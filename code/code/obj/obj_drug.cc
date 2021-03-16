@@ -276,7 +276,9 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
   aff.modifier2 = drug;
 
   // all affects should be based on amount consumed
-  consumed=ch->desc->drugs[drug].current_consumed;
+  auto current_consumed = ch->desc ? ch->desc->drugs[drug].current_consumed : 0;
+  auto total_consumed = ch->desc ? ch->desc->drugs[drug].total_consumed : 0;
+  consumed = current_consumed;
   potency=drugTypes[drug].potency;
   if(consumed>potency) consumed=potency;
 
@@ -285,14 +287,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
   switch(drug){
     case DRUG_PIPEWEED:
       if(!istick){
-	if(ch->desc->drugs[drug].total_consumed==1){
+	if (total_consumed==1){
 	  // first smoke :)
 	  act("Ugh, you're not used to smoking this stuff, it makes you nauseous.", TRUE,ch,0,0,TO_CHAR);
 	  ch->doAction("", CMD_PUKE);
 	  ch->dropPool(10, LIQ_VOMIT);
 	}
 
-	if(ch->desc->drugs[drug].current_consumed>(potency*3)){
+	if (current_consumed>(potency*3)){
 	  act("You overdose on pipeweed and pass out.",
 	      TRUE,ch,0,0,TO_CHAR);
 	  if (ch->riding) {
@@ -364,14 +366,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
       break;
     case DRUG_POT:
       if(!istick){
-	if(ch->desc->drugs[drug].total_consumed==1){
+	if (total_consumed==1){
 	  // first REAL smoke :)
 	  act("Ugh, you're not used to smoking this stuff, but it is tasty.", TRUE,ch,0,0,TO_CHAR);
 	  ch->doAction("", CMD_PUKE);
 	  ch->dropPool(10, LIQ_VOMIT);
 	}
 
-	if(ch->desc->drugs[drug].current_consumed>(potency*3)){
+	if (current_consumed>(potency*3)){
 	  act("You smoked a bit too much pot and decide to crash.",
 	      TRUE,ch,0,0,TO_CHAR);
 	  if (ch->riding) {
@@ -443,7 +445,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
       break;
     case DRUG_OPIUM:
       if(!istick){
-	if(ch->desc->drugs[drug].current_consumed>(potency*3)){
+	if (current_consumed>(potency*3)){
 	  act("You feel like you are smoking too much opium.",
 	      TRUE,ch,0,0,TO_CHAR);
 	}
@@ -527,7 +529,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
           long modifier = modifiers[consumed-1];
           uint64_t bitvector = bitvectors[consumed-1];
 
-          if (ch->desc->drugs[drug].current_consumed > potency * 2 &&
+          if (current_consumed > potency * 2 &&
             !ch->isImmune(IMMUNE_SLEEP, WEAR_BODY) && !ch->isImmortal())
           {
             // add sleep
@@ -545,7 +547,7 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
             modifier = Garble::TYPE_CRAZYFROG;
             bitvector = 0;
           }
-          else if (ch->desc->drugs[drug].current_consumed > potency)
+          else if (current_consumed > potency)
           {
             // add sick affect (super garble)
             ch->doAction("", CMD_PUKE);
@@ -586,13 +588,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
   affectedData aff, *affptr;
 
+  auto current_consumed = ch->desc ? ch->desc->drugs[drug].current_consumed : 0;
   switch(drug){
     case DRUG_PIPEWEED:
       // severity is average amount of drug in body since first use
       // roughly, we say a cigarette is 5 drug units, so a pack a day
       // is 20*5=100 units, divided by 24 hours = about 4
 
-      if(ch->desc->drugs[DRUG_PIPEWEED].current_consumed > (unsigned)(severity/2))
+      if(current_consumed > (unsigned)(severity/2))
 	break;
 
       if(severity<20){
@@ -632,7 +635,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
       }
       break;
     case DRUG_POT:
-      if(ch->desc->drugs[DRUG_POT].current_consumed > (unsigned)(severity/2))
+      if(current_consumed > (unsigned)(severity/2))
         break;
 
       if(severity<20){
@@ -679,7 +682,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
           "You begin salivating for no apparent reason.\n\r",
           };
         TThing *target = NULL;
-        if(ch->desc->drugs[DRUG_FROGSLIME].current_consumed > (unsigned)(severity/2))
+        if(current_consumed > (unsigned)(severity/2))
           break;
 
         if (severity < 3)
@@ -751,23 +754,25 @@ int TBeing::doSmoke(const char *argument)
 
   // Update drug stats
   tdc->addToCurBurn(-1);
-  if(!desc->drugs[tdc->getDrugType()].total_consumed){
-    desc->drugs[tdc->getDrugType()].first_use.seconds=GameTime::getSeconds();
-    desc->drugs[tdc->getDrugType()].first_use.minutes=GameTime::getMinutes();
-    desc->drugs[tdc->getDrugType()].first_use.hours=GameTime::getHours();
-    desc->drugs[tdc->getDrugType()].first_use.day=GameTime::getDay();
-    desc->drugs[tdc->getDrugType()].first_use.month=GameTime::getMonth();
-    desc->drugs[tdc->getDrugType()].first_use.year=GameTime::getYear();
+  if (desc) {
+    if(!desc->drugs[tdc->getDrugType()].total_consumed){
+      desc->drugs[tdc->getDrugType()].first_use.seconds=GameTime::getSeconds();
+      desc->drugs[tdc->getDrugType()].first_use.minutes=GameTime::getMinutes();
+      desc->drugs[tdc->getDrugType()].first_use.hours=GameTime::getHours();
+      desc->drugs[tdc->getDrugType()].first_use.day=GameTime::getDay();
+      desc->drugs[tdc->getDrugType()].first_use.month=GameTime::getMonth();
+      desc->drugs[tdc->getDrugType()].first_use.year=GameTime::getYear();
 
-    desc->drugs[tdc->getDrugType()].last_use.seconds=GameTime::getSeconds();
-    desc->drugs[tdc->getDrugType()].last_use.minutes=GameTime::getMinutes();
-    desc->drugs[tdc->getDrugType()].last_use.hours=GameTime::getHours();
-    desc->drugs[tdc->getDrugType()].last_use.day=GameTime::getDay();
-    desc->drugs[tdc->getDrugType()].last_use.month=GameTime::getMonth();
-    desc->drugs[tdc->getDrugType()].last_use.year=GameTime::getYear();
+      desc->drugs[tdc->getDrugType()].last_use.seconds=GameTime::getSeconds();
+      desc->drugs[tdc->getDrugType()].last_use.minutes=GameTime::getMinutes();
+      desc->drugs[tdc->getDrugType()].last_use.hours=GameTime::getHours();
+      desc->drugs[tdc->getDrugType()].last_use.day=GameTime::getDay();
+      desc->drugs[tdc->getDrugType()].last_use.month=GameTime::getMonth();
+      desc->drugs[tdc->getDrugType()].last_use.year=GameTime::getYear();
+    }
+    desc->drugs[tdc->getDrugType()].total_consumed++;
+    desc->drugs[tdc->getDrugType()].current_consumed++;
   }
-  desc->drugs[tdc->getDrugType()].total_consumed++;
-  desc->drugs[tdc->getDrugType()].current_consumed++;
 
   saveDrugStats();
 

@@ -23,6 +23,7 @@
 
 // there is another one of these defines in combat.cc
 #define DAMAGE_DEFINE 0
+#define DAMAGE_DEBUG 0
 
 // -1 = v is dead, needs to go bye-bye
 int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
@@ -410,7 +411,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 // DELETE_VICT or FALSE
 int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 {
-  char buf[256], buf2[256];
+  char buf[512], buf2[256];
   sstring taunt_buf;
   int rc = 0, questmob;
   TBeing *k=NULL;

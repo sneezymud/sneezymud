@@ -1029,7 +1029,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       continue;
     if (!(rp2 = real_roomp(exitp->to_room)))
       continue;
-    if (!(back = rp2->dir_option[rev_dir[door]]))
+    if (!(back = rp2->dir_option[rev_dir(door)]))
       continue;
     if (rp != real_roomp(back->to_room))
       continue;
@@ -1054,7 +1054,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         continue;
       }
       vict->sendTo("You hear a siren song and feel compelled to follow its allure...\n\r");
-      rc = vict->moveOne(rev_dir[door]);
+      rc = vict->moveOne(rev_dir(door));
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
         vict = NULL;
@@ -1530,7 +1530,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       if(!myself->canSee(ch) || myself==ch || ch->isAnimal() || 
          !myself->awake() || myself->fight() || (cmd == CMD_OPEN)) {
 	return FALSE;
-      } else if(rev_dir[dir]==ch->specials.last_direction){
+      } else if(rev_dir(dir)==ch->specials.last_direction){
 	act("$n growls but lets you return the way you came.",
 	    FALSE, myself, 0, ch, TO_VICT);
 	act("$n growls but lets $N return the way $e came.",
@@ -1590,7 +1590,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
         return FALSE;
       break;
     case 22713:
-      if((rev_dir[dir]==ch->specials.last_direction) || (cmd == CMD_OPEN)){
+      if((rev_dir(dir)==ch->specials.last_direction) || (cmd == CMD_OPEN)){
 	return FALSE;
       } else if(ch->hasQuestBit(TOG_PAID_TOLL) || 
                 dynamic_cast<TMonster *>(ch)){
@@ -1616,7 +1616,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       if(((!myself->canSee(ch) || myself==ch)) || ch->isAnimal() ||
          myself->fight() || (cmd == CMD_OPEN)){
 	return FALSE;
-      } else if(rev_dir[dir]==ch->specials.last_direction){
+      } else if(rev_dir(dir)==ch->specials.last_direction){
 	return FALSE;
       } else if((ch->hasQuestBit(TOG_PAID_TOLL) || 
                 dynamic_cast<TMonster *>(ch))){
@@ -4239,327 +4239,6 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   return FALSE;
 }
 
-static int engraveCost(TObj *obj, TBeing *ch, unsigned int shop_nr)
-{
-  double cost;
-
-  cost = obj->obj_flags.cost;
-
-  cost *= max(1,obj->obj_flags.cost/10000);
-
-  if(shop_nr)
-    cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
-
-  return (int) cost;
-}
-
-int engraver(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
-{
-  char buf[256];
-  TObj *item;
-  TBeing *final_pers;
-  int cost;
-  dirTypeT dir = DIR_NONE;
-  roomDirData *exitp;
-  int rc;
-  TBeing *tbt = NULL;
-  TThing *ttt;
-
-  class reg_struct {
-    public:
-    int wait;
-    int cost;
-    char *char_name;
-    char *obj_name;
-    reg_struct() :
-      wait(0),
-      cost(0),
-      char_name(NULL),
-      obj_name(NULL)
-    {
-    }
-    ~reg_struct() {
-      delete [] char_name;
-      char_name = NULL;
-      delete [] obj_name;
-      obj_name = NULL;
-    }
-  };
-  static reg_struct *job;
-
-  switch (cmd) {
-    case CMD_WHISPER:
-      return shopWhisper(ch, me, find_shop_nr(me->number), arg);
-    case CMD_GENERIC_DESTROYED:
-      delete (reg_struct *) me->act_ptr;
-      me->act_ptr = NULL;
-      return FALSE;
-    case CMD_GENERIC_CREATED:
-      if (!(me->act_ptr = new reg_struct())) {
-        perror("failed new of engraver.");
-        exit(0);
-      }
-      return FALSE;
-    case CMD_MOB_MOVED_INTO_ROOM:
-
-        return kick_mobs_from_shop(me, ch, (long int)o);
-
-    case CMD_MOB_VIOLENCE_PEACEFUL:
-      ttt = o;
-      tbt = dynamic_cast<TBeing *>(ttt);
-      me->doSay("Hey!  Take it outside.");
-      for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        if (exit_ok(exitp = me->exitDir(dir), NULL)) {
-          act("$n throws you from $s shop.",
-                 FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N from $s shop.",
-                 FALSE, me, 0, ch, TO_NOTVICT);
-          me->throwChar(ch, dir, FALSE, SILENT_NO, true);
-          act("$n throws you from $s shop.",
-                 FALSE, me, 0, tbt, TO_VICT);
-          act("$n throws $N from $s shop.",
-                 FALSE, me, 0, tbt, TO_NOTVICT);
-          me->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-          return TRUE;
-        }
-      }
-      return TRUE;
-    case CMD_GENERIC_PULSE:
-      if (!(job = (reg_struct *) me->act_ptr)) {
-        vlogf(LOG_PROC,"ENGRAVER PROC ERROR: terminating (hopefully)");
-        return FALSE;   
-      }
-      if (!job->char_name || !job->obj_name)
-        return FALSE;
-
-      if (job->wait > 0) {
-        job->wait--;
-        if (!job->wait) {
-          sprintf(buf, "That should do it %s!", job->char_name);
-          me->doSay(buf);
-          TThing *ts = NULL;
-          TObj *final = NULL;
-          if (!(ts = searchLinkedList(job->obj_name, me->stuff)) ||
-              !(final = dynamic_cast<TObj *>(ts))) {
-            me->doSay("Ack, I lost the item somehow! Tell a god immediately!  ");
-            vlogf(LOG_PROC,format("engraver lost his engraving item (%s)") %
-                (final ? final->name : ""));
-            return FALSE;
-          }
-          final->swapToStrung();
-
-          //  Remake the obj name.  
-          sprintf(buf, "%s %s", final->name.c_str(), job->char_name);
-          final->name = buf;
-
-          sprintf(buf, "This is the personalized object of %s", job->char_name);
-          final->action_description = buf;
-
-          if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
-            me->doSay("Hmm, I seem to have lost the person I was engraving for.");
-            rc = me->doDrop(job->obj_name, NULL);
-            if (IS_SET_DELETE(rc, DELETE_THIS))
-              return DELETE_THIS;
-            return FALSE;
-          }
-          if ((final_pers->getCarriedVolume() + final->getTotalVolume())  > final_pers->carryVolumeLimit()) {
-            me->doSay("You can't carry it! I'll just drop it here for you!");
-            rc = me->doDrop(job->obj_name, NULL);
-            if (IS_SET_DELETE(rc, DELETE_THIS))
-              return DELETE_THIS;
-            delete [] job->char_name;
-            job->char_name = NULL;
-            delete [] job->obj_name;
-            job->obj_name = NULL;
-            job->cost = 0;
-            return FALSE;
-          }
-          // final-weight > free final carry weight
-          if (compareWeights(final->getTotalWeight(TRUE),
-                (final_pers->carryWeightLimit() - final_pers->getCarriedWeight())) == -1) {
-            me->doSay("You can't carry it! I'll just drop it here for you!");
-            rc = me->doDrop(job->obj_name, NULL);
-            if (IS_SET_DELETE(rc, DELETE_THIS))
-              return DELETE_THIS;
-            delete [] job->char_name;
-            job->char_name = NULL;
-            delete [] job->obj_name;
-            job->obj_name = NULL;
-
-            job->cost = 0;
-            return FALSE;
-          }
-          sprintf(buf, "%s %s", job->obj_name, job->char_name);
-          if (me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT) == DELETE_THIS)
-            return DELETE_THIS;
-          delete [] job->char_name;
-          job->char_name = NULL;
-          delete [] job->obj_name;
-          job->obj_name = NULL;
-
-          job->cost = 0;
-          return FALSE;
-        } else {
-          sprintf(buf, "$n etches part of %s's %s.", job->char_name, job->obj_name);
-          act(buf, FALSE, me, NULL, ch, TO_ROOM);
-          return FALSE;
-        }
-      }
-      break;
-    case CMD_NORTH:
-    case CMD_SOUTH:
-    case CMD_WEST:
-    case CMD_EAST:
-    case CMD_UP:
-    case CMD_DOWN:
-    case CMD_NE:
-    case CMD_SW:
-    case CMD_SE:
-    case CMD_NW:
-      if (!(job = (reg_struct *) me->act_ptr)) {
-        return FALSE;
-      }
-      if (!job->char_name) {
-        return FALSE;
-      }
-      if (job->char_name == ch->getName()) {
-        sprintf(buf, "%s! Don't leave until I finish with this %s!", ch->getName().c_str(), job->obj_name);
-        me->doSay(buf);
-        return TRUE;
-      } else
-        return FALSE;
-      break;
-    case CMD_VALUE: {
-      for(; *arg && isspace(*arg);arg++);
-      TThing *ts = NULL;
-      TObj *valued = NULL;
-      if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
-          !(valued = dynamic_cast<TObj *>(ts))) {
-        me->doTell(ch->getName(), "You don't have that item.");
-        return TRUE;
-      }
-
-      if (valued->engraveMe(ch, me, false))
-        return TRUE;
-
-      if (valued->obj_flags.cost <=  500) {
-        me->doTell(ch->getName(), "This item is too cheap to be engraved.");
-        return TRUE;
-      }
-      if (!valued->action_description.empty()) {
-        me->doTell(ch->getName(), "This item has already been engraved!");
-        return TRUE;
-      }
-      if (obj_index[valued->getItemIndex()].max_exist <= 10) {
-        me->doTell(ch->getName(), "I refuse to engrave such an artifact of beauty!");
-        return TRUE;
-      }
-      if (valued->obj_flags.decay_time >= 0) {
-        me->doTell(ch->getName(), "Sorry, but this item won't last long enough to bother with an engraving!");
-        return TRUE;
-      }
-
-      cost = engraveCost(valued, ch, find_shop_nr(me->number));
-
-      me->doTell(ch->getName(), format("It will cost %d talens to engrave your %s.") % cost % fname(valued->name));
-      return TRUE;
-      }
-    case CMD_MOB_GIVEN_ITEM:
-      // prohibit polys and charms from engraving 
-      if (dynamic_cast<TMonster *>(ch)) {
-        me->doTell(fname(ch->name), "I don't engrave for beasts.");
-        return TRUE;
-      }
-      if (!(item = o)) {
-        me->doTell(ch->getName(), "You don't have that item!");
-        return TRUE;
-      }
-      me->logItem(item, CMD_EAST);  // log the receipt of the item
-
-      if (item->engraveMe(ch, me, true))
-        return TRUE;
-
-      if (item->obj_flags.cost <= 500) {
-        me->doTell(ch->getName(), "That can't be engraved!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
-        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
-      }
-      if (!item->action_description.empty()) {
-        me->doTell(ch->getName(), "Sorry, but this item has already been engraved!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
-        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
-      }
-      if (obj_index[item->getItemIndex()].max_exist <= 10) {
-        me->doTell(ch->getName(), "This artifact is too powerful to be engraved!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
-        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
-      }
-      if (item->obj_flags.decay_time >= 0) {
-        me->doTell(ch->getName(), "This won't be around long enough to bother engraving it!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
-        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
-      }
-
-      cost = engraveCost(item, ch, find_shop_nr(me->number));
-
-      if (ch->getMoney() < cost) {
-        me->doTell(ch->getName(), "I have to make a living! If you don't have the money, I don't do the work!");
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
-        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
-      }
-      job = (reg_struct *) me->act_ptr;
-      if (!job->wait || !job->char_name) {
-        job->wait = max(1, (int) (item->obj_flags.max_struct_points)/7);
-        sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
-        me->doSay(buf);
-
-	TShopOwned tso(find_shop_nr(me->number), me, ch);
-	tso.doBuyTransaction(cost, format("engraving %s") % item->getName(), 
-			     TX_BUYING_SERVICE);
-
-        job->cost = cost;
-        job->char_name = new char[ch->getName().length() + 1];
-        strcpy(job->char_name, ch->getName().c_str());
-        job->obj_name = new char[fname(item->name).length() + 1];
-        strcpy(job->obj_name, fname(item->name).c_str());
-        --(*item);
-        *me += *item; 
-
-	me->saveChar(Room::AUTO_RENT);
-	ch->saveChar(Room::AUTO_RENT);
-
-        return TRUE;
-      } else {
-        sprintf(buf, "Sorry, %s, but you'll have to wait while I engrave %s's item.", ch->getName().c_str(), job->char_name);
-        me->doSay(buf);
-        strcpy(buf, item->name.c_str());
-        strcpy(buf, add_bars(buf).c_str());
-        sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
-        me->doGive(buf,GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
-      }
-      return FALSE;
-    default:
-      return FALSE;
-  }
-  return FALSE;
-}
-
 int fireMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 {
   char buf[256];
@@ -4982,7 +4661,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   sstring hookername, johnname, tmp;
   TPathFinder path;
 
-   enum hookerStateT {
+  enum hookerStateT {
     STATE_NONE,
     STATE_OFFER,      // 1
     STATE_REJECT1,    // 2
@@ -5009,7 +4688,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     }
     return FALSE;
   } else  if ((cmd != CMD_GENERIC_PULSE) ||
-	      !myself->awake() || myself->fight())
+      !myself->awake() || myself->fight())
     return FALSE;
 
   if (!myself->act_ptr) {
@@ -5019,15 +4698,15 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     // find a john
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
       if((tmons=dynamic_cast<TMonster *>(t))){
-	if(tmons!=myself && tmons->isHumanoid() && !tmons->isShopkeeper() &&
-      !IS_SET(tmons->specials.act, ACT_SENTINEL) &&
-	   (tmons->getSex()!=SEX_NEUTER && tmons->getSex()!=myself->getSex())){
-	  found=1;
-	  break;
-	}
+        if(tmons!=myself && tmons->isHumanoid() && !tmons->isShopkeeper() &&
+            !IS_SET(tmons->specials.act, ACT_SENTINEL) &&
+            (tmons->getSex()!=SEX_NEUTER && tmons->getSex()!=myself->getSex())){
+          found=1;
+          break;
+        }
       }
     }
-    
+
     // didn't find one
     if(!found)
       return FALSE;
@@ -5045,12 +4724,12 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     if(::number(0,4))
       return FALSE;
   }
-  
+
   if (!(job = static_cast<hunt_struct *>(myself->act_ptr))) {
     vlogf(LOG_PROC, "grimhavenHooker: error, static_cast");
     return FALSE;
   }
-  
+
   if(job->state==STATE_NONE){
     //    vlogf(LOG_PROC, "STATE_NONE, deleting act_ptr");
     delete static_cast<hunt_struct *>(myself->act_ptr);
@@ -5062,7 +4741,14 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
   // Make sure our john is still alive and in the same room
   found=0;
   if(job->john){
-    if(!myself->sameRoom(*job->john)){
+    bool mobStillExists = false;
+    for (TBeing* i = character_list; i; i = i->next) {
+      if (i == job->john) {
+        mobStillExists = true;
+        break;
+      }
+    }
+    if (!mobStillExists || !myself->sameRoom(*job->john)){
       myself->doAction("", CMD_FROWN);
       job->john=NULL;
       job->state=STATE_NONE;
@@ -5072,7 +4758,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     job->state=STATE_NONE;
     return FALSE;
   }
-    	  
+
   hookername=myself->name;
   hookername=add_bars(hookername);
   johnname=job->john->name;
@@ -5084,173 +4770,173 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     case STATE_OFFER:
       myself->doAction(johnname, CMD_PEER);
       switch(::number(0,3)){
-	case 0: 
-	  myself->doSay("You want to party, honey?"); 
-	  myself->doAction("", CMD_LICK);
-	  break;
-	case 1:
-	  myself->doSay("How about some action baby?"); 
-	  myself->doAction(johnname, CMD_NUZZLE);
-	  break;
-	case 2:
-	  if(job->john->getSex() == SEX_MALE)
-	    myself->doSay("Is that a training dagger in your pants, or do you need some hot lovin'?"); 
-	  else 
-	    myself->doSay("Did you just come from a sushi bar, or do you need some hot lovin'?");
-	  myself->doAction(johnname, CMD_GRIN);
-	  break;
-	case 3:
-	  myself->doAction("", CMD_WIGGLE);
-	  myself->doSay("Me so horny, me love you long time!");
-	  myself->doAction("", CMD_LICK);
-	  break;
+        case 0: 
+          myself->doSay("You want to party, honey?"); 
+          myself->doAction("", CMD_LICK);
+          break;
+        case 1:
+          myself->doSay("How about some action baby?"); 
+          myself->doAction(johnname, CMD_NUZZLE);
+          break;
+        case 2:
+          if(job->john->getSex() == SEX_MALE)
+            myself->doSay("Is that a training dagger in your pants, or do you need some hot lovin'?"); 
+          else 
+            myself->doSay("Did you just come from a sushi bar, or do you need some hot lovin'?");
+          myself->doAction(johnname, CMD_GRIN);
+          break;
+        case 3:
+          myself->doAction("", CMD_WIGGLE);
+          myself->doSay("Me so horny, me love you long time!");
+          myself->doAction("", CMD_LICK);
+          break;
       }
 
       if(::number(0,2))
-	job->state=STATE_REJECT1;
+        job->state=STATE_REJECT1;
       else
-	job->state=STATE_ASKPRICE;
+        job->state=STATE_ASKPRICE;
       break;
     case STATE_REJECT1:
       switch(::number(0,4)){
-	case 0:
-	  job->john->doAction("", CMD_SNICKER);
-	  job->john->doSay("Yeah, right.  As if.");
-	  break;
-	case 1:
-	  job->john->doAction("", CMD_SNEER);
-	  job->john->doSay("Get the hell away from me you skank ghetto whore!");
-	  break;
-	case 2:
-	  job->john->doAction("", CMD_BLUSH);
-	  job->john->doSay("Um, no thanks.");
-	  break;
-	case 3:
-	  job->john->doSay("Not me sexy, why pay when I get it for free in the pasture?");
-	  job->john->doAction("", CMD_CHUCKLE);
-	  break;
-	case 4:
-	  job->john->doSay("Wait, is that my wife I see down the street?!?");
-	  job->john->doSay("I'm out of here!");
-	  job->john->doFlee("");
-	  break;
+        case 0:
+          job->john->doAction("", CMD_SNICKER);
+          job->john->doSay("Yeah, right.  As if.");
+          break;
+        case 1:
+          job->john->doAction("", CMD_SNEER);
+          job->john->doSay("Get the hell away from me you skank ghetto whore!");
+          break;
+        case 2:
+          job->john->doAction("", CMD_BLUSH);
+          job->john->doSay("Um, no thanks.");
+          break;
+        case 3:
+          job->john->doSay("Not me sexy, why pay when I get it for free in the pasture?");
+          job->john->doAction("", CMD_CHUCKLE);
+          break;
+        case 4:
+          job->john->doSay("Wait, is that my wife I see down the street?!?");
+          job->john->doSay("I'm out of here!");
+          job->john->doFlee("");
+          break;
       }
       job->john=NULL;
       job->state=STATE_NONE;
       break;
     case STATE_ASKPRICE:
       switch(::number(0,4)){
-	case 0:
-	  job->john->doSay("Yeah baby, I want some real rough love.");
-	  job->john->doAction(hookername, CMD_TAUNT);
-	  job->john->doSay("What's it gonna cost me to tie that little bad ass up?");
-	  job->john->doAction(hookername, CMD_GRIN);
-	  break;
-	case 1:
-	  job->john->doScan("");
-	  job->john->doSay("Well... Ok, but it has to be secret.  How much?");
-	  break;
-	case 2:
-	  job->john->doAction("", CMD_MOAN);
-	  job->john->doSay("Oh god, I want you so bad, I'll pay anything you want!");
-	  job->john->doAction(johnname, CMD_GROPE); 
-	  break;
-	case 3:
-	  job->john->doSay("I've had a rough day, I could certainly use a little winding down.");
-	  job->john->doSay("Let's get it on!");
-	  job->john->doAction("", CMD_CLAP);
-	  job->john->doAction("", CMD_GIGGLE);	  
-	  break;
-	case 4:
-	  tmp = format("%s Do you swallow?") % hookername;
-	  job->john->doWhisper(tmp);
-	  myself->doEmote("looks startled and almost chokes.");
-	  myself->doAction(johnname, CMD_SLAP);
-	  job->john->doAction(hookername, CMD_GRIN);
-	  myself->doAction("", CMD_GIGGLE);
-	  break;
+        case 0:
+          job->john->doSay("Yeah baby, I want some real rough love.");
+          job->john->doAction(hookername, CMD_TAUNT);
+          job->john->doSay("What's it gonna cost me to tie that little bad ass up?");
+          job->john->doAction(hookername, CMD_GRIN);
+          break;
+        case 1:
+          job->john->doScan("");
+          job->john->doSay("Well... Ok, but it has to be secret.  How much?");
+          break;
+        case 2:
+          job->john->doAction("", CMD_MOAN);
+          job->john->doSay("Oh god, I want you so bad, I'll pay anything you want!");
+          job->john->doAction(johnname, CMD_GROPE); 
+          break;
+        case 3:
+          job->john->doSay("I've had a rough day, I could certainly use a little winding down.");
+          job->john->doSay("Let's get it on!");
+          job->john->doAction("", CMD_CLAP);
+          job->john->doAction("", CMD_GIGGLE);	  
+          break;
+        case 4:
+          tmp = format("%s Do you swallow?") % hookername;
+          job->john->doWhisper(tmp);
+          myself->doEmote("looks startled and almost chokes.");
+          myself->doAction(johnname, CMD_SLAP);
+          job->john->doAction(hookername, CMD_GRIN);
+          myself->doAction("", CMD_GIGGLE);
+          break;
       }
       job->state=STATE_TELLPRICE;
       break;
     case STATE_TELLPRICE:
       switch(::number(0,2)){
-	case 0:
-	  myself->doSay("It will cost you...");
-	  myself->doEmote("grins evilly revealing pointed teeth and her eyes turn <r>red<1>!");
-	  myself->doSay("...YOUR SOUL!");
-	  myself->doEmote("suddenly returns to normal.");
-	  myself->doAction("", CMD_GIGGLE);
-	  myself->doSay("Just joking.");
-	  myself->doAction(johnname, CMD_BECKON);
-	  break;
-	case 1:
-	  myself->doAction(johnname, CMD_PONDER);
-	  myself->doSay("Maybe we can work out a payment plan or something.");
-	  break;
-	case 2:
-	  myself->doSay("Don't worry sailor, I'm sure you can afford it.");
-	  myself->doAction(johnname, CMD_PET);
-	  break;
-	case 3:
-	  myself->doSay("For the service I provide, the cost is quite reasonable, I assure you.");
-	  myself->doAction(johnname, CMD_MASSAGE);
-	  break;
+        case 0:
+          myself->doSay("It will cost you...");
+          myself->doEmote("grins evilly revealing pointed teeth and her eyes turn <r>red<1>!");
+          myself->doSay("...YOUR SOUL!");
+          myself->doEmote("suddenly returns to normal.");
+          myself->doAction("", CMD_GIGGLE);
+          myself->doSay("Just joking.");
+          myself->doAction(johnname, CMD_BECKON);
+          break;
+        case 1:
+          myself->doAction(johnname, CMD_PONDER);
+          myself->doSay("Maybe we can work out a payment plan or something.");
+          break;
+        case 2:
+          myself->doSay("Don't worry sailor, I'm sure you can afford it.");
+          myself->doAction(johnname, CMD_PET);
+          break;
+        case 3:
+          myself->doSay("For the service I provide, the cost is quite reasonable, I assure you.");
+          myself->doAction(johnname, CMD_MASSAGE);
+          break;
       }
-      
+
       if(job && job->john && IS_SET(job->john->specials.act, ACT_SENTINEL)){
-	job->state=STATE_REJECT2;
+        job->state=STATE_REJECT2;
       } else {
-	if(::number(0,1))
-	  job->state=STATE_REJECT2;
-	else
-	  job->state=STATE_ACCEPT;
+        if(::number(0,1))
+          job->state=STATE_REJECT2;
+        else
+          job->state=STATE_ACCEPT;
       }
       break;
     case STATE_REJECT2:
       switch(::number(0,3)){
-	case 0:
-	  job->john->doSay("Hell, for that price I could just get married.");
-	  job->john->doAction("", CMD_CACKLE);
-	  break;
-	case 1:
-	  job->john->doAction("", CMD_SMIRK);
-	  job->john->doSay("The pet store has cheaper prices.");
-	  job->john->doSay("Er, I mean, um.");
-	  job->john->doEmote("turns away quickly.");
-	  break;
-	case 2:
-	  job->john->doSay("How about I mail you a check?  No?  Damn.");
-	  job->john->doAction("", CMD_SULK);
-	  break;
-	case 3:
-	  job->john->doSay("Wait, is that my wife I see down the street?!?");
-	  job->john->doSay("I'm out of here!");
-	  job->john->doFlee("");
-	  break;
+        case 0:
+          job->john->doSay("Hell, for that price I could just get married.");
+          job->john->doAction("", CMD_CACKLE);
+          break;
+        case 1:
+          job->john->doAction("", CMD_SMIRK);
+          job->john->doSay("The pet store has cheaper prices.");
+          job->john->doSay("Er, I mean, um.");
+          job->john->doEmote("turns away quickly.");
+          break;
+        case 2:
+          job->john->doSay("How about I mail you a check?  No?  Damn.");
+          job->john->doAction("", CMD_SULK);
+          break;
+        case 3:
+          job->john->doSay("Wait, is that my wife I see down the street?!?");
+          job->john->doSay("I'm out of here!");
+          job->john->doFlee("");
+          break;
       }
       job->john=NULL;
       job->state=STATE_NONE;
       break;
     case STATE_ACCEPT:
       switch(::number(0,3)){
-	case 0:
-	  job->john->doSay("Excellent.  You take Grimhaven Express right?");
-	  break;
-	case 1:
-	  job->john->doSay("Hm, that's almost a week's pay.");
-	  job->john->doAction("head", CMD_SCRATCH);
-	  job->john->doSay("Deal!");
-	  break;
-	case 2:
-	  job->john->doAction("", CMD_DROOL);
-	  job->john->doSay("Me Tarzan, you cheap whore.");
-	  break;
-	case 3:
-	  job->john->doSay("Alright, but you better not have crabs or anything.");
-	  break;
+        case 0:
+          job->john->doSay("Excellent.  You take Grimhaven Express right?");
+          break;
+        case 1:
+          job->john->doSay("Hm, that's almost a week's pay.");
+          job->john->doAction("head", CMD_SCRATCH);
+          job->john->doSay("Deal!");
+          break;
+        case 2:
+          job->john->doAction("", CMD_DROOL);
+          job->john->doSay("Me Tarzan, you cheap whore.");
+          break;
+        case 3:
+          job->john->doSay("Alright, but you better not have crabs or anything.");
+          break;
       }
       if(!IS_SET(job->john->specials.act, ACT_SENTINEL))
-	job->john->doFollow(hookername.c_str());
+        job->john->doFollow(hookername.c_str());
       job->state=STATE_WALKING;
       break;
     case STATE_WALKING:
@@ -5258,60 +4944,60 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       //	break;
 
       if(myself->in_room != homes[job->cur_path]){
-	switch((dir=path.findPath(myself->in_room, 
-				  findRoom(homes[job->cur_path])))){
+        switch((dir=path.findPath(myself->in_room, 
+                findRoom(homes[job->cur_path])))){
           case 0: case 1: case 2: case 3: case 4: 
           case 5: case 6: case 7: case 8: case 9:
-	    myself->goDirection(dir);
-	    break;
+            myself->goDirection(dir);
+            break;
           case -1: // lost
-  	  default: // portal
-	    myself->doSay("Damn, I think I'm lost.");
-	    delete job->john;
-	    if(myself->act_ptr){
-	      delete static_cast<hunt_struct *>(myself->act_ptr);
-	      myself->act_ptr = NULL;
-	    }
-	    break;
+          default: // portal
+            myself->doSay("Damn, I think I'm lost.");
+            job->john = nullptr;
+            if(myself->act_ptr){
+              delete static_cast<hunt_struct *>(myself->act_ptr);
+              myself->act_ptr = NULL;
+            }
+            break;
         }
-// returns -1 indicating a problem or can't find a path
-// returns 0-9 indicating a direction to travel
-// returns 10+ indicating a portal to enter (10 = first in room, 11 = 2nd,...)
+        // returns -1 indicating a problem or can't find a path
+        // returns 0-9 indicating a direction to travel
+        // returns 10+ indicating a portal to enter (10 = first in room, 11 = 2nd,...)
 
       } else {
-	// if arrived at destination
-	job->state=STATE_WAITFORCLEAR;
-	myself->doSay("Let's get to work.");
-	myself->doAction("", CMD_GRIN);
+        // if arrived at destination
+        job->state=STATE_WAITFORCLEAR;
+        myself->doSay("Let's get to work.");
+        myself->doAction("", CMD_GRIN);
       }
       break;
     case STATE_WAITFORCLEAR:
       found=0;
       for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
-	if(dynamic_cast<TPerson *>(t)){
-	  switch(::number(0,1)){
-	    case 0:
-	      myself->doSay("Um, a little privacy please.");
-	      myself->doAction("", CMD_COUGH);
-	      break;
-	    case 1:
-	      job->john->doEmote("tries to hide his face from you.");
-	      break;
-	  }
-	  found=1;
-	}
+        if(dynamic_cast<TPerson *>(t)){
+          switch(::number(0,1)){
+            case 0:
+              myself->doSay("Um, a little privacy please.");
+              myself->doAction("", CMD_COUGH);
+              break;
+            case 1:
+              job->john->doEmote("tries to hide his face from you.");
+              break;
+          }
+          found=1;
+        }
       }
       if(!found){
-	delete job->john;
-	if(myself->act_ptr){
-	  delete static_cast<hunt_struct *>(myself->act_ptr);
-	  myself->act_ptr = NULL;
-	  return DELETE_THIS;
-	}
+        job->john = nullptr;
+        if(myself->act_ptr){
+          delete static_cast<hunt_struct *>(myself->act_ptr);
+          myself->act_ptr = NULL;
+          return DELETE_THIS;
+        }
       }
       break;
   }
-  
+
   return FALSE;
 }
 
@@ -5759,7 +5445,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     return TRUE;
   }
 
-  char buf[256], buf2[256];
+  char buf[512], buf2[256];
   int count, numsimilar;
   int which;
   int Hi = 0, Hf = 0; //hp initial, hp final
@@ -6341,7 +6027,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       me->doGive(ch,commod, GIVE_FLAG_DROP_ON_FAIL);
     }
   
-    delete o;
+    return DELETE_ITEM;
   }
 
   return FALSE;
@@ -7407,7 +7093,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE,"Trainer: blacksmithing", CDGenericTrainer}, 
   {FALSE,"Trainer: deikhan fight", CDGenericTrainer},
   {FALSE,"Trainer: mounted", CDGenericTrainer},
-  {FALSE,"Trainer: deikhan aegis", CDGenericTrainer},
+  {FALSE,"Trainer: deikhan guardian", CDGenericTrainer},
   {FALSE,"Trainer: deikhan cures", CDGenericTrainer},    // 125 
   {FALSE,"Trainer: deikhan wrath", CDGenericTrainer},
   {FALSE,"Trainer: leverage", CDGenericTrainer},
@@ -7503,6 +7189,9 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "ration factory", rationFactory},
   {FALSE, "pet veterinarian", petVeterinarian},
   {TRUE, "lagomorph", lagomorph},
+  {TRUE, "Trainer: Offense", CDGenericTrainer},
+  {TRUE, "Tailor", tailor},
+  {TRUE, "Blacksmith", blacksmith},
 // replace non-zero, bogus_mob_procs above before adding
 };
 

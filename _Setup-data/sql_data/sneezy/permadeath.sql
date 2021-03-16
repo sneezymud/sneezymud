@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,12 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `permadeath`
+--
+
+DROP TABLE IF EXISTS `permadeath`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `permadeath` (
+  `name` varchar(80) NOT NULL DEFAULT '',
+  `level` int(11) DEFAULT NULL,
+  `died` int(11) DEFAULT NULL,
+  `killer` varchar(80) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `permadeath`
 --
 
-
-/*!40000 ALTER TABLE `permadeath` DISABLE KEYS */;
 LOCK TABLES `permadeath` WRITE;
+/*!40000 ALTER TABLE `permadeath` DISABLE KEYS */;
 INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Fujisaowa',7,0,'no one'),
 ('Anda',11,1,'fire'),
@@ -102,7 +116,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Matilda',5,1,'a robber'),
 ('Leafy',2,0,'no one'),
 ('Tigerposture',11,1,'a young student'),
-('Level',2,0,'no one'),
 ('TheMidasArray',16,1,'the <g>wardrobe mistress<z>'),
 ('Crack',6,1,'Jelly'),
 ('Kell',2,1,'an <R>obedient zombie<1>'),
@@ -136,7 +149,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Clashofthetitans',3,0,'no one'),
 ('Artere',2,0,'no one'),
 ('Multiplay',4,0,'no one'),
-('Jinx',10,0,'no one'),
 ('Onion',12,1,'a hobgoblin cook'),
 ('Beany',2,0,'no one'),
 ('Sheisterhausen',5,0,'no one'),
@@ -245,7 +257,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Bloodrayne',5,0,'no one'),
 ('Anklebiter',6,0,'no one'),
 ('Vampyre',15,1,'Vampyre'),
-('Revan',7,0,'no one'),
 ('Whole',17,1,'Whole'),
 ('Bhut',3,0,'no one'),
 ('Morpheus',14,1,'<o>Overlord Toreth<z>'),
@@ -279,9 +290,11 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Gruntle',12,0,'no one'),
 ('Chaynal',31,0,'no one'),
 ('Mortal',4,0,'no one'),
-('Colambo',7,0,'no one');
-UNLOCK TABLES;
+('Colambo',7,0,'no one'),
+('Stark',20,0,'no one'),
+('Arya',21,0,'no one');
 /*!40000 ALTER TABLE `permadeath` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -292,3 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:55:01

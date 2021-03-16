@@ -15,7 +15,7 @@ prod:
 	$(SCONS) shared=0 harden=1 optimize=1 lto=1
 
 test:
-	# TODO: have a test suite...
+	$(SCONS) check
 
 clean:
 	$(SCONS) -c

@@ -17,6 +17,8 @@
 
 int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
+  return FALSE; // buffer overflow.
+
   int i, rc, found=0;
   TBeing *mob, *vict=NULL;
   const int criminals[3]={180, 134, 131};
@@ -158,7 +160,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
     case STATE_LEAVE_OFFICE: // get out of barracks
     case STATE_TO_JAIL: // go to jail
     case STATE_RETURN_OFFICE: // go back to office
-      if (head_guard_path[job->cur_path][(job->cur_pos + 1)].direction == -1) {
+      if (head_guard_path[job->cur_path][(job->cur_pos + 1)].direction == -1) { // XXX: TODO: buffer overflow here
 	// end of path, start on the lamp boy path now
 	switch(job->state){
    	  case STATE_LEAVE_OFFICE:
@@ -396,6 +398,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	    }
 	  }
 	  job->cur_pos++;
+      assert(job->cur_pos < 19); // fails here.
 	}
       }
       break;

@@ -87,7 +87,8 @@ bool TBeing::canSpin(TBeing *victim, silentTypeT silent)
 enum spinMissT {
     TYPE_DEFAULT,
     TYPE_DEX,
-    TYPE_MONK
+    TYPE_MONK,
+    TYPE_DEFENSE
 };
 
 static int spinMiss(TBeing *caster, TBeing *victim, spinMissT type)
@@ -101,6 +102,11 @@ static int spinMiss(TBeing *caster, TBeing *victim, spinMissT type)
               0, victim, TO_VICT);
     act("$N deftly avoids $n's attempt at spinning $M.", FALSE, caster, 
               0, victim, TO_NOTVICT);
+  } else if (type == TYPE_DEFENSE) {
+    act("$N is too fast and avoids your attempt at spinning $M.", FALSE, caster, 0, victim, TO_CHAR);
+    act("Your defensive training helps you avoid $n's feeble spin attempt.", FALSE, caster, 0, victim, TO_VICT);
+    act("$N deftly avoids $n's attempt at spinning $M.", FALSE, caster, 0, victim, TO_NOTVICT);
+  
   } else if (type == TYPE_MONK) {
     act("$N deftly counters your attempt at spinning $M.", FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
     act("You trip and land on the $g.", FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
@@ -174,9 +180,6 @@ static int spinHit(TBeing *caster, TBeing *victim)
   // see the balance notes for details on what's going on here.
   float wt = (combatRound(discArray[SKILL_SPIN]->lag) / 3);
 
-  // adjust based on bash difficulty
-  wt = (wt * 100.0 / getSkillDiffModifier(SKILL_SPIN));
-
   // since we cost some moves to perform, allow an extra 1/2 round of lag
   wt += 1.5;
 
@@ -240,6 +243,11 @@ static int spin(TBeing *caster, TBeing *victim)
     if (victim->canCounterMove(bKnown/3)) {
       SV(SKILL_SPIN);
       rc = spinMiss(caster, victim, TYPE_MONK);
+      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
+        return rc;
+    } else if (victim->canFocusedAvoidance(bKnown/3)) {
+      SV(SKILL_SPIN);
+      rc = spinMiss(caster, victim, TYPE_DEFENSE);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
     } else if (((caster->getDexReaction() - 

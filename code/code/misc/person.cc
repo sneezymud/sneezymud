@@ -2,14 +2,22 @@
 #include "database.h"
 #include "account.h"
 #include "pathfinder.h"
+#include "low.h"
 
 #include <unordered_map>
+#include <queue>
+#include <set>
+#include <string>
 
 class TPersonPimpl
 {
   public:
     std::unordered_map<std::string, int> favoriteRooms;
 };
+
+TThing::TThingKind TPerson::getKind() const {
+  return TThing::TThingKind::TPerson;
+}
 
 TPerson::TPerson(Descriptor *thedesc) :
   TBeing(),
@@ -125,6 +133,9 @@ std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd, const sstring & argu
       break;
     case CMD_RETRIEVE:
       doRetrieve(true, argument);
+      break;
+    case CMD_DISTRIBUTE:
+      doDistribute(argument);
       break;
     default:
       return std::make_pair(false, 0);
@@ -301,8 +312,26 @@ void TPerson::doMap(sstring const& arg)
     doMapAdd(rest);
   else if (is_abbrev(cmd, "remove") || cmd == "rm")
     doMapRm(rest);
+  else if (cmd == "recalc")
+  {
+    if (this->GetMaxLevel() < 60) {
+      sendTo("Nuh-uh.\n\r");
+      return;
+    }
+    doMapRecalc(convertTo<int>(rest));
+  }
+  else if (cmd == "reset")
+  {
+    TDatabase db(DB_SNEEZY);
+    db.query("update room set x = 0, y = 0, z = 0");
+    sendTo("Reset done. Forcing a reboot to flush the room cache.\n");
+    extern bool Reboot;
+    extern bool Shutdown;
+    Reboot = 1;
+    Shutdown = 1;
+  }
   else if (is_abbrev(cmd, "go"))
     doMapGo(rest);
   else
-    sendTo("Syntax: map list/ls | add/new | rm/remove | go\n");
+    drawMap(cmd.empty() ? 5 : max(0, min(20, convertTo<int>(cmd))));
 }

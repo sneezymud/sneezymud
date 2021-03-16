@@ -1257,7 +1257,7 @@ int detectMagic(TBeing *caster, TBeing * victim, int level, short bKnown)
   }
 
   aff.type = SPELL_DETECT_MAGIC;
-  aff.duration = level * 2 * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_DETECT_MAGIC, level * 2 * Pulse::UPDATES_PER_MUDHOUR);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_DETECT_MAGIC;
@@ -1327,17 +1327,10 @@ int dispelMagic(TBeing *caster, TObj * obj, int, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_DISPEL_MAGIC)) {
 
-    // assumes item not being used so don't have to affectFrom()
-    // this is the same list in checkObjStat for affects requiring MAGIC be set
+    // No point affecting objects already set to none, but legacy checks removed.
     for (i = 0; i < MAX_OBJ_AFFECT; i++) { 
       if ((obj->affected[i].location != APPLY_NONE) &&
-          (obj->affected[i].location != APPLY_LIGHT) &&
-          (obj->affected[i].location != APPLY_NOISE) &&
-          (obj->affected[i].location != APPLY_HIT) &&
-          (obj->affected[i].location != APPLY_CHAR_WEIGHT) &&
-          (obj->affected[i].location != APPLY_CHAR_HEIGHT) &&
-          (obj->affected[i].location != APPLY_MOVE) &&
-          (obj->affected[i].location != APPLY_ARMOR)) {
+	  (obj->affected[i].location != APPLY_ARMOR)) {
         obj->affected[i].location = APPLY_NONE;
         obj->affected[i].modifier = 0;
         obj->affected[i].modifier2 = 0;
@@ -1670,9 +1663,9 @@ int enhanceWeapon(TBeing *caster, TMagicItem *usedobj, TObj * toenhance)
 
   ret = enhanceWeapon(caster,toenhance,usedobj->getMagicLevel(),usedobj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$p begins to glow with a soft yellow light.", 
+    act("$p pulses with powerful magical energy.", 
           FALSE, caster, toenhance, NULL, TO_CHAR);
-    act("$p begins to glow with a soft yellow light.", 
+    act("$p pulses with powerful magical energy.", 
           FALSE, caster, toenhance, NULL, TO_ROOM);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {

@@ -16,6 +16,7 @@
 #include "person.h"
 #include "monster.h"
 #include "guild.h"
+#include "player_data.h"
 
 void TBeing::doSet(const char *)
 {
@@ -301,7 +302,7 @@ void TPerson::doSet(const char *argument)
     argument = one_argument(argument, namebuf, cElements(namebuf));
     argument = one_argument(argument, parmstr, cElements(parmstr));
     parm = convertTo<int>(parmstr);
-    strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf));
+    strncpy(namebuf, sstring(namebuf).cap().c_str(), cElements(namebuf)-1);
 
     if (strcmp("Noone", namebuf) && !load_char(namebuf, &st)) {
       sendTo("No such person exists.\n\r");

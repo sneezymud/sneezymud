@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,12 +16,43 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `shop`
+--
+
+DROP TABLE IF EXISTS `shop`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `shop` (
+  `shop_nr` int(11) NOT NULL DEFAULT 0,
+  `profit_buy` double NOT NULL DEFAULT 0,
+  `profit_sell` double NOT NULL DEFAULT 0,
+  `no_such_item1` varchar(127) NOT NULL DEFAULT '',
+  `no_such_item2` varchar(127) NOT NULL DEFAULT '',
+  `do_not_buy` varchar(127) NOT NULL DEFAULT '',
+  `missing_cash1` varchar(127) NOT NULL DEFAULT '',
+  `missing_cash2` varchar(127) NOT NULL DEFAULT '',
+  `message_buy` varchar(127) NOT NULL DEFAULT '',
+  `message_sell` varchar(127) NOT NULL DEFAULT '',
+  `temper1` int(11) NOT NULL DEFAULT 0,
+  `temper2` int(11) NOT NULL DEFAULT 0,
+  `keeper` int(11) NOT NULL DEFAULT 0,
+  `flags` int(11) NOT NULL DEFAULT 0,
+  `in_room` int(11) NOT NULL DEFAULT 0,
+  `open1` int(11) NOT NULL DEFAULT 0,
+  `close1` int(11) NOT NULL DEFAULT 0,
+  `open2` int(11) NOT NULL DEFAULT 0,
+  `close2` int(11) NOT NULL DEFAULT 0,
+  `expense_ratio` double DEFAULT NULL,
+  PRIMARY KEY (`shop_nr`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `shop`
 --
 
-
-/*!40000 ALTER TABLE `shop` DISABLE KEYS */;
 LOCK TABLES `shop` WRITE;
+/*!40000 ALTER TABLE `shop` DISABLE KEYS */;
 INSERT INTO `shop` VALUES (0,1.1,0.9,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Go sell it to someone who cares!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,150,0,559,0,96,0,0,0),
 (1,1.1,0.9,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','I only buy light!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,151,0,550,0,96,0,0,0),
 (2,1.1,0.9,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Armor is all I care about!','I can\'t afford that!','If you can\'t afford it, don\'t ask for it!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,152,0,555,0,96,0,0,0),
@@ -284,8 +315,8 @@ INSERT INTO `shop` VALUES (0,1.1,0.9,'I don\'t have that right now.  Try \"list\
 (259,0,0,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Go sell it to someone who cares!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,16706,0,16709,0,96,0,0,NULL),
 (260,1,0,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Go sell it to someone who cares!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,16707,0,16711,0,96,0,0,0),
 (261,1,0,'I don\'t have that right now.  Try \"list\".','I\'ve never heard of that!','Go sell it to someone who cares!','I can\'t afford that!','I don\'t think you have that kind of money!','That\'ll be %d talens.  Thank you!','Here is your %d talens.  Thank you!',2,1,16708,0,16712,0,96,0,0,0);
-UNLOCK TABLES;
 /*!40000 ALTER TABLE `shop` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -296,3 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:55:07

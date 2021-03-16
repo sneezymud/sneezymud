@@ -1,13 +1,13 @@
--- MySQL dump 10.10
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db.sneezymud.com    Database: sneezy
+-- Host: db    Database: immortal
 -- ------------------------------------------------------
--- Server version	5.0.24a-standard
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
@@ -16,12 +16,26 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `objextra`
+--
+
+DROP TABLE IF EXISTS `objextra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `objextra` (
+  `owner` varchar(32) DEFAULT NULL,
+  `vnum` int(11) NOT NULL DEFAULT 0,
+  `name` varchar(127) NOT NULL DEFAULT '',
+  `description` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Dumping data for table `objextra`
 --
 
-
-/*!40000 ALTER TABLE `objextra` DISABLE KEYS */;
 LOCK TABLES `objextra` WRITE;
+/*!40000 ALTER TABLE `objextra` DISABLE KEYS */;
 INSERT INTO `objextra` VALUES (NULL,3,'fountain','<b>The fountain is large and made of <b>gray-white marble<z>.  It is\nfilled with clear water and <o>a large statue<b> sits majestically in\nthe center<z>.\n'),
 (NULL,5,'statue large','The statue is of <o>Prince Theoman the First<z>, patron saint of the\nstarving. It is amazingly lifelike and folks often come from miles around\njust to <R>pray<z> at this statue.  Perhaps you should give it a try...\n'),
 (NULL,7,'couch','<p>It exhibits signs of use, although of what type you can\'t tell.  You\nrealize that despite your first impressions and the distractions of the\nconstantly changing horizons, that the couch and table appear constant.\nPerhaps they are the only constants in this place.  Perhaps not.<1>\n'),
@@ -4854,8 +4868,8 @@ INSERT INTO `objextra` VALUES (NULL,3,'fountain','<b>The fountain is large and m
 (NULL,24714,'skirt silver feathered','A knee-length skirt made of some kind of toughened leather covered completely\nby sewn-on silver feathers.  A lizard-skin pouch is attached to the front.\n'),
 (NULL,16250,'cap scaled green','Several thick green scales have been fashioned together to form a cap.\nA small red gem, which has been set into the cap, emits a soft glow. \n'),
 (NULL,16252,'green scaled shirt','This shirt has been crafted from large green scales.  Surprisingly, it \nfeels soft and luxurious. \n'),
-(NULL,24714,'bag','The lizard-skin pouch attached to the front of the skirt looks to be\ncompartmentalized to hold many small items.\n'),
-(NULL,623,'decanter crystal dragon','<p>This crystal decanter is finely shaped into the form of an attacking dragon.\nIt appears to be filled with some sort of powder.<1>'),
+(NULL,24714,'bag','The lizard-skin pouch attached to the front of the skirt looks to be\ncompartmentalized to hold many small items.\n');
+INSERT INTO `objextra` VALUES (NULL,623,'decanter crystal dragon','<p>This crystal decanter is finely shaped into the form of an attacking dragon.\nIt appears to be filled with some sort of powder.<1>'),
 (NULL,16254,'sleeve green scaled','Large green scales have been molded into a leather sleeve. \n'),
 (NULL,16255,'bracer green scaled','A large dragon scale has been crafted into a bracer.\n'),
 (NULL,16256,'glove green scaled','Several large scales have been fashioned together with leather to \nform a well made glove.  Several small red gems have been set into\nthe back of the glove.\n'),
@@ -4980,8 +4994,8 @@ INSERT INTO `objextra` VALUES (NULL,3,'fountain','<b>The fountain is large and m
 (NULL,18901,'lever trolley','<o>There is a handle on one side of the lever and a notch on the other.  It\nis designed to insert into the gearing mechanism of the trolley, giving\ncontrol over direction and speed.<1>\n'),
 (NULL,34,'key','Its a basic key used for generic chests.\n'),
 (NULL,631,'desk','<o>It looks like a well-used but ornate desk.<1>\n'),
-(NULL,632,'bookshelf shelf','<o>This huge wooden bookshelf runs along the wall, holding\nmany books and guides on the fine art of torture.  One of the\nshelves seems to be a lot less dustier than the others...\n');
-INSERT INTO `objextra` VALUES (NULL,632,'shelf bookshelf','<o>It\'s made of the finest oak, and seems to be aged quite a bit.<1>\n'),
+(NULL,632,'bookshelf shelf','<o>This huge wooden bookshelf runs along the wall, holding\nmany books and guides on the fine art of torture.  One of the\nshelves seems to be a lot less dustier than the others...\n'),
+(NULL,632,'shelf bookshelf','<o>It\'s made of the finest oak, and seems to be aged quite a bit.<1>\n'),
 (NULL,633,'bed','<o>The bed looks to be able to sleep six comfortably.<1>\n'),
 (NULL,14421,'potion orange dark vial','This vial is filled with a syrupy liquid which is <o>dark orange<1> in color.\nThe liquid glows slightly, like the coals in fire which has almost gone\nout.  The stopper is sealed with a black band embossed with an <o>orange eye<1>.\n'),
 (NULL,634,'chest oak solid','<o>You see a chest made of a fine oak wood with a metal locking\nmechanism.<1>\n'),
@@ -6270,9 +6284,193 @@ INSERT INTO `objextra` VALUES (NULL,632,'shelf bookshelf','<o>It\'s made of the 
 (NULL,14348,'tomato red ripe juicy','This vegetable is about 3 inches in diameter and ready to eat.\n'),
 (NULL,33507,'tomato red ripe juicy','This vegetable is about 3 inches in diameter and ready to eat.\n'),
 (NULL,3987,'hat','A dark <p>three-cornered hat<1> with a long <g>green<1> plume.\n'),
-(NULL,3988,'shirt rep cloth','Course, natural fiber woven into a sturdy cloth forms the basis for this simple\npiece of apparel.\n');
-UNLOCK TABLES;
+(NULL,3988,'shirt rep cloth','Course, natural fiber woven into a sturdy cloth forms the basis for this simple\npiece of apparel.\n'),
+('Aion',32900,'diamond shoe','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',32901,'diamond legging','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',32902,'diamond belt','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',32904,'diamond gauntlet','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',32905,'glove woven mithril telekinesis','This glove is made of fine mithril cords, expertly woven together to\ncreate a beautiful piece of clothing.  The are millions of tiny runes\ninscribed on every thread, almost too small to be visible.\n'),
+('Aion',32906,'diamond bracelet','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',32907,'diamond sleeve','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',32908,'diamond helm','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',32909,'cloak cloth black pile','  Made of toughened the cloth this piece of apparel seems to have been dyed\nin specially prepared oils.  The material now seems to have almost magical\nproperties as it soaks up the surrounding light and is far stronger then\nnormal cloth should be.  With a deep set hood and several small strips of\ncloth the cloak is capable of being pulled around someone to act as excellent\nconcealment, or pulled back and secured out of the way.\n'),
+('Aion',32910,'katana','<o>This finely crafted blade is a marvel to behold. The slightly\ncurved blade extends about three feet in length and the handle\nappears to be made of<1> <G>malachite<1> <o>and completely covered with\nintricate carvings.<1>\n'),
+('Aion',32910,'handle carving','<o>Beautifully etched into the<1> <G>malachite handle<1> <o>appears to be\na pictorial depiction of one man\'s trials with a long<1> <g>serpentine\ndragon.<1>\n'),
+('Aion',32911,'diamond pendant','Dwarven smiths have coated the finest armor they could make with a thin\ncoat of solid diamonds.\n'),
+('Aion',2657,'scepter domination','This scepter has been carefully carved with exquisite detail by a careful hand.\nDepicted on this scepter are six beautiful naked elven women, each reaching up\nwith arms outstretched to hold a glowing orb at the top. You feel a sense of\npower when holding this weapon, as if the gods themselves had meant for you to\nhave it.\n'),
+('Aion',29601,'scepter domination','This scepter has been carefully carved with exquisite detail by a careful hand.\nDepicted on this scepter are six beautiful naked elven women, each reaching up\nwith arms outstretched to hold a glowing orb at the top. You feel a sense of\npower when holding this weapon, as if the gods themselves had meant for you to\nhave it.\n'),
+('Aion',29604,'heavens fall blade thousand lies','<k>By the markings on the hilt and runes engraved on the blade, this weapon can\nonly be the legendary dagger used to assassinate the eight-winged angel,\nAsmaria. This act caused the sundering of the astral plane and the weapon was\nthought lost... until now.<z>\n'),
+('Aion',29603,'orb malevolent darkness','<k>A seething cloud of ominous storms swirl about, seemingly bound to a small\nglobe of utter darkness at the center. Black lightning flashes and crackles\nfrequently, seeking release upon any who approach. Only a true master of the\nmystic arts could ever hope to control an object of such raw and awesome\npower.<z>\n'),
+('Aion',29605,'lightsaber blade energy red','Gripping this strange metal hilt causes <R>a blade of intense red plasma<z> to\nspring forth! There are surely few materials in existence that this weapon could\nnot easily cut through.\n'),
+('Aion',29606,'lightsaber blade energy violet shield','Gripping this strange metal hilt causes <P>a blade of intense violet plasma<z>\nto spring forth! There are surely few materials in existence that this weapon\ncould not easily cut through.\n'),
+('Aion',29607,'mjolnir storm hammer','<W>An ancient weapon, forged in the heart of a <Y>dying<W> star and infused with\nthe essence of a storm god, this hammer knows no equal. It is inscribed with\nmystical runes and a strange insignia.<z>\n'),
+('Aion',29609,'spellbelt belt mystic','A curious belt woven of a strange material and inscribed with many runes. It is\nclearly enchanted and intended to aid spellcasters in their craft.\n'),
+('Aion',29610,'dagger vampiric','This wicked looking dagger is the sort that is often seen in ritual sacrifices.\nIt is overly elaborate in design, though it appears as if it would be incredibly\ndeadly in combat.\n'),
+('Aion',29611,'katana reverse blade sword','This sword is an exquisite display of craftsmanship. A perfectly curved katana\nforged into a beautifully aesthetic work of art. However, the blade on this\npiece is reversed. A sakabato such as this is a weapon that could only by used\neffectively by a master.\n'),
+('Aion',29612,'saya black lacquered','This saya has been stained and polished black. It is adorned with a wrapping of\nsilk rope, used to tie this piece to a warriors belt. It has subtle design\nalterations to better accommodate a battoujutsu style or quick draw technique.\n'),
+('Aion',45665,'lamppost iron wrought','A finely crafted work of metalsmithing. Functional, yet tastefully designed.\n'),
+('Aion',45721,'sapphire pendant','A beautiful sapphire pendant on a delicate silver chain. Close inspection\nreveals tiny runes and sigils inscribed into the setting.\n'),
+('Aion',45667,'torch stone grey','This torch is made of grey stone and is affixed to the wall. The lip is charred\nblack from use, but seems well kept.\n'),
+('Aion',34038,'spider necklace onyx pendant symbol','This holy symbol is made out of onyx in the shape of a spider. A thin\nnon-descript chain of a dark metal is attached to it.\n'),
+('Imm',45660,'shield ebony','<k>Crafted by the most ancient forest sprites, and enhanced by the power<z>\n<k>of the Gaia Spirit, this armor is superior to all others of its kind.<z>\n<k>Often granted to the elite elven hunters in Her service, this equipment is<z>\n<k>meant to hide the wearer from sight, and aid them in destroying the<z>\n<k>enemies of nature. Waves of darkness emanate from this piece of armor, and<z>\n<k>cause the wearer to become little more than a shadow.<z>\n'),
+('Aion',24675,'hood ebony','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',24676,'pendant ebon grey','<k>An ebon-grey gem decorates this otherwise simple pendant. It shifts and\nswirls as it draws in and absorbs light from the room.<z>\n'),
+('Aion',24677,'bodysuit ebony','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',24678,'cloak ebon grey','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',24680,'bracer ebony','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',24681,'glove ebony','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',24682,'ring ebon grey','<k>An ebon-grey gem decorates this otherwise simple ring. It shifts and swirls\nas it draws in and absorbs light from the room.<z>\n'),
+('Aion',24683,'belt ebon grey utility','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',24684,'legging ebony','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',24687,'wakizashi ebon grey','<k>The hilt of this incredible weapon is wrapped with black silk and studded\nwith small ebon-grey gems. The blade is of folded steel and slightly curved. It\nis razor sharp and exquisite in detail.<z>\n'),
+('Aion',12012,'steelheart sword','This weapon is fearsome to behold. It is said each steelheart sword made is\nquenched at the forge, not with oil or water, but with a thrust into the beating\nheart of a human sacrifice. Long after its creation, the blade of this gruesome\nweapon still glows <R>hot<z> as if fresh from the embers.\n'),
+('Aion',24686,'shield ebon grey','<k>Thousands of tiny ebon-grey gems coat the face of this elaborate shield. It\nis extremely lightweight yet offers excellent protection. The swirling energy\nwithin the gems draws in and absorbs the light around it.<z> \n'),
+('Aion',33307,'flask golden','A dark metal label has been affixed to this small gold flask to identify\nits special contents.\n'),
+('Aion',33308,'flask golden','A dark metal label has been affixed to this small gold flask to identify\nits special contents.\n'),
+('Aion',29619,'ring jack lantern','This ring appears to be made of vines and ivy leaves with the carved face of a\njack-o-lantern affixed to the top. Further inspection reveals the ring to be\nmetallic in nature, yet strangely warm to the touch.\n'),
+('Aion',29621,'gem power stone reality','This delicately carved ruby is about the size of a small marble, yet radiates an\nintense aura of power. A sorcerer\'s stone of this description is whispered of\nonly in legends. Its very existence is impossible. Its value is immeasurable.\n'),
+('Aion',29622,'lightsaber blade energy pure azure','Gripping this strange metal hilt causes <B>a blade of intense blue plasma<z> to\nspring forth! There are surely few materials in existence that this weapon could\nnot easily cut through.\n'),
+('Ammanas',7451,'scepter dragon heart','The beating heart of a dragon has been affixed to a bone scepter.\n'),
+('Ammanas',45431,'shield spores','The shield is made of bleached bone and bits of skull encased and secured by a tight weave of cloth covered in odd <p>sp<k>or<p>es<z>.\n'),
+('Ammanas',6306,'ring coral white','The fabled white coral ring has long been favored by sailors, \nwho believe it grants luck to those who wear it.\n'),
+('Ammanas',6558,'finger severed demon','A twitching demonic finger has been hollowed out to be used as a sinister\nlooking ring.\nA long sharp claw writhes at the end of the claw.\n'),
+('Ammanas',6554,'sleeve bleached ','As if exposed to the sun for years, the colors have been sucked from this item.\n'),
+('Ammanas',6555,'band wrist bleached','As if exposed to the sun for years, the colors have been sucked from this item.\n'),
+('Ammanas',6553,'knickers bleached','As if exposed to the sun for years, the colors have been sucked from this item.\n'),
+('Ammanas',6552,'slipper bleached','As if exposed to the sun for years, the colors have been sucked from this item.\n'),
+('Ammanas',6551,'belt bleached','As if exposed to the sun for years, the colors have been sucked from this item.\n'),
+('Ammanas',6550,'vest bleached','As if exposed to the sun for years, the colors have been sucked from this item.\n'),
+('Ammanas',6549,'cap bleached','This cap has been bleached of its colors by a powerful light.\n'),
+('Ammanas',6548,'cloak bleached','As if exposed to the sun for years, the colors have been sucked from this item.\n'),
+('Ammanas',5774,'cape turquoise','  This cape is made of a strange thread that is a deep turquoise in color.\nYou suspect that somehow, someone has magically turned a precious gem into\nthread that can be woven.\n'),
+('Ammanas',5770,'staff disruption','<p>Like its counter part, the mace of disruption, this staff was carved from an\nenchanted tree only located in the Lan\'Quin forest.\n'),
+('Ammanas',5769,'scythe devastation','<c>This beautifully crafted weapon seems to throb with the need to\nbe used.  Its bone white handle quivers in your palm, and its\ntitanium blade gleams oddly, ready to taste blood.  The freezing cold\nchill of the grave clings to this weapon, a fitting sign for its long\nlegacy of death and devastation.<1>\n'),
+('Aion',29623,'gift stolen Christmas red','This elegantly wrapped gift is shiny and wondrous. What could possibly be\ninside? Perhaps if you were to listen closely and shake it...\n'),
+('Aion',29624,'gift stolen Christmas blue','This elegantly wrapped gift is shiny and wondrous. What could possibly be\ninside? Perhaps if you were to listen closely and shake it...\n'),
+('Aion',29625,'gift stolen Christmas green','This elegantly wrapped gift is shiny and wondrous. What could possibly be\ninside? Perhaps if you were to listen closely and shake it...\n'),
+('Aion',29626,'ornament Christmas shiny','This wondrous ornament is beautiful behold. As your eyes linger, the shiny\nsurface begins to glow with an inner light that coalesces into a holiday memory\nfrom your childhood...  After a moment, the images fade away. Truly this object\nis imbued with the magic of Christmas.\n'),
+('Aion',29630,'bracelet frozen chain','Winter-forged links of frozen nevermelt are bound together forming a unique type\nof jewelry. Delicately carved runes can be seen, though barely distinguishable\nfrom cracks in the ice. Despite its frosty appearance, the chain is actually\nwarm to the touch. Clearly it has been imbued with powerful northern magic.\n'),
+('Aion',29631,'dagger frost rune','This dagger is of elvish design and is finely crafted. It has an icy appearance\nand is nearly translucent. It would be difficult to see from any sort of\ndistance. Etched upon the blade are powerful runes of magic.\n'),
+('Aion',29632,'shield winter solstice snowflake','Buried deep within the ice of this frost covered shield is a huge snowflake\ninsignia. Inscribed along the edges are runes and sigils of the north. It has\nbeen polished to a mirror finish and is utterly breathtaking to behold.\n'),
+('Aion',1415,'mask','This mask is comprised of dark green scales with a spectacle marking in \nblack scales above the eyes.  Two bits of amber that have been set into \nthe eye sockets glow with a pale eerie light.  Four cords hang from the \nedges of the mask threaded with pieces of iron and other metal.\n'),
+('Aion',1415,'scale','This mask is comprised of dark green scales with a spectacle marking in \nblack scales above the eyes.  Two bits of amber that have been set into \nthe eye sockets glow with a pale eerie light.  Four cords hang from the \nedges of the mask threaded with pieces of iron and other metal.\n'),
+('Aion',1415,'serpent','This mask is comprised of dark green scales with a spectacle marking in\nblack scales above the eyes.  Two bits of amber that have been set into\nthe eye sockets glow with a pale eerie light.  Four cords hang from the\nedges of the mask threaded with pieces of iron and other metal.\n'),
+('Aion',1416,'eclipse','White scales have been layered to form a halo around the dark center of\nthe mask.  The halo gives off a bright light that while spreading through\nthe room does not penetrate the circle of purple scales it surrounds.  The\neyes of the mask can not been seen but must be somewhere near the center.\n'),
+('Aion',1416,'scale','White scales have been layered to form a halo around the dark center of\nthe mask.  The halo gives off a bright light that while spreading through\nthe room does not penetrate the circle of purple scales it surrounds.  The\neyes of the mask can not been seen but must be somewhere near the center.\n'),
+('Aion',1416,'mask','White scales have been layered to form a halo around the dark center of \nthe mask.  The halo gives off a bright light that while spreading through \nthe room does not penetrate the circle of purple scales it surrounds.  The \neyes of the mask can not been seen but must be somewhere near the center.\n'),
+('Aion',1417,'mask','Two large pieces of celestine have been placed on the mask for eyes.  \nThey glow with an unearthly light from within that casts no warmth.  The \nmask is covered in blue and white scales intermixed with bits of coral.  \nThe pattern of scales only serves to focus your attention on the eyes \nwhich appear to track every movement.\n'),
+('Aion',1417,'scale','Two large pieces of celestine have been placed on the mask for eyes.\nThey glow with an unearthly light from within that casts no warmth.  The\nmask is covered in blue and white scales intermixed with bits of coral.\nThe pattern of scales only serves to focus your attention on the eyes\nwhich appear to track every movement.\n'),
+('Aion',1417,'celestine','Two large pieces of celestine have been placed on the mask for eyes.\nThey glow with an unearthly light from within that casts no warmth.  The\nmask is covered in blue and white scales intermixed with bits of coral.\nThe pattern of scales only serves to focus your attention on the eyes\nwhich appear to track every movement.\n'),
+('Aion',1418,'mask','This mask is comprised of brunt orange scaled tinged with burgundy at \nthe tips.  As the scales catch the light emanating from the garnets in \nthe eyes they seem to shimmer and dance.  Large horns adorn each side \nof the mask, each intricately carved with symbols.\n'),
+('Aion',1418,'scale','This mask is comprised of brunt orange scaled tinged with burgundy at\nthe tips.  As the scales catch the light emanating from the garnets in\nthe eyes they seem to shimmer and dance.  Large horns adorn each side\nof the mask, each intricately carved with symbols.\n'),
+('Aion',1418,'horned','This mask is comprised of brunt orange scaled tinged with burgundy at\nthe tips.  As the scales catch the light emanating from the garnets in\nthe eyes they seem to shimmer and dance.  Large horns adorn each side\nof the mask, each intricately carved with symbols.\n'),
+('Aion',1419,'mask','Green and yellow scales have been arranged in a striped pattern giving \na hypnotic effect.  Two small pieces of bloodstone have been placed to \neither side of the mask giving it the look of a reptile.  A small strip \nof coral colored scales give the appearance of a forked tongue testing \nthe air.\n'),
+('Aion',1419,'scale','Green and yellow scales have been arranged in a striped pattern giving\na hypnotic effect.  Two small pieces of bloodstone have been placed to\neither side of the mask giving it the look of a reptile.  A small strip\nof coral colored scales give the appearance of a forked tongue testing\nthe air.\n'),
+('Aion',1419,'wyrm','Green and yellow scales have been arranged in a striped pattern giving\na hypnotic effect.  Two small pieces of bloodstone have been placed to\neither side of the mask giving it the look of a reptile.  A small strip\nof coral colored scales give the appearance of a forked tongue testing\nthe air.\n'),
+('Aion',1420,'mask','White scales have been patterned to form twin lightning bolts, one on \neach side of the mask.  Each bolt glows softly with its own light as if \nthe brief intensity of lightning was stretched out to last an eternity.  \nThe rest of the scales are a bright crimson with two bits of rutile set \nin place for the eyes.\n'),
+('Aion',1420,'scale','White scales have been patterned to form twin lightning bolts, one on\neach side of the mask.  Each bolt glows softly with its own light as if\nthe brief intensity of lightning was stretched out to last an eternity.\nThe rest of the scales are a bright crimson with two bits of rutile set\nin place for the eyes.\n'),
+('Aion',1420,'storm','White scales have been patterned to form twin lightning bolts, one on\neach side of the mask.  Each bolt glows softly with its own light as if\nthe brief intensity of lightning was stretched out to last an eternity.\nThe rest of the scales are a bright crimson with two bits of rutile set\nin place for the eyes.\n'),
+('Aion',29650,'glove power','This glove is made of some sort of ash colored ivory. Strange runes cover it,\nand it radiates a faint aura of power.\n'),
+('Aion',29651,'greathelm helm imperial','Rumored to be forged by master smiths from across the great seas, this armor is\nvastly superior to others of its kind. A strange golden crest is carefully\netched on each side. It is made with red dragon scales which are bound together\nwith mithril plating. The interior is lined with a rubber-like substance that\nabsorbs impact and ensures a close fit. Many warriors go their entire lives\nwithout seeing armor this fine.\n'),
+('Aion',29652,'Desecrator unholy sword','<p>You have taken this sword through means of malicious intent and force of\nwill. This sword is your destiny, and so charged with powers beyond your\nunderstanding. It will lead you to victory, though its power might overwhelm\nyou. Guard it with your life... and take care not to lose your soul.<z>\n'),
+('Aion',24679,'armband ebony','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',29653,'gauntlet hellfire','Forged cold-iron and red dragonscale links bind this gauntlet together. Visible\nwaves of heat emanate from the charred ruin of this hellish armor.\n'),
+('Aion',750,'helm elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',751,'gorget elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',752,'vest elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',753,'cloak elite guard','<B>This is a cloak worn by the elite guard of Grimhaven. It is of a finely made\nbrilliant blue material and makes one easy to spot in a crowd. For this reason\nthe guard are often referred to as the \'blue cloaks\' by commoners.<z>\n'),
+('Aion',754,'armband elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',755,'bracer elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',757,'signet elite guards','<Y>A simple gold signet ring, topped with the engraved seal of the elite guard.\nOfficials and nobles use rings of this type to seal documents and identify\nthemselves.<z>\n'),
+('Aion',758,'belt elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',759,'tassets pair elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',760,'boot elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',761,'shield elite leather','<o>This shield has been crafted from the finest leathers and triple stitched for\ndurability. The interior is treated wood with light steel reinforcement. It is\nlight and easily carried. Splashes of decorative red stain mark this as a shield\nof the Grimhaven elite guard.<z>\n'),
+('Aion',762,'sword steel castle forged','This is a fine blade made from superior steel which has been polished to a\nmirror finish. It has been stamped with the seal of the Grimhaven.\n'),
+('Aion',29422,'dagger golden heart','This little dagger is made entirely of gold, and the handle is shaped like a\nsmall heart.  Tiny diamonds form the outline of a heart around the handle.\n'),
+('Aion',29452,'necklace gold heart shaped pendant','This necklace glows with an otherworldly light and is far stronger than it\nlooks. The heart shaped pendant is inscribed with the words, \"Never burn\nwith desire.\"\n'),
+('Aion',756,'glove elite leather','<o>This armor has been crafted from the finest leathers and triple stitched for\ndurability. It is oiled and fits snuggly. Padding has been added in strategic\nplaces to avoid chafing. Splashes of decorative red stain mark this as armor of\nthe Grimhaven elite guard.<z>\n'),
+('Aion',24685,'boot ebon grey','<k>This protective clothing was crafted by ancient wilder elves and imbued with\npower from the Earth Spirit. It is meant to allow elven hunters to safely\ntraverse the dream world. The material is strange and unfamiliar. It is woven\nlike cloth, yet protects the wearer as if hardened armor. Waves of darkness\nemanate from this piece and cause the wearer to become little more than a\nshadow.<z>\n'),
+('Aion',29608,'backpack pack travelers','<W>This backpack is very well suited to adventurers who are planning a lengthy\njourney. It seems of a typical design, although on closer inspection the inside\nof the bag seems larger than the outside. Strange magic is at work here.<z>\n'),
+('Aion',29655,'Crownguard greatsword sword Demacia','<B>This huge, two-handed sword has a lion\'s head designed at its pummel and an\nintricately embellished golden crossguard. Its blade is thick, heavy, and\nperfectly sharp, with the word \"<W>Crownguard<Z><B>\" etched down the center in\nancient script. This legendary weapon is traditionally passed down to a\nprotector of great strength from a line of the Kingsguard.<z>\n'),
+('Aion',13703,'behir scale helm','<b>This armor is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.<1>\n'),
+('Aion',13700,'behir scale suit armor','<b>This armor is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.<1>\n'),
+('Aion',13706,'behir scale sleeve','<b>This armor is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.<1>\n'),
+('Aion',13705,'behir scale bracer','<b>This armor is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.<1>\n'),
+('Aion',13704,'behir horn ring','<b>A behir is a multi-legged snake-like reptilian creature that can gather and\ndischarge electrical energy, making them a rather dangerous foe.  The horns of\nthe behir are said to contain the very electrical essence of the creature and\nis often used in magical items and rituals.<1>\n'),
+('Aion',13708,'behir scale kilt','<b>This armor is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.<1>\n'),
+('Aion',13709,'behir scale boot jackboot','<b>This armor is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.<1>\n'),
+('Aion',13701,'behir scale shield','<b>This shield is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.\nThere is a large polished half-sphere piece of behir horn mounted directly\nin the center of the shield.<1>\n'),
+('Aion',13711,'mace dark bloodspike spike','<k>This mace is made from an indeterminate material.  It is black as the void\nand slightly cool to the touch.  The shaft is perfectly cylindrical and\nsmooth, but somehow your grip is firm.  The head is a perfect sphere, totally\nsmooth like the shaft except for a number of spikes that protrude like nails.\nEach time you look at them, the spikes seem to be in a different orientation,\nbut they seem solid and you can never catch them moving.<1>\n'),
+('Aion',8800,'Sunburst hammer','<y>This is a magnificent crushing weapon, and it has harsh golden\nrunes carved into its massive head.  The handle is wrapped with\nbeautiful leather.  The hammer feels warm to the touch even when\nit is cold out, and seems to glow with a strange inner light.<z>\n'),
+('Aion',13702,'umber hulk claw gauntlet','<k>This gauntlet has been fashioned from the claw of an <y>umber<1><w> hulk<k>.  They are\ncapable of digging through stone and as such, their claws are extremely hard.<1>\n'),
+('Aion',13712,'behir scale cloak regal long','<b>This armor is made <w>from b<o>ehi<w>r sc<b>ales that have been sewn onto the cured skin\nof the behir.  A behir is a multi-legged snake-like reptilian creature that\ncan gather and discharge electrical energy, making them a rather dangerous\nfoe.  Their scales are highly valued for their beautiful color and hardness.<1>\n'),
+('Aion',29656,'Crissaegrim sword infinite shadow','<k>This sword is forged from the remnants of three ancient weapons: the Vampire\nKiller, Glaciem, and Igneas. It has been imbued with the power to melt through\narmor, freeze enemies, and heal the wielder. It is a truly terrifying instrument\nof destruction.<z>.\n'),
+('Aion',1140,'cowl runic magic','Some powerful grand wizard has inscribed <p>mystic runes<z> upon this armor\nenchanting it beyond the powers of mortal man.\n'),
+('Aion',1141,'runic brooch','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1151,'runic cape','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1143,'runic band','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1146,'runic bracelet','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1144,'runic glove','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1145,'runic belt','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1150,'runic shield','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1148,'runic sandal','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',1147,'runic stocking','Some powerful grand wizard has inscribed <p>mystic runes<1> upon this\narmor enchanting it beyond the powers of mortal man.\n'),
+('Aion',35413,'warhammer topaz hammer','<o>This ancient warhammer has been finely crafted by hobbit \njewelers.<1>\n'),
+('Aion',12010,'helm molten','<r>A helm of molten is showered in tiny specks of glass.<1>\n'),
+('Aion',12009,'collar molten','<r>The collar is showered with tiny specks of glass.<1>\n'),
+('Aion',12008,'suit molten','<r>A suit of molten is showered in tiny specks of glass.<1>\n'),
+('Aion',12007,'sleeve molten','<r>The molten sleeve is showered with tiny specks of glass.<1>\n'),
+('Aion',12004,'bracelet molten','<r>The bracelet of molten is showered in tiny glass specks.<1>\n'),
+('Aion',12006,'gauntlet molten','<r>The molten gauntlet is showered in tiny specks of glass.<1>\n'),
+('Aion',12000,'ring molten','<r>A ring made from molten lava has been crafted by the\nwizards of the abyss and tempered with a polished magical\nlayer.\n'),
+('Aion',12005,'belt molten','<r>A belt of molten is showered in t tiny specks of glass.<1>\n'),
+('Aion',12003,'legging molten','<r>A strange legging is threaded with a mystical thread. A\nthin trace of molten rock traces down the sides of the legging.<1>\n'),
+('Aion',12002,'boot molten','<r>A molten covered boot is showered in tiny specks of glass.<1>\n'),
+('Aion',12001,'shield molten','<r>This thick layered shield is encrusted with tiny diamonds\nthat form along the outer ridges.<1>\n'),
+('Aion',12011,'cloak molten','<r>The cloak is showered in tiny specks of glass.<1>\n'),
+('Aion',29602,'everblade blade huge sword','<o>This huge, two-handed sword has a bear\'s head designed at its pummel.\nThe craftsmanship is obviously of dwarven make. Its blade is thick,\nheavy, and perfectly sharp. It has been mentioned among the dwarves that this\nsword was to be given to a protector of great strength to guard the mines. \nIt seems the sword now belongs to the great Everlast, but no dwarf can say how\nthis came to pass.<z>\n'),
+('Aion',15163,'helmet spiked titanium plate','<k>This item was crafted from the purest titanium. This item\nhas spikes embedded into it to provide extra protection against \nenimies.<1>\n'),
+('Aion',15161,'breastplate titanium plate','<k>This item was crafted from the purest titanium. This item\nhas spikes embedded into it to provide extra protection against \nenimies.<1>\n'),
+('Aion',15160,'coat spiked titanium plate','<k>This item was crafted from the purest titanium and meshed\ntogether in small plates to allow ease of movement. This item\nhas spikes embedded into the small plates to provide extra\nprotection against enimies.<1>\n'),
+('Aion',15159,'sleeve titanium spiked plate','<k>This item was crafted from the purest titanium and meshed\ntogether in small plates to allow ease of movement. This item\nhas spikes embedded into the small plates to provide extra\nprotection against enimies.<1>\n'),
+('Aion',15158,'wristguard spiked titanium plate','<k>This item was crafted from the purest titanium and meshed\ntogether in small plates to allow ease of movement. This item\nhas spikes embedded into the small plates to provide extra\nprotection against enimies.<1>\n'),
+('Aion',15157,'gauntlet spiked titanium plate','<k>This item was crafted from the purest titanium and meshed\ntogether in small plates to allow ease of movement. This item\nhas spikes embedded into the small plates to provide extra\nprotection against enimies.<1>\n'),
+('Aion',15162,'collar spiked titanium','<k>This item was crafted from the purest titanium. This item\nhas spikes embedded into it to provide extra protection against \nenimies.<1>\n'),
+('Aion',15156,'terbium belt weave','This belt has been woven from thin, fine strands of terbium.  Its suppleness\nis amazing considering it has been made from a strong, durable metal.\n'),
+('Aion',15156,'belt titanium strand woven weave','<k>This item was crafted from the purest titanium strands.<1>\n'),
+('Aion',15155,'legging spiked titanium plate','<k>This item was crafted from the purest titanium and meshed\ntogether in small plates to allow ease of movement. This item\nhas spikes embedded into the small plates to provide extra\nprotection against enimies.<1>\n'),
+('Aion',15153,'shield titanium spiked','<k>This item was crafted from the purest titanium. This item\nhas spikes embedded into it to provide extra protection against \nenimies.<1>\n'),
+('Aion',15154,'boot spiked titanium plate','<k>This item was crafted from the purest titanium and meshed\ntogether in small plates to allow ease of movement. This item\nhas spikes embedded into the small plates to provide extra\nprotection against enimies.<1>\n'),
+('Aion',6312,'carapace turtle shell','This sturdy carapace has been crafted from the shells of a massive\nturtle.\n'),
+('Aion',6311,'helm turtle shell','The shell plates of a massive turtle have been crafted into a helm.\n'),
+('Aion',6314,'armband turtle shell','The shell plates of a massive turtle have been crafted into an armband.\n'),
+('Aion',6309,'girth turtle shell','Shell plates from a massive sea turtle have been crafted into a girth.\n'),
+('Aion',6310,'suit turtle shell','The shell plates of a massive turtle have been crafted into a suit.\n'),
+('Aion',6308,'legging shell turtle','The shell plates of a massive turtle have been fashioned together to form a\nlegging. \n'),
+('Aion',6307,'boot turtle shell','The thick armored platting of a massive sea turtle have been carefully\nshaped and crafted onto a leather boot, offering the strongest of \nprotection.\n'),
+('Aion',6316,'shield turtle shell','The shell plates of a massive turtle have been crafted to form this \nsturdy shield.\n'),
+('Aion',7894,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',7894,'robe mages black','  This mysterious robe appears to have a life of its own. Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7893,'robe mages white','  This mysterious robe appears to have a life of its own. Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7893,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',7892,'robe mages watery blue','  This mysterious robe appears to have a life of its own. Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7892,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',7891,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',7891,'robe mages sky blue','  This mysterious robe appears to have a life of its own. Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7889,'robe mages gold','  This mysterious robe appears to have a life of its own. Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7889,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',7887,'robe mages fiery red','  This mysterious robe appears to have a life of its own.  Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7887,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',7890,'robe mages forest green','  This mysterious robe appears to have a life of its own. Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7890,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',8803,'Azurite ring','<b>It is a simple ring made from a blue mineral.<z>\n'),
+('Aion',7888,'symbol gold','  This symbol is of a lighting bolt atop the symbol of eternity.  Mages\noften use such symbols to focus their energies while casting spells.\nIt is often a great enhancer of ones mystical energies.\n'),
+('Aion',7888,'robe mages earthy brown','  This mysterious robe appears to have a life of its own. Its soft silken\nfolds writhe in rhythmic motion.  The outside feels soft as silk, but the\ninside feels as hard as tempered steel.  A mysterious <Y>gold symbol<z>\nadorns the hood  of the robe, and glyphs of protection hem its borders.\nArcane energy constantly flows from the robe, giving it a bright glow of\nmagic.  This robe clearly marks its wearer as an adept in the Mystic Arts.\n'),
+('Aion',7872,'belt magician\'s','  This belt has been fashioned from some exotic <g>dragonhide<z>. The belt\nhas a <Y>gold clasp<z> that has been fashioned into the shape of a dragon\'s\nhead.  Cleverly sewn into the lining of the belt are carefully concealed\n<k>pouches<z> for storing spell components.  Oddly enough, bulges are\nnot evident along the belt and it is impossible to tell when it is holding\nsomething.  This belt is clearly magical in nature.\n'),
+('Aion',320,'Devastator sword','<o>You have won this sword through means of mental anguish and impossible\nodds. This sword is your birthright, and so charged with powers beyond\nyour scope. Still, it will aid you well in battle though its power\nmight overwhelm you, guard it with your life......<1>\n');
 /*!40000 ALTER TABLE `objextra` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -6283,3 +6481,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
+-- Dump completed on 2019-05-25 15:54:57

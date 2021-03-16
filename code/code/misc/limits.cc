@@ -96,21 +96,21 @@ int baseHp()
 
 float classHpPerLevel(const TPerson *tp){
   float hpgain=0;
-
+  int num_classes=0;
 
   for(int i=0;i<MAX_CLASSES;++i){
     if(tp->hasClass(classInfo[i].class_num)){
-      hpgain = classInfo[i].hp_per_level;
-      break;
+      hpgain += classInfo[i].hp_per_level;
+      num_classes++;
     }
   }
 
-  if(!hpgain){
+  if(!hpgain || num_classes == 0){
     vlogf(LOG_BUG, format("No class in classHpPerLevel() for %s") %  tp->getName());
     hpgain=7.0;
   } 
 
-  return hpgain;
+  return hpgain / num_classes;
 }
 
 int ageHpMod(const TPerson *tp){
@@ -149,6 +149,8 @@ short int TPerson::hitLimit() const
   newmax += eqHpBonus(this);
   newmax += affectHpBonus(this);
 
+  updateMaxHit(newmax);
+
   return (short int) newmax;
 }
 
@@ -173,6 +175,8 @@ short int TPerson::manaLimit() const
     iMax += stone->psGetMaxMana();
 
   iMax += points.maxMana;        /* bonus mana */
+
+  updateMaxMana(iMax);
 
   return (iMax);
 }
@@ -202,6 +206,7 @@ short int TBeing::moveLimit() const
   if(hasQuestBit(TOG_IS_ASTHMATIC))
     iMax /= 2;
 
+  updateMaxMove(iMax);
   return (iMax);
 }
 
@@ -653,7 +658,7 @@ void TPerson::advanceLevel(classIndT Class)
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>double-class characters<z>!\n\r");
       desc->saveAccount();
     }
-    if (isDoubleClass()) {
+    if (howManyClasses() >= 2) {
       SET_BIT(desc->account->flags, TAccount::ALLOW_TRIPLECLASS);
       sendTo(COLOR_BASIC, "<r>Congratulations on obtaining L50!<z>\n\rYou may now create <y>triple-class characters<z>!\n\r");
       desc->saveAccount();

@@ -1,19 +1,36 @@
--- MySQL dump 10.13  Distrib 5.1.69, for redhat-linux-gnu (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: localhost    Database: immortal
+-- Host: db    Database: immortal
 -- ------------------------------------------------------
--- Server version	5.1.69-log
+-- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `roomextra`
+--
+
+DROP TABLE IF EXISTS `roomextra`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `roomextra` (
+  `vnum` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `description` text NOT NULL,
+  `owner` varchar(32) DEFAULT NULL,
+  `block` int(11) DEFAULT NULL,
+  KEY `roomextra_idx` (`vnum`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `roomextra`
@@ -8822,7 +8839,25 @@ INSERT INTO `roomextra` VALUES (16249,'misplaced anatomy book','The book seems t
 (45463,'walls jagged','<r>The walls are drenched in blood making them slick to the touch.  Bits of hair, skull and internal organs are splattered on every surface.  Claw marks are the only evidence of the victims attempts to flee this room of death.<z>',NULL,NULL),
 (45463,'table bleached bone','<W>The table is actually a simple construct made of various dragon bones excavated from the dig site.  The table seems to slough off most of the <r>gory mess<z> <W>its owner likes to heap upon it.<z>',NULL,NULL),
 (45464,'hook bloody meat','<k>A <r>bloody<z> <w>meat hook<z> <k>is attached to the southern wall.  Closer inspection of the hook reveals a grisly discovery.  A piece of spine from some unfortunate being still clings to the device.<z>',NULL,NULL),
-(44794,'lily lilies magical','These lilies glow softly and a faint aura surrounds them.  They appear to be\nmagically grown and are perpetually blooming.  There are no dead petals anywhere\nto be found and always look fresh and hearty.\n',NULL,NULL);
+(44794,'lily lilies magical','These lilies glow softly and a faint aura surrounds them.  They appear to be\nmagically grown and are perpetually blooming.  There are no dead petals anywhere\nto be found and always look fresh and hearty.\n',NULL,NULL),
+(12224,'sign','\n                      <o>Welcome To\n\n               Trouts Armory Supply Shop.<1>\n','Imm',2),
+(12227,'sign','\n                 <b>Welcome to the\n\n               Water Purifying Shop.\n','Imm',2),
+(12236,'jaws','<o>A set of sharp pointed jaws hang along the northen wall spanning\nabout six feet in length and twelve feet in width.  The set appears\nto come from a great white shark but no shark you\'ve heard of had\nhas had such a large mouth.  Perhaps the shopkeeper can fill you in on it?\n','Imm',2),
+(12236,'saberfish','<o>No one really knows where this type of breed originated from.  Some\nbelieved them to be prehistoric from a time long forgotten.  Others assumed\nthey were developed by the gnomes in the times before humans began to walk\nthe lands.  Standing upright, the saberfisherman has the complete form of a\nhuman, or the markings of them.  Its webbed feet and hands help it through\nany water terrain type with great speed.  Its head however, is one of a tiger-\nlike face that reveals strong pointed teeth very much like a sabertooth tiger.\n','Imm',2),
+(12239,'cabinate','<o>The cabinate is locked, probably wizlocked by the\nshop keeper himself.  Inside you can see the magical\naura that surrounds a few scrolls and vials.  A short\nwood wand can be seen also from where you stand.<1>\n','Imm',2),
+(12271,'sign','\n             <y>Welcome to\n\n          The Golden Goose.\n','Imm',2),
+(12281,'door fortified','<o>Two large doors with the symbol of an Ogre on the front stands here.\n','Imm',2),
+(12285,'sign','\n             Welcome to\n\n           Plastics are Us.\n','Imm',2),
+(12286,'sign','\n             <g>Welcome to\n\n            Calja\'s Glass.\n','Imm',2),
+(12290,'sign','\n           <G>Welcome to\n\n           Wazzy Wax.\n','Imm',2),
+(12296,'tools','These tools are worn and rusted.  They appear to have been here\nquite awhile.\n','Imm',2),
+(12313,'door','<o>Two large doors bar the entryway to a temple.  Crafted upon\nthe doors is a remarkable resemblance of an Ogre.\n','Imm',2),
+(12350,'cottage','A simple wood cottage sits here .  It appears to be vacant.\n','Imm',2),
+(12351,'fireplace','An ordinary fireplace sits here waiting to be installed.\nIt looks really heavy.\n','Imm',2),
+(53,'desk oak','This desk is very ornate and well varnished.  The top of it has medical books\nand scattered papers all about it.  It definitely needs to be cleaned.\n','Imm',1),
+(53,'sofa','This sofa is very inviting.  It\'s quite soft and comfortable.  Fear sitting\non it.  Once you do, you may just decide to lie on it and fall asleep.\n','Imm',1),
+(53,'poster','This poster is a huge anatomical description of the human body.  Hey, is that\nthe gastrocnemius.  Maybe it\'s the pectoralis major.  Who gives a care, it\nall looks the same anyways.\n','Imm',1),
+(53,'weapons weapon martial','The weapons here are 2 katana blades and some shurikens.  The katana blades\nare highly polished and have a razor sharp edge.  Wonder what they might do?\n','Imm',1);
 /*!40000 ALTER TABLE `roomextra` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -8835,4 +8870,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-10-08 15:22:42
+-- Dump completed on 2019-05-25 15:54:58

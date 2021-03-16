@@ -1,6 +1,6 @@
 #include <cassert>
 #include <stdarg.h>
-#include <mysql/mysql.h>
+#include <mariadb/mysql.h>
 
 #include "configuration.h"
 #include "extern.h"
@@ -32,16 +32,23 @@ namespace {
         MYSQL *databases[DB_MAX];
         public:
         TDatabaseConnection();
+        ~TDatabaseConnection();
 
         const char *getConnectParam(dbTypeT type);
         MYSQL *getDB(dbTypeT type);
-
-        void clearConnections(){ for(int i=0;i<DB_MAX;++i) databases[i]=NULL; }
     };
 
     TDatabaseConnection::TDatabaseConnection()
     {
         memset(databases, 0, sizeof(databases));
+    }
+
+    TDatabaseConnection::~TDatabaseConnection()
+    {
+        for (MYSQL* db : databases)
+          mysql_close(db);
+        mysql_thread_end();
+        mysql_library_end();
     }
 
     TDatabaseConnection database_connection;
@@ -52,6 +59,9 @@ std::vector <std::string> db_names(DB_MAX);
 std::vector <std::string> db_users(DB_MAX);
 std::vector <std::string> db_passwords(DB_MAX);
 
+
+IDatabase::~IDatabase()
+{}
 
 const char *TDatabaseConnection::getConnectParam(dbTypeT type)
 {
@@ -64,19 +74,12 @@ const char *TDatabaseConnection::getConnectParam(dbTypeT type)
 
 class TDatabasePimpl {
 public:
-  MYSQL_RES *res;
-  MYSQL_ROW row;
-  MYSQL *db;
-  long row_count;
-  bool log;
+  MYSQL_RES *res = nullptr;
+  MYSQL_ROW row = 0;
+  MYSQL *db = nullptr;
+  long row_count = 0;
+  bool log = false;
   std::map <const char *, int, ltstr> column_names;
-
-  TDatabasePimpl() :
-    res(NULL),
-    row(NULL),
-    db(NULL)
-  {
-  }
 };
 
 static const char* getUser(dbTypeT type)
@@ -105,8 +108,9 @@ MYSQL *TDatabaseConnection::getDB(dbTypeT type)
   if (!databases[type] || mysql_ping(databases[type]))
   {
     vlogf(LOG_DB, format("Initializing database '%s'.") % getConnectParam(type));
-    databases[type] = mysql_init(NULL);
-    
+    if (!databases[type])
+      databases[type] = mysql_init(NULL);
+
     vlogf(LOG_DB, "Connecting to database.");
     if(!mysql_real_connect(databases[type], db_hosts[type].c_str(), getUser(type), getPass(type), getConnectParam(type), 0, NULL, 0))
     {
@@ -155,7 +159,7 @@ unsigned long TDatabase::escape_string(char *to, const char *from, unsigned long
   return mysql_real_escape_string(pimpl->db, to, from, length);
 }
 
-unsigned long TDatabase::escape_string_ugly(char *to, const char *from, unsigned long length)
+unsigned long IDatabase::escape_string_ugly(char *to, const char *from, unsigned long length)
 {
   TDatabase sn(DB_SNEEZY);
   return sn.escape_string(to, from, length);

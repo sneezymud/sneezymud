@@ -2051,7 +2051,7 @@ void TPerson::doMedit(const char *argument)
          tStArg("");
   char sstring[256],
        mobile[80],
-       Buf[256],
+       Buf[1024],
        tTextLns[3][256] = {"\0", "\0", "\0"};
 
   if (!hasWizPower(POWER_MEDIT)) {
@@ -2078,8 +2078,8 @@ void TPerson::doMedit(const char *argument)
 	sendTo("You are not allowed to edit that monster.\n\r");
 
       else {
-        sprintf(sstring, "%s %d", sstring, cMob->getSnum());
-        msave(this, sstring);
+        snprintf(Buf, sizeof(Buf), "%s %d", sstring, cMob->getSnum());
+        msave(this, Buf);
       }
       return;
       break;

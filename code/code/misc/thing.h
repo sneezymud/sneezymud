@@ -56,6 +56,18 @@ class TThing {
     int carried_volume;
     TBeing * the_caster;
   public:
+    enum class TThingKind {
+      TThing,
+      TBeing,
+      TMonster,
+      TPerson,
+      TRoom,
+      TObj, // there are many object types. Add overloads as needed.
+      TComponent,
+      TBaseContainer,
+    };
+    virtual TThingKind getKind() const;
+
     StuffList stuff;
     sstring descr;             // Description of thing
     sstring real_descr;        // used with disguise/polymorph

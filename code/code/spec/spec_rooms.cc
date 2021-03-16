@@ -743,6 +743,8 @@ int slide(TBeing *, cmdTypeT cmd, const char *, TRoom *rp)
   for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
     t=*(it++);
 
+    if (t == nullptr)
+        vlogf(LOG_BUG, format("Null pointer in roomproc slide() in room %s") % rp->getName());
     if (t->riding)
       continue;
 
@@ -1861,7 +1863,7 @@ int elfForest(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
              cap(capbuf), dirs[door], mob->hshr(), fname(bow->name).c_str());
         sendrpf(rp, buf);
 
-        sprintf(buf, "%s %s 1", fname(vict->name).c_str(), dirs[rev_dir[door]]);
+        sprintf(buf, "%s %s 1", fname(vict->name).c_str(), dirs[rev_dir(door)]);
         mob->doShoot(buf, 0);
         sprintf(buf, "%s scrambles back into the brush.\n\r", cap(capbuf));
         sendrpf(rp, buf);

@@ -30,6 +30,7 @@ const unsigned int PROMPT_TIME              = (1<<18);
 const unsigned int PROMPT_CR                = (1<<19);
 const unsigned int PROMPT_ROOM_NAME         = (1<<20);
 const unsigned int PROMPT_ZONE_NUM          = (1<<21);
+const unsigned int PROMPT_COORDS            = (1<<22);
 // Add new prompt options here.
 const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
 const unsigned int PROMPT_CLIENT_PROMPT     = (unsigned)(1<<31);

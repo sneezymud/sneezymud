@@ -28,21 +28,21 @@ TTraits traits[MAX_TRAITS+1] = {
   {0,0, "", "", 0,0}, 
   {TOG_IS_COWARD, 10,       "cowardice", 
    "You flee combat if you get below 1/2 hit points.", 0,0},
-  {TOG_IS_BLIND, 6,         "blindness",
+  {TOG_IS_BLIND, 10,         "blindness",
    "Your vision has been damaged and you are permanently blind.", 0,1},
-  {TOG_IS_ASTHMATIC, 6,     "asthma",
+  {TOG_IS_ASTHMATIC, 8,     "asthma",
    "You have asthma and thus are easily winded.", 0,0},
-  {TOG_IS_MUTE, 6,          "mute",
+  {TOG_IS_MUTE, 5,          "mute",
    "Your throatbox has been damaged and you are unable to speak.", 0,1},
-  {TOG_IS_NARCOLEPTIC, 3,   "narcolepsy",
+  {TOG_IS_NARCOLEPTIC, 8,   "narcolepsy",
    "You have narcolepsy and fall asleep uncontrollably.", 0,0},
-  {TOG_IS_COMBUSTIBLE, 3,   "combustible",
+  {TOG_IS_COMBUSTIBLE, 5,   "combustible",
    "You are prone to spontaneous combustion.", 0,0},
-  {TOG_IS_HEMOPHILIAC, 3,   "hemophilia",
+  {TOG_IS_HEMOPHILIAC, 5,   "hemophilia",
    "You have hemophilia and your wounds do not clot naturally.", 0,0},
-  {TOG_IS_NECROPHOBIC, 3,   "necrophobia",
+  {TOG_IS_NECROPHOBIC, 5,   "necrophobia",
    "You have necrophobia and are terrified at the sight of dead things.", 0,0},
-  {TOG_IS_ALCOHOLIC, 3,     "alcoholism",
+  {TOG_IS_ALCOHOLIC, 5,     "alcoholism",
    "You are an alcoholic and feel a constant urge to drink booze.", 0,0},
   {TOG_HAS_TOURETTES, 1,    "tourettes",
    "You involuntarily insult other people.", 0,1},
@@ -50,13 +50,13 @@ TTraits traits[MAX_TRAITS+1] = {
    "You only have one life to live and if you die your game is over.", 0,1},
   {TOG_REAL_AGING, 0,       "real aging",
    "You will suffer the affects of old age as you get older.", 0,1},
-  {TOG_IS_HEALTHY, -3,      "healthy",
+  {TOG_IS_HEALTHY, -8,      "healthy",
    "You are particularly healthy and resistant to disease.", 0,0},
-  {TOG_IS_AMBIDEXTROUS, -6, "ambidextrous",
+  {TOG_IS_AMBIDEXTROUS, -10, "ambidextrous",
    "You are able to use both hands with equal facility.", 0,0},
-  {TOG_HAS_NIGHTVISION, -10,"nightvision",
+  {TOG_HAS_NIGHTVISION, -8,"nightvision",
    "You have excellent nightvision.", 0,0},
-  {TOG_PSIONICIST, -200,    "psionics",
+  {TOG_PSIONICIST, -100,    "psionics",
    "You have innate psionic abilities.", 0,1},
   {TOG_FAE_TOUCHED, 0,    "fae-touched",
    "You gain random bonus stats, but gain experience at half speed.\n\r        (requires one level 50 character of your current race)", 1,1}
@@ -1026,7 +1026,7 @@ void nannyDone_output(Descriptor * desc)
   output += format("You should also %sread the newbie guide%s and %swear your equipment%s.\n\r") % desc->orange() % desc->norm() %desc-> orange() % desc->norm();
 
   output += "For further orientation, use the help system, newbie helpers and immortal staff.\n\r";
-  output += "Check the SneezyMUD website's Help section for more: http://www.sneezymud.com\n\r";
+  output += "Check the SneezyMUD website's Help section for more: http://www.sneezymud.org\n\r";
   output += "In contacting immortals, be aware that our immortal staff is not\n\r";
   output += "allowed to help you discover The World.  However, they are allowed\n\r";
   output += "and encouraged to help you with command problems and general orientation.\n\r\n\r";

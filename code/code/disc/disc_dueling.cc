@@ -226,8 +226,8 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
   // the higher amt is, the more things get blocked
   int amt = 0;
   if (trance) {
-    amt += (int)(420 * 100 / getSkillDiffModifier(SKILL_TRANCE_OF_BLADES));
-    amt += (int)(80 * 100 / getSkillDiffModifier(SKILL_PARRY_WARRIOR));
+    // 50% base parry chance
+    amt += 500;
     switch(::number(0,2)){
     case 0:
       strcpy(type, "parry");
@@ -247,7 +247,8 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
     //    amt = (int)((float) amt * v->plotStat(STAT_CURRENT, STAT_SPE, 0.80, 1.25, 1.00));
     amt = (int)((float)amt * getSpeMod() * getAgiMod()); // does the same thing - fear hobbit trancer.
   } else {  
-    amt += (int) (40 * 100 / getSkillDiffModifier(SKILL_PARRY_WARRIOR));
+    // 4% base parry chance
+    amt += 40;
     strcpy(type, "parry");
     strcpy(type2,"parries");
   }

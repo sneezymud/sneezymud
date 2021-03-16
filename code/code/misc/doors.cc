@@ -20,7 +20,7 @@ void TBeing::rawUnlockDoor(roomDirData * exitp, dirTypeT door)
  /* now for unlocking the other side, too */
   rp = real_roomp(exitp->to_room);
   if (rp &&
-      (back = rp->dir_option[rev_dir[door]]) &&
+      (back = rp->dir_option[rev_dir(door)]) &&
       back->to_room == in_room) {
     REMOVE_BIT(back->condition, EXIT_LOCKED);
   } else
@@ -37,7 +37,7 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
   char action[20];
   char action2[20];
   char dir[64];
-  strncpy(dir, direct, cElements(dir));
+  strncpy(dir, direct, cElements(dir)-1);
 
   if (!strcasecmp(dir, "ne"))
     strcpy(dir, "northeast");
@@ -299,7 +299,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
 
   // now for opening the OTHER side of the door! 
   if (exit_ok(exitp, &rp) &&
-      (back = rp->dir_option[rev_dir[dir]]) &&
+      (back = rp->dir_option[rev_dir(dir)]) &&
       (back->to_room == in_room)) {
     REMOVE_BIT(back->condition, EXIT_CLOSED);
     if (IS_SET(back->condition, EXIT_TRAPPED))
@@ -308,23 +308,23 @@ void TBeing::rawOpenDoor(dirTypeT dir)
     rp2 = real_roomp(exitp->to_room);
     switch (back->door_type) {
       case DOOR_DRAWBRIDGE:
-        sendrpf(rp2, "The %s %s lowers.\n\r", back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+        sendrpf(rp2, "The %s %s lowers.\n\r", back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_PANEL:
-        sendrpf(rp2, "The %s %s slides to one side.\n\r", back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+        sendrpf(rp2, "The %s %s slides to one side.\n\r", back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_SCREEN:  // can see thru
-        sendrpf(rp2, "Nearby, %s slides the %s %s to one side.\n\r", getName().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+        sendrpf(rp2, "Nearby, %s slides the %s %s to one side.\n\r", getName().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_RUBBLE:
         sendrpf(rp2,
           "The %s %s is pushed aside from somewhere nearby.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_PORTCULLIS:
         sendrpf(rp2,
           "%s struggles a bit, but manages to lift the %s %s open.\n\r",
-              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_GRATE:   // see thru these
         if (dir == DIR_UP) {
@@ -338,13 +338,13 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "%s opens the %s %s from the other side.\n\r",
-              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         }
         break;
       case DOOR_GATE:
         sendrpf(rp2,
           "The %s %s is swung open from the other side.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_TRAPDOOR:
         if (dir == DIR_UP) {
@@ -358,19 +358,19 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "The %s %s is opened from the other side.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         }
         break;
       case DOOR_HATCH:
         sendrpf(rp2,
           "The %s %s is swung open from the other side.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_DOOR:
       default:
         sendrpf(rp2,
               "The %s %s is opened from the other side.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         rp2->playsound(snd, SOUND_TYPE_NOISE);
 
     }
@@ -525,7 +525,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
  
   /* now for closing the OTHER side of the door! */
   if (exit_ok(exitp, &rp) &&
-      (back = rp->dir_option[rev_dir[dir]]) &&
+      (back = rp->dir_option[rev_dir(dir)]) &&
       (back->to_room == in_room)) {
     SET_BIT(back->condition, EXIT_CLOSED);
     strcpy(buf, getName().c_str());
@@ -534,27 +534,27 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       case DOOR_DRAWBRIDGE:
         sendrpf(rp2,
           "The %s %s raises.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_SCREEN:
         sendrpf(rp2,
           "Nearby, %s slides the %s %s closed.\n\r",
-              getName().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              getName().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_PANEL:
         sendrpf(rp2,
           "The %s %s slides closed.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_RUBBLE:
         sendrpf(rp2,
           "The %s %s is pushed into the path from somewhere nearby.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_PORTCULLIS:
         sendrpf(rp2,
           "%s lowers the %s %s, closing it.\n\r",
-              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_GRATE:   // see thru these
         if (dir == DIR_UP) {
@@ -568,13 +568,13 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",
-              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         }
         break;
       case DOOR_GATE:
         sendrpf(rp2,
          "The %s %s is swung closed from the other side.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         break;
       case DOOR_TRAPDOOR:
         if (dir == DIR_UP) {
@@ -588,7 +588,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "The %s %s is closed from the other side.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         }
         break;
       case DOOR_HATCH:   
@@ -603,14 +603,14 @@ void TBeing::rawCloseDoor(dirTypeT dir)
         } else {
           sendrpf(rp2,
           "%s closes the %s %s from the other side.\n\r",
-              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              sstring(buf).cap().c_str(), back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         }
         break;
       case DOOR_DOOR:
       default:
         sendrpf(rp2,
               "The %s %s is closed from the other side.\n\r",
-              back->getName().uncap().c_str(), dirs_to_blank[rev_dir[dir]]);
+              back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         rp2->playsound(snd, SOUND_TYPE_NOISE);
     }
     TThing *t=NULL;
@@ -749,7 +749,7 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
   }
  /* now for opening the OTHER side of the door! */
   if (exit_ok(exitp, &rp) &&
-      (back = rp->dir_option[rev_dir[dir]]) &&
+      (back = rp->dir_option[rev_dir(dir)]) &&
       (back->to_room == in_room)) {
     if (open == SUCCESS_OPEN)
       REMOVE_BIT(back->condition, EXIT_CLOSED);
@@ -801,7 +801,7 @@ void roomDirData::destroyDoor(dirTypeT dir, int room)
 
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
-      (back = rp->dir_option[rev_dir[dir]]) &&
+      (back = rp->dir_option[rev_dir(dir)]) &&
       (back->to_room == room)) {
     back->condition = EXIT_DESTROYED;
     sendrpf(rp, "The %s is destroyed from the other side.\n\r", getName().c_str());
@@ -821,12 +821,12 @@ void roomDirData::caveinDoor(dirTypeT dir, int room)
  
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
-      (back = rp->dir_option[rev_dir[dir]]) &&
+      (back = rp->dir_option[rev_dir(dir)]) &&
       (back->to_room == room)) {
     SET_BIT(back->condition, EXIT_CAVED_IN);
     SET_BIT(back->condition, EXIT_CLOSED);
     back->door_type = DOOR_NONE;
-    sendrpf(rp, "A massive cave in blocks the way %s.\n\r", dirs[rev_dir[dir]]);
+    sendrpf(rp, "A massive cave in blocks the way %s.\n\r", dirs[rev_dir(dir)]);
   }
 }
 
@@ -841,10 +841,10 @@ void roomDirData::wardDoor(dirTypeT dir, int room)
  
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
-      (back = rp->dir_option[rev_dir[dir]]) &&
+      (back = rp->dir_option[rev_dir(dir)]) &&
       (back->to_room == room)) {
     SET_BIT(back->condition, EXIT_WARDED);
-    sendrpf(rp, "You hear a soft _woompf_ as a magical ward is placed across the %s exit.\n\r", dirs[rev_dir[dir]]);
+    sendrpf(rp, "You hear a soft _woompf_ as a magical ward is placed across the %s exit.\n\r", dirs[rev_dir(dir)]);
   }
 }
 

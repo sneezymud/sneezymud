@@ -2,19 +2,27 @@
 
 Import(['env', 'libs'])
 
+env.Append(CXXFLAGS=[
+    '-Wno-unused-result',
+    ])
+
 cxx_tests = (
-    'Act',
-    'CommTest',
-    'ConfigFile',
-    'ConvertTo',
-    'DBTest',
-    'Exceptions',
-    'Fruit',
-    'GarbleTest',
-    'Pfile',
-    'SString',
-    'Stat',
-    'Tell',
+        'DescriptorListTest',
+        'SString',
+        'SpellParser',
+        'AllocateDeallocateTPersonDescriptorAndDb',
+        'Run',
+        'Act',
+        'CommTest',
+        # 'Tell', disabled as it requires better mocking of DB than available now
+        'Exceptions',
+        'GarbleTest',
+        'Pfile',
+        'ConfigFile',
+        'ConvertTo',
+        # 'DBTest', disabled as the MySQL connection in TDatabase class is not comfily mockable
+        # 'Fruit', needs DB
+        # 'Stat', needs DB
 )
 
 for test in cxx_tests:

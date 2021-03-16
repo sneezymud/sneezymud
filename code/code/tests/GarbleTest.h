@@ -2,9 +2,10 @@
 
 #include "configuration.h"
 #include "person.h"
-#include "extern.h"
+#include "player_data.h"
 #include "charfile.h"
 #include "code/tests/ValueTraits.h"
+#include "code/tests/MockDb.h"
 #include "socket.h"
 
 class GarbleTest : public CxxTest::TestSuite
@@ -26,14 +27,15 @@ class GarbleTest : public CxxTest::TestSuite
     testString[3]="C-C-C-C-C-Combo breaker!";
 
     buildSpellArray();
-    chdir("lib");
-    Races[RACE_HUMAN] = new Race(RACE_HUMAN);    
+    chdir("../lib");
+    Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
     testSocket=new TSocket();
     testDesc=new Descriptor(testSocket);
     testPerson=new TPerson(testDesc);
 
-    load_char("killer", &st);
+    auto db = std::make_unique<MockDb>();
+    load_char("test", &st, std::move(db));
     testPerson->loadFromSt(&st);
     testRoom=new TRoom(100);
     *testRoom += *testPerson;

@@ -32,11 +32,17 @@ public:
   const sstring cap() const;
   const sstring uncap() const;
   const sstring word(int) const;
+  std::vector<sstring> words() const;
+  static sstring join(const std::vector<sstring>& words, const sstring& delimiter);
+  sstring lastWord() const;
   sstring dropWord() const;
+  sstring dropLastWord() const;
   sstring dropWords(size_t num) const;
   const sstring comify() const;
   const sstring replaceString(sstring, sstring) const;
   const sstring trim() const;
+  const sstring trimLeft() const;
+  const sstring trimRight() const;
   const sstring capitalizeSentences() const;
   const sstring matchCase(const sstring match) const;
   const sstring escape() const;

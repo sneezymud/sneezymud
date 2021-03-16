@@ -220,7 +220,7 @@ void TPerson::doEdit(const char *arg)
   long r_flags;
   sstring tStString("");
   char str[512],
-       Buf[256],
+       Buf[1024],
        tString[256],
        tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
   const char *tBuf;
@@ -444,7 +444,7 @@ void TPerson::doEdit(const char *arg)
             newrp->setRoomHeight(roomp->getRoomHeight());
           }
 
-          int rvs_dir = rev_dir[new_dir];
+          dirTypeT rvs_dir = rev_dir(static_cast<dirTypeT>(new_dir));
 
           if (!newrpTo->dir_option[new_dir]) {
             newrpTo->dir_option[new_dir] = new roomDirData();
@@ -568,7 +568,7 @@ void TPerson::doEdit(const char *arg)
       }
       newrp = real_roomp(exroom);
       sendTo("Fixing opposite directions.\n\r");
-      new_dir = rev_dir[rdir];
+      new_dir = rev_dir(static_cast<dirTypeT>(rdir));
       if (newrp->dir_option[new_dir]) {
         sendTo("Exit back into room already exists...");
         if (newrp->dir_option[new_dir]->to_room == in_room)
@@ -851,8 +851,8 @@ void TPerson::doEdit(const char *arg)
                 sendTo("Error.  Exit exists but exit room Doesn't!\n\r");
                 return;
               } else {
-                delete zRoom->dir_option[rev_dir[dir]];
-                zRoom->dir_option[rev_dir[dir]] = NULL;
+                delete zRoom->dir_option[rev_dir(dir)];
+                zRoom->dir_option[rev_dir(dir)] = NULL;
               }
             }
             newrp->dir_option[dir]->door_type       = DOOR_NONE;
@@ -866,7 +866,7 @@ void TPerson::doEdit(const char *arg)
             newrp->dir_option[dir]->keyword         = NULL;
 
             // Create exit back.
-            dir = rev_dir[dir];
+            dir = rev_dir(dir);
             if (!newrpTo->dir_option[dir])
               newrpTo->dir_option[dir] = new roomDirData();
             else {
@@ -875,8 +875,8 @@ void TPerson::doEdit(const char *arg)
                 sendTo("Error.  Exit exists but exit room Doesn't!\n\r");
                 return;
               } else {
-                delete zRoom->dir_option[rev_dir[dir]];
-                zRoom->dir_option[rev_dir[dir]] = 0;
+                delete zRoom->dir_option[rev_dir(dir)];
+                zRoom->dir_option[rev_dir(dir)] = 0;
               }
             }
             newrpTo->dir_option[dir]->door_type       = DOOR_NONE;
@@ -1799,7 +1799,7 @@ static void finishRoom(TRoom *rp, TBeing *ch, dirTypeT dir)
     ch->sendTo("Done.\n\r");
   }
   ch->sendTo("Fixing opposite directions.\n\r");
-  dirTypeT new_dir = rev_dir[dir];
+  dirTypeT new_dir = rev_dir(dir);
   if (newrp->dir_option[new_dir]) {
     ch->sendTo("Exit back into room already exists...");
     if (newrp->dir_option[new_dir]->to_room == ch->in_room) {
@@ -2908,12 +2908,12 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
   strcpy(dots, "\0");
 
   db.query("begin");
-  db.query("delete from room where owner='%s' and block=%i", 
-	   ch->getName().c_str(), useSecond);
-  db.query("delete from roomexit where owner='%s' and block=%i",
-	   ch->getName().c_str(), useSecond);
-  db.query("delete from roomextra where owner='%s' and block=%i", 
-	   ch->getName().c_str(), useSecond);
+  db.query("delete from room where owner='%s' and (block=%i or vnum between %i and %i)",
+	   ch->getName().c_str(), useSecond, start, end);
+  db.query("delete from roomexit where owner='%s' and block=%i and (block=%i or vnum between %i and %i)",
+	   ch->getName().c_str(), useSecond, start, end);
+  db.query("delete from roomextra where owner='%s' and block=%i and (block=%i or vnum between %i and %i)",
+	   ch->getName().c_str(), useSecond, start, end);
 
   for (i = rstart; i <= rend; i++) {
     rp = real_roomp(i);
@@ -2933,14 +2933,15 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
     }
     temp[x] = '\0';
 
-    db.query("insert into room (owner, block, vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height) values ('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i)",
+    db.query("insert into room (owner, block, vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,zone,spec) values ('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i)",
 	     ch->getName().c_str(), useSecond,
-	     rp->number, 0, 0, 0, rp->name.c_str(), temp,
+	     rp->number, rp->getXCoord(), rp->getYCoord(), rp->getZCoord(), rp->name.c_str(), temp,
 	     rp->getRoomFlags(),
-	     mapSectorToFile(rp->getSectorType()), 
+	     mapSectorToFile(rp->getSectorType()),
 	     rp->getTeleTime(), rp->getTeleTarg(),
 	     rp->getTeleLook(), rp->getRiverSpeed(), rp->getRiverDir(),
-	     rp->getMoblim(), rp->getRoomHeight());
+	     rp->getMoblim(), rp->getRoomHeight(), rp->getZoneNum(), rp->spec
+         );
 
     dirTypeT j;
     for (j = MIN_DIR; j < MAX_DIR; j++) {

@@ -223,6 +223,7 @@ static int bash(TBeing *c, TBeing *victim, spellNumT skill)
       (bKnown > 0) &&
       (i != GUARANTEED_FAILURE) &&
       (!victim->canCounterMove(bKnown)) &&
+      (!victim->canFocusedAvoidance(bKnown/2)) &&
       c->bSuccess(bKnown + percent, skill)) {
     rc = c->bashSuccess(victim, skill);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
@@ -322,8 +323,6 @@ int TBeing::bashSuccess(TBeing *victim, spellNumT skill)
   // the effect here should be strictly to prevent skill-use
   // it should NOT cause loss of attacks, or do damage
   float wt = combatRound(discArray[SKILL_BASH]->lag);
-  // adjust based on bash difficulty
-  wt = (wt * 100.0 / getSkillDiffModifier(SKILL_BASH));
 
   // Take a few moves from basher
   // since we cost some moves to perform, allow an extra 1/2 round of lag

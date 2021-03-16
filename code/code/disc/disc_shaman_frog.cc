@@ -632,12 +632,12 @@ int shapeShift(TBeing *caster, int level, short bKnown)
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
-        duration = (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR;
+        duration = caster->durationModify(SPELL_SHAPESHIFT, (2 + level / 5) * Pulse::UPDATES_PER_MUDHOUR);
         CS(SPELL_SHAPESHIFT);
         break;
       case CRIT_S_NONE:
       default:
-        duration = (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR;
+        duration = caster->durationModify(SPELL_SHAPESHIFT, (1 + level / 10) * Pulse::UPDATES_PER_MUDHOUR);
         break;
    }
 

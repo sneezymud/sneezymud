@@ -199,13 +199,19 @@ void TBeing::lookInObj(sstring arg2, TThing *specific, unsigned int bits, const 
     sendTo("Look in what?!\n\r");
 }
 
-
 // this is just "look" with no arguments
 void TBeing::lookRoom(bool changedZones)
 {
   int res;
 
   sendRoomGmcp(changedZones);
+
+  if (desc && IS_SET(desc->autobits, AUTO_MAP)) {
+    TPerson* me = dynamic_cast<TPerson*>(this);
+    if (me) {
+      me->drawMap(5);
+    }
+  }
 
   // purple if color basic, nothing if no color, 
   // varied color if color room name
@@ -765,7 +771,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	}
 	// room extras
 	if (!found) {
-	  if ((tmp_desc = roomp->ex_description->findExtraDesc(tmp))) {
+	  if (roomp && roomp->ex_description && (tmp_desc = roomp->ex_description->findExtraDesc(tmp))) {
 	    totalFound++;
 	    if (totalFound == iNum) {
 	      sstring tmp_desc_str = tmp_desc;

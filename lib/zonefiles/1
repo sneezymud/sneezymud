@@ -1,17 +1,18 @@
 #1
 Immort Zone~
-99 10 2 1
+99 1 2 1
+* changed reset timer to 1, TODO change back to 10
 *O 0 1 1 13       PUT ALL ONE_TIME LOAD STUFF (shrubs, trees, torches) HERE
 
 * Pet Shop loads
 * Grimhaven Pet Shop
-M 0 560 1 566	Plump Cat (pet)
-M 0 561 1 566	Friendly Dog (pet)
-M 0 562 1 566	Falcon (pet)
-M 0 563 1 566	Fox (pet)
-M 0 564 1 566	large Brown Dog (pet)
-M 0 565 1 566	Lynx (pet)
-M 0 566 1 566	Young Tiger (pet)
+M 0 560 1 566        Plump Cat (pet)
+M 0 561 1 566        Friendly Dog (pet)
+M 0 562 1 566        Falcon (pet)
+M 0 563 1 566        Fox (pet)
+M 0 564 1 566        large Brown Dog (pet)
+M 0 565 1 566        Lynx (pet)
+M 0 566 1 566        Young Tiger (pet)
 
 * Amber Pet Shop
 M 0 567 1 7804  Large Parrot (pet)
@@ -42,16 +43,16 @@ O 0 351 5 400      sauna bench
 O 0 23502 1 23276     scraggly tree (quest room)
 
 
-*O 0 1 1 13	  SNEEZY HERALD LOADS
+*O 0 1 1 13          SNEEZY HERALD LOADS
 
-O 0 10545 1 85 	    Advertising Sign
-O 0 10544 1 85 	    Cluttered News Desk
+O 0 10545 1 85             Advertising Sign
+O 0 10544 1 85             Cluttered News Desk
 O 0 10540 1 85       In Box
 O 0 10541 1 85       Out box Box
 O 0 10548 1 85       Herald Board
 O 0 10547 1 85       Note & Quill Dispenser
 
-*O 0 1 1 13	  END OF SNEEZY HERALD LOADS
+*O 0 1 1 13          END OF SNEEZY HERALD LOADS
 
 
 *O 0 1 1 13       SNEEZY WELFARE OFFICE LOADS
@@ -66,13 +67,13 @@ O 0 10041 1 10020          Rainbow Bridge
 O 0 10041 1 7833           Rainbow Bridge
 O 0 10042 1 11000          Rainbow Bridge
 
-O 0 117 1 1200      	Signs 
+O 0 117 1 1200              Signs 
 O 0 118 1 650       
 O 0 119 1 9325       
 O 0 120 1 10203      
 O 0 121 1 1085 
 O 0 123 1 1024       
-O 0 10300 1 10300 	Dwarven Mines Sign      
+O 0 10300 1 10300         Dwarven Mines Sign      
 O 0 17122 1 7839     ogre camp sign
 
 
@@ -111,15 +112,14 @@ P 1 1461 1 1456
 
 
 D 0 62 0 1      lounge loads (dash)
-D 0 32 1 1	doors etc
+D 0 32 1 1        doors etc
 D 0 15 2 1
-D 0 43 3 1
 D 0 45 0 1
-D 0 45 1 1
+D 0 45 9 1
 D 0 45 2 1
 D 0 45 3 1
-O 0 1456 1 45 		bookshelf
-P 1 1450 2 1456		builder books (2 of each)
+O 0 1456 1 45                 bookshelf
+P 1 1450 2 1456                builder books (2 of each)
 P 1 1450 2 1456
 P 1 1451 2 1456
 P 1 1451 2 1456
@@ -135,7 +135,7 @@ P 1 1461 2 1456
 P 1 1461 2 1456
 P 1 1462 2 1456
 P 1 1462 2 1456
-P 1 9995 10 1456	vending machine tokens (10)
+P 1 9995 10 1456        vending machine tokens (10)
 P 1 9995 10 1456
 P 1 9995 10 1456
 P 1 9995 10 1456
@@ -146,10 +146,10 @@ P 1 9995 10 1456
 P 1 9995 10 1456
 P 1 9995 10 1456
 P 1 9995 10 1456
-O 0 23661 2 45 		beat up couch
-O 0 452 1 45 		conf. table
-O 0 3098 1 45 		wiz board
-O 0 9989 1 45      	better vender :) end of lounge loads
+O 0 23661 2 45                 beat up couch
+O 0 452 1 45                 conf. table
+O 0 3098 1 45                 wiz board
+O 0 9989 1 45              better vender :) end of lounge loads
 
 
 O 0 10516 1 394        Grimhaven Safe
@@ -178,16 +178,16 @@ O 0 551 1 238   small bubbling fountain in Market Square
 O 0 15314 1 238   monument to fallen heroes
 
 
-O 0 10935 1 15      	Freshwater Spring
-O 0 22421 1 22453   	Gnome Pump
-O 0 2224 1 2224     	Dwarf baptismal font
+O 0 10935 1 15              Freshwater Spring
+O 0 22421 1 22453           Gnome Pump
+O 0 2224 1 2224             Dwarf baptismal font
 O 0 19 1 61 
 *P 1 10571 4 10570         corona
 *P 1 10571 4 10570         corona
 *P 1 10571 4 10570         corona
 *P 1 10571 4 10570         corona
-O 0 29940 1 39         	Omen's portal
-O 0 29943 3 51         	Syl's cushion
+O 0 29940 1 39                 Omen's portal
+O 0 29943 3 51                 Syl's cushion
 O 0 20 1 3370      chair generic
 O 0 20 2 260  
 O 0 20 2 320 
@@ -264,10 +264,10 @@ O 0 3089 1 2            note & quill
 O 0 3097 1 27         Builder board (Dolgan's Office)
 O 0 31024 1 67        Board (cactus) (Maror's office)
 
-*O 0 10550 1 42 	     Balance board (Rixanne's Office)
+*O 0 10550 1 42              Balance board (Rixanne's Office)
 
-*O 0 23270 1 42 		Factions Board  (Rix)
-O 0 23270 1 53 				(Gringar)
+*O 0 23270 1 42                 Factions Board  (Rix)
+O 0 23270 1 53                                 (Gringar)
 
 O 0 31 1 13        Jacuzzi batopr
 
@@ -298,9 +298,9 @@ O 0 10940 1 27      table drafting dolgan
 O 0 6602 1 6600     rocks entrance to Dark's Dungeon
 O 0 5703 1 5841     beeswax candle  Mage 40 Guildmaster
 
-O 0 15949 1 48 	 Throne of Bone [Lapsos]
-O 0 15948 1 48 	 Board of Reminders [Lapsos]
-O 0 6100 1 48 	 Center Square Image [Lapsos]
+O 0 15949 1 48          Throne of Bone [Lapsos]
+O 0 15948 1 48          Board of Reminders [Lapsos]
+O 0 6100 1 48          Center Square Image [Lapsos]
 
 O 0 3098 1 1           wizboard
 O 0 3089 1 1               note-dispenser
@@ -313,23 +313,23 @@ O 0 10551 1 8       Enforcement/Reimbursement Board
 O 1 3089 1 8           Note & Quill Dispenser
 
 *O 0 1 1 13       TREE LOADS FOR TREEWALK SPELL  **
-O 0 4308 1 4328 		Cypress tree in Swamp
-O 0 4708 1 4708 		Redwood tree in Aerie
+O 0 4308 1 4328                 Cypress tree in Swamp
+O 0 4708 1 4708                 Redwood tree in Aerie
 O 0 7098 1 7070          Huge Frosted Pine in Obsidian Citadel
-O 0 8604 1 8604 		Acacia tree in Veldt
-O 0 10943 1 10965 	Pine tree in Mt Valley
-O 0 14367 1 14327 	Apple tree in Shire
-O 0 1850 1 5331 		Oak tree in Lan'Quin
-O 0 1851 1 14111 	Palm tree in Spirits
-*O 0 1852 1 9702		Mango tree in Cannibal
-O 0 1854 1 17139 	Cherry tree in Ogre Camp
-O 0 1855 1 9316 		cactus in badlands
-O 0 1856 1 3482 		Willow in Brazzed-Dumm
-O 0 1857 1 15280 	Ash in Poacher Camp
-O 0 1860 1 13108 	Coconut on Myrian Island
-O 0 1861 1 15422 	Dogwood on Albanos Farm
-O 0 1864 1 10134 	Mahogany with Nymphs
-O 0 1865 1 28860 	Petrified in Undead Graveyard
+O 0 8604 1 8604                 Acacia tree in Veldt
+O 0 10943 1 10965         Pine tree in Mt Valley
+O 0 14367 1 14327         Apple tree in Shire
+O 0 1850 1 5331                 Oak tree in Lan'Quin
+O 0 1851 1 14111         Palm tree in Spirits
+*O 0 1852 1 9702                Mango tree in Cannibal
+O 0 1854 1 17139         Cherry tree in Ogre Camp
+O 0 1855 1 9316                 cactus in badlands
+O 0 1856 1 3482                 Willow in Brazzed-Dumm
+O 0 1857 1 15280         Ash in Poacher Camp
+O 0 1860 1 13108         Coconut on Myrian Island
+O 0 1861 1 15422         Dogwood on Albanos Farm
+O 0 1864 1 10134         Mahogany with Nymphs
+O 0 1865 1 28860         Petrified in Undead Graveyard
 
 
 ******************   
@@ -337,31 +337,31 @@ O 0 1865 1 28860 	Petrified in Undead Graveyard
 ******************
 
 ** Trader mobs
-* M 0 29405 1 238	romantic gypsy - trade candy hearts
-M 0 29406 1 4616  	busy florist - trade box of chocolates
-M 0 29416 1 8928 	farmer wife - trade delicate tulip
-M 0 29407 1 36949 	scary clown - trade bouquet of tulip
-M 0 29408 1 11016	animated mime - trade balloon
-*M 0 29409 1 13106 	lazy guy - trade teddy bear
-*M 0 29410 1 3177 	drunk trader - trade bottle of port
-
-** Sugar toothed weasels **
+* M 0 29405 1 238        romantic gypsy - trade candy hearts
+* M 0 29406 1 4616          busy florist - trade box of chocolates
+* M 0 29416 1 8928         farmer wife - trade delicate tulip
+* M 0 29407 1 36949         scary clown - trade bouquet of tulip
+* M 0 29408 1 11016        animated mime - trade balloon
+* M 0 29409 1 13106         lazy guy - trade teddy bear
+* M 0 29410 1 3177         drunk trader - trade bottle of port
+ 
+* ** Sugar toothed weasels **
 * M 0 37138 500 13700    a sugar toothed weasel
-
-** Candy heart loading mobs in astral pocket
-* M 0 29415 500 13700	thieving squirrel
-* G 1 29405 9999		 candy heart
-
-* M 0 29412 500 13700	sticky child
+ 
+* ** Candy heart loading mobs in astral pocket
+* M 0 29415 500 13700        thieving squirrel
+* G 1 29405 9999                 candy heart
+ 
+* M 0 29412 500 13700        sticky child
 * G 1 29405 9999          candy heart
 * G 1 29405 9999
-
+ 
 * M 0 29411 500 13700    lovestruck teen
 * G 1 29405 9999          candy heart
 * G 1 29405 9999
 * G 1 29405 9999          
-
-* M 0 29413 500 13700	depressed lovelorn
+ 
+* M 0 29413 500 13700        depressed lovelorn
 * G 1 29405 9999          candy heart
 * G 1 29405 9999
 * G 1 29405 9999
@@ -372,70 +372,143 @@ M 0 29408 1 11016	animated mime - trade balloon
 **********************
 
 **************************
-* December holiday quest *
+* October holiday quest *
 **************************
 
-* Trader elves
-*M 0 3905 1 238           a fat helper elf (1 - candy cane trader) 
-*M 0 3906 1 851           a fat helper elf (2 - jingle bell collar trader)
-*M 0 3907 1 339           a fat helper elf (3 - scroll case trader)
+* * Boss mobs
+* M 0 29600 1 24687       Headless Horseman - Dead Forest
+* ? 0 3 0 E 
+* E 1 29600 9999 5             helm headless (quest)
+* ? 0 3 0 E 
+* E 1 29618 9999 14            cloak of the dark rider (quest)
+* ? 0 3 0 E 
+* E 1 29619 9999 1             ring, jack o lantern (quest)
+* ? 0 3 0 E
+* E 1 29619 9999 19            black velvet bag (quest)
 
-* Low level holiday elves, empty handed
-*M 0 3901 9999 13700      a cheery holiday elf (level 10)
+* M 0 29602 5 13700      	mother plant of the pumpkin seedlings
+* ? 0 3 0 E 
+* E 1 29619 9999 1             ring, jack o lantern (quest)
+* ? 0 3 0 E 
+* E 1 29617 9999 14            egg sac blood flower (quest)
+* G 1 24699 9999               shiny silver potion
 
-* Low level holiday elves, with a candy cane
-*M 0 3901 9999 13700      a cheery holiday elf (level 10)
-*G 1 3961 9999                 candy cane
+* * Low level pumpkin seedlings
+* M 0 29601 9999 13700	pumpkin plant monster (level 14)
+* G 1 31367 9999		        faerie fire scroll
+* G 1 803 9999             	blue potion
 
-* * Low level holiday elves, with a candy cane and champagne
-*M 0 3901 9999 13700      a cheery holiday elf (level 10)
-*G 1 3961 9999                 candy cane
-*G 1 3959 9999                 a cheery holiday flask (champagne)
+* * Mid level pumpkin squashlings
+* M 0 29611 9999 13700	pumpkin plant monster (level 25)
+* G 1 14148 9999		ghostly wand
+* G 1 823 9999      vermillion potion
 
-* Mid level holiday elves, empty handed
-*M 0 3902 9999 13700      a cheery holiday elf (level 25)
+**********************************
+* END OF October holiday quest *
+**********************************
 
-* Mid level holiday elves, with a candy cane
-*M 0 3902 9999 13700      a cheery holiday elf (level 25)
-*G 1 3961 9999                 candy cane
-
-* Mid level holiday elves, with a candy cane and champage
-*M 0 3902 9999 13700      a cheery holiday elf (level 25)
-*G 1 3961 9999                 candy cane
-*G 1 3959 9999                 a cheery holiday flask (champagne)
-
-* Mid-high level holiday elves, empty handed
-*M 0 3903 9999 13700      a cheery holiday elf (level 40)
-
-* Mid-high level holiday elves, with a candy cane
-*M 0 3903 9999 13700      a cheery holiday elf (level 40)
-*G 1 3961 9999                 candy cane
-
-* Mid-high level holiday elves, with a candy cane and potion of mystery
-*M 0 3903 9999 13700      a cheery holiday elf (level 40)
-*G 1 3961 9999                 candy cane
-*G 1 3958 9999                 cheery holiday flask (potion of mystery)
-
-* High level holiday elves, empty handed
-*M 0 3904 9999 13700      a cheery holiday elf (level 60)
-
-* High level holiday elves, with a candy cane
-*M 0 3904 9999 13700      a cheery holiday elf (level 60)
-*G 1 3961 9999                 candy cane
-
-* High level holiday elves, with a candy cane and potion of mystery
-*M 0 3904 9999 13700      a cheery holiday elf (level 60)
-*G 1 3961 9999                 candy cane
-*G 1 3958 9999                 cheery holiday flask (potion of mystery)
-
-* Reindeer (no loads)
-*M 0 3908 9999 13700     a reindeer
-
-* Reindeer (jingle bell collars)
-*M 0 3908 9999 13700     a reindeer
-*? 0 100 0 E                  load collar 100% of the time
-*E 1 3960 9999 3              a jingle bell collar
-
+**************************
+* December holiday quest *
+**************************
+* 
+* * Trader elves
+* M 0 3905 1 238       	a fat helper elf (1 - candy cane trader) 
+* M 0 3906 1 240      	a fat helper elf (2 - stolen gift trader)
+* M 0 3907 1 239       	a fat helper elf (3 - boss insignia trader)
+* 
+* * Low level holiday minions, empty handed
+* M 0 29603 9999 13700	a holiday minion (level 10)
+* 
+* * Low level holiday minions, with a candy cane + green gift
+* M 0 29603  9999 13700	a holiday minion (level 10)
+* G 1 29625 9999		stolen gift green
+* G 1 3961 9999             	candy cane
+* 
+* * * Low level holiday minions, with a candy cane and champagne + green gift
+* M 0 29603 9999 13700	a holiday minion (level 10)
+* G 1 3961 9999             	candy cane
+* G 1 3959 9999             	a cheery holiday flask (champagne)
+* G 1 29625 9999		stolen gift green
+* 
+* * Mid level holiday minions, with green gift
+* M 0 29604 9999 13700	a holiday minion (level 25)
+* G 1 29625 9999		stolen gift green
+* 
+* * Mid level holiday minions, with a candy cane + blue gift
+* M 0 29604 9999 13700	a holiday minion (level 25)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
+* 
+* * Mid level holiday minions, with a candy cane and champagne + blue gift
+* M 0 29604 9999 13700	a holiday minion (level 25)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
+* G 1 3959 9999             	a cheery holiday flask (champagne)
+* 
+* * Mid-high level holiday minions with candy cane + blue gift
+* M 0 29605 9999 13700	a holiday minion (level 40)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
+* 
+* * Mid-high level holiday minions, with blue/green gift
+* M 0 29605 9999 13700	a holiday minion (level 40)
+* G 1 29624 9999		stolen gift blue
+* G 1 29625 9999		stolen gift green
+* 
+* * Mid-high level holiday minions, with a candy cane and potion of mystery + blue gift
+* M 0 29605 9999 13700	a holiday minion (level 40)
+* G 1 29624 9999		stolen gift blue
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* 
+* * High level holiday minions with blue gift
+* M 0 29606 9999 13700	a holiday minion (level 60)
+* G 1 29624 9999		stolen gift blue
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* 
+* * High level holiday minions, with a candy cane + red/blue gift
+* M 0 29606 10 13700	a holiday minion (level 60)
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* 
+* * High level holiday minions, with a candy cane and potion of mystery + red gift
+* M 0 29606 9999 13700	a holiday minion (level 60)
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* 
+* * Boss 1, with gifts and unique holiday items
+* M 0 29607 1 13700	Krampus
+* G 1 29625 9999		stolen gift green
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* G 1 29627 9999             	insignia krampus
+* 
+* * Boss 2, with gifts and unique holiday items
+* M 0 29608 1 13700	The White Witch
+* G 1 29625 9999		stolen gift green
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* G 1 29628 9999             	insignia white witch
+* 
+* * Boss 3, with gifts and unique holiday items
+* M 0 29609 1 13700	The Abominable Snowman
+* G 1 29625 9999		stolen gift green
+* G 1 29624 9999		stolen gift blue
+* G 1 29623 9999		stolen gift red
+* G 1 3961 9999             	candy cane
+* G 1 3958 9999             	cheery holiday flask (potion of mystery)
+* G 1 29629 9999             	insignia abominable snowman
+* 
+* * Reindeer - Santa Hat
+* M 0 3908 9999 13700     a reindeer
+* G 1 29634 9999              red santa hat
+* 
 **********************************
 * END OF  December holiday quest *
 **********************************

@@ -194,8 +194,6 @@ static int bodyslamHit(TBeing *caster, TBeing *victim)
 
   // see the balance notes for details on what's going on here.
   float wt = combatRound(discArray[SKILL_BODYSLAM]->lag);
-  // adjust based on bash difficulty
-  wt = (wt * 100.0 / getSkillDiffModifier(SKILL_BODYSLAM));
 
   // since we cost some moves to perform, allow an extra 1/2 round of lag
   wt += 1.5;

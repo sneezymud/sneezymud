@@ -25,6 +25,7 @@ class TPerson : public TBeing {
     TPersonPimpl* d = nullptr;
 
   public:
+    virtual TThingKind getKind() const;
     FILE *tLogFile;
     char lastHost[40];
     char *title; 
@@ -91,6 +92,8 @@ class TPerson : public TBeing {
     void doMapAdd(sstring const&);
     void doMapRm(sstring const&);
     void doMapGo(sstring const&);
+    void doMapRecalc(int startZ) const;
+    void drawMap(const int size) const;
     void doRemember(bool print, sstring const&);
     void doRememberPlayer(bool print, sstring const&);
     void doRetrieve(bool print, sstring const&);
@@ -116,7 +119,7 @@ class TPerson : public TBeing {
     virtual void doSnoop(const char *);
     virtual void doSwitch(const char *);
     virtual void doForce(const char *);
-    virtual void doDistribute(const char *);
+    virtual void doDistribute(const sstring&);
     virtual void doLoad(const char *);
     virtual int doRent(const sstring &);
     virtual void doCutlink(const char *);

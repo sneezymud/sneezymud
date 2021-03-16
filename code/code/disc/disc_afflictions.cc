@@ -501,7 +501,7 @@ void blindness(TBeing * caster, TBeing * victim, TMagicItem * obj)
 
   ret = blindness(caster, victim, level, obj->getMagicLearnedness());
 
-  duration = (obj->getMagicLevel()/10 + 1) * Pulse::UPDATES_PER_MUDHOUR;
+  duration = (obj->getMagicLevel()/5 + 1) * Pulse::UPDATES_PER_MUDHOUR;
   saveTypeT save = SAVE_NO;
   if (IS_SET(ret, SPELL_SAVE)) 
     save = SAVE_YES;
@@ -1268,7 +1268,7 @@ bool TBeing::canBoneBreak(TBeing *victim, silentTypeT silent)
 
 int boneBreaker(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   int ret;
   wearSlotT slot;
 
@@ -1474,7 +1474,7 @@ bool notBleedSlot(wearSlotT slot)
 
 int bleed(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   int ret;
   bool found = 0;
   wearSlotT slot;
@@ -1725,7 +1725,7 @@ bool TBeing::canWither(TBeing *victim, silentTypeT silent)
 
 int witherLimb(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   wearSlotT slot;
 
   if (caster->isNotPowerful(victim, level, SPELL_WITHER_LIMB, SILENT_NO)) {
@@ -1880,7 +1880,7 @@ bool TBeing::canParalyzeLimb(TBeing *victim, silentTypeT silent)
 
 int paralyzeLimb(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   wearSlotT slot;
 
   if (caster->isNotPowerful(victim, level, SPELL_PARALYZE_LIMB, SILENT_NO)) {
@@ -1980,7 +1980,7 @@ int paralyzeLimb(TBeing * caster, TBeing * v)
 
 int numb(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
-  char buf[256], limb[256];
+  char buf[1024], limb[256];
   wearSlotT slot;
   affectedData aff;
 
@@ -2184,7 +2184,7 @@ void disease(TBeing *caster, TBeing *victim)
 
 int infect(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   bool found = FALSE;
   wearSlotT slot;
   int duration;

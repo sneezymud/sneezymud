@@ -437,12 +437,12 @@ void saveExit(Cgicc cgi, int account_id)
   db.query("delete from roomexit where owner='%s' and vnum=%s and block=1 and direction=%i",
   	   (**(cgi.getElement("owner"))).c_str(), 
 	   destination.c_str(),
-	   rev_dir[convertTo<int>((**(cgi.getElement("direction"))))]);
+	   rev_dir(convertTo<int>((**(cgi.getElement("direction"))))));
 
   db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %i, '%s', '%s', %s, %s, %s, %s, %s, %s)", 
 	   destination.c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
-	   rev_dir[convertTo<int>((**(cgi.getElement("direction"))))],
+	   rev_dir(convertTo<int>((**(cgi.getElement("direction"))))),
 	   (**(cgi.getElement("name"))).c_str(),
 	   (**(cgi.getElement("description"))).c_str(),
 	   (**(cgi.getElement("type"))).c_str(),

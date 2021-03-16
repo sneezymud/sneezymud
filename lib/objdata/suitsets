@@ -6,31 +6,60 @@
 :head     = <vnum>
 :neck     = <vnum>
 :body     = <vnum>
+:back     = <vnum>
 :arm      = <vnum>
-:hand     = <vnum>
-:waist    = <vnum>
 :wrist    = <vnum>
+:hand     = <vnum>
+:finger   = <vnum>
+:waist    = <vnum>
 :leg      = <vnum>
 :foot     = <vnum>
-:finger   = <vnum>
 :shield   = <vnum>
-:back     = <vnum>
 :Set #
 :#
 :$
 :head     = 
 :neck     = 
 :body     = 
+:back     = 
 :arm      = 
-:hand     = 
-:waist    = 
 :wrist    = 
+:hand     = 
+:finger   = 
+:waist    = 
 :leg      = 
 :foot     = 
-:finger   = 
 :shield   = 
-:back     = 
 // Paste below this line.
+// ----------------------
+:Set #158
+#flowing black
+$human
+head     = 2500
+neck     = 2501
+back     = 2503
+arm      = 2504
+hand     = 2505
+finger   = 2506
+waist    = 2507
+leg      = 2508
+foot     = 2509
+shield   = 2511
+:Set #157
+#elite leather
+$human
+head     = 750
+neck     = 751
+body     = 752
+back     = 753
+arm      = 754
+wrist    = 755
+hand     = 756
+finger   = 757
+waist    = 758
+leg      = 760
+foot     = 761
+shield   = 762 
 :Set #156
 #grizzled
 $ogre

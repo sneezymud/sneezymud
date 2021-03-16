@@ -178,7 +178,7 @@ static void bountyPoof(TMonster *myself, int targ_rm)
 int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 {
   char buf[256];
-  char buf2[256];
+  char buf2[1024];
   char buf3[256];
   TBeing *targ = NULL;
   TObj *temp_obj = NULL;
@@ -1135,7 +1135,7 @@ void repoCheckForRent(TBeing *ch, TObj *obj, bool corpse) {
 void repoCheck(TMonster *mob, int rnum)
 {
   if(Config::RepoMobs()){
-    char buf[160],buf2[160];
+    char buf[160],buf2[512];
     int cur_num = obj_index[rnum].getNumber();
     int max_num = obj_index[rnum].max_exist;
     

@@ -409,9 +409,8 @@ int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlot
 
   w_type -= TYPE_HIT;
 
-  // base amount, modified for difficulty
-  // the higher amt is, the more things get blocked
-  int amt = (int) (45 * 100 / getSkillDiffModifier(SKILL_DODGE_THIEF));
+  // the higher amt is, the more things get dodged
+  int amt = 45;
 
   if (::number(0, 999) >= amt)
     return FALSE;
@@ -467,7 +466,7 @@ void TBeing::doTrack(const char *argument)
   TBeing *scan;
   affectedData aff, *Vaff;
   TThing *t = NULL;
-  char buf[256]="\0\0\0", buf2[256]="\0\0\0";
+  char buf[256]="\0\0\0", buf2[512]="\0\0\0";
 
   strcpy(namebuf, argument);
  
@@ -680,7 +679,7 @@ int TBeing::track(TBeing *vict)
   int targetRm = -1;
   int isSW = affectedBySpell(SKILL_SEEKWATER);
   char buf[256];
-  char buf2[256];
+  char buf2[512];
   TPathFinder path(hunt_dist);
   path.setUsePortals(false);
 

@@ -13,7 +13,8 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   int clev = ch->GetMaxLevel();
   int percent = ::number(1, 100);
-  int factor = ::number(5, (((clev + learning) + percent) / 2));
+  // random number between 50 and 175
+  int factor = ::number(clev, learning + clev + 25);
   int factor2 = ::number(5, (((clev + learning) + percent) / 5));
 
   if (!ch || !ch->task) {

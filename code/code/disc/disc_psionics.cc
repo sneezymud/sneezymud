@@ -196,7 +196,7 @@ int TBeing::doPTell(const char *arg, bool visible){
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
   if (vict->desc && isPc() && vict->canSee(this, INFRA_YES) && isPc())
-    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller));
+    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller)-1);
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);
@@ -217,7 +217,7 @@ int TBeing::doPSay(const char *arg){
   TBeing *mob = NULL;
   int rc;
   char capbuf[256];
-  char tmpbuf[256], nameBuf[256], garbedBuf[256];
+  char tmpbuf[256], nameBuf[512], garbedBuf[256];
   Descriptor *d;
 
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){
@@ -489,7 +489,7 @@ void TBeing::doMindfocus(const char *){
 
     aff.type      = SKILL_MIND_FOCUS;
     aff.level     = bKnown;
-    aff.duration  = 4 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration  = durationModify(SKILL_MIND_FOCUS, 4 * Pulse::UPDATES_PER_MUDHOUR);
     aff.location  = APPLY_NONE;
     affectTo(&aff, -1);
   } else {
@@ -586,7 +586,7 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR;
+	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
 	aff.location  = APPLY_INT;
 	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
@@ -596,7 +596,7 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR;
+	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
 	aff.location  = APPLY_WIS;
 	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
@@ -606,7 +606,7 @@ int TBeing::doPsiblast(const char *tString){
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
 	aff.type      = SKILL_PSI_BLAST;
 	aff.level     = bKnown;
-	aff.duration  = (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR;
+	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
 	aff.location  = APPLY_FOC;
 	aff.modifier   = -(::number(bKnown/3, bKnown/2));
 	tVictim->affectTo(&aff, -1);
@@ -723,7 +723,7 @@ int TBeing::doPsycrush(const char *tString){
 	  TRUE, this, NULL, tVictim, TO_NOTVICT);
 
       // very short duration
-      int duration = Pulse::COMBAT * 2;
+      int duration = durationModify(SKILL_PSYCHIC_CRUSH, Pulse::COMBAT * 2);
 
       tVictim->rawBlind(level, duration, SAVE_NO);
 
@@ -775,7 +775,6 @@ int kwaveDamage(TBeing *caster, TBeing *victim) {
         return DELETE_VICT;
 
     float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);
-    wt = (wt * 100.0 / getSkillDiffModifier(SKILL_KINETIC_WAVE));
     wt += 1;
     victim->addToWait((int) wt);
 

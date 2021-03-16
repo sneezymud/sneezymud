@@ -64,8 +64,8 @@ int task_ride(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
 	// either we continue in the direction we were travelling if possible
 	// or we take whatever exit is available if there are 2 exits
 	// otherwise stop
-	if(ch->roomp->dir_option[rev_dir[camefrom]]){
-	  newdir=rev_dir[camefrom];
+	if(ch->roomp->dir_option[rev_dir(camefrom)]){
+	  newdir=rev_dir(camefrom);
 	} else if(count != 2){
 	  ch->sendTo("Your mount comes to a halt.\n\r");
 	  ch->stopTask();

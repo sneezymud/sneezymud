@@ -358,6 +358,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     rc = ret.second;
     if (!ret.first) { // handled
       switch(cmd) {
+	case CMD_NOP:
+	  break;
         case CMD_UNHARNESS:
         case CMD_UNSADDLE:
           doUnsaddle(newarg);
@@ -1504,9 +1506,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_FORCE:
           doForce(newarg.c_str());
           break;
-        case CMD_DISTRIBUTE:
-          doDistribute(newarg.c_str());
-          break;
         case CMD_COLOR:
           doColor(newarg.c_str());
           addToLifeforce(1);
@@ -1789,6 +1788,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_RECHARGE:
           doChargeStave(newarg.c_str());
           break;
+        case CMD_AURA:
+          doAura(newarg);
+          break;
 
           break;
         case MAX_CMD_LIST:
@@ -1882,6 +1884,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_REMEMBER:
         case CMD_REMEMBERPLAYER:
         case CMD_RETRIEVE:
+        case CMD_DISTRIBUTE:
+        case CMD_BEING_HIT:
+        case CMD_BEING_BEEN_HIT:
           sendTo(format("doCommand:incorrectCommand: [%d]\n\r") % cmd);
           incorrectCommand();
           return FALSE;
@@ -2988,6 +2993,8 @@ void buildCommandArray(void)
   commandArray[CMD_REMEMBERPLAYER] = new commandInfo("rememberplayer", POSITION_DEAD, 0);
   commandArray[CMD_RETRIEVE] = new commandInfo("retrieve", POSITION_DEAD, 0);
   commandArray[CMD_RECHARGE] = new commandInfo("recharge", POSITION_STANDING, 0);
+  commandArray[CMD_NOP] = new commandInfo("noop", POSITION_DEAD, 0);
+  commandArray[CMD_AURA] = new commandInfo("aura", POSITION_RESTING, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

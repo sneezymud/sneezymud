@@ -1269,7 +1269,7 @@ int caravan_wagon(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *)
     (*me)--;
     *rp2 += *me;
 
-    buf = format("$n rolls in from the %s.") % dirs[rev_dir[dir]];
+    buf = format("$n rolls in from the %s.") % dirs[rev_dir(dir)];
     act(buf, TRUE, me, 0, 0, TO_ROOM);
 
     return TRUE;
@@ -1343,7 +1343,7 @@ int bogusObjProc(TBeing *, cmdTypeT, const char *, TObj *me, TObj *)
 
 int bleedChair(TBeing *ch, cmdTypeT cmd, const char *, TObj *me, TObj *)
 {
-  char buf[256], limb[256];
+  char buf[512], limb[256];
   int duration;
   wearSlotT slot;
 
@@ -5729,6 +5729,29 @@ int regeneration(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
   return FALSE;
 }
 
+int pietyRegen(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
+{
+  if (!o)
+    return FALSE;
+  if (!(ch = dynamic_cast<TBeing *>(o->equippedBy)))
+    return FALSE;       // item not equipped (carried or on ground)
+
+  if(cmd == CMD_GENERIC_PULSE) {
+
+    // don't spam if we're already full
+    if (ch->getPiety() >= ch->pietyLimit())
+      return FALSE;
+  
+    if (ch->doesKnowSkill(SKILL_PENANCE) && (!::number(0,17))) {
+      float dam = ch->getSkillValue(SKILL_PENANCE) * 7.5 / 100;
+      act("<g>Your $o<g> lets you feel more in tune with $d.<1>",TRUE,ch,o,NULL,TO_CHAR,NULL);
+      ch->addToPiety(dam);
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+
 int stickerBush(TBeing *ch, cmdTypeT cmd, const char *, TObj *o, TObj *)
 {
   if (cmd != CMD_OBJ_MOVEMENT)
@@ -5831,9 +5854,9 @@ int skittishObject (TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 			
 			// movement into room
 			if (o->roomp->isWaterSector() || o->roomp->isUnderwaterSector()){
-				msg = format("$p swims in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = format("$p swims in from the %s.") % dirs[rev_dir(use_dir)];
 			} else {
-				msg = format("$p skitters in from the %s.") % dirs[rev_dir[use_dir]];
+				msg = format("$p skitters in from the %s.") % dirs[rev_dir(use_dir)];
 			}
 			act(msg, FALSE, o, o, 0, TO_ROOM);
 			
@@ -6198,7 +6221,7 @@ int mobSpawnGrab(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *me, TObj *cont
     }
     *ch->roomp += *mob;
     colorAct(COLOR_MOBS, 
-            ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
+            (mob && mob->ex_description && (mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
             mob->ex_description->findExtraDesc("repop") :
             "$n appears suddenly in the room."), TRUE, mob, 0, 0, TO_ROOM);
   }
@@ -6757,6 +6780,13 @@ extern int objWornMinorAstralWalk(TBeing *targ, cmdTypeT cmd, const char *arg, T
 extern int objWornPortal(TBeing *targ, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int comboEQCast(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 extern int ofManyPotions(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int shadowWeapon(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int livingVines(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int dkSword(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *);
+extern int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+extern int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
+
+
 
 // assign special procedures to objects
 
@@ -6797,9 +6827,9 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Dragon Slayer", dragonSlayer},
   {TRUE, "Blood Drainer", bloodDrain},
   {FALSE, "Stone Altar", stoneAltar},
-  {FALSE, "Bone Staff", boneStaff},   // 35
+  {TRUE, "Bone Staff", boneStaff},   // 35
   {FALSE, "Bloodspike", bloodspike}, 
-  {FALSE, "behir horn item", behirHornItem},
+  {TRUE, "behir horn item", behirHornItem},
   {FALSE, "Newbie Helper", newbieHelperWProc},
   {FALSE, "pirate hat dispenser", pirateHatDispenser},
   {FALSE, "Blood Bowl", bowl_of_blood},  // 40
@@ -6807,7 +6837,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "wicked dagger", wickedDagger},  
   {TRUE, "poison sap dagger", poisonSap},  
   {FALSE, "blinder weapon", weaponBlinder},
-  {FALSE, "mana drain weapon", weaponManaDrainer}, // 45
+  {TRUE, "mana drain weapon", weaponManaDrainer}, // 45
   {FALSE, "tequila cutlass", tequilaCutlass},
   {FALSE, "daySword", daySword},  
   {FALSE, "nightBlade", nightBlade},  
@@ -6818,7 +6848,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {TRUE, "Viper Weapon (poison)", poisonViperBlade},
   {FALSE, "trolley", trolley},
   {FALSE, "Stone Skin Amulet", stoneSkinAmulet}, // 55
-  {FALSE, "Razor Glove", razorGlove},
+  {TRUE, "Razor Glove", razorGlove},
   {FALSE, "ShadowSlayer", weaponShadowSlayer},
   {FALSE, "Squirt Gun", squirtGun},
   {FALSE, "Glory Weapon", blazeOfGlory},
@@ -6845,36 +6875,36 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Chipped Tooth Food Item", chippedTooth}, // 80
   {FALSE, "Goofers Dust", goofersDust},
   {FALSE, "teleport ring", teleportRing},
-  {FALSE, "self repairing", selfRepairing},
+  {TRUE, "self repairing", selfRepairing},
   {FALSE, "undead spewing portal", USPortal},
   {FALSE, "Amulet of Aeth Koralm", AKAmulet}, // 85
-  {FALSE, "fire glove", fireGlove},
+  {TRUE, "fire glove", fireGlove},
   {FALSE, "Shaman's Totem Mask", totemMask},
   {FALSE, "perma death monument", permaDeathMonument},
   {FALSE, "fishing boat", fishingBoat},
-  {FALSE, "Splintered Club", splinteredClub}, // 90 
+  {TRUE, "Splintered Club", splinteredClub}, // 90 
   {FALSE, "Suffocation Glove", suffGlove},
   {FALSE, "Force", force},
   {FALSE, "trophy board", trophyBoard},
   {FALSE, "shopinfo board", shopinfoBoard},
-  {FALSE, "Sonic Blast", sonicBlast},  // 95
+  {TRUE, "Sonic Blast", sonicBlast},  // 95
   {FALSE, "highrollers board", highrollersBoard},
   {FALSE, "faction score board", factionScoreBoard},
   {FALSE, "fragile arrow", fragileArrow},
   {FALSE, "Weapon: Starfire", starfire},
   {FALSE, "Sheath: Starfire", starfiresheath}, // 100
   {FALSE, "Teleport Rescue Item", teleportRescue},
-  {FALSE, "Deikhan Sword", deikhanSword},
-  {FALSE, "black sun", blackSun},
-  {FALSE, "poison cutlass", poisonCutlass},
-  {FALSE, "unholy cutlass", unholyCutlass},
+  {TRUE, "Deikhan Sword", deikhanSword},
+  {TRUE, "black sun", blackSun},
+  {TRUE, "poison cutlass", poisonCutlass},
+  {TRUE, "unholy cutlass", unholyCutlass},
   {FALSE, "ghostly shiv", ghostlyShiv},
   {FALSE, "hammer set: peke", HSPeke},
   {FALSE, "hammer set: copsi", HSCopsi},
   {FALSE, "hammer set: pendant", HSPendant}, 
   {FALSE, "blizzard ring", blizzardRing}, //110
-  {FALSE, "frost spear", frostSpear},
-  {FALSE, "ice staff", iceStaff},
+  {TRUE, "frost spear", frostSpear},
+  {TRUE, "ice staff", iceStaff},
   {FALSE, "heart of the arctic", arcticHeart},
   {FALSE, "frost armor", frostArmor}, 
   {FALSE, "telekinesis glove", telekinesisGlove}, //115
@@ -6919,5 +6949,11 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
   {FALSE, "Immortal Exchange Computer", ieComputer}, 
   {FALSE, "liquid source", liquidSource}, // 155
   {FALSE, "of many potions", ofManyPotions},
+  {TRUE, "Shadow Weapon", shadowWeapon},
+  {TRUE, "Living Vines", livingVines},
+  {TRUE, "Piety Regen", pietyRegen},
+  {TRUE, "DK Sword", dkSword},
+  {TRUE, "Molten Weapon", moltenWeapon}, 
+  {TRUE, "Glacial Weapon", glacialWeapon},
   {FALSE, "last proc", bogusObjProc}
 };

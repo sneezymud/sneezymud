@@ -460,7 +460,7 @@ void TBeing::doGrouptell(const sstring &arg)
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
-    if (!k->desc || !k->desc->ignored.isIgnored(desc)) {
+    if (k->desc && !k->desc->ignored.isIgnored(desc)) {
       garbledTo = garble(k, garbled, Garble::SPEECH_GROUPTELL, Garble::SCOPE_INDIVIDUAL);
       buf = format("%s: %s%s%s") % getName() % k->red() % colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) % k->norm();
       sstring gmcp = format("comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", \"player\": \"%s\" }")
@@ -927,11 +927,11 @@ int TBeing::doTell(const sstring &name, const sstring &message, bool visible)
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
   if (vict->desc && vict->canSee(this, INFRA_YES) && isPc())
-    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller));
+    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller)-1);
 
   // if you told to someone, remember who you last told to for use later
   if (desc && vict->desc && isPc() && vict->isPc())
-    strncpy(desc->last_told, vict->name.c_str(), cElements(desc->last_told));
+    strncpy(desc->last_told, vict->name.c_str(), cElements(desc->last_told)-1);
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);

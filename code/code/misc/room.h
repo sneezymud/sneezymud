@@ -142,7 +142,7 @@ class TRoom : public TThing {
     int roomHeight;         // room height
     unsigned int roomFlags; // Bitvector os flags for room
     long descPos;           // File offset for the description.
-    int x, y, z;            // x,y,z location in the world
+    int x=0, y=0, z=0;            // x,y,z location in the world
     unsigned short fished;           // how fished out the room is
     unsigned short logsHarvested;           // how deforested the room is
     int treetype;          // the kind of tree growing in the room
@@ -157,6 +157,7 @@ class TRoom : public TThing {
     roomDirData *dir_option[MAX_DIR]; // Exits
 
     TRoom(int);
+    virtual TThingKind getKind() const;
     virtual TThing& operator+= (TThing& t);
     virtual ~TRoom();
 

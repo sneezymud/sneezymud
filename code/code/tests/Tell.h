@@ -6,7 +6,8 @@
 #include "account.h"
 #include "socket.h"
 #include "code/tests/ValueTraits.h"
-#include "extern.h"
+#include "code/tests/MockDb.h"
+#include "player_data.h"
 
 class Tell : public CxxTest::TestSuite
 {
@@ -25,19 +26,24 @@ class Tell : public CxxTest::TestSuite
     Config::doConfiguration();
     freopen("code/tests/output/Tell.out", "w", stderr);
     buildSpellArray();
-    chdir("lib");
-    Races[RACE_HUMAN] = new Race(RACE_HUMAN);    
+    chdir("../lib");
+    Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
     testSocket=new TSocket();
     testRoom=new TRoom(100);
     testRoom->setRoomFlagBit(ROOM_ALWAYS_LIT);
+
+    // 2 accounts
+    // 1 account has 2 users: testa, testb. testa is logged in, testb is not logged in
+    // As immortal, send tell to testb. Get message about testa being logged in instead.
+    // As mortal, send tell to testb. Get no message about testa being logged in instead.
 
     testDesc=new Descriptor(testSocket);
     testDesc->connected=CON_PLYNG;
     testDesc->account=new TAccount();
     testPerson=new TPerson(testDesc);
     testDesc->character=testPerson;
-    load_char("dante", &st);
+    load_char("anotherone", &st, std::make_unique<MockDb>());
     testPerson->loadFromSt(&st);
     testPerson->in_room=0;
     testPerson->next=character_list;
@@ -49,7 +55,7 @@ class Tell : public CxxTest::TestSuite
     testDesc2->account=new TAccount();
     testPerson2=new TPerson(testDesc2);
     testDesc2->character=testPerson2;
-    load_char("peel", &st);
+    load_char("imm", &st, std::make_unique<MockDb>());
     testPerson2->loadFromSt(&st);
     testPerson2->in_room=0;
     testPerson2->next=character_list;
@@ -61,7 +67,7 @@ class Tell : public CxxTest::TestSuite
     testDesc3->account=new TAccount();
     testPerson3=new TPerson(testDesc3);
     testDesc3->character=testPerson3;
-    load_char("killer", &st);
+    load_char("test", &st, std::make_unique<MockDb>());
     testPerson3->loadFromSt(&st);
     testPerson3->in_room=0;
     testPerson3->next=character_list;
@@ -71,60 +77,57 @@ class Tell : public CxxTest::TestSuite
 
   }
 
-  void testImmNotFound(){
-    Comm *c;
+  void testImmNotFound()
+  {
+    testPerson2->doTell("AnotherTwo", "not logged in user but alt is logged in");
 
-    testPerson2->doTell("milton", "test message");
-    
-    if(!(c=testPerson2->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS("You fail to tell to 'milton'\n\r", c->getComm(Comm::TEXT));
+    TS_ASSERT(!testPerson2->desc->output.empty());
+    TS_ASSERT_EQUALS("You fail to tell to 'AnotherTwo'\n\r", testPerson2->desc->output.front()->getComm());
 
-    if(!(c=testPerson2->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS("The player 'Dante' is logged in under the same account.\n\r", c->getComm(Comm::TEXT));
+    testPerson2->desc->output.pop();
+
+    TS_ASSERT(!testPerson2->desc->output.empty());
+    TS_ASSERT_EQUALS("The player 'AnotherOne' is logged in under the same account.\n\r", testPerson2->desc->output.front()->getComm());
+  }
 
 
+  void testMortalNotFound()
+  {
     // now make sure it doesn't work for mortals
-    testPerson3->doTell("milton", "test message");
-    
-    if(!(c=testPerson3->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS("You fail to tell to 'milton'\n\r", c->getComm(Comm::TEXT));
+    testPerson3->doTell("anothertwo", "not logged in user but alt is logged in");
 
-    if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(Comm::TEXT));
-    }
+    TS_ASSERT(!testPerson3->desc->output.empty());
+    TS_ASSERT_EQUALS("You fail to tell to 'anothertwo'\n\r", testPerson3->desc->output.front()->getComm());
 
+    testPerson3->desc->output.pop();
+
+    if(!testPerson3->desc->output.empty())
+      TS_FAIL((format("received data from output queue: '%s'") % testPerson3->desc->output.front()->getComm()).str());
+  }
+
+  void testNotLoggedIn()
+  {
     // make sure it works with a player who isn't logged in at all
-    testPerson2->doTell("pappy", "test message");
-    
-    if(!(c=testPerson2->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS("You fail to tell to 'pappy'\n\r", c->getComm(Comm::TEXT));
+    testPerson2->doTell("testone", "test message");
 
-    if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(Comm::TEXT));
-    }
+    TS_ASSERT(!testPerson2->desc->output.empty());
+    TS_ASSERT_EQUALS("You fail to tell to 'testone'\n\r", testPerson2->desc->output.front()->getComm());
 
+    testPerson2->desc->output.pop();
+
+    TS_ASSERT(testPerson2->desc->output.empty());
+  }
+
+  void testDoesntExist()
+  {
     // and with a non-existent player
     testPerson2->doTell("notaplayer", "test message");
-    
-    if(!(c=testPerson2->desc->output.takeFromQ()))
-      TS_FAIL("received NULL from output queue");
-    else
-      TS_ASSERT_EQUALS("You fail to tell to 'notaplayer'\n\r", c->getComm(Comm::TEXT));
 
-    if((c=testPerson3->desc->output.takeFromQ())){
-      TS_FAIL(format("received data from output queue: '%s'") % c->getComm(Comm::TEXT));
-    }
+    TS_ASSERT(!testPerson2->desc->output.empty());
+    TS_ASSERT_EQUALS("You fail to tell to 'notaplayer'\n\r", testPerson2->desc->output.front()->getComm());
 
+    testPerson2->desc->output.pop();
 
-
-
+    TS_ASSERT(testPerson2->desc->output.empty());
   }
 };

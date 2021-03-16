@@ -61,6 +61,7 @@ class tweakInfoT {
   tweakEntry *operator[] (const tweakTypeT);
 
   tweakInfoT();
+  ~tweakInfoT();
 };
 
 extern tweakInfoT tweakInfo;

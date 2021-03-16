@@ -18,15 +18,22 @@ namespace {
 
   void handleCoreHello(sstring const& s, Descriptor& d) {
     auto hello = s.substr(sizeof("Core.Hello"));
-    auto js = nlohmann::json::parse(hello);
     try {
+      auto js = nlohmann::json::parse(hello);
       d.mudclient = js.at("client");
       d.clientversion = js.at("version");
+    } catch (nlohmann::json::parse_error const&) {
+      vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     } catch (const std::range_error&) {
       vlogf(LOG_MISC, format("Client sent bad Core.Hello: %s") % hello);
     }
   }
 
+  void handleDiscord(sstring const& s, Descriptor& d)
+  {
+    sstring discordInfoCmd("External.Discord.Info { \"inviteurl\": \"https://discord.gg/pTcaQuk\", \"applicationid\": \"SneezyMUD\" }");
+    d.sendGmcp(discordInfoCmd, true);
+  }
 
   void handleRemember(sstring const& s, Descriptor& d)
   {
@@ -61,6 +68,7 @@ namespace {
     {"remember", handleRemember},
     {"rememberplayer", handleRememberPlayer},
     {"retrieve", handleRetrieve},
+    {"External.Discord.Hello", handleDiscord},
   };
 
   void handleGmcpCommand(sstring const& s, Descriptor* d)

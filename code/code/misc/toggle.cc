@@ -1033,6 +1033,22 @@ void TBeing::doToggle(const char *arg2)
       sendTo("Hero sprites will no longer follow you.\n\r");
       SET_BIT(desc->autobits, AUTO_NOSPRITE);
     }
+  } else if (is_abbrev(arg, "nomap") || is_abbrev(arg, "map")) {
+    if (IS_SET(desc->autobits, AUTO_MAP)) {
+      sendTo("Automap disabled.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_MAP);
+    } else {
+      sendTo("Automap enabled.\n\r");
+      SET_BIT(desc->autobits, AUTO_MAP);
+    }
+  } else if (is_abbrev(arg, "nomaptags") || is_abbrev(arg, "maptags")) {
+    if (IS_SET(desc->autobits, AUTO_MAPTAGS)) {
+      sendTo("Map tags disabled.\n\r");
+      REMOVE_BIT(desc->autobits, AUTO_MAPTAGS);
+    } else {
+      sendTo("Map tags enabled.\n\r");
+      SET_BIT(desc->autobits, AUTO_MAPTAGS);
+    }
   } else if (is_abbrev(arg, "notell") || is_abbrev(arg, "tell")) {
     if (IS_SET(desc->autobits, AUTO_NOTELL)) {
       sendTo("People can now initiate tells to you.\n\r");

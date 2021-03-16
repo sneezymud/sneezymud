@@ -591,6 +591,8 @@ enum cmdTypeT {
      CMD_REMEMBERPLAYER,
      CMD_RETRIEVE,
      CMD_RECHARGE,
+     CMD_NOP,
+     CMD_AURA,
      MAX_CMD_LIST,  // Keep this as last command in regular list
        CMD_RESP_TOGGLE,
        CMD_RESP_UNTOGGLE,
@@ -678,6 +680,8 @@ enum cmdTypeT {
        CMD_MOB_COMBAT_ONATTACK, // called when you begin a fight
        CMD_MOB_COMBAT_ONATTACKED, // called when someone starts a fight with you
        CMD_MOB_COMBAT_STOPPING,
+       CMD_BEING_HIT,
+       CMD_BEING_BEEN_HIT,
 };
 extern cmdTypeT & operator++(cmdTypeT &c, int);
 const cmdTypeT MIN_CMD = cmdTypeT(0);

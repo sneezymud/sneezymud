@@ -196,8 +196,7 @@ int immobilize(TBeing * caster, TBeing * victim, int level, short bKnown)
   // some command lock-out.
   // since spell is tasked, add one to the lag
   float rounds = 0.2233 * (discArray[SPELL_IMMOBILIZE]->lag + 1);
-  // adjust for difficulty
-  rounds = (rounds * 100.0 / getSkillDiffModifier(SPELL_IMMOBILIZE));
+
   // adjust for saving-throw penalty
   rounds = (rounds * 4 / 3);
 
@@ -367,7 +366,7 @@ int suffocate(TBeing * caster, TBeing * victim, int level, short bKnown)
   }
 
   caster->reconcileHurt(victim,discArray[SPELL_SUFFOCATE]->alignMod);
-  duration = level / 5;
+  duration = caster->durationModify(SPELL_SUFFOCATE, level / 5);
 //  duration = modifyForSector(duration, caster, victim, SPELL_SUFFOCATE, 0);
   aff.type = AFFECT_DISEASE;
   aff.level = level;
@@ -830,7 +829,7 @@ void featheryDescent(TBeing *caster, TBeing *victim, int level, int learn)
 
   aff.type = SPELL_FEATHERY_DESCENT;
   aff.level = level;
-  aff.duration = (aff.level) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_FEATHERY_DESCENT, aff.level * Pulse::UPDATES_PER_MUDHOUR);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -870,7 +869,7 @@ int castFeatheryDescent(TBeing * caster, TBeing * victim)
 
   aff.type = SPELL_FEATHERY_DESCENT;
   aff.level = level;
-  aff.duration = aff.level * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_FEATHERY_DESCENT, aff.level * Pulse::UPDATES_PER_MUDHOUR);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -926,7 +925,7 @@ void fly(TBeing * caster, TBeing *victim,  TMagicItem * obj)
 
   aff.type = SPELL_FLY;
   aff.level = level;
-  aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR * level;
+  aff.duration = caster->durationModify(SPELL_FLY, 1 * Pulse::UPDATES_PER_MUDHOUR * level);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_FLYING;
@@ -968,7 +967,7 @@ int castFly(TBeing * caster, TBeing * victim)
 
   aff.type = SPELL_FLY;
   aff.level = level;
-  aff.duration = 3 * Pulse::UPDATES_PER_MUDHOUR * level;
+  aff.duration = caster->durationModify(SPELL_FLY, 3 * Pulse::UPDATES_PER_MUDHOUR * level);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_FLYING;
@@ -1064,7 +1063,7 @@ int castAntigravity(TBeing * caster)
 
   aff.type = SPELL_LEVITATE;
   aff.level = level;
-  aff.duration = (caster->isImmortal() ? caster->GetMaxLevel() : 3) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_ANTIGRAVITY, (caster->isImmortal() ? caster->GetMaxLevel() : 3) * Pulse::UPDATES_PER_MUDHOUR);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_LEVITATING;
@@ -1203,7 +1202,7 @@ int levitate(TBeing * caster, TBeing * victim, int level, short bKnown)
 
   aff.type = SPELL_LEVITATE;
   aff.level = level;
-  aff.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_LEVITATE, 3 * Pulse::UPDATES_PER_MUDHOUR);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_LEVITATING;
@@ -1284,7 +1283,7 @@ int falconWings(TBeing * caster, TBeing * victim, int level, short bKnown)
 
   aff.type = SPELL_FALCON_WINGS;
   aff.level = level;
-  aff.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_FALCON_WINGS, 3 * Pulse::UPDATES_PER_MUDHOUR);
   aff.modifier = 0;
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_FLYING;
@@ -1374,7 +1373,7 @@ int protectionFromAir(TBeing *caster, TBeing *victim, int level, short bKnown)
  
   aff.type = SPELL_PROTECTION_FROM_AIR;
   aff.level = level;
-  aff.duration = (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_AIR, (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_IMMUNITY;
   aff.modifier = IMMUNE_AIR;
   aff.modifier2 = ((level * 2) / 3);

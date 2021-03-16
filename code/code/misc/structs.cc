@@ -35,6 +35,7 @@
 //#include "liquids.h"
 #include "socket.h"
 #include "timing.h"
+#include "player_data.h"
 
 TBeing::TBeing() :
   TThing(),
@@ -88,6 +89,10 @@ TBeing::TBeing() :
   mobCount++;
   setRace(RACE_NORACE);
   trophy = new TTrophy(this);
+}
+
+TThing::TThingKind TBeing::getKind() const {
+  return TThing::TThingKind::TBeing;
 }
 
 TBeing::~TBeing() 
@@ -343,6 +348,10 @@ TBeing::~TBeing()
   delete trophy;
 }
 
+TThing::TThingKind TObj::getKind() const {
+  return TThing::TThingKind::TObj;
+}
+
 TObj::TObj() :
   TThing(),
   obj_flags(), 
@@ -463,6 +472,10 @@ TObj::~TObj()
   owners = NULL;
 
 
+}
+
+TThing::TThingKind TRoom::getKind() const {
+  return TThing::TThingKind::TRoom;
 }
 
 TRoom::TRoom(int r) :
@@ -1329,6 +1342,10 @@ TThing::TThing(const TThing &a) :
 {
   // default will be to member copy the text fields
   // will have to reallocate where appropriate
+}
+
+TThing::TThingKind TThing::getKind() const {
+  return TThing::TThingKind::TThing;
 }
 
 TThing & TThing::operator=(const TThing &a)

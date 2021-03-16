@@ -241,7 +241,7 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
     act(buf, FALSE, thief, 0, 0, TO_ROOM);
     REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
     if ((rp = real_roomp(exitp->to_room)) &&
-        (back = rp->dir_option[rev_dir[door]])) {
+        (back = rp->dir_option[rev_dir(door)])) {
       REMOVE_BIT(back->condition, EXIT_TRAPPED);
     }
     return TRUE;

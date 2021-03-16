@@ -34,6 +34,7 @@ extern "C" {
 #include "combat.h"
 #include "database.h"
 #include "materials.h"
+#include "player_data.h"
 
 
 wizListInfo *wiz;
@@ -323,7 +324,7 @@ bool raw_save_char(const char *name, charFile *char_element)
 }
 
 // Load a char, TRUE if loaded, FALSE if not
-bool load_char(const sstring &name, charFile *char_element)
+bool load_char(const sstring &name, charFile *char_element, std::unique_ptr<IDatabase> dbase)
 {
   FILE *fl;
   char buf[256];
@@ -336,13 +337,13 @@ bool load_char(const sstring &name, charFile *char_element)
   int rc = fread(char_element, sizeof(charFile), 1, fl);
   fclose(fl);
 
-  TDatabase db(DB_SNEEZY);
-  db.query("select talens from player where lower(name)=lower('%s') and talens is not null",
+  std::unique_ptr<IDatabase> db(dbase ? std::move(dbase) : std::move(std::unique_ptr<IDatabase>(new TDatabase(DB_SNEEZY))));
+  db->query("select talens from player where lower(name)=lower('%s') and talens is not null",
 	   name.c_str());
-  if(db.fetchRow()){
-    char_element->money=convertTo<int>(db["talens"]);
+  if(db->fetchRow()){
+    char_element->money=convertTo<int>((*db)["talens"]);
   } else {
-    db.query("update player set talens=%i where lower(name)=lower('%s')",
+    db->query("update player set talens=%i where lower(name)=lower('%s')",
 	     char_element->money, name.c_str());
   }
 
@@ -849,8 +850,6 @@ void TPerson::rentAffectTo(saveAffectedData *af)
   if (af->type == TYPE_UNDEFINED)
     return;
 
-  affectedData *a;
-
   applyTypeT att = mapFileToApply(af->location);
   spellNumT snt = mapFileToSpellnum(af->type);
 
@@ -859,15 +858,15 @@ void TPerson::rentAffectTo(saveAffectedData *af)
     return;
   } else if ((att == APPLY_CURRENT_HIT) || (att == APPLY_HIT)) {
     //mud_assert(af->duration != 0, "affectTo() with 0 duration affect");
-    a = new affectedData(*af);
+    affectedData* a = new affectedData(*af);
     a->next = affected;
     affected = a;
   } else {
-    a = new affectedData(*af);
+    auto a = affectedData(*af);
 
     // when assigning, lets not lose track of the renew value we saved off
     // pass it through in the affectTo call
-    affectTo(a, af->renew);
+    affectTo(&a, af->renew);
     return;
   } 
 }
@@ -881,7 +880,7 @@ void TBeing::saveChar(int load_room)
   charFile st;
   FILE *fl;
   TBeing *tmp = NULL;
-  char buf[256];
+  char buf[512];
   char buf2[256];
 
   if (dynamic_cast<TMonster *>(this)) {
@@ -919,7 +918,6 @@ void TBeing::saveChar(int load_room)
     tmp = NULL;
   }
 
-  memset(&st, 0, sizeof(charFile));
   st.load_room = (short) load_room;
 
   if (!tmp)
@@ -934,6 +932,11 @@ void TBeing::saveChar(int load_room)
   if (!desc->account->name[0]) {
     vlogf(LOG_BUG, format("Character %s has a NULL account name! Save aborted.") %  getName());
     return;
+  }
+  if (getPlayerID() == 0) {
+      vlogf(LOG_BUG, format("Character %s's player ID = 0. Save aborted.") %  getName());
+      act("Your character was not saved. Please report the circumstances how it happened!.", FALSE, this, 0, 0, TO_CHAR);
+      return;
   }
   if (!tmp) { 
     strcpy(buf2, sstring(name).lower().c_str());
@@ -2293,7 +2296,7 @@ int listAccount(sstring name, sstring &buf)
     char * tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
     
-    buf += format("%d) %s (L%d) %s\n\r") % ++count % chars[iChar].c_str() % int(max_level) % tmstr;
+    buf += format("%2d) %-16s %-10s [ %-5s Lev %2d ] %s\n\r") % ++count % chars[iChar].c_str() % Races[int(st.race)]->getSingularName() % TBeing::getProfAbbrevName(st.Class) % int(max_level) % tmstr;
   }
   return count;
 }

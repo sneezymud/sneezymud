@@ -87,8 +87,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
   int learn, wohlin_learn;
   int monk_level;
 
-  if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING) ||
-      (ch->getPosition() > POSITION_STANDING)) {
+  if (!ch->canMeditate()) {
     ch->stopTask();
     return FALSE;
   }
@@ -187,6 +186,10 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
       break;
     case CMD_ABORT:
     case CMD_STOP:
+      act("You stop meditating.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops meditating.", FALSE, ch, 0, 0, TO_ROOM);
+      ch->stopTask();
+      break;
     case CMD_STAND:
       act("You stop meditating and stand up.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops meditating and stands up.", FALSE, ch, 0, 0, TO_ROOM);
@@ -389,11 +392,8 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
   // So technically, we should be blocking 12/90 = 13.3% of damage
   w_type -= TYPE_HIT;
 
-  // monks becoming better tanks than warriors, so lowering this to 10% (3-14-01)
-  // base amount, modified for difficulty
   // the higher amt is, the more things get blocked
-  //  :: Modifer was SKILL_DODGE.  Jirin was created to replace it.
-  int amt = (int) (100 * 100 / getSkillDiffModifier(SKILL_JIRIN));
+  int amt = 100;
 
   if (::number(0, 999) >= amt)
     return FALSE;

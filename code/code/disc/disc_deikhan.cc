@@ -13,15 +13,70 @@
 
 extern void startChargeTask(TBeing *, const char *);
 
+// divineRescue will apply a heal to the target/victim and a short duration buff
+// the buff is mainly so the free heal can't be spammed. 
+void divineRescue(TBeing * caster, TBeing * victim) {
+
+  if (!caster->bSuccess(caster->getSkillValue(SKILL_DIVINE_RESCUE), SKILL_DIVINE_RESCUE))
+    return;
+
+  if (victim->affectedBySpell(SKILL_DIVINE_RESCUE)) {
+    act("Your deities refuse to bless $N again so soon.",
+      FALSE, caster, 0, victim, TO_CHAR);
+    return;
+  }
+
+  affectedData aff;
+  int casterlevel = caster->GetMaxLevel();
+  int level = caster->getSkillLevel(SKILL_DIVINE_RESCUE);
+  int adv_learn = caster->getAdvLearning(SKILL_DIVINE_RESCUE);
+
+  // Max 100 point heal
+  int hp = casterlevel + (adv_learn / 2);
+
+  // lets make this similar to the avenger to continue the Deikhan flavor
+  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", 
+      FALSE, caster, 0, victim, TO_NOTVICT);
+  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", 
+      FALSE, caster, 0, victim, TO_CHAR);
+  act("You glow with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>",
+      FALSE, caster, 0, victim, TO_VICT);
+
+  // caster->sendTo("You fail the rescue.\n\r");
+  act("You are blessed as $n rescues you.",
+      FALSE, caster, 0, victim, TO_VICT);
+
+  act("$N is blessed as $n intercedes on $S behalf.",
+      FALSE, caster, 0, victim, TO_NOTVICT);
+  // TO_CHAR TO_ROOM
+  act("$N is blessed as you intercede on $S behalf.",
+      FALSE, caster, 0, victim, TO_CHAR);
+
+  if (victim->getHit() < victim->hitLimit()) {
+    caster->reconcileHelp(victim,discArray[SKILL_DIVINE_RESCUE]->alignMod);
+    checkFactionHelp(caster,victim);
+  }
+
+  aff.type = SKILL_DIVINE_RESCUE;
+  aff.level = level;
+  aff.duration = Pulse::UPDATES_PER_MUDHOUR / 4;
+  aff.modifier = -50;
+  aff.location = APPLY_ARMOR;
+  aff.bitvector = 0;
+  victim->affectTo(&aff, -1);
+  // Now heal
+  victim->addToHit(hp);
+  victim->updatePos();
+
+}
+
+
 int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
 {
-  int hitp = 0, vlevel = 0;
+  int hitp = 0;
   affectedData aff;
+  int casterlevel = caster->GetMaxLevel();
 
-  if (caster == v) {
-    caster->sendTo("You can not give and take hitpoints from yourself.\n\r");
-    return FALSE;
-  }
   if (!caster->isImmortal() && caster->checkForSkillAttempt(SPELL_SYNOSTODWEOMER)) {
     act("You are not prepared to try to Snyostodweomer again so soon.",
          FALSE, caster, NULL, NULL, TO_CHAR);
@@ -33,51 +88,37 @@ int synostodweomer(TBeing *caster, TBeing *v, int level, short bKnown)
     return FALSE;
   }
 
-  vlevel = v->GetMaxLevel();
-
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_SYNOSTODWEOMER)) {
-    act("Power rushes through your fingers as you touch $N with your blessings.", FALSE, caster, NULL, v, TO_CHAR);
-    act("Power rushes through $n's fingers as $e touches $N with $s blessings.", TRUE, caster, NULL, v, TO_NOTVICT);
-    act("Power surges through $n's fingers as $e touches you with $s blessings.", TRUE, caster, NULL, v, TO_VICT);
+    act("Power rushes through your fingers as you bless $N.", FALSE, caster, NULL, v, TO_CHAR);
+    act("Power rushes through $n's fingers as $e blesses $N.", TRUE, caster, NULL, v, TO_NOTVICT);
+    act("Power surges through $n's fingers as $e blesses you.", TRUE, caster, NULL, v, TO_VICT);
 
     if (!caster->isImmortal()) {
       aff.type = AFFECT_SKILL_ATTEMPT;
       aff.location = APPLY_NONE;
-      aff.duration = 168 * Pulse::UPDATES_PER_MUDHOUR;
+      aff.duration = caster->durationModify(SPELL_SYNOSTODWEOMER, max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR);
       aff.bitvector = 0;
       aff.modifier = SPELL_SYNOSTODWEOMER;
       caster->affectTo(&aff, -1);
     }
-    hitp = caster->getHit() / 3;
-    hitp = (int) (caster->percModifier() * hitp);
-    hitp *= (int) caster->getDiscipline(DISC_DEIKHAN_AEGIS)->getLearnedness() + 100;
-    hitp /= 200;
-    if (vlevel <= level) {
-      hitp *= vlevel;
-      hitp /= level;
-    } else {
-      hitp += (3 * (vlevel - level)) / 2;
-    }
+
+    // hps to add to the vict
+    int learnedness = caster->getDiscipline(DISC_DEIKHAN_GUARDIAN)->getLearnedness();
+    // max of 60
+    hitp = 10 + (caster->GetMaxLevel() * learnedness / 100);
+
     if (critSuccess(caster, SPELL_SYNOSTODWEOMER)) {
       CS(SPELL_SYNOSTODWEOMER);
-      hitp *= 2;
+      hitp += 10;
     }
 
     aff.type = SPELL_SYNOSTODWEOMER;
     aff.level = level;
-    aff.duration  = 2 * Pulse::UPDATES_PER_MUDHOUR;
+    // aff.duration = max(min(casterlevel/12, 5), 1) * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = hitp;
     aff.location = APPLY_HIT;
     aff.bitvector = 0;
     v->affectTo(&aff, -1);
-    aff.location = APPLY_CURRENT_HIT;
-    v->affectTo(&aff, -1);
-
-    aff.location = APPLY_HIT;
-    aff.modifier = 0 - hitp;
-    caster->affectTo(&aff, -1);
-    aff.location = APPLY_CURRENT_HIT;
-    caster->affectTo(&aff, -1);
 
     v->updatePos();
     caster->updatePos();
@@ -95,16 +136,8 @@ int synostodweomer(TBeing *caster, TBeing *v)
   int level, ret;
   int rc = 0;
 
-  caster->sendTo("The synostodweomer prayer has been disabled due to a crash bug.\n\r");
-  return FALSE;
-
   if (!bPassClericChecks(caster,SPELL_SYNOSTODWEOMER))
      return FALSE;
-
-  if (caster == v) {
-    caster->sendTo("You can not give and take hitpoints from yourself.\n\r");
-    return FALSE;
-  }
 
   if (!caster->isImmortal() && 
           caster->checkForSkillAttempt(SPELL_SYNOSTODWEOMER)) {
@@ -157,7 +190,7 @@ int TBeing::doLayHands(const char *arg)
 
   // Prevent back-to-back attempts
   aff.type = AFFECT_SKILL_ATTEMPT;
-  aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = 1.5 * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = SKILL_LAY_HANDS;
   aff.location = APPLY_NONE;
   aff.bitvector = 0;
@@ -171,7 +204,7 @@ int TBeing::doLayHands(const char *arg)
     act("$n attempts to lay hands on you.", FALSE, this, NULL, vict, TO_VICT);
     act("$n attempts to lay hands on $N.", FALSE, this, NULL, vict, TO_NOTVICT);
   }
-  amt = ::number(1,100) + getClassLevel(CLASS_DEIKHAN);
+  amt = ::number(20,200) + (5 * getClassLevel(CLASS_DEIKHAN));
 
   if (bSuccess(getSkillValue(SKILL_LAY_HANDS), getPerc(), SKILL_LAY_HANDS)) {
     LogDam(this, SKILL_LAY_HANDS, amt);
@@ -192,9 +225,9 @@ int TBeing::doLayHands(const char *arg)
     vict->addToHit(amt);
     vict->setHit(std::min(vict->getHit(), (int) vict->hitLimit()));
 
-    // success prevents from working for 12 hours
+    // success prevents from working for longer
     aff.type = SKILL_LAY_HANDS;
-    aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
     aff.location = APPLY_NONE;
     aff.modifier = 0;
     aff.bitvector = 0;

@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <cmath>
 
+#include "DescriptorList.h"
 #include "extern.h"
 #include "handler.h"
 #include "room.h"
@@ -58,6 +59,7 @@ extern "C" {
 #include "obj_commodity.h"
 #include "spec_mobs.h"
 #include "materials.h"
+#include "player_data.h"
 
 extern bool Reboot;
 
@@ -73,6 +75,8 @@ togTypeT & operator++(togTypeT &c, int)
 
 togInfoT::~togInfoT()
 {
+  for (auto t : toggles)
+    delete t;
 }
 
 togInfoT::togInfoT()
@@ -1418,13 +1422,18 @@ void TPerson::doShutdown(bool reboot, const char *argument)
     Descriptor::worldSend(buf, this);
     Shutdown = 1;
   } else {
-    if (isdigit(*arg)) {
+    bool force = false;
+    if (std::string(arg) == "now!")
+      force = true;
+
+    if (force || isdigit(*arg)) {
       num = convertTo<int>(arg);
-      if (num <= 0) {
+      if (!force && num <= 0) {
         sendTo("Illegal number of minutes.\n\r");
         sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
         return;
-      } 
+      }
+
       if (!timeTill)
         timeTill = time(0) + (num * SECS_PER_REAL_MIN);
       else if (timeTill < (time(0) + (num * SECS_PER_REAL_MIN))) {
@@ -1450,7 +1459,7 @@ void TPerson::doShutdown(bool reboot, const char *argument)
       sendTo("Syntax : shutdown <minutes until shutdown>\n\r");
       return;
     }
-  } 
+  }
 }
 
 void TBeing::doSnoop(const char *)
@@ -2151,7 +2160,7 @@ void TPerson::doForce(const char *argument)
 {
   Descriptor *i;
   TBeing *vict;
-  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH];
+  char name_buf[MAX_INPUT_LENGTH], to_force[MAX_INPUT_LENGTH], buf[MAX_INPUT_LENGTH*2];
   int rc;
   TThing *t;
 
@@ -2250,56 +2259,45 @@ void TPerson::doForce(const char *argument)
   }
 }
 
-void TBeing::doDistribute(const char* argument)
+void TPerson::doDistribute(sstring const& argument)
 {
-  sendTo("Mobs can't distribute.\n\r");
-}
-
-void TPerson::doDistribute(const char* argument)
-{
-  char vnum_s[MAX_INPUT_LENGTH], chance_s[MAX_INPUT_LENGTH];
-
   if (powerCheck(POWER_DISTRIBUTE))
     return;
 
-  half_chop(argument, vnum_s, chance_s);
+  int vnum = convertTo<int>(argument.word(0));
+  int chance = convertTo<int>(argument.word(1));
 
-  if (!*vnum_s || !*chance_s)
-    sendTo("Syntax: distribute <vnum> <chance>.\n\r");
-  else {
-      int vnum;
-      int chance;
-      if (sscanf(vnum_s, "%d", &vnum) != 1 || sscanf(chance_s, "%d", &chance) != 1) {
-	  sendTo("Syntax: distribute <vnum> <chance>.\n\r");
-	  return;
+  if (vnum == 0 || chance == 0) {
+    sendTo("Syntax: distribute <vnum> <chance>\n\r");
+  } else {
+    TObj* tmpObj;
+    if (vnum < 0 || (tmpObj = read_object(vnum, VIRTUAL)) == nullptr) {
+      sendTo(format("There is no such object %d.\n\r") % vnum);
+      return;
+    }
+    delete tmpObj;
+
+    sendTo(format("Distributing %d with chance %d.\n\r") % vnum % chance);
+    vlogf(LOG_MISC, format("%s distributing vnum %d to mobs, with chance %d") % getName() % vnum % chance);
+
+    int count = 0;
+    TObj* obj;
+    for (TBeing* person = character_list; person; person = person->next) {
+      if (person->isPc())
+        continue;
+
+      if (rand() % 100 < chance) {
+        if (!(obj = read_object(vnum, VIRTUAL))) {
+          vlogf(LOG_BUG, "Error finding object.");
+          return;
+        }
+        *person += *obj;
+        count++;
       }
+    }
 
-      if (vnum < 0 || vnum >= (signed int) obj_index.size()) {
-	sendTo("There is no such object.\n\r");
-	return;
-      }
-
-      sendTo(format("Distributing %d with chance %d.\n\r") % vnum % chance);
-      vlogf(LOG_MISC, format("%s distributing vnum %d to mobs, with chance %d") % getName() % vnum % chance);
-
-      int count = 0;
-      TObj* obj;
-      for (TBeing* person = character_list; person; person = person->next) {
-	if (person->isPc())
-	  continue;
-
-	if (rand() % 100 < chance) {
-	  if (!(obj = read_object(vnum, VIRTUAL))) {
-	    vlogf(LOG_BUG, "Error finding object.");
-	    return;
-	  }
-	  *person += *obj;
-	  count++;
-	}
-      }
-
-      vlogf(LOG_MISC, format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
-      sendTo(format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
+    vlogf(LOG_MISC, format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
+    sendTo(format("%s distributed %d copies of item vnum %d to mobs, with chance %d") % getName() % count % vnum % chance);
   }
 }
 
@@ -2486,7 +2484,6 @@ void TBeing::doCutlink(const char *)
 
 void TPerson::doCutlink(const char *argument)
 {
-  Descriptor *d;
   char name_buf[100];
 
   if (powerCheck(POWER_CUTLINK))
@@ -2495,40 +2492,39 @@ void TPerson::doCutlink(const char *argument)
   argument = one_argument(argument, name_buf, cElements(name_buf));
 
   if (!*name_buf) {
-    for (d = descriptor_list; d; d = d->next) {
+    std::vector<Descriptor*> toDelete;
+    for (auto d : DescriptorList) {
       if (!d->character || d->character->name.empty()) {
-        sendTo(format("You cut a link from host %s\n\r") %
-               (!(d->host.empty()) ? d->host : "Host Unknown"));
-
-        delete d;
+        sendTo(format("You cut a link from host %s\n\r") % (!(d->host.empty()) ? d->host : "Host Unknown"));
+        toDelete.push_back(d);
       }
     }
+    for (Descriptor* d : toDelete)
+      delete d;
   } else {
-    for (d = descriptor_list; d; d = d->next) {
-      if (d->character) {
-        if (!d->character->name.empty() && !(d->character->name.lower()).compare(name_buf)) {
-          if (d->character == this) {
-            sendTo("You can't cut your own link, sorry.\n\r");
-            return;
-          }
-          if (d->character->GetMaxLevel() >= GetMaxLevel()) {
-            sendTo("You can only cut the link of players lower level than you.\n\r");
-            return;
-          }
-          if (d->character->roomp)  // necessary check due to canSeeMe
-            act("You cut $S link.", TRUE, this, 0, d->character, TO_CHAR);
-          else 
-            act("You cut someone's link.", TRUE, this, 0, 0, TO_CHAR);
-
-          TPerson *p = dynamic_cast<TPerson *>(d->character);
-          if (p)
-            p->fixClientPlayerLists(TRUE);
-          delete d;
-          return;
-        }
-      }
+    auto it = DescriptorList.findByCharName(name_buf);
+    if (it == DescriptorList.end()) {
+      sendTo("No one by that name logged in!\n\r");
+      return;
     }
-    sendTo("No one by that name logged in!\n\r");
+    Descriptor* d = *it;
+    if (d->character == this) {
+      sendTo("You can't cut your own link, sorry.\n\r");
+      return;
+    }
+    if (d->character->GetMaxLevel() >= GetMaxLevel()) {
+      sendTo("You can only cut the link of players lower level than you.\n\r");
+      return;
+    }
+    if (d->character->roomp)  // necessary check due to canSeeMe
+      act("You cut $S link.", TRUE, this, 0, d->character, TO_CHAR);
+    else
+      act("You cut someone's link.", TRUE, this, 0, 0, TO_CHAR);
+
+    TPerson *p = dynamic_cast<TPerson *>(d->character);
+    if (p)
+      p->fixClientPlayerLists(TRUE);
+    delete d;
     return;
   }
 }
@@ -3365,13 +3361,13 @@ void TBeing::doRestore(const char *argument)
       }
       if (name == victim->getName()) {
   found = TRUE;
-  strncpy(name2, name, sizeof(name));
+  strncpy(name2, name, sizeof(name2));
   pracs2 = pracs;
       } else {
 	fprintf(fp2,"%s", buf);
       }
     }
-    strncpy(name, name2, sizeof(name2));
+    strncpy(name, name2, sizeof(name));
     pracs = pracs2;
     fprintf(fp2,"%s", buf);
     fclose(fp);
@@ -3501,7 +3497,7 @@ void TBeing::doNoshout(const sstring &argument)
 
 void TBeing::doDeathcheck(const sstring &arg)
 {
-  char file[256], playerx[256], buf[256];
+  char file[256], playerx[256], buf[1024];
   char *p;
 
   if (powerCheck(POWER_DEATHCHECK))
@@ -3958,7 +3954,7 @@ void TPerson::doAccess(const sstring &arg)
 
 void TBeing::doReplace(const sstring &argument)
 {
-  char buf[256], dir[256], dir2[256];
+  char buf[1024], dir[256], dir2[256];
   sstring arg1, arg2, arg3;
   FILE *fp;
   charFile st;
@@ -4663,7 +4659,7 @@ void TBeing::doInfo(const char *arg)
           tTotalGold[tMoney] = getPosGold(tMoney);
           tNetGold[tMoney]   = getNetGold(tMoney);
 
-          sprintf(buf2, "Ecomony-%s:\n\r\tpos = %9u   net gold = %9d (drain: %9d : %6.2f%%)\n\r",
+          sprintf(buf2, "Ecomony-%.30s:\n\r\tpos = %9u   net gold = %9d (drain: %9d : %6.2f%%)\n\r",
                   tNames[tMoney], tTotalGold[tMoney], tNetGold[tMoney],
                   tTotalGold[tMoney] - tNetGold[tMoney],
                   100.0 * (tTotalGold[tMoney] - tNetGold[tMoney]) / tTotalDrain);
@@ -5577,7 +5573,7 @@ void TBeing::doSysChecklog(const sstring &arg)
 {
   char *tMarkerS, // Start
        *tMarkerE, // End
-        tString[256],
+        tString[1024],
         tSearch[256],
         tLog[256];
   unsigned int tIndex;
@@ -5995,7 +5991,7 @@ void TBeing::doAccount(const sstring &arg)
       int new_limit = account.multiplay_limit;
       try {
         new_limit = std::stoi(limit);
-      } catch (std::invalid_argument) {
+      } catch (std::invalid_argument&) {
         sendTo(format("Incorrect multiplay limit '%s', expected positive integer.\n\r") % limit);
         return;
       }

@@ -84,7 +84,7 @@ void TPool::overFlow()
       sendrpf(COLOR_BASIC, rooms[i], 
 	      "Some %s flows in from the %s.\n\r",
 	      liquidInfo[getDrinkType()]->name,
-	      dirs[rev_dir[roomdirs[i]]]);
+	      dirs[rev_dir(roomdirs[i])]);
     }
 
     roomp->saveItems("");

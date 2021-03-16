@@ -7,199 +7,139 @@
 
 class CommTest : public CxxTest::TestSuite
 {
- public:
-  sstring testString[4];
-  TSocket *testSocket;
-  Descriptor *testDesc;
-  TPerson *testPerson;
+  public:
+    sstring testString[4];
+    Descriptor *testDesc;
+    TPerson *testPerson;
 
-  void setUp(){
-    Config::doConfiguration();
-    freopen("code/tests/output/CommTest.out", "w", stderr);
+    void setUp(){
+      Config::doConfiguration();
 
-    testString[0]="holding up my";
-    testString[1]="purring cat to the moon";
-    testString[2]="I sighed.";
-    testString[3]="C-C-C-C-C-Combo breaker!";
+      testString[0]="holding up my";
+      testString[1]="purring cat to the moon";
+      testString[2]="I sighed.";
+      testString[3]="C-C-C-C-C-Combo breaker!";
 
-    testSocket=new TSocket();
-    testDesc=new Descriptor(testSocket);
-    testPerson=new TPerson(testDesc);
-  }
-
-  void tearDown(){
-  }
-
-  void testOutputQ(){
-    //    outputQ q;
-    Comm *c;
-
-    // make sure the basic functions work on an empty queue
-    {
-      TS_ASSERT(testPerson->desc->output.takeFromQ()==NULL);
-      TS_ASSERT(testPerson->desc->output.getBegin()==NULL);
-      TS_ASSERT(testPerson->desc->output.getEnd()==NULL);
+      testDesc=new Descriptor(new TSocket());
+      testPerson=new TPerson(testDesc);
     }
 
-    // basic queue test
-    {
-      testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
-      testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
-      testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
-      
-      c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[0]);
-      
-      // stick something in out of order
-      testPerson->desc->output.putInQ(new UncategorizedComm(testString[3]));
-      
-      c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[1]);
-      
-      c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[2]);
-      
-      c=testPerson->desc->output.takeFromQ();
-      TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[3]);
+    void tearDown(){
+      delete testPerson;
+      delete testDesc;
     }
 
-    // queue should be empty now (after operations)
-    TS_ASSERT(testPerson->desc->output.takeFromQ()==NULL);
+    void testUncategorizedComm(){
+      testPerson->desc->output.push(CommPtr(new UncategorizedComm(testString[0])));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-    // check if clear() works
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
-    
-    c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[0]);
-    
-    testPerson->desc->output.clear();
-    TS_ASSERT(testPerson->desc->output.takeFromQ()==NULL);
+      TS_ASSERT_EQUALS(comm->getComm(), testString[0]);
+    }
 
-  }
+    void testColoredComm(){
+      testPerson->desc->output.push(CommPtr(new UncategorizedComm("this is <r>a<1> test")));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-  void testUncategorizedComm(){
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
-    Comm *comm=testPerson->desc->output.takeFromQ();
+      TS_ASSERT_EQUALS(comm->getComm(),
+          "this is <r>a<1> test");
+    }
 
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT), testString[0]);
-  }
+    void testAnsiColoredComm(){
+      testPerson->desc->output.push(CommPtr(new UncategorizedComm(format("this is %sa%s test") % ANSI_RED % ANSI_NORMAL)));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-  void testColoredComm(){
-    testPerson->desc->output.putInQ(new UncategorizedComm("this is <r>a<1> test"));
-    Comm *comm=testPerson->desc->output.takeFromQ();
-
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
-		     "this is <r>a<1> test");
-  }
-
-  void testAnsiColoredComm(){
-    testPerson->desc->output.putInQ(new UncategorizedComm(format("this is %sa%s test") % ANSI_RED % ANSI_NORMAL));
-    Comm *comm=testPerson->desc->output.takeFromQ();
-
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
-		     (format("this is %sa%s test") % ANSI_RED % ANSI_NORMAL).str());
-  }
+      TS_ASSERT_EQUALS(comm->getComm(),
+          (format("this is %sa%s test") % ANSI_RED % ANSI_NORMAL).str());
+    }
 
 
-  void testSystemLogComm(){
-    testPerson->desc->output.putInQ(new SystemLogComm(time(0), LOG_PIO, testString[1]));
-    Comm *comm=testPerson->desc->output.takeFromQ();
+    void testSystemLogComm(){
+      testPerson->desc->output.push(CommPtr(new SystemLogComm(time(0), LOG_PIO, testString[1])));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
-		     (format("// Player I/O: %s\n\r") % testString[1]).str());
-  }
+      TS_ASSERT_EQUALS(comm->getComm(),
+          (format("// Player I/O: %s\n\r") % testString[1]).str());
+    }
 
-  void testTellFromComm(){
-    testPerson->desc->output.putInQ(new TellFromComm("Deirdre", "Peel",
-						     format("%s, %s, %s") %
-			    testString[0] % testString[1] % testString[2],
-						     true, false));
-    Comm *comm=testPerson->desc->output.takeFromQ();
-    
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
-		     (format("<p>Peel<z> tells you, \"<c>%s, %s, %s<z>\"\n\r") %
-    		     testString[0] % testString[1] % testString[2]).str());
-  }
+    void testTellFromComm(){
+      testPerson->desc->output.push(CommPtr(new TellFromComm("Deirdre", "Peel",
+            format("%s, %s, %s") %
+            testString[0] % testString[1] % testString[2],
+            true, false)));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-  void testTellToComm(){
-    testPerson->desc->output.putInQ(new TellToComm("Deirdre", "Peel",
-						   (format("%s, %s, %s") %
-						    testString[0] % testString[1] % testString[2]).str()));
-    Comm *comm=testPerson->desc->output.takeFromQ();
+      TS_ASSERT_EQUALS(comm->getComm(),
+          (format("<p>Peel<z> tells you, \"<c>%s, %s, %s<z>\"\n\r") %
+           testString[0] % testString[1] % testString[2]).str());
+    }
 
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT),
-		     (format("<G>You tell Deirdre<z>, \"%s, %s, %s\"\n\r") %
-    		     testString[0] % testString[1] % testString[2]).str());
-  }
+    void testTellToComm(){
+      testPerson->desc->output.push(CommPtr(new TellToComm("Deirdre", "Peel",
+            (format("%s, %s, %s") %
+             testString[0] % testString[1] % testString[2]).str())));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-  void testWhoListRemoveComm(){
-    testPerson->desc->output.putInQ(new WhoListComm("Peel", false, 60, 100,
-	 true, "The Freshmaker", "Peel keeps her warm but they never kiss."));
-    Comm *comm=testPerson->desc->output.takeFromQ();
+      TS_ASSERT_EQUALS(comm->getComm(),
+          (format("<G>You tell Deirdre<z>, \"%s, %s, %s\"\n\r") %
+           testString[0] % testString[1] % testString[2]).str());
+    }
 
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT), "");
+    void testWhoListRemoveComm(){
+      testPerson->desc->output.push(CommPtr(new WhoListComm("Peel", false, 60, 100,
+            true, "The Freshmaker", "Peel keeps her warm but they never kiss.")));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-  }
+      TS_ASSERT_EQUALS(comm->getComm(), "");
 
-  void testWhoListAddComm(){
-    testPerson->desc->output.putInQ(new WhoListComm("Peel", false, 60, 100,
-	false, "The Freshmaker", "Peel keeps her warm but they never kiss."));
-    Comm *comm=testPerson->desc->output.takeFromQ();
+    }
 
-    TS_ASSERT_EQUALS(comm->getComm(Comm::TEXT), "");
+    void testWhoListAddComm(){
+      testPerson->desc->output.push(CommPtr(new WhoListComm("Peel", false, 60, 100,
+            false, "The Freshmaker", "Peel keeps her warm but they never kiss.")));
+      CommPtr comm=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-  }
+      TS_ASSERT_EQUALS(comm->getComm(), "");
 
-  void testPagedOutput(){
-    Comm *c;
+    }
 
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
-    
-    testPerson->makeOutputPaged();
+    void testPagedOutput(){
+      testPerson->desc->output.push(CommPtr(new UncategorizedComm(testString[0])));
+      testPerson->desc->output.push(CommPtr(new UncategorizedComm(testString[1])));
+      testPerson->desc->output.push(CommPtr(new UncategorizedComm(testString[2])));
 
-    c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[0]);
-    
-    c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[1]);
-    
-    c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), testString[2]);
+      testPerson->makeOutputPaged();
 
+      TS_ASSERT_EQUALS(testPerson->desc->output.front()->getComm(), (format("%s%s%s") %
+            testString[0] % testString[1] % testString[2]).str());
 
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[0]));
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[1]));
-    testPerson->desc->output.putInQ(new UncategorizedComm(testString[2]));
-
-    testSocket->port=Config::Port::PROD; // makeOutputPaged checks this
-    testPerson->makeOutputPaged();
-    
-    c=testPerson->desc->output.takeFromQ();
-    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), (format("%s%s%s") %
-		     testString[0] % testString[1] % testString[2]).str());
-
-  }
+    }
 
 
-  void testSoundComm(){
-    Comm *c;
-    SoundComm *sound=new SoundComm("sound", "", "cackle.wav", "socials", -1, -1, -1, -1);
+    void testSoundComm(){
+      CommPtr c;
+      auto sound = CommPtr(new SoundComm("sound", "", "cackle.wav", "socials", -1, -1, -1, -1));
 
-    testPerson->sendTo(sound);
-    c=testPerson->desc->output.takeFromQ();
+      testPerson->sendTo(sound);
+      c=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "!!SOUND(cackle.wav T=socials)\n\r");
+      TS_ASSERT_EQUALS(c->getComm(), "!!SOUND(cackle.wav T=socials)\n\r");
 
-    sound=new SoundComm("sound", "http://sneezymud.com/sounds/", "Off", "", -1,-1,-1, -1);
-    testPerson->sendTo(sound);
-    c=testPerson->desc->output.takeFromQ();
+      auto sound2 = CommPtr(new SoundComm("sound", "http://sneezymud.org/sounds/", "Off", "", -1,-1,-1, -1));
+      testPerson->sendTo(sound2);
+      c=testPerson->desc->output.front();
+      testPerson->desc->output.pop();
 
-    TS_ASSERT_EQUALS(c->getComm(Comm::TEXT), "!!SOUND(Off U=http://sneezymud.com/sounds/)\n\r");
-  }
-  
+      TS_ASSERT_EQUALS(c->getComm(), "!!SOUND(Off U=http://sneezymud.org/sounds/)\n\r");
+    }
+
 
 };

@@ -188,6 +188,12 @@ public:
   void preload(void);
   cached_object *operator[](int);
 
+  ~TObjectCache()
+  {
+    for (auto& it : cache)
+      delete it.second;
+    cache.clear();
+  }
 } obj_cache;
 
 class TMobileCache {
@@ -198,6 +204,13 @@ public:
 
   void preload(void);
   cached_object *operator[](int);
+
+  ~TMobileCache()
+  {
+    for (auto& it : cache)
+      delete it.second;
+    cache.clear();
+  }
 } mob_cache;
 
 
@@ -657,8 +670,8 @@ void bootWorld(void)
 
   db.query("select * from room order by vnum asc");
   db_exits.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit order by vnum asc");
-  db_exits.fetchRow();
-  db_extras.query("select * from roomextra order by vnum asc");  
+  bool hasExits = db_exits.fetchRow();
+  bool hasExtras = db_extras.query("select * from roomextra order by vnum asc");
   db_extras.fetchRow();
 
   while(db.fetchRow()){
@@ -711,12 +724,10 @@ void bootWorld(void)
     rp->ex_description = NULL;
 
     // in case there are extras with no associated room, we need this
-    while(convertTo<int>(db_extras["vnum"]) < rp->number)
-      if(!db_extras.fetchRow())
-        break;
+    while (hasExtras && convertTo<int>(db_extras["vnum"]) < rp->number)
+      hasExtras = db_extras.fetchRow();
 
-
-    while(convertTo<int>(db_extras["vnum"]) == rp->number){
+    while(hasExtras && convertTo<int>(db_extras["vnum"]) == rp->number){
       new_descr = new extraDescription();
       new_descr->keyword = db_extras["name"];
       if (new_descr->keyword.empty())
@@ -729,8 +740,7 @@ void bootWorld(void)
       new_descr->next = rp->ex_description;
       rp->ex_description = new_descr;
 
-      if(!db_extras.fetchRow())
-        break;
+      hasExtras = db_extras.fetchRow();
     }
 
     dirTypeT dir;
@@ -738,12 +748,11 @@ void bootWorld(void)
       rp->dir_option[dir] = 0;
 
     // in case there are exits with no associated room, we need this
-    while(convertTo<int>(db_exits[0]) < rp->number)
-      if(!db_exits.fetchRow())
-        break;
+    while (hasExits && convertTo<int>(db_exits[0]) < rp->number)
+      hasExits = db_exits.fetchRow();
 
 
-    while(convertTo<int>(db_exits[0]) == rp->number){
+    while (hasExits && convertTo<int>(db_exits[0]) == rp->number){
       dir=mapFileToDir(convertTo<int>(db_exits[1]));
 
       rp->dir_option[dir] = new roomDirData();
@@ -784,8 +793,7 @@ void bootWorld(void)
           vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
               rp->number % dir);
       }
-      if(!db_exits.fetchRow())
-        break;
+      hasExits = db_exits.fetchRow();
     }
     
     roomCount++;
@@ -1210,125 +1218,182 @@ void zoneData::renumCmd(void)
   stat_objs.clear();
   int argbuf;
   
+  std::vector<resetCom> clean_cmd_table;
+  clean_cmd_table.reserve(cmd_table.size());
+
   for (comm = 0; cmd_table[comm].command != 'S'; comm++) {
     resetCom *rs = &cmd_table[comm];
     switch (rs->command) {
       case 'A':
-        if (rs->arg1 < 0 || rs->arg1 >= WORLD_SIZE)
+        if (rs->arg1 < 0 || rs->arg1 >= WORLD_SIZE) {
           logError('A', "room 1",comm, rs->arg1);
-        if (rs->arg2 < 0 || rs->arg2 >= WORLD_SIZE)
+          continue;
+        }
+        if (rs->arg2 < 0 || rs->arg2 >= WORLD_SIZE) {
           logError('A', "room 2",comm, rs->arg2);
-        if (rs->arg2 <= rs->arg1)
+          continue;
+        }
+        if (rs->arg2 <= rs->arg1) {
           logError('A', "no overlap",comm, rs->arg2);
+          continue;
+        }
         break;
       case 'C':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('C', "mobile",comm, value);
-          else 
+          continue;
+        } else {
             ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('C', "room",comm, rs->arg3);
-          
+          continue;
+        }
         break;
       case 'K':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('K', "mobile",comm, value);
-          else 
-            ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_mobs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('K', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'M':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('M', "mobile",comm, value);
-          else 
-            ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_mobs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('M', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'R':
         rs->arg1 = real_mobile(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('R', "mobile",comm, value);
-          else 
-            ++stat_mobs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_mobs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('R', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'O':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('O', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('O', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'G':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('G', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
         break;
       case 'X': // X <set num> <slot> <vnum>
-        if (rs->arg3 < 0 || rs->arg3 > 15)
+        if (rs->arg3 < 0 || rs->arg3 > 15) {
           logError('X', "macro",comm, rs->arg2);
-        rs->arg1 = mapFileToSlot(value = rs->arg1); 
-        if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR)
+          continue;
+        }
+        rs->arg1 = mapFileToSlot(value = rs->arg1);
+        if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR) {
           logError('X', "bogus slot",comm, value);
+          continue;
+        }
         argbuf = real_object(value = rs->arg2);
+        // why no check? Why no assigning it back to arg2?
         if (argbuf >= 0)
           ++stat_objs[argbuf];
         break;
       case 'Z': // Z <if flag> <set num> <perc chance>
-        if (rs->arg1 < 0 || rs->arg1 > 15)
+        if (rs->arg1 < 0 || rs->arg1 > 15) {
           logError('Z', "macro",comm, rs->arg3);
-        if (rs->arg2 <= 0 || rs->arg2 > 100)
+          continue;
+        }
+        if (rs->arg2 <= 0 || rs->arg2 > 100) {
           logError('Z', "percent",comm, rs->arg2);
+          continue;
+        }
         break;
         // Add one for each suit load ..loadset
       case 'Y':
-        if (rs->arg1 <= 0 || rs->arg1 > (signed) suitSets.suits.size())
+        if (rs->arg1 <= 0 || rs->arg1 > (signed) suitSets.suits.size()) {
           logError('Y', "macro",comm, rs->arg1);
-        if (rs->arg2 <= 0 || rs->arg2 > 100)
+          continue;
+        }
+        if (rs->arg2 <= 0 || rs->arg2 > 100) {
           logError('Y', "percent",comm, rs->arg2);
+          continue;
+        }
         break;
       case 'E':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('E', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
         rs->arg3 = mapFileToSlot(value = rs->arg3); 
-        if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR)
+        if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR) {
           logError('E', "bogus slot",comm, value);
+          continue;
+        }
         break;
       case 'P':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('P', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
         rs->arg3 = real_object(rs->arg3);
-        if (rs->arg3 < 0)
+        if (rs->arg3 < 0) {
           logError('P', "container",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'D':
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('D', "room",comm, rs->arg1);
+          continue;
+        }
         break;
       case 'B':
         rs->arg1 = real_object(value = rs->arg1);
-        if (rs->arg1 < 0)
+        if (rs->arg1 < 0) {
           logError('B', "object",comm, value);
-          else 
-            ++stat_objs[rs->arg1];
-        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM)
+          continue;
+        } else {
+          ++stat_objs[rs->arg1];
+        }
+        if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
           logError('B', "room",comm, rs->arg3);
+          continue;
+        }
         break;
       case 'H':
         if (rs->arg1 < MIN_HATE || rs->arg1 >= MAX_HATE) {
@@ -1343,7 +1408,9 @@ void zoneData::renumCmd(void)
         }
         break;
     }
+    clean_cmd_table.push_back(*rs);
   }
+  cmd_table.swap(clean_cmd_table);
   
   // set the object and mob tallies in zoneData
   std::map<int,int>::iterator iter;
@@ -2729,14 +2796,10 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
     zone_table[zone].max_mob_level = max(grl, zone_table[zone].max_mob_level);
   }
 
-#if 1
   colorAct(COLOR_MOBS, ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
                         mob->ex_description->findExtraDesc("repop") :
                         "$n appears suddenly in the room."),
            TRUE, mob, 0, 0, TO_ROOM);
-#else
-  act("$n appears suddenly in the room.", TRUE, mob, 0, 0, TO_ROOM);
-#endif
 
   if (mob->spec && zone && UtilProcs(mob->spec))
     vlogf(LOG_LOW, format("Mob (%s:%d) has a utility proc (%s:%d) and is not in zone #0") % 
@@ -3321,6 +3384,12 @@ void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       (obj = read_object_buy_build(mob, rs.arg1, REAL))))
   {
     repoCheck(mob, rs.arg1);
+    return;
+  }
+
+  if (mob == nullptr)
+  {
+    vlogf(LOG_BUG, format("Nullptr mob in G command #%d (%d %d %d %d) in %s") % rs.cmd_no % rs.arg1 % rs.arg2 % rs.arg3 % rs.arg4 % zone.name);
     return;
   }
 

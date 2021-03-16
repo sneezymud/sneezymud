@@ -116,8 +116,7 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
     if(p->isPlayerAction(PLR_ANONYMOUS) && !ch->isImmortal()){
       tmpstring = "Anonymous";
     } else {
-      tempbuf=format("%-5s Lev %2d") % 
-	p->getProfAbbrevName() % p->GetMaxLevel();
+      tempbuf=format("%-5s Lev %2d") % TBeing::getProfAbbrevName(p->player.Class) % p->GetMaxLevel();
       tmpstring += tempbuf;
     }
 

@@ -294,7 +294,7 @@ sstring TMessages::getDefaultMessage(messageTypeT tValue, TBeing *tChar)
   }
 }
 
-bool TMessages::operator==(messageTypeT tValue)
+bool TMessages::operator==(messageTypeT tValue) const
 {
   if (!tPlayer || (*this)[tValue].empty() ||
       (messageCommandSwitches[tValue][2] &&
@@ -314,112 +314,58 @@ void TMessages::operator()(messageTypeT tValue, sstring tStString)
   switch (tValue)
   {
     case MSG_IMM_TITLE: // Immortal Title
-      delete [] tMessages.msgImmTitle;
-      tMessages.msgImmTitle = NULL;
-      tMessages.msgImmTitle = new char [tStString.length() + 1];
-      strcpy(tMessages.msgImmTitle, tStString.c_str());
+      tMessages.msgImmTitle = tStString;
       break;
     case MSG_PURGE: // purge
-      delete [] tMessages.msgPurge;
-      tMessages.msgPurge = NULL;
-      tMessages.msgPurge = new char[tStString.length() + 1];
-      strcpy(tMessages.msgPurge, tStString.c_str());
+      tMessages.msgPurge = tStString;
       break;
     case MSG_PURGE_TARG: // purge-target
-      delete [] tMessages.msgPurgeTarg;
-      tMessages.msgPurgeTarg = NULL;
-      tMessages.msgPurgeTarg = new char[tStString.length() + 1];
-      strcpy(tMessages.msgPurgeTarg, tStString.c_str());
+      tMessages.msgPurgeTarg = tStString;
       break;
     case MSG_RLOAD: // rload
-      delete [] tMessages.msgRLoad;
-      tMessages.msgRLoad = NULL;
-      tMessages.msgRLoad = new char[tStString.length() + 1];
-      strcpy(tMessages.msgRLoad, tStString.c_str());
+      tMessages.msgRLoad = tStString;
       break;
     case MSG_LOAD_OBJ: // load-object
-      delete [] tMessages.msgLoadObj;
-      tMessages.msgLoadObj = NULL;
-      tMessages.msgLoadObj = new char[tStString.length() + 1];
-      strcpy(tMessages.msgLoadObj, tStString.c_str());
+      tMessages.msgLoadObj = tStString;
       break;
     case MSG_LOAD_MOB: // load-mobile
-      delete [] tMessages.msgLoadMob;
-      tMessages.msgLoadMob = NULL;
-      tMessages.msgLoadMob = new char[tStString.length() + 1];
-      strcpy(tMessages.msgLoadMob, tStString.c_str());
+      tMessages.msgLoadMob = tStString;
       break;
     case MSG_MEDIT: // medit
-      delete [] tMessages.msgMEdit;
-      tMessages.msgMEdit = NULL;
-      tMessages.msgMEdit = new char[tStString.length() + 1];
-      strcpy(tMessages.msgMEdit, tStString.c_str());
+      tMessages.msgMEdit = tStString;
       break;
     case MSG_OEDIT: // oedit
-      delete [] tMessages.msgOEdit;
-      tMessages.msgOEdit = NULL;
-      tMessages.msgOEdit = new char[tStString.length() + 1];
-      strcpy(tMessages.msgOEdit, tStString.c_str());
+      tMessages.msgOEdit = tStString;
       break;
     case MSG_SWITCH_TARG: // switch-target
-      delete [] tMessages.msgSwitchTarg;
-      tMessages.msgSwitchTarg = NULL;
-      tMessages.msgSwitchTarg = new char[tStString.length() + 1];
-      strcpy(tMessages.msgSwitchTarg, tStString.c_str());
+      tMessages.msgSwitchTarg = tStString;
       break;
     case MSG_MOVE_IN: // move in
-      delete [] tMessages.msgMoveIn;
-      tMessages.msgMoveIn = NULL;
-      tMessages.msgMoveIn = new char[tStString.length() + 1];
-      strcpy(tMessages.msgMoveIn, tStString.c_str());
+      tMessages.msgMoveIn = tStString;
       break;
     case MSG_MOVE_OUT: // move out
-      delete [] tMessages.msgMoveOut;
-      tMessages.msgMoveOut = NULL;
-      tMessages.msgMoveOut = new char[tStString.length() + 1];
-      strcpy(tMessages.msgMoveOut, tStString.c_str());
+      tMessages.msgMoveOut = tStString;
       break;
     case MSG_SLAY: // slay
-      delete [] tMessages.msgSlay;
-      tMessages.msgSlay = NULL;
-      tMessages.msgSlay = new char[tStString.length() + 1];
-      strcpy(tMessages.msgSlay, tStString.c_str());
+      tMessages.msgSlay = tStString;
       break;
     case MSG_SLAY_TARG: // slay target
-      delete [] tMessages.msgSlayTarg;
-      tMessages.msgSlayTarg = NULL;
-      tMessages.msgSlayTarg = new char[tStString.length() + 1];
-      strcpy(tMessages.msgSlayTarg, tStString.c_str());
+      tMessages.msgSlayTarg = tStString;
       break;
     case MSG_FORCE: // force
-      delete [] tMessages.msgForce;
-      tMessages.msgForce = NULL;
-      tMessages.msgForce = new char[tStString.length() + 1];
-      strcpy(tMessages.msgForce, tStString.c_str());
+      tMessages.msgForce = tStString;
       break;
     case MSG_BAMFIN: // bamfin
-      delete [] tMessages.msgBamfin;
-      tMessages.msgBamfin = NULL;
-      tMessages.msgBamfin = new char[tStString.length() + 1];
-      strcpy(tMessages.msgBamfin, tStString.c_str());
+      tMessages.msgBamfin = tStString;
       break;
     case MSG_BAMFOUT: // bamfout
-      delete [] tMessages.msgBamfout;
-      tMessages.msgBamfout = NULL;
-      tMessages.msgBamfout = new char[tStString.length() + 1];
-      strcpy(tMessages.msgBamfout, tStString.c_str());
+      tMessages.msgBamfout = tStString;
       break;
     case MSG_LONGDESCR: // Long Description
-      delete [] tMessages.msgLongDescr;
-      tMessages.msgLongDescr = NULL;
-      tMessages.msgLongDescr = new char[tStString.length() + 1];
-      strcpy(tMessages.msgLongDescr, tStString.c_str());
+      tMessages.msgLongDescr = tStString;
       break;
     case MSG_NOTE: // who list note
-      delete [] tMessages.msgNote;
-      tMessages.msgNote = NULL;
-      tMessages.msgNote = new char[tStString.length() + 1];
-      strcpy(tMessages.msgNote, tStString.c_str());
+      tMessages.msgNote = tStString;
       break;
     case MSG_ERROR:
     case MSG_MAX:
@@ -437,7 +383,7 @@ void findAndReplace(sstring & tStOrig, sstring tStArg, sstring tStNew)
 sstring TMessages::operator()(messageTypeT tValue,
                              TThing *tThing,
                              const char * tString,
-                             bool sendFiltered)
+                             bool sendFiltered) const
 {
   sstring  tMessage("");
   TBeing *tBeing = dynamic_cast<TBeing *>(tThing);
@@ -504,70 +450,54 @@ sstring TMessages::operator()(messageTypeT tValue,
   return tMessage;
 }
 
-sstring TMessages::operator[](messageTypeT tValue) const
+sstring const& TMessages::operator[](messageTypeT tValue) const
 {
   switch (tValue)
   {
     case MSG_IMM_TITLE: // Immortal Title
       return tMessages.msgImmTitle;
-      break;
     case MSG_PURGE: // purge
       return tMessages.msgPurge;
-      break;
     case MSG_PURGE_TARG: // purge-target
       return tMessages.msgPurgeTarg;
-      break;
     case MSG_RLOAD: // rload
       return tMessages.msgRLoad;
-      break;
     case MSG_LOAD_OBJ: // load-object
       return tMessages.msgLoadObj;
-      break;
     case MSG_LOAD_MOB: // load-mobile
       return tMessages.msgLoadMob;
-      break;
     case MSG_MEDIT: // medit
       return tMessages.msgMEdit;
-      break;
     case MSG_OEDIT: // oedit
       return tMessages.msgOEdit;
-      break;
     case MSG_SWITCH_TARG: // switch-target
       return tMessages.msgSwitchTarg;
-      break;
     case MSG_MOVE_IN: // move in
       return tMessages.msgMoveIn;
-      break;
     case MSG_MOVE_OUT: // move out
       return tMessages.msgMoveOut;
-      break;
     case MSG_SLAY: // slay
       return tMessages.msgSlay;
-      break;
     case MSG_SLAY_TARG: // slay target
       return tMessages.msgSlayTarg;
-      break;
     case MSG_FORCE: // force
       return tMessages.msgForce;
-      break;
     case MSG_BAMFIN: // bamfin
       return tMessages.msgBamfin;
-      break;
     case MSG_BAMFOUT: // bamfout
       return tMessages.msgBamfout;
-      break;
     case MSG_LONGDESCR: // Long Description
       return tMessages.msgLongDescr;
-      break;
     case MSG_NOTE: // Who list note
       return tMessages.msgNote;
-      break;
     default:
       vlogf(LOG_BUG, format("TMessages::operator[](int) got invalid tValue.  [%d]") % 
             tValue);
+      {
+        static sstring error = "Error";
+        return error;
+      }
   }
-
-  return "ERROR";
 }
 
 sstring fread_tilTilde(FILE *tFile)
@@ -672,39 +602,6 @@ void TMessages::savedown()
   // if we didn't write even 1 sstring, just delete the file.
   if (!didWrite)
     unlink(tString);
-}
-
-TMessages::TMessages() :
-  tPlayer(NULL)
-{
-  // Null out the messages, this is a quick way of doing it.
-  memset(&tMessages, 0, sizeof(tMessages));
-
-  // Set them to the default empty.
-  for (messageTypeT cMsg = MSG_MIN; cMsg < MSG_MAX; cMsg++)
-    (*this)(cMsg, "");
-}
-
-TMessages::TMessages(const TMessages &a) :
-  tPlayer(a.tPlayer)
-{
-  for (messageTypeT cMsg = MSG_MIN; cMsg < MSG_MAX; cMsg++)
-    (*this)(cMsg, a[cMsg]);
-}
-
-TMessages & TMessages::operator==(const TMessages &a)
-{
-  tPlayer = a.tPlayer;
-
-  for (messageTypeT cMsg = MSG_MIN; cMsg < MSG_MAX; cMsg++)
-    (*this)(cMsg, a[cMsg]);
-
-  return (*this);
-}
-
-TMessages::~TMessages()
-{
-  tPlayer = NULL;
 }
 
 messageTypeT mapMessageFromFile(const char tString)

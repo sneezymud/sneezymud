@@ -100,6 +100,35 @@ short TBeing::getImmunity(immuneTypeT type) const
 
   imm = immunities.immune_arr[type];
 
+  if(doesKnowSkill(SKILL_DIVINE_GRACE)) {
+    amount = max((int)getSkillValue(SKILL_DIVINE_GRACE), 0);
+    switch(type){
+      case IMMUNE_FEAR:
+        imm += amount;
+        break;
+      case IMMUNE_PARALYSIS:
+        imm += (amount/2);
+        break;
+      case IMMUNE_DISEASE:
+        imm += (amount/3);
+        break;
+      case IMMUNE_BLEED:
+        imm += (amount/4);
+        break;
+      case IMMUNE_CHARM:
+        imm += max(0, (amount - 25));
+        break;
+      case IMMUNE_SUMMON:
+        imm += max(0, (amount - 33));
+        break;
+      case IMMUNE_HEAT:
+        imm += max(0, (amount - 85));
+        break;
+      default:
+        break;
+    }
+  }
+
   if(doesKnowSkill(SKILL_DUFALI)) {
     amount = max((int)getSkillValue(SKILL_DUFALI), 0);
     switch(type){
@@ -178,7 +207,7 @@ void TBeing::setImmunity(immuneTypeT type, short amt)
 
 void TBeing::addToImmunity(immuneTypeT type, short amt)
 {
-  immunities.immune_arr[type] = min(max(immunities.immune_arr[type] + amt, -100), 100);
+  immunities.immune_arr[type] = immunities.immune_arr[type] + amt;
 }
 
 bool TBeing::isImmune(immuneTypeT bit, wearSlotT pos, int modifier) const
@@ -210,7 +239,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_FLAMESTRIKE:
     case SPELL_FIRE_BREATH:
     case SPELL_RAIN_BRIMSTONE:
-    case SPELL_RAIN_BRIMSTONE_DEIKHAN:
     case SPELL_INFERNO:
     case SPELL_HELLFIRE:
     case SPELL_FLAMING_SWORD:
@@ -221,7 +249,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
       bit = IMMUNE_HEAT;
       break;
 //    case SPELL_LIGHTNING_BOLT:
-    case SPELL_CALL_LIGHTNING_DEIKHAN:
     case SPELL_CALL_LIGHTNING:
     case SPELL_LIGHTNING_BREATH:
     case DAMAGE_ELECTRIC:
@@ -249,7 +276,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
       bit = IMMUNE_ENERGY;
       break;
     case SPELL_METEOR_SWARM:
-    case SPELL_EARTHQUAKE_DEIKHAN:
     case SPELL_EARTHQUAKE:
     case SPELL_PEBBLE_SPRAY:
     case SPELL_SAND_BLAST:
@@ -327,7 +353,6 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case DAMAGE_KICK_SIDE:
     case DAMAGE_KICK_SHIN:
     case DAMAGE_KICK_SOLAR:
-    case SKILL_KICK_DEIKHAN:
     case SKILL_KICK_THIEF:
     case SKILL_KICK_MONK:
     case SKILL_KICK:

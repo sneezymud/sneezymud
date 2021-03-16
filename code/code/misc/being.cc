@@ -121,6 +121,9 @@ pointData::pointData() :
   maxHit(0),
   move(0),
   maxMove(0),
+  prevMaxHit(0),
+  prevMaxMana(0),
+  prevMaxMove(0),
   money(0),
   bankmoney(0),
   exp(0), 
@@ -141,6 +144,9 @@ pointData::pointData(const pointData &a) :
   maxHit(a.maxHit),
   move(a.move),
   maxMove(a.maxMove),
+  prevMaxHit(a.prevMaxHit),
+  prevMaxMana(a.prevMaxMana),
+  prevMaxMove(a.prevMaxMove),
   money(a.money),
   bankmoney(a.bankmoney),
   exp(a.exp), 
@@ -166,6 +172,9 @@ pointData & pointData::operator=(const pointData &a)
   maxHit = a.maxHit;
   move = a.move;
   maxMove = a.maxMove; 
+  prevMaxHit = a.prevMaxHit;
+  prevMaxMana = a.prevMaxMana;
+  prevMaxMove = a.prevMaxMove;
   spellHitroll = a.spellHitroll;
   hitroll = a.hitroll;
   damroll = a.damroll;
@@ -608,7 +617,9 @@ charFile::~charFile()
 // this returns the ID in the database, or creates a new one if needed
 int TBeing::getPlayerID() const
 {
-  mud_assert(player.player_id, (name + " has null player ID").c_str());
+  // mud_assert(player.player_id, (name + " has null player ID").c_str());
+  if (player.player_id == 0)
+	  vlogf(LOG_BUG, format("%s has no player ID!") % getName());
   return player.player_id;
 }
 
@@ -761,19 +772,49 @@ int TBeing::getHit() const
 
 void TBeing::addToHit(int add)
 {
+  auto oldHit = points.hit;
   points.hit = min(points.hit + add, (int) hitLimit());
 // this prevents folks from dying
 //  points.hit = max((short int) 0, points.hit);
+  if (oldHit != points.hit)
+    sendVitalsGmcp();
 }
 
 void TBeing::setHit(int newhit)
 {
-  points.hit = newhit;
+  if (points.hit != newhit) {
+    points.hit = newhit;
+    sendVitalsGmcp();
+  }
 }
 
 void TBeing::setMaxHit(int newhit)
 {
   points.maxHit = newhit;
+}
+
+void TBeing::updateMaxHit(int newValue) const
+{
+  if (points.prevMaxHit != newValue) {
+    points.prevMaxHit = newValue;
+    sendMaxStatsGmcp();
+  }
+}
+
+void TBeing::updateMaxMana(int newValue) const
+{
+  if (points.prevMaxMana != newValue) {
+    points.prevMaxMana = newValue;
+    sendMaxStatsGmcp();
+  }
+}
+
+void TBeing::updateMaxMove(int newValue) const
+{
+  if (points.prevMaxMove != newValue) {
+    points.prevMaxMove = newValue;
+    sendMaxStatsGmcp();
+  }
 }
 
 double TBeing::getPercHit(void)
@@ -788,17 +829,23 @@ int TBeing::getMove() const
 
 void TBeing::addToMove(int add)
 {
+  auto oldMove = points.move;
   points.move += add;
   points.move = max((short int) 0, points.move);
 // I don't think we need this check, since it is probably checked already
 // in any event, having it here is making this command take a big amt of
 // cpu% time - bat 12/23/98
 //  points.move = min(points.move, moveLimit());
+  if (oldMove != points.move)
+    sendVitalsGmcp();
 }
 
 void TBeing::setMove(int move)
 {
-  points.move = move;
+  if (points.move != move) {
+    points.move = move;
+    sendVitalsGmcp();
+  }
 }
 
 int TBeing::getMaxMove() const
@@ -818,14 +865,25 @@ int TBeing::getMana() const
 
 void TBeing::setMana(int mana)
 {
-  points.mana = mana;
+  if (points.mana != mana) {
+    points.mana = mana;
+    if (hasClass(MAGE_LEVEL_IND, EXACT_NO) || hasClass(MONK_LEVEL_IND, EXACT_NO))
+      sendVitalsGmcp();
+  }
 }
 
 void TBeing::addToMana(int mana)
 {
+  auto oldmana = points.mana;
   points.mana += mana;
   points.mana = max((short int) 0, points.mana);
   points.mana = min(points.mana, manaLimit());
+  if (oldmana != points.mana && (
+        hasClass(MAGE_LEVEL_IND, EXACT_NO)
+        || hasClass(MONK_LEVEL_IND, EXACT_NO)
+        || hasQuestBit(TOG_PSIONICIST)
+        ))
+    sendVitalsGmcp();
 }
 
 double TBeing::getPercMana(void)
@@ -847,15 +905,22 @@ int TBeing::getLifeforce() const
 
 void TBeing::setLifeforce(int lifeforce)
 {
-  points.lifeforce = lifeforce;
+  if (points.lifeforce != lifeforce) {
+    points.lifeforce = lifeforce;
+    if (hasClass(SHAMAN_LEVEL_IND, EXACT_NO))
+      sendVitalsGmcp();
+  }
 }
 
 void TBeing::addToLifeforce(int lifeforce)
 {
+  auto oldLF = points.lifeforce;
   int total = points.lifeforce + lifeforce;
   total = max(0,total);
   total = min(total, SHRT_MAX);
   points.lifeforce = (short) total;
+  if (points.lifeforce != oldLF && hasClass(SHAMAN_LEVEL_IND, EXACT_NO))
+    sendVitalsGmcp();
 }
 
 bool TBeing::noLifeforce(int lifeforce) const
@@ -1109,16 +1174,24 @@ double TBeing::getPiety() const
 
 void TBeing::setPiety(double num)
 {
-  points.piety = num;
+  if (points.piety != num) {
+    points.piety = num;
+    if (hasClass(CLERIC_LEVEL_IND, EXACT_NO) || hasClass(DEIKHAN_LEVEL_IND, EXACT_NO))
+      sendVitalsGmcp();
+  }
 }
 
 void TBeing::addToPiety(double num)
 {
+  auto oldPiety = points.piety;
   points.piety += num;
   if (points.piety > pietyLimit())
     points.piety = pietyLimit();
   else if (points.piety < 0.0)
     points.piety = 0.0;
+  if (points.piety != oldPiety
+      && (hasClass(CLERIC_LEVEL_IND, EXACT_NO) || hasClass(DEIKHAN_LEVEL_IND, EXACT_NO)))
+    sendVitalsGmcp();
 }
 
 int TBeing::getSpellHitroll() const
@@ -1504,13 +1577,12 @@ void TBeing::peeOnMe(const TBeing *ch)
   act("You relieve yourself on $N's foot.", TRUE, ch, 0, this, TO_CHAR);
 }
 
-sstring const& TBeing::getLongDesc() const
+sstring TBeing::getLongDesc() const
 {
   if (!player.longDescr.empty())
     return player.longDescr;
 
-  static sstring uglyhack = msgVariables.tMessages.msgLongDescr;
-  return uglyhack;
+  return msgVariables[MSG_LONGDESCR];
 }
 
 int TBeing::chiMe(TBeing *tLunatic)
@@ -1701,4 +1773,16 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring & tat, silentTypeT silent
       return TRUE;
   }
   return FALSE;
+}
+
+bool TBeing::canMeditate()
+{
+  if (isLinkdead() || (getPosition() < POSITION_RESTING))
+    return FALSE;
+  
+  if (getPosition() > POSITION_STANDING && 
+    !(getPosition() == POSITION_MOUNTED && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))) {
+      return FALSE;
+    }
+  return TRUE;
 }

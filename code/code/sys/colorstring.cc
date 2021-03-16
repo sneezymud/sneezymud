@@ -47,7 +47,10 @@ bool hasColorStrings(const TBeing *mob, const sstring &arg, int field)
       s = arg;
       break;
   }
-  for(unsigned int i=0;i<s.size()-1;++i){
+  // <3
+  if (s.size() <3)
+    return false;
+  for(unsigned int i=0;i<s.size()-2;++i){
     if ((s[i] == '<') && (s[i+2] == '>')) {
       switch (s[i+1]) {
         case 'b':

@@ -347,68 +347,42 @@ sstring const TBeing::getProfName() const
   return buf;
 }
 
-std::string TBeing::getProfAbbrevName() const
+namespace {
+  int count_set_bit(int n) {
+    int count = 0;
+    while(n != 0) {
+      count += n & 1;
+      n >>= 1;
+    }
+    return count;
+  }
+}
+
+sstring TBeing::getProfAbbrevName(unsigned short code)
 {
-  // CLASS_MAGE
-  // CLASS_CLERIC
-  // CLASS_WARRIOR
-  // CLASS_THIEF
-  // CLASS_SHAMAN
-  // CLASS_DEIKHAN
-  // CLASS_MONK
-  // CLASS_RANGER
-  // CLASS_COMMONER
+  sstring buf = "";
+  bool multiclass = false;
 
-  std::unordered_map<classIndT, char> abbr = {
-    {MAGE_LEVEL_IND, 'M'},
-    {CLERIC_LEVEL_IND, 'C'},
-    {WARRIOR_LEVEL_IND, 'W'},
-    {THIEF_LEVEL_IND, 'T'},
-    {SHAMAN_LEVEL_IND, 'S'},
-    {DEIKHAN_LEVEL_IND, 'D'},
-    {MONK_LEVEL_IND, 'K'},
-    {RANGER_LEVEL_IND, 'R'},
-    {COMMONER_LEVEL_IND, '?'},
-    {UNUSED1_LEVEL_IND, '?'},
-    {UNUSED2_LEVEL_IND, '?'}};
+  if (count_set_bit(code) > 1)
+    multiclass = true;
 
-  int numCl = howManyClasses();
-  if (numCl > 3)
-    return "Multi";
+  for (classIndT iClass = MIN_CLASS_IND; iClass < MAX_CLASSES; iClass++){
+    if (code & (1<<iClass)) {
+      if (!multiclass) {
+        if (classInfo[iClass].name == "thief"){
+          return classInfo[iClass].name.cap();
+        }
 
-  if (numCl == 1) {
-    if (hasClass(CLASS_MAGE, EXACT_YES))
-      return "Mage";
-    else if (hasClass(CLASS_CLERIC, EXACT_YES))
-      return "Cler";
-    else if (hasClass(CLASS_WARRIOR, EXACT_YES))
-      return "Warr";
-    else if (hasClass(CLASS_THIEF, EXACT_YES))
-      return "Thief";
-    else if (hasClass(CLASS_DEIKHAN, EXACT_YES))
-      return "Deik";
-    else if (hasClass(CLASS_MONK, EXACT_YES))
-      return "Monk";
-    else if (hasClass(CLASS_SHAMAN, EXACT_YES))
-      return "Sham";
-    else if (hasClass(CLASS_RANGER, EXACT_YES))
-      return "Rang";
-    return "???";
-  } else {
-    bool first = true;
-    std::string res;
-
-    for (auto cl = MAGE_LEVEL_IND; cl <= RANGER_LEVEL_IND; cl++) {
-      if (hasClass(getClassNum(cl), EXACT_NO)) {
-        if (first)
-          first = false;
-        else
-          res += "/";
-        res += abbr[cl];
+        return sstring(classInfo[iClass].name.substr(0, 4)).cap();
+      } else {
+        buf += classInfo[iClass].abbr;
+        buf += "/";
       }
     }
-    return res;
   }
+  if (multiclass)
+    buf = buf.substr(0, buf.size() - 1);
+  return buf;
 }
 
 void TBeing::setClass(unsigned short num)
