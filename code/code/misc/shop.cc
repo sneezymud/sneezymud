@@ -552,6 +552,8 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
       rent_id=convertTo<int>(db["rent_id"]);
       temp1=keeper->loadItem(shop_nr, rent_id);
       *keeper += *temp1;
+      vlogf(LOG_BUG, format("created: %s ") % temp1->getName());
+
       objects.push_back(rent_id);
       objects_p.push_back(temp1);
       ++i;
@@ -591,18 +593,15 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     for(unsigned int i=0;i<objects_p.size();++i)
       delete objects_p[i];
     return;
+  } else {
+    // We've sucessfully sold so update the DB
+    for(unsigned int i=0;i<objects_p.size();++i) {
+      keeper->deleteItem(shop_nr, objects[i]);
+    }
   }
 
-  // delete objects left on keeper, remove objects sold from db
-  for(unsigned int i=0;i<objects_p.size();++i) {
-    TObj *cleanupObj = objects_p[i];
-    if (!cleanupObj)
-      continue;
-    if (cleanupObj->parent == keeper)
-      delete objects_p[i];
-    else
-      keeper->deleteItem(shop_nr, objects[i]);
-  }
+  // We might still have loaded items on the keeper somehow maybe????
+  
 }
 
 

@@ -343,7 +343,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   ch->doQueueSave();
   if (numUnits() > 0)
     keeper->saveItem(shop_nr, this);
-  delete this;
+  // delete this;
   return price;
 }
 
