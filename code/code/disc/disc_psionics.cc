@@ -903,7 +903,6 @@ int TBeing::doPsidrain(const char *tString){
 int TBeing::doDfold(const char *tString){
   TBeing *tVictim=NULL;
   int rc, location=0;
-  char buf[256];
   sstring sbuf;
 
   if(!doesKnowSkill(SKILL_DIMENSIONAL_FOLD)){
@@ -999,8 +998,7 @@ int TBeing::doDfold(const char *tString){
     act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_ROOM);
     act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
 
-    sprintf(buf, "%s suddenly appears out of a swirling mist.\n\r", (sstring(next_tmp_obj->shortDescr).cap()).c_str());
-    sendToRoom(buf, location);
+    rp->sendTo(format("%s suddenly appears out of a swirling mist.\n\r") % next_tmp_obj->shortDescr.cap());
 
     rc = TRUE;
   } else {

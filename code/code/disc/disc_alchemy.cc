@@ -2209,36 +2209,25 @@ int castGalvanize(TBeing *caster, TObj *obj)
   return FALSE;
 }
 
-struct gateRoomT {
-      int roomnum;
-      const char *name;
-};
-
-gateRoomT gateRooms[] =
-{
-  {15346, "grimhaven"},
-  {11000, "cloud"},
-  {5700, "auria"},
-  {6953, "circle"},
-  {12883, "volcano"},
-};
-
-const int NUM_GATE_ROOMS = 5;
-
-
 int etherealGate(TBeing *caster, const char * portalroom, int, short bKnown)
 {
-  char buf[256];
   TPerson *tPerson = dynamic_cast<TPerson *>(caster);
-  int i, location=0;
+  int location=0;
   int num_charges = 20;
   sstring sbuf;
 
+  std::map<std::string, int> gateRooms { 
+    {"grimhaven", 15346},
+    {"cloud", 11000},
+    {"auria", 5700},
+    {"circle", 6953},
+    {"volcano", 12883}, 
+  };
 
-  for(i=0;i<NUM_GATE_ROOMS;++i){
-    if(is_abbrev(portalroom, gateRooms[i].name)){
-      location=gateRooms[i].roomnum;
-    }
+  // Iterate over the map using c++11 range based for loop
+  for (std::pair<std::string, int> element : gateRooms) {
+    if(is_abbrev(portalroom, element.first))
+      location=element.second;
   }
 
   TRoom * rp = real_roomp(location);
@@ -2254,7 +2243,7 @@ int etherealGate(TBeing *caster, const char * portalroom, int, short bKnown)
     return SPELL_FAIL;
   }
 
-  if (caster->bSuccess(bKnown,caster->getPerc(),SPELL_ETHER_GATE)) {
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_ETHER_GATE)) {
     TPortal * tmp_obj = new TPortal(rp);
     tmp_obj->setPortalNumCharges(num_charges);
     tmp_obj->obj_flags.decay_time = 5;
@@ -2286,8 +2275,7 @@ int etherealGate(TBeing *caster, const char * portalroom, int, short bKnown)
     act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_ROOM);
     act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_CHAR);
 
-    sprintf(buf, "%s suddenly appears out of a swirling mist.\n\r", (sstring(next_tmp_obj->shortDescr).cap()).c_str());
-    sendToRoom(buf, location);
+    rp->sendTo(format("%s suddenly appears out of a swirling mist.\n\r") % next_tmp_obj->shortDescr.cap());
 
     return SPELL_SUCCESS;
   }
