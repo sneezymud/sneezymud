@@ -718,7 +718,7 @@ int TBeing::doPray(const char *argument)
 
 std::tuple<spellNumT, sstring> TBeing::parseSpellNum(sstring const& args) const
 {
-  if (args.empty()) {
+  if (args.trim().empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around <spell name>.\n\r");
     return std::make_tuple(TYPE_UNDEFINED, "");
