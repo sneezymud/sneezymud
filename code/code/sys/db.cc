@@ -107,6 +107,7 @@
 #include "obj_moneypouch.h"
 #include "weather.h"
 #include "obj_fruit.h"
+#include "CharacterList.h"
 
 int top_of_world = 0;         // ref to the top element of world 
 
@@ -117,6 +118,7 @@ TObjList object_list; // the global linked list of obj's
 int commod_index[200];
 
 TBeing *character_list = 0; // global l-list of chars          
+TCharacterList CharacterList;
 TMonster *pawnman = NULL;
 TPCorpse *pc_corpse_list = NULL;
 // table of reset data 
