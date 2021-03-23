@@ -2609,7 +2609,7 @@ void procZoneUpdate::run(const TPulse &) const
 // update zone ages, queue for reset if necessary, and dequeue when possible
   unsigned int i;
   resetQElement *update_u, *temp, *tmp2;
-  const int ZO_DEAD = 999;
+  const int ZO_DEAD = 9999;
 
   for (i = 0; i < zone_table.size(); i++) {
     if (zone_table[i].age < zone_table[i].lifespan &&
