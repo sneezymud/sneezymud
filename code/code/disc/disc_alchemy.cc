@@ -2279,7 +2279,8 @@ int etherealGate(TBeing *caster, const char * portalroom, int, short bKnown)
 
     return SPELL_SUCCESS;
   }
-
+  act("Nothing seems to happen!", FALSE, caster, NULL, NULL, TO_ROOM);
+  act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
   return SPELL_FAIL;
 }
 
