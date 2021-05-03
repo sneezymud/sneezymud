@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.18  Distrib 10.5.8-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db    Database: sneezy
+-- Host: sneezy-db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
+-- Server version	10.5.8-MariaDB-1:10.5.8+maria~focal
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -114,7 +114,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (69,'Omen - Amber City',1,8700,8899,2,35,NULL,1),
 (70,'Coral - Sparse Forest (Haon-Dor)',1,8900,8949,2,30,NULL,1),
 (71,'Therias - Arabian Caravan Camp',1,8950,8974,2,30,NULL,1),
-(72,'Blum - Grimhaven University',0,8975,8999,2,25,NULL,1),
+(72,'Juno - Grimhaven University',0,8975,8999,2,25,NULL,1),
 (73,'Shota - Chaos Garrison Dungeon',1,9000,9024,2,35,NULL,1),
 (74,'Shota/Magdalena - Chaos Garrison Upstairs',1,9025,9049,2,25,NULL,1),
 (75,'Staffa - Galek Church Second Floor',1,9050,9073,2,35,NULL,1),
@@ -126,7 +126,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (81,'Connovar - Mage Academy Basement',1,9550,9574,2,30,NULL,1),
 (82,'Dash - Bandit Camp',1,9575,9599,2,20,NULL,1),
 (83,'Onslaught - Hold of Smuggler\'s Ship',1,9600,9624,2,30,NULL,1),
-(84,'Peel - Sunken Ship',1,9625,9649,0,30,NULL,1),
+(84,'Peel - Sunken Ship',1,9625,9649,2,1500,NULL,1),
 (85,'Dash - Misc Rooms (19 rooms)',0,9650,9674,2,25,NULL,1),
 (86,'Hold of a Cargo Ship - Unused Block (25 rooms)',0,9675,9699,2,25,NULL,1),
 (87,'Mithros - Jungle Roads from Volcano',1,9700,9725,2,35,NULL,1),
@@ -266,7 +266,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (221,'Armagedon - Sea of Sorrows',1,27900,28499,2,45,NULL,1),
 (222,'Moath\'s Area (300 rooms)',0,28500,28799,2,25,NULL,1),
 (223,'Bartruce - Temple of the Undead',1,28800,28864,1,50,NULL,1),
-(224,'Bartruce - Vampire Crypt',1,28865,28899,0,45,NULL,1),
+(224,'Bartruce - Vampire Crypt',1,28865,28899,2,999,NULL,1),
 (225,'Connovar - Trolloc Infested Farmsteads',1,28900,28999,2,35,NULL,1),
 (226,'Block For Quests (1000 rooms)',0,29000,29999,2,25,NULL,1),
 (227,'Therias - Arabian City (600 rooms)',0,30000,30599,2,25,NULL,1),
@@ -279,7 +279,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (234,'Ichiban - Drossway Road',1,31050,31099,2,25,NULL,1),
 (235,'Modaries\'s Zone (200 rooms)',0,31100,31299,2,25,NULL,1),
 (236,'Jesus - Player Kill Area',1,31300,31399,2,30,NULL,1),
-(237,'Bump - Dracolich Lair',1,31400,31449,1,60,NULL,1),
+(237,'Bump - Dracolich Lair',1,31400,31449,1,1200,NULL,1),
 (238,'Angus - A Trail through the Parnithian Mountains',1,31450,31479,2,25,NULL,1),
 (239,'Peel - Brightmoon Outpost',1,31480,31499,2,25,NULL,1),
 (240,'Octogal - Bullywug Hunters',0,31500,31549,2,25,NULL,1),
@@ -371,7 +371,12 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (326,'Ammanas - Random\'s Retreat',0,45765,45844,2,35,NULL,1),
 (327,'Aion - Royal Academy',0,45845,45894,2,35,NULL,1),
 (328,'Jimbus - Mount Apocryphia',0,45895,46344,2,35,NULL,1),
-(329,'Last Block',0,46345,99998,2,25,NULL,1);
+(329,'Onslaught - The Morass',0,46345,46444,2,35,NULL,1),
+(330,'Aion - Adventurer\'s Guild',0,46445,46494,2,35,NULL,1),
+(331,'Xyndaris - The Dell',0,46495,46544,2,35,NULL,1),
+(332,'Sidartha - Avalon Outpost',0,46545,46594,2,35,NULL,1),
+(333,'Warluk - Old Cemetery',0,46595,46619,2,35,NULL,1),
+(334,'Last Block',0,46620,99998,2,25,NULL,1);
 /*!40000 ALTER TABLE `zone` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -384,4 +389,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-25 15:55:07
+-- Dump completed on 2021-05-03 20:19:05

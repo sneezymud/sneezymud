@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.18  Distrib 10.5.8-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db    Database: sneezy
+-- Host: sneezy-db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
+-- Server version	10.5.8-MariaDB-1:10.5.8+maria~focal
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -168,7 +168,37 @@ INSERT INTO `shopownedmatch` VALUES (35,'hammer',1.2,0.01,1),
 (258,'grenulpa',1.1,0.9,1),
 (173,'breeches',5,0.000001,10),
 (173,'kuo',5,0.00001,10),
-(173,'luna',5,0.0001,10);
+(173,'luna',5,0.0001,10),
+(10,'plat-sym',2.5,1.1,50),
+(10,'mith-sym',2.5,0.7,50),
+(10,'tit-sym',2.5,0.7,50),
+(10,'platinum-symbol',2.5,0.9,50),
+(10,'titanium-symbol',2.5,0.9,50),
+(10,'white-titanium-symbol',5,0.9,50),
+(10,'white-neck-symbol',4.5,0.9,50),
+(10,'holy-white-necklace',5,0.9,50),
+(10,'pentacle-necklace',5,0.9,50),
+(10,'black-unholy-necklace',5,0.9,50),
+(10,'silver-symbol',2.5,0.9,50),
+(10,'gold-symbol',2.5,0.9,50),
+(119,'large-vial',1,0.7,50),
+(119,'small-vial',1,0.7,50),
+(119,'tiny-vial',1,0.7,50),
+(121,'tiny-vial',1,0.7,50),
+(121,'small-vial',1,0.7,50),
+(121,'large-vial',1,0.7,50),
+(121,'silver-symbol',2.5,0.9,50),
+(121,'gold-symbol',2.5,0.9,50),
+(121,'platinum-symbol',2.5,0.9,50),
+(121,'titanium-symbol',2.5,0.9,50),
+(121,'mithril-symbol',2.5,0.9,50),
+(119,'mithril-symbol',2.5,0.9,50),
+(119,'titanium-symbol',2.5,0.9,50),
+(119,'platinum-symbol',2.5,0.9,50),
+(119,'gold-symbol',2.5,0.9,50),
+(119,'silver-symbol',2.5,0.9,50),
+(10,'ruby-holy',2.5,0.6,50),
+(10,'necklace',2.5,0.6,50);
 /*!40000 ALTER TABLE `shopownedmatch` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -181,4 +211,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-25 15:55:06
+-- Dump completed on 2021-05-03 20:19:04
