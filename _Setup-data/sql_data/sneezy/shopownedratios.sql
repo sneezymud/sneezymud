@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.18  Distrib 10.5.8-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db    Database: sneezy
+-- Host: sneezy-db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
+-- Server version	10.5.8-MariaDB-1:10.5.8+maria~focal
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -156,8 +156,7 @@ INSERT INTO `shopownedratios` VALUES (34,1162,2,0.1,10),
 (35,8713,4,1.3,10),
 (21,1408,5,0.9,10),
 (114,24414,5,0.1,10),
-(15,50,1.01,1,100000),
-(10,5737,3,1,200);
+(15,50,1.01,1,100000);
 /*!40000 ALTER TABLE `shopownedratios` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -170,4 +169,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-25 15:55:06
+-- Dump completed on 2021-05-03 20:19:04

@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.38-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.18  Distrib 10.5.8-MariaDB, for debian-linux-gnu (x86_64)
 --
--- Host: db    Database: sneezy
+-- Host: sneezy-db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	10.3.14-MariaDB-1:10.3.14+maria~bionic-log
+-- Server version	10.5.8-MariaDB-1:10.5.8+maria~focal
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -165,7 +165,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Gunther',13,0,'no one'),
 ('DuGneisse',2,0,'no one'),
 ('DuGneiss',9,0,'no one'),
-('Ragnar',25,0,'no one'),
 ('Ablut',2,0,'no one'),
 ('Hammerhead',21,1,'a crazed gladiator'),
 ('Elenore',6,0,'no one'),
@@ -222,10 +221,8 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Moroven',5,0,'no one'),
 ('Meber',5,0,'no one'),
 ('Mannix',24,0,'no one'),
-('Deathwind',37,1,'an arena guard'),
 ('Tsetse',23,0,'no one'),
 ('Rhomak',10,1,'Evain'),
-('Nikita',4,1,'a gnome housewife'),
 ('Prostav',2,0,'no one'),
 ('Forge',2,0,'no one'),
 ('Calia',37,1,'a <r>wild elf<z>'),
@@ -270,7 +267,7 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Tic',38,1,'the head mage technician'),
 ('Yalp',10,0,'no one'),
 ('Phalthar',24,1,'no one'),
-('Jaxom',2,1,'the head of the cityguard'),
+('Jaxom',40,1,'a dagger thrower'),
 ('Gadget',3,0,'no one'),
 ('Mellancor',2,0,'no one'),
 ('Brook',6,0,'no one'),
@@ -282,7 +279,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Bender',10,1,'an elven traveler'),
 ('Bromidrosis',17,1,'Gnarrelus, the gadget-maker'),
 ('Zigma',28,1,'a caravan guard'),
-('ElfLord',8,1,'a <B>postman<1>'),
 ('Ceirseldju',20,0,'no one'),
 ('Beef',20,0,'no one'),
 ('Edema',12,0,'no one'),
@@ -305,4 +301,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-05-25 15:55:01
+-- Dump completed on 2021-05-03 20:19:00
