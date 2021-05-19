@@ -71,9 +71,9 @@ wrist    = 755
 hand     = 756
 finger   = 757
 waist    = 758
-leg      = 760
-foot     = 761
-shield   = 762 
+leg      = 759
+foot     = 760
+shield   = 761 
 :Set #156
 #grizzled
 $ogre
