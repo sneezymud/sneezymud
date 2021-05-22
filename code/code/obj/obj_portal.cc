@@ -83,6 +83,7 @@ TPortal & TPortal::operator=(const TPortal &a)
 
 TPortal::~TPortal()
 {
+  act("Silently, $n fades from view.", TRUE, this, 0, 0, TO_ROOM);
 }
 
 
@@ -306,14 +307,6 @@ void TPortal::unlockMe(TBeing *ch)
 
 int TPortal::objectDecay()
 {
-
-  if (roomp && !roomp->stuff.empty()) {
-#if 0
-    sendrpf(COLOR_OBJECTS, roomp, "%s flickers out of view.\n\r", getName(.cap()).c_str());
-#else
-    act("$n flickers out of view.", TRUE, this, 0, 0, TO_ROOM);
-#endif
-  }
   return DELETE_THIS;
 }
 
@@ -416,13 +409,18 @@ int TPortal::enterMe(TBeing *ch)
       ch->setPosition(POSITION_FLYING);
     }
   }
-  int iCharges = getPortalNumCharges();
-  if (iCharges>=1) {
-    if (iCharges == 1) {        /* last use */
-      act("Silently, $n fades from view.", TRUE, this, 0, 0, TO_ROOM);
-      return DELETE_THIS;
-    } else
-      setPortalNumCharges(iCharges - 1);
+
+  followData *k, *n;
+  for (k = ch->followers; k; k = n) {
+    n = k->next;
+    if (k->follower->inRoom() == orig_room && k->follower->getPosition() >= POSITION_CRAWLING && ch->riding == k->follower) {
+      act("You follow $N.", FALSE, k->follower, 0, ch, TO_CHAR);
+      rc = k->follower->doEnter(NULL, this);
+      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+        delete k->follower;
+        k->follower = NULL;
+      }
+    }
   }
 
   // and use a charge up on the farside too
@@ -432,14 +430,20 @@ int TPortal::enterMe(TBeing *ch)
     int iCharges = otherport->getPortalNumCharges();
     if (iCharges>=1) {
       if (iCharges == 1) {        /* last use */
-        act("Silently, $n fades from view.", TRUE, otherport, 0, 0, TO_ROOM);
         delete otherport;
       } else
         otherport->setPortalNumCharges(iCharges - 1);
     }
   }
 
-  followData *k, *n;
+  int iCharges = getPortalNumCharges();
+  if (iCharges>=1) {
+    if (iCharges == 1) {        /* last use */
+      return DELETE_THIS;
+    } else
+      setPortalNumCharges(iCharges - 1);
+  }
+
   for (k = ch->followers; k; k = n) {
     n = k->next;
     if (k->follower->inRoom() == orig_room &&
@@ -455,6 +459,7 @@ int TPortal::enterMe(TBeing *ch)
       }
     }
   }
+
   return FALSE;
 }
 

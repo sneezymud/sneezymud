@@ -1752,6 +1752,7 @@ class TBeing : public TThing {
   int doPsycrush(const char *);
   int doKwave(const char *);
   int doPsidrain(const char *);
+  int doDfold(const char *);
 
 
   // Monk Skills

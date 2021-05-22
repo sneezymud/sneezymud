@@ -14,6 +14,7 @@
 #include "person.h"
 #include "low.h"
 #include "colorstring.h"
+#include "obj_portal.h"
 #include "monster.h"
 #include "disc_psionics.h"
 #include "garble.h"
@@ -30,7 +31,8 @@ CDPsionics::CDPsionics() :
   skKineticWave(),
   skMindPreservation(),
   skTelekinesis(),
-  skPsiDrain()
+  skPsiDrain(),
+  skDimensionalFold()
 {
 }
 
@@ -46,7 +48,8 @@ CDPsionics::CDPsionics(const CDPsionics &a) :
   skKineticWave(a.skKineticWave),
   skMindPreservation(a.skMindPreservation),
   skTelekinesis(a.skTelekinesis),
-  skPsiDrain(a.skPsiDrain)
+  skPsiDrain(a.skPsiDrain),
+  skDimensionalFold(a.skDimensionalFold)
 {
 }
 
@@ -66,6 +69,7 @@ CDPsionics & CDPsionics::operator=(const CDPsionics &a)
   skMindPreservation = a.skMindPreservation;
   skTelekinesis = a.skTelekinesis;
   skPsiDrain = a.skPsiDrain;
+  skDimensionalFold = a.skDimensionalFold;
 
   return *this;
 }
@@ -896,6 +900,116 @@ int TBeing::doPsidrain(const char *tString){
 }
 
 
+int TBeing::doDfold(const char *tString){
+  TBeing *tVictim=NULL;
+  int rc, location=0;
+  sstring sbuf;
 
+  if(!doesKnowSkill(SKILL_DIMENSIONAL_FOLD)){
+    sendTo("You are not telepathic!\n\r");
+    return FALSE;
+  }
+
+  if(getMana() < discArray[SKILL_DIMENSIONAL_FOLD]->minMana){
+    sendTo("You don't have enough mana.\n\r");
+    return FALSE;
+  }
+
+  if(affectedBySpell(SKILL_MIND_FOCUS)){
+    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+    return FALSE;
+  }
+
+  if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
+    sendTo("What a dumb master you have, charmed mobiles can't open dimensional folds.\n\r");
+    return FALSE;
+  }
+
+  // IF tstring is null or "home" then create a fold to the word of recall spot
+  const char *home = "home";
+
+  if (!tString || tString == NULL || tString[0] == '\0' || is_abbrev(tString, home)) {
+    if (player.hometown)
+      location = player.hometown;
+    else
+      location = Room::CS;
+  } else {
+    // parse to find victim
+    if (!(tVictim = get_pc_world(this, tString, EXACT_YES, INFRA_NO, TRUE))) {
+      if (!(tVictim = get_pc_world(this, tString, EXACT_NO, INFRA_NO, TRUE))) {
+        sendTo(format("You fail to create a dimensional fold to '%s'\n\r") % tString);
+        return FALSE;
+      }
+    }
+    // Valid targets?
+    if (this == tVictim) {
+      sendTo("You can't open a dimensional fold to yourself. How would that even work?\n\r");
+      return FALSE;
+    }
+
+    if (tVictim->GetMaxLevel() > MAX_MORT && !isImmortal()) {
+      sendTo("Their mind is too powerful for you to open a dimensional fold to.\n\r");
+      return FALSE;
+    }
+
+    location = tVictim->in_room;
+
+  }
+  
+  TRoom * rp = real_roomp(location);
+
+  if (!rp) {
+    vlogf(LOG_BUG, "Attempt to dimensional fold to a NULL room.");
+    return FALSE;
+  }
+
+  if (!isImmortal() && (rp->isRoomFlag(ROOM_PRIVATE) ||
+      rp->isRoomFlag(ROOM_HAVE_TO_WALK) ||
+      zone_table[rp->getZoneNum()].enabled == FALSE)) {
+    act("Your mind can't seem to focus on that area.", FALSE, this, 0, 0, TO_CHAR);
+    return FALSE;
+  }
+
+  int bKnown=getSkillValue(SKILL_DIMENSIONAL_FOLD);
+
+  if (bSuccess(bKnown, SKILL_DIMENSIONAL_FOLD)) {
+    TPortal * tmp_obj = new TPortal(rp);
+    tmp_obj->setPortalNumCharges(1);
+    tmp_obj->obj_flags.decay_time = 1;
+    tmp_obj->name = "portal fold";
+    tmp_obj->shortDescr = "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal<1>";
+    sbuf = format("<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal to %s beckons.<1>") % rp->name;
+    tmp_obj->setDescr(sbuf);
+
+    *roomp += *tmp_obj;
+
+    TPortal * next_tmp_obj = new TPortal(roomp);
+    next_tmp_obj->setPortalNumCharges(1);
+    next_tmp_obj->obj_flags.decay_time = 1;
+    next_tmp_obj->name = "portal fold";
+    next_tmp_obj->shortDescr = "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal<1>";
+    sbuf = format("<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal to %s beckons.<1>") % roomp->name;
+    next_tmp_obj->setDescr(sbuf);
+
+    *rp += *next_tmp_obj;
+
+    act("$n winces in concentration.", TRUE, this, NULL, NULL, TO_ROOM);
+    act(format("You wince as you focus on %s.") % rp->name, TRUE, this, NULL, NULL, TO_CHAR);
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
+
+    rp->sendTo(format("%s suddenly appears out of a swirling mist.\n\r") % next_tmp_obj->shortDescr.cap());
+
+    rc = TRUE;
+  } else {
+    sendTo("Your mind lacks the focus to create a dimensional fold.\n\r");
+    rc = FALSE;
+  }
+
+  reconcileMana(SKILL_DIMENSIONAL_FOLD, FALSE);
+  addSkillLag(SKILL_DIMENSIONAL_FOLD, rc);
+  return rc;
+
+}
 
 

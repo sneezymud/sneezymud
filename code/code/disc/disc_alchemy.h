@@ -150,10 +150,10 @@ private:
     int castCopy(TBeing *, TObj *);
     void copy(TBeing *, TMagicItem *, TObj *);
     int copy(TBeing *, TObj *, int, short);
- 
-    int ethrealGate(TBeing *, TObj *);
-    int castEthrealGate(TBeing *, TObj *);
-    int ethrealGate(TBeing *, TObj *, int, short);
+
+    int etherealGate(TBeing *, const char *);
+    int castEtherealGate(TBeing *, const char *);
+    int etherealGate(TBeing *, const char *, int, short);
 
     int galvanize(TBeing *, TObj *);
     int castGalvanize(TBeing *, TObj *);

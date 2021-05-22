@@ -2086,6 +2086,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
       case SKILL_PSIDRAIN:
+      case SKILL_DIMENSIONAL_FOLD:
       case SKILL_IRON_FIST:
       case SKILL_IRON_FLESH:
       case SKILL_IRON_SKIN:
