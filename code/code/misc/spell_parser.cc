@@ -718,7 +718,7 @@ int TBeing::doPray(const char *argument)
 
 std::tuple<spellNumT, sstring> TBeing::parseSpellNum(sstring const& args) const
 {
-  if (args.empty()) {
+  if (args.trim().empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around <spell name>.\n\r");
     return std::make_tuple(TYPE_UNDEFINED, "");
@@ -1526,6 +1526,7 @@ namespace {
     { SKILL_MIND_PRESERVATION, "SKILL_MIND_PRESERVATION" },
     { SKILL_TELEKINESIS, "SKILL_TELEKINESIS" },
     { SKILL_PSIDRAIN, "SKILL_PSIDRAIN" },
+    { SKILL_DIMENSIONAL_FOLD, "SKILL_DIMENSIONAL_FOLD" },
     { SKILL_SIGN, "SKILL_SIGN" },
     { SKILL_SWIM, "SKILL_SWIM" },
     { SKILL_CONS_UNDEAD, "SKILL_CONS_UNDEAD" },
@@ -1886,7 +1887,7 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
       spontaneousGeneration(this, n);
       break;
     case SPELL_ETHER_GATE:
-      ethrealGate(this, o);
+      etherealGate(this, n);
       break;
     case SPELL_GALVANIZE:
       rc = galvanize(this, o);   

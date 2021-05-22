@@ -1232,6 +1232,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDPsionics *) cd)->skTelekinesis;
     case SKILL_PSIDRAIN:
       return &((CDPsionics *) cd)->skPsiDrain;
+    case SKILL_DIMENSIONAL_FOLD:
+      return &((CDPsionics *) cd)->skDimensionalFold;
 
 
 
@@ -1635,9 +1637,6 @@ bool hideThisSpell(spellNumT spell)
     return true;
 
   if (spell == SPELL_GARMULS_TAIL)
-    return true;
-
-  if (spell == SPELL_ETHER_GATE)
     return true;
 
   return false;

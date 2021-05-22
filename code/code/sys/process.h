@@ -625,7 +625,7 @@ class TScheduler {
   TObjIter objIter;
 
   // char process data
-  TBeing *tmp_ch;
+  int procIdx = 0;
 
   void runObj(int);
   void runChar(int);

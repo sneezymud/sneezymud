@@ -1859,6 +1859,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
       case SKILL_PSIDRAIN:
+      case SKILL_DIMENSIONAL_FOLD:
       case SKILL_MANA:
       case SKILL_IRON_FIST:
       case SKILL_IRON_FLESH:

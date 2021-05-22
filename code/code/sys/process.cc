@@ -8,6 +8,7 @@
 #include "toggle.h"
 #include "guild.h"
 #include "being.h"
+#include "CharacterList.h"
 #include <sys/shm.h>
 #include <sys/ipc.h>
 
@@ -124,7 +125,6 @@ TScheduler::TScheduler(){
   mud_assert(real_roomp(0) != NULL, "couldn't load room 0");
   *(real_roomp(0)) += *placeholder;
   objIter=find(object_list.begin(), object_list.end(), placeholder);
-  tmp_ch=NULL;
 }
 
 void TScheduler::runObj(int pulseNum)
@@ -175,65 +175,69 @@ void TScheduler::runObj(int pulseNum)
 
 void TScheduler::runChar(int pulseNum)
 {
-  int count;
+  int count = max((int)((float)mobCount/11.5), 1);
 
-  // we've already finished going through the character list, so start over
-  if(!tmp_ch)
-    tmp_ch=character_list;
+  auto doRunChar = [this, &count]() {
+    std::vector<TBeing*> deleteMe;
+    int startIdx = 0;
 
-  count=max((int)((float)mobCount/11.5), 1);
+    for (TBeing* tmp_ch : CharacterList) {
+      if (startIdx++ < procIdx) continue;
+      procIdx++;
 
-  while (tmp_ch) {
-    if (tmp_ch->roomp == NULL || tmp_ch->getName().empty() || (tmp_ch->desc && tmp_ch->desc->character != tmp_ch))
-    {
-      vlogf(LOG_BUG, format("Error: character_list contains a bogus item (%s), removing.") % (
-          tmp_ch->roomp == nullptr ? "no roomptr" :
-          tmp_ch->getName().empty() ? "no name" :
-          tmp_ch->desc && tmp_ch->desc->character != tmp_ch ? "bad char ptr in desc" :
-          "bug"
-          ));
-      tmp_ch = tmp_ch->next;
-      continue;
-    }
+      if (tmp_ch->roomp == NULL || tmp_ch->getName().empty() || (tmp_ch->desc && tmp_ch->desc->character != tmp_ch))
+      {
+        vlogf(LOG_BUG, format("Error: character_list contains a bogus item (%s), removing.") % (
+            tmp_ch->roomp == nullptr ? "no roomptr" :
+            tmp_ch->getName().empty() ? "no name" :
+            tmp_ch->desc && tmp_ch->desc->character != tmp_ch ? "bad char ptr in desc" :
+            "bug"
+            ));
+        deleteMe.push_back(tmp_ch);
+        continue;
+      }
 
-    if(!count--)
-      break;
+      if(!count--)
+        break;
 
-    if (tmp_ch->getPosition() == POSITION_DEAD) {
-      // even if shortDescr is NULL.
-      vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
-          tmp_ch->getName() % tmp_ch->in_room);
-      TBeing* dead = tmp_ch;
-      tmp_ch = tmp_ch->next;
-      delete dead; // possibly skip, hopefully not lose a character here, because the destructor manages character_list
-      continue;
-    }
+      if (tmp_ch->getPosition() == POSITION_DEAD) {
+        // even if shortDescr is NULL.
+        vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
+            tmp_ch->getName() % tmp_ch->in_room);
+        deleteMe.push_back(tmp_ch);
+        continue;
+      }
 
-    if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
-        (tmp_ch->getHit() > 0)) {
-      vlogf(LOG_BUG, format("Error: creature (%s) with hit > 0 found with position < stunned") % 
-          tmp_ch->getName());
-      vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
-      tmp_ch->setPosition(POSITION_STANDING);
-    }
+      if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
+          (tmp_ch->getHit() > 0)) {
+        vlogf(LOG_BUG, format("Error: creature (%s) with hit > 0 found with position < stunned") % 
+            tmp_ch->getName());
+        vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
+        tmp_ch->setPosition(POSITION_STANDING);
+      }
 
-    for(TCharProcess *char_proc : char_procs) {
-      if(char_proc->should_run(pulse.pulse)){
-        if(char_proc->run(pulse, tmp_ch)){
-          TBeing* dead = tmp_ch;
-          tmp_ch = tmp_ch->next;
-          delete dead; // possibly skip, hopefully not lose a character here, because the destructor manages character_list
-          break;
+      for(TCharProcess *char_proc : char_procs) {
+        if(char_proc->should_run(pulse.pulse)){
+          if(char_proc->run(pulse, tmp_ch)){
+            deleteMe.push_back(tmp_ch);
+            break;
+          }
+        }
+        if (!tmp_ch->roomp || tmp_ch->getName().empty()) {
+          vlogf(LOG_BUG, format("Error: char %s roomp %p in proc %s") %
+              tmp_ch->getName() % tmp_ch ->roomp % char_proc->name);
         }
       }
-      if (!tmp_ch->roomp || tmp_ch->getName().empty()) {
-        vlogf(LOG_BUG, format("Error: char %s roomp %p in proc %s") %
-            tmp_ch->getName() % tmp_ch ->roomp % char_proc->name);
-        tmp_ch = tmp_ch->next;
-      }
     }
+    for (TBeing* being : deleteMe)
+      delete being;
+  };
 
-    tmp_ch = tmp_ch -> next;
+  doRunChar();
+  if (count > 0) // wraparound: in case we finished this pass over chars, start over from the beginning
+  {
+    procIdx = 0;
+    doRunChar();
   }
 }
 

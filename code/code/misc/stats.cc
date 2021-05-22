@@ -947,9 +947,8 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
       if(isVampire() &&
 	 (whichStat == STAT_STR ||
 	  whichStat == STAT_SPE ||
-	  whichStat == STAT_AGI ||
-	  whichStat == STAT_FOC))
-	amount += 15;
+	  whichStat == STAT_CHA))
+	amount += 25;
 
       return amount;
     case(STAT_RACE):
