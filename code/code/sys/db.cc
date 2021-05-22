@@ -402,6 +402,7 @@ void bootDb(void)
   bootPulse("Verifying runtime lib dirs.");
   verify_path("roomdata/saved");
   verify_path("immortals");
+  verify_path("corpses/corrupt");
   verify_path_azdir("rent");
   verify_path_azdir("account");
   verify_path_azdir("player");
