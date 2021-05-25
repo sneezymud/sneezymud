@@ -116,6 +116,14 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_CRIT_FREQUENCY,
         4,
         0);
+//  ego_imm_blessing("Maror",
+//      AFFECT_MAROR_BLESSING,
+//      APPLY_KAR, 
+//      "<Y>luck<1>",
+//      APPLY_CRIT_FREQUENCY,
+//      2,
+//      0);
+// Replacing Marors blessing until he needs it back.
   blessings[AFFECT_CORAL_BLESSING]=
     ego_imm_blessing("Coral",
         AFFECT_CORAL_BLESSING,
