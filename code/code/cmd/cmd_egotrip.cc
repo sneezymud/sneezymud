@@ -60,6 +60,14 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_IMMUNITY,
         IMMUNE_NONMAGIC,
         5);
+ blessings[AFFECT_ONSLAUGHT_BLESSING]=
+   ego_imm_blessing("Onslaught", 
+    AFFECT_ONSLAUGHT_BLESSING,
+    APPLY_FOC,
+    "<B>clarity<1>",
+    APPLY_CRIT_FREQUENCY,
+    3,
+    0);	
   blessings[AFFECT_AION_BLESSING]=
     ego_imm_blessing("Aion",
         AFFECT_AION_BLESSING,
