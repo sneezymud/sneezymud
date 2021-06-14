@@ -1,0 +1,25 @@
+name: Build and Publish
+on:
+  push:
+    branches:    
+      - 'master'
+      - 'add_github_actions'
+jobs:
+  build_image:
+    runs-on: ubuntu-latest
+    name: Build Image
+    steps:
+      - uses: actions/checkout@v2
+        name: Check out code
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & Push Docker image
+        with:
+          image: wershlak/sneezymud2
+          registry: registry.hub.docker.com
+          dockerfile: Dockerfile
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
