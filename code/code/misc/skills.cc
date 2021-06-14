@@ -1232,6 +1232,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDPsionics *) cd)->skTelekinesis;
     case SKILL_PSIDRAIN:
       return &((CDPsionics *) cd)->skPsiDrain;
+    case SKILL_DIMENSIONAL_FOLD:
+      return &((CDPsionics *) cd)->skDimensionalFold;
 
 
 
@@ -1393,7 +1395,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case AFFECT_VASCO_BLESSING:
     case AFFECT_CORAL_BLESSING:
     case AFFECT_BUMP_BLESSING:
-    case AFFECT_MAROR_BLESSING:
+    case AFFECT_ONSLAUGHT_BLESSING:
     case AFFECT_DASH_BLESSING:
     case AFFECT_DEIRDRE_BLESSING:
     case AFFECT_GARTHAGK_BLESSING:
@@ -1635,9 +1637,6 @@ bool hideThisSpell(spellNumT spell)
     return true;
 
   if (spell == SPELL_GARMULS_TAIL)
-    return true;
-
-  if (spell == SPELL_ETHER_GATE)
     return true;
 
   return false;

@@ -1,6 +1,6 @@
 #11800
 Stonecold - Inverse Grimhaven~
-11999 22 2 1
+11999 576 2 1
 
 D 0 12041 5 1     Panel casino
 D 0 11848 4 1
@@ -35,8 +35,14 @@ M 0 11803 1 11824        Vampire
 G 1 813 1                scroll recall
 M 0 11803 1 11822        Vampire
 G 1 813 1                scroll recall
+M 0 11803 1 11829        Vampire
+G 1 813 1                scroll recall
+M 0 11803 1 11829        Vampire
+G 1 813 1                scroll recall
 M 0 11804 1 11829        Arch Nemesis
-G 1 12219 1
+? 0 1 0 E
+E 1 11814 10 19            Legion Greatblade
+Y 0 159 4                  Black Legion Set
 M 0 25506 35 11911       Skeleton
 G 1 813 1
 M 0 25506 35 11916

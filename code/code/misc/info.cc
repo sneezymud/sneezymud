@@ -1828,9 +1828,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
             describeDuration(this, aff->duration);
         }
         break;
-      case AFFECT_MAROR_BLESSING:
+      case AFFECT_ONSLAUGHT_BLESSING:
         if(show){
-          str+=format("Affected: Maror's Blessing.  Approx. duration : %s\n\r") %
+          str+=format("Affected: Onslaught's Blessing.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;
@@ -2086,6 +2086,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_MIND_PRESERVATION:
       case SKILL_TELEKINESIS:
       case SKILL_PSIDRAIN:
+      case SKILL_DIMENSIONAL_FOLD:
       case SKILL_IRON_FIST:
       case SKILL_IRON_FLESH:
       case SKILL_IRON_SKIN:

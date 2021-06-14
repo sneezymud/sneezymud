@@ -554,7 +554,7 @@ int vorpal(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     o->setStructPoints(o->getStructPoints()-1);
   }    
 
-  rc = ch->critSuccessChance(vict, weap, &part, wtype, &dam, crits[::number(0,20)]);
+  rc = ch->critSuccessChance(vict, weap, &part, wtype, &dam, crits[::number(0, cElements(crits)-1)]);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_VICT;
   } else if (!rc) {

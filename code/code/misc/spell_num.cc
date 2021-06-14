@@ -1026,6 +1026,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 731;
     case SKILL_INEVITABILITY:
       return 732;
+    case SKILL_DIMENSIONAL_FOLD:
+      return 733;
     case AFFECT_DISEASE:
       return 2500;
     case AFFECT_COMBAT:
@@ -1100,7 +1102,7 @@ int mapSpellnumToFile(spellNumT stt)
       return 2535;
     case AFFECT_BUMP_BLESSING:
       return 2536;
-    case AFFECT_MAROR_BLESSING:
+    case AFFECT_ONSLAUGHT_BLESSING:
       return 2537;
     case AFFECT_DASH_BLESSING:
       return 2538;
@@ -2139,6 +2141,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_TOUGHNESS;
     case 732:
       return SKILL_INEVITABILITY;
+    case 733:
+      return SKILL_DIMENSIONAL_FOLD;
     case 2500:
       return AFFECT_DISEASE;
     case 2501:
@@ -2210,7 +2214,7 @@ spellNumT mapFileToSpellnum(int stt)
     case 2536:
       return AFFECT_BUMP_BLESSING;
     case 2537:
-      return AFFECT_MAROR_BLESSING;
+      return AFFECT_ONSLAUGHT_BLESSING;
     case 2538:
       return AFFECT_DASH_BLESSING;
     case 2539:

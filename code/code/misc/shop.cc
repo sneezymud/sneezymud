@@ -586,23 +586,22 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     return;
   }
 
-  // sell/purchase the object, if that fails destroy all in-memory stuff
-  if (temp1->buyMe(ch, keeper, num, shop_nr) == -1) {
-    for(unsigned int i=0;i<objects_p.size();++i)
-      delete objects_p[i];
-    return;
+  if (temp1->buyMe(ch, keeper, num, shop_nr) != -1) {
+    // We've sucessfully sold so update the DB
+    for(unsigned int i=0;i<objects_p.size();++i) {
+      keeper->deleteItem(shop_nr, objects[i]);
+    }
   }
 
-  // delete objects left on keeper, remove objects sold from db
-  for(unsigned int i=0;i<objects_p.size();++i) {
-    TObj *cleanupObj = objects_p[i];
-    if (!cleanupObj)
-      continue;
-    if (cleanupObj->parent == keeper)
-      delete objects_p[i];
-    else
-      keeper->deleteItem(shop_nr, objects[i]);
+  // Ensure stuff that is on the keeper is deleted 
+  // regardless of where it came from or how it got there!
+  TThing *t;
+  for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end();) {
+    // delete t;
+    t=*(it++);
+    --(*t);
   }
+
 }
 
 

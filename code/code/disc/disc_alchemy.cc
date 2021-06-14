@@ -23,6 +23,7 @@
 #include "obj_opal.h"
 #include "obj_component.h"
 #include "obj_magic_item.h"
+#include "obj_portal.h"
 #include "obj_scroll.h"
 #include "person.h"
 #include "pathfinder.h"
@@ -2208,28 +2209,98 @@ int castGalvanize(TBeing *caster, TObj *obj)
   return FALSE;
 }
 
-int ethrealGate(TBeing *caster, TObj *obj, int, short bKnown)
+int etherealGate(TBeing *caster, const char * portalroom, int, short bKnown)
 {
-  return SPELL_FALSE;
+  TPerson *tPerson = dynamic_cast<TPerson *>(caster);
+  int location=0;
+  int num_charges = 20;
+  sstring sbuf;
+
+  std::map<std::string, int> gateRooms { 
+    {"grimhaven", 15346},
+    {"cloud", 11000},
+    {"auria", 5700},
+    {"circle", 6953},
+    {"volcano", 12883}, 
+  };
+
+  // Iterate over the map using c++11 range based for loop
+  for (std::pair<std::string, int> element : gateRooms) {
+    if(is_abbrev(portalroom, element.first))
+      location=element.second;
+  }
+
+  TRoom * rp = real_roomp(location);
+
+  if (!rp || !location) {
+    caster->sendTo("You can't seem to open a gate to that location.\n\r");
+    return SPELL_FAIL;
+  }
+
+  if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL) && !caster->isImmortal()) {
+    caster->sendTo("You can't seem to escape the defenses of this area.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return SPELL_FAIL;
+  }
+
+  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_ETHER_GATE)) {
+    TPortal * tmp_obj = new TPortal(rp);
+    tmp_obj->setPortalNumCharges(num_charges);
+    tmp_obj->obj_flags.decay_time = 5;
+    tmp_obj->name = "portal gate";
+    tmp_obj->shortDescr = "<c>A <B>sw<W>ir<1><b>li<C>ng <1><c>ethereal gate<1>";
+    sbuf = format("<c>A <B>sw<W>ir<1><b>li<C>ng <1><c>ethereal gate to %s sits here.<1>") % rp->name;
+    tmp_obj->setDescr(sbuf);
+    *caster->roomp += *tmp_obj;
+
+    if (tPerson)
+      tmp_obj->checkOwnersList(tPerson);
+
+    TPortal * next_tmp_obj = new TPortal(caster->roomp);
+    next_tmp_obj->setPortalNumCharges(num_charges);
+    next_tmp_obj->obj_flags.decay_time = 5;
+    next_tmp_obj->name = "portal gate";
+    next_tmp_obj->shortDescr = "<c>A <B>sw<W>ir<1><b>li<C>ng <1><c>ethereal gate<1>";
+    sbuf = format("<c>A <B>sw<W>ir<1><b>li<C>ng <1><c>ethereal gate to %s sits here.<1>") % caster->roomp->name;
+    next_tmp_obj->setDescr(sbuf);
+    
+    *rp += *next_tmp_obj;
+
+    if (tPerson)
+      next_tmp_obj->checkOwnersList(tPerson);
+
+    caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
+    rp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
+
+    act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj, NULL, TO_CHAR);
+
+    rp->sendTo(format("%s suddenly appears out of a swirling mist.\n\r") % next_tmp_obj->shortDescr.cap());
+
+    return SPELL_SUCCESS;
+  }
+  act("Nothing seems to happen!", FALSE, caster, NULL, NULL, TO_ROOM);
+  act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
+  return SPELL_FAIL;
 }
 
-int ethrealGate(TBeing *caster, TObj *obj)
+int etherealGate(TBeing *caster, const char * portalroom)
 {
-  if (!bPassMageChecks(caster, SPELL_ETHER_GATE, obj))
+  if (!bPassMageChecks(caster, SPELL_ETHER_GATE, NULL))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_ETHER_GATE]->lag;
   taskDiffT diff = discArray[SPELL_ETHER_GATE]->task;
 
-  start_cast(caster, NULL, obj, NULL, SPELL_ETHER_GATE, diff, 2,"", rounds, caster->in_room, 0, 0,TRUE, 0);
+  start_cast(caster, NULL, NULL, NULL, SPELL_ETHER_GATE, diff, 2, portalroom, rounds, caster->in_room, 0, 0,TRUE, 0);
   return TRUE;
 }
 
-int castEthrealGate(TBeing *caster, TObj *obj)
+int castEtherealGate(TBeing *caster, const char * portalroom)
 {
   int level = caster->getSkillLevel(SPELL_ETHER_GATE);
 
-  int ret=ethrealGate(caster,obj,level,caster->getSkillValue(SPELL_ETHER_GATE));
+  int ret=etherealGate(caster, portalroom, level, caster->getSkillValue(SPELL_ETHER_GATE));
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
   }
