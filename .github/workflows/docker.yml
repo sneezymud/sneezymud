@@ -19,6 +19,7 @@ jobs:
         name: Build & Push Docker image
         with:
           image: wershlak/sneezymud2
+          addLatest: true
           registry: registry.hub.docker.com
           dockerfile: Dockerfile
           username: ${{ secrets.DOCKERHUB_USERNAME }}
