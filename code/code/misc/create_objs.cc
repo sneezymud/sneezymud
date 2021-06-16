@@ -670,7 +670,7 @@ void TPerson::doOEdit(const char *argument)
     return;
 
   tString = sstring;
-  half_chop(tString, object, sstring);
+  half_chop(std::string(tString).c_str(), object, sstring);
 
   if (!(cObj = dynamic_cast<TObj *>(searchLinkedList(object, stuff)))) {
     sendTo("Try an object next time, it works better.\n\r");
