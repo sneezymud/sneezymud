@@ -89,7 +89,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         APPLY_FOC,
         "<B>reflection<1>"); // Steal my blessing again, and I'll break you. -D
   blessings[AFFECT_SIDARTHA_BLESSING]=
-    ego_imm_blessing("SIDARTHA",
+    ego_imm_blessing("Sidartha",
         AFFECT_SIDARTHA_BLESSING,
         APPLY_SPE,
 	APPLY_HASTE,	     
