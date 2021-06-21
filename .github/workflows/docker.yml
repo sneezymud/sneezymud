@@ -18,7 +18,7 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: Build & Push Docker image
         with:
-          image: wershlak/sneezymud2
+          image: sneezymud/sneezymud
           addLatest: true
           registry: registry.hub.docker.com
           dockerfile: Dockerfile
