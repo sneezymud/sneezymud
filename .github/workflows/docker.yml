@@ -6,7 +6,7 @@ on:
       - 'add_github_actions'
 jobs:
   build_image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: Build Image
     steps:
       - uses: actions/checkout@v2
