@@ -92,118 +92,133 @@ M 0 10202 1 10247 			reindeer
 M 0 10202 1 10292 			reindeer
 M 0 10212 1 10207 			reindeer
 M 0 10212 1 10267 			reindeer
-M 0 10203 1 10234 			frontier guardsman type1a
+
+M 0 10203 1 10234             frontier guardsman type1a
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10203 1 10231 			frontier guardsman type1a
+
+M 0 10203 1 10231             frontier guardsman type1a
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10213 1 10224 			frontier guardsman type1a
+
+M 0 10213 1 10224             frontier guardsman type1a
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10213 1 10240 			frontier guardsman type1a
+
+M 0 10213 1 10240             frontier guardsman type1a
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 10 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10204 1 10235 			frontier guardsman type1b
+
+M 0 10204 1 10235             frontier guardsman type1b
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 10 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10204 1 10236 			frontier guardsman type1b
+
+M 0 10204 1 10236             frontier guardsman type1b
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10214 1 10233 			frontier guardsman type1b
+
+M 0 10214 1 10233             frontier guardsman type1b
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 10 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10214 1 10238 			frontier guardsman type1b
+
+M 0 10214 1 10238             frontier guardsman type1b
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 8 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10205 1 10241 			frontier guardsman type2a
+
+M 0 10205 1 10241             frontier guardsman type2a
 ? 0 10 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10205 1 10244 			frontier guardsman type2a
+
+M 0 10205 1 10244             frontier guardsman type2a
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10215 1 10242 			frontier guardsman type2a
+
+M 0 10215 1 10242             frontier guardsman type2a
 ? 0 9 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 ? 0 3 0 E
-E 1 1111 800 14				platemail cloak on back
+E 1 1111 800 14                platemail cloak on back
 Y 0 11 1                                platemail
-M 0 10215 1 10241 			frontier guardsman type2a
+
+M 0 10215 1 10241             frontier guardsman type2a
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10206 1 10241 			frontier guardsman type2b
+
+M 0 10206 1 10241             frontier guardsman type2b
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10206 1 10253 			frontier guardsman type2b
+
+M 0 10206 1 10253             frontier guardsman type2b
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10216 1 10254 			frontier guardsman type2b
+
+M 0 10216 1 10254             frontier guardsman type2b
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
-M 0 10216 1 10242 			frontier guardsman type2b
+
+M 0 10216 1 10242             frontier guardsman type2b
 ? 0 5 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 ? 0 1 0 E
-E 1 10245 1 3				armoury key around neck
+E 1 10245 1 3                armoury key around neck
 Y 0 11 1                                platemail
 
 */ loading of key dumps full suit of platemail into armory
-B 1 1100 1 10245			platemail helm
-B 1 1101 1 10245			platemail collar
-B 1 1102 1 10245			platemail suit
-B 1 1103 2 10245			platemail armband
-B 1 1103 2 10245			platemail armband
-B 1 1104 2 10245			platemail gauntelt
-B 1 1104 2 10245			platemail gauntlet
-B 1 1105 1 10245			platemail girth
-B 1 1106 2 10245			platemail bracer
-B 1 1106 2 10245			platemail bracer
-B 1 1107 2 10245			platemail legging
-B 1 1107 2 10245			platemail legging
-B 1 1108 2 10245			platemail boot
-B 1 1108 2 10245			platemail boot
-B 1 1109 2 10245			brass knuckles
-B 1 1110 1 10245			kite shield
-B 1 1111 1 10245			purple black cape
+B 1 1100 1 10245            platemail helm
+B 1 1101 1 10245            platemail collar
+B 1 1102 1 10245            platemail suit
+B 1 1103 2 10245            platemail armband
+B 1 1103 2 10245            platemail armband
+B 1 1104 2 10245            platemail gauntelt
+B 1 1104 2 10245            platemail gauntlet
+B 1 1105 1 10245            platemail girth
+B 1 1106 2 10245            platemail bracer
+B 1 1106 2 10245            platemail bracer
+B 1 1107 2 10245            platemail legging
+B 1 1107 2 10245            platemail legging
+B 1 1108 2 10245            platemail boot
+B 1 1108 2 10245            platemail boot
+B 1 1109 2 10245            brass knuckles
+B 1 1110 1 10245            kite shield
+B 1 1111 1 10245            purple black cape
 
-M 0 10208 1 10257 			frontier signalman
-G 1 10223 20					key to footlocker
+M 0 10208 1 10257             frontier signalman
+G 1 10223 20                    key to footlocker
 ? 0 5 0 E
-E 1 10211 800 14				warm fur cloak on back
+E 1 10211 800 14                warm fur cloak on back
 ? 0 3 0 E
-E 1 303 300 19				broad sword in r.hand
+E 1 1112 300 19                WARM STEEL BROADSWORD
 Y 0 11 1                                platemail
 
 M 0 10220 1 15714            Frost Giant
 S
-
