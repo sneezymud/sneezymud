@@ -1,3 +1,14 @@
+06-25-21 : Buff spells and Armor rebalance
+           - Starting to update buff spells so they have the same affects when cast
+           on self versus cast on others. looking to add group versions of buffs but
+           that's not a good idea when casting on others is less affective.
+           - It's very easy to hit the Armor cap. Going to decrease armor on buff spells
+           accross the board somewhat to try to tone it down. Hopefully make things more
+           diverse and fun at the same time.
+           - Deikhan and Cleric Armor spell down to 70AC
+           - Deikhan Aura of might now 40AC
+           - Sanctuary protection reduced but now provides the same amount to others
+
 06-25-21 : Monk Stuff
            - Reduce mana cost of Chain and Blur
            - Chain now works while using a weapon. Blur still requires bare hands

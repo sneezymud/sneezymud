@@ -10,6 +10,53 @@
 #include "obj_magic_item.h"
 #include "obj_player_corpse.h"
 
+void crusade(TBeing *ch)
+{
+  affectedData aff;
+  int level;
+  TBeing *tmp_victim = NULL;
+
+  if (!bPassClericChecks(ch,SPELL_CRUSADE))
+    return;
+  
+  level = ch->getSkillLevel(SPELL_CRUSADE);
+
+  if (ch->bSuccess(ch->getSkillValue(SPELL_CRUSADE), ch->getPerc(), SPELL_CRUSADE)) {
+    int found = FALSE;
+    TThing *t=NULL;
+
+    // Armor aff
+    aff.type = SPELL_ARMOR;
+    aff.level = level;
+    aff.duration = ch->durationModify(SPELL_ARMOR, (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
+    aff.location = APPLY_ARMOR;
+    aff.bitvector = 0;
+    aff.modifier = -70;
+
+    ch->sendTo("You exhale a blue-green vapor around your group.\n\r");
+    act("$n breaths forth a blue-green mist that surrounds $s group.", TRUE,ch,0,0,TO_ROOM, ANSI_GREEN);
+
+    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
+      tmp_victim = dynamic_cast<TBeing *>(t);
+      if (!tmp_victim)
+        continue;
+      if (ch->inGroup(*tmp_victim)) {
+        ch->reconcileHelp(tmp_victim,discArray[SPELL_CRUSADE]->alignMod);
+        act("$n makes a face like a fish.", TRUE, tmp_victim, NULL, NULL, TO_ROOM, ANSI_BLUE_BOLD);
+        act("You make a face like a fish.", TRUE, tmp_victim, NULL, NULL, TO_CHAR, ANSI_BLUE_BOLD);
+
+        tmp_victim->affectTo(&aff);
+        found = TRUE;
+      }  
+    }
+    if (!found)
+      ch->sendTo("But, there's nobody in your group.\n\r");
+    return;
+  } else
+    ch->nothingHappens();
+  
+}
+
 void relive(TBeing *ch, TBeing *vict)
 {
   affectedData aff;
@@ -964,22 +1011,11 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
   aff.duration = c->durationModify(SPELL_ARMOR, (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
+  aff.modifier = -70;
 
-  // deikhan armor does less (c.f. balance notes)
-  if (spell == SPELL_ARMOR)
-    aff.modifier = -100;
-  else if (spell == SPELL_ARMOR_DEIKHAN)
-    aff.modifier = -75;
-  else {
-    vlogf(LOG_BUG, format("Unknown spell %d in armor()") %  spell);
-    aff.modifier = 0;
-  }
   
   if (c->bSuccess(learn, c->getPerc(), spell)) {
     c->reconcileHelp(victim, discArray[spell]->alignMod);
-
-    if (c != victim)
-      aff.modifier /= 8;
 
     victim->roomp->playsound(SOUND_SPELL_ARMOR, SOUND_TYPE_MAGIC);
 
@@ -988,8 +1024,6 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
       case CRIT_S_DOUBLE:
         CS(spell);
         aff.duration *= 2;
-        if (c != victim)
-          aff.modifier *= 2;
 
         if (!victim->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES))
           return SPELL_FAIL;
@@ -1101,11 +1135,8 @@ int sanctuary(TBeing *c, TBeing *victim, int level, short learn)
   aff.level = level;
   aff.duration = c->durationModify(SPELL_SANCTUARY, ((level <= MAX_MORT) ? 3 : level) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_PROTECTION;
-  aff.modifier = min(level, 50);
+  aff.modifier = min(level / 2 , 25);
   aff.bitvector = AFF_SANCTUARY;
-
-  if (c != victim)
-    aff.modifier /= 3;
 
   if (c->bSuccess(learn, c->getPerc(), SPELL_SANCTUARY)) {
     c->reconcileHelp(victim, discArray[SPELL_SANCTUARY]->alignMod);
