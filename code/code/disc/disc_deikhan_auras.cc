@@ -133,7 +133,7 @@ int procAuraOfMight(TBeing * caster)
     aff2.type      = SPELL_AURA_MIGHT;
     aff2.level     = bKnown;
     aff2.duration  = AURA_DURATION;
-    aff2.modifier  = -50;
+    aff2.modifier  = -40;
     aff2.location  = APPLY_ARMOR;
     aff2.bitvector = 0;
 

@@ -34,16 +34,19 @@ public:
     CSkill skCureParalyze;
     CSkill skSecondWind;
     CSkill skRelive;
+    CSkill skCrusade;
 
     CDAegis()
       : CDiscipline(),
         skSanctuary(), skCureParalyze(),
-        skSecondWind(), skRelive() {
+        skSecondWind(), skRelive(),
+        skCrusade() {
     }
     CDAegis(const CDAegis &a)
       : CDiscipline(a),
         skSanctuary(a.skSanctuary), skCureParalyze(a.skCureParalyze),
-        skSecondWind(a.skSecondWind), skRelive(a.skRelive) {
+        skSecondWind(a.skSecondWind), skRelive(a.skRelive),
+        skCrusade(a.skCrusade) {
     }
     CDAegis & operator=(const CDAegis &a) {
       if (this == &a) return *this;
@@ -52,6 +55,7 @@ public:
       skCureParalyze = a.skCureParalyze;
       skSecondWind = a.skSecondWind;
       skRelive = a.skRelive;
+      skCrusade = a.skCrusade;
       return *this;
     }
     virtual ~CDAegis() {}
@@ -100,4 +104,6 @@ private:
     void cureDisease(TBeing *, TBeing *, TMagicItem *, spellNumT);
 
     void relive(TBeing *, TBeing *);
+
+    void crusade(TBeing *);
 #endif

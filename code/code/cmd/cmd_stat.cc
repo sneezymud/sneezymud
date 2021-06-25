@@ -1636,6 +1636,7 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_WORD_OF_RECALL:
       case SPELL_SANCTUARY:
       case SPELL_RELIVE:
+      case SPELL_CRUSADE:
       case SPELL_CURE_PARALYSIS:
       case SPELL_SECOND_WIND:
       case SPELL_HEROES_FEAST:

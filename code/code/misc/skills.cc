@@ -461,6 +461,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAegis *) cd)->skSecondWind;
     case SPELL_RELIVE:
       return &((CDAegis *) cd)->skRelive;
+    case SPELL_CRUSADE:
+      return &((CDAegis *) cd)->skCrusade;
 
 // disc_hand_of_god
 
