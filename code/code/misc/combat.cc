@@ -3973,11 +3973,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	normalHitMessage(vict, weapon, w_type, dam, part_hit);
       
        
-     if(doesKnowSkill(SKILL_CHAIN_ATTACK) &&   // must know the skill
-	 !weapon &&                             // must be barehanded
-	 (::number(0,99) < 10) &&                // only 10% of the time
-	 getMana()>=5 &&                       // requires 5 mana
-	 bSuccess(SKILL_CHAIN_ATTACK)){
+     if(doesKnowSkill(SKILL_CHAIN_ATTACK) && (::number(0,99) < 10) && getMana()>=5 && bSuccess(SKILL_CHAIN_ATTACK)){
 	// successfully chain this attack
 	act("Lightning fast, you shift your balance and launch another strike.",
 	    FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
