@@ -92,7 +92,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
     ego_imm_blessing("Sidartha",
         AFFECT_SIDARTHA_BLESSING,
         APPLY_SPE,
-	"<b>the mongoose<1>");
+	"<b>the mongoose<1>",
 	APPLY_HITROLL,
 	5,
 	0);
