@@ -150,7 +150,7 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
 
   // cut area effects in half
   if (IS_SET(discArray[skill]->targets, TAR_AREA)) 
-    fixed_amt /= 2.0;
+    fixed_amt *= 0.75;
 
   if (victim && reduce) {
     // physical skills typically have a hits() check in them which keeps
