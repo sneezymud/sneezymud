@@ -36,7 +36,6 @@ D 0 9549 0 1		9549 Hall
 
 *		Objects
 O 0 1201 1 9525 	9525 Lift		Torch
-O 0 9528 1 9525 				Rope & Pulley
 O 0 1201 1 9526 	9526 Hall		Torch
 O 0 1201 1 9527 	9527 Hall		Torch
 O 0 1201 1 9528 	9528 Hall		Torch
@@ -63,9 +62,7 @@ P 1 9537 9999 9536					Red Paint
 O 0 9530 4 9534 				Back Drop
 O 0 1201 1 9535 	9535 Starlet Room	Torch
 O 0 9561 1 9535 				Couch
-O 0 9525 1 9535 				Table
 O 0 14365 1 9535 				Wardrobe
-O 0 9526 1 9535 				Trunk
 O 0 9541 1 9535 				Roses
 O 0 16221 1 9535 				chair
 O 0 1201 1 9536 	9536 Wardrobe		Torch
@@ -81,9 +78,7 @@ P 1 24435 9999 9543					Brush
 O 0 9542 1 9538 				Chair
 O 0 1201 1 9539 	9539 Star's Room	Torch
 O 0 9561 1 9539 				Couch
-O 0 9525 1 9539 				Table
 O 0 14365 1 9539 				Wardrobe
-O 0 9526 1 9539 				Trunk
 O 0 16221 1 9539 				chair
 O 0 1201 1 9540 	9540 Hall		Torch
 O 0 1201 1 9541 	9541 Hall		Torch
@@ -172,11 +167,7 @@ M 0 9541 1 9538		gnome makeup artist
 M 0 9542 1 9536		ward robe mistress
 
 M 0 9543 3 9545		Ogre Bouncer
-E 1 9527 9999 4			Ogre's Tuxedo Jacket
 ? 0 75 0 M
 M 0 9543 3 9545		Ogre Bouncer
-E 1 9527 9999 4			Ogre's Tuxedo Jacket
 M 0 9543 3 9549		Ogre Bouncer
-E 1 9527 9999 4			Ogre's Tuxedo Jacket
 S
-
