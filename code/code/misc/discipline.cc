@@ -1401,6 +1401,10 @@ critSuccT spellCritSuccess(TBeing *caster, spellNumT spell)
   // If there were spellcrit eq or other skills/buff to modify crit
   // -- it would go here --
 
+  // 5% spell crit for Crusade
+  if (caster->affectedBySpell(SPELL_CRUSADE))
+    chance += 500;
+
   int roll = ::number(1, 10000);
 
   if (roll <= chance) {
