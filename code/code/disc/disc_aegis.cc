@@ -21,89 +21,89 @@ void crusade(TBeing *ch)
   
   level = ch->getSkillLevel(SPELL_CRUSADE);
 
-  if (ch->bSuccess(ch->getSkillValue(SPELL_CRUSADE), ch->getPerc(), SPELL_CRUSADE)) {
-    int found = FALSE;
-    TThing *t=NULL;
-    int duration = ch->durationModify(SPELL_CRUSADE, (3 + level) * Pulse::UPDATES_PER_MUDHOUR);
-
-    // Armor aff
-    aff1.type = SPELL_ARMOR;
-    aff1.level = level;
-    aff1.duration = duration;
-    aff1.location = APPLY_ARMOR;
-    aff1.bitvector = 0;
-    aff1.modifier = -60;
-
-    // Bless
-    aff2.type = SPELL_BLESS;
-    aff2.level = level;
-    aff2.duration = duration;
-    aff2.location = APPLY_SPELL_HITROLL;
-    aff2.modifier = 10;
-    aff2.bitvector = 0;
-
-    aff3.type = SPELL_BLESS;
-    aff3.level = level;
-    aff3.duration = duration;
-    aff3.location = APPLY_IMMUNITY;
-    aff3.modifier = IMMUNE_NONMAGIC;
-    aff3.modifier2 = 5;
-    aff3.bitvector = 0;
-
-    // Crusade
-    aff4.type = SPELL_CRUSADE;
-    aff4.level = level;
-    aff4.duration = duration;
-    aff4.location = APPLY_WIS;
-    aff4.modifier = 10;
-    aff4.bitvector = 0;
-
-    aff5.type = SPELL_CRUSADE;
-    aff5.level = level;
-    aff5.duration = duration;
-    aff5.location = APPLY_FOC;
-    aff5.modifier = 10;
-    aff5.bitvector = 0;
-
-    aff6.type = SPELL_CRUSADE;
-    aff6.level = level;
-    aff6.duration = duration;
-    aff6.location = APPLY_INT;
-    aff6.modifier = 10;
-    aff6.bitvector = 0;
-
-
-
-    ch->sendTo("A <y>golden ray of light<1> shines down from the sky as you call the crusade.\n\r");
-    act("$n looks to the sky as a <y>golden ray of light<1> shines down on $s group.", TRUE,ch,0,0,TO_ROOM);
-
-    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
-      tmp_victim = dynamic_cast<TBeing *>(t);
-      if (!tmp_victim)
-        continue;
-      if (ch->inGroup(*tmp_victim)) {
-        ch->reconcileHelp(tmp_victim,discArray[SPELL_CRUSADE]->alignMod);
-
-        act("A <y>golden halo<1> flickers briefly above $n's head.", TRUE, tmp_victim, NULL, NULL, TO_ROOM);
-        act("You feel more focused on your crusade.", TRUE, tmp_victim, NULL, NULL, TO_CHAR);
-
-        tmp_victim->affectJoin(ch, &aff1, AVG_DUR_NO, AVG_EFF_NO, false);
-        tmp_victim->affectJoin(ch, &aff2, AVG_DUR_NO, AVG_EFF_NO, false);
-        tmp_victim->affectJoin(ch, &aff3, AVG_DUR_NO, AVG_EFF_NO, false);
-        tmp_victim->affectJoin(ch, &aff4, AVG_DUR_NO, AVG_EFF_NO, false);
-        tmp_victim->affectJoin(ch, &aff5, AVG_DUR_NO, AVG_EFF_NO, false);
-        tmp_victim->affectJoin(ch, &aff6, AVG_DUR_NO, AVG_EFF_NO, false);
-
-        found = TRUE;
-      }  
-    }
-    if (!found)
-      ch->sendTo("But, there's nobody in your group.\n\r");
-    
-    return;
-  } else
+  if (!ch->bSuccess(ch->getSkillValue(SPELL_CRUSADE), ch->getPerc(), SPELL_CRUSADE)) {
     ch->nothingHappens();
+    return;
+  }
   
+  int found = FALSE;
+  TThing *t=NULL;
+  int duration = ch->durationModify(SPELL_CRUSADE, (3 + level) * Pulse::UPDATES_PER_MUDHOUR);
+
+  // Armor aff
+  aff1.type = SPELL_ARMOR;
+  aff1.level = level;
+  aff1.duration = duration;
+  aff1.location = APPLY_ARMOR;
+  aff1.bitvector = 0;
+  aff1.modifier = -60;
+
+  // Bless
+  aff2.type = SPELL_BLESS;
+  aff2.level = level;
+  aff2.duration = duration;
+  aff2.location = APPLY_SPELL_HITROLL;
+  aff2.modifier = 10;
+  aff2.bitvector = 0;
+
+  aff3.type = SPELL_BLESS;
+  aff3.level = level;
+  aff3.duration = duration;
+  aff3.location = APPLY_IMMUNITY;
+  aff3.modifier = IMMUNE_NONMAGIC;
+  aff3.modifier2 = 5;
+  aff3.bitvector = 0;
+
+  // Crusade
+  aff4.type = SPELL_CRUSADE;
+  aff4.level = level;
+  aff4.duration = duration;
+  aff4.location = APPLY_WIS;
+  aff4.modifier = 10;
+  aff4.bitvector = 0;
+
+  aff5.type = SPELL_CRUSADE;
+  aff5.level = level;
+  aff5.duration = duration;
+  aff5.location = APPLY_FOC;
+  aff5.modifier = 10;
+  aff5.bitvector = 0;
+
+  aff6.type = SPELL_CRUSADE;
+  aff6.level = level;
+  aff6.duration = duration;
+  aff6.location = APPLY_INT;
+  aff6.modifier = 10;
+  aff6.bitvector = 0;
+
+  ch->sendTo("A <y>golden ray of light<1> shines down from the sky as you call the crusade.\n\r");
+  act("$n looks to the sky as a <y>golden ray of light<1> shines down on $s group.", TRUE,ch,0,0,TO_ROOM);
+
+  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
+    tmp_victim = dynamic_cast<TBeing *>(t);
+    if (!tmp_victim)
+      continue;
+    if (ch->inGroup(*tmp_victim)) {
+      ch->reconcileHelp(tmp_victim,discArray[SPELL_CRUSADE]->alignMod);
+
+      act("A <y>golden halo<1> flickers briefly above $n's head.", TRUE, tmp_victim, NULL, NULL, TO_ROOM);
+      act("You feel more focused on your crusade.", TRUE, tmp_victim, NULL, NULL, TO_CHAR);
+
+      tmp_victim->affectJoin(ch, &aff1, AVG_DUR_NO, AVG_EFF_NO, false);
+      tmp_victim->affectJoin(ch, &aff2, AVG_DUR_NO, AVG_EFF_NO, false);
+      tmp_victim->affectJoin(ch, &aff3, AVG_DUR_NO, AVG_EFF_NO, false);
+      tmp_victim->affectJoin(ch, &aff4, AVG_DUR_NO, AVG_EFF_NO, false);
+      tmp_victim->affectJoin(ch, &aff5, AVG_DUR_NO, AVG_EFF_NO, false);
+      tmp_victim->affectJoin(ch, &aff6, AVG_DUR_NO, AVG_EFF_NO, false);
+
+      found = TRUE;
+    }  
+  }
+  if (!found)
+    ch->sendTo("But, there's nobody in your group.\n\r");
+  
+  return;
+
 }
 
 void relive(TBeing *ch, TBeing *vict)
