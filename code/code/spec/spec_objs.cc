@@ -6787,7 +6787,6 @@ extern int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TO
 extern int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *);
 
 
-
 // assign special procedures to objects
 
 TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] =
