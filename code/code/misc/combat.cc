@@ -1992,9 +1992,10 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     // 2h Specialization: should be no additional dam for anyone without specialization
     // extra 10% for 2h is part of the object
     TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
-    if (obj && obj->isPaired() && doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
+    if (obj && obj->isPaired() && (doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) || doesKnowSkill(SKILL_2H_SPEC_WARRIOR))) {
       // Take half the skill value and normalize between 10 and 50
-      int amt = (int) getSkillValue(SKILL_2H_SPEC_DEIKHAN);
+      // Take the greater of Deikhan or Warrior 2h Spec
+      int amt = max((int) getSkillValue(SKILL_2H_SPEC_DEIKHAN),(int) getSkillValue(SKILL_2H_SPEC_WARRIOR));
       amt = 100 + min(50, max(10, (int) (amt / 2)));
       dam = (int) (dam * amt / 100);
     }
@@ -2046,6 +2047,9 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
         if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
           ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
+        }
+        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_WARRIOR) && obj->isPaired()) {
+          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_WARRIOR, max(0, (100 - (2* myLevel))));
         }
         // Offense hones
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (170 - (2* myLevel)));
@@ -2292,12 +2296,13 @@ int TBeing::hit(TBeing *target, int pulse)
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 20);
 
-      if(doesKnowSkill(SKILL_CRIT_HIT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 20);
     }
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 20);
+      // Boz 6-25-2021 Monk Crit Hitting works on weapons, it should hone on weapons 
+      if(doesKnowSkill(SKILL_CRIT_HIT))
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 20);
     }
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {
@@ -3936,9 +3941,10 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       else if (thiefDodge(vict, weapon, &dam, w_type, part_hit))
 	      mess_sent |= ONEHIT_MESS_DODGE;
       else if (parryWarrior(vict, weapon, &dam, w_type, part_hit)){
-	      if(vict->doesKnowSkill(SKILL_RIPOSTE) &&   // must know the skill
-	        (::number(0,99) < 50) &&                // only 50% of the time
-	        vict->bSuccess(SKILL_RIPOSTE)){
+	      // Must know the skill and pass a skill check - no need to reduce this further
+	      if(vict->doesKnowSkill(SKILL_RIPOSTE) &&   
+	        // (::number(0,99) < 50) &&               
+	        vict->bSuccess(SKILL_RIPOSTE)){ 
 	          act("$N uses $S parry to execute a riposte.",
 	            FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
 	          act("You use your parry to execute a riposte.", 

@@ -1028,6 +1028,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 732;
     case SKILL_DIMENSIONAL_FOLD:
       return 733;
+    case SKILL_2H_SPEC_WARRIOR:
+      return 734;
     case AFFECT_DISEASE:
       return 2500;
     case AFFECT_COMBAT:
