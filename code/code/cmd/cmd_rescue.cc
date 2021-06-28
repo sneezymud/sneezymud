@@ -31,19 +31,6 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     caster->sendTo("What about fleeing instead?\n\r");
     return FALSE;
   }
-  if (dynamic_cast<TBeing *>(victim->riding)) {
-    caster->sendTo("You can't rescue a mounted person!\n\r");
-    return FALSE;
-  }
-  if (victim->riding) {
-    caster->sendTo(COLOR_MOBS, format("You can't rescue %s off of %s!\n\r") % 
-         victim->getName() % victim->riding->getName());
-    return FALSE;
-  }
-  if (!victim->isPc() && !victim->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-    caster->sendTo("You can only rescue PCs or pets.\n\r");
-    return FALSE;
-  }
 
   if (caster->fight() == victim) {
     caster->sendTo("How can you rescue someone you are trying to kill?\n\r");
@@ -72,7 +59,6 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     return FALSE;
   }
 
-  // int level = caster->getSkillLevel(skill);
   int bKnown = caster->getSkillValue(skill);
 
   if (caster->bSuccess(bKnown + percent, skill)) {

@@ -1159,6 +1159,8 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_ACID_BLAST:
       case SKILL_BODYSLAM:
       case SKILL_SPIN:
+      case SKILL_ADVANCED_BERSERKING:
+      case SKILL_BLOODLUST:
       case SKILL_POWERMOVE:
       case SKILL_CHARGE:
       case SKILL_SMITE:
@@ -1430,6 +1432,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
       case SKILL_2H_SPEC_DEIKHAN:
+      case SKILL_2H_SPEC:
       case SKILL_RIDE:
       case SKILL_CALM_MOUNT:
       case SKILL_TRAIN_MOUNT:

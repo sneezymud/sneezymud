@@ -564,6 +564,7 @@ class TBeing : public TThing {
   int hits(TBeing *, int);
   int missVictim(TBeing *, TThing *, spellNumT);
   void doInevitability();
+  void doBloodlust();
   void doGuardiansLight(int, int);
   void checkGuardiansLight();
 
@@ -1347,6 +1348,8 @@ class TBeing : public TThing {
   virtual float getStrDamModifier() const;
   virtual float getDexDamModifier() const;
   int getDexReaction() const;
+  int getSpeReaction() const;
+  int getKarReaction() const;
   int getAgiReaction() const;
   int getConShock() const;
   float getConHpModifier() const;

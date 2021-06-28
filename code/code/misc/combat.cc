@@ -39,6 +39,8 @@
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
 #include "rent.h"
+#include "disc_warrior.h"
+#include "disc_brawling.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -1992,9 +1994,9 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     // 2h Specialization: should be no additional dam for anyone without specialization
     // extra 10% for 2h is part of the object
     TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
-    if (obj && obj->isPaired() && doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
+    if (obj && obj->isPaired() && doesKnowSkill(getSkillNum(SKILL_2H_SPEC))) {
       // Take half the skill value and normalize between 10 and 50
-      int amt = (int) getSkillValue(SKILL_2H_SPEC_DEIKHAN);
+      int amt = max(0, (int) getSkillValue(getSkillNum(SKILL_2H_SPEC)));
       amt = 100 + min(50, max(10, (int) (amt / 2)));
       dam = (int) (dam * amt / 100);
     }
@@ -2041,11 +2043,11 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
         if (ch->doesKnowSkill(skill) && 
             dynamic_cast<TBaseWeapon *>(o) && 
             !isPrimary)
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, max(0, (100 - (2* myLevel))));
+	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, (120 - (2* myLevel)));
         // Learn 2h on hit
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
-        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
-          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
+        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC) && obj->isPaired()) {
+          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC, (120 - (2* myLevel)));
         }
         // Offense hones
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (120 - (2* myLevel)));
@@ -2101,6 +2103,56 @@ int TBeing::hit(TBeing *target, int pulse)
       target->desc->session.rounds_received[target->getCombatMode()]++;
   } 
 
+  if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      // This will eventually grant a chance to land a random warrior ability automatically while berserking.
+      // The abilities currently planned are:
+      //   - headbutt (1)
+      //   - kneestrike (2)
+      //   - bash (3)
+      //   - bodyslam (4)
+      //   - spin (5)
+      //   - stomp (situationally - opponent needs to be downed) (6)
+      //   - taunt (not particularly advantageous) (7)
+      /*
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && !::number(0,10)) {
+	 int roll = ::number(1,7;
+	 if (roll == 1) {
+           //TBeing::headbuttHit(this, target);
+         }
+	 else if (roll == 2) {
+ 	   //TBeing::kneestrikeHit(this, target);
+         }
+	 else if (roll == 3) {
+	   act("In a berserker rage, you crash into $N with all your might!", FALSE, this, 0, target, TO_CHAR);     
+	   act("In a berserker rage, $n crashes into $N!", FALSE, this, 0, target, TO_NOTVICT);     
+	   act("In a berserker rage, $n crashes into you!", FALSE, this, 0, target, TO_VICT);     
+ 	   TBeing::bashSuccess(target, SKILL_BASH);
+	 }
+	 else if (roll == 4) {
+ 	   //TBeing::bodyslamHit(this, target); 
+	 }
+	 else if (roll == 5) {
+ 	   //TBeing::spinHit(this, target);
+	 }
+	 else if (roll == 6) {
+ 	   //TBeing::stompHit(this, target);
+	 }
+	 else if (roll == 7) {
+	   if (doesKnowSkill(SKILL_TAUNT)) {
+ 	     TBeing::doTaunt(target.getName());
+           }
+	 }
+      } */
+
+      // Adding a chance per round to gain a stack of bloodlust while berserking and upon
+      // passing a successful advanced berserking check
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && 
+  	  doesKnowSkill(SKILL_BLOODLUST) && 
+	  bSuccess(getSkillLevel(SKILL_BLOODLUST), SKILL_BLOODLUST) && 
+	  !::number(0,5)) {
+        doBloodlust();
+      }
+    }
 
   // we come in here multiple times
   // 1 round is Pulse::COMBAT long
@@ -2291,13 +2343,12 @@ int TBeing::hit(TBeing *target, int pulse)
       if(doesKnowSkill(SKILL_IRON_FIST) && 
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 15);
-
-      if(doesKnowSkill(SKILL_CRIT_HIT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 15);
+      if(doesKnowSkill(SKILL_CRIT_HIT))
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {
@@ -2312,8 +2363,6 @@ int TBeing::hit(TBeing *target, int pulse)
         ; // do nothing, just for sake of learning
     }
   }
-  /////
-
 
   // this affect is added after a successful parry
   if(isAffected(AFF_RIPOSTE)){
@@ -5888,6 +5937,52 @@ void doToughness(TBeing *ch)
   aff.bitvector = 0;
 
   ch->affectTo(&aff, -1);
+}
+
+void TBeing::doBloodlust()
+{
+  int MAX_BLOODLUST = 10;
+  affectedData *ch_affected;
+  if (!doesKnowSkill(SKILL_BLOODLUST))
+    return;
+  if (!awake() || getPosition() < POSITION_CRAWLING)
+    return;
+  if (!bSuccess(SKILL_BLOODLUST))
+    return;
+
+  int mod = 1;
+  if (affectedBySpell(SKILL_BLOODLUST))
+  {
+    for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_BLOODLUST) {
+        // set the mod and remove the affect so we can add it fresh
+        mod += ch_affected->modifier;
+        affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+  // Removing messages after we hit max stacks
+  if (mod < MAX_BLOODLUST) {
+    if (mod == MAX_BLOODLUST/2) {
+      act("<r>You feel the blood pumping in your veins, as your <R>bloodlust <r>continues to grow.<1>", 0, this, 0, 0, TO_CHAR);
+    }  
+    else if (mod == MAX_BLOODLUST) {
+      act("<r>Your desire for combat nearly overwhelms you, as you are overcome with <R>BLOODLUST.<1>", 0, this, 0, 0, TO_CHAR);
+    }  
+    else {
+      act("<r>You feel the bloodlust welling up inside you.<1>", 0, this, 0, 0, TO_CHAR);
+    }
+  }
+  mod = max(min(mod, MAX_BLOODLUST), 1);
+  affectedData aff1;
+  aff1.type = SKILL_BLOODLUST;
+  aff1.duration = Pulse::UPDATES_PER_MUDHOUR*3/2;
+  aff1.location = APPLY_DAMROLL;
+  aff1.modifier = mod;
+  aff1.bitvector = 0;
+  affectTo(&aff1, -1);
+  learnFromDoing(SKILL_BLOODLUST, SILENT_NO, 0);
 }
 
 void TBeing::doInevitability()

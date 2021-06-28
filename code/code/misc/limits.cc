@@ -467,6 +467,22 @@ int TPerson::hitGain()
   if (affectedBySpell(SPELL_ENLIVEN))
     gain *= 2;
 
+  // Scale regen based on the number of bloodlust stacks 
+  if (affectedBySpell(SKILL_BLOODLUST)) {
+    int mod = 0;
+    affectedData *ch_affected;
+
+    for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_BLOODLUST) {
+        // set the mod and remove the affect so we can add it fresh
+	mod += ch_affected->modifier;
+	break;
+      }
+    }
+
+    gain += (gain * mod / 15);
+  }
+
   if (isAquatic())
     gain = int(gain * (affectedBySpell(AFFECT_WET) ? 1.3 : 0.5));
 

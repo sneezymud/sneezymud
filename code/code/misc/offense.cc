@@ -657,11 +657,16 @@ int TBeing::doOrder(const char *argument)
         v->getCaptiveOf() == this)
       legitimate = true;
 
+    // Boz Edit 6-23-2021 - the low success rate may make sense RL but is terrible for gameplay and leads
+    // to players spamming orders to try and ensure the mount obeys.  Order has no lockout so 
+    // this isn't penalizing, it's just annoying.  We can find other, better ways to add difficulty.
+    //
     // I am a horse, taking orders from my master
     if (!legitimate &&
       v->horseMaster() == this) {
       int check = MountEgoCheck(this, v);
 
+      // Boz - this only affects a few types of mount commands, OK to leave it
       // mounts are not gung-ho supporters of their riders
       if (orderDenyCheck(cmd_buf))
         check = 3;   // force indifference
@@ -2246,6 +2251,12 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
           fx += 0.5;
         if (fy > 0.0)
 	        fy += 0.5;
+      }
+      if (bSuccess(SKILL_ADVANCED_BERSERKING)) {
+        if (fx > 0.0)
+          fx += 0.5;
+        if (fy > 0.0)
+	  fy += 0.5;
       }
     }
   }

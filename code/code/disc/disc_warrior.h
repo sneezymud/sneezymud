@@ -60,6 +60,7 @@ public:
 
     CSkill skKneestrike;
     CSkill skTrip;
+    CSkill skBloodlust;
     CDWarrior()
       : CDiscipline(),
       skKick(),
@@ -71,7 +72,8 @@ public:
       skBerserk(),
       skSwitch(),
       skKneestrike(),
-      skTrip() {
+      skTrip(),
+      skBloodlust()	{
     }
     CDWarrior(const CDWarrior &a)
       : CDiscipline(a),
@@ -84,7 +86,8 @@ public:
       skBerserk(a.skBerserk),
       skSwitch(a.skSwitch),
       skKneestrike(a.skKneestrike),
-      skTrip(a.skTrip) {
+      skTrip(a.skTrip), 
+      skBloodlust(a.skBloodlust) {
     }
     CDWarrior & operator=(const CDWarrior &a) {
       if (this == &a) return *this;
@@ -99,6 +102,7 @@ public:
       skSwitch = a.skSwitch;
       skKneestrike = a.skKneestrike;
       skTrip = a.skTrip;
+      skBloodlust = a.skBloodlust;
       return *this;
     }
     virtual ~CDWarrior() {}

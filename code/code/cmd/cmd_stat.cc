@@ -1461,6 +1461,8 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_ACID_BLAST:
       case SKILL_BODYSLAM:
       case SKILL_SPIN:
+      case SKILL_ADVANCED_BERSERKING:
+      case SKILL_BLOODLUST:
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
@@ -1725,6 +1727,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
       case SKILL_2H_SPEC_DEIKHAN:
+      case SKILL_2H_SPEC:
       case SKILL_RIDE:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
