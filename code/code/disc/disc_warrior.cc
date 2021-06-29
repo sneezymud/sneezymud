@@ -95,7 +95,6 @@ int berserk(TBeing * caster)
 
     af.type = SKILL_BERSERK;
     af.level = level;
-    // Boz 6-25-2021 - Drastically reducing the lockout
     af.duration = Pulse::UPDATES_PER_MUDHOUR/2;
     af.location = APPLY_NONE;
     af.modifier = 0;

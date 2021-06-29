@@ -1061,8 +1061,8 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               if (doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
                 learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, 100);
               }
-              if (doesKnowSkill(SKILL_2H_SPEC_WARRIOR)) {
-                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_WARRIOR, 100);
+              if (doesKnowSkill(SKILL_2H_SPEC)) {
+                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC, 100);
               }
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.05, TRUE, TRUE);
