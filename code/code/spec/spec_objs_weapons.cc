@@ -2747,4 +2747,3 @@ int glacialWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
   return FALSE;
 }
-

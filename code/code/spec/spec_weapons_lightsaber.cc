@@ -119,7 +119,7 @@ int lightsaber(TBeing *vict, cmdTypeT cmd, const char *, TObj *obj, TObj *)
 
   wearSlotT part = vict->getPartHit(ch, TRUE);
   int damage = ch->getWeaponDam(vict, weapon, HAND_PRIMARY);
-  int crit = LS_CRIT_LIST[::number(0, LS_MAX_CRITS)];
+  int crit = LS_CRIT_LIST[::number(0, LS_MAX_CRITS - 1)];
   spellNumT type = ch->getAttackType(weapon, HAND_PRIMARY);
 
   int rc = ch->critSuccessChance(vict, weapon, &part, type, &damage, crit);

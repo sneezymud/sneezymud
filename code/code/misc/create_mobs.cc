@@ -2188,7 +2188,7 @@ void TPerson::doMedit(const char *argument)
     return;
 
   tString = sstring;
-  half_chop(tString, mobile, sstring);
+  half_chop(std::string(tString).c_str(), mobile, sstring);
 
   if (!(cMob = dynamic_cast<TMonster *>(searchLinkedList(mobile, roomp->stuff)))) {
     sendTo("Try a mobile next time, it works better.\n\r");

@@ -177,11 +177,11 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
         break;
 
       default:
-        tStringChar=format("Your stab to $N's %s ceases their existence!") %
+        tStringChar=format("Your stab to $N's %s ends their life in a final <r>spray of blood<z>!") %
 	  tStLimb;
-        tStringVict=format("$n stabs you in your %s, ceasing your existence!") %
+        tStringVict=format("$n stabs you in your %s, ending your life in a final <r>spray of blood<z>!") %
 	  tStLimb;
-        tStringOthr=format("$n stabs $N in $S %s, ceasing their existence!") %
+        tStringOthr=format("$n stabs $N in $S %s, ending their life in a final <r>spray of blood<z>!") %
 	  tStLimb;
         break;
     }
