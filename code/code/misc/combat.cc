@@ -2193,7 +2193,7 @@ int TBeing::hit(TBeing *target, int pulse)
      !heldInPrimHand() && !heldInSecHand() &&
      doesKnowSkill(SKILL_BLUR) && 
      ::number(0, 99) < 20 &&  // this makes it happen 20% of the time
-     !isAffected(AFF_ENGAGER) && getMana()>=25 &&
+     !isAffected(AFF_ENGAGER) && getMana()>=15 &&
      bSuccess(SKILL_BLUR)) {
     // the number of extra swings use to be skill dependant too, but
     // this was getting too complex and is not how the balance document
@@ -2211,7 +2211,7 @@ int TBeing::hit(TBeing *target, int pulse)
     fy += fy2;
 
     sendTo(COLOR_BASIC, "<b>You focus your mind and body and execute a <C>blur<1><b> of attacks!<1>\n\r");
-    reconcileMana(TYPE_UNDEFINED, 0, 25);
+    reconcileMana(TYPE_UNDEFINED, 0, 15);
   }
     
 
@@ -3978,11 +3978,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	normalHitMessage(vict, weapon, w_type, dam, part_hit);
       
        
-     if(doesKnowSkill(SKILL_CHAIN_ATTACK) &&   // must know the skill
-	 !weapon &&                             // must be barehanded
-	 (::number(0,99) < 10) &&                // only 10% of the time
-	 getMana()>=10 &&                       // requires 10 mana
-	 bSuccess(SKILL_CHAIN_ATTACK)){
+     if(doesKnowSkill(SKILL_CHAIN_ATTACK) && (::number(0,99) < 10) && getMana()>=5 && bSuccess(SKILL_CHAIN_ATTACK)){
 	// successfully chain this attack
 	act("Lightning fast, you shift your balance and launch another strike.",
 	    FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
@@ -3992,7 +3988,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	    FALSE, this, 0, vict, TO_NOTVICT);
 	
 	*f += 1; // one extra attack
-	reconcileMana(TYPE_UNDEFINED, 0, 10);
+	reconcileMana(TYPE_UNDEFINED, 0, 5);
       }
       
       if(affectedBySpell(SPELL_AURA_VENGEANCE) &&

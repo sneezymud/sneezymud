@@ -32,6 +32,20 @@
 :shield   = 
 // Paste below this line.
 // ----------------------
+:Set #159
+#legion
+$human
+head     = 11803
+neck     = 11804
+body     = 11805
+back     = 11806
+arm      = 11807
+wrist    = 11808
+hand     = 11809
+finger   = 11810
+waist    = 11811
+leg      = 11812
+foot     = 11813
 :Set #158
 #flowing black
 $human
@@ -57,9 +71,9 @@ wrist    = 755
 hand     = 756
 finger   = 757
 waist    = 758
-leg      = 760
-foot     = 761
-shield   = 762 
+leg      = 759
+foot     = 760
+shield   = 761 
 :Set #156
 #grizzled
 $ogre
