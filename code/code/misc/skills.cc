@@ -550,7 +550,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDSoldiering *) cd)->skDeathstroke;
     case SKILL_POWERMOVE:
       return &((CDSoldiering *) cd)->skPowerMove;
-    case SKILL_2H_SPEC_WARRIOR:
+    case SKILL_2H_SPEC:
       return &((CDSoldiering *) cd)->sk2hSpecWarrior;
 
 // disc_blacksmithing

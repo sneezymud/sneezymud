@@ -2299,7 +2299,7 @@ int TBeing::hit(TBeing *target, int pulse)
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 20);
-      // Boz 6-25-2021 Monk Crit Hitting works on weapons, it should hone on weapons 
+
       if(doesKnowSkill(SKILL_CRIT_HIT))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 20);
     }
