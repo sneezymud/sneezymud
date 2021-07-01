@@ -1994,7 +1994,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
     if (obj && obj->isPaired()) {
       // Take half the skill value and normalize between 10 and 50
-      int amt = max(0, (int) getSkillValue(SKILL_2H_SPEC));
+      int amt = max(0, (int) getSkillValue(getSkillNum(SKILL_2H_SPEC)));
       amt = 100 + min(50, max(10, (int) (amt / 2)));
       dam = (int) (dam * amt / 100);
     }
