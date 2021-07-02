@@ -1887,25 +1887,26 @@ buf=format("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 
 0-33: double damage
 34-66: triple damage
-67,68: pierced larynx
-69,70: gouged out eye
-71,72: sever tendon
-73,74: stab back (impale)
-75,76: pierce cranium
-77,78: shatter elbow
-79,80: sever hand
-81,82: punctured lung (impale)
-83,84,85: punctured kindey infect (impale)
-86,87: punctured stomach
+67,68,69,70,71: pierced larynx (4-5x damage)
+72,73,74: gouged out eye (5x damage)
+75,76,77,78: sever tendon (4x damage)
+79,80,81,82: stab back (impale) (4-5x damage)
+83,84: pierce cranium (4-5x damage)
+85,86,87: shatter elbow (4x damage)
+88,89,90: sever hand (4x damage)
+91,92,93: punctured lung (impale) (4-5x damage)
+94,95,96: punctured kindey infect (impale) (4-5x damage)
+97,98,99: punctured stomach (4-5x damage)
 100: crit kill (death)
 
 total:
   double damage: 33%
   triple damage: 33%
-  impale: 7%
-  minor sever/ailment: 11%
-  major sever/ailment: 8%
-  death: 3%
+  limb mutilation (leg/elbow/hand): 10% 
+  body mutilation (lung/kidney/stomach): 9%
+  debilitate (larynx/eye): 8%
+  stun: 4%
+  death: 3% (1% if helmet)
 
 ------------------------------------------------------------ */
 int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
@@ -2113,8 +2114,8 @@ buf=format("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
 	if ((obj = v->equipment[WEAR_BACK])) {
 	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a gory wound!\n\r") %
 		    fname(obj->name));
-	// quintuple damage
-        *dam *= 5;
+	// quadruple damage
+        *dam *= 4;
 
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_BACK])
@@ -2169,8 +2170,8 @@ buf=format("$n plunges $s %s deep into $N's side, stunning $M.") %
 	    limbStr;
 	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
-	  // quintuple damage
-          *dam *= 5;
+	  // quadruple damage
+          *dam *= 4;
 
 	  for (i=1;i<5;i++)
 	    if (v->equipment[WEAR_HEAD])
@@ -2211,6 +2212,7 @@ buf=format("$n thrusts $s %s deep into the back of $N's unprotected head, causin
 	return FALSE;   // not possible, but just in case
       case 85:
       case 86:
+      case 87:
 	// Strike shatters elbow in weapon arm. Arm broken 
 	new_slot = v->getSecondaryArm();
 	if (!v->hasPart(new_slot))
@@ -2239,7 +2241,6 @@ buf=format("$n's %s shatters $N's elbow!") %
 	if (IS_SET_DELETE(rc, DELETE_VICT))
 	  return DELETE_VICT;
 	return ONEHIT_MESS_CRIT_S;
-      case 87:
       case 88:
 	new_slot = v->getPrimaryHand();
 	if (!v->hasPart(new_slot))
@@ -2294,8 +2295,8 @@ buf=format("$n's %s severs $N's hand at the wrist!") %
 	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a punctured lung!\n\r") %
 		    fname(obj->name));
 
-	// quintuple damage
-        *dam *= 5;
+	// quadruple damage
+        *dam *= 4;
 
 	  for (i=1;i<9;i++)
 	    if (v->equipment[WEAR_BODY])
@@ -2346,8 +2347,8 @@ buf=format("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctur
 	if (!v->hasPart(WEAR_BODY))
 	  return 0;
 
-	// quintuple damage
-        *dam *= 5;
+	// quadruple damage
+        *dam *= 4;
 
 	if ((obj = v->equipment[WEAR_BODY])) {
 	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a kidney wound!\n\r") %
@@ -2391,6 +2392,7 @@ buf=format("$n's %s punctures $N's kidney!") %
 	return ONEHIT_MESS_CRIT_S;
       case 97:
       case 98:
+      case 99:
 	// stomach wound.  causes death 5 mins later if not healed.
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
@@ -2425,7 +2427,6 @@ buf=format("$n's %s tears into $N's stomach exposing intestines!") %
         *dam *= 5;
 
 	return ONEHIT_MESS_CRIT_S;
-      case 99:
       case 100:
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
