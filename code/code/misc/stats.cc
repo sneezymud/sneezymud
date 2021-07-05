@@ -1130,6 +1130,16 @@ int TBeing::getDexReaction() const
   return plotStat(STAT_CURRENT, STAT_DEX, -4, 6, 0);
 }
 
+int TBeing::getSpeReaction() const
+{
+  return plotStat(STAT_CURRENT, STAT_SPE, -4, 6, 0);
+}
+
+int TBeing::getKarReaction() const
+{
+  return plotStat(STAT_CURRENT, STAT_KAR, -4, 6, 0);
+}
+
 int TBeing::getAgiReaction() const
 {
   return plotStat(STAT_CURRENT, STAT_AGI, -4, 6, 0);

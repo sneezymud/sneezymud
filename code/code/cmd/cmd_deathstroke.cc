@@ -8,15 +8,18 @@ static int deathstroke(TBeing *caster, TBeing *victim)
   int percent;
   int i = 0;
   bool wasSuccess = FALSE; 
-  const int DEATHSTROKE_MOVE = 25;
+  // Reducing this slightly - can be reduced further through other abilities (coming soon)
+  const int DEATHSTROKE_MOVE = 15;
   TBaseWeapon *tw;
   spellNumT sktype = SKILL_DEATHSTROKE;
+  affectedData aff, *ch_affected;
   
   if (caster->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
-  
-  if (caster->getCombatMode() == ATTACK_BERSERK) {
-    caster->sendTo("You are berserking! You can't focus enough to deathstroke anyone!\n\r ");
+
+  // Adding a lockout 
+  if (caster->affectedBySpell(SKILL_DEATHSTROKE)) {
+    caster->sendTo("You are still recovering from your last deathstroke and cannot use this ability again at this time.\n\r");
     return FALSE;
   }
 
@@ -35,24 +38,21 @@ static int deathstroke(TBeing *caster, TBeing *victim)
     caster->sendTo("You can't deathstroke while mounted!\n\r");
     return FALSE;
   }
-  if (dynamic_cast<TBeing *> (victim->riding)) {
-    caster->sendTo("You can't deathstroke a mounted person!\n\r");
-    return FALSE;
-  }
-  if (victim->isFlying() && (victim->fight() != caster)) {
-    caster->sendTo("You can only deathstroke fliers that are fighting you.\n\r");
-    return FALSE;
-  }
   if (!caster->heldInPrimHand() || 
       !(tw=dynamic_cast<TBaseWeapon *>(caster->heldInPrimHand()))) {
     caster->sendTo("You need to hold a weapon in your primary hand to make this a success.\n\r");
     return FALSE;
   }
   
-  /* AC makes a big difference here ... */
-  percent = ((10 - (victim->getArmor() / 50)) << 1);
+  percent = victim->getArmor() / 20;
   percent += caster->getDexReaction() * 5;
+  percent += caster->getKarReaction() * 5;
   percent -= victim->getAgiReaction() * 5;
+  percent -= victim->getSpeReaction() * 3;
+
+  // Encouraging reckless behavior while berserking
+  if (caster->getCombatMode() == ATTACK_BERSERK)
+    percent += caster->getSkillValue(SKILL_BERSERK)/10;
   
   if (!caster->isImmortal())
     caster->addToMove(-DEATHSTROKE_MOVE);
@@ -62,11 +62,9 @@ static int deathstroke(TBeing *caster, TBeing *victim)
 
   int dam = caster->getSkillDam(victim, SKILL_DEATHSTROKE, lev, caster->getAdvLearning(SKILL_DEATHSTROKE));
 
-  if ((caster->bSuccess(bKnown+ percent, SKILL_DEATHSTROKE) &&
-         (i = caster->specialAttack(victim,SKILL_DEATHSTROKE)) && 
-         (i != GUARANTEED_FAILURE)) ||
-      !victim->awake()) {
+  if (caster->bSuccess(bKnown+percent, SKILL_DEATHSTROKE) || !victim->awake()) {
     wasSuccess = TRUE;
+
     if (!dam) {
       act("$n's attempt at $N's vital area falls far short of hitting.",
                 FALSE, caster, 0, victim, TO_NOTVICT);
@@ -74,6 +72,15 @@ static int deathstroke(TBeing *caster, TBeing *victim)
                 TO_CHAR);
       act("$n attempts to hit your vital area, but fails miserably.", 
                 FALSE, caster, 0, victim, TO_VICT);
+
+      // Boz 6-25-2021 
+      // Adding a lockout 
+      // You failed to deal damage - assessing a small penalty for a short lockout
+      aff.type = SKILL_DEATHSTROKE;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 6;
+      aff.location = APPLY_PROTECTION;
+      aff.modifier = -50;
+      aff.bitvector = 0;
     } else {
       act("$n hits $N in $S vital organs!", FALSE, caster, 0, victim, 
                 TO_NOTVICT);
@@ -81,13 +88,39 @@ static int deathstroke(TBeing *caster, TBeing *victim)
                 TO_CHAR);
       act("$n hits you in your vital organs!", FALSE, caster, 0, 
                 victim, TO_VICT);
+
+      // Boz 6-25-2021 
+      // Adding a lockout
+      // You successfully landed your deathstroke - assessing a bonus
+      aff.type = SKILL_DEATHSTROKE;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 2;
+      aff.location = APPLY_HITROLL;
+      aff.modifier = 15;
+      aff.bitvector = 0;
+
     }
+    // Applying either the buff or debuff
+    caster->affectTo(&aff, -1);
+
     TThing *ob = caster->heldInPrimHand();
     if (ob && ob->isBluntWeapon())
       sktype = DAMAGE_CAVED_SKULL;
-    if (caster->reconcileDamage(victim, dam,sktype) == -1)
+    if (caster->reconcileDamage(victim, dam,sktype) == -1) {
+
+      // Clear deathstroke buff when it kills an enemy, resetting cooldown
+      if (caster->affectedBySpell(SKILL_DEATHSTROKE)) {
+        for (ch_affected = caster->affected; ch_affected; ch_affected = ch_affected->next) {
+	  if (ch_affected->type == SKILL_DEATHSTROKE) {
+	    caster->affectRemove(ch_affected, SILENT_YES);
+	    break;
+	  }
+	}
+      }
       return DELETE_VICT;
-  } else {
+    } 
+  }
+  // Unsuccessful skill check
+  else {
     if (victim->getPosition() > POSITION_DEAD) {
       act("$n's attempt at $N's vital area falls far short of hitting.", 
                   FALSE, caster, 0, victim, TO_NOTVICT);
@@ -95,17 +128,31 @@ static int deathstroke(TBeing *caster, TBeing *victim)
                   TO_CHAR);
       act("$n attempts to hit your vital area, but fails miserably.", 
                   FALSE, caster, 0, victim, TO_VICT);
-      if (caster->reconcileDamage(victim, 0,sktype) == -1)
-        return DELETE_VICT;
+
+      // Boz 6-25-2021 
+      // You failed to land your deathstroke - assessing a large penalty 
+      aff.type = SKILL_DEATHSTROKE;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+      aff.location = APPLY_PROTECTION;
+      aff.modifier = -500;
+      aff.bitvector = 0;
+
+      caster->affectTo(&aff, -1);
     }
 
-    // with great failure, comes great sorrow *grin*
+    if (caster->reconcileDamage(victim, 0,sktype) == -1) 
+      return DELETE_VICT;
+  }
+
     // what happens here is that the mob gets a shot at the players vitals
     // ... fair is fair right? 
-    percent = ((10 - (caster->getArmor() / 50)) << 1);
+    percent = ((10 - (caster->getArmor() / 20)) << 1);
     percent += victim->getDexReaction() * 5;
     percent -= caster->getAgiReaction() * 5;
+    percent -= caster->getSpeReaction() * 3;
+
     int bKnown2 = victim->getSkillValue(SKILL_DEATHSTROKE);
+
     if (bKnown2 > 0 &&
         victim->bSuccess(bKnown2 + percent, SKILL_DEATHSTROKE) &&
          (i = victim->specialAttack(caster,SKILL_DEATHSTROKE)) &&
@@ -113,18 +160,19 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       /* victim hits attacker vitals while attacker is exposed */
       CF(SKILL_DEATHSTROKE);
       if (victim->getPosition() > POSITION_STUNNED) {
-        act("$N exploits $n's vulnerable state with a quick hit to the heart.",
-                FALSE, caster, 0, victim, TO_NOTVICT);
-        act("While you are vulnerable, $N strikes you in the center of your torso.",
-                FALSE, caster, 0, victim, TO_CHAR);
-        act("You take advantage of $n's vulnerability for a cheap shot!", 
-               FALSE, caster, 0, victim, TO_VICT);
 
-        dam = 3*victim->GetMaxLevel();
-        dam += 3*victim->plotStat(STAT_CURRENT, STAT_STR, 0, 6, 3);
-        dam = ::number(1, dam);
+        dam = victim->GetMaxLevel()*3/2;
+        dam += victim->plotStat(STAT_CURRENT, STAT_STR, 0, 6, 3);
+        dam = ::number(victim->GetMaxLevel()/3, dam);
         dam = victim->getActualDamage(victim, NULL, dam, SKILL_DEATHSTROKE);
-        dam /= 2;
+        dam /= 3;
+
+        act("$N exploits $n's vulnerable state with a quick hit to the heart.",
+              FALSE, caster, 0, victim, TO_NOTVICT);
+        act("While you are vulnerable, $N strikes you in the center of your torso.",
+              FALSE, caster, 0, victim, TO_CHAR);
+        act("You take advantage of $n's vulnerability for a cheap shot!", 
+             FALSE, caster, 0, victim, TO_VICT);
 
         TThing *ob = victim->heldInPrimHand();
         if (ob && ob->isBluntWeapon())
@@ -133,7 +181,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
           return DELETE_THIS;
       }
     }
-  }
+
   /* success make monster attack caster player as player is  now */
   /* perceived as a greatest threat to the monster's livelyhood */
   TBeing *cfight = caster->fight();
