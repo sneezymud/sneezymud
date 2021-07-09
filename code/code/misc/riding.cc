@@ -344,10 +344,6 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       sendTo("You can't ride that!\n\r");
       return FALSE;
     }
-    if (horse->fight()) {
-      sendTo("Trying to ride something involved in a life-or-death fight is not advisable.\n\r");
-      return FALSE;
-    }
     if (horse->getNumRiders(this) >= horse->getMaxRiders()) {
       sendTo(COLOR_MOBS, format("The maximum number of riders are already riding %s.\n\r") % horse->getName());
       return FALSE;
@@ -432,12 +428,6 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       }
     }
     if (roomp && !roomp->isFlyingSector()) {
-      if (isFlying()) {
-        if (!horse->isFlying()) {
-          sendTo("Riding a grounded mount while flying is impossible.\n\r");
-          return FALSE;
-        }
-      }
       if (horse->isFlying() && !isFlying()) {
         if (!hasClass(CLASS_DEIKHAN)) {
           sendTo("You can't mount something that is flying.\n\r");
@@ -641,7 +631,23 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
         }
         dismount(POSITION_STANDING);
         doFly();
-      } else {
+      }
+      else if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
+	  if (!silent) { 
+	     act("You coax $N to land so you can dismount.", TRUE, this, NULL, horse, TO_CHAR);
+	     act("$n coaxes you into landing, you feel charmed and comply.", TRUE, this, NULL, horse, TO_VICT);
+	     act("$n coaxes $N into landing.", TRUE, this, NULL, horse, TO_NOTVICT); 
+	  }
+	  horse->doLand();
+
+          if (!silent) {
+             act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
+             act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
+             act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+          }
+          dismount(POSITION_STANDING);
+      }
+      else {
         sendTo("You must order your mount to land before dismounting.\n\r");
         return FALSE;
       } 
@@ -654,7 +660,22 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
         }
         dismount(POSITION_STANDING);
         doFly();
-      } else {
+      } 
+      else if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
+	  if (!silent) { 
+	     act("You coax $N to land so you can dismount.", TRUE, this, NULL, horse, TO_CHAR);
+	     act("$n coaxes you into landing, you feel charmed and comply.", TRUE, this, NULL, horse, TO_VICT);
+	     act("$n coaxes $N into landing.", TRUE, this, NULL, horse, TO_NOTVICT); 
+	  }
+	  horse->doLand();
+
+          if (!silent) {
+             act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
+             act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
+             act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+          }
+          dismount(POSITION_STANDING);
+      } else { 
         sendTo("You must order your mount to land before dismounting.\n\r");
         return FALSE;
       }
