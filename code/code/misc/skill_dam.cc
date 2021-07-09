@@ -263,7 +263,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 0.20, REDUCE_NO, !isPc(), TRIM_NO);
       break;
     case SKILL_DEATHSTROKE:
-      // deathstroke fail has chance of being hit back
+      // damage scaling higher the lower the victim's hp %
       dam =  genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 2.5 -
 		      2.0*((double) victim->getHit() / (double) victim->hitLimit()), 
 		      REDUCE_NO, !isPc(), TRIM_NO);

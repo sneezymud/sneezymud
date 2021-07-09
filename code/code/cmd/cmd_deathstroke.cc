@@ -44,7 +44,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
     return FALSE;
   }
   
-  percent = victim->getArmor() / 20;
+  percent = (victim->getArmor() / 20) - 15;
   percent += caster->getDexReaction() * 5;
   percent += caster->getKarReaction() * 5;
   percent -= victim->getAgiReaction() * 5;
@@ -73,13 +73,11 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       act("$n attempts to hit your vital area, but fails miserably.", 
                 FALSE, caster, 0, victim, TO_VICT);
 
-      // Boz 6-25-2021 
-      // Adding a lockout 
-      // You failed to deal damage - assessing a small penalty for a short lockout
+      // You failed to deal damage - assessing a penalty
       aff.type = SKILL_DEATHSTROKE;
-      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 6;
-      aff.location = APPLY_PROTECTION;
-      aff.modifier = -50;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+      aff.location = APPLY_ARMOR;
+      aff.modifier = caster->GetMaxLevel()*8 - caster->getSkillLevel(SKILL_DEATHSTROKE);
       aff.bitvector = 0;
     } else {
       act("$n hits $N in $S vital organs!", FALSE, caster, 0, victim, 
@@ -89,12 +87,11 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       act("$n hits you in your vital organs!", FALSE, caster, 0, 
                 victim, TO_VICT);
 
-      // Boz 6-25-2021 
       // Adding a lockout
       // You successfully landed your deathstroke - assessing a bonus
       aff.type = SKILL_DEATHSTROKE;
-      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 2;
-      aff.location = APPLY_HITROLL;
+      aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
+      aff.location = APPLY_HITNDAM;
       aff.modifier = 15;
       aff.bitvector = 0;
 
@@ -129,12 +126,11 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       act("$n attempts to hit your vital area, but fails miserably.", 
                   FALSE, caster, 0, victim, TO_VICT);
 
-      // Boz 6-25-2021 
-      // You failed to land your deathstroke - assessing a large penalty 
+      // You failed to land your deathstroke - assessing a penalty 
       aff.type = SKILL_DEATHSTROKE;
       aff.duration = Pulse::UPDATES_PER_MUDHOUR / 3;
-      aff.location = APPLY_PROTECTION;
-      aff.modifier = -500;
+      aff.location = APPLY_ARMOR;
+      aff.modifier = caster->GetMaxLevel()*8 - caster->getSkillLevel(SKILL_DEATHSTROKE);
       aff.bitvector = 0;
 
       caster->affectTo(&aff, -1);
@@ -161,7 +157,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
       CF(SKILL_DEATHSTROKE);
       if (victim->getPosition() > POSITION_STUNNED) {
 
-        dam = victim->GetMaxLevel()*3/2;
+        dam = victim->GetMaxLevel()*2;
         dam += victim->plotStat(STAT_CURRENT, STAT_STR, 0, 6, 3);
         dam = ::number(victim->GetMaxLevel()/3, dam);
         dam = victim->getActualDamage(victim, NULL, dam, SKILL_DEATHSTROKE);
