@@ -799,7 +799,22 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
     check =  horse->GetMaxLevel();
     check += dynamic_cast<TMonster *>(horse)->anger() / 10;
     check -= ch->GetMaxLevel();
+
+    if (ch->doesKnowSkill(SKILL_RIDE))
     check -= ch->getSkillValue(SKILL_RIDE)/10;
+    // Boz Edit 6-23-2021 - At least making this significantly less of a hurdle for Deikhans
+    // who spend the practices and time to hone advanced riding
+    // Also pulling in the if statements from below to avoid subtracting and dividing 0
+    //
+    // Bonus for proficiency in advanced riding disc.
+    if (ch->doesKnowSkill(SKILL_ADVANCED_RIDING))
+      check -= ch->getSkillValue(SKILL_ADVANCED_RIDING)/8;
+
+    // Bonus for proficiency in winged riding disc. 
+    // Safe to assume dragons are winged (?)
+    if (ch->doesKnowSkill(SKILL_RIDE_WINGED) && horse->mountSkillType() == SKILL_RIDE_WINGED)
+      check -= ch->getSkillValue(SKILL_RIDE_WINGED)/6;
+
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_PER, 1.5, 9.0, 5.0),
                     (int) horse->plotStat(STAT_CURRENT, STAT_PER, 4.5, 27.0, 15.0));
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_FOC, 1.5, 9.0, 5.0),
@@ -823,8 +838,24 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
     check = horse->GetMaxLevel();
     check += dynamic_cast<TMonster *>(horse)->anger() / 30;
     check -= ch->GetMaxLevel();
+
     if (ch->doesKnowSkill(SKILL_RIDE))
       check -= ch->getSkillValue(SKILL_RIDE)/10;
+
+    // Bonus for proficiency in advanced riding disc.
+    if (ch->doesKnowSkill(SKILL_ADVANCED_RIDING))
+      check -= ch->getSkillValue(SKILL_ADVANCED_RIDING)/8;
+
+    // Bonus for proficiency in type-specific mount ability
+    if (ch->doesKnowSkill(SKILL_RIDE_WINGED) && horse->mountSkillType() == SKILL_RIDE_WINGED)
+      check -= ch->getSkillValue(SKILL_RIDE_WINGED)/6;
+    else if (ch->doesKnowSkill(SKILL_RIDE_DOMESTIC) && horse->mountSkillType() == SKILL_RIDE_DOMESTIC)
+      check -= ch->getSkillValue(SKILL_RIDE_DOMESTIC)/6;
+    else if (ch->doesKnowSkill(SKILL_RIDE_NONDOMESTIC) && horse->mountSkillType() == SKILL_RIDE_NONDOMESTIC)
+      check -= ch->getSkillValue(SKILL_RIDE_NONDOMESTIC)/6;
+    else if (ch->doesKnowSkill(SKILL_RIDE_EXOTIC) && horse->mountSkillType() == SKILL_RIDE_EXOTIC)
+      check -= ch->getSkillValue(SKILL_RIDE_EXOTIC)/6;
+
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_PER, 1.5, 9.0, 5.0),
                     (int) horse->plotStat(STAT_CURRENT, STAT_PER, 4.5, 27.0, 15.0));
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_FOC, 1.5, 9.0, 5.0),

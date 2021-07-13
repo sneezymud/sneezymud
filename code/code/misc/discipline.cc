@@ -680,6 +680,11 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_DUAL_WIELD},
                 {CLASS_THIEF, SKILL_DUAL_WIELD_THIEF}});
+
+	case SKILL_2H_SPEC:
+	    return pick_best_skill(this, skill_num, {
+		{CLASS_WARRIOR, SKILL_2H_SPEC},
+		{CLASS_DEIKHAN, SKILL_2H_SPEC_DEIKHAN}});
         
         case SKILL_SHOVE:
             return pick_best_skill(this, skill_num, {

@@ -150,7 +150,7 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
 
   // cut area effects in half
   if (IS_SET(discArray[skill]->targets, TAR_AREA)) 
-    fixed_amt *= 0.75;
+    fixed_amt /= 2.0;
 
   if (victim && reduce) {
     // physical skills typically have a hits() check in them which keeps
@@ -263,11 +263,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       dam = genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 0.20, REDUCE_NO, !isPc(), TRIM_NO);
       break;
     case SKILL_DEATHSTROKE:
-      // deathstroke fail has chance of being hit back
-      // allow 2* normal dam
-      dam =  genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 
-         victim->doesKnowSkill(SKILL_DEATHSTROKE) ? 0.40 : 0.20,
-         REDUCE_NO, !isPc(), TRIM_NO);
+      // damage scaling higher the lower the victim's hp %
+      dam =  genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 2.5 -
+		      2.0*((double) victim->getHit() / (double) victim->hitLimit()), 
+		      REDUCE_NO, !isPc(), TRIM_NO);
       break;
     case SPELL_SAND_BLAST:
     case SPELL_HELLFIRE:

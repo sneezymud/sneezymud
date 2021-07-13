@@ -31,17 +31,10 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     caster->sendTo("What about fleeing instead?\n\r");
     return FALSE;
   }
-  if (dynamic_cast<TBeing *>(victim->riding)) {
-    caster->sendTo("You can't rescue a mounted person!\n\r");
-    return FALSE;
-  }
+
   if (victim->riding) {
     caster->sendTo(COLOR_MOBS, format("You can't rescue %s off of %s!\n\r") % 
          victim->getName() % victim->riding->getName());
-    return FALSE;
-  }
-  if (!victim->isPc() && !victim->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-    caster->sendTo("You can only rescue PCs or pets.\n\r");
     return FALSE;
   }
 

@@ -39,6 +39,8 @@
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
 #include "rent.h"
+#include "disc_warrior.h"
+#include "disc_brawling.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -1992,9 +1994,9 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     // 2h Specialization: should be no additional dam for anyone without specialization
     // extra 10% for 2h is part of the object
     TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
-    if (obj && obj->isPaired() && doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
+    if (obj && obj->isPaired()) {
       // Take half the skill value and normalize between 10 and 50
-      int amt = (int) getSkillValue(SKILL_2H_SPEC_DEIKHAN);
+      int amt = max(0, (int) getSkillValue(getSkillNum(SKILL_2H_SPEC)));
       amt = 100 + min(50, max(10, (int) (amt / 2)));
       dam = (int) (dam * amt / 100);
     }
@@ -2046,6 +2048,9 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
         if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
           ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
+        }
+        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC) && obj->isPaired()) {
+          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC, max(0, (100 - (2* myLevel))));
         }
         // Offense hones
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (170 - (2* myLevel)));
@@ -2099,6 +2104,28 @@ int TBeing::hit(TBeing *target, int pulse)
       desc->session.rounds[getCombatMode()]++;
     if (target->desc)
       target->desc->session.rounds_received[target->getCombatMode()]++;
+
+    if (doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && !::number(0,10)) {
+	 // Might need to re-write these functions to call from here?  Or I'm just doing it wrong - ask
+	 /*int roll = ::number(1,5);
+	 if (roll == 1)
+           TBeing::headbuttHit(this, target);
+	 else if (roll == 2)
+ 	   TBeing::kneestrikeHit(this, target);
+	 else if (roll == 3)
+ 	   TBeing::bashSuccess(target, SKILL_BASH);
+	 else if (roll == 4)
+ 	   TBeing::bodyslamHit(this, target);
+	 else
+ 	   TBeing::spinHit(this, target);*/
+	 act("In a berserker rage, you crash into $N with all your might!", FALSE, this, 0, target, TO_CHAR);     
+	 act("In a berserker rage, $n crashes into $N!", FALSE, this, 0, target, TO_NOTVICT);     
+	 act("In a berserker rage, $n crashes into you!", FALSE, this, 0, target, TO_VICT);     
+	 bashSuccess(target, SKILL_BASH);
+      }
+    }
+
   } 
 
 
@@ -2292,12 +2319,13 @@ int TBeing::hit(TBeing *target, int pulse)
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 20);
 
-      if(doesKnowSkill(SKILL_CRIT_HIT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 20);
     }
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 20);
+
+      if(doesKnowSkill(SKILL_CRIT_HIT))
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 20);
     }
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {
@@ -2426,8 +2454,9 @@ int TBeing::attackRound(const TBeing * target) const
     if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK))
       bonus += my_lev/4;
 
-    // we intentionally DO NOT give an extra offense benefit for berserk
-    // they get other benefits (more hits, etc) so not needed
+    if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      bonus += my_lev*getSkillValue(SKILL_ADVANCED_BERSERKING)/400;
+    }
   } 
 
   if (doesKnowSkill(SKILL_CHIVALRY) && getPosition() == POSITION_MOUNTED) {
@@ -3936,9 +3965,10 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       else if (thiefDodge(vict, weapon, &dam, w_type, part_hit))
 	      mess_sent |= ONEHIT_MESS_DODGE;
       else if (parryWarrior(vict, weapon, &dam, w_type, part_hit)){
-	      if(vict->doesKnowSkill(SKILL_RIPOSTE) &&   // must know the skill
-	        (::number(0,99) < 50) &&                // only 50% of the time
-	        vict->bSuccess(SKILL_RIPOSTE)){
+	      // Must know the skill and pass a skill check - no need to reduce this further
+	      if(vict->doesKnowSkill(SKILL_RIPOSTE) &&   
+	        // (::number(0,99) < 50) &&               
+	        vict->bSuccess(SKILL_RIPOSTE)){ 
 	          act("$N uses $S parry to execute a riposte.",
 	            FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
 	          act("You use your parry to execute a riposte.", 

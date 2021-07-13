@@ -339,6 +339,7 @@ enum spellNumT {
      SKILL_SWITCH_OPP,
      SKILL_BODYSLAM,
      SKILL_SPIN,
+     SKILL_ADVANCED_BERSERKING,
      SKILL_KNEESTRIKE,
      SKILL_SHOVE,
      SKILL_RETREAT,
@@ -355,6 +356,7 @@ enum spellNumT {
      SKILL_CLOSE_QUARTERS_FIGHTING,
      SKILL_RIPOSTE,
      SKILL_TAUNT,
+     SKILL_2H_SPEC,
 
      // end of warrior
 
