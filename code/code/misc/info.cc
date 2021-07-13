@@ -1557,6 +1557,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_BULLYWUGCROAK:
       case SKILL_AVIAN:
       case SKILL_FISHBURBLE:
+      case SKILL_COMMON:
         // some spells have 2 effects, skip over one of them
         if (!aff->shouldGenerateText())
           continue;

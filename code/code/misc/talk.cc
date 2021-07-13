@@ -108,6 +108,10 @@ int TBeing::doSay(const sstring &arg)
   sendTo(COLOR_COMM, format("<g>You say, <z>\"%s%s\"\n\r") % 
    colorString(this, desc, garbleRoom, NULL, COLOR_BASIC, FALSE) %
    norm());
+  
+  // Improve your speech the more you talk
+  if(doesKnowSkill(SKILL_COMMON))
+    learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_COMMON, 20);
 
   // show everyone in room the say.
 
@@ -125,7 +129,6 @@ int TBeing::doSay(const sstring &arg)
     tmpbuf = format("%s") % colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE); 
     
     if (mob->isPc()) {
-
       if (mob->desc && mob->desc->ignored.isIgnored(desc))
         continue;
 
@@ -454,6 +457,7 @@ void TBeing::doGrouptell(const sstring &arg)
 
     sendTo(format("You tell your group: %s%s%s\n\r") % red() % colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
   }
+
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
     if (k->desc && !k->desc->ignored.isIgnored(desc) && (k->desc->m_bIsClient || IS_SET(k->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)) && (k != this)) {
       k->desc->clientf(format("%d|%s|%s") % CLIENT_GROUPTELL % colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, k->desc, garbled, NULL, COLOR_NONE, FALSE));
@@ -490,7 +494,6 @@ void TBeing::doGrouptell(const sstring &arg)
         f->follower->desc->sendGmcp(gmcp, false);
 
       act(buf, 0, this, 0, f->follower, TO_VICT);
-
     }
   }
 }
@@ -1000,6 +1003,7 @@ int TBeing::doWhisper(const sstring &arg)
   sendTo(COLOR_MOBS, format("You whisper to %s, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
   act("$n whispers something to $N.", TRUE, this, 0, vict, TO_NOTVICT);
 
+
   // Lets check the room for any thives we might have using spy.
   // If it's a pc with spy, then they must be equal/greater than the speaker
   // level or they don't get the message.  And messages to/from immorts are
@@ -1081,6 +1085,8 @@ int TBeing::doAsk(const sstring &arg)
       vict->desc->clientf(format("%d|%s|%s") % CLIENT_ASK % colorString(this, vict->desc, getName(), NULL, COLOR_NONE, FALSE) % colorString(this, vict->desc, garbled, NULL, COLOR_NONE, FALSE));
 
     act("$n asks $N a question.", TRUE, this, 0, vict, TO_NOTVICT);
+
+
     if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
       disturbMeditation(vict);
     if (!vict->isPc()) {

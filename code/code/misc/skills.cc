@@ -1093,6 +1093,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdvAdventuring *) cd)->skAvian;
     case SKILL_FISHBURBLE:
       return &((CDAdvAdventuring *) cd)->skKalysian;
+    case SKILL_COMMON:
+      return &((CDAdvAdventuring *) cd)->skCommon;
 
       // adventuring
     case SKILL_ALCOHOLISM:// 668

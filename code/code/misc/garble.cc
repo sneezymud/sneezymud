@@ -237,6 +237,11 @@ int getLanguageChance(const TBeing *from, TBeing *to, spellNumT language)
   // -10-116 with bonus based on how smart the speaker is
   chance += from ? from->plotStat(STAT_CURRENT, STAT_INT, -10, 10, 0) : 0;
 
+  if (from && from->doesKnowSkill(SKILL_COMMON)) {
+    chance += from->getSkillValue(SKILL_COMMON)*4/5;
+  }
+
+
   return min(100, max(0, 100 - chance));
 }
 
