@@ -23,6 +23,7 @@ class CDBrawling : public CDiscipline
     CSkill skSpin;
     CSkill skCloseQuartersFighting;
     CSkill skTaunt;
+    CSkill skAdvBerserk;
 
     CDBrawling();
     CDBrawling(const CDBrawling &a);

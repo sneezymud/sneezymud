@@ -39,6 +39,8 @@
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
 #include "rent.h"
+#include "disc_warrior.h"
+#include "disc_brawling.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -2102,6 +2104,28 @@ int TBeing::hit(TBeing *target, int pulse)
       desc->session.rounds[getCombatMode()]++;
     if (target->desc)
       target->desc->session.rounds_received[target->getCombatMode()]++;
+
+    if (doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && !::number(0,10)) {
+	 // Might need to re-write these functions to call from here?  Or I'm just doing it wrong - ask
+	 /*int roll = ::number(1,5);
+	 if (roll == 1)
+           TBeing::headbuttHit(this, target);
+	 else if (roll == 2)
+ 	   TBeing::kneestrikeHit(this, target);
+	 else if (roll == 3)
+ 	   TBeing::bashSuccess(target, SKILL_BASH);
+	 else if (roll == 4)
+ 	   TBeing::bodyslamHit(this, target);
+	 else
+ 	   TBeing::spinHit(this, target);*/
+	 act("In a berserker rage, you crash into $N with all your might!", FALSE, this, 0, target, TO_CHAR);     
+	 act("In a berserker rage, $n crashes into $N!", FALSE, this, 0, target, TO_NOTVICT);     
+	 act("In a berserker rage, $n crashes into you!", FALSE, this, 0, target, TO_VICT);     
+	 bashSuccess(target, SKILL_BASH);
+      }
+    }
+
   } 
 
 
@@ -2430,8 +2454,9 @@ int TBeing::attackRound(const TBeing * target) const
     if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK))
       bonus += my_lev/4;
 
-    // we intentionally DO NOT give an extra offense benefit for berserk
-    // they get other benefits (more hits, etc) so not needed
+    if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      bonus += my_lev*getSkillValue(SKILL_ADVANCED_BERSERKING)/400;
+    }
   } 
 
   if (doesKnowSkill(SKILL_CHIVALRY) && getPosition() == POSITION_MOUNTED) {
