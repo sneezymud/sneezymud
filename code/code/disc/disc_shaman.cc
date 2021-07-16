@@ -805,7 +805,7 @@ void TBeing::doSacrifice(const char *arg)
 
   for (; isspace(*arg); arg++);
 
-  if (getPosition() != POSITION_STANDING) {
+  if (getPosition() != POSITION_STANDING || getPosition() != POSITION_FLYING) {
     sendTo("Have some respect! Stand to perform the sacrifice!\n\r");
     return;
   }
