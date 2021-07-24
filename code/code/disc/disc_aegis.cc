@@ -13,21 +13,19 @@
 void crusade(TBeing *ch)
 {
   affectedData aff1, aff2, aff3, aff4, aff5, aff6;
-  int level;
-  TBeing *tmp_victim = NULL;
+  TBeing *tmp_victim = nullptr;
+  TThing *t = nullptr;
 
   if (!bPassClericChecks(ch,SPELL_CRUSADE))
     return;
   
-  level = ch->getSkillLevel(SPELL_CRUSADE);
+  int level = ch->getSkillLevel(SPELL_CRUSADE);
 
   if (!ch->bSuccess(ch->getSkillValue(SPELL_CRUSADE), ch->getPerc(), SPELL_CRUSADE)) {
     ch->nothingHappens();
     return;
   }
   
-  int found = FALSE;
-  TThing *t=NULL;
   int duration = ch->durationModify(SPELL_CRUSADE, (3 + level) * Pulse::UPDATES_PER_MUDHOUR);
 
   // Armor aff
@@ -79,7 +77,8 @@ void crusade(TBeing *ch)
   ch->sendTo("A <y>golden ray of light<1> shines down from the sky as you call the crusade.\n\r");
   act("$n looks to the sky as a <y>golden ray of light<1> shines down on $s group.", TRUE,ch,0,0,TO_ROOM);
 
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
+  int found = false;
+  for(StuffIter it=ch->roomp->stuff.begin(); it!=ch->roomp->stuff.end() && (t=*it); ++it) {
     tmp_victim = dynamic_cast<TBeing *>(t);
     if (!tmp_victim)
       continue;
@@ -96,7 +95,7 @@ void crusade(TBeing *ch)
       tmp_victim->affectJoin(ch, &aff5, AVG_DUR_NO, AVG_EFF_NO, false);
       tmp_victim->affectJoin(ch, &aff6, AVG_DUR_NO, AVG_EFF_NO, false);
 
-      found = TRUE;
+      found = true;
     }  
   }
   if (!found)
