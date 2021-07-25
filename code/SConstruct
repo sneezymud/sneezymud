@@ -72,7 +72,7 @@ need good crash debugging).
 """)
 
 
-flag_sanitize = get_bool_option('sanitize',      True)
+flag_sanitize = get_bool_option('sanitize',    True)
 flag_ccache =   get_bool_option('ccache',      False)
 flag_debug =    get_bool_option('debug',       True)
 flag_gprof =    get_bool_option('gprof',       False)
@@ -177,23 +177,26 @@ if flag_debug:
     env.Append(CXXFLAGS='-fno-optimize-sibling-calls')
     # keep the frame pointer for better debugging
     env.Append(CXXFLAGS='-fno-omit-frame-pointer')
-    # undefined behavior sanitizer, apple clang unsupported
-    if clang_version and clang_version >= (3, 9):
-        env.Append(CXXFLAGS='-fsanitize=undefined')
-        env.Append(extra_libs=['ubsan'])
-    # memory error sanitizer
-    if flag_sanitize:
+    if flag_sanitize:   
+        # memory error sanitizer
         env.Append(CXXFLAGS='-fsanitize=address')
-    # native clang doesn't need explicit asan lib
-    if (gcc_version or clang_version >= (3, 9)) and flag_sanitize:
-        env.Append(extra_libs=['asan'])
-    if (clang_version and clang_version >= (3, 9) or gcc_version >= (7, 0)) and flag_sanitize:
-        env.Append(CXXFLAGS='-fsanitize-address-use-after-scope')
-    # integer sanitizer, apple clang unsupported
-    if clang_version and clang_version >= (3, 9):
-        env.Append(CXXFLAGS='-fsanitize=integer')
+        # native clang doesn't need explicit asan lib
+        if (gcc_version or clang_version and clang_version >= (3, 9)):
+            env.Append(extra_libs=['asan'])
+            # undefined behavior sanitizer, apple clang unsupported
+            env.Append(CXXFLAGS='-fsanitize=undefined')
+            env.Append(extra_libs=['ubsan']) 
+            # integer sanitizer, apple clang unsupported
+            env.Append(CXXFLAGS='-fsanitize=integer')
+        if (clang_version and clang_version >= (3, 9) or gcc_version >= (7, 0)):
+            env.Append(CXXFLAGS='-fsanitize-address-use-after-scope') 
 
 env.Append(extra_libs=[opt_libs])
+
+# Fixes link errors when compiling with clang in Linux
+if not flag_harden and not flag_shared and clang_version:
+        # position-independent executable (shared mode already has -fPIC)
+        env.Append(CXXFLAGS='-fPIE', LINKFLAGS=['-fPIE', '-pie'])
 
 ## harden: security flags, slows runtime a bit
 if flag_harden:
