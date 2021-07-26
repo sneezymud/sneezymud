@@ -15,65 +15,62 @@
 
 int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
-  TMonster *locusts;
-  affectedData aff; 
-  int rc, swarm;
-  followData *k, *n;
-
   if (!caster->outside()) {
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     caster->sendTo("You need to be outside to summon locusts!\n\r");
     return SPELL_FAIL;
   }
+
   if (Weather::getWeather(*caster->roomp) == Weather::RAINY) {
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     caster->sendTo("How do you expect to summon locusts in the rain!\n\r");
     return SPELL_FAIL;
   }
-  if (level < 26) 
-    swarm = Mob::LOCUSTS25;
-  else if (level < 31) 
-    swarm = Mob::LOCUSTS30;
-  else if (level < 36) 
-    swarm = Mob::LOCUSTS35;
-  else if (level < 41) 
-    swarm = Mob::LOCUSTS40;
-  else 
-    swarm = Mob::LOCUSTS50;
-
-  if (!(locusts = read_mobile(swarm, VIRTUAL))) {
-    vlogf(LOG_BUG, "Spell PLAGUE_LOCUSTS unable to load mob...");
-    caster->sendTo("Unable to create the locusts, please report this.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return SPELL_FAIL;
-  }
 
   if ((caster->followers) && (level < GOD_LEVEL1))  {
-    for (k = caster->followers; k; k = n) {
-      n = k->next;
-      if (isname("locust", k->follower->name)) {
+    followData *currentFollower, *nextFollower;
+    for (currentFollower = caster->followers; currentFollower; currentFollower = nextFollower) {
+      nextFollower = currentFollower->next;
+      if (isname("locust", currentFollower->follower->name)) {
         act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        caster->sendTo("You would have to be a god to summon another locust swarm!\n\r");
-        delete locusts;
-        locusts=NULL;
+        caster->sendTo("You would have to be a god to summon another locust swarm!\n\r");        
         return SPELL_FAIL;
       }
     }
   }
 
-  level = min(level, 75);
+  int vnumToLoad;
+  if (level < 26) 
+    vnumToLoad = Mob::LOCUSTS25;
+  else if (level < 31) 
+    vnumToLoad = Mob::LOCUSTS30;
+  else if (level < 36) 
+    vnumToLoad = Mob::LOCUSTS35;
+  else if (level < 41) 
+    vnumToLoad = Mob::LOCUSTS40;
+  else 
+    vnumToLoad = Mob::LOCUSTS50;
 
-  float lvl = max(1.0, level/2.0);
+  TMonster *locusts = read_mobile(vnumToLoad, VIRTUAL);
+
+  if (!locusts) {
+    vlogf(LOG_BUG, "Spell PLAGUE_LOCUSTS unable to load mob...");
+    caster->sendTo("Unable to create the locusts, please report this.\n\r");
+    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    return SPELL_FAIL;
+  }  
+
+  float normalizedLevel = max(1.0, min(level, 75) / 2.0);
+
   locusts->setDamPrecision(20);
-
   locusts->setExp(0);
   locusts->setMoney(0);
   locusts->setHitroll(0);
 
   *caster->roomp += *locusts;
 
-  act("You hear a loud humming sound as a swarm of locusts decends from above.", TRUE, locusts, NULL, caster, TO_ROOM);
-  act("You hear a loud humming sound as a swarm of locusts decends from above.", TRUE, locusts, NULL, caster, TO_CHAR);
+  act("You hear a loud humming sound as a swarm of locusts decends from above!", TRUE, locusts, NULL, caster, TO_ROOM);
+  act("You hear a loud humming sound as a swarm of locusts decends from above!", TRUE, locusts, NULL, caster, TO_CHAR);
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_PLAGUE_LOCUSTS)) {
     switch(critSuccess(caster, SPELL_PLAGUE_LOCUSTS)) {
@@ -81,26 +78,27 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_PLAGUE_LOCUSTS);
-        act("The swarm seems to be especially angry and to be circling especially fast!", TRUE, caster, 0, locusts, TO_ROOM);
-        caster->sendTo("The swarm seems to be especially angry and to be circling especially fast!\n\r");
-        lvl *= 2;
+        act("The swarm seems larger and angrier than expected!", TRUE, caster, 0, locusts, TO_ROOM);
+        caster->sendTo("The swarm seems larger and angrier than expected!\n\r");
+        normalizedLevel *= 2;
         break;
       case CRIT_S_NONE:
         if (victim->isLucky(caster->spellLuckModifier(SPELL_PLAGUE_LOCUSTS))) {
           SV(SPELL_PLAGUE_LOCUSTS);
-          lvl /= 2;
+          act("Luckily for $N, only a small swarm responds to $n's prayer!", TRUE, caster, 0, victim, TO_NOTVICT);
+          act("Luckily for you, only a small swarm responds to $n's prayer!", TRUE, caster, 0, victim, TO_VICT);
+          act("Unfortunately, only a small swarm responds to your prayer.", TRUE, caster, 0, victim, TO_CHAR);
+          normalizedLevel /= 2;
         }
         break;
-    }
-    if (!caster->fight()) {
-    }
+    }    
 
-    locusts->setLevel(WARRIOR_LEVEL_IND, (byte)lvl);
-    locusts->setHPLevel(lvl);
+    locusts->setLevel(WARRIOR_LEVEL_IND, (byte)normalizedLevel);
+    locusts->setHPLevel(normalizedLevel);
     locusts->setHPFromHPLevel();
-    locusts->setACLevel(lvl);
+    locusts->setACLevel(normalizedLevel);
     locusts->setACFromACLevel();
-    locusts->setDamLevel(lvl);
+    locusts->setDamLevel(normalizedLevel);
 
     if (!IS_SET(locusts->specials.act, ACT_SENTINEL))
       SET_BIT(locusts->specials.act, ACT_SENTINEL);
@@ -108,10 +106,11 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
     if (!locusts->master)
       caster->addFollower(locusts);
 
-    act("After following $n, the swarm descends on and attacks $N with all of the vengeance of $d!", TRUE, caster, 0, victim, TO_NOTVICT);
-    act("After following you, the swarm descends on $N attacking with all the vengeance of $d!", TRUE, caster, 0, victim, TO_CHAR);
-    act("After following $n, the swarm descends on you with all the fury of $d!", TRUE, caster, 0, victim, TO_VICT);
+    act("Heeding $n's command, the swarm descends on and attacks $N with all of the fury of $d!", TRUE, caster, 0, victim, TO_NOTVICT);
+    act("Heeding your command, the swarm descends on $N attacking with all the fury of $d!", TRUE, caster, 0, victim, TO_CHAR);
+    act("Heeding $n's command, the swarm descends on you with all the fury of $d!", TRUE, caster, 0, victim, TO_VICT);
 
+    affectedData aff;
     aff.type = SPELL_PLAGUE_LOCUSTS;
     aff.level = level;
     aff.duration = 32000;
@@ -120,14 +119,19 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
     aff.bitvector = 0;
     locusts->affectTo(&aff);
 
+    locusts->setFighting(victim, 0, FALSE);
+
+    if (!victim->fight()) 
+      victim->setFighting(locusts, 0, FALSE);
+      
     return SPELL_SUCCESS;
   } else {
-    locusts->setLevel(WARRIOR_LEVEL_IND, (byte)lvl);
-    locusts->setHPLevel(lvl);
+    locusts->setLevel(WARRIOR_LEVEL_IND, (byte)normalizedLevel);
+    locusts->setHPLevel(normalizedLevel);
     locusts->setHPFromHPLevel();
-    locusts->setACLevel(lvl);
+    locusts->setACLevel(normalizedLevel);
     locusts->setACFromACLevel();
-    locusts->setDamLevel(lvl);
+    locusts->setDamLevel(normalizedLevel);
 
     switch (critFail(caster, SPELL_PLAGUE_LOCUSTS)) {
       case CRIT_F_HITOTHER:
@@ -135,6 +139,8 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
         CF(SPELL_PLAGUE_LOCUSTS);
         act("The swarm hums angrily as it attacks $n instead of $s enemy!", TRUE, caster, 0, locusts, TO_ROOM);
         act("The swarm of locusts hums angrily as it begins to attack you!", TRUE, caster, 0, locusts, TO_CHAR);
+
+        int rc;
         if ((rc = locusts->hit(caster)) == DELETE_VICT) {
           return SPELL_CRIT_FAIL | CASTER_DEAD;
           }
@@ -158,14 +164,10 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
 }
 
 int plagueOfLocusts(TBeing *caster, TBeing *victim, TMagicItem *obj)
-{
-  int ret = 0;
-  int rc=0;
-  ret=plagueOfLocusts(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
-  if (IS_SET(ret, SPELL_SUCCESS)) {
-  } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
-  } else {
-  }
+{  
+  int rc = 0;
+  int ret = plagueOfLocusts(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness());
+
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
   if (IS_SET(ret, CASTER_DEAD))
@@ -175,12 +177,8 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, TMagicItem *obj)
 
 int plagueOfLocusts(TBeing * caster, TBeing * victim)
 {
-
-  int level,ret;
   int rc = 0;
-
-
-  level = caster->getSkillLevel(SPELL_PLAGUE_LOCUSTS);
+  int level = caster->getSkillLevel(SPELL_PLAGUE_LOCUSTS);
   int bKnown = caster->getSkillValue(SPELL_PLAGUE_LOCUSTS);
 
   if (!bPassClericChecks(caster, SPELL_PLAGUE_LOCUSTS)) {
@@ -188,7 +186,7 @@ int plagueOfLocusts(TBeing * caster, TBeing * victim)
     return FALSE;
   }
   
-  ret=plagueOfLocusts(caster, victim, level, bKnown);
+  int ret = plagueOfLocusts(caster, victim, level, bKnown);
 
   if (IS_SET(ret, CASTER_DEAD))
     ADD_DELETE(rc, DELETE_THIS);
