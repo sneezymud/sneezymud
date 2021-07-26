@@ -555,6 +555,7 @@ class TBeing : public TThing {
   int attackRound(const TBeing *target) const;
   int defendRound(const TBeing *attacker) const;
   int specialAttack(TBeing *target, spellNumT);
+  int specialAttack(TBeing *target, spellNumT, int);
 
   void updateStatistics();
   bool checkForDiceHeld() const;

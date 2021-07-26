@@ -2774,6 +2774,37 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
   return hits(target, mod);
 }
 
+/*
+  Overload of specialAttack to allow skills to pass a modifier for attacker. 
+  Enables circumstantial bonuses/penalties to be applied here rather than in bSuccess, 
+  which should be used primarily to determine skill execution success - especially now
+  that ability difficulty level is being used again.
+
+  Per combat.cc balance notes: One level's worth of bonus or penalty = 16.667 points, which
+  equates to 3% difference in chance to hit when attacker and victim are same level.
+
+  So for example, if a skill should be executed as if attacker were 10 levels higher than they
+  really are, modifier should be 16.667 * 10 = 166.67.
+*/
+int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier)
+{
+  int offense = attackRound(target) + situationalModifier;
+  int defense = target->defendRound(this);
+  int mod = offense - defense;
+
+  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
+     skill == SKILL_RANGED_PROF) {
+    // other surprise attacks should be added here
+    if(target->isWary())
+      mod -= 300;
+    else {
+      target->makeWary();
+    }
+  }
+
+  return hits(target, mod);
+}
+
 // hits() is for an individual hit.
 int TBeing::hits(TBeing *v, int mod)
 {
