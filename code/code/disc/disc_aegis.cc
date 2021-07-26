@@ -88,12 +88,12 @@ void crusade(TBeing *ch)
       act("A <y>golden halo<1> flickers briefly above $n's head.", TRUE, tmp_victim, NULL, NULL, TO_ROOM);
       act("You feel more focused on your crusade.", TRUE, tmp_victim, NULL, NULL, TO_CHAR);
 
-      tmp_victim->affectJoin(ch, &aff1, AVG_DUR_NO, AVG_EFF_NO, false);
-      tmp_victim->affectJoin(ch, &aff2, AVG_DUR_NO, AVG_EFF_NO, false);
-      tmp_victim->affectJoin(ch, &aff3, AVG_DUR_NO, AVG_EFF_NO, false);
-      tmp_victim->affectJoin(ch, &aff4, AVG_DUR_NO, AVG_EFF_NO, false);
-      tmp_victim->affectJoin(ch, &aff5, AVG_DUR_NO, AVG_EFF_NO, false);
-      tmp_victim->affectJoin(ch, &aff6, AVG_DUR_NO, AVG_EFF_NO, false);
+      tmp_victim->affectJoin(ch, &aff1, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff2, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff3, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff4, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff5, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff6, AVG_DUR_NO, AVG_EFF_YES, false);
 
       found = true;
     }  
