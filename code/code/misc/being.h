@@ -1048,8 +1048,8 @@ class TBeing : public TThing {
   virtual void wizFileSave() = 0;
   void checkWeatherConditions();
   int slamIntoWall(roomDirData *);
-  int bashFail(TBeing *, spellNumT);
-  int bashSuccess(TBeing *, spellNumT);
+  int bashFail(TBeing *, spellNumT, bool, int, bool);
+  int bashSuccess(TBeing *, spellNumT, bool, TObj *);
   int tripFail(TBeing *, spellNumT);
   int tripSuccess(TBeing *, spellNumT);
   void bandage(TBeing *, wearSlotT);
