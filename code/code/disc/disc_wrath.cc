@@ -60,6 +60,10 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   float normalizedLevel = max(1.0, min(level, 75) / 2.0);
 
+  // Modify level based on caster's wisdom stat, as this spell has
+  // no damage to modify
+  normalizedLevel *= caster->getWisMod();
+
   locusts->setDamPrecision(20);
   locusts->setExp(0);
   locusts->setMoney(0);
