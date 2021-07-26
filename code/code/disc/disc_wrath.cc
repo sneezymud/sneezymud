@@ -27,15 +27,13 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
     return SPELL_FAIL;
   }
 
-  if ((caster->followers) && (level < GOD_LEVEL1))  {
-    followData *currentFollower, *nextFollower;
-    for (currentFollower = caster->followers; currentFollower; currentFollower = nextFollower) {
-      nextFollower = currentFollower->next;
+  if ((caster->followers) && (level < GOD_LEVEL1))  {    
+    for (auto currentFollower = caster->followers; currentFollower; currentFollower = currentFollower->next) {      
       if (isname("locust", currentFollower->follower->name)) {
         act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
         caster->sendTo("You would have to be a god to summon another locust swarm!\n\r");        
         return SPELL_FAIL;
-      }
+      }      
     }
   }
 
