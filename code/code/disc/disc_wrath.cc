@@ -72,6 +72,8 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_PLAGUE_LOCUSTS)) {
     switch(critSuccess(caster, SPELL_PLAGUE_LOCUSTS)) {
+      case CRIT_S_NONE:
+        break;
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
@@ -79,16 +81,6 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown)
         act("The swarm seems larger and angrier than expected!", TRUE, caster, 0, locusts, TO_ROOM);
         caster->sendTo("The swarm seems larger and angrier than expected!\n\r");
         normalizedLevel *= 2;
-        break;
-      case CRIT_S_NONE:
-        if (victim->isLucky(caster->spellLuckModifier(SPELL_PLAGUE_LOCUSTS))) {
-          SV(SPELL_PLAGUE_LOCUSTS);
-          act("Luckily for $N, only a small swarm responds to $n's prayer!", TRUE, caster, 0, victim, TO_NOTVICT);
-          act("Luckily for you, only a small swarm responds to $n's prayer!", TRUE, caster, 0, victim, TO_VICT);
-          act("Unfortunately, only a small swarm responds to your prayer.", TRUE, caster, 0, victim, TO_CHAR);
-          normalizedLevel /= 2;
-        }
-        break;
     }    
 
     locusts->setLevel(WARRIOR_LEVEL_IND, (byte)normalizedLevel);
