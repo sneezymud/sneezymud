@@ -55,7 +55,7 @@ public:
     CDAegis& operator=(const CDAegis& a)
     {
         if (this == &a) {
-        return *this;
+            return *this;
         }
 
         CDiscipline::operator=(a),
@@ -68,23 +68,23 @@ public:
     }
 
     virtual ~CDAegis()
-    {       
+    {
     }
 
-    virtual CDAegis * cloneMe()
+    virtual CDAegis* cloneMe()
     {
-        return new CDAegis(*this); 
+        return new CDAegis(*this);
     }
 
 private:
 };
 
 void armor(TBeing*, TBeing*);
-void armor(TBeing*, TBeing*, TMagicItem* obj, spellNumT);
+void armor(TBeing*, TBeing*, TMagicItem * obj, spellNumT);
 int armor(TBeing*, TBeing*, int, short, spellNumT);
 
 void sanctuary(TBeing*, TBeing*);
-void sanctuary(TBeing*, TBeing*, TMagicItem* obj);
+void sanctuary(TBeing*, TBeing*, TMagicItem * obj);
 int sanctuary(TBeing*, TBeing*, int, short);
 
 void bless(TBeing*, TObj*);
@@ -101,10 +101,12 @@ void cureBlindness(TBeing*, TBeing*, TMagicItem*);
 int cureBlindness(TBeing*, TBeing*, int, short);
 
 void curePoison(TBeing*, TBeing*);
+
 void curePoison(TBeing*, TBeing*, TMagicItem*, spellNumT);
 int curePoison(TBeing*, TBeing*, int, short, spellNumT);
 
 void refresh(TBeing*, TBeing*);
+
 void refresh(TBeing*, TBeing*, TMagicItem*, spellNumT);
 int refresh(TBeing*, TBeing*, int, short, spellNumT);
 
@@ -117,6 +119,7 @@ void cureParalysis(TBeing*, TBeing*, TMagicItem*);
 int cureParalysis(TBeing*, TBeing*, int, short);
 
 void cureDisease(TBeing*, TBeing*);
+
 int  cureDisease(TBeing*, TBeing*, int, short, spellNumT);
 void cureDisease(TBeing*, TBeing*, TMagicItem*, spellNumT);
 
