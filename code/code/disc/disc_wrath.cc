@@ -36,8 +36,8 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown) {
     }
   } 
 
-  act("You hear a loud humming sound as a swarm of locusts decends from above!", true, caster, nullptr, nullptr, TO_ROOM);
-  act("You hear a loud humming sound as a swarm of locusts decends from above!", true, caster, nullptr, nullptr, TO_CHAR);
+  act("You hear a loud humming sound as a swarm of locusts descends from above!", true, caster, nullptr, nullptr, TO_ROOM);
+  act("You hear a loud humming sound as a swarm of locusts descends from above!", true, caster, nullptr, nullptr, TO_CHAR);
 
   /*  
     This is primarily to change what the swarm looks like based on cleric level.
