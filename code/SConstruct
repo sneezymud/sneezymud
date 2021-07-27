@@ -186,9 +186,10 @@ if flag_debug:
             # undefined behavior sanitizer, apple clang unsupported
             env.Append(CXXFLAGS='-fsanitize=undefined')
             env.Append(extra_libs=['ubsan']) 
-            # integer sanitizer, apple clang unsupported
-            env.Append(CXXFLAGS='-fsanitize=integer')
-        if (clang_version and clang_version >= (3, 9) or gcc_version >= (7, 0)):
+            if (clang_version):
+                # integer sanitizer, g++ and apple clang unsupported
+                env.Append(CXXFLAGS='-fsanitize=integer')
+        if (clang_version and clang_version >= (3, 9) or gcc_version and gcc_version >= (7, 0)):
             env.Append(CXXFLAGS='-fsanitize-address-use-after-scope') 
 
 env.Append(extra_libs=[opt_libs])
