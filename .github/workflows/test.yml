@@ -11,9 +11,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: C++ Style Check (compiled)
-      uses: Dal-Papa/actions-uncrustify@v1.2
-
     - run: sudo apt-get update
     - run: sudo apt-get install software-properties-common
     - run: sudo apt-get update

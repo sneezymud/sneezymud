@@ -292,7 +292,7 @@ int bounty_hunter(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
       job = static_cast<bounty_hunt_struct *>(myself->act_ptr);
       if (job) {
         job->warned = TRUE;
-        if (job->num_chances >= -99 || job->num_chances <= -96)
+        if (job->num_chances <= -99 || job->num_chances >= -96)
           job->num_chances = -96;
         else
           job->num_chances = 1;

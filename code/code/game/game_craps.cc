@@ -631,7 +631,7 @@ void Craps::checkHorn(int diceroll, TBeing *ch)
     vlogf(LOG_BUG, "No better desc in checkHorn()");
     return;
   }
-  if ((diceroll > 3) || (diceroll < 11)){
+  if ((diceroll > 3) && (diceroll < 11)){
     ch->sendTo(format("You lose your horn bet (%d).\n\r") % d->bet.horn_bet);
     observerReaction(ch, GAMBLER_LOST);
   } else {
