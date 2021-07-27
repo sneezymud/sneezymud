@@ -18,7 +18,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #ifndef __DISC_AEGIS_H
 #define __DISC_AEGIS_H
 
@@ -80,6 +79,7 @@ private:
 };
 
 void armor(TBeing*, TBeing*);
+
 void armor(TBeing*, TBeing*, TMagicItem * obj, spellNumT);
 int armor(TBeing*, TBeing*, int, short, spellNumT);
 
@@ -93,7 +93,7 @@ void bless(TBeing*, TObj*, TMagicItem*, spellNumT);
 int bless(TBeing*, TObj*, int, short, spellNumT);
 
 void bless(TBeing*, TBeing*);
-void bless(TBeing*, TBeing*, TMagicItem* obj, spellNumT);
+void bless(TBeing*, TBeing*, TMagicItem * obj, spellNumT);
 int bless(TBeing*, TBeing*, int, short, spellNumT);
 
 void cureBlindness(TBeing*, TBeing*);
@@ -120,7 +120,7 @@ int cureParalysis(TBeing*, TBeing*, int, short);
 
 void cureDisease(TBeing*, TBeing*);
 
-int  cureDisease(TBeing*, TBeing*, int, short, spellNumT);
+int cureDisease(TBeing*, TBeing*, int, short, spellNumT);
 void cureDisease(TBeing*, TBeing*, TMagicItem*, spellNumT);
 
 void relive(TBeing*, TBeing*);
