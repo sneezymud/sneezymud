@@ -869,8 +869,6 @@ bool TBeing::affectedBySpell(spellNumT skill) const
 
     if(skill==SPELL_HASTE && hjp->type == AFFECT_AION_BLESSING)
       return TRUE;
-    if(skill==SPELL_SANCTUARY && hjp->type == AFFECT_ANGUS_BLESSING)
-      return TRUE;
     if(skill==SPELL_ENLIVEN && hjp->type == AFFECT_DAMESCENA_BLESSING)
       return TRUE;
     if(skill==SPELL_TRUE_SIGHT && hjp->type == AFFECT_JESUS_BLESSING)

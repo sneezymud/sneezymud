@@ -88,11 +88,14 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
         AFFECT_DASH_BLESSING,
         APPLY_FOC,
         "<B>reflection<1>"); // Steal my blessing again, and I'll break you. -D
-  blessings[AFFECT_ANGUS_BLESSING]=
-    ego_imm_blessing("Angus",
-        AFFECT_ANGUS_BLESSING,
-        APPLY_WIS,
-        "<g>wisdom<1>");
+  blessings[AFFECT_SIDARTHA_BLESSING]=
+    ego_imm_blessing("Sidartha",
+        AFFECT_SIDARTHA_BLESSING,
+        APPLY_SPE,
+	"<b>the mongoose<1>",
+	APPLY_HITROLL,
+	5,
+	0);
   blessings[AFFECT_DAMESCENA_BLESSING]=
     ego_imm_blessing("Damescena",
         AFFECT_DAMESCENA_BLESSING,
