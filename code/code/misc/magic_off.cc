@@ -43,8 +43,8 @@ void TBeing::shatterWeapon(wearSlotT slot, int scrap_it)
   char buf[256];
   wearSlotT hand;
 
-  if (((slot >= WEAR_HAND_R) && (slot <= WEAR_ARM_L)) || (slot == HOLD_RIGHT) || (slot == HOLD_LEFT)) {
-    if ((slot == WEAR_HAND_R) || (slot == WEAR_ARM_R) || (slot == HOLD_RIGHT))
+  if (((slot >= WEAR_ARM_R) && (slot <= WEAR_FINGER_L)) || (slot == HOLD_RIGHT) || (slot == HOLD_LEFT)) {
+    if ((slot == WEAR_HAND_R) || (slot == WEAR_ARM_R) || (slot == HOLD_RIGHT) || (slot == WEAR_WRIST_R) || (slot == WEAR_FINGER_R))
       hand = HOLD_RIGHT;
     else
       hand = HOLD_LEFT;
