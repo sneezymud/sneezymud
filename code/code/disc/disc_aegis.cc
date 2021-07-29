@@ -10,6 +10,101 @@
 #include "obj_magic_item.h"
 #include "obj_player_corpse.h"
 
+void crusade(TBeing *ch)
+{
+  affectedData aff1, aff2, aff3, aff4, aff5, aff6;
+  TBeing *tmp_victim = nullptr;
+  TThing *t = nullptr;
+
+  if (!bPassClericChecks(ch,SPELL_CRUSADE))
+    return;
+  
+  int level = ch->getSkillLevel(SPELL_CRUSADE);
+
+  if (!ch->bSuccess(ch->getSkillValue(SPELL_CRUSADE), ch->getPerc(), SPELL_CRUSADE)) {
+    ch->nothingHappens();
+    return;
+  }
+  
+  int duration = ch->durationModify(SPELL_CRUSADE, (3 + level) * Pulse::UPDATES_PER_MUDHOUR);
+
+  // Armor aff
+  aff1.type = SPELL_ARMOR;
+  aff1.level = level;
+  aff1.duration = duration;
+  aff1.location = APPLY_ARMOR;
+  aff1.bitvector = 0;
+  aff1.modifier = -60;
+
+  // Bless
+  aff2.type = SPELL_BLESS;
+  aff2.level = level;
+  aff2.duration = duration;
+  aff2.location = APPLY_SPELL_HITROLL;
+  aff2.modifier = 10;
+  aff2.bitvector = 0;
+
+  aff3.type = SPELL_BLESS;
+  aff3.level = level;
+  aff3.duration = duration;
+  aff3.location = APPLY_IMMUNITY;
+  aff3.modifier = IMMUNE_NONMAGIC;
+  aff3.modifier2 = 5;
+  aff3.bitvector = 0;
+
+  // Crusade
+  aff4.type = SPELL_CRUSADE;
+  aff4.level = level;
+  aff4.duration = duration;
+  aff4.location = APPLY_WIS;
+  aff4.modifier = 10;
+  aff4.bitvector = 0;
+
+  aff5.type = SPELL_CRUSADE;
+  aff5.level = level;
+  aff5.duration = duration;
+  aff5.location = APPLY_FOC;
+  aff5.modifier = 10;
+  aff5.bitvector = 0;
+
+  aff6.type = SPELL_CRUSADE;
+  aff6.level = level;
+  aff6.duration = duration;
+  aff6.location = APPLY_INT;
+  aff6.modifier = 10;
+  aff6.bitvector = 0;
+
+  ch->sendTo("A <y>golden ray of light<1> shines down from the sky as you call the crusade.\n\r");
+  act("$n looks to the sky as a <y>golden ray of light<1> shines down on $s group.", TRUE,ch,0,0,TO_ROOM);
+
+  int found = false;
+  for(StuffIter it=ch->roomp->stuff.begin(); it!=ch->roomp->stuff.end() && (t=*it); ++it) {
+    tmp_victim = dynamic_cast<TBeing *>(t);
+    if (!tmp_victim)
+      continue;
+    if (ch->inGroup(*tmp_victim)) {
+      ch->reconcileHelp(tmp_victim,discArray[SPELL_CRUSADE]->alignMod);
+
+      act("A <y>golden halo<1> flickers briefly above $n's head.", TRUE, tmp_victim, NULL, NULL, TO_ROOM);
+      act("You feel more focused on your crusade.", TRUE, tmp_victim, NULL, NULL, TO_CHAR);
+
+      tmp_victim->affectJoin(ch, &aff1, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff2, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff3, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff4, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff5, AVG_DUR_NO, AVG_EFF_YES, false);
+      tmp_victim->affectJoin(ch, &aff6, AVG_DUR_NO, AVG_EFF_YES, false);
+
+      found = true;
+    }  
+  }
+  if (!found)
+    ch->sendTo("But, there's nobody in your group.\n\r");
+  
+  return;
+
+}
+
 void relive(TBeing *ch, TBeing *vict)
 {
   affectedData aff;
@@ -964,22 +1059,11 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
   aff.duration = c->durationModify(SPELL_ARMOR, (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_ARMOR;
   aff.bitvector = 0;
+  aff.modifier = -60;
 
-  // deikhan armor does less (c.f. balance notes)
-  if (spell == SPELL_ARMOR)
-    aff.modifier = -100;
-  else if (spell == SPELL_ARMOR_DEIKHAN)
-    aff.modifier = -75;
-  else {
-    vlogf(LOG_BUG, format("Unknown spell %d in armor()") %  spell);
-    aff.modifier = 0;
-  }
   
   if (c->bSuccess(learn, c->getPerc(), spell)) {
     c->reconcileHelp(victim, discArray[spell]->alignMod);
-
-    if (c != victim)
-      aff.modifier /= 8;
 
     victim->roomp->playsound(SOUND_SPELL_ARMOR, SOUND_TYPE_MAGIC);
 
@@ -988,8 +1072,6 @@ int armor(TBeing *c, TBeing * victim, int level, short learn, spellNumT spell)
       case CRIT_S_DOUBLE:
         CS(spell);
         aff.duration *= 2;
-        if (c != victim)
-          aff.modifier *= 2;
 
         if (!victim->affectJoin(c, &aff, AVG_DUR_NO, AVG_EFF_YES))
           return SPELL_FAIL;
@@ -1101,11 +1183,8 @@ int sanctuary(TBeing *c, TBeing *victim, int level, short learn)
   aff.level = level;
   aff.duration = c->durationModify(SPELL_SANCTUARY, ((level <= MAX_MORT) ? 3 : level) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_PROTECTION;
-  aff.modifier = min(level, 50);
+  aff.modifier = min(level / 2 , 25);
   aff.bitvector = AFF_SANCTUARY;
-
-  if (c != victim)
-    aff.modifier /= 3;
 
   if (c->bSuccess(learn, c->getPerc(), SPELL_SANCTUARY)) {
     c->reconcileHelp(victim, discArray[SPELL_SANCTUARY]->alignMod);

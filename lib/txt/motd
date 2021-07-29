@@ -1,23 +1,18 @@
-     <Y><z>Important game status information:<z>
+    <r>Important game information<z>
 
-      <R>Offical Status:<z> PWIPE 07/26/2018
-      Limit 1 Account. 2 simultaneous character logons per account. 
-      Multiclassing Re-Enabled. Access dual-classing at lvl 50.  
-      Players with homes will be provided keys to their homes upon request.<z>
+       Multiplayer is enabled.
+       Limit 1 Account with up to 2 simultaneous character logons per account.
+       Multi-classing enabled at level 50
+       Players with homes will be provided keys to their homes upon request.
 
+       NEWBIE HELP:    'help newbie'
 
-     <Y>SNEEZYMUD PATREON:<z>       <c>https://www.patreon.com/Sneezy<z>
-     <Y>DISCORD CHANNEL:<z>       <c>https://discord.gg/YY2PgqP<z>
-     <Y>FACEBOOK GROUP:<z>       <c>https://www.facebook.com/groups/SneezyMud/<z>
-    
+    <r>SneezyMUD Online Resources:<z>
 
-     <Y>WEBSITE:<z>        <c>Wiki Online @ wiki.sneezymud.com<z>
-     <Y>NEWBIE HELP:<z>    <c>'help newbie'
-     <Y>GAME HELP:<z>      <c>game commands: REQUEST, BUG, IDEA and TYPO.
-
-     <R>-------------<z>   <W>Multiplay is enabled. Limit 1 Account.<z> 
-     <R> NEWS UPDATE <z>   <W>2 simultaneous character logins allowed.<z> 
-     <R>             <z>   <W>Multi-classing enabled at 50.<z> 
-   
+       <y>SNEEZY-MUD PATREON:<z>   <b>https://www.patreon.com/sneezy_mud<z>
+       <y>Discord Channel:<z>  <b>https://discord.gg/TMz8gMBDXA<z>
+       <y>Website:<z>  <b>https://sneezymud.github.io/<z>
+       <y>Web-based GUI:<z>  <b>https://sneezy-mud.com/<z>
+       <y>GitHub:<z>  <b>https://github.com/sneezymud/sneezymud<z>
 
 ==========================================================================

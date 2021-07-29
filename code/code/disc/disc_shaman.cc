@@ -383,7 +383,7 @@ int shieldOfMists(TBeing *caster, TBeing *victim, int level, short bKnown)
   aff.level = level;
   aff.duration = caster->durationModify(SPELL_SHIELD_OF_MISTS, (3 + (aff.level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_ARMOR;
-  aff.modifier = -80;
+  aff.modifier = -60;
   aff.bitvector = 0;
 
   if (caster->bSuccess(bKnown,SPELL_SHIELD_OF_MISTS)) {
@@ -392,15 +392,11 @@ int shieldOfMists(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(SPELL_SHIELD_OF_MISTS);
-        aff.duration = (12 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR;
-        if (caster != victim)
-          aff.modifier *= 2;
+        aff.duration *= 2;
         break;
       case CRIT_S_NONE:
         break;
     }
-    if (caster != victim) 
-      aff.modifier /= 5;
 
     //Second argument FALSE causes it to add new duration to old
     //Third argument TRUE causes it to average the old and newmodifier
@@ -1050,8 +1046,7 @@ int cheval(TBeing *caster, TBeing *victim, int level, short bKnown)
     aff.type = SPELL_CHEVAL;
     aff.level = level;
     aff.duration = caster->durationModify(SPELL_CHEVAL, (aff.level / 3) * Pulse::UPDATES_PER_MUDHOUR);
-    aff.modifier = -50;
-    aff.location = APPLY_ARMOR;
+    aff.location = APPLY_NONE;
     aff.bitvector = 0;
     switch (critSuccess(caster, SPELL_CHEVAL)) {
       case CRIT_S_DOUBLE:
