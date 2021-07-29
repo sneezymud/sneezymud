@@ -1,3 +1,8 @@
+07-29-21 : Hitpoints and locusts
+           - Plague of locusts should work again
+           - Player health gain is once again based on levels. All single class 50s
+           should have identical health but multiclass might be slightly different.
+           
 06-25-21 : Buff spells and Armor rebalance
            - Starting to update buff spells so they have the same affects when cast
            on self versus cast on others. looking to add group versions of buffs but
