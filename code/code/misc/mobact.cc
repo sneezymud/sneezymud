@@ -5359,8 +5359,7 @@ int TMonster::doHatefulStuff()
   return FALSE;
 }
 
-void TMonster::quickieDefend()
-{
+void TMonster::quickieDefend() {
   int iter;
   iter = 10;
   while (iter--) {
@@ -5373,11 +5372,7 @@ void TMonster::quickieDefend()
         rc = cast_spell(this, CMD_TASK_CONTINUE, 0);
         if (IS_SET_DELETE(rc, DELETE_THIS | DELETE_VICT))
           vlogf(LOG_BUG, "Error: uncaught DELETE (2) in quickieDefend");
-      }     
-    }    
+      }
+    }
   }
 }
-
-
-
-
