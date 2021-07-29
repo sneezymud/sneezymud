@@ -28,22 +28,26 @@ class CDThiefFight : public CDiscipline
 {
 public:
     CSkill skDodgeThief;
+    CSkill skGarrotte;
     CSkill skDualWieldThief;
 
     CDThiefFight()
       : CDiscipline(),
       skDodgeThief(),
+      skGarrotte(),
       skDualWieldThief() {
     }
     CDThiefFight(const CDThiefFight &a)
       : CDiscipline(a),
       skDodgeThief(a.skDodgeThief),
+      skGarrotte(a.skGarrotte),
       skDualWieldThief(a.skDualWieldThief) {
     }
     CDThiefFight & operator=(const CDThiefFight &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
       skDodgeThief = a.skDodgeThief;
+      skGarrotte = a.skGarrotte;
       skDualWieldThief = a.skDualWieldThief;
       return *this;
     }

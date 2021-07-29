@@ -36,23 +36,19 @@
 class CDMurder : public CDiscipline
 {
 public:
-    CSkill skGarrotte;
     CSkill skThroatSlit;
 
     CDMurder()
-      : CDiscipline(),
-      skGarrotte(),
+      : CDiscipline(),  
       skThroatSlit() {
     }
     CDMurder(const CDMurder &a)
-      : CDiscipline(a),
-      skGarrotte(a.skGarrotte),
+      : CDiscipline(a), 
       skThroatSlit(a.skThroatSlit) {
     }
     CDMurder & operator=(const CDMurder &a) {
       if (this == &a) return *this;
-      CDiscipline::operator=(a);
-      skGarrotte = a.skGarrotte;
+      CDiscipline::operator=(a);  
       skThroatSlit = a.skThroatSlit;
       return *this;
     }
