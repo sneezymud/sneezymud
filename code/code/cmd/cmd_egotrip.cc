@@ -415,8 +415,8 @@ void TBeing::doEgoTrip(const char *arg)
       if (!tmons)
         continue;
       if (!tmons->spec) 
-        continue;
-      int rc = tmons->checkSpec(tmons, CMD_MOB_ALIGN_PULSE, "", NULL);
+        continue;     
+      int rc = tmons->checkSpec(tmons, CMD_MOB_ALIGN_PULSE, "");
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
         delete tmons;
         tmons = NULL;

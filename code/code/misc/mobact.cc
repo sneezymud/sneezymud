@@ -3826,7 +3826,7 @@ int TMonster::mobileActivity(int pulse)
 
   if (spec && !(pulse %(50*Pulse::MOBACT)) && !::number(0, 1) && 
       !Config::NoSpecials()) {
-    rc = checkSpec(this, CMD_MOB_ALIGN_PULSE, "", NULL);
+    rc = checkSpec(this, CMD_MOB_ALIGN_PULSE, "");
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
     else if (rc)
@@ -3836,7 +3836,7 @@ int TMonster::mobileActivity(int pulse)
 
   // should do this in socket.cc
   if (spec && !(pulse %(2 * Pulse::MOBACT)) && !Config::NoSpecials()) {
-    rc = checkSpec(this, CMD_GENERIC_PULSE, "", NULL);
+    rc = checkSpec(this, CMD_GENERIC_PULSE, "");
     if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     else if (rc)
@@ -3886,7 +3886,7 @@ int TMonster::mobileActivity(int pulse)
 
     // a lot of specs are combat-related, trigger these
     if (spec) {
-      rc = checkSpec(this, (::number(0,2)) ? CMD_MOB_COMBAT : CMD_MOB_COMBAT2, "", NULL);
+      rc = checkSpec(this, (::number(0,2)) ? CMD_MOB_COMBAT : CMD_MOB_COMBAT2, "");
       if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       else if (rc)

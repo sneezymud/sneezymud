@@ -278,7 +278,7 @@ TMonster::~TMonster()
   }
 
   if (spec)
-    checkSpec(this, CMD_GENERIC_DESTROYED, "", NULL);
+    checkSpec(this, CMD_GENERIC_DESTROYED, "");
 
   // responses
   if (resps) {

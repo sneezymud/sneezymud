@@ -83,34 +83,19 @@ const int GET_MOB_SPE_INDEX(int d)
   return (((d > NUM_MOB_SPECIALS) || (d < 0)) ? 0 : d);
 }
 
-
-
 // returns DELETE_THIS for this
 // returns DELETE_VICT if the special kills t
 // returns DELETE_ITEM for t2
-int TMonster::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TThing *t2)
-{
-  int rc;
+int TMonster::checkSpec(TBeing *t, cmdTypeT cmd, const char *arg, TObj *t2) {
+  if (inRoom() == Room::NOCTURNAL_STORAGE) return FALSE;
 
-  //  if (cmd == CMD_GENERIC_PULSE && spec == SPEC_BOUNTY_HUNTER)
-  //    vlogf(LOG_DASH, format("Bounty Hunter spec %d on %s called with CMD_GENERIC_PULSE (checkSpec)") %  spec % getName());
-
-  if(inRoom() == Room::NOCTURNAL_STORAGE)
-    return FALSE;
   // if we move them to hell, it's probably cause there is a problem with
   // the proc, so skip it.  Realize, this may let them leak memory since
   // the destroy message is not called...
-  if (inRoom() == Room::HELL && spec != SPEC_TORMENTOR)
-    return FALSE;
+  if (inRoom() == Room::HELL && spec != SPEC_TORMENTOR) return FALSE;
 
-  // we will use a static cast on t2 as we don't always pass a true
-  // TThing as the extra pointer.  e.g.
-  // CMD_MOB_KILLED_NEARBY: vict passed as t2
-  if (spec) {
-    rc = (mob_specials[GET_MOB_SPE_INDEX(spec)].proc)
-               (t, cmd, arg, this, static_cast<TObj *>(t2));
-    return rc;
-  }
+  if (spec) return (mob_specials[GET_MOB_SPE_INDEX(spec)].proc)(t, cmd, arg, this, t2);
+
   return FALSE;
 }
 

@@ -1663,7 +1663,26 @@ int TBeing::genericMovedIntoRoom(TRoom *rp, int was_in,
       continue;
 
     if (was_in != -1) {
-      rc = tmons->checkSpec(this, CMD_MOB_MOVED_INTO_ROOM, "", reinterpret_cast<TObj *>(static_cast<intptr_t>(was_in))); // casts: int was_in is passed in a pointer field
+      /* 
+        A few mob spec procs expect the previous room number (int was_in) as their
+        final parameter. The issue is that this parameter is expected to be of type
+        TObj*, not int.
+
+        Whether or not this was good practice, the way the original coders worked around
+        this was to first static_cast was_in to a long int, so that its type is the same 
+        size (8 bytes) as a pointer, then reinterpret_cast that resulting long int to
+        a TObj*.
+
+        This allowed them to pass the integer room value into a function expecting a
+        TObj* and not an int. Inside any mob spec procs where this was_in value is
+        needed they then static_cast the TObj* back to an int and utilize its original
+        value.
+
+        This static_cast below previously casted to an intptr_t but that was causing an
+        error when trying to further reinterpret_cast it to a TObj*. Using long int in 
+        the static_cast fixes that problem.
+      */      
+      rc = tmons->checkSpec(this, CMD_MOB_MOVED_INTO_ROOM, "", reinterpret_cast<TObj *>(static_cast<long int>(was_in))); 
       if (rc) {
         // if TRUE, was prevented from entering.  
         // will have been put back into original room

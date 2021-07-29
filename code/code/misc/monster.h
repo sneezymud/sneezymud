@@ -115,7 +115,8 @@ class TMonster : public TBeing {
     // VIRTUAL FUNCTIONS
     virtual double baseDamage() const;
     virtual int grenadeHit(TTrap *);
-    virtual int checkSpec(TBeing *, cmdTypeT, const char *, TThing *);
+    using TThing::checkSpec;
+    virtual int checkSpec(TBeing *, cmdTypeT, const char *, TObj * = nullptr);
     virtual int mobVnum() const;
 
     virtual sstring const& getName() const { return shortDescr; }

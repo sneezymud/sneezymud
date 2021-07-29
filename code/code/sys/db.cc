@@ -1794,7 +1794,7 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   else
     stats.act_101_127++;
 
-  rc = mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
+  rc = mob->checkSpec(mob, CMD_GENERIC_CREATED, "");
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete mob;
     return NULL;
@@ -2226,7 +2226,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       max_exist = convertTo<int>(mob_cache[nr]->s["max_exist"]);
       
       if (!should_alloc) {
-	rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+	rc = checkSpec(this, CMD_GENERIC_INIT, "");
 	if (IS_SET_DELETE(rc, DELETE_THIS) ||
 	    IS_SET_DELETE(rc, DELETE_VICT)) {
 	  return DELETE_THIS;
@@ -2393,7 +2393,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       max_exist = convertTo<int>(db["max_exist"]);
       
       if (!should_alloc) {
-	rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+	rc = checkSpec(this, CMD_GENERIC_INIT, "");
 	if (IS_SET_DELETE(rc, DELETE_THIS) ||
 	    IS_SET_DELETE(rc, DELETE_VICT)) {
 	  return DELETE_THIS;
