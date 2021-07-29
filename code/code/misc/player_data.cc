@@ -1084,7 +1084,7 @@ void do_the_player_stuff(const char *name)
     return;
 
   // skip faction data
-  if (strlen(name) > 6 && !strcmp(&name[strlen(name) - 8], ".faction"))
+  if (strlen(name) > 8 && !strcmp(&name[strlen(name) - 8], ".faction"))
     return;
 
   // skip wizpowers data if there was an error up above.
