@@ -3437,14 +3437,15 @@ void runResetCmdZ(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
 void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
 {
+  if (!mob || !mobload) {    
+    return; 
+  }    
+
   if ((flags & resetFlagFindLoadPotential))
   {
     mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance, true);
     return;
   }
-
-  if (!mob || !mobload)
-    return; // log error here?
 
   mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance);
 
