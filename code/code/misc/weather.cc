@@ -434,7 +434,7 @@ void Weather::ChangeWeather(changeWeatherT change)
 }
 
 void Weather::AlterWeather(changeWeatherT *change)
-{
+{  
   switch (getSky()) {
     case SKY_CLOUDLESS:
       if (getPressure() < 990)
@@ -474,7 +474,7 @@ void Weather::AlterWeather(changeWeatherT *change)
         if (dice(1, 4) == 1)
           *change = CHANGE_STORM_AWAY;
       break;
-    default:
+    default:      
       *change = CHANGE_NONE;
       setSky(SKY_CLOUDLESS);
       break;
@@ -751,7 +751,7 @@ void Weather::weatherChange()
   // keep in range 1040 - 960
 
   int diff = 0;
-  changeWeatherT change;
+  Weather::changeWeatherT change = Weather::CHANGE_NONE;
 
   // create nice fluxuating driven toward 1000
   if (Weather::getPressure() > 1024)   
