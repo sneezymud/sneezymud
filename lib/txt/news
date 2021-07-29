@@ -1,3 +1,26 @@
+07-29-21 : Hitpoints and locusts
+           - Plague of locusts should work again
+           - Player health gain is once again based on levels. All single class 50s
+           should have identical health but multiclass might be slightly different.
+           
+06-25-21 : Buff spells and Armor rebalance
+           - Starting to update buff spells so they have the same affects when cast
+           on self versus cast on others. looking to add group versions of buffs but
+           that's not a good idea when casting on others is less affective.
+           - It's very easy to hit the Armor cap. Going to decrease armor on buff spells
+           accross the board somewhat to try to tone it down. Hopefully make things more
+           diverse and fun at the same time.
+           - Deikhan and Cleric Armor spell down to 60AC
+           - Deikhan Aura of might now 40AC
+           - Cleric Sanctuary protection reduced but now provides the same amount to others
+           - NEW PRAYER: Clerics have now been authorized to invoke the powerful Crusade
+             prayer. Group Armor, Bless and more!
+           - Shaman Shield of mists down to 60AC
+           - Shaman Cheval no longer has any AC benefit
+           - Shaman Celerite no longer has any AC benefit
+           - Shaman Shadow walk now grants some immunity to non-magic
+           - Mage stuff to follow soon...
+
 06-25-21 : Monk Stuff
            - Reduce mana cost of Chain and Blur
            - Chain now works while using a weapon. Blur still requires bare hands

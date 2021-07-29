@@ -973,31 +973,38 @@ APP_type apply_types[MAX_APPLY_TYPES] =
 };
 
 
+/*
+   Scale HP per level of non tank classes so that they get
+   35 levels worth of HP spread out over 50. Warriors and
+   deikhans get a full 50 levels' worth of HP over 50 levels.
+   Replaces the previous method of HP scaling with defense +
+   advanced defense.
+*/
 const struct class_info classInfo[MAX_CLASSES] =
 {
   {true, MAGE_LEVEL_IND, CLASS_MAGE, "mage", 
-   DISC_MAGE, DISC_LORE, 0.43, 7.5, "M"},
+   DISC_MAGE, DISC_LORE, 0.43, 7.5 * 35.0 / 50.0, "M"},
 
   {true, CLERIC_LEVEL_IND, CLASS_CLERIC, "cleric",
-   DISC_CLERIC, DISC_THEOLOGY, 0.47, 8, "C"},
+   DISC_CLERIC, DISC_THEOLOGY, 0.47, 8.0 * 35.0 / 50.0, "C"},
 
   {true, WARRIOR_LEVEL_IND, CLASS_WARRIOR, "warrior",
    DISC_WARRIOR, DISC_NONE, 0.47, 8.5, "W"},
 
   {true, THIEF_LEVEL_IND, CLASS_THIEF, "thief",
-   DISC_THIEF, DISC_NONE, 0.41, 8, "T"},
+   DISC_THIEF, DISC_NONE, 0.41, 8.0 * 35.0 / 50.0, "T"},
 
   {true, SHAMAN_LEVEL_IND, CLASS_SHAMAN, "shaman",
-   DISC_SHAMAN, DISC_NONE, 0.39, 7.5, "S"},
+   DISC_SHAMAN, DISC_NONE, 0.39, 7.5 * 35.0 / 50.0, "S"},
 
   {true, DEIKHAN_LEVEL_IND, CLASS_DEIKHAN, "deikhan",
    DISC_DEIKHAN, DISC_THEOLOGY, 0.44, 7.5, "D"},
 
   {true, MONK_LEVEL_IND, CLASS_MONK, "monk",
-   DISC_MONK, DISC_NONE, 0.44, 7.5, "K"},
+   DISC_MONK, DISC_NONE, 0.44, 7.5 * 35.0 / 50.0, "K"},
 
   {false, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
-   DISC_RANGER, DISC_NONE, 0.46, 7, "R"},
+   DISC_RANGER, DISC_NONE, 0.46, 7.0 * 35.0 / 50.0, "R"},
 
   {false, COMMONER_LEVEL_IND, CLASS_COMMONER, "commoner",
    DISC_ADVENTURING, DISC_NONE, 0.40, 5, "O"}
