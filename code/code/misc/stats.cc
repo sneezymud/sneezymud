@@ -1155,6 +1155,21 @@ float TBeing::getConHpModifier() const
   return plotStat(STAT_CURRENT, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (double) 1.0);
 }
 
+float TBeing::getStrMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_STR, 0.8, 1.25, 1.0);
+}
+
+float TBeing::getBraMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_BRA, 0.8, 1.25, 1.0);
+}
+
+float TBeing::getConMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_CON, 0.8, 1.25, 1.0);
+}
+
 float TBeing::getDexMod() const
 {
   return plotStat(STAT_CURRENT, STAT_DEX, 0.8, 1.25, 1.0);
@@ -1170,14 +1185,34 @@ float TBeing::getSpeMod() const
   return plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getBraMod() const
+float TBeing::getIntMod() const
 {
-  return plotStat(STAT_CURRENT, STAT_BRA, 0.8, 1.25, 1.0);
+  return plotStat(STAT_CURRENT, STAT_INT, 0.8, 1.25, 1.0);
+}
+
+float TBeing::getWisMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_WIS, 0.8, 1.25, 1.0);
 }
 
 float TBeing::getFocMod() const
 {
   return plotStat(STAT_CURRENT, STAT_FOC, 0.8, 1.25, 1.0);
+}
+
+float TBeing::getPerMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_PER, 0.8, 1.25, 1.0);
+}
+
+float TBeing::getChaMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_CHA, 0.8, 1.25, 1.0);
+}
+
+float TBeing::getKarMod() const
+{
+  return plotStat(STAT_CURRENT, STAT_KAR, 0.8, 1.25, 1.0);
 }
 
 float TBeing::getIntModForPracs() const

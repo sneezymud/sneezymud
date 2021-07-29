@@ -3323,7 +3323,7 @@ void runResetCmdV(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 {
   last_cmd = false;
 
-  if (rs.arg1 < 0 && rs.arg1 >= 4)
+  if (rs.arg1 < 0 || rs.arg1 >= 4)
   {
     vlogf(LOG_LOW, format("Bad slot (%d) for V command (%d)") % rs.arg1 % rs.arg2);
     return;
