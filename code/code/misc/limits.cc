@@ -142,7 +142,7 @@ short int TPerson::hitLimit() const
 
   float newmax=0;
   newmax += baseHp() + ageHpMod(this);
-  newmax += (classHpPerLevel(this) * (float)GetMaxLevel() * maxHpLevels) / MAX_MORT;
+  newmax += (classHpPerLevel(this) * (float)GetMaxLevel() * maxHpLevels) / (float)MAX_MORT;
   newmax *= getConHpModifier();
   newmax += eqHpBonus(this);
   newmax += affectHpBonus(this);
