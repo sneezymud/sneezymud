@@ -869,6 +869,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
     case SKILL_DODGE_THIEF:  //            498
       return &((CDThiefFight *) cd)->skDodgeThief;
+    case SKILL_GARROTTE: 
+      return &((CDThiefFight *) cd)->skGarrotte;
     case SKILL_DUAL_WIELD_THIEF: //          503
       return &((CDThiefFight *) cd)->skDualWieldThief;
 
@@ -882,9 +884,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 // disc_murder
 
     case SKILL_THROATSLIT:
-      return &((CDMurder *) cd)->skThroatSlit;
-    case SKILL_GARROTTE:  //                  501
-      return &((CDMurder *) cd)->skGarrotte;
+      return &((CDMurder *) cd)->skThroatSlit;    
 
 // disc_poisons
 
@@ -1078,9 +1078,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case SKILL_SKIN:  //                       346
       return &((CDAdvAdventuring *) cd)->skSkin;
     case SKILL_DIVINATION:  //                391
-      return &((CDAdvAdventuring *) cd)->skDivination;
-    case SKILL_ENCAMP:  //                    393
-      return &((CDAdvAdventuring *) cd)->skEncamp;
+      return &((CDAdvAdventuring *) cd)->skDivination;    
     case SKILL_FISHLORE:
       return &((CDAdvAdventuring *) cd)->skFishlore;
     case SKILL_TROLLISH:
@@ -1151,6 +1149,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAdventuring *) cd)->skGnollJargon;
     case SKILL_TROGLODYTE_PIDGIN:
       return &((CDAdventuring *) cd)->skTroglodytePidgin;
+    case SKILL_ENCAMP:  //                    393
+      return &((CDAdventuring *) cd)->skEncamp;
 
   // disc_wizardry
     case SKILL_WIZARDRY: // 960
