@@ -5361,20 +5361,20 @@ int TMonster::doHatefulStuff()
 
 void TMonster::quickieDefend()
 {
-  unsigned int iter;
+  int iter;
   iter = 10;
   while (iter--) {
     int rc = defendSelf(0);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       vlogf(LOG_BUG, "Error: uncaught DELETE (1) in quickieDefend");
-    unsigned int rnds = 7;
+    int rnds = 7;
     while (rnds--) {
       if (spelltask) {
         rc = cast_spell(this, CMD_TASK_CONTINUE, 0);
         if (IS_SET_DELETE(rc, DELETE_THIS | DELETE_VICT))
           vlogf(LOG_BUG, "Error: uncaught DELETE (2) in quickieDefend");
-      }
-    }
+      }     
+    }    
   }
 }
 
