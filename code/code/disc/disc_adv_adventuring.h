@@ -19,8 +19,7 @@ class CDAdvAdventuring : public CDiscipline
     CSkill skForage;
     CSkill skSeekWater;
     CSkill skSkin;
-    CSkill skDivination;
-    CSkill skEncamp;
+    CSkill skDivination;    
     CSkill skFishlore;
     CSkill skTrollish;
     CSkill skBullywug;
@@ -33,8 +32,7 @@ class CDAdvAdventuring : public CDiscipline
       skForage(),
       skSeekWater(),
       skSkin(),
-      skDivination(),
-      skEncamp(),
+      skDivination(),      
       skFishlore(),
       skTrollish(),
       skBullywug(),
@@ -48,8 +46,7 @@ class CDAdvAdventuring : public CDiscipline
       skForage(a.skForage),
       skSeekWater(a.skSeekWater),
       skSkin(a.skSkin),
-      skDivination(a.skDivination),
-      skEncamp(a.skEncamp),
+      skDivination(a.skDivination),      
       skFishlore(a.skFishlore),
       skTrollish(a.skTrollish),
       skBullywug(a.skBullywug),
@@ -64,8 +61,7 @@ class CDAdvAdventuring : public CDiscipline
       skForage = a.skForage;
       skSeekWater = a.skSeekWater;
       skSkin = a.skSkin;
-      skDivination = a.skDivination;
-      skEncamp = a.skEncamp;
+      skDivination = a.skDivination;      
       skFishlore = a.skFishlore;
       skTrollish = a.skTrollish;
       skBullywug = a.skBullywug;
