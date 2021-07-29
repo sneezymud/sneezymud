@@ -136,13 +136,11 @@ int affectHpBonus(const TPerson *tp){
 short int TPerson::hitLimit() const
 {
   if(isImmortal())
-    return points.maxHit;
-
-  float maxHpLevels = doesKnowSkill(SKILL_ADVANCED_DEFENSE) ? 50.0 : 35.0;
+    return points.maxHit;  
 
   float newmax=0;
   newmax += baseHp() + ageHpMod(this);
-  newmax += (classHpPerLevel(this) * (float)GetMaxLevel() * maxHpLevels) / (float)MAX_MORT;
+  newmax += classHpPerLevel(this) * (float)GetMaxLevel();
   newmax *= getConHpModifier();
   newmax += eqHpBonus(this);
   newmax += affectHpBonus(this);
