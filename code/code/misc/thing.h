@@ -323,7 +323,6 @@ class TThing {
     virtual void sstringMeString(TBeing *, TBow *);
     virtual void skinMe(TBeing *, const char *);
     virtual void butcherMe(TBeing *, const char *);
-    virtual void sacrificeMe(TBeing *, const char *);
     virtual int pickWithMe(TBeing *, const char *, const char *, const char *);
     virtual void repairMeHammer(TBeing *, TObj *);
     virtual int garottePulse(TBeing *, affectedData *);
