@@ -7,15 +7,13 @@
 int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
 {
   TThing *t;
-  TMonster *guard;
-  TTool *totem=NULL;
+  TMonster *guard; 
   int learning = ch->getSkillValue(SKILL_SACRIFICE);
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
   int clev = ch->GetMaxLevel();
-  int percent = ::number(1, 100);
   // random number between 50 and 175
   int factor = ::number(clev, learning + clev + 25);
-  int factor2 = ::number(5, (((clev + learning) + percent) / 5));
+  int factor2 = ::number(5, (((clev + learning) + ::number(1, 100)) / 5));
 
   if (!ch || !ch->task) {
     vlogf(LOG_BUG, format("No %s in task_sacrifice!") % (ch ? "character" : "task"));
@@ -47,11 +45,12 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
     return TRUE;
   }
 
-  if (!(t = get_thing_char_using(ch, "totem", 0, FALSE, FALSE)) || 
-      !(totem=dynamic_cast<TTool *>(t))) {
-    ch->sendTo("You need to own a totem to perform the ritual.\n\r");
+  auto mask = ch->getWornShamanMask();
+  auto totem = ch->getHeldTotem();
+  if (!mask && !totem) {
+    ch->sendTo("You must be holding a totem to perform the ritual.\n\r");
     ch->stopTask();
-    if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
+    if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) 
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
     return TRUE;
   }
@@ -107,7 +106,7 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      if (percent < ch->getSkillValue(SKILL_SACRIFICE)) {
+      if (ch->bSuccess(learning, SKILL_SACRIFICE)) {
         act("Your sacrifice is being accepted by the loa.", 
             FALSE, ch, 0, 0, TO_CHAR);
         ch->addToLifeforce(factor);
@@ -128,20 +127,23 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
       }
 
       ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
-      totem->addToToolUses(-1);
-      if (totem->getToolUses() <= 0) {
-        act("Your $o has been confiscated by the loa! It must have been too weak.", 
-            FALSE, ch, totem, 0, TO_CHAR);
-        act("$n looks pale as $s $o shatters.", TRUE, ch, totem, 0, TO_ROOM);
-        ch->stopTask();
-        delete totem;
-        totem = NULL;
-        if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
-          corpse->remCorpseFlag(CORPSE_SACRIFICE);
-        return TRUE;
+
+      if (!mask) {
+        totem->addToToolUses(-1);
+        if (totem->getToolUses() <= 0) {
+          act("Your $o has been confiscated by the loa! It must have been too weak.", FALSE, ch,
+              totem, 0, TO_CHAR);
+          act("$n looks pale as $s $o shatters.", TRUE, ch, totem, 0, TO_ROOM);
+          ch->stopTask();
+          delete totem;
+          totem = NULL;
+          if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) corpse->remCorpseFlag(CORPSE_SACRIFICE);
+          return TRUE;
+        }
       }
+
       if (10 >= corpse->obj_flags.decay_time)
-        corpse->obj_flags.decay_time = 10;
+        corpse->obj_flags.decay_time = 10;      
 
       switch (ch->task->timeLeft) {
         case 2:
@@ -154,9 +156,9 @@ int task_sacrifice(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, T
 	        break;
         case 1:
           act("Your $o's eyes glow <r>blood red<1>.", 
-              FALSE, ch, totem, 0, TO_CHAR);
+              FALSE, ch, mask ? mask : totem, 0, TO_CHAR);
           act("The eyes on $n's $o begin to glow a <r>blood red<1>.", 
-              TRUE, ch, totem, 0, TO_ROOM);
+              TRUE, ch, mask ? mask : totem, 0, TO_ROOM);
 	        if (ch->bSuccess(learning, SKILL_SACRIFICE))
 	          ch->task->timeLeft--;
 	        break;
