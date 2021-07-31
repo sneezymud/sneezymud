@@ -1930,4 +1930,7 @@ class TBeing : public TThing {
   virtual int checkAura(cmdTypeT cmd, TBeing *t);
   void doAura(sstring const& arg);
 
+  // shaman helpers
+  TObj *getWornShamanMask();
+  TTool *getHeldTotem();
 };
