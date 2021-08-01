@@ -2689,7 +2689,7 @@ void TComponent::evaluateMe(TBeing *ch) const
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 
   // adjust for knowledge about magic stuff
   if (ch->hasClass(CLASS_RANGER)) {

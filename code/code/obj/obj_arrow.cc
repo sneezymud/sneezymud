@@ -273,7 +273,7 @@ void TArrow::evaluateMe(TBeing *ch) const
   traptype = getTrapDamType();
   
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 
   ch->describeNoise(this, learn);
 

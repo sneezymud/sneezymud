@@ -2048,10 +2048,10 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
           ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
         }
         // Offense hones
-        ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (170 - (2* myLevel)));
+        ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (120 - (2* myLevel)));
       }
       // Learn advanced offense
-      ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (170 - (2* myLevel)));
+      ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (120 - (2* myLevel)));
     }
   }
 
@@ -2277,27 +2277,27 @@ int TBeing::hit(TBeing *target, int pulse)
   if (desc && !dynamic_cast<TMonster *>(this)) {
     if (((fx > 0.999) || (fy > 0.999)) && (!o || !o2)){
       if(doesKnowSkill(SKILL_OOMLAT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OOMLAT, 20);
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OOMLAT, 15);
 
       if(doesKnowSkill(SKILL_KUBO))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_KUBO, 20);
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_KUBO, 15);
 
       if(doesKnowSkill(SKILL_CINTAI))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CINTAI, 20);
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CINTAI, 15);
 
       if(doesKnowSkill(SKILL_ADVANCED_KICKING))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_KICKING, 20);
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_KICKING, 15);
 
       if(doesKnowSkill(SKILL_IRON_FIST) && 
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
-	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 20);
+	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 15);
 
       if(doesKnowSkill(SKILL_CRIT_HIT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 20);
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
-	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 20);
+	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 15);
     }
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {
@@ -3745,8 +3745,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if (victimCanAttack) {
       if (canAttack(isprimary)) {
         // defense hones
-        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (120 - (2 * myLevel)));
-        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (120 - (2 * myLevel)));
+        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (100 - (2 * myLevel)));
+        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (100 - (2 * myLevel)));
       }
     }
   }
@@ -3853,13 +3853,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   } else {
     if (vict->isPc() && vict->desc) {
       if (canAttack(isprimary)) {
-        if (victimCanAttack) {
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (200 - (2 * myLevel)));
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (200 - (2 * myLevel)));
-        } else {
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (300 - (2 * myLevel)));
-          vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (300 - (2 * myLevel)));
-        }
+        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DEFENSE, (140 - (2 * myLevel)));
+        vict->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_DEFENSE, (140 - (2 * myLevel)));
       }
     }
     if (vict->getHit() <= 0)
