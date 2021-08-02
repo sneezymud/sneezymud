@@ -1383,6 +1383,11 @@ int TThing::visibility() const
         cbs += 5;
     }
 
+    // Drow are hard to see indoors maybe
+    if (tbt->getRace() == RACE_DROW && tbt->roomp->isIndoorSector()) {
+      cbs += 5;
+    }
+
   // shadowy eq
     int eqbonus=0, j;
     TObj *to;

@@ -2165,6 +2165,13 @@ const char* const home_terrains[MAX_HOME_TERS] =
   "deep troll",
   "UNUSED",
   "UNUSED",
+
+  // drow
+  "society drow",
+  "low class drow",
+  "outcast drow",
+  "tunnel drow",
+  "deep drow",
 };
 
 const char * const corpse_flags[MAX_CORPSE_FLAGS] =
