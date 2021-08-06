@@ -410,7 +410,8 @@ static int stab(TBeing *thief, TBeing * victim)
     if (dam == -1 || thief->reconcileDamage(victim, dam, tDamageType) == -1)
       return DELETE_VICT;
 
-    if (obj->checkSpec(victim, CMD_STAB, "-special-", thief) == DELETE_VICT)
+    auto limbString = limbEnumToString(tLimb);
+    if (obj->checkSpec(victim, CMD_STAB, limbString, thief) == DELETE_VICT)
       return DELETE_VICT;
 
     return TRUE;
