@@ -28,7 +28,6 @@ int thiefQuestWeapon(TBeing *victim, cmdTypeT command, const char *arg, TObj *ob
 
   auto damage = 0;
   auto damageType = SKILL_STABBING;
-  sstring toChar, toRoom;
 
   if (command == CMD_STAB) {
     damage = thief->GetMaxLevel() * 1.5;
