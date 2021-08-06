@@ -137,33 +137,32 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
               FALSE, this, obj, victim, TO_NOTVICT);
         }
 
-        act("Suddenly, $n stabs you in the back!",
-            FALSE, this, obj, victim, TO_VICT);
+        act("Suddenly, $n stabs you in the back!", FALSE, this, obj, victim, TO_VICT);  
 
-	// poison
-	TBaseWeapon *tow;
-	if(obj && (tow = dynamic_cast<TBaseWeapon *>(obj)) && 
-	   tow->isPoisoned())
-	  tow->applyPoison(victim);
+        auto weapon = dynamic_cast<TBaseWeapon *>(obj);
+        
+        if (weapon && weapon->checkSpec(victim, CMD_BACKSTAB, "-special-", this) == DELETE_VICT) {
+          delete victim;
+          victim = NULL;
+          return DELETE_VICT;
+        }
 
+        // poison        
+        if (victim && weapon && weapon->isPoisoned())
+          weapon->applyPoison(victim);     
       }
     }
   } else {
-    act("$N quickly avoids your backstab, and you nearly cut your finger.",
-        FALSE, this, obj, victim, TO_CHAR);
-    act("$n tried to backstab you, but you avoid $m.",
-        FALSE, this, obj, victim, TO_VICT);
-    act("$n tried to backstab $N, but nearly cut $s own finger.",
-        FALSE, this, obj, victim, TO_NOTVICT);
-
+    act("$N quickly avoids your backstab, and you nearly cut your finger.", FALSE, this, obj,
+        victim, TO_CHAR);
+    act("$n tried to backstab you, but you avoid $m.", FALSE, this, obj, victim, TO_VICT);
+    act("$n tried to backstab $N, but nearly cut $s own finger.", FALSE, this, obj, victim,
+        TO_NOTVICT);
     d = 0;
   }
 
   if (reconcileDamage(victim, d, SKILL_BACKSTAB) == -1)
     return DELETE_VICT;
-
-  victim->addHated(this);
-
 
   return 0;
 }
@@ -248,14 +247,6 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
-
-  TGenWeapon * obj = dynamic_cast<TGenWeapon *>(heldInPrimHand());
-
-  if (obj &&
-      obj->checkSpec(victim, CMD_BACKSTAB, "-special-", this) == DELETE_VICT) {
-    delete victim;
-    victim = NULL;
-  } 
 
   return rc;
 }
@@ -490,10 +481,17 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj)
         act("$n sneaks up behind you and cuts your throat!",
             FALSE, this, obj, victim, TO_VICT);
 
-        // poison
-	      TBaseWeapon *tow;
-	      if(obj && (tow = dynamic_cast<TBaseWeapon *>(obj)) && tow->isPoisoned())
-	        tow->applyPoison(victim);
+        auto weapon = dynamic_cast<TGenWeapon *>(heldInPrimHand());
+
+        if (weapon && weapon->checkSpec(victim, CMD_SLIT, "-special-", this) == DELETE_VICT) {
+          delete victim;
+          victim = NULL;
+          return DELETE_VICT;
+        }
+
+        // poison        
+        if (victim && weapon && weapon->isPoisoned())
+          weapon->applyPoison(victim);
       }
     }
   } else {
@@ -509,9 +507,6 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj)
 
   if (reconcileDamage(victim, d, SKILL_THROATSLIT) == -1)
     return DELETE_VICT;
-
-  victim->addHated(this);
-
 
   return 0;
 }
@@ -596,14 +591,6 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
-
-  TGenWeapon * obj = dynamic_cast<TGenWeapon *>(heldInPrimHand());
-
-  if (obj &&
-      obj->checkSpec(victim, CMD_SLIT, "-special-", this) == DELETE_VICT) {
-    delete victim;
-    victim = NULL;
-  } 
 
   return rc;
 }
