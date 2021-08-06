@@ -1,67 +1,57 @@
 #include <stdio.h>
 
-#include "comm.h"
-#include "obj_base_weapon.h"
 #include "being.h"
+#include "comm.h"
 #include "extern.h"
+#include "obj_base_weapon.h"
 
-int weaponJambiyaSpecial(TBeing *tVictim, cmdTypeT tCmd, const char *tArg, TObj *tObj, TObj *)
-{
-  if (tCmd != CMD_STAB && tCmd != CMD_BACKSTAB)
-    return FALSE;
+int thiefQuestWeapon(TBeing *victim, cmdTypeT command, const char *arg, TObj *object, TObj *) {
+  if (command != CMD_STAB && command != CMD_BACKSTAB && command != CMD_SLIT) return false;
+  if (strcmp(arg, "-special-") && command != CMD_STAB) return false;
+  if (!victim || !object) return false;
 
-  if (strcmp(tArg, "-special-") ||
-      !tVictim || !tObj)
-    return FALSE;
+  auto limb = command == CMD_BACKSTAB ? WEAR_BACK
+              : command == CMD_SLIT   ? WEAR_NECK
+                                      : limbStringToEnum(arg);
 
-  TBaseWeapon *tWeapon;
-  int          tDamage = 0;
-  char         tToChar[256],
-               tToRoom[256];
-  TBeing      *tThief;
-  spellNumT    tDamageType;
+  if (limb == WEAR_NOWHERE || limb == HOLD_RIGHT || limb == HOLD_LEFT || limb == MAX_WEAR)
+    return false;
 
-  if (!(tWeapon = dynamic_cast<TBaseWeapon *>(tObj)) ||
-      !(tThief  = dynamic_cast<TBeing  *>(tObj->equippedBy)))
-    return FALSE;
+  auto limbDescription = victim->describeBodySlot(limb);
 
-  bool forceSuccess = tThief->getName() == "Lapsos";
+  // 50% chance to proc on successful special attack
+  if (!::number(0, 1)) return false;
 
-  if (::number(0, 100) && !forceSuccess)
-    return FALSE;
+  auto weapon = dynamic_cast<TBaseWeapon *>(object);
+  auto thief = weapon ? dynamic_cast<TBeing *>(weapon->equippedBy) : nullptr;
+  if (!weapon || !thief) return false;
 
-  if (tCmd == CMD_STAB) {
-    tDamage = max(1, min(50, (int) (tWeapon->getWeapDamLvl() / 5)));
-    tDamageType = SKILL_STABBING;
+  auto damage = 0;
+  auto damageType = SKILL_STABBING;
+  sstring toChar, toRoom;
 
-    sprintf(tToChar, "Your $o slides deep into $N.");
-    sprintf(tToRoom, "$n's $o slides deep into $N.");
+  if (command == CMD_STAB) {
+    damage = thief->GetMaxLevel() * 1.5;
+  } else if (command == CMD_BACKSTAB) {
+    damage = thief->GetMaxLevel() * 2.5;
+    damageType = SKILL_BACKSTAB;
+    act("<W>The weapon sears down $N's spine!<z>", FALSE, thief, weapon, victim, TO_CHAR);
+    act("<W>The weapon sears down $N's spine!<z>", FALSE, thief, weapon, victim, TO_ROOM);
   } else {
-    tDamage = max(1, min(50, (int) (tWeapon->getWeapDamLvl() / 2)));
-    tDamageType = SKILL_BACKSTAB;
-
-    sprintf(tToChar, "Your $o sears $N down the spine.");
-    sprintf(tToRoom, "$n's $o sears $N down the spine.");
+    damage = thief->GetMaxLevel() * 3;
+    damageType = SKILL_THROATSLIT;
+    act("<W>The weapon sears through $N's throat!<z>", FALSE, thief, weapon, victim, TO_CHAR);
+    act("<W>The weapon sears through $N's throat!<z>", FALSE, thief, weapon, victim, TO_ROOM);
   }
 
-  tDamage = ::number(1, tDamage);
+  int rc = thief->reconcileDamage(victim, damage, damageType);
+  if (IS_SET_DELETE(rc, DELETE_VICT)) return DELETE_VICT;
 
-  act(tToChar, FALSE, tThief, tWeapon, tVictim, TO_CHAR);
-  act(tToRoom, FALSE, tThief, tWeapon, tVictim, TO_ROOM);
-
-  if (tThief->reconcileDamage(tVictim, tDamage, tDamageType) == -1)
-    return DELETE_VICT;
-
-  if (tCmd == CMD_BACKSTAB && !notBleedSlot(WEAR_BACK) &&
-      !tVictim->isUndead() && tVictim->slotChance(WEAR_BACK) &&
-      !tVictim->isImmune(IMMUNE_BLEED, WEAR_BACK) &&
-      !tVictim->isLimbFlags(WEAR_BACK, PART_BLEEDING)) {
-    sprintf(tToRoom, "Blood begins to pour from $n's %s!",
-            tVictim->describeBodySlot(WEAR_BACK).c_str());
-    act(tToRoom, FALSE, tVictim, NULL, NULL, TO_ROOM);
-    tVictim->rawBleed(WEAR_BACK, (tWeapon->getWeapDamLvl() * 3) + 100,
-                      SILENT_YES, CHECK_IMMUNITY_NO);
+  if (victim->slotChance(limb) && !victim->isImmune(IMMUNE_BLEED, WEAR_BACK) &&
+      !victim->isLimbFlags(limb, PART_BLEEDING) && !victim->isUndead()) {
+    act("<r>Blood begins to pour from the wound!<z>", false, victim, nullptr, nullptr, TO_ROOM);
+    victim->rawBleed(limb, thief->GetMaxLevel() * 3 + 100, SILENT_YES, CHECK_IMMUNITY_NO);
   }
 
-  return TRUE;
+  return true;
 }
