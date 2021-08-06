@@ -32,6 +32,7 @@
 
 #include "discipline.h"
 #include "skills.h"
+#include "obj.h"
 
 class CDMurder : public CDiscipline
 {
