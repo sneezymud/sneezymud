@@ -1145,3 +1145,89 @@ int TBeing::hurtLimb(unsigned int dam, wearSlotT part_hit)
   }
   return FALSE;
 }
+
+const char *limbEnumToString(wearSlotT limb) {
+  switch (limb) {
+    case WEAR_NOWHERE:
+      return "WEAR_NOWHERE";
+    case WEAR_HEAD:
+      return "WEAR_HEAD";
+    case WEAR_NECK:
+      return "WEAR_NECK";
+    case WEAR_BODY:
+      return "WEAR_BODY";
+    case WEAR_BACK:
+      return "WEAR_BACK";
+    case WEAR_ARM_R:
+      return "WEAR_ARM_R";
+    case WEAR_ARM_L:
+      return "WEAR_ARM_L";
+    case WEAR_WRIST_R:
+      return "WEAR_WRIST_R";
+    case WEAR_WRIST_L:
+      return "WEAR_WRIST_L";
+    case WEAR_HAND_R:
+      return "WEAR_HAND_R";
+    case WEAR_HAND_L:
+      return "WEAR_HAND_L";
+    case WEAR_FINGER_R:
+      return "WEAR_FINGER_R";
+    case WEAR_FINGER_L:
+      return "WEAR_FINGER_L";
+    case WEAR_WAIST:
+      return "WEAR_WAIST";
+    case WEAR_LEG_R:
+      return "WEAR_LEG_R";
+    case WEAR_LEG_L:
+      return "WEAR_LEG_L";
+    case WEAR_FOOT_R:
+      return "WEAR_FOOT_R";
+    case WEAR_FOOT_L:
+      return "WEAR_FOOT_L";
+    case HOLD_RIGHT:
+      return "HOLD_RIGHT";
+    case HOLD_LEFT:
+      return "HOLD_LEFT";
+    case WEAR_EX_LEG_R:
+      return "WEAR_EX_LEG_R";
+    case WEAR_EX_LEG_L:
+      return "WEAR_EX_LEG_L";
+    case WEAR_EX_FOOT_R:
+      return "WEAR_EX_FOOT_R";
+    case WEAR_EX_FOOT_L:
+      return "WEAR_EX_FOOD_L";
+    case MAX_WEAR:
+      return "MAX_WEAR";
+    default:
+      return "WEAR_NOWHERE";
+  }
+}
+
+wearSlotT limbStringToEnum(const char *limbString) {
+  if (!strcmp(limbString, "WEAR_NOWHERE")) return WEAR_NOWHERE;
+  if (!strcmp(limbString, "WEAR_HEAD")) return WEAR_HEAD;
+  if (!strcmp(limbString, "WEAR_NECK")) return WEAR_NECK;
+  if (!strcmp(limbString, "WEAR_BODY")) return WEAR_BODY;
+  if (!strcmp(limbString, "WEAR_BACK")) return WEAR_BACK;
+  if (!strcmp(limbString, "WEAR_ARM_R")) return WEAR_ARM_R;
+  if (!strcmp(limbString, "WEAR_ARM_L")) return WEAR_ARM_L;
+  if (!strcmp(limbString, "WEAR_WRIST_R")) return WEAR_WRIST_R;
+  if (!strcmp(limbString, "WEAR_WRIST_L")) return WEAR_WRIST_L;
+  if (!strcmp(limbString, "WEAR_HAND_R")) return WEAR_HAND_R;
+  if (!strcmp(limbString, "WEAR_HAND_L")) return WEAR_HAND_L;
+  if (!strcmp(limbString, "WEAR_FINGER_R")) return WEAR_FINGER_R;
+  if (!strcmp(limbString, "WEAR_FINGER_L")) return WEAR_FINGER_L;
+  if (!strcmp(limbString, "WEAR_WAIST")) return WEAR_WAIST;
+  if (!strcmp(limbString, "WEAR_LEG_R")) return WEAR_LEG_R;
+  if (!strcmp(limbString, "WEAR_LEG_L")) return WEAR_LEG_L;
+  if (!strcmp(limbString, "WEAR_FOOT_R")) return WEAR_FOOT_R;
+  if (!strcmp(limbString, "WEAR_FOOT_L")) return WEAR_FOOT_L;
+  if (!strcmp(limbString, "HOLD_RIGHT")) return HOLD_RIGHT;
+  if (!strcmp(limbString, "HOLD_LEFT")) return HOLD_LEFT;
+  if (!strcmp(limbString, "WEAR_EX_LEG_R")) return WEAR_EX_LEG_R;
+  if (!strcmp(limbString, "WEAR_EX_LEG_L")) return WEAR_EX_LEG_L;
+  if (!strcmp(limbString, "WEAR_EX_FOOT_R")) return WEAR_EX_FOOT_R;
+  if (!strcmp(limbString, "WEAR_EX_FOOT_L")) return WEAR_EX_FOOT_L;
+  if (!strcmp(limbString, "MAX_WEAR")) return MAX_WEAR;
+  return WEAR_NOWHERE;
+}
