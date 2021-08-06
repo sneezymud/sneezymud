@@ -3380,7 +3380,7 @@ void TBeing::combatFatigue(TThing *o)
   // randomly fatigue, monks will tire faster then others 
   if ((!hasClass(CLASS_MONK) && !::number(0,19)) ||
       (!::number(0,4)))
-    addToMove(::number(-1,0));
+    addToMove(-1);
   
   if (!o)
     return;
@@ -3392,13 +3392,13 @@ void TBeing::combatFatigue(TThing *o)
   TBaseWeapon * tbw = dynamic_cast<TBaseWeapon *>(o);
   if (tbw && tbw->isPaired()) {
     if (::number(1,100) <= (int) (50 * 2 * tbw->getWeight() / (num * 3)))
-      addToMove(::number(-1,0));
+      addToMove(-1);
   } else if (tbw && !tbw->isPaired()) {
     if (::number(1,100) <= (int) (50 * 2 * tbw->getWeight() / ( 3 * num * 3 / 2))) {
-      addToMove(::number(-1,0));
+      addToMove(-1);
     } else {
       if (::number(1, 50) < (int) o->getWeight()) 
-        addToMove(::number(-1,0));
+	addToMove(-1);
     }
   }
 }
