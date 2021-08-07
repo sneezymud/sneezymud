@@ -69,8 +69,6 @@ const wearSlotT MIN_WEAR = WEAR_HEAD;
 const wearSlotT MAX_HUMAN_WEAR  = wearSlotT(HOLD_LEFT+1);
 extern wearSlotT & operator++(wearSlotT &, int);
 extern wearSlotT pickRandomLimb(bool = false);
-extern const char *limbEnumToString(wearSlotT);
-extern wearSlotT limbStringToEnum(const char *);
 
 struct TransformLimbType {
   char name[20];
