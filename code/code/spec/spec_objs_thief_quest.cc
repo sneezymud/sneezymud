@@ -6,21 +6,27 @@
 #include "obj_base_weapon.h"
 
 int thiefQuestWeapon(TBeing *victim, cmdTypeT command, const char *arg, TObj *object, TObj *) {
+  wearSlotT limb = WEAR_NOWHERE;
+
   if (command != CMD_STAB && command != CMD_BACKSTAB && command != CMD_SLIT) return false;
-  if (strcmp(arg, "-special-") && command != CMD_STAB) return false;
+  if (command == CMD_STAB) limb = static_cast<wearSlotT>(reinterpret_cast<uintptr_t>(arg));
+  if (command != CMD_STAB && strcmp(arg, "-special-")) return false;
   if (!victim || !object) return false;
 
-  auto limb = command == CMD_BACKSTAB ? WEAR_BACK
+  limb = command == CMD_BACKSTAB ? WEAR_BACK
               : command == CMD_SLIT   ? WEAR_NECK
-                                      : limbStringToEnum(arg);
+                                      : limb;
 
   if (limb == WEAR_NOWHERE || limb == HOLD_RIGHT || limb == HOLD_LEFT || limb == MAX_WEAR)
     return false;
 
   auto limbDescription = victim->describeBodySlot(limb);
 
-  // 50% chance to proc on successful special attack
-  if (!::number(0, 1)) return false;
+  // 10% chance on stab, 50% on backstab/slit
+  if (command == CMD_STAB) {
+    if (::number(0, 9)) return false;
+  } else if (::number(0, 1))
+    return false;
 
   auto weapon = dynamic_cast<TBaseWeapon *>(object);
   auto thief = weapon ? dynamic_cast<TBeing *>(weapon->equippedBy) : nullptr;
