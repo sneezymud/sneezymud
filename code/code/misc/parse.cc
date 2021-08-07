@@ -903,7 +903,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           addToLifeforce(1);
           break;
         case CMD_WHO:
-          doWho(newarg.c_str());
+          doWhoNew(newarg.c_str());
           addToLifeforce(1);
           break;
         case CMD_BRUTTEST:

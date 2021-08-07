@@ -143,6 +143,39 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
   return tempbuf;
 }
 
+void TBeing::doWhoNew(const char *argument) {
+  int count = 0;
+  TBeing *p;
+
+  sstring who_buffer = "Players: (Add -? for online help)\n\r--------\n\r";
+
+  who_buffer += "blah\n\r";
+
+  std::set<std::string> uniqueAccounts;
+
+
+  for (p = character_list; p; p = p->next) {
+    if (p->isPc() && p->polyed == POLY_TYPE_NONE) {
+      if (dynamic_cast<TPerson *>(p)) {
+        if (p->desc && p->desc->account)
+          uniqueAccounts.insert(p->desc->account->name);
+        count++;
+
+        who_buffer=p->parseTitle(desc);
+        who_buffer += "   " + getWhoLevel(this, p);
+      }
+    }
+  }
+
+  
+  who_buffer += format("\n\rTotal Players : [%d] Max since last reboot : [%d] Avg Players : [%.1f]\n\r") % count % AccountStats::max_player_since_reboot % (stats.useage_iters ? (float) stats.num_users / stats.useage_iters : 0);
+
+
+  if (desc)
+    desc->page_string(who_buffer, SHOWNOW_NO, ALLOWREP_YES);
+}
+
+
 void TBeing::doWho(const char *argument)
 {
   TBeing *k, *p;
