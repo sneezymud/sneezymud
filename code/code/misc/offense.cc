@@ -836,19 +836,19 @@ int TBeing::doFlee(const char *arg) {
     return false;
   }
 
-  /* 
-  Do skill checks now and use results throughout so bSuccess only gets 
-  called once per flee attempt. 
+  /*
+  Do skill checks now and use results throughout so bSuccess only gets
+  called once per flee attempt.
   */
-  auto retreatSkill = getSkillNum(SKILL_RETREAT);  
+  auto retreatSkill = getSkillNum(SKILL_RETREAT);
   auto doesKnowRetreat = doesKnowSkill(retreatSkill);
-  auto wasRetreatSuccessful = doesKnowRetreat && bSuccess(retreatSkill);  
+  auto wasRetreatSuccessful = doesKnowRetreat && bSuccess(retreatSkill);
 
   auto panic = false;
   auto rc = 0;
   auto riderAsTBeing = dynamic_cast<TBeing *>(rider);
 
-  if (riding) {   
+  if (riding) {
     // Allow successful retreat and ride checks to avoid falling off mount
     if (!doesKnowSkill(SKILL_RIDE) || !bSuccess(SKILL_RIDE) || !wasRetreatSuccessful) {
       sendTo("Your panic causes you to fall.\n\r");
@@ -877,18 +877,16 @@ int TBeing::doFlee(const char *arg) {
       panic = true;
     }
     // If <this> is a mount being ridden
-  } else if (riderAsTBeing) {    
+  } else if (riderAsTBeing) {
     act("Your $O panics and attempts to flee!", true, riderAsTBeing, nullptr, this, TO_CHAR);
 
     // Allow deikhans to pass checks and prevent getting bucked
-    if (
-      riderAsTBeing->doesKnowSkill(SKILL_CHIVALRY) &&
-      riderAsTBeing->bSuccess(SKILL_CHIVALRY) && 
-      riderAsTBeing->doesKnowSkill(SKILL_RIDE) &&
-      riderAsTBeing->bSuccess(SKILL_RIDE)) {
-        act("You manage to calm $M down before $E dismounts you.", true, riderAsTBeing, nullptr, this, TO_CHAR);
-        return true;
-      }
+    if (riderAsTBeing->doesKnowSkill(SKILL_CHIVALRY) && riderAsTBeing->bSuccess(SKILL_CHIVALRY) &&
+        riderAsTBeing->doesKnowSkill(SKILL_RIDE) && riderAsTBeing->bSuccess(SKILL_RIDE)) {
+      act("You manage to calm $M down before $E dismounts you.", true, riderAsTBeing, nullptr, this,
+          TO_CHAR);
+      return true;
+    }
     rc = riderAsTBeing->fallOffMount(this, POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       riderAsTBeing->reformGroup();
@@ -901,15 +899,33 @@ int TBeing::doFlee(const char *arg) {
 
   playsound(pickRandSound(SOUND_FLEE_01, SOUND_FLEE_03), SOUND_TYPE_COMBAT);
 
-  // Create vector containing all currently valid movement directions
+  auto chosenDir = getDirFromChar(arg);
+
+  /*
+    Whether retreating or fleeing, if they input a direction, check if it's a valid
+    dir and return if not. If they've chosen a valid direction, actually do the
+    checks to see if they succeed in fleeing that way further down.
+  */
+  if (chosenDir != DIR_NONE && !canFleeThisWay(this, chosenDir)) {
+    act("You can't escape in that direction!", true, this, nullptr, nullptr, TO_CHAR);
+    return true;
+  }
+
+  /*
+    Create vector containing all currently valid flee directions, except for
+    the chosen direction if one was given.
+  */
   std::vector<dirTypeT> validDirections;
   for (auto direction = MIN_DIR; direction < MAX_DIR; direction++) {
+    if (direction == chosenDir) continue;
     if (canFleeThisWay(this, direction)) validDirections.push_back(direction);
   }
 
-  // If there are no valid flee directions, simply return with the panic
-  // message.
-  if (validDirections.size() == 0) {
+  /*
+    If there are no valid flee directions (doors closed, etc), simply return with the panic
+    message.
+  */
+  if (validDirections.size() == 0 && chosenDir == DIR_NONE) {
     sendTo("PANIC! You couldn't escape!\n\r");
 
     // Handle troglodyte racial perk
@@ -924,9 +940,14 @@ int TBeing::doFlee(const char *arg) {
     return true;
   }
 
-  // Randomly select a valid direction for use later
-  auto randomDir = validDirections[::number(0, validDirections.size() - 1)];
-  auto chosenDir = getDirFromChar(arg);
+  /*
+    Randomly select a valid flee direction for later use. If chosenDir is
+    the only valid flee direction, just use it as randomDir. Otherwise choose
+    any valid direction that's *not* chosenDir.
+  */
+  auto randomDir = validDirections.size() == 0
+                       ? chosenDir
+                       : validDirections[::number(0, validDirections.size() - 1)];
 
   // Save reference to who <this> was fighting for later
   auto enemy = fight();
@@ -1009,7 +1030,6 @@ int TBeing::doFlee(const char *arg) {
   // Determine if enemy begins hunting <this>
   auto enemyAsTMonster = dynamic_cast<TMonster *>(enemy);
   if (!(enemy->isPc()) && enemyAsTMonster) {
-   
     auto percent =
         (int)(100 * (double)enemyAsTMonster->getHit() / (double)enemyAsTMonster->hitLimit());
 
@@ -1041,7 +1061,7 @@ int TBeing::doFlee(const char *arg) {
     }
   }
 
-  return true; 
+  return true;
 }
 
 // return DELETE_THIS if this should die
