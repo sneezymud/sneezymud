@@ -513,44 +513,36 @@ int TMonster::getMobDamage() const
   return max(1, idamrnd);
 }
 
-int TMonster::lookForEngaged(const TBeing *ch)
-{
-  // here's some AI
-  // tank and healer fight mob, tank flees, mob should now beat on
-  // healer (regardless of whether he engaged or not?)
-  if (isPc())
-    return FALSE;
-  // if someone is attacking me directly, bypass
-  if (attackers > 0)
-    return FALSE;
-  if (!isSmartMob(0))
-    return FALSE;
+int TMonster::lookForEngaged(const TBeing *previousAttacker) {
+  if (isPc()) return false;
 
-  TThing * t;
-  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-    t=*(it++);
-    if (t == this || (ch && dynamic_cast<const TBeing *>(t) == ch))
+  // if someone is attacking me directly, bypass
+  if (attackers > 0) return false;
+
+  for (auto thing : roomp->stuff) {
+    if (thing == this ||
+        (previousAttacker && dynamic_cast<const TBeing *>(thing) == previousAttacker))
       continue;
-    TBeing *tbt = dynamic_cast<TBeing *>(t);
-    if (!tbt)
-      continue;
-    if (tbt->fight() == this) {
-      // I'm a smart mob, and, oh look, tbt is engaged with me...
-      int rc = takeFirstHit(*tbt);
+
+    auto thingAsTBeing = dynamic_cast<TBeing *>(thing);
+    if (!thingAsTBeing) continue;
+
+    if (thingAsTBeing->fight() == this) {
+      auto rc = takeFirstHit(*thingAsTBeing);
+
       if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        delete tbt;
-        tbt = NULL;
+        delete thingAsTBeing;
+        thingAsTBeing = nullptr;
       }
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
+
+      if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      }
-      return TRUE;
+      
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
-
-
 
 bool TMonster::isShopkeeper() const {
   if(spec==SPEC_SHOPKEEPER || spec==SPEC_REPAIRMAN ||
