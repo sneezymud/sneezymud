@@ -133,32 +133,32 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent) {
   return TRUE;
 }
 
-static int bash(TBeing *attacker, TBeing *victim, spellNumT skill) {   
-  int brawlingLearnedness = attacker->getAdvLearning(skill);
-  TBaseWeapon *weaponInPrimaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInPrimHand());
-  TBaseWeapon *weaponInSecondaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInSecHand());
-  TBaseClothing *itemInSecondaryHand = dynamic_cast<TBaseClothing *>(attacker->heldInSecHand());  
-  bool isWielding2Hander = weaponInPrimaryHand && weaponInPrimaryHand->isPaired();
-  bool isHoldingShield = itemInSecondaryHand && itemInSecondaryHand->isShield();
-  bool isBarehanded = !weaponInPrimaryHand && !weaponInSecondaryHand;  
+static int bash(TBeing *attacker, TBeing *victim, spellNumT skill) {     
+  auto advLearnedness = attacker->getAdvLearning(skill);
+  auto weaponInPrimaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInPrimHand());
+  auto weaponInSecondaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInSecHand());
+  auto itemInSecondaryHand = dynamic_cast<TBaseClothing *>(attacker->heldInSecHand());  
+  auto isWielding2Hander = weaponInPrimaryHand && weaponInPrimaryHand->isPaired();
+  auto isHoldingShield = itemInSecondaryHand && itemInSecondaryHand->isShield();
+  auto isBarehanded = !weaponInPrimaryHand && !weaponInSecondaryHand;  
 
-  // Without this check, many warrior mobs won't be able to bash
+  // Without this check, most mobs won't be able to bash
   if (attacker->isPc()) {
     /*
-      Allow bash with weapon + no shield after 10% in brawling
+      Allow bash with weapon + no shield after 10% in advanced disc
     */
-    if (brawlingLearnedness <= 10 && !isHoldingShield) {    
+    if (advLearnedness <= 10 && !isHoldingShield) {    
         attacker->sendTo("You're not skilled enough to bash without a shield!\n\r");
         return FALSE;    
     }
 
     /* 
       Bashing while dual wielding, or single wielding a one-handed weapon in either hand 
-      with no shield, requires even higher brawling disc as there's no shield or heavy 
+      with no shield, requires even higher advanced disc as there's no shield or heavy 
       weapon to assist with the bash 
     */
     if (
-      brawlingLearnedness < 50 && 
+      advLearnedness < 50 && 
       !isHoldingShield && 
       !isWielding2Hander && 
       (weaponInPrimaryHand || weaponInSecondaryHand)
@@ -168,11 +168,11 @@ static int bash(TBeing *attacker, TBeing *victim, spellNumT skill) {
     } 
 
     /* 
-      Require near-maxed brawling disc to bash with no weapons or shield at all. Probably
+      Require near-maxed advanced disc to bash with no weapons or shield at all. Probably
       not a super common scenario. 
     */
     if (
-      brawlingLearnedness < 90 && 
+      advLearnedness < 90 && 
       isBarehanded &&
       !isHoldingShield
     ) {
@@ -202,17 +202,17 @@ static int bash(TBeing *attacker, TBeing *victim, spellNumT skill) {
   float modifier = 0.0;
 
  /*  
-    Maxed brawling disc lets one bash as if they were 10 levels higher. Bonus increases
-    linearly with brawling learnedness. 
+    Maxed advanced disc lets one bash as if they were 10 levels higher. Bonus increases
+    linearly with advanced disc learnedness. 
   */
-  modifier += ONE_LEVEL * ((float) brawlingLearnedness / 10.0);
+  modifier += ONE_LEVEL * ((float) advLearnedness / 10.0);
 
   /* 
-    Attacker with brawling disc using shield to bash, can get another bonus of
+    Attacker with advanced disc using shield to bash can get another bonus of
     up to +5 levels to distinguish shield bashing from weapon/shoulder bashing
     and also makes bash more of a tank-centric ability.
   */
-  modifier += ONE_LEVEL * ((float) brawlingLearnedness / 20.0);
+  modifier += ONE_LEVEL * ((float) advLearnedness / 20.0);
   
   float attackerWeight = attacker->getWeight();
   float victimWeight = victim->getWeight();
