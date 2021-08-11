@@ -513,33 +513,32 @@ int TMonster::getMobDamage() const
   return max(1, idamrnd);
 }
 
-int TMonster::lookForEngaged(const TBeing *previousAttacker) {
+int TMonster::lookForEngaged() {
   if (isPc()) return false;
 
-  // if someone is attacking me directly, bypass
   if (attackers > 0) return false;
 
-  for (auto thing : roomp->stuff) {
-    if (thing == this ||
-        (previousAttacker && dynamic_cast<const TBeing *>(thing) == previousAttacker))
-      continue;
+  auto isEngagedOpponent = [this](TThing *thingInRoom) {
+    auto thingAsTBeing = dynamic_cast<TBeing *>(thingInRoom);
+    return thingAsTBeing && thingAsTBeing->fight() == this;
+  };
 
-    auto thingAsTBeing = dynamic_cast<TBeing *>(thing);
-    if (!thingAsTBeing) continue;
+  auto stuff = roomp->stuff;
+  auto found = std::find_if(stuff.begin(), stuff.end(), isEngagedOpponent);
+  auto newOpponent = found != stuff.end() ? dynamic_cast<TBeing *>(*found) : nullptr;
 
-    if (thingAsTBeing->fight() == this) {
-      auto rc = takeFirstHit(*thingAsTBeing);
+  if (newOpponent) {
+    auto rc = takeFirstHit(*newOpponent);
 
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        delete thingAsTBeing;
-        thingAsTBeing = nullptr;
-      }
-
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-      
-      return true;
+    if (IS_SET_DELETE(rc, DELETE_VICT)) {
+      delete newOpponent;
+      newOpponent = nullptr;
     }
+
+    if (IS_SET_DELETE(rc, DELETE_THIS)) 
+      return DELETE_THIS;   
+
+    return true;
   }
   return false;
 }
