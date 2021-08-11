@@ -952,9 +952,6 @@ int TBeing::doFlee(const char *arg) {
   // Save reference to who <this> was fighting for later
   auto enemy = fight();
 
-  // Save reference to room from which <this> is attempting to flee
-  auto previousRoom = roomp;
-
   /*
     Determine which direction to actually use. If panicked, no flee direction
     chosen, (fighting + knows retreat + retreat failed), or (fighting + doesn't know retreat +
@@ -1013,43 +1010,31 @@ int TBeing::doFlee(const char *arg) {
   REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
   if (fight()) stopFighting();
   if (cantHit > 0) cantHit = 0;
+  if (enemy->fight() == this) enemy->stopFighting();
 
   // Make mobs fear enemy who forced them to flee
-  auto thisAsTMonster = dynamic_cast<TMonster *>(this);
   // Check IsPc() in case of disguised/polymorphed/otherwise transformed PC
-  if (!isPc() && thisAsTMonster) thisAsTMonster->addFeared(enemy);
+  auto thisAsTMonster = isPc() ? nullptr : dynamic_cast<TMonster *>(this);
+  if (thisAsTMonster) thisAsTMonster->addFeared(enemy);  
 
-  // Determine if enemy begins hunting <this>
-  auto enemyAsTMonster = dynamic_cast<TMonster *>(enemy);
-  if (!(enemy->isPc()) && enemyAsTMonster) {
+  /* 
+    Determine if enemy begins hunting <this>, then potentially look for 
+    remaining opponents who are engaged and make enemy attack them if found 
+  */
+  auto enemyAsTMonster = enemy->isPc() ? nullptr : dynamic_cast<TMonster *>(enemy);
+  if (enemyAsTMonster) {
     auto percent =
         (int)(100 * (double)enemyAsTMonster->getHit() / (double)enemyAsTMonster->hitLimit());
 
-    if (::number(1, 100) < percent) {
-      if (enemyAsTMonster->Hates(this, nullptr) || isOppositeFaction(enemyAsTMonster)) {
-        enemyAsTMonster->setHunting(this);
-      }
-    }
-  }
+    if (::number(1, 100) < percent &&
+        (enemyAsTMonster->Hates(this, nullptr) || isOppositeFaction(enemyAsTMonster)))
+      enemyAsTMonster->setHunting(this);
 
-  // Make enemy attack anything else still in the room fighting them
-  for (auto thing : previousRoom->stuff) {
-    auto thingAsTBeing = dynamic_cast<TBeing *>(thing);
-    if (!thingAsTBeing) continue;
-
-    // If true, thing == enemy so stop fight on their end too
-    if (thingAsTBeing->fight() == this) {
-      thingAsTBeing->stopFighting();
-
-      auto thingAsTMonster = dynamic_cast<TMonster *>(thingAsTBeing);
-      if (!thingAsTMonster) continue;
-
-      auto rc = thingAsTMonster->lookForEngaged(this);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) {
-        delete thingAsTMonster;
-        thingAsTMonster = nullptr;
-      }
-      if (rc == true) break;
+    auto rc = enemyAsTMonster->lookForEngaged();
+    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+      delete enemyAsTMonster;
+      enemyAsTMonster = nullptr;
+      enemy = nullptr;
     }
   }
 
