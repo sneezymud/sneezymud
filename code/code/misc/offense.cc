@@ -920,14 +920,7 @@ int TBeing::doFlee(const char *arg) {
     if (canFleeThisWay(this, direction)) validDirections.push_back(direction);
   }
 
-  /*
-    If there are no valid flee directions (doors closed, etc), simply return with the panic
-    message.
-  */
-  if (validDirections.size() == 0 && chosenDir == DIR_NONE) {
-    sendTo("PANIC! You couldn't escape!\n\r");
-
-    // Handle troglodyte racial perk
+  auto handleTrogRacial = [this]() {
     if (!::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
       act("In your panic you release some musk scent to cover your tracks.", false, this, nullptr,
           nullptr, TO_CHAR);
@@ -935,7 +928,15 @@ int TBeing::doFlee(const char *arg) {
       dropGas(::number(1, 3), GAS_MUSK);
       setCond(FULL, getCond(FULL) - 5);
     }
+  };
 
+  /*
+    If there are no valid flee directions (doors closed, etc), simply return with the panic
+    message.
+  */
+  if (validDirections.size() == 0 && chosenDir == DIR_NONE) {
+    sendTo("PANIC! You couldn't escape!\n\r");
+    handleTrogRacial();
     return true;
   }
 
@@ -999,15 +1000,7 @@ int TBeing::doFlee(const char *arg) {
 
   if (panic) {
     sendTo(format("Panic-stricken, you flee %s.\n\r") % dirs[dirToUse]);
-
-    // Handle troglodyte racial perk
-    if (!::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
-      act("In your panic you release some musk scent to cover your tracks.", false, this, 0,
-          nullptr, TO_CHAR);
-      act("$n releases some musk into the room!", false, this, 0, nullptr, TO_ROOM);
-      dropGas(::number(1, 3), GAS_MUSK);
-      setCond(FULL, getCond(FULL) - 5);
-    }
+    handleTrogRacial();
   } else if (wasRetreatSuccessful)
     sendTo(format("You skillfully retreat %s.\n\r") % dirs[dirToUse]);
   else
