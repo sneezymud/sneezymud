@@ -344,10 +344,6 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
       sendTo("You can't ride that!\n\r");
       return FALSE;
     }
-    if (horse->fight()) {
-      sendTo("Trying to ride something involved in a life-or-death fight is not advisable.\n\r");
-      return FALSE;
-    }
     if (horse->getNumRiders(this) >= horse->getMaxRiders()) {
       sendTo(COLOR_MOBS, format("The maximum number of riders are already riding %s.\n\r") % horse->getName());
       return FALSE;
@@ -391,6 +387,51 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
 	return FALSE;
       }
     }    
+    if (roomp && !roomp->isFlyingSector()) {
+      if (horse->isFlying() && !isFlying()) {
+	// Non-deikhans without flying attempting to mount a flying mount
+        if (!hasClass(CLASS_DEIKHAN)) {
+          sendTo("You can't mount something that is flying.\n\r");
+          return FALSE;
+        } 
+	// Deikhans without flying attempting to mount a flying mount
+	else { 
+	  // Deikhan is not skilled enough attempt coaxing the mount down
+	  if (getSkillValue(SKILL_RIDE_WINGED) < 70) {
+            sendTo("I am afraid you don't know enough about winged creatures to mount one while it is flying.\n\r");
+            return FALSE;
+	  // Deikhan is skilled enough to attempt and succeeds
+          } else if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
+            if (!silent) act("You coax $N to land so you can mount.",
+                TRUE, this, NULL, horse, TO_CHAR);
+            if (!silent) act("$n coaxes you into landing, you feel charmed and comply.",
+                TRUE, this, NULL, horse, TO_VICT);
+            if (!silent) act("$n coaxes $N into landing.",
+                TRUE, this, NULL, horse, TO_NOTVICT);
+            horse->doLand();
+
+            if (horse->getPosition() != POSITION_STANDING) {
+              sendTo("Oddly enough you still failed.\n\r");
+              horse->sendTo("Oddly enough they still failed.\n\r");
+              act("Oddly enough $n still failed.",
+                  TRUE, this, NULL, horse, TO_NOTVICT);
+              return FALSE;
+            }
+	  // Deikhan is skilled enough to attempt but fails 
+          } else {
+            act(format("You attempt to coax $N into landing but %s seems to ignore you.")
+                % horse->thirdPerson(POS_SUBJECT),
+                TRUE, this, NULL, horse, TO_CHAR);
+            act("The Nerve!  $n just tried to make you land.",
+                TRUE, this, NULL, horse, TO_VICT);
+            act(format("$n attempts to coax $N into landing, who promptly ignores %s.")
+                % thirdPerson(POS_OBJECT),
+                TRUE, this, NULL, horse, TO_NOTVICT);
+            return FALSE;
+          }
+        }
+      }
+    }
     if (!isImmortal() && (fight() || horse->fight())) {
       learn = getSkillValue(SKILL_RIDE) + 
 	advancedRidingBonus(dynamic_cast<TMonster *>(horse));
@@ -429,51 +470,6 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
         if (!horse->isPc())
           dynamic_cast<TMonster *>(horse)->aiHorse(this);
         return FALSE;
-      }
-    }
-    if (roomp && !roomp->isFlyingSector()) {
-      if (isFlying()) {
-        if (!horse->isFlying()) {
-          sendTo("Riding a grounded mount while flying is impossible.\n\r");
-          return FALSE;
-        }
-      }
-      if (horse->isFlying() && !isFlying()) {
-        if (!hasClass(CLASS_DEIKHAN)) {
-          sendTo("You can't mount something that is flying.\n\r");
-          return FALSE;
-        } else if (getSkillValue(SKILL_RIDE_WINGED) < 70) {
-          sendTo("I am afraid you don't know enough about winged creatures to mount one while it is flying.\n\r");
-          return FALSE;
-        } else {
-          if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
-            if (!silent) act("You coax $N to land so you can mount.",
-                TRUE, this, NULL, horse, TO_CHAR);
-            if (!silent) act("$n coaxes you into landing, you feel charmed and comply.",
-                TRUE, this, NULL, horse, TO_VICT);
-            if (!silent) act("$n coaxes $N into landing.",
-                TRUE, this, NULL, horse, TO_NOTVICT);
-            horse->doLand();
-
-            if (horse->getPosition() != POSITION_STANDING) {
-              sendTo("Oddly enough you still failed.\n\r");
-              horse->sendTo("Oddly enough they still failed.\n\r");
-              act("Oddly enough $n still failed.",
-                  TRUE, this, NULL, horse, TO_NOTVICT);
-              return FALSE;
-            }
-          } else {
-            act(format("You attempt to coax $N into landing but %s seems to ignore you.")
-                % horse->thirdPerson(POS_SUBJECT),
-                TRUE, this, NULL, horse, TO_CHAR);
-            act("The Nerve!  $n just tried to make you land.",
-                TRUE, this, NULL, horse, TO_VICT);
-            act(format("$n attempts to coax $N into landing, who promptly ignores %s.")
-                % thirdPerson(POS_OBJECT),
-                TRUE, this, NULL, horse, TO_NOTVICT);
-            return FALSE;
-          }
-        }
       }
     }
 
@@ -641,8 +637,9 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
         }
         dismount(POSITION_STANDING);
         doFly();
-      } else {
-        sendTo("You must order your mount to land before dismounting.\n\r");
+      }
+      else {
+        sendTo("It would be a poor idea to leave your flying mount while in mid-air, without the ability to fly yourself.\n\r");
         return FALSE;
       } 
     } else if (horse->isFlying()) {
@@ -654,7 +651,22 @@ int TBeing::doMount(const char *arg, cmdTypeT cmd, TBeing *h, silentTypeT silent
         }
         dismount(POSITION_STANDING);
         doFly();
-      } else {
+      } 
+      else if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
+	  if (!silent) { 
+	     act("You coax $N to land so you can dismount.", TRUE, this, NULL, horse, TO_CHAR);
+	     act("$n coaxes you into landing, you feel charmed and comply.", TRUE, this, NULL, horse, TO_VICT);
+	     act("$n coaxes $N into landing.", TRUE, this, NULL, horse, TO_NOTVICT); 
+	  }
+	  horse->doLand();
+
+          if (!silent) {
+             act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
+             act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
+             act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+          }
+          dismount(POSITION_STANDING);
+      } else { 
         sendTo("You must order your mount to land before dismounting.\n\r");
         return FALSE;
       }
@@ -799,7 +811,19 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
     check =  horse->GetMaxLevel();
     check += dynamic_cast<TMonster *>(horse)->anger() / 10;
     check -= ch->GetMaxLevel();
+
+    if (ch->doesKnowSkill(SKILL_RIDE))
     check -= ch->getSkillValue(SKILL_RIDE)/10;
+
+    // Bonus for proficiency in advanced riding disc.
+    if (ch->doesKnowSkill(SKILL_ADVANCED_RIDING))
+      check -= ch->getSkillValue(SKILL_ADVANCED_RIDING)/8;
+
+    // Bonus for proficiency in winged riding disc. 
+    // Safe to assume dragons are winged (?)
+    if (ch->doesKnowSkill(SKILL_RIDE_WINGED) && horse->mountSkillType() == SKILL_RIDE_WINGED)
+      check -= ch->getSkillValue(SKILL_RIDE_WINGED)/6;
+
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_PER, 1.5, 9.0, 5.0),
                     (int) horse->plotStat(STAT_CURRENT, STAT_PER, 4.5, 27.0, 15.0));
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_FOC, 1.5, 9.0, 5.0),
@@ -823,8 +847,22 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
     check = horse->GetMaxLevel();
     check += dynamic_cast<TMonster *>(horse)->anger() / 30;
     check -= ch->GetMaxLevel();
+
     if (ch->doesKnowSkill(SKILL_RIDE))
       check -= ch->getSkillValue(SKILL_RIDE)/10;
+
+    // Bonus for proficiency in advanced riding disc.
+    if (ch->doesKnowSkill(SKILL_ADVANCED_RIDING))
+      check -= ch->getSkillValue(SKILL_ADVANCED_RIDING)/8;
+
+    // Bonus for proficiency in type-specific mount ability
+    for (const auto skill : {SKILL_RIDE_WINGED, SKILL_RIDE_DOMESTIC, SKILL_RIDE_NONDOMESTIC, SKILL_RIDE_EXOTIC }) {
+      if (horse->mountSkillType() == skill && ch->doesKnowSkill(skill)) { 
+	 check -= ch->getSkillValue(skill)/6; 
+	 break;
+      }
+    }
+
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_PER, 1.5, 9.0, 5.0),
                     (int) horse->plotStat(STAT_CURRENT, STAT_PER, 4.5, 27.0, 15.0));
     check += number((int) horse->plotStat(STAT_CURRENT, STAT_FOC, 1.5, 9.0, 5.0),
@@ -879,5 +917,3 @@ int TBeing::getRiderHeight() const
 {
   return (82 * getHeight() / 100);
 }
-
-
