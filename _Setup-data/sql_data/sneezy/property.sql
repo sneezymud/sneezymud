@@ -1,8 +1,8 @@
--- MariaDB dump 10.18  Distrib 10.5.8-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.5.9-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: sneezy-db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	10.5.8-MariaDB-1:10.5.8+maria~focal
+-- Server version	10.5.9-MariaDB-1:10.5.9+maria~focal
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -81,4 +81,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-03 20:19:00
+-- Dump completed on 2021-08-16  2:35:07
