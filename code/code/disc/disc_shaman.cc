@@ -724,7 +724,9 @@ TTool *TBeing::getHeldTotem() {
 void TBeing::doSacrifice(const char *arg) {
   for (; isspace(*arg); arg++);
 
-  if (getPosition() != POSITION_STANDING) {
+  positionTypeT position = getPosition();
+
+  if (position != POSITION_STANDING && position != POSITION_FLYING) {
     sendTo("Have some respect! Stand to perform the sacrifice!\n\r");
     return;
   }
