@@ -1030,6 +1030,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 732;
     case SKILL_DIMENSIONAL_FOLD:
       return 733;
+    case SKILL_2H_SPEC:
+      return 734;
     case AFFECT_DISEASE:
       return 2500;
     case AFFECT_COMBAT:
@@ -2147,6 +2149,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_INEVITABILITY;
     case 733:
       return SKILL_DIMENSIONAL_FOLD;
+    case 734: 
+      return SKILL_2H_SPEC;
     case 2500:
       return AFFECT_DISEASE;
     case 2501:

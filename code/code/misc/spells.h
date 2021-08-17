@@ -356,6 +356,7 @@ enum spellNumT {
      SKILL_CLOSE_QUARTERS_FIGHTING,
      SKILL_RIPOSTE,
      SKILL_TAUNT,
+     SKILL_2H_SPEC,
 
      // end of warrior
 
