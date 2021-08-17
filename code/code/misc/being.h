@@ -1347,6 +1347,7 @@ class TBeing : public TThing {
   virtual float getStrDamModifier() const;
   virtual float getDexDamModifier() const;
   int getDexReaction() const;
+  int getKarReaction() const;
   int getAgiReaction() const;
   int getConShock() const;
   float getConHpModifier() const;
