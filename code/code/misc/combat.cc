@@ -39,6 +39,8 @@
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
 #include "rent.h"
+#include "disc_warrior.h"
+#include "disc_brawling.h"
 
 #define DAMAGE_DEBUG 0
 
