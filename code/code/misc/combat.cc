@@ -2343,13 +2343,13 @@ int TBeing::hit(TBeing *target, int pulse)
       if(doesKnowSkill(SKILL_IRON_FIST) && 
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 15);
-
-      if(doesKnowSkill(SKILL_CRIT_HIT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
+
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 15);
+      if(doesKnowSkill(SKILL_CRIT_HIT))
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {
