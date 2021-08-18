@@ -2103,6 +2103,56 @@ int TBeing::hit(TBeing *target, int pulse)
       target->desc->session.rounds_received[target->getCombatMode()]++;
   } 
 
+  if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      // This will eventually grant a chance to land a random warrior ability automatically while berserking.
+      // The abilities currently planned are:
+      //   - headbutt (1)
+      //   - kneestrike (2)
+      //   - bash (3)
+      //   - bodyslam (4)
+      //   - spin (5)
+      //   - stomp (situationally - opponent needs to be downed) (6)
+      //   - taunt (not particularly advantageous) (7)
+      /*
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && !::number(0,10)) {
+	 int roll = ::number(1,7;
+	 if (roll == 1) {
+           //TBeing::headbuttHit(this, target);
+         }
+	 else if (roll == 2) {
+ 	   //TBeing::kneestrikeHit(this, target);
+         }
+	 else if (roll == 3) {
+	   act("In a berserker rage, you crash into $N with all your might!", FALSE, this, 0, target, TO_CHAR);     
+	   act("In a berserker rage, $n crashes into $N!", FALSE, this, 0, target, TO_NOTVICT);     
+	   act("In a berserker rage, $n crashes into you!", FALSE, this, 0, target, TO_VICT);     
+ 	   TBeing::bashSuccess(target, SKILL_BASH);
+	 }
+	 else if (roll == 4) {
+ 	   //TBeing::bodyslamHit(this, target); 
+	 }
+	 else if (roll == 5) {
+ 	   //TBeing::spinHit(this, target);
+	 }
+	 else if (roll == 6) {
+ 	   //TBeing::stompHit(this, target);
+	 }
+	 else if (roll == 7) {
+	   if (doesKnowSkill(SKILL_TAUNT)) {
+ 	     TBeing::doTaunt(target.getName());
+           }
+	 }
+      } */
+
+      // Adding a chance per round to gain a stack of bloodlust while berserking and upon
+      // passing a successful advanced berserking check
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && 
+  	  doesKnowSkill(SKILL_BLOODLUST) && 
+	  bSuccess(getSkillLevel(SKILL_BLOODLUST), SKILL_BLOODLUST) && 
+	  !::number(0,5)) {
+        doBloodlust();
+      }
+    }
 
   // we come in here multiple times
   // 1 round is Pulse::COMBAT long
@@ -5888,6 +5938,53 @@ void doToughness(TBeing *ch)
   aff.bitvector = 0;
 
   ch->affectTo(&aff, -1);
+}
+
+
+void TBeing::doBloodlust()
+{
+  int MAX_BLOODLUST = 10;
+  affectedData *ch_affected;
+  if (!doesKnowSkill(SKILL_BLOODLUST))
+    return;
+  if (!awake() || getPosition() < POSITION_CRAWLING)
+    return;
+  if (!bSuccess(SKILL_BLOODLUST))
+    return;
+
+  int mod = 1;
+  if (affectedBySpell(SKILL_BLOODLUST))
+  {
+    for (ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_BLOODLUST) {
+        // set the mod and remove the affect so we can add it fresh
+        mod += ch_affected->modifier;
+        affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+  // Removing messages after we hit max stacks
+  if (mod < MAX_BLOODLUST) {
+    if (mod == MAX_BLOODLUST/2) {
+      act("<r>You feel the blood pumping in your veins, as your <R>bloodlust <r>continues to grow.<1>", 0, this, 0, 0, TO_CHAR);
+    }  
+    else if (mod == MAX_BLOODLUST) {
+      act("<r>Your desire for combat nearly overwhelms you, as you are overcome with <R>BLOODLUST.<1>", 0, this, 0, 0, TO_CHAR);
+    }  
+    else {
+      act("<r>You feel the bloodlust welling up inside you.<1>", 0, this, 0, 0, TO_CHAR);
+    }
+  }
+  mod = max(min(mod, MAX_BLOODLUST), 1);
+  affectedData aff1;
+  aff1.type = SKILL_BLOODLUST;
+  aff1.duration = Pulse::UPDATES_PER_MUDHOUR*3/2;
+  aff1.location = APPLY_DAMROLL;
+  aff1.modifier = mod;
+  aff1.bitvector = 0;
+  affectTo(&aff1, -1);
+  learnFromDoing(SKILL_BLOODLUST, SILENT_NO, 0);
 }
 
 void TBeing::doInevitability()

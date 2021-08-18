@@ -964,6 +964,10 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       } else 
         vlogf(LOG_MISC, format("%s killed by %s at Nowhere  Method: %s.") %  v->getName() % getName() % buf2);
     }
+
+    // Trigger bloodlust for attacker 
+    doBloodlust();
+
     // Mark an actual kill for the person giving the final blow
     if (desc) {
       if (roomp->isRoomFlag(ROOM_ARENA) || inPkZone()) 

@@ -358,6 +358,7 @@ enum spellNumT {
      SKILL_TAUNT,
      SKILL_2H_SPEC,
      SKILL_ADVANCED_BERSERKING,
+     SKILL_BLOODLUST,
 
      // end of warrior
 
