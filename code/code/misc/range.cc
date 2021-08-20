@@ -138,7 +138,7 @@ sprintf(buf, "Ranged debug: max_distance: %d\n\racceleration: %6.2f, velocity: %
 vlogf(LOG_BUG, buf);
 #endif
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 20);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 15);
   
   strncpy(local_vict, vict, sizeof(local_vict - 1));
 

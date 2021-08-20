@@ -305,7 +305,7 @@ int TTool::pickWithMe(TBeing *thief, const char *argument, const char *type, con
     else {
       act("$n begins fiddling with a lock.", FALSE, thief, 0, 0, TO_ROOM);
       act("You begin fiddling with a lock.", FALSE, thief, 0, 0, TO_CHAR);
-      thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_PICK_LOCK, 10);
+      thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_PICK_LOCK, 8);
 
       // silly, but what if they sit down and pick the lock...
       if (thief->task)

@@ -1,8 +1,8 @@
--- MariaDB dump 10.18  Distrib 10.5.8-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.5.9-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: sneezy-db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	10.5.8-MariaDB-1:10.5.8+maria~focal
+-- Server version	10.5.9-MariaDB-1:10.5.9+maria~focal
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -126,7 +126,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (81,'Connovar - Mage Academy Basement',1,9550,9574,2,30,NULL,1),
 (82,'Dash - Bandit Camp',1,9575,9599,2,20,NULL,1),
 (83,'Onslaught - Hold of Smuggler\'s Ship',1,9600,9624,2,30,NULL,1),
-(84,'Peel - Sunken Ship',1,9625,9649,2,1500,NULL,1),
+(84,'Peel - Sunken Ship',1,9625,9649,2,1728,NULL,1),
 (85,'Dash - Misc Rooms (19 rooms)',0,9650,9674,2,25,NULL,1),
 (86,'Hold of a Cargo Ship - Unused Block (25 rooms)',0,9675,9699,2,25,NULL,1),
 (87,'Mithros - Jungle Roads from Volcano',1,9700,9725,2,35,NULL,1),
@@ -266,7 +266,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (221,'Armagedon - Sea of Sorrows',1,27900,28499,2,45,NULL,1),
 (222,'Moath\'s Area (300 rooms)',0,28500,28799,2,25,NULL,1),
 (223,'Bartruce - Temple of the Undead',1,28800,28864,1,50,NULL,1),
-(224,'Bartruce - Vampire Crypt',1,28865,28899,2,999,NULL,1),
+(224,'Bartruce - Vampire Crypt',1,28865,28899,2,1728,NULL,1),
 (225,'Connovar - Trolloc Infested Farmsteads',1,28900,28999,2,35,NULL,1),
 (226,'Block For Quests (1000 rooms)',0,29000,29999,2,25,NULL,1),
 (227,'Therias - Arabian City (600 rooms)',0,30000,30599,2,25,NULL,1),
@@ -279,7 +279,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (234,'Ichiban - Drossway Road',1,31050,31099,2,25,NULL,1),
 (235,'Modaries\'s Zone (200 rooms)',0,31100,31299,2,25,NULL,1),
 (236,'Jesus - Player Kill Area',1,31300,31399,2,30,NULL,1),
-(237,'Bump - Dracolich Lair',1,31400,31449,1,1200,NULL,1),
+(237,'Bump - Dracolich Lair',1,31400,31449,1,1728,NULL,1),
 (238,'Angus - A Trail through the Parnithian Mountains',1,31450,31479,2,25,NULL,1),
 (239,'Peel - Brightmoon Outpost',1,31480,31499,2,25,NULL,1),
 (240,'Octogal - Bullywug Hunters',0,31500,31549,2,25,NULL,1),
@@ -389,4 +389,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-03 20:19:05
+-- Dump completed on 2021-08-16  2:35:15

@@ -1,8 +1,8 @@
--- MariaDB dump 10.18  Distrib 10.5.8-MariaDB, for debian-linux-gnu (x86_64)
+-- MariaDB dump 10.19  Distrib 10.5.9-MariaDB, for debian-linux-gnu (x86_64)
 --
 -- Host: sneezy-db    Database: sneezy
 -- ------------------------------------------------------
--- Server version	10.5.8-MariaDB-1:10.5.8+maria~focal
+-- Server version	10.5.9-MariaDB-1:10.5.9+maria~focal
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -133,7 +133,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Roothopper',7,1,'<o>a grimey janitor<z>'),
 ('Anderdr',4,1,'an elderly woman'),
 ('Salina',5,1,'<o>a homeless man<z>'),
-('Blaster',3,1,'Blaster'),
 ('HuoLee',3,1,'an old broken down horse'),
 ('Nilla',15,1,'Delgado'),
 ('Baozhi',2,1,'a cleric'),
@@ -288,7 +287,8 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Mortal',4,0,'no one'),
 ('Colambo',7,0,'no one'),
 ('Stark',20,0,'no one'),
-('Arya',21,0,'no one');
+('Arya',21,0,'no one'),
+('Aquaman',4,0,'no one');
 /*!40000 ALTER TABLE `permadeath` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -301,4 +301,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-05-03 20:19:00
+-- Dump completed on 2021-08-16  2:35:06
