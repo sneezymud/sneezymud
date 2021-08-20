@@ -5871,7 +5871,7 @@ void doToughness(TBeing *ch)
   }
 
   // stop giving feedback if we aren't increasing the affect
-  if (mod <= MAX_TOUGHNESS)
+  if (mod <= MAX_TOUGHNESS && ch->desc && !IS_SET(ch->desc->autobits, AUTO_NOSPAM))
     act("<r>You grit your teeth and think tough thoughts.<1>", 0, ch, 0, 0, TO_CHAR);
 
   mod = max(min(mod, MAX_TOUGHNESS), 1);
@@ -5919,7 +5919,7 @@ void TBeing::doInevitability()
   }
 
   // Too damn spammy
-  if (mod <= 1)
+  if (mod <= 1 && desc && !IS_SET(desc->autobits, AUTO_NOSPAM))
     act("<b>You grit your teeth and try to concentrate on hitting.<1>", 0, this, 0, 0, TO_CHAR);
 
   mod = max(min(mod, MAX_INEVITABILITY), 1);
