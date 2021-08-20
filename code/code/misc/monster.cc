@@ -523,9 +523,10 @@ int TMonster::lookForEngaged() {
     return thingAsTBeing && thingAsTBeing->fight() == this;
   };
 
-  auto stuff = roomp->stuff;
-  auto found = std::find_if(stuff.begin(), stuff.end(), isEngagedOpponent);
-  auto newOpponent = found != stuff.end() ? dynamic_cast<TBeing *>(*found) : nullptr;
+  StuffList::iterator found =
+      std::find_if(roomp->stuff.begin(), roomp->stuff.end(), isEngagedOpponent);
+
+  TBeing *newOpponent = found != roomp->stuff.end() ? dynamic_cast<TBeing *>(*found) : nullptr;
 
   if (newOpponent) {
     auto rc = takeFirstHit(*newOpponent);
