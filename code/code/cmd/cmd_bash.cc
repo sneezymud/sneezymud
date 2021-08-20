@@ -134,13 +134,13 @@ bool TBeing::canBash(TBeing *victim, silentTypeT silent) {
 }
 
 static int bash(TBeing *attacker, TBeing *victim, spellNumT skill) {     
-  auto advLearnedness = attacker->getAdvLearning(skill);
-  auto weaponInPrimaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInPrimHand());
-  auto weaponInSecondaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInSecHand());
-  auto itemInSecondaryHand = dynamic_cast<TBaseClothing *>(attacker->heldInSecHand());  
-  auto isWielding2Hander = weaponInPrimaryHand && weaponInPrimaryHand->isPaired();
-  auto isHoldingShield = itemInSecondaryHand && itemInSecondaryHand->isShield();
-  auto isBarehanded = !weaponInPrimaryHand && !weaponInSecondaryHand;  
+  int advLearnedness = attacker->getAdvLearning(skill);
+  TBaseWeapon *weaponInPrimaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInPrimHand());
+  TBaseWeapon *weaponInSecondaryHand = dynamic_cast<TBaseWeapon *>(attacker->heldInSecHand());
+  TBaseClothing *itemInSecondaryHand = dynamic_cast<TBaseClothing *>(attacker->heldInSecHand());  
+  bool isWielding2Hander = weaponInPrimaryHand && weaponInPrimaryHand->isPaired();
+  bool isHoldingShield = itemInSecondaryHand && itemInSecondaryHand->isShield();
+  bool isBarehanded = !weaponInPrimaryHand && !weaponInSecondaryHand;  
 
   // Without this check, most mobs won't be able to bash
   if (attacker->isPc()) {
