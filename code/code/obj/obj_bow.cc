@@ -145,7 +145,7 @@ void TBow::evaluateMe(TBeing *ch) const
   int learn = ch->getSkillValue(SKILL_EVALUATE);
 
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 
   ch->describeNoise(this, learn);
 
@@ -283,7 +283,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   the_arrow = dynamic_cast<TObj *>(stuff.front());
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 2);
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_SPEC, 40);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_SPEC, 20);
 
   if (ch->getSkillValue(SKILL_RANGED_PROF) < 10) {
     ch->sendTo("You can't even get the arrow out of the bow properly!\n\r");

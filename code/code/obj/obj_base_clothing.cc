@@ -136,7 +136,7 @@ void TBaseClothing::evaluateMe(TBeing *ch) const
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 
   ch->describeNoise(this, learn);
 

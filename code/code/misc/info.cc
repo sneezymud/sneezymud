@@ -1344,6 +1344,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_WORD_OF_RECALL:
       case SPELL_SANCTUARY:
       case SPELL_RELIVE:
+      case SPELL_CRUSADE:
       case SPELL_CURE_PARALYSIS:
       case SPELL_SECOND_WIND:
       case SPELL_HEROES_FEAST:
@@ -3928,7 +3929,7 @@ void TMagicItem::evaluateMe(TBeing *ch) const
   int learn2 = learn;
   int learn3 = learn;
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 
   // adjust for knowledge about magic stuff
   if (ch->hasClass(CLASS_RANGER)) {

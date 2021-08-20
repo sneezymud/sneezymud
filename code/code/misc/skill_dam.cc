@@ -175,8 +175,9 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
     double off = min(max(orig_lev, level), 60) * 16.67;
     off += max(0, max(orig_lev, level)-60) * 5;
     
-    // if I am higher level
     double mod = def-off;
+
+    // mod is > 0 if the victim is higher level that the attacker
     if (mod > 0) {
       // fixed_amt *= 60 - (3 * mod * 3 / 50)
       fixed_amt *= max(60 - (9 * mod / 50), 5.0);

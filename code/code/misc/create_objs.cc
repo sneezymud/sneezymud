@@ -323,7 +323,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
 	return;
       }
     } else {
-      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '', '%s')", exdes->keyword.c_str(), ch->name.c_str(), vnum)){
+      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '', '%s', %i)", exdes->keyword.c_str(), ch->name.c_str(), vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
 	return;
       }

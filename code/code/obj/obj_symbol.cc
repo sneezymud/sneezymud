@@ -255,7 +255,7 @@ void TSymbol::evaluateMe(TBeing *ch) const
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 
   if (learn > 10)
     ch->describeSymbolOunces(this, learn);

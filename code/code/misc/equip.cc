@@ -1059,7 +1059,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               equipChar(o, HOLD_RIGHT);
               // learn 2h spec as with dual wield
               if (doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
-                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, 100);
+                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, 60);
               }
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.05, TRUE, TRUE);
@@ -1114,7 +1114,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               // If fighting, make them lose a round or two. 
               skill = getSkillNum(SKILL_DUAL_WIELD);
               if (doesKnowSkill(skill) && dynamic_cast<TBaseWeapon *> (equipment[getPrimaryHold()])) {
-                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 100);
+                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 60);
               }
               loseRoundWear(0.05, TRUE, TRUE);
             }
@@ -1175,7 +1175,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
             // If fighting, make them lose a round or two. 
             skill = getSkillNum(SKILL_DUAL_WIELD);
             if (doesKnowSkill(skill) && dynamic_cast<TBaseWeapon *> (equipment[HOLD_LEFT])) {
-              learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 100);
+              learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 60);
             }
 
             loseRoundWear(0.05, TRUE, TRUE);
@@ -1236,7 +1236,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
             // If fighting, make them lose a round or two. 
             skill = getSkillNum(SKILL_DUAL_WIELD);
             if (doesKnowSkill(skill) && dynamic_cast<TBaseWeapon *> (equipment[HOLD_RIGHT])) {
-              learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 100);
+              learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 60);
             }
 
               loseRoundWear(0.05, TRUE, TRUE);

@@ -105,9 +105,9 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
       ch->task->calcNextUpdate(pulse, 4 * Pulse::MOBACT);
       if (!ch->task->status) {
         if (!ch->roomp->isRoomFlag(ROOM_NO_HEAL)) {
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_YOGINSA, 20);
+	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_YOGINSA, 15);
 	  if(ch->doesKnowSkill(SKILL_WOHLIN))
-	    ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_WOHLIN, 20);
+	    ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_WOHLIN, 15);
 
           learn = ch->getSkillValue(SKILL_YOGINSA);
           wohlin_learn = ch->getSkillValue(SKILL_WOHLIN);

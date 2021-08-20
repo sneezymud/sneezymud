@@ -973,31 +973,38 @@ APP_type apply_types[MAX_APPLY_TYPES] =
 };
 
 
+/*
+   Scale HP per level of non tank classes so that they get
+   35 levels worth of HP spread out over 50. Warriors and
+   deikhans get a full 50 levels' worth of HP over 50 levels.
+   Replaces the previous method of HP scaling with defense +
+   advanced defense.
+*/
 const struct class_info classInfo[MAX_CLASSES] =
 {
   {true, MAGE_LEVEL_IND, CLASS_MAGE, "mage", 
-   DISC_MAGE, DISC_LORE, 0.43, 7.5, "M"},
+   DISC_MAGE, DISC_LORE, 0.43, 7.5 * 35.0 / 50.0, "M"},
 
   {true, CLERIC_LEVEL_IND, CLASS_CLERIC, "cleric",
-   DISC_CLERIC, DISC_THEOLOGY, 0.47, 8, "C"},
+   DISC_CLERIC, DISC_THEOLOGY, 0.47, 8.0 * 35.0 / 50.0, "C"},
 
   {true, WARRIOR_LEVEL_IND, CLASS_WARRIOR, "warrior",
    DISC_WARRIOR, DISC_NONE, 0.47, 8.5, "W"},
 
   {true, THIEF_LEVEL_IND, CLASS_THIEF, "thief",
-   DISC_THIEF, DISC_NONE, 0.41, 8, "T"},
+   DISC_THIEF, DISC_NONE, 0.41, 8.0 * 35.0 / 50.0, "T"},
 
   {true, SHAMAN_LEVEL_IND, CLASS_SHAMAN, "shaman",
-   DISC_SHAMAN, DISC_NONE, 0.39, 7.5, "S"},
+   DISC_SHAMAN, DISC_NONE, 0.39, 7.5 * 35.0 / 50.0, "S"},
 
   {true, DEIKHAN_LEVEL_IND, CLASS_DEIKHAN, "deikhan",
    DISC_DEIKHAN, DISC_THEOLOGY, 0.44, 7.5, "D"},
 
   {true, MONK_LEVEL_IND, CLASS_MONK, "monk",
-   DISC_MONK, DISC_NONE, 0.44, 7.5, "K"},
+   DISC_MONK, DISC_NONE, 0.44, 7.5 * 35.0 / 50.0, "K"},
 
   {false, RANGER_LEVEL_IND, CLASS_RANGER, "ranger",
-   DISC_RANGER, DISC_NONE, 0.46, 7, "R"},
+   DISC_RANGER, DISC_NONE, 0.46, 7.0 * 35.0 / 50.0, "R"},
 
   {false, COMMONER_LEVEL_IND, CLASS_COMMONER, "commoner",
    DISC_ADVENTURING, DISC_NONE, 0.40, 5, "O"}
@@ -1372,21 +1379,21 @@ const struct material_type_numbers material_nums[200] =
 {
   {100, 100, 100, 100, 50, 11, 11, 5,10, 1, 0, 0, 0, 0, NULL, "undefined"},
   {100,  20, 100, 100, 5, 209, 0, 5,-1,8, 0, 1000, 75, 0.06, repairGeneric,"paper"},
-  {90, 0, 100, 100, 1, 11, 0, 30, -3,8, 0, 750, 65, 1, repairGeneric,"cloth"},
+  {90, 0, 100, 100, 1, 11, 0, 30, -3,8, 0, 750, 65, 1, repairHide,"cloth"},
   {50, 50, 95, 80, 7, 153, 105, 0,-2,1, 0, 250, 40, 0.2, repairGeneric,"wax"},
   {0, 100, 0, 50, 40, 0, 249, 0, 3,1, 0, 0, 5, 0.5, NULL,"glass"},
   {40, 30, 75, 50, 25, 42, 53, 255, 3,1, 0, 500, 25, 0.05, repairWood,"wood"},
-  {90, 0, 50, 100, 7, 22, 0, 40, -2,6, 0, 900, 80, 3, repairGeneric,"silk"},
+  {90, 0, 50, 100, 7, 22, 0, 40, -2,6, 0, 900, 80, 3, repairHide,"silk"},
   {75, 75, 75, 100, 5, 35, 55, 30, 1,2, 0, 0, 95, 0.8, repairSpiritual,"foodstuff"},
   {65, 25, 25, 100, 3, 0, 51, 0, -1,2, 0, 500, 50, 6, repairGeneric,"plastic"},
-  {75, 0, 0, 100, 10, 0, 0, 0, -2,1, 0, 0, 66, 3, repairGeneric,"rubber"},
+  {75, 0, 0, 100, 10, 0, 0, 0, -2,1, 0, 0, 66, 3, repairHide,"rubber"},
   {40, 20, 100, 100, 6, 209, 0, 10, 0,1, 0, 900, 80, 0.08, repairGeneric,"cardboard"},
   {40, 10, 75, 50, 2, 105, 0, 100, -1,2, 0, 750, 85, 0.75, repairGeneric,"string"},
   {75, 50, 25, 50, 4, 59, 79, 2, 0,1, 0, 0, 25, 10, repairMagical,"plasma"},
-  {83, 0, 100, 95, 2, 11, 0, 25, -3,6, 0, 600, 60, 1.25, repairGeneric,"toughened cloth"},
+  {83, 0, 100, 95, 2, 11, 0, 25, -3,6, 0, 600, 60, 1.25, repairHide,"toughened cloth"},
   {80, 100, 10, 40, 3, 0, 99, 20, 3, 1, 0, 0, 90, 3.2, repairOrganic,"coral"},
-  {80, 3, 80, 10, 2, 101, 0, 100, -1, 3, 0, 750, 70, 1, repairGeneric,"horsehair"},
-  {40, 10, 75, 50, 2, 105, 0, 100, -1, 2, 0, 750, 85, 1.2, repairGeneric,"hair"},
+  {80, 3, 80, 10, 2, 101, 0, 100, -1, 3, 0, 750, 70, 1, repairHide,"horsehair"},
+  {40, 10, 75, 50, 2, 105, 0, 100, -1, 2, 0, 750, 85, 1.2, repairHide,"hair"},
   {90, 5,  2, 50, 2, 103, 11,  99, -1, 4, 0, 0, 30, 0.3, repairDead,"ash"},
   {50, 65, 70, 25, 2,  92, 53, 100, -1, 1, 0, 0, 60, 1.3, repairRock, "pumice"},
 // slash susc, blunt susc, fire susc, pierce susc,
@@ -1427,7 +1434,7 @@ const struct material_type_numbers material_nums[200] =
   {75, 5, 5, 70, 20, 55, 55, 3, -2, 4, 0, 400, 20, 2, repairHide,"leather"},
   {55, 5, 1, 50, 25, 35, 36, 3, -1, 3, 0, 200, 30, 2.5, repairHide,"toughened leather"},
   {10, 50, 10, 30, 50, 11, 0, 0, 5, 1, 0, 0, 10, 157.5, repairOrganic,"dragon scale"},
-  {70, 0, 100, 75, 15, 33, 0, 50, -2, 4, 0, 800, 0,   1.1,   repairGeneric,"wool"},
+  {70, 0, 100, 75, 15, 33, 0, 50, -2, 4, 0, 800, 0,   1.1,   repairHide,"wool"},
   {45, 5, 100, 60, 15, 33, 0, 50, -2, 4, 0, 800, 30,   1.6,   repairHide,"fur"},
   {30, 5, 100, 45, 15, 0, 0, 60, -3, 1, 0, 900, 15,   1.4,   repairHide,"feathered"},
   {0, 0, 0, 0, 4, 0, 0, 255, 3, 1, 0, 0, 3,   15,   repairMagical,"liquid"},
@@ -1450,7 +1457,7 @@ const struct material_type_numbers material_nums[200] =
   {83, 13,15, 75, 25, 56, 56, 9, -3, 6, 0, 400, 33,   1.3,   repairHide,"soft leather"},
   {53,57,45, 65, 30, 0, 12,30, 2, 2, 0, 0, 12,   1.1,   repairOrganic,"fishscale"},
   {90, 15,20,95,33,12,11, 7, 1, 2, 0, 200, 10,   2.75,   repairDead,"ogre hide"},
-  {70, 0, 100, 75, 10, 33, 0, 50, -2, 4, 0, 750, 0,   3,   repairGeneric,"hemp"},
+  {70, 0, 100, 75, 10, 33, 0, 50, -2, 4, 0, 750, 0,   3,   repairHide,"hemp"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
 // flammability, acid_susc, price, base commod vnum, repair proc, mat_name 

@@ -1401,6 +1401,10 @@ critSuccT spellCritSuccess(TBeing *caster, spellNumT spell)
   // If there were spellcrit eq or other skills/buff to modify crit
   // -- it would go here --
 
+  // 5% spell crit for Crusade
+  if (caster->affectedBySpell(SPELL_CRUSADE))
+    chance += 500;
+
   int roll = ::number(1, 10000);
 
   if (roll <= chance) {
@@ -2763,21 +2767,15 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     learnAttemptLog(this, sknum);
     learnLearnednessLog(this, sknum, actual);
   }
-  int boost = 1;
 
   // this prevents them from gaining further without a minimum wait between
-  // increases.
-  // since the chance (below) drops off as they approach max, we don't want
-  // them to wait too long or they will never gain some skills
-  //
-  // allow them to boost the skill up to a "usable" amount without problems.
-  //
+  // increases. Allow less minimum wait time between gains 
 
-  if (actual <= 15) {
-    if ((time(0) - sk->lastUsed) < (1 * SECS_PER_REAL_MIN))  {
+  if (actual <= 50) {
+    if ((time(0) - sk->lastUsed) < (SECS_PER_REAL_MIN / 2))  {
       return FALSE;
     }
-  } else if ((time(0) - sk->lastUsed) < (5 * SECS_PER_REAL_MIN))  {
+  } else if ((time(0) - sk->lastUsed) < (3 * SECS_PER_REAL_MIN))  {
     return FALSE;
   }
 
@@ -2876,12 +2874,12 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   // we desire B to be in range 1.0 (high wis) to 3.5 (low wis) 
   // solving for a linear formula, gave slope of (-1/60) and intersect of 4
     float power;
-    power = 4.0 - ( plotStat(STAT_NATURAL, STAT_WIS, 0.5, 3.0, 1.75, 1.0));
-    int chance = (int) (1000.0 * (pow(amount, power)));
+    power = 3.0 - ( plotStat(STAT_CURRENT, STAT_WIS, 1.0, 2.5, 1.75, 1.0));
+    int chance = (int) (1000.0 * pow(amount, power));
 
     // make a minimum chance of increase.
     if (amount > 0.0)
-      chance = max(10, chance);
+      chance = max(15, chance);
 
 
     if (::number(0, 999) >= chance)
@@ -2908,14 +2906,13 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     sendTo(COLOR_BASIC, format("<c>You increase your mastery of %s.<z>\n\r") % discArray[sknum]->name);
 #endif
 
-  // boost at this point is 1, now make it more it if appropriate
+  int boost = 1;
   if (discArray[sknum]->amtLearnDo > 1) {
     boost = discArray[sknum]->amtLearnDo;
-    if (actual >= 90) 
-      boost = 1;
-    else if ((actual + boost) >= 90) 
-      boost = 90 - actual;
+    if ((actual + boost) > 100) 
+      boost = 100 - actual;
   }
+
 #if DISC_DEBUG
   vlogf(LOG_SILENT, format("learnFromDoing (%s)(%d): actual (%d), boost (%d)") %  discArray[sknum]->name % sknum % actual % boost);
 #endif

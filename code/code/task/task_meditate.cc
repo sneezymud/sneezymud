@@ -51,7 +51,7 @@ int task_meditate(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
             if (::number(0,1))
               ch->sendTo("Your meditation has slightly increased your sense of well being!\n\r");
           }
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_MANA, 20);
+	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_MANA, 8);
 
           // get this regardless...
           ch->addToHit(1);

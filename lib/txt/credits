@@ -20,11 +20,14 @@ SneezyMUD 5.4:    August 3rd, 2017
 ------------------------------------------------------------------------------
 SneezyMUD v5.4:
 
-Elmo Todurov  (Imm)        : Sysadmin, Coder, Site Provider
-Aaron Nebeker (Aion)       : MUDAdmin, LOW, Master of Coin
-JD Fenech    (Juno)        : Sysadmin, Coder
-
-Jeff Wolak  (Warluk)       : Coder
+Elmo Todurov  (Imm)        : Coder, GitHub Code Support
+Jeff Wolak  (Warluk)       : Sysadmin, Coder
+            (Onslaught)    : OPS manager, VPS hosting
+            (Sidartha)     : Senior LOW
+            (Vasco)        : Senior builder
+            (Bozwell)      : Coder
+            (Cirius)       : Coder
+            (Wry)          : Sysadmin support
 
 Past members of the MUD Admin:
 
@@ -33,6 +36,9 @@ Jeff Bennett (Batopr)      : Coder, Partner
 Ben Sarnoff  (Cosmo)       : Coder, Partner
 Travis Nelson (Peel)       : Coder, Partner
 
+Elmo Todurov  (Imm)        : Sysadmin, Coder, Site Provider
+Aaron Nebeker (Aion)       : MUDAdmin, LOW, Master of Coin
+JD Fenech    (Juno)        : Sysadmin, Coder
 Andrew Evans (Erasmus)     : 5.3 Sysadmin, Coder, Site Provider
 (Vasco)                    : Lord of Worlds
 (Metrohep)                 : Coder

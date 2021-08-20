@@ -1286,7 +1286,7 @@ void TBaseWeapon::evaluateMe(TBeing *ch) const
   int learn = ch->getSkillValue(SKILL_EVALUATE);
   const TGenWeapon *tgen = dynamic_cast<const TGenWeapon *>(this);
 
-  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 10);
+  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 
   ch->describeNoise(this, learn);
 
