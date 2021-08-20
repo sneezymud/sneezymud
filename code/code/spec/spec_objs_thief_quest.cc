@@ -8,32 +8,47 @@
 int thiefQuestWeapon(TBeing *victim, cmdTypeT command, const char *arg, TObj *object, TObj *) {
   wearSlotT limb = WEAR_NOWHERE;
 
-  if (command != CMD_STAB && command != CMD_BACKSTAB && command != CMD_SLIT) return false;
-  if (command == CMD_STAB) limb = static_cast<wearSlotT>(reinterpret_cast<uintptr_t>(arg));
-  if (command != CMD_STAB && strcmp(arg, "-special-")) return false;
-  if (!victim || !object) return false;
+  if (command != CMD_STAB && command != CMD_BACKSTAB && command != CMD_SLIT)
+    return false;
 
-  limb = command == CMD_BACKSTAB ? WEAR_BACK
-              : command == CMD_SLIT   ? WEAR_NECK
-                                      : limb;
+  if (command == CMD_STAB)
+    limb = static_cast<wearSlotT>(reinterpret_cast<uintptr_t>(arg));
+
+  if (command != CMD_STAB && strcmp(arg, "-special-"))
+    return false;
+
+  if (!victim || !object)
+    return false;
+
+  limb = command == CMD_BACKSTAB
+      ? WEAR_BACK
+      : command == CMD_SLIT
+      ? WEAR_NECK
+      : limb;
 
   if (limb == WEAR_NOWHERE || limb == HOLD_RIGHT || limb == HOLD_LEFT || limb == MAX_WEAR)
     return false;
 
-  auto limbDescription = victim->describeBodySlot(limb);
+  sstring limbDescription = victim->describeBodySlot(limb);
 
   // 10% chance on stab, 50% on backstab/slit
   if (command == CMD_STAB) {
-    if (::number(0, 9)) return false;
+    if (::number(0, 9))
+      return false;
   } else if (::number(0, 1))
     return false;
 
   auto weapon = dynamic_cast<TBaseWeapon *>(object);
-  auto thief = weapon ? dynamic_cast<TBeing *>(weapon->equippedBy) : nullptr;
-  if (!weapon || !thief) return false;
 
-  auto damage = 0;
-  auto damageType = SKILL_STABBING;
+  auto thief = weapon
+      ? dynamic_cast<TBeing *>(weapon->equippedBy)
+      : nullptr;
+
+  if (!weapon || !thief)
+    return false;
+
+  int damage = 0;
+  spellNumT damageType = SKILL_STABBING;
 
   if (command == CMD_STAB) {
     damage = thief->GetMaxLevel() * 1.5;
@@ -50,7 +65,8 @@ int thiefQuestWeapon(TBeing *victim, cmdTypeT command, const char *arg, TObj *ob
   }
 
   int rc = thief->reconcileDamage(victim, damage, damageType);
-  if (IS_SET_DELETE(rc, DELETE_VICT)) return DELETE_VICT;
+  if (IS_SET_DELETE(rc, DELETE_VICT))
+    return DELETE_VICT;
 
   if (victim->slotChance(limb) && !victim->isImmune(IMMUNE_BLEED, WEAR_BACK) &&
       !victim->isLimbFlags(limb, PART_BLEEDING) && !victim->isUndead()) {
