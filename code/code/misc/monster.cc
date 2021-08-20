@@ -514,12 +514,14 @@ int TMonster::getMobDamage() const
 }
 
 int TMonster::lookForEngaged() {
-  if (isPc()) return false;
+  if (isPc())
+    return false;
 
-  if (attackers > 0) return false;
+  if (attackers > 0)
+    return false;
 
   auto isEngagedOpponent = [this](TThing *thingInRoom) {
-    auto thingAsTBeing = dynamic_cast<TBeing *>(thingInRoom);
+    TBeing *thingAsTBeing = dynamic_cast<TBeing *>(thingInRoom);
     return thingAsTBeing && thingAsTBeing->fight() == this;
   };
 
@@ -529,15 +531,15 @@ int TMonster::lookForEngaged() {
   TBeing *newOpponent = found != roomp->stuff.end() ? dynamic_cast<TBeing *>(*found) : nullptr;
 
   if (newOpponent) {
-    auto rc = takeFirstHit(*newOpponent);
+    int rc = takeFirstHit(*newOpponent);
 
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete newOpponent;
       newOpponent = nullptr;
     }
 
-    if (IS_SET_DELETE(rc, DELETE_THIS)) 
-      return DELETE_THIS;   
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
 
     return true;
   }
