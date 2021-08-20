@@ -799,7 +799,8 @@ int TBeing::doFlee(const char *arg) {
     return false;
   }
 
-  if (getPosition() <= POSITION_STUNNED) return false;
+  if (getPosition() <= POSITION_STUNNED)
+    return false;
 
   if (isCombatMode(ATTACK_BERSERK)) {
     sendTo("Flee? FLEE!? Your rage is too overwhelming!!\n\r");
@@ -839,20 +840,21 @@ int TBeing::doFlee(const char *arg) {
   Do skill checks now and use results throughout so bSuccess only gets
   called once per flee attempt.
   */
-  auto retreatSkill = getSkillNum(SKILL_RETREAT);
-  auto doesKnowRetreat = doesKnowSkill(retreatSkill);
-  auto wasRetreatSuccessful = doesKnowRetreat && bSuccess(retreatSkill);
+  spellNumT retreatSkill = getSkillNum(SKILL_RETREAT);
+  bool doesKnowRetreat = doesKnowSkill(retreatSkill);
+  bool wasRetreatSuccessful = doesKnowRetreat && bSuccess(retreatSkill);
 
-  auto panic = false;
-  auto rc = 0;
-  auto riderAsTBeing = dynamic_cast<TBeing *>(rider);
+  bool panic = false;
+  int rc = 0;
+  TBeing *riderAsTBeing = dynamic_cast<TBeing *>(rider);
 
   if (riding) {
     // Allow successful retreat and ride checks to avoid falling off mount
     if (!doesKnowSkill(SKILL_RIDE) || !bSuccess(SKILL_RIDE) || !wasRetreatSuccessful) {
       sendTo("Your panic causes you to fall.\n\r");
       rc = fallOffMount(riding, POSITION_SITTING);
-      if (IS_SET_DELETE(rc, DELETE_THIS)) return DELETE_THIS;
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
       panic = true;
     }
   } else if (getPosition() <= POSITION_SITTING) {
@@ -898,7 +900,7 @@ int TBeing::doFlee(const char *arg) {
 
   playsound(pickRandSound(SOUND_FLEE_01, SOUND_FLEE_03), SOUND_TYPE_COMBAT);
 
-  auto chosenDir = getDirFromChar(arg);
+  dirTypeT chosenDir = getDirFromChar(arg);
 
   /*
     Whether retreating or fleeing, if they input a direction, check if it's a valid
@@ -915,11 +917,13 @@ int TBeing::doFlee(const char *arg) {
     the chosen direction if one was given.
   */
   std::vector<dirTypeT> validDirections;
-  for (auto direction = MIN_DIR; direction < MAX_DIR; direction++) {
+  for (dirTypeT direction = MIN_DIR; direction < MAX_DIR; direction++) {
     if (direction == chosenDir) continue;
-    if (canFleeThisWay(this, direction)) validDirections.push_back(direction);
+    if (canFleeThisWay(this, direction))
+      validDirections.push_back(direction);
   }
 
+  // Lambda for handling troglodyte racial, to avoid repetition
   auto handleTrogRacial = [this]() {
     if (!::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
       act("In your panic you release some musk scent to cover your tracks.", false, this, nullptr,
@@ -945,23 +949,23 @@ int TBeing::doFlee(const char *arg) {
     the only valid flee direction, just use it as randomDir. Otherwise choose
     any valid direction that's *not* chosenDir.
   */
-  auto randomDir = validDirections.size() == 0
-                       ? chosenDir
-                       : validDirections[::number(0, validDirections.size() - 1)];
+  dirTypeT randomDir = validDirections.size() == 0
+                           ? chosenDir
+                           : validDirections[::number(0, validDirections.size() - 1)];
 
   // Save reference to who <this> was fighting for later
-  auto enemy = fight();
+  TBeing *enemy = fight();
 
   /*
     Determine which direction to actually use. If panicked, no flee direction
     chosen, (fighting + knows retreat + retreat failed), or (fighting + doesn't know retreat +
     fails 50% chance) then flee in random direction. Otherwise flee in chosen direction.
   */
-  auto dirToUse = panic || chosenDir == DIR_NONE ||
-                          (enemy && ((doesKnowRetreat && !wasRetreatSuccessful) ||
-                                     (!doesKnowRetreat && ::number(0, 1))))
-                      ? randomDir
-                      : chosenDir;
+  dirTypeT dirToUse = panic || chosenDir == DIR_NONE ||
+                              (enemy && ((doesKnowRetreat && !wasRetreatSuccessful) ||
+                                         (!doesKnowRetreat && ::number(0, 1))))
+                          ? randomDir
+                          : chosenDir;
 
   // These messages don't make sense if not fighting
   if (enemy) {
@@ -977,7 +981,9 @@ int TBeing::doFlee(const char *arg) {
   }
 
   // If <this> is a mount and still has a rider, have its rider execute the move
-  auto moveResult = riderAsTBeing ? riderAsTBeing->moveOne(dirToUse) : moveOne(dirToUse);
+  int moveResult = riderAsTBeing 
+      ? riderAsTBeing->moveOne(dirToUse) 
+      : moveOne(dirToUse);
 
   if (IS_SET_DELETE(moveResult, DELETE_THIS)) {
     if (riderAsTBeing) {
@@ -1004,33 +1010,44 @@ int TBeing::doFlee(const char *arg) {
     sendTo(format("You nearly hurt yourself as you fled madly %swards.\n\r") % dirs[dirToUse]);
 
   // If <this> wasn't fighting when attempting the flee, just return here
-  if (!enemy) return true;
+  if (!enemy)
+    return true;
 
   // Ensure <this> no longer fighting after successful flee
   REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
-  if (fight()) stopFighting();
-  if (cantHit > 0) cantHit = 0;
-  if (enemy->fight() == this) enemy->stopFighting();
+  if (fight())
+    stopFighting();
+  if (cantHit > 0)
+    cantHit = 0;
+  if (enemy->fight() == this)
+    enemy->stopFighting();
 
   // Make mobs fear enemy who forced them to flee
   // Check IsPc() in case of disguised/polymorphed/otherwise transformed PC
-  auto thisAsTMonster = isPc() ? nullptr : dynamic_cast<TMonster *>(this);
-  if (thisAsTMonster) thisAsTMonster->addFeared(enemy);  
+  TMonster *thisAsTMonster = isPc() 
+      ? nullptr 
+      : dynamic_cast<TMonster *>(this);
 
-  /* 
-    Determine if enemy begins hunting <this>, then potentially look for 
-    remaining opponents who are engaged and make enemy attack them if found 
+  if (thisAsTMonster)
+    thisAsTMonster->addFeared(enemy);
+
+  /*
+    Determine if enemy begins hunting <this>, then potentially look for
+    remaining opponents who are engaged and make enemy attack them if found
   */
-  auto enemyAsTMonster = enemy->isPc() ? nullptr : dynamic_cast<TMonster *>(enemy);
+  TMonster *enemyAsTMonster = enemy->isPc() 
+      ? nullptr 
+      : dynamic_cast<TMonster *>(enemy);
+      
   if (enemyAsTMonster) {
-    auto percent =
-        (int)(100 * (double)enemyAsTMonster->getHit() / (double)enemyAsTMonster->hitLimit());
+    int percent =
+        (int)(100.0 * (double)enemyAsTMonster->getHit() / (double)enemyAsTMonster->hitLimit());
 
     if (::number(1, 100) < percent &&
         (enemyAsTMonster->Hates(this, nullptr) || isOppositeFaction(enemyAsTMonster)))
       enemyAsTMonster->setHunting(this);
 
-    auto rc = enemyAsTMonster->lookForEngaged();
+    int rc = enemyAsTMonster->lookForEngaged();
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete enemyAsTMonster;
       enemyAsTMonster = nullptr;
