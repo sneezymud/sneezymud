@@ -210,7 +210,7 @@ int ObjectEvaluator::getStatPointsRaw()
       4.0,  //IMMUNE_NONMAGIC
       0.5,  //IMMUNE_PLUS1
       1.0,  //IMMUNE_PLUS2
-      1.5,  //IMMUNE_PLUS3
+      1.5,  //IMMUNE_HOLY
       0.5,  //IMMUNE_AIR
       0.5,  //IMMUNE_ENERGY
       0.5,  //IMMUNE_ELECTRICITY

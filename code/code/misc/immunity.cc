@@ -46,8 +46,8 @@ immuneTypeT Immunities::convert(const sstring & immunity) const
     return IMMUNE_PLUS1;
   if (!immunity.compare("IMMUNE_PLUS2"))
     return IMMUNE_PLUS2;
-  if (!immunity.compare("IMMUNE_PLUS3"))
-    return IMMUNE_PLUS3;
+  if (!immunity.compare("IMMUNE_HOLY"))
+    return IMMUNE_HOLY;
   if (!immunity.compare("IMMUNE_AIR"))
     return IMMUNE_AIR;
   if (!immunity.compare("IMMUNE_ENERGY"))
@@ -232,6 +232,9 @@ immuneTypeT getTypeImmunity(spellNumT type)
   immuneTypeT bit = IMMUNE_NONE;
 
   switch (type) {
+    case DAMAGE_HOLY:
+      bit = IMMUNE_HOLY;
+      break;
     case SPELL_BLOOD_BOIL:
     case DAMAGE_FIRE:
     case SPELL_FIREBALL:

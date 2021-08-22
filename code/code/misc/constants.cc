@@ -1698,7 +1698,7 @@ const char * const immunity_names[MAX_IMMUNES] =
   "Non-Magic",   // 10
   "+1 Weapons",
   "+2 Weapons",
-  "+3 Weapons",
+  "Holy",
   "Air",
   "Energy/Thaumaturgy",    // 15
   "Electricity",
