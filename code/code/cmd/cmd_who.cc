@@ -143,13 +143,24 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
   return tempbuf;
 }
 
+static const sstring getNewWhoLevel(const TBeing *ch, TBeing *p)
+{
+  sstring tempbuf;
+
+  tempbuf = p->parseTitle(ch->desc) + "\n\r";
+
+  tempbuf += format("%-10s [ %-5s Lev %2d ] %-20s \n\r") % p->getMyRace()->getSingularName() % TBeing::getProfAbbrevName(p->player.Class) % p->GetMaxLevel() % p->roomp->getName().c_str();
+
+  return tempbuf;
+}
+
+
+
 void TBeing::doWhoNew(const char *argument) {
   int count = 0;
   TBeing *p;
 
   sstring who_buffer = "Players: (Add -? for online help)\n\r--------\n\r";
-
-  who_buffer += "blah\n\r";
 
   std::set<std::string> uniqueAccounts;
 
@@ -161,8 +172,7 @@ void TBeing::doWhoNew(const char *argument) {
           uniqueAccounts.insert(p->desc->account->name);
         count++;
 
-        who_buffer=p->parseTitle(desc);
-        who_buffer += "   " + getWhoLevel(this, p);
+        who_buffer += getNewWhoLevel(this, p);
       }
     }
   }
