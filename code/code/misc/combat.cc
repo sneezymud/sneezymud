@@ -3676,7 +3676,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   int mess_sent = 0;
   int damaged_limb = FALSE;
   int rc = 0, retCode = 0;
-  bool found = FALSE;
 
   // Can I even attack the target?
   if (invalidTarget(vict)) {
@@ -3803,7 +3802,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   TGun *gun;
   if(dynamic_cast<THandgonne *>(weapon)){
     act("You can't fire $N while under attack!", TRUE, this, NULL, weapon, TO_CHAR);
-    found=TRUE;
   } else if(weapon && (gun=dynamic_cast<TGun *>(weapon))){
     if(dynamic_cast<TMonster *>(this) && !master){
       // unlimited ammo for mobs
@@ -3820,7 +3818,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r", in_room);
       } else {
 	act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
-	found=TRUE;
       }
     }
 
@@ -3832,7 +3829,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 // 1.  First check hitting vs missing outright
   result = hits(vict, mod);
   if (!result) {
-    found = TRUE;
     rc = missVictim(vict, weapon, w_type);
     if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_VICT | DELETE_THIS)) {
       combatFatigue(weapon);
@@ -3847,8 +3843,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       return retCode;
     }
   } else if (result == GUARANTEED_FAILURE) {
-    found = TRUE;
-
     mess_sent = critFailureChance(vict, weapon, w_type);
     if (IS_SET_DELETE(mess_sent, DELETE_THIS))
       return retCode | DELETE_THIS;
@@ -3868,21 +3862,6 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
         retCode |= DELETE_THIS;
       return retCode;
     }
-  }
-
-// 2. Do Block and Parry 
-  if (found) {
-// temporary for coding purposes, found isnt there for any purpose
-   // can tighten up if its not deleted
-  } else {
-  }
-
-// 3 Will be a hit
-
-  if (found) {
-// temporary for coding purposes, found isnt there for any purpose
-   // miss
-
   } else if ((dam = getWeaponDam(vict, weapon,isprimary)) < 1) {
     rc = missVictim(vict, weapon, w_type);
     if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_VICT | DELETE_THIS)) {
@@ -3942,12 +3921,13 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       vict->desc->session.potential_dam_received[amt] += dam;
     }
 
-    // We check for a crit only on GUARANTEED_SUCCESS
-    // So max 5% crit rate unless they are sleeping or paralyzed
-    // now we add another possible 5% max for aura of vengeance
-    if (result == GUARANTEED_SUCCESS ||
-          (affectedBySpell(SPELL_AURA_VENGEANCE) && !::number(0,19)))
-      mess_sent = critSuccessChance(vict, weapon, &part_hit, w_type, &dam);
+    /*
+      Crit chance is no longer affected at all from within the oneHit function.
+      Every successful hit will roll for a chance to become a crit now, and
+      code that modifies chance to crit can all be kept together inside the
+      critSuccessChance function.
+    */
+    mess_sent = critSuccessChance(vict, weapon, &part_hit, w_type, &dam);
 
     if (IS_SET_DELETE(mess_sent, DELETE_VICT)) {
       // we killed them, so increment crit-kill counter
