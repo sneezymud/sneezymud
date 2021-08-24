@@ -549,6 +549,14 @@ TObj *ItemLoad::raw_read_item()
   *action_description = NULL;
 
   if (!raw_read_rentObject(fp, &item, &name, &shortDescr, &description, &action_description, version)) {
+    /* 
+      Delete these to prevent memory leak, as some values could have been allocated before 
+      raw_read_rentObject returned false 
+    */
+    delete [] name;
+    delete [] shortDescr;
+    delete [] description;
+    delete [] action_description;
     vlogf(LOG_BUG, "Error reading object from rent.");
     return NULL;
   }
@@ -573,6 +581,14 @@ TObj *ItemLoad::raw_read_item()
 
   if (!(o = read_object(item.item_number, VIRTUAL))) {
     vlogf(LOG_BUG, format("Unable to load object Vnum = %d from rent.") %  item.item_number);
+    /* 
+      Delete these to prevent a memory leak, as if this point in the code is reached all
+      of these values will have been allocated inside raw_read_rentObject
+    */
+    delete [] name;
+    delete [] shortDescr;
+    delete [] description;
+    delete [] action_description;
     return NULL;
   }
 
@@ -646,23 +662,31 @@ TObj *ItemLoad::raw_read_item()
   }
     
   if (o->isObjStat(ITEM_STRUNG)) {
-    if (name)
-      o->name = name;
+    if (name) {
+      o->name = sstring(name);
+      delete [] name;
+    }
     else
       o->name = obj_index[o->getItemIndex()].name;
     
-    if (shortDescr)
-      o->shortDescr = shortDescr;
+    if (shortDescr) {
+      o->shortDescr = sstring(shortDescr);
+      delete [] shortDescr;
+    }
     else
       o->shortDescr = obj_index[o->getItemIndex()].short_desc;
     
-    if (description)
-      o->setDescr(description);
+    if (description) {
+      o->setDescr(sstring(description));
+      delete [] description;
+    }
     else
       o->setDescr(obj_index[o->getItemIndex()].long_desc);
     
-    if (action_description) 
-      o->action_description = action_description;
+    if (action_description) {
+      o->action_description = sstring(action_description);
+      delete [] action_description;
+    }
     else if (obj_index[o->getItemIndex()].description) 
       o->action_description = obj_index[o->getItemIndex()].description;
     else 
