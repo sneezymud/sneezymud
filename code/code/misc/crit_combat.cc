@@ -492,147 +492,137 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
 // This will just be a big ass case statement based on random diceroll 
 // returns DELETE_VICT if v dead
 // mod is -1 from generic combat, mod == crit desired from immortal command.
-int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod)
-{
-  int crit_num = 0, dicenum, crit_chance;
-  affectedData *adp;
+int TBeing::critSuccessChance(TBeing* victim,
+                              TThing* weapon,
+                              wearSlotT* partHit,
+                              spellNumT weaponDamageType,
+                              int* damage,
+                              int mod) {
+  if (isAffected(AFF_ENGAGER) || dynamic_cast<TGun*>(weapon))
+    return 0;
 
-  if (isAffected(AFF_ENGAGER))
-    return FALSE;
+  if (!isImmortal() && (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)))
+    return 0;
 
-  if (!isImmortal() && 
-      (v->isImmortal() || IS_SET(v->specials.act, ACT_IMMORTAL)))
-    return FALSE;
+  if ((mod == -1) && victim->isImmune(getTypeImmunity(weaponDamageType), *partHit))
+    return 0;
 
-  if (dynamic_cast<TGun *>(weapon))
-    return FALSE;
-
-  if ((mod == -1) && v->isImmune(getTypeImmunity(wtype), *part_hit))
-    return FALSE;
-
-  if(mod>100){
-    vlogf(LOG_BUG, format("critSuccessChance called with mod>100 (%i)") %  mod);
-    return FALSE;
+  if (mod > 100) {
+    vlogf(LOG_BUG, format("critSuccessChance called with mod>100 (%i)") % mod);
+    return 0;
   }
 
-  if (mod == -1 && v->affectedBySpell(AFFECT_DUMMY)) {
-    for (affectedData *an = v->affected; an; an = an->next) {
-      if (an->type == AFFECT_DUMMY && an->level == 60) {
-        mod = an->modifier2;
+  if (mod == -1 && victim->affectedBySpell(AFFECT_DUMMY)) {
+    for (auto* affect = victim->affected; affect; affect = affect->next) {
+      if (affect->type == AFFECT_DUMMY && affect->level == 60) {
+        mod = affect->modifier2;
       }
     }
-    v->affectFrom(AFFECT_DUMMY);
+    victim->affectFrom(AFFECT_DUMMY);
   }
 
   stats.combat_crit_suc++;
 
-  // determine dice roll for crit, modified by skill(s)
-  if(doesKnowSkill(SKILL_CRIT_HIT) && isPc()){
-    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_CRIT_HIT)*850)));
-  } else if(doesKnowSkill(SKILL_POWERMOVE) && isPc()){
-    dicenum = dice(1, (int)(100000-(getSkillValue(SKILL_POWERMOVE)*800)));
-  } else if(dynamic_cast<TMonster *>(this)){
-    // less crits for mobs
-    dicenum = dice(1, 1000000);
-  } else {
-    dicenum = dice(1, 100000);    // This was 10k under 3.x - Bat
-  }
+  int critHittingValue = doesKnowSkill(SKILL_CRIT_HIT) ? getSkillValue(SKILL_CRIT_HIT) : 0;
+  int powerMoveValue = doesKnowSkill(SKILL_POWERMOVE) ? getSkillValue(SKILL_POWERMOVE) : 0;
 
-  // adjust for immorts being awesome
-  if (isImmortal())
-    dicenum /= 10;
+  int diceRollResult = dice(1, isPc() ? 100000 : 1000000);
 
-  // begin with dexterity
-  crit_chance = plotStat(STAT_CURRENT, STAT_DEX, 10, 100, 63);
+  // Derive base crit chance from karma. 1% base chance at 105 karma, with final range of 0.5% - 2%.
+  double critChance = 1000.0 * plotStat(STAT_CURRENT, STAT_KAR, 0.5, 2.0, 1.0);
 
-  // drunkeness reduces chance
-  crit_chance -= 2 * getCond(DRUNK);
+  critChance += 20 * critHittingValue;
+  critChance += 10 * powerMoveValue;
 
-  // factor in karma
-  crit_chance *= plotStat(STAT_CURRENT, STAT_KAR, 80, 125, 100);
-  crit_chance /= 100;
+  // Add 1% increased crit chance from Aura of Vengeance
+  if (affectedBySpell(SPELL_AURA_VENGEANCE))
+    critChance += 1000;
 
-  // factor in relative levels
-  int diff = GetMaxLevel() - v->GetMaxLevel();
-  if (diff == 0) {
-    crit_chance *= 50;
-  } else {
-    double absdiff = abs(diff);
-    double level_mod = 50.0 + ((double)diff * log(absdiff/20.0+1) / absdiff) * 75.0;
+  critChance -= 2 * getCond(DRUNK);
 
-    // Increasing scaling based on level difference for NPCs
-    if (dynamic_cast<TMonster *>(this)){
-      level_mod *= 1.2;
-    }
-
-    if (level_mod <= 0) {
-      crit_chance = 1;
-    } else {
-      crit_chance = (int)((double)crit_chance * level_mod);
+  for (auto* affect = affected; affect; affect = affect->next) {
+    if (affect->location == APPLY_CRIT_FREQUENCY) {
+      critChance *= affect->modifier;
     }
   }
 
-  // if affected by APPLY_CRIT_FREQUENCY then multiply out by modifier
-  for (adp = affected; adp; adp = adp->next) {
-    if (adp->location == APPLY_CRIT_FREQUENCY) {
-      crit_chance *= adp->modifier;
-    }
-  }
+  int critSeverity = 0;
+  // Mod comes in as -1 when critSuccessChance is called normally from the oneHit function.
+  // Things like the vorpal proc and the imm "crit" command will send in a specific value
+  // for mod, which serves as the crit severity in those cases.
+  if (mod == -1) {
+    if (diceRollResult > critChance)
+      return 0;
 
-  if(mod == -1){
-    // check the roll versus the chance
-    if(dicenum > crit_chance)
-      return FALSE;
-    
-    // if there is greater than 10 levels of different in either direction
-    // then either make the crits better, or worse
-    int level_mod=(GetMaxLevel() - v->GetMaxLevel());
-    if(level_mod > -10 && level_mod < 10)
-      level_mod = 0;
+    // Crit severity is based on two factors - base severity and max severity.
 
-    // determine which crit to do, higher number = better crits
-    crit_num = ::number(1, 100) + ::number(0, level_mod/10);
-    crit_num = max(1, crit_num);
-    crit_num = min(100, crit_num);
+    // Base severity = 10, when victim level > attacker level, to allow all
+    // attackers the potential for the highest severity crits once victim
+    // is at 10% or less of their maximum HP.
 
-    // if we are fighting barehand, adjust the crit based on type
+    // Base severity = 10 + level difference, when attacker level > victim level,
+    // meaning attacker can achieve more deadly crits immediately when fighting a
+    // victim under its level.
+
+    // Max severity = base severity + victim's missing HP % as an int, capped
+    // at 100. Thus, as the fight progresses the highest crit severity
+    // possible scales up as the victim takes more and more damage. This also
+    // means that the victim healing through any means will defend against more
+    // damaging crits.
+
+    // The actual crit severity used per successful crit roll is a random number
+    // between 1 and the calculated max severity at that moment in the fight.
+
+    // For example, if the victim is higher level than the attacker and is at
+    // 75% health, the possible range for the crit severity roll would be:
+    // 10 (base) + 25 (% missing HP) = 35, giving a crit severity range for that
+    // specific hit of 0 - 35 for an attacker without skills that increase crit
+    // severity (powermove or crit hitting) or up to 55 for attacker with those
+    // skill maxed.
+
+    int levelDifference = GetMaxLevel() - victim->GetMaxLevel();
+    double victCurrentHpPercent =
+      static_cast<double>(victim->getHit()) / static_cast<double>(victim->hitLimit());
+    double victMissingHpPercent = 100.0 - (victCurrentHpPercent * 100.0);
+    int baseCritSeverity = levelDifference <= 0 ? 10 : 10 + levelDifference;
+    int maxCritSeverity = min(baseCritSeverity + static_cast<int>(victMissingHpPercent), 100);
+
+    maxCritSeverity += 15 * powerMoveValue / 100;
+    maxCritSeverity += 5 * critHittingValue / 100;
+    maxCritSeverity = min(100, maxCritSeverity);
+
+    critSeverity = ::number(1, maxCritSeverity);
+
     if (isPc() && !weapon) {
-      crit_num = adjustCritRollForBarehand(crit_num, this, wtype);
-      if (crit_num == 0)
+      critSeverity = adjustCritRollForBarehand(critSeverity, this, weaponDamageType);
+      if (critSeverity == 0)
         return 0;
     }
 
-    // update crit stats
     stats.combat_crit_suc_pass++;
     if (desc)
       desc->career.crit_hits++;
-    if (v->desc)
-      v->desc->career.crit_hits_suff++;
+    if (victim->desc)
+      victim->desc->career.crit_hits_suff++;
 
-  } else {
-    // specified crit
-    crit_num = mod;
-  }
+  } else
+    critSeverity = mod;
 
-  // critical hitting gets damage boost as well
-  if(doesKnowSkill(SKILL_CRIT_HIT))
-    *dam = (int)(*dam * ((getSkillValue(SKILL_CRIT_HIT)/100.0)+1.0));
-
-  // play the crit-hit sound
   // boost the priority so that this sound will trump normal combat sounds
-  soundNumT snd = pickRandSound(SOUND_CRIT_01, SOUND_CRIT_43);
-  playsound(snd, SOUND_TYPE_COMBAT, 100, 45, 1);
+  playsound(pickRandSound(SOUND_CRIT_01, SOUND_CRIT_43), SOUND_TYPE_COMBAT, 100, 45, 1);
 
-  if (pierceType(wtype)) {
-    return critPierce(v, weapon, part_hit, wtype, dam, crit_num);
-  } else if (slashType(wtype)) {
-    return critSlash(v, weapon, part_hit, wtype, dam, crit_num);
-  } else if (bluntType(wtype)) {
-    return critBlunt(v, weapon, part_hit, wtype, dam, crit_num);
-  } else {
-    vlogf(LOG_BUG, format("unknown weapon type in critSuccessChance (%i)") %  wtype);
-  }
-  return FALSE;
+  if (pierceType(weaponDamageType))
+    return critPierce(victim, weapon, partHit, weaponDamageType, damage, critSeverity);
+
+  if (slashType(weaponDamageType))
+    return critSlash(victim, weapon, partHit, weaponDamageType, damage, critSeverity);
+
+  if (bluntType(weaponDamageType))
+    return critBlunt(victim, weapon, partHit, weaponDamageType, damage, critSeverity);
+
+  vlogf(LOG_BUG, format("unknown weapon type in critSuccessChance (%i)") % weaponDamageType);
+
+  return 0;
 }
 
 /* ------------------------------------------------------------
