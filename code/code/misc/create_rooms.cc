@@ -2785,8 +2785,8 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
       return; 
 
     if (rp->dir_option[update]) {
-      rp->dir_option[update] = 0;
       delete rp->dir_option[update];
+      rp->dir_option[update] = nullptr;
       ch->sendTo("Deleting exit.\n\r");
       ch->specials.edit = MAIN_MENU;
       update_room_menu(ch);
