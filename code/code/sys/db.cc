@@ -758,6 +758,11 @@ void bootWorld(void)
     while (hasExits && convertTo<int>(db_exits[0]) == rp->number){
       dir=mapFileToDir(convertTo<int>(db_exits[1]));
 
+      // Prevents memory leaks when roomexit table contains duplicate rows
+      if (rp->dir_option[dir]) {
+        delete rp->dir_option[dir];
+        rp->dir_option[dir] = nullptr;
+      }
       rp->dir_option[dir] = new roomDirData();
 
       if(!db_exits[2].empty())
