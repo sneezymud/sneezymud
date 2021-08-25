@@ -4289,9 +4289,6 @@ void generic_cleanup()
   for (i = 0; i < (unsigned int) MAX_SECTOR_TYPES; i++)
     delete TerrainInfo[i];
 
-extern void cleanUpHelp();
-  cleanUpHelp();
-
   for(race_t rindex=RACE_NORACE;rindex<MAX_RACIAL_TYPES;rindex++)
     delete Races[rindex];
 

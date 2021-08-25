@@ -20,10 +20,10 @@ extern "C" {
 #define ARTICLE_LIST_WIDTH 80
 
 static std::vector<sstring>helpIndex(0);
-static std::vector<char *>immortalIndex(0);
-static std::vector<char *>builderIndex(0);
-static std::vector<char *>skillIndex(0);
-static std::vector<char *>spellIndex(0);
+static std::vector<sstring>immortalIndex(0);
+static std::vector<sstring>builderIndex(0);
+static std::vector<sstring>skillIndex(0);
+static std::vector<sstring>spellIndex(0);
 
 #if 0
 static const char *start_name(byte num)
@@ -437,20 +437,20 @@ void TBeing::doHelp(const char *arg)
 
   if (isImmortal() && hasWizPower(POWER_IMMORTAL_HELP)) {
     for (i = 0; i < immortalIndex.size(); i++) {
-      if (!strcasecmp(arg, immortalIndex[i])) {
+      if (!strcasecmp(arg, immortalIndex[i].c_str())) {
         found = TRUE;
         helpnum = i;
-        sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i]);
+        sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i].c_str());
         break;
-      } else if (is_abbrev(arg, immortalIndex[i])) {
+      } else if (is_abbrev(arg, immortalIndex[i].c_str())) {
         found = TRUE;
         helpnum = i;
-        sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i]);
+        sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i].c_str());
       }
     }
     if (found) {
       i = helpnum;
-      strcpy(namebuf, immortalIndex[i]);
+      strcpy(namebuf, immortalIndex[i].c_str());
       if (hasColorVt()) {
         sprintf(ansipath, "%s.ansi", helppath);
         if (file_to_sstring(ansipath, str)) {
@@ -480,20 +480,20 @@ void TBeing::doHelp(const char *arg)
   }
   if (GetMaxLevel() >= GOD_LEVEL1 && isImmortal()) {
     for (i = 0; i < builderIndex.size(); i++) {
-      if (!strcasecmp(arg, builderIndex[i])) {
-        sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i]);
+      if (!strcasecmp(arg, builderIndex[i].c_str())) {
+        sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i].c_str());
         helpnum = i;
         found = TRUE;
         break;
-      } else if (is_abbrev(arg, builderIndex[i])) {
-        sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i]);
+      } else if (is_abbrev(arg, builderIndex[i].c_str())) {
+        sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i].c_str());
         helpnum = i;
         found = TRUE;
       }
     }
     if (found) {
       i = helpnum;
-      strcpy(namebuf, builderIndex[i]);
+      strcpy(namebuf, builderIndex[i].c_str());
       if (hasColorVt()) {
         sprintf(ansipath, "%s.ansi", helppath);
         if (file_to_sstring(ansipath, str)) {
@@ -550,24 +550,24 @@ void TBeing::doHelp(const char *arg)
     // some normal help files are masked by spells
     if (!strcasecmp(arg, "steal"))  // stealth
       break;
-    if (!strcasecmp(arg, spellIndex[i])) {
-      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
+    if (!strcasecmp(arg, spellIndex[i].c_str())) {
+      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i].c_str());
       helpnum = i;
       found = TRUE;
       break;
     } else if (is_abbrev(arg, spellIndex[i], MULTIPLE_YES, EXACT_YES)) {
-      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
+      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i].c_str());
       helpnum = i;
       found = TRUE;
-    } else if (is_abbrev(arg, spellIndex[i])) {
-      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
+    } else if (is_abbrev(arg, spellIndex[i].c_str())) {
+      sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i].c_str());
       helpnum = i;
       found = TRUE;
     }
   }
   if (found) {
     i = helpnum;
-    strcpy(namebuf, spellIndex[i]);
+    strcpy(namebuf, spellIndex[i].c_str());
     if (hasColorVt()) {
       sprintf(ansipath, "%s.ansi", helppath);
       if (file_to_sstring(ansipath, str)) {
@@ -599,7 +599,7 @@ void TBeing::doHelp(const char *arg)
       if (hideThisSpell(snt))
         continue;
 
-      if (strcasecmp(discArray[snt]->name, spellIndex[i]))
+      if (strcasecmp(discArray[snt]->name, spellIndex[i].c_str()))
         continue;
    
       if (doesKnowSkill(snt))
@@ -612,7 +612,7 @@ void TBeing::doHelp(const char *arg)
         if (hideThisSpell(snt))
           continue;
   
-        if (!strcasecmp(discArray[snt]->name, spellIndex[i]))
+        if (!strcasecmp(discArray[snt]->name, spellIndex[i].c_str()))
           break;
       }
     }
@@ -849,20 +849,20 @@ void TBeing::doHelp(const char *arg)
     // some normal help files are masked by skills
     if (!strcasecmp(arg, "cast"))  // casting
       break;
-    if (!strcasecmp(arg, skillIndex[i])) {
-      sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i]);
+    if (!strcasecmp(arg, skillIndex[i].c_str())) {
+      sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i].c_str());
       helpnum = i;
       found = TRUE;
       break;
     } else if (is_abbrev(arg, skillIndex[i], MULTIPLE_YES)) {
-      sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i]);
+      sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i].c_str());
       helpnum = i;
       found = TRUE;
     }
   }
   if (found) {
     i = helpnum;
-    strcpy(namebuf, skillIndex[i]);
+    strcpy(namebuf, skillIndex[i].c_str());
     if (hasColorVt()) {
       sprintf(ansipath, "%s.ansi", helppath);
       if (file_to_sstring(ansipath, str)) {
@@ -896,7 +896,7 @@ void TBeing::doHelp(const char *arg)
       if (hideThisSpell(snt))
         continue;
 
-      if (strcasecmp(discArray[snt]->name, skillIndex[i]))
+      if (strcasecmp(discArray[snt]->name, skillIndex[i].c_str()))
         continue;
    
       if (doesKnowSkill(snt))
@@ -909,7 +909,7 @@ void TBeing::doHelp(const char *arg)
         if (hideThisSpell(snt))
           continue;
   
-        if (!strcasecmp(discArray[snt]->name, skillIndex[i]))
+        if (!strcasecmp(discArray[snt]->name, skillIndex[i].c_str()))
           break;
       }
     }
@@ -1098,8 +1098,7 @@ void buildHelpIndex()
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue; 
 
-    char *tmpc = mud_str_dup(dp->d_name);
-    immortalIndex.push_back(tmpc);
+    immortalIndex.push_back(sstring(dp->d_name));
   }
   closedir(dfd);
 
@@ -1115,9 +1114,8 @@ void buildHelpIndex()
         (strlen(dp->d_name) >= 5 &&
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
-
-    char *tmpc = mud_str_dup(dp->d_name);
-    builderIndex.push_back(tmpc);
+  
+    builderIndex.push_back(sstring(dp->d_name));
   }
   closedir(dfd);
 
@@ -1128,18 +1126,15 @@ void buildHelpIndex()
     vlogf(LOG_FILE, "Can't open help directory for indexing!");
     exit(0);
   }
-  // COSMO STRING
-  sstring str;
+
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
-    str = dp->d_name;
-    helpIndex.push_back(str);
+    helpIndex.push_back(sstring(dp->d_name));
   }
-// COSMO STRING  
-//  delete str;
+
   closedir(dfd);
 
   // set a reasonable initial size
@@ -1155,8 +1150,7 @@ void buildHelpIndex()
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
 
-    char *tmpc = mud_str_dup(dp->d_name);
-    skillIndex.push_back(tmpc);
+    skillIndex.push_back(sstring(dp->d_name));
   }
   closedir(dfd);
 
@@ -1173,22 +1167,7 @@ void buildHelpIndex()
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
 
-    char *tmpc = mud_str_dup(dp->d_name);
-    spellIndex.push_back(tmpc);
+    spellIndex.push_back(sstring(dp->d_name));
   }
   closedir(dfd);
-}
-
-
-void cleanUpHelp()
-{
-  unsigned int i;
-  for (i = 0; i < immortalIndex.size(); i++)
-    delete [] immortalIndex[i];
-  for (i = 0; i < builderIndex.size(); i++)
-    delete [] builderIndex[i];
-  for (i = 0; i < skillIndex.size(); i++)
-    delete [] skillIndex[i];
-  for (i = 0; i < spellIndex.size(); i++)
-    delete [] spellIndex[i];
 }
