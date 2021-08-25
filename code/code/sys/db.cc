@@ -2242,7 +2242,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
 	distantSnds=mob_cache[nr]->s["adjacent_sound"];
     }
 
-    for(auto& imm : mob_cache.imm[nr])    
+    for(auto& imm : mob_cache.imm[nr])
       setImmunity((immuneTypeT) imm.type, imm.amt);
     
     
