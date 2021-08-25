@@ -1680,6 +1680,8 @@ void bootZones(void)
     files.insert(std::pair<int,sstring>(tmp, dp->d_name));
   }
   
+  closedir(dfd);
+  
   db.query("update zone set util_flag = 0");
   for(it=files.begin();it!=files.end();++it){
     bootOneZone(db, it->first, zon);
