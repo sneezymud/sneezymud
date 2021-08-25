@@ -2343,9 +2343,9 @@ void TBeing::doUnlock(const char *argument)
       int realObj = real_object(exitp->key);
       if (realObj < 0)
         return;
-      snprintf(buf, cElements(buf), "$n unlocks the $T with %s.", obj_index[realObj].short_desc);
+      snprintf(buf, cElements(buf), "$n unlocks the $T with %s.", obj_index[realObj].short_desc.c_str());
       act(buf, TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_ROOM);
-      snprintf(buf, cElements(buf), "You unlock the $T with %s.", obj_index[realObj].short_desc);
+      snprintf(buf, cElements(buf), "You unlock the $T with %s.", obj_index[realObj].short_desc.c_str());
       act(buf, TRUE, this, 0, reinterpret_cast<const TThing *>(exitp->getName().c_str()), TO_CHAR);
      
       REMOVE_BIT(exitp->condition, EXIT_LOCKED);

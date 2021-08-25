@@ -40,14 +40,10 @@ indexData & indexData::operator= (const indexData &a)
   virt = a.virt;
   pos = a.pos;
   number = a.number;
-  delete [] name;
-  delete [] short_desc;
-  delete [] long_desc;
-  delete [] description;
-  name = mud_str_dup(a.name);
-  short_desc = mud_str_dup(a.short_desc);
-  long_desc = mud_str_dup(a.long_desc);
-  description = mud_str_dup(a.description);
+  name = sstring(a.name);
+  short_desc = sstring(a.short_desc);
+  long_desc = sstring(a.long_desc);
+  description = sstring(a.description);
 
   max_exist = a.max_exist;
   spec = a.spec;
@@ -64,19 +60,13 @@ indexData::indexData(const indexData &a) :
   spec(a.spec),
   weight(a.weight)
 {
-  name = mud_str_dup(a.name);
-  short_desc = mud_str_dup(a.short_desc);
-  long_desc = mud_str_dup(a.long_desc);
-  description = mud_str_dup(a.description);
+  name = sstring(a.name);
+  short_desc = sstring(a.short_desc);
+  long_desc = sstring(a.long_desc);
+  description = sstring(a.description);
 }
 
-indexData::~indexData()
-{
-  delete [] name;
-  delete [] short_desc;
-  delete [] long_desc;
-  delete [] description;
-}
+indexData::~indexData() {}
 
 mobIndexData::mobIndexData() :
   faction(-99),
@@ -218,11 +208,11 @@ void generate_obj_index()
       perror("indexData");
       exit(0);
     }
-    
+  
     tmpi->virt=convertTo<int>(db["vnum"]);
-    tmpi->name=mud_str_dup(db["name"]);
-    tmpi->short_desc=mud_str_dup(db["short_desc"]);
-    tmpi->long_desc=mud_str_dup(db["long_desc"]);
+    tmpi->name = sstring(db["name"]);
+    tmpi->short_desc = sstring(db["short_desc"]);
+    tmpi->long_desc = sstring(db["long_desc"]);
     tmpi->max_exist=convertTo<int>(db["max_exist"]);
 
     // use 327 so we don't go over 32765 in calculation
@@ -241,7 +231,7 @@ void generate_obj_index()
     tmpi->itemtype=convertTo<int>(db["type"]);
     tmpi->value=convertTo<int>(db["price"]);
     if(!db["action_desc"].empty())
-      tmpi->description=mud_str_dup(db["action_desc"]);
+      tmpi->description=sstring(db["action_desc"]);
     else tmpi->description=NULL;
 
     while(!extra_db["vnum"].empty() && convertTo<int>(extra_db["vnum"]) < tmpi->virt){
@@ -251,8 +241,8 @@ void generate_obj_index()
     while(!extra_db["vnum"].empty() &&
 	  convertTo<int>(extra_db["vnum"])==tmpi->virt){
       new_descr = new extraDescription();
-      new_descr->keyword = mud_str_dup(extra_db["name"]);
-      new_descr->description = mud_str_dup(extra_db["description"]);
+      new_descr->keyword = sstring(extra_db["name"]);
+      new_descr->description = sstring(extra_db["description"]);
       new_descr->next = tmpi->ex_description;
       tmpi->ex_description = new_descr;
 
@@ -320,10 +310,10 @@ void generate_mob_index()
     tmpi->virt = convertTo<int>(db["vnum"]);
     
     // read the sstrings
-    tmpi->name = mud_str_dup(db["name"]);
-    tmpi->short_desc = mud_str_dup(db["short_desc"]);
-    tmpi->long_desc = mud_str_dup(db["long_desc"]);
-    tmpi->description = mud_str_dup(db["description"]);
+    tmpi->name = sstring(db["name"]);
+    tmpi->short_desc = sstring(db["short_desc"]);
+    tmpi->long_desc = sstring(db["long_desc"]);
+    tmpi->description = sstring(db["description"]);
     
     long fac=convertTo<int>(db["faction"]);
     

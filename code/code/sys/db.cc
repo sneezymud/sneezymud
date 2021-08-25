@@ -177,42 +177,53 @@ std::vector<TRoom *>roomspec_db(0);
 std::vector<TRoom *>roomsave_db(0);
 std::queue<sstring>queryqueue;
 
+struct cached_object {
+  int number;
+  std::map<sstring, sstring> s;
 
-struct cached_object { int number;std::map <sstring, sstring> s; };
-struct cached_mob_extra { int number;sstring keyword; sstring description; };
-struct cached_mob_imm { int number;int type; int amt; };
+  cached_object() {}
+  cached_object(int _number, std::map<sstring, sstring> _s)
+    : number(_number), s(_s) {}
+};
 
+struct cached_mob_extra {
+  int number;
+  sstring keyword;
+  sstring description;
+
+  cached_mob_extra(int _number, sstring _keyword, sstring _description)
+      : number(_number), keyword(_keyword), description(_description) {}
+};
+
+struct cached_mob_imm {
+  int number;
+  int type;
+  int amt;
+
+  cached_mob_imm(int _number, int _type, int _amt)
+    : number(_number), type(_type), amt(_amt) {}
+};
 
 class TObjectCache {
 public:
-  std::map<int, cached_object *>cache;
+  std::map<int, cached_object> cache;
 
   void preload(void);
   cached_object *operator[](int);
 
-  ~TObjectCache()
-  {
-    for (auto& it : cache)
-      delete it.second;
-    cache.clear();
-  }
+ ~TObjectCache() {}
 } obj_cache;
 
 class TMobileCache {
 public:
-  std::map<int, cached_object *>cache;
-  std::map<int, std::vector <cached_mob_extra *> >extra;
-  std::map<int, std::vector <cached_mob_imm *> >imm;
+  std::map<int, cached_object> cache;
+  std::map<int, std::vector <cached_mob_extra>> extra;
+  std::map<int, std::vector <cached_mob_imm>> imm;
 
   void preload(void);
   cached_object *operator[](int);
 
-  ~TMobileCache()
-  {
-    for (auto& it : cache)
-      delete it.second;
-    cache.clear();
-  }
+  ~TMobileCache() {}
 } mob_cache;
 
 
@@ -1816,35 +1827,21 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   return (mob);
 }
 
+cached_object *TObjectCache::operator[](int nr) {
+  auto tIter = cache.find(nr);
+  if (tIter != cache.end())
+    return &(tIter->second);
 
-cached_object *TObjectCache::operator[](int nr)
-{
-  std::map<int, cached_object *>::iterator tIter;
-  cached_object *ret;
-
-  tIter = cache.find(nr);
-  if (tIter != cache.end()) {
-    ret = tIter->second;
-  } else {
-    ret = NULL;
-  }
-  return ret;
+  return nullptr;
 }
 
-cached_object *TMobileCache::operator[](int nr)
-{
-  std::map<int, cached_object *>::iterator tIter;
-  cached_object *ret;
+cached_object *TMobileCache::operator[](int nr) {
+  auto tIter = cache.find(nr);
+  if (tIter != cache.end())
+    return &(tIter->second);
 
-  tIter = cache.find(nr);
-  if (tIter != cache.end()) {
-    ret = tIter->second;
-  } else {
-    ret = NULL;
-  }
-  return ret;
+  return nullptr;
 }
-
 
 void log_object(TObj *obj)
 {
@@ -1887,27 +1884,28 @@ void TObjectCache::preload()
   db.query("select vnum, short_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj");
 
   while(db.fetchRow()){
-    cached_object *c=new cached_object;
-    c->number=real_object(convertTo<int>(db["vnum"]));
-    c->s["type"]=db["type"];
-    c->s["action_flag"]=db["action_flag"];
-    c->s["wear_flag"]=db["wear_flag"];
-    c->s["val0"]=db["val0"];
-    c->s["val1"]=db["val1"];
-    c->s["val2"]=db["val2"];
-    c->s["val3"]=db["val3"];
-    c->s["weight"]=db["weight"];
-    c->s["price"]=db["price"];
-    c->s["can_be_seen"]=db["can_be_seen"];
-    c->s["spec_proc"]=db["spec_proc"];
-    c->s["max_struct"]=db["max_struct"];
-    c->s["cur_struct"]=db["cur_struct"];
-    c->s["decay"]=db["decay"];
-    c->s["volume"]=db["volume"];
-    c->s["material"]=db["material"];
-    c->s["max_exist"]=db["max_exist"];
+    int number = real_object(convertTo<int>(db["vnum"]));
 
-    cache[c->number]=c;
+    std::map<sstring, sstring> s;
+    s["type"] = db["type"];
+    s["action_flag"] = db["action_flag"];
+    s["wear_flag"] = db["wear_flag"];
+    s["val0"] = db["val0"];
+    s["val1"] = db["val1"];
+    s["val2"] = db["val2"];
+    s["val3"] = db["val3"];
+    s["weight"] = db["weight"];
+    s["price"] = db["price"];
+    s["can_be_seen"] = db["can_be_seen"];
+    s["spec_proc"] = db["spec_proc"];
+    s["max_struct"] = db["max_struct"];
+    s["cur_struct"] = db["cur_struct"];
+    s["decay"] = db["decay"];
+    s["volume"] = db["volume"];
+    s["material"] = db["material"];
+    s["max_exist"] = db["max_exist"];
+
+    cache[number] = cached_object(number, s);
   }
 }
 
@@ -1918,76 +1916,75 @@ void TMobileCache::preload()
   db.query("select vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound from mob");
 
   while(db.fetchRow()){
-    cached_object *c=new cached_object;
-    c->number=real_mobile(convertTo<int>(db["vnum"]));
-    c->s["vnum"]=db["vnum"];
-    c->s["name"]=db["name"];
-    c->s["short_desc"]=db["short_desc"];
-    c->s["long_desc"]=db["long_desc"];
-    c->s["description"]=db["description"];
-    c->s["actions"]=db["actions"];
-    c->s["affects"]=db["affects"];
-    c->s["faction"]=db["faction"];
-    c->s["fact_perc"]=db["fact_perc"];
-    c->s["letter"]=db["letter"];
-    c->s["attacks"]=db["attacks"];
-    c->s["class"]=db["class"];
-    c->s["level"]=db["level"];
-    c->s["tohit"]=db["tohit"];
-    c->s["ac"]=db["ac"];
-    c->s["hpbonus"]=db["hpbonus"];
-    c->s["damage_level"]=db["damage_level"];
-    c->s["damage_precision"]=db["damage_precision"];
-    c->s["gold"]=db["gold"];
-    c->s["race"]=db["race"];
-    c->s["weight"]=db["weight"];
-    c->s["height"]=db["height"];
-    c->s["str"]=db["str"];
-    c->s["bra"]=db["bra"];
-    c->s["con"]=db["con"];
-    c->s["dex"]=db["dex"];
-    c->s["agi"]=db["agi"];
-    c->s["intel"]=db["intel"];
-    c->s["wis"]=db["wis"];
-    c->s["foc"]=db["foc"];
-    c->s["per"]=db["per"];
-    c->s["cha"]=db["cha"];
-    c->s["kar"]=db["kar"];
-    c->s["spe"]=db["spe"];
-    c->s["pos"]=db["pos"];
-    c->s["def_position"]=db["def_position"];
-    c->s["sex"]=db["sex"];
-    c->s["spec_proc"]=db["spec_proc"];
-    c->s["skin"]=db["skin"];
-    c->s["vision"]=db["vision"];
-    c->s["can_be_seen"]=db["can_be_seen"];
-    c->s["max_exist"]=db["max_exist"];
-    c->s["local_sound"]=db["local_sound"];
-    c->s["adjacent_sound"]=db["adjacent_sound"];
+    int number = real_mobile(convertTo<int>(db["vnum"]));
+
+    std::map<sstring, sstring> s;
+    s["vnum"] = db["vnum"];
+    s["name"] = db["name"];
+    s["short_desc"] = db["short_desc"];
+    s["long_desc"] = db["long_desc"];
+    s["description"] = db["description"];
+    s["actions"] = db["actions"];
+    s["affects"] = db["affects"];
+    s["faction"] = db["faction"];
+    s["fact_perc"] = db["fact_perc"];
+    s["letter"] = db["letter"];
+    s["attacks"] = db["attacks"];
+    s["class"] = db["class"];
+    s["level"] = db["level"];
+    s["tohit"] = db["tohit"];
+    s["ac"] = db["ac"];
+    s["hpbonus"] = db["hpbonus"];
+    s["damage_level"] = db["damage_level"];
+    s["damage_precision"] = db["damage_precision"];
+    s["gold"] = db["gold"];
+    s["race"] = db["race"];
+    s["weight"] = db["weight"];
+    s["height"] = db["height"];
+    s["str"] = db["str"];
+    s["bra"] = db["bra"];
+    s["con"] = db["con"];
+    s["dex"] = db["dex"];
+    s["agi"] = db["agi"];
+    s["intel"] = db["intel"];
+    s["wis"] = db["wis"];
+    s["foc"] = db["foc"];
+    s["per"] = db["per"];
+    s["cha"] = db["cha"];
+    s["kar"] = db["kar"];
+    s["spe"] = db["spe"];
+    s["pos"] = db["pos"];
+    s["def_position"] = db["def_position"];
+    s["sex"] = db["sex"];
+    s["spec_proc"] = db["spec_proc"];
+    s["skin"] = db["skin"];
+    s["vision"] = db["vision"];
+    s["can_be_seen"] = db["can_be_seen"];
+    s["max_exist"] = db["max_exist"];
+    s["local_sound"] = db["local_sound"];
+    s["adjacent_sound"] = db["adjacent_sound"];
     
-    cache[c->number]=c;
+    cache[number] = cached_object(number, s);
   }
 
   db.query("select vnum, keyword, description from mob_extra");
 
   while(db.fetchRow()){
-    cached_mob_extra *c=new cached_mob_extra;
-    c->number=real_mobile(convertTo<int>(db["vnum"]));
-    c->keyword=db["keyword"];
-    c->description=db["description"];
+    int number = real_mobile(convertTo<int>(db["vnum"]));
+    sstring keyword = db["keyword"];
+    sstring description = db["description"];
 
-    extra[c->number].push_back(c);
+    extra[number].emplace_back(number, keyword, description);
   }
 
   db.query("select vnum, type, amt from mob_imm");
 
   while(db.fetchRow()){
-    cached_mob_imm *c=new cached_mob_imm;
-    c->number=real_mobile(convertTo<int>(db["vnum"]));
-    c->type=convertTo<int>(db["type"]);
-    c->amt=convertTo<int>(db["amt"]);
+    int number = real_mobile(convertTo<int>(db["vnum"]));
+    int type = convertTo<int>(db["type"]);
+    int amt = convertTo<int>(db["amt"]);
 
-    imm[c->number].push_back(c);
+    imm[number].emplace_back(number, type, amt);
   }
 }
 
@@ -2245,15 +2242,15 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
 	distantSnds=mob_cache[nr]->s["adjacent_sound"];
     }
 
-    for(unsigned int i=0;i<mob_cache.imm[nr].size();++i){
-      setImmunity((immuneTypeT) mob_cache.imm[nr][i]->type, mob_cache.imm[nr][i]->amt);
-    }
+    for(auto& imm : mob_cache.imm[nr])    
+      setImmunity((immuneTypeT) imm.type, imm.amt);
+    
     
     extraDescription *tExDescr;
-    for(unsigned int i=0;i<mob_cache.extra[nr].size();++i){
+    for(auto& extra : mob_cache.extra[nr]) {
       tExDescr              = new extraDescription();
-      tExDescr->keyword     = mob_cache.extra[nr][i]->keyword;
-      tExDescr->description = mob_cache.extra[nr][i]->description;
+      tExDescr->keyword     = extra.keyword;
+      tExDescr->description = extra.description;
       tExDescr->next        = ex_description;
       ex_description        = tExDescr;
     }
@@ -2562,28 +2559,28 @@ TObj *read_object(int nr, readFileTypeT type)
 
   if(/*bootTime &&*/ obj_cache[nr]==NULL){
     //    vlogf(LOG_PEEL, format("caching object - %s") %  obj->shortDescr);
-    cached_object *c=new cached_object;
-    
-    c->number=nr;
-    c->s["type"]=db["type"];
-    c->s["action_flag"]=db["action_flag"];
-    c->s["wear_flag"]=db["wear_flag"];
-    c->s["val0"]=db["val0"];
-    c->s["val1"]=db["val1"];
-    c->s["val2"]=db["val2"];
-    c->s["val3"]=db["val3"];
-    c->s["weight"]=db["weight"];
-    c->s["price"]=db["price"];
-    c->s["can_be_seen"]=db["can_be_seen"];
-    c->s["spec_proc"]=db["spec_proc"];
-    c->s["max_struct"]=db["max_struct"];
-    c->s["cur_struct"]=db["cur_struct"];
-    c->s["decay"]=db["decay"];
-    c->s["volume"]=db["volume"];
-    c->s["material"]=db["material"];
-    c->s["max_exist"]=db["max_exist"];
+    int number = real_object(convertTo<int>(db["vnum"]));
 
-    obj_cache.cache[c->number]=c;
+    std::map<sstring, sstring> s;
+    s["type"] = db["type"];
+    s["action_flag"] = db["action_flag"];
+    s["wear_flag"] = db["wear_flag"];
+    s["val0"] = db["val0"];
+    s["val1"] = db["val1"];
+    s["val2"] = db["val2"];
+    s["val3"] = db["val3"];
+    s["weight"] = db["weight"];
+    s["price"] = db["price"];
+    s["can_be_seen"] = db["can_be_seen"];
+    s["spec_proc"] = db["spec_proc"];
+    s["max_struct"] = db["max_struct"];
+    s["cur_struct"] = db["cur_struct"];
+    s["decay"] = db["decay"];
+    s["volume"] = db["volume"];
+    s["material"] = db["material"];
+    s["max_exist"] = db["max_exist"];
+    
+    obj_cache.cache[number] = cached_object(number, s);
   }
 
   return obj;

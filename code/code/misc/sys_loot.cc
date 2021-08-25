@@ -98,7 +98,7 @@ bool sysLootBoot()
   for (unsigned int tOIndex = 0; tOIndex < obj_index.size(); tOIndex++)
     if (((isLegalLoot(itemTypeT(obj_index[tOIndex].itemtype)) &&
           isLegalLoot(obj_index[tOIndex].virt) &&
-          isLegalLoot(obj_index[tOIndex].name)) ||
+          isLegalLoot(obj_index[tOIndex].name.c_str())) ||
           isSpecialLegalLoot(tOIndex)) &&
         obj_index[tOIndex].max_exist == 9999) {
       //vlogf(LOG_BUG, format("Loot Object Debug, reading object: %d") %  tOIndex);

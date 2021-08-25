@@ -5596,7 +5596,7 @@ void TBeing::doSpells(const sstring &argument)
 
         if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
           sprintf(buf + strlen(buf), "   [%3i] %s",  totalcharges, 
-                  obj_index[real_object(CompInfo[comp].comp_num)].short_desc);
+                  obj_index[real_object(CompInfo[comp].comp_num)].short_desc.c_str());
         }         
       }
         strcat(buf, "\n\r");
@@ -5818,7 +5818,7 @@ void TBeing::doRituals(const sstring &argument)
 
         if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
           sprintf(buf + strlen(buf), "   [%3i] %s",  totalcharges, 
-                  obj_index[real_object(CompInfo[comp].comp_num)].short_desc);
+                  obj_index[real_object(CompInfo[comp].comp_num)].short_desc.c_str());
         }         
       }
         strcat(buf, "\n\r");
@@ -6012,7 +6012,7 @@ void TBeing::doPrayers(const sstring &argument)
         for (comp = 0; (comp < CompInfo.size()) && (i != CompInfo[comp].spell_num);comp++);
 
         if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) 
-          sprintf(buf + strlen(buf), "   [%2i] %s",  totalcharges, obj_index[real_object(CompInfo[comp].comp_num)].short_desc); 
+          sprintf(buf + strlen(buf), "   [%2i] %s",  totalcharges, obj_index[real_object(CompInfo[comp].comp_num)].short_desc.c_str()); 
       }
       strcat(buf, "\n\r");
           

@@ -108,7 +108,7 @@ sstring TNote::statObjInfo() const
   int rc = real_mobile(getRepairman());
 
   sprintf(buf, "Repairman: %s : %d",
-      (rc >= 0 ? mob_index[rc].short_desc : "Unknown"), getRepairman());
+      (rc >= 0 ? mob_index[rc].short_desc.c_str() : "Unknown"), getRepairman());
 
   sstring a(buf);
   return a;

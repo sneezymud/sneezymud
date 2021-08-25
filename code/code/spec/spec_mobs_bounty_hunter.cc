@@ -1145,7 +1145,7 @@ void repoCheck(TMonster *mob, int rnum)
 	!::number(0, ((cur_num > max_num) ? 10 : 100))) {
       // reduce hunter chance on artifacts
       if (::number(1,5) <= cur_num) {
-	strcpy(buf,obj_index[rnum].name);
+	strcpy(buf,obj_index[rnum].name.c_str());
 	strcpy(buf, add_bars(buf).c_str());
 	sprintf(buf2,"Hunter, repo %s",buf);
 	vlogf(LOG_PROC,format("REPO: %s auto-hunting: '%s' : cur:%d, max:%d.") % 

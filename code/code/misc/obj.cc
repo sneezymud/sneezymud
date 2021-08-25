@@ -114,11 +114,11 @@ void TObj::swapToStrung()
   addObjStat(ITEM_STRUNG);
   name = obj_index[getItemIndex()].name;
   shortDescr = obj_index[getItemIndex()].short_desc;
-  if (obj_index[getItemIndex()].long_desc)
+  if (!(obj_index[getItemIndex()].long_desc.empty()))
     setDescr(obj_index[getItemIndex()].long_desc);
   else
     setDescr(NULL);
-  if (obj_index[getItemIndex()].description)
+  if (!(obj_index[getItemIndex()].description.empty()))
     action_description = obj_index[getItemIndex()].description;
   else
     action_description = NULL;

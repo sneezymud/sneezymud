@@ -246,7 +246,7 @@ sstring showComponentTechnical(const int tValue)
       if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
         strcpy(tBuffer, "[Unknown]");
       else
-        strcpy(tBuffer, mob_index[tMobNum].name);
+        strcpy(tBuffer, mob_index[tMobNum].name.c_str());
 
       tResult += format("Dissect Load: %d %s\n\r") % tDissectIndex % tBuffer;
     }
@@ -295,7 +295,7 @@ sstring showComponentTechnical(const int tValue)
           if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
             strcpy(tBuffer, "[Unknown]");
           else
-            strcpy(tBuffer, mob_index[tMobNum].name);
+            strcpy(tBuffer, mob_index[tMobNum].name.c_str());
 
           tResult += format("Script: %s %s\n\r") % tDir->d_name % tBuffer;
 
@@ -1067,7 +1067,7 @@ void TPerson::doShow(const sstring &argument)
             obj_index[tObjectIndex].value >  minCost &&
             (tStItemType.empty() ||
              is_abbrev(tStItemType, ItemInfo[obj_index[tObjectIndex].itemtype]->name))) {
-          strcpy(tBuffer, obj_index[tObjectIndex].short_desc);
+          strcpy(tBuffer, obj_index[tObjectIndex].short_desc.c_str());
 
           if (colorString(this, desc, tBuffer, NULL, COLOR_NONE, TRUE).length() > 40) {
             tBuffer[38] = '\0';

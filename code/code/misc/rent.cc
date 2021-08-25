@@ -687,7 +687,7 @@ TObj *ItemLoad::raw_read_item()
       o->action_description = sstring(action_description);
       delete [] action_description;
     }
-    else if (obj_index[o->getItemIndex()].description) 
+    else if (!(obj_index[o->getItemIndex()].description.empty())) 
       o->action_description = obj_index[o->getItemIndex()].description;
     else 
       o->action_description = NULL;
@@ -2511,7 +2511,7 @@ void printLimitedInRent(void)
         // latter condition is because Obj::DEITY_TOKEN max exist = 0
         char buf[1024];
         sprintf(buf, "Item (%s:%d) is over max (%d).  Num: (%d).\n\r", 
-            obj_index[i].name, obj_index[i].virt,
+            obj_index[i].name.c_str(), obj_index[i].virt,
             obj_index[i].max_exist, obj_index[i].getNumber());
 	// these have to be lower case
         // autoMail(NULL, "jesus", buf);
