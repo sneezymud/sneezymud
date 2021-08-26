@@ -1464,6 +1464,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_ADVANCED_BERSERKING:
       case SKILL_BLOODLUST:
       case SKILL_WHIRLWIND:
+      case SKILL_RALLY:
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
