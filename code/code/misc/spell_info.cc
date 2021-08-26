@@ -686,7 +686,7 @@ void buildSpellArray()
 
   discArray[SKILL_RALLY] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_STR, "rally", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "Your motivation to continue the battle diminishes.", "", "", "", START_1, LEARN_4, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_FOCUSED_ATTACK] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "focused attack", TASK_NORMAL, LAG_1, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "Your focus returns and you feel ready to attempt another concentrated blow.", "", "", "", START_20, LEARN_2,START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
+  discArray[SKILL_FOCUS_ATTACK] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "focus attack", TASK_NORMAL, LAG_1, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "Your focus returns and you feel ready to attempt another concentrated blow.", "", "", "", START_20, LEARN_2,START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
 // disc_dueling
 

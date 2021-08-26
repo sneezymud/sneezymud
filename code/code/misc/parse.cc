@@ -1224,6 +1224,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_WHIRLWIND:
           rc = doWhirlwind();
           break;
+        case CMD_FOCUS_ATTACK:
+          rc = doFocusAttack(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          break;
         case CMD_RALLY:
           rc = doRally(newarg.c_str());
           break;
@@ -3007,6 +3010,7 @@ void buildCommandArray(void)
   commandArray[CMD_RECHARGE] = new commandInfo("recharge", POSITION_STANDING, 0);
   commandArray[CMD_NOP] = new commandInfo("noop", POSITION_DEAD, 0);
   commandArray[CMD_AURA] = new commandInfo("aura", POSITION_RESTING, 0);
+  commandArray[CMD_FOCUS_ATTACK] = new commandInfo("focus", POSITION_FIGHTING, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

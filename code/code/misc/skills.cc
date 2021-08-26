@@ -549,6 +549,9 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDWarrior *) cd)->skWhirlwind;
     case SKILL_RALLY:
       return &((CDWarrior *) cd)->skRally;
+    case SKILL_FOCUS_ATTACK:
+      return &((CDWarrior *) cd)->skFocusAttack;
+
 
 // disc_soldiering
 

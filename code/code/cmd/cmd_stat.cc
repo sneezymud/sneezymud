@@ -1516,6 +1516,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_KICK:
       case SKILL_SPRINGLEAP:
       case SKILL_DEATHSTROKE:
+      case SKILL_FOCUS_ATTACK:
       case SKILL_BASH_DEIKHAN:
       case SKILL_BASH:
       case SPELL_BONE_BREAKER:
