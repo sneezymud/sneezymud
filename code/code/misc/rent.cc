@@ -2499,26 +2499,11 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
   return TRUE;
 }
 
-void printLimitedInRent(void)
-{
-  unsigned int i;
-  for (i = 0; i < obj_index.size(); i++) {
-    if (obj_index[i].getNumber() > 0) {
-      vlogf(LOG_MISC, format("  %d - [%d] : max [%d]") % 
-           obj_index[i].virt % obj_index[i].getNumber() % obj_index[i].max_exist);
-      if (obj_index[i].getNumber() > obj_index[i].max_exist &&
-          obj_index[i].max_exist) {
-        // latter condition is because Obj::DEITY_TOKEN max exist = 0
-        char buf[1024];
-        sprintf(buf, "Item (%s:%d) is over max (%d).  Num: (%d).\n\r", 
-            obj_index[i].name.c_str(), obj_index[i].virt,
-            obj_index[i].max_exist, obj_index[i].getNumber());
-	// these have to be lower case
-        // autoMail(NULL, "jesus", buf);
-        // autoMail(NULL, "damescena", buf);
-
-      }
-    }
+void printLimitedInRent(void) {
+  for (auto &obj : obj_index) {
+    if (obj.getNumber() > 0)
+      vlogf(LOG_MISC,
+            format("  %d - [%d] : max [%d]") % obj.virt % obj.getNumber() % obj.max_exist);
   }
 }
 
