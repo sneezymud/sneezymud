@@ -181,7 +181,7 @@ struct cached_object {
   int number;
   std::map<sstring, sstring> s;
 
-  cached_object() {}
+  cached_object() = default;
   cached_object(int number, std::map<sstring, sstring> s)
     : number(number), s(s) {}
 };
@@ -210,8 +210,6 @@ public:
 
   void preload(void);
   cached_object *operator[](int);
-
- ~TObjectCache() {}
 } obj_cache;
 
 class TMobileCache {
@@ -222,8 +220,6 @@ public:
 
   void preload(void);
   cached_object *operator[](int);
-
-  ~TMobileCache() {}
 } mob_cache;
 
 

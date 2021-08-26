@@ -66,8 +66,6 @@ indexData::indexData(const indexData &a) :
   description = a.description;
 }
 
-indexData::~indexData() {}
-
 mobIndexData::mobIndexData() :
   faction(-99),
   Class(-99),
@@ -103,10 +101,6 @@ mobIndexData::mobIndexData(const mobIndexData &a) :
   race(a.race),
   doesLoad(a.doesLoad),
   numberLoad(a.numberLoad)
-{
-}
-
-mobIndexData::~mobIndexData()
 {
 }
 

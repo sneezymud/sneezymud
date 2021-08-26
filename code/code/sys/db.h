@@ -270,7 +270,6 @@ class indexData {
   indexData();
   indexData(const indexData &);
   indexData & operator= (const indexData &a);
-  virtual ~indexData();
 };
 
 class objIndexData : public indexData
@@ -303,7 +302,6 @@ class mobIndexData : public indexData
     mobIndexData();
     mobIndexData(const mobIndexData &);
     mobIndexData & operator=(const mobIndexData &);
-    virtual ~mobIndexData();
 };
 
 class resetQElement
