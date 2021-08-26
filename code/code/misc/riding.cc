@@ -814,7 +814,6 @@ int MountEgoCheck(TBeing *ch, TBeing *horse)
 
     if (ch->doesKnowSkill(SKILL_RIDE))
     check -= ch->getSkillValue(SKILL_RIDE)/10;
-
     // Bonus for proficiency in advanced riding disc.
     if (ch->doesKnowSkill(SKILL_ADVANCED_RIDING))
       check -= ch->getSkillValue(SKILL_ADVANCED_RIDING)/8;

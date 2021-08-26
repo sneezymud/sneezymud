@@ -95,7 +95,7 @@ int berserk(TBeing * caster)
 
     af.type = SKILL_BERSERK;
     af.level = level;
-    af.duration = 6 * Pulse::UPDATES_PER_MUDHOUR;
+    af.duration = Pulse::UPDATES_PER_MUDHOUR/2;
     af.location = APPLY_NONE;
     af.modifier = 0;
     af.bitvector = 0;
@@ -188,11 +188,3 @@ void repair(TBeing * caster, TObj *obj)
   }
   hammer->repairMeHammer(caster, obj);
 }
-
-
-
-
-
-
-
-

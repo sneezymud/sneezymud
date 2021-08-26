@@ -1,3 +1,25 @@
+05-XX-22 : Warrior Revamp
+            - Updates to legacy warrior abilities (bodyslam, stomp, etc.) to make 
+            them worth using.
+            - Refactoring of warrior abilities to move abilities into more logical 
+            disciplines and to spread the abilities around more evenly. 
+            - Added 2h specialization to warriors.
+            - Reworked deathstroke - this ability now deals more damage overall 
+            and scales inversely with victim health. Added a lockout and a 
+            significant debuff to discourage tanks from using this offensive ability.
+            - New ability - Rally - short duration AoE buff that raises max hp/mv.
+            - New ability - Whirlwind - AoE attack with a lockout.
+            - New ability - Focus Attack - a reliable autoattack with a lockout.
+            - New ability - Slam - a low damage melee attack with no lockout.
+            - New ability - Fortify - drastically reduces incoming damage for the 
+            warrior for a very short duration. Lockout and requires a shield.
+            - New ability - Bloodlust - combat and healing bonuses that stack as the 
+            warrior kills opponents. Short duration and buffs will fall off if the 
+            warrior is out of combat for long.
+            - Berserk tweaks and new ability - advanced berserking that strengthens 
+            the base berserk ability and provides increased bloodlust stacks while 
+            berserking.
+
 07-31-21 : Learn by doing
            - made subtle changes accross various parts of LBD all to mkae it easier
            to hone skills. 

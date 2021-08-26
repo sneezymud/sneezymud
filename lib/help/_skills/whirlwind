@@ -1,0 +1,9 @@
+Through their mastery of armed combat, warriors are able to swing their
+weapons in wide arcs, striking multiple opponents simultaneously.  Such
+whirlwind attacks can only be attempted periodically, as they can throw
+the warrior off-balance and are draining on even the most veteran warriors.
+
+
+Technical description: Whirlwind attempts to strike all non-grouped entities
+within the room.  A skill-success check is applied for attempting the maneuver,
+and then a separate hit-check is applied for each and every non-grouped entity.

@@ -1,7 +1,7 @@
-Deathstroke is a single, very destructive fighting move designed to strike a 
-victim's vital organs.  While the move can be attempted against healthy foes, 
-it is most effective against wounded opponents.  Deathstroke is generally a 
-risky maneuver and warriors should exercise caution when attempting this move.
+Deathstroke is a single, very destructive fighting move designed to
+strike a victim's vital organs.  While the move can be attempted against healthy
+foes, it is most effective against wounded opponents.  Deathstroke is generally
+a risky maneuver and warriors should exercise caution when attempting this move.
 Due to the overly aggressive nature of a deathstroke, warriors who attempt this 
 maneuver tend to leave themselves exposed to attack for some time, and may even 
 leave themselves open to a counter-attack to their own vital organs.  However, 
@@ -10,3 +10,8 @@ with additional fervor.
 
 Deathstroke is a physical attack, and as such, requires the warrior be able to
 successfully hit the victim.  Failure to do so will cause the attempt to fail.
+
+
+Technical description: Deathstroke damage scales up as the victim's hp % decreases.
+Deathstroke will always apply an armor penalty to the user so tanks should use it
+sparingly, if at all.  Successful hits will also provide the user with +3 hitroll.
