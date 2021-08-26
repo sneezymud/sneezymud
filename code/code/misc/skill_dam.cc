@@ -251,7 +251,6 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
   const double NEED_RAIN_LIGHTNING = 1.075;
 
   switch (skill) {
-    case SKILL_KICK:
     case SKILL_SLAM:
     case SKILL_BASH:
     case SKILL_HEADBUTT:
@@ -260,7 +259,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_BODYSLAM:
     case SKILL_SPIN:
     // other: bash lag is handled based on this is bash
-      dam = genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 0.20, REDUCE_NO, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 0.50, REDUCE_NO, !isPc(), TRIM_NO);
       break;
     case SKILL_DEATHSTROKE:
       // damage scaling higher the lower the victim's hp %
@@ -403,7 +402,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_HEALING_GRASP:
       dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 2.50, REDUCE_NO, !isPc(), TRIM_YES);
       break;
-    case SKILL_KICK_THIEF:
+    case SKILL_KICK:
     case SKILL_GARROTTE:
     case SKILL_STABBING:
       dam = genericDam(victim, this, skill, DISC_THIEF, level, adv_learn, 1.033, REDUCE_NO, !isPc(), TRIM_NO);

@@ -40,11 +40,6 @@ bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  if (getCombatMode() == ATTACK_BERSERK) {
-    if (!silent)
-      sendTo("You are berserking! You can't focus enough to headbutt anyone!\n\r ");
-    return FALSE;
-  }
   if (victim->riding && !dynamic_cast<TBeing *> (victim->riding)) {
     act("You can't headbutt $N while $E is on $p!", TRUE, this, victim->riding, victim, TO_CHAR);
     return FALSE;
@@ -255,19 +250,11 @@ static int headbuttHit(TBeing *c, TBeing *victim)
 
 static int headbutt(TBeing *caster, TBeing *victim)
 {
-  int percent;
-  int i;
   int rc;
-  const int HEADBUTT_MOVE   = 15;
+  const int HEADBUTT_MOVE   = 10;
 
   if (!caster->canHeadbutt(victim, SILENT_NO))
     return FALSE;
-
-  percent = ((10 - (victim->getArmor() / 100)) << 1);
-  percent += caster->getDexReaction() * 5;
-  percent -= victim->getAgiReaction() * 5;
-  
-  int bKnown = caster->getSkillValue(SKILL_HEADBUTT);
 
   if (caster->getMove() < HEADBUTT_MOVE) {
     caster->sendTo("You lack the vitality.\n\r");
@@ -275,12 +262,15 @@ static int headbutt(TBeing *caster, TBeing *victim)
   }
   caster->addToMove(-HEADBUTT_MOVE);
 
-  if (caster->bSuccess(bKnown + percent, SKILL_HEADBUTT) &&
-         (i = caster->specialAttack(victim,SKILL_HEADBUTT)) &&
-         i != GUARANTEED_FAILURE &&
-         percent < bKnown&&
-         !victim->canCounterMove(bKnown*2/5) &&
-         !victim->canFocusedAvoidance(bKnown*2/5)) {
+  int bKnown = caster->getSkillValue(SKILL_HEADBUTT);
+  int successfulHit = caster->specialAttack(victim, SKILL_HEADBUTT);
+  int successfulSkill = caster->bSuccess(bKnown, SKILL_HEADBUTT);
+
+  // keep bSucc at end so counters are OK
+  if (!victim->awake() ||
+      (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE &&
+      !victim->canCounterMove(bKnown*2/5) &&
+      !victim->canFocusedAvoidance(bKnown*2/5))) {
     return (headbuttHit(caster, victim));
   } else {
     rc = headbuttMiss(caster, victim);

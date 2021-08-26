@@ -12,12 +12,6 @@ static int deathstroke(TBeing *caster, TBeing *victim)
   spellNumT sktype = SKILL_DEATHSTROKE;
   affectedData aff1, aff2;
   
-  // Ensure player even knows the skill before continuing
-  if (!caster->doesKnowSkill(SKILL_DEATHSTROKE)) {
-    caster->sendTo("You know nothing about deathblows.\n\r");
-    return FALSE;
-  }
-
   // Ensure this isn't a peaceful room
   if (caster->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
@@ -179,10 +173,13 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
   if (checkBusy()) {
     return FALSE;
   }
+
+  // Ensure player even knows the skill before continuing
   if (!doesKnowSkill(SKILL_DEATHSTROKE)) {
-    sendTo("You know nothing about making deathstrokes.\n\r");
+    sendTo("You know nothing about deathblows.\n\r");
     return FALSE;
   }
+
   strcpy(v_name, argument);
   
   if (!(victim = vict)) {

@@ -181,8 +181,7 @@ static int stompHit(TBeing *caster, TBeing *victim)
 
 static int stomp(TBeing *c, TBeing *victim)
 {
-  int percent, i;
-  const int STOMP_MOVE  = 12;
+  const int STOMP_MOVE  = 10;
   
   if (!c->canStomp(victim, SILENT_NO))
     return FALSE;
@@ -193,19 +192,15 @@ static int stomp(TBeing *c, TBeing *victim)
   }
   c->addToMove(-STOMP_MOVE);
 
-  percent = ((10 - (victim->getArmor() / 100)) << 1);
-  percent += c->getDexReaction() * 5;
-  percent -= victim->getAgiReaction() * 5;
-  
-  int bKnown = c->getSkillValue(SKILL_STOMP);
 
-  if (victim->getPosition() <= POSITION_STUNNED) {
-    return (stompHit(c, victim));
-  } else if (c->bSuccess(bKnown + percent, SKILL_STOMP) &&
-         (i = c->specialAttack(victim,SKILL_STOMP)) &&
-         i != GUARANTEED_FAILURE &&
-        percent < bKnown&&
-         !victim->canCounterMove(bKnown*2/5)) {
+  int bKnown = c->getSkillValue(SKILL_STOMP);
+  int successfulHit = c->specialAttack(victim, SKILL_STOMP);
+  int successfulSkill = c->bSuccess(bKnown, SKILL_STOMP);
+
+  if (!victim->awake() ||
+      (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE &&
+      !victim->canCounterMove(bKnown*2/5) &&
+      !victim->canFocusedAvoidance(bKnown*2/5))) {
     return (stompHit(c, victim));
   } else {
     stompMiss(c, victim);

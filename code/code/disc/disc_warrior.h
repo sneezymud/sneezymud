@@ -41,13 +41,10 @@ class CDWarrior : public CDiscipline
 {
 public:
 // Level 2
-    CSkill skKick;
     CSkill skSlam;
 //Level 10
     CSkill skBash;
     CSkill skFocusAttack;
-//Level 12
-    CSkill skHeadbutt;
 
 //Level 15
     CSkill skRescue;
@@ -58,27 +55,20 @@ public:
 //Level 25
     CSkill skBerserk;
     CSkill skSwitch;
-
-    CSkill skKneestrike;
-    CSkill skTrip;
     CSkill skBloodlust;
     CSkill skWhirlwind;
     CSkill skRally;
 
     CDWarrior()
       : CDiscipline(),
-      skKick(),
       skSlam(),
       skBash(),
       skFocusAttack(),
-      skHeadbutt(),
       skRescue(),
       skBlacksmithing(),
       skDisarm(),
       skBerserk(),
       skSwitch(),
-      skKneestrike(),
-      skTrip(),
       skBloodlust(),
       skWhirlwind(),	
       skRally()	{
@@ -100,18 +90,14 @@ public:
     CDWarrior & operator=(const CDWarrior &a) {
       if (this == &a) return *this;
       CDiscipline::operator=(a);
-      skKick = a.skKick;
       skSlam = a.skSlam;
       skBash = a.skBash;
       skFocusAttack = a.skFocusAttack;
-      skHeadbutt = a.skHeadbutt;
       skRescue = a.skRescue;
       skBlacksmithing = a.skBlacksmithing;
       skDisarm = a.skDisarm;
       skBerserk = a.skBerserk;
       skSwitch = a.skSwitch;
-      skKneestrike = a.skKneestrike;
-      skTrip = a.skTrip;
       skBloodlust = a.skBloodlust;
       skWhirlwind = a.skWhirlwind;
       skRally = a.skRally;

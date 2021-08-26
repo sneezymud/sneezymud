@@ -198,18 +198,12 @@ static int spinHit(TBeing *caster, TBeing *victim)
 
 static int spin(TBeing *caster, TBeing *victim)
 {
-  int percent;
-  int i = 0;
   int rc;
   int flycheck = ::number(1, 10);
-  const int SPIN_COST = 13;       // movement cost to spin
+  const int SPIN_COST = 10;       // movement cost to spin
 
   if (!caster->canSpin(victim, SILENT_NO))
     return FALSE;
-
-  // AC makes less difference here ... 
-  percent = ((10 + (victim->getArmor() / 200)) << 1);
-  int bKnown = caster->getSkillValue(SKILL_SPIN);
 
   if (victim->isFlying()) {
     if (flycheck > 5) {
@@ -231,34 +225,29 @@ static int spin(TBeing *caster, TBeing *victim)
   }
   caster->addToMove(-SPIN_COST);
 
-  if (victim->getPosition() <= POSITION_INCAP) 
-    return (spinHit(caster, victim));
-  
-  // remember, F = MA :) need to take  weight into account 
-  if (caster->bSuccess(bKnown + percent, SKILL_SPIN) &&
-         (i = caster->specialAttack(victim,SKILL_SPIN)) && 
-         i != GUARANTEED_FAILURE &&
-         (percent < bKnown))  {
+  int bKnown = caster->getSkillValue(SKILL_SPIN);
+  int successfulHit = caster->specialAttack(victim, SKILL_SPIN);
+  int successfulSkill = caster->bSuccess(bKnown, SKILL_SPIN);
 
+  // Success case
+  if (!victim->awake() ||
+      (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE)) {
+    // Allow victim a chance to counter
     if (victim->canCounterMove(bKnown/3)) {
       SV(SKILL_SPIN);
       rc = spinMiss(caster, victim, TYPE_MONK);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
+    // Allow victim a chance to successfully avoid via focused avoidance
     } else if (victim->canFocusedAvoidance(bKnown/3)) {
       SV(SKILL_SPIN);
       rc = spinMiss(caster, victim, TYPE_DEFENSE);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
-    } else if (((caster->getDexReaction() - 
-                victim->getAgiReaction()) > ::number(-10,20)) &&
-               victim->awake() && victim->getPosition() >= POSITION_STANDING) {
-      CS(SKILL_SPIN);
-      rc = spinMiss(caster, victim, TYPE_DEX);
-      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-        return rc;
+    // Successful hit
     } else 
       return spinHit(caster, victim);
+  // Failure case
   } else {
     rc = spinMiss(caster, victim, TYPE_DEFAULT);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))

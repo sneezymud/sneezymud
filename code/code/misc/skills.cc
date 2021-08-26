@@ -490,14 +490,10 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_warrior
 
-    case SKILL_KICK:
-      return &((CDWarrior *) cd)->skKick;
     case SKILL_SLAM:
       return &((CDWarrior *) cd)->skSlam;
     case SKILL_BASH:
       return &((CDWarrior *) cd)->skBash;
-    case SKILL_HEADBUTT:
-      return &((CDWarrior *) cd)->skHeadbutt;
     case SKILL_RESCUE:
       return &((CDWarrior *) cd)->skRescue;
     case SKILL_BLACKSMITHING:
@@ -508,10 +504,14 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDWarrior *) cd)->skBerserk;
     case SKILL_SWITCH_OPP:
       return &((CDWarrior *) cd)->skSwitch;
-    case SKILL_KNEESTRIKE:
-      return &((CDWarrior *) cd)->skKneestrike;
-    case SKILL_TRIP:
-      return &((CDWarrior *) cd)->skTrip;
+    case SKILL_BLOODLUST:
+      return &((CDWarrior *) cd)->skBloodlust;
+    case SKILL_WHIRLWIND:
+      return &((CDWarrior *) cd)->skWhirlwind;
+    case SKILL_RALLY:
+      return &((CDWarrior *) cd)->skRally;
+    case SKILL_FOCUS_ATTACK:
+      return &((CDWarrior *) cd)->skFocusAttack;
 
 //disc_dueling
 
@@ -545,14 +545,12 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDBrawling *) cd)->skTaunt;
     case SKILL_ADVANCED_BERSERKING:
       return &((CDBrawling *) cd)->skAdvBerserk;
-    case SKILL_BLOODLUST:
-      return &((CDWarrior *) cd)->skBloodlust;
-    case SKILL_WHIRLWIND:
-      return &((CDWarrior *) cd)->skWhirlwind;
-    case SKILL_RALLY:
-      return &((CDWarrior *) cd)->skRally;
-    case SKILL_FOCUS_ATTACK:
-      return &((CDWarrior *) cd)->skFocusAttack;
+    case SKILL_HEADBUTT:
+      return &((CDBrawling *) cd)->skHeadbutt;
+    case SKILL_KNEESTRIKE:
+      return &((CDBrawling *) cd)->skKneestrike;
+    case SKILL_TRIP:
+      return &((CDBrawling *) cd)->skTrip;
 
 
 // disc_soldiering
@@ -852,7 +850,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDThief *) cd)->skStabbing;
     case SKILL_RETREAT_THIEF: //             485
       return &((CDThief *) cd)->skRetreatThief;
-    case SKILL_KICK_THIEF:  //                486
+    case SKILL_KICK:  //                486
       return &((CDThief *) cd)->skKickThief;
     case SKILL_PICK_LOCK:   //                 487
       return &((CDThief *) cd)->skPickLock;

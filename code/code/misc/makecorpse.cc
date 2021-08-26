@@ -342,7 +342,6 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf, "The body of %s has a footprint in its side.",getName().c_str());
         break;
       case DAMAGE_KICK_SOLAR:
-      case SKILL_KICK_THIEF:
       case SKILL_KICK_MONK:
       case SKILL_KICK:
       case SKILL_SPRINGLEAP:

@@ -396,33 +396,26 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
 
 static int kneestrike(TBeing *caster, TBeing *victim)
 {
-  int percent;
-  int i = 0;
   int rc = 0;
-  const int KNEESTRIKE_MOVE   = 15;
+  const int KNEESTRIKE_MOVE   = 10;
   int adv=caster->getAdvLearning(SKILL_KNEESTRIKE);
   
   if (!caster->canKneestrike(victim, SILENT_NO))
     return FALSE;
 
-  percent = ((10 - (victim->getArmor() / (10+adv/10))) << 1);
-  percent += caster->getDexReaction() * 5;
-  percent -= victim->getAgiReaction() * 5;
-  
-  int bKnown = caster->getSkillValue(SKILL_KNEESTRIKE);
-  
   if (caster->getMove() < KNEESTRIKE_MOVE) {
     caster->sendTo("You lack the vitality.\n\r");
     return FALSE;
   }
   caster->addToMove(-(KNEESTRIKE_MOVE-(adv/20)));
 
+  int bKnown = caster->getSkillValue(SKILL_KNEESTRIKE);
+  int successfulHit = caster->specialAttack(victim, SKILL_KNEESTRIKE);
+  int successfulSkill = caster->bSuccess(bKnown, SKILL_KNEESTRIKE);
+  
   // keep bSucc at end so counters are OK
-  i = caster->specialAttack(victim,SKILL_KNEESTRIKE);
-  if (i &&
-      i != GUARANTEED_FAILURE &&
-      percent < bKnown &&
-      caster->bSuccess(bKnown + percent, SKILL_KNEESTRIKE)) {
+  if (!victim->awake() || 
+      (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE)) {
 
     if (victim->canCounterMove((bKnown-adv/2)/3)) {
       SV(SKILL_KNEESTRIKE);
@@ -474,10 +467,3 @@ int TBeing::doKneestrike(const char *argument, TBeing *vict)
   }
   return rc;
 }
-
-
-
-
-
-
-

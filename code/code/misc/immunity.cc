@@ -353,9 +353,8 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case DAMAGE_KICK_SIDE:
     case DAMAGE_KICK_SHIN:
     case DAMAGE_KICK_SOLAR:
-    case SKILL_KICK_THIEF:
-    case SKILL_KICK_MONK:
     case SKILL_KICK:
+    case SKILL_KICK_MONK:
     case TYPE_KICK:
     case SKILL_CHOP:
     case TYPE_CRUSH:
