@@ -39,6 +39,8 @@
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
 #include "rent.h"
+#include "disc_warrior.h"
+#include "disc_brawling.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -2101,6 +2103,56 @@ int TBeing::hit(TBeing *target, int pulse)
       target->desc->session.rounds_received[target->getCombatMode()]++;
   } 
 
+  if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      // This will eventually grant a chance to land a random warrior ability automatically while berserking.
+      // The abilities currently planned are:
+      //   - headbutt (1)
+      //   - kneestrike (2)
+      //   - bash (3)
+      //   - bodyslam (4)
+      //   - spin (5)
+      //   - stomp (situationally - opponent needs to be downed) (6)
+      //   - taunt (not particularly advantageous) (7)
+      /*
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && !::number(0,10)) {
+	 int roll = ::number(1,7;
+	 if (roll == 1) {
+           //TBeing::headbuttHit(this, target);
+         }
+	 else if (roll == 2) {
+ 	   //TBeing::kneestrikeHit(this, target);
+         }
+	 else if (roll == 3) {
+	   act("In a berserker rage, you crash into $N with all your might!", FALSE, this, 0, target, TO_CHAR);     
+	   act("In a berserker rage, $n crashes into $N!", FALSE, this, 0, target, TO_NOTVICT);     
+	   act("In a berserker rage, $n crashes into you!", FALSE, this, 0, target, TO_VICT);     
+ 	   TBeing::bashSuccess(target, SKILL_BASH);
+	 }
+	 else if (roll == 4) {
+ 	   //TBeing::bodyslamHit(this, target); 
+	 }
+	 else if (roll == 5) {
+ 	   //TBeing::spinHit(this, target);
+	 }
+	 else if (roll == 6) {
+ 	   //TBeing::stompHit(this, target);
+	 }
+	 else if (roll == 7) {
+	   if (doesKnowSkill(SKILL_TAUNT)) {
+ 	     TBeing::doTaunt(target.getName());
+           }
+	 }
+      } */
+
+      // Adding a chance per round to gain a stack of bloodlust while berserking and upon
+      // passing a successful advanced berserking check
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && 
+  	  doesKnowSkill(SKILL_BLOODLUST) && 
+	  bSuccess(getSkillLevel(SKILL_BLOODLUST), SKILL_BLOODLUST) && 
+	  !::number(0,5)) {
+        doBloodlust();
+      }
+    }
 
   // we come in here multiple times
   // 1 round is Pulse::COMBAT long
@@ -2291,13 +2343,13 @@ int TBeing::hit(TBeing *target, int pulse)
       if(doesKnowSkill(SKILL_IRON_FIST) && 
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 15);
-
-      if(doesKnowSkill(SKILL_CRIT_HIT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
+
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 15);
+      if(doesKnowSkill(SKILL_CRIT_HIT))
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {

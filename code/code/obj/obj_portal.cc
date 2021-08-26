@@ -343,6 +343,10 @@ int TPortal::enterMe(TBeing *ch)
     ch->sendTo("You can't seem to find a way to enter that.\n\r");
     return FALSE;
   }
+  if (ch->isCombatMode(ATTACK_BERSERK) && ch->fight()) {
+    ch->sendTo("You are too overwhelmed with rage to leave the battle now!\n\r");
+    return FALSE;
+  }
   if (!(rp = real_roomp(getTarget(&isRandom)))) {
     ch->sendTo("As you start to enter, you glimpse a swirling vortex just beyond.\n\r");
     ch->sendTo("The sheer terror of that chaos prevents you from actually going through.\n\r");
