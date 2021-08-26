@@ -44,7 +44,7 @@ public:
     CSkill skKick;
 //Level 10
     CSkill skBash;
-    CSkill skFocusedAttack;
+    CSkill skFocusAttack;
 //Level 12
     CSkill skHeadbutt;
 
@@ -68,6 +68,7 @@ public:
       : CDiscipline(),
       skKick(),
       skBash(),
+      skFocusAttack(),
       skHeadbutt(),
       skRescue(),
       skBlacksmithing(),
@@ -84,6 +85,7 @@ public:
       : CDiscipline(a),
       skKick(a.skKick),
       skBash(a.skBash),
+      skFocusAttack(a.skFocusAttack),
       skHeadbutt(a.skHeadbutt),
       skRescue(a.skRescue),
       skBlacksmithing(a.skBlacksmithing),
@@ -101,6 +103,7 @@ public:
       CDiscipline::operator=(a);
       skKick = a.skKick;
       skBash = a.skBash;
+      skFocusAttack = a.skFocusAttack;
       skHeadbutt = a.skHeadbutt;
       skRescue = a.skRescue;
       skBlacksmithing = a.skBlacksmithing;
