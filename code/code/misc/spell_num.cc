@@ -1034,6 +1034,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 734;
     case SKILL_ADVANCED_BERSERKING:
       return 735;
+    case SKILL_BLOODLUST:
+      return 736;
     case AFFECT_DISEASE:
       return 2500;
     case AFFECT_COMBAT:
@@ -2155,6 +2157,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_2H_SPEC;
     case 735:
       return SKILL_ADVANCED_BERSERKING;
+    case 736:
+      return SKILL_BLOODLUST;
     case 2500:
       return AFFECT_DISEASE;
     case 2501:
