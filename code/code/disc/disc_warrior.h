@@ -108,6 +108,9 @@ public:
       skSwitch = a.skSwitch;
       skKneestrike = a.skKneestrike;
       skTrip = a.skTrip;
+      skBloodlust = a.skBloodlust;
+      skWhirlwind = a.skWhirlwind;
+      skRally = a.skRally;
       return *this;
     }
     virtual ~CDWarrior() {}

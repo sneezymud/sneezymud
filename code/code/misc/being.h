@@ -1067,6 +1067,7 @@ class TBeing : public TThing {
   bool canKneestrike(TBeing *, silentTypeT);
   bool canGrapple(TBeing *, silentTypeT);
   bool canDeathstroke(TBeing *, silentTypeT);
+  bool canWhirlwind(TBeing *, silentTypeT);
   bool canWither(TBeing *, silentTypeT);
   bool canBoneBreak(TBeing *, silentTypeT);
   bool canParalyzeLimb(TBeing *, silentTypeT);
@@ -1281,6 +1282,11 @@ class TBeing : public TThing {
   void doBoot(const sstring &);
   void doResize(const char *);
   int doDeathstroke(const char *, TBeing *);
+  int doFocusAttack(const char *, TBeing *);
+  int doWhirlwind();
+  int doRally();
+  int doFortify();
+  int doSlam(const char *, TBeing *);
   void doBandage(const sstring &);
   int doBodyslam(const char *, TBeing *);
   int doSpin(const char *, TBeing *);

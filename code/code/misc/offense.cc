@@ -567,6 +567,7 @@ static bool orderDenyCheck(const char * cmd_buf)
       is_abbrev(cmd_buf, "kick") ||
       is_abbrev(cmd_buf, "bash") ||
       is_abbrev(cmd_buf, "deathstroke") ||
+      is_abbrev(cmd_buf, "whirlwind") ||
       is_abbrev(cmd_buf, "grapple") ||
       is_abbrev(cmd_buf, "shove") ||
       is_abbrev(cmd_buf, "bodyslam") ||

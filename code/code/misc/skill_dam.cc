@@ -267,6 +267,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
 		      2.0*((double) victim->getHit() / (double) victim->hitLimit()), 
 		      REDUCE_NO, !isPc(), TRIM_NO);
       break;
+    case SKILL_WHIRLWIND:
+      dam =  genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 4.0,
+		      REDUCE_NO, !isPc(), TRIM_NO);
+      break;
     case SPELL_SAND_BLAST:
     case SPELL_HELLFIRE:
     case SPELL_ENERGY_DRAIN:
