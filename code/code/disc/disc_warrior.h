@@ -44,6 +44,7 @@ public:
     CSkill skKick;
 //Level 10
     CSkill skBash;
+    CSkill skFocusedAttack;
 //Level 12
     CSkill skHeadbutt;
 
