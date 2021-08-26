@@ -302,6 +302,7 @@ enum cmdTypeT {
      CMD_SPLIT,
      CMD_COMMAND,
      CMD_DEATHSTROKE,
+     CMD_WHIRLWIND,
      CMD_PIMP,
      CMD_LIGHT,
      CMD_BELITTLE,

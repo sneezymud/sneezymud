@@ -1161,6 +1161,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_SPIN:
       case SKILL_ADVANCED_BERSERKING:
       case SKILL_BLOODLUST:
+      case SKILL_WHIRLWIND:
       case SKILL_POWERMOVE:
       case SKILL_CHARGE:
       case SKILL_SMITE:
