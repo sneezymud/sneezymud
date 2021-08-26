@@ -19,7 +19,8 @@ CDBrawling::CDBrawling() :
   skBodyslam(),
   skSpin(),
   skCloseQuartersFighting(),
-  skTaunt()
+  skTaunt(),
+  skAdvBerserk()
 {
 }
 
@@ -31,7 +32,8 @@ CDBrawling::CDBrawling(const CDBrawling &a) :
   skBodyslam(a.skBodyslam),
   skSpin(a.skSpin),
   skCloseQuartersFighting(a.skCloseQuartersFighting),
-  skTaunt(a.skTaunt)
+  skTaunt(a.skTaunt),
+  skAdvBerserk(a.skAdvBerserk)
 {
 }
 
@@ -46,6 +48,7 @@ CDBrawling & CDBrawling::operator=(const CDBrawling &a)
   skSpin = a.skSpin;
   skCloseQuartersFighting = a.skCloseQuartersFighting;
   skTaunt = a.skTaunt;
+  skAdvBerserk = a.skAdvBerserk;
   return *this;
 }
 

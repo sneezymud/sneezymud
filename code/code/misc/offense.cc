@@ -2247,6 +2247,12 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
         if (fy > 0.0)
 	        fy += 0.5;
       }
+      if (bSuccess(SKILL_ADVANCED_BERSERKING)) {
+        if (fx > 0.0)
+          fx += 0.5;
+        if (fy > 0.0)
+	  fy += 0.5;
+      }
     }
   }
 

@@ -356,6 +356,7 @@ enum spellNumT {
      SKILL_RIPOSTE,
      SKILL_TAUNT,
      SKILL_2H_SPEC,
+     SKILL_ADVANCED_BERSERKING,
      // end of warrior
 
      // start of mage
