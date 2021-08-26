@@ -1725,6 +1725,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
       case SKILL_2H_SPEC_DEIKHAN:
+      case SKILL_2H_SPEC:
       case SKILL_RIDE:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:

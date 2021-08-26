@@ -1058,8 +1058,8 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               --(*o);
               equipChar(o, HOLD_RIGHT);
               // learn 2h spec as with dual wield
-              if (doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
-                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, 60);
+              if (doesKnowSkill(getSkillNum(SKILL_2H_SPEC))) {
+                learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, getSkillNum(SKILL_2H_SPEC), 60);
               }
               // If fighting, make them lose a round or two. 
               loseRoundWear(0.05, TRUE, TRUE);
