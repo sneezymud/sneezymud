@@ -1,0 +1,13 @@
+Through their mastery of armed combat, warriors are able to study their
+opponent's defense and find openings in even the most skilled defense.  
+However, such focus is difficult for warriors to maintain, and thus a 
+focused attack can only be attempted periodically.
+
+
+Technical description: Focused attack does not do anything immediately
+upon a successful use, but applies a buff to the warrior that has a 
+chance to fire off a special attack in subsequent rounds of combat 
+(consuming the buff when it does).  This buff is separate from the
+lockout buff.  The special attack, when fired, is a normal melee hit with
+the character's primary weapon but with a very high chance of success, even
+against very difficult opponents.

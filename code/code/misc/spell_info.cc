@@ -675,13 +675,12 @@ void buildSpellArray()
   discArray[SKILL_SWITCH_OPP] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "switch opponents", TASK_EASY, LAG_2, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_61, LEARN_3, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_BLOODLUST] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_STR, "bloodlust", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "Your <R>bloodlust <z>has been sated.", "", "", "", START_1, LEARN_4, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
->>>>>>> eb558eb6... Shuffling warrior abilities around
 
   discArray[SKILL_WHIRLWIND] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_SOLDIERING, STAT_STR, "whirlwind", TASK_DANGEROUS, LAG_2, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "You feel ready to attempt another <R>whirlwind attack<z>.", "", "", "", START_60, LEARN_4, START_DO_1, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_RALLY] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_BRAWLING, STAT_CHA, "rally", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "Your motivation to continue the battle diminishes, but you feel prepared for another <C>rallying cry<z>.", "", "", "", START_1, LEARN_4, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
-  discArray[SKILL_FOCUS_ATTACK] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "focus attack", TASK_NORMAL, LAG_1, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "Your focus returns and you feel ready to attempt another concentrated blow.", "", "", "", START_20, LEARN_2,START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
+  discArray[SKILL_FOCUS_ATTACK] = new spellInfo(SKILL_WARRIOR, DISC_WARRIOR, DISC_DUELING, STAT_EXT, "focus attack", TASK_NORMAL, LAG_1, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "Your <Y>focus <z>returns and you feel ready to attempt another concentrated blow.", "", "", "", START_20, LEARN_2,START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
 // disc_dueling
 
@@ -734,6 +733,8 @@ void buildSpellArray()
   discArray[SKILL_POWERMOVE] = new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT, "power move", TASK_EASY, LAG_0, POSITION_STANDING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_1, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 
   discArray[SKILL_2H_SPEC] = new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_EXT, "2h specialization", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_1, LEARN_2, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
+
+  discArray[SKILL_FORTIFY] = new spellInfo(SKILL_WARRIOR, DISC_SOLDIERING, DISC_SOLDIERING, STAT_BRA, "fortify", TASK_NORMAL, LAG_0, POSITION_CRAWLING, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "You collect your composure and are ready to <G>fortify <z>your defenses once again.", "", "", "", START_1, LEARN_4, START_DO_10, LEARN_DO_2, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_UNUSUAL, 0.0, 0, 0);
 
 // disc_blacksmithing
 
