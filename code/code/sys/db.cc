@@ -182,8 +182,8 @@ struct cached_object {
   std::map<sstring, sstring> s;
 
   cached_object() {}
-  cached_object(int _number, std::map<sstring, sstring> _s)
-    : number(_number), s(_s) {}
+  cached_object(int number, std::map<sstring, sstring> s)
+    : number(number), s(s) {}
 };
 
 struct cached_mob_extra {
@@ -191,8 +191,8 @@ struct cached_mob_extra {
   sstring keyword;
   sstring description;
 
-  cached_mob_extra(int _number, sstring _keyword, sstring _description)
-      : number(_number), keyword(_keyword), description(_description) {}
+  cached_mob_extra(int number, sstring keyword, sstring description)
+      : number(number), keyword(keyword), description(description) {}
 };
 
 struct cached_mob_imm {
@@ -200,8 +200,8 @@ struct cached_mob_imm {
   int type;
   int amt;
 
-  cached_mob_imm(int _number, int _type, int _amt)
-    : number(_number), type(_type), amt(_amt) {}
+  cached_mob_imm(int number, int type, int amt)
+    : number(number), type(type), amt(amt) {}
 };
 
 class TObjectCache {
