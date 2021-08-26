@@ -543,6 +543,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDBrawling *) cd)->skTaunt;
     case SKILL_ADVANCED_BERSERKING:
       return &((CDBrawling *) cd)->skAdvBerserk;
+    case SKILL_BLOODLUST:
+      return &((CDWarrior *) cd)->skBloodlust;
 
 // disc_soldiering
 

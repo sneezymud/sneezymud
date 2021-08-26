@@ -39,8 +39,6 @@
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
 #include "rent.h"
-#include "disc_warrior.h"
-#include "disc_brawling.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -2148,7 +2146,6 @@ int TBeing::hit(TBeing *target, int pulse)
       // passing a successful advanced berserking check
       if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && 
   	  doesKnowSkill(SKILL_BLOODLUST) && 
-	  bSuccess(getSkillLevel(SKILL_BLOODLUST), SKILL_BLOODLUST) && 
 	  !::number(0,5)) {
         doBloodlust();
       }
@@ -2372,8 +2369,16 @@ int TBeing::hit(TBeing *target, int pulse)
     fx++;
     REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
   }    
-
+  
   while (fx > 0.999) {
+    // check for concentrated blow
+    if (isAffected(AFF_FOCUS_ATTACK) && !::number(0,2)) {
+      sendTo(COLOR_BASIC, "<Y>You execute a focused attack, striking your opponent with precision!<z>\n\r");
+      act("<y>$n executes a focused attack!<z>", TRUE, this, NULL, NULL, TO_ROOM);
+      REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
+      oneHit(target, HAND_PRIMARY, o, attackRound(target), &fx);
+    }
+
     checkLearnFromHit(this, tarLevel, o, true, w_type);
     if ((rc = oneHit(target, HAND_PRIMARY, o,mod, &fx))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
@@ -5971,6 +5976,60 @@ void doToughness(TBeing *ch)
   aff.bitvector = 0;
 
   ch->affectTo(&aff, -1);
+}
+
+
+void TBeing::doBloodlust()
+{
+  const long MAX_BLOODLUST = 10;
+  if (!doesKnowSkill(SKILL_BLOODLUST) || !awake() || getPosition() < POSITION_CRAWLING ||
+      !bSuccess(SKILL_BLOODLUST))
+    return;
+
+  long mod = 0;
+  if (affectedBySpell(SKILL_BLOODLUST)) {
+    for (auto *ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_BLOODLUST) {
+        // set the mod and remove the affect so we can add it fresh
+        mod = ch_affected->modifier;
+        affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+  
+  if (mod < MAX_BLOODLUST) {
+    // Increment stacks since it's < max
+    ++mod;
+
+    // Only send message if NOSPAM toggle isn't set and
+    // max stacks hadn't been already reached previously
+    if (desc && !IS_SET(desc->autobits, AUTO_NOSPAM)) {
+      sstring message;
+      switch (mod) {
+        case MAX_BLOODLUST:
+          message =
+              "<r>Your desire for combat nearly overwhelms you, as you are overcome with <R>BLOODLUST.<1>";
+          break;
+        case (MAX_BLOODLUST / 2):
+          message =
+              "<r>You feel the blood pumping in your veins, as your <R>bloodlust <r>continues to grow.<1>";
+          break;
+        default:
+          message = "<r>You feel the bloodlust welling up inside you.<1>";
+      }
+
+      act(message, false, this, nullptr, nullptr, TO_CHAR);
+    }
+  }
+
+  affectedData aff1;
+  aff1.type = SKILL_BLOODLUST;
+  aff1.duration = Pulse::UPDATES_PER_MUDHOUR*3;
+  aff1.location = APPLY_DAMROLL;
+  aff1.modifier = mod;
+  aff1.bitvector = 0;
+  affectTo(&aff1, -1);  
 }
 
 void TBeing::doInevitability()

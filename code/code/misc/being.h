@@ -565,6 +565,7 @@ class TBeing : public TThing {
   int hits(TBeing *, int);
   int missVictim(TBeing *, TThing *, spellNumT);
   void doInevitability();
+  void doBloodlust();
   void doGuardiansLight(int, int);
   void checkGuardiansLight();
 
