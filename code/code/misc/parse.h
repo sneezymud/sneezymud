@@ -302,6 +302,7 @@ enum cmdTypeT {
      CMD_SPLIT,
      CMD_COMMAND,
      CMD_DEATHSTROKE,
+     CMD_SLAM,
      CMD_FOCUS_ATTACK,
      CMD_WHIRLWIND,
      CMD_RALLY,

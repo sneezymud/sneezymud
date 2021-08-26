@@ -19,9 +19,12 @@ class CDBrawling : public CDiscipline
     CSkill skStomp;
     CSkill skBrawlAvoidance;
     CSkill skBodyslam;
+    CSkill skHeadbutt;
+    CSkill skKneestrike;
     CSkill skSpin;
     CSkill skCloseQuartersFighting;
     CSkill skTaunt;
+    CSkill skTrip;
     CSkill skAdvBerserk;
 
     CDBrawling();

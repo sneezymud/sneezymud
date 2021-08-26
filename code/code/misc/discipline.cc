@@ -641,10 +641,8 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
           if (hasClass(CLASS_MONK))
             return SKILL_KICK_MONK;
           else
-            return pick_best_skill(this, skill_num, {
-                {CLASS_WARRIOR, SKILL_KICK},
-                {CLASS_THIEF, SKILL_KICK_THIEF}});
-      
+            return SKILL_KICK;
+
         case SKILL_RETREAT:
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_RETREAT},

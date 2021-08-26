@@ -327,7 +327,6 @@ enum spellNumT {
      
      // start of warrior
 // KEEP KICK AS FIRST SKILL, OR MODIFY MIN_SKILL AND MAX_SPELL BELOW
-     SKILL_KICK,
      SKILL_SLAM,
      SKILL_BASH,
      SKILL_TRIP,
@@ -473,7 +472,7 @@ enum spellNumT {
      SKILL_SNEAK,
      SKILL_STABBING,
      SKILL_RETREAT_THIEF,
-     SKILL_KICK_THIEF,
+     SKILL_KICK,
      SKILL_PICK_LOCK,
      SKILL_BACKSTAB,
      SKILL_THROATSLIT,

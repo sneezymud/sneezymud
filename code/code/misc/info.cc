@@ -1212,9 +1212,8 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case SPELL_BLEED:
-      case SKILL_KICK_THIEF:
-      case SKILL_KICK_MONK:
       case SKILL_KICK:
+      case SKILL_KICK_MONK:
       case SKILL_SLAM:
       case SKILL_SPRINGLEAP:
       case SKILL_DEATHSTROKE:
