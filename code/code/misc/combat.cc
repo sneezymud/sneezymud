@@ -1992,9 +1992,9 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     // 2h Specialization: should be no additional dam for anyone without specialization
     // extra 10% for 2h is part of the object
     TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
-    if (obj && obj->isPaired() && doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
+    if (obj && obj->isPaired() && doesKnowSkill(getSkillNum(SKILL_2H_SPEC))) {
       // Take half the skill value and normalize between 10 and 50
-      int amt = (int) getSkillValue(SKILL_2H_SPEC_DEIKHAN);
+      int amt = max(0, (int) getSkillValue(getSkillNum(SKILL_2H_SPEC)));
       amt = 100 + min(50, max(10, (int) (amt / 2)));
       dam = (int) (dam * amt / 100);
     }
@@ -2041,11 +2041,11 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
         if (ch->doesKnowSkill(skill) && 
             dynamic_cast<TBaseWeapon *>(o) && 
             !isPrimary)
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, max(0, (100 - (2* myLevel))));
+	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, (120 - (2* myLevel)));
         // Learn 2h on hit
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
-        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
-          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
+        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC) && obj->isPaired()) {
+          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC, (120 - (2* myLevel)));
         }
         // Offense hones
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (120 - (2* myLevel)));
