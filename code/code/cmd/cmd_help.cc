@@ -1098,7 +1098,7 @@ void buildHelpIndex()
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue; 
 
-    immortalIndex.push_back(sstring(dp->d_name));
+    immortalIndex.emplace_back(dp->d_name);
   }
   closedir(dfd);
 
@@ -1115,7 +1115,7 @@ void buildHelpIndex()
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
   
-    builderIndex.push_back(sstring(dp->d_name));
+    builderIndex.emplace_back(dp->d_name);
   }
   closedir(dfd);
 
@@ -1132,7 +1132,7 @@ void buildHelpIndex()
         (strlen(dp->d_name) >= 5 &&
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
-    helpIndex.push_back(sstring(dp->d_name));
+    helpIndex.emplace_back(dp->d_name);
   }
 
   closedir(dfd);
@@ -1150,7 +1150,7 @@ void buildHelpIndex()
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
 
-    skillIndex.push_back(sstring(dp->d_name));
+    skillIndex.emplace_back(dp->d_name);
   }
   closedir(dfd);
 
@@ -1167,7 +1167,7 @@ void buildHelpIndex()
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
 
-    spellIndex.push_back(sstring(dp->d_name));
+    spellIndex.emplace_back(dp->d_name);
   }
   closedir(dfd);
 }
