@@ -25,10 +25,6 @@ int mysticDarts(TBeing *caster, TBeing *victim, int level, short bKnown, int adv
 {
   char buf[256];
   sstring misBuf;
-
-  if (caster->isNotPowerful(victim, level, SPELL_MYSTIC_DARTS, SILENT_NO))
-    return SPELL_FAIL;
-
   level = min(level, 10);
 
   int dam = caster->getSkillDam(victim, SPELL_MYSTIC_DARTS, level, adv_learn);
