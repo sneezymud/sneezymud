@@ -1042,6 +1042,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 738;
     case SKILL_FOCUS_ATTACK:
       return 739;
+    case SKILL_FORTIFY:
+      return 740;
     case AFFECT_DISEASE:
       return 2500;
     case AFFECT_COMBAT:
@@ -1146,6 +1148,8 @@ int mapSpellnumToFile(spellNumT stt)
       return 2550;
     case AFFECT_HOLY_WRATH:
       return 2551;
+    case AFFECT_FORTIFY:
+      return 2552;
     case SPELL_FIRE_BREATH:
     case SPELL_CHLORINE_BREATH:
     case SPELL_FROST_BREATH:
@@ -2171,6 +2175,8 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_RALLY;
     case 739:
       return SKILL_FOCUS_ATTACK;
+    case 740:
+      return SKILL_FORTIFY;
     case 2500:
       return AFFECT_DISEASE;
     case 2501:
@@ -2271,6 +2277,8 @@ spellNumT mapFileToSpellnum(int stt)
       return AFFECT_GUARDIANS_LIGHT;
     case 2551:
       return AFFECT_HOLY_WRATH;
+    case 2552:
+      return AFFECT_FORTIFY;
     default:
       break;
   }

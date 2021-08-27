@@ -20,6 +20,7 @@ public:
     CSkill skPowerMove;
     CSkill skDeathstroke;
     CSkill sk2hSpecWarrior;
+    CSkill skFortify;
 
     CDSoldiering();
     CDSoldiering(const CDSoldiering &a);

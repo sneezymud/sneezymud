@@ -305,6 +305,7 @@ enum cmdTypeT {
      CMD_FOCUS_ATTACK,
      CMD_WHIRLWIND,
      CMD_RALLY,
+     CMD_FORTIFY,
      CMD_PIMP,
      CMD_LIGHT,
      CMD_BELITTLE,

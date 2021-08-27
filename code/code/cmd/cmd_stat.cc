@@ -1465,6 +1465,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_BLOODLUST:
       case SKILL_WHIRLWIND:
       case SKILL_RALLY:
+      case SKILL_FORTIFY:
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
@@ -2284,6 +2285,12 @@ void TBeing::statBeing(TBeing *k)
         str += "Wet.\n\r";
         str += format("     Covered by %d fluid ounces of water.\n\r") % aff->modifier;
       break;
+
+      case AFFECT_FORTIFY:
+        str += "Shield Wall.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") % apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
 
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:

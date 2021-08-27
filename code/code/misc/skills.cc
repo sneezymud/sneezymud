@@ -565,6 +565,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDSoldiering *) cd)->skPowerMove;
     case SKILL_2H_SPEC:
       return &((CDSoldiering *) cd)->sk2hSpecWarrior;
+    case SKILL_FORTIFY:
+      return &((CDSoldiering *) cd)->skFortify;
 
 // disc_blacksmithing
     case SKILL_BLACKSMITHING_ADVANCED:
@@ -1423,6 +1425,7 @@ CSkill *TBeing::getSkill(spellNumT skill) const
     case AFFECT_UNHOLY_WRATH:
     case AFFECT_GUARDIANS_LIGHT:
     case AFFECT_HOLY_WRATH:
+    case AFFECT_FORTIFY:
     case AFFECT_PREENED:
     case AFFECT_WET:
     case ABSOLUTE_MAX_SKILL:

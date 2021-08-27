@@ -3,7 +3,7 @@
 #include "combat.h"
 #include "obj_base_weapon.h"
 
-int TBeing::doRally(const char *argument)
+int TBeing::doRally()
 {
   if (!doesKnowSkill(SKILL_RALLY)) {
     sendTo("You know nothing about motivational speaking.\n\r");
