@@ -61,7 +61,9 @@ class GameStats {
 
     double max_exist;
     double xp_modif;
-    double damage_modifier;
+    double skill_damage_mod;
+    double weapon_damage_mod;
+    double barehand_damage_mod;
     int absorb_damage_divisor[2];
     long logins;
     unsigned int mobs_1_5;
@@ -112,7 +114,9 @@ class GameStats {
       burnrate(1.0),
       max_exist(0.0),
       xp_modif(1.0),
-      damage_modifier(1.0),
+      skill_damage_mod(1.0),
+      weapon_damage_mod(1.0),
+      barehand_damage_mod(1.0),
       logins(0),
       mobs_1_5(0),
       mobs_6_10(0),

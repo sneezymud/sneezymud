@@ -129,17 +129,14 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   // so, for mobs, throw in a scale factor
   // totally arbitrary, and unrealistic, but necessary for balance
 
-  // the basic assumption of this formula is that it is PC v NPC for
-  // an offensive skill
-  // NPC v PC offense needs correction factor
-  // PC v PC (arena) should not be corrected since melee damage not reduced
-  //     for that case
-  // NPC v NPC is sort of a moot case (charmies, pets, etc) too rare to worry about
-  // xx v PC (heal) ought to be corrected as want dam and healing to be same
-  // xx v NPC (heal) ought not to be corrected for similar reasoning
-  if ((npc || trim) && ((victim && victim->isPc()) || !victim))
-    fixed_amt *= 0.9091 / 1.75;
+  // Adjust NPC damage/healing 
+  if (npc && ((victim && victim->isPc()) || !victim))
+    fixed_amt *= 0.5195;
 
+  // Adjust healing for PCs
+  if (!npc && trim)
+    fixed_amt *= 0.5195;
+  
   // Obviously, we should tweak dam up/down based on how successful the
   // skill is. We increase damage for skills as the failure rate increases 
   // to ensure those skills are worth using.
@@ -200,7 +197,7 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   }
 
   // adjust for global values
-  dam = (int) (dam * stats.damage_modifier);
+  dam = (int) (dam * stats.skill_damage_mod);
 
   dam = max(1,dam);
 

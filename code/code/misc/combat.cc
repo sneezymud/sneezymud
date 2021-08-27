@@ -1812,7 +1812,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   dam += rollDam;
 
   // adjust for global values
-  dam = (int) (dam * stats.damage_modifier);
+  dam = (int) (dam * stats.barehand_damage_mod);
 
 #if DAMAGE_DEBUG
   vlogf(LOG_COMBAT, format("MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f") %  ch->getName() % ch->GetMaxLevel() % ch->getProfName() % dam % wepDam % rollDam % statDam);
@@ -2020,7 +2020,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
   }
 
   // adjust for global values
-  dam = (int) (dam * stats.damage_modifier);
+  dam = (int) (dam * stats.weapon_damage_mod);
 
   dam = max(1, dam);                // Not less than 0 damage 
   return (dam);
