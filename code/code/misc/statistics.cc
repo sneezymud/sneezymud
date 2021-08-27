@@ -89,8 +89,11 @@ int init_game_stats(void)
   // 5.0-5.1 was too easy and too fast
   // people could level to 50 in 2-6 play days
   // this should be better for 5.2
-  stats.damage_modifier = 0.65;
-  //stats.damage_modifier = 0.86;
+  
+  // Splitting these out to provide knobs for each
+  stats.skill_damage_mod = 0.65;
+  stats.weapon_damage_mod = 0.65;
+  stats.barehand_damage_mod = 0.65;
 
   if (!(fp = fopen(STATS_FILE,"r"))) {
     vlogf(LOG_BUG, "Unable to open txt/stat file");
@@ -499,7 +502,9 @@ void TBeing::doGamestats(const sstring &arg)
     sendTo(format("Current Max-Exist Modifier      : %4.2f\n\r") % stats.max_exist);
     sendTo(format("Current Mob-Money Modifier      : %4.2f\n\r") % gold_modifier[GOLD_INCOME].getVal());
     sendTo(format("Current Mob-XP Modifier         : %4.2f\n\r") % stats.xp_modif);
-    sendTo(format("Current Damage Modifier         : %4.2f\n\r") % stats.damage_modifier);
+    sendTo(format("Current Skill Dam Modifier      : %4.2f\n\r") % stats.skill_damage_mod);
+    sendTo(format("Current Weapon Dam Modifier     : %4.2f\n\r") % stats.weapon_damage_mod);
+    sendTo(format("Current Barehand Dam Modifier   : %4.2f\n\r") % stats.barehand_damage_mod);
     return;
   } else if (is_abbrev(buf, "trivia")) {
     sendTo(format("Average HP regen              : %4.2f  (attempts : %d)\n\r") %        (stats.hit_gained_attempts == 0 ? 0.0 :
