@@ -1287,6 +1287,8 @@ namespace {
     { SPELL_KNIT_BONE, "SPELL_KNIT_BONE" },
     { SPELL_RELIVE, "SPELL_RELIVE" },
     { SPELL_CRUSADE, "SPELL_CRUSADE"},
+    { SPELL_HOLY_SMITE, "SPELL_HOLY_SMITE"},
+    { SPELL_IMPROVED_SMITE, "SPELL_HOLY_SMITE"},
     { SPELL_FLATULENCE, "SPELL_FLATULENCE" },
     { SPELL_ENLIVEN, "SPELL_ENLIVEN" },
     { SPELL_BLOOD_BOIL, "SPELL_BLOOD_BOIL" },
@@ -2417,6 +2419,9 @@ int TBeing::doDiscipline(spellNumT which, sstring const& n1)
         break;
       case SPELL_CRUSADE:
         crusade(this);
+        break;
+      case SPELL_HOLY_SMITE:
+        rc = holySmite(this, ch);
         break;
       case SPELL_RELIVE:
         relive(this,ch);

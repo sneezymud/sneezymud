@@ -164,8 +164,10 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     sprintf(buf, "The bloated, water-filled corpse of %s is floating here.", getName().c_str());
   } else if (!specialCorpse) {
     switch (dmg_type) {
+      case SPELL_HOLY_SMITE:
       case DAMAGE_HOLY:
         sprintf(buf, "The corpse of %s lies here peacfully with arms crossed.", getName().c_str());
+        break;
       case SPELL_GUST:
       case DAMAGE_GUST:
       case SPELL_DUST_STORM:

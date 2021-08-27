@@ -357,6 +357,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
 // disc_cleric
 
+    case SPELL_HOLY_SMITE:
+      return &((CDCleric *) cd)->skHolySmite;
     case SPELL_HEAL_LIGHT:
       return &((CDCleric *) cd)->skHealLight;
     case SPELL_HARM_LIGHT:
@@ -377,6 +379,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDCleric *) cd)->skHealSerious;
     case SPELL_HARM_SERIOUS:
       return &((CDCleric *) cd)->skHarmSerious;
+    case SPELL_IMPROVED_SMITE:
+      return &((CDCleric *) cd)->skImprovedSmite;
     case SPELL_STERILIZE:
       return &((CDCleric *) cd)->skSterilize;
     case SPELL_EXPEL:

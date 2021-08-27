@@ -13,6 +13,7 @@ CDCleric::CDCleric() :
   CDiscipline(),
   skHealLight(),
   skHarmLight(),
+  skHolySmite(),
   skCreateFood(),
   skCreateWater(),
   skArmor(),
@@ -21,6 +22,7 @@ CDCleric::CDCleric() :
   skRainBrimstone(),
   skHealSerious(),
   skHarmSerious(),
+  skImprovedSmite(),
   skSterilize(),
   skExpel(),
   skCureDisease(),
@@ -52,6 +54,7 @@ CDCleric::CDCleric(const CDCleric &a) :
   CDiscipline(a),
   skHealLight(a.skHealLight),
   skHarmLight(a.skHarmLight),
+  skHolySmite(a.skHolySmite),
   skCreateFood(a.skCreateFood),
   skCreateWater(a.skCreateWater),
   skArmor(a.skArmor),
@@ -60,6 +63,7 @@ CDCleric::CDCleric(const CDCleric &a) :
   skRainBrimstone(a.skRainBrimstone),
   skHealSerious(a.skHealSerious),
   skHarmSerious(a.skHarmSerious),
+  skImprovedSmite(a.skImprovedSmite),
   skSterilize(a.skSterilize),
   skExpel(a.skExpel),
   skCureDisease(a.skCureDisease),
@@ -93,6 +97,7 @@ CDCleric & CDCleric::operator=(const CDCleric &a)
   CDiscipline::operator=(a);
   skHealLight = a.skHealLight;
   skHarmLight = a.skHarmLight;
+  skHolySmite = a.skHolySmite;
   skCreateFood = a.skCreateFood;
   skCreateWater = a.skCreateWater;
   skArmor = a.skArmor;
@@ -101,6 +106,7 @@ CDCleric & CDCleric::operator=(const CDCleric &a)
   skRainBrimstone = a.skRainBrimstone;
   skHealSerious = a.skHealSerious;
   skHarmSerious = a.skHarmSerious;
+  skImprovedSmite = a.skImprovedSmite;
   skSterilize = a.skSterilize;
   skExpel = a.skExpel;
   skCureDisease = a.skCureDisease;

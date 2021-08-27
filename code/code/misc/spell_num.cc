@@ -413,6 +413,10 @@ int mapSpellnumToFile(spellNumT stt)
       return 204;
     case SPELL_CRUSADE:
       return 205;
+    case SPELL_HOLY_SMITE:
+      return 206;
+    case SPELL_IMPROVED_SMITE:
+      return 207;
     case SKILL_KICK:
       return 217;
     case SKILL_BASH:
@@ -1545,6 +1549,10 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_RELIVE;
     case 205:
       return SPELL_CRUSADE;
+    case 206:
+      return SPELL_HOLY_SMITE;
+    case 207:
+      return SPELL_IMPROVED_SMITE;
     case 217:
       return SKILL_KICK;
     case 218:

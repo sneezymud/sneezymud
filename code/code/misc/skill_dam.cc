@@ -366,6 +366,8 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       ///////////////////////
       // END SHAMAN STUFF
       ///////////////////////
+    case SPELL_HOLY_SMITE:
+    case SPELL_IMPROVED_SMITE:
     case SPELL_HARM_LIGHT:
     case SPELL_HARM_SERIOUS:
     case SPELL_HARM_CRITICAL:

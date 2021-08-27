@@ -107,5 +107,8 @@ private:
     int hailStorm(TBeing *);
     int hailStorm(TBeing *, int, short);
 
+    int holySmite(TBeing *, TBeing *);
+    int holySmite(TBeing *, TBeing *, int, short, int);
+
 #endif
 

@@ -38,6 +38,7 @@ public:
 //Level 1
     CSkill skHealLight;       // MOD   1st level individual
     CSkill skHarmLight;       // MOD   1st level individual
+    CSkill skHolySmite;
 
 //Level 4
     CSkill skCreateFood;
@@ -56,6 +57,7 @@ public:
 //Level 9 
     CSkill skHealSerious;    // MOD  10th level individual
     CSkill skHarmSerious;    // MOD  10th level individual
+    CSkill skImprovedSmite;
 
 //Level 10
     CSkill skSterilize;

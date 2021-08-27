@@ -1147,4 +1147,78 @@ int flamestrike(TBeing *caster, TBeing *victim, TMagicItem *obj)
 }
 
 
+int holySmite(TBeing *caster, TBeing *victim) {
+  int ret = 0;
+  int rc = 0;
 
+  if (!bPassClericChecks(caster,SPELL_HOLY_SMITE))
+    return FALSE;
+
+  ret=holySmite(caster, 
+                victim,
+                caster->getSkillLevel(SPELL_HOLY_SMITE), //Caster level in the appropriate class (1-50)
+                caster->getSkillValue(SPELL_HOLY_SMITE), //Caster skill value (1-100)
+                caster->getAdvLearning(SPELL_HOLY_SMITE)); //learnedness in the advanced disc
+  
+  if (IS_SET(ret, SPELL_SUCCESS)) {
+
+  } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
+    caster->sendTo("Nothing seems to happen.\n\r");
+  } else {
+
+  }
+
+  if (IS_SET(ret, VICTIM_DEAD))
+    ADD_DELETE(rc, DELETE_VICT);
+  if (IS_SET(ret, CASTER_DEAD))
+    ADD_DELETE(rc, DELETE_THIS);
+
+  return rc;
+}
+    
+int holySmite(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn) {
+  int rc = 0;
+  int dam = 0;
+  sstring light_string = "<c>cyan light<1>";
+  spellNumT spell = SPELL_HOLY_SMITE;
+  caster->reconcileHurt(victim, discArray[SPELL_HOLY_SMITE]->alignMod);
+
+    // SPELL_HOLY_SMITE is the spell we cast regardless of other passive abilities
+  if (!caster->bSuccess(bKnown, caster->getPerc(), SPELL_HOLY_SMITE))
+    return SPELL_FAIL;
+
+  // Now we decide which skill determines the damage
+  if (caster->doesKnowSkill(SPELL_IMPROVED_SMITE) && caster->bSuccess(SPELL_IMPROVED_SMITE)) {
+    spell = SPELL_IMPROVED_SMITE;
+    light_string = "<b>blue light<1>";
+  }
+
+
+
+  dam = caster->getSkillDam(victim, spell, level, adv_learn);
+  
+  act(format("$n summons a beam of %s that streaks towards you!") % light_string, false, caster, 0, victim, TO_VICT);
+  act(format("$n summons a beam of %s that streaks towards $N!") % light_string, false, caster, 0, victim, TO_NOTVICT);
+  act(format("You summon a beam of %s that streaks towards $N!") % light_string, false, caster, 0, victim, TO_CHAR);
+
+  switch (critSuccess(caster, SPELL_HOLY_SMITE)) {
+    case CRIT_S_KILL:
+    case CRIT_S_TRIPLE:
+    case CRIT_S_DOUBLE:
+      CS(SPELL_HOLY_SMITE);
+      dam *= 2;
+      rc = SPELL_CRIT_SUCCESS;
+      act("The blazing column is incredibly hot!", FALSE, victim, 0, 0, TO_ROOM);
+      act("The blazing column is incredibly hot!", FALSE, victim, 0, 0, TO_CHAR);
+      break;
+    case CRIT_S_NONE:
+      rc=SPELL_SUCCESS;
+      break;
+  }
+
+  caster->sendTo(format("The damage is: %s. \n\r") % dam);
+  if (caster->reconcileDamage(victim, dam, SPELL_HOLY_SMITE) == -1)
+    return (rc | VICTIM_DEAD);
+
+  return rc;
+}

@@ -232,6 +232,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
   immuneTypeT bit = IMMUNE_NONE;
 
   switch (type) {
+    case SPELL_HOLY_SMITE:
     case DAMAGE_HOLY:
       bit = IMMUNE_HOLY;
       break;
