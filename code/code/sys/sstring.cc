@@ -870,3 +870,11 @@ sstring sstring::escapeJson() const {
   }
   return ss.str();
 }
+
+/* 
+  Compares <this> with <other>, ignoring case, and returns same 
+  values as std::string::compare()
+*/
+int sstring::compareCaseless(const sstring &other) const {
+  return this->lower().compare(other.lower());
+}

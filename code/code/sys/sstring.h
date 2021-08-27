@@ -61,6 +61,8 @@ public:
   const bool isWord() const;
   const bool startsVowel() const;
 
+  int compareCaseless(const sstring&) const;
+
   // string mungers
   void ascify();
   void convertStringColor(const sstring replacement);
