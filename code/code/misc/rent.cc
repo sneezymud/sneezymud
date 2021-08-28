@@ -661,41 +661,38 @@ TObj *ItemLoad::raw_read_item()
       o->addObjStat(ITEM_RUSTY);
   }
     
+  auto& oFromIndex = obj_index[o->getItemIndex()];  
   if (o->isObjStat(ITEM_STRUNG)) {
     if (name) {
-      o->name = sstring(name);
+      o->name = name;
       delete [] name;
     }
     else
-      o->name = obj_index[o->getItemIndex()].name;
+      o->name = oFromIndex.name;
     
     if (shortDescr) {
-      o->shortDescr = sstring(shortDescr);
+      o->shortDescr = shortDescr;
       delete [] shortDescr;
     }
     else
-      o->shortDescr = obj_index[o->getItemIndex()].short_desc;
+      o->shortDescr = oFromIndex.short_desc;
     
     if (description) {
-      o->setDescr(sstring(description));
+      o->setDescr(description);
       delete [] description;
     }
     else
-      o->setDescr(obj_index[o->getItemIndex()].long_desc);
-    
+      o->setDescr(oFromIndex.long_desc);
+
     if (action_description) {
-      o->action_description = sstring(action_description);
-      delete [] action_description;
-    }
-    else if (!(obj_index[o->getItemIndex()].description.empty())) 
-      o->action_description = obj_index[o->getItemIndex()].description;
-    else 
-      o->action_description = NULL;
-    
-    if (obj_index[o->getItemIndex()].ex_description)
-      o->ex_description = new extraDescription(*obj_index[o->getItemIndex()].ex_description);
-    else
-      o->ex_description = NULL;
+      o->action_description = action_description;
+      delete[] action_description;
+    } else
+      o->action_description = oFromIndex.description;
+
+    o->ex_description = oFromIndex.ex_description 
+        ? new extraDescription(*oFromIndex.ex_description) 
+        : nullptr;
 
     //strung objects keep everything
     if(version<9 && dynamic_cast<TOpenContainer *>(o)){
