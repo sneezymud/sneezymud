@@ -75,11 +75,6 @@ static void addTorment(TBeing * victim, spellNumT spell)
 
 int harm(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
-  level = min(level, 70);
-
-  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
-    return SPELL_FAIL;
-  }
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
@@ -651,12 +646,6 @@ void blindness(TBeing * caster, TBeing * victim)
 
 int harmLight(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
-  level = min(level, 10);
-
-  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
-    return SPELL_FAIL;
-  }
-
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
@@ -759,12 +748,6 @@ int harmLight(TBeing * caster, TBeing * victim)
 
 int harmCritical(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
-  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
-    return SPELL_FAIL;
-  }
-
-  level = min(level, 45);
-
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
 
@@ -856,12 +839,6 @@ int harmCritical(TBeing * caster, TBeing * victim)
 
 int harmSerious(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
-  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
-    return SPELL_FAIL;
-  }
-
-  level = min(level, 25);
-
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);

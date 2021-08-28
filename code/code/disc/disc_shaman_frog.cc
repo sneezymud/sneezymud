@@ -428,8 +428,6 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, short bKnown, int 
   int rc;
   TThing *t;
 
-  level = min(level, 50);
-
   int dam = caster->getSkillDam(victim, SPELL_AQUATIC_BLAST, level, adv_learn);
 
   if (victim->getImmunity(IMMUNE_WATER) >= 100) {
@@ -961,8 +959,6 @@ int deathWave(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
 {
   char buf[256];
   sstring bBuf;
-
-  level = min(level, 75);
 
   int dam = caster->getSkillDam(victim, SPELL_DEATHWAVE, level, adv_learn);
   int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));

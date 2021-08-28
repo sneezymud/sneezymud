@@ -198,8 +198,6 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int 
     return FALSE;
   }
 
-  level = min(level, 50);
-
   caster->reconcileHurt(victim, discArray[SPELL_PILLAR_SALT]->alignMod);
 
   int dam = caster->getSkillDam(victim, SPELL_PILLAR_SALT, level, adv_learn);
@@ -339,7 +337,6 @@ int pillarOfSalt(TBeing * caster, TBeing * victim)
 
 int rainBrimstone(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
-  level = min(level, 10);
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
@@ -586,8 +583,6 @@ int earthquake(TBeing *caster, int level, short bKnown, spellNumT spell, int adv
     return SPELL_FAIL;
   }
 
-  level = min(level, 50);
-
   int dam = caster->getSkillDam(NULL, spell, level, adv_learn);
 
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
@@ -732,8 +727,6 @@ int callLightning(TBeing *caster, TBeing *victim, int level, short bKnown, spell
     return SPELL_FAIL;
   }
 
-  level = min(level, 50);
-
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
   int dam = caster->getSkillDam(victim, spell, level, adv_learn);
@@ -832,8 +825,6 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
           FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FALSE;
   }
-
-  level = min(level, 60);
 
   caster->reconcileHurt(victim, discArray[SPELL_SPONTANEOUS_COMBUST]->alignMod);
 
@@ -983,8 +974,6 @@ int spontaneousCombust(TBeing *caster, TBeing *victim)
 int flamestrike(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
 {
   int ret = 0;
-
-  level = min(level, 30);
 
   int dam = caster->getSkillDam(victim, SPELL_FLAMESTRIKE, level, adv_learn);
 

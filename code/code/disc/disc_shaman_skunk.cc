@@ -366,8 +366,6 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, short bKnown, int a
     return SPELL_FAIL;
   }
 
-  level = std::min(level, 80);
-
   int dam = caster->getSkillDam(victim, SPELL_CARDIAC_STRESS, level, adv_learn);
 
   caster->reconcileHurt(victim, discArray[SPELL_CARDIAC_STRESS]->alignMod);
@@ -488,7 +486,6 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  level = std::min(level, 45);
 
   int dam = caster->getSkillDam(victim, SPELL_BLOOD_BOIL, level, adv_learn);
 
