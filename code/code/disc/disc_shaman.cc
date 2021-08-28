@@ -1787,7 +1787,6 @@ int embalm(TBeing *caster, TObj *o, int level, short bKnown)
 
 int squish(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
-  level = min(level, 25);
 
   int dam = caster->getSkillDam(victim, SPELL_SQUISH, level, adv_learn);
 
@@ -1890,9 +1889,6 @@ int distort(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_lea
 {
   char buf[256];
   sstring bBuf;
-
-
-  level = min(level, 15);
 
   int dam = caster->getSkillDam(victim, SPELL_DISTORT, level, adv_learn);
   int beams = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
@@ -2066,8 +2062,6 @@ int soulTwist(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
     act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
     return SPELL_FAIL;
   }
-
-  level = min(level, 30);
 
   int dam = caster->getSkillDam(victim, SPELL_SOUL_TWIST, level, adv_learn);
   caster->reconcileHurt(victim, discArray[SPELL_SOUL_TWIST]->alignMod);
@@ -2554,8 +2548,6 @@ int flatulence(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TThing *t;
   TBeing *vict = NULL;
-
-  level = min(level, 20);
 
   int dam = caster->getSkillDam(NULL, SPELL_FLATULENCE, level, adv_learn);
 

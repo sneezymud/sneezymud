@@ -38,7 +38,6 @@ int handsOfFlame(TBeing *caster, TBeing *victim, int level, short bKnown, int *d
     return SPELL_FALSE;
   }
 // Second Calculate Damage
-  level = min(level, 10);
   *damage = caster->getSkillDam(victim, SPELL_HANDS_OF_FLAME, level, adv_learn);
 
 //  ToBe coded
@@ -564,8 +563,6 @@ int flamingSword(TBeing *caster, TBeing *victim, int level, short bKnown, int ad
 {
   int ret = 0;
 
-  level = min(level, 25);
-
   int dam = caster->getSkillDam(victim, SPELL_FLAMING_SWORD, level, adv_learn);
 
   caster->reconcileHurt(victim,discArray[SPELL_FLAMING_SWORD]->alignMod);
@@ -866,8 +863,6 @@ int hellfire(TBeing *caster, int level, short bKnown, int adv_learn)
   TThing * t;
   TBeing *vict;
 
-  level = min(level, 33);
-
   vict = NULL;
   dam = caster->getSkillDam(NULL, SPELL_HELLFIRE, level, adv_learn);
 
@@ -997,8 +992,6 @@ int fireball(TBeing *caster, int level, short bKnown, int adv_learn)
     caster->sendTo("The water completely dissolves your fireball!\n\r");
     return SPELL_FAIL;
   } 
-
-  level = min(level, 15);
 
   int damage = caster->getSkillDam(NULL, SPELL_FIREBALL, level, adv_learn);
 

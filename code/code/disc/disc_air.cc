@@ -29,8 +29,6 @@ int gust(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_lear
     return SPELL_FAIL;
   }
 
-  level = min(level, 10);
-
   int dam = caster->getSkillDam(victim, SPELL_GUST, level, adv_learn);
 
   caster->reconcileHurt(victim,discArray[SPELL_GUST]->alignMod); 
@@ -495,7 +493,6 @@ int dustStorm(TBeing * caster, int level, short bKnown, int adv_learn)
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  level = min(level, 15);
 
   int dam = caster->getSkillDam(NULL, SPELL_DUST_STORM, level, adv_learn);
 
@@ -593,7 +590,6 @@ int tornado(TBeing * caster, int level, short bKnown, int adv_learn)
   TThing *t, *ch;
   TBeing *tb;
   int rc;
-  level = min(level, 33);
 
   int dam = caster->getSkillDam(NULL, SPELL_TORNADO, level, adv_learn);
 

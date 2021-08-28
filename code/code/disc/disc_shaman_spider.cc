@@ -968,8 +968,6 @@ int raze(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
     return SPELL_FAIL;
   }
 
-  level = min(level, 90);
-
   int dam = caster->getSkillDam(victim, SPELL_RAZE, level, adv_learn);
 
   caster->reconcileHurt(victim, discArray[SPELL_RAZE]->alignMod);
