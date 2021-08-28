@@ -92,11 +92,6 @@ int harm(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT sp
         break;
     }
 
-    if (victim->isLucky(caster->spellLuckModifier(spell))) {
-      SV(spell);
-      dam /= 2;
-    }
-
     act("$N buckles from the pain!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("$N buckles from the pain!", FALSE, caster, NULL, victim, TO_CHAR);
     act("You buckle from the pain!  You could swear you're about to die!", FALSE, caster, NULL, victim, TO_VICT);
