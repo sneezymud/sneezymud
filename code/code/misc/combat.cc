@@ -2761,11 +2761,19 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
   int defense = target->defendRound(this);
   int mod = offense - defense;
 
-  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
+  // Scale any penalty assessed
+  if (mod <= 0) { 
+    int skillTypeScaling = (skill == SKILL_THROATSLIT || skill == SKILL_CUDGEL) ? 2
+	   	  	 : (skill == SKILL_BACKSTAB) ? 6
+		  	 : 20;
+    mod /= skillTypeScaling;
+  }
+
+  if (skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
      skill == SKILL_RANGED_PROF) {
-    // other surprise attacks should be added here
-    if(target->isWary())
-      mod -= 300;
+    if(target->isWary()) {
+      mod -= !target->fight ? 140 : 0;
+    }
     else {
       target->makeWary();
     }
