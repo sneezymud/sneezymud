@@ -252,6 +252,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
 
   switch (skill) {
     case SKILL_KICK:
+    case SKILL_BASH:
     case SKILL_HEADBUTT:
     case SKILL_KNEESTRIKE:
     case SKILL_STOMP:
@@ -411,6 +412,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       // made this slightly higher than backstab since it is in an advanced discipline
     case SKILL_THROATSLIT:
       dam = genericDam(victim, this, skill, DISC_THIEF, level, adv_learn, 2.01, REDUCE_NO, !isPc(), TRIM_NO);
+      break;
+    case SKILL_BASH_DEIKHAN:
+      dam =  genericDam(victim, this, skill, DISC_DEIKHAN, level, adv_learn, 0.639, REDUCE_NO, !isPc(), TRIM_NO);
+      dam = (int) (dam * percModifier());
       break;
     case SKILL_CHARGE:
       // limited to mounted and has other penalties  (3*normal dam)
