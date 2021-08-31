@@ -335,22 +335,22 @@ int TBeing::bashSuccess(
     act("You tumble as $n knocks you over", FALSE, this, 0, victim, TO_VICT, ANSI_BLUE);
   }
   
+  int shieldDam = getSkillDam(victim, skill, getSkillLevel(skill), getAdvLearning(skill));
+
   //extra damage done by shield with spikes 10-20-00 -dash
-  if (
-    isHoldingShield && itemInSecondaryHand && (
-      itemInSecondaryHand->isSpiked() || 
-      itemInSecondaryHand->isObjStat(ITEM_SPIKED)
-    )
-  ) {
-    int shieldDam = (int)((itemInSecondaryHand->getWeight() / 3.0) + 1.0);
+  if (isHoldingShield && itemInSecondaryHand) {
+    shieldDam += (int)((itemInSecondaryHand->getWeight() / 4.0) + 1.0);
 
-    act("The spikes on your $o sink into $N.", FALSE, this, itemInSecondaryHand, victim, TO_CHAR);
-    act("The spikes on $n's $o sink into $N.", FALSE, this, itemInSecondaryHand, victim, TO_NOTVICT);
-    act("The spikes on $n's $o sink into you.", FALSE, this, itemInSecondaryHand, victim, TO_VICT);
-
-    if (reconcileDamage(victim, shieldDam, TYPE_STAB) == -1)
-      return DELETE_VICT;
+    if (itemInSecondaryHand->isSpiked() || itemInSecondaryHand->isObjStat(ITEM_SPIKED)) {
+      act("The spikes on your $o sink into $N.", FALSE, this, itemInSecondaryHand, victim, TO_CHAR);
+      act("The spikes on $n's $o sink into $N.", FALSE, this, itemInSecondaryHand, victim, TO_NOTVICT);
+      act("The spikes on $n's $o sink into you.", FALSE, this, itemInSecondaryHand, victim, TO_VICT);
+      shieldDam += 2;
+    }
   }
+
+  if (reconcileDamage(victim, shieldDam, TYPE_STAB) == -1)
+    return DELETE_VICT;
 
   int distractionBonus = 1;
   /*
@@ -391,9 +391,6 @@ int TBeing::bashSuccess(
     victim->addToDistracted(distractionBonus, FALSE);
 
   reconcileHurt(victim, 0.01);
-
-  if (reconcileDamage(victim, 0, skill) == -1)
-    return DELETE_VICT;
 
   return FALSE;
 }
