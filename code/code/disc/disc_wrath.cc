@@ -198,8 +198,6 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int 
     return FALSE;
   }
 
-  level = min(level, 50);
-
   caster->reconcileHurt(victim, discArray[SPELL_PILLAR_SALT]->alignMod);
 
   int dam = caster->getSkillDam(victim, SPELL_PILLAR_SALT, level, adv_learn);
@@ -254,8 +252,7 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int 
     }
 
     if (victim->awake()) {
-      if ((victim->isLucky(caster->spellLuckModifier(SPELL_PILLAR_SALT))) ||
-          (caster->isNotPowerful(victim, (level+8), SPELL_PILLAR_SALT, SILENT_YES))) {
+      if (victim->isLucky(caster->spellLuckModifier(SPELL_PILLAR_SALT))) {
         SV(SPELL_PILLAR_SALT);
         act("$N manages to avoid some of the pelting salt particles!", FALSE, caster, NULL, victim, TO_NOTVICT);
         act("$N manages to avoid some of the salt particles!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -340,7 +337,6 @@ int pillarOfSalt(TBeing * caster, TBeing * victim)
 
 int rainBrimstone(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell, int adv_learn)
 {
-  level = min(level, 10);
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
@@ -587,8 +583,6 @@ int earthquake(TBeing *caster, int level, short bKnown, spellNumT spell, int adv
     return SPELL_FAIL;
   }
 
-  level = min(level, 50);
-
   int dam = caster->getSkillDam(NULL, spell, level, adv_learn);
 
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
@@ -721,10 +715,6 @@ int callLightning(TBeing *caster, TBeing *victim, int level, short bKnown, spell
 {
   int rc;
 
-  //if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) {
-  //  return SPELL_FAIL;
-  //}
-
   if (!((Weather::getWeather(*victim->roomp) == Weather::RAINY) ||
       (Weather::getWeather(*victim->roomp) == Weather::LIGHTNING))) {
     caster->sendTo("You fail to call upon the lightning from the sky!\n\r");
@@ -736,8 +726,6 @@ int callLightning(TBeing *caster, TBeing *victim, int level, short bKnown, spell
       caster->sendTo("There is no lightning here...it's not storming!\n\r");
     return SPELL_FAIL;
   }
-
-  level = min(level, 50);
 
   caster->reconcileHurt(victim, discArray[spell]->alignMod);
 
@@ -831,18 +819,12 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
 {
   int rc;
 
-  //  if (caster->isNotPowerful(victim, level, SPELL_SPONTANEOUS_COMBUST, SILENT_NO)) {
-  //    return SPELL_FAIL;
-  //  }
-
   if (victim->roomp->isUnderwaterSector()) {
     caster->sendTo("Your attempt fizzels and sputters in the water!\n\r");
     act("$n causes the water to warm up around you.  You wonder why?", 
           FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FALSE;
   }
-
-  level = min(level, 60);
 
   caster->reconcileHurt(victim, discArray[SPELL_SPONTANEOUS_COMBUST]->alignMod);
 
@@ -993,8 +975,6 @@ int flamestrike(TBeing *caster, TBeing *victim, int level, short bKnown, int adv
 {
   int ret = 0;
 
-  level = min(level, 30);
-
   int dam = caster->getSkillDam(victim, SPELL_FLAMESTRIKE, level, adv_learn);
 
   caster->reconcileHurt(victim, discArray[SPELL_FLAMESTRIKE]->alignMod);
@@ -1020,9 +1000,6 @@ int flamestrike(TBeing *caster, TBeing *victim, int level, short bKnown, int adv
       case CRIT_S_NONE:
         ret=SPELL_SUCCESS;
         break;
-    }
-    if (victim->isNotPowerful(victim, level + 5, SPELL_FLAMESTRIKE, SILENT_YES)) {
-      dam /=2;
     }
     if (victim->isLucky(caster->spellLuckModifier(SPELL_FLAMESTRIKE))) {
       dam /= 2;

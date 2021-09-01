@@ -30,7 +30,7 @@ static void repHealing2(TBeing *caster, TBeing *victim)
 
 static void adjustHealHp2(const TBeing *caster, int &hp, int durat)
 {
-  hp = (int)((double)(hp)*(stats.damage_modifier * 1.15));
+  hp = (int)((double)(hp)*(stats.skill_damage_mod * 1.15));
 
   if (caster->spelltask && 
       IS_SET(caster->spelltask->flags, CASTFLAG_CAST_INDEFINITE)) {

@@ -1812,7 +1812,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   dam += rollDam;
 
   // adjust for global values
-  dam = (int) (dam * stats.damage_modifier);
+  dam = (int) (dam * stats.barehand_damage_mod);
 
 #if DAMAGE_DEBUG
   vlogf(LOG_COMBAT, format("MONK %s (%d %s) barehand dam = %d , wep = %d roll = %d, stats = %.2f") %  ch->getName() % ch->GetMaxLevel() % ch->getProfName() % dam % wepDam % rollDam % statDam);
@@ -2020,7 +2020,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
   }
 
   // adjust for global values
-  dam = (int) (dam * stats.damage_modifier);
+  dam = (int) (dam * stats.weapon_damage_mod);
 
   dam = max(1, dam);                // Not less than 0 damage 
   return (dam);
@@ -2758,6 +2758,37 @@ int TBeing::defendRound(const TBeing * attacker) const
 int TBeing::specialAttack(TBeing *target, spellNumT skill)
 {
   int offense = attackRound(target);
+  int defense = target->defendRound(this);
+  int mod = offense - defense;
+
+  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
+     skill == SKILL_RANGED_PROF) {
+    // other surprise attacks should be added here
+    if(target->isWary())
+      mod -= 300;
+    else {
+      target->makeWary();
+    }
+  }
+
+  return hits(target, mod);
+}
+
+/*
+  Overload of specialAttack to allow skills to pass a modifier for attacker. 
+  Enables circumstantial bonuses/penalties to be applied here rather than in bSuccess, 
+  which should be used primarily to determine skill execution success - especially now
+  that ability difficulty level is being used again.
+
+  Per combat.cc balance notes: One level's worth of bonus or penalty = 16.667 points, which
+  equates to 3% difference in chance to hit when attacker and victim are same level.
+
+  So for example, if a skill should be executed as if attacker were 10 levels higher than they
+  really are, modifier should be 16.667 * 10 = 166.67.
+*/
+int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier)
+{
+  int offense = attackRound(target) + situationalModifier;
   int defense = target->defendRound(this);
   int mod = offense - defense;
 

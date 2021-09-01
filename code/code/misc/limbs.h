@@ -64,7 +64,8 @@ enum wearSlotT {
      WEAR_EX_FOOT_L,
      MAX_WEAR
 };
-const wearSlotT MIN_WEAR        = WEAR_HEAD;
+
+const wearSlotT MIN_WEAR = WEAR_HEAD;
 const wearSlotT MAX_HUMAN_WEAR  = wearSlotT(HOLD_LEFT+1);
 extern wearSlotT & operator++(wearSlotT &, int);
 extern wearSlotT pickRandomLimb(bool = false);
