@@ -349,7 +349,7 @@ int TBeing::bashSuccess(
     }
   }
 
-  if (reconcileDamage(victim, shieldDam, TYPE_STAB) == -1)
+  if (reconcileDamage(victim, shieldDam, SKILL_BASH) == -1)
     return DELETE_VICT;
 
   int distractionBonus = 1;
