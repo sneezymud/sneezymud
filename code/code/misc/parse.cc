@@ -1233,6 +1233,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_FORTIFY:
           rc = doFortify();
           break;
+        case CMD_SLAM:
+          rc = doSlam(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          break;
         case CMD_BODYSLAM:
           rc = doBodyslam(newarg.c_str(), dynamic_cast<TBeing *>(vict));
           break;
@@ -2725,6 +2728,7 @@ void buildCommandArray(void)
   commandArray[CMD_WHIRLWIND] = new commandInfo("whirlwind", POSITION_FIGHTING, 0);
   commandArray[CMD_RALLY] = new commandInfo("rally", POSITION_FIGHTING, 0);
   commandArray[CMD_FORTIFY] = new commandInfo("fortify", POSITION_FIGHTING, 0);
+  commandArray[CMD_SLAM] = new commandInfo("slam", POSITION_FIGHTING, 0);
   commandArray[CMD_PIMP] = new commandInfo("pimp", POSITION_STANDING, 0);
   commandArray[CMD_LIGHT] = new commandInfo("light", POSITION_RESTING, 0);
   commandArray[CMD_FISH] = new commandInfo("fish", POSITION_RESTING, 0);

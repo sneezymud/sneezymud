@@ -328,6 +328,7 @@ enum spellNumT {
      // start of warrior
 // KEEP KICK AS FIRST SKILL, OR MODIFY MIN_SKILL AND MAX_SPELL BELOW
      SKILL_KICK,
+     SKILL_SLAM,
      SKILL_BASH,
      SKILL_TRIP,
      SKILL_HEADBUTT,
@@ -719,8 +720,8 @@ enum spellNumT {
      ABSOLUTE_MAX_SKILL=900
 };
 const spellNumT MIN_SPELL = spellNumT(TYPE_UNDEFINED+1);
-const spellNumT MAX_SPELL = spellNumT(SKILL_KICK); // 1 more than last spell
-const spellNumT MIN_SKILL = spellNumT(SKILL_KICK - 1); // 1 less than 1st skill
+const spellNumT MAX_SPELL = spellNumT(SKILL_SLAM); // 1 more than last spell
+const spellNumT MIN_SKILL = spellNumT(SKILL_SLAM - 1); // 1 less than 1st skill
 const spellNumT TYPE_MIN_HIT = TYPE_HIT;
 const spellNumT FIRST_TRANSFORMED_LIMB = AFFECT_TRANSFORMED_HANDS;
 const spellNumT FIRST_BREATH_WEAPON = SPELL_FIRE_BREATH;

@@ -492,6 +492,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
 
     case SKILL_KICK:
       return &((CDWarrior *) cd)->skKick;
+    case SKILL_SLAM:
+      return &((CDWarrior *) cd)->skSlam;
     case SKILL_BASH:
       return &((CDWarrior *) cd)->skBash;
     case SKILL_HEADBUTT:

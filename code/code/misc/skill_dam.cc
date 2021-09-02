@@ -252,6 +252,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
 
   switch (skill) {
     case SKILL_KICK:
+    case SKILL_SLAM:
     case SKILL_BASH:
     case SKILL_HEADBUTT:
     case SKILL_KNEESTRIKE:
