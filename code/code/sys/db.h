@@ -266,10 +266,8 @@ class indexData {
     return max_num;
   }
   
-  
   indexData();
   indexData(const indexData &);
-  indexData & operator= (const indexData &a);
 };
 
 class objIndexData : public indexData
@@ -287,7 +285,6 @@ class objIndexData : public indexData
     objIndexData(int, sstring, sstring, sstring, int, int, float, byte, unsigned int, ubyte, int,
                  sstring, extraDescription *, objAffData[MAX_OBJ_AFFECT]);
     objIndexData(const objIndexData &);
-    objIndexData & operator=(const objIndexData &);
     virtual ~objIndexData();
 };
 
@@ -304,7 +301,6 @@ class mobIndexData : public indexData
     mobIndexData();
     mobIndexData(int, const sstring&, const sstring&, const sstring&, const sstring&, int, int, float, long, long, long, long);
     mobIndexData(const mobIndexData &);
-    mobIndexData & operator=(const mobIndexData &);
 };
 
 class resetQElement

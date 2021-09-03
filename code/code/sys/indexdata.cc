@@ -18,63 +18,37 @@ extern FILE *mob_f;
 std::vector<mobIndexData> mob_index;
 std::vector<objIndexData> obj_index;
 
-indexData::indexData() :
-  virt(0),
-  pos(0),
-  number(0),
-  name(NULL),
-  short_desc(NULL),
-  long_desc(NULL),
-  description(NULL),
-  max_exist(-99),
-  spec(0),
-  weight(0)
-{
-}
-
-indexData & indexData::operator= (const indexData &a)
-{
-  if (this == &a)
-    return *this;
-
-  virt = a.virt;
-  pos = a.pos;
-  number = a.number;
-  name = a.name;
-  short_desc = a.short_desc;
-  long_desc = a.long_desc;
-  description = a.description;
-
-  max_exist = a.max_exist;
-  spec = a.spec;
-  weight = a.weight;
-
-  return *this;
-}
+indexData::indexData()
+    : virt(0),
+      pos(0),
+      number(0),
+      name(nullptr),
+      short_desc(nullptr),
+      long_desc(nullptr),
+      description(nullptr),
+      max_exist(-99),
+      spec(0),
+      weight(0) {}
 
 indexData::indexData(const indexData &a) :
   virt(a.virt),
   pos(a.pos),
   number(a.number),
+  name(a.name),
+  short_desc(a.short_desc),
+  long_desc(a.long_desc),
+  description(a.description),
   max_exist(a.max_exist),
   spec(a.spec),
-  weight(a.weight)
-{
-  name = a.name;
-  short_desc = a.short_desc;
-  long_desc = a.long_desc;
-  description = a.description;
-}
+  weight(a.weight) {}
 
-mobIndexData::mobIndexData() :
-  faction(-99),
-  Class(-99),
-  level(-99),
-  race(-99),
-  doesLoad(false),
-  numberLoad(0)
-{
-}
+mobIndexData::mobIndexData()
+    : faction(-99),
+      Class(-99),
+      level(-99),
+      race(-99),
+      doesLoad(false),
+      numberLoad(0) {}
 
 mobIndexData::mobIndexData(int _virt, const sstring &_name, const sstring &_short_desc,
                            const sstring &_long_desc, const sstring &_description, int _max_exist,
@@ -91,63 +65,28 @@ mobIndexData::mobIndexData(int _virt, const sstring &_name, const sstring &_shor
   weight = _weight;
 }
 
-mobIndexData &mobIndexData::operator=(const mobIndexData &a) {
-  if (this == &a)
-    return *this;
+mobIndexData::mobIndexData(const mobIndexData &a)
+    : indexData(a),
+      faction(a.faction),
+      Class(a.Class),
+      level(a.level),
+      race(a.race),
+      doesLoad(a.doesLoad),
+      numberLoad(a.numberLoad) {}
 
-  indexData::operator=(a);
+objIndexData::objIndexData()
+    : max_struct(-99),
+      armor(-99),
+      where_worn(0),
+      itemtype(MAX_OBJ_TYPES),
+      value(-99),
+      ex_description(nullptr) {}
 
-  faction = a.faction;
-  Class = a.Class;
-  level = a.level;
-  race = a.race;
-  doesLoad = a.doesLoad;
-  numberLoad = a.numberLoad;
-
-  return *this;
-}
-
-mobIndexData::mobIndexData(const mobIndexData &a) :
-  indexData(a),
-  faction(a.faction),
-  Class(a.Class),
-  level(a.level),
-  race(a.race),
-  doesLoad(a.doesLoad),
-  numberLoad(a.numberLoad)
-{
-}
-
-objIndexData::objIndexData() :
-  max_struct(-99),
-  armor(-99),
-  where_worn(0),
-  itemtype(MAX_OBJ_TYPES),
-  value(-99),
-  ex_description(NULL)
-{
-}
-
-objIndexData::objIndexData(
-  int _virt,
-  sstring _name,
-  sstring _short_desc,
-  sstring _long_desc,
-  int _max_exist,
-  int _spec,
-  float _weight,
-  byte max_struct,
-  unsigned int where_worn,
-  ubyte itemtype,
-  int value,
-  sstring _description,
-  extraDescription *ex_description,
-  objAffData _affected[MAX_OBJ_AFFECT]
-) : max_struct(max_struct),
-    where_worn(where_worn),
-    itemtype(itemtype),
-    value(value),
-    ex_description(ex_description) {
+objIndexData::objIndexData(int _virt, sstring _name, sstring _short_desc, sstring _long_desc,
+                           int _max_exist, int _spec, float _weight, byte max_struct,
+                           unsigned int where_worn, ubyte itemtype, int value, sstring _description,
+                           extraDescription *ex_description, objAffData _affected[MAX_OBJ_AFFECT])
+    : max_struct(max_struct), where_worn(where_worn), itemtype(itemtype), value(value), ex_description(ex_description) {
   virt = _virt;
   name = _name;
   short_desc = _short_desc;
@@ -161,41 +100,13 @@ objIndexData::objIndexData(
     affected[i] = _affected[i];
 }
 
-objIndexData & objIndexData::operator= (const objIndexData &a)
-{
-  if (this == &a)
-    return *this;
-
-  indexData::operator=(a);
-
-  // use copy operator;
-  if (a.ex_description)
-    ex_description = new extraDescription(*a.ex_description);
-  else
-    ex_description = NULL;
-
-  max_struct = a.max_struct;
-  armor = a.armor;
-  where_worn = a.where_worn;
-  itemtype = a.itemtype;
-  value = a.value;
-
-  int i;
-  for(i=0;i<MAX_OBJ_AFFECT;++i){
-    affected[i]=a.affected[i];
-  }
-
-  return *this;
-}
-
-objIndexData::objIndexData(const objIndexData &a) :
-  indexData(a),
-  max_struct(a.max_struct),
-  armor(a.armor),
-  where_worn(a.where_worn),
-  itemtype(a.itemtype),
-  value(a.value)
-{
+objIndexData::objIndexData(const objIndexData &a)
+    : indexData(a),
+      max_struct(a.max_struct),
+      armor(a.armor),
+      where_worn(a.where_worn),
+      itemtype(a.itemtype),
+      value(a.value) {
   // use copy operator;
   if (a.ex_description)
     ex_description = new extraDescription(*a.ex_description);
@@ -203,13 +114,12 @@ objIndexData::objIndexData(const objIndexData &a) :
     ex_description = NULL;
 
   int i;
-  for(i=0;i<MAX_OBJ_AFFECT;++i){
-    affected[i]=a.affected[i];
+  for (i = 0; i < MAX_OBJ_AFFECT; ++i) {
+    affected[i] = a.affected[i];
   }
 }
 
-objIndexData::~objIndexData()
-{
+objIndexData::~objIndexData() {
   extraDescription *tmp;
   while ((tmp = ex_description)) {
     ex_description = tmp->next;
