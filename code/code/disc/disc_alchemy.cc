@@ -1750,20 +1750,20 @@ int castEnhanceWeapon(TBeing *caster, TObj *obj)
 
 bool alchemy_create_deny(int numberx)
 {
-  objIndexData oid = obj_index[numberx];
+  objIndexData *oid = &obj_index[numberx];
 
-  if (oid.value < 0) 
+  if (oid->value < 0) 
     return true;
-  if (oid.max_exist < 1000) 
+  if (oid->max_exist < 1000) 
     return true;
-  if (oid.spec)
+  if (oid->spec)
     return true;
 
   // see if zone the obj comes from is disabled
   unsigned int zone;
 
   for (zone = 0; zone < zone_table.size(); zone++) {
-    if (zone_table[zone].top > oid.virt) {
+    if (zone_table[zone].top > oid->virt) {
       // the obj belongs to this zone
       if (zone_table[zone].enabled == FALSE)
         return true;
@@ -1772,63 +1772,63 @@ bool alchemy_create_deny(int numberx)
     }
   }
 
-  if (oid.itemtype == ITEM_WINDOW)
+  if (oid->itemtype == ITEM_WINDOW)
     return true;
-  if (oid.itemtype == ITEM_MONEY)  // piles of coins
+  if (oid->itemtype == ITEM_MONEY)  // piles of coins
     return true;
-  if (oid.itemtype == ITEM_HOLY_SYM)
+  if (oid->itemtype == ITEM_HOLY_SYM)
     return true;
-  if (oid.itemtype == ITEM_COMPONENT)
+  if (oid->itemtype == ITEM_COMPONENT)
     return true;
-  if (oid.itemtype == ITEM_BOOK)
+  if (oid->itemtype == ITEM_BOOK)
     return true;
-  if (oid.itemtype == ITEM_FOOD)  // domain of clerics
+  if (oid->itemtype == ITEM_FOOD)  // domain of clerics
     return true;
-  if (oid.itemtype == ITEM_STAFF)
+  if (oid->itemtype == ITEM_STAFF)
     return true;
-  if (oid.itemtype == ITEM_POTION)
+  if (oid->itemtype == ITEM_POTION)
     return true;
-  if (oid.itemtype == ITEM_WAND)
+  if (oid->itemtype == ITEM_WAND)
     return true;
-  if (oid.itemtype == ITEM_SCROLL)
+  if (oid->itemtype == ITEM_SCROLL)
     return true;
-  if (oid.itemtype == ITEM_TREASURE)
+  if (oid->itemtype == ITEM_TREASURE)
     return true;
-  if (oid.itemtype == ITEM_RAW_MATERIAL)
+  if (oid->itemtype == ITEM_RAW_MATERIAL)
     return true;
-  if (oid.itemtype == ITEM_RAW_ORGANIC)
+  if (oid->itemtype == ITEM_RAW_ORGANIC)
     return true;
-  if (oid.itemtype == ITEM_FLAME)
+  if (oid->itemtype == ITEM_FLAME)
     return true;
-  if (oid.itemtype == ITEM_KEY)
+  if (oid->itemtype == ITEM_KEY)
     return true;
-  if (oid.itemtype == ITEM_PORTAL)
+  if (oid->itemtype == ITEM_PORTAL)
     return true;
-  if (oid.itemtype == ITEM_BED)
+  if (oid->itemtype == ITEM_BED)
     return true;
-  if (oid.itemtype == ITEM_TABLE)
+  if (oid->itemtype == ITEM_TABLE)
     return true;
-  if (oid.itemtype == ITEM_STATUE)
+  if (oid->itemtype == ITEM_STATUE)
     return true;
-  if (oid.itemtype == ITEM_TRAP)
+  if (oid->itemtype == ITEM_TRAP)
     return true;
-  if (oid.itemtype == ITEM_CHEST)
+  if (oid->itemtype == ITEM_CHEST)
     return true;
-  if (!IS_SET(oid.where_worn, ITEM_WEAR_TAKE))
+  if (!IS_SET(oid->where_worn, ITEM_WEAR_TAKE))
     return true;
-  if (isname("belt monk", oid.name))
+  if (isname("belt monk", oid->name))
     return true;
-  if (isname("sash monk", oid.name))
+  if (isname("sash monk", oid->name))
     return true;
-  if (isname("script bundle", oid.name))
+  if (isname("script bundle", oid->name))
     return true;
-  if (isname("[quest_object]", oid.name))
+  if (isname("[quest_object]", oid->name))
     return true;
-  if (isname("[prop_object]", oid.name))
+  if (isname("[prop_object]", oid->name))
     return true;
-  if (isname("pager beeper", oid.name))
+  if (isname("pager beeper", oid->name))
     return true;
-  if (isname("muffs ear", oid.name))
+  if (isname("muffs ear", oid->name))
     return true;
 
   // the above checks remain as a safeguard against putting bad objects
@@ -1837,7 +1837,7 @@ bool alchemy_create_deny(int numberx)
 		 26686,28917,28918,28919,148,318, -1};
 
   for(int i=0;allowed[i]!=-1;++i){
-    if(allowed[i] == oid.virt)
+    if(allowed[i] == oid->virt)
       return false;
   }
 
