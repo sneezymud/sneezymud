@@ -1882,24 +1882,24 @@ void TObjectCache::preload() {
   while (db.fetchRow()) {
     int number = real_object(convertTo<int>(db["vnum"]));
 
-    cache[number] = cached_object(number, {{"short_desc", db["short_desc"]},
-                                           {"type", db["type"]},
-                                           {"action_flag", db["action_flag"]},
-                                           {"wear_flag", db["wear_flag"]},
-                                           {"val0", db["val0"]},
-                                           {"val1", db["val1"]},
-                                           {"val2", db["val2"]},
-                                           {"val3", db["val3"]},
-                                           {"weight", db["weight"]},
-                                           {"price", db["price"]},
-                                           {"can_be_seen", db["can_be_seen"]},
-                                           {"spec_proc", db["spec_proc"]},
-                                           {"max_struct", db["max_struct"]},
-                                           {"cur_struct", db["cur_struct"]},
-                                           {"decay", db["decay"]},
-                                           {"volume", db["volume"]},
-                                           {"material", db["material"]},
-                                           {"max_exist", db["max_exist"]}});
+    cache.emplace(number, cached_object(number, {{"short_desc", db["short_desc"]},
+                                                 {"type", db["type"]},
+                                                 {"action_flag", db["action_flag"]},
+                                                 {"wear_flag", db["wear_flag"]},
+                                                 {"val0", db["val0"]},
+                                                 {"val1", db["val1"]},
+                                                 {"val2", db["val2"]},
+                                                 {"val3", db["val3"]},
+                                                 {"weight", db["weight"]},
+                                                 {"price", db["price"]},
+                                                 {"can_be_seen", db["can_be_seen"]},
+                                                 {"spec_proc", db["spec_proc"]},
+                                                 {"max_struct", db["max_struct"]},
+                                                 {"cur_struct", db["cur_struct"]},
+                                                 {"decay", db["decay"]},
+                                                 {"volume", db["volume"]},
+                                                 {"material", db["material"]},
+                                                 {"max_exist", db["max_exist"]}}));
   }
 }
 
@@ -1912,55 +1912,55 @@ void TMobileCache::preload() {
   while (db.fetchRow()) {
     int number = real_mobile(convertTo<int>(db["vnum"]));
 
-    cache[number] = cached_object(number, {{"vnum", db["vnum"]},
-                                           {"name", db["name"]},
-                                           {"short_desc", db["short_desc"]},
-                                           {"long_desc", db["long_desc"]},
-                                           {"description", db["description"]},
-                                           {"actions", db["actions"]},
-                                           {"affects", db["affects"]},
-                                           {"faction", db["faction"]},
-                                           {"fact_perc", db["fact_perc"]},
-                                           {"letter", db["letter"]},
-                                           {"attacks", db["attacks"]},
-                                           {"class", db["class"]},
-                                           {"level", db["level"]},
-                                           {"tohit", db["tohit"]},
-                                           {"ac", db["ac"]},
-                                           {"hpbonus", db["hpbonus"]},
-                                           {"damage_level", db["damage_level"]},
-                                           {"damage_precision", db["damage_precision"]},
-                                           {"gold", db["gold"]},
-                                           {"race", db["race"]},
-                                           {"weight", db["weight"]},
-                                           {"height", db["height"]},
-                                           {"str", db["str"]},
-                                           {"bra", db["bra"]},
-                                           {"con", db["con"]},
-                                           {"dex", db["dex"]},
-                                           {"agi", db["agi"]},
-                                           {"intel", db["intel"]},
-                                           {"wis", db["wis"]},
-                                           {"foc", db["foc"]},
-                                           {"per", db["per"]},
-                                           {"cha", db["cha"]},
-                                           {"kar", db["kar"]},
-                                           {"spe", db["spe"]},
-                                           {"pos", db["pos"]},
-                                           {"def_position", db["def_position"]},
-                                           {"sex", db["sex"]},
-                                           {"spec_proc", db["spec_proc"]},
-                                           {"skin", db["skin"]},
-                                           {"vision", db["vision"]},
-                                           {"can_be_seen", db["can_be_seen"]},
-                                           {"max_exist", db["max_exist"]},
-                                           {"local_sound", db["local_sound"]},
-                                           {"adjacent_sound", db["adjacent_sound"]}});
+  cache.emplace(number, cached_object(number, {{"vnum", db["vnum"]},
+                                                      {"name", db["name"]},
+                                                      {"short_desc", db["short_desc"]},
+                                                      {"long_desc", db["long_desc"]},
+                                                      {"description", db["description"]},
+                                                      {"actions", db["actions"]},
+                                                      {"affects", db["affects"]},
+                                                      {"faction", db["faction"]},
+                                                      {"fact_perc", db["fact_perc"]},
+                                                      {"letter", db["letter"]},
+                                                      {"attacks", db["attacks"]},
+                                                      {"class", db["class"]},
+                                                      {"level", db["level"]},
+                                                      {"tohit", db["tohit"]},
+                                                      {"ac", db["ac"]},
+                                                      {"hpbonus", db["hpbonus"]},
+                                                      {"damage_level", db["damage_level"]},
+                                                      {"damage_precision", db["damage_precision"]},
+                                                      {"gold", db["gold"]},
+                                                      {"race", db["race"]},
+                                                      {"weight", db["weight"]},
+                                                      {"height", db["height"]},
+                                                      {"str", db["str"]},
+                                                      {"bra", db["bra"]},
+                                                      {"con", db["con"]},
+                                                      {"dex", db["dex"]},
+                                                      {"agi", db["agi"]},
+                                                      {"intel", db["intel"]},
+                                                      {"wis", db["wis"]},
+                                                      {"foc", db["foc"]},
+                                                      {"per", db["per"]},
+                                                      {"cha", db["cha"]},
+                                                      {"kar", db["kar"]},
+                                                      {"spe", db["spe"]},
+                                                      {"pos", db["pos"]},
+                                                      {"def_position", db["def_position"]},
+                                                      {"sex", db["sex"]},
+                                                      {"spec_proc", db["spec_proc"]},
+                                                      {"skin", db["skin"]},
+                                                      {"vision", db["vision"]},
+                                                      {"can_be_seen", db["can_be_seen"]},
+                                                      {"max_exist", db["max_exist"]},
+                                                      {"local_sound", db["local_sound"]},
+                                                      {"adjacent_sound", db["adjacent_sound"]}}));
   }
 
   db.query("select vnum, keyword, description from mob_extra");
 
-  while(db.fetchRow()){
+  while (db.fetchRow()) {
     int number = real_mobile(convertTo<int>(db["vnum"]));
     sstring keyword = db["keyword"];
     sstring description = db["description"];
@@ -1970,7 +1970,7 @@ void TMobileCache::preload() {
 
   db.query("select vnum, type, amt from mob_imm");
 
-  while(db.fetchRow()){
+  while (db.fetchRow()) {
     int number = real_mobile(convertTo<int>(db["vnum"]));
     int type = convertTo<int>(db["type"]);
     int amt = convertTo<int>(db["amt"]);
@@ -1978,8 +1978,6 @@ void TMobileCache::preload() {
     imm[number].emplace_back(number, type, amt);
   }
 }
-
-
 
 // the idea here is to search all shops for the object we want to load
 // and if we find it at a decent price, buy it.
@@ -2552,23 +2550,23 @@ TObj *read_object(int nr, readFileTypeT type)
 
     int number = real_object(convertTo<int>(db["vnum"]));
 
-    obj_cache.cache[number] = cached_object(number, {{"type", db["type"]},
-                                                     {"action_flag", db["action_flag"]},
-                                                     {"wear_flag", db["wear_flag"]},
-                                                     {"val0", db["val0"]},
-                                                     {"val1", db["val1"]},
-                                                     {"val2", db["val2"]},
-                                                     {"val3", db["val3"]},
-                                                     {"weight", db["weight"]},
-                                                     {"price", db["price"]},
-                                                     {"can_be_seen", db["can_be_seen"]},
-                                                     {"spec_proc", db["spec_proc"]},
-                                                     {"max_struct", db["max_struct"]},
-                                                     {"cur_struct", db["cur_struct"]},
-                                                     {"decay", db["decay"]},
-                                                     {"volume", db["volume"]},
-                                                     {"material", db["material"]},
-                                                     {"max_exist", db["max_exist"]}});
+    obj_cache.cache.emplace(number, cached_object(number, {{"type", db["type"]},
+                                                           {"action_flag", db["action_flag"]},
+                                                           {"wear_flag", db["wear_flag"]},
+                                                           {"val0", db["val0"]},
+                                                           {"val1", db["val1"]},
+                                                           {"val2", db["val2"]},
+                                                           {"val3", db["val3"]},
+                                                           {"weight", db["weight"]},
+                                                           {"price", db["price"]},
+                                                           {"can_be_seen", db["can_be_seen"]},
+                                                           {"spec_proc", db["spec_proc"]},
+                                                           {"max_struct", db["max_struct"]},
+                                                           {"cur_struct", db["cur_struct"]},
+                                                           {"decay", db["decay"]},
+                                                           {"volume", db["volume"]},
+                                                           {"material", db["material"]},
+                                                           {"max_exist", db["max_exist"]}}));
   }
 
   return obj;

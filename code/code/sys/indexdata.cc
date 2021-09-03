@@ -76,8 +76,22 @@ mobIndexData::mobIndexData() :
 {
 }
 
-mobIndexData & mobIndexData::operator= (const mobIndexData &a)
-{
+mobIndexData::mobIndexData(int _virt, const sstring &_name, const sstring &_short_desc,
+                           const sstring &_long_desc, const sstring &_description, int _max_exist,
+                           int _spec, float _weight, long faction, long Class, long level,
+                           long race)
+    : faction(faction), Class(Class), level(level), race(race) {
+  virt = _virt;
+  name = _name;
+  short_desc = _short_desc;
+  long_desc = _long_desc;
+  description = _description;
+  max_exist = _max_exist;
+  spec = _spec;
+  weight = _weight;
+}
+
+mobIndexData &mobIndexData::operator=(const mobIndexData &a) {
   if (this == &a)
     return *this;
 
@@ -105,13 +119,46 @@ mobIndexData::mobIndexData(const mobIndexData &a) :
 }
 
 objIndexData::objIndexData() :
-  ex_description(NULL),
   max_struct(-99),
   armor(-99),
   where_worn(0),
   itemtype(MAX_OBJ_TYPES),
-  value(-99)
+  value(-99),
+  ex_description(NULL)
 {
+}
+
+objIndexData::objIndexData(
+  int _virt,
+  sstring _name,
+  sstring _short_desc,
+  sstring _long_desc,
+  int _max_exist,
+  int _spec,
+  float _weight,
+  byte max_struct,
+  unsigned int where_worn,
+  ubyte itemtype,
+  int value,
+  sstring _description,
+  extraDescription *ex_description,
+  objAffData _affected[MAX_OBJ_AFFECT]
+) : max_struct(max_struct),
+    where_worn(where_worn),
+    itemtype(itemtype),
+    value(value),
+    ex_description(ex_description) {
+  virt = _virt;
+  name = _name;
+  short_desc = _short_desc;
+  long_desc = _long_desc;
+  max_exist = _max_exist;
+  spec = _spec;
+  weight = _weight;
+  description = _description;
+  
+  for (int i = 0; i < MAX_OBJ_AFFECT; i++)
+    affected[i] = _affected[i];
 }
 
 objIndexData & objIndexData::operator= (const objIndexData &a)
@@ -171,15 +218,13 @@ objIndexData::~objIndexData()
 }
 
 // generate index table for object
-void generate_obj_index()
-{
-  objIndexData *tmpi = NULL;
-  extraDescription *new_descr;
-  int i=0;
-
+void generate_obj_index() {
   // to prevent constant resizing (slows boot), declare an appropriate initial
   // size.  Should be smallest power of 2 that will hold everything
-  obj_index.reserve(8192);
+  
+  // 2021-08-26: This cache is currently ending at 9212 entries, so updating this 
+  // value from 8192 to 16,384
+  mob_index.reserve(16384);
 
   /****** extra ******/
   TDatabase extra_db(DB_SNEEZY);
@@ -194,181 +239,118 @@ void generate_obj_index()
   /********************/
 
   TDatabase db(DB_SNEEZY);
-  db.query("select vnum, name, short_desc, long_desc, max_exist, spec_proc, weight, max_struct, wear_flag, type, price, action_desc from obj order by vnum");
+  db.query(
+      "select vnum, name, short_desc, long_desc, max_exist, spec_proc, weight, max_struct, wear_flag, type, price, action_desc from obj order by vnum");
 
-  while(db.fetchRow()){
-    tmpi = new objIndexData();
-    if (!tmpi) {
-      perror("indexData");
-      exit(0);
-    }
-  
-    tmpi->virt=convertTo<int>(db["vnum"]);
-    tmpi->name = db["name"];
-    tmpi->short_desc = db["short_desc"];
-    tmpi->long_desc = db["long_desc"];
-    tmpi->max_exist=convertTo<int>(db["max_exist"]);
+  while (db.fetchRow()) {
+    int virt = convertTo<int>(db["vnum"]);
+    sstring name = db["name"];
+    sstring short_desc = db["short_desc"];
+    sstring long_desc = db["long_desc"];
 
-    // use 327 so we don't go over 32765 in calculation
-    if (tmpi->max_exist < 327) {
-      tmpi->max_exist *= (short) (stats.max_exist * 100);
-      tmpi->max_exist /= 100;
-    }
-    if (tmpi->max_exist)
-      tmpi->max_exist = max(tmpi->max_exist, (short int) 1);
-    
+    int max_exist = convertTo<int>(db["max_exist"]);
+    max_exist = static_cast<int>(max_exist * stats.max_exist);
+    max_exist = min(max(max_exist, 1), 9999);
 
-    tmpi->spec=convertTo<int>(db["spec_proc"]);
-    tmpi->weight=convertTo<float>(db["weight"]);
-    tmpi->max_struct=convertTo<int>(db["max_struct"]);
-    tmpi->where_worn=convertTo<int>(db["wear_flag"]);
-    tmpi->itemtype=convertTo<int>(db["type"]);
-    tmpi->value=convertTo<int>(db["price"]);
-    if(!db["action_desc"].empty())
-      tmpi->description = db["action_desc"];
-    else tmpi->description=NULL;
+    int spec = convertTo<int>(db["spec_proc"]);
+    float weight = convertTo<float>(db["weight"]);
+    byte max_struct = convertTo<int>(db["max_struct"]);
+    unsigned int where_worn = convertTo<int>(db["wear_flag"]);
+    ubyte itemtype = convertTo<int>(db["type"]);
+    int value = convertTo<int>(db["price"]);
+    sstring description = db["action_desc"];
 
-    while(!extra_db["vnum"].empty() && convertTo<int>(extra_db["vnum"]) < tmpi->virt){
+    extraDescription *ex_description = nullptr;
+    while (!extra_db["vnum"].empty() && convertTo<int>(extra_db["vnum"]) <= virt) {
+      if (convertTo<int>(extra_db["vnum"]) == virt) {
+        auto new_descr = new extraDescription();
+        new_descr->keyword = extra_db["name"];
+        new_descr->description = extra_db["description"];
+        new_descr->next = ex_description;
+        ex_description = new_descr;
+      }
       extra_db.fetchRow();
     }
 
-    while(!extra_db["vnum"].empty() &&
-	  convertTo<int>(extra_db["vnum"])==tmpi->virt){
-      new_descr = new extraDescription();
-      new_descr->keyword = extra_db["name"];
-      new_descr->description = extra_db["description"];
-      new_descr->next = tmpi->ex_description;
-      tmpi->ex_description = new_descr;
+    objAffData affected[MAX_OBJ_AFFECT];
+    int i = 0;
+    while (!affect_db["vnum"].empty() && convertTo<int>(affect_db["vnum"]) <= virt) {
+      if (convertTo<int>(affect_db["vnum"]) == virt && i < MAX_OBJ_AFFECT) {
+        affected[i].location = mapFileToApply(convertTo<int>(affect_db["type"]));
 
-      extra_db.fetchRow();
-    }
+        if (affected[i].location == APPLY_SPELL)
+          affected[i].modifier = mapFileToSpellnum(convertTo<int>(affect_db["mod1"]));
+        else
+          affected[i].modifier = convertTo<int>(affect_db["mod1"]);
 
-    while(!affect_db["vnum"].empty() &&
-	  convertTo<int>(affect_db["vnum"]) < tmpi->virt){
+        affected[i].modifier2 = convertTo<int>(affect_db["mod2"]);
+        affected[i].type = TYPE_UNDEFINED;
+        affected[i].level = 0;
+        affected[i].bitvector = 0;
+
+        i++;
+      }
       affect_db.fetchRow();
     }
 
-    i=0;
-    while(!affect_db["vnum"].empty() &&
-	  convertTo<int>(affect_db["vnum"])==tmpi->virt){
-      tmpi->affected[i].location = mapFileToApply(convertTo<int>(affect_db["type"]));
-
-      if (tmpi->affected[i].location == APPLY_SPELL)
-	tmpi->affected[i].modifier = mapFileToSpellnum(convertTo<int>(affect_db["mod1"]));
-      else
-	tmpi->affected[i].modifier = convertTo<int>(affect_db["mod1"]);
-      
-      tmpi->affected[i].modifier2 = convertTo<int>(affect_db["mod2"]);
-      tmpi->affected[i].type = TYPE_UNDEFINED;
-      tmpi->affected[i].level = 0;
-      tmpi->affected[i].bitvector = 0;      
-
-      affect_db.fetchRow();
-      i++;
-    }
-
-    obj_index.push_back(*tmpi);
-    delete tmpi;
+    obj_index.emplace_back(virt, name, short_desc, long_desc, max_exist, spec, weight, max_struct,
+                           where_worn, itemtype, value, description, ex_description, affected);
   }
 }
 
-
-
-// generate index table for monster file 
-void generate_mob_index()
-{
-  mobIndexData *tmpi = NULL;
+// generate index table for monster file
+void generate_mob_index() {
   TDatabase db(DB_SNEEZY);
-  
+
   // to prevent constant resizing (slows boot), declare an appropriate initial
   // size.  Should be smallest power of 2 that will hold everything
   mob_index.reserve(8192);
 
-  // start by reading
   db.query("select * from mob");
 
-  while(db.fetchRow()){
-    if (tmpi) {
-      // push the previous one into the stack
-      mob_index.push_back(*tmpi);
-      delete tmpi;
-    }
+  while (db.fetchRow()) {
+    int virt = convertTo<int>(db["vnum"]);
+    sstring name = db["name"];
+    sstring short_desc = db["short_desc"];
+    sstring long_desc = db["long_desc"];
+    sstring description = db["description"];
+    long faction = convertTo<int>(db["faction"]);
+    long Class = convertTo<int>(db["class"]);
+    float arm = convertTo<int>(db["ac"]);
+    float hp = convertTo<int>(db["hpbonus"]);
+    float daml = convertTo<int>(db["damage_level"]);
+    long level = static_cast<long>((arm + hp + daml) / 3);
+    long race = convertTo<int>(db["race"]);
+    float weight = convertTo<float>(db["weight"]);
+    int spec = convertTo<int>(db["spec_proc"]);
+    int max_exist = convertTo<int>(db["max_exist"]);
 
-    // start a new data member
-    tmpi = new mobIndexData();
-    if (!tmpi) {
-      perror("mobIndexData");
-      exit(0);
-    }
-    
-    tmpi->virt = convertTo<int>(db["vnum"]);
-    
-    // read the sstrings
-    tmpi->name = db["name"];
-    tmpi->short_desc = db["short_desc"];
-    tmpi->long_desc = db["long_desc"];
-    tmpi->description = db["description"];
-    
-    long fac=convertTo<int>(db["faction"]);
-    
-    tmpi->faction = fac;
-    
-    long Class=convertTo<int>(db["class"]);
-    float arm=convertTo<int>(db["ac"]);
-    float hp=convertTo<int>(db["hpbonus"]);
-    float daml=convertTo<int>(db["damage_level"]);
-    
-    long lev = (long)((arm + hp + daml) / 3);
-    
-    tmpi->Class = Class;
-    tmpi->level = lev;
-    
-    long race=convertTo<int>(db["race"]);
-    long wgt=convertTo<int>(db["weight"]);
-    
-    tmpi->race = race;
-    tmpi->weight = wgt;
-    
-    long spec=convertTo<int>(db["spec_proc"]);
-    
-    tmpi->spec = spec;
-        
-    long maxe=convertTo<int>(db["max_exist"]);
-    
-    tmpi->max_exist = maxe;
-    
-    // handle some stat counters
-    if (lev <= 5) {
+    if (level <= 5)
       stats.mobs_1_5++;
-    } else if (lev <= 10) {
+    else if (level <= 10)
       stats.mobs_6_10++;
-    } else if (lev <= 15) {
+    else if (level <= 15)
       stats.mobs_11_15++;
-    } else if (lev <= 20) {
+    else if (level <= 20)
       stats.mobs_16_20++;
-    } else if (lev <= 25) {
+    else if (level <= 25)
       stats.mobs_21_25++;
-    } else if (lev <= 30) {
+    else if (level <= 30)
       stats.mobs_26_30++;
-    } else if (lev <= 40) {
+    else if (level <= 40)
       stats.mobs_31_40++;
-    } else if (lev <= 50) {
+    else if (level <= 50)
       stats.mobs_41_50++;
-    } else if (lev <= 60) {
+    else if (level <= 60)
       stats.mobs_51_60++;
-    } else if (lev <= 70) {
+    else if (level <= 70)
       stats.mobs_61_70++;
-    } else if (lev <= 100) {
+    else if (level <= 100)
       stats.mobs_71_100++;
-    } else {
+    else
       stats.mobs_101_127++;
-    }
-    // end stat counters
-  }
-  // and push the last one into the stack
-  // ... if it exists, ie. we have at least one mob.
-  if (tmpi) {
-    mob_index.push_back(*tmpi);
-    delete tmpi;
+
+    mob_index.emplace_back(virt, name, short_desc, long_desc, description, max_exist, spec, weight,
+                           faction, Class, level, race);
   }
 }

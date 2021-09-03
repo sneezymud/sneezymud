@@ -275,15 +275,17 @@ class indexData {
 class objIndexData : public indexData
 {
   public:
-    extraDescription *ex_description;  // extra descriptions
-    objAffData affected[MAX_OBJ_AFFECT];
     byte max_struct;
     short armor;
     unsigned int where_worn;
     ubyte itemtype;
     int value;
+    extraDescription *ex_description;  // extra descriptions
+    objAffData affected[MAX_OBJ_AFFECT];
 
     objIndexData();
+    objIndexData(int, sstring, sstring, sstring, int, int, float, byte, unsigned int, ubyte, int,
+                 sstring, extraDescription *, objAffData[MAX_OBJ_AFFECT]);
     objIndexData(const objIndexData &);
     objIndexData & operator=(const objIndexData &);
     virtual ~objIndexData();
@@ -300,6 +302,7 @@ class mobIndexData : public indexData
     int numberLoad;
 
     mobIndexData();
+    mobIndexData(int, const sstring&, const sstring&, const sstring&, const sstring&, int, int, float, long, long, long, long);
     mobIndexData(const mobIndexData &);
     mobIndexData & operator=(const mobIndexData &);
 };
