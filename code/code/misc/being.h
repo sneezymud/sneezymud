@@ -1666,9 +1666,7 @@ class TBeing : public TThing {
 
   void doPracSkill(const char *, spellNumT);
   void doPracDisc(const char *, int);
-  void doSpells(const sstring &);
-  void doRituals(const sstring &);
-  void doPrayers(const sstring &);
+  void displaySpellInfo(const sstring &argument, cmdTypeT command);
   void sendSkillsList(discNumT);
   void doPractice(const char *);
   virtual void doFeedback(const sstring &type, int clientCmd, const sstring &arg);

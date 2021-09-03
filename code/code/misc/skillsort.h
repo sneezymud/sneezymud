@@ -23,12 +23,11 @@
 // second, it stores the data that will be needed by that sorting routine.
 class skillSorter {
   public:
-    TBeing *ch;
-    spellNumT theSkill;
-    skillSorter(TBeing *c2, spellNumT ts) :
-      ch(c2), theSkill(ts) {}
+    const TBeing *ch{nullptr};
+    spellNumT theSkill{TYPE_UNDEFINED};
 
-    skillSorter() : ch(NULL), theSkill(TYPE_UNDEFINED) {}
+    skillSorter() = default;
+    skillSorter(const TBeing *c2, const spellNumT ts) : ch(c2), theSkill(ts) {};
 
     bool operator() (const skillSorter &, const skillSorter &) const;
 };

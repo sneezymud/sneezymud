@@ -1,17 +1,31 @@
-Syntax: spells <offensive|utility> <targeted|nontargeted> <all>
+Syntax: [spells|prayers|rituals] [offensive|utility|targeted|nontargeted] [mage|cleric|shaman|deikhan] [unlearned]
 
-The spells command allows you to view your spells by category.  The targeted/
-nontargeted options refer to whether or not the spell targets an individual
-person.  Spells that target objects are considered to be nontargeted.  The all
-option shows all the spells of a particular type, whether or not you have
-learned them yet.
+The spells/prayers/rituals commands allow you to view your magic abilities by category.
+The commands accept any combination of arguments in any order. If no category arguments
+are passed it will default to displaying all categories.
 
-Each line lists the spell name, your current learnedness of the spell, your max
-learnedness of the spell, the number of component charges for the spell that
-you have available and the name of the required component.
+The initiation commands (spells/prayers/rituals) are interchangeable and functionally identical,
+unless no class arguments are passed. If no class arguments are included it will default to 
+displaying abilities based on the command used. Only abilities for classes your character 
+has will be displayed, whether or not that class is included in the arguments.
+
+To see abilities you haven't yet learned but could in the future, add the "unlearned" argument.
+This will also display any abilities unlocked through quests.
+
+By default it will display the spell/prayer/ritual name and your current learnedness in the spell.
+If applicable it will also display your maximum potential learnedness, and/or the component required
+to cast the spell along with the number of charges available in all possible component storage
+locations.
 
 Usage examples:
 
-spells offensive
-spells offensive targeted
-spells utility nontargeted all
+spells utility targeted mage shaman unlearned
+    -> Displays targeted utility spells for mage and shaman (if character has those classes),
+       including unlearned
+
+prayers
+    -> Shows all cleric and deikhan prayers (if character has those classes), excluding unlearned
+
+rituals cleric mage offensive
+    -> Somewhat unintuitively, displays all targeted and non-targeted offensive abilities known
+       to the character and available to a cleric or mage (if character has those classes)

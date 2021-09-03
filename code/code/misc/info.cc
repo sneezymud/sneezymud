@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
+#include <iomanip>
 
 #include "handler.h"
 #include "extern.h"
@@ -149,27 +150,6 @@ static const sstring describe_part_wounds(const TBeing *ch, wearSlotT pos)
     return (buf);
   else
     return ("");
-}
-
-int findComponentCharges(TThing *t, spellNumT spell)
-{
-  if (!t)
-    return 0;
-
-  TComponent * comp = dynamic_cast<TComponent *>(t);
-  if (comp && comp->isComponentType(COMP_SPELL) && comp->getComponentSpell() == spell)
-    return comp->getComponentCharges();
-
-  TOpenContainer * cont = dynamic_cast<TOpenContainer *>(t);
-  TBeing * b = dynamic_cast<TBeing *>(t);
-  if (!b && (!cont || cont->isClosed()))
-    return 0;
-
-  int count = 0;
-  for (StuffIter it=t->stuff.begin();it!=t->stuff.end();++it) {
-    count += findComponentCharges(*it, spell);
-  }
-  return count;
 }
 
 // rp is the room looking at
@@ -5398,642 +5378,446 @@ void TBeing::describeTrapDamType(const TTrap *obj, int) const
        trap_types[obj->getTrapDamType()].uncap());
 }
 
-void TBeing::doSpells(const sstring &argument)
-{
-  char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
-  char learnbuf[64];
-  spellNumT i;
-  unsigned int j, l;
-  Descriptor *d;
-  CDiscipline *cd;
-  sstring arg, arg2, arg3;
-  int subtype=0, types[4], type=0, badtype=0, showall=0;
-  discNumT das;
-  TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
-  TThing *belt=equipment[WEAR_WAIST];
-  TThing *juju=equipment[WEAR_NECK];
-  TThing *wristpouch=equipment[WEAR_WRIST_R];
-  TThing *wristpouch2=equipment[WEAR_WRIST_L];
-  int totalcharges;
-  wizardryLevelT wizlevel = getWizardryLevel();
+// Functions used by TBeing::displaySpellInfo
+namespace {
+  using std::vector;
+  using std::unordered_map;
 
-  struct {
-    TThing *where;
-    wizardryLevelT wizlevel;
-  } search[] = {
-      {primary  , WIZ_LEV_COMP_PRIM_OTHER_FREE},
-      {secondary, WIZ_LEV_COMP_EITHER         },
-      {this    , WIZ_LEV_COMP_INV            },
-      {belt     , WIZ_LEV_COMP_BELT           },
-      {juju     , WIZ_LEV_COMP_NECK           },
-      {wristpouch, WIZ_LEV_COMP_WRIST         },
-      {wristpouch2, WIZ_LEV_COMP_WRIST         }
+  enum SpellCategory {
+    TARGETED_OFFENSIVE,
+    TARGETED_UTILITY,
+    NONTARGETED_OFFENSIVE,
+    NONTARGETED_UTILITY
   };
 
+  using SpellsByCategory = unordered_map<SpellCategory, vector<spellNumT>>;
+  using SpellsByCategoryByClass = unordered_map<skillUseClassT, SpellsByCategory>;
 
-  if (!hasClass(CLASS_MAGE) && !isImmortal()) {
-    sendTo("You know nothing of casting spells.\n\r");
-    if (hasClass(CLASS_SHAMAN)) {
-      sendTo("Perhaps looking at rituals is what you need to do?\n\r");
+  const vector<skillUseClassT> VALID_SPELL_TYPES = { SPELL_CLERIC,
+                                                     SPELL_DEIKHAN,
+                                                     SPELL_MAGE,
+                                                     SPELL_SHAMAN,
+                                                     SPELL_RANGER };
+
+  auto getAllSpellsSorted(const TBeing *character) {
+    vector<skillSorter> output;
+    output.reserve(MAX_SKILL);
+
+    auto isValidSpellType = [](const skillUseClassT spellType) {
+      return std::find(VALID_SPELL_TYPES.begin(), VALID_SPELL_TYPES.end(), spellType) !=
+             VALID_SPELL_TYPES.end();
+    };
+
+    int index = 0;
+    for (const spellInfo *spell : discArray) {
+      const auto indexEnum = static_cast<spellNumT>(index);
+      ++index;
+
+      if (!spell || sstring(spell->name).empty() || !isValidSpellType(spell->typ) ||
+          (getDisciplineNumber(indexEnum, false) == DISC_NONE))
+        continue;
+
+      output.emplace_back(skillSorter(character, indexEnum));
     }
+
+    std::sort(output.begin(), output.end(), skillSorter());
+
+    return output;
+  };
+
+  auto createEmptySpellsByCategoryMap() {
+    SpellsByCategory output;
+
+    for (int category = TARGETED_OFFENSIVE; category <= NONTARGETED_UTILITY; ++category) {
+      output.emplace(static_cast<SpellCategory>(category), vector<spellNumT>());
+      output.at(static_cast<SpellCategory>(category)).reserve(32);
+    }
+
+    return output;
+  };
+
+  auto createEmptySpellsByCategoryByClassMap() {
+    SpellsByCategoryByClass output;
+
+    for (const skillUseClassT spellType : VALID_SPELL_TYPES)
+      output.emplace(spellType, createEmptySpellsByCategoryMap());
+
+    return output;
+  };
+
+  SpellCategory getSpellCategory(const spellInfo *spell) {
+    const bool isViolent = spell->targets & TAR_VIOLENT;
+    const bool isAOE = spell->targets & TAR_AREA;
+    const bool isTargeted = spell->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_SELF_ONLY |
+                                              TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_CHAR_VIS_WORLD);
+
+    return isViolent ? (isAOE ? NONTARGETED_OFFENSIVE : TARGETED_OFFENSIVE)
+                     : (isTargeted ? TARGETED_UTILITY : NONTARGETED_UTILITY);
+  };
+
+  SpellsByCategoryByClass createSpellsByCategoryByClassMap(const TBeing *character) {
+    auto output = createEmptySpellsByCategoryByClassMap();
+
+    const vector<skillSorter> spellsSorted = getAllSpellsSorted(character);
+    for (const auto &skillSorterObj : spellsSorted) {
+      const spellNumT spellNumber = skillSorterObj.theSkill;
+      const spellInfo *spell = discArray[spellNumber];
+      output.at(spell->typ).at(getSpellCategory(spell)).push_back(spellNumber);
+    }
+
+    return output;
+  };
+
+  auto getPossibleComponentLocations(const TBeing *character, const spellNumT spellNumber) {
+    const auto comp =
+        std::find_if(CompInfo.begin(), CompInfo.end(), [spellNumber](const compInfo &ci) {
+          return ci.spell_num == spellNumber;
+        });
+
+    if (comp == CompInfo.end() || comp->comp_num <= 0)
+      return std::tuple(vector<const TThing *>(), comp);
+
+    vector<const TThing *> possibleComponentLocations{
+      character,
+      character->heldInPrimHand(),
+      character->heldInSecHand(),
+      character->equipment[WEAR_WAIST],
+      character->equipment[WEAR_NECK],
+      character->equipment[WEAR_WRIST_R],
+      character->equipment[WEAR_WRIST_L],
+    };
+
+    return std::tuple(possibleComponentLocations, comp);
+  };
+
+  int findComponentCharges(const TThing *thing, const spellNumT spell) {
+    if (!thing)
+      return 0;
+
+    const auto *comp = dynamic_cast<const TComponent *>(thing);
+    if (comp && comp->isComponentType(COMP_SPELL) && comp->getComponentSpell() == spell)
+      return comp->getComponentCharges();
+
+    const auto *container = dynamic_cast<const TOpenContainer *>(thing);
+    const auto *being = dynamic_cast<const TBeing *>(thing);
+    if (!being && (!container || container->isClosed()))
+      return 0;
+
+    int count = 0;
+    for (const auto *each : thing->stuff)
+      count += findComponentCharges(each, spell);
+
+    return count;
+  }
+
+  sstring getComponentString(const TBeing *character, const spellNumT spellNumber) {
+    sstring componentString = "[   ] No Component Found";
+
+    const auto [possibleComponentLocations, comp] =
+        getPossibleComponentLocations(character, spellNumber);
+
+    if (possibleComponentLocations.empty() || comp == CompInfo.end())
+      return componentString;
+
+    int totalCharges = 0;
+    for (const TThing *location : possibleComponentLocations) {
+      if (!location)
+        continue;
+      totalCharges += findComponentCharges(location, spellNumber);
+    }
+
+    const int compIndex = real_object(comp->comp_num);
+    const sstring compShortDesc = obj_index[compIndex].short_desc;
+
+    componentString = format("[%3i] %s") % totalCharges % compShortDesc;
+
+    return componentString;
+  };
+
+  auto generateOutputLines(const TBeing *character,
+                           const vector<spellNumT> &skills,
+                           const bool showUnlearned) {
+    vector<vector<sstring>> output;
+
+    for (const spellNumT skillNumber : skills) {
+      const CDiscipline *disc = character->getDiscipline(getDisciplineNumber(skillNumber, false));
+
+      if (!disc || !IS_SET(character->getClass(), static_cast<uint16_t>(disc->ok_for_class)))
+        continue;
+
+      const int16_t skillValue = character->getSkillValue(skillNumber);
+      const spellInfo *spell = discArray[skillNumber];
+      const int discLearnedness =
+          !disc || disc->getLearnedness() <= 0
+              ? 0
+              : min(disc->getLearnedness(), static_cast<int>(MAX_DISC_LEARNEDNESS));
+
+      const bool spellIsUnlearned = skillValue <= 0 && spell->start > discLearnedness;
+      const bool spellRequiresQuest = spell->toggle && !character->hasQuestBit(spell->toggle);
+
+      if ((spellRequiresQuest || spellIsUnlearned) && !showUnlearned)
+        continue;
+
+      const int16_t maxSkillValue = character->getMaxSkillValue(skillNumber);
+      const bool spellNotYetMaxable =
+          maxSkillValue < MAX_SKILL_LEARNEDNESS && spell->startLearnDo > 0;
+
+      vector<sstring> thisLine;
+      thisLine.reserve(3);
+
+      const sstring spellName =
+          format("%s%s%s") % character->cyan() % spell->name % character->norm();
+      thisLine.emplace_back(spellName);
+
+      if (spellRequiresQuest)
+        thisLine.emplace_back("Learned: Quest");
+      else if (spellIsUnlearned) {
+        const sstring howCloseToLearning = skill_diff(spell->start - discLearnedness);
+        const sstring whenWillLearn = format("Learned: %s") % howCloseToLearning.cap();
+        thisLine.emplace_back(whenWillLearn);
+      } else {
+        sstring learnedness = how_good(skillValue);
+
+        if (spellNotYetMaxable) {
+          const sstring maxLearnedness = how_good(maxSkillValue);
+          learnedness = format("%s/%s") % learnedness.trim() % maxLearnedness.trim();
+        }
+
+        thisLine.emplace_back(learnedness.trim());
+      }
+
+      if (IS_SET(spell->comp_types, COMP_MATERIAL)) {
+        const sstring componentInfo = getComponentString(character, skillNumber);
+        thisLine.emplace_back(componentInfo);
+      } else
+        thisLine.emplace_back("");
+
+      output.emplace_back(thisLine);
+    }
+
+    return output;
+  };
+
+  void calcMaxStringWidths(const vector<vector<sstring>> &outputLines,
+                           size_t &maxSpellNameSize,
+                           size_t &maxLearnInfoSize,
+                           size_t &maxCompInfoSize) {
+    for (const auto &line : outputLines) {
+      maxSpellNameSize = max(maxSpellNameSize, line.at(0).size());
+      maxLearnInfoSize = max(maxLearnInfoSize, line.at(1).size());
+      maxCompInfoSize = max(maxCompInfoSize, line.at(2).size());
+    }
+  };
+
+  sstring generateFormattedOutput(const vector<vector<sstring>> &outputLines,
+                                  const size_t maxSpellNameSize,
+                                  const size_t maxLearnInfoSize,
+                                  const size_t maxCompInfoSize) {
+    sstring output;
+    for (const auto &line : outputLines) {
+      output += format("    %-s %-s %-s\n\r") %
+                boost::io::group(std::setw(maxSpellNameSize), line.at(0)) %
+                boost::io::group(std::setw(maxLearnInfoSize), line.at(1)) %
+                boost::io::group(std::setw(maxCompInfoSize), line.at(2));
+    }
+
+    return (output += "\n\r");
+  };
+
+  auto getClassNameAndBitflagFromSpellType(const TBeing *character,
+                                           const skillUseClassT spellType) {
+    static const unordered_map<skillUseClassT, uint16_t> classForSpellType = {
+      { SPELL_CLERIC, CLASS_CLERIC },
+      { SPELL_DEIKHAN, CLASS_DEIKHAN },
+      { SPELL_MAGE, CLASS_MAGE },
+      { SPELL_SHAMAN, CLASS_SHAMAN },
+      { SPELL_RANGER, CLASS_RANGER }
+    };
+    const uint16_t spellClassBitflag = classForSpellType.at(spellType);
+    const classIndT classIndex = character->getClassIndNum(spellClassBitflag);
+    const sstring className = classInfo[classIndex].name.cap();
+
+    return std::tuple<const sstring, const uint16_t>(className, spellClassBitflag);
+  };
+
+  sstring getClassNameFromSpellType(const TBeing *character, const skillUseClassT spellType) {
+    const auto [className, bitFlag] = getClassNameAndBitflagFromSpellType(character, spellType);
+    return className;
+  };
+
+  uint16_t getClassBitflagFromSpellType(const TBeing *character, const skillUseClassT spellType) {
+    const auto [className, bitFlag] = getClassNameAndBitflagFromSpellType(character, spellType);
+    return bitFlag;
+  };
+
+  sstring generateCategoryHeader(SpellCategory category) {
+    static const unordered_map<SpellCategory, sstring> spellCategoryHeaders = {
+      { TARGETED_OFFENSIVE, "Targeted Offensive" },
+      { TARGETED_UTILITY, "Targeted Utility" },
+      { NONTARGETED_OFFENSIVE, "Non-Targeted Offensive" },
+      { NONTARGETED_UTILITY, "Non-Targeted Utility" }
+    };
+
+    return format("%s:\n\r") % spellCategoryHeaders.at(category);
+  };
+
+  auto getClassesToDisplay(const TBeing *character, const uint16_t whichClasses) {
+    vector<skillUseClassT> output;
+
+    for (const auto spellType : VALID_SPELL_TYPES) {
+      const auto spellClassBitflag = getClassBitflagFromSpellType(character, spellType);
+      const bool includeSpellsForThisClass =
+          whichClasses == 0 || IS_SET(whichClasses, spellClassBitflag);
+
+      if (includeSpellsForThisClass && character->hasClass(spellClassBitflag))
+        output.emplace_back(spellType);
+    }
+
+    return output;
+  };
+
+  auto getCategoriesToDisplay(const bool showTargeted,
+                              const bool showUtility,
+                              const bool showOffensive,
+                              const bool showNonTargeted,
+                              const bool showAll) {
+    vector<SpellCategory> output;
+
+    if ((showTargeted && !showUtility) || (showOffensive && !showNonTargeted) || showAll)
+      output.push_back(TARGETED_OFFENSIVE);
+    if ((showTargeted && !showOffensive) || (showUtility && !showNonTargeted) || showAll)
+      output.push_back(TARGETED_UTILITY);
+    if ((showNonTargeted && !showUtility) || (showOffensive && !showTargeted) || showAll)
+      output.push_back(NONTARGETED_OFFENSIVE);
+    if ((showNonTargeted && !showOffensive) || (showUtility && !showTargeted) || showAll)
+      output.push_back(NONTARGETED_UTILITY);
+
+    return output;
+  };
+} // End functions used by TBeing::displaySpellInfo
+
+void TBeing::displaySpellInfo(const sstring &argument, const cmdTypeT command) {
+  if (!desc)
+    return;
+
+  static const uint16_t validClasses =
+      CLASS_MAGE | CLASS_SHAMAN | CLASS_CLERIC | CLASS_DEIKHAN | CLASS_RANGER;
+
+  if (!hasClass(validClasses) && !isImmortal()) {
+    sendTo("You don't know any spells, prayers, or rituals.\n\r");
     return;
   }
 
-  if (!(d = desc))
-    return;
+  bool showAll = false, showTargeted = false, showNonTargeted = false, showOffensive = false,
+       showUtility = false, showUnlearned = false;
 
-  *buffer = '\0';
+  uint16_t whichClasses = 0U;
 
   if (argument.empty())
-    memset(types, 1, sizeof(int) * 4);      
-  else {
-    memset(types, 0, sizeof(int) * 4);
+    showAll = true;
 
-    arg=argument.word(0);
-    arg2=argument.word(1);
-    arg3=argument.word(2);
-
-    if (is_abbrev(arg3, "all"))
-      showall = 1;
-
-    if (!arg2.empty()) {
-      if (is_abbrev(arg2, "all"))
-        showall = 1;
-      else if (is_abbrev(arg2, "targeted"))
-        subtype = 1;
-      else if (is_abbrev(arg2, "nontargeted"))
-        subtype = 2;
-      else
-        badtype = 1;
-    }
-    
-    if (is_abbrev(arg, "offensive")) {
-      if(!subtype || subtype == 1)
-        types[0] = 1;
-      if(!subtype || subtype == 2)
-        types[1] = 1;
-    } else if (is_abbrev(arg, "utility")) {
-      if(!subtype || subtype == 1)
-        types[2] = 1;
-      if(!subtype || subtype == 2)
-        types[3] = 1;      
-    } else
-      badtype = 1;
-    
-    if (badtype) {
-      sendTo("You must specify a valid spell type.\n\r");
-      sendTo("Syntax: spells <offensive|utility> <targeted|nontargeted> <all>.\n\r");
+  for (const sstring &word : argument.words()) {
+    if (is_abbrev(word, "all"))
+      showAll = true;
+    else if (is_abbrev(word, "unlearned"))
+      showUnlearned = true;
+    else if (is_abbrev(word, "offensive"))
+      showOffensive = true;
+    else if (is_abbrev(word, "utility"))
+      showUtility = true;
+    else if (is_abbrev(word, "targeted"))
+      showTargeted = true;
+    else if (is_abbrev(word, "nontargeted"))
+      showNonTargeted = true;
+    else if (is_abbrev(word, "mage"))
+      whichClasses |= CLASS_MAGE;
+    else if (is_abbrev(word, "shaman"))
+      whichClasses |= CLASS_SHAMAN;
+    else if (is_abbrev(word, "cleric"))
+      whichClasses |= CLASS_CLERIC;
+    else if (is_abbrev(word, "deikhan"))
+      whichClasses |= CLASS_DEIKHAN;
+    else if (is_abbrev(word, "ranger"))
+      whichClasses |= CLASS_RANGER;
+    else {
+      sendTo(
+          "Syntax: <prayers|spells|rituals> [offensive|utility|targeted|nontargeted] [mage|shaman|cleric|deikhan|ranger] [unlearned]\n\r");
+      sendTo("See 'help spells' for more information.\n\r");
       return;
     }
   }
 
-  std::vector<skillSorter>skillSortVec(0);
+  // Assume user wants to see all if no specific categories are specified
+  showAll = showAll || !(showOffensive || showUtility || showTargeted || showNonTargeted);
 
-  for (i = MIN_SPELL; i < MAX_SKILL; i++) {
-    if (hideThisSpell(i) || (!discArray[i]->minMana))
-      continue;
-
-    skillSortVec.push_back(skillSorter(this, i));
-  }
-  
-  // sort it into proper order
-  sort(skillSortVec.begin(), skillSortVec.end(), skillSorter());
-
-  for (type = 0; type < 4;++type) {
-    if (!types[type])
-      continue;
-
-    if (*buffer)
-      strcat(buffer, "\n\r");
-
-    switch (type) {
-      case 0:
-        strcat(buffer, "Targeted offensive spells:\n\r");
+  // If no class arguments were passed, choose classes based on the command used
+  if (whichClasses == 0U) {
+    switch (command) {
+      case CMD_SPELLS:
+        whichClasses = (CLASS_MAGE | CLASS_RANGER);
         break;
-      case 1:
-        strcat(buffer, "Non-targeted offensive spells:\n\r");
+      case CMD_PRAYERS:
+        whichClasses = (CLASS_CLERIC | CLASS_DEIKHAN);
         break;
-      case 2:
-        strcat(buffer, "Targeted utility spells:\n\r");
+      case CMD_RITUALS:
+        whichClasses = CLASS_SHAMAN;
         break;
-      case 3:
-        strcat(buffer, "Non-targeted utility spells:\n\r");
+      default:
         break;
     }
+  }
 
-    for (j = 0; j < skillSortVec.size(); j++) {
-      i = skillSortVec[j].theSkill;
-      das = getDisciplineNumber(i, FALSE);
-      if (das == DISC_NONE) {
-        vlogf(LOG_BUG, format("Bad disc for skill %d in doSpells") %  i);
-        continue;
-      }
-      cd = getDiscipline(das);
-      
-      // getLearnedness is -99 for an unlearned skill, make it seem like a 0
-      int tmp_var = ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
-      tmp_var = min((int) MAX_DISC_LEARNEDNESS, tmp_var);
+  // Create map of maps. Outer map relates a spell type (e.g. SPELL_MAGE) to an inner
+  // map. Inner map relates a spell category (e.g. TARGETED_OFFENSIVE) to a vector of
+  // spell numbers that match the outer spell type and inner spell category (e.g. SPELL_GUST).
 
-      switch (type) {
-        case 0: // single target offensive
-          if (!(discArray[i]->targets & TAR_VIOLENT) ||
-              (discArray[i]->targets & TAR_AREA))
-            continue;
-          break;
-        case 1: // area offensive
-          if (!(discArray[i]->targets & TAR_VIOLENT) ||
-              !(discArray[i]->targets & TAR_AREA))
-            continue;
-          break;
-        case 2: // targeted utility
-          if ((discArray[i]->targets & TAR_VIOLENT) ||
-              !(discArray[i]->targets & TAR_CHAR_ROOM))
-            continue;
-          break;
-        case 3: // non-targeted utility
-          if ((discArray[i]->targets &  TAR_VIOLENT) ||
-              (discArray[i]->targets & TAR_CHAR_ROOM))
-            continue;
-          break;
-      }
+  // Do this once per use of the spells/rituals/prayers command, as the skills are sorted based on
+  // the character's current learnedness at the time, so the order can change potentially
+  // every call.
+  const auto spellsByCategoryByClass = createSpellsByCategoryByClassMap(this);
 
-      // can't we say if !cd, continue here?
-      if (cd && !cd->ok_for_class && getSkillValue(i) <= 0) 
+  // Determine which categories to display based on combination of arguments provided
+  const auto categoriesToDisplay =
+      getCategoriesToDisplay(showTargeted, showUtility, showOffensive, showNonTargeted, showAll);
+
+  // Determine which classes to display based on arguments provided (or not provided)
+  const auto classesToDisplay = getClassesToDisplay(this, whichClasses);
+
+  unordered_map<skillUseClassT, unordered_map<SpellCategory, vector<vector<sstring>>>>
+      outputLinesByCategoryByClass;
+
+  size_t maxSpellNameSize = 0, maxLearnInfoSize = 0, maxCompInfoSize = 0;
+
+  // Create map of lines to be displayed, allowing us to count the max size of each field
+  // before generating any output. This way we can keep all output aligned while not
+  // printing a bunch of extra whitespace.
+  for (const auto spellType : classesToDisplay) {
+    unordered_map<SpellCategory, vector<vector<sstring>>> outputByCategory;
+    for (const auto category : categoriesToDisplay) {
+      const auto &spells = spellsByCategoryByClass.at(spellType).at(category);
+      const auto &outputLines = generateOutputLines(this, spells, showUnlearned);
+      calcMaxStringWidths(outputLines, maxSpellNameSize, maxLearnInfoSize, maxCompInfoSize);
+      outputByCategory.emplace_hint(outputByCategory.end(), category, outputLines);
+    }
+    outputLinesByCategoryByClass.emplace_hint(outputLinesByCategoryByClass.end(),
+                                              spellType,
+                                              outputByCategory);
+  }
+
+  sstring finalOutput;
+
+  for (const auto category : categoriesToDisplay) {
+    finalOutput += generateCategoryHeader(category);
+    for (const auto spellType : classesToDisplay) {
+      const auto &outputLines = outputLinesByCategoryByClass.at(spellType).at(category);
+      if (outputLines.empty())
         continue;
 
-      totalcharges = 0;
-      
-      for (l = 0; l < 7; l++) {
-        if (search[l].where && wizlevel >= search[l].wizlevel) {
-          totalcharges += findComponentCharges(search[l].where, i);
-        }
-      }
-
-      if ((getSkillValue(i) <= 0) &&
-          (!tmp_var || (discArray[i]->start - tmp_var) > 0)) {
-        if (!showall) 
-          continue;
-
-        sprintf(buf, "%s%-22.22s%s  (Learned: %s)", 
-                cyan(), discArray[i]->name, norm(),
-                skill_diff(discArray[i]->start - tmp_var));
-      } else if (discArray[i]->toggle && 
-                 !hasQuestBit(discArray[i]->toggle)) {
-        if (!showall) 
-          continue;
-
-        sprintf(buf, "%s%-22.22s%s  (Learned: Quest)",
-                cyan(), discArray[i]->name, norm());
-      } else { 
-        if (getMaxSkillValue(i) < MAX_SKILL_LEARNEDNESS) {
-          if (discArray[i]->startLearnDo > 0) {
-            sprintf(learnbuf, "%.9s/%.9s", how_good(getSkillValue(i)),
-                    how_good(getMaxSkillValue(i))+1);
-            sprintf(buf, "%s%-22.22s%s %-19.19s",
-                    cyan(), discArray[i]->name, norm(), 
-                    learnbuf);
-          } else {
-            sprintf(buf, "%s%-22.22s%s %-19.19s",
-                    cyan(), discArray[i]->name, norm(), 
-                    how_good(getSkillValue(i)));
-          }
-        } else {
-          sprintf(buf, "%s%-22.22s%s %-19.19s",
-                  cyan(), discArray[i]->name, norm(), 
-                  how_good(getSkillValue(i)));
-        }
-        unsigned int comp;
-
-        for (comp = 0; (comp < CompInfo.size()) &&
-                       (i != CompInfo[comp].spell_num); comp++);
-
-        if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
-          sprintf(buf + strlen(buf), "   [%3i] %s",  totalcharges, 
-                  obj_index[real_object(CompInfo[comp].comp_num)].short_desc);
-        }         
-      }
-        strcat(buf, "\n\r");
-        
-      if (strlen(buf) + strlen(buffer) > (MAX_STRING_LENGTH * 2) - 2)
-        break;
-
-      strcat(buffer, buf);
-    } 
-  }
-  d->page_string(buffer);
-}
-
-void TBeing::doRituals(const sstring &argument)
-{
-  char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
-  char learnbuf[64];
-  spellNumT i;
-  unsigned int j, l;
-  Descriptor *d;
-  CDiscipline *cd;
-  sstring arg, arg2, arg3;
-  int subtype=0, types[4], type=0, badtype=0, showall=0;
-  discNumT das;
-  TThing *primary=heldInPrimHand(), *secondary=heldInSecHand();
-  TThing *belt=equipment[WEAR_WAIST];
-  TThing *juju=equipment[WEAR_NECK];
-  TThing *wristpouch=equipment[WEAR_WRIST_R];
-  TThing *wristpouch2=equipment[WEAR_WRIST_L];
-  int totalcharges;
-  ritualismLevelT ritlevel = getRitualismLevel();
-
-  struct {
-    TThing *where;
-    ritualismLevelT ritlevel;
-  } search[] = {
-      {primary  , RIT_LEV_COMP_PRIM_OTHER_FREE},
-      {secondary, RIT_LEV_COMP_EITHER         },
-      {this    , RIT_LEV_COMP_INV            },
-      {belt     , RIT_LEV_COMP_BELT           },
-      {juju     , RIT_LEV_COMP_NECK           },
-      {wristpouch, RIT_LEV_COMP_WRIST         },
-      {wristpouch2, RIT_LEV_COMP_WRIST         }
-  };
-
-  if (!hasClass(CLASS_SHAMAN) && !isImmortal()) {
-    sendTo("You aren't a Shaman, therefore you have no use for rituals.\n\r");
-    sendTo("Perhaps using the SPELLS command is what you want.\n\r");
-    return;
-  }
-
-  if (!(d = desc))
-    return;
-
-  *buffer = '\0';
-
-  if (argument.empty())
-    memset(types, 1, sizeof(int) * 4);      
-  else {
-    memset(types, 0, sizeof(int) * 4);
-
-    arg=argument.word(0);
-    arg2=argument.word(2);
-    arg3=argument.word(3);
-
-    if (is_abbrev(arg3, "all"))
-      showall = 1;
-
-    if (!arg2.empty()) {
-      if (is_abbrev(arg2, "all"))
-        showall = 1;
-      else if (is_abbrev(arg2, "targeted"))
-        subtype = 1;
-      else if (is_abbrev(arg2, "nontargeted"))
-        subtype = 2;
-      else
-        badtype = 1;
-    }
-    
-    if (is_abbrev(arg, "offensive")) {
-      if(!subtype || subtype == 1)
-        types[0] = 1;
-      if(!subtype || subtype == 2)
-        types[1] = 1;
-    } else if (is_abbrev(arg, "utility")) {
-      if(!subtype || subtype == 1)
-        types[2] = 1;
-      if(!subtype || subtype == 2)
-        types[3] = 1;      
-    } else
-      badtype = 1;
-    
-    if (badtype) {
-      sendTo("You must specify a valid ritual type.\n\r");
-      sendTo("Syntax: rituals <offensive|utility> <targeted|nontargeted> <all>.\n\r");
-      return;
+      finalOutput += format("  %s:\n\r") % getClassNameFromSpellType(this, spellType);
+      finalOutput +=
+          generateFormattedOutput(outputLines, maxSpellNameSize, maxLearnInfoSize, maxCompInfoSize);
     }
   }
 
-  std::vector<skillSorter>skillSortVec(0);
-
-  for (i = MIN_SPELL; i < MAX_SKILL; i++) {
-    if (hideThisSpell(i) || !discArray[i]->minLifeforce)
-      continue;
-
-    skillSortVec.push_back(skillSorter(this, i));
-  }
-  
-  // sort it into proper order
-  sort(skillSortVec.begin(), skillSortVec.end(), skillSorter());
-
-  for (type = 0; type < 4;++type) {
-    if (!types[type])
-      continue;
-
-    if (*buffer)
-      strcat(buffer, "\n\r");
-
-    switch (type) {
-      case 0:
-        strcat(buffer, "Targeted offensive rituals:\n\r");
-        break;
-      case 1:
-        strcat(buffer, "Non-targeted offensive rituals:\n\r");
-        break;
-      case 2:
-        strcat(buffer, "Targeted utility rituals:\n\r");
-        break;
-      case 3:
-        strcat(buffer, "Non-targeted utility rituals:\n\r");
-        break;
-    }
-
-    for (j = 0; j < skillSortVec.size(); j++) {
-      i = skillSortVec[j].theSkill;
-      das = getDisciplineNumber(i, FALSE);
-      if (das == DISC_NONE) {
-        vlogf(LOG_BUG, format("Bad disc for skill %d in doRituals") %  i);
-        continue;
-      }
-      cd = getDiscipline(das);
-      
-      // getLearnedness is -99 for an unlearned skill, make it seem like a 0
-      int tmp_var = ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
-      tmp_var = min((int) MAX_DISC_LEARNEDNESS, tmp_var);
-
-      switch (type) {
-        case 0: // single target offensive
-          if (!(discArray[i]->targets & TAR_VIOLENT) ||
-              (discArray[i]->targets & TAR_AREA))
-            continue;
-          break;
-        case 1: // area offensive
-          if (!(discArray[i]->targets & TAR_VIOLENT) ||
-              !(discArray[i]->targets & TAR_AREA))
-            continue;
-          break;
-        case 2: // targeted utility
-          if ((discArray[i]->targets & TAR_VIOLENT) ||
-              !(discArray[i]->targets & TAR_CHAR_ROOM))
-            continue;
-          break;
-        case 3: // non-targeted utility
-          if ((discArray[i]->targets &  TAR_VIOLENT) ||
-              (discArray[i]->targets & TAR_CHAR_ROOM))
-            continue;
-          break;
-      }
-
-      // can't we say if !cd, continue here?
-      if (cd && !cd->ok_for_class && getSkillValue(i) <= 0) 
-        continue;
-
-      totalcharges = 0;
-      
-      for (l = 0; l < 7; l++) {
-        if (search[l].where && ritlevel >= search[l].ritlevel) {
-          totalcharges += findComponentCharges(search[l].where, i);
-        }
-      }
-
-      if ((getSkillValue(i) <= 0) &&
-          (!tmp_var || (discArray[i]->start - tmp_var) > 0)) {
-        if (!showall) 
-          continue;
-
-        sprintf(buf, "%s%-22.22s%s  (Learned: %s)", 
-                cyan(), discArray[i]->name, norm(),
-                skill_diff(discArray[i]->start - tmp_var));
-      } else if (discArray[i]->toggle && 
-                 !hasQuestBit(discArray[i]->toggle)) {
-        if (!showall) 
-          continue;
-
-        sprintf(buf, "%s%-22.22s%s  (Learned: Quest)",
-                cyan(), discArray[i]->name, norm());
-      } else { 
-        if (getMaxSkillValue(i) < MAX_SKILL_LEARNEDNESS) {
-          if (discArray[i]->startLearnDo > 0) {
-            sprintf(learnbuf, "%.9s/%.9s", how_good(getSkillValue(i)),
-                    how_good(getMaxSkillValue(i))+1);
-            sprintf(buf, "%s%-22.22s%s %-19.19s",
-                    cyan(), discArray[i]->name, norm(), 
-                    learnbuf);
-          } else {
-            sprintf(buf, "%s%-22.22s%s %-19.19s",
-                    cyan(), discArray[i]->name, norm(), 
-                    how_good(getSkillValue(i)));
-          }
-        } else {
-          sprintf(buf, "%s%-22.22s%s %-19.19s",
-                  cyan(), discArray[i]->name, norm(), 
-                  how_good(getSkillValue(i)));
-        }
-        unsigned int comp;
-
-        for (comp = 0; (comp < CompInfo.size()) &&
-                       (i != CompInfo[comp].spell_num); comp++);
-
-        if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
-          sprintf(buf + strlen(buf), "   [%3i] %s",  totalcharges, 
-                  obj_index[real_object(CompInfo[comp].comp_num)].short_desc);
-        }         
-      }
-        strcat(buf, "\n\r");
-        
-      if (strlen(buf) + strlen(buffer) > (MAX_STRING_LENGTH * 2) - 2)
-        break;
-
-      strcat(buffer, buf);
-    } 
-  }
-  d->page_string(buffer);
-}
-
-void TBeing::doPrayers(const sstring &argument)
-{
-  char buf[MAX_STRING_LENGTH * 2] = "\0";
-  char buffer[MAX_STRING_LENGTH * 2] = "\0";
-  char learnbuf[64];
-  spellNumT i;
-  unsigned int j, l;
-  Descriptor *d;
-  CDiscipline *cd;
-  sstring arg, arg2, arg3;
-  int subtype=0, types[4], type=0, badtype=0, showall=0;
-  discNumT das;
-  TThing *primary = heldInPrimHand(), *secondary = heldInSecHand();
-  TThing *belt = equipment[WEAR_WAIST];
-  TThing *juju = equipment[WEAR_NECK];
-  TThing *wristpouch = equipment[WEAR_WRIST_R];
-  TThing *wristpouch2 = equipment[WEAR_WRIST_L];
-  int totalcharges;
-  wizardryLevelT wizlevel = getWizardryLevel();
-
-  struct {
-    TThing *where;
-    wizardryLevelT wizlevel;
-  } search[]={{primary, WIZ_LEV_COMP_PRIM_OTHER_FREE}, {secondary, WIZ_LEV_COMP_EITHER}, {this, WIZ_LEV_COMP_INV}, {belt, WIZ_LEV_COMP_BELT}, {juju, WIZ_LEV_COMP_NECK}, {wristpouch, WIZ_LEV_COMP_WRIST}, {wristpouch2, WIZ_LEV_COMP_WRIST}};
-
-  if (!(d = desc))
-    return;
-
-  if(argument.empty())
-    memset(types, 1, sizeof(int)*4);      
-  else {
-    memset(types, 0, sizeof(int)*4);
-
-    arg=argument.word(0);
-    arg2=argument.word(1);
-    arg3=argument.word(2);
-
-    if (is_abbrev(arg3, "all"))
-      showall = 1;
-
-    if (!arg2.empty()){
-      if (is_abbrev(arg2, "all")) 
-        showall=1;
-        else if(is_abbrev(arg2, "targeted")) 
-        subtype=1;
-        else if(is_abbrev(arg2, "nontargeted")) 
-        subtype=2;
-        else badtype=1;
-    }      
-    if (is_abbrev(arg, "offensive")){
-        if (!subtype || subtype==1) 
-        types[0] = 1;
-
-        if (!subtype || subtype==2) 
-        types[1] = 1;
-    } else if(is_abbrev(arg, "utility")) {
-        if (!subtype || subtype==1) 
-        types[2] = 1;
-        
-      if (!subtype || subtype==2) 
-        types[3] = 1;      
-    } else  
-      badtype = 1;
-      
-    if (badtype) {
-        sendTo("You must specify a valid spell type.\n\r");
-        sendTo("Syntax: spells <offensive|utility> <targeted|nontargeted> <all>.\n\r");
-        return;
-    }
-  }
-
-  std::vector<skillSorter>skillSortVec(0);
-
-  for (i = MIN_SPELL; i < MAX_SKILL; i++) {
-    if (hideThisSpell(i) || (!discArray[i]->minMana))
-      continue;
-    skillSortVec.push_back(skillSorter(this, i));
-  }  
-    
-  sort(skillSortVec.begin(), skillSortVec.end(), skillSorter());
-
-  for (type = 0;type < 4;++type) {
-    if (!types[type])
-      continue;
-
-    if(*buffer)
-        strcat(buffer, "\n\r");
-
-    switch(type){
-      case 0:
-        strcat(buffer, "Targeted offensive spells:\n\r");
-        break;
-      case 1:
-        strcat(buffer, "Non-targeted offensive spells:\n\r");
-        break;
-      case 2:
-        strcat(buffer, "Targeted utility spells:\n\r");
-        break;
-      case 3:
-        strcat(buffer, "Non-targeted utility spells:\n\r");
-        break;
-    }
-    for (j = 0; j < skillSortVec.size(); j++) {
-      i = skillSortVec[j].theSkill;
-      das = getDisciplineNumber(i, FALSE);
-      if (das == DISC_NONE) {
-        vlogf(LOG_BUG, format("Bad disc for skill %d in doPrayers") %  i);
-          continue;
-      }
-      cd = getDiscipline(das);
-        
-      // getLearnedness is -99 for an unlearned skill, make it seem like a 0
-      int tmp_var = ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
-      tmp_var = min((int) MAX_DISC_LEARNEDNESS, tmp_var);
-
-      switch (type) {
-        case 0: // single target offensive
-          if(!(discArray[i]->targets & TAR_VIOLENT) ||
-                (discArray[i]->targets & TAR_AREA))
-                continue;
-  
-          break;
-        case 1: // area offensive
-          if(!(discArray[i]->targets & TAR_VIOLENT) ||
-             !(discArray[i]->targets & TAR_AREA))
-            continue;
-  
-          break;
-         case 2: // targeted utility
-          if((discArray[i]->targets & TAR_VIOLENT) ||
-             !(discArray[i]->targets & TAR_CHAR_ROOM))
-            continue;
-
-          break;
-        case 3: // non-targeted utility
-          if((discArray[i]->targets &  TAR_VIOLENT) ||
-             (discArray[i]->targets & TAR_CHAR_ROOM))
-            continue;
-
-          break;
-      }
-      // can't we say if !cd, continue here?
-      if (cd && !cd->ok_for_class && getSkillValue(i) <= 0) 
-        continue;
-
-      totalcharges = 0;
-        
-      for (l = 0; l < 7; l++) {
-        if (search[l].where && wizlevel >= search[l].wizlevel) {
-          totalcharges += findComponentCharges(search[l].where, i);
-        }
-      }
-
-      if ((getSkillValue(i) <= 0) &&
-          (!tmp_var || (discArray[i]->start - tmp_var) > 0)) {
-	
-        if (!showall) 
-          continue;
-
-        sprintf(buf, "%s%-22.22s%s  (Learned: %s)",  cyan(), discArray[i]->name, norm(), skill_diff(discArray[i]->start - tmp_var));
-      } else if (discArray[i]->toggle && !hasQuestBit(discArray[i]->toggle)) {
-          if (!showall) 
-          continue;
-
-          sprintf(buf, "%s%-22.22s%s  (Learned: Quest)", cyan(), discArray[i]->name, norm());
-      } else { 
-        if (getMaxSkillValue(i) < MAX_SKILL_LEARNEDNESS) {
-          if (discArray[i]->startLearnDo > 0) {
-            sprintf(learnbuf, "%.9s/%.9s", how_good(getSkillValue(i)), how_good(getMaxSkillValue(i))+1);
-            sprintf(buf, "%s%-22.22s%s %-19.19s", cyan(), discArray[i]->name, norm(), learnbuf);
-          } else 
-            sprintf(buf, "%s%-22.22s%s %-19.19s", cyan(), discArray[i]->name, norm(), how_good(getSkillValue(i)));   
-        } else 
-          sprintf(buf, "%s%-22.22s%s %-19.19s", cyan(), discArray[i]->name, norm(), how_good(getSkillValue(i)));
-            
-        unsigned int comp;
-
-        for (comp = 0; (comp < CompInfo.size()) && (i != CompInfo[comp].spell_num);comp++);
-
-        if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) 
-          sprintf(buf + strlen(buf), "   [%2i] %s",  totalcharges, obj_index[real_object(CompInfo[comp].comp_num)].short_desc); 
-      }
-      strcat(buf, "\n\r");
-          
-      if (strlen(buf) + strlen(buffer) > (MAX_STRING_LENGTH * 2) - 2)
-        break;
-
-      strcat(buffer, buf);
-    } 
-  }
-  d->page_string(buffer);
+  desc->page_string(finalOutput);
 }
