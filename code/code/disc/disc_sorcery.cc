@@ -26,11 +26,6 @@ int mysticDarts(TBeing *caster, TBeing *victim, int level, short bKnown, int adv
   char buf[256];
   sstring misBuf;
 
-  if (caster->isNotPowerful(victim, level, SPELL_MYSTIC_DARTS, SILENT_NO))
-    return SPELL_FAIL;
-
-  level = min(level, 10);
-
   int dam = caster->getSkillDam(victim, SPELL_MYSTIC_DARTS, level, adv_learn);
   // Lets make the missiles at least partly dependant on damage.
   int missiles = (dam / 3) + ::number(0, (caster->GetMaxLevel() / 10));
@@ -197,8 +192,6 @@ int stunningArrow(TBeing *caster, TBeing *victim, int level, short bKnown, int a
     return SPELL_FAIL;
   }
 
-  level = min(level, 25);
-
   int dam = caster->getSkillDam(victim, SPELL_STUNNING_ARROW, level, adv_learn);
   caster->reconcileHurt(victim, discArray[SPELL_STUNNING_ARROW]->alignMod);
 
@@ -328,7 +321,6 @@ int blastOfFury(TBeing *caster, TBeing *victim, int level, short bKnown, int adv
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-  level = min(level, 45);
 
   int dam = caster->getSkillDam(victim, SPELL_BLAST_OF_FURY, level, adv_learn);
 
@@ -447,8 +439,6 @@ int colorSpray(TBeing *caster, int level, short bKnown, int adv_learn)
 {
   TBeing *tmp_victim = NULL;
   TThing *t;
-
-  level = min(level, 15);
 
   int orig_dam = caster->getSkillDam(NULL, SPELL_COLOR_SPRAY, level, adv_learn);
 
@@ -715,8 +705,6 @@ int acidBlast(TBeing *caster, int level, short bKnown, int adv_learn)
   TThing *t;
   TBeing *b = NULL;
 
-  level = min(level, 33);
-
   int orig_dam = caster->getSkillDam(NULL, SPELL_ACID_BLAST, level, adv_learn);
 
   if (caster->bSuccess(bKnown,SPELL_ACID_BLAST)) {
@@ -838,8 +826,6 @@ int atomize(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_lea
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
-
-  level = min(level, 75);
 
   int dam = caster->getSkillDam(victim, SPELL_ATOMIZE, level, adv_learn);
 

@@ -17,9 +17,6 @@
 
 int slingShot(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
-
-  level = min(level, 10);
-
   int dam = caster->getSkillDam(victim, SPELL_SLING_SHOT, level, adv_learn);
   caster->reconcileHurt(victim,discArray[SPELL_SLING_SHOT]->alignMod);
 
@@ -112,8 +109,6 @@ int castSlingShot(TBeing * caster, TBeing * victim)
 
 int graniteFists(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
-  level = min(level, 25);
-
   int dam = caster->getSkillDam(victim, SPELL_GRANITE_FISTS, level, adv_learn);
 
   caster->reconcileHurt(victim,discArray[SPELL_GRANITE_FISTS]->alignMod);
@@ -209,9 +204,7 @@ int pebbleSpray(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TThing *t;
   TBeing *vict = NULL;
-
-  level = min(level, 15);
-
+  
   int dam = caster->getSkillDam(NULL, SPELL_PEBBLE_SPRAY, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_PEBBLE_SPRAY)) {

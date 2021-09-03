@@ -410,7 +410,7 @@ static int stab(TBeing *thief, TBeing * victim)
     if (dam == -1 || thief->reconcileDamage(victim, dam, tDamageType) == -1)
       return DELETE_VICT;
 
-    if (obj->checkSpec(victim, CMD_STAB, "-special-", thief) == DELETE_VICT)
+    if (obj->checkSpec(victim, CMD_STAB, reinterpret_cast<char *>(tLimb), thief) == DELETE_VICT)
       return DELETE_VICT;
 
     return TRUE;

@@ -114,8 +114,6 @@ int icyGrip(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_l
     return SPELL_FAIL;
   }
 
-  level = min(level, 25);
-
   int damage = caster->getSkillDam(victim, SPELL_ICY_GRIP, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_ICY_GRIP)) {
@@ -261,8 +259,6 @@ int wateryGrave(TBeing * caster, TBeing * victim, int level, short bKnown, int)
     return SPELL_FAIL;
   }
 
-  level = min(level, 60);
-
   aff.type = AFFECT_DISEASE;
   aff.level = level/2;
   aff.duration = caster->durationModify(SPELL_WATERY_GRAVE, aff.level/2);
@@ -339,8 +335,6 @@ int arcticBlast(TBeing * caster, int level, short bKnown, int adv_learn)
   int rc = 0;
   TBeing *tmp_victim = NULL;
   TThing *t;
-
-  level = min(level, 15);
 
   int damage = caster->getSkillDam(NULL, SPELL_ARCTIC_BLAST, level, adv_learn);
 
@@ -482,8 +476,6 @@ int iceStorm(TBeing * caster, int level, short bKnown, int adv_learn)
   TBeing *tmp_victim = NULL;
   TThing *t;
 
-  level = min(level, 33);
-
   int orig_damage = caster->getSkillDam(NULL, SPELL_ICE_STORM, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_ICE_STORM)) {
@@ -622,8 +614,6 @@ int tsunami(TBeing * caster, int level, short bKnown, int adv_learn)
 {
   TBeing *tmp_victim = NULL;
   TThing *t;
-
-  level = min(level, 60);
 
   int orig_damage = caster->getSkillDam(NULL, SPELL_TSUNAMI, level, adv_learn);
 
@@ -1133,8 +1123,6 @@ int gusher(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_le
 {
   int rc;
   TThing *t;
-
-  level = min(level, 10);
 
   int dam = caster->getSkillDam(victim, SPELL_GUSHER, level, adv_learn);
 
