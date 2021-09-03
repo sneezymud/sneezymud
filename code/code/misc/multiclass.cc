@@ -150,42 +150,18 @@ int TBeing::getClassNum(classIndT arg) const
 }
 
 
-classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact) const
-{
-  int which = getClassNum(arg, exact);
-  classIndT res = MIN_CLASS_IND;
+classIndT TBeing::getClassIndNum(const char *arg, exactTypeT exact) const {
+  auto which = static_cast<unsigned short>(getClassNum(arg, exact));
 
-  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
-    if(classInfo[i].class_num==which){
-      res=i;
-      break;
-    }
-  }
-      
-  if(res==MIN_CLASS_IND) {
-    vlogf(LOG_BUG, "unknown class result");
-  }
-
-  return res;
+  return getClassIndNum(which);
 }
 
+classIndT TBeing::getClassIndNum(unsigned short which) const {
+  for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++)
+    if (classInfo[i].class_num == which)
+      return i;
 
-classIndT TBeing::getClassIndNum(unsigned short which, exactTypeT exact) const
-{
-  classIndT res = MIN_CLASS_IND;
-
-  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
-    if(classInfo[i].class_num==which){
-      res=i;
-      break;
-    }
-  }
-      
-  if(res==MIN_CLASS_IND) {
-    vlogf(LOG_BUG, "unknown class result");
-  }
-
-  return res;
+  return MAX_CLASSES;
 }
 
 

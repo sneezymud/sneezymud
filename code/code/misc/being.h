@@ -705,7 +705,7 @@ class TBeing : public TThing {
   int getClassNum(const char *, exactTypeT) const;
   int getClassNum(classIndT) const;
   classIndT getClassIndNum(const char *, exactTypeT) const;
-  classIndT getClassIndNum(unsigned short, exactTypeT) const;
+  classIndT getClassIndNum(unsigned short) const;
   bool hasClass(const char *, exactTypeT) const;
   bool hasClass(unsigned short, exactTypeT = EXACT_NO) const;
   void setQuaffUse(bool tmp) { inQuaffUse = tmp; }
