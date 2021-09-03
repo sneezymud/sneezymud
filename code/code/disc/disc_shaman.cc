@@ -1069,9 +1069,7 @@ int ret,level;
 
 bool shaman_create_deny(int numberx)
 {
-  objIndexData oid = obj_index[numberx];
-
-  if (!isname("[chrism_object]", oid.name))
+  if (!isname("[chrism_object]", obj_index[numberx].name))
     return true;
 
   return false;
