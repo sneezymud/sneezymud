@@ -1333,17 +1333,34 @@ bool TObj::makeScraps()
 
 static void absorb_damage(TBeing *v, wearSlotT part_hit, int *dam)
 {
-  int armor;
-  int abs;
+  TObj *equip = nullptr;
+  TThing *t;
+  int armor = v->acForPos(part_hit) / stats.absorb_damage_divisor[v->isPc() ? PC_STAT : MOB_STAT];
+  int absorb = min(armor/10, *dam);
 
-  armor = v->acForPos(part_hit) / stats.absorb_damage_divisor[v->isPc() ? PC_STAT : MOB_STAT];
-  abs = min(armor/10, *dam);
-  stats.ac_absorb[v->isPc() ? PC_STAT : MOB_STAT] += abs;
+  if (v->isPc()) {
+    if (!(t = v->equipment[part_hit]) || !(equip = dynamic_cast<TObj *>(t)))
+      absorb = 0;
+    else {
+      if (equip->itemType() == ITEM_WORN) {
+        absorb /= 2;
+      } else if (equip->itemType() != ITEM_ARMOR) {
+        absorb = 0; 
+      }
+    }
+  }
+
+  // 20% bonus for advanced defense
+  if (v->doesKnowSkill(SKILL_ADVANCED_DEFENSE)) {
+    absorb *= (1 + (0.002 * v->getSkillValue(SKILL_ADVANCED_DEFENSE)));
+  }
+
+  stats.ac_absorb[v->isPc() ? PC_STAT : MOB_STAT] += absorb;
 
 #if DEBUG
   vlogf(LOG_COMBAT, format("Debug : Damage went from %d to %d with armor absorption!") %  *dam % (*dam - abs));
 #endif
-  *dam -= abs;
+  *dam -= absorb;
 }
 
 // this = v, ch = hitter

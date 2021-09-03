@@ -62,7 +62,7 @@ int init_game_stats(void)
   char buf[256];
 
   stats.absorb_damage_divisor[MOB_STAT] = 2;
-  stats.absorb_damage_divisor[PC_STAT] = 4;
+  stats.absorb_damage_divisor[PC_STAT] = 5;
 
   //stats.equip = 0.7;   // this affects the global load potential of things
   //stats.global_lp_target = stats.equip;  // When we want to change the load potential, this is what we change.
