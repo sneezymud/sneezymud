@@ -224,7 +224,7 @@ void generate_obj_index() {
   
   // 2021-08-26: This cache is currently ending at 9212 entries, so updating this 
   // value from 8192 to 16,384
-  mob_index.reserve(16384);
+  obj_index.reserve(16384);
 
   /****** extra ******/
   TDatabase extra_db(DB_SNEEZY);
