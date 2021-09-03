@@ -244,7 +244,7 @@ class indexData {
   sstring long_desc;
   sstring description;
   
-  short max_exist;        // for objs and mobs
+  int max_exist;        // for objs and mobs
   int spec;
   float weight;
   
