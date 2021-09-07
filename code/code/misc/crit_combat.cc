@@ -559,6 +559,12 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   } else {
     double absdiff = abs(diff);
     double level_mod = 50.0 + ((double)diff * log(absdiff/20.0+1) / absdiff) * 75.0;
+
+    // Increasing scaling based on level difference for NPCs
+    if(dynamic_cast<TMonster *>(this)){
+      level_mod *= 1.2;
+    }
+
     if (level_mod <= 0) {
       crit_chance = 1;
     } else {
@@ -585,7 +591,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
       level_mod = 0;
 
     // determine which crit to do, higher number = better crits
-    crit_num = ::number(1, 100) + ::number(0, level_mod);
+    crit_num = ::number(1, 100) + ::number(0, level_mod/10);
     crit_num = max(1, crit_num);
     crit_num = min(100, crit_num);
 
