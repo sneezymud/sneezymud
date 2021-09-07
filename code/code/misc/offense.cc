@@ -952,8 +952,8 @@ int TBeing::doFlee(const char *arg)
   for (i = 0; i < 20; i++) {
     dirTypeT attempt = dirTypeT(::number(MIN_DIR, MAX_DIR-1));        // Select a random direction 
     
-    // fighting, so give slight chance of letting PC direct the direction
-    if (chosenDir != DIR_NONE && !panic && !(::number(0,99) < (30+getSkillValue(skill)/2)))
+    // fighting, so the chance of success depends on retreat skill (with at least 5% chance to fail)
+    if (chosenDir != DIR_NONE && !panic && (::number(0,99) < (45+getSkillValue(skill)/2)))
       attempt = chosenDir;
     
     if (canFleeThisWay(this, attempt)) {
