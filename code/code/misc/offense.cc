@@ -850,9 +850,14 @@ int TBeing::doFlee(const char *arg) {
   TBeing *riderAsTBeing = dynamic_cast<TBeing *>(rider);
 
   if (riding) {
-    // Allow successful retreat and ride checks to avoid falling off mount
-    if (!doesKnowSkill(SKILL_RIDE) || !bSuccess(SKILL_RIDE) || !wasRetreatSuccessful) {
-      sendTo("Your panic causes you to fall.\n\r");
+    // Allow successful retreat or ride checks to avoid falling off mount. Deikhans
+    // get extra attempt to remain mounted via chivalry.
+    if ((doesKnowSkill(SKILL_RIDE) && !bSuccess(SKILL_RIDE)) ||
+        (doesKnowSkill(SKILL_CHIVALRY) && !bSuccess(SKILL_CHIVALRY)) || !wasRetreatSuccessful) {
+      act("You urge your $O to flee, causing it to panic and throw you off!", true, this,
+          nullptr, riding, TO_CHAR);
+      act("$n urges $s mount to flee, causing it to panic and throw $n off!", true, this,
+          nullptr, riding, TO_ROOM);
       rc = fallOffMount(riding, POSITION_SITTING);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
@@ -881,12 +886,15 @@ int TBeing::doFlee(const char *arg) {
     // If <this> is a mount being ridden
   } else if (riderAsTBeing) {
     act("Your $O panics and attempts to flee!", true, riderAsTBeing, nullptr, this, TO_CHAR);
+    act("$n's $O panics and attempts to flee!", true, riderAsTBeing, nullptr, this, TO_ROOM);
 
     // Allow deikhans to pass checks and prevent getting bucked
     if (riderAsTBeing->doesKnowSkill(SKILL_CHIVALRY) && riderAsTBeing->bSuccess(SKILL_CHIVALRY) &&
         riderAsTBeing->doesKnowSkill(SKILL_RIDE) && riderAsTBeing->bSuccess(SKILL_RIDE)) {
       act("You manage to calm $M down before $E dismounts you.", true, riderAsTBeing, nullptr, this,
           TO_CHAR);
+      act("With soothing words $n manages to calm $N and remain mounted.", true,
+          riderAsTBeing, nullptr, this, TO_ROOM);
       return true;
     }
     rc = riderAsTBeing->fallOffMount(this, POSITION_SITTING);
@@ -924,24 +932,12 @@ int TBeing::doFlee(const char *arg) {
       validDirections.push_back(direction);
   }
 
-  // Lambda for handling troglodyte racial, to avoid repetition
-  auto handleTrogRacial = [this]() {
-    if (!::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
-      act("In your panic you release some musk scent to cover your tracks.", false, this, nullptr,
-          nullptr, TO_CHAR);
-      act("$n releases some musk into the room!", false, this, nullptr, nullptr, TO_ROOM);
-      dropGas(::number(1, 3), GAS_MUSK);
-      setCond(FULL, getCond(FULL) - 5);
-    }
-  };
-
   /*
     If there are no valid flee directions (doors closed, etc), simply return with the panic
     message.
   */
   if (validDirections.size() == 0 && chosenDir == DIR_NONE) {
     sendTo("PANIC! You couldn't escape!\n\r");
-    handleTrogRacial();
     return true;
   }
 
@@ -978,6 +974,14 @@ int TBeing::doFlee(const char *arg) {
       act("$n panics and attempts to flee!", true, this, nullptr, nullptr, TO_ROOM);
       act("You turn tail and attempt to run away.", true, this, nullptr, nullptr, TO_CHAR);
       loseSneak();
+
+      if (panic && !::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
+        act("Your fear causes you to release some musk scent to cover your tracks.", false, this, nullptr,
+            nullptr, TO_CHAR);
+        act("$n releases some musk into the room!", false, this, nullptr, nullptr, TO_ROOM);
+        dropGas(::number(1, 3), GAS_MUSK);
+        setCond(FULL, getCond(FULL) - 5);
+      }
     }
   }
 
@@ -1004,7 +1008,6 @@ int TBeing::doFlee(const char *arg) {
 
   if (panic) {
     sendTo(format("Panic-stricken, you flee %s.\n\r") % dirs[dirToUse]);
-    handleTrogRacial();
   } else if (wasRetreatSuccessful)
     sendTo(format("You skillfully retreat %s.\n\r") % dirs[dirToUse]);
   else
