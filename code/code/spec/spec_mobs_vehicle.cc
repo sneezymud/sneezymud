@@ -384,8 +384,7 @@ int casinoElevatorGuard(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself
       myself->doSay("Thank you, enjoy your stay!");
       ch->doEnter("", elevator);
       (*o)--;
-      delete o;
-      return true;
+      return DELETE_ITEM;
     }
   }
 
