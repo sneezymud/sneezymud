@@ -846,7 +846,7 @@ int TBeing::doFlee(const char *arg) {
 
   bool panic = false;
   int rc = 0;
-  TBeing *riderAsTBeing = dynamic_cast<TBeing *>(rider);
+  auto *riderAsTBeing = dynamic_cast<TBeing *>(rider);
 
   if (riding) {
     // Allow successful retreat or ride checks to avoid falling off mount. Deikhans
