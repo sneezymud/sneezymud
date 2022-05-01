@@ -935,7 +935,7 @@ int TBeing::doFlee(const char *arg) {
     If there are no valid flee directions (doors closed, etc), simply return with the panic
     message.
   */
-  if (validDirections.size() == 0 && chosenDir == DIR_NONE) {
+  if (validDirections.empty() && chosenDir == DIR_NONE) {
     sendTo("PANIC! You couldn't escape!\n\r");
     return true;
   }
@@ -945,7 +945,7 @@ int TBeing::doFlee(const char *arg) {
     the only valid flee direction, just use it as randomDir. Otherwise choose
     any valid direction that's *not* chosenDir.
   */
-  dirTypeT randomDir = validDirections.size() == 0
+  dirTypeT randomDir = validDirections.empty()
                            ? chosenDir
                            : validDirections[::number(0, validDirections.size() - 1)];
 
@@ -974,6 +974,7 @@ int TBeing::doFlee(const char *arg) {
       act("You turn tail and attempt to run away.", true, this, nullptr, nullptr, TO_CHAR);
       loseSneak();
 
+      // Handle troglodyte racial
       if (panic && !::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
         act("Your fear causes you to release some musk scent to cover your tracks.", false, this, nullptr,
             nullptr, TO_CHAR);
@@ -995,19 +996,20 @@ int TBeing::doFlee(const char *arg) {
       delete riderAsTBeing;
       riderAsTBeing = nullptr;
       return false;
-    } else
-      return DELETE_THIS;
+    }
+
+    return DELETE_THIS;
   }
 
-  if (moveResult == false) {
+  if (!moveResult) {
     sendTo("Something prevents your escape!\n\r");
     act("Something prevents $s escape!", true, this, nullptr, nullptr, TO_ROOM);
     return true;
   }
 
-  if (panic) {
+  if (panic) 
     sendTo(format("Panic-stricken, you flee %s.\n\r") % dirs[dirToUse]);
-  } else if (wasRetreatSuccessful)
+  else if (wasRetreatSuccessful)
     sendTo(format("You skillfully retreat %s.\n\r") % dirs[dirToUse]);
   else
     sendTo(format("You nearly hurt yourself as you fled madly %swards.\n\r") % dirs[dirToUse]);
@@ -1043,15 +1045,13 @@ int TBeing::doFlee(const char *arg) {
       : dynamic_cast<TMonster *>(enemy);
       
   if (enemyAsTMonster) {
-    int percent =
-        (int)(100.0 * (double)enemyAsTMonster->getHit() / (double)enemyAsTMonster->hitLimit());
+    int percent = 100 * enemyAsTMonster->getHit() / enemyAsTMonster->hitLimit();
 
     if (::number(1, 100) < percent &&
         (enemyAsTMonster->Hates(this, nullptr) || isOppositeFaction(enemyAsTMonster)))
       enemyAsTMonster->setHunting(this);
-
-    int rc = enemyAsTMonster->lookForEngaged();
-    if (IS_SET_DELETE(rc, DELETE_THIS)) {
+  
+    if (IS_SET_DELETE(enemyAsTMonster->lookForEngaged(), DELETE_THIS)) {
       delete enemyAsTMonster;
       enemyAsTMonster = nullptr;
       enemy = nullptr;
