@@ -1,5 +1,4 @@
-#ifndef __SHOPOWNED_H
-#define __SHOPOWNED_H
+#pragma once
 
 #include "thing.h"
 
@@ -93,5 +92,3 @@ class TShopOwned {
   ~TShopOwned();
 };
 
-
-#endif

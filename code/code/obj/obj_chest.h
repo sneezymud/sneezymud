@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_CHEST_H
-#define __OBJ_CHEST_H
+#pragma once
 
 #include "obj_open_container.h"
 
@@ -28,5 +27,3 @@ class TChest : public TOpenContainer {
     virtual ~TChest();
 };
 
-
-#endif

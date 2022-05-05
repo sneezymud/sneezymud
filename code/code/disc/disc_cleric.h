@@ -24,8 +24,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_CLERIC_H
-#define __DISC_CLERIC_H
+#pragma once
 
 // This is the CLERIC BASIC discipline.
 
@@ -116,7 +115,4 @@ public:
 
 private:
 };
-
-
-#endif
 

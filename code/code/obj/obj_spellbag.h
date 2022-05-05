@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_SPELLBAG_H
-#define __OBJ_SPELLBAG_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -36,5 +35,3 @@ class TSpellBag : public TExpandableContainer {
 };
 
 
-
-#endif

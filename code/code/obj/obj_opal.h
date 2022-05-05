@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_OPAL_H
-#define __OBJ_OPAL_H
+#pragma once
 
 #include "obj.h"
 
@@ -47,5 +46,3 @@ class TOpal : public TObj {
 };
 
 
-
-#endif

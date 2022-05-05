@@ -22,8 +22,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_CURES_H
-#define __DISC_CURES_H
+#pragma once
 
 // This is the CLERIC CURES discipline.
 
@@ -137,5 +136,3 @@ private:
 
 // this is the amount of healing a removing bruise is equivalent to
 #define BRUISE_HEAL_AMOUNT 7
-
-#endif

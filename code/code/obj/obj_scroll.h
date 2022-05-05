@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_SCROLL_H
-#define __OBJ_SCROLL_H
+#pragma once
 
 #include "obj_magic_item.h"
 
@@ -41,5 +40,3 @@ class TScroll : public TMagicItem {
 };
 
 
-
-#endif

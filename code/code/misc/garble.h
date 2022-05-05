@@ -6,8 +6,7 @@
 // Code for changing how players talk
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GARBLE_H
-#define __GARBLE_H
+#pragma once
 
 #include "sstring.h"
 
@@ -157,5 +156,3 @@ extern const sstring RandomVerb();
 
 // Make drunk people garble their words!
 extern sstring garble_olddrunk(const TBeing *, const TBeing *, const sstring &, Garble::SPEECHTYPE);
-
-#endif // __GARBLE_H

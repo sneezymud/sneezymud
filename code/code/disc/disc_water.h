@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_WATER_H
-#define __DISC_WATER_H
+#pragma once
 
 // This is the WATER discipline.
 
@@ -100,5 +99,3 @@ private:
     int castGarmulsTail(TBeing *, TBeing *);
     void garmulsTail(TBeing *, TBeing *, TMagicItem *);
     int garmulsTail(TBeing *, TBeing *, int, short);
-
-#endif

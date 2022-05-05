@@ -1,5 +1,4 @@
-#ifndef __SPEC_ROOMS_H
-#define __SPEC_ROOMS_H
+#pragma once
 
 
 struct TRoomSpecs {
@@ -45,5 +44,3 @@ extern TRoomSpecs roomSpecials[NUM_ROOM_SPECIALS + 1];
      rp - a pointer to the room for which the spec_proc was called.
 
 *************************************************************************/
-
-#endif

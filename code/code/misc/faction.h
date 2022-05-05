@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __FACTION_H
-#define __FACTION_H
+#pragma once
 
 // some faction code is bad  (faction%) without fully enabled factions
 #define FACTIONS_IN_USE 0
@@ -143,5 +142,3 @@ extern int bestFactionPower();
 extern void recalcFactionPower();
 extern void launch_caravans();
 extern void sendToFaction(factionTypeT, const TBeing *, const char *);
-
-#endif

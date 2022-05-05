@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_DEFENSE_H
-#define __DISC_DEFENSE_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -29,6 +28,3 @@ public:
 private:
 };
     void doToughness(TBeing *ch);
-
-#endif
-

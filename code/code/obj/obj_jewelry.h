@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_JEWELRY_H
-#define __OBJ_JEWELRY_H
+#pragma once
 
 #include "obj_base_clothing.h"
 
@@ -26,5 +25,3 @@ class TJewelry : public TBaseClothing {
     virtual ~TJewelry();
 };
 
-
-#endif

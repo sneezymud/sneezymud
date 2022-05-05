@@ -1,5 +1,4 @@
-#ifndef __LIQUIDS_H
-#define __LIQUIDS_H
+#pragma once
 
 #include "obj.h"
 
@@ -36,5 +35,3 @@ class liqInfoT {
 };
 
 
-
-#endif

@@ -25,8 +25,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_BLACKSMITHING_H
-#define __DISC_BLACKSMITHING_H
+#pragma once
 
 // This is the blacksmith discipline.
 
@@ -46,6 +45,3 @@ public:
 
 private:
 };
-
-#endif
-

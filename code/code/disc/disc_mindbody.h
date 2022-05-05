@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_MINDBODY_H
-#define __DISC_MINDBODY_H 
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -36,5 +35,3 @@ public:
 
 private:
 };
-
-#endif

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_STAFF_H
-#define __OBJ_STAFF_H
+#pragma once
 
 #include "obj_magic_item.h"
 
@@ -51,5 +50,3 @@ class TStaff : public TMagicItem {
     virtual ~TStaff();
 };
 
-
-#endif

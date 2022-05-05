@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __CHARFILE_H
-#define __CHARFILE_H
+#pragma once
 
 #include "limbs.h"
 #include "stats.h"
@@ -109,5 +108,3 @@ class charFile {
   charFile();
   ~charFile();
 };
-
-#endif

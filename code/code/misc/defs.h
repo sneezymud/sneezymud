@@ -1,5 +1,4 @@
-#ifndef __DEFS_H
-#define __DEFS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -161,5 +160,3 @@ const int MAX_NAME_LENGTH = 80;
 const int POS_OBJECT            = 1;
 const int POS_SUBJECT           = 2;
 const int POS_POSSESS           = 3;
-
-#endif

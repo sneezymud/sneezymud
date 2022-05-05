@@ -1,6 +1,5 @@
 
-#ifndef __DISC_SHAMAN_H
-#define __DISC_SHAMAN_H
+#pragma once
 
 // This is the SHAMAN discipline.
 
@@ -243,6 +242,3 @@ private:
     int embalm(TBeing *, TObj *);
     int castEmbalm(TBeing *, TObj *);
     int embalm(TBeing *, TObj *, int, short);
-
-#endif
-

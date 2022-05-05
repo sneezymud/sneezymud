@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_POISON_H
-#define __OBJ_POISON_H
+#pragma once
 
 #include "obj_base_cup.h"
 
@@ -25,5 +24,3 @@ class TPoison : public TBaseCup {
     virtual ~TPoison();
 };
 
-
-#endif

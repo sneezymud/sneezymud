@@ -1,6 +1,5 @@
 
-#ifndef __DISC_SHAMAN_CONTROL_H
-#define __DISC_SHAMAN_CONTROL_H
+#pragma once
 
 
 #include "discipline.h"
@@ -73,5 +72,3 @@ private:
     void resurrection(TBeing *, TObj *, TMagicItem *);
     int resurrection(TBeing *, TObj *);
     int castResurrection(TBeing *, TObj *);
-
-#endif

@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_BRAWLING_H
-#define __DISC_BRAWLING_H
+#pragma once
 
 // This is the Brawling discipline.
 
@@ -32,13 +31,3 @@ class CDBrawling : public CDiscipline
 
   private:
 };
-
-#endif
-
-
-
-
-
-
-
-

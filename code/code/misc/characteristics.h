@@ -11,8 +11,7 @@
 //
 // A class for defining the stat system.
 
-#ifndef __CHARACTERISTICS_H
-#define __CHARACTERISTICS_H
+#pragma once
 
 class Stats {
   private:
@@ -92,5 +91,3 @@ class Stats {
 
     inline void setAdd(int num) { add = num; }
 };
-
-#endif

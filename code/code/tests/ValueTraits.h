@@ -1,5 +1,4 @@
-#ifndef __VALUETRAITS_H
-#define __VALUETRAITS_H
+#pragma once
 
 #include <cxxtest/TestSuite.h>
 #include "sstring.h"
@@ -16,4 +15,3 @@ namespace CxxTest {
     };
 
 };
-#endif

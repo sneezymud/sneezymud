@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_KEYRING_H
-#define __OBJ_KEYRING_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -28,5 +27,3 @@ class TKeyring : public TExpandableContainer {
 };
 
 
-
-#endif

@@ -6,8 +6,7 @@
 
 
 
-#ifndef __MATERIALS_H
-#define __MATERIALS_H
+#pragma once
 
 #include "structs.h"
 
@@ -151,5 +150,3 @@ extern sstring describeMaterial(const int);
 extern sstring describeMaterial(const TThing *);
 
 extern ubyte convertV9MaterialToV10(ubyte oldMat);
-
-#endif

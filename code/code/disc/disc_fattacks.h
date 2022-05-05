@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_FOCUSED_ATTACKS_H
-#define __DISC_FOCUSED_ATTACKS_H 
+#pragma once
 
 
 #include "discipline.h"
@@ -37,12 +36,3 @@ public:
 
 private:
 };
-
-#endif
-
-
-
-
-
-
-

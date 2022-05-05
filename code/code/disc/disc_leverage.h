@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_LEVERAGE_H
-#define __DISC_LEVERAGE_H 
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -57,13 +56,3 @@ private:
   int hurl(TBeing *, TBeing *, char *);
   int defenestrate(TBeing *, TBeing *, sstring);
   int bonebreak(TBeing *, TBeing *);
-
-#endif
-
-
-
-
-
-
-
-

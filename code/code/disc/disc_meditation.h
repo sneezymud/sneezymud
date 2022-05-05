@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_MEDITATION_MONK_H
-#define __DISC_MEDITATION_MONK_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -57,27 +56,4 @@ public:
 
 private:
 };
-
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

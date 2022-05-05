@@ -1,5 +1,4 @@
-#ifndef __DAMAGE_H
-#define __DAMAGE_H
+#pragma once
 
 const int DAMAGE_NORMAL             = -2;
 const int DAMAGE_CAVED_SKULL        = -3;
@@ -58,19 +57,3 @@ const int DAMAGE_KNEESTRIKE_FACE    = -55;
 const int DAMAGE_KICK_SIDE          = -56;
 const int DAMAGE_DISEMBOWLED_VR     = -57;
 const int DAMAGE_RIPPED_OUT_HEART   = -58;
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-

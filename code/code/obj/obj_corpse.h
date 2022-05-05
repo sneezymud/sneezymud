@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_CORPSE_H
-#define __OBJ_CORPSE_H
+#pragma once
 
 #include "obj_base_corpse.h"
 
@@ -24,5 +23,3 @@ class TCorpse : public TBaseCorpse {
     virtual ~TCorpse();
 };
 
-
-#endif

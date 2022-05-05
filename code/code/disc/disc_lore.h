@@ -26,8 +26,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_LORE_H
-#define __DISC_LORE_H
+#pragma once
 
 // This is the mage/ranger/shaman lore discipline.
 
@@ -64,6 +63,3 @@ public:
 
 private:
 };
-
-#endif
-

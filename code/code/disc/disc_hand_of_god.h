@@ -19,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_HAND_OF_GOD_H
-#define __DISC_HAND_OF_GOD_H
+#pragma once
 
 // This is the HAND_OF_GOD discipline.
 
@@ -82,7 +81,4 @@ private:
     void portal(TBeing *, const char *);
     int portal(TBeing *, const char *, int, short);
 
-
-
-#endif
 

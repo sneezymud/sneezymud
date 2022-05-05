@@ -1,5 +1,4 @@
-#ifndef __DISC_SHAMAN_ARMADILLO_H
-#define __DISC_SHAMAN_ARMADILLO_H
+#pragma once
 
 // This is the ARMADILLO discipline for shaman.
 
@@ -64,7 +63,3 @@ int shadowWalk(TBeing *, TBeing *, int, short);
     int castCelerite(TBeing *, TBeing *);
     void celerite(TBeing *, TBeing *, TMagicItem *);
     int celerite(TBeing *, TBeing *, int, short);
-
-#endif
-
-

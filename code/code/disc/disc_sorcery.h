@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_SORCERY_H
-#define __DISC_SORCERY_H
+#pragma once
 
 // This is the SORCERY discipline.
 
@@ -119,6 +118,3 @@ private:
     int chainLightning(TBeing *, TBeing *);
     int chainLightning(TBeing *, TBeing *, int, short);
 #endif
-
-#endif
-

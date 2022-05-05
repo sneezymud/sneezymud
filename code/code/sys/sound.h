@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SOUND_H
-#define __SOUND_H
+#pragma once
 
 class sstring;
 
@@ -207,5 +206,3 @@ const soundNumT MIN_SOUND_NUM = soundNumT(0);
 
 extern soundNumT pickRandSound(soundNumT, soundNumT);
 extern musicNumT pickRandMusic(musicNumT, musicNumT);
-
-#endif

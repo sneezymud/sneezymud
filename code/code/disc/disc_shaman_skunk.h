@@ -1,7 +1,6 @@
 
 
-#ifndef __DISC_SHAMAN_SKUNK_H
-#define __DISC_SHAMAN_SKUNK_H
+#pragma once
 
 
 #include "discipline.h"
@@ -74,8 +73,3 @@ private:
     int castBloodBoil(TBeing *, TBeing *);
     int bloodBoil(TBeing *, TBeing *, TMagicItem *);
     int bloodBoil(TBeing *, TBeing *, int, short, int);
-
-#endif
-
-
-

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_MONEYPOUCH_H
-#define __OBJ_MONEYPOUCH_H
+#pragma once
 
 #include "obj_expandable_container.h"
 #include "obj_money.h"
@@ -29,5 +28,3 @@ class TMoneypouch : public TExpandableContainer {
 };
 
 
-
-#endif

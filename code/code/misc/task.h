@@ -19,8 +19,7 @@
 
 *************************************************************************/
 
-#ifndef __TASK
-#define __TASK
+#pragma once
 
 extern int task_bogus         (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
 extern int task_sharpening    (TBeing *, cmdTypeT, const char *, int, TRoom *, TObj *);
@@ -143,5 +142,3 @@ extern int  start_task(TBeing *, TThing *, TRoom *, taskTypeT,
                        const char *, int, unsigned short, ubyte, int, int);
 extern void warn_busy(TBeing *ch);
 
-
-#endif

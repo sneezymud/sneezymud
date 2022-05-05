@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_EARTH_H
-#define __DISC_EARTH_H
+#pragma once
 
 // This is the EARTH discipline.
 
@@ -108,6 +107,3 @@ private:
     int castProtectionFromEarth(TBeing *, TBeing *);
     void protectionFromEarth(TBeing *, TBeing *, TMagicItem *);
     int protectionFromEarth(TBeing *, TBeing *, int, short);
-
-#endif
-

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_EGG_H
-#define __OBJ_EGG_H
+#pragma once
 
 #include "obj.h"
 #include "obj_food.h"
@@ -45,4 +44,3 @@ class TEgg : public TFood {
     virtual ~TEgg();
 
 };
-#endif

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_PLAYER_CORPSE_H
-#define __OBJ_PLAYER_CORPSE_H
+#pragma once
 
 #include "obj_base_corpse.h"
 
@@ -64,5 +63,3 @@ class TPCorpse : public TBaseCorpse {
     virtual ~TPCorpse();
 };
 
-
-#endif

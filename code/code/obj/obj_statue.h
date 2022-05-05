@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_STATUE_H
-#define __OBJ_STATUE_H
+#pragma once
 
 #include "obj.h"
 
@@ -31,5 +30,3 @@ class TStatue : public TObj {
 };
 
 
-
-#endif

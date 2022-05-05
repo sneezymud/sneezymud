@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_COMMONER_H
-#define __DISC_COMMONER_H
+#pragma once
 
 #include "discipline.h"
 
@@ -32,5 +31,3 @@ public:
 
 private:
 };
-
-#endif

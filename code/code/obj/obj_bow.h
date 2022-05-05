@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BOW_H
-#define __OBJ_BOW_H
+#pragma once
 
 #include "obj.h"
 
@@ -48,5 +47,3 @@ class TBow : public TObj {
     virtual ~TBow();
 };
 
-
-#endif

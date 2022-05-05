@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SOCKET_H
-#define __SOCKET_H
+#pragma once
 
 #include "comm.h"
 #include "structs.h"
@@ -62,5 +61,3 @@ class TSocket {
 };
 
 extern TMainSocket *gSocket;
-
-#endif

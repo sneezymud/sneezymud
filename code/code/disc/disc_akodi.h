@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_AKODI_H
-#define __DISC_AKODI_H
+#pragma once
 
 // This is the AKODI discipline.
 
@@ -46,6 +45,3 @@ public:
 
 private:
 };
-
-#endif
-

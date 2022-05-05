@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_DUELING_H
-#define __DISC_DUELING_H
+#pragma once
 
 // This is the dueling discipline.
 
@@ -61,8 +60,3 @@ private:
 };
 
     int shove(TBeing *, TBeing *, char *, spellNumT);
-
-#endif
-
-
-

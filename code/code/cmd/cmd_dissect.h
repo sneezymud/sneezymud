@@ -20,8 +20,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __CMD_DISSECT_H
-#define __CMD_DISSECT_H
+#pragma once
 
 #include <map>
 
@@ -48,5 +47,3 @@ class dissectInfo
 };
 
 extern std::map<unsigned short int, dissectInfo>dissect_array;
-
-#endif

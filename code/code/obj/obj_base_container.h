@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BASE_CONTAINER_H
-#define __OBJ_BASE_CONTAINER_H
+#pragma once
 
 #include "obj.h"
 
@@ -50,5 +49,3 @@ class TBaseContainer : public virtual TObj {
     TBaseContainer & operator=(const TBaseContainer &a);
     virtual ~TBaseContainer();
 };
-
-#endif

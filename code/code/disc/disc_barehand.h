@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_BAREHAND_H
-#define __DISC_BAREHAND_H
+#pragma once
 
 // This is the BAREHAND discipline.
 
@@ -55,6 +54,3 @@ public:
 
 private:
 };
-
-#endif
-

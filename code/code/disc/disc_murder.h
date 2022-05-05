@@ -25,8 +25,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_MURDER_H
-#define __DISC_MURDER_H
+#pragma once
 
 // This is the MURDER discipline.
 
@@ -70,6 +69,3 @@ private:
 
      bool addPoison(affectedData aff[5], 
 		    liqTypeT liq, int level, int duration);
-
-#endif
-

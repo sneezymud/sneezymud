@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __MONSTER_H
-#define __MONSTER_H
+#pragma once
 
 #include "being.h"
 #include "paths.h"
@@ -548,5 +547,3 @@ class TMonster : public TBeing {
     virtual bool getStolenFrom() const { return stolenFrom; }
     virtual void setStolenFrom(bool v) { stolenFrom = v; }
 };
-
-#endif  // inclusion sandwich

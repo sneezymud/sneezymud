@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BANDAID_H
-#define __OBJ_BANDAID_H
+#pragma once
 
 #include "obj.h"
 
@@ -29,5 +28,3 @@ class TBandage : public TObj {
 };
 
 
-
-#endif

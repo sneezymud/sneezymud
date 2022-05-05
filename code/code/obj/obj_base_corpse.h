@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BASE_CORPSE_H
-#define __OBJ_BASE_CORPSE_H
+#pragma once
 
 #include "obj_base_container.h"
 #include "extern.h"
@@ -62,5 +61,3 @@ class TBaseCorpse : public TBaseContainer {
 };
 
 
-
-#endif

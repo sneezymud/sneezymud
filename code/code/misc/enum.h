@@ -11,8 +11,7 @@
 //
 // Contains definitions of all global enums used in the mud
 
-#ifndef __ENUM_H
-#define __ENUM_H
+#pragma once
 
 
 /* For 'Sector types' */
@@ -715,5 +714,3 @@ enum gasTypeT
 
   GAS_MAX
 };
-
-#endif  // __ENUM_H inclusion sandwich

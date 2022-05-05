@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_PORTAL_H
-#define __OBJ_PORTAL_H
+#pragma once
 
 #include "obj_seethru.h"
 
@@ -63,5 +62,3 @@ class TPortal : public TSeeThru {
     virtual ~TPortal();
 };
 
-
-#endif

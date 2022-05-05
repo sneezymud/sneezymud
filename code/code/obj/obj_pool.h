@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_POOL_H
-#define __OBJ_POOL_H
+#pragma once
 
 #include "obj_base_cup.h"
 #include "obj_mergeable.h"
@@ -42,5 +41,3 @@ class TPool : public TBaseCup, public TMergeable {
 };
 
 
-
-#endif

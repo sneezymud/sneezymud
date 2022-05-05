@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __H
-#define __H
+#pragma once
 
 class TBeing;
 class TRoom;
@@ -120,5 +119,3 @@ extern int getRoomWetness(TRoom*);
 
 
 
-
-#endif

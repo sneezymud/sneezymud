@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_WAND_H
-#define __OBJ_WAND_H
+#pragma once
 
 #include "obj_magic_item.h"
 
@@ -51,5 +50,3 @@ class TWand : public virtual TMagicItem {
 };
 
 
-
-#endif

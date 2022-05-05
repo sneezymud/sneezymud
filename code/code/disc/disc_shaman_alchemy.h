@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_SHAMAN_ALCHEMY_H
-#define __DISC_SHAMAN_ALCHEMY_H
+#pragma once
 
 // This is the SHAMAN ALCHEMY discipline.
 
@@ -48,5 +47,3 @@ public:
 private:
 };
 
-
-#endif
