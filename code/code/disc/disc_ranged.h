@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_RANGED_H
-#define __DISC_RANGED_H
+#pragma once
 
 // This is the RANGED discipline.
 
@@ -52,6 +51,3 @@ public:
 
 private:
 };
-
-#endif
-

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_CASINO_CHIP_H
-#define __OBJ_CASINO_CHIP_H
+#pragma once
 
 #include "obj.h"
 
@@ -26,5 +25,3 @@ class TCasinoChip : public TObj {
     virtual ~TCasinoChip();
 };
 
-
-#endif

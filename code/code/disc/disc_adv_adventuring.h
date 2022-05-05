@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_ADV_ADVENTURING_H
-#define __DISC_ADV_ADVENTURING_H   1
+#pragma once
 
 
 #include "discipline.h"
@@ -92,7 +91,4 @@ private:
     int divine(TBeing *, int, short, TThing *);
 
     int encamp(TBeing *);
-
-
-#endif
 

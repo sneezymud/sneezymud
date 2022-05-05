@@ -1,5 +1,4 @@
-#ifndef __CONFIGURATION_H
-#define __CONFIGURATION_H
+#pragma once
 
 #include "sstring.h"
 
@@ -134,5 +133,3 @@ class Config {
 
 
 
-
-#endif

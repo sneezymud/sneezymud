@@ -35,8 +35,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_ADVENTURING_H
-#define __DISC_ADVENTURING_H   1
+#pragma once
 
 // This contains the general knowledge areas that _every_ pc knows.  All of
 // these are "learn by mistake".  None can be practiced.
@@ -196,6 +195,3 @@ private:
 };
 
     int dissect(TBeing *, TObj *);
-
-#endif
-

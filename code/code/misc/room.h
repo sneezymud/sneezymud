@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __ROOM_H
-#define __ROOM_H
+#pragma once
 
 #include "sound.h"
 #include "ansi.h"
@@ -342,5 +341,3 @@ class TRoom : public TThing {
 };
 
 const int ZONE_MAX_TIME      = 50;
-
-#endif

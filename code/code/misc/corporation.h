@@ -1,5 +1,4 @@
-#ifndef __CORPORATION_H
-#define __CORPORATION_H
+#pragma once
 
 #include "sstring.h"
 
@@ -45,5 +44,3 @@ const unsigned int CORPACCESS_ACCESS  = (1<<5);
 const unsigned int CORPACCESS_LOGS  = (1<<6);
 
 
-
-#endif

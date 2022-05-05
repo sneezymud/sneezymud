@@ -1,5 +1,4 @@
-#ifndef __DISC_SHAMAN_FROG_H
-#define __DISC_SHAMAN_FROG_H
+#pragma once
 
 const int LAST_TRANSFORM_LIMB = 6;
 extern struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB];
@@ -74,8 +73,4 @@ private:
     int transformLimb(TBeing *, const char *);
     int castTransformLimb(TBeing *);
     int transformLimb(TBeing *, const char *, int, short);
-
-
-#endif
-
 

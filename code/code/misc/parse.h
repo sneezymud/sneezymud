@@ -6,8 +6,7 @@
 
 *************************************************************************/
 
-#ifndef __PARSE_H
-#define __PARSE_H
+#pragma once
 
 #include <sstream>
 #include "sstring.h"
@@ -722,5 +721,3 @@ template<class T> T convertTo(const sstring &s)
 }
 
 
-
-#endif

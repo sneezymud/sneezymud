@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_OPEN_CONTAINER_H
-#define __OBJ_OPEN_CONTAINER_H
+#pragma once
 
 #include "obj_base_container.h"
 
@@ -73,5 +72,3 @@ class TOpenContainer : public TBaseContainer {
     virtual ~TOpenContainer();
 };
 
-
-#endif

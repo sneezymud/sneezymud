@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __RENT_H
-#define __RENT_H
+#pragma once
 
 const int CURRENT_RENT_VERSION     =10;
 // 0        3.x - initial version
@@ -152,5 +151,3 @@ class ItemLoadDB {
   ItemLoadDB(sstring, int);
   ~ItemLoadDB();
 };
-
-#endif

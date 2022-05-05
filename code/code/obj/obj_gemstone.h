@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_GEMSTONE_H
-#define __OBJ_GEMSTONE_H
+#pragma once
 
 #include "obj.h"
 
@@ -25,5 +24,3 @@ class TGemstone : public TObj {
     virtual ~TGemstone();
 };
 
-
-#endif

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_SEETHRU_H
-#define __OBJ_SEETHRU_H
+#pragma once
 
 #include "obj.h"
 
@@ -37,5 +36,3 @@ class TSeeThru : public TObj {
 };
 
 
-
-#endif

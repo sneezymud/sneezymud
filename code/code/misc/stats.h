@@ -9,8 +9,7 @@
 //
 // A class for defining the stat system.
 
-#ifndef __CHARACTERISTICS_H
-#define __CHARACTERISTICS_H
+#pragma once
 
 enum statTypeT {
      STAT_STR,
@@ -81,4 +80,3 @@ class Stats {
   const sstring printRawStats(const TBeing *caller) const;
 
 };
-#endif

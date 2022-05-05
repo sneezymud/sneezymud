@@ -10,8 +10,7 @@
 // body.h
 //
 //  This is an attempt to make some sense out of the limb system.
-#ifndef __BODY_H
-#define __BODY_H
+#pragma once
 
 #include "limbs.h"
 
@@ -35,5 +34,3 @@ enum body_t {
 };
 
 extern const char *bodyNames[MAX_BODY_TYPES];
-
-#endif

@@ -27,8 +27,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_THIEF_H
-#define __DISC_THIEF_H
+#pragma once
 
 // This is the BASIC THIEF discipline.
 
@@ -141,6 +140,3 @@ private:
     int spy(TBeing *);
     int hide(TBeing *, spellNumT);
     int disguise(TBeing *, char *);
-
-#endif
-

@@ -1,5 +1,4 @@
-#ifndef __DISC_CMD_TROPHY_H
-#define __DISC_CMD_TROPHY_H
+#pragma once
 
 // TTrophy is a class for interacting with the trophy data
 // for a particular player
@@ -67,5 +66,3 @@ private:
   ~TTrophy();
 };
 
-
-#endif

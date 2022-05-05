@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_WRATH_H
-#define __DISC_WRATH_H
+#pragma once
 
 // This is the WRATH discipline.
 
@@ -106,6 +105,3 @@ private:
 
     int hailStorm(TBeing *);
     int hailStorm(TBeing *, int, short);
-
-#endif
-

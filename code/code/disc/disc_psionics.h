@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_PSIONICS_H
-#define __DISC_PSIONICS_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -37,6 +36,3 @@ public:
 
 private:
 };
-
-#endif
-

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BASE_CLOTHING_H
-#define __OBJ_BASE_CLOTHING_H
+#pragma once
 
 #include "obj.h"
 
@@ -54,5 +53,3 @@ public:
     TBaseClothing & operator=(const TBaseClothing &a);
     virtual ~TBaseClothing();
 };
-
-#endif

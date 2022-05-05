@@ -18,8 +18,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __DISC_AEGIS_H
-#define __DISC_AEGIS_H
+#pragma once
 
 // This is the AEGIS discipline.
 
@@ -127,5 +126,3 @@ void cureDisease(TBeing*, TBeing*, TMagicItem*, spellNumT);
 void relive(TBeing*, TBeing*);
 
 void crusade(TBeing*);
-
-#endif

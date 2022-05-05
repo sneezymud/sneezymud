@@ -17,8 +17,7 @@
 
 *************************************************************************/
 
-#ifndef __SPEC_OBJS_H
-#define __SPEC_OBJS_H
+#pragma once
 
 #include "enum.h"
 #include "parse.h"
@@ -53,9 +52,3 @@ extern void obj_act(const char *message, const TThing *ch, const TObj *o, const 
 extern const int GET_OBJ_SPE_INDEX(int d);
 
 extern TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1];
-
-#endif
-
-
-
-

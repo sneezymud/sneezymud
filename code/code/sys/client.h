@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __CLIENT_H
-#define __CLIENT_H
+#pragma once
 
 class sstring;
 
@@ -111,26 +110,4 @@ const int ADD           = 1;
 extern bool is_client_sstring(char *str);
 extern void stripFrontBytes(char *, int);
 extern void processStringForClient(sstring &);
-
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

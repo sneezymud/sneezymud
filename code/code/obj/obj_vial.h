@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_VIAL_H
-#define __OBJ_VIAL_H
+#pragma once
 
 #include "obj_base_cup.h"
 
@@ -29,5 +28,3 @@ class TVial : public TBaseCup {
 };
 
 
-
-#endif

@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_SOLDIERING_H
-#define __DISC_SOLDIERING_H
+#pragma once
 
 // This is the WARRIOR SOLDIERING discipline.
 
@@ -29,7 +28,4 @@ public:
 
 private:
 };
-
-
-#endif
 

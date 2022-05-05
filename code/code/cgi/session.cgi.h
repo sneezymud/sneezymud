@@ -1,5 +1,4 @@
-#ifndef __SESSION_CGI_H
-#define __SESSION_CGI_H
+#pragma once
 
 #include <cgicc/Cgicc.h>
 #include "sstring.h"
@@ -80,5 +79,3 @@ public:
 };
 
 sstring escape_html(sstring);
-
-#endif

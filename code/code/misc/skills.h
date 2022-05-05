@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SKILLS_H
-#define __SKILLS_H
+#pragma once
 
 #include "structs.h"
 
@@ -54,5 +53,3 @@ extern bool checkPerc(const TBeing *, double);
 #endif
 extern void checkFactionHurt(TBeing *, TBeing *);
 extern void checkFactionHelp(TBeing *, TBeing *);
-
-#endif

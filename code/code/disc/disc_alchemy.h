@@ -19,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_ALCHEMY_H
-#define __DISC_ALCHEMY_H
+#pragma once
 
 // This is the ALCHEMY discipline.
 
@@ -158,5 +157,3 @@ private:
     int galvanize(TBeing *, TObj *);
     int castGalvanize(TBeing *, TObj *);
     int galvanize(TBeing *, TObj *, int, short);
-
-#endif

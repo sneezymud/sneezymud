@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_QUIVER_H
-#define __OBJ_QUIVER_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -30,5 +29,3 @@ class TQuiver : public TExpandableContainer {
     virtual ~TQuiver();
 };
 
-
-#endif

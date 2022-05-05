@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_BLUNT_H
-#define __DISC_BLUNT_H
+#pragma once
 
 // This is the BLUNT discipline.
 
@@ -44,6 +43,3 @@ public:
 
 private:
 };
-
-#endif
-

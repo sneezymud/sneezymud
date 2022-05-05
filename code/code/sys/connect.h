@@ -1,5 +1,4 @@
-#ifndef __CONNECT_H
-#define __CONNECT_H
+#pragma once
 
 #include <deque>
 
@@ -604,5 +603,3 @@ class Descriptor
     const char *WhiteOnPurple() const;
     const char *WhiteOnRed() const;
 };
-
-#endif

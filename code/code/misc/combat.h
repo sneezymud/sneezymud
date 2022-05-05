@@ -6,8 +6,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#ifndef __COMBAT_H
-#define __COMBAT_H
+#pragma once
 
 class TBeing;
 
@@ -33,5 +32,3 @@ extern TBeing *gCombatList;
 bool restrict_xp(const TBeing *caster, TBeing *victim, int duration);
 void doToughness(TBeing *ch);
 
-
-#endif

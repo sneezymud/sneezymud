@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_COMMODITY_H
-#define __OBJ_COMMODITY_H
+#pragma once
 
 #include "obj_mergeable.h"
 
@@ -52,5 +51,3 @@ class TCommodity : public TMergeable {
     virtual ~TCommodity();
 };
 
-
-#endif

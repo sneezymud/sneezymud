@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_MAGIC_ITEM_H
-#define __OBJ_MAGIC_ITEM_H
+#pragma once
 
 #include "obj.h"
 
@@ -46,5 +45,3 @@ class TMagicItem : public virtual TObj
     TMagicItem & operator=(const TMagicItem &a);
     virtual ~TMagicItem();
 };
-
-#endif

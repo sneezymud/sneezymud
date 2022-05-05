@@ -1,5 +1,4 @@
-#ifndef __SHOPACCOUNTING_H
-#define __SHOPACCOUNTING_H
+#pragma once
 
 #include <map>
 
@@ -22,5 +21,3 @@ class TShopJournal {
   TShopJournal(int);
   TShopJournal(int,int);
 };
-
-#endif

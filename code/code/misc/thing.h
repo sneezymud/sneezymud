@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __THING_H
-#define __THING_H
+#pragma once
 
 #include <string.h>
 #include <list>
@@ -386,5 +385,3 @@ class TThing {
     virtual bool isPierceWeapon() const { return FALSE; }
     virtual bool canCarryMe(const TBeing *, silentTypeT) const;
 };
-
-#endif

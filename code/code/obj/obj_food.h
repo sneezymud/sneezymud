@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_FOOD_H
-#define __OBJ_FOOD_H
+#pragma once
 
 #include "obj.h"
 
@@ -57,5 +56,3 @@ class TFood : public TObj {
 };
 
 
-
-#endif

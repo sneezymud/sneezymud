@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_IRON_BODY_H
-#define __DISC_IRON_BODY_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -61,5 +60,3 @@ public:
 
 private:
 };
-
-#endif

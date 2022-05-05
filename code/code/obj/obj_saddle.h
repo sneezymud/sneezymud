@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_SADDLE_H
-#define __OBJ_SADDLE_H
+#pragma once
 
 #include "obj_base_clothing.h"
 
@@ -27,5 +26,3 @@ class TSaddle : public TBaseClothing {
     virtual ~TSaddle();
 };
 
-
-#endif

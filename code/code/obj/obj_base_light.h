@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BASE_LIGHT_H
-#define __OBJ_BASE_LIGHT_H
+#pragma once
 
 #include "obj.h"
 
@@ -44,5 +43,3 @@ class TBaseLight : public TObj {
     virtual ~TBaseLight();
 };
 
-
-#endif

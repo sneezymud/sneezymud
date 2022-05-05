@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __ANSI_H
-#define __ANSI_H
+#pragma once
 
 enum colorTypeT {
      COLOR_NONE, //       = 0;
@@ -205,5 +204,3 @@ enum setColorKolorT {
   SET_COL_KOL_BOLDPURPLE,
   SET_COL_KOL_BOLDCYAN
 };
-
-#endif

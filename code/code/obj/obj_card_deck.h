@@ -4,8 +4,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_CARD_DECK_H
-#define __OBJ_CARD_DECK_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -29,5 +28,3 @@ class TCardDeck : public TExpandableContainer {
 };
 
 
-
-#endif

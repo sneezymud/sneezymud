@@ -19,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_PIETY_H
-#define __DISC_PIETY_H
+#pragma once
 
 // This is the FAITH discipline.
 
@@ -54,6 +53,3 @@ public:
     bool isAutomatic(){ return true; }
 private:
 };
-
-#endif
-

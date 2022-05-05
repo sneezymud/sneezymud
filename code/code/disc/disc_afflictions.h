@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_AFFLICT_H
-#define __DISC_AFFLICT_H
+#pragma once
 
 // This is the AFFLICT discipline.
 
@@ -124,4 +123,3 @@ private:
     void disease(TBeing *, TBeing *);
     void disease(TBeing *, TBeing *, TMagicItem *);
     int disease(TBeing *, TBeing *, int, short);
-#endif

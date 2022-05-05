@@ -1,5 +1,4 @@
-#ifndef __PATHFINDER_H
-#define __PATHFINDER_H
+#pragma once
 
 #include <deque>
 #include <boost/shared_ptr.hpp>
@@ -219,5 +218,3 @@ extern int go_ok(roomDirData *exitp);
 extern int go_ok_smarter(roomDirData *exitp);
 
 
-
-#endif

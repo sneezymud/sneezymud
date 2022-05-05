@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_TRAPS_H
-#define __DISC_TRAPS_H
+#pragma once
 
 // This is the THIEF TRAPS discipline.
 
@@ -55,5 +54,3 @@ public:
 private:
 };
 
-
-#endif

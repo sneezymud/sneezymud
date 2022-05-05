@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __ACCOUNT_H
-#define __ACCOUNT_H
+#pragma once
 
 #include "sstring.h"
 #include "connect.h" // termTypeT
@@ -60,5 +59,3 @@ class TAccount
   TAccount();
 };
 
-
-#endif

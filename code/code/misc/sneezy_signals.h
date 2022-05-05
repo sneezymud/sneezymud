@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SIGNALS_H
-#define __SIGNALS_H
+#pragma once
 
 class SignalHandler {
   private:
@@ -36,5 +35,3 @@ class SignalHandler {
 };
 
 extern SignalHandler *gSigHandler;
-
-#endif

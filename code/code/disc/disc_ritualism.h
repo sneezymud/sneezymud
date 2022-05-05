@@ -1,5 +1,4 @@
-#ifndef __DISC_RITUALISM_H
-#define __DISC_RITUALISM_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -31,6 +30,3 @@ public:
     bool isAutomatic(){ return true; }
 private:
 };
-
-#endif
-

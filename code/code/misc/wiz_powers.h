@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __WIZPOWER_H
-#define __WIZPOWER_H
+#pragma once
 
 // Wiz-Powers
 
@@ -131,7 +130,3 @@ enum wizPowerT {
 };
 const wizPowerT MIN_POWER_INDEX = wizPowerT(0);
 wizPowerT & operator++ (wizPowerT &, int);
-
-#endif
-
-

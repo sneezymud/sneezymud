@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_RANGER_H
-#define __DISC_RANGER_H
+#pragma once
 
 // This is the RANGER discipline.
 
@@ -83,6 +82,3 @@ public:
 
 private:
 };
-
-#endif
-

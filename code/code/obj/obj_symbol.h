@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_SYMBOL_H
-#define __OBJ_SYMBOL_H
+#pragma once
 
 #include "obj.h"
 
@@ -60,5 +59,3 @@ class TSymbol : public TObj {
     virtual ~TSymbol();
 };
 
-
-#endif

@@ -7,8 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __COLORSTRING_H
-#define __COLORSTRING_H
+#pragma once
 
 #include "ansi.h"
 
@@ -27,5 +26,3 @@ sstring nameColorString(TBeing *, Descriptor *, const sstring &, int *, colorTyp
 
 const sstring colorString(const TBeing *, const Descriptor *, const sstring &, int *, colorTypeT, bool, bool = false);
 
-
-#endif

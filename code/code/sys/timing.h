@@ -1,5 +1,4 @@
-#ifndef __TIMING_H
-#define __TIMING_H
+#pragma once
 
 #include<sys/time.h>
 
@@ -21,5 +20,3 @@ class TTiming {
 };
 
 
-
-#endif

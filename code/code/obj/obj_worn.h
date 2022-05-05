@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_WORN_H
-#define __OBJ_WORN_H
+#pragma once
 
 #include "obj_base_clothing.h"
 
@@ -27,5 +26,3 @@ class TWorn : public TBaseClothing {
     virtual ~TWorn();
 };
 
-
-#endif

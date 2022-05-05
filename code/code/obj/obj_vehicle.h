@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_VEHICLE_H
-#define __OBJ_VEHICLE_H
+#pragma once
 
 #include "obj_portal.h"
 
@@ -57,5 +56,3 @@ class TVehicle : public TPortal {
   virtual ~TVehicle();
 };
 
-
-#endif

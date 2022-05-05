@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BOAT_H
-#define __OBJ_BOAT_H
+#pragma once
 
 #include "obj.h"
 
@@ -31,5 +30,3 @@ class TBoat : public TObj {
 };
 
 
-
-#endif

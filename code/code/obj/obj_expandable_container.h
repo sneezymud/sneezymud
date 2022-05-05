@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_EXPANDABLE_CONTAINER_H
-#define __OBJ_EXPANDABLE_CONTAINER_H
+#pragma once
 
 #include "obj_open_container.h"
 
@@ -31,5 +30,3 @@ class TExpandableContainer : public TOpenContainer {
 };
 
 
-
-#endif

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BED_H
-#define __OBJ_BED_H
+#pragma once
 
 #include "obj.h"
 
@@ -59,5 +58,3 @@ class TBed : public TObj {
     TBed & operator=(const TBed &a);
     virtual ~TBed();
 };
-
-#endif

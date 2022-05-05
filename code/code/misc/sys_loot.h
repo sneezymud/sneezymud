@@ -1,5 +1,4 @@
-#ifndef __SYS_LOOT_H
-#define __SYS_LOOT_H
+#pragma once
 
 struct TLootStructure {
   int tLevel, // Object Level;
@@ -14,5 +13,3 @@ extern bool sysLootBoot();
 extern bool sysLootLoad(resetCom &, TBeing *, TObj *, bool);
 extern bool isLegalLoot(itemTypeT);
 extern bool isLegalLoot(int);
-
-#endif

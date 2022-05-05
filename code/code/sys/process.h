@@ -1,5 +1,4 @@
-#ifndef __PROCESS_H
-#define __PROCESS_H
+#pragma once
 
 #include "sstring.h"
 #include "comm.h"
@@ -642,5 +641,3 @@ class TScheduler {
   ~TScheduler();
 };
 
-
-#endif

@@ -1,5 +1,4 @@
-#ifndef __DISC_NATURE_H
-#define __DISC_NATURE_H
+#pragma once
 
 // This is the NATURE discipline.
 // Most of these were moved to armadillo for shaman
@@ -41,13 +40,5 @@ private:
     int castBarkskin(TBeing *, TBeing *);
     int barkskin(TBeing *, TBeing *, TMagicItem *);
     int barkskin(TBeing *, TBeing *, int, short);
-
-
-
-#endif
-
-
-
-
 
 

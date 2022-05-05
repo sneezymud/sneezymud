@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DRUG_H
-#define __DRUG_H
+#pragma once
 
 #include "obj.h"
 #include "gametime.h"
@@ -87,15 +86,3 @@ class TDrug : public TObj {
 
 void applyDrugAffects(TBeing *, drugTypeT, bool);
 void applyAddictionAffects(TBeing *, drugTypeT, int);
-
-#endif
-
-
-
-
-
-
-
-
-
-

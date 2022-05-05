@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_ARMOR_H
-#define __OBJ_ARMOR_H
+#pragma once
 
 #include "obj_base_clothing.h"
 
@@ -26,5 +25,3 @@ class TArmor : public virtual TBaseClothing {
     TArmor & operator=(const TArmor &a);
     virtual ~TArmor();
 };
-
-#endif

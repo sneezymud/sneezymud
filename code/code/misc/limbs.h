@@ -1,5 +1,4 @@
-#ifndef __LIMBS_H
-#define __LIMBS_H
+#pragma once
 
 #include "discipline.h"
 #include "sstring.h"
@@ -82,5 +81,3 @@ struct TransformLimbType {
 
 extern bool has_healthy_body(TBeing *);
 extern void break_bone(TBeing *, wearSlotT which);
-
-#endif

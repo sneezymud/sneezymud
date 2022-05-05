@@ -1,5 +1,4 @@
-#ifndef __GUILD_H
-#define __GUILD_H
+#pragma once
 
 
 const int GUILD_CREATE_LEVEL = 25;
@@ -118,5 +117,3 @@ extern bool remove_guild_by_keywords(const char *);
 extern char * display_permission(unsigned int);
 extern char * display_guild_flags(unsigned int);
 
-
-#endif

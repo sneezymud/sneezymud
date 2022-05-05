@@ -10,8 +10,7 @@
 //
 // Class for Immunity Data.
 
-#ifndef __IMMUNITY_H
-#define __IMMUNITY_H
+#pragma once
 
 class sstring;
 
@@ -66,5 +65,3 @@ class Immunities {
     // to immune_t so other functions can access the ImmunityArray.
     immuneTypeT convert(const sstring & immunity) const;
 };
-
-#endif

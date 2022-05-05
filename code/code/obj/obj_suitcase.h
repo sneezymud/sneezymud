@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_SUITCASE_H
-#define __OBJ_SUITCASE_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -28,5 +27,3 @@ class TSuitcase : public TExpandableContainer {
 };
 
 
-
-#endif

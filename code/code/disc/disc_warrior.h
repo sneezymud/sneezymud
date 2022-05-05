@@ -30,8 +30,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_WARRIOR_H
-#define __DISC_WARRIOR_H
+#pragma once
 
 // This is the WARRIOR discipline.
 
@@ -111,6 +110,3 @@ private:
 
     int berserk(TBeing *);
     void repair(TBeing *, TObj *);
-
-#endif
-

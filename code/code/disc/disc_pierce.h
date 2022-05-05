@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_PIERCE_H
-#define __DISC_PIERCE_H
+#pragma once
 
 // This is the PIERCE discipline.
 
@@ -44,6 +43,3 @@ public:
 
 private:
 };
-
-#endif
-

@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_PLANTS_H
-#define __DISC_PLANTS_H
+#pragma once
 
 // This is the RANGER plants discipline.
 
@@ -38,6 +37,3 @@ public:
 
 private:
 };
-
-#endif
-

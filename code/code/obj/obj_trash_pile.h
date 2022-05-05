@@ -1,5 +1,4 @@
-#ifndef __OBJ_TRASH_PILE_H
-#define __OBJ_TRASH_PILE_H
+#pragma once
 
 #include "obj_expandable_container.h"
 #include "obj_mergeable.h"
@@ -28,5 +27,3 @@ class TTrashPile : public TExpandableContainer, public TMergeable {
     virtual ~TTrashPile();
 };
 
-
-#endif

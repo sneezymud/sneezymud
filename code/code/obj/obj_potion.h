@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_POTION_H
-#define __OBJ_POTION_H
+#pragma once
 
 #include "obj_base_cup.h"
 
@@ -29,5 +28,3 @@ class TPotion : public TBaseCup {
 
 
 liqTypeT spell_to_liq(spellNumT which);
-
-#endif

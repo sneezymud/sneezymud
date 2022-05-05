@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __OBJ_H
-#define __OBJ_H
+#pragma once
 
 #include <vector>
 #include <list>
@@ -772,5 +771,3 @@ private:
     virtual int getValue() const; 
     virtual sstring wear_flags_to_sentence() const;
 };
-
-#endif

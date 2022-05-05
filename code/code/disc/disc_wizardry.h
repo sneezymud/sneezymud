@@ -19,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_WIZARDRY_H
-#define __DISC_WIZARDRY_H
+#pragma once
 
 // This is the WIZARDRY discipline.
 
@@ -55,6 +54,3 @@ public:
 
 private:
 };
-
-#endif
-

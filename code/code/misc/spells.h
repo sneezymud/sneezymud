@@ -7,8 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SPELLS_H
-#define __SPELLS_H
+#pragma once
 
 enum spellNumT {
      DAMAGE_RIPPED_OUT_HEART = -58,
@@ -742,8 +741,5 @@ extern spellNumT & operator-= (spellNumT &, spellNumT);
      SKILL_PRAYING,
      SKILL_MASS_FORAGE,
      SKILL_TAN,
-#endif
-
-
 #endif
 

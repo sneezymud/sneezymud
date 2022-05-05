@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __PERSON_H
-#define __PERSON_H
+#pragma once
 
 #include "being.h"
 #include "wiz_powers.h"
@@ -167,5 +166,3 @@ class TPerson : public TBeing {
     void doHPGainForLev(classIndT);
     virtual void doBestow(const sstring &);
 };
-
-#endif

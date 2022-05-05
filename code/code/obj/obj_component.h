@@ -9,8 +9,7 @@
 *  file: components.h, Implementation of periodic components      DIKUMUD *
 ************************************************************************* */
 
-#ifndef __COMPONENTS_H
-#define __COMPONENTS_H
+#pragma once
 
 #include "obj_mergeable.h"
 #include "enum.h"
@@ -354,5 +353,3 @@ class TComponent : public TMergeable {
     virtual ~TComponent();
     virtual TThing & operator-- ();
 };
-
-#endif

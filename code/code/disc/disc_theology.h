@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_THEOLOGY_H
-#define __DISC_THEOLOGY_H
+#pragma once
 
 // This is the THEOLOGY discipline.
 
@@ -60,5 +59,3 @@ public:
 private:
 };
  void attune(TBeing *, TThing *);
-#endif
-

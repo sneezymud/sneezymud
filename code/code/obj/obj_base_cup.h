@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BASE_CUP_H
-#define __OBJ_BASE_CUP_H
+#pragma once
 
 #include "obj.h"
 
@@ -80,5 +79,3 @@ class TBaseCup : public virtual TObj {
 };
 
 
-
-#endif
