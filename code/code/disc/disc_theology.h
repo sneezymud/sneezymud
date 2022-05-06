@@ -58,5 +58,5 @@ public:
 
 private:
 };
- void attune(TBeing *, TThing *);
- 
+
+void attune(TBeing *, TThing *);
