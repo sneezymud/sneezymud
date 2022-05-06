@@ -205,4 +205,3 @@ struct class_info
   double hp_per_level;
   sstring abbr;
 };
-      
