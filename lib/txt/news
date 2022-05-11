@@ -1,3 +1,9 @@
+06-11-22 : Fixed several crashes related to shapeshifting/lycanthropy and re-enabled
+           the lycanthropy transformation for PCs
+           - Fixed saves while shapeshifted
+           - Also increased the damage of the bite skill available to transformed
+             lycanthropes to make it at least somewhat useful
+
 05-XX-22 : Warrior Revamp
             - Updates to legacy warrior abilities (bodyslam, stomp, etc.) to make 
             them worth using.
