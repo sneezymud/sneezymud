@@ -1001,199 +1001,175 @@ void TBeing::doPoint(const sstring &arg)
   sendTo("Do you usually point at things that aren't there?\n\r");
 }
 
+int TBeing::doBite(const sstring &arg) {
+  if (!roomp) return false;
 
+  TBeing *vict = nullptr;
 
-int TBeing::doBite(const sstring &arg)
-{
-  TThing *t = NULL;
-  TBeing *b;
-  sstring buf;
-  int rc;
+  auto commonChecks = [this, &arg, &vict](const sstring &notFoundMessage,
+                                          const sstring &biteSelfMessage) {
+    if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r")) return false;
 
-  if (!roomp)
-    return FALSE;
-
-  if (arg.empty()) {
-    sendTo("Whom do you want to bite?\n\r");
-    return FALSE;
-  }
-
-
-  if(isVampire()){
-    // vampire bite!
-    if (!(b = get_char_room_vis(this, arg))) {
-      if (!(b = fight())) {
-	sendTo("Whose blood do you wish to suck?\n\r");
-	return FALSE;
-      }
+    if (!(vict = get_char_room_vis(this, arg)) && !(vict = fight())) {
+      sendTo(notFoundMessage);
+      return false;
     }
-    if (!sameRoom(*b)) {
-      sendTo("That person isn't around.\n\r");
-      return FALSE;
-    }
-    if (b == this) {
-      sendTo("Sucking blood from yourself would not be effective.\n\r");
-      return FALSE;
-    }
-    
-    if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-      return FALSE;
-    
-    if (noHarmCheck(b))
-      return FALSE;
 
-    if(b->isImmortal()){
+    if (vict == this) {
+      sendTo(biteSelfMessage);
+      return false;
+    }
+
+    if (noHarmCheck(vict)) return false;
+
+    if (vict->isImmortal()) {
       sendTo("That would be unwise.\n\r");
-      return FALSE;
+      return false;
     }
 
-    if (b->isUndead() || b->isColdBlooded()) {
+    if (!sameRoom(*vict)) {
+      sendTo("That person isn't around.\n\r");
+      return false;
+    }
+
+    return true;
+  };
+
+  // Handle special bite types first, to allow use in combat without specifying target
+
+  if (isVampire()) {
+    // vampire bite!
+    if (!commonChecks("Whose blood do you wish to suck?\n\r",
+                      "Sucking blood from yourself would not be effective.\n\r"))
+      return false;
+
+    if (vict->isUndead() || vict->isColdBlooded()) {
       sendTo("You can only do this to living, warm blooded opponents.\n\r");
-      return FALSE;
+      return false;
     }
-    
-    if(b->getPosition() <= POSITION_INCAP){
+
+    if (vict->getPosition() <= POSITION_INCAP) {
       sendTo("That victim is too close to death already.\n\r");
-      return FALSE;
+      return false;
     }
 
+    reconcileDamage(vict, 0, DAMAGE_DRAIN);
 
-    reconcileDamage(b, 0, DAMAGE_DRAIN);
+    if ((((vict->hitLimit() < hitLimit()) &&
+          ((GetMaxLevel() > vict->GetMaxLevel() + 10) ||
+           ((GetMaxLevel() > vict->GetMaxLevel()) && vict->isDumbAnimal() &&
+            vict->GetMaxLevel() <= 10 && (vict->getHit() < (int)(vict->hitLimit() / 4.0)))) &&
+          hits(vict, attackRound(vict) - vict->defendRound(this))) ||
+         isImmortal())) {
+      act("You sink your fangs deep into $N's neck and suck $S <r>blood<1>!", false, this, nullptr,
+          vict, TO_CHAR);
+      act("$n sinks $s fangs deep into $N's neck and sucks $S <r>blood<1>!", false, this, nullptr,
+          vict, TO_NOTVICT);
+      act("$n sinks $s fangs deep into your neck and sucks your <r>blood<1>!", false, this, nullptr,
+          vict, TO_VICT);
 
-    if((((b->hitLimit() < hitLimit()) && 
-	 ((GetMaxLevel()>b->GetMaxLevel()+10) ||
-	  ((GetMaxLevel()>b->GetMaxLevel()) &&
-	   b->isDumbAnimal() && b->GetMaxLevel()<=10 &&
-	   (b->getHit() < (int)(b->hitLimit()/4.0)))) &&
-	 hits(b, attackRound(b) - b->defendRound(this))) ||
-	isImmortal())){
-      act("You sink your fangs deep into $N's neck and suck $S <r>blood<1>!",
-	  FALSE, this, NULL, b, TO_CHAR);
-      act("$n sinks $s fangs deep into $N's neck and sucks $S <r>blood<1>!",
-	  FALSE, this, NULL, b, TO_NOTVICT);
-      act("$n sinks $s fangs deep into your neck and sucks your <r>blood<1>!",
-	  FALSE, this, NULL, b, TO_VICT);
-
-      rc = reconcileDamage(b, b->getHit()+5, DAMAGE_DRAIN);
-      b->setHit(-5); // sometimes the above doesn't set to -5 properly
+      int rc = reconcileDamage(vict, vict->getHit() + 5, DAMAGE_DRAIN);
+      vict->setHit(-5);  // sometimes the above doesn't set to -5 properly
 
       gainCondition(FULL, 15);
       gainCondition(THIRST, 15);
-      act("You feel satiated.", FALSE, this, NULL, b, TO_CHAR);
+      act("You feel satiated.", false, this, nullptr, vict, TO_CHAR);
 
-      act("You reel about unsteadily, flush with <r>blood<1>.",
-	  FALSE, this, NULL, b, TO_CHAR);
+      act("You reel about unsteadily, flush with <r>blood<1>.", false, this, nullptr, vict,
+          TO_CHAR);
 
-      if(fight()) {
-	stopFighting();
-	b->stopFighting();
+      if (fight()) {
+        stopFighting();
+        vict->stopFighting();
       }
 
-      if(b->isPc() && !b->hasQuestBit(TOG_VAMPIRE) &&
-	 !b->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) && !b->isVampire()){
-	affectedData aff;
-	aff.type = AFFECT_BITTEN_BY_VAMPIRE;
-	aff.location = APPLY_NONE;
-	aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
-	
-	b->affectTo(&aff);
-      }
+      if (vict->isPc() && !vict->hasQuestBit(TOG_VAMPIRE) &&
+          !vict->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) && !vict->isVampire()) {
+        affectedData aff;
+        aff.type = AFFECT_BITTEN_BY_VAMPIRE;
+        aff.location = APPLY_NONE;
+        aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
 
+        vict->affectTo(&aff);
+      }
 
       addToWait(combatRound(5));
-
       return rc;
-    } else {
-      act("You try to bite $N's neck but $E fights you off!",
-	  FALSE, this, NULL, b, TO_CHAR);
-      act("$n tries to bite $N's neck, but $N fights $m off!",
-	  FALSE, this, NULL, b, TO_NOTVICT);
-      act("$n tries to bite your neck, but you fight him off!",
-	  FALSE, this, NULL, b, TO_VICT);
-      return TRUE;
     }
-  } else if(getMyRace()->isLycanthrope()){
+
+    act("You try to bite $N's neck but $E fights you off!", false, this, nullptr, vict, TO_CHAR);
+    act("$n tries to bite $N's neck, but $N fights $m off!", false, this, nullptr, vict,
+        TO_NOTVICT);
+    act("$n tries to bite your neck, but you fight him off!", false, this, nullptr, vict, TO_VICT);
+    return true;
+  }
+
+  if (getMyRace()->isLycanthrope()) {
     // we don't use isLycanthrope() here because we don't want non-transformed
     // players to be able to bite
     // were-creature bite!
-    if (!(b = get_char_room_vis(this, arg))) {
-      if (!(b = fight())) {
-	sendTo("Who do you want to bite?\n\r");
-	return FALSE;
-      }
-    }
-    if (!sameRoom(*b)) {
-      sendTo("That person isn't around.\n\r");
-      return FALSE;
-    }
-    if (b == this) {
-      sendTo("Biting yourself would not be wise.\n\r");
-      return FALSE;
-    }
-    
-    if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-      return FALSE;
-    
-    if (noHarmCheck(b))
-      return FALSE;
+    if (!commonChecks("Who do you want to bite?\n\r", "Biting yourself would not be wise.\n\r"))
+      return false;
 
-    if(b->isImmortal()){
-      sendTo("That would be unwise.\n\r");
-      return FALSE;
-    }
+    reconcileDamage(vict, 0, DAMAGE_STOMACH_WOUND);
 
-    reconcileDamage(b, 0, DAMAGE_STOMACH_WOUND);
-    
-    if(hits(b, attackRound(b) - b->defendRound(this))){
-      act("You sink your teeth into $N's flesh and tear it viciously!",
-	  FALSE, this, NULL, b, TO_CHAR);
-      act("$n sinks $s teeth into $N's flesh and tears at it viciously!",
-	  FALSE, this, NULL, b, TO_NOTVICT);
-      act("$n sinks $s teeth into your flesh and tears at it viciously!",
-	  FALSE, this, NULL, b, TO_VICT);
+    if (specialAttack(vict, TYPE_BITE)) {
+      act("You sink your teeth into $N's flesh and tear it viciously!", false, this, nullptr, vict,
+          TO_CHAR);
+      act("$n sinks $s teeth into $N's flesh and tears at it viciously!", false, this, nullptr,
+          vict, TO_NOTVICT);
+      act("$n sinks $s teeth into your flesh and tears at it viciously!", false, this, nullptr,
+          vict, TO_VICT);
 
-      rc = reconcileDamage(b, ::number(5,25), DAMAGE_STOMACH_WOUND);
+      auto level = GetMaxLevel();
+      int rc = reconcileDamage(vict, ::number(level / 2, level * 2), DAMAGE_STOMACH_WOUND);
 
-      if(b->isPc() && !b->isLycanthrope()){	
-	act("You feel a burning in your <r>blood<1>.",
-	    FALSE, this, NULL, b, TO_VICT);
-	b->setQuestBit(TOG_LYCANTHROPE);
+      if (vict->isPc() && !vict->isLycanthrope()) {
+        act("You feel a burning in your <r>blood<1>.", false, this, nullptr, vict, TO_VICT);
+        vict->setQuestBit(TOG_LYCANTHROPE);
       }
 
       addToWait(combatRound(3));
-
       return rc;
+    }
+
+    act("You try to bite $N but $E fights you off!", false, this, nullptr, vict, TO_CHAR);
+    act("$n tries to bite $N, but $N fights $m off!", false, this, nullptr, vict, TO_NOTVICT);
+    act("$n tries to bite you, but you fight him off!", false, this, nullptr, vict, TO_VICT);
+    return TRUE;
+  }
+
+  // Now handle emote
+
+  if (arg.empty()) {
+    sendTo("Whom do you want to bite?\n\r");
+    return false;
+  }
+
+  for (auto *thing : roomp->stuff) {
+    if (!isname(arg, thing->name)) continue;
+
+    if (!(vict = dynamic_cast<TBeing *>(thing))) {
+      sendTo("How about biting someone?\n\r");
+      return false;
+    };
+
+    if (vict == this) {
+      sendTo(COLOR_OBJECTS, "You bite yourself. Are you that deranged?\n\r");
+      act("$n bites himself. WEIRD?!?", false, this, nullptr, vict, TO_NOTVICT);
     } else {
-      act("You try to bite $N but $E fights you off!",
-	  FALSE, this, NULL, b, TO_CHAR);
-      act("$n tries to bite $N, but $N fights $m off!",
-	  FALSE, this, NULL, b, TO_NOTVICT);
-      act("$n tries to bite you, but you fight him off!",
-	  FALSE, this, NULL, b, TO_VICT);
-      return TRUE;
+      sendTo(COLOR_OBJECTS,
+             format("You rip %s's flesh with your piercing bite.\n\r") % vict->getName());
+      act("$n sinks $s teeth into $N. $N screams in agony!", false, this, nullptr, vict,
+          TO_NOTVICT);
+      act("$n bites you. OOOOOOOOOHHHHHHHHHHHH that hurts!", false, this, nullptr, vict, TO_VICT);
     }
-  } else {
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-      if (isname(arg, t->name)) {
-	if((b=dynamic_cast<TBeing *>(t)) && b==this){
-	  sendTo(COLOR_OBJECTS, "You bite yourself. Are you that deranged?\n\r");
-	  act("$n bites himself. WEIRD?!?", FALSE, this, NULL, b, TO_NOTVICT);
-	} else if(b){
-	  sendTo(COLOR_OBJECTS, format("You rip %s's flesh with your piercing bite.\n\r") %
-		 b->getName());
-	  act("$n sinks $s teeth into $N. $N screams in agony!",
-	      FALSE, this, NULL, b, TO_NOTVICT);
-	  act("$n bites you. OOOOOOOOOHHHHHHHHHHHH that hurts!",
-	      FALSE, this, NULL, b, TO_VICT);
-	}
-	return TRUE;
-      }
-    }
+
+    return true;
   }
 
   sendTo("How about biting someone?\n\r");
-
-  return FALSE;
+  return false;
 }
 
 void TBeing::doToast(const sstring &arg)
