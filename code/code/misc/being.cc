@@ -617,7 +617,13 @@ charFile::~charFile()
 // this returns the ID in the database, or creates a new one if needed
 int TBeing::getPlayerID() const
 {
-  // mud_assert(player.player_id, (name + " has null player ID").c_str());
+  // Handle shapeshifted player
+  if (dynamic_cast<const TMonster *>(this) && IS_SET(specials.act, ACT_POLYSELF) && desc->original) {
+    if (desc->original->player.player_id == 0)
+      vlogf(LOG_BUG, format("%s has no player ID!") % desc->original->getName());  
+    return desc->original->player.player_id;
+  }
+
   if (player.player_id == 0)
 	  vlogf(LOG_BUG, format("%s has no player ID!") % getName());
   return player.player_id;
