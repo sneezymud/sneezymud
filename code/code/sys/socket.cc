@@ -1455,32 +1455,61 @@ procCharLycanthropy::procCharLycanthropy(const int &p)
   name="procCharLycanthropy";
 }
 
-bool procCharLycanthropy::run(const TPulse &pl, TBeing *tmp_ch) const
-{
-  return false;
-    // lycanthrope transformation
-  if(tmp_ch->hasQuestBit(TOG_LYCANTHROPE) &&
-     !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)
-     && !tmp_ch->isLinkdead() &&
-     
+bool procCharLycanthropy::run(const TPulse & /*pl*/, TBeing *tmp_ch) const {
+  // If not a lycanthrope, this proc doesn't apply
+  if (!tmp_ch->hasQuestBit(TOG_LYCANTHROPE)) return false;
+
+  // First check if a lycanthrope should transform. Don't return here, to
+  // allow a chance to begin berserking as soon as transformation occurs.
+  if (
+    !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
+    !tmp_ch->isLinkdead() && 
+    !Weather::sunIsUp() &&
      Weather::moonType() == "full" && 
-     !Weather::sunIsUp() && Weather::moonIsUp()) {
+     Weather::moonIsUp()
+  ) {
     lycanthropeTransform(tmp_ch);
-  } else if(tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
-    if(Weather::moonType() != "full" || 
-       Weather::sunIsUp() || !Weather::moonIsUp()){
+  }
+
+  // Then check what a transformed lycanthrope should do based on moon/time of day
+  if (tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)) {
+    if (
+       Weather::moonType() != "full" || 
+      (Weather::sunIsUp() && !Weather::moonIsUp())
+    ) {
       tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
-      tmp_ch->doReturn("", WEAR_NOWHERE, true);
-    } else if(!tmp_ch->fight() && tmp_ch->roomp && 
-	      !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
-	      !::number(0,24)){
+
+      /*
+        doReturn was causing a heap-use-after-free crash here due to the werewolf mob being deleted
+        inside of it, causing tmp_ch to become a pointer to deleted memory. That pointer was then
+        accessed further up the call stack in runChar(), causing the crash.
+
+        Instead, send false as last param to doReturn so werewolf mob player is inhabiting will be
+        moved to poly storage.
+      */
+      tmp_ch->doReturn("", WEAR_NOWHERE, true, false);
+
+      // Then return true here to add the werewolf mob now in storage to the global delete vector
+      return true;
+    }
+
+    // Reaching this point means lycanthrope is transformed during full moon at night
+    // So see if they start berserking around the room
+    if (
+      !tmp_ch->fight() && 
+       tmp_ch->roomp && 
+      !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
+      // 4% chance (1/25) per proc tick - might need toned down considering how often
+      // procs are checked.
+      !::number(0, 24)
+    ) {
       tmp_ch->setCombatMode(ATTACK_BERSERK);
-      tmp_ch->goBerserk(NULL);
+      tmp_ch->goBerserk(nullptr);
     }
   }
+
   return false;
 }
-
 
 procCharSpecProcsQuick::procCharSpecProcsQuick(const int &p)
 {
