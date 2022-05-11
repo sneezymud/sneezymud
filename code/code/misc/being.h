@@ -1808,7 +1808,7 @@ class TBeing : public TThing {
   int doFlee(const char *);
   int doDisarm(sstring, TThing *);
   int dieReturn(const char *, spellNumT, int);
-  void doReturn(const char *, wearSlotT, bool, bool deleteMob = TRUE);
+  void doReturn(const sstring &argument, wearSlotT limb, bool tell, bool deleteMob = true);
   int doHit(const sstring &, TBeing *);
   int doEngagedHit(const char *, TBeing *);
   int doKill(const char *, TBeing *);

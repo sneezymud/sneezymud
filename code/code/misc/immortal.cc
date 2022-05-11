@@ -2064,92 +2064,70 @@ void TBeing::transformLimbsBack(const char * buffer, wearSlotT limb, bool cmd)
   }
 }
 
-void TBeing::doReturn(const char * buffer, wearSlotT limb, bool tell, bool deleteMob)
-{
-  TBeing *mob = NULL, *per;
-  int X = LAST_TRANSFORM_LIMB, found = FALSE;
-  char argument[80];
-  TRoom *rp = NULL;
-
-  if(hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)){
+void TBeing::doReturn(const sstring &argument, wearSlotT limb, bool tell, bool deleteMob) {
+  if (hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)) {
     sendTo("You can't do that of your own free will!\n\r");
     return;
   }
 
-  strcpy(argument, buffer);
-
-  if (!limb){
-    if (hasTransformedLimb()) {
-      while (!found) {
-        if (is_abbrev(argument,TransformLimbList[X].name)) {
-          limb = TransformLimbList[X].limb;
-          found = TRUE;
-          break;
-        } else {
-          X--;
-          if (X < 0)
-            break;
-          continue;
-        }
+  if (!limb && hasTransformedLimb())
+    for (const auto &limbType : TransformLimbList)
+      if (is_abbrev(argument, limbType.name)) {
+        limb = limbType.limb;
+        break;
       }
-    }
-  }
-
 
   if (limb) {
-    transformLimbsBack("", limb, TRUE);
+    transformLimbsBack("", limb, true);
     return;
   }
 
   if (!desc || !desc->original) {
     sendTo("What are you trying to return from?!\n\r");
     return;
-  } else {
-    sendTo("You return to your original body.\n\r");
-
-    per = desc->original;
-    if ((specials.act & ACT_POLYSELF) && tell) {
-      mob = this;
-
-      act("$n turns liquid, and reforms as $N.", TRUE, mob, 0, per, TO_ROOM);
-
-      --(*per);
-      if (mob->roomp)
-        *mob->roomp += *per;
-      else {
-        rp = real_roomp(Room::CS);
-        *rp += *per;
-      }
-
-      SwitchStuff(mob, per);
-      per->affectFrom(SPELL_POLYMORPH);
-      per->affectFrom(SKILL_DISGUISE);
-      per->affectFrom(SPELL_SHAPESHIFT);
-    }
-
-    desc->character = desc->original;
-    desc->original = NULL;
-
-    desc->character->desc = desc;
-    desc = NULL;
-    
-    if (IS_SET(specials.act, ACT_POLYSELF) && tell && deleteMob ) {
-      delete mob;
-      mob = NULL;
-    } else if (IS_SET(specials.act, ACT_POLYSELF)) { // move mob to room 72
-      --(*mob);
-      rp = real_roomp(Room::POLY_STORAGE);
-      *rp += *mob;
-    }
-      
-    per->polyed = POLY_TYPE_NONE;
-
-    // POLYSELF idetifies a TMonster as an isPc
-    // It would be bad to have the "desc = NULL" and still have isPc
-    REMOVE_BIT(specials.act, ACT_POLYSELF);
   }
-}
 
+  sendTo("You return to your original body.\n\r");
+
+  TBeing *originalBody = desc->original;
+
+  // Don't want to do this stuff when returning from immortal "switch" command,
+  // as that doesn't swap any stats/spell effects/discs and is supposed to happen invisibly.
+  if (specials.act & ACT_POLYSELF) {
+    if (tell)
+      act("$n turns liquid, and reforms as $N.", true, this, nullptr, originalBody, TO_ROOM);
+
+    --(*originalBody);
+    if (roomp)
+      *roomp += *originalBody;
+    else
+      *(real_roomp(Room::CS)) += *originalBody;
+
+    SwitchStuff(this, originalBody);
+    originalBody->affectFrom(SPELL_POLYMORPH);
+    originalBody->affectFrom(SKILL_DISGUISE);
+    originalBody->affectFrom(SPELL_SHAPESHIFT);
+  }
+
+  originalBody->desc = desc;
+  originalBody->desc->character = desc->original;
+  originalBody->desc->original = nullptr;
+  desc->original = nullptr;
+  desc = nullptr;
+  originalBody->polyed = POLY_TYPE_NONE;
+
+  if (!IS_SET(specials.act, ACT_POLYSELF)) 
+    return;
+
+  // Remove bit *before* deletion to avoid heap-use-after-free
+  REMOVE_BIT(specials.act, ACT_POLYSELF);
+  if (tell && deleteMob)
+    delete this;
+  else {
+    --(*this);
+    *(real_roomp(Room::POLY_STORAGE)) += *this;
+  }    
+}
 
 void TBeing::doForce(const char *)
 {
