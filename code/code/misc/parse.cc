@@ -1912,9 +1912,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     }
   }
 
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, false))
-    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
-
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
     // switch it to vict
     ADD_DELETE(rc, DELETE_VICT);
