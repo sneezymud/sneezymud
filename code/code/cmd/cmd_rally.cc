@@ -58,7 +58,6 @@ int TBeing::doRally()
   aff2.bitvector = 0;
  
   // Loop for each person in room
-  bool found = false;
   for (TThing *thing : roomp->stuff) {
     auto *person = dynamic_cast<TBeing *>(thing);
 
@@ -70,13 +69,7 @@ int TBeing::doRally()
     person->affectJoin(this, &aff2, AVG_DUR_NO, AVG_EFF_YES, false);
     person->addToMove(modifierValue);
     person->addToHit(modifierValue);
-
-    if (person != this)
-      found = true;
   }
-
-  if (!found)
-    sendTo("But, there's nobody in your group.\n\r");
   // end loop
 
   return TRUE;
