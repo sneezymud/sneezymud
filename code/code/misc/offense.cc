@@ -1030,32 +1030,30 @@ int TBeing::doFlee(const char *arg) {
 
   // Make mobs fear enemy who forced them to flee
   // Check IsPc() in case of disguised/polymorphed/otherwise transformed PC
-  TMonster *thisAsTMonster = isPc() 
-      ? nullptr 
-      : dynamic_cast<TMonster *>(this);
+  if (!isPc()) {
+    auto* thisAsTMonster = dynamic_cast<TMonster*>(this);
+    if (thisAsTMonster)
+      thisAsTMonster->addFeared(enemy);
+  }
 
-  if (thisAsTMonster)
-    thisAsTMonster->addFeared(enemy);
+  // Determine if enemy begins hunting <this>, then potentially look for
+  // remaining opponents who are engaged and make enemy attack them if found
+  if (!enemy->isPc()) {
+    auto* enemyAsTMonster = dynamic_cast<TMonster*>(enemy);
+    if (enemyAsTMonster) {
+      int percent =
+        100 * enemyAsTMonster->getHit() / enemyAsTMonster->hitLimit();
 
-  /*
-    Determine if enemy begins hunting <this>, then potentially look for
-    remaining opponents who are engaged and make enemy attack them if found
-  */
-  TMonster *enemyAsTMonster = enemy->isPc() 
-      ? nullptr 
-      : dynamic_cast<TMonster *>(enemy);
-      
-  if (enemyAsTMonster) {
-    int percent = 100 * enemyAsTMonster->getHit() / enemyAsTMonster->hitLimit();
+      if (::number(1, 100) < percent &&
+          (enemyAsTMonster->Hates(this, nullptr) ||
+           isOppositeFaction(enemyAsTMonster)))
+        enemyAsTMonster->setHunting(this);
 
-    if (::number(1, 100) < percent &&
-        (enemyAsTMonster->Hates(this, nullptr) || isOppositeFaction(enemyAsTMonster)))
-      enemyAsTMonster->setHunting(this);
-  
-    if (IS_SET_DELETE(enemyAsTMonster->lookForEngaged(), DELETE_THIS)) {
-      delete enemyAsTMonster;
-      enemyAsTMonster = nullptr;
-      enemy = nullptr;
+      if (IS_SET_DELETE(enemyAsTMonster->lookForEngaged(), DELETE_THIS)) {
+        delete enemyAsTMonster;
+        enemyAsTMonster = nullptr;
+        enemy = nullptr;
+      }
     }
   }
 
