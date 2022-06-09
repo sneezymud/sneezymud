@@ -338,6 +338,7 @@ class TRoom : public TThing {
     int brightSunlight() { return getLight() > 20; }
     int pitchBlackDark() { return getLight() <= 0; }
 
+    TThing* findInRoom(const std::function<bool(TThing*)> &);
 };
 
 const int ZONE_MAX_TIME      = 50;
