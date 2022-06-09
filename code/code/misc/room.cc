@@ -510,3 +510,8 @@ int TRoom::getLight()
   return ((isRoomFlag(ROOM_ALWAYS_LIT)) ? 18 : TThing::getLight());
 
 }
+
+TThing* TRoom::findInRoom(const std::function<bool(TThing*)> &predicate) {
+  auto found = std::find_if(stuff.begin(), stuff.end(), predicate);
+  return found != stuff.end() ? *found : nullptr;
+}
