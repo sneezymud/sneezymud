@@ -514,10 +514,7 @@ int TMonster::getMobDamage() const
 }
 
 int TMonster::lookForEngaged() {
-  if (isPc())
-    return false;
-
-  if (attackers > 0)
+  if (isPc() || attackers > 0)
     return false;
 
   auto isEngagedOpponent = [this](TThing *thingInRoom) {
@@ -525,24 +522,23 @@ int TMonster::lookForEngaged() {
     return thingAsTBeing && thingAsTBeing->fight() == this;
   };
 
-  auto found = std::find_if(roomp->stuff.begin(), roomp->stuff.end(), isEngagedOpponent);
+  auto* newOpponent =
+    dynamic_cast<TBeing*>(roomp->findInRoom(isEngagedOpponent));
 
-  TBeing *newOpponent = found != roomp->stuff.end() ? dynamic_cast<TBeing *>(*found) : nullptr;
+  if (!newOpponent)
+    return false;
 
-  if (newOpponent) {
-    int rc = takeFirstHit(*newOpponent);
+  int rc = takeFirstHit(*newOpponent);
 
-    if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      delete newOpponent;
-      newOpponent = nullptr;
-    }
-
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
-
-    return true;
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    delete newOpponent;
+    newOpponent = nullptr;
   }
-  return false;
+
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_THIS;
+
+  return true;
 }
 
 bool TMonster::isShopkeeper() const {
