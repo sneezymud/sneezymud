@@ -837,66 +837,74 @@ int TBeing::doFlee(const char *arg) {
     return false;
   }
 
-  /*
-  Do skill checks now and use results throughout so bSuccess only gets
-  called once per flee attempt.
-  */
-  spellNumT retreatSkill = getSkillNum(SKILL_RETREAT);
-  bool doesKnowRetreat = doesKnowSkill(retreatSkill);
-  bool wasRetreatSuccessful = doesKnowRetreat && bSuccess(retreatSkill);
+  
+  // Do skill checks now and use results throughout so bSuccess only gets
+  // called once per flee attempt. 
+  bool wasRetreatSuccessful = bSuccess(getSkillNum(SKILL_RETREAT));
 
   bool panic = false;
   int rc = 0;
   auto *riderAsTBeing = dynamic_cast<TBeing *>(rider);
 
+  // Could be either riding an actual mount, or be on a chair/bed of some sort.
+  // Handle both possibilities. Failures here result in flee fail and return from function call.
   if (riding) {
-    // Allow successful retreat or ride checks to avoid falling off mount. Deikhans
-    // get extra attempt to remain mounted via chivalry.
-    if ((doesKnowSkill(SKILL_RIDE) && !bSuccess(SKILL_RIDE)) ||
-        (doesKnowSkill(SKILL_CHIVALRY) && !bSuccess(SKILL_CHIVALRY)) || !wasRetreatSuccessful) {
-      act("You urge your $O to flee, causing it to panic and throw you off!", true, this,
-          nullptr, riding, TO_CHAR);
-      act("$n urges $s mount to flee, causing it to panic and throw $n off!", true, this,
-          nullptr, riding, TO_ROOM);
+    // If this resolves to nullptr we know 'riding' is a TObj (furniture)
+    auto* ridingAsTBeing = dynamic_cast<TBeing*>(riding);
+
+    // Condensed logic using ternaries. Determine if <this> is riding an actual mount or simply on
+    // some furniture, then build some strings to send to act(). Avoids a bunch of nested ifs and
+    // calling act repeatedly.
+    bool shouldFallOffMount = ridingAsTBeing ? ((!bSuccess(SKILL_RIDE) || !wasRetreatSuccessful) &&
+                                                !bSuccess(ridingAsTBeing->mountSkillType()))
+                                             : !wasRetreatSuccessful;
+
+    sstring toChar =
+      ridingAsTBeing
+        ? (shouldFallOffMount ? "You urge your $O to flee, causing it to panic and throw you off!"
+                              : "")
+        : (shouldFallOffMount ? "Lurching backwards, you attempt to escape!"
+                              : "You smoothly stand up while looking for available exits.");
+
+    sstring toRoom =
+      ridingAsTBeing
+        ? (shouldFallOffMount ? "$n urges $s $O to flee, causing it to panic and throw $n off!"
+                              : "")
+        : (shouldFallOffMount ? "$n lurches backwards, attempting to escape!"
+                              : "$n stands up and conspicuously looks for an exit.");
+
+    if (!toChar.empty())
+      act(toChar, true, this, nullptr, riding, TO_CHAR);
+    if (!toRoom.empty())
+      act(toRoom, true, this, nullptr, riding, TO_ROOM);    
+
+    if (shouldFallOffMount) {
       rc = fallOffMount(riding, POSITION_SITTING);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      panic = true;
-    }
-  } else if (getPosition() <= POSITION_SITTING) {
-    addToMove(-10);
-    // If retreat succeeded, simply being on the ground when fleeing doesn't
-    // result in panic. And you get a different message.
-    if (wasRetreatSuccessful) {
-      act("$n rolls aside and regains $s footing!", true, this, nullptr, nullptr, TO_ROOM);
-      act("You quickly roll aside and regain your footing.", true, this, nullptr, nullptr, TO_CHAR);
-    } else {
-      act("$n scrambles madly to $s feet!", true, this, nullptr, nullptr, TO_ROOM);
-      act("Panic-stricken, you scramble to your feet.", true, this, nullptr, nullptr, TO_CHAR);
-    }
-
-    doStand();
-
-    // If retreat didn't succeed or char doesn't have it, add some lag
-    // and panic.
-    if (!wasRetreatSuccessful) {
       addToWait(combatRound(1));
-      panic = true;
+      return true;
     }
+
+    // Have to use dismount here, as just forcing a standing position via setPosition actually sets
+    // <this> to standing on top of whatever furniture they were on. Collapses chairs, etc.
+    if (!ridingAsTBeing)
+      dismount(POSITION_STANDING);
+
     // If <this> is a mount being ridden
   } else if (riderAsTBeing) {
     act("Your $O panics and attempts to flee!", true, riderAsTBeing, nullptr, this, TO_CHAR);
     act("$n's $O panics and attempts to flee!", true, riderAsTBeing, nullptr, this, TO_ROOM);
 
-    // Allow deikhans to pass checks and prevent getting bucked
-    if (riderAsTBeing->doesKnowSkill(SKILL_CHIVALRY) && riderAsTBeing->bSuccess(SKILL_CHIVALRY) &&
-        riderAsTBeing->doesKnowSkill(SKILL_RIDE) && riderAsTBeing->bSuccess(SKILL_RIDE)) {
+    // Give Deikhans a chance to prevent being bucked, with the right skills.
+    if (riderAsTBeing->bSuccess(mountSkillType()) && riderAsTBeing->bSuccess(SKILL_CALM_MOUNT)) {
       act("You manage to calm $M down before $E dismounts you.", true, riderAsTBeing, nullptr, this,
           TO_CHAR);
       act("With soothing words $n manages to calm $N and remain mounted.", true,
           riderAsTBeing, nullptr, this, TO_ROOM);
       return true;
     }
+    
     rc = riderAsTBeing->fallOffMount(this, POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       riderAsTBeing->reformGroup();
@@ -904,7 +912,31 @@ int TBeing::doFlee(const char *arg) {
     }
     // Don't want reference to rider anymore if they fell off
     riderAsTBeing = nullptr;
-    panic = true;
+  }
+
+  if (getPosition() <= POSITION_SITTING) {
+    addToMove(-10);   
+
+    // If retreat succeeded, simply being on the ground when fleeing doesn't
+    // result in panic. And you get a different message.
+    sstring toRoom = wasRetreatSuccessful
+                       ? "$n rolls aside and regains $s footing!"
+                       : "$n scrambles madly to $s feet!";
+    sstring toChar = wasRetreatSuccessful
+                       ? "You quickly roll aside and regain your footing!"
+                       : "You scramble madly to your feet!";
+
+    act(toRoom, true, this, nullptr, nullptr, TO_ROOM);
+    act(toChar, true, this, nullptr, nullptr, TO_CHAR);
+
+    setPosition(POSITION_STANDING);
+
+    // If retreat didn't succeed or char doesn't have it, add some lag
+    // and panic.
+    if (!wasRetreatSuccessful) {
+      addToWait(combatRound(1));
+      panic = true;
+    }
   }
 
   playsound(pickRandSound(SOUND_FLEE_01, SOUND_FLEE_03), SOUND_TYPE_COMBAT);
@@ -955,14 +987,13 @@ int TBeing::doFlee(const char *arg) {
 
   /*
     Determine which direction to actually use. If panicked, no flee direction
-    chosen, (fighting + knows retreat + retreat failed), or (fighting + doesn't know retreat +
-    fails 50% chance) then flee in random direction. Otherwise flee in chosen direction.
+    chosen, or fighting and both retreat and 50% chance fail then flee in random direction.
+    Otherwise flee in chosen direction.
   */
-  dirTypeT dirToUse = panic || chosenDir == DIR_NONE ||
-                              (enemy && ((doesKnowRetreat && !wasRetreatSuccessful) ||
-                                         (!doesKnowRetreat && ::number(0, 1))))
-                          ? randomDir
-                          : chosenDir;
+  dirTypeT dirToUse =
+    panic || chosenDir == DIR_NONE || (!wasRetreatSuccessful && enemy && ::number(0, 1))
+      ? randomDir
+      : chosenDir;
 
   // These messages don't make sense if not fighting
   if (enemy) {
