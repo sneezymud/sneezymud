@@ -1020,7 +1020,7 @@ int TBeing::doFlee(const char *arg) {
     return true;
 
   // Ensure <this> no longer fighting after successful flee
-  REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
+  // Removing AFF_ENGAGER is handled within stopFighting()
   if (fight())
     stopFighting();
   if (cantHit > 0)
