@@ -102,7 +102,8 @@ int TBeing::doWhirlwind()
   else if (weapon->isSlashWeapon())
     damageType = DAMAGE_HACKED;
 
-  // Loop for each person in room
+  // Loop for each person in room and determine if they're a valid whirlwind target. If so, add them
+  // to the vector for later.
   std::vector<TBeing *> validTargets{};
   for (TThing *thing : roomp->stuff) {
     auto *being = dynamic_cast<TBeing *>(thing);
@@ -114,6 +115,12 @@ int TBeing::doWhirlwind()
     validTargets.push_back(being);
   }
 
+  // Apply whirlwind damage and delete dead victims in a separate loop. This is necessary because
+  // when applying the damage from whirlwind there's a chance the victim will have an immediate flee
+  // triggered when taken below 10% health. If this happens during the previous loop, the victim is
+  // removed from the TRoom::stuff list being iterated and causes the iterator to become invalid
+  // before the loop is complete, triggering a crash. Doing it in a secondary loop afterwards
+  // prevents this.
   for (TBeing *being: validTargets) {
     if (being->inRoom() != in_room)
       continue;
