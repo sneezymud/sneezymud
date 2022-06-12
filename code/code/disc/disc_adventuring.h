@@ -79,6 +79,7 @@ class CDAdventuring : public CDiscipline
     CSkill skGutterCant;
     CSkill skGnollJargon;
     CSkill skTroglodytePidgin;
+    CSkill skEncamp;
 
     CDAdventuring()
       : CDiscipline(),
@@ -111,7 +112,8 @@ class CDAdventuring : public CDiscipline
         skButcher(),
         skGutterCant(),
         skGnollJargon(),
-        skTroglodytePidgin()
+        skTroglodytePidgin(),
+        skEncamp()
     {
     }
     CDAdventuring(const CDAdventuring &a)
@@ -145,7 +147,8 @@ class CDAdventuring : public CDiscipline
         skButcher(a.skButcher),
         skGutterCant(a.skGutterCant),
         skGnollJargon(a.skGnollJargon),
-        skTroglodytePidgin(a.skTroglodytePidgin)
+        skTroglodytePidgin(a.skTroglodytePidgin),
+        skEncamp(a.skEncamp)
     {
     }
     CDAdventuring & operator=(const CDAdventuring &a) {
@@ -181,6 +184,7 @@ class CDAdventuring : public CDiscipline
       skGutterCant = a.skGutterCant;
       skGnollJargon = a.skGnollJargon;
       skTroglodytePidgin = a.skTroglodytePidgin;
+      skEncamp = a.skEncamp;
 
       return *this;
     }
@@ -196,6 +200,7 @@ private:
 };
 
     int dissect(TBeing *, TObj *);
+    int encamp(TBeing *);
 
 #endif
 

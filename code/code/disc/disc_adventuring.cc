@@ -423,3 +423,105 @@ void TBeing::doButcher(const char *arg)
   }
   tobj->butcherMe(this, arg);
 }
+
+int TBeing::doEncamp()
+{
+  int rc;
+
+  if (!doesKnowSkill(SKILL_ENCAMP)) {
+    sendTo("You know nothing about camping.\n\r");
+    return FALSE;
+  }
+  
+  rc = encamp(this);
+  if (rc)
+    addSkillLag(SKILL_ENCAMP, rc);
+  return rc;
+}
+
+int encamp(TBeing * caster)
+{
+  if (!caster || !caster->isPc()) {
+    vlogf(LOG_BUG, format("Non-PC in encamp() call.  %s") %  caster->getName());
+    return FALSE;
+  }
+
+  affectedData aff;
+  int level = caster->getSkillLevel(SKILL_ENCAMP);
+  int bKnown = caster->getSkillValue(SKILL_ENCAMP);
+
+  if (caster->affectedBySpell(SKILL_ENCAMP)) {
+    caster->sendTo("You already have a camp set up here.\n\r");
+    return FALSE;
+  }
+  
+  if (caster->roomp->isRoomFlag(ROOM_ON_FIRE)) {
+    caster->sendTo("The raging fire here needs to be controlled before setting up camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->isRoomFlag(ROOM_FLOODED)) {
+    caster->sendTo("The flood in here needs to subside before setting up camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
+      || caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
+      || caster->roomp->getSectorType() == SECT_ARCTIC_BUILDING
+      || (caster->roomp->isRoomFlag(ROOM_INDOORS) && !(caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE || caster->roomp->getSectorType() == SECT_TROPICAL_CAVE || caster->roomp->getSectorType() == SECT_ARCTIC_CAVE))) {
+    caster->sendTo("You cannot camp indoors.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->isCitySector()
+      || !(caster->roomp->isForestSector()
+      || caster->roomp->isBeachSector()
+      || caster->roomp->isHillSector()
+      || caster->roomp->isMountainSector()
+      || caster->roomp->isNatureSector()
+      || caster->roomp->isRoadSector()
+      || caster->roomp->isSwampSector()
+      || caster->roomp->isArcticSector()
+      || caster->roomp->getSectorType() == SECT_TEMPERATE_CAVE
+      || caster->roomp->getSectorType() == SECT_TROPICAL_CAVE
+      || caster->roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
+    caster->sendTo("You need to be in nature to camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->isFlyingSector()
+      || caster->roomp->isVertSector()
+      || caster->roomp->isUnderwaterSector()
+      || caster->roomp->isAirSector()
+      || caster->roomp->isOceanSector()
+      || caster->roomp->isRiverSector()) {
+    caster->sendTo("This is not a good spot for a camp.\n\r");
+    return SPELL_FAIL;
+  }
+  if (caster->roomp->isRoomFlag(ROOM_NO_FLEE)
+      || caster->roomp->isRoomFlag(ROOM_NO_ESCAPE)
+      || caster->roomp->isRoomFlag(ROOM_NO_HEAL)
+      || caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK)) {
+    caster->sendTo("This room is unfit for a camp.\n\r");
+    return SPELL_FAIL;
+  }
+  
+  aff.duration = PERMANENT_DURATION;
+  aff.level = level;
+  aff.type = SKILL_ENCAMP;
+  aff.location = APPLY_NONE;
+  aff.modifier = 0;
+  aff.bitvector = 0;
+  aff.be = caster->roomp;
+
+  if (caster->bSuccess(bKnown, SKILL_ENCAMP)) {
+    caster->sendTo("You stop and set up camp.\n\r");
+    act("$n stops and begins to camp.", FALSE, caster, 0, 0, TO_ROOM);
+
+    caster->affectTo(&aff);
+  } else {
+    caster->sendTo("You stop and set up a poorly made camp.\n\r");
+    act("$n stops and begins to camp.",
+              FALSE, caster, 0, 0, TO_ROOM);
+    aff.level /= 2;
+
+    caster->affectTo(&aff);
+  }
+  return TRUE;
+}

@@ -20,7 +20,6 @@ class CDAdvAdventuring : public CDiscipline
     CSkill skSeekWater;
     CSkill skSkin;
     CSkill skDivination;
-    CSkill skEncamp;
     CSkill skFishlore;
     CSkill skTrollish;
     CSkill skBullywug;
@@ -34,7 +33,6 @@ class CDAdvAdventuring : public CDiscipline
       skSeekWater(),
       skSkin(),
       skDivination(),
-      skEncamp(),
       skFishlore(),
       skTrollish(),
       skBullywug(),
@@ -49,7 +47,6 @@ class CDAdvAdventuring : public CDiscipline
       skSeekWater(a.skSeekWater),
       skSkin(a.skSkin),
       skDivination(a.skDivination),
-      skEncamp(a.skEncamp),
       skFishlore(a.skFishlore),
       skTrollish(a.skTrollish),
       skBullywug(a.skBullywug),
@@ -65,7 +62,6 @@ class CDAdvAdventuring : public CDiscipline
       skSeekWater = a.skSeekWater;
       skSkin = a.skSkin;
       skDivination = a.skDivination;
-      skEncamp = a.skEncamp;
       skFishlore = a.skFishlore;
       skTrollish = a.skTrollish;
       skBullywug = a.skBullywug;
@@ -90,9 +86,6 @@ private:
 
     void divine(TBeing *, TThing *);
     int divine(TBeing *, int, short, TThing *);
-
-    int encamp(TBeing *);
-
 
 #endif
 
