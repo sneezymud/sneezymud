@@ -5,6 +5,7 @@
 
 
 #include <boost/filesystem.hpp>
+#include <fstream>
 
 #include "room.h"
 #include "being.h"
@@ -1999,7 +2000,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
   sstring name=obj_index[nr].short_desc;
   int indexed_cost=convertTo<int>(obj_cache[nr]->s["price"]);
 
-  int price, shop_nr, rent_id=0;
+  int price = 0, shop_nr = 0, rent_id=0;
   int commod_price=0, commod_shop_nr=0, commod_rent_id=0;
   TObj *o=NULL;
   TObj *commod=NULL;
@@ -3746,31 +3747,31 @@ sstring fread_string(FILE *fp)
   return buf;
 }
 
-// read contents of a text file, and place in buf 
-bool file_to_sstring(const char *name, sstring &buf, concatT concat)
-{
-  FILE *fl;
-  char tmp[256];
+sstring file_to_sstring(const sstring& name) {
+  sstring output{""};
 
-  if (!concat)
-    buf = "";
+  std::ifstream fl(name);
+  if (!fl.is_open()) {
+    vlogf(LOG_FILE, "Unable to open file: " + name);
+    return "";
+  }
+  
+  sstring line;
+  while(std::getline(fl, line)) {
+    output += line + "\r\n";
+  }
+  fl.close();
+  return output;
+}
 
-  if (!(fl = fopen(name, "r"))) {
+// read contents of a text file, and place in buf
+bool file_to_sstring(const char* name, sstring& buf, concatT concat) {
+  sstring result = file_to_sstring(name);
+
+  if (result.empty())
     return false;
-  }
-  do {
-    if(!fgets(tmp, 256, fl) && !feof(fl))
-      vlogf(LOG_FILE, "Unexpected read error in file_to_sstring");
 
-    if (!feof(fl)) {
-      *(tmp + strlen(tmp) + 1) = '\0';
-      *(tmp + strlen(tmp)) = '\r';
-      buf += tmp;
-    }
-  }
-  while (!feof(fl));
-
-  fclose(fl);
+  buf = concat ? buf + result : result;
 
   return true;
 }

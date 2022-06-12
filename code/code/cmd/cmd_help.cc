@@ -347,35 +347,32 @@ void replaceWikiTable(sstring &data)
   }
 }
 
-void displayHelpFile(TBeing *ch, const sstring &helppath, sstring namebuf) {
-  // make the topic name upper case
-  namebuf = static_cast<sstring>(namebuf).upper();
-
+void displayHelpFile(TBeing* ch, const sstring& helppath, const sstring& namebuf) {
   // find the last modified time on the file
-  struct stat timestat;
+  struct stat timestat {};
+
   if (stat(helppath.c_str(), &timestat)) {
-    vlogf(LOG_BUG, format("bad call to help function %s, rebuilding indices") % namebuf);
+    vlogf(LOG_BUG, format("bad call to help function %s, rebuilding indices") % namebuf.upper());
     buildHelpIndex();
     ch->sendTo("There was an error, try again.\n\r");
     return;
   }
   sstring timebuf = ctime(&(timestat.st_mtim.tv_sec));
-  timebuf.pop_back(); // Drop newline
-  sstring buffer = format("%s%-30.30s (Last Updated: %s)%s\n\r\n\r") % ch->green() % namebuf %
-                   timebuf % ch->norm();
+  timebuf.pop_back();  // Drop newline
+  sstring output = format("%s%-30.30s (Last Updated: %s)%s\n\r\n\r") % ch->green() %
+                   namebuf.upper() % timebuf % ch->norm();
 
   // special message for nextversion file
   if (!namebuf.compareCaseless("NEXTVERSION")) {
-    buffer += "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME THERE\n\r";
-    buffer += "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO GIVE\n\r";
-    buffer += "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES ARE\n\r";
-    buffer += "FORTHCOMING...\n\r\n\r";
+    output += "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME THERE\n\r";
+    output += "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO GIVE\n\r";
+    output += "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES ARE\n\r";
+    output += "FORTHCOMING...\n\r\n\r";
   }
 
   // now print the file
-  file_to_sstring(helppath.c_str(), buffer, CONCAT_YES);
-  buffer += "\n\r";
-  ch->desc->page_string(buffer);
+  output += file_to_sstring(helppath) + "\n\r";
+  ch->desc->page_string(output);
 }
 
 void TBeing::doHelp(const char *arg) {
