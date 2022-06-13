@@ -2218,7 +2218,7 @@ int TBeing::hit(TBeing *target, int pulse)
     fy += fy2;
 
     sendTo(COLOR_BASIC, "<b>You focus your mind and body and execute a <C>blur<1><b> of attacks!<1>\n\r");
-    reconcileMana(TYPE_UNDEFINED, 0, 15);
+    reconcileMana(TYPE_UNDEFINED, 0, 8);
   }
     
 

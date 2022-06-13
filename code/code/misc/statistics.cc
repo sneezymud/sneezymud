@@ -91,8 +91,8 @@ int init_game_stats(void)
   // this should be better for 5.2
   
   // Splitting these out to provide knobs for each
-  stats.skill_damage_mod = 0.65;
-  stats.weapon_damage_mod = 0.65;
+  stats.skill_damage_mod = 0.70;
+  stats.weapon_damage_mod = 0.60;
   stats.barehand_damage_mod = 0.65;
 
   if (!(fp = fopen(STATS_FILE,"r"))) {

@@ -595,13 +595,6 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     crit_num = max(1, crit_num);
     crit_num = min(100, crit_num);
 
-    // if we are fighting barehand, adjust the crit based on type
-    if (isPc() && !weapon) {
-      crit_num = adjustCritRollForBarehand(crit_num, this, wtype);
-      if (crit_num == 0)
-        return 0;
-    }
-
     // update crit stats
     stats.combat_crit_suc_pass++;
     if (desc)
