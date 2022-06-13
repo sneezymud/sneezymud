@@ -446,7 +446,11 @@ class TBeing : public TThing {
   // VIRTUAL FUNCTIONS
   virtual int editAverageMe(TBeing *, const char *);
   virtual sstring getLongDesc() const;
-  virtual int chiMe(TBeing *);
+  virtual int chiSelf();
+  virtual int chiTarget(TBeing *);
+  virtual int doChiTarget(TBeing *, int damage);
+  virtual int chiRoom();
+  virtual int chiObject(TObj *);
   virtual sstring const& getName() const { return shortDescr; }
   virtual int getAccountID() const;
   virtual int getPlayerID() const;
