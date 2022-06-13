@@ -107,13 +107,13 @@ short TBeing::getImmunity(immuneTypeT type) const
         imm += amount;
         break;
       case IMMUNE_PARALYSIS:
-        imm += (amount/2);
+        imm += (amount/5);
         break;
       case IMMUNE_DISEASE:
         imm += (amount/3);
         break;
       case IMMUNE_BLEED:
-        imm += (amount/4);
+        imm += (amount/3);
         break;
       case IMMUNE_CHARM:
         imm += max(0, (amount - 25));
@@ -133,10 +133,13 @@ short TBeing::getImmunity(immuneTypeT type) const
     amount = max((int)getSkillValue(SKILL_DUFALI), 0);
     switch(type){
       case IMMUNE_PARALYSIS: 
-        imm += (amount/3);
+        imm += (amount/5);
         break;
       case IMMUNE_CHARM:
         imm += amount;
+        break;
+      case IMMUNE_DISEASE:
+        imm += (amount/5);
         break;
       case IMMUNE_POISON:
         imm += (amount/2);
@@ -167,7 +170,7 @@ short TBeing::getImmunity(immuneTypeT type) const
 
   if(doesKnowSkill(SKILL_IRON_WILL) && type == IMMUNE_NONMAGIC){
     amount = max((int)getSkillValue(SKILL_IRON_WILL), 0);
-    imm += (amount/30);
+    imm += (amount/20);
   }
 
   if(hasQuestBit(TOG_IS_HEALTHY) && type == IMMUNE_DISEASE){

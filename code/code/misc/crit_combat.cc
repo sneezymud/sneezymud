@@ -629,12 +629,7 @@ int TBeing::critSuccessChance(TBeing* victim,
 
     critSeverity = ::number(1, maxCritSeverity);
 
-    if (isPc() && !weapon) {
-      critSeverity = adjustCritRollForBarehand(critSeverity, this, weaponDamageType);
-      if (critSeverity == 0)
-        return 0;
-    }
-
+    // update crit stats
     stats.combat_crit_suc_pass++;
     if (desc)
       desc->career.crit_hits++;
