@@ -92,8 +92,8 @@ int init_game_stats(void)
   
   // Splitting these out to provide knobs for each
   stats.skill_damage_mod = 0.65;
-  stats.weapon_damage_mod = 0.65;
-  stats.barehand_damage_mod = 0.65;
+  stats.weapon_damage_mod = 0.40;
+  stats.barehand_damage_mod = 0.44;
 
   if (!(fp = fopen(STATS_FILE,"r"))) {
     vlogf(LOG_BUG, "Unable to open txt/stat file");
