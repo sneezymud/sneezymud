@@ -1591,110 +1591,196 @@ sstring TBeing::getLongDesc() const
   return msgVariables[MSG_LONGDESCR];
 }
 
-int TBeing::chiMe(TBeing *tLunatic)
+int TBeing::chiSelf()
 {
-  int bKnown  = tLunatic->getSkillValue(SKILL_CHI),
-      tDamage,
-      tMana;
+  int bKnown  = getSkillValue(SKILL_CHI);
 
-  if (tLunatic->getSkillValue(SKILL_CHI) < 50 ||
-      tLunatic->getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 10) {
-    tLunatic->sendTo("I'm afraid you don't have the training to do this.\n\r");
+  if (getSkillValue(SKILL_CHI) < 50 ||
+      getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 10) {
+    sendTo("I'm afraid you don't have the training to do this.\n\r");
     return RET_STOP_PARSING;
   }
 
-  if (tLunatic->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r"))
-    return RET_STOP_PARSING;
+  if (affectedBySpell(SKILL_CHI)) {
+    sendTo("You have not yet recovered from your last chi projection.\n\r");
+    return FALSE;
+  }
 
-  if (tLunatic == this) {
-    tMana = 100 - ::number(1, getSkillValue(SKILL_CHI) / 2);
+  if (bSuccess(bKnown, SKILL_CHI)) {
+    setMana(min(getMana() + ::number(manaGain(), manaGain()*10), (int) manaLimit()));
+
+    act("You close your eyes and concentrate for a moment, then begin radiating an intense <R>heat<1> from your body.", TRUE, this, NULL, NULL, TO_CHAR);
+    act("$n closes $s eyes in concentration, then begins radiating an intense <R>heat<1> from $s body.", TRUE, this, NULL, NULL, TO_ROOM);
+
+    if (affectedBySpell(AFFECT_WET))
+    {
+      if (0 == Weather::addWetness(this, -15))
+        sendTo("You feel completely dried off now.\n\r");
+      else
+        sendTo(format("The heat dries you a bit.  You feel %s.\n\r") % Weather::describeWet(this));
+    }
+
     affectedData aff;
-
-    if (affectedBySpell(SKILL_CHI)) {
-      sendTo("You are already projecting your chi upon yourself.\n\r");
-      return FALSE;
-    }
-
-    if (bSuccess(bKnown, SKILL_CHI)) {
-      reconcileMana(TYPE_UNDEFINED, 0, tMana);
-
-      act("You close your eyes and concentrate for a moment, then begin radiating an intense <R>heat<1> from your body.", TRUE, this, NULL, NULL, TO_CHAR);
-      act("$n closes $s eyes in concentration, then begins radiating an intense <R>heat<1> from $s body.", TRUE, this, NULL, NULL, TO_ROOM);
-
-      if (affectedBySpell(AFFECT_WET))
-      {
-        if (0 == Weather::addWetness(this, -15))
-          sendTo("You feel completely dried off now.\n\r");
-        else
-          sendTo(format("The heat dries you a bit.  You feel %s.\n\r") % 
-		 Weather::describeWet(this));
-      }
-
-      aff.type      = SKILL_CHI;
-      aff.level     = bKnown;
-      aff.duration  = (3 + (bKnown / 2)) * Pulse::UPDATES_PER_MUDHOUR;
-      aff.location  = APPLY_IMMUNITY;
-      aff.modifier  = IMMUNE_COLD;
-      aff.modifier2 = ((bKnown * 2) / 3);
-      aff.bitvector = 0;
-      affectTo(&aff, -1);
-    } else {
-      act("You are unable to focus your mind.",
-          TRUE, this, NULL, NULL, TO_CHAR);
-
-      if (getMana() >= 0)
-        reconcileMana(TYPE_UNDEFINED, 0, tMana/2);
-    }
+    aff.type      = SKILL_CHI;
+    aff.level     = bKnown;
+    aff.duration  = 2 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.location  = APPLY_IMMUNITY;
+    aff.modifier  = IMMUNE_COLD;
+    aff.modifier2 = ((bKnown * 2) / 3);
+    aff.bitvector = 0;
+    affectTo(&aff, -1);
 
     return true;
   }
+  else {
+    affectedData aff;
+    aff.type      = SKILL_CHI;
+    aff.level     = bKnown;
+    aff.duration  = 2 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.bitvector = 0;
+    affectTo(&aff, -1);
 
-  if (this->isImmortal() || this->inGroup(*tLunatic) || tLunatic->noHarmCheck(this))
+    sendTo("You fail to project your chi upon yourself.\n\r");
+    return FALSE;
+  }
+}
+
+int TBeing::chiTarget(TBeing *target) 
+{
+  int bKnown  = getSkillValue(SKILL_CHI),
+      tDamage,
+      tMana;
+
+  if (target->isImmortal() || noHarmCheck(target))
     return FALSE;
 
-  if (tLunatic->bSuccess(bKnown, SKILL_CHI)) {
+  if (checkPeaceful("You feel too peaceful to contemplate violence here.\n\r"))
+    return RET_STOP_PARSING;
+
+  if (bSuccess(bKnown, SKILL_CHI)) {
     tDamage = getSkillDam(this, SKILL_CHI,
-                          tLunatic->getSkillLevel(SKILL_CHI),
-                          tLunatic->getAdvLearning(SKILL_CHI));
+                          getSkillLevel(SKILL_CHI),
+                          getAdvLearning(SKILL_CHI));
+
     tMana = ::number((tDamage / 2), tDamage);
 
-    if (tLunatic->getMana() < tMana) {
-      tLunatic->sendTo("You lack of the chi to do this.\n\r");
+    if (getMana() < tMana) {
+      sendTo("You lack of the chi to do this.\n\r");
       return RET_STOP_PARSING;
     } else
-      tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
+      reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
-    act("You unleash your chi upon $N!",
-        FALSE, tLunatic, NULL, this, TO_CHAR);
-
-    if (affectedBySpell(SKILL_CHI)) {
-      act("A bright <W>aura<1> flares up around $N, deflecting your attack and then striking back!\n\rYour vision goes <r>red<1> as the pain overwhelms you!", TRUE, tLunatic, NULL, this, TO_CHAR);
-      act("A bright <W>aura<1> flares up around $N, deflecting $n's chi attack and then striking back!", TRUE, tLunatic, NULL, this, TO_NOTVICT);
-      act("A bright <W>aura<1> flares up around you, deflecting $n's chi attack and then striking back!", TRUE, tLunatic, NULL, this, TO_VICT);
-
-      if (this->reconcileDamage(tLunatic, ::number((tDamage / 2), tDamage), SKILL_CHI) == -1)
-        return (DELETE_THIS | RET_STOP_PARSING);
-    } else {
-      act("...$N screws up $S face in agony.",
-          TRUE, tLunatic, NULL, this, TO_CHAR);
-      act("$n exerts $s <r>chi force<1> on you, causing extreme pain.",
-          TRUE, tLunatic, NULL, this, TO_VICT);
-      act("$N screws up $S face in agony.",
-          TRUE, tLunatic, NULL, this, TO_NOTVICT);
-
-      if (tLunatic->reconcileDamage(this, tDamage, SKILL_CHI) == -1)
-        return DELETE_VICT;
-    }
+    return doChiTarget(target, tDamage);
   } else {
-    act("You fail to harm $N with your <r>blast of chi<z>!",
-        FALSE, tLunatic, NULL, this, TO_CHAR);
-    act("You escape $n's attempt to chi you!",
-        TRUE, tLunatic, NULL, this, TO_VICT);
-    act("$N avoids $n's attempt to chi them!",
-        TRUE, tLunatic, NULL, this, TO_NOTVICT);
+    act("You fail to harm $N with your <r>blast of chi<z>!", FALSE, this, NULL, target, TO_CHAR);
+    act("You escape $n's attempt to chi you!", TRUE, this, NULL, target, TO_VICT);
+    act("$N avoids $n's attempt to chi them!", TRUE, this, NULL, target, TO_NOTVICT);
+
+    return true;
+  }
+}
+
+int TBeing::doChiTarget(TBeing *target, int damage)
+{
+  act("You unleash your chi upon $N!", FALSE, target, NULL, this, TO_CHAR);
+
+  if (target->affectedBySpell(SKILL_CHI)) {
+    act("A bright <W>aura<1> flares up around $N, deflecting your attack and then striking back!\n\rYour vision goes <r>red<1> as the pain overwhelms you!", TRUE, this, NULL, target, TO_CHAR);
+    act("A bright <W>aura<1> flares up around $N, deflecting $n's chi attack and then striking back!", TRUE, this, NULL, target, TO_NOTVICT);
+    act("A bright <W>aura<1> flares up around you, deflecting $n's chi attack and then striking back!", TRUE, this, NULL, target, TO_VICT);
+
+    if (reconcileDamage(this, ::number((damage / 2), damage), SKILL_CHI) == -1)
+      return (DELETE_THIS | RET_STOP_PARSING);
+  } else {
+    act("...$N screws up $S face in agony.", TRUE, this, NULL, target, TO_CHAR);
+    act("$n exerts $s <r>chi force<1> on you, causing extreme pain.", TRUE, this, NULL, target, TO_VICT);
+    act("$N screws up $S face in agony.", TRUE, this, NULL, target, TO_NOTVICT);
+
+    if (reconcileDamage(target, damage, SKILL_CHI) == -1)
+      return DELETE_VICT;
   }
 
   return true;
+}
+
+int TBeing::chiRoom()
+{
+  int bKnown  = getSkillValue(SKILL_CHI),
+      tMana = ::number(10, 30),
+      rc = 0;
+
+  if (checkPeaceful("You feel too peaceful to contemplate violence here.\n\r"))
+    return RET_STOP_PARSING;
+
+  if (getMana() < tMana) {
+    sendTo("You lack the chi to do this.\n\r");
+      return RET_STOP_PARSING;
+  }
+
+  if (affectedBySpell(SKILL_CHI)) {
+    sendTo("You have not yet recovered from your last chi projection.\n\r");
+    return FALSE;
+  }
+
+  if (bSuccess(bKnown, SKILL_CHI)) {
+    // Loop for each person in room
+    std::vector<TBeing *> toDelete{};
+    for (TThing *thing : roomp->stuff) {
+      auto *being = dynamic_cast<TBeing *>(thing);
+      if (!being || (being == this) || inGroup(*being) ||
+         (being->isPc() && IS_SET(desc->autobits, AUTO_NOHARM)) || being->isImmortal() ||
+          IS_SET(being->specials.act, ACT_IMMORTAL))
+        continue;
+    
+    int casterLevel = GetMaxLevel(),
+        targetLevel = being->GetMaxLevel(),
+        levelDiff = casterLevel - targetLevel,
+        damage = ::number(casterLevel, (casterLevel + bKnown + levelDiff)*getWisMod());
+
+    rc = doChiTarget(being, damage);
+
+    if (!IS_SET_DELETE(rc, DELETE_VICT))
+      continue;
+
+    toDelete.push_back(being);
+    }
+
+    for (TBeing *being: toDelete) {
+      delete being;
+      being = nullptr;
+    }
+    // apply debuff to player to prevent AOE spam
+    affectedData aff;
+    aff.type      = SKILL_CHI;
+    aff.level     = bKnown;
+    aff.duration  = 5 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.bitvector = 0;
+    affectTo(&aff, -1);
+    // end loop 
+  }
+
+  return rc;
+}
+
+int TBeing::chiObject(TObj *target)
+{
+  int bKnown  = getSkillValue(SKILL_CHI),
+      tMana = ::number(10, 30);
+
+  if (getMana() < tMana) {
+    sendTo("You lack the chi to do this.\n\r");
+    return RET_STOP_PARSING;
+  } else
+    reconcileMana(TYPE_UNDEFINED, 0, tMana);
+
+  if (!bSuccess(bKnown, SKILL_CHI)) {
+    act("You fail to affect $p in any way.",
+        FALSE, this, target, NULL, TO_CHAR);
+    return true;
+  }
+  else {
+    return target->chiMe(this);
+  }
 }
 
 void TBeing::addObjUsed(TObj *obj, int duration) {

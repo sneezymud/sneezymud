@@ -485,33 +485,32 @@ int TBeing::doChi(const char *tString, TThing *tSucker)
     return FALSE;
   }
 
+  // Target string specified
   if (tString && *tString)
     strcpy(tTarget, tString);
-  else {
-    if (!fight()) {
-#if 1
-      sendTo("Chi what or whom?\n\r");
-      return FALSE;
-#else
-      tVictim = this;
-#endif
-    } else
+  // Caster is fighting - default to whoever caster is fighting
+  else if (fight()) {
       tVictim = fight();
   }
+  // No target can be determined
+  else {
+    sendTo("Chi what or whom?\n\r");
+    return FALSE;
+  } 
 
   if (is_abbrev(tTarget, getName()))
-    tRc = chiMe(this);
+    tRc = chiSelf();
   else if (!strcmp(tTarget, "all"))
-    tRc = roomp->chiMe(this);
+    tRc = chiRoom();
   else if (tVictim)
-    tRc = tVictim->chiMe(this);
+    tRc = chiTarget(tVictim);
   else {
     generic_find(tTarget, FIND_CHAR_ROOM | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, this, &tVictim, &tObj);
 
     if (tObj)
-      tRc = tObj->chiMe(this);
+      tRc = chiObject(tObj);
     else if (tVictim)
-      tRc = tVictim->chiMe(this);
+      tRc = chiTarget(tVictim);
     else {
       sendTo("Yes, good.  Use chi...on what or whom?\n\r");
       return FALSE;
