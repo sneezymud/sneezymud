@@ -8,7 +8,9 @@
 
 #include <dirent.h>
 #include <stdio.h>
+#include <fstream>
 
+#include "db.h"
 #include "extern.h"
 #include "room.h"
 #include "being.h"
@@ -227,90 +229,32 @@ unsigned long int showFreeMobObj(int shFrZoneNumber, sstring *sb,
 // Dissection loads
 // 'Nature' loads
 // Scriptfile loads
-sstring showComponentTechnical(const int tValue)
-{
-  sstring        tResult("");
-  char           tLine[256],
-                 tBuffer[256];
-  int            tMobNum;
-  struct dirent *tDir;
-  DIR           *tDirInfo;
-  FILE          *tFile;
+sstring showComponentTechnical(const int tValue) {
+  sstring output;
 
-  // Check for dissection loads.
-  // This doesn't check for hard-coded ones such as 'by race' and such.
-  for (unsigned int tDissectIndex = 0; tDissectIndex < dissect_array.size(); tDissectIndex++)
-    if (dissect_array[tDissectIndex].loadItem == (unsigned) tValue) {
-      tMobNum = real_mobile(tDissectIndex);
+  // This doesn't check for hard-coded ones such as 'by race' and such.  
+  for (const auto& [mobNum, dissectionInfo] : dissect_array) {
+    if (dissectionInfo.loadItem == static_cast<uint32_t>(tValue)) {
+      int realMobNum = real_mobile(mobNum);
 
-      if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
-        strcpy(tBuffer, "[Unknown]");
-      else
-        strcpy(tBuffer, mob_index[tMobNum].name.c_str());
+      sstring name = (realMobNum < 0 || realMobNum > static_cast<signed>(mob_index.size()))
+                       ? "[Unknown]"
+                       : mob_index[realMobNum].name;
 
-      tResult += format("Dissect Load: %d %s\n\r") % tDissectIndex % tBuffer;
+      output += format("Dissect Load: %d %s\n\r") % mobNum % name;
     }
-
-  // Check for natural loads.  Unfortunatly it's easy to do a double entry here
-  // so we have to be careful.
-  for (unsigned int tCompIndex = 0; tCompIndex < component_placement.size(); tCompIndex++)
-    if (component_placement[tCompIndex].number == tValue &&
-        (component_placement[tCompIndex].place_act & CACT_PLACE)) {
-      if (component_placement[tCompIndex].room2 == -1)
-        tBuffer[0] = '\0';
-      else
-        sprintf(tBuffer, "-%d", component_placement[tCompIndex].room2);
-
-      tResult += format("Natural Load: Room%s %d%s\n\r") % (!tBuffer[0] ? "" : "s") % component_placement[tCompIndex].room1 % tBuffer;
-    }
-
-  // Check for script loads.  This will go through ALL of the scripts and check.
-  // We only do this on !PROD because of the lag it will generate, and I do mean a
-  // LOT of lag it will make.
-  if (gamePort != Config::Port::PROD) {
-    if (!(tDirInfo = opendir("mobdata/responses"))) {
-      vlogf(LOG_FILE, "Unable to dirwalk directory mobdata/responses");
-      tResult += "ERROR.  Unable to open mobdata/responses for reading.";
-      return tResult ;
-    }
-
-    while ((tDir = readdir(tDirInfo))) {
-      if (!strcmp(tDir->d_name, ".") || !strcmp(tDir->d_name, ".."))
-        continue;
-
-      sstring resp_path = format("mobdata/responses/%s") % tDir->d_name;
-      if (!(tFile = fopen(resp_path.c_str(), "r")))
-        continue;
-
-      while (fgets(tLine, 256, tFile)) {
-        char *tChar = tLine;
-
-        for (; isspace(*tChar) || *tChar == '\t'; tChar++);
-
-        sprintf(tBuffer, "load %d;\n", tValue);
-
-        if (!strcmp(tChar, tBuffer)) {
-          tMobNum = real_mobile(convertTo<int>(tDir->d_name));
-
-          if (tMobNum < 0 || tMobNum > (signed) mob_index.size())
-            strcpy(tBuffer, "[Unknown]");
-          else
-            strcpy(tBuffer, mob_index[tMobNum].name.c_str());
-
-          tResult += format("Script: %s %s\n\r") % tDir->d_name % tBuffer;
-
-          // Don't show the same entry twice.
-          break;
-        }
-      }
-
-      fclose(tFile);
-    }
-
-    closedir(tDirInfo);
   }
 
-  return tResult;
+  for (const compPlace& c : component_placement) {
+    if (c.number == tValue && (c.place_act & CACT_PLACE)) {
+      sstring room = c.room2 == -1 ? "" : sstring(format("-%d") % c.room2);
+
+      output +=
+        format("Natural Load: Room%s %d%s\n\r") % (room.empty() ? "" : "s") % c.room1 % room;
+    }
+  }
+
+  return output;
 }
 
 void TBeing::doShow(const sstring &argument)
