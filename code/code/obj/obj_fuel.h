@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_FUEL_H
-#define __OBJ_FUEL_H
+#pragma once
 
 #include "obj.h"
 
@@ -40,5 +39,3 @@ class TFuel : public TObj {
     virtual ~TFuel();
 };
 
-
-#endif

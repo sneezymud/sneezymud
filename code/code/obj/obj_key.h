@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_KEY_H
-#define __OBJ_KEY_H
+#pragma once
 
 #include "obj.h"
 
@@ -31,5 +30,3 @@ class TKey : public TObj {
 };
 
 
-
-#endif

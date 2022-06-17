@@ -1,5 +1,4 @@
-#ifndef __OBJ_APPLIED_SUB_H
-#define __OBJ_APPLIED_SUB_H
+#pragma once
 
 #include "obj.h"
 
@@ -12,5 +11,3 @@ class TASubstance : public TObj {
     virtual sstring statObjInfo() const { return sstring(""); }
     virtual itemTypeT itemType() const {return ITEM_APPLIED_SUB; }
 };
-
-#endif

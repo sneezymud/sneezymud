@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_BRAWLING_H
-#define __DISC_BRAWLING_H
+#pragma once
 
 // This is the Brawling discipline.
 
@@ -20,9 +19,13 @@ class CDBrawling : public CDiscipline
     CSkill skStomp;
     CSkill skBrawlAvoidance;
     CSkill skBodyslam;
+    CSkill skHeadbutt;
+    CSkill skKneestrike;
     CSkill skSpin;
     CSkill skCloseQuartersFighting;
     CSkill skTaunt;
+    CSkill skTrip;
+    CSkill skAdvBerserk;
 
     CDBrawling();
     CDBrawling(const CDBrawling &a);
@@ -32,13 +35,3 @@ class CDBrawling : public CDiscipline
 
   private:
 };
-
-#endif
-
-
-
-
-
-
-
-

@@ -1,5 +1,4 @@
-#ifndef __GAMETIME_H
-#define __GAMETIME_H
+#pragma once
 
 #include <time.h>
 
@@ -63,5 +62,3 @@ class GameTime {
   // manipulators
   static void setMonth(int m){ time_info.month=m; }
 };
-
-#endif

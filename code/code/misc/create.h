@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __CREATE_H
-#define __CREATE_H
+#pragma once
 
 class TArrow;
 class TPortal;
@@ -264,5 +263,3 @@ enum editorChangeTypeT {
      CHANGE_EGG_FILL,
      CHANGE_VEHICLE_VALUE3,
 };
-
-#endif

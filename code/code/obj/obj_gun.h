@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_GUN_H
-#define __OBJ_GUN_H
+#pragma once
 
 #include "obj_general_weapon.h"
 
@@ -129,5 +128,3 @@ class TGun : public TGenWeapon {
 };
 
 
-
-#endif

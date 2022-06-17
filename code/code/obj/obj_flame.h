@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_FLAME_H
-#define __OBJ_FLAME_H
+#pragma once
 
 #include "obj_base_light.h"
 
@@ -55,5 +54,3 @@ class TFFlame : public TBaseLight {
     virtual ~TFFlame();
 };
 
-
-#endif

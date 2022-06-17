@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_PLANT_H
-#define __OBJ_PLANT_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -43,5 +42,3 @@ class TPlant : public TExpandableContainer {
 };
 
 
-
-#endif

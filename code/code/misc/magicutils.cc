@@ -367,6 +367,11 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
       s == AFFECT_TRANSFORMED_HEAD)
     s = SKILL_TRANSFORM_LIMB;
 
+  // Notify players when the fortify defensive bonus expires
+  if (s == AFFECT_FORTIFY) {
+    sendTo("You are unable to continue maintaining your shield wall any longer.\n\r");
+    act("$n lowers $s shield and relaxes his defensive posture, unable to continue maintaining $s shield wall.", TRUE, this, 0, 0, TO_ROOM);
+  }
 
   if (s < MIN_SPELL || s >= MAX_SKILL || !discArray[s])
     return 0;
@@ -2240,8 +2245,7 @@ int lycanthropeTransform(TBeing *ch)
   mob->setWeight(ch->getWeight());
 
   mob->doAction("", CMD_HOWL);
-  mob->roomp->getZone()->sendTo("You hear a chilling wolf howl in the distance.\n\r");
-
+  mob->roomp->getZone()->sendTo("You hear a chilling wolf howl in the distance.\n\r", mob->in_room);
 
   return TRUE;
 }

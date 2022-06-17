@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_COMBAT_H
-#define __DISC_COMBAT_H   1
+#pragma once
 
 // This contains the general combat skills.  
 
@@ -54,6 +53,3 @@ private:
 
     void sharpen(TBeing *, TThing *);
     void dull(TBeing *, TThing *);
-
-#endif
-

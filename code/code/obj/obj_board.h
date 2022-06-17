@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __OBJ_BOARD_H
-#define __OBJ_BOARD_H
+#pragma once
 
 #include "obj.h"
 
@@ -41,5 +40,3 @@ class TBoard : public TObj {
 };
 
 int board(TBeing *ch, cmdTypeT cmd, const char *arg, TObj **me, TObj **ob2);
-
-#endif

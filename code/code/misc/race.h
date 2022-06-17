@@ -10,8 +10,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __RACE_H
-#define __RACE_H
+#pragma once
 
 #ifndef __BODY_H
 #include "body.h"
@@ -308,5 +307,3 @@ private:
 }; 
 
 extern Race *Races[MAX_RACIAL_TYPES];
-
-#endif

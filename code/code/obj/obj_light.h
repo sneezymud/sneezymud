@@ -1,5 +1,4 @@
-#ifndef __OBJ_LIGHT_H
-#define __OBJ_LIGHT_H
+#pragma once
 
 #include "obj_base_light.h"
 
@@ -42,5 +41,3 @@ class TLight : public TBaseLight {
     virtual ~TLight();
 };
 
-
-#endif

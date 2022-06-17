@@ -7,8 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SPELLS_H
-#define __SPELLS_H
+#pragma once
 
 enum spellNumT {
      DAMAGE_RIPPED_OUT_HEART = -58,
@@ -288,10 +287,10 @@ enum spellNumT {
      SPELL_STORMY_SKIES,
      SPELL_TREE_WALK,
      SPELL_SHAPESHIFT,
-  SPELL_EARTHMAW,
-  SPELL_CREEPING_DOOM,
-  SPELL_FERAL_WRATH,
-  SPELL_SKY_SPIRIT,
+     SPELL_EARTHMAW,
+     SPELL_CREEPING_DOOM,
+     SPELL_FERAL_WRATH,
+     SPELL_SKY_SPIRIT,
      // end of ranger
 
      // start of deikhan
@@ -328,7 +327,7 @@ enum spellNumT {
      
      // start of warrior
 // KEEP KICK AS FIRST SKILL, OR MODIFY MIN_SKILL AND MAX_SPELL BELOW
-     SKILL_KICK,
+     SKILL_SLAM,
      SKILL_BASH,
      SKILL_TRIP,
      SKILL_HEADBUTT,
@@ -356,7 +355,13 @@ enum spellNumT {
      SKILL_CLOSE_QUARTERS_FIGHTING,
      SKILL_RIPOSTE,
      SKILL_TAUNT,
-
+     SKILL_2H_SPEC,
+     SKILL_ADVANCED_BERSERKING,
+     SKILL_BLOODLUST,
+     SKILL_WHIRLWIND,
+     SKILL_RALLY,
+     SKILL_FORTIFY,
+     SKILL_FOCUS_ATTACK,
      // end of warrior
 
      // start of mage
@@ -467,7 +472,7 @@ enum spellNumT {
      SKILL_SNEAK,
      SKILL_STABBING,
      SKILL_RETREAT_THIEF,
-     SKILL_KICK_THIEF,
+     SKILL_KICK,
      SKILL_PICK_LOCK,
      SKILL_BACKSTAB,
      SKILL_THROATSLIT,
@@ -590,6 +595,7 @@ enum spellNumT {
      SKILL_INEVITABILITY,
 
      // end of generic
+     
 
      // keep this as the last of the true skills
      MAX_SKILL,
@@ -704,13 +710,17 @@ enum spellNumT {
      AFFECT_PREENED,
      AFFECT_WET,
 
+     // Used to provide the short protection buff for fortify skill
+     AFFECT_FORTIFY,
+
+
      LAST_ODDBALL_AFFECT,
 // DO NOT MODIFY THIS, AFFECTS SIZE OF CHARFILE
      ABSOLUTE_MAX_SKILL=900
 };
 const spellNumT MIN_SPELL = spellNumT(TYPE_UNDEFINED+1);
-const spellNumT MAX_SPELL = spellNumT(SKILL_KICK); // 1 more than last spell
-const spellNumT MIN_SKILL = spellNumT(SKILL_KICK - 1); // 1 less than 1st skill
+const spellNumT MAX_SPELL = spellNumT(SKILL_SLAM); // 1 more than last spell
+const spellNumT MIN_SKILL = spellNumT(SKILL_SLAM - 1); // 1 less than 1st skill
 const spellNumT TYPE_MIN_HIT = TYPE_HIT;
 const spellNumT FIRST_TRANSFORMED_LIMB = AFFECT_TRANSFORMED_HANDS;
 const spellNumT FIRST_BREATH_WEAPON = SPELL_FIRE_BREATH;
@@ -742,8 +752,5 @@ extern spellNumT & operator-= (spellNumT &, spellNumT);
      SKILL_PRAYING,
      SKILL_MASS_FORAGE,
      SKILL_TAN,
-#endif
-
-
 #endif
 

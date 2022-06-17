@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SPELLS2_H
-#define __SPELLS2_H
+#pragma once
 
 #include <map>
 #include "stats.h"
@@ -527,5 +526,3 @@ struct PolyType {
 };
 
 extern spellInfo *discArray[MAX_SKILL+1];
-
-#endif

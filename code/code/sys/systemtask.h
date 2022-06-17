@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SYSTEMTASK_H
-#define __SYSTEMTASK_H
+#pragma once
 
 enum systemTaskT {
   SYSTEM_TRACEROUTE,
@@ -39,5 +38,3 @@ class SystemTask {
 };
 
 extern SystemTask *systask;
-
-#endif

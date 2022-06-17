@@ -1,5 +1,4 @@
-#ifndef __SSTRING_H
-#define __SSTRING_H
+#pragma once
 
 
 #include <boost/format.hpp>
@@ -169,5 +168,3 @@ extern bool isvowel(const char c);
 #define cElements(x) (sizeof(x)/sizeof(x[0]))
 #endif
 
-
-#endif

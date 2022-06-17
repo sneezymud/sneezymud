@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_MONEY_H
-#define __OBJ_MONEY_H
+#pragma once
 
 #include "obj.h"
 #include "obj_mergeable.h"
@@ -90,5 +89,3 @@ class currencyInfoT {
 
 extern currencyTypeT & operator++(currencyTypeT &c, int);
 
-
-#endif

@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __EXTERN_H
-#define __EXTERN_H
+#pragma once
 
 
 #include "wiz_powers.h"
@@ -371,5 +370,3 @@ extern int atoi_safe(const sstring);
 extern double atof_safe(const sstring);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
-#endif
-

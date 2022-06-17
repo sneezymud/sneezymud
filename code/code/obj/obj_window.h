@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_WINDOW_H
-#define __OBJ_WINDOW_H
+#pragma once
 
 #include "obj_seethru.h"
 
@@ -35,5 +34,3 @@ class TWindow : public TSeeThru {
 };
 
 
-
-#endif

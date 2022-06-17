@@ -1,5 +1,4 @@
-#ifndef __TASK_COOK_H
-#define __TASK_COOK_H
+#pragma once
 
 #include "low.h"
 
@@ -134,5 +133,3 @@ ingredientTypeT ingredients[] =
   
   {-1, -1, -1, -1}
 };
-
-#endif

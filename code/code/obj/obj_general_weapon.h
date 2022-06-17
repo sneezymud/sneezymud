@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_GENERAL_WEAPON_H
-#define __OBJ_GENERAL_WEAPON_H
+#pragma once
 
 #include "obj_base_weapon.h"
 
@@ -43,5 +42,3 @@ class TGenWeapon : public TBaseWeapon {
 };
 
 
-
-#endif

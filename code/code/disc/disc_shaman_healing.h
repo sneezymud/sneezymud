@@ -27,8 +27,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_SHAMAN_HEALING_H
-#define __DISC_SHAMAN_HEALING_H
+#pragma once
 
 // This is the SHAMAN CURES discipline.
 
@@ -73,4 +72,3 @@ private:
    void enliven(TBeing *, TBeing *, TMagicItem *);
    int enliven(TBeing *, TBeing *);
    int castEnliven(TBeing *, TBeing *);
-#endif

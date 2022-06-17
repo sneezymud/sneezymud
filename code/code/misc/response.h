@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __RESPONSE_H
-#define __RESPONSE_H
+#pragma once
 
 #include "parse.h"
 
@@ -73,5 +72,3 @@ class Responses {
     Responses & operator=(const Responses &a);
     virtual ~Responses();
 };
-
-#endif // __RESPONSE_H__

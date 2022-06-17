@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_JUMANDO_H
-#define __DISC_JUMANDO_H
+#pragma once
 
 // This is the JUMANDO discipline.
 
@@ -68,6 +67,3 @@ private:
     int feignDeath(TBeing *);
     int springLeap(TBeing *, TBeing *);
     int shoulderThrow(TBeing *, TBeing *);
-
-#endif
-

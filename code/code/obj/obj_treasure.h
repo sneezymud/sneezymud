@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_TREASURE_H
-#define __OBJ_TREASURE_H
+#pragma once
 
 #include "obj.h"
 
@@ -31,5 +30,3 @@ class TTreasure : public TObj {
     virtual ~TTreasure();
 };
 
-
-#endif

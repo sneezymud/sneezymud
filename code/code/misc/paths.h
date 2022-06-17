@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __PATHS_H
-#define __PATHS_H
+#pragma once
 
 struct path_struct {
     dirTypeT direction;
@@ -4186,5 +4185,3 @@ const path_struct garbage_convoy_path[10][200]={
 };
 
 
-
-#endif

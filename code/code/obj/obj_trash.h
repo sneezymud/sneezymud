@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_TRASH_H
-#define __OBJ_TRASH_H
+#pragma once
 
 #include "obj.h"
 
@@ -27,5 +26,3 @@ class TTrash : public TObj {
 };
 
 
-
-#endif

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_TABLE_H
-#define __OBJ_TABLE_H
+#pragma once
 
 #include "obj.h"
 
@@ -38,5 +37,3 @@ class TTable : public TObj {
     virtual ~TTable();
 };
 
-
-#endif

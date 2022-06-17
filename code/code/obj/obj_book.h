@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BOOK_H
-#define __OBJ_BOOK_H
+#pragma once
 
 #include "obj.h"
 
@@ -26,5 +25,3 @@ class TBook : public TObj {
     virtual ~TBook();
 };
 
-
-#endif

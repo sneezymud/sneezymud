@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __TOGGLE_H
-#define __TOGGLE_H
+#pragma once
 
 #include <map>
 
@@ -642,9 +641,3 @@ const int MAX_TOG_INDEX                        = 371;  // move and change
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;
-
-#endif
-
-
-
-

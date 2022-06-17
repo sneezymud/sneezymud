@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_POISONS_H
-#define __DISC_POISONS_H
+#pragma once
 
 // This is the THIEF POISONS discipline.
 
@@ -48,5 +47,3 @@ public:
 private:
 };
 
-
-#endif

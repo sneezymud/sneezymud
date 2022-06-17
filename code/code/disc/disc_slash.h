@@ -21,8 +21,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_SLASH_H
-#define __DISC_SLASH_H
+#pragma once
 
 // This is the SLASH discipline.
 
@@ -44,6 +43,3 @@ public:
 
 private:
 };
-
-#endif
-

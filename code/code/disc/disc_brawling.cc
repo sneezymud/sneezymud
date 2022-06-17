@@ -17,9 +17,13 @@ CDBrawling::CDBrawling() :
   skStomp(),
   skBrawlAvoidance(),
   skBodyslam(),
+  skHeadbutt(),
+  skKneestrike(),
   skSpin(),
   skCloseQuartersFighting(),
-  skTaunt()
+  skTaunt(),
+  skTrip(),
+  skAdvBerserk()
 {
 }
 
@@ -29,9 +33,13 @@ CDBrawling::CDBrawling(const CDBrawling &a) :
   skStomp(a.skStomp),
   skBrawlAvoidance(a.skBrawlAvoidance),
   skBodyslam(a.skBodyslam),
+  skHeadbutt(a.skHeadbutt),
+  skKneestrike(a.skKneestrike),
   skSpin(a.skSpin),
   skCloseQuartersFighting(a.skCloseQuartersFighting),
-  skTaunt(a.skTaunt)
+  skTaunt(a.skTaunt),
+  skTrip(a.skTrip),
+  skAdvBerserk(a.skAdvBerserk)
 {
 }
 
@@ -43,9 +51,13 @@ CDBrawling & CDBrawling::operator=(const CDBrawling &a)
   skStomp = a.skStomp;
   skBrawlAvoidance = a.skBrawlAvoidance;
   skBodyslam = a.skBodyslam;
+  skHeadbutt = a.skHeadbutt;
+  skKneestrike = a.skKneestrike;
   skSpin = a.skSpin;
   skCloseQuartersFighting = a.skCloseQuartersFighting;
   skTaunt = a.skTaunt;
+  skTrip = a.skTrip;
+  skAdvBerserk = a.skAdvBerserk;
   return *this;
 }
 

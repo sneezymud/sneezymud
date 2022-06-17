@@ -20,8 +20,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_LOOTING_H
-#define __DISC_LOOTING_H
+#pragma once
 
 // This is the LOOTING discipline.
 
@@ -64,6 +63,3 @@ private:
 
     int detectTrapObj(TBeing *, const TThing *);
     int detectTrapDoor(TBeing *, int);
-
-#endif
-

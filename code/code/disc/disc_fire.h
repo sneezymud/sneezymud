@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_FIRE_H
-#define __DISC_FIRE_H
+#pragma once
 
 // This is the FIRE discipline.
 
@@ -109,6 +108,3 @@ private:
     int castProtectionFromFire(TBeing *, TBeing *);
     void protectionFromFire(TBeing *, TBeing *, TMagicItem *);
     int protectionFromFire(TBeing *, TBeing *, int, short);
-
-#endif
-

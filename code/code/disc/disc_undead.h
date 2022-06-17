@@ -19,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_UNDEAD_H
-#define __DISC_UNDEAD_H
+#pragma once
 
 
 // This is the SHAMAN UNDEAD discipline.
@@ -52,5 +51,3 @@ public:
 private:
 };
 
-
-#endif

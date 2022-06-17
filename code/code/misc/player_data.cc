@@ -875,148 +875,136 @@ void TBeing::convertAbilities()
 {
 }
 
-void TBeing::saveChar(int load_room)
-{
-  charFile st;
-  FILE *fl;
-  TBeing *tmp = NULL;
-  char buf[512];
-  char buf2[256];
+void TBeing::saveChar(int load_room) {
+  TBeing *tmp = nullptr;
 
   if (dynamic_cast<TMonster *>(this)) {
     // save money for shop keepers, if they're owned
     if(isShopkeeper()){
-      unsigned int shop_nr;
-    
-      for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
-    
+      unsigned int shop_nr = 0;    
+      for (; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
+
       if (shop_nr >= shop_index.size()) {
-	vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[this->number].virt);
-	return;
+        vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %
+                           mob_index[this->number].virt);
+        return;
       }
-      
+
       TDatabase db(DB_SNEEZY);
-      db.query("update shopowned set gold=%i where shop_nr=%i",
-	       getMoney(), shop_nr);
+      db.query("update shopowned set gold=%i where shop_nr=%i", getMoney(), shop_nr);
+      
+      // No reason to continue past this point for shopkeeper mob
+      return;
     }
 
+    // If <this> is a TMonster but isn't a polymorphed/shapeshifted PC, abort save
+    if (!IS_SET(specials.act, ACT_POLYSELF) || !desc || !(tmp = desc->original))
+      return;
 
-    if (!IS_SET(specials.act, ACT_POLYSELF) || !desc)
-      return;
-  
-    if (!(tmp = desc->original))
-      return;
     tmp->desc = desc;
-
   } else {
-    if (!desc)
+    if (!desc || (desc->connected != CON_PLYNG))
       return;
-
-    if ((desc->connected != CON_PLYNG))
-      return;
-
-    tmp = NULL;
   }
 
-  st.load_room = (short) load_room;
-
-  if (!tmp)
-    dynamic_cast<TPerson *>(this)->storeToSt(&st);
-  else
-    dynamic_cast<TPerson *>(tmp)->storeToSt(&st);
+  charFile chFile;
+  chFile.load_room = static_cast<short>(load_room);
+  dynamic_cast<TPerson *>(tmp ? tmp : this)->storeToSt(&chFile);
 
   if (!desc || !desc->account) {
     vlogf(LOG_BUG, format("Character %s has no account in saveChar()!!!  Save aborted.") %  getName());
     return;
   }
+
   if (!desc->account->name[0]) {
     vlogf(LOG_BUG, format("Character %s has a NULL account name! Save aborted.") %  getName());
     return;
   }
+
   if (getPlayerID() == 0) {
-      vlogf(LOG_BUG, format("Character %s's player ID = 0. Save aborted.") %  getName());
-      act("Your character was not saved. Please report the circumstances how it happened!.", FALSE, this, 0, 0, TO_CHAR);
-      return;
-  }
-  if (!tmp) { 
-    strcpy(buf2, sstring(name).lower().c_str());
-    sprintf(buf, "account/%c/%s/%s", LOWER(desc->account->name[0]), sstring(desc->account->name).lower().c_str(), buf2);
-  } else {
-    strcpy(buf2, sstring(tmp->name).lower().c_str());
-    sprintf(buf, "account/%c/%s/%s", LOWER(tmp->desc->account->name[0]), sstring(tmp->desc->account->name).lower().c_str(), buf2);
+    vlogf(LOG_BUG, format("Character %s's player ID = 0. Save aborted.") % (tmp ? tmp->getName() : getName()));
+    act("Your character was not saved. Please report the circumstances how it happened!.", false,
+        this, nullptr, nullptr, TO_CHAR);
+    return;
   }
 
-  Descriptor *mydesc=tmp?tmp->desc:desc;
-  assert(mydesc->account->account_id);
+  const sstring realName = (tmp ? tmp->name : name).lower();
+  const sstring accountName = (tmp ? tmp->desc->account->name : desc->account->name).lower();
+  const sstring accountFilePath = format("account/%c/%s/%s") % accountName.at(0) % accountName % realName;
+
+  const int accountId = tmp ? tmp->desc->account->account_id : desc->account->account_id;
+  const auto *prompt = &(tmp ? tmp->desc->prompt_d : desc->prompt_d);
+  
+  assert(accountId);
 
   TTransaction db(DB_SNEEZY);
 
   if(!isImmortal()){
     db.query("update player set talens=%i, account_id=%i, load_room=%i, last_logon=%i, nutrition=%i where id=%i",
-        st.money, mydesc->account->account_id, load_room, st.last_logon, nutrition, getPlayerID());
-    st.load_room=0;
+        chFile.money, accountId, load_room, chFile.last_logon, nutrition, getPlayerID());
+
+    chFile.load_room = 0;
   }
 
-  assert(player.player_id);
+  assert(getPlayerID());
 
   db.query("select 1 from playerprompt where player_id = %i", getPlayerID());
   if (db.fetchRow()) {
-    db.query("update playerprompt "
+    db.query(
+        "update playerprompt "
         "set p_type=%i, hp='%s', mana='%s', move='%s', money='%s', exp='%s', room='%s', "
         "opp='%s', tank='%s', piety='%s', lifeforce='%s', time='%s' where player_id = %i",
-        mydesc->prompt_d.type, mydesc->prompt_d.hpColor,
-        mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
-        mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
-        mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
-        mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
-        mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor,
-        getPlayerID());
+        prompt->type, prompt->hpColor, prompt->manaColor, prompt->moveColor, prompt->moneyColor,
+        prompt->expColor, prompt->roomColor, prompt->oppColor, prompt->tankColor,
+        prompt->pietyColor, prompt->lifeforceColor, prompt->timeColor, getPlayerID());
   } else {
-    db.query("insert into playerprompt "
+    db.query(
+        "insert into playerprompt "
         "(player_id, p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time) "
         "values (%i, %i, '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s')",
-        getPlayerID(),
-        mydesc->prompt_d.type, mydesc->prompt_d.hpColor,
-        mydesc->prompt_d.manaColor, mydesc->prompt_d.moveColor,
-        mydesc->prompt_d.moneyColor, mydesc->prompt_d.expColor,
-        mydesc->prompt_d.roomColor, mydesc->prompt_d.oppColor,
-        mydesc->prompt_d.tankColor, mydesc->prompt_d.pietyColor,
-        mydesc->prompt_d.lifeforceColor, mydesc->prompt_d.timeColor);
+        getPlayerID(), prompt->type, prompt->hpColor, prompt->manaColor, prompt->moveColor,
+        prompt->moneyColor, prompt->expColor, prompt->roomColor, prompt->oppColor,
+        prompt->tankColor, prompt->pietyColor, prompt->lifeforceColor, prompt->timeColor);
   }
 
-  fl = fopen(buf, "w");
-  mud_assert(fl != NULL, "Failed fopen in save char: %s", buf);
-  fwrite(&st, sizeof(charFile), 1, fl);
-  if (fclose(fl) != 0) 
-    vlogf(LOG_BUG, format("Problem closing %s's charFile") %  name);
+  FILE *file = fopen(accountFilePath.c_str(), "w");
+  mud_assert(file != nullptr, "Failed fopen in save char: %s", accountFilePath.c_str());
+  fwrite(&chFile, sizeof(charFile), 1, file);
+  if (fclose(file) != 0) 
+    vlogf(LOG_BUG, format("Problem closing %s's charFile") % realName);
 
   // Make a hard link to player directory of actual file in account
   // Directory. This is done for easy access by load_char and other
   // commands without needing to know account name.
+  
+  const sstring playerFilePath = format("player/%c/%s") % realName.at(0) % realName;
 
-  if (!tmp)
-    sprintf(buf2, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
-  else
-    sprintf(buf2, "player/%c/%s", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
+  if (unlink(playerFilePath.c_str()))
+    vlogf(LOG_BUG, format("unlink failed in saveChar for %s") % realName);
 
-  if (unlink(buf2))
-    vlogf(LOG_BUG, format("unlink failed in saveChar for %s") % name);
+  if(link(accountFilePath.c_str(), playerFilePath.c_str()))
+    vlogf(LOG_BUG, format("link failed in saveChar for %s") % realName);  
+  
+  // Call these on tmp if exists to allow full saving of shapeshifted chars
+  if (tmp) {
+    // save mobile followers
+    tmp->saveFollowers((load_room != Room::AUTO_RENT && load_room != Room::NOWHERE));
+    tmp->saveCareerStats();
+    tmp->saveGuildStats();
+    tmp->saveDrugStats();
+    tmp->saveTitle();
 
-  if(link(buf, buf2))
-    vlogf(LOG_BUG, format("link failed in saveChar for %s") % name);
+    // tmp which is the original character should not have a desc when it leaves
+    tmp->desc = nullptr;
+    return;
+  }
 
   // save mobile followers
   saveFollowers((load_room != Room::AUTO_RENT && load_room != Room::NOWHERE));
-
-  // save career stats, saves info on desc, no need to use tmp
   saveCareerStats();
   saveGuildStats();
   saveDrugStats();
   saveTitle();
-
-  // tmp which is the original character should not have a desc when it leaves
-  if (tmp) 
-    tmp->desc = NULL;
 }
 
 

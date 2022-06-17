@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_ARROW_H
-#define __OBJ_ARROW_H
+#pragma once
 
 #include "obj_base_weapon.h"
 
@@ -64,5 +63,3 @@ class TArrow : public TBaseWeapon {
     virtual ~TArrow();
 };
 
-
-#endif

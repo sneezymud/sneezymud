@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __LOADSET_H
-#define __LOADSET_H
+#pragma once
 
 enum loadSetTypeT {
   LST_ALL  = -1,
@@ -102,5 +101,3 @@ public:
     int getRandomItem() { return getItem(getRandomIndex(-1)); }
     int getRandomItem(int weightMax) { return getItem(getRandomIndex(weightMax)); }
 };
-
-#endif

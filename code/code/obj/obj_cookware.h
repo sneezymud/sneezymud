@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_COOKWARE_H
-#define __OBJ_COOKWARE_H
+#pragma once
 
 #include "obj_open_container.h"
 
@@ -30,5 +29,3 @@ class TCookware : public TOpenContainer {
     virtual ~TCookware();
 };
 
-
-#endif

@@ -12,7 +12,9 @@ CDSoldiering::CDSoldiering() :
       skDoorbash(),
       skDualWieldWarrior(),
       skPowerMove(),
-      skDeathstroke()
+      skDeathstroke(),
+      sk2hSpecWarrior(),
+      skFortify()
 {
 }
 
@@ -21,7 +23,9 @@ CDSoldiering::CDSoldiering(const CDSoldiering &a) :
       skDoorbash(a.skDoorbash),
       skDualWieldWarrior(a.skDualWieldWarrior),
       skPowerMove(a.skPowerMove),
-      skDeathstroke(a.skDeathstroke)
+      skDeathstroke(a.skDeathstroke),
+      sk2hSpecWarrior(a.sk2hSpecWarrior),
+      skFortify(a.skFortify)
 {
 }
 
@@ -33,13 +37,11 @@ CDSoldiering & CDSoldiering::operator=(const CDSoldiering &a)
   skDualWieldWarrior = a.skDualWieldWarrior;
   skPowerMove = a.skPowerMove;
   skDeathstroke = a.skDeathstroke;
+  sk2hSpecWarrior = a.sk2hSpecWarrior;
+  skFortify = a.skFortify;
   return *this;
 }
 
 CDSoldiering::~CDSoldiering()
 {
 }
-
-
-
-

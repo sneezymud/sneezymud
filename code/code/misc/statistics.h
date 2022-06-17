@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __STATS_H
-#define __STATS_H
+#pragma once
 
 #include <algorithm>
 #include <string.h>
@@ -253,6 +252,4 @@ extern float getNetGoldShops();
 extern float getPosGoldShops();
 extern float getNetGoldBudget();
 extern float getPosGoldBudget();
-#endif
-
 #endif

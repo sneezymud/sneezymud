@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __LOW_H
-#define __LOW_H
+#pragma once
 
 // I would prefer to decouple these definitions and assign them in low.cc
 // but we use these values at compile time sometimes (switch/case) so they
@@ -432,10 +431,3 @@ class Mob {
   static const int FAT_ELF_3      =3907;
   static const int DEE            =7600;
 };
-#endif
-
-
-
-
-
-

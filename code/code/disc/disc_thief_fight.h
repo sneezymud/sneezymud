@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_THIEF_FIGHT_H
-#define __DISC_THIEF_FIGHT_H
+#pragma once
 
 // This is the THIEF FIGHTHING skills discipline.
 
@@ -51,6 +50,3 @@ public:
     virtual CDThiefFight * cloneMe() { return new CDThiefFight(*this); }
 private:
 };
-
-#endif
-

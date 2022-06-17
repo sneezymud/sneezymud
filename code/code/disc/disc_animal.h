@@ -1,5 +1,4 @@
-#ifndef __DISC_ANIMAL_H
-#define __DISC_ANIMAL_H
+#pragma once
 
 // This is the ANIMAL discipline.
 
@@ -45,5 +44,3 @@ private:
     int beastSummon(TBeing *, const char *);
     int beastSummon(TBeing *, const char *, int, short);
 
-
-#endif

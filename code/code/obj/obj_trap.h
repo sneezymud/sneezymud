@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_TRAP_H
-#define __OBJ_TRAP_H
+#pragma once
 
 #include "obj.h"
 
@@ -64,5 +63,3 @@ class TTrap : public TObj {
     TTrap & operator=(const TTrap &a);
     virtual ~TTrap();
 };
-
-#endif

@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_SOLDIERING_H
-#define __DISC_SOLDIERING_H
+#pragma once
 
 // This is the WARRIOR SOLDIERING discipline.
 
@@ -20,6 +19,8 @@ public:
     CSkill skDualWieldWarrior;
     CSkill skPowerMove;
     CSkill skDeathstroke;
+    CSkill sk2hSpecWarrior;
+    CSkill skFortify;
 
     CDSoldiering();
     CDSoldiering(const CDSoldiering &a);
@@ -29,7 +30,4 @@ public:
 
 private:
 };
-
-
-#endif
 

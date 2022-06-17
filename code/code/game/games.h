@@ -6,8 +6,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __GAMES_H
-#define __GAMES_H
+#pragma once
 
 #include <algorithm>
 
@@ -470,5 +469,3 @@ extern int hearts_index(TBeing *);
 extern int hearts_pass(TBeing *, char *arg);
 extern int hearts_get_pass(TBeing *, char *);
 extern int get_suit(int);
-
-#endif

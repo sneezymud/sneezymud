@@ -24,8 +24,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_DEIKHAN_H
-#define __DISC_DEIKHAN_H
+#pragma once
 
 // This is the deikhan discipline.
 
@@ -210,7 +209,4 @@ private:
     int procAuraOfAbsolution(TBeing * caster);
     void doAbsolutionAuraAffects(TBeing * caster, TBeing * target, bool &done_warmth);
     void doWarmth(TBeing * caster);
-
-
-#endif
 

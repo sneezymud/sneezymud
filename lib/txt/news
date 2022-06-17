@@ -1,16 +1,15 @@
-09-03-21 : Encamp and Garrotte Moved
-           - Encamp and garrotte have accidentally been in the wrong disciplines for
-           a long time. This was causing some memory leakage on the server, which was
-           fixed by moving the skills to their originally intended disciplines.
-
-           - Encamp is now in the Advanced Adventuring discipline instead of Adventuring
-
+06-XX-22 : Garrotte Moved
            - Garrotte is now in the Murder discipline instead of Fighting
 
-           - If a character doesn't have the new discipline learned they'll no longer
-           be able to access these skills. Once the new discipline has been learned
-           the skills will again be available, and will already be honed to whatever
-           they were at in their old disciplines.
+              - Garrotte has accidentally been in the wrong discipline for
+                a long time. This was causing a minor memory leak on the server, 
+                which has been fixed by moving the skill to its originally intended 
+                discipline.
+
+           - If a character doesn't have the Murder discipline learned they'll no longer
+           be able to access garrotte. Once the new discipline has been learned
+           it will again be available, and will already be honed to whatever level it
+           at in the Fighting discipline.
 
 07-31-21 : Learn by doing
            - made subtle changes accross various parts of LBD all to mkae it easier

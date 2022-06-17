@@ -1,6 +1,5 @@
 
-#ifndef __DISC_SHAMAN_SPIDER_H
-#define __DISC_SHAMAN_SPIDER_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -92,6 +91,3 @@ private:
     int castRaze(TBeing *, TBeing *);
     int raze(TBeing *, TBeing *, int, short, int);
     int raze(TBeing *, TBeing *, TMagicItem *);
-
-#endif
-

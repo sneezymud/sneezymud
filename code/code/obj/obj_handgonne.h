@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_HANDGONNE_H
-#define __OBJ_HANDGONNE_H
+#pragma once
 
 #include "obj_gun.h"
 
@@ -26,5 +25,3 @@ class THandgonne : public TGun {
   virtual ~THandgonne();
 };
 
-
-#endif

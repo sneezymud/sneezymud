@@ -1,5 +1,4 @@
-#ifndef __DEFS_H
-#define __DEFS_H
+#pragma once
 
 #include <stdint.h>
 
@@ -115,9 +114,12 @@ const uint64_t AFF_RIPOSTE           = uint64_t(1<<27);
 const uint64_t AFF_SILENT            = uint64_t(1<<28);
 const uint64_t AFF_ENGAGER           = uint64_t(1<<29);
 const uint64_t AFF_AGGRESSOR         = uint64_t(1<<30); // (set automatically)
+
+// switch to literals to avoid bitshift cast to 32-bit long
 const uint64_t AFF_CLARITY           = uint64_t(0x0000000080000000LLU); // switch to literals to avoid bitshift cast to 32-bit long
 const uint64_t AFF_FLIGHTWORTHY      = uint64_t(0x0000000100000000LLU);
-const int AFF_MAX                    = 33;
+const uint64_t AFF_FOCUS_ATTACK      = uint64_t(0x0000000200000000LLU);
+const int AFF_MAX                    = 34;
 
 // these are used to pass deletion bitvectors through functions
 // it is used in same functions that return degree of damage done
@@ -161,5 +163,3 @@ const int MAX_NAME_LENGTH = 80;
 const int POS_OBJECT            = 1;
 const int POS_SUBJECT           = 2;
 const int POS_POSSESS           = 3;
-
-#endif

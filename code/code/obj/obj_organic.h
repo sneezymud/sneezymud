@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_ORGANIC_H
-#define __OBJ_ORGANIC_H
+#pragma once
 
 #include "obj.h"
 
@@ -49,5 +48,3 @@ class TOrganic : public TObj {
     virtual ~TOrganic();
 };
 
-
-#endif

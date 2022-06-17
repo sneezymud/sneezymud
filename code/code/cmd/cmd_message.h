@@ -26,8 +26,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __CMD_MESSAGE_H
-#define __CMD_MESSAGE_H
+#pragma once
 
 #define NEWBIE_PURGATORY_LENGTH 7257600
 
@@ -104,5 +103,3 @@ class TMessages
     void initialize();
     void savedown();
 };
-
-#endif

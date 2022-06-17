@@ -24,8 +24,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_MAGE_H
-#define __DISC_MAGE_H
+#pragma once
 
 // This is the MAGE BASIC discipline.
 
@@ -150,5 +149,3 @@ public:
 
 };
 
-
-#endif

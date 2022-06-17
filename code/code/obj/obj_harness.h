@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_HARNESS_H
-#define __OBJ_HARNESS_H
+#pragma once
 
 #include "obj_base_clothing.h"
 
@@ -27,5 +26,3 @@ class THarness : public TBaseClothing {
     virtual ~THarness();
 };
 
-
-#endif

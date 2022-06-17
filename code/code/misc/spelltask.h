@@ -30,8 +30,7 @@
 
 *************************************************************************/
 
-#ifndef __SPELLTASK
-#define __SPELLTASK 1
+#pragma once
 
 #include "spell2.h"
 
@@ -47,5 +46,3 @@ void cast_warn_busy(const TBeing *, spellNumT);
 //  start_cast(this, victim, objectTarget, room, spell_num, difficulty, targetType, arg, rounds, wasInRoom, status, flags, text, next_update);
 
 extern int start_cast(TBeing *, TBeing *, TThing *, TRoom *, spellNumT, taskDiffT, int, const char *, lag_t, unsigned short, ubyte, int, int, int);
-
-#endif

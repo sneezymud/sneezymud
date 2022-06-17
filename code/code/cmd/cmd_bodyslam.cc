@@ -221,17 +221,11 @@ static int bodyslamHit(TBeing *caster, TBeing *victim)
 
 static int bodyslam(TBeing *caster, TBeing *victim)
 {
-  int percent;
-  int i = 0;
   int rc;
-  const int BODYSLAM_COST = 30;       // movement cost to slam
+  const int BODYSLAM_COST = 15;       // movement cost to slam
 
   if (!caster->canBodyslam(victim, SILENT_NO))
     return FALSE;
-
-  // AC makes less difference here ... 
-  percent = ((10 + (victim->getArmor() / 200)) << 1);
-  int bKnown = caster->getSkillValue(SKILL_BODYSLAM);
 
   if (caster->getMove() < BODYSLAM_COST) {
     caster->sendTo("You don't have the vitality to bodyslam anyone!\n\r");
@@ -239,32 +233,23 @@ static int bodyslam(TBeing *caster, TBeing *victim)
   }
   caster->addToMove(-BODYSLAM_COST);
 
-  if (victim->getPosition() <= POSITION_INCAP) 
-    return (bodyslamHit(caster, victim));
-  
-  // remember, F = MA :) need to take  weight into account 
-  if (caster->bSuccess(bKnown + percent, SKILL_BODYSLAM) &&
-         (i = caster->specialAttack(victim,SKILL_BODYSLAM)) && 
-         i != GUARANTEED_FAILURE &&
-         (percent < bKnown))  {
-    int modif = 1;
-    modif += (caster->getPrimaryHold() ? 0 : 2);
-    modif += (caster->getSecondaryHold() ? 0 : 1);
+  int bKnown = caster->getSkillValue(SKILL_BODYSLAM);
+  int successfulHit = caster->specialAttack(victim, SKILL_BODYSLAM);
+  int successfulSkill = caster->bSuccess(bKnown, SKILL_BODYSLAM);
 
+  // Success case
+  if (!victim->awake() ||
+      (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE)) {
+
+    // Allow victim a chance to counter
     if (victim->canCounterMove(bKnown/3)) {
       SV(SKILL_BODYSLAM);
       rc = bodyslamMiss(caster, victim, TYPE_MONK);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
-    } else if (((caster->getDexReaction() - 
-                victim->getAgiReaction()) > ::number(-10,20)) &&
-               victim->awake() && victim->getPosition() >= POSITION_STANDING) {
-      CS(SKILL_BODYSLAM);
-      rc = bodyslamMiss(caster, victim, TYPE_DEX);
-      if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
-        return rc;
+    // Ensure 
     } else if (compareWeights(victim->getTotalWeight(TRUE), 
-                              caster->carryWeightLimit() * modif) == -1) {
+                              caster->carryWeightLimit() * 3) == -1) {
       CF(SKILL_BODYSLAM);
       rc = bodyslamMiss(caster, victim, TYPE_STR);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))

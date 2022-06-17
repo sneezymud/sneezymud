@@ -5,8 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __TRAP_H
-#define __TRAP_H
+#pragma once
 
 
 const unsigned int TRAP_EFF_MOVE      = (1<<0);   // 1  trigger on movement
@@ -59,5 +58,3 @@ extern const char * const trap_effects[MAX_TRAP_EFF];
 extern doorTrapT mapFileToDoorTrap(int);
 extern int mapDoorTrapToFile(doorTrapT);
 
-
-#endif

@@ -565,6 +565,7 @@ class TBeing : public TThing {
   int hits(TBeing *, int);
   int missVictim(TBeing *, TThing *, spellNumT);
   void doInevitability();
+  void doBloodlust();
   void doGuardiansLight(int, int);
   void checkGuardiansLight();
 
@@ -1066,6 +1067,7 @@ class TBeing : public TThing {
   bool canKneestrike(TBeing *, silentTypeT);
   bool canGrapple(TBeing *, silentTypeT);
   bool canDeathstroke(TBeing *, silentTypeT);
+  bool canWhirlwind(TBeing *, silentTypeT);
   bool canWither(TBeing *, silentTypeT);
   bool canBoneBreak(TBeing *, silentTypeT);
   bool canParalyzeLimb(TBeing *, silentTypeT);
@@ -1280,6 +1282,11 @@ class TBeing : public TThing {
   void doBoot(const sstring &);
   void doResize(const char *);
   int doDeathstroke(const char *, TBeing *);
+  int doFocusAttack(const char *, TBeing *);
+  int doWhirlwind();
+  int doRally();
+  int doFortify();
+  int doSlam(const char *, TBeing *);
   void doBandage(const sstring &);
   int doBodyslam(const char *, TBeing *);
   int doSpin(const char *, TBeing *);
@@ -1801,7 +1808,7 @@ class TBeing : public TThing {
   int doFlee(const char *);
   int doDisarm(sstring, TThing *);
   int dieReturn(const char *, spellNumT, int);
-  void doReturn(const char *, wearSlotT, bool, bool deleteMob = TRUE);
+  void doReturn(const sstring &argument, wearSlotT limb, bool tell, bool deleteMob = true);
   int doHit(const sstring &, TBeing *);
   int doEngagedHit(const char *, TBeing *);
   int doKill(const char *, TBeing *);

@@ -4,8 +4,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_TOOTH_NECKLACE_H
-#define __OBJ_TOOTH_NECKLACE_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -29,5 +28,3 @@ class TToothNecklace : public TExpandableContainer {
 };
 
 
-
-#endif

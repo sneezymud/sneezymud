@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_FRUIT_H
-#define __OBJ_FRUIT_H
+#pragma once
 
 #include "obj.h"
 #include "obj_food.h"
@@ -36,4 +35,3 @@ class TFruit : public TFood {
     virtual ~TFruit();
 
 };
-#endif

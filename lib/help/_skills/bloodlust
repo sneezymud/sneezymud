@@ -1,0 +1,17 @@
+Bloodlust represents a warrior's love of battle and their desire to
+continue the fight.  With each foe vanquished, the warrior's bloodlust
+continues to grow, increasing their effectiveness in battle.  Moreover,
+the accompanying adrenaline rush can allow the warrior to continue to 
+fight and sustain themselves, well beyond the stamina and vitality of
+the average adventurer.  However, this fervor of battle can fade as quickly
+as it comes on once a battle has ended.
+
+Rumor has it that some tribes of northern Berskerers have further mastered
+their lust for battle, allowing them to work themselves up into a bloodlust
+even before vanquishing their foes.
+
+
+Technical description: Bloodlust can stack up to 10 times.  Each stack provides
+a regen boost (similar to enliven), with 10 stacks being a little over half as
+strong as the enliven spell.  Each stack also provides +1 damroll to the warrior,
+up to a maximum of +10 damroll.

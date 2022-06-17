@@ -1,5 +1,4 @@
-#ifndef __DISCIPLINE_H
-#define __DISCIPLINE_H 
+#pragma once
 
 
 #include "sstring.h"
@@ -206,5 +205,3 @@ struct class_info
   double hp_per_level;
   sstring abbr;
 };
-      
-#endif

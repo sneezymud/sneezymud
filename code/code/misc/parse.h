@@ -6,8 +6,7 @@
 
 *************************************************************************/
 
-#ifndef __PARSE_H
-#define __PARSE_H
+#pragma once
 
 #include <sstream>
 #include "sstring.h"
@@ -303,6 +302,11 @@ enum cmdTypeT {
      CMD_SPLIT,
      CMD_COMMAND,
      CMD_DEATHSTROKE,
+     CMD_SLAM,
+     CMD_FOCUS_ATTACK,
+     CMD_WHIRLWIND,
+     CMD_RALLY,
+     CMD_FORTIFY,
      CMD_PIMP,
      CMD_LIGHT,
      CMD_BELITTLE,
@@ -722,5 +726,3 @@ template<class T> T convertTo(const sstring &s)
 }
 
 
-
-#endif

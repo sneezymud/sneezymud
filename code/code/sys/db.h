@@ -10,8 +10,7 @@
 
 
 
-#ifndef __DB_H
-#define __DB_H
+#pragma once
 
 #ifndef __STRUCTS_H
 #include "structs.h"
@@ -317,5 +316,3 @@ class resetQElement
 };
 
 extern std::queue<sstring>queryqueue;
-
-#endif

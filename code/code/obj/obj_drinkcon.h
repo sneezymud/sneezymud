@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_DRINKCON_H
-#define __OBJ_DRINKCON_H
+#pragma once
 
 #include "obj_base_cup.h"
 
@@ -24,5 +23,3 @@ class TDrinkCon : public TBaseCup {
     virtual ~TDrinkCon();
 };
 
-
-#endif

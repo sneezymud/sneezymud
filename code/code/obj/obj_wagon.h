@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_WAGON_H
-#define __OBJ_WAGON_H
+#pragma once
 
 #include "obj_open_container.h"
 
@@ -27,5 +26,3 @@ class TWagon : public TOpenContainer {
     virtual ~TWagon();
 };
 
-
-#endif

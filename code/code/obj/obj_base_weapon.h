@@ -6,8 +6,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BASE_WEAPON_H
-#define __OBJ_BASE_WEAPON_H
+#pragma once
 
 #include "obj.h"
 
@@ -93,5 +92,3 @@ class TBaseWeapon : public TObj {
     virtual ~TBaseWeapon();
 };
 
-
-#endif

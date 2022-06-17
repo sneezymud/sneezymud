@@ -6,8 +6,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __HANDLER_H
-#define __HANDLER_H
+#pragma once
 
 #include <list>
 
@@ -69,5 +68,3 @@ extern TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList lis
 
 extern TThing *searchLinkedList(const char * name, StuffList list, thingTypeT x = TYPETHING);
 extern TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT x = TYPETHING);
-
-#endif

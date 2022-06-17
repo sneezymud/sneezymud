@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_TREE_H
-#define __OBJ_TREE_H
+#pragma once
 
 #include "obj.h"
 
@@ -28,5 +27,3 @@ class TTree : public TObj {
 };
 
 
-
-#endif

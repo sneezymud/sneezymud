@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_OTHER_OBJ_H
-#define __OBJ_OTHER_OBJ_H
+#pragma once
 
 #include "obj.h"
 
@@ -30,5 +29,3 @@ class TOtherObj : public TObj {
 };
 
 
-
-#endif

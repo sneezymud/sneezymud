@@ -1221,6 +1221,21 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_DEATHSTROKE:
           rc = doDeathstroke(newarg.c_str(), dynamic_cast<TBeing *>(vict));
           break;
+        case CMD_WHIRLWIND:
+          rc = doWhirlwind();
+          break;
+        case CMD_FOCUS_ATTACK:
+          rc = doFocusAttack(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          break;
+        case CMD_RALLY:
+          rc = doRally();
+          break;
+        case CMD_FORTIFY:
+          rc = doFortify();
+          break;
+        case CMD_SLAM:
+          rc = doSlam(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          break;
         case CMD_BODYSLAM:
           rc = doBodyslam(newarg.c_str(), dynamic_cast<TBeing *>(vict));
           break;
@@ -1896,9 +1911,6 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       }
     }
   }
-
-  if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, false))
-    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
     // switch it to vict
@@ -2710,6 +2722,10 @@ void buildCommandArray(void)
   commandArray[CMD_SPLIT] = new commandInfo("split", POSITION_RESTING, 0);
   commandArray[CMD_COMMAND] = new commandInfo("commands", POSITION_SLEEPING, 0);
   commandArray[CMD_DEATHSTROKE] = new commandInfo("deathstroke", POSITION_FIGHTING, 0);
+  commandArray[CMD_WHIRLWIND] = new commandInfo("whirlwind", POSITION_FIGHTING, 0);
+  commandArray[CMD_RALLY] = new commandInfo("rally", POSITION_FIGHTING, 0);
+  commandArray[CMD_FORTIFY] = new commandInfo("fortify", POSITION_FIGHTING, 0);
+  commandArray[CMD_SLAM] = new commandInfo("slam", POSITION_FIGHTING, 0);
   commandArray[CMD_PIMP] = new commandInfo("pimp", POSITION_STANDING, 0);
   commandArray[CMD_LIGHT] = new commandInfo("light", POSITION_RESTING, 0);
   commandArray[CMD_FISH] = new commandInfo("fish", POSITION_RESTING, 0);
@@ -2999,6 +3015,7 @@ void buildCommandArray(void)
   commandArray[CMD_RECHARGE] = new commandInfo("recharge", POSITION_STANDING, 0);
   commandArray[CMD_NOP] = new commandInfo("noop", POSITION_DEAD, 0);
   commandArray[CMD_AURA] = new commandInfo("aura", POSITION_RESTING, 0);
+  commandArray[CMD_FOCUS_ATTACK] = new commandInfo("focus", POSITION_FIGHTING, 0);
 }
 
 bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)

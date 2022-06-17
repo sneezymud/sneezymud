@@ -1159,6 +1159,12 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_ACID_BLAST:
       case SKILL_BODYSLAM:
       case SKILL_SPIN:
+      case SKILL_ADVANCED_BERSERKING:
+      case SKILL_BLOODLUST:
+      case SKILL_WHIRLWIND:
+      case SKILL_RALLY:
+      case SKILL_FORTIFY:
+      case SKILL_FOCUS_ATTACK:
       case SKILL_POWERMOVE:
       case SKILL_CHARGE:
       case SKILL_SMITE:
@@ -1206,9 +1212,9 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case SPELL_BLEED:
-      case SKILL_KICK_THIEF:
-      case SKILL_KICK_MONK:
       case SKILL_KICK:
+      case SKILL_KICK_MONK:
+      case SKILL_SLAM:
       case SKILL_SPRINGLEAP:
       case SKILL_DEATHSTROKE:
       case SKILL_BASH_DEIKHAN:
@@ -1430,6 +1436,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
       case SKILL_2H_SPEC_DEIKHAN:
+      case SKILL_2H_SPEC:
       case SKILL_RIDE:
       case SKILL_CALM_MOUNT:
       case SKILL_TRAIN_MOUNT:
@@ -1940,6 +1947,12 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case AFFECT_HOLY_WRATH:
         if(show){
           str+=format("Affected: Holy Wrath.  Approx. duration : %s\n\r") %
+            describeDuration(this, aff->duration);
+        }
+        break;
+      case AFFECT_FORTIFY:
+        if(show){
+          str+=format("Affected: Shield Wall.  Approx. duration : %s\n\r") %
             describeDuration(this, aff->duration);
         }
         break;

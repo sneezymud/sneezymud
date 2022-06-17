@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_BAG_H
-#define __OBJ_BAG_H
+#pragma once
 
 #include "obj_expandable_container.h"
 
@@ -27,5 +26,3 @@ class TBag : public TExpandableContainer {
     TBag & operator=(const TBag &a);
     virtual ~TBag();
 };
-
-#endif

@@ -19,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_SPIRIT_H
-#define __DISC_SPIRIT_H
+#pragma once
 
 // This is the SPIRIT discipline.
 
@@ -159,6 +158,3 @@ private:
     int fumble(TBeing *, TBeing *);
     int castFumble(TBeing *, TBeing *);
     int fumble(TBeing *, TBeing *, int, short);
-
-#endif
-

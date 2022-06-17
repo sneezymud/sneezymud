@@ -22,8 +22,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_AIR_H
-#define __DISC_AIR_H
+#pragma once
 
 // This is the AIR discipline.
 
@@ -104,6 +103,3 @@ private:
     int protectionFromAir(TBeing *, TBeing *, int, short);
 
     void weightCorrectDuration(const TBeing *, affectedData *);
-
-#endif
-

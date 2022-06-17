@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_GAS_H
-#define __OBJ_GAS_H
+#pragma once
 
 #include "obj.h"
 #include "obj_mergeable.h"
@@ -58,5 +57,3 @@ protected:
 };
 
 
-
-#endif

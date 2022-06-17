@@ -24,8 +24,7 @@
 
 *************************************************************************/
 
-#ifndef __SPEC_MOBS_H
-#define __SPEC_MOBS_H
+#pragma once
 
 class TBeing;
 class TMonster;
@@ -356,5 +355,3 @@ class sharp_struct {
 
 extern sstring randommessage(sstring);
 
-
-#endif

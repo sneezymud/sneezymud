@@ -1,5 +1,4 @@
-#ifndef __SPEC_OBJS_LOTTERY_TICKET_H
-#define __SPEC_OBJS_LOTTERY_TICKET_H
+#pragma once
 
 #include "sstring.h"
 
@@ -14,5 +13,3 @@ struct LotteryPrizes {
 };
 
 extern LotteryPrizes prizes[NUM_LOTTERY_PRIZES];
-
-#endif

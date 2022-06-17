@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_DRUG_CONTAINER_H
-#define __OBJ_DRUG_CONTAINER_H
+#pragma once
 
 #include "obj.h"
 
@@ -60,5 +59,3 @@ class TDrugContainer : public TObj {
 };
 
 
-
-#endif

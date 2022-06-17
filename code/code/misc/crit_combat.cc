@@ -559,6 +559,12 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   } else {
     double absdiff = abs(diff);
     double level_mod = 50.0 + ((double)diff * log(absdiff/20.0+1) / absdiff) * 75.0;
+
+    // Increasing scaling based on level difference for NPCs
+    if (dynamic_cast<TMonster *>(this)){
+      level_mod *= 1.2;
+    }
+
     if (level_mod <= 0) {
       crit_chance = 1;
     } else {
@@ -585,7 +591,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
       level_mod = 0;
 
     // determine which crit to do, higher number = better crits
-    crit_num = ::number(1, 100) + ::number(0, level_mod);
+    crit_num = ::number(1, 100) + ::number(0, level_mod/10);
     crit_num = max(1, crit_num);
     crit_num = min(100, crit_num);
 
@@ -1654,7 +1660,8 @@ buf=format("$n thrusts $s %s deep into $N's torso, impaling $M!") %
 	  desc->career.crit_impale++;
 	if (v->desc)
 	  v->desc->career.crit_impale_suff++;
-	rc = dislodgeWeapon(v, weapon, WEAR_BODY);
+
+	rc = damageLimb(v,WEAR_BODY,weapon,dam);
 	if (IS_SET_DELETE(rc, DELETE_VICT))
 	  return DELETE_VICT;
 	rc = applyDamage(v, v->hitLimit()/2,DAMAGE_IMPALE);
@@ -1880,31 +1887,32 @@ buf=format("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 
 0-33: double damage
 34-66: triple damage
-67,68: pierced larynx
-69,70: gouged out eye
-71,72: sever tendon
-73,74: stab back (impale)
-75,76: pierce cranium
-77,78: shatter elbow
-79,80: sever hand
-81,82: punctured lung (impale)
-83,84,85: punctured kindey infect (impale)
-86,87: punctured stomach
+67,68,69,70,71: pierced larynx (3x damage)
+72,73,74: gouged out eye (3x damage)
+75,76,77,78: sever tendon (3x damage)
+79,80,81: shatter elbow (3x damage)
+82,83,84: sever hand (3x damage)
+85,86,87: punctured lung (impale) (3x damage)
+88,89,90: punctured kidney infect (impale) (3x damage)
+91,92,93: punctured stomach (3x damage)
+94,95,96,97: impale stun (3x damage)
+98,99: pierce cranium (death/3x damage)
 100: crit kill (death)
 
 total:
   double damage: 33%
-  triple damage: 33%
-  impale: 7%
-  minor sever/ailment: 11%
-  major sever/ailment: 8%
-  death: 3%
+  triple damage: 67%
+  limb mutilation (leg/elbow/hand): 10% 
+  body mutilation (lung/kidney/stomach): 9%
+  debilitate (larynx/eye): 8%
+  stun: 4%
+  death: 3% (1% if helmet)
 
 ------------------------------------------------------------ */
 int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		       spellNumT wtype, int *dam, int crit_num)
 {
-  sstring buf, weaponStr, limbStr;
+  sstring buf, weaponStr;
   TThing *obj=NULL;
   int rc, i;
   affectedData af;
@@ -1948,443 +1956,465 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     return (ONEHIT_MESS_CRIT_S);
   } else {
     // better stuff 
-    limbStr=(weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce(this));
+    weaponStr=(weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce(this));
 
     switch (crit_num) {
       case 67:
-	if (!v->hasPart(WEAR_NECK) || IS_SET(v->specials.act, ACT_GHOST) || IS_SET(v->specials.act, ACT_SKELETON))
-	  return 0;
-	*part_hit = WEAR_NECK;
-	if ((obj = v->equipment[WEAR_NECK])) {
-	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a punctured larynx!\n\r") %
-		    fname(obj->name));
-	  for (i=1;i<5;i++)
-	    if (v->equipment[WEAR_NECK])
-	      v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
-	  return ONEHIT_MESS_CRIT_S;
-	}
-	// intentional drop through
       case 68:
-	// Punctured Larnyx, can't speak 
-	if (!v->hasPart(WEAR_NECK) || IS_SET(v->specials.act, ACT_GHOST) || IS_SET(v->specials.act, ACT_SKELETON))
-	  return 0;
-	if (v->hasDisease(DISEASE_VOICEBOX))
-	  return 0;
-buf=format("You pop your %s into $N's throat, puncturing $S voice box!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n pops $s %s into your throat, puncturing your voice box!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n pops $s %s into $N's throat, puncturing $S voice box!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	for (i=1;i<5;i++)
-	  if (v->equipment[WEAR_NECK])
-	    v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
-	af.type = AFFECT_DISEASE;
-	af.level = 0;   // has to be 0 for doctor to treat
-	af.duration = PERMANENT_DURATION;
-	af.modifier = DISEASE_VOICEBOX;
-	af.location = APPLY_NONE;
-	af.bitvector = AFF_SILENT;
-	v->affectTo(&af);
-	*part_hit = WEAR_NECK;
-	if (desc)
-	  desc->career.crit_voice++;
-	if (v->desc)
-	  v->desc->career.crit_voice_suff++;
-	return ONEHIT_MESS_CRIT_S;
       case 69:
+	    if (!v->hasPart(WEAR_NECK) || IS_SET(v->specials.act, ACT_GHOST) || IS_SET(v->specials.act, ACT_SKELETON))
+	    return 0;
+
+	    // triple damage
+        *dam *= 3;
+
+	    *part_hit = WEAR_NECK;
+	    if ((obj = v->equipment[WEAR_NECK])) {
+	      v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a punctured larynx!\n\r") % fname(obj->name));
+	      for (i=1;i<5;i++)
+	        if (v->equipment[WEAR_NECK])
+	          v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
+	      return ONEHIT_MESS_CRIT_S;
+	    }
+	    // intentional drop through
       case 70:
-	// Struct in eye, blinded with new blind type
-        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
-          return 0;
-	if (v->hasDisease(DISEASE_EYEBALL))
-	  return 0;
-	if (!v->hasPart(WEAR_HEAD))
-	  return 0;
-buf=format("You pop your %s into $N's eyes, gouging them out and blinding $M!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n pops $s %s into your eyes and The World goes DARK!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	act("$n's eyeballs fall from $s sockets!",TRUE,v,0,0,TO_ROOM);
-	v->makeOtherPart(NULL,"eyeballs",this);
-	af.type = AFFECT_DISEASE;
-	af.level = 0;   // has to be 0 for doctor to treat
-	af.duration = PERMANENT_DURATION;
-	af.modifier = DISEASE_EYEBALL;
-	af.location = APPLY_NONE;
-	af.bitvector = AFF_BLIND;
-	v->affectTo(&af);
-	v->rawBlind(GetMaxLevel(), af.duration, SAVE_NO);
-	*part_hit = WEAR_HEAD;
-	if (desc)
-	  desc->career.crit_eye_pop++;
-	if (v->desc)
-	  v->desc->career.crit_eye_pop_suff++;
-	return ONEHIT_MESS_CRIT_S;
       case 71:
-        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
-          return 0;
-	if (!v->hasPart(WEAR_LEG_R))
-	  return 0;
-	if (!v->isHumanoid())
-	  return 0;
-	if ((obj = v->equipment[WEAR_LEG_R])) {
-	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from losing a tendon!\n\r") %
-		    fname(obj->name));
-	  for (i=1;i<5;i++)
-	    if (v->equipment[WEAR_LEG_R])
-	      v->damageItem(this,WEAR_LEG_R,wtype,weapon,*dam);
-	  *part_hit = WEAR_LEG_R;
-	  return ONEHIT_MESS_CRIT_S;
-	}
-	// an intentional drop through
+	    // Punctured Larnyx, can't speak 
+	    if (!v->hasPart(WEAR_NECK) || IS_SET(v->specials.act, ACT_GHOST) || IS_SET(v->specials.act, ACT_SKELETON))
+	      return 0;
+	    if (v->hasDisease(DISEASE_VOICEBOX))
+	      return 0;
+
+        buf=format("You pop your %s into $N's throat, puncturing $S voice box!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n pops $s %s into your throat, puncturing your voice box!") % weaponStr;
+        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n pops $s %s into $N's throat, puncturing $S voice box!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+	    // triple damage
+        *dam *= 3;
+	
+	    for (i=1;i<5;i++)
+	      if (v->equipment[WEAR_NECK])
+	        v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
+
+	    af.type = AFFECT_DISEASE;
+	    af.level = 0;   // has to be 0 for doctor to treat
+	    af.duration = PERMANENT_DURATION;
+	    af.modifier = DISEASE_VOICEBOX;
+	    af.location = APPLY_NONE;
+	    af.bitvector = AFF_SILENT;
+	    v->affectTo(&af);
+
+	    *part_hit = WEAR_NECK;
+	    if (desc)
+	      desc->career.crit_voice++;
+	    if (v->desc)
+	      v->desc->career.crit_voice_suff++;
+	    return ONEHIT_MESS_CRIT_S;
       case 72:
-	// strike lower leg, rip tendons, vict at -25% move. 
+      case 73:
+      case 74:
+	    // Struct in eye, blinded with new blind type
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
-	if (!v->hasPart(WEAR_LEG_R))
-	  return 0;
-	if (!v->isHumanoid())
-	  return 0;
-buf=format("Your %s rips through $N's tendon on $S lower leg!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n's %s rips through the tendon in your lower leg.") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->setMove(v->getMove()/4);
-	for (i = 1; i < 5; i++) {
-	  if (v->equipment[WEAR_LEG_R])
-	    v->damageItem(this,WEAR_LEG_R,wtype,weapon,*dam);
-	}
-	*part_hit = WEAR_LEG_R;
-	rc = damageLimb(v,WEAR_LEG_R,weapon,dam);
-	if (IS_SET_DELETE(rc, DELETE_VICT))
-	  return DELETE_VICT;
-	return ONEHIT_MESS_CRIT_S;
-      case 73:
-	if (!v->hasPart(WEAR_BACK))
-	  return 0;
-	if ((obj = v->equipment[WEAR_BACK])) {
-	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a gory wound!\n\r") %
-		    fname(obj->name));
-	  for (i=1;i<5;i++)
-	    if (v->equipment[WEAR_BACK])
-	      v->damageItem(this,WEAR_BACK,wtype,weapon,*dam);
-	  *part_hit = WEAR_BACK;
-	  return ONEHIT_MESS_CRIT_S;
-	}
-      case 74:
-	// Side wound, vict stunned 6 rounds. 
-	if (!v->hasPart(WEAR_BACK))
-	  return 0;
-buf=format("You plunge your %s deep into $N's side, stunning $M!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n plunges $s %s deep into your side.  The agony makes you forget about the fight.") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n plunges $s %s deep into $N's side, stunning $M.") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	for (i=1;i<5;i++)
-	  if (v->equipment[WEAR_BACK])
-	    v->damageItem(this,WEAR_BACK,wtype,weapon,*dam); 
-	v->cantHit += v->loseRound(6);
-	rc = dislodgeWeapon(v,weapon,WEAR_BACK);
-	if (IS_SET_DELETE(rc, DELETE_VICT))
-	  return DELETE_VICT;
-	*part_hit = WEAR_BACK;
-	return ONEHIT_MESS_CRIT_S;
+	    if (v->hasDisease(DISEASE_EYEBALL))
+	      return 0;
+	    if (!v->hasPart(WEAR_HEAD))
+	      return 0;
+
+        buf=format("You pop your %s into $N's eyes, gouging them out and blinding $M!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n pops $s %s into your eyes and The World goes DARK!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n pops $s %s into $N's eyes, gouging them out and blinding $M!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	    act("$n's eyeballs fall from $s sockets!",TRUE,v,0,0,TO_ROOM);
+	    v->makeOtherPart(NULL,"eyeballs",this);
+
+	    af.type = AFFECT_DISEASE;
+	    af.level = 0;   // has to be 0 for doctor to treat
+	    af.duration = PERMANENT_DURATION;
+	    af.modifier = DISEASE_EYEBALL;
+	    af.location = APPLY_NONE;
+	    af.bitvector = AFF_BLIND;
+	    v->affectTo(&af);
+	    v->rawBlind(GetMaxLevel(), af.duration, SAVE_NO);
+
+	    // triple damage
+        *dam *= 3;
+
+	    *part_hit = WEAR_HEAD;
+	    if (desc)
+	      desc->career.crit_eye_pop++;
+	    if (v->desc)
+	      v->desc->career.crit_eye_pop_suff++;
+	    return ONEHIT_MESS_CRIT_S;
       case 75:
       case 76:
-	// Strike in back of head. If no helm, vict dies. 
-	if (!v->hasPart(WEAR_HEAD))
-	  return 0;
-	if ((obj = v->equipment[WEAR_HEAD])) {
-	  buf=format("You try to thrust your %s into the back of $N's head.") %
-	    limbStr;
-	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	  buf = "Unfortunately, $p saves $M from a hideous death!";
-	  act(buf, FALSE, this, obj, v, TO_CHAR);
-	  buf=format("$n tries to thrust $s %s into the back of your head.") %
-	    limbStr;
-	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	  buf="But $p saves you from a hideous death!";
-	  act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
-	  buf=format("$n tries plunging $s %s into the back of $N's head, but $p saves $M.") %
-	    limbStr;
-	  act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-	  for (i=1;i<5;i++)
-	    if (v->equipment[WEAR_HEAD])
-	      v->damageItem(this,WEAR_HEAD,wtype,weapon,*dam);
-	  rc = dislodgeWeapon(v,weapon,WEAR_HEAD);
-	  if (IS_SET_DELETE(rc, DELETE_VICT))
-	    return DELETE_VICT;
-	  *part_hit = WEAR_HEAD;
-	  rc = damageLimb(v,WEAR_HEAD,weapon,dam);
-	  if (IS_SET_DELETE(rc, DELETE_VICT))
-	    return DELETE_VICT;
-	  return ONEHIT_MESS_CRIT_S;
-	} else {
-buf=format("You thrust your %s into the back of $N's head causing an immediate death.") %
-		  limbStr;
-	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n's %s tears into the back of your unprotected head.") %
-		  limbStr;
-	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	  buf = format("The world goes black and dark...");
-	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_BLACK);
-buf=format("$n thrusts $s %s deep into the back of $N's unprotected head, causing an immediate death.") %
-		  limbStr;
-	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	  rc = dislodgeWeapon(v,weapon,WEAR_HEAD);
-	  if (IS_SET_DELETE(rc, DELETE_VICT))
-	    return DELETE_VICT;
-	  applyDamage(v, (20 * v->hitLimit()),wtype);
-	  *part_hit = WEAR_HEAD;
-	  if (desc)
-	    desc->career.crit_cranial_pierce++;
-	  if (v->desc)
-	    v->desc->career.crit_cranial_pierce_suff++;
-	  return DELETE_VICT;
-	}
-	return FALSE;   // not possible, but just in case
-      case 77:
-      case 78:
-	// Strike shatters elbow in weapon arm. Arm broken 
-	new_slot = v->getSecondaryArm();
-	if (!v->hasPart(new_slot))
-	  return 0;
-	if (!v->isHumanoid())
-	  return FALSE;
-buf=format("$N blocks your %s with $S arm.  However the force shatters $S elbow!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n's %s is blocked by your arm.  Unfortunately your elbow is shattered!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n's %s shatters $N's elbow!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->damageArm(FALSE,PART_BROKEN);
-	if (desc)
-	  desc->career.crit_broken_bones++;
-	if (v->desc)
-	  v->desc->career.crit_broken_bones_suff++;
-	*part_hit = new_slot;
-	rc = damageLimb(v,new_slot,weapon,dam);
-	if (IS_SET_DELETE(rc, DELETE_VICT))
-	  return DELETE_VICT;
-	return ONEHIT_MESS_CRIT_S;
-      case 79:
-	new_slot = v->getPrimaryHand();
-	if (!v->hasPart(new_slot))
-	  return 0;
-	if (!v->isHumanoid())
-	  return 0;
-	if ((obj = v->equipment[v->getPrimaryWrist()])) {
-	  act("Your $o just saved you from losing your hand!",TRUE,v,obj,0,TO_CHAR, ANSI_PURPLE);
-	  act("You nearly sever $N's hand, but $S $o saved $M!",TRUE,this,obj,v,TO_CHAR);
-	  *part_hit = v->getPrimaryWrist();
-	  return ONEHIT_MESS_CRIT_S;
-	}
-      case 80:
-	// Sever weapon arm at hand 
-	if (!v->hasPart(v->getPrimaryHand()))
-	  return 0;
-	if (!v->isHumanoid())
-	  return 0;
-buf=format("Your %s severs $N's hand at $S wrist!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n's %s severs your arm below the wrist!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n's %s severs $N's hand at the wrist!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->makePartMissing(v->getPrimaryHand(), FALSE, this);
-	v->rawBleed(v->getPrimaryWrist(), PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	v->woundedHand(TRUE);
-	*part_hit = v->getPrimaryHand();
-	if (desc)
-	  desc->career.crit_sev_limbs++;
-	if (v->desc)
-	  v->desc->career.crit_sev_limbs_suff++;
-	return ONEHIT_MESS_CRIT_S;
-      case 81:
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
-	if (!v->hasPart(WEAR_BODY))
-	  return 0;
-	if ((obj = v->equipment[WEAR_BODY])) {
-	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a punctured lung!\n\r") %
-		    fname(obj->name));
+	    if (!v->hasPart(WEAR_LEG_R))
+	      return 0;
+	    if (!v->isHumanoid())
+	      return 0;
+
+	    // triple damage
+        *dam *= 3;
+
+	    if ((obj = v->equipment[WEAR_LEG_R])) {
+	      v->sendTo(COLOR_OBJECTS, format("Your %s saves you from losing a tendon!\n\r") % fname(obj->name));
+	      for (i=1;i<5;i++)
+	        if (v->equipment[WEAR_LEG_R])
+	          v->damageItem(this,WEAR_LEG_R,wtype,weapon,*dam);
+	      *part_hit = WEAR_LEG_R;
+	      return ONEHIT_MESS_CRIT_S;
+	    }
+	// an intentional drop through
+      case 77:
+      case 78:
+	    // strike lower leg, rip tendons, vict at -25% move. 
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
+	    if (!v->hasPart(WEAR_LEG_R))
+	      return 0;
+	    if (!v->isHumanoid())
+	      return 0;
+
+	    // triple damage
+        *dam *= 3;
+
+        buf=format("Your %s rips through $N's tendon on $S lower leg!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n's %s rips through the tendon in your lower leg.") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n's %s rips into $N, tearing the tendon in $S lower leg.") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+	    v->setMove(v->getMove()/4);
+	    for (i = 1; i < 5; i++) {
+	      if (v->equipment[WEAR_LEG_R])
+	        v->damageItem(this,WEAR_LEG_R,wtype,weapon,*dam);
+	    }
+	    *part_hit = WEAR_LEG_R;
+	    rc = damageLimb(v,WEAR_LEG_R,weapon,dam);
+	    if (IS_SET_DELETE(rc, DELETE_VICT))
+	      return DELETE_VICT;
+	    return ONEHIT_MESS_CRIT_S;
+      case 79:
+      case 80:
+      case 81:
+	    // Strike shatters elbow in weapon arm. Arm broken 
+	    new_slot = v->getSecondaryArm();
+	    if (!v->hasPart(new_slot))
+	      return 0;
+	    if (!v->isHumanoid())
+	      return FALSE;
+        buf=format("$N blocks your %s with $S arm.  However the force shatters $S elbow!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n's %s is blocked by your arm.  Unfortunately your elbow is shattered!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n's %s shatters $N's elbow!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    	v->damageArm(FALSE,PART_BROKEN);
+    	if (desc)
+    	  desc->career.crit_broken_bones++;
+    	if (v->desc)
+	      v->desc->career.crit_broken_bones_suff++;
+    	*part_hit = new_slot;
+    	// triple damage
+        *dam *= 3;
+
+	    rc = damageLimb(v,new_slot,weapon,dam);
+	    if (IS_SET_DELETE(rc, DELETE_VICT))
+	      return DELETE_VICT;
+	    return ONEHIT_MESS_CRIT_S;
+      case 82:
+	    new_slot = v->getPrimaryHand();
+	    if (!v->hasPart(new_slot))
+	      return 0;
+	    if (!v->isHumanoid())
+	      return 0;
+
+    	// triple damage
+        *dam *= 3;
+
+	    if ((obj = v->equipment[v->getPrimaryWrist()])) {
+	      act("Your $o just saved you from losing your hand!",TRUE,v,obj,0,TO_CHAR, ANSI_PURPLE);
+	      act("You nearly sever $N's hand, but $S $o saved $M!",TRUE,this,obj,v,TO_CHAR);
+	      *part_hit = v->getPrimaryWrist();
+	      return ONEHIT_MESS_CRIT_S;
+	    }
+      case 83:
+      case 84:
+	    // Sever weapon arm at hand 
+	    if (!v->hasPart(v->getPrimaryHand()))
+	      return 0;
+    	if (!v->isHumanoid())
+	      return 0;
+        buf=format("Your %s severs $N's hand at $S wrist!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n's %s severs your arm below the wrist!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n's %s severs $N's hand at the wrist!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+	    // triple damage
+        *dam *= 3;
+
+    	v->makePartMissing(v->getPrimaryHand(), FALSE, this);
+    	v->rawBleed(v->getPrimaryWrist(), PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+    	v->woundedHand(TRUE);
+    	*part_hit = v->getPrimaryHand();
+    	if (desc)
+    	  desc->career.crit_sev_limbs++;
+    	if (v->desc)
+    	  v->desc->career.crit_sev_limbs_suff++;
+    	return ONEHIT_MESS_CRIT_S;
+      case 85:
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
+    	if (!v->hasPart(WEAR_BODY))
+	      return 0;
+    	if ((obj = v->equipment[WEAR_BODY])) {
+	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a punctured lung!\n\r") % fname(obj->name));
+
+          // triple damage
+          *dam *= 3;
+
 	  for (i=1;i<9;i++)
 	    if (v->equipment[WEAR_BODY])
 	      v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
 	  *part_hit = WEAR_BODY;
 	  return ONEHIT_MESS_CRIT_S;
 	}
-      case 82:
-	// Punctured lungs. Can't breathe. Dies if not healed quickly 
-        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
-          return 0;
-	if (v->hasDisease(DISEASE_LUNG))
-	  return 0;
-buf=format("Your %s plunges into $N's chest puncturing a lung!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n's %s plunges into your chest and punctures a lung!!!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured lung!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	af.type = AFFECT_DISEASE;
-	af.level = 0;   // has to be 0 for doctor to treat
-	af.duration = PERMANENT_DURATION;
-	af.modifier = DISEASE_LUNG;
-	af.location = APPLY_NONE;
-	af.bitvector = AFF_SILENT;
-	v->affectTo(&af);
-	rc = dislodgeWeapon(v,weapon,WEAR_BODY);
-	if (IS_SET_DELETE(rc, DELETE_VICT))
-	  return DELETE_VICT;
-	v->sendTo("You won't be able to speak or breathe until you get that punctured lung fixed!!!\n\r");
-	*part_hit = WEAR_BODY;
-	if (desc)
-	  desc->career.crit_lung_punct++;
-	if (v->desc)
-	  v->desc->career.crit_lung_punct_suff++;
-	return ONEHIT_MESS_CRIT_S;
-      case 83:
-      case 84:
-        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
-          return 0;
-	if (!v->hasPart(WEAR_BODY))
-	  return 0;
-	if ((obj = v->equipment[WEAR_BODY])) {
-	  v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a kidney wound!\n\r") %
-		    fname(obj->name));
-	  for (i=1;i<7;i++)
-	    if (v->equipment[WEAR_BODY])
-	      v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
-	  *part_hit = WEAR_BODY;
-	  return ONEHIT_MESS_CRIT_S;
-	}
-      case 85:
-	// punctured kidney causes infection
-        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
-          return 0;
-	if (!v->hasPart(WEAR_BODY))
-	  return 0;
-buf=format("You puncture $N's kidney with your %s and cause an infection!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n's %s tears into your kidney; the pain is AGONIZING and an infection has started!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n's %s punctures $N's kidney!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-
-	if (desc)
-	  desc->career.crit_kidney++;
-	if (v->desc)
-	  v->desc->career.crit_kidney_suff++;
-
-	rc = dislodgeWeapon(v,weapon,WEAR_BODY);
-	if (IS_SET_DELETE(rc, DELETE_VICT))
-	  return DELETE_VICT;
-	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	*part_hit = WEAR_BODY;
-	return ONEHIT_MESS_CRIT_S;
       case 86:
       case 87:
-	// stomach wound.  causes death 5 mins later if not healed.
+  	    // Punctured lungs. Can't breathe. Dies if not healed quickly 
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
-	if (!v->hasPart(WEAR_BODY))
-	  return 0;
-	if (v->hasDisease(DISEASE_STOMACH))
-	  return 0;
-buf=format("You plunge your %s into $N's stomach, opening up $S gullet!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-buf=format("$n's %s tears into your stomach and exposes your intestines!!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-buf=format("$n's %s tears into $N's stomach exposing intestines!") %
-		limbStr;
-	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	if (v->hasPart(WEAR_WAIST))
-	  v->rawInfect(WEAR_WAIST, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	af.type = AFFECT_DISEASE;
-	af.level = 0;   // for doctor to heal
-	af.duration = PERMANENT_DURATION;
-	af.modifier = DISEASE_STOMACH;
-	v->affectTo(&af);
-	*part_hit = WEAR_WAIST;
-	if (desc)
-	  desc->career.crit_eviscerate++;
-	if (v->desc)
-	  v->desc->career.crit_eviscerate_suff++;
+	    if (v->hasDisease(DISEASE_LUNG))
+	      return 0;
+        buf=format("Your %s plunges into $N's chest puncturing a lung!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n's %s plunges into your chest and punctures a lung!!!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S punctured lung!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
-	return ONEHIT_MESS_CRIT_S;
+	    af.type = AFFECT_DISEASE;
+	    af.level = 0;   // has to be 0 for doctor to treat
+    	af.duration = PERMANENT_DURATION;
+    	af.modifier = DISEASE_LUNG;
+    	af.location = APPLY_NONE;
+    	af.bitvector = AFF_SILENT;
+    	v->affectTo(&af);
+
+	    // triple damage
+        *dam *= 3;
+
+	    rc = damageLimb(v,WEAR_BODY,weapon,dam);
+	    if (IS_SET_DELETE(rc, DELETE_VICT))
+	      return DELETE_VICT;
+    	v->sendTo("You won't be able to speak or breathe until you get that punctured lung fixed!!!\n\r");
+    	*part_hit = WEAR_BODY;
+    	if (desc)
+	      desc->career.crit_lung_punct++;
+    	if (v->desc)
+    	  v->desc->career.crit_lung_punct_suff++;
+    	return ONEHIT_MESS_CRIT_S;
       case 88:
-      case 89:
-	// abdominal wound
-	// You plunge your %s into $N's abdoman and tear out causing a shower of blood
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
+    	if (!v->hasPart(WEAR_BODY))
+	      return 0;
 
+    	// triple damage
+        *dam *= 3;
+
+    	if ((obj = v->equipment[WEAR_BODY])) {
+	      v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a kidney wound!\n\r") % fname(obj->name));
+    	  for (i=1;i<7;i++)
+	        if (v->equipment[WEAR_BODY])
+	          v->damageItem(this,WEAR_BODY,wtype,weapon,*dam);
+    	  *part_hit = WEAR_BODY;
+	      return ONEHIT_MESS_CRIT_S;
+    	}
+      case 89:
       case 90:
+	    // punctured kidney causes infection
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
+    	if (!v->hasPart(WEAR_BODY))
+	      return 0;
+        buf=format("You puncture $N's kidney with your %s and cause an infection!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n's %s tears into your kidney; the pain is AGONIZING and an infection has started!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n's %s punctures $N's kidney!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+    	if (desc)
+	      desc->career.crit_kidney++;
+    	if (v->desc)
+	      v->desc->career.crit_kidney_suff++;
+
+	    // triple damage
+        *dam *= 3;
+
+    	rc = damageLimb(v,WEAR_BODY,weapon,dam);
+	    if (IS_SET_DELETE(rc, DELETE_VICT))
+	      return DELETE_VICT;
+    	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+    	*part_hit = WEAR_BODY;
+    	return ONEHIT_MESS_CRIT_S;
       case 91:
       case 92:
       case 93:
+	// stomach wound.  causes death 5 mins later if not healed.
+        if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
+          return 0;
+    	if (!v->hasPart(WEAR_BODY))
+    	  return 0;
+    	if (v->hasDisease(DISEASE_STOMACH))
+    	  return 0;
+        buf=format("You plunge your %s into $N's stomach, opening up $S gullet!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        buf=format("$n's %s tears into your stomach and exposes your intestines!!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        buf=format("$n's %s tears into $N's stomach exposing intestines!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    	v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+    	if (v->hasPart(WEAR_WAIST))
+    	  v->rawInfect(WEAR_WAIST, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
+    	af.type = AFFECT_DISEASE;
+    	af.level = 0;   // for doctor to heal
+    	af.duration = PERMANENT_DURATION;
+    	af.modifier = DISEASE_STOMACH;
+    	v->affectTo(&af);
+    	*part_hit = WEAR_WAIST;
+
+    	if (desc)
+	  desc->career.crit_eviscerate++;
+	    if (v->desc)
+	      v->desc->career.crit_eviscerate_suff++;
+
+    	// triple damage
+        *dam *= 3;
+
+    	return ONEHIT_MESS_CRIT_S;
       case 94:
       case 95:
+    	if (!v->hasPart(WEAR_BACK))
+    	  return 0;
+    	if ((obj = v->equipment[WEAR_BACK])) {
+	      v->sendTo(COLOR_OBJECTS, format("Your %s saves you from a gory wound!\n\r") % fname(obj->name));
+    	  // triple damage
+          *dam *= 3;
+
+    	  for (i=1;i<5;i++)
+	        if (v->equipment[WEAR_BACK])
+	          v->damageItem(this,WEAR_BACK,wtype,weapon,*dam);
+    	  *part_hit = WEAR_BACK;
+	      return ONEHIT_MESS_CRIT_S;
+    	}
       case 96:
       case 97:
+    	// Side wound, vict stunned 6 rounds. 
+	    if (!v->hasPart(WEAR_BACK))
+	    return 0;
+  	    buf=format("You plunge your %s deep into $N's side, stunning $M!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+    	buf=format("$n plunges $s %s deep into your side.  The agony makes you forget about the fight.") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+    	buf=format("$n plunges $s %s deep into $N's side, stunning $M.") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+	    // triple damage
+        *dam *= 3;
+
+    	for (i=1;i<5;i++)
+	      if (v->equipment[WEAR_BACK])
+	        v->damageItem(this,WEAR_BACK,wtype,weapon,*dam); 
+    	v->cantHit += v->loseRound(6);
+    	rc = damageLimb(v,WEAR_BACK,weapon,dam);
+    	if (IS_SET_DELETE(rc, DELETE_VICT))
+    	  return DELETE_VICT;
+    	*part_hit = WEAR_BACK;
+    	return ONEHIT_MESS_CRIT_S;
       case 98:
       case 99:
-	return FALSE;
-	break;
+    	// Strike in back of head. If no helm, vict dies. 
+    	if (!v->hasPart(WEAR_HEAD))
+    	  return 0;
+    	if ((obj = v->equipment[WEAR_HEAD])) {
+    	  buf=format("You try to thrust your %s into the back of $N's head.") % weaponStr;
+    	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+    	  buf = "Unfortunately, $p saves $M from a hideous death!";
+    	  act(buf, FALSE, this, obj, v, TO_CHAR);
+    	  buf=format("$n tries to thrust $s %s into the back of your head.") % weaponStr;
+    	  act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+    	  buf="But $p saves you from a hideous death!";
+	      act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+    	  buf=format("$n tries plunging $s %s into the back of $N's head, but $p saves $M.") % weaponStr;
+	      act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+
+	      // triple damage
+          *dam *= 3;
+
+    	  for (i=1;i<5;i++)
+	        if (v->equipment[WEAR_HEAD])
+	          v->damageItem(this,WEAR_HEAD,wtype,weapon,*dam);
+
+    	  rc = damageLimb(v,WEAR_HEAD,weapon,dam);
+	      if (IS_SET_DELETE(rc, DELETE_VICT))
+	        return DELETE_VICT;
+    	  *part_hit = WEAR_HEAD;
+	      rc = damageLimb(v,WEAR_HEAD,weapon,dam);
+    	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	        return DELETE_VICT;
+    	  return ONEHIT_MESS_CRIT_S;
+	    } else {
+          buf=format("You thrust your %s into the back of $N's head causing an immediate death.") % weaponStr;
+    	  act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+          buf=format("$n's %s tears into the back of your unprotected head.") % weaponStr;
+          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+	      buf = format("The world goes black and dark...");
+	      act(buf, FALSE, this, 0, v, TO_VICT, ANSI_BLACK);
+          buf=format("$n thrusts $s %s deep into the back of $N's unprotected head, causing an immediate death.") % weaponStr;
+     	  act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+
+	      rc = damageLimb(v,WEAR_HEAD,weapon,dam);
+    	  if (IS_SET_DELETE(rc, DELETE_VICT))
+	        return DELETE_VICT;
+    	  applyDamage(v, (20 * v->hitLimit()),wtype);
+	      *part_hit = WEAR_HEAD;
+	      if (desc)
+    	    desc->career.crit_cranial_pierce++;
+	      if (v->desc)
+	        v->desc->career.crit_cranial_pierce_suff++;
+    	  return DELETE_VICT;
+	    }
+    	return FALSE;   // not possible, but just in case
       case 100:
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
-	buf=format("You sink your %s between $N's eyes, causing an immediate death!") %
-	  limbStr;
-	act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-	buf=format("$n sinks $s %s right between your eyes, causing an immediate death!") %
-	  limbStr;
-	act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
-	buf=format("$n sinks $s %s smack between $N's eyes, causing an immediate death!") %
-	  limbStr;
-	act(buf, FALSE, this, 0, v, TO_ROOM);
-	applyDamage(v, (20 * v->hitLimit()),wtype);
-	*part_hit = WEAR_HEAD;
-	if (desc)
-	  desc->career.crit_cranial_pierce++;
-	if (v->desc)
-	  v->desc->career.crit_cranial_pierce_suff++;
-	return DELETE_VICT;
+    	buf=format("You sink your %s between $N's eyes, causing an immediate death!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+       	buf=format("$n sinks $s %s right between your eyes, causing an immediate death!") % weaponStr;
+	    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+    	buf=format("$n sinks $s %s smack between $N's eyes, causing an immediate death!") % weaponStr;
+    	act(buf, FALSE, this, 0, v, TO_ROOM);
+    	applyDamage(v, (20 * v->hitLimit()),wtype);
+    	*part_hit = WEAR_HEAD;
+    	if (desc)
+	      desc->career.crit_cranial_pierce++;
+    	if (v->desc)
+	      v->desc->career.crit_cranial_pierce_suff++;
+    	return DELETE_VICT;
       default:
-	vlogf(LOG_BUG, format("crit_num=%i in critPierce switch, shouldn't happen") % 
-	      crit_num);
-	break;
+    	vlogf(LOG_BUG, format("crit_num=%i in critPierce switch, shouldn't happen") % crit_num);
+    	break;
     }
   }
   return 0;

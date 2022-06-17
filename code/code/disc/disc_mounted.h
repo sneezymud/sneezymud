@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_MOUNTED_H
-#define __DISC_MOUNTED_H
+#pragma once
 
 // This is the DEIKHAN MOUNT discipline.
 
@@ -72,6 +71,3 @@ public:
 
 private:
 };
-
-#endif
-

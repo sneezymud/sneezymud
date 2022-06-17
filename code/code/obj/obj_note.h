@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_NOTE_H
-#define __OBJ_NOTE_H
+#pragma once
 
 #include "obj.h"
 
@@ -47,5 +46,3 @@ class TNote : public TObj {
 };
 
 
-
-#endif

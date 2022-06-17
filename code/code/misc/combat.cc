@@ -1657,6 +1657,7 @@ void TBeing::stopFighting()
   REMOVE_BIT(specials.affectedBy, AFF_AGGRESSOR);
   REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
   REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
+  REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
 
   if (gCombatList == this)
     gCombatList = next_fighting;
@@ -1992,9 +1993,9 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     // 2h Specialization: should be no additional dam for anyone without specialization
     // extra 10% for 2h is part of the object
     TObj *obj = dynamic_cast<TObj *>(heldInPrimHand());
-    if (obj && obj->isPaired() && doesKnowSkill(SKILL_2H_SPEC_DEIKHAN)) {
+    if (obj && obj->isPaired() && doesKnowSkill(getSkillNum(SKILL_2H_SPEC))) {
       // Take half the skill value and normalize between 10 and 50
-      int amt = (int) getSkillValue(SKILL_2H_SPEC_DEIKHAN);
+      int amt = max(0, (int) getSkillValue(getSkillNum(SKILL_2H_SPEC)));
       amt = 100 + min(50, max(10, (int) (amt / 2)));
       dam = (int) (dam * amt / 100);
     }
@@ -2041,11 +2042,11 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
         if (ch->doesKnowSkill(skill) && 
             dynamic_cast<TBaseWeapon *>(o) && 
             !isPrimary)
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, max(0, (100 - (2* myLevel))));
+	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, (120 - (2* myLevel)));
         // Learn 2h on hit
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
-        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC_DEIKHAN) && obj->isPaired()) {
-          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC_DEIKHAN, max(0, (100 - (2* myLevel))));
+        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC) && obj->isPaired()) {
+          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC, (120 - (2* myLevel)));
         }
         // Offense hones
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (120 - (2* myLevel)));
@@ -2101,6 +2102,15 @@ int TBeing::hit(TBeing *target, int pulse)
       target->desc->session.rounds_received[target->getCombatMode()]++;
   } 
 
+  if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+      // Adding a chance per round to gain a stack of bloodlust while berserking and upon
+      // passing a successful advanced berserking check
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && 
+  	  doesKnowSkill(SKILL_BLOODLUST) && 
+	  !::number(0,5)) {
+        doBloodlust();
+      }
+    }
 
   // we come in here multiple times
   // 1 round is Pulse::COMBAT long
@@ -2291,13 +2301,13 @@ int TBeing::hit(TBeing *target, int pulse)
       if(doesKnowSkill(SKILL_IRON_FIST) && 
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 15);
-
-      if(doesKnowSkill(SKILL_CRIT_HIT))
-        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
+
     if (((fx > 0.999) || (fy > 0.999))){
       if(doesKnowSkill(SKILL_POWERMOVE))
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_POWERMOVE, 15);
+      if(doesKnowSkill(SKILL_CRIT_HIT))
+        learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_CRIT_HIT, 15);
     }
 
     if (awake() && getPosition() < POSITION_CRAWLING && (fx > 0 || fy > 0)) {
@@ -2312,16 +2322,22 @@ int TBeing::hit(TBeing *target, int pulse)
         ; // do nothing, just for sake of learning
     }
   }
-  /////
-
 
   // this affect is added after a successful parry
   if(isAffected(AFF_RIPOSTE)){
     fx++;
     REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
   }    
-
+  
   while (fx > 0.999) {
+    // check for concentrated blow
+    if (isAffected(AFF_FOCUS_ATTACK) && !::number(0,2)) {
+      sendTo(COLOR_BASIC, "<Y>You execute a focused attack, striking your opponent with precision!\n\r");
+      act("<y>$n executes a focused attack!<z>", TRUE, this, NULL, NULL, TO_ROOM);
+      REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
+      oneHit(target, HAND_PRIMARY, o, attackRound(target), &fx);
+    }
+
     checkLearnFromHit(this, tarLevel, o, true, w_type);
     if ((rc = oneHit(target, HAND_PRIMARY, o,mod, &fx))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
@@ -5919,6 +5935,60 @@ void doToughness(TBeing *ch)
   aff.bitvector = 0;
 
   ch->affectTo(&aff, -1);
+}
+
+
+void TBeing::doBloodlust()
+{
+  const long MAX_BLOODLUST = 10;
+  if (!doesKnowSkill(SKILL_BLOODLUST) || !awake() || getPosition() < POSITION_CRAWLING ||
+      !bSuccess(SKILL_BLOODLUST))
+    return;
+
+  long mod = 0;
+  if (affectedBySpell(SKILL_BLOODLUST)) {
+    for (auto *ch_affected = affected; ch_affected; ch_affected = ch_affected->next) {
+      if (ch_affected->type == SKILL_BLOODLUST) {
+        // set the mod and remove the affect so we can add it fresh
+        mod = ch_affected->modifier;
+        affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    }
+  }
+  
+  if (mod < MAX_BLOODLUST) {
+    // Increment stacks since it's < max
+    ++mod;
+
+    // Only send message if NOSPAM toggle isn't set and
+    // max stacks hadn't been already reached previously
+    if (desc && !IS_SET(desc->autobits, AUTO_NOSPAM)) {
+      sstring message;
+      switch (mod) {
+        case MAX_BLOODLUST:
+          message =
+              "<r>Your desire for combat nearly overwhelms you, as you are overcome with <R>BLOODLUST.<1>";
+          break;
+        case (MAX_BLOODLUST / 2):
+          message =
+              "<r>You feel the blood pumping in your veins, as your <R>bloodlust <r>continues to grow.<1>";
+          break;
+        default:
+          message = "<r>You feel the bloodlust welling up inside you.<1>";
+      }
+
+      act(message, false, this, nullptr, nullptr, TO_CHAR);
+    }
+  }
+
+  affectedData aff1;
+  aff1.type = SKILL_BLOODLUST;
+  aff1.duration = Pulse::UPDATES_PER_MUDHOUR*3;
+  aff1.location = APPLY_DAMROLL;
+  aff1.modifier = mod;
+  aff1.bitvector = 0;
+  affectTo(&aff1, -1);  
 }
 
 void TBeing::doInevitability()

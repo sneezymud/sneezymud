@@ -1461,6 +1461,11 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_ACID_BLAST:
       case SKILL_BODYSLAM:
       case SKILL_SPIN:
+      case SKILL_ADVANCED_BERSERKING:
+      case SKILL_BLOODLUST:
+      case SKILL_WHIRLWIND:
+      case SKILL_RALLY:
+      case SKILL_FORTIFY:
       case SKILL_CHARGE:
       case SKILL_SMITE:
       case SPELL_METEOR_SWARM:
@@ -1507,11 +1512,12 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case SPELL_BLEED:
-      case SKILL_KICK_THIEF:
-      case SKILL_KICK_MONK:
       case SKILL_KICK:
+      case SKILL_KICK_MONK:
+      case SKILL_SLAM:
       case SKILL_SPRINGLEAP:
       case SKILL_DEATHSTROKE:
+      case SKILL_FOCUS_ATTACK:
       case SKILL_BASH_DEIKHAN:
       case SKILL_BASH:
       case SPELL_BONE_BREAKER:
@@ -1725,6 +1731,7 @@ void TBeing::statBeing(TBeing *k)
       case SKILL_RETREAT_DEIKHAN:
       case SKILL_SHOVE_DEIKHAN:
       case SKILL_2H_SPEC_DEIKHAN:
+      case SKILL_2H_SPEC:
       case SKILL_RIDE:
       case SKILL_ALCOHOLISM:
       case SKILL_FISHING:
@@ -2278,6 +2285,12 @@ void TBeing::statBeing(TBeing *k)
         str += "Wet.\n\r";
         str += format("     Covered by %d fluid ounces of water.\n\r") % aff->modifier;
       break;
+
+      case AFFECT_FORTIFY:
+        str += "Shield Wall.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") % apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
 
       case LAST_ODDBALL_AFFECT:
       case LAST_TRANSFORMED_LIMB:

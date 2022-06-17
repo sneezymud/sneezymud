@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_MONK_H
-#define __DISC_MONK_H
+#pragma once
 
 #include "discipline.h"
 #include "skills.h"
@@ -127,22 +126,4 @@ private:
     int chiMe(TBeing *);
     int chi(TBeing *, TBeing *);
     int chi(TBeing *, TObj *);
-
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

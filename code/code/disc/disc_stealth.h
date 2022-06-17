@@ -19,8 +19,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __DISC_STEALTH_H
-#define __DISC_STEALTH_H
+#pragma once
 
 // This is the THIEF Stealth discipline.
 
@@ -58,5 +57,3 @@ private:
 
 int conceal(TBeing *, TBeing *);
 
-
-#endif

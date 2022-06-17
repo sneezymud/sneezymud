@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_AUDIO_H
-#define __OBJ_AUDIO_H
+#pragma once
 
 #include "obj.h"
 
@@ -31,5 +30,3 @@ class TAudio : public TObj {
 
 
 
-
-#endif

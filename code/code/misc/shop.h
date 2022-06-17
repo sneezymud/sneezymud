@@ -6,8 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SHOP_H
-#define __SHOP_H
+#pragma once
 
 #include <map>
 #include <vector>
@@ -148,4 +147,3 @@ private:
 
 extern bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int);
 //extern void waste_shop_file(int shop_nr);
-#endif

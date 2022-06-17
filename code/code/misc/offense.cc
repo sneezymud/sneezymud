@@ -567,6 +567,7 @@ static bool orderDenyCheck(const char * cmd_buf)
       is_abbrev(cmd_buf, "kick") ||
       is_abbrev(cmd_buf, "bash") ||
       is_abbrev(cmd_buf, "deathstroke") ||
+      is_abbrev(cmd_buf, "whirlwind") ||
       is_abbrev(cmd_buf, "grapple") ||
       is_abbrev(cmd_buf, "shove") ||
       is_abbrev(cmd_buf, "bodyslam") ||
@@ -952,8 +953,8 @@ int TBeing::doFlee(const char *arg)
   for (i = 0; i < 20; i++) {
     dirTypeT attempt = dirTypeT(::number(MIN_DIR, MAX_DIR-1));        // Select a random direction 
     
-    // fighting, so give slight chance of letting PC direct the direction
-    if (chosenDir != DIR_NONE && !panic && !(::number(0,99) < (30+getSkillValue(skill)/2)))
+    // fighting, so the chance of success depends on retreat skill (with at least 5% chance to fail)
+    if (chosenDir != DIR_NONE && !panic && (::number(0,99) < (45+getSkillValue(skill)/2)))
       attempt = chosenDir;
     
     if (canFleeThisWay(this, attempt)) {
@@ -2246,6 +2247,12 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
           fx += 0.5;
         if (fy > 0.0)
 	        fy += 0.5;
+      }
+      if (bSuccess(SKILL_ADVANCED_BERSERKING)) {
+        if (fx > 0.0)
+          fx += 0.5;
+        if (fy > 0.0)
+	  fy += 0.5;
       }
     }
   }

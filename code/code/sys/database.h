@@ -1,5 +1,4 @@
-#ifndef __DATABASE_H
-#define __DATABASE_H
+#pragma once
 
 class sstring;
 
@@ -140,5 +139,3 @@ class TTransaction : public TDatabase
       query("commit");
     }
 };
-
-#endif

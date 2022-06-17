@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_PEN_H
-#define __OBJ_PEN_H
+#pragma once
 
 #include "obj.h"
 
@@ -27,5 +26,3 @@ class TPen : public TObj {
     virtual ~TPen();
 };
 
-
-#endif

@@ -5,8 +5,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#ifndef __OBJ_ARMOR_WAND_H
-#define __OBJ_ARMOR_WAND_H
+#pragma once
 
 #include "obj_armor.h"
 #include "obj_wand.h"
@@ -31,5 +30,3 @@ class TArmorWand : public virtual TArmor, public virtual TWand
     TArmorWand & operator=(const TArmorWand &a);
     virtual ~TArmorWand();
 };
-
-#endif

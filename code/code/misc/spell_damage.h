@@ -16,8 +16,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __SPELL_DAMAGE_H
-#define __SPELL_DAMAGE_H
+#pragma once
 
 const int MAX_DAM 		= (1<<0);
 const int BASE_RANGE 		= (1<<1);
@@ -61,5 +60,3 @@ weather too
 };
 #endif
 extern spellDamInfo *spellDamArray[MAX_SKILL+1];
-#endif
-

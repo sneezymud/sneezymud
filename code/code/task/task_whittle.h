@@ -20,8 +20,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifndef __TASK_WHITTLE_H
-#define __TASK_WHITTLE_H
+#pragma once
 
 enum whittleTypeT
 {
@@ -70,5 +69,3 @@ class taskWhittleEntry
     taskWhittleEntry();
     ~taskWhittleEntry();
 };
-
-#endif

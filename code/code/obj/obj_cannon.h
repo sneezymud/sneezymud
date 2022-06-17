@@ -1,5 +1,4 @@
-#ifndef __OBJ_CANNON_H
-#define __OBJ_CANNON_H
+#pragma once
 
 #include "obj_gun.h"
 
@@ -19,5 +18,3 @@ class TCannon : public TGun {
   virtual ~TCannon();
 };
 
-
-#endif
