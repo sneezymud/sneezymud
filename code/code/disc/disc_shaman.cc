@@ -25,7 +25,6 @@ int voodoo(TBeing *caster, TObj *obj, int level, short bKnown)
   TMonster *mob;
   TThing *t;
   TBaseCorpse *corpse = dynamic_cast<TBaseCorpse *>(obj);
-  char buf[256], capbuf[256];
   wearSlotT i;
 
   /* some sort of check for corpse hood */
@@ -200,7 +199,6 @@ int dancingBones(TBeing * caster, TObj * obj, int level, short bKnown)
   TMonster *mob;
   TThing *t;
   TBaseCorpse *corpse;
-  char buf[256], capbuf[256];
   wearSlotT i;
 
   /* some sort of check for corpse hood */
