@@ -448,9 +448,10 @@ namespace {
       return;
 
     const immuneTypeT immunityType = getTypeImmunity(skillNumber);
-    const sstring immunityStr = immunityType >= IMMUNE_NONE ? immunity_names[immunityType] : "NONE";
+    if (immunityType <= IMMUNE_NONE)
+      return;
 
-    output += format("%sImmunity Type    :%s %s\n\r") % purple() % norm() % immunityStr;
+    output += infoLine("Immunity Type", immunity_names[immunityType]);
   }
 
   void HelpFileHandler::addSkillInfo() {
@@ -472,8 +473,8 @@ namespace {
                  skillNumber % norm();
       spec += format(" %s(disc: %d)%s") % purple() % mapDiscToFile(skill->assDisc) % norm();
       learnRate += format(" %s(%d)%s") % purple() % skill->learn % norm();
-      lbd +=
-        format(" %s(start: %d) (amount: %d)%s") % purple() % skill->startLearnDo % skill->amtLearnDo % norm();
+      lbd += format(" %s(start: %d) (amount: %d)%s") % purple() % skill->startLearnDo %
+             skill->amtLearnDo % norm();
     }
 
     output += discStr + spec + startLearn + learnRate + lbd + modStat + diff;
@@ -487,13 +488,15 @@ namespace {
     bool isTasked = IS_SET(skill->comp_types, SPELL_TASKED);
 
     if (isTasked) {
-      output += infoLine("Casting Rounds", std::to_string(lag + 2));      
+      output += infoLine("Casting Rounds", std::to_string(lag + 2));
       output += infoLine("Combat Rounds", std::to_string(lag + 1));
     }
 
     sstring label = "Command Lock-Out";
     if (lag > LAG_0) {
-      output += infoLine(label, format("%.1f seconds") % (user->lagAdjust(lag) * combatRound(1) / Pulse::ONE_SECOND));
+      output += infoLine(
+        label,
+        format("%.1f seconds") % (user->lagAdjust(lag) * combatRound(1) / Pulse::ONE_SECOND));
 
       if (user->isImmortal())
         output += format(" %s(%d round%s)%s") % purple() % lag % (lag != 1 ? "s" : "") % norm();
@@ -594,6 +597,7 @@ namespace {
 
     addHeader();
     addSkillInfo();
+    addImmunityInfo();
     addComponentInfo();
     addSkillLagInfo();
     addSpellResourceInfo();
@@ -606,7 +610,7 @@ namespace {
 
   // Standardize printing skill/spell helpfile header lines
   sstring HelpFileHandler::infoLine(const sstring& label, const sstring& value) {
-      return format("\n\r%s%-16.16s:%s %s") % purple() % label % norm() % value;
+    return format("\n\r%s%-16.16s:%s %s") % purple() % label % norm() % value;
   }
 
   bool HelpFileHandler::initSkillInfo() {
