@@ -4011,18 +4011,9 @@ TObj * makeNewObj(itemTypeT tmp)
 
 resetCom::exec_fn *resetCom::executeMethods[resetCom::cmd_Max];
 
-resetCom::resetCom() :
-  command('\0'),
-  if_flag(0),
-  arg1(0),
-  arg2(0),
-  arg3(0),
-  arg4(0),
-  character('\0')
-{
+resetCom::resetCom() {
   static bool v_isInitialized = false;
-  if (!v_isInitialized)
-  {
+  if (!v_isInitialized) {
     memset(executeMethods, 0, sizeof(executeMethods));
     executeMethods[cmd_Stop] = NULL;
     executeMethods[cmd_LoadMob] = runResetCmdM;
@@ -4048,39 +4039,6 @@ resetCom::resetCom() :
     executeMethods[cmd_LoadObjEquippedProp] = runResetCmdI;
     executeMethods[cmd_LoadObjSetLocalProp] = runResetCmdJ;
   }
-}
-
-resetCom::resetCom(const resetCom &t) :
-  command(t.command),
-  if_flag(t.if_flag),
-  arg1(t.arg1),
-  arg2(t.arg2),
-  arg3(t.arg3),
-  arg4(t.arg4),
-  character(t.character),
-  cmd_no(0)
-{
-}
-
-resetCom::~resetCom()
-{
-}
-
-resetCom & resetCom::operator =(const resetCom &t)
-{
-  if (this == &t) return *this;
-
-  command = t.command;
-  if_flag = t.if_flag;
-  character = t.character;
-  arg1 = t.arg1;
-  arg2 = t.arg2;
-  arg3 = t.arg3;
-  arg4 = t.arg4;
-  arg1 = t.arg1;
-  cmd_no = t.cmd_no;
-
-  return *this;
 }
 
 // helper func for resetCom::hasLoadPotential
@@ -4177,88 +4135,6 @@ bool resetCom::execute(zoneData &zone, resetFlag flags, bool &mobload, TMonster 
 
   executeMethods[getCommandId()](zone, *this, flags, mobload, mob, objload, obj, last_cmd);
   return true;
-}
-
-
-zoneData::zoneData() :
-  name(NULL),
-  zone_nr(0),
-  lifespan(0),
-  age(0),
-  bottom(0),
-  top(0),
-  reset_mode(0),
-  enabled(false),
-  zone_value(0),
-  num_mobs(0),
-  mob_levels(0),
-  min_mob_level(128),
-  max_mob_level(0),
-  stat_mobs_total(0),
-  stat_mobs_unique(0),
-  stat_objs_unique(0),
-  cmd_table(0)
-{
-}
-
-zoneData::zoneData(const zoneData &t) :
-  name(t.name),
-  zone_nr(t.zone_nr),
-  lifespan(t.lifespan),
-  age(t.age),
-  bottom(t.bottom),
-  top(t.top),
-  reset_mode(t.reset_mode),
-  enabled(t.enabled),
-  zone_value(t.zone_value),
-  num_mobs(t.num_mobs),
-  mob_levels(t.mob_levels),
-  min_mob_level(t.min_mob_level),
-  max_mob_level(t.max_mob_level),
-  stat_mobs(t.stat_mobs),
-  stat_objs(t.stat_objs),
-  stat_mobs_total(t.stat_mobs_total),
-  stat_mobs_unique(t.stat_mobs_unique),
-  stat_objs_unique(t.stat_objs_unique),
-  cmd_table(t.cmd_table)
-{
-}
-
-zoneData::~zoneData()
-{
-  cmd_table.clear();
-  stat_mobs.clear();
-  stat_objs.clear();
-}
-
-zoneData & zoneData::operator= (const zoneData &t)
-{
-  if (this == &t) return *this;
-
-  name = t.name;
-  zone_nr = t.zone_nr;
-  lifespan = t.lifespan;
-  age = t.age;
-  bottom = t.bottom;
-  top = t.top;
-  reset_mode = t.reset_mode;
-  enabled = t.enabled;
-  zone_value = t.zone_value;
-  num_mobs = t.num_mobs;
-  mob_levels = t.mob_levels;
-  min_mob_level = t.min_mob_level;
-  max_mob_level = t.max_mob_level;
-  stat_mobs.clear();
-  stat_mobs = t.stat_mobs;
-  stat_objs.clear();
-  stat_objs = t.stat_objs;
-  stat_mobs_total = t.stat_mobs_total;
-  stat_mobs_unique = t.stat_mobs_unique;
-  stat_objs_unique = t.stat_objs_unique;
-  cmd_table.clear();
-  cmd_table = t.cmd_table;
-
-  return *this;
 }
 
 // we have a number of global structs holding heap memory
