@@ -878,3 +878,10 @@ sstring sstring::escapeJson() const {
 int sstring::compareCaseless(const sstring &other) const {
   return this->lower().compare(other.lower());
 }
+
+// Provides alnum and isspace functionality to sstrings
+bool sstring::isOnlyAlnum(bool allowSpace) const {
+  return std::all_of(this->begin(), this->end(), [allowSpace](const char c) {
+    return std::isalnum(c) || (allowSpace ? std::isspace(c) : false);
+  });
+}

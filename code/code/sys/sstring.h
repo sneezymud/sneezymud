@@ -62,6 +62,7 @@ public:
   const bool startsVowel() const;
 
   int compareCaseless(const sstring&) const;
+  bool isOnlyAlnum(bool allowSpace = true) const;
 
   // string mungers
   void ascify();
