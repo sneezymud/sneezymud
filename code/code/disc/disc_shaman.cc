@@ -89,17 +89,12 @@ int voodoo(TBeing *caster, TObj *obj, int level, short bKnown)
       mob->setCurLimbHealth(i, mob->getMaxLimbHealth(i));
   }
 
-  // set up descriptions and such 
+  // set up descriptions and such
   mob->swapToStrung();
-  sprintf(buf, "zombie %s", mob_index[mob->getMobIndex()].name.c_str());
-  mob->name = buf;
-  sprintf(buf, "a zombie of %s", mob_index[mob->getMobIndex()].short_desc.c_str());
-  mob->shortDescr = buf;
-
-  strcpy(capbuf, mob->getName().c_str());
-  sprintf(buf, "%s is here, obediently following its master.\n\r", 
-	  sstring(capbuf).cap().c_str());
-  mob->player.longDescr = buf;
+  mob->name = format("zombie %s") % mob_index[mob->getMobIndex()].name;
+  mob->shortDescr = format("a zombie of %s") % mob_index[mob->getMobIndex()].short_desc;
+  mob->player.longDescr =
+    format("%s is here, obediently following its master.\n\r") % mob->getName().cap();
 
   if (caster->tooManyFollowers(mob, FOL_ZOMBIE)) {
     act("$N refuses to enter a group the size of yours!", 
@@ -268,14 +263,10 @@ int dancingBones(TBeing * caster, TObj * obj, int level, short bKnown)
 
  /* set up descriptions and such */
   mob->swapToStrung();
-  sprintf(buf, "skeleton %s", mob_index[mob->getMobIndex()].name.c_str());
-  mob->name = buf;
-  sprintf(buf, "a skeleton of %s", mob_index[mob->getMobIndex()].short_desc.c_str());
-  mob->shortDescr = buf;
-  strcpy(capbuf, mob->getName().c_str());
-  sprintf(buf, "%s is here, enthralled by it's master.\n\r", 
-	  sstring(capbuf).cap().c_str());
-  mob->player.longDescr = buf;
+  mob->name = format("skeleton %s") % mob_index[mob->getMobIndex()].name;
+  mob->shortDescr = format("a skeleton of %s") % mob_index[mob->getMobIndex()].short_desc;
+  mob->player.longDescr =
+    format("%s is here, enthralled by it's master.\n\r") % mob->getName().cap();
 
   if (caster->tooManyFollowers(mob, FOL_ZOMBIE)) {
     act("$N refuses to enter a group the size of yours!", 
@@ -1885,7 +1876,6 @@ int castSquish(TBeing * caster, TBeing * victim)
 
 int distort(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
 {
-  char buf[256];
   sstring bBuf;
 
   int dam = caster->getSkillDam(victim, SPELL_DISTORT, level, adv_learn);
@@ -1907,89 +1897,77 @@ int distort(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_lea
         CS(SPELL_DISTORT);
         dam *= 2;
         beams *= 2;
-        sprintf(buf, "%d", beams);
-        bBuf = buf;
-        bBuf += " intense energy beam";
+        bBuf = format("%d intense energy beam") % beams;
         if (beams != 1)
           bBuf += "s expel";
         else
           bBuf += " expels";
 
-        sprintf(buf, "%s from $n's hands and course into $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-        sprintf(buf, "%s from your hands and course into $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        sprintf(buf, "%s from $n's hands and course into your body distorting your soul!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
-        break;
+        break;      
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_DISTORT);
         dam *= 3;
         beams *=3;
 
-        sprintf(buf, "%d", beams);
-        bBuf = buf;
-        bBuf += " BRILLIANT energy beam";
+        bBuf = format("%d BRILLIANT energy beam") % beams;
         if (beams != 1)
           bBuf += "s stream";
         else
           bBuf += " streams";
 
-        sprintf(buf, "%s from $n's hands and course into $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-        sprintf(buf, "%s from your hands and course into $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        sprintf(buf, "%s from $n's hands and course into your body distorting your soul!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
-        break;
+        break;      
       case CRIT_S_NONE:
-        sprintf(buf, "%d", beams);
-        bBuf = buf;
-        bBuf += " energy beam";
+        bBuf += format(" energy beam") % beams;
         if (beams != 1)
           bBuf += "s stream";
         else
           bBuf += " streams";
 
-        sprintf(buf, "%s from $n's hands and course into $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-        sprintf(buf, "%s from your hands and course into $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        sprintf(buf, "%s from $n's hands and course into your body distorting your soul!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_DISTORT))) {
           SV(SPELL_DISTORT);
           dam /= 2;
-        }
+        }     
     }
+
+    sstring toNotVict = format("%s from $n's hands and course into $N's body!") % bBuf;
+    sstring toChar = format("%s from your hands and course into $N's body!") % bBuf;
+    sstring toVict =
+      format("%s from $n's hands and course into your body distorting your soul!") % bBuf;
+
+    act(toNotVict, FALSE, caster, NULL, victim, TO_NOTVICT);
+    act(toChar, FALSE, caster, NULL, victim, TO_CHAR);
+    act(toVict, FALSE, caster, NULL, victim, TO_VICT);
+
     if (caster->reconcileDamage(victim, dam, SPELL_DISTORT) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_DISTORT)) {
       case CRIT_F_HITSELF:
-      case CRIT_F_HITOTHER:
+      case CRIT_F_HITOTHER: {
         CF(SPELL_DISTORT);
-        sprintf(buf, "%d", beams);
-        bBuf = buf;
-        bBuf += " energy beam";
+        bBuf += format(" energy beam") % beams;
         if (beams != 1)
           bBuf += "s stream";
         else
           bBuf += " streams";
 
-        sprintf(buf, "%s from $n's hands and blow up in $n's face!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
-        sprintf(buf, "%s from your hands and blow up in your face!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        sprintf(buf, "%s from $n's hands and blow up in $n's face!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        sstring toNotVict = format("%s from $n's hands and blow up in $n's face!") % bBuf;
+        act(toNotVict, FALSE, caster, NULL, victim, TO_NOTVICT);
+
+        sstring toChar = format("%s from your hands and blow up in your face!") % bBuf;
+        act(toChar, FALSE, caster, NULL, victim, TO_CHAR);
+        
+        sstring toVict = format("%s from $n's hands and blow up in $n's face!") % bBuf;
+        act(toVict, FALSE, caster, NULL, victim, TO_VICT);
+
         if (caster->reconcileDamage(caster, dam, SPELL_DISTORT) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
 
         return SPELL_CRIT_FAIL;
         break;
+      }
       case CRIT_F_NONE:
         break;
     } 

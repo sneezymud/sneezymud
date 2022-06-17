@@ -132,26 +132,14 @@ int castIdentify(TBeing *caster, TObj *obj)
 
 static sstring identifyBeingStuff(const TBeing *caster, TBeing *victim, showMeT show)
 {
-  sstring str;
-  char buf[256];
-
-  sprintf(buf, "You sense that %s is a %s %s.\n\r", victim->hssh(), 
-              describe_level(victim->GetMaxLevel()), 
-              victim->getMyRace()->getPluralName().c_str());
-  str += buf;
-
-  if (dynamic_cast<const TPerson *>(victim)) {
-    sprintf(buf, "%d years, %d months, %d days, %d hours old.\n\r",
-             victim->age()->year, victim->age()->month, 
-             victim->age()->day, victim->age()->hours / 2);
-    str += buf;
-  }
-
-  sprintf(buf, "Height %d inches, weight %d pounds.\n\r", victim->getHeight(), (int) victim->getWeight());
-  str += buf;
-
-  sprintf(buf, "%s is %s.\n\r", sstring(victim->getName()).cap().c_str(), ac_for_score(victim->getArmor()));
-  str += buf;
+  sstring str = format("You sense that %s is a %s %s.\n\r") % victim->hssh() %
+                describe_level(victim->GetMaxLevel()) % victim->getMyRace()->getPluralName();
+  if (dynamic_cast<const TPerson*>(victim))
+    str += format("%d years, %d months, %d days, %d hours old.\n\r") % victim->age()->year %
+           victim->age()->month % victim->age()->day % (victim->age()->hours / 2);
+  str +=
+    format("Height %d inches, weight %d pounds.\n\r") % victim->getHeight() % victim->getWeight();
+  str += format("%s is %s.\n\r") % victim->getName().cap() % ac_for_score(victim->getArmor());
 
   Stats tempStat;
   tempStat = victim->getCurStats();
@@ -351,20 +339,12 @@ int divinationBeing(TBeing *caster, TBeing * victim, int, short bKnown)
     if (caster->desc) {
       sstring str = identifyBeingStuff(caster, victim, SHOW_ME);
 
-      char buf[256];
       for (immuneTypeT i = MIN_IMMUNE;i < MAX_IMMUNES; i++) {
         if (victim->getImmunity(i) == 0 || !*immunity_names[i])
           continue;
-        if (victim->getImmunity(i) > 0) {
-          sprintf(buf, "%d%% resistant to %s.\n\r", victim->getImmunity(i),
-             immunity_names[i]);
-          str += buf;
-        }
-        if (victim->getImmunity(i) < 0) {
-          sprintf(buf, "%d%% susceptible to %s.\n\r", victim->getImmunity(i),
-             immunity_names[i]);
-          str += buf;
-        }
+
+        str += format("%d%% %s to %s.\n\r") % victim->getImmunity(i) %
+               (victim->getImmunity(i) > 0 ? "resistant" : "susceptible") % immunity_names[i];
       }
       str += describeMaterial(victim);
 
@@ -1004,7 +984,6 @@ int farlook(TBeing *caster, TBeing * victim, int level, short bKnown)
   std::vector<TBeing *>tBeing(0);
 
   int target;
-  char buf1[128];
   TThing *t=NULL;
   TBeing *ch;
 
@@ -1088,14 +1067,14 @@ int farlook(TBeing *caster, TBeing * victim, int level, short bKnown)
     // remember that doAt takes them out of current room, does thing, and
     // then puts them back in.  Thus the stuff list changes
     //
-    sprintf(buf1, "%d look", target);
+    sstring buf1 = format("%d look") % target;
     for (unsigned int tBeingIndex = 0; tBeingIndex < tBeing.size(); tBeingIndex++) {
       int tBrief = FALSE;
 
       if ((tBrief = tBeing[tBeingIndex]->isPlayerAction(PLR_BRIEF)))
         tBeing[tBeingIndex]->remPlayerAction(PLR_BRIEF);
 
-      tBeing[tBeingIndex]->doAt(buf1, true);
+      tBeing[tBeingIndex]->doAt(buf1.c_str(), true);
 
       if (tBrief)
         tBeing[tBeingIndex]->addPlayerAction(PLR_BRIEF);
@@ -1104,16 +1083,17 @@ int farlook(TBeing *caster, TBeing * victim, int level, short bKnown)
     return SPELL_SUCCESS;
   } else {
     switch (critFail(caster, SPELL_FARLOOK)) {
-      case CRIT_F_HITSELF:
+      case CRIT_F_HITSELF: {
         CF(SPELL_FARLOOK);
         act("You conjure up a large cloud which shimmers slightly before revealing...",
               FALSE, caster, 0, 0, TO_CHAR);
         act("$n conjures up a large cloud which shimmers slightly before revealing...",
               FALSE, caster, 0, 0, TO_ROOM);
-        strcpy(buf1, "70 look");
-        caster->doAt(buf1, true);
+        sstring buf1 = "70 look";
+        caster->doAt(buf1.c_str(), true);
         return SPELL_CRIT_FAIL;
         break;
+      }
       default:
         caster->nothingHappens();
         break;
