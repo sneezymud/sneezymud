@@ -30,10 +30,8 @@ objIndexData::objIndexData(const objIndexData& a) :
     ex_description = new extraDescription(*a.ex_description);
   else
     ex_description = nullptr;
-
-  for (int i = 0; i < MAX_OBJ_AFFECT; ++i) {
-    affected[i] = a.affected[i];
-  }
+    
+  std::copy(std::begin(a.affected), std::end(a.affected), std::begin(affected));
 }
 
 objIndexData::~objIndexData() {
