@@ -698,7 +698,7 @@ class TBeing : public TThing {
   int loseRound(double, bool x = TRUE, bool check = FALSE);
   void blowCount(bool, float &, float &);
   bool checkBusy(const sstring &buf="");
-  float lagAdjust(lag_t);
+  float lagAdjust(lag_t) const;
   void addSkillLag(spellNumT, int rc);
   virtual void addToWait(int) { return; }
   virtual int getWait(void) const { return 0; }
@@ -932,10 +932,10 @@ class TBeing : public TThing {
   void updatePos();
   int reconcilePiety(spellNumT, bool);
   int reconcileMana(spellNumT, bool, int = 0);
-  int useMana(spellNumT);
+  int useMana(spellNumT) const;
   int reconcileLifeforce(spellNumT, bool, int = 0);
-  int useLifeforce(spellNumT);
-  double usePiety(spellNumT);
+  int useLifeforce(spellNumT) const;
+  double usePiety(spellNumT) const;
   int reconcileDamage(TBeing *, int, spellNumT);
   virtual int doRent(const sstring &);
   void doRestring(const sstring &);
@@ -1160,7 +1160,7 @@ class TBeing : public TThing {
   void doRMember(const char *);
   void doDisband();
   void doSend(sstring);
-  void doHelp(const char *);
+  void doHelp(const sstring&);
   int doEncamp();
   int doSoothBeast(const char *);
   int doBefriendBeast(const char *);

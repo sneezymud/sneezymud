@@ -347,443 +347,487 @@ void replaceWikiTable(sstring &data)
   }
 }
 
-void displayHelpFile(TBeing* ch, const sstring& helppath, const sstring& namebuf) {
-  // find the last modified time on the file
-  struct stat timestat {};
+// Class and member functions for handling helpfile requests in doHelp
+namespace {
+  class HelpFileHandler {
+    public:
+      HelpFileHandler() = delete;
+      HelpFileHandler(sstring args, TBeing* user) : originalArgs(std::move(args)), user(user){};
 
-  if (stat(helppath.c_str(), &timestat)) {
-    vlogf(LOG_BUG, format("bad call to help function %s, rebuilding indices") % namebuf.upper());
-    buildHelpIndex();
-    ch->sendTo("There was an error, try again.\n\r");
-    return;
+      void displayOutput();
+
+    private:
+      const sstring originalArgs;
+      const TBeing* user;
+      spellNumT skillNumber{MAX_SKILL};
+      spellInfo* skill{nullptr};
+      bool isSpell{false};
+      sstring fileName;
+      sstring filePath;
+      sstring output;
+
+      struct stat timestat {};
+
+      std::vector<std::pair<sstring, sstring>> partialMatches;
+
+      void addComponentInfo();
+      void addHeader();
+      void addImmunityInfo();
+      void addFileContents();
+      void addSkillInfo();
+      void addSkillLagInfo();
+      void addSpellRequirements();
+      void addSpellResourceInfo();
+      void addSpellTargetInfo();
+      sstring infoLine(const sstring& label, const sstring& value);
+      bool initSkillInfo();
+      void setIsSpell();
+      bool isValidRequest() const;
+      bool returnEarly();
+
+      sstring purple() const { return user->purple(); };
+
+      sstring norm() const { return user->norm(); };
+
+      bool searchAllIndexes();
+      bool searchBuilderIndex();
+      bool searchGeneralIndex();
+      bool searchImmortalIndex();
+      bool searchIndex(const std::vector<sstring>& index, const sstring& path);
+      bool searchSkillIndex();
+      bool searchSpellIndex();
+      void setFilePath(const sstring& path);
+      bool updateFileStats();
+  };
+
+  void HelpFileHandler::addComponentInfo() {
+    if (!isSpell || skill->minPiety > 0)
+      return;
+
+    sstring compName = "NONE";
+
+    if (skillNumber == SPELL_MATERIALIZE || skillNumber == SPELL_SPONTANEOUS_GENERATION) {
+      compName = "SPECIAL (see below)";
+    }
+
+    auto comp = std::find_if(CompInfo.begin(), CompInfo.end(), [this](const compInfo& comp) {
+      return comp.spell_num == skillNumber;
+    });
+
+    if (comp != CompInfo.end()) {
+      auto index = static_cast<size_t>(real_object(comp->comp_num));
+      compName = obj_index[index].short_desc.cap();
+    }
+
+    output += infoLine("Spell Component", compName);
   }
-  sstring timebuf = ctime(&(timestat.st_mtim.tv_sec));
-  timebuf.pop_back();  // Drop newline
-  sstring output = format("%s%-30.30s (Last Updated: %s)%s\n\r\n\r") % ch->green() %
-                   namebuf.upper() % timebuf % ch->norm();
 
-  // special message for nextversion file
-  if (!namebuf.compareCaseless("NEXTVERSION")) {
+  void HelpFileHandler::addFileContents() {
+    output += "\n\r\n\r";
+    file_to_sstring(filePath, output, CONCAT_YES);
+  }
+
+  void HelpFileHandler::addHeader() {
+    sstring time = ctime(&(timestat.st_mtim.tv_sec));
+    time.pop_back();  // Drop newline
+    output += format("%s%-30.30s (Last Updated: %s)%s\n\r") % user->green() % fileName.upper() %
+              time % user->norm();
+
+    if (fileName.compareCaseless("NEXTVERSION") != 0)
+      return;
+
+    // special message for nextversion file
     output += "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME THERE\n\r";
     output += "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO GIVE\n\r";
     output += "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES ARE\n\r";
     output += "FORTHCOMING...\n\r\n\r";
-  }
+  };
 
-  // now print the file
-  output += file_to_sstring(helppath) + "\n\r";
-  ch->desc->page_string(output);
-}
-
-void TBeing::doHelp(const char *arg) {
-  if (!desc)
-    return;
-
-  for (; isspace(*arg); arg++);
-
-  char searchBuf[256];
-  one_argument(arg, searchBuf, cElements(searchBuf));
-
-  // this prevents "help ../../being.h" and "help _skills"
-  const char *c;
-  for (c = arg; *c; c++) {
-    if (!isalnum(*c) && !isspace(*c)) {
-      sendTo("Illegal argument.\n\r");
+  void HelpFileHandler::addImmunityInfo() {
+    if (!skill)
       return;
-    }
+
+    const immuneTypeT immunityType = getTypeImmunity(skillNumber);
+    const sstring immunityStr = immunityType >= IMMUNE_NONE ? immunity_names[immunityType] : "NONE";
+
+    output += format("%sImmunity Type    :%s %s\n\r") % purple() % norm() % immunityStr;
   }
 
-  help_used_num++;
-  total_help_number++;
-  save_game_stats();
+  void HelpFileHandler::addSkillInfo() {
+    if (!skill)
+      return;
 
-  if (!*arg) {
-    desc->start_page_file(File::HELP_PAGE, "General help unavailable.\n\r");
-    return;
-  }
+    const sstring properName = discNames[skill->disc].properName;
 
-  if (!static_cast<sstring>(arg).compareCaseless("index")) {
-    FILE *index = popen("bin/helpindex", "r");
+    sstring discStr = infoLine("Discipline", properName);
+    sstring spec = infoLine("Specialization", properName);
+    sstring startLearn = infoLine("Start Learning", std::to_string(skill->start));
+    sstring learnRate = infoLine("Disc. Learn Rate", learn_name(skill->learn));
+    sstring lbd = infoLine("Learn By Doing", skill->startLearnDo == -1 ? "No" : "Yes");
+    sstring modStat = infoLine("Modifier Stat", statToString(skill->modifierStat).cap());
+    sstring diff = infoLine("Difficulty", displayDifficulty(skillNumber));
 
-    sstring str;
-    char buffer[MAX_STRING_LENGTH];
-    while (fread(buffer, 1, MAX_STRING_LENGTH, index)) {
-      str += buffer;
-    }
-    pclose(index);
-    desc->page_string(str);
-    return;
-  }
-
-  enum resultType { ERROR, MATCH_FOUND, MATCH_NOT_FOUND };
-
-  auto searchIndex = [this, arg](std::vector<sstring> &index, const sstring &path,
-                                 std::function<bool(sstring)> skipArgs = nullptr,
-                                 bool multiExact = false) {
-    sstring helpName, helpPath, buffer, _;
-
-    for (const auto &indexEntry : index) {
-      if (skipArgs && skipArgs(arg))
-        break;
-
-      bool isMatch = !static_cast<sstring>(arg).compareCaseless(indexEntry);
-
-      if (isMatch || (multiExact ? is_abbrev(arg, indexEntry, MULTIPLE_YES, EXACT_YES) : false) ||
-          is_abbrev(arg, indexEntry)) {
-        helpName = indexEntry.upper();
-        helpPath = format("%s/%s") % path % indexEntry;
-        if (isMatch)
-          break;
-      }
+    if (user->isImmortal()) {
+      discStr += format(" %s(disc: %d, spell %d)%s") % purple() % mapDiscToFile(skill->disc) %
+                 skillNumber % norm();
+      spec += format(" %s(disc: %d)%s") % purple() % mapDiscToFile(skill->assDisc) % norm();
+      learnRate += format(" %s(%d)%s") % purple() % skill->learn % norm();
+      lbd +=
+        format(" %s(start: %d) (amount: %d)%s") % purple() % skill->startLearnDo % skill->amtLearnDo % norm();
     }
 
-    if (helpName.empty())
-      return std::make_tuple(resultType::MATCH_NOT_FOUND, helpName, helpPath, buffer);
-  
-    if (hasColorVt()) {
-      sstring ansiPath = format("%s.ansi") % helpPath;
-      if (file_to_sstring(ansiPath.c_str(), _))
-        helpPath = ansiPath;
-    }
-
-    struct stat timestat;
-    if (stat(helpPath.c_str(), &timestat)) {
-      vlogf(LOG_BUG, format("bad call to help function %s, rebuilding indices") % helpName);
-      buildHelpIndex();
-      sendTo("There was an error, try again.\n\r");
-      return std::make_tuple(resultType::ERROR, helpName, helpPath, buffer);
-    }
-
-    sstring time = ctime(&(timestat.st_mtim.tv_sec));
-    time.pop_back(); // Remove newline
-    buffer = format("%s%-30.30s (Last Updated: %s)%s\n\r\n\r") % green() % helpName % time % norm();
-
-    return std::make_tuple(resultType::MATCH_FOUND, helpName, helpPath, buffer);
+    output += discStr + spec + startLearn + learnRate + lbd + modStat + diff;
   };
 
-  auto searchImmortalIndexGeneric = [this, searchIndex](std::vector<sstring> &index, sstring path) {
-    auto [result, helpName, helpPath, buffer] = searchIndex(index, path);
+  void HelpFileHandler::addSkillLagInfo() {
+    if (!skill)
+      return;
 
-    if (result == resultType::MATCH_NOT_FOUND)
-      return false;
+    const lag_t lag = skill->lag;
+    bool isTasked = IS_SET(skill->comp_types, SPELL_TASKED);
 
-    if (result == resultType::MATCH_FOUND) {
-      file_to_sstring(helpPath.c_str(), buffer, CONCAT_YES);
-      buffer += "\n\r";
-      desc->page_string(buffer);
-    }
-
-    return true;
-  };
-
-  auto searchImmortalIndex = [this, searchImmortalIndexGeneric]() {
-    if (hasWizPower(POWER_IMMORTAL_HELP) &&
-        searchImmortalIndexGeneric(immortalIndex, Path::IMMORTAL_HELP))
-      return true;
-    return false;
-  };
-
-  auto searchBuilderIndex = [this, searchImmortalIndexGeneric]() {
-    if (GetMaxLevel() >= GOD_LEVEL1 && searchImmortalIndexGeneric(builderIndex, Path::BUILDER_HELP))
-      return true;
-    return false;
-  };
-
-  auto searchImmortalIndexes = [this, searchImmortalIndex, searchBuilderIndex]() {
-    if (!isImmortal())
-      return false;
-
-    if (searchImmortalIndex() || searchBuilderIndex())
-      return true;    
-
-    return false;
-  };
-
-  auto searchHelpIndex = [this, searchIndex]() {
-    auto skipArgs = [](sstring sArg) {
-      return !sArg.compareCaseless("armor") || !sArg.compareCaseless("sharpen") ||
-             !sArg.compareCaseless("bleed");
-    };
-
-    auto [result, helpName, helpPath, buffer] = searchIndex(helpIndex, Path::HELP, skipArgs);
-
-    if (result == resultType::MATCH_NOT_FOUND)
-      return false;
-
-    if (result == resultType::MATCH_FOUND)
-        displayHelpFile(this, helpPath, helpName);
-
-    return true;
-  };
-
-  auto findSkill = [this](const sstring &helpName) {
-    // first, see if we can find a matching skill that the player has
-    // this is here so skills with same name (for different classes) will
-    // be isolated.
-    spellNumT skillNumber = MIN_SPELL;
-    for (; skillNumber < MAX_SKILL; skillNumber++) {
-      if (hideThisSpell(skillNumber))
-        continue;
-
-      if (helpName.compareCaseless(discArray[skillNumber]->name) != 0)
-        continue;
-
-      if (doesKnowSkill(skillNumber))
-        break;
-    }
-
-    // if we can't find match on name for skill they have, just use name match
-    if (skillNumber >= MAX_SKILL) {
-      for (skillNumber = MIN_SPELL; skillNumber < MAX_SKILL; skillNumber++) {
-        if (hideThisSpell(skillNumber))
-          continue;
-
-        if (!helpName.compareCaseless(discArray[skillNumber]->name))
-          break;
-      }
-    }
-
-    spellInfo *skill = nullptr;
-
-    if (skillNumber >= MAX_SKILL || (skillNumber = getSkillNum(skillNumber)) < 0) {
-      vlogf(LOG_BUG, format("Bogus help file: %s") % helpName);
-      return std::make_tuple(skill, MAX_SKILL);
-    }
-
-    skill = discArray[skillNumber];
-
-    if (skill && skill->disc == DISC_NONE) {
-      vlogf(LOG_BUG, format("Skill/spell %s with DISC_NONE in doHelp()") % helpName);
-      return std::make_tuple(skill, skillNumber);
-    }
-
-    return std::make_tuple(skill, skillNumber);
-  };
-
-  auto bufferSkillInfo = [this](sstring &buffer, spellInfo *skill, spellNumT skillNumber) {
-    buffer +=
-        format("%sDiscipline       :%s %s") % purple() % norm() % discNames[skill->disc].properName;
-    if (isImmortal())
-      buffer += format("    %s(disc: %d, spell %d)%s") % purple() % mapDiscToFile(skill->disc) %
-                skillNumber % norm();
-
-    buffer += format("\n\r%sSpecialization   :%s %s") % purple() % norm() %
-              discNames[skill->assDisc].properName;
-    if (isImmortal())
-      buffer += format("    %s(disc: %d)%s") % purple() % mapDiscToFile(skill->assDisc) % norm();
-
-    buffer += format("\n\r%sStart Learning   :%s %d%%") % purple() % norm() % skill->start;
-
-    buffer +=
-        format("\n\r%sDisc. Learn Rate :%s %s") % purple() % norm() % learn_name(skill->learn);
-    if (isImmortal())
-      buffer += format(" %s(%d)%s") % purple() % skill->learn % norm();
-
-    buffer += format("\n\r%sLearn By Doing   :%s %s") % purple() % norm() %
-              (skill->startLearnDo == -1 ? "No" : "Yes");
-    if (isImmortal())
-      buffer +=
-          format("  %s(%d) (%d) %s") % purple() % skill->startLearnDo % skill->amtLearnDo % norm();
-
-    buffer += format("\n\r%sModifier Stat    :%s %s\n\r") % purple() % norm() %
-              statToString(skill->modifierStat).cap();
-
-    buffer += format("%sDifficulty       :%s %s\n\r") % purple() % norm() %
-              displayDifficulty(skillNumber);
-  };
-
-  auto bufferSkillLagInfo = [this](sstring &buffer, lag_t lag) {
-    if (lag > LAG_0) {
-      buffer += format("%sCommand lock-out :%s %.1f seconds") % purple() % norm() %
-                (lagAdjust(lag) * combatRound(1) / Pulse::ONE_SECOND);
-      if (isImmortal())
-        buffer += format(" %s(%d rounds)%s") % purple() % lag % norm();
-      buffer += "\n\r";
-    } else
-      buffer += format("%sCommand lock-out :%s None\n\r") % purple() % norm();
-  };
-
-  auto bufferHelpFileContents = [](sstring &buffer, const sstring &helpPath) {
-    buffer += "\n\r";
-    file_to_sstring(helpPath.c_str(), buffer, CONCAT_YES);
-    buffer += "\n\r";
-  };
-
-  auto searchSpellIndex = [this, searchIndex, findSkill, bufferSkillInfo, bufferSkillLagInfo,
-                           bufferHelpFileContents]() {
-    auto skipArgs = [](sstring sArg) { return !sArg.compareCaseless("steal"); };
-
-    auto [result, helpName, helpPath, buffer] =
-        searchIndex(spellIndex, Path::SPELL_HELP, skipArgs, true);
-
-    if (result == resultType::ERROR)
-      return true;
-
-    if (result == resultType::MATCH_NOT_FOUND)
-      return false;
-
-    spellInfo *spell = nullptr;
-    spellNumT spellNumber = MAX_SKILL;
-
-    // Have to use std::tie here because lambda used in find_if below
-    // can't capture structured binding in C++17 apparently
-    std::tie(spell, spellNumber) = findSkill(helpName);
-    if (!spell || spellNumber == MAX_SKILL)
-      return true;
-
-    bufferSkillInfo(buffer, spell, spellNumber);
-
-    unsigned int compTypes = spell->comp_types;
-    bool isTasked = IS_SET(compTypes, SPELL_TASKED);
-
-    if (spellNumber == SPELL_MATERIALIZE || spellNumber == SPELL_SPONTANEOUS_GENERATION)
-      buffer += format("%sSpell Component  :%s SPECIAL (see below)\n\r") % purple() % norm();
-    else if (isTasked) {
-      auto comp = std::find_if(CompInfo.begin(), CompInfo.end(), [spellNumber](compInfo comp) {
-        return comp.spell_num == spellNumber;
-      });
-
-      if (comp != CompInfo.end()) {
-        sstring compName = obj_index[real_object(comp->comp_num)].short_desc.cap();
-        buffer += format("%sSpell Component  :%s %s\n\r") % purple() % norm() % compName;
-      } else
-        vlogf(LOG_BUG,
-              format("Problem in help file for skill=%d, comp=%d.  (component definition)") %
-                  spellNumber % comp->comp_num);
-    } else
-      buffer += format("%sSpell Component  :%s NONE\n\r") % purple() % norm();
-
-    int immunityType = getTypeImmunity(spellNumber);
-    buffer += format("%sImmunity Type    :%s %s\n\r") % purple() % norm() %
-              (immunityType != -1 ? immunity_names[immunityType] : "NONE");
-
-    lag_t lag = spell->lag;
     if (isTasked) {
-      buffer +=
-          format("%sCasting rounds   :%s %d casting rounds\n\r") % purple() % norm() % (lag + 2);
-      buffer +=
-          format("%sCombat rounds    :%s %d combat rounds\n\r") % purple() % norm() % (lag + 1);
+      output += infoLine("Casting Rounds", std::to_string(lag + 2));      
+      output += infoLine("Combat Rounds", std::to_string(lag + 1));
+    }
+
+    sstring label = "Command Lock-Out";
+    if (lag > LAG_0) {
+      output += infoLine(label, format("%.1f seconds") % (user->lagAdjust(lag) * combatRound(1) / Pulse::ONE_SECOND));
+
+      if (user->isImmortal())
+        output += format(" %s(%d round%s)%s") % purple() % lag % (lag != 1 ? "s" : "") % norm();
     } else
-      bufferSkillLagInfo(buffer, lag);
+      output += infoLine(label, "None");
+  };
 
-    sstring minResource, curResource, combinedResource;
-    bool bufferSpellResourceInfo = false;
-    int minResourceAmt = 0;
-    if (spell->minMana) {
-      bufferSpellResourceInfo = true;
-      minResourceAmt = spell->minMana;
-      minResource = "Minimum Mana     :";
-      curResource = "Current Mana     :";
-      combinedResource = "Mana (min/cur)   :";
-    } else if (spell->minLifeforce) {
-      bufferSpellResourceInfo = true;
-      minResourceAmt = spell->minLifeforce;
-      minResource = "Minimum Lifeforce:";
-      curResource = "Current Lifeforce:";
-      combinedResource = "Lifeforce:min/cur:";
-    } else if (spell->minPiety) {
-      bufferSpellResourceInfo = true;
-      minResourceAmt = spell->minPiety;
-      minResource = "Minimum Piety    :";
-      curResource = "Current Piety    :";
-      combinedResource = "Piety (min/cur)  :";
-    }
+  void HelpFileHandler::addSpellRequirements() {
+    if (!skill || !isSpell)
+      return;
 
-    if (bufferSpellResourceInfo) {
-      if (doesKnowSkill(spellNumber)) {
-        if (isTasked) {
-          buffer += format("%s%s%s %d, per round amount : %d\n\r") % purple() % minResource %
-                    norm() % ((minResourceAmt / (lag + 2)) * (lag + 2)) %
-                    (minResourceAmt / (lag + 2));
+    const uint32_t compTypes = skill->comp_types;
 
-          buffer += format("%s%s%s %d, per round amount : %d\n\r") % purple() % curResource %
-                    norm() % (useMana(spellNumber) * (lag + 2)) % useMana(spellNumber);
-        } else
-          buffer += format("%s%s%s %d, current : %d\n\r") % purple() % minResource % norm() %
-                    minResourceAmt % useMana(spellNumber);
+    if (!compTypes)
+      return;
+
+    const sstring gestures = compTypes & COMP_GESTURAL ? "Gestures" : "";
+    const sstring spokenType = skill->holyStrength > 0 ? "Mantra" : "Incantation";
+    const sstring spoken = compTypes & COMP_VERBAL ? "Spoken " + spokenType : "";
+    const sstring both = !gestures.empty() && !spoken.empty() ? ", " : "";
+
+    output += infoLine("Requires", format("%s%s%s") % gestures % both % spoken);
+  }
+
+  void HelpFileHandler::addSpellResourceInfo() {
+    if (!skill || !isSpell)
+      return;
+
+    sstring resource;
+    sstring type;
+    double minAmt = 0;
+    double curAmt = 0;
+
+    if (skill->minMana > 0) {
+      resource = "Mana";
+      type = "spell";
+      minAmt = skill->minMana;
+      curAmt = user->useMana(skillNumber);
+    } else if (skill->minLifeforce > 0) {
+      resource = "Lifeforce";
+      type = "ritual";
+      minAmt = skill->minLifeforce;
+      curAmt = user->useLifeforce(skillNumber);
+    } else if (skill->minPiety > 0) {
+      resource = "Piety";
+      type = "prayer";
+      minAmt = skill->minPiety;
+      curAmt = user->usePiety(skillNumber);
+    } else
+      return;
+
+    sstring minLabel = format("Minimum %-9.9s") % resource;
+    sstring curLabel = format("Current %-9.9s") % resource;
+    sstring combinedLabel = format("%s %-10.10s") % resource % "(min/cur)";
+
+    if (user->doesKnowSkill(skillNumber)) {
+      if (IS_SET(skill->comp_types, SPELL_TASKED)) {
+        lag_t lag = skill->lag;
+        output += infoLine(minLabel,
+                           format("%d, per round amount: %d") % ((minAmt / (lag + 2)) * (lag + 2)) %
+                             (minAmt / (lag + 2)));
+        output +=
+          infoLine(curLabel, format("%d, per round amount: %d") % (curAmt * (lag + 2)) % curAmt);
       } else
-        buffer += format("%s%s%s %d/%s-not-known\n\r") % purple() % combinedResource % norm() %
-                  minResourceAmt % (spell->minPiety ? "prayer" : "spell");
-    }
+        output += infoLine(minLabel, format("%d, current: %d") % minAmt % curAmt);
+    } else
+      output += infoLine(combinedLabel, format("%d/%s-not-known") % minAmt % type);
+  }
 
-    if (compTypes) {
-      buffer += format("%sRequires         :%s ") % purple() % norm();
-      if (compTypes & COMP_GESTURAL) {
-        buffer += "Gestural Moves";
-        if (compTypes & COMP_VERBAL)
-          buffer += format(", Spoken%s") % (spell->holyStrength > 0 ? " Mantra" : " Incantation");
-      }
-      buffer += "\n\r";
-    }
+  void HelpFileHandler::addSpellTargetInfo() {
+    if (!skill || !isSpell)
+      return;
 
-    unsigned int targets = spell->targets;
+    uint32_t targets = skill->targets;
 
     sstring isOffensiveSpell = (targets & TAR_VIOLENT) ? "Yes" : "No";
     sstring isAOESpell = (targets & TAR_AREA) ? "Yes" : "No";
-    buffer += format("%sOffensive        :%s %s\t") % purple() % norm() % isOffensiveSpell;
-    buffer += format("%sArea Effect          :%s %s\n\r") % purple() % norm() % isAOESpell;
-
-    sstring canCastOnSelf = (targets & TAR_SELF_NONO) 
-        ? "No"
-        : (targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY))
-            ? "Yes"
-            : "No";
-
+    sstring canCastOnSelf =
+      (targets & TAR_SELF_NONO)                                                       ? "No"
+      : (targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)) ? "Yes"
+                                                                                      : "No";
+    sstring canCastOnOthers = (targets & TAR_SELF_ONLY)                      ? "No"
+                              : (targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD)) ? "Yes"
+                                                                             : "No";
     sstring canCastOnObject =
-        (targets & (TAR_OBJ_INV | TAR_OBJ_ROOM | TAR_OBJ_WORLD | TAR_OBJ_EQUIP))
-            ? "Yes" 
-            : "No";
+      (targets & (TAR_OBJ_INV | TAR_OBJ_ROOM | TAR_OBJ_WORLD | TAR_OBJ_EQUIP)) ? "Yes" : "No";
 
-    buffer += format("%sCast on Self     :%s %s\t") % purple() % norm() % canCastOnSelf;
-    buffer += format("%sObject Castable      :%s %s\n\r") % purple() % norm() % canCastOnObject;
+    output += infoLine("Offensive", isOffensiveSpell);
+    output += infoLine("Area Effect", isAOESpell);
+    output += infoLine("Cast on Self", canCastOnSelf);
+    output += infoLine("Cast on Others", canCastOnOthers);
+    output += infoLine("Cast on Object", canCastOnObject);
+  }
 
-    sstring canCastOnOthers = (targets & TAR_SELF_ONLY)
-        ? "No"
-        : (targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD))
-            ? "Yes"
-            : "No";
+  void HelpFileHandler::displayOutput() {
+    if (returnEarly())
+      return;
 
-    buffer += format("%sCast on Others   : %s%s \n\r") % purple() % norm() % canCastOnOthers;
+    addHeader();
+    addSkillInfo();
+    addComponentInfo();
+    addSkillLagInfo();
+    addSpellResourceInfo();
+    addSpellRequirements();
+    addSpellTargetInfo();
+    addFileContents();
 
-    bufferHelpFileContents(buffer, helpPath);
-    desc->page_string(buffer);
+    user->desc->page_string(output);
+  }
 
+  // Standardize printing skill/spell helpfile header lines
+  sstring HelpFileHandler::infoLine(const sstring& label, const sstring& value) {
+      return format("\n\r%s%-16.16s:%s %s") % purple() % label % norm() % value;
+  }
+
+  bool HelpFileHandler::initSkillInfo() {
+    struct MatchedSkill {
+        spellNumT skillNumber{MAX_SKILL};
+        spellInfo* skill{nullptr};
+
+        MatchedSkill() = default;
+        MatchedSkill(spellNumT sn, spellInfo* sk) : skillNumber(sn), skill(sk){};
+    };
+
+    auto* begin = std::begin(discArray);
+    auto* end = std::end(discArray);
+
+    std::vector<MatchedSkill> matches{};
+
+    auto* nameMatch = begin;
+    while (nameMatch != end) {
+      nameMatch = std::find_if(nameMatch, end, [this](spellInfo* si) {
+        return (si && !fileName.compareCaseless(si->name));
+      });
+
+      if (nameMatch != end) {
+        // Can calculate index of iterator by subtracting .begin(). Index of
+        // discArray is actually the value of the spellNumT enum for the entry
+        // at that index. Have to obtain it this way because it's not stored in
+        // the actual spellInfo object for some reason.
+        auto skillNum = static_cast<spellNumT>(nameMatch - begin);
+        matches.emplace_back(skillNum, *nameMatch);
+        nameMatch = std::next(nameMatch);
+      }
+    }
+
+    if (matches.empty()) {
+      return false;
+    }
+
+    auto nameMatchesKnownSkill =
+      std::find_if(matches.begin(), matches.end(), [this](MatchedSkill& sk) {
+        return (!hideThisSpell(sk.skillNumber) && user->doesKnowSkill(sk.skillNumber));
+      });
+
+    // If one of the matches is also a skill known by the character, use it.
+    // Otherwise just grab the first skill with a matching name.
+    auto match = nameMatchesKnownSkill != matches.end() ? *nameMatchesKnownSkill : matches.front();
+    skillNumber = match.skillNumber;
+    skill = match.skill;
+    setIsSpell();
     return true;
-  };
+  }
 
-  auto searchSkillIndex = [this, searchIndex, findSkill, bufferSkillInfo, bufferSkillLagInfo,
-                           bufferHelpFileContents]() {
-    auto skipArgs = [](sstring sArg) { return !sArg.compareCaseless("cast"); };
+  bool HelpFileHandler::isValidRequest() const {
+    // this prevents "help ../../being.h" and "help _skills"
+    return originalArgs.isOnlyAlnum();
+  }
 
-    auto [result, helpName, helpPath, buffer] =
-        searchIndex(skillIndex, Path::SKILL_HELP, skipArgs, true);
-
-    if (result == resultType::ERROR)
+  bool HelpFileHandler::searchAllIndexes() {
+    if (searchImmortalIndex() || searchBuilderIndex() || searchGeneralIndex())
       return true;
 
-    if (result == resultType::MATCH_NOT_FOUND)
+    if (searchSpellIndex() || searchSkillIndex())
+      return initSkillInfo();
+
+    if (partialMatches.empty())
       return false;
 
-    spellInfo *skill = nullptr;
-    spellNumT skillNumber = MAX_SKILL;
+    // Sort helpfile names for which arg was a partial match by size and use the shortest one, as
+    // longer helpfile names can be accessed by passing a more specific arg.
+    std::sort(partialMatches.begin(),
+              partialMatches.end(),
+              [](std::pair<sstring, sstring>& a, const std::pair<sstring, sstring>& b) {
+                return a.first.size() < b.first.size();
+              });
 
-    // Have to use std::tie here because lambda used in find_if below
-    // can't capture structured binding in C++17 apparently
-    std::tie(skill, skillNumber) = findSkill(helpName);
-    if (!skill || skillNumber == MAX_SKILL)
+    const auto& [indexEntry, path] = partialMatches.front();
+    fileName = indexEntry;
+    setFilePath(path);
+    return (path == Path::SKILL_HELP || path == Path::SPELL_HELP) ? initSkillInfo() : true;
+  }
+
+  bool HelpFileHandler::searchBuilderIndex() {
+    return user->isImmortal() && user->GetMaxLevel() >= GOD_LEVEL1 &&
+           searchIndex(builderIndex, Path::BUILDER_HELP);
+  }
+
+  bool HelpFileHandler::searchGeneralIndex() {
+    return searchIndex(helpIndex, Path::HELP);
+  }
+
+  bool HelpFileHandler::searchImmortalIndex() {
+    return user->isImmortal() && user->hasWizPower(POWER_IMMORTAL_HELP) &&
+           searchIndex(immortalIndex, Path::IMMORTAL_HELP);
+  }
+
+  bool HelpFileHandler::searchIndex(const std::vector<sstring>& index, const sstring& path) {
+    fileName = originalArgs;
+
+    bool exactMatch = false;
+    for (const auto& indexEntry : index) {
+      exactMatch = !fileName.compareCaseless(indexEntry);
+      if (exactMatch) {
+        fileName = indexEntry;
+        setFilePath(path);
+        partialMatches.clear();
+        break;
+      }
+
+      // Use different variations of is_abbrev to ensure finding all possible abbreviations. Keep
+      // track of partial matches through all indexes. If an exact match is never found, use these
+      // to determine which file to display.
+      if (is_abbrev(fileName, indexEntry) ||
+          is_abbrev(fileName, indexEntry, MULTIPLE_YES, EXACT_NO) ||
+          is_abbrev(fileName, indexEntry, MULTIPLE_YES, EXACT_YES))
+        partialMatches.emplace_back(indexEntry, path);
+    }
+
+    return exactMatch;
+  }
+
+  bool HelpFileHandler::searchSkillIndex() {
+    return searchIndex(skillIndex, Path::SKILL_HELP);
+  }
+
+  bool HelpFileHandler::searchSpellIndex() {
+    return searchIndex(spellIndex, Path::SPELL_HELP);
+  }
+
+  void HelpFileHandler::setFilePath(const sstring& path) {
+    filePath = format("%s%s%s") % path % (filePath == Path::HELP ? "" : "/") % fileName;
+    sstring ansiPath = format("%s.ansi") % filePath;
+    if (user->hasColorVt() && fileExists(ansiPath))
+      filePath = ansiPath;
+  }
+
+  void HelpFileHandler::setIsSpell() {
+    if (!skill)
+      return;
+
+    isSpell = skill->minMana > 0 || skill->minLifeforce > 0 || skill->minPiety > 0;
+  }
+
+  bool HelpFileHandler::updateFileStats() {
+    if (!stat(filePath.c_str(), &timestat))
       return true;
 
-    bufferSkillInfo(buffer, skill, skillNumber);
-    bufferSkillLagInfo(buffer, skill->lag);
-    bufferHelpFileContents(buffer, helpPath);
-    desc->page_string(buffer);
-    return true;
-  };
+    vlogf(LOG_BUG, format("bad call to help function %s, rebuilding indices") % fileName.upper());
+    buildHelpIndex();
+    user->sendTo("There was an error, try again.\n\r");
+    return false;
+  }
 
-  if (searchImmortalIndexes() || searchHelpIndex() || searchSpellIndex() || searchSkillIndex())
-    return;
+  // Define a series of tests and resulting actions on test failure. Before
+  // building the output, execute all tests and if any fail, execute the
+  // included action then end the helpfile request.
+  bool HelpFileHandler::returnEarly() {
+    struct EarlyReturn {
+        std::function<bool()> test;
+        std::function<void()> action;
+    };
 
-  sendTo("No such help file available.\n\r");
+    const std::vector<EarlyReturn> returnCases = {
+      {
+        [this]() { return !user || !user->desc; },
+        []() {},
+      },
+      {
+        [this]() { return originalArgs.trim().empty(); },
+        [this]() { user->desc->start_page_file(File::HELP_PAGE, "General help unavailable.\n\r"); },
+      },
+      {
+        [this]() { return !isValidRequest(); },
+        [this]() { user->sendTo("Illegal argument.\n\r"); },
+      },
+      {
+        [this]() { return !originalArgs.compareCaseless("index"); },
+        [this]() {
+          // bin/helpindex is a perl script. Use popen to execute the script in
+          // a separate process then pull the output in to a stream for reading.
+          FILE* index = popen("bin/helpindex", "r");
+          if (!index) {
+            vlogf(LOG_FILE, "popen failed to open bin/helpindex for read in cmd_help.cc");
+            return;
+          }
+
+          char* line = nullptr;
+          size_t len = 0;
+          while (getline(&line, &len, index) != -1) {
+            output += line;
+          }
+          pclose(index);
+          user->desc->page_string(output);
+        },
+      },
+      {
+        [this]() { return !searchAllIndexes(); },
+        [this]() { user->sendTo("No such help file available.\n\r"); },
+      },
+      {
+        [this]() { return !updateFileStats(); },
+        []() {},
+      }};
+
+    for (const auto& returnCase : returnCases) {
+      if (!returnCase.test())
+        continue;
+
+      returnCase.action();
+      return true;
+    }
+
+    help_used_num++;
+    total_help_number++;
+    save_game_stats();
+
+    return false;
+  }
+}  // namespace
+
+void TBeing::doHelp(const sstring& arg) {
+  HelpFileHandler handler(arg, this);
+  handler.displayOutput();
 }
 
 void TBeing::doBuildhelp(const char *arg) {

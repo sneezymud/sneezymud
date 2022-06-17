@@ -42,7 +42,7 @@
 
 #include <boost/algorithm/string.hpp>
 
-int TBeing::useMana(spellNumT spl)
+int TBeing::useMana(spellNumT spl) const
 {
   int arrayMana;
   int rounds;
@@ -66,7 +66,7 @@ int TBeing::useMana(spellNumT spl)
 }
 
 // LIFEFORCE
-int TBeing::useLifeforce(spellNumT spl)
+int TBeing::useLifeforce(spellNumT spl) const
 {
   int arrayLifeforce;
   int rounds;
@@ -95,7 +95,7 @@ int TBeing::useLifeforce(spellNumT spl)
 
 // END LIFEFORCE
  
-double TBeing::usePiety(spellNumT spl)
+double TBeing::usePiety(spellNumT spl) const
 {
   double arrayPiety;
   int rounds;

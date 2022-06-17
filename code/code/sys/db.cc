@@ -3756,6 +3756,16 @@ sstring fread_string(FILE *fp)
   return buf;
 }
 
+// Simply determine whether or not a file exists and can 
+// successfully be opened.
+bool fileExists(const sstring& path) {
+  if (path.empty())
+    return false;
+
+  std::ifstream file(path.data());
+  return file.is_open();
+}
+
 sstring file_to_sstring(const sstring& name) {
   sstring output{""};
 
@@ -3769,18 +3779,16 @@ sstring file_to_sstring(const sstring& name) {
   while(std::getline(fl, line)) {
     output += line + "\r\n";
   }
-  fl.close();
   return output;
 }
 
-// read contents of a text file, and place in buf
-bool file_to_sstring(const char* name, sstring& buf, concatT concat) {
+bool file_to_sstring(const sstring& name, sstring& output, concatT concat) {
   sstring result = file_to_sstring(name);
 
   if (result.empty())
     return false;
 
-  buf = concat ? buf + result : result;
+  output = concat ? output + result : result;
 
   return true;
 }

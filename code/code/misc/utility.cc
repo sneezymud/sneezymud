@@ -1982,7 +1982,7 @@ bool TBeing::checkBusy(const sstring &buf)
   return TRUE;
 }
 
-float TBeing::lagAdjust(lag_t orig_lag)
+float TBeing::lagAdjust(lag_t orig_lag) const
 {
   // basically, take a fixed amount of "orig_lag", and adjust it for speed
   //  float min_lag = 0.80 * orig_lag;
