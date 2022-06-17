@@ -549,10 +549,8 @@ TObj *ItemLoad::raw_read_item()
   *action_description = NULL;
 
   if (!raw_read_rentObject(fp, &item, &name, &shortDescr, &description, &action_description, version)) {
-    /* 
-      Delete these to prevent memory leak, as some values could have been allocated before 
-      raw_read_rentObject returned false 
-    */
+    // Delete these to prevent memory leak, as some values could have been allocated before
+    // raw_read_rentObject returned false
     delete [] name;
     delete [] shortDescr;
     delete [] description;
@@ -581,10 +579,9 @@ TObj *ItemLoad::raw_read_item()
 
   if (!(o = read_object(item.item_number, VIRTUAL))) {
     vlogf(LOG_BUG, format("Unable to load object Vnum = %d from rent.") %  item.item_number);
-    /* 
-      Delete these to prevent a memory leak, as if this point in the code is reached all
-      of these values will have been allocated inside raw_read_rentObject
-    */
+
+    // Delete these to prevent a memory leak, as if this point in the code is reached all
+    // of these values will have been allocated inside raw_read_rentObject
     delete [] name;
     delete [] shortDescr;
     delete [] description;
