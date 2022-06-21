@@ -2,13 +2,41 @@
            thing, and should make seeing all spells/prayers/rituals available to a
            multiclass character much easier. See helpfiles for usage.
 
+06-18-22 : Basic Attack Critical Hit Redesign
+           - The way critical hit chance and severity are calculated for basic attacks
+           has been completely redesigned.
+           - Similarly to before, every successful attack has a chance to become a 
+           critical hit. This chance is based on karma then modified by the crit 
+           hitting, powermove, and Aura of Vengeance skills.
+           - Previously, crit hits were arbitrarily impossible against a target 19 or 
+           more levels higher than the attacker. Crit hits are now possible against
+           targets of any level, and chance to crit is not affected by level
+           difference.
+           - Crit severity (that is, the actual flavor of crit that gets performed, 
+           with instant death crits being the most severe) is now capped and scales
+           based on the target's % of remaining hitpoints. This means that as the
+           victim's health is reduced more severe crits will become possible against
+           them.
+           - Crit hitting and powermove skills increase maximum crit severity
+           more quickly, so characters with these skills will be able to cause
+           more damaging crits when the victim is at higher remaining health.
+           - This also means that players won't be vulnerable to instakill crits
+           from mobs while at high health, and staying healed up is the best way 
+           to protect against receiving more damaging crits.
+           - The intent was to make crit hits slightly more frequent and possible 
+           against high level mobs again, while making fishing for instakill crits a 
+           non-viable strategy. Additionally, mobs should now achieve crits against 
+           players slightly more often, but crits resulting in instant player death 
+           should be much less common and generally only occur due to insufficient
+           healing.
+
 06-11-22 : Fixed several crashes related to shapeshifting/lycanthropy and re-enabled
            the lycanthropy transformation for PCs
            - Fixed saves while shapeshifted
            - Also increased the damage of the bite skill available to transformed
              lycanthropes to make it at least somewhat useful
 
-05-XX-22 : Warrior Revamp
+05-18-22 : Warrior Revamp
             - Updates to legacy warrior abilities (bodyslam, stomp, etc.) to make 
             them worth using.
             - Refactoring of warrior abilities to move abilities into more logical 
