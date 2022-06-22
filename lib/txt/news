@@ -1,3 +1,44 @@
+06-22-22 : Fixed energy drain touch and vampire bite mob special procs
+
+           These two mob procs have been broken for a long time. Mobs with these
+           procs might be noticeably more dangerous now, so step carefully.
+          
+           - Vampire bite proc: Vampires around The World have remembered how to 
+             use their fangs properly and are again able to drain health and
+             vitality from their victims with a bite. This fix doesn't affect the 
+             special vampire bite that turns a PC into a vampire - that's a 
+             separate thing which happens much less frequently. 
+             
+             The following mobs have the vampire bite proc:
+              - Dalia'Pantin
+              - a female vampire
+              - the arch nemesis
+              - a lesser vampire
+              - the arch vampire
+              - Lorto
+
+           - Energy drain touch proc: You may have previously noticed these mobs 
+             touching you with no perceivable effect (because there wasn't one),
+             but be assured something can now actually happen.
+
+             The following mobs have the energy drain touch proc:
+              - a topiary unicorn
+              - a topiary lion
+              - a topiary bear
+              - a topiary elephant
+              - the Interrogator
+              - a gruesome fade
+              - General Benjamin
+              - General Alaric
+              - Noctagon
+              - a water apparition
+              - Lixlor
+              - a young mindflayer
+              - a drider
+              - an elvish banshee
+              - a grimlock
+              - Cladosporium (nocturnal version)
+
 06-11-22 : Fixed several crashes related to shapeshifting/lycanthropy and re-enabled
            the lycanthropy transformation for PCs
            - Fixed saves while shapeshifted
