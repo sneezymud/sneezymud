@@ -540,17 +540,18 @@ int TBeing::critSuccessChance(TBeing* victim,
 
   critChance -= 2 * getCond(DRUNK);
 
-  for (auto* affect = affected; affect; affect = affect->next) {
-    if (affect->location == APPLY_CRIT_FREQUENCY) {
-      critChance *= affect->modifier;
-    }
-  }
+  // Each point of APPLY_CRIT_FREQUENCY = 0.1% crit chance increase, so multiply modifier by 100 and
+  // add to critChance
+  const int64_t affectedMod1Total = affected->sumAffectsByApplyType(APPLY_CRIT_FREQUENCY).first;
+  const int64_t objAffectMod1Total = equipment.sumAffectsByApplyType(APPLY_CRIT_FREQUENCY).first;
+  critChance += static_cast<double>(affectedMod1Total + objAffectMod1Total) * 100.0;
 
   int critSeverity = 0;
   // Mod comes in as -1 when critSuccessChance is called normally from the oneHit function.
   // Things like the vorpal proc and the imm "crit" command will send in a specific value
   // for mod, which serves as the crit severity in those cases.
   if (mod == -1) {
+    sendTo(format("<Y>Roll: %d | CritChance: %d<z>\n\r") % diceRollResult % critChance);
     if (diceRollResult > critChance)
       return 0;
 
