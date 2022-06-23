@@ -892,14 +892,10 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
 // things like consciousness. Tweak is the operative word here. - Russ  
 
 // DELETE_VICT, v died
-int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
-{
-  int rc = 0;
-  int hardness, sharp = 0;
-  int wound_duration;
-  // These areas take off main hp. We still check to see if            
-  // damage was done, but we return false, because main hp are taken   
-  // off with hit to these vital body parts. - Russ                    
+int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, TThing* maybeWeapon, int* dam) {
+  // These areas take off main hp. We still check to see if
+  // damage was done, but we return false, because main hp are taken
+  // off with hit to these vital body parts. - Russ
 
   if (isVitalPart(part_hit) || !v->slotChance(part_hit))
     return FALSE;
@@ -916,126 +912,70 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
   if (part_hit == HOLD_RIGHT)
     part_hit = WEAR_HAND_R;
 
-  TBaseWeapon *w2 = NULL;
-  if (weapon && (w2 = dynamic_cast<TBaseWeapon *>(weapon)))
-    sharp = w2->getCurSharp();
-  else
-    sharp = sharpness[getFormType() - TYPE_MIN_HIT];
+  auto* weapon = dynamic_cast<TBaseWeapon*>(maybeWeapon);
+  int sharp = weapon ? weapon->getCurSharp() : sharpness[getFormType() - TYPE_MIN_HIT];
 
- // Let's base the damage done to limb on the following things :      
- // 1) Base damage of the weapon.           (dam)                     
- // 2) Strength in limb(How healthy it is)  (body_parts[].health)     
- // 3) Constitution                         (getConShock())         
- // 4) Skin type                            (getMaterial())   
- // adding 5)                               disease state of limb (infected, leprosed, bruised, gangrenous...)
- // The healtheir the limb, the less chance of this happening, and    
- // the more damage, the more chance of it happening. - Russ          
-
-  if (setCharFighting(v, 0) == -1)
+  if (!fight() && setCharFighting(v, 0) == -1)
     return 0;
 
-  setVictFighting(v, 0);
-
-  // While it makes sense to do more damage as the limb gets bad
-  // I felt it needed to be more linear on the MUD. Sometimes
-  // realism gives way to playablity. So I changed it from
-  // current health, to ma health of limb - Russ 04/28/96
+  if (!v->fight())
+    setVictFighting(v, 0);
 
   if (!v->hasPart(part_hit))
-    return FALSE;
+    return false;
 
-  if (::number(1, (v->getMaxLimbHealth(part_hit) / 4)) < *dam) {
-    // Give them a chance to save based on con.shock
-    if (::number(1, 101) < (v->getConShock() / 3))
-      return TRUE;
+  // Modify damage based on victim's brawn. Brawnier victims take less limb damage, and vice versa.
+  if (*dam)
+    *dam = static_cast<int>(*dam / v->getStatMod(STAT_BRA));
 
-    // Check to see if skin type protects them       
-    hardness = material_nums[v->getMaterial(part_hit)].hardness *
-        v->getCurLimbHealth(part_hit) / v->getMaxLimbHealth(part_hit);
-    if (hardness && (::number(1, 101) < (hardness / 2))) 
-      return TRUE;
+  if (isPc() && v->isPc() && (roomp->isRoomFlag(ROOM_ARENA) || (inPkZone() && cutPeelPkDam())))
+    *dam /= 2;  // raising this number will lower damage rates in arena
 
-    // seeing we do the con-shock test above, don't give two benefits
-    // for con.  also, this function is for something totaly diff anyway
-    // bat 11/13/98
-    // *dam -= (int) v->getConHpModifier();
+  // if bleeding or infected or leprosed or gangrenous, take extra dam
+  if (v->isLimbFlags(part_hit, PART_BLEEDING | PART_INFECTED | PART_LEPROSED | PART_GANGRENOUS)) {
+    *dam *= 2;
+  }
 
-    if (*dam) {
-      //      *dam *= v->plotStat(STAT_CURRENT, STAT_BRA, 125, 80, 100);
-      //      *dam /= 100;
-      *dam = (int)((float)*dam / v->getBraMod());
+  // Deal 50% of total limb damage to main health pool, 50% to limb
+  int damageDealt = static_cast<int>(*dam * 0.5);
+  int rc = applyDamage(v, damageDealt, DAMAGE_NORMAL);
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    v->reformGroup();
+    return DELETE_VICT;
+  }
+
+  rc = v->hurtLimb(damageDealt, part_hit);
+  sendTo(format("<G>(%d damage to %s - HP: %d/%d)<z>\n\r") % damageDealt %
+         v->describeBodySlot(part_hit) % v->getCurLimbHealth(part_hit) %
+         v->getMaxLimbHealth(part_hit));
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_VICT;
+
+  // cuts & bruises
+  // would be nice if attack type was available, to check for blunt vs slash/pierce
+  if (v->isLimbFlags(part_hit, PART_BLEEDING)) {
+    // Chance to cut and start bleeding, or if already bleeding infect wound
+    if (!::number(0, 8)) {
+      // Infection rocks! - Russ
+      v->rawInfect(part_hit, ((*dam) * 10) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
     }
-
-    if (isPc() && v->isPc() && (roomp->isRoomFlag(ROOM_ARENA) || (inPkZone() && cutPeelPkDam())))
-      *dam /= 2;   // raising this number will lower damage rates in arena
-
-    // this changes damage done to limb only, mhit already returned from funct
-    // lessens damage based on level
-    *dam *= 25 + GetMaxLevel();
-    // lowering this next number INCREASES limb damage
-    // 4.1 balanced at 60. 75 too high, 50 too low.    
-    // 4.5 :
-    *dam /= 70;
-
-    *dam = max(0, *dam);
-    // apply some main HP loss due to limb damage
-    rc = applyDamage(v,*dam/5,DAMAGE_NORMAL);
-    if (IS_SET_DELETE(rc, DELETE_VICT)) {
-      v->reformGroup();
-      return DELETE_VICT;
-    }
-    // if bleeding or infected or leprosed or gangrenous, take extra dam
-    if (v->isLimbFlags(part_hit, PART_BLEEDING | PART_INFECTED | PART_LEPROSED | PART_GANGRENOUS)) {
-      *dam *= 2;
-    }
-    rc = v->hurtLimb(*dam, part_hit);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_VICT;
-    
-    // cuts & bruises
-    // would be nice if attack type was available, to check for blunt vs slash/pierce
-    if (v->isLimbFlags(part_hit, PART_BLEEDING)) {
-      // Chance to cut and start bleeding, or if already bleeding infect wound 
-      if (!::number(0, 8)) {
-        // Infection rocks! - Russ 
-        v->rawInfect(part_hit, ((*dam) * 10) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
-      }
     // if the attacker is barehanded, then lets reduce chance  -- bat
-    } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) && 
-               (weapon || !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) &&
-               !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) {
-      wound_duration = max(120, (*dam) * (isPc() ? 10 : 20));
-      v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
-      // vlogf(LOG_COMBAT, format("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
-    }
-    if(!v->isLimbFlags(part_hit, PART_BRUISED) 
-	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) ) 
-	   && !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10))) &&
-       !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))){
-      wound_duration = max(240, (*dam) * (isPc() ? 20 : 40));
-      v->rawBruise(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
-      // vlogf(LOG_COMBAT, format("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
-    }
-/*
-    } else if (::number(0, 400) < (sharp / 2) && 
-               (weapon || !v->isLucky(levelLuckModifier(5))) &&
-               !v->isLucky(levelLuckModifier(5))) {
-      // if the attacker is barehanded, then lets reduce chance  -- bat
-      v->rawBleed(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
-    }
-
-    // chance to bruise
-    if(!v->isLimbFlags(part_hit, PART_BRUISED) &&
-       !::number(0,6) && !v->isLucky(levelLuckModifier(5)) &&
-       !v->isLucky(levelLuckModifier(5))){
-      v->rawBruise(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
-    }
-*/
-    
-  } else
-    *dam = 0;
-
-  return TRUE;
+  } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) &&
+             (weapon ||
+              !v->isLucky(levelLuckModifier(min((int)GetMaxLevel(), v->GetMaxLevel() + 10))))) {
+    int wound_duration = max(120, (*dam) * (isPc() ? 10 : 20));
+    v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
+  }
+  if (!v->isLimbFlags(part_hit, PART_BRUISED) &&
+      !::number(
+        0,
+        ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6)) &&
+      !v->isLucky(levelLuckModifier(min((int)GetMaxLevel(), v->GetMaxLevel() + 10))) &&
+      !v->isLucky(levelLuckModifier(min((int)GetMaxLevel(), v->GetMaxLevel() + 10)))) {
+    int wound_duration = max(240, (*dam) * (isPc() ? 20 : 40));
+    v->rawBruise(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
+  }
+  return 1;
 }
 
 // damage_hand will be called when a person hits something with his/her   
