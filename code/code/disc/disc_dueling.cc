@@ -241,11 +241,10 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
       strcpy(type, "deflect");
       strcpy(type2,"deflects");
       break;
-    }    // Give fast and agile trancers an improved chance
+    }    
+    // Give fast and agile trancers an improved chance
     // translates to rougly 66% max
-    //    amt = (int)((float) amt * v->plotStat(STAT_CURRENT, STAT_AGI, 0.80, 1.25, 1.00));
-    //    amt = (int)((float) amt * v->plotStat(STAT_CURRENT, STAT_SPE, 0.80, 1.25, 1.00));
-    amt = (int)((float)amt * getSpeMod() * getAgiMod()); // does the same thing - fear hobbit trancer.
+    amt *= (getStatMod(STAT_SPE) * getStatMod(STAT_AGI));
   } else {  
     // 4% base parry chance
     amt += 40;

@@ -2508,7 +2508,7 @@ int TBeing::attackRound(const TBeing * target) const
   //bonus += (int) plotStat(STAT_CURRENT, STAT_DEX, -67, 84, 0);
 
   // this does the same thing - just uses the standardized function - dash
-  bonus += (int)(335 * getDexMod() - 335);
+  bonus += (int)(335 * getStatMod(STAT_DEX) - 335);
 
   // thaco adjustment
   // +10 hitroll should let me fight evenly with L+1 mob
@@ -2713,7 +2713,7 @@ int TBeing::defendRound(const TBeing * attacker) const
   // 75% rate would be extra 15% would be 83.3 pts
   // 48% rate would be loss of 12% would be 66.67 pts 
   if (!spelltask)
-    bonus += (int)( 335 * getAgiMod() - 335); // this does the same thing, just uses standard formulas
+    bonus += (int)( 335 * getStatMod(STAT_AGI) - 335); // this does the same thing, just uses standard formulas
     //bonus += (int) plotStat(STAT_CURRENT, STAT_AGI, -67, 84, 0);
 
   // Check if you can see your target. (penalty)

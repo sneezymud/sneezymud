@@ -51,7 +51,7 @@ bool TBeing::canFocusedAvoidance(int perc) {
   int skill = getSkillValue(SKILL_FOCUSED_AVOIDANCE);
 
   // Agi seems to be the defense stat so this makes sense
-  skill *= getAgiMod();
+  skill *= getStatMod(STAT_AGI);
 
   if (eitherLegHurt())
     skill = (skill * 0.75);

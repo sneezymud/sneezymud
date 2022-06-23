@@ -63,7 +63,7 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim, int level, short bKnown) {
     Modify level based on caster's wisdom stat, as this spell has
     no damage to modify.
     */
-  adjustedLevel *= caster->getWisMod();
+  adjustedLevel *= caster->getStatMod(STAT_WIS);
 
   auto wasPrayerSuccessful = caster->bSuccess(bKnown, caster->getPerc(), SPELL_PLAGUE_LOCUSTS);
 
