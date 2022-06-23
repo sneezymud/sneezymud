@@ -498,6 +498,43 @@ int TBeing::critSuccessChance(TBeing* victim,
                               spellNumT weaponDamageType,
                               int* damage,
                               int mod) {
+  // This defines the range against crit chance will be calculated. 100,000 allows
+  // more granular modifications of crit chance.                                
+  static constexpr int PC_CRIT_ROLL_RANGE = 100000;
+
+  // Mob crit roll range is higher than PC by factor of 10, as we wants mobs doing
+  // substantially fewer crits.
+  static constexpr int NPC_CRIT_ROLL_RANGE = PC_CRIT_ROLL_RANGE * 10;
+
+  // This defines how much base crit chance one will have with exactly average karma (so 105)
+  // It's then modified by the character's actual karma stat from -20% up to +25%. In this
+  // case, a value of 1000 equals a base crit chance of 1%.
+  static constexpr double KARMA_BASE_CRIT_CHANCE = 1000.0;
+
+  // These values will be multiplied by the attacker's learnedness in the respective skills
+  // to determine how much extra crit chance is provided. A value of 10 equals 1% incresed
+  // crit chance at max learnedness.
+  static constexpr int CRIT_HITTING_CRIT_BONUS = 20;
+  static constexpr int POWER_MOVE_CRIT_BONUS = 10;
+
+  // This defines the crit chance bonus gained from aura of vengeance. A value of 1000
+  // equals a 1% increase.
+  static constexpr int AURA_OF_VENGEANCE_CRIT_BONUS = 1000;
+
+  // This represents the base max crit severity possible when an opponent is at 100% HP.
+  // Increasing this will make more severe crits possible earlier in fights. Crit severity
+  // is a value from 1-100.
+  static constexpr int BASE_CRIT_SEVERITY = 10;
+
+  // These values represent how much the respective skills increase the crit severity
+  // ceiling at all times.
+  static constexpr int CRIT_HITTING_SEVERITY_BONUS = 5;
+  static constexpr int POWER_MOVE_SEVERITY_BONUS = 15;
+
+  // This value divided by 100 is how much each point of APPLY_CRIT_FREQUENCY from spells
+  // or gear increases crit chance                                
+  static constexpr int CRIT_FREQUENCY_VALUE_PER_POINT = 50;
+
   if (isAffected(AFF_ENGAGER) || dynamic_cast<TGun*>(weapon))
     return 0;
 
@@ -526,25 +563,22 @@ int TBeing::critSuccessChance(TBeing* victim,
   int critHittingValue = doesKnowSkill(SKILL_CRIT_HIT) ? getSkillValue(SKILL_CRIT_HIT) : 0;
   int powerMoveValue = doesKnowSkill(SKILL_POWERMOVE) ? getSkillValue(SKILL_POWERMOVE) : 0;
 
-  int diceRollResult = dice(1, isPc() ? 100000 : 1000000);
+  int diceRollResult = dice(1, isPc() ? PC_CRIT_ROLL_RANGE : NPC_CRIT_ROLL_RANGE);
 
-  // Derive base crit chance from karma. 1% base chance at 105 karma, with final range of 0.5% - 2%.
-  double critChance = 1000.0 * plotStat(STAT_CURRENT, STAT_KAR, 0.5, 2.0, 1.0);
+  double critChance = KARMA_BASE_CRIT_CHANCE * plotStat(STAT_CURRENT, STAT_KAR, 0.5, 2.0, 1.0);
 
-  critChance += 20 * critHittingValue;
-  critChance += 10 * powerMoveValue;
+  critChance += CRIT_HITTING_CRIT_BONUS * critHittingValue;
+  critChance += POWER_MOVE_CRIT_BONUS * powerMoveValue;
 
-  // Add 1% increased crit chance from Aura of Vengeance
   if (affectedBySpell(SPELL_AURA_VENGEANCE))
-    critChance += 1000;
+    critChance += AURA_OF_VENGEANCE_CRIT_BONUS;
 
   critChance -= 2 * getCond(DRUNK);
 
-  // Each point of APPLY_CRIT_FREQUENCY = 0.1% crit chance increase, so multiply modifier by 100 and
-  // add to critChance
+  // Modify crit chance based on APPLY_CRIT_FREQUENCY values from spells and/or equipment
   const int64_t affectedMod1Total = affected->sumAffectsByApplyType(APPLY_CRIT_FREQUENCY).first;
   const int64_t objAffectMod1Total = equipment.sumAffectsByApplyType(APPLY_CRIT_FREQUENCY).first;
-  critChance += static_cast<double>(affectedMod1Total + objAffectMod1Total) * 100.0;
+  critChance += static_cast<double>(affectedMod1Total + objAffectMod1Total) * CRIT_FREQUENCY_VALUE_PER_POINT;
 
   int critSeverity = 0;
   // Mod comes in as -1 when critSuccessChance is called normally from the oneHit function.
@@ -557,11 +591,11 @@ int TBeing::critSuccessChance(TBeing* victim,
 
     // Crit severity is based on two factors - base severity and max severity.
 
-    // Base severity = 10, when victim level > attacker level, to allow all
-    // attackers the potential for the highest severity crits once victim
+    // Base severity is currently set to 10, when victim level > attacker level,
+    // to allow all attackers the potential for the highest severity crits once victim
     // is at 10% or less of their maximum HP.
 
-    // Base severity = 10 + level difference, when attacker level > victim level,
+    // When attacker level > victim level, the level difference is added to the base,
     // meaning attacker can achieve more deadly crits immediately when fighting a
     // victim under its level.
 
@@ -585,11 +619,12 @@ int TBeing::critSuccessChance(TBeing* victim,
     double victCurrentHpPercent =
       static_cast<double>(victim->getHit()) / static_cast<double>(victim->hitLimit());
     double victMissingHpPercent = 100.0 - (victCurrentHpPercent * 100.0);
-    int baseCritSeverity = levelDifference <= 0 ? 10 : 10 + levelDifference;
+    int baseCritSeverity =
+      levelDifference <= 0 ? BASE_CRIT_SEVERITY : BASE_CRIT_SEVERITY + levelDifference;
     int maxCritSeverity = min(baseCritSeverity + static_cast<int>(victMissingHpPercent), 100);
 
-    maxCritSeverity += 15 * powerMoveValue / 100;
-    maxCritSeverity += 5 * critHittingValue / 100;
+    maxCritSeverity += POWER_MOVE_SEVERITY_BONUS * powerMoveValue / 100;
+    maxCritSeverity += CRIT_HITTING_SEVERITY_BONUS * critHittingValue / 100;
     maxCritSeverity = min(100, maxCritSeverity);
 
     critSeverity = ::number(1, maxCritSeverity);
