@@ -1933,7 +1933,7 @@ class TBeing : public TThing {
   bool isWary() const;
   void makeWary();
   sstring displayExp() const;
-  int hurtLimb(unsigned int, wearSlotT);
+  int hurtLimb(int, wearSlotT);
   void stunIfLimbsUseless();
   int flightCheck();
   int hpGainForLevel(classIndT) const;
