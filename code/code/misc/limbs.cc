@@ -1121,27 +1121,27 @@ void TBeing::stunIfLimbsUseless()
   disease_start(this, &aff);
 }
 
-int TBeing::hurtLimb(unsigned int dam, wearSlotT part_hit)
-{
-  unsigned int limHlt = getCurLimbHealth(part_hit);
-  sstring buf;
+int TBeing::hurtLimb(int dam, wearSlotT part_hit) {
+  int limbHealth = getCurLimbHealth(part_hit);
 
-  if (limHlt > 0) {
-    addCurLimbHealth(part_hit, -std::min(dam, limHlt));
-    if (getCurLimbHealth(part_hit) <= 0) {
-      sendTo(COLOR_BASIC, format("%sYour %s has become totally useless!%s\n\r") %
-	     red() % describeBodySlot(part_hit) % norm());
-      buf=format("$n's %s has become completely useless!") %
-	describeBodySlot(part_hit);
-      act(buf, TRUE, this, NULL, NULL, TO_ROOM, ANSI_ORANGE);
-      addToLimbFlags(part_hit, PART_USELESS);
+  if (limbHealth <= 0)
+    return false;
 
-      int rc = flightCheck();
-      if (IS_SET_DELETE(rc, DELETE_THIS))
-        return DELETE_THIS;
-    }
-    stunIfLimbsUseless();
-    return TRUE;
+  addCurLimbHealth(part_hit, -min(dam, limbHealth));
+
+  if (getCurLimbHealth(part_hit) <= 0) {
+    sendTo(COLOR_BASIC, format("%sYour %s has become totally useless!%s\n\r") % red() %
+                          describeBodySlot(part_hit) % norm());
+
+    act(format("$n's %s has become completely useless!") % describeBodySlot(part_hit), true, this,
+      nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
+    addToLimbFlags(part_hit, PART_USELESS);
+
+    int rc = flightCheck();
+    if (IS_SET_DELETE(rc, DELETE_THIS))
+      return DELETE_THIS;
   }
-  return FALSE;
+
+  stunIfLimbsUseless();
+  return true;
 }
