@@ -2213,7 +2213,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
 
       // Now we can do the speed mod in here it won't affect monks barehand
       if (fx > 0.0)
-        fx *= getSpeMod();
+        fx *= getStatMod(STAT_SPE);
     // finally if we are holding nothing and not a monk
     } else {
       fx = 1.0;
@@ -2233,7 +2233,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
 
       // Speed mod
       if (fy > 0.0)
-        fy *= getSpeMod();
+        fy *= getStatMod(STAT_SPE);
     // finally if barehand secondary and not a monk
     } else if (!sec) {
       fy = 1.0;

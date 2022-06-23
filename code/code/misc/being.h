@@ -1358,18 +1358,11 @@ class TBeing : public TThing {
   int getAgiReaction() const;
   int getConShock() const;
   float getConHpModifier() const;
-  float getStrMod() const;
-  float getBraMod() const;
-  float getConMod() const;
-  float getDexMod() const;
-  float getAgiMod() const;
-  float getSpeMod() const;
-  float getIntMod() const;
-  float getWisMod() const;
-  float getFocMod() const;
-  float getPerMod() const;
-  float getChaMod() const;
-  float getKarMod() const;
+  double getStatMod(statTypeT statType) const;
+
+  using StatList = std::initializer_list<statTypeT>;
+  bool statCheck(spellNumT spellNum, StatList attackerStatTypes, TBeing *defender, StatList defenderStatTypes, bool useIsNotPowerful = false, double isNotPowerfulBonus = 1.35);
+
   float getIntModForPracs() const;
   float getChaShopPenalty() const;
   float getSwindleBonus();
