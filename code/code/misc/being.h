@@ -284,7 +284,7 @@ class taskData {
 
 class equipmentData {
   private:
-    TThing *equipment[MAX_WEAR];
+    TThing *equipment[MAX_WEAR]{nullptr};
 
   public:
     TThing *operator[] (int slot) const {
@@ -330,6 +330,31 @@ class equipmentData {
       }
 
       equipment[slot]=t;
+    }
+
+    // Finds the total sum for objAffect.modifier1 and objAffect.modifier2 amongst all worn
+    // equipment for the given applyTypeT
+    std::pair<int64_t, int64_t> sumAffectsByApplyType(applyTypeT affectType) {
+      int64_t mod1 = 0;
+      int64_t mod2 = 0;
+
+      std::for_each(std::begin(equipment), std::end(equipment),
+        [&mod1, &mod2, affectType](TThing* thing) {
+          auto* eq = dynamic_cast<TObj*>(thing);
+          if (!eq)
+            return;
+
+          std::for_each(std::begin(eq->affected), std::end(eq->affected),
+            [&mod1, &mod2, affectType](const objAffData& aff) {
+              if (aff.location != affectType)
+                return;
+
+              mod1 += aff.modifier;
+              mod2 += aff.modifier2;
+            });
+        });
+
+      return { mod1, mod2 };
     }
 
     equipmentData();
