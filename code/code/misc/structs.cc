@@ -1945,3 +1945,20 @@ const char * extraDescription::findExtraDesc(const char *word)
   return NULL;
 }
 
+// Find the total sums of aff->modifier and aff->modifier2 amongst all active affects for given
+// applyTypeT
+std::pair<int64_t, int64_t> affectedData::sumAffectsByApplyType(const applyTypeT affectType) const {
+  int64_t mod1 = 0;
+  int64_t mod2 = 0;
+
+  for (const affectedData* aff = this; aff != nullptr; aff = aff->next) {
+    if (aff->location != affectType)
+      continue;
+
+    mod1 += aff->modifier;
+    mod2 += aff->modifier2;
+  }
+
+  return { mod1, mod2 };
+}
+

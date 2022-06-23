@@ -341,6 +341,7 @@ class affectedData {
     void setMod(long v) { if (location == APPLY_IMMUNITY || location == APPLY_SPELL)  modifier2 = v; else modifier = v; }
     bool canBeRenewed() const;
     bool shouldGenerateText() const;
+    std::pair<int64_t, int64_t> sumAffectsByApplyType(applyTypeT affectType) const;
 };
 
 // affects size of charFile
