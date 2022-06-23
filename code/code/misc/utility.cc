@@ -1989,10 +1989,7 @@ float TBeing::lagAdjust(lag_t orig_lag)
   //  float max_lag = 1.25 * orig_lag;
 
   // remember that the min_lag should be held by max-stat, and vice-versa
-  //  float act_lag = plotStat(STAT_CURRENT, STAT_SPE, max_lag, min_lag, (float) orig_lag);
-
-  float act_lag = (float)(orig_lag) / getSpeMod();
-  // this does the same thing, just uses the standardized formulas - dash
+  float act_lag = (float)(orig_lag) / getStatMod(STAT_SPE);
 
   act_lag = max(act_lag, (float) 0.0);
   return act_lag;

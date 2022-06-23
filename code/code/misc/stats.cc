@@ -1155,65 +1155,74 @@ float TBeing::getConHpModifier() const
   return plotStat(STAT_CURRENT, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (double) 1.0);
 }
 
-float TBeing::getStrMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_STR, 0.8, 1.25, 1.0);
+double TBeing::getStatMod(statTypeT statType) const {
+  return plotStat(STAT_CURRENT, statType, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getBraMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_BRA, 0.8, 1.25, 1.0);
-}
+/*
+  Compare a set of attacker's stats to a set of defender's stats for purposes of stat-based skill
+  success determination.  
 
-float TBeing::getConMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_CON, 0.8, 1.25, 1.0);
-}
+  @param skillNum `spellNumT` of the skill being attempted
+  @param attackerStatTypes/defenderStatTypes `std::initializer_list<statTypeT>` containing the
+  `statTypeT` values for attacker and defender. Stat types can be different for each, as often it 
+  will make sense to use a different stats when attacking with a skill vs defending against it.
+  @param defender `TBeing*` to the victim of the skill attempt
+  @param useIsNotPowerful boolean denoting whether this skill attempt should be subject to an
+  `isNotPowerful` check. If the skill should be more difficult when attempted against defenders 
+  of higher level than the attacker, then this should be true
+  @param isNotPowerfulBonus the percent by which the defender's stats should be
+  increased if the attacker fails the isNotPowerful check. Default value is 1.35. At this value,
+  an attacker who fails the isNotPowerful check with maxed stats will have about a 50% chance 
+  to succeed against a defender with min stats, but only about a 2% chance to succeed when 
+  attacker and defender stats are equal.
+  @return True if attacker succeeded, false if defender succeeded
+*/
+bool TBeing::statCheck(spellNumT spellNum, StatList attackerStatTypes, TBeing *defender,
+                       StatList defenderStatTypes, bool useIsNotPowerful,
+                       double isNotPowerfulBonus) {
+  auto attStatTypes = std::vector<statTypeT>(attackerStatTypes);
+  auto defStatTypes = std::vector<statTypeT>(defenderStatTypes);
 
-float TBeing::getDexMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_DEX, 0.8, 1.25, 1.0);
-}
+  mud_assert(attStatTypes.size() == defStatTypes.size(),
+             "TBeing::statCheck called with different number of stats for attacker vs defender");
 
-float TBeing::getAgiMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_AGI, 0.8, 1.25, 1.0);
-}
+  /* 
+    Minimum value for a stat mod returned by TBeing::getStatMod() is 0.80. Max value is 1.25. Therefore,
+    after multiplying each by 100, we get minimum total = [# of stat types] * 80, and max total = # * 125.
 
-float TBeing::getSpeMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
-}
+    Make a roll where lowest roll is -difference and highest is difference. Add this to attacker's stat total
+    to create variance. When attacker and defender have equal stat totals, the roll creates a 50% chance for
+    the attacker to succeed.
 
-float TBeing::getIntMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_INT, 0.8, 1.25, 1.0);
-}
+    Success chance changes linearly with stat disparity between attacker/defender, as follows:
 
-float TBeing::getWisMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_WIS, 0.8, 1.25, 1.0);
-}
+    SuccessChance = (Diff + AttackerStats - (DefenderStats * isNotPowerful ? 1.35 : 1)) / Diff * 2
 
-float TBeing::getFocMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_FOC, 0.8, 1.25, 1.0);
-}
+    Success Roll Formula:
+    Success = (::number(-diff, diff) + AttackerStats) >= (DefenderStats * isNotPowerful ? 1.35 : 1);
+  */
+  auto minTotal = attStatTypes.size() * 80;
+  auto maxTotal = attStatTypes.size() * 125;
+  auto diff = maxTotal - minTotal;
+  auto roll = ::number(-diff, diff);
 
-float TBeing::getPerMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_PER, 0.8, 1.25, 1.0);
-}
+  auto calcStatValue = [](TBeing *being, const std::vector<statTypeT> &statTypes) {
+    double total = 0.0;
+    for (const auto &statType : statTypes) {
+      total += being->getStatMod(statType);
+    }
+    return total * 100.0;
+  };
 
-float TBeing::getChaMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_CHA, 0.8, 1.25, 1.0);
-}
+  auto attStatTotal = calcStatValue(this, attStatTypes);
+  auto defStatTotal = calcStatValue(defender, defStatTypes);
+  if (useIsNotPowerful && isNotPowerful(defender, getSkillLevel(spellNum), spellNum, SILENT_YES)) {
+    defStatTotal *= isNotPowerfulBonus;
+  }
 
-float TBeing::getKarMod() const
-{
-  return plotStat(STAT_CURRENT, STAT_KAR, 0.8, 1.25, 1.0);
-}
+  return (attStatTotal + roll) >= defStatTotal;
+};
 
 float TBeing::getIntModForPracs() const
 {

@@ -663,7 +663,7 @@ void TBeing::doAttribute(const char *arg)
       }
 
       //// bra
-      mod=(int)(getBraMod()*100)-100;
+      mod=(int)(getStatMod(STAT_BRA)*100)-100;
 
       if(GetMaxLevel()>=25){
 	sendTo(COLOR_MOBS, format("Your brawn gives you a %i%c damage absorption %s.\n\r") %
@@ -686,7 +686,7 @@ void TBeing::doAttribute(const char *arg)
 
       
       //// dex
-      mod=(int)(getDexMod()*100)-100;
+      mod=(int)(getStatMod(STAT_DEX)*100)-100;
 
       if(GetMaxLevel()>=25){
 	sendTo(COLOR_MOBS, format("Your dexterity gives you a %i%c hitting %s.\n\r") %
@@ -697,7 +697,7 @@ void TBeing::doAttribute(const char *arg)
       }
 
       //// agi
-      mod=(int)(getAgiMod()*100)-100;
+      mod=(int)(getStatMod(STAT_AGI)*100)-100;
 
       if(GetMaxLevel()>=25){
 	sendTo(COLOR_MOBS, format("Your agility gives you a %i%c armor class %s.\n\r") %
@@ -721,7 +721,7 @@ void TBeing::doAttribute(const char *arg)
       }
 
       //// foc
-      mod=(int)(getFocMod()*100)-100;
+      mod=(int)(getStatMod(STAT_FOC)*100)-100;
 
       if(GetMaxLevel()>=25){
 	sendTo(COLOR_MOBS, format("Your focus gives you a %i%c skill success %s.\n\r") %
@@ -745,7 +745,7 @@ void TBeing::doAttribute(const char *arg)
       }
 
       //// spe
-      mod=(int)(getSpeMod()*100)-100;
+      mod=(int)(getStatMod(STAT_SPE)*100)-100;
 
       if(GetMaxLevel()>=25){
 	sendTo(COLOR_MOBS, format("Your speed gives you a %i%c %s to your number of attacks.\n\r") %

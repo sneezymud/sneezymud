@@ -1333,9 +1333,8 @@ bool TBeing::bSuccess(int ubCompetence, spellNumT spell)
   limit *= ubCompetence;
   limit /= MAX_SKILL_LEARNEDNESS;
 
-  // factor in focus
-  //limit *= plotStat(STAT_CURRENT, STAT_FOC, 0.80, 1.25, 1.00);
-  limit *= getFocMod(); // does the same thing, just uses standard formula
+  // factor in focus  
+  limit *= getStatMod(STAT_FOC); // does the same thing, just uses standard formula
 
   // Adding in Karma (luck) as a smaller component than focus
   limit *= plotStat(STAT_CURRENT, STAT_KAR, 0.9, 1.125, 1.0);
