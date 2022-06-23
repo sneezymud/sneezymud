@@ -1,9 +1,25 @@
+06-XX-22 : Limb Damage Redesign
+           - With the changes to critical hits, it's now possible (and even likely)
+           with the current limb damage code for players to scrap the limbs of 
+           end-game mobs in a single crit, trivializing combat.
+           - To allow limb damage to work within the critical hit update, the way it's
+           calculated and applied has been redesigned.
+           - Hits on limbs now do 50% of the incoming damage to the victim's main HP
+           pool, and 50% to the limb. Damage is reduced by high brawn and increased
+           by low brawn.
+           - The values in this update will be subject to frequent change in response
+           to tester feedback over the next while. The goal is to find a good balance
+           where limb damage can still affect a fight but isn't the primary goal of
+           end-game combat, and where the extra damage to the main HP pool isn't too
+           substantial of an increase.
+
 06-XX-22 : Basic Attack Critical Hit Redesign
            - The way critical hit chance and severity are calculated for basic attacks
            has been completely redesigned.
            - Similarly to before, every successful attack has a chance to become a 
            critical hit. This chance is based on karma then modified by the crit 
-           hitting, powermove, and Aura of Vengeance skills.
+           hitting, powermove, and the Aura of Vengeance skills, plus any Crit 
+           Frequency bonuses from spells and/or worn equipment.
            - Previously, crit hits were arbitrarily impossible against a target 19 or 
            more levels higher than the attacker. Crit hits are now possible against
            targets of any level, and chance to crit is not affected by level
