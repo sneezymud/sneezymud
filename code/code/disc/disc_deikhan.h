@@ -75,7 +75,6 @@ public:
 // Level 22
     CSkill skPoisonDeikhan;
 // Level 25
-    CSkill skSwitchDeikhan;
     CSkill skDisarmDeikhan;
     CSkill skLayHands;
 // Level 28
@@ -110,7 +109,6 @@ public:
       skCharge(),
       skHarmSeriousDeikhan(),
       skPoisonDeikhan(),
-      skSwitchDeikhan(),
       skDisarmDeikhan(),
       skLayHands(),
       skHealCriticalDeikhan(),
@@ -142,7 +140,6 @@ public:
         skCharge(a.skCharge),
         skHarmSeriousDeikhan(a.skHarmSeriousDeikhan),
         skPoisonDeikhan(a.skPoisonDeikhan),
-        skSwitchDeikhan(a.skSwitchDeikhan),
         skDisarmDeikhan(a.skDisarmDeikhan),
         skLayHands(a.skLayHands),
         skHealCriticalDeikhan(a.skHealCriticalDeikhan),
@@ -175,7 +172,6 @@ public:
       skCharge = a.skCharge;
       skHarmSeriousDeikhan = a.skHarmSeriousDeikhan;
       skPoisonDeikhan = a.skPoisonDeikhan;
-      skSwitchDeikhan = a.skSwitchDeikhan;
       skDisarmDeikhan = a.skDisarmDeikhan;
       skLayHands = a.skLayHands;
       skHealCriticalDeikhan = a.skHealCriticalDeikhan;

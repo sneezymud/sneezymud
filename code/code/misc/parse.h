@@ -437,6 +437,7 @@ enum cmdTypeT {
      CMD_PENANCE,
      CMD_SMITE,
      CMD_CHARGE,
+     CMD_ORIENT,
      CMD_HURL,
      CMD_LOWER,
      CMD_REPLY,

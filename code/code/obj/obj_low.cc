@@ -196,6 +196,7 @@ int ObjectEvaluator::getStatPointsRaw()
       20.0, //AFF_CLARITY
       0.0, //AFF_FLIGHTWORTHY
       0.0, //AFF_FOCUS_ATTACK
+      0.0, //AFF_ORIENT
       };
   static float immunityCost[MAX_IMMUNES] = {
       0.5,  //IMMUNE_HEAT
