@@ -119,7 +119,8 @@ const uint64_t AFF_AGGRESSOR         = uint64_t(1<<30); // (set automatically)
 const uint64_t AFF_CLARITY           = uint64_t(0x0000000080000000LLU); // switch to literals to avoid bitshift cast to 32-bit long
 const uint64_t AFF_FLIGHTWORTHY      = uint64_t(0x0000000100000000LLU);
 const uint64_t AFF_FOCUS_ATTACK      = uint64_t(0x0000000200000000LLU);
-const int AFF_MAX                    = 34;
+const uint64_t AFF_ORIENT            = uint64_t(0x0000000400000000LLU);
+const int AFF_MAX                    = 35;
 
 // these are used to pass deletion bitvectors through functions
 // it is used in same functions that return degree of damage done

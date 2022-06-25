@@ -1287,6 +1287,7 @@ class TBeing : public TThing {
   void doResize(const char *);
   int doDeathstroke(const char *, TBeing *);
   int doFocusAttack(const char *, TBeing *);
+  int doOrient();
   int doWhirlwind();
   int doRally();
   int doFortify();

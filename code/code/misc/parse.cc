@@ -1604,6 +1604,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
         case CMD_CHARGE:
           rc = doCharge(newarg.c_str(), dynamic_cast<TBeing *>(vict));
           break;
+        case CMD_ORIENT:
+          rc = doOrient();
+          break;
         case CMD_SPLIT:
           doSplit(newarg.c_str(), true);
           addToLifeforce(1);
@@ -2861,6 +2864,7 @@ void buildCommandArray(void)
   commandArray[CMD_PENANCE] = new commandInfo("penance", POSITION_RESTING, 0);
   commandArray[CMD_SMITE] = new commandInfo("smite", POSITION_SITTING, 0);
   commandArray[CMD_CHARGE] = new commandInfo("charge", POSITION_SITTING, 0);
+  commandArray[CMD_ORIENT] = new commandInfo("orient", POSITION_SITTING, 0);
   commandArray[CMD_LOWER] = new commandInfo("lower", POSITION_STANDING, 0);
   commandArray[CMD_REPLY] = new commandInfo("reply", POSITION_RESTING, 0);
   commandArray[CMD_HEAVEN]=new commandInfo("heaven",POSITION_DEAD, GOD_LEVEL1);
