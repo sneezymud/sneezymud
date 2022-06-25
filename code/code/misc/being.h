@@ -1312,6 +1312,7 @@ class TBeing : public TThing {
   void doResize(const char *);
   int doDeathstroke(const char *, TBeing *);
   int doFocusAttack(const char *, TBeing *);
+  int doOrient();
   int doWhirlwind();
   int doRally();
   int doFortify();
@@ -1382,6 +1383,7 @@ class TBeing : public TThing {
   int checkShield(TBeing *, TThing *, wearSlotT, spellNumT, int);
   int getWeaponDam(const TBeing *, const TThing *, primaryTypeT) const;
   virtual float getStrDamModifier() const;
+  virtual float getWisDamModifier() const;
   virtual float getDexDamModifier() const;
   int getDexReaction() const;
   int getAgiReaction() const;

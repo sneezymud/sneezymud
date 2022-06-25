@@ -1108,14 +1108,16 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
   return num;
 }
 
-// Some notes on these two dam formulas
 // High stat should yield 1.25 * more dam, low 0.80 less dam
 float TBeing::getStrDamModifier() const
 {
-  // the name of this function is historical, we want to use brawn (damage)
-  // not strength (weight)
-  // um no, we use str.
   return plotStat(STAT_CURRENT, STAT_STR, 0.8, 1.25, 1.0, 1.0);
+}
+
+// High stat should yield 1.25 * more dam, low 0.80 less dam
+float TBeing::getWisDamModifier() const
+{
+  return plotStat(STAT_CURRENT, STAT_WIS, 0.8, 1.25, 1.0, 1.0);
 }
 
 float TBeing::getDexDamModifier() const
