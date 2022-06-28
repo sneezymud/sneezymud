@@ -432,6 +432,7 @@ class TMonster : public TBeing {
     void mobAI();
     int standUp();
     void elementalFix(TBeing *, spellNumT, bool);
+    void customizeThrall(spellNumT);
     void genericCharmFix();
     void genericPetFix();
     int findMyHorse();
