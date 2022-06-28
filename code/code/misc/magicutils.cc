@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include <cmath>
+#include <algorithm>
 
 #include "extern.h"
 #include "handler.h"
@@ -21,33 +22,17 @@
 
 void TMonster::balanceMakeNPCLikePC()
 {
-  // This is predicated on balance ideas
-  // If a player buys a pet/charm/etc, that pet has stats of an NPC
-  // which for the most part are very different from a PC
-  // e.g. 2*HP, 1/2*damage, etc
-  // If they use this mob as a tank (legitimate) then things will be
-  // very skewed.
-  // PC damage hitting behing NPC HP tank
-  // to get around this, tweak the NPC so that it resembles a "typical" PC
-
-  // conversion factor of 1.75 to 0.9091
-  float conv_num = 1.0 / (1.1 * 1.75);
+  float scalingValue = ::number(65,85) / 100.0;
 
   // modify HP
-  float hpl = getHPLevel();
-  hpl *= conv_num;
-  // we want to make player tanks a bit more favorable than charm/elemental tanks... yes?
-  hpl *= .80;
+  float hpl = getHPLevel() * scalingValue;
   setHPLevel(hpl);
   setHPFromHPLevel();
 
   // modify damage capacity
   float daml = getDamLevel();
-  daml /= (conv_num * 1.5);
+  daml /= scalingValue;
   setDamLevel(daml);
-
-
-  // leave AC alone, should be OK
 }
 
 // set AC, hp, damage, to hit adjustment for poly'd mages and shamans
@@ -1214,45 +1199,27 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
 
   switch (spell) {
     case SPELL_CONJURE_AIR:
-      // air elems fly, so let's account for this and make uhm weak
-      level = (int) (0.8 * level);
-      break;
-    case SPELL_CONJURE_FIRE:
-      // fire elms fly, so let's account for this and also make them weak
-      level = (int) (0.8 * level);
-      break;
-    case SPELL_CONJURE_EARTH:
-      level = (int) (0.8 * level);
-      break;
-    case SPELL_CONJURE_WATER:
-      level = (int) (0.8 * level);
-      break;
     case SPELL_ENTHRALL_SPECTRE:
-      level = (int) (0.8 * level);
-      break;
+    case SPELL_CONJURE_FIRE:
     case SPELL_ENTHRALL_GHAST:
       level = (int) (0.8 * level);
       break;
     case SPELL_ENTHRALL_GHOUL:
-      level = (int) (0.85 * level);
-      break;
     case SPELL_ENTHRALL_DEMON:
-      level = (int) (0.85 * level);
-      break;
     case SPELL_CREATE_WOOD_GOLEM:
+    case SPELL_CONJURE_WATER:
       level = (int) (0.9 * level);
       break;
     case SPELL_CREATE_ROCK_GOLEM:
-      level = (int) (0.95 * level);
-      break;
     case SPELL_CREATE_IRON_GOLEM:
-      level = (int) (1.0 * level);
-      break;
+    case SPELL_CONJURE_EARTH:
     case SPELL_CREATE_DIAMOND_GOLEM:
       level = (int) (1.0 * level);
       break;
     case SPELL_RESURRECTION:
-      level = (int) (1.0 * min((int)GetMaxLevel(), level));
+      level = caster->GetMaxLevel() >= 50 ? 
+              (int) min((int)GetMaxLevel(), max(level, (int)GetMaxLevel()-50)) :
+              (int) min((int)GetMaxLevel(), level);
       hplevel = (getHPLevel()/(int)GetMaxLevel());
       aclevel = (getACLevel()/(int)GetMaxLevel());
       damlevel = (getDamLevel()/(int)GetMaxLevel());
@@ -1281,13 +1248,87 @@ void TMonster::elementalFix(TBeing *caster, spellNumT spell, bool flags)
 
   setHitroll(0);
 
+  // Set some basic values across the board
   genericCharmFix();
+
+  // Customize each thrall for a bit more flavor
+  customizeThrall(spell);
+}
+
+void TMonster::customizeThrall(spellNumT spell)
+{
+  switch (spell) {
+    case SPELL_CONJURE_AIR:
+      setImmunity(IMMUNE_AIR, 75);
+      setImmunity(IMMUNE_EARTH, -75);
+      break;
+    case SPELL_CONJURE_FIRE:
+      setImmunity(IMMUNE_HEAT, 75);
+      setImmunity(IMMUNE_WATER, -75);
+      setImmunity(IMMUNE_COLD, -35);
+      break;
+    case SPELL_ENTHRALL_SPECTRE:
+      setImmunity(IMMUNE_BLUNT, -15);
+      setImmunity(IMMUNE_SLASH, 10);
+      setImmunity(IMMUNE_PIERCE, 10);
+      break;
+    case SPELL_ENTHRALL_GHAST:
+      setImmunity(IMMUNE_BLUNT, -25);
+      setImmunity(IMMUNE_SLASH, 20);
+      setImmunity(IMMUNE_PIERCE, 20);
+      break;
+    case SPELL_ENTHRALL_GHOUL:
+      setImmunity(IMMUNE_BLUNT, -35);
+      setImmunity(IMMUNE_SLASH, 25);
+      setImmunity(IMMUNE_PIERCE, 25);
+      break;
+    case SPELL_ENTHRALL_DEMON:
+      setImmunity(IMMUNE_PARALYSIS, 50);
+      break;
+    case SPELL_CREATE_WOOD_GOLEM:
+      setImmunity(IMMUNE_ACID, 35);
+      setImmunity(IMMUNE_AIR, 35);
+      setImmunity(IMMUNE_ELECTRICITY, 35);
+      setImmunity(IMMUNE_DRAIN, 35);
+      setImmunity(IMMUNE_WATER, 35);
+      setImmunity(IMMUNE_HEAT, -75);
+      break;
+    case SPELL_CONJURE_WATER:
+      setImmunity(IMMUNE_WATER, 75);
+      setImmunity(IMMUNE_HEAT, -75);
+      break;
+    case SPELL_CREATE_ROCK_GOLEM:
+      setImmunity(IMMUNE_BLUNT, -75);
+      setImmunity(IMMUNE_SLASH, 35);
+      setImmunity(IMMUNE_PIERCE, 35);
+      break;
+    case SPELL_CREATE_IRON_GOLEM:
+      setImmunity(IMMUNE_SLASH, 25);
+      break;
+    case SPELL_CONJURE_EARTH:
+      setImmunity(IMMUNE_EARTH, 75);
+      setImmunity(IMMUNE_AIR, -75);
+      setImmunity(IMMUNE_BLUNT, -40);
+      setImmunity(IMMUNE_SLASH, 15);
+      setImmunity(IMMUNE_PIERCE, 15);
+      break;
+    case SPELL_CREATE_DIAMOND_GOLEM:
+      setImmunity(IMMUNE_PIERCE, 20);
+      setImmunity(IMMUNE_SLASH, 20);
+      break;
+    case SPELL_RESURRECTION:
+      break;
+    default:
+      vlogf(LOG_BUG, format("Bad spellNumT (%d) to customizeThrall") %  spell);
+      break;
+  }
 }
 
 void TMonster::genericPetFix()
 {
   // for pets
 }
+
 // fix some values on charms/zombies, etc
 void TMonster::genericCharmFix()
 {
