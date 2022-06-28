@@ -153,12 +153,12 @@ static int charge(TBeing *ch, TBeing *vict)
     dam += ::number(5, ch->GetMaxLevel() + bKnown);
   }
 
-  int shockKnown = ch->getSkillValue(SKILL_SHOCK_CAVALRY);t 
+  int shockKnown = ch->getSkillValue(SKILL_SHOCK_CAVALRY);
   int successfulShockSkill = ch->bSuccess(shockKnown, SKILL_SHOCK_CAVALRY);
   int successfulShockHit = ch->specialAttack(vict, SKILL_SHOCK_CAVALRY);
 
   if (shockKnown && successfulShockSkill && successfulShockHit) {
-    dam += dam * shockKnown / 150;
+    dam += dam * mount->getWeight() / 4000;
 
     act("You charge $N, trampling $M with an especially mighty blow!",  TRUE, ch, 0, vict, TO_CHAR);
     act("$n and $s mount trample you with a mighty charge!", TRUE, ch, 0, vict, TO_VICT);
