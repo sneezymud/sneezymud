@@ -11,6 +11,7 @@
 #include "room.h"
 #include "being.h"
 #include "client.h"
+#include "combat.h"
 #include "person.h"
 #include "low.h"
 #include "colorstring.h"
@@ -798,27 +799,36 @@ int TBeing::doKwave(const char *tString){
   if(!(tVictim=psiAttackChecks(this, SKILL_KINETIC_WAVE, tString)))
     return FALSE;
   
-  int bKnown=getSkillValue(SKILL_KINETIC_WAVE);
+  int successfulSkill = bSuccess(SKILL_KINETIC_WAVE);
+  int successfulHit   = specialAttack(tVictim, SKILL_KINETIC_WAVE);
 
-  if (bSuccess(bKnown, SKILL_KINETIC_WAVE)) {
+  if (successfulSkill && (successfulHit == COMPLETE_SUCCESS || successfulHit == PARTIAL_SUCCESS)) {
     act("You set loose a wave of kinetic force at $N!",
       FALSE, this, NULL, tVictim, TO_CHAR);
 
-    if (tVictim->riding) {
-      act("You knock $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_CHAR);
-      act("$n knocks $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_NOTVICT);
-      act("$n knocks you off $p.", FALSE, this, tVictim->riding, tVictim, TO_VICT);
-      tVictim->dismount(POSITION_STANDING);
+    if (successfulHit == COMPLETE_SUCCESS) {
+      if (tVictim->riding) {
+        act("You knock $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_CHAR);
+        act("$n knocks $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_NOTVICT);
+        act("$n knocks you off $p.", FALSE, this, tVictim->riding, tVictim, TO_VICT);
+        tVictim->dismount(POSITION_STANDING);
+      }
+
+      act("$n sends $N sprawling with a kinetic force wave!", FALSE, this, 0, tVictim, TO_NOTVICT);
+      act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
+      act("You tumble as $n knocks you over with a kinetic wave.", FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
+
+      rc = kwaveDamage(this, tVictim);
     }
-
-    act("$n sends $N sprawling with a kinetic force wave!", FALSE, this, 0, tVictim, TO_NOTVICT);
-    act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
-    act("You tumble as $n knocks you over with a kinetic wave.", FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
-
-    rc = kwaveDamage(this, tVictim);
+    // Partial success - damage only
+    else  {
+      int damage = getSkillDam(tVictim, SKILL_KINETIC_WAVE, getSkillLevel(SKILL_KINETIC_WAVE), getAdvLearning(SKILL_KINETIC_WAVE));
+      rc = reconcileDamage(tVictim, damage, SKILL_KINETIC_WAVE);
+    }
+    
     if (IS_SET_ONLY(rc, DELETE_VICT)) {
-        delete tVictim;
-        tVictim = NULL;
+      delete tVictim;
+      tVictim = NULL;
     }
   }
   else {
@@ -837,22 +847,68 @@ int TBeing::doPsidrain(const char *tString){
 
   if(!(tVictim=psiAttackChecks(this, SKILL_PSIDRAIN, tString)))
     return FALSE;
+    
+  int successfulSkill = bSuccess(SKILL_PSIDRAIN);
 
-  // check mindflayer race
+  if (!successfulSkill) {
+    sendTo("You fail your attempt to drain your victim.\n\r");
+    return FALSE;
+  }
+
+  // non-mindflayer race
   if(getRace() != RACE_MFLAYER && !isImmortal()){
-    sendTo("Only mindflayer psionicists can drain.\n\r");
-    return FALSE;
+
+    // Adding a lockout 
+    if (tVictim->affectedBySpell(SKILL_PSIDRAIN)) {
+      sendTo("You cannot psionically drain that target again so soon.\n\r");
+      return FALSE;
+    }
+
+    int perc=::number(10, 60);
+
+    // reduce amount significantly if victim is a dumb animal
+    if(tVictim->isDumbAnimal())
+      perc/=5;
+
+    short int addmana=(int)((manaLimit()*(perc/2))/100.0);
+    addmana=min(addmana, tVictim->manaLimit());
+    addToMana(addmana);
+
+    colorAct(COLOR_SPELLS, "You mentally drain $N, siphoning off $S <Y>energy <z>with your mind!",
+	           TRUE, this, NULL, tVictim, TO_CHAR);
+    colorAct(COLOR_SPELLS, "$n mentally drains you, siphoning off your <Y>energy <z>with $s mind!",
+	           TRUE, this, NULL, tVictim, TO_VICT);
+    colorAct(COLOR_SPELLS, "$n mentally drains $N, siphoning off $S <Y>energy <z>with $s mind!",
+	           TRUE, this, NULL, tVictim, TO_NOTVICT);
+
+    int rc = reconcileDamage(tVictim, 100, SKILL_PSIDRAIN);
+    tVictim->addToMana(-addmana);
+    addSkillLag(SKILL_PSIDRAIN, rc);
+
+    affectedData aff1;
+    aff1.type = SKILL_PSIDRAIN;
+    aff1.duration = Pulse::UPDATES_PER_MUDHOUR;
+    aff1.bitvector = 0;
+    aff1.location = APPLY_AGI;
+    aff1.modifier = perc/3;
+    tVictim->affectTo(&aff1, -1);
+
+    if (IS_SET_ONLY(rc, DELETE_VICT)) {
+      delete tVictim;
+      tVictim = NULL;
+      REM_DELETE(rc, DELETE_VICT);
+    } 
+
+    return TRUE;
   }
+  else {
   
-  // check incap or mortal etc
-  if(tVictim->getPosition() > POSITION_INCAP){
-    sendTo("You can only drain incapacitated victims.\n\r");
-    return FALSE;
-  }
+    // check incap or mortal etc
+    if(tVictim->getPosition() > POSITION_INCAP){
+      sendTo("You can only drain incapacitated victims.\n\r");
+      return FALSE;
+    }
 
-  int bKnown=getSkillValue(SKILL_PSIDRAIN);
-
-  if (bSuccess(bKnown, SKILL_PSIDRAIN)) {
     int perc=::number(15,25);
 
     // reduce amount significantly if victim is a dumb animal
@@ -874,15 +930,12 @@ int TBeing::doPsidrain(const char *tString){
     addToHit(addhit);
     addToMana(addmana);
 
-    colorAct(COLOR_SPELLS,
-	"<k>You wrap your tentacles around $N's head and begin to devour $S energy.<1>",
-	TRUE, this, NULL, tVictim, TO_CHAR);
-    colorAct(COLOR_SPELLS,
-    "<k>$n wraps $s tentacles around your head and begins to devour your energy.<1>",
-	TRUE, this, NULL, tVictim, TO_VICT);
-    colorAct(COLOR_SPELLS,
-     "<k>$n wraps $s tentacles around $N's head and begins to devour $S energy.<1>",
-	TRUE, this, NULL, tVictim, TO_NOTVICT);
+    colorAct(COLOR_SPELLS, "<k>You wrap your tentacles around $N's head and begin to devour $S energy.<1>",
+	           TRUE, this, NULL, tVictim, TO_CHAR);
+    colorAct(COLOR_SPELLS, "<k>$n wraps $s tentacles around your head and begins to devour your energy.<1>",
+	           TRUE, this, NULL, tVictim, TO_VICT);
+    colorAct(COLOR_SPELLS, "<k>$n wraps $s tentacles around $N's head and begins to devour $S energy.<1>",
+	           TRUE, this, NULL, tVictim, TO_NOTVICT);
 
     int rc = reconcileDamage(tVictim, 100, SKILL_PSIDRAIN);
     addSkillLag(SKILL_PSIDRAIN, rc);
@@ -891,12 +944,12 @@ int TBeing::doPsidrain(const char *tString){
       delete tVictim;
       tVictim = NULL;
       REM_DELETE(rc, DELETE_VICT);
+    } else {
+      psiAttackFailMsg(this, tVictim);
     }
-  } else {
-    psiAttackFailMsg(this, tVictim);
-  }
 
-  return TRUE;
+    return TRUE;
+  }
 }
 
 
