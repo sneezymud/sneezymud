@@ -585,6 +585,8 @@ class TBeing : public TThing {
   int defendRound(const TBeing *attacker) const;
   int specialAttack(TBeing *target, spellNumT);
   int specialAttack(TBeing *target, spellNumT, int);
+  int specialAttack(TBeing *target, spellNumT, int, bool);
+  int specialAttack(TBeing *target, spellNumT, int, statTypeT, statTypeT, statTypeT, statTypeT, bool);
 
   void updateStatistics();
   bool checkForDiceHeld() const;
@@ -1372,7 +1374,7 @@ class TBeing : public TThing {
   virtual void doPurge(const char *);
   virtual void doSet(const char *);
   int backstabHit(TBeing *, TThing *);
-  int throatSlitHit(TBeing *, TThing *);
+  int throatSlitHit(TBeing *, TThing *, int);
   int critFailureChance(TBeing *, TThing *, spellNumT);
   void critHitEqDamage(TBeing *, TThing *, int);
   int critSuccessChance(TBeing *, TThing *, wearSlotT *, spellNumT, int *, int=-1);

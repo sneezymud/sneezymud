@@ -254,6 +254,7 @@ enum stopCastT {
   STOP_CAST_DEATH,
   STOP_CAST_GENERIC,
   STOP_CAST_LOCATION,
+  STOP_CAST_CUDGEL,
 };
 
 enum armorLevT {
