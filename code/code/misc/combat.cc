@@ -2715,21 +2715,9 @@ int TBeing::defendRound(const TBeing * attacker) const
 // specialAttack() is used for combat specials like kick, bash, grapple, etc.
 int TBeing::specialAttack(TBeing *target, spellNumT skill)
 {
-  int offense = attackRound(target);
-  int defense = target->defendRound(this);
-  int mod = offense - defense;
+  int rc = specialAttack(target, skill, 0);
 
-  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
-     skill == SKILL_RANGED_PROF) {
-    // other surprise attacks should be added here
-    if(target->isWary())
-      mod -= 300;
-    else {
-      target->makeWary();
-    }
-  }
-
-  return hits(target, mod);
+  return (rc == COMPLETE_SUCCESS || rc == GUARANTEED_SUCCESS) ? 1 : 0;
 }
 
 /*
@@ -2737,30 +2725,69 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
   Enables circumstantial bonuses/penalties to be applied here rather than in bSuccess, 
   which should be used primarily to determine skill execution success - especially now
   that ability difficulty level is being used again.
-
-  Per combat.cc balance notes: One level's worth of bonus or penalty = 16.667 points, which
-  equates to 3% difference in chance to hit when attacker and victim are same level.
-
-  So for example, if a skill should be executed as if attacker were 10 levels higher than they
-  really are, modifier should be 16.667 * 10 = 166.67.
 */
 int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier)
 {
-  int offense = attackRound(target) + situationalModifier;
-  int defense = target->defendRound(this);
-  int mod = offense - defense;
+  return specialAttack(target, skill, situationalModifier, STAT_FOC, STAT_KAR, STAT_AGI, STAT_PER, false);
+}
 
-  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
-     skill == SKILL_RANGED_PROF) {
-    // other surprise attacks should be added here
-    if(target->isWary())
-      mod -= 300;
-    else {
-      target->makeWary();
-    }
+int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier, bool partialSuccessAllowed)
+{
+  return specialAttack(target, skill, situationalModifier, STAT_FOC, STAT_KAR, STAT_AGI, STAT_PER, partialSuccessAllowed);
+}
+
+int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier, statTypeT primaryOffenseStat, statTypeT secondaryOffenseStat, statTypeT primaryDefenseStat, statTypeT secondaryDefenseStat, bool partialSuccessAllowed)
+{
+  sendTo(format("specialAttack called with sitMod (%i) ") % situationalModifier);
+  if (situationalModifier < SITUATIONAL_MOD_LOWER_BOUND || 
+      situationalModifier > SITUATIONAL_MOD_UPPER_BOUND) { 
+    vlogf(LOG_BUG, format("Erroneous value (%s) passed to specialAttack().") % situationalModifier);
+    return FALSE;
   }
 
-  return hits(target, mod);
+  // Handle surprise attacks 
+  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || skill == SKILL_RANGED_PROF) {
+    if(target->isWary())
+      situationalModifier -= 10;
+    else 
+      target->makeWary();
+  }
+
+  // Adjust for level difference
+  int attackerLevel = GetMaxLevel(),
+      defenderLevel = target->GetMaxLevel();
+
+  // For gameplay reasons, give players more of a bonus if they're hitting lower level enemies
+  if (attackerLevel > defenderLevel)
+    situationalModifier += (attackerLevel > defenderLevel) ?
+                           (attackerLevel - defenderLevel) :
+                           ((attackerLevel - defenderLevel) / 5);
+
+  double roll = static_cast<int>(::number(1,100));
+  sendTo(format("Original roll is (%i) - ") % roll);
+
+  // Apply modifier
+  roll -= situationalModifier;
+
+  roll = roll * 
+         getStatMod(primaryOffenseStat) * 
+         plotStat(STAT_CURRENT, secondaryOffenseStat, 0.92, 1.08, 1.0) / 
+         target->getStatMod(primaryDefenseStat) / target->plotStat(STAT_CURRENT, primaryDefenseStat, 0.92, 1.08, 1.0);
+
+  sendTo(format("Modified roll is (%i) - \n") % roll);
+
+  // Placeholder - scale for target->HEROIC_MODIFIER
+
+  if (roll <= 5)
+    return GUARANTEED_SUCCESS;
+  else if (roll > 95)
+    return GUARANTEED_FAILURE;
+  else if (roll < SUCCESS_THRESHOLD)
+    return COMPLETE_SUCCESS;
+  else if (partialSuccessAllowed && roll < PARTIAL_SUCCESS_THRESHOLD)
+    return PARTIAL_SUCCESS;
+  else
+    return FALSE;
 }
 
 // hits() is for an individual hit.

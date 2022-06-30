@@ -103,7 +103,7 @@ static int charge(TBeing *ch, TBeing *vict)
   int successfulHit = chOriented ? true : ch->specialAttack(vict, SKILL_CHARGE);
 
   // Failure case
-  if (vict->awake() && (!successfulHit || !successfulSkill)) { 
+  if (vict->awake() && (!successfulHit || successfulSkill == GUARANTEED_FAILURE || successfulSkill == FAILURE)) { 
     act("You charge $N, but $E dodges to the side at the last moment.",
           TRUE, ch, 0, vict, TO_CHAR);
     act("$n and $s mount come charging at you.\n\rFortunately you were able to dodge them.",
@@ -123,12 +123,9 @@ static int charge(TBeing *ch, TBeing *vict)
         continue;
       if ((tb->fight() == vict) && (tb != mount)) {
         // we have already validated that all attackers are in ch's group
-        act("You scatter as $N charges!",
-           FALSE, tb, 0, ch, TO_CHAR);
-        act("$n scatters as you charge!",
-           FALSE, tb, 0, ch, TO_VICT);
-        act("$n scatters as $N charges!",
-           FALSE, tb, 0, ch, TO_NOTVICT);
+        act("You scatter as $N charges!", FALSE, tb, 0, ch, TO_CHAR);
+        act("$n scatters as you charge!", FALSE, tb, 0, ch, TO_VICT);
+        act("$n scatters as $N charges!", FALSE, tb, 0, ch, TO_NOTVICT);
         tb->loseRound(2);
       }
     }
@@ -139,6 +136,8 @@ static int charge(TBeing *ch, TBeing *vict)
 
   // Success case 
   int dam = ch->getSkillDam(vict, SKILL_CHARGE, ch->getSkillLevel(SKILL_CHARGE), ch->getAdvLearning(SKILL_CHARGE));
+
+  dam /= (successfulSkill == COMPLETE_SUCCESS) ? 1 : 2;
 
   TThing *prim = ch->heldInPrimHand();
   if (prim && 

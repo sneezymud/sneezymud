@@ -171,6 +171,18 @@ void TBeing::stopCast(stopCastT messages)
         colorAct(COLOR_SPELLS, "<o>$n interrups $s ritual dance to change location.<z>", TRUE, this, NULL, NULL, TO_ROOM);
       }
       break;
+    case STOP_CAST_CUDGEL:
+      if (caster_type == SPELL_CASTER) {
+        colorAct(COLOR_SPELLS, "<R>Dazed, you stop casting your spell.  Your head hurts!<z>",FALSE, this, NULL, NULL, TO_CHAR);
+        colorAct(COLOR_SPELLS, "<R>$n staggers about in a daze as $s magic dissipates.<z>", TRUE, this, NULL, NULL, TO_ROOM);
+      } else if (caster_type == SPELL_PRAYER) {
+        colorAct(COLOR_SPELLS, "<R>Dazed, you stop praying to your deities for help.  Your head hurts!<z>", FALSE, this, NULL, NULL, TO_CHAR);
+        colorAct(COLOR_SPELLS, "<R>$n staggers about in a daze and stops praying.<z>", TRUE, this, NULL, NULL, TO_ROOM);
+      } else if (caster_type == SPELL_DANCER) {
+        colorAct(COLOR_SPELLS, "<o>Dazed, you stop your ritual to your ancestors for help.  Your head hurts!<z>", FALSE, this, NULL, NULL, TO_CHAR);
+        colorAct(COLOR_SPELLS, "<o>$n staggers about in a daze, interrupting $s ritual dance.<z>", TRUE, this, NULL, NULL, TO_ROOM);
+      }
+      break;
     case STOP_CAST_DEATH:
       if (caster_type == SPELL_CASTER) {
         colorAct(COLOR_SPELLS, "<R>You hear the last echo of $n's spell hanging in the air left there by $s death.<z>",TRUE, this, NULL, NULL, TO_ROOM);
