@@ -35,11 +35,11 @@ int vampire(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
     act("$N screams in agony as energy pours from $S body!", false, ch, nullptr, victim,
       TO_NOTVICT);
     act("You scream in agony as energy pours from your body!", false, ch, nullptr, victim, TO_VICT);
+    victim->addToMove(-vit);
     if (ch->reconcileDamage(victim, dam, SPELL_ENERGY_DRAIN) == -1) {
       delete victim;
       victim = nullptr;
     }
-    victim->addToMove(-vit);
   }
 
   ch->addSkillLag(SPELL_ENERGY_DRAIN, 0);
