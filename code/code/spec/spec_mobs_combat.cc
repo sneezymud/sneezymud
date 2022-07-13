@@ -497,7 +497,7 @@ int arch_vampire(TBeing* vampire, cmdTypeT cmd, const char*, TMonster*, TObj*) {
   // energyDrain function, as that just introduces problems when non-mage mobs attempt it.
   // The bite is an innate ability, anyway.
   int dam = vampire->getSkillDam(victim, SPELL_ENERGY_DRAIN, vampire->GetMaxLevel(), 100);
-  int vit = dice(number(1, vampire->GetMaxLevel()), 4);
+  int vit = dice(::number(1, vampire->GetMaxLevel()), 4);
 
   // The proc could be made less punishing here - for instance, by adding a 'victim->isAgile()' call
   if (victim->isLucky(levelLuckModifier(vampire->GetMaxLevel()))) {
@@ -509,6 +509,7 @@ int arch_vampire(TBeing* vampire, cmdTypeT cmd, const char*, TMonster*, TObj*) {
     act("Before you can react $n bites you, feeding briefly then darting away!", true, vampire,
       nullptr, victim, TO_VICT, "<r>");
 
+    victim->addToMove(-vit);
     if (vampire->reconcileDamage(victim, dam, SPELL_ENERGY_DRAIN) == -1) {
       delete victim;
       victim = nullptr;
