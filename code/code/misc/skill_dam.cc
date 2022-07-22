@@ -92,7 +92,6 @@ static int genericDam(const TBeing *victim, const TBeing *caster, spellNumT skil
   // and scales up to 50 based on learning in the specialized disc.
   int max_lev;
   int min_lev;
-  int orig_lev = level;
 
 // sanity test
 if (discArray[skill]->disc == discArray[skill]->assDisc) {
@@ -149,46 +148,12 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   if (IS_SET(discArray[skill]->targets, TAR_AREA)) 
     fixed_amt *= 0.75;
 
-  if (victim && reduce) {
-    // physical skills typically have a hits() check in them which keeps
-    // them from being useful against vastly higher level mobs.  Spells
-    // have no such check.  This makes it possible for mages (with an adequate
-    // tank) to take down ANY level mob.
-    // to avoid this, we will reduce the damage if they are fighting over level
-    // warriors are expected to be hitting 60% at fair fight with a 3% penalty
-    // per level difference, thus a 1 lev diff for a warrior results in 57/60
-    // the hit rate (and consequently, the damage), 2 levs = 54/60, etc...
-    // however, they always have at least a 5% chance
-
-    // the upshot is that casters will still be just as successful with their
-    // spells in terms of success rate, BUT, the damage will be lower.
-    // use the BEST level comparison (most advantageous to PC) though
-
-    // a high level correction:
-    // from analysis of hits(), attRound/defRound follow 0-1000 over L0-L60
-    // that is 16.67 pts per level
-    // after L60, att goes up 5 pts to max of 1200, def stays constant
-    double def = min((int) victim->GetMaxLevel(), 60) * 16.67;
-    double off = min(max(orig_lev, level), 60) * 16.67;
-    off += max(0, max(orig_lev, level)-60) * 5;
-    
-    double mod = def-off;
-
-    // mod is > 0 if the victim is higher level that the attacker
-    if (mod > 0) {
-      // fixed_amt *= 60 - (3 * mod * 3 / 50)
-      fixed_amt *= max(60 - (9 * mod / 50), 5.0);
-      fixed_amt /= 60.0;
-    }
-  }
-
   // only for PC hitting NPC case
   if (!npc && victim && !victim->isPc())
     fixed_amt *= balanceCorrectionForLevel(level);
 
   // use a randomizer that avgs to L/4
   fixed_amt -= level/4.0;
-
   dam = (int) (fixed_amt + ::number(1,level/2));
 
   // adjust for stats
@@ -198,7 +163,6 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
 
   // adjust for global values
   dam = (int) (dam * stats.skill_damage_mod);
-
   dam = max(1,dam);
 
   if (!npc && 
@@ -234,21 +198,19 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
   // saving throw: c.f. balance.
   // a 50% chance of taking half damage (save).
   // raise damage by 4/3 to bring damage up to par.
-  const double HAS_SAVING_THROW = 4.0 / 3.0;
+  const double HAS_SAVING_THROW = 4.0 / 2.0;
   // component
   // components that load naturally, or via dissect, are harder to find
   // then the more generic ones.  Make the use of these spells worthwhile
-  const double HARD_TO_FIND_COMPONENT = 1.2;  // arbitrary
+  const double HARD_TO_FIND_COMPONENT = 1.5;  // arbitrary
 
   // multiplier for spells that must be used outdoors
-  const double OUTDOOR_ONLY = 1.1;
+  const double OUTDOOR_ONLY = 1.5;
 
   // multiplier for spells that need weather condition
   // since these mostly have the outdoor-only too, don't make these obscene
-  const double NEED_RAIN_SNOW_LIGHTNING = 1.05;
-  //const double NEED_RAIN = 1.10;
-  //const double NEED_NORAIN = 1.05;
-  const double NEED_RAIN_LIGHTNING = 1.075;
+  const double NEED_RAIN_SNOW_LIGHTNING = 1.5;
+  const double NEED_RAIN_LIGHTNING = 1.5;
 
   switch (skill) {
     case SKILL_SLAM:
@@ -274,16 +236,15 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_SAND_BLAST:
     case SPELL_HELLFIRE:
     case SPELL_ENERGY_DRAIN:
-      // damage increased slightly due to component being hard to come by
-      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.05 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_DUST_STORM:
     case SPELL_PEBBLE_SPRAY:
     case SPELL_LAVA_STREAM:
-      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.05, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.5, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_TORNADO:
-      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.05 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.5 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_COLOR_SPRAY:
     case SPELL_ACID_BLAST:
@@ -309,35 +270,27 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_HANDS_OF_FLAME:
     case SPELL_SLING_SHOT:
     case SPELL_GRANITE_FISTS:
-      // for normal success, these spells provide a "save" that cuts dam in
-      // half.  That is, 50% chance of dam in half.  The average would be 75%
-      // hence we multiply by 4/3 to get the desired result  
-      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.0 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_METEOR_SWARM:
-      // for normal success, these spells provide a "save" that cuts dam in
-      // half.  That is, 50% chance of dam in half.  The average would be 75%
-      // hence we multiply by 4/3 to get the desired result  
-
-      // meteor has an outdoor-only limitation:
-      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.25 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.0 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_HARM:
     case SPELL_PILLAR_SALT:
     case SPELL_RAIN_BRIMSTONE:
     case SPELL_EARTHQUAKE:
-      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 1.667, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 3.0, REDUCE_YES, !isPc(), TRIM_NO);
       dam = (int) (dam * percModifier());
       break;
     case SPELL_SPONTANEOUS_COMBUST:
     case SPELL_FLAMESTRIKE:
-      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 1.667 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 2.5 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
 
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
     case SPELL_CALL_LIGHTNING:
-      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 1.888 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 3.0 * HAS_SAVING_THROW * OUTDOOR_ONLY * NEED_RAIN_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
@@ -345,7 +298,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       // SHAMAN STUFF
       ////////////////////
     case SPELL_STORMY_SKIES:
-      dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn, 2.15 * HARD_TO_FIND_COMPONENT * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn, 3.0 * HARD_TO_FIND_COMPONENT * NEED_RAIN_SNOW_LIGHTNING, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_CARDIAC_STRESS:
     case SPELL_AQUATIC_BLAST:
@@ -353,7 +306,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_DEATHWAVE:
     case SPELL_RAZE:
     case SPELL_LICH_TOUCH:
-      dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn, 2.15 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn, 1.5 * HARD_TO_FIND_COMPONENT, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_DISTORT:
     case SPELL_STICKS_TO_SNAKES:
@@ -362,7 +315,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_FLATULENCE:
     case SPELL_VAMPIRIC_TOUCH:
     case SPELL_LIFE_LEECH:
-      dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn, 2.15 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_SHAMAN, level, adv_learn, 2.0 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
       ///////////////////////
       // END SHAMAN STUFF
@@ -371,7 +324,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_HARM_SERIOUS:
     case SPELL_HARM_CRITICAL:
     // other: paralyze lag is based on this logic manually in paralyze
-      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 1.667, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 2.5, REDUCE_YES, !isPc(), TRIM_NO);
       // additionally, do faction percent modification for clerics
       dam = (int) (dam * percModifier());
       break;
@@ -381,7 +334,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_WITHER_LIMB:
       // these are torments, this gets called for anti-salve stuff
       // divide by scale factor to keep under control as castable multiple times
-      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 1.667/5.0, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_CLERIC, level, adv_learn, 1.667, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_HEAL_LIGHT:
     case SPELL_HEAL_SERIOUS:
@@ -480,11 +433,11 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_MIND_THRUST:
     case SKILL_PSYCHIC_CRUSH:
     case SKILL_KINETIC_WAVE:
-      dam = genericDam(victim, this, skill, DISC_PSIONICS, level, adv_learn, 0.200, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_PSIONICS, level, adv_learn, 1.2, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_SKY_SPIRIT:
     case SPELL_EARTHMAW:
-      dam = genericDam(victim, this, skill, DISC_ANIMAL, level, adv_learn, 0.529 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_ANIMAL, level, adv_learn, 2.5 * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     default:
       vlogf(LOG_BUG, format("Unknown skill %d in call to getSkillDam") %  skill);
