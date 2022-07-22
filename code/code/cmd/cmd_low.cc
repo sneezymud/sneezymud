@@ -46,6 +46,7 @@ double balanceCorrectionForLevel(double level)
   // a char is getting as a result of this, and we can use this factor
   // in "tweaking" balance
   double boost = min(max(((level-25) * 0.1) + 1.0, 1.00), 2.0);
+
   return boost;
 }
 

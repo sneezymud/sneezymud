@@ -45,21 +45,6 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
 
   dam = getActualDamage(v, NULL, dam, how);
 
-#if 0
-  // Do more damage if you're much larger. Doesn't apply to mobs less than 5th.
-  if (!isPc() && (getLevel(bestClass()) < 5)) {
-    if (dam)
-      dam += (int)((getWeight() / v->getWeight())/2);
-  }
-#endif
-#if 0
-  // hey cool, my spells do more damage!!!!!!  - Bad to do this here
-  // FYI use getStrDamModifier instead too
-  // Modify by strength.
-  if (dam)
-    dam += plotStat(STAT_CURRENT, STAT_STR, 1, 7, 4);
-#endif
-
   // make um fly if appropriate
   if (!v->isPc() && v->canFly() && !v->isFlying())  {
     // in general, we did text before we applied the dam

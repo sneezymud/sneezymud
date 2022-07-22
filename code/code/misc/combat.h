@@ -25,8 +25,8 @@ constexpr int PARTIAL_SUCCESS    =  2;
 constexpr int COMPLETE_SUCCESS   =  1;
 constexpr int FAILURE = 0;
 
-constexpr int SITUATIONAL_MOD_LOWER_BOUND = -10;
-constexpr int SITUATIONAL_MOD_UPPER_BOUND = 10;
+constexpr int SITUATIONAL_MOD_LOWER_BOUND = -20;
+constexpr int SITUATIONAL_MOD_UPPER_BOUND = 20;
 constexpr int SUCCESS_THRESHOLD           = 50;
 constexpr int PARTIAL_SUCCESS_THRESHOLD   = 80;
 

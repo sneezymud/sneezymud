@@ -2739,11 +2739,11 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
 int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier, statTypeT primaryOffenseStat, statTypeT secondaryOffenseStat, statTypeT primaryDefenseStat, statTypeT secondaryDefenseStat, bool partialSuccessAllowed)
 {
   sendTo(format("specialAttack called with sitMod (%i) ") % situationalModifier);
-  if (situationalModifier < SITUATIONAL_MOD_LOWER_BOUND || 
-      situationalModifier > SITUATIONAL_MOD_UPPER_BOUND) { 
-    vlogf(LOG_BUG, format("Erroneous value (%s) passed to specialAttack().") % situationalModifier);
-    return FALSE;
-  }
+
+  if (situationalModifier < SITUATIONAL_MOD_LOWER_BOUND)
+    situationalModifier = SITUATIONAL_MOD_LOWER_BOUND;
+  else if (situationalModifier > SITUATIONAL_MOD_UPPER_BOUND)
+    situationalModifier = SITUATIONAL_MOD_UPPER_BOUND;
 
   // Handle surprise attacks 
   if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || skill == SKILL_RANGED_PROF) {

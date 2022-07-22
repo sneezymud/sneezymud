@@ -830,7 +830,7 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
 
   int dam = caster->getSkillDam(victim, SPELL_SPONTANEOUS_COMBUST, level, adv_learn);
 
-  if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_SPONTANEOUS_COMBUST)) {
+  if (caster->bSuccess(bKnown, SPELL_SPONTANEOUS_COMBUST)) {
 
     if (critSuccess(caster, SPELL_SPONTANEOUS_COMBUST)) {
       CS(SPELL_SPONTANEOUS_COMBUST);
