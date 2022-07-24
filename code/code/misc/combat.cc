@@ -10,8 +10,10 @@
 
 #include <cmath>
 
+#include "discipline.h"
 #include "handler.h"
 #include "extern.h"
+#include "immunity.h"
 #include "room.h"
 #include "being.h"
 #include "client.h"
@@ -39,6 +41,7 @@
 #include "cmd_trophy.h"
 #include "obj_base_cup.h"
 #include "rent.h"
+#include "stats.h"
 
 #define DAMAGE_DEBUG 0
 
@@ -4161,29 +4164,49 @@ int TBeing::preProcDam(spellNumT type, int dam) const
   return (dam);
 }
 
-// weaponCheck handles immunity to non-magic when reconciling damage.
-// Since magic items and skills can avoid it's affects in ways that
-// don't apply to other immunity types
-// NOTE: slash/blunt/pierce immunity is handled in preProcDam
-int TBeing::weaponCheck(TBeing *vict, TThing *o, spellNumT type, int dam)
-{
-  TObj *tobj;
+// Handles the reduction of weapon damage due to weapon-related resists. Only affects attacks
+// that are resisted by slash, blunt, or pierce immunity.
+int TBeing::weaponCheck(TBeing* vict, TThing* o, spellNumT type, int dam) {
+  immuneTypeT attackResistType = getTypeImmunity(type);
 
-  // Get the object held and if it's magic we'll ignore immunity
-  if ((tobj=dynamic_cast<TObj *>(o))) {
-
-    if(tobj->isObjStat(ITEM_MAGIC))
-      return dam;
-
-  // else if there's nothing held check for voplat
-  } else if ((doesKnowSkill(SKILL_VOPLAT) && (getSkillValue(SKILL_VOPLAT) >= 15))) {
+  // Check immunity type of incoming attack. If it deals slash, blunt, or pierce damage, we know
+  // it's some sort of physical attack that should be subject to weapon-related immunity. This isn't
+  // actually reducing damage for blunt/pierce/slash immunity since that's already done in
+  // preProcDamage (though it might make more sense to do it here instead).
+  if (attackResistType != IMMUNE_SLASH && attackResistType != IMMUNE_BLUNT &&
+      attackResistType != IMMUNE_PIERCE) {
     return dam;
   }
 
-  // otherwise we'll apply nonmagic immunity
-  dam *= (100 - (int) vict->getImmunity(IMMUNE_NONMAGIC));
-  dam /= 100;
-  return dam;
+  static constexpr std::array<immuneTypeT, 4> immunityLevels = {
+    IMMUNE_NONMAGIC,
+    IMMUNE_PLUS1,
+    IMMUNE_PLUS2,
+    IMMUNE_PLUS3,
+  };
+
+  int magicLevel = 0;
+  auto* tobj = dynamic_cast<TObj*>(o);
+
+  if (tobj) {    
+    magicLevel = min(tobj->itemHitroll(), 3);
+
+    if (!magicLevel && tobj->isObjStat(ITEM_MAGIC))
+      magicLevel = 1;
+  } else if (!o && doesKnowSkill(SKILL_VOPLAT)) {
+    const int level = GetMaxLevel();
+    magicLevel = level >= 50 ? 3 : (level >= 40 ? 2 : 1);
+  }
+
+  immuneTypeT whichImmunity = immunityLevels[static_cast<size_t>(magicLevel)];
+  int immunityValue = vict->getImmunity(whichImmunity);
+
+  // If victim's immunity is positive, reduce it by an amount proportional to the attacker's
+  // learnedness in voplat. Maxed voplat completely nullifies victim's magic weapon immunity.
+  if (!o && doesKnowSkill(SKILL_VOPLAT) && immunityValue > 0)
+    immunityValue *= ((100 - getSkillValue(SKILL_VOPLAT)) / MAX_SKILL_LEARNEDNESS);
+
+  return static_cast<int>(dam * (100 - immunityValue) / 100);
 }
 
 int TBeing::numValidSlots()
