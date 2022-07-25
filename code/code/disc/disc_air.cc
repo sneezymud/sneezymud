@@ -1439,7 +1439,8 @@ CDAir::CDAir() :
   skImmobilize(),
   skSuffocate(),
   skFly(),
-  skAntigravity()
+  skAntigravity(),
+  skPierceResist()
 {
 }
 
@@ -1448,7 +1449,8 @@ CDAir::CDAir(const CDAir &a) :
   skImmobilize(a.skImmobilize),
   skSuffocate(a.skSuffocate),
   skFly(a.skFly),
-  skAntigravity(a.skAntigravity)
+  skAntigravity(a.skAntigravity),
+  skPierceResist(a.skPierceResist)
 {
 }
 
@@ -1461,6 +1463,7 @@ CDAir & CDAir::operator= (const CDAir &a)
   skSuffocate = a.skSuffocate;
   skFly = a.skFly;
   skAntigravity = a.skAntigravity;
+  skPierceResist = a.skPierceResist;
   return *this;
 }
 

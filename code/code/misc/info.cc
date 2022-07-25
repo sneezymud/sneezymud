@@ -1534,6 +1534,7 @@ sstring TBeing::describeAffects(TBeing *ch, showMeT showme) const
       case SKILL_ATTUNE:
       case SKILL_STAVECHARGE:
       case SKILL_MANA:
+      case SKILL_PIERCE_RESIST:
       case SPELL_EMBALM:
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:

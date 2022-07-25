@@ -36,6 +36,7 @@ public:
     CSkill skSuffocate;               //      40th level individual
     CSkill skFly;
     CSkill skAntigravity;
+    CSkill skPierceResist;
 
     CDAir();
     CDAir(const CDAir &a);

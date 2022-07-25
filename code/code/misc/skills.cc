@@ -276,6 +276,8 @@ CSkill *TBeing::getSkill(spellNumT skill) const
       return &((CDAir *) cd)->skFly;
     case SPELL_ANTIGRAVITY:
       return &((CDAir *) cd)->skAntigravity;
+    case SKILL_PIERCE_RESIST:
+      return &((CDAir *) cd)->skPierceResist;
 
 // disc_alchemy
  

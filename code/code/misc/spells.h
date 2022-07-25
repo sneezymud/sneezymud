@@ -367,6 +367,7 @@ enum spellNumT {
      // start of mage
      SKILL_SCRIBE,
      SKILL_REPAIR_MAGE,
+     SKILL_PIERCE_RESIST,
      // end of mage
      
      // start of cleric
