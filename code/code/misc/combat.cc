@@ -4150,15 +4150,26 @@ bool TBeing::isHitableAggr(TBeing *vict)
   return FALSE;
 }
 
-int TBeing::preProcDam(spellNumT type, int dam) const
+int TBeing::preProcDam(TBeing *vict, spellNumT type, int dam) 
 {
-  immuneTypeT bit;
-  if ((bit = getTypeImmunity(type)) == IMMUNE_NONE)
+  immuneTypeT attackResistType = getTypeImmunity(type);
+  if (attackResistType == IMMUNE_NONE)
     return dam;
+
+  int resistValue = vict->getImmunity(attackResistType);
+
+  // Lower resistances based on pierce resist skill, while preventing it from 
+  // reducing the caster's resists when objects damage the caster
+  if(this != vict && 
+     doesKnowSkill(SKILL_PIERCE_RESIST) && 
+     bSuccess(SKILL_PIERCE_RESIST)) {
+    resistValue -= (getSkillValue(SKILL_PIERCE_RESIST) / 2.85);
+    resistValue = max(resistValue, 0);
+  }
 
   // this handles straight immunity
   // secondary immunities (like immune_plus1) are handled in weaponCheck()
-  dam *= (100 - getImmunity(bit));
+  dam *= (100 - resistValue);
   dam /= 100;
 
   return (dam);
@@ -4447,7 +4458,7 @@ int TBeing::setVictFighting(TBeing *vict, int dam)
 
 int TBeing::damageTrivia(TBeing *vict, TThing *o, int dam, spellNumT type)
 {
-  dam = vict->preProcDam(type, dam);
+  dam = preProcDam(vict, type, dam);
 
   if (dam > -1) {
     dam = weaponCheck(vict, o, type, dam);
@@ -4936,7 +4947,7 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing *t)
   amnt *= 100 - getProtection();
   amnt /= 100;
 
-  amnt = preProcDam(damtype, amnt);
+  amnt = preProcDam(this, damtype, amnt);
   if (isLucky(levelLuckModifier(10)))
     amnt = max((int) (amnt / 2), 0);
 

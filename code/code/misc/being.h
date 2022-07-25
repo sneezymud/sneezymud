@@ -1430,7 +1430,8 @@ class TBeing : public TThing {
   int damageEm(int, sstring, spellNumT);
   int skipImmortals(int) const;
   int applyDamage(TBeing *, int, spellNumT);
-  int preProcDam(spellNumT, int) const;
+  int preProcDam(spellNumT, int);
+  int preProcDam(TBeing *, spellNumT, int);
   TBeing *findAnAttacker() const;
   int damageEpilog(TBeing *, spellNumT);
   void catchLostLink(TBeing *);
