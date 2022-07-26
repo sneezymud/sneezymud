@@ -129,8 +129,11 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   // totally arbitrary, and unrealistic, but necessary for balance
 
   // Adjust NPC damage/healing 
-  if (npc && ((victim && victim->isPc()) || !victim))
+  if (npc && ((victim && victim->isPc()) || !victim)) {
     fixed_amt *= 0.5195;
+    if(reduce == REDUCE_YES)
+      fixed_amt *= 0.5;
+  }
 
   // Adjust healing for PCs
   if (!npc && trim)
