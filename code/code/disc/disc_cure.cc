@@ -10,6 +10,7 @@
 #include "obj_magic_item.h"
 #include "being.h"
 #include "room.h"
+#include "monster.h"
 
 static void repHealing(TBeing *caster, TBeing *victim)
 {
@@ -37,7 +38,11 @@ static void adjustHealHp(const TBeing *caster, int &hp, int durat)
   // then clerics can heal tanks too fast.
   // the mud is semi balanced as far as heal to 5.1, where our damage constant was .75
   // as of 5.2 the damage constant is .65 so i'm gonna make the heal constant .75
-  hp = (int)((double)(hp)*(stats.skill_damage_mod * 1.15));
+  const TMonster *tmon = dynamic_cast<const TMonster *>(caster); 
+  if (tmon)
+    hp = (int)((double)(hp)*(stats.npc_skill_damage_mod * 1.15));
+  else
+    hp = (int)((double)(hp)*(stats.skill_damage_mod * 1.15));
  
   // imms have had an adjustment to rounds made in start_cast
   // so adjust for that

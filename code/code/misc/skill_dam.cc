@@ -93,16 +93,16 @@ static int genericDam(const TBeing *victim, const TBeing *caster, spellNumT skil
   int max_lev;
   int min_lev;
 
-// sanity test
-if (discArray[skill]->disc == discArray[skill]->assDisc) {
-  // specialized disc
-  //  if (discArray[skill]->disc == basic_disc)
-  //    vlogf(LOG_BUG, format("bad setup for skill %d wrt disc arrangement (1)") %  skill);
-} else {
-  // basic disc
-  if (discArray[skill]->disc != basic_disc)
-    vlogf(LOG_BUG, format("bad setup for skill %d wrt disc arrangement (2)") %  skill);
-}
+  // sanity test
+  if (discArray[skill]->disc == discArray[skill]->assDisc) {
+    // specialized disc
+    //  if (discArray[skill]->disc == basic_disc)
+    //    vlogf(LOG_BUG, format("bad setup for skill %d wrt disc arrangement (1)") %  skill);
+  } else {
+    // basic disc
+    if (discArray[skill]->disc != basic_disc)
+      vlogf(LOG_BUG, format("bad setup for skill %d wrt disc arrangement (2)") %  skill);
+  }
 
   getSkillLevelRange(skill, min_lev, max_lev, adv_learn);
 
@@ -165,7 +165,11 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   }
 
   // adjust for global values
-  dam = (int) (dam * stats.skill_damage_mod);
+  if(npc)
+    dam = (int) (dam * stats.npc_skill_damage_mod);
+  else
+    dam = (int) (dam * stats.skill_damage_mod);
+
   dam = max(1,dam);
 
   if (!npc && 

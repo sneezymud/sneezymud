@@ -1687,15 +1687,6 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
     // partially learned in KUBO but have some learning in the advanced spec.
     double value = 3.0 * double(ch->getSkillValue(SKILL_KUBO)) / 10.0;
 
-    // in general, we ought to be adding 20 levs for max specialization
-    // however, review the balance docs and realize we add a penalty
-    // here (the 76% factor) in order to counter the effects of blur.
-#if 0
-    double amt = ch->getAdvLearning(SKILL_KUBO);
-    if (amt)
-      value += (0.7676 * amt)/5.0;
-#endif
-
     // enforce range
     value = min(max(value, 0.0), 50.0);
 
@@ -1945,9 +1936,8 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     
     dam = max(1, dam);
 
-#if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, format("PLAYER %s (%d %s) %s dam = %d , wep = %d bon = %d roll = %d, stats = %.2f skill = %d") %  getName() % GetMaxLevel() % getProfName() % buf % dam % wepDam % bonusDam % rollDam % statDam % wepLearn);
-#endif
+    // adjust for global values (use PC value)
+    dam = (int) (dam * stats.weapon_damage_mod);
 
   } else {
     // isMonster is true
@@ -1957,14 +1947,10 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
 
     wepDam = max(wepDam, 1);
     dam = wepDam + bonusDam + rollDam;
-#if DAMAGE_DEBUG
-    vlogf(LOG_COMBAT, format("MOB %s (%d %s) dam = %d , wep = %d bon = %d roll = %d.") %  getName() % GetMaxLevel() % getProfName() % dam % wepDam % bonusDam % rollDam);
-#endif
 
+    // adjust for global values (use NPC value)
+    dam = (int) (dam * stats.npc_weapon_damage_mod);
   }
-
-  // adjust for global values
-  dam = (int) (dam * stats.weapon_damage_mod);
 
   dam = max(1, dam);                // Not less than 0 damage 
   return (dam);
