@@ -94,6 +94,8 @@ int init_game_stats(void)
   stats.skill_damage_mod = 0.65;
   stats.weapon_damage_mod = 0.40;
   stats.barehand_damage_mod = 0.44;
+  stats.npc_skill_damage_mod = 0.45;
+  stats.npc_weapon_damage_mod = 0.75;
 
   if (!(fp = fopen(STATS_FILE,"r"))) {
     vlogf(LOG_BUG, "Unable to open txt/stat file");
@@ -505,6 +507,8 @@ void TBeing::doGamestats(const sstring &arg)
     sendTo(format("Current Skill Dam Modifier      : %4.2f\n\r") % stats.skill_damage_mod);
     sendTo(format("Current Weapon Dam Modifier     : %4.2f\n\r") % stats.weapon_damage_mod);
     sendTo(format("Current Barehand Dam Modifier   : %4.2f\n\r") % stats.barehand_damage_mod);
+    sendTo(format("Current NPC Skill Dam Modifier  : %4.2f\n\r") % stats.npc_skill_damage_mod);
+    sendTo(format("Current NPC Weapon Dam Modifier : %4.2f\n\r") % stats.npc_weapon_damage_mod);
     return;
   } else if (is_abbrev(buf, "trivia")) {
     sendTo(format("Average HP regen              : %4.2f  (attempts : %d)\n\r") %        (stats.hit_gained_attempts == 0 ? 0.0 :
