@@ -1277,6 +1277,3 @@ int targetDummy(TBeing *character, cmdTypeT cmd, const char *argIn, TMonster *my
 
   return TRUE; // returning true from here will cancel normal mob class-based moves
 }
-
-
-
