@@ -568,6 +568,8 @@ private:
     int objVnum() const;
     int adjPrice() const;
 
+    std::pair<int64_t, int64_t> sumAffectedByApplyType(applyTypeT location) const;
+
     virtual void setVolume(int vol) {
       obj_flags.volume = vol;
     }

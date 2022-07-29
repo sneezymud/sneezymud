@@ -342,6 +342,7 @@ class affectedData {
     bool canBeRenewed() const;
     bool shouldGenerateText() const;
     std::pair<int64_t, int64_t> sumAffectsByApplyType(applyTypeT affectType) const;
+    affectedData* find_if(const std::function<bool(affectedData*)>& predicate);
 };
 
 // affects size of charFile

@@ -14,299 +14,71 @@
 #include "toggle.h"
 #include "stats.h"
 
-spellInfo *discArray[MAX_SKILL+1];
+spellInfo* discArray[MAX_SKILL + 1];
 
-spellInfo::spellInfo(skillUseClassT styp,
-  discNumT discipline, 
-  discNumT assDiscipline,
-  statTypeT modifierStat,
-  const char *n, taskDiffT cast_diff, lag_t l, positionTypeT pos, 
-  manaCostT mana,
-  lifeforceCostT lifeforce,
-  pietyCostT align,
-  unsigned int t,
-  symbolStressT h, 
-  const char *fa, 
-  const char *far, 
-  const char *fas, 
-  const char *fasr,
-  discStartT starting,
-  discLearnT learning,
-  discStartDoT learnDoStarting,
-  discLearnDoT learningAmt, 
-  discStartDoT secLearnDoStart,
-  discLearnDoT secLearnDoAmt,
-  int learningDoDiff, float modifier, unsigned int ctyp, unsigned int tgl) :
-  name(n),
+// Helper function to obtain the spellNumT for a given spellInfo object, as spellInfo
+// doesn't actually contain its relevant spellNumT for some reason.
+spellNumT spellInfo::getSpellNum() const {
+  const auto* begin = std::begin(discArray);
+  const auto* end = std::end(discArray);
+  for (const auto* it = begin; it != end; it = std::next(it)) {
+    if (strcmp(name, (*it)->name) != 0)
+      continue;
+
+    return static_cast<spellNumT>(std::distance(begin, it));
+  }
+  return spellNumT::MAX_SKILL;
+}
+
+// Safely search discArray for the spellInfo entry for the given skill number.
+// Return nullptr if no entry is found.
+spellInfo* getSpellInfo(spellNumT skillNum) {
+  auto* begin = std::begin(discArray);
+  auto* end = std::end(discArray);
+  for (auto* it = begin; it != end; it = std::next(it)) {
+    auto index = static_cast<spellNumT>(it - begin);
+    if (index != skillNum)
+      continue;
+
+    return *it;
+  }
+  return static_cast<spellInfo*>(nullptr);
+};
+
+spellInfo::spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc, statTypeT modifierStat,
+  const char* name, taskDiffT task, lag_t lag, positionTypeT minPosition, manaCostT minMana,
+  lifeforceCostT minLifeforce, pietyCostT minPiety, uint32_t targets, symbolStressT holyStrength,
+  const char* fadeAway, const char* fadeAwayRoom, const char* fadeAwaySoon,
+  const char* fadeAwaySoonRoom, discStartT start, discLearnT learn, discStartDoT startLearnDo,
+  discLearnDoT amtLearnDo, discStartDoT secStartLearnDo, discLearnDoT secAmtLearnDo,
+  int learnDoDiff, float alignMod, uint32_t comp_types, uint32_t toggle) :
+  name(name),
   modifierStat(modifierStat),
-  start(starting),
-  learn(learning),
-  uses(0),
-  levels(0),
-  learned(0),
-  damage(0),
-  pot_damage(0),
-  pot_victims(0),
-  pot_level(0),
-  victims(0),
-  crits(0),
-  critf(0),
-  success(0),
-  potSuccess(0),
-  fail(0),
-  focusValue(0),
-  newAttempts(0),
-  lowAttempts(0),
-  midAttempts(0),
-  goodAttempts(0),
-  highAttempts(0),
-  engAttempts(0),
-  genFail(0),
-  focFail(0),
-  engFail(0),
-  saves(0),
-  learnAttempts(0),
-  learnSuccess(0),
-  learnLearn(0),
-  learnLevel(0),
-  learnFail(0),
-  learnBoost(0),
-  learnDiscSuccess(0),
-  learnAdvDiscSuccess(0),
-  mobUses(0),
-  mobLevels(0),
-  mobLearned(0),
-  mobDamage(0),
-  mobVictims(0),
-  mobCrits(0),
-  mobCritf(0),
-  mobSuccess(0),
-  potSuccessMob(0),
-  mobFail(0),
-  mobSaves(0),
-  immUses(0),
-  immLevels(0),
-  immLearned(0),
-  immDamage(0),
-  immVictims(0),
-  immCrits(0),
-  immCritf(0),
-  immSuccess(0),
-  potSuccessImm(0),
-  immFail(0),
-  immSaves(0),
-  lag(l),
-  typ(styp),
-  task(cast_diff),
-  minPosition(pos),
-  minMana(mana),
-  minLifeforce(lifeforce),
-  minPiety(align/4.0),  // we wanted a float, but had the enum as an int
-  targets(t),
-  holyStrength(h),
-  fadeAway(fa),
-  fadeAwayRoom(far),
-  fadeAwaySoon(fas),
-  fadeAwaySoonRoom(fasr),
-  alignMod(modifier),
-  comp_types(ctyp),
-  toggle(tgl),
-  disc(discipline),
-  assDisc(assDiscipline),
-  startLearnDo(learnDoStarting),
-  amtLearnDo(learningAmt),
-  learnDoDiff(learningDoDiff),
-  secStartLearnDo(secLearnDoStart),
-  secAmtLearnDo(secLearnDoAmt)
-{
-}
-
-spellInfo::spellInfo(const spellInfo &a) :
-  name(a.name),
-  modifierStat(a.modifierStat),
-  start(a.start),
-  learn(a.learn),
-  uses(a.uses),
-  levels(a.levels),
-  learned(a.learned),
-  damage(a.damage),
-  pot_damage(a.pot_damage),
-  pot_victims(a.pot_victims),
-  pot_level(a.pot_level),
-  victims(a.victims),
-  crits(a.crits),
-  critf(a.critf),
-  success(a.success),
-  potSuccess(a.potSuccess),
-  fail(a.fail),
-  focusValue(a.focusValue),
-  newAttempts(a.newAttempts),
-  lowAttempts(a.lowAttempts),
-  midAttempts(a.midAttempts),
-  goodAttempts(a.goodAttempts),
-  highAttempts(a.highAttempts),
-  engAttempts(a.engAttempts),
-  genFail(a.genFail),
-  focFail(a.focFail),
-  engFail(a.engFail),
-  saves(a.saves),
-  learnAttempts(a.learnAttempts),
-  learnSuccess(a.learnSuccess),
-  learnLearn(a.learnLearn),
-  learnLevel(a.learnLevel),
-  learnFail(a.learnFail),
-  learnBoost(a.learnBoost),
-  learnDiscSuccess(a.learnDiscSuccess),
-  learnAdvDiscSuccess(a.learnAdvDiscSuccess),
-  mobUses(a.mobUses),
-  mobLevels(a.mobLevels),
-  mobLearned(a.mobLearned),
-  mobDamage(a.mobDamage),
-  mobVictims(a.mobVictims),
-  mobCrits(a.mobCrits),
-  mobCritf(a.mobCritf),
-  mobSuccess(a.mobSuccess),
-  potSuccessMob(a.potSuccessMob),
-  mobFail(a.mobFail),
-  mobSaves(a.mobSaves),
-  immUses(a.immUses),
-  immLevels(a.immLevels),
-  immLearned(a.immLearned),
-  immDamage(a.immDamage),
-  immVictims(a.immVictims),
-  immCrits(a.immCrits),
-  immCritf(a.immCritf),
-  immSuccess(a.immSuccess),
-  potSuccessImm(a.potSuccessImm),
-  immFail(a.immFail),
-  immSaves(a.immSaves),
-  lag(a.lag),
-  typ(a.typ),
-  task(a.task),
-  minPosition(a.minPosition),
-  minMana(a.minMana),
-  minLifeforce(a.minLifeforce),
-  minPiety(a.minPiety),
-  targets(a.targets),
-  holyStrength(a.holyStrength),
-  fadeAway(a.fadeAway),
-  fadeAwayRoom(a.fadeAwayRoom),
-  fadeAwaySoon(a.fadeAwaySoon),
-  fadeAwaySoonRoom(a.fadeAwaySoonRoom),
-  alignMod(a.alignMod),
-  comp_types(a.comp_types),
-  toggle(a.toggle),
-  disc(a.disc),
-  assDisc(a.assDisc),
-  startLearnDo(a.startLearnDo),
-  amtLearnDo(a.amtLearnDo),
-  learnDoDiff(a.learnDoDiff),
-  secStartLearnDo(a.secStartLearnDo),
-  secAmtLearnDo(a.secAmtLearnDo)
-{
-  sectorData = a.sectorData;
-  weatherData = a.weatherData;
-}
-
-spellInfo & spellInfo::operator = (const spellInfo &a)
-{
-  if (this == &a) return *this;
-
-  name = a.name;
-  modifierStat = a.modifierStat;
-  start = a.start;
-  learn = a.learn;
-  uses = a.uses;
-  levels = a.levels;
-  learned = a.learned;
-  damage = a.damage;
-  pot_damage = a.pot_damage;
-  pot_victims = a.pot_victims;
-  pot_level = a.pot_level;
-  victims = a.victims;
-  crits = a.crits;
-  critf = a.critf;
-  success = a.success;
-  potSuccess = a.potSuccess;
-  fail = a.fail;
-  focusValue = a.focusValue;
-  newAttempts = a.newAttempts;
-  lowAttempts = a.lowAttempts;
-  midAttempts = a.midAttempts;
-  goodAttempts = a.goodAttempts;
-  highAttempts = a.highAttempts;
-  engAttempts = a.engAttempts;
-  genFail = a.genFail;
-  focFail = a.focFail;
-  engFail = a.engFail;
-  saves = a.saves;
-  learnAttempts = a.learnAttempts;
-  learnSuccess = a.learnSuccess;
-  learnLearn = a.learnLearn;
-  learnLevel = a.learnLevel;
-  learnFail = a.learnFail;
-  learnBoost = a.learnBoost;
-  learnDiscSuccess = a.learnDiscSuccess;
-  learnAdvDiscSuccess = a.learnAdvDiscSuccess;
-  mobUses = a.mobUses;
-  mobLevels = a.mobLevels;
-  mobLearned = a.mobLearned;
-  mobDamage = a.mobDamage;
-  mobVictims = a.mobVictims;
-  mobCrits = a.mobCrits;
-  mobCritf = a.mobCritf;
-  mobSuccess = a.mobSuccess;
-  potSuccessMob = a.potSuccessMob;
-  mobFail = a.mobFail;
-  mobSaves = a.mobSaves;
-  immUses = a.immUses;
-  immLevels = a.immLevels;
-  immLearned = a.immLearned;
-  immDamage = a.immDamage;
-  immVictims = a.immVictims;
-  immCrits = a.immCrits;
-  immCritf = a.immCritf;
-  immSuccess = a.immSuccess;
-  potSuccessImm = a.potSuccessImm;
-  immFail = a.immFail;
-  immSaves = a.immSaves;
-  lag = a.lag;
-  typ = a.typ;
-  task = a.task;
-  minPosition = a.minPosition;
-  minMana = a.minMana;
-  minLifeforce = a.minLifeforce;
-  minPiety = a.minPiety;
-  targets = a.targets;
-  holyStrength = a.holyStrength;
-  fadeAway = a.fadeAway;
-  fadeAwayRoom = a.fadeAwayRoom;
-  fadeAwaySoon = a.fadeAwaySoon;
-  fadeAwaySoonRoom = a.fadeAwaySoonRoom;
-  alignMod = a.alignMod;
-  comp_types = a.comp_types;
-  toggle = a.toggle;
-  disc = a.disc;
-  assDisc = a.assDisc;
-  startLearnDo = a.startLearnDo;
-  amtLearnDo = a.amtLearnDo;
-  learnDoDiff = a.learnDoDiff;
-  secStartLearnDo = a.secStartLearnDo;
-  secAmtLearnDo = a.secAmtLearnDo;
-
-  sectorData.erase(sectorData.begin(), sectorData.end());
-  sectorData = a.sectorData;
-  weatherData.erase(weatherData.begin(), weatherData.end());
-  weatherData = a.weatherData;
-
-  return *this;
-}
-
-spellInfo::~spellInfo()
-{
-  sectorData.erase(sectorData.begin(), sectorData.end());
-  weatherData.erase(weatherData.begin(), weatherData.end());
-}
+  start(start),
+  learn(learn),
+  lag(lag),
+  typ(typ),
+  task(task),
+  minPosition(minPosition),
+  minMana(minMana),
+  minLifeforce(minLifeforce),
+  minPiety(static_cast<float>(minPiety) / 4),  // we wanted a float, but had the enum as an int
+  targets(targets),
+  holyStrength(holyStrength),
+  fadeAway(fadeAway),
+  fadeAwayRoom(fadeAwayRoom),
+  fadeAwaySoon(fadeAwaySoon),
+  fadeAwaySoonRoom(fadeAwaySoonRoom),
+  alignMod(alignMod),
+  comp_types(comp_types),
+  toggle(toggle),
+  disc(disc),
+  assDisc(assDisc),
+  startLearnDo(startLearnDo),
+  amtLearnDo(amtLearnDo),
+  learnDoDiff(learnDoDiff),
+  secStartLearnDo(secStartLearnDo),
+  secAmtLearnDo(secAmtLearnDo) {}
 
 void buildSpellArray()
 {
@@ -1431,26 +1203,18 @@ void buildSpellArray()
   discArray[SKILL_DIMENSIONAL_FOLD] = new spellInfo(SKILL_GENERAL, DISC_PSIONICS, DISC_PSIONICS, STAT_INT, "dimensional fold", TASK_EASY, LAG_2, POSITION_STANDING, MANA_50, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "","","","", START_80, LEARN_5, START_DO_1, LEARN_DO_1, START_DO_NO, LEARN_DO_NO, LEARN_DIFF_SKILLS, 0.0, 0, 0);
 // end psionics
 
+  // last_discipline, uses default values
+  discArray[MAX_SKILL] = new spellInfo();
 
-  // last_discipline
-
-  discArray[MAX_SKILL] = new spellInfo(SPELL_NOCLASS, DISC_NONE, DISC_NONE, STAT_INT, "\n", TASK_NORMAL, LAG_0, POSITION_DEAD, MANA_0, LIFEFORCE_0, PRAY_0, 0, SYMBOL_STRESS_0, "", "", "", "", START_0, LEARN_0, START_DO_NO, LEARN_DO_NO, START_DO_NO, LEARN_DO_NO, 0, 0.0, 0, 0);
-
-  for(int i=MIN_SPELL;i<MAX_SKILL;i++){
-    if(!discArray[i] || !*discArray[i]->name)
+  // Audit start and learn values
+  for (spellNumT i = MIN_SPELL; i < MAX_SKILL; i++) {
+    const spellInfo* spell = getSpellInfo(i);
+    if (!spell || !spell->name)
       continue;
 
-    if((((101-discArray[i]->start)*discArray[i]->learn)) < 100){
-      vlogf(LOG_BUG, format("skill '%s' has bad learning (start: %i, learn: %i)")%
-	    discArray[i]->name % discArray[i]->start % discArray[i]->learn);
+    if ((((101 - spell->start) * spell->learn)) < 100) {
+      vlogf(LOG_BUG, format("skill '%s' has bad learning (start: %i, learn: %i)") % spell->name %
+                       spell->start % spell->learn);
     }
   }
-
-  
 }
-
-
-
-
-
-

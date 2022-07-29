@@ -1479,6 +1479,18 @@ unsigned short TBeing::getClass() const
   return player.Class;
 }
 
+// Returns vector of class bitvalues to make it easier to write code that applies to all classes of
+// a multiclass character
+std::vector<uint16_t> TBeing::getClasses() const {
+  std::vector<uint16_t> results{};
+  std::for_each(CLASS_BITVALUES.begin(), CLASS_BITVALUES.end(),
+    [&results, this](const uint16_t classValue) {
+      if (hasClass(classValue))
+        results.push_back(classValue);
+    });
+  return results;
+}
+
 unsigned short TBeing::GetMaxLevel() const
 {
   return player.max_level;
@@ -1791,4 +1803,53 @@ bool TBeing::canMeditate()
       return FALSE;
     }
   return TRUE;
+}
+
+// Helper to quickly get a being's current % HP remaining as a decimal
+double TBeing::getPercentHp() const {
+  return static_cast<double>(getHit()) / static_cast<double>(hitLimit());
+}
+
+// Check if a TBeing is also a TMonster. Won't be fooled by shapeshifted/polymorphed player
+// characters.
+bool TBeing::isTMonster() const {
+  return !(IS_SET(specials.act, ACT_POLYSELF) && desc && desc->original) &&
+         dynamic_cast<const TMonster*>(this) != nullptr;
+};
+
+// Return a TBeing cast to a TMonster. Will return the mob form taken by shapeshifted/polymorphed
+// players as a TMonster, which could sometimes be needed.
+TMonster* TBeing::toTMonster() {
+  return dynamic_cast<TMonster*>(this);
+};
+
+// Return a TBeing cast to a TMonster. Will return the mob form taken by shapeshifted/polymorphed
+// players as a TMonster, which could sometimes be needed. This version works inside const member
+// functions.
+const TMonster* TBeing::toTMonster() const {
+  return dynamic_cast<const TMonster*>(this);
+};
+
+// Check if a TBeing is also a TPerson. Works through shapeshift/polymorph.
+bool TBeing::isTPerson() const {
+  return (IS_SET(specials.act, ACT_POLYSELF) && desc && desc->original) ||
+         dynamic_cast<const TPerson*>(this) != nullptr;
+};
+
+// Return a TBeing cast to a TPerson. Works through shapeshift/polymorph.
+TPerson* TBeing::toTPerson() {
+  return (IS_SET(specials.act, ACT_POLYSELF) && desc && desc->original)
+           ? desc->original
+           : dynamic_cast<TPerson*>(this);
+};
+
+// Return a TBeing cast to a TPerson. Works through shapeshift/polymorph. This version works
+// inside const member functions.
+const TPerson* TBeing::toTPerson() const {
+  return dynamic_cast<const TPerson*>(
+    (IS_SET(specials.act, ACT_POLYSELF) && desc && desc->original) ? desc->original : this);
+};
+
+bool TBeing::isTransformedPc() const {
+  return IS_SET(specials.act, ACT_POLYSELF) && desc && desc->original;
 }

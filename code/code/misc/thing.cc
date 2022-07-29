@@ -226,6 +226,39 @@ unsigned short TThing::getMaterial() const
   return material_type;
 }
 
+// Bounds-safe way to get a pointer to the entry in the material_nums array that matches the given
+// material number. Returns nullptr if no match found.
+const material_type_numbers* getMaterialTypeNumbers(int materialNum) {
+  for (const auto& mat : material_nums) {
+    auto index = std::distance(std::begin(material_nums), &mat);
+    if (index != materialNum)
+      continue;
+
+    return &mat;
+  }
+
+  return nullptr;
+}
+
+// Directly return the hardness value for the material number provided, if the number is a valid
+// index for the material_nums array. Otherwise returns 0.
+int getMaterialHardness(int materialNum) {
+  const auto* mat = getMaterialTypeNumbers(materialNum);
+  return mat ? mat->hardness : 0;
+};
+
+// Bounds-safe way to get a pointer to the entry in the material_nums array for this TThing's
+// getMaterial() value. Returns nullptr if no match found.
+const material_type_numbers* TThing::getMaterialTypeNumbers() const {
+  return ::getMaterialTypeNumbers(getMaterial());
+}
+
+// Get the hardness value for whatever material this TThing is made of. Returns 0 if TThing has an
+// invalid material number.
+int TThing::getMaterialHardness() const {
+  return ::getMaterialHardness(getMaterial());
+};
+
 int TThing::getReducedVolume(const TThing *o) const
 {
   // we use o if we want to do a check BEFORE the volume changes.
