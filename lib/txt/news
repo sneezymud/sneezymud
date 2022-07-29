@@ -44,7 +44,8 @@
               - Cladosporium (nocturnal version)
 
 
-06-20-22 : Limb Damage Redesign
+
+06-22-22 : Limb Damage Redesign
            - With the changes to critical hits, it's now possible (and even likely)
            with the current limb damage code for players to scrap the limbs of 
            end-game mobs in a single crit, trivializing combat.
