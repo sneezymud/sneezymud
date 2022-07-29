@@ -1479,6 +1479,18 @@ unsigned short TBeing::getClass() const
   return player.Class;
 }
 
+// Returns vector of class bitvalues to make it easier to write code that applies to all classes of
+// a multiclass character
+std::vector<uint16_t> TBeing::getClasses() const {
+  std::vector<uint16_t> results{};
+  std::for_each(CLASS_BITVALUES.begin(), CLASS_BITVALUES.end(),
+    [&results, this](const uint16_t classValue) {
+      if (hasClass(classValue))
+        results.push_back(classValue);
+    });
+  return results;
+}
+
 unsigned short TBeing::GetMaxLevel() const
 {
   return player.max_level;
@@ -1881,3 +1893,32 @@ bool TBeing::canMeditate()
     }
   return TRUE;
 }
+
+// Helper to quickly get a being's current % HP remaining as a decimal
+double TBeing::getPercentHp() const {
+  return static_cast<double>(getHit()) / static_cast<double>(hitLimit());
+}
+
+bool TBeing::isTMonster() const {
+  return dynamic_cast<const TMonster*>(this) != nullptr;
+};
+
+TMonster* TBeing::toTMonster() {
+  return dynamic_cast<TMonster*>(this);
+};
+
+const TMonster* TBeing::toTMonster() const {
+  return dynamic_cast<const TMonster*>(this);
+};
+
+bool TBeing::isTPerson() const {
+  return dynamic_cast<const TPerson*>(this) != nullptr;
+};
+
+TPerson* TBeing::toTPerson() {
+  return dynamic_cast<TPerson*>(this);
+};
+
+const TPerson* TBeing::toTPerson() const {
+  return dynamic_cast<const TPerson*>(this);
+};

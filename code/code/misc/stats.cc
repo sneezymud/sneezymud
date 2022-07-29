@@ -1286,37 +1286,67 @@ Stats::~Stats()
 {
 }
 
-bool TBeing::isStrong() const
-{
-  return (plotStat(STAT_CURRENT, STAT_BRA, 30, 180, 105, 1.0) >= ::number(30,200));
+// Performs a test of a being's given stat against a random roll, to allow stats
+// to affect the success of various actions
+bool TBeing::statSelfCheck(statTypeT stat, int num) const {
+  return static_cast<int>(plotStat(STAT_CURRENT, stat, 30, 180, 105, 1.0) + num) >=
+         ::number(30, 200);
 }
 
-bool TBeing::isPerceptive() const
-{
-  return (plotStat(STAT_CURRENT, STAT_PER, 30, 180, 105, 1.0) >= ::number(30,200));
+bool TBeing::isStrong() const {
+  return statSelfCheck(STAT_STR);
 }
 
-bool TBeing::isAgile(int num) const
-{
-  return ((plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 105, 1.0) + num) >= ::number(30,200));
+bool TBeing::isPerceptive() const {
+  return statSelfCheck(STAT_PER);
 }
 
-bool TBeing::isDextrous() const
-{
-  return (plotStat(STAT_CURRENT, STAT_DEX, 30, 180, 105, 1.0) >= ::number(30,200));
+bool TBeing::isAgile(int num) const {
+  return statSelfCheck(STAT_AGI, num);
 }
 
-bool TBeing::isTough() const
-{
-  return (plotStat(STAT_CURRENT, STAT_CON, 30, 180, 105, 1.0) >= ::number(30,200));
+bool TBeing::isDextrous() const {
+  return statSelfCheck(STAT_DEX);
+}
+
+bool TBeing::isTough() const {
+  return statSelfCheck(STAT_CON);
+}
+
+bool TBeing::isBrawny() const {
+  return statSelfCheck(STAT_BRA);
+}
+
+bool TBeing::isIntelligent() const {
+  return statSelfCheck(STAT_INT);
+}
+
+bool TBeing::isWise() const {
+  return statSelfCheck(STAT_WIS);
+}
+
+bool TBeing::isFast() const {
+  return statSelfCheck(STAT_SPE);
+}
+
+bool TBeing::isFocused() const {
+  return statSelfCheck(STAT_FOC);
+}
+
+bool TBeing::isCharismatic() const {
+  return statSelfCheck(STAT_CHA);
+}
+
+bool TBeing::isLucky() const {
+  return statSelfCheck(STAT_KAR);
 }
 
 bool TBeing::isUgly() const
 {
-  return (plotStat(STAT_CURRENT, STAT_CHA, 30, 180, 105, 1.0) >= ::number(30,200));
+  return statSelfCheck(STAT_CHA);
 }
 
 bool TBeing::isRealUgly() const
 {
-  return (isUgly() && isUgly() && !::number(0,1));
+  return (isUgly() && isUgly());
 }

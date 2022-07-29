@@ -181,6 +181,7 @@ class TThing {
     void setRoom(int room);
     virtual void setMaterial(unsigned short num);
     unsigned short getMaterial() const;
+    const struct material_type_numbers* getMaterialTypeNumbers() const;
     virtual void setWeight(const float w);
     void addToWeight(const float w);
     float getCarriedWeight() const;

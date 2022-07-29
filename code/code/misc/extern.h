@@ -17,6 +17,7 @@
 #include "obj_drug.h"
 
 #include <sys/select.h> // for fd_set
+#include <random>
 
 struct PolyType;
 class charFile;
@@ -360,6 +361,7 @@ extern const sstring getSectorNameColor(sectorTypeT, TRoom *);
 extern const sstring getSectorDescrColor(sectorTypeT, TRoom *);
 extern spellNumT mapWeaponT(weaponT w);
 extern spellNumT getWtype_kluge(weaponT t);
+extern const std::vector<uint16_t> CLASS_BITVALUES;
 
 // these needs C++ linkage to avoid conflict with functions in stdlib
 extern int remove(TBeing *, TThing *);
@@ -368,3 +370,24 @@ extern int atoi_safe(const sstring);
 extern double atof_safe(const sstring);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
+
+// Template functions need to be defined in header to be visible in other translation units
+
+// Helper to retrieve by value a random entry from a vector.
+// Receives a copy of a std::vector<T>, shuffles it in place using C++ <random>
+// library, then returns first entry by value.
+template <typename T>
+T getRandomEntryByVal(std::vector<T> v) {
+  std::shuffle(v.begin(), v.end(), std::minstd_rand{std::random_device{}()});
+  return v.front();
+}
+
+// Helper to retrieve by reference a random entry from a vector.
+// Takes an instance of std::vector<T>, shuffles in place using C++ <random>
+// library, then returns reference to first entry. Mutates the original vector.
+// Should be more efficient when mutability of original isn't an issue.
+template <typename T>
+T& getRandomEntryByRef(std::vector<T>& v) {    
+  std::shuffle(v.begin(), v.end(), std::minstd_rand{std::random_device{}()});
+  return v.front();
+}

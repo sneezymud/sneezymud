@@ -226,6 +226,21 @@ unsigned short TThing::getMaterial() const
   return material_type;
 }
 
+// Bounds-safe way to get a pointer to a material object in the material_nums array
+// that matches a TThing's material type. Returns nullptr if none found.
+const material_type_numbers* TThing::getMaterialTypeNumbers() const {
+  const auto* begin = std::begin(material_nums);
+  const auto* end = std::end(material_nums);
+
+  for (const auto* mat = begin; mat != end; mat = std::next(mat)) {
+    auto index = std::distance(begin, mat);
+    if (index == getMaterial())
+      return mat;    
+  }
+
+  return nullptr;
+}
+
 int TThing::getReducedVolume(const TThing *o) const
 {
   // we use o if we want to do a check BEFORE the volume changes.
