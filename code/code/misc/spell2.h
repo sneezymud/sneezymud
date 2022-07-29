@@ -8,6 +8,7 @@
 #pragma once
 
 #include <map>
+#include "discipline.h"
 #include "stats.h"
 
 enum skillUseTypeT {
@@ -379,130 +380,102 @@ enum discLearnDoT {
 
 class spellInfo {
   public:
-    const char *name;
-    statTypeT modifierStat;
-    int start;
-    int learn;
-    unsigned int uses;
-    long unsigned levels;
-    long unsigned learned;
-    long unsigned damage;
-    long unsigned pot_damage;
-    long unsigned pot_victims;
-    long unsigned pot_level;
-    unsigned int victims;
-    unsigned int crits;
-    unsigned int critf;
-    unsigned int success;
-    unsigned int potSuccess;
-    unsigned int fail;
-    unsigned int focusValue;
-    unsigned int newAttempts;
-    unsigned int lowAttempts;
-    unsigned int midAttempts;
-    unsigned int goodAttempts;
-    unsigned int highAttempts;
-    unsigned int engAttempts;
-    unsigned int genFail;
-    unsigned int focFail;
-    unsigned int engFail;
-    unsigned int saves;
-    unsigned long learnAttempts;
-    unsigned int learnSuccess;
-    unsigned int learnLearn;
-    unsigned int learnLevel;
-    unsigned int learnFail;
-    unsigned long learnBoost;
-    unsigned int learnDiscSuccess;
-    unsigned int learnAdvDiscSuccess;
-    unsigned int mobUses;
-    unsigned long mobLevels;
-    unsigned long mobLearned;
-    unsigned long mobDamage;
-    unsigned int mobVictims;
-    unsigned int mobCrits;
-    unsigned int mobCritf;
-    unsigned int mobSuccess;
-    unsigned int potSuccessMob;
-    unsigned int mobFail;
-    unsigned int mobSaves;
-    unsigned int immUses;
-    unsigned long immLevels;
-    unsigned long immLearned;
-    unsigned long immDamage;
-    unsigned int immVictims;
-    unsigned int immCrits;
-    unsigned int immCritf;
-    unsigned int immSuccess;
-    unsigned int potSuccessImm;
-    unsigned int immFail;
-    unsigned int immSaves;
-    lag_t lag;
-    skillUseClassT typ;
-    taskDiffT task;
-    positionTypeT minPosition;
-    int minMana;
-    int minLifeforce; // shaman
-    float minPiety;
-    unsigned int targets;
-    int holyStrength;
-    const char *fadeAway, *fadeAwayRoom, *fadeAwaySoon, *fadeAwaySoonRoom;
-    float alignMod;
-    unsigned int comp_types;
-    unsigned int toggle;
-    discNumT disc;
-    discNumT assDisc;
-    short startLearnDo;
-    short amtLearnDo;
-    int learnDoDiff;
-    short secStartLearnDo;
-    short secAmtLearnDo;
-    std::map<int, int>sectorData;
-    std::map<int, int>weatherData;
+    const char* name{"\n"};
+    statTypeT modifierStat{STAT_INT};
+    int start{START_0};
+    int learn{LEARN_0};
+    uint32_t uses{0};
+    uint64_t levels{0};
+    uint64_t learned{0};
+    uint64_t damage{0};
+    uint64_t pot_damage{0};
+    uint64_t pot_victims{0};
+    uint64_t pot_level{0};
+    uint32_t victims{0};
+    uint32_t crits{0};
+    uint32_t critf{0};
+    uint32_t success{0};
+    uint32_t potSuccess{0};
+    uint32_t fail{0};
+    uint32_t focusValue{0};
+    uint32_t newAttempts{0};
+    uint32_t lowAttempts{0};
+    uint32_t midAttempts{0};
+    uint32_t goodAttempts{0};
+    uint32_t highAttempts{0};
+    uint32_t engAttempts{0};
+    uint32_t genFail{0};
+    uint32_t focFail{0};
+    uint32_t engFail{0};
+    uint32_t saves{0};
+    uint64_t learnAttempts{0};
+    uint32_t learnSuccess{0};
+    uint32_t learnLearn{0};
+    uint32_t learnLevel{0};
+    uint32_t learnFail{0};
+    uint64_t learnBoost{0};
+    uint32_t learnDiscSuccess{0};
+    uint32_t learnAdvDiscSuccess{0};
+    uint32_t mobUses{0};
+    uint64_t mobLevels{0};
+    uint64_t mobLearned{0};
+    uint64_t mobDamage{0};
+    uint32_t mobVictims{0};
+    uint32_t mobCrits{0};
+    uint32_t mobCritf{0};
+    uint32_t mobSuccess{0};
+    uint32_t potSuccessMob{0};
+    uint32_t mobFail{0};
+    uint32_t mobSaves{0};
+    uint32_t immUses{0};
+    uint64_t immLevels{0};
+    uint64_t immLearned{0};
+    uint64_t immDamage{0};
+    uint32_t immVictims{0};
+    uint32_t immCrits{0};
+    uint32_t immCritf{0};
+    uint32_t immSuccess{0};
+    uint32_t potSuccessImm{0};
+    uint32_t immFail{0};
+    uint32_t immSaves{0};
+    lag_t lag{LAG_0};
+    skillUseClassT typ{SPELL_NOCLASS};
+    taskDiffT task{TASK_NORMAL};
+    positionTypeT minPosition{POSITION_DEAD};
+    int minMana{MANA_0};
+    int minLifeforce{LIFEFORCE_0};
+    float minPiety{PRAY_0};
+    uint32_t targets{0};
+    int holyStrength{SYMBOL_STRESS_0};
+    const char* fadeAway{""};
+    const char* fadeAwayRoom{""};
+    const char* fadeAwaySoon{""};
+    const char* fadeAwaySoonRoom{""};
+    float alignMod{0.0};
+    uint32_t comp_types{0};
+    uint32_t toggle{0};
+    discNumT disc{DISC_NONE};
+    discNumT assDisc{DISC_NONE};
+    int16_t startLearnDo{START_DO_NO};
+    int16_t amtLearnDo{LEARN_DO_NO};
+    int learnDoDiff{0};
+    int16_t secStartLearnDo{START_DO_NO};
+    int16_t secAmtLearnDo{LEARN_DO_NO};
+    std::map<int, int> sectorData{};
+    std::map<int, int> weatherData{};
 
-  private:
-    spellInfo() {}  // prevent default constructor from being used
-  public:
-    spellInfo(skillUseClassT styp, 
-         discNumT discipline, 
-         discNumT assDiscipline, 
-         statTypeT modifierStat,
-         const char *n,
-         taskDiffT cast_diff,
-         lag_t l,
-         positionTypeT pos,
-         manaCostT mana,
-         lifeforceCostT lifeforce,
-         pietyCostT align,
-         unsigned int t, 
-         symbolStressT h, 
-         const char *fa, 
-         const char *far, 
-         const char *fas, 
-         const char *fasr, 
-         discStartT starting,
-         discLearnT learning,
-         discStartDoT learnDoStarting,
-         discLearnDoT learningDoAmt,
-         discStartDoT secLearnDoStart,
-         discLearnDoT secLearnDoAmt,
-         int learningDoDiff, float modifier, unsigned int ctyp, 
-         unsigned int tgl);
-    ~spellInfo();
-    spellInfo(const spellInfo &);
-    spellInfo & operator = (const spellInfo &);
-}; 
+    spellInfo() = default;
+    spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc, statTypeT modifierStat,
+      const char* name, taskDiffT task, lag_t lag, positionTypeT minPosition, manaCostT minMana,
+      lifeforceCostT minLifeforce, pietyCostT minPiety, uint32_t targets,
+      symbolStressT holyStrength, const char* fadeAway, const char* fadeAwayRoom,
+      const char* fadeAwaySoon, const char* fadeAwaySoonRoom, discStartT start, discLearnT learn,
+      discStartDoT startLearnDo, discLearnDoT amtLearnDo, discStartDoT secStartLearnDo,
+      discLearnDoT secAmtLearnDo, int learnDoDiff, float alignMod, uint32_t comp_types,
+      uint32_t toggle);
 
-#if 0
-// defunct, but remains in some commented out code
-enum spellTypeT {
-     SPELL_TYPE_SPELL,
-     SPELL_TYPE_POTION,
-     SPELL_TYPE_WAND,
-     SPELL_TYPE_STAFF,
-     SPELL_TYPE_SCROLL
+    spellNumT getSpellNum() const;
 };
-#endif
 
 struct attack_hit_type {
   const char *singular;
@@ -525,4 +498,5 @@ struct PolyType {
   unsigned long int tRace;
 };
 
-extern spellInfo *discArray[MAX_SKILL+1];
+extern spellInfo* discArray[MAX_SKILL + 1];
+extern spellInfo* getSpellInfo(spellNumT skillNum);

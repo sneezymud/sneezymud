@@ -1962,3 +1962,28 @@ std::pair<int64_t, int64_t> affectedData::sumAffectsByApplyType(const applyTypeT
   return { mod1, mod2 };
 }
 
+// Search a TBeing's affects, looking for one for which the predicate function returns
+// true when passed the affect. If found, return a pointer to this affect.
+affectedData* affectedData::find_if(const std::function<bool(affectedData*)>& predicate) {
+  for (affectedData* aff = this; aff; aff = aff->next) {
+    if (!predicate(aff))
+      continue;
+
+    return aff;
+  }
+  return nullptr;
+}
+
+const std::vector<uint16_t> CLASS_BITVALUES = {
+  CLASS_MAGE,
+  CLASS_CLERIC,
+  CLASS_WARRIOR,
+  CLASS_THIEF,
+  CLASS_SHAMAN,
+  CLASS_DEIKHAN,
+  CLASS_MONK,
+  CLASS_RANGER,
+  CLASS_COMMONER,
+  CLASS_ALL,
+};
+

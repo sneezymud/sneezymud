@@ -818,6 +818,7 @@ class TBeing : public TThing {
   int durationModify(spellNumT, int);
   short getSkillValue(spellNumT) const;
   void setSkillValue(spellNumT, int);
+  double getSkillLearnednessPercent(spellNumT) const;
   short getRawNatSkillValue(spellNumT) const;
   short getRawSkillValue(spellNumT) const;
   virtual immortalTypeT isImmortal(int = GOD_LEVEL1) const { return IMMORTAL_NO; }
@@ -1519,6 +1520,7 @@ class TBeing : public TThing {
   unsigned short getLevel(classIndT i) const;
   void setLevel(classIndT i, unsigned short);
   unsigned short getClass() const;
+  std::vector<uint16_t> getClasses() const;
   void setClass(unsigned short num);
 
   short pracsSoFar();
@@ -1586,6 +1588,7 @@ class TBeing : public TThing {
   virtual sstring getStealLootNames() const { return "nothing"; }
   virtual bool getStolenFrom() const { return false; }
   virtual void setStolenFrom(bool) { }
+  double getPercentHp() const;
 
   TBeing *fight() const;
 
@@ -1932,11 +1935,19 @@ class TBeing : public TThing {
   virtual unsigned int getTimer() const = 0;
   virtual void setTimer(unsigned int) = 0;
   virtual void addToTimer(unsigned int) = 0;
+  bool statSelfCheck(statTypeT stat, int num = 0) const;
   bool isStrong() const;
   bool isPerceptive() const;
   bool isDextrous() const;
   bool isAgile(int num) const;
   bool isTough() const;
+  bool isBrawny() const;
+  bool isIntelligent() const;
+  bool isWise() const;
+  bool isFast() const;
+  bool isFocused() const;
+  bool isCharismatic() const;
+  bool isLucky() const;
   bool isUgly() const;
   bool isRealUgly() const;
   bool isWary() const;
@@ -1973,4 +1984,12 @@ class TBeing : public TThing {
   // shaman helpers
   TObj *getWornShamanMask();
   TTool *getHeldTotem();
+
+  // New utility methods
+  bool isTMonster() const;
+  TMonster* toTMonster();
+  const TMonster* toTMonster() const;
+  bool isTPerson() const;
+  TPerson* toTPerson();
+  const TPerson* toTPerson() const;
 };

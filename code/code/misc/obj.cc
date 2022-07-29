@@ -750,3 +750,20 @@ sstring TObj::wear_flags_to_sentence() const
   return msg_wear_flag;
 }
 
+// Helper to quickly find the sum of either modifier or modifier2 for all affects with the given
+// applyTypeT as their location
+std::pair<int64_t, int64_t> TObj::sumAffectedByApplyType(applyTypeT location) const {
+  int64_t mod1 = 0.0;
+  int64_t mod2 = 0.0;
+
+  std::for_each(std::begin(affected), std::end(affected),
+    [&mod1, &mod2, location](const objAffData& aff) {
+      if (aff.location != location)
+        return;
+
+      mod1 += aff.modifier;
+      mod2 += aff.modifier2;
+    });
+
+  return {mod1, mod2};
+};
