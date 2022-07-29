@@ -11,7 +11,7 @@
 #include "materials.h"
 
 int vampire(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
-  auto* victim = ch->fight();
+  TBeing* victim = ch->fight();
 
   // Mob spec procs don't get called if their position is < POSITION_STANDING
   if (cmd != CMD_MOB_COMBAT || !ch || !victim || !ch->sameRoom(*victim) || ch->spelltask)
@@ -21,12 +21,12 @@ int vampire(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
   act("$n touches you in an attempt to suck away your energy...", true, ch, nullptr, victim,
     TO_VICT);
 
-  auto level = ch->GetMaxLevel();
+  int level = ch->GetMaxLevel();
 
   // No need to call actual spell function, as this is an innate ability. Just calculate damage,
-  // using mob's level as adv_learn value.
+  // using mob's level as adv_learn value. Drains between 1% and 5% of victim's max moves.
   int dam = ch->getSkillDam(victim, SPELL_ENERGY_DRAIN, level, level);
-  int vit = dice(number(1, level), 4);
+  int vit = ::number(victim->getMaxMove() * 0.01, victim->getMaxMove() * 0.05);
 
   if (!dam || victim->getImmunity(IMMUNE_DRAIN) >= 100 ||
       victim->isLucky(levelLuckModifier(level))) {
@@ -40,6 +40,8 @@ int vampire(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
       delete victim;
       victim = nullptr;
     }
+
+    ch->addToMove(vit);
   }
 
   ch->addSkillLag(SPELL_ENERGY_DRAIN, 0);
@@ -495,9 +497,9 @@ int arch_vampire(TBeing* vampire, cmdTypeT cmd, const char*, TMonster*, TObj*) {
 
   // Calculate damage for bite attack. No need to pseudo-cast the real spell by calling the
   // energyDrain function, as that just introduces problems when non-mage mobs attempt it.
-  // The bite is an innate ability, anyway.
+  // The bite is an innate ability, anyway. Drains between 5% and 10% of victim's max moves.
   int dam = vampire->getSkillDam(victim, SPELL_ENERGY_DRAIN, vampire->GetMaxLevel(), 100);
-  int vit = dice(::number(1, vampire->GetMaxLevel()), 4);
+  int vit = ::number(victim->getMaxMove() * 0.05, victim->getMaxMove() * 0.1);
 
   // The proc could be made less punishing here - for instance, by adding a 'victim->isAgile()' call
   if (victim->isLucky(levelLuckModifier(vampire->GetMaxLevel()))) {
