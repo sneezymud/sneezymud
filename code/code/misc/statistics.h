@@ -65,7 +65,6 @@ class GameStats {
     double barehand_damage_mod;
     double npc_skill_damage_mod;
     double npc_weapon_damage_mod;
-    double npc_barehand_damage_mod;
     int absorb_damage_divisor[2];
     long logins;
     unsigned int mobs_1_5;
