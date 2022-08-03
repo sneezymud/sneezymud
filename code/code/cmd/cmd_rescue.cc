@@ -42,14 +42,6 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
     caster->sendTo("How can you rescue someone you are trying to kill?\n\r");
     return FALSE;
   }
-#if 0
-  if (!caster->inGroup(*victim)) {
-    act("You need to be a part of $S group to rescue $N.", 
-             FALSE, caster, 0, victim, TO_CHAR);
-    return FALSE;
-  }
-#endif
-  
 
   for(StuffIter it=victim->roomp->stuff.begin();
       it!=victim->roomp->stuff.end();++it, tmp_ch=NULL){
@@ -62,6 +54,11 @@ static int rescue(TBeing * caster, TBeing * victim, spellNumT skill)
 
   if (!tmp_ch) {
     act("But nobody is fighting $M?", FALSE, caster, 0, victim, TO_CHAR);
+    return FALSE;
+  }
+  
+  if (caster->noHarmCheck(tmp_ch)) {
+    act("You cannot rescue someone who is fighting that target?", FALSE, caster, 0, victim, TO_CHAR);
     return FALSE;
   }
 
