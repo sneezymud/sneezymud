@@ -91,11 +91,11 @@ int init_game_stats(void)
   // this should be better for 5.2
   
   // Splitting these out to provide knobs for each
-  stats.skill_damage_mod = 0.65;
-  stats.weapon_damage_mod = 0.40;
-  stats.barehand_damage_mod = 0.44;
+  stats.skill_damage_mod = 0.5;
+  stats.weapon_damage_mod = 0.30;
+  stats.barehand_damage_mod = 0.34;
   stats.npc_skill_damage_mod = 0.45;
-  stats.npc_weapon_damage_mod = 0.75;
+  stats.npc_weapon_damage_mod = 0.85;
 
   if (!(fp = fopen(STATS_FILE,"r"))) {
     vlogf(LOG_BUG, "Unable to open txt/stat file");
