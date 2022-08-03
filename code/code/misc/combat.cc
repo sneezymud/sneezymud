@@ -2747,10 +2747,9 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
       defenderLevel = target->GetMaxLevel();
 
   // For gameplay reasons, give players more of a bonus if they're hitting lower level enemies
-  if (attackerLevel > defenderLevel)
-    situationalModifier += (attackerLevel > defenderLevel) ?
-                           (attackerLevel - defenderLevel) :
-                           ((attackerLevel - defenderLevel) / 5);
+  situationalModifier += (attackerLevel > defenderLevel && isPc()) ?
+                         (attackerLevel - defenderLevel) :
+                         ((attackerLevel - defenderLevel) / 5);
 
   double roll = static_cast<int>(::number(1,100));
   sendTo(format("Original roll is (%i) - ") % roll);
