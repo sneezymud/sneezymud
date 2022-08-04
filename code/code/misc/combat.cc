@@ -2760,11 +2760,10 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
   roll = roll * 
          getStatMod(primaryOffenseStat) * 
          plotStat(STAT_CURRENT, secondaryOffenseStat, 0.92, 1.08, 1.0) / 
-         target->getStatMod(primaryDefenseStat) / target->plotStat(STAT_CURRENT, primaryDefenseStat, 0.92, 1.08, 1.0);
+         target->getStatMod(primaryDefenseStat) / 
+         target->plotStat(STAT_CURRENT, primaryDefenseStat, 0.92, 1.08, 1.0);
 
   sendTo(format("Modified roll is (%i) - \n") % roll);
-
-  // Placeholder - scale for target->HEROIC_MODIFIER
 
   if (roll <= 5)
     return GUARANTEED_SUCCESS;
@@ -2775,7 +2774,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
   else if (partialSuccessAllowed && roll < PARTIAL_SUCCESS_THRESHOLD)
     return PARTIAL_SUCCESS;
   else
-    return FALSE;
+    return FAILURE;
 }
 
 // hits() is for an individual hit.
