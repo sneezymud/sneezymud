@@ -432,7 +432,7 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj, int modifier)
   d = getSkillDam(victim, SKILL_THROATSLIT, getSkillLevel(SKILL_THROATSLIT), getAdvLearning(SKILL_THROATSLIT));
 
 
-  int specialAttackValue = specialAttack(victim, SKILL_THROATSLIT, modifier);
+  int specialAttackValue = specialAttack(victim, SKILL_THROATSLIT, modifier, true);
   if (specialAttackValue == GUARANTEED_SUCCESS || 
       specialAttackValue == COMPLETE_SUCCESS || 
       (specialAttackValue == PARTIAL_SUCCESS && (::number(0,99) + modifier > 50))) {
