@@ -767,331 +767,329 @@ static bool canFleeThisWay(TBeing *ch, dirTypeT dir)
   return true;
 }
 
-static void fleeFail(const TBeing *ch)
-{
-#if 0
-  // can fail for lack of moves or too tall for door...
-  ch->sendTo("You try to flee but are too exhausted.\n\r");
-  act("$n tries to flee, but is too exhausted!", TRUE, ch, 0, 0, TO_ROOM);
-#else
-  ch->sendTo("You try to flee but fail.\n\r");
-  act("$n tries to flee!", TRUE, ch, 0, 0, TO_ROOM);
-#endif
-}
-
 // returns DELETE_THIS
-int TBeing::doFlee(const char *arg)
-{
-  int i, iDie, percent;
-  bool panic = FALSE;
-  int rc = FALSE;
-  TRoom *rp = roomp;
-  TThing *t;
-  TBeing *vict;
-
-  spellNumT skill = getSkillNum(SKILL_RETREAT);
-  spellNumT skill2 = getSkillNum(SKILL_RIDE);
-
+int TBeing::doFlee(const char *arg) {
   // automatic flee attempts should fail if lagging
   // remember that wait comes in as 1 naturaly i think
   if (getWait() > 1) {
-    sendTo("You can't flee while orienting yourself.\n\r");
-    return TRUE;
+    sendTo("You're too disoriented to flee.\n\r");
+    return true;
   }
-  // This is used to prevent 'insta-fleeing' on mobiles
-  if (isAffected(AFF_SHOCKED) && !isPc()) {
-    sendTo("You are still recovering from something!\n\r");
-    return FALSE;
-  } if (!isPc()) {
-    affectedData tAff;
 
-    tAff.type     = AFFECT_COMBAT;
-    tAff.duration = 1; // Short and sweet
+  // This is used to prevent 'insta-fleeing' on mobiles
+  if (!isPc()) {
+    if (isAffected(AFF_SHOCKED)) {
+      sendTo("You are still recovering from something!\n\r");
+      return false;
+    }
+    affectedData tAff;
+    tAff.type = AFFECT_COMBAT;
+    tAff.duration = 1;
     tAff.modifier = AFF_SHOCKED;
     tAff.location = APPLY_NONE;
-
     affectTo(&tAff, -1);
   }
 
   if (isAffected(AFF_PARALYSIS)) {
     sendTo("You can't flee while paralyzed.\n\r");
-    return FALSE;
+    return false;
   }
+
   if (isAffected(AFF_STUNNED)) {
     sendTo("You can't flee while stunned.\n\r");
-    return FALSE;
+    return false;
   }
+
   if (getPosition() <= POSITION_STUNNED)
-    return FALSE;
+    return false;
 
   if (isCombatMode(ATTACK_BERSERK)) {
-    sendTo("You are berserking!  There is no way to flee!\n\r");
-    return FALSE;
+    sendTo("Flee? FLEE!? Your rage is too overwhelming!!\n\r");
+    return false;
   }
-  if (bothLegsHurt() && !isFlying()) {
-    sendTo("It is futile to try to flee without use of your legs!\n\r");
-    act("$n tries to flee, but $s legs just won't move!", TRUE, this, NULL, NULL, TO_ROOM);
-    return FALSE;
+
+  if (!isFlying()) {
+    if (bothLegsHurt()) {
+      sendTo("You try to flee, but can't due to the condition of your legs!\n\r");
+      act("$n tries to flee, but $s legs just won't move!", true, this, nullptr, nullptr, TO_ROOM);
+      return false;
+    }
+    if ((eitherLegHurt() || (!isHumanoid() && eitherArmHurt())) && ::number(0, 2)) {
+      sendTo("You try to flee, but can't due to the condition of your legs!\n\r");
+      act("$n tries to flee, but $s leg just won't move!", true, this, nullptr, nullptr, TO_ROOM);
+      return false;
+    }
   }
-  if (eitherLegHurt() && ::number(0,2) && !isFlying()) {
-    sendTo("Your injured leg makes the attempt fail!\n\r");
-    act("$n tries to flee, but $s legs just won't move!", 
-         TRUE, this, NULL, NULL, TO_ROOM);
-    return FALSE;
-  }
-  if (!isHumanoid() && eitherArmHurt() && ::number(0,2) && !isFlying()) {
-    // non-humanoid arms are considered legs
-    sendTo("Your injured leg makes the attempt fail!\n\r");
-    act("$n tries to flee, but $s legs just won't move!", 
-         TRUE, this, NULL, NULL, TO_ROOM);
-    return FALSE;
-  }
+
   if (isAffected(AFF_CHARM) && master && sameRoom(*master)) {
     if (!::number(0, 5))
-      act("$n bursts into tears.", TRUE, this, 0, 0, TO_ROOM);
-    act("You burst into tears at the thought of leaving $N.", 
-            FALSE, this, 0, master, TO_CHAR);
-    return FALSE;
+      act("$n bursts into tears at the thought of fleeing without $N!", true, this, nullptr, master,
+          TO_ROOM);
+    act("You can't bear the thought of leaving $N's side!", false, this, nullptr, master, TO_CHAR);
+    return false;
   }
-  if (roomp->isRoomFlag(ROOM_NO_FLEE)) {
-    act("A strange power prevents $n from escaping.",
-            FALSE, this, NULL, NULL, TO_ROOM);
-    act("A strange power prevents you from escaping.",
-            FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
-    return FALSE;
-  }
-  if (riding) {
-    // Let's make retreat skill have some chance of keeping you on the mount - Brutius 07/26/1999
-    if (!(doesKnowSkill(skill) && doesKnowSkill(skill2)) || 
-	!(bSuccess(skill) && bSuccess(skill2))) { 
-      sendTo("Your panic causes you to fall.\n\r");
-      rc = fallOffMount(riding, POSITION_SITTING);
-      panic = TRUE;
-      if (IS_SET_DELETE(rc, DELETE_THIS)) 
-        return DELETE_THIS;
-    }
-  } else if (getPosition() <= POSITION_SITTING) {
-    addToMove(-10);
-    act("$n scrambles madly to $s feet!", TRUE, this, 0, 0, TO_ROOM);
-    act("Panic-stricken, you scramble to your feet.", TRUE, this, 0, 0, TO_CHAR);
-    doStand();
-    addToWait(combatRound(1));
 
-    panic = TRUE;
-  } else if ((t = rider)) {
-    t->sendTo("Your mount panics and attempts to flee.\n\r");
-    rc = t->fallOffMount(this, POSITION_SITTING);
-    panic = TRUE;
+  if (roomp->isRoomFlag(ROOM_NO_FLEE)) {
+    act("$n tries to flee but a strange power prevents $m from escaping.", false, this, nullptr,
+        nullptr, TO_ROOM);
+    act("A strange power prevents you from escaping.", false, this, nullptr, nullptr, TO_CHAR,
+        ANSI_RED);
+    return false;
+  }
+
+  
+  // Do skill checks now and use results throughout so bSuccess only gets
+  // called once per flee attempt. 
+  bool wasRetreatSuccessful = bSuccess(getSkillNum(SKILL_RETREAT));
+
+  bool panic = false;
+  int rc = 0;
+  auto *riderAsTBeing = dynamic_cast<TBeing *>(rider);
+
+  // Could be either riding an actual mount, or be on a chair/bed of some sort.
+  // Handle both possibilities. Failures here result in flee fail and return from function call.
+  if (riding) {
+    // If this resolves to nullptr we know 'riding' is a TObj (furniture)
+    auto* ridingAsTBeing = dynamic_cast<TBeing*>(riding);
+
+    // Condensed logic using ternaries. Determine if <this> is riding an actual mount or simply on
+    // some furniture, then build some strings to send to act(). Avoids a bunch of nested ifs and
+    // calling act repeatedly.
+    bool shouldFallOffMount = ridingAsTBeing ? ((!bSuccess(SKILL_RIDE) || !wasRetreatSuccessful) &&
+                                                !bSuccess(ridingAsTBeing->mountSkillType()))
+                                             : !wasRetreatSuccessful;
+
+    sstring toChar =
+      ridingAsTBeing
+        ? (shouldFallOffMount ? "You urge your $O to flee, causing it to panic and throw you off!"
+                              : "")
+        : (shouldFallOffMount ? "Lurching backwards, you attempt to escape!"
+                              : "You smoothly stand up while looking for available exits.");
+
+    sstring toRoom =
+      ridingAsTBeing
+        ? (shouldFallOffMount ? "$n urges $s $O to flee, causing it to panic and throw $n off!"
+                              : "")
+        : (shouldFallOffMount ? "$n lurches backwards, attempting to escape!"
+                              : "$n stands up and conspicuously looks for an exit.");
+
+    if (!toChar.empty())
+      act(toChar, true, this, nullptr, riding, TO_CHAR);
+    if (!toRoom.empty())
+      act(toRoom, true, this, nullptr, riding, TO_ROOM);    
+
+    if (shouldFallOffMount) {
+      rc = fallOffMount(riding, POSITION_SITTING);
+      if (IS_SET_DELETE(rc, DELETE_THIS))
+        return DELETE_THIS;
+      addToWait(combatRound(1));
+      return true;
+    }
+
+    // Have to use dismount here, as just forcing a standing position via setPosition actually sets
+    // <this> to standing on top of whatever furniture they were on. Collapses chairs, etc.
+    if (!ridingAsTBeing)
+      dismount(POSITION_STANDING);
+
+    // If <this> is a mount being ridden
+  } else if (riderAsTBeing) {
+    act("Your $O panics and attempts to flee!", true, riderAsTBeing, nullptr, this, TO_CHAR);
+    act("$n's $O panics and attempts to flee!", true, riderAsTBeing, nullptr, this, TO_ROOM);
+
+    // Give Deikhans a chance to prevent being bucked, with the right skills.
+    if (riderAsTBeing->bSuccess(mountSkillType()) && riderAsTBeing->bSuccess(SKILL_CALM_MOUNT)) {
+      act("You manage to calm $M down before $E dismounts you.", true, riderAsTBeing, nullptr, this,
+          TO_CHAR);
+      act("With soothing words $n manages to calm $N and remain mounted.", true,
+          riderAsTBeing, nullptr, this, TO_ROOM);
+      return true;
+    }
+    
+    rc = riderAsTBeing->fallOffMount(this, POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      TBeing *tbt = dynamic_cast<TBeing *>(t);
-      if (tbt)
-        tbt->reformGroup();
-      delete t;
-      t = NULL;
+      riderAsTBeing->reformGroup();
+      delete riderAsTBeing;
+    }
+    // Don't want reference to rider anymore if they fell off
+    riderAsTBeing = nullptr;
+  }
+
+  if (getPosition() <= POSITION_SITTING) {
+    addToMove(-10);   
+
+    // If retreat succeeded, simply being on the ground when fleeing doesn't
+    // result in panic. And you get a different message.
+    sstring toRoom = wasRetreatSuccessful
+                       ? "$n rolls aside and regains $s footing!"
+                       : "$n scrambles madly to $s feet!";
+    sstring toChar = wasRetreatSuccessful
+                       ? "You quickly roll aside and regain your footing!"
+                       : "You scramble madly to your feet!";
+
+    act(toRoom, true, this, nullptr, nullptr, TO_ROOM);
+    act(toChar, true, this, nullptr, nullptr, TO_CHAR);
+
+    setPosition(POSITION_STANDING);
+
+    // If retreat didn't succeed or char doesn't have it, add some lag
+    // and panic.
+    if (!wasRetreatSuccessful) {
+      addToWait(combatRound(1));
+      panic = true;
     }
   }
-   
-  
+
+  playsound(pickRandSound(SOUND_FLEE_01, SOUND_FLEE_03), SOUND_TYPE_COMBAT);
+
   dirTypeT chosenDir = getDirFromChar(arg);
 
-  soundNumT snd = pickRandSound(SOUND_FLEE_01, SOUND_FLEE_03);
-  playsound(snd, SOUND_TYPE_COMBAT);
+  /*
+    Whether retreating or fleeing, if they input a direction, check if it's a valid
+    dir and return if not. If they've chosen a valid direction, actually do the
+    checks to see if they succeed in fleeing that way further down.
+  */
+  if (chosenDir != DIR_NONE && !canFleeThisWay(this, chosenDir)) {
+    act("You can't escape in that direction!", true, this, nullptr, nullptr, TO_CHAR);
+    return true;
+  }
 
-  if (!(vict = fight())) {
-    for (i = 0; i < 20; i++) {
-      dirTypeT attempt = dirTypeT(::number(MIN_DIR, MAX_DIR-1));        // Select a random direction 
-      
-      // not fighting, so encourage flight to be in dir PC selected
-      if (chosenDir != DIR_NONE && !panic) {
-	attempt = chosenDir;
-      }
-      if (canFleeThisWay(this, attempt)) {
-        act("$n panics, and attempts to flee.", TRUE, this, 0, 0, TO_ROOM);
-        TBeing *tbt = dynamic_cast<TBeing *>(rider);
-        if (tbt) {
-          act("You turn tail and attempt to run away.", 
-	      TRUE, this, 0, 0, TO_CHAR);
-          loseSneak();
-          iDie = tbt->moveOne(attempt);
-          if (IS_SET_DELETE(iDie, DELETE_THIS)) {
-            tbt->reformGroup();
-            delete tbt;
-            tbt = NULL;
-            return FALSE;
-          }
-          if (iDie == TRUE) {
-            sendTo("You fled head over heels.\n\r");
-            return TRUE;
-          } else {
-            fleeFail(this);
-            return TRUE;
-          }
-        } else {
-          act("You turn tail and attempt to run away.", 
-	      TRUE, this, 0, 0, TO_CHAR);
-          loseSneak();
-          iDie = moveOne(attempt);
-          if (IS_SET_DELETE(iDie, DELETE_THIS))
-            return DELETE_THIS;
-	  
-          if (iDie == TRUE) {
-            sendTo(format("You nearly hurt yourself as you fled madly %swards.\n\r") % dirs[attempt]);
-            REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
-	    
-            return TRUE;
-          } else {
-            fleeFail(this);
-            return TRUE;
-          }
-        }
-      }
-    }
-    // No exits was found 
+  /*
+    Create vector containing all currently valid flee directions, except for
+    the chosen direction if one was given.
+  */
+  std::vector<dirTypeT> validDirections;
+  for (dirTypeT direction = MIN_DIR; direction < MAX_DIR; direction++) {
+    if (direction == chosenDir) continue;
+    if (canFleeThisWay(this, direction))
+      validDirections.push_back(direction);
+  }
+
+  /*
+    If there are no valid flee directions (doors closed, etc), simply return with the panic
+    message.
+  */
+  if (validDirections.empty() && chosenDir == DIR_NONE) {
     sendTo("PANIC! You couldn't escape!\n\r");
-    return TRUE;
+    return true;
   }
-  for (i = 0; i < 20; i++) {
-    dirTypeT attempt = dirTypeT(::number(MIN_DIR, MAX_DIR-1));        // Select a random direction 
-    
-    // fighting, so the chance of success depends on retreat skill (with at least 5% chance to fail)
-    if (chosenDir != DIR_NONE && !panic && (::number(0,99) < (45+getSkillValue(skill)/2)))
-      attempt = chosenDir;
-    
-    if (canFleeThisWay(this, attempt)) {
-      if (panic || !doesKnowSkill(skill) || 
-          !bSuccess(skill)) {
-        act("$n panics, and attempts to flee.", TRUE, this, 0, 0, TO_ROOM);
-        panic = TRUE;
-      } else {
-        act("$n skillfully retreats from battle", TRUE, this, 0, 0, TO_ROOM);
-        panic = FALSE;
-      }
+
+  /*
+    Randomly select a valid flee direction for later use. If chosenDir is
+    the only valid flee direction, just use it as randomDir. Otherwise choose
+    any valid direction that's *not* chosenDir.
+  */
+  dirTypeT randomDir = validDirections.empty()
+                           ? chosenDir
+                           : validDirections[::number(0, validDirections.size() - 1)];
+
+  // Save reference to who <this> was fighting for later
+  TBeing *enemy = fight();
+
+  /*
+    Determine which direction to actually use. If panicked, no flee direction
+    chosen, or fighting and both retreat and 50% chance fail then flee in random direction.
+    Otherwise flee in chosen direction.
+  */
+  dirTypeT dirToUse =
+    panic || chosenDir == DIR_NONE || (!wasRetreatSuccessful && enemy && ::number(0, 1))
+      ? randomDir
+      : chosenDir;
+
+  // These messages don't make sense if not fighting
+  if (enemy) {
+    if (wasRetreatSuccessful && !panic) {
+      act("$n is looking for an opening to escape!", true, this, nullptr, nullptr, TO_ROOM);
+      act("You look for an opening to escape from the fight.", true, this, nullptr, nullptr,
+          TO_CHAR);
+    } else {
+      act("$n panics and attempts to flee!", true, this, nullptr, nullptr, TO_ROOM);
+      act("You turn tail and attempt to run away.", true, this, nullptr, nullptr, TO_CHAR);
       loseSneak();
-      TBeing *tbt = dynamic_cast<TBeing *>(rider);
-      if (tbt) {
-        iDie = tbt->moveOne(attempt);
-        if (IS_SET_DELETE(iDie, DELETE_THIS)) {
-          tbt->reformGroup();
-          delete tbt;
-          tbt = NULL;
-          return FALSE;
-        }
-      } else {
-        iDie = moveOne(attempt);
-        if (IS_SET_DELETE(iDie, DELETE_THIS))
-          return DELETE_THIS;
-      }
-      if (iDie == 1) {
-        double lose;
-        if (GetMaxLevel() > 3) {
-          // IDEALLY:
-          // get agg'd by a trainer and flee = lose minimal
-          // attack super high lev and flee for xp = lose a lot
-          // flee from lower level = lose moderate
-          if (vict->GetMaxLevel() > GetMaxLevel()) {
-            if (isAffected(AFF_AGGRESSOR)) {
-              // flee from higher level that I attacked...
-              lose = 3 * mob_exp(GetMaxLevel());
-            } else {
-              // flee from higher level that attacked me...
-              lose = mob_exp(GetMaxLevel());
-              lose /= 4.0;
-            }
-          } else {
-            // flee from lower level...
-            // We'll use vict's XP so you can't lose more than mob was worth.
-            lose = mob_exp(vict->GetMaxLevel());
-          }
-           // Tone this way down, we're making a lot of changes and
-          // this is drawing complaints - Bat 12/98
-          lose /= 1000;
-        } else
-          lose = 0;
 
-        if (lose < 0)
-          lose = 1;
-
-        // a crash was here somehow, i rearranged a bit but net was
-        // dynamic_cast was NULL, but !isPc occurred (tmons = 0x0 in addFeared)
-        // bizarre!! bat 09-19-98
-        TMonster *tmons = dynamic_cast<TMonster *>(this);
-        if (!isPc() && tmons)
-          tmons->addFeared(vict);
-
-        if (!(vict->isPc())) {
-          // I'm fleeing, make my opponent hunt me
-          tmons = dynamic_cast<TMonster *>(vict);
-          percent = (int) (100 *(double) tmons->getHit() /
-           (double) tmons->hitLimit());
-          if (::number(1, 101) < percent) {
-            if (tmons->Hates(this, NULL) ||
-                isOppositeFaction(tmons)) {
-              tmons->setHunting(this);
-            }
-          }
-        }
-        if (isPc() && panic) {
-          if (hasClass(CLASS_MONK) || hasClass(CLASS_WARRIOR) ||
-              hasClass(CLASS_DEIKHAN) || hasClass(CLASS_RANGER))
-            addToExp(-min(lose, getExp()));
-        }
-        if (panic) {
-          sendTo(format("Panic-stricken, you flee %s.\n\r") % dirs[attempt]);
-          if (!::number(0,1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
-            act("In your panic you release some musk scent to cover your tracks.", FALSE, this, 0, NULL, TO_CHAR);
-            act("$n releases some musk into the room!", FALSE, this, 0, NULL, TO_ROOM);
-            dropGas(::number(1,3), GAS_MUSK);
-            setCond(FULL, getCond(FULL)-5);
-          }
-        } else
-          sendTo(format("You retreat skillfully %s.\n\r") % dirs[attempt]);
-
-        // do this before lookForEngaged to get attackers check to work OK
-        if (fight())
-          stopFighting();
-
-        for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-          t=*(it++);
-          TBeing *tbt = dynamic_cast<TBeing *>(t);
-          if (!tbt)
-            continue;
-          if (tbt->fight() == this) {
-            tbt->stopFighting();
-
-            TMonster *tmon = dynamic_cast<TMonster *>(tbt);
-            if (tmon) {
-              rc = tmon->lookForEngaged(this);
-              if (IS_SET_DELETE(rc, DELETE_THIS)) {
-                delete tmon;
-                tmon = NULL;
-              }
-              continue;
-            }
-          }
-        }
-        if (cantHit > 0)
-          cantHit = 0;
-
-        REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
-
-        return TRUE;
-      } else {
-        fleeFail(this);
-        return TRUE;
+      // Handle troglodyte racial
+      if (panic && !::number(0, 1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
+        act("Your fear causes you to release some musk scent to cover your tracks.", false, this, nullptr,
+            nullptr, TO_CHAR);
+        act("$n releases some musk into the room!", false, this, nullptr, nullptr, TO_ROOM);
+        dropGas(::number(1, 3), GAS_MUSK);
+        setCond(FULL, getCond(FULL) - 5);
       }
     }
-  }                                // for 
-  sendTo("PANIC! You couldn't escape!\n\r");
-  if (!::number(0,1) && getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
-    act("In your panic you release some musk scent to cover your tracks.", FALSE, this, 0, NULL, TO_CHAR);
-    act("$n releases some musk into the room!", FALSE, this, 0, NULL, TO_ROOM);
-    dropGas(::number(1,3), GAS_MUSK);
-    setCond(FULL, getCond(FULL)-5);
   }
 
-  return FALSE;
-}
+  // If <this> is a mount and still has a rider, have its rider execute the move
+  int moveResult = riderAsTBeing 
+      ? riderAsTBeing->moveOne(dirToUse) 
+      : moveOne(dirToUse);
 
+  if (IS_SET_DELETE(moveResult, DELETE_THIS)) {
+    if (riderAsTBeing) {
+      riderAsTBeing->reformGroup();
+      delete riderAsTBeing;
+      riderAsTBeing = nullptr;
+      return false;
+    }
+
+    return DELETE_THIS;
+  }
+
+  if (!moveResult) {
+    sendTo("Something prevents your escape!\n\r");
+    act("Something prevents $s escape!", true, this, nullptr, nullptr, TO_ROOM);
+    return true;
+  }
+
+  if (panic) 
+    sendTo(format("Panic-stricken, you flee %s.\n\r") % dirs[dirToUse]);
+  else if (wasRetreatSuccessful)
+    sendTo(format("You skillfully retreat %s.\n\r") % dirs[dirToUse]);
+  else
+    sendTo(format("You nearly hurt yourself as you fled madly %swards.\n\r") % dirs[dirToUse]);
+
+  // If <this> wasn't fighting when attempting the flee, just return here
+  if (!enemy)
+    return true;
+
+  // Ensure <this> no longer fighting after successful flee
+  // Removing AFF_ENGAGER is handled within stopFighting()
+  if (fight())
+    stopFighting();
+  if (cantHit > 0)
+    cantHit = 0;
+  if (enemy->fight() == this)
+    enemy->stopFighting();
+
+  // Make mobs fear enemy who forced them to flee
+  // Check IsPc() in case of disguised/polymorphed/otherwise transformed PC
+  if (!isPc()) {
+    auto* thisAsTMonster = dynamic_cast<TMonster*>(this);
+    if (thisAsTMonster)
+      thisAsTMonster->addFeared(enemy);
+  }
+
+  // Determine if enemy begins hunting <this>, then potentially look for
+  // remaining opponents who are engaged and make enemy attack them if found
+  if (!enemy->isPc()) {
+    auto* enemyAsTMonster = dynamic_cast<TMonster*>(enemy);
+    if (enemyAsTMonster) {
+      int percent =
+        100 * enemyAsTMonster->getHit() / enemyAsTMonster->hitLimit();
+
+      if (::number(1, 100) < percent &&
+          (enemyAsTMonster->Hates(this, nullptr) ||
+           isOppositeFaction(enemyAsTMonster)))
+        enemyAsTMonster->setHunting(this);
+
+      if (IS_SET_DELETE(enemyAsTMonster->lookForEngaged(), DELETE_THIS)) {
+        delete enemyAsTMonster;
+        enemyAsTMonster = nullptr;
+        enemy = nullptr;
+      }
+    }
+  }
+
+  return true;
+}
 
 // return DELETE_THIS if this should die
 int TBeing::doAssist(const char *argument, TBeing *vict, bool flags)

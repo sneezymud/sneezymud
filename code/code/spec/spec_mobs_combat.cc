@@ -10,27 +10,46 @@
 #include "disc_afflictions.h"
 #include "materials.h"
 
-int vampire(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
-{
-  if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+int vampire(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
+  TBeing* victim = ch->fight();
 
-  if (ch->spelltask)
-    return FALSE;
+  // Mob spec procs don't get called if their position is < POSITION_STANDING
+  if (cmd != CMD_MOB_COMBAT || !ch || !victim || !ch->sameRoom(*victim) || ch->spelltask)
+    return false;
 
-  if (ch->fight() && ch->sameRoom(*ch->fight())) {
-    act("$n touches $N!", TRUE, ch, 0, ch->fight(), TO_NOTVICT);
-    act("$n touches you in an attempt to suck away your energy!",
-        TRUE, ch, 0, ch->fight(), TO_VICT);
+  act("$n touches $N...", true, ch, nullptr, victim, TO_NOTVICT);
+  act("$n touches you in an attempt to suck away your energy...", true, ch, nullptr, victim,
+    TO_VICT);
 
-    if (!ch->doesKnowSkill(SPELL_ENERGY_DRAIN))
-      ch->setSkillValue(SPELL_ENERGY_DRAIN,120);
+  int level = ch->GetMaxLevel();
 
-    return energyDrain(ch,ch->fight());
+  // No need to call actual spell function, as this is an innate ability. Just calculate damage,
+  // using mob's level as adv_learn value. Drains between 1% and 5% of victim's max moves.
+  int dam = ch->getSkillDam(victim, SPELL_ENERGY_DRAIN, level, level);
+  int vit = ::number(victim->getMaxMove() * 0.01, victim->getMaxMove() * 0.05);
+
+  if (!dam || victim->getImmunity(IMMUNE_DRAIN) >= 100 ||
+      victim->isLucky(levelLuckModifier(level))) {
+    act("Nothing happens.", false, ch, nullptr, nullptr, TO_ROOM);
+  } else {
+    act("$N screams in agony as energy pours from $S body!", false, ch, nullptr, victim,
+      TO_NOTVICT);
+    act("You scream in agony as energy pours from your body!", false, ch, nullptr, victim, TO_VICT);
+    victim->addToMove(-vit);
+    if (ch->reconcileDamage(victim, dam, SPELL_ENERGY_DRAIN) == -1) {
+      delete victim;
+      victim = nullptr;
+    }
+
+    ch->addToMove(vit);
   }
-  return FALSE;
-}
 
+  ch->addSkillLag(SPELL_ENERGY_DRAIN, 0);
+
+  // Whatever the result, return true to prevent 'ch' from performing any other mob actions this
+  // pulse.
+  return true;
+}
 
 int kraken(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
@@ -458,35 +477,60 @@ int paralyzeBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   return TRUE;
 }
 
-// Arch does two drains at once!
-int arch_vampire(TBeing *ch, cmdTypeT cmd, const char *, TMonster *, TObj *)
-{
-  if ((cmd != CMD_MOB_COMBAT) || !ch->awake())
-    return FALSE;
+// If this proc is deemed too punishing we can gate it behind a random roll or specialAttack call
+int arch_vampire(TBeing* vampire, cmdTypeT cmd, const char*, TMonster*, TObj*) {
+  TBeing* victim = vampire->fight();
 
-  if (ch->spelltask)
-    return FALSE;
+  if (cmd != CMD_MOB_COMBAT || !victim || !vampire->sameRoom(*victim) || vampire->spelltask)
+    return false;
 
-  if (ch->fight() && ch->fight()->sameRoom(*ch)) {
-    act("$n bites $N!", 1, ch, 0, ch->fight(), TO_NOTVICT);
-    act("$n bites you!", 1, ch, 0, ch->fight(), TO_VICT);
-    if (!ch->doesKnowSkill(SPELL_ENERGY_DRAIN))
-      ch->setSkillValue(SPELL_ENERGY_DRAIN,2*ch->GetMaxLevel());
-
-    energyDrain(ch,ch->fight());
-
-#if 0
-// energyDrain goes through spelltask stuff, so can't double cast it anymore
-    if (ch->fight() && ch->fight()->sameRoom(*ch)) {
-      energyDrain(ch,ch->fight());
+  if (victim->getImmunity(IMMUNE_DRAIN) >= 100 || victim->isUndead()) {
+    // Don't spam the message too much
+    if (!::number(0, 3)) {
+      act("$n stares at $N hungrily but senses a feeding attempt would be futile.", false, vampire,
+        nullptr, victim, TO_NOTVICT);
+      act("$n stares at you hungrily but senses a feeding attempt would be futile.", false, vampire,
+        nullptr, victim, TO_VICT);
     }
-#endif
-
-    return TRUE;
+    return false;
   }
-  return FALSE;
-}
 
+  // Calculate damage for bite attack. No need to pseudo-cast the real spell by calling the
+  // energyDrain function, as that just introduces problems when non-mage mobs attempt it.
+  // The bite is an innate ability, anyway. Drains between 5% and 10% of victim's max moves.
+  int dam = vampire->getSkillDam(victim, SPELL_ENERGY_DRAIN, vampire->GetMaxLevel(), 100);
+  int vit = ::number(victim->getMaxMove() * 0.05, victim->getMaxMove() * 0.1);
+
+  // The proc could be made less punishing here - for instance, by adding a 'victim->isAgile()' call
+  if (victim->isLucky(levelLuckModifier(vampire->GetMaxLevel()))) {
+    act("$N narrowly avoids $n's lunging bite!", true, vampire, nullptr, victim, TO_NOTVICT);
+    act("You narrowly avoid $n's lunging bite!", true, vampire, nullptr, victim, TO_VICT);
+  } else {
+    act("$n bites $N, feeding briefly then darting away!", true, vampire, nullptr, victim,
+      TO_NOTVICT, "<r>");
+    act("Before you can react $n bites you, feeding briefly then darting away!", true, vampire,
+      nullptr, victim, TO_VICT, "<r>");
+
+    victim->addToMove(-vit);
+    if (vampire->reconcileDamage(victim, dam, SPELL_ENERGY_DRAIN) == -1) {
+      delete victim;
+      victim = nullptr;
+    } else {
+      act("$N sags, weakening due to blood loss.", true, vampire, nullptr, victim, TO_NOTVICT);
+      act("You sag, feeling weaker due to blood loss.", true, vampire, nullptr, victim, TO_VICT);
+    }
+
+    // The normal energy drain spell doesn't restore HP to the caster, but vampire bite does
+    vampire->addToHit(dam);
+    vampire->addToMove(vit);
+  }
+
+  // Add some skill lag to prevent rapid fire bites in consecutive rounds
+  vampire->addSkillLag(SPELL_ENERGY_DRAIN, 0);
+
+  // Return true whether or not bite lands, to prevent any further mob actions this pulse.
+  return true;
+}
 
 int rust_monster(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {

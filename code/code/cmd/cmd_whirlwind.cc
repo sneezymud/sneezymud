@@ -6,22 +6,21 @@
 static int whirlwind(TBeing *caster, TBeing *victim, int castLevel, spellNumT damageType)
 {
   int successfulHit = caster->specialAttack(victim, SKILL_WHIRLWIND);
-  int dam = caster->getSkillDam(victim, SKILL_WHIRLWIND, castLevel, caster->getAdvLearning(SKILL_WHIRLWIND));
+  int dam = 0;
 
   // Success case
   if (!victim->awake() || 
     (successfulHit && successfulHit != GUARANTEED_FAILURE)) {
-
     act("$n hits $N with a spinning attack!", FALSE, caster, 0, victim, TO_NOTVICT);
     act("You hit $N with a spinning attack!", FALSE, caster, 0, victim, TO_CHAR);
     act("$n hits you with a spinning attack!", FALSE, caster, 0, victim, TO_VICT);
+    dam = caster->getSkillDam(victim, SKILL_WHIRLWIND, castLevel, caster->getAdvLearning(SKILL_WHIRLWIND));
   }
   // Failure case
-  else
-  {
-    if (caster->reconcileDamage(victim, 0, damageType) == -1) 
-      return DELETE_VICT;
-    return FALSE;
+  else {
+    act("$n's spinning attack misses $N.", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("Your spinning attack misses $N.", FALSE, caster, 0, victim, TO_CHAR);
+    act("$n's spinning attack misses you.", FALSE, caster, 0, victim, TO_VICT);
   }
 
   if (caster->reconcileDamage(victim, dam, damageType) == -1) 
@@ -91,8 +90,8 @@ int TBeing::doWhirlwind()
 
   // Successful skill attempt
   // Send messages to caster/room
-  act("You perform a sweeping attack, striking every opponent nearby!", FALSE, this, NULL, NULL, TO_CHAR);
-  act("$n performs a sweeping attack, striking everyone nearby!", FALSE, this, NULL, NULL, TO_ROOM);
+  act("You perform a sweeping attack, striking out at every opponent nearby!", FALSE, this, NULL, NULL, TO_CHAR);
+  act("$n performs a sweeping attack, striking out at everyone nearby!", FALSE, this, NULL, NULL, TO_ROOM);
   
   // Determine damage type
   spellNumT damageType = DAMAGE_NORMAL;
@@ -103,8 +102,9 @@ int TBeing::doWhirlwind()
   else if (weapon->isSlashWeapon())
     damageType = DAMAGE_HACKED;
 
-  // Loop for each person in room
-  std::vector<TBeing *> toDelete{};
+  // Loop for each person in room and determine if they're a valid whirlwind target. If so, add them
+  // to the vector for later.
+  std::vector<TBeing *> validTargets{};
   for (TThing *thing : roomp->stuff) {
     auto *being = dynamic_cast<TBeing *>(thing);
     if (!being || (being == this) || inGroup(*being) ||
@@ -112,14 +112,23 @@ int TBeing::doWhirlwind()
         IS_SET(being->specials.act, ACT_IMMORTAL))
       continue;
 
+    validTargets.push_back(being);
+  }
+
+  // Apply whirlwind damage and delete dead victims in a separate loop. This is necessary because
+  // when applying the damage from whirlwind there's a chance the victim will have an immediate flee
+  // triggered when taken below 10% health. If this happens during the previous loop, the victim is
+  // removed from the TRoom::stuff list being iterated and causes the iterator to become invalid
+  // before the loop is complete, triggering a crash. Doing it in a secondary loop afterwards
+  // prevents this.
+  for (TBeing *being: validTargets) {
+    if (being->inRoom() != in_room)
+      continue;
+
     rc = whirlwind(this, being, castLevel, damageType);
     if (!IS_SET_DELETE(rc, DELETE_VICT))
       continue;
 
-    toDelete.push_back(being);
-  }
-
-  for (TBeing *being: toDelete) {
     delete being;
     being = nullptr;
   }

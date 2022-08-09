@@ -542,7 +542,7 @@ class TMonster : public TBeing {
     double getRealLevel() const;
     int lookForHorse();
     void balanceMakeNPCLikePC();
-    int lookForEngaged(const TBeing *);
+    int lookForEngaged();
     virtual sstring getStealLootNames() const;
     virtual bool getStolenFrom() const { return stolenFrom; }
     virtual void setStolenFrom(bool v) { stolenFrom = v; }

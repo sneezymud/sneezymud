@@ -2033,29 +2033,31 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
 
   if (ch->desc && !dynamic_cast<TMonster *>(ch))  {
     if (ch->cantHit <= 0) { 
-      if (((myLevel - tarLevel) < (10 + (myLevel / 10))) &&
-          (!o || dynamic_cast<TBaseWeapon *>(o))) { 
-        ch->learnFromDoingUnusual(LEARN_UNUSUAL_PROFICIENCY, (o?w_type:TYPE_HIT), 
-                   max(0, 25 - myLevel));
+      if (((myLevel - tarLevel) < (10 + (myLevel / 10)))) {
 
-	spellNumT skill = ch->getSkillNum(SKILL_DUAL_WIELD);
-        if (ch->doesKnowSkill(skill) && 
-            dynamic_cast<TBaseWeapon *>(o) && 
-            !isPrimary)
-	  ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, (120 - (2* myLevel)));
-        // Learn 2h on hit
+        ch->learnFromDoingUnusual(LEARN_UNUSUAL_PROFICIENCY, (o?w_type:TYPE_HIT), max(0, 25 - myLevel));
+
         TBaseWeapon *obj = dynamic_cast<TBaseWeapon *>(o);
-        if (obj && ch->doesKnowSkill(SKILL_2H_SPEC) && obj->isPaired()) {
-          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_2H_SPEC, (120 - (2* myLevel)));
+        if (obj) {
+          // Learn dual wield on hit
+	        spellNumT skill = ch->getSkillNum(SKILL_DUAL_WIELD);
+          if (skill && ch->doesKnowSkill(skill) && !isPrimary)
+	          ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, (120 - (2* myLevel)));
+
+          // Learn 2h on hit
+	        skill = ch->getSkillNum(SKILL_2H_SPEC);
+          if (skill && ch->doesKnowSkill(skill) && obj->isPaired()) 
+            ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, (120 - (2* myLevel)));
         }
+
         // Offense hones
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (120 - (2* myLevel)));
+      
+        // Learn advanced offense
+        ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (120 - (2* myLevel)));
       }
-      // Learn advanced offense
-      ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (120 - (2* myLevel)));
     }
-  }
-
+  } 
 }
 
 // DELETE_VICT: v dead, delete
