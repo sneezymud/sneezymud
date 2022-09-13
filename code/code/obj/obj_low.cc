@@ -320,7 +320,7 @@ int ObjectEvaluator::getStatPointsRaw()
     else if (m_obj->affected[iAff].location == APPLY_SPELL || m_obj->affected[iAff].location == APPLY_DISCIPLINE)
     {
       bonus = m_obj->affected[iAff].modifier2;
-      bonus *= applyCost[m_obj->affected[iAff].modifier];
+      bonus *= applyCost[m_obj->affected[iAff].location];
     }
     else if (m_obj->affected[iAff].location == APPLY_SPELL_EFFECT)
     {
