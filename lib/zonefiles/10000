@@ -2,6 +2,7 @@
 Saint - The Crater~
 10099 45 2 1
 
+
 D 0 10046 3 2		Bridge Leading Into Dome
 D 0 10047 1 2		Bridge Leading Into Dome
 D 0 10055 3 2		Security Checkpoint Panel
@@ -17,227 +18,236 @@ O 0 10030 1 10073 	A piece of offal
 O 0 10030 1 10068 	A piece of offal
 O 0 10037 1 10039 	Head of Lettuce
 O 0 10038 1 10061 	Carrot
-O 0 10030 1 10070     A piece of offal(EXTRA 3)	   
+O 0 10030 1 10070     A piece of offal(EXTRA 3)
 O 0 10037 1 10061     Head of Lettuce
 O 0 10038 1 10039     Carrot
 
-M 0 10000 1 10081 	Isamu
+*titanium mesh set
+X 1 5 10024			Titanium mesh helmet
+X 1 3 10027			Crimson Carcanet
+X 1 4 10026 			Armored Carapace
+X 1 14 10035			Crimson Tabard
+X 1 12 10033			Titanium mesh armlet
+X 1 13 10033			Titanium mesh armlet
+X 1 10 10025			Titanium mesh glove
+X 1 11 10025			Titanium mesh glove
+X 1 2 10028			crimson signet
+X 1 1 10028			crimson signet
+X 1 15 10022			Beltpouch
+X 1 6 10036			Titanium mesh pants
+X 1 8 10034			Spiked Boot
+X 1 9 10034			Spiked Boot
+X 1 18 10004			Quivering Blade
+
+M 0 10000 1 10081 	Isamu 75
 ? 0 3 0 E
 E 1 10002 4 18			Katana
-? 0 4 0 E
-E 1 10028 10 2			Signet
-? 0 7 0 E
-E 1 10035 20 14			Tabard
-? 0 25 0 G
-G 1 10006 20			Mauve Potion
-? 0 1 0 E
-E 1 10033 10 13			Sleeve
-M 0 10001 1 10083 	Guld
-? 0 5 0 E
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+Z 0 1 5 				mesh set
+
+M 0 10001 1 10083 	Guld 75
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
 E 1 10003 8 19			Wakazashi
-? 0 7 0 E
-E 1 10034 20 9			Spiked Boot
-? 0 9 0 E
-E 1 10022 25 15			Beltpouch
-? 0 12 0 G
-G 1 10013 50			Shuriken
-M 0 10002 1 10084 	Jaime Wolf
-*? 0 3 0 E
-*E 1 10032 2 18			Scepter
-? 0 4 0 E
-E 1 10028 10 2			Signet
-? 0 7 0 E
-E 1 10035 20 14			Tabard
+Z 0 1 5 				mesh set
+
+M 0 10002 1 10084 	Fugeo 85
+? 0 6 0 E
+E 1 10032 2 18			Scepter
 ? 0 9 0 E
 G 1 10009 10			Neural prod
 ? 0 25 0 G
 G 1 10006 20			Mauve Potion
-? 0 1 0 E
-E 1 10033 10 13			Sleeve
-M 0 10003 1 10041 	Maeve Wolf
-? 0 4 0 E
-E 1 10028 10 2			Signet
-? 0 7 0 E
-E 1 10027 20 3			Carcanet
-? 0 5 0 E
-E 1 10033 10 13			Sleeve
-? 0 7 0 E
-E 1 10035 20 14			Tabard
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+Z 0 1 5 				mesh set
+
+M 0 10003 1 10041 	Myung 78
 ? 0 9 0 E
 G 1 10011 10			Stun stick
-M 0 10004 1 10072 	Marza
-? 0 5 0 E
-E 1 10004 20 19			Quivering Blade
-? 0 7 0 E
-E 1 10027 20 3 			Carcanet
-? 0 7 0 E
-E 1 10034 20 9			Spiked Boot
-M 0 10005 1 10065 	Kelly Yukinov
-? 0 5 0 E
-E 1 10004 20 19			Quivering Blade
-? 0 1 0 E
-E 1 10028 10 2			Signet
-? 0 7 0 E
-E 1 10034 20 9			Spiked Boot
-? 0 15 0 G
-G 1 10008 9999			Bolt
-M 0 10006 1 10041 	Anton Rand
-? 0 5 0 E
-E 1 10004 20 19			Quivering Blade
-? 0 7 0 E
-E 1 10023 20 4			Coolant Vest
-? 0 1 0 E
-E 1 10028 10 2			Signet
-M 0 10007 1 10050 	Elizabeth Nicole
-? 0 5 0 E
-E 1 10004 20 19			Quivering Blade
-? 0 1 0 E
-E 1 10028 10 2			Signet
-? 0 7 0 E
-E 1 10034 20 9			Spiked Boot
-? 0 4 0 E
-E 1 10033 10 13			Sleeve
-M 0 10008 1 10056 	J. Elliot Jamison
-? 0 5 0 E
-E 1 10004 20 19			Quivering Blade
-? 0 7 0 E
-E 1 10023 20 4			Coolant Vest
-? 0 1 0 E
-E 1 10028 10 2 			Signet
-*M 0 10009 1 10088 	Saint Kincaid
-*? 0 3 0 E
-*E 1 10010 4 18			Club
-*? 0 6 0 E
-*E 1 10027 20 3			Carcanet
-*? 0 6 0 E
-*E 1 10035 20 14			Tabard
-*? 0 15 0 G
-*G 1 10008 9999			Bolt
-M 0 10010 1 10062 	Darkhosis
-? 0 5 0 E
-E 1 10007 20 19			Epee
-? 0 5 0 E
-E 1 10027 20 3			Carcanet
-? 0 10 0 G
-G 1 10005 9999			Crossbow
-M 0 10011 1 10042 	Ryuichi Musashi
-? 0 5 0 E
-E 1 10007 20 19			Epee
-? 0 5 0 E
-E 1 10027 20 3			Carcanet
-? 0 9 0 E
-E 1 10022 25 15			Beltpouch
-? 0 12 0 G
-G 1 10013 50			Shuriken
-M 0 10012 1 10063 	Johnny Clavell
-? 0 5 0 E
-E 1 10004 20 19			Quivering Blade
-? 0 1 0 E
-E 1 10028 10 2 			Signet
 ? 0 6 0 E
-E 1 10035 20 14			Tabard
-? 0 10 0 G
-G 1 10005 9999			Crossbow
-M 0 10013 1 10058 	Wai
-? 0 9 0 E
-E 1 10031 30 19			Saber
-? 0 4 0 E
-E 1 10027 20 3			Carcanet
-? 0 9 0 E
-E 1 10022 25 15			Beltpouch
-? 0 15 0 G
-G 1 10008 9999			Bolt
-M 0 10014 1 10086 	Ghost of Shelly Brubaker
-M 0 10015 1 10085 	Ghost of Irwin Tyrell
-M 0 10016 1 10013 	Warrior
-? 0 9 0 E
-E 1 10031 30 19			Saber
-? 0 7 0 E
-E 1 10034 20 9			Spiked Boot
-M 0 10016 1 10022 	Warrior
-? 0 9 0 E
-E 1 10031 30 19			Saber
-? 0 6 0 E
-E 1 10024 20 5 			Helmet
-M 0 10016 2 10061 	Warrior
-? 0 9 0 E
-E 1 10031 30 19			Saber
-? 0 6 0 E
-E 1 10023 20 4			Coolant Vest
-M 0 10017 1 10051 	Technician
-? 0 12 0 E
-E 1 10012 50 19			Wrench
-M 0 10017 1 10054 	Technician
-? 0 12 0 E
-E 1 10012 50 19			Wrench
-*M 0 10017 1 10089 	Technician
-*? 0 12 0 E
-*E 1 10012 50 19			Wrench
-*? 0 9 0 E
-*E 1 10022 25 15			Beltpouch
-*M 0 10017 1 10087 	Technician
-*? 0 12 0 E
-*E 1 10012 50 19			Wrench
-M 0 10018 1 10046 	Elemental Guard
-G 1 10048 2			Metal Card Key
-? 0 3 0 E
-E 1 10025 10 11			Powered Glove
-M 0 10018 1 10055 	Elemental Guard
-G 1 10001 3			Silver Card Key
-? 0 3 0 E
-E 1 10026 5 4			Armored Carapace
-M 0 10018 1 10049 	Elemental Guard
-G 1 10001 3			Silver Card Key
-? 0 20 0 G
-G 1 10029 9999			MRE
-M 0 10018 2 10053 	Elemental Guard
-G 1 10001 3			Silver Card Key
-? 0 20 0 G
-G 1 10029 9999			MRE
-M 0 10019 2 10075 	Crocodile
-M 0 10020 1 10020 	Elemental Warrior
-? 0 20 0 G
-G 1 10029 9999			MRE
-M 0 10020 1 10026 	Elemental Warrior
-? 0 20 0 G
-G 1 10029 9999			MRE
-? 0 12 0 G
-G 1 10013 50			Shuriken
-M 0 10020 1 10044 	Elemental Warrior
-? 0 3 0 E
-E 1 10026 5 4			Armored Carapace
-M 0 10020 1 10057 	Elemental Warrior
-? 0 3 0 E
-E 1 10025 10 11			Powered Glove
+E 1 10023 20 4			Rime-covered Vest
+Z 0 1 5 				mesh set
 
-M 0 10021 2 10059 	Warrior, stationary
+M 0 10004 1 10072 	Marza 73
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+Z 0 1 5 				mesh set
+
+M 0 10005 1 10065 	Thales 74
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+? 0 15 0 G
+G 1 10008 9999			Bolt
+Z 0 1 5 				mesh set
+
+M 0 10006 1 10041 	Kerin 78
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+Z 0 1 5 				mesh set
+
+M 0 10007 1 10050 	Diehl 76
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+Z 0 1 5 				mesh set
+
+M 0 10008 1 10056 	Thar 75
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+Z 0 1 5 				mesh set
+
+M 0 10010 1 10062 	Darkhosis 73
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+? 0 5 0 E
+E 1 10007 20 19			Epee
+? 0 10 0 G
+G 1 10005 9999			Crossbow
+Z 0 1 5 				mesh set
+
+M 0 10011 1 10042 	Ryuichi Musashi 71
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+? 0 5 0 E
+E 1 10007 20 19			Epee
+Z 0 1 5 				mesh set
+
+M 0 10012 1 10063 	Drake 74
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+? 0 10 0 G
+G 1 10005 9999			Crossbow
+Z 0 1 5 				mesh set
+
+M 0 10013 1 10058 	Wai 72
+? 0 6 0 E
+E 1 10023 20 4			Rime-covered Vest
+? 0 6 0 E
+E 1 10031 30 19			Saber
 ? 0 4 0 E
-E 1 10027 20 3			Carcanet
+? 0 15 0 G
+G 1 10008 9999			Bolt
+Z 0 1 5 				mesh set
+
+M 0 10014 1 10086 	Ghost of Utchan 71
+Z 0 1 5 				mesh set
+
+M 0 10015 1 10085 	Ghost of Asuka 71
+Z 0 1 5 				mesh set
+
+M 0 10016 1 10013 	Warrior 70
+? 0 6 0 E
+E 1 10031 30 19			Saber
+Z 0 1 5 				mesh set
+
+M 0 10016 1 10022 	Warrior 70
+? 0 6 0 E
+E 1 10031 30 19			Saber
+Z 0 1 5 				mesh set
+
+M 0 10016 2 10061 	Warrior 70
+? 0 6 0 E
+E 1 10031 30 19			Saber
+Z 0 1 5 				mesh set
+
+M 0 10017 1 10051 	Servant 70
+? 0 4 0 E
+E 1 10012 50 19			Wrench
+
+M 0 10017 1 10054 	Servant 70
+? 0 4 0 E
+E 1 10012 50 19			Wrench
+
+		Wrench
+
+M 0 10018 1 10046 	Elemental Guard 71
+G 1 10048 2			Metal Card Key
+Z 0 1 5 				mesh set
+? 0 6 0 E
+E 1 10031 30 19			Saber
+
+M 0 10018 1 10055 	Elemental Guard 71
+G 1 10001 3			Silver Card Key
+Z 0 1 5 				mesh set
+? 0 6 0 E
+E 1 10031 30 19			Saber
+
+M 0 10018 1 10049 	Elemental Guard 71
+G 1 10001 3			Silver Card Key
 ? 0 20 0 G
 G 1 10029 9999			MRE
+Z 0 1 5 				mesh set
+? 0 6 0 E
+E 1 10031 30 19			Saber
+
+M 0 10018 2 10053 	Elemental Guard 71
+G 1 10001 3			Silver Card Key
+? 0 20 0 G
+G 1 10029 9999			MRE
+Z 0 1 5 				mesh set
+? 0 6 0 E
+E 1 10031 30 19			Saber
+
+M 0 10019 2 10075 	Crocodile
+
+M 0 10020 1 10020 	Elemental Warrior 71
+? 0 6 0 E
+E 1 10031 30 19			Saber
+? 0 20 0 G
+G 1 10029 9999			MRE
+Z 0 1 5 				mesh set
+
+M 0 10020 1 10026 	Elemental Warrior
+? 0 6 0 E
+E 1 10031 30 19			Saber
+? 0 20 0 G
+G 1 10029 9999			MRE
+Z 0 1 5 				mesh set
+
+M 0 10020 1 10044 	Elemental Warrior
+? 0 6 0 E
+E 1 10031 30 19			Saber
+Z 0 1 5 				mesh set
+
+M 0 10020 1 10057 	Elemental Warrior
+? 0 6 0 E
+E 1 10031 30 19			Saber
+Z 0 1 5 				mesh set
+
+M 0 10021 2 10059 	Warrior, stationary 70
+? 0 6 0 E
+E 1 10031 30 19			Saber
+? 0 20 0 G
+G 1 10029 9999			MRE
+Z 0 1 5 				mesh set
+
 M 0 10021 1 10067 	Warrior, stationary
 ? 0 6 0 E
-E 1 10024 20 5			Helmet
-? 0 8 0 E
-E 1 10022 25 15			Beltpouch
+E 1 10031 30 19			Saber
+Z 0 1 5 				mesh set
 ? 0 20 0 G
 G 1 10029 9999			MRE
+
 M 0 10021 1 10065 	Warrior, stationary
 ? 0 6 0 E
-E 1 10023 20 4			Coolant Vest
+E 1 10031 30 19			Saber
+Z 0 1 5 				mesh set
 ? 0 20 0 G
 G 1 10029 9999			MRE
 ? 0 50 0 M
+
 M 0 10022 2 10029 	Freezing mist
-M 0 10023 1 10007 	Vicious marauder
+
+M 0 10023 1 10007 	Vicious marauder 70
 ? 0 8 0 E
 E 1 10039 10 19			Onyx Kris
 ? 0 12 0 E
 G 1 10013 50			Shuriken
+
 M 0 10024 1 10090 	Quivering horde of maggots
-? 0 15 0 G
-G 1 10036 20			Pearl Necklace
+
 M 0 10025 2 10043 	Cow
+
 M 0 10026 1 10077 	Octopus
 S
-
