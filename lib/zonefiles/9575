@@ -24,48 +24,58 @@ X 1 5 9578              a wolf skull
 X 1 14 9579             a wolf skin mantle
 X 1 6 9580              a pair of wolf skin breeches
 
-X 2 18 9585       	a bluesteel buckler
-X 2 19 9577		a bluesteel knife
-X 2 10 9592		a gauntlet of ogre strength
+X 2 18 9585           a bluesteel buckler
+X 2 19 9577        a bluesteel scimitar
+X 2 8 9592        a gauntlet of ogre strength
 
 M 0 9576 1 9575         Glodo
-? 0 2 0 E		
-E 1 9576 4 19		a bluesteel knife
-Z 0 1 10
+? 0 2 0 E
+E 1 9576 4 19        a bluesteel knife
+Z 0 2 10
 
 M 0 9581 1 9582         Death's Head Pete, the ogre bandit
 ? 0 8 0 E
-E 1 9581 1 18		Wargtooth, the greataxe
-Z 0 1 20
+E 1 9581 1 18        Wargtooth, the greataxe
+Z 0 1 10
 
 M 0 9577 8 9582         a bandit
+Y 0 101 5
 M 0 9585 8 9582         a bandit
-Y 0 101 1
+Y 0 101 5
 M 0 9580 1 9583         Tomas, the bandit cleric
 ? 0 7 0 E
-E 1 9583 1 19		Wanderlust, Hammer of Travel
+E 1 9583 1 19        Wanderlust, Hammer of Travel
 ? 0 7 0 E
-E 1 9582 1 14		Cloak of the Traveler
-Y 0 101 3
+E 1 9582 1 14        Cloak of the Traveler
+Y 0 101 5
 
 M 0 9577 8 9585         a bandit
+Y 0 101 5
 M 0 9585 8 9586         a bandit
+Y 0 101 5
 M 0 9577 8 9586         a bandit
+Y 0 101 5
 M 0 9585 8 9587         a bandit
+Y 0 101 5
 M 0 9578 3 9587         a bandit
+Y 0 101 5
 M 0 9578 3 9587         a bandit
+Y 0 101 5
 M 0 9578 3 9587         a bandit
+Y 0 101 5
 M 0 9575 1 9588         Jareth, the bandit leader
 ? 0 10 0 E
-E 1 9584 10 19		a long silver dagger
-Y 0 101 1
+E 1 9584 10 19        a long silver dagger
+Y 0 101 8
 
 M 0 9577 8 9589         a bandit
+Y 0 101 5
 M 0 9585 8 9589         a bandit
+Y 0 101 5
 M 0 9579 1 9590         Pollox, the bandit mage
 ? 0 7 0 E
-E 1 9575 5 18		a steel staff tipped with sapphires
-Y 0 101 1
+E 1 9575 5 18        a steel staff tipped with sapphires
+Y 0 101 8
 
 M 0 9583 1 9593         a huge shaggy horse
 M 0 9582 5 9593         a light military horse
@@ -74,9 +84,11 @@ M 0 9582 5 9593         a light military horse
 M 0 9582 5 9593         a light military horse
 M 0 9582 5 9593         a light military horse
 M 0 9584 2 9599         a bandit guard
+Y 0 101 5
 M 0 9584 2 9599         a bandit guard
+Y 0 101 5
 M 0 9584 2 9576         a bandit guard
+Y 0 101 5
 M 0 9584 2 9576         a bandit guard
+Y 0 101 5
 S
-
-
