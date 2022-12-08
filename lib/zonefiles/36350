@@ -31,6 +31,63 @@ D 0 36407 4 1        Top of a Long Spiral Staircase -> The Top of a Colossal Tow
 D 0 36408 2 2        Before a Set of Large Wooden Doors -> Quiet Marble Hall
 D 0 36418 1 1        Path Between a Large Tower and a Mountain -> Before A Hole In A Large Log
 
+*local set - Ladybirds
+X 1  1    36409           	a small band of black down [finger-left]
+X 1  2    36409           	a small band of black down [finger-left]
+X 1  3    36404           	a leather choker covered in black down [neck]
+X 1  4    36400            a dull chainmail vest lined with dark green felt [body]
+X 1  5    36403           	a skullcap of dark green leather [head]
+X 1  6   36408           	a pair of quilted dark green leather pants [leg-right]
+X 1  10  36405          	a fingerless glove of dark green calfskin 
+X 1  11  36405          	a fingerless glove of dark green calfskin [hand-left]
+X 1  12  36402          	a dark green armband of crocheted hemp
+X 1  13  36402          	a dark green armband of crocheted hemp [arm-left]
+X 1  14  36401          	a houndstooth overcoat with short sleeves [back]
+X 1  15  36406          	a wide belt of dark green leather [waist]
+X 1  16  36407          	a bracer of grey and brown
+X 1  17  36407          	a bracer of grey and brown felt [wrist-left]
+X 1  18  36352		egg shell
+X 1  19  36427          	a short black dirk [hold-left]
+
+*local set - Pantherskin
+X 2  1 	  36423          a ring made from a small strip of panther skin
+X 2  2 	  36423          a ring made from a small strip of panther skin [finger-left]
+X 2  3 	  36421          a necklet of panther skin [neck]
+X 2  4 	  36414          a vest of panther skin [body]
+X 2  5    36422          a tight-fitting hood of panther skin [head]
+X 2  6 	  36417          a panther skin legging
+X 2  7 	  36417          a panther skin legging [leg-left]
+X 2  8 	  36416          a small boot of panther skin
+X 2  9 	  36416          a small boot of panther skin [foot-left]
+X 2  10  36419          a fingerless glove of panther skin
+X 2  11  36419          a fingerless glove of panther skin [hand-left]
+X 2  12  36410          a sleeve of panther skin
+X 2  13  36410          a sleeve of panther skin [arm-left]
+X 2  14  36415          a cape of panther skin [back]
+X 2  15  36420          a sash of panther skin [waist]
+X 2  17  36418          a bracer of panther skin [wrist-left]
+X 2  18  36424          a flask of panther blood [hold-right]
+X 2  19	  36427          a short black dirk [hold-left]
+
+* local set - Fine Gnomemail
+X 3 3    36361          a throatguard of fine gnomemail plate [neck]
+X 3 4    36360          a breastplate of fine gnomemail plate [body]
+X 3 5    36362          a fine gnomemail helm [head]
+X 3 6    36355          a greave of fine gnomemail plate
+X 3 7    36355          a greave of fine gnomemail plate [leg-left]
+X 3 8    36354          a boot of fine gnomemail plate
+X 3 9    36354          a boot of fine gnomemail plate [foot-left]
+X 3 10  36356          a gauntlet of fine gnomemail plate
+X 3 11  36356          a gauntlet of fine gnomemail plate [hand-left]
+X 3 12  36357          an armlet of fine gnomemail plate
+X 3 13  36357          an armlet of fine gnomemail plate [arm-left]
+X 3 14  36359          a red cape of the Royal Gnome Cadre [back]
+X 3 15  36358          a girth of fine gnomemail plate [waist]
+X 3 16  36353          a bracer of fine gnomemail plate
+X 3 17  36353          a bracer of fine gnomemail plate [wrist-left]
+X 3 18  36363          a shield of the Royal Gnome Cadre [hold-right]
+X 3 19  36350          a short scimitar with a thick blade [hold-left]
+
 * props and portals
 O 0 36378 1 36369       a glowing portal
 O 0 36379 1 36402       a huge throne
@@ -55,909 +112,140 @@ M 0 36350 1 36382       a mushroom warrior
 
 * mobs with eq loads
 M 0 36354 2 36359       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+Z 0 1 5
 
 M 0 36354 4 36359       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+Z 0 1 5
 
 M 0 36356 1 36360       Tarfox, Captain of the Green Ladybirds
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+Z 0 1 5
 ? 0 3 0 E
 E 1 34036 9999 19         a vampiric dagger [hold-left]
 
 M 0 36367 1 36362       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36367 1 36363       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36367 1 36364       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36367 1 36365       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36369 1 36368       the ghost of an Elite Gnome Cadre soldier
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36354 1 36369       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
-
+Z 0 1 5
 M 0 36354 2 36370       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
-
+Z 0 1 5
 M 0 36354 4 36370       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
-
+Z 0 1 5
 M 0 36354 1 36371       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+Z 0 1 5
 
 M 0 36369 1 36375       the ghost of an Elite Gnome Cadre soldier
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36370 1 36376       the ghost of Gnario, captain of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
+? 0 5 0 E
+E 1 36383 9999 19        vermilion longsword [hold-left]
 
 M 0 36369 1 36378       the ghost of an Elite Gnome Cadre soldier
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
+
 
 M 0 36361 1 36380       a hunched gnome shaman
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
 
 M 0 36361 2 36381       a hunched gnome shaman
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
 
 M 0 36362 2 36382       an entranced shaman
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
 
 M 0 36363 2 36383       a wild-eyed shaman
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
 
 M 0 36363 4 36383       a wild-eyed shaman
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
 
 M 0 36363 1 36384       a wild-eyed shaman
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
 
 M 0 36363 1 36385       a wild-eyed shaman
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
 
 M 0 36367 1 36387       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36365 1 36391       a burly gnome savage
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
 
 M 0 36365 1 36393       a burly gnome savage
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
+Z 0 2 5
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
 
 M 0 36365 1 36395       a burly gnome savage
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
 
 M 0 36365 1 36396       a burly gnome savage
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin [finger-left]
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
 
 M 0 36354 2 36397       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-? 0 3 0 E
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
-? 0 3 0 E
-
+Z 0 1 5
 M 0 36354 4 36397       a member of The Green Ladybirds
-E 1 36427 9999 19         a short black dirk [hold-left]
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
-
+Z 0 1 5
 M 0 36358 1 36398       Mortis, second lieutenant of the Green Ladybirds
-? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
 ? 0 3 0 E
 E 1 36411 9999 19         a short black mace [hold-left]
 
 M 0 36360 1 36399       Noefris, third lieutentant of the Green Ladybirds
 ? 0 3 0 E
-E 1 36403 9999 5          a skullcap of dark green leather [head]
-? 0 3 0 E
-E 1 36404 9999 3          a leather choker covered in black down [neck]
-? 0 3 0 E
-? 0 3 0 E
-E 1 36400 9999 4          a dull chainmail vest lined with dark green felt [body]
-? 0 3 0 E
-E 1 36401 9999 14         a houndstooth overcoat with short sleeves [back]
-? 0 3 0 E
-E 1 36402 9999 13         a dark green armband of crocheted hemp [arm-left]
-? 0 3 0 E
-E 1 36407 9999 17         a bracer of grey and brown felt [wrist-left]
-? 0 3 0 E
-E 1 36405 9999 11         a fingerless glove of dark green calfskin [hand-left]
-? 0 3 0 E
-E 1 36409 9999 2          a small band of black down [finger-left]
-? 0 3 0 E
-E 1 36406 9999 15         a wide belt of dark green leather [waist]
-? 0 3 0 E
-E 1 36408 9999 6          a pair of quilted dark green leather pants [leg-right]
-E 1 36408 9999 7          a pair of quilted dark green leather pants [leg-left]
+E 1 36381 9999 19		bone misericord
 
 M 0 36367 1 36401       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36367 1 36401       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36367 1 36402       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36371 1 36402       a shaken soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 36368 1 36402       King Gnumble
+Z 0 3 5
 ? 0 3 0 E
 E 1 36365 9999 5          a helm with a frog-faced visor [head]
 ? 0 3 0 E
@@ -989,57 +277,10 @@ E 1 36382 9999 19         an ice-covered flail [hold-left]
 
 M 0 36367 1 36408       a soldier of the Elite Gnome Cadre
 G 1 36428 1               a fine gnomish key            
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
-? 0 3 0 E
+Z 0 3 5
 
 M 0 36367 1 36408       a soldier of the Elite Gnome Cadre
-? 0 3 0 E
-E 1 36362 9999 5          a fine gnomemail helm [head]
-? 0 3 0 E
-E 1 36361 9999 3          a throatguard of fine gnomemail plate [neck]
-? 0 3 0 E
-E 1 36360 9999 4          a breastplate of fine gnomemail plate [body]
-? 0 3 0 E
-E 1 36359 9999 14         a red cape of the Royal Gnome Cadre [back]
-? 0 3 0 E
-E 1 36357 9999 13         an armlet of fine gnomemail plate [arm-left]
-? 0 3 0 E
-E 1 36353 9999 17         a bracer of fine gnomemail plate [wrist-left]
-? 0 3 0 E
-E 1 36356 9999 11         a gauntlet of fine gnomemail plate [hand-left]
-? 0 3 0 E
-E 1 36358 9999 15         a girth of fine gnomemail plate [waist]
-? 0 3 0 E
-E 1 36355 9999 7          a greave of fine gnomemail plate [leg-left]
-? 0 3 0 E
-E 1 36354 9999 9          a boot of fine gnomemail plate [foot-left]
-? 0 3 0 E
-E 1 36363 9999 18         a shield of the Royal Gnome Cadre [hold-right]
-? 0 3 0 E
-E 1 36350 9999 19         a short scimitar with a thick blade [hold-left]
+Z 0 3 5
 
 M 0 34038 1 36418       Rothwar
 ? 0 3 0 E
@@ -1070,57 +311,27 @@ E 1 34052 9999 18         a bizarre shield [hold-right]
 E 1 34063 9999 19         a dull, wide saber [hold-left]
 
 M 0 36372 2 36421       an intense-looking shaman
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
+Z 0 2 5
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers 
 E 1 36413 9999 19         a holy spear ornamented with feathers
+? 0 5 0 E
+E 1 36425 1 5          panther mask
+? 0 3 0 E
+E 1 36426 9999 10         panther paw glove 
+? 0 3 0 E
+E 1 36426 9999 11         panther paw glove [hand-left]
 
 M 0 36372 4 36421       an intense-looking shaman
-? 0 3 0 E
-E 1 36422 9999 5          a tight-fitting hood of panther skin [head]
-? 0 3 0 E
-E 1 36421 9999 3          a necklet of panther skin [neck]
-? 0 3 0 E
-E 1 36414 9999 4          a vest of panther skin [body]
-? 0 3 0 E
-E 1 36415 9999 14         a cape of panther skin [back]
-? 0 3 0 E
-E 1 36410 9999 13         a sleeve of panther skin [arm-left]
-? 0 3 0 E
-E 1 36418 9999 17         a bracer of panther skin [wrist-left]
-? 0 3 0 E
-E 1 36419 9999 11         a fingerless glove of panther skin [hand-left]
-? 0 3 0 E
-E 1 36423 9999 2          a ring made from a small strip of panther skin 
-? 0 3 0 E
-E 1 36420 9999 15         a sash of panther skin [waist]
-? 0 3 0 E
-E 1 36417 9999 7          a panther skin legging [leg-left]
-? 0 3 0 E
-E 1 36416 9999 9          a small boot of panther skin [foot-left]
-? 0 3 0 E
+Z 0 2 5
+? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers 
 E 1 36413 9999 19         a holy spear ornamented with feathers 
-S
+? 0 3 0 E
+E 1 36426 9999 10         panther paw glove 
+? 0 3 0 E
+E 1 36426 9999 11         panther paw glove [hand-left]
+? 0 5 0 E
+E 1 36425 1 5          panther mask
 
+S

@@ -87,12 +87,32 @@ D 0 25588 3 1
 D 0 25587 2 1	Inn - south
 D 0 25591 0 1
 
+* athanor set
+X 1 1   25526	athanor ring
+X 1 2   25526	athanor ring
+X 1 3   25521	necklace
+X 1 4   25519	breastplate
+X 1 5   25515	helmet
+X 1 6   25516	shinguard
+X 1 7   25516	shinguard
+X 1 8   25517	boot
+X 1 9   25517	boot
+X 1 10 25520	gauntlet
+X 1 11 25520 	gauntlet
+X 1 12 25522	armband
+X 1 13 25522	armband
+X 1 14 25525	backplate
+X 1 15 25518	girth
+X 1 16 25523	bracelet
+X 1 17 25523	bracelet
+X 1 18 25524	shield
+
 O 0 25500 1 25602 	Fire (offering) pit
 O 0 25501 1 25649 	altar
 *P 1 512 9999 25501
 O 0 25504 1 25655 	vortex
 O 0 25505 1 25503 	Broken wheel
-O 0 25505 1 25505 
+O 0 25505 1 25505
 O 0 25506 1 25522 	Bench
 O 0 25507 1 25522 	Racks
 O 0 6612 1 25601 	large Fire Pit
@@ -157,9 +177,13 @@ M 0 25506 1 25621
 M 0 25506 1 25623
 M 0 25507 1 25624	Sphinx
 *G 1 25502 1			Key
+
 M 0 25508 1 25642	Amun
 ? 0 5 0 E
 E 1 25547 1 3			Skull Choker
+? 0 5 0 E
+E 1 25568 5 19             	steel blue jambiya
+
 M 0 25509 1 25649	Makta
 ? 0 5 0 G
 G 1 512 9999			platinum holy symbol
@@ -168,63 +192,87 @@ M 0 25510 1 25645	Kthul
 E 1 25546 1 5			barbut
 ? 0 3 0 E
 E 1 25539 1 18			athanor greataxe
+Z 0 1 5 	athanor set local
+
 M 0 25511 1 25632	Lahtnero
 ? 0 3 0 E
 E 1 25545 2 19              	Athanor dagger
+? 0 5 0 E
+E 1 25568 5 19             	steel blue jambiya
+Z 0 1 5 	athanor set local
+
 M 0 25512 1 25633	Aktid
 ? 0 3 0 E
-E 1 25544 1 4			Salaha corslet
+E 1 25544 1 4			Salah corslet
+? 0 5 0 E
+E 1 25568 5 19             	steel blue jambiya
+
 M 0 25513 1 25634	Grebnas
 ? 0 5 0 E
 E 1 25543 3 11			sacrificial glove
+
 M 0 25514 1 25630	Mould
 ? 0 3 0 E
 E 1 25541 2 7			dragonbone legplate
+
 M 0 25515 1 25643	Mohammed
-? 0 3 0 E
-E 1 25525 1 14			athanor backplate
+Z 0 1 5 	athanor set local
+
 M 0 25516 1 25653	Ahmed
 G 1 25570 1			key rusty
-? 0 3 0 E
-E 1 25524 1 18			athanor shield
+Z 0 1 5 	athanor set local
+
 M 0 25517 1 25575	Sandworm
 M 0 25517 1 25558
 M 0 25654 1 25656 Fentaculus
 M 0 25518 1 25522	Guard Captain
 ? 0 3 0 E
 E 1 25540 8 19			Tungsten claymore
-Y 0 77 3			Tungsten set - 3%
-M 0 25519 4 25522	Guard
-? 0 5 0 E	
-E 1 25542 30 19			Light lance
+Y 0 77 8			Tungsten set - 8%
 M 0 25519 4 25522	Guard
 ? 0 5 0 E
 E 1 25542 30 19			Light lance
-M 0 25519 4 25522	Guard
-? 0 5 0 E	
-E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
 M 0 25519 4 25522	Guard
 ? 0 5 0 E
 E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
+M 0 25519 4 25522	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
+
+M 0 25519 4 25522	Guard
+? 0 5 0 E
+E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
+
 M 0 25519 2 25584	Guard
 ? 0 5 0 E
 E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
+
 M 0 25519 2 25584	Guard
 ? 0 5 0 E
 E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
+
 M 0 25519 1 25586	Guard
 ? 0 5 0 E
 E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
+
 M 0 25519 1 25591	Guard
 ? 0 5 0 E
 E 1 25542 30 19			Light lance
+Y 0 77 5			Tungsten set - 5%
+
 M 0 25520 1 25583	Bedouin
-M 0 25520 1 25586	
+M 0 25520 1 25586
 M 0 25520 1 25588
 M 0 25520 1 25591
 M 0 25520 1 25590	Bedouin
-? 0 5 0 E
-E 1 25568 5 19             	steel blue jambiya
+
 M 0 25520 1 25532
 M 0 25520 1 25536
 M 0 25520 1 25517
@@ -246,10 +294,7 @@ M 0 25521 1 25591
 R 1 25519 1 25591
 M 0 25522 1 25654	Synjilla
 G 1 25503 1			exit key
-? 0 3 0 E
-E 1 25526 2 2			athanor ring
-G 1 513 9999
-Y 0 76 3			Athanor set - 3%
+Z 0 1 8 	athanor set local
 M 0 25523 1 25664	Efreet
 M 0 25524 1 25663	Kwal'ish
 G 1 25552 1			key
@@ -257,7 +302,6 @@ G 1 25552 1			key
 E 1 25555 1 19			Khopesh
 ? 0 3 0 E
 E 1 25556 12 1			ring of blue flames
-Y 0 78 3			Sapphire set - 3%
+Y 0 78 6			Sapphire set - 6%
 
 S
-
