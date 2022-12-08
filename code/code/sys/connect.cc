@@ -2871,7 +2871,7 @@ int Descriptor::sendLogin(const sstring &arg)
     output.push(CommPtr(new UncategorizedComm(buf2)));
 
     outputBuf="Please type NEW (case sensitive) for a new account, or ? for help.\n\r";
-    outputBuf+="If you need assistance, join our Discord @ https://discord.gg/TMz8gMBDXA\n\r\n\r";
+    outputBuf+="If you need assistance, join our Discord @ https://discord.gg/qURazhdjyX\n\r\n\r";
     outputBuf+="\n\rLogin: ";
     output.push(CommPtr(new LoginComm("user", outputBuf)));
     return FALSE;

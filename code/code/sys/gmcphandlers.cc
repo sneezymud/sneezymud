@@ -31,7 +31,7 @@ namespace {
 
   void handleDiscord(sstring const& s, Descriptor& d)
   {
-    sstring discordInfoCmd("External.Discord.Info { \"inviteurl\": \"https://discord.gg/TMz8gMBDXA\", \"applicationid\": \"SneezyMUD\" }");
+    sstring discordInfoCmd("External.Discord.Info { \"inviteurl\": \"https://discord.gg/qURazhdjyX\", \"applicationid\": \"SneezyMUD\" }");
     d.sendGmcp(discordInfoCmd, true);
   }
 
