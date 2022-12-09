@@ -3,7 +3,7 @@ on: [ pull_request ]
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: Build and Test
     steps:
     - name: Checkout this commit
