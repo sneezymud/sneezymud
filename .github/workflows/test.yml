@@ -14,7 +14,6 @@ jobs:
     - run: sudo apt-get update
     - run: sudo apt-get install software-properties-common
     - run: sudo apt-get update
-    - run: sudo apt-get install scons g++-9 libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libmariadbclient-dev libmariadb3 ccache
-    - run: scons -C code -j4 -Q ccache=1 pretty=0 sanitize=1 shared=0 check sneezy
-
+    - run: sudo apt-get install scons g++-9 libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libmariadb-dev libmariadb3 ccache
+    - run: scons -C code -j4 -Q ccache=1 pretty=0 sanitize=1 shared=0
 
