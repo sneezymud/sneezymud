@@ -651,8 +651,7 @@ mob->getName());
       sendTo("Sorry, only positive numbers allowed.\n\r");
       return;
     }
-    if (parm < GetMaxLevel() ||
-        (parm <= GetMaxLevel() && this == mob)) {
+    if (parm <= GetMaxLevel()) {
       if (hasWizPower(POWER_SET_IMP_POWER)) {
         if (parm2 >= MIN_CLASS_IND && parm2 < MAX_CLASSES) {
           mob->setLevel(classIndT(parm2), parm);
@@ -716,7 +715,7 @@ mob->getName());
         }
       }
     } else {
-      sendTo("You can only set level less than your own.\n\r");
+      sendTo("You can only set level less than or equal to your own.\n\r");
       return;
     }
     if (!mob->isImmortal() && (parm > MAX_MORT) && mob->isPc()) {
