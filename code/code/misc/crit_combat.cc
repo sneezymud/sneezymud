@@ -585,7 +585,7 @@ int TBeing::critSuccessChance(TBeing* victim,
   // Things like the vorpal proc and the imm "crit" command will send in a specific value
   // for mod, which serves as the crit severity in those cases.
   if (mod == -1) {
-    sendTo(format("<Y>Roll: %d | CritChance: %d<z>\n\r") % diceRollResult % critChance);
+    // sendTo(format("<Y>Roll: %d | CritChance: %d<z>\n\r") % diceRollResult % critChance);
     if (diceRollResult > critChance)
       return 0;
 

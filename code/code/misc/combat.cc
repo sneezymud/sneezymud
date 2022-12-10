@@ -948,9 +948,9 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, TThing* maybeWeapon, int* 
   }
 
   rc = v->hurtLimb(damageDealt, part_hit);
-  sendTo(format("<G>(%d damage to %s - HP: %d/%d)<z>\n\r") % damageDealt %
+  /*sendTo(format("<G>(%d damage to %s - HP: %d/%d)<z>\n\r") % damageDealt %
          v->describeBodySlot(part_hit) % v->getCurLimbHealth(part_hit) %
-         v->getMaxLimbHealth(part_hit));
+         v->getMaxLimbHealth(part_hit));*/
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
 
@@ -2727,7 +2727,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
 
 int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier, statTypeT primaryOffenseStat, statTypeT secondaryOffenseStat, statTypeT primaryDefenseStat, statTypeT secondaryDefenseStat, bool partialSuccessAllowed)
 {
-  sendTo(format("specialAttack called with sitMod (%i) ") % situationalModifier);
+  // sendTo(format("specialAttack called with sitMod (%i) ") % situationalModifier);
 
   if (situationalModifier < SITUATIONAL_MOD_LOWER_BOUND)
     situationalModifier = SITUATIONAL_MOD_LOWER_BOUND;
@@ -2752,7 +2752,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
                          ((attackerLevel - defenderLevel) / 5);
 
   double roll = static_cast<int>(::number(1,100));
-  sendTo(format("Original roll is (%i) - ") % roll);
+  // sendTo(format("Original roll is (%i) - ") % roll);
 
   // Apply modifier
   roll -= situationalModifier;
@@ -2763,7 +2763,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
          target->getStatMod(primaryDefenseStat) / 
          target->plotStat(STAT_CURRENT, primaryDefenseStat, 0.92, 1.08, 1.0);
 
-  sendTo(format("Modified roll is (%i) - \n") % roll);
+  // sendTo(format("Modified roll is (%i) - \n") % roll);
 
   if (roll <= 5)
     return GUARANTEED_SUCCESS;
