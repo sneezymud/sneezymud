@@ -187,112 +187,135 @@ M 0 2103 1 2122   ;  Elite Guard
 H 1 2 2
 G 1 2180 1		Metal Key
 Y 0 32 5		5% chance of marble armor
-
+Y 0 12 7	ivory set 
 
 M 0 2103 1 2122   ;  Elite
 H 1 2 2
 G 1 2182 1		Large Tin Key
 G 1 2183 1		Iron Key
 Y 0 32 5		5% chance of marble armor
-
+Y 0 12 7	ivory set 
 
 M 0 2103 1 2149   ;  Elite
 H 1 2 2
 Y 0 32 5		5% chance of marble armor
+Y 0 12 7	ivory set 
 
 M 0 2103 1 2159   ; Elite
 H 1 2 2
 Y 0 32 5		5% chance of marble armor
+Y 0 12 7	ivory set 
 
 M 0 2103 1 2123   ;  Elite 
 H 1 2 2
 Y 0 32 5		5% chance of marble armor
+Y 0 12 7	ivory set 
 
 M 0 2103 1 2166   ;  Elite
 H 1 2 2
 Y 0 32 5		5% chance of marble armor
+Y 0 12 7	ivory set 
 
 M 0 2103 1 2179  ; Elite
 H 1 2 2
 Y 0 32 5		5% chance of marble armor
+Y 0 12 7	ivory set 
+Y 0 12 7	ivory set 
 
 M 0 2104 1 2150   ; Guards
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
+Y 0 38 7	Crude Metal Armor Set load
 
 
 M 0 2104 1 2152 
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 38 7	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
 
 M 0 2104 1 2154 
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 38 7	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
 
 M 0 2104 1 2156 
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 38 7	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
 
 M 0 2104 1 2169 
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 38 7	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
 
 M 0 2104 1 2171 
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 38 7	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
 
 M 0 2104 1 2175 
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 38 7	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
 
 M 0 2104 1 2178 
 H 1 2 2
-Y 0 38 4	Crude Metal Armor Set load
+Y 0 38 7	Crude Metal Armor Set load
+Y 0 12 5	ivory set 
 
 M 0 2105 1 2151   ;  Miners
 H 1 2 2
 ? 0 5 0 E
 E 1 2138 30 19		Pick-axe
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2105 1 2153 
 H 1 2 2
 ? 0 15 0 E
 E 1 2138 30 19
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2105 1 2155 
 H 1 2 2
 ? 0 15 0 E
 E 1 2138 30 19
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2105 1 2168 
 H 1 2 2
 ? 0 15 0 E
 E 1 2138 30 19
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2105 1 2170 
 H 1 2 2
 ? 0 15 0 E
 E 1 2138 30 19
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2106 1 2152   ; Diggers
 H 1 2 2
 ? 0 15 0 E
 E 1 2139 30 19		Heavy Shovel
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2106 1 2154 
 H 1 2 2
 ? 0 15 0 E
 E 1 2139 30 19
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2106 1 2156 
 H 1 2 2
 ? 0 15 0 E
 E 1 2139 30 19
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2106 1 2158 
 H 1 2 2
 ? 0 15 0 E
 E 1 2139 30 19
+Y 0 38 7	Crude Metal Armor Set load
 
 M 0 2107 1 2139   ;  Kylish'Ra the Ice Dragon
 G 1 6 3000     ;  	Give bag to Kylish'Ra
@@ -351,7 +374,7 @@ Y 0 53 4	   	Glowing white set
 
 M 0 2109 1 2201   ; Monks
 ? 0 1 0 E
-E 1 2141 9 4		Brown Pilgramage Robe
+E 1 2141 9 4		Brown Pilgrimage Robe
 
 M 0 2109 1 2203 
 ? 0 1 0 E
@@ -390,42 +413,59 @@ M 0 2109 1 2254
 E 1 2141 9 4
 
 M 0 2110 1 2211   ;  Clerics
+Y 0 32 5		5% chance of marble armor
 
 M 0 2110 1 2217 
 G 1 2252 1		Small Marble Key
 ? 0 3 0 E
 E 1 2100 3000 18	Marble Holy Symbol
+Y 0 32 5		5% chance of marble armor
 
 M 0 2110 1 2244 
+? 0 5 0 E
+E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2110 1 2249 
 ? 0 3 0 E
 E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2110 1 2250 
+? 0 5 0 E
+E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2110 1 2275 
 ? 0 3 0 E
 E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2110 1 2276 
+? 0 5 0 E
+E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2111 1 2224   ;  Priests
 G 1 2269 1
 ? 0 5 0 E
 E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2111 1 2227 
 ? 0 10 0 E
 E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2111 1 2228 
 ? 0 5 0 E
 E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2111 1 2229 
 ? 0 5 0 E
 E 1 2100 3000 18
+Y 0 32 5		5% chance of marble armor
 
 M 0 2112 1 2247   ;  Cook
 ? 0 5 0 E
@@ -444,14 +484,21 @@ E 1 2103 10 18		Dwarven Maul
 *E 1 2104 1 5
 
 M 0 2115 1 2200   ;  Male Citizens
+Y 0 38 7	Crude Metal Armor Set load
 M 0 2115 1 2209 
+Y 0 38 7	Crude Metal Armor Set load
 M 0 2115 1 2214 
+Y 0 38 7	Crude Metal Armor Set load
 M 0 2115 1 2221 
+Y 0 38 7	Crude Metal Armor Set load
 M 0 2115 1 2218 
 
 M 0 2116 1 2207   ;  Female Citizens
+Y 0 38 7	Crude Metal Armor Set load
 M 0 2116 1 2210 
+Y 0 38 7	Crude Metal Armor Set load
 M 0 2116 1 2215 
+Y 0 38 7	Crude Metal Armor Set load
 M 0 2116 1 2202 
 
 M 0 2117 1 2207   ;  Male Children

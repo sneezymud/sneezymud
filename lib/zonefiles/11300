@@ -1,3 +1,5 @@
+
+
 #11300
 Stregan - The Ancient Malithean Mines~
 11499 35 2 1
@@ -69,14 +71,13 @@ O 0 11437 1 11437 	; weapon rack
 O 0 805 3 11453 	; cyan potion (fly)
 
 O 0 11401 1 11398 	; weapon case
-? 0 2 0 P
-P 1 11399 1 11401		; Hammer of Caradhras
+
 
 M 0 11300 1 11473       ; orc magi - ranger lvl 14 quest
 
 M 0 11301 1 11339       ; Field Scholar
 ? 0 5 0 E
-E 1 306 9999 19                 ; runed dagger
+E 1 4311 9999 19                 ;tarnished dagger
 ? 0 5 0 G
 G 1 802 9999                    ; heal critical potion
 
@@ -101,187 +102,226 @@ E 1 11315 999 6			; crude leather leggings
 E 1 11309 999 14		; patchwork cloak
 
 M 0 11311 1 11471 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
+
 M 0 11311 1 11457 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11409 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11463 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11469 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11461 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11415 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11405 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11471 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set -
 
 M 0 11311 1 11419 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11459 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11415 	; kobold marauder
-? 0 2 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11311 1 11417 	; kobold marauder
-? 0 2 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set -
 
 M 0 11311 1 11461 	; kobold marauder
 ? 0 2 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11392 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 2			Elfstud set - 
 
 M 0 11312 1 11365 	; kobold marauder
-? 0 2 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11322 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11308 	; kobold marauder
-? 0 1 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11402 	; kobold marauder
-? 0 2 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11390 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11362 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11312 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11318 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11308 	; kobold marauder
-? 0 1 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11364 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11389 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11316 	; kobold marauder
-? 0 1 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11320 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11312 1 11311 	; kobold marauder
-? 0 3 0 E
+? 0 9 0 E
 E 1 11310 999 19		; short orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set 
 
 M 0 11316 1 11469 	; kobold captain
-? 0 1 0 E
+? 0 9 0 E
 E 1 11311 999 19 		; long orcish blade
-Y 0 61 3			Elfstud set - 3%
+Y 0 61 9			Elfstud set - 
 
 M 0 11316 1 11409 	; kobold captain
-? 0 1 0 E
+? 0 9 0 E
 E 1 11311 999 19 		; long orcish blade
-Y 0 61 3			Elfstud set - 3%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11316 1 11401 	; kobold captain
-? 0 1 0 E
+? 0 9 0 E
 E 1 11311 999 19 		; long orcish blade
-Y 0 61 2			Elfstud set - 2%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11316 1 11389 	; kobold captain
-? 0 2 0 E
+? 0 9 0 E
 E 1 11311 999 19 		; long orcish blade
-Y 0 61 3			Elfstud set - 3%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set -
 
 M 0 11316 1 11459 	; kobold captain
-? 0 2 0 E
+? 0 9 0 
 E 1 11311 999 19 		; long orcish blade
-Y 0 61 3			Elfstud set - 3%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11316 1 11316 	; kobold captain
-? 0 2 0 E
+? 0 9 0 E
 E 1 11311 999 19 		; long orcish blade
-Y 0 61 3			Elfstud set - 3%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11316 1 11419 	; kobold captain
-? 0 2 0 E
+? 0 9 0 E
 E 1 11311 999 19 		; long orcish blade
-Y 0 61 3			Elfstud set - 3%
+Y 0 41 9			ringmail set
+Y 0 61 9			Elfstud set - 
 
 M 0 11326 1 11326 	; demogorgon
 ? 0 50 0 G
 G 1 1400 50			; large ruby
+? 0 1 0 E
+E 1 11399 1 19 		Hammer of Caradhras
+ 
 
 M 0 11329 1 11329        ; Liupol the hobbit thief trainer fight
 G 1 11329 1			; emerald key
@@ -293,7 +333,7 @@ E 1 11332 9 5			; droopy black hood
 E 1 11333 5 2			; black ring
 ? 0 10 0 E
 E 1 11334 9 19			; slotted knife
-Y 0 114 2                       ; pearl studded set
+Y 0 114 15                       ; pearl studded set
 
 M 0 11340 1 11340 	; vampire bat
 M 0 11340 1 11340 
@@ -305,10 +345,11 @@ M 0 11340 1 11343
 M 0 11344 1 11344 	; Baeron the mountain man
 ? 0 10 0 G
 G 1 11347 5		; Staff of the Ancients (earthquake)
+? 0 10 0 E
 E 1 11346 2 3		; crystal amulet
 
 M 0 11348 1 11348 	; packrat
-? 0 10 0 E
+? 0 50 0 G
 G 1 11348 999			; gray potion
 
 M 0 11352 1 11352 	; ghost
@@ -317,26 +358,7 @@ M 0 11377 1 11377
 M 0 11382 1 11382 
 
 M 0 11395 1 11395 	; orc guard
-? 0 1 0 E
-E 1 11316 999 5			; field helmet
-? 0 1 0 E
-E 1 11317 999 4			; field armor
-? 0 1 0 E
-E 1 11318 999 6			; field leggings
-? 0 1 0 E
-E 1 11319 100 11		; combat glove
-? 0 1 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 1 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 1 0 E
-E 1 11322 999 3			; field neckguard
-? 0 1 0 E
-E 1 11323 999 15		; woven girth
-? 0 1 0 E
-E 1 11324 999 14		; field backplate
-? 0 1 0 E
-E 1 11325 999 17		; field wristguard
+Y 0 10 8
 ? 0 1 0 E
 E 1 11311 999 19 		; long orcish blade
 
@@ -356,215 +378,82 @@ M 0 11415 1 11414 	; kobold sparring
 M 0 11415 1 11414 
 
 M 0 11420 1 11420 	; young kobold 2
-? 0 2 0 E
+? 0 8 0 E
 E 1 11312 999 5			; crude leather helm
-? 0 2 0 E
+? 0 8 0 E
 E 1 11314 999 4			; crude leather mantle
-? 0 2 0 E
+? 0 8 0 E
 E 1 11315 999 6			; crude leather leggings
-? 0 2 0 E
+? 0 8 0 E
 E 1 11309 999 14		; patchwork cloak
-? 0 2 0 E
+? 0 8 0 E
 E 1 11310 999 19		; short orcish blade
 
 M 0 11420 1 11420 	; young kobold 2
-? 0 2 0 E
+? 0 8 0 E
 E 1 11312 999 5			; crude leather helm
-? 0 2 0 E
+? 0 8 0 E
 E 1 11314 999 4			; crude leather mantle
-? 0 2 0 E
+? 0 8 0 E
 E 1 11315 999 6			; crude leather leggings
-? 0 2 0 E
+? 0 8 0 E
 E 1 11309 999 14		; patchwork cloak
-? 0 2 0 E
+? 0 8 0 E
 E 1 11310 999 19		; short orcish blade
 
 
 M 0 11408 1 11463 	; orc lieutenant
-? 0 2 0 E
-E 1 11316 999 5			; field helmet
-? 0 2 0 E
-E 1 11317 999 4			; field armor
-? 0 2 0 E
-E 1 11318 999 6			; field leggings
-? 0 2 0 E
-E 1 11319 100 11		; combat glove
-? 0 3 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 4 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 3 0 E
-E 1 11322 999 3			; field neckguard
-? 0 3 0 E
-E 1 11323 999 15		; woven girth
-? 0 3 0 E
-E 1 11324 999 14		; field backplate
-? 0 3 0 E
-E 1 11325 999 17		; field wristguard
-? 0 2 0 E
+Y 0 10 8			metal
+? 0 8 0 E
 E 1 11311 999 19 		; long orcish blade
 
 M 0 11408 1 11311 	; orc lieutenant
-? 0 2 0 E
-E 1 11316 999 5			; field helmet
-? 0 2 0 E
-E 1 11317 999 4			; field armor
-? 0 2 0 E
-E 1 11318 999 6			; field leggings
-? 0 2 0 E
-E 1 11319 100 11		; combat glove
-? 0 4 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 5 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 3 0 E
-E 1 11322 999 3			; field neckguard
-? 0 3 0 E
-E 1 11323 999 15		; woven girth
-? 0 3 0 E
-E 1 11324 999 14		; field backplate
-? 0 3 0 E
-E 1 11325 999 17		; field wristguard
-? 0 2 0 E
+Y 0 10 8
+? 0 8 0 E
 E 1 11311 999 19 		; long orcish blade
 
 M 0 11408 1 11417 	; orc lieutenant
-? 0 2 0 E
-E 1 11316 999 5			; field helmet
-? 0 2 0 E
-E 1 11317 999 4			; field armor
-? 0 2 0 E
-E 1 11318 999 6			; field leggings
-? 0 2 0 E
-E 1 11319 100 11		; combat glove
-? 0 4 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 5 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 3 0 E
-E 1 11322 999 3			; field neckguard
-? 0 3 0 E
-E 1 11323 999 15		; woven girth
-? 0 3 0 E
-E 1 11324 999 14		; field backplate
-? 0 3 0 E
-E 1 11325 999 17		; field wristguard
-? 0 2 0 E
+Y 0 10 8
+? 0 8 0 E
 E 1 11311 999 19 		; long orcish blade
 
 M 0 11408 1 11362 	; orc lieutenant
 G 1 11408 1			; parchment report
-? 0 2 0 E
-E 1 11316 999 5			; field helmet
-? 0 2 0 E
-E 1 11317 999 4			; field armor
-? 0 2 0 E
-E 1 11318 999 6			; field leggings
-? 0 2 0 E
-E 1 11319 100 11		; combat glove
-? 0 4 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 5 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 3 0 E
-E 1 11322 999 3			; field neckguard
-? 0 3 0 E
-E 1 11323 999 15		; woven girth
-? 0 3 0 E
-E 1 11324 999 14		; field backplate
-? 0 3 0 E
-E 1 11325 999 17		; field wristguard
-? 0 2 0 E
+Y 0 10 8
+? 0 8 0 E
 E 1 11311 999 19 		; long orcish blade
 
 M 0 11408 1 11405 	; orc lieutenant
-? 0 2 0 E
-E 1 11316 999 5			; field helmet
-? 0 2 0 E
-E 1 11317 999 4			; field armor
-? 0 2 0 E
-E 1 11318 999 6			; field leggings
-? 0 2 0 E
-E 1 11319 100 11		; combat glove
-? 0 4 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 4 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 3 0 E
-E 1 11322 999 3			; field neckguard
-? 0 3 0 E
-E 1 11323 999 15		; woven girth
-? 0 3 0 E
-E 1 11324 999 14		; field backplate
-? 0 3 0 E
-E 1 11325 999 17		; field wristguard
-? 0 2 0 E
+Y 0 10 8
+? 0 8 0 E
 E 1 11311 999 19 		; long orcish blade
 
 M 0 11408 1 11392 	; orc lieutenant
-? 0 2 0 E
-E 1 11316 999 5			; field helmet
-? 0 2 0 E
-E 1 11317 999 4			; field armor
-? 0 2 0 E
-E 1 11318 999 6			; field leggings
-? 0 2 0 E
-E 1 11319 100 11		; combat glove
-? 0 4 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 5 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 3 0 E
-E 1 11322 999 3			; field neckguard
-? 0 3 0 E
-E 1 11323 999 15		; woven girth
-? 0 3 0 E
-E 1 11324 999 14		; field backplate
-? 0 3 0 E
-E 1 11325 999 17		; field wristguard
-? 0 2 0 E
+Y 0 10 8
+? 0 8 0 E
 E 1 11311 999 19 		; long orcish blade
 
 M 0 11408 1 11403 	; orc lieutenant
-? 0 2 0 E
-E 1 11316 999 5			; field helmet
-? 0 2 0 E
-E 1 11317 999 4			; field armor
-? 0 2 0 E
-E 1 11318 999 6			; field leggings
-? 0 2 0 E
-E 1 11319 100 11		; combat glove
-? 0 3 0 E
-E 1 11320 100 9			; metal-tipped boot
-? 0 4 0 E
-E 1 11321 999 13		; woven sleeve
-? 0 3 0 E
-E 1 11322 999 3			; field neckguard
-? 0 3 0 E
-E 1 11323 999 15		; woven girth
-? 0 3 0 E
-E 1 11324 999 14		; field backplate
-? 0 3 0 E
-E 1 11325 999 17		; field wristguard
-? 0 2 0 E
+Y 0 10 8
+? 0 8 0 E
 E 1 11311 999 19 		; long orcish blade
 
 M 0 11424 1 11424 	; orc cook
 
 M 0 11434 1 11434 	; kobold tired
 ? 0 15 0 E
-E 1 11440 999 4			; pyjama top munchkin
-E 1 11441 999 6			; pyjama bottom munchkin
+E 1 11440 999 4			; pajama top munchkin
+E 1 11441 999 6			; pajama bottom munchkin
 
 M 0 11435 1 11435 	; orc tired
 ? 0 15 0 E
-E 1 11442 999 4			; pyjama top human
-E 1 11443 999 6			; pyjama bottom human
+E 1 11442 999 4			; pajama top human
+E 1 11443 999 6			; pajama bottom human
 
 M 0 11436 1 11436 	; ogre tired
 ? 0 15 0 E
-E 1 11438 999 4			; pyjama top ogre
-E 1 11439 999 6			; pyjama bottom ogre
+E 1 11438 999 4			; pajama top ogre
+E 1 11439 999 6			; pajama bottom ogre
 
 M 0 11437 1 11437 	; ogre arms master
 M 0 11450 1 11450 	; giant crab
@@ -577,4 +466,3 @@ M 0 11467 1 11467 	; ogre magus
 G 1 209 999			; powdered mushroom
 
 S
-

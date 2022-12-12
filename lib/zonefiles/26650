@@ -37,8 +37,61 @@ D 0 26699 0 1
 D 0 26696 0 1		Grandmasters Bedchamber
 D 0 26698 2 1
 
+X * sleek set
+X 1 1  27010 		ring
+X 1 2  27010 		ring
+X 1 3  27004 		necklace
+X 1 4  27006		breastplate
+X 1 5  27001		helmet
+X 1 6  27007 		pants
+X 1 8  27008		boot
+X 1 9   27008 		boot
+X 1 10	27009 		gauntlet
+X 1 11 	27009 		gauntlet
+X 1 14	27002 		backplate
+X 1 16	27005 		bracelet
+X 1 17	27005 		bracelet
+X 1 18	27000 		bow
+
+X * velvet set
+X 2 1   26739 ring
+X 2 2   26739 ring
+X 2 3   26735 necklace
+X 2 4  	26735 breastplate
+X 2 5  	26737 helmet
+X 2 6  	26730 shinguard
+X 2 7  	26730 shinguard
+X 2 10	26733 gauntlet
+X 2 11 	26733 gauntlet
+X 2 12	26734 armband
+X 2 13	26734 armband
+X 2 14	26278 backplate
+X 2 15	26732 girth
+X 2 16	26731 bracelet
+X 2 17	26731 bracelet
+X 2 18	26729 shield
+
+X * onyx-thread set
+X 3 3   26742  		necklace
+X 3 4   26743		breastplate
+X 3 5   26741		helmet
+X 3 6   26747		pants
+X 3 8   26749		boot
+X 3 9   26749		boot
+X 3 10	26745 		gauntlet
+X 3 11 	26745 		gauntlet
+X 3 12	26744 		armband
+X 3 13	26744 		armband
+X 3 14	26748 		backplate
+X 3 15	26746 		girth
+
 O 0 26652 1 26698 		dark mahogany wardrobe
+P 0 915 5 26652    		spikes slender trap
+P 0 909 5 26652    		spring small trap
+P 0 916 5 26652    		tripwire wire trap
+
 O 0 26654 1 26654 		magical fountain
+
 O 0 3864 1 26654  	 	logrus faction board
 O 0 3089 1 26654  ; Dispenser
 O 0 26656 1 26660 		hardwood chair       
@@ -46,10 +99,56 @@ O 0 26656 1 26672
 O 0 26656 1 26674 
 O 0 26656 1 26681 
 O 0 26656 1 26694 
+
 O 0 26660 1 26660 		ornate desk
-O 0 26660 1 26681 
+? 0 30 0 P
+P 0 907 5 26660   		nozzle tiny trap
+? 0 30 0 P
+P 0 908 5 26660  		spores fungus trap
+? 0 30 0 P
+P 0 909 5 26660  		spring small trap
+? 0 30 0 P
+P 0 910 5 26660 		bellows minute trap
+? 0 30 0 P
+P 0 911 5 26660 		gas vial trap
+? 0 30 0 P
+P 0 912 5 26660  		hose thin trap
+
+O 0 26660 1 26681 		desk
+? 0 30 0 P
+P 0 904 5 26660   		poison vial trap
+? 0 30 0 P
+P 0 905 5 26660  		shards metal trap
+? 0 30 0 P
+P 0 906 5 26660  		needle short trap
+? 0 30 0 P
+P 0 907 5 26660   		nozzle tiny trap
+? 0 30 0 P
+P 0 908 5 26660   		spores fungus trap
+? 0 30 0 P
+P 0 909 5 26660   		spring small trap
+? 0 30 0 P
+P 0 910 5 26660   		bellows minute trap
+? 0 30 0 P
+P 0 911 5 26660  		gas vial trap
+? 0 30 0 P
+P 0 913 5 26660 		acid vial trap
+
 O 0 26660 1 26694 
 P 1 26694 1 26660		secretarys memo
+? 0 30 0 P
+P 0 907 5 26660   		nozzle tiny trap
+? 0 30 0 P
+P 0 908 5 26660  		spores fungus trap
+? 0 30 0 P
+P 0 909 5 26660  		spring small trap
+? 0 30 0 P
+P 0 910 5 26660 		bellows minute trap
+? 0 30 0 P
+P 0 911 5 26660 		gas vial trap
+? 0 30 0 P
+P 0 912 5 26660  		hose thin trap
+
 O 0 26661 1 26661 		globe of continual light
 O 0 26661 1 26664 
 O 0 26661 1 26666 
@@ -67,15 +166,74 @@ O 0 26663 1 26669
 O 0 26665 1 26662 		training mat
 O 0 26665 1 26665 
 O 0 26666 1 26666 		bloody carcass
+
+O 0 26666 1 26682		kaboom room equipment
+P 9 27001 10 26666
+? 0 30 0 P
+P 0 926 5 26666   		casing mine trap
+? 0 30 0 P
+P 0 927 5 26666   		casing grenade trap
+? 0 30 0 P
+P 0 928 5 26666  		 gas compressed vial trap
+? 0 30 0 P
+P 0 929 5 26666   		tubing metal trap
+? 0 30 0 P
+P 0 930 5 26666   		pebbles bag polished trap
+? 0 30 0 P
+P 0 931 5 26666   		bolts box sharpened trap
+? 0 30 0 P
+P 0 932 5 26666   		canister trap
+? 0 30 0 P
+P 0 933 5 26666  		crystalline trap
+? 0 30 0 P
+P 0 934 5 26666  		disks razor trap
+
 O 0 26668 1 26663 		equipment rack
-P 1 26653  999 26668		field provision
-P 1 26655  999 26668		field dressing
-O 0 26668 1 26668 
-P 1 26653  999 26668		field provision
-P 1 26655  999 26668		field dressing 
+? 0 30 0 P
+P 0 900 5 26668 			flint small trap
+? 0 30 0 P
+P 0 901 5 26668			sulphur bag trap
+? 0 30 0 P
+P 0 902 5 26668			trap-bag trap bag small
+? 0 30 0 P
+P 0 903 5 26668			hydrogen bottle trap
+? 0 30 0 P
+P 0 927 5 26668			casing grenade trap
+
+O 0 26668 1 26684		mage room equipment
+? 0 30 0 P
+P 0 916 5 26666    			tripwire wire trap
+? 0 30 0 P
+P 0 921 5 26666    			pentagram magic trap
+? 0 30 0 P
+P 0 922 5 26666    			powder blink trap
+? 0 30 0 P
+P 0 923  5 26666  			 athanor refined trap  
+? 0 30 0 P
+P 0 925  5 26666   			grenade trap
+? 0 30 0 P
+P 0 926 5 26666    			casing mine trap
+? 0 30 0 P
+P 0 927 5 26666   			casing grenade trap
+
+O 0 26668 1 26668 		eq rack
+? 0 30 0 P
+P 0 900 5 26668 			flint small trap
+? 0 30 0 P
+P 0 901 5 26668			sulphur bag trap
+? 0 30 0 P
+P 0 902 5 26668			trap-bag trap bag small
+? 0 30 0 P
+P 0 903 5 26668			hydrogen bottle trap
+? 0 30 0 P
+P 0 927 5 26668			casing grenade trap
+? 0 30 0 P
 P 1 26667  999 26668		black leather saddle
+? 0 30 0 P
 P 1 26667  999 26668
+? 0 30 0 P
 P 1 26667  999 26668
+
 O 0 26670 1 26683 		council table
 O 0 26672 1 26660 		lamp sculpture
 O 0 26672 1 26662 
@@ -99,7 +257,63 @@ O 0 26673 1 26699 		long metal table
 P 1 26650 999 26673		bloody lancet
 P 1 26679 999 26673		hot poker
 O 0 26674 1 26682 		cracked iron cauldron
-O 0 26676 1 26676 		iron safe
+
+O 0 26676 1 26671 		iron safe [dojo]
+? 0 5 0 P
+P 0 27015 10 26672 			vial tiny indigo potion[poison]
+? 0 5 0 P
+P 0 27016 10 26672			vial tiny charcoal gray potion[bone break]
+? 0 5 0 P
+P 0 27017 10 26672			vial tiny purple potion purple [faerie fire]
+? 0 5 0 P
+P 0 27018 10 26672			vial tiny light pink potion light pink [bind]
+? 0 5 0 P
+P 0 27019 10 26672			vial tiny magenta potion [blindness]
+? 0 5 0 P
+P 0 27020 10 26672			vial tiny maroon potion [curse]
+? 0 5 0 P
+P 0 27021 10 26672			vial tiny translucent white potion [suffocate]
+? 0 5 0 P
+P 0 27022 10 26672			vial tiny gray potion [teleport]
+? 0 5 0 P
+P 0 27023 10 26672			vial tiny smooth grey potion [stealth]
+? 0 5 0 P
+P 0 27024 10 26672			vial tiny puce potion puce [invis]
+? 0 5 0 P
+P 0 27025 10 26672			vial tiny milky white potion  [slumber]
+? 0 5 0 P
+P 0 27026 10 26672			vial tiny transparent potion [stupidity]
+? 0 5 0 P
+P 0 27027 10 26672			vial tiny scarlet potion [boiling blood]
+
+O 0 26676 1 26676 		iron safe [archives]
+? 0 5 0 P
+P 0 27015 10 26672 			vial tiny indigo potion[poison]
+? 0 5 0 P
+P 0 27016 10 26672			vial tiny charcoal gray potion[bone break]
+? 0 5 0 P
+P 0 27017 10 26672			vial tiny purple potion purple [faerie fire]
+? 0 5 0 P
+P 0 27018 10 26672			vial tiny light pink potion light pink [bind]
+? 0 5 0 P
+P 0 27019 10 26672			vial tiny magenta potion [blindness]
+? 0 5 0 P
+P 0 27020 10 26672			vial tiny maroon potion [curse]
+? 0 5 0 P
+P 0 27021 10 26672			vial tiny translucent white potion [suffocate]
+? 0 5 0 P
+P 0 27022 10 26672			vial tiny gray potion [teleport]
+? 0 5 0 P
+P 0 27023 10 26672			vial tiny smooth grey potion [stealth]
+? 0 5 0 P
+P 0 27024 10 26672			vial tiny puce potion puce [invis]
+? 0 5 0 P
+P 0 27025 10 26672			vial tiny milky white potion  [slumber]
+? 0 5 0 P
+P 0 27026 10 26672			vial tiny transparent potion [stupidity]
+? 0 5 0 P
+P 0 27027 10 26672			vial tiny scarlet potion [boiling blood]
+
 O 0 26680 1 26680 		sorcerors sand
 O 0 26683 1 26683 		Tharchions chair
 O 0 26685 1 26683 		Keeper of the Ways Chair
@@ -110,6 +324,33 @@ O 0 26689 1 26689 		round cushion
 O 0 26689 1 26690 
 O 0 26690 1 26683 		Grandmasters chair
 O 0 26692 1 26692 		golden reliquary of Logrus
+? 0 10 0 P
+P 0 27015 10 26692 			vial tiny indigo potion[poison]
+? 0 10 0 P
+P 0 27016 10 26692			vial tiny charcoal gray potion[bone break]
+? 0 10 P
+P 0 27017 10 26692			vial tiny purple potion purple [faerie fire]
+? 0 10 0 P
+P 0 27018 10 26692			vial tiny light pink potion light pink [bind]
+? 0 10 0 P
+P 0 27019 10 26692			vial tiny magenta potion [blindness]
+? 0 10 0 P
+P 0 27020 10 26692			vial tiny maroon potion [curse]
+? 0 10 0 P
+P 0 27021 10 26692			vial tiny translucent white potion [suffocate]
+? 0 10 0 P
+P 0 27022 10 26692			vial tiny gray potion [teleport]
+? 0 10 0 P
+P 0 27023 10 26692			vial tiny smooth grey potion [stealth]
+? 0 10 0 P
+P 0 27024 10 26692			vial tiny puce potion puce [invis]
+? 0 10 0 P
+P 0 27025 10 26692			vial tiny milky white potion  [slumber]
+? 0 10 0 P
+P 0 27026 10 26692			vial tiny transparent potion [stupidity]
+? 0 10 0 P
+P 0 27027 10 26692			vial tiny scarlet potion [boiling blood]
+
 O 0 26695 1 26672 		wooden stand
 P 1 29913 999 26695		book of Logrus
 O 0 26695 1 26684 
@@ -128,61 +369,96 @@ E 1 1102 999 4			plate mail suit
 M 0 26650 1 26663
 ? 0 2 0 E
 E 1 1102 999 4
-M 0 26650 1 26664
-? 0 2 0 E
-E 1 1102 999 4
-M 0 26650 2 26664
-? 0 2 0 E
-E 1 1102 999 4
-M 0 26650 1 26665
-? 0 2 0 E
-E 1 1102 999 4
-M 0 26650 1 26683
-? 0 2 0 E
-E 1 1102 999 4
-M 0 26650 2 26683
-? 0 2 0 E
-E 1 1102 999 4
-M 0 26650 1 26685
-? 0 2 0 E
-E 1 1102 999 4
-M 0 26650 2 26685
-? 0 2 0 E
-E 1 1102 999 4
+M 0 26650 1 26664		chaos knight
+Y 0 11 5
+M 0 26650 2 26664		chaos knight
+Y 0 11 5
+M 0 26650 1 26665		chaos knight
+Y 0 11 5
+M 0 26650 1 26683		chaos knight
+Y 0 11 5
+M 0 26650 2 26683		chaos knight
+Y 0 11 5
+M 0 26650 1 26685		chaos knight
+Y 0 11 5
+M 0 26650 2 26685		chaos knight
+Y 0 11 5
 M 0 26651 1 26650			half orc guard
-? 0 10 0 E
-E 1 1687 999 4				orc mail suit
+Y 0 52 5 				orc mail set
+
 M 0 26651 2 26650
-? 0 10 0 E
-E 1 1687 999 4
+Y 0 52 5 				orc mail set
+
 M 0 26652 1 3757			illithid gatekeeper (quest_mob)
 M 0 26653 1 26652			onyx statue of Malshyra
+Y 0 63 5
 M 0 26654 1 26653			onyx statue of Shroud
+Y 0 63 5
 M 0 26655 1 26658			onyx statue of Lesprit
+Y 0 63 5
 M 0 26656 1 26659			onyx statue of Talana
+Y 0 63 5
 M 0 26657 1 26654			black marble statue of Logrus
+Y 0 63 5
 M 0 26658 1 26651			human warrior initiate
-E 1 26657 32 4				human sized training robe
+Z 0 1 5
+				
 M 0 26658 1 26662
-E 1 26657 32 4				
+Z 0 1 5
+				
 M 0 26659 1 26656			female monk initiate
-E 1 26657 32 4				
+Z 0 1 5
+? 0 50 0 G
+G 1 27001 999				arrow	
 M 0 26660 1 26671			male monk initiate
-E 1 26657 32 4
+Z 0 1 5
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26661 1 26657			cleric initiate
-E 1 26657 32 4
+
+
 M 0 26661 1 26690
-E 1 26657 32 4
+
 M 0 26662 1 26674			human mage initiate
-E 1 26657 32 4
+? 0 50 0 G
+G 1 600 999				backpack
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26662 1 26676
 E 1 26657 32 4
 M 0 26663 1 26655			drow mage initiate
-E 1 26658 6 4				elf sized training robe
-M 0 26663 1 26669
-E 1 26658 6 4
+Z 0 2 5
+? 0 50 0 G				backpack
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
+M 0 26663 1 26669			drow mage
+Z 0 2 5
+? 0 50 0 G				backpack
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26664 1 26656			drow assassin initiate
-E 1 26658 6 4
+Z 0 2 5
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26665 1 26665			practice dummy (quest_mob)
 M 0 26666 1 26666			battle wyvern
 M 0 26666 2 26666
@@ -191,75 +467,227 @@ M 0 26667 1 26666			wyvern rider
 M 0 26667 1 26667
 M 0 26667 1 26668
 M 0 26668 1 26651			ogre warrior initiate
-E 1 26659 8 4				ogre sized training robe
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26668 1 26662
-E 1 26659 8 4
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26668 1 26669
-E 1 26659 8 4
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26669 1 26680			ogre mage apprentice
 E 1 26659 8 4
 M 0 26670 1 26655			dark ranger
+Z 0 1 5
 ? 0 15 0 E				
 E 1 26678 10 12				badge of Shadow Walkers
 ? 0 5 0 E
 E 1 26664 6 10				mithril saber
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26671 1 26671			Master Hiromatsu
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26672 1 26660			recruiting officer (quest_mob)
 M 0 26673 1 26663			garrison commander
+Y 0 52 5 				orc mail set
+
 M 0 26674 1 26661			black cowled monk
-? 0 10 0 E
-E 1 26671 20 4				karate gi
-M 0 26674 1 26672
-? 0 10 0 E
-E 1 26671 20 4
-M 0 26674 1 26673
-? 0 10 0 E
-E 1 26671 20 4
-M 0 26674 1 26675
-? 0 10 0 E
-E 1 26671 20 4
+Z 0 1 5
+? 0 50 0 G
+G 1 27001 999				arrow	
+
+M 0 26674 1 26672			monk
+Z 0 1 5
+? 0 50 0 G
+G 1 27001 999				arrow	
+
+M 0 26674 1 26673			monk
+Z 0 1 5
+? 0 50 0 G
+G 1 27001 999				arrow	
+
+M 0 26674 1 26675			monk
+Z 0 1 5
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26675 1 26676			Librarian (quest_mob)
+? 0 50 0 G
+G 1 600 999				backpack
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26676 1 26674			mage instructor
+? 0 50 0 G
+G 1 600 999				backpack
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26677 1 26682			KaBoom (quest_mob)
+Z 0 2 5
+Z 0 3 5
+? 0 50 0 G				backpack
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26678 1 26699			Ainad the Interrogator 
+? 0 50 0 G
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
 ? 0 7 0 E
 E 1 26675 5 4				red leather bodysuit
 ? 0 15 0 E
 E 1 26677 10 10				agiel
+
 M 0 26679 1 26681			male assassin
+Z 0 1 5
 ? 0 9 0 E
 E 1 26681 12 10				assassins dagger
 ? 0 15 0 E
 E 1 26678 10 12				badge of Shadow Walkers
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26680 2 26681			female assassin
 ? 0 9 0 E
 E 1 26681 12 10				
 ? 0 15 0 E
 E 1 26678 10 12
+? 0 50 0 G
+G 1 27001 999				arrow	
+
 M 0 26681 1 26677			drow mage
+Z 0 3 5
+? 0 50 0 G
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26681 1 26680
 M 0 26682 1 26684			focused mage
+? 0 50 0 G
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26682 1 26689
 M 0 26683 1 26694			Ledari- grandmasters secretary (quest_mob)
 M 0 26684 1 26696			Pmub the seneschal (quest_mob)
+? 0 5 0 E
+E 1 1036 999 3		 hardened steel collar
+? 0 5 0 E
+E 1 1037 999 7          hardened steel legging
+? 0 5 0 E
+E 1 1038 999 18         studded metal shield
+? 0 5 0 E
+E 1 1052 999 5          hardened steel Helmet
+? 0 5 0 E
+E 1 1053 999 4 	        hardened steel breastplate
+? 0 5 0 E
+E 1 1055 999 15         hardened steel girth
+? 0 5 0 E
+E 1 1056 999 10	        hardened steel gauntlet
+? 0 5 0 E
+E 1 1057 999 14         hardened metal cloak
+? 0 5 0 E
+E 1 1058 999 17         hardened steel bracer
+? 0 5 0 E
+E 1 1059 999 12	 	hardened steel armband
+? 0 5 0 E
+E 1 1089 999 1         metal ring
 M 0 26685 1 26699			Negrat the tortured victim (quest_mob)
 M 0 26686 1 26686			female dark cultist
 M 0 26686 2 26686
 M 0 26687 1 26690			male dark cultist
 M 0 26687 1 26691
 M 0 26688 1 26695			priestess of Talana
+Z 0 2 5
+Z 0 3 5
+? 0 50 0 G
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
 ? 0 5 0 E
 E 1 26683 1 10				Staff of Judgment
+
 M 0 26689 1 26681			priest of Talana (quest_mob)
+Z 0 2 5
+Z 0 3 5
+? 0 50 0 G
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26690 1 26687			naked male worshipper
 M 0 26690 2 26687			
 M 0 26691 1 26688			naked female worshipper
 M 0 26691 2 26688
 M 0 26692 1 26692			Aixel, High Priestess of Malshyra
+? 0 50 0 G
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
+
 M 0 26693 1 26693			Templar guard
+Y 0 52 5 				orc mail set
 M 0 26693 2 26693
+Y 0 52 5 				orc mail set
 M 0 26693 1 26696
+Y 0 52 5 				orc mail set
 M 0 26693 2 26696
+Y 0 52 5 				orc mail set
 M 0 26697 1 26697			Htonret (quest_mob)
+? 0 50 0 G
+G 1 600 999
+? 0 50 0 P
+P 0 27022 10 600			vial tiny gray potion [teleport]
+? 0 50 0 P
+P 0 27023 10 600			vial tiny smooth grey potion [stealth]
+? 0 50 0 P
+P 0 27024 10 600			vial tiny puce potion puce [invis]
 S
 
