@@ -15,14 +15,14 @@ int main(int argc, char **argv)
   std::vector<int>vnums;
 
   toggleInfo.loadToggles();
-  
+
   if((argc-1) < 1){
     printf("Usage: %s <immortal> <resp list>\n", argv[0]);
     exit(0);
   }
 
   immortal=argv[1];
-  
+
   if(!parse_num_args(argc-2, argv+2, vnums))
     exit(0);
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     //// resp
     db_immo.query("select vnum, response from mobresponses where owner='%s' and vnum=%i",
 		  immortal.c_str(), vnums[t]);
-    
+
     if(db_immo.fetchRow()){
       printf("Adding %i ('%s')\n", vnums[t], db_immo["vnum"].c_str());
 

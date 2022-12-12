@@ -52,7 +52,7 @@ void TSymbol::attuneMe(TBeing *caster, TVial *obj)
 
   int reqUses = 0;
   int uses = 0;
- 
+
   if (!checkAttuneUsage(caster, &uses, &reqUses, &obj, this))
     return;
 
@@ -74,7 +74,7 @@ void TSymbol::attuneMe(TBeing *caster, TVial *obj)
 }
 
 
-void attune(TBeing * caster, TThing * sym) 
+void attune(TBeing * caster, TThing * sym)
 {
   TVial *best = NULL;
   TThing *obj = NULL;
@@ -83,10 +83,10 @@ void attune(TBeing * caster, TThing * sym)
     caster->sendTo("Not while fighting..\n\r");
     return;
   }
-  
-  for(StuffIter it=caster->stuff.begin();it!=caster->stuff.end() && (obj=*it);++it) 
+
+  for(StuffIter it=caster->stuff.begin();it!=caster->stuff.end() && (obj=*it);++it)
     obj->getBestVial(&best);
-  
+
   if (!best) {
     caster->sendTo("You need more holy water to attempt this attune.\n\r");
     //caster->sendTo("You need to own some holy water.\n\r");

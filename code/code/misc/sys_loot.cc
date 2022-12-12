@@ -125,7 +125,7 @@ bool sysLootBoot()
 	    tLevel = pot->getDrinkUnits();
 	  break;
         default:
-          vlogf(LOG_BUG, format("sysLootBoot Error: Unrecognized Type: %d") % 
+          vlogf(LOG_BUG, format("sysLootBoot Error: Unrecognized Type: %d") %
                 obj_index[tOIndex].virt);
           delete tObj;
           tObj = NULL;

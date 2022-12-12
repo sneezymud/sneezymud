@@ -5,13 +5,13 @@
 
 static int deathstroke(TBeing *caster, TBeing *victim)
 {
-  bool wasSuccess = FALSE; 
+  bool wasSuccess = FALSE;
   const int DEATHSTROKE_MOVE = 15;
   TBaseWeapon *tw;
   TThing *ob;
   spellNumT sktype = SKILL_DEATHSTROKE;
   affectedData aff1, aff2;
-  
+
   // Ensure this isn't a peaceful room
   if (caster->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
@@ -45,12 +45,12 @@ static int deathstroke(TBeing *caster, TBeing *victim)
   }
 
   // Ensure the player has a weapon equipped
-  if (!caster->heldInPrimHand() || 
+  if (!caster->heldInPrimHand() ||
       !(tw=dynamic_cast<TBaseWeapon *>(caster->heldInPrimHand()))) {
     caster->sendTo("You need to hold a weapon in your primary hand to make this a success.\n\r");
     return FALSE;
   }
-  
+
   // Only consume vitality for mortals
   if (!(caster->isImmortal() || IS_SET(caster->specials.act, ACT_IMMORTAL)))
     caster->addToMove(-DEATHSTROKE_MOVE);
@@ -70,7 +70,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
   aff1.bitvector = 0;
 
   // Success use case
-  if (!victim->awake() || 
+  if (!victim->awake() ||
     (successfulHit && successfulSkill && successfulHit != GUARANTEED_FAILURE)) {
     wasSuccess = TRUE;
 
@@ -78,17 +78,17 @@ static int deathstroke(TBeing *caster, TBeing *victim)
     if (!dam) {
       act("$n's attempt at $N's vital area is ineffective.",
                 FALSE, caster, 0, victim, TO_NOTVICT);
-      act("You hit to $N's vital area is ineffective.", FALSE, caster, 0, victim, 
+      act("You hit to $N's vital area is ineffective.", FALSE, caster, 0, victim,
                 TO_CHAR);
-      act("$n attempts to hit your vital area, but the blow is ineffective.", 
+      act("$n attempts to hit your vital area, but the blow is ineffective.",
                 FALSE, caster, 0, victim, TO_VICT);
 
     } else {
-      act("$n hits $N in $S vital organs!", FALSE, caster, 0, victim, 
+      act("$n hits $N in $S vital organs!", FALSE, caster, 0, victim,
                 TO_NOTVICT);
-      act("You hit $N in $S vital organs!", FALSE, caster, 0, victim, 
+      act("You hit $N in $S vital organs!", FALSE, caster, 0, victim,
                 TO_CHAR);
-      act("$n hits you in your vital organs!", FALSE, caster, 0, 
+      act("$n hits you in your vital organs!", FALSE, caster, 0,
                 victim, TO_VICT);
 
       // You successfully landed your deathstroke - assessing a bonus
@@ -102,21 +102,21 @@ static int deathstroke(TBeing *caster, TBeing *victim)
     ob = caster->heldInPrimHand();
     if (ob && ob->isBluntWeapon())
       sktype = DAMAGE_CAVED_SKULL;
-    if (caster->reconcileDamage(victim, dam,sktype) == -1) 
+    if (caster->reconcileDamage(victim, dam,sktype) == -1)
       return DELETE_VICT;
   }
   // Failure use case
   else {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("$n's attempt at $N's vital area falls far short of hitting.", 
+      act("$n's attempt at $N's vital area falls far short of hitting.",
                   FALSE, caster, 0, victim, TO_NOTVICT);
-      act("You fail to hit $N's vital area.", FALSE, caster, 0, victim, 
+      act("You fail to hit $N's vital area.", FALSE, caster, 0, victim,
                   TO_CHAR);
-      act("$n attempts to hit your vital area, but fails miserably.", 
+      act("$n attempts to hit your vital area, but fails miserably.",
                   FALSE, caster, 0, victim, TO_VICT);
     }
 
-    if (caster->reconcileDamage(victim, 0,sktype) == -1) 
+    if (caster->reconcileDamage(victim, 0,sktype) == -1)
       return DELETE_VICT;
   }
   // Applying the debuff and, on success, the buff
@@ -135,7 +135,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
   victimSkillModifier -= caster->getAgiReaction() * 5;
   victimSkillModifier -= skillLevel/2;
 
-  if (victim->specialAttack(caster,SKILL_DEATHSTROKE) != GUARANTEED_FAILURE && 
+  if (victim->specialAttack(caster,SKILL_DEATHSTROKE) != GUARANTEED_FAILURE &&
      ((victimSkillValue + victimSkillModifier)> 0) &&
      victim->bSuccess(victimSkillValue + victimSkillModifier, SKILL_DEATHSTROKE)) {
     // Successful counter attack
@@ -150,7 +150,7 @@ static int deathstroke(TBeing *caster, TBeing *victim)
             FALSE, caster, 0, victim, TO_NOTVICT);
       act("While you are vulnerable, $N strikes you in the center of your torso.",
             FALSE, caster, 0, victim, TO_CHAR);
-      act("You take advantage of $n's vulnerability for a cheap shot!", 
+      act("You take advantage of $n's vulnerability for a cheap shot!",
            FALSE, caster, 0, victim, TO_VICT);
 
       ob = victim->heldInPrimHand();
@@ -169,7 +169,7 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
   int rc;
   TBeing *victim;
   char v_name[MAX_INPUT_LENGTH];
-  
+
   if (checkBusy()) {
     return FALSE;
   }
@@ -181,7 +181,7 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
   }
 
   strcpy(v_name, argument);
-  
+
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, v_name))) {
       if (!(victim = fight())) {
@@ -212,7 +212,7 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
-  
+
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     return DELETE_THIS;
   }

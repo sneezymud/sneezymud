@@ -71,7 +71,7 @@ const unsigned int ROOM_HOSPITAL      = (1<<16);    // 65536
 const unsigned int ROOM_SAVE_ROOM     = (1<<17);    // 131072
 const unsigned int ROOM_NO_AUTOFORMAT = (1<<18);    // 262144
 const unsigned int ROOM_BEING_EDITTED = (1<<19);    // 524288
-const unsigned int ROOM_ON_FIRE       = (1<<20);  
+const unsigned int ROOM_ON_FIRE       = (1<<20);
 const unsigned int ROOM_FLOODED       = (1<<21);
 
 const int MAX_ROOM_BITS      = 22;          /* move and change */
@@ -132,12 +132,12 @@ class TRoom : public TThing {
     sectorTypeT sectorType;
     dirTypeT riverDir;      // River flows toward this exit direction
     short riverSpeed;        // River flows with this speed
-    short hasWindow;         // whether or not room has a window   
-    short teleLook;          // do a do_look or not when teleported 
-    zoneData *zone;         // Room zone (for resetting)          
-    short teleTime;        // time to a teleport                
-    int teleTarg;        // target room of a teleport       
-    unsigned short moblim;           // # of mobs allowed in room.       
+    short hasWindow;         // whether or not room has a window
+    short teleLook;          // do a do_look or not when teleported
+    zoneData *zone;         // Room zone (for resetting)
+    short teleTime;        // time to a teleport
+    int teleTarg;        // target room of a teleport
+    unsigned short moblim;           // # of mobs allowed in room.
     int roomHeight;         // room height
     unsigned int roomFlags; // Bitvector os flags for room
     long descPos;           // File offset for the description.
@@ -332,7 +332,7 @@ class TRoom : public TThing {
     sstring describeGround() const;
     sstring describeGroundWeather() const;
     sstring describeGroundType() const;
-    
+
     void playsound(soundNumT, const sstring &, int = 100, int = 50, int = 1) const;
     void stopsound() const;
     int brightSunlight() { return getLight() > 20; }

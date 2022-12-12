@@ -14,7 +14,7 @@
 extern void startChargeTask(TBeing *, const char *);
 
 // divineRescue will apply a heal to the target/victim and a short duration buff
-// the buff is mainly so the free heal can't be spammed. 
+// the buff is mainly so the free heal can't be spammed.
 void divineRescue(TBeing * caster, TBeing * victim) {
 
   if (!caster->bSuccess(caster->getSkillValue(SKILL_DIVINE_RESCUE), SKILL_DIVINE_RESCUE))
@@ -35,9 +35,9 @@ void divineRescue(TBeing * caster, TBeing * victim) {
   int hp = casterlevel + (adv_learn / 2);
 
   // lets make this similar to the avenger to continue the Deikhan flavor
-  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", 
+  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>",
       FALSE, caster, 0, victim, TO_NOTVICT);
-  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", 
+  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>",
       FALSE, caster, 0, victim, TO_CHAR);
   act("You glow with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>",
       FALSE, caster, 0, victim, TO_VICT);
@@ -139,7 +139,7 @@ int synostodweomer(TBeing *caster, TBeing *v)
   if (!bPassClericChecks(caster,SPELL_SYNOSTODWEOMER))
      return FALSE;
 
-  if (!caster->isImmortal() && 
+  if (!caster->isImmortal() &&
           caster->checkForSkillAttempt(SPELL_SYNOSTODWEOMER)) {
     act("You are not prepared to try to Snyostodweomer again so soon.",
         FALSE, caster, NULL, NULL, TO_CHAR);

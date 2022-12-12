@@ -24,7 +24,7 @@
     Gear is set to a 'tier' based on its type and flags
     Everything (stats, armor) is given a 'point' value
     Some points are weighted based on tier of the object (to skew a stat towards a class)
-    
+
     We add in three categories for armor: struct, stats, main (armor for eq, damage for weapons)
     All of these point totals are calculated.  Then added.
     (min point total for any one is 1/2 the max)
@@ -233,7 +233,7 @@ int ObjectEvaluator::getStatPointsRaw()
       0.0, // ITEM_STRUNG
       2.0, // ITEM_SHADOWY
       0.0, // ITEM_PROTOTYPE
-      0.0, // ITEM_INVISIBLE 
+      0.0, // ITEM_INVISIBLE
       0.0, // ITEM_MAGIC
       0.0, // ITEM_NODROP
       0.0, // ITEM_BLESS
@@ -251,7 +251,7 @@ int ObjectEvaluator::getStatPointsRaw()
       0.0, // ITEM_PAIRED
       0.0, // ITEM_NORENT
       0.0, // ITEM_FLOAT
-      0.0, // ITEM_NOPURGE 
+      0.0, // ITEM_NOPURGE
       0.0, // ITEM_NEWBIE
       0.0, // ITEM_NOJUNK_PLAYER
       0.0, // ITEM_SILVERED

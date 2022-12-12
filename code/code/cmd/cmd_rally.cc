@@ -25,7 +25,7 @@ int TBeing::doRally()
     act("Your half-hearted battlecry fails to motivate your allies.", FALSE, this, NULL, NULL, TO_CHAR);
     act("$n attempts a rally battlecry but fails to motivate anyone.", FALSE, this, NULL, NULL, TO_ROOM);
 
-    // Apply a lockout buff on the caster 
+    // Apply a lockout buff on the caster
     affectedData aff1;
     aff1.type = SKILL_RALLY;
     aff1.duration = Pulse::UPDATES_PER_MUDHOUR;
@@ -48,15 +48,15 @@ int TBeing::doRally()
   aff1.location = APPLY_HIT;
   aff1.modifier = modifierValue;
   aff1.bitvector = 0;
- 
-  // Max MOVE 
+
+  // Max MOVE
   affectedData aff2;
   aff2.type = SKILL_RALLY;
-  aff2.duration = Pulse::UPDATES_PER_MUDHOUR * 3; 
+  aff2.duration = Pulse::UPDATES_PER_MUDHOUR * 3;
   aff2.location = APPLY_MOVE;
   aff2.modifier = modifierValue;
   aff2.bitvector = 0;
- 
+
   // Loop for each person in room
   bool found = false;
   for (TThing *thing : roomp->stuff) {

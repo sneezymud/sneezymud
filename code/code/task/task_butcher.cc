@@ -192,7 +192,7 @@ int TThing::butcherPulse(TBeing *ch, TBaseCorpse *corpse)
       strcpy(namebuf, tpc->getOwner().c_str());
       namebuf[0]=toupper(namebuf[0]);
     }
-    
+
     int FoodUnits = max(0,min(100,(maxUnitsP/Ceffect)));
     steak->setFoodFill(FoodUnits);
     steak->setWeight((float)FoodUnits / 10.0);

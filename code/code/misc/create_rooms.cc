@@ -118,7 +118,7 @@ void make_room_coords(TRoom *rorig, TRoom *tdest, int dir){
     case 9:
       tdest->setXCoord(tdest->getXCoord()-1);
       tdest->setYCoord(tdest->getYCoord()-1);
-      break;    
+      break;
   }
 }
 
@@ -200,7 +200,7 @@ void TBeing::doEdit(const char *)
 
 void TPerson::doEdit(const char *arg)
 {
-  int field,     dtype,     
+  int field,     dtype,
       dkey,      rspeed,    rdir,      new_dir,
       dcond,     dldiff,    dweight,   tele_room,
       tele_time, tele_look, moblim,    s_type,
@@ -213,7 +213,7 @@ void TPerson::doEdit(const char *arg)
   sstring regStr;
   sstring line, garbled;
   sstring word, stripped_word;
-  sstring punctuation = ".!?;:"; 
+  sstring punctuation = ".!?;:";
   sstring newDescr = "";
   size_t swlen = 0;
   bool was_word = false;
@@ -492,7 +492,7 @@ void TPerson::doEdit(const char *arg)
       }
 
       // Normal creation process.
-      if (sscanf(str, "%d %d %d %d %d %d %d", 
+      if (sscanf(str, "%d %d %d %d %d %d %d",
           &rdir, &dtype, &dcond, &dldiff, &dweight, &dkey, &exroom) != 7) {
         sendTo("Syntax : edit exit <dir> <door_type> <condition> <lock difficulty> <weight> <key> <exitroom>.\n\r");
         return;
@@ -543,8 +543,8 @@ void TPerson::doEdit(const char *arg)
           // our current room.  Flags, Sector, and Room Height.
           newrp->setRoomFlags(roomp->getRoomFlags());
           newrp->setSectorType(roomp->getSectorType());
-          newrp->setRoomHeight(roomp->getRoomHeight());	
-	  make_room_coords(roomp, newrp, rdir);  
+          newrp->setRoomHeight(roomp->getRoomHeight());
+	  make_room_coords(roomp, newrp, rdir);
         } else {
           sendTo(format("Rooms need to be positive numbers less than %d.\n\r") % (WORLD_SIZE-1));
           return;
@@ -604,7 +604,7 @@ void TPerson::doEdit(const char *arg)
         }
         return;
       }
-      // try to locate extra description 
+      // try to locate extra description
       for (prev = ed = roomp->ex_description;; prev = ed, ed = ed->next)
         if (!ed) {
           ed = new extraDescription();
@@ -914,9 +914,9 @@ void TPerson::doEdit(const char *arg)
       return;
       break;
     case  8: // Max_Capacity
-      if (sscanf(str, "%d", &moblim) != 1) 
+      if (sscanf(str, "%d", &moblim) != 1)
         sendTo("edit max_capacity <mob_limit>\n\r");
-      else 
+      else
         roomp->setMoblim(moblim);
       return;
       break;
@@ -981,7 +981,7 @@ void TPerson::doEdit(const char *arg)
       tele_time = -1;
       tele_look = -1;
       sscanf(str, "%d %d %d", &tele_time, &tele_room, &tele_look);
-      if (tele_room < 0 || tele_time < 0 || tele_look < 0) 
+      if (tele_room < 0 || tele_time < 0 || tele_look < 0)
         sendTo("edit tele <time> <room_nr> <look-flag>\n\r");
       else {
         roomp->setTeleTime(tele_time);
@@ -1084,7 +1084,7 @@ void TPerson::doEdit(const char *arg)
                   if (teDesc)
                     teDesc->next = prev->next;
                   else
-                    newrp->ex_description = prev->next; 
+                    newrp->ex_description = prev->next;
                   delete prev;
                   break;
                   //prev = teDesc->next;
@@ -1297,10 +1297,10 @@ void TPerson::doEdit(const char *arg)
       // B) There should be two spaces and only two spaces after each sentence end
       // C) Lines should be no longer than 80 characters, and should not break in the
       //    middle of a word.
-      
+
       whitespace = " \n\r";
 
-      punctuation = ".!?;:"; 
+      punctuation = ".!?;:";
       colors = "<";
 
       size_t bgin, look_at;
@@ -1313,7 +1313,7 @@ void TPerson::doEdit(const char *arg)
 
 	bgin = tStr.find_first_not_of(whitespace);
 	look_at = tStr.find_first_of(whitespace, bgin);
-	
+
 	if (look_at != sstring::npos) {
 	  // normal, return the part between
 	  word = tStr.substr(bgin, look_at - bgin);
@@ -1360,7 +1360,7 @@ void TPerson::doEdit(const char *arg)
       }
       newDescr += line;
       newDescr += "\n\r";
-     
+
 
       delete [] roomp->descr;
       roomp->descr = newDescr;
@@ -1376,14 +1376,14 @@ void TPerson::doEdit(const char *arg)
       break;
   }
 
-  if (*str) {		// there was a str in the argument array 
+  if (*str) {		// there was a str in the argument array
     if (strlen(str) > (unsigned int) room_length[field - 1]) {
       sendTo("String too long - truncated.\n\r");
       *(str + room_length[field - 1]) = '\0';
     }
     *(desc->str) = str;
     sendTo("Ok.\n\r");
-  } else {			// there was no str. enter str mode 
+  } else {			// there was no str. enter str mode
     sendTo(format("Enter str.  Terminate with '~' on %s.\n\r") %
            ((field == 1 || field == 2) ? "NEW LINE" : "SAME LINE"));
     *desc->str = 0;
@@ -1391,7 +1391,7 @@ void TPerson::doEdit(const char *arg)
   }
 }
 
-// Below are the saving and loading commands for the rooms 
+// Below are the saving and loading commands for the rooms
 
 void TBeing::doRload(const char *)
 {
@@ -1486,8 +1486,8 @@ void TBeing::doRsave(const char *)
   sendTo("Mobs can't save rooms.\n\r");
 }
 
-// Below is the vt100 room editor written by DM of SillyMUD and Epic  
-// fame. All changes have been done by myself, or Batopr - Russ                  
+// Below is the vt100 room editor written by DM of SillyMUD and Epic
+// fame. All changes have been done by myself, or Batopr - Russ
 
 static const char *exit_menu = "    1) North                      2) East\n\r"
 "    3) South                      4) West\n\r"
@@ -2370,7 +2370,7 @@ static void ChangeExitCondition(TRoom *rp, TBeing *ch, const char *arg, editorEn
     }
     update = convertTo<int>(arg);
 
-    if (update <= 0 || update >= MAX_DOOR_CONDITIONS)   
+    if (update <= 0 || update >= MAX_DOOR_CONDITIONS)
       return;
     i = 1 << (update-1);
 
@@ -2713,7 +2713,7 @@ static void ChangeExitDir(TRoom *rp, TBeing *ch, const char *arg, editorEnterTyp
       ch->sendTo("\n\rMaking new exit.");
       rp->dir_option[update] = new roomDirData();
     } else {
-      ch->sendTo(format("\n\rModifying exit.  Current exit to room %i.") % 
+      ch->sendTo(format("\n\rModifying exit.  Current exit to room %i.") %
 		 rp->dir_option[update]->to_room);
     }
     ch->sendTo("\n\r\n\rExit to Room: ");
@@ -2782,7 +2782,7 @@ static void DeleteExit(TRoom *rp, TBeing *ch, const char *arg, editorEnterTypeT 
     update--;
 
     if (update < MIN_DIR || update >= MAX_DIR)
-      return; 
+      return;
 
     if (rp->dir_option[update]) {
       rp->dir_option[update] = 0;
@@ -2965,7 +2965,7 @@ static void RoomSave(TBeing *ch, int start, int end, int useSecond)
 	}
 
 
-	db.query("insert into roomexit (owner,block, vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values ('%s', %i, %i, %i,'%s','%s',%i,%i,%i,%i,%i,%i)", 
+	db.query("insert into roomexit (owner,block, vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values ('%s', %i, %i, %i,'%s','%s',%i,%i,%i,%i,%i,%i)",
 		 ch->getName().c_str(), useSecond,
 		 rp->number, mapDirToFile(j), keyword.c_str(),
 		 descr.c_str(),
@@ -3026,7 +3026,7 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
       if (vnum >= end)
 	found = TRUE;
 
-      if (!(rp = real_roomp(vnum))) {	// empty room 
+      if (!(rp = real_roomp(vnum))) {	// empty room
 	rp2 = new TRoom(vnum);
         rp2->putInDb(vnum);
 	ch->sendTo("+");
@@ -3057,12 +3057,12 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
       rp2->name=db["name"];
       rp2->setDescr(db["description"]);
-      
+
       if (!zone_table.empty()) {
 	//      fscanf(fl, " %*d ");  // this is the "zone" value - unused?
 	unsigned int z;
 	for (z = 0; rp2->number>zone_table[z].top && z<zone_table.size(); z++);
-	
+
 	if (z >= zone_table.size()) {
 	  vlogf(LOG_EDIT, format("Room %d is outside of any zone.\n") % rp2->number);
 	  exit(0);
@@ -3070,22 +3070,22 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 	rp2->setZoneNum(z);
       }
       rp2->setRoomFlags(convertTo<int>(db["room_flag"]));
-      
+
       rp2->setSectorType(mapFileToSector(convertTo<int>(db["sector"])));
       rp2->setTeleTime(convertTo<int>(db["teleTime"]));
       rp2->setTeleTarg(convertTo<int>(db["teleTarg"]));
       rp2->setTeleLook(convertTo<int>(db["teleLook"]));
-      
+
       rp2->setRiverSpeed(convertTo<int>(db["river_speed"]));
       rp2->setRiverDir(mapFileToDir(convertTo<int>(db["river_dir"])));
       rp2->setMoblim(convertTo<int>(db["capacity"]));
-      
+
       rp2->setRoomHeight(convertTo<int>(db["height"]));
-      
+
       rp2->spec = 0;
       rp2->setLight(0);
       rp2->setHasWindow(0);
-      
+
       rp2->ex_description = NULL;
 
       while(convertTo<int>(db_extras["vnum"]) == rp2->number){
@@ -3100,7 +3100,7 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
 	new_descr->next = rp2->ex_description;
 	rp2->ex_description = new_descr;
-	
+
 	if(!db_extras.fetchRow())
 	  break;
       }
@@ -3126,7 +3126,7 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
 	tmp=convertTo<int>(db_exits["type"]);
 	if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
-	  vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") % 
+	  vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") %
 		tmp % rp2->number % dir);
 	  return;
 	}
@@ -3142,18 +3142,18 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
 
 	rp2->dir_option[dir]->to_room = convertTo<int>(db_exits["destination"]);
 
-	if (IS_SET(rp2->dir_option[dir]->condition, EXIT_SECRET) && 
+	if (IS_SET(rp2->dir_option[dir]->condition, EXIT_SECRET) &&
 	    canSeeThruDoor(rp2->dir_option[dir])) {
 	  if (IS_SET(rp2->dir_option[dir]->condition, EXIT_CLOSED)){
 	    //vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
 	  } else
-	    vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
+	    vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") %
 		  rp2->number % dir);
 	}
 	if(!db_exits.fetchRow())
 	  break;
       }
-      
+
       rp2->initLight();
     } else {
       ch->sendTo(format("Room %d found, but not in load range!  Skipping.\n\r") % vnum);
@@ -3161,9 +3161,9 @@ void RoomLoad(TBeing *ch, int start, int end, int useSecond)
     }
   }
 
-  if (!found) 
+  if (!found)
     ch->sendTo("The room number(s) that you specified could not all be found.\n\r");
-  else 
+  else
     ch->sendTo("\n\rDone.\n\r");
 }
 
@@ -3193,10 +3193,10 @@ void CreateOneRoom(int loc_nr)
   rp->initLight();
 
   rp->setSectorType(SECT_ASTRAL_ETHREAL);
-  
+
   // default the save room flag to 'on'
   rp->setRoomFlagBit(ROOM_SAVE_ROOM);
-  
+
   roomCount++;
 }
 
@@ -3208,7 +3208,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
 
   if(fscanf(fl, "%d ", &tmp))
     x=tmp;
-  else 
+  else
     x=0;
 
   if(fscanf(fl, "%d ", &tmp))
@@ -3218,7 +3218,7 @@ void TRoom::loadOne(FILE *fl, bool tinyfile)
 
   if(fscanf(fl, "%d\n", &tmp))
     z=tmp;
-  else 
+  else
     z=0;
 
   name = fread_string(fl);
@@ -3374,7 +3374,7 @@ TRoom *room_find_or_create(int key)
 
 sstring TRoom::describeGroundWeather() const
 {
-  if(!isUnderwaterSector() && !isWaterSector() && 
+  if(!isUnderwaterSector() && !isWaterSector() &&
      Weather::getWeather(*this) == Weather::SNOWY){
     // non-water sector in the snow
     return "<W>snow-covered<1>";
@@ -3415,7 +3415,7 @@ sstring TRoom::describeGroundType() const
 
 sstring TRoom::describeGround() const
 {
-  return format("%s%s%s") % describeGroundWeather() % 
+  return format("%s%s%s") % describeGroundWeather() %
     (describeGroundWeather().empty()?"":" ") % describeGroundType();
 }
 

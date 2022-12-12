@@ -44,12 +44,12 @@ recipeTypeT recipes[] =
 
 // recipe number, amount of item, type of item, item vnum
 ingredientTypeT ingredients[] =
-{ 
+{
   // marinated steak
   {0, 1, 1, TYPE_VNUM, Obj::GENERIC_STEAK},  // any steak will do
   {0, 2, 3, TYPE_LIQUID, LIQ_WHISKY}, // 3 ounces of whiskey
   {0, 3, 1, TYPE_VNUM, 432}, // 1 orange
-  
+
   // fried catfish
   {1, 1, 1, TYPE_VNUM, 13803}, // 1 catfish
   {1, 2, 1, TYPE_VNUM, 263}, // jar of whale grease
@@ -100,7 +100,7 @@ ingredientTypeT ingredients[] =
   {9, 1, 1, TYPE_VNUM, 10030}, // offal
   {9, 2, 1, TYPE_VNUM, 10913}, // rock
   {9, 3, 10, TYPE_LIQUID, LIQ_WATER}, // water
-  
+
   // friendship bread
   {10, 1, 1, TYPE_VNUM, 256}, // gnome flour
   {10, 2, 1, TYPE_VNUM, 276}, // berries
@@ -130,6 +130,6 @@ ingredientTypeT ingredients[] =
   {12, 4, 1, TYPE_VNUM, 24703},
 
 
-  
+
   {-1, -1, -1, -1}
 };

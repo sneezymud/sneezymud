@@ -257,7 +257,7 @@ void TPerson::resetChar()
     sendTo("This is your first login.\n\r");
   }
   // Now that we sent the character where they last logged in from
-  // reset the lastHost to the current hostname 
+  // reset the lastHost to the current hostname
 
   strncpy(lastHost, desc->host.c_str(), 38);
   lastHost[39] = '\0';
@@ -265,12 +265,12 @@ void TPerson::resetChar()
   if (desc && desc->bad_login)
     sendTo(format("%sYou have had %d unsuccessful logins to your player since last login.%s\n\r") % red() % desc->bad_login % norm());
 
-  // Now that bad logins have been sent, reset it to 0 
+  // Now that bad logins have been sent, reset it to 0
   desc->bad_login = 0;
 
   //  setArmor(1000);  // need to set this to 100 or we have double spell affect
 
-  // racial stuff 
+  // racial stuff
   setRacialStuff();
 
 // This works in conjunction with the end of loadFromSt which excludes
@@ -365,7 +365,7 @@ void TPerson::storeToSt(charFile *st)
 
   st->flags = 0;
 
-  if (desc && desc->account) 
+  if (desc && desc->account)
     strcpy(st->aname, desc->account->name.c_str());
   else {
     vlogf(LOG_BUG, format("storeToSt for %s with no account info") %  getName());
@@ -401,7 +401,7 @@ void TPerson::storeToSt(charFile *st)
 		   st->affected[j].bitvector, FALSE, SILENT_YES);
       af = af->next;
     } else {
-      st->affected[j].type = TYPE_UNDEFINED;	     // Zero signifies not used 
+      st->affected[j].type = TYPE_UNDEFINED;	     // Zero signifies not used
       st->affected[j].duration = 0;
       st->affected[j].location = mapApplyToFile(APPLY_NONE);
       st->affected[j].modifier = 0;
@@ -461,7 +461,7 @@ void TPerson::storeToSt(charFile *st)
   }
   st->wimpy = wimpy;
 
-  
+
   st->practices = practices;
   short tmp=0;
   // these pracs are switched in the actual pfiles for some dumb reason
@@ -598,7 +598,7 @@ void TPerson::loadFromSt(charFile *st)
   age_mod = st->age_mod;
 
   desc->playerID=0;
-  
+
   setRace(race_t(st->race));
 
   wearSlotT iw;
@@ -668,7 +668,7 @@ void TPerson::loadFromSt(charFile *st)
     CDiscipline *tmpCD;
     byte dl = st->disc_learning[mapDiscToFile(dnt)];
     if (dl > MAX_DISC_LEARNEDNESS) {
-      vlogf(LOG_BUG, format("disc %d on %s pfile with learning %d.  ERROR") % 
+      vlogf(LOG_BUG, format("disc %d on %s pfile with learning %d.  ERROR") %
              dnt % getName() % dl);
     }
     tmpCD = getDiscipline(dnt);
@@ -682,7 +682,7 @@ void TPerson::loadFromSt(charFile *st)
       tmpCD->setLearnedness(tmpCD->getNatLearnedness());
       if (!(tmpCD->ok_for_class) && (GetMaxLevel() <= MAX_MORT) &&
                                    (tmpCD->getLearnedness() > 0)) {
-        vlogf(LOG_BUG, format("disc %d on %s with learning %d.  ERROR") % 
+        vlogf(LOG_BUG, format("disc %d on %s with learning %d.  ERROR") %
              dnt % getName() % tmpCD->getLearnedness());
       }
     }
@@ -692,7 +692,7 @@ void TPerson::loadFromSt(charFile *st)
   for (snt = MIN_SPELL; snt < MAX_SKILL;snt++) {
     if (discArray[snt]) {
       int mappedskill = mapSpellnumToFile(snt);
-      setNatSkillValue(snt, 
+      setNatSkillValue(snt,
           ((GetMaxLevel() > MAX_MORT) ? MAX_SKILL_LEARNEDNESS : st->skills[mappedskill]));
       int xi = getMaxSkillValue(snt);
       setSkillValue(snt, min((int) st->skills[mappedskill], xi));
@@ -707,8 +707,8 @@ void TPerson::loadFromSt(charFile *st)
   player.time->logon = time(0);
   player.time->last_logon = st->last_logon;
 
-  
-  
+
+
   strcpy(lastHost, st->lastHost);
 
   setWeight(st->weight);
@@ -775,10 +775,10 @@ void TPerson::loadFromSt(charFile *st)
 
   desc->playerID=0;
   db.query("select p_type, hp, mana, move, money, exp, room, opp, tank, piety, lifeforce, time from playerprompt where player_id=%i", getPlayerID());
-  
+
   if(db.fetchRow()){
     desc->prompt_d.type = convertTo<int>(db["p_type"]);
-    
+
     strcpy(desc->prompt_d.hpColor, db["hp"].c_str());
     strcpy(desc->prompt_d.manaColor, db["mana"].c_str());
     strcpy(desc->prompt_d.moveColor, db["move"].c_str());
@@ -817,11 +817,11 @@ void TPerson::loadFromSt(charFile *st)
 // resetChar.  Others of these we strip away and then add back in like
 // armor spell.  I left it this way cause although duplicative, I forsee
 // someone changing things around and seperating the functions of load and
-// reset char 
+// reset char
   for (i = 0; i < MAX_AFFECT; i++) {
     if (st->affected[i].type) {
         rentAffectTo(&st->affected[i]);
-    } 
+    }
   }
 
   // tacked on account and player id here
@@ -868,7 +868,7 @@ void TPerson::rentAffectTo(saveAffectedData *af)
     // pass it through in the affectTo call
     affectTo(&a, af->renew);
     return;
-  } 
+  }
 }
 
 void TBeing::convertAbilities()
@@ -881,7 +881,7 @@ void TBeing::saveChar(int load_room) {
   if (dynamic_cast<TMonster *>(this)) {
     // save money for shop keepers, if they're owned
     if(isShopkeeper()){
-      unsigned int shop_nr = 0;    
+      unsigned int shop_nr = 0;
       for (; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
 
       if (shop_nr >= shop_index.size()) {
@@ -892,7 +892,7 @@ void TBeing::saveChar(int load_room) {
 
       TDatabase db(DB_SNEEZY);
       db.query("update shopowned set gold=%i where shop_nr=%i", getMoney(), shop_nr);
-      
+
       // No reason to continue past this point for shopkeeper mob
       return;
     }
@@ -934,7 +934,7 @@ void TBeing::saveChar(int load_room) {
 
   const int accountId = tmp ? tmp->desc->account->account_id : desc->account->account_id;
   const auto *prompt = &(tmp ? tmp->desc->prompt_d : desc->prompt_d);
-  
+
   assert(accountId);
 
   TTransaction db(DB_SNEEZY);
@@ -970,21 +970,21 @@ void TBeing::saveChar(int load_room) {
   FILE *file = fopen(accountFilePath.c_str(), "w");
   mud_assert(file != nullptr, "Failed fopen in save char: %s", accountFilePath.c_str());
   fwrite(&chFile, sizeof(charFile), 1, file);
-  if (fclose(file) != 0) 
+  if (fclose(file) != 0)
     vlogf(LOG_BUG, format("Problem closing %s's charFile") % realName);
 
   // Make a hard link to player directory of actual file in account
   // Directory. This is done for easy access by load_char and other
   // commands without needing to know account name.
-  
+
   const sstring playerFilePath = format("player/%c/%s") % realName.at(0) % realName;
 
   if (unlink(playerFilePath.c_str()))
     vlogf(LOG_BUG, format("unlink failed in saveChar for %s") % realName);
 
   if(link(accountFilePath.c_str(), playerFilePath.c_str()))
-    vlogf(LOG_BUG, format("link failed in saveChar for %s") % realName);  
-  
+    vlogf(LOG_BUG, format("link failed in saveChar for %s") % realName);
+
   // Call these on tmp if exists to allow full saving of shapeshifted chars
   if (tmp) {
     // save mobile followers
@@ -1215,7 +1215,7 @@ void do_the_player_stuff(const char *name)
       AccountStats::active_player7++;
     if ((time(0) - st.last_logon) <= (30 * SECS_PER_REAL_DAY))
       AccountStats::active_player30++;
-    
+
     if (Config::AutoDeletion()){
       time_t ltime = time(0);
       time_t lastlogin=lastAccountLogin(st.aname);
@@ -1224,7 +1224,7 @@ void do_the_player_stuff(const char *name)
       // This gives a player at least 3 months before delete occurs
       if((time(0) - lastlogin) > (90 * SECS_PER_REAL_DAY)){
 	if (!Config::RentOnlyDeletion()){
-	  vlogf(LOG_MISC, format("%s (level %d) did not log in for %d days. Deleting.") %  
+	  vlogf(LOG_MISC, format("%s (level %d) did not log in for %d days. Deleting.") %
 		name %
 		max_level % elapsed_time);
 	  wipePlayerFile(name);
@@ -1238,7 +1238,7 @@ void do_the_player_stuff(const char *name)
 	  sprintf(buf, "rent/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
 	  if ((fp = fopen(buf, "r"))) {
 	    fclose(fp);
-	    vlogf(LOG_MISC, format("%s (level %d) did not log in for %d days. Deleting rent.") % 
+	    vlogf(LOG_MISC, format("%s (level %d) did not log in for %d days. Deleting rent.") %
 		  name % max_level % elapsed_time);
 	    wipeRentFile(name);
 	    wipeCorpseFile(sstring(name).lower().c_str());
@@ -1272,7 +1272,7 @@ void fixup_players(void)
   TDatabase db(DB_SNEEZY);
   db.query("delete from factionmembers");
 
- 
+
   dirwalk("player/a", do_the_player_stuff);
   bootPulse(".", false);
   dirwalk("player/b", do_the_player_stuff);
@@ -1486,8 +1486,8 @@ void TBeing::checkForStr(silentTypeT silent)
             FALSE, this, obj, 0, TO_ROOM);
         *this += *unequip(getPrimaryHold());
       }
-    }  
-    if (obj && !obj->isPaired()) { 
+    }
+    if (obj && !obj->isPaired()) {
       if (checkWeaponWeight(obj, HAND_TYPE_PRIM, FALSE)) {
       } else {
         act("You lack the strength to continue to hold $p.",
@@ -1730,7 +1730,7 @@ void TBeing::saveTitle()
   if(!(tp=dynamic_cast<TPerson *>(this)))
     return;
 
-  db.query("update player set title='%s' where id=%i", 
+  db.query("update player set title='%s' where id=%i",
 	   tp->title, getPlayerID());
 }
 
@@ -1760,7 +1760,7 @@ void TBeing::saveDrugStats()
 
 
   db.query("delete from drug_use where player_id=%i", getPlayerID());
-  
+
   for(int i=MIN_DRUG;i<MAX_DRUG;++i){
     if(desc->drugs[i].total_consumed){
       db.query("insert into drug_use values (%i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i)",
@@ -1854,52 +1854,52 @@ void TBeing::saveCareerStats()
     return;
   }
 
-  fprintf(fp, "%u\n", 
+  fprintf(fp, "%u\n",
       current_version);
-  fprintf(fp, "%u %u\n", 
+  fprintf(fp, "%u %u\n",
       desc->career.kills,
       desc->career.group_kills);
-  fprintf(fp, "%u %f\n", 
+  fprintf(fp, "%u %f\n",
       desc->career.deaths,
       desc->career.exp);
-  fprintf(fp, "%u %u %u\n", 
+  fprintf(fp, "%u %u %u\n",
       desc->career.crit_hits,
       desc->career.crit_misses,
       desc->career.crit_kills);
-  fprintf(fp, "%u %u\n", 
+  fprintf(fp, "%u %u\n",
       desc->career.crit_hits_suff,
       desc->career.crit_kills_suff);
-  fprintf(fp, "%u %u %u %u %u\n", 
+  fprintf(fp, "%u %u %u %u %u\n",
       desc->career.crit_beheads,
       desc->career.crit_sev_limbs,
       desc->career.crit_cranial_pierce,
       desc->career.crit_broken_bones,
       desc->career.crit_crushed_skull);
-  fprintf(fp, "%u %u %u %u %u\n", 
+  fprintf(fp, "%u %u %u %u %u\n",
       desc->career.crit_beheads_suff,
       desc->career.crit_sev_limbs_suff,
       desc->career.crit_cranial_pierce_suff,
       desc->career.crit_broken_bones_suff,
       desc->career.crit_crushed_skull_suff);
-  fprintf(fp, "%u %u %u %u\n", 
+  fprintf(fp, "%u %u %u %u\n",
       desc->career.crit_cleave_two,
       desc->career.crit_cleave_two_suff,
       desc->career.crit_disembowel,
       desc->career.crit_disembowel_suff);
-  fprintf(fp, "%u %u\n", 
+  fprintf(fp, "%u %u\n",
       desc->career.crit_crushed_nerve,
       desc->career.crit_crushed_nerve_suff);
-  fprintf(fp, "%u %u %u %u\n", 
+  fprintf(fp, "%u %u %u %u\n",
       desc->career.crit_voice,
       desc->career.crit_voice_suff,
       desc->career.crit_eye_pop,
       desc->career.crit_eye_pop_suff);
-  fprintf(fp, "%u %u %u %u\n", 
+  fprintf(fp, "%u %u %u %u\n",
       desc->career.crit_lung_punct,
       desc->career.crit_lung_punct_suff,
       desc->career.crit_impale,
       desc->career.crit_impale_suff);
-  fprintf(fp, "%u %u %u %u\n", 
+  fprintf(fp, "%u %u %u %u\n",
       desc->career.crit_eviscerate,
       desc->career.crit_eviscerate_suff,
       desc->career.crit_kidney,
@@ -1907,13 +1907,13 @@ void TBeing::saveCareerStats()
   fprintf(fp, "%u %u\n",
       desc->career.crit_genitalia,
       desc->career.crit_genitalia_suff);
-  fprintf(fp, "%u %u\n", 
+  fprintf(fp, "%u %u\n",
       desc->career.arena_victs,
       desc->career.arena_loss);
-  fprintf(fp, "%u %u\n", 
+  fprintf(fp, "%u %u\n",
       desc->career.skill_success_attempts,
       desc->career.skill_success_pass);
-  fprintf(fp, "%u %u %u %u\n", 
+  fprintf(fp, "%u %u %u %u\n",
       desc->career.spell_success_attempts,
       desc->career.spell_success_pass,
       desc->career.prayer_success_attempts,
@@ -1925,10 +1925,10 @@ void TBeing::saveCareerStats()
         desc->career.dam_done[i],
         desc->career.dam_received[i]);
   }
-  fprintf(fp, "%u %u\n", 
+  fprintf(fp, "%u %u\n",
       desc->career.pets_bought,
       desc->career.pet_levels_bought);
-  fprintf(fp, "%lu %lu\n", 
+  fprintf(fp, "%lu %lu\n",
 	  (unsigned long) desc->career.hit_level40,
 	  (unsigned long) desc->career.hit_level50);
   fprintf(fp, "%u %u\n",
@@ -1941,9 +1941,9 @@ void TBeing::saveCareerStats()
 	  desc->career.crit_ripped_out_heart,
 	  desc->career.crit_ripped_out_heart_suff);
 
-  if (fclose(fp)) 
+  if (fclose(fp))
       vlogf(LOG_BUG, format("Problem closing %s's saveCareerStats") %  name);
-  
+
 }
 
 
@@ -1970,7 +1970,7 @@ void TBeing::loadCareerStats()
     return;
   }
 
-  if (fscanf(fp, "%d\n", 
+  if (fscanf(fp, "%d\n",
       &current_version) != 1) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -1983,7 +1983,7 @@ void TBeing::loadCareerStats()
     return;
   }
 
-  if (fscanf(fp, "%u %u\n", 
+  if (fscanf(fp, "%u %u\n",
       &num1, &num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -1993,7 +1993,7 @@ void TBeing::loadCareerStats()
   desc->career.group_kills = num2;
 
 if (current_version < 15) {
-  if (fscanf(fp, "%u %lu\n", 
+  if (fscanf(fp, "%u %lu\n",
       &num1, &lu_num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2002,7 +2002,7 @@ if (current_version < 15) {
   desc->career.deaths = num1;
   desc->career.exp = 0;
 } else {
-  if (fscanf(fp, "%u %f\n", 
+  if (fscanf(fp, "%u %f\n",
       &num1, &f_num1) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2015,7 +2015,7 @@ if (current_version < 16) {
   desc->career.exp = 0;
 }
 
-  if (fscanf(fp, "%u %u %u\n", 
+  if (fscanf(fp, "%u %u %u\n",
       &num1, &num2, &num3) != 3) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2025,7 +2025,7 @@ if (current_version < 16) {
   desc->career.crit_misses = num2;
   desc->career.crit_kills = num3;
 
-  if (fscanf(fp, "%u %u\n", 
+  if (fscanf(fp, "%u %u\n",
       &num1, &num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2034,7 +2034,7 @@ if (current_version < 16) {
   desc->career.crit_hits_suff = num1;
   desc->career.crit_kills_suff = num2;
 
-  if (fscanf(fp, "%u %u %u %u %u\n", 
+  if (fscanf(fp, "%u %u %u %u %u\n",
       &num1, &num2, &num3, &num4, &num5) != 5) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2046,7 +2046,7 @@ if (current_version < 16) {
   desc->career.crit_broken_bones = num4;
   desc->career.crit_crushed_skull = num5;
 
-  if (fscanf(fp, "%u %u %u %u %u\n", 
+  if (fscanf(fp, "%u %u %u %u %u\n",
       &num1, &num2, &num3, &num4, &num5) != 5) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2058,7 +2058,7 @@ if (current_version < 16) {
   desc->career.crit_broken_bones_suff = num4;
   desc->career.crit_crushed_skull_suff = num5;
 
-  if (fscanf(fp, "%u %u %u %u\n", 
+  if (fscanf(fp, "%u %u %u %u\n",
       &num1, &num2, &num3, &num4) != 4) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2069,7 +2069,7 @@ if (current_version < 16) {
   desc->career.crit_disembowel = num3;
   desc->career.crit_disembowel_suff = num4;
 
-  if (fscanf(fp, "%u %u\n", 
+  if (fscanf(fp, "%u %u\n",
       &num1, &num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2078,7 +2078,7 @@ if (current_version < 16) {
   desc->career.crit_crushed_nerve = num1;
   desc->career.crit_crushed_nerve_suff = num2;
 
-  if (fscanf(fp, "%u %u %u %u\n", 
+  if (fscanf(fp, "%u %u %u %u\n",
       &num1, &num2, &num3, &num4) != 4) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2089,7 +2089,7 @@ if (current_version < 16) {
   desc->career.crit_eye_pop = num3;
   desc->career.crit_eye_pop_suff = num4;
 
-  if (fscanf(fp, "%u %u %u %u\n", 
+  if (fscanf(fp, "%u %u %u %u\n",
       &num1, &num2, &num3, &num4) != 4) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2101,7 +2101,7 @@ if (current_version < 16) {
   desc->career.crit_impale_suff = num4;
 
   if (current_version >= 14) {
-    if (fscanf(fp, "%u %u %u %u\n", 
+    if (fscanf(fp, "%u %u %u %u\n",
 	       &num1, &num2, &num3, &num4) != 4) {
       vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
       fclose(fp);
@@ -2112,7 +2112,7 @@ if (current_version < 16) {
     desc->career.crit_kidney = num3;
     desc->career.crit_kidney_suff = num4;
   }
-  
+
   if (current_version >= 17) {
     if (fscanf(fp, "%u %u\n",
 	       &num1, &num2) !=2){
@@ -2121,10 +2121,10 @@ if (current_version < 16) {
       return;
     }
     desc->career.crit_genitalia = num1;
-    desc->career.crit_genitalia_suff = num2;    
+    desc->career.crit_genitalia_suff = num2;
   }
 
-  if (fscanf(fp, "%u %u\n", 
+  if (fscanf(fp, "%u %u\n",
       &num1, &num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2133,7 +2133,7 @@ if (current_version < 16) {
   desc->career.arena_victs = num1;
   desc->career.arena_loss = num2;
 
-  if (fscanf(fp, "%u %u\n", 
+  if (fscanf(fp, "%u %u\n",
       &num1, &num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2142,7 +2142,7 @@ if (current_version < 16) {
   desc->career.skill_success_attempts = num1;
   desc->career.skill_success_pass = num2;
 
-  if (fscanf(fp, "%u %u %u %u\n", 
+  if (fscanf(fp, "%u %u %u %u\n",
       &num1, &num2, &num3, &num4) != 4) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2154,7 +2154,7 @@ if (current_version < 16) {
   desc->career.prayer_success_pass = num4;
 
   for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
-    if (fscanf(fp, "%u %u %u %u\n", 
+    if (fscanf(fp, "%u %u %u %u\n",
         &num1, &num2, &num3, &num4) != 4) {
       vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
       fclose(fp);
@@ -2166,7 +2166,7 @@ if (current_version < 16) {
     desc->career.dam_received[i] = num4;
   }
 
-  if (fscanf(fp, "%u %u\n", 
+  if (fscanf(fp, "%u %u\n",
       &num1, &num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2176,7 +2176,7 @@ if (current_version < 16) {
   desc->career.pet_levels_bought = num2;
 
 if (current_version >= 11) {
-  if (fscanf(fp, "%lu %lu\n", 
+  if (fscanf(fp, "%lu %lu\n",
       &lu_num1, &lu_num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
     fclose(fp);
@@ -2185,7 +2185,7 @@ if (current_version >= 11) {
   desc->career.hit_level40 = lu_num1;
   desc->career.hit_level50 = lu_num2;
 }
-  
+
 if (current_version >= 12) {
   if (fscanf(fp, "%u %u\n", &num1, &num2) != 2) {
     vlogf(LOG_BUG, format("Bad data in career stat read (%s)") %  getName());
@@ -2283,7 +2283,7 @@ int listAccount(sstring name, sstring &buf)
     time_t ct = st.last_logon;
     char * tmstr = (char *) asctime(localtime(&ct));
     *(tmstr + strlen(tmstr) - 1) = '\0';
-    
+
     buf += format("%2d) %-16s %-10s [ %-5s Lev %2d ] %s\n\r") % ++count % chars[iChar].c_str() % Races[int(st.race)]->getSingularName() % TBeing::getProfAbbrevName(st.Class) % int(max_level) % tmstr;
   }
   return count;
@@ -2302,7 +2302,7 @@ int numFifties(race_t race, bool perma, sstring account_name)
   bool char_is_perma;
 
   if (!(dfd = opendir(account_path.c_str()))) {
-    vlogf(LOG_BUG, format("Unable to walk directory in numFifties (%s account)") 
+    vlogf(LOG_BUG, format("Unable to walk directory in numFifties (%s account)")
         % account_name);
     return 0;
   }
@@ -2332,11 +2332,11 @@ int numFifties(race_t race, bool perma, sstring account_name)
       }
     }
     fclose(fp);
-    
+
     if (perma && !char_is_perma)
-     continue; 
+     continue;
     // end of permadeath section
-    
+
     for (classIndT i = MIN_CLASS_IND; i < MAX_SAVED_CLASSES; i++)
       max_level = max(max_level, st.level[i]);
 

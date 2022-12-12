@@ -87,7 +87,7 @@ static void test_fight_start(bool same_time)
       mob1->setClass(changed_class);
       mob1->fixLevels(mob1->GetMaxLevel());
       mob1->setExp(mob1->determineExp());
-      
+
       // fix disciplines too
       delete mob1->discs;
       mob1->discs = NULL;
@@ -105,11 +105,11 @@ static void test_fight_start(bool same_time)
     aff.type = AFFECT_TEST_FIGHT_MOB;
     aff.duration = PERMANENT_DURATION;
     aff.modifier = 1;
-  
+
     aff.level = 1;
     aff.be = mob2;
     mob1->affectTo(&aff, -1);
-  
+
     aff.level = 2;
     aff.be = mob1;
     mob2->affectTo(&aff, -1);
@@ -139,7 +139,7 @@ static void repTheStats()
   float perc1 = (float) left1 * 100.0 * iTot / (float) tot1 / (float) iter1;
   float perc2 = (float) left2 * 100.0 * iTot / (float) tot2 / (float) iter2;
 
-  vlogf(LOG_MISC, format("m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)") % 
+  vlogf(LOG_MISC, format("m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)") %
         mob1_num % left1 % tot1 %
         perc1 % iter1 %
         mob2_num % left2 % tot2 %
@@ -214,9 +214,9 @@ void test_fight_death(TBeing *ch, TBeing *v, int mod)
   TRoom *rp = ch->roomp;
 
   num_fighting--;
-  
+
 #if 0
-  vlogf(LOG_MISC, format("Test fight in room %d: %s beat %s by %.2f%% (%d)") % 
+  vlogf(LOG_MISC, format("Test fight in room %d: %s beat %s by %.2f%% (%d)") %
      ch->in_room % v->getName() % ch->getName() % v->getPercHit() % num_fighting);
 #else
   if (!(num_fighting%100) ||

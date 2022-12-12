@@ -22,7 +22,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
   int shop_nr=find_shop_nr(myself->number);
   TShopOwned tso(shop_nr, myself, ch);
   TCorporation corp(tso.getCorpID());
-  
+
   if(!loan_id){
     myself->doTell(ch->getName(), "That isn't a valid loan number");
     return;
@@ -30,7 +30,7 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
 
   db.query("select amt from shopownednpcloans where loan_id=%i",
 	   loan_id);
-  
+
   if(!db.fetchRow()){
     myself->doTell(ch->getName(), "That isn't a valid loan number.");
     return;
@@ -38,12 +38,12 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
 
   // make sure they have money
   int amt=convertTo<int>(db["amt"]);
-  
+
   if(ch->getMoney() < amt){
     myself->doTell(ch->getName(), "You don't have enough money.");
     return;
   }
-  
+
   // make sure they have an account at my bank
   db.query("select 1 from shopownedbank where player_id=%i and shop_nr=%i",
 	   ch->getPlayerID(), corp.getBank());
@@ -58,21 +58,21 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
   db.query("update shopownednpcloans set owner=%i where loan_id=%i",
 	   ch->getPlayerID(), loan_id);
 
-#if 0  
+#if 0
   TMonster *sba;
   // give loan amount to SBA
   if(!(sba=shop_index[SBA_SHOP_NR].getKeeper())){
     vlogf(LOG_BUG, "couldn't find SBA!");
     return;
   }
-  
+
   sba->addToMoney(amt, GOLD_SHOP);
   shoplog(160, ch, sba, "talens", amt, "loaning");
   sba->saveItems(format("%s/%d") % SHOPFILE_PATH % 160);
 
   // give fee amount to myself
 #endif
-  
+
 }
 
 void loanList(TBeing *ch, TMonster *myself)

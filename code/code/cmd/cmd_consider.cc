@@ -74,7 +74,7 @@ void TBeing::doConsider(const char *argument)
 		  (vis >= 5  ? "slightly hidden" :
 		   (vis >= 0 ? "not especially hidden or visible" :
 		    "as visible as a christmas tree"))))))));
-      
+
       int n=noise(this);
       sendTo(format("You are %s.\n\r") %
 	     (n >= 500 ? "too noisy to sneak up on a deaf man" :
@@ -156,7 +156,7 @@ void TBeing::doConsider(const char *argument)
 
   auto count = trophy->getCount(tmon->mobVnum());
   if(count > 0){
-    sendTo(COLOR_BASIC, format("You will gain %s experience when fighting %s.\n\r") % 
+    sendTo(COLOR_BASIC, format("You will gain %s experience when fighting %s.\n\r") %
 	   trophy->getExpModDescr(count, tmon->mobVnum()) %
 	   namebuf);
   } else {
@@ -255,7 +255,7 @@ void TBeing::doConsider(const char *argument)
     addToWait(combatRound(1));
 
     int num = GetApprox(tmon->hitLimit(), max(80,learn));
-    double fnum = hitLimit() ? ((double) num / (double) hitLimit()) : 
+    double fnum = hitLimit() ? ((double) num / (double) hitLimit()) :
             (num ? 10.0 : 0.0);
     if (learn > 5)
       sendTo(format("Est Max HP are: %s.\n\r") % DescRatio(fnum));

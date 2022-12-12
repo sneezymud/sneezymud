@@ -13,12 +13,12 @@ namespace po = boost::program_options;
 
 using namespace std;
 
-//int shops[]={0, 1, 2, 4, 5, 8, 9, 10, 11, 12, 14, 36, 44, 73, 84, 85, 
-//	     86, 87, 89, 90, 91, 92, 93, 94, 95, 127, 144, 
+//int shops[]={0, 1, 2, 4, 5, 8, 9, 10, 11, 12, 14, 36, 44, 73, 84, 85,
+//	     86, 87, 89, 90, 91, 92, 93, 94, 95, 127, 144,
 //	     150, 161, 184, 186, 214, -1};
 
-int shops[]={0, 2, 4, 5, 9, 14, 36, 44, 73, 84, 85, 
-	     86, 87, 89, 90, 91, 92, 93, 94, 95, 
+int shops[]={0, 2, 4, 5, 9, 14, 36, 44, 73, 84, 85,
+	     86, 87, 89, 90, 91, 92, 93, 94, 95,
 	     150, 160, 161, 184, 186, 250, -1};
 
 // the purpose of this is to check the sum of the credits and debits in the
@@ -93,7 +93,7 @@ void check_cogs_count(){
 
 
     db.query("select r.name as name from room r, shop s where s.shop_nr=%i and r.vnum=s.in_room", shops[i]);
-    db.fetchRow();    
+    db.fetchRow();
     sstring shop_name=db["name"];
 
     db.query("select count(*) as count from shoplogcogs where count < 0 and shop_nr=%i", shops[i]);
@@ -108,7 +108,7 @@ void check_cogs_count(){
 
     if(cogscount != rentcount){
       cout << format("%-30s (%3i): ") % shop_name % shops[i];
-    
+
       if(itemcount != 0){
 	cout << format("negative count in COGS on %i items\n") % itemcount;
       } else if(cogscount < rentcount){
@@ -139,7 +139,7 @@ void check_cogs_detail(int cogs_detail){
   while(db.fetchRow()){
     items[db["obj_name"]]=convertTo<int>(db["count"]);
   }
-  
+
   db.query("select o.short_desc as name, count(*) as count from obj o, rent r where owner_type='shop' and owner=%i and r.vnum=o.vnum group by o.vnum", cogs_detail);
   while(db.fetchRow()){
     if(items.find(db["name"]) != items.end()){
@@ -172,23 +172,23 @@ void check_balance_sheet(){
     sstring shop_name=db["name"];
 
     TShopJournal tsj(shops[i]);
-    
+
     int assets=tsj.getAssets();
     int liabilities=tsj.getLiabilities();
     int equity=tsj.getShareholdersEquity();
-    
+
     if(assets != (liabilities+equity)){
       cout << format("%-30s (%3i): ") % shop_name % shops[i];
 
       if(assets < (liabilities+equity)){
-	cout << format("missing assets: %10i\n") % 
+	cout << format("missing assets: %10i\n") %
 	  ((liabilities+equity)-assets);
       } else {
-	cout << format("extra assets:   %10i\n") % 
+	cout << format("extra assets:   %10i\n") %
 	  (assets - (liabilities+equity));
       }
     }
-  }  
+  }
 }
 
 
@@ -240,6 +240,6 @@ int main(int argc, char *argv[]){
   if(cogs_detail!=-1)
     check_cogs_detail(cogs_detail);
 
-  if(argc<=1 || vm.count("help"))  
+  if(argc<=1 || vm.count("help"))
      cout << cmdline_options;
 }

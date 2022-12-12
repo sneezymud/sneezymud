@@ -80,7 +80,7 @@ private:
     int hellfire(TBeing *, TMagicItem *);
     int hellfire(TBeing *, int, short, int);
 
-    int castFireball(TBeing *); 
+    int castFireball(TBeing *);
     int fireball(TBeing *);
     int fireball(TBeing *, TMagicItem *);
     int fireball(TBeing *, int, short, int);

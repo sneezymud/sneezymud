@@ -15,7 +15,7 @@
 #include "process.h"
 
 GameStats stats;
-// statistics for info command 
+// statistics for info command
 unsigned int gDescriptorUpdates = 0;
 unsigned long gTimeGameLoopStarted = 0;
 unsigned int gHBsSinceReboot = 0;
@@ -89,7 +89,7 @@ int init_game_stats(void)
   // 5.0-5.1 was too easy and too fast
   // people could level to 50 in 2-6 play days
   // this should be better for 5.2
-  
+
   // Splitting these out to provide knobs for each
   stats.skill_damage_mod = 0.65;
   stats.weapon_damage_mod = 0.65;
@@ -112,11 +112,11 @@ int init_game_stats(void)
 
     for (i= 0; i < MAX_IMMORT; i++) {
       if (fscanf(fp, " %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
-             &gold_statistics[GOLD_INCOME][i], 
-             &gold_statistics[GOLD_SHOP][i], 
+             &gold_statistics[GOLD_INCOME][i],
+             &gold_statistics[GOLD_SHOP][i],
              &gold_statistics[GOLD_REPAIR][i],
-             &gold_statistics[GOLD_COMM][i], 
-             &gold_statistics[GOLD_HOSPITAL][i], 
+             &gold_statistics[GOLD_COMM][i],
+             &gold_statistics[GOLD_HOSPITAL][i],
              &gold_statistics[GOLD_GAMBLE][i],
              &gold_statistics[GOLD_RENT][i],
              &gold_statistics[GOLD_TITHE][i],
@@ -134,11 +134,11 @@ int init_game_stats(void)
           gold_statistics[j][i] = 0;
       }
       if (fscanf(fp, " %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
-             &gold_positive[GOLD_INCOME][i], 
-             &gold_positive[GOLD_SHOP][i], 
+             &gold_positive[GOLD_INCOME][i],
+             &gold_positive[GOLD_SHOP][i],
              &gold_positive[GOLD_REPAIR][i],
-             &gold_positive[GOLD_COMM][i], 
-             &gold_positive[GOLD_HOSPITAL][i], 
+             &gold_positive[GOLD_COMM][i],
+             &gold_positive[GOLD_HOSPITAL][i],
              &gold_positive[GOLD_GAMBLE][i],
              &gold_positive[GOLD_RENT][i],
              &gold_positive[GOLD_TITHE][i],
@@ -157,11 +157,11 @@ int init_game_stats(void)
       }
     }
     if (fscanf(fp, " %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n",
-             &gold_modifier[GOLD_INCOME], 
-             &gold_modifier[GOLD_SHOP], 
+             &gold_modifier[GOLD_INCOME],
+             &gold_modifier[GOLD_SHOP],
              &gold_modifier[GOLD_REPAIR],
-             &gold_modifier[GOLD_COMM], 
-             &gold_modifier[GOLD_HOSPITAL], 
+             &gold_modifier[GOLD_COMM],
+             &gold_modifier[GOLD_HOSPITAL],
              &gold_modifier[GOLD_GAMBLE],
              &gold_modifier[GOLD_RENT],
              &gold_modifier[GOLD_TITHE],
@@ -187,7 +187,7 @@ int init_game_stats(void)
 
     for (i = 0; i < 50; i++) {
       for (j = 0; j < MAX_CLASSES; j++) {
-        if (fscanf(fp, "%d %ld ", 
+        if (fscanf(fp, "%d %ld ",
                &stats.levels[j][i], &stats.time_levels[j][i]) != 2) {
           vlogf(LOG_BUG, format("Bad level info, class %d, lev %d") %  j % (i+1));
         }
@@ -203,9 +203,9 @@ int init_game_stats(void)
       stats.logins = 0;
     }
 
-  
 
-    
+
+
 
     fclose(fp);
 
@@ -222,11 +222,11 @@ void save_game_stats(void)
 
   if ((fp = fopen(STATS_FILE,"w+")) != NULL) {
     fprintf(fp, "%ld\n", stats.logins);
- 
+
     fprintf(fp, "%d %d\n", repair_number, total_help_number);
 
     for (i= 0; i < MAX_IMMORT; i++) {
-      fprintf(fp, "%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n", 
+      fprintf(fp, "%ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld %ld\n",
          gold_statistics[GOLD_INCOME][i],
          gold_statistics[GOLD_SHOP][i],
          gold_statistics[GOLD_REPAIR][i],
@@ -290,9 +290,9 @@ void save_game_stats(void)
 
     fprintf(fp, "%ld\n", (long) stats.first_login);
 
-    
 
- 
+
+
     fclose(fp);
   } else {
     vlogf(LOG_BUG, format("Error writing %s") %  STATS_FILE);
@@ -471,22 +471,22 @@ void TBeing::doGamestats(const sstring &arg)
 
     buf = format("Total crit-success checks : %ld  (%5.2f%c of hits)\n\r") %
       stats.combat_crit_suc %
-      (tot_hits == 0 ? 0.0 : 
+      (tot_hits == 0 ? 0.0 :
        (100.0 * stats.combat_crit_suc / tot_hits)) % '%';
     str += buf;
     buf = format("Total crit-fail checks    : %ld  (%5.2f%c of misses)\n\r") %
            stats.combat_crit_fail %
-      ((tot_blows - tot_hits) == 0 ? 0.0 : 
+      ((tot_blows - tot_hits) == 0 ? 0.0 :
        (100.0 * stats.combat_crit_fail / (tot_blows - tot_hits))) % '%';
     str += buf;
     buf = format("Total crit-success passes : %ld  (%5.2f%c of hits)\n\r") %
       stats.combat_crit_suc_pass %
-      (tot_hits == 0 ? 0.0 : 
+      (tot_hits == 0 ? 0.0 :
        (100.0 * stats.combat_crit_suc_pass / tot_hits)) % '%';
     str += buf;
     buf = format("Total crit-fail passes    : %ld  (%5.2f%c of misses)\n\r") %
             stats.combat_crit_fail_pass %
-      ((tot_blows - tot_hits) == 0 ? 0.0 : 
+      ((tot_blows - tot_hits) == 0 ? 0.0 :
        (100.0 * stats.combat_crit_fail_pass / (tot_blows - tot_hits))) % '%';
     str += buf;
     str += "\n\r";
@@ -578,7 +578,7 @@ int getNetGoldGlobal()
   int net_gold = 0;
   int i;
   for (i = 0; i < MAX_MORT; i++)
-    net_gold += gold_statistics[GOLD_INCOME][i] + 
+    net_gold += gold_statistics[GOLD_INCOME][i] +
                 gold_statistics[GOLD_COMM][i] +
                 gold_statistics[GOLD_RENT][i] +
                 gold_statistics[GOLD_REPAIR][i] +
@@ -604,7 +604,7 @@ unsigned int getPosGoldGlobal()
   unsigned int pos_gold = 0;
   int i;
   for (i = 0; i < MAX_MORT; i++)
-    pos_gold += gold_positive[GOLD_INCOME][i] + 
+    pos_gold += gold_positive[GOLD_INCOME][i] +
                 gold_positive[GOLD_COMM][i] +
                 gold_positive[GOLD_RENT][i] +
                 gold_positive[GOLD_REPAIR][i] +
@@ -665,7 +665,7 @@ int getNetGoldBudget()
   int net_gold = 0;
   int i;
   for (i = 0; i < MAX_MORT; i++)
-    net_gold += gold_statistics[GOLD_INCOME][i] + 
+    net_gold += gold_statistics[GOLD_INCOME][i] +
                 gold_statistics[GOLD_COMM][i] +
                 gold_statistics[GOLD_REPAIR][i] +
                 gold_statistics[GOLD_HOSPITAL][i] +
@@ -689,7 +689,7 @@ unsigned int getPosGoldBudget()
   unsigned int pos_gold = 0;
   int i;
   for (i = 0; i < MAX_MORT; i++)
-    pos_gold += gold_positive[GOLD_INCOME][i] + 
+    pos_gold += gold_positive[GOLD_INCOME][i] +
                 gold_positive[GOLD_COMM][i] +
                 gold_positive[GOLD_REPAIR][i] +
                 gold_positive[GOLD_HOSPITAL][i] +
@@ -756,7 +756,7 @@ void procCheckGoldStats::run(const TPulse &) const
 //    vlogf(LOG_BUG, format("ECONOMY: income modifier lowered. %d %u %.2f") %  net_gold_budget % pos_gold_budget % gold_modifier[GOLD_INCOME].getVal());
     should_reset = true;
   }
-  
+
   // good drain:
   // components and symbol purchasing
   // armor and weapon purchasing (upgrading)
@@ -771,7 +771,7 @@ void procCheckGoldStats::run(const TPulse &) const
 
   // get the drain associated with renting
   int rent_drain = getPosGold(GOLD_RENT) - getNetGold(GOLD_RENT);
-  
+
   // realize that we are flucuating these costs based on these costs
   // which is rather problematic
   // we essentially want the "true" rent drain

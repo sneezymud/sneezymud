@@ -61,7 +61,7 @@ public:
       skLegbasGuidance(),
       skDancingBones(),
       skRepairShaman(),
-      skEmbalm() { 
+      skEmbalm() {
     }
     CDShaman(const CDShaman &a)
       : CDiscipline(a),
@@ -152,10 +152,10 @@ private:
     int castEnthrallGhoul(TBeing * caster);
 
     int chaseSpirits(TBeing *, TObj *);
-    int castChaseSpirits(TBeing *, TObj *);  
-    void chaseSpirits(TBeing *, TObj *, TMagicItem *);  
-    int chaseSpirits(TBeing *, TObj *, int, short);  
-    int chaseSpirits(TBeing *, TBeing *);  
+    int castChaseSpirits(TBeing *, TObj *);
+    void chaseSpirits(TBeing *, TObj *, TMagicItem *);
+    int chaseSpirits(TBeing *, TObj *, int, short);
+    int chaseSpirits(TBeing *, TBeing *);
     int castChaseSpirits(TBeing *, TBeing *);
     int chaseSpirits(TBeing *, TBeing *, TMagicItem *);
     int chaseSpirits(TBeing *, TBeing *, int, short);
@@ -181,7 +181,7 @@ private:
     int castCheval(TBeing *, TBeing *);
     void cheval(TBeing *, TBeing *, TMagicItem *);
     int cheval(TBeing *, TBeing *, int, short);
- 
+
     extern       bool shaman_create_deny(int);
     const int CHRISM_PRICE = 250;
     int castChrism(TBeing *, const char *);

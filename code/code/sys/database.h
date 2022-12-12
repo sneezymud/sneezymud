@@ -33,13 +33,13 @@ class sstring;
 //
 // Documentation:
 //
-// TDatabase(dbTypeT) - The initializer takes the name of the database you 
+// TDatabase(dbTypeT) - The initializer takes the name of the database you
 // want to use as an argument.  Allowable databases are listed below under
 // dbTypeT, but the most common is DB_SNEEZY.
 // Returns: TDatabase (initializer)
 // Ex: TDatabase db(DB_SNEEZY);
 //
-// bool setDB(dbTypeT) - This function sets the database that the instance 
+// bool setDB(dbTypeT) - This function sets the database that the instance
 // will use, and is generally called from the constructor rather than directly.
 // Returns: nothing (void)
 // Ex: db.setDB(DB_SNEEZY);
@@ -52,7 +52,7 @@ class sstring;
 // left as is.  You can do a select, then do an insert/update/delete and still
 // access the select's results.
 // Returns: TRUE if query was sent successfully, FALSE if there was an error
-// Ex: 
+// Ex:
 // float weight=5.5;
 // char name[]="blade";
 // int vnum=10000;
@@ -75,7 +75,7 @@ class sstring;
 //
 // bool isResults() - checks if there are results available
 // Returns: TRUE if results are there, FALSE if not
-// 
+//
 // long rowCount() - added to return affected or retrieved row counts
 // This should include affected counts for inserts, updates and deletes
 // as well as standard result set sizes for select statements.

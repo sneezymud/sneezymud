@@ -32,12 +32,12 @@ int signMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
     sign_text=sign_text=o->action_description;
     me->doDrop(add_bars(o->name), NULL);
   }
-      
+
   if (sign_text.length() > SIGN_MAX) {
     me->doSay("I can't make a sign that big.");
     return TRUE;
   }
-  
+
   if (ch->getMoney() >= SIGN_COST) {
     if(!(sign = read_object(SIGN_VNUM, VIRTUAL))){
       vlogf(LOG_BUG, "problem loading generic sign in signMaker proc");

@@ -46,10 +46,10 @@ void sendCorporationInfo(int corp_id)
     cout << html() << endl;
     return;
   }
-  
+
 
   db.query("select c.name, sum(s.gold) as gold, b.talens as banktalens, count(s.shop_nr) as shops, bank, r.name as bankname, sob.corp_id as bankowner from shop sbank, room r, shopowned sob, corporation c left outer join shopownedcorpbank b on (c.corp_id=b.corp_id), shopowned so, shop s where sob.shop_nr=c.bank and c.corp_id=so.corp_id and c.corp_id=%i and so.shop_nr=s.shop_nr and r.vnum=sbank.in_room and sbank.shop_nr=c.bank group by c.corp_id, c.name, b.talens, c.bank, sob.corp_id, r.name order by c.corp_id", corp_id);
-  
+
   if(!db.fetchRow()){
     cout << "No information for that corporation." << endl;
     cout << body() << endl;
@@ -74,14 +74,14 @@ void sendCorporationInfo(int corp_id)
   // we own the bank, so don't count our money twice
   if(bankowner == corp_id)
     gold -= banktalens;
-  
+
   cout << (format("<tr><td>Bank Talens</td><td>%12s</td></tr>") %
 	     (format("%i") % banktalens).comify());
-  cout << (format("<tr><td>Talens</td><td>%12s</td></tr>") % 
+  cout << (format("<tr><td>Talens</td><td>%12s</td></tr>") %
 	     (format("%i") % gold).comify());
-  cout << (format("<tr><td>Assets</td><td>%12s</td></tr>") % 
+  cout << (format("<tr><td>Assets</td><td>%12s</td></tr>") %
 	     (format("%i") % value).comify());
-  cout << (format("<tr><td>Shops (x1M)</td><td>%12s</td></tr>") % 
+  cout << (format("<tr><td>Shops (x1M)</td><td>%12s</td></tr>") %
 	     (format("%i") % (shopcount*1000000)).comify());
   cout << (format("<tr><td>Total value</td><td>%12s</td></tr>") %
 	     (format("%i") % (banktalens+gold+value+(shopcount * 1000000))).comify());
@@ -89,7 +89,7 @@ void sendCorporationInfo(int corp_id)
 
   // officers
   db.query("select name from corpaccess where corp_id=%i", corp_id);
-  
+
   buf="";
   while(db.fetchRow()){
     buf+=" ";
@@ -103,11 +103,11 @@ void sendCorporationInfo(int corp_id)
     cout << (format("%-3i| %s</td></tr>") % bank % bankname); //tr->getName());
     //  }
 
-  // shops    
+  // shops
   db.query("select s.shop_nr, r.name, s.gold from shop s, shopowned so, room r where s.shop_nr=so.shop_nr and so.corp_id=%i and r.vnum=s.in_room order by s.gold desc", corp_id);
-  
+
   cout << ("<tr><td>The following shops are owned by this corporation:</td><td></td></tr>");
-  
+
   while(db.fetchRow()){
     //    if((tr=real_roomp(convertTo<int>(db["in_room"])))){
       gold=convertTo<int>(db["gold"]);
@@ -115,7 +115,7 @@ void sendCorporationInfo(int corp_id)
 		 db["shop_nr"] % db["name"] % talenDisplay(gold));
       //    }
   }
-  
+
   cout << "</table>";
   cout << body() << endl;
   cout << html() << endl;
@@ -132,7 +132,7 @@ void sendCorporationsList()
   cout << body() << endl;
 
   corp_list=getCorpListingData();
-  
+
   for(unsigned int i=0;i<corp_list.size();++i){
     m.insert(pair<int,int>(corp_list[i].gold, i));
   }

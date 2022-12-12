@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     return 0;
   }
 
-    
+
 
   if(state_form == cgi.getElements().end() || **state_form == "main"){
     cout << HTTPHTMLHeader() << endl;
@@ -105,7 +105,7 @@ int main(int argc, char **argv)
     cout << endl;
     return 0;
   }
-  
+
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Eqcalc") << endl;
   cout << head() << body() << endl;
@@ -113,7 +113,7 @@ int main(int argc, char **argv)
   cout << **state_form << endl;
   cout << body() << endl;
   cout << html() << endl;
-  
+
   return 0;
 }
 
@@ -345,7 +345,7 @@ void adjustObjs(Cgicc cgi, int account_id)
     cout << "You need to enter a valid mob level.<p>";
     return;
   }
-  
+
   if(!objlist.size()){
     cout << "You need to select object(s).<p>";
     return;
@@ -357,15 +357,15 @@ void adjustObjs(Cgicc cgi, int account_id)
       buf+=",";
     buf+=*objlist[i];
   }
-  
+
   db.query("select vnum, owner, type, max_exist, volume, wear_flag, action_flag, short_desc from obj o where lower(owner) in (%r) and vnum in (%s) order by vnum asc", getPlayerNames(account_id).c_str(), buf.c_str());
 
-  
+
   while(db.fetchRow()){
     is_artifact=((convertTo<int>(db["max_exist"])==1)?true:false);
-    
+
     volume=convertTo<float>(db["volume"]);
-    
+
     wearSlotT slot=MAX_WEAR;
     slot_c=0.0;
     slot_s=0.0;
@@ -385,7 +385,7 @@ void adjustObjs(Cgicc cgi, int account_id)
     player_races.push_back(RACE_GNOME);
     player_races.push_back(RACE_HOBBIT);
     player_races.push_back(RACE_OGRE);
-  
+
     int avg_height=0;
     float eq_size=0;
     race_t eq_race=RACE_NORACE;
@@ -406,7 +406,7 @@ void adjustObjs(Cgicc cgi, int account_id)
       }
     }
 
-    if(slot == WEAR_NECK || 
+    if(slot == WEAR_NECK ||
        convertTo<int>(db["type"]) == ITEM_JEWELRY ||
        slot == HOLD_LEFT){
       eq_race=RACE_HUMAN;
@@ -436,7 +436,7 @@ void adjustObjs(Cgicc cgi, int account_id)
     float stats = ceil((moblevel * 0.5) * 0.86);
     float maxes = ceil(slot_s * stats * 2);
 
-    
+
     // adjust the eq
     db2.query("update objaffect set mod1=%i where type=11 and vnum=%s and owner='%s'", (int)-ac, db["vnum"].c_str(), db["owner"].c_str());
 
@@ -457,7 +457,7 @@ void adjustObjs(Cgicc cgi, int account_id)
     cout << "<br>" << endl;
 
   }
-  
+
   //  cout << "Adjusted";
 }
 
@@ -480,7 +480,7 @@ void sendSelectForm(int account_id)
   cout << "<select name=objlist multiple=true>" << endl;
 
   db.query("select vnum, short_desc from obj o where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
-  
+
   while(db.fetchRow()){
     cout << "<option value=" << db["vnum"] << ">";
     cout << db["vnum"] << " - " << mudColorToHTML(db["short_desc"], false);
@@ -491,7 +491,7 @@ void sendSelectForm(int account_id)
   cout << "<button name=state value=adjust type=submit>adjust</button>";
 
   cout << "</form>";
-  
+
 
   cout << body() << endl;
   cout << html() << endl;

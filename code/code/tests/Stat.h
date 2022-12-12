@@ -22,7 +22,7 @@ class Stat : public CxxTest::TestSuite
 
     TS_ASSERT(w);
     TS_ASSERT((tgw=dynamic_cast<TGenWeapon *>(w)));
-    
+
     TS_ASSERT_THROWS_NOTHING(tgw->statObjInfo());
   }
 };

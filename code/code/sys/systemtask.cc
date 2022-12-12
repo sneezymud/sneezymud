@@ -27,7 +27,7 @@ extern pid_t vfork(void);
 const char TMPFILE[] = "task.output";
 
 class _task {
-  public: 
+  public:
     TBeing *owner;
     char tsk;
     char *cmd;
@@ -70,9 +70,9 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
     bot->next = tmp;
     tmp->prev = bot;
     bot = tmp;
-  } else 
+  } else
     top = bot = tmp;
-  
+
   //  Create the command that is send to the shell.
   switch(tmp->tsk) {
     case SYSTEM_TRACEROUTE:
@@ -105,13 +105,13 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
 //
 // SystemTask::CheckTask()
 //
-void SystemTask::CheckTask() 
+void SystemTask::CheckTask()
 {
   char file[32];
   int pstatus;
   struct stat fstatus;
 
-  if (!top) 
+  if (!top)
     return;
 
   //  Check if the top task is running and start it if it isn't.
@@ -123,7 +123,7 @@ void SystemTask::CheckTask()
       vlogf(LOG_SILENT, format("INFO: task '%s' completed.") %  top->cmd);
       //  Process the output.
       memset((char *) &fstatus, 0, sizeof(struct stat));
-      if (stat(TMPFILE, &fstatus) < 0) 
+      if (stat(TMPFILE, &fstatus) < 0)
 #if defined(__linux__)
         vlogf(LOG_BUG, "WARNING: SystemTask::CheckTask(): stat()");
 #else
@@ -153,7 +153,7 @@ void SystemTask::CheckTask()
         top->owner->sendTo("Your task has completed but is to large to be loaded into a note.  Use\n\rviewoutput to read it.\n\r");
       } else
         top->owner->sendTo("Your task has completed.  You have no output.\n\r");
-      
+
       remove(top);
     }
   }
@@ -163,7 +163,7 @@ void SystemTask::CheckTask()
 //  SystemTask::Tasks(TBeing *, char *)
 //
 
-sstring SystemTask::Tasks(TBeing *ch, const char *args) 
+sstring SystemTask::Tasks(TBeing *ch, const char *args)
 {
   _task	*tsk;
 
@@ -193,13 +193,13 @@ sstring SystemTask::Tasks(TBeing *ch, const char *args)
 //
 //  SystemTask::remove(_task)
 //
-void SystemTask::remove(_task *tsk) 
+void SystemTask::remove(_task *tsk)
 {
   if (!tsk) {
     vlogf(LOG_BUG, "WARNING: SystemTask::remove(): trying to remove NULL task");
     return;
   }
-  if (tsk == top) 
+  if (tsk == top)
     top = tsk->next;
 
   if (tsk == bot)
@@ -208,7 +208,7 @@ void SystemTask::remove(_task *tsk)
   if (tsk->prev)
      tsk->prev->next = tsk->next;
 
-  if (tsk->next) 
+  if (tsk->next)
     tsk->next->prev = tsk->prev;
 
   delete tsk;
@@ -216,10 +216,10 @@ void SystemTask::remove(_task *tsk)
 
 //
 // SystemTask::start_task()
-//  
+//
 void SystemTask::start_task()
 {
-  if (!top) 
+  if (!top)
     return;
 
   if (top->pid) {
@@ -253,7 +253,7 @@ int SystemTask::forktask(_task *tsk)
   }
   vlogf(LOG_SILENT, format("INFO: task '%s' started.") %  tsk->cmd);
   top->owner->sendTo("Your task has started.\n\r");
-  
+
   sscanf(tsk->cmd, "%s", cmd);
   char tmp[9];
   strcpy(tmp, "-c");

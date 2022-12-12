@@ -213,7 +213,7 @@ int subterfuge(TBeing *thief, TBeing *victim)
     thief->sendTo("You simply fail to confuse your target.\n\r");
     return TRUE;
   }
-  if ((victim->plotStat(STAT_CURRENT, STAT_PER, 3, 18, 12) + 
+  if ((victim->plotStat(STAT_CURRENT, STAT_PER, 3, 18, 12) +
        victim->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12)) >
       (thief->plotStat(STAT_CURRENT, STAT_KAR, 3, 18, 12) +
        thief->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12))) {
@@ -384,7 +384,7 @@ int spy(TBeing *thief)
     aff.bitvector = AFF_SCRYING;
     thief->affectTo(&aff, -1);
     return TRUE;
-  } 
+  }
   aff.bitvector = 0;
   thief->affectTo(&aff, -1);
   return TRUE;
@@ -431,7 +431,7 @@ int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlot
 	      v->describeBodySlot(part_hit).c_str());
     }
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
-    if (toggleInfo[TOG_TWINK]->toggle) {    
+    if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
 	      attack_hit_text_twink[w_type].singular,
 	      v->describeBodySlot(part_hit).c_str());
@@ -469,7 +469,7 @@ void TBeing::doTrack(const char *argument)
   char buf[256]="\0\0\0", buf2[512]="\0\0\0";
 
   strcpy(namebuf, argument);
- 
+
   if (!*namebuf && !specials.hunting) {
     sendTo("You need to search for SOMEONE.\n\r");
     return;
@@ -510,14 +510,14 @@ void TBeing::doTrack(const char *argument)
     sendTo("You are unable to find any signs of that.\n\r");
     return;
   }
- 
+
   // Lets determine the distance: [roomCount == 11865 as of 12-18-98]
   //  Ranger  TRAIL_SEEK :  25 - 176
   //  Ranger !TRAIL_SEEK :  20 - 161
   // !Ranger  TRAIL_SEEK :  15 - 153
   int level = 0;
   if (learning > 0) {
-    level = getSkillLevel(SKILL_TRACK); 
+    level = getSkillLevel(SKILL_TRACK);
 
     if (affectedBySpell(SPELL_TRAIL_SEEK))
       dist = max(25, (int) (((((roomCount*((level+1)/2))/1000)+
@@ -539,27 +539,27 @@ void TBeing::doTrack(const char *argument)
   else if (hasClass(CLASS_MAGE))
     dist += getLevel(MAGE_LEVEL_IND);
   // else no change
- 
+
   switch (getRace()) {
     case RACE_GIANT:
     case RACE_ELVEN:
-      dist *= 2;                // even better 
+      dist *= 2;                // even better
       break;
     case RACE_DEVIL:
     case RACE_DEMON:
-      dist = MAX_ROOMS;         //  4 as good as can be 
+      dist = MAX_ROOMS;         //  4 as good as can be
       break;
     default:
       break;
   }
- 
+
   if (isImmortal())
     dist = MAX_ROOMS;
- 
+
   hunt_dist = dist;
   specials.hunting = 0;
   TPathFinder path(dist);
- 
+
   // note: -dist will look THRU doors.
   // all subsequent calls use track() which does not go thru doors
   // this is intentional so they lose track after 1 step
@@ -573,7 +573,7 @@ void TBeing::doTrack(const char *argument)
   } else {
     path.setStayZone(false);
     path.setThruDoors(true);
-    
+
     code=path.findPath(in_room, findBeing(namebuf));
     targrm=path.getDest();
   }
@@ -623,7 +623,7 @@ void TBeing::doTrack(const char *argument)
           if (tp) {
             seen++;
             if (count == seen) {
-              sendTo(COLOR_OBJECTS, format("%sYou see traces of your quarry through %s.%s\n\r") % 
+              sendTo(COLOR_OBJECTS, format("%sYou see traces of your quarry through %s.%s\n\r") %
                      purple() % tp->getName() % norm());
               break;
             }
@@ -669,7 +669,7 @@ void TBeing::doTrack(const char *argument)
 
   start_task(this, NULL, NULL, TASK_TRACKING, "", 1, in_room, 1, code+1, 40);
 }
- 
+
 // used by doLook() to display next direction to go.
 // return FALSE to cease tracking
 int TBeing::track(TBeing *vict)
@@ -687,7 +687,7 @@ int TBeing::track(TBeing *vict)
     vlogf(LOG_BUG, format("Problem in track() %s") %  getName());
     return TRUE;
   }
-  if (roomp && !isImmortal() && 
+  if (roomp && !isImmortal() &&
       (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
       !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
@@ -760,7 +760,7 @@ int TBeing::track(TBeing *vict)
   }
   return TRUE;
 }
- 
+
 // this is called exclusively by TMonster::hunt()
 // returns 0-9 for dir to travel, or 10+ for a portal (indexed)
 // return -1 to stop the tracking
@@ -769,7 +769,7 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
   dirTypeT code;
   affectedData *aff;
 
-  if (roomp && !isImmortal() && 
+  if (roomp && !isImmortal() &&
       (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
       !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
@@ -808,10 +808,10 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
       sendTo(format("%s##You have found your target!%s\n\r") % orange() % norm());
     else
       sendTo(format("%s##You have lost the trail.%s\n\r") % orange() % norm());
- 
-    return DIR_NONE;                // false to continue the hunt 
+
+    return DIR_NONE;                // false to continue the hunt
   } else if (code < MAX_DIR) {
-    sendTo(format("%s##You see a faint trail %s.%s\n\r") % 
+    sendTo(format("%s##You see a faint trail %s.%s\n\r") %
          purple() % dirs_to_leading[code] % norm());
     return code;
   } else {
@@ -835,4 +835,4 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
     return code;
   }
 }
- 
+

@@ -220,7 +220,7 @@ void TBeing::doMeditate()
      return;
     }
     if (!getCond(FULL)) {
-      sendTo("You are too hungry to meditate.\n\r"); 
+      sendTo("You are too hungry to meditate.\n\r");
       return;
     }
     if (!getCond(THIRST)) {
@@ -254,7 +254,7 @@ void TBeing::doMeditate()
     if (task->task == TASK_MEDITATE) {
       sendTo("You sink deeper into your meditation.\n\r");
       return;
-    } else if (getPosition() <= POSITION_SITTING) 
+    } else if (getPosition() <= POSITION_SITTING)
       stopTask();
   }
   if (!riding) {
@@ -307,7 +307,7 @@ void TBeing::doYoginsa()
     if (task->task == TASK_YOGINSA) {
       sendTo("You meditate harder and harder.\n\r");
       return;
-    } else if (getPosition() <= POSITION_SITTING) 
+    } else if (getPosition() <= POSITION_SITTING)
       stopTask();
   }
   if (!riding) {

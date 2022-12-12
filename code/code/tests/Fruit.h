@@ -36,10 +36,10 @@ class Fruit : public CxxTest::TestSuite
   void testCreateSeeds(){
     // put the fruit in a room
     *testRoom += *fruit;
-    
+
     // check that create seeds actually puts seeds in the room
     fruit->createSeeds();
-    TS_ASSERT_EQUALS(obj_index[testRoom->stuff.front()->number].virt, 
+    TS_ASSERT_EQUALS(obj_index[testRoom->stuff.front()->number].virt,
 		     fruit->getSeedVNum());
 
   }

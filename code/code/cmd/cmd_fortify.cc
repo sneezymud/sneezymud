@@ -29,7 +29,7 @@ int TBeing::doFortify()
   int skillLevel = getSkillValue(SKILL_FORTIFY);
   int successfulSkill = bSuccess(skillLevel, SKILL_FORTIFY);
 
-  // Apply a lockout buff on the caster 
+  // Apply a lockout buff on the caster
   aff1.type = SKILL_FORTIFY;
   aff1.duration = Pulse::UPDATES_PER_MUDHOUR;
   aff1.modifier = 0;

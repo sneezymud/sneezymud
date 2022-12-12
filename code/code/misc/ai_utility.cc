@@ -11,7 +11,7 @@
 //   hence at this time we are NOT allowing (except accidentally) for
 //   opinions.target to be an NPC.  It might be interesting later to allow
 //   target to be an NPC (mobs interacting with mobs) but my feeling is
-//   that this will lead to endless loop (A's action triggering B's triggering 
+//   that this will lead to endless loop (A's action triggering B's triggering
 //   A's triggering B's...).  The problem with the present system is that
 //   a mob could piss off another mob, and the pissed off mob "think"
 //   it was some random PC that did nothing. */
@@ -24,21 +24,21 @@
 #include "combat.h"
 #include "spec_mobs.h"
 
-// This function should be used if you want to see if the mob is "pissed" 
+// This function should be used if you want to see if the mob is "pissed"
 int TMonster::pissed(void)
 {
-  if (UtilMobProc(this)) 
+  if (UtilMobProc(this))
     return FALSE;
 
-  if (isAngry() && isMalice()) 
+  if (isAngry() && isMalice())
     return TRUE;
 
   return FALSE;
 }
 
-// This function should be used if you want to see if ch is REALLY pissed 
-// aggro should be called for most things leading to fights 
-// the 4*anger+5*malice thing allows for "love/hate" fights 
+// This function should be used if you want to see if ch is REALLY pissed
+// aggro should be called for most things leading to fights
+// the 4*anger+5*malice thing allows for "love/hate" fights
 int TMonster::aggro(void)
 {
   if (UtilMobProc(this))
@@ -61,14 +61,14 @@ int TMonster::aggro(void)
   return FALSE;
 }
 
-// function designed for use in conjunction with aggro 
+// function designed for use in conjunction with aggro
 // it returns TRUE if the char is real ugly and the mob is sufficient
 // low level as to be little challenge for the char.  A pissed roll also
-// has to be passed. 
+// has to be passed.
 int TMonster::aiUglyMug(TBeing *tmp_ch)
 {
   int lmob = GetMaxLevel(), ltmp = tmp_ch->GetMaxLevel();
- 
+
   if (lmob < 7)
     return FALSE;
   if (ltmp < 10)
@@ -117,7 +117,7 @@ void TMonster::aiTarget(TBeing *vict)
   else {
     if (vict->master && vict->master->isPc())
       setTarg(vict->master);
-    else  // mob acting on its own 
+    else  // mob acting on its own
       setTarg(NULL);
   }
   TBeing * targy = targ();
@@ -131,11 +131,11 @@ void TMonster::aiTarget(TBeing *vict)
 }
 
 // this functon checks conditions of limbs and disallows some socials
-// it should return FALSE if you want the standard text that social will show 
-// and TRUE otherwise (which returns out of the doAction loop 
+// it should return FALSE if you want the standard text that social will show
+// and TRUE otherwise (which returns out of the doAction loop
 int TBeing::socialLimbBad(TBeing *mob, cmdTypeT cmd)
 {
-  if (!hasHands() || bothHandsHurt()) {   // polymorphed into something handless? 
+  if (!hasHands() || bothHandsHurt()) {   // polymorphed into something handless?
     switch (cmd) {
       case CMD_DANCE:
       case CMD_SHAKE:
@@ -168,7 +168,7 @@ int TBeing::socialLimbBad(TBeing *mob, cmdTypeT cmd)
       default:
         break;
     }
-  } 
+  }
   if (riding) {
     switch (cmd) {
       case CMD_HOP:
@@ -219,7 +219,7 @@ int TBeing::socialLimbBad(TBeing *mob, cmdTypeT cmd)
   if (!mob->canUseLimb(WEAR_HAND_L) || !mob->canUseLimb(WEAR_HAND_R) || !mob->canUseLimb(WEAR_ARM_L) || !mob->canUseLimb(WEAR_ARM_R)) {
     switch (cmd) {
       case CMD_DANCE:
-      case CMD_SHAKE: 
+      case CMD_SHAKE:
         act("$N has a busted arm, so you can't do that to $M.",TRUE,this,0,mob,TO_CHAR);
         return TRUE;
         break;
@@ -266,7 +266,7 @@ int TBeing::socialLimbBad(TBeing *mob, cmdTypeT cmd)
   return FALSE;
 }
 
-// called when ch falls off horse 
+// called when ch falls off horse
 void TMonster::aiHorse(TBeing *ch)
 {
   aiTarget(ch);
@@ -299,7 +299,7 @@ void TMonster::mobAI()
 
   // suspicion is whether the mob has seen "wierd things" or thinks that
   // it is about to be attacked.  look at, and con affect it a lot.
-  // It's basically how "wary and alert" it is.  
+  // It's basically how "wary and alert" it is.
 
   if (!::number(0,2)) {
     if (susp() > defsusp()) {
@@ -314,12 +314,12 @@ void TMonster::mobAI()
       }
     } else {
       if (!::number(0,4)) {
-        if (::number(0,1)) 
+        if (::number(0,1))
           US(2);
         else
           DS(2);
       }
-    } 
+    }
   }
   // Greed should be fairly obvious.  it starts at 50%, very high greed implies
   // it wants lots of valuables, while low implies it feels cheritable.  this
@@ -394,20 +394,20 @@ void TMonster::mobAI()
       }
     }
   }
-  // turn off targets if set by mistake 
-  if (targ()) 
+  // turn off targets if set by mistake
+  if (targ())
     if (!targ()->isPc()) {
       vlogf(LOG_MOB_AI, format("Ooops, target for %s got set to a mob: %s.") % getName() % targ()->getName());
       setTarg(NULL);
     }
-  
-  // Let's set target for a couple of things. 
-  // Obviously opinion should be of who we are fighting 
+
+  // Let's set target for a couple of things.
+  // Obviously opinion should be of who we are fighting
   if (fight()) {
-    if (fight()->isPc()) 
+    if (fight()->isPc())
       aiTarget(fight());
     else if (fight()->master)
-      aiTarget(fight()->master); 
+      aiTarget(fight()->master);
     else
       setTarg(NULL);
 
@@ -425,7 +425,7 @@ void TMonster::mobAI()
     // keep newbiedom peaceful and happy
     DA(2);
     DMal(1);
-  } 
+  }
 
   if (!aggro_state_1 && aggro_state_2) {
     // flipped down
@@ -447,8 +447,8 @@ void TMonster::mobAI()
     DMal(3);
   }
 
-  // OK, if we don't have a target, lets see who's in the room 
-  // set it to a random PC in the room that we can see 
+  // OK, if we don't have a target, lets see who's in the room
+  // set it to a random PC in the room that we can see
   if (!targ()) {
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       if (t->isPc() && canSee(t) && (t != this)) {
@@ -459,7 +459,7 @@ void TMonster::mobAI()
     if (!targ())
       return;
   }
-  // we should probably call some independant-reaction functions here 
+  // we should probably call some independant-reaction functions here
   // like have the mob demand money if greedy, or leave if suspicious
 }
 
@@ -522,8 +522,8 @@ int TMonster::aiSocialSwitch (TBeing *doer,TBeing *other, cmdTypeT cmd, aiTarg c
   if (UtilMobProc(this))
     return FALSE;
   //if (GetMaxLevel() <= 5)    // lessen grimhaven spam
-    //return FALSE;    
-  
+    //return FALSE;
+
   // have it skip if someone is spamming with same command over and over
   if (cmd == opinion.last_cmd) {
     US(1);

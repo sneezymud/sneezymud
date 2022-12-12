@@ -145,7 +145,7 @@ class togInfoT {
   togEntry *operator[] (const togTypeT);
 
   togInfoT();
-  ~togInfoT();  
+  ~togInfoT();
 };
 
 
@@ -301,7 +301,7 @@ const int TOG_HAS_STONESKIN        = 121;
 const int TOG_ELIGIBLE_GALVANIZE   = 122;
 const int TOG_FIND_PURPLE_ROBE     = 123;
 const int TOG_HAS_GALVANIZE        = 124;
-const int TOG_ELIGIBLE_POWERSTONE  = 125; 
+const int TOG_ELIGIBLE_POWERSTONE  = 125;
 const int TOG_FIND_SNAKESTAFF      = 126;
 const int TOG_HAS_POWERSTONE       = 127;
 const int TOG_HAS_ADVANCED_KICKING = 128;
@@ -382,7 +382,7 @@ const int TOG_STARTED_RANGER_L14    = 175;
 const int TOG_SEEN_KOBOLD_POACHER   = 176;
 const int TOG_SEEKING_ORC_POACHER   = 177;
 const int TOG_SEEN_ORC_POACHER      = 178;
-const int TOG_SEEKING_BONE_WOMAN    = 179;    
+const int TOG_SEEKING_BONE_WOMAN    = 179;
 const int TOG_SEEKING_APPLE         = 180;
 const int TOG_GOT_CARVED_BUCKLE     = 181;
 const int TOG_SEEKING_ORC_MAGI      = 182;
@@ -487,7 +487,7 @@ const int TOG_PSIONICIST                       = 248;
 const int TOG_DRAGON_ARMOR_RED_SCALES          = 249;
 const int TOG_DRAGON_ARMOR_GREEN_SCALES        = 250;
 const int TOG_DRAGON_ARMOR_WHITE_SCALES        = 251;
-const int TOG_DRAGON_ARMOR_TUNGSTEN_SUIT       = 252;    
+const int TOG_DRAGON_ARMOR_TUNGSTEN_SUIT       = 252;
 const int TOG_DRAGON_ARMOR_HUGE_OPAL           = 253;
 const int TOG_DRAGON_ARMOR_DRAGON_BONE_1       = 254;
 const int TOG_DRAGON_ARMOR_DRAGON_BONE_2       = 255;

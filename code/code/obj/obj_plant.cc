@@ -61,7 +61,7 @@ TPlant::~TPlant()
 int TPlant::putSomethingInto(TBeing *ch, TThing *)
 {
   // technically, would be OK since is a container, but prevent them anyhow
-  act("Unfortunately, you can't put things into $p.", 
+  act("Unfortunately, you can't put things into $p.",
              FALSE, ch, this, 0, TO_CHAR);
   return 2;
 }
@@ -71,8 +71,8 @@ sstring TPlant::statObjInfo() const
   char buf[256];
   if (this->getVerminated())
 	  sprintf(buf, "Type: %i Age: %i Total Yield: %i To Vermin: %i", getType(), getAge(), getYield(), getVerminated());
-  else 
-	  sprintf(buf, "Type: %i Age: %i Total Yield: %i", getType(), getAge(), getYield());  
+  else
+	  sprintf(buf, "Type: %i Age: %i Total Yield: %i", getType(), getAge(), getYield());
   sstring a(buf);
   return a;
 }
@@ -114,7 +114,7 @@ int seed_to_plant(int vnum)
     case 34216:  // grape seeds
       return 14; // gray grapes
   }
-  
+
   return 0;
 }
 
@@ -135,16 +135,16 @@ void TPlant::updateDesc()
     "plant %s",
     "plant withered %s"
   };
-  
+
   const char *plantname [] =
   {
-    "a small mound of <o>dirt<1>", 
-    "a tiny sprout", 
-    "a small %s", 
+    "a small mound of <o>dirt<1>",
+    "a tiny sprout",
+    "a small %s",
     "a %s",
     "an old, withered %s"
   };
-  
+
   const char *plantdesc [] =
   {
     "A small mound of <o>dirt<1> is here.",
@@ -209,12 +209,12 @@ void TPlant::updateDesc()
     34215
   };
 
-  // considering a plant ages an average of 2 'age' points each mud hour, 
+  // considering a plant ages an average of 2 'age' points each mud hour,
   // a plant will age to 17520 in a mud year
   int plantlifeexpectancy [] =
   {
     175200, // 10 years
-    262800, // 15 years 
+    262800, // 15 years
     219000,  // 12.5 years
     262800,  // 15 years
     262800,  // 15 years
@@ -227,9 +227,9 @@ void TPlant::updateDesc()
     17520, // 1 year
     17520, // 1 year
     2350, // 2 real days
-    262800 // 15 years 
+    262800 // 15 years
   };
-  
+
   // really old plants should wither and die
   if(getAge() > plantlifeexpectancy[getType()]){
     plantindex=4;
@@ -258,7 +258,7 @@ void TPlant::updateDesc()
 
     sprintf(buf, plantname[plantindex], planttypes[getType()]);
     shortDescr = buf;
-    
+
     sprintf(buf, plantdesc[plantindex], planttypes[getType()]);
     setDescr(buf);
   } else {
@@ -267,7 +267,7 @@ void TPlant::updateDesc()
 
     sprintf(buf, "%s", plantname[plantindex]);
     shortDescr = buf;
-    
+
     sprintf(buf, "%s", plantdesc[plantindex]);
     setDescr(buf);
   }
@@ -281,8 +281,8 @@ void TPlant::updateDesc()
       ++count;
     }
 
-    if(count<=4 && 
-       (obj_index[real_object(plantfruits[getType()])].getNumber() < 
+    if(count<=4 &&
+       (obj_index[real_object(plantfruits[getType()])].getNumber() <
 	obj_index[real_object(plantfruits[getType()])].max_exist)){
       t=read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
@@ -297,7 +297,7 @@ void TPlant::updateDesc()
     for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
       ++count;
     }
-    
+
     if(count<=2){
       t=read_object(plantfruits[getType()], VIRTUAL);
       *this += *t;
@@ -313,7 +313,7 @@ void TPlant::updateDesc()
 	 !::number(0,150)){
 	--(*o);
 	*roomp+=*o;
-	sendrpf(roomp, "%s falls to the ground.\n\r", 
+	sendrpf(roomp, "%s falls to the ground.\n\r",
 		sstring(o->getName()).cap().c_str());
 	break; // iterator is invalidated
       }
@@ -348,7 +348,7 @@ void TPlant::updateDesc()
 		      return;
 		    }
 		    *roomp += *mob;
-		    colorAct(COLOR_MOBS, 
+		    colorAct(COLOR_MOBS,
 		            ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
 		            mob->ex_description->findExtraDesc("repop") :
 		            "$n appears suddenly in the room."), TRUE, mob, 0, 0, TO_ROOM);

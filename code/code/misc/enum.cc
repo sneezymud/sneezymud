@@ -1381,7 +1381,7 @@ drugTypeT mapFileToDrug(int d)
 }
 
 
-spellNumT mapWeaponT(weaponT w) 
+spellNumT mapWeaponT(weaponT w)
 {
   // divorced this from TGenWeapon
   switch (w) {

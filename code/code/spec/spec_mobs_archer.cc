@@ -9,7 +9,7 @@
 
 #define MAX_RANGE 3
 
-std::vector <TBow *> TBeing::getBows() 
+std::vector <TBow *> TBeing::getBows()
 {
   TBow *temp = NULL;
   std::vector <TBow *> bows;
@@ -30,16 +30,16 @@ std::vector <TBow *> TBeing::getBows()
   }
   return bows;
 }
- 
-TArrow *TBeing::autoGetAmmoQuiver(TBow *bow, TQuiver *quiver) 
+
+TArrow *TBeing::autoGetAmmoQuiver(TBow *bow, TQuiver *quiver)
 {
   TThing *i=NULL;
   TArrow *temp = NULL;
   TArrow *ammo = NULL;
-  
+
   if (!bow || !quiver || quiver->isClosed())
     return ammo;
-  
+
   for(StuffIter it=quiver->stuff.begin();it!=quiver->stuff.end() && (i=*it);++it)
   {
     if ((temp = dynamic_cast<TArrow *>(i)) &&
@@ -64,7 +64,7 @@ TArrow *TBeing::autoGetAmmo(TBow *bow)
 
   if (!bow)
     return ammo;
-  
+
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
 // if you are carrying it then you know it's there
 //    if (!canSee(i))
@@ -73,7 +73,7 @@ TArrow *TBeing::autoGetAmmo(TBow *bow)
       if ((ammo = autoGetAmmoQuiver(bow, quiver)))
         break;
     }
-    else if ((temp = dynamic_cast<TArrow *>(equipment[i])) 
+    else if ((temp = dynamic_cast<TArrow *>(equipment[i]))
         && bow->getArrowType() == temp->getArrowType()) {
       ammo = temp;
       break;
@@ -87,23 +87,23 @@ TArrow *TBeing::autoGetAmmo(TBow *bow)
         if ((ammo = autoGetAmmoQuiver(bow, quiver)))
           break;
       }
-      else if ((temp = dynamic_cast<TArrow *>(j)) 
+      else if ((temp = dynamic_cast<TArrow *>(j))
           && bow->getArrowType() == temp->getArrowType()) {
         ammo = temp;
         break;
       }
     }
   }
-  return ammo; 
+  return ammo;
 }
 
 // returns TRUE for shot or restring, otherwise FALSE
 // DELETE_THIS and DELETE_OBJECT for a couple of calls
 int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 {
-  if (cmd != CMD_GENERIC_PULSE) 
+  if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
-  
+
   int rm = 0, new_rm = 0;
   TThing *t=NULL;
   const char *directions[][2] =
@@ -177,8 +177,8 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       }
     }
   }
- 
-  
+
+
   tbt = NULL;
 // find target
   for (i = MIN_DIR; i <= (MAX_DIR - 1); i++) {
@@ -191,9 +191,9 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
           continue;
         else
           rm = new_rm;
-        
+
         count = 0;
-  
+
         for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
           tbt = dynamic_cast<TBeing *>(t);
           if (!tbt || !tbt->isPc())
@@ -208,7 +208,7 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       }
       if (count == 0)
 	      continue;
-      
+
       which = ::number(1,count);// which target to pick on the next pass
       count = 0;
      for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
@@ -220,11 +220,11 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
         if (!ch->Hates(tbt, NULL) && !IS_SET(ch->specials.act, ACT_AGGRESSIVE))
           continue;
         count++;
-        
+
 	      if (count == which) // found victim
 	        break;
       }
-	
+
       // ok now we have to do a bit of trickery - there could be multiple identical mobs
       // in the same room, ie, 3 orc guards, and even if we pick the third one our code
       // will only aim at the first one.  So we have to figure out which we're aiming at
@@ -259,49 +259,49 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
     // check for bow and ammo combination
 
     if (bow->isBowFlag(BOW_STRING_BROKE)) {
-    
+
       act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
       act("$n quickly restrings $p.", FALSE, ch, bow, 0, TO_ROOM);
 
       bow->remBowFlags(BOW_STRING_BROKE);
       return TRUE;
     }
-  
+
     // check for ammo and load into bow if necessary
     // bload handles case of arrow already in bow for us
       int rc;
       TThing *t = NULL;
       t = ch->equipment[HOLD_LEFT];
-      rc = ch->doRemove("", t);   
+      rc = ch->doRemove("", t);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete t;
         t = NULL;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-                  
+
       t = ch->equipment[HOLD_RIGHT];
-      rc = ch->doRemove("", t);   
+      rc = ch->doRemove("", t);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete t;
         t = NULL;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      
+
     bow->bloadArrowBow(ch, ammo);
     if(!(bow = dynamic_cast<TBow *>(ch->equipment[ch->getPrimaryHold()]))
        || bow->stuff.empty())
       return FALSE; // in case bload fails for some reason
-    
+
     // shoot target and remove bow
-  
+
     // text to character
-        
+
     buf = format("%s %d.%s %d") % directions[i][0] % numsimilar % temp % range;
 
     temp = tbt->getName();
-  
+
 // too mean? removed for now - otherwise engage-all won't help you even
 // when he's out of arrows
     if (!ch->specials.hunting || ch->specials.hunting != tbt)
@@ -311,30 +311,30 @@ int archer(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 
     if (!(ch->doShoot(buf.c_str())))
       vlogf(LOG_BUG, format("spec_mobs_archer.cc: archer: error shooting bow with arguments: %s") % buf);
-        
+
     t = ch->equipment[HOLD_LEFT];
-    rc = ch->doRemove("", t);   
+    rc = ch->doRemove("", t);
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
       delete t;
       t = NULL;
     }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-                
+
     t = ch->equipment[HOLD_RIGHT];
-    rc = ch->doRemove("", t);   
+    rc = ch->doRemove("", t);
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
       delete t;
       t = NULL;
     }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-      
+
 #if 0
-      vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
+      vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") %
           Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
 #endif
-    return TRUE; 
+    return TRUE;
     }
   }
   return FALSE;

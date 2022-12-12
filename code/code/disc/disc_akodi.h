@@ -28,10 +28,10 @@ class CDAkodi : public CDiscipline
 public:
     CSkill skMartialSpec;
 
-    CDAkodi() 
+    CDAkodi()
       : CDiscipline(), skMartialSpec() {
     }
-    CDAkodi(const CDAkodi &a) 
+    CDAkodi(const CDAkodi &a)
       : CDiscipline(a), skMartialSpec(a.skMartialSpec) {
     }
     CDAkodi & operator=(const CDAkodi &a) {

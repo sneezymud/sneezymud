@@ -74,11 +74,11 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     if (mobVnum() < 0)
       corpse->addCorpseFlag(CORPSE_NO_REGEN);
   }
-  
+
   gen_corpse->setCorpseFlags(0);
   gen_corpse->setCorpseLevel(GetMaxLevel());
   gen_corpse->addObjStat(ITEM_STRUNG);
-  
+
   gen_corpse->ex_description = NULL;
   gen_corpse->action_description = NULL;
 
@@ -158,7 +158,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   }
 
 
-  if (!specialCorpse && roomp && 
+  if (!specialCorpse && roomp &&
 
       (roomp->isUnderwaterSector() || roomp->isWaterSector())) {
     sprintf(buf, "The bloated, water-filled corpse of %s is floating here.", getName().c_str());
@@ -186,7 +186,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
           namebuf);
         break;
       case SKILL_SHOULDER_THROW:
-         sprintf(buf, "%s's corpse lies shattered here, having been thrown hard to the ground.", namebuf); 
+         sprintf(buf, "%s's corpse lies shattered here, having been thrown hard to the ground.", namebuf);
         break;
       case DAMAGE_ELECTRIC:
       case SPELL_CALL_LIGHTNING:
@@ -476,7 +476,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         sprintf(buf,"%s's corpse lies here with a crushed rib cage.",
              namebuf);
         break;
-      case DAMAGE_KNEESTRIKE_CROTCH:      
+      case DAMAGE_KNEESTRIKE_CROTCH:
       case DAMAGE_HEADBUTT_CROTCH:
         sprintf(buf,"%s's corpse seems folded at the waist, protecting its privates.",
               namebuf);
@@ -598,7 +598,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     addToMoney(-getMoney(), GOLD_INCOME);
     *gen_corpse += *money;
   }
-  
+
 #if 0
   // this is designed to move the pc's light cuz of items to the corpse
   // this seems to be silly.  makes the corpse glow or shadowy artificially
@@ -622,17 +622,17 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 
   //load a herald and put on corpse - Russ 010298
   // Grimhaven Newsboy, chance to put herald in corpse
-  if (mobVnum() == Mob::NEWSBOY) { 
-    if (!::number(0, 10)) 
+  if (mobVnum() == Mob::NEWSBOY) {
+    if (!::number(0, 10))
       *gen_corpse += *(read_object(Obj::HERALD, VIRTUAL));
-  } 
+  }
 
   // banshee loading banshee larynx (shatter comp)
   // would be better as dissect, but banshee=undead=dustpile=no-dissect
-  if (mobVnum() == Mob::BANSHEE) { 
-    if (!::number(0, 1)) 
+  if (mobVnum() == Mob::BANSHEE) {
+    if (!::number(0, 1))
       *gen_corpse += *(read_object(COMP_SHATTER, VIRTUAL));
-  } 
+  }
 
   for(StuffIter it=stuff.begin();it!=stuff.end();){
     TThing *obo=*(it++);
@@ -640,12 +640,12 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     logItem(obo, CMD_SOUTH);
   }
 
-  if (dynamic_cast<TMonster *>(this)) 
+  if (dynamic_cast<TMonster *>(this))
     gen_corpse->obj_flags.decay_time = MAX_NPC_CORPSE_TIME;
   else {
-    if (!gen_corpse->stuff.empty()) 
+    if (!gen_corpse->stuff.empty())
       gen_corpse->obj_flags.decay_time = MAX_PC_CORPSE_EQUIPPED_TIME;
-    else 
+    else
       gen_corpse->obj_flags.decay_time = MAX_PC_CORPSE_EMPTY_TIME;
   }
 
@@ -659,7 +659,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 //    *rp += *gen_corpse;
   }
 
-  // make sure we don't have any "corpses in a corpse" 
+  // make sure we don't have any "corpses in a corpse"
   for(StuffIter it=gen_corpse->stuff.begin();it!=gen_corpse->stuff.end();){
     o=*(it++);
     TBaseCorpse *tbc = dynamic_cast<TBaseCorpse *>(o);

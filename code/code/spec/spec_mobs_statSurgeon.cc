@@ -19,15 +19,15 @@ int statSurgeon(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *surg, TObj 
     if (is_abbrev(sarg.word(i), "speed"))
       stats.push_back(STAT_SPE);
     else if (is_abbrev(sarg.word(i), "agility"))
-      stats.push_back(STAT_AGI); 
+      stats.push_back(STAT_AGI);
     else if (is_abbrev(sarg.word(i), "dexterity"))
-      stats.push_back(STAT_DEX); 
+      stats.push_back(STAT_DEX);
     else if (is_abbrev(sarg.word(i), "strength"))
-      stats.push_back(STAT_STR); 
+      stats.push_back(STAT_STR);
     else if (is_abbrev(sarg.word(i), "brawn"))
-      stats.push_back(STAT_BRA); 
+      stats.push_back(STAT_BRA);
     else if (is_abbrev(sarg.word(i), "constitution"))
-      stats.push_back(STAT_CON); 
+      stats.push_back(STAT_CON);
     else {
       surg->doSay("Hm, I don't quite follow you there.");
       return TRUE;
@@ -40,12 +40,12 @@ int statSurgeon(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *surg, TObj 
     surg->doSay("Don't waste my time.");
     return TRUE;
   }
-  
+
   std::vector <int> group1;
   group1.push_back(STAT_SPE);
   group1.push_back(STAT_DEX);
   group1.push_back(STAT_AGI);
-  
+
   std::vector <int> group2;
   group2.push_back(STAT_STR);
   group2.push_back(STAT_BRA);
@@ -72,7 +72,7 @@ int statSurgeon(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *surg, TObj 
     surg->doSay("Just THINK of how much I could CHARGE for that!");
     return TRUE;
   }
- 
+
   if (ch->getMoney() >= COST) {
     ch->addToMoney((-COST), GOLD_SHOP_RESPONSES);
     surg->doSay("Thanks... ah yes, I do love gold.");
@@ -80,17 +80,17 @@ int statSurgeon(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *surg, TObj 
     surg->doSay("So sorry!  Is seems that you can't afford my services after all.");
     return TRUE;
   }
-  
+
   act("You touch $P on the forehead.", TRUE, surg, NULL, ch, TO_CHAR);
   act("$P touches you on the forehead.", TRUE, ch, NULL, surg, TO_CHAR);
   ch->doSleep("");
   act("$n mumbles something and touches $P on the forehead.", TRUE, surg, NULL, ch, TO_ROOM);
   act("You operate on $P.", TRUE, surg, NULL, ch, TO_CHAR);
   act("$n pulls out a long thin blade and recites words in a strange language as he repeatedly cuts and miraculously heals $P.", TRUE, surg, 0, ch, TO_ROOM);
-  
+
   ch->setStat(STAT_CHOSEN, stats[0], st1 + changeBy);
   ch->setStat(STAT_CHOSEN, stats[1], st2 - changeBy);
-  
+
   surg->doSay("That's that then.");
   surg->doSay("Hope I didn't forget anything.");
   ch->doSave(SILENT_NO);

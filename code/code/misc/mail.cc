@@ -73,7 +73,7 @@ void store_mail(const char *to, const char *from, const char *message_pointer, i
   if(!strcmp(to, "faction")){
     TDatabase fm(DB_SNEEZY);
     fm.query("select name from factionmembers where faction=(select faction from factionmembers where name='%s')", from);
-    
+
     while(fm.fetchRow()){
       db.query("insert into mail (port, mailfrom, mailto, timesent, content, talens, rent_id) values (%i, '%s', '%s', '%s', '%s', 0, 0)", gamePort, from, fm["name"].c_str(), tmstr, message_pointer);
     }
@@ -99,7 +99,7 @@ sstring read_delete(const sstring recipient, const char *recipient_formatted, ss
     db["timesent"] % recipient_formatted % db["content"] % db["mailfrom"];
 
   db.query("delete from mail where mailid=%s", db["mailid"].c_str());
-  
+
   return sstring(buf);
 }
 
@@ -179,7 +179,7 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
   size_t endTag = objName.find("]", dueTag+1);
   if (endTag == sstring::npos)
     return 0;
-  
+
   // raw data
   sstring fullToken = objName.substr(startTag, endTag-startTag+1); // includes [] brackets
   sstring deathDate = objName.substr(startTag+playerTag.length(), dueTag-startTag-playerTag.length());
@@ -232,14 +232,14 @@ int postmasterGiven(TBeing *ch, TMonster *me, TObj *o)
       TObj *stored = dynamic_cast<TObj*>(*it);
       if (!stored)
         continue;
-      vlogf(LOG_BUG, "Scanning " + sstring(stored->name)); 
+      vlogf(LOG_BUG, "Scanning " + sstring(stored->name));
       if (sstring(stored->name).find(fullToken) == sstring::npos)
         continue;
       linkbag = stored;
     }
     if (!linkbag) {
       me->doTell(ch->getName(), "Well that's strange; you don't have a linkbag.  Use the 'report' command for help.");
-      me->doGive(ch, o); 
+      me->doGive(ch, o);
       ch->doQueueSave();
       return 0;
     }
@@ -268,11 +268,11 @@ int postmaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj
 
   switch (cmd) {
     case CMD_WHISPER:
-      return shopWhisper(ch, myself, find_shop_nr(myself->number), arg);    
-    case CMD_MAIL: 
+      return shopWhisper(ch, myself, find_shop_nr(myself->number), arg);
+    case CMD_MAIL:
       ch->postmasterSendMail(arg, myself);
       return TRUE;
-    case CMD_CHECK: 
+    case CMD_CHECK:
       ch->postmasterCheckMail(myself);
       return TRUE;
     case CMD_RECEIVE:
@@ -304,7 +304,7 @@ void TBeing::postmasterSendMail(const char *arg, TMonster *me)
     me->doTell(getName(), "You need to specify an addressee!");
     return;
   }
-  
+
   args = one_argument(args, recipient);
   args = one_argument(args, item);
   args = one_argument(args, talen);
@@ -476,7 +476,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
     // hence this setup instead.
     int robj = real_object(Obj::GENERIC_NOTE);
     if (robj < 0 || robj >= (signed int) obj_index.size()) {
-      vlogf(LOG_BUG, format("postmasterReceiveMail(): No object (%d) in database!") %  
+      vlogf(LOG_BUG, format("postmasterReceiveMail(): No object (%d) in database!") %
             Obj::GENERIC_NOTE);
       return;
     }
@@ -488,7 +488,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
 
     note->swapToStrung();
     note->name = "letter mail";
-    note->shortDescr = "<o>a handwritten <W>letter<1>"; 
+    note->shortDescr = "<o>a handwritten <W>letter<1>";
     note->setDescr("A wrinkled <W>letter<1> lies here.");
     msg = read_delete(recipient, getName().c_str(), from, talens, rent_id);
     note->action_description = msg.c_str();
@@ -504,7 +504,7 @@ void TBeing::postmasterReceiveMail(TMonster *me)
       vlogf(LOG_BUG, "Couldn't load envelope object!");
       return;
     }
-    
+
     envelope->addObjStat(ITEM_NEWBIE);
     envelope->addObjStat(ITEM_NORENT);
 

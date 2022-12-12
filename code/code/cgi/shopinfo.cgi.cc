@@ -81,7 +81,7 @@ int main(int argc, char **argv)
     cout << html() << endl;
 
     return 0;
-  }  
+  }
 
   // shouldn't get here
   cout << HTTPHTMLHeader() << endl;
@@ -123,17 +123,17 @@ where \
     cout << head() << body() << endl;
     cout << "Shop not found or you don't have permission.";
     cout << body() << endl;
-    cout << html() << endl; 
+    cout << html() << endl;
     return;
   }
-  
+
 
   cout << HTTPPlainHeader() << endl;
-  
-  
+
+
   db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplog sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
   cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
-  
+
   while(db.fetchRow()){
     cout << stripColorCodes(db["shop_nr"]) << ", ";
     cout << stripColorCodes(db["name"]) << ", ";
@@ -145,7 +145,7 @@ where \
     cout << stripColorCodes(db["logtime"]) << ", ";
     cout << stripColorCodes(db["itemcount"]) << endl;
   }
-}  
+}
 
 
 void sendShowLogs(int account_id, int shop_nr)
@@ -169,7 +169,7 @@ where \
   so.shop_nr=%i and \
   p.account_id=%i",
 	   shop_nr, account_id);
-  
+
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Shopinfo") << endl;
   cout << head() << body() << endl;
@@ -178,18 +178,18 @@ where \
   if(!db.fetchRow()){
     cout << "Shop not found or you don't have permission.";
     cout << body() << endl;
-    cout << html() << endl; 
+    cout << html() << endl;
     return;
   }
-  
 
-  
+
+
   db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplog sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
 
   cout << "<table border=1><tr>";
 
   cout << "<td>shop_nr</td><td>name</td><td>action</td><td>item</td><td>talens</td><td>shoptalens</td><td>shopvalue</td><td>logtime</td><td>itemcount</td></tr>" << endl;
-  
+
   while(db.fetchRow()){
     cout << "<tr>";
     cout << "<td>" << stripColorCodes(db["shop_nr"]) << "</td>";
@@ -205,9 +205,9 @@ where \
   cout << "</table>";
 
   cout << body() << endl;
-  cout << html() << endl; 
+  cout << html() << endl;
 
-}  
+}
 
 
 void sendShowLogsRawArchive(int account_id, int shop_nr)
@@ -239,17 +239,17 @@ where \
     cout << head() << body() << endl;
     cout << "Shop not found or you don't have permission.";
     cout << body() << endl;
-    cout << html() << endl; 
+    cout << html() << endl;
     return;
   }
-  
+
 
   cout << HTTPPlainHeader() << endl;
-  
-  
+
+
   db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplogarchive sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
   cout << "shop_nr, name, action, item, talens, shoptalens, shopvalue, logtime, itemcount\n";
-  
+
   while(db.fetchRow()){
     cout << stripColorCodes(db["shop_nr"]) << ", ";
     cout << stripColorCodes(db["name"]) << ", ";
@@ -261,7 +261,7 @@ where \
     cout << stripColorCodes(db["logtime"]) << ", ";
     cout << stripColorCodes(db["itemcount"]) << endl;
   }
-}  
+}
 
 
 void sendShowLogsArchive(int account_id, int shop_nr)
@@ -285,7 +285,7 @@ where \
   so.shop_nr=%i and \
   p.account_id=%i",
 	   shop_nr, account_id);
-  
+
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Shopinfo") << endl;
   cout << head() << body() << endl;
@@ -294,18 +294,18 @@ where \
   if(!db.fetchRow()){
     cout << "Shop not found or you don't have permission.";
     cout << body() << endl;
-    cout << html() << endl; 
+    cout << html() << endl;
     return;
   }
-  
 
-  
+
+
   db.query("select sl.shop_nr, sl.name, sl.action, sl.item, sl.talens, sl.shoptalens, sl.shopvalue, sl.logtime, sl.itemcount from shoplogarchive sl, shopowned so where sl.shop_nr=so.shop_nr and sl.shop_nr=%i order by sl.logtime desc", shop_nr);
 
   cout << "<table border=1><tr>";
 
   cout << "<td>shop_nr</td><td>name</td><td>action</td><td>item</td><td>talens</td><td>shoptalens</td><td>shopvalue</td><td>logtime</td><td>itemcount</td></tr>" << endl;
-  
+
   while(db.fetchRow()){
     cout << "<tr>";
     cout << "<td>" << stripColorCodes(db["shop_nr"]) << "</td>";
@@ -321,9 +321,9 @@ where \
   cout << "</table>";
 
   cout << body() << endl;
-  cout << html() << endl; 
+  cout << html() << endl;
 
-}  
+}
 
 
 
@@ -358,7 +358,7 @@ where \
   if(!db.fetchRow()){
     cout << "Shop not found or you don't have permission.";
     cout << body() << endl;
-    cout << html() << endl; 
+    cout << html() << endl;
     return;
   }
 
@@ -387,11 +387,11 @@ order by r.name",
   if(!db.fetchRow()){
     cout << "Shop not found or you don't have permission.";
     cout << body() << endl;
-    cout << html() << endl; 
+    cout << html() << endl;
     return;
   }
 
-  
+
   cout << "<table border=1>" << endl;
   cout << "<tr><td>Shop #" << db["shop_nr"] << "</td><td>" << db["shopname"];
   cout << "</td><td>" << db["corpname"] << "</td></tr>" << endl;
@@ -440,7 +440,7 @@ order by r.name",
     cout << "<tr><td>message_sell</td><td colspan=2>" << db["message_sell"];
     cout << "</td></tr>" << endl;
   }
-  
+
   cout << "</table>" << endl;
 
 
@@ -456,7 +456,7 @@ order by r.name",
     cout << "<tr><td>" << db["name"] << "</td>" << endl;
 
     int access=convertTo<int>(db["access"]);
-    
+
     cout << "<td>" << ((access & SHOPACCESS_OWNER)?"true":"false") << "</td>";
     cout << "<td>" << ((access & SHOPACCESS_INFO)?"true":"false") << "</td>";
     cout << "<td>" << ((access & SHOPACCESS_RATES)?"true":"false") << "</td>";
@@ -465,7 +465,7 @@ order by r.name",
     cout << "<td>" << ((access & SHOPACCESS_ACCESS)?"true":"false") << "</td>";
     cout << "<td>" << ((access & SHOPACCESS_LOGS)?"true":"false") << "</td>";
     cout << "<td>" << ((access&SHOPACCESS_DIVIDEND)?"true":"false") << "</td>";
-    
+
   }
   cout << "</table>" << endl;
 
@@ -484,10 +484,10 @@ order by r.name",
     cout << "</tr>";
   }
   cout << "</table>" << endl;
-  
+
 
   cout << body() << endl;
-  cout << html() << endl; 
+  cout << html() << endl;
 }
 
 void sendCorpShopList(int account_id)
@@ -521,7 +521,7 @@ void sendCorpShopList(int account_id)
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
 
-      cout << format("<a href=javascript:pickshop('%s','showlogsraw')>") % 
+      cout << format("<a href=javascript:pickshop('%s','showlogsraw')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
 
@@ -529,7 +529,7 @@ void sendCorpShopList(int account_id)
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
 
-      cout << format("<a href=javascript:pickshop('%s','showlogsrawarchive')>") % 
+      cout << format("<a href=javascript:pickshop('%s','showlogsrawarchive')>") %
 	db["shop_nr"];
       cout << "logs" << "</td></tr>";
   }
@@ -567,7 +567,7 @@ void sendAccessShopList(int account_id)
       cout << format("<a href=javascript:pickshop('%s','showlogs')>") %
 	db["shop_nr"];
       cout << "logs" << "</td><td>";
-      cout << format("<a href=javascript:pickshop('%s','showlogsraw')>") % 
+      cout << format("<a href=javascript:pickshop('%s','showlogsraw')>") %
 	db["shop_nr"];
       cout << "logs" << "</td></tr>";
   }

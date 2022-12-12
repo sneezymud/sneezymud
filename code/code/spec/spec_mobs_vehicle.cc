@@ -556,7 +556,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	  // first clear out existing route
 	  for(int i=0;i<10;++i)
 	    job->room[i]=0;
-	  
+
 	  int i=0;
 	  do {
 	    job->room[i++] = convertTo<int>(db["room"]);
@@ -624,7 +624,7 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 	} else {
 	  myself->doSay("That layabout?!");
 	}
-	
+
       } else {
 	// list delegates
 	db.query("select p1.name from ship_master s1 join player p1 on s1.player_id = p1.id and captain_vnum = %i and s1.player_id is not null", myself->mobVnum());
@@ -660,9 +660,9 @@ int shipCaptain(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     }
     return TRUE;
   }
-  
+
   //// sailing
-  
+
   if(!has_key(myself, vehicle->getPortalKey())){
     return FALSE;
   }

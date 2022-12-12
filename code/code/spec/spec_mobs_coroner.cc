@@ -18,7 +18,7 @@ int goToMorgue(TBeing *myself)
 
   if (myself->in_room != Room::MORGUE) {
     if((dir=path.findPath(myself->in_room, findRoom(room))) < 0){
-      // unable to find a path 
+      // unable to find a path
       if (room >= 0) {
         myself->doSay("Time for my coffee break");
         act("$n has left into the void.",0, myself, 0, 0, TO_ROOM);
@@ -76,7 +76,7 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TThing *t;
   TObj *obj = NULL;
   int rc;
-  char buf[256];  
+  char buf[256];
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
     return FALSE;
@@ -85,7 +85,7 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
 
   int found=0;
-  
+
   // check if we have any corpses
   if (!myself->stuff.empty()){
     for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();++it){
@@ -93,17 +93,17 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	found++;
     }
   }
-  
+
   // pick up corpses
   if(myself->inRoom() != Room::MORGUE && found < 3){
     // look for a corpse
     for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
       t=*(it++);
-      
+
       obj = dynamic_cast<TObj *>(t);
       if (!obj || !okForJanitor(myself, obj))
 	continue;
-      
+
       if (dynamic_cast<TBaseCorpse *>(obj)) {
 	sprintf(buf, "$n gets $p and prepares it for delivery to the morgue.");
 	act(buf, FALSE, myself, obj, 0, TO_ROOM);
@@ -120,15 +120,15 @@ int coroner(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     }
   }
 
-  
+
   // if we have corpses, head towards the morgue
   if(found){
     rc = goToMorgue(myself);
-    
+
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    
+
     return TRUE;
   } else { // otherwise, look for a corpse
     rc = findACorpse(myself);

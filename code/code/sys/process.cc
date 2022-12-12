@@ -202,7 +202,7 @@ void TScheduler::runChar(int pulseNum)
 
       if (tmp_ch->getPosition() == POSITION_DEAD) {
         // even if shortDescr is NULL.
-        vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") % 
+        vlogf(LOG_BUG, format("Error: dead creature (%s at %d) in character_list, removing.") %
             tmp_ch->getName() % tmp_ch->in_room);
         deleteMe.push_back(tmp_ch);
         continue;
@@ -210,7 +210,7 @@ void TScheduler::runChar(int pulseNum)
 
       if ((tmp_ch->getPosition() < POSITION_STUNNED) &&
           (tmp_ch->getHit() > 0)) {
-        vlogf(LOG_BUG, format("Error: creature (%s) with hit > 0 found with position < stunned") % 
+        vlogf(LOG_BUG, format("Error: creature (%s) with hit > 0 found with position < stunned") %
             tmp_ch->getName());
         vlogf(LOG_BUG, "Setting player to POSITION_STANDING");
         tmp_ch->setPosition(POSITION_STANDING);

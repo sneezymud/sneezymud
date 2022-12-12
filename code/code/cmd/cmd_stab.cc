@@ -239,13 +239,13 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
       for (int tSwingIndex = 0; tSwingIndex < MAX_SWING_AFFECT; tSwingIndex++) {
         int tDuration = (tThief->GetMaxLevel() * Pulse::UPDATES_PER_MUDHOUR);
 
-  
+
 	if(tWeapon->isPoisoned()){
           if (!tSucker->isLimbFlags(tLimb, PART_BLEEDING) &&
               !tSucker->isAffected(AFF_POISON)) {
             if (!tSucker->isImmune(IMMUNE_POISON, tLimb) && !::number(0, 9)) {
 	      tWeapon->applyPoison(tSucker);
-	      
+
 
               act("You poison $N with your stab!",
                   FALSE, tThief, NULL, tSucker, TO_CHAR);
@@ -263,7 +263,7 @@ spellNumT doStabMsg(TBeing *tThief, TBeing *tSucker, TGenWeapon *tWeapon, wearSl
 		tStLimb;
               tStringOthr=format("$N's %s gets infected from $n's stab!") %
 		tStLimb;
-	      
+
               act(tStringChar, FALSE, tThief, NULL, tSucker, TO_CHAR);
               act(tStringVict, FALSE, tThief, NULL, tSucker, TO_VICT);
               act(tStringOthr, FALSE, tThief, NULL, tSucker, TO_NOTVICT);
@@ -381,7 +381,7 @@ static int stab(TBeing *thief, TBeing * victim)
     tLimb = victim->getCritPartHit();
 
   if (!victim->awake() ||
-      (i && (i != GUARANTEED_FAILURE) && 
+      (i && (i != GUARANTEED_FAILURE) &&
       thief->bSuccess(bKnown, SKILL_STABBING))) {
     switch (critSuccess(thief, SKILL_STABBING)) {
       case CRIT_S_KILL:
@@ -450,7 +450,7 @@ static int stab(TBeing *thief, TBeing * victim)
 #else
   // Start of old stab code.
 
-  if (!victim->awake() || 
+  if (!victim->awake() ||
       (i &&
        (i != GUARANTEED_FAILURE) &&
        bSuccess(thief, bKnown, SKILL_STABBING))) {
@@ -459,19 +459,19 @@ static int stab(TBeing *thief, TBeing * victim)
       case CRIT_S_KILL:
         if (!victim->getStuckIn(WEAR_BODY)) {
           CS(SKILL_STABBING);
-          act("You thrust $p ***REALLY DEEP*** into $N and twist.", 
+          act("You thrust $p ***REALLY DEEP*** into $N and twist.",
                FALSE, thief, obj, victim, TO_CHAR);
-          act("$n thrusts $p ***REALLY DEEP*** into $N and twists.", 
+          act("$n thrusts $p ***REALLY DEEP*** into $N and twists.",
                FALSE, thief, obj, victim, TO_NOTVICT);
-          act("$n thrusts $p ***REALLY DEEP*** into you and twists it.", 
+          act("$n thrusts $p ***REALLY DEEP*** into you and twists it.",
                FALSE, thief, obj, victim, TO_VICT);
 
           dam *= 4;
-          act("You hit exceptionally well but lost your grasp on $p.", 
+          act("You hit exceptionally well but lost your grasp on $p.",
                  FALSE, thief, obj, victim, TO_CHAR, ANSI_RED);
-          act("$n left $s $o stuck in you.", 
+          act("$n left $s $o stuck in you.",
                  FALSE, thief, obj, victim, TO_VICT, ANSI_ORANGE);
-          act("$n loses $s grasp on $p.", 
+          act("$n loses $s grasp on $p.",
                  TRUE, thief, obj, victim, TO_NOTVICT);
 
           rc = victim->stickIn(thief->unequip(thief->getPrimaryHold()) ,WEAR_BODY);
@@ -482,11 +482,11 @@ static int stab(TBeing *thief, TBeing * victim)
         }  // if already stuckIn, drop through to next
       case CRIT_S_TRIPLE:
         CS(SKILL_STABBING);
-        act("You thrust $p REALLY DEEP into $N and twist.", 
+        act("You thrust $p REALLY DEEP into $N and twist.",
                FALSE, thief, obj, victim, TO_CHAR);
-        act("$n thrusts $p REALLY DEEP into $N and twists.", 
+        act("$n thrusts $p REALLY DEEP into $N and twists.",
                FALSE, thief, obj, victim, TO_NOTVICT);
-        act("$n thrusts $p REALLY DEEP into you and twists it.", 
+        act("$n thrusts $p REALLY DEEP into you and twists it.",
                FALSE, thief, obj, victim, TO_VICT);
 
         dam *= 3;
@@ -494,20 +494,20 @@ static int stab(TBeing *thief, TBeing * victim)
       case CRIT_S_DOUBLE:
         CS(SKILL_STABBING);
         dam *= 2;
-        act("You thrust $p DEEP into $N and twist.", 
+        act("You thrust $p DEEP into $N and twist.",
                FALSE, thief, obj, victim, TO_CHAR);
-        act("$n thrusts $p DEEP into $N and twists.", 
+        act("$n thrusts $p DEEP into $N and twists.",
                FALSE, thief, obj, victim, TO_NOTVICT);
-        act("$n thrusts $p DEEP into you and twists it.", 
+        act("$n thrusts $p DEEP into you and twists it.",
                FALSE, thief, obj, victim, TO_VICT);
 
         break;
       case CRIT_S_NONE:
-        act("You thrust $p into $N and twist.", 
+        act("You thrust $p into $N and twist.",
                FALSE, thief, obj, victim, TO_CHAR);
-        act("$n thrusts $p into $N and twists.", 
+        act("$n thrusts $p into $N and twists.",
                FALSE, thief, obj, victim, TO_NOTVICT);
-        act("$n thrusts $p into you and twists it.", 
+        act("$n thrusts $p into you and twists it.",
                FALSE, thief, obj, victim, TO_VICT);
 
         break;

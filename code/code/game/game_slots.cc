@@ -1,8 +1,8 @@
 /*************************************************************************
 
       SneezyMUD 3.0 - All rights reserved, SneezyMUD Coding Team
-      "slots.c" - All functions and routines related to the slot machines 
-      
+      "slots.c" - All functions and routines related to the slot machines
+
       Slot Machines coded by Russ Russell, January 1993. Last revision
       April 6th, 1994.
 
@@ -152,7 +152,7 @@ void TBeing::doPlay(const char *arg)
     gPoker.discard(this, arg);
     return;
   }
-  
+
   half_chop(arg, game, options);
 
   if (!*game) {

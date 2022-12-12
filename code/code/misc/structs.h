@@ -326,7 +326,7 @@ class affectedData {
     affectedData(const saveAffectedData &a);
     affectedData & operator=(const affectedData &a);
     ~affectedData();
- 
+
     bool operator !=(affectedData &cmp) { return !(*this == cmp); }
     bool operator ==(affectedData &cmp)
     {
@@ -381,7 +381,7 @@ inline void ADD_DELETE(T& a, const T& b) { a |= b; }
 template<class T>
 inline void REM_DELETE(T& a, const T& b) { a &= ~b; }
 
-inline int GET_BITS(int a, int p, int n) 
+inline int GET_BITS(int a, int p, int n)
 {
 // return ((a >> (p + 1 - n)) & ~(~0 << n)); }
   int x, y;
@@ -390,7 +390,7 @@ inline int GET_BITS(int a, int p, int n)
   return x & y;
 }
 
-inline int GET_BITS_CORRECT(int a, int p, int n) 
+inline int GET_BITS_CORRECT(int a, int p, int n)
 {
 // return ((a >> (p + 1 - n)) & ~(~0 << n)); }
   int x, y;

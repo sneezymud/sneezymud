@@ -9,7 +9,7 @@ int graffitiObject(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   if (!o || !ch)
     return FALSE;
-  
+
   sstring buf = sstring(arg).word(0);
 
   if (!isname(buf, o->name))
@@ -20,7 +20,7 @@ int graffitiObject(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       ch->sendTo("You are not skilled enough to do this without removing the equipment that lies between you and your target.\n\r");
     return TRUE;
   }
-  
+
   act("$n directs a stream of urine at $p, dissolving it completely.", TRUE,
     ch, o, NULL, TO_ROOM, NULL);
   act("You direct a stream of urine at $p, dissolving it completely.", TRUE,

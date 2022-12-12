@@ -58,18 +58,18 @@ void TObj::lookObj(TBeing *ch, int bits) const
 
 void TThing::lookAtObj(TBeing *ch, const char *, showModeT x) const
 {
-  ch->showTo(this, x);        // Show no-description 
+  ch->showTo(this, x);        // Show no-description
   ch->describeObject(this);
 }
 
 void TBeing::lookDark()
 {
   sendTo("It is very dark in here...\n\r");
-  
+
   // this already handles stuff like infravision, and glowing mobs
 
   list_char_in_room(roomp->stuff, this);
-  
+
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {
     if (dynamic_cast<TObj *>(*it) && canSee(*it))   // glowing objects
       showTo(*it, SHOW_MODE_DESC_PLUS);
@@ -84,7 +84,7 @@ void TBeing::lookDir(int keyword_no)
 
   if (keyword_no >= 10)  // adjust cause of our whacky array
     keyword_no -= 4;
-  
+
   sendTo(format("You look %swards.\n\r") % dirs[keyword_no]);
   act(format("$n looks %swards.") % dirs[keyword_no], TRUE, this, 0, 0, TO_ROOM);
 
@@ -110,7 +110,7 @@ void TBeing::lookDir(int keyword_no)
 	      sendTo(COLOR_ROOM_NAME, format("You see %s%s%s.\n\r") %                           addColorRoom(rp, 1) % rp->name  %norm());
 	    }
 	  } else {
-	    sendTo(COLOR_BASIC, format("You see %s%s%s.\n\r") % purple() % 
+	    sendTo(COLOR_BASIC, format("You see %s%s%s.\n\r") % purple() %
 		   rp->getNameNOC(this) % norm());
 	  }
 	} else {
@@ -192,10 +192,10 @@ void TBeing::lookInObj(sstring arg2, TThing *specific, unsigned int bits, const 
       }
 
       o->lookObj(this, bits);
-            
-    } else        // wrong argument 
+
+    } else        // wrong argument
       sendTo("You do not see that item here.\n\r");
-  } else                // no argument 
+  } else                // no argument
     sendTo("Look in what?!\n\r");
 }
 
@@ -213,13 +213,13 @@ void TBeing::lookRoom(bool changedZones)
     }
   }
 
-  // purple if color basic, nothing if no color, 
+  // purple if color basic, nothing if no color,
   // varied color if color room name
   sendRoomName(roomp);
-  if (!isPlayerAction(PLR_BRIEF)) 
+  if (!isPlayerAction(PLR_BRIEF))
     sendRoomDesc(roomp);
 
-  describeWeather(in_room);	
+  describeWeather(in_room);
   describeGround();
   describeRoomLight();
   //  doEvaluate("room");
@@ -279,7 +279,7 @@ void TBeing::lookAtRoom()
 {
   int res;
 
-  // purple if color basic, nothing if no color, 
+  // purple if color basic, nothing if no color,
   // varied color if color room name
   sendRoomName(roomp);
   sendRoomDesc(roomp);
@@ -381,7 +381,7 @@ void TBeing::lookingAtObj(TThing *specific)
     sendTo("Look at what?\n\r");
     return;
   }
- 
+
   if (tmpObj->ex_description) {
     if ((tmp_desc = tmpObj->ex_description->findExtraDesc(tmp))) {
       sstring tmp_desc_str = tmp_desc;
@@ -423,7 +423,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
     "down",     // 5
     "in",
     "at",
-    "",                                // Look at '' case 
+    "",                                // Look at '' case
     "room",
     "ne",      // 10
     "nw",
@@ -462,7 +462,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
   } else if (getPosition() == POSITION_SLEEPING){
     sendTo("You can't see anything -- you're sleeping!\n\r");
     return;
-  } else if (isAffected(AFF_BLIND) && !isImmortal() && 
+  } else if (isAffected(AFF_BLIND) && !isImmortal() &&
 	   !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
     sendTo("You can't see a damn thing -- you're blinded!\n\r");
     return;
@@ -491,7 +491,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
   } else {
     // sendrpf(COLOR_NONE, roomp, "argument=[%s]\n\r", argument.c_str());
     keyword_no = search_block(stripColorCodes(argument), keywords, FALSE);
-    
+
     // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
     if (keyword_no == -1) {
       if (argument.empty()) {
@@ -581,7 +581,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	if (dynamic_cast<TBeing *> (specific)) {
 	  lookAtBeing(specific);
 	  return;
-	} 
+	}
 
 	if (dynamic_cast<TObj *> (specific)) {
 	  lookingAtObj(specific);
@@ -786,7 +786,7 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
 	  }
 	}
 	if (!found) {
-	  if (bits)                 // If an object was found 
+	  if (bits)                 // If an object was found
 	    o2->lookAtObj(this, tmp, SHOW_MODE_TYPE);
 	  else
 	    sendTo("You do not see that here.\n\r");
@@ -800,12 +800,12 @@ void TBeing::doLook(const sstring &argument, cmdTypeT cmd, TThing *specific)
     }
       break;
 
-      // look '' 
+      // look ''
     case 8:
       lookRoom();
       break;
     case -1:
-      // wrong arg     
+      // wrong arg
       sendTo("Sorry, I didn't understand that!\n\r");
       break;
     case 9:

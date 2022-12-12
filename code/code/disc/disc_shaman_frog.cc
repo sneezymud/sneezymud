@@ -34,33 +34,33 @@ int vampireTransform(TBeing *ch)
 	TRUE, ch, NULL, NULL, TO_CHAR);
     return FALSE;
   }
-  
+
   if (!(mob = read_mobile(13749, VIRTUAL))) {
     ch->sendTo("It didn't seem to work.\n\r");
     return FALSE;
   }
   thing_to_room(mob,Room::VOID);
   mob->swapToStrung();
-  
 
-  act("You use your dark powers to transform into $N.", 
+
+  act("You use your dark powers to transform into $N.",
        TRUE, ch, NULL, mob, TO_CHAR);
   act("$n transforms into $N.",
        TRUE, ch, NULL, mob, TO_ROOM);
 
   SwitchStuff(ch, mob);
   setCombatStats(ch, mob, bat, SPELL_POLYMORPH);
-  
+
   --(*mob);
   *ch->roomp += *mob;
   --(*ch);
   thing_to_room(ch, Room::POLY_STORAGE);
-  
+
   // stop following whoever you are following.
   if (ch->master)
     ch->stopFollower(TRUE);
-  
-  // switch ch into mobile 
+
+  // switch ch into mobile
   ch->desc->character = mob;
   ch->desc->original = dynamic_cast<TPerson *>(ch);
 
@@ -78,7 +78,7 @@ int vampireTransform(TBeing *ch)
   REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
   appendPlayerName(ch, mob);
-  
+
   mob->setHeight(ch->getHeight()/5);
   mob->setWeight(ch->getWeight()/10);
 
@@ -147,7 +147,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, short bKnown)
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return FALSE;
   }
-  
+
   if (limb == MAX_WEAR) {
     caster->sendTo("You can't transform all of your limbs.\n\r");
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
@@ -164,7 +164,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, short bKnown)
   aff.location = APPLY_NONE;
   aff.duration = (combatRound((level / 5) + 2));
   aff.bitvector = 0;
-  aff.modifier = 0; 
+  aff.modifier = 0;
 
   aff2.type = SKILL_TRANSFORM_LIMB;
   aff2.location = APPLY_NONE;
@@ -243,8 +243,8 @@ int transformLimb(TBeing * caster, const char * buffer, int level, short bKnown)
         sprintf(newl, "%s", TransformLimbList[i].newName);
         sprintf(old, "%s", TransformLimbList[i].name);
         if (multi)
-          sprintf(buf, "Your %s tingle as they transform into %s!", old, newl); 
-        else 
+          sprintf(buf, "Your %s tingle as they transform into %s!", old, newl);
+        else
           sprintf(buf, "Your %s tingles as it transforms into %s!", old, newl);
         act(buf, FALSE, caster, 0, 0, TO_CHAR);
         if (multi)
@@ -261,8 +261,8 @@ int transformLimb(TBeing * caster, const char * buffer, int level, short bKnown)
 
     caster->makeLimbTransformed(caster, limb, TRUE);
     return ret;
-  } else {  
-    switch (critFail(caster, SKILL_TRANSFORM_LIMB)) {  
+  } else {
+    switch (critFail(caster, SKILL_TRANSFORM_LIMB)) {
       case CRIT_F_HITOTHER:
         CF(SKILL_TRANSFORM_LIMB);
         caster->rawBleed(limb, (level * 3) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
@@ -277,7 +277,7 @@ int transformLimb(TBeing * caster, const char * buffer, int level, short bKnown)
 
 
 // STORMY SKIES
- 
+
 int stormySkies(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   int rc;
@@ -286,7 +286,7 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, short bKnown)
     return SPELL_FAIL;
   }
 
-  if (!((Weather::getWeather(*victim->roomp) == Weather::RAINY) || 
+  if (!((Weather::getWeather(*victim->roomp) == Weather::RAINY) ||
      (Weather::getWeather(*victim->roomp) == Weather::LIGHTNING) ||
      (Weather::getWeather(*victim->roomp) == Weather::SNOWY))) {
     caster->sendTo("You fail to call upon the weather to aid you!\n\r");
@@ -296,15 +296,15 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, short bKnown)
   }
 
   caster->reconcileHurt(victim, discArray[SPELL_STORMY_SKIES]->alignMod);
-  
+
   int dam = caster->getSkillDam(victim, SPELL_STORMY_SKIES, caster->getSkillLevel(SPELL_STORMY_SKIES), caster->getAdvLearning(SPELL_STORMY_SKIES));
- 
+
   if ((Weather::getWeather(*victim->roomp) == Weather::RAINY) ||
      (Weather::getWeather(*victim->roomp) == Weather::LIGHTNING)) {
     if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
       if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
         dam /= 2; // half damage
- 
+
       if (critSuccess(caster, SPELL_STORMY_SKIES)) {
         CS(SPELL_STORMY_SKIES);
         dam *= 2;
@@ -336,11 +336,11 @@ int stormySkies(TBeing * caster, TBeing * victim, int level, short bKnown)
       caster->sendTo("Nothing seems to happen.\n\r");
       return SPELL_FAIL;
     }
-  } else if (Weather::getWeather(*victim->roomp) == Weather::SNOWY) { 
+  } else if (Weather::getWeather(*victim->roomp) == Weather::SNOWY) {
     if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_STORMY_SKIES)) {
       if (victim->isLucky(caster->spellLuckModifier(SPELL_STORMY_SKIES)))
         dam /= 2;         // half damage
- 
+
       if (critSuccess(caster, SPELL_STORMY_SKIES)) {
         CS(SPELL_STORMY_SKIES);
         dam *= 2;
@@ -464,7 +464,7 @@ int aquaticBlast(TBeing * caster, TBeing * victim, int level, short bKnown, int 
           t = NULL;
         }
       }
- 
+
       victim->setPosition(POSITION_SITTING);
       victim->addToWait(combatRound(1));
     } else if (victim->isLucky(caster->spellLuckModifier(SPELL_AQUATIC_BLAST))) {
@@ -586,7 +586,7 @@ int shapeShift(TBeing *caster, int level, short bKnown)
   affectedData aff2;
 
   buffer = caster->spelltask->orig_arg;
- 
+
   discNumT das = getDisciplineNumber(SPELL_SHAPESHIFT, FALSE);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, "Bad disc for SPELL_SHAPESHIFT");
@@ -606,7 +606,7 @@ int shapeShift(TBeing *caster, int level, short bKnown)
       continue;
 
     if (!isname(buffer, ShapeShiftList[i].name))
-      continue;               
+      continue;
 
     break;
   }
@@ -614,17 +614,17 @@ int shapeShift(TBeing *caster, int level, short bKnown)
   if (i >= LAST_SHAPED_MOB) { // i > LAST_SHAPED_MOB cannot happen from above
     caster->sendTo("You haven't a clue where to start on that one.\n\r");
     return SPELL_FAIL;
-  } 
+  }
 
  if (!(mob = read_mobile(ShapeShiftList[i].number, VIRTUAL))) {
     caster->sendTo("You couldn't summon an image of that creature.\n\r");
     return SPELL_FAIL;
   }
-  thing_to_room(mob,Room::VOID);   // just so if extracted it isn't in NOWHERE 
+  thing_to_room(mob,Room::VOID);   // just so if extracted it isn't in NOWHERE
   mob->swapToStrung();
 
  int duration;
-  
+
   if (caster->bSuccess(bKnown, SPELL_SHAPESHIFT)) {
     switch (critSuccess(caster, SPELL_SHAPESHIFT)) {
       case CRIT_S_KILL:
@@ -662,21 +662,21 @@ int shapeShift(TBeing *caster, int level, short bKnown)
     if (found) {
       act("Your equipment falls from your body as your flesh turns liquid.",
                TRUE, caster, NULL, mob, TO_CHAR);
-      act("Slowly you take on the shape of $N.", 
+      act("Slowly you take on the shape of $N.",
                TRUE, caster, NULL, mob, TO_CHAR);
     } else {
       act("Your flesh turns liquid.", TRUE, caster, NULL, mob, TO_CHAR);
       act("Slowly your flesh melts and you take on the shape of $N.", TRUE, caster, NULL, mob, TO_CHAR);
     }
-  
+
     --(*caster);
     thing_to_room(caster, Room::POLY_STORAGE);
 
-    // stop following whoever you are following.. 
+    // stop following whoever you are following..
     if (caster->master)
       caster->stopFollower(TRUE);
 
-    // switch caster into mobile 
+    // switch caster into mobile
     caster->desc->character = mob;
     caster->desc->original = dynamic_cast<TPerson *>(caster);
 
@@ -693,8 +693,8 @@ int shapeShift(TBeing *caster, int level, short bKnown)
     mob->desc = caster->desc;
     caster->desc = NULL;
     caster->polyed = POLY_TYPE_SHAPESHIFT;
-    
-    
+
+
     // transfer spells - some bugs
 //    caster->spellAffectJoin(mob, caster->affected, AVG_DUR_NO, AVG_EFF_YES);
 
@@ -708,7 +708,7 @@ int shapeShift(TBeing *caster, int level, short bKnown)
 
     // fix name so poly'd shaman can be found
     appendPlayerName(caster, mob);
-        
+
 //    mob->setLifeforce(min((mob->getLifeforce() - 15), 85));
     return SPELL_SUCCESS;
   } else {
@@ -769,12 +769,12 @@ int castShapeShift(TBeing *caster)
   int bKnown = caster->getSkillValue(SPELL_SHAPESHIFT);
 
   if ((ret=shapeShift(caster,level,bKnown)) == SPELL_SUCCESS) {
-  } else 
+  } else
     caster->nothingHappens();
   return TRUE;
 }
 
-int TBeing::doTransform(const char *argument) 
+int TBeing::doTransform(const char *argument)
 {
   int i = 0, bKnown = 0;
   wearSlotT limb = WEAR_NOWHERE;
@@ -844,19 +844,19 @@ int TBeing::doTransform(const char *argument)
       act("$n seems to have caused $s limbs to start bleeding!",
           FALSE, this, 0, NULL, TO_ROOM);
   } else if (ret==SPELL_SAVE) {
-      act("You are not powerful enough to transform that limb.", 
+      act("You are not powerful enough to transform that limb.",
           FALSE, this, NULL, NULL, TO_CHAR);
-      act("Nothing seems to happen.", 
+      act("Nothing seems to happen.",
           FALSE, this, NULL, NULL, TO_ROOM);
   } else if (ret==SPELL_FAIL) {
-      act("You fail to transform your limbs.", 
+      act("You fail to transform your limbs.",
           FALSE, this, NULL, NULL, TO_CHAR);
-      act("Nothing seems to happen.", 
+      act("Nothing seems to happen.",
           FALSE, this, NULL, NULL, TO_ROOM);
   } else {
-      act("Nothing seems to happen.", 
+      act("Nothing seems to happen.",
           FALSE, this, NULL, NULL, TO_CHAR);
-      act("Nothing seems to happen.", 
+      act("Nothing seems to happen.",
           FALSE, this, NULL, NULL, TO_ROOM);
   }
   if (IS_SET(ret, CASTER_DEAD))
@@ -910,7 +910,7 @@ int transformLimb(TBeing * caster, const char * buffer)
     lag_t rounds = discArray[SKILL_TRANSFORM_LIMB]->lag;
     diff = discArray[SKILL_TRANSFORM_LIMB]->task;
 
-    
+
     start_cast(caster, NULL, NULL, caster->roomp, SKILL_TRANSFORM_LIMB, diff, 1, buffer, rounds, caster->in_room, 0, 0,TRUE, 0);
     return FALSE;
 }
@@ -1064,7 +1064,7 @@ int deathWave(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
         break;
       case CRIT_F_NONE:
         break;
-    } 
+    }
     caster->nothingHappens();
     return SPELL_FAIL;
   }
@@ -1076,10 +1076,10 @@ int deathWave(TBeing *caster, TBeing *victim, TMagicItem * obj)
   int ret = 0;
 
   ret = deathWave(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), 0);
-  if (IS_SET(ret, VICTIM_DEAD)) 
+  if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
-  
-  if (IS_SET(ret, CASTER_DEAD)) 
+
+  if (IS_SET(ret, CASTER_DEAD))
     ADD_DELETE(rc, DELETE_THIS);
 
   return rc;
@@ -1095,7 +1095,7 @@ int deathWave(TBeing *caster, TBeing *victim)
   lag_t rounds = discArray[SPELL_DEATHWAVE]->lag;
   diff = discArray[SPELL_DEATHWAVE]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_DEATHWAVE, diff, 1, "", rounds, 
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_DEATHWAVE, diff, 1, "", rounds,
 caster->in_room, 0, 0,TRUE, 0);
 
   return TRUE;

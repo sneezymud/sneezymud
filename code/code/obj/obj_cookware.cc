@@ -88,9 +88,9 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
     vlogf(LOG_BUG, format("TCookware::pourMeIntoDrink2(): No object (%d) in database!") %  Obj::GENERIC_POOL);
     return;
   }
-  
+
   obj = read_object(robj, REAL);
-  
+
   pool = dynamic_cast<TPool *>(obj);
   if (!pool)
     return;
@@ -106,7 +106,7 @@ void TCookware::pourMeIntoDrink2(TBeing *ch, TBaseCup *from)
     liquidInfo[from->getDrinkType()]->name % ch->objs(this);
   act(buf, TRUE, ch, 0, 0, TO_ROOM);
 
-  
+
   // init the pool
   pool->initPool(from->getDrinkUnits(), from->getDrinkType());
   from->genericEmpty();

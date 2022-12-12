@@ -148,15 +148,15 @@ TOpal *find_biggest_powerstone(const TBeing *ch)
     t->powerstoneCheck(&stone);
   }
   // Check through char's inventory -- only the biggest powerstone charges
-  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) 
+  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it)
     t->powerstoneCheck(&stone);
-  
+
   return stone;
 }
 
 void TOpal::powerstoneCheck(TOpal **topMax)
 {
-  if (!*topMax || (psGetStrength() > (*topMax)->psGetStrength())) 
+  if (!*topMax || (psGetStrength() > (*topMax)->psGetStrength()))
     *topMax = this;
 }
 
@@ -165,7 +165,7 @@ int TOpal::suggestedPrice() const
   // these formulas are strictly for consistency and have not been evaluated
   // with respect to balance
   int str = psGetStrength();
-  
+
   // first term increases based on how charged the powerstone is
   // second term is simply to make larger opals more expensive
   return (80 * str * str * str) + (100 * psGetCarats()) + (int)(10.0 * getWeight() * material_nums[getMaterial()].price);
@@ -175,7 +175,7 @@ void TOpal::lowCheck()
 {
   int ap = suggestedPrice();
   if (ap != obj_flags.cost && ap) {
-    vlogf(LOG_LOW, format("Opal (%s:%d) has a bad price (%d).  should be (%d)") % 
+    vlogf(LOG_LOW, format("Opal (%s:%d) has a bad price (%d).  should be (%d)") %
          getName() % objVnum() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }

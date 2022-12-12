@@ -9,14 +9,14 @@
 #define LOGS_PER_ROOM 5
 
 std::map <int, bool> mRoomsLogsHarvested;
-    
+
 void TBeing::doLogging(){
 
   std::vector<int>treetypes;
   const int woodtypes[] = { 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
     86, 87, 88, 0 };
   int i = 0;
-  
+
 
 
   if(!roomp->isForestSector()){
@@ -46,7 +46,7 @@ void TBeing::doLogging(){
 TObj *harvest_a_log(TRoom *rp){
   TObj *log=NULL;
   int log_vnum = rp->getTreetype();
-  
+
   if (rp->getLogsHarvested() > LOGS_PER_ROOM) {
     vlogf(LOG_BUG, "Lumberjack in a treeless room.");
     rp->setLogsHarvested(LOGS_PER_ROOM-1);
@@ -124,7 +124,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
             TRUE, ch, NULL, 0, TO_ROOM);
           if (!::number(0,100/learning))
             ch->task->timeLeft--;
-          if(!(ch->bSuccess(SKILL_LOGGING) || 
+          if(!(ch->bSuccess(SKILL_LOGGING) ||
                 (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0,99))) ||
                 !(::number(1,LOGS_PER_ROOM*3/2) > rp->getLogsHarvested())) {
             act("You don't find any promising trees.",
@@ -139,7 +139,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
           // find a tree
           log_vnum = rp->getTreetype();
           log = read_object(log_vnum, VIRTUAL);
-          if(log && (ch->bSuccess(SKILL_LOGGING) || 
+          if(log && (ch->bSuccess(SKILL_LOGGING) ||
                 (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0,99))) &&
                 (::number(1,LOGS_PER_ROOM*3/2) > rp->getLogsHarvested())) {
             if (!(ch->canSee(log)))
@@ -151,7 +151,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
               ch->stopTask();
               return TRUE;
             }
-            ch->sendTo(format("You've found a %s tree!\n\r") 
+            ch->sendTo(format("You've found a %s tree!\n\r")
                 % sstring(log->getName()).word(1));
             act("You begin to chop at the tree.",
               FALSE, ch, NULL, 0, TO_CHAR);
@@ -175,14 +175,14 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
         case 1:
           ch->addToMove(::number(-1,-10+ch->getSkillValue(SKILL_LOGGING)/10));
           if (ch->getMove() < 5) {
-            act("You are much too tired to continue chopping.", 
+            act("You are much too tired to continue chopping.",
                 FALSE, ch, tool, 0, TO_CHAR);
-            act("$n stops chopping, and wipes sweat from $s brow.", 
+            act("$n stops chopping, and wipes sweat from $s brow.",
                 TRUE, ch, tool, 0, TO_ROOM);
             ch->stopTask();
             return TRUE;
           }
-          
+
           act("You chop at the tree with your $o.",
                     FALSE, ch, tool, 0, TO_CHAR);
           act("$n chops at a tree with $s $o.",
@@ -219,9 +219,9 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
         case 0:
           if((ch->bSuccess(SKILL_LOGGING) ||
               (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0,99))) &&
-             (log=harvest_a_log(rp))) 
+             (log=harvest_a_log(rp)))
           {
-            
+
             *rp += *log;
 
             int lvl=ch->GetMaxLevel();
@@ -233,7 +233,7 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
             // 10% exp variance
             double exp=mob_exp(lvl);
             exp *= 0.1*(1.0+((::number(0,20)-10)/100.0)); // 0.1 x fishing xp
-            
+
             gain_exp(ch, exp, -1);
 
             ch->doSave(SILENT_YES);

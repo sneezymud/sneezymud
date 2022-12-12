@@ -137,19 +137,19 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
               FALSE, this, obj, victim, TO_NOTVICT);
         }
 
-        act("Suddenly, $n stabs you in the back!", FALSE, this, obj, victim, TO_VICT);  
+        act("Suddenly, $n stabs you in the back!", FALSE, this, obj, victim, TO_VICT);
 
         auto weapon = dynamic_cast<TBaseWeapon *>(obj);
-        
+
         if (weapon && weapon->checkSpec(victim, CMD_BACKSTAB, "-special-", this) == DELETE_VICT) {
           delete victim;
           victim = NULL;
           return DELETE_VICT;
         }
 
-        // poison        
+        // poison
         if (victim && weapon && weapon->isPoisoned())
-          weapon->applyPoison(victim);     
+          weapon->applyPoison(victim);
       }
     }
   } else {
@@ -202,7 +202,7 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
         if (!FDt->follower->isAffected(AFF_GROUP))
           continue;
 
-        if ((victim = FDt->follower->fight())) 
+        if ((victim = FDt->follower->fight()))
           break;
       }
 
@@ -348,9 +348,9 @@ int backstab(TBeing *thief, TBeing * victim)
     thief->setSpellHitroll(thief->getSpellHitroll() + base);
     rc = thief->backstabHit(victim, obj);
     thief->setSpellHitroll(thief->getSpellHitroll() - base);
-    if (IS_SET_DELETE(rc, DELETE_VICT)) 
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
-    
+
     victim->addHated(thief);
   } else {
     act("$n makes a pathetic attempt at backstabbing $N.", FALSE, thief, 0, victim, TO_NOTVICT);
@@ -367,7 +367,7 @@ int backstab(TBeing *thief, TBeing * victim)
 //////////////////////////////////////////////////////////////////
 // Throat slitting: Meant to be an advanced form of backstabbing
 /////////////////// not to replace backstab but to enhance the
-/////////////////// flavor of the thief class by giving them 
+/////////////////// flavor of the thief class by giving them
 /////////////////// something else that looks different without
 /////////////////// making the class overpowered skillwise
 /////////////////////////////////////////////////////////////////
@@ -489,7 +489,7 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj)
           return DELETE_VICT;
         }
 
-        // poison        
+        // poison
         if (victim && weapon && weapon->isPoisoned())
           weapon->applyPoison(victim);
       }
@@ -546,7 +546,7 @@ int TBeing::doThroatSlit(const char *argument, TBeing *vict)
         if (!FDt->follower->isAffected(AFF_GROUP))
           continue;
 
-        if ((victim = FDt->follower->fight())) 
+        if ((victim = FDt->follower->fight()))
           break;
       }
 
@@ -698,9 +698,9 @@ int throatSlit(TBeing *thief, TBeing * victim)
     thief->setSpellHitroll(thief->getSpellHitroll() + base);
     rc = thief->throatSlitHit(victim, obj);
     thief->setSpellHitroll(thief->getSpellHitroll() - base);
-    if (IS_SET_DELETE(rc, DELETE_VICT)) 
+    if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
-    
+
     victim->addHated(thief);
   } else {
     act("$n makes a pathetic attempt at $N's life.", FALSE, thief, 0, victim, TO_NOTVICT);
@@ -728,7 +728,7 @@ int TBeing::doPoisonWeapon(sstring arg)
   }
   if(checkBusy())
     return FALSE;
-  
+
   arg = one_argument(arg, namebuf);
 
   if(arg.empty() ||
@@ -773,7 +773,7 @@ int TBeing::doPoisonWeapon(sstring arg)
 
 int TThing::poisonMePoison(TBeing *ch, TBaseWeapon *)
 {
-  act("$p isn't the proper kind of poison for this.", 
+  act("$p isn't the proper kind of poison for this.",
             FALSE, ch, this, 0, TO_CHAR);
   return FALSE;
 }
@@ -785,11 +785,11 @@ void addPoisonDefaults(affectedData *aff, int level, int duration)
   aff->bitvector=AFF_POISON;
   aff->renew=-1;
   aff->level=level;
-  aff->duration=duration;  
+  aff->duration=duration;
 }
 
 // this is ugly as hell
-bool addPoison(affectedData aff[5], 
+bool addPoison(affectedData aff[5],
 	       liqTypeT liq, int level, int duration){
   addPoisonDefaults(&aff[4], level, duration);
   aff[4].type = AFFECT_DISEASE;
@@ -830,7 +830,7 @@ bool addPoison(affectedData aff[5],
       aff[1].location=APPLY_FOC;
       aff[1].modifier=-20;
       break;
-    case LIQ_POISON_HEMLOCK:      
+    case LIQ_POISON_HEMLOCK:
       addPoisonDefaults(&aff[0], level, duration);
       aff[0].location=APPLY_STR;
       aff[0].modifier=-20;
@@ -910,7 +910,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
   int j;
   sstring s;
   spellNumT skill=SKILL_POISON_WEAPON;
-    
+
   if (getDrinkUnits() <= 0) {
     act("$p seems not to have anything in it.",
        TRUE, ch, this, 0, TO_CHAR);
@@ -927,14 +927,14 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
     }
 
     weapon->setPoison(getDrinkType());
-    
+
     s = format("You coat $p with %s.") % liquidInfo[getDrinkType()]->name;
     act(s, FALSE, ch, weapon, NULL, TO_CHAR);
     s = format("$n coats $p with %s.") % liquidInfo[getDrinkType()]->name;
     act(s, FALSE, ch, weapon, NULL, TO_ROOM);
   } else {
     if(critFail(ch, skill) != CRIT_F_NONE){
-      act("You slip up and cut yourself with $p!", 
+      act("You slip up and cut yourself with $p!",
 	  FALSE, ch, weapon, NULL, TO_CHAR);
       act("$n slips up and cuts $mself with $p!",
 	  FALSE, ch, weapon, NULL, TO_ROOM);
@@ -950,7 +950,7 @@ int TBaseCup::poisonMePoison(TBeing *ch, TBaseWeapon *weapon)
       doLiqSpell(ch, ch, getDrinkType(), 1);
     } else {
       weapon->setPoison(LIQ_WATER);
-      
+
       s = format("You coat $p with %s.") % liquidInfo[getDrinkType()]->name;
       act(s, FALSE, ch, weapon, NULL, TO_CHAR);
       s = format("$n coats $p with %s.") % liquidInfo[getDrinkType()]->name;
@@ -1133,7 +1133,7 @@ int garrotte(TBeing *thief, TBeing * victim)
     return DELETE_VICT;
   } else if (rc)
     return TRUE;
-  
+
   return FALSE;
 }
 
@@ -1259,7 +1259,7 @@ int cudgel(TBeing *thief, TBeing *victim)
   if (victim->fight())
     bKnown /= 2;
   thief->reconcileHurt(victim,0.06);
-  if ((thief->bSuccess(bKnown, SKILL_CUDGEL) && 
+  if ((thief->bSuccess(bKnown, SKILL_CUDGEL) &&
        !thief->isNotPowerful(victim, level, SKILL_CUDGEL, SILENT_YES)) || !victim->awake()) {
     if ((i = thief->specialAttack(victim, SKILL_CUDGEL)) ||
 	(i == GUARANTEED_SUCCESS)) {

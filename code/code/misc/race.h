@@ -242,7 +242,7 @@ public:
   void remTalent(unsigned int n);
 
   const Immunities & getImmunities() const;
-  
+
   int getBaseArmor() const; // gets the basic armor class of this race (usually 1000)
 
   int getGarbles() const; // gets the garbles which members of this race have by default
@@ -304,6 +304,6 @@ private:
    public:
   // Dissection Information
   dissectInfo tDissectItem[2];
-}; 
+};
 
 extern Race *Races[MAX_RACIAL_TYPES];

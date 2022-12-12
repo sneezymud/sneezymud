@@ -16,36 +16,36 @@ class Config {
   // the minimum "hardness" for a material to damage/blunt a weapon
   // when hitting.
   static int WEAPON_DAM_MIN_HARDNESS;
-  
+
   // the max value of a hardness roll, raising it = weapon
   // damage/blunt DECREASE
   static int WEAPON_DAM_MAX_HARDNESS;
-  
+
   // the max value of a sharpness roll, raising it = weapon blunt DECREASE
   static int WEAPON_DAM_MAX_SHARP;
-  
+
   // causes items left in repair to be deleted after a set number of days.
   // Good to keep things circulating, but bad if extended downtime anticipated.
   // Simply deletes the file in mobdata/repairs/, the tickets still exist
   // and the repairman will say he doesn't have the item.
   static bool NUKE_REPAIR_ITEMS;
-  
-  // Enables a check to validate that players are not multiplaying. 
+
+  // Enables a check to validate that players are not multiplaying.
   // check is done each login and periodically for all chars logged in.
   static bool CHECK_MULTIPLAY;
-  
+
   // code will disallow any bad multiplay event
   static bool FORCE_MULTIPLAY_COMPLIANCE;
 
   // Enables automatic generation of repossession mobs based on item max-exist.
   // Not extremely popular, but a good way to get item overturn.
   static bool REPO_MOBS;
-  
+
   // items that are over max-exist get hunted by a buffed up version of the
   // hunter.  Requires REPO_MOBS be TRUE.
   // VERY unpopular
   static bool SUPER_REPO_MOBS;
-  
+
   // shops tend to get a lot of goods that strictly speaking aren't isSimilar()
   // slightly damaged, depreciated, etc.
   // We can eliminate this by turning this on.  Any item not perfect will get
@@ -56,14 +56,14 @@ class Config {
   // more then a few weeks.  Conserves disk space and speeds up the boot
   // process significantly.  Periods of college breaks are bypassed.
   static bool auto_deletion;
-  
+
   // requires auto-deletion turned on causes deletion only of the rent
   // file.  Otherwise pfile, rent and account go
   static bool rent_only_deletion;
-  
+
   // whether to tax rent at the public hostels
   static bool rent_tax;
-  
+
   // Causes mobs in inactive zones to be deleted.  Typically, 50% of the mud's
   // mobs would qualify.  Dramatically speeds up the mobileActivity loop and
   // improves CPU performance.
@@ -98,7 +98,7 @@ class Config {
 
  public:
   static bool doConfiguration(int argc=0, char *argv[]=0);
-  
+
   static int ItemDamageRate(){ return ITEM_DAMAGE_RATE; }
   static int WeaponDamMinHardness(){ return WEAPON_DAM_MIN_HARDNESS;}
   static int WeaponDamMaxHardness(){ return WEAPON_DAM_MAX_HARDNESS;}

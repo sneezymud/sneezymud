@@ -80,7 +80,7 @@ int TMonster::protectionStuff()
   if(getPosition() <= POSITION_SLEEPING)
     return FALSE;
 
-  if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) || master) 
+  if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) || master)
     return FALSE;
 
   if (GuildProcs(spec) || UtilProcs(spec))
@@ -126,7 +126,7 @@ int TMonster::protectionStuff()
       TBeing *tbt = dynamic_cast<TBeing *>(t);
       if (!tbt || (this == tbt))
         continue;
-      if (!tbt->fight()) 
+      if (!tbt->fight())
         continue;
       if (tbt->fight()->isImmortal() || tbt->fight()->desc)
         continue;
@@ -205,7 +205,7 @@ int TMonster::charmeeStuff()
             stopFollower(TRUE);
             return TRUE;
           }
-	  
+
 	  if(!master->isPc() || IS_SET(specials.act, ACT_GUARDIAN)){
 	    if (!isDumbAnimal())
 	      act("$n hollers, \"I'll save you master!\"",
@@ -287,12 +287,12 @@ int TMonster::wanderAround()
   for(iterDir=MIN_DIR; iterDir < MAX_DIR; iterDir++)
     if (exitDir(iterDir))
       numExits++;
-  
+
   if (!numExits)
     return false;
 
   // choose one of the exits at random
-  unsigned int iterEx = ::number(0, numExits-1); 
+  unsigned int iterEx = ::number(0, numExits-1);
   for (iterDir=MIN_DIR; iterDir < MAX_DIR; iterDir++) {
     if (exitDir(iterDir)) {
       if (!iterEx)
@@ -335,7 +335,7 @@ int TMonster::mobileWander(dirTypeT door)
   TRoom *rp = NULL, *rp2 = NULL;
   int rc;
 
-  if ((getPosition() < POSITION_STANDING) || 
+  if ((getPosition() < POSITION_STANDING) ||
       !exit_ok(exitp = exitDir(door), &rp) ||
       (rp->isRoomFlag(ROOM_NO_MOB) && !isPolice()) ||
       !(rp2 = roomp) || master ||
@@ -349,7 +349,7 @@ int TMonster::mobileWander(dirTypeT door)
   if (IS_SET(exitp->condition, EXIT_SECRET) &&
       IS_SET(exitp->condition, EXIT_CLOSED))
     return 0;
-  
+
   if ((rp->isWaterSector() &&
           !(isFlying() || isLevitating() || isAffected(AFF_SWIM))) ||
       (rp->isVertSector() &&
@@ -384,7 +384,7 @@ int TMonster::targetFound()
   TBeing *v;
   int rc;
 
-  if (!(v = specials.hunting) || !awake()) 
+  if (!(v = specials.hunting) || !awake())
     return FALSE;
 
   if (!canSee(v, INFRA_YES))
@@ -400,9 +400,9 @@ int TMonster::targetFound()
       if(strcmp(pers(v),"someone"))
 	act(screamBuf, FALSE, this, 0, 0, TO_ROOM);
       // hee hee -GR
-    } else 
+    } else
       doAction(fname(v->name),CMD_GROWL);
-    
+
     rc = takeFirstHit(*v);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete v;
@@ -425,7 +425,7 @@ int TMonster::hunt()
     REMOVE_BIT(specials.act, ACT_HUNTING);
     return FALSE;
   }
- 
+
   if (fight() || (attackers >= 1))
     return FALSE;
 
@@ -437,19 +437,19 @@ int TMonster::hunt()
   // Don't pick on level 15 or less
   // Peel
   if (!::number(0,4) && hasClass(CLASS_CLERIC) && persist >= 30 && !fight() &&
-      !spelltask && hunted && !sameRoom(*hunted) && 
+      !spelltask && hunted && !sameRoom(*hunted) &&
       hunted->GetMaxLevel() > 15 && !isPolice()){
-    if(roomp && hunted->roomp && 
+    if(roomp && hunted->roomp &&
        roomp->getZoneNum()  == hunted->roomp->getZoneNum()){
       if(doesKnowSkill(SPELL_SUMMON) && getSkillValue(SPELL_SUMMON) > 33 &&
-	 !isNotPowerful(hunted, getSkillLevel(SPELL_SUMMON), 
+	 !isNotPowerful(hunted, getSkillLevel(SPELL_SUMMON),
 			SPELL_SUMMON, SILENT_YES)) {
-	act("$n utters the words, 'Set it free and if it returns, it was meant to be.'", 
+	act("$n utters the words, 'Set it free and if it returns, it was meant to be.'",
 	    TRUE, this, 0, 0, TO_ROOM);
 	rc = doDiscipline(SPELL_SUMMON, hunted->name);
       }
     } else {
-      if(doesKnowSkill(SPELL_ASTRAL_WALK) && 
+      if(doesKnowSkill(SPELL_ASTRAL_WALK) &&
 	 getSkillValue(SPELL_ASTRAL_WALK) > 33){
 	act("$n utters the words, 'You can run, but you can't hide!'",
 	    TRUE, this, 0, 0, TO_ROOM);
@@ -533,7 +533,7 @@ int TMonster::hunt()
             break;
         }
       }
-      
+
       if (res != DIR_NONE) {
         if (legalMobMovement(this, res)) {
           rc = goDirection(res);
@@ -690,7 +690,7 @@ int TMonster::superScavenger()
         delete t;
         t = NULL;
       }
-      if (IS_SET_DELETE(rc, DELETE_THIS)) 
+      if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
 #if 0
@@ -722,7 +722,7 @@ int TMonster::superScavenger()
       return TRUE;
     }
   }
-  
+
   // best_o = NULL here, check room for goodies
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
     rc = t->scavengeMe(this, &best_o);
@@ -810,19 +810,19 @@ int TMonster::remove()
   return FALSE;
 }
 
-// routine switches to wimpiest in room based on lowest "score" 
-// a high "score" implies you are not a wimp 
-// might also randomly switch just for the hell of it 
-// score is based on current hit pts, current mana and AC 
-//fudge factors are thrown in so switch preferences will be toward PC's 
-// and away from newbie (level <5) PC's  - Batopr 
+// routine switches to wimpiest in room based on lowest "score"
+// a high "score" implies you are not a wimp
+// might also randomly switch just for the hell of it
+// score is based on current hit pts, current mana and AC
+//fudge factors are thrown in so switch preferences will be toward PC's
+// and away from newbie (level <5) PC's  - Batopr
 int TMonster::senseWimps()
 {
   TBeing *tmp_victim = NULL;
   TThing *t=NULL;
   int score, smallest=100000;
   TBeing *wimp = NULL;
-  
+
   if (!fight() || !awake())
     return FALSE;
 
@@ -850,7 +850,7 @@ int TMonster::senseWimps()
     }
 
     if (beingUsed) {
-      if (!isDumbAnimal()) 
+      if (!isDumbAnimal())
         doSay("I think I'll just take care of you first!");
       act("$n <R>switches to $N<Z>.", TRUE, this, 0, wimp, TO_NOTVICT);
       act("$n <R>switches to you<Z>.", TRUE, this, 0, wimp, TO_VICT);
@@ -879,7 +879,7 @@ int TMonster::senseWimps()
       if (::number(0,1) || tmp_victim->isImmortal())
         continue;
       aiWimpCheck(tmp_victim);
-      return TRUE; 
+      return TRUE;
     }
   }
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
@@ -901,7 +901,7 @@ int TMonster::senseWimps()
 
     // protect recently dead PCs
     if ((tmp_victim->getHit() < 15) && tmp_victim->isPc())
-      continue; 
+      continue;
 
     // protect the true newbie
     if ((tmp_victim->GetMaxLevel() < 3) && tmp_victim->isPc())
@@ -968,13 +968,13 @@ int TMonster::senseWimps()
     score += tmp_victim->getMana();
     score += (2000 - tmp_victim->getArmor());
     score += tmp_victim->plotStat(STAT_CURRENT, STAT_KAR, 0, 2000, 1000);
-  
+
 // a lot of these adjustments are so the mob fights the person we want it
 // to.  most of its arbitrary, ie. a mounted person _should_ be more powerful
-// in reality, but otherwise the master (a PC) would rarely be hit 
-// artificial newbie protection 
+// in reality, but otherwise the master (a PC) would rarely be hit
+// artificial newbie protection
     if ((tmp_victim->GetMaxLevel() < 10) && tmp_victim->isPc())
-      score += (500 - 50*tmp_victim->GetMaxLevel());   
+      score += (500 - 50*tmp_victim->GetMaxLevel());
 
     // a non combatant
     if (!tmp_victim->fight()) {
@@ -1014,7 +1014,7 @@ int TMonster::senseWimps()
     if (wimp && wimp->fight() && !::number(0,3))
       aiWimpCheck(wimp);
   }
-  if (!wimp) 
+  if (!wimp)
     return FALSE;
 
   // lets give a big chance of switching to a horse's rider
@@ -1043,7 +1043,7 @@ int TMonster::senseWimps()
         setCharFighting(wimp);
         return TRUE;
       } else return FALSE;
-    } else   // we are fighting the wimp already 
+    } else   // we are fighting the wimp already
       return FALSE;
   } else {
     if (wimp->isPc() && wimp->task &&
@@ -1115,7 +1115,7 @@ int TMonster::fighterMove(TBeing &vict)
       if (!canSee(t)) {
 	      continue;
       }
-      if (t && t->isAffected(AFF_GROUP) && 
+      if (t && t->isAffected(AFF_GROUP) &&
 	        t->hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
 	        (badspell || !::number(0,4)) &&
 	        canBash(t, SILENT_YES) && getPosition() > POSITION_SITTING){
@@ -1123,7 +1123,7 @@ int TMonster::fighterMove(TBeing &vict)
       }
     }
   }
-  
+
   //distinguish between fighting a caster and a non-caster
   if (vict.hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_SHAMAN) &&
       vict.getPosition() > POSITION_SITTING) {
@@ -1307,7 +1307,7 @@ int TMonster::monkMove(TBeing &vict)
     } else if ((num <= 15) &&
               (canDisarm(&vict, SILENT_YES)) &&
               (getPosition() >= POSITION_CRAWLING) &&
-              (vict.heldInPrimHand() || 
+              (vict.heldInPrimHand() ||
                 (vict.heldInSecHand() && !secHandCloth) ||
               (secHandCloth && !secHandCloth->isShield()) ||
               // trying to account for disarm working 1/3 of time with shield
@@ -1350,7 +1350,7 @@ int TMonster::thiefMove(TBeing &vict)
 #if 0
   TBaseClothing *secHandCloth = dynamic_cast<TBaseClothing *>(vict.heldInSecHand());
 #endif
-  
+
   if (!awake())
     return FALSE;
 
@@ -1410,7 +1410,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
   spellNumT spell = TYPE_UNDEFINED;
   int j;
   discNumT i, best_disc;
-  discNumT good_discs[]={DISC_AIR, DISC_ALCHEMY, DISC_EARTH, 
+  discNumT good_discs[]={DISC_AIR, DISC_ALCHEMY, DISC_EARTH,
 		    DISC_FIRE, DISC_SORCERY, DISC_SPIRIT, DISC_WATER, DISC_NONE};
 
   on_me = FALSE;
@@ -1422,7 +1422,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       continue;
     }
 
-    if ((cdisc->getLearnedness() >= 
+    if ((cdisc->getLearnedness() >=
 	 ch.getDiscipline(best_disc)->getLearnedness()) ||
 	(best_disc==DISC_MAGE && cdisc->getLearnedness()>20)){
 
@@ -1442,11 +1442,11 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
   // PANIC spells
   // two varieties of teleport:
   spell = SPELL_TELEPORT;
-  if (ch.doesKnowSkill(spell) && 
+  if (ch.doesKnowSkill(spell) &&
       (ch.getSkillValue(spell) > 33)) {
     // teleport myself as a "flee"
     if (!::number(0,30) &&
-        !ch.pissed() && 
+        !ch.pissed() &&
         (ch.getHit() < ch.hitLimit()/8) &&
         // don't let test fight mobs teleport
         !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB)) {
@@ -1571,7 +1571,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
 
     spell = SPELL_ICY_GRIP;
-    if (!::number(0, 9) && 
+    if (!::number(0, 9) &&
            (cutoff < discArray[spell]->start) &&
          ch.getSkillValue(spell) > 33 ) {
       act("$n utters the words, 'Cold Shoulder!'",
@@ -1597,7 +1597,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_MYSTIC_DARTS;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'Missiles, come forth!'",
@@ -1605,7 +1605,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_HANDS_OF_FLAME;
-    if (ch.hasHands() && !::number(0, 1) && 
+    if (ch.hasHands() && !::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'Fire, Fire Everywhere!'",
@@ -1613,7 +1613,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_GUSHER;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) ) {
       act("$n utters the words, 'Jack and Jill Time!'",
@@ -1621,7 +1621,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_SLING_SHOT;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'David and Goliath!'",
@@ -1629,7 +1629,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_GUST;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'Summer Breeze!'",
@@ -1684,7 +1684,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
   } else if (best_disc == DISC_ALCHEMY) {
     spell = SPELL_SHATTER;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'Crack and Break!'",
@@ -1738,7 +1738,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_SLING_SHOT;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
           ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'David and Goliath!'",
@@ -1788,7 +1788,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_HANDS_OF_FLAME;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'Fire, Fire Everywhere!'",
@@ -1809,7 +1809,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
                  TRUE, &ch, 0, 0, TO_ROOM);
         return spell;
       }
-    } 
+    }
 #endif
     // area affect
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
@@ -1868,7 +1868,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
 
     spell = SPELL_MYSTIC_DARTS;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the words, 'Missiles, come forth!'",
@@ -1931,7 +1931,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_ICY_GRIP;
-    if (!::number(0, 3) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
         ch.getSkillValue(spell) > 33 ) {
       act("$n utters the words, 'Cold Shoulder!'",
@@ -1939,7 +1939,7 @@ static spellNumT get_mage_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_GUSHER;
-    if (!::number(0, 1) && 
+    if (!::number(0, 1) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) ) {
       act("$n utters the words, 'Jack and Jill Time!'",
@@ -1990,7 +1990,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       continue;
     }
 
-    if ((cdisc->getLearnedness() >= 
+    if ((cdisc->getLearnedness() >=
 	 ch.getDiscipline(best_disc)->getLearnedness()) ||
 	(best_disc==DISC_SHAMAN && cdisc->getLearnedness()>20)){
       if (!::number(0,1))
@@ -2024,10 +2024,10 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
 
   // PANIC spells
   spell = SPELL_INTIMIDATE;
-  if (ch.doesKnowSkill(spell) && 
+  if (ch.doesKnowSkill(spell) &&
       (ch.getSkillValue(spell) > 33)) {
     if (!::number(0,30) &&
-        !ch.pissed() && 
+        !ch.pissed() &&
         (ch.getHit() < ch.hitLimit()/8) &&
         !ch.affectedBySpell(AFFECT_TEST_FIGHT_MOB)) {
       act("$n utters the invokation, 'Go Away! Leave me the Hell Alone!'", FALSE, &ch, 0, 0, TO_ROOM);
@@ -2111,7 +2111,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the invokation, 'I'm gonna suck you dry!!!'",
@@ -2127,7 +2127,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the invokation, 'I'm gonna suck you dry!!!'",
@@ -2143,7 +2143,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the invokation, 'I'm gonna suck you dry!!!'",
@@ -2151,7 +2151,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_LIFE_LEECH;
-    if (!::number(0, 3) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell)) {
       act("$n utters the invokation, 'I'm gonna suck you dry!!!'",
@@ -2165,7 +2165,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
     if (ch.attackers >= 2 && ::number(0, ch.attackers - 1)) {
     }
     spell = SPELL_STICKS_TO_SNAKES;
-    if (!::number(0, 6) && 
+    if (!::number(0, 6) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
       act("$n utters the invokation, 'I got a woody and I'm gonna use it!'",
@@ -2181,7 +2181,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_STICKS_TO_SNAKES;
-    if (!::number(0, 6) && 
+    if (!::number(0, 6) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) && (ch.getSkillValue(spell) > 33)) {
       act("$n utters the invokation, 'I got a woody and I'm gonna use it!'",
@@ -2271,7 +2271,7 @@ static spellNumT get_shaman_spell(TMonster &ch, TBeing &vict, bool &on_me)
       return spell;
     }
     spell = SPELL_CARDIAC_STRESS;
-    if (!::number(0, 3) && 
+    if (!::number(0, 3) &&
            (cutoff < discArray[spell]->start) &&
         ch.doesKnowSkill(spell) ) {
       act("$n utters the invokation, 'Don't go breakin' my heart!'",
@@ -2344,7 +2344,7 @@ int TMonster::dynamicComponentLoader(spellNumT spell, int loadrate)
 
   for (comp = 0; (comp < CompInfo.size()) &&
     (spell != CompInfo[comp].spell_num); comp++);
-  if (comp == CompInfo.size() || CompInfo[comp].comp_num < 0) 
+  if (comp == CompInfo.size() || CompInfo[comp].comp_num < 0)
     return FALSE;
 
   if (!(tcomp = findComponent(spell))) {
@@ -2418,7 +2418,7 @@ int TMonster::mageMove(TBeing &vict)
   } else {
     addToWait(combatRound(2));
   }
-  
+
   // if the target is not me but is a mob, don't load comp
   // prevents comp farming by using brawling or pets
   if(on_me || (!on_me && vict.isPc()))
@@ -2488,7 +2488,7 @@ int TMonster::shamanMove(TBeing &vict)
   } else {
     addToWait(combatRound(2));
   }
-  
+
   // if the target is not me but is a mob, don't load comp
   // prevents comp farming by using brawling or pets
   if(on_me || (!on_me && vict.isPc()))
@@ -2563,7 +2563,7 @@ static spellNumT get_cleric_heal_spell(TMonster &ch, TBeing &targ)
   }
 
   // cure blindness
-  if(ch.doesKnowSkill(SPELL_CURE_BLINDNESS) && 
+  if(ch.doesKnowSkill(SPELL_CURE_BLINDNESS) &&
      ch.getSkillValue(SPELL_CURE_BLINDNESS) > 33 &&
 #if 0
      targ.isAffected(AFF_BLIND)) {
@@ -2576,7 +2576,7 @@ static spellNumT get_cleric_heal_spell(TMonster &ch, TBeing &targ)
   // cure poison
   if(ch.doesKnowSkill(SPELL_CURE_POISON) &&
      ch.getSkillValue(SPELL_CURE_POISON) > 33){
-    if (targ.isAffected(AFF_POISON) || 
+    if (targ.isAffected(AFF_POISON) ||
         targ.affectedBySpell(SPELL_POISON) ||
         targ.affectedBySpell(SPELL_POISON_DEIKHAN) ||
         targ.hasDisease(DISEASE_FOODPOISON))
@@ -2628,15 +2628,15 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
   on_me = FALSE;
 
   for (j = 0;j < 6; j++) {
-    if (j == 0) 
+    if (j == 0)
       i = DISC_WRATH;
-    else if (j == 1) 
+    else if (j == 1)
       i = DISC_AFFLICTIONS;
-    else if (j == 2) 
+    else if (j == 2)
       i = DISC_CURES;
-    else if (j == 3) 
+    else if (j == 3)
       i = DISC_HAND_OF_GOD;
-    else if (j == 4) 
+    else if (j == 4)
       i = DISC_AEGIS;
     else if (j == 5)
       i = DISC_CLERIC;
@@ -2645,7 +2645,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
       continue;   // no useful spells
     if (!ch.getDiscipline(best_disc))
       return TYPE_UNDEFINED;
-    if (ch.getDiscipline(i) && (ch.getDiscipline(i)->getLearnedness() > ch.getDiscipline(best_disc)->getLearnedness())) 
+    if (ch.getDiscipline(i) && (ch.getDiscipline(i)->getLearnedness() > ch.getDiscipline(best_disc)->getLearnedness()))
       best_disc = i;
   }
   if (ch.getDiscipline(best_disc)->getLearnedness() <= 0)
@@ -2664,11 +2664,11 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
   // two varieties of recall:
   // modeled after teleport logic
   spell = SPELL_WORD_OF_RECALL;
-  if (ch.doesKnowSkill(spell) && 
+  if (ch.doesKnowSkill(spell) &&
       (ch.getSkillValue(spell) > 33)) {
     // recall myself as a "flee"
     if (!::number(0,30) &&
-        !ch.pissed() && 
+        !ch.pissed() &&
         (ch.getHit() < ch.hitLimit()/8) &&
 
         // extra check for recall.  avoid recalling if already home
@@ -2693,7 +2693,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
   if (best_disc == DISC_CLERIC) {
     spell = SPELL_PARALYZE_LIMB;
     if (!::number(0, 6) &&
-        ch.doesKnowSkill(spell) && 
+        ch.doesKnowSkill(spell) &&
         (cutoff < discArray[spell]->start) &&
         (ch.getSkillValue(spell) > 33) &&
         ch.canParalyzeLimb(&vict, SILENT_YES)) {
@@ -2703,7 +2703,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_BLINDNESS;
     if (!::number(0, 6) &&
          !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"Darkness...take over the land!!!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2711,7 +2711,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Ichor and Gore'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2720,7 +2720,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_HEAL;
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Kjila'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2729,7 +2729,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_INFECT);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Pox and Smegma!'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2738,7 +2738,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_POISON);
     if (!::number(0, 6) &&
          !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"Mold and Mushrooms!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2746,7 +2746,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_DISEASE;
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n beseeches, \"Oh lord, unleash pestilence upon this unrighteous one!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2754,7 +2754,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM_CRITICAL);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Pain and Suffering'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2762,7 +2762,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_FLAMESTRIKE;
     if (!::number(0, 4) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n biblethumps, \"Hellfire and Lava unleashed!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2770,7 +2770,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_CURSE);
     if (!::number(0, 4) && !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"!&*!*#@(*&\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2778,7 +2778,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM_SERIOUS);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Cuts and Bruises'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2787,7 +2787,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_HEAL_CRITICAL;
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Comfort and Joy'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2797,7 +2797,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_HEAL_SERIOUS);
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'I feel much better now'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2806,7 +2806,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_RAIN_BRIMSTONE);
     if (!::number(0, 1) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"Let's see how this smells!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2815,7 +2815,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_BLESS);
     if (!::number(0, 6) &&
          !ch.affectedBySpell(SPELL_BLESS) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"What a Rush!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2825,7 +2825,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_ARMOR);
     if (!::number(0, 6) &&
          !ch.affectedBySpell(SPELL_ARMOR) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Abrazak'",  TRUE, &ch, 0, 0, TO_ROOM);
@@ -2834,7 +2834,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM_LIGHT);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'This will only hurt a little...'",
@@ -2845,7 +2845,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_HEAL_LIGHT);
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'I feel better now'",
@@ -2860,7 +2860,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
       if (!::number(0, 6) &&
            !ch.roomp->isWaterSector() &&
            !ch.roomp->isUnderwaterSector() &&
-           ch.doesKnowSkill(spell) && 
+           ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
         act("$n utters the words, 'Crumble and die!'",  TRUE, &ch, 0, 0, TO_ROOM);
@@ -2869,18 +2869,18 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_PILLAR_SALT;
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"How about a little salt for your wounds!\"", TRUE, &ch, 0, 0, TO_ROOM);
       return spell;
     }
     spell = ch.getSkillNum(SPELL_CALL_LIGHTNING);
-    if (!::number(0, 6) && 
+    if (!::number(0, 6) &&
          vict.outside() &&
          ((Weather::getWeather(*vict.roomp) == Weather::RAINY) ||
 	  (Weather::getWeather(*vict.roomp) == Weather::LIGHTNING)) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Come forth lightning!'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2888,7 +2888,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_SPONTANEOUS_COMBUST;
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"Burn for your sins!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2896,7 +2896,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_PILLAR_SALT;
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"How about a little salt for your wounds!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2904,7 +2904,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_FLAMESTRIKE;
     if (!::number(0, 4) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n biblethumps, \"Hellfire and Lava unleashed!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2912,7 +2912,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_CURSE);
     if (!::number(0, 4) && !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"!&*!*#@(*&\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2920,7 +2920,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_RAIN_BRIMSTONE);
     if (!::number(0, 1) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"Let's see how this smells!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2931,7 +2931,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
 #if 0
     spell = SPELL_HARM_FULL;
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Hurts, doesn't it?\?'",
@@ -2941,7 +2941,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
 #endif
     spell = SPELL_WITHER_LIMB;
     if (!::number(0, 6) &&
-        ch.doesKnowSkill(spell) && 
+        ch.doesKnowSkill(spell) &&
         (cutoff < discArray[spell]->start) &&
         (ch.getSkillValue(spell) > 33) &&
         ch.canWither(&vict, SILENT_YES)) {
@@ -2950,7 +2950,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Ichor and Gore'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2959,7 +2959,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_PARALYZE;
     if (!::number(0, 6) &&
          !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Stay put!'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2967,7 +2967,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_BONE_BREAKER;
     if (!::number(0, 6) &&
-        ch.doesKnowSkill(spell) && 
+        ch.doesKnowSkill(spell) &&
         (cutoff < discArray[spell]->start) &&
         (ch.getSkillValue(spell) > 33) &&
         ch.canBoneBreak(&vict, SILENT_YES)) {
@@ -2976,7 +2976,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM_CRITICAL);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Pain and Suffering'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2985,7 +2985,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_POISON);
     if (!::number(0, 6) &&
          !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"Mold and Mushrooms!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -2994,7 +2994,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_BLINDNESS;
     if (!::number(0, 6) &&
          !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters, \"Darkness...COME TO ME!!!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -3002,7 +3002,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_DISEASE;
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n beseeches, \"Oh lord, unleash pestilence upon this unrighteous one!\"", TRUE, &ch, 0, 0, TO_ROOM);
@@ -3010,7 +3010,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_INFECT);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Pox and Smegma!'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -3018,7 +3018,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM_SERIOUS);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Cuts and Bruises'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -3026,7 +3026,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = SPELL_PARALYZE_LIMB;
     if (!::number(0, 6) &&
-        ch.doesKnowSkill(spell) && 
+        ch.doesKnowSkill(spell) &&
         (cutoff < discArray[spell]->start) &&
         (ch.getSkillValue(spell) > 33) &&
         ch.canParalyzeLimb(&vict, SILENT_YES)) {
@@ -3037,7 +3037,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_BLEED;
     if (!::number(0, 6) &&
          !vict.affectedBySpell(spell) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Blood Drive!'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -3045,7 +3045,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     }
     spell = ch.getSkillNum(SPELL_HARM_LIGHT);
     if (!::number(0, 6) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'This will only hurt a little...'", TRUE, &ch, 0, 0, TO_ROOM);
@@ -3055,7 +3055,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_HEAL_FULL;
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'I feel REAL good'",
@@ -3066,7 +3066,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_HEAL;
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'JAMES BROWN'",
@@ -3077,7 +3077,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_HEAL_CRITICAL;
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Comfort and Joy'",
@@ -3088,7 +3088,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_HEAL_SERIOUS);
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'I feel much better now'",
@@ -3099,7 +3099,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_HEAL_LIGHT);
     if (!::number(0, 6) &&
          (ch.getHit() < ch.hitLimit()) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'I feel better now'",
@@ -3112,18 +3112,18 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = SPELL_SANCTUARY;
     if (!::number(0, 6) &&
          !ch.affectedBySpell(spell) && !ch.isAffected(AFF_SANCTUARY) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
-      
+
       switch (::number(1,3)) {
         case 1:
-          act("$n utters, \"Safe Haven!\"", 
+          act("$n utters, \"Safe Haven!\"",
                TRUE, &ch, 0, 0, TO_ROOM);
         case 2:
         case 3:
         default:
-          act("$n utters, \"White aura, surround me!\"", 
+          act("$n utters, \"White aura, surround me!\"",
                TRUE, &ch, 0, 0, TO_ROOM);
           break;
       }
@@ -3134,10 +3134,10 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_BLESS);
     if (!::number(0, 6) &&
          !ch.affectedBySpell(SPELL_BLESS) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
-      act("$n utters, \"What a Rush!\"", 
+      act("$n utters, \"What a Rush!\"",
                TRUE, &ch, 0, 0, TO_ROOM);
       on_me = TRUE;
       return spell;
@@ -3145,7 +3145,7 @@ static spellNumT get_cleric_spell(TMonster &ch, TBeing &vict, bool &on_me)
     spell = ch.getSkillNum(SPELL_ARMOR);
     if (!::number(0, 6) &&
          !ch.affectedBySpell(SPELL_ARMOR) &&
-         ch.doesKnowSkill(spell) && 
+         ch.doesKnowSkill(spell) &&
            (cutoff < discArray[spell]->start) &&
          (ch.getSkillValue(spell) > 33)) {
       act("$n utters the words, 'Abrazak'",
@@ -3178,7 +3178,7 @@ int TMonster::clerMove(TBeing &vict)
   if(spelltask && spelltask->rounds==0 && (t=spelltask->victim) &&
      (((t->getHit()*100)/t->hitLimit())<=75) && ::number(0,10)){
     switch(spelltask->spell){
-      case SPELL_HEAL_FULL: 
+      case SPELL_HEAL_FULL:
       case SPELL_HEAL_CRITICAL:
       case SPELL_HEAL_SERIOUS:
       case SPELL_HEAL_LIGHT:
@@ -3210,7 +3210,7 @@ int TMonster::clerMove(TBeing &vict)
 	  break;
       }
     }
-    
+
     if (spell != TYPE_UNDEFINED && t) {
       //      vlogf(LOG_MISC, format("%s HEALING %s, spell %i") %  name % t->name % spell);
       return doDiscipline(spell, t->name);
@@ -3327,11 +3327,11 @@ int TMonster::takeFirstHit(TBeing &vict)
       }
     }
   }
-  
+
   // fuzzy logic to figure out how to open fight best.
   if (getMult() > 2.0) {
     // lots of attacks translates into small damage per hit.  (I only get 1
-    // hit on opening round.  use a special instead  
+    // hit on opening round.  use a special instead
     rc = classStuff(vict);
     if (IS_SET_DELETE(rc, DELETE_VICT) || IS_SET_DELETE(rc, DELETE_THIS)) {
       return rc;
@@ -3353,7 +3353,7 @@ int TMonster::takeFirstHit(TBeing &vict)
 // returns DELETE_THIS if this needs to die
 int TMonster::classStuff(TBeing &vict)
 {
-  if (hasClass(CLASS_WARRIOR)) 
+  if (hasClass(CLASS_WARRIOR))
     return fighterMove(vict);
   else if (hasClass(CLASS_THIEF))
     return thiefMove(vict);
@@ -3380,28 +3380,28 @@ int TMonster::scavenge()
   int iMax;
   int rc;
   TBaseCorpse *corpse;
-  
+
   if (in_room == Room::DONATION)
     return FALSE;
   if (UtilMobProc(this))
     return FALSE;
   if (!hasHands() && !isHumanoid())
     return FALSE;
-  
+
   if (!roomp->stuff.empty() && !::number(0, 5)) {
     best_obj = NULL;
     iMax=1;
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
       if (!(obj = dynamic_cast<TObj *>(*it)))
         continue;
-      
+
       // skip over unlooted corpses
       corpse = dynamic_cast<TBaseCorpse *>(*it);
       if (corpse && !corpse->stuff.empty())
         continue;
-      
+
       if (obj->canWear(ITEM_WEAR_TAKE) && canCarry(obj, SILENT_YES) &&
-          canSee(obj) && 
+          canSee(obj) &&
           obj->action_description.empty() &&   // checks for personalized
           obj->stuff.empty()) {
         if (obj->obj_flags.cost > iMax) {
@@ -3442,7 +3442,7 @@ int TMonster::notFightingMove(int pulse)
     if (job && job->hasJob) {
       return FALSE;
     }
-  } 
+  }
 
   if (!(pulse%(7*Pulse::MOBACT))) {
     rc = lookForHorse();
@@ -3464,7 +3464,7 @@ int TMonster::notFightingMove(int pulse)
 	else if (rc)
 	  return TRUE;
 	break;
-      } 
+      }
 
       // wimpy mobs don't like standing around fights
       if (!isAffected(AFF_GROUP) && IS_SET(specials.act, ACT_WIMPY) &&
@@ -3538,11 +3538,11 @@ int TMonster::notFightingMove(int pulse)
 
   if (!IS_SET(specials.act, ACT_SENTINEL)) {
     // this is examined every pulse (no pulse check), i.e. once every 3 secs
-    
+
     // Change this to increase or decrease the chance of mobs moving about
     // each check.
     const int DEF_MOBILE_WANDER_CHANCE = 40;
-    
+
     if (!::number(0,DEF_MOBILE_WANDER_CHANCE)) {
       rc = wanderAround();
       if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3563,9 +3563,9 @@ int TMonster::notFightingMove(int pulse)
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       t=*(it++);
       tmp_ch = dynamic_cast<TBeing *>(t);
-      
+
       // spellup friendly people
-      if (t != this && tmp_ch && 
+      if (t != this && tmp_ch &&
 	  !tmp_ch->isPc() &&
 	  canSee(tmp_ch) && isFriend(*tmp_ch) && !tmp_ch->isDumbAnimal() ){
 	rc = defendOther(*tmp_ch);
@@ -3573,8 +3573,8 @@ int TMonster::notFightingMove(int pulse)
 	  return DELETE_THIS;
 	} else if (rc)
 	  return TRUE;
-      } 
-    }   
+      }
+    }
   }
 
   // if I need to preen to be able to fly, let's keep ourselves flight-ready
@@ -3616,11 +3616,11 @@ int TMonster::mobileActivity(int pulse)
 
   if(parent || !roomp)
     return 0;
-  
+
   if (isAquatic() && !IS_SET(specials.act, ACT_IMMORTAL) && (specials.zone != 1) && (mobVnum() >= 0) &&
      !roomp->isWaterSector() && !roomp->isUnderwaterSector() &&
      !inImperia() && getRace() != RACE_FISHMAN) {
-    vlogf(LOG_MISC, format("Fish (%s), found out of water in %s (%d)! Destroying!") %  
+    vlogf(LOG_MISC, format("Fish (%s), found out of water in %s (%d)! Destroying!") %
            getName() % roomp->getName() % in_room);
     return DELETE_THIS;
   }
@@ -3628,7 +3628,7 @@ int TMonster::mobileActivity(int pulse)
   if (oldRoom == Room::NOWHERE)
     oldRoom = inRoom();
 
-#if 0 
+#if 0
   if (isPet(PETTYPE_PET) && !isElemental()) {
     if (getCond(FULL) < 0) {
       setCond(FULL, 20);
@@ -3648,7 +3648,7 @@ int TMonster::mobileActivity(int pulse)
            act("$n looks at you with thirst in its eyes.", FALSE, master, 0, this, TO_CHAR);
       }
     }
-  } 
+  }
 #endif
 
   // we could use affectedBySpell() but those will scroll through affects
@@ -3667,7 +3667,7 @@ int TMonster::mobileActivity(int pulse)
         act("$n goes away.", TRUE, this, 0, 0, TO_ROOM);
         return DELETE_THIS;
       }
-    }  
+    }
     if (af->type == SKILL_TRANSFIX) {
       if (!::number(0, 5)) {
         act("$n looks glazed-eyed and content.", TRUE, this, NULL, NULL, TO_ROOM);
@@ -3686,7 +3686,7 @@ int TMonster::mobileActivity(int pulse)
 
   // if not in a fighting stance, and in a fight...
   // stand up and fight like a mob
-  if ((getPosition() < POSITION_CRAWLING) && 
+  if ((getPosition() < POSITION_CRAWLING) &&
           (fight() || (default_pos > POSITION_SITTING))) {
     if ((spec == SPEC_ATTUNER) && !fight()) {
       static attune_struct *job;
@@ -3700,7 +3700,7 @@ int TMonster::mobileActivity(int pulse)
       }
     } else if (!(pulse%(1 * Pulse::MOBACT))) {
       if (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && ::number(0, 1)) {
-        rc = standUp(); 
+        rc = standUp();
         if (rc)
           return FALSE;
       }
@@ -3729,10 +3729,10 @@ int TMonster::mobileActivity(int pulse)
   } else if (getPosition() <= POSITION_SITTING) {
     // if we are hunting from sitting position, go get the bastard!
     if (IS_SET(specials.act, ACT_HUNTING)) {
-      rc = standUp(); 
+      rc = standUp();
       if (rc)
         return FALSE;
-    } 
+    }
     if (!(pulse%(36*Pulse::MOBACT)) &&
         !riding &&
         !fight() &&
@@ -3745,14 +3745,14 @@ int TMonster::mobileActivity(int pulse)
         if (bedsChecked.find(fname(t->name)) == bedsChecked.end()) {
           bedsChecked[fname(t->name)] = 1;
         } else { bedsChecked[fname(t->name)] += 1; }
-        
+
         if (t->mobPulseBed(this, bedsChecked[fname(t->name)]))
           return TRUE;
       }
     }
-  } else if ((default_pos <= POSITION_CRAWLING) && 
+  } else if ((default_pos <= POSITION_CRAWLING) &&
               !fight() &&
-              (getPosition() > POSITION_CRAWLING) && 
+              (getPosition() > POSITION_CRAWLING) &&
               !IS_SET(specials.act, ACT_HUNTING) &&
               (getHit() >= hitLimit()) &&
               (spec != SPEC_BOUNTY_HUNTER)) {
@@ -3773,7 +3773,7 @@ int TMonster::mobileActivity(int pulse)
     // rescue group members if needed
     // this needs high priority so we put it here instead of fighterMove
     if(hasClass(CLASS_WARRIOR) && isAffected(AFF_GROUP) &&
-       (vict=fight()) && (tmp_ch=vict->fight()) && 
+       (vict=fight()) && (tmp_ch=vict->fight()) &&
        tmp_ch != this && inGroup(*tmp_ch) &&
        (tmp_ch->hasClass(CLASS_MAGE | CLASS_CLERIC | CLASS_THIEF) ||
 	((tmp_ch->getHit()*100)/tmp_ch->hitLimit())<50)){
@@ -3815,16 +3815,16 @@ int TMonster::mobileActivity(int pulse)
 
   if (isShopkeeper() && !(pulse %(200*Pulse::MOBACT)) && !Config::NoSpecials()){
     unsigned int shop_nr;
-    
+
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
-    
+
     if (shop_nr >= shop_index.size()) {
       vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[number].virt);
       return FALSE;
     }
   }
 
-  if (spec && !(pulse %(50*Pulse::MOBACT)) && !::number(0, 1) && 
+  if (spec && !(pulse %(50*Pulse::MOBACT)) && !::number(0, 1) &&
       !Config::NoSpecials()) {
     rc = checkSpec(this, CMD_MOB_ALIGN_PULSE, "", NULL);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
@@ -3844,7 +3844,7 @@ int TMonster::mobileActivity(int pulse)
   }
 
 
-  if ( !awake() || desc || IS_SET(specials.act, ACT_POLYSELF) || 
+  if ( !awake() || desc || IS_SET(specials.act, ACT_POLYSELF) ||
       spec == SPEC_HERO_FAERIE )
     return FALSE;
 
@@ -3957,7 +3957,7 @@ int TMonster::mobileActivity(int pulse)
 	  if(fears.clist) {
 	    int safety = 0;
 	    while(fears.clist && safety < 10) {
-	      if (fears.clist && 
+	      if (fears.clist &&
 		  (tmp_ch = get_char(fears.clist->name, EXACT_YES)) &&
 		  !IS_SET(specials.act, ACT_HUNTING)) {
 		remFeared(tmp_ch, NULL);
@@ -4074,11 +4074,11 @@ int TMonster::factionAggroCheck()
   if (desc)
     return FALSE;
 
-    // Scroll through stuff list to get count of valid things to hit, 
+    // Scroll through stuff list to get count of valid things to hit,
 
   for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
     t=*(it++);
-    // cast to Person, rather than isPc(), so poly'd chars are safe 
+    // cast to Person, rather than isPc(), so poly'd chars are safe
     tmp_ch = dynamic_cast<TPerson *>(t);
     if (!tmp_ch)
       continue;
@@ -4098,12 +4098,12 @@ int TMonster::factionAggroCheck()
       if(((isCult() && (tmp_ch->isBrother() || tmp_ch->isSnake())) ||
 	  (isBrother() && tmp_ch->isCult())) &&
 	 !::number(0,3)){
-	
+
 	if(isCult() && tmp_ch->isBrother()){
 	  switch(::number(0,3)){
 	    case 0:
 	      doAction(fname(tmp_ch->name), CMD_FLIPOFF);
-	      doAction("", CMD_SCREAM);	  
+	      doAction("", CMD_SCREAM);
 	      break;
 	    case 1:
 	      doSay("Religious psycho-babbeling weirdos are not welcome here!");
@@ -4161,21 +4161,21 @@ int TMonster::factionAggroCheck()
 	      doSay("Rally the guard!  There are Logrites about!");
 	      doEmote("charges into the fray.");
 	      break;
-	  }	      
+	  }
 	} else {
 	  act("$n snarls angrily and attacks!",TRUE,this,0,0,TO_ROOM);
 	  vlogf(LOG_BUG, "faction confusion in factionAggroCheck()");
 	}
-	
+
 
 	rc = takeFirstHit(*tmp_ch);
 	if (IS_SET_DELETE(rc, DELETE_VICT)) {
 	  delete tmp_ch;
 	  tmp_ch = NULL;
 	  return DELETE_VICT;
-	} else if (IS_SET_DELETE(rc, DELETE_THIS)) 
+	} else if (IS_SET_DELETE(rc, DELETE_THIS))
 	  return DELETE_THIS;
-	
+
 	return TRUE;
       }
     }
@@ -4231,7 +4231,7 @@ int TMonster::aggroCheck(bool mobpulse)
 
   // Some randomization of who gets attacked added - Brutius 1/28/97
   if ((aggro() && (getHit() >= (hitLimit()/2)))){
-    // Scroll through stuff list to get count of valid things to hit, 
+    // Scroll through stuff list to get count of valid things to hit,
 
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       t=*(it++);
@@ -4290,7 +4290,7 @@ int TMonster::aggroCheck(bool mobpulse)
 		act("$n considers killing you, but thinks better of it.",TRUE,this,NULL,tmp_ch,TO_VICT,NULL);
 		act("You consider killing $N, but thinks better of it.",TRUE,this,NULL,tmp_ch,TO_CHAR,NULL);
 	      }
-	      
+
 	      return FALSE;
 	    }
 	  }
@@ -4377,7 +4377,7 @@ int TMonster::assistFriend()
       // don't assist if he's flipping out
       if (!tmp_ch->isPc() && (dynamic_cast<TMonster *>(tmp_ch)->anger() > 40))
         continue;
-      
+
       if (isPolice() && !fight()) {
         if (!tmp_ch->fight()->isAnimal()) {
           if (tmp_ch->fight()->isPolice()) {
@@ -4413,7 +4413,7 @@ int TMonster::assistFriend()
           }
         }
       }
-      
+
       if ((tbeTarg = tmp_ch->findAnAttacker())) {
         if (tbeTarg == master || inGroup(*tbeTarg) || !canSee(tbeTarg))
           continue;
@@ -4423,7 +4423,7 @@ int TMonster::assistFriend()
           // % chance of avoiding brawl is equal to brawler or brawlee level (whichever is higher)
           continue;
         }
-        
+
         if (tbeTarg->isPc()) {
           final = tbeTarg;
           break;
@@ -4458,7 +4458,7 @@ int TMonster::findABetterWeapon()
   TThing *t=NULL;
   TObj *o = NULL, *best = NULL;
   int rc =0;
-  
+
   if (!hasHands())
     return FALSE;
 
@@ -4478,7 +4478,7 @@ int TMonster::findABetterWeapon()
       continue;
     if (!canUseEquipment(o, SILENT_YES))
       continue;
-    if ((!best || (o->baseDamage() >= best->baseDamage()))) 
+    if ((!best || (o->baseDamage() >= best->baseDamage())))
       best = o;
   }
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
@@ -4522,7 +4522,7 @@ int TMonster::findABetterWeapon()
         // skip training gear
         if (tobj && tobj->objVnum() == Obj::WEAPON_T_DAGGER)
           return FALSE;
-        vlogf(LOG_LOW,format("%s (%d) removed %s (%d : base=%.2f) as hands are better.") % 
+        vlogf(LOG_LOW,format("%s (%d) removed %s (%d : base=%.2f) as hands are better.") %
                   getName() % mobVnum() % tobj->getName() % tobj->objVnum() % tobj->baseDamage());
 
         return TRUE;
@@ -4536,7 +4536,7 @@ int TMonster::findABetterWeapon()
 #endif
 
   // pick it up if we don't possess it
-  if ((best->equippedBy != this) && (best->parent != this)) { 
+  if ((best->equippedBy != this) && (best->parent != this)) {
     vlogf(LOG_MOB_AI, format("Mob weapon grab: %s picking up %s in room (%d)") % this->name % best->name % (roomp ? roomp->in_room : 0));
     rc = doGet(fname(best->name).c_str());
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4604,7 +4604,7 @@ int TMonster::defendOther(TBeing &targ)
   if (hasClass(CLASS_SHAMAN)) {
     if (!found) {
       spell = SPELL_SHIELD_OF_MISTS;
-      if (!targ.affectedBySpell(spell) && 
+      if (!targ.affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n sings the words, 'Eluagga Xypomine!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4627,7 +4627,7 @@ vlogf(LOG_BUG, format("Shaman Mob casting (2) spell %d on other with possibly ba
   if (hasClass(CLASS_MAGE)) {
     if (!found) {
       spell = SPELL_SORCERERS_GLOBE;
-      if (!targ.affectedBySpell(spell) && 
+      if (!targ.affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n utters the words, 'Protection Correction!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4651,7 +4651,7 @@ vlogf(LOG_BUG, format("Mob casting (2) spell %d on other with possibly bad targe
       spell = getSkillNum(SPELL_BLESS);
       if (!targ.affectedBySpell(SPELL_BLESS) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"What a Rush!\"", 
+        act("$n utters, \"What a Rush!\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -4671,7 +4671,7 @@ vlogf(LOG_BUG, format("Mob casting (2) spell %d on other with possibly bad targe
       spell = SPELL_SANCTUARY;
       if ( !targ.affectedBySpell(spell) && !targ.isAffected(AFF_SANCTUARY) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"White aura, surround me!\"", 
+        act("$n utters, \"White aura, surround me!\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -4701,7 +4701,7 @@ vlogf(LOG_BUG, format("Mob invoking (2) prayer %d on other with possibly bad tar
       spell = getSkillNum(SPELL_BLESS);
       if (!targ.affectedBySpell(SPELL_BLESS) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"What a Rush!\"", 
+        act("$n utters, \"What a Rush!\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -4732,7 +4732,7 @@ vlogf(LOG_BUG, format("Mob invoking (3) prayer %d on other with possibly bad tar
       spell = SKILL_BARKSKIN;
       if (!targ.affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"I'm a lumberjack, and I'm OK...\"", 
+        act("$n utters, \"I'm a lumberjack, and I'm OK...\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -4756,7 +4756,7 @@ vlogf(LOG_BUG, format("Mob casting (3) spell %d on other with possibly bad targe
       return TRUE;
     }
   }
-  
+
   return FALSE;
 }
 
@@ -4785,11 +4785,11 @@ int TMonster::defendSelf(int)
     return FALSE;
 
   // the purpose of this function is to have mob improve their defenses
- 
+
   if (hasClass(CLASS_SHAMAN)) {
     if (!found) {
       spell = SPELL_SHIELD_OF_MISTS;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n sings the words, 'Eluagga Xypomine!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4798,7 +4798,7 @@ int TMonster::defendSelf(int)
     }
     if (!found) {
       spell = SPELL_CELERITE;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n sings the words, 'Kick up your heels! Stick out your toosh!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4807,7 +4807,7 @@ int TMonster::defendSelf(int)
     }
     if (!found) {
       spell = SPELL_THORNFLESH;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n utters the words, 'Big Prick!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4816,7 +4816,7 @@ int TMonster::defendSelf(int)
     }
     if (!found) {
       spell = SPELL_SHADOW_WALK;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n utters the invokation, 'You Sneeggy Bastidge!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4825,7 +4825,7 @@ int TMonster::defendSelf(int)
     }
     if (!found) {
       spell = SPELL_CLARITY;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n utters the invokation, 'I can see clearly now the rain is gone!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4926,7 +4926,7 @@ int TMonster::defendSelf(int)
 #endif
     if (!found) {
       spell = SPELL_CHEVAL;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n utters the invokation, 'Legba de' Cheval!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4950,7 +4950,7 @@ int TMonster::defendSelf(int)
   if (hasClass(CLASS_MAGE)) {
     if (!found) {
       spell = SPELL_SORCERERS_GLOBE;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n utters the words, 'Protection Correction!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -4974,7 +4974,7 @@ int TMonster::defendSelf(int)
     }
     if (!found) {
       spell = SPELL_PLASMA_MIRROR;
-      if (!affectedBySpell(spell) && 
+      if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
         act("$n utters the words, 'Mirror Mirror!'",
                  TRUE, this, 0, 0, TO_ROOM);
@@ -5034,10 +5034,10 @@ int TMonster::defendSelf(int)
 #if 0
     if ((susp()-defsusp()) > 9){
       if (!found){
-	int mentals[]={SPELL_CONJURE_AIR, SPELL_CONJURE_FIRE, 
-		       SPELL_CONJURE_EARTH, SPELL_CONJURE_WATER, 
+	int mentals[]={SPELL_CONJURE_AIR, SPELL_CONJURE_FIRE,
+		       SPELL_CONJURE_EARTH, SPELL_CONJURE_WATER,
 		       SPELL_ENTHRALL_SPECTRE, SPELL_ENTHRALL_GHAST,
-		       SPELL_ENTHRALL_GHOUL, SPELL_ENTHRALL_DEMON, 
+		       SPELL_ENTHRALL_GHOUL, SPELL_ENTHRALL_DEMON,
 		       SPELL_CREATE_WOOD_GOLEM, SPELL_CREATE_ROCK_GOLEM,
 		       SPELL_CREATE_IRON_GOLEM, SPELL_CREATE_DIAMOND_GOLEM};
 	int count=12, i, foundmental=0;
@@ -5046,7 +5046,7 @@ int TMonster::defendSelf(int)
 
 	// pick a conjure spell
 	for(i=::number(0,11),count+=i;i<count;++i)
-	  if (doesKnowSkill(mentals[i%4]) && 
+	  if (doesKnowSkill(mentals[i%4]) &&
 	      (getSkillValue(mentals[i%4]) > 33))
 	    spell=mentals[i%4];
 
@@ -5066,51 +5066,51 @@ int TMonster::defendSelf(int)
 	  switch(spell){
 	    case SPELL_CONJURE_AIR:
 	      act("$n utters the words, 'Atmospheric Aid!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CONJURE_FIRE:
 	      act("$n utters the words, 'Fiery Friend!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CONJURE_EARTH:
 	      act("$n utters the words, 'Earthly Endorsement!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CONJURE_WATER:
 	      act("$n utters the words, 'Watery Waiter!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_SPECTRE:
 	      act("$n sings the rada, 'Xebec Kamala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_GHAST:
 	      act("$n sings the rada, 'Xebec Romula!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_GHOUL:
 	      act("$n sings the rada, 'Xebec Pumula!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_ENTHRALL_DEMON:
 	      act("$n sings the rada, 'Xebec Tamala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_WOOD_GOLEM:
 	      act("$n sings the rada, 'Xebec Oakala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_ROCK_GOLEM:
 	      act("$n sings the rada, 'Xebec Rokala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_IRON_GOLEM:
 	      act("$n sings the rada, 'Xebec Metala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	    case SPELL_CREATE_DIAMOND_GOLEM:
 	      act("$n sings the rada, 'Xebec Diala!'",
-		  TRUE, this, 0, 0, TO_ROOM);	      
+		  TRUE, this, 0, 0, TO_ROOM);
 	      break;
 	  }
 	  found = TRUE;
@@ -5138,7 +5138,7 @@ vlogf(LOG_BUG, format("Mob casting (4) spell %d on self with possibly bad target
       spell = getSkillNum(SPELL_BLESS);
       if (!affectedBySpell(SPELL_BLESS) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"What a Rush!\"", 
+        act("$n utters, \"What a Rush!\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -5156,7 +5156,7 @@ vlogf(LOG_BUG, format("Mob casting (4) spell %d on self with possibly bad target
       spell = SPELL_SANCTUARY;
       if ( !affectedBySpell(spell) && !isAffected(AFF_SANCTUARY) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"White aura, surround me!\"", 
+        act("$n utters, \"White aura, surround me!\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -5197,7 +5197,7 @@ vlogf(LOG_BUG, format("Mob invoking (4) prayer %d on self with possibly bad targ
       spell = getSkillNum(SPELL_BLESS);
       if (!affectedBySpell(SPELL_BLESS) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"What a Rush!\"", 
+        act("$n utters, \"What a Rush!\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -5228,7 +5228,7 @@ vlogf(LOG_BUG, format("Mob invoking (5) prayer %d on self with possibly bad targ
       spell = SKILL_BARKSKIN;
       if (!affectedBySpell(spell) &&
            doesKnowSkill(spell) && (getSkillValue(spell) > 33)) {
-        act("$n utters, \"I'm a lumberjack, and I'm OK...\"", 
+        act("$n utters, \"I'm a lumberjack, and I'm OK...\"",
                  TRUE, this, 0, 0, TO_ROOM);
         found = TRUE;
       }
@@ -5244,7 +5244,7 @@ vlogf(LOG_BUG, format("Mob invoking (5) prayer %d on self with possibly bad targ
             !equipment[HOLD_RIGHT] && !equipment[HOLD_LEFT]) {
 	  act("$n utters, 'Shred!'",
 	      TRUE, this, 0, 0, TO_ROOM);
-	  found = TRUE;	  
+	  found = TRUE;
 	}
       }
     }
@@ -5272,7 +5272,7 @@ vlogf(LOG_BUG, format("Mob casting (5) spell %d on self with possibly bad target
       return TRUE;
     }
   }
-  
+
   return FALSE;
 }
 

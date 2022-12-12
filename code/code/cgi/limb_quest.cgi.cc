@@ -21,18 +21,18 @@ int main(int argc, char **argv)
   // trick the db code into using the prod database
   gamePort = Config::Port::PROD;
   TDatabase db(DB_SNEEZY);
-  
+
   // get the query string
   Cgicc cgi;
   CgiEnvironment ce = cgi.getEnvironment();
   sstring team = ce.getQueryString();
   replaceString(team, "%20", " ");
-  
+
   int level, avg_level, max_level, part_num, tmp;
-  
+
   cout << HTTPHTMLHeader() << endl;
   cout << html() << endl;
-  cout << "<head><title>SneezyMUD: Quest for Limbs</title>\n" 
+  cout << "<head><title>SneezyMUD: Quest for Limbs</title>\n"
        << "<style>\n"
        << "A {color: red;}\n"
        << "BODY, P {font-family: \"Verdana\", \"Arial\", sans-serif; background: #070909; color: white;}\n"
@@ -61,7 +61,7 @@ int main(int argc, char **argv)
       }
     }
     cout << "</td></tr>\n" << endl;
-    
+
     // summaries
     cout << "<tr><td colspan=\"4\" align=\"center\">&nbsp;<br><b>Team Summaries</b></td></tr>\n" << endl;
     for (unsigned int step = 0; step < teams.size(); step++) {
@@ -99,12 +99,12 @@ int main(int argc, char **argv)
       }
     }
     cout << "</table>"  << endl;
-    
+
   } else {
     // view details for team
     cout << "<table align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td align=\"center\">"
          << "<table width=\"100%\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\"><tr><td valign=\"top\" colspan=\"4\" align=\"center\"><h3><a href=\"limb_quest.cgi\">Welcome to SneezyMUD: Quest for Limbs III</a></h3></td></tr>" << endl;
-    cout << format("<tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey; color: red; font-weight: bold\">%s</td></tr>") % team 
+    cout << format("<tr><td colspan=\"4\" align=\"center\" style=\"border: 1px solid grey; color: red; font-weight: bold\">%s</td></tr>") % team
          << "<tr><td colspan=\"4\">&nbsp;</td></tr>"
          << endl;
     db.query("select q1.player, q1.mob_vnum, m1.short_desc, round((m1.ac + m1.hpbonus + m1.damage_level) / 3) as mob_level, q1.slot_name from quest_limbs q1 left join mob m1 on q1.mob_vnum = m1.vnum where q1.team = '%s' and q1.date_submitted < '2007-06-25 01:30:00' order by q1.date_submitted desc, q1.slot_num;", team.c_str());
@@ -288,7 +288,7 @@ sstring mudColorToHTML(sstring str)
 
 
 /*
- create table quest_limbs 
+ create table quest_limbs
  (
  player varchar(80) not null,
  team varchar(30) null,
@@ -297,14 +297,14 @@ sstring mudColorToHTML(sstring str)
  slot_name varchar(80) not null,
  date_submitted timestamp not null default CURRENT_TIMESTAMP
  );
- 
+
  create table quest_limbs_team
  (
  team varchar(30) null,
  player varchar(80) not null
  );
- 
- * 
- * 
- * 
+
+ *
+ *
+ *
  */

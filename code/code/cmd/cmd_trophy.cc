@@ -206,7 +206,7 @@ void TBeing::doTrophy(const sstring &arg)
   if (specials.act & ACT_POLYSELF)
     per = desc->original;
   else per = this;
-  
+
   TTrophy trophy(per->getName());
 
   arg1=arg.word(0);
@@ -229,7 +229,7 @@ void TBeing::doTrophy(const sstring &arg)
 
   for (zone = 0; zone < zone_table.size(); zone++) {
     zoneData &zd = zone_table[zone];
-    
+
     while(1){
       if(processrow){
 	if(!db.fetchRow()){
@@ -253,7 +253,7 @@ void TBeing::doTrophy(const sstring &arg)
 
       int rnum = real_mobile(convertTo<int>(db["mobvnum"]));
       if (rnum < 0) {
-	vlogf(LOG_BUG, format("DoTrophy detected bad mobvnum=%d for name='%s'") %  
+	vlogf(LOG_BUG, format("DoTrophy detected bad mobvnum=%d for name='%s'") %
 	      convertTo<int>(db["mobvnum"]) % per->getName());
 	continue;
       }
@@ -273,7 +273,7 @@ void TBeing::doTrophy(const sstring &arg)
       // we do it here, so we can prevent printing headers for empty zones
       if(!header){
 	buf = format("\n--%s\n") % zd.name;
-	sb += buf; 
+	sb += buf;
 	header=1;
       }
 
@@ -348,7 +348,7 @@ void TBeing::doTrophy(const sstring &arg)
 
 void TTrophy::wipe(){
   pimpl->db.query("select id from player where name='%s'", getMyName().c_str());
-  
+
   if(pimpl->db.fetchRow())
     pimpl->db.query("delete from trophy where player_id=%i", convertTo<int>(pimpl->db["id"]));
 

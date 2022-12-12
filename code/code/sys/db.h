@@ -33,7 +33,7 @@ const int MAX_OBJ_AFFECT = 5;
 class File {
   private:
   File();
-  
+
  public:
   static const char * const SIGN_MESS;
   static const char * const MOB;
@@ -64,7 +64,7 @@ class Path {
   static const char * const BUILDER_HELP;
   static const char * const SKILL_HELP;
   static const char * const SPELL_HELP;
-};  
+};
 
 const char * const MUDADMIN_EMAIL   ="support@sneezymud.org";
 const char * const CODERS_EMAIL     ="support@sneezymud.org";
@@ -108,11 +108,11 @@ const resetFlag resetFlagMax = 1<<resetFlagCount;
 
 class resetCom {
   public:
-    char command; 
-    int if_flag; 
-    int arg1;   
-    int arg2;  
-    int arg3; 
+    char command;
+    int if_flag;
+    int arg1;
+    int arg2;
+    int arg3;
     int arg4;
     char character;
     int cmd_no;
@@ -185,11 +185,11 @@ class zoneData
   public:
     sstring name;             // name of this zone
     int zone_nr;            // number of this zone
-    int lifespan;           // how long between resets (minutes)  
-    int age;                // current age of this zone (minutes) 
+    int lifespan;           // how long between resets (minutes)
+    int age;                // current age of this zone (minutes)
     int bottom;
-    int top;                // upper limit for rooms in this zone 
-    int reset_mode;         // conditions for reset (see below)   
+    int top;                // upper limit for rooms in this zone
+    int reset_mode;         // conditions for reset (see below)
     bool enabled;           // whether zone is enabled
     byte zone_value;
     unsigned int num_mobs;
@@ -204,11 +204,11 @@ class zoneData
     std::map<int, int> stat_objs; // key: real obj number, value: count of that obj loading in the zonefile
     // note the count value for stat_objs ignores things like load rates so is pretty useless info
     // it also doesn't contain global suitset objs and doesn't check to see if local suitsets actually load, so...
-    
+
     int stat_mobs_total;     // total # of mobs loading in the zonefile
     int stat_mobs_unique;    // unique # of mobs loading in the zonefile
     int stat_objs_unique;    // unique # of objects loading in the zonefile
-    
+
     armorSetLoad armorSets;
 
     bool isEmpty(void);
@@ -222,7 +222,7 @@ class zoneData
     void renumCmd(void);
 
     std::vector<resetCom> cmd_table;          // command table for reset
-  
+
     zoneData();
     zoneData(const zoneData &t);
     ~zoneData();
@@ -232,8 +232,8 @@ class zoneData
 
 class indexData {
  public:
-  int virt;   
-  long pos;  
+  int virt;
+  long pos;
  private:
   int number;
   int max_num;
@@ -242,13 +242,13 @@ class indexData {
   const char *short_desc;
   const char *long_desc;
   const char *description;
-  
+
   short max_exist;        // for objs and mobs
   int spec;
   float weight;
-  
+
   void addToNumber(const short int n){
-    //    vlogf(LOG_PEEL, fmt("adding %i to number %i for object %i") % 
+    //    vlogf(LOG_PEEL, fmt("adding %i to number %i for object %i") %
     //	  n % number % virt);
     number+=n;
   }
@@ -264,8 +264,8 @@ class indexData {
   int getMaxNumber(){
     return max_num;
   }
-  
-  
+
+
   indexData();
   indexData(const indexData &);
   indexData & operator= (const indexData &a);
@@ -308,8 +308,8 @@ class mobIndexData : public indexData
 class resetQElement
 {
   public:
-    unsigned int zone_to_reset;   
-    resetQElement *next;	
+    unsigned int zone_to_reset;
+    resetQElement *next;
 
   resetQElement() :
     zone_to_reset(0),

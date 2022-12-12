@@ -45,7 +45,7 @@ const float SIP_WEIGHT         = 0.065;
 const float SIP_VOLUME         = 1.8046875;
 
 const int MAX_SWING_AFFECT  = 5;
-//const int MAX_OBJ_AFFECT    = 5;     
+//const int MAX_OBJ_AFFECT    = 5;
 const int OBJ_NOTIMER    = -1;
 const int MAX_TOUNGE  = 3;
 const int MAX_AFFECT  = 25;
@@ -141,7 +141,7 @@ const int MAX_PORTAL_TYPE = 14;
 
 class itemInfo
 {
-  public:   
+  public:
     const char * const name;
     const char * const common_name;
     const char * const val0_info;
@@ -175,17 +175,17 @@ enum toolTypeT {
      TOOL_THREAD,
      TOOL_POISON,
      TOOL_GARROTTE,
-     TOOL_FILE,   
+     TOOL_FILE,
      TOOL_BOWSTRING,//10
      TOOL_SKIN_KNIFE,
      TOOL_HOLYWATER,
      TOOL_FLINTSTEEL,
-     TOOL_TOTEM,  
+     TOOL_TOTEM,
      TOOL_FISHINGBAIT, //15
      TOOL_BUTCHER_KNIFE,
      TOOL_SEED,
      TOOL_TONGS,
-     TOOL_OPERATING_TABLE, 
+     TOOL_OPERATING_TABLE,
      TOOL_SCALPEL, // 20
      TOOL_FORCEPS,
      TOOL_LADEL,
@@ -378,7 +378,7 @@ enum liqTypeT {
      LIQ_MAGICAL_ELIXIR,
      LIQ_URINE,
      LIQ_POT_HEALING_GRASP,
-     LIQ_POT_CLEANSE, 
+     LIQ_POT_CLEANSE,
      LIQ_POT_QUICKSILVER, // 130
      LIQ_POT_MYSTERY,
      LIQ_MUD,
@@ -479,7 +479,7 @@ const unsigned int ITEM_NEWBIE          = (1<<24);    // 16777216
 const unsigned int ITEM_NOJUNK_PLAYER   = (1<<25);    // 33554432 USE THIS SPOT FOR EXTRA
 const unsigned int ITEM_SILVERED        = (1<<26);    // 67108864
 const unsigned int ITEM_NOT_USED3       = (1<<27);    // 134217728  USE THIS SPOT FOR EXTRA
-const unsigned int ITEM_ATTACHED        = (1<<28);    // 268435456 
+const unsigned int ITEM_ATTACHED        = (1<<28);    // 268435456
 const unsigned int ITEM_BURNING         = (1<<29);    // 536870912
 const unsigned int ITEM_CHARRED         = (1<<30);    // 1073741824
 const unsigned int ITEM_NOLOCATE        = (unsigned) (1<<31);    // returns negitive int
@@ -554,7 +554,7 @@ private:
     bool isMonogramOwner(TBeing *b, bool crossAccount) const;
     bool isImmMonogrammed() const;
     bool deMonogram(bool erase_imm_monogram);
-    
+
     int objectTickUpdate(int);
     int updateBurning(void);
     bool isObjStat(unsigned int num) const;
@@ -768,6 +768,6 @@ private:
     virtual void purchaseMe(TBeing *, TMonster *, int, int);
     virtual void sellMeMoney(TBeing *, TMonster *, int, int);
     virtual int taskChargeMe(TBeing *, spellNumT, int &);
-    virtual int getValue() const; 
+    virtual int getValue() const;
     virtual sstring wear_flags_to_sentence() const;
 };

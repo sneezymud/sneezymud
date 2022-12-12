@@ -77,11 +77,11 @@ sstring TSymbol::statObjInfo() const
   sstring a;
 
   sprintf(buf, "Symbol Strength: Current: %d, Maximum: %d\n\r",
-    getSymbolCurStrength(), 
+    getSymbolCurStrength(),
     getSymbolMaxStrength());
   a += buf;
   sprintf(buf, "Symbol Faction: %d (%s)\n\r",
-    getSymbolFaction(), 
+    getSymbolFaction(),
     getSymbolFaction() == -1 ? "not attuned" : FactionInfo[getSymbolFaction()].faction_name);
   a += buf;
 
@@ -156,18 +156,18 @@ void TSymbol::lowCheck()
   int i;
 
   if (getSymbolMaxStrength() < getSymbolCurStrength())
-    vlogf(LOG_LOW, format("symbol (%s) has lower max strength then current.") % 
+    vlogf(LOG_LOW, format("symbol (%s) has lower max strength then current.") %
              getName());
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if (affected[i].location == APPLY_ARMOR) {
-      vlogf(LOG_LOW, format("symbol (%s) had armor, bad!") % 
+      vlogf(LOG_LOW, format("symbol (%s) had armor, bad!") %
          getName());
     }
   }
   int ap = suggestedPrice();
   if (ap != obj_flags.cost && obj_flags.cost >= 0 && ap) {
     // ignore newbie symbol with cost = -1
-    vlogf(LOG_LOW, format("symbol (%s:%d) has a bad price (%d).  should be (%d)") % 
+    vlogf(LOG_LOW, format("symbol (%s:%d) has a bad price (%d).  should be (%d)") %
          getName() % objVnum() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
@@ -196,7 +196,7 @@ bool TSymbol::lowCheckSlots(silentTypeT silent)
 
   if (value != 0) {
     if (!silent)
-      vlogf(LOG_LOW, format("symbol (%s) with bad wear slots: %d") % 
+      vlogf(LOG_LOW, format("symbol (%s) with bad wear slots: %d") %
                  getName() % value);
     return true;
   }

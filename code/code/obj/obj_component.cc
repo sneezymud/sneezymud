@@ -37,7 +37,7 @@ bool TComponent::willMerge(TMergeable *tm)
   // Same VNum.
   // Has a cost greater than 0 (ignore comps from leveling)
   if(!(tComp=dynamic_cast<TComponent *>(tm)) ||
-     tComp==this || 
+     tComp==this ||
      (tComp->objVnum() != objVnum()) ||
      tComp->obj_flags.cost <= 0 ||  // ignore "free" comps from GM
      obj_flags.cost <= 0 ||
@@ -55,7 +55,7 @@ void TComponent::doMerge(TMergeable *tm)
 
   if(!(tComp=dynamic_cast<TComponent *>(tm)))
     return;
-  
+
   if (!(rp = roomp)) {
     if (parent) {
       rp = parent->roomp;
@@ -92,142 +92,142 @@ void assign_component_placement()
   }
 
 // rainbow bridge 1
-  component_placement.push_back(compPlace(BRIDGE_ROOM, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(BRIDGE_ROOM, -1, Mob::NONE,
      Obj::ITEM_RAINBOW_BRIDGE1,
      CACT_PLACE, 1, 100,
      HOUR_SUNRISE, HOUR_SUNSET, -1, -1, -1, -1, 1<<Weather::RAINY | 1<<Weather::LIGHTNING,
      "<p>$p slowly shimmers into existence!<1>", ""));
-  component_placement.push_back(compPlace(BRIDGE_ROOM, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(BRIDGE_ROOM, -1, Mob::NONE,
      Obj::ITEM_RAINBOW_BRIDGE1,
      CACT_REMOVE, 1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY | 1<<Weather::LIGHTNING),
      "<p>$p slowly fades out of existence!<1>", ""));
-  component_placement.push_back(compPlace(BRIDGE_ROOM, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(BRIDGE_ROOM, -1, Mob::NONE,
      Obj::ITEM_RAINBOW_BRIDGE1,
      CACT_REMOVE, 1, 100,
      HOUR_SUNSET, -1, -1, -1, -1, -1, -1,
      "<p>$p slowly fades out of existence!<1>", ""));
 // rainbow bridge 2
-  component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, Mob::NONE,
      Obj::ITEM_RAINBOW_BRIDGE2,
      CACT_PLACE, 1, 100,
      HOUR_SUNRISE, HOUR_SUNSET, -1, -1, -1, -1, 1<<Weather::RAINY | 1<<Weather::LIGHTNING,
      "<p>$p slowly shimmers into existence!<1>", ""));
-  component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, Mob::NONE,
      Obj::ITEM_RAINBOW_BRIDGE2,
      CACT_REMOVE, 1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY | 1<<Weather::LIGHTNING),
      "<p>$p slowly fades out of existence!<1>", ""));
-  component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(BRIDGE_ROOM2, -1, Mob::NONE,
      Obj::ITEM_RAINBOW_BRIDGE2,
      CACT_REMOVE, 1, 100,
      HOUR_SUNSET, -1, -1, -1, -1, -1, -1,
      "<p>$p slowly fades out of existence!<1>", ""));
 
   // cheval
-  component_placement.push_back(compPlace(6101, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6101, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
-  component_placement.push_back(compPlace(6101, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6101, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<k>$p skitters away into the night.<1>", ""));
-  component_placement.push_back(compPlace(6101, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6101, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
-  component_placement.push_back(compPlace(6104, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6104, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
-  component_placement.push_back(compPlace(6104, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6104, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<k>$p skitters away into the night.<1>", ""));
-  component_placement.push_back(compPlace(6104, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6104, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
-  component_placement.push_back(compPlace(6108, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6108, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
-  component_placement.push_back(compPlace(6108, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6108, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<k>$p skitters away into the night.<1>", ""));
-  component_placement.push_back(compPlace(6108, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6108, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
-  component_placement.push_back(compPlace(6200, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6200, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
-  component_placement.push_back(compPlace(6200, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6200, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<k>$p skitters away into the night.<1>", ""));
-  component_placement.push_back(compPlace(6200, -1, Mob::NONE, 
-     COMP_CHEVAL,
-     CACT_REMOVE, -1, 100,
-     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
-     "<k>$p flips over and flies away.<1>", ""));
-
-  component_placement.push_back(compPlace(6205, -1, Mob::NONE, 
-     COMP_CHEVAL,
-     CACT_PLACE, 9999, 65,
-     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
-     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
-  component_placement.push_back(compPlace(6205, -1, Mob::NONE, 
-     COMP_CHEVAL,
-     CACT_REMOVE, -1, 100,
-     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
-     "<k>$p skitters away into the night.<1>", ""));
-  component_placement.push_back(compPlace(6205, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6200, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
 
-  component_placement.push_back(compPlace(6211, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6205, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
-  component_placement.push_back(compPlace(6211, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6205, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<k>$p skitters away into the night.<1>", ""));
-  component_placement.push_back(compPlace(6211, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6205, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<k>$p flips over and flies away.<1>", ""));
-  component_placement.push_back(compPlace(6220, -1, Mob::NONE, 
+
+  component_placement.push_back(compPlace(6211, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
-  component_placement.push_back(compPlace(6220, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6211, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<k>$p skitters away into the night.<1>", ""));
-  component_placement.push_back(compPlace(6220, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(6211, -1, Mob::NONE,
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
+     "<k>$p flips over and flies away.<1>", ""));
+  component_placement.push_back(compPlace(6220, -1, Mob::NONE,
+     COMP_CHEVAL,
+     CACT_PLACE, 9999, 65,
+     HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
+     "<k>$p stupidly dives into the ground and lands on its back.<1>" ,""));
+  component_placement.push_back(compPlace(6220, -1, Mob::NONE,
+     COMP_CHEVAL,
+     CACT_REMOVE, -1, 100,
+     HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
+     "<k>$p skitters away into the night.<1>", ""));
+  component_placement.push_back(compPlace(6220, -1, Mob::NONE,
      COMP_CHEVAL,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
@@ -235,100 +235,100 @@ void assign_component_placement()
 
 
 // color spray
-  component_placement.push_back(compPlace(11328, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(11328, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>" ,""));
-  component_placement.push_back(compPlace(11328, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(11328, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<b>$p dulls and fades away as the night approaches.<1>", ""));
-  component_placement.push_back(compPlace(11328, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(11328, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
 
-  component_placement.push_back(compPlace(1008, 1015, Mob::NONE, 
+  component_placement.push_back(compPlace(1008, 1015, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
-  component_placement.push_back( compPlace(1008, 1015, Mob::NONE, 
+  component_placement.push_back( compPlace(1008, 1015, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<b>$p dulls and fades away as the night approaches.<1>", ""));
-  component_placement.push_back( compPlace(1008, 1015, Mob::NONE, 
+  component_placement.push_back( compPlace(1008, 1015, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
-  component_placement.push_back( compPlace(11368, -1, Mob::NONE, 
+  component_placement.push_back( compPlace(11368, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
-  component_placement.push_back( compPlace(11368, -1, Mob::NONE, 
+  component_placement.push_back( compPlace(11368, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<b>$p dulls and fades away as the night approaches.<1>", ""));
-  component_placement.push_back( compPlace(11368, -1, Mob::NONE, 
+  component_placement.push_back( compPlace(11368, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
-  component_placement.push_back( compPlace(1018, 1023, Mob::NONE, 
+  component_placement.push_back( compPlace(1018, 1023, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>", ""));
-  component_placement.push_back( compPlace(1018, 1023, Mob::NONE, 
+  component_placement.push_back( compPlace(1018, 1023, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<b>$p dulls and fades away as the night approaches.<1>",
      ""));
-  component_placement.push_back( compPlace(1018, 1023, Mob::NONE, 
+  component_placement.push_back( compPlace(1018, 1023, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
 
-  component_placement.push_back( compPlace(7510, 7512, Mob::NONE, 
+  component_placement.push_back( compPlace(7510, 7512, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
-  component_placement.push_back( compPlace(7510, 7512, Mob::NONE, 
+  component_placement.push_back( compPlace(7510, 7512, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<b>$p dulls and fades away as the night approaches.<1>", ""));
-  component_placement.push_back( compPlace(7510, 7512, Mob::NONE, 
+  component_placement.push_back( compPlace(7510, 7512, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
      "<b>$p dulls and fades away.<1>", ""));
 
-  component_placement.push_back(compPlace(11324, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(11324, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_PLACE, 9999, 65,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "<B>A small stone nearby begins to sparkle and glow from the kiss of a rainbow.<1>",
      "<y>A beautiful rainbow streaks across the sky.<1>"));
-  component_placement.push_back(compPlace(11324, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(11324, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_END, -1, -1, -1, -1, -1, -1,
      "<b>$p dulls and fades away as the night approaches.<1>", ""));
-  component_placement.push_back(compPlace(11324, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(11324, -1, Mob::NONE,
      COMP_COLOR_SPRAY,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY),
@@ -454,7 +454,7 @@ void assign_component_placement()
      COMP_SAND_BLAST,
      CACT_PLACE, 9999, 50,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, 1<<Weather::CLOUDLESS,
-     "The extreme heat from the sun dries and cracks the $g.", 
+     "The extreme heat from the sun dries and cracks the $g.",
      "The blazing sun blisters the $g."));
   component_placement.push_back(compPlace(12795, 12799, Mob::NONE,
      COMP_SAND_BLAST,
@@ -463,19 +463,19 @@ void assign_component_placement()
      "Moisture hangs heavily in the air as bad weather approaches.", ""));
 
 // Some porous bedrock [stoneskin] //
-  component_placement.push_back(compPlace(10990, 10992, Mob::NONE, 
+  component_placement.push_back(compPlace(10990, 10992, Mob::NONE,
      COMP_STONE_SKIN,
      CACT_PLACE | CACT_UNIQUE, 9999, 15,
      -1, -1, -1, -1, -1, -1, -1,
      "A gust of wind exposes $p.", ""));
 
   // A dryad's footprint [stealth] //
-  component_placement.push_back(compPlace(7829, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(7829, -1, Mob::NONE,
      COMP_STEALTH,
      CACT_PLACE | CACT_UNIQUE, 9999, 80,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::RAINY | 1<<Weather::SNOWY),
      "", ""));
-  component_placement.push_back(compPlace(7829, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(7829, -1, Mob::NONE,
      COMP_STEALTH,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, (1<<Weather::RAINY | 1<<Weather::SNOWY),
@@ -483,113 +483,113 @@ void assign_component_placement()
 
   // A prism of condensation [concealment] //
   // created during daylight rain, destroyed by sun
-  // nighttime has no effect on destruction 
-  component_placement.push_back(compPlace(2712, 2717, Mob::NONE, 
+  // nighttime has no effect on destruction
+  component_placement.push_back(compPlace(2712, 2717, Mob::NONE,
      COMP_CLOUD_OF_CONCEAL,
      CACT_PLACE | CACT_UNIQUE, 9999, 80,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
      "Raindrops slowly fall from the leaves.",
      "The falling rain gathers on the foliage around you."));
 
-  component_placement.push_back(compPlace(2712, 2717, Mob::NONE, 
+  component_placement.push_back(compPlace(2712, 2717, Mob::NONE,
      COMP_CLOUD_OF_CONCEAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The bright heat from the sun warms the air around you.", ""));
 
-  component_placement.push_back(compPlace(10101, 10159, Mob::NONE, 
+  component_placement.push_back(compPlace(10101, 10159, Mob::NONE,
      COMP_CLOUD_OF_CONCEAL,
      CACT_PLACE | CACT_UNIQUE, 9999, 80,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::RAINY),
-     "Raindrops slowly fall from the leaves.", 
+     "Raindrops slowly fall from the leaves.",
      "The falling rain gathers on the foliage around you."));
 
-  component_placement.push_back(compPlace(10101, 10159, Mob::NONE, 
+  component_placement.push_back(compPlace(10101, 10159, Mob::NONE,
      COMP_CLOUD_OF_CONCEAL,
      CACT_REMOVE, -1, 100,
      HOUR_DAY_BEGIN, HOUR_DAY_END, -1, -1, -1, -1, (1<<Weather::CLOUDLESS),
      "The bright heat from the sun warms the air around you.", ""));
 
   // Some gnome flour [dispel invisible] //
-  component_placement.push_back(compPlace(22480, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(22480, -1, Mob::NONE,
      COMP_DISPEL_INVIS,
      CACT_PLACE, 40, 90,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
   // A bit of brain coral [telepathy] //
-  component_placement.push_back(compPlace(4300, 4399, Mob::NONE, 
+  component_placement.push_back(compPlace(4300, 4399, Mob::NONE,
      COMP_TELEPATHY,
      CACT_PLACE | CACT_UNIQUE, 9999, 10,
      12, 25, -1, -1, -1, -1, -1,
      "$p washes up onto shore.",
      "The shallow waters churn, kicking up sediment and debris."));
-  component_placement.push_back(compPlace(4300, 4399, Mob::NONE, 
+  component_placement.push_back(compPlace(4300, 4399, Mob::NONE,
      COMP_TELEPATHY,
      CACT_REMOVE, -1, 100,
      25, -1, -1, -1, -1, -1, -1,
      "The waterline recedes as the tides change.", ""));
 
-  component_placement.push_back(compPlace(14111, 14115, Mob::NONE, 
+  component_placement.push_back(compPlace(14111, 14115, Mob::NONE,
      COMP_TELEPATHY,
      CACT_PLACE | CACT_UNIQUE, 9999, 10,
      40, 2, -1, -1, -1, -1, -1,
      "$p washes up onto shore.",
      "The shallow waters churn kicking up sediment and debris."));
 
-  component_placement.push_back(compPlace(14111, 14115, Mob::NONE, 
+  component_placement.push_back(compPlace(14111, 14115, Mob::NONE,
      COMP_TELEPATHY,
      CACT_REMOVE, -1, 100,
      2, -1, -1, -1, -1, -1, -1,
      "The waterline recedes as the tides change.", ""));
 
 // A jar of whale grease [fumble] //
-  component_placement.push_back(compPlace(1293, -1, 1389, 
+  component_placement.push_back(compPlace(1293, -1, 1389,
      COMP_FUMBLE,
      CACT_PLACE, 9999, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(2794, -1, 2773, 
+  component_placement.push_back(compPlace(2794, -1, 2773,
      COMP_FUMBLE,
      CACT_PLACE, 9999, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 // A piece of cloud stone [conjure air elemental] //
-  component_placement.push_back(compPlace(11000, 11017, Mob::NONE, 
+  component_placement.push_back(compPlace(11000, 11017, Mob::NONE,
      COMP_CONJURE_AIR,
      CACT_PLACE | CACT_UNIQUE, 9999, 60,
      -1, -1, -1, -1, -1, -1, (1<<Weather::CLOUDY | 1<<Weather::RAINY),
      "Heavy winds buffet the clouds, sending $p across the $g.",
      "Howling winds scream in your ears."));
 
-  component_placement.push_back(compPlace(11000, 11017, Mob::NONE, 
+  component_placement.push_back(compPlace(11000, 11017, Mob::NONE,
      COMP_CONJURE_AIR,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, ~(1<<Weather::CLOUDY | 1<<Weather::RAINY),
      "The winds begin to die down somewhat.", ""));
 
 // A bit of cloud foam [fly] //
-  component_placement.push_back(compPlace(11000, 11017, Mob::NONE, 
+  component_placement.push_back(compPlace(11000, 11017, Mob::NONE,
      COMP_FLIGHT,
      CACT_PLACE | CACT_UNIQUE, 9999, 40,
      -1, -1, -1, -1, -1, -1, (1<<Weather::RAINY),
      "The moist air creates $p on the $g.",
      "The $g becomes heavy with moisture."));
 
-  component_placement.push_back(compPlace(11000, 11017, Mob::NONE, 
+  component_placement.push_back(compPlace(11000, 11017, Mob::NONE,
      COMP_FLIGHT,
      CACT_REMOVE, -1, 100,
      -1, -1, -1, -1, -1, -1, (1<<Weather::CLOUDY),
      "The clouds firm up as the rain dissipates.", ""));
 
 // Some liquid brimstone [hellfire] //
-  component_placement.push_back(compPlace(9994, -1, 9917, 
+  component_placement.push_back(compPlace(9994, -1, 9917,
      COMP_HELLFIRE,
      CACT_PLACE | CACT_UNIQUE, 9999, 90,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(7515, -1, Mob::NONE, 
+  component_placement.push_back(compPlace(7515, -1, Mob::NONE,
      COMP_HELLFIRE,
      CACT_PLACE | CACT_UNIQUE, 9999, 70,
      -1, -1, -1, -1, -1, -1, -1,
@@ -597,12 +597,12 @@ void assign_component_placement()
 
   // Brown mushrooms to trade for promethian fire
   // created (revealed) at first morning light
-  component_placement.push_back(compPlace(3401, 3449, Mob::NONE, 
+  component_placement.push_back(compPlace(3401, 3449, Mob::NONE,
      Obj::BROWN_MUSHROOM,
      CACT_PLACE, 9999, 10,
      5, -1, -1, -1, -1, -1, -1,
      "The morning light reveals $p growing in the $g.", ""));
-  component_placement.push_back(compPlace(3451, 3482, Mob::NONE, 
+  component_placement.push_back(compPlace(3451, 3482, Mob::NONE,
      Obj::BROWN_MUSHROOM,
      CACT_PLACE, 9999, 10,
      5, -1, -1, -1, -1, -1, -1,
@@ -613,109 +613,109 @@ void assign_component_placement()
 // mob load doesn't work well, so maybe should be dissect...
 
 // Some eyes from a blind man [sense life] //
-  component_placement.push_back(compPlace(1, 99, 7800, 
+  component_placement.push_back(compPlace(1, 99, 7800,
      COMP_BLIND_EYE,
      CACT_PLACE, 40, 70,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A golden carrot [true sight] //
-  component_placement.push_back(compPlace(10117, 10128, 10108, 
+  component_placement.push_back(compPlace(10117, 10128, 10108,
      COMP_GOLDEN_CARROT,
      CACT_PLACE, 40, 15,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A bag of pixie dust [slumber] //
-  component_placement.push_back(compPlace(10258, 10299, 7817, 
+  component_placement.push_back(compPlace(10258, 10299, 7817,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(2700, 2740, 7805, 
+  component_placement.push_back(compPlace(2700, 2740, 7805,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(2700, 2740, 7805, 
+  component_placement.push_back(compPlace(2700, 2740, 7805,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A pixie torch [faerie fire] //
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_TORCH,
      CACT_PLACE, 40, 85,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_TORCH,
      CACT_PLACE, 40, 85,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_TORCH,
      CACT_PLACE, 40, 85,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A dropper of pixie tears [faerie fog] //
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
@@ -830,7 +830,7 @@ void do_components(int situ)
       do {
         l_room = ::number(component_placement[i].room1, component_placement[i].room2);
         j++;
-     
+
       } while (!real_roomp(l_room) && j < 20);
       if (j >= 20)
         continue;
@@ -852,7 +852,7 @@ void do_components(int situ)
             if ((rp = real_roomp(t_room)) && !rp->stuff.empty()) {
               act(component_placement[i].glo_msg,
                     TRUE, rp->stuff.front(), NULL, NULL, TO_CHAR);
-              act(component_placement[i].glo_msg, 
+              act(component_placement[i].glo_msg,
                     TRUE, rp->stuff.front(), NULL, NULL, TO_ROOM);
             }
           }
@@ -874,7 +874,7 @@ void do_components(int situ)
                 TMonster *tmon = dynamic_cast<TMonster *>(m);
                 if (!tmon)
                   continue;
-                if (!tmon->isPc() && 
+                if (!tmon->isPc() &&
                     (tmon->mobVnum() == component_placement[i].mob)) {
                   for(StuffIter it=tmon->stuff.begin();it!=tmon->stuff.end();++it) {
                     TObj *tobj = dynamic_cast<TObj *>(*it);
@@ -887,7 +887,7 @@ void do_components(int situ)
                   }
                 }
               }
-              if (found) 
+              if (found)
                 continue;
             } else {
               // limit to 1 in the room
@@ -900,7 +900,7 @@ void do_components(int situ)
                   break;
                 }
               }
-              if (found) 
+              if (found)
                 continue;
             }
           }
@@ -914,8 +914,8 @@ void do_components(int situ)
               TMonster *tmon = dynamic_cast<TMonster *>(m);
               if (!tmon)
                 continue;
-        
-              if (!tmon->isPc() && 
+
+              if (!tmon->isPc() &&
                   (tmon->mobVnum() == component_placement[i].mob)) {
                 *tmon += *obj;
                 placed = TRUE;
@@ -1032,7 +1032,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_DUST_STORM,
-    "",                       
+    "",
     "",
     "",
     "You open $p allowing a bit of vapor to seep out.",
@@ -1040,7 +1040,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_TORNADO,
-    "",                       
+    "",
     "",
     "",
     "You open $p, unleashing a tiny vortex.",
@@ -1053,12 +1053,12 @@ void buildComponentArray()
     "",
     "You toss $p upward and it forms into a small grey cloud.",
     "$n tosses $p upward and it forms into a cloud.",
-    "",                       
+    "",
     ""));
   CompInfo.push_back(compInfo(SPELL_FEATHERY_DESCENT,
     "You fling $p at $N.",
     "$n flings $p at $N.",
-    "$n flings $p at you.",                       
+    "$n flings $p at you.",
     "You fling $p at yourself.",
     "$n flings $p at $mself.",
     "",
@@ -1066,7 +1066,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_FALCON_WINGS,
     "You run $p up and down $N's arms.",
     "$n runs $p up and down $N's arms.",
-    "$n runs $p up and down your arms.",                       
+    "$n runs $p up and down your arms.",
     "You run $p up and down your arms.",
     "$n runs $p up and down $s arms.",
     "",
@@ -1120,7 +1120,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ILLUMINATE,
-    "",                       
+    "",
     "",
     "",
     "",
@@ -1130,7 +1130,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_DETECT_MAGIC,
     "You toss $p onto $N.",
     "$n tosses $p onto $N.",
-    "$n tosses $p onto you.",                       
+    "$n tosses $p onto you.",
     "You toss $p on yourself.",
     "$n tosses $p onto $mself.",
     "",
@@ -1152,7 +1152,7 @@ void buildComponentArray()
     "You swallow $p.",
     "$n swallows $p."));
   CompInfo.push_back(compInfo(SPELL_COPY,
-    "",                       
+    "",
     "",
     "",
     "",
@@ -1168,7 +1168,7 @@ void buildComponentArray()
     "You uncap $p and sprinkle the corpse with it.",
     "$n uncaps $p and sprinkles the corpse with it."));
   CompInfo.push_back(compInfo(SPELL_VOODOO,
-    "",                       
+    "",
     "",
     "",
     "You taste $p and spit it out.",
@@ -1176,7 +1176,7 @@ void buildComponentArray()
     "You taste $p and spit it out.",
     "$n tastes $p and then $e spits it out."));
   CompInfo.push_back(compInfo(SPELL_DANCING_BONES,
-    "",                       
+    "",
     "",
     "",
     "You blow $p into the air.",
@@ -1184,7 +1184,7 @@ void buildComponentArray()
     "You blow $p into the air.",
     "$n blows $p into the air."));
   CompInfo.push_back(compInfo(SPELL_RESURRECTION,
-    "",                       
+    "",
     "",
     "",
     "You toss $p into the air and it vanishes.",
@@ -1192,7 +1192,7 @@ void buildComponentArray()
     "You toss $p into the air and it vanishes.",
     "$n tosses $p into the air and it vanishes."));
   CompInfo.push_back(compInfo(SPELL_GALVANIZE,
-    "",                       
+    "",
     "",
     "",
     "",
@@ -1202,7 +1202,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_GRANITE_FISTS,
     "You tightly squeeze $p as you stare at $N.",
     "$n tightly squeezes $p as $e stares at $N.",
-    "$n tightly squeezes $p as $e stares at you.",                       
+    "$n tightly squeezes $p as $e stares at you.",
     "You tightly squeeze $p as your eyes roll back into your head.",
     "$n tightly squeezes $p as $s eyes roll back into $s head.",
     "",
@@ -1216,7 +1216,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_PEBBLE_SPRAY,
-    "",                       
+    "",
     "",
     "",
     "You press $p to the $g.",
@@ -1224,7 +1224,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_FLATULENCE,
-    "",                       
+    "",
     "",
     "",
     "You quickly eat $p.",
@@ -1232,7 +1232,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_SAND_BLAST,
-    "",                       
+    "",
     "",
     "",
     "You pour a portion of sand from $p.",
@@ -1258,7 +1258,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_STONE_SKIN,
     "You rub $p upon $N.",
     "$n rubs $p on $N.",
-    "$n rubs $p on you.",                       
+    "$n rubs $p on you.",
     "You rub $p on yourself.",
     "$n rubs $p on $mself.",
     "",
@@ -1266,7 +1266,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_TRAIL_SEEK,
     "You touch $p to $N's nose.",
     "$n touches $p to $N's nose.",
-    "$n touches $p to your nose.",                       
+    "$n touches $p to your nose.",
     "You touch $p to your nose.",
     "$n touches $p to $s nose.",
     "",
@@ -1274,13 +1274,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_LEVITATE,
     "You uncork $p and hold it beneath $N's nose.",
     "$n uncorks $p and holds it beneath $N's nose.",
-    "$n uncorks $p and holds it beneath your nose.",                       
+    "$n uncorks $p and holds it beneath your nose.",
     "You uncork $p and sniff it.",
     "$n uncorks $p and sniffs it.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CONJURE_EARTH,
-    "",                       
+    "",
     "",
     "",
     "You crush $p in your hand.",
@@ -1306,7 +1306,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_FLAMING_SWORD,
     "You grip $p, slashing at the air before $N.",
     "$n grips $p, slashing at the air before $N.",
-    "$n grips $p, slashing it at the air before you.",                       
+    "$n grips $p, slashing it at the air before you.",
     "You grip $p, slashing at the air around you.",
     "$n grips $p, slashing at the air around $m.",
     "",
@@ -1314,13 +1314,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_INFERNO,
     "You blow $p in $N's direction.",
     "$n blows $p in $N's direction.",
-    "$n blows $p in your direction.",                       
+    "$n blows $p in your direction.",
     "You blow $p in a cloud about yourself.",
     "$n blows $p in a cloud about $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_FIREBALL,
-    "",                       
+    "",
     "",
     "",
     "You scatter $p into the air.",
@@ -1328,7 +1328,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_HELLFIRE,
-    "",                       
+    "",
     "",
     "",
     "You pour $p into your palm.",
@@ -1336,7 +1336,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CONJURE_FIRE,
-    "",                       
+    "",
     "",
     "",
     "You touch $p to your forehead.",
@@ -1346,7 +1346,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_FLAMING_FLESH,
     "You apply $p to $N.",
     "$n applies $p to $N.",
-    "$n applies $p to you.",                       
+    "$n applies $p to you.",
     "You apply $p to yourself.",
     "$n applies $p to $mself.",
     "",
@@ -1354,13 +1354,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_CLEANSE,
     "You wash $N's private area with $p! There HAS to be a better way!",
     "ACK!! $n washes $N's privates with $p! YUCKO!!",
-    "$n washes your privates with $p. ACK!!!",                       
+    "$n washes your privates with $p. ACK!!!",
     "You wash *cough* yourself with $p. Sheesh! How about some damn privacy!",
     "$n washes $mself in a private area with $p for a DAMN LONG TIME!",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_FLARE,
-    "",                       
+    "",
     "",
     "",
     "You take a globe from $p launching it upwards.",
@@ -1370,7 +1370,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_STUNNING_ARROW,
     "You wrap $p around your wrist and reach for $N.",
     "$n wraps $p around a wrist and reaches for $N.",
-    "$n wraps $p around a wrist and reaches for you.",                       
+    "$n wraps $p around a wrist and reaches for you.",
     "You wrap $p around your wrist and grab yourself.",
     "$n wraps $p around a wrist and grabs $mself.",
     "",
@@ -1378,7 +1378,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_BLAST_OF_FURY,
     "You lick $p and spit it at $N.",
     "$n licks $p and spits it at $N.",
-    "$n licks $p and spits it at you.",                       
+    "$n licks $p and spits it at you.",
     "You lick $p and start to drool.",
     "$n licks $p and drools on $mself.",
     "",
@@ -1386,7 +1386,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_ENERGY_DRAIN,
     "You wave $p at $N.",
     "$n waves $p at $N.",
-    "$n waves $p at you.",                       
+    "$n waves $p at you.",
     "You wave $p at yourself.",
     "$n waves $p at $mself.",
     "",
@@ -1394,7 +1394,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_LICH_TOUCH,
     "You fling $p at $N.",
     "$n flings $p at $N.",
-    "$n flings $p at you.",                       
+    "$n flings $p at you.",
     "You fling $p at yourself.",
     "$n flings $p at $mself.",
     "",
@@ -1402,7 +1402,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SQUISH,
     "You squeeze $p tightly.",
     "$n squeezes $p tightly.",
-    "$n squeezes $p tightly.",                       
+    "$n squeezes $p tightly.",
     "You squeeze $p tightly.",
     "$n squeezes $p tightly.",
     "",
@@ -1410,7 +1410,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_CARDIAC_STRESS,
     "You chew up $p and then kiss $N deeply on the mouth.",
     "$n chews up $p and then kisses $N deeply on the mouth.",
-    "$n chews up $p and then kisses you deeply on the mouth.",                       
+    "$n chews up $p and then kisses you deeply on the mouth.",
     "You chew up $p and accidentally swallow the poisonous juice.",
     "$n chews up $p and accidentally swallows it.",
     "",
@@ -1418,7 +1418,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SOUL_TWIST,
     "You wrap $p around your wrist and reach for $N.",
     "$n wraps $p around a wrist and reaches for $N.",
-    "$n wraps $P around a wrist and reaches for you.",                       
+    "$n wraps $P around a wrist and reaches for you.",
     "You wrap $p around your wrist and grab yourself.",
     "$n wraps $p around a wrist and grabs $mself.",
     "",
@@ -1426,7 +1426,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_VAMPIRIC_TOUCH,
     "You consume $p and spit it on $N.",
     "$n consumes $p and spits it on $N.",
-    "$n consumes $p and spits it on you.",                       
+    "$n consumes $p and spits it on you.",
     "You consume $p and accidentally swallow it.",
     "$n consumes $p and swallows it down.",
     "",
@@ -1434,7 +1434,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_BLOOD_BOIL,
     "You spit $p at $N.",
     "$n spits $p at $N.",
-    "$n spits $p at you.",                       
+    "$n spits $p at you.",
     "You swallow $p and start to drool.",
     "$n swallows $p and drools on $mself.",
     "",
@@ -1442,7 +1442,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_LIFE_LEECH,
     "You throw $p onto $N's chest.",
     "$n throws $p onto $N's chest.",
-    "$n throws $p onto your chest!",                       
+    "$n throws $p onto your chest!",
     "You fumble $p and it latches on to you.",
     "$n fumbles $p and it latches tightly to $s chest.",
     "",
@@ -1450,7 +1450,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_ATOMIZE,
     "You blow $p at $N.",
     "$n blows $p at $N.",
-    "$n blows $p at you.",                       
+    "$n blows $p at you.",
     "You blow $p at yourself.",
     "$n blows $p at $mself.",
     "",
@@ -1458,13 +1458,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_DEATHWAVE,
     "You blow $p at $N.",
     "$n blows $p at $N.",
-    "$n blows $p at you.",                       
+    "$n blows $p at you.",
     "You blow $p at yourself.",
     "$n blows $p at $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_COLOR_SPRAY,
-    "",                       
+    "",
     "",
     "",
     "You squeeze $p and wave it over your head.",
@@ -1472,7 +1472,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ACID_BLAST,
-    "",                       
+    "",
     "",
     "",
     "You uncork $p.",
@@ -1480,16 +1480,16 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ANIMATE,
-    "",                       
-    "",                       
+    "",
+    "",
     "",
     "You toss $p into the pile of armor.",
     "$n tosses $p into the pile of armor.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CONTROL_UNDEAD,
-    "",                       
-    "",                       
+    "",
+    "",
     "",
     "You toss $p on the ground.",
     "$n tosses $p on the ground.",
@@ -1498,7 +1498,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SHIELD_OF_MISTS,
     "You masticate $p and spit it at $N.",
     "$n masticates $p and spits it at $N.",
-    "$n masticates $p and spits it at you.",                       
+    "$n masticates $p and spits it at you.",
     "You chew $p and swallow it down.",
     "$n chews $p and swallows it down.",
     "",
@@ -1506,7 +1506,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SORCERERS_GLOBE,
     "You twirl $p in front of $N.",
     "$n twirls $p in front of $N.",
-    "$n twirls $p in front of you.",                       
+    "$n twirls $p in front of you.",
     "You twirl $p in front of yourself.",
     "$n twirls $p in front of $mself.",
     "",
@@ -1514,7 +1514,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_BIND,
     "You drape $p over a finger and point at $N.",
     "$n drapes $p over a finger and points at $N.",
-    "$n drapes $p over a finger and points at you.",                       
+    "$n drapes $p over a finger and points at you.",
     "You drape $p over a finger and point at yourself.",
     "$n drapes $p over a finger and points at $mself.",
     "",
@@ -1522,14 +1522,14 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_TELEPORT,
     "You crumble $p and toss it at $N.",
     "$n crumbles $p and tosses it at $N.",
-    "$n crumbles $p and tosses it at you.",                       
+    "$n crumbles $p and tosses it at you.",
     "You crumble $p and toss it at yourself.",
     "$n crumbles $p and tosses it at $mself.",
     "",
     ""));
 #if 0
   CompInfo.push_back(compInfo(SPELL_FIND_FAMILIAR,
-    "",                       
+    "",
     "",
     "",
     "You clutch $p and stare off into space.",
@@ -1540,7 +1540,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SENSE_LIFE,
     "You touch $p to $N's head.",
     "$n touches $p to $N's head.",
-    "$n touches $p to your head.",                       
+    "$n touches $p to your head.",
     "You touch $p to your head.",
     "$n touches $p to $s head.",
     "",
@@ -1548,13 +1548,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SENSE_LIFE_SHAMAN,
     "You touch $p to $N's head.",
     "$n touches $p to $N's head.",
-    "$n touches $p to your head.",                       
+    "$n touches $p to your head.",
     "You touch $p to your head.",
     "$n touches $p to $s head.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_FARLOOK,
-    "",                       
+    "",
     "",
     "",
     "You look into $p.",
@@ -1564,7 +1564,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SILENCE,
     "You unleash $p at $N.",
     "$n unleashes $p at $N.",
-    "$n unleashes $p at you.",                       
+    "$n unleashes $p at you.",
     "You unleash $p upon yourself.",
     "$n unleashes $p at $mself.",
     "",
@@ -1572,7 +1572,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_STEALTH,
     "You place $p on $N's sole.",
     "$n places $p on $N's sole.",
-    "$n places $p on your sole.",                       
+    "$n places $p on your sole.",
     "You place $p on your sole.",
     "$n places $p on $s sole.",
     "",
@@ -1580,7 +1580,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_CALM,
     "You hold up $p at $N.",
     "$n holds up $p at $N.",
-    "$n holds up $p at you.",                       
+    "$n holds up $p at you.",
     "You hold up $p.",
     "$n holds up $p.",
     "",
@@ -1588,7 +1588,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_ENSORCER,
     "You tie $p in a knot while thinking of $N.",
     "$n ties $p in a knot.",
-    "$n ties $p in a knot.",                       
+    "$n ties $p in a knot.",
     "You tie $p in a knot while thinking of yourself.",
     "$n ties $p in a knot.",
     "",
@@ -1596,7 +1596,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_INTIMIDATE,
     "You flick $p at $N.",
     "$n flicks $p at $N.",
-    "$n flicks $p at you.",                       
+    "$n flicks $p at you.",
     "You rub $p on your face? YUCK!",
     "$n rubs $p on $s face! What a dweeb!",
     "",
@@ -1604,7 +1604,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_FEAR,
     "You throw $p at $N.",
     "$n throws $p at $N.",
-    "$n throws $p at you.",                       
+    "$n throws $p at you.",
     "You throw $p on the ground.",
     "$n throws $p on the ground.",
     "",
@@ -1612,13 +1612,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_INVISIBILITY,
     "You douse $N with $p.",
     "$n douses $N with $p.",
-    "$n douses you with $p.",                       
+    "$n douses you with $p.",
     "You douse yourself with $p.",
     "$n douses $mself with $p.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CLOUD_OF_CONCEALMENT,
-    "",                       
+    "",
     "",
     "",
     "You hold $p before your group, bending the light around it.",
@@ -1628,7 +1628,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_DETECT_INVISIBLE,
     "You toss $p at $N.",
     "$n tosses $p at $N.",
-    "$n tosses $p at you.",                       
+    "$n tosses $p at you.",
     "You toss $p on yourself.",
     "$n tosses $p on $mself.",
     "",
@@ -1636,7 +1636,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_DETECT_SHADOW,
     "You sprinkle $p on $N.",
     "$n sprinkles $p on $N.",
-    "$n sprinkles $p on you.",                       
+    "$n sprinkles $p on you.",
     "You sprinkle $p on yourself.",
     "$n sprinkles $p on $mself.",
     "",
@@ -1644,13 +1644,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_DISPEL_INVISIBLE,
     "You scatter $p near $N.",
     "$n scatters $p near $N.",
-    "$n scatters $p near you.",                       
+    "$n scatters $p near you.",
     "You scatter $p on the $g.",
     "$n scatters $p on the $g at $s feet.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_TELEPATHY,
-    "",                       
+    "",
     "",
     "",
     "You touch $p to your forehead.",
@@ -1658,7 +1658,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ROMBLER,
-    "",                       
+    "",
     "",
     "",
     "You stretch out $p.",
@@ -1668,7 +1668,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_RAZE,
     "You toss $p at $N.",
     "$n tosses $p at $N.",
-    "$n tosses $p at you.",                       
+    "$n tosses $p at you.",
     "You toss $p to the ground.",
     "$n tosses $p to the ground.",
     "",
@@ -1676,13 +1676,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_TRUE_SIGHT,
     "You nibble on $p and spit it upon $N.",
     "$n nibbles on $p and spits it at $N.",
-    "$n nibbles on $p and spits it at you.",                       
+    "$n nibbles on $p and spits it at you.",
     "You nibble on $p and swallow it down.",
     "$n nibbles on $p and swallows it down.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_POLYMORPH,
-    "",                       
+    "",
     "",
     "",
     "You wave $p over your head.",
@@ -1692,7 +1692,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_ACCELERATE,
     "You shake $p at $N.",
     "$n shakes $p at $N.",
-    "$n shakes $p at you.",                       
+    "$n shakes $p at you.",
     "You shake $p at yourself.",
     "$n shakes $p at $mself.",
     "",
@@ -1700,7 +1700,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_HASTE,
     "You shake $p at $N.",
     "$n shakes $p at $N.",
-    "$n shakes $p at you.",                       
+    "$n shakes $p at you.",
     "You shake $p at yourself.",
     "$n shakes $p at $mself.",
     "",
@@ -1708,7 +1708,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SLUMBER,
     "You blow $p upon $N.",
     "$n blows $p upon $N.",
-    "$n blows $p upon you.",                       
+    "$n blows $p upon you.",
     "You inhale $p.",
     "$n inhales $p.",
     "",
@@ -1716,13 +1716,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_FUMBLE,
     "You lather with $p and point at $N.",
     "$n lathers with $p and points at $N.",
-    "$n lathers with $p and points at you.",                       
+    "$n lathers with $p and points at you.",
     "You lather with $p and hug yourself.",
     "$n lathers with $p and hugs $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_FAERIE_FOG,
-    "",                       
+    "",
     "",
     "",
     "You squeeze $p.",
@@ -1732,7 +1732,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_ICY_GRIP,
     "You clutch $p, shaking it at $N.",
     "$n clutches $p, shaking it at $N.",
-    "$n clutches $p, shaking it at you.",                       
+    "$n clutches $p, shaking it at you.",
     "You clutch $p, shaking it at no one in particular.",
     "$n clutches $p, shaking it at no one in particular.",
     "",
@@ -1740,13 +1740,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_WATERY_GRAVE,
     "You toss $p at $N.",
     "$n tosses $p at $N.",
-    "$n tosses $p at you.",                       
+    "$n tosses $p at you.",
     "You toss $p at yourself.",
     "$n tosses $p at $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ARCTIC_BLAST,
-    "",                       
+    "",
     "",
     "",
     "You breathe through $p.",
@@ -1754,7 +1754,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ICE_STORM,
-    "",                       
+    "",
     "",
     "",
     "You shatter $p.",
@@ -1762,7 +1762,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_TSUNAMI,
-    "",                       
+    "",
     "",
     "",
     "You uncork $p.",
@@ -1770,7 +1770,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CONJURE_WATER,
-    "",                       
+    "",
     "",
     "",
     "You shatter $p.",
@@ -1780,13 +1780,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_GILLS_OF_FLESH,
     "You apply $p to $N's throat.",
     "$n applies $p to $N's throat.",
-    "$n applies $p to your throat.",                       
+    "$n applies $p to your throat.",
     "You apply $p to your throat.",
     "$n applies $p to $s throat.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_BREATH_OF_SARAHAGE,
-    "",                       
+    "",
     "",
     "",
     "You squeeze $p in your hands.",
@@ -1796,13 +1796,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_INFRAVISION,
     "You grind $p against $N's eyelids.",
     "$n grinds $p against $N's eyelids.",
-    "$n grinds $p against your eyelids.",                       
+    "$n grinds $p against your eyelids.",
     "You grind $p against your eyelids.",
     "$n grinds $p against $s eyelids.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ENHANCE_WEAPON,
-    "",                       
+    "",
     "",
     "",
     "You toss $p into the air.",
@@ -1812,7 +1812,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_FLY,
     "You smear $p upon $N.",
     "$n smears $p on $N.",
-    "$n smears $p upon you.",                       
+    "$n smears $p upon you.",
     "You smear $p upon yourself.",
     "$n smears $p on $mself.",
     "",
@@ -1820,13 +1820,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SKILL_BARKSKIN,
     "You smear $p upon $N.",
     "$n smears $p on $N.",
-    "$n smears $p upon you.",                       
+    "$n smears $p upon you.",
     "You smear $p upon yourself.",
     "$n smears $p on $mself.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_STORMY_SKIES,
-    "",                       
+    "",
     "",
     "",
     "You crush $p releasing a blue-green mist.",
@@ -1834,7 +1834,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_STICKS_TO_SNAKES,
-    "",                       
+    "",
     "",
     "",
     "You wave $p over your head.",
@@ -1844,7 +1844,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_LIVING_VINES,
     "You squeeze $p at $N.",
     "$n squeezes $p in $N's direction.",
-    "$n squeezes $p in your direction.",                       
+    "$n squeezes $p in your direction.",
     "You squeeze $p at yourself.",
     "$n squeezes $p.",
     "",
@@ -1852,13 +1852,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_HYPNOSIS,
     "You shake $p in $N's face.",
     "$n shakes $p.",
-    "$n shakes $p.",                       
+    "$n shakes $p.",
     "You shake $p in your own face.",
     "$n shakes $p.",
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CHEVAL,
-    "",                       
+    "",
     "",
     "",
     "You swallow $p.",
@@ -1866,7 +1866,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CELERITE,
-    "",                       
+    "",
     "",
     "",
     "You eat $p.",
@@ -1876,7 +1876,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_CLARITY,
     "",
     "",
-    "",                       
+    "",
     "You put a few drops of $p in your eyes.",
     "$n put a few drops of $p in $s eyes.",
     "",
@@ -1884,7 +1884,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_ENLIVEN,
     "You squeeze $p at $N.",
     "$n squeezes $p at $N.",
-    "$n squeezes $p at you.",                       
+    "$n squeezes $p at you.",
     "You squeeze $p at yourself.",
     "$n squeezes $p at $mself.",
     "",
@@ -1892,7 +1892,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_SHADOW_WALK,
     "",
     "",
-    "",                       
+    "",
     "You drop $p to the ground and crush it under your feet.",
     "$n drops $p to the ground and crushes it under $s feet.",
     "",
@@ -1934,7 +1934,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SKILL_BEAST_SOOTHER,
     "You coat $N with $p.",
     "$n coats $N with $p.",
-    "$n coats you with $p.",                       
+    "$n coats you with $p.",
     "You coat yourself with $p.",
     "$n coats $mself with $p.",
     "",
@@ -1942,13 +1942,13 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SKILL_TRANSFIX,
     "You smear $N with $p.",
     "$n smears $N with $p.",
-    "$n smears you with $p.",                       
+    "$n smears you with $p.",
     "You smear yourself with $p.",
     "$n smears $mself with $p",
     "",
     ""));
   CompInfo.push_back(compInfo(SKILL_BEAST_SUMMON,
-    "",                       
+    "",
     "",
     "",
     "You rattle $p over your head.",
@@ -1956,7 +1956,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_SHAPESHIFT,
-    "",                       
+    "",
     "",
     "",
     "You sip $p and quickly spit it out.",
@@ -1966,7 +1966,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SKILL_BEAST_CHARM,
     "You crumple $p and toss it at $N.",
     "$n crumples $p and tosses it in $N's direction.",
-    "$n crumples $p and tosses it in your direction.",                       
+    "$n crumples $p and tosses it in your direction.",
     "You crumple $p and toss it on yourself.",
     "$n crumples $p and tosses it on $mself",
     "",
@@ -1974,7 +1974,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SKILL_BEFRIEND_BEAST,
     "You point $p at $N.",
     "$n points $p in $N's direction.",
-    "$n points $p in your direction.",                       
+    "$n points $p in your direction.",
     "You point $p at yourself.",
     "$n points $p at $mself.",
     "",
@@ -1982,7 +1982,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_DJALLA,
     "You smear $p on $N's forehead.",
     "$n smears $p on $N's forehead.",
-    "$n smears $p on your forehead.",                       
+    "$n smears $p on your forehead.",
     "You smear $p on your forehead.",
     "$n smears $p on $s forehead.",
     "",
@@ -1990,7 +1990,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_LEGBA,
     "You smear $p on $N's forehead.",
     "$n smears $p on $N's forehead.",
-    "$n smears $p on your forehead.",                       
+    "$n smears $p on your forehead.",
     "You smear $p on your forehead.",
     "$n smears $p on $s forehead.",
     "",
@@ -1998,7 +1998,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_FIRE,
     "You touch $p to $N's forehead.",
     "$n touches $p to $N's forehead.",
-    "$n touches $p to your forehead.",                       
+    "$n touches $p to your forehead.",
     "You touch $p to your forehead.",
     "$n touches $p to $s forehead.",
     "",
@@ -2006,7 +2006,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_EARTH,
     "You touch $p to $N's forehead.",
     "$n touches $p to $N's forehead.",
-    "$n touches $p to your forehead.",                       
+    "$n touches $p to your forehead.",
     "You touch $p to your forehead.",
     "$n touches $p to $s forehead.",
     "",
@@ -2014,7 +2014,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_AIR,
     "You touch $p to $N's forehead.",
     "$n touches $p to $N's forehead.",
-    "$n touches $p to your forehead.",                       
+    "$n touches $p to your forehead.",
     "You touch $p to your forehead.",
     "$n touches $p to $s forehead.",
     "",
@@ -2022,7 +2022,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_WATER,
     "You touch $p to $N's forehead.",
     "$n touches $p to $N's forehead.",
-    "$n touches $p to your forehead.",                       
+    "$n touches $p to your forehead.",
     "You touch $p to your forehead.",
     "$n touches $p to $s forehead.",
     "",
@@ -2030,7 +2030,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_PROTECTION_FROM_ELEMENTS,
     "You touch $p to $N's forehead.",
     "$n touches $p to $N's forehead.",
-    "$n touches $p to your forehead.",                       
+    "$n touches $p to your forehead.",
     "You touch $p to your forehead.",
     "$n touches $p to $s forehead.",
     "",
@@ -2078,7 +2078,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_AQUALUNG,
     "You apply $p to $N's face.",
     "$n applies $p to $N's face.",
-    "$n applies $p to your face.",                       
+    "$n applies $p to your face.",
     "You apply $p to your face.",
     "$n applies $p to $s face.",
     "",
@@ -2100,7 +2100,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ENTHRALL_SPECTRE,
-    "",                       
+    "",
     "",
     "",
     "You sprinkle $p on the ground.",
@@ -2108,7 +2108,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ENTHRALL_GHAST,
-    "",                       
+    "",
     "",
     "",
     "You sprinkle $p on the ground.",
@@ -2116,7 +2116,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ENTHRALL_GHOUL,
-    "",                       
+    "",
     "",
     "",
     "You sprinkle $p on the ground.",
@@ -2124,7 +2124,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_ENTHRALL_DEMON,
-    "",                       
+    "",
     "",
     "",
     "You sprinkle $p on the ground.",
@@ -2132,7 +2132,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CREATE_WOOD_GOLEM,
-    "",                       
+    "",
     "",
     "",
     "You throw $p into the air and it disappears!",
@@ -2140,7 +2140,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CREATE_ROCK_GOLEM,
-    "",                       
+    "",
     "",
     "",
     "You throw $p into the air and it disappears!",
@@ -2148,7 +2148,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CREATE_IRON_GOLEM,
-    "",                       
+    "",
     "",
     "",
     "You throw $p into the air and it disappears!",
@@ -2156,7 +2156,7 @@ void buildComponentArray()
     "",
     ""));
   CompInfo.push_back(compInfo(SPELL_CREATE_DIAMOND_GOLEM,
-    "",                       
+    "",
     "",
     "",
     "You throw $p into the air and it disappears!",
@@ -2166,7 +2166,7 @@ void buildComponentArray()
   CompInfo.push_back(compInfo(SPELL_HEALING_GRASP,
     "You apply $p to $N's eyes.",
     "$n applies $p to $N's eyes.",
-    "$n applies $p to your eyes.",                       
+    "$n applies $p to your eyes.",
     "You apply $p to your eyes.",
     "$n applies $p to $s eyes.",
     "",
@@ -2223,7 +2223,7 @@ TComponent::TComponent() :
 TComponent::TComponent(const TComponent &a) :
   TMergeable(a),
   charges(a.charges),
-  comp_spell(a.comp_spell), 
+  comp_spell(a.comp_spell),
   comp_type(a.comp_type)
 {
 }
@@ -2314,7 +2314,7 @@ bool TComponent::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int defaultM
     vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
     return FALSE;
   }
-  
+
   TShopOwned tso(shop_nr, keeper, ch);
   int max_num = tso.getMaxNum(ch, this, defaultMax);
 
@@ -2421,7 +2421,7 @@ int TComponent::componentNumValue(TBeing *ch, TMonster *keeper, int shop_nr, TTh
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
 
-    if (!parent || dynamic_cast<TBeing *>(parent)) 
+    if (!parent || dynamic_cast<TBeing *>(parent))
       valueMe(ch, keeper, shop_nr, num);
   } else
     valueMe(ch, keeper, shop_nr, num);
@@ -2447,7 +2447,7 @@ int TComponent::componentValue(TBeing *ch, TMonster *keeper, int shop_nr, TThing
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
 
-    if (!parent || dynamic_cast<TBeing *>(parent)) 
+    if (!parent || dynamic_cast<TBeing *>(parent))
       valueMe(ch, keeper, shop_nr);
   } else
     valueMe(ch, keeper, shop_nr);
@@ -2556,7 +2556,7 @@ void TComponent::decayMe()
   // or if the parent is not spellbag
   // or random chance
   if(!parent ||
-     !dynamic_cast<TSpellBag *>(parent) || 
+     !dynamic_cast<TSpellBag *>(parent) ||
      (!::number(0,50))){
     //    setComponentCharges(getComponentCharges()-1);
 
@@ -2589,7 +2589,7 @@ sstring TComponent::statObjInfo() const
     buf = format("Spell for : %d (%s)\n\r") %
       getComponentSpell() %
       ((discArray[getComponentSpell()] &&
-       discArray[getComponentSpell()]->name) ? 
+       discArray[getComponentSpell()]->name) ?
        discArray[getComponentSpell()]->name :
        "UNKNOWN/BOGUS");
   }
@@ -2629,7 +2629,7 @@ void TComponent::lowCheck()
     return;
   }
   if ((obj_flags.cost != sp)) {
-    vlogf(LOG_LOW, format("component (%s:%d) with bad price %d should be %d.") % 
+    vlogf(LOG_LOW, format("component (%s:%d) with bad price %d should be %d.") %
           getName() % objVnum() % obj_flags.cost % sp);
     obj_flags.cost = sp;
   }
@@ -2730,7 +2730,7 @@ bool TComponent::fitInShop(const char *, const TBeing *ch) const
     if (which == DISC_NONE)
       return false;
 
-    return (ch->getSkillValue(skill));  
+    return (ch->getSkillValue(skill));
   }
   return FALSE;
 }
@@ -3045,7 +3045,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
   }
 
   int charges = getComponentCharges();
-  
+
   if (tNum > charges) {
     tKeeper->doTell(ch->getName(), format("I don't have %d charges of %s.  Here %s the %d I do have.") % tNum % getName() % ((charges > 2) ? "are" : "is") % charges);
     tNum  = charges;
@@ -3057,7 +3057,7 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
     tNum  = 100;
     tCost = shopPrice(tNum, tShop, tChr, ch);
   }
-  
+
   if (charges == tNum) {
     tObj = this;
     --(*tObj);
@@ -3070,27 +3070,27 @@ int TComponent::buyMe(TBeing *ch, TMonster *tKeeper, int tNum, int tShop)
 
     if (TComponent *tComponent = dynamic_cast<TComponent *>(tObj)) {
       int cost_per;
-      
+
       cost_per = tComponent->pricePerUnit();
       tComponent->setComponentCharges(tNum);
       addToComponentCharges(-tNum);
-      
+
       tComponent->obj_flags.cost = tNum * cost_per;
       obj_flags.cost = getComponentCharges() * cost_per;
     }
   }
-  
+
   tObj->purchaseMe(ch, tKeeper, tCost, tShop);
   tKeeper->doTell(ch->name, format(shop_index[tShop].message_buy) % tCost);
-  
+
   ch->sendTo(COLOR_OBJECTS, format("You now have %s (*%d charges).\n\r") %
 	     sstring(getName()).uncap() % tNum);
   act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
-  
+
   *ch += *tObj;
   ch->logItem(tObj, CMD_BUY);
   tValue++;
-  
+
   tKeeper->saveItems(tShop);
 
   if (!tValue)

@@ -34,7 +34,7 @@ void doCurse(TBeing *ch, TBeing *vict, TObj *o)
       0, ch, o, vict, TO_ROOM);
       act("<r>You glow evilly with a dark forboding red as $n's $p <1><r>strikes you!<1>",
       0, ch, o, vict, TO_VICT);
-  
+
 
   genericCurse(ch, vict, 50, SPELL_CURSE);
 }
@@ -55,15 +55,15 @@ int unholyCutlass(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 	  0, ch, o, 0, TO_CHAR);
       ch->dropPool(1, LIQ_BLOOD);
     }
-  }  
+  }
 
   if(!(ch=genericWeaponProcCheck(vict, cmd, o, 5)))
      return FALSE;
-  
+
   if(!::number(0,3)){
-    doCurse(ch, vict, o);      
+    doCurse(ch, vict, o);
     return TRUE;
   }
-  
+
   return doHurt(ch, vict, o);
 }

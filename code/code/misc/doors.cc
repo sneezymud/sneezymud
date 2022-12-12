@@ -112,13 +112,13 @@ dirTypeT TBeing::findDoor(const char *type, const char *direct, doorIntentT mode
               (mode == DOOR_INTENT_CLOSE && !IS_SET(exitp->condition, EXIT_CLOSED)) ||
               (mode == DOOR_INTENT_LOCK && !IS_SET(exitp->condition, EXIT_LOCKED)) ||
               (mode == DOOR_INTENT_UNLOCK && IS_SET(exitp->condition, EXIT_LOCKED)) ||
-              (mode == DOOR_INTENT_LOWER && IS_SET(exitp->condition, EXIT_CLOSED) && 
+              (mode == DOOR_INTENT_LOWER && IS_SET(exitp->condition, EXIT_CLOSED) &&
                     (exitp->door_type == DOOR_DRAWBRIDGE)) ||
-              (mode == DOOR_INTENT_LOWER && !IS_SET(exitp->condition, EXIT_CLOSED) && 
+              (mode == DOOR_INTENT_LOWER && !IS_SET(exitp->condition, EXIT_CLOSED) &&
                     (exitp->door_type == DOOR_PORTCULLIS)) ||
-              (mode == DOOR_INTENT_RAISE && !IS_SET(exitp->condition, EXIT_CLOSED) && 
+              (mode == DOOR_INTENT_RAISE && !IS_SET(exitp->condition, EXIT_CLOSED) &&
                     (exitp->door_type == DOOR_DRAWBRIDGE)) ||
-              (mode == DOOR_INTENT_RAISE && IS_SET(exitp->condition, EXIT_CLOSED) && 
+              (mode == DOOR_INTENT_RAISE && IS_SET(exitp->condition, EXIT_CLOSED) &&
                     (exitp->door_type == DOOR_PORTCULLIS))) {
             return (door);
           }
@@ -297,7 +297,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
               exitp->getName().uncap() % dirs_to_blank[dir]);
   }
 
-  // now for opening the OTHER side of the door! 
+  // now for opening the OTHER side of the door!
   if (exit_ok(exitp, &rp) &&
       (back = rp->dir_option[rev_dir(dir)]) &&
       (back->to_room == in_room)) {
@@ -350,7 +350,7 @@ void TBeing::rawOpenDoor(dirTypeT dir)
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "The %s in the %s is unlatched and opened from the other side.\n\r",
-              back->getName().uncap().c_str(), rp->describeGround().c_str());          
+              back->getName().uncap().c_str(), rp->describeGround().c_str());
         } else if (dir == DIR_DOWN) {
           sendrpf(rp2,
         "The %s in the ceiling is unlatched and opened from the other side.\n\r",
@@ -392,10 +392,10 @@ void TBeing::rawCloseDoor(dirTypeT dir)
   TRoom *rp, *rp2;
   char buf[256];
   soundNumT snd = SOUND_OFF;
- 
+
   if (!(rp = roomp))
     vlogf(LOG_BUG, format("NULL rp in rawCloseDoor() for %s.") %  getName());
- 
+
   exitp = rp->dir_option[dir];
   if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
     sendTo(format("The %s has been destroyed, it can't be closed.\n\r") %
@@ -418,14 +418,14 @@ void TBeing::rawCloseDoor(dirTypeT dir)
       break;
     case DOOR_PANEL:
     case DOOR_SCREEN:
-      sprintf(buf, "$n slides the %s %s closed.", 
+      sprintf(buf, "$n slides the %s %s closed.",
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo(format("You slide the %s %s closed.\n\r") %
             exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_RUBBLE:
-      sprintf(buf, "$n pushes the %s %s into the path and blocks the way.", 
+      sprintf(buf, "$n pushes the %s %s into the path and blocks the way.",
             exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
       act(buf, TRUE, this, 0, 0, TO_ROOM);
       sendTo(format("You push the %s %s into the path and block the way.\n\r") %
@@ -522,7 +522,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
     act("You conceal a hidden passage!", TRUE, this, 0, 0, TO_CHAR);
     addToWait(combatRound(1));
   }
- 
+
   /* now for closing the OTHER side of the door! */
   if (exit_ok(exitp, &rp) &&
       (back = rp->dir_option[rev_dir(dir)]) &&
@@ -591,7 +591,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
               back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         }
         break;
-      case DOOR_HATCH:   
+      case DOOR_HATCH:
         if (dir == DIR_UP) {
           sendrpf(rp2,
           "Below you, %s reaches up and closes the %s.\n\r",
@@ -648,7 +648,7 @@ void TBeing::rawCloseDoor(dirTypeT dir)
   the *_far messages are sent on successes to the OTHER side of the door
   Also, the *_far messages need trailing "\n\r" because of sendrp
 */
-void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent, 
+void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
       const char * was_closed,
       const char * was_open,
       const char * open_char,
@@ -669,7 +669,7 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
     SUCCESS_WAS_CLOSE
   };
   successResT open = SUCCESS_OPEN;
- 
+
   if (!(rp = roomp)) {
     vlogf(LOG_BUG, format("NULL rp in openUniqueDoor() for %s.") %  getName());
     return;
@@ -681,7 +681,7 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
   }
 
 // Find out if it matters if the pc is trying to open or close a unique
-// Only important if push opens and pulls closes.  Unique door function in 
+// Only important if push opens and pulls closes.  Unique door function in
 // spec_rooms will set the intention or use 0 if it doesnt matter - Cos 5/97
 
   switch (intent) {
@@ -796,7 +796,7 @@ void roomDirData::destroyDoor(dirTypeT dir, int room)
 
   if (door_type == DOOR_NONE)
     return;
-  
+
   condition = EXIT_DESTROYED;   // removes closed/locked too
 
   rp = real_roomp(to_room);
@@ -812,13 +812,13 @@ void roomDirData::caveinDoor(dirTypeT dir, int room)
 {
   roomDirData *back = NULL;
   TRoom *rp;
- 
+
   // this should destroy any door, closing the way
 
   SET_BIT(condition, EXIT_CAVED_IN);
   SET_BIT(condition, EXIT_CLOSED);
   door_type = DOOR_NONE;
- 
+
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
       (back = rp->dir_option[rev_dir(dir)]) &&
@@ -834,11 +834,11 @@ void roomDirData::wardDoor(dirTypeT dir, int room)
 {
   roomDirData *back = NULL;
   TRoom *rp;
- 
+
   // this should pop a ward onto the exit
- 
+
   SET_BIT(condition, EXIT_WARDED);
- 
+
   rp = real_roomp(to_room);
   if (exit_ok(this, &rp) &&
       (back = rp->dir_option[rev_dir(dir)]) &&
@@ -962,7 +962,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         return FALSE;
       if ((cmd == CMD_RAISE) || (cmd == CMD_LIFT)) {
         if (!strcasecmp(buf, "lever")) {
-          ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_OPEN_ONLY, 
+          ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_OPEN_ONLY,
               "",
               "The lever is already raised.",
               "You squat down and raise the small lever concealed in the $g.  With a grinding of gears, a large section of the north wall breaks free and slides to one side.",
@@ -988,7 +988,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
           );
           return TRUE;
         }
-      } 
+      }
       break;
     case 6158:
       if ((cmd != CMD_RAISE) && (cmd != CMD_LOWER) && (cmd != CMD_LIFT))
@@ -1072,7 +1072,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
               "The ladder raises out of the pit."
         );
         return TRUE;
-      } 
+      }
       break;
     case 7023:
       if ((cmd != CMD_PULL) && (cmd != CMD_SHOVE))
@@ -1121,7 +1121,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
             "The passage to the east is concealed."
         );
         return TRUE;
-      }  
+      }
     }
     break;
   case 9064:
@@ -1303,7 +1303,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
             "",
             "",
             "A strange rumbling is heard and a stairway descends toward the forest below.",
-            "$n's action causes the small stairway to descend into the forest below.", 
+            "$n's action causes the small stairway to descend into the forest below.",
             "A rumbling noise is heard and a stairway descends out of the foliage nearby.",
             "Your action makes the concealed stairway ascend back into the foliage nearby.",
             "$n's action causes a stairway to ascend back up into the foliage nearby.",
@@ -1415,7 +1415,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
       break;
     case 10759:
-      if (cmd != CMD_PUSH) 
+      if (cmd != CMD_PUSH)
         return FALSE;
       if (!strcasecmp(buf, "footrest")) {
         ch->openUniqueDoor(DIR_NORTHWEST, DOOR_UNIQUE_DEF,
@@ -1430,7 +1430,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         );
         return TRUE;
       }
-      break;    
+      break;
     case 10760:
       if (cmd != CMD_PUSH)
         return FALSE;
@@ -1658,8 +1658,8 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF,
             "",
             "",
-            "A strange rumbling is heard.  Your words have caused a boulder to roll aside.", 
-            "A strange rumbling is heard.  $n's words have caused a boulder to roll aside.", 
+            "A strange rumbling is heard.  Your words have caused a boulder to roll aside.",
+            "A strange rumbling is heard.  $n's words have caused a boulder to roll aside.",
             "A boulder to the south has rolled aside.",
             "A strange rumbling is heard.  Your words cause a large boulder to conceal a path.",
             "A strange rumbling is heard.  $n's words cause a large boulder to conceal a path.",
@@ -1676,8 +1676,8 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF,
             "",
             "",
-            "A strange rumbling is heard.  Your words have caused a boulder to roll aside.", 
-            "A strange rumbling is heard.  $n's words have caused a boulder to roll aside.", 
+            "A strange rumbling is heard.  Your words have caused a boulder to roll aside.",
+            "A strange rumbling is heard.  $n's words have caused a boulder to roll aside.",
             "A boulder to the north has rolled aside.",
             "A strange rumbling is heard.  Your words cause a large boulder to conceal a path.",
             "A strange rumbling is heard.  $n's words cause a large boulder to conceal a path.",
@@ -1921,7 +1921,7 @@ int SecretDoors(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       }
       break;
 
- 
+
     case 16238:
       if ((cmd != CMD_PUSH) && (cmd!= CMD_PULL))
         return FALSE;

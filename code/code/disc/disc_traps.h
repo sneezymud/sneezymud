@@ -15,10 +15,10 @@
 class CDTraps : public CDiscipline
 {
 public:
-    CSkill skSetTrapsCont;   
-    CSkill skSetTrapsDoor;   
-    CSkill skSetTrapsMine;   
-    CSkill skSetTrapsGren;   
+    CSkill skSetTrapsCont;
+    CSkill skSetTrapsDoor;
+    CSkill skSetTrapsMine;
+    CSkill skSetTrapsGren;
     CSkill skSetTrapsArrow;
 
     CDTraps()

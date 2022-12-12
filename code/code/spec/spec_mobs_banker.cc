@@ -14,7 +14,7 @@ procBankInterest::procBankInterest(const int &p)
   name="procBankInterest";
 }
 
-void procBankInterest::run(const TPulse &) const 
+void procBankInterest::run(const TPulse &) const
 {
   TDatabase db(DB_SNEEZY), in(DB_SNEEZY), out(DB_SNEEZY);
   double profit_sell;
@@ -67,8 +67,8 @@ void procBankInterest::run(const TPulse &) const
 
         tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
 
-        out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", 
-            shop_nr, 
+        out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)",
+            shop_nr,
             in["name"].c_str(),
             amt,
             convertTo<int>(in["talens"]));
@@ -85,12 +85,12 @@ void procBankInterest::run(const TPulse &) const
 
         tso.journalize(in["name"], "talens", TX_PAYING_INTEREST, amt, 0, 0, 0);
 
-        out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)", 
-            shop_nr, 
+        out.query("insert into shoplog values (%i, '%s', 'interest', 'talens', %i, %i, 0, now(), 0)",
+            shop_nr,
             in["name"].c_str(),
             amt,
             convertTo<int>(in["talens"]));
-      }	
+      }
     }
   }
 }
@@ -115,7 +115,7 @@ int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, in
     return FALSE;
   } else
     bankmoney = convertTo<int>(db["talens"]);
-  
+
   if (money > bankmoney) {
     teller->doTell(ch->getName(), "You don't have enough in the bank for that!");
     return TRUE;
@@ -133,7 +133,7 @@ int bankWithdraw(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, in
   tso.doSellTransaction(money, "talens", TX_WITHDRAWAL);
 
   db.query("update shopownedbank set talens=talens-%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
-  
+
 
   return TRUE;
 }
@@ -156,7 +156,7 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
     teller->doTell(ch->getName(), "The new account fee is 100 talens.");
     return TRUE;
   }
-  
+
   if (money <= 0) {
     teller->doTell(ch->getName(), "Go away, you bother me.");
     return TRUE;
@@ -164,14 +164,14 @@ int bankDeposit(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int
     teller->doTell(ch->getName(), "You don't have enough for that!");
     return TRUE;
   }
-  
+
   teller->doTell(ch->getName(), "Thank you.");
 
   TShopOwned tso(shop_nr, myself, ch);
   tso.doBuyTransaction(money, "talens", TX_DEPOSIT);
-  
+
   db.query("update shopownedbank set talens=talens+%i where player_id=%i and shop_nr=%i", money, ch->getPlayerID(), shop_nr);
-  
+
 
   db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i", shop_nr, ch->getPlayerID());
 
@@ -212,26 +212,26 @@ int bankBalance(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr)
 int bankBuyAccount(TBeing *ch, TMonster *myself, TMonster *teller, int shop_nr, int money)
 {
   TDatabase db(DB_SNEEZY);
-  
+
   if(ch->getMoney() < 100){
     teller->doTell(ch->getName(), "You don't have enough money to open an account.");
     return TRUE;
   }
-  
+
   db.query("select talens from shopownedbank where player_id=%i and shop_nr=%i", ch->getPlayerID(), shop_nr);
-  
+
   if(db.fetchRow()){
     teller->doTell(ch->getName(), "You already have an account.");
     return TRUE;
   }
-  
+
   db.query("insert into shopownedbank (player_id, shop_nr, talens) values (%i, %i, 0)", ch->getPlayerID(), shop_nr);
   ch->giveMoney(myself, 100, GOLD_XFER);
   shoplog(shop_nr, ch, myself, "talens", 100, "new account");
   myself->saveItems(shop_nr);
-  
+
   teller->doTell(ch->getName(), "Your account is now open and ready for use.");
-  
+
   return TRUE;
 }
 
@@ -249,18 +249,18 @@ int centralBanker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 
   if(!(shop_nr=find_shop_nr(myself->number)))
     return FALSE;
-  
+
   if(cmd==CMD_WHISPER)
     return shopWhisper(ch, myself, shop_nr, arg);
 
   if(cmd==CMD_LIST){
     db.query("select s.shop_nr, r.name from room r, shop s, shopownedcentralbank socb where socb.centralbank=%i and s.shop_nr=socb.bank and r.vnum=s.in_room", shop_nr);
-    
+
     while(db.fetchRow()){
       db2.query("select (sb.c+sbc.c) as c, (sb.t+sbc.t) as t from (select count(*) as c, sum(talens) as t from shopownedbank where shop_nr=%i) sb, (select count(*) as c, sum(talens) as t from shopownedcorpbank where shop_nr=%i) sbc", db["shop_nr"].c_str(), db["shop_nr"].c_str());
 
       if(db2.fetchRow()){
-	buf += format("<c>%s - %s accounts, %s in deposits.<1>\n\r") % 
+	buf += format("<c>%s - %s accounts, %s in deposits.<1>\n\r") %
 	  db["name"] % db2["c"] %
 	  talenDisplay(convertTo<int>(db2["t"]));
       }
@@ -278,18 +278,18 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
   int shop_nr, money=0;
   TDatabase db(DB_SNEEZY);
 
-  if((cmd!=CMD_WITHDRAW && 
-      cmd!=CMD_DEPOSIT && 
-      cmd!=CMD_BUY && 
+  if((cmd!=CMD_WITHDRAW &&
+      cmd!=CMD_DEPOSIT &&
+      cmd!=CMD_BUY &&
       cmd!=CMD_LIST &&
-      cmd!=CMD_BALANCE && 
+      cmd!=CMD_BALANCE &&
       cmd!=CMD_WHISPER) ||
      !ch || !myself)
     return FALSE;
 
   if(!(shop_nr=find_shop_nr(myself->number)))
     return FALSE;
-  
+
   if(cmd==CMD_WHISPER)
     return shopWhisper(ch, myself, shop_nr, arg);
 
@@ -319,7 +319,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 
     if(db.fetchRow()){
       buf += format("%i total accounts, %s talens.\n\r") %
-	convertTo<int>(db["c"]) % 
+	convertTo<int>(db["c"]) %
 	talenDisplay(convertTo<int>(db["t"]));
     }
 
@@ -330,7 +330,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 
 
   if(cmd==CMD_BUY && sstring(arg).lower()=="account"){
-    money=convertTo<int>(arg);    
+    money=convertTo<int>(arg);
     return bankBuyAccount(ch, myself, myself, shop_nr, money);
   } else if(cmd==CMD_BALANCE){
     return bankBalance(ch, myself, myself, shop_nr);
@@ -348,7 +348,7 @@ int banker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
       money=convertTo<int>(arg);
     return bankDeposit(ch, myself, myself, shop_nr, money);
   }
-  
+
   return TRUE;
 }
 
@@ -370,7 +370,7 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   // find out which teller for this room
 
   switch(rp->number){
-    case 31751: 
+    case 31751:
     case 31756:
     case 2351:
       tmp=31750;
@@ -397,7 +397,7 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
   // find out which banker for this room
   switch(rp->number){
-    case 31751: 
+    case 31751:
     case 31756:
     case 2351:
       tmp=31765;
@@ -427,7 +427,7 @@ int bankRoom(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
 
 
   if(cmd==CMD_BUY && sstring(arg).lower()=="account"){
-    money=convertTo<int>(arg);    
+    money=convertTo<int>(arg);
     return bankBuyAccount(ch, banker, teller, shop_nr, money);
   } else if(cmd==CMD_BALANCE){
     return bankBalance(ch, banker, teller, shop_nr);

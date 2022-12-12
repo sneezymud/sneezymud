@@ -24,7 +24,7 @@ int TBeing::doLeap(const sstring &arg)
   if (checkBusy()) {
     return FALSE;
   }
-  
+
   if(arg.empty()){
     sendTo("Which way do you want to leap?\n\r");
     return FALSE;
@@ -113,7 +113,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
           wohlin_learn = ch->getSkillValue(SKILL_WOHLIN);
 	  monk_level = ch->getLevel(MONK_LEVEL_IND);
 
-          if (ch->bSuccess(learn, SKILL_YOGINSA) && 
+          if (ch->bSuccess(learn, SKILL_YOGINSA) &&
 	      (::number(1,100) < (70+(wohlin_learn/4)))) {
 	    // this artifical roll to check for a success is so we can slowly
 	    // phase out the speed of hp recover without causing a ruckus.
@@ -121,7 +121,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 	    // product of the two close to .65 (or whatever stats.damage_modifier is)
             ch->sendTo(format("%sMeditating refreshes your inner harmonies!%s\n\r") %
                      ch->green() % ch->norm());
-            ch->setHit(min(ch->getHit() + 
+            ch->setHit(min(ch->getHit() +
 			   max(2,(int)(((double)ch->hitGain())*(.80))), (int) ch->hitLimit()));
             ch->setMove(min(ch->getMove() + ch->moveGain()/2, (int) ch->moveLimit()));
             ch->setMana(min(ch->getMana() + ch->manaGain()/2, (int) ch->manaLimit()));
@@ -140,7 +140,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 	    if(wohlin_learn>50 && ::number(0, 100) <= (wohlin_learn-50)){
 	      sterilize(ch, ch, 0, 0, SKILL_WOHLIN);
 	    }
-	    
+
 	    // cure disease 60
 	    if(wohlin_learn>60 && ::number(0, 100) <= (wohlin_learn-60)){
 	      cureDisease(ch, ch, 0, 0, SKILL_WOHLIN);
@@ -150,7 +150,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 	    if(wohlin_learn>75 && ::number(0, 100) <= (wohlin_learn-75)){
 	      clot(ch, ch, 0, 0, SKILL_WOHLIN);
 	    }
-	    
+
 	    // reduce hunger/thirst 90
       // bumped these up a bit - Maror Feb 2004
 	    if(wohlin_learn>90 && ::number(0, 100) <= (wohlin_learn-90)){
@@ -162,8 +162,8 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 		ch->sendTo("You don't feel quite so hungry.\n\r");
 		ch->gainCondition(FULL, 4);
 	      }
-	    }	    
-	    
+	    }
+
 	    if (ch->ansi()) {
 	      ch->desc->updateScreenAnsi(CHANGED_HP);
 	      ch->desc->updateScreenAnsi(CHANGED_MOVE);
@@ -175,7 +175,7 @@ int task_yoginsa(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
 	    }
           } else {
           }
-	    
+
         } else {
           ch->sendTo("A magical force in the room stops your meditation\n\r");
           ch->stopTask();
@@ -425,7 +425,7 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
 	      v->describeBodySlot(part_hit).c_str());
     }
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
-    if (toggleInfo[TOG_TWINK]->toggle) {    
+    if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
 	      attack_hit_text_twink[w_type].singular,
 	      v->describeBodySlot(part_hit).c_str());
@@ -435,7 +435,7 @@ int TBeing::monkDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT
 	      v->describeBodySlot(part_hit).c_str());
     }
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
-    if (toggleInfo[TOG_TWINK]->toggle) {    
+    if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss $n's %s at $S %s.", type,
 	      attack_hit_text_twink[w_type].singular,
 	      v->describeBodySlot(part_hit).c_str());
@@ -535,7 +535,7 @@ int TBeing::doChi(const char *tString, TThing *tSucker)
     }
 
     REM_DELETE(tRc, DELETE_VICT);
-  } 
+  }
   if (IS_SET_DELETE(tRc, DELETE_THIS))
     return DELETE_THIS;
 

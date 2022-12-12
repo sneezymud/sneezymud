@@ -35,14 +35,14 @@ void TBeing::calmMount(TBeing *m){
   TMonster *mount=NULL;
   int skillTotal=0, amt;
 
-  if(!m || !doesKnowSkill(SKILL_CALM_MOUNT) || 
+  if(!m || !doesKnowSkill(SKILL_CALM_MOUNT) ||
      !(mount=dynamic_cast<TMonster *>(m)) ||
      !bSuccess(SKILL_CALM_MOUNT))
     return;
 
   skillTotal+=getSkillValue(SKILL_CALM_MOUNT); // 1/2 calm mount
   skillTotal+=advancedRidingBonus(mount);      // 1/2 advanced riding/ride xxx
- 
+
   amt=::number(0, skillTotal/30);  // 0-6
   if((mount->anger()+20) > mount->defanger())
      mount->DA(amt);

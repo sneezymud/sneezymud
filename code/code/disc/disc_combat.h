@@ -23,7 +23,7 @@
 
 #pragma once
 
-// This contains the general combat skills.  
+// This contains the general combat skills.
 
 #include "discipline.h"
 #include "skills.h"

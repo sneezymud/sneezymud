@@ -42,7 +42,7 @@ class TMoney : public TMergeable {
     virtual bool isPluralItem() const;
     virtual void onObjLoad();
     virtual sstring getNameForShow(bool, bool, const TBeing *) const;
-    
+
     currencyTypeT getCurrency() const;
     void setCurrency(currencyTypeT);
     sstring getCurrencyName() const;
@@ -61,7 +61,7 @@ class currencyEntry {
   sstring name;         // eg, "talen"
   sstring affiliation;  // eg, "Grimhaven"
 
- public:  
+ public:
   sstring getName() const {return name;}
   sstring getAffiliation() const {return affiliation;}
   float getExchangeRate(currencyTypeT) const;
@@ -70,7 +70,7 @@ class currencyEntry {
   currencyEntry(sstring, sstring);
   currencyEntry & operator=(const currencyEntry &a);
   ~currencyEntry();
-  
+
  private:
   currencyEntry();  // deny usage in this format
 };

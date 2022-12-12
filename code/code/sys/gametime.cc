@@ -77,7 +77,7 @@ void GameTime::anotherHour()
 
         // announce new month, etc.
         Weather::GetMonth(time_info.month);
-    
+
         // check for new year
         if (time_info.month >= 12) {
           time_info.month = 0;
@@ -86,7 +86,7 @@ void GameTime::anotherHour()
           Descriptor::worldSend(buf, NULL);
         }
       }
-  
+
       // on a new day, update the moontime too
       Weather::addToMoon(1);
 
@@ -136,7 +136,7 @@ time_info_data::~time_info_data()
 {
 }
 
-// Calculate the REAL time passed over the last t2-t1 centuries (secs) 
+// Calculate the REAL time passed over the last t2-t1 centuries (secs)
 void GameTime::realTimePassed(time_t t2, time_t t1, time_info_data *now)
 {
   long secs;
@@ -157,29 +157,29 @@ void GameTime::realTimePassed(time_t t2, time_t t1, time_info_data *now)
   now->seconds = secs;
 }
 
-// Calculate the MUD time passed over the last t2-t1 centuries (secs) 
+// Calculate the MUD time passed over the last t2-t1 centuries (secs)
 void GameTime::mudTimePassed(time_t t2, time_t t1, time_info_data *now)
 {
   long secs;
 
   secs = (long) (t2 - t1);
 
-  now->minutes = (secs / Pulse::SECS_PER_UPDATE) % 4;	
+  now->minutes = (secs / Pulse::SECS_PER_UPDATE) % 4;
   secs -= Pulse::SECS_PER_UPDATE * now->minutes;
 
   // values are 0, 15, 30, 45...
   now->minutes *= 15;
 
-  now->hours = (secs / Pulse::SECS_PER_MUDHOUR) % 24;	
+  now->hours = (secs / Pulse::SECS_PER_MUDHOUR) % 24;
   secs -= Pulse::SECS_PER_MUDHOUR * now->hours;
 
-  now->day = (secs / Pulse::SECS_PER_MUD_DAY) % 28;	
+  now->day = (secs / Pulse::SECS_PER_MUD_DAY) % 28;
   secs -= Pulse::SECS_PER_MUD_DAY * now->day;
 
-  now->month = (secs / Pulse::SECS_PER_MUD_MONTH) % 12;		
+  now->month = (secs / Pulse::SECS_PER_MUD_MONTH) % 12;
   secs -= Pulse::SECS_PER_MUD_MONTH * now->month;
 
-  now->year = (secs / Pulse::SECS_PER_MUD_YEAR);	
+  now->year = (secs / Pulse::SECS_PER_MUD_YEAR);
 }
 
 void GameTime::reset_time(void)
@@ -194,8 +194,8 @@ void GameTime::reset_time(void)
 
   Weather::fixSunlight();
 
-  vlogf(LOG_MISC, format("   Current Gametime: %dm, %dH %dD %dM %dY.") %  
-        getMinutes() % getHours() % getDay() % 
+  vlogf(LOG_MISC, format("   Current Gametime: %dm, %dH %dD %dM %dY.") %
+        getMinutes() % getHours() % getDay() %
 	getMonth() % getYear());
 
   Weather::setPressure(960);

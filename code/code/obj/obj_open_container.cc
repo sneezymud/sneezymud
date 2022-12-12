@@ -187,17 +187,17 @@ void TOpenContainer::describeContains(const TBeing *ch) const
 void TOpenContainer::lowCheck()
 {
   if (carryWeightLimit() <= 0.0) {
-    vlogf(LOG_LOW, format("Container (%s) with bad weight limit (%5.2f).") % 
+    vlogf(LOG_LOW, format("Container (%s) with bad weight limit (%5.2f).") %
             getName() % carryWeightLimit());
   }
   if (carryVolumeLimit() <= 0) {
-    vlogf(LOG_LOW, format("Container (%s) with bad volume limit (%d).") % 
+    vlogf(LOG_LOW, format("Container (%s) with bad volume limit (%d).") %
             getName() % carryVolumeLimit());
   }
 
   if (isContainerFlag(CONT_TRAPPED)) {
     if (getContainerTrapType() == DOOR_TRAP_NONE) {
-      vlogf(LOG_LOW, format("Container (%s:%d) trapped with no trap type.  Removing.") % 
+      vlogf(LOG_LOW, format("Container (%s:%d) trapped with no trap type.  Removing.") %
            getName() % objVnum());
       remContainerFlag(CONT_TRAPPED);
     }
@@ -222,18 +222,18 @@ sstring TOpenContainer::showModifier(showModeT tMode, const TBeing *tBeing) cons
   sstring tString = TBaseContainer::showModifier(tMode, tBeing);
 
   if (isCloseable()) {
-    tString += " (";                                          
+    tString += " (";
     tString += isClosed() ? "closed" : "opened";
-    tString += ")";                                           
+    tString += ")";
 
     if(!isClosed() && stuff.empty()){
       tString += " (empty)";
     }
 
-  }                                                           
-                                                              
-  return tString;                                             
-}                                                             
+  }
+
+  return tString;
+}
 
 void TOpenContainer::putMoneyInto(TBeing *ch, int amount)
 {
@@ -267,12 +267,12 @@ int TOpenContainer::openMe(TBeing *ch)
     return FALSE;
   } else if (isContainerFlag(CONT_LOCKED)) {
     ch->sendTo("It seems to be locked.\n\r");
-    return FALSE;                                             
-  } else if (isContainerFlag(CONT_TRAPPED) ||                 
-             !isContainerFlag(CONT_EMPTYTRAP) ||              
-             isContainerFlag(CONT_GHOSTTRAP)) {               
-    if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {               
-      if (detectTrapObj(ch, this) || isContainerFlag(CONT_GHOSTTRAP)) {      
+    return FALSE;
+  } else if (isContainerFlag(CONT_TRAPPED) ||
+             !isContainerFlag(CONT_EMPTYTRAP) ||
+             isContainerFlag(CONT_GHOSTTRAP)) {
+    if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
+      if (detectTrapObj(ch, this) || isContainerFlag(CONT_GHOSTTRAP)) {
         sprintf(buf, "You start to open $p, but then notice an insidious %s trap...",
               sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
@@ -639,7 +639,7 @@ void TOpenContainer::pickMe(TBeing *thief)
     act("$n fiddles with $p.", FALSE, thief, this, 0, TO_ROOM);
   } else {
     if (critFail(thief, SKILL_PICK_LOCK)) {
-      act("Uhoh.  $n seems to have jammed the lock!", 
+      act("Uhoh.  $n seems to have jammed the lock!",
 	  TRUE, thief, 0, 0, TO_ROOM);
       thief->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
       addContainerFlag(CONT_JAMMED);
@@ -721,18 +721,18 @@ void TOpenContainer::lockMe(TBeing *ch)
   }
 }
 
-void TOpenContainer::unlockMe(TBeing *ch)                     
-{                                                             
-  if (getKeyNum() < 0)                                        
+void TOpenContainer::unlockMe(TBeing *ch)
+{
+  if (getKeyNum() < 0)
     ch->sendTo("Odd - you can't seem to find a keyhole.\n\r");
-  else if (!has_key(ch, getKeyNum()))                         
-    ch->sendTo("You don't seem to have the proper key.\n\r"); 
-  else if (!isContainerFlag(CONT_LOCKED))                     
-    ch->sendTo("Oh.. it wasn't locked, after all.\n\r");      
-  else {                                                      
-    remContainerFlag(CONT_LOCKED);                            
-    ch->sendTo("*Click*\n\r");                                
-    act("$n unlocks $p.",TRUE, ch, this, 0, TO_ROOM);         
-  }                                                           
-}                                                             
+  else if (!has_key(ch, getKeyNum()))
+    ch->sendTo("You don't seem to have the proper key.\n\r");
+  else if (!isContainerFlag(CONT_LOCKED))
+    ch->sendTo("Oh.. it wasn't locked, after all.\n\r");
+  else {
+    remContainerFlag(CONT_LOCKED);
+    ch->sendTo("*Click*\n\r");
+    act("$n unlocks $p.",TRUE, ch, this, 0, TO_ROOM);
+  }
+}
 

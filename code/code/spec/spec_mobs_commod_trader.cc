@@ -112,10 +112,10 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
       TThing *t=*(it++);
       if((commod=dynamic_cast<TCommodity *>(t))){
-	price=commod->sellPrice(commod->numUnits(), 
+	price=commod->sellPrice(commod->numUnits(),
 				commod_shop_nr[*target_shop_idx], -1, myself);
 	int rc;
-	if((rc=commod->sellMe(myself, tso.getKeeper(), 
+	if((rc=commod->sellMe(myself, tso.getKeeper(),
 			      commod_shop_nr[*target_shop_idx], 1))){
 
 	  homebase.journalize(tso.getKeeper()->getName(),
@@ -124,8 +124,8 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  myself->giveMoney(homebase.getKeeper(), myself->getMoney(), GOLD_SHOP);
 	  homebase.getKeeper()->saveItems(250);
 
-	  shoplog(250, myself, tso.getKeeper(), 
-		  material_nums[commod->getMaterial()].mat_name, 
+	  shoplog(250, myself, tso.getKeeper(),
+		  material_nums[commod->getMaterial()].mat_name,
 		  price, "selling");
 
 	  vlogf(LOG_PEEL, format("sold %i for %i from %i") %
@@ -136,8 +136,8 @@ int commodTrader(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	}
       }
     }
-    
-      
+
+
 
     // do price check, buy commods
     db.query("\
@@ -151,21 +151,21 @@ where others.vnum=50 and others.owner_type='shop' and \
   others.owner in (%i,%i,%i,%i) and here.material!=0 and \
   others.material=here.material \
 group by owner, others.material \
-order by diff desc limit 1", 
-	     commod_shop_nr[*target_shop_idx], 
-	     commod_shop_nr[0], commod_shop_nr[1], 
+order by diff desc limit 1",
+	     commod_shop_nr[*target_shop_idx],
+	     commod_shop_nr[0], commod_shop_nr[1],
 	     commod_shop_nr[2], commod_shop_nr[3]);
     db.fetchRow();
-    
+
     int diff=(int)(convertTo<float>(db["diff"]));
     int rent_id=convertTo<int>(db["rent_id"]);
-    int owner=convertTo<int>(db["owner"]);    
+    int owner=convertTo<int>(db["owner"]);
 
     vlogf(LOG_PEEL, format("best deal found at (%i): diff=%i") % owner % diff);
 
     // risk mediation, for robbings etc
     diff=min(5000, diff);
-    
+
     if(diff >= 500 && owner!=commod_shop_nr[*target_shop_idx]){
       // do buy
       TObj *temp1=tso.getKeeper()->loadItem(commod_shop_nr[*target_shop_idx], rent_id);
@@ -176,7 +176,7 @@ order by diff desc limit 1",
 	delete temp1;
 	return FALSE;
       }
-      
+
       // make obj2 the amount we want to buy, then adjust an re-save commod
       TObj *obj2 = read_object(50, VIRTUAL);
       diff/=2;
@@ -191,7 +191,7 @@ order by diff desc limit 1",
       (*tso.getKeeper()) += *commod;
 
       price=commod->shopPrice(commod->numUnits(),
-			      commod_shop_nr[*target_shop_idx], 
+			      commod_shop_nr[*target_shop_idx],
 			      -1, myself);
 
       vlogf(LOG_PEEL, format("units: %i, price: %i") % commod->numUnits() % price);
@@ -199,20 +199,20 @@ order by diff desc limit 1",
       homebase.getKeeper()->giveMoney(myself, price, GOLD_SHOP);
       sstring commodname=material_nums[commod->getMaterial()].mat_name;
       int units=commod->numUnits();
-      if((commod->buyMe(myself, tso.getKeeper(), commod->numUnits(), 
+      if((commod->buyMe(myself, tso.getKeeper(), commod->numUnits(),
 			commod_shop_nr[*target_shop_idx])) != -1){
 	// commod is invalid here
 
 	homebase.journalize(tso.getKeeper()->getName(), commodname,
 			    TX_SELLING, price, 0, 0, 0, units);
 
-	shoplog(250, myself, tso.getKeeper(), 
+	shoplog(250, myself, tso.getKeeper(),
 		commodname, -price, "buying");
 
       } else {
 	vlogf(LOG_PEEL, "buy failed");
       }
-      
+
       myself->giveMoney(homebase.getKeeper(), myself->getMoney(), GOLD_SHOP);
       homebase.getKeeper()->saveItems(250);
 
@@ -223,7 +223,7 @@ order by diff desc limit 1",
 	if(commod_shop_nr[i]==owner)
 	  *target_shop_idx=i;
 
-      vlogf(LOG_PEEL, format("now moving to %i") % 
+      vlogf(LOG_PEEL, format("now moving to %i") %
 	    commod_shop_nr[*target_shop_idx]);
 
       for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
@@ -246,7 +246,7 @@ order by diff desc limit 1",
 
     for(int i=0;i<4;++i){
       path.setNoMob(false);
-    dirTypeT dir=path.findPath(myself->in_room, 
+    dirTypeT dir=path.findPath(myself->in_room,
 			       findRoom(commod_shops[*target_shop_idx]));
 
     myself->goDirection(dir);

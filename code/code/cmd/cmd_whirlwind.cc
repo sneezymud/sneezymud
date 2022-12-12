@@ -9,7 +9,7 @@ static int whirlwind(TBeing *caster, TBeing *victim, int castLevel, spellNumT da
   int dam = 0;
 
   // Success case
-  if (!victim->awake() || 
+  if (!victim->awake() ||
     (successfulHit && successfulHit != GUARANTEED_FAILURE)) {
     act("$n hits $N with a spinning attack!", FALSE, caster, 0, victim, TO_NOTVICT);
     act("You hit $N with a spinning attack!", FALSE, caster, 0, victim, TO_CHAR);
@@ -23,7 +23,7 @@ static int whirlwind(TBeing *caster, TBeing *victim, int castLevel, spellNumT da
     act("$n's spinning attack misses you.", FALSE, caster, 0, victim, TO_VICT);
   }
 
-  if (caster->reconcileDamage(victim, dam, damageType) == -1) 
+  if (caster->reconcileDamage(victim, dam, damageType) == -1)
     return DELETE_VICT;
 
   return TRUE;
@@ -34,7 +34,7 @@ int TBeing::doWhirlwind()
   const int WHIRLWIND_MOVE = 20;
   int rc = 0;
   affectedData aff1;
-  
+
   if (checkBusy()) {
     return FALSE;
   }
@@ -46,7 +46,7 @@ int TBeing::doWhirlwind()
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  // Adding a lockout 
+  // Adding a lockout
   if (affectedBySpell(SKILL_WHIRLWIND)) {
     sendTo("You are still recovering from your last whirlwind attack and cannot use this ability again at this time.\n\r");
     return FALSE;
@@ -59,14 +59,14 @@ int TBeing::doWhirlwind()
 
   auto *weapon = dynamic_cast<TBaseWeapon *>(heldInPrimHand());
   if (!weapon){
-      sendTo("You need to hold a weapon in your primary attack to attempt this maneuver.\n\r");	 
+      sendTo("You need to hold a weapon in your primary attack to attempt this maneuver.\n\r");
       return FALSE;
   }
 
   if (!(isImmortal() || IS_SET(specials.act, ACT_IMMORTAL)))
     addToMove(-WHIRLWIND_MOVE);
-  
-  
+
+
   // Assessing an armor penalty regardless of success - this penalty greatly scales with level
   // to ensure that players are not overly penalized early on
   aff1.type = SKILL_WHIRLWIND;
@@ -92,7 +92,7 @@ int TBeing::doWhirlwind()
   // Send messages to caster/room
   act("You perform a sweeping attack, striking out at every opponent nearby!", FALSE, this, NULL, NULL, TO_CHAR);
   act("$n performs a sweeping attack, striking out at everyone nearby!", FALSE, this, NULL, NULL, TO_ROOM);
-  
+
   // Determine damage type
   spellNumT damageType = DAMAGE_NORMAL;
   if (weapon->isBluntWeapon())
@@ -132,7 +132,7 @@ int TBeing::doWhirlwind()
     delete being;
     being = nullptr;
   }
-  // end loop 
+  // end loop
 
   return rc;
 }

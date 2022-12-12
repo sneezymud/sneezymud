@@ -69,7 +69,7 @@ int lotteryTicket(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   buf = format("%s\n\r%s") % o->ex_description->description % buf;
   o->ex_description->description=buf;
 
-  
+
 
   return TRUE;
 }

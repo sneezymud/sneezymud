@@ -88,7 +88,7 @@ TObj *find_chip(TBeing *ch, const int &chip)
     if((o=dynamic_cast<TObj *>(*it)) && dynamic_cast<TCasinoChip *>(o) &&
        o->objVnum()==chip)
       return o;
-  
+
   return NULL;
 }
 
@@ -101,7 +101,7 @@ TObj *find_chip(TBeing *ch, const sstring &coin_str)
      !(dynamic_cast<TCasinoChip *>(chip))){
     return NULL;
   }
-  
+
   return chip;
 }
 
@@ -140,7 +140,7 @@ void react_gambler_lost(TBeing *ch, TMonster *tm)
       tm->doSay("Please enjoy your stay at the casino.");
       *ch += *(read_object(3503, VIRTUAL)); // chips
       return;
-  }      
+  }
 
 
   switch(::number(0,5)){

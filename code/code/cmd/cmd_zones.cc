@@ -456,7 +456,7 @@ void TBeing::doZones(sstring tStString)
 
       lastavg = (int)(sortZoneVec[zone].avgLevel);
     }
-    
+
     sprintf(tString, "%3d. %s%s<z>", (zone + 1), colorStrings[cIndex], sortZoneVec[zone].zoneName.c_str());
     str += tString;
   }

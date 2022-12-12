@@ -2,7 +2,7 @@
 
       SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
       "hearts.cc" - All functions and routines related to the hearts game
-      
+
       The SneezyMUD hearts table was coded by Russ Russell, April 1994.
       Changed to c++ October 1994
       Last revision, October 26th, 1994.
@@ -80,9 +80,9 @@ bool HeartsGame::get_other_players(const TBeing *ch, TBeing **left, TBeing **acr
 {
   int which;
 
-  if ((which = index(ch)) < 0) 
+  if ((which = index(ch)) < 0)
     return FALSE;
-  
+
   *left = get_char_room(names[LEFT(ch)], Room::HEARTS);
   *across = get_char_room(names[ACROSS(ch)], Room::HEARTS);
   *right = get_char_room(names[RIGHT(ch)], Room::HEARTS);
@@ -282,7 +282,7 @@ int HeartsGame::exitGame(const TBeing *ch)
     right->sendTo("You stand up and leave the table as well.\n\r");
     right->setPosition(POSITION_STANDING);
   }
-  // Clear out and zero all necessary gHearts variables. 
+  // Clear out and zero all necessary gHearts variables.
   *(names[0]) = '\0';
   *(names[1]) = '\0';
   *(names[2]) = '\0';
@@ -322,7 +322,7 @@ int HeartsGame::new_deal()
 
   for (i = 0; i < 13; i++) {
     for (j = 0; j < 4; j++) {
-      if (is_heart(tricks[i][j])) 
+      if (is_heart(tricks[i][j]))
         countx += 1;
       if (is_queen_of_spades(tricks[i][j]))
         countx += 13;
@@ -348,12 +348,12 @@ int HeartsGame::new_deal()
     game = FALSE;
     led = 0;
     iplay = 0;
-    
+
     ch1 = get_char_room(names[0], Room::HEARTS);
     ch2 = get_char_room(names[1], Room::HEARTS);
     ch3 = get_char_room(names[2], Room::HEARTS);
     ch4 = get_char_room(names[3], Room::HEARTS);
-  
+
     if (!ch1 || !ch2 || !ch3 || !ch4) {
       vlogf(LOG_BUG, "HeartsGame::new_deal called without four hearts players!");
       return FALSE;
@@ -421,7 +421,7 @@ int HeartsGame::new_round(TBeing *ch, int *pilex)
     tricks[round][i] = pilex[i];
     pilex[i] = 0;
   }
-  if (++round == 13) 
+  if (++round == 13)
     new_deal();
   else {
     led = 0;
@@ -529,7 +529,7 @@ void HeartsGame::pass(TBeing *ch, const char *arg)
     ch->sendTo("Hearts table syntax : pass <cardnum> <cardnum> <cardnum>\n\r");
     return;
   }
-  if (!in_range(pass1--, 1, 13) || 
+  if (!in_range(pass1--, 1, 13) ||
       !in_range(pass2--, 1, 13) ||
       !in_range(pass3--, 1, 13) ||
       (pass1 == pass2) || (pass2 == pass3) || (pass1 == pass3)) {
@@ -573,7 +573,7 @@ int HeartsGame::get_pass(TBeing *ch, char *arg)
 
   if ((which = index(ch)) < 0)
     return FALSE;
-  
+
   if (is_abbrev(arg, "pass")) {
     if (hands[which][12]) {
       ch->sendTo("You can't get your pass with all your cards!\n\r");
@@ -601,16 +601,16 @@ int HeartsGame::get_pass(TBeing *ch, char *arg)
     hands[which][10] = passes[passed_from][0];
     hands[which][11] = passes[passed_from][1];
     hands[which][12] = passes[passed_from][2];
-  
+
     /* Since pretty_card_printout returns a static, I have to */
     /* put them into temporary buffers - Russ                 */
-  
+
     strcpy(buf1, pretty_card_printout(ch, passes[passed_from][0]).c_str());
     strcpy(buf2, pretty_card_printout(ch, passes[passed_from][1]).c_str());
     strcpy(buf3, pretty_card_printout(ch, passes[passed_from][2]).c_str());
-  
+
     ch->sendTo(format("You pick up the pile and get the %s, %s, and %s.\n\r") % buf1 % buf2 % buf3);
-  
+
     cangetpass[which] = FALSE;
     if (++done_passing == 4) {
       passing = FALSE;

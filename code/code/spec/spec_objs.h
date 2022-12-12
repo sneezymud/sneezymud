@@ -6,13 +6,13 @@
   ----------------------------------------------------------------------
 
   Special procedures for objects may be called under a number of different
-  conditions.  These conditions are defined in this file with two 
+  conditions.  These conditions are defined in this file with two
   exceptions:  when cmd >= 0, a command is triggering the spec_proc, and
   when cmd == -1, the spec_proc is being triggered by a PULSE.
 
   A return value of zero (FALSE) indicates that nothing exceptional
   happened.  A non-zero return value (TRUE) indicates that some action
-  needs to be taken (such as ignoring the players command).  When in doubt, 
+  needs to be taken (such as ignoring the players command).  When in doubt,
   return FALSE.  A -1 indicates something died as a result.
 
 *************************************************************************/

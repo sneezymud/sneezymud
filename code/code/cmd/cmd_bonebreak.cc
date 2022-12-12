@@ -24,7 +24,7 @@ int TBeing::doBoneBreak(const char *argument, TBeing *vict)
     sendTo("You know nothing about breaking bones.\n\r");
     return FALSE;
   }
-  
+
   if (!(v = vict)) {
     if (!(v = get_char_room_vis(this, argument))) {
       if (!(v = fight())) {
@@ -87,8 +87,8 @@ int bonebreakHit(TBeing *c, TBeing *victim)
   int dam=::number(1,c->GetMaxLevel()), rc;
   char limb[256], buf[512];
 
-  // find a suitable bone to break 
-  for (slot = (wearSlotT) number(MIN_WEAR, MAX_WEAR - 1);; 
+  // find a suitable bone to break
+  for (slot = (wearSlotT) number(MIN_WEAR, MAX_WEAR - 1);;
        slot = (wearSlotT) number(MIN_WEAR, MAX_WEAR - 1)) {
     if (notBreakSlot(slot, false))
       continue;
@@ -102,20 +102,20 @@ int bonebreakHit(TBeing *c, TBeing *victim)
   if (victim->isImmune(IMMUNE_BONE_COND, slot, c->GetMaxLevel())) {
     act("You grab ahold of $N but you just can't seem to break any bones.",
 	FALSE, c, 0, victim, TO_CHAR);
-    act("$n grabs ahold of you, but is incapable of breaking your bones.", 
+    act("$n grabs ahold of you, but is incapable of breaking your bones.",
 	FALSE, c, 0, victim, TO_VICT);
-    act("$n grabs ahold of $N, but doesn't seem to be able to break any bones.", 
+    act("$n grabs ahold of $N, but doesn't seem to be able to break any bones.",
 	FALSE, c, 0, victim, TO_NOTVICT);
 
     if ((rc = c->reconcileDamage(victim, 0,SKILL_BONEBREAK)) == -1)
-      return DELETE_VICT;    
+      return DELETE_VICT;
     return TRUE; // lag them anyway
   }
 
 
   sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
   switch(critSuccess(c, SKILL_BONEBREAK)) {
-    case CRIT_S_KILL: 
+    case CRIT_S_KILL:
       sprintf(buf, "You yell out a mighty warcry and rip $N's %s completely off!", limb);
       act(buf, FALSE, c, 0, victim, TO_CHAR);
       sprintf(buf, "$n yells out a mighty warcry and rips your %s completely off!", limb);
@@ -156,7 +156,7 @@ int bonebreak(TBeing *caster, TBeing *victim)
   wearSlotT slot;
   int rc = 0;
   const int BONEBREAK_MOVE   = 15;
-  
+
   if (caster->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
@@ -170,7 +170,7 @@ int bonebreak(TBeing *caster, TBeing *victim)
   }
   if (caster->noHarmCheck(victim))
     return FALSE;
-  
+
   if ((victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) &&
        caster->GetMaxLevel()<victim->GetMaxLevel()){
     caster->sendTo("Attacking an immortal wouldn't be very smart.\n\r");
@@ -199,7 +199,7 @@ int bonebreak(TBeing *caster, TBeing *victim)
     return FALSE;
   }
 
-  // check whether or not there is a bone left to break 
+  // check whether or not there is a bone left to break
   for (slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     if (notBreakSlot(slot, false))
       continue;
@@ -230,7 +230,7 @@ int bonebreak(TBeing *caster, TBeing *victim)
 
   level = caster->getSkillLevel(SKILL_BONEBREAK);
   int bKnown = caster->getSkillValue(SKILL_BONEBREAK);
-  
+
   caster->addToMove(-(BONEBREAK_MOVE));
 
   if (caster->bSuccess(bKnown + percent, SKILL_BONEBREAK) &&

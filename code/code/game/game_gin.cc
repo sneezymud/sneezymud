@@ -187,7 +187,7 @@ ch, NULL, NULL, TO_ROOM);
     other->sendTo("You stand up and leave the table as well.\n\r");
     other->setPosition(POSITION_STANDING);
   }
-  // Clear out and zero all necessary gGin variables. 
+  // Clear out and zero all necessary gGin variables.
   *(names[0]) = '\0';
   *(names[1]) = '\0';
   topcard = 0;
@@ -513,10 +513,10 @@ void GinGame::play(TBeing *ch, const char *arg)
     return;
   }
   if (hands[which][card]) {
-    // Put card onto the pile 
+    // Put card onto the pile
     pile[++pile_index] = hands[which][card];
 
-    // Rearrange players hand so he doesn't have a "hole" where the card was 
+    // Rearrange players hand so he doesn't have a "hole" where the card was
     take_card_from_hand(hands[which], card, 10);
 
     can_draw = !which;
@@ -530,28 +530,28 @@ void GinGame::play(TBeing *ch, const char *arg)
   }
 }
 
-// Figuring out the lowest gin hand can be confusing. There are 
-// a number of possibilities for each card. A card can fit in a 
-// book, it can fit in a run, or it can fit in both. What we end 
-// up with are examples like these :                            
-                                                            
-//    1) A book of three 8's that aren't in any run.           
-//    2) A book of three 8's where one 8 is in a 8, 9, 10 run.  
-//         In this case we have to figure out which is lower    
-//    3) A book of three 8's with more than one 8 in a run.     
-//         In this case we have to figure out which is lower    
-//    4) A book of four 8's that aren't in a run.               
-//    5) A book of four 8's where one eight is in a run.        
-//         In this case we don't have to figure anything out    
-//         because the run and the remaining 3 8's play.        
-//    6) A book of four 8's with more than one 8 in a run.      
-//         In this case we have to figure out which is lower    
+// Figuring out the lowest gin hand can be confusing. There are
+// a number of possibilities for each card. A card can fit in a
+// book, it can fit in a run, or it can fit in both. What we end
+// up with are examples like these :
+
+//    1) A book of three 8's that aren't in any run.
+//    2) A book of three 8's where one 8 is in a 8, 9, 10 run.
+//         In this case we have to figure out which is lower
+//    3) A book of three 8's with more than one 8 in a run.
+//         In this case we have to figure out which is lower
+//    4) A book of four 8's that aren't in a run.
+//    5) A book of four 8's where one eight is in a run.
+//         In this case we don't have to figure anything out
+//         because the run and the remaining 3 8's play.
+//    6) A book of four 8's with more than one 8 in a run.
+//         In this case we have to figure out which is lower
 
 
-// This function takes a hand,and returns whether or not has any 
-// possibility of being a part of a book of 3 or a run of three. 
-// First thing we do in lowest function is total all such cards 
-// to see if they even have a shot at any sort of knock of gin  
+// This function takes a hand,and returns whether or not has any
+// possibility of being a part of a book of 3 or a run of three.
+// First thing we do in lowest function is total all such cards
+// to see if they even have a shot at any sort of knock of gin
 
 int GinGame::total_not_in_book(int *hand, Hand *hs)
 {
@@ -710,13 +710,13 @@ int GinGame::recursive_gin_search(TBeing *ch, Hand *hs, int *hand)
       i++;
       continue;
     }
-    // We now are at a card that is both in a run, and a book. What I'm  
-    // gonna do here is rip off the book, then the run, figuring         
-    // out each time how many points are left. We will do this double    
-    // maneuver for each both spot. We will recursively call the function 
-    // with the remaining cards each time to make sure we get all of it  
-    // This might not be the best way to do this, but after much thought 
-    // it is the best way I came up with to do it - Russ                 
+    // We now are at a card that is both in a run, and a book. What I'm
+    // gonna do here is rip off the book, then the run, figuring
+    // out each time how many points are left. We will do this double
+    // maneuver for each both spot. We will recursively call the function
+    // with the remaining cards each time to make sure we get all of it
+    // This might not be the best way to do this, but after much thought
+    // it is the best way I came up with to do it - Russ
 
     if (!run)
       left = find_book(i, hand, left);
@@ -794,7 +794,7 @@ int GinGame::count(int which)
   return (num - 1);
 }
 
-GinGame::GinGame() : 
+GinGame::GinGame() :
   CardGame(),
   can_draw(false),
   topcard(0),

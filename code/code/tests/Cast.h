@@ -24,7 +24,7 @@ class Cast : public CxxTest::TestSuite
 
     buildSpellArray();
     chdir("../lib");
-    Races[RACE_HUMAN] = new Race(RACE_HUMAN);    
+    Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
     generate_obj_index();
 

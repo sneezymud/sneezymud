@@ -169,7 +169,7 @@ TCommodity *getRepairMaterial(StuffList list, ubyte mat)
 
 bool BaseRepair::ConsumeRepairMats(TObj *o)
 {
-    int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);	
+    int mats_needed=(int)((o->getWeight() / (float)o->getMaxStructPoints()) * 10.0);
     mats_needed = (int)(repair_mats_ratio * mats_needed);
     // monogrammed items take 25% of normal mats to repair
     if (o->isMonogrammed())
@@ -282,7 +282,7 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse)
   didSucceed = m_ch->bSuccess(learning, m_skill);
   m_ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
 
-  if ((m_ch->task->status && didSucceed) || !m_ch->task->status) 
+  if ((m_ch->task->status && didSucceed) || !m_ch->task->status)
   {
     if (OnDrain(o))
     {
@@ -331,7 +331,7 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse)
       m_ch->stopTask();
       return 0;
     }
-  } // (m_ch->task->status && didSucceed || !m_ch->task->status) 
+  } // (m_ch->task->status && didSucceed || !m_ch->task->status)
   if (OnPulse(o))
   {
     m_ch->stopTask();
@@ -412,7 +412,7 @@ bool MetalRepair::OnDrain(TObj *o)
 int MetalRepair::OnSuccess(TObj *o)
 {
   const int HEATING_TIME = 3;
-  
+
   TTool* forge = GetRoomTool(GetRoom1ToolId());
   TTool* anvil = GetRoomTool(GetRoom2ToolId());
   TTool* hammer = GetPrimaryTool();
@@ -519,7 +519,7 @@ int DeadRepair::OnSuccess(TObj *o)
   if (!m_ch->task->status)
   {
     act("$n carefully places $p atop $P.", FALSE, m_ch, o, operatingtable, TO_ROOM);
-    act("You carefully place $p atop $P.", FALSE, m_ch, o, operatingtable, TO_CHAR);	  
+    act("You carefully place $p atop $P.", FALSE, m_ch, o, operatingtable, TO_CHAR);
   }
   else if (::number(0,1))
   {
@@ -531,13 +531,13 @@ int DeadRepair::OnSuccess(TObj *o)
         return -1;
     }
     else
-    { 
+    {
       act("$n removes a damaged piece from $p with $s $O.", FALSE, m_ch, o, forceps, TO_ROOM);
       act("You remove a damaged piece from $p with your $O.", FALSE, m_ch, o, forceps, TO_CHAR);
       if (DamageTool(false, o, true))
         return -1;
     }
-  } 
+  }
   else
   {
     act("$n focuses $s lifeforce, regrowing the damaged part of $p.", FALSE, m_ch, o, 0, TO_ROOM);
@@ -565,7 +565,7 @@ int task_repair_dead(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 }
 
 
-// repair organic: wood (5), ebony (105) 
+// repair organic: wood (5), ebony (105)
 // tools: water (room), a ladle (primary), some rich soil (secondary)
 class WoodRepair : public BaseRepair
 {
@@ -794,7 +794,7 @@ int OrganicRepair::OnSuccess(TObj *o)
   m_ch->task->status++;
   return 0;
 }
-	
+
 bool OrganicRepair::OnStop(TObj *o)
 {
   act("You stop trying to regenerate $p.", FALSE, m_ch, o, 0, TO_CHAR);
@@ -880,7 +880,7 @@ int MagicRepair::OnSuccess(TObj *o)
   {
     act("$n concentrates intensly on $p.", FALSE, m_ch, o, 0, TO_ROOM);
     act("You concentrate intensly on $p.", FALSE, m_ch, o, 0, TO_CHAR);
-  } 
+  }
   else if (m_ch->task->status == 1)
   {
     TTool *pentagram = GetRoomTool(GetRoom1ToolId());
@@ -1030,7 +1030,7 @@ int task_repair_rock(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *,
 
 
 
-// repair gemmed: jeweled (101), crystal (103), diamond (104), emerald (106), onyx (109), opal (110), 
+// repair gemmed: jeweled (101), crystal (103), diamond (104), emerald (106), onyx (109), opal (110),
 //                ruby (111), sapphire (112), amethyst (119), mica (120), quartz (124), corundum (126)
 // tools: a workbench (room), a loupe (primary), a pair of needle nosed pliers (secondary)
 class GemRepair : public BaseRepair
@@ -1072,7 +1072,7 @@ bool GemRepair::OnComplete(TObj *o)
 bool GemRepair::OnDrain(TObj *o)
 {
   m_ch->addToMove(min(-1, ::number(-15,-25) + ::number(1,((m_ch->getSkillValue(m_skill) / 10)))));
-  
+
   if (m_ch->getMove() < 10)
   {
     act("You are much too tired to continue repairing $p.", FALSE, m_ch, o, 0, TO_CHAR);
@@ -1134,7 +1134,7 @@ int task_repair_gem(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, 
 
 // mend hide: laminate (19), leather (51), toughened leather (52), fur (55), feathered (56), cat fur (69),
 //            dog fur (70), rabbit fur (71), dwarven leather (73), soft leather (74)
-// tools: a leather punch (primary), some leather cording (secondary) 
+// tools: a leather punch (primary), some leather cording (secondary)
 class LeatherRepair : public BaseRepair
 {
 public:
@@ -1182,7 +1182,7 @@ int LeatherRepair::OnSuccess(TObj *o)
 {
   TTool *punch = GetPrimaryTool();
   TTool *cording = GetSecondaryTool();
-  if (!m_ch->task->status) 
+  if (!m_ch->task->status)
   {
     act("$n carefully inspects $p.", FALSE, m_ch, o, 0, TO_ROOM);
     act("You carefully inspect $p.", FALSE, m_ch, o, 0, TO_CHAR);
@@ -1239,7 +1239,7 @@ int task_mend(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
 }
 
 // repair spiritual: ghostly (72), foodstuff (7)
-// tools: an altar (in room), a small brush (primary), some astral resin (secondary) 
+// tools: an altar (in room), a small brush (primary), some astral resin (secondary)
 class SpiritRepair : public BaseRepair
 {
 public:
@@ -1280,7 +1280,7 @@ bool SpiritRepair::OnComplete(TObj *o)
 bool SpiritRepair::OnDrain(TObj *o)
 {
   m_ch->addToMove(min(-1, ::number(-10,-15) + ::number(1,((m_ch->getSkillValue(m_skill) / 20)))));
-        
+
   if (m_ch->getMove() < 10)
   {
     act("You are much too tired to continue mending $p.", FALSE, m_ch, o, 0, TO_CHAR);

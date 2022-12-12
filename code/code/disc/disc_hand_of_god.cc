@@ -16,7 +16,7 @@
 #include "materials.h"
 
 static void moveLoss(TBeing &ch)
-{ 
+{
   // used by recall and summon
 
   // take up to 100 move
@@ -55,13 +55,13 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, short bKnown)
     return SPELL_FAIL;
   }
 
-  
+
 
   if (victim->GetMaxLevel() > MAX_MORT ||
       room->isRoomFlag(ROOM_PRIVATE) ||
       room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
       (zone_table[room->getZoneNum()].enabled == FALSE) ||
-      (toggleInfo[TOG_QUESTCODE2]->toggle && 
+      (toggleInfo[TOG_QUESTCODE2]->toggle &&
        room->number >= 5700 && room->number < 5900) ||
       room->isRoomFlag(ROOM_NO_MAGIC)) {
     act("$d refuses to let you astral walk there.", FALSE, caster, 0, 0, TO_CHAR);
@@ -70,11 +70,11 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, short bKnown)
   }
 
 
-  if((tmon=dynamic_cast<TMonster *>(victim)) && 
+  if((tmon=dynamic_cast<TMonster *>(victim)) &&
      ((tmon->mobVnum()==Mob::TIGER_SHARK) || (tmon->mobVnum()==Mob::ELEPHANT))){
     act("$d refuses to let you astral walk there.", FALSE, caster, 0, 0, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return SPELL_FAIL;  
+    return SPELL_FAIL;
   }
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_ASTRAL_WALK)) {
@@ -82,15 +82,15 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, short bKnown)
 
     switch (::number(1,2)) {
       case 1:
-        act("$d opens a door to another dimension and you step through.", 
+        act("$d opens a door to another dimension and you step through.",
                 FALSE, caster, NULL, NULL, TO_CHAR);
-        act("$d opens a door to another dimension and $n steps through!", 
+        act("$d opens a door to another dimension and $n steps through!",
                 FALSE, caster, NULL, NULL, TO_ROOM);
         break;
       case 2:
-        act("$d opens a door to another dimension and guides you through.", 
+        act("$d opens a door to another dimension and guides you through.",
                 FALSE, caster, NULL, NULL, TO_CHAR);
-        act("$d opens a door to another dimension and guides $n through!", 
+        act("$d opens a door to another dimension and guides $n through!",
                 FALSE, caster, NULL, NULL, TO_ROOM);
         break;
     }
@@ -101,11 +101,11 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, short bKnown)
     switch (critFail(caster, SPELL_ASTRAL_WALK)) {
       case CRIT_F_HITOTHER:
 
-        act("$d opens a door to another dimension and $n steps through!", 
+        act("$d opens a door to another dimension and $n steps through!",
             FALSE, caster, NULL, NULL, TO_ROOM);
-        act("$d opens a door to another dimension and you step through.", 
+        act("$d opens a door to another dimension and you step through.",
             FALSE, caster, NULL, NULL, TO_CHAR);
-        act("Uh oh. You have a funny feeling that door didn't lead where you wanted it to.", 
+        act("Uh oh. You have a funny feeling that door didn't lead where you wanted it to.",
            FALSE, caster, NULL, NULL, TO_CHAR);
 
         caster->genericTeleport(SILENT_YES);
@@ -133,7 +133,7 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, short bKnown)
         } else {
 // pass through
         }
-      default:        
+      default:
         act("Nothing seems to happen!",
             FALSE, caster, NULL, NULL, TO_ROOM);
         act("Nothing seems to happen.",
@@ -147,7 +147,7 @@ int astralWalk(TBeing * caster, TBeing * victim, int level, short bKnown)
   *room += *caster;
   caster->doLook("", CMD_LOOK);
 
-  act("You are blinded for a moment as $n appears in a flash of light!", 
+  act("You are blinded for a moment as $n appears in a flash of light!",
           FALSE, caster, NULL, NULL, TO_ROOM);
 
   if (caster->riding) {
@@ -226,7 +226,7 @@ int createFood(TBeing *c, int level, short bKnown, spellNumT spell)
     act("$p poofs into existence from out of the ether.",1,c, o, NULL, TO_ROOM);
     act("$p poofs into existence from out of the ether.",1,c, o, NULL, TO_CHAR);
     return SPELL_SUCCESS;
-  } else 
+  } else
     return SPELL_FAIL;
 }
 
@@ -343,7 +343,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
   }
-  
+
   if (caster->affectedBySpell(AFFECT_PLAYERKILL) ||
       victim->affectedBySpell(AFFECT_PLAYERKILL)){
     act("$d will not provide refuge to a murderer.",
@@ -362,7 +362,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)
   }
 
 #if FACTIONS_IN_USE
-  learning = bKnown - (100 - ((int) caster->getPerc()));  
+  learning = bKnown - (100 - ((int) caster->getPerc()));
 #else
   learning = bKnown;
 #endif
@@ -392,7 +392,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)
 #if FACTIONS_IN_USE
         if (!caster->percLess(10.0)) {   // if > 10.0
 #endif
-          act("$d is not entirely pleased with how well you are serving him!", 
+          act("$d is not entirely pleased with how well you are serving him!",
               FALSE, caster, NULL, NULL, TO_CHAR);
           sprintf(buf, "He throws %s mortal body to the winds!",
               (caster == victim) ? "your" : "$N's");
@@ -402,7 +402,7 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)
 #if FACTIONS_IN_USE
         } else {
           location = Room::HELL;
-          act("$d is upset with your unwillingness to properly serve!", 
+          act("$d is upset with your unwillingness to properly serve!",
               FALSE, caster, NULL, NULL, TO_CHAR);
           sprintf(buf, "He sends %s to Hell!", (caster == victim) ? "you" : "$N");
           act(buf, FALSE, caster, NULL, victim, TO_CHAR);
@@ -433,16 +433,16 @@ int wordOfRecall(TBeing * caster, TBeing * victim, int, short bKnown)
 
     --(*victim);
     *room += *victim;
-    act("You hear a small \"pop\" as $n appears in the middle of the room.", 
+    act("You hear a small \"pop\" as $n appears in the middle of the room.",
         TRUE, victim, NULL, NULL, TO_ROOM);
     victim->doLook("", CMD_LOOK);
 
     moveLoss(*victim);
 
     victim->updatePos();
-    act("You are exhausted from interplanar travel.", 
+    act("You are exhausted from interplanar travel.",
         FALSE, victim, NULL, NULL, TO_CHAR);
-    act("$n is exhausted from interplanar travel.", 
+    act("$n is exhausted from interplanar travel.",
         FALSE, victim, NULL, NULL, TO_ROOM);
   }
   return ret;
@@ -480,15 +480,15 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
   int rc = 0;
   TThing *t;
   int location = 0;
-  TRoom *room = NULL; 
+  TRoom *room = NULL;
 
   int immun = victim->getImmunity(IMMUNE_SUMMON);
   TMonster *tmon=dynamic_cast<TMonster *>(victim);
 
   // check for immunity to summon
   // prevent some mobs used in quests from being moved around
-  if(((immun > 0) && ::number(0,100)<=immun) || 
-     (tmon && ((tmon->mobVnum()==Mob::TIGER_SHARK) || 
+  if(((immun > 0) && ::number(0,100)<=immun) ||
+     (tmon && ((tmon->mobVnum()==Mob::TIGER_SHARK) ||
 	       (tmon->mobVnum()==Mob::ELEPHANT)))){
     act("You feel unable to summon $N.", FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
@@ -532,7 +532,7 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
     return SPELL_FAIL;
   }
   if (victim->inRoom() == Room::NOWHERE) {
-    act("$N cannot be summoned at the moment!", 
+    act("$N cannot be summoned at the moment!",
             FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
@@ -559,7 +559,7 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
     return SPELL_FAIL;
   }
 
-#if 0 
+#if 0
   if (immun) {
     if (isImmune(IMMUNE_SUMMON), WEAR_BODY) {
       act("You feel great difficulty in summoning $N this time.", FALSE, caster, NULL, victim, TO_CHAR);
@@ -589,7 +589,7 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
   }
 
   if (victim->isImmortal()) {
-    act("Summoning the gods can be hazardous to your health...", 
+    act("Summoning the gods can be hazardous to your health...",
             FALSE, caster, NULL, victim, TO_CHAR);
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     act("$n just tried to summon you.", FALSE, caster, NULL, victim, TO_VICT);
@@ -640,10 +640,10 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
         } else {
           act("Your body flails helplessly through the cosmos!",
               FALSE, caster, NULL, NULL, TO_CHAR);
-  
-          act("You vanish in a flash of irridescent midnight blue..", 
+
+          act("You vanish in a flash of irridescent midnight blue..",
                FALSE, caster, NULL, NULL, TO_CHAR);
-          act("$n vanishes in a flash of irridescent midnight blue..", 
+          act("$n vanishes in a flash of irridescent midnight blue..",
                FALSE, caster, NULL, NULL, TO_ROOM);
 
           rc = caster->genericTeleport(SILENT_YES);
@@ -656,7 +656,7 @@ int summon(TBeing * caster, TBeing * victim, int level, short bKnown)
           caster->updatePos();
           act("You hear a small \"pop\" as $n appears in the middle of the room.",
                 TRUE, caster, NULL, NULL, TO_ROOM);
-          act("$n is exhausted from interplanar travel.", 
+          act("$n is exhausted from interplanar travel.",
                   FALSE, caster, NULL, NULL, TO_ROOM);
 
        // genericTeleport, make sure they get to look first
@@ -736,7 +736,7 @@ int heroesFeast(TBeing * caster, int, short bKnown, spellNumT spell)
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
-      if (tch->inGroup(*caster) && (tch->getPosition() > POSITION_SLEEPING)) 
+      if (tch->inGroup(*caster) && (tch->getPosition() > POSITION_SLEEPING))
       {
         if(isname("Merkaba", name)) {
           switch(::number(1,20)) {
@@ -785,7 +785,7 @@ int heroesFeast(TBeing * caster, int, short bKnown, spellNumT spell)
           }
         }
         act(message, false, tch, 0, 0, TO_CHAR);
-      
+
         if (tch->getCond(FULL) >= 0)
           tch->gainCondition(FULL, gain);
         if (tch->getCond(THIRST) >= 0)
@@ -873,7 +873,7 @@ int portal(TBeing * caster, const char * portalroom, int level, short bKnown)
       location=portalRooms[i].roomnum;
     }
   }
- 
+
   TRoom * rp = real_roomp(location);
 
   if (!rp || !location) {

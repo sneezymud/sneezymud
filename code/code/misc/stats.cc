@@ -676,7 +676,7 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return 10;
         case STAT_CON:  // poor health environment
           return -10;
-        case STAT_BRA: 
+        case STAT_BRA:
           return -10;
         default:
           return 0;
@@ -701,9 +701,9 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return 20;
         case STAT_CON:  // poor health environment
           return -20;
-        case STAT_BRA: 
+        case STAT_BRA:
           return -20;
-        case STAT_PER:  // over stimulated 
+        case STAT_PER:  // over stimulated
           return -10;
         default:
           return 0;
@@ -723,15 +723,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return 0;
         case STAT_CON:  // mildly healthy environment
           return 5;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 5;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -10;
         case STAT_PER:
           return 15;
-        case STAT_SPE: 
+        case STAT_SPE:
           return -5;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 0;
         default:
           return 0;
@@ -750,15 +750,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -15;
         case STAT_CON:  // mildly healthy environment
           return 25;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 15;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return 15;
         case STAT_PER:
           return -15;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 0;
         default:
           return 0;
@@ -779,15 +779,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -5;
         case STAT_CON:  // mildly healthy environment
           return 10;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 10;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -15;
         case STAT_PER:
           return 10;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 5;
         default:
           return 0;
@@ -806,15 +806,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -15;
         case STAT_CON:  // mildly healthy environment
           return 20;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 15;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -15;
         case STAT_PER:
           return 10;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 5;
         default:
           return 0;
@@ -833,15 +833,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -15;
         case STAT_CON:  // mildly healthy environment
           return 15;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 15;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -15;
         case STAT_PER:
           return 10;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 5;
         default:
           return 0;
@@ -861,15 +861,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -5;
         case STAT_CON:  // mildly healthy environment
           return 5;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 5;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -5;
         case STAT_PER:
           return 5;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 0;
         default:
           return 0;
@@ -934,7 +934,7 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
       my_age = age()->year - getBaseAge() + 17;
       if(!isVampire())
 	amount += age_mod_for_stat(this, my_age, whichStat);
-    
+
       amount += territory_adjustment(player.hometerrain, whichStat);
 
       // monk skill
@@ -1038,7 +1038,7 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
     cleared = true;
   }
 #endif
- 
+
   int MAXSTAT = 205;
   int MINSTAT = 005;
   if (whichSet == STAT_CHOSEN) {
@@ -1057,7 +1057,7 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
 
   // A little algebra and we get:
   // A = (max_value - avg)/(MAXSTAT ^ power - midline ^ power)
-  // B = avg - (midline^power) * A 
+  // B = avg - (midline^power) * A
 
   // March, 2001:
   // this is incorrect, A = (max_value - avg)/(MAXSTAT-midline)^power
@@ -1075,9 +1075,9 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
       // determine the normalized value
       double A, B;
       if (stat >= midline) {
-        A = 1  / (pow(MAXSTAT, power) - pow(midline, power)); 
+        A = 1  / (pow(MAXSTAT, power) - pow(midline, power));
       } else {
-        A = 1 / (pow(midline, power) - pow(MINSTAT, power)); 
+        A = 1 / (pow(midline, power) - pow(MINSTAT, power));
       }
 
       // this if statment is equiv to A = abs(1 / (pow(midline,power) - pow(MAXSTAT,power)))
@@ -1094,14 +1094,14 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
   }
 #endif
   double A, B;
-  double num; 
+  double num;
 
   if (stat >= midline) {
-    A = (max_value - avg) / (pow(MAXSTAT - midline, power)); 
+    A = (max_value - avg) / (pow(MAXSTAT - midline, power));
     B = avg;
     num = A * pow(stat - midline, power) + B;
   } else {
-    A = (min_value - avg) / (pow(midline - MINSTAT, power)); 
+    A = (min_value - avg) / (pow(midline - MINSTAT, power));
     B =  avg;
     num = A * pow(midline - stat, power) + B;
   }

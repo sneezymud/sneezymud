@@ -95,7 +95,7 @@ sstring TTable::statObjInfo() const
 void TTable::writeAffects(int i, FILE *fp) const
 {
   if (affected[i].location != APPLY_NONE) {
-    fprintf(fp, "A\n%d %ld %ld\n", 
+    fprintf(fp, "A\n%d %ld %ld\n",
             mapApplyToFile(affected[i].location),
             applyTypeShouldBeSpellnum(affected[i].location) ? mapSpellnumToFile(spellNumT(affected[i].modifier)) : affected[i].modifier,
             affected[i].modifier2);

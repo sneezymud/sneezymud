@@ -349,8 +349,8 @@ itemInfo::~itemInfo()
 void assign_item_info()
 {
   ItemInfo[ITEM_UNDEFINED] = new itemInfo("Undefined","something unknown",
-     "",0, 0, 
-     "",0, 0, 
+     "",0, 0,
+     "",0, 0,
      "",0, 0,
      "",0, 0);
   ItemInfo[ITEM_LIGHT] = new itemInfo("Light","a lighting device",
@@ -584,7 +584,7 @@ void assign_item_info()
      "Former Level", 0, 0,
      "Former Vnum", 0, 0);
   ItemInfo[ITEM_POOL] = new itemInfo("Pool", "a pool of liquid",
-     "Unused", 0, 0,		      
+     "Unused", 0, 0,
      "Number of drink units", 2560, 0,
      "Liquid type - see help liquids", MAX_DRINK_TYPES - 1, 0,
      "Decay (non-zero = no)", 1, 0);
@@ -622,7 +622,7 @@ void assign_item_info()
      "Type of Drug", MAX_DRUG-1, 0,
      "Max number of ticks for refuel light. -1 means no refuleing.",10000,-1,
      "Ticks left before burns out.",10000,0,
-     "1 = lit, 0 = unit.  Should be set 0", 1, 0);   
+     "1 = lit, 0 = unit.  Should be set 0", 1, 0);
   ItemInfo[ITEM_DRUG] = new itemInfo("Drug","a drug",
      "Amount of drug", 75, 0,
      "Max Amount of drug", 75, 0,
@@ -695,7 +695,7 @@ void assign_item_info()
      "Special - container flags", 0, 0,
      "Vnum of key that unlocks.  -1 == none", WORLD_SIZE - 1, -1,
      "Volume pile can hold", 10000000, 1);
-  
+
   ItemInfo[ITEM_CARD_DECK] = new itemInfo("Card Deck", "a deck of cards",
      "Weight bag can hold", 50000, 1,
      "Special - container flags", 0, 0,
@@ -931,38 +931,38 @@ const char * const affected_bits[AFF_MAX+1] =
  "\n"
 };
 
-APP_type apply_types[MAX_APPLY_TYPES] = 
+APP_type apply_types[MAX_APPLY_TYPES] =
 {
   {TRUE,"None"},
   {TRUE, "Strength"},
   {TRUE, "Intelligence"},
   {TRUE, "Wisdom"},
   {TRUE, "Dexterity"},
-  {TRUE, "Constitution"},    // 5 
+  {TRUE, "Constitution"},    // 5
   {TRUE, "Karma"},
   {TRUE, "Sex"},
   {TRUE, "Age"},
   {TRUE, "Height"},
-  {TRUE, "Weight"},      // 10 
+  {TRUE, "Weight"},      // 10
   {TRUE, "Armor/AC"},
   {TRUE, "Max Hit Points"},
   {TRUE, "Mana"},
   {TRUE, "Move"},
   {FALSE, "Hitroll"},
   {FALSE, "Damroll"},
-  {FALSE, "Hit & Dam"},  // 20 
+  {FALSE, "Hit & Dam"},  // 20
   {TRUE, "Immunity"},
   {TRUE, "Skill/Spell"},
   {TRUE, "Magic Affect"},
   {TRUE, "Light"},
   {TRUE, "Noise"},
   {TRUE, "Can Be Seen"},
-  {TRUE, "Vision"},   // 30 
+  {TRUE, "Vision"},   // 30
   {FALSE, "Protection"},
   {TRUE, "Brawn"},
   {TRUE, "Agility"},
   {TRUE, "Focus"},
-  {TRUE, "Speed"},   // 35 
+  {TRUE, "Speed"},   // 35
   {TRUE, "Perception"},
   {TRUE, "Charisma"},
   {TRUE, "Discipline"},
@@ -982,7 +982,7 @@ APP_type apply_types[MAX_APPLY_TYPES] =
 */
 const struct class_info classInfo[MAX_CLASSES] =
 {
-  {true, MAGE_LEVEL_IND, CLASS_MAGE, "mage", 
+  {true, MAGE_LEVEL_IND, CLASS_MAGE, "mage",
    DISC_MAGE, DISC_LORE, 0.43, 7.5 * 35.0 / 50.0, "M"},
 
   {true, CLERIC_LEVEL_IND, CLASS_CLERIC, "cleric",
@@ -1087,7 +1087,7 @@ const char * const attr_player_bits[] =
   "Stealth",
   "Hunting",
   "Tell-an-immort-you-saw-this (MAILING)",
-  "",				// note ... no LOGGED 
+  "",				// note ... no LOGGED
   "Tell-an-immort-you-saw-this (BUGGING)",
   "VT-100",
   "Color",
@@ -1160,12 +1160,12 @@ const char * const connected_types[MAX_CON_STATUS] =
   "Wizlock",
   "General Delete",
   "Disconnection",
-  "New account", 
+  "New account",
   "Account Password",
   "New login",
   "New account Password",
   "Account email",
-  "Account terminal", 
+  "Account terminal",
   "Account connection",
   "Account change password",
   "Account change password",
@@ -1341,7 +1341,7 @@ const char * const attack_modes[] =
 };
 
 // formula for fall/water susceptibility is:
-// chance in 10 of being damaged + (10 * points to remove) 
+// chance in 10 of being damaged + (10 * points to remove)
 // So... if the number is 99 it would mean, 90% (9 in 10)
 // chance of being damaged, with 9 struct points removed
 // when it is damaged.  Note, maximum damage rate is:
@@ -1366,7 +1366,7 @@ extern int repairSpiritual(TBeing *, TObj *);
 // type and stay floating.  0 means object will sink no matter
 // what.  255 means object will float no matter what.  */
 // hardness: 0 = air
-// 5 = paper, 10 = rubber, 25 = wood, 45+ = metal, 100 = dimond 
+// 5 = paper, 10 = rubber, 25 = wood, 45+ = metal, 100 = dimond
 // fall/water susc:
 // chance of damage: dice(1,10) <= number%10
 // amount of damage: number/10
@@ -1398,7 +1398,7 @@ const struct material_type_numbers material_nums[200] =
   {50, 65, 70, 25, 2,  92, 53, 100, -1, 1, 0, 0, 60, 1.3, repairRock, "pumice"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name
   {50, 25, 4, 40, 12, 30, 36, 3, -1, 3, 0, 0, 25, 4.1, repairHide,"laminate"},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, NULL,""},
@@ -1460,7 +1460,7 @@ const struct material_type_numbers material_nums[200] =
   {70, 0, 100, 75, 10, 33, 0, 50, -2, 4, 0, 750, 0,   3,   repairHide,"hemp"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
@@ -1483,7 +1483,7 @@ const struct material_type_numbers material_nums[200] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
-  {5, 50, 8, 20, 50, 0, 39, 0, 10, 1, 0, 0, 31,   171,   repairCrystal,"jeweled"},  
+  {5, 50, 8, 20, 50, 0, 39, 0, 10, 1, 0, 0, 31,   171,   repairCrystal,"jeweled"},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {10, 60, 10, 24, 48, 0, 39, 0, 10, 1, 1, 0, 31,   95,   repairMagical,"runed"},
   {25, 45, 0, 25, 60, 0, 39, 0, 13, 1, 0, 0, 31,   70,   repairCrystal,"crystal"},
@@ -1512,7 +1512,7 @@ const struct material_type_numbers material_nums[200] =
   {1, 12, 0, 5, 100, 0, 0, 0, 14, 1, 0, 0, 21,   201,   repairCrystal,"corundum"},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
@@ -1540,7 +1540,7 @@ const struct material_type_numbers material_nums[200] =
   {0, 75, 0, 20, 45, 101, 101, 0, 20, 1, 1, 0, 70,   0.5,   repairMetal,"copper"},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
-  {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},	
+  {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
   {0, 70, 0, 10, 50, 101, 101, 0, 25, 1, 1, 0, 70,   9.1,    repairMetal,"bronze"},
   {0, 79, 0, 5,  50, 101, 101, 0, 25, 1, 1, 0, 70,   3.334,   repairMetal,"brass"},
@@ -1567,7 +1567,7 @@ const struct material_type_numbers material_nums[200] =
   {0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,   0,   NULL,""},
 // slash susc, blunt susc, fire susc, pierce susc,
 // hardness, water susc, fall susc, float weight, noise, vol_mult, conduct
-// flammability, acid_susc, price, base commod vnum, repair proc, mat_name 
+// flammability, acid_susc, price, base commod vnum, repair proc, mat_name
 };
 
 // this is how blunt/sharp/pointy weapon is
@@ -1718,7 +1718,7 @@ const char * const immunity_names[MAX_IMMUNES] =
 // make first letter '*' to block the sstring anywhere in the name
 // otherwise, blocks the exact name (case insensative)
 // that is "*fuck" blocks "somefuck", "fucksome", and "sfucky"
-const char * const illegalnames[] = 
+const char * const illegalnames[] =
 {
   // SWEAR WORDS
   "*fuk",
@@ -1751,7 +1751,7 @@ const char * const illegalnames[] =
   "brutus",
   "fatopr",
   "batoper",
-  
+
   // NEWBIE PROTECTION
   "*admin",
   "root",
@@ -1787,10 +1787,10 @@ const char * const illegalnames[] =
   "men",
 
   // BLOCKED AS CAUSES CODE PROBLEMS
-  "blob",     // needed for infravision 
-  "blobs",    // needed for infravision 
-  "link",     // needed for purging links 
-  "links",    // needed for purging links 
+  "blob",     // needed for infravision
+  "blobs",    // needed for infravision
+  "link",     // needed for purging links
+  "links",    // needed for purging links
   "noone",   // needed for makeleader
   "comment", // needed for comments
   "all",      // "group all"
@@ -1897,81 +1897,81 @@ const char * const auto_name[MAX_AUTO] =
 // COSMO CLASS MARKER
 const struct disc_names_data discNames[MAX_DISCS] =
 {
-  {DISC_MAGE, CLASS_MAGE, "mage abilities", 
-   "Mage Abilities"},   // 0 
-  {DISC_AIR, CLASS_MAGE, "air magic", 
+  {DISC_MAGE, CLASS_MAGE, "mage abilities",
+   "Mage Abilities"},   // 0
+  {DISC_AIR, CLASS_MAGE, "air magic",
    "Air Magic"},         // 1
-  {DISC_ALCHEMY, CLASS_MAGE, "alchemy", 
+  {DISC_ALCHEMY, CLASS_MAGE, "alchemy",
    "Alchemy"},
-  {DISC_EARTH, CLASS_MAGE, "earth magic", 
+  {DISC_EARTH, CLASS_MAGE, "earth magic",
    "Earth Magic"},
-  {DISC_FIRE, CLASS_MAGE, "fire magic", 
+  {DISC_FIRE, CLASS_MAGE, "fire magic",
    "Fire Magic"},
-  {DISC_SORCERY, CLASS_MAGE, "sorcery", 
+  {DISC_SORCERY, CLASS_MAGE, "sorcery",
    "Sorcery"},        // 5
-  {DISC_SPIRIT, CLASS_MAGE, "spirit magic", 
+  {DISC_SPIRIT, CLASS_MAGE, "spirit magic",
    "Spirit Magic"},
-  {DISC_WATER, CLASS_MAGE, "water magic", 
+  {DISC_WATER, CLASS_MAGE, "water magic",
    "Water Magic"},
-  {DISC_CLERIC, CLASS_CLERIC, "clerical abilities", 
+  {DISC_CLERIC, CLASS_CLERIC, "clerical abilities",
    "Clerical Abilities"},
-  {DISC_WRATH, CLASS_CLERIC, "wrath of the deities", 
+  {DISC_WRATH, CLASS_CLERIC, "wrath of the deities",
    "Wrath of the Deities"},
-  {DISC_AFFLICTIONS, CLASS_CLERIC, "afflictions", 
+  {DISC_AFFLICTIONS, CLASS_CLERIC, "afflictions",
    "Afflictions"},   // 10
-  {DISC_AEGIS, CLASS_CLERIC, "aegis", 
+  {DISC_AEGIS, CLASS_CLERIC, "aegis",
    "Aegis of the Deities"},
-  {DISC_CURES, CLASS_CLERIC, "cures", 
+  {DISC_CURES, CLASS_CLERIC, "cures",
    "Cures"},
-  {DISC_HAND_OF_GOD, CLASS_CLERIC, "hand of the deities", 
+  {DISC_HAND_OF_GOD, CLASS_CLERIC, "hand of the deities",
    "Hand of the Deities"},
-  {DISC_WARRIOR, CLASS_WARRIOR, "warrior abilities", 
+  {DISC_WARRIOR, CLASS_WARRIOR, "warrior abilities",
    "Warrior Abilities"},
-  {DISC_DUELING, CLASS_WARRIOR, "dueling", 
+  {DISC_DUELING, CLASS_WARRIOR, "dueling",
    "Dueling Skills"},  //15
-  {DISC_BRAWLING, CLASS_WARRIOR, "brawling skills", 
+  {DISC_BRAWLING, CLASS_WARRIOR, "brawling skills",
    "Brawling Skills"},
-  {DISC_SOLDIERING, CLASS_WARRIOR, "soldiering skills", 
+  {DISC_SOLDIERING, CLASS_WARRIOR, "soldiering skills",
    "Soldiering Skills"},
-  {DISC_BLACKSMITHING, CLASS_WARRIOR, "blacksmithing", 
+  {DISC_BLACKSMITHING, CLASS_WARRIOR, "blacksmithing",
    "Blacksmithing Skills"},
-  {DISC_RANGER, CLASS_RANGER, "ranger abilities", 
+  {DISC_RANGER, CLASS_RANGER, "ranger abilities",
    "Ranger Abilities"},
-  {DISC_BOGUS1, 0, "bogus1", 
+  {DISC_BOGUS1, 0, "bogus1",
    "unused"},  //20
-  {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities", 
+  {DISC_SHAMAN_ARMADILLO, CLASS_SHAMAN, "armadillo abilities",
    "Armadillo Abilities"},
-  {DISC_ANIMAL, CLASS_RANGER, "animals", 
+  {DISC_ANIMAL, CLASS_RANGER, "animals",
    "Animal Abilities"},
-  {DISC_PLANTS, CLASS_RANGER, "plants", 
+  {DISC_PLANTS, CLASS_RANGER, "plants",
    "Plant Abilities"},
-  {DISC_BOGUS2, 0, "bogus2", 
-   "unused"}, 
-  {DISC_DEIKHAN, CLASS_DEIKHAN, "deikhan abilities", 
+  {DISC_BOGUS2, 0, "bogus2",
+   "unused"},
+  {DISC_DEIKHAN, CLASS_DEIKHAN, "deikhan abilities",
    "Deikhan Abilities"},   // 25
-  {DISC_DEIKHAN_MARTIAL, CLASS_DEIKHAN, "martial abilities", 
+  {DISC_DEIKHAN_MARTIAL, CLASS_DEIKHAN, "martial abilities",
    "Martial Abilities"},
-  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted abilities", 
+  {DISC_MOUNTED, CLASS_DEIKHAN, "mounted abilities",
    "Mounted Abilities"},
-  {DISC_DEIKHAN_GUARDIAN, CLASS_DEIKHAN, "guardian", 
+  {DISC_DEIKHAN_GUARDIAN, CLASS_DEIKHAN, "guardian",
    "Guardian Abilities"},
-  {DISC_DEIKHAN_ABSOLUTION, CLASS_DEIKHAN, "absolution", 
+  {DISC_DEIKHAN_ABSOLUTION, CLASS_DEIKHAN, "absolution",
    "Absolution Abilities"},
-  {DISC_DEIKHAN_VENGEANCE, CLASS_DEIKHAN, "vengeance abilities", 
+  {DISC_DEIKHAN_VENGEANCE, CLASS_DEIKHAN, "vengeance abilities",
    "Vengeance Abilities"},  // 30
-  {DISC_MONK, CLASS_MONK, "monk abilities", 
+  {DISC_MONK, CLASS_MONK, "monk abilities",
    "Monk Abilities"},
-  {DISC_MEDITATION_MONK, CLASS_MONK, "meditation/internal abilities", 
+  {DISC_MEDITATION_MONK, CLASS_MONK, "meditation/internal abilities",
    "Meditation/Internal Abilities"},
-  {DISC_LEVERAGE, CLASS_MONK, "balance and leverage skill", 
+  {DISC_LEVERAGE, CLASS_MONK, "balance and leverage skill",
    "Balanced and Leverage Skill"},
-  {DISC_MINDBODY, CLASS_MONK, "mind and body control", 
+  {DISC_MINDBODY, CLASS_MONK, "mind and body control",
    "Mind and Body Control"},
-  {DISC_FOCUSED_ATTACKS, CLASS_MONK, "focused attacks", 
+  {DISC_FOCUSED_ATTACKS, CLASS_MONK, "focused attacks",
    "Focused Attacks"},
-  {DISC_BAREHAND, CLASS_MONK, "barehand", 
+  {DISC_BAREHAND, CLASS_MONK, "barehand",
    "Barehand Specialization"},
-  {DISC_THIEF, CLASS_THIEF, "thief abilities", 
+  {DISC_THIEF, CLASS_THIEF, "thief abilities",
    "Thief Abilities"},          // 40
   {DISC_THIEF_FIGHT, CLASS_THIEF, "fighting skills",
    "Fighting Skills"},
@@ -2220,7 +2220,7 @@ const char *shelldesc [] =
   "cannon ball",                // 18
 };
 
-const char *shellkeyword [] = 
+const char *shellkeyword [] =
 {
   "None",                       // 0
   "10mmPistol",                 // 1

@@ -21,7 +21,7 @@ int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *tudy, TObj *)
 
   if(cmd != CMD_GIVE && cmd != CMD_GENERIC_PULSE)
     return FALSE;
-  
+
   // loop through inventory
   for(StuffIter it=tudy->stuff.begin();it!=tudy->stuff.end() && (t=*it);++it){
     if((o=dynamic_cast<TObj *>(t))){
@@ -31,11 +31,11 @@ int tudy(TBeing *, cmdTypeT cmd, const char *, TMonster *tudy, TObj *)
 	haskey2=true;
     }
   }
-  
-  
+
+
   if(haskey1 && haskey2){
     act("$n quickly unlocks his shackles.",
-	0, tudy, 0, 0, TO_ROOM);	
+	0, tudy, 0, 0, TO_ROOM);
     act("$n looks to the heavens and as large wings sprout from his back.",
 	0, tudy, 0, 0, TO_ROOM);
     tudy->doAction("", CMD_SCREAM);

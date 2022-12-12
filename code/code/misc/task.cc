@@ -12,12 +12,12 @@
 
   obj and rp can be NULL
   arg is probably ""
-   
+
   timeLeft: (the first 0)
     - generally used as a counter of the number of interations of
       CMD_TASK_CONTINUE that have been encountered.
-    - can be any (int) value desired 
- 
+    - can be any (int) value desired
+
   in_room: (sets ch->task->was_in_room)
     - task should check current room vs this.
       reason: start the task and let my group leader move me around mud.
@@ -38,7 +38,7 @@
     - an int, use depends on the task.
 
   nextUpdate:
-    - NOT WHAT IT SEEMS:  
+    - NOT WHAT IT SEEMS:
       start_task() says ch->task->nextUpdate = nextUpdate.
     - calls to CMD_TASK_CONTINUE occur if pulse > ch->task->nextUpdate
     - notice that because pulse is typically big, calls to TASK CONTINUE are
@@ -104,7 +104,7 @@ taskData::~taskData()
     obj->setIsTaskObj(false);
 }
 
-void taskData::calcNextUpdate(int pulse, int interval) 
+void taskData::calcNextUpdate(int pulse, int interval)
 {
   nextUpdate = pulse + interval;
   nextUpdate %= 2400;
@@ -128,7 +128,7 @@ void TBeing::stopTask()
 int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg, int timeLeft, ushort wasInRoom, ubyte status, int flags, int nextUpdate)
 {
   if (!ch || (ch->task)) {
-    vlogf(LOG_BUG, format("%s got to bad place in start_task (%d).  Tell Brutius or Batopr") % 
+    vlogf(LOG_BUG, format("%s got to bad place in start_task (%d).  Tell Brutius or Batopr") %
        (ch ? ch->getName() : "Unknown") % task);
     if (ch)
       ch->sendTo("Problem in task.  Bug Brutius.\n\r");
@@ -159,7 +159,7 @@ int start_task(TBeing *ch, TThing *t, TRoom *rp, taskTypeT task, const char *arg
 void warn_busy(TBeing *ch)
 {
   if (!ch || !(ch->task)) {
-    vlogf(LOG_BUG, format("%s got to bad place in warn_busy.  Tell Brutius or Batopr") % 
+    vlogf(LOG_BUG, format("%s got to bad place in warn_busy.  Tell Brutius or Batopr") %
        (ch ? ch->getName() : "Unknown"));
     return;
   }
@@ -176,8 +176,8 @@ int task_bogus(TBeing *ch, cmdTypeT, const char *, int , TRoom *, TObj *)
   return FALSE;
 }
 
-// first argument, the task name, should be a verb for the "look" commands 
-// display and the stat command 
+// first argument, the task name, should be a verb for the "look" commands
+// display and the stat command
 TaskEntry tasks[NUM_TASKS] =
 {
   {"performing a bogus task", "You are busy doing nothing.\n\r", task_bogus},

@@ -59,7 +59,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   int rc;
   int dam;
   int height;
-  
+
   if (caster->getMove() < 10) {
     caster->sendTo("You're too tired to do that.\n\r");
     return FALSE;
@@ -68,7 +68,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     caster->sendTo("Yeah... right... while mounted.\n\r");
     return FALSE;
   }
-  
+
   if (!(exitp = caster->exitDir(dir))) {
     vlogf(LOG_BUG, "bad exit in doorbash (2)");
     return FALSE;
@@ -86,14 +86,14 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   sprintf(buf, "$n charges %swards.", dirs[dir]);
   act(buf, FALSE, caster, 0, 0, TO_ROOM);
   caster->sendTo(format("You charge %swards.\n\r") % dirs[dir]);
-  
+
   if (caster->willBumpHeadDoor(exitp, &height)) {
     caster->sendTo("Belatedly, you realize the exit is a bit too short for you to charge at successfully.\n\r");
     rc = caster->slamIntoWall(exitp);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     return FALSE;
-  }        
+  }
 
   if ((IS_SET(exitp->condition, EXIT_DESTROYED)) ||
       !IS_SET(exitp->condition, EXIT_CLOSED)) {
@@ -101,7 +101,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     --(*caster);
     thing_to_room(caster, exitp->to_room);
     caster->doLook("", CMD_LOOK);
-    
+
     rc = caster->displayMove(dir, was_in, 1);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -111,7 +111,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   }
   if (!caster->isImmortal())
     caster->addToMove(-10);
-  
+
   int bKnown = caster->getSkillValue(SKILL_DOORBASH);
 
   if ((2*exitp->weight > caster->maxWieldWeight(NULL, HAND_TYPE_PRIM)) ||
@@ -147,12 +147,12 @@ static int doorbash(TBeing * caster, dirTypeT dir)
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
-    } 
+    }
 
-    sprintf(buf, "$n slams into the %s, and it bursts open!", 
+    sprintf(buf, "$n slams into the %s, and it bursts open!",
                  fname(exitp->keyword).c_str());
     act(buf, FALSE, caster, 0, 0, TO_ROOM);
-    caster->sendTo(format("You slam into the %s, and it bursts open!\n\r") % 
+    caster->sendTo(format("You slam into the %s, and it bursts open!\n\r") %
             fname(exitp->keyword));
     int room = caster->in_room;
     if (IS_SET(exitp->condition, EXIT_TRAPPED))
@@ -166,10 +166,10 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     exitp->destroyDoor(dir, room);
     if (caster->reconcileDamage(caster, dam, SKILL_DOORBASH) == -1)
       return DELETE_THIS;
-    
+
     if (!caster->isAgile(0)) {
       was_in = caster->in_room;
-      
+
       --(*caster);
       thing_to_room(caster, exitp->to_room);
       caster->doLook("", CMD_LOOK);
@@ -208,12 +208,12 @@ int TBeing::doDoorbash(const sstring & argument)
   }
   sstring type=argument.word(0);
   sstring direction=argument.word(1);
-          
+
   if (type.empty()) {
     sendTo("You must specify a direction.\n\r");
     return FALSE;
   }
-  
+
   if ((dir = findDoor(type.c_str(), direction.c_str(), DOOR_INTENT_OPEN, SILENT_YES)) >= MIN_DIR)
     ok = TRUE;
   else

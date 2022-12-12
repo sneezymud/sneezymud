@@ -101,7 +101,7 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 
     act("Some paladin soldiers come to his aid.",
         TRUE, myself, 0, 0, TO_ROOM);
-    
+
     SET_BIT(myself->specials.affectedBy, AFF_GROUP);
     for (i=0;i<3;i++) {
       if (!(mob = read_mobile(MOB_PALADIN_SOLDIER, VIRTUAL))) {
@@ -132,12 +132,12 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   switch(job->state){
     case STATE_NONE:
       myself->doSay("Enough loafing, let's go find some cyclopses!");
-      job->state=STATE_TO_GH; 
+      job->state=STATE_TO_GH;
       break;
     case STATE_TO_GH:
       if(myself->in_room!=GH_ROOM){
 	switch((dir=path.findPath(myself->in_room, findRoom(GH_ROOM)))){
-	  case 0: case 1: case 2: case 3: case 4: 
+	  case 0: case 1: case 2: case 3: case 4:
 	  case 5: case 6: case 7: case 8: case 9:
 	    myself->goDirection(dir);
 	    break;
@@ -158,7 +158,7 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
     case STATE_TO_BM:
       if(myself->in_room!=BM_ROOM){
 	switch((dir=path.findPath(myself->in_room, findRoom(BM_ROOM)))){
-	  case 0: case 1: case 2: case 3: case 4: 
+	  case 0: case 1: case 2: case 3: case 4:
 	  case 5: case 6: case 7: case 8: case 9:
 	    myself->goDirection(dir);
 	    break;
@@ -174,7 +174,7 @@ int paladinPatrol(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
       } else {
 	followData *f, *n;
 	TBeing *vict;
-	
+
 	// get rid of valuables, these accumulate
 	for(StuffIter it=myself->stuff.begin();it!=myself->stuff.end();){
 	  TThing *t=*(it++);

@@ -88,9 +88,9 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
     return FALSE;
 
   TObj *weapon = dynamic_cast<TObj *>(weap);
-    
+
   stats.combat_crit_fail++;
-  if (::number(1, 300) <= 
+  if (::number(1, 300) <=
       (plotStat(STAT_CURRENT, STAT_KAR, 50, 3, 10) + 10*drunkMinus())) {
     if (isLucky(levelLuckModifier(v->GetMaxLevel())))
       return FALSE;
@@ -134,7 +134,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         }
         return (ONEHIT_MESS_CRIT_S);
       case 2:
-        // Slip, dex check or fall and be stunned for some rounds. 
+        // Slip, dex check or fall and be stunned for some rounds.
 	// Speef changed to Agility but probably use Speed for reaction mod.
         if (::number(0, plotStat(STAT_NATURAL, STAT_AGI, -30, 60, 0)) <
             (30 + getCond(DRUNK))) {
@@ -152,7 +152,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         }
         return (ONEHIT_MESS_CRIT_S);
       case 3:
-        // Trip and fall. No dex check. Stunned for many rounds.   
+        // Trip and fall. No dex check. Stunned for many rounds.
         act("In your attempt to swing at $N, you trip and fall!", TRUE, this, NULL, v, TO_CHAR);
         act("In an attempt to swing at $N, $n trips and falls!", TRUE, this, NULL, v, TO_NOTVICT);
         act("In an attempt to swing at you, $n trips and falls!", TRUE, this, NULL, v, TO_VICT);
@@ -186,7 +186,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
           return (ONEHIT_MESS_CRIT_S);
         }
       case 5:
-        // Lose grip and drop weapon with no dex check. 
+        // Lose grip and drop weapon with no dex check.
         if (weapon && weapon->canDrop()) {
 	  if(doesKnowSkill(SKILL_WEAPON_RETENTION) &&
 	     bSuccess(SKILL_WEAPON_RETENTION)){
@@ -204,7 +204,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         }
       case 6:
       case 7:
-        // Hit self (half damage) 
+        // Hit self (half damage)
         if (weapon) {
           act("$n gets clumsy, and nails $mself with $p.", TRUE, this, weapon, v, TO_ROOM);
           act("You become careless, and nail yourself with $p.", FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
@@ -226,7 +226,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         }
         return (ONEHIT_MESS_CRIT_S);
       case 8:
-        // Hit self (full damage) 
+        // Hit self (full damage)
         if (weapon) {
           act("$n slips, and smacks $mself with $p.", TRUE, this, weapon, v, TO_ROOM);
           act("You become careless, and smack yourself with your $o.", FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
@@ -248,20 +248,20 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         }
         return (ONEHIT_MESS_CRIT_S);
       case 9:
-        // Hit friend (half damage) (if no friend hit self) 
+        // Hit friend (half damage) (if no friend hit self)
 
 	for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
           tbt = dynamic_cast<TBeing *>(*it);
           if (!tbt)
             continue;
 
-          if (!tbt->isAffected(AFF_CHARM) && 
+          if (!tbt->isAffected(AFF_CHARM) &&
                inGroup(*tbt) && (tbt != this))
             break;
         }
-        if (!tbt) 
+        if (!tbt)
           tbt = this;
-        
+
         if (weapon) {
           if (tbt != this) {
             act("$n slips, and smacks $N with $p.", TRUE, this, weapon, tbt, TO_NOTVICT);
@@ -327,7 +327,7 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         }
         return ONEHIT_MESS_CRIT_S;
       case 10:
-        // Hit friend (full damage) (if no friend hit self) 
+        // Hit friend (full damage) (if no friend hit self)
 	for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
           tbt = dynamic_cast<TBeing *>(*it);
           if (!tbt)
@@ -404,12 +404,12 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
         }
         return ONEHIT_MESS_CRIT_S;
       case 11:
-        // Miss miserably and stick weapon in foot (with dex check). 
+        // Miss miserably and stick weapon in foot (with dex check).
         if (::number(0, plotStat(STAT_NATURAL, STAT_AGI, -30, 60, 0)) >=
             (30 + getCond(DRUNK)))
           return 0;
       case 12:
-        // Miss miserably and stick weapon in foot (no dex check). 
+        // Miss miserably and stick weapon in foot (no dex check).
         if (weapon && hasPart(WEAR_FOOT_R) && !weapon->isBluntWeapon() &&
             !getStuckIn(WEAR_FOOT_R)) {
           sprintf(buf, "You miserably miss $N, %sand stick $p in your foot%s!",
@@ -442,12 +442,12 @@ int TBeing::critFailureChance(TBeing *v, TThing *weap, spellNumT w_type)
        if (!isHumanoid())
          return 0;
 
-        // Fall and twist ankle, affect with new affect that halfs max moves 
-        act("You stumble and twist your ankle as you swing at $N!", 
+        // Fall and twist ankle, affect with new affect that halfs max moves
+        act("You stumble and twist your ankle as you swing at $N!",
                FALSE, this, 0, v, TO_CHAR);
-        act("$n stumbles and twists $s ankle as $e tries to swing at $N!", 
+        act("$n stumbles and twists $s ankle as $e tries to swing at $N!",
                TRUE, this, 0, v, TO_NOTVICT);
-        act("$n stumbles and twists $s ankle as $e tries to swing at you!", 
+        act("$n stumbles and twists $s ankle as $e tries to swing at you!",
                TRUE, this, 0, v, TO_VICT);
         setMove(getMove()/2);
 
@@ -489,7 +489,7 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
 }
 
 
-// This will just be a big ass case statement based on random diceroll 
+// This will just be a big ass case statement based on random diceroll
 // returns DELETE_VICT if v dead
 // mod is -1 from generic combat, mod == crit desired from immortal command.
 int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, spellNumT wtype, int *dam, int mod)
@@ -500,7 +500,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
   if (isAffected(AFF_ENGAGER))
     return FALSE;
 
-  if (!isImmortal() && 
+  if (!isImmortal() &&
       (v->isImmortal() || IS_SET(v->specials.act, ACT_IMMORTAL)))
     return FALSE;
 
@@ -583,7 +583,7 @@ int TBeing::critSuccessChance(TBeing *v, TThing *weapon, wearSlotT *part_hit, sp
     // check the roll versus the chance
     if(dicenum > crit_chance)
       return FALSE;
-    
+
     // if there is greater than 10 levels of different in either direction
     // then either make the crits better, or worse
     int level_mod=(GetMaxLevel() - v->GetMaxLevel());
@@ -685,11 +685,11 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     crit_num=0;
   }
 
-  // Do crush crit 
+  // Do crush crit
   limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbBlunt());
 
   if (crit_num <= 33) {
-    // double damage 
+    // double damage
     *dam *= 2;
 
     buf=format("You strike $N exceptionally well, %s $S %s with your %s!") %
@@ -706,15 +706,15 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     buf = format("$n strikes $N exceptionally well, %s $S %s with $s %s.") %
       attack_hit_text[new_wtype].hitting %
-      v->describeBodySlot(*part_hit) % 
+      v->describeBodySlot(*part_hit) %
       limbStr;
     act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else if (crit_num <= 66) {
-    // triple damage 
+    // triple damage
     *dam *= 3;
-    
+
     buf = format("You critically strike $N, %s $S %s with your %s!") %
       attack_hit_text[new_wtype].hitting %
       v->describeBodySlot(*part_hit) %
@@ -735,7 +735,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     return (ONEHIT_MESS_CRIT_S);
   } else {
-    // better stuff 
+    // better stuff
     switch (crit_num) {
       case 67:
       case 68:
@@ -1107,10 +1107,10 @@ buf=format("$n's %s shatters one of $N's ribs!") %
 	act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
 	buf = format("$n's %s connects with $N's face, sending a tooth flying.") % limbStr;
 	act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
-	      	      
+
 	TObj *corpse;
 	TCorpse *tooth;
-	
+
 	corpse = read_object(Obj::GENERIC_TOOTH, VIRTUAL);
 	corpse->swapToStrung();
 
@@ -1131,15 +1131,15 @@ buf=format("$n's %s shatters one of $N's ribs!") %
   } else{
     buf = format("tooth lost limb %s") % v->name;
   }
-  
+
 	corpse->name = buf;
-	
+
 	buf = format("<W>a <1><r>bloody<1><W> tooth of %s<1>") % v->getName();
 	corpse->shortDescr = buf;
-	
+
 	buf = format("<W>A <1><r>bloody<1><W> tooth lies here, having been knocked out of %s's mouth.<1>") % v->getName();
 	corpse->setDescr(buf);
-	      
+
 	corpse->obj_flags.wear_flags = ITEM_WEAR_TAKE | ITEM_WEAR_HOLD | ITEM_WEAR_THROW;
 	//	corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	//	corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
@@ -1149,27 +1149,27 @@ buf=format("$n's %s shatters one of $N's ribs!") %
 	corpse->setVolume(1);
 	corpse->setMaterial(MAT_BONE);
 	corpse->obj_flags.cost=50;
-	      
+
 	act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
 	*v->roomp += *corpse;
 
 	if (desc)
 	  desc->career.crit_tooth++;
-	      
+
 	if (v->desc)
 	  v->desc->career.crit_tooth_suff++;
-      
+
 	return ONEHIT_MESS_CRIT_S;
       case 98:
       case 99:
       case 100:
 	if (doesKnowSkill(SKILL_CRIT_HIT) && !v->equipment[WEAR_BODY] &&
-	    v->hasPart(WEAR_BODY) && !weapon && bSuccess(SKILL_CRIT_HIT) && 
+	    v->hasPart(WEAR_BODY) && !weapon && bSuccess(SKILL_CRIT_HIT) &&
 	    !::number(0,4) && !IS_SET(v->specials.act, ACT_SKELETON)) {
-  
+
     // Rip out the heart instead of head crush whee fancy.
     // ...But make it a bit fancier on ghosts, zombies and skeletons.
-  
+
     if (IS_SET(v->specials.act, ACT_GHOST)) {
       buf = format("With your %s, you reach into $N's chest and rip out what you think is $S heart!") % limbStr;
       act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
@@ -1239,7 +1239,7 @@ buf=format("$n's %s shatters one of $N's ribs!") %
 
 	  if (desc)
 	    desc->career.crit_ripped_out_heart++;
-	    
+
 	  if (v->desc)
 	    v->desc->career.crit_ripped_out_heart_suff++;
 
@@ -1261,7 +1261,7 @@ buf=format("$n's %s strikes a mighty blow to $N's head, crushing $S $o!") %
 	    act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 	    if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA))
 	      critHitEqDamage(v, obj, (::number(-55,-40)));
-	    
+
 	    *part_hit = WEAR_HEAD;
 	    rc = damageLimb(v,*part_hit,weapon,dam);
 	    if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -1283,19 +1283,19 @@ buf=format("$n's %s crushes $N's skull.  Brains ooze out as $E crumples!") %
 	    if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
 		(obj = v->equipment[WEAR_HEAD]))
 	      critHitEqDamage(v, obj, (::number(-55,-40)));
-	    
+
 	    if (desc)
 	      desc->career.crit_crushed_skull++;
-	    
+
 	    if (v->desc)
 	      v->desc->career.crit_crushed_skull_suff++;
-	    
+
 	    applyDamage(v, (20 * v->hitLimit()),DAMAGE_CAVED_SKULL);
 	    return DELETE_VICT;
 	  }
 	}
       default:
-	vlogf(LOG_BUG, format("crit_num=%i in critBlunt switch, shouldn't happen") % 
+	vlogf(LOG_BUG, format("crit_num=%i in critBlunt switch, shouldn't happen") %
 	      crit_num);
 	break;
     }
@@ -1358,7 +1358,7 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   limbStr = (weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash());
 
   if (crit_num <= 33) {
-    // double damage 
+    // double damage
     *dam *= 2;
 
     buf = format("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % limbStr;
@@ -1386,7 +1386,7 @@ int TBeing::critSlash(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     return (ONEHIT_MESS_CRIT_S);
   } else {
-    // better stuff 
+    // better stuff
     if ((crit_num == 83 || crit_num == 84) && wtype == TYPE_CLEAVE)
       crit_num = 85;  // axes don't impale
 
@@ -1775,14 +1775,14 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	    critHitEqDamage(v, obj, (::number(-45,-30)));
 
 	  TCorpse *corpse;
-		
+
 	  corpse = new TCorpse();
-    if (dynamic_cast<TPerson *>(this)) 
+    if (dynamic_cast<TPerson *>(this))
       buf = format("genitalia lost limb %s [q] [jumblies] [0] [%d] [%s]") % v->name % v_vnum % getName();
     else
       buf = format("genitalia lost limb %s") % v->name;
     corpse->name = buf;
-		
+
 	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
 	    buf = format("the mangled genitalia of %s") % v->getName();
@@ -1790,7 +1790,7 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	    buf = format("the bloody, mangled genitalia of %s") % v->getName();
 	  }
 	  corpse->shortDescr = buf;
-		
+
 	  if (v->getMaterial(WEAR_WAIST) > MAT_GEN_MINERAL) {
 	    // made of mineral or metal
 	    buf = format("The mangled, severed genitalia of %s is lying here.") % v->getName();
@@ -1798,7 +1798,7 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	    buf = format("The bloody, mangled, severed genitalia of %s is lying here.") % v->getName();
 	  }
 	  corpse->setDescr(buf);
-		
+
 	  corpse->obj_flags.wear_flags = ITEM_WEAR_TAKE | ITEM_WEAR_HOLD | ITEM_WEAR_THROW;
 	  corpse->addCorpseFlag(CORPSE_NO_REGEN);
 	  corpse->obj_flags.decay_time = 3 * (dynamic_cast<TMonster *>(this) ? MAX_NPC_CORPSE_TIME : MAX_PC_CORPSE_EMPTY_TIME);
@@ -1806,7 +1806,7 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 	  corpse->canBeSeen = v->canBeSeen;
 	  corpse->setVolume(v->getVolume() * 2/100);
 	  corpse->setMaterial(v->getMaterial(WEAR_WAIST));
-		
+
 	  act("$p goes flying through the air and bounces once before it rolls to a stop.",TRUE,v,corpse,0,TO_ROOM, ANSI_RED);
 	  *v->roomp += *corpse;
 
@@ -1815,10 +1815,10 @@ buf=format("$n's %s slices into $N from gullet to groin, disembowling $M!") %
 
 	  if (desc)
 	    desc->career.crit_genitalia++;
-		
+
 	  if (v->desc)
 	    v->desc->career.crit_genitalia_suff++;
-		
+
 	  return ONEHIT_MESS_CRIT_S;
 	}
 	break;
@@ -1853,7 +1853,7 @@ buf=format("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 	  return ONEHIT_MESS_CRIT_S;
 	} else { // no collar
 	  // if no collar, its going into next critSuccess...
-	  // POW! He was deCAPITATED! 
+	  // POW! He was deCAPITATED!
 	  act("$n strikes a fatal blow and cuts off $N's head!", FALSE, this, 0, v, TO_NOTVICT, ANSI_CYAN);
 	  act("You strike a fatal blow and completely behead $N!", FALSE, this, 0, v, TO_CHAR, ANSI_RED);
 	  act("$n strikes a fatal blow and completely beheads you!", FALSE, this, 0, v, TO_VICT, ANSI_RED);
@@ -1866,14 +1866,14 @@ buf=format("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 	  *part_hit = WEAR_NECK;
 	  if (desc)
 	    desc->career.crit_beheads++;
-		
+
 	  if (v->desc)
 	    v->desc->career.crit_beheads_suff++;
-		
+
 	  return DELETE_VICT;
 	}
       default:
-	vlogf(LOG_BUG, format("crit_num=%i in critSlash switch, shouldn't happen") % 
+	vlogf(LOG_BUG, format("crit_num=%i in critSlash switch, shouldn't happen") %
 	      crit_num);
 	break;
     }
@@ -1902,7 +1902,7 @@ buf=format("$n attempts to decapitate $N with $s %s!  Luckily, $p saves $M!") %
 total:
   double damage: 33%
   triple damage: 67%
-  limb mutilation (leg/elbow/hand): 10% 
+  limb mutilation (leg/elbow/hand): 10%
   body mutilation (lung/kidney/stomach): 9%
   debilitate (larynx/eye): 8%
   stun: 4%
@@ -1919,15 +1919,15 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
   wearSlotT new_slot;
 
   weaponStr=(weapon ? "$o" : getMyRace()->getBodyLimbPierce(this));
-  
+
   if(crit_num>100){
     vlogf(LOG_BUG, format("critPierce called with crit_num>100 (%i)") %  crit_num);
     crit_num=0;
   }
 
-  // Do pierce crit 
+  // Do pierce crit
   if (crit_num <= 33) {
-    // double damage 
+    // double damage
     *dam *= 2;
 
     buf = format("You strike $N's %s exceptionally well, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
@@ -1941,7 +1941,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     return (ONEHIT_MESS_CRIT_S);
   } else if (crit_num <= 66) {
-    // triple damage 
+    // triple damage
     *dam *= 3;
 
     buf = format("You critically strike $N's %s, sinking your %s deep into $S flesh!") % v->describeBodySlot(*part_hit) % weaponStr;
@@ -1955,7 +1955,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     return (ONEHIT_MESS_CRIT_S);
   } else {
-    // better stuff 
+    // better stuff
     weaponStr=(weapon ? fname(weapon->name) : getMyRace()->getBodyLimbPierce(this));
 
     switch (crit_num) {
@@ -1979,7 +1979,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	    // intentional drop through
       case 70:
       case 71:
-	    // Punctured Larnyx, can't speak 
+	    // Punctured Larnyx, can't speak
 	    if (!v->hasPart(WEAR_NECK) || IS_SET(v->specials.act, ACT_GHOST) || IS_SET(v->specials.act, ACT_SKELETON))
 	      return 0;
 	    if (v->hasDisease(DISEASE_VOICEBOX))
@@ -1994,7 +1994,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
 	    // triple damage
         *dam *= 3;
-	
+
 	    for (i=1;i<5;i++)
 	      if (v->equipment[WEAR_NECK])
 	        v->damageItem(this,WEAR_NECK,wtype,weapon,*dam);
@@ -2074,7 +2074,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	// an intentional drop through
       case 77:
       case 78:
-	    // strike lower leg, rip tendons, vict at -25% move. 
+	    // strike lower leg, rip tendons, vict at -25% move.
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
 	    if (!v->hasPart(WEAR_LEG_R))
@@ -2104,7 +2104,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
       case 79:
       case 80:
       case 81:
-	    // Strike shatters elbow in weapon arm. Arm broken 
+	    // Strike shatters elbow in weapon arm. Arm broken
 	    new_slot = v->getSecondaryArm();
 	    if (!v->hasPart(new_slot))
 	      return 0;
@@ -2147,7 +2147,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	    }
       case 83:
       case 84:
-	    // Sever weapon arm at hand 
+	    // Sever weapon arm at hand
 	    if (!v->hasPart(v->getPrimaryHand()))
 	      return 0;
     	if (!v->isHumanoid())
@@ -2190,7 +2190,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	}
       case 86:
       case 87:
-  	    // Punctured lungs. Can't breathe. Dies if not healed quickly 
+  	    // Punctured lungs. Can't breathe. Dies if not healed quickly
         if (IS_SET(v->specials.act, ACT_SKELETON) || IS_SET(v->specials.act, ACT_GHOST))
           return 0;
 	    if (v->hasDisease(DISEASE_LUNG))
@@ -2320,7 +2320,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     	}
       case 96:
       case 97:
-    	// Side wound, vict stunned 6 rounds. 
+    	// Side wound, vict stunned 6 rounds.
 	    if (!v->hasPart(WEAR_BACK))
 	    return 0;
   	    buf=format("You plunge your %s deep into $N's side, stunning $M!") % weaponStr;
@@ -2335,7 +2335,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     	for (i=1;i<5;i++)
 	      if (v->equipment[WEAR_BACK])
-	        v->damageItem(this,WEAR_BACK,wtype,weapon,*dam); 
+	        v->damageItem(this,WEAR_BACK,wtype,weapon,*dam);
     	v->cantHit += v->loseRound(6);
     	rc = damageLimb(v,WEAR_BACK,weapon,dam);
     	if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -2344,7 +2344,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
     	return ONEHIT_MESS_CRIT_S;
       case 98:
       case 99:
-    	// Strike in back of head. If no helm, vict dies. 
+    	// Strike in back of head. If no helm, vict dies.
     	if (!v->hasPart(WEAR_HEAD))
     	  return 0;
     	if ((obj = v->equipment[WEAR_HEAD])) {

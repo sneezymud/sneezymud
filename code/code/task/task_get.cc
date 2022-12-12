@@ -260,7 +260,7 @@ int task_get(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj 
 	  ch->doQueueSave();
 	  return FALSE;
 	}
-        
+
         if (ch->task->flags) {
           if (!ch->anythingGetable(sub, buf1.c_str())) {
             act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);

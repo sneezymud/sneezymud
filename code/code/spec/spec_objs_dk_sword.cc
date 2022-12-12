@@ -14,7 +14,7 @@ void doWord(TBeing *ch, TObj *o)
     act("You cannot use $p's powers unless you are fighting.",TRUE,ch,o,NULL,TO_CHAR,NULL);
     return;
   }
-  
+
   ch->addObjUsed(o, 2 * Pulse::UPDATES_PER_MUDHOUR);
 
   affectedData aff1, aff2;
@@ -65,9 +65,9 @@ void doWrath(TBeing *ch, TObj *o)
   aff.bitvector = 0;
 
   if (!ch->affectedBySpell(AFFECT_UNHOLY_WRATH)) {
-    act("<k>$n's $o glows <z><r>blood red<k> with <R>Rage<1>!", 
+    act("<k>$n's $o glows <z><r>blood red<k> with <R>Rage<1>!",
         0, ch, o, 0, TO_ROOM);
-    act("<k>Your $o glows <z><r>blood red<k> with <R>Rage<1>!", 
+    act("<k>Your $o glows <z><r>blood red<k> with <R>Rage<1>!",
         0, ch, o, 0, TO_CHAR);
   }
 
@@ -97,8 +97,8 @@ int doBleed(TBeing *ch, TBeing *vict, const char *arg, TObj *o)
     act(buf, 0, vict, o, 0, TO_ROOM);
     sprintf(buf, "<r>Blood<1> <k>drips out of the wound.<1>");
     act(buf, 0, vict, o, 0, TO_CHAR);
-    
-  }    
+
+  }
 
   rc = ch->reconcileDamage(vict, dam, DAMAGE_NORMAL);
   if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -145,7 +145,7 @@ int dkSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       if (!::number(0,5))
         return doLifeLeach(ch, vict, o);
       return doBleed(ch, vict, arg, o);
-      
+
     }
   }
 
@@ -161,5 +161,5 @@ int dkSword(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   }
 
 
-  return FALSE;  
+  return FALSE;
 }

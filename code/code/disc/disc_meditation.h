@@ -26,7 +26,7 @@ class CDMeditationMonk: public CDiscipline
 public:
     CSkill skWohlin;          // Advanced Yoginsa (meditation)
     CSkill skVoplat;          // Advanced Kubo (makes kubo damage magical)
-    CSkill skBlindfighting; 
+    CSkill skBlindfighting;
 
     CDMeditationMonk() :
       CDiscipline(),

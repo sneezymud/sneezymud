@@ -28,7 +28,7 @@ void phat_lewt(TMonster *myself)
 	    }
 	  }
 	  break;
-	  
+
 	case 3:
 	  // load some gems
 	  for(int j=::number(3,15);j>=0;--j){
@@ -39,7 +39,7 @@ void phat_lewt(TMonster *myself)
 	    }
 	  }
 	  break;
-	  
+
 	case 4:
 	  // promissory notes
 	  for(int j=::number(1,10);j>=0;--j){
@@ -51,7 +51,7 @@ void phat_lewt(TMonster *myself)
 	  }
 	  break;
       }
-      
+
       *myself += *o;
     }
   }
@@ -138,7 +138,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
     return FALSE;
 
-  // Not doing anything yet, time to start a posse  
+  // Not doing anything yet, time to start a posse
   if (!myself->act_ptr) {
     if(::number(0,99))
       return FALSE;
@@ -147,13 +147,13 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       vlogf(LOG_BUG, "failed memory allocation in mob proc moneyTrain.");
       return FALSE;
     }
-    
+
     act("$n prepares to make the money train delivery.",
 	TRUE, myself, 0, 0, TO_ROOM);
-    
+
     act("A group of <Y>money train<1> guards join him.",
 	TRUE, myself, 0, 0, TO_ROOM);
-    
+
     gather_posse(myself);
   }
 
@@ -185,7 +185,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
        f->follower->isAffected(AFF_GROUP)){
       f->follower->setHunting(myself);
     }
-  }  
+  }
 
 
   // speed
@@ -197,7 +197,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     case STATE_NONE:
       job->cur_path=0;
       job->cur_pos=0;
-      job->state=STATE_TO_CS; 
+      job->state=STATE_TO_CS;
       break;
     case STATE_TO_CS:
       if(!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)){
@@ -213,7 +213,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  job->cur_path=4;
 	  job->cur_pos=0;
 	  job->state=STATE_TO_AMBER_BANK;
-	}	  
+	}
       }
       break;
     case STATE_TO_LOGRUS_BANK:
@@ -263,7 +263,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    return DELETE_THIS;
 	  }
-	  
+
 	  job->cur_pos=0;
 	  job->cur_path=1;
 	  job->state=STATE_BM_DELIVERING;
@@ -305,7 +305,7 @@ int moneyTrain(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    return DELETE_THIS;
 	  }
-	  
+
 	  job->cur_pos=0;
 	  job->cur_path=3;
 	  job->state=STATE_TO_BANK;

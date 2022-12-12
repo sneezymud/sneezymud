@@ -51,8 +51,8 @@ void uniqueTrophyIntro(TBeing *faerie, TBeing *targ)
 // feral wrath, but only the stat part (no AC penalty), stat part is halved
 void addUniqueTrophyEffects(TBeing *faerie, TBeing *targ)
 {
-  affectedData aff2; 
-   
+  affectedData aff2;
+
   if (!targ) {
     vlogf(LOG_BUG, "addUniqueTrophyEffects entered with null targ");
     return;
@@ -121,9 +121,9 @@ int clearUniqueTrophyEffects(TBeing *faerie, TBeing *targ)
   targ->affectFrom(SPELL_FERAL_WRATH);
 
   return TRUE;
-                  
-}  
-  
+
+}
+
 
 // only important that higher is better
 int getPermaDeathRank(TBeing *targ)
@@ -165,14 +165,14 @@ void addPermaDeathEffects(TBeing *faerie, TBeing *targ)
     vlogf(LOG_BUG, "addPermaDeathEffects entered with null faerie");
     return;
   }
- 
+
   aff.type = SKILL_BARKSKIN;
   aff.location = APPLY_ARMOR;
   aff.duration = 2*Pulse::UPDATES_PER_MUDHOUR;
   aff.bitvector = 0;
   aff.modifier = -90;
 
-  
+
   if (!targ->affectJoin(targ, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
     vlogf(LOG_BUG, "Failed to join aff in addPermaDeathEffects");
     targ->sendTo("The faerie's magic fails.");
@@ -203,7 +203,7 @@ int clearPermaDeathEffects(TBeing *faerie, TBeing *targ)
   targ->affectFrom(SKILL_BARKSKIN);
 
   return TRUE;
-      
+
 }
 
 // wrapper function
@@ -211,30 +211,30 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   TMonster *myself, TObj *)
 {
   return heroFaerie(ch, cmd, arg, myself, NULL, FALSE);
-} 
+}
 
 int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   TMonster *myself, TObj *, bool login)
 {
   int rc = FALSE;
-  
+
   if (!ch || !cmd || !myself)
     return FALSE;
-  
+
   if (cmd == CMD_GIVE) {
     sstring sarg = arg;
     if (!isname(sarg.word(1), myself->name)) {
       return FALSE;
     } else {
-      act("$n tells you, <1>\"<c>But I can't carry your things for you!<1>\"", 
+      act("$n tells you, <1>\"<c>But I can't carry your things for you!<1>\"",
           TRUE, myself, 0, ch, TO_VICT);
       return TRUE;
     }
   }
-  
+
   if (!login && cmd != CMD_GENERIC_PULSE)
     return FALSE;
-  
+
   if (myself->master && myself->roomp == myself->master->roomp && ::number(0,119)
       && !(myself->master->desc && myself->master->desc->autobits & AUTO_NOSPRITE)) {
     // want it on most of the time but not too spammy
@@ -247,16 +247,16 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
   if (!myself->awake())
     myself->doWake("");
 
-  if (myself->canFly() && !myself->isFlying()) 
+  if (myself->canFly() && !myself->isFlying())
     myself->doFly();
-  
+
   // put faerie and master in the same room
   if (myself->master && myself->roomp != myself->master->roomp) {
     act("$N left without you!  Can't have that!  *pop*", FALSE, myself, 0, myself->master, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
 
-    thing_to_room(myself, myself->master->roomp->number); 
+    thing_to_room(myself, myself->master->roomp->number);
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", TRUE, myself, 0, myself->master, TO_VICT);
@@ -268,12 +268,12 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     myself->doSay("Oh, so it's like that!");
     stop_following = TRUE;
   }
-  
+
   if (myself->master && myself->master->getTimer() > MAX_TIME) {
     myself->doSay("I'm bored.");
     stop_following = TRUE;
   }
-  
+
   // erase effects on current target
   if (myself->master && myself->roomp == myself->master->roomp) {
     act("Time for something new!  You point at $N, then touch your nose and wiggle your bottom.",
@@ -303,16 +303,16 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     vlogf(LOG_PROC, format("Hero Faerie stopping follow in room %d.") % myself->in_room);
     myself->stopFollower(FALSE);
   }
-  
+
   // identify new master
   Descriptor *d;
   TBeing *newMaster = NULL;
   for (d = descriptor_list; d; d = d->next) {
     if (d->connected != CON_PLYNG)
       continue;
-    
+
     TPerson *targ = dynamic_cast<TPerson*>(d->character);
-    
+
     if (!targ || targ->GetMaxLevel() > MAX_MORT)
       continue;
 
@@ -321,14 +321,14 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
 
     if (targ->roomp == real_roomp(Room::VOID) || targ->roomp->isRoomFlag(ROOM_PRIVATE))
       continue;
-    
+
     if (targ->desc->autobits & AUTO_NOSPRITE) {
       continue;
     }
-    
+
     switch(myself->mobVnum()) {
       case UNIQUE_TROPHY_FAERIE:
-        if ( (getUniqueTrophyRank(targ) > 0 && !newMaster) || 
+        if ( (getUniqueTrophyRank(targ) > 0 && !newMaster) ||
             ( newMaster &&
               getUniqueTrophyRank(targ) > getUniqueTrophyRank(newMaster))) {
           newMaster = targ;
@@ -336,7 +336,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
         break;
       case PERMA_DEATH_FAERIE:
         if ( (getPermaDeathRank(targ) > 0 && !newMaster) ||
-            ( newMaster && 
+            ( newMaster &&
               getPermaDeathRank(targ) > getPermaDeathRank(newMaster))) {
           newMaster = targ;
         }
@@ -346,7 +346,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
         break;
     }
   }
-  
+
   // check for new target, if no target return DELETE_THIS
   // if target is new, move there and give intro message
   if (!newMaster) {
@@ -365,12 +365,12 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     return TRUE;
   } else if (myself->master != newMaster) {
     if (myself->master) {
-      act("$n tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has arrived.<1>\"", 
+      act("$n tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has arrived.<1>\"",
           TRUE, myself, 0, myself->master, TO_VICT);
       vlogf(LOG_PROC, format("Hero Faerie switching follower: was %s") % (myself->master ? myself->master->getName() : "None"));
       myself->stopFollower(FALSE);
     }
-    
+
     if (myself->circleFollow(newMaster)) {
       vlogf(LOG_BUG, format("Sprite %s following %s in a circle, bugging out.") % myself->name % newMaster->name);
       return TRUE;
@@ -380,16 +380,16 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
       vlogf(LOG_BUG, format("Sprite %s is trying to follow itself, bugging out.") % myself->name);
       return TRUE;
     }
-    
+
     act("You go to $N, your new master.  *pop*", FALSE, myself, 0, newMaster, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
-    thing_to_room(myself, newMaster->roomp->number); 
+    thing_to_room(myself, newMaster->roomp->number);
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
 
     newMaster->addFollower(myself);
-   
+
     switch(myself->mobVnum()) {
       case UNIQUE_TROPHY_FAERIE:
         uniqueTrophyIntro(myself, newMaster);
@@ -400,18 +400,18 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
       default:
         break;
     }
-   
+
   } else if (myself->roomp != myself->master->roomp) {
     vlogf(LOG_BUG, "Master and heroFaerie in different rooms - this should not happen at this point.");
     act("$N left without you!  Can't have that!.  *pop*", FALSE, myself, 0, myself->master, TO_CHAR);
     act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
     --(*myself);
-    thing_to_room(myself, myself->master->roomp->number); 
+    thing_to_room(myself, myself->master->roomp->number);
     myself->doLook("",CMD_LOOK);
     act("$n appears in the room.  *pop", TRUE, myself, 0, NULL, TO_ROOM);
     act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", TRUE, myself, 0, myself->master, TO_VICT);
   }
-  
+
   act("$n claps $s hands twice and sprinkles you with glittery dust.",
     TRUE, myself, 0, myself->master, TO_VICT);
   act("$n claps $s hands twice and sprinkles $N with glittery dust.",
@@ -429,7 +429,7 @@ int heroFaerie(TBeing *ch, cmdTypeT cmd, const char *arg,
     default:
       break;
   }
-  
+
   return TRUE;
 
 }

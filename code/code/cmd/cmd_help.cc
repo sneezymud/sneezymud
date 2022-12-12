@@ -10,7 +10,7 @@ extern "C" {
 #include <sys/socket.h>
 #include <dirent.h>
 }
- 
+
 #include "help.h"
 #include "obj_component.h"
 #include "statistics.h"
@@ -368,8 +368,8 @@ void /*TBeing::*/displayHelpFile(TBeing *ch, char *helppath, char *namebuf){
   sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", ch->green(),
 	  namebuf,timebuf, ch->norm());
   str = buf2;
-  
-  
+
+
   // special message for nextversion file
   if (!strcmp(namebuf, "NEXTVERSION")) {
     str += "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME THERE\n\r";
@@ -424,12 +424,12 @@ void TBeing::doHelp(const char *arg)
 
   if(!strcasecmp(arg, "index")){
     FILE *index=popen("bin/helpindex", "r");
-    
+
     while(fread(buf2, 1, MAX_STRING_LENGTH, index)){
       str+=buf2;
     }
     pclose(index);
-    
+
     desc->page_string(str);
 
     return;
@@ -601,7 +601,7 @@ void TBeing::doHelp(const char *arg)
 
       if (strcasecmp(discArray[snt]->name, spellIndex[i]))
         continue;
-   
+
       if (doesKnowSkill(snt))
         break;
     }
@@ -611,7 +611,7 @@ void TBeing::doHelp(const char *arg)
       for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
         if (hideThisSpell(snt))
           continue;
-  
+
         if (!strcasecmp(discArray[snt]->name, spellIndex[i]))
           break;
       }
@@ -702,7 +702,7 @@ void TBeing::doHelp(const char *arg)
                 (skill != CompInfo[comp].spell_num);comp++);
       if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
         sprintf(buf2, "%sSpell Component  :%s %s\n\r",
-		purple(), norm(), 
+		purple(), norm(),
 		sstring(obj_index[real_object(CompInfo[comp].comp_num)].short_desc).cap().c_str());
         str += buf2;
       } else
@@ -816,23 +816,23 @@ void TBeing::doHelp(const char *arg)
       }
       str += "\n\r";
     }
-    sprintf(buf2, "%sOffensive        : %s%s\t%sArea Effect          : %s%s\n\r", 
-      purple(), norm(), 
+    sprintf(buf2, "%sOffensive        : %s%s\t%sArea Effect          : %s%s\n\r",
+      purple(), norm(),
       (discArray[skill]->targets & TAR_VIOLENT) ? "Yes" : "No",
       purple(), norm(),
       (discArray[skill]->targets & TAR_AREA) ? "Yes" : "No");
     str += buf2;
 
-    sprintf(buf2, "%sCast on Self     : %s%s\t%sObject Castable      : %s%s\n\r", 
-      purple(), norm(), 
+    sprintf(buf2, "%sCast on Self     : %s%s\t%sObject Castable      : %s%s\n\r",
+      purple(), norm(),
       (discArray[skill]->targets & TAR_SELF_NONO ? "No" :
        (discArray[skill]->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)) ? "Yes" : "No"),
-      purple(), norm(), 
+      purple(), norm(),
       (discArray[skill]->targets & (TAR_OBJ_INV | TAR_OBJ_ROOM | TAR_OBJ_WORLD | TAR_OBJ_EQUIP)) ? "Yes" : "No");
     str += buf2;
 
-    sprintf(buf2, "%sCast on Others   : %s%s \n\r", 
-      purple(), norm(), 
+    sprintf(buf2, "%sCast on Others   : %s%s \n\r",
+      purple(), norm(),
       (discArray[skill]->targets & TAR_SELF_ONLY) ? "No" :
       (discArray[skill]->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD)) ? "Yes" : "No");
     str += buf2;
@@ -898,7 +898,7 @@ void TBeing::doHelp(const char *arg)
 
       if (strcasecmp(discArray[snt]->name, skillIndex[i]))
         continue;
-   
+
       if (doesKnowSkill(snt))
         break;
     }
@@ -908,7 +908,7 @@ void TBeing::doHelp(const char *arg)
       for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
         if (hideThisSpell(snt))
           continue;
-  
+
         if (!strcasecmp(discArray[snt]->name, skillIndex[i]))
           break;
       }
@@ -931,9 +931,9 @@ void TBeing::doHelp(const char *arg)
         sprintf(buf2, "    (disc: %d, skill %d)", mapDiscToFile(disc_num), skill);
         str += buf2;
       }
-    } else 
+    } else
       vlogf(LOG_BUG, format("Bad disc for skill %d in doHelp()") %  skill);
-    
+
     str += purple();
     str += "\n\rSpecialization   : ";
     str += norm();
@@ -967,7 +967,7 @@ void TBeing::doHelp(const char *arg)
     str += norm();
     str += ((discArray[skill]->startLearnDo == -1) ? "No" : "Yes");
     if (isImmortal()) {
-      sprintf(buf2, "  %s(%d) (%d) %s", 
+      sprintf(buf2, "  %s(%d) (%d) %s",
          purple(), discArray[skill]->startLearnDo, discArray[skill]->amtLearnDo, norm());
       str += buf2;
     }
@@ -1096,7 +1096,7 @@ void buildHelpIndex()
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&
          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
-      continue; 
+      continue;
 
     char *tmpc = mud_str_dup(dp->d_name);
     immortalIndex.push_back(tmpc);
@@ -1138,7 +1138,7 @@ void buildHelpIndex()
     str = dp->d_name;
     helpIndex.push_back(str);
   }
-// COSMO STRING  
+// COSMO STRING
 //  delete str;
   closedir(dfd);
 

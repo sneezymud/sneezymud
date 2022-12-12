@@ -19,7 +19,7 @@ class TPathFinder;
 // TGas object is never stored in the database.
 
 class TGas : public TMergeable {
-  public:    
+  public:
     virtual void assignFourValues(int, int, int, int);
     virtual void getFourValues(int *, int *, int *, int *) const;
     virtual sstring statObjInfo() const;

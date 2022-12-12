@@ -46,17 +46,17 @@ static int charge(TBeing *ch, TBeing *vict)
     return FALSE;
   }
   if (!mount->hasLegs()) {
-    act("You can't charge on a legless $o!", 
+    act("You can't charge on a legless $o!",
          false, ch, mount, NULL, TO_CHAR);
     return FALSE;
   }
   if (mount->eitherLegHurt()) {
-    act("Your $o's injury prevents you from charging!", 
+    act("Your $o's injury prevents you from charging!",
          false, ch, mount, NULL, TO_CHAR);
     return FALSE;
   }
   if (!mount->isFlying() && vict->isFlying()) {
-    act("That would be hard, considering $N is flying, and your $o is not.", 
+    act("That would be hard, considering $N is flying, and your $o is not.",
 	FALSE,ch,mount,vict, TO_CHAR);
     return FALSE;
   }
@@ -86,7 +86,7 @@ static int charge(TBeing *ch, TBeing *vict)
       }
     }
   }
-  
+
   // very hard to tank and charge. Charge should be opening move
   if ((vict->getPosition() > POSITION_SITTING) &&
       ::number(0,2) &&
@@ -98,9 +98,9 @@ vict->getName());
     return FALSE;
   }
 
-  if (ch->fight()) 
+  if (ch->fight())
     ch->cantHit += ch->loseRound(5);
-  else 
+  else
     ch->cantHit += ch->loseRound(3);
 
   soundNumT snd = pickRandSound(SOUND_HORSE_1, SOUND_HORSE_2);
@@ -144,11 +144,11 @@ vict->getName());
 
   int dam = ch->getSkillDam(vict, SKILL_CHARGE, ch->getSkillLevel(SKILL_CHARGE), ch->getAdvLearning(SKILL_CHARGE));
 
-#if 1  
+#if 1
   // added charge crit per popular request
   // this is not the right way to do this.  - bat
   // New Damage Formula for Charge
-  //if (gamePort != Config::Port::PROD) 
+  //if (gamePort != Config::Port::PROD)
     //float newDam        = (100 + ((float) mount->GetMaxLevel() -
   // (float) ch->GetMaxLevel())) / 100;
     //float crossValue    = (float) dam * newDam;
@@ -156,7 +156,7 @@ vict->getName());
     //bool  didCrit       = false;
 
     //    dam = (int) crossValue;
-  
+
     TThing *prim = ch->heldInPrimHand();
     if (prim && !(::number(0, 25))) {
       act("A split second before the charge you brace your $o to strike.",
@@ -169,13 +169,13 @@ vict->getName());
       dam += ::number(5, ch->GetMaxLevel() / 2);
       //   didCrit = true;
     }
-	
+
     // vlogf(LOG_MISC, format("Charge Damage Formula [%s][%.2f / %.2f|%d / %s]") %  ch->getName() %
     //      newDam % crossValue % initialDamage % (didCrit ? "Critical" : "Normal"));
     //  }
 #endif
 
-  act("You charge $N, striking $M with a mighty blow.",  
+  act("You charge $N, striking $M with a mighty blow.",
          TRUE, ch, 0, vict, TO_CHAR);
   act("$n and $s mount come charging at you.",
          TRUE, ch, 0, vict, TO_VICT);
@@ -204,7 +204,7 @@ vict->getName());
     act("You are knocked from your mount and dashed to the $g!",
           TRUE, vict, 0,0, TO_CHAR);
     rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) 
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
 
     vict->addToWait(combatRound(1));
@@ -222,7 +222,7 @@ vict->getName());
           TRUE, vict, 0, c, TO_VICT);
     act("You are battered by the blow and $N falls off you!",
           TRUE, vict, 0, c, TO_CHAR);
-    act("$n is stricken by the blow and $N falls off $m!",    
+    act("$n is stricken by the blow and $N falls off $m!",
           TRUE, vict, 0, c, TO_NOTVICT);
     rc = c->fallOffMount(vict, POSITION_SITTING);
     vict->addToWait(combatRound(1));

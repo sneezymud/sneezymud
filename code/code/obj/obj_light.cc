@@ -146,11 +146,11 @@ void TLight::lightDecay()
         equippedBy->roomp->addToLight(-getLightAmt());
       }
     } else if (getCurBurn() < 4) {
-      if (roomp && !roomp->stuff.empty()) 
+      if (roomp && !roomp->stuff.empty())
         act("$n flickers a bit.", FALSE, this, 0, 0, TO_ROOM);
-      else if (parent) 
+      else if (parent)
         act("$p flickers a bit.", FALSE, parent, this, 0, TO_CHAR);
-      else if (equippedBy) 
+      else if (equippedBy)
         act("$p flickers a bit.", FALSE, equippedBy, this, 0, TO_CHAR);
     }
   }

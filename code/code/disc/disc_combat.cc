@@ -80,9 +80,9 @@ void TBeing::doDull(const char *argument)
 {
   char name_buf[256];
   TThing *obj;
- 
+
   strcpy(name_buf, argument);
- 
+
   if (!doesKnowSkill(SKILL_DULL)) {
     sendTo("You know nothing about dulling weapons.\n\r");
     return;
@@ -99,10 +99,10 @@ void TBeing::doDull(const char *argument)
       return;
     }
   }
- 
+
   dull(this, obj);
 }
- 
+
 void TThing::dullMeFile(TBeing *caster, TThing *)
 {
   caster->sendTo("You need to own a file.\n\r");
@@ -121,11 +121,11 @@ void TThing::dullMeFileWeap(TBeing *caster, TTool *)
 {
   caster->sendTo("Sorry.  You only know how to dull weapons.\n\r");
 }
- 
+
 void dull(TBeing * caster, TThing * obj)
 {
   TThing *file;
- 
+
   if (!(file = get_thing_char_using(caster, "file", 0, FALSE, FALSE))) {
     caster->sendTo("You need to own a file.\n\r");
     return;

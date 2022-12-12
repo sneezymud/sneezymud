@@ -45,7 +45,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
           learn = ch->getSkillValue(SKILL_PENANCE);
           if (ch->bSuccess(learn, ch->getPerc(), SKILL_PENANCE)) {
             amt = ch->pietyGain(val);
-	    
+
 	    if ((ch->getPiety() + amt) < 100.0){
 	      // we want the value to vary by +-10%   number(-amt/10, amt/10)
 	      // can't randomize a double, so mult by 100 then divide by same
@@ -70,7 +70,7 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
                      FALSE, ch, 0, 0, TO_CHAR, ANSI_RED);
             }
           } else {
-            // penance task pulse is about 3* longer than resting pulse 
+            // penance task pulse is about 3* longer than resting pulse
             // but resting also gives HP, MV and we want penancing to beat
             // resting in general
             amt = (::number(6,8));

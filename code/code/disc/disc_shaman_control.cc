@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////
-// 
+//
 //  disc_shaman_control
 //
 ///////////////////////////////////////////////////////////////////
@@ -76,7 +76,7 @@ int resurrection(TBeing * caster, TObj * obj, int level, short bKnown)
 
     act("$N slowly rises from the $g.", FALSE, caster, 0, victim, TO_ROOM);
     caster->reconcileHelp(victim,discArray[SPELL_RESURRECTION]->alignMod);
-      
+
     if (victim->isImmune(IMMUNE_CHARM, WEAR_BODY, level)) {
       victim->setPosition(POSITION_STANDING);
       delete corpse;
@@ -91,7 +91,7 @@ int resurrection(TBeing * caster, TObj * obj, int level, short bKnown)
     }
 
     aff.type      = SPELL_RESURRECTION;
-    aff.duration = caster->followTime(); 
+    aff.duration = caster->followTime();
     aff.duration = (int) (caster->percModifier() * aff.duration);
     aff.modifier = 0;
     aff.location = APPLY_NONE;
@@ -117,9 +117,9 @@ int resurrection(TBeing * caster, TObj * obj, int level, short bKnown)
       --(*t);
       *victim += *t;
     }
-    act("With mystic power, $p is resurrected.", 
+    act("With mystic power, $p is resurrected.",
             TRUE, caster, corpse, 0, TO_CHAR);
-    act("With mystic power, $p is resurrected.", 
+    act("With mystic power, $p is resurrected.",
             TRUE, caster, corpse, 0, TO_ROOM);
     delete corpse;
     return SPELL_SUCCESS;  // note, this indicates obj should go bye bye
@@ -561,7 +561,7 @@ int createRockGolem(TBeing * caster)
   lag_t rounds = discArray[SPELL_CREATE_ROCK_GOLEM]->lag;
   taskDiffT diff = discArray[SPELL_CREATE_ROCK_GOLEM]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_ROCK_GOLEM, diff, 1, "", rounds, 
+  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_ROCK_GOLEM, diff, 1, "", rounds,
 caster->in_room, 0, 0,TRUE, 0);
   return TRUE;
 }
@@ -576,7 +576,7 @@ int castCreateRockGolem(TBeing * caster)
 
    level = caster->getSkillLevel(SPELL_CREATE_ROCK_GOLEM);
 
-   if ((ret=createRockGolem(caster,level,caster->getSkillValue(SPELL_CREATE_ROCK_GOLEM))) == 
+   if ((ret=createRockGolem(caster,level,caster->getSkillValue(SPELL_CREATE_ROCK_GOLEM))) ==
 SPELL_SUCCESS) {
    } else {
      act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL, TO_CHAR);
@@ -687,7 +687,7 @@ int createIronGolem(TBeing * caster)
   lag_t rounds = discArray[SPELL_CREATE_IRON_GOLEM]->lag;
   taskDiffT diff = discArray[SPELL_CREATE_IRON_GOLEM]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_IRON_GOLEM, diff, 1, "", rounds, 
+  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_IRON_GOLEM, diff, 1, "", rounds,
 caster->in_room, 0, 0,TRUE, 0);
   return TRUE;
 }
@@ -702,7 +702,7 @@ int castCreateIronGolem(TBeing * caster)
 
    level = caster->getSkillLevel(SPELL_CREATE_IRON_GOLEM);
 
-   if ((ret=createIronGolem(caster,level,caster->getSkillValue(SPELL_CREATE_IRON_GOLEM))) == 
+   if ((ret=createIronGolem(caster,level,caster->getSkillValue(SPELL_CREATE_IRON_GOLEM))) ==
 SPELL_SUCCESS) {
    } else {
      act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL, TO_CHAR);
@@ -827,7 +827,7 @@ int castCreateDiamondGolem(TBeing * caster)
 
    level = caster->getSkillLevel(SPELL_CREATE_DIAMOND_GOLEM);
 
-   if ((ret=createDiamondGolem(caster,level,caster->getSkillValue(SPELL_CREATE_DIAMOND_GOLEM))) 
+   if ((ret=createDiamondGolem(caster,level,caster->getSkillValue(SPELL_CREATE_DIAMOND_GOLEM)))
 == SPELL_SUCCESS) {
    } else {
      act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL, TO_CHAR);

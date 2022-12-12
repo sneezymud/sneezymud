@@ -32,7 +32,7 @@ static void adjustHealHp2(const TBeing *caster, int &hp, int durat)
 {
   hp = (int)((double)(hp)*(stats.skill_damage_mod * 1.15));
 
-  if (caster->spelltask && 
+  if (caster->spelltask &&
       IS_SET(caster->spelltask->flags, CASTFLAG_CAST_INDEFINITE)) {
     hp /= durat;
     hp = max(1,hp);
@@ -114,7 +114,7 @@ int castHealingGrasp(TBeing *caster, TBeing *victim)
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf,"%s",colorString(caster,caster->desc,nameBuf,NULL,COLOR_MOBS, TRUE).c_str());
 
-  spellNumT spell = caster->getSkillNum(caster->spelltask->spell); 
+  spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
   int ret=healingGrasp(caster,victim, caster->getSkillLevel(spell), caster->getSkillValue(spell), spell, caster->getAdvLearning(spell));
   if (ret == SPELL_SUCCESS) {
     if (victim->getHit() >= victim->hitLimit()) {
@@ -125,13 +125,13 @@ int castHealingGrasp(TBeing *caster, TBeing *victim)
 
       act("$n stops $s healing ritual.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
-    } else 
+    } else
       repHealing2(caster, victim);
   } else {
     if (victim->getHit() >= victim->hitLimit()) {
       if (caster == victim)
         caster->sendTo(COLOR_SPELLS, "<p>You are fully healed so you cease the ritual.<z>\n\r");
-      else 
+      else
         caster->sendTo(COLOR_SPELLS, format("<p>%s <z><p>is fully healed so you cease the ritual.<z>\n\r") % nameBuf);
       act("$n stops $s healing ritual.", TRUE, caster, NULL, NULL, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);

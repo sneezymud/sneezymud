@@ -60,7 +60,7 @@ int knot(TBeing *caster, TBeing *victim, int, short bKnown)
   TThing *t;
 
   if (caster->bSuccess(bKnown,SPELL_KNOT)) {
-  // I added this to prevent pkillers from seeking refuge in the 
+  // I added this to prevent pkillers from seeking refuge in the
   // knot...jesus
     if (caster->affectedBySpell(AFFECT_PLAYERKILL) ||
         victim->affectedBySpell(AFFECT_PLAYERKILL)){
@@ -79,21 +79,21 @@ int knot(TBeing *caster, TBeing *victim, int, short bKnown)
 
     act("$n <r>tears a gap in reality and steps through.<1>", FALSE, caster, NULL, NULL, TO_ROOM);
     act("<r>You tear a gap in reality and step through.<1>", FALSE, caster, NULL, NULL, TO_CHAR);
-    
+
     while ((t = caster->rider)) {
       rc = t->fallOffMount(caster, POSITION_STANDING);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	delete t;
-	t = NULL; 
+	t = NULL;
       }
     }
-    
+
     if (caster->riding) {
       rc = caster->fallOffMount(caster->riding, POSITION_STANDING);
       if (IS_SET_DELETE(rc, DELETE_THIS))
 	return SPELL_SUCCESS + CASTER_DEAD;
     }
-    
+
     TRoom *room = real_roomp(2387);
     --(*caster);
     *room += *caster;
@@ -232,7 +232,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, short bKnown)
         caster->sendTo("You can not use that staff here.\n\r");
         return SPELL_FAIL;
       }
-      vlogf(LOG_MISC, format("Sleep Tag Staff: %s just got slept by %s") % 
+      vlogf(LOG_MISC, format("Sleep Tag Staff: %s just got slept by %s") %
                victim->getName() % caster->getName());
       rc = victim->rawSleep(level, (4 + level/2) * Pulse::UPDATES_PER_MUDHOUR, crit, save);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -241,13 +241,13 @@ int slumber(TBeing *caster, TBeing *victim, int level, short bKnown)
     }
   }
 
-  if ((victim->isAffected(AFF_SLEEP)) || 
+  if ((victim->isAffected(AFF_SLEEP)) ||
       (victim->getPosition() == POSITION_SLEEPING)) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
 
-  if (victim->isImmortal() || 
+  if (victim->isImmortal() ||
       caster->isNotPowerful(victim, level, SPELL_SLUMBER, SILENT_YES) ||
       (!caster->isImmortal() &&
       (victim->isLucky(caster->spellLuckModifier(SPELL_SLUMBER))))) {
@@ -306,7 +306,7 @@ int slumber(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     if (victim == caster)
       ret |= CASTER_DEAD;
-    else 
+    else
       ret |= VICTIM_DEAD;
   }
   if (caster->fight() == victim) {
@@ -473,9 +473,9 @@ int ensorcer(TBeing *caster, TBeing *victim, int level, short bKnown)
         if (victim->isLucky(caster->spellLuckModifier(SPELL_ENSORCER))) {
           SV(SPELL_ENSORCER);
           aff.duration /= 2;
-        } 
+        }
         break;
-    } 
+    }
 
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
@@ -633,7 +633,7 @@ int cloudOfConcealment(TBeing *caster, int level, short bKnown)
             found = TRUE;
           }
         }
-      } 
+      }
     }
     if (!caster->isAffected(AFF_INVISIBLE)) {
 #if 0
@@ -702,7 +702,7 @@ int dispelInvisible(TBeing *caster, TBeing *victim, int level, short bKnown)
 	victim->specials.affectedBy -= AFF_INVISIBLE;
     } else if (victim->isAffected(AFF_INVISIBLE)) {
       act("$n slowly becomes visible again.", TRUE, victim, NULL, NULL, TO_ROOM,ANSI_WHITE_BOLD);
-      victim->sendTo("You slowly become visible again.\n\r");     
+      victim->sendTo("You slowly become visible again.\n\r");
       REMOVE_BIT(victim->specials.affectedBy, AFF_INVISIBLE);
     } else {
       act("Umm...$N is already visible, bud.", FALSE, caster, NULL, victim, TO_CHAR, ANSI_WHITE_BOLD);
@@ -830,7 +830,7 @@ int polymorph(TBeing *caster, int level, short bKnown)
   affectedData aff2;
 
   buffer = caster->spelltask->orig_arg;
- 
+
   discNumT das = getDisciplineNumber(SPELL_POLYMORPH, FALSE);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, "Bad disc for SPELL_POLYMORPH");
@@ -858,9 +858,9 @@ int polymorph(TBeing *caster, int level, short bKnown)
     caster->sendTo("You couldn't summon an image of that creature.\n\r");
     return SPELL_FAIL;
   }
-  thing_to_room(mob,Room::VOID);   // just so if extracted it isn't in NOWHERE 
+  thing_to_room(mob,Room::VOID);   // just so if extracted it isn't in NOWHERE
   mob->swapToStrung();
-  
+
  int duration;
 
   if (caster->bSuccess(bKnown, SPELL_POLYMORPH)) {
@@ -900,21 +900,21 @@ int polymorph(TBeing *caster, int level, short bKnown)
     if (found) {
       act("Your equipment falls from your body as your flesh turns liquid.",
                TRUE, caster, NULL, mob, TO_CHAR);
-      act("Slowly you take on the shape of $N.", 
+      act("Slowly you take on the shape of $N.",
                TRUE, caster, NULL, mob, TO_CHAR);
     } else {
       act("Your flesh turns liquid.", TRUE, caster, NULL, mob, TO_CHAR);
       act("Slowly your flesh melts and you take on the shape of $N.", TRUE, caster, NULL, mob, TO_CHAR);
     }
-  
+
     --(*caster);
     thing_to_room(caster, Room::POLY_STORAGE);
 
-    // stop following whoever you are following.. 
+    // stop following whoever you are following..
     if (caster->master)
       caster->stopFollower(TRUE);
 
-    // switch caster into mobile 
+    // switch caster into mobile
     caster->desc->character = mob;
     caster->desc->original = dynamic_cast<TPerson *>(caster);
 
@@ -993,7 +993,7 @@ int castPolymorph(TBeing *caster)
   int bKnown = caster->getSkillValue(SPELL_POLYMORPH);
 
   if ((ret=polymorph(caster,level,bKnown)) == SPELL_SUCCESS) {
-  } else 
+  } else
     caster->nothingHappens();
   return TRUE;
 }
@@ -1072,10 +1072,10 @@ int castStealth(TBeing *caster, TBeing *victim)
     act("$N seems more stealthy!", FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_GREEN);
     act("You feel much more stealthy!", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
     if (caster != victim)
-      act("You have given $N the gift of stealth!", 
+      act("You have given $N the gift of stealth!",
               FALSE, caster, NULL, victim, TO_CHAR, ANSI_GREEN);
   } else {
-    act("Your attempt to give $N the gift of stealth fails.", 
+    act("Your attempt to give $N the gift of stealth fails.",
                    FALSE, caster, NULL, victim, TO_CHAR, ANSI_GREEN);
     caster->nothingHappens(SILENT_YES);
   }
@@ -1114,10 +1114,10 @@ int accelerate(TBeing *caster, TBeing *victim, int level, short bKnown)
 
     act("$N seems more nimble on $S feet!",
         FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_WHITE_BOLD);
-    act("You seem to be able to move with more ease!", 
+    act("You seem to be able to move with more ease!",
         FALSE, victim, NULL, NULL, TO_CHAR, ANSI_WHITE_BOLD);
     if (caster != victim)
-      act("You have given $N the gift of speed!", 
+      act("You have given $N the gift of speed!",
              FALSE, caster, NULL, victim, TO_CHAR, ANSI_WHITE_BOLD);
     return SPELL_SUCCESS;
   } else {
@@ -1323,9 +1323,9 @@ int castCalm(TBeing *caster, TBeing *victim)
     act("$N has come to terms with $S anger and now looks quite peaceful!",
               FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED);
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-    act("$n succeeds only in angering $N more!", 
+    act("$n succeeds only in angering $N more!",
               FALSE, caster, NULL, victim, TO_ROOM, ANSI_RED);
-    act("Oops! Now you really pissed $M off!", 
+    act("Oops! Now you really pissed $M off!",
               FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED);
   } else {
     caster->nothingHappens();
@@ -1386,7 +1386,7 @@ int invisibility(TBeing *caster, TObj * obj)
 
   lag_t rounds = discArray[SPELL_INVISIBILITY]->lag;
   taskDiffT diff = discArray[SPELL_INVISIBILITY]->task;
-  start_cast(caster, NULL, obj, caster->roomp, SPELL_INVISIBILITY, diff,2 
+  start_cast(caster, NULL, obj, caster->roomp, SPELL_INVISIBILITY, diff,2
 , "", rounds, caster->in_room, 0, 0,TRUE, 0);
   return TRUE;
 }
@@ -1551,7 +1551,7 @@ void senseLife(TBeing *caster, TBeing *victim, TMagicItem * obj)
   if (ret == SPELL_SUCCESS) {
     victim->sendTo("You feel more aware of the world about you.\n\r");
     act("$n's eyes flicker a faint aqua blue.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_CYAN);
-  } else { 
+  } else {
     caster->nothingHappens();
   }
 }
@@ -1581,7 +1581,7 @@ int castSenseLife(TBeing *caster, TBeing *victim)
   if (ret == SPELL_SUCCESS) {
     victim->sendTo("You feel more aware of the world about you.\n\r");
     act("$n's eyes flicker a faint aqua blue.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_CYAN);
-  } else 
+  } else
     caster->nothingHappens();
 
   return TRUE;
@@ -1599,7 +1599,7 @@ int detectInvisibility(TBeing *caster, TBeing *victim, int level, short bKnown)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_DETECT_INVISIBLE;
- 
+
     switch (critSuccess(caster, SPELL_DETECT_INVISIBLE)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1733,8 +1733,8 @@ int telepathy(TBeing *caster, int, short bKnown)
 
   for (; isspace(*msg); msg++);
 
-  if (caster->isPc() && 
-     ((caster->desc && 
+  if (caster->isPc() &&
+     ((caster->desc &&
       IS_SET(caster->desc->autobits, AUTO_NOSHOUT)) || caster->isPlayerAction(PLR_GODNOSHOUT))) {
     caster->sendTo("You aren't allowed to cast this spell at this time!!\n\r");
     return SPELL_FAIL;
@@ -1889,9 +1889,9 @@ int castFear(TBeing *caster, TBeing *victim)
   int ret=fear(caster,victim,level,bKnown);
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else if (IS_SET(ret,SPELL_CRIT_FAIL)) {
-  } else { 
+  } else {
   }
-  
+
   if (IS_SET(ret, VICTIM_DEAD))
     ADD_DELETE(rc, DELETE_VICT);
   if (IS_SET(ret, CASTER_DEAD))
@@ -1899,7 +1899,7 @@ int castFear(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int fumble(TBeing *caster, TBeing *victim, int level, short bKnown) 
+int fumble(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   bool drop = FALSE;
   wearSlotT toDrop = WEAR_NOWHERE;
@@ -1967,7 +1967,7 @@ int fumble(TBeing *caster, TBeing *victim, int level, short bKnown)
     else if (drop && caster->heldInPrimHand())
       toDrop = caster->getPrimaryHold();
 
-    if (toDrop > WEAR_NOWHERE) 
+    if (toDrop > WEAR_NOWHERE)
       caster->dropWeapon(toDrop);
 
     return SPELL_CRIT_FAIL;

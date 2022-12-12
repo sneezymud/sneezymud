@@ -21,7 +21,7 @@ using namespace std;
 bool TSession::hasWizPower(wizPowerT wp)
 {
   TDatabase db(DB_SNEEZY);
-  
+
   db.query("select 1 from wizpower w, player p where w.player_id=p.id and p.account_id=%i and w.wizpower=%i", account_id, mapWizPowerToFile(wp));
 
   if(db.fetchRow())
@@ -70,7 +70,7 @@ void TSession::sendLoginPage(sstring url)
 void TSession::doLogin(Cgicc cgi, sstring url)
 {
   form_iterator state_form=cgi.getElement("Login");
-  
+
   if(state_form == cgi.getElements().end()){
     sendLoginPage(url);
   } else {
@@ -78,7 +78,7 @@ void TSession::doLogin(Cgicc cgi, sstring url)
   }
 }
 
-// I tried using the cgi that TSession stores, 
+// I tried using the cgi that TSession stores,
 // but it is unstable for some reason
 void TSession::sendLoginCheck(Cgicc cgi, sstring url)
 {
@@ -129,7 +129,7 @@ bool TSession::checkPasswd(sstring name, sstring passwd)
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select account_id, passwd from account where name='%s'", 
+  db.query("select account_id, passwd from account where name='%s'",
 	   name.c_str());
 
   // account not found.  I debated whether or not we should let users know
@@ -152,7 +152,7 @@ bool TSession::checkPasswd(sstring name, sstring passwd)
     account_id=-1;
     return -1;
   }
-  
+
 
   return true;
 }
@@ -161,7 +161,7 @@ bool TSession::checkPasswd(sstring name, sstring passwd)
 void TSession::logout()
 {
   TDatabase db(DB_SNEEZY);
-  db.query("delete from cgisession where session_id='%s'", 
+  db.query("delete from cgisession where session_id='%s'",
 	   session_id.c_str());
   cookieduration=0;
 }
@@ -194,7 +194,7 @@ int TSession::validateSessionID()
 {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select account_id from cgisession where session_id='%s' and (timeset+duration) > %i", 
+  db.query("select account_id from cgisession where session_id='%s' and (timeset+duration) > %i",
 	   session_id.c_str(), time(NULL));
 
   if(!db.fetchRow())
@@ -213,7 +213,7 @@ sstring TSession::getSessionCookie()
 
   if(!cookies.size())
     return "";
-  
+
   for(unsigned int i=0;i<cookies.size();++i){
     if(cookies[i].getName() == cookiename)
       return cookies[i].getValue();
@@ -239,10 +239,10 @@ void TSession::createSession(int duration)
 	     session_id.c_str());
   } while(db.fetchRow());
 
-  db.query("delete from cgisession where account_id=%i and name='%s'", 
+  db.query("delete from cgisession where account_id=%i and name='%s'",
 	   account_id, cookiename.c_str());
-  db.query("insert into cgisession values ('%s', %i, %i, %i, '%s')", 
-	   session_id.c_str(), account_id, duration, 
+  db.query("insert into cgisession values ('%s', %i, %i, %i, '%s')",
+	   session_id.c_str(), account_id, duration,
 	   time(NULL), cookiename.c_str());
 }
 

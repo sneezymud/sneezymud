@@ -48,9 +48,9 @@ const int PROMPT_DONT_SEND = -1;
 
 SystemTask *systask;
 
-// local globals 
+// local globals
 
-time_t Uptime;			// time that the game has been up 
+time_t Uptime;			// time that the game has been up
 
 char hostlist[MAX_BAN_HOSTS][40];	// list of sites to ban
 char hostLogList[MAX_BAN_HOSTS][40];
@@ -62,7 +62,7 @@ extern void save_all();
 extern int run_the_game();
 
 
-// Init sockets, run game, and cleanup sockets 
+// Init sockets, run game, and cleanup sockets
 int run_the_game()
 {
 
@@ -97,7 +97,7 @@ void zoneData::nukeMobs()
   TThing *t;
   TBeing *mob, *mob2;
   wearSlotT i;
-  
+
   if(!Config::NukeInactiveMobs())
     return;
 
@@ -133,7 +133,7 @@ void zoneData::nukeMobs()
   }
 }
 
-void TBeing::sendTo(CommPtr c) const 
+void TBeing::sendTo(CommPtr c) const
 {
   if (!desc)
     return;
@@ -468,7 +468,7 @@ void sendrpf(int tslevel, TRoom *rp, const char *msg,...)
   char messageBuffer[MAX_STRING_LENGTH];
   va_list ap;
   TThing *i=NULL;
-  
+
   if (rp && msg) {
     va_start(ap, msg);
     vsnprintf(messageBuffer, cElements(messageBuffer), msg, ap);
@@ -516,7 +516,7 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
     return;
   }
 
-  if (!t1->roomp) 
+  if (!t1->roomp)
     return;
 
   if (!t3) {
@@ -542,7 +542,7 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
     to = t1->roomp->stuff.front();
   }
 
-  if (!to->desc && ((type == TO_VICT) || (type == TO_CHAR))) 
+  if (!to->desc && ((type == TO_VICT) || (type == TO_CHAR)))
     return;
 
   if (which) {
@@ -563,11 +563,11 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
         }
         break;
       case COLOR_OBJECTS:
-        if (!(IS_SET(to->desc->plr_color, PLR_COLOR_OBJECTS))) 
+        if (!(IS_SET(to->desc->plr_color, PLR_COLOR_OBJECTS)))
            colorize = FALSE;
-        else 
+        else
           colorize = TRUE;
-        
+
         break;
       case COLOR_MOBS:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_MOBS))) {
@@ -628,15 +628,15 @@ void colorAct(colorTypeT colorLevel, const sstring &str, bool hide, const TThing
 // Doesnt work well if there are substitutes but if none its ok
     for(StuffIter it=t1->roomp->stuff.begin();it!=t1->roomp->stuff.end();++it){
       const TBeing *tbto = dynamic_cast<const TBeing *>(*it);
-      if (!tbto || !tbto->desc || tbto->GetMaxLevel() <= tslevel) 
+      if (!tbto || !tbto->desc || tbto->GetMaxLevel() <= tslevel)
         continue;
-    
-      if (tbto == t1) 
+
+      if (tbto == t1)
         continue;
-     
-      if (tbto == t3 && type == TO_NOTVICT) 
+
+      if (tbto == t3 && type == TO_NOTVICT)
         continue;
-    
+
       colorAct(colorLevel, str, hide, t1, obj, tbto, TO_VICT, color, tslevel);
     }
   }
@@ -700,7 +700,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
         ((to != victim || (actor == victim && type == TO_CHAR)) ||
          (type == TO_VICT) || (type == TO_ROOM)) &&
         (to->canSee(actor) || !hide) &&
-        to->awake() && (to->desc->connected < MAX_CON_STATUS) && 
+        to->awake() && (to->desc->connected < MAX_CON_STATUS) &&
         !(to->isPlayerAction(PLR_MAILING | PLR_BUGGING))) {
       x = 0; // used to determine whether or not to capitalize the substitution at start of line
       for (strp = str.c_str(), point = buf;;) {
@@ -778,7 +778,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
               strncpy(ibuf, victim->roomp->describeGround().c_str(), cElements(ibuf)-1);
               i=ibuf;
               break;
-            case 'd': 
+            case 'd':
               per = ((to == actor) ? FIRST_PERSON : (!strlen(buf) ? THIRD_PERSON : SECOND_PERSON));
               strncpy(ibuf, actor->yourDeity(your_deity_val, per, (per == THIRD_PERSON) ? to : NULL).c_str(), cElements(ibuf)-1);
               i=ibuf;
@@ -850,7 +850,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
                 vlogf(LOG_BUG, format("Bad act M. '%s'") %  str);
                 return;
               }
-              if ((type == TO_CHAR) && (actor == victim)) 
+              if ((type == TO_CHAR) && (actor == victim))
                 i = "yourself";
               else if (to->canSee(victim))
                 i = victim->hmhr();
@@ -975,7 +975,7 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
       // problems for the client
       *(--point) = '\0';
 
-      if (!((to->GetMaxLevel() > MAX_MORT) && 
+      if (!((to->GetMaxLevel() > MAX_MORT) &&
             (IS_SET(to->desc->plr_color, PLR_COLOR_CODES)))) {
         snprintf(buf, cElements(buf), "%s", colorString(to, to->desc, buf, NULL, COLOR_BASIC, FALSE).c_str());
       }
@@ -990,9 +990,9 @@ void act(const sstring &str, bool hide, const TThing *actor, const TThing *obj, 
           to->desc->output.push(CommPtr(new UncategorizedComm(format("%s\n\r") %s.cap())));
         else {
           to->desc->output.push(CommPtr(new UncategorizedComm(format("%s%s%s\n\r") %
-                  str % s.cap() % 
+                  str % s.cap() %
                   to->norm())));
-        } 
+        }
       }
     }
     if ((type == TO_VICT) || (type == TO_CHAR))
@@ -1103,7 +1103,7 @@ void Descriptor::updateScreenVt100(unsigned int update)
 
     if (IS_SET(update, CHANGED_MUD)) {
       snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), VT_CURSPOS, ch->getScreen(), 35);
-      snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), " %s ", 
+      snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), " %s ",
 	       GameTime::hmtAsString(GameTime::hourminTime()).c_str());
     }
 
@@ -1346,9 +1346,9 @@ void Descriptor::updateScreenAnsi(unsigned int update)
 
   current_hit = (int) (10 * ((double) ch->getHit() / (double) ch->hitLimit()));
 
-  if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) 
+  if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC))
     current_mana = (int) (10 * ch->getPiety() / 100.0);
-  else if (ch->hasClass(CLASS_SHAMAN)) 
+  else if (ch->hasClass(CLASS_SHAMAN))
     current_mana = (int) (10 * ((double) ch->getLifeforce()));
   else
     current_mana = (int) (10 * ((double) ch->getMana() / (double) ch->manaLimit()));
@@ -1356,9 +1356,9 @@ void Descriptor::updateScreenAnsi(unsigned int update)
   current_moves = (int) (10 * ((double) ch->getMove() / (double) ch->moveLimit()));
   current_hit = max(0, min(10, current_hit));
 
-  if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) 
+  if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC))
     current_mana = (int) max(0., min(10., (double) current_mana));
-  else if (ch->hasClass(CLASS_SHAMAN)) 
+  else if (ch->hasClass(CLASS_SHAMAN))
     current_mana = max(0, min(10, current_mana));
   else
     current_mana = max(0, min(10, current_mana));
@@ -1522,9 +1522,9 @@ void Descriptor::updateScreenAnsi(unsigned int update)
     if (IS_SET(update, CHANGED_MANA) || IS_SET(update, CHANGED_PIETY) || IS_SET(update, CHANGED_LIFEFORCE)) {
       buf += format(VT_CURSPOS) % (ch->getScreen() - 2) % 34;
 
-      if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC)) 
+      if (ch->hasClass(CLASS_DEIKHAN) || ch->hasClass(CLASS_CLERIC))
         buf += format("%s%-5.1f ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getPiety();
-      else if (ch->hasClass(CLASS_SHAMAN)) 
+      else if (ch->hasClass(CLASS_SHAMAN))
         buf += format("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getLifeforce();
       else
         buf += format("%s%-5d ") % (current_mana ? VT_BOLDTEX : ANSI_RED) % ch->getMana();
@@ -1745,7 +1745,7 @@ RoomExitComm::RoomExitComm(){
 
 
 // WhoListComm
-WhoListComm::WhoListComm(const sstring &w, bool o, int l, int i, bool ld, 
+WhoListComm::WhoListComm(const sstring &w, bool o, int l, int i, bool ld,
 			 const sstring &p, const sstring &t){
   who=w;
   online=o;
@@ -1766,7 +1766,7 @@ sstring CmdMsgComm::getText(){
 }
 
 // TellComm
-TellFromComm::TellFromComm(const sstring &tt, const sstring &f, 
+TellFromComm::TellFromComm(const sstring &tt, const sstring &f,
 			   const sstring &t, bool d, bool m){
   to=tt;
   from=f;

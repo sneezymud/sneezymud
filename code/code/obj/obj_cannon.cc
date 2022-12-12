@@ -18,7 +18,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
   TAmmo *ammo;
   TObj *bullet;
   char  buf[256];
-  
+
   if (targ &&
       ch->checkPeacefulVictim("They are in a peaceful room. You can't seem to fire the gun.\n\r", targ))
     return FALSE;
@@ -27,7 +27,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     return FALSE;
 
   sstring capbuf, capbuf2;
-  
+
   int rof=getROF();
 
 
@@ -36,7 +36,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
   TThing *t;
 
   t=findFlint(ch->stuff);
-  
+
   int m=WEAR_NOWHERE;
   while(!t && m<MAX_WEAR){
     ++m;
@@ -70,14 +70,14 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
 	TRUE, ch, NULL, this, TO_ROOM);
 
     addToFlags(GUN_FLAG_FOULED);
-    
+
     ammo=dynamic_cast<TAmmo *>(getAmmo());
 
     if(ammo){
       --(*ammo);
       delete ammo;
     }
-      
+
     int rc = ch->objDamage(DAMAGE_TRAP_TNT, ::number(25,100), this);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -89,7 +89,7 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
   // 10% failure rate
   if(!::number(0,9))
     addToFlags(GUN_FLAG_FOULED);
-  
+
 
   if(isFouled()){
     act("Nothing happens, $N has been fouled and won't fire!",
@@ -97,13 +97,13 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     return FALSE;
   }
 
-  if((!ch->roomp->isIndoorSector() && 
+  if((!ch->roomp->isIndoorSector() &&
       Weather::getSky()==Weather::SKY_RAINING &&
       !::number(0,3)) ||
      ch->roomp->isUnderwaterSector()){
     act("Nothing happens, $N has been fouled by wet weather!",
 	TRUE, ch, NULL, this, TO_CHAR);
-    
+
     addToFlags(GUN_FLAG_FOULED);
     return false;
   }
@@ -127,11 +127,11 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     if(!isCaseless())
       dropSpentCasing(ch->roomp);
     setRounds(getRounds()-1);
-    
+
     // send messages
     capbuf = colorString(ch, ch->desc, bullet->getName(), NULL, COLOR_OBJECTS, TRUE);
     capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
-    
+
     if (targ){
       ch->sendTo(COLOR_BASIC, format("<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r") % shortDescr);
       ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
@@ -140,9 +140,9 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     } else {
       ch->sendTo(COLOR_BASIC, format("<Y>BANG!<1>  A deafening blast sounds as you ignite %s.\n\r") % shortDescr);
       ch->sendTo(format("You shoot %s out of %s.\n\r") %
-		 capbuf.uncap() % 
+		 capbuf.uncap() %
 		 capbuf2.uncap());
-    }    
+    }
 
     act("<Y>BANG!<1>  A deafening blast sounds as $n ignites $p.",
 	FALSE, ch, this, bullet, TO_ROOM);
@@ -151,10 +151,10 @@ int TCannon::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT d
     act(buf, FALSE, ch, this, bullet, TO_ROOM);
 
     ch->dropGas(::number(5,15), GAS_SMOKE);
-    
+
     // put the bullet in the room and then "throw" it
-    *ch->roomp += *bullet;    
-    
+    *ch->roomp += *bullet;
+
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 1, ch);
 
     if(!isSilenced())
@@ -213,7 +213,7 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 5);
-      
+
       switch (ch->task->timeLeft) {
 	case 5:
 	  buf = format("You clear out the barrel of %s.") %
@@ -231,15 +231,15 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 
 	  // find powder
 	  t=findPowder(ch->stuff, 12);
-	  
+
 	 m=WEAR_NOWHERE;
 	  while(!t && m<MAX_WEAR){
 	    ++m;
 	    t=findPowder(ch->equipment[m]->stuff, 12);
 	  }
-	  
+
 	  powder=dynamic_cast<TTool *>(t);
-	  
+
 	  if(!powder){
 	    ch->sendTo("You need to have a full flask of black powder.\n\r");
 	    ch->stopTask();
@@ -284,28 +284,28 @@ int task_cannon_load(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *r
 
 	  // find shot
 	  t=findShot(ch->stuff, AMMO_CANNON_BALL);
-	  
+
 	  m=WEAR_NOWHERE;
 	  while(!t && m<MAX_WEAR){
 	    ++m;
 	    t=findShot(ch->equipment[m]->stuff, AMMO_CANNON_BALL);
 	  }
-	  
+
 	  shot=dynamic_cast<TAmmo *>(t);
-	  
+
 	  if(!shot && !cannon->getAmmo()){
 	    ch->sendTo("You need to have a cannon ball.\n\r");
 	    ch->stopTask();
 	    return FALSE;
 	  }
-  
+
 
 	  --(*shot);
 	  cannon->setAmmo(shot);
 
 	  act("You load $p into $N.", FALSE, ch, shot, cannon, TO_CHAR);
 	  act("$n loads $p into $N.", FALSE, ch, shot, cannon, TO_ROOM);
-	  
+
           ch->task->timeLeft--;
           break;
 	case 0:
@@ -360,17 +360,17 @@ void TCannon::unloadMe(TBeing *ch, TAmmo *ammo)
   if(arrow){
     --(*arrow);
     *ch += *arrow;
-    
+
     act("You unload $N.", TRUE, ch, ammo, this, TO_CHAR);
     act("$n unloads $N.", TRUE, ch, ammo, this, TO_ROOM);
   }
 
   act("You clear out $N.", TRUE, ch, ammo, this, TO_CHAR);
   act("$n clears out $N.", TRUE, ch, ammo, this, TO_ROOM);
-  
+
   remFromFlags(GUN_FLAG_FOULED);
 
-  ch->addToWait(combatRound(1));    
+  ch->addToWait(combatRound(1));
 }
 
 

@@ -39,7 +39,7 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
 
   if (desc && !fight()) {
     SET_BIT(specials.affectedBy, AFF_AGGRESSOR);
-    if (checkEngagementStatus()) 
+    if (checkEngagementStatus())
       SET_BIT(specials.affectedBy, AFF_ENGAGER);
   }
 
@@ -107,7 +107,7 @@ int TBeing::reconcileDamage(TBeing *v, int dam, spellNumT how)
   // later on, but with some other quirks
   int dam2 = min(dam, 11 + v->getHit());
 
-  if (how2 >= MIN_SPELL && how2 < MAX_SKILL && this != v) 
+  if (how2 >= MIN_SPELL && how2 < MAX_SKILL && this != v)
     LogDam(this, how2, dam2);
 
   TMonster *tmons = dynamic_cast<TMonster *>(v);
@@ -169,7 +169,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
   // account for protection (sanct, etc)
   int protection = v->getProtection();
-  dam *= 100 - protection; 
+  dam *= 100 - protection;
   dam = (dam + 50) / 100;  // the 50 is here to round appropriately
 
   if (this != v) {
@@ -179,7 +179,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       act("Something bogus about this fight.  Tell a god!", TRUE, this, 0, v, TO_CHAR);
       return 0;
     }
-    if (dam <= 0) 
+    if (dam <= 0)
       return FALSE;
 
     // special code for quest mobs
@@ -290,14 +290,14 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
       // add that percentage to each group members trophy count
       for (f = k->followers; f; f = f->next) {
-	if (f->follower->isPc() && inGroup(*f->follower) && 
+	if (f->follower->isPc() && inGroup(*f->follower) &&
 	    sameRoom(*f->follower) && !isImmortal()) {
 	  f->follower->trophy->addToCount(v->mobVnum(), trophyperc);
 	}
-      }      
+      }
     }
 
-    
+
     percent = ((double) dam / (double) (v->getHit() + 11));
 
     if (percent < 0)
@@ -309,8 +309,8 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
 
     if (willKill(v, dam, dmg_type, TRUE)) {
       // Mages can no longer kill themselves with crit failures...Russ 09/28/98
-      if (hasClass(CLASS_MAGE) && (dmg_type >= 0) && (dmg_type <= 125)) 
-        dam = v->getHit() - ::number(1, 10);  
+      if (hasClass(CLASS_MAGE) && (dmg_type >= 0) && (dmg_type <= 125))
+        dam = v->getHit() - ::number(1, 10);
       else
         dam = 11 + v->getHit();
     }
@@ -319,13 +319,13 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
   // doDamage erases flight, needed later to do crash landings by tellStatus
   bool flying = v->isFlying();
 
-  if (dmg_type == DAMAGE_NORMAL || 
+  if (dmg_type == DAMAGE_NORMAL ||
      (dmg_type >= TYPE_MIN_HIT && dmg_type <= TYPE_MAX_HIT)) {
     stats.combat_damage[v->isPc() ? PC_STAT : MOB_STAT] += dam;
   }
   if (desc) {
     desc->career.dam_done[getCombatMode()] += dam;
-    if (dmg_type == DAMAGE_NORMAL || 
+    if (dmg_type == DAMAGE_NORMAL ||
        (dmg_type >= TYPE_MIN_HIT && dmg_type <= TYPE_MAX_HIT))
       desc->session.combat_dam_done[getCombatMode()] += dam;
     else
@@ -389,7 +389,7 @@ int TBeing::applyDamage(TBeing *v, int dam, spellNumT dmg_type)
       tmons->DS(8);
       // hey, look at all this cool gear in the corpse!
       tmons->UG(60);   // spiked high, but will drop off quickly
-      
+
       if (tmons->inGrimhaven()) {
 	// complete newbie protection
 	tmons->setAnger(0);
@@ -452,7 +452,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     TBeing *tb = dynamic_cast<TBeing *>(t);
     // force a doubly failed rideCheck for riders of victim
     if (tb &&
-        !tb->rideCheck(-3) && 
+        !tb->rideCheck(-3) &&
         !tb->rideCheck(-3)) {
       rc = tb->fallOffMount(v, POSITION_SITTING);
       tb->addToWait(combatRound(2));
@@ -533,7 +533,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
   }
 
   // set pkilling flag on pkillers
-  if(isPc() && v->isPc() && this!=v && this->roomp && 
+  if(isPc() && v->isPc() && this!=v && this->roomp &&
 
      !this->roomp->isRoomFlag(ROOM_ARENA) &&
      !this->inPkZone() && v->isValidPkTarget(this)){
@@ -570,7 +570,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     SET_BIT(specials.act, ACT_HIT_BY_PK);
     setExp(0);
   }
-  
+
 
   doQueueSave();
 
@@ -731,17 +731,17 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
 
   if ((v->getPosition() < POSITION_STUNNED) && !v->isPc()) {
     if (specials.fighting == v)
-      if (desc && !(desc->autobits & AUTO_KILL)) 
+      if (desc && !(desc->autobits & AUTO_KILL))
         stopFighting();
   }
 
   if (v->getPosition() == POSITION_DEAD) {
-    if (specials.fighting == v) 
+    if (specials.fighting == v)
       stopFighting();
 
     reconcileHurt(v, 0.03);
 
-    if (dmg_type >= MIN_SPELL && (dmg_type < MAX_SKILL) && 
+    if (dmg_type >= MIN_SPELL && (dmg_type < MAX_SKILL) &&
         discArray[dmg_type]) {
       strcpy(buf2, discArray[dmg_type]->name);
     } else if (dmg_type >= TYPE_MIN_HIT && dmg_type <= TYPE_MAX_HIT) {
@@ -827,13 +827,13 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
           // killed by a mob
           // for sanity, check if the killer mob was a pet, etc
           if (master)
-            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s -- master was %s") %  
+            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s -- master was %s") %
                  v->getName() % getName() % v->roomp->name % v->inRoom() % buf2 % master->getName());
           else if (rider)
-            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s -- rider was %s") %  
+            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s -- rider was %s") %
                  v->getName() % getName() % v->roomp->name % v->inRoom() % buf2 % rider->getName());
           else
-            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s") %  
+            vlogf(LOG_MISC, format("%s killed by %s at %s (%d).  Method: %s") %
                  v->getName() % getName() % v->roomp->name % v->inRoom() % buf2);
 	  // taunting shout
 	  // added for information to other players that haven't died but
@@ -899,23 +899,23 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
         } else {
 #if 1
           if (v == this && isPc())
-            vlogf(LOG_COMBAT, format("%s killed %sself at %s (%d) Method: %s -- <%sSuicide>") % 
+            vlogf(LOG_COMBAT, format("%s killed %sself at %s (%d) Method: %s -- <%sSuicide>") %
                   getName() % hmhr() % roomp->name % inRoom() % buf2 %
                   ((GetMaxLevel() <= 5) ? "NEWBIE " : ""));
           else if (GetMaxLevel() > MAX_MORT && isPc() && v->isPc()) {
             if (v->GetMaxLevel() > MAX_MORT)
-              vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <God VS God>") % 
+              vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <God VS God>") %
                     v->getName() % getName() % v->roomp->name % v->inRoom() % buf2);
             else
-              vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <Immortal Kill>") % 
+              vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <Immortal Kill>") %
                     v->getName() % getName() % v->roomp->name % v->inRoom() % buf2);
           } else
-            vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") % 
+            vlogf(LOG_COMBAT, format("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") %
                   v->getName() % getName() % v->roomp->name % v->inRoom() % buf2 %
                   ((v->GetMaxLevel() <= 5) ? "NEWBIE " : ""));
 
 #else
-          vlogf(LOG_MISC, format("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") % 
+          vlogf(LOG_MISC, format("%s killed by %s at %s (%d) Method: %s -- <%sPlayer kill>") %
                 v->getName() % getName() % v->roomp->name % v->inRoom() %
                 buf2 %
                 ((v->GetMaxLevel() <= 5 && v != this) ? "NEWBIE " : ""));
@@ -942,7 +942,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
             sstring graveDesc = "Here lies ";
             graveDesc += v->getName();
             graveDesc += ".\n\rKilled ";
-  
+
             graveDesc += "by ";
             graveDesc += getName();
             graveDesc += format(" this %s day of %s, Year %d P.S.\n\r") %
@@ -961,16 +961,16 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
             *v->roomp += *grave;
           }
         }
-      } else 
+      } else
         vlogf(LOG_MISC, format("%s killed by %s at Nowhere  Method: %s.") %  v->getName() % getName() % buf2);
     }
 
-    // Trigger bloodlust for attacker 
+    // Trigger bloodlust for attacker
     doBloodlust();
 
     // Mark an actual kill for the person giving the final blow
     if (desc) {
-      if (roomp->isRoomFlag(ROOM_ARENA) || inPkZone()) 
+      if (roomp->isRoomFlag(ROOM_ARENA) || inPkZone())
         desc->career.arena_victs++;
       else {
         desc->session.kills++;
@@ -1005,7 +1005,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
       }
       for (f = k->followers; f; f = f->next) {
         if (f->follower->isAffected(AFF_GROUP) && canSee(f->follower)) {
-          if (sameRoom(*f->follower)) { 
+          if (sameRoom(*f->follower)) {
             if (f->follower->desc) {
 	      ngroup++;
               f->follower->desc->session.groupKills++;
@@ -1024,7 +1024,7 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     // theoretically possible, but I don't believe situation will
     // have it occur realistically, JIC though
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
-      vlogf(LOG_BUG, format("Bad result from PkRespawn (%s at %d).  Multiple deaths??") % 
+      vlogf(LOG_BUG, format("Bad result from PkRespawn (%s at %d).  Multiple deaths??") %
           v->getName() % v->inRoom());
     }
 
@@ -1060,11 +1060,11 @@ int TBeing::damageEpilog(TBeing *v, spellNumT dmg_type)
     if (sameRoom(*v)) {
       // use auto-bit settings to do appropriate looting
       // let masters loot the kills of a follower
-      if (desc && (desc->autobits & AUTO_LOOT_MONEY) && 
+      if (desc && (desc->autobits & AUTO_LOOT_MONEY) &&
           !(desc->autobits & AUTO_LOOT_NOTMONEY)) {
         sprintf(buf, "get all.talen %s-corpse-autoloot", buf2);
         addCommandToQue(buf);
-      } else if ((dynamic_cast<TMonster *>(this) && !v->isPc())|| 
+      } else if ((dynamic_cast<TMonster *>(this) && !v->isPc())||
 		 (desc && (desc->autobits & AUTO_LOOT_NOTMONEY))) {
         sprintf(buf, "get all %s-corpse-autoloot", buf2);
         addCommandToQue(buf);
@@ -1167,7 +1167,7 @@ void TBeing::doDamage(int dam, spellNumT dmg_type)
 
  if (desc) {
     desc->career.dam_received[getCombatMode()] += dam;
-    if (dmg_type == DAMAGE_NORMAL || 
+    if (dmg_type == DAMAGE_NORMAL ||
        (dmg_type >= TYPE_MIN_HIT && dmg_type <= TYPE_MAX_HIT))
       desc->session.combat_dam_received[getCombatMode()] += dam;
     else

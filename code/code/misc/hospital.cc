@@ -114,7 +114,7 @@ int limb_wound_price(TBeing *ch, wearSlotT pos, unsigned short int wound, int sh
 
   else if (IS_SET(wound, PART_BROKEN))
     price *= 7;
-  
+
   else if (IS_SET(wound, PART_USELESS))
     price *= 8;
 
@@ -235,7 +235,7 @@ int doctorCost(int shop_nr, TBeing *ch, diseaseTypeT disease)
   }
 
   cost = (int)((float) cost * shop_index[shop_nr].getProfitBuy(NULL, ch));
-  
+
   return cost;
 }
 
@@ -372,7 +372,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    }
 
 	    TShopOwned tso(shop_nr, me, ch);
-	    tso.doBuyTransaction(cashCost, format("regenerating %s") % 
+	    tso.doBuyTransaction(cashCost, format("regenerating %s") %
 				 ch->describeBodySlot(i),
 				 TX_BUYING_SERVICE);
 
@@ -405,14 +405,14 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
                 return TRUE;
               } else {
                 int cashCost = min(ch->getMoney(), cost);
-		
+
 		if(me->getMoney() < cashCost){
 		  me->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
 		  return TRUE;
 		}
 
 		TShopOwned tso(shop_nr, me, ch);
-		tso.doBuyTransaction(cashCost, format("mending %s") % 
+		tso.doBuyTransaction(cashCost, format("mending %s") %
 				     ch->describeBodySlot(i),
 				     TX_BUYING_SERVICE);
 
@@ -450,7 +450,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    }
 
 	    TShopOwned tso(shop_nr, me, ch);
-	    tso.doBuyTransaction(cashCost, format("healing %s") % 
+	    tso.doBuyTransaction(cashCost, format("healing %s") %
 				 ch->describeBodySlot(i),
 				 TX_BUYING_SERVICE);
 
@@ -484,7 +484,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    }
 
 	    TShopOwned tso(shop_nr, me, ch);
-	    tso.doBuyTransaction(cashCost, format("expelling %s") % 
+	    tso.doBuyTransaction(cashCost, format("expelling %s") %
 				 ch->describeBodySlot(i),
 				 TX_BUYING_SERVICE);
 
@@ -529,7 +529,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	      tso.doBuyTransaction(cashCost, format("curing disease %s") %
 				   DiseaseInfo[affToDisease(*aff)].name,
 				   TX_BUYING_SERVICE);
-	      
+
 	      act("$n waves $s hands, utters many magic phrases and touches $N!", TRUE, me, NULL, ch, TO_NOTVICT);
 	      act("$n waves $s hands, utters many magic phrases and touches you!", TRUE, me, NULL, ch, TO_VICT);
 	      if (aff->modifier == DISEASE_POISON) {
@@ -709,7 +709,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
   } else if (cmd == CMD_BUY) {        /* Buy */
     // find the doctor
     doctor = getDoctor(rp->in_room, shop_nr);
-    
+
     if(!doctor){
       vlogf(LOG_BUG, format("couldn't find doctor for shop_nr=%i!") % shop_nr);
       ch->sendTo("Couldn't find the doctor, tell a god!");
@@ -722,7 +722,7 @@ int emergency_room(TBeing *ch, cmdTypeT cmd, const char *arg, TRoom *rp)
       ch->sendTo("Sorry, no medicare, medicaid or insurance allowed.\n\r");
       return TRUE;
     }
-    
+
     if(doctor->getMoney() < cost){
       doctor->doTell(ch->getName(), "I don't have enough money to cover my operating expenses!");
       return TRUE;

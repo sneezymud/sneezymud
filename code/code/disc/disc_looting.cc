@@ -85,7 +85,7 @@ int detectSecret(TBeing * thief)
   }
   int bKnown = thief->getSkillValue(SKILL_SEARCH);
 
-  if (thief->doesKnowSkill(SKILL_SEARCH)) 
+  if (thief->doesKnowSkill(SKILL_SEARCH))
     thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_SEARCH, 5);
 
   for (j = 0; j < 10; j++) {
@@ -101,7 +101,7 @@ int detectSecret(TBeing * thief)
 	act("$n searches the $g for secret doors.",
                 FALSE, thief, 0, 0, TO_ROOM);
 
-      if (!IS_SET(fdd->condition, EXIT_SECRET) || 
+      if (!IS_SET(fdd->condition, EXIT_SECRET) ||
           !IS_SET(fdd->condition, EXIT_CLOSED) ||
           fdd->keyword == "_unique_door_")
         continue;
@@ -109,7 +109,7 @@ int detectSecret(TBeing * thief)
       if (thief->bSuccess(bKnown,SKILL_SEARCH)) {
 	thief->sendTo(format("Secret door found %s! Door is named %s.\n\r") %
 	      dirs[j] % (!fdd->keyword.empty() ? fname(fdd->keyword) : "NO NAME. TELL A GOD"));
-	sprintf(buf, "$n exclaims, \"Look %s! A SECRET door named %s!\"\n\r", dirs[j], 
+	sprintf(buf, "$n exclaims, \"Look %s! A SECRET door named %s!\"\n\r", dirs[j],
                        (!fdd->keyword.empty() ? fname(fdd->keyword).c_str() : "NO NAME. TELL A GOD"));
 	act(buf, FALSE, thief, 0, 0, TO_ROOM);
 	thief->setMove(max(0, (thief->getMove() - 30)));
@@ -285,9 +285,9 @@ int TTrap::detectMe(TBeing *thief) const
 
   // randomly seen when in room
   // reduced detection rate
-  if (thief->bSuccess(bKnown/10 + 1, SKILL_DETECT_TRAP)) 
+  if (thief->bSuccess(bKnown/10 + 1, SKILL_DETECT_TRAP))
     return TRUE;
-  else 
+  else
     return FALSE;
 }
 
@@ -301,8 +301,8 @@ int detectTrapDoor(TBeing * thief, int)
 {
   int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
 
-  if (thief->bSuccess(bKnown/3 + 1, SKILL_DETECT_TRAP)) 
+  if (thief->bSuccess(bKnown/3 + 1, SKILL_DETECT_TRAP))
     return TRUE;
-  else 
+  else
     return FALSE;
 }

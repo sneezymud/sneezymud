@@ -26,7 +26,7 @@ int getSmokeIndex(int volume)
     return 2;
   } else if(volume<=25){
     return 3;
-  } else if(volume<=50){ 
+  } else if(volume<=50){
     return 4;
   } else if(volume<=100){
     return 5;
@@ -57,7 +57,7 @@ void doChoke(TGas *myself)
     if((tb=dynamic_cast<TBeing *>(*(it++))) && !::number(0,4)){
       tb->sendTo(COLOR_BASIC, "<r>The large amount of smoke in the room causes you to choke and cough!<1>\n\r");
       int rc=tb->reconcileDamage(tb, ::number(3,11), DAMAGE_SUFFOCATION);
-      
+
       if (IS_SET_DELETE(rc, DELETE_VICT)) {
         delete tb;
         continue;
@@ -156,13 +156,13 @@ sstring const& getNameSmoke(const TGas *myself)
 {
   static sstring smokename [] =
   {
-    "<k>a few wisps of smoke<1>", 
-    "<k>a tiny cloud of smoke<1>", 
-    "<k>a small cloud of smoke<1>", 
-    "<k>a cloud of smoke<1>", 
-    "<k>a fair sized cloud of smoke<1>", 
-    "<k>a big cloud of smoke<1>", 
-    "<k>a large cloud of smoke<1>", 
+    "<k>a few wisps of smoke<1>",
+    "<k>a tiny cloud of smoke<1>",
+    "<k>a small cloud of smoke<1>",
+    "<k>a cloud of smoke<1>",
+    "<k>a fair sized cloud of smoke<1>",
+    "<k>a big cloud of smoke<1>",
+    "<k>a large cloud of smoke<1>",
     "<k>a huge cloud of smoke<1>",
     "<k>a massive cloud of smoke<1>",
     "<k>a tremendously huge cloud of smoke<1>",
@@ -263,10 +263,10 @@ void TGas::doDrift()
   if((exitp=roomp->exitDir(DIR_UP)) &&
      !IS_SET(exitp->condition, EXIT_CLOSED) &&
      (rp=real_roomp(exitp->to_room))){
-    act("$n drifts upwards.",FALSE, this, 0, 0, TO_ROOM); 
+    act("$n drifts upwards.",FALSE, this, 0, 0, TO_ROOM);
     --(*this);
     *rp += *this;
-    act("$n drifts in from below.",FALSE, this, 0, 0, TO_ROOM); 
+    act("$n drifts in from below.",FALSE, this, 0, 0, TO_ROOM);
   } else {
     dirTypeT dir;
 
@@ -297,13 +297,13 @@ void TGas::doDrift()
           break;
         }
       }
-    } else if (dir >= MIN_DIR && dir != DIR_DOWN && 
+    } else if (dir >= MIN_DIR && dir != DIR_DOWN &&
                (exitp=roomp->exitDir(dir)) &&
                (rp=real_roomp(exitp->to_room))){
       act(format("$n drifts %s.") % dirs_to_blank[dir], FALSE, this, 0, 0, TO_ROOM);
       --(*this);
       *rp += *this;
-      act(format("$n drifts in from the %s.") % dirs[rev_dir(dir)], FALSE, this, 0, 0, TO_ROOM); 
+      act(format("$n drifts in from the %s.") % dirs[rev_dir(dir)], FALSE, this, 0, 0, TO_ROOM);
     }
   }
 }
@@ -469,7 +469,7 @@ void TGas::decayMe()
   else if (volume < 25)
     addToVolume((roomp->isIndoorSector() ? -5 : -8));
   else // large smokes evaporate faster
-    addToVolume((roomp->isIndoorSector() ? -(volume/15) : -(volume/8))); 
+    addToVolume((roomp->isIndoorSector() ? -(volume/15) : -(volume/8)));
 
   if (getVolume() < 0)
     setVolume(0);

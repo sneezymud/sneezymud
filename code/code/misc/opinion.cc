@@ -68,17 +68,17 @@ bool TMonster::addHated(TBeing *hatee)
     bool silent_multi_hate = TRUE;
     if (this->in_room == hatee->in_room)
       silent_multi_hate = FALSE;
-    
+
     if (multiHates(hatee, silent_multi_hate)) {
       // mob is hating a new player from the same account as an existing hatee
       // checking room in case hate has other causes, like a god setting hatred
       // player can probably work around this using a ranged weapon, but whatever
-      
+
       if (!silent_multi_hate) {
         doAction(fname(hatee->name), CMD_ACCUSE);
       }
     }
-    
+
     if (!awake())               /* don't add to the list if mob is !awake */
       return FALSE;
 
@@ -177,16 +177,16 @@ bool TMonster::multiHates(const TBeing *v, bool silent)
 
   if (!hatefield)
     return FALSE;
-    
+
   if (isPc() || !v->isPc())
-    return FALSE;    
- 
+    return FALSE;
+
   if (this == v)
     return FALSE;
-  
+
   if (!v->player.account_id || !v->player.player_id)
     return FALSE;
-    
+
   bool multi = FALSE;
   // loop over the hated list, looking for matching account id
   if (IS_SET(hatefield, HATE_CHAR)) {
@@ -200,7 +200,7 @@ bool TMonster::multiHates(const TBeing *v, bool silent)
             if (m)
               m->doShout(format("%s smells so much like %s it's creepy.") % v->getName() % i->name);
           }
-          
+
           vlogf(LOG_CHEAT, format("MULTIPLAY: Players %s and %s are both hated by %s.") % v->getName() % i->name % getName());
           multi = TRUE;
         }
@@ -217,7 +217,7 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
 
   sstring namebuf;
 
-  if (!v) 
+  if (!v)
     namebuf = n;
   else {
     if(dynamic_cast<const TMonster *>(v)){
@@ -229,7 +229,7 @@ bool TMonster::Hates(const TBeing *v, const char *n) const
 
   if (namebuf.empty())
     return FALSE;
- 
+
   if (this == v)
     return FALSE;
 
@@ -345,7 +345,7 @@ int TMonster::remFeared(const TBeing *hatee, const char *n)
     strcpy(buf, hatee->getName().c_str());
   else
     strcpy(buf, n);
- 
+
   if (!IS_SET(specials.act, ACT_AFRAID))
     return FALSE;
 
@@ -463,7 +463,7 @@ TBeing * TMonster::findAHatee(void)
     if (!tmp_ch)
       continue;
     if (Hates(tmp_ch, NULL) && canSee(tmp_ch) && (this != tmp_ch) &&
-         !(tmp_ch->isImmortal() && 
+         !(tmp_ch->isImmortal() &&
                tmp_ch->isPlayerAction(PLR_NOHASSLE))) {
       return (tmp_ch);
     }
@@ -551,7 +551,7 @@ void TMonster::developHatred(TBeing *v)
     diff = 100;
   else if (lev > 5)  // killable, but onyl with 2-3 people
     diff = 75;
-  
+
 
   // set patience to the critters %health
   int hl = hitLimit();

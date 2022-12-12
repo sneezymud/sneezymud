@@ -86,7 +86,7 @@ public:
     CSkill skRepairDeikhan;
     CSkill skAuraMight;
     CSkill skAuraRegeneration;
-    
+
     CDDeikhan()
       : CDiscipline(),
       skHealLightDeikhan(),

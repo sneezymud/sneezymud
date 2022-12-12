@@ -119,7 +119,7 @@ findClutterAmber::findClutterAmber(TBeing *tb)
 
 bool findClutterAmber::isTarget(int room) const
 {
-  if (room == 33281 || (room < 2750 || 
+  if (room == 33281 || (room < 2750 ||
         (room > 2849 && room < 8700) ||
         (room > 8899 && room < 16200) ||
         (room > 16249 && room < 33270) ||
@@ -414,7 +414,7 @@ bool findEquipment::checkOwner(TObj *o) const
   sstring prevOwner;
 
   ownerList = one_argument(ownerList, prevOwner);
-  while (!prevOwner.empty()) {  
+  while (!prevOwner.empty()) {
     if (owner->getName() == prevOwner)
       return true;
     ownerList = one_argument(ownerList, prevOwner);
@@ -460,7 +460,7 @@ TPathFinder::TPathFinder(int depth) :
   setRange(depth);
 }
 
-void TPathFinder::setRange(int d){ 
+void TPathFinder::setRange(int d){
   if(d<0){
     // old find_path used negative depth to set certain options
     // this is depreciated, so check for erroneous usage
@@ -468,7 +468,7 @@ void TPathFinder::setRange(int d){
     d=-d;
   }
 
-  range=d; 
+  range=d;
 }
 
 
@@ -535,7 +535,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
         roomDirData *exitp = rp->dir_option[dir];
         TRoom *hp = NULL;
-        if (exitp && 
+        if (exitp &&
             (hp = real_roomp(exitp->to_room)) &&
             (!no_mob || !(hp->isRoomFlag(ROOM_NO_MOB))) &&
             (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
@@ -577,7 +577,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
             }
           }
           // it's not our target, and we don't have this room yet
-          path_map[exitp->to_room] = new pathData(exitp->to_room, dir, 
+          path_map[exitp->to_room] = new pathData(exitp->to_room, dir,
               CI->first, false, distance+1);
           found=true;
         }
@@ -591,7 +591,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
         TThing *t=NULL;
         for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
           TPortal *tp = dynamic_cast<TPortal *>(t);
-          if (!tp) 
+          if (!tp)
             continue;
           // dirTypeT ++ wraps around - stupid
           dir = (dirTypeT) (dir + 1);
@@ -640,7 +640,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           }
 
           // it's not our target, and we don't have this room yet
-          path_map[tmp_room] = new pathData(tmp_room, dir, CI->first, 
+          path_map[tmp_room] = new pathData(tmp_room, dir, CI->first,
               false, distance+1);
 
           found=true;

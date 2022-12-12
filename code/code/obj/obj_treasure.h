@@ -23,7 +23,7 @@ class TTreasure : public TObj {
     void setSerialNumber(int s){ serial_number = s; }
     int getSerialNumber() const { return serial_number; }
     virtual void lowCheck();
-    
+
     TTreasure();
     TTreasure(const TTreasure &a);
     TTreasure & operator=(const TTreasure &a);

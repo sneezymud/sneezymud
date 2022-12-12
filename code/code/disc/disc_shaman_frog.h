@@ -17,7 +17,7 @@ public:
     CSkill skCreepingDoom;
     CSkill skShapeShift;
 
-    CDShamanFrog() 
+    CDShamanFrog()
       : CDiscipline(),
       skStormySkies(),
       skDeathWave(),
@@ -26,7 +26,7 @@ public:
       skCreepingDoom(),
       skShapeShift() {
     }
-    CDShamanFrog(const CDShamanFrog &a) 
+    CDShamanFrog(const CDShamanFrog &a)
       : CDiscipline(a),
       skStormySkies(a.skStormySkies),
       skDeathWave(a.skDeathWave),

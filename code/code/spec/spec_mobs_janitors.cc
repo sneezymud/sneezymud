@@ -25,7 +25,7 @@ bool okForJanitor(TMonster *myself, TObj *obj)
     return false;
 
   // don't let them pick up 3000 pound wagons because that's retarded
-  if(compareWeights(obj->getTotalWeight(TRUE), 
+  if(compareWeights(obj->getTotalWeight(TRUE),
 	      (myself->carryWeightLimit() - myself->getCarriedWeight()))==-1)
     return false;
 
@@ -215,12 +215,12 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TThing *t;
   TObj *obj = NULL;
   int rc;
-  char buf[256];  
+  char buf[256];
   bool trashpile=false;
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<TPathFinder *>(myself->act_ptr);
-    myself->act_ptr=NULL;    
+    myself->act_ptr=NULL;
     return FALSE;
   }
 
@@ -272,7 +272,7 @@ int janitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
-      *myself += *obj; 
+      *myself += *obj;
       if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
@@ -305,7 +305,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
   TThing *t;
   TObj *obj = NULL;
   int rc;
-  char buf[256];  
+  char buf[256];
   int DUMP=31905;
   bool trashpile=false;
 
@@ -352,7 +352,7 @@ int prisonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
-      *myself += *obj; 
+      *myself += *obj;
       if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
@@ -385,7 +385,7 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   TThing *t;
   TObj *obj = NULL;
   int rc;
-  char buf[256];  
+  char buf[256];
   int DUMP=33281;
   bool trashpile=false;
 
@@ -429,7 +429,7 @@ int amberJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
-      *myself += *obj; 
+      *myself += *obj;
       if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
@@ -460,7 +460,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
   TThing *t;
   TObj *obj = NULL;
   int rc;
-  char buf[256];  
+  char buf[256];
   int DUMP=1385;
   bool trashcan=false;
   bool trashpile=false;
@@ -513,7 +513,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
       act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
       --(*obj);
-      *myself += *obj; 
+      *myself += *obj;
       if(obj->objVnum() == Obj::PILE_OFFAL)
 	delete obj;
     }
@@ -540,7 +540,7 @@ int brightmoonJanitor(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, 
 }
 
 
-// for use by janitors to drop stuff in donation 
+// for use by janitors to drop stuff in donation
 // returns DELETE_THIS
 int TBeing::doDonate(int room)
 {
@@ -550,7 +550,7 @@ int TBeing::doDonate(int room)
 
   if (in_room != room) {
     if((dir=path.findPath(in_room, findRoom(room))) < 0){
-      // unable to find a path 
+      // unable to find a path
       if (room >= 0) {
         doSay("Time for my coffee break");
         act("$n has left into the void.",0, this, 0, 0, TO_ROOM);
@@ -641,7 +641,7 @@ TObj *findCart(TMonster *mob)
   }
   return cart;
 }
-  
+
 
 
 int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
@@ -709,7 +709,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
   }
 
-  if ((cmd != CMD_GENERIC_PULSE && cmd != CMD_GENERIC_QUICK_PULSE) 
+  if ((cmd != CMD_GENERIC_PULSE && cmd != CMD_GENERIC_QUICK_PULSE)
       || !myself->awake() || myself->fight())
     return FALSE;
 
@@ -749,7 +749,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     case STATE_NONE:
       job->cur_path=0;
       job->cur_pos=0;
-      job->state=STATE_TO_CS; 
+      job->state=STATE_TO_CS;
       break;
     case STATE_TO_CS:
       if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
@@ -827,7 +827,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	job->cur_pos=0;
 	job->state=STATE_AMBER_TO_CS;
       } else
-	moveCart(myself, cart);      
+	moveCart(myself, cart);
       break;
     case STATE_AMBER_TO_CS:
       if(!myself->walk_path(garbage_convoy_path[job->cur_path], job->cur_pos)){
@@ -846,7 +846,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    return DELETE_THIS;
 	  }
-	  
+
 	  job->cur_pos=0;
 	  job->cur_path=1;
 	  job->state=STATE_BM_DELIVERING;
@@ -888,7 +888,7 @@ int garbageConvoy(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 	  if (IS_SET_DELETE(rc, DELETE_THIS)) {
 	    return DELETE_THIS;
 	  }
-	  
+
 	  job->cur_pos=0;
 	  job->cur_path=0;
 	  job->state=STATE_TO_CS;
@@ -928,11 +928,11 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 
 	int seek_tree = 13; // candy heart tree type
 	int seek_fruit = 29405; // candy heart seed
-	
+
 	TPlant *tree;
 	TObj *fruit;
 	TThing *t=NULL, *t2=NULL;
-	
+
 	for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
 
 		fruit = dynamic_cast<TObj *>(t);
@@ -943,7 +943,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 			delete fruit;
 			return TRUE;
 		}
-		
+
 		tree = dynamic_cast<TPlant *>(t);
 		if (tree && tree->getType() == seek_tree) {
 			// find fruit inside and eat it
@@ -959,7 +959,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 			}
 		}
 	}
-	
+
 	// find nearby trees or fruits and go to them
 	std::vector <dirTypeT> possible_exits;
 	TRoom *rp;
@@ -983,7 +983,7 @@ int fruitScavenger(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
 			}
 		}
 	}
-	
+
 	if (!possible_exits.size()){
 		act("$n lifts its nose and sniffs.", TRUE, myself, 0, 0, TO_ROOM);
 		act("You lift your nose and sniff, but can't smell any candy.", FALSE, myself, 0, 0, TO_CHAR);

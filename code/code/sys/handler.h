@@ -2,7 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// Usage: Various routines for moving about objects/players               
+// Usage: Various routines for moving about objects/players
 //
 //////////////////////////////////////////////////////////////////////////
 

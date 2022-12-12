@@ -73,7 +73,7 @@ void setCombatStats(TBeing *ch, TBeing *mob, PolyType shape, spellNumT skill)
   float newHit = (float) ch->hitLimit();
   newHit /= ch->getConHpModifier();
   newHit *= critter->getConHpModifier();
-  critter->setMaxHit((int) newHit); 
+  critter->setMaxHit((int) newHit);
 
   // set current hp
   critter->setHit(ch->getHit() * critter->hitLimit() / ch->hitLimit());
@@ -108,7 +108,7 @@ void setDisguiseCombatStats(TBeing *ch, TBeing *mob)
   critter->setACFromACLevel();
 
   // set max hp and hp
-  critter->setMaxHit(ch->hitLimit()); 
+  critter->setMaxHit(ch->hitLimit());
   critter->setHit(ch->getHit());
 
   // set number of attacks
@@ -141,7 +141,7 @@ void appendPlayerName(TBeing *ch, TBeing *mob)
 void switchStat(statTypeT stat, TBeing *giver, TBeing *taker)
 {
   // assumes mob age mod is zero
-  taker->setStat(STAT_CHOSEN, stat, 
+  taker->setStat(STAT_CHOSEN, stat,
       giver->getStat(STAT_TERRITORY, stat) -
       taker->getStat(STAT_TERRITORY, stat) +
       giver->getStat(STAT_RACE, stat) -
@@ -185,7 +185,7 @@ void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
 
   for(StuffIter it=giver->stuff.begin();it!=giver->stuff.end();){
     t=*(it++);
-    --(*t); 
+    --(*t);
     *taker += *t;
   }
   taker->setMoney(giver->getMoney());
@@ -227,9 +227,9 @@ void SwitchStuff(TBeing *giver, TBeing *taker, bool setStats)
       statTypeT iStat;
       for (iStat=MIN_STAT;iStat<MAX_STATS;iStat++) {
         if (iStat == STAT_INT || iStat == STAT_WIS || iStat == STAT_FOC ||
-            iStat == STAT_KAR ) continue; 
+            iStat == STAT_KAR ) continue;
         taker->setStat(STAT_CHOSEN, iStat, giver->getStat(STAT_CHOSEN, iStat) +
-            giver->getStat(STAT_TERRITORY, iStat) - 
+            giver->getStat(STAT_TERRITORY, iStat) -
             taker->getStat(STAT_TERRITORY, iStat));
         taker->setStat(STAT_CURRENT, iStat, STAT_NATURAL);
       }
@@ -302,7 +302,7 @@ void TBeing::failSleep(TBeing *ch)
 {
   sendTo("You feel sleepy for a moment, but then you recover.\n\r");
   if (dynamic_cast<TMonster *>(this))
-    if (toggleInfo[TOG_SLEEP]->toggle && !fight() && 
+    if (toggleInfo[TOG_SLEEP]->toggle && !fight() &&
         (getPosition() > POSITION_SLEEPING))
       setCharFighting(ch);
 }
@@ -341,7 +341,7 @@ void TBeing::spellWearOffSoon(spellNumT s)
     act("$n's teeth begin to chatter.", TRUE, this, 0, 0, TO_ROOM);
   }
 
-  if (discArray[s]->fadeAwaySoon) 
+  if (discArray[s]->fadeAwaySoon)
     sendTo(format("%s\n\r") % discArray[s]->fadeAwaySoon);
 
   if (discArray[s]->fadeAwaySoonRoom)
@@ -381,7 +381,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe)
     act("$n begins to shiver violently, and looks pale.", TRUE, this, 0, 0, TO_ROOM);
   }
 
-  if (discArray[s]->fadeAway) 
+  if (discArray[s]->fadeAway)
     sendTo(format("%s\n\r") % discArray[s]->fadeAway);
 
   if (discArray[s]->fadeAwayRoom)
@@ -423,14 +423,14 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe)
   bool release = FALSE;
   TBeing *m;
 
-  if (!(m = master) && !force) {  
+  if (!(m = master) && !force) {
     return FALSE;
   } else if (m) {
     mastLevel = m->GetMaxLevel();
   }
   mastLevel = 0 - mastLevel;
 
-  stopFollower(FALSE);	// stop following the master 
+  stopFollower(FALSE);	// stop following the master
 
   if (!isPc()) {
     int  mVn         = mobVnum();
@@ -525,8 +525,8 @@ TComponent *comp_from_object(TThing *item, spellNumT spell)
   if (trc && trc->isClosed())
     return ret;
 
-  // item is wrong component or spellbag 
-  for(StuffIter it=item->stuff.begin();it!=item->stuff.end();++it) 
+  // item is wrong component or spellbag
+  for(StuffIter it=item->stuff.begin();it!=item->stuff.end();++it)
     pick_best_comp(&ret, *it, spell);
 
   return ret;
@@ -557,7 +557,7 @@ TComponent *TBeing::findComponent(spellNumT spell) const
   if (hasClass(CLASS_RANGER)) {
     if (fight())
       wizlevel = WIZ_LEV_COMP_EITHER;
-    else 
+    else
       wizlevel = WIZ_LEV_COMP_BELT;
   } else {
     if (hasClass(CLASS_SHAMAN)) {
@@ -708,42 +708,42 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
   if (isImmortal() && isPlayerAction(PLR_NOHASSLE))
     return TRUE;
 
-  // Until a better solution, mobs dont need components. - Russ 
+  // Until a better solution, mobs dont need components. - Russ
   if (!isPc())
     return TRUE;
 
   // has already used component
-  if (spelltask && spelltask->component) 
+  if (spelltask && spelltask->component)
     return TRUE;
 
   if (!o) {
     missingComponent(this);
     return FALSE;
   }
-  if (checkOnly) 
+  if (checkOnly)
     return TRUE;
 
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(LOG_BUG,format("useComponent had problem finding component for %s") % 
+    vlogf(LOG_BUG,format("useComponent had problem finding component for %s") %
         o->getName());
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
   }
   if (o->isPersonalized() && !isname(getName(), o->name)) {
-    vlogf(LOG_MISC, format("Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.") %  getName() % o->name); 
+    vlogf(LOG_MISC, format("Mage %s using component %s that was personalized but not theirs!!! Reprimand at once.") %  getName() % o->name);
     sendTo("You can't use a component that is personalized for someone else!");
     return FALSE;
   }
   if (vict && vict != this) {
-    if (*CompInfo[i].to_caster && 
+    if (*CompInfo[i].to_caster &&
         *CompInfo[i].to_vict &&
         *CompInfo[i].to_other) {
       act(CompInfo[i].to_caster, TRUE, this, o, vict, TO_CHAR);
       act(CompInfo[i].to_vict, TRUE, this, o, vict, TO_VICT);
       act(CompInfo[i].to_other, TRUE, this, o, vict, TO_NOTVICT);
-    } else if (*CompInfo[i].to_self && 
+    } else if (*CompInfo[i].to_self &&
         *CompInfo[i].to_room) {
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
@@ -751,7 +751,7 @@ int TBeing::useComponent(TComponent *o, TBeing *vict, checkOnlyT checkOnly)
       vlogf(LOG_BUG, format("Bad component sstring.  component %d  (1)") %  i);
     }
   } else {
-    if (*CompInfo[i].to_self && 
+    if (*CompInfo[i].to_self &&
         *CompInfo[i].to_room) {
       act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
       act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
@@ -804,18 +804,18 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
   for (i=0; (i<CompInfo.size()) && (o->getComponentSpell() != CompInfo[i].spell_num);i++);
 
   if (i>= CompInfo.size()) {
-    vlogf(LOG_BUG,format("useComponent had problem finding component for %s") % 
+    vlogf(LOG_BUG,format("useComponent had problem finding component for %s") %
         o->shortDescr);
     sendTo("Uh oh, something bogus happened.\n\r");
     return FALSE;
   }
 
   if (targ) {
-    if (*CompInfo[i].to_self_object && 
+    if (*CompInfo[i].to_self_object &&
         *CompInfo[i].to_room_object) {
       act(CompInfo[i].to_self_object, TRUE, this, o, targ, TO_CHAR);
       act(CompInfo[i].to_room_object, TRUE, this, o, targ, TO_NOTVICT);
-    } else if (*CompInfo[i].to_caster && 
+    } else if (*CompInfo[i].to_caster &&
         *CompInfo[i].to_other) {
       act(CompInfo[i].to_caster, TRUE, this, o, targ, TO_CHAR);
       act(CompInfo[i].to_other, TRUE, this, o, targ, TO_ROOM);
@@ -836,7 +836,7 @@ int TBeing::useComponentObj(TComponent *o, TObj *targ, checkOnlyT checkOnly)
     o = NULL;
   }
   // Set it so that for chanting purposes the component has been used
-  if (spelltask) 
+  if (spelltask)
     spelltask->component = TRUE;
 
   return 1;
@@ -975,7 +975,7 @@ const char *what_does_it_open(const TKey *o)
   roomDirData *ex;
 
   vnum = o->objVnum();
-  for (i = 0; i < WORLD_SIZE; i++) {	// check if it opens a door 
+  for (i = 0; i < WORLD_SIZE; i++) {	// check if it opens a door
     if ((rp = real_roomp(i))) {
       for (x = 0; x < 10; x++) {
 
@@ -1008,7 +1008,7 @@ int TBeing::rawSummon(TBeing *v)
   int rc;
   wearSlotT j;
 
-  act("You hear a small \"pop\" as $n disappears.", 
+  act("You hear a small \"pop\" as $n disappears.",
       FALSE, v, NULL, NULL, TO_ROOM);
   --(*v);
   *roomp += *v;
@@ -1020,8 +1020,8 @@ int TBeing::rawSummon(TBeing *v)
 
   if (!v->isPc() && (v->GetMaxLevel() > GetMaxLevel())) {
     act("$N struggles, and all of $S items are destroyed!", TRUE, this, NULL, v, TO_CHAR);
-    for (j = MIN_WEAR; j < MAX_WEAR; j++) {    // remove objects from victim 
-      if (v->equipment[j] && 
+    for (j = MIN_WEAR; j < MAX_WEAR; j++) {    // remove objects from victim
+      if (v->equipment[j] &&
           !dynamic_cast<TKey *>(v->equipment[j])) {
         TThing *t_o = v->unequip(j);
         delete t_o;
@@ -1050,7 +1050,7 @@ int TBeing::rawSummon(TBeing *v)
     rc = t->fallOffMount(v, POSITION_STANDING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL; 
+      t = NULL;
     }
   }
 
@@ -1065,7 +1065,7 @@ int TBeing::rawSummon(TBeing *v)
   act("$n is exhausted from interplanar travel.", FALSE, v, NULL, NULL, TO_ROOM);
 
   // summon newbie to aggro zone far from GH, allow us to check for it
-  vlogf(LOG_SILENT, format("%s summoned %s to %s (%d)") % 
+  vlogf(LOG_SILENT, format("%s summoned %s to %s (%d)") %
       getName() % v->getName() % roomp->getName() % inRoom());
 
   if (v->riding) {
@@ -1087,7 +1087,7 @@ int TBeing::rawSummon(TBeing *v)
       continue;
     if (!tmp->isPc() && ((IS_SET(tmp->specials.act, ACT_AGGRESSIVE)))) {
       act("$n sneers at you.", 1, tmp, NULL, this, TO_VICT);
-      act("$n sneers at $N. Uh oh...there's gonna be a RUMBLE!", 
+      act("$n sneers at $N. Uh oh...there's gonna be a RUMBLE!",
           1, tmp, NULL, this, TO_NOTVICT);
 
       rc = dynamic_cast<TMonster *>(tmp)->takeFirstHit(*this);
@@ -1171,7 +1171,7 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe)
     rc = t->fallOffMount(this, POSITION_STANDING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL; 
+      t = NULL;
     }
   }
 
@@ -1495,7 +1495,7 @@ int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmu
   disease_start(this, &aff);
 
   if (!silent) {
-    sendTo(format("%sYour %s is bruised!%s\n\r") % 
+    sendTo(format("%sYour %s is bruised!%s\n\r") %
         red() % describeBodySlot(pos) % norm());
     sprintf(buf, "$n's %s has been bruised!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
@@ -1545,7 +1545,7 @@ int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmun
   dropBloodLimb(pos);
 
   if (!silent) {
-    sendTo(format("%sYour %s has started to bleed!%s\n\r") % 
+    sendTo(format("%sYour %s has started to bleed!%s\n\r") %
         red() % describeBodySlot(pos) % norm());
     sprintf(buf, "$n's %s has begun to bleed!", describeBodySlot(pos).c_str());
     act(buf, TRUE, this, NULL, NULL, TO_ROOM);
@@ -1630,7 +1630,7 @@ int TBeing::rawGangrene(wearSlotT pos, int duration, silentTypeT silent, checkIm
     // however, let immunities also decrease duration
     aff.duration *= (100 - getImmunity(IMMUNE_DISEASE));
     aff.duration /= 100;
-  } 
+  }
   affectTo(&aff);
   disease_start(this, &aff);
 
@@ -1654,9 +1654,9 @@ void TBeing::spellMessUp(spellNumT spell)
       (discArray[spell]->typ == SPELL_RANGER) ||
       (discArray[spell]->typ == SPELL_SHAMAN)) {
     type = 0;
-  } else if ((discArray[spell]->typ == SPELL_CLERIC) || 
+  } else if ((discArray[spell]->typ == SPELL_CLERIC) ||
       (discArray[spell]->typ == SPELL_DEIKHAN)) {
-    type = 1;       
+    type = 1;
   }
 #if 0
   switch (getDisciplineNumber(spell, FALSE)) {
@@ -1690,30 +1690,30 @@ void TBeing::spellMessUp(spellNumT spell)
     case 2:
       if (type == 1)
         act("Your brain is jumbled and confused, and you flub the prayer.",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
       else
         act("Your brain is jumbled and confused.",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
       act("$n must have done something wrong.",
-          FALSE, this, 0, 0, TO_ROOM); 
+          FALSE, this, 0, 0, TO_ROOM);
       break;
     case 3:
       if (getWizardryLevel() < WIZ_LEV_NO_GESTURES &&
           IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
         // requires gestures
         act("Darn it!  You mess up one of the intricate gestures.",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_GESTURES &&
           IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
         // requires gestures
         act("Darn it!  You mess up one of the intricate gestures.",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
     case 4:
@@ -1722,20 +1722,20 @@ void TBeing::spellMessUp(spellNumT spell)
         // requires gestures
         if (type == 1)
           act("You clumsily perform the prayer's gestures, and things seem to have gone wrong.",
-              FALSE, this, 0, 0, TO_CHAR); 
+              FALSE, this, 0, 0, TO_CHAR);
         else
           act("You clumsily perform the spell's gestures, and things seem to have gone wrong.",
-              FALSE, this, 0, 0, TO_CHAR); 
+              FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_GESTURES &&
           IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
         act("You pathetic excuse for a houngan....Grrrrrr!!!",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
     case 5:
@@ -1743,18 +1743,18 @@ void TBeing::spellMessUp(spellNumT spell)
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
         act("Oops...  You mis-spoke part of the incantation.",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
         act("Oops...  You messed that one up....",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
     case 6:
@@ -1762,25 +1762,25 @@ void TBeing::spellMessUp(spellNumT spell)
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
         act("You trip over your tongue and mis-speak the incantation.",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
         act("You trip over your own feet trying to dance for the loa!",
-            FALSE, this, 0, 0, TO_CHAR); 
+            FALSE, this, 0, 0, TO_CHAR);
         act("$n must have done something wrong.",
-            FALSE, this, 0, 0, TO_ROOM); 
+            FALSE, this, 0, 0, TO_ROOM);
         break;
       } // otherwise drop through for different text
     default:
       act("You aren't sure what, but something seems to have gone wrong.",
-          FALSE, this, 0, 0, TO_CHAR); 
+          FALSE, this, 0, 0, TO_CHAR);
       act("$n must have done something wrong.",
-          FALSE, this, 0, 0, TO_ROOM); 
+          FALSE, this, 0, 0, TO_ROOM);
   }
 }
 
@@ -2222,7 +2222,7 @@ int lycanthropeTransform(TBeing *ch)
 
   mob->setQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
 
-  // switch ch into mobile 
+  // switch ch into mobile
   ch->desc->character = mob;
   ch->desc->original = dynamic_cast<TPerson *>(ch);
 

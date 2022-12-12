@@ -239,7 +239,7 @@ int TDrugContainer::objectDecay()
       t = equippedBy;
     else if (stuckIn)
       t = stuckIn;
-  
+
     if (t) {
       act("Your $o flickers then fades into insignificance.",
          TRUE, t, this, 0, TO_CHAR);
@@ -274,19 +274,19 @@ void TDrugContainer::describeObjectSpecifics(const TBeing *ch) const
 
   if (getMaxBurn() < 0)
     act("$p doesn't seem to be reusable.", FALSE, ch, this, 0, TO_CHAR);
-  else 
+  else
     ch->sendTo(COLOR_OBJECTS,format("%s is reusable.\n\r") % sstring(getName()).cap());
-  
+
   diff = (double) ((double) getCurBurn() / max(1.0, (double) getMaxBurn()));
   if(diff==0 || getDrugType()==DRUG_NONE)
     ch->sendTo(COLOR_OBJECTS, format("%s is completely empty.\n\r") %
 	       sstring(getName()).uncap());
-  else      
+  else
     ch->sendTo(COLOR_OBJECTS, format("You can tell that %s has %s %s left.\n\r") % sstring(getName()).uncap() %
 	       (((diff == 0) ? "no" :
 		((diff < .20) ? "very little" :
 		 ((diff < .50) ? "some" :
-		  ((diff < .75) ? "a good bit of" : 
+		  ((diff < .75) ? "a good bit of" :
                     ((diff==1.00) ? "all of" : "almost all of its")))))) %
 	       drugTypes[getDrugType()].name);
 }
@@ -341,10 +341,10 @@ void TDrugContainer::lightMe(TBeing *ch, silentTypeT silent)
   }
   setLit(TRUE);
   if(!silent){
-    sprintf(buf, "You light $p, and the %s begins to burn.", 
+    sprintf(buf, "You light $p, and the %s begins to burn.",
 	    drugTypes[getDrugType()].name);
     act(buf, FALSE, ch, this, 0, TO_CHAR);
-    sprintf(buf, "$n light $p, and the %s begins to burn.", 
+    sprintf(buf, "$n light $p, and the %s begins to burn.",
 	    drugTypes[getDrugType()].name);
     act(buf, TRUE, ch, this, 0, TO_ROOM);
   }

@@ -92,7 +92,7 @@ int main(int argc, char **argv)
     return 0;
   }
 
-    
+
 
   if(state_form == cgi.getElements().end() || **state_form == "main"){
     sendObjlist(session.getAccountID());
@@ -100,7 +100,7 @@ int main(int argc, char **argv)
   } else if(**state_form == "delobj"){
     delObj(cgi, session.getAccountID());
     sendObjlist(session.getAccountID());
-    return 0;    
+    return 0;
   } else if(**state_form == "newobj"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -110,13 +110,13 @@ int main(int argc, char **argv)
     makeNewObj(cgi, session.getAccountID(), session.hasWizPower(POWER_LOAD));
     sendShowObj(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
-    return 0;    
+    return 0;
   } else if(**state_form == "showobj"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Objeditor") << endl;
     cout << head() << body() << endl;
-    
+
     sendShowObj(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
     return 0;
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
 
     delExtra(cgi, session.getAccountID());
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "newextra"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -137,13 +137,13 @@ int main(int argc, char **argv)
 
     makeNewExtra(cgi, session.getAccountID());
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "showextra"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Objeditor") << endl;
     cout << head() << body() << endl;
-    
+
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
     return 0;
   } else if(**state_form == "saveextra"){
@@ -163,7 +163,7 @@ int main(int argc, char **argv)
 
     delAffect(cgi, session.getAccountID());
     sendShowAffect(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "newaffect"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -172,13 +172,13 @@ int main(int argc, char **argv)
 
     makeNewAffect(cgi, session.getAccountID());
     sendShowAffect(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "showaffect"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Objeditor") << endl;
     cout << head() << body() << endl;
-    
+
     sendShowAffect(session.getAccountID(), convertTo<int>(**vnum));
     return 0;
   } else if(**state_form == "saveaffect"){
@@ -195,7 +195,7 @@ int main(int argc, char **argv)
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Objeditor") << endl;
     cout << head() << body() << endl;
-    
+
     saveObj(cgi, session.getAccountID());
     sendShowObj(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
     cout << endl;
     return 0;
   }
-  
+
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Objeditor") << endl;
   cout << head() << body() << endl;
@@ -214,7 +214,7 @@ int main(int argc, char **argv)
   cout << **state_form << endl;
   cout << body() << endl;
   cout << html() << endl;
-  
+
   return 0;
 }
 
@@ -281,7 +281,7 @@ void makeNewExtra(Cgicc cgi, int account_id)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '')",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
@@ -298,7 +298,7 @@ void makeNewAffect(Cgicc cgi, int account_id)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, 0, 0)",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
@@ -316,40 +316,40 @@ void makeNewObj(Cgicc cgi, int account_id, bool power_load)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db_sneezy.query("select name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material from obj where vnum=%s", (**(cgi.getElement("template"))).c_str());
   db_sneezy.fetchRow();
 
   db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
-	   db_sneezy["name"].c_str(), 
-	   db_sneezy["short_desc"].c_str(), 
-	   db_sneezy["long_desc"].c_str(), 
-	   db_sneezy["action_desc"].c_str(), 
-	   db_sneezy["type"].c_str(), 
-	   db_sneezy["action_flag"].c_str(), 
-	   db_sneezy["wear_flag"].c_str(), 
-	   db_sneezy["val0"].c_str(), 
-	   db_sneezy["val1"].c_str(), 
-	   db_sneezy["val2"].c_str(), 
-	   db_sneezy["val3"].c_str(), 
-	   db_sneezy["weight"].c_str(), 
-	   db_sneezy["price"].c_str(), 
-	   db_sneezy["can_be_seen"].c_str(), 
-	   db_sneezy["spec_proc"].c_str(), 
-	   db_sneezy["max_exist"].c_str(), 
-	   db_sneezy["max_struct"].c_str(), 
-	   db_sneezy["cur_struct"].c_str(), 
-	   db_sneezy["decay"].c_str(), 
-	   db_sneezy["volume"].c_str(), 
+	   db_sneezy["name"].c_str(),
+	   db_sneezy["short_desc"].c_str(),
+	   db_sneezy["long_desc"].c_str(),
+	   db_sneezy["action_desc"].c_str(),
+	   db_sneezy["type"].c_str(),
+	   db_sneezy["action_flag"].c_str(),
+	   db_sneezy["wear_flag"].c_str(),
+	   db_sneezy["val0"].c_str(),
+	   db_sneezy["val1"].c_str(),
+	   db_sneezy["val2"].c_str(),
+	   db_sneezy["val3"].c_str(),
+	   db_sneezy["weight"].c_str(),
+	   db_sneezy["price"].c_str(),
+	   db_sneezy["can_be_seen"].c_str(),
+	   db_sneezy["spec_proc"].c_str(),
+	   db_sneezy["max_exist"].c_str(),
+	   db_sneezy["max_struct"].c_str(),
+	   db_sneezy["cur_struct"].c_str(),
+	   db_sneezy["decay"].c_str(),
+	   db_sneezy["volume"].c_str(),
 	   db_sneezy["material"].c_str());
 
 
   db_sneezy.query("select vnum, name, description from objextra where vnum=%s", (**(cgi.getElement("template"))).c_str());
 
   while(db_sneezy.fetchRow()){
-    db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '%s')", 
+    db.query("insert into objextra (vnum, owner, name, description) values (%s, '%s', '%s', '%s')",
 	     (**(cgi.getElement("vnum"))).c_str(),
 	     (**(cgi.getElement("owner"))).c_str(),
 	     db_sneezy["name"].c_str(),
@@ -360,7 +360,7 @@ void makeNewObj(Cgicc cgi, int account_id, bool power_load)
   db_sneezy.query("select vnum, type, mod1, mod2 from objaffect where vnum=%s", (**(cgi.getElement("template"))).c_str());
 
   while(db_sneezy.fetchRow()){
-    db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, %s, %s)", 
+    db.query("insert into objaffect (vnum, owner, type, mod1, mod2) values (%s, '%s', %s, %s, %s)",
 	     (**(cgi.getElement("vnum"))).c_str(),
 	     (**(cgi.getElement("owner"))).c_str(),
 	     db_sneezy["type"].c_str(),
@@ -379,9 +379,9 @@ void saveExtra(Cgicc cgi, int account_id)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db.query("delete from objextra where owner='%s' and vnum=%s and name='%s'",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
   	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str());
 
@@ -394,7 +394,7 @@ void saveExtra(Cgicc cgi, int account_id)
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str(),
 	   buf.c_str());
-  
+
   cout << "Saved for keyword " << (**(cgi.getElement("name"))) << ".<br>";
 }
 
@@ -406,9 +406,9 @@ void saveAffect(Cgicc cgi, int account_id)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db.query("delete from objaffect where owner='%s' and vnum=%s and type=%s",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
   	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("type"))).c_str());
 
@@ -421,7 +421,7 @@ void saveAffect(Cgicc cgi, int account_id)
 	   apply_file,
 	   (**(cgi.getElement("mod1"))).c_str(),
 	   (**(cgi.getElement("mod2"))).c_str());
-  
+
   cout << "Saved for type " << (**(cgi.getElement("type"))) << ".<br>";
 }
 
@@ -454,9 +454,9 @@ void saveObj(Cgicc cgi, int account_id)
 
 
   db.query("delete from obj where owner='%s' and vnum=%s",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
   	   (**(cgi.getElement("vnum"))).c_str());
-  
+
   db.query("insert into obj (owner, vnum, name, short_desc, long_desc, action_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, max_struct, cur_struct, decay, volume, material) values ('%s', %s, '%s', '%s', '%s', '%s', %s, %i, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
@@ -510,7 +510,7 @@ void sendShowExtra(int account_id, int vnum)
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "</form>";
   cout << endl;
-  
+
 
   db.query("select owner, vnum, name, description from objextra where vnum=%i and owner in (%r) order by name", vnum, getPlayerNames(account_id).c_str());
 
@@ -532,8 +532,8 @@ void sendShowExtra(int account_id, int vnum)
 
     cout << format("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
       mudColorToHTML(db["description"]);
-    
-    cout << "</table>";    
+
+    cout << "</table>";
     cout << "<table width=100%><tr><td align left>";
     cout << "<input type=submit value='save changes'>";
     cout << "</form></td><td width=100% align=right></td><td>";
@@ -544,7 +544,7 @@ void sendShowExtra(int account_id, int vnum)
     cout << "<input type=hidden name=vnum value=" << vnum << ">";
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "</form></td></tr></table>";
-    
+
 
     cout << "<hr>";
   }
@@ -570,7 +570,7 @@ sstring getItemTypeForm(int selected)
   sstring buf="<tr><td>type</td><td><select name=type>\n";
   for(it=m.begin();it!=m.end();++it){
     buf+=format("<option value=%i %s>%s</option>\n") %
-      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).second % (((*it).second==selected)?"selected":"") %
       (*it).first;
   }
   buf+="</select>\n";
@@ -605,7 +605,7 @@ void sendShowAffect(int account_id, int vnum)
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "</form>";
   cout << endl;
-  
+
 
   db.query("select owner, vnum, type, mod1, mod2 from objaffect where vnum=%i and owner in (%r) order by type", vnum, getPlayerNames(account_id).c_str());
 
@@ -621,8 +621,8 @@ void sendShowAffect(int account_id, int vnum)
     cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod1" % "mod1" % db["mod1"];
     cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "mod2" % "mod2" % db["mod2"];
 
-    
-    cout << "</table>";    
+
+    cout << "</table>";
     cout << "<table width=100%><tr><td align left>";
     cout << "<input type=submit value='save changes'>";
     cout << "</form></td><td width=100% align=right></td><td>";
@@ -633,7 +633,7 @@ void sendShowAffect(int account_id, int vnum)
     cout << "<input type=hidden name=vnum value=" << vnum << ">";
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "</form></td></tr></table>";
-    
+
 
     cout << "<hr>";
   }
@@ -661,7 +661,7 @@ sstring getMaterialForm(int selected)
   sstring buf="<tr><td>material</td><td><select name=material>\n";
   for(it=m.begin();it!=m.end();++it){
     buf+=format("<option value=%i %s>%s</option>\n") %
-      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).second % (((*it).second==selected)?"selected":"") %
       (*it).first;
   }
   buf+="</select>\n";
@@ -683,7 +683,7 @@ sstring getTypesForm(int selected)
   sstring buf="<tr><td>type</td><td><select name=type>\n";
   for(it=m.begin();it!=m.end();++it){
     buf+=format("<option value=%i %s>%s</option>\n") %
-      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).second % (((*it).second==selected)?"selected":"") %
       (*it).first;
   }
   buf+="</select>\n";
@@ -706,11 +706,11 @@ sstring getProcForm(int selected, bool wizard)
 
   sstring buf="<tr><td>spec_proc</td><td><select name=spec_proc>\n";
   for(it=m.begin();it!=m.end();++it){
-    if(objSpecials[(*it).second].assignable || 
+    if(objSpecials[(*it).second].assignable ||
        (*it).second==selected ||
        wizard){
       buf+=format("<option value=%i %s>%s</option>\n") %
-	(*it).second % (((*it).second==selected)?"selected":"") % 
+	(*it).second % (((*it).second==selected)?"selected":"") %
 	(*it).first;
     }
   }
@@ -761,7 +761,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
   cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "short_desc" % "short_desc" % buf;
 
-  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
     mudColorToHTML(db["short_desc"]);
 
   buf=db["long_desc"];
@@ -770,7 +770,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
   cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "long_desc" % "long_desc" % buf;
 
-  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
     mudColorToHTML(db["long_desc"]);
 
   cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "action_desc" % "action_desc" % db["action_desc"];
@@ -804,7 +804,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
       cout << "</tr><tr>" << endl;
   }
   cout <<"</tr></table></td></tr>";
-  
+
   /*********************************************************
    * Added to compute the 4 values bit vectors for weapons *
    *********************************************************/
@@ -851,7 +851,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
     cout << format("</script>\n") << endl;
 
     // wtf is up with javascript? multiplied values by 1 so it knows not to use the + operator for string concatenation
-    
+
     int sharp_cur = GET_BITS(convertTo<int>(db["val0"]), 7, 8);
     int sharp_max = GET_BITS(convertTo<int>(db["val0"]), 15, 8);
     int dam_lev = GET_BITS(convertTo<int>(db["val1"]), 7, 8) / 4;
@@ -863,25 +863,25 @@ void sendShowObj(int account_id, int vnum, bool wizard)
     int weap_type_3 = GET_BITS(convertTo<int>(db["val3"]), 7, 8);
     int weap_freq_3 = GET_BITS(convertTo<int>(db["val3"]), 15, 8);
     weaponT wt;
-    
+
     // x0 - current and max sharpness
     cout << format("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val0_info % "val0" % db["val0"] << endl;
     cout << format("<td>Current sharpness <input type='text' size='15' maxlength='3' name='sharp_cur' value='%i' onchange='compute_weap_x0()'>\n<br>Maximum sharpness <input type='text' size='15' maxlength='3' name='sharp_max' value='%i' onchange='compute_weap_x0()'></td></tr>\n") % sharp_cur % sharp_max << endl;
-    
+
     // x1 - damage level and damage precision
     cout << format("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=text size=24 name='weap_dam' value='' readonly style='border:0'></td>\n") % ItemInfo[convertTo<int>(db["type"])]->val1_info % "val1" % db["val1"];
     cout << format("<td>Damage level <input type='text' size='15' maxlength='4' name='dam_lev' value='%i' onchange='compute_weap_x1()'> (no <b style='color:red'>NOT</b> multiply by 4 here)\n<br>Damage deviation <input type='text' size='15' maxlength='3' name='dam_dev' value='%i' onchange='compute_weap_x1()'></td></tr>\n") % dam_lev % dam_dev;
     cout << format("<script>weap_dam();</script>") << endl;
-    
+
     // x2 - attack rate 1 and attack rate 2
     cout << format("<tr><td>%s<br>Bit # <input type=text size=12 name='%s' value='%s' style='border:0'></td>") % ItemInfo[convertTo<int>(db["type"])]->val2_info % "val2" % db["val2"] << endl;
-    
+
     cout << format("<td>Type 1 <select type='select' name='weap_type_1' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
     for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
       cout << format("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_1) ? " selected" : "") % attack_hit_text[(int) ((mapWeaponT(wt) - TYPE_MIN_HIT))].singular << endl;
     }
     cout << format("</select>&nbsp;&nbsp;&nbsp;Frequency 1 <input type='text' size='5' maxlength='3' name='weap_freq_1' value='%i' onchange='compute_weap_x2()'> %") % weap_freq_1 << endl;
-    
+
     cout << format("<br>Type 2 <select type='select' name='weap_type_2' onchange='compute_weap_x2()'><option value='0'>None</option>") << endl;
     for(wt = weaponT(WEAPON_TYPE_NONE + 1); wt < WEAPON_TYPE_MAX; wt = weaponT(wt + 1)) {
       cout << format("<option value='%i'%s>%s</option>") % (int) wt % (((int) wt == weap_type_2) ? " selected" : "") % attack_hit_text[(mapWeaponT(wt) - TYPE_MIN_HIT)].singular << endl;
@@ -926,7 +926,7 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
 
   cout << getMaterialForm(convertTo<int>(db["material"]));
-  
+
 
   cout << "</table>";
 
@@ -935,8 +935,8 @@ void sendShowObj(int account_id, int vnum, bool wizard)
 
   cout << body() << endl;
   cout << html() << endl;
-  
-  
+
+
 }
 
 void sendObjlist(int account_id){
@@ -957,7 +957,7 @@ void sendObjlist(int account_id){
 
   db.query("select owner, max(vnum)+1 as nvnum from obj where lower(owner) in (%r) group by owner",
 	   getPlayerNames(account_id).c_str());
-  
+
   if(db.fetchRow())
     buildername=db["owner"];
   else {
@@ -984,7 +984,7 @@ void sendObjlist(int account_id){
   cout << "<tr><td>vnum</td><td>name</td><td>short_desc</td><td>extras</td><td>affects</td></tr>";
 
   db.query("select vnum, name, short_desc from obj o where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
-  
+
   db_affects.query("select vnum, count(*) as count from objaffect where lower(owner) in (%r) group by vnum order by vnum asc", getPlayerNames(account_id).c_str());
   db_affects.fetchRow();
 
@@ -994,15 +994,15 @@ void sendObjlist(int account_id){
   int affcount=0, extracount=0;
   while(db.fetchRow()){
     affcount=extracount=0;
-    while(convertTo<int>(db_affects["vnum"]) < 
+    while(convertTo<int>(db_affects["vnum"]) <
 	  convertTo<int>(db["vnum"]))
       if(!db_affects.fetchRow())
 	break;
-    while(convertTo<int>(db_extras["vnum"]) < 
+    while(convertTo<int>(db_extras["vnum"]) <
 	  convertTo<int>(db["vnum"]))
       if(!db_extras.fetchRow())
 	break;
-    
+
     if(db_affects["vnum"]==db["vnum"]){
       affcount=convertTo<int>(db_affects["count"]);
       db_affects.fetchRow();
@@ -1098,7 +1098,7 @@ sstring mudColorToHTML(sstring str, bool spacer)
   return format("<span style=\"color:white\"><font face=\"courier\">%s%s</font></span>") % spacing_strip % str;
 }
 
-spellNumT mapWeaponT(weaponT w) 
+spellNumT mapWeaponT(weaponT w)
 {
   // divorced this from TGenWeapon
   switch (w) {

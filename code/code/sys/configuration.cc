@@ -42,7 +42,7 @@ extern std::vector <std::string> db_passwords;
 
 void sendHelp(po::options_description desc){
   std::cout << "Usage: sneezy [options] [port]" << std::endl;
-  std::cout << desc;  
+  std::cout << desc;
 }
 
 bool Config::doConfiguration(int argc, char *argv[])
@@ -61,7 +61,7 @@ bool Config::doConfiguration(int argc, char *argv[])
   // command line OR in config file
   po::options_description config("Configuration + Command line");
   config.add_options()
-    ("lib,l", po::value<string>(&data_dir)->default_value(Path::DATA), 
+    ("lib,l", po::value<string>(&data_dir)->default_value(Path::DATA),
      "data directory to run in")
     ("no_specials,s", po::value<bool>(&no_specials)->default_value(false),
      "suppress assignment of special routines")
@@ -74,7 +74,7 @@ bool Config::doConfiguration(int argc, char *argv[])
   // config file only options
   po::options_description configOnly("Configuration File Only");
   configOnly.add_options()
-    ("item_damage_rate", 
+    ("item_damage_rate",
      po::value<int>(&ITEM_DAMAGE_RATE)->default_value(1),
      "see configuration.h")
     ("weapon_dam_min_hardness",
@@ -175,7 +175,7 @@ bool Config::doConfiguration(int argc, char *argv[])
   // first positional argument is port number
   po::positional_options_description p;
   p.add("port", -1);
-  
+
   po::variables_map vm;
 
 
@@ -185,14 +185,14 @@ bool Config::doConfiguration(int argc, char *argv[])
   }
   po::notify(vm);
   std::ifstream ifs(configFile.c_str());
-  
+
   if(!ifs.is_open()){
     std::cout << format("Failed to open config file '%s'\n") % configFile;
   }
 
   po::store(parse_config_file(ifs, config_options), vm);
   po::notify(vm);
-  
+
   if(vm.count("help")){
     sendHelp(visible);
     return false;

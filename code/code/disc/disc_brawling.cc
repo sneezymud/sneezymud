@@ -70,9 +70,9 @@ int TBeing::doTaunt(const sstring &arg)
 {
   TBeing *victim;
   char name_buf[256];
-  
+
   strcpy(name_buf, arg.c_str());
-  
+
   if (!(victim = get_char_room_vis(this, name_buf))) {
     if (!(victim = fight())) {
       sendTo("Taunt whom?\n\r");
@@ -100,7 +100,7 @@ int TBeing::doTaunt(const sstring &arg)
 	FALSE, this, 0, victim, TO_VICT);
     act("$n taunts $N ruthlessly, drawing their ire.",
 	FALSE, this, 0, victim, TO_NOTVICT);
-    
+
     affectedData af;
 
     af.type = SKILL_TAUNT;

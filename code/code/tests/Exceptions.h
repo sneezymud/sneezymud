@@ -52,7 +52,7 @@ class Exceptions : public CxxTest::TestSuite
 
   void testCap(){
     sstring foo;
-    
+
     TS_ASSERT_THROWS_NOTHING(foo.cap());
   }
 };

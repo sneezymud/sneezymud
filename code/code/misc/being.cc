@@ -47,7 +47,7 @@ playerData::playerData() :
   time->logon = ::time(0);
   time->played = 0;
   time->last_logon = ::time(0);
-  
+
   account_id = 0;
   player_id = 0;
 }
@@ -61,7 +61,7 @@ playerData::playerData(const playerData &a) :
 {
   // just assign by default, this gets overridden in TBeing stuff
   longDescr = a.longDescr;
-  
+
   classIndT i;
   for (i = MIN_CLASS_IND; i < MAX_SAVED_CLASSES; i++) {
     level[i] = a.level[i];
@@ -71,7 +71,7 @@ playerData::playerData(const playerData &a) :
   time->logon = a.time->logon;
   time->played = a.time->played;
   time->last_logon = a.time->last_logon;
-  
+
   account_id = a.account_id;
   player_id = a.player_id;
 }
@@ -100,10 +100,10 @@ playerData & playerData::operator=(const playerData &a)
   time->logon = a.time->logon;
   time->played = a.time->played;
   time->last_logon = a.time->last_logon;
-  
+
   account_id = a.account_id;
   player_id = a.player_id;
-  
+
   return *this;
 }
 
@@ -126,8 +126,8 @@ pointData::pointData() :
   prevMaxMove(0),
   money(0),
   bankmoney(0),
-  exp(0), 
-  max_exp(0), 
+  exp(0),
+  max_exp(0),
   spellHitroll(0),
   hitroll(0),
   damroll(0),
@@ -149,9 +149,9 @@ pointData::pointData(const pointData &a) :
   prevMaxMove(a.prevMaxMove),
   money(a.money),
   bankmoney(a.bankmoney),
-  exp(a.exp), 
-  max_exp(a.max_exp), 
-  spellHitroll(a.spellHitroll), 
+  exp(a.exp),
+  max_exp(a.max_exp),
+  spellHitroll(a.spellHitroll),
   hitroll(a.hitroll),
   damroll(a.damroll),
   armor(a.armor)
@@ -171,7 +171,7 @@ pointData & pointData::operator=(const pointData &a)
   hit = a.hit;
   maxHit = a.maxHit;
   move = a.move;
-  maxMove = a.maxMove; 
+  maxMove = a.maxMove;
   prevMaxHit = a.prevMaxHit;
   prevMaxMana = a.prevMaxMana;
   prevMaxMove = a.prevMaxMove;
@@ -235,7 +235,7 @@ factionData::factionData(const factionData &a) :
   next_captive(a.next_captive),
   captiveOf(a.captiveOf),
   target(a.target),
-  type(a.type), 
+  type(a.type),
   actions(a.actions),
   align_ge(a.align_ge),
   align_lc(a.align_lc),
@@ -250,9 +250,9 @@ factionData::factionData(const factionData &a) :
 factionData & factionData::operator=(const factionData &a)
 {
   if (this == &a) return *this;
-  type = a.type; 
+  type = a.type;
   actions = a.actions;
-  captive = a.captive; 
+  captive = a.captive;
   next_captive = a.next_captive;
   captiveOf = a.captiveOf;
   target = a.target;
@@ -294,12 +294,12 @@ pracData::~pracData()
 {
 }
 
-bodyPartsDamage::bodyPartsDamage() 
+bodyPartsDamage::bodyPartsDamage()
   : flags(0), stuckIn(NULL), health(0)
 {
 }
 
-bodyPartsDamage::bodyPartsDamage(const bodyPartsDamage &a) 
+bodyPartsDamage::bodyPartsDamage(const bodyPartsDamage &a)
   : flags(a.flags), stuckIn(a.stuckIn), health(a.health)
 {
 }
@@ -323,7 +323,7 @@ skillApplyData::skillApplyData()
 }
 
 skillApplyData::skillApplyData(const skillApplyData &a)
-  : skillNum(a.skillNum), amount(a.amount), 
+  : skillNum(a.skillNum), amount(a.amount),
     numApplys(a.numApplys), nextApply(a.nextApply)
 {
   if (a.nextApply)
@@ -346,12 +346,12 @@ skillApplyData::~skillApplyData()
 {
 }
 
-followData::followData() 
+followData::followData()
   : follower(NULL), next(NULL)
 {
 }
 
-followData::followData(const followData &a) 
+followData::followData(const followData &a)
   : follower(a.follower)
 {
   if (a.next)
@@ -407,7 +407,7 @@ spellTaskData::spellTaskData(const spellTaskData &a) :
   target(a.target),
   start_pos(a.start_pos),
   distracted(a.distracted),
-  difficulty(a.difficulty), 
+  difficulty(a.difficulty),
   component(a.component),
   nextUpdate(a.nextUpdate),
   rounds(a.rounds),
@@ -431,13 +431,13 @@ spellTaskData & spellTaskData::operator=(const spellTaskData &a)
   rounds = a.rounds;
   flags = a.flags;
   start_pos = a.start_pos;
-  distracted = a.distracted; 
+  distracted = a.distracted;
   difficulty = a.difficulty;
   component = a.component;
   wasInRoom = a.wasInRoom;
   text = a.text;
   target = a.target;
-  victim = a.victim; 
+  victim = a.victim;
   object = a.object;
   room = a.room;
   delete [] orig_arg;
@@ -493,7 +493,7 @@ equipmentData & equipmentData::operator= (const equipmentData &a){
   wearSlotT i;
   for (i = MIN_WEAR; i < MAX_WEAR; i++)
     equipment[i] = a.equipment[i];
-  
+
   return *this;
 }
 
@@ -620,7 +620,7 @@ int TBeing::getPlayerID() const
   // Handle shapeshifted player
   if (dynamic_cast<const TMonster *>(this) && IS_SET(specials.act, ACT_POLYSELF) && desc->original) {
     if (desc->original->player.player_id == 0)
-      vlogf(LOG_BUG, format("%s has no player ID!") % desc->original->getName());  
+      vlogf(LOG_BUG, format("%s has no player ID!") % desc->original->getName());
     return desc->original->player.player_id;
   }
 
@@ -902,7 +902,7 @@ void TBeing::setMaxMana(int mana)
   points.maxMana = mana;
 }
 
-// LIFEFORCE 
+// LIFEFORCE
 
 int TBeing::getLifeforce() const
 {
@@ -1140,7 +1140,7 @@ double TBeing::getMaxExp() const
     return 0;
 
   return points.max_exp;
-}  
+}
 
 
 void TBeing::setMaxExp(double n)
@@ -1281,7 +1281,7 @@ void TBeing::setSexUnsafe(int sex)
   setSex(sexTypeT(sex));
 }
 
-// is this character a pk character, 
+// is this character a pk character,
 // did they choose the pk option when creating etc
 bool TBeing::isPkChar() const
 {
@@ -1305,7 +1305,7 @@ bool TBeing::isPking() const
 
 bool TBeing::isValidPkTarget(const TBeing *attacker) const
 {
-  if(isPc() && attacker->isPc() && attacker->isPkChar() && isPkChar() && 
+  if(isPc() && attacker->isPc() && attacker->isPkChar() && isPkChar() &&
      (attacker->GetMaxLevel() >= (GetMaxLevel()-MAX_NEWBIE_LEVEL)) &&
      (attacker->GetMaxLevel() <= (GetMaxLevel()+MAX_NEWBIE_LEVEL)))
     return true;
@@ -1430,7 +1430,7 @@ short TBeing::getArmor() const
       armor-=(int)(getIronFleshArmor(wearIndex)*(getSkillValue(SKILL_IRON_FLESH)/100.0));
     }
 
-    
+
   }
 
   // mobs have a different base AC
@@ -1441,7 +1441,7 @@ short TBeing::getArmor() const
     // whichever is better.
     armor=min(num, armor);
   }
-  
+
   // spell affects
   for (af = affected; af; af = af->next) {
     if(af->location == APPLY_ARMOR)
@@ -1453,7 +1453,7 @@ short TBeing::getArmor() const
 
 void TBeing::setArmor(short armor)
 {
-  vlogf(LOG_PEEL, format("Something called setArmor(%i) on %s") % 
+  vlogf(LOG_PEEL, format("Something called setArmor(%i) on %s") %
 	armor % getName());
 
   //  points.armor = armor;
@@ -1626,7 +1626,7 @@ int TBeing::chiMe(TBeing *tLunatic)
         if (0 == Weather::addWetness(this, -15))
           sendTo("You feel completely dried off now.\n\r");
         else
-          sendTo(format("The heat dries you a bit.  You feel %s.\n\r") % 
+          sendTo(format("The heat dries you a bit.  You feel %s.\n\r") %
 		 Weather::describeWet(this));
       }
 
@@ -1698,7 +1698,7 @@ int TBeing::chiMe(TBeing *tLunatic)
 }
 
 void TBeing::addObjUsed(TObj *obj, int duration) {
-  
+
   affectedData aff;
 
   aff.type = AFFECT_OBJECT_USED;
@@ -1785,8 +1785,8 @@ bool TBeing::canMeditate()
 {
   if (isLinkdead() || (getPosition() < POSITION_RESTING))
     return FALSE;
-  
-  if (getPosition() > POSITION_STANDING && 
+
+  if (getPosition() > POSITION_STANDING &&
     !(getPosition() == POSITION_MOUNTED && (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))) {
       return FALSE;
     }

@@ -75,7 +75,7 @@ bool TSpellBag::lowCheckSlots(silentTypeT silent)
 
   if (value != 0) {
     if (!silent)
-      vlogf(LOG_LOW, format("spellbag (%s) with bad wear slots: %d") % 
+      vlogf(LOG_LOW, format("spellbag (%s) with bad wear slots: %d") %
                  getName() % value);
     return true;
   }

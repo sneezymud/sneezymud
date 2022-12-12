@@ -14,11 +14,11 @@ public:
 
 
 
-    CDNature() 
+    CDNature()
       : CDiscipline(),
       skTreeWalk() {
     }
-    CDNature(const CDNature &a) 
+    CDNature(const CDNature &a)
       : CDiscipline(a),
       skTreeWalk(a.skTreeWalk) {
     }

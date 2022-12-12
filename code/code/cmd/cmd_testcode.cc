@@ -28,7 +28,7 @@ void TBeing::doTestCode(const char *arg)
   unsigned int shopPosBudg = shopPos - getPosGold(GOLD_SHOP_PET);
   int shopNetBudg = shopNet - getNetGold(GOLD_SHOP_PET);
   int shopDrainBudg = shopPosBudg - shopNetBudg;
-  
+
   // tweak the budget values for a "corrected" shop system
   // the drain would be the same, but the pos would only be:
   int shopPosNew = (int) (shopDrainBudg / 1.05);
@@ -98,7 +98,7 @@ void TBeing::doTestCode(const char *arg)
        iters++;
        // flush
        desc->output.clear();
-    } while (heldInPrimHand() && iters < 10000000); 
+    } while (heldInPrimHand() && iters < 10000000);
     breaks++;
 
     sym = dynamic_cast<TSymbol *>(read_object(sym_num, REAL));
@@ -117,7 +117,7 @@ void TBeing::doTestCode(const char *arg)
   sendTo("Checking array boundaries\n\r");
   for (int i = 5;i>=-1;i--) {
     if (discArray[i])
-      sendTo(format("%s\n\r") % discArray[i]->name); 
+      sendTo(format("%s\n\r") % discArray[i]->name);
   }
   sendTo("Checking new/delete\n\r");
   char *s = mud_str_dup("test sstring");
@@ -165,7 +165,7 @@ void TBeing::doTestCode(const char *arg)
         (i == CMD_COMMENT) || (i == CMD_DESCRIPTION) || (i == CMD_REDIT) ||
         (i == CMD_VIEWOUTPUT) || (i == CMD_PRACTICE) || (i == CMD_COMMAND) ||
         (i == CMD_NEWS) || (i == CMD_WIZNEWS) || (i == CMD_CREDITS) ||
-        (i == CMD_SIT) || (i == CMD_REST) || (i == CMD_SLEEP) || 
+        (i == CMD_SIT) || (i == CMD_REST) || (i == CMD_SLEEP) ||
         (i == CMD_CRAWL) || (i == CMD_WIZLIST) || (i == CMD_MEDITATE) ||
         (i == CMD_PENANCE) || (i == CMD_TRACEROUTE) ||
         (i == CMD_MID) || (i == CMD_LOGLIST) || (i == CMD_BRUTTEST))
@@ -189,7 +189,7 @@ void TBeing::doTestCode(const char *arg)
   }
   return;
 #endif
-#if 0  
+#if 0
   TThing *obj = NULL;
   char tmpbuf[256];
 

@@ -114,7 +114,7 @@ int TThing::throwMe(TBeing *ch, dirTypeT tdir, const char *vict)
   // the above formula is for returning to same height we started from
   // make allowance for how high we started from (from tt above)
   mult += v0 * cos(ang * (2.0*M_PI/360.0)) * tt;
-  
+
   // regard the average "room" as 50 feet across, exterior = 100 ft across
   if (ch->outside())
     max_distance = (unsigned int) (mult / 100);
@@ -139,7 +139,7 @@ vlogf(LOG_BUG, buf);
 #endif
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 15);
-  
+
   strncpy(local_vict, vict, sizeof(local_vict - 1));
 
   if(sstring(local_vict).isNumber() && (sscanf(local_vict, "%d", &iDist) == 1))
@@ -152,7 +152,7 @@ vlogf(LOG_BUG, buf);
     return FALSE;
   }
   if (tdir == 4)
-    max_distance /= 2; // you can only throw upwards half as far 
+    max_distance /= 2; // you can only throw upwards half as far
 
   if ((iDist > 50) || (max_distance < (unsigned int) iDist)) {
     ch->sendTo("Much too far.  Maybe in your dreams!\n\r");
@@ -302,7 +302,7 @@ int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellN
 void pissOff(TMonster *irritated, TBeing *reason)
 {
   affectedData af;
-  const int PISSED_MOB_PERSIST = 250;    // make em damn persistant 
+  const int PISSED_MOB_PERSIST = 250;    // make em damn persistant
 
   if (!(irritated->canSee(reason, INFRA_YES)) || reason->isImmortal())
     return;
@@ -339,7 +339,7 @@ void pissOff(TMonster *irritated, TBeing *reason)
     irritated->oldRoom = irritated->inRoom();
     irritated->addHated(reason);
     if (!irritated->affectedBySpell(SPELL_TRAIL_SEEK)) {
-      af.type = SPELL_TRAIL_SEEK;        // make sure mob hunts global 
+      af.type = SPELL_TRAIL_SEEK;        // make sure mob hunts global
       af.duration = PISSED_MOB_PERSIST;
       af.modifier = 0;
       af.location = APPLY_NONE;
@@ -360,11 +360,11 @@ bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
   if (ch) {
     if (ch->isImmortal())
       return FALSE;
- 
+
     // presume anyone near thrower is safely out of the way
     if (tbc && tbc->sameRoom(*ch))
       return false;
-  
+
     // protect the mounts of group members too
     if (tbc && tbc->rider) {
       TBeing *temp = dynamic_cast<TBeing *>(tbc->horseMaster());
@@ -384,12 +384,12 @@ bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
   num += 1 + thing->getVolume()/1000;
 
   if (ch) {
-    num -= ch->plotStat(STAT_CURRENT, STAT_AGI, -10, 10, 0); 
+    num -= ch->plotStat(STAT_CURRENT, STAT_AGI, -10, 10, 0);
   }
 
   if (tbc) {
-    num -= tbc->plotStat(STAT_CURRENT, STAT_PER, -5, 5, 0); 
-    num -= tbc->plotStat(STAT_CURRENT, STAT_SPE, -5, 5, 0); 
+    num -= tbc->plotStat(STAT_CURRENT, STAT_PER, -5, 5, 0);
+    num -= tbc->plotStat(STAT_CURRENT, STAT_SPE, -5, 5, 0);
   }
 
   return (::number(20, 100) < num);
@@ -426,9 +426,9 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
     else
       range = cdist;
 
-    // anyone we want to hit here?  (including innocents) 
+    // anyone we want to hit here?  (including innocents)
     // the ch->isImmortal() checks prevent gods from hitting innocents
-    if ((true_targ = (tbt == *targ)) || 
+    if ((true_targ = (tbt == *targ)) ||
          hitInnocent(ch, this, tbt)) {
       // if we hit an innocent, treat range as being greater so that damage
       // is less than if it was intentional
@@ -442,7 +442,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
         act("$n catches $p.", FALSE, tbt, this, NULL, TO_ROOM);
         if (!ch->sameRoom(*tbt))
           act("In the distance, $N catches your $o.",TRUE,ch,this,tbt,TO_CHAR);
- 
+
         if (!tbt->heldInPrimHand()) {
           act("You catch $p.",
                        FALSE,tbt,this,0,TO_CHAR);
@@ -459,13 +459,13 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
           --(*this);
           *tbt += *this;
         }
-        if (!tbt->isPc()) 
+        if (!tbt->isPc())
           pissOff(dynamic_cast<TMonster *>(tbt), ch);
         if (cdist == 0)
           ch->setCharFighting(tbt, 0);
         return resCode;
       } else if (!ch->isImmortal() &&
-                  (!(i = ch->specialAttack(tbt, SKILL_RANGED_PROF)) || 
+                  (!(i = ch->specialAttack(tbt, SKILL_RANGED_PROF)) ||
                    i == GUARANTEED_FAILURE)) {
         act("$n dodges out of the way of $p.", FALSE, tbt, this, NULL, TO_ROOM);
         tbt->sendTo("You dodge out of its way.\n\r");
@@ -516,7 +516,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
             }
           }
 #if RANGE_DEBUG
-          vlogf(LOG_BUG, format("Range debug: (2) %s damaging %s with %s for %d dam") % 
+          vlogf(LOG_BUG, format("Range debug: (2) %s damaging %s with %s for %d dam") %
                  ch->getName() % tbt->getName() % tobj->getName() % d);
 #endif
           if (ch->reconcileDamage(tbt, d, getWtype()) == -1) {
@@ -555,7 +555,7 @@ int hit_obstacle_in_room(TRoom *rp, TThing *thing, TBeing *ch)
           (obj->getVolume() > ((dice(1, 1000) * 1000)) - thing->getVolume())) {
         act("$n smacks into $N, and falls to the $g.",
              TRUE, thing, 0, obj, TO_ROOM);
-        act("$p smacked into $N.", FALSE, ch, thing, obj, TO_CHAR); 
+        act("$p smacked into $N.", FALSE, ch, thing, obj, TO_CHAR);
 	if (thing->spec) thing->checkSpec(NULL, CMD_ARROW_HIT_OBJ, "", obj);
         return TRUE;
       }
@@ -680,8 +680,8 @@ static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
   if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
 }
 
-// max_dist is the maximum distance that "o" can be thrown. 
-// iDist is how far user wants item to go 
+// max_dist is the maximum distance that "o" can be thrown.
+// iDist is how far user wants item to go
 // distance is actual amount flown
 // return DELETE_ITEM if t should go poof
 // returns DELETE_VICT if *targ should die   (|| able)
@@ -692,7 +692,7 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
   int iDist = 0;
   int rc;
 
-  // send the thing up to "dist" rooms away, checking for our target 
+  // send the thing up to "dist" rooms away, checking for our target
   while ((rp = real_roomp(from))) {
     if (iDist) {
       sprintf(capbuf, "$n %s into the room %s.", (dir == 5 ? "drops" : "flies"), directions[dir][1]);
@@ -715,29 +715,29 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
     else if (rc)
       return FALSE;
 
-    // users specified to fly "dist" rooms, so probably only provided 
+    // users specified to fly "dist" rooms, so probably only provided
     // momentum for that far.  Use dist in this check, rather than max_dist
     iDist++;
     if (iDist > dist || iDist > max_dist) {
       act("$n drops to the $g.", TRUE, t, 0, 0, TO_ROOM);
 
       if (dir != DIR_DOWN)
-        act("$p ran out of momentum and fell.", FALSE, ch, t, 0, TO_CHAR); 
+        act("$p ran out of momentum and fell.", FALSE, ch, t, 0, TO_CHAR);
       if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
       return FALSE;
     } else if (!clearpath(from, dir) || rp->isUnderwaterSector()) {
       barrier(rp, dir,t);
-      act("$p hit an obstacle and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR); 
-      
+      act("$p hit an obstacle and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR);
+
       if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
       return FALSE;
     }
-    // No need to check for a NULL newrp, clearpath() does that. - Russ 
+    // No need to check for a NULL newrp, clearpath() does that. - Russ
     newrp = real_roomp(rp->dir_option[dir]->to_room);
     if (newrp->isRoomFlag(ROOM_PEACEFUL) || newrp->isRoomFlag(ROOM_NO_MOB)) {
-      act("Strangely, $n hits a magical barrier and falls to the $g.", 
+      act("Strangely, $n hits a magical barrier and falls to the $g.",
              FALSE, t, 0, 0, TO_ROOM);
-      act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR); 
+      act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR);
 
       if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
 
@@ -785,14 +785,14 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
   switch (ch->getPosition()) {
     case POSITION_MOUNTED:
       height = 4*dynamic_cast<TBeing *>(ch->riding)->getHeight()/5 + 2*ch->getHeight()/3;
-      break;  
+      break;
     case POSITION_STANDING:
     case POSITION_FIGHTING:
       height = ch->getHeight();
       break;
     case POSITION_SITTING:
       height = ch->getHeight()/3;
-      break; 
+      break;
     case POSITION_CRAWLING:
       height = ch->getHeight()/4;
       break;
@@ -875,7 +875,7 @@ TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
   if (!(n = get_number(&tmp)))
     return NULL;
 
-  // This routine counts folks in your room 
+  // This routine counts folks in your room
   rm = ch->in_room;
   dirTypeT i = DIR_NONE;
   range = 0;
@@ -973,7 +973,7 @@ void TBeing::doScan(const char *argument)
     "on the horizon",
     "on the horizon",
     "on the horizon",
-    "on the horizon" 
+    "on the horizon"
   };
   char buf[256], buf2[256];
   int max_range = 15, range, new_rm, rm, nfnd;
@@ -1007,7 +1007,7 @@ void TBeing::doScan(const char *argument)
   if (getMove() < (all ? 10 : 2)) {
     sendTo("You are simply too exhausted!\n\r");
     return;
-  } 
+  }
 
   act(buf, TRUE, this, 0, 0, TO_ROOM);
   sendTo(buf2);
@@ -1168,7 +1168,7 @@ TThing *has_range_object(TBeing *ch, int *pos)
   if (!ch->equipment[HOLD_RIGHT] && !ch->equipment[HOLD_LEFT] && ch->stuff.empty())
     return NULL;
 
-  // Go thru possible places for throwing objects. 
+  // Go thru possible places for throwing objects.
   if ((hucked = ch->equipment[HOLD_RIGHT])) {
     tobj = dynamic_cast<TObj *>(hucked);
     if (tobj && tobj->canWear(ITEM_WEAR_THROW)) {
@@ -1213,7 +1213,7 @@ dirTypeT choose_exit_global(int in_room, int tgt_room, int depth)
 
   return path.findPath(in_room, findRoom(tgt_room));
 }
- 
+
 dirTypeT choose_exit_in_zone(int in_room, int tgt_room, int depth)
 {
   TPathFinder path(depth);
@@ -1236,7 +1236,7 @@ int TBeing::doShoot(const char *arg)
     return FALSE;
 
   rc = sscanf(arg, "%s %s %d", arg2, arg1, &iDist);
-  if (rc < 3) 
+  if (rc < 3)
     iDist = 99;
   if (rc < 2)
     *arg1='\0';
@@ -1246,7 +1246,7 @@ int TBeing::doShoot(const char *arg)
   }
 
   dir = getDirFromChar(arg2);
-  
+
   if (dir == DIR_NONE) {
     strcpy(arg1, arg2);
     dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
@@ -1284,7 +1284,7 @@ int TBeing::doShoot(const char *arg)
   }
 
   // this is mainly for dual wielding guns, bows should be 2-handed
-  if((t = equipment[getSecondaryHold()]) && 
+  if((t = equipment[getSecondaryHold()]) &&
      dynamic_cast<TObj *>(t) && !dynamic_cast<TObj *>(t)->usedAsPaired()){
     rc = t->shootMeBow(this, targ, count, dir, iDist);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1311,22 +1311,22 @@ int TBeing::unloadBow(const char *arg)
   TObj *arrow;
   TBow *bow = NULL;
   TThing *t;
- 
+
   if (!(t = equipment[getPrimaryHold()]) ||
       !(bow = dynamic_cast<TBow *>(t)) ||
       bow->stuff.empty() || !dynamic_cast<TArrow *>(bow->stuff.front()))
     return FALSE;
- 
+
   arrow = dynamic_cast<TObj *>(bow->stuff.front());
   --(*arrow);
   sendTo("You uncock your bow and take out its arrow!\n\r");
-  act("$n uncocks $s bow and takes out its arrow!", 
+  act("$n uncocks $s bow and takes out its arrow!",
               TRUE, this, NULL, NULL, TO_ROOM);
   *this += *(unequip(getPrimaryHold()));
   *this += *arrow;
   return TRUE;
 }
- 
+
 TThing * TBeing::findArrow(const char *buf, silentTypeT silent) const
 {
   TThing *arrow;
@@ -1376,7 +1376,7 @@ void TBeing::doBload(const char *arg)
           arg2[128];
   TThing  *bow;
   TThing  *arrow;
- 
+
   if (sscanf(arg, "%s %s", arg1, arg2) != 2) {
     sendTo("Syntax : bload <bow> <arrow>\n\r");
     return;

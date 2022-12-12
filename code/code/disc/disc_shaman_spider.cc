@@ -6,7 +6,7 @@
  *   SneezyMUD Development - All Rights Reserved                   *
  *                                                                 *
  *******************************************************************/
- 
+
 #include <stdio.h>
 
 #include "handler.h"
@@ -53,7 +53,7 @@ int transfix(TBeing * caster, TBeing * victim, int level, short bKnown)
     return SPELL_FAIL;
   }
 
-  if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_TRANSFIX) && 
+  if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_TRANSFIX) &&
            !victim->isLucky(caster->spellLuckModifier(SKILL_TRANSFIX))) {
     aff.type = SKILL_TRANSFIX;
     aff.level = level;
@@ -101,7 +101,7 @@ int transfix(TBeing * caster, TBeing * victim, int level, short bKnown)
 int livingVines(TBeing *caster, TBeing *victim,int level, short bKnown)
 {
   affectedData aff1, aff2;
- 
+
   if (caster->isNotPowerful(victim, level, SPELL_LIVING_VINES, SILENT_NO)) {
     return SPELL_FAIL;
   }
@@ -110,23 +110,23 @@ int livingVines(TBeing *caster, TBeing *victim,int level, short bKnown)
     caster->sendTo("You need to be in nature or on land to cast this spell!\n\r");
     return SPELL_FAIL;
   }
- 
+
   caster->reconcileHurt(victim, discArray[SPELL_LIVING_VINES]->alignMod);
- 
+
   aff1.type = SPELL_LIVING_VINES;
   aff1.level = level;
   aff1.bitvector = AFF_WEB;
   aff1.location = APPLY_ARMOR;
   aff1.modifier = (level / 2) + 5;
   aff1.duration = caster->durationModify(SPELL_LIVING_VINES, level * Pulse::UPDATES_PER_MUDHOUR);
- 
+
   aff2.type = SPELL_LIVING_VINES;
   aff2.level = level;
   aff2.bitvector = AFF_WEB;
   aff2.location = APPLY_SPELL_HITROLL;
   aff2.modifier = (-level*2);
   aff2.duration = aff1.duration;
-   
+
   if (caster->bSuccess(bKnown, SPELL_LIVING_VINES)) {
     act("$n summons the vines to hold $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("You command the vines to trap $N!", FALSE, caster, NULL, victim, TO_CHAR);
@@ -169,22 +169,22 @@ int livingVines(TBeing *caster, TBeing *victim,int level, short bKnown)
     return SPELL_FAIL;
   }
 }
- 
+
 void livingVines(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
   livingVines(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
 }
- 
+
 void livingVines(TBeing *caster, TBeing *victim)
 {
 int ret,level;
- 
+
   if (!bPassMageChecks(caster, SPELL_LIVING_VINES, victim))
     return;
- 
+
   level = caster->getSkillLevel(SPELL_LIVING_VINES);
   int bKnown = caster->getSkillValue(SPELL_LIVING_VINES);
- 
+
   if ((ret=livingVines(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
   } else {
     if (ret==SPELL_CRIT_FAIL) {
@@ -212,7 +212,7 @@ int rootControl(TBeing *caster, TBeing *victim, TMagicItem *tObj)
 int rootControl(TBeing * caster, TBeing * victim, int, int dam, short bKnown)
 {
   dam = max(1,dam);
- 
+
   if (!victim) {
     act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
@@ -229,7 +229,7 @@ int rootControl(TBeing * caster, TBeing * victim, int, int dam, short bKnown)
     return SPELL_FAIL;
   }
   caster->reconcileHurt(victim,discArray[SPELL_ROOT_CONTROL]->alignMod);
- 
+
   act("Large tree roots start to form in front of $N.", FALSE, caster , NULL, victim, TO_CHAR);
   act("Large tree roots start to form in front of $N.", TRUE, caster , NULL, victim, TO_NOTVICT);
   act("Large tree roots start to form in front of you.", TRUE, caster , NULL, victim, TO_VICT);
@@ -272,19 +272,19 @@ int rootControl(TBeing * caster, TBeing * victim, int, int dam, short bKnown)
     }
   }
 }
- 
+
 int rootControl(TBeing * caster, TBeing * victim)
 {
   int ret;
   int rc = 0;
- 
+
   if (!bPassMageChecks(caster, SPELL_ROOT_CONTROL, victim))
     return FALSE;
 
   int level = caster->getSkillLevel(SPELL_ROOT_CONTROL);
   int bKnown = caster->getSkillValue(SPELL_ROOT_CONTROL);
   int dam = caster->getSkillDam(victim, SPELL_ROOT_CONTROL, level, caster->getAdvLearning(SPELL_ROOT_CONTROL));
- 
+
   ret=rootControl(caster,victim,level,dam,bKnown);
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else if (IS_SET(ret, SPELL_FAIL)) {
@@ -296,7 +296,7 @@ int rootControl(TBeing * caster, TBeing * victim)
     ADD_DELETE(rc, DELETE_THIS);
   return rc;
 }
- 
+
 
 
 
@@ -352,7 +352,7 @@ int transfix(TBeing * caster, TBeing * victim)
 int sticksToSnakes(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   TMonster *snake;
-  affectedData aff; 
+  affectedData aff;
   int rc, mobile;
   followData *k, *n;
 
@@ -507,7 +507,7 @@ int sticksToSnakes(TBeing *caster, TBeing *victim)
      lag_t rounds = discArray[SPELL_STICKS_TO_SNAKES]->lag;
      diff = discArray[SPELL_STICKS_TO_SNAKES]->task;
 
-     start_cast(caster, victim, NULL, caster->roomp, SPELL_STICKS_TO_SNAKES, diff, 1, "", 
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_STICKS_TO_SNAKES, diff, 1, "",
 rounds, caster->in_room, 0, 0,TRUE, 0);
       return TRUE;
 }
@@ -535,7 +535,7 @@ int controlUndead(TBeing *caster,TBeing *victim,int level,short bKnown)
     caster->sendTo("Umm...that's not an undead creature. You can't charm it.\n\r");
     act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FAIL;
-  } 
+  }
 
   if (caster->isAffected(AFF_CHARM)) {
     sprintf(buf, "You can't charm $N -- you're busy taking orders yourself!");
@@ -571,7 +571,7 @@ int controlUndead(TBeing *caster,TBeing *victim,int level,short bKnown)
   if ((!victim->isPc() && dynamic_cast<TMonster *>(victim)->Hates(caster, NULL)) ||
        caster->isNotPowerful(victim, level, SPELL_CONTROL_UNDEAD, SILENT_YES)) {
 
-      act("Something went wrong!  All you did was piss $N off!", 
+      act("Something went wrong!  All you did was piss $N off!",
                 FALSE, caster, NULL, victim, TO_CHAR);
       act("Nothing seems to happen.", FALSE, caster, NULL, victim, TO_NOTVICT);
       act("$n just tried to charm you!", FALSE, caster, NULL, victim, TO_VICT);
@@ -589,7 +589,7 @@ int controlUndead(TBeing *caster,TBeing *victim,int level,short bKnown)
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = AFF_CHARM;
-    aff.duration = caster->followTime(); 
+    aff.duration = caster->followTime();
     aff.duration = (int) (caster->percModifier() * aff.duration);
 
     switch (critSuccess(caster, SPELL_CONTROL_UNDEAD)) {
@@ -603,7 +603,7 @@ int controlUndead(TBeing *caster,TBeing *victim,int level,short bKnown)
         break;
       default:
         break;
-    } 
+    }
     victim->affectTo(&aff);
 
     aff.type = AFFECT_THRALL;
@@ -721,7 +721,7 @@ int clarity(TBeing *caster, TBeing *victim)
      lag_t rounds = discArray[SPELL_CLARITY]->lag;
      diff = discArray[SPELL_CLARITY]->task;
 
-     start_cast(caster, victim, NULL, caster->roomp, SPELL_CLARITY, diff, 1, "", 
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_CLARITY, diff, 1, "",
 rounds, caster->in_room, 0, 0,TRUE, 0);
       return TRUE;
 }
@@ -772,9 +772,9 @@ int hypnosis(TBeing *caster, TBeing *victim, int level, short bKnown)
   }
 
   if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-    act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL, victim, 
+    act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL, victim,
 TO_CHAR, ANSI_RED_BOLD);
-    act("$N refuses to enter $ group the size of $n's!", TRUE, caster, NULL, victim, 
+    act("$N refuses to enter $ group the size of $n's!", TRUE, caster, NULL, victim,
 TO_ROOM, ANSI_RED_BOLD);
     return SPELL_FAIL;
   }
@@ -799,7 +799,7 @@ TO_ROOM, ANSI_RED_BOLD);
       victim->failCharm(caster);
       act("You have failed in this important ritual! Your victim is immune!", FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED_BOLD);
       caster->nothingHappens(SILENT_YES);
-      act("$n just tried to hypnotize you!", FALSE, caster, NULL, victim, TO_VICT, 
+      act("$n just tried to hypnotize you!", FALSE, caster, NULL, victim, TO_VICT,
 ANSI_RED_BOLD);
       return SPELL_FAIL;
   }
@@ -836,9 +836,9 @@ ANSI_RED_BOLD);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_HYPNOSIS))) {
           SV(SPELL_HYPNOSIS);
           aff.duration /= 2;
-        } 
+        }
         break;
-    } 
+    }
 
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
@@ -866,9 +866,9 @@ ANSI_RED_BOLD);
 
     return SPELL_SUCCESS;
   } else {
-    act("You have invoked this important ritual incorrectly!", FALSE, caster, NULL, 
+    act("You have invoked this important ritual incorrectly!", FALSE, caster, NULL,
 victim, TO_CHAR, ANSI_RED_BOLD);
-    act("$n just tried to hypnotize you!", FALSE, caster, NULL, victim, TO_VICT, 
+    act("$n just tried to hypnotize you!", FALSE, caster, NULL, victim, TO_VICT,
 ANSI_RED_BOLD);
     caster->nothingHappens(SILENT_YES);
     victim->failCharm(caster);
@@ -937,7 +937,7 @@ int hypnosis(TBeing *caster, TBeing *victim)
   lag_t rounds = discArray[SPELL_HYPNOSIS]->lag;
   diff = discArray[SPELL_HYPNOSIS]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_HYPNOSIS, diff, 1, "", rounds, 
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_HYPNOSIS, diff, 1, "", rounds,
 caster->in_room, 0, 0,TRUE, 0);
     return TRUE;
 }
@@ -950,9 +950,9 @@ int ret,level;
   int bKnown = caster->getSkillValue(SPELL_HYPNOSIS);
 
   if ((ret=hypnosis(caster,victim,level,bKnown)) == SPELL_SUCCESS) {
-    act("You feel an overwhelming urge to follow $n!", FALSE, caster, NULL, victim, 
+    act("You feel an overwhelming urge to follow $n!", FALSE, caster, NULL, victim,
 TO_VICT, ANSI_RED_BOLD);
-    act("You decide to do whatever $e says!", FALSE, caster, NULL, victim, TO_VICT, 
+    act("You decide to do whatever $e says!", FALSE, caster, NULL, victim, TO_VICT,
 ANSI_RED_BOLD);
 
   } else {
@@ -1013,7 +1013,7 @@ int raze(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
         }
         if (caster->reconcileDamage(caster, dam/3, SPELL_RAZE) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
-        act("Oops! You nearly disintegrated yourself on that one!", 
+        act("Oops! You nearly disintegrated yourself on that one!",
             FALSE, caster, NULL, victim, TO_CHAR);
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
@@ -1070,6 +1070,6 @@ int raze(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
 
   return tRc;
 }
- 
+
 
 

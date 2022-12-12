@@ -76,7 +76,7 @@ int task_brew(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
             // successful brew, set learnedness to knowledge in the skill
             ch->sendTo(format("You successfully create your potion%s.\n\r") %
 		       (how_many <= 5 ? "" : "s"));
-	    
+
 	    potion_obj->setDrinkUnits(how_many);
 	    potion_obj->setDrinkType(spell_to_liq(which));
             ch->sendTo(format("You now have a potion of %s.\n\r") %

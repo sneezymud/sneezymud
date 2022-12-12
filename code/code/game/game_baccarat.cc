@@ -53,7 +53,7 @@ void BaccaratGame::stay(TBeing *ch)
   sstring log_msg;
 
   // dealer plays
-  if((bet_type==0 && handValue(dealer)<=5) || 
+  if((bet_type==0 && handValue(dealer)<=5) ||
      (bet_type==1 && handValue(dealer)>5)){
     dealer[2]=deck[deck_inx++];
 
@@ -72,7 +72,7 @@ void BaccaratGame::stay(TBeing *ch)
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
     }
   }
-  
+
   ch->sendTo("\n\rThe dealer's final hand:\n\r");
   act("\n\rThe dealer's final hand:",TRUE, ch, 0, 0, TO_ROOM);
 
@@ -118,7 +118,7 @@ void BaccaratGame::stay(TBeing *ch)
       mult=8;
     }
   }
-  
+
   if(mult>0){
     payout(ch, (int)((double)bet * mult));
     observerReaction(ch, GAMBLER_WON);
@@ -141,10 +141,10 @@ void BaccaratGame::Hit(TBeing *ch)
   }
 
   player[2]=deck[deck_inx++];
-  
+
   log_msg = format("You are dealt %s.\n\r") % pretty_card_printout(ch, player[2]);
   ch->sendTo(COLOR_BASIC, log_msg);
-    
+
   log_msg = format("$n is dealt %s.") %pretty_card_printout(ch, player[2]);
   act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 }
@@ -228,10 +228,10 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 
       log_msg = format("%s (down)\n\r") % pretty_card_printout(ch, player[i]);
       ch->sendTo(COLOR_BASIC, log_msg);
-      
+
       log_msg = format("%s (down)") %pretty_card_printout(ch, player[i]);
       act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
-    }    
+    }
 
 
     // check for natural hands
@@ -247,10 +247,10 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 	  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	}
       }
-      
+
       ch->sendTo("\n\rThe dealer's final hand:\n\r");
       act("\n\rThe dealer's final hand:",TRUE, ch, 0, 0, TO_ROOM);
-      
+
       for(int i=0;i<3;++i){
 	if(dealer[i]){
 	  ch->sendTo(COLOR_BASIC, format("%s\n\r") % pretty_card_printout(ch, dealer[i]));
@@ -258,7 +258,7 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 	  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	}
       }
-      
+
       ch->sendTo("\n\r");
       act("\n\r", TRUE, ch, 0, 0, TO_ROOM);
 
@@ -280,10 +280,10 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 	  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	}
       }
-      
+
       ch->sendTo("\n\rThe dealer's final hand:\n\r");
       act("\n\rThe dealer's final hand:",TRUE, ch, 0, 0, TO_ROOM);
-      
+
       for(int i=0;i<3;++i){
 	if(dealer[i]){
 	  ch->sendTo(COLOR_BASIC, format("%s\n\r") % pretty_card_printout(ch, dealer[i]));
@@ -291,7 +291,7 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 	  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	}
       }
-      
+
       ch->sendTo("\n\r");
       act("\n\r", TRUE, ch, 0, 0, TO_ROOM);
 
@@ -311,10 +311,10 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 	  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	}
       }
-      
+
       ch->sendTo("\n\rThe dealer's final hand:\n\r");
       act("\n\rThe dealer's final hand:",TRUE, ch, 0, 0, TO_ROOM);
-      
+
       for(int i=0;i<3;++i){
 	if(dealer[i]){
 	  ch->sendTo(COLOR_BASIC, format("%s\n\r") % pretty_card_printout(ch, dealer[i]));
@@ -322,13 +322,13 @@ void BaccaratGame::Bet(TBeing *ch, const sstring &arg)
 	  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 	}
       }
-      
+
       ch->sendTo("\n\r");
       act("\n\r", TRUE, ch, 0, 0, TO_ROOM);
 
       ch->sendTo("It's a tie, you push.\n\r");
       log_msg="It's a tie, $n pushes.";
-      act(log_msg, TRUE, ch, 0, 0, TO_ROOM);      
+      act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
       payout(ch, bet);
     } else
       observerReaction(ch, GAMBLER_BET);
@@ -357,7 +357,7 @@ void BaccaratGame::peek(const TBeing *ch)
 	       pretty_card_printout(ch, player[i]);
       ch->sendTo(COLOR_BASIC, log_msg);
     }
-  }    
+  }
 
 }
 

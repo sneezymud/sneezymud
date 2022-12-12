@@ -69,7 +69,7 @@ unsigned int find_shop_nr(int mobvnum)
   if (shop_nr >= shop_index.size()) {
     vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") % mob_index[mobvnum].virt);
     return 0;
-  }   
+  }
 
   return shop_nr;
 }
@@ -274,7 +274,7 @@ float shopData::getProfitBuy(int vnum, sstring name, const TBeing *ch)
 
   // if the shop is player owned, we check custom pricing
   if(isOwned())
-  {  
+  {
     if(buy_ratios_cache.count(vnum))
       profit=buy_ratios_cache[vnum];
 
@@ -371,7 +371,7 @@ int TObj::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
 
 // this is price shop will sell it at
 int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
-{    
+{
   // adjust cost based on structure
   double cost = adjPrice();
 
@@ -389,7 +389,7 @@ int TObj::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
   int singleCost = (int) cost;
 
   // finally do the multiplication for number of items
-  // we do this last so that the actual price is the same as the single-object quoted price * num 
+  // we do this last so that the actual price is the same as the single-object quoted price * num
   return singleCost * num;
 }
 
@@ -429,7 +429,7 @@ bool shopData::willBuy(const TObj *item)
   bool mat_ok=FALSE;
   bool is_commod = dynamic_cast<const TCommodity*>(item) != NULL;
 
-  if ((!is_commod && item->getValue() < 1) || 
+  if ((!is_commod && item->getValue() < 1) ||
       item->isObjStat(ITEM_NEWBIE) ||
       item->isObjStat(ITEM_PROTOTYPE))
     return FALSE;
@@ -548,7 +548,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     for(int i=0;i<num && db.fetchRow();){
       if(!isname(argm, db["name"]))
         continue;
-      
+
       rent_id=convertTo<int>(db["rent_id"]);
       temp1=keeper->loadItem(shop_nr, rent_id);
       *keeper += *temp1;
@@ -593,7 +593,7 @@ void shopping_buy(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     }
   }
 
-  // Ensure stuff that is on the keeper is deleted 
+  // Ensure stuff that is on the keeper is deleted
   // regardless of where it came from or how it got there!
   TThing *t;
   for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end();) {
@@ -629,30 +629,30 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
       return -1;
     }
   }
-  
+
   tmp = number_objects_in_list(this, keeper->stuff);
   if (num > tmp) {
     keeper->doTell(ch->name, format("I don't have %d of that item. Here %s the %d I do have.") %
 		   num  % ((tmp > 1) ? "are" : "is") % tmp);
   } else
     tmp = num;
-  
+
   strcpy(argm, name.c_str());
-  
+
   strcpy(argm, add_bars(argm).c_str());
   swindle=ch->getSwindleBonus();
   chr = ch->getChaShopPenalty() - swindle;
   chr = max((float)1.0,chr);
 
   cost = shopPrice(1, shop_nr, chr, ch);
-  
+
   for (i = 0; i < tmp; i++) {
     TThing *t_temp1 = searchLinkedList(argm, keeper->stuff);
     TObj *temp1 = dynamic_cast<TObj *>(t_temp1);
-      
+
     if ((ch->getMoney() < cost) && !ch->hasWizPower(POWER_GOD)) {
       keeper->doTell(ch->name, shop_index[shop_nr].missing_cash2);
-	
+
       switch (shop_index[shop_nr].temper1) {
 	case 0:
 	  keeper->doAction(ch->name, CMD_SMILE);
@@ -688,10 +688,10 @@ int TObj::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
   keeper->doTell(ch->name, format(shop_index[shop_nr].message_buy) %
 		 (cost * count));
 
-  ch->sendTo(COLOR_OBJECTS, format("You now have %s (*%d).\n\r") % 
+  ch->sendTo(COLOR_OBJECTS, format("You now have %s (*%d).\n\r") %
 	     sstring(getName()).uncap() % count);
-  if (count == 1) 
-    act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM); 
+  if (count == 1)
+    act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
   else {
     buf = format("$n buys %s [%d].") % fname(name) % count;
     act(buf, FALSE, ch, this, 0, TO_ROOM);
@@ -708,7 +708,7 @@ bool will_not_buy(TBeing *ch, TMonster *keeper, TObj *temp1, int shop_nr)
   if(temp1->objectSell(ch, keeper)){
     if(ch->isImmortal())
       keeper->doTell(ch->getName(), "Since you're immortal, I'll make an exception.");
-    else 
+    else
       return TRUE;
   }
   if(Config::NoDamagedItemsShop()){
@@ -770,7 +770,7 @@ bool TObj::sellMeCheck(TBeing *ch, TMonster *keeper, int, int defaultMax) const
     vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[keeper->number].virt);
     return FALSE;
   }
-  
+
   TShopOwned tso(shop_nr, keeper, ch);
   int max_num=tso.getMaxNum(ch, this, defaultMax);
 
@@ -805,9 +805,9 @@ void generic_num_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr, int 
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
   }
-  if (will_not_buy(ch, keeper, obj, shop_nr)) 
+  if (will_not_buy(ch, keeper, obj, shop_nr))
     return;
-  
+
   int rc;
   if (tComp) {
     rc=tComp->sellMe(ch, keeper, shop_nr, num);
@@ -837,9 +837,9 @@ void generic_sell(TBeing *ch, TMonster *keeper, TObj *obj, int shop_nr)
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return;
   }
-  if (will_not_buy(ch, keeper, obj, shop_nr)) 
+  if (will_not_buy(ch, keeper, obj, shop_nr))
     return;
-  
+
   int rc;
   if (tComp) {
     rc=tComp->sellMe(ch, keeper, shop_nr, 1);
@@ -864,15 +864,15 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
     keeper->doTell(ch->getName(), shop_index[shop_nr].do_not_buy);
     return false;
   }
-  
-  
+
+
   if (getValue() <= 1 || isObjStat(ITEM_NEWBIE)) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy valueless items.");
     return false;
   }
   if (sellMeCheck(ch, keeper, num, 9))
     return false;
-  
+
   chr = ch->getChaShopPenalty() - ch->getSwindleBonus();
   chr = max((float)1.0,chr);
   cost = sellPrice(1, shop_nr, chr, ch);
@@ -888,7 +888,7 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       keeper->doTell(fname(ch->name), "It's been damaged, but I guess I can buy it as scrap.");
     }
   }
-  max(cost, 1);   // at least 1 talen 
+  max(cost, 1);   // at least 1 talen
   if (keeper->getMoney() < cost) {
     keeper->doTell(ch->getName(), shop_index[shop_nr].missing_cash1);
     return false;
@@ -910,7 +910,7 @@ int TObj::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   sellMeMoney(ch, keeper, cost, shop_nr);
 
   if (ch->isAffected(AFF_GROUP) && ch->desc &&
-           IS_SET(ch->desc->autobits, AUTO_SPLIT) && 
+           IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
           (ch->master || ch->followers)){
     buf = format("%d") % cost;
     ch->doSplit(buf.c_str(), false);
@@ -943,9 +943,9 @@ TThing *)
   TThing *t;
   int rc;
 
-  if (isClosed()) 
+  if (isClosed())
     return TRUE;
-  
+
   for(StuffIter it=stuff.begin();it!=stuff.end();){
     t=*(it++);
     rc = t->componentValue(ch, keeper, shop_nr, this);
@@ -1215,14 +1215,14 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
               //haven't sold this type of comp yet
               soldComps.insert(temp2->objVnum());
               rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, temp2->getComponentCharges());
-            } 
+            }
           }
         }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
           t = NULL;
         }
-        if (IS_SET_DELETE(rc, DELETE_VICT)) 
+        if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
       for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
@@ -1242,14 +1242,14 @@ int shopping_sell(const char *tString, TBeing *ch, TMonster *tKeeper, int shop_n
               //haven't sold this type of comp yet
               soldComps.insert(temp2->objVnum());
               rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, temp2->getComponentCharges());
-            } 
+            }
           }
         }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
           t = NULL;
         }
-        if (IS_SET_DELETE(rc, DELETE_VICT)) 
+        if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
       ch->doQueueSave();
@@ -1324,7 +1324,7 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     keeper->doTell(ch->name, "What do you want me to evaluate??");
     return;
   }
-  
+
   if ((num = getabunch(argm, newarg)))
     strcpy(argm, newarg);
 
@@ -1372,9 +1372,9 @@ void shopping_value(const char *arg, TBeing *ch, TMonster *keeper, int shop_nr)
     keeper->doTell(ch->name, shop_index[shop_nr].do_not_buy);
     return;
   }
-  if (will_not_buy(ch, keeper, temp1, shop_nr)) 
+  if (will_not_buy(ch, keeper, temp1, shop_nr))
     return;
-  
+
   TComponent *temp2 = dynamic_cast<TComponent *>(temp1);
   if (temp2) {
     temp2->valueMe(ch, keeper, shop_nr, num);
@@ -1390,7 +1390,7 @@ void TObj::valueMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
   int cost;
   sstring buf;
   int willbuy=0;
-  
+
   willbuy=!sellMeCheck(ch, keeper, num, 9);
 
   if (!shop_index[shop_nr].willBuy(this)) {
@@ -1514,7 +1514,7 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
              (isBluntWeapon() &&
              (ch->getSkillValue(SKILL_BLUNT_PROF) < MAX_SKILL_LEARNEDNESS))) {
           sprintf(buf3, "not proficient");
-        } else 
+        } else
           sprintf(buf3, "too heavy");
       } else {
         // weight > ch-wield_weight
@@ -1546,12 +1546,12 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
         sprintf(buf3, "yes");
         isWearable = true;
       }
-    } else 
+    } else
       sprintf(buf3, "N/A");
   } else {
     sprintf(buf3, "yes");
     isWearable = true;
-  } 
+  }
 
   if (tComp) {
     sprintf(buf4, "[%d]", tComp->getComponentCharges());
@@ -1591,11 +1591,11 @@ const sstring TObj::shopList(const TBeing *ch, const sstring &arg, int iMin, int
         (shop_index[shop_nr].type[counter] == ITEM_HOLY_SYM) ||
         (shop_index[shop_nr].type[counter] == ITEM_WEAPON)) {
       strcpy(equipColor, equip_condition(-1).c_str());
-      strcpy(equipCond, equipColor + 3); 
+      strcpy(equipCond, equipColor + 3);
       equipColor[3] = '\0';
       sprintf(buf, "%s[%2d] %-29s %s%-12s %-6d %-5s %s%s\n\r",
              wcolor, k + 1, sstring(capbuf).cap().c_str(),
-             equipColor, equipCond, cost, 
+             equipColor, equipCond, cost,
              buf4, buf3, ch->norm());
       found = TRUE;
       strcpy(wcolor, ch->norm());
@@ -1715,7 +1715,7 @@ sstring list_string(sstring buf, int len)
       obuf+=buf[i];
       continue;
     }
-    obuf+=buf[i];    
+    obuf+=buf[i];
     --len;
   }
 
@@ -1725,7 +1725,7 @@ sstring list_string(sstring buf, int len)
   }
 
   obuf += "<1>";
-  
+
   return obuf;
 }
 
@@ -1850,7 +1850,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
 
     // check class restriction
     extra_flags = convertTo<int>(db["extra_flags"]);
-      
+
     fit=false;
     if(ch->hasClass(CLASS_MAGE) && !(extra_flags & ITEM_ANTI_MAGE))
       fit=true;
@@ -1870,15 +1870,15 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     volume=convertTo<int>(db["volume"]);
     slot = slot_from_bit(convertTo<int>(db["wear_flag"]));
     if(type==ITEM_ARMOR || type==ITEM_ARMOR_WAND || type==ITEM_WORN){
-      // check size restriction      
+      // check size restriction
       // It's 0 for some slots, like hold, handle that below
-      perc=(((double) ch->getHeight()) * 
+      perc=(((double) ch->getHeight()) *
 	    (double) race_vol_constants[mapSlotToFile(slot)]);
       if(extra_flags & ITEM_PAIRED)
 	perc *= 2;
-      
-      
-      if ((slot != WEAR_NECK) && (slot != WEAR_FINGER_R) && 
+
+
+      if ((slot != WEAR_NECK) && (slot != WEAR_FINGER_R) &&
 	  (slot != WEAR_FINGER_L) && (slot != WEAR_NOWHERE) && perc > 0) {
 	if (volume > (int) (perc/0.85) ||
 	    volume < (int) (perc/1.15))
@@ -1890,26 +1890,26 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     if((ch->hasClass(CLASS_MONK) || ch->hasClass(CLASS_SHAMAN)) &&
        (type==ITEM_ARMOR || type==ITEM_ARMOR_WAND))
       fit=false;
-    
-    
+
+
     // determine damage type for weapons
     isPierce=isBlunt=isSlash=false;
     if(type==ITEM_WEAPON){
       int x3=convertTo<int>(db["val2"]);
       int x4=convertTo<int>(db["val3"]);
-      
+
       weaponT damage_type[3];
       int damage_freq[3];
-      
+
       damage_type[0]=(weaponT)GET_BITS(x3, 7, 8);
       damage_freq[0]=GET_BITS(x3, 15, 8);
       damage_type[1]=(weaponT)GET_BITS(x3, 23, 8);
       damage_freq[1]=GET_BITS(x3, 31, 8);
       damage_type[2]=(weaponT)GET_BITS(x4, 7, 8);
       damage_freq[2]=GET_BITS(x4, 15, 8);
-      
+
       int count_pierce=0, count_blunt=0, count_slash=0, total=0;
-      
+
       for(int i=0;i<3;++i){
 	// we have a lot of weapons with one damage type and frequency of 0
 	if(!i && !damage_freq[0] && !damage_freq[1] && !damage_freq[2]){
@@ -1942,7 +1942,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
        ((FitT & (1 << 2)) && !isPierce) ||
        ((FitT & (1 << 3)) && !isBlunt) ||
        ((FitT & (1 << 4)) && slot != WEAR_BODY) ||
-       ((FitT & (1 << 5)) && slot != WEAR_FINGER_L && 
+       ((FitT & (1 << 5)) && slot != WEAR_FINGER_L &&
                              slot != WEAR_FINGER_R) ||
        ((FitT & (1 << 6)) && slot != WEAR_WRIST_L &&
                              slot != WEAR_WRIST_R) ||
@@ -1968,7 +1968,7 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
     if(type==ITEM_RAW_MATERIAL){
       buf+=format("[%8i] %s COMMODITY  [%6i] %7.3f\n\r") %
 	convertTo<int>(db["rent_id"]) %
-	list_string(short_desc, 40) % 
+	list_string(short_desc, 40) %
 	convertTo<int>(db["count"]) %
 	(max((float)1.0, price));
     } else if(type==ITEM_COMPONENT){
@@ -1979,21 +1979,21 @@ void shopping_list(sstring argument, TBeing *ch, TMonster *keeper, int shop_nr)
       }
       buf+=format("[%8i] %s %s [%6i] %7i\n\r") %
 	convertTo<int>(db["rent_id"]) %
-	list_string(short_desc, 30) % 
+	list_string(short_desc, 30) %
 	list_string(spell, 20) %
 	convertTo<int>(db["count"]) %
-	(int)(max((float)1.0, price));      
+	(int)(max((float)1.0, price));
     } else {
       buf+=format("[%8i] %s %s [%6i] %7i\n\r") %
 	convertTo<int>(db["rent_id"]) %
-	list_string(short_desc, 40) % 
+	list_string(short_desc, 40) %
 	list_string(equip_cond(convertTo<int>(db["cur_struct"]),
 			       convertTo<int>(db["max_struct"])), 10) %
 	convertTo<int>(db["count"]) %
 	(int)(max((float)1.0, price));
     }
   }
-  
+
   if(ch->desc)
     ch->desc->page_string(buf, SHOWNOW_NO, ALLOWREP_YES);
 }
@@ -2038,7 +2038,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
   TDatabase db(DB_SNEEZY);
   char buf[256];
 
-  if (!*arg) 
+  if (!*arg)
     return FALSE;   // generic: look
 
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)) || !ch->desc)
@@ -2053,7 +2053,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
     for(int i=0;!arg_words.word(i).empty();++i){
       db.escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
-      query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
+      query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") %
 	"%%" % buf % "%%" %
 	"%%" % buf % "%%";
     }
@@ -2065,7 +2065,7 @@ static bool shopping_look(const char *arg, TBeing *ch, TMonster *keeper, int sho
 
   temp1=keeper->loadItem(shop_nr, rent_id);
 
-  if (!temp1) 
+  if (!temp1)
     return FALSE;
 
   sstring str = "You examine ";
@@ -2100,7 +2100,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
   int rent_id;
   TDatabase db(DB_SNEEZY);
 
-  if (!*arg) 
+  if (!*arg)
     return FALSE;   // generic: look
 
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)) || !ch->desc)
@@ -2121,7 +2121,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
     for(int i=0;!arg_words.word(i).empty();++i){
       db.escape_string(buf, arg_words.word(i).c_str(), arg_words.word(i).length());
 
-      query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") % 
+      query += format("and ((rs.name is not null and rs.name like '%s%s%s') or (o.name like '%s%s%s'))") %
 	"%%" % buf % "%%" %
 	"%%" % buf % "%%";
     }
@@ -2133,7 +2133,7 @@ static bool shopping_evaluate(const char *arg, TBeing *ch, TMonster *keeper, int
 
   temp1=keeper->loadItem(shop_nr, rent_id);
 
-  if (!temp1) 
+  if (!temp1)
     return FALSE;
 
   act("You evaluate $p sold by $N.", FALSE, ch, temp1, keeper, TO_CHAR);
@@ -2174,7 +2174,7 @@ int kickFromShop(TMonster *keeper, TBeing *vagrant)
 	    do {
 	      dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
 	    } while (!exit_ok(keeper->exitDir(dir), NULL));
-	    
+
 	    act("$n throws you from $s shop.", FALSE, keeper, 0, vagrant, TO_VICT);
 	    act("$n throws $N from $s shop.", FALSE, keeper, 0, vagrant, TO_NOTVICT);
 
@@ -2216,7 +2216,7 @@ int shopping_produce(TMonster *keeper)
       continue;
 
     if (!(o = read_object(*iter, REAL))) {
-      vlogf(LOG_BUG, format("Shopkeeper %d couldn't load produced item.") %  
+      vlogf(LOG_BUG, format("Shopkeeper %d couldn't load produced item.") %
       shop_nr);
       db.query("commit");
       return FALSE;
@@ -2225,7 +2225,7 @@ int shopping_produce(TMonster *keeper)
     db.query("select count(*) as count from rent where owner_type='shop' and owner=%i and vnum=%i", shop_nr, o->objVnum());
     db.fetchRow();
     int count=convertTo<int>(db["count"]);
-    
+
     if(count >= tso.getMaxNum(NULL, o, 10)){
       delete o;
       continue;
@@ -2247,7 +2247,7 @@ int shopping_produce(TMonster *keeper)
 
     // money goes to sba
     TShopOwned tsba(SBA_SHOP_NR, sbaKeeper, keeper);
-    tsba.journalize(keeper->getName(), o->getName(), TX_BUYING_SERVICE, 
+    tsba.journalize(keeper->getName(), o->getName(), TX_BUYING_SERVICE,
 		    cost, 0,0,0);
     shoplog(SBA_SHOP_NR, keeper, sbaKeeper, o->getName(), cost, "producing");
 
@@ -2290,7 +2290,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       }
     }
     return TRUE;
-  }  
+  }
 
   // sanity check - shop mobs are unique
   if (cmd == CMD_GENERIC_INIT) {
@@ -2318,7 +2318,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 
     return TRUE;
   }
-  
+
   // keep mobs out of our room
   if (cmd == CMD_MOB_MOVED_INTO_ROOM) {
 
@@ -2327,7 +2327,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
       return kick_mobs_from_shop(myself, ch, (long int)o);
     return FALSE;
   }
-  
+
   // produce stuff I'm supposed to have
   if (cmd == CMD_MOB_ALIGN_PULSE) {
 
@@ -2379,7 +2379,7 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
     }
     return FALSE;
   }
-  if ((cmd == CMD_CAST) || (cmd == CMD_RECITE) || 
+  if ((cmd == CMD_CAST) || (cmd == CMD_RECITE) ||
       (cmd == CMD_USE) || (cmd == CMD_PRAY)) {
     if (myself->canSee(ch)) {
       myself->doTell(ch->getNameNOC(ch), "<r>No magic here - kid!<z>");
@@ -2416,14 +2416,14 @@ int shop_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TOb
 void shoplog(int shop_nr, TBeing *ch, TMonster *keeper, const sstring &name, int cost, const sstring &action){
   int value=0, count=0;
   TThing *tt=NULL;
-  TObj *o;  
+  TObj *o;
 
   for(StuffIter it=keeper->stuff.begin();it!=keeper->stuff.end() && (tt=*it);++it){
     ++count;
     o=dynamic_cast<TObj *>(tt);
     value+=o->getValue();
   }
-  
+
   TDatabase db(DB_SNEEZY);
 
   //  db.query("insert into shoplog values (%i, '%s', '%s', '%s', %i, %i, %i, now(), %i)", shop_nr, ch?ch->getName():"unknown", action.c_str(), name.c_str(), cost, keeper->getMoney(), value, count);
@@ -2463,7 +2463,7 @@ void bootTheShops()
   isowned_db.query("select distinct shop_nr from shopowned order by shop_nr asc");
   isowned_db.fetchRow();
 
-  
+
   TDatabase db(DB_SNEEZY);
 
   db.query("select shop_nr, no_such_item1, no_such_item2, do_not_buy, missing_cash1, missing_cash2, message_buy, message_sell, temper1, temper2, keeper, flags, in_room, open1, close1, open2, close2, profit_buy, profit_sell from shop order by shop_nr");
@@ -2544,14 +2544,14 @@ void bootTheShops()
       type_db.fetchRow();
     }
     sd.type.push_back(MAX_OBJ_TYPES);
-    
+
     while(!producing_db["shop_nr"].empty() &&
 	  convertTo<int>(producing_db["shop_nr"])==shop_nr){
       sd.producing.push_back(real_object(convertTo<int>(producing_db["producing"])));
       producing_db.fetchRow();
     }
     sd.producing.push_back(-1);
-    
+
     while(!material_db["shop_nr"].empty() &&
 	  convertTo<int>(material_db["shop_nr"])==shop_nr){
       sd.mat_type.push_back(convertTo<int>(material_db["mat_type"]));
@@ -2585,13 +2585,13 @@ bool safe_to_save_shop_stuff(TMonster *ch)
 {
 
   if (mob_index[ch->getMobIndex()].getNumber() < 1) {
-     vlogf(LOG_BUG, format("Shopkeeper #%d got safe_to_save_shop_stuff called when none in world!") % 
+     vlogf(LOG_BUG, format("Shopkeeper #%d got safe_to_save_shop_stuff called when none in world!") %
             mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 1.");
     return FALSE;
   }
   if (mob_index[ch->getMobIndex()].getNumber() > 1) {
-    vlogf(LOG_BUG, format("More than one shopkeeper #%d in world.  Now the shop won't work!") % 
+    vlogf(LOG_BUG, format("More than one shopkeeper #%d in world.  Now the shop won't work!") %
           mob_index[ch->getMobIndex()].virt);
     ch->doSay("I'm not functioning properly.  Tell a god to check the logs, case 2.");
     return FALSE;
@@ -2637,7 +2637,7 @@ void processShopFiles(void)
 int TObj::adjPrice() const
 {
   int value = ((getMaxStructPoints() <= 0) ? getValue() :
-               (int) (getValue() * 
+               (int) (getValue() *
                 getStructPoints() / getMaxStructPoints()));
 
   return value;
@@ -2838,7 +2838,7 @@ void factoryProduction(int shop_nr)
 	ready=false;
       supplies[db["name"]]=convertTo<int>(db["required"]);
     }
-     
+
     if(!ready)
       continue;
 
@@ -2861,9 +2861,9 @@ void factoryProduction(int shop_nr)
     TShopOwned tsba(SBA_SHOP_NR, sba, keeper);
     tsba.journalize(keeper->getName(), obj->getName(), TX_BUYING_SERVICE,
 		    obj->productionPrice(), 0,0,0);
-    shoplog(SBA_SHOP_NR, keeper, sba, obj->getName(), 
+    shoplog(SBA_SHOP_NR, keeper, sba, obj->getName(),
 	    obj->productionPrice(), "producing");
-    
+
     // subtract raw materials
     int COGS=0, total_cogs=0;
     bool first_time=true;
@@ -2874,7 +2874,7 @@ void factoryProduction(int shop_nr)
       // COGS of this material
       COGS=tso.COGS_get(name, num);
       total_cogs+=COGS;
-      
+
       // inventory - remove this material
       tso.journalize_credit(130, keeper->getName(), name, COGS, first_time);
       first_time=false;
@@ -2884,13 +2884,13 @@ void factoryProduction(int shop_nr)
     }
 
     // cash - labor costs for production
-    tso.journalize_credit(100, keeper->getName(), 
+    tso.journalize_credit(100, keeper->getName(),
 			  obj->getName(), obj->productionPrice());
-    
+
     // inventory - add the value of the newly produced item
-    tso.journalize_debit(130, keeper->getName(), obj->getName(), 
+    tso.journalize_debit(130, keeper->getName(), obj->getName(),
 		     obj->productionPrice()+total_cogs);
-    
+
     // record COGS
     tso.COGS_add(obj->getName(), obj->productionPrice()+total_cogs, 1);
 

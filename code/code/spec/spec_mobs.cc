@@ -124,14 +124,14 @@ walkPathT TMonster::walk_path(const path_struct *p, int &pos)
 
     // check surrounding rooms
     for (dir=MIN_DIR; dir < MAX_DIR;dir++) {
-      if (canGo(dir) && 
+      if (canGo(dir) &&
 	  roomp->dir_option[dir]->to_room ==
 	  p[pos].cur_room){
 	goDirection(dir);
 	return WALK_PATH_MOVED;
       }
     }
-    
+
     // check the entire path
     pos = -1;
     do {
@@ -157,11 +157,11 @@ bool TMonster::isPolice() const
 {
   int num = mobVnum();
 
-  return (!isPc() && ((spec == SPEC_CITYGUARD) || 
+  return (!isPc() && ((spec == SPEC_CITYGUARD) ||
                       (num == Mob::BOUNCER) || (num == Mob::Mob::BOUNCER2) ||
                       (num == Mob::Mob::BOUNCER_HEAD)));
 }
-  
+
 int TMonster::npcSteal(TPerson *victim)
 {
   sstring buf;
@@ -255,7 +255,7 @@ int factionFaery(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     if (strcmp(buf, "help"))
       return FALSE;
   }
-  
+
   return FALSE;
 }
 
@@ -266,9 +266,9 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
   int amt;
   FILE *fp;
 
-  if (cmd != CMD_GENERIC_PULSE && 
-      cmd != CMD_BUY && 
-      cmd != CMD_LIST && 
+  if (cmd != CMD_GENERIC_PULSE &&
+      cmd != CMD_BUY &&
+      cmd != CMD_LIST &&
       cmd != CMD_MOB_GIVEN_COINS)
     return FALSE;
 
@@ -277,9 +277,9 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     return FALSE;
 
   // skip med mobs
-  if (myself->mobVnum() <= 0) 
+  if (myself->mobVnum() <= 0)
     return FALSE;
-  if (!myself->awake()) 
+  if (!myself->awake())
     return FALSE;
 
   sprintf(caFilebuf, "mobdata/rumors/%d", myself->mobVnum());
@@ -298,7 +298,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
     fclose(fp);
     return FALSE;
   }
-    
+
   if (!type) {
     vlogf(LOG_LOW, format("Bad rumor type (%s) %s") %  caFilebuf % buf);
     fclose(fp);
@@ -418,7 +418,7 @@ int rumorMonger(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *
 
     do {
       if(!fgets(buf, 255, fp)) // skip over type
-	vlogf(LOG_FILE, "Unexpected read error in rumor file");	
+	vlogf(LOG_FILE, "Unexpected read error in rumor file");
     } while (*buf == '#');
 
     do {
@@ -450,7 +450,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   int request = 0, duration = 0, r_num = 0, found = 0;
   char buf[256];
   TSymbol *best = NULL;
-//  TObj *best = NULL; // 
+//  TObj *best = NULL; //
   TObj *obj = NULL;
   TThing *i = NULL;
   TThing *j = NULL;
@@ -460,7 +460,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   if (me->mobVnum() <= 0)
     return FALSE;
 
-  if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_WHISPER && cmd != CMD_ASK) 
+  if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_WHISPER && cmd != CMD_ASK)
     return FALSE;
 
   if (!ch->canSpeak())
@@ -479,14 +479,14 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
 
   if (!me->awake())
     return FALSE;
-  
+
   one_argument(arg, buf, cElements(buf));
 
-  if (!strcmp(buf, "newbie")) 
+  if (!strcmp(buf, "newbie"))
     books = 1;
-  else if (!strcmp(buf, "guide")) 
+  else if (!strcmp(buf, "guide"))
     books = 2;
-  
+
 
   if (books) {
     if (cmd == CMD_SAY2)
@@ -502,7 +502,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
     if (books == 1) {
       if ((r_num = real_object(1458)) >= 0) {
         obj = read_object(r_num, REAL);
-        *ch += *obj;    // newbie book 
+        *ch += *obj;    // newbie book
        } else {
          vlogf(LOG_BUG, "Problem in NewbieEquipper, newbie");
          return TRUE;
@@ -513,7 +513,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
     } else if (books == 2) {
       if ((r_num = real_object(1459)) >= 0) {
         obj = read_object(r_num, REAL);
-        *ch += *obj;    // conversion book 
+        *ch += *obj;    // conversion book
       } else {
         vlogf(LOG_BUG, "Problem in NewbieEquipper, guide");
         return TRUE;
@@ -541,28 +541,28 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
     } else {
       request = 2;
     }
-  } else if (!strcmp(buf, "weapon")) 
+  } else if (!strcmp(buf, "weapon"))
     request = 3;
-  
+
 #if 0
   } else if (!strcmp(buf, "spellbag")) {
     if (!ch->hasClass(CLASS-MAGE) && !ch->hasClass(CLASS_RANGER)) {
       if (cmd == CMD_SAY)
         ch->doSay(arg);
       else if (cmd == CMD_WHISPER)
-        ch->doWhisper(arg); 
+        ch->doWhisper(arg);
       else
         ch->doAsk(arg);
       sprintf(tmp_buf, "%s You are not a mage or ranger.  I am not that charitable.", ch->getName());
       me->doTell(tmp_buf);
       return TRUE;
-    } else 
+    } else
       request = 4;
 #endif
 
   if (!request)
     return FALSE;
-  
+
   if (ch->GetMaxLevel() >= 10) {
     me->doTell(ch->getName(), "I can no longer help you!");
     return TRUE;
@@ -612,7 +612,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
           i->findSym(&best);
 
           for(StuffIter it=i->stuff.begin();it!=i->stuff.end() && (j=*it);++it) {
-            j->findSym(&best); 
+            j->findSym(&best);
           }
         }
         if (best) {
@@ -655,7 +655,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         if (ch->hasClass(CLASS_CLERIC)) {
           if ((r_num = real_object(324)) >= 0) {
             obj = read_object(r_num, REAL);
-            *ch += *obj;   //  newbie staff 
+            *ch += *obj;   //  newbie staff
           } else {
             vlogf(LOG_BUG, "Problem in NewbieEquipper, staff");
             return TRUE;
@@ -663,7 +663,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
         } else {
           if ((r_num = real_object(Obj::WEAPON_T_DAGGER)) >= 0) {
             obj = read_object(r_num, REAL);
-            *ch += *obj;    // newbie dagger 
+            *ch += *obj;    // newbie dagger
           } else {
             vlogf(LOG_BUG, "Problem in NewbieEquipper, dagger");
             return TRUE;
@@ -686,7 +686,7 @@ int newbieEquipper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
       af.level = 0;
       // roughly 4 hours
       if (duration)
-        af.duration = duration; 
+        af.duration = duration;
       else
         af.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
       ch->affectTo(&af);
@@ -804,7 +804,7 @@ int librarian(TBeing *ch, cmdTypeT cmd, const char * arg, TMonster *myself, TObj
     if (ch->isImmortal()) {
       act("The foolish mortal actually tried to silence $N!", FALSE, myself, 0, ch, TO_NOTVICT);
       act("The foolish mortal actually tried to silence you!", FALSE, myself, 0, ch, TO_VICT);
-    } else { 
+    } else {
       act("$n smiles with satisfaction!", FALSE, myself, 0, ch, TO_NOTVICT);
       act("$n smiles with satisfaction!", TRUE, myself, 0, ch, TO_VICT);
       aff.type = SPELL_SILENCE;
@@ -849,7 +849,7 @@ int TMonster::randomHunt()
 {
   TBeing *hunted;
   int rc;
-  
+
   // this opinion.target stuff works because the horsemen are UtilMobProcs
   // and the mobAI stuff doesn't apply to them
 
@@ -871,7 +871,7 @@ int TMonster::randomHunt()
       dir = path.findPath(in_room, findRoom(room));
 
       if (!exitDir(dir) || !real_roomp(exitDir(dir)->to_room) || dir<MIN_DIR){
-        // unable to find a path 
+        // unable to find a path
 	if(spec==SPEC_HORSE_FAMINE ||
 	   spec==SPEC_HORSE_WAR ||
 	   spec==SPEC_HORSE_DEATH ||
@@ -949,7 +949,7 @@ int TMonster::findMyHorse()
   if (!sameRoom(*horse)) {
 
     if((dir=path.findPath(in_room, findRoom(horse->in_room))) < 0){
-      // unable to find a path 
+      // unable to find a path
       if (horse->in_room >= 0) {
         doSay("Bloody stupid horse!");
         act("$n has left into the void.",0, this, 0, 0, TO_ROOM);
@@ -1003,7 +1003,7 @@ int insulter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if (!vict)
     return FALSE;
   myself->setAnger(70);
-  myself->setMalice(0);  
+  myself->setMalice(0);
   myself->aiInsultDoer(vict);
 
   return TRUE;
@@ -1059,7 +1059,7 @@ int siren(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
         delete vict;
         vict = NULL;
       }
-    }  
+    }
   }
 
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it) {
@@ -1123,7 +1123,7 @@ static int rob_blind(TBeing *ch, TBeing *vict)
   // make all checks prohibiting stealing before coming in here
   TThing *t;
   sstring name, buf;
- 
+
   if (ch->fight() || vict->fight())
     return FALSE;
   if ((ch->getRace() == RACE_HOBBIT) && (ch->getSkillValue(SKILL_STEAL) < 80))
@@ -1138,10 +1138,10 @@ static int rob_blind(TBeing *ch, TBeing *vict)
       continue;
     name=fname(t->name);
     buf=format("%s %s") % name % fname(vict->name);
-    if (ch->getRace() == RACE_HOBBIT) 
+    if (ch->getRace() == RACE_HOBBIT)
       act("$n says, \"Hey $N, I'm just going to borrow your $o for a bit.\"",
 	  TRUE, ch, t, vict, TO_ROOM);
-    
+
     return ch->doSteal(buf, vict);
   }
   return FALSE;
@@ -1331,7 +1331,7 @@ void TBeing::throwChar(TBeing *v, dirTypeT dir, bool also, silentTypeT silent, b
 
   rp = v->roomp;
   if (rp && rp->dir_option[dir] &&
-      rp->dir_option[dir]->to_room && 
+      rp->dir_option[dir]->to_room &&
       !IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED) &&
       (rp->dir_option[dir]->to_room != Room::NOWHERE)) {
     if (v->fight() && !silent) {
@@ -1515,7 +1515,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
     return TRUE;
   } else if (cmd == CMD_DRAG) {
     // well, we aren't checking room, but oh well
-    if(!myself->canSee(ch) || myself==ch || ch->isAnimal() || 
+    if(!myself->canSee(ch) || myself==ch || ch->isAnimal() ||
        !myself->awake()) {
       return FALSE;
     }
@@ -1527,7 +1527,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 
   switch(myself->inRoom()){
     case 1024:
-      if(!myself->canSee(ch) || myself==ch || ch->isAnimal() || 
+      if(!myself->canSee(ch) || myself==ch || ch->isAnimal() ||
          !myself->awake() || myself->fight() || (cmd == CMD_OPEN)) {
 	return FALSE;
       } else if(rev_dir(dir)==ch->specials.last_direction){
@@ -1537,7 +1537,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 	    FALSE, myself, 0, ch, TO_NOTVICT);
 	ch->remQuestBit(TOG_PAID_TOLL);
 	return FALSE;
-      } else if(ch->hasQuestBit(TOG_PAID_TOLL) || 
+      } else if(ch->hasQuestBit(TOG_PAID_TOLL) ||
                 dynamic_cast<TMonster *>(ch)){
 	act("$n smiles happily and lets you pass.",
 	    FALSE, myself, 0, ch, TO_VICT);
@@ -1592,7 +1592,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
     case 22713:
       if((rev_dir(dir)==ch->specials.last_direction) || (cmd == CMD_OPEN)){
 	return FALSE;
-      } else if(ch->hasQuestBit(TOG_PAID_TOLL) || 
+      } else if(ch->hasQuestBit(TOG_PAID_TOLL) ||
                 dynamic_cast<TMonster *>(ch)){
 	act("$n disperses the forcefield and lets you through..",
 	    FALSE, myself, 0, ch, TO_VICT);
@@ -1618,7 +1618,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 	return FALSE;
       } else if(rev_dir(dir)==ch->specials.last_direction){
 	return FALSE;
-      } else if((ch->hasQuestBit(TOG_PAID_TOLL) || 
+      } else if((ch->hasQuestBit(TOG_PAID_TOLL) ||
                 dynamic_cast<TMonster *>(ch))){
 	switch(myself->mobVnum()){
 	  case 22737:
@@ -1671,7 +1671,7 @@ int payToll(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
 	}
 	return TRUE;
       }
-      
+
       break;
   }
   return FALSE;
@@ -1686,7 +1686,7 @@ int ThrowerMob(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       vict = myself->fight();
       switch (myself->in_room) {
         case 13912:
-          myself->throwChar(vict, DIR_EAST, FALSE, SILENT_NO, false);  // throw chars to the east 
+          myself->throwChar(vict, DIR_EAST, FALSE, SILENT_NO, false);  // throw chars to the east
           return (FALSE);
           break;
         default:
@@ -1709,7 +1709,7 @@ int ThrowerMob(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   return (FALSE);
 }
 
-// Swallower special 
+// Swallower special
 int Tyrannosaurus_swallower(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 {
   int rc = 0;
@@ -1766,7 +1766,7 @@ int Tyrannosaurus_swallower(TBeing *ch, cmdTypeT cmd, const char *, TMonster *my
             return TRUE;
           }
 
-          vlogf(LOG_PROC, format("%s killed by being swallowed at %s (%d)") % 
+          vlogf(LOG_PROC, format("%s killed by being swallowed at %s (%d)") %
               targ->getName() % targ->roomp->getName() % targ->inRoom());
           rc = targ->die(DAMAGE_EATTEN);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1784,9 +1784,9 @@ int Tyrannosaurus_swallower(TBeing *ch, cmdTypeT cmd, const char *, TMonster *my
 	    for(StuffIter it=co->stuff.begin();it!=co->stuff.end();){
 	      t=*(it++);
               --(*t);
-              *ch += *t; 
+              *ch += *t;
             }
-            delete co;        // remove the corpse 
+            delete co;        // remove the corpse
             co = NULL;
           }
         } else { // if here we just mangle them REAL bad.
@@ -1889,7 +1889,7 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       bool completed;
   };
   hunt_struct *job;
- 
+
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct *>(myself->act_ptr);
     myself->act_ptr = NULL;
@@ -1898,13 +1898,13 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
- 
+
   if (::number(0,2))
     return FALSE;
 
   if (!myself->awake() || myself->fight())
     return FALSE;
- 
+
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new hunt_struct())) {
      perror("failed new of frost_giant.");
@@ -1921,10 +1921,10 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     myself->getDiscipline(getDisciplineNumber(SKILL_DOORBASH, 0))->setLearnedness(100);
     myself->setSkillValue(SKILL_DOORBASH, 95);
     res = ::number(2,5);
-  
+
     act("A band of ice goblins comes to the aid of this mighty giant.",
         TRUE, myself, 0, 0, TO_ROOM);
-    
+
     SET_BIT(myself->specials.affectedBy, AFF_GROUP);
     for (i= 0; i < res; i++) {
       if (!(mob = read_mobile(10221, VIRTUAL))) {
@@ -1997,7 +1997,7 @@ int frostGiant(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       if (frosty_path_pos[job->cur_pos].cur_room == myself->in_room)
         return TRUE;
     } while (frosty_path_pos[job->cur_pos].cur_room != -1);
- 
+
     if (myself->riding)
       myself->dismount(POSITION_STANDING);
 
@@ -2045,11 +2045,11 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     public:
     byte cur_pos;
     byte cur_path;
-    byte town;   // 0 = gh, 1 = brightmoon, 2 = logrus, 3-4 = amber 
+    byte town;   // 0 = gh, 1 = brightmoon, 2 = logrus, 3-4 = amber
                  // 6-9 obsidian keep
   };
   hunt_struct *job;
- 
+
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct *>( myself->act_ptr);
     myself->act_ptr = NULL;
@@ -2061,10 +2061,10 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
- 
+
   if (!myself->awake() || myself->fight())
     return FALSE;
- 
+
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new hunt_struct())) {
      perror("failed new of lamp_lighter.");
@@ -2089,7 +2089,7 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       job->cur_path = ::number(MIN_KEEP_PATH_2, MAX_KEEP_PATH_2);
     } else if (myself->in_room == 7061) {
       job->town = 8;
-      job->cur_path = ::number(MIN_KEEP_PATH_3, MAX_KEEP_PATH_3); 
+      job->cur_path = ::number(MIN_KEEP_PATH_3, MAX_KEEP_PATH_3);
     } else if (myself->in_room == 7276) {
       job->town = 9;
       job->cur_path = ::number(MIN_KEEP_PATH_4, MAX_KEEP_PATH_4);
@@ -2098,7 +2098,7 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       job->cur_path = ::number(MIN_AMBER_PATH_1, MAX_AMBER_PATH_1);
     } else if (myself->in_room == 8891) {
       job->town = 4;
-      job->cur_path = AMBER_PATH_2; 
+      job->cur_path = AMBER_PATH_2;
     } else {
       vlogf(LOG_PROC, "Bogus room load of lampboy");
       job->town = 0;
@@ -2169,7 +2169,7 @@ int lamp_lighter(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       if (lamp_path_pos[job->cur_path][job->cur_pos].cur_room == myself->in_room)
         return TRUE;
     } while (lamp_path_pos[job->cur_path][job->cur_pos].cur_room != -1);
- 
+
     act("$n seems to have gotten a little bit lost.",0, myself, 0, 0, TO_ROOM);
     act("$n goes to ask directions.", 0, myself, 0, 0, TO_ROOM);
     //vlogf(LOG_PROC, format("Lampboy got lost: path: %d, pos: %d") %  job->cur_path % myself->in_room);
@@ -2255,7 +2255,7 @@ static int caravan_stuff(TBeing *car, caravan_struct *job, dirTypeT)
     return FALSE;
 
   int wealth_used = 0;
-  bool loaded = false; 
+  bool loaded = false;
 
   int num_loaded;
   for (num_loaded = 0; num_loaded < 5; num_loaded++) {
@@ -2308,7 +2308,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   TObj *obj;
 
   caravan_struct *job;
- 
+
   if (cmd == CMD_GENERIC_DESTROYED) {
     if (!(job = (caravan_struct *) myself->act_ptr))
       return FALSE;
@@ -2325,13 +2325,13 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
- 
+
   if (::number(0,2) && !timeTill)
     return FALSE;
 
   if (!myself->awake() || myself->fight())
     return FALSE;
- 
+
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new caravan_struct())) {
       perror("failed new of caravan.");
@@ -2343,7 +2343,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     if (myself->in_room == CAR_GH_HOME) {
       myself->setFaction(FACT_NONE);
       faction = myself->getFaction();
-      REMOVE_BIT(FactionInfo[faction].caravan_flags, 
+      REMOVE_BIT(FactionInfo[faction].caravan_flags,
             CARAVAN_CUR_DEST_GH | CARAVAN_CUR_DEST_BM |
             CARAVAN_CUR_DEST_LOG | CARAVAN_CUR_DEST_AMBER);
       for (i = 0; i < 10 && !ok; i++) {
@@ -2381,7 +2381,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     } else if (myself->in_room == CAR_BM_HOME) {
       myself->setFaction(FACT_BROTHERHOOD);
       faction = myself->getFaction();
-      REMOVE_BIT(FactionInfo[faction].caravan_flags, 
+      REMOVE_BIT(FactionInfo[faction].caravan_flags,
             CARAVAN_CUR_DEST_GH | CARAVAN_CUR_DEST_BM |
             CARAVAN_CUR_DEST_LOG | CARAVAN_CUR_DEST_AMBER);
       for (i = 0; i < 10 && !ok; i++) {
@@ -2411,7 +2411,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     } else if (myself->in_room == CAR_LOG_HOME) {
       myself->setFaction(FACT_CULT);
       faction = myself->getFaction();
-      REMOVE_BIT(FactionInfo[faction].caravan_flags, 
+      REMOVE_BIT(FactionInfo[faction].caravan_flags,
             CARAVAN_CUR_DEST_GH | CARAVAN_CUR_DEST_BM |
             CARAVAN_CUR_DEST_LOG | CARAVAN_CUR_DEST_AMBER);
       for (i = 0; i < 10 && !ok; i++) {
@@ -2442,7 +2442,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     } else if (myself->in_room == CAR_AMBER_HOME) {
       myself->setFaction(FACT_SNAKE);
       faction = myself->getFaction();
-      REMOVE_BIT(FactionInfo[faction].caravan_flags, 
+      REMOVE_BIT(FactionInfo[faction].caravan_flags,
             CARAVAN_CUR_DEST_GH | CARAVAN_CUR_DEST_BM |
             CARAVAN_CUR_DEST_LOG | CARAVAN_CUR_DEST_AMBER);
       for (i = 0; i < 10 && !ok; i++) {
@@ -2500,7 +2500,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     job->caravan = obj;
 
     if (faction != FACT_NONE) {
-      sprintf(buf, "A caravan has formed bound for %s.", 
+      sprintf(buf, "A caravan has formed bound for %s.",
              CaravanDestination(-faction - 1));
       sendToFaction(faction, myself, buf);
     }
@@ -2521,7 +2521,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     FactionInfo[faction].caravan_successes++;
     FactionInfo[faction].addToMoney((200 * job->wealth / 100));
     FactionInfo[job->dest_fact].addToMoney((100 * job->wealth / 100));
-    
+
     if (faction != FACT_NONE) {
       sprintf(buf, "A caravan has arrived successfully in %s.", CaravanDestination(-faction - 1));
       sendToFaction(faction, myself, buf);
@@ -2560,7 +2560,7 @@ int caravan(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       if (caravan_path_pos[job->cur_path][job->cur_pos].cur_room == myself->in_room)
         return TRUE;
     } while (caravan_path_pos[job->cur_path][job->cur_pos].cur_room != -1);
- 
+
     act("$n seems to have gotten a little bit lost.",0, myself, 0, 0, TO_ROOM);
     act("$n goes to ask directions.", 0, myself, 0, 0, TO_ROOM);
 #if 1
@@ -2619,7 +2619,7 @@ void CallForGuard(TBeing *ch, TBeing *vict, int lev)
     if (m->isPc() || m == ch || m == vict)
       continue;
     tmons = dynamic_cast<TMonster *>(m);
-    if (!tmons) 
+    if (!tmons)
       continue;
     if (tmons->spec != SPEC_CITYGUARD)
       continue;
@@ -2665,11 +2665,11 @@ int dagger_thrower(TBeing *pch, cmdTypeT cmd, const char *, TMonster *me, TObj *
 // hence this setup instead.
         int robj = real_object(Obj::GENERIC_DAGGER);
         if (robj < 0 || robj >= (signed int) obj_index.size()) {
-          vlogf(LOG_BUG, format("dagger_thrower(): No object (%d) in database!") % 
+          vlogf(LOG_BUG, format("dagger_thrower(): No object (%d) in database!") %
                 Obj::GENERIC_DAGGER);
           return FALSE;
         }
-    
+
         if (!(dagger = read_object(robj, REAL))) {
           vlogf(LOG_BUG, "Couldn't make a dagger for dagger_thrower()!");
           return FALSE;
@@ -2818,7 +2818,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
     return FALSE;
 
   db.query("select vnum, name, exp, level from pet where player_id=%i order by name", ch->getPlayerID());
-    
+
 
   if(cmd == CMD_LIST){
     for(int i=1;db.fetchRow();++i){
@@ -2826,7 +2826,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 	me->doTell(ch->getName(), "Yeah, your pet dragged himself in here, half dead, and I fixed him up.");
 	me->doTell(ch->getName(), "You'll have to pay the bill if you want the cuddly little thing back.");
       }
-      
+
       vnum=convertTo<int>(db["vnum"]);
       short_desc=mob_index[real_mobile(vnum)].short_desc;
       int level=convertTo<int>(db["level"]);
@@ -2872,7 +2872,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 
 	if(aff){
 	  owner=(char *)aff->be;
-	  
+
 	  if(owner == ch->getName()){
 	    // get the pet name
 	    sstring short_desc=t->name;
@@ -2882,7 +2882,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 		name=short_desc.word(i);
 	      }
 	    }
-	    
+
 	    if(name == db["name"]){
 	      me->doTell(ch->getName(), "Hmm my mistake, I thought that guy wandered in here but looks like it wandered out again...");
 	      return TRUE;
@@ -2900,7 +2900,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
     }
 
 
-    TMonster *pet;    
+    TMonster *pet;
     if (!(pet = read_mobile(vnum, VIRTUAL))) {
       vlogf(LOG_PROC, "Whoa!  No pet in pet_keeper");
       return TRUE;
@@ -2908,12 +2908,12 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 
     if(!db["name"].empty()){
       pet->swapToStrung();
-      
-      //  Remake the pet's name.  
+
+      //  Remake the pet's name.
       strcpy(new_name, db["name"].c_str());
       tmpbuf = format("%s %s") % pet->name % new_name;
       pet->name = tmpbuf;
-      
+
       // remake the short desc
       //      sprintf(tmpbuf2, stripColorCodes(pet->getName()).c_str());
       sprintf(tmpbuf2, "%s", pet->getName().c_str());
@@ -2923,9 +2923,9 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 	  one_argument(tmpbuf2, buf, cElements(buf));
       else
 	tmpbuf = format("\"%s\", %s") % sstring(new_name).cap() % pet->getName();
-      
+
       pet->shortDescr = tmpbuf;
-      
+
       // remake the long desc
       tmpbuf += " is here.\n\r";
       pet->player.longDescr = tmpbuf;
@@ -2938,7 +2938,7 @@ int petVeterinarian(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TOb
 
     for(int i=pet->GetMaxLevel();i<level;++i)
       pet->raiseLevel(pet->bestClass());
-    
+
     // now set the actual exp
     pet->setExp(convertTo<float>(db["exp"]));
     SET_BIT(pet->specials.affectedBy, AFF_CHARM);
@@ -3019,7 +3019,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   } else if (cmd == CMD_BUY) {
     arg = one_argument(arg, buf, cElements(buf));
     price = 0;
-    
+
     TBeing *tbt = get_char_room(buf, rp->number);
     TMonster *pet = dynamic_cast<TMonster *>(tbt);
     if (!pet) {
@@ -3057,7 +3057,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       return TRUE;
     }
 
-    price = (int)((float) pet->petPrice() * 
+    price = (int)((float) pet->petPrice() *
 		  shop_index[shop_nr].getProfitBuy(NULL, ch));
 
     if (ch->isPc() && ((ch->getMoney()) < price) && !ch->isImmortal()) {
@@ -3126,7 +3126,7 @@ int pet_keeper(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     int petLevel = pet->GetMaxLevel();
     int pcLevel = ch->GetMaxLevel();
 
-    price = (int)((float) pet->petPrice() * 
+    price = (int)((float) pet->petPrice() *
 		  shop_index[shop_nr].getProfitBuy(NULL, ch));
 
     me->doTell(ch->name, format("A pet %s will cost %d to purchase.") % fname(pet->name) % price);
@@ -3299,7 +3299,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
     sprintf(buf, "Thanks for the donation.  I'll take your %d talen%s tithe in advance!", cost, (cost > 1) ? "s" : "");
     me->doSay(buf);
     ch->giveMoney(me, cost, GOLD_SHOP_SYMBOL);
-    shoplog(find_shop_nr(me->number), ch, me, getName(), 
+    shoplog(find_shop_nr(me->number), ch, me, getName(),
 	    cost, "attuning");
     me->saveChar(Room::AUTO_RENT);
     ch->saveChar(Room::AUTO_RENT);
@@ -3321,7 +3321,7 @@ void TSymbol::attunerGiven(TBeing *ch, TMonster *me)
   } else {
     if (ch == job->pc)
       sprintf(buf, "Sorry, %s, but you'll have to wait while I attune your other symbol.", ch->getName().c_str());
-    else 
+    else
       sprintf(buf, "Sorry, %s, but you'll have to wait while I attune %s's symbol.", ch->getName().c_str(), job->pc->getName().c_str());
 
     me->doSay(buf);
@@ -3346,7 +3346,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   attune_struct *job;
 
   if(cmd == CMD_WHISPER){
-    return shopWhisper(ch, me, find_shop_nr(me->number), arg);    
+    return shopWhisper(ch, me, find_shop_nr(me->number), arg);
   } else if (cmd == CMD_GENERIC_DESTROYED) {
     delete (attune_struct *) me->act_ptr;
     me->act_ptr = NULL;
@@ -3373,7 +3373,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
   attuneStructSanityCheck(job);
 
   if (!job->hasJob) {
-    if (job->sym || job->pc || job->wait || 
+    if (job->sym || job->pc || job->wait ||
                     job->cost || (job->faction > FACT_UNDEFINED)) {
       if (job->pc && !job->pc->name.empty())
         vlogf(LOG_PROC, format("Attuner (%s) seems to have a bad job structure (case 1) see %s.") %  me->getName() % job->pc->getName());
@@ -3402,7 +3402,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         me->doStand();
       return FALSE;
     }
-  } 
+  }
 
   switch (cmd) {
     case CMD_MOB_VIOLENCE_PEACEFUL:
@@ -3511,7 +3511,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           if (!::number(0,2)) {
             act("You can feel $n's prayer in your soul as you watch $m sanctify $p", TRUE, me, t, job->pc, TO_VICT);
            act("You utter a prayer from your soul as you sanctify $p", TRUE, me, t, job->pc,TO_CHAR);
-            act("$n sits with $s head bowed concentrating on $p", TRUE, me, t, job->pc, TO_NOTVICT); 
+            act("$n sits with $s head bowed concentrating on $p", TRUE, me, t, job->pc, TO_NOTVICT);
           }
           return FALSE;
         }
@@ -3561,7 +3561,7 @@ int attuner(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       if (!ch->hasClass(CLASS_CLERIC) && !ch->hasClass(CLASS_DEIKHAN)) {
         act("You do not accept $N's offer to give you $p.", TRUE, me, t, ch, TO_CHAR);
         act("$n rejects your attempt to give $s $p.", TRUE, me, t, ch, TO_VICT);
-        act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT); 
+        act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT);
         me->doTell(ch->getName(), "You are not a cleric or Deikhan.  I can not help you.");
         strcpy(buf, t->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
@@ -3678,14 +3678,14 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           if (!(final = searchLinkedList(job->obj_name, me->stuff))) {
             me->doSay("Ack, I lost the weapon somehow! Tell a god immediately!");
             return FALSE;
-          } 
+          }
           if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
             me->doSay("Hmm, I seem to have lost the person I was sharpening for.");
             rc = me->doDrop(job->obj_name, NULL);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
             return FALSE;
-          } 
+          }
           if (!final_pers->desc) {
             me->doSay("Hmm, I seem to have lost the person I was sharpening for.");
             rc = me->doDrop(job->obj_name, NULL);
@@ -3707,7 +3707,7 @@ int sharpener(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
           if (!(final = searchLinkedList(job->obj_name, me->stuff))) {
             me->doSay("Ack, I lost the weapon somehow! Tell a god immediately!");
             return FALSE;
-          } 
+          }
 
           if (!job->isBlunt)
             sprintf(buf, "$n whets $p.");
@@ -3805,7 +3805,7 @@ int frostbiter(TBeing *ch, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   if ((cmd != CMD_GENERIC_PULSE) || number(0, 50))
     return FALSE;
 
-  act("A frigid breeze blows past, chilling you to the bone.", 
+  act("A frigid breeze blows past, chilling you to the bone.",
          FALSE, me, NULL, NULL, TO_ROOM);
   af.type = AFFECT_DISEASE;
   af.level = 0;
@@ -3861,7 +3861,7 @@ int flu_giver(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 int bogus_mob_proc(TBeing *, cmdTypeT, const char *, TMonster *me, TObj *)
 {
   if (me)
-    vlogf(LOG_PROC, format("WARNING:  %s is running around with a bogus spec_proc #%d") % 
+    vlogf(LOG_PROC, format("WARNING:  %s is running around with a bogus spec_proc #%d") %
        me->name % me->spec);
   else
     vlogf(LOG_PROC, "WARNING: indeterminate mob has bogus spec_proc");
@@ -3906,9 +3906,9 @@ int death(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       continue;
     if (t->isImmortal())
       continue;
-    if (number(0,3))  // randomize slain a bit 
+    if (number(0,3))  // randomize slain a bit
       continue;
-    // protect newbies 
+    // protect newbies
     if (t->GetMaxLevel() < 8 && me->inGrimhaven())
       continue;
     act("$n's skeletal gaze falls upon $N.",TRUE,me,0,t,TO_NOTVICT);
@@ -3944,9 +3944,9 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  
+
   if ((vict = me->fight())) {
-    // calls forth great warriors to protect him 
+    // calls forth great warriors to protect him
     for (t = character_list;t;t = next_tar) {
       next_tar = t->next;
       if (t->mobVnum() == Mob::Mob::APOC_WARRIOR) {
@@ -3973,8 +3973,8 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     me->addFollower(t);
     t->reconcileDamage(me->fight(),0,DAMAGE_NORMAL);
   }
-  // start people in the room fighting each other, randomly 
-  // keep War and his horse out of it though 
+  // start people in the room fighting each other, randomly
+  // keep War and his horse out of it though
   if (me->checkPeaceful(""))
     return FALSE;
   TThing *t1, *t2=NULL, *t3=NULL;
@@ -3986,14 +3986,14 @@ int war(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
     if (t == me)
       continue;
     if (t->rider)
-      continue;  
+      continue;
     if (!t->isPc() && UtilMobProc(t))
       continue;
     if (t->fight())
       continue;
     if (t->isImmortal())
       continue;
-    // protect newbies 
+    // protect newbies
     if (t->GetMaxLevel() < 8 && me->inGrimhaven())
       continue;
     for (next_tar = NULL;t2;t2 = t3, next_tar = NULL) {
@@ -4151,7 +4151,7 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       return DELETE_THIS;
   }
 
-  if ((t = me->fight()) 
+  if ((t = me->fight())
       && !number(0, 3)
       && !t->isImmune(IMMUNE_DISEASE, WEAR_BODY)
       && t->isHumanoid()) {
@@ -4204,7 +4204,7 @@ int pestilence(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
       continue;
     if (!t->isHumanoid())
       continue;
-    // protect newbies 
+    // protect newbies
     if (t->GetMaxLevel() < 8 && me->inGrimhaven())
       continue;
     aff.type = AFFECT_DISEASE;
@@ -4281,7 +4281,7 @@ int TicketGuy(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
     me->doTell(fname(ch->name), "Buy what?!?");
     return TRUE;
   }
-  // prohibit polys and charms from engraving 
+  // prohibit polys and charms from engraving
   if (dynamic_cast<TMonster *>(ch)) {
     me->doTell(fname(ch->name), "I don't sell tickets to beasts.");
     return TRUE;
@@ -4329,7 +4329,7 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     return FALSE;
   }
 
-  if (cmd != CMD_GENERIC_PULSE) 
+  if (cmd != CMD_GENERIC_PULSE)
     return FALSE;
 
   if (::number(0,2))
@@ -4372,7 +4372,7 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
       targ->doWhisper(format("%s sweet nothings") % fname(myself->name));
       targ->doSay("Hurry off with that and report back soonest.");
       act("$n salutes the ambassador.",0, myself, 0, 0, TO_ROOM);
-      
+
       delete [] job->hunted_victim;
       job->hunted_victim = mud_str_dup("king Grimhaven");
       job->cur_path = 1;
@@ -4386,13 +4386,13 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
       targ->doWhisper(format("%s sweet nothings") % fname(myself->name));
       targ->doSay("Hurry off with that and tell me his response.");
       act("$n salutes the King.",0, myself, 0, 0, TO_ROOM);
-      
+
       delete [] job->hunted_victim;
       job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
       job->cur_path = 0;
       job->cur_pos = 0;
     } else {
-      vlogf(LOG_PROC,format("Error: hobbit emissary hunted undefined target. (%s)") % 
+      vlogf(LOG_PROC,format("Error: hobbit emissary hunted undefined target. (%s)") %
 	    job->hunted_victim);
       delete [] job->hunted_victim;
       job->hunted_victim = NULL;
@@ -4418,7 +4418,7 @@ int hobbitEmissary(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     case WALK_PATH_LOST:
       act("$n seems to have gotten a little bit lost.",
 	  0, myself, 0, 0, TO_ROOM);
-      act("$n goes to ask directions.", 
+      act("$n goes to ask directions.",
 	  0, myself, 0, 0, TO_ROOM);
       if (myself->riding)
 	myself->dismount(POSITION_STANDING);
@@ -4490,9 +4490,9 @@ int corpseMuncher(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
     found=1;
 
     if(!myself->isAffected(AFF_MUNCHING_CORPSE)){
-      act("$n kneels down and begins munching on $p.", 
+      act("$n kneels down and begins munching on $p.",
              TRUE, myself, obj, 0, TO_ROOM);
-      myself->dropPool(9, LIQ_BLOOD);   
+      myself->dropPool(9, LIQ_BLOOD);
       SET_BIT(myself->specials.affectedBy, AFF_MUNCHING_CORPSE);
       SET_BIT(myself->specials.act, ACT_SENTINEL);
     } else {
@@ -4509,7 +4509,7 @@ int corpseMuncher(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj
 
     break;
   }
-  
+
   if(!found && myself->isAffected(AFF_MUNCHING_CORPSE)){
     act("$n swallows down the last few pieces of flesh and looks around for another corpse to eat.",
       TRUE, myself, 0, 0, TO_ROOM);
@@ -4529,13 +4529,13 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
   if(!ch || !ch->awake() || ch->fight())
     return FALSE;
 
-  
+
   switch(cmd){
     case CMD_MOB_GIVEN_ITEM:
       if(!o || !isname("caughtfish", o->name)){
         return FALSE;
       }
-      
+
       // update total weight caught for player
       db.query("update fishkeeper set weight=weight+%f where name='%s'", o->getWeight(), ch->name.c_str());
       if (db.rowCount() == 0) {
@@ -4544,15 +4544,15 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
       }
 
       // check for record
-      db.query("update fishlargest set name = '%s', weight = %f where vnum = %i and weight < %f", 
+      db.query("update fishlargest set name = '%s', weight = %f where vnum = %i and weight < %f",
           ch->getName().c_str(), o->getWeight(), o->objVnum(), o->getWeight());
 
       if (db.rowCount() > 0) {
         myself->doSay(format("Oh my, you've broken the record for %s!") % o->shortDescr);
-        buf=format("This the largest I've seen, weighing in at %i!  Very nice! (%i talens)") 
+        buf=format("This the largest I've seen, weighing in at %i!  Very nice! (%i talens)")
             % (int)o->getWeight() % (int)(o->getWeight()*100);
         myself->doSay(buf);
-        ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);	
+        ch->addToMoney((int)(o->getWeight()*100), GOLD_COMM);
       } else {
         buf=format("Ok, I tallied your fish, weighing in at %i.  Nice one! (%i talens)") %
             (int)o->getWeight() % (int)(o->getWeight()*2);
@@ -4582,7 +4582,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
     case CMD_ASK:
     case CMD_WHISPER:
       arg = one_argument(arg, buf);
-      
+
       if(!isname(buf, myself->name))
         return FALSE;
 
@@ -4592,7 +4592,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
         db.query("select f1.name, o1.short_desc as type, f1.weight from fishlargest f1 join obj o1 on f1.vnum = o1.vnum where f1.weight > 0 order by f1.weight desc");
 
       	while(db.fetchRow()){
-      	  buf=format("%s caught %s weighing in at %i.") 
+      	  buf=format("%s caught %s weighing in at %i.")
       	      % db["name"] % db["type"] % (int)(convertTo<float>(db["weight"]));
       	  myself->doSay(buf);
       	}
@@ -4628,7 +4628,7 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
         } else {
           db.query("select o.name, o.weight, count(l.name) as count from fishkeeper o left join fishlargest l on o.name=l.name where o.name='%s' group by o.name, o.weight order by weight desc limit 10", buf.c_str());
         }
-	
+
         while(db.fetchRow()){
           if(topten){
             weight=talenDisplay((int)(convertTo<float>(db["weight"])));
@@ -4636,10 +4636,10 @@ int fishTracker(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *myself
             weight=format("%i") % (int)(convertTo<float>(db["weight"]));
           }
 
-          buf=format("%s has %s pounds of fish and %i records.") 
+          buf=format("%s has %s pounds of fish and %i records.")
               % db["name"] % weight % convertTo<int>(db["count"]);
           myself->doSay(buf);
-        }      
+        }
       }
 
       break;
@@ -4752,7 +4752,7 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       myself->doAction("", CMD_FROWN);
       job->john=NULL;
       job->state=STATE_NONE;
-      return TRUE;	
+      return TRUE;
     }
   } else {
     job->state=STATE_NONE;
@@ -4770,18 +4770,18 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
     case STATE_OFFER:
       myself->doAction(johnname, CMD_PEER);
       switch(::number(0,3)){
-        case 0: 
-          myself->doSay("You want to party, honey?"); 
+        case 0:
+          myself->doSay("You want to party, honey?");
           myself->doAction("", CMD_LICK);
           break;
         case 1:
-          myself->doSay("How about some action baby?"); 
+          myself->doSay("How about some action baby?");
           myself->doAction(johnname, CMD_NUZZLE);
           break;
         case 2:
           if(job->john->getSex() == SEX_MALE)
-            myself->doSay("Is that a training dagger in your pants, or do you need some hot lovin'?"); 
-          else 
+            myself->doSay("Is that a training dagger in your pants, or do you need some hot lovin'?");
+          else
             myself->doSay("Did you just come from a sushi bar, or do you need some hot lovin'?");
           myself->doAction(johnname, CMD_GRIN);
           break;
@@ -4839,13 +4839,13 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
         case 2:
           job->john->doAction("", CMD_MOAN);
           job->john->doSay("Oh god, I want you so bad, I'll pay anything you want!");
-          job->john->doAction(johnname, CMD_GROPE); 
+          job->john->doAction(johnname, CMD_GROPE);
           break;
         case 3:
           job->john->doSay("I've had a rough day, I could certainly use a little winding down.");
           job->john->doSay("Let's get it on!");
           job->john->doAction("", CMD_CLAP);
-          job->john->doAction("", CMD_GIGGLE);	  
+          job->john->doAction("", CMD_GIGGLE);
           break;
         case 4:
           tmp = format("%s Do you swallow?") % hookername;
@@ -4944,9 +4944,9 @@ int grimhavenHooker(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
       //	break;
 
       if(myself->in_room != homes[job->cur_path]){
-        switch((dir=path.findPath(myself->in_room, 
+        switch((dir=path.findPath(myself->in_room,
                 findRoom(homes[job->cur_path])))){
-          case 0: case 1: case 2: case 3: case 4: 
+          case 0: case 1: case 2: case 3: case 4:
           case 5: case 6: case 7: case 8: case 9:
             myself->goDirection(dir);
             break;
@@ -5009,7 +5009,7 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   int zone_nr=real_roomp(31750)->getZoneNum(), v=0;
   TBeing *victims[10], *vict;
   int saferooms[20]={31750, 31751, 31756, 31757, 31758, 31759, 31764, 31788,
-  31789,31790,31791,31792,31793,31794,31795,31796,31797,31798,31799,31760};  
+  31789,31790,31791,31792,31793,31794,31795,31796,31797,31798,31799,31760};
 
   // only on pulse and only if we're not already hunting someone
   if(cmd != CMD_GENERIC_PULSE || IS_SET(myself->specials.act, ACT_HUNTING))
@@ -5050,7 +5050,7 @@ int bankGuard(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
   vlogf(LOG_PEEL, format("bank guard hunting %s") %  vict->getName());
   myself->setHunting(vict);
   myself->addHated(vict);
-  
+
   // set my followers to hate them too
   for (followData *f = myself->followers; f; f = f->next) {
     if(myself->inGroup(*f->follower)){
@@ -5070,7 +5070,7 @@ int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
 
   if (cmd != CMD_GENERIC_QUICK_PULSE || myself->fight())
     return FALSE;
-  
+
   // look for people to run from
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end();){
     t=*(it++);
@@ -5272,7 +5272,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
         me->doTell(ch->getName(), "You don't have that item!");
         return TRUE;
       }
-      // prohibit polys and charms from engraving 
+      // prohibit polys and charms from engraving
       if (dynamic_cast<TMonster *>(ch)) {
         me->doTell(fname(ch->name), "I don't identify for beasts.");
         me->doGive(ch, item,GIVE_FLAG_IGN_DEX_TEXT);
@@ -5288,7 +5288,7 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       sprintf(buf, "Thanks for your business, I'll take your %d talens payment in advance!", cost);
       me->doSay(buf);
 
-      tso=new TShopOwned(find_shop_nr(me->number), 
+      tso=new TShopOwned(find_shop_nr(me->number),
 			 dynamic_cast<TMonster *>(me), ch);
       tso->doBuyTransaction(cost, "divination", TX_BUYING_SERVICE);
       delete tso;
@@ -5347,7 +5347,7 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
     return FALSE;
   }
 
-  
+
   // don't wander around while planting
   SET_BIT(mob->specials.act, ACT_SENTINEL);
 
@@ -5360,9 +5360,9 @@ int gardener(TBeing *, cmdTypeT cmd, const char *, TMonster *mob, TObj *)
 int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 {
 
-  if (cmd != CMD_GENERIC_QUICK_PULSE || ::number(0,3)) 
+  if (cmd != CMD_GENERIC_QUICK_PULSE || ::number(0,3))
     return FALSE;
-  
+
   int arrownum = 0, bownum = 0;
 
   switch(ch->mobVnum()) {
@@ -5437,7 +5437,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   if (bow->isBowFlag(BOW_STRING_BROKE)) {
     //    vlogf(LOG_DASH, "archer fixing a bowsstring");
 
-    
+
     act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
     act("$n quickly restrings $p.", FALSE, ch, bow, 0, TO_ROOM);
 
@@ -5456,7 +5456,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
   for (i = MIN_DIR; i <= (MAX_DIR - 1); i++) {
     rm = ch->in_room;
     if (clearpath(rm, i)) {
-      
+
       new_rm = real_roomp(rm)->dir_option[i]->to_room;
       if (new_rm == rm || (real_roomp(rm)->isRoomFlag(ROOM_PEACEFUL)))
 	continue;
@@ -5464,7 +5464,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	rm = new_rm;
       count = 0;
 
-      
+
 
       for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
 	tbt = dynamic_cast<TBeing *>(t);
@@ -5478,10 +5478,10 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	//ok we have a mob and he's a logrite - tally him the pick a random one.
 	count++;
       }
-      
+
       if (count == 0)
 	return TRUE;
-      
+
 
       which = ::number(1,count);// which target to pick on the next pass
       count = 0;
@@ -5498,7 +5498,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	if (count == which)
 	  break;
       }
-	
+
       // ok now we have to do a bit of trickery - there could be multiple identical mobs
       // in the same room, ie, 3 orc guards, and even if we pick the third one our code
       // will only aim at the first one.  So we have to figure out which we're aiming at
@@ -5529,7 +5529,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       Hi = tbt->getHit();
 
       if(ch->in_room == Room::TROLLEY) {
-	
+
 	sprintf(buf, "From inside the trolley, $N aims a $o at you.");
 	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
 	sprintf(buf, "From inside the trolley, $N aims a $o at $n.");
@@ -5539,7 +5539,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	sprintf(buf, "$n aims a $o out the trolley at $N.");
 	act(buf,FALSE, ch, bow, tbt, TO_ROOM);
       } else {
-	
+
 	sprintf(buf, "From up on the %s tower, $N aims a $o down at you.", directions[i][1]);
 	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
 	sprintf(buf, "From up on the %s tower, $N aims a $o down at $n.", directions[i][1]);
@@ -5560,7 +5560,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
       Hf = tbt->getHit();
 
 #if 1
-      //      vlogf(LOG_DASH, format("archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
+      //      vlogf(LOG_DASH, format("archer debug: %d->%d, temp/name: (%s)/(%s), tbt?: %s") %
       //    Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
 #endif
       if (tbt->getName().empty()) {
@@ -5622,8 +5622,8 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	    sprintf(buf2, "Wa-hey, bitch!");
 	    break;
 	}
-	
-	
+
+
 	sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
 	act(buf,FALSE, tbt, bow, ch, TO_CHAR);
 	sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
@@ -5634,7 +5634,7 @@ int bmarcher(TBeing *, cmdTypeT cmd, const char *, TMonster *ch, TObj *)
 	act(buf,FALSE, ch, bow, tbt, TO_ROOM);
       }
       return TRUE;
-     
+
     }
   }
   return TRUE;
@@ -5651,7 +5651,7 @@ int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
   sstring argument=arg;
 
   if(cmd != CMD_GENERIC_PULSE &&
-     !((cmd == CMD_SAY || cmd == CMD_SAY2) && 
+     !((cmd == CMD_SAY || cmd == CMD_SAY2) &&
        ((argument.word(0).lower()=="pirates,") ||
 	(argument.word(0).lower()=="pirate,")) && ch &&
        (ch->desc->account->name == "trav" ||
@@ -5659,23 +5659,23 @@ int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 	ch->desc->account->name == "laren" ||
 	ch->desc->account->name == "ekeron")))
     return FALSE;
-  
+
   if(cmd==CMD_GENERIC_PULSE){
     // if fighting return false
     if(myself->fight()){
       fighting=true;
     } else {
       for (followData *f = myself->followers; f; f = f->next){
-	if(myself->inGroup(*f->follower) && 
+	if(myself->inGroup(*f->follower) &&
 	   (f->follower->fight() || f->follower->spelltask)){
 	  fighting=true;
 	}
       }
     }
-    
+
     if(fighting)
       return FALSE;
-    
+
     // if mob in room that isn't in my group
     //   if within my level range (my level + 10 or lower?)
     //     attack
@@ -5693,7 +5693,7 @@ int aggroFollower(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, T
 	  delete tmons;
 	  tmons = NULL;
 	}
-	if (IS_SET_DELETE(rc, DELETE_THIS)) 
+	if (IS_SET_DELETE(rc, DELETE_THIS))
 	  return DELETE_VICT;
       }
     }
@@ -5730,7 +5730,7 @@ int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     fighting=true;
   } else {
     for (followData *f = myself->followers; f; f = f->next){
-      if(myself->inGroup(*f->follower) && 
+      if(myself->inGroup(*f->follower) &&
 	 (f->follower->fight() || f->follower->spelltask)){
 	fighting=true;
       }
@@ -5751,7 +5751,7 @@ int adventurer(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 	delete tmons;
 	tmons = NULL;
       }
-      if (IS_SET_DELETE(rc, DELETE_THIS)) 
+      if (IS_SET_DELETE(rc, DELETE_THIS))
 	return DELETE_VICT;
     }
   }
@@ -5782,7 +5782,7 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
 
 
-  if ((myself->getCarriedWeight()/myself->carryWeightLimit()) * 100.0 > 25 || 
+  if ((myself->getCarriedWeight()/myself->carryWeightLimit()) * 100.0 > 25 ||
       (myself->getCarriedVolume()/myself->carryVolumeLimit()) * 100.0 > 25) {
     act("$n carries the empty glasses behind the counter and washes them.",FALSE, myself, 0, 0, TO_ROOM);
 
@@ -5799,10 +5799,10 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     myself->addToWait(50);
     return TRUE;
   }
-  
+
   for(StuffIter it=myself->roomp->stuff.begin();it!=myself->roomp->stuff.end() && (t=*it);++it){
     if((table=dynamic_cast<TTable *>(t))){
-      
+
       for(t2=table->rider;t2;t2=t2->nextRider){
 	if((glass=dynamic_cast<TBaseCup *>(t2))){
 	  //	  vlogf(LOG_DASH, format("Barmaid: found  %s with %d units left.") %  glass->getName() % glass->getDrinkUnits());
@@ -5838,7 +5838,7 @@ int barmaid(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       }
     }
   }
-  
+
   if (!::number(0,19)) {
     act("$n flirts with some of the patrons." , FALSE, myself, myself, myself, TO_ROOM);
     myself->addToWait(20);
@@ -5854,17 +5854,17 @@ bool okForCommodMaker(TObj *o, sstring &ret)
       ret=format("%s: That isn't a valuable - I can't convert that.") % o->getName();
       return false;
     }
-    
+
     if(dynamic_cast<TCommodity *>(o)){
       ret=format("%s: That's already a commodity.") % o->getName();
       return false;
     }
-    
+
     if(!o->isRentable()){
       ret=format("%s: That isn't rentable so I can't convert it.") % o->getName();
       return false;
     }
-    
+
     if(o->isMonogrammed()){
       ret=format("%s: Sorry, I don't convert monogrammed items.") % o->getName();
       return false;
@@ -5890,17 +5890,17 @@ bool okForCommodMaker(TObj *o, sstring &ret)
         ret=format("%s: That isn't a valuable - I can't convert that.") % obj->getName();
         return false;
       }
-      
+
       if(dynamic_cast<TCommodity *>(obj)){
         ret=format("%s: That's already a commodity.") % obj->getName();
         return false;
       }
-      
+
       if(!obj->isRentable()){
         ret=format("%s: That isn't rentable so I can't convert it.") % obj->getName();
         return false;
       }
-      
+
       if(obj->isMonogrammed()){
         ret=format("%s: Sorry, I don't convert monogrammed items.") % o->getName();
         return false;
@@ -5910,14 +5910,14 @@ bool okForCommodMaker(TObj *o, sstring &ret)
         ret=format("%s: Sorry, I cannot convert magical components.") % obj->getName();
         return false;
       }
-      
+
       TBaseCup *tbc;
       if((tbc=dynamic_cast<TBaseCup *>(obj)) && tbc->getDrinkUnits()){
         ret=format("%s: Sorry, I can't convert liquid containers unless they are empty.") % obj->getName();
         return false;
       }
     }
-    
+
     return true;
 }
 
@@ -5998,7 +5998,7 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
       me->doGive(ch,o, GIVE_FLAG_DROP_ON_FAIL);
       return TRUE;
     }
-    
+
     mat_list=commodMakerValue(o, value);
     value = (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value);
 
@@ -6011,22 +6011,22 @@ int commodMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o
 
     for(iter=mat_list.begin();iter!=mat_list.end();++iter){
       TShopOwned tso(shop_nr, me, ch);
-      tso.doBuyTransaction((int)value, format("deconstructing %s (%s)") % 
-			   o->getName() % 
+      tso.doBuyTransaction((int)value, format("deconstructing %s (%s)") %
+			   o->getName() %
 			   material_nums[(*iter).first].mat_name,
 			   TX_BUYING_SERVICE);
-      
+
       commod = read_object(Obj::GENERIC_COMMODITY, VIRTUAL);
-      
+
       commod->setWeight((*iter).second/10.0);
       commod->setMaterial((*iter).first);
-      
+
       me->doTell(ch->getName(), "Alright, here you go!");
-      
+
       *me += *commod;
       me->doGive(ch,commod, GIVE_FLAG_DROP_ON_FAIL);
     }
-  
+
     return DELETE_ITEM;
   }
 
@@ -6149,7 +6149,7 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
     }
     return DELETE_ITEM;
   }
-  
+
   return false;
 }
 
@@ -6157,34 +6157,34 @@ int konastisGuard(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, 
 // riddling tree proc
 int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj *)
 {
-  
+
   if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_TELL && cmd != CMD_OPEN)
     return FALSE;
-    
+
   sstring sarg = arg;
-  if ( (cmd == CMD_TELL && sarg.find(" ") > 0 && 
+  if ( (cmd == CMD_TELL && sarg.find(" ") > 0 &&
          !isname(sarg.substr(0,(int) sarg.find(" ")), tree->name)) ||
-       ((cmd == CMD_SAY || cmd == CMD_SAY2) 
+       ((cmd == CMD_SAY || cmd == CMD_SAY2)
           && sarg.lower().find("clue") == sstring::npos ))
   {
     return FALSE;
   }
-  
+
 // make him unresponsive if somehow he's in the wrong room
   if (tree->inRoom() != 24700)
     return FALSE;
-    
-  if (cmd == CMD_OPEN && sarg.lower().find("vine") != sstring::npos) 
+
+  if (cmd == CMD_OPEN && sarg.lower().find("vine") != sstring::npos)
   {
     act("$n blocks your way.", TRUE, tree, NULL, ch, TO_VICT);
-    act("$N moves towards some vines, but $n blocks the way.", 
+    act("$N moves towards some vines, but $n blocks the way.",
       TRUE, tree, NULL, ch, TO_NOTVICT);
-    act("<c>$n says,<z> \"Just where do you think you're going?!?\"", 
+    act("<c>$n says,<z> \"Just where do you think you're going?!?\"",
       TRUE, tree, NULL, ch, TO_ROOM);
     return TRUE;
-  } else if (cmd == CMD_OPEN) 
+  } else if (cmd == CMD_OPEN)
     return FALSE;
-  
+
   int whichRiddle;
   std::vector <sstring> riddles;
   std::vector <sstring> answers;
@@ -6196,7 +6196,7 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
   if (firstGuessTime) elapsedTime = (time(0) - firstGuessTime) / 60;
   if (elapsedTime >= 10) firstGuessTime = 0;
   if (!firstGuessTime) chancesLeft = 3;
-  
+
   riddles.push_back("A great tree that spreads its roots where dryads step around the gentle dancing of nymphs.");
   answers.push_back("oak");
 
@@ -6214,10 +6214,10 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
 
   riddles.push_back("I always loved to watch the griffons and winged lions sweep about the skies near this tree.  The gnats were a little annoying, though.");
   answers.push_back("redwood");
-  
-  riddles.push_back("This tree was well-tended by elves from a nearby village."); 
-  answers.push_back("elm"); 
-  
+
+  riddles.push_back("This tree was well-tended by elves from a nearby village.");
+  answers.push_back("elm");
+
   riddles.push_back("A settlement of short hairy-footed folk had recently been established near this tree last I visited.");
   answers.push_back("apple");
 
@@ -6232,18 +6232,18 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
 
   riddles.push_back("Home to many birds and monkeys, this fair tree grows where lions and zebras roam.");
   answers.push_back("acacia");
-  
+
   // which riddle are we using this boot
   whichRiddle = Uptime % riddles.size();
   vlogf(LOG_MAROR, format("riddle = %s") % riddles[whichRiddle]);
   vlogf(LOG_MAROR, format("answer = %s") %  answers[whichRiddle]);
 
-  if (cmd == CMD_TELL && sarg.lower().find(answers[whichRiddle]) != 
+  if (cmd == CMD_TELL && sarg.lower().find(answers[whichRiddle]) !=
       sstring::npos) {
 // reset guessing
     firstGuessTime = 0;
     tree->doAction("", CMD_SMILE);
-    act("<c>$n says,<z> \"Oh, thank you - you have brought a ray of sunshine into an old tree's day.\"", 
+    act("<c>$n says,<z> \"Oh, thank you - you have brought a ray of sunshine into an old tree's day.\"",
       TRUE, tree, NULL, ch, TO_ROOM);
     act("$n hums a little tune.", TRUE, tree, NULL, ch, TO_ROOM);
     tree->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF,
@@ -6257,11 +6257,11 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
       ""
     );
   }
-  else if ( chancesLeft > 0 && (cmd == CMD_TELL || cmd == CMD_SAY 
-        || cmd == CMD_SAY2) && 
-      sarg.lower().find("clue") != sstring::npos) 
+  else if ( chancesLeft > 0 && (cmd == CMD_TELL || cmd == CMD_SAY
+        || cmd == CMD_SAY2) &&
+      sarg.lower().find("clue") != sstring::npos)
   {
-    act("<c>$n says,<z> \"A clue, hmm, a clue... ah, hmm, yes, if you answer this I'll know that my friend you have found:\"", 
+    act("<c>$n says,<z> \"A clue, hmm, a clue... ah, hmm, yes, if you answer this I'll know that my friend you have found:\"",
       TRUE, tree, NULL, ch, TO_ROOM);
     sstring sayRiddle;
     sayRiddle = format("<c>$n says,<z> \"%s\"") % riddles[whichRiddle];
@@ -6271,20 +6271,20 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
       chancesLeft % ((chancesLeft != 1) ? "chances" : "chance");
     act(askForClue, TRUE, tree, NULL, ch, TO_ROOM);
   }
- // control response to other tells to the tree 
-  else 
+ // control response to other tells to the tree
+  else
 /*  if ((cmd == CMD_SAY && chancesLeft == 0 ) || (cmd == CMD_TELL &&*/
 /*      sarg.lower().find(answers[whichRiddle]) == sstring::npos))*/
   {
-    if (chancesLeft == 3) 
+    if (chancesLeft == 3)
       firstGuessTime = time(0);
     chancesLeft--;
     act("$n shrugs helplessly.", TRUE, tree, NULL, ch, TO_ROOM);
     if (chancesLeft > 0)
     {
-      act("<c>$n says<z>, \"A shame, a shame... I do hope you're wrong due to ignorance, and not because my friend no longer stands.\"", 
+      act("<c>$n says<z>, \"A shame, a shame... I do hope you're wrong due to ignorance, and not because my friend no longer stands.\"",
         TRUE, tree, NULL, ch, TO_ROOM);
-      tree->doAction("",CMD_SNICKER); 
+      tree->doAction("",CMD_SNICKER);
       sstring stateChancesLeft;
       stateChancesLeft = format("<c>$n says,<z> \"There's a good chance of that, at least.  You have %d %s left, so you'd best stop fooling around.\"") %
         chancesLeft % ((chancesLeft != 1) ? "chances" : "chance");
@@ -6295,21 +6295,21 @@ int riddlingTree(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *tree, TObj
     }
   }
   return TRUE;
-    
+
 }
 
 int shopWhisper(TBeing *ch, TMonster *myself, int shop_nr, const char *arg)
 {
   char buf[256];
-  
+
   arg = one_argument(arg, buf, cElements(buf));
   if(!isname(buf, myself->name))
     return FALSE;
-  
+
   arg = one_argument(arg, buf, cElements(buf));
-  
+
   TShopOwned tso(shop_nr, myself, ch);
-  
+
   if(!strcmp(buf, "info")){ /////////////////////////////////////////
     tso.showInfo();
   } else if(!strcmp(buf, "statements")){
@@ -6351,17 +6351,17 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
   if (isname(target, mimic->name) || isname(ch->name, mimic->name) ) {
       return FALSE;
   }
-  
+
   bool snicker = FALSE;
   if ( sarg.lower().find("i'm") != sstring::npos ||
         sarg.lower().find("i am") != sstring::npos)
   {
     snicker = TRUE;
   }
-  
+
   if (cmd == CMD_WHISPER) {
     ch->doWhisper(arg);
-    buf = format("%s psssst") % target; 
+    buf = format("%s psssst") % target;
     if (snicker) {
       mimic->doAction("", CMD_SNICKER);
     } else
@@ -6389,7 +6389,7 @@ int mimic(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *mimic, TObj *)
 
   return FALSE;
 
-}  
+}
 
 
 int chicken(TBeing *, cmdTypeT cmd, const char *, TMonster *chicken, TObj *)
@@ -6409,7 +6409,7 @@ int chicken(TBeing *, cmdTypeT cmd, const char *, TMonster *chicken, TObj *)
   }
 
   *chicken->roomp += *egg;
-  
+
   act("$n lays an egg.", TRUE, chicken, NULL, NULL, TO_ROOM);
 
   return FALSE;
@@ -6448,7 +6448,7 @@ int shippingOfficial(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself
 
 	*myself += *o;
 
-	sstring giveBuf = format("%s %s") % 
+	sstring giveBuf = format("%s %s") %
 	  add_bars(o->name) % add_bars(ch->name);
 	myself->doGive(giveBuf, GIVE_FLAG_IGN_DEX_TEXT);
 
@@ -6490,11 +6490,11 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    break;
 	  case 3:
 	    me->doAction(add_bars(ch->name), CMD_STRETCH);
-	    break;	    
+	    break;
 	  case 4:
 	    me->doAction(add_bars(ch->name), CMD_NUZZLE);
-	    break;	    
-	}	    
+	    break;
+	}
 	return TRUE;
       }
     }
@@ -6505,7 +6505,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
   if(cmd==CMD_GENERIC_PULSE){
     if(::number(0,49))
       return FALSE;
-    
+
     // LOOK FOR MICE
     for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
       if((tm=dynamic_cast<TMonster *>(*it)) && tm->getRace()==RACE_RODENT &&
@@ -6523,7 +6523,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	break;
       case 1:
 	// stare at something
-	if((me->roomp->isIndoorSector() || 
+	if((me->roomp->isIndoorSector() ||
 	    me->roomp->isRoomFlag(ROOM_INDOORS))){
 	  act("$n stares intently at a spot on the $g.",
 	      TRUE, me, NULL, NULL, TO_ROOM);
@@ -6543,7 +6543,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    roompeople.push_back(tb);
 	  }
 	}
-	
+
 	if(roompeople.size()>0){
 	  tb=roompeople[::number(0,roompeople.size()-1)];
 	  act("$n rubs against $N's leg.",
@@ -6563,7 +6563,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	me->affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
 	me->doSleep("");
 	break;
-      case 5: 
+      case 5:
 	me->doAction("", CMD_STRETCH);
 	break;
       case 6:
@@ -6572,18 +6572,18 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	    roomobj.push_back(o);
 	  }
 	}
-	
+
 	if(roomobj.size()>0){
 	  o=roomobj[::number(0,roomobj.size()-1)];
 	  act("$n sharpens $s claws on $p.",
 	      TRUE, me, o, NULL, TO_ROOM);
 	}
-	
+
 	break;
       case 7: case 8: case 9: case 10:
 	// play with other cats
         for(StuffIter it=me->roomp->stuff.begin();it!=me->roomp->stuff.end();++it){
-          if((tb=dynamic_cast<TBeing *>(*it)) && 
+          if((tb=dynamic_cast<TBeing *>(*it)) &&
 	     (tb->getRace() == RACE_FELINE) &&
 	     tb!=me){
             roompeople.push_back(tb);
@@ -6611,7 +6611,7 @@ int cat(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
 	break;
     }
   }
-    
+
   return TRUE;
 }
 
@@ -6624,14 +6624,14 @@ int beeDeath(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *) {
 
   TBeing *vict;
   vict = ch->fight();
-  
+
   if (!vict->isAffected(AFF_ENGAGER) && number(0,10) > 7) {
-    act("$n darts directly toward your head!",TRUE,ch,NULL,vict,TO_VICT,NULL);  
+    act("$n darts directly toward your head!",TRUE,ch,NULL,vict,TO_VICT,NULL);
     act("$n misses and smacks into the ground.",TRUE,ch,NULL,vict,TO_VICT,NULL);
     act("$n flies directly at $N's head, misses, and smacks into the ground.",TRUE,ch,NULL,vict,TO_NOTVICT,NULL);
     act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_ROOM,NULL);
-    act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_CHAR,NULL);  
-    myself->makeCorpse(DAMAGE_NORMAL); // generic type for phony corpse 
+    act("A bee is dead! R.I.P.",TRUE,ch,NULL,vict,TO_CHAR,NULL);
+    myself->makeCorpse(DAMAGE_NORMAL); // generic type for phony corpse
   }
   return TRUE;
 }
@@ -6643,7 +6643,7 @@ int brickCollector(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *mys
   if(!ch || !ch->awake() || ch->fight())
     return FALSE;
 
-  
+
   switch(cmd){
     case CMD_MOB_GIVEN_ITEM:
       if(!o || !isname("foundbrick", o->name)){
@@ -6652,14 +6652,14 @@ int brickCollector(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *mys
 
       db.query("select 1 from brickquest where name='%s'", ch->name.c_str());
       if(!db.fetchRow()){
-	db.query("insert into brickquest values (1, '%s')", 
+	db.query("insert into brickquest values (1, '%s')",
 		 ch->name.c_str());
       } else {
 	db.query("update brickquest set numbricks=numbricks+1 where name='%s'", ch->name.c_str());
       }
       db.query("select name, numbricks from brickquest where name='%s'", ch->name.c_str());
       while (db.fetchRow()) {
-	buf = format("Thanks %s! That makes your total %i bricks. I will update the scores.") % db["name"] % 
+	buf = format("Thanks %s! That makes your total %i bricks. I will update the scores.") % db["name"] %
 convertTo<int>(db["numbricks"]);
 	myself->doSay(buf);
 	buf = format("Gauge has won the last brick quest on 7-1-2006. Yay!");
@@ -6696,7 +6696,7 @@ int caretaker(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
       }
     }
   }
-  
+
   // drop stuff
   if(!found){
     for(StuffIter it=me->stuff.begin();it!=me->stuff.end();++it){
@@ -6726,14 +6726,14 @@ int cannonLoader(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *
 	ch->desc->account->name == "laren" ||
 	ch->desc->account->name == "ekeron")))
     return FALSE;
-  
+
   sstring argument=arg;
 
   if(argument.lower() != "load the cannons!")
     return FALSE;
 
   me->doGload("cannon-iron-dragon");
-  
+
   return FALSE;
 }
 
@@ -6755,12 +6755,12 @@ int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
   GameTime::mudTimePassed(ch->player.time->birth, GameTime::getBeginningOfTime(), &birth_data);
   birth_data.year += GameTime::getYearAdjust();
   birth_data.year -= ch->getBaseAge();
-  
-  int day = birth_data.day + 1;        // day in [1..35] 
-  
-  sstring dob=format("%s %s, %d") % 
-    month_name[birth_data.month] % 
-    numberAsString(day) % 
+
+  int day = birth_data.day + 1;        // day in [1..35]
+
+  sstring dob=format("%s %s, %d") %
+    month_name[birth_data.month] %
+    numberAsString(day) %
     birth_data.year;
 
   sstring buf="";
@@ -6779,7 +6779,7 @@ int idCardProvider(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj
 
   TNote *card = createNote(buf);
   card->name = "card paper id";
-  card->shortDescr = "<W>an ID card<1>"; 
+  card->shortDescr = "<W>an ID card<1>";
   card->setDescr("<W>An official Kingdom of Grimhaven ID card lies here.<1>");
 
   *me += *card;
@@ -6801,25 +6801,25 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
   // respectively.  i precalculated this on current prices (cheating).
   // since the factory will produce one of each production pulse,
   // then we can average these prices to get the actual supply cost.
-  float base_price=2.175; 
+  float base_price=2.175;
 
   if(cmd != CMD_MOB_GIVEN_ITEM)
     return FALSE;
 
   db.query("select supplyamt from factorysupplies where shop_nr=%i and supplyname='meat'", factory_shop);
-  
+
   if(!db.fetchRow()){
     vlogf(LOG_BUG, "ration factory missing db entry");
     return FALSE;
   }
-	
+
   if(convertTo<int>(db["supplyamt"]) >= maxsupply){
     me->doSay("I have enough meat right now.");
     me->doDrop("", o);
     return FALSE;
   }
 
-  if(!o || !(o->objVnum()==Obj::GENERIC_STEAK) || 
+  if(!o || !(o->objVnum()==Obj::GENERIC_STEAK) ||
      !(food=dynamic_cast<TFood *>(o))){
     me->doSay("What the hell is this?!  That's not going into a ration.");
     me->doDrop("", o);
@@ -6831,7 +6831,7 @@ int rationFactory(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj 
 
   me->doSay("Now that's a nice cut of steak!  Here you go.");
   me->doEmote(format("hands you %i talens.") % (int)price);
-  
+
   tso.doSellTransaction((int)price, "meat",
 			TX_SELLING,  food->getFoodFill());
 
@@ -6969,157 +6969,157 @@ extern int GenericGuildMaster(TBeing *ch, cmdTypeT cmd, const char *arg, TMonste
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
 TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
 {
-  {TRUE, "BOGUS", bogus_mob_proc},        // 0 
+  {TRUE, "BOGUS", bogus_mob_proc},        // 0
   {TRUE, "energy drainer", vampire},
   {TRUE, "arch vampire", arch_vampire},
   {FALSE, "dragon breath", DragonBreath},
   {TRUE, "thief", thief},
-  {TRUE, "janitor", janitor},        // 5 
+  {TRUE, "janitor", janitor},        // 5
   {FALSE, "tormentor", tormentor},
   {FALSE, "Trainer: air", CDGenericTrainer},
   {TRUE, "chicken", chicken},
   {TRUE, "thrower mob", ThrowerMob},
-  {TRUE, "swallower", Tyrannosaurus_swallower},                // 10 
+  {TRUE, "swallower", Tyrannosaurus_swallower},                // 10
   {TRUE, "bounty hunter", bounty_hunter},
   {FALSE, "alignment god", alignment_deity},
   {TRUE, "engraver", engraver},
   {FALSE, "cityguard", cityguard},
-  {FALSE, "dagger thrower", dagger_thrower},        // 15 
+  {FALSE, "dagger thrower", dagger_thrower},        // 15
   {TRUE, "mount", horse},
   {TRUE, "beggar", beggar},
   {FALSE, "pet keeper", pet_keeper},
   {FALSE, "stable man", stable_man},
-  {FALSE, "famine", famine},        // 20 
+  {FALSE, "famine", famine},        // 20
   {FALSE, "war", war},
   {TRUE, "cold giver", cold_giver},
   {TRUE, "flu giver", flu_giver},
   {FALSE, "craps man", craps_table_man},
-  {FALSE, "shop keeper", shop_keeper},        // 25 
+  {FALSE, "shop keeper", shop_keeper},        // 25
   {TRUE, "postmaster", postmaster},
   {TRUE, "receptionist", receptionist},
-  {FALSE, "rock worm", rock_worm},        
+  {FALSE, "rock worm", rock_worm},
   {FALSE, "mage guildmaster", GenericGuildMaster},
-  {FALSE, "deikhan guildmaster", GenericGuildMaster},        // 30 
+  {FALSE, "deikhan guildmaster", GenericGuildMaster},        // 30
   {FALSE, "monk guildmaster", GenericGuildMaster},
   {FALSE, "warrior guildmaster", GenericGuildMaster},
   {FALSE, "thief guildmaster", GenericGuildMaster},
   {FALSE, "cleric guildmaster", GenericGuildMaster},
-  {FALSE, "ranger guildmaster", GenericGuildMaster},        // 35 
+  {FALSE, "ranger guildmaster", GenericGuildMaster},        // 35
   {FALSE, "hobbit emissary", hobbitEmissary},
   {FALSE, "Trainer: alchemy", CDGenericTrainer},
   {FALSE, "Trainer: earth", CDGenericTrainer},
   {TRUE, "repairman", repairman},
-  {TRUE, "sharpener", sharpener},        // 40 
+  {TRUE, "sharpener", sharpener},        // 40
   {TRUE, "rust monster", rust_monster},
   {TRUE, "paralyze bite", paralyzeBite},
   {FALSE, "caravan leader", caravan},
   {FALSE, "death", death},
-  {FALSE, "pestilence", pestilence},        // 45 
+  {FALSE, "pestilence", pestilence},        // 45
   {FALSE, "firemaster", fireMaster},
   {TRUE, "paralyze breath", paralyzeBreath},
   {FALSE, "doctor", doctor},
   {FALSE, "Trainer: fire", CDGenericTrainer},
-  {TRUE, "frostbiter", frostbiter},       // 50 
+  {TRUE, "frostbiter", frostbiter},       // 50
   {FALSE, "ticket-guy", TicketGuy},
   {FALSE, "fireballer",Fireballer},
   {FALSE,"teleporter",Teleporter},
   {FALSE,"meteorswarm",MSwarmer},
-  {FALSE,"icestormer",IceStormer},     // 55 
+  {FALSE,"icestormer",IceStormer},     // 55
   {FALSE,"energy drainer2",Edrain},
   {FALSE,"lightning bolter",LBolter},
   {FALSE,"disintigrater",Disser},
   {FALSE,"witherer",Witherer},
-  {FALSE,"paralyzer2",Paralyzer},      // 60 
+  {FALSE,"paralyzer2",Paralyzer},      // 60
   {FALSE,"acid blaster",AcidBlaster},
   {FALSE,"king Urik",kingUrik},
   {FALSE,"Trainer: sorcery", CDGenericTrainer},
   {FALSE,"Trainer: spirit", CDGenericTrainer},
-  {FALSE,"Trainer: water", CDGenericTrainer},   // 65 
+  {FALSE,"Trainer: water", CDGenericTrainer},   // 65
   {FALSE,"Trainer: wrath", CDGenericTrainer},
   {FALSE,"Trainer: afflictions", CDGenericTrainer},
   {FALSE,"Trainer: cures", CDGenericTrainer},
   {FALSE,"Trainer: hand of god", CDGenericTrainer},
-  {FALSE,"Trainer: ranger", CDGenericTrainer},    // 70 
+  {FALSE,"Trainer: ranger", CDGenericTrainer},    // 70
   {FALSE,"replicant", replicant},
   {FALSE,"Trainer: looting", CDGenericTrainer},
   {FALSE,"Trainer: murder", CDGenericTrainer},
   {FALSE,"Trainer: hand-to-hand", CDGenericTrainer},
-  {FALSE,"Trainer: adventuring", CDGenericTrainer},    // 75 
+  {FALSE,"Trainer: adventuring", CDGenericTrainer},    // 75
   {FALSE,"Trainer: warrior", CDGenericTrainer},
-  {TRUE, "Banshee", banshee},        
-  {FALSE,"Meeting Organizer", meeting_organizer},        
+  {TRUE, "Banshee", banshee},
+  {FALSE,"Meeting Organizer", meeting_organizer},
   {FALSE,"toll taker", payToll},
-  {FALSE,"Trainer: wizardry", CDGenericTrainer},   // 80 
+  {FALSE,"Trainer: wizardry", CDGenericTrainer},   // 80
   {FALSE,"Trainer: faith", CDGenericTrainer},
   {FALSE,"Trainer: slash", CDGenericTrainer},
   {FALSE,"Trainer: blunt", CDGenericTrainer},
   {FALSE,"Trainer: pierce", CDGenericTrainer},
-  {FALSE,"Trainer: ranged", CDGenericTrainer},    // 85 
+  {FALSE,"Trainer: ranged", CDGenericTrainer},    // 85
   {TRUE,"Tunneler/Earthquake", tunnelerEarthquake},
   {FALSE,"Trainer: deikhan", CDGenericTrainer},
   {TRUE, "Ram", ram},
   {TRUE, "Insulter", insulter},
-  {TRUE, "Kraken", kraken},      // 90 
+  {TRUE, "Kraken", kraken},      // 90
   {FALSE, "ascallion", ascallion},
   {FALSE, "electric eel", electricEel},
   {FALSE, "poison hit", poisonHit},
   {FALSE, "Belimus", belimus},
-  {FALSE, "Siren", siren},      // 95 
+  {FALSE, "Siren", siren},      // 95
   {TRUE, "Lamp-Lighter", lamp_lighter},
   {TRUE, "Leper", leper},
   {TRUE, "Air Magi", specificDisc},
   {TRUE, "Water Magi", specificDisc},
-  {TRUE, "Earth Magi", specificDisc},   // 100 
+  {TRUE, "Earth Magi", specificDisc},   // 100
   {TRUE, "Fire Magi", specificDisc},
   {TRUE, "Sorcerer", specificDisc},
   {FALSE, "Faction-Faery", factionFaery},
   {FALSE,"Trainer: brawling", CDGenericTrainer},
-  {FALSE,"Trainer: mage/thief", CDGenericTrainer},   // 105 
+  {FALSE,"Trainer: mage/thief", CDGenericTrainer},   // 105
   {FALSE,"Trainer: meditation (monk)", CDGenericTrainer},
   {FALSE,"Trainer: survival", CDGenericTrainer},
   {FALSE,"Trainer: armadillo", CDGenericTrainer},
   {FALSE,"Trainer: animal", CDGenericTrainer},
-  {FALSE,"Trainer: aegis", CDGenericTrainer},    // 110 
+  {FALSE,"Trainer: aegis", CDGenericTrainer},    // 110
   {FALSE,"Trainer: shaman rites", CDGenericTrainer},
   {FALSE,"frost giant warrior", frostGiant},
   {FALSE,"librarian", librarian},
   {FALSE,"rumormonger", rumorMonger},
-  {FALSE,"Trainer: mage", CDGenericTrainer},    // 115 
-  {FALSE,"Trainer: monk", CDGenericTrainer},   
+  {FALSE,"Trainer: mage", CDGenericTrainer},    // 115
+  {FALSE,"Trainer: monk", CDGenericTrainer},
   {FALSE,"Trainer: cleric", CDGenericTrainer},
   {FALSE,"Trainer: thief", CDGenericTrainer},
   {FALSE,"Trainer: plants", CDGenericTrainer},
-  {FALSE,"Trainer: soldiering", CDGenericTrainer},       // 120 
-  {FALSE,"Trainer: blacksmithing", CDGenericTrainer}, 
+  {FALSE,"Trainer: soldiering", CDGenericTrainer},       // 120
+  {FALSE,"Trainer: blacksmithing", CDGenericTrainer},
   {FALSE,"Trainer: deikhan fight", CDGenericTrainer},
   {FALSE,"Trainer: mounted", CDGenericTrainer},
   {FALSE,"Trainer: deikhan guardian", CDGenericTrainer},
-  {FALSE,"Trainer: deikhan cures", CDGenericTrainer},    // 125 
+  {FALSE,"Trainer: deikhan cures", CDGenericTrainer},    // 125
   {FALSE,"Trainer: deikhan wrath", CDGenericTrainer},
   {FALSE,"Trainer: leverage", CDGenericTrainer},
   {FALSE,"Trainer: mindbody", CDGenericTrainer},
   {FALSE, "grimhaven posse", grimhavenPosse},
-  {FALSE, "grimhaven hooker", grimhavenHooker},       // 130 
+  {FALSE, "grimhaven hooker", grimhavenHooker},       // 130
   {FALSE,"Trainer: focused attacks", CDGenericTrainer},
   {TRUE,"Corpse Muncher", corpseMuncher},
   {FALSE,"Trainer: barehand", CDGenericTrainer},
   {FALSE,"Trainer: thief fight", CDGenericTrainer},
-  {FALSE,"Trainer: poisons", CDGenericTrainer},    // 135 
+  {FALSE,"Trainer: poisons", CDGenericTrainer},    // 135
   {FALSE,"Trainer: frog", CDGenericTrainer},
   {FALSE,"Trainer: shaman alchemy", CDGenericTrainer},
   {FALSE,"Trainer: skunk", CDGenericTrainer},
   {FALSE,"Trainer: spider", CDGenericTrainer},
-  {FALSE,"Trainer: control", CDGenericTrainer},       // 140 
+  {FALSE,"Trainer: control", CDGenericTrainer},       // 140
   {FALSE,"Trainer: ritualism", CDGenericTrainer},
   {FALSE,"paladin patrol", paladinPatrol},
   {FALSE,"shaman guildmaster", GenericGuildMaster},
   {FALSE,"Trainer: combat", CDGenericTrainer},
-  {FALSE,"Trainer: stealth", CDGenericTrainer},     // 145 
-  {FALSE,"Trainer: traps", CDGenericTrainer},       
+  {FALSE,"Trainer: stealth", CDGenericTrainer},     // 145
+  {FALSE,"Trainer: traps", CDGenericTrainer},
   {FALSE,"Newbie Equipper", newbieEquipper},
   {FALSE,"Trainer: lore", CDGenericTrainer},
-  {FALSE,"Trainer: theology", CDGenericTrainer},   
-  {FALSE,"attuner", attuner},                      // 150 
+  {FALSE,"Trainer: theology", CDGenericTrainer},
+  {FALSE,"attuner", attuner},                      // 150
   {TRUE,"paralyze gaze", paralyzeGaze},
   {TRUE,"Doppleganger/Mimic", doppleganger},
   {TRUE,"Tusker/Goring", tuskGoring},
@@ -7130,7 +7130,7 @@ TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] =
   {FALSE, "Guild Registrar", guildRegistrar},
   {FALSE, "Trainer: defense", CDGenericTrainer},
   {FALSE, "Scared Kid", scaredKid},               // 160
-  {TRUE, "Corporate Asistant", corporateAssistant},     
+  {TRUE, "Corporate Asistant", corporateAssistant},
   {FALSE,"Trainer: psionics", CDGenericTrainer},
   {TRUE, "Divination Man", divman},
   {FALSE,"Trainer: healing abilities", CDGenericTrainer},

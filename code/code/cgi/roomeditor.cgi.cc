@@ -110,7 +110,7 @@ int main(int argc, char **argv)
   } else if(**state_form == "delroom"){
     delRoom(cgi, session.getAccountID());
     sendRoomlist(session.getAccountID());
-    return 0;    
+    return 0;
   } else if(**state_form == "newroom"){
     form_iterator vnum=cgi.getElement("vnum");
     form_iterator templatevnum=cgi.getElement("template");
@@ -121,13 +121,13 @@ int main(int argc, char **argv)
     makeNewRoom(cgi, session.getAccountID(), (**vnum), (**templatevnum));
     sendShowRoom(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
-    return 0;    
+    return 0;
   } else if(**state_form == "showroom"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("SneezyMUD Room Editor") << endl;
     cout << head() << body() << endl;
-    
+
     sendShowRoom(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
     return 0;
@@ -139,7 +139,7 @@ int main(int argc, char **argv)
 
     delExtra(cgi, session.getAccountID());
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "newextra"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -148,13 +148,13 @@ int main(int argc, char **argv)
 
     makeNewExtra(cgi, session.getAccountID());
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "showextra"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("SneezyMUD Room Editor") << endl;
     cout << head() << body() << endl;
-    
+
     sendShowExtra(session.getAccountID(), convertTo<int>(**vnum));
     return 0;
   } else if(**state_form == "saveextra"){
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
 
     delExit(cgi, session.getAccountID());
     sendShowExit(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "newexit"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -183,13 +183,13 @@ int main(int argc, char **argv)
 
     makeNewExit(cgi, session.getAccountID());
     sendShowExit(session.getAccountID(), convertTo<int>(**vnum));
-    return 0;    
+    return 0;
   } else if(**state_form == "showexit"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("SneezyMUD Room Editor") << endl;
     cout << head() << body() << endl;
-    
+
     sendShowExit(session.getAccountID(), convertTo<int>(**vnum));
     return 0;
   } else if(**state_form == "saveexit"){
@@ -206,7 +206,7 @@ int main(int argc, char **argv)
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("SneezyMUD Room Editor") << endl;
     cout << head() << body() << endl;
-    
+
     saveRoom(cgi, session.getAccountID());
     sendShowRoom(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
@@ -217,7 +217,7 @@ int main(int argc, char **argv)
     cout << endl;
     return 0;
   }
-  
+
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("SneezyMUD Room Editor") << endl;
   cout << head() << body() << endl;
@@ -225,7 +225,7 @@ int main(int argc, char **argv)
   cout << **state_form << endl;
   cout << body() << endl;
   cout << html() << endl;
-  
+
   return 0;
 }
 
@@ -292,7 +292,7 @@ void makeNewExtra(Cgicc cgi, int account_id)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db.query("insert into roomextra (vnum, owner, block, name, description) values (%s, '%s', 1, '%s', '')",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
@@ -309,7 +309,7 @@ void makeNewExit(Cgicc cgi, int account_id)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %s, '', '', 0, 0, -1, -1, -1, 0)",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
@@ -326,7 +326,7 @@ void makeNewRoom(Cgicc cgi, int account_id, sstring vnum, sstring templatevnum)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   if(templatevnum.empty() ||
      templatevnum == "0"){
     db_sneezy.setDB(DB_SNEEZY);
@@ -335,23 +335,23 @@ void makeNewRoom(Cgicc cgi, int account_id, sstring vnum, sstring templatevnum)
     db_sneezy.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where vnum=%s and block=1 and owner in (%r)", templatevnum.c_str(), getPlayerNames(account_id).c_str());
   }
   db_sneezy.fetchRow();
-    
+
   db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   vnum.c_str(),
-	   db_sneezy["x"].c_str(), 
-	   db_sneezy["y"].c_str(), 
-	   db_sneezy["z"].c_str(), 
-	   db_sneezy["name"].c_str(), 
-	   db_sneezy["description"].c_str(), 
-	   db_sneezy["room_flag"].c_str(), 
-	   db_sneezy["sector"].c_str(), 
-	   db_sneezy["teletime"].c_str(), 
-	   db_sneezy["teletarg"].c_str(), 
-	   db_sneezy["telelook"].c_str(), 
-	   db_sneezy["river_speed"].c_str(), 
-	   db_sneezy["river_dir"].c_str(), 
-	   db_sneezy["capacity"].c_str(), 
+	   db_sneezy["x"].c_str(),
+	   db_sneezy["y"].c_str(),
+	   db_sneezy["z"].c_str(),
+	   db_sneezy["name"].c_str(),
+	   db_sneezy["description"].c_str(),
+	   db_sneezy["room_flag"].c_str(),
+	   db_sneezy["sector"].c_str(),
+	   db_sneezy["teletime"].c_str(),
+	   db_sneezy["teletarg"].c_str(),
+	   db_sneezy["telelook"].c_str(),
+	   db_sneezy["river_speed"].c_str(),
+	   db_sneezy["river_dir"].c_str(),
+	   db_sneezy["capacity"].c_str(),
 	   db_sneezy["height"].c_str(),
 	   db_sneezy["spec"].c_str());
 
@@ -362,7 +362,7 @@ void makeNewRoom(Cgicc cgi, int account_id, sstring vnum, sstring templatevnum)
   }
 
   while(db_sneezy.fetchRow()){
-    db.query("insert into roomextra (vnum, owner, block, name, description) values (%s, '%s', 1, '%s', '%s')", 
+    db.query("insert into roomextra (vnum, owner, block, name, description) values (%s, '%s', 1, '%s', '%s')",
 	     vnum.c_str(),
 	     (**(cgi.getElement("owner"))).c_str(),
 	     db_sneezy["name"].c_str(),
@@ -378,9 +378,9 @@ void saveExtra(Cgicc cgi, int account_id)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
   db.query("delete from roomextra where owner='%s' and vnum=%s and block=1 and name='%s'",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
   	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str());
 
@@ -389,7 +389,7 @@ void saveExtra(Cgicc cgi, int account_id)
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("name"))).c_str(),
 	   (**(cgi.getElement("description"))).c_str());
-  
+
   cout << "Saved for keyword " << (**(cgi.getElement("name"))) << ".<br>";
 }
 
@@ -405,19 +405,19 @@ void saveExit(Cgicc cgi, int account_id)
 
   if((**(cgi.getElement("destination"))) == "new"){
     destination=getNextVnum(account_id);
-    makeNewRoom(cgi, account_id, destination, 
+    makeNewRoom(cgi, account_id, destination,
 		(**(cgi.getElement("vnum"))));
     cout << "Created new destination room " << destination << ".<br>";
   }
 
 
-  
+
   db.query("delete from roomexit where owner='%s' and vnum=%s and block=1 and direction=%s",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
   	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("direction"))).c_str());
-  
-  db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %s, '%s', '%s', %s, %s, %s, %s, %s, %s)", 
+
+  db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %s, '%s', '%s', %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("vnum"))).c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("direction"))).c_str(),
@@ -431,15 +431,15 @@ void saveExit(Cgicc cgi, int account_id)
 	   destination.c_str());
 
   cout << "Saved for direction " << (**(cgi.getElement("direction")))<<".<br>";
-  
-  
+
+
   ///
   db.query("delete from roomexit where owner='%s' and vnum=%s and block=1 and direction=%i",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
 	   destination.c_str(),
 	   rev_dir(convertTo<int>((**(cgi.getElement("direction"))))));
 
-  db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %i, '%s', '%s', %s, %s, %s, %s, %s, %s)", 
+  db.query("insert into roomexit (vnum, owner, block, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination) values (%s, '%s', 1, %i, '%s', '%s', %s, %s, %s, %s, %s, %s)",
 	   destination.c_str(),
 	   (**(cgi.getElement("owner"))).c_str(),
 	   rev_dir(convertTo<int>((**(cgi.getElement("direction"))))),
@@ -478,26 +478,26 @@ void saveRoom(Cgicc cgi, int account_id)
   int terrain_file=mapSectorToFile((sectorTypeT)terrain);
 
   db.query("delete from room where owner='%s' and vnum=%s and block=1",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
   	   (**(cgi.getElement("vnum"))).c_str());
 
 
   db.query("insert into room (owner, vnum, block, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec) values ('%s', %s, 1, %s, %s, %s, '%s', '%s', %i, %i, %s, %s, %s, %s, %s, %s, %s, %s)",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
-	   (**(cgi.getElement("x"))).c_str(), 
-	   (**(cgi.getElement("y"))).c_str(), 
-	   (**(cgi.getElement("z"))).c_str(), 
-	   (**(cgi.getElement("name"))).c_str(), 
-	   (**(cgi.getElement("description"))).c_str(), 
+	   (**(cgi.getElement("x"))).c_str(),
+	   (**(cgi.getElement("y"))).c_str(),
+	   (**(cgi.getElement("z"))).c_str(),
+	   (**(cgi.getElement("name"))).c_str(),
+	   (**(cgi.getElement("description"))).c_str(),
 	   room_flag,
 	   terrain_file,
-	   (**(cgi.getElement("teletime"))).c_str(), 
-	   (**(cgi.getElement("teletarg"))).c_str(), 
-	   (**(cgi.getElement("telelook"))).c_str(), 
-	   (**(cgi.getElement("river_speed"))).c_str(), 
-	   (**(cgi.getElement("river_dir"))).c_str(), 
-	   (**(cgi.getElement("capacity"))).c_str(), 
+	   (**(cgi.getElement("teletime"))).c_str(),
+	   (**(cgi.getElement("teletarg"))).c_str(),
+	   (**(cgi.getElement("telelook"))).c_str(),
+	   (**(cgi.getElement("river_speed"))).c_str(),
+	   (**(cgi.getElement("river_dir"))).c_str(),
+	   (**(cgi.getElement("capacity"))).c_str(),
 	   (**(cgi.getElement("height"))).c_str(),
 	   (**(cgi.getElement("spec"))).c_str());
 
@@ -530,7 +530,7 @@ void sendShowExtra(int account_id, int vnum)
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "</form>";
   cout << endl;
-  
+
 
   db.query("select owner, vnum, name, description from roomextra where vnum=%i and block=1 and owner in (%r) order by name", vnum, getPlayerNames(account_id).c_str());
 
@@ -547,8 +547,8 @@ void sendShowExtra(int account_id, int vnum)
 
     cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
       mudColorToHTML(db["description"]);
-    
-    cout << "</table>";    
+
+    cout << "</table>";
     cout << "<table width=100%><tr><td align left>";
     cout << "<input type=submit value='save changes'>";
     cout << "</form></td><td width=100% align=right></td><td>";
@@ -559,7 +559,7 @@ void sendShowExtra(int account_id, int vnum)
     cout << "<input type=hidden name=vnum value=" << vnum << ">";
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "</form></td></tr></table>";
-    
+
 
     cout << "<hr>";
   }
@@ -604,7 +604,7 @@ sstring getDestinationForm(int selected, int account_id)
   buf+="<option bgcolor=black value=new>New Room</option>\n";
   while(db.fetchRow()){
     buf+=format("<option bgcolor=black value=%s %s>%s - %s</option>\n") %
-       db["vnum"] % ((convertTo<int>(db["vnum"])==selected)?"selected":"") % 
+       db["vnum"] % ((convertTo<int>(db["vnum"])==selected)?"selected":"") %
       mudColorToHTML(db["name"], false) % db["vnum"];
   }
   buf+="</select>\n";
@@ -638,7 +638,7 @@ void sendShowExit(int account_id, int vnum)
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
   cout << "</form>";
   cout << endl;
-  
+
 
 
   db.query("select owner, vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where vnum=%i and block=1 and owner in (%r) order by type", vnum, getPlayerNames(account_id).c_str());
@@ -655,7 +655,7 @@ void sendShowExit(int account_id, int vnum)
     cout << getDirectionForm(convertTo<int>(db["direction"]));
 
   cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % db["name"];
-  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
     mudColorToHTML(db["name"]);
 
   cout << format("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % db["description"];
@@ -670,8 +670,8 @@ void sendShowExit(int account_id, int vnum)
 
 
     cout << getDestinationForm(convertTo<int>(db["destination"]), account_id);
-    
-    cout << "</table>";    
+
+    cout << "</table>";
     cout << "<table width=100%><tr><td align left>";
     cout << "<input type=submit value='save changes'>";
     cout << "</form></td><td width=100% align=right></td><td>";
@@ -682,7 +682,7 @@ void sendShowExit(int account_id, int vnum)
     cout << "<input type=hidden name=vnum value=" << vnum << ">";
     cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
     cout << "</form></td></tr></table>";
-    
+
 
     cout << "<hr>";
   }
@@ -720,14 +720,14 @@ sstring getTerrainForm(int selected)
   for (sectorTypeT i = MIN_SECTOR_TYPE; i < MAX_SECTOR_TYPES; i++) {
     if (!*TerrainInfo[i]->name)
       continue;
-    
+
     m.insert(pair<sstring,int>(TerrainInfo[i]->name, i));
   }
 
   sstring buf="<tr><td>sector</td><td><select name=sector>\n";
   for(it=m.begin();it!=m.end();++it){
     buf+=format("<option value=%i %s>%s</option>\n") %
-      (*it).second % (((*it).second==selected)?"selected":"") % 
+      (*it).second % (((*it).second==selected)?"selected":"") %
       (*it).first;
   }
   buf+="</select>\n";
@@ -750,11 +750,11 @@ sstring getProcForm(int selected, bool wizard)
 
   sstring buf="<tr><td>spec_proc</td><td><select name=spec>\n";
   for(it=m.begin();it!=m.end();++it){
-    if(roomSpecials[(*it).second].assignable || 
+    if(roomSpecials[(*it).second].assignable ||
        (*it).second==selected ||
        wizard){
       buf+=format("<option value=%i %s>%s</option>\n") %
-	(*it).second % (((*it).second==selected)?"selected":"") % 
+	(*it).second % (((*it).second==selected)?"selected":"") %
 	(*it).first;
     }
   }
@@ -789,7 +789,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << "</table><p></form>" << endl;
 
   // exit navigation
-  
+
   db_exits.query("select direction, destination from roomexit where vnum=%i and owner in (%r) and block=1 and destination in (select vnum from room where owner in (%r) and block=1)", vnum, getPlayerNames(account_id).c_str(), getPlayerNames(account_id).c_str());
   int exits[MAX_DIR];
 
@@ -804,47 +804,47 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   cout << "<form action=\"roomeditor.cgi\" method=post>" << endl;
   cout << "<input type=hidden name=state value=showroom>" << endl;
   cout << "<input type=hidden name=owner value='" << db["owner"] << "'>";
-  
+
   cout << "<table border=1>";
-  cout << "<tr><td><button name=vnum value="<< exits[DIR_NORTHWEST] << 
+  cout << "<tr><td><button name=vnum value="<< exits[DIR_NORTHWEST] <<
     ((exits[DIR_NORTHWEST]==-1)?" disabled> ":"> ") <<
     dirs[DIR_NORTHWEST] <<"</button></td>" << endl;
 
-  cout << "<td><button name=vnum value="<< exits[DIR_NORTH] << 
+  cout << "<td><button name=vnum value="<< exits[DIR_NORTH] <<
     ((exits[DIR_NORTH]==-1)?" disabled> ":"> ") <<
     dirs[DIR_NORTH] <<"</button></td>";
 
-  cout << "<td><button name=vnum value="<< exits[DIR_NORTHEAST] << 
+  cout << "<td><button name=vnum value="<< exits[DIR_NORTHEAST] <<
     ((exits[DIR_NORTHEAST]==-1)?" disabled> ":"> ") <<
     dirs[DIR_NORTHEAST] <<"</button></td>";
 
-  cout << "<td><button name=vnum value="<< exits[DIR_UP] << 
+  cout << "<td><button name=vnum value="<< exits[DIR_UP] <<
     ((exits[DIR_UP]==-1)?" disabled> ":"> ") <<
     dirs[DIR_UP] <<"</button></td></tr>";
 
-  cout << "<tr><td align=right><button name=vnum value="<< exits[DIR_WEST] << 
+  cout << "<tr><td align=right><button name=vnum value="<< exits[DIR_WEST] <<
     ((exits[DIR_WEST]==-1)?" disabled> ":"> ") <<
     dirs[DIR_WEST] <<"</button></td>" << endl;
 
   cout << "<td></td>" << endl;
 
-  cout << "<td><button name=vnum value="<< exits[DIR_EAST] << 
+  cout << "<td><button name=vnum value="<< exits[DIR_EAST] <<
     ((exits[DIR_EAST]==-1)?" disabled> ":"> ") <<
     dirs[DIR_EAST] <<"</button></td></tr>";
 
-  cout << "<tr><td><button name=vnum value="<< exits[DIR_SOUTHWEST] << 
+  cout << "<tr><td><button name=vnum value="<< exits[DIR_SOUTHWEST] <<
     ((exits[DIR_SOUTHWEST]==-1)?" disabled> ":"> ") <<
     dirs[DIR_SOUTHWEST] <<"</button></td>" << endl;
 
-  cout << "<td><button name=vnum value="<< exits[DIR_SOUTH] << 
+  cout << "<td><button name=vnum value="<< exits[DIR_SOUTH] <<
     ((exits[DIR_SOUTH]==-1)?" disabled> ":"> ") <<
     dirs[DIR_SOUTH] <<"</button></td>";
 
-  cout << "<td><button name=vnum value="<< exits[DIR_SOUTHEAST] << 
+  cout << "<td><button name=vnum value="<< exits[DIR_SOUTHEAST] <<
     ((exits[DIR_SOUTHEAST]==-1)?" disabled> ":"> ") <<
     dirs[DIR_SOUTHEAST] <<"</button></td>";
 
-  cout << "<td><button name=vnum value="<< exits[DIR_DOWN] << 
+  cout << "<td><button name=vnum value="<< exits[DIR_DOWN] <<
     ((exits[DIR_DOWN]==-1)?" disabled> ":"> ") <<
     dirs[DIR_DOWN] <<"</button></td></tr>";
 
@@ -874,17 +874,17 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#39;");
   cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "name" % "name" % buf;
-  buf=format("%s%s") % 
+  buf=format("%s%s") %
     getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
     db["name"];
-  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") % 
+  cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
     mudColorToHTML(buf);
 
   buf=db["description"];
   while (buf.find("'") != sstring::npos)
     buf.replace(buf.find("'"), 1, "&#39;");
   cout << format("<tr><td>%s</td><td><textarea name=description cols=90 rows=5>%s</textarea></td></tr>\n") % "description" % buf;
-  buf=format("%s%s") % 
+  buf=format("%s%s") %
     getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
     db["description"];
   cout << format("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
@@ -918,7 +918,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
 
   cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "capacity" % "capacity" % db["capacity"];
   cout << format("<tr><td>%s</td><td><input type=text size=127 name='%s' value='%s'></td></tr>\n") % "height" % "height" % db["height"];
-  
+
   cout << getProcForm(convertTo<int>(db["spec"]), wizard);
 
   cout << "</table>";
@@ -928,8 +928,8 @@ void sendShowRoom(int account_id, int vnum, bool wizard)
 
   cout << body() << endl;
   cout << html() << endl;
-  
-  
+
+
 }
 
 void sendRoomlist(int account_id)
@@ -952,7 +952,7 @@ void sendRoomlist(int account_id)
 
   db.query("select owner, max(vnum)+1 as nvnum from room where block=1 and lower(owner) in (%r) group by owner",
 	   getPlayerNames(account_id).c_str());
-  
+
   if(db.fetchRow())
     buildername=db["owner"];
   else {
@@ -980,7 +980,7 @@ void sendRoomlist(int account_id)
   cout << "<tr><td>vnum</td><td>name</td><td>extras</td><td>exits</td></tr>";
 
   db.query("select vnum, name, sector from room r where block=1 and lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
-  
+
   db_exits.query("select vnum, count(*) as count from roomexit where block=1 and lower(owner) in (%r) group by vnum order by vnum asc", getPlayerNames(account_id).c_str());
   db_exits.fetchRow();
 
@@ -990,15 +990,15 @@ void sendRoomlist(int account_id)
   int affcount=0, extracount=0;
   while(db.fetchRow()){
     affcount=extracount=0;
-    while(convertTo<int>(db_exits["vnum"]) < 
+    while(convertTo<int>(db_exits["vnum"]) <
 	  convertTo<int>(db["vnum"]))
       if(!db_exits.fetchRow())
 	break;
-    while(convertTo<int>(db_extras["vnum"]) < 
+    while(convertTo<int>(db_extras["vnum"]) <
 	  convertTo<int>(db["vnum"]))
       if(!db_extras.fetchRow())
 	break;
-    
+
     if(db_exits["vnum"]==db["vnum"]){
       affcount=convertTo<int>(db_exits["count"]);
       db_exits.fetchRow();
@@ -1010,7 +1010,7 @@ void sendRoomlist(int account_id)
 
     cout << "<tr><td>" << "<a href=javascript:pickroom('" << db["vnum"];
     cout << "','showroom')>" << db["vnum"] << "</a>" << endl;
-    buf=format("%s%s") % 
+    buf=format("%s%s") %
       getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
       db["name"];
     cout << "</td><td bgcolor=black>" << mudColorToHTML(buf, false);

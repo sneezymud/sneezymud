@@ -28,7 +28,7 @@ void print_form()
   cout << "Filter on Object Type: <select name=object_type>" << endl;
 
   db.query("select SUBSTR(LOWER(i.name), 6) as object_type from itemtypes i order by i.name");
-  
+
   cout << "<option value=ALL" << endl;
   cout << "> ALL" << endl;
   while(db.fetchRow()){

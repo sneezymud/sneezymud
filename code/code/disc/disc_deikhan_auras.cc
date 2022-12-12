@@ -36,10 +36,10 @@
 // These are the hooks that are supported now though others are possible.
 // Generally CMD_GENERIC_PULSE should be used for skills to proc the aura.
 //
-// BALANCE NOTE: While possible to use the skill with other hooks to proc on the 
-// deikhan only to make some affects that are more advanced and not desired on 
-// the entire groupt is preferable to proc on spells and check if the being is a 
-// deikhan. This allows multiple deikhans in a group to get all the benefits of 
+// BALANCE NOTE: While possible to use the skill with other hooks to proc on the
+// deikhan only to make some affects that are more advanced and not desired on
+// the entire groupt is preferable to proc on spells and check if the being is a
+// deikhan. This allows multiple deikhans in a group to get all the benefits of
 // an aura even if they aren't projecting it.
 
 // cmd == CMD_GENERIC_PULSE
@@ -53,7 +53,7 @@
 //    Hook into when you a person with a buff or aura is hit
 
 const int MAX_AURA = 5;
-spellNumT auraArray[MAX_AURA] = {SKILL_AURA_MIGHT, 
+spellNumT auraArray[MAX_AURA] = {SKILL_AURA_MIGHT,
     SKILL_AURA_REGENERATION,
     SKILL_AURA_GUARDIAN,
     SKILL_AURA_VENGEANCE,
@@ -141,7 +141,7 @@ int procAuraOfMight(TBeing * caster)
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
-      if (tch->inGroup(*caster)) 
+      if (tch->inGroup(*caster))
       {
         tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
         tch->affectJoin(tch, &aff2, AVG_DUR_YES, AVG_EFF_YES, FALSE);
@@ -198,7 +198,7 @@ int procAuraOfRegeneration(TBeing * caster)
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
-      if (tch->inGroup(*caster)) 
+      if (tch->inGroup(*caster))
       {
         tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
         //caster->reconcileHelp(tch, discArray[spell]->alignMod);
@@ -251,11 +251,11 @@ int procAuraGuardian(TBeing * caster)
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
-      if (tch->inGroup(*caster)) 
+      if (tch->inGroup(*caster))
       {
         if (tch->hasClass(CLASS_DEIKHAN))
           aff2.modifier += 5;
-        
+
         tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
         tch->affectJoin(tch, &aff2, AVG_DUR_YES, AVG_EFF_YES, FALSE);
         //caster->reconcileHelp(tch, discArray[spell]->alignMod);
@@ -291,9 +291,9 @@ int procAuraOfVengeance(TBeing * caster)
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
-      if (tch->inGroup(*caster)) 
+      if (tch->inGroup(*caster))
       {
-        
+
         tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
         //caster->reconcileHelp(tch, discArray[spell]->alignMod);
       }
@@ -328,7 +328,7 @@ int procAuraOfAbsolution(TBeing * caster)
       tch = dynamic_cast<TBeing *>(t);
       if (!tch)
         continue;
-      if (tch->inGroup(*caster)) 
+      if (tch->inGroup(*caster))
       {
         // First we apply the aura buff even though it doesn't do anything yet
         // The experience is consistent with other auras
@@ -341,7 +341,7 @@ int procAuraOfAbsolution(TBeing * caster)
         tch = dynamic_cast<TBeing *>(t);
         if (!tch)
           continue;
-        if (tch->inGroup(*caster)) 
+        if (tch->inGroup(*caster))
         {
           doAbsolutionAuraAffects(caster, tch, done_warmth);
         }
@@ -379,7 +379,7 @@ void doAbsolutionAuraAffects(TBeing * caster, TBeing * target, bool &done_warmth
     // Vindicator level heals
     colorAct(COLOR_SPELLS, "$n glows briefly with an <p>indigo hue<1>.",FALSE, target, NULL, 0, TO_ROOM);
     colorAct(COLOR_SPELLS, "You glow briefly with an <p>indigo hue<1>.",FALSE, target, NULL, 0, TO_CHAR);
-      
+
     int hp = caster->getSkillDam(caster, SPELL_HEAL_CRITICAL, 50, 100);
     target->addToHit(hp);
     target->updatePos();
@@ -409,7 +409,7 @@ void doAbsolutionAuraAffects(TBeing * caster, TBeing * target, bool &done_warmth
   }
 
   // Do Cure Poison
-  if ((target->isAffected(AFF_POISON) || 
+  if ((target->isAffected(AFF_POISON) ||
         target->affectedBySpell(SPELL_POISON) ||
         target->affectedBySpell(SPELL_POISON_DEIKHAN) ||
         target->hasDisease(DISEASE_FOODPOISON)) &&
@@ -422,7 +422,7 @@ void doAbsolutionAuraAffects(TBeing * caster, TBeing * target, bool &done_warmth
 
     act("You suddenly start sweating profusely as the poison is extracted from your body.", FALSE, caster, NULL, target, TO_VICT);
     act("$N suddenly starts sweating profusely as the poison is extracted from $S body.", FALSE, caster, NULL, target, TO_ROOM);
-    
+
     target->affectFrom(SPELL_POISON_DEIKHAN);
     target->affectFrom(SPELL_POISON);
     target->diseaseFrom(DISEASE_FOODPOISON);
@@ -497,7 +497,7 @@ void TBeing::doAura(sstring const& arg)
 
   // Should the aura be the first arg or should there be subcommands like
   // <aura list> <aura show> <aura project name> <aura stop>
-  // 
+  //
   int i;
   Descriptor *d;
 
@@ -530,7 +530,7 @@ void TBeing::doAura(sstring const& arg)
     sendTo("You must specify an aura command.\n\r");
     sendTo("Syntax: aura <*aura name*|off|stop>\n\r");
     return;
-  } 
+  }
 
   sstring Buf;
 
@@ -538,7 +538,7 @@ void TBeing::doAura(sstring const& arg)
 
   if (!(d = desc))
     return;
-  
+
   // Show all auras
   for (i = 0; i < MAX_AURA; i++) {
     Buf += format("%s%-22.22s%s %-19.19s") % cyan() % discArray[auraArray[i]]->name % norm() % how_good(getSkillValue(auraArray[i]));

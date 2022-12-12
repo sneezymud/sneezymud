@@ -1938,7 +1938,7 @@ class TBeing : public TThing {
   bool resetPractices(classIndT resetClass, int &practices, bool reset = true);
 
   bool canMeditate();
-  
+
   // paladin auras
   virtual int checkAura(cmdTypeT cmd, TBeing *t);
   void doAura(sstring const& arg);

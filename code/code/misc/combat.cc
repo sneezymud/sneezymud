@@ -45,7 +45,7 @@
 extern class TPeelPk peelPk;
 
 
-TBeing *gCombatList = NULL;        // head of l-list of fighting chars    
+TBeing *gCombatList = NULL;        // head of l-list of fighting chars
 
 // So WTF are we doing here?  glad you asked
 // GCN maintains the next pointer for the perform_violance loop
@@ -74,7 +74,7 @@ struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"strike","strikes", "striking"},
   {"club","clubs", "clubbing"},
   {"pound","pounds", "pounding"},
-  {"pierce", "pierces", "piercing"},        
+  {"pierce", "pierces", "piercing"},
   {"bite", "bites","biting"},
   {"sting", "stings", "stinging"},
   {"stab", "stabs", "stabbing"},
@@ -114,7 +114,7 @@ struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"<R>STRIKE<1>","<R>STRIKES<1>", "STRIKING"},
   {"CLUBB","CLUBBZ", "CLUBBIN"},
   {"<B>POUND<1>", "<B>POUNDS<1>", "POUNDING"},
-  {"PIERCE", "PIERCES", "PIERCING"},        
+  {"PIERCE", "PIERCES", "PIERCING"},
   {"BITE", "BITES","BITING"},
   {"STING", "STINGS", "STINGING"},
   {"STAB", "STABS", "STABBING"},
@@ -244,7 +244,7 @@ void TBeing::deathCry()
 
 #if 1
   strcpy(buf, ((ex_description && ex_description->findExtraDesc("deathcry")) ?
-               ex_description->findExtraDesc("deathcry") : 
+               ex_description->findExtraDesc("deathcry") :
                "Your blood freezes as you hear $N's death cry."));
 #else
   sprintf(buf, "Your blood freezes as you hear %s's death cry.\n\r", getName());
@@ -308,7 +308,7 @@ void TBeing::deathCry()
 	      tmons->UM(1);
 	      tmons->US(4);
 	    } else if (dynamic_cast<TBeing *>(i))
-              colorAct(COLOR_MOBS,) 
+              colorAct(COLOR_MOBS,)
 	  }
 	}
       }
@@ -349,9 +349,9 @@ void TBeing::updatePos()
 
   else if (getHit() > 0) {
     if (getPosition() == POSITION_STUNNED && !isAffected(AFF_PARALYSIS)) {
-      act("You shake the fuzziness from your head and sit up.", 
+      act("You shake the fuzziness from your head and sit up.",
                  FALSE, this, 0, 0, TO_CHAR);
-      act("$n shakes the fuzziness from $s head and sits up.", 
+      act("$n shakes the fuzziness from $s head and sits up.",
                  FALSE, this, 0, 0, TO_ROOM);
       setPosition(POSITION_SITTING);
     } else if (getPosition() != POSITION_STUNNED) {
@@ -368,27 +368,27 @@ void TBeing::updatePos()
         setPosition(POSITION_MOUNTED);
     } else
       setPosition(POSITION_STUNNED);
-    
+
     // save them: got healed, mud crashes, last save would say they were neg...
     doSave(SILENT_YES);
     return;
   }
-  if (getHit() <= -11) 
+  if (getHit() <= -11)
     newPos = POSITION_DEAD;
-  else if (getHit() <= -6) 
+  else if (getHit() <= -6)
     newPos = POSITION_MORTALLYW;
-  else if (getHit() <= -3) 
+  else if (getHit() <= -3)
     newPos = POSITION_INCAP;
-  else 
+  else
     newPos = POSITION_STUNNED;
 
-  if (riding && dynamic_cast<TBeing *> (riding)) 
+  if (riding && dynamic_cast<TBeing *> (riding))
     fallOffMount(riding, newPos);
-  else if (riding) 
+  else if (riding)
     fallOffMount(riding, newPos, TRUE);
-  
+
 #if 1
-  if ((newPos == POSITION_DEAD) || (newPos == POSITION_STUNNED)) 
+  if ((newPos == POSITION_DEAD) || (newPos == POSITION_STUNNED))
     setPosition(newPos);
   else if ((newPos <= POSITION_STUNNED)) {
     setPosition(newPos);
@@ -468,15 +468,15 @@ void logPermaDeathDied(TBeing *ch, TBeing *killer)
 int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
 {
   TBeing *per = NULL;
-  
+
   // using this to keep an eye on potential problem cropping up. bat - 12/26/99
 /*  Descriptor * tmpdesc = desc;
   if (tmpdesc) {
   }
   */
   if(hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) ||
-    (specials.act & ACT_POLYSELF) || 
-    (desc && desc->original && desc->original->polyed == POLY_TYPE_SWITCH)) 
+    (specials.act & ACT_POLYSELF) ||
+    (desc && desc->original && desc->original->polyed == POLY_TYPE_SWITCH))
   {
     per = desc->original;
 
@@ -487,7 +487,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
     }
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
     doReturn("", WEAR_NOWHERE, true);
-    
+
     if ((per->rawKill(dmg_type, tKiller)) == DELETE_THIS) {
       per->reformGroup();
       delete per;
@@ -503,7 +503,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
         if (IS_SET(f->follower->desc->autobits, AUTO_LIMBS))
           f->follower->doLimbs(fname(fight()->name));
       }
-    } 
+    }
     stopFighting();
   }
 
@@ -519,7 +519,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
   // dead immortals mortal again
   if (GetMaxLevel() > MAX_MORT) {
     if (!isPlayerAction(PLR_IMMORTAL))
-      addPlayerAction(PLR_IMMORTAL);  
+      addPlayerAction(PLR_IMMORTAL);
   }
   if (desc)
     desc->outputProcessing();
@@ -562,7 +562,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing *tKiller, float exp_lost)
     unsigned int shop_nr;
     for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != number); shop_nr++);
 
-    if (shop_nr >= shop_index.size()) 
+    if (shop_nr >= shop_index.size())
       vlogf(LOG_MISC, format("Warning... shop # for mobile %d (real nr) not found.") % mob_index[number].virt);
     else {
       vlogf(LOG_COMBAT, format("Deleting shopkeeper file for shop #%d.") %  shop_nr);
@@ -600,11 +600,11 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller)
         per = NULL;
       }
       return DELETE_THIS;
-    } else if (polymorph == FALSE) { 
+    } else if (polymorph == FALSE) {
       return FALSE;
     }
   }
-  
+
   affectedData *aff;
   bool skip_death = false;
   for (aff = affected; aff; aff = aff->next) {
@@ -623,7 +623,7 @@ int TBeing::die(spellNumT dam_type, TBeing *tKiller)
     if (isPc() && !rp->isRoomFlag(ROOM_ARENA) && !skip_death) {
       int val_num = ::number(0,3);
       if (GetMaxLevel() <= 10) val_num = 0;
-      vlogf(LOG_COMBAT,format("%s died and lost %.2f exp (age +%d).  Before death: %.2f exp and %d talens.") % 
+      vlogf(LOG_COMBAT,format("%s died and lost %.2f exp (age +%d).  Before death: %.2f exp and %d talens.") %
                getName() % deathExp() % val_num % getExp() %getMoney());
       //      vlogf(LOG_COMBAT,format("Average skill loss: %f") %  deathSkillLoss());
       age_mod += val_num;
@@ -678,7 +678,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
     return FALSE;
   }
 
-  if (dam <= Config::ItemDamageRate()) 
+  if (dam <= Config::ItemDamageRate())
     return FALSE;
 
   if(inPkZone())
@@ -707,7 +707,7 @@ bool TBeing::checkCut(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *w
         if (weapon)
 	  buf3=objn(weapon);
 
-        buf=format("Your %s$o%s $q %scut%s by $N's %s!") % 
+        buf=format("Your %s$o%s $q %scut%s by $N's %s!") %
 	  blue() % norm() % purple() % norm() %
 	  (weapon ? buf3.c_str() : ch->getMyRace()->getBodyLimbSlash());
         act(buf, FALSE, this, item, ch, TO_CHAR);
@@ -749,7 +749,7 @@ bool TBeing::checkSmashed(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     vlogf(LOG_COMBAT, "check_smashed called with no item!");
     return FALSE;
   }
-  if (dam <= Config::ItemDamageRate()) 
+  if (dam <= Config::ItemDamageRate())
     return FALSE;
 
   if(inPkZone())
@@ -828,7 +828,7 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     vlogf(LOG_COMBAT, "Check pierced called with no item! BUG BRUTIUS!!!");
     return FALSE;
   }
-  if (dam <= Config::ItemDamageRate()) 
+  if (dam <= Config::ItemDamageRate())
     return FALSE;
 
   if(inPkZone())
@@ -885,11 +885,11 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     return FALSE;
 }
 
-// damageLimb will have to determine if the "limb" is a vital area, and 
-// if it is, then take off max hp, otherwise damage the limb's health   
-// This might get tricky, when we determine how to update a person every 
-// update, and decide what damage will entail loss of hp or loss of other 
-// things like consciousness. Tweak is the operative word here. - Russ  
+// damageLimb will have to determine if the "limb" is a vital area, and
+// if it is, then take off max hp, otherwise damage the limb's health
+// This might get tricky, when we determine how to update a person every
+// update, and decide what damage will entail loss of hp or loss of other
+// things like consciousness. Tweak is the operative word here. - Russ
 
 // DELETE_VICT, v died
 int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
@@ -897,9 +897,9 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
   int rc = 0;
   int hardness, sharp = 0;
   int wound_duration;
-  // These areas take off main hp. We still check to see if            
-  // damage was done, but we return false, because main hp are taken   
-  // off with hit to these vital body parts. - Russ                    
+  // These areas take off main hp. We still check to see if
+  // damage was done, but we return false, because main hp are taken
+  // off with hit to these vital body parts. - Russ
 
   if (isVitalPart(part_hit) || !v->slotChance(part_hit))
     return FALSE;
@@ -922,14 +922,14 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
   else
     sharp = sharpness[getFormType() - TYPE_MIN_HIT];
 
- // Let's base the damage done to limb on the following things :      
- // 1) Base damage of the weapon.           (dam)                     
- // 2) Strength in limb(How healthy it is)  (body_parts[].health)     
- // 3) Constitution                         (getConShock())         
- // 4) Skin type                            (getMaterial())   
+ // Let's base the damage done to limb on the following things :
+ // 1) Base damage of the weapon.           (dam)
+ // 2) Strength in limb(How healthy it is)  (body_parts[].health)
+ // 3) Constitution                         (getConShock())
+ // 4) Skin type                            (getMaterial())
  // adding 5)                               disease state of limb (infected, leprosed, bruised, gangrenous...)
- // The healtheir the limb, the less chance of this happening, and    
- // the more damage, the more chance of it happening. - Russ          
+ // The healtheir the limb, the less chance of this happening, and
+ // the more damage, the more chance of it happening. - Russ
 
   if (setCharFighting(v, 0) == -1)
     return 0;
@@ -949,10 +949,10 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     if (::number(1, 101) < (v->getConShock() / 3))
       return TRUE;
 
-    // Check to see if skin type protects them       
+    // Check to see if skin type protects them
     hardness = material_nums[v->getMaterial(part_hit)].hardness *
         v->getCurLimbHealth(part_hit) / v->getMaxLimbHealth(part_hit);
-    if (hardness && (::number(1, 101) < (hardness / 2))) 
+    if (hardness && (::number(1, 101) < (hardness / 2)))
       return TRUE;
 
     // seeing we do the con-shock test above, don't give two benefits
@@ -973,7 +973,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     // lessens damage based on level
     *dam *= 25 + GetMaxLevel();
     // lowering this next number INCREASES limb damage
-    // 4.1 balanced at 60. 75 too high, 50 too low.    
+    // 4.1 balanced at 60. 75 too high, 50 too low.
     // 4.5 :
     *dam /= 70;
 
@@ -991,25 +991,25 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
     rc = v->hurtLimb(*dam, part_hit);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
-    
+
     // cuts & bruises
     // would be nice if attack type was available, to check for blunt vs slash/pierce
     if (v->isLimbFlags(part_hit, PART_BLEEDING)) {
-      // Chance to cut and start bleeding, or if already bleeding infect wound 
+      // Chance to cut and start bleeding, or if already bleeding infect wound
       if (!::number(0, 8)) {
-        // Infection rocks! - Russ 
+        // Infection rocks! - Russ
         v->rawInfect(part_hit, ((*dam) * 10) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
       }
     // if the attacker is barehanded, then lets reduce chance  -- bat
-    } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) && 
+    } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) &&
                (weapon || !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) &&
                !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))) {
       wound_duration = max(120, (*dam) * (isPc() ? 10 : 20));
       v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
       // vlogf(LOG_COMBAT, format("Cut in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
-    if(!v->isLimbFlags(part_hit, PART_BRUISED) 
-	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) ) 
+    if(!v->isLimbFlags(part_hit, PART_BRUISED)
+	   && !::number(0, ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6) )
 	   && !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10))) &&
        !v->isLucky(levelLuckModifier(min((int) GetMaxLevel(), v->GetMaxLevel() + 10)))){
       wound_duration = max(240, (*dam) * (isPc() ? 20 : 40));
@@ -1017,7 +1017,7 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
       // vlogf(LOG_COMBAT, format("Bruised in combat for %d: %s (%d) by %s (%d)") % wound_duration % v->getName() % v->GetMaxLevel() % getName() % GetMaxLevel());
     }
 /*
-    } else if (::number(0, 400) < (sharp / 2) && 
+    } else if (::number(0, 400) < (sharp / 2) &&
                (weapon || !v->isLucky(levelLuckModifier(5))) &&
                !v->isLucky(levelLuckModifier(5))) {
       // if the attacker is barehanded, then lets reduce chance  -- bat
@@ -1031,16 +1031,16 @@ int TBeing::damageLimb(TBeing *v, wearSlotT part_hit, TThing *weapon, int *dam)
       v->rawBruise(part_hit, ((*dam) * 20) + 200, SILENT_NO, CHECK_IMMUNITY_YES);
     }
 */
-    
+
   } else
     *dam = 0;
 
   return TRUE;
 }
 
-// damage_hand will be called when a person hits something with his/her   
+// damage_hand will be called when a person hits something with his/her
 // bare hand. It will be based on the material type hit, and the strength
-// of the persons hand, along with its health points - Russ               
+// of the persons hand, along with its health points - Russ
 
 int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
 {
@@ -1066,7 +1066,7 @@ int TBeing::damageHand(TBeing *v, wearSlotT part_hit)
   if (::number(1, 100) < hardness) {
     if (!::number(0, getCurLimbHealth(getPrimaryHold()))) {
       if (affectedBySpell(AFFECT_TRANSFORMED_HANDS))
-        sendTo(COLOR_MOBS, format("You damage your claw on %s's %s.\n\r") % pers(v) % 
+        sendTo(COLOR_MOBS, format("You damage your claw on %s's %s.\n\r") % pers(v) %
               (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
       else if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
         sendTo(COLOR_MOBS, format("You damage your wing on %s's %s.\n\r") % pers(v) %
@@ -1087,7 +1087,7 @@ int TObj::damageItem(short amt)
 	  getName() % amt);
     amt=-amt;
   }
-  
+
 
   addToStructPoints(max(-amt, -getStructPoints()));
 
@@ -1105,7 +1105,7 @@ bool scrapMonogrammed(TObj *o)
 {
   TThing *x = NULL, *tmp = NULL, *ch = NULL;
 
-  if (((ch = o->parent) && o->parent->roomp) || 
+  if (((ch = o->parent) && o->parent->roomp) ||
       (ch = o->equippedBy) || (ch = o->stuckIn)) {
     act("$p falls to the $g.", TRUE, ch, o, NULL, TO_ROOM);
     act("Your $o falls to the $g.", FALSE, ch, o, NULL, TO_CHAR, ANSI_RED);
@@ -1124,7 +1124,7 @@ bool scrapMonogrammed(TObj *o)
       }
     } else if (o->roomp) {
       act("$n is destroyed.", TRUE, o, NULL, NULL, TO_ROOM);
-    } else 
+    } else
       vlogf(LOG_COMBAT, format("Something in scrapMonogrammed isn't in a room %s.") %  o->getName());
   }
 
@@ -1140,7 +1140,7 @@ bool scrapMonogrammed(TObj *o)
     chb->setStuckIn(o->eq_stuck, NULL);
     if (chb->roomp)
       *chb->roomp += *o;
-    else 
+    else
       *chb += *o;
     return true;
   } else if ((ch = o->equippedBy)) {
@@ -1152,11 +1152,11 @@ bool scrapMonogrammed(TObj *o)
     if (!o2)
       return true;
 
-    if (tbt->roomp) 
+    if (tbt->roomp)
       *tbt->roomp += *o;
-    else 
+    else
       *tbt += *o;
-    
+
     return true;
   }
   // at this point, "this" is guaranteed to be in roomp
@@ -1233,7 +1233,7 @@ bool TObj::makeScraps()
     } else {
       sprintf(buf, "$p falls to the $g, scrapped.");
       sprintf(buf2, "Your $o falls to the $g, scrapped.");
-    } 
+    }
     act(buf, TRUE, ch, this, NULL, TO_ROOM);
     act(buf2, FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
 
@@ -1266,10 +1266,10 @@ bool TObj::makeScraps()
       act(buf, TRUE, this, NULL, NULL, TO_ROOM);
       if (owner)
         vlogf(LOG_COMBAT, format("%s's %s just scrapped.") % owner->getName() % getName());
-    } else 
+    } else
       vlogf(LOG_COMBAT, format("Something in make scraps isnt in a room %s.") %  getName());
   }
-  
+
   o = new TTrash();
 
   if (isMineral()) {
@@ -1300,7 +1300,7 @@ bool TObj::makeScraps()
     chb->setStuckIn(eq_stuck, NULL);
     if (chb->roomp)
       *chb->roomp += *o;
-    else 
+    else
       *chb += *o;
     return false;
   } else if ((ch = equippedBy)) {
@@ -1312,11 +1312,11 @@ bool TObj::makeScraps()
     if (!o2)
       return false;
 
-    if (tbt->roomp) 
+    if (tbt->roomp)
       *tbt->roomp += *o;
-    else 
+    else
       *tbt += *o;
-    
+
     return false;
   }
   // at this point, "this" is guaranteed to be in roomp
@@ -1368,7 +1368,7 @@ int TBeing::damageItem(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *
   if (item->getStructPoints() < 0)
     return FALSE;
 
-  if (::number(0,99) >= 75) 
+  if (::number(0,99) >= 75)
     return FALSE;
   // this is an arbitrary reduction in equipment damage from combat - dash 2002
 
@@ -1386,10 +1386,10 @@ int TBeing::damageItem(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThing *
   return FALSE;
 }
 
-// damage_weapon must check for two types of damage..... one is 
-// "dulling" of the weapon, and the other is general structural 
+// damage_weapon must check for two types of damage..... one is
+// "dulling" of the weapon, and the other is general structural
 // decay of the weapon. The sharpness, and struct points will be
-// used respectfully to get at these two things - Russ          
+// used respectfully to get at these two things - Russ
 
 // return DELETE_ITEM indicates weapon should be deleted
 int TBeing::damageWeapon(TBeing *v, wearSlotT part_hit, TThing **weapon)
@@ -1424,17 +1424,17 @@ void TBeing::setFighting(TThing *vict, int dam, bool inFight)
     return;
 
   if (fight()) {
-    vlogf(LOG_COMBAT, format("Fighting character (%s) set to fighting another. (%s)") % 
+    vlogf(LOG_COMBAT, format("Fighting character (%s) set to fighting another. (%s)") %
        getName() % tbv->getName());
     return;
   }
 
   // extreme engager
-  if (inFight && desc && (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS))) 
+  if (inFight && desc && (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)))
     SET_BIT(specials.affectedBy, AFF_ENGAGER);
 
   // dont add to attackers
-  if (!isAffected(AFF_ENGAGER)) 
+  if (!isAffected(AFF_ENGAGER))
     tbv->attackers++;
 
   next_fighting = gCombatList;
@@ -1515,7 +1515,7 @@ void TBeing::checkForQuestTog(TBeing *vict)
       if (hasQuestBit(bitnum = TOG_SEEKING_CLERIC_A) &&
           !hasQuestBit(TOG_FAILED_CLERIC_A) &&
           !hasQuestBit(TOG_PENANCE_R21_2))
-        found = TRUE; 
+        found = TRUE;
       break;
     default:
       found = FALSE;
@@ -1574,7 +1574,7 @@ void TBeing::sendCheatMessage(char *cheater)
     case Mob::JOHN_RUSTLER:
       doTell(nameBuf, "You have failed to defeat me in single combat.");
       doTell(nameBuf, "An honorable ranger would allow me to heal completely before attacking again.");
-      break;      
+      break;
     case Mob::ORC_MAGI:
       sendTo("<c>You realize you did not follow the guidelines of your quest, so this fight will be for naught.<1>\n\r");
       setQuestBit(TOG_FAILED_TO_KILL_MAGI);
@@ -1593,7 +1593,7 @@ void TBeing::sendCheatMessage(char *cheater)
   }
 }
 
-// remove a char from the list of fighting chars 
+// remove a char from the list of fighting chars
 void TBeing::stopFighting()
 {
   TBeing *tmp;
@@ -1618,7 +1618,7 @@ void TBeing::stopFighting()
     return;
   }
   // Clear out client fight and tank condition fields
-  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
+  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
     desc->clientf(format("%d|%s|%s|%s|%s") % CLIENT_FIGHT % "" % "" % "" % "");
 
   // see explanation at declaration for details on this
@@ -1723,7 +1723,7 @@ int TBeing::extraDam(const TBeing *vict, const TBaseWeapon *weap) const
   if (vict->isUndead() || vict->isLycanthrope()) {
     if (weap->isObjStat(ITEM_BLESS))
       plus += 10;
-    if(weap->getMaterial() == MAT_SILVER || weap->isObjStat(ITEM_SILVERED)) 
+    if(weap->getMaterial() == MAT_SILVER || weap->isObjStat(ITEM_SILVERED))
       plus += 10;
   }
   if (vict->isDiabolic()) {
@@ -1790,7 +1790,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
   // float statDam = (ch->getStrDamModifier() + ch->getDexDamModifier()) / 2;
   float statDam = ch->getStrDamModifier(); // we already account for dex bonuses in tohit -dash
 
-  if(ch->doesKnowSkill(SKILL_IRON_FIST) && 
+  if(ch->doesKnowSkill(SKILL_IRON_FIST) &&
      !ch->equipment[WEAR_HAND_R] && !ch->equipment[WEAR_HAND_L]){
     // extra 0-8.3%
     statDam += (ch->getSkillValue(SKILL_IRON_FIST)/1200.0);
@@ -1856,7 +1856,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
 
   rollDam += getDamroll();
   strcpy(buf, "Barehand");
-  
+
   // strip off affects of dual wields
   if (isprimary) {
     TObj *obj = dynamic_cast<TObj *>(heldInSecHand());
@@ -1876,8 +1876,8 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
     } else if (doesKnowSkill(SKILL_KUBO))
       return getMonkWeaponDam(this, v, isprimary, rollDam);
     else
-      wepDam += ::number(1, 3);        
-  } else {                       // swinging some odd item 
+      wepDam += ::number(1, 3);
+  } else {                       // swinging some odd item
     if (tmon && !(polyed == POLY_TYPE_DISGUISE)) {
       // NPC wielding
       // mob damage is proper for NPC hitting a PC  (0.9 * level)
@@ -1953,7 +1953,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
 
     // we are roughly trying to plot this formula
     // (21 + 5*(wepDam-2) + roll) * stat * wepLearn/100
-    
+
     float weapDam = wepDam;
     weapDam += rollDam;
     weapDam += bonusDam;
@@ -1999,7 +1999,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       amt = 100 + min(50, max(10, (int) (amt / 2)));
       dam = (int) (dam * amt / 100);
     }
-    
+
     dam = max(1, dam);
 
 #if DAMAGE_DEBUG
@@ -2023,7 +2023,7 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
   // adjust for global values
   dam = (int) (dam * stats.weapon_damage_mod);
 
-  dam = max(1, dam);                // Not less than 0 damage 
+  dam = max(1, dam);                // Not less than 0 damage
   return (dam);
 }
 
@@ -2032,7 +2032,7 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
   int myLevel = ch->GetMaxLevel();
 
   if (ch->desc && !dynamic_cast<TMonster *>(ch))  {
-    if (ch->cantHit <= 0) { 
+    if (ch->cantHit <= 0) {
       if (((myLevel - tarLevel) < (10 + (myLevel / 10)))) {
 
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_PROFICIENCY, (o?w_type:TYPE_HIT), max(0, 25 - myLevel));
@@ -2046,18 +2046,18 @@ static void checkLearnFromHit(TBeing * ch, int tarLevel, TThing * o, bool isPrim
 
           // Learn 2h on hit
 	        skill = ch->getSkillNum(SKILL_2H_SPEC);
-          if (skill && ch->doesKnowSkill(skill) && obj->isPaired()) 
+          if (skill && ch->doesKnowSkill(skill) && obj->isPaired())
             ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, (120 - (2* myLevel)));
         }
 
         // Offense hones
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_OFFENSE, (120 - (2* myLevel)));
-      
+
         // Learn advanced offense
         ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_OFFENSE, (120 - (2* myLevel)));
       }
     }
-  } 
+  }
 }
 
 // DELETE_VICT: v dead, delete
@@ -2102,13 +2102,13 @@ int TBeing::hit(TBeing *target, int pulse)
       desc->session.rounds[getCombatMode()]++;
     if (target->desc)
       target->desc->session.rounds_received[target->getCombatMode()]++;
-  } 
+  }
 
   if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
       // Adding a chance per round to gain a stack of bloodlust while berserking and upon
       // passing a successful advanced berserking check
-      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && 
-  	  doesKnowSkill(SKILL_BLOODLUST) && 
+      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) &&
+  	  doesKnowSkill(SKILL_BLOODLUST) &&
 	  !::number(0,5)) {
         doBloodlust();
       }
@@ -2137,7 +2137,7 @@ int TBeing::hit(TBeing *target, int pulse)
     // handler for engage.
     if (isAffected(AFF_ENGAGER)) {
       // we basically want to give them a "dummy" attack for each hand if
-      // engaged.  They don't actually get a hit with it, but it is used 
+      // engaged.  They don't actually get a hit with it, but it is used
       // in the below case to figure out when they would have hit, and then
       // the handler below that works off the combat lag.
       if (fx <= 0)
@@ -2192,7 +2192,7 @@ int TBeing::hit(TBeing *target, int pulse)
   // check for various conditions where a person can't hit for the round.
   rc = canFight(target);
 
-  if (IS_SET_DELETE(rc, DELETE_THIS)) 
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (!rc)
     return FALSE;
@@ -2200,7 +2200,7 @@ int TBeing::hit(TBeing *target, int pulse)
   // monk stuff
   if (pulse >= 0 && !(pulse % len_rnd) &&
      !heldInPrimHand() && !heldInSecHand() &&
-     doesKnowSkill(SKILL_BLUR) && 
+     doesKnowSkill(SKILL_BLUR) &&
      ::number(0, 99) < 20 &&  // this makes it happen 20% of the time
      !isAffected(AFF_ENGAGER) && getMana()>=15 &&
      bSuccess(SKILL_BLUR)) {
@@ -2222,7 +2222,7 @@ int TBeing::hit(TBeing *target, int pulse)
     sendTo(COLOR_BASIC, "<b>You focus your mind and body and execute a <C>blur<1><b> of attacks!<1>\n\r");
     reconcileMana(TYPE_UNDEFINED, 0, 15);
   }
-    
+
 
   // This unequipping stuff should go into a specialized version of this method
   // for mobs.
@@ -2233,16 +2233,16 @@ int TBeing::hit(TBeing *target, int pulse)
       *this += *unequip(getPrimaryHold());
     }
     // soak up attack their primary hand would have had
-    if (cantHit > 0) 
+    if (cantHit > 0)
       cantHit--;
-    
+
     fx = (float) 0.0;
-  } 
+  }
   TObj *tobj = dynamic_cast<TObj *>(heldInSecHand());
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(tobj);
   TBaseWeapon *tbw = dynamic_cast<TBaseWeapon *>(tobj);
   if (tobj &&
-      !tobj->isPaired() && 
+      !tobj->isPaired() &&
       (!tbc || !tbc->isShield()) &&
       !tbw) {
     if (!isPc()) {
@@ -2251,11 +2251,11 @@ int TBeing::hit(TBeing *target, int pulse)
       *this += *unequip(getSecondaryHold());
     }
     // soak up attack their secondary hand would have had
-    if (cantHit > 0) 
+    if (cantHit > 0)
       cantHit--;
-    
+
     fy = (float) 0.0;
-  } 
+  }
 
   // soak up one can't hit for a shield hit
   tbc = dynamic_cast<TBaseClothing *>(heldInSecHand());
@@ -2268,7 +2268,7 @@ int TBeing::hit(TBeing *target, int pulse)
   // running through usable limbs and then calling speed functions within.
 
   // Build up attack and defense bonuses for this round.
-  
+
   int mod = attackRound(target) - target->defendRound(this);
   int tarLevel = target->GetMaxLevel();
 
@@ -2300,7 +2300,7 @@ int TBeing::hit(TBeing *target, int pulse)
       if(doesKnowSkill(SKILL_ADVANCED_KICKING))
         learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_ADVANCED_KICKING, 15);
 
-      if(doesKnowSkill(SKILL_IRON_FIST) && 
+      if(doesKnowSkill(SKILL_IRON_FIST) &&
 	 !equipment[WEAR_HAND_R] && !equipment[WEAR_HAND_L])
 	learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_IRON_FIST, 15);
     }
@@ -2329,8 +2329,8 @@ int TBeing::hit(TBeing *target, int pulse)
   if(isAffected(AFF_RIPOSTE)){
     fx++;
     REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
-  }    
-  
+  }
+
   while (fx > 0.999) {
     // check for concentrated blow
     if (isAffected(AFF_FOCUS_ATTACK) && !::number(0,2)) {
@@ -2419,10 +2419,10 @@ int TBeing::attackRound(const TBeing * target) const
   // We want to return a value from 0 - 1000
   // that roughly follows a level based linear format
   // Thus, L60 returns 1000, L0 = 0
-  
+
   // correction: 1000 will correspond to L60, but we will extend the scale
   // up to L70 equivalent = 1167 (70/60*1000)
-  
+
   int bonus = 0;
   int lvl = GetMaxLevel();
 
@@ -2437,7 +2437,7 @@ int TBeing::attackRound(const TBeing * target) const
 
   // Combat mode modifiers.
   if (desc) {
-    // offensive penalty for defense should be greater than defensive reward 
+    // offensive penalty for defense should be greater than defensive reward
     if (isCombatMode(ATTACK_DEFENSE))
       bonus -= my_lev/2;
 
@@ -2446,7 +2446,7 @@ int TBeing::attackRound(const TBeing * target) const
 
     // we intentionally DO NOT give an extra offense benefit for berserk
     // they get other benefits (more hits, etc) so not needed
-  } 
+  }
 
   if (doesKnowSkill(SKILL_CHIVALRY) && getPosition() == POSITION_MOUNTED) {
     // C.F. balance for the reasons on these numbers
@@ -2461,7 +2461,7 @@ int TBeing::attackRound(const TBeing * target) const
   }
 
   //  Add CINTAI's benefit, 0-15
-  if (doesKnowSkill(SKILL_CINTAI)) 
+  if (doesKnowSkill(SKILL_CINTAI))
     bonus += (int)(((float) getSkillValue(SKILL_CINTAI) / 20.0) * 3.0);
 
   // offense skill should play decent role
@@ -2504,7 +2504,7 @@ int TBeing::attackRound(const TBeing * target) const
   // 1 lev = 16.67 pts of bonus = 3%
   // 1 pt of bonus = 0.18%
   // 75% rate would be extra 15% would be 83.3 pts
-  // 48% rate would be loss of 12% would be 66.67 pts 
+  // 48% rate would be loss of 12% would be 66.67 pts
   //bonus += (int) plotStat(STAT_CURRENT, STAT_DEX, -67, 84, 0);
 
   // this does the same thing - just uses the standardized function - dash
@@ -2599,7 +2599,7 @@ int TBeing::defendRound(const TBeing * attacker) const
   // a mob of twice the difficulty would have.  This is a useful number
   // to scale things by.
   int my_lev = max(10, (int) (16.67 * get_doubling_level(GetMaxLevel())));
- 
+
   // this is mostly just AC
   // some classes have some situational effects here (mounted deikhans, etc)
   int armor = 1000 - getArmor();
@@ -2618,7 +2618,7 @@ int TBeing::defendRound(const TBeing * attacker) const
     // this is NOT the way a skill should in general modify this function
     // and is only appropriate for this case.
     if (doesKnowSkill(SKILL_OOMLAT))
-      armor += (int)((double)armor * (double)getSkillValue(SKILL_OOMLAT) / 250.0); 
+      armor += (int)((double)armor * (double)getSkillValue(SKILL_OOMLAT) / 250.0);
     // playing with ints this way worries me... i see too much potential for this not to take effect -d
 
 
@@ -2652,7 +2652,7 @@ int TBeing::defendRound(const TBeing * attacker) const
     if (isCombatMode(ATTACK_DEFENSE))
       bonus += my_lev/4;
 
-    // defensive penalty for offense-mode should be > offensive reward 
+    // defensive penalty for offense-mode should be > offensive reward
     if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK))
       bonus -= my_lev/4;
 
@@ -2665,7 +2665,7 @@ int TBeing::defendRound(const TBeing * attacker) const
       amt /= 100;
       bonus -= amt;
     }
-  } 
+  }
 
   // NOTE: the Armor spell works out to 66 but this works beyond max armor
   if (affectedBySpell(SPELL_AURA_GUARDIAN)) {
@@ -2711,7 +2711,7 @@ int TBeing::defendRound(const TBeing * attacker) const
   // 1 lev = 16.67 pts of bonus = 3%
   // 1 pt of bonus = 0.18%
   // 75% rate would be extra 15% would be 83.3 pts
-  // 48% rate would be loss of 12% would be 66.67 pts 
+  // 48% rate would be loss of 12% would be 66.67 pts
   if (!spelltask)
     bonus += (int)( 335 * getAgiMod() - 335); // this does the same thing, just uses standard formulas
     //bonus += (int) plotStat(STAT_CURRENT, STAT_AGI, -67, 84, 0);
@@ -2757,7 +2757,7 @@ int TBeing::defendRound(const TBeing * attacker) const
       val += my_lev/3 +1;
       break;
   }
-  if (getPosition() < POSITION_STANDING && 
+  if (getPosition() < POSITION_STANDING &&
         awake() && val < 0) {
     if(doesKnowSkill(SKILL_GROUNDFIGHTING)) {
       int gsv = getSkillValue(SKILL_GROUNDFIGHTING);
@@ -2779,7 +2779,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
   int defense = target->defendRound(this);
   int mod = offense - defense;
 
-  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
+  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL ||
      skill == SKILL_RANGED_PROF) {
     // other surprise attacks should be added here
     if(target->isWary())
@@ -2793,8 +2793,8 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill)
 }
 
 /*
-  Overload of specialAttack to allow skills to pass a modifier for attacker. 
-  Enables circumstantial bonuses/penalties to be applied here rather than in bSuccess, 
+  Overload of specialAttack to allow skills to pass a modifier for attacker.
+  Enables circumstantial bonuses/penalties to be applied here rather than in bSuccess,
   which should be used primarily to determine skill execution success - especially now
   that ability difficulty level is being used again.
 
@@ -2810,7 +2810,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
   int defense = target->defendRound(this);
   int mod = offense - defense;
 
-  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL || 
+  if(skill == SKILL_BACKSTAB || skill == SKILL_CUDGEL ||
      skill == SKILL_RANGED_PROF) {
     // other surprise attacks should be added here
     if(target->isWary())
@@ -2831,7 +2831,7 @@ int TBeing::hits(TBeing *v, int mod)
   // it is a fair fight.  Since they scale from 0-1000 over 60 levels,
   // a single level is 50/3 = 16.667 points of mod
   // We desire a one level difference to represent a +/- 3% chance
-  // of hitting.  
+  // of hitting.
   // an Even fight should hit about 60% of the time
   // Please note, the above factor was chosen arbitrarily, BUT it
   // is now tied up in the XP formula as well, so should not be
@@ -2887,7 +2887,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 
   other = NULL;
   applyDamage(v, 0, wtype);
-  
+
   soundNumT snd = pickRandSound(SOUND_MISS_01, SOUND_MISS_10);
   roomp->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
 
@@ -2952,7 +2952,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
         for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
           other = dynamic_cast<TBeing *>(t);
           if (!other)
-            continue;        
+            continue;
           if ((other == this) || (other == v))
             continue;
           if (!other->awake())
@@ -2991,7 +2991,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
         break;
       case 3:
       case 4:
-        sprintf(buf, "You hit $N, but fail to penetrate $S thick %s.", 
+        sprintf(buf, "You hit $N, but fail to penetrate $S thick %s.",
               (v->isHumanoid() ? "armor" : "hide"));
         if (desc && !(desc->autobits & AUTO_NOSPAM))
           act(buf, FALSE, this, 0, v, TO_CHAR);
@@ -3013,7 +3013,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *) t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
-            other->sendTo(COLOR_MOBS, format("%s hits %s, but fails to penetrate %s thick %s.\n\r") % sstring(namebuf).cap() % victbuf % v->hshr() % 
+            other->sendTo(COLOR_MOBS, format("%s hits %s, but fails to penetrate %s thick %s.\n\r") % sstring(namebuf).cap() % victbuf % v->hshr() %
                     (v->isHumanoid() ? "armor" : "hide"));
         }
         break;
@@ -3064,7 +3064,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
     switch(num) {
       case 1:
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act("You swing wildly, but miss $N.", 
+          act("You swing wildly, but miss $N.",
                   FALSE, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
           act("You are missed by $n as $e swings wildly.",
@@ -3131,7 +3131,7 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
             retCode |= DELETE_THIS;
           return retCode;
         }
-        
+
       default:
         if (desc && !(desc->autobits & AUTO_NOSPAM))
           act("You miss $N.", FALSE, this, 0, v, TO_CHAR);
@@ -3161,8 +3161,8 @@ int TBeing::missVictim(TBeing *v, TThing *weapon, spellNumT wtype)
 
   // inevitability procs when we miss. Check here
   doInevitability();
-  
-  // handle a weapon's spec_proc 
+
+  // handle a weapon's spec_proc
   if (weapon && weapon->spec) {
     rc = weapon->checkSpec(v, CMD_OBJ_MISS, "", this);
     unsigned int retCode = 0;
@@ -3189,7 +3189,7 @@ const char *describe_dam(int dam, int dam_capacity, spellNumT wtype)
 
   if (toggleInfo[TOG_TWINK]->toggle) {
     if ((p >= 1) || (dam_capacity < 0)) {
-      if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE) 
+      if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE)
 	return "into <Y>-=><1><R>BLOODY GOREY SHREDS<1><Y><=-<1>";
       else
 	return "into a <B>***<z><R>BLOODY<z> <P>PULP<z><B>***<z>";
@@ -3214,7 +3214,7 @@ const char *describe_dam(int dam, int dam_capacity, spellNumT wtype)
     return "<Y>-=><z><R>UBER<1>-<P>SUPER<1>-<C>DUPER<1>-<G>MONDO<1> <o>CRAPPILY<z><Y><=-<1>";
   } else {
     if ((p >= 1) || (dam_capacity < 0)) {
-      if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE) 
+      if ((wtype == TYPE_SLASH) || wtype == TYPE_SLICE)
 	return "into shreds";
       else
 	return "into a bloody pulp";
@@ -3265,7 +3265,7 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
 	    ::number(0,1))
       w_type=TYPE_CLUB;
   }
-	    
+
   soundNumT snd = MIN_SOUND_NUM;
   if (!dam)
     snd = pickRandSound(SOUND_PATHETIC_01, SOUND_PATHETIC_04);
@@ -3289,8 +3289,8 @@ void TBeing::normalHitMessage(TBeing *v, TThing *weapon, spellNumT w_type, int d
 
     if (dam || !(other->desc->autobits & AUTO_NOSPAM)) {
 
-      strcpy(namebuf, other->pers(this)); 
-      strcpy(victbuf, other->pers(v)); 
+      strcpy(namebuf, other->pers(this));
+      strcpy(victbuf, other->pers(v));
       strcpy(buf, sstring(namebuf).cap().c_str());
       if (toggleInfo[TOG_TWINK]->toggle) {
 	sprintf(buf + strlen(buf), " %s ", attack_hit_text_twink[w_type].plural);
@@ -3422,11 +3422,11 @@ void TBeing::combatFatigue(TThing *o)
   if (num <= 0.0)
     return;
 
-  // randomly fatigue, monks will tire faster then others 
+  // randomly fatigue, monks will tire faster then others
   if ((!hasClass(CLASS_MONK) && !::number(0,19)) ||
       (!::number(0,4)))
     addToMove(-1);
-  
+
   if (!o)
     return;
 
@@ -3442,7 +3442,7 @@ void TBeing::combatFatigue(TThing *o)
     if (::number(1,100) <= (int) (50 * 2 * tbw->getWeight() / ( 3 * num * 3 / 2))) {
       addToMove(-1);
     } else {
-      if (::number(1, 50) < (int) o->getWeight()) 
+      if (::number(1, 50) < (int) o->getWeight())
 	addToMove(-1);
     }
   }
@@ -3495,7 +3495,7 @@ int TBeing::checkShield(TBeing *v, TThing *weapon, wearSlotT part_hit, spellNumT
     if (!other->desc || !(other->desc->autobits & AUTO_NOSPAM))
       other->sendTo(COLOR_MOBS, format("%s parries %s's blow with %s.\n\r") %
 		    sstring(other->pers(v)).cap() %
-		    namebuf % equipBuf); 
+		    namebuf % equipBuf);
   }
 
   v->checkGuardiansLight();
@@ -3686,9 +3686,9 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       // potentially they have gone linkdead or something
       // lets check for the obvious cheat
       if (vict->desc->connected == CON_WRITING) {
-        vlogf(LOG_COMBAT, format("%s using editing trick to prevent combat with %s at room %d") % 
+        vlogf(LOG_COMBAT, format("%s using editing trick to prevent combat with %s at room %d") %
               vict->getName() % getName() % vict->in_room);
- 
+
         // grab their stuff if they were REALLY cheating
 	if(!vict->affectedBySpell(AFFECT_PLAYERLOOT) &&
 	   !vict->affectedBySpell(AFFECT_PLAYERKILL)){
@@ -3696,7 +3696,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	}
       }
     }
-    
+
     return retCode;
   }
 
@@ -3709,16 +3709,16 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   TObj *tobj = dynamic_cast<TObj *>(weapon);
 
   // if can't use other hand
-  if (tobj && tobj->isPaired() && !canUseArm(isprimary ? HAND_SECONDARY : HAND_PRIMARY)) 
+  if (tobj && tobj->isPaired() && !canUseArm(isprimary ? HAND_SECONDARY : HAND_PRIMARY))
     return retCode;
 
   TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(weapon);
   if (tbc && tbc->isShield())
-    return retCode; 
+    return retCode;
 
   if (dynamic_cast<TArrow *>(weapon)) {
     sendTo("You can't attack with an arrow.\n\r");
-    return retCode; 
+    return retCode;
   }
 
   if (!vict->isPc()) {
@@ -3742,7 +3742,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     }
   }
 
-  // handle a weapon's spec_proc 
+  // handle a weapon's spec_proc
   if (weapon && weapon->spec) {
     rc = weapon->checkSpec(vict, CMD_OBJ_HITTING, NULL, NULL);
     if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -3768,8 +3768,8 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	return retCode;
     }
   }
-  
-  
+
+
 
   // Handle faction affiliation
   reconcileHurt(vict, 0.005);
@@ -3780,7 +3780,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   spellNumT w_type = getAttackType(weapon, isprimary);
 
   //   moved learn from doing for weapons and some monk passive skills to
-  //   hit() to save resources 
+  //   hit() to save resources
   int myLevel = 0;
   myLevel = GetMaxLevel();
   bool victimCanAttack = FALSE;
@@ -3872,7 +3872,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     }
   }
 
-// 2. Do Block and Parry 
+// 2. Do Block and Parry
   if (found) {
 // temporary for coding purposes, found isnt there for any purpose
    // can tighten up if its not deleted
@@ -3970,7 +3970,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if (!vict->isImmortal())
       dam = max(dam, 1);
 #if 0
-    vlogf(LOG_COMBAT, format("DAMAGE %d (%s) After getActualDamage and absorb.") %  dam % getName());  
+    vlogf(LOG_COMBAT, format("DAMAGE %d (%s) After getActualDamage and absorb.") %  dam % getName());
 #endif
 
     if (!IS_SET_DELETE(mess_sent, ONEHIT_MESS_CRIT_S) &&
@@ -3985,7 +3985,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	        vict->bSuccess(SKILL_RIPOSTE)){
 	          act("$N uses $S parry to execute a riposte.",
 	            FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
-	          act("You use your parry to execute a riposte.", 
+	          act("You use your parry to execute a riposte.",
 	            FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
 	          act("$N uses $S parry to execute a riposte.",
 	            FALSE, this, 0, vict, TO_NOTVICT);
@@ -4011,25 +4011,25 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
 	if(*f <= iskick)
 	  normalHitMessage(vict, NULL, TYPE_KICK, dam, part_hit);
-	else 
+	else
 	  normalHitMessage(vict, NULL, w_type, dam, part_hit);
       } else
 	normalHitMessage(vict, weapon, w_type, dam, part_hit);
-      
-       
+
+
      if(doesKnowSkill(SKILL_CHAIN_ATTACK) && (::number(0,99) < 10) && getMana()>=5 && bSuccess(SKILL_CHAIN_ATTACK)){
 	// successfully chain this attack
 	act("Lightning fast, you shift your balance and launch another strike.",
 	    FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
-	act("Lightning fast, $n shifts $s balance and launches another strike.", 
+	act("Lightning fast, $n shifts $s balance and launches another strike.",
 	    FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
-	act("Lightning fast, $n shifts $s balance and launches another strike.", 
+	act("Lightning fast, $n shifts $s balance and launches another strike.",
 	    FALSE, this, 0, vict, TO_NOTVICT);
-	
+
 	*f += 1; // one extra attack
 	reconcileMana(TYPE_UNDEFINED, 0, 5);
       }
-      
+
       if(affectedBySpell(SPELL_AURA_VENGEANCE) &&
           hasClass(CLASS_DEIKHAN) &&
           affectedBySpell(SKILL_SMITE) &&
@@ -4038,7 +4038,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
         act("Your vengeance aura flairs as you launch another strike.", FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
         act("$n's vengeance aura flairs as $e launches another strike.", FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
         act("$n's vengeance aura flairs as $e launches another strike.", FALSE, this, 0, vict, TO_NOTVICT);
-        
+
         *f += 1; // one extra attack
       }
 
@@ -4055,7 +4055,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       }
 
       // we've now hit, so do some post hit stuff
-      // handle a weapon's spec_proc 
+      // handle a weapon's spec_proc
       if (weapon && weapon->spec) {
         rc = weapon->checkSpec(vict, CMD_OBJ_HIT, (const char *) part_hit, this);
         if (IS_SET_ONLY(rc, DELETE_THIS))
@@ -4068,7 +4068,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       // handle proc on the eq being hit
       if (vict->equipment[part_hit] && vict->equipment[part_hit]->spec){
 	rc = vict->equipment[part_hit]->checkSpec(this, CMD_OBJ_BEEN_HIT, NULL, weapon);
-	if (IS_SET_ONLY(rc, DELETE_VICT)) 
+	if (IS_SET_ONLY(rc, DELETE_VICT))
 	  retCode |= DELETE_THIS;
 	if (IS_SET_ONLY(rc, DELETE_ITEM))
 	  retCode |= DELETE_ITEM;
@@ -4078,10 +4078,10 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	}
       }
 
-      // handle Deikhan Aura procs      
+      // handle Deikhan Aura procs
       // check aura for been hit
       rc = vict->checkAura(CMD_BEING_BEEN_HIT, this);
-      if (IS_SET_ONLY(rc, DELETE_VICT)) 
+      if (IS_SET_ONLY(rc, DELETE_VICT))
         retCode |= DELETE_THIS;
       if (IS_SET_ONLY(rc, DELETE_THIS)){
         retCode |= DELETE_VICT;
@@ -4093,7 +4093,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
         retCode |= DELETE_VICT;
         return retCode;
       }
-      // Add toughness 
+      // Add toughness
       doToughness(vict);
 
 	// handle proc on glove/gauntlet of unarmed hitters hitting hand. Dash - 10/17/00
@@ -4101,7 +4101,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
       if ((isRightHanded() && isprimary) || (!isRightHanded() && !isprimary))
 	   which_hand = WEAR_HAND_R;
-      else 
+      else
 	   which_hand = WEAR_HAND_L;
 
       if (!weapon && equipment[which_hand] && equipment[which_hand]->spec) {
@@ -4117,11 +4117,11 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 
       // poison
       TBaseWeapon *tow;
-      if(weapon && (tow = dynamic_cast<TBaseWeapon *>(weapon)) && 
+      if(weapon && (tow = dynamic_cast<TBaseWeapon *>(weapon)) &&
 	 tow->isPoisoned())
 	tow->applyPoison(vict);
 
-    
+
       // more absorbtion stuff..
       //      affectedData *af;
       if (vict->affectedBySpell(SPELL_PLASMA_MIRROR)) {
@@ -4132,9 +4132,9 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  act("The swirls of plasma surrounding $n soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_NOTVICT);
 	  act("The swirls of plasma surrounding you soak up energy, sending it back toward $N!", FALSE, vict, 0, this, TO_CHAR);
 	  act("The swirls of plasma surrounding $n soak up energy, sending it back toward you!", FALSE, vict, 0, this, TO_VICT);
-	  
+
 	  int rc = vict->reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
-	  if (rc == -1) 
+	  if (rc == -1)
 	    retCode |= DELETE_THIS;
 	}
       } else if (vict->affectedBySpell(SPELL_THORNFLESH)) {
@@ -4147,7 +4147,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
 	  act("<o>The thorns on your body hurt $N as $E hits you!<1>", FALSE, vict, 0, this, TO_CHAR);
 	  act("<o>The thorns on $n's damage you as you hit $m!<1>", FALSE, vict, 0, this, TO_VICT);
 	  int rc = vict->reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
-	  if (rc == -1) 
+	  if (rc == -1)
 	    retCode |= DELETE_THIS;
 	}
       }
@@ -4183,7 +4183,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
   combatFatigue(weapon);
   updatePos();
   vict->updatePos();
-  
+
   return retCode;
 }
 
@@ -4372,7 +4372,7 @@ bool TBeing::canFight(TBeing *target)
   }
   for (t = rider; t; t = t->nextRider) {
     TBeing *tb = dynamic_cast<TBeing *>(t);
-    if (tb && 
+    if (tb &&
         !tb->rideCheck(-10) &&
         !tb->rideCheck(-10)) {
       rc = tb->fallOffMount(this, POSITION_SITTING);
@@ -4384,7 +4384,7 @@ bool TBeing::canFight(TBeing *target)
     }
   }
   // make um fly if appropriate
-  if (!target->isPc() && target->canFly() && !target->isFlying()) 
+  if (!target->isPc() && target->canFly() && !target->isFlying())
     target->doFly();
 
   return TRUE;
@@ -4403,9 +4403,9 @@ bool TBeing::damCheckDeny(const TBeing *vict, spellNumT type) const
 
   rp = roomp;
   if (rp && rp->isRoomFlag(ROOM_PEACEFUL) &&
-      type != SPELL_POISON && type != SPELL_POISON_DEIKHAN && (this != vict)) 
-    return TRUE;                // true, they are denied from fighting 
-  
+      type != SPELL_POISON && type != SPELL_POISON_DEIKHAN && (this != vict))
+    return TRUE;                // true, they are denied from fighting
+
   return FALSE;
 }
 
@@ -4461,12 +4461,12 @@ int TBeing::setVictFighting(TBeing *vict, int dam)
       return -1;
     }
     TMonster *tmons = dynamic_cast<TMonster *>(vict);
-    if (tmons && (tmons->specials.act & ACT_IMMORTAL)) 
+    if (tmons && (tmons->specials.act & ACT_IMMORTAL))
       return -1;
-    
+
     if (!desc && vict->desc && !vict->fight()) // aggro mob against a non fighting pc
       vict->setFighting(this, dam, 1);
-    else 
+    else
       vict->setFighting(this, dam, FALSE);
 
     return TRUE;
@@ -4492,7 +4492,7 @@ static void fleeFlush(TBeing *ch)
   if (ch->desc) {
     while (!ch->desc->input.empty()) {
       if (ch->desc->input.front() != "flee") {
-        ch->sendTo(format("Flushing input command: '%s'\n\r") % 
+        ch->sendTo(format("Flushing input command: '%s'\n\r") %
 		   ch->desc->input.front());
 	ch->desc->input.pop();
       } else {
@@ -4580,9 +4580,9 @@ int TBeing::tellStatus(int dam, bool same, bool flying)
       }
       return TRUE;
     }
-    if (dam && (getHit() < (hitLimit() / 6))) 
+    if (dam && (getHit() < (hitLimit() / 6)))
       sendTo(format("You wish that your wounds would stop %sHURTING%s so much!!\n\r") % red() % norm());
-    
+
     if (getHit() < (hitLimit() / 10)) {
       if (dynamic_cast<TMonster *>(this) && !same && (specials.act & ACT_WIMPY) && (dam > 0)) {
         if (fight() && !isCombatMode(ATTACK_BERSERK)) {
@@ -4796,16 +4796,16 @@ int TBeing::checkEngagementStatus()
 {
 // false will mean pc will be hitting, true means will just engage
 
-  if (isAffected(AFF_ENGAGER)) 
+  if (isAffected(AFF_ENGAGER))
     return TRUE;
 
-  if ((!isPc() && !desc) || !desc) 
+  if ((!isPc() && !desc) || !desc)
     return FALSE;
-  else if (IS_SET(desc->autobits, AUTO_ENGAGE)) 
+  else if (IS_SET(desc->autobits, AUTO_ENGAGE))
     return TRUE;
-  else if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS)) 
+  else if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS))
     return TRUE;
-  else 
+  else
     return FALSE;
 }
 
@@ -4871,7 +4871,7 @@ TBeing *TBeing::findAnAttacker() const
       continue;
     if (tbt->fight() == this)
       return tbt;
-   // The more evil the mob is, the weaker the person it tries to use 
+   // The more evil the mob is, the weaker the person it tries to use
   }
 
   return NULL;
@@ -4947,7 +4947,7 @@ int TBeing::objDam(spellNumT damtype, int amnt, TThing *t)
     rc = trapSleep(amnt);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-  } else if (damtype == DAMAGE_TRAP_DISEASE) 
+  } else if (damtype == DAMAGE_TRAP_DISEASE)
     trapDisease(amnt);
 
   return FALSE;
@@ -4986,10 +4986,10 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing *t)
       if (desc && desc->original && desc->original != this) {
         vlogf(LOG_COMBAT, format("%s killed by %s at %s (polyed as a %s)") %  desc->original->getName() % (t ? t->getName() : "a door") % roomp->getName() % getName());
       } else {
-        vlogf(LOG_COMBAT, format("%s killed by %s at %s") %  getName() % 
+        vlogf(LOG_COMBAT, format("%s killed by %s at %s") %  getName() %
             (t ? t->getName() : "a door") % roomp->getName());
       }
-      if (desc) 
+      if (desc)
         desc->career.deaths++;
     }
     DeleteHatreds(this, NULL);
@@ -5103,7 +5103,7 @@ double TBeing::getExpSharePerc() const
 {
   followData *f;
   double totalshares=0;
-  
+
   if(master){
     f=master->followers;
     totalshares=master->getExpShare();
@@ -5151,7 +5151,7 @@ static int FRACT(TBeing *ch, TBeing *v)
 }
 
 
-   
+
 void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
 {
   double exp_shares = 0;
@@ -5169,9 +5169,9 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
   double exp_received = (exp * percent);
 
   // find out who the tank is
-  if (v->fight()) 
+  if (v->fight())
     tank = v->fight();
-  else 
+  else
     tank = this;
 
   if(!tank)
@@ -5243,7 +5243,7 @@ void TBeing::gainExpPerHit(TBeing *v, double percent, int dam)
     vlogf(LOG_COMBAT, format("gainExpPerHit: percent=%.15f, tmp_perc=%.15f") %
 	  percent % tmp_perc);
   }
-    
+
   // Gain exp for master if in room with ch
   if (sameRoom(*real_master) && inGroup(*real_master)) {
     exp_received = (tmp_exp * real_master->getExpShare());
@@ -5369,12 +5369,12 @@ void TBeing::remCastingList(TThing *v)
 
   for (ch = v->getCaster(); ch; ch = tmp_ch) {
     tmp_ch = ch->next_caster;
-    if (!ch->spelltask) { 
-      vlogf(LOG_COMBAT, format("Somehow, %s was being cast on by someone (%s) who had no spelltask.") %  v->getName() % ch->getName()); 
+    if (!ch->spelltask) {
+      vlogf(LOG_COMBAT, format("Somehow, %s was being cast on by someone (%s) who had no spelltask.") %  v->getName() % ch->getName());
       continue;
     }
-    if (!ch->spelltask->victim) { 
-      vlogf(LOG_COMBAT, format("Somehow, %s was being cast on by someone (%s) who had no casting target.") %  v->getName() % ch->getName()); 
+    if (!ch->spelltask->victim) {
+      vlogf(LOG_COMBAT, format("Somehow, %s was being cast on by someone (%s) who had no casting target.") %  v->getName() % ch->getName());
     }
     ch->spelltask->victim = NULL;
     ch->next_caster = NULL;
@@ -5422,21 +5422,21 @@ void TBeing::woundedHand(bool isPrimary)
 
 // returns DELETE_VICT
 int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
-{           
+{
   char buf[160];
   int rc;
-  
+
   // Quality of life tweak - there's no sense in weapons getting stuck in opponents that can't even move
   if (v->isAffected(AFF_STUNNED))
     return FALSE;
-	
+
   mud_assert(v->slotChance(part), "No slotChance in dislodgeWeapon");
 
   if (weapon && !v->getStuckIn(part)) {
     sstring nameBuf = colorString(this, desc, pers(v), NULL, COLOR_MOBS, TRUE);
 
     sendTo(COLOR_OBJECTS, format("Your %s, still stuck in %s's %s, is %storn from your grasp%s.\n\r") %
-       objn(weapon) % nameBuf % 
+       objn(weapon) % nameBuf %
        v->describeBodySlot(part) %red() %norm());
     v->sendTo(COLOR_OBJECTS, format("%s%s leaves %s %s stuck in your %s%s.\n\r") %
        v->orange() % sstring(getName()).cap() % hshr() %
@@ -5456,12 +5456,12 @@ void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing *opp)
   TThing *t;
 
   if (!hasPart(slot)) {
-    vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
+    vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_MISSING: %d on %s") %
          slot % getName());
     return;
   }
   if (!roomp) {
-    // bat 8-16-96, mob could be dead, this is a bug 
+    // bat 8-16-96, mob could be dead, this is a bug
     vlogf(LOG_COMBAT, format("!roomp for target (%s) of makePartMissing().") %  getName());
     return;
   }
@@ -5568,7 +5568,7 @@ spellNumT TBeing::monkDamType(spellNumT orig) const
   value = 3 * getSkillValue(SKILL_KUBO);
   value /= 2;
   value += getLevel(MONK_LEVEL_IND);
-  value /= 4;  // 1-50 based 
+  value /= 4;  // 1-50 based
 
   static spellNumT poundDamage[51] = { TYPE_POUND,
                                 TYPE_POUND, TYPE_POUND, TYPE_POUND,
@@ -5641,7 +5641,7 @@ void TBeing::reformGroup()
 
     // exclude pure mobs-- allow poly and linkdead poly
     // (but if the original leader was a mob, it's a mob group - Peel)
-    if ((!tmp->follower->isPc() && isPc()) && 
+    if ((!tmp->follower->isPc() && isPc()) &&
         tmp->follower->polyed == POLY_TYPE_NONE) {
       tmp->follower->stopFollower(TRUE);
       continue;
@@ -5694,7 +5694,7 @@ void TBeing::reformGroup()
       new_master->sendTo(COLOR_BASIC, format("<R>%s has died and you have taken over leadership of the group.<z>\n\r") % getName());
       continue;
     }
-   
+
     survivor = tmp->follower;
     survivor->stopFollower(TRUE, STOP_FOLLOWER_CHAR_VICT);
     new_master->addFollower(survivor, 1);
@@ -5717,12 +5717,12 @@ void TBeing::genericKillFix(void)
   int rc = generic_dispel_magic(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   int rc2 = genericChaseSpirits(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    vlogf(LOG_BUG, format("Multiple deaths (%s in room %d) occurred!") % 
+    vlogf(LOG_BUG, format("Multiple deaths (%s in room %d) occurred!") %
          getName() % inRoom());
   }
 
   if (IS_SET_DELETE(rc2, DELETE_VICT)) {
-    vlogf(LOG_BUG, format("Multiple deaths (%s in room %d) occurred!") % 
+    vlogf(LOG_BUG, format("Multiple deaths (%s in room %d) occurred!") %
          getName() % inRoom());
   }
 
@@ -5796,8 +5796,8 @@ double TBeing::deathSkillLoss()
 
   spellNumT i;
   for (i = MIN_SPELL; i < MAX_SKILL;i++) {
-    if ((!discArray[i]) || 
-	(!*discArray[i]->name) || 
+    if ((!discArray[i]) ||
+	(!*discArray[i]->name) ||
 	(discArray[i]->startLearnDo == -1) ||
 	(!doesKnowSkill(i)) ||
 	(!getSkill(i))){
@@ -5816,7 +5816,7 @@ double TBeing::deathSkillLoss()
     setSkillValue(i, max(amt, 1));
     setNatSkillValue(i, amt);
 
-    vlogf(LOG_COMBAT, format("skill loss %s (%d) = %d,  %d->%d") %  
+    vlogf(LOG_COMBAT, format("skill loss %s (%d) = %d,  %d->%d") %
 	  discArray[i]->name % i % (preskill-amt) %
 	  preskill % getRawNatSkillValue(i));
   }
@@ -5894,14 +5894,14 @@ void doToughness(TBeing *ch)
 
   if (!ch->doesKnowSkill(SKILL_TOUGHNESS))
     return;
-  
+
   if (!ch->awake() || ch->getPosition() < POSITION_CRAWLING)
     return;
 
   if (!ch->bSuccess(SKILL_TOUGHNESS))
     return;
 
-  // 50% shot 
+  // 50% shot
   if (!::number(0,1))
     return;
 
@@ -5958,7 +5958,7 @@ void TBeing::doBloodlust()
       }
     }
   }
-  
+
   if (mod < MAX_BLOODLUST) {
     // Increment stacks since it's < max
     ++mod;
@@ -5990,7 +5990,7 @@ void TBeing::doBloodlust()
   aff1.location = APPLY_DAMROLL;
   aff1.modifier = mod;
   aff1.bitvector = 0;
-  affectTo(&aff1, -1);  
+  affectTo(&aff1, -1);
 }
 
 void TBeing::doInevitability()
@@ -6000,7 +6000,7 @@ void TBeing::doInevitability()
 
   if (!doesKnowSkill(SKILL_INEVITABILITY))
     return;
-  
+
   if (!awake() || getPosition() < POSITION_CRAWLING)
     return;
 

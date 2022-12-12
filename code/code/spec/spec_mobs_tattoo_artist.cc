@@ -46,7 +46,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     }
 
     one_argument(arg, buf, cElements(buf));
-    
+
     wearSlotT slot=WEAR_NOWHERE;
     int slot_i;
     if ((slot_i = old_search_block(buf, 0, strlen(buf), bodyParts, 0)) > 0) {
@@ -64,7 +64,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
       myself->doTell(ch->getName(), "It's not like you're gonna run around pantless to show it off anyway!");
       return FALSE;
     }
-    
+
     TDatabase db(DB_SNEEZY);
     db.query("select 1 from tattoos where name='%s' and location=%i",
 	     ch->getName().c_str(), slot);
@@ -88,7 +88,7 @@ int tattooArtist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TO
     db.query("insert into tattoos (name, tattoo, location) values ('%s', '%s', %i)", ch->getName().c_str(), tattoos[i-1], slot);
 
     myself->doSay("There you go, all set.");
-    
+
     return TRUE;
   }
 

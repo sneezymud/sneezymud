@@ -57,7 +57,7 @@ class Stats {
   private:
     short values[MAX_STATS];
 
-  public: 
+  public:
     Stats();
     Stats(const Stats &);
     ~Stats();
@@ -65,7 +65,7 @@ class Stats {
 
   Stats operator+(const Stats &operand);
   Stats operator-(const Stats &operand);
-  
+
   short get(statTypeT stat) const;
   short set(statTypeT stat, short val);
   short add(statTypeT stat, short mod);

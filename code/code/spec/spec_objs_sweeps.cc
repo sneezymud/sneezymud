@@ -4,12 +4,12 @@
 #include "disc_sorcery.h"
 #include "being.h"
 
-int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
+int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 {
-  
+
   if (cmd != CMD_SHAKE)
     return FALSE;
-  
+
   sstring buf;
   buf=sstring(arg).word(0);
 
@@ -30,12 +30,12 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   TObj *tile = NULL;
 
   if (!(tile = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])) &&
-    !(tile = dynamic_cast<TObj *>(ch->equipment[HOLD_LEFT]))) 
+    !(tile = dynamic_cast<TObj *>(ch->equipment[HOLD_LEFT])))
   {
     act("You must hold the tile before trying to shake it.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
     return TRUE;
   }
-  
+
   act("$n shakes a tile vigorously.",TRUE,ch,NULL,NULL,TO_ROOM,NULL);
   act("You shake the tile vigorously.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
 
@@ -63,7 +63,7 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     buf3 = "O";
   else
     buf3 = "P";
-  
+
   ch->sendTo("As you watch, the blank face of the tile blurs momentarily.\n\r");
   buf4 = format("The letter <Y>%s<z> appears.") % buf3;
 
@@ -71,7 +71,7 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 // need to know what hand to hold it in tile->eq_pos
   TObj *newtile = NULL;
   if (!(newtile = read_object(TILEVNUM_SHAKEN, VIRTUAL))) {
-    vlogf(LOG_LOW, format("could not read obj %d in spec_objs_sweeps.cc") % 
+    vlogf(LOG_LOW, format("could not read obj %d in spec_objs_sweeps.cc") %
         TILEVNUM_SHAKEN);
   }
   if (newtile) { // delete tile and load item
@@ -85,22 +85,22 @@ int sweepsScratch(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     newtile->obj_flags.decay_time = o->obj_flags.decay_time;
     delete o;
     o = NULL;
-  
+
     ch->equipChar(newtile, pos, SILENT_YES);
   } else {
     ch->sendTo("Something has gone horribly wrong with your tile.\n\r");
     vlogf(LOG_LOW, "Error in tile shake - no new tile.\n\r");
   }
- 
+
   return TRUE;
 
 }
-  
+
 int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 
   if (cmd != CMD_COMBINE && cmd != CMD_SPLIT)
     return FALSE;
-  
+
   sstring buf, buf4, buf5, buf6;
   buf=sstring(arg).word(0);
 
@@ -120,17 +120,17 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
   TObj *tile1 = NULL;
   TObj *tile2 = NULL;
 
-  if (cmd == CMD_COMBINE) 
+  if (cmd == CMD_COMBINE)
   {
     if (!(tile1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT])) ||
       !(tile2 = dynamic_cast<TObj *>(ch->equipment[HOLD_LEFT])) ||
-      !(tile1->spec == SPEC_SPLIT_JOIN) || 
-      !(tile2->spec == SPEC_SPLIT_JOIN)) 
+      !(tile1->spec == SPEC_SPLIT_JOIN) ||
+      !(tile2->spec == SPEC_SPLIT_JOIN))
     {
       act("You must hold two tiles, on in each hand, in order to combine them.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
      return TRUE;
     }
- 
+
     //return quietly if the proc is firing from both hands
     if (o == ch->equipment[HOLD_LEFT])
       return TRUE;
@@ -151,7 +151,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     act("<R>*SNAP*<z>\n\rYou lay one tile on top of the other and they merge into one.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
 
     delete tile2;
-  
+
     sstring newname = format("%s%s") % name1 % name2;
     ch->sendTo("As you watch, the face of the tile blurs momentarily.\n\r");
     buf4 = format("The letters <Y>%s<z> appear.") % newname;
@@ -184,12 +184,12 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
       } else if (newname == "MOP") {
         newobjn = 9083; // a mop
       }
-      
-      
-      if (newobjn > 0) { 
+
+
+      if (newobjn > 0) {
         TObj *newobj = NULL;
         if (!(newobj = read_object(newobjn, VIRTUAL))) {
-          vlogf(LOG_LOW, format("could not read obj %d in spec_objs_sweeps.cc") % 
+          vlogf(LOG_LOW, format("could not read obj %d in spec_objs_sweeps.cc") %
               newobjn);
         }
         if (newobj) { // delete tile and load item
@@ -204,7 +204,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
         }
       }
     }
-    
+
   } else if (cmd == CMD_SPLIT) {
     TThing *left=NULL, *right=NULL;
     tile1 = dynamic_cast<TObj *>(ch->equipment[HOLD_RIGHT]);
@@ -224,7 +224,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
       act("Nothing happens.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
       return TRUE;
     }
-    
+
     act("$n fiddles with a tile.",TRUE,ch,NULL,NULL,TO_ROOM,NULL);
     act("You fiddle with a tile.",TRUE,ch,NULL,NULL,TO_CHAR,NULL);
 
@@ -255,7 +255,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     tile2->name = buf5;
     tile2->shortDescr = buf6;
     tile2->obj_flags.decay_time = tile1->obj_flags.decay_time;
-    
+
     if (!left)
     {
       ch->equipChar(tile2, HOLD_LEFT, SILENT_YES);
@@ -264,7 +264,7 @@ int sweepsSplitJoin(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *) 
     } else {
       vlogf(LOG_BUG, "Somehow got to end of splitting tiles in spec_objs_sweeps.cc with both hands full.");
     }
-    
+
   }
 
   return TRUE;

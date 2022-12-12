@@ -124,10 +124,10 @@ int TMonster::aiOtherInsulted(TBeing *, TBeing *other)
   return FALSE;
 }
 
-// proc referenced by social calls if homosexual act occurs 
-// SneezyMUD != politically correct  :) 
-// self = TRUE if ch was homo with mob 
-// self = FALSE if mob saw ch homo with other 
+// proc referenced by social calls if homosexual act occurs
+// SneezyMUD != politically correct  :)
+// self = TRUE if ch was homo with mob
+// self = FALSE if mob saw ch homo with other
 int TMonster::aiFag(TBeing *homo,int self)
 {
   char buf[160];
@@ -221,7 +221,7 @@ sstring TBeing::getInsult(TBeing *vict)
   sstring buf, buf2, buf3;
   ubyte insult = 1;
 
-  // find a convenient stat to make fun of.  allow some randomness 
+  // find a convenient stat to make fun of.  allow some randomness
   if (!::number(0,3)) {
     switch (::number(1,10)) {
       case 1:
@@ -244,7 +244,7 @@ sstring TBeing::getInsult(TBeing *vict)
         break;
       case 7:
 	buf2 = "faggy";
-	break;    
+	break;
       default:
         buf2 =  "gutless";
         break;
@@ -261,12 +261,12 @@ sstring TBeing::getInsult(TBeing *vict)
 	(vict->getStat(STAT_CURRENT,STAT_BRA) <=
 			vict->getStat(STAT_CURRENT,STAT_CHA)))
       buf2 = "weak";
-    else if ((vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_WIS)) && 
-             (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_AGI)) && 
-             (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_CON)) && 
+    else if ((vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_WIS)) &&
+             (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_AGI)) &&
+             (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_CON)) &&
              (vict->getStat(STAT_CURRENT, STAT_INT) <= vict->getStat(STAT_CURRENT, STAT_CHA)))
       buf2 = "stupid";
-    else if ((vict->getStat(STAT_CURRENT, STAT_WIS) <= vict->getStat(STAT_CURRENT, STAT_AGI)) && 
+    else if ((vict->getStat(STAT_CURRENT, STAT_WIS) <= vict->getStat(STAT_CURRENT, STAT_AGI)) &&
              (vict->getStat(STAT_CURRENT, STAT_WIS) <= vict->getStat(STAT_CURRENT, STAT_CON)) &&
              (vict->getStat(STAT_CURRENT, STAT_WIS) <= vict->getStat(STAT_CURRENT, STAT_CHA)))
       buf2 = "idiotic";
@@ -329,10 +329,10 @@ sstring TBeing::getInsult(TBeing *vict)
       break;
     case 17:
       buf3 = "jackass";
-      break;   
+      break;
     case 18:
       buf3 = "hunk of DiqMeat";
-      break;         
+      break;
     default:
       buf3 = "freak of nature";
       break;
@@ -402,7 +402,7 @@ sstring TBeing::getInsult(TBeing *vict)
       break;
     case 21:
       buf = "Blah blah blah";
-      break;  
+      break;
     case 22:
       buf = "PFFFfffffftttt";
       break;
@@ -966,7 +966,7 @@ int TMonster::aiWimpSwitch(TBeing *vict)
       cLevel = 0;
   tank = fight();
   affectedData *hjp=NULL;
-      
+
 
   // Lets see if the current tank is in a position, and if so would
   // Want to, to prevent the switch.  The mobs current target MUST be
@@ -1060,32 +1060,32 @@ int TMonster::aiWimpSwitch(TBeing *vict)
 
   switch (::number(1,7)) {
     case 1:
-      act("$n senses that $N is a weaker opponent.",TRUE, this, 0, vict, 
+      act("$n senses that $N is a weaker opponent.",TRUE, this, 0, vict,
           TO_NOTVICT, ANSI_RED);
       act("$n senses that you are a weaker opponent.",TRUE, this, 0, vict,
                TO_VICT, ANSI_RED);
       break;
     case 2:
     case 4:
-      if (!isDumbAnimal()) 
+      if (!isDumbAnimal())
         doSay("Time to die, feeble one!");
-      
+
       act("$n <R>switches to $N<Z>.", TRUE, this, 0, vict, TO_NOTVICT);
       act("$n <R>switches to you<Z>.", TRUE, this, 0, vict, TO_VICT);
       break;
     case 3:
     case 5:
-      if (!isDumbAnimal()) 
+      if (!isDumbAnimal())
         doSay("I think I'll just take care of you first!");
-      
+
       act("$n <R>switches to $N<Z>.", TRUE, this, 0, vict, TO_NOTVICT);
       act("$n <R>switches to you<Z>.", TRUE, this, 0, vict, TO_VICT);
       break;
     case 6:
     case 7:
-      if (!isDumbAnimal()) 
+      if (!isDumbAnimal())
         doSay("You're all mine!");
-      
+
       act("$n <R>switches to $N<Z>.", TRUE, this, 0, vict, TO_NOTVICT);
       act("$n <R>switches to you<Z>.", TRUE, this, 0, vict, TO_VICT);
       break;
@@ -1118,7 +1118,7 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
     rc = goDirection(rev_dir(dir));
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // we're not checking for death, log an error
-      vlogf(LOG_MOB_AI, format("error in shove react (%s shoving %d)") %   
+      vlogf(LOG_MOB_AI, format("error in shove react (%s shoving %d)") %
           doer->getName() % dir);
       return DELETE_THIS;
     }
@@ -1133,7 +1133,7 @@ int TMonster::aiShoveReact(TBeing *doer, bool worked, dirTypeT dir)
       act("$n nudges you.", TRUE, this, 0, doer, TO_VICT);
       act("You nudge $N.", TRUE, this, 0, doer, TO_CHAR);
     }
-    if (isAngry()) 
+    if (isAngry())
       return takeFirstHit(*doer);
     else
       aiUpset(doer);

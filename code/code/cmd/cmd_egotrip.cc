@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 //      "egotrip.cc" - The egotrip command
-//  
+//
 //////////////////////////////////////////////////////////////////////////
 
 #include "extern.h"
@@ -51,7 +51,7 @@ public:
 std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 {
   std::map <spellNumT,ego_imm_blessing> blessings;
-  
+
   blessings[AFFECT_IMMORTAL_BLESSING]=
     ego_imm_blessing("immortal",
         AFFECT_IMMORTAL_BLESSING,
@@ -71,7 +71,7 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
 //  blessings[AFFECT_PEEL_BLESSING]=
 //  ego_imm_blessing("Peel",
 //      AFFECT_PEEL_BLESSING,
-//      APPLY_SPE, 
+//      APPLY_SPE,
 //      "<r>speed<1>");
 // PEEL's abilities were replaced by Aion in all files and this blessing is null until someone re-adds him. Oops.
 // https://github.com/sneezymud/sneezymud/commit/5eff77d065e65421ab8d87ae785ce8e750dfee98
@@ -279,12 +279,12 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax:\n\r     egotrip disease <target> <disease>\n\r");
       return;
     }
-    
+
     if (sufferer->isImmune(IMMUNE_DISEASE, WEAR_BODY)) {
       sendTo("Bummer, they're immune.\n\r");
       return;
     }
-    
+
     affectedData aff;
     aff.type = AFFECT_DISEASE;
     aff.level = 0;
@@ -292,7 +292,7 @@ void TBeing::doEgoTrip(const char *arg)
     aff.bitvector = 0;
     aff.duration = min((int) sufferer->GetMaxLevel(), (int) GetMaxLevel()) * Pulse::UPDATES_PER_MUDHOUR / 3;
     aff.modifier2 = sufferer->GetMaxLevel();
-    
+
     if (is_abbrev(disease, "cold")) {
       aff.modifier = DISEASE_COLD;
     } else if (is_abbrev(disease, "dysentery")) {
@@ -356,7 +356,7 @@ void TBeing::doEgoTrip(const char *arg)
     sufferer->affectTo(&aff);
     disease_start(sufferer, &aff);
     return;
-    
+
   } else if(is_abbrev(argument, "teleport")){
     sstring target, buf;
     restarg = one_argument(restarg, target);
@@ -370,9 +370,9 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip teleport <target>\n\r");
       return;
     }
-    
+
     sendTo(format("You teleport %s\n\r") % ch->getName());
-    
+
     ch->genericTeleport(SILENT_NO, false, true);
   } else if(is_abbrev(argument, "portal")){
     sstring target, buf;
@@ -414,7 +414,7 @@ void TBeing::doEgoTrip(const char *arg)
       TMonster *tmons = dynamic_cast<TMonster *>(ch);
       if (!tmons)
         continue;
-      if (!tmons->spec) 
+      if (!tmons->spec)
         continue;
       int rc = tmons->checkSpec(tmons, CMD_MOB_ALIGN_PULSE, "", NULL);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
@@ -572,7 +572,7 @@ void TBeing::doEgoTrip(const char *arg)
       return;
     }
     ch->setMove(ch->getMove()/2);
-    
+
     return;
   } else if (is_abbrev(argument, "damn")) {
     if (!isImmortal() || !desc || !IS_SET(desc->autobits, AUTO_SUCCESS)) {
@@ -592,7 +592,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip damn <target>\n\r");
       return;
     }
-    
+
     vlogf(LOG_MISC, format("%s egotrip damned %s") %  getName() % ch->getName());
     if (ch->isPc() && ch->isImmortal() &&
         ch->GetMaxLevel() > GetMaxLevel()) {
@@ -628,7 +628,7 @@ void TBeing::doEgoTrip(const char *arg)
       sendTo("Syntax: egotrip hate <target>\n\r");
       return;
     }
-    
+
     TThing *t=NULL;
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TMonster *tmon = dynamic_cast<TMonster *>(t);

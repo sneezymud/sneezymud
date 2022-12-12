@@ -188,7 +188,7 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         if (!ch->specials.hunting) {
           if (isSW){
             TPathFinder path(ch->hunt_dist);
-            
+
             code=path.findPath(ch->in_room, findWater());
             targetRm=path.getDest();
           } else {

@@ -4,7 +4,7 @@
 //   SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 //   "socket.cc" - All methods for TSocket class
-//               
+//
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -30,7 +30,7 @@ extern "C" {
 #include <sys/syscall.h>
 #include <sys/param.h>
 
-int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);   
+int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 }
 
 #include "DescriptorList.h"
@@ -63,14 +63,14 @@ int select(int, fd_set *, fd_set *, fd_set *, struct timeval *);
 #include "obj_tool.h"
 #include "obj_plant.h"
 
-int maxdesc, avail_descs;  
+int maxdesc, avail_descs;
 bool Shutdown = 0;               // clean shutdown
 bool Reboot = false;
 int tics = 0;
 TMainSocket *gSocket;
 long timeTill = 0;
 TDescriptorList DescriptorList;
-Descriptor *descriptor_list = NULL, *next_to_process; 
+Descriptor *descriptor_list = NULL, *next_to_process;
 
 struct timeval timediff(struct timeval *a, struct timeval *b)
 {
@@ -99,7 +99,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
 
 
   if (!been_called) {
-    // prepare the time values 
+    // prepare the time values
     null_time.tv_sec = 0;
     null_time.tv_usec = 0;
 
@@ -115,11 +115,11 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
     sigaddset(&mask, SIGXCPU);
     sigaddset(&mask, SIGHUP);
     // don't trap SIG_PROF, it is needed for debugging.
-    
+
     been_called = true;
   }
 
-  // Check what's happening out there 
+  // Check what's happening out there
   FD_ZERO(&input_set);
   FD_ZERO(&output_set);
   FD_ZERO(&exc_set);
@@ -136,7 +136,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
 
 
   sigprocmask(SIG_SETMASK, &mask, NULL);
-  
+
 #if defined(__linux__)
   // linux uses a nonstandard style of "timedout" (the last parm of select)
   // it gets hosed each select() so must be reinited here
@@ -152,7 +152,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
   sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
 
-  // establish any new connections 
+  // establish any new connections
   if (FD_ISSET(m_mainSockFD, &input_set)) {
     int tFd;
 
@@ -162,7 +162,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
       descriptor_list->writeToQ(tStString);
   }
 
-  // close any connections with an exceptional condition pending 
+  // close any connections with an exceptional condition pending
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
     if (FD_ISSET(point->socket->m_sock, &exc_set)) {
@@ -171,7 +171,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString)
       delete point;
     }
   }
-  // read any incoming input, and queue it up 
+  // read any incoming input, and queue it up
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
     if (FD_ISSET(point->socket->m_sock, &input_set)) {
@@ -197,7 +197,7 @@ int updateWholist()
   sstring wholist = "";
 
   for (p = descriptor_list; p; p = p->next) {
-    if ((p && p->connected == CON_PLYNG) || (p->connected > MAX_CON_STATUS && p->character && 
+    if ((p && p->connected == CON_PLYNG) || (p->connected > MAX_CON_STATUS && p->character &&
 					     !p->character->name.empty() && p->character->isPc() && !p->character->isLinkdead() && p->character->polyed == POLY_TYPE_NONE)) {
       if ((p2 = dynamic_cast<TPerson *>(p->character))) {
 	wholist += p2->getName();
@@ -209,10 +209,10 @@ int updateWholist()
   if (wholist != wholist_last) {
     // every 10 RL seconds
     TDatabase db(DB_SNEEZY);
-    
-    
+
+
     db.query("delete from wholist where port=%i", gamePort);
-    
+
     //  vlogf(LOG_DASH, format("Updating who table for port %d") %  gamePort);
   for (p = descriptor_list; p; p = p->next) {
     if ((p && p->connected == CON_PLYNG) || (p->connected > MAX_CON_STATUS && p->character &&
@@ -239,7 +239,7 @@ void updateUsagelogs(int count)
   static time_t logtime;
 
   int TIME_BETWEEN_LOGS = 300;
-  
+
   // every 10 RL seconds
   TDatabase db(DB_SNEEZY);
 
@@ -249,8 +249,8 @@ void updateUsagelogs(int count)
   if(logtime/TIME_BETWEEN_LOGS < ct/TIME_BETWEEN_LOGS) {
     //	vlogf(LOG_DASH, format("Webstuff: collecting game usage data - %d seconds since last log") %  ct-lastlog);
     //        vlogf(LOG_DASH, format("Webstuff:  logtime = %d,  ct = %d, players = %d") %  logtime % ct % count);
-    
-    
+
+
     if (logtime != 0) logtime += TIME_BETWEEN_LOGS;
     else logtime = ct;
     db.query("insert into usagelogs (time, players, port) VALUES(%i, %i, %i)", logtime, count, gamePort);
@@ -348,7 +348,7 @@ bool TMainSocket::handleShutdown()
     int minutes=(timeTill - time(0)) / 60;
     if (!sent) {
       buf="<r>******* SYSTEM MESSAGE ******<z>\n\r";
-      buf+=format("<c>%s in %ld minute%s.<z>\n\r") % 
+      buf+=format("<c>%s in %ld minute%s.<z>\n\r") %
 	shutdown_or_reboot() % minutes % ((minutes == 1) ? "" : "s");
       Descriptor::worldSend(buf, NULL);
     }
@@ -383,7 +383,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   null_time.tv_usec = 0;
   opt_time.tv_usec = OPT_USEC;
   opt_time.tv_sec = 0;
-  
+
   sigaddset(&mask, SIGUSR1);
   sigaddset(&mask, SIGUSR2);
   sigaddset(&mask, SIGINT);
@@ -397,7 +397,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
   // do some socket stuff or something
   ////////////////////////////////////////////
-  // Check what's happening out there 
+  // Check what's happening out there
   FD_ZERO(&input_set);
   FD_ZERO(&output_set);
   FD_ZERO(&exc_set);
@@ -416,7 +416,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
   // do some time related stuff
   ////////////////////////////////////////////
-  // check out the time 
+  // check out the time
   gettimeofday(&now, NULL);
   timespent=timediff(&now, &last_time);
   timeout=timediff(&opt_time, &timespent);
@@ -448,7 +448,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   sigprocmask(SIG_UNBLOCK, &mask, NULL);
 
   ////////////////////////////////////////////
-  // establish any new connections 
+  // establish any new connections
   ////////////////////////////////////////////
   if (FD_ISSET(m_mainSockFD, &input_set)) {
     int rc = newDescriptor(m_mainSockFD);
@@ -463,7 +463,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   }
 
   ////////////////////////////////////////////
-  // close any connections with an exceptional condition pending 
+  // close any connections with an exceptional condition pending
   ////////////////////////////////////////////
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
@@ -477,7 +477,7 @@ struct timeval TMainSocket::handleTimeAndSockets()
   ////////////////////////////////////////////
 
   ////////////////////////////////////////////
-  // read any incoming input, and queue it up 
+  // read any incoming input, and queue it up
   ////////////////////////////////////////////
   for (point = descriptor_list; point; point = next_to_process) {
     next_to_process = point->next;
@@ -503,7 +503,7 @@ procSetZoneEmpty::procSetZoneEmpty(const int &p)
   name="procSetZoneEmpty";
 }
 
-void procSetZoneEmpty::run(const TPulse &) const 
+void procSetZoneEmpty::run(const TPulse &) const
 {
   // set zone emptiness flags
   for (unsigned int i = 0; i < zone_table.size(); i++)
@@ -522,20 +522,20 @@ procMobHate::procMobHate(const int &p)
 void procMobHate::run(const TPulse &) const
 {
   TBeing * b = NULL;
-  
+
   for (b = character_list; b; b = b->next) {
     TMonster *tmons = dynamic_cast<TMonster *>(b);
     charList *list;
-    
+
     if (tmons && IS_SET(tmons->hatefield, HATE_CHAR) && tmons->hates.clist){
       for (list = tmons->hates.clist; list; list = list->next){
 	if (list->name) {
 	  list->iHateStrength--;
-	  
+
 	  if (list->iHateStrength <= 0) {
-	    vlogf(LOG_LAPSOS, format("%s no longer hates %s") % 
+	    vlogf(LOG_LAPSOS, format("%s no longer hates %s") %
 		  tmons->getName() % list->name);
-	    
+
 	    tmons->remHated(NULL, list->name);
 	  }
 	}
@@ -571,7 +571,7 @@ void procTweakRate::run(const TPulse &) const
 
 
   for(tweakTypeT i=TWEAK_LOADRATE;i<MAX_TWEAK_TYPES;i++){
-    
+
     tweakEntry* t = tweakInfo[i];
     if (t->rate == 0.0) continue;
     if (t->target <= 0) return; // If this is zero, the procedure won't change anything anyway.
@@ -579,8 +579,8 @@ void procTweakRate::run(const TPulse &) const
     // If the current value is within one delta of the target, we will
     // call it good. Clamp the rate to target just to be safe and
     // prevent hunting.
-    if( 
-        (t->target-t->rate <= t->current) 
+    if(
+        (t->target-t->rate <= t->current)
         &&
         (t->current <= t->target+t->rate)
     ){
@@ -636,7 +636,7 @@ void procCheckTriggerUsers::run(const TPulse &) const
     if(count < 100)
       continue;
 
-    vlogf(LOG_MISC, format("procCheckTriggerUsers: %s has %i unique commands") % 
+    vlogf(LOG_MISC, format("procCheckTriggerUsers: %s has %i unique commands") %
 	  d->character->getName() % (c-'a'));
 
     unsigned int longest=0;
@@ -645,9 +645,9 @@ void procCheckTriggerUsers::run(const TPulse &) const
     for(unsigned int i=0;i<128;++i){
       if(!d->history[i][0])
 	continue;
-      
+
       buf+=cmds[d->history[i]];
-      
+
       if(find(str.begin(), str.end(), buf) == str.end()){
 	if(buf.length() > longest)
 	  longest=buf.length();
@@ -656,7 +656,7 @@ void procCheckTriggerUsers::run(const TPulse &) const
       }
     }
 
-    vlogf(LOG_MISC, format("procCheckTriggerUsers: %s has longest pattern of %i") % 
+    vlogf(LOG_MISC, format("procCheckTriggerUsers: %s has longest pattern of %i") %
 	  d->character->getName() % longest);
   }
 }
@@ -692,7 +692,7 @@ void procWeightVolumeFumble::run(const TPulse &) const
   int loop_check=0;
 
   for (d = descriptor_list; d; d = d->next) {
-    if(!(ch=d->character) || d->connected || 
+    if(!(ch=d->character) || d->connected ||
        !d->character->roomp || d->character->isImmortal())
       continue;
 
@@ -701,7 +701,7 @@ void procWeightVolumeFumble::run(const TPulse &) const
       ch->sendTo("You are carrying too much and lose control of your inventory!\n\r");
 
     loop_check=0;
-    
+
     while(ch->getCarriedVolume() > ch->carryVolumeLimit() ||
 	  ch->getCarriedWeight() > ch->carryWeightLimit()){
       t=ch->stuff.front();
@@ -749,7 +749,7 @@ bool procObjDetonateGrenades::run(const TPulse &pl, TObj *obj) const
   // this stuff all happens every time we go through here, which is
   // about every 12 pulses, ie "combat" or "teleport" pulse
   int rc = obj->detonateGrenade();
-  if (IS_SET_DELETE(rc, DELETE_THIS)) 
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return true;
   return false;
 }
@@ -839,16 +839,16 @@ bool procObjRust::run(const TPulse &pl, TObj *obj) const
   // rust
   if(!::number(0,99) && obj->canRust()){
     TRoom *rp=NULL;
-    
+
     if(obj->equippedBy)
       rp=obj->equippedBy->roomp;
-    
+
     if(dynamic_cast<TBeing *>(obj->parent))
       rp=obj->parent->roomp;
-    
+
     if(obj->roomp)
       rp=obj->roomp;
-    
+
     if(rp && (Weather::getWeather(*rp)==Weather::RAINY ||
 	      Weather::getWeather(*rp)==Weather::LIGHTNING ||
 	      rp->isWaterSector())){
@@ -857,7 +857,7 @@ bool procObjRust::run(const TPulse &pl, TObj *obj) const
   }
   return false;
 }
-      
+
 procObjFreezing::procObjFreezing(const int &p)
 {
   trigger_pulse=p;
@@ -876,21 +876,21 @@ bool procObjFreezing::run(const TPulse &pl, TObj *obj) const
     TRoom *r=NULL;
     TThing *t;
     TBeing *ch=NULL;
-    
+
     if((t = cup->equippedBy) || (t = cup->parent)){
       ch = dynamic_cast<TBeing *>(t);
       if(ch)
 	r=ch->roomp;
     } else
       r = cup->roomp;
-    
+
     if(r && (!ch || !ch->affectedBySpell(AFFECT_WAS_INDOORS))){
-      if(r->isArcticSector() && cup->getDrinkUnits() > 0 && 
+      if(r->isArcticSector() && cup->getDrinkUnits() > 0 &&
 	 cup->getLiqDrunk() < 7 && !cup->isDrinkConFlag(DRINK_FROZEN)){
 	int rc=cup->freezeObject(ch, 0);
 	if (IS_SET_DELETE(rc, DELETE_THIS))
 	  return true;
-	
+
 	// freeze any pools that were dropped
 	TPool *tp;
 	for(StuffIter it=r->stuff.begin();it!=r->stuff.end() && (t=*it);++it){
@@ -900,7 +900,7 @@ bool procObjFreezing::run(const TPulse &pl, TObj *obj) const
 	}
       }
     }
-    
+
     if(cup->roomp && !cup->roomp->isArcticSector() &&
        cup->isDrinkConFlag(DRINK_FROZEN)){
       cup->thawObject(ch, 0);
@@ -908,7 +908,7 @@ bool procObjFreezing::run(const TPulse &pl, TObj *obj) const
   }
   return false;
 }
- 
+
 procObjAutoPlant::procObjAutoPlant(const int &p)
 {
   trigger_pulse=p;
@@ -916,24 +916,24 @@ procObjAutoPlant::procObjAutoPlant(const int &p)
 }
 
 bool procObjAutoPlant::run(const TPulse &pl, TObj *obj) const
-{     
+{
   // seeds sitting on the ground will sometimes auto-plant themselves
   TTool *seed=dynamic_cast<TTool *>(obj);
   if(seed && seed->getToolType()==TOOL_SEED &&
      !::number(0,100) &&
      seed->roomp &&
-     !(seed->roomp->isFallSector() || 
-       seed->roomp->isWaterSector() || 
-       seed->roomp->isIndoorSector() || 
+     !(seed->roomp->isFallSector() ||
+       seed->roomp->isWaterSector() ||
+       seed->roomp->isIndoorSector() ||
        seed->roomp->isUnderwaterSector())){
-    
+
     int count=0;
     for(StuffIter it=seed->roomp->stuff.begin();
 	it!=seed->roomp->stuff.end();++it){
       if(dynamic_cast<TPlant *>(*it))
 	++count;
-    }    
-    
+    }
+
     if(count<8){
       TObj *tp;
       TPlant *tplant;
@@ -941,16 +941,16 @@ bool procObjAutoPlant::run(const TPulse &pl, TObj *obj) const
       if((tplant=dynamic_cast<TPlant *>(tp))){
 	tplant->setType(seed_to_plant(obj->objVnum()));
 	tplant->updateDesc();
-	
+
 	*seed->roomp += *tp;
-	
+
 	seed->addToToolUses(-1);
-	
-	if (seed->getToolUses() <= 0) 
+
+	if (seed->getToolUses() <= 0)
 	  return true;
       }
     }
-  }      
+  }
   return false;
 }
 
@@ -998,7 +998,7 @@ bool procObjTrash::run(const TPulse &pl, TObj *obj) const
   // trash piles
   if(!::number(0,999))
     obj->joinTrash();
-  
+
   TTrashPile *pile=dynamic_cast<TTrashPile *>(obj);
   if(pile){
     // delete empty piles
@@ -1083,7 +1083,7 @@ bool procCharSpecProcs::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   if (tmp_ch->spec) {
     int rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
-    if (IS_SET_DELETE(rc, DELETE_THIS)) 
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return true;
   }
   return false;
@@ -1113,10 +1113,10 @@ bool procCharResponses::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   TMonster *tmon = dynamic_cast<TMonster *>(tmp_ch);
   if(tmon){
-    tmon->checkResponses((tmon->opinion.random ? tmon->opinion.random : 
+    tmon->checkResponses((tmon->opinion.random ? tmon->opinion.random :
 			  (tmon->targ() ? tmon->targ() : tmon)),
 			 NULL, NULL, CMD_RESP_PULSE);
-    
+
   }
   return false;
 }
@@ -1144,12 +1144,12 @@ bool procCharFalling::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   if (toggleInfo[TOG_GRAVITY]->toggle){
     int rc = tmp_ch->checkFalling();
-    if (IS_SET_DELETE(rc, DELETE_THIS)) 
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return true;
   }
   return false;
 }
-	
+
 procCharMobileActivity::procCharMobileActivity(const int &p)
 {
   trigger_pulse=p;
@@ -1159,8 +1159,8 @@ procCharMobileActivity::procCharMobileActivity(const int &p)
 bool procCharMobileActivity::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   if (!tmp_ch->isPc() && dynamic_cast<TMonster *>(tmp_ch) &&
-      (zone_table[tmp_ch->roomp->getZoneNum()].zone_value!=1 || 
-       tmp_ch->isShopkeeper() || 
+      (zone_table[tmp_ch->roomp->getZoneNum()].zone_value!=1 ||
+       tmp_ch->isShopkeeper() ||
        IS_SET(tmp_ch->specials.act, ACT_HUNTING))){
     int rc = dynamic_cast<TMonster *>(tmp_ch)->mobileActivity(pl.pulse);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1180,8 +1180,8 @@ bool procCharTasks::run(const TPulse &pl, TBeing *tmp_ch) const
   if (tmp_ch->task && (pl.pulse >= tmp_ch->task->nextUpdate)) {
     TObj *tmper_obj = NULL;
     if (tmp_ch->task->obj) {
-      tmper_obj = tmp_ch->task->obj; 
-    } 
+      tmper_obj = tmp_ch->task->obj;
+    }
     int rc = (*(tasks[tmp_ch->task->task].taskf))
       (tmp_ch, CMD_TASK_CONTINUE, "", pl.pulse, tmp_ch->task->room, tmp_ch->task->obj);
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -1214,9 +1214,9 @@ bool procCharImmLeash::run(const TPulse &pl, TBeing *tmp_ch) const
     strcpy(tmpbuf, "");
     tmp_ch->sendTo("An incredibly powerful force pulls you back into Imperia.\n\r");
     act("$n is pulled back whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
-    vlogf(LOG_BUG,format("%s was wandering around the mortal world (R:%d) so moving to office.") % 
+    vlogf(LOG_BUG,format("%s was wandering around the mortal world (R:%d) so moving to office.") %
 	  tmp_ch->getName() % tmp_ch->roomp->number);
-    
+
     if (!tmp_ch->hasWizPower(POWER_GOTO)) {
       tmp_ch->setWizPower(POWER_GOTO);
       tmp_ch->doGoto(tmpbuf);
@@ -1256,7 +1256,7 @@ bool procCharAffects::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   int rc = tmp_ch->updateAffects();
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
-    // died in update (disease) 
+    // died in update (disease)
     return true;
   }
   return false;
@@ -1271,7 +1271,7 @@ procCharRegen::procCharRegen(const int &p)
 bool procCharRegen::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   // this was in hit(), makes more sense here I think
-  if (tmp_ch->roomp && !tmp_ch->roomp->isRoomFlag(ROOM_NO_HEAL) && 
+  if (tmp_ch->roomp && !tmp_ch->roomp->isRoomFlag(ROOM_NO_HEAL) &&
       tmp_ch->getHit() < tmp_ch->hitLimit() &&
       tmp_ch->getCond(FULL) && tmp_ch->getCond(THIRST) &&
       !::number(0, 10) &&
@@ -1356,7 +1356,7 @@ bool procCharHalfTickUpdate::run(const TPulse &pl, TBeing *tmp_ch) const
     return true;
   return false;
 }
-      
+
 procCharTickUpdate::procCharTickUpdate(const int &p)
 {
   trigger_pulse=p;
@@ -1403,7 +1403,7 @@ bool procCharLightning::run(const TPulse &pl, TBeing *tmp_ch) const
      !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
      Weather::getWeather(*tmp_ch->roomp) == Weather::LIGHTNING){
     TThing *eq=NULL;
-    
+
     if(tmp_ch->equipment[WEAR_HEAD] &&
        tmp_ch->equipment[WEAR_HEAD]->isMetal()){
       eq=tmp_ch->equipment[WEAR_HEAD];
@@ -1414,8 +1414,8 @@ bool procCharLightning::run(const TPulse &pl, TBeing *tmp_ch) const
 	      tmp_ch->equipment[HOLD_LEFT]->isMetal()){
       eq=tmp_ch->equipment[HOLD_LEFT];
     }
-    
-    
+
+
     if(eq && !::number(0,4319)){
       // at this point, they're standing outside in a lightning storm,
       // either holding something metal or wearing a metal helmet. zzzap.
@@ -1425,7 +1425,7 @@ bool procCharLightning::run(const TPulse &pl, TBeing *tmp_ch) const
 	  FALSE, tmp_ch, 0, 0, TO_CHAR);
       act(format("A bolt of lightning streaks down from the heavens and hits $n's %s!") % fname(eq->name),
 	  FALSE, tmp_ch, 0, 0, TO_ROOM);
-      
+
       // stolen from ego blast
       if (tmp_ch->reconcileDamage(tmp_ch, tmp_ch->getHit()/2, DAMAGE_ELECTRIC) == -1)
 	return true;
@@ -1448,7 +1448,7 @@ bool procCharNutrition::run(const TPulse &pl, TBeing *tmp_ch) const
     tmp_ch->calcNutrition();
   return false;
 }
-	
+
 procCharLycanthropy::procCharLycanthropy(const int &p)
 {
   trigger_pulse=p;
@@ -1463,9 +1463,9 @@ bool procCharLycanthropy::run(const TPulse & /*pl*/, TBeing *tmp_ch) const {
   // allow a chance to begin berserking as soon as transformation occurs.
   if (
     !tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE) &&
-    !tmp_ch->isLinkdead() && 
+    !tmp_ch->isLinkdead() &&
     !Weather::sunIsUp() &&
-     Weather::moonType() == "full" && 
+     Weather::moonType() == "full" &&
      Weather::moonIsUp()
   ) {
     lycanthropeTransform(tmp_ch);
@@ -1474,7 +1474,7 @@ bool procCharLycanthropy::run(const TPulse & /*pl*/, TBeing *tmp_ch) const {
   // Then check what a transformed lycanthrope should do based on moon/time of day
   if (tmp_ch->hasQuestBit(TOG_TRANSFORMED_LYCANTHROPE)) {
     if (
-       Weather::moonType() != "full" || 
+       Weather::moonType() != "full" ||
       (Weather::sunIsUp() && !Weather::moonIsUp())
     ) {
       tmp_ch->remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
@@ -1496,8 +1496,8 @@ bool procCharLycanthropy::run(const TPulse & /*pl*/, TBeing *tmp_ch) const {
     // Reaching this point means lycanthrope is transformed during full moon at night
     // So see if they start berserking around the room
     if (
-      !tmp_ch->fight() && 
-       tmp_ch->roomp && 
+      !tmp_ch->fight() &&
+       tmp_ch->roomp &&
       !tmp_ch->roomp->isRoomFlag(ROOM_PEACEFUL) &&
       // 4% chance (1/25) per proc tick - might need toned down considering how often
       // procs are checked.
@@ -1542,7 +1542,7 @@ bool procCharScreenUpdate::run(const TPulse &pl, TBeing *tmp_ch) const
       tptr = localtime(&t1);
       if (tptr->tm_min != tmp_ch->desc->last.minute) {
 	tmp_ch->desc->last.minute = tptr->tm_min;
-	if (tmp_ch->ansi()) 
+	if (tmp_ch->ansi())
 	  tmp_ch->desc->updateScreenAnsi(CHANGED_TIME);
 	else
 	  tmp_ch->desc->updateScreenVt100(CHANGED_TIME);
@@ -1561,18 +1561,18 @@ procCharVampireBurn::procCharVampireBurn(const int &p)
 bool procCharVampireBurn::run(const TPulse &pl, TBeing *tmp_ch) const
 {
   // check for vampires in daylight
-  if(!tmp_ch->roomp->isIndoorSector() && 
+  if(!tmp_ch->roomp->isIndoorSector() &&
      !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
      (tmp_ch->inRoom() != Room::VOID) && Weather::sunIsUp()){
-    
+
     if(tmp_ch->hasQuestBit(TOG_VAMPIRE)){
       act("<r>Exposure to sunlight causes your skin to ignite!<1>",
 	  FALSE, tmp_ch, NULL, NULL, TO_CHAR);
       act("<r>$n's skin ignites in flames as the sunlight shines on $m!<1>",
 	  FALSE, tmp_ch, NULL, NULL, TO_ROOM);
-      
+
       int rc=tmp_ch->reconcileDamage(tmp_ch, ::number(20,200), SPELL_RAZE);
-      
+
       if(IS_SET_DELETE(rc, DELETE_THIS))
 	return true;
     } else if(tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) &&
@@ -1599,7 +1599,7 @@ void procRoomPulse::run(const TPulse &pl) const
 
   for(int i=0;i<WORLD_SIZE;i++){
     TRoom *rp = real_roomp(i);
-    
+
     if(!rp)
       continue;
 
@@ -1643,11 +1643,11 @@ void procLagInfo::run(const TPulse &pl) const
   // this needs to remain at pulse%100
   if (!(pl.pulse %100)){
     int which=(pl.pulse/100)%10;
-    
+
     lag_info.current=lag_info.lagtime[which]=time(0)-lagtime_t;
     lagtime_t=time(0);
     lag_info.lagcount[which]=1;
-    
+
     lag_info.high = max(lag_info.lagtime[which], lag_info.high);
     lag_info.low = min(lag_info.lagtime[which], lag_info.low);
   }
@@ -1699,7 +1699,7 @@ void procDoubleXP::run(const TPulse &pl) const
   struct tm next_week_m2 = *localtime(&ct);
 
   static bool turnedOn=false;
-  
+
 
   enum tm_days {
     Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
@@ -1819,7 +1819,7 @@ int TMainSocket::gameLoop()
   scheduler.add(new procCheckForRepo(Pulse::WAYSLOW));
   scheduler.add(new procCheckMail(Pulse::WAYSLOW));
   //  scheduler.add(new procCheckTriggerUsers(Pulse::WAYSLOW));
-  
+
   // pulse mudday   (3456 seconds (57.6 mins))
   scheduler.add(new procUpdateAuction(Pulse::MUDDAY));
   scheduler.add(new procBankInterest(Pulse::MUDDAY));
@@ -1831,9 +1831,9 @@ int TMainSocket::gameLoop()
   scheduler.add(new procTrophyDecay(Pulse::REALHOUR));
   scheduler.add(new procSeedRandom(Pulse::REALHOUR));
 
-  avail_descs = 150;		
+  avail_descs = 150;
 
-  // players may have connected before this point via 
+  // players may have connected before this point via
   // addNewDescriptorsDuringBoot, so send all those descriptors the login
   for (point = descriptor_list; point; point = point->next)
     if (!point->m_bIsClient)
@@ -1841,8 +1841,8 @@ int TMainSocket::gameLoop()
 
   while (!handleShutdown()) {
     scheduler.run(++pulse);
-    
-    tics++;			// tics since last checkpoint signal 
+
+    tics++;			// tics since last checkpoint signal
   }
 
   // flush the query queue
@@ -1943,11 +1943,11 @@ int TSocket::writeNull()
   if (write(m_sock, &txt, 1) < 0){
     if (errno == EWOULDBLOCK)
       return 0;
-    
+
     perror("TSocket::writeToSocket(char *)");
     return (-1);
   }
-  
+
   return 0;
 }
 
@@ -1959,7 +1959,7 @@ int TSocket::writeToSocket(const char *txt)
   sofar = 0;
 
   //txt >> m_sock;
- 
+
   do {
     thisround = write(m_sock, txt + sofar, total - sofar);
     if (thisround < 0) {

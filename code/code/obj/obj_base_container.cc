@@ -149,16 +149,16 @@ void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
     t=*(it++);
     if(it==stuff.end() || strcmp(last, (*it)->getName().c_str())){
       if(runcount>1){
-        vlogf(LOG_SILENT, format("%s%s%s %s containing %s [%i].") %     
-              (ch ? ch->getName() : "") %                      
-              (ch ? " " : "") %                                
-              cmdbuf % getName() % t->getName() % runcount);     
-      } else                                                  
-        vlogf(LOG_SILENT, format("%s%s%s %s containing %s.") %          
-          (ch ? ch->getName() : "") %                          
-          (ch ? " " : "") %                                    
-          cmdbuf % getName() % t->getName());                   
-      runcount=0;                                             
+        vlogf(LOG_SILENT, format("%s%s%s %s containing %s [%i].") %
+              (ch ? ch->getName() : "") %
+              (ch ? " " : "") %
+              cmdbuf % getName() % t->getName() % runcount);
+      } else
+        vlogf(LOG_SILENT, format("%s%s%s %s containing %s.") %
+          (ch ? ch->getName() : "") %
+          (ch ? " " : "") %
+          cmdbuf % getName() % t->getName());
+      runcount=0;
       if(it!=stuff.end())
         last=(*it)->getName().c_str();
       else
@@ -189,7 +189,7 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
 
   act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
   act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 
+  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument,
             350, ch->in_room, 0, 0, 0);
 
 
@@ -211,38 +211,38 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
   // this dumps around it and goes right to the guts
   rc = (*(tasks[TASK_GET_ALL].taskf))
         (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
-  if (IS_SET_DELETE(rc, DELETE_THIS))                         
-    return DELETE_VICT;                                       
-  return FALSE;                                               
-}                                                             
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_VICT;
+  return FALSE;
+}
 
 int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
-{                                                             
+{
   char newarg[100], capbuf[256];
   int rc;
   int p;
   TPCorpse * tCorpse;
   TBaseCorpse *corpse;
 
-  if (getall(arg1, newarg)) {                                 
-    if (!searchLinkedListVis(ch, newarg, stuff)) {            
+  if (getall(arg1, newarg)) {
+    if (!searchLinkedListVis(ch, newarg, stuff)) {
       ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible in %s.\n\r") %
                newarg % getName());
-      return TRUE;                                            
-    }                                                         
-    if (ch->getPosition() <= POSITION_SITTING) {              
-      ch->sendTo("You need to be standing to do that.\n\r");  
-      if (!ch->awake())                                       
-        return TRUE;   // sleeping                            
-      ch->doStand();                                          
-                                                              
-      if (ch->fight())                                        
-        return TRUE;  // don't fall through                   
-    }                                                         
-    if (dynamic_cast<TBeing *>(ch->riding) 
-        && (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) 
-        && (in_room != Room::NOWHERE)) {  
-      act("You can't get things from $p while mounted!",      
+      return TRUE;
+    }
+    if (ch->getPosition() <= POSITION_SITTING) {
+      ch->sendTo("You need to be standing to do that.\n\r");
+      if (!ch->awake())
+        return TRUE;   // sleeping
+      ch->doStand();
+
+      if (ch->fight())
+        return TRUE;  // don't fall through
+    }
+    if (dynamic_cast<TBeing *>(ch->riding)
+        && (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50)
+        && (in_room != Room::NOWHERE)) {
+      act("You can't get things from $p while mounted!",
              FALSE, ch, this, 0, TO_CHAR);
       return TRUE;
     }
@@ -277,7 +277,7 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     }
     */
 
-    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf, 
+    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf,
             350, ch->in_room, 1, 0, 0);
     // this is a kludge, task_get still has a tiny delay on it
     // this dumps around it and goes right to the guts
@@ -302,8 +302,8 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) 
-        && (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) 
+    if (dynamic_cast<TBeing *>(ch->riding)
+        && (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50)
         && (ch->in_room != Room::NOWHERE)) {
       act("You can't get things from $p while mounted!",
            FALSE, ch, this, 0, TO_CHAR);
@@ -375,9 +375,9 @@ void TBaseContainer::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_
 
 void TBaseContainer::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *)
 {
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it)       
-    (*it)->findSomeFood(last_good, last_cont, this);              
-}                                                             
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+    (*it)->findSomeFood(last_good, last_cont, this);
+}
 
 void TBaseContainer::powerstoneCheck(TOpal **topMax)
 {
@@ -388,12 +388,12 @@ void TBaseContainer::powerstoneCheck(TOpal **topMax)
 
 void TBaseContainer::powerstoneCheckCharged(TOpal **topMax)
 {
-                                                              
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {                      
+
+  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
     (*it)->powerstoneCheckCharged(topMax);
-  }                                                           
-}                                                             
-                                                              
+  }
+}
+
 void TBaseContainer::powerstoneMostMana(int *topMax)
 {
   for(StuffIter it=stuff.begin();it!=stuff.end();++it) {

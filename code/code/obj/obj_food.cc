@@ -2,7 +2,7 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-//      "food.cc" - Procedures for eating/drinking. And general liquid 
+//      "food.cc" - Procedures for eating/drinking. And general liquid
 //      containers like vials
 //
 //////////////////////////////////////////////////////////////////////////
@@ -45,18 +45,18 @@ void TBaseCup::weightChangeObject(float wgt_amt)
     return;
 
   // obj-weight < -weight + indexed weight
-  if (compareWeights(getWeight(), 
+  if (compareWeights(getWeight(),
                (-wgt_amt + obj_index[getItemIndex()].weight)) == 1) {
 #if DRINK_DEBUG
     // this happens sometimes because of that stupid roundoff error in floats
     vlogf(LOG_BUG, format("Attempt to reduce %s below its empty weight") %  getName());
-    vlogf(LOG_BUG, format("weight: %f, adjust: %f, base: %f") %  getWeight() % 
+    vlogf(LOG_BUG, format("weight: %f, adjust: %f, base: %f") %  getWeight() %
          -wgt_amt % obj_index[getItemIndex()].weight);
 #endif
     wgt_amt = -(getWeight() - obj_index[getItemIndex()].weight);
   }
-  
-  if (in_room != Room::NOWHERE) 
+
+  if (in_room != Room::NOWHERE)
     addToWeight(wgt_amt);
   else if ((tmp = parent)) {
     if (dynamic_cast<TBeing *> (tmp)) {
@@ -93,7 +93,7 @@ void TBaseCup::weightChangeObject(float wgt_amt)
            (in_room != Room::NOWHERE ? roomp->getName() :
            (equippedBy ? equippedBy->getName() :
            parent->getName())));
-    vlogf(LOG_BUG, format("DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d") %  
+    vlogf(LOG_BUG, format("DRINK: Orig: %.1f, change %.1f, now %.1f, max %.1f, sips: %d") %
         sweight % wgt_amt % getWeight() % max_amt % getMaxDrinkUnits());
     vlogf(LOG_BUG, "DRINK: resetting");
 #endif
@@ -123,13 +123,13 @@ void TBaseCup::weightChangeObject(float wgt_amt)
 }
 
 int TObj::drinkMe(TBeing *ch)
-{ 
+{
   ch->sendTo("Drink is generally used for liquids.\n\r");
   return FALSE;
 }
 
 int TBaseCup::drinkMe(TBeing *ch)
-{ 
+{
   int amount;
   affectedData af, aff2, aff3;
   sstring drinkName;
@@ -173,7 +173,7 @@ int TBaseCup::drinkMe(TBeing *ch)
 
   amount = max(1, min(amount, getDrinkUnits()));
 
-  // Subtract amount, if not a never-emptying container 
+  // Subtract amount, if not a never-emptying container
   if (!isDrinkConFlag(DRINK_PERM))
     weightChangeObject(-(amount * SIP_WEIGHT));
 
@@ -198,20 +198,20 @@ int TBaseCup::drinkMe(TBeing *ch)
   } else {
     if (ch->getCond(FULL) >= 0) {
       ch->gainCondition(FULL, (getLiqHunger() * amount) / 10);
-      
+
       // use leftover as chance to go 1 more unit up/down
       if (::number(0,9) < ((abs(getLiqHunger()) * amount) % 10))
         ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
     }
 
-    
-    if(ch->hasQuestBit(TOG_IS_ALCOHOLIC) && !getLiqDrunk() && 
+
+    if(ch->hasQuestBit(TOG_IS_ALCOHOLIC) && !getLiqDrunk() &&
        ch->getCond(THIRST) > 3){
         ch->sendTo("Only sweet, sweet alcohol can quench your thirst any further.\n\r");
     } else {
       if (ch->getCond(THIRST) >= 0) {
         ch->gainCondition(THIRST, (getLiqThirst() * amount) / 10);
-	
+
 	// use leftover as chance to go 1 more unit up/down
 	if (::number(0,9) < ((abs(getLiqThirst()) * amount) % 10))
 	  ch->gainCondition(THIRST, (getLiqThirst() > 0 ? 1 : -1));
@@ -275,7 +275,7 @@ int TBaseCup::drinkMe(TBeing *ch)
     }
   }
 
-  
+
   if(liquidInfo[liquidType]->potion)
     doLiqSpell(ch, ch, getDrinkType(), amount);
 
@@ -284,7 +284,7 @@ int TBaseCup::drinkMe(TBeing *ch)
 
   if (!isDrinkConFlag(DRINK_PERM))
     addToDrinkUnits(-amount);
-  
+
   TPool * tPool = dynamic_cast<TPool *>(this);
   if (tPool && getDrinkType() == LIQ_WATER && !ch->isImmune(IMMUNE_DISEASE, WEAR_BODY) && !ch->hasDisease(DISEASE_DYSENTERY)) {
     // drinking from standing water: chance for dysentery
@@ -433,7 +433,7 @@ void TFood::Poisoned(TBeing *ch, int dur)
 {
   affectedData af;
 
-  if (isFoodFlag(FOOD_POISON) && 
+  if (isFoodFlag(FOOD_POISON) &&
       !ch->isAffected(AFF_POISON)) {
     if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
       act("Mmm, that had a bit of a kick to it!", FALSE, ch, 0, 0, TO_CHAR);
@@ -546,7 +546,7 @@ void TBeing::doEat(const char *argument)
     sendTo("You are too busy fending off your foes!\n\r");
     return;
   }
-  
+
   TThing *temp = generic_find_obj(buf, FIND_OBJ_INV | FIND_OBJ_HELD, this);
 
   if(!temp)
@@ -609,7 +609,7 @@ void TBaseCup::pourMeIntoDrink2(TBeing *ch, TBaseCup *from_obj)
     ch->sendTo("How are you going to pour from something into itself?\n\r");
     return;
   }
-  ch->sendTo(COLOR_OBJECTS, format("You pour %s into %s.\n\r") % 
+  ch->sendTo(COLOR_OBJECTS, format("You pour %s into %s.\n\r") %
           liquidInfo[from_obj->getDrinkType()]->name % ch->objs(this));
 
   // set liquid type
@@ -730,12 +730,12 @@ void TBaseCup::sipMe(TBeing *ch)
       if (::number(0,9) < (abs(getLiqDrunk()) % 10))
         ch->gainCondition(DRUNK, (getLiqDrunk() > 0 ? 1 : -1));
     }
-    
+
     ch->gainCondition(FULL, (getLiqHunger() / 10));
     // use leftover as chance to go 1 more unit up/down
     if (::number(0,9) < (abs(getLiqHunger()) % 10))
       ch->gainCondition(FULL, (getLiqHunger() > 0 ? 1 : -1));
-    
+
     ch->gainCondition(THIRST, (getLiqThirst() / 10));
     // use leftover as chance to go 1 more unit up/down
     if (::number(0,9) < (abs(getLiqThirst()) % 10))
@@ -755,7 +755,7 @@ void TBaseCup::sipMe(TBeing *ch)
     act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
 
   if (isDrinkConFlag(DRINK_POISON) && !ch->isAffected(AFF_POISON)) {
-    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) 
+    if (ch->isImmune(IMMUNE_POISON, WEAR_BODY))
       act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);
     else {
       act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);
@@ -913,13 +913,13 @@ void TBeing::foodNDrink(sectorTypeT sector, int modifier)
     gainCondition(FULL, -1);
     gainCondition(POOP, 1);
   }
-  
+
   if ((::number(0,9) < 5) && !::number(0,thirst)){
     gainCondition(THIRST, -1);
     gainCondition(PEE, 1);
   }
-  
-  if ((::number(0,9) < 6) && !::number(0,drunk)) 
+
+  if ((::number(0,9) < 6) && !::number(0,drunk))
     gainCondition(DRUNK, -1);
 }
 
@@ -934,15 +934,15 @@ void TBeing::doFill(const char *arg)
   argument_interpreter(arg, arg1, cElements(arg1), arg2, cElements(arg2));
   // we use to check for FIND_OBJ_EQUIP too
   // since doDrink doesn't check for stuff in equip, neither should this
-  bits = generic_find(arg1, FIND_OBJ_INV | FIND_OBJ_ROOM, 
+  bits = generic_find(arg1, FIND_OBJ_INV | FIND_OBJ_ROOM,
 		      this, &tmp, &obj1);
   if (!bits) {
     sendTo("You must fill SOMETHING!!\n\r");
     return;
   }
-  
+
   if(*arg2){
-    bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM, 
+    bits = generic_find(arg2, FIND_OBJ_INV | FIND_OBJ_ROOM,
 			this, &tmp, &obj2);
     if (!bits) {
       sendTo("You must fill from SOMETHING!!\n\r");
@@ -960,10 +960,10 @@ void TBeing::doFill(const char *arg)
       }
     }
   }
-  
+
   if(roomp->isWaterSector() || roomp->isUnderwaterSector()) {
     obj1->fillMe(this, roomp->isRiverSector() ? LIQ_WATER : LIQ_SALTWATER);
-  } else 
+  } else
     doNotHere();
 }
 
@@ -1099,23 +1099,23 @@ void TFood::lowCheck()
 
   int vModified = suggestedPrice();
   if (vModified != obj_flags.cost) {
-    vlogf(LOG_LOW, format("food (%s:%d) with bad price.  Should be: %d.") % 
+    vlogf(LOG_LOW, format("food (%s:%d) with bad price.  Should be: %d.") %
           getName() % objVnum() % vModified);
     obj_flags.cost = vModified;
   }
   if (obj_flags.decay_time < 0 && !isObjStat(ITEM_MAGIC)) {
-    vlogf(LOG_LOW, format("food (%s:%d) with bad decay.  Should be magic or decay.") % 
+    vlogf(LOG_LOW, format("food (%s:%d) with bad decay.  Should be magic or decay.") %
           getName() % objVnum());
   }
 
   if ((vModified = (getFoodFill() * 10)) != getVolume()) {
-    vlogf(LOG_LOW, format("food (%s) with bad volume.  Should be: %d.") % 
+    vlogf(LOG_LOW, format("food (%s) with bad volume.  Should be: %d.") %
           getName() % vModified);
     setVolume(vModified);
   }
 #if 0
   if ((vModified = (int) (getFoodFill() / 12)) != getWeight()) {
-    vlogf(LOG_LOW, format("food (%s) with bad weight.  Should be: %d") % 
+    vlogf(LOG_LOW, format("food (%s) with bad weight.  Should be: %d") %
           getName() % vModified);
     setWeight(vModified);
   }

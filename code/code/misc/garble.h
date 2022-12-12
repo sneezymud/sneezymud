@@ -48,7 +48,7 @@ class Garble {
   static const unsigned int SPEECH_FLAG_LOCAL;
   static const unsigned int SPEECH_FLAG_DIRECTED;
   static const unsigned int SPEECH_FLAG_NONWRITE;
-  
+
   // flags for passing which garbles should be applied
   static const unsigned int TYPE_FLAG_INNUENDO;
   static const unsigned int TYPE_FLAG_EXCITED;
@@ -92,7 +92,7 @@ class Garble {
     SPEECH_WIZNET,
     SPEECH_ROOMDESC,
     SPEECH_EMOTE,
-    
+
     SPEECH_MAX
   };
 

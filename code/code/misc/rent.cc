@@ -78,7 +78,7 @@ void handleCorrupted(const char *name, char *account)
 {
   char buf[200];
 
-  sprintf(buf, "mv player/%c/%s player/corrupt/.", 
+  sprintf(buf, "mv player/%c/%s player/corrupt/.",
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
@@ -88,25 +88,25 @@ void handleCorrupted(const char *name, char *account)
   vsystem(buf);
 
   // toggles
-  sprintf(buf, "mv player/%c/%s.toggle player/corrupt/.", 
+  sprintf(buf, "mv player/%c/%s.toggle player/corrupt/.",
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // career
-  sprintf(buf, "mv player/%c/%s.career player/corrupt/.", 
+  sprintf(buf, "mv player/%c/%s.career player/corrupt/.",
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // rent
-  sprintf(buf, "mv rent/%c/%s rent/corrupt/.", 
+  sprintf(buf, "mv rent/%c/%s rent/corrupt/.",
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
   // followers
-  sprintf(buf, "mv rent/%c/%s.fol rent/corrupt/.", 
+  sprintf(buf, "mv rent/%c/%s.fol rent/corrupt/.",
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
-  sprintf(buf, "mv rent/%c/%s.fr rent/corrupt/.", 
+  sprintf(buf, "mv rent/%c/%s.fr rent/corrupt/.",
          LOWER(name[0]), sstring(name).lower().c_str());
   vsystem(buf);
 
@@ -231,7 +231,7 @@ void TBeing::removeRent()
     // being::isPc() checks for a bit set in specials.act, but could be
     // that bit is set (poly) but has no desc.  Not sure how this happens
     // so add this to track problem down
-    vlogf(LOG_BUG, format("removeRent() called for a bad isPc() (%s)") %  getName()); 
+    vlogf(LOG_BUG, format("removeRent() called for a bad isPc() (%s)") %  getName());
     return;
   }
 
@@ -420,7 +420,7 @@ bool ItemSave::raw_write_item(TObj *o)
   item.material_points = o->getMaterial();
   item.cost = o->obj_flags.cost;
   item.depreciation = o->getDepreciation();
-  
+
   for (j = 0; j < MAX_OBJ_AFFECT; j++) {
     item.affected[j].type = mapSpellnumToFile(o->affected[j].type);
     item.affected[j].level = o->affected[j].level;
@@ -486,7 +486,7 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
 
   if(rent_id==-1){
     db.query("insert into rent (owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation) values ('%s', %i, %i, %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i)",
-	     owner_type.c_str(), owner, 
+	     owner_type.c_str(), owner,
 	     obj_index[o->getItemIndex()].virt, slot,
 	     container,
 	     a0, a1, a2, a3, o->getObjStat(), (float) o->getWeight(),
@@ -494,7 +494,7 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
 	     o->obj_flags.struct_points, o->obj_flags.max_struct_points,
 	     o->getMaterial(), o->obj_flags.volume, o->obj_flags.cost,
 	     o->getDepreciation());
-    
+
     db.query("select last_insert_id() as rent_id");
     db.fetchRow();
 
@@ -503,7 +503,7 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
       vlogf(LOG_BUG, "Error in rent_id, value is 0 - this code should be switched to use db.lastInsertId()");
   } else {
     db.query("insert into rent (rent_id, owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation) values (%i, '%s', %i, %i, %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i)",
-	     rent_id, owner_type.c_str(), owner, 
+	     rent_id, owner_type.c_str(), owner,
 	     obj_index[o->getItemIndex()].virt, slot,
 	     container,
 	     a0, a1, a2, a3, o->getObjStat(), (float) o->getWeight(),
@@ -520,8 +520,8 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
       modifier = mapSpellnumToFile(spellNumT(o->affected[j].modifier));
     else
       modifier = o->affected[j].modifier;
-    
-    db.query("insert into rent_obj_aff (type, level, duration, renew, modifier, location, modifier2, bitvector, rent_id) values (%i, %i, %i, %i, %i, %i, %i, %i, %i)", 
+
+    db.query("insert into rent_obj_aff (type, level, duration, renew, modifier, location, modifier2, bitvector, rent_id) values (%i, %i, %i, %i, %i, %i, %i, %i, %i)",
 	     mapSpellnumToFile(o->affected[j].type), o->affected[j].level,
 	     o->affected[j].duration, o->affected[j].renew, modifier,
 	     mapApplyToFile(o->affected[j].location),
@@ -530,7 +530,7 @@ int ItemSaveDB::raw_write_item(TObj *o, int slot, int container, int rent_id)
 
   if (IS_SET(o->getObjStat(), ITEM_STRUNG)) {
     db.query("insert into rent_strung (rent_id, name, short_desc, long_desc, action_desc) values (%i, '%s', '%s', '%s', '%s')",
-	     rent_id, 
+	     rent_id,
 	     o->name.c_str(),
 	     o->shortDescr.c_str(),
 	     o->getDescr().c_str(),
@@ -567,7 +567,7 @@ TObj *ItemLoad::raw_read_item()
     // its bad to return NULL here, so instead we will have it load a
     // hairball (vnum=0), that decays immediately
     const unsigned int OBJ_HAIRBALL = 1;
-    item.item_number = OBJ_HAIRBALL; 
+    item.item_number = OBJ_HAIRBALL;
     item.decay_time = 0;
   }
 
@@ -598,11 +598,11 @@ TObj *ItemLoad::raw_read_item()
     }
 
 
-    
+
     o->setObjStat(item.extra_flags);
     o->setWeight((float) item.weight);
     o->weightCorrection();
-    
+
     o->setVolume(item.volume);
     o->obj_flags.bitvector = item.bitvector;
     o->obj_flags.struct_points = item.struct_points;
@@ -610,23 +610,23 @@ TObj *ItemLoad::raw_read_item()
     o->obj_flags.decay_time = item.decay_time;
     o->setMaterial(item.material_points);
     o->setDepreciation(item.depreciation);
-    
+
     o->obj_flags.cost = item.cost;
-    
+
     o->updateDesc();
-    
+
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
       o->affected[j].type = mapFileToSpellnum(item.affected[j].type);
       o->affected[j].level = item.affected[j].level;
       o->affected[j].duration = item.affected[j].duration;
       o->affected[j].renew = item.affected[j].renew;
       o->affected[j].location = mapFileToApply(item.affected[j].location);
-      
+
       if (applyTypeShouldBeSpellnum(o->affected[j].location))
         o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
       else
         o->affected[j].modifier = item.affected[j].modifier;
-      
+
       o->affected[j].modifier2 = item.affected[j].modifier2;
       o->affected[j].bitvector = item.affected[j].bitvector;
     }
@@ -634,40 +634,40 @@ TObj *ItemLoad::raw_read_item()
   } else {
     if ((item.extra_flags & ITEM_STRUNG) && !o->isObjStat(ITEM_STRUNG))
       o->addObjStat(ITEM_STRUNG);  // preserve strung
-    
+
     // deal with structure
     o->setStructPoints(min(item.struct_points, (int) obj_index[o->getItemIndex()].max_struct));
-    
+
     if ((item.extra_flags & ITEM_CHARRED) && !o->isObjStat(ITEM_CHARRED))
       o->addObjStat(ITEM_CHARRED); // preserve charred
 
     if ((item.extra_flags & ITEM_RUSTY) && !o->isObjStat(ITEM_RUSTY))
       o->addObjStat(ITEM_RUSTY);
   }
-    
+
   if (o->isObjStat(ITEM_STRUNG)) {
     if (name)
       o->name = name;
     else
       o->name = obj_index[o->getItemIndex()].name;
-    
+
     if (shortDescr)
       o->shortDescr = shortDescr;
     else
       o->shortDescr = obj_index[o->getItemIndex()].short_desc;
-    
+
     if (description)
       o->setDescr(description);
     else
       o->setDescr(obj_index[o->getItemIndex()].long_desc);
-    
-    if (action_description) 
+
+    if (action_description)
       o->action_description = action_description;
-    else if (obj_index[o->getItemIndex()].description) 
+    else if (obj_index[o->getItemIndex()].description)
       o->action_description = obj_index[o->getItemIndex()].description;
-    else 
+    else
       o->action_description = NULL;
-    
+
     if (obj_index[o->getItemIndex()].ex_description)
       o->ex_description = new extraDescription(*obj_index[o->getItemIndex()].ex_description);
     else
@@ -690,11 +690,11 @@ TObj *ItemLoad::raw_read_item()
     } else {
       o->assignFourValues(item.value[0],item.value[1],item.value[2],item.value[3]);
     }
-    
+
     o->setObjStat(item.extra_flags);
     o->setWeight((float) item.weight);
     o->weightCorrection();
-    
+
     o->setVolume(item.volume);
     o->obj_flags.bitvector = item.bitvector;
     o->obj_flags.struct_points = item.struct_points;
@@ -702,23 +702,23 @@ TObj *ItemLoad::raw_read_item()
     o->obj_flags.decay_time = item.decay_time;
     o->setMaterial(item.material_points);
     o->setDepreciation(item.depreciation);
-    
+
     o->obj_flags.cost = item.cost;
     o->updateDesc();
 
-    
+
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
       o->affected[j].type = mapFileToSpellnum(item.affected[j].type);
       o->affected[j].level = item.affected[j].level;
       o->affected[j].duration = item.affected[j].duration;
       o->affected[j].renew = item.affected[j].renew;
       o->affected[j].location = mapFileToApply(item.affected[j].location);
-      
+
       if (applyTypeShouldBeSpellnum(o->affected[j].location))
         o->affected[j].modifier = mapFileToSpellnum(item.affected[j].modifier);
       else
         o->affected[j].modifier = item.affected[j].modifier;
-      
+
       o->affected[j].modifier2 = item.affected[j].modifier2;
       o->affected[j].bitvector = item.affected[j].bitvector;
     }
@@ -750,7 +750,7 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
   db.query("select owner_type, owner, vnum, slot, container, val0, val1, val2, val3, extra_flags, weight, bitvector, decay, cur_struct, max_struct, material, volume, price, depreciation from rent where rent_id=%i and owner_type='%s' and owner=%i", rent_id, owner_type.c_str(), owner);
 
   if(!db.fetchRow()){
-    vlogf(LOG_DB, format("rent object %i not found! Owner %i (%s)") % 
+    vlogf(LOG_DB, format("rent object %i not found! Owner %i (%s)") %
 	  rent_id % owner % owner_type);
     return NULL;
   }
@@ -764,7 +764,7 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
   o->setObjStat(convertTo<int>(db["extra_flags"]));
   o->setWeight((float) convertTo<float>(db["weight"]));
   o->weightCorrection();
-  
+
   o->setVolume(convertTo<int>(db["volume"]));
   o->obj_flags.bitvector = convertTo<int>(db["bitvector"]);
   o->obj_flags.struct_points = convertTo<int>(db["cur_struct"]);
@@ -776,11 +776,11 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
 		      convertTo<int>(db["val1"]),
 		      convertTo<int>(db["val2"]),
 		      convertTo<int>(db["val3"]));
-  
+
   o->obj_flags.cost = convertTo<int>(db["price"]);
 
   o->updateDesc();
-  
+
   db.query("select type, level, duration, renew, modifier, location, modifier2, bitvector from rent_obj_aff where rent_id=%i", rent_id);
 
   for(int j=0;db.fetchRow() && j < MAX_OBJ_AFFECT; j++){
@@ -789,12 +789,12 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
     o->affected[j].duration = convertTo<int>(db["duration"]);
     o->affected[j].renew = convertTo<int>(db["renew"]);
     o->affected[j].location = mapFileToApply(convertTo<int>(db["location"]));
-    
+
     if (applyTypeShouldBeSpellnum(o->affected[j].location))
       o->affected[j].modifier = mapFileToSpellnum(convertTo<int>(db["modifier"]));
     else
       o->affected[j].modifier = convertTo<int>(db["modifier"]);
-    
+
     o->affected[j].modifier2 = convertTo<int>(db["modifier2"]);
     o->affected[j].bitvector = convertTo<int>(db["bitvector"]);
   }
@@ -818,12 +818,12 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
     db.query("select name, short_desc, long_desc, action_desc from rent_strung where rent_id=%i", rent_id);
     if (db.fetchRow()) {
       if (!db["name"].empty())
-        name = db["name"];   
+        name = db["name"];
       if (!db["short_desc"].empty())
         shortDesc = db["short_desc"];
       if (!db["long_desc"].empty())
         longDesc = db["long_desc"];
-      if (!db["action_desc"].empty()) 
+      if (!db["action_desc"].empty())
         actionDesc = db["action_desc"];
     }
 
@@ -856,12 +856,12 @@ TObj *ItemLoadDB::raw_read_item(int rent_id, int &slot)
     o->obj_flags.cost = tmpcost;
   }
 
-  
+
   return o;
 }
 
 
-  
+
 static bool shouldRecycle(int robj)
 {
   return false;
@@ -907,7 +907,7 @@ bool ItemLoad::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoom 
     vlogf(LOG_BUG, "Error in objsFromStore (3)");
     return false;
   }
-  
+
   *parent += *new_obj;
 
   return true;
@@ -929,7 +929,7 @@ bool ItemLoadDB::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoo
     vlogf(LOG_BUG, "Error in objsFromStore (3)");
     return false;
   }
-  
+
   *parent += *new_obj;
 
   return true;
@@ -948,7 +948,7 @@ bool ItemLoad::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, TRo
     else
       ch->equipChar(new_obj, mapped_slot, SILENT_YES);
   } else {
-    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %  
+    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %
 	  ((r) ? r->number : -99));
     return false;
   }
@@ -967,7 +967,7 @@ bool ItemLoadDB::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, T
     else
       ch->equipChar(new_obj, mapped_slot, SILENT_YES);
   } else {
-    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %  
+    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %
 	  ((r) ? r->number : -99));
     return false;
   }
@@ -991,7 +991,7 @@ bool ItemLoad::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r
   return true;
 }
 
-#if 0    
+#if 0
 bool ItemLoadDB::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
   //  vlogf(LOG_PEEL, format("objToTarg: %s") % new_obj->name);
@@ -1007,9 +1007,9 @@ bool ItemLoadDB::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom 
 
   return true;
 }
-#endif    
+#endif
 
-// read a list of items and their contents from storage 
+// read a list of items and their contents from storage
 bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, bool corpse)
 {
   signed char slot;
@@ -1037,7 +1037,7 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
       vlogf(LOG_BUG, "Error in objsFromStore (4)");
       return true;
     }
-    
+
     if (slot == CONTENTS_END)
       return false;
 
@@ -1067,12 +1067,12 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
     if (objsFromStore(new_obj, numread, ch, r, corpse)) {
       vlogf(LOG_BUG, "Error in objsFromStore (1)");
       delete new_obj;
-      return true;  // ERROR occured 
+      return true;  // ERROR occured
     }
-    
+
     if (immortalityNukeCheck(ch, new_obj, corpse))
       continue;  // new_obj invalid if this was true
-    
+
     (*numread)++;
     if (ch)
       ch->logItem(new_obj, CMD_WEST); // rent in
@@ -1085,7 +1085,7 @@ bool ItemLoad::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, b
 }
 
 #if 0
-// read a list of items and their contents from storage 
+// read a list of items and their contents from storage
 bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, bool corpse)
 {
   signed char slot;
@@ -1110,7 +1110,7 @@ bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r,
       vlogf(LOG_BUG, "Error in objsFromStore (4)");
       return true;
     }
-    
+
     if (slot == CONTENTS_END)
       return false;
 
@@ -1140,10 +1140,10 @@ bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r,
       }
     }
 
-    
+
     if (immortalityNukeCheck(ch, new_obj, corpse))
       continue;  // new_obj invalid if this was true
-    
+
     repoCheckForRent(ch, new_obj, corpse);
 
     if(!container)
@@ -1171,7 +1171,7 @@ void ItemLoad::setVersion(unsigned char v)
 
 
 
-// write a list of items and their contents to storage. 
+// write a list of items and their contents to storage.
 // recursive
 //
 // slot = slot the item is worn on, if worn (NORMAL_SLOT if in inventory)
@@ -1179,15 +1179,15 @@ void ItemLoad::setVersion(unsigned char v)
 // ch = character that is saving items
 // d = delete the item after saving (for renting)
 // corpse = indicate if pcorpse saving items
-void ItemSave::objToStore(signed char slot, TObj *o, 
+void ItemSave::objToStore(signed char slot, TObj *o,
 			   TBeing *ch, bool d, bool corpse = FALSE)
 {
   if(!o)
     return;
-  
+
   if (!o->isRentable()) {
     objsToStore(NORMAL_SLOT, o->stuff, ch, d, corpse);
-    
+
     // normal item, save it
   } else {
     // write out the slot
@@ -1196,26 +1196,26 @@ void ItemSave::objToStore(signed char slot, TObj *o,
 	    (ch?ch->getName():"unknown"));
       return;
     }
-    
+
     (st.number)++;
-    
+
     // write out the item
-    if (!raw_write_item(o)) 
+    if (!raw_write_item(o))
       vlogf(LOG_BUG, format("Rent error in %s's file") %
 	    (ch?ch->getName():"UNKNOWN"));
-    
+
     // save the contents
     objsToStore(NORMAL_SLOT, o->stuff, ch, d, corpse);
-    
+
     // write the contents footer
     slot = CONTENTS_END;
     if (fwrite(&slot, sizeof(signed char), 1, fp) != 1) {
-      vlogf(LOG_BUG, format("Error saving %s's objects -- slot write (2).") %  
+      vlogf(LOG_BUG, format("Error saving %s's objects -- slot write (2).") %
 	    ((ch) ? ch->getName() : "UNKNOWN"));
       return;
-    }      
+    }
   }
-  
+
   // delete the item if d is specified
   if (d) {
     if (o->parent)
@@ -1227,13 +1227,13 @@ void ItemSave::objToStore(signed char slot, TObj *o,
     ch->logItem(o, CMD_RENT);
     if (o->number >= 0)
       obj_index[o->number].addToNumber(1);
-    
+
     delete o;
     o = NULL;
   }
 }
 
-void ItemSave::objsToStore(signed char slot, StuffList list, 
+void ItemSave::objsToStore(signed char slot, StuffList list,
 			   TBeing *ch, bool d, bool corpse = FALSE)
 {
   TObj *o=NULL;
@@ -1252,18 +1252,18 @@ void ItemSaveDB::objToStore(signed char slot, TObj *o,
 {
   if(!o)
     return;
-  
+
   if (!o->isRentable()) {
     objsToStore(NORMAL_SLOT, o->stuff, ch, d, corpse, container);
     // normal item, save it
   } else {
     // write out the item
     int rent_id=raw_write_item(o, slot, container);
-    
+
     // save the contents
     objsToStore(NORMAL_SLOT, o->stuff, ch, d, corpse, rent_id);
   }
-  
+
   // delete the item if d is specified
   if (d) {
     if (o->parent)
@@ -1275,13 +1275,13 @@ void ItemSaveDB::objToStore(signed char slot, TObj *o,
     ch->logItem(o, CMD_RENT);
     if (o->number >= 0)
       obj_index[o->number].addToNumber(1);
-    
+
     delete o;
     o = NULL;
   }
 }
 
-void ItemSaveDB::objsToStore(signed char slot, StuffList list, 
+void ItemSaveDB::objsToStore(signed char slot, StuffList list,
 			   TBeing *ch, bool d, bool corpse = FALSE,
 			     int container=0)
 {
@@ -1290,7 +1290,7 @@ void ItemSaveDB::objsToStore(signed char slot, StuffList list,
   for(StuffIter it=list.begin();it!=list.end();++it){
     if(!(o=dynamic_cast<TObj *>(*it)))
       continue;
-    
+
     objToStore(slot, o, ch, d, corpse, container);
   }
 }
@@ -1300,7 +1300,7 @@ void ItemSaveDB::clearRent()
   TDatabase db(DB_SNEEZY);
 
   db.query("delete rof from rent_obj_aff rof, rent r where r.rent_id=rof.rent_id and r.owner_type='%s' and r.owner=%i", owner_type.c_str(), owner);
-  
+
   db.query("delete rs from rent r, rent_strung rs where r.owner=%i and r.owner_type='%s' and r.rent_id=rs.rent_id", owner, owner_type.c_str());
 
   db.query("delete r from rent r where r.owner=%i and r.owner_type='%s'", owner, owner_type.c_str());
@@ -1433,10 +1433,10 @@ void TRoom::loadItems()
     vlogf(LOG_FILE, format("Failed to open file '%s' in TRoom::loadItems() call.") % filepath);
     return;
   }
-  
+
   reset = isRoomFlag(ROOM_SAVE_ROOM);
-  // we need to fool obj_to_room into not trying to resave    
-  // the room file when it loads objects into a SAVE_ROOM ... 
+  // we need to fool obj_to_room into not trying to resave
+  // the room file when it loads objects into a SAVE_ROOM ...
   if (reset)
     removeRoomFlagBit(ROOM_SAVE_ROOM);
 
@@ -1519,7 +1519,7 @@ void TRoom::loadItems()
 
         if (!tNote)
           continue;
- 
+
         int  tDay,
              tHour,
              tMin,
@@ -1749,7 +1749,7 @@ void TPCorpse::removeCorpseFromList(bool updateFile)
     otherCorpse = previousCorpse;
     if (nextCorpse)
       previousCorpse->nextCorpse = nextCorpse;
-    else 
+    else
       previousCorpse->nextCorpse = NULL;
   }
   if (nextCorpse) {
@@ -1779,7 +1779,7 @@ void TPCorpse::removeCorpseFromList(bool updateFile)
   togOnCorpseListsOff();
   if (updateFile) {
     if (otherCorpse) {
-      otherCorpse->saveCorpseToFile(); 
+      otherCorpse->saveCorpseToFile();
     } else if (!fileName.empty()) {
       wipeCorpseFile(fileName.c_str());
     }
@@ -1813,7 +1813,7 @@ void TPCorpse::addCorpseToLists()
         previousCorpse = tmpCorpse->previousCorpse;
         tmpCorpse->previousCorpse->nextCorpse = this;
         found = TRUE;
-      } 
+      }
       tmpCorpse->previousCorpse = this;
       nextCorpse = tmpCorpse;
       break;
@@ -1834,7 +1834,7 @@ void TPCorpse::addCorpseToLists()
   togOnCorpseListsOn();
 }
 
-void TBeing::assignCorpsesToRooms() 
+void TBeing::assignCorpsesToRooms()
 {
   TRoom *rp = NULL, *rp2 = NULL;
   TThing *tmp;
@@ -1867,7 +1867,7 @@ void TBeing::assignCorpsesToRooms()
   sprintf(buf, "player/%c/%s", LOWER(name[0]), sstring(name).lower().c_str());
   if (!(playerFile = fopen(buf, "r"))) {
     wipeCorpseFile(sstring(name).lower().c_str());
-  } 
+  }
   fclose(playerFile);
 
   if (GetMaxLevel() > MAX_MORT) {
@@ -1913,7 +1913,7 @@ void TBeing::assignCorpsesToRooms()
       rp2 = real_roomp(Room::STORAGE);
       if (corpse->roomp)
         --(*corpse);
-      *rp2 += *corpse; 
+      *rp2 += *corpse;
       vlogf(LOG_BUG, format("%s distributed to Storage Room (%d).") %  corpse->getName() % Room::STORAGE);
       sendTo(COLOR_BASIC, "<r>*** You had a CORPSE placed in the storage area. See a god to get it back. *** <z>\n\r");
     } else {
@@ -2027,7 +2027,7 @@ int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/)
       unequip(ij);
       is.objToStore(mapSlotToFile(ij), obj, this, d);
     } else {
-      // if they're wearing a paired item, don't save the other slot 
+      // if they're wearing a paired item, don't save the other slot
       if (!(((ij == WEAR_LEG_L) && obj->isPaired()) ||
           ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((ij == HOLD_LEFT) && obj->isPaired()))) {
@@ -2046,7 +2046,7 @@ int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/)
         getName() % getMoney() % getBank() % getExp() % is.st.number % age_mod);
   }
 
-  if (!is.st.number) 
+  if (!is.st.number)
     wipeRentFile(getName().c_str());
 
   if (d) {
@@ -2090,7 +2090,7 @@ void TPerson::loadRent()
 
       actual = meanPracsSoFar();
 
-      vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent/%d extra pracs (%d-%d)]") %  
+      vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/no items/%d age-mod/no rent/%d extra pracs (%d-%d)]") %
          getName() % getMoney() % getBank() % getExp() % age_mod %
          (actual-expectedPracs()) % actual % expectedPracs());
     }
@@ -2120,9 +2120,9 @@ void TPerson::loadRent()
   il.st.first_update = il.st.last_update = time(0);
 
   actual = meanPracsSoFar();
-    
-  vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d extra pracs (%d-%d)]") %  
-       getName() % getMoney() % getBank() % getExp() % il.st.number % 
+
+  vlogf(LOG_PIO, format("Loading %s [%d talens/%d bank/%.2f xps/%d items/%d age-mod/%d extra pracs (%d-%d)]") %
+       getName() % getMoney() % getBank() % getExp() % il.st.number %
        age_mod % (actual - expectedPracs()) % actual % expectedPracs());
 
   // silly kludge
@@ -2244,7 +2244,7 @@ int receptionist(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *recep, TOb
       // obviously we don't want to toss out people in their homes
       for(StuffIter it=recep->roomp->stuff.begin();it!=recep->roomp->stuff.end() && (t=*it);++it) {
 	if ((tbt = dynamic_cast<TBeing *>(t)) &&
-	    tbt->getTimer() > 1 && 
+	    tbt->getTimer() > 1 &&
 	    !tbt->isImmortal()) {
 	  if ((tbt->master) && tbt->master->inRoom() == tbt->inRoom()) {
 	    continue;
@@ -2454,7 +2454,7 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
     int robj = real_object(item.item_number);
     if (item.item_number >= 0) {
       if (robj < 0) {
-        vlogf(LOG_BUG, format("BOGUS ITEM #%d found in %s's rent file!") %  
+        vlogf(LOG_BUG, format("BOGUS ITEM #%d found in %s's rent file!") %
            item.item_number % tag);
         delete [] ad;
         delete [] s;
@@ -2466,7 +2466,7 @@ bool noteLimitedItems(FILE * fp, const char *tag, unsigned char version, bool im
     delete [] ad;
     delete [] s;
   }
-  // make sure we can't possibly read anymore... i.e., at eof 
+  // make sure we can't possibly read anymore... i.e., at eof
   if (fread(&c, 1, 1, fp)) {
     vlogf(LOG_BUG, "notelimitedItem: unexpected excess.");
     return FALSE;
@@ -2480,13 +2480,13 @@ void printLimitedInRent(void)
   unsigned int i;
   for (i = 0; i < obj_index.size(); i++) {
     if (obj_index[i].getNumber() > 0) {
-      vlogf(LOG_MISC, format("  %d - [%d] : max [%d]") % 
+      vlogf(LOG_MISC, format("  %d - [%d] : max [%d]") %
            obj_index[i].virt % obj_index[i].getNumber() % obj_index[i].max_exist);
       if (obj_index[i].getNumber() > obj_index[i].max_exist &&
           obj_index[i].max_exist) {
         // latter condition is because Obj::DEITY_TOKEN max exist = 0
         char buf[1024];
-        sprintf(buf, "Item (%s:%d) is over max (%d).  Num: (%d).\n\r", 
+        sprintf(buf, "Item (%s:%d) is over max (%d).  Num: (%d).\n\r",
             obj_index[i].name, obj_index[i].virt,
             obj_index[i].max_exist, obj_index[i].getNumber());
 	// these have to be lower case
@@ -2498,7 +2498,7 @@ void printLimitedInRent(void)
   }
 }
 
-void countAccounts(const char *arg) 
+void countAccounts(const char *arg)
 {
   DIR *dfd;
   struct dirent *dp;
@@ -2514,10 +2514,10 @@ void countAccounts(const char *arg)
   bool accountActive30 = false;
 
   while ((dp = readdir(dfd)) != NULL) {
-    if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") || 
+    if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") ||
         !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
-    
+
     // check for valid char
     sstring player_path = format("player/%c/%s") % dp->d_name[0] % dp->d_name;
 
@@ -2556,10 +2556,10 @@ void countAccounts(const char *arg)
   closedir(dfd);
 
   if (!count) {
-    // delete this empty account 
+    // delete this empty account
 
     vlogf(LOG_MISC, format("Empty Account: %s, deleting it.") % account_path);
-    
+
     TDatabase db(DB_SNEEZY);
     db.query("delete from account where name=lower('%s')", arg);
 
@@ -2609,7 +2609,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
     if (fscanf(fp, " %d ", &tmp) != 1)
       throw std::runtime_error("2");
     mob->specials.affectedBy = tmp;
-  
+
     // technically, we should check for AFF_SANCT here
     // if it had natural sanct, it got set in readMobile
     // if it had been cast, it should be added by the affections loop below
@@ -2626,10 +2626,10 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
     if (fscanf(fp, " %f ", &att) != 1)
       throw std::runtime_error("5");
     mob->setMult((double) att);
-  
+
     if(fscanf(fp, "\n")==EOF)
       vlogf(LOG_FILE, "Unexpected read error on follower data");
-  
+
     if (fscanf(fp, " %d ", &tmp) != 1)
       throw std::runtime_error("6");
     mob->setClass(tmp);
@@ -2641,7 +2641,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
     if (fscanf(fp, " %d ", &tmp) != 1)
       throw std::runtime_error("8");
     mob->setHitroll(tmp);
-  
+
     if (fscanf(fp, " %f ", &att) != 1)
       throw std::runtime_error("9");
 
@@ -2659,10 +2659,10 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
     if (fscanf(fp, " %d ", &tmp) != 1)
       throw std::runtime_error("11");
     mob->setMaxHit(tmp);
-  
+
     rc = fscanf(fp, " %f+%d \n", &att, &tmp);
     if (rc == 1) {
-      vlogf(LOG_BUG, format("Old style mob found in %s's rent") %  
+      vlogf(LOG_BUG, format("Old style mob found in %s's rent") %
 	    (ch ? ch->getName() : "Unknown"));
       // first, correct the file pointer so reading works ok
       rc = fscanf(fp, "d%d+%d", &tmp, &tmp2);
@@ -2688,7 +2688,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
 
     //    mob->setMaxMana(10);
     //    mob->setMaxMove(50);
-  
+
     if (fscanf(fp, " %d ", &tmp) != 1)
       throw std::runtime_error("13");
     mob->setMoney(tmp);
@@ -2746,7 +2746,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
       mob->setMaterial(tmp);
     else
       mob->setMaterial(MAT_UNDEFINED);
-  
+
     if (fscanf(fp, " %d ", &tmp) == 1)
       mob->canBeSeen = tmp;
     else
@@ -2800,7 +2800,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
     }
 
     // fix limbs
-    for (i = MIN_WEAR; i < MAX_WEAR; i++) {      // Initializing 
+    for (i = MIN_WEAR; i < MAX_WEAR; i++) {      // Initializing
       // we are reading the ith element of the file
       // find the wear slot that corresponds to i in the file
       wearSlotT mapped_slot = mapFileToSlot(i);
@@ -2818,7 +2818,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
       if (tmp != -1 && fp2_open == false) {
         char buf[256];
         sprintf(buf, "rent/%c/%s.fr", LOWER(arg[0]), sstring(arg).lower().c_str());
-        if (!(fp2 = fopen(buf, "r+b"))) 
+        if (!(fp2 = fopen(buf, "r+b")))
           break;
         fp2_open = true;
       }
@@ -2834,8 +2834,8 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
           // the delete will reduce the number, add an additional one
           if ((new_obj->number >= 0)) {
             obj_index[new_obj->getItemIndex()].addToNumber(2);
-	    
-            vlogf(LOG_PIO, format("     [%d] - in %s's follower rent") %  
+
+            vlogf(LOG_PIO, format("     [%d] - in %s's follower rent") %
                      new_obj->objVnum() % arg);
           }
           delete new_obj;
@@ -2852,7 +2852,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
       if (fp2_open == false) {
         char buf[256];
         sprintf(buf, "rent/%c/%s.fr", LOWER(arg[0]), sstring(arg).lower().c_str());
-        if (!(fp2 = fopen(buf, "r+b"))) 
+        if (!(fp2 = fopen(buf, "r+b")))
           break;
         fp2_open = true;
       }
@@ -2868,7 +2868,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
           // the delete will reduce the number, add an additional one
           if ((new_obj->number >= 0)) {
             obj_index[new_obj->getItemIndex()].addToNumber(2);
-            vlogf(LOG_PIO, format("     [%d] - in %s's follower rent") %  
+            vlogf(LOG_PIO, format("     [%d] - in %s's follower rent") %
                      new_obj->objVnum() % arg);
           }
           delete new_obj;
@@ -2890,10 +2890,10 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
     if (ch) {
       //we are actually retrieving
       *ch->roomp += *mob;
-  
-      act("You retrieve $N from $S storage area.", 
+
+      act("You retrieve $N from $S storage area.",
                FALSE, ch, 0, mob, TO_CHAR);
-      act("$n retrieves $N from $S storage area.", 
+      act("$n retrieves $N from $S storage area.",
                FALSE, ch, 0, mob, TO_NOTVICT);
       vlogf(LOG_SILENT, format("%s mobile-rent retrieving %s") %  ch->getName() % mob->getName());
 
@@ -2909,7 +2909,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
       // here
       affectedData *aff;
       for (aff = mob->affected; aff; aff = aff->next) {
-        if ((aff->type == AFFECT_PET) || 
+        if ((aff->type == AFFECT_PET) ||
             (aff->type == AFFECT_CHARM) ||
             (aff->type == AFFECT_THRALL) ||
             (aff->type == AFFECT_ORPHAN_PET) ||
@@ -2926,7 +2926,7 @@ static bool parseFollowerRentEntry(FILE *fp, TBeing *ch, const char *arg, int nu
       // decrease that will happen in delete.
       mob_index[mob->getMobIndex()].addToNumber(2);
 
-      vlogf(LOG_PIO, format("     [%d] - mobile (%s) owned by %s") % 
+      vlogf(LOG_PIO, format("     [%d] - mobile (%s) owned by %s") %
                      mob->mobVnum() % mob->getName() % arg);
       thing_to_room(mob, Room::VOID);
       delete mob;
@@ -3002,7 +3002,7 @@ void updateRentFile(const char *who)
   }
   immortal = IS_SET(account.flags, TAccount::IMMORTAL);
 
-  if (pd.load_room == Room::AUTO_RENT) {        // this person was autorented 
+  if (pd.load_room == Room::AUTO_RENT) {        // this person was autorented
     pd.load_room = Room::NOWHERE;
     h.last_update = time(0);
     if (!noteLimitedItems(fp, who, h.version, immortal)) {
@@ -3022,7 +3022,7 @@ void updateRentFile(const char *who)
       return;
     }
     vlogf(LOG_PIO, format("   De-autorented %s") %  h.owner);
-  } else {   // this person was rented as normal 
+  } else {   // this person was rented as normal
 
     if (!noteLimitedItems(fp, who, h.version, immortal)) {
       vlogf(LOG_BUG, format("cannot count (2) limited items for %s") %  h.owner);
@@ -3099,7 +3099,7 @@ void updateRentFiles(void)
 void TBeing::removeFollowers()
 {
   TPerson *tmp;
- 
+
   if (desc && desc->original)
     tmp = desc->original;
   else
@@ -3110,7 +3110,7 @@ void TBeing::removeFollowers()
   // In the case of a polymorphed, but linkdead mob, isPc() will be true
   // but !desc will exist, so we need a handler for this event
   // This blocks bad things from happening lower down for this eventuality
-  if (!tmp) 
+  if (!tmp)
     return;
 
   wipeFollowersFile(tmp->name.c_str());
@@ -3156,7 +3156,7 @@ bool TBeing::saveFollowers(bool rent_time)
   unsigned char version;
   TObj *obj;
   ItemSave is;
- 
+
   if (desc && desc->original)
     tmp = desc->original;
   else
@@ -3175,7 +3175,7 @@ bool TBeing::saveFollowers(bool rent_time)
 
   bool fp2_open = false;
   FILE *fp2 = NULL;
-  for (f = followers; f; f = f2) { 
+  for (f = followers; f; f = f2) {
     f2 = f->next;
     ch = f->follower;
 
@@ -3238,13 +3238,13 @@ bool TBeing::saveFollowers(bool rent_time)
         mob->getSex(), mob->spec);
 
     immuneTypeT itt;
-    for (itt=MIN_IMMUNE; itt < 14; itt++) 
+    for (itt=MIN_IMMUNE; itt < 14; itt++)
       fprintf(fp, "%d ", mob->getImmunity(itt));
-    
+
     fprintf(fp, "\n");
-    for (; itt < MAX_IMMUNES; itt++) 
+    for (; itt < MAX_IMMUNES; itt++)
       fprintf(fp, "%d ", mob->getImmunity(itt));
-    
+
     fprintf(fp, "\n");
 
     fprintf(fp, "%d %d %d\n", mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus);
@@ -3271,11 +3271,11 @@ bool TBeing::saveFollowers(bool rent_time)
     version = CURRENT_RENT_VERSION;
 
     // save limbs
-    for (i = MIN_WEAR; i < MAX_WEAR; i++) {      // Initializing 
+    for (i = MIN_WEAR; i < MAX_WEAR; i++) {      // Initializing
       // we are trying to write the ith element of the file
       // find the wear slot that corresponds to i in the file
       wearSlotT mapped_slot = mapFileToSlot( i);
-      fprintf(fp, "%d %d", 
+      fprintf(fp, "%d %d",
               mob->getLimbFlags(mapped_slot),
               mob->getCurLimbHealth(mapped_slot));
       TThing *t_obj = char_eq[mapped_slot];
@@ -3302,10 +3302,10 @@ bool TBeing::saveFollowers(bool rent_time)
           sprintf(buf, "rent/%c/%s.fr", LOWER(tmp->name[0]), sstring(tmp->name).lower().c_str());
           if (!(fp2 = fopen(buf, "w+b"))) {
             vlogf(LOG_BUG, format("Error opening %'s follower rent file for write.") %  tmp->name);
-          } else 
+          } else
             fp2_open = true;
         }
-	
+
 	is.setFile(fp2);
         if (fp2_open)
           is.raw_write_item(obj);
@@ -3335,7 +3335,7 @@ bool TBeing::saveFollowers(bool rent_time)
         } else
           fp2_open = true;
       }
-        
+
       is.setFile(fp2);
       if (fp2_open)
         is.raw_write_item(obj);
@@ -3402,16 +3402,16 @@ bool TBeing::loadFollowers()
   FILE *fp;
   char buf[256];
   TPerson *tmpPer;
- 
+
   if (desc && desc->original)
     tmpPer = desc->original;
   else
     tmpPer = dynamic_cast<TPerson *>(this);
 
   sprintf(buf, "rent/%c/%s.fol", LOWER(tmpPer->name[0]), sstring(tmpPer->name).lower().c_str());
-  if (!(fp = fopen(buf, "r"))) 
+  if (!(fp = fopen(buf, "r")))
     return FALSE;
-  
+
   parseFollowerRent(fp, this, tmpPer->name.c_str());
 
   fclose(fp);
@@ -3448,7 +3448,7 @@ void TBeing::reconnectEquipmentHandler(void)
   age_mod = 0;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if (obj_array[i]) 
+    if (obj_array[i])
       equipChar(obj_array[i], i, SILENT_YES);
   }
   doSave(SILENT_YES);
@@ -3646,7 +3646,7 @@ void TBeing::doClone(const sstring &arg)
       return;
     }
   }
-  
+
   if (!(mob = read_mobile(mob_num, VIRTUAL))) {
     sendTo("Mob not found\n\r");
     return;
@@ -3662,15 +3662,15 @@ void TBeing::doClone(const sstring &arg)
 
   if(*st1.description)
     mob->setDescr(format("%s\n\r") % st1.description);
-  else 
+  else
     mob->setDescr("You see nothing special about him.\n\r");
-  
+
   mob->setSex(sexTypeT(st1.sex));
   mob->setHeight(st1.height);
   mob->setWeight(st1.weight);
   mob->setRace(race_t(st1.race));
-  
-  
+
+
   // open player rent file
   sstring buf = format("rent/%c/%s") % LOWER(ch_name[0]) % ch_name.lower();
   if (!il.openFile(buf)){
@@ -3685,8 +3685,8 @@ void TBeing::doClone(const sstring &arg)
     vlogf(LOG_BUG, format("Error while reading %s's objects in doClone.  Your clone stands naked before you.") %  ch_name);
     return;
   }
-  
-  // add NO RENT to the objects, don't want them falling into PC 
+
+  // add NO RENT to the objects, don't want them falling into PC
   //   hands permanently
   // ALSO - junk notes, and increase object number for these loads (since
   //   they will decrease when purged)
@@ -3694,7 +3694,7 @@ void TBeing::doClone(const sstring &arg)
   TThing *i, *j;
   TObj *bo;
 //  TBaseContainer *b1;
-  
+
   for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end();){
     i=*(it++);
     if ((o = dynamic_cast<TObj *>(i)))
@@ -3707,22 +3707,22 @@ void TBeing::doClone(const sstring &arg)
         delete o;
         continue;
       }
-    } else 
-      vlogf(LOG_BUG, format("did not add no-rent flag to %s when cloning") %  
+    } else
+      vlogf(LOG_BUG, format("did not add no-rent flag to %s when cloning") %
 	    i->name);
-    
+
     if ((dynamic_cast<TBaseContainer *>(i))) {
       for(StuffIter itt=i->stuff.begin();itt!=i->stuff.end();){
 	j=*(itt++);
-        if ((bo = dynamic_cast<TObj *>(j))) 
+        if ((bo = dynamic_cast<TObj *>(j)))
         {
           obj_index[bo->getItemIndex()].addToNumber(1);
           bo->addObjStat(ITEM_NORENT);
-        } else 
-          vlogf(LOG_BUG, format("did not add no-rent flag to %s when cloning") %  
+        } else
+          vlogf(LOG_BUG, format("did not add no-rent flag to %s when cloning") %
 	          bo->name);
-        
-        if ((dynamic_cast<TNote *>(j))) 
+
+        if ((dynamic_cast<TNote *>(j)))
         {
           j->makeScraps();
           delete j;
@@ -3733,6 +3733,6 @@ void TBeing::doClone(const sstring &arg)
   }
 
   // this bit makes the mob TRUE for isPc, and prevents the look responses, etc
-  
+
   sendTo("Your clone appears before you.\n\r");
 }

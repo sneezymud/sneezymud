@@ -15,7 +15,7 @@ int main(int argc, char **argv)
   std::vector<int>vnums;
 
   toggleInfo.loadToggles();
-  
+
   if((argc-1) < 2){
     printf("Usage: %s <immortal> <block> <room list>\n", argv[0]);
     exit(0);
@@ -23,7 +23,7 @@ int main(int argc, char **argv)
 
   immortal=argv[1];
   block=argv[2];
-  
+
   if(!parse_num_args(argc-3, argv+3, vnums))
     exit(0);
 
@@ -34,7 +34,7 @@ int main(int argc, char **argv)
     //// room
     db_immo.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where owner='%s' and vnum=%i and block=%s",
 		  immortal.c_str(), vnums[t], block.c_str());
-    
+
     if(db_immo.fetchRow()){
       printf("Adding %i ('%s')\n", vnums[t], db_immo["name"].c_str());
 
@@ -57,20 +57,20 @@ int main(int argc, char **argv)
 
       while(db_immo.fetchRow()){
 	db_beta.query("insert into roomextra (vnum, name, description) values (%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
-      }      
+      }
 
-    
+
       //// roomexit
       db_beta.query("delete from roomexit where vnum=%i", vnums[t]);
 
       db_immo.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where owner='%s' and vnum=%i and block=%s", immortal.c_str(), vnums[t], block.c_str());
 
       while(db_immo.fetchRow()){
-	db_beta.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s, %s,'%s','%s',%s,%s,%s,%s,%s,%s)", 
-		 db_immo["vnum"].c_str(), db_immo["direction"].c_str(), 
-		 db_immo["name"].c_str(), db_immo["description"].c_str(), 
-		 db_immo["type"].c_str(), db_immo["condition_flag"].c_str(), 
-		 db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(), 
+	db_beta.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s, %s,'%s','%s',%s,%s,%s,%s,%s,%s)",
+		 db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
+		 db_immo["name"].c_str(), db_immo["description"].c_str(),
+		 db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
+		 db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
 		 db_immo["key_num"].c_str(), db_immo["destination"].c_str());
 
       }

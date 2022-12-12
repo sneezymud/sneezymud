@@ -48,7 +48,7 @@ TShopJournal::TShopJournal(int shop)
       values[db["name"]]=abs(convertTo<int>(db["amt"]));
     }
   }
-  
+
   shop_nr=shop;
 }
 
@@ -110,7 +110,7 @@ void TShopJournal::closeTheBooks()
 
   // shouldn't be an entries for last year in here if books have been closed
   db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
-  
+
   if(!db.fetchRow()){
     // seems as the books have already been closed.
     //    vlogf(LOG_BUG, "closeTheBooks() called when retained earnings already set!");
@@ -121,10 +121,10 @@ void TShopJournal::closeTheBooks()
 
   //// assets
   // carryover entry for cash
-  tso.journalize_debit(100, "Accountant", "Year End Accounting", 
+  tso.journalize_debit(100, "Accountant", "Year End Accounting",
 			getValue("Cash"), true);
   // carryover entry for inventory
-  tso.journalize_debit(130, "Accountant", "Year End Accounting", 
+  tso.journalize_debit(130, "Accountant", "Year End Accounting",
 			getValue("Inventory"));
 
   //// liabilities
@@ -133,15 +133,15 @@ void TShopJournal::closeTheBooks()
 			getValue("Deposits"));
 
   // carryover entry for PIC
-  tso.journalize_credit(300, "Accountant", "Year End Accounting", 
+  tso.journalize_credit(300, "Accountant", "Year End Accounting",
 			getValue("Paid-in Capital"));
   // carryover entry for RE
   // sometimes RE can be negative, so debit if needed
   if(getRetainedEarnings() >= 0){
-    tso.journalize_credit(800, "Accountant", "Year End Accounting", 
+    tso.journalize_credit(800, "Accountant", "Year End Accounting",
 			  getRetainedEarnings());
   } else {
-    tso.journalize_debit(800, "Accountant", "Year End Accounting", 
+    tso.journalize_debit(800, "Accountant", "Year End Accounting",
 			  -getRetainedEarnings());
   }
 
@@ -160,7 +160,7 @@ void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
 
   queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape() % customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
 }
-				  
+
 void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
 				  const sstring &name, int amt, bool new_id)
 {
@@ -201,16 +201,16 @@ int TShopOwned::COGS_get(const sstring &name, int num)
   TDatabase db(DB_SNEEZY);
 
   db.query("select (total_cost/count)*%i as cost from shoplogcogs where shop_nr=%i and obj_name='%s'", num, shop_nr, name.c_str());
-  
+
   if(db.fetchRow())
     return convertTo<int>(db["cost"]);
   else
     return 0;
 }
 
-void TShopOwned::journalize(const sstring &customer, const sstring &name, 
-			    transactionTypeT action, 
-			    int amt, int tax, int corp_cash, 
+void TShopOwned::journalize(const sstring &customer, const sstring &name,
+			    transactionTypeT action,
+			    int amt, int tax, int corp_cash,
 			    int expenses, int num)
 {
   TDatabase db(DB_SNEEZY);
@@ -220,9 +220,9 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     case TX_RECEIVING_TALENS:
       // shop giving money to owner
       // we might want to record this as salary or something?
-      // perhaps we need a way for owners to differentiate between PIC and 
+      // perhaps we need a way for owners to differentiate between PIC and
       // salary withdrawals
-      
+
       // PIC
       journalize_debit(300, customer, name, amt, true);
       // cash
@@ -249,9 +249,9 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       break;
     case TX_PAYING_INTEREST:
       // interest
-      journalize_debit(610, customer, name, amt, true);      
+      journalize_debit(610, customer, name, amt, true);
       // cash
-      journalize_credit(100, customer, name, amt);      
+      journalize_credit(100, customer, name, amt);
       break;
     case TX_FACTORY:
       break;
@@ -262,7 +262,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       journalize_debit(130, customer, name, amt, true);
       // cash
       journalize_credit(100, customer, name, amt);
-      
+
       // record COGS
       COGS_add(name, amt, num);
       break;
@@ -277,13 +277,13 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 	journalize_credit(510, customer, name, amt);
       else
 	journalize_credit(500, customer, name, amt);
-      
+
       if(action == TX_BUYING_SERVICE){
       } else if(action == TX_BUYING || action == TX_RECYCLING){
 	// now we have to calculate COGS for this item
 	// (COGS = cost of goods sold)
 	COGS=COGS_get(name, num);
-	
+
 	// now log it
 	// COGS
 	journalize_debit(600, customer, name, COGS);
@@ -293,8 +293,8 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
 	// now update COGS table
 	COGS_remove(name, num);
       }
-      
-      
+
+
       break;
   }
 
@@ -315,7 +315,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
     journalize_debit(700, customer, name, tax);
     // cash
     journalize_credit(100, customer, name, tax);
-  }      
+  }
 
 
   ///// now log the corporate cash flow
@@ -348,28 +348,28 @@ void TShopOwned::giveStatements(sstring arg)
 
   TShopJournal tsj(shop_nr, year);
   sstring keywords, short_desc, long_desc, buf, name;
-  
+
   name=real_roomp(shop_index[shop_nr].in_room)->getName();
-  keywords=format("statement income financial %i %i %s") % 
+  keywords=format("statement income financial %i %i %s") %
     shop_nr % year % name;
   short_desc=format("an income statement for '<p>%s<1>', year <r>%i<1>") %
     name % year;
   long_desc="A crumpled up financial statement lies here.";
 
   if(year == GameTime::getYear())
-    buf=format("Income statement for '%s', current year %i.\n\r") % 
+    buf=format("Income statement for '%s', current year %i.\n\r") %
       name % year;
   else
-    buf=format("Income statement for '%s', year ending %i.\n\r") % 
+    buf=format("Income statement for '%s', year ending %i.\n\r") %
       name % year;
 
   sstring prev_re=format("Retained earnings %i") % (year-1);
 
   buf+="-----------------------------------------------------------------\n\r";
-  buf+=format("%-36s %10s %10i\n\r") % 
+  buf+=format("%-36s %10s %10i\n\r") %
     "Sales revenue" % "" % tsj.getValue("Sales");
   if(tsj.getValue("Recycling"))
-    buf+=format("%-36s %10s %10i\n\r") % 
+    buf+=format("%-36s %10s %10i\n\r") %
       "Recycling revenue" % "" % tsj.getValue("Recycling");
   buf+=format("  %-34s %10i\n\r") %
     "Cost of goods sold" % tsj.getValue("COGS");
@@ -393,7 +393,7 @@ void TShopOwned::giveStatements(sstring arg)
   buf+=format("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
   buf+=format("%-36s %10s %10i\n\r") %
     "Retained earnings" % "" % tsj.getRetainedEarnings();
-  
+
   TNote *income_statement = createNote(buf);
   income_statement->name = keywords;
   income_statement->shortDescr = short_desc;
@@ -404,7 +404,7 @@ void TShopOwned::giveStatements(sstring arg)
 
 
   name=real_roomp(shop_index[shop_nr].in_room)->getName();
-  keywords=format("sheet balance financial statement %i %i %s") % 
+  keywords=format("sheet balance financial statement %i %i %s") %
     shop_nr % year % name;
   short_desc=format("a balance sheet for '<p>%s<1>', year <r>%i<1>") %
     name % year;
@@ -412,21 +412,21 @@ void TShopOwned::giveStatements(sstring arg)
 
 
   if(year == GameTime::getYear())
-    buf=format("Balance sheet for '%s', current year %i.\n\r\n\r") % 
+    buf=format("Balance sheet for '%s', current year %i.\n\r\n\r") %
       name % year;
   else
-    buf=format("Balance sheet for '%s', year ending %i.\n\r\n\r") % 
+    buf=format("Balance sheet for '%s', year ending %i.\n\r\n\r") %
       name % year;
 
-  buf+=format("%-36s   %-36s\n\r") % 
+  buf+=format("%-36s   %-36s\n\r") %
     "Assets" % "Liabilities";
   buf+="-----------------------------------------------------------------\n\r";
-  
+
   if(tsj.getValue("Deposits")){
     buf+=format("%-36s | %-25s\n\r") %
       "" % "Liabilities";
     buf+=format("%-25s %10i | %-25s %10i\n") %
-      "Cash" % tsj.getValue("Cash") % 
+      "Cash" % tsj.getValue("Cash") %
       "  Deposits" % tsj.getValue("Deposits");
   } else {
     buf+=format("%-25s %10i |\n") %
@@ -445,10 +445,10 @@ void TShopOwned::giveStatements(sstring arg)
     "" % "----------" % "" % "----------";
   buf+=format("%-25s %10i | %-25s %10i\n\r") %
     "Total assets" % tsj.getAssets() %
-    "Total liabilities & SHE" % 
+    "Total liabilities & SHE" %
     (tsj.getLiabilities()+tsj.getShareholdersEquity());
 
-  
+
   TNote *balance_sheet = createNote(buf);
   balance_sheet->name = keywords;
   balance_sheet->shortDescr = short_desc;

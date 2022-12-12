@@ -207,7 +207,7 @@ int TFuel::chiMe(TBeing *tLunatic)
     act("You must be more cautious to chi something so volatile.", FALSE, tLunatic, this, NULL, TO_CHAR);
     return FALSE;
   }
-  
+
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
     act("You fail to affect $p in any way.",
         FALSE, tLunatic, this, NULL, TO_CHAR);

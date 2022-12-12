@@ -24,11 +24,11 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     sstring arg=argument;
     if(arg.empty()){
       /////////// list all polls
-      ch->sendTo(COLOR_BASIC, format("You have a look at %s...\n\r") % 
+      ch->sendTo(COLOR_BASIC, format("You have a look at %s...\n\r") %
 		 o->getName());
 
       db.query("select poll_id, descr from poll where status='open' order by poll_id");
-      
+
       if(db.fetchRow()){
 	ch->sendTo(COLOR_BASIC, "These polls are open:\n\r");
 	do {
@@ -67,14 +67,14 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
       if(status=="open"){
 	db.query("select option_id, descr from poll_option where poll_id=%i",
 		 which);
-	
+
 	while(db.fetchRow()){
 	  ch->sendTo(COLOR_BASIC, format("%-2i| <b>%s<1>\n\r") %
 		     convertTo<int>(db["option_id"]) % db["descr"]);
 	}
       } else if(status=="closed"){
 	db.query("select pv.option_id as option_id, po.descr as descr, count(pv.option_id) as count from poll_vote pv, poll_option po where pv.poll_id=%i and pv.poll_id=po.poll_id and pv.option_id=po.option_id group by pv.option_id, po.descr order by count desc", which);
-	
+
 	while(db.fetchRow()){
 	  ch->sendTo(COLOR_BASIC, format("%-2i| <b>%s<1> (%i votes)\n\r") %
 		     convertTo<int>(db["option_id"]) % db["descr"] %
@@ -142,7 +142,7 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
     } else {
       poll_id=convertTo<int>(tmp);
       arg=one_argument(arg, tmp);
-      
+
       if(tmp == "add"){
 	// vote <poll_id> add <option_id> <descr>
 	if(!voteAdmin(ch)){
@@ -195,15 +195,15 @@ int ballotBox(TBeing *ch, cmdTypeT cmd, const char *argument, TObj *o, TObj *)
 	  return true;
 	}
 
-	
+
 	db.query("insert into poll_vote values ('%s', %i, %i)",
 		 ch->desc->account->name.c_str(), poll_id, option_id);
 
 
 	db.query("select po.descr as descr from poll_option po, poll_vote pv where po.poll_id=%i and po.option_id=%i and pv.poll_id=%i and pv.option_id=%i and pv.account='%s'", poll_id, option_id, poll_id, option_id, ch->desc->account->name.c_str());
-	
+
 	if(db.fetchRow()){
-	  ch->sendTo(format("You cast your vote for %s.\n\r") % 
+	  ch->sendTo(format("You cast your vote for %s.\n\r") %
 		     db["descr"]);
 	} else {
 	  ch->sendTo("There was an error - speak to an admin.\n\r");

@@ -147,10 +147,10 @@ long TDatabase::lastInsertId()
 bool TDatabase::fetchRow(){
   if(!pimpl->res)
     return FALSE;
-  
+
   if(!(pimpl->row=mysql_fetch_row(pimpl->res)))
     return FALSE;
-  
+
   return TRUE;
 }
 
@@ -220,33 +220,33 @@ bool TDatabase::query(const char *query,...)
 	  // this is just like %s, but it doesn't do escaping
 	  // use with caution!  should not be used with user input
 	  from=va_arg(ap, char *);
-	 	  	  
+
 	  if(!from){
 	    vlogf(LOG_DB, "null argument for format specifier 'r'");
-	    vlogf(LOG_DB, format("%s") % qsave);	    
+	    vlogf(LOG_DB, format("%s") % qsave);
 	  }
-	  
+
 	  buf += from;
 	  break;
 	case 's':
 	  from=va_arg(ap, char *);
-	 	  	  
+
 	  if(!from){
 	    vlogf(LOG_DB, "null argument for format specifier 's'");
-	    vlogf(LOG_DB, format("%s") % qsave);	    
+	    vlogf(LOG_DB, format("%s") % qsave);
 	    return FALSE;
 	  }
 
 	  fromlen=strlen(from);
-	  
-	  // mysql_escape_string needs a buffer that is 
+
+	  // mysql_escape_string needs a buffer that is
 	  // (string * 2) + 1 in size to avoid overruns
 	  if(((fromlen*2)+1) > tolen){
 	    vlogf(LOG_DB, format("query - buffer overrun on %s") % from);
 	    vlogf(LOG_DB, format("%s") % qsave);
 	    return FALSE;
 	  }
-	  
+
 	  escape_string(to, from, strlen(from));
 	  buf += to;
 	  break;
@@ -289,7 +289,7 @@ bool TDatabase::query(const char *query,...)
       mysql_free_result(pimpl->res);
     pimpl->res=restmp;
   }
-  
+
   // capture rowcount here, because the db pointer state changes when
   // db timing is on
   pimpl->row_count = (long) mysql_affected_rows(pimpl->db);
@@ -299,7 +299,7 @@ bool TDatabase::query(const char *query,...)
     pimpl->column_names.clear();
     unsigned int num_fields=mysql_num_fields(pimpl->res);
     MYSQL_FIELD *fields=mysql_fetch_fields(pimpl->res);
-    
+
     for(unsigned int i=0;i<num_fields;++i)
       pimpl->column_names[fields[i].name]=i;
   }
@@ -326,7 +326,7 @@ bool TDatabase::query(const char *query,...)
       buf += *query++;
     }
 
-    buf = format("insert into querytimes (query, secs) values ('%s', %f)") % 
+    buf = format("insert into querytimes (query, secs) values ('%s', %f)") %
       buf % t.getElapsed();
 
     mysql_query(pimpl->db, buf.c_str());
@@ -335,7 +335,7 @@ bool TDatabase::query(const char *query,...)
 
   //  if(res)
   //    vlogf(LOG_DB, "New query results stored.");
-  
+
   return TRUE;
 }
 
@@ -349,7 +349,7 @@ bool TDatabase::isResults(){
 long TDatabase::rowCount(){
   // return # of affected or retrieved rows
   // -1 if query returned an error
-  
+
   // this gets set in TDatabase::query
   // because the db pointer will have changed state if query timing is on
   return pimpl->row_count;

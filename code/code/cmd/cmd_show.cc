@@ -453,7 +453,7 @@ void TPerson::doShow(const sstring &argument)
     sb += "---------------------------------------------------------------------------\n\r";
     for (liqTypeT i = (liqTypeT)(LIQ_NONE+1); i < MAX_DRINK_TYPES; i++) {
       sb += format("%3i) %-30s%-8i%-10i%-8i%-8s%-8s\n\r")  %
-	i % stripColorCodes(liquidInfo[i]->name) % liquidInfo[i]->drunk % 
+	i % stripColorCodes(liquidInfo[i]->name) % liquidInfo[i]->drunk %
 	liquidInfo[i]->hunger % liquidInfo[i]->thirst %
 	(liquidInfo[i]->potion?"yes":"no") %
 	(liquidInfo[i]->poison?"yes":"no");
@@ -492,7 +492,7 @@ void TPerson::doShow(const sstring &argument)
           buf2 = sstring(zd.name);
         else
           buf2 = format("DISABLED: %s") % zd.name;
-       
+
         sb += format("%3d %-38.38s %4dm %4dm %6d-%-6d %3d %.1f\n\r") %
           zone % buf2 % zd.lifespan % zd.age % bottom % zd.top %
           zd.zone_value %
@@ -589,7 +589,7 @@ void TPerson::doShow(const sstring &argument)
     unsigned int objnx;
     for (objnx = 0; objnx < obj_index.size(); objnx++) {
 
-      if ((zone > 0 && 
+      if ((zone > 0 &&
 	   (obj_index[objnx].virt < bottom || obj_index[objnx].virt > top))
 	  || (zone <= 0 && !isname(zonenum, obj_index[objnx].name)))
         continue;
@@ -601,7 +601,7 @@ void TPerson::doShow(const sstring &argument)
       if (!hasWizPower(POWER_SHOW_TRUSTED)) {
         sb += format("%5d %5d   %s\n\r") % obj_index[objnx].virt % objnx % buf2;
       } else {
-        sb += format("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") % 
+        sb += format("%5d %5d     %5d %5d %3d %3d %5d %s\n\r") %
           obj_index[objnx].virt %
           obj_index[objnx].getNumber() %
           int(obj_index[objnx].max_exist) %
@@ -628,7 +628,7 @@ void TPerson::doShow(const sstring &argument)
           sb += format(" %s%s\n\r") %
             b->master->getNameNOC(this) %
             (b->master->isPc() ? " (PC)" : "");
-        }  
+        }
       }
       if (desc)
         desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
@@ -642,7 +642,7 @@ void TPerson::doShow(const sstring &argument)
 	TMonster *tmons = dynamic_cast<TMonster *>(b);
 	sstring haters;
 	charList *list;
-	
+
 	if (tmons && IS_SET(tmons->hatefield, HATE_CHAR) &&
 	    tmons->hates.clist){
 	  for (list = tmons->hates.clist; list; list = list->next) {
@@ -652,7 +652,7 @@ void TPerson::doShow(const sstring &argument)
 	    }
 	  }
 	}
-	
+
 	if(!haters.empty()){
 	  sb += format("%-20.20s (room: %5d) Hates: %s") %
             stripColorCodes(tmons->getName()) %
@@ -667,7 +667,7 @@ void TPerson::doShow(const sstring &argument)
       sb += "Hunting Mobs\n\r";
       sb += "-------------------------------------\n\r";
       for (b = character_list; b; b = b->next) {
-        if (!b->isPc() && IS_SET(b->specials.act, ACT_HUNTING) && 
+        if (!b->isPc() && IS_SET(b->specials.act, ACT_HUNTING) &&
              (ch = b->specials.hunting)) {
           TMonster *tmons = dynamic_cast<TMonster *>(b);
           sb += format("%-20.20s (room: %5d)    %-20.20s (room: %5d) %7s\n\r") %
@@ -686,7 +686,7 @@ void TPerson::doShow(const sstring &argument)
       sb += "Response Mobs\n\r";
       sb += "-------------------------------------\n\r";
       for (b = character_list; b; b = b->next) {
-        if ((k = dynamic_cast<TMonster *>(b)) && 
+        if ((k = dynamic_cast<TMonster *>(b)) &&
             k->resps && k->resps->respList) {
           sb += format("%-30.30s (room: %5d)\n\r") %
             b->getName() % b->in_room;
@@ -925,13 +925,13 @@ void TPerson::doShow(const sstring &argument)
       for(i=0;i<200;++i){
 	if(material_nums[i].mat_name[0]){
 	  sb += format("%-8i %-18s %-8i %-10f %-9i %i\n\r") % i %
-	    sstring(material_nums[i].mat_name).uncap() % 
+	    sstring(material_nums[i].mat_name).uncap() %
 	    commod_index[i] % material_nums[i].price %
 	    (int)TCommodity::demandCurvePrice(1,0,i) %
 	    (int)(TCommodity::demandCurvePrice(1,0,i)-material_nums[i].price);
 	}
       }
-    } else if (!buf2.empty()) {  
+    } else if (!buf2.empty()) {
       // one material
       for (i=0; i<200; ++i){
 	if (material_nums[i].mat_name[0] &&
@@ -951,7 +951,7 @@ void TPerson::doShow(const sstring &argument)
       sb += "------------------\n\r";
       for(i=0;i<200;++i){
 	if(material_nums[i].mat_name[0]){
-	  sb += format("%-9i %s\n\r") % i % 
+	  sb += format("%-9i %s\n\r") % i %
             sstring(material_nums[i].mat_name).uncap();
 	}
       }
@@ -1169,8 +1169,8 @@ void TPerson::doShow(const sstring &argument)
 	  if(!db.fetchRow())
 	    break;
 
-	sb += format("%3i) [%s] %-30s (%-2s objects)\n\r") % 
-	  i % (objSpecials[i].assignable?"X":" ") % objSpecials[i].name % 
+	sb += format("%3i) [%s] %-30s (%-2s objects)\n\r") %
+	  i % (objSpecials[i].assignable?"X":" ") % objSpecials[i].name %
 	  ((convertTo<int>(db["spec_proc"])==i)?db["count"]:"0");
       }
     }
@@ -1181,7 +1181,7 @@ void TPerson::doShow(const sstring &argument)
     for (int i = 1; i <= NUM_MOB_SPECIALS; i++) {
       if(!is_abbrev(my_arg, "assignable") ||
 	 mob_specials[i].assignable)
-	sb += format("%i) [%s] %s\n\r") % 
+	sb += format("%i) [%s] %s\n\r") %
 	  i % (mob_specials[i].assignable?"X":" ") % mob_specials[i].name;
     }
   } else if (is_abbrev(buf, "boobies")) {

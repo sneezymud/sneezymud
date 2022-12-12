@@ -70,43 +70,43 @@ public:
 private:
 };
 
-    void healLight(TBeing *, TBeing *);      
-    int castHealLight(TBeing *, TBeing *);      
+    void healLight(TBeing *, TBeing *);
+    int castHealLight(TBeing *, TBeing *);
     void healLight(TBeing *, TBeing *, TMagicItem *, spellNumT);
     int healLight(TBeing *, TBeing *, int, short, spellNumT, int);
 
-    void healSerious(TBeing *, TBeing *);    
-    int castHealSerious(TBeing *, TBeing *);      
+    void healSerious(TBeing *, TBeing *);
+    int castHealSerious(TBeing *, TBeing *);
     void healSerious(TBeing *, TBeing *, TMagicItem *, spellNumT);
     int healSerious(TBeing *, TBeing *, int, short, spellNumT);
 
-    void healCritical(TBeing *, TBeing *);   
-    int castHealCritical(TBeing *, TBeing *);      
+    void healCritical(TBeing *, TBeing *);
+    int castHealCritical(TBeing *, TBeing *);
     void healCritical(TBeing *, TBeing *, TMagicItem *, spellNumT);
     int healCritical(TBeing *, TBeing *, int, short, spellNumT, int);
 
-    void heal(TBeing *, TBeing *);           
-    int castHeal(TBeing *, TBeing *);      
+    void heal(TBeing *, TBeing *);
+    int castHeal(TBeing *, TBeing *);
     void heal(TBeing *, TBeing *, TMagicItem *, spellNumT);
     int heal(TBeing *, TBeing *, int, short, spellNumT, int);
 
-    void healFull(TBeing *, TBeing *);       
-    int castHealFull(TBeing *, TBeing *);      
+    void healFull(TBeing *, TBeing *);
+    int castHealFull(TBeing *, TBeing *);
     void healFull(TBeing *, TBeing *, TMagicItem *);
     int healFull(TBeing *, TBeing *, int, short, int);
 
     void healCritSpray(TBeing *);
-    int castHealCritSpray(TBeing *, TBeing *);      
+    int castHealCritSpray(TBeing *, TBeing *);
     void healCritSpray(TBeing *, TMagicItem *);
     int healCritSpray(TBeing *, int, short);
 
-    void healSpray(TBeing *);     
-    int castHealSpray(TBeing *, TBeing *);      
+    void healSpray(TBeing *);
+    int castHealSpray(TBeing *, TBeing *);
     void healSpray(TBeing *, TMagicItem *);
     int healSpray(TBeing *, int, short);
 
-    void healFullSpray(TBeing *);  
-    int castHealFullSpray(TBeing *, TBeing *);      
+    void healFullSpray(TBeing *);
+    int castHealFullSpray(TBeing *, TBeing *);
     void healFullSpray(TBeing *, TMagicItem *);
     int healFullSpray(TBeing *, int, short);
 

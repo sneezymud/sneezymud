@@ -74,7 +74,7 @@ void TPerson::wizFileSave()
   TDatabase db(DB_SNEEZY);
 
   db.query("replace into wizdata (setsev, office, blockastart, blockaend, blockbstart, blockbend, player_id) "
-            "values (%i, %i, %i,%i, %i, %i, %i)", d->severity, d->office, d->blockastart, 
+            "values (%i, %i, %i,%i, %i, %i, %i)", d->severity, d->office, d->blockastart,
             d->blockaend, d->blockbstart, d->blockbend, getPlayerID());
 }
 

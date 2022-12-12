@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//      "craps.cc" - All functions and routines related to the craps table 
-//      
+//      "craps.cc" - All functions and routines related to the craps table
+//
 //      Craps table coded by Russ Russell, January 1993. Last revision
 //      December 12, 1997.
 //
@@ -50,7 +50,7 @@ const char DICE_TWO[] =
  # *     #\n\r\
  #########\n\r\n\r";
 
-const char DICE_THREE[] = 
+const char DICE_THREE[] =
 " #########\n\r\
  #     * #\n\r\
  #   *   #\n\r\
@@ -90,7 +90,7 @@ void Craps::loseDice()
       vlogf(LOG_BUG, "loseDice called without dice held???");
     }
   }
-  
+
 
   if ((crap_man = FindMobInRoomWithProcNum(m_ch->in_room, SPEC_CRAPSGUY))) {
     if (the_dice)
@@ -202,7 +202,7 @@ void TBeing::doBet(const char *arg)
     return;
   }
 
-  
+
   if (!FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY)) {
     sendTo("The bet command is used for casino games.\n\r");
     return;
@@ -244,7 +244,7 @@ void TBeing::doBet(const char *arg)
       if (is_abbrev(amount, "crap")) {
 	if (!d->bet.crap) {
 	  d->bet_opt.crapsOptions += CRAP_OUT;
-	  sendTo(COLOR_OBJECTS, format("You place %s for your bet on the crap roll.\n\r") % 
+	  sendTo(COLOR_OBJECTS, format("You place %s for your bet on the crap roll.\n\r") %
 		 chip->getName());
 
 	  d->bet.crap = chip->obj_flags.cost;
@@ -276,10 +276,10 @@ void TBeing::doBet(const char *arg)
 	      crap_man->doSay("Hold the dice, and throw them when I say it's ok!");
 	      --(*the_dice);
 	      *this += *the_dice;
-  
+
 	      if (!crap_man->act_ptr)
 		crap_man->act_ptr = new Ccraps();
-  
+
 	      Ccraps *cr = (Ccraps *) crap_man->act_ptr;
 	      cr->pos = 4;
 	      m_craps = new Craps(this);
@@ -468,7 +468,7 @@ int Craps::checkCraps(int diceroll)
       }
     }
   }
-  if (newRoll) 
+  if (newRoll)
     return TRUE;
   return FALSE;
 }
@@ -510,7 +510,7 @@ int Craps::checkSeven(int diceroll)
 	REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
 	d->bet.crap = 0;
 	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
-      
+
 #if 0
 // unless we want them to start with a crapout and get the dice
 	if (tbt == m_ch) {
@@ -616,7 +616,7 @@ void Craps::checkOnerollSeven(int diceroll, TBeing *ch)
     observerReaction(ch, GAMBLER_WON);
   } else {
     ch->sendTo(format("You lose your oneroll seven bet (%d).\n\r") % d->bet.seven);
-    observerReaction(ch, GAMBLER_LOST);  
+    observerReaction(ch, GAMBLER_LOST);
   }
 
   REMOVE_BIT(d->bet_opt.oneRoll, SEVEN);
@@ -967,7 +967,7 @@ int Craps::rollDice()
 
   if (checkCraps(dice_roll)) {
     return TRUE;
-  } 
+  }
   if (checkSeven(dice_roll)) {
     return TRUE;
   }
@@ -1039,7 +1039,7 @@ int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
         return TRUE;
       }
       return FALSE;
-    } else if ((cmd == CMD_NORTH) || 
+    } else if ((cmd == CMD_NORTH) ||
         (cmd == CMD_SOUTH) ||
         (cmd == CMD_EAST) ||
         (cmd == CMD_WEST) ||

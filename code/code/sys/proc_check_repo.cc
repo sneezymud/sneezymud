@@ -11,12 +11,12 @@ procCheckForRepo::procCheckForRepo(const int &p)
   name="procCheckForRepo";
 }
 
-void procCheckForRepo::run(const TPulse &) const 
+void procCheckForRepo::run(const TPulse &) const
 {
   TBeing *tmp_ch, *temp;
 
   for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
-    temp = tmp_ch->next; 
+    temp = tmp_ch->next;
     int i;
     TThing *repot;
     TObj *repoo;
@@ -24,7 +24,7 @@ void procCheckForRepo::run(const TPulse &) const
     for (i = MIN_WEAR;i < MAX_WEAR;i++) {
       if (!(repot = tmp_ch->equipment[i]) || !(repoo = dynamic_cast<TObj *>(repot)))
 	continue;
-      
+
       repoCheckForRent(tmp_ch, repoo, false);
     }
     // check inventory
@@ -33,10 +33,10 @@ void procCheckForRepo::run(const TPulse &) const
       repoo = dynamic_cast<TObj *>(repot);
       if (!repoo)
 	continue;
-      
+
       repoCheckForRent(tmp_ch, repoo, false);
     }
-    
+
   }
 }
 

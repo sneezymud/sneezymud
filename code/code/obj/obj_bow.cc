@@ -318,7 +318,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
       addToStructPoints(-1);
       addBowFlags(BOW_STRING_BROKE);
 
-      act("You hear a loud pop as $n's bowsstring snaps!", 
+      act("You hear a loud pop as $n's bowsstring snaps!",
                  FALSE, ch, NULL, NULL, TO_ROOM);
       act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_CHAR);
       act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_ROOM);
@@ -346,22 +346,22 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     --(*the_arrow);
     sstring capbuf = colorString(ch, ch->desc, the_arrow->getName(), NULL, COLOR_OBJECTS, TRUE);
     sstring capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
-    
+
     if (targ)
       ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
 		 capbuf.uncap() % capbuf2.uncap() %
 		 targ->getName());
     else
       ch->sendTo(format("You shoot %s out of %s.\n\r") %
-		 capbuf.uncap() % 
+		 capbuf.uncap() %
 		 capbuf2.uncap());
-    
+
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);
     act(buf, FALSE, ch, this, the_arrow, TO_ROOM);
-    
+
     *ch->roomp += *the_arrow;
-    
+
     // construct reload buf, do it here since arrow might go bye-bye
     // as sanity check, verify that person has an arrow to reload at this
     // point too.
@@ -384,7 +384,7 @@ int TBow::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
 
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
-    
+
     // stop if we were unable to remove the bow for some reason
     if (!rc)
       break;

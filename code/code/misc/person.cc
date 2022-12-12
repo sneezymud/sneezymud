@@ -101,7 +101,7 @@ TPerson::~TPerson()
   // We use to let this be a handler for quit
   // however, if we accidentally delete a player (bad return code?)
   // this gets called and duplicates items
-  // quit should now have similar code to what was here, so regard 
+  // quit should now have similar code to what was here, so regard
   // getting here as an error.
   dropItemsToRoom(SAFE_NO, DROP_IN_ROOM);
 

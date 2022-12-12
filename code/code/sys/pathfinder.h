@@ -156,9 +156,9 @@ class pathData {
     int source;
     bool checked;
     int distance;
-    pathData() : 
+    pathData() :
       room(0), direct(DIR_NONE), source(0), checked(false), distance(0) {}
-    pathData(int r, dirTypeT d, int s, bool c, int dist) : 
+    pathData(int r, dirTypeT d, int s, bool c, int dist) :
       room(r), direct(d), source(s), checked(c), distance(dist) {}
     pathData(pathData *pd) :
       room(pd->room), direct(pd->direct), source(pd->source),

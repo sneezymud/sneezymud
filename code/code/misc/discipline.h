@@ -157,7 +157,7 @@ class CDiscipline
 class CMasterDiscipline
 {
   public:
-    CDiscipline *disc[MAX_DISCS]; 
+    CDiscipline *disc[MAX_DISCS];
 
     CMasterDiscipline();
     CMasterDiscipline(const CMasterDiscipline &a);
@@ -184,8 +184,8 @@ struct disc_names_data
   const char * const properName;
 };
 
-//const struct pc_class_names_data 
-struct pc_class_names_data 
+//const struct pc_class_names_data
+struct pc_class_names_data
 {
   classIndT class_lev_num;
   int class_num;

@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     return 0;
   }
 
-    
+
 
   if(state_form == cgi.getElements().end() || **state_form == "main"){
     sendResplist(session.getAccountID());
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
   } else if(**state_form == "delresp"){
     delResp(cgi, session.getAccountID());
     sendResplist(session.getAccountID());
-    return 0;    
+    return 0;
   } else if(**state_form == "newresp"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
@@ -100,13 +100,13 @@ int main(int argc, char **argv)
     makeNewResp(cgi, session.getAccountID(), session.hasWizPower(POWER_LOAD));
     sendShowResp(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
-    return 0;    
+    return 0;
   } else if(**state_form == "showresp"){
     form_iterator vnum=cgi.getElement("vnum");
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Respeditor") << endl;
     cout << head() << body() << endl;
-    
+
     sendShowResp(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
     return 0;
@@ -115,7 +115,7 @@ int main(int argc, char **argv)
     cout << HTTPHTMLHeader() << endl;
     cout << html() << head() << title("Respeditor") << endl;
     cout << head() << body() << endl;
-    
+
     saveResp(cgi, session.getAccountID());
     sendShowResp(session.getAccountID(), convertTo<int>(**vnum),
 		session.hasWizPower(POWER_WIZARD));
@@ -126,7 +126,7 @@ int main(int argc, char **argv)
     cout << endl;
     return 0;
   }
-  
+
   cout << HTTPHTMLHeader() << endl;
   cout << html() << head() << title("Respeditor") << endl;
   cout << head() << body() << endl;
@@ -134,7 +134,7 @@ int main(int argc, char **argv)
   cout << **state_form << endl;
   cout << body() << endl;
   cout << html() << endl;
-  
+
   return 0;
 }
 
@@ -162,7 +162,7 @@ void makeNewResp(Cgicc cgi, int account_id, bool power_load)
     cout << "Owner name didn't match - security violation.";
     return;
   }
-  
+
 
   db.query("insert into mobresponses (owner, vnum, response) values ('%s', %s, '')",
 	   (**(cgi.getElement("owner"))).c_str(),
@@ -182,9 +182,9 @@ void saveResp(Cgicc cgi, int account_id)
   }
 
   db.query("delete from mobresponses where owner='%s' and vnum=%s",
-  	   (**(cgi.getElement("owner"))).c_str(), 
+  	   (**(cgi.getElement("owner"))).c_str(),
   	   (**(cgi.getElement("vnum"))).c_str());
-  
+
   db.query("insert into mobresponses (owner, vnum, response) values ('%s', %s, '%s')",
 	   (**(cgi.getElement("owner"))).c_str(),
 	   (**(cgi.getElement("vnum"))).c_str(),
@@ -239,8 +239,8 @@ void sendShowResp(int account_id, int vnum, bool wizard)
 
   cout << body() << endl;
   cout << html() << endl;
-  
-  
+
+
 }
 
 void sendResplist(int account_id){
@@ -259,7 +259,7 @@ void sendResplist(int account_id){
 
   db.query("select owner, max(vnum)+1 as nvnum from mobresponses where lower(owner) in (%r) group by owner",
 	   getPlayerNames(account_id).c_str());
-  
+
   if(db.fetchRow())
     buildername=db["owner"];
   else {
@@ -285,7 +285,7 @@ void sendResplist(int account_id){
   cout << "<tr><td>vnum</td></tr>";
 
   db.query("select vnum, response from mobresponses where lower(owner) in (%r) order by vnum asc", getPlayerNames(account_id).c_str());
-  
+
 
   while(db.fetchRow()){
     cout << "<tr><td>" << "<a href=javascript:pickresp('" << db["vnum"];

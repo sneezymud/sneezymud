@@ -50,9 +50,9 @@ int ofManyPotions(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *){
   }
 
 
-  act(format("A %s liquid oozes from $n's $o and drips to the $g.") % 
+  act(format("A %s liquid oozes from $n's $o and drips to the $g.") %
       liquidInfo[liq]->color, 0, ch, o, 0, TO_ROOM);
-  act(format("Your $o oozes a %s liquid, which drips to the $g.") % 
+  act(format("Your $o oozes a %s liquid, which drips to the $g.") %
       liquidInfo[liq]->color, 0, ch, o, 0, TO_CHAR);
 
   ch->dropPool(1, liq);

@@ -144,7 +144,7 @@ S
  */
 
 NODE *find_node(int num){
-  if(num<0) 
+  if(num<0)
     return NULL;
 
   return(nodes[num]);
@@ -158,7 +158,7 @@ bool isEnabled(int num)
 
   if(zone_enabled.size()==0)
     return true;
-  
+
   for(iter=zone_enabled.begin();iter!=zone_enabled.end();++iter){
     if((*iter).first>=num){
       enabled=(*iter).second;
@@ -182,14 +182,14 @@ NODE *read_room(TDatabase *db, TDatabase *dbexits)
   do {
     if(!db->fetchRow()){
       //	fprintf(stderr, "read_room(): couldn't find a room\n");
-	return NULL;      
+	return NULL;
     }
 
     tmp->num=convertTo<int>((*db)["vnum"]);
 
   } while(!isEnabled(tmp->num));
 
-  
+
   strcpy(tmp->name, (*db)["name"].c_str());
 
   // parse sector type
@@ -206,7 +206,7 @@ NODE *read_room(TDatabase *db, TDatabase *dbexits)
   } while((*dbexits).fetchRow());
 
 
-  return tmp; 
+  return tmp;
 }
 
 
@@ -235,11 +235,11 @@ NODE *read_room(FILE *tiny){
 	return NULL;
       }
     }
-    
+
     fscanf(tiny, "%i", &tmp->num);
   } while(isEnabled(tmp->num));
 
-  
+
 
   fscanf(tiny, "%[^~]~", tmp->name); // name
   while(fgetc(tiny)!='~'); // descr
@@ -248,7 +248,7 @@ NODE *read_room(FILE *tiny){
   fscanf(tiny, "\n%i %i %i ", &t, &t, &tmp->sector);
   if(tmp->sector == -1){
     fscanf(tiny, "%i %i %i %i ", &t, &t, &t, &tmp->sector);
-  } 
+  }
 
   // 1 8265 -1 500 39 0 21 0 0 0 1000
   // 1 41213 60 0 0 0 100
@@ -296,7 +296,7 @@ void remove_one_way_exits(bool quiet=false, bool checkrooms_p=false)
 	continue;
 
       room=find_node(t->idirs[i]);
-      
+
       if(!room){
 	notfound++;
 	if(checkrooms_p)
@@ -321,7 +321,7 @@ void consolidate_nodes(bool quiet=false)
 {
   NODE *t;
   int i, j=0;
- 
+
   for(t=head;t;t=t->next){
     ++j;
     if(!quiet && !(j % 10))
@@ -366,7 +366,7 @@ int coordinates(bool quiet=false)
 	    case 2: // south
 	      t->pdirs[i]->y=t->y-1;
 	      break;
-	    case 3: // west 
+	    case 3: // west
 	      t->pdirs[i]->x=t->x-1;
 	      break;
 	    case 4: // up
@@ -397,7 +397,7 @@ int coordinates(bool quiet=false)
       }
     }
   }
-  
+
   if(!quiet){
     printf("Coordinate iteration %4i (%i rooms left)\r",
 	   ++count, roomsleft);
@@ -419,7 +419,7 @@ char *itoa(int n){
   int c, i, j, sign;
   char *s=(char *)malloc(256);
 
-  if((sign=n)<0) 
+  if((sign=n)<0)
     n=-n;
   i=0;
   do {
@@ -440,7 +440,7 @@ char *itoa(int n){
 
 void check_rooms(int MAXROOMS){
   int count=0;
-  
+
 
   for(int i=0;i<MAXROOMS;++i){
     for(int j=i+1;j<MAXROOMS;++j){
@@ -450,8 +450,8 @@ void check_rooms(int MAXROOMS){
 	 nodes[i]->x == nodes[j]->x &&
 	 nodes[i]->y == nodes[j]->y &&
 	 nodes[i]->z == nodes[j]->z){
-	printf("%i and %i have same coords (%i, %i, %i)\n", 
-	       nodes[i]->num, nodes[j]->num, 
+	printf("%i and %i have same coords (%i, %i, %i)\n",
+	       nodes[i]->num, nodes[j]->num,
 	       nodes[i]->x, nodes[i]->y, nodes[i]->z);
 	++count;
       }
@@ -468,7 +468,7 @@ void check_rooms(int MAXROOMS){
 	  if((!nodes[i]->pdirs[j]->pdirs[rev_dir(j)] ||
 	     (nodes[i]->pdirs[j]->pdirs[rev_dir(j)]->num !=
 	     nodes[i]->num)) && !done[i]){
-	    
+
 	    printf("Room %i has a one way exit %i (%i) to room %i\n",
 		   nodes[i]->num, j, rev_dir(j), nodes[i]->pdirs[j]->num);
 
@@ -567,22 +567,22 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
     if(t->y<miny) miny=t->y;
     if(t->y>maxy) maxy=t->y;
   }
-  
+
   // determine map buffer size
   mapwidth=abs(minx-maxx)+1;
   mapwidth*=CELLSIZE;
   mapheight=abs(miny-maxy)+1;
   mapheight*=CELLSIZE;
 
-  // make the image a multiple of 256  
+  // make the image a multiple of 256
   while(mapwidth % 256) ++mapwidth;
   while(mapheight % 256) ++mapheight;
 
-  
+
   mapsize=(mapwidth*mapheight);
   mapsize*=3; // for rgb
 
-  printf("x range=%i,%i, y range=%i,%i, size=%i\n", 
+  printf("x range=%i,%i, y range=%i,%i, size=%i\n",
 	 minx, maxx, miny, maxy, mapsize);
 
   mapdata=(char *) calloc(1, mapsize);
@@ -603,35 +603,35 @@ void createmap(int MINLEVEL, int MAXLEVEL, int SCALEBY, sstring outputfile, bool
     mapdata[loc*3]=sector_colors[t->sector][0];
     mapdata[(loc*3)+1]=sector_colors[t->sector][1];
     mapdata[(loc*3)+2]=sector_colors[t->sector][2];
-    
+
     // color by popularity
     if(logf){
       double perc =  log(double(roomcount[t->num])) / log(double(max));
       perc=1.0-perc;
       double red, green, blue;
-      
+
       if (perc < 0.5 && perc >= 0.25)
 	red = min(255.0, 255  * ((0.25 - (perc - 0.25)) / 0.25));
       else if (perc < 0.25)
 	red = 255 ;
       else
 	red = 0;
-      
+
       if (perc > 0.5 && perc <= 0.75)
 	blue = min(255.0, 255 * ((perc - 0.50) / 0.25));
       else if (perc > 0.75)
 	blue = 255;
       else
 	blue = 0;
-      
+
       if (perc < 0.25)
 	green = min(255.0, 255 * (1 - ((0.25 - perc) / 0.25)));
       else if (perc > 0.75)
 	green = min(255.0, 255 * (1 - ((perc - 0.75) / 0.25)));
       else
 	green = 255;
-      
-      
+
+
       mapdata[loc*3]=(int)red;
       mapdata[(loc*3)+1]=(int)green;
       mapdata[(loc*3)+2]=(int)blue;
@@ -733,12 +733,12 @@ void makezonelist(FILE *zone){
     }
     last=tch;
   }
-    
+
   fscanf(zone, "%i", &num);
   fscanf(zone, "%[^~]~", buf); // name
-  
+
   fscanf(zone, "%i %i %i %i", &start_room, &num, &num, &enabled);
-  
+
   zone_enabled[start_room]=enabled?true:false;
 }
 
@@ -866,7 +866,7 @@ int main(int argc, char **argv)
   if(!infile.empty()){
     printf("Using '%s' as room file.\n", infile.c_str());
     tiny=fopen(infile.c_str(), "rt");
-    
+
     if(!tiny){
       printf("Unable to open tiny file.\n");
       usage();
@@ -908,7 +908,7 @@ int main(int argc, char **argv)
     } else {
       if(!(t=read_room(&db, &dbexits)))
 	break;
-    }      
+    }
 
 
     if(use_range && roomrange.count(t->num)==0)
@@ -934,7 +934,7 @@ int main(int argc, char **argv)
   printf("\nBeginning consolidation\n");
   consolidate_nodes(quiet);
   printf("\nFinished consolidation\n");
-  
+
   // this lets us specify a better 0,0,0 point for custom ranges
   // the first room passed in the argument is used as the 0,0,0 point
   if(use_range && headroom==100)
@@ -958,7 +958,7 @@ int main(int argc, char **argv)
 
   if(checkrooms_p)
     check_rooms(rcount);
-    
+
   createmap(zmin, zmax, SCALEBY, outputfile, sideways, logf, gradient_exits);
 
   t=head;

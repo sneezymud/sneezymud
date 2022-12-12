@@ -24,16 +24,16 @@ TCorporation::~TCorporation(){
 void TCorporation::corpLog(const sstring &name, const sstring &action, int talens)
 {
   TDatabase db(DB_SNEEZY);
-  
 
-  db.query("insert into corplog values (%i, '%s', '%s', %i, %i, now())", 
+
+  db.query("insert into corplog values (%i, '%s', '%s', %i, %i, now())",
 	   corp_id, name.c_str(), action.c_str(), talens, getMoney());
 }
 
 
 int TCorporation::getAccess(TBeing *ch){
   TDatabase db(DB_SNEEZY);
-  
+
   db.query("select access from corpaccess where corp_id=%i and lower(name)='%s'", corp_id, sstring(ch->getName()).lower().c_str());
 
   if(db.fetchRow()){
@@ -78,7 +78,7 @@ void TCorporation::setBank(int bank)
   TDatabase db(DB_SNEEZY);
 
   db.query("update corporation set bank=%i where corp_id=%i", bank, corp_id);
-  
+
 }
 
 int TCorporation::getMoney()
@@ -140,7 +140,7 @@ from \
 group by c.corp_id, c.name, b.talens, sob.corp_id \
 order by sum(so.gold)+b.talens desc \
 ");
-  
+
   while(db.fetchRow()){
     corp_id=convertTo<int>(db["corp_id"]);
     gold=convertTo<int>(db["gold"]);
@@ -148,7 +148,7 @@ order by sum(so.gold)+b.talens desc \
     bankowner=convertTo<int>(db["bankowner"]);
 
     TCorporation corp(corp_id);
-   
+
     // if we don't own the bank, record our gold that's in the bank
     // otherwise we end up counting it twice
     if(bankowner!=corp_id)

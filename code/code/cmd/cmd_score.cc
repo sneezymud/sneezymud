@@ -60,7 +60,7 @@ void TBeing::doScore()
       }
     }
     if(count > 0){
-      sendTo(format("You have a total of %s%i%s skill points with an average of %s%i%s per skill.\n\r") % 
+      sendTo(format("You have a total of %s%i%s skill points with an average of %s%i%s per skill.\n\r") %
 	     cyan() % total % norm() %
 	     cyan() % (int)(total/count) % norm());
     }

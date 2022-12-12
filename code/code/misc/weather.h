@@ -12,14 +12,14 @@ class TRoom;
 class sstring;
 
 class Weather {
- public:  
-  enum weatherT { NONE, CLOUDLESS, CLOUDY, 
+ public:
+  enum weatherT { NONE, CLOUDLESS, CLOUDY,
 		  RAINY, LIGHTNING, SNOWY };
-  
+
   enum sunT { SUN_DARK, SUN_DAWN, SUN_RISE, SUN_LIGHT, SUN_SET, SUN_TWILIGHT };
-  
+
   enum skyT { SKY_CLOUDLESS, SKY_CLOUDY, SKY_RAINING, SKY_LIGHTNING };
-  
+
   enum changeWeatherT {
     CHANGE_NONE,
     CHANGE_CLOUDS,
@@ -56,9 +56,9 @@ class Weather {
     MESS_LIGHTNING_AWAY,
     MESS_BLIZZARD_AWAY
   };
-  
+
   static const int WET_MAXIMUM;
-  
+
   static void AlterWeather(changeWeatherT *);
   static void calcNewSunRise();
   static void calcNewSunSet();
@@ -93,20 +93,20 @@ class Weather {
   static void addToPressure(int p){ pressure+=p; }
   static void setChange(int c){ change=c; }
   static void addToChange(int c){ change+=c; }
-  static void setSunlight(sunT s){ sunlight=s; } 
+  static void setSunlight(sunT s){ sunlight=s; }
   static void setSky(skyT s){ sky=s; }
   static void setMoon(int m){ moontype=m; }
   static void addToMoon(int m){ moontype+=m; }
 
  private:
   Weather();
-  
+
   static int pressure;        /* How is the pressure ( Mb ) */
   static int change;          /* How fast and what way does it change. */
   static skyT sky;            /* How is the sky. */
   static sunT sunlight;       /* And how much sun. */
-  static int moontype;        // what stage is moon in?  (0 - 31) 
-  
+  static int moontype;        // what stage is moon in?  (0 - 31)
+
   // due to the calculations involved in sunrise/set formula
   // it becomes expensive to calculate this each time
   // do it as needed, and save it.

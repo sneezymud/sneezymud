@@ -16,7 +16,7 @@ class TSocket;
 
 extern int maxdesc, avail_descs;
 
-const int OPT_USEC = 100000; 
+const int OPT_USEC = 100000;
 
 extern char hostlist[MAX_BAN_HOSTS][40];
 

@@ -230,7 +230,7 @@ int getLanguageChance(const TBeing *from, TBeing *to, spellNumT language)
   // 0-90 base chance if you pass your skill success check
   int chance = to && to->bSuccess(language) ? learning * 9/10 : 0;
 
-  // Let's add a bonus to perception representing 
+  // Let's add a bonus to perception representing
   // A natural talent for how good your ear for accents is
   chance += to ? to->plotStat(STAT_CURRENT, STAT_PER, 0, 16, 8) : 0;
 
@@ -391,7 +391,7 @@ sstring garble_olddrunk(const TBeing *from, TBeing *to, const sstring &arg, Garb
       buf.insert(loc, latin);
     }
   } // end for i
-  
+
   // change some letters randomly
   for(unsigned int i=0;i<buf.length()-1;++i)
   {
@@ -867,7 +867,7 @@ sstring garble_fishtalk(const TBeing *from, TBeing *to, const sstring &arg, Garb
       out += watery[number(0, cElements(watery)-1)].matchCase(word);
       out += ' ';
     }
-    
+
     if (chance > number(0, 100))
     {
       for(int i=0;i < (int)cElements(replace);i++)
@@ -1533,7 +1533,7 @@ const sstring RandomWord()
     "bargle",
     "glop",
     "glyph",
-    "hussamah",                 // 5 
+    "hussamah",                 // 5
     "rodina",
     "mustafah",
     "angina",
@@ -1704,55 +1704,55 @@ const sstring RandomVerb()
   // guaranteed insensible
   static const sstring str[] =
   {
-    "hoist", 
-    "pinch", 
-    "decorate", 
-    "besmirch", 
+    "hoist",
+    "pinch",
+    "decorate",
+    "besmirch",
     "conflagrate",              // 5
-    "snook", 
-    "pilfer", 
-    "parlay", 
-    "flummox", 
+    "snook",
+    "pilfer",
+    "parlay",
+    "flummox",
     "tender",                   // 10
-    "archive", 
-    "hail", 
-    "ploot", 
-    "castigate", 
+    "archive",
+    "hail",
+    "ploot",
+    "castigate",
     "micturate",                // 15
-    "tuck", 
-    "strap", 
-    "absolve", 
-    "flagellate", 
+    "tuck",
+    "strap",
+    "absolve",
+    "flagellate",
     "abnegate",                 // 20
-    "bowdlerize", 
-    "mesmerize", 
-    "simonize", 
-    "levitate", 
+    "bowdlerize",
+    "mesmerize",
+    "simonize",
+    "levitate",
     "orate",                    // 25
-    "ration", 
-    "finesse", 
-    "enrapture", 
-    "declaim", 
+    "ration",
+    "finesse",
+    "enrapture",
+    "declaim",
     "canoodle",                 // 30
-    "atomize", 
-    "massage", 
-    "poeticize", 
-    "criticize", 
+    "atomize",
+    "massage",
+    "poeticize",
+    "criticize",
     "harbor",                   // 35
-    "unravel", 
-    "demystify", 
-    "lobby", 
-    "swive", 
+    "unravel",
+    "demystify",
+    "lobby",
+    "swive",
     "scrump",                   // 40
-    "deride", 
-    "remune", 
-    "addle", 
-    "brindle", 
+    "deride",
+    "remune",
+    "addle",
+    "brindle",
     "coddle",                   // 45
-    "succor", 
-    "embarrass", 
-    "dominate", 
-    "envalorize", 
+    "succor",
+    "embarrass",
+    "dominate",
+    "envalorize",
     "encapitate",
     "kill",
     "taste",

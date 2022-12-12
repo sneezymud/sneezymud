@@ -26,7 +26,7 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
   buf=format("This is the personalized object of %s") % ch->getName();
 
   obj->swapToStrung();
-  if ((virt == Obj::WEAPON_AVENGER1) || 
+  if ((virt == Obj::WEAPON_AVENGER1) ||
       (virt == Obj::WEAPON_AVENGER2) ||
       (virt == Obj::WEAPON_AVENGER3))
     obj->addObjStat(ITEM_NOPURGE);
@@ -39,11 +39,11 @@ int personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
 
   if (deity) {
     buf=format("%s %s") % fname(obj->name) % ch->getName();
-    *deity += *obj; 
+    *deity += *obj;
     rc = deity->doGive(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-  } else 
+  } else
     *ch += *obj;
 
   if (obj->parent == deity) {
@@ -87,11 +87,11 @@ int resize_personalize_object(TBeing *deity, TBeing *ch, int virt, int decay)
 
   if (deity) {
     buf=format("%s %s") % fname(obj->name) % ch->getName();
-    *deity += *obj; 
+    *deity += *obj;
     rc = deity->doGive(buf);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-  } else 
+  } else
     *ch += *obj;
 
   if (obj->parent == deity) {
@@ -138,25 +138,25 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
     buf=format("%s, you have faithfully practiced your beliefs.") % ch->getName();
     deity->doSay(buf);
     deity->doSay("Here is your reward.");
-    // default will always do a nice thing, top ten do something great 
+    // default will always do a nice thing, top ten do something great
     int num = ::number(percent, 100);
     vlogf(LOG_FACT, format("reward loop val=%d") %  num);
     switch (num) {
       case 90:
-        // Nice token that decays in 100 ticks. 
+        // Nice token that decays in 100 ticks.
         deity->doSay("You are a paragon of virtue.");
         if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 100) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 91:
-        // Nice token that decays in 150 ticks. 
+        // Nice token that decays in 150 ticks.
         deity->doSay("You are a paragon of virtue.");
         if (personalize_object(deity, ch, Obj::DEITY_TOKEN, 150) == DELETE_THIS)
           return DELETE_THIS;
         break;
       case 92:
       case 93:
-        // Nice token that decays in 200 ticks and sanc 
+        // Nice token that decays in 200 ticks and sanc
         deity->doSay("You are a paragon of virtue.");
         if (!deity->doesKnowSkill(SPELL_SANCTUARY))
           deity->setSkillValue(SPELL_SANCTUARY,120);
@@ -167,7 +167,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
         break;
       case 94:
       case 95:
-        // 200 tick token and sanc and part restore. 
+        // 200 tick token and sanc and part restore.
         deity->doSay("You are a paragon of virtue.");
         buf=format("%s part") % ch->getName());
         deity->doRestore(buf.c_str());
@@ -180,7 +180,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
         break;
       case 96:
       case 97:
-        // 200 tick token and sanc and full restore. 
+        // 200 tick token and sanc and full restore.
         deity->doSay("You are virtually an avatar.");
         buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
@@ -192,7 +192,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           return DELETE_THIS;
         break;
       case 98:
-        // 250 tick token and sanc and full restore. 
+        // 250 tick token and sanc and full restore.
         deity->doSay("You are virtually an avatar.");
         buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
@@ -204,7 +204,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           return DELETE_THIS;
         break;
       case 99:
-        // 300 tick token and sanc and full restore. 
+        // 300 tick token and sanc and full restore.
         deity->doSay("You are virtually an avatar.");
         buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
@@ -216,7 +216,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
           return DELETE_THIS;
         break;
       case 100:
-        // 500 tick token and sanc and full restore. 
+        // 500 tick token and sanc and full restore.
         deity->doSay("You are an avatar of our beliefs.");
         buf=format("%s full") % ch->getName();
         deity->doRestore(buf.c_str());
@@ -240,7 +240,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
     int num = number(0, percent);
     vlogf(LOG_FACT, format("punishment loop val=%d") %  num);
     switch (num) {
-       // default sucks, but not as bad as the 10 lowest ones. 
+       // default sucks, but not as bad as the 10 lowest ones.
       case 0:
         deity->doSay("You have gone extraordinarily astray from your beliefs.");
         act("$n waves $s arms and utters the words 'jhakki phranc'", FALSE, deity, NULL, NULL, TO_ROOM);
@@ -369,16 +369,16 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
         curse(deity,ch);
         deity->doSay("Let this be a lesson to you.");
         break;
-      case 70:                                                                  
-      case 71:                                                                  
-      case 72:                                                                  
-      case 73:                                                                  
-      case 74:                                                                  
-      case 75:                                                                  
-      case 76:                                                                  
-      case 77:                                                                  
-      case 78:                                                                  
-      case 79:                                                                  
+      case 70:
+      case 71:
+      case 72:
+      case 73:
+      case 74:
+      case 75:
+      case 76:
+      case 77:
+      case 78:
+      case 79:
       case 80:
       case 81:
       case 82:
@@ -389,7 +389,7 @@ static int reward_or_punish(TBeing *deity, TBeing *ch)
       case 87:
       case 88:
       case 89:
-        // dont do anything to these guys who just rolled a bad roll. 
+        // dont do anything to these guys who just rolled a bad roll.
         break;
       default:
         if (!deity->doesKnowSkill(SPELL_DISPEL_MAGIC))
@@ -412,16 +412,16 @@ static void simple_deity_poof(TMonster *deity, short targ_rm)
   if (deity->inRoom() == targ_rm)
     return;
 
-  act("$n disappears in a cloud of mushrooms.", 
+  act("$n disappears in a cloud of mushrooms.",
           TRUE, deity, NULL, NULL, TO_ROOM);
   --(*deity);
   thing_to_room(deity, targ_rm);
-  act("$n appears with an explosion of rose-petals.", 
+  act("$n appears with an explosion of rose-petals.",
          TRUE, deity, 0, NULL, TO_ROOM);
 }
 
 // These guys step thru the player lists, and either reward a
-// player for correct alignment, or punish for deviance. 
+// player for correct alignment, or punish for deviance.
 int alignment_deity(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 {
   TBeing *tmp_ch;
@@ -439,7 +439,7 @@ int alignment_deity(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
         d2 = d->next;
         if ((tmp_ch = d->character) && !d->connected) {
           if (!number(0, 30)) {
-            vlogf(LOG_FACT, format("%s in room %d reward/punishing %s") % 
+            vlogf(LOG_FACT, format("%s in room %d reward/punishing %s") %
                 me->getName() % room % tmp_ch->getName());
             simple_deity_poof(me, tmp_ch->inRoom());
 

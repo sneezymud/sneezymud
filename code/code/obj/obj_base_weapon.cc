@@ -202,20 +202,20 @@ void TBaseWeapon::sharpenMe(TBeing *ch, TTool *tool)
 
   ch->addToMove(-sharp_move);
   if (ch->getMove() < 10) {
-    act("You are much too tired to continue to sharpen $p.", 
+    act("You are much too tired to continue to sharpen $p.",
            FALSE, ch, this, tool, TO_CHAR);
-    act("$n stops sharpening, and wipes $s brow.", 
+    act("$n stops sharpening, and wipes $s brow.",
            FALSE, ch, this, tool, TO_ROOM);
     ch->stopTask();
     return;
   }
-  act("You continue to sharpen $p with $P.", 
+  act("You continue to sharpen $p with $P.",
            FALSE, ch, this, tool, TO_CHAR);
   tool->addToToolUses(-1);
   if (tool->getToolUses() <= 0) {
-    act("Your $o breaks due to overuse.", 
+    act("Your $o breaks due to overuse.",
            FALSE, ch, tool, 0, TO_CHAR);
-    act("$n looks startled as $e breaks $P while sharpening.", 
+    act("$n looks startled as $e breaks $P while sharpening.",
            FALSE, ch, this, tool, TO_ROOM);
     ch->stopTask();
     delete tool;
@@ -228,7 +228,7 @@ void TBaseWeapon::sharpenMe(TBeing *ch, TTool *tool)
     return;
   }
 
-  if (ch->bSuccess(SKILL_SHARPEN)) 
+  if (ch->bSuccess(SKILL_SHARPEN))
     addToCurSharp((itemType() == ITEM_ARROW) ? 2 : 1);
 
   // task can continue forever, so don't bother decrementing the timer
@@ -240,9 +240,9 @@ void TBaseWeapon::dullMe(TBeing *ch, TTool *tool)
 
   ch->addToMove(-blunt_move);
   if (ch->getMove() < 10) {
-    act("You are much too tired to continue to blunt $p.", 
+    act("You are much too tired to continue to blunt $p.",
               FALSE, ch, this, tool, TO_CHAR);
-    act("$n stops blunting $p, and wipes $s brow.", 
+    act("$n stops blunting $p, and wipes $s brow.",
               FALSE, ch, this, tool, TO_ROOM);
     ch->stopTask();
     return;
@@ -251,7 +251,7 @@ void TBaseWeapon::dullMe(TBeing *ch, TTool *tool)
   tool->addToToolUses(-1);
   if (tool->getToolUses() <= 0) {
     act("Your $o breaks due to overuse.", false, ch, tool, 0, TO_CHAR);
-    act("$n looks startled as $e breaks $P while smoothing.", 
+    act("$n looks startled as $e breaks $P while smoothing.",
              FALSE, ch, this, tool, TO_ROOM);
     ch->stopTask();
     delete tool;
@@ -263,7 +263,7 @@ void TBaseWeapon::dullMe(TBeing *ch, TTool *tool)
     ch->stopTask();
     return;
   }
-  if (ch->bSuccess(SKILL_DULL)) 
+  if (ch->bSuccess(SKILL_DULL))
     addToCurSharp(1);
 
   // task can continue forever, so don't bother decrementing the timer
@@ -340,7 +340,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing *ch, TMonster *me)
     sprintf(buf, "Thanks for your business, I'll take your %d talen%s payment in advance!", cost, (cost > 1) ? "s" : "");
     me->doSay(buf);
 
-    TShopOwned tso(find_shop_nr(me->number), 
+    TShopOwned tso(find_shop_nr(me->number),
 		   dynamic_cast<TMonster *>(me), ch);
     tso.doBuyTransaction(cost, "sharpening", TX_BUYING_SERVICE);
 
@@ -379,15 +379,15 @@ void TBaseWeapon::objMenu(const TBeing *ch) const
   ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo(format("%sReal Lvl:%s %.2f") %
         ch->purple() % ch->norm() % weaponLevel());
-                 
+
   ch->sendTo(format(VT_CURSPOS) % 4 % 18);
   ch->sendTo(format("%sDam Lvl:%s %.2f") %
         ch->purple() % ch->norm() % damageLevel());
-                 
+
   ch->sendTo(format(VT_CURSPOS) % 4 % 32);
   ch->sendTo(format("%sStr Lvl:%s %.2f") %
         ch->purple() % ch->norm() % structLevel());
-                 
+
   ch->sendTo(format(VT_CURSPOS) % 4 % 50);
   ch->sendTo(format("%sQual Lvl:%s %.2f") %
         ch->purple() % ch->norm() % sharpLevel());
@@ -506,7 +506,7 @@ int TBaseWeapon::damageMe(TBeing *ch, TBeing *v, wearSlotT part_hit)
       // NOTE: this makes it easier to damage an item that is very damaged already
       if (::number(0, getMaxStructPoints()) >= getStructPoints()) {
 	int rc=damageItem(1);
-	
+
 	if(rc){
 	  if (IS_SET_DELETE(rc, DELETE_THIS))
 	    return DELETE_ITEM;
@@ -663,7 +663,7 @@ bool TBaseWeapon::isSlashWeapon() const
     // need at least 2/3 type, for TGenWeapons
 
     return count > (total/3.0*2.0);
-  }  
+  }
 
   // not a TGenWeapon
   return (slashType(wtype));
@@ -688,7 +688,7 @@ bool TBaseWeapon::isPierceWeapon() const
     // need at least 2/3 type, for TGenWeapons
 
     return count > (total/3.0*2.0);
-  }  
+  }
 
   // not a TGenWeapon
   return (pierceType(wtype));
@@ -697,10 +697,10 @@ bool TBaseWeapon::isPierceWeapon() const
 void TBaseWeapon::divinateMe(TBeing *caster) const
 {
 #if 1
-  caster->sendTo(format("It is capable of doing %s of damage for your level.\n\r") % 
+  caster->sendTo(format("It is capable of doing %s of damage for your level.\n\r") %
           describe_damage((int) damageLevel(), caster));
 #else
-  caster->sendTo(format("It is capable of doing %s of damage.\n\r") % 
+  caster->sendTo(format("It is capable of doing %s of damage.\n\r") %
           describe_damage((int) damageLevel(), caster));
 #endif
 }
@@ -1077,7 +1077,7 @@ int TBaseWeapon::wieldMe(TBeing *ch, char *arg2)
       canSingleWieldPrim = canSingleWieldSecd = false;
 
 #if 0
-    vlogf(LOG_LAPSOS, format("Dynamic Paired Code Active: %s %d %d") % 
+    vlogf(LOG_LAPSOS, format("Dynamic Paired Code Active: %s %d %d") %
           arg2 % canSingleWieldPrim % canSingleWieldSecd);
 #endif
 
@@ -1478,7 +1478,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 	    act("In the distance, $N dodges out of the way of $p.",
 		TRUE,ch,this,tb,TO_CHAR);
 	} else {
-	  act("$n dives behind some cover, avoiding $p.", 
+	  act("$n dives behind some cover, avoiding $p.",
 	      FALSE, tb, this, NULL, TO_ROOM);
 	  tb->sendTo("You dive behind some cover avoiding it.\n\r");
 	  if (!ch->sameRoom(*tb))
@@ -1547,18 +1547,18 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
 	  d *= 10;
 
         d = get_range_actual_damage(ch, tb, this, d, damtype);
-	
+
 	if(isPoisoned())
 	  applyPoison(tb);
 
 	TArrow *arrow;
-	if((arrow=dynamic_cast<TArrow *>(this)) && 
+	if((arrow=dynamic_cast<TArrow *>(this)) &&
 	   arrow->getTrapDamType()!=DOOR_TRAP_NONE){
 	  tb->triggerArrowTrap(arrow);
 	  arrow->setTrapLevel(0);
 	  arrow->setTrapDamType(DOOR_TRAP_NONE);
 	}
-	
+
         if (c->roomp && !c->roomp->isRoomFlag(ROOM_ARENA)) {
           if (::number(1, d) <= getStructPoints()) {
 	    if(IS_SET_DELETE(damageItem(1), DELETE_THIS)){
@@ -1569,7 +1569,7 @@ int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int
           }
         }
 #if RANGE_DEBUG
-        vlogf(LOG_MISC, format("Range debug: (1) %s damaging %s with %s for %d dam") % 
+        vlogf(LOG_MISC, format("Range debug: (1) %s damaging %s with %s for %d dam") %
                  ch->getName() % tb->getName() % getName() % d);
 #endif
         rc = ch->applyDamage(tb, d, damtype);
@@ -1629,14 +1629,14 @@ void TBaseWeapon::lowCheck()
 #else
   if (ap != obj_flags.cost) {
 #endif
-    vlogf(LOG_LOW, format("base_weapon %s has a bad price (%d).  should be (%d)") % 
+    vlogf(LOG_LOW, format("base_weapon %s has a bad price (%d).  should be (%d)") %
          getName() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
   if (canWear(ITEM_WEAR_HOLD)) {
     int amt = -itemAC();
     if (amt)
-      vlogf(LOG_LOW, format("Holdable weapon (%s:%d) with AC.  (bad!)") % 
+      vlogf(LOG_LOW, format("Holdable weapon (%s:%d) with AC.  (bad!)") %
           getName() % objVnum());
   }
 }

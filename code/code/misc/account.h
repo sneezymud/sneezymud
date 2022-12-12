@@ -38,7 +38,7 @@ class TAccount
   static const unsigned int MSP;
   static const unsigned int ALLOW_DOUBLECLASS;
   static const unsigned int ALLOW_TRIPLECLASS;
-  
+
   unsigned multiplay_limit = 2;
   int status = 0;
   sstring email;
@@ -52,10 +52,10 @@ class TAccount
   unsigned int flags = 0;
   int account_id = 0;
   time_t last_logon = 0;
-  
+
   bool read(const sstring &);
   bool write(const sstring &);
-  
+
   TAccount();
 };
 

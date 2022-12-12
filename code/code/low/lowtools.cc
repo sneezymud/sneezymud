@@ -25,7 +25,7 @@ bool parse_num_args(int argc, char **argv, std::vector<int> &vnums)
     if(npos != sstring::npos){
       s=convertTo<int>(tmp.substr(0, npos));
       e=convertTo<int>(tmp.substr(npos+1, tmp.size()));
-      
+
       if(s==0 || e==0){
 	printf("Bad argument %s, aborting.\n", tmp.c_str());
 	return false;
@@ -68,7 +68,7 @@ std::map <sstring,sstring> parse_data_file(const sstring &file, int num)
   // this is a crappy kluge
   values["vnum"]="EOM";
   values["shop_nr"]="EOM";
-      
+
   while(num--){
     while(getline(ifile, buf)){
       if(buf.size()>0 && buf[0]=='-'){
@@ -89,7 +89,7 @@ std::map <sstring,sstring> parse_data_file(const sstring &file, int num)
     if((loc=buf.find_first_of("~"))!=sstring::npos){
       name=buf.substr(0, loc);
       val="";
-      
+
       while(getline(ifile, buf) && buf.find_first_of("~")==sstring::npos){
 	val+=buf;
 	val+="\n";
@@ -103,7 +103,7 @@ std::map <sstring,sstring> parse_data_file(const sstring &file, int num)
     } else {
       if((loc=buf.find_first_of(":"))==sstring::npos)
 	continue;
-      
+
       name=buf.substr(0, loc);
       val=buf.substr(loc+1);
     }

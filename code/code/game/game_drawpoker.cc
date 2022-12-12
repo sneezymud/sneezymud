@@ -187,7 +187,7 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, format("%s got into DrawPoker::deal without being at the poker table!") % 
+    vlogf(LOG_BUG, format("%s got into DrawPoker::deal without being at the poker table!") %
           ch->getName());
     return;
   }
@@ -494,7 +494,7 @@ int DrawPokerGame::exitGame(const TBeing *ch)
          *ch6 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, format("%s left a poker table %s wasn't at!") % 
+    vlogf(LOG_BUG, format("%s left a poker table %s wasn't at!") %
           ch->getName() % ch->hssh());
     return FALSE;
   }
@@ -1017,7 +1017,7 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
     if (handHighs[playerIndex][0] == -1)
       handHighs[playerIndex][0] = getHighCard(playerIndex, 0);
 
-    vlogf(LOG_LAPSOS, format("DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d") % 
+    vlogf(LOG_LAPSOS, format("DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d") %
           hasStraight % hasFlush % hasTwoPair % hasSecondTwoPair % hasThreePair % hasFourPair %
           handHighs[playerIndex][0] % handHighs[playerIndex][1] % playerIndex);
 

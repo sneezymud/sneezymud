@@ -120,7 +120,7 @@ const char * const FACTION_BAK       = "faction/faction_info.bak";
 const int FACT_BOARD_BROTHER=1387;
 const int FACT_BOARD_SERPENT=8878;
 const int FACT_BOARD_LOGRUS =3864;
-  
+
 // the amount of faction % help received for donating 1 talen to your faction
 const float TITHE_FACTOR   = (0.0003);
 

@@ -16,17 +16,17 @@ void TBeing::doConceal(sstring argument)
   sstring name_buf;
   int rc;
   TBeing *vict;
- 
+
   if (getSkillValue(SKILL_CONCEALMENT) <= 0) {
     sendTo("You do not have the ability to conceal paths.\n\r");
     return;
   }
   argument = one_argument(argument, name_buf);
- 
+
   if (name_buf.empty()) {
     vict = this;
   } else {
-    if (is_abbrev(name_buf, "off") || 
+    if (is_abbrev(name_buf, "off") ||
 	is_abbrev(name_buf, "stop")) {
       one_argument(argument, name_buf);
       if (!name_buf.empty()) {
@@ -75,7 +75,7 @@ void TBeing::doConceal(sstring argument)
   if (rc)
     addSkillLag(SKILL_CONCEALMENT, rc);
 }
- 
+
 // return FALSE to cease tracking
 int conceal(TBeing *caster, TBeing *vict)
 {
@@ -92,7 +92,7 @@ int conceal(TBeing *caster, TBeing *vict)
     return FALSE;
   }
   if (vict->fight()) {
-    act("You can't conceal $N's path while $E is fighting.", 
+    act("You can't conceal $N's path while $E is fighting.",
          FALSE, caster, 0, vict, TO_CHAR);
     return FALSE;
   }
@@ -114,8 +114,8 @@ int conceal(TBeing *caster, TBeing *vict)
     // even if they can, reduce the chance of success
     lnd /= 2;
   }
-  
-  if (caster == vict) {  
+
+  if (caster == vict) {
     act("You attempt to conceal your path.",
         FALSE, caster, 0, 0, TO_CHAR);
     act("$n attempts to conceal $s path.",
@@ -144,7 +144,7 @@ int conceal(TBeing *caster, TBeing *vict)
 
     vict->affectTo(&aff);
   }
-  
+
   return TRUE;
 }
 
@@ -152,7 +152,7 @@ int conceal(TBeing *caster, TBeing *vict)
 
 int TBeing::doDisguise(const char *arg)
 {
-  
+
   char name_buf[MAX_INPUT_LENGTH];
   int rc;
 
@@ -214,7 +214,7 @@ struct PolyType DisguiseList[LAST_DISGUISE_MOB] =
   {"ambassador male"    , 40, 80, 125, DISC_STEALTH, RACE_DWARF},
   {"young-male gnome"   , 20, 40, 124, DISC_STEALTH, RACE_GNOME},
   {"missionary male"    , 40, 80, 126, DISC_STEALTH, RACE_GNOME},
-  {"outcast ogre"       , 20, 40, 196, DISC_STEALTH, RACE_OGRE}, 
+  {"outcast ogre"       , 20, 40, 196, DISC_STEALTH, RACE_OGRE},
   {"vigilante male"     , 40, 80, 127, DISC_STEALTH, RACE_OGRE},
   {"trader hobbit"      , 20, 40, 198, DISC_STEALTH, RACE_HOBBIT},
   {"emissary male"      , 40, 80, 128, DISC_STEALTH, RACE_HOBBIT}, //***
@@ -301,7 +301,7 @@ int disguise(TBeing *caster, char * buffer)
   thing_to_room(mob,Room::VOID);
   mob->swapToStrung();
 
-  // Check to make sure that there is no snooping going on. 
+  // Check to make sure that there is no snooping going on.
   if (!caster->desc || caster->desc->snoop.snooping) {
     caster->sendTo("Nothing seems to happen.\n\r");
     delete mob;
@@ -351,9 +351,9 @@ int disguise(TBeing *caster, char * buffer)
       duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
       break;
   }
-  act("You apply your skills and make yourself look like $N.", 
+  act("You apply your skills and make yourself look like $N.",
        TRUE, caster, NULL, mob, TO_CHAR);
-  act("$n applies $s skills and makes $mself look like $N.", 
+  act("$n applies $s skills and makes $mself look like $N.",
        TRUE, caster, NULL, mob, TO_ROOM);
 
 // first add the attempt -- used to regulate attempts
@@ -386,7 +386,7 @@ int disguise(TBeing *caster, char * buffer)
   if (caster->master)
     caster->stopFollower(TRUE);
 
-  // switch caster into mobile 
+  // switch caster into mobile
   caster->desc->character = mob;
   caster->desc->original = dynamic_cast<TPerson *>(caster);
 
@@ -404,7 +404,7 @@ int disguise(TBeing *caster, char * buffer)
   REMOVE_BIT(mob->specials.act, ACT_NOCTURNAL);
 
   appendPlayerName(caster, mob);
-  
+
  /*
   It is critical to remember that some diguises are race/sex independent
   so they Must be set here else it'll not always fit.

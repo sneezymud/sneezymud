@@ -409,7 +409,7 @@ int TOrganic::sellMe(TBeing *ch, TMonster *keeper, int shop_nr, int num = 1)
       ch->doSave(SILENT_YES);
       keeper->saveItems(shop_nr);
       return DELETE_THIS;
-    } else 
+    } else
       *keeper += *this;
   }
 

@@ -58,7 +58,7 @@ public:
       skChop(),
       skChi(),
       skDisarmMonk(),
-      skCatfall(), 
+      skCatfall(),
       skRepairMonk(),
       skCatleap(){
     }

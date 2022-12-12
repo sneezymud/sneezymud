@@ -82,8 +82,8 @@ int check_size_restrictions(const TBeing *ch, const TObj *o, wearSlotT slot, con
   const TBaseClothing *tbc = dynamic_cast<const TBaseClothing *>(o);
   if (!tbc || dynamic_cast<const TJewelry *>(tbc))
     return TRUE;
-  const TBaseContainer *tbc2 = (dynamic_cast<const TBaseContainer *>(o)); 
-  if (tbc2) 
+  const TBaseContainer *tbc2 = (dynamic_cast<const TBaseContainer *>(o));
+  if (tbc2)
     if (tbc2->isSaddle())
       return TRUE;
   if (tbc->isSaddle())
@@ -114,9 +114,9 @@ int check_size_restrictions(const TBeing *ch, const TObj *o, wearSlotT slot, con
 
 bool TBeing::isWieldingWeapon()
 {
-  if (heldInPrimHand() && dynamic_cast<TBaseWeapon *>(heldInPrimHand())) 
+  if (heldInPrimHand() && dynamic_cast<TBaseWeapon *>(heldInPrimHand()))
     return TRUE;
-  if (heldInSecHand() && dynamic_cast<TBaseWeapon *>(heldInSecHand())) 
+  if (heldInSecHand() && dynamic_cast<TBaseWeapon *>(heldInSecHand()))
     return TRUE;
   return FALSE;
 }
@@ -204,7 +204,7 @@ int TObj::personalizedCheck(TBeing *ch)
 
   if (!action_description.empty()) {
     strcpy(capbuf, action_description.c_str());
-    
+
     if ((sscanf(capbuf, "This is the personalized object of %s.", namebuf)) != 1) {
       vlogf(LOG_BUG, format("Bad personalized item (on %s) with bad action description...extracting from world.") %  ch->getName());
       return DELETE_THIS;
@@ -233,7 +233,7 @@ int TObj::personalizedCheck(TBeing *ch)
 	++it;
       }
 
-      if (eq_pos != WEAR_NOWHERE) 
+      if (eq_pos != WEAR_NOWHERE)
 	*ch->roomp += *ch->unequip(eq_pos);
       else if (parent) {
 	--(*this);
@@ -249,7 +249,7 @@ int TBeing::loseRoundWear(double num, bool randomize, bool check)
   if (!fight())
     return FALSE;
 
-  if (isAffected(AFF_ENGAGER) && !isTanking()) 
+  if (isAffected(AFF_ENGAGER) && !isTanking())
     return FALSE;
 
    int rc = loseRound(num, randomize, check);
@@ -261,7 +261,7 @@ int TBeing::loseRoundWear(double num, bool randomize, bool check)
 // this is who is wearing the item
 // DELETE_ITEM = nuke o
 int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
-{       
+{
   char buf[256];
   int primary = 0, rc = 0;
   spellNumT skill = TYPE_UNDEFINED;
@@ -269,7 +269,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
   if (!canUseEquipment(o, SILENT_NO, keyword))
     return FALSE;
 
-  if (!isImmortal() && desc && (isTanking() || 
+  if (!isImmortal() && desc && (isTanking() ||
                      (fight() && !isAffected(AFF_ENGAGER)))) {
     switch (keyword) {
       case WEAR_KEY_NONE:
@@ -277,7 +277,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
       case WEAR_KEY_HOLD_R:
       case WEAR_KEY_HOLD_L:
         break;
-      default: 
+      default:
         if (isTanking())
           sprintf(buf, "%s can't wear equipment like $p while tanking.",
              (ch == this ? "You" : "$N"));
@@ -285,7 +285,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
           sprintf(buf, "%s can't wear equipment like $p while fighting.",
              (ch == this ? "You" : "$N"));
         act(buf, FALSE, ch, o, this, TO_CHAR);
-        return FALSE; 
+        return FALSE;
     }
   }
 
@@ -295,7 +295,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
       keyword = (isRightHanded() ? WEAR_KEY_HOLD_L : WEAR_KEY_HOLD_R);
     else if ((keyword == WEAR_KEY_HOLD_R && isRightHanded()) ||
              (keyword == WEAR_KEY_HOLD_L && !isRightHanded())) {
-      sprintf(buf, "%s can't equip $p in your %s %s.", 
+      sprintf(buf, "%s can't equip $p in your %s %s.",
          (ch == this ? "You" : "$N"),
          (ch == this ? "your" : "$S"),
          describeBodySlot(isRightHanded() ? HOLD_RIGHT : HOLD_LEFT).c_str());
@@ -339,7 +339,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_FINGER_R);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.05, TRUE, TRUE);
             } else {
               sprintf(buf, "You slip $p around %s %s.",
@@ -357,7 +357,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_FINGER_L);
-              //  If fighting, make them lose a round or two. 
+              //  If fighting, make them lose a round or two.
               loseRoundWear(0.05, TRUE, TRUE);
             }
             aiWear(o);
@@ -399,7 +399,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             --(*o);
             equipChar(o, WEAR_NECK);
-            // If fighting, make them lose a round or two. 
+            // If fighting, make them lose a round or two.
             loseRoundWear(0.15, TRUE, TRUE);
             aiWear(o);
           }
@@ -448,7 +448,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             --(*o);
             equipChar(o, WEAR_BODY);
-            // If fighting, make them lose a round or two. 
+            // If fighting, make them lose a round or two.
             loseRoundWear(1.0, TRUE, TRUE);
             aiWear(o);
           }
@@ -497,7 +497,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             --(*o);
             equipChar(o, WEAR_HEAD);
-            // If fighting, make them lose a round or two. 
+            // If fighting, make them lose a round or two.
             loseRoundWear(0.10, TRUE, TRUE);
             aiWear(o);
           }
@@ -547,7 +547,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_LEG_R);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.60, TRUE, TRUE);
               aiWear(o);
             }
@@ -573,7 +573,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_LEG_R);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.60, TRUE, TRUE);
             } else {
               if (!check_size_restrictions(this, o, WEAR_LEG_R, ch))
@@ -596,7 +596,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_LEG_L);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.60, TRUE, TRUE);
             }
             aiWear(o);
@@ -648,7 +648,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_FOOT_R);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.45, TRUE, TRUE);
 	      aiWear(o);
             } else if(!hasQuestBit(TOG_PEGLEG_L)){
@@ -670,7 +670,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_FOOT_L);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.45, TRUE, TRUE);
 	      aiWear(o);
             } else {
@@ -700,7 +700,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
           if (!check_size_restrictions(this, o, WEAR_HAND_L, ch))
             return FALSE;
 
-          if ((equipment[WEAR_HAND_L] || hasQuestBit(TOG_HOOK_HAND_L)) && 
+          if ((equipment[WEAR_HAND_L] || hasQuestBit(TOG_HOOK_HAND_L)) &&
 	      (equipment[WEAR_HAND_R] || hasQuestBit(TOG_HOOK_HAND_R))){
             sprintf(buf, "%s already %s something on %s hands.",
                    (ch == this ? "You" : "$N"),
@@ -728,7 +728,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_HAND_R);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.25, TRUE, TRUE);
 	      aiWear(o);
             } else if(!hasQuestBit(TOG_HOOK_HAND_L)){
@@ -750,7 +750,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_HAND_L);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.25, TRUE, TRUE);
 	      aiWear(o);
             } else {
@@ -804,7 +804,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_ARM_R);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
              loseRoundWear(0.75, TRUE, TRUE);
             } else {
               sprintf(buf, "You %s $p on %s %s.",
@@ -825,7 +825,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_ARM_L);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.75, TRUE, TRUE);
             }
             aiWear(o);
@@ -880,7 +880,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             --(*o);
             equipChar(o, WEAR_BACK);
-            // If fighting, make them lose a round or two. 
+            // If fighting, make them lose a round or two.
             loseRoundWear(0.33, TRUE, TRUE);
             aiWear(o);
           }
@@ -930,7 +930,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             --(*o);
             equipChar(o, WEAR_WAIST);
-            // If fighting, make them lose a round or two. 
+            // If fighting, make them lose a round or two.
             loseRoundWear(0.90, TRUE, TRUE);
             aiWear(o);
           }
@@ -980,7 +980,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_WRIST_R);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.25, TRUE, TRUE);
             } else {
               sprintf(buf, "You %s $p around %s %s.",
@@ -1001,7 +1001,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
               --(*o);
               equipChar(o, WEAR_WRIST_L);
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.25, TRUE, TRUE);
             }
             aiWear(o);
@@ -1061,7 +1061,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               if (doesKnowSkill(getSkillNum(SKILL_2H_SPEC))) {
                 learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, getSkillNum(SKILL_2H_SPEC), 60);
               }
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.05, TRUE, TRUE);
               aiWear(o);
             }
@@ -1091,7 +1091,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               act(buf, FALSE, ch, o, this, TO_NOTVICT);
 
               equipChar(o, getPrimaryHold());
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               loseRoundWear(0.05, TRUE, TRUE);
             } else {
               sprintf(buf, "You %s $p in %s %s.",
@@ -1111,7 +1111,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
               act(buf, FALSE, ch, o, this, TO_NOTVICT);
 
               equipChar(o, getSecondaryHold());
-              // If fighting, make them lose a round or two. 
+              // If fighting, make them lose a round or two.
               skill = getSkillNum(SKILL_DUAL_WIELD);
               if (doesKnowSkill(skill) && dynamic_cast<TBaseWeapon *> (equipment[getPrimaryHold()])) {
                 learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 60);
@@ -1129,7 +1129,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
       break;
     case WEAR_KEY_HOLD_R:
-     // hold right 
+     // hold right
       if (validEquipSlot(HOLD_RIGHT)) {
         if (equipment[HOLD_RIGHT]) {
           sprintf(buf, "%s already %s something in %s %s.",
@@ -1172,7 +1172,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             --(*o);
             equipChar(o, HOLD_RIGHT);
-            // If fighting, make them lose a round or two. 
+            // If fighting, make them lose a round or two.
             skill = getSkillNum(SKILL_DUAL_WIELD);
             if (doesKnowSkill(skill) && dynamic_cast<TBaseWeapon *> (equipment[HOLD_LEFT])) {
               learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 60);
@@ -1180,8 +1180,8 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             loseRoundWear(0.05, TRUE, TRUE);
             aiWear(o);
-          } 
-        } 
+          }
+        }
       } else {
         sprintf(buf, "%s can't wear $p on that body part.",
              (ch == this ? "You" : "$N"));
@@ -1190,7 +1190,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
       break;
     case WEAR_KEY_HOLD_L:
-      // hold left 
+      // hold left
       if (validEquipSlot(HOLD_LEFT)) {
         if (equipment[HOLD_LEFT]) {
           sprintf(buf, "%s already %s something in %s %s.",
@@ -1233,7 +1233,7 @@ int TBeing::wear(TObj *o, wearKeyT keyword, TBeing *ch)
 
             --(*o);
             equipChar(o, HOLD_LEFT);
-            // If fighting, make them lose a round or two. 
+            // If fighting, make them lose a round or two.
             skill = getSkillNum(SKILL_DUAL_WIELD);
             if (doesKnowSkill(skill) && dynamic_cast<TBaseWeapon *> (equipment[HOLD_RIGHT])) {
               learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, skill, 60);
@@ -1318,7 +1318,7 @@ void TBeing::doWear(const char *argument)
       o = dynamic_cast<TObj *>(tto);
       if (o) {
         if (*arg2) {
-          int sbnum = search_block(arg2, keywords, FALSE);  // Partial Match 
+          int sbnum = search_block(arg2, keywords, FALSE);  // Partial Match
           if (sbnum == -1) {
             sendTo(format("Unknown body location: %s\n\r") % arg2);
             sendTo("Valid body locations:\n\r");
@@ -1617,7 +1617,7 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
         }
         return TRUE;
       } else {
-        sendTo(format("There is nothing %s your %s.\n\r") % 
+        sendTo(format("There is nothing %s your %s.\n\r") %
                ((slot == HOLD_RIGHT || slot == HOLD_LEFT) ? "in" : "on") %
                describeBodySlot(slot));
         return FALSE;
@@ -1643,13 +1643,13 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
       }
       if (o->stuckIn) {
         if (carryVolumeLimit() > getCarriedVolume()) {
-          buf = format("You rip $p out of your %s.") % 
+          buf = format("You rip $p out of your %s.") %
 	    describeBodySlot(j=o->eq_stuck);
           act(buf, FALSE, this, o, 0, TO_CHAR);
           buf = format("$n rips $p out of $s %s.") %
                      describeBodySlot(j);
           act(buf, FALSE, this, o, 0, TO_ROOM);
-  
+
           // If fighting, make them lose a round or two.
           loseRoundWear((double) o->getVolume() / 2250, TRUE, TRUE);
 
@@ -1663,14 +1663,14 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
           sendTo("You aren't agile enough to carry that much volume.\n\r");
           sendTo("Removing weapons, shields and other stuff in your hands may help some...\n\r");
           return FALSE;
-        } 
+        }
       } else {
         if (getPosition() == POSITION_RESTING && o->eq_pos != HOLD_RIGHT &&
                 o->eq_pos != HOLD_LEFT) {
           sendTo("You sit up in order to remove things more easily.\n\r");
           doSit("");
         }
-  
+
         if (carryVolumeLimit() > getCarriedVolume()) {
           rc = remove(o, this);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -1702,14 +1702,14 @@ int TBeing::doRemove(const sstring &argument, TThing *obj)
       if (!(o = obj)) {
         if (!(o = get_thing_in_equip(this, arg1.c_str(), ch->equipment, &j, TRUE, &count))) {
           if (!(o = get_thing_stuck_in_vis(this, arg1.c_str(), &j, &count, ch))) {
-            act("That item is nowhere on $N's body,", 
+            act("That item is nowhere on $N's body,",
                      FALSE, this, 0, ch, TO_CHAR);
             return FALSE;
           }
         }
       }
       if (obj && obj->stuckIn != ch && obj->equippedBy != ch) {
-        act("That item is nowhere on $N's body,", 
+        act("That item is nowhere on $N's body,",
                      FALSE, this, 0, ch, TO_CHAR);
         return FALSE;
       }
@@ -1894,11 +1894,11 @@ void TBeing::wearNTear(void)
 	  amount = getSkillValue(SKILL_IRON_SKIN);
 	  amount = max(amount, 0);
 	  if (amount >= ::number(1,100)) {
-	    return;	  
+	    return;
 	  }
 	}
-	
-	if (i == WEAR_FOOT_R || i == WEAR_FOOT_L || 
+
+	if (i == WEAR_FOOT_R || i == WEAR_FOOT_L ||
 	    i == WEAR_EX_FOOT_R || i == WEAR_EX_FOOT_L) {
           if (isLevitating())
             return; // If they are levitating, they will not hurt their feet.
@@ -1909,7 +1909,7 @@ void TBeing::wearNTear(void)
           act("<r>Your feet are getting sore from walking around barefoot.<1>",
 	      TRUE,this,NULL,0,TO_CHAR);
         }
-	
+
 	hurtLimb(getMaxLimbHealth((wearSlotT)i)/10, (wearSlotT)i);
 	return;
       }
@@ -2044,7 +2044,7 @@ int TBeing::doUnsaddle(sstring arg)
     return FALSE;
   }
   if (!horse->isRideable()) {
-    act("You can't unsaddle $N, $E isn't rideable.", 
+    act("You can't unsaddle $N, $E isn't rideable.",
           FALSE, this, 0, horse, TO_CHAR);
     return FALSE;
   }
@@ -2077,7 +2077,7 @@ int TBeing::doUnsaddle(sstring arg)
     return FALSE;
   }
 
-  act(format("You %s $p from $N.") % 
+  act(format("You %s $p from $N.") %
       (dynamic_cast<THarness *>(saddle)?"unharness":"unsaddle"),
       FALSE, this, saddle, horse , TO_CHAR);
   act(format("$n %s $p from $N.") %
@@ -2113,7 +2113,7 @@ void TBeing::doUntie(const sstring &arg)
     sendTo("That mount isn't harnessed.\n\r");
     return;
   }
-  
+
   if(!horse->tied_to){
     sendTo("That mount isn't tied to anything.\n\r");
     return;
@@ -2121,7 +2121,7 @@ void TBeing::doUntie(const sstring &arg)
 
   horse->tied_to->tied_to=NULL;
   horse->tied_to=NULL;
-  
+
   act("You untie $N.",
       FALSE, this, 0, horse, TO_CHAR);
   act("$n unties $N.",
@@ -2145,14 +2145,14 @@ void TBeing::doTie(const sstring &arg)
     sendTo("That mount isn't harnessed.\n\r");
     return;
   }
-  
+
   if(horse->tied_to){
     sendTo("That mount is already tied to something.\n\r");
     return;
   }
 
   if(!(obj=generic_find_obj(arg.word(1), FIND_OBJ_ROOM, this)) &&
-     !(isImmortal() && 
+     !(isImmortal() &&
        (obj=generic_find_being(arg.word(1), FIND_CHAR_ROOM, this)))){
     sendTo("Can't find that object.\n\r");
     return;
@@ -2162,7 +2162,7 @@ void TBeing::doTie(const sstring &arg)
     sendTo("That object is already tied to something.\n\r");
     return;
   }
-  
+
   act("You tie $N to $p.",
       FALSE, this, obj, horse, TO_CHAR);
   act("$n ties $N to $p.",
@@ -2207,7 +2207,7 @@ int TBeing::doSaddle(sstring arg)
     sendTo("You can't saddle yourself, you dolt. Try wearing it.\n\r");
   }
   if (!horse->isRideable()) {
-    act("You can't saddle $N, $E isn't rideable.", 
+    act("You can't saddle $N, $E isn't rideable.",
           FALSE, this, saddle, horse, TO_CHAR);
     return FALSE;
   }
@@ -2275,7 +2275,7 @@ float TBeing::maxWieldWeight(const TThing *obj, handTypeT hands) const
   // Weapon damage is less important nowadays with current combat setup
   // Additionally, this places limits on shield usage.  Balance arguments
   // make NO assumptions about AC limits from strength which is what that
-  // would effectively create.  As a consequence, I have upped maxWieldWeight  
+  // would effectively create.  As a consequence, I have upped maxWieldWeight
   // Bat 4-3-99
 #if 0
   float maxval = plotStat(STAT_CURRENT, STAT_STR, (float) 8.0, (float) 25.0, (float) 12.0);
@@ -2290,7 +2290,7 @@ float TBeing::maxWieldWeight(const TThing *obj, handTypeT hands) const
   if (hands == HAND_TYPE_BOTH) {
     // result = sum of both
     maxval = maxWieldWeight(obj, HAND_TYPE_PRIM) + maxWieldWeight(obj, HAND_TYPE_SEC);
-  } else if (obj && 
+  } else if (obj &&
              (tbc = dynamic_cast<const TBaseClothing *>(obj)) &&
              tbc->isShield()) {
     maxval *= 150;
@@ -2372,11 +2372,11 @@ void TBeing::doOutfit(const sstring &arg)
     }
     if (keyword == WEAR_KEY_HOLD) {
       TBaseClothing * tWorn = dynamic_cast<TBaseClothing *>(obj);
-  
+
       handTypeT tHandLoc = (obj->isPaired() ? HAND_TYPE_BOTH :
                             ((tWorn && tWorn->isShield()) ? HAND_TYPE_SEC :
                              HAND_TYPE_PRIM));
-  
+
       if (compareWeights(obj->getTotalWeight(true),
           mob->maxWieldWeight(obj, tHandLoc)) == -1) {
         act("$p is too heavy for $N to hold.", FALSE, this, obj, mob, TO_CHAR);
@@ -2386,7 +2386,7 @@ void TBeing::doOutfit(const sstring &arg)
     if (keyword == WEAR_KEY_NONE) {
       act("$p: That item doesn't seem to be wearable anywhere.  Putting in inventory.",
            FALSE, this, obj, mob, TO_CHAR);
-      
+
       --(*obj);
       *mob += *obj;
       doSave(SILENT_YES);
@@ -2409,7 +2409,7 @@ void TBeing::doOutfit(const sstring &arg)
       act("You can't outfit prototype objects!", FALSE, this, obj, 0, TO_CHAR);
       return;
     }
-  
+
     if (keyword == WEAR_KEY_HOLD) {
       if (obj->getTotalWeight(true) >= 1.0) {
         act("$p is too heavy for $N to hold.", FALSE, this, obj, mob, TO_CHAR);
@@ -2439,7 +2439,7 @@ void TBeing::doOutfit(const sstring &arg)
   act("$n outfits $N with $p.",
         FALSE, this, obj, mob, TO_NOTVICT);
 #endif
-     
+
   rc = mob->wear(obj, keyword, this);
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
     delete obj;

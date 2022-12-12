@@ -56,7 +56,7 @@ const sstring sstring::ansiToAard() const
   for(;m!=end;++m){
     oBuf.append((*m).prefix());
     oBuf.append((*m)[1]);
-      
+
     if((*m)[0].str()[1]=='<')
       code=(*m)[0].str()[2];
     else
@@ -214,9 +214,9 @@ const sstring sstring::ansiToAard() const
       oBuf.append(ANSI_NORMAL);
       break;
     case '1':
-      oBuf.append(ANSI_NORMAL);    
+      oBuf.append(ANSI_NORMAL);
       break;
-    }      
+    }
     last_m=m;
   }
   if(last_m!=m)
@@ -241,39 +241,39 @@ const sstring sstring::ansiToAard() const
   oBuf.inlineReplaceString(ANSI_PURPLE, "@m");
 
   // colors with styles
-  oBuf.inlineReplaceString(ANSI_RED_BOLD, 
+  oBuf.inlineReplaceString(ANSI_RED_BOLD,
 			   "@R");
-  oBuf.inlineReplaceString(ANSI_GREEN_BOLD, 
+  oBuf.inlineReplaceString(ANSI_GREEN_BOLD,
 			   "@G");
-  oBuf.inlineReplaceString(ANSI_ORANGE_BOLD, 
+  oBuf.inlineReplaceString(ANSI_ORANGE_BOLD,
 			   "@Y");
-  oBuf.inlineReplaceString(ANSI_YELLOW_BOLD, 
+  oBuf.inlineReplaceString(ANSI_YELLOW_BOLD,
 			   "@Y");
-  oBuf.inlineReplaceString(ANSI_BLUE_BOLD, 
+  oBuf.inlineReplaceString(ANSI_BLUE_BOLD,
 			   "@B");
-  oBuf.inlineReplaceString(ANSI_PURPLE_BOLD, 
+  oBuf.inlineReplaceString(ANSI_PURPLE_BOLD,
 			   "@M");
-  oBuf.inlineReplaceString(ANSI_CYAN_BOLD, 
+  oBuf.inlineReplaceString(ANSI_CYAN_BOLD,
 			   "@C");
-  oBuf.inlineReplaceString(ANSI_WHITE_BOLD, 
+  oBuf.inlineReplaceString(ANSI_WHITE_BOLD,
 			   "@W");
 
   // colors with background
-  oBuf.inlineReplaceString(ANSI_BK_ON_BK, 
+  oBuf.inlineReplaceString(ANSI_BK_ON_BK,
 			   "@x000");
-  oBuf.inlineReplaceString(ANSI_BK_ON_WH, 
+  oBuf.inlineReplaceString(ANSI_BK_ON_WH,
 			   "@w");
-  oBuf.inlineReplaceString(ANSI_WH_ON_BL, 
+  oBuf.inlineReplaceString(ANSI_WH_ON_BL,
 			   "@w");
-  oBuf.inlineReplaceString(ANSI_WH_ON_CY, 
+  oBuf.inlineReplaceString(ANSI_WH_ON_CY,
 			   "@c");
-  oBuf.inlineReplaceString(ANSI_WH_ON_GR, 
+  oBuf.inlineReplaceString(ANSI_WH_ON_GR,
 			   "@g");
-  oBuf.inlineReplaceString(ANSI_WH_ON_OR, 
+  oBuf.inlineReplaceString(ANSI_WH_ON_OR,
 			   "@y");
-  oBuf.inlineReplaceString(ANSI_WH_ON_PR, 
+  oBuf.inlineReplaceString(ANSI_WH_ON_PR,
 			   "@m");
-  oBuf.inlineReplaceString(ANSI_WH_ON_RD, 
+  oBuf.inlineReplaceString(ANSI_WH_ON_RD,
 			   "@r");
 
 
@@ -301,7 +301,7 @@ const sstring sstring::comify() const
 
   for (; charIndex < strCount; charIndex++) {
     // put commas every 3rd char EXCEPT if next char is '-'
-    // that is, want "123456" to become "123,456" 
+    // that is, want "123456" to become "123,456"
     // but don't want "-123" to become "-,123"
     if (!((strCount - charIndex) % 3) && charIndex != 0 &&
         !(charIndex == 1 && (*this)[0] == '-'))
@@ -375,7 +375,7 @@ const sstring sstring::cap() const
     for(sstring::size_type i=0;i<s.length();++i){
       if (s[i] == '<')
         counter = 0;
-      else 
+      else
         counter++;
 
       if (counter == 3) {
@@ -407,7 +407,7 @@ const sstring sstring::uncap() const
 	      counter = 0;
       else
 	      counter++;
-      
+
       if (counter == 3) {
 	      s[i] = tolower(s[i]);
         return s;
@@ -569,7 +569,7 @@ const bool sstring::startsVowel() const
     return isvowel((*this)[i]);
   }
   return false;
-} 
+}
 
 const sstring sstring::replaceString(sstring find, sstring replace) const
 {
@@ -807,17 +807,17 @@ void sstring::convertStringColor(const sstring replacement)
   // <z> at the end
   sstring repl = "<tmpi>";
   repl += replacement;
- 
-  while (find("<z>") != sstring::npos)  
+
+  while (find("<z>") != sstring::npos)
     replace(find("<z>"), 3, repl);
 
-  while (find("<Z>") != sstring::npos)  
+  while (find("<Z>") != sstring::npos)
     replace(find("<Z>"), 3, repl);
 
-  while (find("<1>") != sstring::npos)  
+  while (find("<1>") != sstring::npos)
     replace(find("<1>"), 3, repl);
 
-  while (find("<tmpi>") != sstring::npos)  
+  while (find("<tmpi>") != sstring::npos)
     replace(find("<tmpi>"), 6, "<z>");
 }
 

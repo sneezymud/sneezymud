@@ -218,7 +218,7 @@ void generate_obj_index()
       perror("indexData");
       exit(0);
     }
-    
+
     tmpi->virt=convertTo<int>(db["vnum"]);
     tmpi->name=mud_str_dup(db["name"]);
     tmpi->short_desc=mud_str_dup(db["short_desc"]);
@@ -232,7 +232,7 @@ void generate_obj_index()
     }
     if (tmpi->max_exist)
       tmpi->max_exist = max(tmpi->max_exist, (short int) 1);
-    
+
 
     tmpi->spec=convertTo<int>(db["spec_proc"]);
     tmpi->weight=convertTo<float>(db["weight"]);
@@ -273,11 +273,11 @@ void generate_obj_index()
 	tmpi->affected[i].modifier = mapFileToSpellnum(convertTo<int>(affect_db["mod1"]));
       else
 	tmpi->affected[i].modifier = convertTo<int>(affect_db["mod1"]);
-      
+
       tmpi->affected[i].modifier2 = convertTo<int>(affect_db["mod2"]);
       tmpi->affected[i].type = TYPE_UNDEFINED;
       tmpi->affected[i].level = 0;
-      tmpi->affected[i].bitvector = 0;      
+      tmpi->affected[i].bitvector = 0;
 
       affect_db.fetchRow();
       i++;
@@ -290,12 +290,12 @@ void generate_obj_index()
 
 
 
-// generate index table for monster file 
+// generate index table for monster file
 void generate_mob_index()
 {
   mobIndexData *tmpi = NULL;
   TDatabase db(DB_SNEEZY);
-  
+
   // to prevent constant resizing (slows boot), declare an appropriate initial
   // size.  Should be smallest power of 2 that will hold everything
   mob_index.reserve(8192);
@@ -316,43 +316,43 @@ void generate_mob_index()
       perror("mobIndexData");
       exit(0);
     }
-    
+
     tmpi->virt = convertTo<int>(db["vnum"]);
-    
+
     // read the sstrings
     tmpi->name = mud_str_dup(db["name"]);
     tmpi->short_desc = mud_str_dup(db["short_desc"]);
     tmpi->long_desc = mud_str_dup(db["long_desc"]);
     tmpi->description = mud_str_dup(db["description"]);
-    
+
     long fac=convertTo<int>(db["faction"]);
-    
+
     tmpi->faction = fac;
-    
+
     long Class=convertTo<int>(db["class"]);
     float arm=convertTo<int>(db["ac"]);
     float hp=convertTo<int>(db["hpbonus"]);
     float daml=convertTo<int>(db["damage_level"]);
-    
+
     long lev = (long)((arm + hp + daml) / 3);
-    
+
     tmpi->Class = Class;
     tmpi->level = lev;
-    
+
     long race=convertTo<int>(db["race"]);
     long wgt=convertTo<int>(db["weight"]);
-    
+
     tmpi->race = race;
     tmpi->weight = wgt;
-    
+
     long spec=convertTo<int>(db["spec_proc"]);
-    
+
     tmpi->spec = spec;
-        
+
     long maxe=convertTo<int>(db["max_exist"]);
-    
+
     tmpi->max_exist = maxe;
-    
+
     // handle some stat counters
     if (lev <= 5) {
       stats.mobs_1_5++;

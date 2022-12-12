@@ -101,7 +101,7 @@ void doSaveMOEdit(TBeing *ch, const char *tArg)
 }
 
 void TBeing::doQueueSave()
-{  
+{
   if(toggleInfo[TOG_TESTCODE1]->toggle){
     addPlayerAction(PLR_SAVE_QUEUED);
   } else {
@@ -155,7 +155,7 @@ void TBeing::doSave(silentTypeT silent, const char *tArg)
     // copy the descriptor so that both can see it
     // we need stuff on descriptor to properly evaluate handedness for eq-swap
     tPerson->desc = desc;
-    
+
     // for a poly, we want to swap all the gear that is on the poly back
     // to the original char, save the person in that state, and then swap
     // it all back.  Fortunately, the original person shouldn't have anything

@@ -20,7 +20,7 @@ CDMindBody::CDMindBody(const CDMindBody &a) :
   skBlur(a.skBlur)
 {
 }
- 
+
 CDMindBody & CDMindBody::operator=(const CDMindBody &a)
 {
   if (this == &a) return *this;

@@ -31,15 +31,15 @@ bool twitterShout(sstring from, sstring msg)
   // this may save us a tiny amount of time on the init call
 
   curl = curl_easy_init();
-  curl_formadd(&formpost, &lastptr, 
+  curl_formadd(&formpost, &lastptr,
               CURLFORM_COPYNAME, "status",
-              CURLFORM_COPYCONTENTS, 
+              CURLFORM_COPYCONTENTS,
               (format("%s: %s")% from% msg).str().c_str(),
               CURLFORM_END);
 
   headerlist = curl_slist_append(headerlist, buf);
 
-  curl_easy_setopt(curl, CURLOPT_URL, 
+  curl_easy_setopt(curl, CURLOPT_URL,
                   "http://twitter.com/statuses/update.xml");
   curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headerlist);
   curl_easy_setopt(curl, CURLOPT_USERPWD, "sneezymud:kegenlgn");

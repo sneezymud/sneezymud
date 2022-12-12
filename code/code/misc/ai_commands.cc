@@ -24,7 +24,7 @@
 int TMonster::aiBounce(TBeing *doer,TBeing *, aiTarg cond)
 {
   switch (cond) {
-    case TARGET_NONE: 
+    case TARGET_NONE:
       if (!isPerceptive()) {
         if (!::number(0,2)) {
           act("$n's head bobs up and down following your antics.",TRUE,this,0,doer,TO_VICT);
@@ -113,7 +113,7 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
           act("$n looks at you strangely.",TRUE,this,0,doer,TO_VICT);
           act("$n looks at $N's move with disgust.",TRUE,this,0,doer,TO_NOTVICT);
         }
-      } 
+      }
       break;
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
@@ -155,7 +155,7 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
       break;
     case TARGET_OTHER:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER) || (other->getSex() == SEX_NEUTER)) {
-        // could care less about the dance 
+        // could care less about the dance
       } else if (doer->getSex() == other->getSex()) {
         if (!::number(0,3)) {
           if (doer->getSex() == SEX_MALE)
@@ -190,7 +190,7 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
           act("$n looks at $N's strangely.",TRUE,this,0,doer,TO_NOTVICT);
         }
       }
-      break; 
+      break;
   }
 
   return FALSE;
@@ -198,9 +198,9 @@ int TMonster::aiDance(TBeing *doer, TBeing *other, aiTarg cond)
 
 int TMonster::aiSmile (TBeing *doer, TBeing *other, aiTarg cond)
 {
-  if (!isHumanoid()) 
+  if (!isHumanoid())
     return FALSE;
-  
+
   switch (cond) {
     case TARGET_NONE:
     case TARGET_SELF:
@@ -269,7 +269,7 @@ int TMonster::aiSmile (TBeing *doer, TBeing *other, aiTarg cond)
       break;
     case TARGET_OTHER:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER) || (other->getSex() == SEX_NEUTER)) {
-        // could care less about it 
+        // could care less about it
       } else if ((getSex() != other->getSex()) && !other->isUgly()) {
         UA(2);
         UM(1);
@@ -280,10 +280,10 @@ int TMonster::aiSmile (TBeing *doer, TBeing *other, aiTarg cond)
       } else if (!doer->isUgly() && (doer->getSex() != getSex())) {
         UA(2);
         UM(1);
-        if(!::number(0,1)) 
+        if(!::number(0,1))
           act("$n seems upset that you didn't smile at $m.",TRUE,this,0,doer,TO_VICT);
       } else {
-        // who cares?  they're ugly   :) 
+        // who cares?  they're ugly   :)
       }
       break;
   }
@@ -339,7 +339,7 @@ int TMonster::aiLaugh(TBeing *doer, TBeing *other, aiTarg cond)
       } else {
         aiShutUp(doer);
       }
-      break;  
+      break;
     case TARGET_OTHER:
       if (!::number(0,2)) {
         if (::number(0,1))
@@ -361,7 +361,7 @@ int TMonster::aiLaugh(TBeing *doer, TBeing *other, aiTarg cond)
 int TMonster::aiGiggle (TBeing *doer, TBeing *, aiTarg cond)
 {
   if (!isHumanoid()) {
-    // doubt they would understand a giggle 
+    // doubt they would understand a giggle
     return FALSE;
   }
 
@@ -399,11 +399,11 @@ int TMonster::aiShake (TBeing *doer, TBeing *, aiTarg cond)
       else
         act("$n watches the jello-thing wobble around.",TRUE, this,0,doer,TO_NOTVICT);
     } else if ((cond == TARGET_MOB) && (getRace() == RACE_CANINE)) {
-      if (isPerceptive()) 
+      if (isPerceptive())
         act("$n learned this trick in obedience school.",TRUE,this,0,doer,TO_ROOM);
       else {
-        act("$n doesn't know that trick and gets mad when you force $m to do it.",TRUE,this,0,doer,TO_VICT); 
-        doAction(fname(doer->name), CMD_GROWL); 
+        act("$n doesn't know that trick and gets mad when you force $m to do it.",TRUE,this,0,doer,TO_VICT);
+        doAction(fname(doer->name), CMD_GROWL);
         UA(1);
       }
     } else if ((cond == TARGET_MOB) && isStrong()) {
@@ -420,7 +420,7 @@ int TMonster::aiShake (TBeing *doer, TBeing *, aiTarg cond)
   }
   switch (cond) {
     case TARGET_NONE:
-      break;  // shakes their head 
+      break;  // shakes their head
     case TARGET_SELF:
       act("$n looks at you questiongly.",TRUE, this,0,doer,TO_VICT);
       if (doer->getSex() == SEX_MALE)
@@ -437,7 +437,7 @@ int TMonster::aiShake (TBeing *doer, TBeing *, aiTarg cond)
       if (isAngry()) {
         if (pissed()) {
           return takeFirstHit(*doer);
-        } else 
+        } else
           aiUpset(doer);
       } else if (isSusp()) {
         if (::number(0,2))
@@ -472,7 +472,7 @@ int TMonster::aiPuke (TBeing *doer, TBeing *, aiTarg cond)
     return FALSE;
   }
   switch (cond) {
-    case TARGET_MOB: 
+    case TARGET_MOB:
       UM(4);
       UA(6);
       doAction(fname(doer->name),CMD_SNARL);
@@ -577,7 +577,7 @@ int TMonster::aiScream (TBeing *doer, TBeing *, aiTarg cond)
 int TMonster::aiComfort (TBeing *doer, TBeing *, aiTarg cond)
 {
   if (!isHumanoid()) {
-    // lets just assume they do nothing 
+    // lets just assume they do nothing
     return FALSE;
   }
   switch (cond) {
@@ -600,7 +600,7 @@ int TMonster::aiComfort (TBeing *doer, TBeing *, aiTarg cond)
       }
       break;
     case TARGET_OTHER:
-      // comfort reaction towards other is in cry, whine, etc 
+      // comfort reaction towards other is in cry, whine, etc
       break;
   }
   return FALSE;
@@ -609,7 +609,7 @@ int TMonster::aiComfort (TBeing *doer, TBeing *, aiTarg cond)
 int TMonster::aiNod (TBeing *doer, TBeing *, aiTarg cond)
 {
   if (!isHumanoid()) {
-    // sheyah, like they know what that would mean 
+    // sheyah, like they know what that would mean
     return FALSE;
   }
   switch (cond) {
@@ -867,7 +867,7 @@ int TMonster::aiNuzzle (TBeing *doer, TBeing *other, aiTarg cond)
 int TMonster::aiCry (TBeing *doer, TBeing *, aiTarg cond)
 {
   if (!isHumanoid()) {
-    // do nothing 
+    // do nothing
     return FALSE;
   }
   switch (cond) {
@@ -1063,9 +1063,9 @@ int TMonster::aiApplaud (TBeing *doer, TBeing *other, aiTarg cond)
 
 int TMonster::aiBlush (TBeing *, TBeing *, aiTarg cond)
 {
-  if (!isHumanoid()) 
+  if (!isHumanoid())
     return FALSE;   // do nothing
-  
+
   switch (cond) {
     case TARGET_NONE:
       if (!isSusp() && !::number(0,2))
@@ -1113,7 +1113,7 @@ int TMonster::aiChuckle(TBeing *, TBeing *, aiTarg cond)
         DMal(1);
       if (!::number(0,3) && !isAngry() && (getSex() == SEX_FEMALE))
         doAction("",CMD_GIGGLE);
-      else if (!::number(0,4)) 
+      else if (!::number(0,4))
         doAction("",CMD_SMILE);
       break;
   }
@@ -1222,10 +1222,10 @@ int TMonster::aiFart (TBeing *doer, TBeing *, aiTarg cond)
         aiBadManners(doer);
       break;
     case TARGET_MOB:
-      if (pissed()) 
+      if (pissed())
         return takeFirstHit(*doer);
       else
-        aiUpset(doer); 
+        aiUpset(doer);
       break;
   }
   return FALSE;
@@ -1459,7 +1459,7 @@ int TMonster::aiLove(TBeing *doer, TBeing *other, aiTarg cond)
       break;
     case TARGET_OTHER:
       if (getSex() == SEX_NEUTER) {
-      } else if ((other->getSex() == SEX_NEUTER) || 
+      } else if ((other->getSex() == SEX_NEUTER) ||
                   (doer->getSex() == SEX_NEUTER)) {
       } else if (doer->getSex() == other->getSex())
         aiFag(doer,0);
@@ -2793,7 +2793,7 @@ int TMonster::aiSpam(TBeing *doer, TBeing *, aiTarg cond)
 
 int TMonster::aiRaise(TBeing *, TBeing *, aiTarg cond)
 {
-  // do_nothing 
+  // do_nothing
   if (!isHumanoid()) {
     return FALSE;
   }
@@ -2830,7 +2830,7 @@ int TMonster::aiRoll(TBeing *, TBeing *, aiTarg cond)
 
 int TMonster::aiBlink(TBeing *, TBeing *, aiTarg cond)
 {
-  // gotta assume this is a do_nothing social 
+  // gotta assume this is a do_nothing social
   if (!isHumanoid()) {
     return FALSE;
   }
@@ -2861,7 +2861,7 @@ void TBeing::aiWear(TObj *obj)
     if (!tbc)
       continue;
     if (!tbc->isPc() && tbc->canSee(this) &&
-        (tbc != this) && tbc->isHumanoid() && tbc->awake() && 
+        (tbc != this) && tbc->isHumanoid() && tbc->awake() &&
         isPc() && !UtilMobProc(tbc)) {
       num = (1 + obj->obj_flags.cost/10000);
       tbc->UG(num);
@@ -2906,7 +2906,7 @@ void TMonster::aiLook(TBeing *doer)
 {
   TThing *t;
   sstring buf;
-  
+
   if (UtilMobProc(this))
     return;
 
@@ -2914,9 +2914,9 @@ void TMonster::aiLook(TBeing *doer)
   for(StuffIter it=doer->roomp->stuff.begin();it!=doer->roomp->stuff.end();){
     t=*(it++);
     TMonster *tmons = dynamic_cast<TMonster *>(t);
-    if (!tmons || !tmons->canSee(doer) || !tmons->awake()) 
+    if (!tmons || !tmons->canSee(doer) || !tmons->awake())
       continue;
-    
+
     tmons->aiTarget(doer);
     tmons->US(2);
     if (tmons == this) {
@@ -3044,7 +3044,7 @@ int TMonster::aiSteal(TBeing *thief)
     }
   } else
     return (takeFirstHit(*thief));
-  
+
   return FALSE;
 }
 

@@ -48,7 +48,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
      vlogf(LOG_BUG, "failed new of holdem player.");
      return false;
     }
-    hpi = static_cast<holdemPlayerInfo *>(me->act_ptr);    
+    hpi = static_cast<holdemPlayerInfo *>(me->act_ptr);
     hpi->name="gambler2000";
     hpi->enabled=false;
     hpi->chip=CHIP_100;
@@ -56,9 +56,9 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
   } else {
     hpi = static_cast<holdemPlayerInfo *>(me->act_ptr);
   }
-  
+
   arg=one_argument(arg, buf);
-  
+
   if(cmd == CMD_SAY2 && ch->isImmortal() && buf==hpi->name){
     if(arg=="power up"){
       hpi->enabled=true;
@@ -90,9 +90,9 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
       me->doSay("My name is... huh?");
       me->doSay("My name is... what?");
       me->doSay("My name is %s.", hpi->name.c_str());
-      
 
-      
+
+
     } else if(arg.find("chip ", 0)!=sstring::npos){
       arg=one_argument(arg, buf);
       if(convertTo<int>(arg)==0)
@@ -163,7 +163,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
 
   if(gHoldem.getLastBet()){
     if(gHoldem.getLastBet() != hpi->chip){
-      me->doSay("Sorry, I only play with '%s' right now.", 
+      me->doSay("Sorry, I only play with '%s' right now.",
 		obj_index[real_object(hpi->chip)].short_desc);
       gHoldem.fold(me);
       return false;
@@ -201,7 +201,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
 	  gHoldem.fold(me);
 	}
       }
-      
+
       // by default we call to see the flop
       gHoldem.call(me);
       return true;
@@ -215,7 +215,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
 	gHoldem.call(me);
 	return true;
       }
-      
+
       // no hand, may as well fold
       gHoldem.fold(me);
       return true;
@@ -244,7 +244,7 @@ int holdemPlayer(TBeing *ch, cmdTypeT cmd, const char *argument, TMonster *me, T
       delete chipl[i];
     }
   }
-  
+
   gHoldem.fold(me);
   return true;
 }

@@ -40,7 +40,7 @@ bool TPotion::potIsEmpty() const {
     return TRUE;
   return FALSE;
 }
-  
+
 bool TPotion::isSimilar(const TThing *t) const
 {
   const TPotion *pot = dynamic_cast<const TPotion *>(t);
@@ -56,7 +56,7 @@ bool TPotion::isSimilar(const TThing *t) const
       !is_exact_name(name, pot->name)){
     return false;
   }
-  
+
   // not same if drink types are different, unless both are empty
   if(getDrinkType() != pot->getDrinkType() &&
      !(getDrinkUnits()==0 && getDrinkUnits()==0)){
@@ -72,11 +72,11 @@ int TPotion::getValue() const
   int cost_per, value;
   cost_per = liquidInfo[getDrinkType()]->price;
   value = (int) (getDrinkUnits() * cost_per);
-  
+
   if (obj_flags.cost <= 1) {
     value = max(0, value);
   } else {
-    value = max(1, value);  
+    value = max(1, value);
   }
 
   return value;

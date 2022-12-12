@@ -24,7 +24,7 @@ int barkskin(TBeing * caster, TBeing * victim, int level, short bKnown)
   if (victim->isPlayerAction(PLR_SOLOQUEST) && (victim != caster) &&
       !caster->isImmortal() && caster->isPc()) {
     act("$N is on a quest, you can't invoke barkskin on $M!",
-      FALSE, caster, NULL, victim, TO_CHAR); 
+      FALSE, caster, NULL, victim, TO_CHAR);
 
     return FALSE;
   }
@@ -56,9 +56,9 @@ int barkskin(TBeing * caster, TBeing * victim, int level, short bKnown)
       return SPELL_FALSE;
     }
 
-    act("Your skin turns into an extremely hard, oak-like bark.", 
+    act("Your skin turns into an extremely hard, oak-like bark.",
         FALSE, victim, NULL, NULL, TO_CHAR);
-    act("$n's skin turns into an extremely hard, oak-like bark.", 
+    act("$n's skin turns into an extremely hard, oak-like bark.",
         TRUE, victim, NULL, NULL, TO_ROOM);
 
     caster->reconcileHelp(victim, discArray[SKILL_BARKSKIN]->alignMod);
@@ -160,7 +160,7 @@ int castBarkskin(TBeing * caster, TBeing * victim)
 }
 
 // TREE WALK
- 
+
 int TObj::treeMe(TBeing *, const char *, int, int *)
 {
   return FALSE;
@@ -206,7 +206,7 @@ int treeWalk(TBeing * caster, const char * arg, int, short bKnown)
           if (j >= numx) {
             rp = ch->roomp;
             if (rp) {
-              act("You locate $N, and form a magical anchor between $M and you.", 
+              act("You locate $N, and form a magical anchor between $M and you.",
                     FALSE, caster, 0, ch, TO_CHAR);
               break;
             }
@@ -216,7 +216,7 @@ int treeWalk(TBeing * caster, const char * arg, int, short bKnown)
       }
     }
     if (!o && !ch) {
-      act("You fail to find any lifeforce by that name.", 
+      act("You fail to find any lifeforce by that name.",
              FALSE, caster, 0, 0, TO_CHAR);
       act("$n snaps out of $s trance.", FALSE, caster, 0, 0, TO_ROOM);
       return SPELL_SUCCESS;
@@ -248,7 +248,7 @@ int treeWalk(TBeing * caster, const char * arg, int, short bKnown)
         }
 
         if (tbt->riding) {
-          
+
           rc = tbt->fallOffMount(tbt->riding, POSITION_STANDING);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete tbt;
@@ -286,7 +286,7 @@ int treeWalk(TBeing * caster, const char * arg, int, short bKnown)
 int treeWalk(TBeing * caster, const char * arg)
 {
   int ret,level;
- 
+
   if (!bPassMageChecks(caster, SPELL_TREE_WALK, NULL))
     return FALSE;
 
@@ -299,10 +299,10 @@ int treeWalk(TBeing * caster, const char * arg)
     caster->sendTo("You are unable to commune with nature while fighting.");
     return FALSE;
   }
- 
+
   level = caster->getSkillLevel(SPELL_TREE_WALK);
   int bKnown = caster->getSkillValue(SPELL_TREE_WALK);
- 
+
   ret=treeWalk(caster,arg,level,bKnown);
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else {

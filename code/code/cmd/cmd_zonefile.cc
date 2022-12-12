@@ -303,9 +303,9 @@ namespace {
         fputs(tBuffer, tFile);
 
         if(!tObj->stuff.empty()){
-          TThing *sThing=NULL, 
+          TThing *sThing=NULL,
                  *sThing2=NULL;
-          TObj   *sObj, 
+          TObj   *sObj,
                  *sObj2;
 
           iMaxExist = 0;

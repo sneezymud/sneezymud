@@ -104,7 +104,7 @@ void CrazyEightsGame::deal(TBeing *ch)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, format("%s got into CrazyEights::deal without being at the eights table!") % 
+    vlogf(LOG_BUG, format("%s got into CrazyEights::deal without being at the eights table!") %
           ch->getName());
     return;
   }
@@ -294,7 +294,7 @@ int CrazyEightsGame::exitGame(const TBeing *ch)
          *ch4 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, format("%s left a crazy eights table %s wasn't at!") % 
+    vlogf(LOG_BUG, format("%s left a crazy eights table %s wasn't at!") %
           ch->getName() % ch->hssh());
     return FALSE;
   }

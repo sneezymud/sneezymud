@@ -6,8 +6,8 @@
 static int slam(TBeing *caster, TBeing *victim)
 {
   const int SLAM_MOVE = 5;
-  auto *weapon = dynamic_cast<TBaseWeapon *>(caster->heldInPrimHand());  
-  
+  auto *weapon = dynamic_cast<TBaseWeapon *>(caster->heldInPrimHand());
+
   // Ensure this isn't a peaceful room
   if (caster->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return false;
@@ -45,7 +45,7 @@ static int slam(TBeing *caster, TBeing *victim)
     caster->sendTo("You need to hold a weapon in your primary hand to make this a success.\n\r");
     return false;
   }
-  
+
   // Only consume vitality for mortals
   if (!(caster->isImmortal() || IS_SET(caster->specials.act, ACT_IMMORTAL)))
     caster->addToMove(-SLAM_MOVE);
@@ -56,7 +56,7 @@ static int slam(TBeing *caster, TBeing *victim)
   int successfulSkill = caster->bSuccess(skillValue, SKILL_SLAM);
 
   // Success use case
-  if (!victim->awake() || 
+  if (!victim->awake() ||
     (successfulHit && successfulSkill && successfulHit != GUARANTEED_FAILURE)) {
       int dam = caster->getSkillDam(victim, SKILL_SLAM, skillLevel, caster->getAdvLearning(SKILL_SLAM));
 
@@ -87,11 +87,11 @@ static int slam(TBeing *caster, TBeing *victim)
       dam = max((int)(victim->hitLimit() * scalingConstant), dam);
 
       // Send description text to players in the room
-      act("$n slams $N with $s weapon, inflicting considerable damage!", FALSE, caster, 0, victim, 
+      act("$n slams $N with $s weapon, inflicting considerable damage!", FALSE, caster, 0, victim,
                 TO_NOTVICT);
-      act("You slam your weapon into $N, inflicting considerable damage!", FALSE, caster, 0, victim, 
+      act("You slam your weapon into $N, inflicting considerable damage!", FALSE, caster, 0, victim,
                 TO_CHAR);
-      act("$n slams $s weapon into you!", FALSE, caster, 0, 
+      act("$n slams $s weapon into you!", FALSE, caster, 0,
                 victim, TO_VICT);
 
     // Special use-case for blunt weapons
@@ -105,21 +105,21 @@ static int slam(TBeing *caster, TBeing *victim)
     else if (weapon->isSlashWeapon())
       damageType = DAMAGE_HACKED;
     // Reconcile damage
-    if (caster->reconcileDamage(victim, dam, damageType) == -1) 
+    if (caster->reconcileDamage(victim, dam, damageType) == -1)
       return DELETE_VICT;
   }
   // Failure use case
   else {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("$n's attempt at slamming $N's with $s his weapon fails to make contact.", 
+      act("$n's attempt at slamming $N's with $s his weapon fails to make contact.",
                   FALSE, caster, 0, victim, TO_NOTVICT);
-      act("Your attempt at slamming $N with your weapon fails to make contact.", FALSE, caster, 0, victim, 
+      act("Your attempt at slamming $N with your weapon fails to make contact.", FALSE, caster, 0, victim,
                   TO_CHAR);
-      act("$n attempts to slam you with $s weapon but comes up short.", 
+      act("$n attempts to slam you with $s weapon but comes up short.",
                   FALSE, caster, 0, victim, TO_VICT);
     }
 
-    if (caster->reconcileDamage(victim, 0, SKILL_SLAM) == -1) 
+    if (caster->reconcileDamage(victim, 0, SKILL_SLAM) == -1)
       return DELETE_VICT;
 
   }
@@ -131,7 +131,7 @@ int TBeing::doSlam(const char *argument, TBeing *vict)
 {
   int rc;
   TBeing *victim;
-  
+
   if (checkBusy()) {
     return false;
   }
@@ -167,7 +167,7 @@ int TBeing::doSlam(const char *argument, TBeing *vict)
     victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
-  
+
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     return DELETE_THIS;
   }

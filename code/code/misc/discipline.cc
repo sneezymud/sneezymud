@@ -116,7 +116,7 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
 	act("$n begins to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_ROOM, ANSI_CYAN);
 	act("You begin to chant a mysterious and melodic incantation.", TRUE, ch, 0, 0, TO_CHAR, ANSI_CYAN);
 	return TRUE;
-      } 
+      }
     } else {
       if (ch->getRitualismLevel() >= RIT_LEV_NO_MANTRA) {
 	act("$n begins to dance and sing in an unfamiliar tongue.", TRUE, ch, 0, 0, TO_ROOM, ANSI_RED);
@@ -128,7 +128,7 @@ static bool enforceVerbal(TBeing *ch, spellNumT spell)
 	return TRUE;
       }
     }
-  } else 
+  } else
     return TRUE;
 }
 
@@ -158,7 +158,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       }
       ///////////////////////////////////////////////////////////////
       // min position in discArray defines absolute minimum level
-      // however, check some positions to see if restricted movement 
+      // however, check some positions to see if restricted movement
       // affects ability to make gestures
       // higher nums are more likely to cause restriction
       ///////////////////////////////////////////////////////////////
@@ -167,7 +167,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       ///////////////////////////////////////////////////////////
       if (ch->getPosition() == POSITION_RESTING)
 	num += 4 * num / 10;
-      
+
       if ((ch->getPosition() == POSITION_RESTING || ch->getPosition() == POSITION_SITTING || ch->getPosition() == POSITION_CRAWLING) && (num > ch->getSkillValue(SKILL_WIZARDRY))) {
 	////////////////////////////////////////////////////////////
 	// we know that wizradry is < 60 from getWizardryLevel check
@@ -189,7 +189,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       }
       ///////////////////////////////////////////////////////////////
       // min position in discArray defines absolute minimum level
-      // however, check some positions to see if restricted movement 
+      // however, check some positions to see if restricted movement
       // affects ability to make gestures
       // higher nums are more likely to cause restriction
       ///////////////////////////////////////////////////////////////
@@ -198,7 +198,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       ///////////////////////////////////////////////////////////
       if (ch->getPosition() == POSITION_RESTING)
 	num += 4 * num / 10;
-      
+
       if ((ch->getPosition() == POSITION_RESTING || ch->getPosition() == POSITION_SITTING || ch->getPosition() == POSITION_CRAWLING) && (num > ch->getSkillValue(SKILL_RITUALISM))) {
 	////////////////////////////////////////////////////////////////
 	// we know that ritualism is < 60 from getRitualismLevel check
@@ -327,9 +327,9 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
       } else {
 	sprintf(buf, "%s",  (ch->isRightHanded() ? "right" : "left"));
 	sprintf(buf2, "%s", (ch->isRightHanded() ? "left" : "right"));
-	
+
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-	
+
 	if (ch->getWizardryLevel() < WIZ_LEV_COMP_EITHER_OTHER_FREE) {
 	  if (!(IS_SET(discArray[spell]->comp_types, COMP_MATERIAL))) {
 	    sprintf(msg, "Both of your hands must be free and usable to perform the ritual's gestures!");
@@ -365,7 +365,7 @@ static bool enforceGestural(TBeing *ch, spellNumT spell)
 	sprintf(buf, "%s",  (ch->isRightHanded() ? "right" : "left"));
 	sprintf(buf2, "%s", (ch->isRightHanded() ? "left" : "right"));
 	act("Nothing seems to happen.", FALSE, ch, NULL, NULL, TO_ROOM);
-	
+
 	if (ch->getRitualismLevel() < RIT_LEV_COMP_EITHER_OTHER_FREE) {
 	  if (!(IS_SET(discArray[spell]->comp_types, COMP_MATERIAL))) {
 	    sprintf(msg, "Both of your hands must be free and usable to perform the ritual's gestures!");
@@ -481,7 +481,7 @@ static bool enforcePrayer(TBeing *ch, spellNumT spell)
     act("$n chants mysterious and sacred words.", TRUE, ch, 0, NULL, TO_ROOM, ANSI_CYAN);
     act("You beseech $d for aid.", TRUE, ch, NULL, NULL, TO_CHAR, ANSI_CYAN);
     return TRUE;
-  } else 
+  } else
     return TRUE;
 }
 
@@ -532,11 +532,11 @@ bool enforceHolySym(const TBeing *ch, spellNumT spell, bool checkDamage)
       } else {
         sb = "$p suffers structural damage from the stress!";
       }
-    
+
       if (sym_stress > orig_strength) {
-        act("$n's $o starts to glow with power but the glow fades away!", 
+        act("$n's $o starts to glow with power but the glow fades away!",
             FALSE, ch, holy, NULL, TO_ROOM);
-        act("Your $o starts to glow with power but the glow fades away!", 
+        act("Your $o starts to glow with power but the glow fades away!",
             FALSE, ch, holy, NULL, TO_CHAR);
         act("You sense that $p is not strong enough for that prayer.",
             FALSE, ch, holy, NULL, TO_CHAR);
@@ -561,7 +561,7 @@ bool enforceHolySym(const TBeing *ch, spellNumT spell, bool checkDamage)
           holy = NULL;
           return FALSE;
         }
-      
+
         holy->addToSymbolCurStrength(-sym_stress);
         act(sb, false, ch, holy, NULL, TO_CHAR);
         return TRUE;
@@ -569,7 +569,7 @@ bool enforceHolySym(const TBeing *ch, spellNumT spell, bool checkDamage)
     } else {
       return FALSE;    // requires symbol, user didn't have one
     }
-  } 
+  }
   return TRUE;         // doesn't require holy symbol
 }
 
@@ -649,31 +649,31 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
                 {CLASS_DEIKHAN, SKILL_RETREAT_DEIKHAN},
                 {CLASS_THIEF, SKILL_RETREAT_THIEF},
                 {CLASS_MONK, SKILL_RETREAT_MONK}});
-        
+
         case SKILL_SWITCH_OPP:
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_SWITCH_OPP},
                 {CLASS_DEIKHAN, SKILL_SWITCH_DEIKHAN},
                 {CLASS_THIEF, SKILL_SWITCH_THIEF},
                 {CLASS_MONK, SKILL_SWITCH_MONK}});
-        
+
         case SKILL_DISARM:
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_DISARM},
                 {CLASS_DEIKHAN, SKILL_DISARM_DEIKHAN},
                 {CLASS_THIEF, SKILL_DISARM_THIEF},
                 {CLASS_MONK, SKILL_DISARM_MONK}});
-        
+
         case SKILL_BASH:
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_BASH},
                 {CLASS_DEIKHAN, SKILL_BASH_DEIKHAN}});
-        
+
         case SKILL_RESCUE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_RESCUE},
                 {CLASS_DEIKHAN, SKILL_RESCUE_DEIKHAN}});
-        
+
         case SKILL_DUAL_WIELD:
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_DUAL_WIELD},
@@ -683,132 +683,132 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
 	    return pick_best_skill(this, skill_num, {
 		{CLASS_WARRIOR, SKILL_2H_SPEC},
 		{CLASS_DEIKHAN, SKILL_2H_SPEC_DEIKHAN}});
-        
+
         case SKILL_SHOVE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_WARRIOR, SKILL_SHOVE},
                 {CLASS_DEIKHAN, SKILL_SHOVE_DEIKHAN}});
-        
+
         case SPELL_SALVE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_SALVE},
                 {CLASS_DEIKHAN, SPELL_SALVE_DEIKHAN}});
-        
+
         case SPELL_HEAL_LIGHT:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HEAL_LIGHT},
                 {CLASS_DEIKHAN, SPELL_HEAL_LIGHT_DEIKHAN}});
-        
+
         case SPELL_HEAL_SERIOUS:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HEAL_SERIOUS},
                 {CLASS_DEIKHAN, SPELL_HEAL_SERIOUS_DEIKHAN}});
-        
+
         case SPELL_HEAL_CRITICAL:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HEAL_CRITICAL},
                 {CLASS_DEIKHAN, SPELL_HEAL_CRITICAL_DEIKHAN}});
-        
+
         case SPELL_NUMB:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_NUMB},
                 {CLASS_DEIKHAN, SPELL_NUMB_DEIKHAN}});
-        
+
         case SPELL_HARM_LIGHT:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HARM_LIGHT},
                 {CLASS_DEIKHAN, SPELL_HARM_LIGHT_DEIKHAN}});
-        
+
         case SPELL_HARM_SERIOUS:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HARM_SERIOUS},
                 {CLASS_DEIKHAN, SPELL_HARM_SERIOUS_DEIKHAN}});
-        
+
         case SPELL_HARM_CRITICAL:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HARM_CRITICAL},
                 {CLASS_DEIKHAN, SPELL_HARM_CRITICAL_DEIKHAN}});
-        
+
         case SPELL_HARM:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HARM},
                 {CLASS_DEIKHAN, SPELL_HARM_DEIKHAN}});
-        
+
         case SPELL_CURE_POISON:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CURE_POISON},
                 {CLASS_DEIKHAN, SPELL_CURE_POISON_DEIKHAN}});
-        
+
         case SPELL_POISON:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_POISON},
                 {CLASS_DEIKHAN, SPELL_POISON_DEIKHAN}});
-        
+
         case SPELL_REFRESH:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_REFRESH},
                 {CLASS_DEIKHAN, SPELL_REFRESH_DEIKHAN}});
-        
+
         case SPELL_HEROES_FEAST:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_HEROES_FEAST},
                 {CLASS_DEIKHAN, SPELL_HEROES_FEAST_DEIKHAN}});
-        
+
         case SPELL_CREATE_FOOD:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CREATE_FOOD},
                 {CLASS_DEIKHAN, SPELL_CREATE_FOOD_DEIKHAN}});
-        
+
         case SPELL_CREATE_WATER:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CREATE_WATER},
                 {CLASS_DEIKHAN, SPELL_CREATE_WATER_DEIKHAN}});
-        
+
         case SPELL_ARMOR:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_ARMOR},
                 {CLASS_DEIKHAN, SPELL_ARMOR_DEIKHAN}});
-        
+
         case SPELL_BLESS:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_BLESS},
                 {CLASS_DEIKHAN, SPELL_BLESS_DEIKHAN}});
-        
+
         case SPELL_EXPEL:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_EXPEL},
                 {CLASS_DEIKHAN, SPELL_EXPEL_DEIKHAN}});
-        
+
         case SPELL_CLOT:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CLOT},
                 {CLASS_DEIKHAN, SPELL_CLOT_DEIKHAN}});
-        
+
         case SPELL_STERILIZE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_STERILIZE},
                 {CLASS_DEIKHAN, SPELL_STERILIZE_DEIKHAN}});
-        
+
         case SPELL_REMOVE_CURSE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_REMOVE_CURSE},
                 {CLASS_DEIKHAN, SPELL_REMOVE_CURSE_DEIKHAN}});
-        
+
         case SPELL_CURSE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CURSE},
                 {CLASS_DEIKHAN, SPELL_CURSE_DEIKHAN}});
-        
+
         case SPELL_INFECT:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_INFECT},
                 {CLASS_DEIKHAN, SPELL_INFECT_DEIKHAN}});
-        
+
         case SPELL_CURE_DISEASE:
             return pick_best_skill(this, skill_num, {
                 {CLASS_CLERIC, SPELL_CURE_DISEASE},
                 {CLASS_DEIKHAN, SPELL_CURE_DISEASE_DEIKHAN}});
-        
+
 #if 0
         // unimplemented
         case SPELL_DETECT_POISON:
@@ -821,7 +821,7 @@ spellNumT TBeing::getSkillNum(spellNumT skill_num) const
     };
 }
 
-bool TBeing::isValidDiscClass(discNumT discNum, int classNum, int indNum) 
+bool TBeing::isValidDiscClass(discNumT discNum, int classNum, int indNum)
 {
   if (discNum >= MAX_DISCS)
     return FALSE;
@@ -840,7 +840,7 @@ bool TBeing::isValidDiscClass(discNumT discNum, int classNum, int indNum)
 
 discNumT getDisciplineNumber(spellNumT spell_num, int class_num)
 {
-  mud_assert(spell_num >= MIN_SPELL && spell_num < MAX_SKILL, 
+  mud_assert(spell_num >= MIN_SPELL && spell_num < MAX_SKILL,
           "Bad skill in getDisciplineNumber: %d", spell_num);
 
   if (!class_num) {
@@ -872,7 +872,7 @@ void CDiscipline::setLearnedness(int uNewValue)
 {
     if (uNewValue > MAX_DISC_LEARNEDNESS)
       uLearnedness = MAX_DISC_LEARNEDNESS;
-    else 
+    else
       uLearnedness = uNewValue;
 }
 
@@ -931,7 +931,7 @@ static void logSkillAttempts(const TBeing *caster, spellNumT spell, logSkillAtte
 #if 0
 // don't log if maxed?
   if (value >= MAX_SKILL_LEARNEDNESS)
-    return; 
+    return;
 #endif
 
   // count the number of immortal uses
@@ -951,7 +951,7 @@ static void logSkillAttempts(const TBeing *caster, spellNumT spell, logSkillAtte
         break;
     }
     return;
-  } 
+  }
 
   // count mob uses
   if (!caster->desc || !caster->isPc()) {
@@ -1029,7 +1029,7 @@ enum skillSuccessT {
 
 static void logSkillSuccess(const TBeing *caster, spellNumT spell, skillSuccessT type)
 {
-  // this is used to log skill success 
+  // this is used to log skill success
   // there is usually no need to call this directly as it sits inside bSuccess
   // however, it can be called directly if appropriate
 
@@ -1047,7 +1047,7 @@ static void logSkillSuccess(const TBeing *caster, spellNumT spell, skillSuccessT
       discArray[spell]->potSuccess++;
     return;
   }
-  
+
   if ((caster->GetMaxLevel() > MAX_MORT) && caster->desc) {
     discArray[spell]->immSuccess++;
     return;
@@ -1058,7 +1058,7 @@ static void logSkillSuccess(const TBeing *caster, spellNumT spell, skillSuccessT
 
   // mortal PCs only get here
   discArray[spell]->success++;
-  
+
   if (discArray[spell]->minMana) {
     caster->desc->session.spell_success_pass++;
     caster->desc->career.spell_success_pass++;
@@ -1082,7 +1082,7 @@ enum logSkillFailT {
 
 static void logSkillFail(const TBeing *caster, spellNumT spell, logSkillFailT type)
 {
-  // this is used to log skill fails 
+  // this is used to log skill fails
   // there is usually no need to call this directly as it sits inside bSuccess
   // however, it can be called directly if appropriate
 
@@ -1123,9 +1123,9 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
   // success counter
   if (caster->desc) {
     if (skillType == SPELL_MAGE ||
-        skillType == SPELL_CLERIC || 
+        skillType == SPELL_CLERIC ||
         skillType == SPELL_DEIKHAN ||
-        skillType == SPELL_SHAMAN || 
+        skillType == SPELL_SHAMAN ||
         skillType == SPELL_RANGER) {
       // Is a spell and not a skill
       if (((caster->fight() && !caster->isAffected(AFF_ENGAGER)) ||
@@ -1207,7 +1207,7 @@ static bool bSucCounter(TBeing *caster, skillUseClassT skillType, spellNumT spel
     logSkillSuccess(caster, spell, SKILL_SUCCESS_NORMAL);
     return TRUE;
   }
-  
+
   return FALSE;
 }
 
@@ -1224,8 +1224,8 @@ bool TBeing::bSuccess(int ubCompetence, double dPiety, spellNumT spell)
     int pietyNum;
     if ((skillType == SPELL_CLERIC) || (skillType == SPELL_DEIKHAN) ||
         (skillType == SKILL_CLERIC) || (skillType == SKILL_DEIKHAN)) {
-      pietyNum = min(95, (3 * GetMaxLevel())); 
-    } else { 
+      pietyNum = min(95, (3 * GetMaxLevel()));
+    } else {
       pietyNum = min(70, (2 * GetMaxLevel()));
     }
     pietyNum = min(0, (((int) dPiety) - pietyNum));
@@ -1250,7 +1250,7 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
 
   if (caster->GetMaxLevel() > MAX_MORT) {
     return;
-  } 
+  }
 
   if (!caster->desc) {
     vlogf(LOG_BUG,format("Something went into logLearnFail with no desc (%d)") %  spell);
@@ -1258,7 +1258,7 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
   }
 
 #if DISC_DEBUG
-  vlogf(LOG_BUG, format("%s Fail Spell %s (%d) ubComp < 0") %  caster->getName() % discArray[spell]->name % spell); 
+  vlogf(LOG_BUG, format("%s Fail Spell %s (%d) ubComp < 0") %  caster->getName() % discArray[spell]->name % spell);
 #endif
 
   if (type) {
@@ -1306,7 +1306,7 @@ bool TBeing::bSuccess(int ubCompetence, spellNumT spell)
     logSkillFail(this, spell, FAIL_GENERAL);
 #if DISC_DEBUG
     if (desc && isPc()) {
-      vlogf(LOG_BUG, format("%s Fail Spell %s (%d) ubComp < 0") %  
+      vlogf(LOG_BUG, format("%s Fail Spell %s (%d) ubComp < 0") %
 	    getName() % discArray[spell]->name % spell);
     }
 #endif
@@ -1411,7 +1411,7 @@ critSuccT spellCritSuccess(TBeing *caster, spellNumT spell)
   int roll = ::number(1, 10000);
 
   if (roll <= chance) {
-    // roll determined Crit success 
+    // roll determined Crit success
     // but we need to roll again to figure out what kind of crit
     int crit_roll = ::number(1, 10);
 
@@ -1449,7 +1449,7 @@ critSuccT critSuccess(TBeing *caster, spellNumT spell)
 {
   if (!caster->isPc())
     return CRIT_S_NONE;
-  
+
   // use the new spell function for spells
   if (spell >= MIN_SPELL && spell < MAX_SPELL)
     return spellCritSuccess(caster, spell);
@@ -1458,7 +1458,7 @@ critSuccT critSuccess(TBeing *caster, spellNumT spell)
   if (::number(0,9))
     return CRIT_S_NONE;
 
-  int roll, adjusted, task = 100; 
+  int roll, adjusted, task = 100;
   discNumT das = getDisciplineNumber(spell, FALSE);
   CDiscipline *cd;
 
@@ -1540,16 +1540,16 @@ critFailT critFail(TBeing *caster, spellNumT spell)
   discNumT das = getDisciplineNumber(spell, FALSE);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, format("bad disc for spell %d") %  spell);
-    return CRIT_F_NONE; 
-  } 
+    return CRIT_F_NONE;
+  }
 // adjust for learnedness of caster
   adjusted = caster->getDiscipline(das)->getLearnedness() - discArray[spell]->start + 1;
 
-  adjusted *= 2;  
+  adjusted *= 2;
   adjusted += 100;
   adjusted=max(100, adjusted);
 
-  task *= adjusted;  
+  task *= adjusted;
   task /= 100;
 
   // Higher Focus gets better results
@@ -1600,7 +1600,7 @@ int checkMana(TBeing * caster, int mana)
     act("You can't seem to summon the magic energies...", FALSE, caster, 0, 0, TO_CHAR, ANSI_CYAN);
     act("$n begins to glow for a brief second, but it quickly fades.", FALSE, caster, NULL, NULL, TO_ROOM, ANSI_CYAN);
     return TRUE;
-  } else   
+  } else
     return FALSE;
 }
 
@@ -1611,7 +1611,7 @@ int checkLifeforce(TBeing * caster, int lifeforce)
     act("You don't seem to have enough lifeforce...", FALSE, caster, 0, 0, TO_CHAR, ANSI_ORANGE);
     act("$n's eyes glow fire red and then quickly fade back to normal.", FALSE, caster, NULL, NULL, TO_ROOM, ANSI_RED);
     return TRUE;
-  } else   
+  } else
     return FALSE;
 }
 // END LIFEFORCE
@@ -1623,7 +1623,7 @@ bool checkPerc(const TBeing * caster, double align)
     act("$d scoffs in your general direction!", FALSE, caster, NULL, NULL, TO_CHAR);
     act("$n blushes as $d falls down laughing at $s request!", FALSE, caster, NULL, NULL, TO_ROOM);
     return TRUE;
-  } else  
+  } else
     return FALSE;
 }
 #endif
@@ -1654,7 +1654,7 @@ TSymbol * TBeing::findHolySym(silentTypeT silent) const
         sym_faction = best->getSymbolFaction();
         attuned = 1;
         if ((sym_faction != FACT_UNDEFINED) || attuneCode) {
-          if ((getFaction() == sym_faction) || attuneCode) { 
+          if ((getFaction() == sym_faction) || attuneCode) {
             // symbol in primary
             if (secondary && dev_lev <= DEV_LEV_SYMB_EITHER_OTHER_FREE) {
               // 0 = prim + sec free
@@ -1741,10 +1741,10 @@ TSymbol * TBeing::findHolySym(silentTypeT silent) const
     }
   }
   if (!silent) {
-    act("$n frantically gropes for something that $e can't seem to find!", 
+    act("$n frantically gropes for something that $e can't seem to find!",
              FALSE, this, NULL, NULL, TO_ROOM);
     if (bad_faction > 1) {
-      act("Your deities do not recognize your choice of holy symbols!", 
+      act("Your deities do not recognize your choice of holy symbols!",
              FALSE, this, NULL, NULL, TO_CHAR);
     } else if (bad_faction == 1) {
       act("Your deities do not recognize your choice of holy symbols!", FALSE, this, NULL, NULL, TO_CHAR);
@@ -1780,7 +1780,7 @@ bool checkRoom(const TBeing * ch)
   return TRUE;
 }
 
-void checkFactionHurt(TBeing * caster, TBeing * victim) 
+void checkFactionHurt(TBeing * caster, TBeing * victim)
 {
   int dec_amt;
 
@@ -1794,7 +1794,7 @@ void checkFactionHurt(TBeing * caster, TBeing * victim)
   }
 }
 
-void checkFactionHelp(TBeing *caster, TBeing *victim) 
+void checkFactionHelp(TBeing *caster, TBeing *victim)
 {
   int dec_amt;
 
@@ -1897,7 +1897,7 @@ void TBeing::assignDisciplinesClass()
     discs->disc[DISC_ADVANCED_ADVENTURING] = new CDAdvAdventuring();
     discs->disc[DISC_DEFENSE] = new CDDefense();
     discs->disc[DISC_OFFENSE] = new CDOffense();
- 
+
     discs->disc[DISC_PSIONICS] = new CDPsionics();
 
     discs->disc[DISC_COMMONER] = new CDCommoner();
@@ -1918,7 +1918,7 @@ void TBeing::assignDisciplinesClass()
   }
 
 
-    
+
   if (!player.Class) {
     vlogf(LOG_BUG,format("call to assignDisciplinesClass without a valid Class (%s)") %  getName());
     return;
@@ -2052,7 +2052,7 @@ void TBeing::assignDisciplinesClass()
 }
 
 
-void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num) 
+void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num)
 {
   int disc_learn = 0, boost = 0, max_amt = 0, value = 0;
   CDiscipline *cd;
@@ -2072,7 +2072,7 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num)
       if (!getSkill(i))
         continue;
 
-      if (disc_learn < discArray[i]->start) 
+      if (disc_learn < discArray[i]->start)
         continue;
 
       if (isPc()) {
@@ -2116,7 +2116,7 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num)
 	}
         if (i == SKILL_RIDE){
           setNatSkillValue(SKILL_RIDE,min(100,5 + GetMaxLevel() * 2));
-          setSkillValue(SKILL_RIDE,min(100,5 + GetMaxLevel() * 2)); 
+          setSkillValue(SKILL_RIDE,min(100,5 + GetMaxLevel() * 2));
 	}
       }
     }
@@ -2242,7 +2242,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
     if (hideThisSpell(i)) continue;
     if (discArray[i]->assDisc != assDiscNum) continue;
     if (!getDiscipline(discArray[i]->assDisc)) continue;
-    if (discArray[i]->assDisc == assDiscNum 
+    if (discArray[i]->assDisc == assDiscNum
          && getDiscipline(discArray[i]->disc)->isBasic()) {
       basSum += getSkillValue(i);
       basCount++;
@@ -2263,15 +2263,15 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
       bonus += advLearning;
 //      advLearning = getAdvDoLearning(skill);
 //      bonus += (level * advLearning) / 200;
-    }                      
-  } 
-  
+    }
+  }
+
   // make the chance at equal level 90%
   // still always works on something more than 3 levels lower than you
   double halfLev = 6;
   double startLev = 1;  // number of levels below current where this takes effect
   // same level = 85%, level + 10 = 16%
-  
+
   // add a bonus for training in skills
 
 /*  halfLev += basMean / 50 + advMean / 20; // add up to 6 levels to double time
@@ -2281,7 +2281,7 @@ int TBeing::isNotPowerful(TBeing *vict, int lev, spellNumT skill, silentTypeT si
   halfLev += bonus / 16.7; // up to 6
   startLev -= bonus / 25; // up to 4
 
-  
+
   double levelDiff = (double) vict->GetMaxLevel() - (double) lev + startLev;
   int chance = (int) (10000 * exp(-levelDiff / halfLev ));
   if (chance < 0) chance = 10001; //roll over of integer
@@ -2329,7 +2329,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case DISC_SORCERY:
       lev = getClassLevel(CLASS_MAGE);
       break;
-    case DISC_RANGER: 
+    case DISC_RANGER:
     case DISC_PLANTS:
     case DISC_ANIMAL:
     case DISC_NATURE:
@@ -2411,7 +2411,7 @@ int TBeing::getSkillLevel(spellNumT skill) const
     case MAX_DISCS:
     case DISC_NONE:
     case MAX_SAVED_DISCS:
-      vlogf(LOG_BUG, format("bad disc (%d, %d) in getSkillLevel (%s).") % 
+      vlogf(LOG_BUG, format("bad disc (%d, %d) in getSkillLevel (%s).") %
                disc_num % skill % getName());
       lev = 0;
       break;
@@ -2476,7 +2476,7 @@ static void learnAttemptLog(const TBeing *caster, spellNumT spell)
 {
   if (caster->desc && caster->isPc()) {
     discArray[spell]->learnAttempts++;
-  } 
+  }
 }
 
 static void learnLearnednessLog(const TBeing *caster, spellNumT spell, int amt)
@@ -2576,7 +2576,7 @@ static void logLearnAttempts(TBeing *caster, spellNumT spell, logLearnAttemptT t
     case LEARN_ATT_ADD:
       discArray[spell]->learnAttempts++;
       discArray[spell]->learnLearn += caster->getSkillValue(spell);
-      discArray[spell]->learnLevel += caster->GetMaxLevel(); 
+      discArray[spell]->learnLevel += caster->GetMaxLevel();
       break;
     case LEARN_ATT_REM:
       discArray[spell]->learnAttempts -= 1;
@@ -2596,7 +2596,7 @@ enum logLearnSuccessT {
 
 static void logLearnSuccess(TBeing *caster, spellNumT spell, logLearnSuccessT type, int boost)
 {
-  // this is used to log learn success 
+  // this is used to log learn success
   // there is usually no need to call this directly as it sits inside i
   // learnFromDoing and learnFromDoingUnusual
 
@@ -2648,7 +2648,7 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
   switch (type) {
     case LEARN_UNUSUAL_PROFICIENCY:   // proficiencies
       if (w_type == TYPE_HIT) {
-          spell = SKILL_BAREHAND_PROF; 
+          spell = SKILL_BAREHAND_PROF;
 	  spell2 = SKILL_BAREHAND_SPEC;
           amt *= 2;
       } else if (slashType(w_type)) {
@@ -2666,7 +2666,7 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
       }
       if (amt && ::number(0,amt)) {
         // arbitrary dont let the skill increase
-        if (doesKnowSkill(spell) && 
+        if (doesKnowSkill(spell) &&
             (value = getRawNatSkillValue(spell)) < MAX_SKILL_LEARNEDNESS) {
           learnAttemptLog(this, spell);
           learnLearnednessLog(this, spell, value);
@@ -2688,10 +2688,10 @@ int TPerson::learnFromDoingUnusual(learnUnusualTypeT type, spellNumT spell, int 
               (getDiscipline(DISC_COMBAT)->getLearnedness() >= MAX_DISC_LEARNEDNESS) &&
               doesKnowSkill(spell2)) {
             return learnFromDoing(spell2, SILENT_NO, 0);
-          } else 
+          } else
             return FALSE;
-        } 
-      } 
+        }
+      }
       break;
     case LEARN_UNUSUAL_NORM_LEARN:
       if (amt && ::number(0, amt)) {
@@ -2751,8 +2751,8 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   }
 
 
-  if (!discArray[sknum] || 
-      !*discArray[sknum]->name || 
+  if (!discArray[sknum] ||
+      !*discArray[sknum]->name ||
       discArray[sknum]->startLearnDo == -1) {
     return FALSE;
   }
@@ -2772,7 +2772,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   }
 
   // this prevents them from gaining further without a minimum wait between
-  // increases. Allow less minimum wait time between gains 
+  // increases. Allow less minimum wait time between gains
 
   if (actual <= 50) {
     if ((time(0) - sk->lastUsed) < (SECS_PER_REAL_MIN / 2))  {
@@ -2794,17 +2794,17 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
         discArray[sknum]->disc == DISC_RANGED ||
         discArray[sknum]->disc == DISC_BAREHAND) {
     chanceDisc = ::number(0,200);
-    chanceAss = ::number(0, 400);  
+    chanceAss = ::number(0, 400);
   } else if (discArray[sknum]->assDisc == discArray[sknum]->disc) {
     // advanced discipline here
     chanceDisc = ::number(0,150);
-    chanceAss = 1;  // no chance of learn 
+    chanceAss = 1;  // no chance of learn
   } else {
     chanceDisc = ::number(0, 200);
     chanceAss = ::number(0,400);
   }
 
-  if ((actual >= MAX_SKILL_LEARNEDNESS) || 
+  if ((actual >= MAX_SKILL_LEARNEDNESS) ||
       (actual >= getMaxSkillValue(sknum))) {
     chanceDisc = (max(0, chanceDisc - 25));
     chanceAss = (max(0, chanceAss - 25));
@@ -2818,14 +2818,14 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       vlogf(LOG_SILENT, format("(%s) has a skill (%d) but doesnt have the discipline") %  getName() % sknum);
 #endif
       return FALSE;
-    } 
+    }
     discLearn = discipline->getDoLearnedness();
     discLearn = max(1, discLearn);
     discLearn = min(100, discLearn + 1);
     if (discLearn < 100) {
       discipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, format("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
+      vlogf(LOG_SILENT, format("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn);
 #endif
     }
   }
@@ -2842,7 +2842,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
     if (discLearn < 100) {
       assDiscipline->setDoLearnedness(discLearn);
 #if DISC_DEBUG
-      vlogf(LOG_SILENT, format("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn); 
+      vlogf(LOG_SILENT, format("%s just learned something in %s, Learn = %d.") %  getName() % discNames[(discArray[sknum]->assDisc)].properName % discLearn);
 #endif
     }
   }
@@ -2874,7 +2874,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   // C = 0 from f(0.0) = 0
   // A = 100% from f(1.0)
   // y = 100% * amount ^ (B)
-  // we desire B to be in range 1.0 (high wis) to 3.5 (low wis) 
+  // we desire B to be in range 1.0 (high wis) to 3.5 (low wis)
   // solving for a linear formula, gave slope of (-1/60) and intersect of 4
     float power;
     power = 3.0 - ( plotStat(STAT_CURRENT, STAT_WIS, 1.0, 2.5, 1.75, 1.0));
@@ -2912,7 +2912,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
   int boost = 1;
   if (discArray[sknum]->amtLearnDo > 1) {
     boost = discArray[sknum]->amtLearnDo;
-    if ((actual + boost) > 100) 
+    if ((actual + boost) > 100)
       boost = 100 - actual;
   }
 
@@ -2935,7 +2935,7 @@ int TPerson::learnFromDoing(spellNumT sknum, silentTypeT silent, unsigned int fl
       sendTo(COLOR_BASIC, format("<c>You feel that you have enough knowledge of %s to please your guildmaster.<z>") % discArray[sknum]->name);
     }
   }
-  
+
   sk->lastUsed = time(0);
   learnSuccessLog(this, sknum, boost);
 
@@ -2984,7 +2984,7 @@ void TBeing::addSkillLag(spellNumT skill, int rc)
   lag_t lag_num = discArray[skill]->lag;
   float f_lag  = lagAdjust(lag_num),
         f_base = 1.0;
-#if 1 
+#if 1
   if (IS_SET_DELETE(rc, DELETE_VICT))
     f_lag = min(f_base, f_lag);
 #else
@@ -3043,7 +3043,7 @@ CDiscipline::CDiscipline() :
 }
 
 CDiscipline::CDiscipline(const CDiscipline &a) :
-  uNatLearnedness(a.uNatLearnedness), 
+  uNatLearnedness(a.uNatLearnedness),
   uLearnedness(a.uLearnedness),
   uDoLearnedness(a.uDoLearnedness),
   ok_for_class(a.ok_for_class)

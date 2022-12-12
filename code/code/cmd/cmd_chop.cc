@@ -37,7 +37,7 @@ static int chopHit(TBeing *c, TBeing *v, int score)
     if ((c->isRightHanded()) && (v->hasPart(WEAR_ARM_L))) {
       pos = WEAR_ARM_L;
       slot = 1;
-    } 
+    }
     else if(!c->isRightHanded() && v->hasPart(WEAR_ARM_R)) {
       pos = WEAR_ARM_R;
       slot = 1;
@@ -49,17 +49,17 @@ static int chopHit(TBeing *c, TBeing *v, int score)
     slot = 2;                     // body shot
   else if (temp < 90)
     slot = 3;                     // neck shot
-  else 
+  else
     slot = 4;                     // head shot
   if (!v->isHumanoid())
     slot = 5;                     // non-human side shot
-  
+
   // Set default damage
   int dam = c->getSkillDam(v, SKILL_CHOP, c->getSkillLevel(SKILL_CHOP), c->getAdvLearning(SKILL_CHOP));
 
   // Default lag
   //  c->cantHit += c->loseRound(1);
-  
+
   switch (slot) {
     case 1:         // ARM SHOT
       act("$n slams $s chop into $N's arm.", FALSE, c, 0, v, TO_NOTVICT);
@@ -123,14 +123,14 @@ static int chopHit(TBeing *c, TBeing *v, int score)
       } else if (c->dentItem(v, item, 1, c->getPrimaryHand()) == DELETE_ITEM) {
         delete item;
         item = NULL;
-      }     
+      }
       break;
     case 5:    // SIDE SHOT
     default:
       act("$n hits $N in the side with a mighty chop!", 0, c, 0, v, TO_NOTVICT);
       act("You're hit in the side by $n's mighty chop!", FALSE, c, 0,v,TO_VICT);
       act("Your chop lands square on $N's side!", FALSE, c, 0, v, TO_CHAR);
-      break; 
+      break;
   }
 
   item = dynamic_cast<TObj *>(c->equipment[c->getPrimaryHand()]);

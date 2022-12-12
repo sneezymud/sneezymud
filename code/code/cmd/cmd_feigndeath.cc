@@ -54,7 +54,7 @@ static int feignDeath(TBeing * caster)
         if (::number(1, 101) < bKnown/ 2) {
           if (!tc->isPc()){
             TMonster *tmons = dynamic_cast<TMonster *>(tc);
-            if (tmons->Hates(caster, NULL)) 
+            if (tmons->Hates(caster, NULL))
               tmons->remHated(caster, NULL);
           }
         }
@@ -73,7 +73,7 @@ static int feignDeath(TBeing * caster)
       case CRIT_F_NONE:
         caster->setPosition(POSITION_SLEEPING);
     }
-  } 
+  }
   return TRUE;
 }
 

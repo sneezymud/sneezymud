@@ -45,14 +45,14 @@ public:
 //Level 5
    CSkill skArmor;
 
-//Level 6 
+//Level 6
     CSkill skBless;
 
-//Level 8 
+//Level 8
     CSkill skClot;
     CSkill skRainBrimstone;
 
-//Level 9 
+//Level 9
     CSkill skHealSerious;    // MOD  10th level individual
     CSkill skHarmSerious;    // MOD  10th level individual
 
@@ -74,7 +74,7 @@ public:
     CSkill skSalve;
     CSkill skPoison;
 
-//Level18 
+//Level18
     CSkill skHarmCritical;   // MOD  20th level individual
     CSkill skInfect;
     CSkill skRefresh;

@@ -26,7 +26,7 @@ class TDrugInfo
   public:
     const char *name;
     int potency; // max units of drug in body that takes affect
-    int duration; 
+    int duration;
     TDrugInfo(const char *n, int p, int d);
     TDrugInfo(const TDrugInfo &);
     TDrugInfo & operator=(const TDrugInfo &);

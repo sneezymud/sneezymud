@@ -27,12 +27,12 @@ int handsOfFlame(TBeing *caster, TBeing *victim, int level, short bKnown, int *d
         TRUE, caster, 0, victim, TO_CHAR);
     act("Nothing seems to happen, you are totally immune to the flames.",
         TRUE, caster, 0, victim, TO_VICT);
-    act("Nothing seems to happen, $N seems totally immune to the flames.", 
+    act("Nothing seems to happen, $N seems totally immune to the flames.",
         TRUE, caster, 0, victim, TO_NOTVICT);
     return SPELL_FALSE;
   }
   if (!caster->hasHands()) {
-    act("How do you expect to cast this spell without hands.", 
+    act("How do you expect to cast this spell without hands.",
         TRUE, caster, 0, 0, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;
@@ -185,7 +185,7 @@ int handsOfFlame(TBeing *caster, TBeing *victim)
     return FALSE;
   }
 
-// 2. Second send to general mage check function 
+// 2. Second send to general mage check function
 
   if (!bPassMageChecks(caster, SPELL_HANDS_OF_FLAME, victim))
     return FALSE;
@@ -219,11 +219,11 @@ int castHandsOfFlame(TBeing *caster, TBeing *victim)
 //  }
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("You reach out and touch $N!", 
+    act("You reach out and touch $N!",
         FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED);
-    act("$n reaches out and grabs $N!", 
+    act("$n reaches out and grabs $N!",
         FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_RED);
-    act("$n reaches out and grabs you!", 
+    act("$n reaches out and grabs you!",
         FALSE, caster, NULL, victim, TO_VICT, ANSI_RED);
 
     if (IS_SET(ret, SPELL_SAVE)) {
@@ -261,20 +261,20 @@ int castHandsOfFlame(TBeing *caster, TBeing *victim)
     if (caster->reconcileDamage(victim, damage, SPELL_HANDS_OF_FLAME) == -1)
       ADD_DELETE(ret, VICTIM_DEAD);
   }
-  
+
 //  if (IS_SET(ret, SPELL_SAVE)) {
 //  }
 
   if (IS_SET(ret, SPELL_FAIL) && !IS_SET(ret, SPELL_CRIT_FAIL)) {
-     act("$n's hands glow for a brief second but then extinguish!", 
+     act("$n's hands glow for a brief second but then extinguish!",
          FALSE, caster, NULL, NULL, TO_ROOM, ANSI_ORANGE);
-     act("You fail to add magic heat to your hands!", 
+     act("You fail to add magic heat to your hands!",
          FALSE, caster, NULL, NULL, TO_CHAR, ANSI_ORANGE);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL) || IS_SET(ret, SPELL_CFAIL_DEFAULT)) {
-    act("$n's hands become engulfed in flames!", 
+    act("$n's hands become engulfed in flames!",
         FALSE, caster, NULL, NULL, TO_ROOM, ANSI_RED);
-    act("Your hands become engulfed in flames!  Man, that hurts!", 
+    act("Your hands become engulfed in flames!  Man, that hurts!",
         FALSE, caster, NULL, NULL, TO_CHAR, ANSI_RED);
     if (caster->reconcileDamage(caster, damage, SPELL_HANDS_OF_FLAME) == -1)
       ADD_DELETE(ret, CASTER_DEAD);
@@ -310,7 +310,7 @@ int faerieFire(TBeing *caster, TBeing *victim, int level, short bKnown)
   if (victim->affectedBySpell(SPELL_FAERIE_FIRE)) {
     act("You sense that $N is already affected by the spell!",
         FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n just tried to cast something on you!", 
+    act("$n just tried to cast something on you!",
         0, caster, NULL, victim, TO_VICT);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;
@@ -481,7 +481,7 @@ void faerieFire(TBeing *caster, TBeing *victim)
   start_cast(caster, victim, NULL, caster->roomp, SPELL_FAERIE_FIRE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
 
 // 6.   Start them fighting with 0 damage
-// this spell is non-violent, it piss off mobs if it hits 
+// this spell is non-violent, it piss off mobs if it hits
 
 }
 
@@ -503,11 +503,11 @@ int ret,level;
   }
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("A faint pink outline puffs out around $N!", 
+    act("A faint pink outline puffs out around $N!",
         TRUE, caster, NULL, victim, TO_NOTVICT);
-    act("A faint pink outline puffs out around $N!", 
+    act("A faint pink outline puffs out around $N!",
         TRUE, caster, NULL, victim, TO_CHAR);
-    act("A faint pink outline puffs out around you!", 
+    act("A faint pink outline puffs out around you!",
         FALSE, caster, NULL, victim, TO_VICT);
   }
   if (IS_SET(ret, SPELL_SAVE)) {
@@ -537,9 +537,9 @@ int ret,level;
     caster->nothingHappens();
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL) || IS_SET(ret, SPELL_CFAIL_DEFAULT)) {
-    act("A faint pink outline puffs out around $n!", 
+    act("A faint pink outline puffs out around $n!",
         TRUE, caster, NULL, victim, TO_ROOM);
-    act("A faint pink outline puffs out around you!", 
+    act("A faint pink outline puffs out around you!",
         TRUE, caster, NULL, victim, TO_CHAR);
   } else {
 
@@ -591,7 +591,7 @@ int flamingSword(TBeing *caster, TBeing *victim, int level, short bKnown, int ad
             FALSE, caster, NULL, victim, TO_VICT);
         ret = SPELL_SUCCESS;
         break;
-    } 
+    }
 
     if (victim->isLucky(caster->spellLuckModifier(SPELL_FLAMING_SWORD))) {
       SV(SPELL_FLAMING_SWORD);
@@ -641,7 +641,7 @@ int castFlamingSword(TBeing *caster, TBeing *victim)
   ret=flamingSword(caster,victim,level,caster->getSkillValue(SPELL_FLAMING_SWORD), caster->getAdvLearning(SPELL_FLAMING_SWORD));
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
-  } 
+  }
   if (IS_SET(ret, SPELL_SAVE)) {
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {
@@ -673,7 +673,7 @@ int flamingSword(TBeing *caster, TBeing *victim)
     return FALSE;
 
 // 4.   Get lag and difficulty for adding to casting object
-  lag_t rounds = discArray[SPELL_FLAMING_SWORD]->lag; 
+  lag_t rounds = discArray[SPELL_FLAMING_SWORD]->lag;
   diff = discArray[SPELL_FLAMING_SWORD]->task;
 
 // 5.   Initialize the casting object with data
@@ -745,7 +745,7 @@ int inferno(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_lea
       CF(SPELL_INFERNO);
       dam = dam/2;
       dam = min(200,dam);
-      if (caster->reconcileDamage(caster, dam, SPELL_INFERNO) == -1) 
+      if (caster->reconcileDamage(caster, dam, SPELL_INFERNO) == -1)
         return SPELL_CRIT_FAIL + CASTER_DEAD;
 
       return SPELL_CRIT_FAIL;
@@ -785,21 +785,21 @@ int castInferno(TBeing *caster, TBeing *victim)
 
   ret=inferno(caster,victim,level,caster->getSkillValue(SPELL_INFERNO), caster->getAdvLearning(SPELL_INFERNO));
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("You cause $N to errupt in a pillar of fire!", 
+    act("You cause $N to errupt in a pillar of fire!",
                   FALSE, caster, NULL, victim, TO_CHAR);
-    act("$n causes $N to errupt in a pillar of fire!", 
+    act("$n causes $N to errupt in a pillar of fire!",
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("$n causes you to errupt in a pillar of fire!", 
+    act("$n causes you to errupt in a pillar of fire!",
                   FALSE, caster, NULL, victim, TO_VICT);
     rc = victim->flameEngulfed();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       ADD_DELETE(rc2, DELETE_VICT);
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-    act("Something goes terribly, terribly wrong!!", 
+    act("Something goes terribly, terribly wrong!!",
                FALSE, caster, 0, 0, TO_CHAR);
-    act("You errupt in a pillar of fire!", 
+    act("You errupt in a pillar of fire!",
                FALSE, caster, NULL, 0, TO_CHAR);
-    act("$n causes $mself to errupt in a pillar of fire!", 
+    act("$n causes $mself to errupt in a pillar of fire!",
                FALSE, caster, NULL, 0, TO_ROOM);
     rc = caster->flameEngulfed();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -821,26 +821,26 @@ int inferno(TBeing *caster, TBeing *victim, TMagicItem * obj)
   int rc = 0;
   int rc2 = 0;
 
-  if (caster->roomp->isUnderwaterSector()) { 
+  if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("You cannot cast that under these wet conditions!\n\r");
     return FALSE;
   }
- 
+
   ret = inferno(caster, victim, obj->getMagicLevel(),obj->getMagicLearnedness(), 0);
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$p causes $n to errupt in a pillar of fire!", 
+    act("$p causes $n to errupt in a pillar of fire!",
                   FALSE, victim, obj, NULL, TO_ROOM);
-    act("$p causes you to errupt in a pillar of fire!", 
+    act("$p causes you to errupt in a pillar of fire!",
                   FALSE, victim, obj, NULL, TO_CHAR);
     rc = victim->flameEngulfed();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       ADD_DELETE(rc2, DELETE_VICT);
   } else if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-    act("Something goes terribly, terribly wrong!!", 
+    act("Something goes terribly, terribly wrong!!",
                FALSE, caster, 0, 0, TO_CHAR);
-    act("You errupt in a pillar of fire!", 
+    act("You errupt in a pillar of fire!",
                FALSE, caster, NULL, 0, TO_CHAR);
-    act("$p causes $n to errupt in a pillar of fire!", 
+    act("$p causes $n to errupt in a pillar of fire!",
                FALSE, caster, obj, 0, TO_ROOM);
     rc = caster->flameEngulfed();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -951,11 +951,11 @@ int hellfire(TBeing *caster, TMagicItem * obj)
 
 int hellfire(TBeing *caster)
 {
-  if (caster->roomp->isUnderwaterSector()) { 
+  if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("You cannot cast that under these wet conditions!\n\r");
     return FALSE;
   }
- 
+
   if (!bPassMageChecks(caster, SPELL_HELLFIRE, NULL))
     return FALSE;
 
@@ -970,7 +970,7 @@ int castHellfire(TBeing *caster)
   int ret,level;
   int rc = 0;
 
-  level = caster->getSkillLevel(SPELL_HELLFIRE);   
+  level = caster->getSkillLevel(SPELL_HELLFIRE);
 
   act("A spray of HELLFIRE eradicates everything in its path!", FALSE, caster, NULL, NULL, TO_ROOM);
 
@@ -991,7 +991,7 @@ int fireball(TBeing *caster, int level, short bKnown, int adv_learn)
   if (rp && rp->isUnderwaterSector()) {
     caster->sendTo("The water completely dissolves your fireball!\n\r");
     return SPELL_FAIL;
-  } 
+  }
 
   int damage = caster->getSkillDam(NULL, SPELL_FIREBALL, level, adv_learn);
 
@@ -1055,13 +1055,13 @@ int fireball(TBeing *caster, int level, short bKnown, int adv_learn)
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_FIREBALL);
-        act("A large ball of fire swells up and explodes in $n's face!", 
+        act("A large ball of fire swells up and explodes in $n's face!",
             FALSE, caster, NULL, NULL, TO_ROOM);
-        act("A large ball of fire swells up and explodes in your face!", 
+        act("A large ball of fire swells up and explodes in your face!",
             FALSE, caster, NULL, NULL, TO_CHAR);
-        if (caster->reconcileDamage(caster, damage, SPELL_FIREBALL) == -1) 
+        if (caster->reconcileDamage(caster, damage, SPELL_FIREBALL) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
-        
+
         rc = caster->flameEngulfed();
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -1077,7 +1077,7 @@ int fireball(TBeing *caster, TMagicItem * obj)
 {
   int ret;
   int rc = 0;
- 
+
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("You cannot obtain that magic under these wet conditions!\n\r");
     return FALSE;
@@ -1163,7 +1163,7 @@ int flamingFlesh(TBeing *caster, TBeing *victim, int level, short bKnown)
         break;
       case CRIT_S_NONE:
         break;
-    } 
+    }
 
     if (caster != victim)
       aff1.modifier /= 5;
@@ -1186,13 +1186,13 @@ int flamingFlesh(TBeing *caster, TBeing *victim, int level, short bKnown)
 
 void flamingFlesh(TBeing *caster, TBeing *victim, TMagicItem * obj)
 {
-  if (victim->affectedBySpell(SPELL_STONE_SKIN)) {  
+  if (victim->affectedBySpell(SPELL_STONE_SKIN)) {
     act("$N's skin is already defended by elementals of earth.",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return;
   }
- 
+
   act("$p calls upon the powers of the elementals of fire.",
             FALSE, caster, obj, 0, TO_ROOM);
   act("$p calls upon the powers of the elementals of fire.",
@@ -1209,7 +1209,7 @@ int flamingFlesh(TBeing *caster, TBeing *victim)
     caster->sendTo("You cannot cast that under these wet conditions!\n\r");
     return FALSE;
   }
-  if (victim->affectedBySpell(SPELL_STONE_SKIN)) {  
+  if (victim->affectedBySpell(SPELL_STONE_SKIN)) {
     act("$N's skin is already defended by elementals of earth.",
         FALSE, caster, NULL, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
@@ -1355,7 +1355,7 @@ int conjureElemFire(TBeing *caster)
     caster->sendTo("There doesn't seem to be enough fire around to conjure a fire elemental.\n\r");
     return FALSE;
   }
-  
+
 
 
   lag_t rounds = discArray[SPELL_CONJURE_FIRE]->lag;
@@ -1367,7 +1367,7 @@ int conjureElemFire(TBeing *caster)
 
 int castConjureElemFire(TBeing *caster)
 {
-  int ret,level; 
+  int ret,level;
   level = caster->getSkillLevel(SPELL_CONJURE_FIRE);
 
   if ((ret=conjureElemFire(caster,level,caster->getSkillValue(SPELL_CONJURE_FIRE))) == SPELL_SUCCESS) {
@@ -1436,20 +1436,20 @@ int flare(TBeing *caster, int level, short bKnown)
           continue;
         if (caster == tmp_victim)
           continue;
-        if (!(tmp_victim->isImmortal() && tmp_victim->isPc())) { 
+        if (!(tmp_victim->isImmortal() && tmp_victim->isPc())) {
           int dam = dice(level, 2);
           dam = max(1,dam);
           caster->reconcileHurt(tmp_victim, discArray[SPELL_FLARE]->alignMod);
           if (tmp_victim->isLucky(caster->spellLuckModifier(SPELL_FLARE))) {
-            act("$n is able to dodge part of the explosion!", FALSE, 
+            act("$n is able to dodge part of the explosion!", FALSE,
                  tmp_victim, NULL, NULL, TO_ROOM);
-            act("You are able to dodge part of the explosion!", FALSE, 
+            act("You are able to dodge part of the explosion!", FALSE,
                  tmp_victim, NULL, NULL, TO_CHAR);
               dam >>= 1;
           } else {
-            act("You had no hope of dodging the lashing flames!", FALSE, 
+            act("You had no hope of dodging the lashing flames!", FALSE,
                 tmp_victim, NULL, NULL, TO_CHAR);
-            act("$n had no hope of dodging the lashing flames!", FALSE, 
+            act("$n had no hope of dodging the lashing flames!", FALSE,
                 tmp_victim, NULL, NULL, TO_ROOM);
           }
           // against PCs, consider safe, against mobs, consider aggro
@@ -1483,7 +1483,7 @@ int flare(TBeing *caster, int level, short bKnown)
       }
       if (caster->reconcileDamage(caster, dam, SPELL_FIREBALL) == -1) {
         return SPELL_SUCCESS + CASTER_DEAD;
-      }      
+      }
     }
     return SPELL_SUCCESS;
   } else {
@@ -1498,7 +1498,7 @@ int flare(TBeing *caster)
 {
   taskDiffT diff;
   TBeing *tmp_victim = NULL;
-  TObj *o = NULL; 
+  TObj *o = NULL;
   TThing *t=NULL;
 
   // look to see if there is already a flare here
@@ -1538,9 +1538,9 @@ int flare(TBeing *caster)
     if (caster == tmp_victim)
       continue;
     if (!(tmp_victim->isImmortal() && tmp_victim->isPc())) {
-    }          
+    }
     caster->reconcileHurt(tmp_victim, discArray[SPELL_FLARE]->alignMod);
-  } 
+  }
   return TRUE;
 }
 
@@ -1619,10 +1619,10 @@ int infravision(TBeing *caster, TBeing *victim, int level, short bKnown)
     // having natural infra and spell-created infra causes natural infra to be
     // lost on spell decay
     if (victim != caster)
-      act("$N already possesses infravision.", 
+      act("$N already possesses infravision.",
            FALSE, caster, 0, victim, TO_CHAR);
     else
-      act("You already possess infravision.", 
+      act("You already possess infravision.",
            FALSE, caster, 0, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;
@@ -1653,7 +1653,7 @@ int infravision(TBeing *caster, TBeing *victim, int level, short bKnown)
     return ret;
   } else {
     ret += SPELL_FAIL;
-    return ret; 
+    return ret;
   }
 }
 
@@ -1664,45 +1664,45 @@ void infravision(TBeing *caster, TBeing *victim, TMagicItem * obj)
   ret = infravision(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS) && !IS_SET(ret, SPELL_CRIT_SUCCESS)) {
     if (caster != victim) {
-      act("Your $p causes $N's eyes to glow red.", 
+      act("Your $p causes $N's eyes to glow red.",
           FALSE, caster, obj, victim, TO_CHAR);
-      act("$n's $p cause your eyes to glow red.", 
+      act("$n's $p cause your eyes to glow red.",
           TRUE, caster, obj, victim, TO_VICT);
-      act("$n uses $p to make $N's eyes glow red.", 
+      act("$n uses $p to make $N's eyes glow red.",
           TRUE, caster, obj, victim, TO_NOTVICT);
     } else {
-      act("$p causes your eyes to glow red.", 
+      act("$p causes your eyes to glow red.",
           FALSE, caster, obj, 0, TO_CHAR);
-      act("$n's uses $p and $s eyes glow red.", 
+      act("$n's uses $p and $s eyes glow red.",
           TRUE, caster, obj, 0, TO_ROOM);
     }
     act("Your eyesight feels enhanced.", FALSE, victim, obj, 0, TO_CHAR);
   }
   if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
     if (caster != victim) {
-      act("Your $p causes $N's eyes to glow a deep red.", 
+      act("Your $p causes $N's eyes to glow a deep red.",
           FALSE, caster, obj, victim, TO_CHAR);
-      act("$n's $p cause your eyes to glow a deep red.", 
+      act("$n's $p cause your eyes to glow a deep red.",
           TRUE, caster, obj, victim, TO_VICT);
-      act("$n uses $p to make $N's eyes glow a deep red.", 
+      act("$n uses $p to make $N's eyes glow a deep red.",
           TRUE, caster, obj, victim, TO_NOTVICT);
     } else {
-      act("$p causes your eyes to glow a deep red.", 
+      act("$p causes your eyes to glow a deep red.",
           FALSE, caster, obj, 0, TO_CHAR);
-      act("$n's uses $p and $e eyes glow a deep red.", 
+      act("$n's uses $p and $e eyes glow a deep red.",
           TRUE, caster, obj, 0, TO_ROOM);
     }
-    act("Your eyesight feels greatly enhanced.", 
+    act("Your eyesight feels greatly enhanced.",
         FALSE, victim, obj, 0, TO_CHAR);
   }
   if (IS_SET(ret, SPELL_SAVE)) {
   }
   if (IS_SET(ret, SPELL_FAIL)) {
     if (caster != victim) {
-      act("$p fails to enhance $N's eyesight.", 
+      act("$p fails to enhance $N's eyesight.",
           FALSE, caster, obj, victim, TO_CHAR);
     } else {
-      act("$p fails to enhance your eyesight.", 
+      act("$p fails to enhance your eyesight.",
           FALSE, caster, obj, 0, TO_CHAR);
     }
     caster->nothingHappens(SILENT_YES);
@@ -1739,7 +1739,7 @@ void infravision(TBeing *caster, TBeing *victim)
   lag_t rounds = discArray[SPELL_INFRAVISION]->lag;
   diff = discArray[SPELL_INFRAVISION]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_INFRAVISION, diff, 1, 
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_INFRAVISION, diff, 1,
         "", rounds, caster->in_room, 0, 0, TRUE, 0);
 }
 
@@ -1756,42 +1756,42 @@ int castInfravision(TBeing *caster, TBeing *victim)
   ret=infravision(caster,victim,level,caster->getSkillValue(SPELL_INFRAVISION));
     if (IS_SET(ret, SPELL_SUCCESS) && !IS_SET(ret, SPELL_CRIT_SUCCESS)) {
       if (caster != victim) {
-        act("You cause $N's eyes to glow red.", 
+        act("You cause $N's eyes to glow red.",
             FALSE, caster, 0, victim, TO_CHAR);
-        act("$n's spell causes your eyes to glow red.", 
+        act("$n's spell causes your eyes to glow red.",
             TRUE, caster, 0, victim, TO_VICT);
-        act("$n's spell causes $N's eyes to glow red.", 
+        act("$n's spell causes $N's eyes to glow red.",
             TRUE, caster, 0, victim, TO_NOTVICT);
       } else {
-        act("Your spell causes your eyes to glow red.", 
+        act("Your spell causes your eyes to glow red.",
             FALSE, caster, 0, 0, TO_CHAR);
-        act("$n's spell causes $s eyes to glow red.", 
+        act("$n's spell causes $s eyes to glow red.",
             TRUE, caster, 0, 0, TO_ROOM);
       }
       act("Your eyesight feels enhanced.", FALSE, victim, 0, 0, TO_CHAR);
     }
     if (IS_SET(ret, SPELL_CRIT_SUCCESS)) {
       if (caster != victim) {
-        act("You cause $N's eyes to glow a deep red.", 
+        act("You cause $N's eyes to glow a deep red.",
             FALSE, caster, 0, victim, TO_CHAR);
-        act("$n's spell causes your eyes to glow a deep red.", 
+        act("$n's spell causes your eyes to glow a deep red.",
             TRUE, caster, 0, victim, TO_VICT);
-        act("$n's spell causes $N's eyes to glow a deep red.", 
+        act("$n's spell causes $N's eyes to glow a deep red.",
             TRUE, caster, 0, victim, TO_NOTVICT);
       } else {
-        act("Your spell causes your eyes to glow a deep red.", 
+        act("Your spell causes your eyes to glow a deep red.",
             FALSE, caster, 0, 0, TO_CHAR);
-        act("$n's spell causes $s eyes to glow a deep red.", 
+        act("$n's spell causes $s eyes to glow a deep red.",
             TRUE, caster, 0, 0, TO_ROOM);
       }
       act("Your eyesight feels greatly enhanced.", FALSE, victim, 0, 0, TO_CHAR);
     }
     if (IS_SET(ret, SPELL_FAIL)) {
       if (caster != victim) {
-        act("Your spell fails to enhance $N's eyesight.", 
+        act("Your spell fails to enhance $N's eyesight.",
             FALSE, caster, 0, victim, TO_CHAR);
       } else {
-        act("Your attempt to enhance your eyesight fails.", 
+        act("Your attempt to enhance your eyesight fails.",
             FALSE, caster, 0, 0, TO_CHAR);
       }
       caster->nothingHappens(SILENT_YES);
@@ -1808,15 +1808,15 @@ int castInfravision(TBeing *caster, TBeing *victim)
 int protectionFromFire(TBeing *caster, TBeing *v,int level, short bKnown)
 {
   affectedData aff;
- 
+
   aff.type = SPELL_PROTECTION_FROM_FIRE;
   aff.level = level;
   aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_FIRE, (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
   aff.location = APPLY_IMMUNITY;
-  aff.modifier = IMMUNE_HEAT; 
+  aff.modifier = IMMUNE_HEAT;
   aff.modifier2 = ((level * 2)/3);
   aff.bitvector = 0;
- 
+
   if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_FIRE)) {
     act("$n glows with a faint red aura for a brief moment.", FALSE, v, NULL, NULL, TO_ROOM);
     act("You glow with a faint red aura for a brief moment.", FALSE, v, NULL, NULL, TO_CHAR);
@@ -1831,10 +1831,10 @@ int protectionFromFire(TBeing *caster, TBeing *v,int level, short bKnown)
       case CRIT_S_NONE:
         break;
     }
- 
-    if (caster != v) 
+
+    if (caster != v)
       aff.modifier2 /= 2;
- 
+
     v->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     caster->reconcileHelp(v, discArray[SPELL_PROTECTION_FROM_FIRE]->alignMod);
     return SPELL_SUCCESS;
@@ -1861,14 +1861,14 @@ int protectionFromFire(TBeing *caster, TBeing *v)
 
   start_cast(caster, v, NULL, caster->roomp, SPELL_PROTECTION_FROM_FIRE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
   return TRUE;
-} 
+}
 
 int castProtectionFromFire(TBeing *caster, TBeing *v)
 {
 int ret,level;
- 
+
   level = caster->getSkillLevel(SPELL_PROTECTION_FROM_FIRE);
- 
+
   if ((ret=protectionFromFire(caster,v,level,caster->getSkillValue(SPELL_PROTECTION_FROM_FIRE))) == SPELL_SUCCESS) {
   } else {
   }

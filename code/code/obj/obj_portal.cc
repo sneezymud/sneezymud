@@ -162,7 +162,7 @@ sstring TPortal::statObjInfo() const
   tStString += "Portal Flags: ";
   tStString += sprintbit(getPortalFlags(), exit_bits);
   sprintf(tString, "\n\rKey: %d, Trap Type: %s, Trap Dam: %d",
-          getPortalKey(), trap_types[getPortalTrapType()].c_str(), 
+          getPortalKey(), trap_types[getPortalTrapType()].c_str(),
 	  getPortalTrapDam());
   tStString += tString;
 
@@ -201,7 +201,7 @@ void TPortal::setPortalFlags(unsigned short s)
 
 bool TPortal::isPortalFlag(unsigned short s) const
 {
-  return ((portal_state & s) != 0); 
+  return ((portal_state & s) != 0);
 }
 
 void TPortal::addPortalFlag(unsigned short s)
@@ -472,7 +472,7 @@ TPortal * TPortal::findMatchingPortal() const
   TRoom *rp;
 
   if (!(rp = real_roomp(getTarget()))) {
-    vlogf(LOG_BUG, format("Bad portal (%s) with destination to NULL room! %d") % 
+    vlogf(LOG_BUG, format("Bad portal (%s) with destination to NULL room! %d") %
           getName() % getTarget());
     return NULL;
   }

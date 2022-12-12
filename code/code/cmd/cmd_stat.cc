@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 //      "cmd_stat.cc" - The stat command
-//  
+//
 //////////////////////////////////////////////////////////////////////////
 
 #include "extern.h"
@@ -32,7 +32,7 @@ extern int getObjLoadPotential(const int obj_num);
 void TBeing::statZone(const sstring &zoneNumber)
 {
   // this probably has the potential to be wildly innaccurate now
-  
+
   int zone_num;
   int count_descriptions = 0;
   int count_titles = 0;
@@ -45,10 +45,10 @@ void TBeing::statZone(const sstring &zoneNumber)
   sstring out("");
   sstring sb;
   TRoom *roomp_current;
-  
+
   int count_mobs_in_block = 0;
   int count_objs_in_block = 0;
-  
+
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
@@ -64,21 +64,21 @@ void TBeing::statZone(const sstring &zoneNumber)
     sendTo("Zone number incorrect.\n\r");
     return;
   }
-  
+
   zoneData zoned = zone_table[zone_num];
-  
+
   room_start = (zone_num ? zone_table[zone_num - 1].top + 1 : 0);
   room_end = zoned.top;
-  
+
   for (room_loop = room_start; room_loop < (room_end + 1); room_loop++) {
     if ((roomp_current = real_roomp(room_loop))) {
       ++count_rooms;
-      
+
       if (roomp_current->getDescr() != "Empty") {
         // count of non 'Empty' descriptions
         ++count_descriptions;
       }
-      
+
       if (!roomp_current->name.empty()) {
         // count titles
         sstring name_num = format("%d") % roomp_current->number;
@@ -88,12 +88,12 @@ void TBeing::statZone(const sstring &zoneNumber)
           ++count_titles;
         }
       }
-      
+
       if (roomp_current->ex_description) {
         // count extra descriptions
         ++count_extras;
       }
-      
+
       if (roomp_current->isRoomFlag(ROOM_DEATH    ))// Count DEATH_ROOM flags
         count_flags[0]++;
       if (roomp_current->isRoomFlag(ROOM_NO_FLEE  ))// Count NO_FLEE flags
@@ -109,13 +109,13 @@ void TBeing::statZone(const sstring &zoneNumber)
       if (roomp_current->isRoomFlag(ROOM_PEACEFUL) &&
           !roomp_current->isRoomFlag(ROOM_NO_HEAL))// If is Peaceful should ALWAYS be no-heal
         count_flags[6]++;
-      
+
       // if (roomp_current->getSectorType() != SECT_ASTRAL_ETHREAL) {
       //   ++count_non_ethereal;
       // }
     }
   }
-  
+
   int mob_lvl_avg_block = 0;
   int mob_lvl_low_block = 0;
   int mob_lvl_high_block = 0;
@@ -132,14 +132,14 @@ void TBeing::statZone(const sstring &zoneNumber)
   }
   if (count_mobs_in_block)
     mob_lvl_avg_block /= count_mobs_in_block;
-  
+
   for (unsigned int oi = 0; oi < obj_index.size(); oi++) {
     if (obj_index[oi].virt < room_start || obj_index[oi].virt > room_end)
       continue;
     // sendTo(format("Obj %u %i %s\n\r") % oi % obj_index[oi].virt % obj_index[oi].short_desc);
     ++count_objs_in_block;
   }
-  
+
   out += "<g>General Zone Info<1>\n\r";
   out += format("Name:         <c>%-s<1>\n\r") % zoned.name;
   out += format("Zone num:     <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
@@ -162,19 +162,19 @@ void TBeing::statZone(const sstring &zoneNumber)
   out += format("Reset mode:   %s\n\r") % reset_mode;
   sb = format("<c>%i<1>/<c>%i<1>") % zoned.lifespan % zoned.age;
   out += format("Lifespan/age: %-21s Block size/used: <c>%i<1>/<c>%i<1>\n\r\n\r")  % sb % ((room_end - room_start) + 1) % count_rooms;
-  
+
   out += "<g>Room Info<1>\n\r";
   out += format("Descriptions: <c>%-d<1>\n\r") % count_descriptions;
   out += format("Titles:       <c>%-d<1>\n\r") % count_titles;
   out += format("Extras:       <c>%-d<1>\n\r") % count_extras;
   out += format("Indoors:      <c>%-d<1>\n\r\n\r") % count_flags[5];
   //out += format("Non-ethereal sectors: <c>%d<1>\n\r\n\r") % count_non_ethereal;
-  
+
   int mob_lvl_low = 0;
   int mob_lvl_high = 0;
   int mob_lvl_avg_unique = 0;
   int mob_lvl_avg_total = 0;
-  
+
   std::map<int,int>::iterator iter;
   for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
     if (!mob_lvl_low)
@@ -207,11 +207,11 @@ void TBeing::statZone(const sstring &zoneNumber)
     }
   }
   out += format("Response mobs in zonefile:  <c>%-4d<1>  Response mobs in block: <c>%-4d<1>\n\r\n\r") % response_scripts_zonefile % response_scripts_block;
-  
+
   out += "<g>Object Info<1>\n\r";
   out += format("Unique objects in zonefile: <c>%-d<1>\n\r") % zoned.stat_objs_unique;
   out += format("Unique objects in block:    <c>%-d<1>\n\r") % count_objs_in_block;
-  
+
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
@@ -219,7 +219,7 @@ void TBeing::statZoneMobs(sstring zoneNumber)
 {
   int zone_num;
   sstring out("");
-  
+
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
@@ -229,21 +229,21 @@ void TBeing::statZoneMobs(sstring zoneNumber)
   } else {
     zone_num = convertTo<int>(zoneNumber);
   }
-  
+
   if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
     return;
   }
-  
+
   zoneData zoned = zone_table[zone_num];
-  
+
   int count = 0;
   std::map<int,int>::iterator iter;
-  
+
   out += "<g>Zonefile Mobile Report<1>\n\r";
   out += format("<g>Zone name:<1>  %-s\n\r") % zoned.name;
   out += format("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-  
+
   out += "      <c>Vnum   Max Count Class    Level Name<1>\n\r";
   for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
     ++count;
@@ -271,15 +271,15 @@ void TBeing::statZoneMobs(sstring zoneNumber)
       classy = format("<R>%-8d<1>") % mob_index[iter->first].Class;
       vlogf(LOG_BUG, format("Unknown class bit (%d) in TBeing::statZoneMobs.") % mob_index[iter->first].Class);
     }
-    
+
     // output the row
-    out += format("<c>%-4d<1> %5d %5d %5d %-8s %5ld %s\n\r") % count 
-    % mob_index[iter->first].virt % mob_index[iter->first].max_exist 
+    out += format("<c>%-4d<1> %5d %5d %5d %-8s %5ld %s\n\r") % count
+    % mob_index[iter->first].virt % mob_index[iter->first].max_exist
     % mob_index[iter->first].getNumber() % classy
     % mob_index[iter->first].level % mob_index[iter->first].name;
     // out += format("<c>%3d)<1> %5d  %s\n\r") % count % mob_index[iter->first].virt % mob_index[iter->first].short_desc;
   }
-  
+
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
@@ -287,7 +287,7 @@ void TBeing::statZoneObjs(sstring zoneNumber)
 {
   int zone_num;
   sstring out("");
-  
+
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
@@ -297,20 +297,20 @@ void TBeing::statZoneObjs(sstring zoneNumber)
   } else {
     zone_num = convertTo<int>(zoneNumber);
   }
-  
+
   if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
     return;
   }
-  
+
   zoneData zoned = zone_table[zone_num];
-  
+
   int count = 0;
   std::map<int,int>::iterator iter;
   out += "<g>Zonefile Object Report<1>\n\r";
   out += format("<g>Zone name:<1>  %-s\n\r") % zoned.name;
   out += format("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-  
+
   if (!hasWizPower(POWER_SHOW_TRUSTED)) {
     out += "      <c>Vnum Type              Name<1>\n\r";
   } else {
@@ -318,7 +318,7 @@ void TBeing::statZoneObjs(sstring zoneNumber)
   }
   for (iter = zoned.stat_objs.begin(); iter != zoned.stat_objs.end(); iter++ ) {
     ++count;
-    
+
     // try to speed things up - don't init an object unless we really need to
     // it's only used to determine level for certain item types
     // leaving the rest blank also helps with readability
@@ -338,11 +338,11 @@ void TBeing::statZoneObjs(sstring zoneNumber)
       delete obj;
     }
     sstring itype = ItemInfo[obj_index[iter->first].itemtype]->name;
-    
+
     if (!hasWizPower(POWER_SHOW_TRUSTED)) {
       out += format("<c>%-4d<1> %5d %-17s %s\n\r") % count % obj_index[iter->first].virt % itype % obj_index[iter->first].name;
     } else {
-      out += format("<c>%-4d<1> %5d %5d %5d %6d %-17s %5s %s\n\r") % count 
+      out += format("<c>%-4d<1> %5d %5d %5d %6d %-17s %5s %s\n\r") % count
         % obj_index[iter->first].virt % obj_index[iter->first].max_exist
         % obj_index[iter->first].getNumber() % obj_index[iter->first].value
         % itype % olevel % obj_index[iter->first].name;
@@ -377,12 +377,12 @@ void TBeing::statRoom(TRoom *rmp)
     rmp->getXCoord() % rmp->getYCoord() % rmp->getZCoord();
 
   unsigned int shop_nr=0;
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && 
+  for (shop_nr = 0; (shop_nr < shop_index.size()) &&
 	 (shop_index[shop_nr].in_room != rmp->number); shop_nr++);
 
   if (shop_nr < shop_index.size())
     str += format("%sShop Number:%s %i, %sShop Keeper:%s %i\n\r") %
-      cyan() % norm() % shop_nr % cyan() % norm() % 
+      cyan() % norm() % shop_nr % cyan() % norm() %
       mob_index[shop_index[shop_nr].keeper].virt;
 
   str += format("%sSector type:%s %s") %
@@ -429,7 +429,7 @@ void TBeing::statRoom(TRoom *rmp)
     cyan() % norm() % ((rmp->getMoblim()) ? buf4 : "Infinite");
 
   if (rmp->isWaterSector() || rmp->isUnderwaterSector()) {
-    str += format("%sRiver direction:%s %s") % 
+    str += format("%sRiver direction:%s %s") %
       cyan() % norm() %
       ((rmp->getRiverDir() < 0) ? "None" : dirs[rmp->getRiverDir()]);
 
@@ -521,12 +521,12 @@ void TBeing::statRoom(TRoom *rmp)
       if (rmp->dir_option[dir]->door_type != DOOR_NONE) {
         str += format("%sWeight:%s %d      %sExit Flags:%s %s\n\r%sKeywords:%s %s\n\r") %
           cyan() % norm() %
-          rmp->dir_option[dir]->weight % 
+          rmp->dir_option[dir]->weight %
           cyan() % norm() %
           sprintbit(rmp->dir_option[dir]->condition, exit_bits) %
           cyan() % norm() %
 	  rmp->dir_option[dir]->keyword;
-        if ((rmp->dir_option[dir]->key > 0) || 
+        if ((rmp->dir_option[dir]->key > 0) ||
              (rmp->dir_option[dir]->lock_difficulty >= 0)) {
           str += format("%sKey Number:%s %d     %sLock Difficulty:%s %d\n\r") %
             cyan() % norm() %
@@ -536,7 +536,7 @@ void TBeing::statRoom(TRoom *rmp)
         }
         if (IS_SET(rmp->dir_option[dir]->condition, EXIT_TRAPPED)) {
           buf2 = sprinttype(rmp->dir_option[dir]->trap_info, trap_types);
-          str += format("%sTrap type:%s %s,  %sTrap damage:%s %d (d8)\n\r") % 
+          str += format("%sTrap type:%s %s,  %sTrap damage:%s %d (d8)\n\r") %
             cyan() % norm() %
 	    buf2 %
             cyan() % norm() %
@@ -581,7 +581,7 @@ void TBeing::statObj(const TObj *j)
     if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top){
       str += format("Zone: %s\n\r") % zone_table[zone].name;
       break;
-    }    
+    }
   }
 
   str += format("Short description: %s\n\rLong description:\n\r%s\n\r") %
@@ -732,20 +732,20 @@ void TBeing::statObjForDivman(const TObj *j)
   TThing *t=NULL;
   sstring str = "\n\r";
   sstring sitem = j->shortDescr;
-  
+
   str += format("%s is %s made of %s.\n\r") % sitem.cap() % ItemInfo[j->itemType()]->common_name % material_nums[j->getMaterial()].mat_name;
-  
+
   for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
     if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top) {
       str += format("It is from %s.\n\r") % zone_table[zone].name;
       break;
-    }    
+    }
   }
-  
+
   str += (j->wear_flags_to_sentence());
-  
+
   str += "Its extra flags are: " + sprintbit(j->getObjStat(), extra_bits) + "\n\r\n\r";
-  
+
   str += format("%s modifies light by %d.\n\r") % sitem.cap() % j->getLight();
   str += format("At least %d units of light are needed to see it.\n\r") % int(j->canBeSeen);
   if (j->obj_flags.decay_time < 0) {
@@ -762,7 +762,7 @@ void TBeing::statObjForDivman(const TObj *j)
   } else {
     str += "It has not been imbued with with any special traits.\n\r\n\r";
   }
-  
+
   if(!j->stuff.empty()){
     str += sitem.cap() + " contains:\n\r";
     for(StuffIter it=j->stuff.begin();it!=j->stuff.end() && (t=*it);++it) {
@@ -771,7 +771,7 @@ void TBeing::statObjForDivman(const TObj *j)
     }
     str += "\n\r";
   }
-  
+
   sstring buf = "";
   for (int i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (j->affected[i].location == APPLY_SPELL) {
@@ -816,8 +816,8 @@ void TBeing::statObjForDivman(const TObj *j)
     str += "It can affect you with:\n\r";
     str += buf;
   }
-  
-  str += "\n\r";       
+
+  str += "\n\r";
   str += "The cloud of smoke is quickly dispersed and the air is clear.\n\r";
   desc->page_string(str);
 }
@@ -911,7 +911,7 @@ void TBeing::statBeing(TBeing *k)
   str += format("%sRace        :%s %-10s") %
     cyan() % norm() % k->getMyRace()->getSingularName();
 
-  str += format("%sHome:%s %-17s") % 
+  str += format("%sHome:%s %-17s") %
     cyan() % norm() % home_terrains[k->player.hometerrain];
 
   if (k->desc && k->desc->account) {
@@ -1136,7 +1136,7 @@ void TBeing::statBeing(TBeing *k)
     str += format(" %3d ") % k->getStat(STAT_NATURAL, ik);
   }
   str += "\n\r";
-    
+
   str += "Current  :";
   for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
     str += format(" %3d ") % k->getStat(STAT_CURRENT, ik);
@@ -1188,7 +1188,7 @@ void TBeing::statBeing(TBeing *k)
     str += format("%sPosition:%s %s  %sFighting:%s %s\n\r") %
           cyan() % norm() % buf2 %
           cyan() % norm() % (k->fight() ? k->fight()->getName() : "Nobody");
-  } 
+  }
   if (k->desc) {
     str += format("\n\r%sFlags (Specials Act):%s ") % cyan() % norm();
     str += sprintbit(k->desc->plr_act, player_bits);
@@ -1214,7 +1214,7 @@ void TBeing::statBeing(TBeing *k)
 
   if (!k->isPc()) {
     const TMonster *tmons = dynamic_cast<const TMonster *>(k);
-    str += format("%sAction pointer:%s %s") % 
+    str += format("%sAction pointer:%s %s") %
       cyan() % norm() %
       ((tmons->act_ptr ? "YES" : "no") );
     str += format("    %sSpecial Procedure:%s %s\n\r") %
@@ -1973,7 +1973,7 @@ void TBeing::statBeing(TBeing *k)
       case AFFECT_SKILL_ATTEMPT:
         str += "Skill Attempt: \n\r";
         str += format("     Expires in %d updates.  Skill = %d.\n\r") %
-          aff->duration % (int) aff->bitvector; 
+          aff->duration % (int) aff->bitvector;
         break;
 
       case AFFECT_NEWBIE:
@@ -2050,7 +2050,7 @@ void TBeing::statBeing(TBeing *k)
         str += format("     Expires in %6d updates, Bits set: %s\n\r") %
           aff->duration % sprintbit_64(aff->bitvector, affected_bits);
         break;
-	
+
       case AFFECT_WARY:
 	str += "State: Wary\n\r";
 	str += "     Decreases chance of multiple cudgels\n\r";
@@ -2060,7 +2060,7 @@ void TBeing::statBeing(TBeing *k)
 	str += "Player recently defected from a faction.\n\r";
 	str += format("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
-	
+
       case AFFECT_OFFER:
 	f = get_guild_by_ID(aff->modifier);
 	if (!f) {
@@ -2071,7 +2071,7 @@ void TBeing::statBeing(TBeing *k)
           f->getName() % f->ID;
 	str += format("     Expires in %6d updates.\n\r") % aff->duration;
 	break;
-	
+
       case AFFECT_OBJECT_USED:
         objused = aff->modifier;
 
@@ -2336,7 +2336,7 @@ void TBeing::statBeing(TBeing *k)
       case DAMAGE_HEADBUTT_LEG:
       case DAMAGE_KNEESTRIKE_SOLAR:
       case DAMAGE_HEADBUTT_BODY:
-      case DAMAGE_KNEESTRIKE_CROTCH:      
+      case DAMAGE_KNEESTRIKE_CROTCH:
       case DAMAGE_HEADBUTT_CROTCH:
       case DAMAGE_HEADBUTT_THROAT:
       case DAMAGE_KNEESTRIKE_CHIN:
@@ -2426,7 +2426,7 @@ void TBeing::statBeing(TBeing *k)
       cyan() % norm() %
       (k->desc->m_bIsClient ? "Yes" : "No");
   }
-  
+
   if (km) {
     if (!km->sounds.empty()) {
       str += format("%sLocal Sound:%s\n\r%s") %
@@ -2460,15 +2460,15 @@ void TPerson::doStat(const sstring &argument)
     incorrectCommand();
     return;
   }
-  
+
   if (!desc)
     return;
-  
+
   if (!hasWizPower(POWER_STAT)) {
     sendTo("Sorry, you lack the power to use the stat command.\n\r");
     return;
   }
-  
+
   if (argument.empty()) {
     sendTo("Usage :\n\r");
     sendTo("        stat mob <name or vnum>\n\r");
@@ -2483,7 +2483,7 @@ void TPerson::doStat(const sstring &argument)
     sendTo("        stat <name> donebasic\n\r");
     return;
   }
-  
+
   tmp_arg = argument;
   tmp_arg = one_argument(tmp_arg, arg1);
   tmp_arg = one_argument(tmp_arg, arg2);
@@ -2495,7 +2495,7 @@ void TPerson::doStat(const sstring &argument)
   } else {
     arg3 = "";
   }
-  
+
   if (arg1 == "mob") {
     // ***** begin stat mob
     if (!hasWizPower(POWER_STAT_MOBILES)) {
@@ -2533,7 +2533,7 @@ void TPerson::doStat(const sstring &argument)
     statBeing(k);
     return;
     // ***** end stat mob
-    
+
   } else if (arg1 == "obj") {
     // ***** begin stat obj
     if (!hasWizPower(POWER_STAT_OBJECT)) {
@@ -2567,13 +2567,13 @@ void TPerson::doStat(const sstring &argument)
       return;
     }
     // ***** end stat obj
-    
+
   } else if (arg1 == "room") {
     // ***** begin stat room
     statRoom(roomp);
     return;
     // ***** end stat room
-    
+
   } else if (arg1 == "zone") {
     // ***** begin stat zone
     if (!hasWizPower(POWER_STAT_OBJECT) || !hasWizPower(POWER_STAT_MOBILES)) {
@@ -2591,7 +2591,7 @@ void TPerson::doStat(const sstring &argument)
     }
     return;
     // ***** end stat zone
-    
+
   } else {
     // // ***** begin stat player
     if (!hasWizPower(POWER_STAT_SKILL)) {
@@ -2628,14 +2628,14 @@ void TPerson::doStat(const sstring &argument)
           if (!(cd = k->getDiscipline(dnt))) {
             continue;
           }
-          if (cd->getNatLearnedness() == 0 && cd->getLearnedness() == 0) 
+          if (cd->getNatLearnedness() == 0 && cd->getLearnedness() == 0)
             continue;
           sendTo(COLOR_MOBS, format("%30s %3d :     %3d     %3d\n\r") % discNames[dnt].properName % mapDiscToFile(dnt) % cd->getLearnedness()  % cd->getNatLearnedness());
           /* sendTo(COLOR_MOBS, format("%30s : Current (%d) Natural (%d).\n\r") % discNames[dnt].properName % cd->getLearnedness()  % cd->getNatLearnedness()); */
         }
         return;
       }
-      
+
       if (is_number(arg3)) {
         // search by number
         // should search by mapped disc number because that's what someone would probably be entering here, no?
@@ -2663,23 +2663,23 @@ void TPerson::doStat(const sstring &argument)
               foundNum = TRUE;
               break;
             }
-          } 
+          }
         }
         if (!foundNum) {
           sendTo("No discipline by that name found.\n\r");
           return;
         }
       }
-      
+
       sendTo(COLOR_MOBS, format("<c>%s<1> is discipline number <c>%d<1>.\n\r") % discNames[dnt].properName % mapDiscToFile(dnt));
-      
+
       if (!(cd = k->getDiscipline(dnt))) {
         sendTo(COLOR_MOBS, format("%s does not appear to have <c>%s<1>.\n\r") % cap_name % discNames[dnt].properName);
         return;
       }
       sendTo(COLOR_MOBS, format("%s's learning in <c>%s<1>: Current (%d) Natural (%d).\n\r") % cap_name % discNames[dnt].properName % cd->getLearnedness() % cd->getNatLearnedness());
       return;
-      
+
       // ***** end stat discipline
     } else if (is_abbrev(arg2, "skill")) {
       // ***** begin stat skill
@@ -2740,7 +2740,7 @@ void TPerson::doStat(const sstring &argument)
               foundNum = TRUE;
               break;
             }
-          } 
+          }
         }
         if (!foundNum) {
           sendTo("No skill by that name found.\n\r");
@@ -2748,7 +2748,7 @@ void TPerson::doStat(const sstring &argument)
         }
         sendTo(COLOR_MOBS, format("<c>%s<1> is skill number <c>%d<1>.\n\r") % ((sstring)(discArray[snt]->name ? discArray[snt]->name : "unknown")).cap() % snt);
       }
-      
+
       if (!k->doesKnowSkill(snt)) {
         if (discArray[snt]) {
           sendTo(COLOR_MOBS, format("%s does not appear to know <c>%s<1>.\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
@@ -2775,7 +2775,7 @@ void TPerson::doStat(const sstring &argument)
       sendTo(COLOR_MOBS, format("%s's <c>%s<1>: Last increased:         %s\n\r") % cap_name % discArray[snt]->name % tmstr);
       return;
       // ***** end stat skill
-      
+
     } else if (is_abbrev(arg2, "donebasic")) {
       // ***** begin stat donebasic
       // search for pc in world
@@ -2828,5 +2828,5 @@ void TPerson::doStat(const sstring &argument)
         vlogf(LOG_BUG, format("doStat fell through looking for %s.") % arg1);
       }
     }
-  }  
+  }
 }

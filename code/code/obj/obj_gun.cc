@@ -26,7 +26,7 @@ const char *getAmmoKeyword(int ammo){
      ammo >= AMMO_MAX){
     return shellkeyword[0];
   }
-  
+
   return shellkeyword[ammo];
 }
 
@@ -37,7 +37,7 @@ const char *getAmmoDescr(int ammo){
      ammo >= AMMO_MAX){
     return shelldesc[0];
   }
-  
+
   return shelldesc[ammo];
 }
 
@@ -52,14 +52,14 @@ void TGun::dropSpentCasing(TRoom *roomp){
     vlogf(LOG_BUG, format("dropSpentCasing(): No object (%d) in database!") %  13874);
     return;
   }
-  
+
   obj = read_object(robj, REAL);
 
   obj->swapToStrung();
-  
+
   sprintf(buf, "casing spent %s", getAmmoDescr(ammo));
   obj->name = buf;
-  
+
   sprintf(buf, "<o>a spent %s casing<1>", getAmmoDescr(ammo));
   obj->shortDescr = buf;
 
@@ -80,7 +80,7 @@ void TGun::loadMe(TBeing *ch, TAmmo *ammo)
 {
   --(*ammo);
   setAmmo(ammo);
-  
+
   act("You load $p into $N.", TRUE, ch, ammo, this, TO_CHAR);
   act("$n loads $p into $N.", TRUE, ch, ammo, this, TO_ROOM);
   ch->addToWait(combatRound(1));
@@ -91,18 +91,18 @@ void TGun::unloadMe(TBeing *ch, TAmmo *ammo)
   if(ammo->getRounds() == 0){
     --(*ammo);
     *ch->roomp += *ammo;
-    
+
     act("You unload $N and drop $p.", TRUE, ch, ammo, this, TO_CHAR);
     act("$n unloads $N and drops $p.", TRUE, ch, ammo, this, TO_ROOM);
   } else {
     --(*ammo);
     *ch += *ammo;
-    
+
     act("You unload $N.", TRUE, ch, ammo, this, TO_CHAR);
     act("$n unloads $N.", TRUE, ch, ammo, this, TO_ROOM);
   }
-  
-  ch->addToWait(combatRound(1));    
+
+  ch->addToWait(combatRound(1));
 }
 
 void TBeing::doGload(sstring arg)
@@ -122,7 +122,7 @@ void TBeing::doGload(sstring arg)
     gload_usage(this);
     return;
   }
-  
+
   if(arg1 != "unload"){
 
     for(int i=1;i<=100;++i){
@@ -138,14 +138,14 @@ void TBeing::doGload(sstring arg)
 
     if(arg2.empty()){
       arg2=getAmmoKeyword(gun->getAmmoType());
-    } 
+    }
 
     if(!(arrow = searchLinkedListVis(this, arg2, stuff)) ||
        !(ammo=dynamic_cast<TAmmo *>(arrow))){
       gload_usage(this);
       return;
     }
-    
+
     if(gun->getAmmo()){
       buf = format("unload %s") % arg1;
       doGload(buf);
@@ -154,7 +154,7 @@ void TBeing::doGload(sstring arg)
 	return;
       }
     }
-    
+
     if(ammo->getAmmoType() != gun->getAmmoType()){
       sendTo("That isn't the right kind of ammunition.\n\r");
       return;
@@ -239,14 +239,14 @@ void TAmmo::describeObjectSpecifics(const TBeing *ch) const
 
 void TGun::assignFourValues(int x1, int x2, int x3, int x4)
 {
-  setROF(x1);  
+  setROF(x1);
 
   setWeapDamLvl(GET_BITS(x2, 7, 8));
   setWeapDamDev(GET_BITS(x2, 15, 8));
 
   setFlags(x3);
 
-  setAmmoType(x4);  
+  setAmmoType(x4);
 }
 
 void TGun::getFourValues(int *x1, int *x2, int *x3, int *x4) const {
@@ -342,7 +342,7 @@ void TAmmo::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = 0;
 }
 
-void TAmmo::setRounds(int r) { 
+void TAmmo::setRounds(int r) {
   if(r<=0){
     char buf[256];
     sprintf(buf, "%s empty", name.c_str());
@@ -354,7 +354,7 @@ void TAmmo::setRounds(int r) {
     name=buf;
   }
 
-  rounds=r; 
+  rounds=r;
 }
 
 
@@ -364,10 +364,10 @@ sstring TAmmo::showModifier(showModeT tMode, const TBeing *tBeing) const
   sstring tString = TObj::showModifier(tMode, tBeing);
 
   if (getRounds()<=0) {
-    tString += " (empty)";                                          
-  }                                                           
-                                                              
-  return tString;                                             
+    tString += " (empty)";
+  }
+
+  return tString;
 }
 
 sstring TGun::showModifier(showModeT tMode, const TBeing *tBeing) const
@@ -376,10 +376,10 @@ sstring TGun::showModifier(showModeT tMode, const TBeing *tBeing) const
   sstring tString = TObj::showModifier(tMode, tBeing);
 
   if (!getAmmo() || getAmmo()->getRounds()<=0) {
-    tString += " (empty)";                                          
-  }                                                           
-                                                              
-  return tString;                                             
+    tString += " (empty)";
+  }
+
+  return tString;
 }
 
 int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir, int shoot_dist)
@@ -387,7 +387,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
   TAmmo *ammo;
   TObj *bullet;
   char  buf[256];
-  
+
   if (targ &&
       ch->checkPeacefulVictim("They are in a peaceful room. You can't seem to fire the gun.\n\r", targ))
     return FALSE;
@@ -396,7 +396,7 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     return FALSE;
 
   sstring capbuf, capbuf2;
-  
+
   ch->addToWait(combatRound(2));
   int rof=getROF();
 
@@ -419,27 +419,27 @@ int TGun::shootMeBow(TBeing *ch, TBeing *targ, unsigned int count, dirTypeT dir,
     if(!isCaseless())
       dropSpentCasing(ch->roomp);
     setRounds(getRounds()-1);
-    
+
     // send messages
     capbuf = colorString(ch, ch->desc, bullet->getName(), NULL, COLOR_OBJECTS, TRUE);
     capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
-    
+
     if (targ)
       ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
 		 capbuf.uncap() % capbuf2.uncap() %
 		 targ->getName());
     else
       ch->sendTo(format("You shoot %s out of %s.\n\r") %
-		 capbuf.uncap() % 
+		 capbuf.uncap() %
 		 capbuf2.uncap());
-    
+
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.",
 	    dirs[dir]);
     act(buf, FALSE, ch, this, bullet, TO_ROOM);
-    
+
     // put the bullet in the room and then "throw" it
-    *ch->roomp += *bullet;    
-    
+    *ch->roomp += *bullet;
+
     int rc = throwThing(bullet, dir, ch->in_room, &targ, shoot_dist, 10, ch);
 
     if(!isSilenced())
@@ -476,7 +476,7 @@ void TGun::setRounds(int r){
 int TGun::getRounds() const {
   if(getAmmo())
     return getAmmo()->getRounds();
-  else 
+  else
     return 0;
 }
 
@@ -509,7 +509,7 @@ TThing *findPowder(StuffList list, int uses){
   TThing *tt;
   TTool *powder;
   TThing *ret;
-  
+
   for(StuffIter it=list.begin();it!=list.end();++it){
     tt=*it;
     if(tt && (powder=dynamic_cast<TTool *>(tt)) &&

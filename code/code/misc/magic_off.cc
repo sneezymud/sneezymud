@@ -22,7 +22,7 @@ void TBeing::dropWeapon(wearSlotT slot)
       hand = HOLD_LEFT;
 
     TObj *tobj = dynamic_cast<TObj *>(equipment[hand]);
-    if (tobj && tobj->isPaired()) 
+    if (tobj && tobj->isPaired())
       hand = getPrimaryHold();
 
     if (equipment[hand]) {

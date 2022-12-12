@@ -75,7 +75,7 @@ const unsigned short CLASS_MAGE         = (1<<0);   // 1
 const unsigned short CLASS_CLERIC       = (1<<1);   // 2
 const unsigned short CLASS_WARRIOR      = (1<<2);   // 4
 const unsigned short CLASS_THIEF        = (1<<3);   // 8
-const unsigned short CLASS_SHAMAN       = (1<<4);   // 16 
+const unsigned short CLASS_SHAMAN       = (1<<4);   // 16
 const unsigned short CLASS_DEIKHAN      = (1<<5);   // 32
 const unsigned short CLASS_MONK         = (1<<6);   // 64
 const unsigned short CLASS_RANGER       = (1<<7);   // 128
@@ -131,7 +131,7 @@ const int AFF_MAX                    = 34;
 // they are combinations of bits, IS_SET, REMOVE_BIT, SET_BIT can not be used
 // use IS_SET_DELETE, ADD_DELETE, REM_DELETE instead
 //
-#if 0 
+#if 0
 const int DELETE_ITEM          = ((1<<5));
 const int DELETE_THIS          = ((1<<6));
 const int DELETE_VICT          = ((1<<7));

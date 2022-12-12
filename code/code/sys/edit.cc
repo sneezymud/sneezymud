@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//   edit.cc : All routines related to vt100 editor.                        
+//   edit.cc : All routines related to vt100 editor.
 //
 //   Coded by : Russ Russell, June 1995, Last update June 10th 1995
 //
@@ -89,7 +89,7 @@ void Descriptor::Edit(char *arg)
         break;
       case ('X' & 037):
         connected = CON_PLYNG;
-  
+
         if(write(socket->m_sock, test, 4)==-1 ||
 	   write(socket->m_sock, test2, 4)==-1)
 	  vlogf(LOG_FILE, "Failed to write to socket in Descriptor::edit");

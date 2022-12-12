@@ -114,7 +114,7 @@ int noise(const TBeing *ch)
   affectedData *af;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if ((i == WEAR_FINGER_L) || (i == WEAR_FINGER_R) || 
+    if ((i == WEAR_FINGER_L) || (i == WEAR_FINGER_R) ||
         (i == HOLD_RIGHT) || (i == HOLD_LEFT))
       continue;
 
@@ -231,7 +231,7 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
 
       sendTo(CommPtr(new SoundComm("music", "", musicStruct[music], type,
 				   vol, -1, loop, cont)));
-      
+
     }
   }
 }
@@ -243,7 +243,7 @@ void TBeing::stopsound()
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sendTo(CommPtr(new SoundComm("sound", "http://sneezymud.org/sounds/", "Off", 
+      sendTo(CommPtr(new SoundComm("sound", "http://sneezymud.org/sounds/", "Off",
 				   "", -1,-1,-1, -1)));
     }
   }
@@ -455,7 +455,7 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
       // the other options should only get sent if they differ from the
       // defaults (to lessen spam)
 
-      // This is done so that the client message isn't somehow combined 
+      // This is done so that the client message isn't somehow combined
       // with other text and missed by the client interpreter - Russ 061299
       desc->outputProcessing();
 
@@ -469,7 +469,7 @@ sstring SoundComm::getText(){
   sstring buf="";
 
   buf+=format("!!%s(%s") % soundtype.upper()% text;
-  
+
   if(type!="")
     buf+=format(" T=%s") % type;
 

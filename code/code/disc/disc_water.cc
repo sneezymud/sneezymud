@@ -83,7 +83,7 @@ int faerieFog(TBeing * caster)
   return TRUE;
 }
 
-int castFaerieFog(TBeing * caster) 
+int castFaerieFog(TBeing * caster)
 {
   int ret, level;
 
@@ -278,7 +278,7 @@ int wateryGrave(TBeing * caster, TBeing * victim, int level, short bKnown, int)
       CF(SPELL_WATERY_GRAVE);
       caster->affectTo(&aff);
       return SPELL_CRIT_FAIL;
-    } 
+    }
     return SPELL_FAIL;
   }
 }
@@ -372,7 +372,7 @@ int arcticBlast(TBeing * caster, int level, short bKnown, int adv_learn)
             continue;
           }
 
-          if (tmp_victim->isLucky(caster->spellLuckModifier(SPELL_ARCTIC_BLAST))) 
+          if (tmp_victim->isLucky(caster->spellLuckModifier(SPELL_ARCTIC_BLAST)))
             damage /= 2;
 
           if (caster->reconcileDamage(tmp_victim, damage, SPELL_ARCTIC_BLAST) == -1) {
@@ -382,7 +382,7 @@ int arcticBlast(TBeing * caster, int level, short bKnown, int adv_learn)
           }
         }
       } else {
-        act("You are able to avoid the cold!", 
+        act("You are able to avoid the cold!",
                     TRUE, tmp_victim, NULL, NULL, TO_CHAR);
       }
     }
@@ -485,16 +485,16 @@ int iceStorm(TBeing * caster, int level, short bKnown, int adv_learn)
       case CRIT_S_KILL:
         CS(SPELL_ICE_STORM);
         orig_damage *= 2;
-        act("$n conjures a giant swirling storm of ice -- take cover!", 
+        act("$n conjures a giant swirling storm of ice -- take cover!",
             FALSE, caster, NULL, NULL, TO_ROOM, ANSI_BLUE_BOLD);
-        act("You conjure a giant swirling storm of ice!", 
+        act("You conjure a giant swirling storm of ice!",
             FALSE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE_BOLD);
         ret = SPELL_CRIT_SUCCESS;
         break;
       case CRIT_S_NONE:
-        act("$n conjures a swirling storm of ice!", 
+        act("$n conjures a swirling storm of ice!",
             FALSE, caster, NULL, NULL, TO_ROOM, ANSI_BLUE_BOLD);
-        act("You conjure a swirling storm of ice!", 
+        act("You conjure a swirling storm of ice!",
             FALSE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE_BOLD);
         ret = SPELL_SUCCESS;
         break;
@@ -542,15 +542,15 @@ int iceStorm(TBeing * caster, int level, short bKnown, int adv_learn)
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_ICE_STORM);
-        act("Something goes terribly, terribly wrong!!", 
+        act("Something goes terribly, terribly wrong!!",
             FALSE, caster, 0, 0, TO_CHAR, ANSI_BLUE);
-        act("$n conjures an ice storm on top of $mself!", 
+        act("$n conjures an ice storm on top of $mself!",
             FALSE, caster, NULL, NULL, TO_ROOM, ANSI_BLUE_BOLD);
-        act("You conjure an ice storm...right on your head!", 
+        act("You conjure an ice storm...right on your head!",
             FALSE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE_BOLD);
-        act("Your body feels frozen to the core!", 
+        act("Your body feels frozen to the core!",
             FALSE, caster, NULL, 0, TO_CHAR, ANSI_BLUE);
-        act("$n causes $mself to be encased in a wall of cold air!", 
+        act("$n causes $mself to be encased in a wall of cold air!",
             FALSE, caster, NULL, 0, TO_ROOM, ANSI_BLUE);
         orig_damage = min(150, orig_damage);
         rc = caster->frostEngulfed();
@@ -618,9 +618,9 @@ int tsunami(TBeing * caster, int level, short bKnown, int adv_learn)
   int orig_damage = caster->getSkillDam(NULL, SPELL_TSUNAMI, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_TSUNAMI)) {
-    act("$n beckons forth a tidal wave!", 
+    act("$n beckons forth a tidal wave!",
          FALSE, caster, NULL, NULL, TO_ROOM, ANSI_BLUE);
-    act("You beckon forth a tidal wave!", 
+    act("You beckon forth a tidal wave!",
          FALSE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE);
     caster->dropPool(100, LIQ_WATER);
     for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
@@ -649,7 +649,7 @@ int tsunami(TBeing * caster, int level, short bKnown, int adv_learn)
             delete tmp_victim;
             tmp_victim = NULL;
           }
-        } 
+        }
       }
     }
     return SPELL_SUCCESS;
@@ -680,7 +680,7 @@ int tsunami(TBeing * caster)
   if (!bPassMageChecks(caster, SPELL_TSUNAMI, NULL))
     return FALSE;
 
-  lag_t rounds = discArray[SPELL_TSUNAMI]->lag;  
+  lag_t rounds = discArray[SPELL_TSUNAMI]->lag;
   taskDiffT diff = discArray[SPELL_TSUNAMI]->task;
 
   start_cast(caster, NULL, NULL, caster->roomp, SPELL_TSUNAMI, diff, 1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
@@ -742,9 +742,9 @@ int conjureElemWater(TBeing * caster, int level, short bKnown)
   victim->elementalFix(caster, SPELL_CONJURE_WATER, 0);
 
   if (caster->bSuccess(bKnown, SPELL_CONJURE_WATER)) {
-    act("You summon the powers of the ocean!", 
+    act("You summon the powers of the ocean!",
             TRUE, caster, NULL, NULL, TO_CHAR, ANSI_BLUE_BOLD);
-    act("$n summons the powers of the ocean!", 
+    act("$n summons the powers of the ocean!",
             TRUE, caster, NULL, NULL, TO_ROOM, ANSI_BLUE_BOLD);
 
     /* charm them for a while */
@@ -839,7 +839,7 @@ int conjureElemWater(TBeing * caster)
 	break;
       }
 
-      if ((tbc = dynamic_cast<TBaseCup *>(t)) && 
+      if ((tbc = dynamic_cast<TBaseCup *>(t)) &&
 	  tbc->getDrinkUnits() >= 100 &&
 	  (tbc->getDrinkType() == LIQ_WATER ||
 	   tbc->getDrinkType() == LIQ_SALTWATER ||
@@ -857,7 +857,7 @@ int conjureElemWater(TBeing * caster)
   }
 
   if (!found) {
-    caster->sendTo("There doesn't seem to be enough water around to conjure a water elemental.\n\r"); 
+    caster->sendTo("There doesn't seem to be enough water around to conjure a water elemental.\n\r");
     return FALSE;
   }
 
@@ -871,7 +871,7 @@ int conjureElemWater(TBeing * caster)
 
 int castConjureElemWater(TBeing * caster)
 {
-  int ret,level; 
+  int ret,level;
 
   level = caster->getSkillLevel(SPELL_CONJURE_WATER);
   int bKnown = caster->getSkillValue(SPELL_CONJURE_WATER);
@@ -1063,7 +1063,7 @@ int protectionFromWater(TBeing *caster, TBeing *victim, int level, short bKnown)
   aff.modifier = IMMUNE_WATER;
   aff.modifier2 = ((level * 2) / 3);
   aff.bitvector = 0;
- 
+
   if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_WATER)) {
     act("$n glows with a faint blue-green aura for a brief moment.", FALSE, victim, NULL, NULL, TO_ROOM, ANSI_GREEN);
     act("You glow with a faint blue-green aura for a brief moment.", FALSE, victim, NULL, NULL, TO_CHAR, ANSI_GREEN);
@@ -1078,10 +1078,10 @@ int protectionFromWater(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_NONE:
         break;
     }
- 
-    if (caster != victim) 
+
+    if (caster != victim)
       aff.modifier2 /= 2;
- 
+
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     caster->reconcileHelp(victim, discArray[SPELL_PROTECTION_FROM_WATER]->alignMod);
     return SPELL_SUCCESS;
@@ -1111,14 +1111,14 @@ int castProtectionFromWater(TBeing *caster, TBeing *victim)
 {
   int level = caster->getSkillLevel(SPELL_PROTECTION_FROM_WATER);
   int bKnown = caster->getSkillValue(SPELL_PROTECTION_FROM_WATER);
- 
+
   int ret=protectionFromWater(caster,victim,level,bKnown);
   if (ret == SPELL_SUCCESS) {
   } else {
   }
   return TRUE;
 }
- 
+
 int gusher(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
   int rc;
@@ -1153,7 +1153,7 @@ int gusher(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_le
           t = NULL;
         }
       }
- 
+
       victim->setPosition(POSITION_SITTING);
       victim->addToWait(combatRound(1));
     } else if (victim->isLucky(caster->spellLuckModifier(SPELL_GUSHER))) {

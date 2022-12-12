@@ -116,7 +116,7 @@ void TMagicItem::lowCheck()
 {
   int sp = suggestedPrice();
   if (obj_flags.cost >= 0 && obj_flags.cost < sp) {
-    vlogf(LOG_LOW, format("magicitem (%s:%d) with bad price %d should be %d.") % 
+    vlogf(LOG_LOW, format("magicitem (%s:%d) with bad price %d should be %d.") %
           getName() % objVnum() % obj_flags.cost % sp);
     obj_flags.cost = sp;
   }

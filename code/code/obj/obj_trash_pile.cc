@@ -85,18 +85,18 @@ void TTrashPile::updateDesc()
 {
   const char *pilename [] =
   {
-    "<o>a tiny pile of trash<1>", 
-    "<o>a small pile of trash<1>", 
-    "<o>a pile of trash<1>", 
-    "<o>a fair sized pile of trash<1>", 
-    "<o>a big pile of trash<1>", 
-    "<o>a large pile of trash<1>", 
+    "<o>a tiny pile of trash<1>",
+    "<o>a small pile of trash<1>",
+    "<o>a pile of trash<1>",
+    "<o>a fair sized pile of trash<1>",
+    "<o>a big pile of trash<1>",
+    "<o>a large pile of trash<1>",
     "<o>a huge pile of trash<1>",
     "<o>a massive pile of trash<1>",
     "<o>a tremendously huge pile of trash<1>",
     "<o>a veritable sea of trash<1>"
   };
-  
+
   const char *piledesc [] =
   {
     "<o>A tiny pile of trash has gathered here.<1>",
@@ -162,7 +162,7 @@ void TTrashPile::overFlow()
     // couldn't find a room to overflow into
     if(!rp)
       return;
-    
+
     // move some stuff
     for(StuffIter it=stuff.begin();it!=stuff.end();){
       TThing *t=*(it++);
@@ -197,11 +197,11 @@ void TTrashPile::attractVermin()
   int mobvnum;
   int count=0;
   TPathFinder path;
-  
+
   if(index<3 || !roomp)
     return;
 
-  if(roomp->isRoomFlag(ROOM_PEACEFUL) || 
+  if(roomp->isRoomFlag(ROOM_PEACEFUL) ||
      roomp->isRoomFlag(ROOM_NO_MOB))
     return;
 
@@ -224,7 +224,7 @@ void TTrashPile::attractVermin()
   path.setUsePortals(true);
   path.setNoMob(false);
   path.setThruDoors(true);
-  
+
   vlogf(LOG_PEEL, format("attractVermin: checking path, here=%i") % inRoom());
 
   if(path.findPath(inRoom(), findOutdoors())==DIR_NONE)
@@ -277,9 +277,9 @@ void TTrashPile::attractVermin()
 
 
   *roomp += *mob;
-  sendrpf(COLOR_BASIC, roomp, buf.c_str(), 
+  sendrpf(COLOR_BASIC, roomp, buf.c_str(),
 	  sstring(mob->getName()).cap().c_str(), getName().c_str());
-  
+
 }
 
 void TTrashPile::doDecay()
@@ -305,7 +305,7 @@ bool TTrashPile::willMerge(TMergeable *tm)
   if(!(pile=dynamic_cast<TTrashPile *>(tm)) ||
      pile==this)
     return false;
-  
+
   return true;
 }
 

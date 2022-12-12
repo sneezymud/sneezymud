@@ -32,7 +32,7 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
 {
   bool is_imp = thief->hasWizPower(POWER_WIZARD);
 
-  if ((thief->equipment[HOLD_LEFT] || thief->equipment[HOLD_RIGHT]) && 
+  if ((thief->equipment[HOLD_LEFT] || thief->equipment[HOLD_RIGHT]) &&
       !is_imp) {
     thief->sendTo("It is impossible to steal with your hand(s) already full!\n\r");
     return FALSE;
@@ -48,7 +48,7 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
   if (dynamic_cast<TMonster *>(thief) && dynamic_cast<TMonster *>(victim))
     return FALSE;
 
-  if (!is_imp) { 
+  if (!is_imp) {
     if (thief->checkPeaceful("What if they caught you?\n\r"))
       return FALSE;
 
@@ -75,7 +75,7 @@ static bool genericCanSteal(TBeing *thief, TBeing *victim)
 
   if (victim->isShopkeeper() && !is_imp) {
     thief->sendTo("Oh, Bad Move.  Bad Move.\n\r");
-    vlogf(LOG_CHEAT, format("%s just tried to steal from a shopkeeper! [%s]") % 
+    vlogf(LOG_CHEAT, format("%s just tried to steal from a shopkeeper! [%s]") %
           thief->getName() % victim->getName());
     return FALSE;
   }
@@ -87,18 +87,18 @@ static bool countersteal(TBeing *thief, TBeing *vict, int known)
 {
   int bKnown;
 
-  if(thief->isImmortal() || !vict->awake() || 
+  if(thief->isImmortal() || !vict->awake() ||
      !vict->doesKnowSkill(SKILL_COUNTER_STEAL))
     return FALSE;
 
   bKnown=vict->getSkillValue(SKILL_COUNTER_STEAL);
   bKnown+=vict->getSkillValue(SKILL_STEAL)/2;
   bKnown-=known;
-  
+
   if(vict->bSuccess(bKnown, SKILL_COUNTER_STEAL)){
-    act("Just when you think you've succeeded, $N reaches out and swats your hand away painfully.", 
+    act("Just when you think you've succeeded, $N reaches out and swats your hand away painfully.",
 	TRUE, thief, NULL, vict, TO_CHAR);
-    act("You notice $n attempting to steal from you, so you wait until $e is almost successful and swat his hand away forcefully.", 
+    act("You notice $n attempting to steal from you, so you wait until $e is almost successful and swat his hand away forcefully.",
 	TRUE, thief, NULL, vict, TO_VICT);
     return TRUE;
   }
@@ -210,7 +210,7 @@ TObj * generateStealLoot(TMonster *mob)
     int lootNum = wr.getRandomItem();
     if (lootNum <= 0)
       continue;
-    
+
     TObj *obj = read_object(lootNum, VIRTUAL);
     if (!obj)
       continue;
@@ -247,7 +247,7 @@ int failSteal(TBeing *thief, TBeing *victim, TObj *obj)
     act("$n tries to steal money from $N.", TRUE, thief, 0, victim, TO_NOTVICT);
 
   // sleeping, you get woken
-  if (victim->getPosition() == POSITION_SLEEPING && 
+  if (victim->getPosition() == POSITION_SLEEPING &&
       !victim->isAffected(AFF_SLEEP) &&
       victim->isLucky(thief->spellLuckModifier(SKILL_STEAL)))
   {
@@ -375,14 +375,14 @@ static int steal(TBeing * thief, TBeing * victim)
   if (!victim->isPc() && Config::LoadOnDeath() && victim->getMoney() < gold)
     victim->setMoney(gold);
   victim->giveMoney(thief, gold, GOLD_INCOME);
-  thief->sendTo(format("You have just stolen %d talen%s from %s.\n\r") % gold % 
+  thief->sendTo(format("You have just stolen %d talen%s from %s.\n\r") % gold %
         ((gold > 1) ? "s" : "") % victim->getName());
 
   // if you crit, you nab a free item
   if (mob && Config::LoadOnDeath() && critSuccess(thief, SKILL_STEAL) != CRIT_S_NONE)
   {
     TObj *objLoot = generateStealLoot(mob);
-    
+
     if (objLoot)
     {
       *thief += *objLoot;
@@ -464,8 +464,8 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
     if (!thief->isImmortal() && eq_pos != WEAR_NOWHERE) {
       if ((eq_pos != WEAR_NECK && eq_pos != WEAR_FINGER_R && eq_pos != WEAR_FINGER_L &&
            eq_pos != WEAR_WRIST_R && eq_pos != WEAR_WRIST_L) ||
-          (victim->getPosition() <= POSITION_SLEEPING && eq_pos != WEAR_FOOT_L && 
-           eq_pos != WEAR_FOOT_R && eq_pos != WEAR_HAND_L && eq_pos != WEAR_HAND_R && 
+          (victim->getPosition() <= POSITION_SLEEPING && eq_pos != WEAR_FOOT_L &&
+           eq_pos != WEAR_FOOT_R && eq_pos != WEAR_HAND_L && eq_pos != WEAR_HAND_R &&
            eq_pos != WEAR_HEAD)) {
 	      thief->sendTo("It is not possible to steal that without being noticed.\n\r");
 	      return FALSE;
@@ -497,7 +497,7 @@ static int steal(TBeing * thief, TBeing * victim, const sstring &obj_name)
        thief->bSuccess(bKnown + modifier, SKILL_STEAL))) {
     if (is_imp || ((thief->getCarriedVolume() + obj->getTotalVolume()) < thief->carryVolumeLimit())) {
       // obj-weight <= weight limit
-      if (is_imp || (compareWeights(obj->getTotalWeight(TRUE), 
+      if (is_imp || (compareWeights(obj->getTotalWeight(TRUE),
                 thief->carryWeightLimit() - thief->getCarriedWeight()) != -1)) {
         if (eq_pos == WEAR_NOWHERE) {
 	        --(*obj);
@@ -546,13 +546,13 @@ int TBeing::doSteal(const sstring &argument, TBeing *vict)
       sendTo("Steal what from whom?\n\r");
       return FALSE;
     }
-  } 
+  }
   if (!genericCanSteal(this, victim))
     return false;
 
-  if (obj_name.empty() || is_abbrev(obj_name, "coins") || is_abbrev(obj_name, "talens")) 
+  if (obj_name.empty() || is_abbrev(obj_name, "coins") || is_abbrev(obj_name, "talens"))
     rc = steal(this,victim);
-  else 
+  else
     rc = steal(this,victim,obj_name);
 
   if (rc)

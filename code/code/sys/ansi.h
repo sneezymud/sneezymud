@@ -69,7 +69,7 @@ enum colorSubT {
      COLOR_SUB_BOLD_WHITE      //   = 17;
 };
 
-const unsigned int COLOR_BLACK         = (1<<0); 
+const unsigned int COLOR_BLACK         = (1<<0);
 const unsigned int COLOR_RED           = (1<<1);
 const unsigned int COLOR_UNDER         = (1<<2);
 const unsigned int COLOR_GREEN         = (1<<3);

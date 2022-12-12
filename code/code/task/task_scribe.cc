@@ -101,7 +101,7 @@ int task_scribe(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
 
             sprintf(buf, "<o>a crumpled %s scroll<1>", discArray[which]->name);
             s2->shortDescr=buf;
-	  
+
             s2->setSpell(0, scroll_obj->getSpell(0));
             s2->setSpell(1, scroll_obj->getSpell(1));
             s2->setSpell(2, scroll_obj->getSpell(2));

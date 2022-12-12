@@ -39,7 +39,7 @@ bool TBeing::canStomp(TBeing *victim, silentTypeT silent)
 
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
-  
+
   if (victim == this) {
     if (!silent)
       sendTo("Aren't we funny today...\n\r");
@@ -75,33 +75,33 @@ bool TBeing::canStomp(TBeing *victim, silentTypeT silent)
 static int stompMiss(TBeing *caster, TBeing *victim)
 {
   if (victim->doesKnowSkill(SKILL_COUNTER_MOVE)) {
-    act("$N deftly avoids $n's stomp.", 
+    act("$N deftly avoids $n's stomp.",
         FALSE, caster, 0, victim, TO_NOTVICT);
-    act("$N deftly avoids your stomp.", 
+    act("$N deftly avoids your stomp.",
         FALSE, caster, 0, victim, TO_CHAR);
-    act("You deftly avoid $n's stomp.", 
+    act("You deftly avoid $n's stomp.",
         FALSE, caster, 0, victim, TO_VICT);
   } else if (victim->getPosition() == POSITION_STANDING) {
-    act("$N ducks and avoids $n's stomp.", 
+    act("$N ducks and avoids $n's stomp.",
         FALSE, caster, 0, victim, TO_NOTVICT);
     act("$N ducks aside, and dodges your stomp.",
         FALSE, caster, 0, victim, TO_CHAR);
-    act("$n tries to stomp you, but you duck to the side just in time.", 
+    act("$n tries to stomp you, but you duck to the side just in time.",
         FALSE, caster, 0, victim, TO_VICT);
   } else if ((victim->getPosition() == POSITION_RESTING) ||
              (victim->getPosition() == POSITION_SLEEPING)) {
-    act("$N rolls and avoids $n's stomp.", 
+    act("$N rolls and avoids $n's stomp.",
         FALSE, caster, 0, victim, TO_NOTVICT);
     act("$N rolls to the side, and dodges your stomp.",
         FALSE, caster, 0, victim, TO_CHAR);
-    act("$n tries to stomp you, but you roll to the side.", 
+    act("$n tries to stomp you, but you roll to the side.",
         FALSE, caster, 0, victim, TO_VICT);
   } else {
-    act("$N dodges and avoids $n's stomp.", 
+    act("$N dodges and avoids $n's stomp.",
         FALSE, caster, 0, victim, TO_NOTVICT);
     act("$N dodges to the side, and dodges your stomp.",
         FALSE, caster, 0, victim, TO_CHAR);
-    act("$n tries to stomp you, but you dodge to the side.", 
+    act("$n tries to stomp you, but you dodge to the side.",
         FALSE, caster, 0, victim, TO_VICT);
   }
 
@@ -125,7 +125,7 @@ static int stompHit(TBeing *caster, TBeing *victim)
 
     height = caster->getHeight();
     targ_height = victim->getPosHeight();
-  
+
     if (height >= 5 * targ_height) {
       act("$n lifts $s leg high over $N's head, stomping $M hard on the head!",
            FALSE, caster, 0, victim, TO_NOTVICT);
@@ -182,7 +182,7 @@ static int stompHit(TBeing *caster, TBeing *victim)
 static int stomp(TBeing *c, TBeing *victim)
 {
   const int STOMP_MOVE  = 10;
-  
+
   if (!c->canStomp(victim, SILENT_NO))
     return FALSE;
 
@@ -213,9 +213,9 @@ int TBeing::doStomp(const char *argument, TBeing *vict)
   int rc;
   TBeing *victim;
   char name_buf[256];
-  
+
   strcpy(name_buf, argument);
-  
+
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {

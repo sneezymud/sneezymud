@@ -72,7 +72,7 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
 
   if ((c->bSuccess(bKnown + percent, skill) &&
          // insure they can hit this critter
-         (i = c->specialAttack(victim,skill)) && 
+         (i = c->specialAttack(victim,skill)) &&
          i != GUARANTEED_FAILURE &&
          // make sure they have reasonable training
          (percent < bKnown)) ||
@@ -130,7 +130,7 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
       rc = c->trySpringleap(victim);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
-   
+
       rc = victim->crashLanding(POSITION_SITTING);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
@@ -146,11 +146,11 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
       if (!victim->fight()) {
         if (c->fight()) {
           if (c->fight() != victim) {
-            act("You now turn your attention to $N!", 
+            act("You now turn your attention to $N!",
                 TRUE, c, 0, victim, TO_CHAR);
-            act("$n now turns $s attention to $N!", 
+            act("$n now turns $s attention to $N!",
                 TRUE, c, 0, victim, TO_NOTVICT);
-            act("$n has turned $s attention to you!", 
+            act("$n has turned $s attention to you!",
                 TRUE, c, 0, victim, TO_VICT);
           }
           c->stopFighting();
@@ -169,11 +169,11 @@ static int grapple(TBeing *c, TBeing *victim, spellNumT skill)
               TRUE, c, 0, victim, TO_VICT);
         }
         if (victim->fight() && (victim->fight() != c)) {
-          act("$N now turns $S attention to you!", 
+          act("$N now turns $S attention to you!",
               TRUE, c, 0, victim, TO_CHAR);
-          act("$N now turns $S attention to $n!", 
+          act("$N now turns $S attention to $n!",
               TRUE, c, 0, victim, TO_NOTVICT);
-          act("You now turn your attention to $n!", 
+          act("You now turn your attention to $n!",
               TRUE, c, 0, victim, TO_VICT);
 
         }

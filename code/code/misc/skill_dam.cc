@@ -72,7 +72,7 @@ enum trimTypeT {
 };
 
 // victim = NULL for area effects
-// class_amt is dam appropriate for the class on a per level, per round 
+// class_amt is dam appropriate for the class on a per level, per round
 // reduce indicates if a check on hit() has been done
 //    physical attacks are probably !reduce, spells are reduce
 // npc tells whether the caster is an NPC or not
@@ -87,7 +87,7 @@ static int genericDam(const TBeing *victim, const TBeing *caster, spellNumT skil
   // reached at L30, and 100% in special disc is L50.  That is, if a skill
   // is start=0, learn=2 (maxing at 50%) we would set the max level either
   // to L15 or L40 depending on whether it was a basic or a special.
-  // 
+  //
   // However, if they have specialized, we will assume the min level is 30
   // and scales up to 50 based on learning in the specialized disc.
   int max_lev;
@@ -129,16 +129,16 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   // so, for mobs, throw in a scale factor
   // totally arbitrary, and unrealistic, but necessary for balance
 
-  // Adjust NPC damage/healing 
+  // Adjust NPC damage/healing
   if (npc && ((victim && victim->isPc()) || !victim))
     fixed_amt *= 0.5195;
 
   // Adjust healing for PCs
   if (!npc && trim)
     fixed_amt *= 0.5195;
-  
+
   // Obviously, we should tweak dam up/down based on how successful the
-  // skill is. We increase damage for skills as the failure rate increases 
+  // skill is. We increase damage for skills as the failure rate increases
   // to ensure those skills are worth using.
   // factoring in once evenly weights easy vs hard skills in terms of
   // resulting damage.
@@ -146,7 +146,7 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
   fixed_amt *= (100.0 / (getSkillDiffModifier(skill) - 15));
 
   // cut area effects in half
-  if (IS_SET(discArray[skill]->targets, TAR_AREA)) 
+  if (IS_SET(discArray[skill]->targets, TAR_AREA))
     fixed_amt *= 0.75;
 
   if (victim && reduce) {
@@ -171,7 +171,7 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
     double def = min((int) victim->GetMaxLevel(), 60) * 16.67;
     double off = min(max(orig_lev, level), 60) * 16.67;
     off += max(0, max(orig_lev, level)-60) * 5;
-    
+
     double mod = def-off;
 
     // mod is > 0 if the victim is higher level that the attacker
@@ -201,7 +201,7 @@ if (discArray[skill]->disc == discArray[skill]->assDisc) {
 
   dam = max(1,dam);
 
-  if (!npc && 
+  if (!npc &&
       ((!trim && ((victim && !victim->isPc()) || !victim)) || trim)) {
     discArray[skill]->pot_victims++;
     discArray[skill]->pot_damage += dam;
@@ -264,7 +264,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SKILL_DEATHSTROKE:
       // damage scaling higher the lower the victim's hp %
       dam =  genericDam(victim, this, skill, DISC_WARRIOR, level, adv_learn, 2.5 -
-		      2.0*((double) victim->getHit() / (double) victim->hitLimit()), 
+		      2.0*((double) victim->getHit() / (double) victim->hitLimit()),
 		      REDUCE_NO, !isPc(), TRIM_NO);
       break;
     case SKILL_WHIRLWIND:
@@ -291,7 +291,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_STUNNING_ARROW:
       // for normal success, these spells provide a "save" that cuts dam in
       // half.  That is, 50% chance of dam in half.  The average would be 75%
-      // hence we multiply by 4/3 to get the desired result  
+      // hence we multiply by 4/3 to get the desired result
       // damage also increased due to difficulty in obtaining component
       dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.05 * HARD_TO_FIND_COMPONENT * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
@@ -311,13 +311,13 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
     case SPELL_GRANITE_FISTS:
       // for normal success, these spells provide a "save" that cuts dam in
       // half.  That is, 50% chance of dam in half.  The average would be 75%
-      // hence we multiply by 4/3 to get the desired result  
+      // hence we multiply by 4/3 to get the desired result
       dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.05 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SPELL_METEOR_SWARM:
       // for normal success, these spells provide a "save" that cuts dam in
       // half.  That is, 50% chance of dam in half.  The average would be 75%
-      // hence we multiply by 4/3 to get the desired result  
+      // hence we multiply by 4/3 to get the desired result
 
       // meteor has an outdoor-only limitation:
       dam = genericDam(victim, this, skill, DISC_MAGE, level, adv_learn, 2.25 * HAS_SAVING_THROW * OUTDOOR_ONLY, REDUCE_YES, !isPc(), TRIM_NO);

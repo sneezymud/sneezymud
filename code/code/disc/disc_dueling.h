@@ -30,7 +30,7 @@ public:
       skTranceOfBlades(),
       skWeaponRetention(),
       skRiposte(){
-    }      
+    }
     CDDueling(const CDDueling &a)
       : CDiscipline(a),
       skShove(a.skShove),
@@ -50,7 +50,7 @@ public:
       skWeaponRetention = a.skWeaponRetention;
       skRiposte = a.skRiposte;
       return *this;
-    } 
+    }
     //    CDDueling();
     //    CDDueling(const CDDueling &a);
     //    CDDueling & operator=(const CDDueling &a);

@@ -721,7 +721,7 @@ template<class T> T convertTo(const sstring &s)
     std::istringstream is(s);
     if(!(is >> x)) // let failure convert to 0 with no warning.  we relied on
       x=0;         // this (undefined) behavior with atoi, so we need it now
-    
+
     return x;
   }
 }

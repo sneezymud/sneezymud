@@ -136,7 +136,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
     case CMD_GENERIC_PULSE:
       if (!(job = (reg_struct *) me->act_ptr)) {
         vlogf(LOG_PROC,"CUSTOMIZER PROC ERROR: terminating (hopefully)");
-        return FALSE;   
+        return FALSE;
       }
       if (!job->char_name || !job->obj_name)
         return FALSE;
@@ -177,14 +177,14 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
           }
 
 
-          //  Remake the obj name.  
+          //  Remake the obj name.
           buf = format("%s %s") % final->name.c_str() % job->char_name;
           final->name = buf;
 
           buf = format("This is the personalized object of %s") % job->char_name;
           final->action_description = buf;
 
-          
+
           if ((final_pers->getCarriedVolume() + final->getTotalVolume())  > final_pers->carryVolumeLimit()) {
             me->doSay("You can't carry it! I'll just drop it here for you!");
             rc = me->doDrop(job->obj_name, NULL);
@@ -300,7 +300,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
       return TRUE;
       }
     case CMD_MOB_GIVEN_ITEM:
-      // prohibit polys and charms from engraving 
+      // prohibit polys and charms from engraving
       if (dynamic_cast<TMonster *>(ch)) {
         me->doTell(fname(ch->name), "I don't work for beasts.");
         return TRUE;
@@ -368,7 +368,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
         job->wait = max(1, (int) (item->obj_flags.max_struct_points)/7);
         buf = format("Thanks for your business, I'll take your %d talens payment in advance!") % cost;
         me->doSay(buf);
-        
+
         TShopOwned tso(find_shop_nr(me->number), me, ch);
         tso.doBuyTransaction(cost, format("customizing %s") % item->getName(), TX_BUYING_SERVICE);
 
@@ -379,7 +379,7 @@ int customizer(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o,
         strcpy(job->obj_name, fname(item->name).c_str());
         --(*item);
         *me += *item;
-        
+
         me->saveChar(Room::AUTO_RENT);
         ch->saveChar(Room::AUTO_RENT);
 

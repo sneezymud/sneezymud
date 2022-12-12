@@ -147,7 +147,7 @@ void TBeing::doPrompt(const char *arg)
       ct = time(0);
     struct tm *tm=localtime(&ct);
 
-    sprintf(str, "Time       : (%s): t:%i:%i:%i\n\r", 
+    sprintf(str, "Time       : (%s): t:%i:%i:%i\n\r",
 	    (tPrompts[20] ? "yes" : " no"),
 	    tm->tm_hour, tm->tm_min, tm->tm_sec);
     tStString += str;
@@ -351,7 +351,7 @@ void TBeing::doPrompt(const char *arg)
           sendTo(format("\t%s\n\r") % stat_fields[ui]);
         return;
       }
-      if (is_abbrev(caColor, "off")) 
+      if (is_abbrev(caColor, "off"))
         kolor2 = 0;
       else {
         kolor2 = old_search_block(caColor, 0, strlen(caColor), colors, 0);
@@ -681,7 +681,7 @@ void TBeing::doCls(bool tell)
 
     if (vt100()) {
       desc->updateScreenVt100(2*CHANGED_PIETY - 1);
-    } else if (ansi()) 
+    } else if (ansi())
       desc->updateScreenAnsi(2*CHANGED_PIETY - 1);
 
     sendTo(format("%s") % norm());
@@ -708,20 +708,20 @@ void TPerson::doColor(const char *buf)
   if (!isPc()) {
     sendTo("Mobs can't have color.\n\r");
     return;
-  } 
+  }
   buf = one_argument(buf, arg, cElements(arg));
   strcpy(arg2, buf);
 
   if (!*arg) {
     for (i = 0;i < (MAX_PLR_COLOR - 1);i++) {
       if (*color_options[i]) {
-        if (isImmortal() || (!(i == PLR_COLOR_CODES) && !(i == PLR_COLOR_LOGS))) {  
+        if (isImmortal() || (!(i == PLR_COLOR_CODES) && !(i == PLR_COLOR_LOGS))) {
           sendTo(format("%-45s : %s\n\r") % color_options[i] %
             ((IS_SET(desc->plr_color, (unsigned) (1<<i))) ? "on" : "off"));
         }
       }
     }
-    sendTo(format("%-45s : %s\n\r") % "Color Substitute" % (desc->plr_colorSub ? "yes" : "no")); 
+    sendTo(format("%-45s : %s\n\r") % "Color Substitute" % (desc->plr_colorSub ? "yes" : "no"));
     sendTo(format("%-45s : %s\n\r") % "Color Replacements" % (desc->plr_colorOff ? "yes" : "no"));
     return;
   }
@@ -752,19 +752,19 @@ void TPerson::doColor(const char *buf)
     // one_argument ignores "on", so 2nd option doesn't work at all
     if (IS_SET(desc->plr_color, PLR_COLOR_BASIC)) {
       sendTo("Your basic color is already turned on.\n\r");
-      
-      if (!(isPlayerAction(PLR_COLOR))) 
+
+      if (!(isPlayerAction(PLR_COLOR)))
         addPlayerAction(PLR_COLOR);
-      
+
       if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
     } else {
       SET_BIT(desc->plr_color, PLR_COLOR_BASIC);
       sendTo(format("%sC%so%sl%so%sr%s mode enabled.\n\r") % ANSI_RED % ANSI_CYAN % ANSI_BLUE % ANSI_ORANGE % ANSI_PURPLE % ANSI_NORMAL);
-      
-      if (!(isPlayerAction(PLR_COLOR))) 
+
+      if (!(isPlayerAction(PLR_COLOR)))
         addPlayerAction(PLR_COLOR);
-      
+
       if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
     }
@@ -772,16 +772,16 @@ void TPerson::doColor(const char *buf)
     if (IS_SET(desc->plr_color, PLR_COLOR_BASIC)) {
       sendTo("You will no longer see color.\n\r");
       REMOVE_BIT(desc->plr_color, PLR_COLOR_BASIC);
-      if (isPlayerAction(PLR_COLOR)) 
+      if (isPlayerAction(PLR_COLOR))
         remPlayerAction(PLR_COLOR);
-      
+
       if (IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
     } else {
       sendTo("Your color is already turned off.\n\r");
-      if (isPlayerAction(PLR_COLOR)) 
+      if (isPlayerAction(PLR_COLOR))
         remPlayerAction(PLR_COLOR);
-      
+
       if (IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
     }
@@ -1168,14 +1168,14 @@ void TPerson::doColor(const char *buf)
       sendTo("You have not chosen a valid color to replace.\n\r");
       sendTo("Syntax: color replace <color>\n\r");
       return;
-    } 
+    }
     if (toggle) {
       sendTo(format("You have chosen to replace %s as a color with your substitute.\n\r") % tempBuf);
     } else {
       sendTo(format("You will no longer replace %s as a color.\n\r") % tempBuf);
     }
   } else if (is_abbrev(arg, "substitute.\n\r")) {
-    if (is_abbrev(arg2, "none")) { 
+    if (is_abbrev(arg2, "none")) {
       desc->plr_colorSub = COLOR_SUB_NONE;
       sprintf(tempBuf, "%s", "none");
     } else if (is_abbrev(arg2, "black")) {

@@ -60,10 +60,10 @@ void TOtherObj::lowCheck()
     int i;
     int lgt = 0;
     for (i=0; i<MAX_OBJ_AFFECT;i++) {
-      if (affected[i].location == APPLY_LIGHT) 
+      if (affected[i].location == APPLY_LIGHT)
         lgt += affected[i].modifier;
     }
-    if ((max_exist < 10 && 
+    if ((max_exist < 10 &&
         ((int) getWeight() < lgt)) ||
         (max_exist >= 10 &&
         ((int) getWeight() < 2*lgt))) {
@@ -76,7 +76,7 @@ void TOtherObj::lowCheck()
 void TOtherObj::writeAffects(int i, FILE *fp) const
 {
   if (affected[i].location != APPLY_NONE) {
-    fprintf(fp, "A\n%d %ld %ld\n", 
+    fprintf(fp, "A\n%d %ld %ld\n",
             mapApplyToFile(affected[i].location),
             applyTypeShouldBeSpellnum(affected[i].location) ? mapSpellnumToFile(spellNumT(affected[i].modifier)) : affected[i].modifier,
             affected[i].modifier2);

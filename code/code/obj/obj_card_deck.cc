@@ -36,11 +36,11 @@ void TBeing::doShuffle(const sstring &arg)
   }
 
   std::random_shuffle(cards.begin(), cards.end());
-  
+
   for(unsigned int i=0;i<cards.size();++i){
     *deck += *cards[i];
   }
-  
+
   act("$n shuffles $p.",
       TRUE,this,deck,NULL, TO_ROOM,NULL);
   act("You shuffle $p.",

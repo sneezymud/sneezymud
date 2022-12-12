@@ -14,8 +14,8 @@ void TBeing::setColor(setColorFieldT num, setColorKolorT col)
 {
   if (!desc)
     return;
-    
-  if (col == SET_COL_KOL_OFF) 
+
+  if (col == SET_COL_KOL_OFF)
     sendTo("Unsetting color....\n\r");
   else {
     sendTo("Setting color....\n\r");
@@ -628,9 +628,9 @@ const sstring Descriptor::ansi_color_bold(const char *s) const
   if (hasColor()) {
     buf = bold();
     buf += s;
-  } else if (hasColorVt()) 
+  } else if (hasColorVt())
     return "";
-  else 
+  else
     return"";
 
   return buf;
@@ -641,11 +641,11 @@ const sstring Descriptor::ansi_color_bold(const char *s, unsigned int color) con
   sstring buf;
   int repFound = FALSE;
 
-  if (IS_SET(plr_colorOff, color)) 
+  if (IS_SET(plr_colorOff, color))
     repFound = TRUE;
 
   if (repFound) {
-    if (plr_colorSub) 
+    if (plr_colorSub)
       return doColorSub();
     else {
       s = "";
@@ -656,7 +656,7 @@ const sstring Descriptor::ansi_color_bold(const char *s, unsigned int color) con
       buf = bold();
       buf += s;
     } else if (hasColorVt()) {
-      if (color == COLOR_BOLD) 
+      if (color == COLOR_BOLD)
         return VT_BOLDTEX;
       else {
         s = "";

@@ -13,7 +13,7 @@
   ----------------------------------------------------------------------
 
   Tasks provide a mechanism for delayed/sequenced/periodic mob actions.
-  Basically, they function a lot like spec_procs.  They tie up the 
+  Basically, they function a lot like spec_procs.  They tie up the
   player/mob for a set ammount of time, allowing things to happen in the
   meantime.
 

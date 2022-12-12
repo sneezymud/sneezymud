@@ -93,7 +93,7 @@ const int    MAT_JET             =125;
 const int    MAT_CORUNDUM        =126;
 const int    MAX_MAT_MINERAL     =27;     // Move and change  (max+1 - 100)
 
-//const int    MAT_GEN_METAL       =150;  
+//const int    MAT_GEN_METAL       =150;
 const int    MAT_COPPER          =151;
 //const int    MAT_SCALE_MAIL      =152;
 //const int    MAT_BANDED_MAIL     =153;

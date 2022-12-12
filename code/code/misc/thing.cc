@@ -82,7 +82,7 @@ bool TThing::inLogrus() const
 }
 
 bool TThing::inBrightmoon() const
-{ 
+{
   return ((inRoom() >= 1200 && inRoom() <= 1399) ||
 	  (inRoom() >= 16450 && inRoom() <= 16499) ||
 	  (inRoom() == 15347));  // Brightmoon portal room
@@ -134,7 +134,7 @@ float TThing::getCarriedWeight() const
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
     if(dynamic_cast<TComponent *>(t))
       total+=(t->getTotalWeight(true)*0.10);
-    else 
+    else
       total+=t->getTotalWeight(true);
   }
 

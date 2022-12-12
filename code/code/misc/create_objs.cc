@@ -161,7 +161,7 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
   ch->sendTo("--> ");
 }
 
-// Loading/Saving functions are below 
+// Loading/Saving functions are below
 
 void TBeing::doOEdit(const char *)
 {
@@ -224,7 +224,7 @@ void ObjLoad(TBeing *ch, int vnum)
 
 
   db.query("select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name.c_str());
-  
+
   while(db.fetchRow()){
     new_descr = new extraDescription();
     new_descr->keyword = db["name"];
@@ -245,7 +245,7 @@ void ObjLoad(TBeing *ch, int vnum)
       o->affected[i].modifier = mapFileToSpellnum(convertTo<int>(db["mod1"]));
     else
       o->affected[i].modifier = convertTo<int>(db["mod1"]);
- 
+
     o->affected[i].modifier2 = convertTo<int>(db["mod2"]);
 
     if (o->affected[i].location == APPLY_LIGHT)
@@ -291,13 +291,13 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   TDatabase db(DB_IMMORTAL);
 
   //  db.query("delete from obj where vnum=%i", vnum);
-  if(!db.query("insert into obj (vnum, name, short_desc, long_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, cur_struct, max_struct, decay, volume, material, owner, action_desc) values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')", 
-	  vnum, o->name.c_str(), o->shortDescr.c_str(), o->getDescr().c_str(), o->itemType(), 
-	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
-	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
-	  o->max_exist, o->obj_flags.struct_points, 
-	  o->obj_flags.max_struct_points, o->obj_flags.decay_time, 
-		 o->getVolume(), o->getMaterial(), ch->name.c_str(), 
+  if(!db.query("insert into obj (vnum, name, short_desc, long_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, cur_struct, max_struct, decay, volume, material, owner, action_desc) values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
+	  vnum, o->name.c_str(), o->shortDescr.c_str(), o->getDescr().c_str(), o->itemType(),
+	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4,
+	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec,
+	  o->max_exist, o->obj_flags.struct_points,
+	  o->obj_flags.max_struct_points, o->obj_flags.decay_time,
+		 o->getVolume(), o->getMaterial(), ch->name.c_str(),
 	       o->action_description.c_str())){
     ch->sendTo("Unable to save object.  Make sure that an object doesn't already exist in that slot.\n\r");
     //    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
@@ -334,7 +334,7 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
-  
+
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
 #if 0
     // Dummy proofing against newb builders who'd confuse Shadowy/Glow with light.
@@ -343,10 +343,10 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       continue;
     }
 #endif
-    
+
     if (o->affected[i].location != APPLY_NONE) {
       if(!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) values (%i, %i, %i, '%s', %i)",
-		 mapApplyToFile(o->affected[i].location), 
+		 mapApplyToFile(o->affected[i].location),
 		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
 		 o->affected[i].modifier2, ch->name.c_str(), vnum)){
 	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
@@ -400,7 +400,7 @@ static void olist(TPerson *ch, bool zone=false)
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
-    
+
 
   while(db.fetchRow()){
     longstr += db["vnum"];
@@ -480,7 +480,7 @@ static void oedit(TBeing *ch, const char *arg)
 void oremove(TBeing *ch, int vnum)
 {
   TDatabase db(DB_IMMORTAL);
-  
+
   db.query("select * from obj where vnum=%i and owner='%s'", vnum, ch->name.c_str());
 
   if(!db.isResults()){
@@ -497,7 +497,7 @@ void oremove(TBeing *ch, int vnum)
     ch->sendTo("Removed.\n\r");
 }
 
-// This is the main function that controls all the object stuff - Russ 
+// This is the main function that controls all the object stuff - Russ
 void TPerson::doOEdit(const char *argument)
 {
   const char *tString = NULL;
@@ -540,7 +540,7 @@ void TPerson::doOEdit(const char *argument)
       }
       return;
       break;
-    case 1:			// save 
+    case 1:			// save
 #if 1
       tStArg = sstring;
       tStString=tStArg.word(0);
@@ -611,13 +611,13 @@ void TPerson::doOEdit(const char *argument)
 #endif
       return;
       break;
-    case 2:			// load 
+    case 2:			// load
       if (sscanf(sstring, "%d", &vnum) != 1) {
 	// assume that sstring is an object name
 	TDatabase db(DB_IMMORTAL);
 
 	db.query("select vnum, name from obj where owner='%s'", getName().c_str());
-  
+
 	vnum=-1;
 	while(db.fetchRow()){
 	  if(isname(sstring, db["vnum"])){
@@ -635,7 +635,7 @@ void TPerson::doOEdit(const char *argument)
       ObjLoad(this, vnum);
       return;
       break;
-    case 3:			// modify 
+    case 3:			// modify
       if (sscanf(sstring, "%s", object) != 1) {
 	sendTo("Syntax : oed modify <object name>\n\r");
 	return;
@@ -643,7 +643,7 @@ void TPerson::doOEdit(const char *argument)
       oedit(this, sstring);
       return;
       break;
-    case 4:			// list 
+    case 4:			// list
       sscanf(sstring, "%s", object);
       if(!strcmp(object, "zone"))
 	olist(this, true);
@@ -651,7 +651,7 @@ void TPerson::doOEdit(const char *argument)
 	olist(this, false);
       return;
       break;
-    case 5:			// remove 
+    case 5:			// remove
       if (sscanf(sstring, "%d", &vnum) != 1) {
 	sendTo("Syntax : oed remove <vnum>\n\r");
 	return;
@@ -659,7 +659,7 @@ void TPerson::doOEdit(const char *argument)
       oremove(this, vnum);
       return;
       break;
-    case 6:			// create 
+    case 6:			// create
       ocreate(this);
       return;
       break;
@@ -936,7 +936,7 @@ void TObj::writeAffects(int i, FILE *fp) const
     return;
 
   if (affected[i].location != APPLY_NONE) {
-    fprintf(fp, "A\n%d %ld %ld\n", 
+    fprintf(fp, "A\n%d %ld %ld\n",
         mapApplyToFile(affected[i].location),
         applyTypeShouldBeSpellnum(affected[i].location) ? mapSpellnumToFile(spellNumT(affected[i].modifier)) : affected[i].modifier,
         affected[i].modifier2);
@@ -947,10 +947,10 @@ void raw_write_out_object(const TObj *o, FILE *fp, unsigned int vnum)
 {
   if (!o->action_description.empty())
     fprintf(fp, "#%d\n%s~\n%s~\n%s~\n%s~\n", vnum, o->name.c_str(),
-	  o->shortDescr.c_str(), o->getDescr().c_str(), 
+	  o->shortDescr.c_str(), o->getDescr().c_str(),
           o->action_description.c_str());
-  else 
-    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->name.c_str(), 
+  else
+    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->name.c_str(),
            o->shortDescr.c_str(), o->getDescr().c_str());
   fprintf(fp, "%d %d %d\n", mapItemTypeToFile(o->itemType()),
 	  o->getObjStat(), o->obj_flags.wear_flags);
@@ -1123,7 +1123,7 @@ static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
       return;
 
     update = itemTypeT(num);
-  
+
     // disallow creating player corpses or "unknown" items
     if (update == ITEM_PCORPSE ||
         update == ITEM_MARTIAL_WEAPON ||
@@ -1221,7 +1221,7 @@ static void change_obj_extra_flags(TBeing *ch, TObj *o, const char *arg, editorE
     i = 1 << update;
 
     if (i == ITEM_STRUNG) {
-      ch->sendTo("This bit gets set automatically, and should never need to be manually changed.\n\r"); 
+      ch->sendTo("This bit gets set automatically, and should never need to be manually changed.\n\r");
       return;
     }
     if ((i == ITEM_PROTOTYPE) && !ch->hasWizPower(POWER_OEDIT_NOPROTOS)) {
@@ -1384,7 +1384,7 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       return;
     }
     if (num == 3) {
-      // offset the arrays for applies 
+      // offset the arrays for applies
       if (att == APPLY_IMMUNITY)
         number1--;
 
@@ -1404,16 +1404,16 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       return;
     } else if ((att != APPLY_SPELL) &&
                (att != APPLY_DISCIPLINE) &&
-               (att != APPLY_IMMUNITY) && 
+               (att != APPLY_IMMUNITY) &&
          (num == 3) && (number2 != 0)) {
       ch->sendTo("Syntax : <apply number> <arg>\n\r");
       return;
-    } else if ((att == APPLY_SPELL) && 
+    } else if ((att == APPLY_SPELL) &&
                (!discArray[number1] || !strcmp(discArray[number1]->name, ""))) {
       ch->sendTo("Illegal skill/spell!\n\r");
       return;
     } else if ((att == APPLY_DISCIPLINE) &&
-         ((number1 < 0) || (number1 >= MAX_DISCS)  || 
+         ((number1 < 0) || (number1 >= MAX_DISCS)  ||
           !(*discNames[number1].name))) {
       ch->sendTo("Illegal Discipline!\n\r");
       return;
@@ -1426,7 +1426,7 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     } else if (att == APPLY_GARBLE && (number1 < 0 || number1 >= Garble::TYPE_MAX)) {
       ch->sendTo(format("Illegal Garble!  Please choose a number between 0 and %d\n\r") % (Garble::TYPE_MAX-1));
       return;
-    } else if (num == 2) 
+    } else if (num == 2)
       number2 = 0;
 
     if (!apply_types[att].assignable) {
@@ -1435,7 +1435,7 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     } else if ((att == APPLY_SPELL) &&!discArray[number1]) {
       ch->sendTo("Illegal skill/spell number.\n\r");
       return;
-    } else if (o->addApply(ch, att)) 
+    } else if (o->addApply(ch, att))
       return;
     else {
       if (att == APPLY_LIGHT)
@@ -1501,7 +1501,7 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     if (o->affected[i].location == APPLY_SPELL) {
       ch->sendTo(format("Affects %s: %s (%d) by %d\n\r") %
         apply_types[o->affected[i].location].name %
-        discArray[o->affected[i].modifier]->name % 
+        discArray[o->affected[i].modifier]->name %
         o->affected[i].modifier %
         o->affected[i].modifier2);
     } else if (o->affected[i].location == APPLY_IMMUNITY) {
@@ -2040,10 +2040,10 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
             i == CONT_EMPTYTRAP ||
             i == CONT_GHOSTTRAP ||
             i == CONT_JAMMED) {
-          ch->sendTo("This flag is set automatically and can not be changed.\n\r"); 
+          ch->sendTo("This flag is set automatically and can not be changed.\n\r");
           return;
         }
-     
+
 	if (o->isContainerFlag(i))
 	  o->remContainerFlag(i);
 	else
@@ -2577,7 +2577,7 @@ void change_arrow_value3(TBeing *ch, TArrow *o, const char *arg, editorEnterType
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice.\n\r--> ");
 }
-	
+
 void change_arrow_value4(TBeing *ch, TArrow *o, const char *arg, editorEnterTypeT type)
 {
   int loc_update;
@@ -3046,7 +3046,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
       if (rc == 1) {
         // only handle if it's of right form
         sstring n = fread_string(fp);
-  
+
         sstring newstr;
         newstr += dp->d_name;
         newstr += " ";
@@ -3085,7 +3085,7 @@ int TObj::addApply(TBeing *ch, applyTypeT apply)
 void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
 {
   int loc_update;
- 
+
   if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = CHANGE_OBJ_VALUES;
@@ -3094,7 +3094,7 @@ void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterT
     }
   }
   loc_update = convertTo<int>(arg);
- 
+
   switch (ch->specials.edit) {
     case CHANGE_MAGICITEM_VALUE1:
       switch (loc_update) {
@@ -3147,7 +3147,7 @@ void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterT
 }
 
 void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
-{ 
+{
   int i, row, loc_update;
   char buf[256];
 
@@ -3181,8 +3181,8 @@ void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
       row++;
     ch->sendTo(buf);
 
-    ch->sendTo(format("%2d [%s] %s") % (i+1) % 
-              ((getTrapEffectType() & (1 << i)) ? "X" : " ") % 
+    ch->sendTo(format("%2d [%s] %s") % (i+1) %
+              ((getTrapEffectType() & (1 << i)) ? "X" : " ") %
               trap_effects[i]);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);
@@ -3191,11 +3191,11 @@ void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
 
 
 void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
-{ 
+{
   int i, row;
   doorTrapT loc_update;
   char buf[256];
- 
+
   if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = MAIN_MENU;
@@ -3222,7 +3222,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
   }
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("Trap Damage Type: %s") % trap_types[getTrapDamType()]);
- 
+
   row = 0;
   for (i = 0; i < MAX_TRAP_TYPES; i++) {
     sprintf(buf, VT_CURSPOS, row + 3, (((i % 3) * 25) + 5));
@@ -3537,7 +3537,7 @@ void TGun::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnterTypeT 
 {
   int new_rof;
   TGun *o=this;
-  
+
   if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = MAIN_MENU;

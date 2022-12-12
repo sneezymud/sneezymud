@@ -69,7 +69,7 @@ TBeing * dopplegangerFindBetter(TBeing *tSucker, TBeing *tPatsy)
   tScores[0] += ::number(-20, 20);
   tScores[1] += ::number(-20, 20);
 
-  // Basically the values will range from: 
+  // Basically the values will range from:
   // -23, ..., 77
 
   return (tScores[0] > tScores[1] ? tSucker : tPatsy);
@@ -206,7 +206,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
       // mimic target <player> to set a target
       // mimic ignore to de-assume current target
       // mimic boost <value> to 'increase' mimic's level by <value>
-      // mimic 
+      // mimic
       break;
     default:
       break;

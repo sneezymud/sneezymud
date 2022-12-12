@@ -67,5 +67,5 @@ private:
     int cudgel(TBeing *, TBeing *);
 
 
-     bool addPoison(affectedData aff[5], 
+     bool addPoison(affectedData aff[5],
 		    liqTypeT liq, int level, int duration);

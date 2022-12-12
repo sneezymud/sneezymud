@@ -44,7 +44,7 @@ int TBeing::doTrigger(const char *argument){
 
   if(!preCastCheck())
     return FALSE;
-  
+
   strcpy(arg, argument);
 
   auto [which, target] = parseSpellNum(argument);
@@ -56,7 +56,7 @@ int TBeing::doTrigger(const char *argument){
     return FALSE;
   }
 
-  if (which <= TYPE_UNDEFINED || !preDiscCheck(which) || 
+  if (which <= TYPE_UNDEFINED || !preDiscCheck(which) ||
       !parseTarget(which, arg, &t))
     return FALSE;
 

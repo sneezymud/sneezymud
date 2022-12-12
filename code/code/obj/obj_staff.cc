@@ -155,13 +155,13 @@ void TStaff::lowCheck()
         !discArray[curspell]->minLifeforce &&
       !discArray[curspell]->minPiety)) ||
       (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-    vlogf(LOG_LOW, format("staff (%s:%d) has messed up spell(%d)") % 
+    vlogf(LOG_LOW, format("staff (%s:%d) has messed up spell(%d)") %
          getName() % objVnum() % curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
       vlogf(LOG_LOW, "bogus range");
     else if (!discArray[curspell])
       vlogf(LOG_LOW, format("bogus spell, %d") %  curspell);
-    else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce && 
+    else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce &&
       !discArray[curspell]->minPiety))
       vlogf(LOG_LOW, "non-spell");
   }

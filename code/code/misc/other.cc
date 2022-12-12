@@ -210,7 +210,7 @@ int TBeing::doNoJunk(const char *argument, TObj *obj)
       else if(num==-1)
 	break;
 
-    } else 
+    } else
       break;
   }
   if (count)
@@ -244,7 +244,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
       strcpy(arg, newarg);
     } else
       num = 1;
-  } else 
+  } else
     num = 1;
 
   count = 0;
@@ -286,9 +286,9 @@ int TBeing::doJunk(const char *argument, TObj *obj)
         }
       }
       o->junkMe(this);
-      
+
       logItem(o, CMD_JUNK);
-      for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (t=*it);++it) 
+      for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (t=*it);++it)
         logItem(t, CMD_JUNK);
 
       --(*o);
@@ -377,7 +377,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
     } else
       break;
   }
-  if (count) 
+  if (count)
     return DELETE_ITEM;
   else {
     sendTo("You don't have anything like that.\n\r");
@@ -533,7 +533,7 @@ void TBeing::doSplit(const char *argument, bool tell)
 #endif
 
       k->addToMoney(tmp_amount, GOLD_XFER);
-      if (k->getPosition() >= POSITION_RESTING) 
+      if (k->getPosition() >= POSITION_RESTING)
         k->sendTo(COLOR_MOBS, format("%s splits %d talens, and you receive %d of them.\n\r") %
                     getName() % amount % tmp_amount);
     }
@@ -541,7 +541,7 @@ void TBeing::doSplit(const char *argument, bool tell)
       if (f->follower->isAffected(AFF_GROUP) && sameRoom(*f->follower) && f->follower != this) {
         int myshares = splitShares(this, f->follower);
         tmp_amount = amount * myshares / no_members;
-        
+
 #if 0
         reconcileHelp(f->follower, (double) tmp_amount/100000);
 #endif
@@ -677,7 +677,7 @@ void TPerson::doTitle(const char *argument)
     if (stmp.length() > 79) {
       sendTo("Title size is limited to 80 or less characters.\n\r");
       return;
-    }    
+    }
 
     delete [] title;
     title = mud_str_dup(str);
@@ -719,7 +719,7 @@ int TPerson::doQuit2()
   }
   if (getPosition() < POSITION_STUNNED) {
     sendTo("You die before your time!\n\r");
-    vlogf(LOG_MISC, format("%s killed by quitting while incapacitated at %s (%d)") % 
+    vlogf(LOG_MISC, format("%s killed by quitting while incapacitated at %s (%d)") %
           getName() % roomp->getName() % inRoom());
     rc = die(DAMAGE_NORMAL);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -729,7 +729,7 @@ int TPerson::doQuit2()
 
   act("Goodbye, friend.. Come back soon!", FALSE, this, 0, 0, TO_CHAR);
   act("$n has left the game.", TRUE, this, 0, 0, TO_ROOM);
-  vlogf(LOG_PIO, format("%s quit the game at %s (%d).") %  
+  vlogf(LOG_PIO, format("%s quit the game at %s (%d).") %
        getName() % roomp->name % inRoom());
   if (!isImmortal() && getMoney()) {
     *roomp += *create_money(getMoney());
@@ -777,7 +777,7 @@ void TBeing::verifyWeightVolume()
     rw += t->getTotalWeight(TRUE);
     rv += t->getTotalVolume();
   }
-  if ((compareWeights(rw, getCarriedWeight()) != 0) || 
+  if ((compareWeights(rw, getCarriedWeight()) != 0) ||
       rv != getCarriedVolume()) {
     setCarriedWeight(rw);
     setCarriedVolume(rv);
@@ -910,7 +910,7 @@ void TBeing::doPractice(const char *argument)
 
     sprintf(buf, "The following disciplines are valid:\n\r");
     for (i=MIN_DISC; i < MAX_DISCS; i++) {
-      if (!strcmp(discNames[i].properName, "unused")) 
+      if (!strcmp(discNames[i].properName, "unused"))
         continue;
       if (!strcmp(discNames[i].properName, "Psionic Abilities"))
         continue;
@@ -938,10 +938,10 @@ void TBeing::doPractice(const char *argument)
       sendTo("You need to specify a discipline: practice discipline <discipline> <class>.\n\r");
       return;
     } else {
-      if (is_abbrev(arg, "fighting") || 
-          is_abbrev(arg, "alchemy") || 
-          is_abbrev(arg, "aegis") || 
-          is_abbrev(arg, "wrath") || 
+      if (is_abbrev(arg, "fighting") ||
+          is_abbrev(arg, "alchemy") ||
+          is_abbrev(arg, "aegis") ||
+          is_abbrev(arg, "wrath") ||
           is_abbrev(arg, "cures")) {
         for (; isspace(*argument); argument++);
         if ((classNum = getClassNum(argument, EXACT_NO))) {
@@ -962,19 +962,19 @@ void TBeing::doPractice(const char *argument)
   if (is_abbrev(arg, "skill")) {
     for (; isspace(*argument); argument++);
 
-    if (!*argument) 
+    if (!*argument)
       sendTo("You need to specify what skill: practice skill <\"skill\">.\n\r");
     else {
-      if (strlen(argument) > 3 && is_abbrev(argument, "wizardry")) 
+      if (strlen(argument) > 3 && is_abbrev(argument, "wizardry"))
         doPracSkill(argument, SKILL_WIZARDRY);
-      else if (strlen(argument) > 3 && is_abbrev(argument, "ritualism")) 
+      else if (strlen(argument) > 3 && is_abbrev(argument, "ritualism"))
         doPracSkill(argument, SKILL_RITUALISM);
-      else if (strlen(argument) > 3 && is_abbrev(argument, "devotion")) 
+      else if (strlen(argument) > 3 && is_abbrev(argument, "devotion"))
         doPracSkill(argument, SKILL_DEVOTION);
-      else 
+      else
         doPracSkill(argument, TYPE_UNDEFINED);
     }
-    return; 
+    return;
   }
   bool found = FALSE;
   bool match = FALSE;
@@ -986,13 +986,13 @@ void TBeing::doPractice(const char *argument)
     classNum = discNames[i].class_num;
     if (is_abbrev(arg, skillbuf, MULTIPLE_YES)) {
       match = TRUE;
-      if (classNum && !hasClass(classNum)) 
+      if (classNum && !hasClass(classNum))
         continue;
       else {
         dnt = discNames[i].disc_num;
         found = TRUE;
         break;
-      }     
+      }
     }
   }
   if (!found) {
@@ -1070,12 +1070,12 @@ void TBeing::sendSkillsList(discNumT which)
     int tmp_var = ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
     tmp_var = min((int) MAX_DISC_LEARNEDNESS, tmp_var);
 
-    if (cd && !cd->ok_for_class && getSkillValue(i) <= 0) 
+    if (cd && !cd->ok_for_class && getSkillValue(i) <= 0)
       strcpy(how_long, "(Learned: Not in this Lifetime)");
     else if ((getSkillValue(i) <= 0) &&
           (!tmp_var || (discArray[i]->start - tmp_var) > 0) &&
           (i != SKILL_WIZARDRY && i != SKILL_RITUALISM && i != SKILL_DEVOTION)) {
-      sprintf(how_long, "(Learned: %s)", 
+      sprintf(how_long, "(Learned: %s)",
           skill_diff(discArray[i]->start - tmp_var));
     } else if (discArray[i]->toggle && !hasQuestBit(discArray[i]->toggle)) {
       if(i==SKILL_ADVANCED_KICKING){
@@ -1198,7 +1198,7 @@ void TBeing::sendSkillsList(discNumT which)
 
       if (strlen(how_long) == 3)
         strcpy(how_long, " ");
-    } else { 
+    } else {
       strcpy(how_long, " ");
     }
 
@@ -1211,17 +1211,17 @@ void TBeing::sendSkillsList(discNumT which)
         } else if (getMaxSkillValue(i) < MAX_SKILL_LEARNEDNESS) {
           if (discArray[i]->startLearnDo > 0) {
             sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s%s\n\r",
-                 cyan(), discArray[i]->name, norm(), 
+                 cyan(), discArray[i]->name, norm(),
                  how_good(getSkillValue(i)),
                  how_good(getMaxSkillValue(i)), how_long);
           } else {
             sprintf(buf, "%s%-25.25s%s   Current: %-15s%s\n\r",
-                   cyan(), discArray[i]->name, norm(), 
+                   cyan(), discArray[i]->name, norm(),
                    how_good(getSkillValue(i)), how_long);
           }
         } else {
           sprintf(buf, "%s%-25.25s%s   Current: %-15s%s\n\r",
-            cyan(), discArray[i]->name, norm(), 
+            cyan(), discArray[i]->name, norm(),
             how_good(getSkillValue(i)), how_long);
         }
       } else {
@@ -1237,8 +1237,8 @@ void TBeing::sendSkillsList(discNumT which)
                 discArray[i]->amtLearnDo,
                 displayDifficulty(i).c_str());
       else
-        sprintf(buf, "%s%-22.22s%s Potential: %-12s (%2d) Current: %-12s (%2d)\n\r", 
-                cyan(), discArray[i]->name, norm(), 
+        sprintf(buf, "%s%-22.22s%s Potential: %-12s (%2d) Current: %-12s (%2d)\n\r",
+                cyan(), discArray[i]->name, norm(),
                 how_good(getMaxSkillValue(i)),
                 getMaxSkillValue(i),
                 how_good(getSkillValue(i)),
@@ -1247,7 +1247,7 @@ void TBeing::sendSkillsList(discNumT which)
     if (strlen(buf) + strlen(buffer) > (MAX_STRING_LENGTH * 2) - 2)
       break;
     strcat(buffer, buf);
-  } 
+  }
   strcat(buffer, describe_practices(this).c_str());
   d->page_string(buffer);
 }
@@ -1263,7 +1263,7 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
   CDiscipline *cd;
   discNumT das;
 
-  if (!*argument && skNum == TYPE_UNDEFINED) 
+  if (!*argument && skNum == TYPE_UNDEFINED)
     return;
 
   if (skNum == SKILL_WIZARDRY) {
@@ -1301,8 +1301,8 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     for (spellNumT i = MIN_SPELL; (i < MAX_SKILL); i++) {
       if (hideThisSpell(i))
         continue;
-      
-      if (!(is_abbrev(argument, discArray[i]->name, MULTIPLE_YES))) 
+
+      if (!(is_abbrev(argument, discArray[i]->name, MULTIPLE_YES)))
         continue;
       else {
 //        skill = getSkillNum(i);
@@ -1315,15 +1315,15 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
           //break;
           sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skill]->name, norm(), how_good(getSkillValue(skill)), how_good(getMaxSkillValue(skill)));
           sendTo(COLOR_BASIC, buf);
-        } 
+        }
       }
-    } 
-  } 
+    }
+  }
   if (wiz && !(found == 1)) {
     sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skNum]->name, norm(), how_good(getSkillValue(skNum)), how_good(getMaxSkillValue(skNum)));
      sendTo(COLOR_BASIC, buf);
   } else if (found == 2 || (skill > TYPE_UNDEFINED)) {
-    //sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skill]->name, norm(), how_good(getSkillValue(skill)), how_good(getMaxSkillValue(skill))); 
+    //sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skill]->name, norm(), how_good(getSkillValue(skill)), how_good(getMaxSkillValue(skill)));
     //sendTo(COLOR_BASIC, buf);
     return;
   } else if (found == 1 && skill > TYPE_UNDEFINED) {
@@ -1332,7 +1332,7 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
   } else if (!wiz) {
     sendTo("That does not appear to be a valid skill: practice skill <name>\n\r");
     return;
-  } 
+  }
 
   das = getDisciplineNumber(skNum, FALSE);
   if (das == DISC_NONE) {
@@ -1469,7 +1469,7 @@ void TBeing::doPracDisc(const char *arg, int classNum)
       } else {
         sendSkillsList(i);
         return;
-      } 
+      }
     }
   }
   sendTo("You must specify a valid discipline and class.\n\r");
@@ -1566,7 +1566,7 @@ void TBeing::doGroup(const char *argument, bool silent)
           } else if (k->hasClass(CLASS_SHAMAN)) {
             sendTo(format("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
               (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
-              k->getLifeforce() % 
+              k->getLifeforce() %
               sstring(namebuf).cap() %
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
@@ -1582,11 +1582,11 @@ void TBeing::doGroup(const char *argument, bool silent)
               (k != this ? "s" : "") %
               DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
               norm() % purple() %
-              tmp_share % ((tmp_share == 1) ? "" : "s") % 
+              tmp_share % ((tmp_share == 1) ? "" : "s") %
               k->getExpSharePerc() % '%' %
               norm());
           }
-        } else 
+        } else
           sendTo(format("%-15.15s [not around]\n\r") % sstring(namebuf).cap());
       }
       for (f = k->followers; f; f = f->next) {
@@ -1594,8 +1594,8 @@ void TBeing::doGroup(const char *argument, bool silent)
         if (f->follower->isAffected(AFF_GROUP) && canSee(f->follower)) {
           tmp_share = splitShares(this, f->follower);
 
-          if (sameRoom(*f->follower)) { 
-            if (f->follower->hasClass(CLASS_CLERIC) || 
+          if (sameRoom(*f->follower)) {
+            if (f->follower->hasClass(CLASS_CLERIC) ||
                 f->follower->hasClass(CLASS_DEIKHAN))
               sendTo(format("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
                 (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
@@ -1604,7 +1604,7 @@ void TBeing::doGroup(const char *argument, bool silent)
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
-                tmp_share % ((tmp_share == 1) ? "" : "s") % 
+                tmp_share % ((tmp_share == 1) ? "" : "s") %
                 f->follower->getExpSharePerc() % '%' %
                 norm());
             else if (f->follower->hasClass(CLASS_SHAMAN))
@@ -1615,23 +1615,23 @@ void TBeing::doGroup(const char *argument, bool silent)
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
-                tmp_share % ((tmp_share == 1) ? "" : "s") % 
+                tmp_share % ((tmp_share == 1) ? "" : "s") %
                 f->follower->getExpSharePerc() % '%' %
                 norm());
 
             else {
-              sendTo(format("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() % 
+              sendTo(format("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
                 (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
                 (((double) (f->follower->getMana())) / ((double) f->follower->manaLimit()) * 100) % '%' %
                 sstring(namebuf).cap() %
                 (f->follower != this ? "s" : "") %
                 DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
                 norm() % purple() %
-                tmp_share % ((tmp_share == 1) ? "" : "s") % 
+                tmp_share % ((tmp_share == 1) ? "" : "s") %
                 f->follower->getExpSharePerc() % '%' %
                 norm());
             }
-          } else 
+          } else
             sendTo(format("%-15.15s [not around]\n\r") % sstring(namebuf).cap());
         }
       }
@@ -1719,7 +1719,7 @@ void TBeing::doGroup(const char *argument, bool silent)
     if (((victim->master == this) || (victim == this)) &&
            victim->isAffected(AFF_GROUP)) {
       victim->desc->session.group_share = amt;
-      sprintf(buf, "I have just set %s's group-share to %d.", 
+      sprintf(buf, "I have just set %s's group-share to %d.",
          victim->getName().c_str(), amt);
       doGrouptell(buf);
     } else {
@@ -1743,7 +1743,7 @@ void TBeing::doGroup(const char *argument, bool silent)
       }
     }
   } else if (is_abbrev(namebuf, "seeksgroup")) {
-    char typebuf[256]; 
+    char typebuf[256];
     one_argument(argument, typebuf, cElements(typebuf));
     if (!*typebuf) {
       if (isPlayerAction(PLR_SEEKSGROUP)) {
@@ -1753,7 +1753,7 @@ void TBeing::doGroup(const char *argument, bool silent)
         addPlayerAction(PLR_SEEKSGROUP);
         sendTo("You are now flagged as seeking a group in the who command.\n\r");
       }
-      return; 
+      return;
     } else {
       sendTo("Functionality not available at this time.\n\r");
       return;
@@ -1768,17 +1768,17 @@ void TBeing::doGroup(const char *argument, bool silent)
       if (!victim)
         continue;
 
-      if (victim->isAffected(AFF_GROUP) || !canSee(victim) || 
+      if (victim->isAffected(AFF_GROUP) || !canSee(victim) ||
           (victim == riding))
         continue;
 
-      if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc() 
+      if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc()
           && victim->master == this && this != victim )
       {
         sendTo(COLOR_MOBS, format("%s is immortal and has no need of you.  %s does not join your group.\n\r") % victim->getName() % victim->getName());
         continue;
       }
-      
+
       if (victim->isPlayerAction(PLR_SOLOQUEST) && (this != victim)
           && (victim->master == this)) {
         sendTo(COLOR_MOBS, format("%s is on a quest! No grouping allowed!\n\r") % victim->getName());
@@ -1802,7 +1802,7 @@ void TBeing::doGroup(const char *argument, bool silent)
         act("$n groups $mself.",TRUE,this,0,0,TO_ROOM);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
         int mana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
-        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
+        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
 	        desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % mana % attack_modes[getCombatMode()]);
         if (victim->desc)
           victim->desc->session.group_share = 1;
@@ -1815,9 +1815,9 @@ void TBeing::doGroup(const char *argument, bool silent)
         victim->sendTo(COLOR_MOBS, format("You are now a member of %s's group.\n\r") %getName());
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
         int mana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
-        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
+        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
 	        desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % mana % attack_modes[victim->getCombatMode()]);
- 
+
         for (f = followers; f; f = f->next) {
           TBeing *b = f->follower;
           if (b->desc && (b->desc->m_bIsClient || IS_SET(b->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
@@ -1898,7 +1898,7 @@ void TBeing::doGroup(const char *argument, bool silent)
             act("$n ungroups $mself, causing the whole group to be disbanded.", FALSE, this, 0, NULL, TO_ROOM);
             sendTo("You ungroup yourself causing the rest of the group to be ungrouped.\n\r");
             REMOVE_BIT(specials.affectedBy, AFF_GROUP);
-            
+
             if (desc) {
               desc->session.group_share = 1;
               if (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
@@ -1964,7 +1964,7 @@ void TBeing::doGroup(const char *argument, bool silent)
 	} else {
 	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
 	    desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
-	}        
+	}
         if (victim != this) {
           for (f = followers; f; f = f->next) {
             TBeing *b = f->follower;
@@ -2030,7 +2030,7 @@ int TBeing::doQuaff(sstring argument)
     delete t;
     t = NULL;
   }
-  if (IS_SET_DELETE(rc, DELETE_VICT)) 
+  if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_THIS;
 
   // add some lag.  Prevents multiple quaffs per round
@@ -2130,10 +2130,10 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       aff.modifier = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = AFF_FLYING;
-      
+
       // correct for weight
       weightCorrectDuration(vict, &aff);
-      
+
       rc = fly(ch,vict,level,&aff,learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
         act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
@@ -2179,7 +2179,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
         }
       } else if (IS_SET(rc, SPELL_FAIL)) {
         vict->sendTo("Your potion fails to bring forth any protection.\n\r");
-        act("$n's potion fails to bring forth any protection.", 
+        act("$n's potion fails to bring forth any protection.",
           FALSE, ch, NULL, NULL, TO_ROOM);
         ch->deityIgnore(SILENT_YES);
       }
@@ -2356,10 +2356,10 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       aff.modifier = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = AFF_FLYING;
-      
+
       // correct for weight
       weightCorrectDuration(vict, &aff);
-      
+
       rc = fly(ch,vict,level,&aff,learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
         act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
@@ -2414,7 +2414,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POT_STAT:
       whichStat = statTypeT(number(0, MAX_STATS_USED - 1));
       vict->addToStat(STAT_CHOSEN, whichStat, amt);
-      
+
       switch (whichStat) {
 	case STAT_STR:
 	  vict->sendTo("You feel stronger.\n\r");
@@ -2467,7 +2467,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 	  break;
 	}
       }
-      
+
       vict->sendTo("You feel ready to learn more.\n\r");
       break;
     case LIQ_POT_MYSTERY:
@@ -2518,7 +2518,7 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 	  aff.modifier = -20;
 	  aff.location = APPLY_STR;
 	  aff.bitvector = AFF_POISON;
-	  ch->affectTo(&aff);	  
+	  ch->affectTo(&aff);
 	  aff.type = AFFECT_DISEASE;
 	  aff.level = 0;
 	  aff.duration = aff.duration;
@@ -2569,11 +2569,11 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POISON_ACACIA:
       if(!vict->isImmune(IMMUNE_POISON, WEAR_BODY)){
 	addPoison(aff5, liq, level, duration);
-	
+
 	for(i=0;i<5;++i){
 	  if(aff5[i].type != TYPE_UNDEFINED){
 	    vict->affectTo(&(aff5[i]), -1);
-	    
+
 	    if (aff5[i].type == AFFECT_DISEASE)
 	      disease_start(vict, &(aff5[i]));
 	  }
@@ -2633,7 +2633,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
 
     // invoked on a being
     // recite, use staff (non-area), use wand, quaff
-    if (victim && 
+    if (victim &&
         !IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)) {
       // tried to invoke on being, not designed for that
       caster->sendTo(COLOR_BASIC, format("You can not invoke '%s' on %s.\n\r") %
@@ -2643,7 +2643,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
 
     // invoked on an obj
     // recite, use wand
-    if (target && 
+    if (target &&
         !IS_SET(discArray[spell]->targets, TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_OBJ_ROOM | TAR_OBJ_WORLD)) {
       // tried to invoke on being, not designed for that
       caster->sendTo(COLOR_BASIC, format("You can not invoke '%s' on %s.\n\r") %
@@ -2691,7 +2691,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       detectMagic(caster,victim,obj);
       break;
     case SPELL_DISPEL_MAGIC:
-      if (target) 
+      if (target)
         dispelMagic(caster,target,obj);
       else
         rc = dispelMagic(caster,victim,obj);
@@ -2709,7 +2709,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       protectionFromAir(caster,victim,obj);
       break;
     case SPELL_CHASE_SPIRIT:
-      if (target) 
+      if (target)
         chaseSpirits(caster,target,obj);
       else
         rc = chaseSpirits(caster,victim,obj);
@@ -3142,7 +3142,7 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_DIVINATION:
       if (!target) {
         divinationBeing(caster, victim, obj);
-      } else 
+      } else
         divinationObj(caster, target, obj);
       break;
     default:
@@ -3233,7 +3233,7 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
     ch->sendTo("You flub the words and the spell does not fire.\n\r");
     return DELETE_THIS;
   }
-  
+
   lag_t max_lag=LAG_0;
 
   for (i = 0; i < 3; i++)  {
@@ -3249,7 +3249,7 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
 
       if(max_lag<discArray[the_spell]->lag)
 	max_lag=discArray[the_spell]->lag;
-      
+
 
       setLocked(true);
       rc=doObjSpell(ch,victim,this,obj,argument,the_spell);
@@ -3352,19 +3352,19 @@ void TBeing::doLight(const sstring & argument)
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
-  
+
   // WARNING: the room and equipped lists do not stack
   // meaning that if there are 2 lanterns in the room and 2 equipped, light 4.lantern will not find any lantern.
   // thus the room and held arguments are needed, and supplying a numbered 1st arg without a 2nd arg can produce odd results.
   // one could write a routine to count objects in the linked list, but perhaps one would then want to reconcile seen vs unseen objects for non-lights.
   roomOnly = is_abbrev(arg2, "room");
   heldOnly = is_abbrev(arg2, "held");
-  
+
   if (arg1.empty()) {
     sendTo("Light what?\n\r");
     return;
   }
-  
+
   if (!(num = get_number(&tmp)))
     return;
 
@@ -3376,7 +3376,7 @@ void TBeing::doLight(const sstring & argument)
       return;
     }
   }
-  
+
   if (!t) {
     // check eq
     int stack_num = 1; // keep track of which object they are trying to light
@@ -3404,7 +3404,7 @@ void TBeing::doLight(const sstring & argument)
   } else {
     t->lightMe(this, SILENT_NO);
   }
-  
+
 }
 
 void TObj::setBurning(TBeing *ch){
@@ -3441,7 +3441,7 @@ void TThing::extinguishMe(TBeing *ch)
     start_task(ch, 0, 0, TASK_EXTINGUISH_MY_ASS, "", 2, ch->inRoom(), 0, 0, 5);
   } else {
     o->remBurning(ch);
-    act("You extinguish $p, and it smolders slightly before going out.",  
+    act("You extinguish $p, and it smolders slightly before going out.",
 	FALSE, ch, o, 0, TO_CHAR);
     act("$n extinguishes $p, and it smolders slightly before going out.",
 	FALSE, ch, o, 0, TO_ROOM);
@@ -3473,7 +3473,7 @@ void TBeing::doExtinguish(const sstring & argument)
     sendTo("Extinguish what?\n\r");
     return;
   }
-  
+
   if (!(num = get_number(&tmp)))
     return;
 
@@ -3485,7 +3485,7 @@ void TBeing::doExtinguish(const sstring & argument)
       return;
     }
   }
-  
+
   if (!t) {
     // check eq
     int stack_num = 1; // keep track of which object they are trying to extinguish
@@ -3554,7 +3554,7 @@ void TBeing::doRefuel(const sstring &argument)
   roomOnly = is_abbrev(arg3, "room");
   heldOnly = is_abbrev(arg3, "held");
 
-  if (roomOnly || 
+  if (roomOnly ||
       !(t = get_thing_char_using(this, arg.c_str(), 0, FALSE, FALSE))) {
     if (heldOnly ||
         !(t = searchLinkedListVis(this, arg, roomp->stuff))) {
@@ -3563,7 +3563,7 @@ void TBeing::doRefuel(const sstring &argument)
       return;
     }
   }
-  // Do some checks to see if it can be refueled. 
+  // Do some checks to see if it can be refueled.
   t->refuelMeLight(this, fuel);
 }
 
@@ -3613,7 +3613,7 @@ void TBeing::doStop(const sstring &tStArg)
 
 void TBeing::doContinue(const char *argument)
 {
-#if 1 
+#if 1
   int value = 0;
   char arg[256];
   skillUseTypeT spellType;
@@ -3635,13 +3635,13 @@ void TBeing::doContinue(const char *argument)
       return;
     }
   } else if (spellType == SPELL_DANCER) {
-    if (!reconcileLifeforce(spelltask->spell, TRUE)) { 
+    if (!reconcileLifeforce(spelltask->spell, TRUE)) {
       // will need to change to lifeforce
       sendTo("You can not continue a invokation without enough lifeforce.\n\r");
       return;
     }
   }
- 
+
   if (*arg) {
     if (is_abbrev(arg, "stop") || is_abbrev(arg, "finish")) {
       sendTo(COLOR_SPELLS, "<g>You start finishing your prayer.<1>\n\r");
@@ -3649,7 +3649,7 @@ void TBeing::doContinue(const char *argument)
       REMOVE_BIT(spelltask->flags, CASTFLAG_CAST_INDEFINITE);
       return;
     }
-    value = convertTo<int>(arg);    
+    value = convertTo<int>(arg);
     if (value < 1) {
       sendTo("You can not change your prayer in this manner.\n\r");
       return;
@@ -3671,7 +3671,7 @@ void TBeing::doContinue(const char *argument)
          value % (value != 1 ? "s" : "") %
          spelltask->rounds % (spelltask->rounds != 1 ? "s" : ""));
       } else {
-         sendTo(COLOR_SPELLS, format("<o>You add %d round%s to your indefinite prayer (%d total round%s).<1>\n\r") % 
+         sendTo(COLOR_SPELLS, format("<o>You add %d round%s to your indefinite prayer (%d total round%s).<1>\n\r") %
          value % (value != 1 ? "s" : "") %
          spelltask->rounds % (spelltask->rounds != 1 ? "s" : ""));
 
@@ -3716,7 +3716,7 @@ void TBeing::doHistory()
     sendTo(COLOR_BASIC, format("[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r") %
 	   i % db["tellfrom"] % db["tell"]);
   }
-  
+
 
 }
 
@@ -3731,7 +3731,7 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
   int oldr, oldroom;
   TRoom *rp;
 
-  
+
   if (v == this) {
     sendTo("You can't drag yourself!\n\r");
     sendTo("Syntax : drag <person> <direction>\n\r");
@@ -3766,7 +3766,7 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
   if(rc==TRUE) // not allowed to move
     return;
 
-  // We can drag now. Do necessary checks and make it so. - Brutius 
+  // We can drag now. Do necessary checks and make it so. - Brutius
   sprintf(buf, "You drag $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, v, TO_CHAR);
   sprintf(buf, "$n drags $N %s.", dirs[tdir]);
@@ -3825,7 +3825,7 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E drags $p out of the room.");
-        act(buf, FALSE, k->follower, v, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, v, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -3928,7 +3928,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E drags $p out of the room.");
-        act(buf, FALSE, k->follower, o, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, o, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -4014,7 +4014,7 @@ void TBeing::doDrag(const sstring &arg)
       sendTo("Drag something with your hands full!?!\n\r");
       return;
     }
-  } 
+  }
 
   exitp = exitDir(tdir);
 
@@ -4023,9 +4023,9 @@ void TBeing::doDrag(const sstring &arg)
     sendTo(syntax);
     return;
   }
-  if (!validMove(tdir)) 
+  if (!validMove(tdir))
     return;
-  
+
   if(bits==FIND_CHAR_ROOM){
     doDrag(v, tdir);
   } else if(bits==FIND_OBJ_ROOM){
@@ -4065,7 +4065,7 @@ void TBeing::doList(const char *arg)
   doNotHere();
 }
 
-void Descriptor::add_comment(const char *who, const char *msg) 
+void Descriptor::add_comment(const char *who, const char *msg)
 {
   time_t ct;
   char *tmstr;
@@ -4116,7 +4116,7 @@ void Descriptor::add_comment(const char *who, const char *msg)
     return;
   }
   sprintf(buf, "****** Comment on %s", sstring(who).lower().c_str());
-  
+
   *character += *mynote;
 
   character->doAt(((sstring)(format("8 post note %s") % buf)).c_str(), false);
@@ -4218,7 +4218,7 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
   int oldr, oldroom;
   TRoom *rp;
 
-  
+
   if (v == this) {
     sendTo("You can't roll yourself!\n\r");
     sendTo("Syntax : roll <person> <direction>\n\r");
@@ -4253,7 +4253,7 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
   if(rc==TRUE) // not allowed to move
     return;
 
-  // We can drag now. Do necessary checks and make it so. - Brutius 
+  // We can drag now. Do necessary checks and make it so. - Brutius
   sprintf(buf, "You roll $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, v, TO_CHAR);
   sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
@@ -4312,7 +4312,7 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E rolls $p out of the room.");
-        act(buf, FALSE, k->follower, v, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, v, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -4413,7 +4413,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E rolls $p out of the room.");
-        act(buf, FALSE, k->follower, o, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, o, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -4498,7 +4498,7 @@ void TBeing::doRoll(const sstring &arg)
       sendTo("Roll something with your hands full!?!\n\r");
       return;
     }
-  } 
+  }
 
   exitp = exitDir(tdir);
 
@@ -4507,9 +4507,9 @@ void TBeing::doRoll(const sstring &arg)
     sendTo(syntax);
     return;
   }
-  if (!validMove(tdir)) 
+  if (!validMove(tdir))
     return;
-  
+
   if(bits==FIND_CHAR_ROOM){
     doRoll(v, tdir);
   } else if(bits==FIND_OBJ_ROOM){
@@ -4524,7 +4524,7 @@ void TBeing::doRoll(const sstring &arg)
 
 // adds to stats randomly, but in a weighted function that favours the first
 // stats to which points are added
-// ** also does some subtractions -- the idea here is to mix things up 
+// ** also does some subtractions -- the idea here is to mix things up
 // a bit **
 void TBeing::addToRandomStat(int extra_points) {
   statTypeT whichStat;
@@ -4735,7 +4735,7 @@ bool ignoreList::staticAdd(const sstring name)
 {
   int myId = m_desc->playerID;
   unsigned int iAdded = 0;
-  
+
   // finds the first usable ignore slot
   for(;iAdded < cMax && iAdded < m_staticCount && !m_staticIgnored[iAdded].empty(); iAdded++);
 
@@ -4793,7 +4793,7 @@ bool ignoreList::add(const sstring name)
   }
 
   unsigned int iAdded = 0;
-  
+
   // finds the first usable ignore slot
   for(;iAdded < cMax && iAdded < m_count && !m_ignored[iAdded].empty(); iAdded++);
 
@@ -4815,7 +4815,7 @@ bool ignoreList::staticRemove(const sstring ignored)
   int myId = m_desc->playerID;
   unsigned int iRemoved = 0;
   sstring name = ignored.lower();
-  
+
   // finds the matching ignore slot
   for(;iRemoved < cMax && iRemoved < m_staticCount && m_staticIds[iRemoved] != myId && m_staticIgnored[iRemoved] != name; iRemoved++);
 
@@ -4858,7 +4858,7 @@ bool ignoreList::remove(const sstring ignored)
 
   unsigned int iRemoved = 0;
   sstring name = ignored.lower();
-  
+
   // finds the matching ignore slot
   for(;iRemoved < cMax && iRemoved < m_count && m_ignored[iRemoved] != name; iRemoved++);
 
@@ -4921,7 +4921,7 @@ void TBeing::doIgnore(const sstring &args)
     arg1Len = arg1.length();
     arg2Len = arg2.length();
   }
-  
+
   // simple length check - drop overlong commands for safety and simplicity (although technically its safe)
   if (arg1Len > 20 || arg2Len > 32)
   {

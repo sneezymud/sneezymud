@@ -25,7 +25,7 @@ public:
       skRootControl(),
       skLivingVines(),
       skTransfix(),
-      skClarity() { 
+      skClarity() {
     }
     CDShamanSpider(const CDShamanSpider &a)
       : CDiscipline(a),
@@ -58,11 +58,11 @@ private:
 
     int transfix(TBeing *, TBeing *);
     int transfix(TBeing *, TBeing *, int, short);
- 
+
     void livingVines(TBeing *, TBeing *);
     void livingVines(TBeing *, TBeing *, TMagicItem *);
     int livingVines(TBeing *, TBeing *, int, short);
-    
+
     int rootControl(TBeing *, TBeing *, int, int, short);
     int rootControl(TBeing *, TBeing *, TMagicItem *);
     int rootControl(TBeing *, TBeing *);

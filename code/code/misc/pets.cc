@@ -65,7 +65,7 @@ void TBeing::petSave()
     return;
 
   owner=(char *)aff->be;
-  
+
   // get the owner player_id
   db.query("select id from player where name='%s'", owner);
   if(!db.fetchRow())
@@ -80,7 +80,7 @@ void TBeing::petSave()
       name=short_desc.word(i);
     }
   }
-  
+
   // save
   db.query("delete from pet where player_id=%i and vnum=%i and name='%s'",
 	   owner_id, mobVnum(), name.c_str());
@@ -163,7 +163,7 @@ bool TBeing::isPet(const unsigned int bv) const
   return TRUE;
 }
 #endif
-int TBeing::getAffectedDataFromType(spellNumT whichAff, double whichField) 
+int TBeing::getAffectedDataFromType(spellNumT whichAff, double whichField)
 {
   affectedData *an = NULL,
                *aff = NULL;
@@ -180,7 +180,7 @@ int TBeing::getAffectedDataFromType(spellNumT whichAff, double whichField)
     return 0;
 
   if (numAffs > 1) {
-    vlogf(LOG_BUG, format("Somehow %s has 2 affectedDatas with same type (%d)") % 
+    vlogf(LOG_BUG, format("Somehow %s has 2 affectedDatas with same type (%d)") %
           getName() % whichAff);
   }
 
@@ -199,7 +199,7 @@ int TBeing::getAffectedDataFromType(spellNumT whichAff, double whichField)
 
   // **Added so code could be compiled**
   return 0;
-} 
+}
 
 int TBeing::getPetOrderLevel()
 {
@@ -213,7 +213,7 @@ int TBeing::getPetOrderLevel()
   return 0;
 }
 
-int TBeing::getPetAge() 
+int TBeing::getPetAge()
 {
 // Returns both true/false if not even a valid concept
 // returns an updated reference as well
@@ -225,8 +225,8 @@ int TBeing::getPetAge()
   // **Added so code could be compiled**
   return 0;
 }
-#if 1 
-bool TMonster::isRetrainable() 
+#if 1
+bool TMonster::isRetrainable()
 {
   affectedData *aff;
 
@@ -234,7 +234,7 @@ bool TMonster::isRetrainable()
     if (aff->type != AFFECT_ORPHAN_PET)
       continue;
     if (aff->level == 0)
-      return TRUE; 
+      return TRUE;
   }
   return FALSE;
 }
@@ -274,7 +274,7 @@ bool TBeing::doRetrainPet(const char *argument, TBeing *vict)
     return FALSE;
   }
 
-#if 1 
+#if 1
   if (!v->isRetrainable()) {
     act("$N is not trainable.  Perhaps you have made a mistake.",
         FALSE, this, NULL, v, TO_CHAR);
@@ -362,7 +362,7 @@ bool TMonster::restorePetToPc(TBeing *ch)
     act("$N has never been a pet and can not be retrained.",
         FALSE, ch, NULL, this, TO_CHAR);
     if (affectedBySpell(AFFECT_ORPHAN_PET)) {
-      affectFrom(AFFECT_ORPHAN_PET); 
+      affectFrom(AFFECT_ORPHAN_PET);
       vlogf(LOG_BUG, format("A non pet with AFFECT_ORPHAN_PET (%s).") %  getName());
     }
     return FALSE;
@@ -412,7 +412,7 @@ bool TMonster::restorePetToPc(TBeing *ch)
 
   SET_BIT(specials.affectedBy, AFF_CHARM);
   pc->addFollower(this);
-  affectFrom(AFFECT_ORPHAN_PET); 
+  affectFrom(AFFECT_ORPHAN_PET);
   if (pc == ch) {
     act("$N has been restored to your side.",
           FALSE, pc, NULL, this, TO_CHAR);

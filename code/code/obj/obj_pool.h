@@ -11,12 +11,12 @@
 #include "obj_mergeable.h"
 
 class TPool : public TBaseCup, public TMergeable {
-  public:    
+  public:
     void fillMeAmount(int, liqTypeT);
     void updateDesc();
 
-    virtual void setDrinkUnits(int);    
-    virtual void addToDrinkUnits(int);    
+    virtual void setDrinkUnits(int);
+    virtual void addToDrinkUnits(int);
     virtual void decayMe();
     virtual void setDrinkType(liqTypeT);
     virtual void weightChangeObject(float);

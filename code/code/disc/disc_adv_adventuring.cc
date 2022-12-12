@@ -44,12 +44,12 @@ int forage(TBeing *caster, short bKnown)
     vlogf(LOG_BUG, format("Forage called without room pointer: %s") % caster->name);
     return SPELL_FAIL;
   }
-  
+
   if (!caster->doesKnowSkill(skill)) {
     caster->sendTo("You know nothing about foraging for food!\n\r");
     return SPELL_FAIL;
   }
-  
+
 
   if (caster->roomp->isCitySector()
       || !(caster->roomp->isForestSector()
@@ -84,7 +84,7 @@ int forage(TBeing *caster, short bKnown)
     caster->sendTo("The raging fire here needs to be controlled before you can forage.\n\r");
     return SPELL_FAIL;
   }
-  
+
   if (caster->checkForSkillAttempt(SKILL_FORAGE)) {
     act("You tried foraging recently and are not prepared to try again so soon.", FALSE, caster, NULL, NULL, TO_CHAR);
     return SPELL_FAIL;
@@ -110,17 +110,17 @@ int forage(TBeing *caster, short bKnown)
         forageItem = ::number(FORAGE_ARCTIC_BEGIN, FORAGE_ARCTIC_END);
       else if (caster->roomp->getSectorType() == SECT_DESERT)
         forageItem = ::number(FORAGE_DESERT_BEGIN, FORAGE_DESERT_END);
-      else 
+      else
         forageItem = ::number(FORAGE_BEGIN, FORAGE_END);
-      
+
       obj = read_object(forageItem, VIRTUAL);
-  
+
       if (!obj) {
         caster->sendTo("Something went wrong, bug Cosmo.\n\r");
         vlogf(LOG_BUG, format("Forage tried to load a NULL object (%d)") % forageItem);
         return SPELL_FAIL;
       }
-  
+
       act("You rustle up $p.", FALSE, caster, obj, NULL, TO_CHAR);
       act("$n rustles up $p.", TRUE, caster, obj, NULL, TO_ROOM);
       *caster->roomp += *obj;
@@ -311,7 +311,7 @@ void TBeing::doForage()
     sendTo("The ensuing battle makes it difficult to search for food.\n\r");
     return;
   }
- 
+
   addToWait(combatRound(1));
   forage(this);
 }
@@ -643,7 +643,7 @@ int determineSkinningItem(TBaseCorpse * corpse, int * amount, char * msg, char *
       case RACE_DINOSAUR:
       case RACE_FISH:
       case RACE_BIRD:
-      case RACE_SNAKE: 
+      case RACE_SNAKE:
       case RACE_PRIMATE:
       case RACE_RODENT:
       case RACE_FISHMAN:
@@ -682,7 +682,7 @@ void TThing::skinMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
+
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     ch->sendTo(COLOR_OBJECTS, format("You cannot skin %s.\n\r") % obj->getName());
     return;
@@ -751,7 +751,7 @@ void TTool::skinMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
+
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     ch->sendTo(COLOR_OBJECTS, format("You cannot skin %s.\n\r") % obj->getName());
     return;
@@ -837,26 +837,26 @@ void TBeing::doSeekwater()
   // Ranges: 21, ..., 120
   // dist = (max(5, lev)/5) * (max(10, skill)/10) + 20;
   dist = lev * max(10, skill);
- 
+
   switch (getRace()) {
     case RACE_ELVEN:
-      dist *= 2;                // even better 
+      dist *= 2;                // even better
       break;
     case RACE_DEVIL:
     case RACE_DEMON:
-      dist = MAX_ROOMS;         //  4 as good as can be 
+      dist = MAX_ROOMS;         //  4 as good as can be
       break;
     default:
       break;
   }
- 
+
   if (isImmortal())
     dist = MAX_ROOMS;
- 
+
   hunt_dist = dist;
   specials.hunting = NULL;
   TPathFinder path(dist);
- 
+
   // note: -dist will look THRU doors.
   // all subsequent calls use track() which does not go thru doors
   // this is intentional so they lose track after 1 step
@@ -868,7 +868,7 @@ void TBeing::doSeekwater()
     code=path.findPath(in_room, findWater());
     targrm=path.getDest();
   }
- 
+
   if (code == -1) {
     addToWait(combatRound(1));
     if (targrm == inRoom())
@@ -891,7 +891,7 @@ void TBeing::doSeekwater()
           if (tp) {
             seen++;
             if (count == seen) {
-              sendTo(COLOR_OBJECTS, format("%sYou see traces of water through %s.%s\n\r") % 
+              sendTo(COLOR_OBJECTS, format("%sYou see traces of water through %s.%s\n\r") %
                      purple() % tp->getName() % norm());
               break;
             }
@@ -977,7 +977,7 @@ int TBeing::doEncamp()
     sendTo("You know nothing about camping.\n\r");
     return FALSE;
   }
-  
+
   rc = encamp(this);
   if (rc)
     addSkillLag(SKILL_ENCAMP, rc);
@@ -999,7 +999,7 @@ int encamp(TBeing * caster)
     caster->sendTo("You already have a camp set up here.\n\r");
     return FALSE;
   }
-  
+
   if (caster->roomp->isRoomFlag(ROOM_ON_FIRE)) {
     caster->sendTo("The raging fire here needs to be controlled before setting up camp.\n\r");
     return SPELL_FAIL;
@@ -1046,7 +1046,7 @@ int encamp(TBeing * caster)
     caster->sendTo("This room is unfit for a camp.\n\r");
     return SPELL_FAIL;
   }
-  
+
   aff.duration = PERMANENT_DURATION;
   aff.level = level;
   aff.type = SKILL_ENCAMP;
@@ -1091,10 +1091,10 @@ int TDrinkCon::divineMe(TBeing *caster, int, short bKnown)
 {
   affectedData aff;
   int units;
-  
+
   if (!caster || !caster->roomp)
     return SPELL_FAIL;
-  
+
   if (!(caster->roomp->isForestSector()
       || caster->roomp->isBeachSector()
       || caster->roomp->isHillSector()
@@ -1136,7 +1136,7 @@ int TDrinkCon::divineMe(TBeing *caster, int, short bKnown)
   if (caster->bSuccess(bKnown, SKILL_DIVINATION)) {
     units = 10 + caster->getSkillLevel(SKILL_DIVINATION)/10;
     units = min(units, (getMaxDrinkUnits() - getDrinkUnits()));
- 
+
     act("$n divines for water, which $e adds to $p.", FALSE, caster, this, 0, TO_ROOM);
 
     if ((getDrinkType() != LIQ_WATER) &&
@@ -1176,7 +1176,7 @@ void TBeing::doDivine(const char *arg)
     sendTo("The ensuing battle makes it difficult to search for water.\n\r");
     return;
   }
- 
+
   one_argument(arg, arg2, cElements(arg2));
   if (!(obj = get_thing_char_using(this, arg2, 0, FALSE, FALSE))) {
     sendTo("You don't have that drink container in your inventory!\n\r");
@@ -1185,7 +1185,7 @@ void TBeing::doDivine(const char *arg)
   }
 
   addToWait(combatRound(1));
- 
+
   divine(this, obj);
 }
 

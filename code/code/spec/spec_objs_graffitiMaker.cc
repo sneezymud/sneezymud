@@ -29,12 +29,12 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
     buf=o->shortDescr;
     o->shortDescr=format("%s%s<1>") % ccodes[c] % buf;
-    
+
     buf=o->descr;
     o->descr=format("%s%s<1>") % ccodes[c] % buf;
     return FALSE;
   }
-  
+
 
   if (cmd != CMD_WRITE)
     return FALSE;
@@ -52,7 +52,7 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
     return FALSE;
 
   TBeing *cho = dynamic_cast<TBeing *>(o->equippedBy);
-  
+
   if (!cho) {
     return FALSE;
   }
@@ -63,13 +63,13 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
   if (buf.length() > GRAFFITI_MAX) {
     ch->sendTo("You can't write that - try something shorter.\n\r");
     return TRUE;
-  } 
-    
+  }
+
   TObj * gfti = read_object(GRAFFITI_OBJ, VIRTUAL);
 
   if (!gfti) {
     ch->sendTo("Problem making graffiti object, bug a coder.\n\r");
-    vlogf(LOG_BUG, format("Couldn't load object (%d) in graffitiMaker.") 
+    vlogf(LOG_BUG, format("Couldn't load object (%d) in graffitiMaker.")
         % GRAFFITI_OBJ);
     return TRUE;
   }
@@ -85,13 +85,13 @@ int graffitiMaker(TBeing *ch, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
   sstring newName = format("%s message [graffiti] [%s]") % buf % ch->name;
   sstring newShort = format("the message '%s%s<z>'") % ccodes[color] % buf;
-  sstring newLong = format("Some vandal has left a message: '%s%s<z>'.") % 
+  sstring newLong = format("Some vandal has left a message: '%s%s<z>'.") %
     ccodes[color] % buf;
   gfti->swapToStrung();
   gfti->name = newName;
   gfti->shortDescr = newShort;
   gfti->setDescr(newLong);
-  
+
   act("$n scrawls some graffiti with $s $p.", TRUE, ch, o, NULL, TO_ROOM);
   act("You make your mark.", TRUE, ch, o, NULL, TO_CHAR);
 

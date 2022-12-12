@@ -59,7 +59,7 @@ extern unsigned char CARD_NUM(unsigned char card);
 extern unsigned char CARD_NUM_ACEHI(unsigned char card);
 
 class Craps {
-  public: 
+  public:
     TBeing *m_ch;
 
   private:
@@ -235,7 +235,7 @@ class BjGame : public CardGame {
     }
     friend int bj_index(TBeing *);
 };
-  
+
 class HeartsGame : public CardGame {
   private:
     char names[4][20];
@@ -382,7 +382,7 @@ class HoldemGame : public CardGame {
   const Card *community[5];
   HoldemPlayer *players[MAX_HOLDEM_PLAYERS];
   int better, firstbetter, button;
-  
+
   holdemStateT state;
   int last_bet;
   int nraises;
@@ -456,7 +456,7 @@ const unsigned int SEVEN        =(1<<11);
 const int START_BETS    =10;
 const int SECOND_CALL   =6;
 const int LAST_CALL     =2;
- 
+
 extern int recursive_gin_search(TBeing *, Hand *hs, int *hand);
 extern char *pretty_card_printout(TBeing *, int);
 extern int best_bj_dealer(int);

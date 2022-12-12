@@ -62,7 +62,7 @@ TBaseCorpse::~TBaseCorpse()
   TThing *t, *p, *r;
   TTable *ttab;
   int rc;
-  
+
   // 1st, drop the corpse from bed/chair rider list
   ttab = dynamic_cast<TTable *>(riding);
   if (riding && !ttab){
@@ -77,28 +77,28 @@ TBaseCorpse::~TBaseCorpse()
       }
     }
   }
-  
+
   // relocate inventory
   for(StuffIter it=this->stuff.begin();it!=this->stuff.end();){
     t=*(it++);
     --(*t);
-    
+
     // junk newbie objects
     TObj *o = dynamic_cast<TObj *>(t);
-    if (o && o->isObjStat(ITEM_NEWBIE) && o->stuff.empty() && 
+    if (o && o->isObjStat(ITEM_NEWBIE) && o->stuff.empty() &&
 	(this->in_room > 80) && (this->in_room != Room::DONATION)){
       sendrpf(this->roomp, "The %s explodes in a flash of white light!\n\r", fname(o->name).c_str());
       delete o;
       o = NULL;
       continue;
     }
-    
+
     if ((p = this->parent) || (p = this->equippedBy)) {
       *(p) += *t;
       rc = p->moneyMeBeing(t, this);
       if (IS_SET_DELETE(rc, DELETE_ITEM))
         delete t;
-        
+
     } else if (this->riding) {
       if ((ttab = dynamic_cast<TTable *>(riding))) {
         t->mount(riding);
@@ -109,16 +109,16 @@ TBaseCorpse::~TBaseCorpse()
         vlogf(LOG_BUG, format("Corpse (%s) decayed on %s, deleting %s") % this->getName() % riding->getName() % t->getName());
         delete t;
       }
- 
+
     } else if (this->roomp) {
       *this->roomp += *t;
-      
+
     } else {
       vlogf(LOG_BUG, format("Unowned corpse decayed: %s - deleting: %s") % this->getName() % t->getName());
       delete t;
     }
   }
-  
+
   if (tDissections) {
     dissectInfo *tNextDissect = tDissections;
     for (; tNextDissect; tNextDissect = tDissections) {
@@ -134,7 +134,7 @@ int TBaseCorpse::putMeInto(TBeing *ch, TOpenContainer *container)
 {
   TObj *o;
   TThing *t=NULL;
-  
+
   for(StuffIter it=container->stuff.begin();it!=container->stuff.end() && (t=*it);++it){
     o = dynamic_cast<TObj *>(t);
 
@@ -239,7 +239,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
   int amount = 100;
   TObj *obj;
   char msg[256], gl_msg[256];
-  
+
   if (isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
     act("$p: You aren't able to dissect that.",
@@ -259,11 +259,11 @@ int TBaseCorpse::dissectMe(TBeing *caster)
 	FALSE, caster, this, 0, TO_CHAR);
     return TRUE;
   }
-  
+
   act("You dissect $p.", FALSE, caster, this, 0, TO_CHAR);
   act("$n dissects $p.", FALSE, caster, this, 0, TO_ROOM);
   addCorpseFlag(CORPSE_NO_DISSECT);
-  
+
   if (obj_index[rnum].getNumber() >= obj_index[rnum].max_exist) {
     // item at max
     act("You find nothing useful in $p.",
@@ -276,7 +276,7 @@ int TBaseCorpse::dissectMe(TBeing *caster)
     return FALSE;
   }
   int bKnown = caster->getSkillValue(SKILL_DISSECT);
-  
+
   if (!caster->bSuccess(bKnown, SKILL_DISSECT) &&
       !caster->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
     // dissection failed
@@ -295,11 +295,11 @@ int TBaseCorpse::dissectMe(TBeing *caster)
       obj = NULL;
       return TRUE;
     }
-    
+
     if(caster->hasQuestBit(TOG_STARTED_MONK_BLUE)){
       caster->setQuestBit(TOG_MONK_KILLED_SHARK);
     }
-    
+
     *caster += *obj;
     act(   msg, FALSE, caster, obj, this, TO_CHAR);
     act(gl_msg, FALSE, caster, obj, this, TO_ROOM);
@@ -325,7 +325,7 @@ void TBaseCorpse::lookObj(TBeing *ch, int) const
 int TBaseCorpse::putSomethingInto(TBeing *ch, TThing *)
 {
   // technically, would be OK since is a container, but prevent them anyhow
-  act("Unfortunately, you can't put things into $p.", 
+  act("Unfortunately, you can't put things into $p.",
              FALSE, ch, this, 0, TO_CHAR);
   return 2;
 }
@@ -427,7 +427,7 @@ int TBaseCorpse::chiMe(TBeing *tLunatic)
     setBurning(tLunatic);}
 
     return true;
-   
+
 }
 
 void TBaseCorpse::getObjFromMeText(TBeing *tBeing, TThing *tThing, getTypeT tType, bool tFirst)

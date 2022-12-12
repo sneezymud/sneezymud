@@ -79,7 +79,7 @@ class TGun : public TGenWeapon {
     int ammotype;
     int flags;
 
-  public:    
+  public:
     virtual void loadMe(TBeing *ch, TAmmo *ammo);
     virtual void unloadMe(TBeing *ch, TAmmo *ammo);
 
@@ -87,7 +87,7 @@ class TGun : public TGenWeapon {
     int getROF() const { return rof; }
     void setAmmoType(int a) { ammotype=a; }
     int getAmmoType() const { return ammotype; }
-    void setAmmo(TAmmo *a) { 
+    void setAmmo(TAmmo *a) {
       *this += *a;
     }
     TAmmo *getAmmo() const { return stuff.empty() ? NULL : dynamic_cast<TAmmo *>(stuff.front()); }

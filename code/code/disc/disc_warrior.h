@@ -70,7 +70,7 @@ public:
       skBerserk(),
       skSwitch(),
       skBloodlust(),
-      skWhirlwind(),	
+      skWhirlwind(),
       skRally()	{
     }
     CDWarrior(const CDWarrior &a)

@@ -47,7 +47,7 @@ public:
     CSkill skFlare;
     CSkill skSorcerersGlobe;
 
-//Level 8 
+//Level 8
     CSkill skFaerieFire;          // NEW  10th level individual
     CSkill skIlluminate;
     CSkill skDetectMagic;

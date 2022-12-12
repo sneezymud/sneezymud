@@ -19,7 +19,7 @@ TBaseCup::TBaseCup() :
   TObj(),
   maxDrinks(0),
   curDrinks(0),
-  liquidType(MIN_DRINK_TYPES), 
+  liquidType(MIN_DRINK_TYPES),
   drinkFlags(0)
 {
   updateDesc();
@@ -145,10 +145,10 @@ sstring TBaseCup::showModifier(showModeT tMode, const TBeing *tBeing) const
   sstring tString = TObj::showModifier(tMode, tBeing);
 
   if (!getDrinkUnits()){
-    tString += " (empty)";                                          
-  }                                                           
-                                                              
-  return tString;                                             
+    tString += " (empty)";
+  }
+
+  return tString;
 }
 
 
@@ -212,10 +212,10 @@ void TBaseCup::pourMeOut(TBeing *ch)
 void TBaseCup::lowCheck()
 {
   if (getMaxDrinkUnits() < getDrinkUnits())
-    vlogf(LOG_LOW, format("drinkcon %s  maxdrinks < current drinks.") % 
+    vlogf(LOG_LOW, format("drinkcon %s  maxdrinks < current drinks.") %
          getName());
   if (isDrinkConFlag(DRINK_PERM) && canWear(ITEM_WEAR_TAKE))
-    vlogf(LOG_LOW, format("drinkcon %s  takeable and permanent container.") % 
+    vlogf(LOG_LOW, format("drinkcon %s  takeable and permanent container.") %
          getName());
 
   TObj::lowCheck();
@@ -414,7 +414,7 @@ void TBaseCup::updateDesc()
   // get og desc
   // replace all $l
   // if $l found, set strung and move desc
-  
+
   newname=obj_index[getItemIndex()].name;
   short_desc=obj_index[getItemIndex()].short_desc;
   long_desc=obj_index[getItemIndex()].long_desc;

@@ -292,7 +292,7 @@ int comboEQCast(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
 	case 2:
 	  if (!ch->affectedBySpell(SPELL_LEVITATE) && !ch->affectedBySpell(SPELL_FLY)) {
 	    doFlyingEQCast(ch, o);
-	  }	  
+	  }
 	  break;
 	case 3:
 	  if (!ch->affectedBySpell(SPELL_ARMOR) && !ch->affectedBySpell(SPELL_SANCTUARY)) {
@@ -303,7 +303,7 @@ int comboEQCast(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *) {
       return true;
     }
     return true;
-  }  
+  }
   return false;
 }
 

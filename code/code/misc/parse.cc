@@ -2,7 +2,7 @@
 //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
 //      "parse.cc" - All functions and routines related to command parsing
-//      
+//
 //
 ///////////////////////////////////////////////////////////////////////////
 
@@ -58,7 +58,7 @@ int old_search_block(const char *argument, int bgin, int length, const char * co
   int guess, search;
   bool found;
 
-  // If the word contain 0 letters, then a match is already found 
+  // If the word contain 0 letters, then a match is already found
   found = (length < 1);
 
   guess = 0;
@@ -171,7 +171,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   sstring tStNewArg = "";
   sstring buf, bufname;
   size_t tVar = 0;
- 
+
   // sendrpf(COLOR_NONE, roomp, "doCommand:argument=[%s]\n\r", argument.c_str());
   newarg=stripColorCodes(argument);
   // sendrpf(COLOR_NONE, roomp, "doCommand:newarg=[%s]\n\r", newarg.c_str());
@@ -242,9 +242,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     newarg = tStNewArg;
   }
 
-  if (typedIn && desc && dynamic_cast<TMonster *>(this)) 
+  if (typedIn && desc && dynamic_cast<TMonster *>(this))
     isPoly = TRUE;
-  
+
   if (GetMaxLevel() < commandArray[cmd]->minLevel &&
       ((cmd != CMD_WIZNET) || !desc || !desc->original ||
        desc->original->GetMaxLevel() < commandArray[cmd]->minLevel)) {
@@ -329,7 +329,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   if (tPerson)
     tPerson->logf("%s:%s %s", name.c_str(), commandArray[cmd]->name, newarg.c_str());
       } else {
-  vlogf(LOG_SILENT, format("%s (%s) (%i):%s %s") %  name % desc->original->name % 
+  vlogf(LOG_SILENT, format("%s (%s) (%i):%s %s") %  name % desc->original->name %
         in_room % commandArray[cmd]->name % newarg);
 
   if (tPerson)
@@ -349,9 +349,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
     rc = triggerSpecial(NULL, cmd, newarg.c_str());
-    if (IS_SET_DELETE(rc, DELETE_THIS)) 
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    else if (rc) 
+    else if (rc)
       return FALSE;
 
     auto ret = doPersonCommand(cmd, argument, vict, typedIn);
@@ -388,7 +388,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           if (!hasWizPower(POWER_WIZARD)) {
             sendTo("Prototype command.  You need to be a developer to use this.\n\r");
             break;
-          }   
+          }
           doRelease(newarg);
           break;
         case CMD_CRIT:
@@ -801,7 +801,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           rc = doEmote(newarg.c_str());
           addToLifeforce(1);
           break;
-        case CMD_ECHO: 
+        case CMD_ECHO:
           doEcho(newarg.c_str());
           break;
         case CMD_SHOW:
@@ -2150,7 +2150,7 @@ const char *one_argument(const char *argument, char *first_arg, unsigned int fir
   try {
     s = one_argument(sstring(argument), tmp_fa);
     strncpy(first_arg, tmp_fa.c_str(), first_arg_size);
-  
+
     // we should return a pointer into argument equivalent to s.c_str
     if (s.empty())
       return &argument[strlen(argument)];  // return pointer to the NULL
@@ -2209,7 +2209,7 @@ bool is_abbrev(const char *arg1, const char *arg2, multipleTypeT multiple, exact
   return is_abbrev(str1, str2, multiple, exact);
 }
 
-// determine if a given sstring is an abbreviation of another 
+// determine if a given sstring is an abbreviation of another
 // multiple word functionality FALSE by c++ default - Russ
 // Must be explicitly passed TRUE otherwise defaults to FALSE
 
@@ -2291,7 +2291,7 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
   return false;
 }
 
-// return first 'word' plus trailing subsstring of input sstring 
+// return first 'word' plus trailing subsstring of input sstring
 void half_chop_safe(const char *sstring, char *arg1, unsigned int arg1Len, char *arg2, unsigned int arg2Len)
 {
   for (; *sstring && isspace(*sstring); sstring++);
@@ -2300,7 +2300,7 @@ void half_chop_safe(const char *sstring, char *arg1, unsigned int arg1Len, char 
   const char* firstWordEnd = sstring;
   for (; isspace(*sstring); sstring++);
 
-  arg1Len = min<unsigned int>(arg1Len-1, firstWordEnd-firstWordStart); 
+  arg1Len = min<unsigned int>(arg1Len-1, firstWordEnd-firstWordStart);
   strncpy(arg1, firstWordStart, arg1Len);
   arg1[arg1Len] = '\0';
 
@@ -2381,7 +2381,7 @@ int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
 
 // this function is a generic trigger for any/all special procs that
 // "this" might trigger by doing cmd.  ch is here for future implementation
-// if we want to add the capability to trigger with 2ndary parameters.  
+// if we want to add the capability to trigger with 2ndary parameters.
 // ch is not used now
 // return DELETE_THIS will cause this to be destroyed
 // return DELETE_VICT will cause ch to be destroyed
@@ -2390,7 +2390,7 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
   int rc;
   TThing *t;
 
-  // is the player busy doing something else? 
+  // is the player busy doing something else?
   if (task && task->task >= TASK_BOGUS && task->task < NUM_TASKS && tasks[task->task].taskf &&
         ((*(tasks[task->task].taskf))(this, cmd, arg, 0, roomp, task->obj)))
     return TRUE;
@@ -2399,7 +2399,7 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
   if (spelltask && cast_spell(this, cmd, 0))
     return TRUE;
 
-  // special in room? 
+  // special in room?
   if (roomp) {
     rc = roomp->checkSpec(this, cmd, arg, NULL);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2450,8 +2450,8 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
         return DELETE_VICT;
       if (rc)
         return TRUE;
-    } 
-  } 
+    }
+  }
   return FALSE;
 }
 
@@ -2783,7 +2783,7 @@ void buildCommandArray(void)
   commandArray[CMD_DEATHCHECK] = new commandInfo("deathcheck", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SET_TRAP] = new commandInfo("trap", POSITION_RESTING, 0);
   commandArray[CMD_CHANGE] = new commandInfo("change", POSITION_RESTING, 0);
-  commandArray[CMD_REDIT]=new commandInfo("redit", POSITION_DEAD, GOD_LEVEL1); 
+  commandArray[CMD_REDIT]=new commandInfo("redit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_OEDIT] = new commandInfo("oedit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_FEDIT] = new commandInfo("fedit", POSITION_DEAD, 0);
   commandArray[CMD_JOIN] = new commandInfo("join", POSITION_RESTING, 0);
@@ -2855,13 +2855,13 @@ void buildCommandArray(void)
   commandArray[CMD_LIFT] = new commandInfo("lift",POSITION_CRAWLING,0);
   commandArray[CMD_ARCH] = new commandInfo("arch",POSITION_RESTING,0);
   commandArray[CMD_BOUNCE] = new commandInfo("bounce",POSITION_STANDING,0);
-  commandArray[CMD_DISGUISE] = new commandInfo("disguise", POSITION_STANDING, 0); 
+  commandArray[CMD_DISGUISE] = new commandInfo("disguise", POSITION_STANDING, 0);
   commandArray[CMD_RENAME] = new commandInfo("rename", POSITION_DEAD, 0);
   commandArray[CMD_DESCRIPTION]=new commandInfo("description",POSITION_DEAD,0);
-  commandArray[CMD_POISON_WEAPON] = new commandInfo("poison-weapon", POSITION_STANDING, 0); 
-  commandArray[CMD_GARROTTE]=new commandInfo("garrotte", POSITION_STANDING, 0); 
-  commandArray[CMD_STAB] = new commandInfo("stab", POSITION_FIGHTING, 0); 
-  commandArray[CMD_CUDGEL] = new commandInfo("cudgel", POSITION_STANDING, 0); 
+  commandArray[CMD_POISON_WEAPON] = new commandInfo("poison-weapon", POSITION_STANDING, 0);
+  commandArray[CMD_GARROTTE]=new commandInfo("garrotte", POSITION_STANDING, 0);
+  commandArray[CMD_STAB] = new commandInfo("stab", POSITION_FIGHTING, 0);
+  commandArray[CMD_CUDGEL] = new commandInfo("cudgel", POSITION_STANDING, 0);
   commandArray[CMD_PENANCE] = new commandInfo("penance", POSITION_RESTING, 0);
   commandArray[CMD_SMITE] = new commandInfo("smite", POSITION_SITTING, 0);
   commandArray[CMD_CHARGE] = new commandInfo("charge", POSITION_SITTING, 0);
@@ -3055,7 +3055,7 @@ bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
     if (!strcasecmp(buf, arg))
       return TRUE;
   }
-#endif    
+#endif
   for (i = 0; i < nameLen && (*name = *arg); arg++, i++, name++)
     if ((*arg < 0) || !isalpha(*arg) || i > 15)
       return TRUE;
@@ -3097,7 +3097,7 @@ bool parse_name_sstring(const sstring arg, sstring &name)
 
   if (is_illegal_name(name.c_str()))
     return TRUE;
-  
+
   for(unsigned int i = 0; i < name.length(); i++)
     if (!isalpha(name[i]))
       return TRUE;
@@ -3110,64 +3110,64 @@ bool parse_name_sstring(const sstring arg, sstring &name)
 #if 0
 int min_stat(race_t race, statTypeT iStat)
 {
-  // 1=str 2=dex 3=int 4=wis 5=con 6=chr 
-  if (iStat == 1) {                                                              
-    if (race == RACE_DWARF) 
-      return (8);            
-    else if (race == RACE_GNOME)                                                 
-      return (6);                                                              
-    else if (race == RACE_OGRE)                                                 
-      return (7);                                                              
-    else                                                                        
-      return (3);                                                              
-  } else if (iStat == 2) {                                                       
-    if (race == RACE_HOBBIT)
-      return (8);                                                              
+  // 1=str 2=dex 3=int 4=wis 5=con 6=chr
+  if (iStat == 1) {
+    if (race == RACE_DWARF)
+      return (8);
+    else if (race == RACE_GNOME)
+      return (6);
     else if (race == RACE_OGRE)
-      return (5); 
+      return (7);
+    else
+      return (3);
+  } else if (iStat == 2) {
+    if (race == RACE_HOBBIT)
+      return (8);
+    else if (race == RACE_OGRE)
+      return (5);
     else if (race == RACE_ELVEN)
       return (6);
     else
       return (3);
-  } else if (iStat == 3) {                                                       
-    if ((race == RACE_GNOME) || (race == RACE_ELVEN))                           
-      return (7);                                                               
-    else                                                                        
+  } else if (iStat == 3) {
+    if ((race == RACE_GNOME) || (race == RACE_ELVEN))
+      return (7);
+    else
       return (3);
-  } else if (iStat == 4) {                                                       
-    if ((race == RACE_GNOME) || (race == RACE_ELVEN)) 
-      return (7);                                                              
-    else                                                                        
-      return (3);                                                              
-  } else if (iStat == 5) {                                                       
+  } else if (iStat == 4) {
+    if ((race == RACE_GNOME) || (race == RACE_ELVEN))
+      return (7);
+    else
+      return (3);
+  } else if (iStat == 5) {
     if ((race == RACE_DWARF) || (race == RACE_HOBBIT))
-      return (8); 
-    else if (race == RACE_OGRE)                                                
-      return (7);                                                              
-    else                                                                        
-      return (3);                                                              
-  } else if (iStat == 6) {                                                       
-    if (race == RACE_ELVEN)                                                     
-      return (7);                                                              
+      return (8);
+    else if (race == RACE_OGRE)
+      return (7);
+    else
+      return (3);
+  } else if (iStat == 6) {
+    if (race == RACE_ELVEN)
+      return (7);
     else if (race == RACE_HOBBIT)
       return (6);
-    else                                                                        
-      return (3);                                                              
-  }                                                                             
-  return (3);                                                                  
-} 
+    else
+      return (3);
+  }
+  return (3);
+}
 
 
 int max_stat(race_t race, statTypeT iStat)
 {
-  // 1=str 2=dex 3=int 4=wis 5=con 6=chr 
+  // 1=str 2=dex 3=int 4=wis 5=con 6=chr
 
   if (iStat == 1) {
     if ((race == RACE_HOBBIT))
       return (14);
     else if (race == RACE_ELVEN)
       return (14);
-    else if (race == RACE_GNOME) 
+    else if (race == RACE_GNOME)
       return (14);
     else if (race == RACE_OGRE)
       return (19);
@@ -3263,8 +3263,8 @@ int TBeing::addCommandToQue(const sstring &msg)
   int rc;
 
   if (isPc() && desc){
-    if (!isPlayerAction(PLR_MAILING) && 
-        desc->connected != CON_WRITING) 
+    if (!isPlayerAction(PLR_MAILING) &&
+        desc->connected != CON_WRITING)
     desc->input.push(msg);
   } else {
     rc = parseCommand(msg, TRUE);
@@ -3331,8 +3331,8 @@ sstring sprinttype(int type, const sstring names[])
   return result;
 }
 
-// I redid this function to make it more flexible. It has a new argument  
-// for the array, making it useful with any array.  - Russ                
+// I redid this function to make it more flexible. It has a new argument
+// for the array, making it useful with any array.  - Russ
 void bisect_arg_safe(const char *arg, int *field, char *sstring, unsigned int sstringLen, const char * const array[])
 {
   char buf[MAX_INPUT_LENGTH];
@@ -3383,14 +3383,14 @@ void cleanCharBuf(char *buf)
   from = to = buf;
 
   while(*from) {
-    if (*from != ' ' || (*from == ' ' && p != ' ')) 
+    if (*from != ' ' || (*from == ' ' && p != ' '))
       *to++ = *from;
     p = *from++;
   }
 
-  if (p == ' ' && to != buf) 
+  if (p == ' ' && to != buf)
     *(to-1) = '\000';
-  else 
+  else
     *to = '\000';
 }
 
@@ -3405,7 +3405,7 @@ sstring nextToken(char delim, unsigned int maxSize, char *str)
 {
   char retbuf[256];
   char *cp;
-  
+
   if (maxSize >= cElements(retbuf))
     maxSize = cElements(retbuf)-1;
 
@@ -3421,7 +3421,7 @@ sstring nextToken(char delim, unsigned int maxSize, char *str)
     *str = '\0';
   else
     str_shiftleft(str, (int) (cp - str + 1));
- 
+
   return retbuf;
 }
 
@@ -3429,7 +3429,7 @@ char *mud_str_dup(const char *buf)
 {
   if (!buf)
     return NULL;
-  
+
   return mud_str_dup((sstring) buf);
 }
 

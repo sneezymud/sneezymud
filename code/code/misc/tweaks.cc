@@ -4,7 +4,7 @@
 #include "being.h"
 
 
-tweakEntry::tweakEntry() 
+tweakEntry::tweakEntry()
 {
 }
 
@@ -18,7 +18,7 @@ tweakTypeT & operator++(tweakTypeT &c, int)
   return c = (c == MAX_TWEAK_TYPES) ? TWEAK_LOADRATE : tweakTypeT(c+1);
 }
 
-tweakInfoT::tweakInfoT(): 
+tweakInfoT::tweakInfoT():
     tweaks(MAX_TWEAK_TYPES + 1, nullptr)
 {
 }
@@ -108,12 +108,12 @@ void tweakInfoT::handleTweak(TBeing *b, tweakTypeT t, sstring arg){
   TDatabase sneezy(DB_SNEEZY);
 
   //only one arguements given after type
-  if (arg.empty()) { 
+  if (arg.empty()) {
     if (is_abbrev(opt, "up") || is_abbrev(opt, "down")) {
       tweak->target += is_abbrev(opt, "up") ? .05 : -.05;
       tweak->rate = fabs((tweak->target - tweak->current)/30);
       b->sendTo(format("You tweaked %s a tad.\r\n") % getTweakName(t));
-      sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,%f)", 
+      sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,%f)",
         t, tweak->current, tweak->target,tweak->rate);
       sneezy.query("select max( tweak_id ) as tid from globaltweaks");
       if (sneezy.fetchRow()) {
@@ -157,7 +157,7 @@ void tweakInfoT::handleTweak(TBeing *b, tweakTypeT t, sstring arg){
       tweak->current = tweak->target = targ;
       vlogf(LOG_MISC, format("%s set %s to %f") % b->getName() % getTweakName(t) % tweak->current);
       b->sendTo(format("Target global %s set to %f\r\n") % getTweakName(t) % tweak->target);
-      sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,0.0)", 
+      sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,0.0)",
         t, tweak->current, tweak->target, 0);
       sneezy.query("select max( tweak_id ) as tid from globaltweaks");
       if (sneezy.fetchRow()) {
@@ -177,12 +177,12 @@ void tweakInfoT::handleTweak(TBeing *b, tweakTypeT t, sstring arg){
     tweak->rate = fabs((tweak->target - tweak->current)/change_period_seconds);
     b->sendTo(format("Target global %s set at %f to change over %f seconds.\r\n") % getTweakName(t) % tweak->target % convertTo<int>(opt) );
     vlogf(LOG_MISC, format("%s set the target global %s at %f to change over %f seconds.\r\n") % b->getName() % getTweakName(t) % tweak->target % convertTo<int>(opt) );
-    sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,%f)", 
+    sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,%f)",
         t, tweak->current, tweak->target,tweak->rate);
 
     //proc tweak rates does not create any new rows in db, only updates current.  To make history understandable, enter
     //two rows - the first indicates the change date, the second holds the current tweak struct
-    sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,%f)", 
+    sneezy.query("insert into globaltweaks (tweak_type, tweak_value, tweak_target, tweak_rate) values (%i,%f,%f,%f)",
         t, tweak->current, tweak->target,tweak->rate);
     sneezy.query("select max( tweak_id ) as tid from globaltweaks");
     if (sneezy.fetchRow()) {

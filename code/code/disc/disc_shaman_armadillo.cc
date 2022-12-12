@@ -6,7 +6,7 @@
  *   SneezyMUD Development - All Rights Reserved                   *
  *                                                                 *
  *******************************************************************/
- 
+
 #include "extern.h"
 #include "handler.h"
 #include "room.h"
@@ -77,9 +77,9 @@ int TBeing::doEarthmaw(const char *argument)
 
   addToWait((int)combatRound(discArray[SPELL_EARTHMAW]->lag));
   reconcileHurt(victim,discArray[SPELL_EARTHMAW]->alignMod);
-  
+
   if (bSuccess(bKnown, SPELL_EARTHMAW)) {
-    
+
     if (critSuccess(this, SPELL_EARTHMAW) == CRIT_S_DOUBLE) {
       CS(SPELL_EARTHMAW);
       dam *= 2;
@@ -104,11 +104,11 @@ int TBeing::doEarthmaw(const char *argument)
       act("<o>You tumble into the fissure!<1>", FALSE, this, NULL, horsie, TO_VICT);
 
     }
-    
+
     act("<o>$N<1><o> tumbles into the fissure, which collapses on top of $m!<1>" , FALSE, this, NULL, victim, TO_CHAR);
     act("<o>$N<1><o> tumbles into the fissure, which collapses on top of $m!<1>", FALSE, this, NULL, victim, TO_NOTVICT);
     act("<o>You tumble into the fissure, which collapses on top of you!<1>", FALSE, this, NULL, victim, TO_VICT);
-    
+
     if (horsie && this->reconcileDamage(horsie, dam, SPELL_EARTHMAW) == -1) {
       delete horsie;
     }
@@ -117,16 +117,16 @@ int TBeing::doEarthmaw(const char *argument)
       return SPELL_SUCCESS + VICTIM_DEAD + DELETE_VICT;
     }
     return SPELL_SUCCESS;
-    
+
   } else {
-    
+
     act("You fail to call the earthmaw.", FALSE, this, NULL, victim, TO_CHAR);
     act("$n fails to call the earthmaw.", FALSE, this, NULL, victim, TO_ROOM);
-    
+
     return SPELL_FAIL;
   }
-  
-  
+
+
   return SPELL_FAIL;
 }
 
@@ -315,7 +315,7 @@ int shadowWalk(TBeing *caster, TBeing *victim, int level, short bKnown)
 #if 0
   if (victim->affectedBySpell(SPELL_SHADOW_WALK)) {
     char buf[256];
-    act("You already walk among the shadows.", FALSE, caster, NULL, victim, 
+    act("You already walk among the shadows.", FALSE, caster, NULL, victim,
 TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -385,7 +385,7 @@ int shadowWalk(TBeing *caster, TBeing *victim)
 #if 0
   if (victim->affectedBySpell(SPELL_SHADOW_WALK)) {
     char buf[256];
-    act("You already are walking among the shadows.", FALSE, caster, NULL, victim, 
+    act("You already are walking among the shadows.", FALSE, caster, NULL, victim,
 TO_CHAR);
     return FALSE;
   }
@@ -394,7 +394,7 @@ TO_CHAR);
   lag_t rounds = discArray[SPELL_SHADOW_WALK]->lag;
   diff = discArray[SPELL_SHADOW_WALK]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_SHADOW_WALK, diff, 1, "", 
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_SHADOW_WALK, diff, 1, "",
 rounds, caster->in_room, 0, 0,TRUE, 0);
   return TRUE;
 }
@@ -407,9 +407,9 @@ int castShadowWalk(TBeing *caster, TBeing *victim)
   int ret=shadowWalk(caster,victim,level,bKnown);
   if (ret== SPELL_SUCCESS) {
 #if 0
-    act("$n becomes dark and walks a little swifter!", FALSE, victim, NULL, NULL, 
+    act("$n becomes dark and walks a little swifter!", FALSE, victim, NULL, NULL,
 TO_ROOM, ANSI_GREEN);
-    act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR, 
+    act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR,
 ANSI_GREEN);
 #endif
   } else {
@@ -449,7 +449,7 @@ int celerite(TBeing *caster, TBeing *victim, int level, short bKnown)
 
     act("$N moves more easily.",
         FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_YELLOW_BOLD);
-    act("The power of the loa takes dominion inside of you!", 
+    act("The power of the loa takes dominion inside of you!",
         FALSE, victim, NULL, NULL, TO_CHAR, ANSI_YELLOW_BOLD);
     return SPELL_SUCCESS;
   } else {
@@ -471,7 +471,7 @@ int celerite(TBeing *caster, TBeing *victim)
      lag_t rounds = discArray[SPELL_CELERITE]->lag;
      diff = discArray[SPELL_CELERITE]->task;
 
-     start_cast(caster, victim, NULL, caster->roomp, SPELL_CELERITE, diff, 1, "", 
+     start_cast(caster, victim, NULL, caster->roomp, SPELL_CELERITE, diff, 1, "",
 rounds, caster->in_room, 0, 0,TRUE, 0);
        return TRUE;
 }

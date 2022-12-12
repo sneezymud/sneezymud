@@ -73,7 +73,7 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
     return FALSE;
 
   // use hardness of eq on slot, or use skintype for hardness
-  hardness = equipment[slot] ? 
+  hardness = equipment[slot] ?
      material_nums[(equipment[slot])->getMaterial()].hardness :
      material_nums[getMaterial((wearSlotT)slot)].hardness;
 
@@ -123,7 +123,7 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
     return FALSE;
 
   // use hardness of eq on slot, or use skintype for hardness
-  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ? 
+  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ?
      material_nums[(equipment[slot])->getMaterial()].hardness :
      material_nums[getMaterial((wearSlotT)slot)].hardness;
 
@@ -135,7 +135,7 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You scratch $S $o.", TRUE, this, item, victim, TO_CHAR);
-   
+
         sprintf(buf, "Your $o %s scratched.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s scratched.", item->isPaired() ? "are" : "is");
@@ -148,7 +148,7 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You tear $S $o.", TRUE, this, item, victim, TO_CHAR);
- 
+
         sprintf(buf, "Your $o %s torn.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s torn.", item->isPaired() ? "are" : "is");
@@ -174,7 +174,7 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
     return FALSE;
 
   // use hardness of eq on slot, or use skintype for hardness
-  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ? 
+  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ?
      material_nums[(equipment[slot])->getMaterial()].hardness :
      material_nums[getMaterial((wearSlotT)slot)].hardness;
 
@@ -186,7 +186,7 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You crack $S $o.", TRUE, this, item, victim, TO_CHAR);
- 
+
         sprintf(buf, "Your $o %s cracked.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s cracked.", item->isPaired() ? "are" : "is");
@@ -199,7 +199,7 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You puncture $S $o.", TRUE, this, item, victim, TO_CHAR);
- 
+
         sprintf(buf, "Your $o %s punctured.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s punctured.", item->isPaired() ? "are" : "is");
@@ -330,7 +330,7 @@ bool TObj::canRust()
     return FALSE;
   if (!isMetal())
     return FALSE;
-  
+
   switch (mat) {
     case MAT_IRON:
     case MAT_STEEL:
@@ -338,7 +338,7 @@ bool TObj::canRust()
     default:
       return FALSE;
   }
- 
+
   return FALSE;
 }
 

@@ -361,7 +361,7 @@ void TFFlame::updateFlameInfo()
       lFound = true;
     }
   if (!lFound)
-    vlogf(LOG_BUG, format("TFFlame object with No extra slots for lighting [%s].") % 
+    vlogf(LOG_BUG, format("TFFlame object with No extra slots for lighting [%s].") %
           (!shortDescr.empty() ? shortDescr : "BAD OBJECT!"));
 }
 
@@ -467,7 +467,7 @@ int TFFlame::igniteMessage(TBeing *ch) const
 	 (cTool->getToolType() != TOOL_FLINTSTEEL))
 	break;
     }
-	 
+
     if ((!cTool || !cTool->getToolType())) {
       ch->sendTo("I'm afraid you need some flint and steel for this.\n\r");
       return -1;
@@ -514,7 +514,7 @@ void TFFlame::addFlameToMe(TBeing *ch, const char *argument, TThing *fObj, bool 
     }
   } else
     woodItem = fObj;
-  
+
   // Make sure we got a TOrganic type 3, It's not a Fire, and not a
   // PC or NPC.
   if (dynamic_cast<TBeing *>(woodItem)) {
@@ -633,14 +633,14 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
 
   if(getPosition() <= POSITION_STUNNED){
     // unconscious person, let's pour it in their mouth instead
-    sprintf(Buf, "You carefully pour %s into $N's mouth!", 
+    sprintf(Buf, "You carefully pour %s into $N's mouth!",
 	    liquidInfo[type]->name);
     act(Buf, TRUE, ch, 0, this, TO_CHAR);
     sprintf(Buf, "$n just poured %s into your mouth.", liquidInfo[type]->name);
     act(Buf, TRUE, ch, 0, this, TO_VICT);
     sprintf(Buf, "$n just poured %s into $N's mouth.", liquidInfo[type]->name);
     act(Buf, TRUE, ch, 0, this, TO_NOTVICT);
-    
+
     setQuaffUse(TRUE);
     dContainer->sipMe(this);
     setQuaffUse(FALSE);
@@ -694,7 +694,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
         TRUE, ch, 0, this, TO_VICT);
     act("$N looks like $E is in pain!  And they seem pretty mad at $n.",
         TRUE, ch, 0, this, TO_NOTVICT);
-    
+
     rc = reconcileDamage(this, ::number(5, max(6, min(15, (int) (size/20)))), DAMAGE_DISRUPTION);
   } else if (roomp && roomp->isArcticSector() && type != LIQ_WARM_MEAD &&
       getMaterial(WEAR_BODY) != MAT_ICE) {
@@ -731,7 +731,7 @@ int TBeing::pourWaterOnMe(TBeing *ch, TObj *sObj)
     sendTo(format("You feel %s.\n\r") % Weather::describeWet(this));
   }
 
-  dContainer->setDrinkUnits(0);  
+  dContainer->setDrinkUnits(0);
 
   // This prevents mass use from one person:
   ch->addToWait(combatRound(2));

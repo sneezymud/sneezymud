@@ -11,7 +11,7 @@ int lotteryRedeemer(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TO
 
   if(!ch || !o) // something weird going on if this happens
     return false;
-  
+
   if(o->objVnum() != OBJ_LOTTERY_TICKET){
     myself->doSay("What the hell is this?");
     myself->doDrop("", o);

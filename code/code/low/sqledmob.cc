@@ -141,7 +141,7 @@ int main(int argc, char **argv)
     val=parse_data_file(file, i);
     if(val["vnum"]=="EOM")
       break;
-    
+
     if(val["DATATYPE"]=="mob"){
       printf("replacing mob %s\n", val["vnum"].c_str());
       db.query("delete from mob where vnum=%s",
@@ -170,15 +170,15 @@ int main(int argc, char **argv)
 
       db.query("insert into mob (vnum,name,short_desc,long_desc,description,actions,affects,faction,fact_perc,letter,attacks,class,level,tohit,ac,hpbonus,damage_level,damage_precision,gold,race,weight,height,str,bra,con,dex,agi,intel,wis,foc,per,cha,kar,spe,pos,def_position,sex,spec_proc,skin,vision,can_be_seen,max_exist,local_sound,adjacent_sound) values (%s,'%s','%s','%s','%s',%s, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s')",
 	       val["vnum"].c_str(),val["name"].c_str(),val["short_desc"].c_str(),val["long_desc"].c_str(),val["description"].c_str(),val["actions"].c_str(),val["affects"].c_str(),val["faction"].c_str(),val["fact_perc"].c_str(),val["letter"].c_str(),val["attacks"].c_str(),val["class"].c_str(),val["level"].c_str(),val["tohit"].c_str(),val["ac"].c_str(),val["hpbonus"].c_str(),val["damage_level"].c_str(),val["damage_precision"].c_str(),val["gold"].c_str(),val["race"].c_str(),val["weight"].c_str(),val["height"].c_str(),val["str"].c_str(),val["bra"].c_str(),val["con"].c_str(),val["dex"].c_str(),val["agi"].c_str(),val["intel"].c_str(),val["wis"].c_str(),val["foc"].c_str(),val["per"].c_str(),val["cha"].c_str(),val["kar"].c_str(),val["spe"].c_str(),val["pos"].c_str(),val["def_position"].c_str(),val["sex"].c_str(),val["spec_proc"].c_str(),val["skin"].c_str(),val["vision"].c_str(),val["can_be_seen"].c_str(),val["max_exist"].c_str(),val["local_sound"].c_str(),val["adjacent_sound"].c_str());
-      
+
     } else if(val["DATATYPE"]=="mob_extra"){
       printf("replacing mob_extra %s\n", val["vnum"].c_str());
-      
+
       db.query("insert into mob_extra (vnum, keyword, description) values (%s,'%s','%s')", val["vnum"].c_str(), val["keyword"].c_str(), val["description"].c_str());
-      
+
     } else if(val["DATATYPE"]=="mob_imm"){
       printf("replacing mob_imm %s\n", val["vnum"].c_str());
-      
+
       db.query("insert into mob_imm (vnum,type,amt) values (%s,%s,%s)",
 	       val["vnum"].c_str(), val["type"].c_str(),val["amt"].c_str());
 

@@ -53,7 +53,7 @@ int task_trance_of_blades(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
       ch->addToWait(combatRound(2));
       ch->cantHit += ch->loseRound(1);
       return FALSE;
-    }   
+    }
     if (ch->getCombatMode() == ATTACK_BERSERK) {
       act("Berserking causes you to snap out of your trance.",
           FALSE, ch, 0, 0, TO_CHAR, ANSI_RED);
@@ -63,7 +63,7 @@ int task_trance_of_blades(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
       ch->addToWait(combatRound(2));
       ch->cantHit += ch->loseRound(1);
       return FALSE;
-    }   
+    }
     if (!ch->canUseArm(HAND_PRIMARY)) {
       act("Your injured arm causes you to snap out of your trance.",
           FALSE, ch, 0, 0, TO_CHAR);
@@ -82,7 +82,7 @@ int task_trance_of_blades(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRo
       ch->stopTask();
       ch->addToWait(combatRound(2));
       ch->cantHit += ch->loseRound(1);
-      return FALSE;      
+      return FALSE;
     }
     ch->addToMove(-10);
     chance = 150 - ch->getSkillValue(SKILL_TRANCE_OF_BLADES);

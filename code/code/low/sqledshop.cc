@@ -120,7 +120,7 @@ int main(int argc, char **argv)
     val=parse_data_file(file, i);
     if(val["shop_nr"]=="EOM")
       break;
-    
+
     if(val["DATATYPE"]=="shop"){
       printf("replacing shop %s\n", val["shop_nr"].c_str());
       db.query("delete from shop where shop_nr=%s",
@@ -132,25 +132,25 @@ int main(int argc, char **argv)
       db.query("delete from shopproducing where shop_nr=%s",
 	       val["shop_nr"].c_str());
 
-  
-      
+
+
       db.query("insert into shop (shop_nr,profit_buy,profit_sell,no_such_item1,no_such_item2,do_not_buy,missing_cash1,missing_cash2,message_buy,message_sell,temper1,temper2,keeper,flags,in_room,open1,close1,open2,close2) values (%s,%s,%s,'%s','%s','%s','%s','%s','%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 	       val["shop_nr"].c_str(),val["profit_buy"].c_str(),val["profit_sell"].c_str(),val["no_such_item1"].c_str(),val["no_such_item2"].c_str(),val["do_not_buy"].c_str(),val["missing_cash1"].c_str(),val["missing_cash2"].c_str(),val["message_buy"].c_str(),val["message_sell"].c_str(),val["temper1"].c_str(),val["temper2"].c_str(),val["keeper"].c_str(),val["flags"].c_str(),val["in_room"].c_str(),val["open1"].c_str(),val["close1"].c_str(),val["open2"].c_str(),val["close2"].c_str());
     } else if(val["DATATYPE"]=="shoptype"){
       printf("replacing shoptype %s\n", val["shop_nr"].c_str());
-      
+
       db.query("insert into shoptype (shop_nr, type) values (%s,%s)", val["shop_nr"].c_str(), val["type"].c_str());
 
     } else if(val["DATATYPE"]=="shopproducing"){
       printf("replacing shopproducing %s\n", val["shop_nr"].c_str());
-      
+
       db.query("insert into shopproducing (shop_nr, producing) values (%s,%s)", val["shop_nr"].c_str(), val["producing"].c_str());
 
     } else if(val["DATATYPE"]=="shopmaterial"){
       printf("replacing shopmaterial %s\n", val["shop_nr"].c_str());
-      
+
       db.query("insert into shopmaterial (shop_nr, mat_type) values (%s,%s)", val["shop_nr"].c_str(), val["mat_type"].c_str());
-      
+
 
     }
 

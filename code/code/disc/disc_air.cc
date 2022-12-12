@@ -31,20 +31,20 @@ int gust(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_lear
 
   int dam = caster->getSkillDam(victim, SPELL_GUST, level, adv_learn);
 
-  caster->reconcileHurt(victim,discArray[SPELL_GUST]->alignMod); 
+  caster->reconcileHurt(victim,discArray[SPELL_GUST]->alignMod);
 
   if (caster->bSuccess(bKnown,SPELL_GUST)) {
-    if ((critSuccess(caster, SPELL_GUST) || 
-        critSuccess(caster, SPELL_GUST) || 
+    if ((critSuccess(caster, SPELL_GUST) ||
+        critSuccess(caster, SPELL_GUST) ||
         critSuccess(caster,SPELL_GUST)) &&
         !caster->isNotPowerful(victim, level, SPELL_GUST, SILENT_YES)) {
       CS(SPELL_GUST);
       dam *= 2;
-      act("<W>A gust of wind picks $N up in the air and slams $M to the $G.<z>", 
+      act("<W>A gust of wind picks $N up in the air and slams $M to the $G.<z>",
           FALSE, caster, NULL, victim, TO_NOTVICT);
       act("<W>A gust of wind picks you up in the air and slams you to the $G.<z>",
           FALSE, caster, NULL, victim, TO_VICT);
-      act("<W>You call up a gust of wind that picks $N up in the air and slams $M to the $G.<z>", 
+      act("<W>You call up a gust of wind that picks $N up in the air and slams $M to the $G.<z>",
           FALSE, caster, NULL, victim, TO_CHAR);
 
       if (caster->isLucky(levelLuckModifier(victim->GetMaxLevel())))
@@ -71,19 +71,19 @@ int gust(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_lear
       victim->addToWait(combatRound(1));
     } else if (victim->isLucky(caster->spellLuckModifier(SPELL_GUST))) {
       SV(SPELL_GUST);
-      act("<W>A gust of wind buffets $N.<z>", 
+      act("<W>A gust of wind buffets $N.<z>",
           FALSE, caster, NULL, victim, TO_NOTVICT);
       act("<W>A gust of wind buffets you.<z>",
           FALSE, caster, NULL, victim, TO_VICT);
-      act("<W>You call up a gust of wind that buffets $N.<z>", 
+      act("<W>You call up a gust of wind that buffets $N.<z>",
           FALSE, caster, NULL, victim, TO_CHAR);
       dam /= 2;
     } else {
-      act("<W>A gust of wind buffets $N fiercely!<z>", 
+      act("<W>A gust of wind buffets $N fiercely!<z>",
           FALSE, caster, NULL, victim, TO_NOTVICT);
       act("<W>A gust of wind buffets you fiercely!<z>",
           FALSE, caster, NULL, victim, TO_VICT);
-      act("<W>You call up a gust of wind that buffets $N fiercely!<z>", 
+      act("<W>You call up a gust of wind that buffets $N fiercely!<z>",
           FALSE, caster, NULL, victim, TO_CHAR);
     }
     if (caster->reconcileDamage(victim, dam, SPELL_GUST) == -1)
@@ -200,7 +200,7 @@ int immobilize(TBeing * caster, TBeing * victim, int level, short bKnown)
 
   if (caster->bSuccess(bKnown, SPELL_IMMOBILIZE)) {
     retCode |= SPELL_SUCCESS;
-    
+
     switch (critSuccess(caster, SPELL_FEATHERY_DESCENT)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -224,7 +224,7 @@ int immobilize(TBeing * caster, TBeing * victim, int level, short bKnown)
 
     int cr = victim->loseRound(rounds);
     victim->cantHit += cr;
-    
+
     cr = combatRound(rounds);
     victim->addToWait(cr);
 
@@ -256,7 +256,7 @@ int immobilize(TBeing * caster, TBeing * victim, int level, short bKnown)
 
       int cr = caster->loseRound(rounds);
       caster->cantHit += cr;
-      
+
       cr = combatRound(rounds);
       caster->addToWait(cr);
 
@@ -284,21 +284,21 @@ int immobilize(TBeing * caster, TBeing * victim, int level, short bKnown)
       caster->setPosition(POSITION_SITTING);
 
       retCode |= SPELL_CRIT_FAIL;
-    }                                                                           
+    }
 
-    return retCode;                                                          
-  }                                                                             
-} 
+    return retCode;
+  }
+}
 
 int immobilize(TBeing * caster, TBeing * victim)
 {
 #if 0
   // good idea, no such affect set though
-  if (victim->affectedBySpell(SPELL_IMMOBILIZE)) {                              
+  if (victim->affectedBySpell(SPELL_IMMOBILIZE)) {
     act("<W>$N is already immobilized!<z>",
-        FALSE, caster, NULL, victim, TO_CHAR);                                  
-    return FALSE;                                                               
-  } 
+        FALSE, caster, NULL, victim, TO_CHAR);
+    return FALSE;
+  }
 #endif
 
   if (!bPassMageChecks(caster, SPELL_IMMOBILIZE, victim))
@@ -351,7 +351,7 @@ int castImmobilize(TBeing * caster, TBeing * victim)
   return rc;
 }
 
-int suffocate(TBeing * caster, TBeing * victim, int level, short bKnown) 
+int suffocate(TBeing * caster, TBeing * victim, int level, short bKnown)
 {
   affectedData aff;
   int duration;
@@ -373,7 +373,7 @@ int suffocate(TBeing * caster, TBeing * victim, int level, short bKnown)
   aff.location = APPLY_NONE;
   aff.bitvector = AFF_SILENT;
 
-// duration = spellNum, pointer to caster, victim, flags 
+// duration = spellNum, pointer to caster, victim, flags
 
   if (caster->bSuccess(bKnown, SPELL_SUFFOCATE)) {
 
@@ -393,7 +393,7 @@ int suffocate(TBeing * caster, TBeing * victim, int level, short bKnown)
       CF(SPELL_SUFFOCATE);
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
       return SPELL_CRIT_FAIL;
-    } 
+    }
     return SPELL_FAIL;
   }
 }
@@ -412,25 +412,25 @@ void suffocate(TBeing * caster, TBeing *victim,  TMagicItem * obj)
   ret=suffocate(caster,victim,level,obj->getMagicLearnedness());
   if (ret==SPELL_SUCCESS) {
     if (caster == victim) {
-      act("<W>Don't you feel stupid. You begin to choke!<z>", 
+      act("<W>Don't you feel stupid. You begin to choke!<z>",
           FALSE, caster, NULL, NULL, TO_CHAR);
-      act("<W>The air around $N dissipates!<z>", 
+      act("<W>The air around $N dissipates!<z>",
           FALSE, caster, NULL, caster, TO_NOTVICT);
     } else {
-      act("<W>You remove the air from around $N!<z>", 
+      act("<W>You remove the air from around $N!<z>",
             FALSE, caster, NULL, victim, TO_CHAR);
-      act("<W>The air around $N dissipates!<z>", 
+      act("<W>The air around $N dissipates!<z>",
             FALSE, caster, NULL, victim, TO_NOTVICT);
-      act("<W>You gasp for air as $n removes the air around you!<z>", 
+      act("<W>You gasp for air as $n removes the air around you!<z>",
             FALSE, caster, NULL, victim, TO_VICT);
     }
   } else {
     if (ret==SPELL_CRIT_FAIL) {
-      act("<W>Woooops! You remove the air from around yourself!<z>", 
+      act("<W>Woooops! You remove the air from around yourself!<z>",
           FALSE, caster, NULL, victim, TO_CHAR);
-      act("<W>Oopsies! The air around $n dissipates!<z>", 
+      act("<W>Oopsies! The air around $n dissipates!<z>",
           FALSE, caster, NULL, victim, TO_NOTVICT);
-      act("<W>$n just tried to suffocate you!<z>", 
+      act("<W>$n just tried to suffocate you!<z>",
           FALSE, caster, NULL, victim, TO_VICT);
     }
   }
@@ -567,7 +567,7 @@ int dustStorm(TBeing * caster)
   start_cast(caster, NULL, NULL, caster->roomp, SPELL_DUST_STORM, diff, 1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
 
   return TRUE;
-} 
+}
 
 int castDustStorm(TBeing * caster)
 {
@@ -876,7 +876,7 @@ int castFeatheryDescent(TBeing * caster, TBeing * victim)
     act("You feel much \"lighter\"!", FALSE, victim, NULL, NULL, TO_CHAR);
     victim->sendTo("You have been granted the gift of featherfall!\n\r");
     if (caster != victim)
-      act("You have given $N the gift of featherfall!", 
+      act("You have given $N the gift of featherfall!",
                FALSE, caster, NULL, victim, TO_CHAR);
    } else {
      caster->nothingHappens();
@@ -991,7 +991,7 @@ int antigravity(TBeing *caster, int, affectedData *aff, short bKnown)
   TThing *t=NULL;
   TBeing *vict = NULL;
   char buf[80];
-  
+
   if (caster->bSuccess(bKnown, SPELL_ANTIGRAVITY)) {
 
     switch (critSuccess(caster, SPELL_ANTIGRAVITY)) {
@@ -1010,18 +1010,18 @@ int antigravity(TBeing *caster, int, affectedData *aff, short bKnown)
         continue;
       if ((caster == vict) || (caster->inGroup(*vict))) {
         if ( vict->isAffected(AFF_LEVITATING) || vict->canFly()) {
-          
+
           if (caster == vict)
             sprintf(buf, "You are already capable of some form of flight!\n\r");
           else
             sprintf(buf, "%s is already capable of some form of flight!\n\r",vict->getName().c_str());
-          
+
           caster->sendTo(buf);
           caster->nothingHappens(SILENT_YES);
           continue;
         }
         caster->reconcileHelp(vict,discArray[SPELL_ANTIGRAVITY]->alignMod);
-        act("You begin to levitate! You're floating in the air!", 
+        act("You begin to levitate! You're floating in the air!",
                     TRUE, vict, NULL, NULL, TO_CHAR);
         act("With the grace of an angel, $n floats up off the $g!",
                     TRUE, vict, NULL, NULL, TO_ROOM);
@@ -1085,12 +1085,12 @@ int conjureElemAir(TBeing * caster, int level, short bKnown)
   victim->elementalFix(caster, SPELL_CONJURE_AIR, 0);
 
   if (caster->bSuccess(bKnown, SPELL_CONJURE_AIR)) {
-     act("You summon the powers of the sky!", 
+     act("You summon the powers of the sky!",
             TRUE, caster, NULL, NULL, TO_CHAR);
-     act("$n summons the powers of the sky!", 
+     act("$n summons the powers of the sky!",
             TRUE, caster, NULL, NULL, TO_ROOM);
 
-    // charm them for a while 
+    // charm them for a while
     if (victim->master)
       victim->stopFollower(TRUE);
 
@@ -1110,7 +1110,7 @@ int conjureElemAir(TBeing * caster, int level, short bKnown)
     // this affect effectively 'marks' the mob as yours
     restrict_xp(caster, victim, PERMANENT_DURATION);
 
-    // Add hp for higher levels - Russ 
+    // Add hp for higher levels - Russ
     victim->setMaxHit(victim->hitLimit() + number(1, level));
     victim->setHit(victim->hitLimit());
 
@@ -1177,7 +1177,7 @@ int conjureElemAir(TBeing * caster)
 
 int castConjureElemAir(TBeing * caster)
 {
-   int ret,level; 
+   int ret,level;
 
    if (!caster)
      return TRUE;
@@ -1366,7 +1366,7 @@ int castFalconWings(TBeing * caster, TBeing * victim)
 int protectionFromAir(TBeing *caster, TBeing *victim, int level, short bKnown)
 {
   affectedData aff;
- 
+
   aff.type = SPELL_PROTECTION_FROM_AIR;
   aff.level = level;
   aff.duration = caster->durationModify(SPELL_PROTECTION_FROM_AIR, (3 + (level / 2)) * Pulse::UPDATES_PER_MUDHOUR);
@@ -1374,7 +1374,7 @@ int protectionFromAir(TBeing *caster, TBeing *victim, int level, short bKnown)
   aff.modifier = IMMUNE_AIR;
   aff.modifier2 = ((level * 2) / 3);
   aff.bitvector = 0;
- 
+
   if (caster->bSuccess(bKnown,SPELL_PROTECTION_FROM_AIR)) {
     act("$n glows with a faint blue aura for a brief moment.", FALSE, victim, NULL, NULL, TO_ROOM);
     act("You glow with a faint blue aura for a brief moment.", FALSE, victim, NULL, NULL, TO_CHAR);
@@ -1389,11 +1389,11 @@ int protectionFromAir(TBeing *caster, TBeing *victim, int level, short bKnown)
       case CRIT_S_NONE:
         break;
     }
- 
+
     if (caster != victim) {
       aff.modifier2 /= 2;
     }
- 
+
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
     caster->reconcileHelp(victim, discArray[SPELL_PROTECTION_FROM_AIR]->alignMod);
     return SPELL_SUCCESS;
@@ -1425,15 +1425,15 @@ int protectionFromAir(TBeing *caster, TBeing *victim)
 int castProtectionFromAir(TBeing *caster, TBeing *victim)
 {
 int ret,level;
- 
+
   level = caster->getSkillLevel(SPELL_PROTECTION_FROM_AIR);
- 
+
   if ((ret=protectionFromAir(caster,victim,level,caster->getSkillValue(SPELL_PROTECTION_FROM_AIR))) == SPELL_SUCCESS) {
   } else {
   }
   return TRUE;
 }
- 
+
 CDAir::CDAir() :
   CDiscipline(),
   skImmobilize(),

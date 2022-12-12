@@ -57,8 +57,8 @@ const unsigned int TAR_OBJ_WORLD    = (1<<9);
 const unsigned int TAR_OBJ_EQUIP    = (1<<10);
 const unsigned int TAR_NAME	       = (1<<11);
 const unsigned int TAR_VIOLENT		  = (1<<12);
-const unsigned int TAR_ROOM	       = (1<<13); 
-const unsigned int TAR_AREA	       = (1<<14); 
+const unsigned int TAR_ROOM	       = (1<<13);
+const unsigned int TAR_AREA	       = (1<<14);
 const unsigned int TAR_CHAR_VIS_WORLD  = (1<<15);
 
 const unsigned int COMP_GESTURAL		= (1<<0);
@@ -203,7 +203,7 @@ enum lifeforceCostT {
 };
 
 // enum can't be float unfortunately, which we want
-// KLUDGE: values here will be 4* the float we really want 
+// KLUDGE: values here will be 4* the float we really want
 // the ctor for spellInfo will turn into float
 enum pietyCostT {
    PRAY_0 = 0,
@@ -463,9 +463,9 @@ class spellInfo {
   private:
     spellInfo() {}  // prevent default constructor from being used
   public:
-    spellInfo(skillUseClassT styp, 
-         discNumT discipline, 
-         discNumT assDiscipline, 
+    spellInfo(skillUseClassT styp,
+         discNumT discipline,
+         discNumT assDiscipline,
          statTypeT modifierStat,
          const char *n,
          taskDiffT cast_diff,
@@ -474,24 +474,24 @@ class spellInfo {
          manaCostT mana,
          lifeforceCostT lifeforce,
          pietyCostT align,
-         unsigned int t, 
-         symbolStressT h, 
-         const char *fa, 
-         const char *far, 
-         const char *fas, 
-         const char *fasr, 
+         unsigned int t,
+         symbolStressT h,
+         const char *fa,
+         const char *far,
+         const char *fas,
+         const char *fasr,
          discStartT starting,
          discLearnT learning,
          discStartDoT learnDoStarting,
          discLearnDoT learningDoAmt,
          discStartDoT secLearnDoStart,
          discLearnDoT secLearnDoAmt,
-         int learningDoDiff, float modifier, unsigned int ctyp, 
+         int learningDoDiff, float modifier, unsigned int ctyp,
          unsigned int tgl);
     ~spellInfo();
     spellInfo(const spellInfo &);
     spellInfo & operator = (const spellInfo &);
-}; 
+};
 
 #if 0
 // defunct, but remains in some commented out code

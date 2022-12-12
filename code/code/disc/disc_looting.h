@@ -33,12 +33,12 @@ public:
   CSkill skCounterSteal;
   CSkill skPlant;
 
-    CDLooting() 
+    CDLooting()
       : CDiscipline(),
       skCounterSteal(),
       skPlant(){
     }
-    CDLooting(const CDLooting &a) 
+    CDLooting(const CDLooting &a)
       : CDiscipline(a),
       skCounterSteal(a.skCounterSteal),
       skPlant(a.skPlant){

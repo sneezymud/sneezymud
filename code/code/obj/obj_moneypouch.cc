@@ -21,11 +21,11 @@ int TMoneypouch::getMoney(currencyTypeT c) const
     if((money=dynamic_cast<TMoney *>(*it)))
       currency[money->getCurrency()]+=money->getMoney();
   }
-  
+
   // MAX_CURRENCY specified, so return total amounted converted to talens
   if(c==MAX_CURRENCY){
     for(int i=0;i<MAX_CURRENCY;++i)
-      total += (int)((float)currency[i] * 
+      total += (int)((float)currency[i] *
 	 currencyInfo[(currencyTypeT)i]->getExchangeRate(CURRENCY_GRIMHAVEN));
   } else {
     total=currency[c];
@@ -73,12 +73,12 @@ sstring TMoneypouch::statObjInfo() const
 
   for(currencyTypeT c=MIN_CURRENCY;c<MAX_CURRENCY;c++){
     if(getMoney(c) > 0){
-      buf += format("%ss inside: %i\n\r") % currencyInfo[c]->getName().cap() % 
+      buf += format("%ss inside: %i\n\r") % currencyInfo[c]->getName().cap() %
 	getMoney(c);
       total += (int)((float)getMoney(c) * currencyInfo[c]->getExchangeRate(CURRENCY_GRIMHAVEN));
     }
   }
-  
+
   buf += format("Total (in talens): %i\n\r") % total;
 
   buf = buf + TExpandableContainer::statObjInfo();

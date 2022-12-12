@@ -36,7 +36,7 @@ namespace {
 void TBeing::setGuildID(int id)
 {
   TDatabase db(DB_SNEEZY);
-  
+
   db.query("update player set guild_id=%i where id=%i",
 	   id, getPlayerID());
 }
@@ -44,7 +44,7 @@ void TBeing::setGuildID(int id)
 void TBeing::setGuildRank(int rank)
 {
   TDatabase db(DB_SNEEZY);
-  
+
   db.query("update player set guildrank=%i where id=%i",
 	   rank, getPlayerID());
 }
@@ -83,10 +83,10 @@ void TBeing::doJoin(const char * args) {
     sendTo("The new guild system is currently disabled.  You may not join a guild now.\n\r");
     return;
   }
-  if(!(f = get_guild(args)) || 
-     (IS_SET(f->flags, GUILD_HIDDEN) && !hasOffer(f)) || 
+  if(!(f = get_guild(args)) ||
+     (IS_SET(f->flags, GUILD_HIDDEN) && !hasOffer(f)) ||
      (!IS_SET(f->flags, GUILD_ACTIVE))) {
-    // logic: guild doesn't exist, guild is hidden and hasn't extended an 
+    // logic: guild doesn't exist, guild is hidden and hasn't extended an
     // offer, or guild is inactive - deny.
     sendTo("There is no such guild for you to join.\n\r");
     return;
@@ -142,7 +142,7 @@ void TBeing::doDefect(const char * args) {
   } else {
     sendTo("In order to insure you really meant to defect, you have to type 'defect yes'.\n\r");
   }
-}  
+}
 
 void TBeing::doRecruit(const char * args) {
   if(!toggleInfo[TOG_TESTCODE5]->toggle) {
@@ -156,7 +156,7 @@ void TBeing::doRecruit(const char * args) {
     sendTo("They don't seem to be here. It will be hard to recruit them.\n\r");
     return;
   }
-  
+
   if(getGuildID() == -1) {
     sendTo("You are unaffiliated, you have no guild to recruit into!\n\r");
     return;
@@ -184,7 +184,7 @@ void TBeing::doRecruit(const char * args) {
   char buf[256];
   sprintf(buf, "You extend an offer of recruitment to %s.\n\r", targ->getName().c_str());
   sendTo(buf);
-  
+
   sprintf(buf, "<o>%s <o>has extended you an offer of recruitment into %s<o>.<1>\n\r",
 	  this->getName().c_str(), newguild()->getName());
   targ->sendTo(COLOR_BASIC,buf);
@@ -194,7 +194,7 @@ void TBeing::doRecruit(const char * args) {
 }
 
 bool TBeing::hasOffer(TGuild * f) {
-  
+
   affectedData *hjp;
 
   for (hjp = affected; hjp; hjp = hjp->next) {
@@ -250,7 +250,7 @@ void TBeing::setDefected() {
 void TBeing::add_guild(const char * args) {
   int idnum;
   idnum = get_unused_ID();
-  
+
   if (idnum == -1) {
     sendTo("It appears there is no room for more guilds - sorry.\n\r");
     return;
@@ -264,12 +264,12 @@ void TBeing::add_guild(const char * args) {
   f->ID = idnum;
 
   int i;
- 
+
   for (i = 0; i < NUM_MAX_RANK; i++) {
     switch(i) {
       case 0:
-	f->permissions[i] = 
-	  (PERM_RECRUIT | PERM_PROMOTE | PERM_TREASURER | PERM_EDIT | 
+	f->permissions[i] =
+	  (PERM_RECRUIT | PERM_PROMOTE | PERM_TREASURER | PERM_EDIT |
 	   PERM_LOCK | PERM_AMBASSADOR | PERM_SCRIBE);
         if (f->rank[i])
           delete [] f->rank[i];
@@ -320,7 +320,7 @@ void TBeing::add_guild(const char * args) {
     setGuildID(f->ID);
     setGuildRank(0); // leader slot
     saveGuildStats();
-  }  
+  }
   vlogf(LOG_FACT, format("%s founded a new guild: [%s] (%d)") %  getName() % f->keywords % f->ID);
   save_guilds();
 }
@@ -342,7 +342,7 @@ bool TBeing::canCreateGuild(bool silent = false) {
       sprintf(buf, "You are already a member of %s.\n\r", newguild()->getName());
       sendTo(COLOR_BASIC, buf);
       sendTo("You must first disband from that guild before you may create another.\n\r");
-    }      
+    }
     return FALSE;
   }
   if(!hasQuestBit(TOG_HAS_PAID_GUILD_FEE)) {
@@ -371,10 +371,10 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
   char tell[512];
 
   strcpy(values, "");
-  
+
   if(!ch || !ch->awake() || ch->fight())
     return FALSE;
-  
+
 
   if(cmd == CMD_FEDIT) {
     int count = sscanf(arg, "%s %[0-9a-z-A-Z '<>]", field, values);
@@ -388,8 +388,8 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
     }
     myself->doTell(fname(ch->name), "Ah, so you wish to found a new guild?");
     myself->doTell(fname(ch->name), "Let me just make sure your paperwork is in order.");
-    
-    
+
+
     if(ch->isImmortal()) {
       myself->doTell(fname(ch->name), "Actually... for an immortal I think I can skip the paperwork.");
       myself->doAction(fname(ch->name), CMD_SMILE);
@@ -401,7 +401,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
 	act("$n hurries off back to $s office.", 0, myself, 0, 0, TO_ROOM);
 	--(*myself);
 	*real_roomp(Room::GUILD_BUREAU) += *myself;
-	act("$n hurries into the office.", 0, myself, 0, 0, TO_ROOM); 
+	act("$n hurries into the office.", 0, myself, 0, 0, TO_ROOM);
 	return TRUE;
       }
       act("$n gets a folder from a filing cabinet in the corner.", 0, myself, 0, 0, TO_ROOM);
@@ -422,7 +422,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
 	myself->doSay(buf);
 	sprintf(buf, "After that, you may come back and create a guild.");
 	myself->doAction(fname(ch->name), CMD_SMILE);
-	
+
 	return TRUE;
       }
       if(ch->recentlyDefected()) {
@@ -440,7 +440,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
 	myself->doSay(buf);
 	sprintf(buf, "The fee is 100000 talens, payable to me.");
 	myself->doSay(buf);
-	
+
 	return TRUE;
       }
       if(ch->hasQuestBit(TOG_HAS_CREATED_GUILD)) {
@@ -449,10 +449,10 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
 	myself->doSay(buf);
 	sprintf(buf, "The King has forbidden us to let players create more than one guild.");
 	myself->doSay(buf);
-	
+
 	return TRUE;
       }
-      
+
     }
     sprintf(buf, "Well, it appears you check out.");
     myself->doSay(buf);
@@ -487,44 +487,44 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
     myself->doSay(buf);
     ch->saveGuildStats();
     return TRUE;
-    
+
   } else if (cmd == CMD_JOIN) {
-    
-    
+
+
     if(!toggleInfo[TOG_TESTCODE5]->toggle) {
       ch->sendTo("The new guild system is currently disabled.  You may not join a guild now.");
       return TRUE;
     }
-    
-    
+
+
     TGuild *f = NULL;
     sprintf(buf, "You wish to join a guild?  Lets see....");
     myself->doSay(buf);
     act("$n gets a folder from a filing cabinet along the wall.", 0, myself, 0, 0, TO_ROOM);
     act("$n quickly scans a few of the pages from the file.", 0, myself, 0, 0, TO_ROOM);
-    
-    
-    
+
+
+
     if(!(f = get_guild(arg)) || (IS_SET(f->flags, GUILD_HIDDEN) && !ch->hasOffer(f)) ||
        (!IS_SET(f->flags, GUILD_ACTIVE)) || f->ID == 0) {
       // logic: guild doesn't exist, guild is hidden and hasn't extended an offer, or
       // guild is inactive - deny.
-      
+
       myself->doTell(fname(ch->name), "I'm sorry, it appears that guild does not show up in any of my records.");
-      
+
       return TRUE;
     }
     if(ch->getGuildID()>=0) {
       myself->doTell(fname(ch->name), "You are already a member of a guild... you'll have to disband before you join another.");
       myself->doTell(fname(ch->name), "There is also a twenty four hour wait period before you may join another guild.");
-      
+
       return TRUE;
     }
     if(ch->recentlyDefected()) {
       myself->doTell(fname(ch->name), "You recently defected from your guild, you'll have to wait to join another.");
       return TRUE;
     }
-    
+
     if(!ch->hasOffer(f)) {
       myself->doTell(fname(ch->name), format("%s has not extended a recruitment offer to you.") % f->getName());
       if(!IS_SET(f->flags, GUILD_OPEN_RECRUITMENT)) {
@@ -532,7 +532,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
       } else {
 	myself->doTell(fname(ch->name), "However, they offer open recruitment, so I can sign you up anyway.");
       }
-      
+
     }
     sprintf(buf, "Well it looks like everything checks out, lets add you to the roster.");
     myself->doSay(buf);
@@ -550,8 +550,8 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
     myself->doAction(fname(ch->name), CMD_SHAKE);
     ch->saveGuildStats();
     return TRUE;
-   
-    
+
+
   }
   if (cmd == CMD_LIST) {
     myself->doTell(fname(ch->name), "I currently have these guilds registered as active.");
@@ -559,7 +559,7 @@ int guildRegistrar(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, 
         FALSE, myself, 0, ch, TO_VICT);
     act("$n says something to $N.\n\r$n gets a sheet of paper from $s desk and holds it out to $N.\n\r",
         FALSE, myself, 0, ch, TO_NOTVICT);
-    
+
     ch->show_guild("showallguilds");
     ch->sendTo("\n\r");
     myself->doTell(fname(ch->name), "I've marked the guilds that have open recruitment with an [<R>X<1>].");
@@ -631,7 +631,7 @@ void TBeing::edit_guild(const char * args)
       return;
     }
     f = newguild();
-    
+
     if (!f || f->ID == 0) {
       sprintf(buf,"You are not a member of any guild.\n\r");
       sendTo(buf);
@@ -650,17 +650,17 @@ void TBeing::edit_guild(const char * args)
       sendTo("Syntax: fedit [<field> <value(s)>]\n\r");
       return;
     }
-    
+
   }
-  
+
 
   // ok, so we matched all 3 parts
   // now we need to figure out which guild we have
   // fact will either be a number or keywords
-  
-  
+
+
   // ok, we have the guild, lets determine which field to edit
-  
+
   if (is_abbrev(field, "name")) {
     if(f->proper_name)
       delete [] f->proper_name;
@@ -685,12 +685,12 @@ void TBeing::edit_guild(const char * args)
     return;
   } else if (is_abbrev(field, "affiliation")){
     sstring buf=values;
-    
+
     if(buf=="logrus" || buf=="cult"){
       f->faction_affiliation=FACT_CULT;
     } else if(buf=="brightmoon" || buf=="galek" || buf=="brotherhood"){
       f->faction_affiliation=FACT_BROTHERHOOD;
-    } else if(buf=="snakes" || buf=="amber" || 
+    } else if(buf=="snakes" || buf=="amber" ||
 	      buf=="serpents" || buf=="order"){
       f->faction_affiliation=FACT_SNAKE;
     } else {
@@ -774,10 +774,10 @@ void TBeing::edit_guild(const char * args)
     }
     if (strchr(bits, 'r') || (strchr(bits, 'R')))
       SET_BIT(perms, PERM_RECRUIT);
-    if (strchr(bits, 'p') || (strchr(bits, 'P'))) 
+    if (strchr(bits, 'p') || (strchr(bits, 'P')))
       SET_BIT(perms, PERM_PROMOTE);
     if (strchr(bits, 't') || (strchr(bits, 'T')))
-      SET_BIT(perms, PERM_TREASURER);  
+      SET_BIT(perms, PERM_TREASURER);
     if (strchr(bits, 'e') || (strchr(bits, 'E')))
       SET_BIT(perms, PERM_EDIT);
     if (strchr(bits, 'l') || (strchr(bits, 'L')))
@@ -787,11 +787,11 @@ void TBeing::edit_guild(const char * args)
     if (strchr(bits, 's') || (strchr(bits, 'S')))
       SET_BIT(perms, PERM_SCRIBE);
     f->permissions[which-1] = perms;
-    
+
     sendTo("Permissions updated.\n\r");
     sprintf(buf, "New permissions for rank #%d: %s\n\r", which, display_permission(perms));
     return;
-    
+
   } else if (is_abbrev(field, "colors")) {
     int i,j;
     char c[3][20];
@@ -810,7 +810,7 @@ void TBeing::edit_guild(const char * args)
 	j++;
       }
     }
-    sprintf(buf, "Colors for %s set to %s, %s, and %s.\n\r", f->getName(), heraldcolors[f->colors[0]], 
+    sprintf(buf, "Colors for %s set to %s, %s, and %s.\n\r", f->getName(), heraldcolors[f->colors[0]],
 	    heraldcolors[f->colors[1]],  heraldcolors[f->colors[2]]);
     sendTo(COLOR_BASIC,buf);
     return;
@@ -850,7 +850,7 @@ void TBeing::edit_guild(const char * args)
 	sendTo("Syntax: fedit <guild> flags [ active | locked | recruitment | hidden | members | ranks ]");
       return;
     }
-    
+
     if(IS_SET(f->flags, whichbit)) {
       REMOVE_BIT(f->flags, whichbit);
       sendTo("Flag removed.\n\r");
@@ -894,7 +894,7 @@ void TBeing::edit_guild(const char * args)
               f->getName(), f2->getName());
       sendTo(COLOR_BASIC, buf);
       return;
-    } 
+    }
     sprintf(buf, "%s relations <guild> [ war | peace | none ]n\r", SYNTAX);
     sendTo(buf);
     return;
@@ -929,21 +929,21 @@ void TBeing::show_guild(const char * args)
     if (!f) {
       sendTo("Unable to find guild by that name or ID.\n\r");
       return;
-    } 
-    
-    sprintf(buf, "<c>Guild ID:<1> %-5d <1><c>Keywords:<1> [%s]\n\r", 
+    }
+
+    sprintf(buf, "<c>Guild ID:<1> %-5d <1><c>Keywords:<1> [%s]\n\r",
 	    f->ID, (f->keywords) ? f->keywords : "(null)");
     sendTo(COLOR_BASIC,buf);
-    
+
     sprintf(buf, " <1><c>Name:<1> %s   <1><p>Power:<1> %5.2f\n\r",
 	    (f->proper_name) ? f->proper_name : "(null)", f->power);
     sendTo(COLOR_BASIC, buf);
-    
+
     sprintf(buf, "<1><c> Short Name:<1> %s   <1><c>Password:<1> %s\n\r",
 	    (f->slang_name) ? f->slang_name : "(null)",
 	    (f->password) ? f->password : "(null)");
     sendTo(COLOR_BASIC,buf);
-    
+
     TCorporation corp(f->corp_id);
     sprintf(buf, "<1><c> Treasury:<1> %d talen%s \n\r<1><c>Guild Flags: <1>",
 	    corp.getMoney(), (corp.getMoney() == 1) ? "" : "s");//, display_guild_flags(f->flags));
@@ -961,7 +961,7 @@ void TBeing::show_guild(const char * args)
     }
     sprintf(buf,"<1><c>Colors:<1> %s%s<1>, %s%s<1>, and %s%s<1>\n\r",
       heraldcodes[f->colors[0]], heraldcolors[f->colors[0]],
-      heraldcodes[f->colors[1]], heraldcolors[f->colors[1]], 
+      heraldcodes[f->colors[1]], heraldcolors[f->colors[1]],
       heraldcodes[f->colors[2]], heraldcolors[f->colors[2]]);
     sendTo(COLOR_BASIC,buf);
 
@@ -996,10 +996,10 @@ void TBeing::show_guild(const char * args)
 		f2->getName());
       else if (f->getRelation(f2->ID) == RELATION_WAR && f2->getRelation(f->ID) == RELATION_WAR)
 	sprintf(buf," We are <R>at war<1> with %s<1>.\n\r", f2->getName());
-      
+
       sendTo(COLOR_BASIC, buf);
       relationcount++;
-    } 
+    }
     if (!relationcount) {
       sendTo(" None!\n\r");
     }
@@ -1010,17 +1010,17 @@ void TBeing::show_guild(const char * args)
     if(getGuildID() == f->ID ||
        !IS_SET(f->flags, GUILD_HIDE_MEMBERS)){
       sendTo(COLOR_BASIC, "<1><c>Members:<1>\n\r");
-      
+
       db.query("select name, guildrank from player where guild_id=%i order by guildrank", f->ID);
-      
+
       while(db.fetchRow()){
 	if(getGuildID() == f->ID ||
 	   (!IS_SET(f->flags, GUILD_HIDE_RANKS) &&
 	   !IS_SET(f->flags, GUILD_HIDE_LEADERS))){
-	  sendTo(format("%s - %s\n\r") % 
+	  sendTo(format("%s - %s\n\r") %
 		 db["name"].cap() % (f->rank[convertTo<int>(db["guildrank"])] ? f->rank[convertTo<int>(db["guildrank"])] : "(null)"));
 	} else {
-	  sendTo(format("%s\n\r") % 
+	  sendTo(format("%s\n\r") %
 		 db["name"].cap());
 	}
 	membercount++;
@@ -1029,8 +1029,8 @@ void TBeing::show_guild(const char * args)
 	sendTo(" None!\n\r");
       }
     }
-    
-    
+
+
 
     return;
   }
@@ -1041,7 +1041,7 @@ void TBeing::show_guild(const char * args)
   for(i = guilds.guild_table.begin();i != guilds.guild_table.end(); ++i) {
     if (isImmortal() || (*i) == newguild() ||
 	!(IS_SET((*i)->flags, GUILD_HIDDEN) || (*i)->ID == 0 || !IS_SET((*i)->flags, GUILD_ACTIVE))) {
-      sprintf(buf, "<1>%-4d%s%s<1>%s%s<1>%s%s<1> [<R>%s<1>] <1>%s%s<k>%s%s%s<1>\n\r", (*i)->ID, 
+      sprintf(buf, "<1>%-4d%s%s<1>%s%s<1>%s%s<1> [<R>%s<1>] <1>%s%s<k>%s%s%s<1>\n\r", (*i)->ID,
 	      heraldcodes[(*i)->colors[0]], ((*i)->colors[0]) ? "*" : " ",
 	      heraldcodes[(*i)->colors[1]], ((*i)->colors[1]) ? "*" : " ",
 	      heraldcodes[(*i)->colors[2]], ((*i)->colors[2]) ? "*" : " ",
@@ -1082,7 +1082,7 @@ int TGuild::getRelation(int target) {
   }
   return RELATION_NONE;
 }
- 
+
 void TGuild::setRelation(TGuild * target, int state) {
   setRelation(target->ID, state);
 }
@@ -1101,7 +1101,7 @@ void TGuild::setRelation(int target, int state) {
   }
   if (state == RELATION_NONE)
     return;
-  
+
   TRelation *r = new TRelation;
   r->targ_fact = target;
   r->relation = state;
@@ -1195,19 +1195,19 @@ char * display_permission(unsigned int perms) {
 char * display_guild_flags(unsigned int flags) {
   char buf[512];
   sprintf(buf, "%s%s%s%s%s%s%s",
-	  (IS_SET(flags, GUILD_ACTIVE) ?  
+	  (IS_SET(flags, GUILD_ACTIVE) ?
 	   "\n\r This guild is activated." : "\n\r This guild is NOT activated."),
-	  (IS_SET(flags, GUILD_LOCKED) ?    
+	  (IS_SET(flags, GUILD_LOCKED) ?
 	   "\n\r This guild's attributes are locked." : ""),
 	  (IS_SET(flags, GUILD_OPEN_RECRUITMENT) ?
 	   "\n\r This guild is openly recruiting." : "\n\r New members must be recruited by hand."),
-	  (IS_SET(flags, GUILD_HIDDEN) ?      
+	  (IS_SET(flags, GUILD_HIDDEN) ?
 	   "\n\r The existance of this guild is hidden." : ""),
 	  (IS_SET(flags, GUILD_HIDE_MEMBERS) ?
 	   "\n\r The members of this guild are hidden from the masses." : ""),
 	  (IS_SET(flags, GUILD_HIDE_LEADERS) ?
 	   "\n\r The leaders of this guild are hidden from the masses." : ""),
-	  (IS_SET(flags, GUILD_HIDE_RANKS) ? 
+	  (IS_SET(flags, GUILD_HIDE_RANKS) ?
 	   "\n\r The ranks of those in this guild are hidden from the masses." : "" ));
   return mud_str_dup(buf);
 }
@@ -1321,7 +1321,7 @@ void TBeing::loadGuildStats()
   }
   faction.align_ge = num3;
   faction.align_lc = num4;
-  
+
   fclose(fp);
 }
 
@@ -1527,7 +1527,7 @@ int load_guilds() {
 void save_guilds()
 {
   FILE *fp;
-  
+
   if (!(fp = fopen(GUILD_FILE, "w+"))) {
     vlogf(LOG_FILE, "Couldn't open guilds datafile in save_guilds()");
     return;

@@ -132,7 +132,7 @@ short TBeing::getImmunity(immuneTypeT type) const
   if(doesKnowSkill(SKILL_DUFALI)) {
     amount = max((int)getSkillValue(SKILL_DUFALI), 0);
     switch(type){
-      case IMMUNE_PARALYSIS: 
+      case IMMUNE_PARALYSIS:
         imm += (amount/3);
         break;
       case IMMUNE_CHARM:
@@ -145,7 +145,7 @@ short TBeing::getImmunity(immuneTypeT type) const
         break;
     }
   }
-  
+
   if(doesKnowSkill(SKILL_IRON_SKIN)){
     amount = max((int)getSkillValue(SKILL_IRON_SKIN), 0);
     switch(type){
@@ -182,7 +182,7 @@ short TBeing::getImmunity(immuneTypeT type) const
         break;
       }
     switch(type){
-      case IMMUNE_HEAT: 
+      case IMMUNE_HEAT:
         imm += (amount/3);
         break;
       case IMMUNE_ELECTRICITY:
@@ -440,7 +440,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_FEAR:
     case SPELL_INTIMIDATE:
       bit = IMMUNE_FEAR;
-      break; 
+      break;
     case SPELL_DISEASE:
     case SPELL_INFECT_DEIKHAN:
     case SPELL_INFECT:

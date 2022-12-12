@@ -47,7 +47,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     c->sendTo("You lack the chi.\n\r");
   }
   c->reconcileMana(TYPE_UNDEFINED, 0, 100);
-  
+
   c->sendTo("You begin to work on the vibrations.\n\r");
   c->reconcileHurt(v, 0.1);
 
@@ -59,11 +59,11 @@ static int quiveringPalm(TBeing *c, TBeing *v)
 
   if (v->getHit() > dmg){
     SV(SKILL_QUIV_PALM);
-    act("$N seems unaffected by the vibrations.", 
+    act("$N seems unaffected by the vibrations.",
          FALSE, c, NULL, v, TO_CHAR);
-    act("$n touches you, but you ignore the puny vibrations.", 
+    act("$n touches you, but you ignore the puny vibrations.",
          FALSE, c, NULL, v, TO_VICT);
-    act("$n touches $N, but $E ignores it.", 
+    act("$n touches $N, but $E ignores it.",
          FALSE, c, NULL, v, TO_NOTVICT);
     aff.type = AFFECT_SKILL_ATTEMPT;
     aff.duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
@@ -79,15 +79,15 @@ static int quiveringPalm(TBeing *c, TBeing *v)
       ((i = c->specialAttack(v, SKILL_QUIV_PALM)) || (i == GUARANTEED_SUCCESS))) {
     int dam = v->getHit()+100;
     if (c->willKill(v, dam, SKILL_QUIV_PALM, false)) {
-      act("$N is killed instantly by the dreaded quivering palm.", 
+      act("$N is killed instantly by the dreaded quivering palm.",
             FALSE, c, NULL, v, TO_CHAR);
-      act("As $n touches you, you feel your bones and organs shatter inside.", 
+      act("As $n touches you, you feel your bones and organs shatter inside.",
               FALSE, c, NULL, v, TO_VICT);
       act("$N dies as $n touches $M.", FALSE, c, NULL, v, TO_NOTVICT);
     } else {
-      act("$N is heinously wounded by the dreaded quivering palm.", 
+      act("$N is heinously wounded by the dreaded quivering palm.",
             FALSE, c, NULL, v, TO_CHAR);
-      act("As $n touches you, you feel your bones and organs shatter inside.", 
+      act("As $n touches you, you feel your bones and organs shatter inside.",
               FALSE, c, NULL, v, TO_VICT);
       act("$N is grievously wounded as $n touches $M.", FALSE, c, NULL, v, TO_NOTVICT);
     }

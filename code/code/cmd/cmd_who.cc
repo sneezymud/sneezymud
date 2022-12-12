@@ -48,7 +48,7 @@ sstring TPerson::parseTitle(Descriptor *user)
   return buf;
 }
 
-void Descriptor::menuWho() 
+void Descriptor::menuWho()
 {
   TBeing *person;
   sstring buf, buf2, send;
@@ -131,13 +131,13 @@ static const sstring getWhoLevel(const TBeing *ch, TBeing *p)
       if (f->ID && (IS_SET(f->flags, GUILD_ACTIVE) || ch->newguild() == p->newguild() || ch->isImmortal()) &&
 	  (!IS_SET(f->flags, GUILD_HIDDEN) || ch->newguild() == p->newguild() || ch->isImmortal()) &&
 	  (!p->isImmortal() || ch->isImmortal())) {
-	tempbuf += format(" %s[<1>%s%s]<1>") % 
+	tempbuf += format(" %s[<1>%s%s]<1>") %
 	  heraldcodes[p->newguild()->colors[0]] %
 	  p->newguild()->getName() %
 	  heraldcodes[p->newguild()->colors[0]];
       }
     }
-       
+
   }
 
   return tempbuf;
@@ -164,12 +164,12 @@ void TBeing::doWho(const char *argument)
 
   std::set<std::string> uniqueAccounts;
 
-  if (!*argument || 
-       ((sscanf(argument, "%d %d", &which1, &which2) == 2) && 
+  if (!*argument ||
+       ((sscanf(argument, "%d %d", &which1, &which2) == 2) &&
           which1 > 0 && which2 > 0) ||
-       ((sscanf(argument, "%d %d", &which1, &which2) == 1) && 
+       ((sscanf(argument, "%d %d", &which1, &which2) == 1) &&
           which1 > 0  && (which2 = MAX_IMMORT))) {
-    // plain old 'who' command 
+    // plain old 'who' command
     // who <level>      level2 assigned to 60
     // who <level> <level2>
     for (p = character_list; p; p = p->next) {
@@ -201,8 +201,8 @@ void TBeing::doWho(const char *argument)
           }
         } else if (isImmortal()) {
 // only immortals will see this to provide them some concealment
-          if (canSeeWho(p) && 
-              (!*argument || 
+          if (canSeeWho(p) &&
+              (!*argument ||
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
               IS_SET(p->specials.act, ACT_POLYSELF)) {
             if (p->desc && p->desc->account)
@@ -211,7 +211,7 @@ void TBeing::doWho(const char *argument)
             buf = format("%s (polymorphed)\n\r") % sstring(pers(p)).cap();
             sb += buf;
           } else if (canSeeWho(p) &&
-                (!*argument || 
+                (!*argument ||
                 (p->GetMaxLevel() >= which1 && p->GetMaxLevel() <= which2)) &&
                      IS_SET(p->specials.act, ACT_DISGUISED)) {
             if (p->desc && p->desc->account)
@@ -298,7 +298,7 @@ void TBeing::doWho(const char *argument)
             else if (dynamic_cast<TMonster *>(p) &&
                      (p->specials.act & ACT_POLYSELF))
               buf = format("(%-14s) ") % pers(p);
-            else 
+            else
               buf = format("%-11s ") % pers(p);
             listed++;
             for (l = 1; l <= (int) strlen(arg); l++) {
@@ -370,15 +370,15 @@ void TBeing::doWho(const char *argument)
                   if (!iPoints) {
                     if (isImmortal()){
                       if (p->hasClass(CLASS_CLERIC)||p->hasClass(CLASS_DEIKHAN))
-                        buf = format("%sHit:[%-3d] Pty:[%-.2f] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
+                        buf = format("%sHit:[%-3d] Pty:[%-.2f] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") %
 			  buf % p->getHit() % p->getPiety() % p->getMove() %
 			  p->getMoney() % p->getBank();
                       else if (p->hasClass(CLASS_SHAMAN))
                         buf = format("%sHit:[%-3d] LF:[%-4d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") %
-			  buf % p->getHit() % p->getLifeforce() % 
+			  buf % p->getHit() % p->getLifeforce() %
 			  p->getMove() % p->getMoney() % p->getBank();
                       else
-			buf = format("%sHit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") % 
+			buf = format("%sHit:[%-3d] Mana:[%-3d] Move:[%-3d], Talens:[%-8d], Bank:[%-8d]") %
 			  buf % p->getHit() % p->getMana() % p->getMove() %
 			  p->getMoney() % p->getBank();
 		    }
@@ -400,14 +400,14 @@ void TBeing::doWho(const char *argument)
 			    p->newguild()->getName() %
 			    heraldcodes[p->newguild()->colors[0]];
 			  if(!IS_SET(f->flags, GUILD_HIDE_RANKS) || newguild() == p->newguild()
-			     || isImmortal()) 
+			     || isImmortal())
 			    buf = format("%s %s[<1>%s%s]<1>") % buf %
 			      heraldcodes[p->newguild()->colors[1]] %
 			      p->rank() %
 			      heraldcodes[p->newguild()->colors[1]];
 			}
 		      }
-		      
+
 
 		    } else {
 		      if ((getFaction()==p->getFaction() &&
@@ -428,7 +428,7 @@ void TBeing::doWho(const char *argument)
                 case 's':
                   if (!statsx) {
                     if (isImmortal())
-                      buf = format("%s\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d Sp:%-3d]") % 
+                      buf = format("%s\n\r\t[St:%-3d Br:%-3d Co:%-3d De:%-3d Ag:%-3d In:%-3d Wi:%-3d Fo:%-3d Pe:%-3d Ch:%-3d Ka:%-3d Sp:%-3d]") %
 			buf %
 			p->curStats.get(STAT_STR) %
 			p->curStats.get(STAT_BRA) %
@@ -449,7 +449,7 @@ void TBeing::doWho(const char *argument)
                   if (!quest) {
                     if (p->isPlayerAction(PLR_SOLOQUEST))
                       buf = format("%s (%sSOLO QUEST%s)") % buf % red() % norm();
-                    
+
                     if (p->isPlayerAction(PLR_GRPQUEST))
                       buf = format("%s (%sGROUP QUEST%s)") % buf % blue() % norm();
                   }
@@ -467,20 +467,20 @@ void TBeing::doWho(const char *argument)
                   break;
                 default:
                   break;
-              }        // end of switch statement 
-            }        // end of for-loop 
+              }        // end of switch statement
+            }        // end of for-loop
 	    buf += "\n\r";
             sb += buf;
-          }        // end of 'should I skip this fool' if-statement 
-        }        // end of !NPC(p) loop 
-      }                // end of 'step through the character list loop 
+          }        // end of 'should I skip this fool' if-statement
+        }        // end of !NPC(p) loop
+      }                // end of 'step through the character list loop
     } else {
-      // 'who playername' command 
+      // 'who playername' command
       int c = 0;
       for (k = character_list; k; k = k->next) {
-        if (!k->isPc() || !isname(arg, k->name) || !canSee(k)) 
+        if (!k->isPc() || !isname(arg, k->name) || !canSee(k))
           continue;
- 
+
         c++;
         buf=k->parseTitle(desc);
         buf += "    ";

@@ -18,7 +18,7 @@ bool check_ingredients(TCookware *pot, int recipe){
   for(int i=0;ingredients[i].recipe>=0;++i){
     if(ingredients[i].recipe!=recipe)
       continue;
-    
+
     nfound=0;
 
     for(int j=i;ingredients[j].recipe>=0 && ingredients[j].ingredient==ingredients[i].ingredient;++j){
@@ -54,7 +54,7 @@ bool check_ingredients(TCookware *pot, int recipe){
       i=j;
     }
 
-    
+
     if(nfound < ingredients[i].amt){
       return false;
     }
@@ -85,7 +85,7 @@ int find_recipe(sstring recipearg){
     if(isname(recipearg, recipes[i].keywords))
       recipe=recipes[i].recipe;
   }
-  
+
   return recipe;
 }
 
@@ -131,7 +131,7 @@ void TBeing::doCook(sstring arg)
     sendTo("Error loading food, alert an admin.\n\r");
     return;
   }
-    
+
 
   sendTo(COLOR_BASIC, format("You begin to cook %s.\n\r") % recipes[recipe].name);
   start_task(this, pot, NULL, TASK_COOK, "", 2, inRoom(), 0, 0, 5);
@@ -166,7 +166,7 @@ int task_cook(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *
     act("$n finishes cooking.",
 	TRUE, ch, pot, 0, TO_ROOM);
     ch->stopTask();
-    
+
     return FALSE;
   }
 

@@ -311,7 +311,7 @@ void Race::initRace(const char *whichRace)
   // COSMO STRING
   sstring buf_sstring;
   const char *buf2;
-  
+
   while (fgets(buf, 256, raceFile)) {
     buf2 = one_argument(buf, keyword, cElements(keyword));
     memmove(buf, buf2, strlen(buf2) + 1);
@@ -725,11 +725,11 @@ void Race::showTo(TBeing *caller)
   sprintf(buf, "\tHP:\t%d\tMV:\t%d\tMANA:\t%d\n\r", hpMod, moveMod, manaMod);
   str += buf;
 
-  sprintf(buf, "\tSearch:\t%d\tSight:\t%d\tVision:\t%d\n\r", 
+  sprintf(buf, "\tSearch:\t%d\tSight:\t%d\tVision:\t%d\n\r",
         searchMod, lineOfSightMod, visionBonus);
   str += buf;
 
-  sprintf(buf, "\tDrink:\t%.2f\tFood:\t%.2f\n\r", 
+  sprintf(buf, "\tDrink:\t%.2f\tFood:\t%.2f\n\r",
 	  	    drinkMod, foodMod);
   str += buf;
 
@@ -805,7 +805,7 @@ int Race::generateHeight(sexTypeT sex) const
   else
     return baseMaleHeight + (dice(maleHtNumDice,maleHtDieSize));
 }
-  
+
 // generateWeight() calculates a weight for a being based on race and the
 // numbers read in at initialization for the race.  This is called upon
 // character creation.  Hopefully mob creation will call this too.
@@ -874,7 +874,7 @@ race_t TBeing::getRaceIndex(const char *ccName) const
 
 race_t TBeing::getRace() const
 {
-  //  if (is_disguised == TRUE && disguise_race) 
+  //  if (is_disguised == TRUE && disguise_race)
   //  return disguise_race->getRace();
   return race->getRace();
 }

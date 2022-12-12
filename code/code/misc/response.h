@@ -27,14 +27,14 @@ class command {
     ~command();
 };
 
-  
+
 class resp {
   public:
     cmdTypeT cmd;
     char *args;
     command *cmds;
     resp *next;
-  
+
   private:
     resp();  // made private, so intentionally can not be called
   public:

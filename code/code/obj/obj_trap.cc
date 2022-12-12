@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//    "obj_trap.cc" - All functions and routines related to traps 
+//    "obj_trap.cc" - All functions and routines related to traps
 //
 //////////////////////////////////////////////////////////////////////////
 
@@ -109,12 +109,12 @@ int TTrap::detonateGrenade()
       --(*this);
     }
     *rp += *this;
-  } 
+  }
   // don't explode in noheal
 
   if (roomp->isRoomFlag(ROOM_NO_HEAL)){
     act("A muffled explosion is heard as $n begins to detonate, but is suppressed by a magical field.",
-	FALSE, this, 0, 0, TO_ROOM);      
+	FALSE, this, 0, 0, TO_ROOM);
     return DELETE_THIS;
   }
 
@@ -344,7 +344,7 @@ sstring TTrap::statObjInfo() const
   sbuf += buf;
 
   sbuf+="Trap effect type: ";
-  
+
   sbuf += sprintbit(getTrapEffectType(), trap_effects);
 
   sstring a(sbuf);

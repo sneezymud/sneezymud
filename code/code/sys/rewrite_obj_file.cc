@@ -3,7 +3,7 @@
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "rewrite_obj_file.cc" - Some optional tack on code that
 //       loads all the objects, and saves tehm out.
-//        
+//
 //       The assumption here is that something was "corrected" during the
 //       loading, and now we are saving it.
 //
@@ -38,7 +38,7 @@ void rewrite_obj_file()
         obj->affected[i].location = APPLY_NONE;
         obj->affected[i].modifier = 0;
       }
-    }    
+    }
 
 #endif
 #if 0
@@ -80,7 +80,7 @@ void rewrite_obj_file()
       int i;
       int lamt = 1 + obj->getVolume()/6000;
       for (i=0; i < MAX_OBJ_AFFECT; i++ ) {
-        if (obj->affected[i].location == APPLY_LIGHT && 
+        if (obj->affected[i].location == APPLY_LIGHT &&
             obj->affected[i].modifier == lamt) {
           obj->affected[i].location = APPLY_NONE;
           obj->affected[i].modifier = 0;
@@ -93,7 +93,7 @@ void rewrite_obj_file()
       int i;
       int lamt = 1 + obj->getVolume()/6000;
       for (i=0; i < MAX_OBJ_AFFECT; i++ ) {
-        if (obj->affected[i].location == APPLY_LIGHT && 
+        if (obj->affected[i].location == APPLY_LIGHT &&
             obj->affected[i].modifier == -lamt) {
           obj->affected[i].location = APPLY_NONE;
           obj->affected[i].modifier = 0;

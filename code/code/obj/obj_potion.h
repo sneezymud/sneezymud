@@ -15,7 +15,7 @@ class TPotion : public TBaseCup {
     virtual itemTypeT itemType() const { return ITEM_POTION; }
     virtual int shopPrice(int, int, float, const TBeing *) const;
     virtual int sellPrice(int, int, float, const TBeing *);
-    virtual int getValue() const; 
+    virtual int getValue() const;
     virtual int objectSell(TBeing *, TMonster *);
     virtual bool isSimilar(const TThing *) const;
     virtual bool potIsEmpty() const;

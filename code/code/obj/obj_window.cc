@@ -63,7 +63,7 @@ void TWindow::lookObj(TBeing *ch, int) const
   ch->windowLook(this);
 }
 
-void TWindow::showMe(TBeing *ch) const 
+void TWindow::showMe(TBeing *ch) const
 {
   ch->windowLook(this);
 }

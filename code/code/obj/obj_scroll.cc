@@ -123,7 +123,7 @@ void TScroll::lowCheck()
            !discArray[curspell]->minLifeforce &&
            !discArray[curspell]->minPiety)) ||
         (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-      vlogf(LOG_LOW, format("scroll (%s:%d) has messed up spell (slot %d: %d)") % 
+      vlogf(LOG_LOW, format("scroll (%s:%d) has messed up spell (slot %d: %d)") %
            getName() % objVnum() % (i+1) % curspell);
       if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
         vlogf(LOG_LOW, "bogus range");

@@ -39,7 +39,7 @@ bool TBeing::canSpin(TBeing *victim, silentTypeT silent)
 
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
-  
+
   if (getCombatMode() == ATTACK_BERSERK) {
     if (!silent)
       sendTo("You are berserking! You can't focus enough to spin anyone!\n\r ");
@@ -96,17 +96,17 @@ static int spinMiss(TBeing *caster, TBeing *victim, spinMissT type)
   int rc;
 
   if (type == TYPE_DEX) {
-    act("$N deftly avoids your attempt at spinning $M.", FALSE, caster, 
+    act("$N deftly avoids your attempt at spinning $M.", FALSE, caster,
               0, victim, TO_CHAR);
-    act("You deftly avoid $n's attempt at spinning you.", FALSE, caster, 
+    act("You deftly avoid $n's attempt at spinning you.", FALSE, caster,
               0, victim, TO_VICT);
-    act("$N deftly avoids $n's attempt at spinning $M.", FALSE, caster, 
+    act("$N deftly avoids $n's attempt at spinning $M.", FALSE, caster,
               0, victim, TO_NOTVICT);
   } else if (type == TYPE_DEFENSE) {
     act("$N is too fast and avoids your attempt at spinning $M.", FALSE, caster, 0, victim, TO_CHAR);
     act("Your defensive training helps you avoid $n's feeble spin attempt.", FALSE, caster, 0, victim, TO_VICT);
     act("$N deftly avoids $n's attempt at spinning $M.", FALSE, caster, 0, victim, TO_NOTVICT);
-  
+
   } else if (type == TYPE_MONK) {
     act("$N deftly counters your attempt at spinning $M.", FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
     act("You trip and land on the $g.", FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
@@ -245,7 +245,7 @@ static int spin(TBeing *caster, TBeing *victim)
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
     // Successful hit
-    } else 
+    } else
       return spinHit(caster, victim);
   // Failure case
   } else {
@@ -253,7 +253,7 @@ static int spin(TBeing *caster, TBeing *victim)
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
-   
+
   return TRUE;
 }
 
@@ -262,9 +262,9 @@ int TBeing::doSpin(const char *argument, TBeing *vict)
   int rc = 0, learning = 0;
   TBeing *victim;
   char name_buf[256];
-  
+
   strcpy(name_buf, argument);
-  
+
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {

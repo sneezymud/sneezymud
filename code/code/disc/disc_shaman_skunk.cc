@@ -6,7 +6,7 @@
  *   SneezyMUD Development - All Rights Reserved                   *
  *                                                                 *
  *******************************************************************/
- 
+
 #include <stdio.h>
 
 #include "room.h"
@@ -74,7 +74,7 @@ int deathMist(TBeing *caster, int level, short bKnown)
           act("$n starts to look a little uncomfortable.",
               TRUE, tmp_victim, NULL, NULL, TO_ROOM);
         }
-      } 
+      }
     }
     if (!caster->isAffected(AFF_SYPHILIS) &&
         !caster->bSuccess(bKnown, SPELL_DEATH_MIST) &&
@@ -134,7 +134,7 @@ int cleanse(TBeing *caster, TBeing * victim, int level, short learn, spellNumT s
   affectedData aff;
 
   if (spell==SKILL_WOHLIN || caster->bSuccess(learn, caster->getPerc(), spell)) {
-    if (victim->isAffected(AFF_SYPHILIS) || victim->affectedBySpell(SPELL_DEATH_MIST) || 
+    if (victim->isAffected(AFF_SYPHILIS) || victim->affectedBySpell(SPELL_DEATH_MIST) ||
 	victim->hasDisease(DISEASE_SYPHILIS)) {
       sprintf(buf, "You succeed in curing the syphilis in %s body.", (caster == victim) ? "your" : "$N's");
       act(buf, FALSE, caster, NULL, victim, TO_CHAR);
@@ -183,7 +183,7 @@ int cleanse(TBeing *caster, TBeing *victim)
 
   start_cast(caster, victim, NULL, caster->roomp, SPELL_CLEANSE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
 
-  return TRUE; 
+  return TRUE;
 }
 
 int castCleanse(TBeing *caster, TBeing *victim)
@@ -202,7 +202,7 @@ int castCleanse(TBeing *caster, TBeing *victim)
 
 int cleanse(TBeing *caster, TBeing *victim, TMagicItem *tMagItem)
 {
-  int tRc = FALSE; 
+  int tRc = FALSE;
   int tReturn;
 
   //  tReturn = cleanse(caster, victim, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
@@ -286,9 +286,9 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_LICH_TOUCH);
-        act("$n's body glows a dark, evil-looking red!", 
+        act("$n's body glows a dark, evil-looking red!",
                FALSE, caster, NULL, NULL, TO_ROOM);
-        act("You sang the invokation incorrectly! The ancestors are EXTREMELY pissed!", 
+        act("You sang the invokation incorrectly! The ancestors are EXTREMELY pissed!",
                FALSE, caster, NULL, NULL, TO_CHAR);
         caster->addToMove(-vit);
         caster->addToLifeforce(0);
@@ -313,10 +313,10 @@ int lichTouch(TBeing *caster, TBeing *victim)
   lag_t rounds = discArray[SPELL_LICH_TOUCH]->lag;
   taskDiffT diff = discArray[SPELL_LICH_TOUCH]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_LICH_TOUCH, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_LICH_TOUCH, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE,
 0);
 
-  return TRUE; 
+  return TRUE;
 }
 
 int castLichTouch(TBeing *caster, TBeing *victim)
@@ -407,7 +407,7 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, short bKnown, int a
         }
         if (caster->reconcileDamage(caster, dam/3, SPELL_CARDIAC_STRESS) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
-        act("Oops! You nearly exploded your own heart!", 
+        act("Oops! You nearly exploded your own heart!",
             FALSE, caster, NULL, victim, TO_CHAR);
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
@@ -422,22 +422,22 @@ int cardiacStress(TBeing *caster, TBeing *victim)
 {
   if (!bPassShamanChecks(caster, SPELL_CARDIAC_STRESS, victim))
     return FALSE;
-  
+
   lag_t rounds = discArray[SPELL_CARDIAC_STRESS]->lag;
   taskDiffT diff = discArray[SPELL_CARDIAC_STRESS]->task;
-  
+
   start_cast(caster, victim, NULL, caster->roomp, SPELL_CARDIAC_STRESS, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
-  
+
   return TRUE;
 }
 
 int castCardiacStress(TBeing *caster, TBeing *victim)
 {
   int rc = 0;
-  
+
   int level = caster->getSkillLevel(SPELL_CARDIAC_STRESS);
   int bKnown = caster->getSkillValue(SPELL_CARDIAC_STRESS);
-  
+
   int ret=cardiacStress(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_CARDIAC_STRESS));
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else {
@@ -453,15 +453,15 @@ int cardiacStress(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
 {
   int tRc = FALSE,
     tReturn;
-  
+
   tReturn = cardiacStress(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
 
   if (IS_SET(tReturn, VICTIM_DEAD))
     ADD_DELETE(tRc, DELETE_VICT);
-  
+
   if (IS_SET(tReturn, CASTER_DEAD))
     ADD_DELETE(tRc, DELETE_THIS);
-  
+
   return tRc;
 }
 
@@ -498,29 +498,29 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
       case CRIT_S_DOUBLE:
         CS(SPELL_BLOOD_BOIL);
         dam <<= 1;
-        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling $N's blood!<z>", 
+        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling $N's blood!<z>",
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("<R>You direct <W>**INTENSE HEAT**<R> from your hands, boiling $N's blood!<z>", 
+        act("<R>You direct <W>**INTENSE HEAT**<R> from your hands, boiling $N's blood!<z>",
                   FALSE, caster, NULL, victim, TO_CHAR);
-        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling your blood!<z>", 
+        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling your blood!<z>",
                   FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
         if (victim->isLucky(caster->spellLuckModifier(SPELL_BLOOD_BOIL))) {
           SV(SPELL_BLOOD_BOIL);
           dam /= 2;
-          act("<r>$n directs heat from $s hands, boiling $N's blood!<z>", 
+          act("<r>$n directs heat from $s hands, boiling $N's blood!<z>",
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-          act("<r>You direct heat from your hands, boiling $N's blood!<z>", 
+          act("<r>You direct heat from your hands, boiling $N's blood!<z>",
                   FALSE, caster, NULL, victim, TO_CHAR);
-          act("<r>$n directs heat from $s hands, boiling your blood!<z>", 
+          act("<r>$n directs heat from $s hands, boiling your blood!<z>",
                   FALSE, caster, NULL, victim, TO_VICT);
         } else {
-          act("<R>$n directs heat from $s hands, boiling $N's blood!<z>", 
+          act("<R>$n directs heat from $s hands, boiling $N's blood!<z>",
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-          act("<R>You direct heat from your hands, boiling $N's blood!<z>", 
+          act("<R>You direct heat from your hands, boiling $N's blood!<z>",
                   FALSE, caster, NULL, victim, TO_CHAR);
-          act("<R>$n directs heat from $s hands, boiling your blood!<z>", 
+          act("<R>$n directs heat from $s hands, boiling your blood!<z>",
                   FALSE, caster, NULL, victim, TO_VICT);
         }
         break;
@@ -535,11 +535,11 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
         CF(SPELL_BLOOD_BOIL);
         caster->setCharFighting(victim);
         caster->setVictFighting(victim);
-        act("<R>$n screwed up $s ritual and burned $mself!<z>", 
+        act("<R>$n screwed up $s ritual and burned $mself!<z>",
                   FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("<R>You direct <W>**INTENSE HEAT**<R> heat from your hands, boiling <W>YOUR OWN<R> blood!<z>", 
+        act("<R>You direct <W>**INTENSE HEAT**<R> heat from your hands, boiling <W>YOUR OWN<R> blood!<z>",
                   FALSE, caster, NULL, victim, TO_CHAR);
-        act("<R>$n has just tried to harm you!<z>", 
+        act("<R>$n has just tried to harm you!<z>",
                   FALSE, caster, NULL, victim, TO_VICT);
         if (caster->reconcileDamage(caster, dam, SPELL_BLOOD_BOIL) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;

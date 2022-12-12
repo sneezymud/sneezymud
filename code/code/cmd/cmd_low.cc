@@ -73,7 +73,7 @@ double get_doubling_level(float real_lev)
       int lookup_lev = (int) (k/lbla/RESOLUTION);
 
       mob_double_table[lookup_lev] = k;
-      
+
       if ((int) (lookup_lev*RESOLUTION) >= MAX_MORT)
         break;
     }
@@ -295,7 +295,7 @@ int kills_to_level(int lev)
   return (int) (0 + (1.7 * lev));
 #endif
 }
-  
+
 static double hpModifier(const TMonster *ch)
 {
   double sanct_modifier = (100.0 / (100.0 - min(99.0, (double) ch->getProtection())));
@@ -304,7 +304,7 @@ static double hpModifier(const TMonster *ch)
   // adjust hp for correction made in calcHitPoints
   hp_modifier /= balanceCorrectionForLevel(ch->GetMaxLevel());
 
-  if (ch->getHPLevel() <= 70) 
+  if (ch->getHPLevel() <= 70)
   {
     hp_modifier *= sanct_modifier * 2.0 / 31.0;
   }
@@ -384,7 +384,7 @@ double TMonster::getRealLevel() const
   armor_modifier = acModifier(this);
   damage_modifier = damModifier(this);
 
-  // modify damage based on absorbtion 
+  // modify damage based on absorbtion
   // (assume 1 point dam absorbed per hit per 10 levels)
   // double hitting_level = numattModifier(this);
 
@@ -436,7 +436,7 @@ if (!isTestmob()) {
   // also, assume at L1 all skills suck (low chance of hitting, low damage)
   // I will report 3 values, one at L15, one at L30, and one at L45
   // the values represent the number of levels over my level I was able
-  // to beat, thus a value of 2.5 for L15, means that if i take the L15 
+  // to beat, thus a value of 2.5 for L15, means that if i take the L15
   // warrior test mob, and change its class, It will now beat an L17, but
   // lose to the L18 warrior test mobs.
   double class_adjust = 0.0;
@@ -451,7 +451,7 @@ if (!isTestmob()) {
       3.99, 4.03, 4.04, 4.03, 4.13,  // L30
       4.94, 6.00, 5.86, 5.55, 5.69,  // L35
       5.64, 5.56, 5.60, 5.67, 5.56,  // L40
-      5.54, 5.64, 5.54, 5.98    
+      5.54, 5.64, 5.54, 5.98
     };
     unsigned int num_elems = (sizeof(mage_array)/sizeof(double))-1;
     if (real_level >= num_elems)
@@ -547,7 +547,7 @@ double TMonster::determineExp()
 
   // make grimhaven high level mobs crappy exp
   // due to how mobVnum works re: "number", don't trap med mobs in this
-  if ((mobVnum() < 1000) && (GetMaxLevel() > 8) && number >= 0) 
+  if ((mobVnum() < 1000) && (GetMaxLevel() > 8) && number >= 0)
     d_exp *= 0.65;
 
   // arbitrary increase in exp because sneezy is so hard - bat 9-12-96
@@ -648,7 +648,7 @@ bool GuildProcs(int spec)
     case SPEC_TRAINER_SHAMAN_CONTROL:
     case SPEC_TRAINER_RITUALISM:
     case SPEC_TRAINER_STEALTH:
-    case SPEC_TRAINER_TRAPS: 
+    case SPEC_TRAINER_TRAPS:
     case SPEC_TRAINER_LORE:
     case SPEC_TRAINER_THEOLOGY:
     case SPEC_TRAINER_DEFENSE:
@@ -688,8 +688,8 @@ bool UtilMobProc(TBeing *ch)
   		return TRUE;
   	default:
   		break;
-  } 
-  */ 
+  }
+  */
   return UtilProcs(ch->spec);
 }
 
@@ -713,35 +713,35 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
   if ((getLongDesc().length() > 2) &&
       ((getLongDesc()[getLongDesc().length() - 1] != '\r') ||
       (getLongDesc()[getLongDesc().length() - 2] != '\n'))) {
-    vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") % 
+    vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") %
           getName() % mobVnum());
   }
   if ((getDescr().length() > 2) &&
       ((getDescr()[getDescr().length() - 1] != '\r') ||
       (getDescr()[getDescr().length() - 2] != '\n'))) {
-    vlogf(LOG_LOW, format("%s (%d) has bad format of descr") % 
+    vlogf(LOG_LOW, format("%s (%d) has bad format of descr") %
           getName() % mobVnum());
   }
   if (name.find_first_of("()") != sstring::npos) {
-    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") % 
+    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") %
           getName() % mobVnum());
   }
   if ((s = strchr(name.c_str(), '['))) {
     for (s++;*s != ']';s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
-      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") % 
+      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") %
             getName() % mobVnum() % *s);
     }
   }
 #if 0
   if (strlen(getName()) > MAX_NAME_LENGTH-1) {
-    vlogf(LOG_LOW, format("%s (%d) had excessive mob name length.") % 
+    vlogf(LOG_LOW, format("%s (%d) had excessive mob name length.") %
          getName() % mobVnum());
   }
 #endif
 
-  
+
   if (forReal == TINYFILE_YES) {
     if (IS_SET(specials.act, ACT_STRINGS_CHANGED))
       vlogf(LOG_LOW, format("%s (%d) strung-mob bit (%d) set") %  getName() % mobVnum() % ACT_STRINGS_CHANGED);
@@ -770,19 +770,19 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
     vlogf(LOG_LOW,format("mob (%s:%d) with susc non-magic.") %
 	  getName() % mobVnum());
 
-  if (isAffected(AFF_SLEEP)) 
+  if (isAffected(AFF_SLEEP))
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SLEEP (%d) set.") %
 	  getName() % mobVnum() % AFF_SLEEP);
-  if (isAffected(AFF_CHARM) && !master) 
+  if (isAffected(AFF_CHARM) && !master)
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_CHARM (%d) and no master set.") %
-	  getName() % mobVnum() % AFF_CHARM); 
-  if (isAffected(AFF_STUNNED)) 
+	  getName() % mobVnum() % AFF_CHARM);
+  if (isAffected(AFF_STUNNED))
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_STUNNED set. make %d") %
 	  getName() % mobVnum() % (specials.affectedBy & ~AFF_STUNNED));
-  if (isAffected(AFF_SHOCKED)) 
-    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SHOCKED set. make %d") %  
+  if (isAffected(AFF_SHOCKED))
+    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SHOCKED set. make %d") %
 	  getName() % mobVnum() % (specials.affectedBy & ~AFF_SHOCKED));
-  if (isAffected(AFF_SYPHILIS)) 
+  if (isAffected(AFF_SYPHILIS))
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SYPHILIS (%d) set.") %
 	  getName() % mobVnum() % AFF_SYPHILIS);
   sumstat = getStat(STAT_CHOSEN, STAT_STR) +
@@ -791,7 +791,7 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
             getStat(STAT_CHOSEN, STAT_DEX) +
             getStat(STAT_CHOSEN, STAT_CON);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,format("mob (%s, %d) with excessive physical stats (%d).") % 
+    vlogf(LOG_LOW,format("mob (%s, %d) with excessive physical stats (%d).") %
                 getName() % mobVnum() % sumstat);
   }
 
@@ -799,7 +799,7 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
             getStat(STAT_CHOSEN, STAT_WIS) +
             getStat(STAT_CHOSEN, STAT_FOC);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,format("mob (%s, %d) with excessive mental stats (%d).") % 
+    vlogf(LOG_LOW,format("mob (%s, %d) with excessive mental stats (%d).") %
                 getName() % mobVnum() % sumstat);
   }
 
@@ -808,7 +808,7 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
             getStat(STAT_CHOSEN, STAT_SPE) +
             getStat(STAT_CHOSEN, STAT_PER);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,format("mob (%s, %d) with excessive utility stats (%d).") % 
+    vlogf(LOG_LOW,format("mob (%s, %d) with excessive utility stats (%d).") %
                 getName() % mobVnum() % sumstat);
   }
 
@@ -818,13 +818,13 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
   /*
   // Leave this disabled.  With the new tBorn code it is now outdated.
   if (!IS_SET(specials.act, ACT_SENTINEL) && max_exist > 100) {
-    vlogf(LOG_LOW,format("non-sentinel mob (%s : %d) with excessive max exist (%d)") % 
+    vlogf(LOG_LOW,format("non-sentinel mob (%s : %d) with excessive max exist (%d)") %
        getName() % mobVnum() % max_exist);
   }
   */
   if (isShopkeeper() && !IS_SET(specials.act, ACT_IMMORTAL)) {
     // have a lot of gold, and otherwise might get killed
-    vlogf(LOG_LOW, format("Shopkeeper (%s:%d) needs to be set immortal(%d).") % 
+    vlogf(LOG_LOW, format("Shopkeeper (%s:%d) needs to be set immortal(%d).") %
          getName() % mobVnum() % ACT_IMMORTAL);
   }
 
@@ -843,30 +843,30 @@ void TObj::checkObjStats()
   if ((getDescr().length() > 2) &&
       (getDescr()[getDescr().length() - 1] == '\r') &&
       (getDescr()[getDescr().length() - 2] == '\n')) {
-    vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") % 
+    vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") %
           getName() % objVnum());
   }
   if (strchr(name.c_str(), '(') || strchr(name.c_str(), ')')) {
-    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") % 
+    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") %
           getName() % objVnum());
   }
   if ((s = strchr(name.c_str(), '['))) {
     for (s++;*s != ']';s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
-      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") % 
+      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") %
             getName() % objVnum() % *s);
     }
   }
 
   if (getName().length() > MAX_NAME_LENGTH-1) {
-    vlogf(LOG_LOW, format("%s (%d) had excessive obj name length.") % 
+    vlogf(LOG_LOW, format("%s (%d) had excessive obj name length.") %
          getName() % objVnum());
   }
 
   sstring a=stripColorCodes(shortDescr);
   bool found=false;
-  
+
   for(int i=0;a.word(i)!="";++i){
     if(isname(a.word(i), name)){
       found=true;
@@ -877,7 +877,7 @@ void TObj::checkObjStats()
     vlogf(LOG_LOW, format("Item '%s' (%i) lacks appropriate name keyword (%s).") %
 	  shortDescr % objVnum() % name);
   }
-  
+
   if(sstring(name) != stripColorCodes(name)){
     vlogf(LOG_LOW, format("Item '%s' (%i) has color codes in name (%s).") %
 	  shortDescr % objVnum() % name);
@@ -897,8 +897,8 @@ void TObj::checkObjStats()
 
   // TPool strings itself during constructor, so bypass this
   // these are all classes that implement updateDesc()
-  if (isObjStat(ITEM_STRUNG) && 
-      !dynamic_cast<TPool *>(this) && 
+  if (isObjStat(ITEM_STRUNG) &&
+      !dynamic_cast<TPool *>(this) &&
       !dynamic_cast<TGas *>(this) &&
       !dynamic_cast<TCommodity *>(this) &&
       !dynamic_cast<TBaseCup *>(this) &&
@@ -917,7 +917,7 @@ void TObj::checkObjStats()
        (tmp>=50 && tmp < (50+MAX_MAT_NATURE)) ||
        (tmp>=100 && tmp < (100+MAX_MAT_MINERAL)) ||
        (tmp>=150 && tmp < (150+MAX_MAT_METAL))))
-    vlogf(LOG_LOW, format("Illegal material type %d for %s!") % 
+    vlogf(LOG_LOW, format("Illegal material type %d for %s!") %
          tmp % getName());
 
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
@@ -934,7 +934,7 @@ void TObj::checkObjStats()
   }
   if (isObjStat(ITEM_GLOW)) {
     if (isObjStat(ITEM_SHADOWY))
-      vlogf(LOG_LOW,format("obj %s is glowing and shadowy.") % 
+      vlogf(LOG_LOW,format("obj %s is glowing and shadowy.") %
                getName());
     addGlowEffects();
   }
@@ -950,7 +950,7 @@ void TObj::checkObjStats()
           vlogf(LOG_LOW,format("Mega shadow on %s") % getName());
         break;
       } else if (i==(MAX_OBJ_AFFECT-1))
-        vlogf(LOG_LOW,format("obj %s has too many affects to set shadow on it.") % 
+        vlogf(LOG_LOW,format("obj %s has too many affects to set shadow on it.") %
                getName());
     }
 #endif
@@ -964,7 +964,7 @@ void TObj::checkObjStats()
 
   lowCheckSlots(SILENT_NO);
 
-  
+
   if(getMaxStructPoints()<getStructPoints()){
     vlogf(LOG_LOW, format("obj %s had greater struct than max struct.") %  getName());
   }
@@ -992,7 +992,7 @@ void objAffData::checkForBadness(TObj *obj)
     vlogf(LOG_LOW,format("%s has an unassignable affect") % obj->getName());
 
   // changes to this list should also be added to dispelMagic()
-  if ((location != APPLY_NONE) && 
+  if ((location != APPLY_NONE) &&
       (location != APPLY_LIGHT) &&
       (location != APPLY_NOISE) &&
       (location != APPLY_HIT) &&
@@ -1001,15 +1001,15 @@ void objAffData::checkForBadness(TObj *obj)
       (location != APPLY_MOVE) &&
       (location != APPLY_ARMOR)) {
     if (!obj->isObjStat(ITEM_MAGIC))
-      vlogf(LOG_LOW,format("obj (%s:%d) should be set magic due to %s") % 
-            obj->getName() % obj->objVnum() % 
+      vlogf(LOG_LOW,format("obj (%s:%d) should be set magic due to %s") %
+            obj->getName() % obj->objVnum() %
             apply_types[location].name);
   }
   if (location == APPLY_SPELL &&
       (modifier < 0 ||
        modifier >= MAX_SKILL ||
        !discArray[modifier])) {
-    vlogf(LOG_LOW,format("obj (%s:%d) trying to set skill %d that is not defined.  REMOVING IT!") % 
+    vlogf(LOG_LOW,format("obj (%s:%d) trying to set skill %d that is not defined.  REMOVING IT!") %
           obj->getName() % obj->objVnum() % modifier);
     // this would be bad, remove it
     removeIt = true;
@@ -1018,7 +1018,7 @@ void objAffData::checkForBadness(TObj *obj)
       (modifier < 0 ||
        modifier >= MAX_DISCS ||
        !discNames[modifier].disc_num)) {
-    vlogf(LOG_LOW,format("obj (%s:%d) trying to set discipline %d that is not defined") % 
+    vlogf(LOG_LOW,format("obj (%s:%d) trying to set discipline %d that is not defined") %
          obj->getName() % obj->objVnum() % modifier);
     // this would be bad, remove it
     removeIt = true;
@@ -1097,7 +1097,7 @@ void TBeing::doCompare(const char *arg)
       }
     }
   } else {
-    sendTo(errMsg);  
+    sendTo(errMsg);
     return;
   }
 
@@ -1409,7 +1409,7 @@ void TPerson::doLow(const sstring &argument)
   } else if (is_abbrev(buf, "objs") ||
 	     is_abbrev(buf, "weapons")) {
     sendTo("The low command does not currently work for objects or weapons.\n\r");
-    
+
 #if 0
     lowObjs(arg.c_str());
     return;
@@ -1432,7 +1432,7 @@ void TPerson::doLow(const sstring &argument)
     TDatabase db(DB_SNEEZY);
     db.query("select type, count(*) as count, max(mod1) as max, min(mod1) as min, avg(mod1) as avg, sum(mod1) as sum from objaffect group by type");
 
-    sendTo(format("%13s %5s %5s %5s %10s %10s\n\r") % 
+    sendTo(format("%13s %5s %5s %5s %10s %10s\n\r") %
 	   "Bonus       :" %"Cnt" %"Max" %"Min" %"Avg" %"Sum");
 
     while(db.fetchRow()){
@@ -1581,7 +1581,7 @@ void TPerson::doLow(const sstring &argument)
 	  break;
       }
     }
-    
+
 
   } else {
     sendTo(usage);
@@ -1610,14 +1610,14 @@ void TBeing::lowPath(const sstring &arg)
 
   sendTo(format("Distance: %i\n\r") % path.getDist());
 
-  
+
   for(unsigned int i=0;i<path.path.size();++i){
     dir=path.path[i]->direct;
 
     if(dir >= MAX_DIR){
       sendTo(format("{%i, %i},\n\r") % dir % path.path[i]->room);
     } else {
-      sendTo(format("{DIR_%s, %i},\n\r") % 
+      sendTo(format("{DIR_%s, %i},\n\r") %
 	     (dir<0?"NONE":sstring(dirs[dir]).upper()) %
 	     path.path[i]->room);
     }
@@ -1659,7 +1659,7 @@ void TBeing::lowRace(const char *arg)
         thing_to_room(mob, Room::VOID);   // prevents extracting from "nowhere"
         delete mob;
         mob = NULL;
-      } else 
+      } else
         vlogf(LOG_BUG,format("BOGUS LOAD of mob %d") % mobnum);
     }
     if (mob_index[mobnum].race != race_num)
@@ -1668,12 +1668,12 @@ void TBeing::lowRace(const char *arg)
       continue;
     if (!(mob = read_mobile(mobnum, REAL))) {
       vlogf(LOG_BUG,format("Error during doLowRace in mob rnum %d") % mobnum);
-      continue;     
+      continue;
     }
     strcpy(namebuf2, mob->getName().c_str());
     sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
     if (show_stat)
-      sprintf(buf2, "%-17.17s: %60s", 
+      sprintf(buf2, "%-17.17s: %60s",
          namebuf.c_str(), mob->chosenStats.printRawStats(this).c_str());
     else
       sprintf(buf2, "%5.5d : %-27.27s : L%-3d, C%-3d, Hgt:%-3d\n\r",
@@ -1794,7 +1794,7 @@ void TBeing::lowTasks(const sstring &oarg)
       temp=format("update lowtasks set status='%s' where id=%d") % buf2 % id;
       vlogf(LOG_DASH, format("lowtask: %s") %  temp);
       db.query(temp.c_str());
-      
+
       sendTo("Task status updated.\n\r");
       return;
     }
@@ -1836,7 +1836,7 @@ void TBeing::lowTasks(const sstring &oarg)
       sendTo("Task deleted.\n\r");
       return;
     }
- 
+
     return;
   }
 }
@@ -1869,7 +1869,7 @@ void TBeing::lowMobs(const char *arg)
         thing_to_room(mob, Room::VOID);      // prevents extracting from "nowhere"
         delete mob;
         mob = NULL;
-      } else 
+      } else
         vlogf(LOG_BUG,format("BOGUS LOAD of mob %d") % mobnum);
     }
     if (mob_index[mobnum].level != level)
@@ -1878,13 +1878,13 @@ void TBeing::lowMobs(const char *arg)
       continue;
     if (!(mob = read_mobile(mobnum, REAL))) {
       vlogf(LOG_BUG,format("Error during doLowMobs in mob rnum %d") % mobnum);
-      continue;     
+      continue;
     }
 
     strcpy(namebuf2, mob->getName().c_str());
     sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
 
-    sprintf(buf2, "%5d %-27.27s : %6d %5.2f %5d  %2d    %.1f %5.2f+%d%% %2d\n\r", 
+    sprintf(buf2, "%5d %-27.27s : %6d %5.2f %5d  %2d    %.1f %5.2f+%d%% %2d\n\r",
        mob->mobVnum(), namebuf.c_str(), mob->getClass(), mob->getHPLevel(),
        mob->getArmor(), mob->getHitroll(), mob->getMult(),
        mob->getDamLevel(), mob->getDamPrecision(),
@@ -2040,7 +2040,7 @@ void TBeing::lowObjs(const char *arg)
 	vlogf(LOG_BUG,format("Error in doLow::lowObjs.  real obj %d") %  objnum);
 	continue;
       }
-      
+
       if(obj->getVolume() <= sort_race_low ||
 	 obj->getVolume() >= sort_race_high){
 	delete obj;
@@ -2054,7 +2054,7 @@ void TBeing::lowObjs(const char *arg)
       objList.push_back(objnum);
     }
   }
-  
+
   // now lets do some sorting
   if (val_sort)
     std::sort(objList.begin(), objList.end(), lowObjSortValue());
@@ -2065,7 +2065,7 @@ void TBeing::lowObjs(const char *arg)
 // send that to user
   str = "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
 
-  sprintf(buf2, "%5s %30s : %3s %5s %4s %6s %4s %5s\n\r","vnum","obj name", 
+  sprintf(buf2, "%5s %30s : %3s %5s %4s %6s %4s %5s\n\r","vnum","obj name",
           "str", "armor", "wght", "price", "sug.pr" "size", "max #");
   str += buf2;
   for (objnum = 0; objnum < objList.size(); objnum++) {
@@ -2085,12 +2085,12 @@ void TBeing::lowObjs(const char *arg)
       if (tbc->isPaired())
         size_per /= 2;
     }
-    sprintf(buf2, "%s%5d %-30.30s : %3d %2dAC %4.1f %6d %6d %3d%% %4d%s\n\r", 
+    sprintf(buf2, "%s%5d %-30.30s : %3d %2dAC %4.1f %6d %6d %3d%% %4d%s\n\r",
       green(), tbc->objVnum(),
       tbc->getNameNOC(this).c_str(),
-      tbc->obj_flags.max_struct_points, 
+      tbc->obj_flags.max_struct_points,
       obj_index[tbc->getItemIndex()].armor, tbc->getWeight(),
-      tbc->obj_flags.cost, tbc->suggestedPrice(), size_per, 
+      tbc->obj_flags.cost, tbc->suggestedPrice(), size_per,
       obj_index[tbc->getItemIndex()].max_exist, norm());
     str += buf2;
 
@@ -2163,7 +2163,7 @@ bool lowWeapSort::operator() (const int &x, const int &y) const
     y_obj = dynamic_cast<TBaseWeapon *>(obj);
 
   if (!x_obj || !y_obj) {
-    vlogf(LOG_BUG, format("Error in lowWeapSort(): x: %s, y: %s, x=%d, y=%d") % 
+    vlogf(LOG_BUG, format("Error in lowWeapSort(): x: %s, y: %s, x=%d, y=%d") %
         (x_obj ? "true" : "false") %
         (y_obj ? "true" : "false") %
         x % y);
@@ -2255,7 +2255,7 @@ void TBeing::lowWeaps(const char *arg)
   // objList now holds a sorted list of objects
   // send that to user
   str = "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
-  sprintf(buf2, "%5s %20s %4s: %4s %4s %5s %6s %5s %5s %5s %5s\n\r","vnum","obj name", 
+  sprintf(buf2, "%5s %20s %4s: %4s %4s %5s %6s %5s %5s %5s %5s\n\r","vnum","obj name",
           "(#H)", "wgt", "vol", "level", "struct", "qual", "price", "recmd", "max #");
   str += buf2;
   for (objnum = 0; objnum < objList.size(); objnum++) {
@@ -2264,12 +2264,12 @@ void TBeing::lowWeaps(const char *arg)
       vlogf(LOG_BUG,format("Error in doLow::lowWeaps.  real obj %d") % objList[objnum]);
       return;
     }
-    sprintf(buf2, "%s%5d %-20.20s %4s: %4.1f %4d %5.2f %6d %5d %6d %6d %4d%s\n\r", 
+    sprintf(buf2, "%s%5d %-20.20s %4s: %4.1f %4d %5.2f %6d %5d %6d %6d %4d%s\n\r",
       green(), weap->objVnum(),
       weap->getNameNOC(this).c_str(),
       (weap->isPaired()) ? "(2H)" : "    ",
       weap->getWeight(), weap->getVolume(),
-      weap->damageLevel(), 
+      weap->damageLevel(),
       weap->getMaxStructPoints(),
       weap->getCurSharp(),
       weap->obj_flags.cost, weap->suggestedPrice(),
@@ -2332,7 +2332,7 @@ int getSpellCost(spellNumT spell, int level, int learning)
   // since it's an object, treat adv_learn=0
   int min_lev, max_lev;
   getSkillLevelRange(spell, min_lev, max_lev, 0);
-  level = min(max(level, min_lev), max_lev); 
+  level = min(max(level, min_lev), max_lev);
 
   // calculate how long it takes to cast normally
   int durat = getSpellCasttime(spell);

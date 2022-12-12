@@ -190,11 +190,11 @@ sstring TArrow::statObjInfo() const
            getWeapDamLvl() / 4.0,
            getWeapDamDev());
   a += buf;
-  
+
   sprintf(buf, "Damage inflicted: %d\n\r",
            (int) damageLevel());
   a += buf;
-  
+
   sprintf(buf, "Sharpness   : %d\n\r",
           getCurSharp());
   a += buf;
@@ -216,11 +216,11 @@ sstring TArrow::statObjInfo() const
   a += buf;
 
   if(getTrapDamType()!=DOOR_TRAP_NONE){
-    sprintf(buf, "Trap Type: %s (%d)", 
+    sprintf(buf, "Trap Type: %s (%d)",
 	    trap_types[getTrapDamType()].c_str(), getTrapDamType());
     a += buf;
-    
-    sprintf(buf, "Trap Level: %i", 
+
+    sprintf(buf, "Trap Level: %i",
 	    getTrapLevel());
     a += buf;
   }
@@ -271,7 +271,7 @@ void TArrow::evaluateMe(TBeing *ch) const
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
   traptype = getTrapDamType();
-  
+
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_EVALUATE, 7);
 

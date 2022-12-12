@@ -59,13 +59,13 @@ int kraken(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     return FALSE;
 
   if ((opp = ch->fight()) && opp->sameRoom(*ch)) {
-    act("$n sprays $N with an inky black cloud!", 
+    act("$n sprays $N with an inky black cloud!",
            1, ch, 0, opp, TO_NOTVICT);
     act("$n sprays you with an inky black cloud!", 1, ch, 0, opp, TO_VICT);
     if (!opp->affectedBySpell(SPELL_BLINDNESS)) {
       opp->sendTo("You have been BLINDED!\n\r");
 
-      opp->rawBlind(myself->GetMaxLevel(), 
+      opp->rawBlind(myself->GetMaxLevel(),
                     (myself->GetMaxLevel()/20 + 1) * Pulse::UPDATES_PER_MUDHOUR,
                     SAVE_YES);
     }
@@ -234,7 +234,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   if (targetSwallower == -1 ||
       targetSwallower >= MAX_SWALLOWER_TO_ROOM) {
-    vlogf(LOG_PROC, format("Mobile in belimus() proc that isn't hard coded.  [%s] [%d]") % 
+    vlogf(LOG_PROC, format("Mobile in belimus() proc that isn't hard coded.  [%s] [%d]") %
           myself->getName() % myself->mobVnum());
     return FALSE;
   }
@@ -278,7 +278,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     thing_to_room(tmp, SWALLOWER_TO_ROOM_PROC[targetSwallower][1]);
     act("$n's mawed corpse arrives tumbling down $N's throat!",
         FALSE, tmp, 0, myself, TO_ROOM);
-    vlogf(LOG_PROC, format("%s killed by belimus-swallow[%s] at %s (%d)") % 
+    vlogf(LOG_PROC, format("%s killed by belimus-swallow[%s] at %s (%d)") %
           tmp->getName() % myself->getName() %
           tmp->roomp->getName() % tmp->inRoom());
 
@@ -299,7 +299,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     delete tmp;
     tmp = NULL;
   }
-    
+
   --(*vict);
   thing_to_room(vict, SWALLOWER_TO_ROOM_PROC[targetSwallower][1]);
 
@@ -310,7 +310,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     vict->sendTo(format("%s chomps down upon you, biting you in two!!!!\n\r") % myself->getName());
     act("$n's mawed corpse arrives tumbling down $N's throat!",
         FALSE, vict, 0, myself, TO_ROOM);
-    vlogf(LOG_PROC, format("%s killed by Belimus-swallow[%s] at %s (%d)") % 
+    vlogf(LOG_PROC, format("%s killed by Belimus-swallow[%s] at %s (%d)") %
           vict->getName() % myself->getName() %
 
           vict->roomp->getName() % vict->inRoom());
@@ -319,7 +319,7 @@ int belimus(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
       delete vict;
       vict = NULL;
     }
-    return TRUE;  
+    return TRUE;
   }
   act("$n arrives tumbling down $N's throat screaming!",
         FALSE, vict, 0, myself, TO_ROOM);
@@ -347,7 +347,7 @@ int ram(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
 
   int damage = dice(5,6);
 
-  act("$n lowers $s head and charges at you!", 
+  act("$n lowers $s head and charges at you!",
              FALSE, myself, 0, vict, TO_VICT);
   act("$n lowers $s head and charges at $N!",
              FALSE, myself, 0, vict, TO_NOTVICT);
@@ -382,14 +382,14 @@ int paralyzeBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
     return FALSE;
 
-  if (!(v = myself->fight()) || !v->sameRoom(*myself)) 
+  if (!(v = myself->fight()) || !v->sameRoom(*myself))
     return FALSE;
 
   if (v->isAffected(AFF_PARALYSIS) || myself->checkForSkillAttempt(SPELL_PARALYZE)) {
     return FALSE;
   }
 
-  act("$n spits out some noxious fumes at $N.", 
+  act("$n spits out some noxious fumes at $N.",
               TRUE, myself, NULL, v, TO_NOTVICT);
   act("$n spits out some noxious fumes at you!", TRUE, myself, NULL, v, TO_VICT);
   act("You spit some noxious fumes out at $N.", TRUE, myself, NULL, v, TO_CHAR);
@@ -407,11 +407,11 @@ int paralyzeBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     aff.bitvector = AFF_PARALYSIS;
 
     // each update is a combat round long...
-    
+
     aff.duration = min(10, number(1, aff.level));
 
     aff.modifier = 0;
-    
+
     v->affectTo(&aff);
     // this should keep paralyze proc mobs from paralyzing the same person right when he wakes up 10-20-00 -dash
     aff2.type = AFFECT_SKILL_ATTEMPT;
@@ -423,7 +423,7 @@ int paralyzeBreath(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj 
     myself->affectTo(&aff2);
   } else {
     v->sendTo("Good thing you are immortal.\n\r");
-  }    
+  }
 
   return TRUE;
 }
@@ -460,7 +460,7 @@ int paralyzeBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     aff.bitvector = AFF_PARALYSIS;
     aff.duration = min(10, number(1, aff.level));
     aff.modifier = 0;
-    
+
     v->affectTo(&aff);
     // this should keep paralyze proc mobs from paralyzing the same person right when he wakes up 10-20-00 -dash
     aff2.type = AFFECT_SKILL_ATTEMPT;
@@ -472,7 +472,7 @@ int paralyzeBite(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     myself->affectTo(&aff2);
   } else {
     v->sendTo("Good thing you are immortal.\n\r");
-  }  
+  }
 
   return TRUE;
 }
@@ -559,9 +559,9 @@ int rust_monster(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
           if (eq->canRust()) {
             if ((number(0, eq->getStructPoints()) < 10) &&
                  number(0,101) <= material_nums[eq->getMaterial()].acid_susc) {
-              act("$n reaches out and touches your $o!", 
+              act("$n reaches out and touches your $o!",
                          FALSE, me, eq, tmp_ch, TO_VICT);
-              act("$n reaches out and touches $N's $o!", 
+              act("$n reaches out and touches $N's $o!",
                          FALSE, me, eq, tmp_ch, TO_NOTVICT);
               act("$p is decayed by $N's rust!", FALSE, tmp_ch, eq, me, TO_ROOM);
               act("$p is decayed by $N's rust!", FALSE, tmp_ch, eq, me, TO_CHAR);
@@ -654,7 +654,7 @@ int Teleporter(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
 
   act("$n summons a Djinn to do $s bidding.",TRUE,me,0,0,TO_ROOM);
   act("You summon forth a Djinn.",TRUE,me,0,0,TO_CHAR);
-  
+
   act("The Djinn looks in your direction and snaps his fingers!",TRUE,vict,0,0,TO_CHAR);
   act("The Djinn looks in $n's direction and snaps his fingers.",TRUE,vict,0,0,TO_ROOM);
 
@@ -896,7 +896,7 @@ int Paralyzer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   if (me->getPosition() <= POSITION_SITTING)
     return FALSE;
 
-  if (v->isAffected(AFF_PARALYSIS) || 
+  if (v->isAffected(AFF_PARALYSIS) ||
       v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     return FALSE;
   }
@@ -919,7 +919,7 @@ int Paralyzer(TBeing *, cmdTypeT cmd, const char *, TMonster *me, TObj *)
   aff.bitvector = AFF_PARALYSIS;
   aff.duration = 2 * number(1, aff.level);
   aff.modifier = 0;
- 
+
   v->affectTo(&aff);
   *me->roomp += *read_mobile(Mob::SMALL_CAT,VIRTUAL);
 
@@ -1026,18 +1026,18 @@ int paralyzeGaze(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
     return FALSE;
 
-  if (!(v = myself->fight()) || !v->sameRoom(*myself)) 
+  if (!(v = myself->fight()) || !v->sameRoom(*myself))
     return FALSE;
 
   if (::number(0,10))
     return FALSE;
 
-  act("$n fixes $N with a penetrating gaze.", 
+  act("$n fixes $N with a penetrating gaze.",
               TRUE, myself, NULL, v, TO_NOTVICT);
   act("$n fixes you with a penetrating gaze.  Suddenly, you have trouble moving.", TRUE, myself, NULL, v, TO_VICT);
   act("You fix $N with a penetrating gaze.", TRUE, myself, NULL, v, TO_CHAR);
 
-  if (v->isAffected(AFF_PARALYSIS) || 
+  if (v->isAffected(AFF_PARALYSIS) ||
       v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_VICT);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
@@ -1055,7 +1055,7 @@ int paralyzeGaze(TBeing *, cmdTypeT cmd, const char *, TMonster *myself, TObj *)
     aff.bitvector = AFF_PARALYSIS;
     aff.duration = 1;
     aff.modifier = 0;
-    
+
     v->affectTo(&aff);
   }
 

@@ -15,7 +15,7 @@
 using std::min;
 using std::max;
 
-int TBeing::doBerserk() 
+int TBeing::doBerserk()
 {
   int rc;
 
@@ -56,7 +56,7 @@ int berserk(TBeing * caster)
   }
 
   if (caster->checkPeaceful("This room is too tranquil to go berserk in.\n\r"))
-    return FALSE;    
+    return FALSE;
 
   if (!caster->isPc())
     return FALSE;

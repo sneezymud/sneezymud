@@ -231,7 +231,7 @@ void TBeing::addSkillApply(spellNumT skillNum, short amt)
       temp->numApplys += 1;
       return;
     }
-  } 
+  }
 
   // gets here only if didn't find one
   temp = new skillApplyData;
@@ -246,7 +246,7 @@ void TBeing::addSkillApply(spellNumT skillNum, short amt)
 void TBeing::remSkillApply(spellNumT skillNum, short amt)
 {
   skillApplyData *temp = NULL, *temp2 = NULL;
- 
+
   if (!skillApplys) {
     vlogf(LOG_BUG, format("Somehow, remSkillApply was called with no skillApplys (%s) (%d)") %  getName() % skillNum);
     return;
@@ -283,7 +283,7 @@ void TBeing::remSkillApply(spellNumT skillNum, short amt)
   }
 
   // !temp....
-  vlogf(LOG_BUG, format("Somehow, skillApplys had no skill to remove in remSkillApply (%s) (%d)") %  getName() % skillNum); 
+  vlogf(LOG_BUG, format("Somehow, skillApplys had no skill to remove in remSkillApply (%s) (%d)") %  getName() % skillNum);
 }
 
 void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bool add, silentTypeT silent)
@@ -330,7 +330,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
       }
       if (!(cd = getDiscipline(dnt))) {
         return;
-      }      
+      }
       if (add) {
         tmpInt = cd->getLearnedness() + mod2;
         if (tmpInt > MAX_DISC_LEARNEDNESS)
@@ -340,7 +340,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
         tmpInt = cd->getLearnedness() - mod2;
         if (tmpInt < 0)
           tmpInt = 0;
-        if (cd->getNatLearnedness() == MAX_DISC_LEARNEDNESS) 
+        if (cd->getNatLearnedness() == MAX_DISC_LEARNEDNESS)
           tmpInt = MAX_DISC_LEARNEDNESS;
         cd->setLearnedness(tmpInt);
       }
@@ -351,9 +351,9 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
         vlogf(LOG_BUG, "Bad immunity value");
         return;
       }
-      if (add) 
+      if (add)
         addToImmunity(immuneTypeT(mod), mod2);
-      else 
+      else
         addToImmunity(immuneTypeT(mod), -mod2);
       return;
     case APPLY_SPELL_EFFECT:
@@ -497,8 +497,8 @@ bool affectShouldApply(const TObj *obj, wearSlotT pos)
   return false;
 }
 
-// This updates a character by subtracting everything he is affected by 
-// restoring original abilities, and then affecting all again          
+// This updates a character by subtracting everything he is affected by
+// restoring original abilities, and then affecting all again
 void TBeing::affectTotal()
 {
   affectedData *af;
@@ -508,7 +508,7 @@ void TBeing::affectTotal()
   CDiscipline *cd = NULL;
   bool discAdd = FALSE; // , skillAdd = FALSE;
   bool discAfAdd = FALSE; // skillAfAdd = FALSE
-  
+
   wearSlotT i;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
@@ -548,7 +548,7 @@ void TBeing::affectTotal()
 // discs and skills next
 
   if (!discs) {
-// if no discs goto end of this section--do not do disc/skills 
+// if no discs goto end of this section--do not do disc/skills
   } else {
 
 // FIRST DISCIPLINE LEARNING
@@ -595,7 +595,7 @@ void TBeing::affectTotal()
       }
       if (discAfAdd) {
         for (af = affected; af; af = af->next) {
-          if (af->location != APPLY_DISCIPLINE) 
+          if (af->location != APPLY_DISCIPLINE)
             continue;
           if (mapFileToDisc(af->modifier) != dnt)
             continue;
@@ -606,7 +606,7 @@ void TBeing::affectTotal()
       if (cd->getNatLearnedness() <= 0)
         cd->setLearnedness(0);
     }
-// NOW FOR SKILLS 
+// NOW FOR SKILLS
 
     spellNumT num;
     for (num = MIN_SPELL; num < MAX_SKILL; num++) {
@@ -623,7 +623,7 @@ void TBeing::affectTotal()
         setSkillValue(num, MAX_SKILL_LEARNEDNESS);
         continue;
       }
-      
+
       if (!(cd = getDiscipline(das)))
         continue;
 
@@ -633,7 +633,7 @@ void TBeing::affectTotal()
         setSkillValue(num, SKILL_MIN);
         continue;
       }
-      if ((desc || isPc()) && discArray[num]->toggle && 
+      if ((desc || isPc()) && discArray[num]->toggle &&
                 !hasQuestBit(discArray[num]->toggle)) {
         setNatSkillValue(num, SKILL_MIN);
         setSkillValue(num, SKILL_MIN);
@@ -645,7 +645,7 @@ void TBeing::affectTotal()
 // Set natLearning
 // remember we  store natLearning so be careful with it
 
-        value = discArray[num]->learn * 
+        value = discArray[num]->learn *
                   (cd->getNatLearnedness() - discArray[num]->start + 1);
         value = max(value, 1);
         value = max(value, discArray[num]->learn);
@@ -688,7 +688,7 @@ void TBeing::affectTotal()
           value = min(value, (int) MAX_SKILL_LEARNEDNESS);
           if (cd->getLearnedness() <= cd->getNatLearnedness()) {
              setSkillValue(num, value);
-          } else { 
+          } else {
             if (discArray[num]->startLearnDo > value) {
               value = getMaxSkillValue(num);
               value = min(value, (int) discArray[num]->startLearnDo);
@@ -733,31 +733,31 @@ void TBeing::affectTotal()
   int minrange, maxrange;
   minrange = 30;
   maxrange = 250;
-  setStat(STAT_CURRENT, STAT_STR, 
+  setStat(STAT_CURRENT, STAT_STR,
           min(max(minrange, getStat(STAT_CURRENT, STAT_STR)), maxrange));
-  setStat(STAT_CURRENT, STAT_BRA, 
+  setStat(STAT_CURRENT, STAT_BRA,
           min(max(minrange, getStat(STAT_CURRENT, STAT_BRA)), maxrange));
-  setStat(STAT_CURRENT, STAT_DEX, 
+  setStat(STAT_CURRENT, STAT_DEX,
           min(max(minrange, getStat(STAT_CURRENT, STAT_DEX)), maxrange));
-  setStat(STAT_CURRENT, STAT_AGI, 
+  setStat(STAT_CURRENT, STAT_AGI,
           min(max(minrange, getStat(STAT_CURRENT, STAT_AGI)), maxrange));
-  setStat(STAT_CURRENT, STAT_CON, 
+  setStat(STAT_CURRENT, STAT_CON,
           min(max(minrange, getStat(STAT_CURRENT, STAT_CON)), maxrange));
 
-  setStat(STAT_CURRENT, STAT_INT, 
+  setStat(STAT_CURRENT, STAT_INT,
           min(max(minrange, getStat(STAT_CURRENT, STAT_INT)), maxrange));
-  setStat(STAT_CURRENT, STAT_WIS, 
+  setStat(STAT_CURRENT, STAT_WIS,
           min(max(minrange, getStat(STAT_CURRENT, STAT_WIS)), maxrange));
-  setStat(STAT_CURRENT, STAT_FOC, 
+  setStat(STAT_CURRENT, STAT_FOC,
           min(max(minrange, getStat(STAT_CURRENT, STAT_FOC)), maxrange));
 
-  setStat(STAT_CURRENT, STAT_CHA, 
+  setStat(STAT_CURRENT, STAT_CHA,
           min(max(minrange, getStat(STAT_CURRENT, STAT_CHA)), maxrange));
-  setStat(STAT_CURRENT, STAT_SPE, 
+  setStat(STAT_CURRENT, STAT_SPE,
           min(max(minrange, getStat(STAT_CURRENT, STAT_SPE)), maxrange));
-  setStat(STAT_CURRENT, STAT_KAR, 
+  setStat(STAT_CURRENT, STAT_KAR,
           min(max(minrange, getStat(STAT_CURRENT, STAT_KAR)), maxrange));
-  setStat(STAT_CURRENT, STAT_PER, 
+  setStat(STAT_CURRENT, STAT_PER,
           min(max(minrange, getStat(STAT_CURRENT, STAT_PER)), maxrange));
 }
 
@@ -772,13 +772,13 @@ void TBeing::affectTo(affectedData *af, int renew, silentTypeT silent)
   a = new affectedData(*af);
 
   a->next = affected;
-  if (renew == -1) 
+  if (renew == -1)
     a->renew = -1;
-  else if (renew) 
+  else if (renew)
     a->renew = renew;
-  else 
+  else
     a->renew = a->duration / 2;
-  
+
   affected = a;
 
   affectModify(a->location, a->modifier, a->modifier2, a->bitvector, TRUE, silent);
@@ -851,7 +851,7 @@ int TBeing::checkForSkillAttempt(spellNumT skill)
 
   for (hjp = affected; hjp; hjp = hjp->next) {
     if (hjp->type == AFFECT_SKILL_ATTEMPT) {
-      if (hjp->modifier == skill) 
+      if (hjp->modifier == skill)
         return TRUE;
     }
   }
@@ -900,9 +900,9 @@ int TBeing::polyAffectJoin(TBeing * recipient)
   affectedData *affp;
   for (affp = affected; affp; affp = affp->next) {
     if (!((affp->type > MIN_SPELL && affp->type < MAX_SKILL) ||
-          (affp->type > FIRST_ODDBALL_AFFECT && 
+          (affp->type > FIRST_ODDBALL_AFFECT &&
            affp->type < LAST_ODDBALL_AFFECT) ||
-           affp->type == AFFECT_SKILL_ATTEMPT)) 
+           affp->type == AFFECT_SKILL_ATTEMPT))
         continue;
     recipient->affectJoin(recipient, affp, AVG_DUR_NO, AVG_EFF_YES, FALSE);
   }
@@ -931,15 +931,15 @@ int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEf
         (hjp->location == af->location)) {
       if (af->location == APPLY_IMMUNITY ||
           af->location == APPLY_SPELL) {
-        if (af->modifier != hjp->modifier) 
+        if (af->modifier != hjp->modifier)
           continue;
       }
       if (!hjp->canBeRenewed()) {
         if (text) {
-          if (this == caster || !caster) 
-            sendTo("You can't increase the duration of that effect any further.\n\r"); 
+          if (this == caster || !caster)
+            sendTo("You can't increase the duration of that effect any further.\n\r");
           else {
-            caster->sendTo("You can't increase the duration of that effect any further.\n\r"); 
+            caster->sendTo("You can't increase the duration of that effect any further.\n\r");
             act("$N can't increase the duration of that effect any further.",
                  FALSE, this, 0, caster, TO_CHAR);
           }
@@ -1036,7 +1036,7 @@ void thing_to_room(TThing *ch, int room)
     room = 0;
     rp = real_roomp(room);
   }
-  
+
   *rp += *ch;
 
 }
@@ -1086,9 +1086,9 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
       if (roomp) {
         sendTo(COLOR_BASIC, format("Your hand is damaged and you drop %s.\n\r") %obj->shortDescr);
         *roomp += *obj;
-      } else 
+      } else
         *this += *obj;
-      
+
       return;
     }
   } else if (pos == HOLD_LEFT) {
@@ -1096,16 +1096,16 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
       if (roomp) {
         sendTo(COLOR_BASIC, format("Your hand is damaged and you drop %s.\n\r") %obj->shortDescr);
         *roomp += *obj;
-      } else 
+      } else
         *this += *obj;
-      
+
       return;
     }
   }
 
 
   obj->equippedBy = this;
-  obj->eq_pos = pos;  
+  obj->eq_pos = pos;
   equipment.wear(obj, pos);
 
   int origamt = specials.affectedBy;
@@ -1132,7 +1132,7 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
 {
   int dam;
   TThing *o;
-  
+
   *res = 0;
 
   if (!(o = getStuckIn(numx))) {
@@ -1146,7 +1146,7 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
   o->eq_stuck = WEAR_NOWHERE;
   if (o->spec) checkSpec(this, CMD_ARROW_RIPPED, "", NULL);
 
-  TBaseWeapon *tbw = dynamic_cast<TBaseWeapon *>(o); 
+  TBaseWeapon *tbw = dynamic_cast<TBaseWeapon *>(o);
   if (tbw && !safe) {
 
     dam = (int) (1.0 * tbw->baseDamage());
@@ -1156,7 +1156,7 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
     } else {
       if (dice(1, 100) < tbw->getCurSharp() && !isImmune(IMMUNE_BLEED, numx)) {
         char buf[256];
-        sprintf(buf, "$n's %s starts bleeding as $p is taken out of it.", 
+        sprintf(buf, "$n's %s starts bleeding as $p is taken out of it.",
                  describeBodySlot(numx).c_str());
         act(buf, TRUE, this, tbw, NULL, TO_ROOM);
         sprintf(buf, "Your %s starts bleeding as $p is taken out of it.",
@@ -1183,7 +1183,7 @@ TThing *TBeing::unequip(wearSlotT pos)
 
   if ((pos < MIN_WEAR) || (pos >= MAX_WEAR))
     return NULL;
- 
+
   if (!equipment[pos])
     return NULL;
 
@@ -1207,7 +1207,7 @@ TThing *TBeing::unequip(wearSlotT pos)
                    to->affected[j].modifier2,
                    to->obj_flags.bitvector, FALSE, SILENT_NO);
     }
-  } 
+  }
 
   affectTotal();
   affectChange(origamt, SILENT_NO);
@@ -1256,8 +1256,8 @@ TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos)
                    to->affected[j].modifier,
                    to->affected[j].modifier2,
                    to->obj_flags.bitvector, FALSE, SILENT_YES);
-    } 
-  } 
+    }
+  }
 
   ch->affectTotal();
 
@@ -1389,13 +1389,13 @@ TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT type)
 
   if (!(numx = get_number(&tmp)))
     return (0);
- 
-  for (StuffIter it=list.begin(); 
-       it!=list.end() && (j <= numx); 
+
+  for (StuffIter it=list.begin();
+       it!=list.end() && (j <= numx);
        ++it){
     t=*it;
     if (isname(tmp, t->name)) {
-      if (type == TYPETHING || 
+      if (type == TYPETHING ||
           ((type == TYPEBEING) && dynamic_cast<TBeing *>(t)) ||
           ((type == TYPEOBJ) && dynamic_cast<TObj *>(t)) ||
           ((type == TYPEPC) && dynamic_cast<TPerson *>(t)) ||
@@ -1408,7 +1408,7 @@ TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT type)
     if (dynamic_cast<TTable *>(t) && t->rider) {
       for (i = t->rider; i; i = i->nextRider) {
         if (isname(tmp, i->name)) {
-          if (type == TYPETHING || 
+          if (type == TYPETHING ||
               ((type == TYPEBEING) && dynamic_cast<TBeing *>(i)) ||
               ((type == TYPEOBJ) && dynamic_cast<TObj *>(i)) ||
               ((type == TYPEPC) && dynamic_cast<TPerson *>(i)) ||
@@ -1424,7 +1424,7 @@ TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT type)
   return NULL;
 }
 
-// Search a given list for an object, and return a pointer to that object 
+// Search a given list for an object, and return a pointer to that object
 TThing *get_thing_on_list(const char *name, TThing *list)
 {
   TThing *i;
@@ -1446,7 +1446,7 @@ TThing *get_thing_on_list(const char *name, TThing *list)
   return (0);
 }
 
-// Search a given list for an object number, and return a ptr to that obj 
+// Search a given list for an object number, and return a ptr to that obj
 TThing *get_thing_on_list_num(int num, TThing *list)
 {
   TThing *i;
@@ -1500,7 +1500,7 @@ TObj *get_num_obj_in_list(TBeing *ch, int num, StuffList list, int shop_nr)
   return NULL;
 }
 
-// search the entire world for an object, and return a pointer  
+// search the entire world for an object, and return a pointer
 TObj *get_obj(const char *name, exactTypeT exact)
 {
   int j, numx;
@@ -1525,7 +1525,7 @@ TObj *get_obj(const char *name, exactTypeT exact)
 }
 
 
-// search the entire world for an object number, and return a pointer  
+// search the entire world for an object number, and return a pointer
 TObj *get_obj_num(int nr)
 {
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
@@ -1535,7 +1535,7 @@ TObj *get_obj_num(int nr)
   return (0);
 }
 
-// search a room for a char, and return a pointer if found.. 
+// search a room for a char, and return a pointer if found..
 TBeing *get_char_room(const sstring &name, int room, int *count)
 {
   TThing *i=NULL;
@@ -1563,7 +1563,7 @@ TBeing *get_char_room(const sstring &name, int room, int *count)
   return NULL;
 }
 
-// search all over the world for a char, and return a pointer if found 
+// search all over the world for a char, and return a pointer if found
 TBeing *get_char(const char *name, exactTypeT exact)
 {
   TBeing *i;
@@ -1620,7 +1620,7 @@ void TObj::update(int use)
 
   for(StuffIter it=stuff.begin();it!=stuff.end();++it)
     (*it)->update(use);
-} 
+}
 
 void TBeing::updateCharObjects()
 {
@@ -1635,8 +1635,8 @@ void TBeing::updateCharObjects()
 }
 
 void extract_edit_char(TMonster *ch)
-{                          
-  if (ch->number > -1)         
+{
+  if (ch->number > -1)
     mob_index[ch->getMobIndex()].addToNumber(-1);
 
   mobCount--;
@@ -1653,7 +1653,7 @@ void extract_edit_char(TMonster *ch)
 
 
 // Here follows high-level versions of some earlier routines, ie functions
-// which incorporate the actual player-data.                              
+// which incorporate the actual player-data.
 
 TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)
 {
@@ -1751,7 +1751,7 @@ TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsig
     if ((range == 0 && here) || range > 0) {
       for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
         TBeing *tbt = dynamic_cast<TBeing *>(t);
-        if (tbt && isname(tmp, tbt->name) && 
+        if (tbt && isname(tmp, tbt->name) &&
             // use same func as scan.  technically might need a canSeeInfra too
             can_see_char_other_room(ch, tbt, rp)) {
           j++;
@@ -1796,14 +1796,14 @@ TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, in
           if (ch->canSee(i, infra))
             return i;
         } else
-          return i; 
+          return i;
       } else if (checkPoly && i->desc && i->desc->original) {
         if ((!exact && isname(name, i->desc->original->name)) || (exact && is_exact_name(name, i->desc->original->name))) {
           if (visible) {
             if (ch->canSee(i->desc->original, infra))
               return i->desc->original;
           } else
-            return i->desc->original; 
+            return i->desc->original;
         }
       }
     }
@@ -1832,14 +1832,14 @@ TBeing *get_pc_room(const TBeing *ch, const sstring &name, exactTypeT exact, inf
           if (ch->canSee(i, infra))
             return i;
         } else
-          return i; 
+          return i;
       } else if (checkPoly && i->desc && i->desc->original) {
         if ((!exact && isname(name, i->desc->original->name)) || (exact && is_exact_name(name, i->desc->original->name))) {
           if (visible) {
             if (ch->canSee(i->desc->original, infra))
               return i->desc->original;
           } else
-            return i->desc->original; 
+            return i->desc->original;
         }
       }
     }
@@ -1849,7 +1849,7 @@ TBeing *get_pc_room(const TBeing *ch, const sstring &name, exactTypeT exact, inf
 
 
 // get a character from anywhere in the world, doesn't care much about
-// being in the same room... 
+// being in the same room...
 TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)
 {
   TBeing *i;
@@ -1925,7 +1925,7 @@ TThing *get_thing_in_list_getable(TBeing *ch, const char *name, StuffList list)
                  ch->carryWeightLimit() - ch->getCarriedWeight()) != -1)) {
         TObj *tobj = dynamic_cast<TObj *>(o);
         if (tobj) {
-          if (ch->isImmortal() || 
+          if (ch->isImmortal() ||
                (tobj->canWear(ITEM_WEAR_TAKE) && !tobj->isObjStat(ITEM_PROTOTYPE))) {
             if (!*name || isname(name, tobj->name))
               return(tobj);
@@ -1986,7 +1986,7 @@ TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int 
     t=*it;
     if (!t->name.empty() && isname(tmp, t->name)) {
       if (ch->canSee(t)) {
-        if (type == TYPETHING || 
+        if (type == TYPETHING ||
               ((type == TYPEBEING) && dynamic_cast<TBeing *>(t)) ||
               ((type == TYPEOBJ) && dynamic_cast<TObj *>(t)) ||
               ((type == TYPEPC) && dynamic_cast<TPerson *>(t)) ||
@@ -2000,7 +2000,7 @@ TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int 
     if (dynamic_cast<TTable *>(t)) {
       for (i = t->rider; i; i = i->nextRider) {
         if (isname(tmp, i->name) && ch->canSee(i)) {
-          if (type == TYPETHING || 
+          if (type == TYPETHING ||
               ((type == TYPEBEING) && dynamic_cast<TBeing *>(i)) ||
               ((type == TYPEOBJ) && dynamic_cast<TObj *>(i)) ||
               ((type == TYPEPC) && dynamic_cast<TPerson *>(i)) ||
@@ -2013,7 +2013,7 @@ TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int 
       }
     }
   }
-  if (count) 
+  if (count)
     *count = j;
   return NULL;
 }
@@ -2058,7 +2058,7 @@ TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exa
 
   j = count ? *count : 1;
 
-  // ok.. no luck yet. scan the entire obj list 
+  // ok.. no luck yet. scan the entire obj list
   for(TObjIter iter=object_list.begin();
       iter!=object_list.end() && (j <= numx);++iter){
     if ((exact && is_exact_name(tmp, (*iter)->name)) ||
@@ -2075,7 +2075,7 @@ TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exa
   return (0);
 }
 
-// search the entire world for an object, and return a pointer 
+// search the entire world for an object, and return a pointer
 TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact)
 {
   TObj *i;
@@ -2148,7 +2148,7 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
       }
       if (j == numx)
         return obj;
-      else 
+      else
         j++;
     }
   }
@@ -2164,19 +2164,19 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
   return NULL;
 }
 
-// Generic Find, designed to find any object/character                    
-// Calling :                                                              
-//  *arg      is the sting containing the sstring to be searched for.       
-//            This sstring doesn't have to be a single word, the routine    
-//            extracts the next word itself.                              
-//  bv        All those bits that you want to "search through".            
-//            Bit found will be result of the function                     
-//  *ch       This is the person that is trying to "find"                  
-//  **tar_ch  Will be NULL if no character was found, otherwise points     
-//  **tar_obj Will be NULL if no object was found, otherwise points        
-//                                                                        
-// The routine returns a pointer to the next word in *arg (just like the  
-// one_argument routine).                                                 
+// Generic Find, designed to find any object/character
+// Calling :
+//  *arg      is the sting containing the sstring to be searched for.
+//            This sstring doesn't have to be a single word, the routine
+//            extracts the next word itself.
+//  bv        All those bits that you want to "search through".
+//            Bit found will be result of the function
+//  *ch       This is the person that is trying to "find"
+//  **tar_ch  Will be NULL if no character was found, otherwise points
+//  **tar_obj Will be NULL if no object was found, otherwise points
+//
+// The routine returns a pointer to the next word in *arg (just like the
+// one_argument routine).
 
 TObj *generic_find_obj(sstring arg, int bv, TBeing *ch)
 {
@@ -2246,7 +2246,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
 
   // please leave this ordering alone
   // look for beings first
-  // look in inventory before worn 
+  // look in inventory before worn
   // look at worn before room
   // look in room before world
   //  look for extra descriptions in room before world
@@ -2336,24 +2336,24 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
     TObj *tobj = dynamic_cast<TObj *>(t);
     if (((vnum >= 0) && tobj && (tobj->objVnum() == vnum)) ||
         (tmp && *tmp && isname(tmp, t->name))) {
-      if (j++ == num) 
+      if (j++ == num)
         return t;
     } else if (dynamic_cast<TSpellBag *>(t) && check_spellbag) {
       bag = t;
       for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
-    } else if (dynamic_cast<TBag *>(t) && check_bag) {       
+    } else if (dynamic_cast<TBag *>(t) && check_bag) {
       bag = t;
       for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
     }
@@ -2363,15 +2363,15 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
     TObj *tobj = dynamic_cast<TObj *>(t);
     if (((vnum >= 0) && tobj && (tobj->objVnum() == vnum)) ||
         (tmp && *tmp && isname(tmp, t->name))) {
-      if (j++ == num) 
+      if (j++ == num)
         return t;
     } else if (dynamic_cast<TSpellBag *>(t) && check_spellbag) {
       bag = t;
       for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
     } else if (dynamic_cast<TBag *>(t) && check_bag) {
@@ -2379,8 +2379,8 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
       for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
         TObj *to = dynamic_cast<TObj *>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
     }
@@ -2391,15 +2391,15 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
     TObj *to = dynamic_cast<TObj *>(t);
     if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
         (tmp && *tmp && isname(tmp, t->name))) {
-      if (j++ == num) 
+      if (j++ == num)
         return t;
     } else if (dynamic_cast<TSpellBag *>(to) && check_spellbag) {
       bag = to;
       for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t2=*it);++it) {
         TObj *to2 = dynamic_cast<TObj *>(t2);
         if (((vnum >= 0) && to2 && (to2->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t2->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t2->name)))
+          if (j++ == num)
             return t2;
       }
     } else if (dynamic_cast<TBag *>(to) && check_bag) {
@@ -2407,8 +2407,8 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
       for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t2=*it);++it) {
         TObj *to2 = dynamic_cast<TObj *>(t2);
         if (((vnum >= 0) && to2 && (to2->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t2->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t2->name)))
+          if (j++ == num)
             return t2;
       }
     }
@@ -2422,12 +2422,12 @@ void TBeing::addCaptive(TBeing *ch)
     return;
 
   if (ch->getCaptiveOf()) {
-    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) when they were already captured.") % 
+    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) when they were already captured.") %
       ch->getName() % getName());
     return;
   }
   if (getCaptiveOf()) {
-    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) who is also captive.") % 
+    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) who is also captive.") %
       ch->getName() % getName());
     return;
   }
@@ -2451,10 +2451,10 @@ void TBeing::remCaptive(TBeing *ch)
       break;
   }
   if (!t) {
-    vlogf(LOG_BUG,format("remCaptive could not find %s in captive list of %s.") % 
+    vlogf(LOG_BUG,format("remCaptive could not find %s in captive list of %s.") %
       ch->getName() % getName());
     return;
-  }  
+  }
   if (!last) {
     // head of list
     setCaptive(t->getNextCaptive());
@@ -2472,7 +2472,7 @@ void mud_assert(int parm, const char *errorMsg,...)
 {
   char message[512];
   va_list ap;
- 
+
   if (parm)
     return;
 
@@ -2504,6 +2504,6 @@ TBeing *get_best_char_room(const TBeing *ch, const char *name, visibleTypeT visi
     // see invis, who cares about infra in this situation...
     i = get_char_room(name, ch->inRoom(), NULL);
   }
-  
+
   return i;
 }

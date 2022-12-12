@@ -151,18 +151,18 @@ void TWand::lowCheck()
   if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL) ||
       ((curspell > TYPE_UNDEFINED) &&
        ((!discArray[curspell] ||
-        ((discArray[curspell]->typ != SPELL_RANGER) && 
-         !discArray[curspell]->minMana && 
-         !discArray[curspell]->minLifeforce && 
+        ((discArray[curspell]->typ != SPELL_RANGER) &&
+         !discArray[curspell]->minMana &&
+         !discArray[curspell]->minLifeforce &&
          !discArray[curspell]->minPiety)) ||
       (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-    vlogf(LOG_LOW, format("wand (%s:%d) has messed up spell(%d)") % 
+    vlogf(LOG_LOW, format("wand (%s:%d) has messed up spell(%d)") %
          getName() % objVnum() % curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
       vlogf(LOG_LOW, "bogus range");
     else if (!discArray[curspell])
       vlogf(LOG_LOW, format("bogus spell, %d") %  curspell);
-    else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce && 
+    else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce &&
       !discArray[curspell]->minPiety))
       vlogf(LOG_LOW, "non-spell");
   }
@@ -240,7 +240,7 @@ int TWand::useMe(TBeing *ch, const char * argument)
     // then we ought to use some other magic-item (probably scroll)
     act("Sparks and smoke come forth from $p.", FALSE, ch, this, 0, TO_CHAR);
     act("Sparks and smoke come forth from $p.", FALSE, ch, this, 0, TO_ROOM);
-    return FALSE; 
+    return FALSE;
   }
 
   bits = generic_find(argument, bv, ch, &tmp_char, &o);

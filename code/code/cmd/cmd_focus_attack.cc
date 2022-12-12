@@ -7,7 +7,7 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
 {
   const int FOCUS_ATTACK_MOVE = 10;
   TBeing *victim = nullptr;
-  
+
   if (checkBusy()) {
     return FALSE;
   }
@@ -19,7 +19,7 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  // Adding a lockout 
+  // Adding a lockout
   if (affectedBySpell(SKILL_FOCUS_ATTACK)) {
     sendTo("You are still recovering from your last focused attack and cannot use this ability again at this time.\n\r");
     return FALSE;
@@ -30,26 +30,26 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
     return FALSE;
   }
 
-  if (!(isImmortal() || IS_SET(specials.act, ACT_IMMORTAL))) 
+  if (!(isImmortal() || IS_SET(specials.act, ACT_IMMORTAL)))
     addToMove(-FOCUS_ATTACK_MOVE);
-  
-  if (!(victim = vict) && 
-     (!(victim = get_char_room_vis(this, argument))) && 
+
+  if (!(victim = vict) &&
+     (!(victim = get_char_room_vis(this, argument))) &&
      (!(victim = fight()))) {
     sendTo("Who do you want to attack?\n\r");
     return FALSE;
   }
 
-  if (!sameRoom(*victim)) { 
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
-  
+
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
     sendTo("You cannot attack an immortal.\n\r");
     return FALSE;
   }
-  
+
   affectedData aff1;
   aff1.type = SKILL_FOCUS_ATTACK;
   aff1.duration = Pulse::UPDATES_PER_MUDHOUR/2;

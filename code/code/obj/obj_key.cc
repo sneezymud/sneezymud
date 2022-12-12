@@ -56,7 +56,7 @@ void TKey::lowCheck()
 
   if(isRentable()){
     db.query("select 1 from property where key_vnum=%i", objVnum());
-    
+
     if(!db.fetchRow())
       vlogf(LOG_LOW, format("rentable key %i (%s)!") % objVnum() %  getName());
   }
@@ -83,7 +83,7 @@ int TKey::putMeInto(TBeing *ch, TOpenContainer *container)
   TObj *o;
   TThing *t=NULL;
   char buf[256];
-  
+
   for(StuffIter it=container->stuff.begin();it!=container->stuff.end() && (t=*it);++it){
     o = dynamic_cast<TObj *>(t);
 

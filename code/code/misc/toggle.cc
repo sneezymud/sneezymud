@@ -54,18 +54,18 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Silverclaw Quest: gave collar", Mob::SCAR},
   {"Silverclaw Quest: find map", Mob::HOBBIT_ADVENTURER},
   {"Silverclaw Quest: find Gruum", Mob::HOBBIT_ADVENTURER},
-  {"Silverclaw Quest: find Warlord", Mob::GRUUM},   
-  {"Silverclaw Quest: find Bishop", Mob::GRUUM}, // 35 
+  {"Silverclaw Quest: find Warlord", Mob::GRUUM},
+  {"Silverclaw Quest: find Bishop", Mob::GRUUM}, // 35
   {"Silverclaw Quest: find tablet", Mob::GHOST_BISHOP},
   {"Silverclaw Quest: on solo", Mob::GHOST_BISHOP},
-  {"Silverclaw Quest: load tablet", Mob::UNDEAD_CHIEF}, 
+  {"Silverclaw Quest: load tablet", Mob::UNDEAD_CHIEF},
   {"Silverclaw Quest: find cloud dragon", Mob::DRAGON_CLOUD},
   {"Silverclaw Quest: find bronze dragon", Mob::DRAGON_BRONZE}, // 40
-  {"Silverclaw Quest: find worker dragon", Mob::DRAGON_WORKER},  
+  {"Silverclaw Quest: find worker dragon", Mob::DRAGON_WORKER},
   {"Silverclaw Quest: find gold dragon", Mob::DRAGON_GOLD},
   {"Silverclaw Quest: find silver dragon", Mob::DRAGON_SILVER},
   {"Silverclaw Quest: find Raliki", Mob::RALIKI},
-  {"Silverclaw Quest: kill Raliki", Mob::RALIKI}, // 45 
+  {"Silverclaw Quest: kill Raliki", Mob::RALIKI}, // 45
   {"Holy Devastator Quest:  find Miser Ben", Mob::CREED},
   {"Holy Devastator Quest:  took bribe", Mob::MISER_BEN},
   {"Holy Devastator Quest:  find opal", Mob::CREED},
@@ -117,7 +117,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"", Mob::NONE},
   {"", Mob::NONE},   //95
   {"Holy Devastator Quest:  has Devastator", Mob::CREED},
-  {"Spirit of Warrior Quest:  has ancient symbol", Mob::SPIRIT_OF_WARRIOR},  
+  {"Spirit of Warrior Quest:  has ancient symbol", Mob::SPIRIT_OF_WARRIOR},
   {"Spirit of Warrior Quest:  has holy white defender", Mob::SPIRIT_OF_WARRIOR},
   {"Spirit of Warrior Quest:  has moss covered robes", Mob::SPIRIT_OF_WARRIOR},
   {"Sculpture Quest:  find the high priest", Mob::DWARVEN_AMBASSADOR}, //100
@@ -196,7 +196,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Ranger 1st Quest: Finished", Mob::HERMIT_GHPARK},
   {"Is Eligible for Ranger L14 Quest", Mob::NONE},
   {"Has Started Ranger L14 Quest", Mob::HERMIT_JED}, // 175
-  {"Has Seen Kobold Poacher", Mob::POACH_KOBOLD}, 
+  {"Has Seen Kobold Poacher", Mob::POACH_KOBOLD},
   {"Seeking Orc Poacher", Mob::HERMIT_JED},
   {"Has Seen Orc Poacher", Mob::POACH_ORC},
   {"Seeking Blind Pygmy Bone Woman", Mob::HERMIT_JED},
@@ -239,7 +239,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"", Mob::NONE},
   {"", Mob::NONE},
   {"", Mob::NONE},
-  {"Warrior L40 Quest: Eligible", Mob::NONE},                  
+  {"Warrior L40 Quest: Eligible", Mob::NONE},
   {"Warrior L40 Quest: Started", Mob::CHIEF_MALE_VILLAGER}, //220
   {"Warrior L40 Quest: Killing Chief", Mob::ELDERLY_SHAMAN},
   {"Warrior L40 Quest: Killing Shaman", Mob::ELDERLY_SHAMAN},
@@ -318,7 +318,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Lightsaber quest: gave essence", 13745},
   {"Lightsaber quest: gave rockfish", 13745},
   {"Lightsaber quest: gave essence", 13745},
-  {"Creation Choice: Fae Touched", Mob::NONE}, 
+  {"Creation Choice: Fae Touched", Mob::NONE},
   {"Trait: Real Aging", Mob::NONE},
   {"No Experience Gain", Mob::NONE},
   {"Practices Fixed", Mob::NONE},
@@ -341,7 +341,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"February Quest: Gave 3 tulips", Mob::WIFE_FARMER},
   {"February Quest: Gave 4 tulips", Mob::WIFE_FARMER},
   {"February Quest: Gave 5 tulips", Mob::WIFE_FARMER}, //320
-  {"February Quest: Gave 1 bouquet", Mob::CLOWN_SCARY}, 
+  {"February Quest: Gave 1 bouquet", Mob::CLOWN_SCARY},
   {"February Quest: Gave 2 bouquets", Mob::CLOWN_SCARY},
   {"February Quest: Gave 3 bouquets", Mob::CLOWN_SCARY},
   {"February Quest: Gave 4 bouquets", Mob::CLOWN_SCARY},
@@ -391,7 +391,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] =
   {"Newbie: Fighting Mouse", Mob::ANY}, //368
   {"Newbie: Killed Mouse", Mob::ANY}, //369
   {"Newbie: Has Completed Newbie Quest", Mob::ANY}, //370
-  {"", Mob::NONE}, 
+  {"", Mob::NONE},
 };
 
 
@@ -417,7 +417,7 @@ void updateCorpseLootFlags(const sstring &name, bool lootable)
   for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
     if((pcorpse=dynamic_cast<TPCorpse *>(*iter))){
       vlogf(LOG_PEEL, format("name=%s") % pcorpse->name);
-      
+
       if((sstring)pcorpse->name == ((sstring) (format("corpse %s pcorpse") % name))){
 	if(!lootable){
 	  pcorpse->addCorpseFlag(CORPSE_DENY_LOOT);
@@ -440,7 +440,7 @@ void closeClientConnections(TBeing *me)
     dn = d->next;
     if (d->m_bIsClient) {
       d->writeToQ("Link severed by admin.\n\r");
-      me->sendTo(COLOR_MOBS, format("Disconnecting client use by %s.\n\r") % 
+      me->sendTo(COLOR_MOBS, format("Disconnecting client use by %s.\n\r") %
 		 (d->character ? d->character->getName() : "Unknown"));
       delete d;
     }
@@ -467,10 +467,10 @@ void TBeing::doToggle(const char *arg2)
   if (!*arg) {
     sendTo(COLOR_BASIC, "\n\r<c>Player Toggles<1>\n\r");
     sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
-    
+
     const int width = 3;
     int printed = 0;
-    
+
     // print regular toggles from MAX_AUTO
     for (int iAuto = 0; iAuto < MAX_AUTO; iAuto++)
     {
@@ -480,7 +480,7 @@ void TBeing::doToggle(const char *arg2)
     }
 
     // toggles not represented by MAX_AUTO
-    sendTo(COLOR_BASIC, format("Wimpy             : %s%s") % int_on_or_off(getWimpy(), getWimpy()).c_str() % ((++printed % width) ? " | " : "\n\r"));   
+    sendTo(COLOR_BASIC, format("Wimpy             : %s%s") % int_on_or_off(getWimpy(), getWimpy()).c_str() % ((++printed % width) ? " | " : "\n\r"));
     sendTo(COLOR_BASIC, format("Deny Corpse Loot  : %s%s") % on_or_off(isPlayerAction(PLR_DENY_LOOT)) % ((++printed % width) ? "  | " : "\n\r"));
     sendTo(COLOR_BASIC, format("Newbie Helper     : %s%s") % on_or_off(isPlayerAction(PLR_NEWBIEHELP)) % ((++printed % width) ? "  | " : "\n\r"));
     sendTo(COLOR_BASIC, format("Anonymous         : %s\n\r") % on_or_off(isPlayerAction(PLR_ANONYMOUS)));
@@ -503,8 +503,8 @@ void TBeing::doToggle(const char *arg2)
     if(isImmortal() || GetMaxLevel() >= GOD_LEVEL1){
       sendTo(COLOR_BASIC, "\n\r<c>Immortal Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
-      
-	    sendTo(COLOR_BASIC, format("Invisibility      : %s | ") % int_on_or_off(getInvisLevel(), getInvisLevel()).c_str());    
+
+	    sendTo(COLOR_BASIC, format("Invisibility      : %s | ") % int_on_or_off(getInvisLevel(), getInvisLevel()).c_str());
       sendTo(COLOR_BASIC, format("Auto Success      : %s  | ") % on_or_off(IS_SET(desc->autobits, AUTO_SUCCESS)));
       sendTo(COLOR_BASIC, format("Stealth Mode      : %s\n\r") % on_or_off(isPlayerAction(PLR_STEALTH)));
       sendTo(COLOR_BASIC, format("No Hassle         : %s  | ") % on_or_off(isPlayerAction(PLR_NOHASSLE)));
@@ -529,7 +529,7 @@ void TBeing::doToggle(const char *arg2)
 
       sendTo(COLOR_BASIC, "\n\r<c>Test Code Toggles<1>\n\r");
       sendTo(COLOR_BASIC, "<c>-----------------------------------------------------------------------------<1>\n\r");
-      
+
       i=0;
       for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
 	      if(!toggleInfo[t]->testcode || t==TOG_NONE)
@@ -714,7 +714,7 @@ void TBeing::doToggle(const char *arg2)
         return;
       }
     }
-    
+
     if (hasQuestBit(TOG_IS_CRAVEN) && num < cravenlimit){
       sendTo("You just can't muster the bravery to fight that long!\n\r");
       num = cravenlimit;
@@ -724,7 +724,7 @@ void TBeing::doToggle(const char *arg2)
       sendTo(format("Please enter a number between 0-%d.\n\r") % (wimplimit-1));
       return;
     }
-    
+
     sendTo("You are now a wimp!!\n\r");
     sendTo(format("You will now flee at %d hit points!\n\r") % num);
     setWimpy(num);
@@ -778,7 +778,7 @@ void TBeing::doToggle(const char *arg2)
         if (vt100())
           remPlayerAction(PLR_VT100);
         doCls(false);
-        sendTo("Setting term type to Ansi...\n\r");	
+        sendTo("Setting term type to Ansi...\n\r");
       } else if(is_abbrev(arg2, "vt100")){
         if (!IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
           SET_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
@@ -909,7 +909,7 @@ void TBeing::doToggle(const char *arg2)
       sendTo("You will now get talens from any corpse you slay.\n\r");
       SET_BIT(desc->autobits, AUTO_LOOT_MONEY);
     }
-  } else if (is_abbrev(arg, "loot-all") || is_abbrev(arg, "notmoney") || 
+  } else if (is_abbrev(arg, "loot-all") || is_abbrev(arg, "notmoney") ||
              is_abbrev(arg, "all") ) {
     if (IS_SET(desc->autobits, AUTO_LOOT_NOTMONEY)) {
       sendTo("You will no longer get everything from corpses.\n\r");
@@ -1069,7 +1069,7 @@ void TBeing::doToggle(const char *arg2)
     for(togTypeT t=TOG_NONE;t<MAX_TOG_TYPES;t++){
      if(t==TOG_NONE)
 	    continue;
-      
+
       sendTo(COLOR_BASIC, format("%-17s : %s\n\r") %
 	     toggleInfo[t]->name %
 	     toggleInfo[t]->descr);
@@ -1084,11 +1084,11 @@ void TBeing::doToggle(const char *arg2)
 
 	      buf += toggleInfo[t]->name[i];
       }
-      
+
       if(is_abbrev(arg, buf)){
 	      toggleInfo[t]->toggle = !toggleInfo[t]->toggle;
 
-	      sendTo(format("%s is now %s.\n\r") % 
+	      sendTo(format("%s is now %s.\n\r") %
 	       toggleInfo[t]->name %
 	       (toggleInfo[t]->toggle ? "on" : "off"));
 	      vlogf(LOG_MISC, format("%s has turned %s %s") % getName() %

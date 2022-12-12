@@ -129,7 +129,7 @@ int main(int argc, char **argv)
     val=parse_data_file(file, i);
     if(val["vnum"]=="EOM")
       break;
-    
+
     if(val["DATATYPE"]=="room"){
       printf("replacing room %s\n", val["vnum"].c_str());
       db.query("delete from room where vnum=%s",
@@ -139,19 +139,19 @@ int main(int argc, char **argv)
       db.query("delete from roomexit where vnum=%s",
 	       val["vnum"].c_str());
 
-  
-      
+
+
       db.query("insert into room (vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,spec) values (%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
 	       val["vnum"].c_str(),val["x"].c_str(),val["y"].c_str(),val["z"].c_str(),val["name"].c_str(),val["description"].c_str(),val["room_flag"].c_str(),val["sector"].c_str(),val["teletime"].c_str(),val["teletarg"].c_str(),val["telelook"].c_str(),val["river_speed"].c_str(),val["river_dir"].c_str(),val["capacity"].c_str(),val["height"].c_str(),val["spec"].c_str());
     } else if(val["DATATYPE"]=="roomextra"){
       printf("replacing roomextra %s\n", val["vnum"].c_str());
-      
+
       db.query("insert into roomextra (vnum, name, description) values (%s,'%s','%s')", val["vnum"].c_str(), val["name"].c_str(), val["description"].c_str());
-      
+
     } else if(val["DATATYPE"]=="roomexit"){
       printf("replacing roomexit %s\n", val["vnum"].c_str());
-      
-      db.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s,%i,'%s','%s',%s,%s,%s,%s,%s,%s)", 
+
+      db.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s,%i,'%s','%s',%s,%s,%s,%s,%s,%s)",
 	       val["vnum"].c_str(),txt2dir(val["direction"]),val["name"].c_str(),val["description"].c_str(),val["type"].c_str(),val["condition_flag"].c_str(),val["lock_difficulty"].c_str(),val["weight"].c_str(),val["key_num"].c_str(),val["destination"].c_str());
     }
     printf("\n");

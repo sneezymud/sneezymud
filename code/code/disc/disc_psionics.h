@@ -25,7 +25,7 @@ public:
   CSkill skTelekinesis;
   CSkill skPsiDrain;
   CSkill skDimensionalFold;
-  
+
     CDPsionics();
     CDPsionics(const CDPsionics &a);
     CDPsionics & operator=(const CDPsionics &a);

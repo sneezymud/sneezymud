@@ -25,7 +25,7 @@ void TAudio::setFreq(int n)
 }
 
 TAudio::TAudio() :
-  TObj(), 
+  TObj(),
   freq(0)
 {
 }

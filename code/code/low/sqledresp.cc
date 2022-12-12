@@ -77,12 +77,12 @@ int main(int argc, char **argv)
     printf("val[DATATYPE]= %s\n", val["DATATYPE"].c_str());
     if(val["vnum"]=="EOM")
       break;
-    
+
     if(val["DATATYPE"]=="response"){
       printf("replacing response %s\n", val["vnum"].c_str());
       db.query("delete from mobresponses where vnum=%s",
 	       val["vnum"].c_str());
-      
+
       db.query("insert into mobresponses (vnum, response) values (%s,'%s')",
 	       val["vnum"].c_str(),val["response"].c_str());
     }

@@ -42,7 +42,7 @@ TVehicle::~TVehicle()
 
 void TVehicle::assignFourValues(int x1, int x2, int x3, int x4)
 {
-    
+
   setTarget(x1);
   setType(x2);
 
@@ -59,7 +59,7 @@ void TVehicle::getFourValues(int *x1, int *x2, int *x3, int *x4) const
 {
   *x1=getTarget();
   *x2=getType();
-  
+
   if(whole_zone)
     *x3=1;
   else
@@ -114,7 +114,7 @@ void TVehicle::driveSpeed(TBeing *ch, int speed)
       } else {
 	act("$n slams on the brakes, bringing $p to a skidding halt.",
 	    0, ch, this, 0, TO_ROOM);
-	act("You slam on the brakes, bringing $p to a skidding halt.", 
+	act("You slam on the brakes, bringing $p to a skidding halt.",
 	    0, ch, this, 0, TO_CHAR);
       }
     } else if(getSpeed() == 0){
@@ -125,7 +125,7 @@ void TVehicle::driveSpeed(TBeing *ch, int speed)
       act("You bring $p to a stop.",
 	  0, ch, this, 0, TO_CHAR);
     }
-    
+
     setSpeed(speed);
   } else {
     if(speed > getSpeed()){
@@ -137,7 +137,7 @@ void TVehicle::driveSpeed(TBeing *ch, int speed)
     } else {
       act("$p is already going that speed.", 0, ch, this, 0, TO_CHAR);
     }
-    
+
     setSpeed(speed);
   }
 }
@@ -179,18 +179,18 @@ bool TVehicle::isAllowedPath(int rnum)
 {
   // this isn't the right place to store this
   const int elevator[]={2352, 2354, 2355, 2356, 2357, 2368, 2369, 2362, -1};
-  const int trolley[]={100, 175, 176, 177, 178, 179, 180, 181, 182, 183, 
+  const int trolley[]={100, 175, 176, 177, 178, 179, 180, 181, 182, 183,
 		       184, 185,
-	      200, 215, 31050, 31051, 31052, 31053, 31054, 31055, 31056, 
-	      31057, 31058, 31059, 31060, 31061, 31062, 31063, 31064, 31065, 
-	      31066, 31067, 31068, 31069, 31070, 31071, 31072, 31073, 31074, 
-	      31075, 31076, 31077, 31078, 31079, 31080, 31081, 31082, 31083, 
-	      31084, 31085, 31086, 31087, 31088, 31089, 
+	      200, 215, 31050, 31051, 31052, 31053, 31054, 31055, 31056,
+	      31057, 31058, 31059, 31060, 31061, 31062, 31063, 31064, 31065,
+	      31066, 31067, 31068, 31069, 31070, 31071, 31072, 31073, 31074,
+	      31075, 31076, 31077, 31078, 31079, 31080, 31081, 31082, 31083,
+	      31084, 31085, 31086, 31087, 31088, 31089,
 	      650, 651, 652, 653, 654, 655, 656, 657, 658, 659,
 	      660, 667, 668, 669, 670, 671, 672, 673, 674, 700, 701, 702,
 	      703, 704, 705, 706, 707, 708, 709, 710, 711, 712, 713, 714,
-	      715, 716, 728, 729, 730, 731, 732, 733, 734, 
-	      34768, 34767, 34766, 34765, 34764, 34763, 34762, 34761, 
+	      715, 716, 728, 729, 730, 731, 732, 733, 734,
+	      34768, 34767, 34766, 34765, 34764, 34763, 34762, 34761,
 	      34760, 34759, 34758, 34757, 34756, 34755, 34754, 34753,
 		       34752,
 	      34751, 34750, 34749, 34748, 34747, 34746, 34745, 34744,
@@ -200,7 +200,7 @@ bool TVehicle::isAllowedPath(int rnum)
 	      34719, 34718, 34717, 34716, 34715, 34714, 34713,
 	      34712, 34711, 34710, 34709, 34708, 34707, 34706, 34705,
 	      34704, 34703, 34702, 34701, 34700, 735, 736, 737,
-	      738, 739, 1381, 1200, 1201, 1204, 1207, 1215, 1218, 1221, 
+	      738, 739, 1381, 1200, 1201, 1204, 1207, 1215, 1218, 1221,
 	      1301, 1302, 1303, -1};
 
 
@@ -255,7 +255,7 @@ void update_exits(TVehicle *vehicle)
       }
       return;
     }
-        
+
     for(int i=MIN_DIR;i<MAX_DIR;++i){
       if(vehicleroom->dir_option[i])
 	vehicleroom->dir_option[i]->to_room=vehicle->roomp->number;
@@ -274,7 +274,7 @@ void update_exits(TVehicle *vehicle)
 
 	  if(rp){
 	    for(int i=MIN_DIR;i<MAX_DIR;++i){
-	      if(rp->dir_option[i] && 
+	      if(rp->dir_option[i] &&
 		 (rp->dir_option[i]->to_room < zone_table[zone_num].bottom ||
 		  rp->dir_option[i]->to_room > zone_table[zone_num].top))
 		rp->dir_option[i]->to_room=vehicle->parent->roomp->number;
@@ -292,7 +292,7 @@ void update_exits(TVehicle *vehicle)
 
       if(rp){
 	for(int i=MIN_DIR;i<MAX_DIR;++i){
-	  if(rp->dir_option[i] && 
+	  if(rp->dir_option[i] &&
 	     (rp->dir_option[i]->to_room < zone_table[zone_num].bottom ||
 	      rp->dir_option[i]->to_room > zone_table[zone_num].top)){
 	    rp->dir_option[i]->to_room=vehicle->roomp->number;
@@ -337,7 +337,7 @@ void TVehicle::vehiclePulse(int pulse)
 	++dcount;
       }
     }
-    
+
     // if there's only one that isn't the way we came, change direction
     if(dcount == 1){
       for(dirTypeT dir=DIR_NORTH;dir<MAX_DIR;dir++){
@@ -357,7 +357,7 @@ void TVehicle::vehiclePulse(int pulse)
   // we let them go one room into non-water, like "beaching" the boat
   // or entering docks.
   TRoom *dest=real_roomp(troom->dir_option[getDir()]->to_room);
-  if(getType() == VEHICLE_BOAT && !dest->isWaterSector() && 
+  if(getType() == VEHICLE_BOAT && !dest->isWaterSector() &&
      !roomp->isWaterSector()){
     return;
   }
@@ -450,7 +450,7 @@ void TVehicle::vehiclePulse(int pulse)
       buf = format("$p creeps %s.") % dirs[getDir()];
     }
   }
-  
+
   // update exits
   update_exits(this);
 
@@ -462,7 +462,7 @@ void TVehicle::vehiclePulse(int pulse)
   for(StuffIter it=troom->stuff.begin();it!=troom->stuff.end() && (t=*it);++it)
     if((tb=dynamic_cast<TBeing *>(t)))
       tBeing.push_back(tb);
-  
+
   for(unsigned int tBeingIndex=0;tBeingIndex<tBeing.size();tBeingIndex++){
     act(buf, 0, tBeing[tBeingIndex], this, 0, TO_CHAR);
     driveLook(tBeing[tBeingIndex], true);

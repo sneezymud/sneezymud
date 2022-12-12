@@ -45,7 +45,7 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
   }
   if (noHarmCheck(victim))
     return FALSE;
-  
+
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
     if (!silent)
       sendTo("Attacking an immortal wouldn't be very smart.\n\r");
@@ -72,7 +72,7 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
 
   if (victim->getPosition() < POSITION_STANDING){
     if (!silent)
-      sendTo(format("That might work, but your victim seems to be on the %s.\n\r") % 
+      sendTo(format("That might work, but your victim seems to be on the %s.\n\r") %
 
 		   roomp->describeGround());
     return FALSE;
@@ -83,16 +83,16 @@ bool TBeing::canKneestrike(TBeing *victim, silentTypeT silent)
       sendTo("You can't kneestrike something that is flying.\n\r");
     return FALSE;
   }
-  if (victim->getHeight() < getPartMinHeight(ITEM_WEAR_LEGS)) {  
+  if (victim->getHeight() < getPartMinHeight(ITEM_WEAR_LEGS)) {
     if (!silent)
-      sendTo("Your victim is too far below you to kneestrike.\n\r");    
+      sendTo("Your victim is too far below you to kneestrike.\n\r");
     return FALSE;
   }
   if (victim->getHeight() < getPartMinHeight(ITEM_WEAR_FEET)) {
     if (!silent)
       sendTo("Your victim is too far above you to kneestrike.\n\r");
     return FALSE;
-  }   
+  }
 
 
   return true;
@@ -102,11 +102,11 @@ static int kneestrikeMiss(TBeing *c, TBeing *v, int type)
 {
   switch(type){
   case 0:{ // normal
-    act("$n tries to plant a knee on $N, but fails.", 
+    act("$n tries to plant a knee on $N, but fails.",
 	FALSE, c, 0, v, TO_NOTVICT);
-    act("$N moves out of the way and you miss your knee strike.", 
+    act("$N moves out of the way and you miss your knee strike.",
 	FALSE, c, 0, v, TO_CHAR);
-    act("$n tries to hit you with $s knee, but you dodge it.", 
+    act("$n tries to hit you with $s knee, but you dodge it.",
 	FALSE, c, 0, v, TO_VICT);
   } break;
   case 1:{ // monk counter move
@@ -140,12 +140,12 @@ static int kneestrikeMiss(TBeing *c, TBeing *v, int type)
   } break;
   /* Old monk Kneestrike counter move
   case 1:{ // monk counter move
-    act("$n tries to plant a knee on $N, but $E nimbly leaps out of the way.", 
+    act("$n tries to plant a knee on $N, but $E nimbly leaps out of the way.",
 	FALSE, c, 0, v, TO_NOTVICT);
-    act("$N nimbly leaps out of the way and you miss your knee strike.", 
+    act("$N nimbly leaps out of the way and you miss your knee strike.",
 	FALSE, c, 0, v, TO_CHAR);
-    act("$n tries to hit you with $s knee, but you nimbly leap out of the way.", 
-	FALSE, c, 0, v, TO_VICT);    
+    act("$n tries to hit you with $s knee, but you nimbly leap out of the way.",
+	FALSE, c, 0, v, TO_VICT);
   } break;
   */
   }
@@ -180,15 +180,15 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
      "$n slams $s head into your foot.",
      "$n slams $s knee into $N's foot."},
     // shorter than victims waist
-    {"You knee $N, knocking $S shin painfully.", 
+    {"You knee $N, knocking $S shin painfully.",
      "$n knees you, knocking your shin painfully.",
      "$n knees $N, knocking $N's shin painfully."},
     // shorter than victims body
-    {"You butt knees with $N, yow that kinda hurt!", 
+    {"You butt knees with $N, yow that kinda hurt!",
      "$n butts knees with you, yow that kinda hurt!",
      "$n butts knees with $N, bet that hurt!"},
     // shorter than victims arms
-    {"You slam your knee into $N's thigh.  Charley horse!", 
+    {"You slam your knee into $N's thigh.  Charley horse!",
      "$n slams $s knee into your thigh.  Charley horse!",
      "$n slams $s knee into $N's thigh.  Charley horse!"},
     // taller than victims arms and victim taller than casters arms
@@ -196,15 +196,15 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
      "$n jerks $s knee into your crotch.",
      "$n jerks $s knee into $N's crotch."},
     // victim shorter than arms
-    {"You plant your knee into $N's solar plexus.", 
-     "$n plants $s knee into your solar plexus.",    
+    {"You plant your knee into $N's solar plexus.",
+     "$n plants $s knee into your solar plexus.",
      "$n plants $s knee into $N's solar plexus."},
     // victim shorter than body
-    {"$N's head jerks back sharply as you knee $S chin hard.", 
+    {"$N's head jerks back sharply as you knee $S chin hard.",
      "Your head jerks back sharply as $n knees your chin hard.",
      "$N's head jerks back sharply as $n knees $S chin hard."},
     // victim shorter than waist
-    {"You smash your knee into $N's face.", 
+    {"You smash your knee into $N's face.",
      "$n smashes $s knee into your face.",
      "$n smashes $s knee into $N's face."},
     // victim shorter than foot
@@ -229,13 +229,13 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
   };
   if (!victim)
     return FALSE;
-    
+
   crit=critSuccess(c, SKILL_KNEESTRIKE);
   switch(crit){
     // would like to add broken limbs for CRIT_S_KILL eventually
     case CRIT_S_KILL:
     case CRIT_S_TRIPLE:
-      dam*=2; 
+      dam*=2;
       for(i=0;i<3;++i)
          act(crit_msg[1][i], FALSE, c, 0, victim, msg_tgt[i]);
       break;
@@ -248,7 +248,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
   }
 #if 0
 // why the fuck are we doing critFail inside the success case?
-    crit=critFail(c, SKILL_KNEESTRIKE);    
+    crit=critFail(c, SKILL_KNEESTRIKE);
     if(crit==CRIT_F_HITSELF){  // reduced damage
       dam/=2;
     for(i=0;i<3;++i) act(crit_msg[3][i], FALSE, c, 0, victim, msg_tgt[i]);
@@ -258,12 +258,12 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
     rc = c->crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    
+
     rc = c->trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
-    
-    c->reconcileDamage(victim, 0,SKILL_KNEESTRIKE);   
+
+    c->reconcileDamage(victim, 0,SKILL_KNEESTRIKE);
     return TRUE;
     }
 #endif
@@ -278,7 +278,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
 
     if ((rc = c->reconcileDamage(victim, 0,dam_type)) == -1)
       return DELETE_VICT;
-    return TRUE;    
+    return TRUE;
   } else if (caster_hgt < victim->getPartMinHeight(ITEM_WEAR_LEGS)) {
     // target foot
     pos = (::number(0,1) ? WEAR_FOOT_L : WEAR_FOOT_R);
@@ -295,7 +295,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
     // target knee
     pos = (::number(0,1) ? WEAR_LEG_L : WEAR_LEG_R);
     dam_type = DAMAGE_KNEESTRIKE_KNEE;
-    
+
     for(i=0;i<3;++i) act(hit_msg[3][i], FALSE, c, 0, victim, msg_tgt[i]);
   } else if (caster_hgt < victim->getPartMinHeight(ITEM_WEAR_ARMS)) {
     // target thigh
@@ -312,9 +312,9 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
     for(i=1;i<3;++i) act(hit_msg[5][i], FALSE, c, 0, victim, msg_tgt[i]);
 
     if (victim->getSex() == SEX_MALE) {
-      act("You jerk your knee into $N's crotch.  Felt like you got both of them.", 
+      act("You jerk your knee into $N's crotch.  Felt like you got both of them.",
 	  FALSE, c, 0, victim, TO_CHAR);
-      if (!victim->equipment[WEAR_WAIST] || 
+      if (!victim->equipment[WEAR_WAIST] ||
 	  isname("belt", victim->equipment[WEAR_WAIST]->name)) {
 	// no equipment or just a belt
 	victim->sendTo("Your voice just went up an octave.  Ouch!\n\r");
@@ -333,12 +333,12 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
 
     if ((rc = c->reconcileDamage(victim, 0,dam_type)) == -1)
       return DELETE_VICT;
-    return TRUE;    
+    return TRUE;
   } else if (victim_hgt < c->getPartMinHeight(ITEM_WEAR_WAIST)) {
     // target skull
     pos = WEAR_HEAD;
     dam_type = DAMAGE_KNEESTRIKE_FACE;
-      
+
     for(i=0;i<3;++i) act(hit_msg[8][i], FALSE, c, 0, victim, msg_tgt[i]);
   } else if (victim_hgt < c->getPartMinHeight(ITEM_WEAR_BODY)) {
     // target chin
@@ -362,7 +362,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
 
   // advance learning gave increased success, this seems bad idea
   //  dam += c->getAdvLearning(SKILL_KNEESTRIKE)/10;
-  
+
   // apply damage to caster if no leg eq
   caster_pos = (::number(0,1) ? WEAR_LEG_L : WEAR_LEG_R);
   if (!(item = dynamic_cast<TObj *>(c->equipment[caster_pos]))) {
@@ -371,7 +371,7 @@ static int kneestrikeHit(TBeing *c, TBeing *victim)
       return DELETE_THIS;
   } else if(item->isSpiked() || item->isObjStat(ITEM_SPIKED)){
     spikeddam=(int) (dam*0.15);
-    
+
     act("The spikes on your $o sink into $N.", FALSE, c, item, victim, TO_CHAR);
     act("The spikes on $n's $o sink into $N.", FALSE, c, item, victim, TO_NOTVICT);
     act("The spikes on $n's $o sink into you.", FALSE, c, item, victim, TO_VICT);
@@ -399,7 +399,7 @@ static int kneestrike(TBeing *caster, TBeing *victim)
   int rc = 0;
   const int KNEESTRIKE_MOVE   = 10;
   int adv=caster->getAdvLearning(SKILL_KNEESTRIKE);
-  
+
   if (!caster->canKneestrike(victim, SILENT_NO))
     return FALSE;
 
@@ -412,9 +412,9 @@ static int kneestrike(TBeing *caster, TBeing *victim)
   int bKnown = caster->getSkillValue(SKILL_KNEESTRIKE);
   int successfulHit = caster->specialAttack(victim, SKILL_KNEESTRIKE);
   int successfulSkill = caster->bSuccess(bKnown, SKILL_KNEESTRIKE);
-  
+
   // keep bSucc at end so counters are OK
-  if (!victim->awake() || 
+  if (!victim->awake() ||
       (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE)) {
 
     if (victim->canCounterMove((bKnown-adv/2)/3)) {
@@ -439,9 +439,9 @@ int TBeing::doKneestrike(const char *argument, TBeing *vict)
   int rc;
   TBeing *v;
   char name_buf[256];
-  
+
   strcpy(name_buf, argument);
-  
+
   if (!(v = vict)) {
     if (!(v = get_char_room_vis(this, name_buf))) {
       if (!(v = fight())) {
@@ -455,7 +455,7 @@ int TBeing::doKneestrike(const char *argument, TBeing *vict)
     return FALSE;
   }
   rc = kneestrike(this, v);
-  if (rc) 
+  if (rc)
     addSkillLag(SKILL_KNEESTRIKE, rc);
 
   if (IS_SET_ONLY(rc, DELETE_VICT)) {

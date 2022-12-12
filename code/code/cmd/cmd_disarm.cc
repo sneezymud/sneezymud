@@ -105,7 +105,7 @@ bool trytelekinesis(TBeing *caster, TBeing *victim, TObj *obj, bool success){
     return TRUE;
   }
 
-  act("You try to retrieve $p using telekinesis, but it is too difficult.", 
+  act("You try to retrieve $p using telekinesis, but it is too difficult.",
     FALSE, caster, obj, victim, TO_VICT, ANSI_CYAN);
   act("$N furrows $s brow for a moment, but nothing happens.",
     FALSE, caster, obj, victim, TO_NOTVICT, ANSI_NORMAL);
@@ -114,7 +114,7 @@ bool trytelekinesis(TBeing *caster, TBeing *victim, TObj *obj, bool success){
   return FALSE;
 }
 
-static int disarm(TBeing * caster, TBeing * victim, spellNumT skill) 
+static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
 {
   int percent = 0;
   int level = caster->getSkillLevel(skill);
@@ -156,7 +156,7 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
     }
 
     caster->affectJoin2(&af, joinFlagUpdateDur);
-    if (dynamic_cast<TMonster *>(victim) && victim->awake() && !victim->fight()) 
+    if (dynamic_cast<TMonster *>(victim) && victim->awake() && !victim->fight())
       caster->reconcileDamage(victim, 0, skill);
 
     return TRUE;
@@ -269,12 +269,12 @@ static int disarm(TBeing * caster, TBeing * victim, spellNumT skill)
   victim->unequip(worn);
   *victim->roomp += *obj;
   victim->logItem(obj, CMD_DISARM);
-  victim->doSave(SILENT_YES); 
+  victim->doSave(SILENT_YES);
   return TRUE;
 }
 
 
-int TBeing::doDisarm(sstring argument, TThing *v) 
+int TBeing::doDisarm(sstring argument, TThing *v)
 {
   TObj *to = NULL;
   TBeing * victim = fight();
@@ -290,7 +290,7 @@ int TBeing::doDisarm(sstring argument, TThing *v)
   if (v)
     victim = dynamic_cast<TBeing *>(v);
   else if (!v_name.empty())
-    victim = get_char_room_vis(this, v_name);     
+    victim = get_char_room_vis(this, v_name);
 
   // check if target was meant to be obj
   if (!victim && v)

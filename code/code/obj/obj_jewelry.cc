@@ -49,7 +49,7 @@ void TJewelry::lowCheck()
   for (i=0; i<MAX_OBJ_AFFECT;i++) {
     if ((affected[i].location == APPLY_ARMOR) &&
         (affected[i].modifier > 1))
-      vlogf(LOG_LOW, format("jewelry (%s : %d) had armor, bad!") % 
+      vlogf(LOG_LOW, format("jewelry (%s : %d) had armor, bad!") %
          getName() % objVnum());
   }
 

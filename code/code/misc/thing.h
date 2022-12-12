@@ -84,7 +84,7 @@ class TThing {
     int snum;                // Special variable used in builder manipulation
     int number;              // Number of thing
     int height;              // Height in centimeters
-    byte canBeSeen;          
+    byte canBeSeen;
     sstring name;              // Name of thing
     sstring real_name;         // used with disguise/polymorph
     sstring shortDescr;
@@ -96,11 +96,11 @@ class TThing {
     TThing *nextBorn;        // The next thing born in my room(mobiles)
     TRoom *roomp;
     Descriptor *desc;
-    extraDescription *ex_description;  // extra descriptions 
+    extraDescription *ex_description;  // extra descriptions
     TThing *rider;          // thing on me
     TThing *riding;         // thing I am on
     TThing *nextRider;
-    
+
   protected:
     TThing();
   public:
@@ -115,7 +115,7 @@ class TThing {
       // postfix operator
       return --(*this);
     }
-    
+
     // VIRTUAL FUNCTIONS
     virtual int editAverageMe(TBeing *, const char *);
     virtual int chiMe(TBeing *);
@@ -240,7 +240,7 @@ class TThing {
     virtual int swungObjectDamage(const TBeing *, const TBeing *) const;
     virtual double baseDamage() const { return 0; }
     virtual int detonateGrenade() { return FALSE; }
-    virtual int grenadeHit(TTrap *) { return FALSE; } 
+    virtual int grenadeHit(TTrap *) { return FALSE; }
     virtual bool hasHands() const { return FALSE; }
 
     virtual bool poisonObject() { return FALSE; }

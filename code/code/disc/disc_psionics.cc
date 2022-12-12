@@ -156,7 +156,7 @@ int TBeing::doPTell(const char *arg, bool visible){
     vict = NULL;
     return DELETE_VICT;
   }
-  if (IS_SET_DELETE(rc, DELETE_VICT)) 
+  if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_THIS;
 
   if (rc)
@@ -205,9 +205,9 @@ int TBeing::doPTell(const char *arg, bool visible){
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);
 
-  if (vict->desc && (vict->isPlayerAction(PLR_AFK) || (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5)))) 
+  if (vict->desc && (vict->isPlayerAction(PLR_AFK) || (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5))))
     act("$N appears to be away from $S terminal at the moment.", TRUE, this, 0, vict, TO_CHAR);
- 
+
   reconcileMana(SKILL_PSITELEPATHY, FALSE);
 
   return TRUE;
@@ -258,7 +258,7 @@ int TBeing::doPSay(const char *arg){
 
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
       tmp=*(it++);
-          
+
       if (!(mob = dynamic_cast<TBeing *>(tmp)))
         continue;
 
@@ -267,7 +267,7 @@ int TBeing::doPSay(const char *arg){
 
       mud_str_copy(capbuf, mob->pers(this), 256);
       strcpy(capbuf, sstring(capbuf).cap().c_str());
-      sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
+      sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
 
       if (mob->isPc()) {
         if (hasColorStrings(NULL, capbuf, 2)) {
@@ -275,7 +275,7 @@ int TBeing::doPSay(const char *arg){
             sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
 	    mob->sendTo(COLOR_COMM, format("%s thinks, \"%s%s\"\n\r") % tmpbuf % garbed % mob->norm());
             if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
-              sprintf(garbedBuf, "%s", 
+              sprintf(garbedBuf, "%s",
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
               d->clientf(format("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
             }
@@ -283,9 +283,9 @@ int TBeing::doPSay(const char *arg){
 	    mob->sendTo(COLOR_COMM, format("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
             if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               sprintf(nameBuf, "<c>%s<z>", tmpbuf);
-              sprintf(garbedBuf, "%s", 
+              sprintf(garbedBuf, "%s",
                 colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf(format("%d|%s|%s") % CLIENT_SAY % 
+              d->clientf(format("%d|%s|%s") % CLIENT_SAY %
                 colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
                 garbedBuf);
             }
@@ -302,7 +302,7 @@ int TBeing::doPSay(const char *arg){
           }
         }
       } else {
-	mob->sendTo(COLOR_COMM, format("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() % 
+	mob->sendTo(COLOR_COMM, format("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() %
 		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
         if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
           d->clientf(format("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
@@ -321,7 +321,7 @@ int TBeing::doPSay(const char *arg){
       if (mob == this)
         continue;
 
-      if (isPc() && !mob->isPc()) { 
+      if (isPc() && !mob->isPc()) {
         TMonster *tmons = dynamic_cast<TMonster *>(mob);
         tmons->aiSay(this, garbed);
         rc = tmons->checkResponses(this, 0, garbed, CMD_SAY);
@@ -329,7 +329,7 @@ int TBeing::doPSay(const char *arg){
           delete tmons;
           tmons = NULL;
         }
-        if (IS_SET_DELETE(rc, DELETE_VICT)) 
+        if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
     }
@@ -343,7 +343,7 @@ int TBeing::doPSay(const char *arg){
 void TBeing::doPShout(const char *msg){
   Descriptor *i;
   char garbed[256];
-  
+
   if(!doesKnowSkill(SKILL_PSITELEPATHY)){
     sendTo("You are not telepathic!\n\r");
     return;
@@ -358,7 +358,7 @@ void TBeing::doPShout(const char *msg){
     sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
     return;
   }
-  
+
 
   if (!*msg) {
     sendTo("What do you wish to broadcast to the world?\n\r");
@@ -515,7 +515,7 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
     return NULL;
 
   if (!caster->doesKnowSkill(sk)) {
-    caster->sendTo(format("You do not have the skill to use %s.\n\r") % 
+    caster->sendTo(format("You do not have the skill to use %s.\n\r") %
 		   discArray[sk]->name);
     return NULL;
   }
@@ -543,7 +543,7 @@ TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
     return NULL;
   }
 
-  if (caster->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r") 
+  if (caster->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r")
       || tVictim->isImmortal() || tVictim->inGroup(*caster))
     return NULL;
 
@@ -566,14 +566,14 @@ int TBeing::doPsiblast(const char *tString){
 
   if(!(tVictim=psiAttackChecks(this, SKILL_PSI_BLAST, tString)))
     return FALSE;
-  
+
   int bKnown=getSkillValue(SKILL_PSI_BLAST);
   int tDamage=0;
 
   if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
     act("You send a blast of psionic power towards $N!",
         FALSE, this, NULL, tVictim, TO_CHAR);
-    
+
     act("A look of shocked pain appears on $N's face.",
 	TRUE, this, NULL, tVictim, TO_CHAR);
     act("$n sends a blast of psionic power into your mind.",
@@ -645,7 +645,7 @@ int TBeing::doPsiblast(const char *tString){
     tVictim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
-  
+
 
   return TRUE;
 }
@@ -656,14 +656,14 @@ int TBeing::doMindthrust(const char *tString){
 
   if(!(tVictim=psiAttackChecks(this, SKILL_MIND_THRUST, tString)))
     return FALSE;
-  
+
   int bKnown=getSkillValue(SKILL_MIND_THRUST);
   int tDamage=0;
 
   if (bSuccess(bKnown, SKILL_MIND_THRUST)) {
     act("You use your psionic powers to stab at $N's mind!",
         FALSE, this, NULL, tVictim, TO_CHAR);
-    
+
     act("$N winces in pain.",
 	TRUE, this, NULL, tVictim, TO_CHAR);
     act("$n squints at you, causing a sharp stabbing pain in your mind.",
@@ -674,7 +674,7 @@ int TBeing::doMindthrust(const char *tString){
                           getSkillLevel(SKILL_MIND_THRUST),
                           getAdvLearning(SKILL_MIND_THRUST));
 
-    
+
     if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
       tVictim->addToDistracted(::number(3,7), FALSE);
     if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
@@ -704,7 +704,7 @@ int TBeing::doPsycrush(const char *tString){
 
   if(!(tVictim=psiAttackChecks(this, SKILL_PSYCHIC_CRUSH, tString)))
     return FALSE;
-  
+
   int bKnown=getSkillValue(SKILL_PSYCHIC_CRUSH);
   int tDamage=0;
   int level = getSkillLevel(SKILL_PSYCHIC_CRUSH);
@@ -713,12 +713,12 @@ int TBeing::doPsycrush(const char *tString){
     act("You reach out with your psionic powers and CRUSH $N's psyche!",
         FALSE, this, NULL, tVictim, TO_CHAR);
 
-    if(bSuccess(bKnown/4, SKILL_PSYCHIC_CRUSH) && 
+    if(bSuccess(bKnown/4, SKILL_PSYCHIC_CRUSH) &&
        !tVictim->affectedBySpell(SPELL_BLINDNESS) &&
        !tVictim->isAffected(AFF_TRUE_SIGHT) &&
        !tVictim->isAffected(AFF_CLARITY) &&
        !isNotPowerful(tVictim, level, SPELL_BLINDNESS, SILENT_YES)){
-				     
+
       act("$N's eyes open wide in shock.",
 	  TRUE, this, NULL, tVictim, TO_CHAR);
       act("$n's psychic crush is too much for you to bear and your vision goes blank.",
@@ -745,11 +745,11 @@ int TBeing::doPsycrush(const char *tString){
       doflee=1;
     }
 
-    
+
     tDamage = getSkillDam(tVictim, SKILL_PSYCHIC_CRUSH,
 			  getSkillLevel(SKILL_PSYCHIC_CRUSH),
 			  getAdvLearning(SKILL_PSYCHIC_CRUSH));
-    
+
   } else {
     psiAttackFailMsg(this, tVictim);
   }
@@ -762,7 +762,7 @@ int TBeing::doPsycrush(const char *tString){
     tVictim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
-  
+
   if(doflee && tVictim){
       act("An overwhelming sense of panic causes you to flee.",
 	  TRUE, this, NULL, tVictim, TO_VICT);
@@ -797,7 +797,7 @@ int TBeing::doKwave(const char *tString){
 
   if(!(tVictim=psiAttackChecks(this, SKILL_KINETIC_WAVE, tString)))
     return FALSE;
-  
+
   int bKnown=getSkillValue(SKILL_KINETIC_WAVE);
 
   if (bSuccess(bKnown, SKILL_KINETIC_WAVE)) {
@@ -843,7 +843,7 @@ int TBeing::doPsidrain(const char *tString){
     sendTo("Only mindflayer psionicists can drain.\n\r");
     return FALSE;
   }
-  
+
   // check incap or mortal etc
   if(tVictim->getPosition() > POSITION_INCAP){
     sendTo("You can only drain incapacitated victims.\n\r");
@@ -864,7 +864,7 @@ int TBeing::doPsidrain(const char *tString){
       perc += min(5, tVictim->GetMaxLevel()-GetMaxLevel());
     else if(tVictim->GetMaxLevel() < GetMaxLevel())
       perc -= min(5, GetMaxLevel()-tVictim->GetMaxLevel());
-    
+
     short int addhit=(int)((hitLimit()*perc)/100.0);
     short int addmana=(int)((manaLimit()*(perc/2))/100.0);
 
@@ -955,7 +955,7 @@ int TBeing::doDfold(const char *tString){
     location = tVictim->in_room;
 
   }
-  
+
   TRoom * rp = real_roomp(location);
 
   if (!rp) {

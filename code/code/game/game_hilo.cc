@@ -38,7 +38,7 @@ void HiLoGame::BetHi(TBeing *ch, const Card *new_card)
 	       (int)((float)bet * (1.0 + win_perc)));
     buf = format("$n wins!  $n's winnings are now at %i talens.") %
 	       (int)((float)bet * (1.0 + win_perc));
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);    
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
     observerReaction(ch, GAMBLER_HILO_BET);
 
     if(win_perc > 25){
@@ -65,7 +65,7 @@ void HiLoGame::BetLo(TBeing *ch, const Card *new_card)
 	       (int)((float)bet * (1.0 + win_perc)));
     buf = format("$n wins!  $n's winnings are now at %i talens.") %
 	       (int)((float)bet * (1.0 + win_perc));
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);    
+    act(buf, TRUE, ch, 0, 0, TO_ROOM);
     observerReaction(ch, GAMBLER_HILO_BET);
 
     if(win_perc > 25){
@@ -126,15 +126,15 @@ void HiLoGame::Bet(TBeing *ch, const sstring &arg)
       if(arg=="hi" || arg=="lo"){
 	new_card=deck.draw();
 	//	vlogf(LOG_PEEL, format("drew %s") %  new_card->getName());
-	
+
 	buf = format("$n bets %s.") % arg;
 	act(buf, TRUE, ch, 0, 0, TO_ROOM);
-	
+
 	ch->sendTo(COLOR_BASIC,format("You are dealt:\n\r%s\n\r") %new_card->getName());
-	
+
 	log_msg = format("$n is dealt:\n\r%s") % new_card->getName();
 	act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
-	
+
 	if(arg=="hi"){
 	  BetHi(ch, new_card);
 	} else if(arg=="lo"){

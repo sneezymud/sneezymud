@@ -26,13 +26,13 @@ class TBoard : public TObj {
 
     int getBoardLevel() const;
     void setBoardLevel(int n);
-    
+
     int postCount() const;
     int lookBoard(TBeing *ch, const char *arg);
     int readPost(TBeing *ch, const char *arg);
     int postToBoard(TBeing *ch, const sstring &arg);
     int removeFromBoard(TBeing *, const char *);
-    
+
     TBoard();
     TBoard(const TBoard &a);
     TBoard & operator=(const TBoard &a);

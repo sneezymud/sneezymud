@@ -28,7 +28,7 @@ void TThing::findBandage(int *)
 {
 }
 
-int findBandages(StuffList list) 
+int findBandages(StuffList list)
 {
   int count = 0;
 
@@ -81,7 +81,7 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
   if (!victim->validEquipSlot(slot)) {
     sendTo("They don't seem to have that body location.\n\r");
     return;
-  } 
+  }
   victim->equipChar(bandage, slot);
   victim->addToLimbFlags(slot, PART_BANDAGED);
   if (this != victim) {
@@ -91,7 +91,7 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
   } else {
     act("You bind your wounds with a $o.",TRUE,this,bandage,0,TO_CHAR);
     act("$n binds $s wounds with a $o.",TRUE,this,bandage,0,TO_ROOM);
-  } 
+  }
   if (victim->isLimbFlags(slot, PART_BLEEDING)) {
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->remLimbFlags(slot, PART_BLEEDING);
@@ -205,7 +205,7 @@ void TBeing::doBandage(const sstring &arg)
       sendTo("Syntax : Bandage <player> <body part>\n\r");
       return;
   }
-  
+
   // adjust for race
   band_num = max(1,(int) (band_num * ((double) getHeight()/(double) 70)));
 
@@ -261,7 +261,7 @@ void TThing::butcherMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
+
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
     return;
@@ -318,7 +318,7 @@ void TTool::butcherMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
+
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
     return;
@@ -360,7 +360,7 @@ void bareHandButcherMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
+
   if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
     ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
     return;

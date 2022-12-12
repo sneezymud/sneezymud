@@ -86,10 +86,10 @@ void TBeing::doDrive(sstring arg)
     vehicle->lockMe(this);
     return;
   }
-		   
+
   // authenticated commands
   int speed=convertTo<int>(buf);
-  if(speed || (is_abbrev(buf, "fast") || is_abbrev(buf, "medium") || 
+  if(speed || (is_abbrev(buf, "fast") || is_abbrev(buf, "medium") ||
 	       is_abbrev(buf, "slow") || is_abbrev(buf, "stop"))){
     if(!has_key(this, vehicle->getPortalKey())){
       sendTo("You need the keys to drive this vehicle!\n\r");

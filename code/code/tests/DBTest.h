@@ -18,7 +18,7 @@ class DBTest : public CxxTest::TestSuite
     TDatabase db(DB_SNEEZY);
 
     db.query("select vnum, name, price from obj where vnum=13711");
-    
+
     TS_ASSERT(db.fetchRow());
 
     TS_ASSERT_EQUALS(db["vnum"], "13711");
@@ -33,7 +33,7 @@ class DBTest : public CxxTest::TestSuite
 
   void testProdConnection(){
     TDatabase db(DB_SNEEZY);
-    
+
     db.query("select 42 as answer");
     db.fetchRow();
 

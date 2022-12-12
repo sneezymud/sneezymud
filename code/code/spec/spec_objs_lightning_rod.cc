@@ -136,7 +136,7 @@ int lightningRodGotHit(TBaseClothing *tObj, TBeing *tMaster, TBeing *tSucker)
 int lightningRodFryRoom(TBaseWeapon *tObj, TRoom *tRoom)
 {
 
-  if (Weather::getWeather(*tRoom) != Weather::LIGHTNING || 
+  if (Weather::getWeather(*tRoom) != Weather::LIGHTNING ||
       tRoom->isRoomFlag(ROOM_INDOORS) || ::number(0, 100))
     return FALSE;
 

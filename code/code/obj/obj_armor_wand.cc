@@ -90,9 +90,9 @@ void TArmorWand::evaluateMe(TBeing *ch) const
 void TArmorWand::generalUseMessage(const TBeing *ch, unsigned int bits, const TBeing *tmp_char, const TObj *o) const
 {
   if (bits == FIND_CHAR_ROOM) {
-    act("$n grabs $s $o and points at you.", 
+    act("$n grabs $s $o and points at you.",
          TRUE, ch, this, tmp_char, TO_VICT);
-    act("$n grabs $s $o and points at $N.", 
+    act("$n grabs $s $o and points at $N.",
          TRUE, ch, this, tmp_char, TO_NOTVICT);
     act("You grab your $o and point at $N.",
          FALSE, ch, this, tmp_char, TO_CHAR);

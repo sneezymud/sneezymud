@@ -41,9 +41,9 @@ void TBeing::doBrew(const char *arg)
     if ((t = equipment[i])) {
       // find the two spell comps, one for spell and one for brew spell
       t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
-      
+
       if(!comp_gen){
-	      if((comp_gen=dynamic_cast<TPotion *>(t)) && 
+	      if((comp_gen=dynamic_cast<TPotion *>(t)) &&
 	         comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
 	        comp_gen=NULL;
       }
@@ -53,7 +53,7 @@ void TBeing::doBrew(const char *arg)
     t->findSomeComponent(&invalid, &comp_spell, &comp_brew, which_spell, 1);
 
     if(!comp_gen){
-      if((comp_gen=dynamic_cast<TPotion *>(t)) && 
+      if((comp_gen=dynamic_cast<TPotion *>(t)) &&
 	       comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
 	      comp_gen=NULL;
     }

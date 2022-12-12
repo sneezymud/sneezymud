@@ -57,11 +57,11 @@ int TBeing::doShove(const char *argument, TBeing *vict)
     //compare pusher's str to rider's dex
     if ((!victim->rideCheck(victim->plotStat(STAT_CURRENT, STAT_AGI, 3, 18, 12) - plotStat(STAT_CURRENT, STAT_STR, 3, 18, 10))) &&
          !isImmortal()) {
-      act("You leap at $N, attempting to topple $M from $S $o, but fail.", 
+      act("You leap at $N, attempting to topple $M from $S $o, but fail.",
                 TRUE, this, victim->riding, victim, TO_CHAR);
-      act("$n leaps at you, attempting to topple you from your $o, but fails.", 
+      act("$n leaps at you, attempting to topple you from your $o, but fails.",
                 TRUE, this, victim->riding, victim, TO_VICT);
-      act("$n leaps at $N, attempting to topple $M off $S $o, but fails.", 
+      act("$n leaps at $N, attempting to topple $M off $S $o, but fails.",
                 TRUE, this, victim->riding, victim, TO_NOTVICT);
 
       rc = crashLanding(POSITION_RESTING);
@@ -76,7 +76,7 @@ int TBeing::doShove(const char *argument, TBeing *vict)
         TMonster *tmons = dynamic_cast<TMonster *>(victim);
         rc = tmons->takeFirstHit(*this);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
-          if (vict) 
+          if (vict)
             return rc;
           delete tmons;
           tmons = NULL;
@@ -86,9 +86,9 @@ int TBeing::doShove(const char *argument, TBeing *vict)
       }
       return TRUE;
     } else {
-      act("You leap at $N, toppling $M from $S $o.", 
+      act("You leap at $N, toppling $M from $S $o.",
           TRUE, this, victim->riding, victim, TO_CHAR);
-      act("$n leaps at you, toppling you from your $o.", 
+      act("$n leaps at you, toppling you from your $o.",
           TRUE, this, victim->riding, victim, TO_VICT);
       act("$n leaps at $N, toppling $M off $S $o.",
           TRUE, this, victim->riding, victim, TO_NOTVICT);
@@ -118,13 +118,13 @@ int TBeing::doShove(const char *argument, TBeing *vict)
     addSkillLag(skill, rc);
   return rc;
 }
- 
+
 int shove(TBeing *caster, TBeing * victim, char * direction, spellNumT skill)
 {
   int percent, level;
   dirTypeT dr;
   int shove_move = ::number(5,10);
- 
+
   if (caster->getCombatMode() == ATTACK_BERSERK) {
     caster->sendTo("You are berserking! You can't focus enough to shove anyone!\n\r");
     return FALSE;
@@ -166,31 +166,31 @@ int shove(TBeing *caster, TBeing * victim, char * direction, spellNumT skill)
   if (caster->bSuccess(bKnown+ percent, skill)) {
     if (victim->doesKnowSkill(SKILL_COUNTER_MOVE)) {
       if (min((int)victim->GetMaxLevel(),100) > percent) {
-        act("$N deftly resists your shove attempt.", 
+        act("$N deftly resists your shove attempt.",
             FALSE, caster, 0, victim, TO_CHAR);
-        act("$N deftly resists $n's shove attempt.", 
+        act("$N deftly resists $n's shove attempt.",
             FALSE, caster, 0, victim, TO_NOTVICT);
-        act("You deftly resist $n's attempt to shove you.", 
+        act("You deftly resist $n's attempt to shove you.",
             FALSE, caster, 0, victim, TO_VICT);
         if (!victim->isPc())
-          dynamic_cast<TMonster *>(victim)->aiShoveReact(caster, FALSE, dr); 
-      } else 
+          dynamic_cast<TMonster *>(victim)->aiShoveReact(caster, FALSE, dr);
+      } else
         caster->throwChar(victim, dr, FALSE, SILENT_NO, false);
 
       if (!victim->isPc())
-        dynamic_cast<TMonster *>(victim)->aiShoveReact(caster, 
+        dynamic_cast<TMonster *>(victim)->aiShoveReact(caster,
                 (caster->exitDir(dr) ? TRUE : FALSE), dr);
 
     } else {
       caster->throwChar(victim, dr, FALSE, SILENT_NO, false);
       if (!victim->isPc())
-        dynamic_cast<TMonster *>(victim)->aiShoveReact(caster, 
+        dynamic_cast<TMonster *>(victim)->aiShoveReact(caster,
       				      (caster->exitDir(dr) ? TRUE : FALSE), dr);
     }
   } else {
-    act("You try to shove $N to no avail!", 
+    act("You try to shove $N to no avail!",
         TRUE, caster, 0, victim, TO_CHAR);
-    act("$n tries to shove $N but has no luck.", 
+    act("$n tries to shove $N but has no luck.",
         TRUE, caster, 0, victim, TO_NOTVICT);
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
@@ -219,9 +219,9 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
       (v->task->task == TASK_TRANCE_OF_BLADES) &&
       (vweap = dynamic_cast<TBaseWeapon *>(v->heldInPrimHand())))
     trance = TRUE;
-  
+
   w_type -= TYPE_HIT;
-  
+
   // base amount, modified for difficulty
   // the higher amt is, the more things get blocked
   int amt = 0;
@@ -246,7 +246,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
     //    amt = (int)((float) amt * v->plotStat(STAT_CURRENT, STAT_AGI, 0.80, 1.25, 1.00));
     //    amt = (int)((float) amt * v->plotStat(STAT_CURRENT, STAT_SPE, 0.80, 1.25, 1.00));
     amt = (int)((float)amt * getSpeMod() * getAgiMod()); // does the same thing - fear hobbit trancer.
-  } else {  
+  } else {
     // 4% base parry chance
     amt += 40;
     strcpy(type, "parry");
@@ -254,7 +254,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
   }
   if (::number(0, 999) >= amt)
     return FALSE;
-  
+
   // check bSuccess after above check, so that we limit how often we
   // call the learnFrom stuff
   if (trance) {
@@ -271,7 +271,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
 		attack_hit_text[w_type].singular);
       }
       act(buf, FALSE, this, vweap, v, TO_VICT, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {      
+      if (toggleInfo[TOG_TWINK]->toggle) {
 	sprintf(buf, "$N %s your %s with $S $o.", type2,
 		attack_hit_text_twink[w_type].singular);
       } else {
@@ -279,7 +279,7 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
 		attack_hit_text[w_type].singular);
       }
       act(buf, FALSE, this, vweap, v, TO_CHAR, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {      
+      if (toggleInfo[TOG_TWINK]->toggle) {
 	sprintf(buf, "$N %s $n's %s with $S $o.", type2,
 		attack_hit_text_twink[w_type].singular);
       } else {
@@ -302,17 +302,17 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
 		v->describeBodySlot(part_hit).c_str());
       }
       act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {      
+      if (toggleInfo[TOG_TWINK]->toggle) {
 	sprintf(buf, "$N %s your %s at $S %s.", type2,
 		attack_hit_text_twink[w_type].singular,
-		v->describeBodySlot(part_hit).c_str());                                       
+		v->describeBodySlot(part_hit).c_str());
       } else {
 	sprintf(buf, "$N %s your %s at $S %s.", type2,
 		attack_hit_text[w_type].singular,
-		v->describeBodySlot(part_hit).c_str());                                       
+		v->describeBodySlot(part_hit).c_str());
       }
       act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
-      if (toggleInfo[TOG_TWINK]->toggle) {      
+      if (toggleInfo[TOG_TWINK]->toggle) {
 	sprintf(buf, "$N %s $n's %s at $S %s.", type2,
 		attack_hit_text_twink[w_type].singular,
 		v->describeBodySlot(part_hit).c_str());
@@ -367,11 +367,11 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
     if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
 	      attack_hit_text_twink[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());                                                          
+	      v->describeBodySlot(part_hit).c_str());
     } else {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
 	      attack_hit_text[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());                                                          
+	      v->describeBodySlot(part_hit).c_str());
     }
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
     if (toggleInfo[TOG_TWINK]->toggle) {
@@ -388,28 +388,28 @@ int TBeing::parryWarrior(TBeing *v, TThing *weapon, int *dam, int w_type, wearSl
     return TRUE;
   }
   return FALSE;
-}    
+}
 #endif
-              
+
 int TBeing::doParry()
 {
   sendTo("Parry is not yet supported in this fashion.\n\r");
   return 0;
-} 
+}
 
 void TBeing::doTranceOfBlades(const char *newarg) {
   TThing *obj;
-  
+
   if (!doesKnowSkill(SKILL_TRANCE_OF_BLADES)) {
     sendTo("You do not have the knowledge to attempt the defensive trance.\n\r");
     return;
   }
-  if ( !(this->heldInPrimHand()) || 
+  if ( !(this->heldInPrimHand()) ||
        !(obj = dynamic_cast<TBaseWeapon *>(this->heldInPrimHand()))) {
     sendTo("You'll need to be holding a suitable weapon to enter the defensive trance.\n\r");
     return;
   }
-  
+
   if (!canUseArm(HAND_PRIMARY)) {
     sendTo("You can't enter the defensive trance with a useless arm.\n\r");
     return;
@@ -436,6 +436,6 @@ void TBeing::doTranceOfBlades(const char *newarg) {
   act("$n focuses intensely upon $s $o.",FALSE, this, obj, NULL, TO_ROOM);
   act("Concentrating, you enter the trance, and you feel your defensive reactions quicken.",FALSE, this, obj, NULL, TO_CHAR);
   act("Concentrating, $n enters into a defensive trance.",FALSE, this, obj, NULL, TO_ROOM);
-  
+
   start_task(this, (TObj *) obj, NULL, TASK_TRANCE_OF_BLADES, NULL, 0, (ushort) this->in_room, 0, 0, 0);
 }

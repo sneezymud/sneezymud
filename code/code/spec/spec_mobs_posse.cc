@@ -68,7 +68,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
     return FALSE;
 
-  // Not doing anything yet, time to start a posse  
+  // Not doing anything yet, time to start a posse
   if (!myself->act_ptr) {
     if(::number(0,25))
       return FALSE;
@@ -91,7 +91,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 
     act("Some cityguards come to his aid.",
         TRUE, myself, 0, 0, TO_ROOM);
-    
+
     SET_BIT(myself->specials.affectedBy, AFF_GROUP);
     for (i=0;i<3;i++) {
       if (!(mob = read_mobile(Mob::CITYGUARD, VIRTUAL))) {
@@ -128,10 +128,10 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
       job->arrest_state=STATE_NONE;
       if(job->state==STATE_ARREST_FAST || job->state==STATE_BOOK_UM)
 	job->state=STATE_FIND_CRIM;
-      return TRUE;	
+      return TRUE;
     }
   }
-  
+
   // seperate switch for "speed"
   switch(job->state){
     case STATE_NONE: // nothing happens here
@@ -155,7 +155,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
     case STATE_NONE:
       job->cur_path=0;
       job->cur_pos=0;
-      job->state=STATE_LEAVE_OFFICE; 
+      job->state=STATE_LEAVE_OFFICE;
       break;
     case STATE_LEAVE_OFFICE: // get out of barracks
     case STATE_TO_JAIL: // go to jail
@@ -202,7 +202,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		delete tmons;
 	      }
 	    }
-	    
+
 	    act("$n relaxes after a hard day of criminal hunting.",
 		TRUE, myself, 0, 0, TO_ROOM);
 	    SET_BIT(myself->specials.act, ACT_SENTINEL);
@@ -218,7 +218,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	// check surrounding rooms, I probably fled
         dirTypeT dir;
 	for (dir=MIN_DIR; dir < MAX_DIR;dir++) {
-	  if (myself->canGo(dir) && 
+	  if (myself->canGo(dir) &&
 	      myself->roomp->dir_option[dir]->to_room ==
 	      head_guard_path[job->cur_path][job->cur_pos].cur_room){
 	    rc = myself->goDirection(dir);
@@ -227,7 +227,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	    return TRUE;
 	  }
 	}
-	
+
 	// trace along entire route and see if I can correct
 	job->cur_pos = -1;
 	do {
@@ -235,7 +235,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	  if (head_guard_path[job->cur_path][job->cur_pos].cur_room == myself->in_room)
 	    return TRUE;
 	} while (head_guard_path[job->cur_path][job->cur_pos].cur_room != -1);
-	
+
         // vlogf(LOG_BUG, "grimhavenPosse: head guard got lost");
 	act("$n grows weary of searching for criminals.",
 	    0, myself, 0, 0, TO_ROOM);
@@ -274,7 +274,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		act("$n jerks him around roughly.",
 		    0, myself, 0, 0, TO_ROOM);
 		break;
-	      case 2: 
+	      case 2:
 		myself->doSay("Clear the way, guards coming through, we've got a criminal.");
 		break;
               case 3:
@@ -307,7 +307,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	// check surrounding rooms, I probably fled
         dirTypeT dir;
 	for (dir=MIN_DIR; dir < MAX_DIR; dir++) {
-	  if (myself->canGo(dir) && 
+	  if (myself->canGo(dir) &&
 	      myself->roomp->dir_option[dir]->to_room ==
 	      lamp_path_pos[job->cur_path][job->cur_pos].cur_room){
 	    rc = myself->goDirection(dir);
@@ -316,7 +316,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	    return TRUE;
 	  }
 	}
-	
+
 	// trace along entire route and see if I can correct
 	job->cur_pos = -1;
 	do {
@@ -324,7 +324,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	  if (lamp_path_pos[job->cur_path][job->cur_pos].cur_room == myself->in_room)
 	    return TRUE;
 	} while (lamp_path_pos[job->cur_path][job->cur_pos].cur_room != -1);
-	
+
         // vlogf(LOG_BUG, "grimhavenPosse: head guard got lost");
 
 	act("$n grows weary of searching for criminals.",
@@ -384,14 +384,14 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 		act("$n jerks him around roughly.",
 		    0, myself, 0, 0, TO_ROOM);
 		break;
-	      case 2: 
+	      case 2:
 		myself->doSay("Clear the way, guards coming through, we've got a criminal.");
 		break;
               case 3:
 		if(dynamic_cast<TMonster *>(job->criminal))
 		  act("$n whispers to you, \"Please you've got to help me!  I didn't do it, it's all a big setup!\"",
 		      0, job->criminal, 0, 0, TO_ROOM);
-		
+
 		act("$n casts a reproving look your way.",
 		    0, myself, 0, 0, TO_ROOM);
 		break;
@@ -412,7 +412,7 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 
       switch(job->arrest_state){
         case 0:
-	  act("$n glares at $N intently for a moment.", 
+	  act("$n glares at $N intently for a moment.",
 	      0, myself, 0, job->criminal, TO_ROOM);
 	  myself->doSay("You're coming with us, we've got some questions to ask you.");
 	  job->arrest_state=1;
@@ -441,13 +441,13 @@ int grimhavenPosse(TBeing *ch, cmdTypeT cmd, const char *, TMonster *myself, TOb
 	  job->arrest_state=3;
 	  break;
         case 3:
-	  sprintf(buf, "That's it, %s is coming with us!", 
+	  sprintf(buf, "That's it, %s is coming with us!",
 		  job->criminal->getName().c_str());
 	  myself->doSay(buf);
 	  myself->doCapture(add_bars(job->criminal->name));
 	  REMOVE_BIT(job->criminal->specials.act, ACT_DIURNAL);
 	  REMOVE_BIT(job->criminal->specials.act, ACT_NOCTURNAL);
-	  job->state=STATE_BOOK_UM;      
+	  job->state=STATE_BOOK_UM;
 	  job->arrest_state=0;
 	  break;
       }

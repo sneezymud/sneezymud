@@ -200,7 +200,7 @@ Descriptor::Descriptor(const Descriptor &a) :
   descriptor_list = this;
 }
 
-Descriptor & Descriptor::operator=(const Descriptor &a) 
+Descriptor & Descriptor::operator=(const Descriptor &a)
 {
   if (this == &a) return *this;
 
@@ -326,7 +326,7 @@ bool Descriptor::checkForMultiplay()
       if (d->account->name==account->name) {
         total += 1;
         if (total > multiplay_limit && gamePort == Config::Port::PROD) {
-          vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") % 
+          vlogf(LOG_CHEAT, format("MULTIPLAY: %s and %s from same account[%s]") %
               character->name % ch->name % account->name);
           if(Config::ForceMultiplayCompliance()){
             character->sendTo(format("\n\rTake note: You have another character, %s, currently logged in.\n\r") % ch->name);
@@ -340,7 +340,7 @@ bool Descriptor::checkForMultiplay()
       }
     }
 
-    if (character && account && !account->name.empty() && 
+    if (character && account && !account->name.empty() &&
         !character->hasWizPower(POWER_MULTIPLAY)) {
       TBeing *tChar = NULL,
              *oChar = NULL;
@@ -425,7 +425,7 @@ int Descriptor::outputProcessing()
       char buf2[MAX_STRING_LENGTH + MAX_STRING_LENGTH];
       strcpy(buf2, i);
       vlogf(LOG_BUG, format("Tell a coder, bad loop in outputProcessing, please investigate %s") %  (character ? character->getName() : "'No char for desc'"));
-      vlogf(LOG_BUG, format("i = %s, last i= %s") %  buf2 % buf); 
+      vlogf(LOG_BUG, format("i = %s, last i= %s") %  buf2 % buf);
       // Set everything to NULL, might lose memory but we dont wanna try
       // a delete cause it might crash/ - Russ
       {
@@ -433,7 +433,7 @@ int Descriptor::outputProcessing()
         std::swap(output, empty);
       }
       break;
-    } 
+    }
     // recall that in inputProcessing we have mangaled any '$' character into
     // '$$' to avoid confusion problems in act/sendTo/etc.
     // it's now time to undo this
@@ -481,7 +481,7 @@ Descriptor::~Descriptor()
 
   // This is a semi-kludge to fix some extra crap we had being sent
   // upon reconnect - Russ 6/15/96
-  if (socket->m_sock == maxdesc) 
+  if (socket->m_sock == maxdesc)
     --maxdesc;
 
   // clear up any editing sstrings
@@ -510,7 +510,7 @@ Descriptor::~Descriptor()
         extract_edit_char(mob);
         mob = NULL;
       }
-      if (connected == CON_REDITING) 
+      if (connected == CON_REDITING)
         character->roomp->removeRoomFlagBit(ROOM_BEING_EDITTED);
       if ((character->checkBlackjack()) &&
           (gBj.index(character) >= 0)) {
@@ -538,7 +538,7 @@ Descriptor::~Descriptor()
           for(StuffIter it=th->stuff.begin();it!=th->stuff.end() && (th2=*it);++it)
             num++;
           num++;
-        }        
+        }
       }
 
       for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -560,10 +560,10 @@ Descriptor::~Descriptor()
         character->setInvisLevel(GOD_LEVEL1);
       }
 
-      if (character->riding) 
+      if (character->riding)
         character->dismount(POSITION_STANDING);
 
-      // this is done out of nceness to keep people from walking linkdeads 
+      // this is done out of nceness to keep people from walking linkdeads
       // to someplace nasty
       if (!character->isAffected(AFF_CHARM)) {
         if (character->master)
@@ -600,7 +600,7 @@ Descriptor::~Descriptor()
   else {
     for (tmp = descriptor_list; tmp && (tmp->next != this); tmp = tmp->next);
 
-    mud_assert(tmp != NULL, 
+    mud_assert(tmp != NULL,
         "~Descriptor : unable to find previous descriptor.");
 
     if (tmp)
@@ -649,7 +649,7 @@ Descriptor::~Descriptor()
 void Descriptor::cleanUpStr()
 {
   if (str) {
-    if (character && 
+    if (character &&
         (character->isPlayerAction(PLR_MAILING) ||
          character->isPlayerAction(PLR_BUGGING))) {
       *str = "";
@@ -698,7 +698,7 @@ void TPerson::autoDeath()
 {
   char buf[1024];
 
-  vlogf(LOG_PIO, format("%s reconnected with negative hp, auto death occurring.") %  
+  vlogf(LOG_PIO, format("%s reconnected with negative hp, auto death occurring.") %
       getName());
   sendTo("You reconnected with negative hit points, automatic death occurring.");
   sprintf(buf, "%s detected you reconnecting with %d hit points.\n\r", MUD_NAME, getHit());
@@ -914,7 +914,7 @@ int Descriptor::nanny(sstring arg)
         *rp += *character;
         delete character;
         character = NULL;
-        if (account->term == TERM_ANSI) 
+        if (account->term == TERM_ANSI)
           SET_BIT(plr_act, PLR_COLOR);
 
         rc = doAccountMenu("");
@@ -943,7 +943,7 @@ int Descriptor::nanny(sstring arg)
         *rp += *character;
         delete character;
         character = NULL;
-        if (account->term == TERM_ANSI) 
+        if (account->term == TERM_ANSI)
           SET_BIT(plr_act, PLR_COLOR);
 
         rc = doAccountMenu("");
@@ -1084,11 +1084,11 @@ int Descriptor::nanny(sstring arg)
 
           if (should_be_logged(character)) {
             if (IS_SET(account->flags, TAccount::IMMORTAL)) {
-              vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") % 
+              vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %
                   character->getName() % host % account->name);
 
             } else {
-              vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  
+              vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %
                   character->getName() % host % account->name);
             }
             dynamic_cast<TPerson *>(character)->saveRent(FALSE, 1);
@@ -1099,7 +1099,7 @@ int Descriptor::nanny(sstring arg)
           tmp_ch->loadGuildStats();
           tmp_ch->loadTitle();
           tmp_ch->stopsound();
-          if (tmp_ch->getHit() < 0) 
+          if (tmp_ch->getHit() < 0)
             dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
 
           tmp_ch->fixClientPlayerLists(FALSE);
@@ -1213,9 +1213,9 @@ int Descriptor::nanny(sstring arg)
                 tmp_ch->doCls(false);
 
               if (should_be_logged(character)) {
-                if (IS_SET(account->flags, TAccount::IMMORTAL)) 
+                if (IS_SET(account->flags, TAccount::IMMORTAL))
                   vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
-                else 
+                else
                   vlogf(LOG_PIO, format("%s[%s] has reconnected  (account: %s).") %  tmp_ch->getName() % host % account->name);
                 dynamic_cast<TPerson *>(tmp_ch)->saveRent(FALSE, 1);
               }
@@ -1225,14 +1225,14 @@ int Descriptor::nanny(sstring arg)
               tmp_ch->loadGuildStats();
               tmp_ch->loadTitle();
               tmp_ch->stopsound();
-              if (tmp_ch->getHit() < 0) 
+              if (tmp_ch->getHit() < 0)
                 dynamic_cast<TPerson *>(tmp_ch)->autoDeath();
 
               tmp_ch->fixClientPlayerLists(FALSE);
 
               if (tmp_ch->desc && !tmp_ch->desc->m_bIsClient) {
                 Descriptor *d;
-                sstring buf2;  
+                sstring buf2;
 
                 if(IS_SET(tmp_ch->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
                   tmp_ch->desc->send_client_prompt(TRUE, 16383);
@@ -1255,7 +1255,7 @@ int Descriptor::nanny(sstring arg)
           break;
       }
       break;
-    case CON_RMOTD:        
+    case CON_RMOTD:
       character->doCls(false);
       if (!character->GetMaxLevel())
         dynamic_cast<TPerson *>(character)->doStart();
@@ -1288,7 +1288,7 @@ int Descriptor::nanny(sstring arg)
 
       if (character->desc && !character->desc->m_bIsClient) {
         Descriptor *d;
-        sstring buf2;  
+        sstring buf2;
 
         if(IS_SET(character->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
           character->desc->send_client_prompt(TRUE, 16383);
@@ -1398,7 +1398,7 @@ int TPerson::genericLoadPC()
       rp = real_roomp((desc ? desc->office : Room::IMPERIA));
 
       if (!IS_SET(desc->account->flags, TAccount::IMMORTAL)) {
-        vlogf(LOG_BUG, format("%s is immortal but account isn't set immortal.  Setting now.") % 
+        vlogf(LOG_BUG, format("%s is immortal but account isn't set immortal.  Setting now.") %
             getName());
         SET_BIT(desc->account->flags, TAccount::IMMORTAL);
       }
@@ -1499,7 +1499,7 @@ bool Descriptor::start_page_file(const char *fpath, const char *errormsg)
   cur_page = 0;
   tot_pages = 0;
 
-  if (!page_file("")) {      // couldn't open file, etc. 
+  if (!page_file("")) {      // couldn't open file, etc.
     delete [] pagedfile;
     pagedfile = NULL;
     cur_page = 0;
@@ -1510,8 +1510,8 @@ bool Descriptor::start_page_file(const char *fpath, const char *errormsg)
   return TRUE;
 }
 
-// page_file returns TRUE if something was paged, FALSE if nothing got sent 
-// if (position) comes back < 0 then EOF was hit when outputing file.    
+// page_file returns TRUE if something was paged, FALSE if nothing got sent
+// if (position) comes back < 0 then EOF was hit when outputing file.
 bool Descriptor::page_file(const char *the_input)
 {
   FILE *fp;
@@ -1647,7 +1647,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
         toggle = 0;
         continue;
       }
-      if (!toggle) 
+      if (!toggle)
         toggle = 1;
     }
     if (lines_per_page <= 0) {
@@ -1670,7 +1670,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
     } else if (*buf == 'b' || *buf == 'B') {
       cur_page -= 2;
       cur_page = max(0, cur_page);
-    } else if (isdigit(*buf)) 
+    } else if (isdigit(*buf))
       cur_page = max(min((int) tot_pages, convertTo<int>(buf)), 1) - 1;
     else {
       if (showstr_head) {
@@ -1679,7 +1679,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
         tot_pages = cur_page = 0;
       }
       return;
-    } 
+    }
   }
   toggle = 1;
   lines = 0;
@@ -1703,7 +1703,7 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
     // some redundant code from colorString()
     if ((*chk == '<') && (*(chk +2) == '>')) {
       if (chk != showstr_head && *(chk-1) == '<') {
-        // encountered double <<, so skip 1 of them, 
+        // encountered double <<, so skip 1 of them,
         // we've already written the first
         continue;
       }
@@ -1911,11 +1911,11 @@ void Descriptor::show_string(const char *the_input, showNowT showNow, allowRepla
   if (showNow) {
     if (tot_pages) {
       sprintf(buffer + strlen(buffer),
-          "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
+          "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r",
           green(),  norm(),
           green(),  norm(),
           green(),  norm(),
-          green(),  
+          green(),
           cur_page, tot_pages, norm(),
           green(),  norm());
     } else {
@@ -2121,7 +2121,7 @@ const char *StPrompts[] =
 sstring getPietyPrompt(TBeing *ch, Descriptor *d, float piety){
   sstring promptbuf="";
 
-  if (IS_SET(d->prompt_d.type, PROMPT_PIETY)) {	    
+  if (IS_SET(d->prompt_d.type, PROMPT_PIETY)) {
     promptbuf=format(StPrompts[2]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.pietyColor : "") %
       piety %
@@ -2133,7 +2133,7 @@ sstring getPietyPrompt(TBeing *ch, Descriptor *d, float piety){
 sstring getLFPrompt(TBeing *ch, Descriptor *d, int lf){
   sstring promptbuf="";
 
-  if (IS_SET(d->prompt_d.type, PROMPT_LIFEFORCE)) {	    
+  if (IS_SET(d->prompt_d.type, PROMPT_LIFEFORCE)) {
     promptbuf=format(StPrompts[12]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.lifeforceColor : "") %
       lf %
@@ -2222,7 +2222,7 @@ sstring getHitPointsPrompt(TBeing *ch, Descriptor *d, int hp){
   sstring promptbuf="";
 
   if (IS_SET(d->prompt_d.type, PROMPT_HIT))
-    promptbuf=format(StPrompts[1]) % 
+    promptbuf=format(StPrompts[1]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.hpColor : "") %
       hp %
       ch->norm();
@@ -2246,7 +2246,7 @@ sstring getTimePrompt(TBeing *ch, Descriptor *d, time_t ct){
   struct tm *tm=localtime(&ct);
 
   if (IS_SET(d->prompt_d.type, PROMPT_TIME)){
-    promptbuf=format(StPrompts[13]) % 
+    promptbuf=format(StPrompts[13]) %
       (IS_SET(d->prompt_d.type, PROMPT_COLOR) ? d->prompt_d.timeColor : "") %
       tm->tm_hour % tm->tm_min % tm->tm_sec %
       ch->norm();
@@ -2355,11 +2355,11 @@ void setPrompts(fd_set out)
       if (d->str && (d->prompt_mode != DONT_SEND)) {
         d->output.push(CommPtr(new UncategorizedComm("-> ")));
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
-        sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
+        sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r",
             d->green(),  d->norm(),
             d->green(),  d->norm(),
             d->green(),  d->norm(),
-            d->green(),  
+            d->green(),
             d->cur_page, d->tot_pages, d->norm(),
             d->green(),  d->norm());
         d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
@@ -2369,11 +2369,11 @@ void setPrompts(fd_set out)
           continue;
         }
         if (d->showstr_head && (d->prompt_mode != DONT_SEND)) {
-          sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
+          sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r",
               d->green(),  d->norm(),
               d->green(),  d->norm(),
               d->green(),  d->norm(),
-              d->green(),  
+              d->green(),
               d->cur_page, d->tot_pages, d->norm(),
               d->green(),  d->norm());
           d->output.push(CommPtr(new UncategorizedComm(promptbuf)));
@@ -2479,7 +2479,7 @@ void setPrompts(fd_set out)
             int gold=ch->getMoney();
             int room=ch->roomp->number;
 
-            sprintf(promptbuf + strlen(promptbuf), 
+            sprintf(promptbuf + strlen(promptbuf),
                 "%s", getTimePrompt(ch, d, ct).c_str());
             sprintf(promptbuf + strlen(promptbuf),
                 "%s", getHitPointsPrompt(ch, d, hp).c_str());
@@ -2682,7 +2682,7 @@ void processAllInput()
       strncpy(comm, d->input.front().c_str(), sizeof(comm)-1);
       d->input.pop();
 
-      if (d->character && !d->connected && 
+      if (d->character && !d->connected &&
           d->character->specials.was_in_room != Room::NOWHERE) {
         --(*d->character);
         rp = real_roomp(d->character->specials.was_in_room);
@@ -2711,15 +2711,15 @@ void processAllInput()
           delete d;
           d = NULL;
           continue;
-        } 
+        }
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           delete d->character;
           d->character = NULL;
           continue;
         }
-      } else if (d->str) 
+      } else if (d->str)
         d->sstring_add(comm);
-      else if (d->pagedfile) 
+      else if (d->pagedfile)
         d->page_file(comm);
       else if (!d->account) {            // NO ACCOUNT
         if (d->m_bIsClient) {
@@ -2727,7 +2727,7 @@ void processAllInput()
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete d;
             d = NULL;
-          } 
+          }
           continue;
         }
         rc = d->sendLogin(comm);
@@ -2736,7 +2736,7 @@ void processAllInput()
           d = NULL;
           continue;
         }
-      } else if (!d->account->status) {       //ACCOUNT STUFF 
+      } else if (!d->account->status) {       //ACCOUNT STUFF
         rc = d->doAccountStuff(comm);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete d;
@@ -2778,11 +2778,11 @@ void processAllInput()
           d = NULL;
           continue;
         }
-      } else if (d->connected == CON_REDITING) 
+      } else if (d->connected == CON_REDITING)
         room_edit(d->character, comm);
-      else if (d->connected == CON_OEDITING) 
+      else if (d->connected == CON_OEDITING)
         obj_edit(d->character, comm);
-      else if (d->connected == CON_MEDITING) 
+      else if (d->connected == CON_MEDITING)
         mob_edit(d->character, comm);
       else if (d->showstr_head) {
         d->show_string(comm, SHOWNOW_YES, ALLOWREP_YES);
@@ -2794,7 +2794,7 @@ void processAllInput()
           continue;
         }
       }
-    } else if (d->wait <= 0) 
+    } else if (d->wait <= 0)
       d->wait = 1;
   }
 }
@@ -2912,11 +2912,11 @@ int Descriptor::sendLogin(const sstring &arg)
       return (sendLogin("1"));
     }
     if(account->read(my_arg)){
-      if (account->term == TERM_ANSI) 
+      if (account->term == TERM_ANSI)
         plr_act = PLR_COLOR;
       account->desc = this;
-      strcpy(pwd, account->passwd.c_str()); 
-    } else 
+      strcpy(pwd, account->passwd.c_str());
+    } else
       *pwd = '\0';
 
     output.push(CommPtr(new LoginComm("pass", "Password: ")));
@@ -3001,13 +3001,13 @@ int Descriptor::doAccountStuff(char *arg)
   switch (connected) {
     case CON_NEWLOG:
       // kick um out so they aren't stuck
-      if (!*arg) 
+      if (!*arg)
         return DELETE_THIS;
 
       if (checkForAccount(arg)) {
         output.push(CommPtr(new UncategorizedComm("Please enter a login name -> ")));
         return FALSE;
-      } 
+      }
       if (strlen(arg) >= 10) {
         output.push(CommPtr(new UncategorizedComm("Account names must be 9 characters or less.\n\r")));
         output.push(CommPtr(new UncategorizedComm("Please enter a login name -> ")));
@@ -3027,7 +3027,7 @@ int Descriptor::doAccountStuff(char *arg)
         writeToQ("Your password can only contain 10 or fewer characters.\n\r");
         writeToQ("Password -> ");
         return FALSE;
-      } 
+      }
       if(!sstring(arg).hasDigit()){
         writeToQ("Your password must contain at least one number.\n\r");
         writeToQ("Password -> ");
@@ -3074,7 +3074,7 @@ int Descriptor::doAccountStuff(char *arg)
       }
       break;
     case CON_EMAIL:
-      if (!*arg) 
+      if (!*arg)
         return DELETE_THIS;
 
       if (illegalEmail(arg, this, SILENT_NO)) {
@@ -3105,11 +3105,11 @@ int Descriptor::doAccountStuff(char *arg)
       connected = CON_TERM;
       break;
     case CON_TERM:
-      if (*arg == 'a' || *arg == 'A') 
+      if (*arg == 'a' || *arg == 'A')
         account->term = TERM_ANSI;
       else if (!*arg || *arg == 'V' || *arg == 'v')
         account->term = TERM_VT100;
-      else if ((*arg == 'n') || *arg == 'N') 
+      else if ((*arg == 'n') || *arg == 'N')
         account->term = TERM_NONE;
       else {
         writeToQ("What is your terminal type? (A)nsi, [V]t100 (default), (N)one -> ");
@@ -3126,7 +3126,7 @@ int Descriptor::doAccountStuff(char *arg)
         return DELETE_THIS;
       break;
     case CON_WIZLOCKNEW:
-      if (!*arg || strcasecmp(arg, WIZLOCK_PASSWORD)) 
+      if (!*arg || strcasecmp(arg, WIZLOCK_PASSWORD))
         return DELETE_THIS;
 
       vlogf(LOG_MISC, "Person making new character after entering wizlock password.");
@@ -3135,7 +3135,7 @@ int Descriptor::doAccountStuff(char *arg)
       connected = CON_NEWLOG;
       break;
     case CON_WIZLOCK:
-      if (!*arg || strcasecmp(arg, WIZLOCK_PASSWORD)) 
+      if (!*arg || strcasecmp(arg, WIZLOCK_PASSWORD))
         return DELETE_THIS;
 
       vlogf(LOG_MISC, "Person entering game by entering wizlock password.");
@@ -3258,7 +3258,7 @@ int Descriptor::doAccountStuff(char *arg)
         }
       }
       count = listAccount(account->name, lStr);
-      if (count) 
+      if (count)
         writeToQ("Type 'C' to connect with an existing character, or <enter> to see account menu.\n\r-> ");
       else
         writeToQ("Type 'A' to add a new character, or <enter> to see account menu.\n\r-> ");
@@ -3282,7 +3282,7 @@ int Descriptor::doAccountStuff(char *arg)
       // lower() returns static buf, so add one at a time
       sprintf(buf, "account/%c/%s", LOWER(account->name[0]), sstring(account->name).lower().c_str());
       sprintf(buf + strlen(buf), "/%s", sstring(arg).lower().c_str());
-      // sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 
+      // sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]),
       //                                  account->name.lower(), arg.lower());
       if (stat(buf, &timestat)) {
         writeToQ("No such character.\n\r");
@@ -3309,7 +3309,7 @@ int Descriptor::doAccountStuff(char *arg)
         }
       }
 
-#endif      
+#endif
 
       writeToQ("Deleting a character will result in total deletion and\n\r");
       writeToQ("equipment loss.  Also, if you character is a perma death\n\r");
@@ -3384,7 +3384,7 @@ int Descriptor::doAccountStuff(char *arg)
         vlogf(LOG_PIO, format("Deleting mail for character %s.") %  delname);
         db.query("delete from mail where lower(mailto)=lower('%s')", delname);
 
-        sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]), 
+        sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]),
             sstring(account->name).lower().c_str(), delname);
         if (unlink(buf) != 0)
           vlogf(LOG_FILE, format("error in unlink (3) (%s) %d") %  buf % errno);
@@ -3392,7 +3392,7 @@ int Descriptor::doAccountStuff(char *arg)
         rc = doAccountMenu("");
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
-        break; 
+        break;
         case CON_ACTDELCNF:
         if (!*pwd) {
           writeToQ("Incorrect password.\n\r");
@@ -3432,7 +3432,7 @@ int Descriptor::doAccountStuff(char *arg)
             writeToQ("To abort the deletion type '/', otherwise ...\n\r");
             writeToQ("Enter the name of the character you wish to delete.\n\r-> ");
             connected = CON_DELCHAR;
-            break; 
+            break;
           case '3':
             account->status = TRUE;
             rc = doAccountMenu("");
@@ -3500,7 +3500,7 @@ int Descriptor::doAccountStuff(char *arg)
         }
         break;
         default:
-        vlogf(LOG_BUG, format("Bad connectivity in doAccountStuff() (%d, %s, %s)") %  
+        vlogf(LOG_BUG, format("Bad connectivity in doAccountStuff() (%d, %s, %s)") %
             connected % (character ? character->getName() : "false") % "0");
         vlogf(LOG_BUG, "Trying to delete it.");
         return DELETE_THIS;
@@ -3573,7 +3573,7 @@ int Descriptor::doAccountStuff(char *arg)
         writeToQ("Enter old password -> ");
         account->status = FALSE;
         connected = CON_OLDPWD;
-        break; 
+        break;
       case 'W':
       case 'w':
         menuWho();
@@ -3623,7 +3623,7 @@ int Descriptor::doAccountStuff(char *arg)
               start_page_file(NORM_MENU_1, "");
             else if (count == 2)
               start_page_file(NORM_MENU_2, "");
-            else 
+            else
               start_page_file(NORM_MENU_3, "");
             screen_size = tss;
           }
@@ -3650,7 +3650,7 @@ int Descriptor::doAccountStuff(char *arg)
     sstring path;
 
     if(!account->write(account->name)){
-      vlogf(LOG_FILE, format("Big problems in saveAccount (%s)") % 
+      vlogf(LOG_FILE, format("Big problems in saveAccount (%s)") %
           account->name.lower());
     }
 
@@ -3722,7 +3722,7 @@ int Descriptor::doAccountStuff(char *arg)
           if (errno != EWOULDBLOCK) {
             perror("Read1 - ERROR");
             return (-1);
-          } else 
+          } else
             break;
 
         } else {
@@ -3747,8 +3747,8 @@ int Descriptor::doAccountStuff(char *arg)
 
     for (i = 0, k = 0; *(m_raw + i);) {
       if (!ISNEWL(*(m_raw + i)) && !(flag = (k >= (!m_bIsClient ? (MAX_INPUT_LENGTH - 2) : 4096)))) {
-        if (*(m_raw + i) == '\b') {      // backspace 
-          if (k) {                // more than one char ? 
+        if (*(m_raw + i) == '\b') {      // backspace
+          if (k) {                // more than one char ?
             if (*(tmp + --k) == '$')
               k--;
             i++;
@@ -3757,7 +3757,7 @@ int Descriptor::doAccountStuff(char *arg)
         } else {
           if ((*(m_raw + i) == '\200') ||
               (isascii(*(m_raw + i)) && isprint(*(m_raw + i)))) {
-            // trans char, double for '$' (printf)   
+            // trans char, double for '$' (printf)
             if ((*(tmp + k) = *(m_raw + i)) == '$')
               *(tmp + ++k) = '$';
             k++;
@@ -3768,7 +3768,7 @@ int Descriptor::doAccountStuff(char *arg)
       } else {
         *(tmp + k) = 0;
 
-        // New history related c-shell type commands - Russ 
+        // New history related c-shell type commands - Russ
         if (*tmp == '!') {
           if (!tmp[1] || (tmp[1] == '!'))
             strcpy(tmp, history[0]);
@@ -3809,13 +3809,13 @@ int Descriptor::doAccountStuff(char *arg)
             return (-1);
           }
 
-          // skip the rest of the line 
+          // skip the rest of the line
           for (; !ISNEWL(*(m_raw + i)); i++);
         }
-        // find end of entry 
+        // find end of entry
         for (; ISNEWL(*(m_raw + i)); i++);
 
-        // squelch the entry from the buffer 
+        // squelch the entry from the buffer
         for (squelch = 0;; squelch++) {
           if ((*(m_raw + squelch) = *(m_raw + i + squelch)) == '\0')
             break;
@@ -3863,7 +3863,7 @@ int Descriptor::doAccountStuff(char *arg)
         vlogf(LOG_BUG, "bad call to wiznews file");
         return {};
       }
-      sprintf(wizmotd + strlen(wizmotd), 
+      sprintf(wizmotd + strlen(wizmotd),
           "\n\rREAD the WIZNEWS LAST UPDATED    : %s\n\r",
           ctime(&(timestat.st_mtime)));
     }
@@ -3900,7 +3900,7 @@ int Descriptor::doAccountStuff(char *arg)
     local_tics = secs / Pulse::SECS_PER_UPDATE;
     local_tics /= 3;  // arbitrary
 
-    vlogf(LOG_PIO, format("%s was rented for %d secs, counting as %d tics out-of-game") % 
+    vlogf(LOG_PIO, format("%s was rented for %d secs, counting as %d tics out-of-game") %
         getName() % secs % local_tics);
 
     setHit(min((int) hitLimit(), getHit() + (local_tics * hitGain())));
@@ -3927,7 +3927,7 @@ int Descriptor::doAccountStuff(char *arg)
 
     wearSlotT ij;
     for (ij=MIN_WEAR;ij < MAX_WEAR; ij++) {
-      amt = min(local_tics, getMaxLimbHealth(ij) - getCurLimbHealth(ij));  
+      amt = min(local_tics, getMaxLimbHealth(ij) - getCurLimbHealth(ij));
       addCurLimbHealth(ij, amt);
     }
 
@@ -3952,7 +3952,7 @@ int Descriptor::doAccountStuff(char *arg)
                 return DELETE_THIS;
             }
           }
-          if ((af->type == AFFECT_TRANSFORMED_ARMS) || 
+          if ((af->type == AFFECT_TRANSFORMED_ARMS) ||
               (af->type == AFFECT_TRANSFORMED_HANDS) ||
               (af->type == AFFECT_TRANSFORMED_LEGS) ||
               (af->type == AFFECT_TRANSFORMED_HEAD) ||
@@ -3961,7 +3961,7 @@ int Descriptor::doAccountStuff(char *arg)
           }
           affectRemove(af);
         }
-      } else 
+      } else
         af->duration -= local_tics * Pulse::UPDATES_PER_MUDHOUR;
     }
     if (transFound)

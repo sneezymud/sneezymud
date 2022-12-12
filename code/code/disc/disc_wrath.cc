@@ -187,7 +187,7 @@ int plagueOfLocusts(TBeing *caster, TBeing *victim) {
 
   return rc;
 }
- 
+
 int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int adv_learn)
 {
   wearSlotT slot = WEAR_NOWHERE;
@@ -256,7 +256,7 @@ int pillarOfSalt(TBeing * caster, TBeing * victim, int level, short bKnown, int 
         SV(SPELL_PILLAR_SALT);
         act("$N manages to avoid some of the pelting salt particles!", FALSE, caster, NULL, victim, TO_NOTVICT);
         act("$N manages to avoid some of the salt particles!", FALSE, caster, NULL, victim, TO_CHAR);
-        act("Luckily, you manage to avoid some of the salt particles!", FALSE, caster, NULL, victim, TO_VICT); 
+        act("Luckily, you manage to avoid some of the salt particles!", FALSE, caster, NULL, victim, TO_VICT);
         dam /= 2;
       }
     }
@@ -344,7 +344,7 @@ int rainBrimstone(TBeing * caster, TBeing * victim, int level, short bKnown, spe
 
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     switch(critSuccess(caster, spell)) {
-      case CRIT_S_KILL: 
+      case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         CS(spell);
@@ -369,7 +369,7 @@ int rainBrimstone(TBeing * caster, TBeing * victim, int level, short bKnown, spe
       SV(spell);
       act("$N manages to avoid some of the sulfur particles!", FALSE, caster, NULL, victim, TO_NOTVICT);
       act("$N manages to avoid some of the sulfur particles!", FALSE, caster, NULL, victim, TO_CHAR);
-      act("Luckily, you manage to avoid some of the sulfur particles!", FALSE, caster, NULL, victim, TO_VICT); 
+      act("Luckily, you manage to avoid some of the sulfur particles!", FALSE, caster, NULL, victim, TO_VICT);
       dam *= 2;
       dam /= 3;
     }
@@ -472,12 +472,12 @@ void curse(TBeing * caster, TObj * target, TMagicItem * obj, spellNumT spell)
 void curse(TBeing * caster, TBeing * victim, TMagicItem * obj, spellNumT spell)
 {
   int ret;
- 
+
   ret=curse(caster,victim,obj->getMagicLevel(),obj->getMagicLearnedness(), spell);
   if (IS_SET(ret,SPELL_SUCCESS)) {
-    act("$n glows evilly with a dark forboding red!", 
+    act("$n glows evilly with a dark forboding red!",
        TRUE, victim, NULL, 0, TO_ROOM);
-    act("You glow evilly with a dark forboding red!", 
+    act("You glow evilly with a dark forboding red!",
        FALSE, victim, NULL, 0, TO_VICT);
   }
   if (!victim->isPc()) {
@@ -503,13 +503,13 @@ void curse(TBeing * caster, TObj * obj)
     act("$p glows evilly with a dark forboding light.", FALSE, caster, obj, NULL, TO_ROOM);
     act("$p glows evilly with a dark forboding light.", FALSE, caster, obj, NULL, TO_CHAR);
     act("You succeed in summoning a minor demon spirit to take residence in $p.", FALSE, caster, obj, NULL, TO_CHAR);
-  } else 
+  } else
     caster->sendTo("Nothing seems to happen.\n\r");
 }
 
 int curse(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT spell)
 {
-  if (caster->isNotPowerful(victim, level, spell, SILENT_NO)) 
+  if (caster->isNotPowerful(victim, level, spell, SILENT_NO))
     return SPELL_FAIL;
 
   caster->reconcileHurt(victim,discArray[spell]->alignMod);
@@ -617,33 +617,33 @@ int earthquake(TBeing *caster, int level, short bKnown, spellNumT spell, int adv
 	  if (critSuccess(caster, spell))  {
             act_dam *= 2;
             if (tmp_victim->getPosition() >= POSITION_STANDING) {
-               act("$n falls down and hurts $mself in the earthquake!", 
+               act("$n falls down and hurts $mself in the earthquake!",
                    FALSE, tmp_victim, NULL, NULL, TO_ROOM);
-               act("You fall down and hurt yourself in the earthquake!", 
+               act("You fall down and hurt yourself in the earthquake!",
                    FALSE, tmp_victim, NULL, NULL, TO_CHAR);
 	      tmp_victim->setPosition(POSITION_SITTING);
             } else {
-               act("$n hurts $mself in the earthquake!", 
+               act("$n hurts $mself in the earthquake!",
                    FALSE, tmp_victim, NULL, NULL, TO_ROOM);
-               act("You hurt yourself in the earthquake!", 
+               act("You hurt yourself in the earthquake!",
                    FALSE, tmp_victim, NULL, NULL, TO_CHAR);
             }
           } else {
             // a non-critsuccess
             if (tmp_victim->isLucky(caster->spellLuckModifier(spell))) {
-              act("The earthquake slightly injures $n!", 
+              act("The earthquake slightly injures $n!",
                    FALSE, tmp_victim, NULL, NULL, TO_ROOM);
-              act("The earthquake slightly injures you!", 
+              act("The earthquake slightly injures you!",
                    FALSE, tmp_victim, NULL, NULL, TO_CHAR);
               act_dam /= 2;
             } else if (tmp_victim->getPosition() >= POSITION_STANDING) {
-              act("The earth shakes and smashes $n into the $g!", 
+              act("The earth shakes and smashes $n into the $g!",
                    FALSE, tmp_victim, NULL, NULL, TO_ROOM);
               act("The earth shakes and smashes you into the $g!",
                    FALSE, tmp_victim, NULL, NULL, TO_CHAR);
               tmp_victim->setPosition(POSITION_SITTING);
             } else {
-              act("The earth shakes causing $n injury!", 
+              act("The earth shakes causing $n injury!",
                    FALSE, tmp_victim, NULL, NULL, TO_ROOM);
               act("The earth shakes causing you injury!",
                    FALSE, tmp_victim, NULL, NULL, TO_CHAR);
@@ -663,7 +663,7 @@ int earthquake(TBeing *caster, int level, short bKnown, spellNumT spell, int adv
             !tmp_victim->isFlying() &&
             !tmp_victim->isLevitating() &&
             caster->isNotPowerful(tmp_victim, level, spell, SILENT_YES) &&
-	    (!tmp_victim->isLucky(caster->spellLuckModifier(spell)) &&    // two chances to save  
+	    (!tmp_victim->isLucky(caster->spellLuckModifier(spell)) &&    // two chances to save
 	    !tmp_victim->isLucky(caster->spellLuckModifier(spell)))) {
           if (tmp_victim->riding) {
             rc = tmp_victim->fallOffMount(tmp_victim->riding,
@@ -733,7 +733,7 @@ int callLightning(TBeing *caster, TBeing *victim, int level, short bKnown, spell
 
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
     if (victim->isLucky(caster->spellLuckModifier(spell)))
-      dam /= 2;		// half damage 
+      dam /= 2;		// half damage
 
     if (critSuccess(caster, spell)) {
       CS(spell);
@@ -745,7 +745,7 @@ int callLightning(TBeing *caster, TBeing *victim, int level, short bKnown, spell
     act("$n summons a lightning bolt from the stormy skies, guiding it down upon $N!", FALSE, caster, NULL, victim, TO_NOTVICT);
     act("You summon a lightning bolt from the stormy skies, guiding it down upon $N!", FALSE, caster, NULL, victim, TO_CHAR);
     act("$n summons a lightning bolt from the stormy skies, guiding it down upon you!", FALSE, caster, NULL, victim, TO_VICT);
-    if (caster->reconcileDamage(victim, dam, spell) == -1) 
+    if (caster->reconcileDamage(victim, dam, spell) == -1)
       return SPELL_SUCCESS | VICTIM_DEAD;
     rc = victim->lightningEngulfed();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -821,7 +821,7 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
 
   if (victim->roomp->isUnderwaterSector()) {
     caster->sendTo("Your attempt fizzels and sputters in the water!\n\r");
-    act("$n causes the water to warm up around you.  You wonder why?", 
+    act("$n causes the water to warm up around you.  You wonder why?",
           FALSE, caster, NULL, NULL, TO_ROOM);
     return SPELL_FALSE;
   }
@@ -846,10 +846,10 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
 	act("<R>You are immolated in an enourmous burst of fire!<1>",
 	    FALSE, caster, NULL, victim, TO_VICT);
       }
-      
+
     } else if (victim->isLucky(caster->spellLuckModifier(SPELL_SPONTANEOUS_COMBUST))) {
       SV(SPELL_SPONTANEOUS_COMBUST);
-      dam /= 2;		// half damage 
+      dam /= 2;		// half damage
       act("<r>$N is immolated in a <Y>rather pitiful<1><r> burst of fire!<1>",
           FALSE, caster, NULL, victim, TO_NOTVICT);
       if (caster != victim) {
@@ -861,7 +861,7 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
         act("<r>You are immolated in a <Y>rather pitiful<1><r> burst of fire!<1>",
             FALSE, caster, NULL, victim, TO_VICT);
       }
-      
+
     } else {
       act("<r>$N is immolated in a burst of fire!<1>",
           FALSE, caster, NULL, victim, TO_NOTVICT);
@@ -873,30 +873,30 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
       } else {
         act("<r>You are immolated in a burst of fire!<1>",
             FALSE, caster, NULL, victim, TO_VICT);
-	
+
       }
     }
       victim->roomp->playsound(SOUND_SPELL_SPONTANEOUS_COMBUST, SOUND_TYPE_MAGIC);
-      
-    act("$N howls in pain!", 
+
+    act("$N howls in pain!",
           FALSE, caster, NULL, victim, TO_NOTVICT);
     if (caster != victim) {
-      act("$N howls in pain!", 
+      act("$N howls in pain!",
           FALSE, caster, NULL, victim, TO_CHAR);
-      act("You howl in pain!<1>", 
+      act("You howl in pain!<1>",
           FALSE, caster, NULL, victim, TO_VICT);
     } else {
-      act("You howl in pain!<1>", 
+      act("You howl in pain!<1>",
           FALSE, caster, NULL, victim, TO_VICT);
     }
-    
+
     if (caster->reconcileDamage(victim, dam, SPELL_SPONTANEOUS_COMBUST) == -1)
       return SPELL_SUCCESS | VICTIM_DEAD;
-    
+
     rc = victim->flameEngulfed();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return SPELL_SUCCESS | VICTIM_DEAD;
-    
+
     return SPELL_SUCCESS;
     } else {
     switch (critFail(caster, SPELL_SPONTANEOUS_COMBUST)) {
@@ -907,9 +907,9 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
               FALSE, caster, NULL, NULL, TO_ROOM);
         act("Something goes dramatically wrong.",
               FALSE, caster, NULL, NULL, TO_CHAR);
-        act("$n suddenly erupts in a tower of flames!", 
+        act("$n suddenly erupts in a tower of flames!",
               FALSE, caster, NULL, NULL, TO_ROOM);
-        act("You are suddenly consumed in a tower of flames! <R>FIRE!!!<1>", 
+        act("You are suddenly consumed in a tower of flames! <R>FIRE!!!<1>",
               FALSE, caster, NULL, NULL, TO_CHAR);
 
         if (caster->reconcileDamage(caster, dam,SPELL_SPONTANEOUS_COMBUST) == -1)
@@ -918,13 +918,13 @@ int spontaneousCombust(TBeing *caster, TBeing *victim, int level, short bKnown, 
       case CRIT_F_NONE:
         break;
     }
-    act("Phantom sparks drift hazily about $n before fizzling out!", 
+    act("Phantom sparks drift hazily about $n before fizzling out!",
           FALSE, victim, NULL, NULL, TO_ROOM);
     act("Phantom sparks drift hazily about you before fizzling out!",
           FALSE, victim, NULL, NULL, TO_CHAR);
 
     return SPELL_FAIL;
-  } 
+  }
 }
 
 int spontaneousCombust(TBeing *caster, TBeing *victim, TMagicItem *obj)

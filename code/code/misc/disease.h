@@ -5,7 +5,7 @@
 // sbyte level;        <-- state data for the disease
 // short duration;    <-- updates until disease wears off
 // sbyte modifier;     <-- type of disease (note this is signed, but only
-//                         use 0 -> 127.  I think 127 diseases is plenty.) 
+//                         use 0 -> 127.  I think 127 diseases is plenty.)
 // byte location;      <-- this should be APPLY_NONE
 // long bitvector;     <-- this should be 0
 
@@ -51,7 +51,7 @@ diseaseTypeT affToDisease(affectedData &);
 // spec procs should (for now) always return FALSE from a message call
 //
 // note, if message > 0, then it represents a "command triggered" message.
-// This is similar to mobile/object/room special procedures, in that 
+// This is similar to mobile/object/room special procedures, in that
 // the message # will be the command # that triggered the spec_proc.
 //
 // the disease affect will be removed following the DISEASE_DONE call
@@ -66,7 +66,7 @@ void spread_affect(TBeing *ch, int chance_to_spread, bool race, bool not_race, a
 typedef struct {
   int (*code)(TBeing *, int, affectedData *);
   char name[40];
-  int cure_cost;  
+  int cure_cost;
 } DISEASEINFO;
 
 extern DISEASEINFO DiseaseInfo[MAX_DISEASE];

@@ -18,7 +18,7 @@ void TBeing::doPracInfo(sstring arg) {
       }
     }
   }
- 
+
   if (!isImmortal() || !desc)
     return;
   if (powerCheck(POWER_ACCESS) || powerCheck(POWER_SET))
@@ -33,5 +33,5 @@ void TBeing::doPracInfo(sstring arg) {
   buf += format("\tDiscrepancy:              %d\n\r")
     % (actual - expected);
   sendTo(buf);
-  
+
 }

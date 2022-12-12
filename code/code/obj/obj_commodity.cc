@@ -41,7 +41,7 @@ bool TCommodity::willMerge(TMergeable *tm)
 void TCommodity::doMerge(TMergeable *tm)
 {
   TCommodity *tCommod;
-  
+
   if(!(tCommod=dynamic_cast<TCommodity *>(tm)) || !willMerge(tm))
     return;
 
@@ -81,7 +81,7 @@ bool TCommodity::splitMe(TBeing *ch, const sstring &tString)
     return true;
   }
 
-  if ((tValue = real_object(objVnum())) < 0 || 
+  if ((tValue = real_object(objVnum())) < 0 ||
       tValue > (signed) obj_index.size() ||
       !(tCommod = dynamic_cast<TCommodity *>(read_object(tValue, REAL)))) {
     ch->sendTo("For some reason that commodity resists being split up.\n\r");
@@ -150,15 +150,15 @@ sstring TCommodity::statObjInfo() const
 void TCommodity::lowCheck()
 {
   if (!isname("commodity", name)) {
-    vlogf(LOG_LOW, format("raw material without COMMODITY in name (%s : %d)") % 
+    vlogf(LOG_LOW, format("raw material without COMMODITY in name (%s : %d)") %
                getName() % objVnum());
   }
   if (!numUnits()) {
-    vlogf(LOG_LOW, format("raw material needs weight above 0.0 (%s : %d)") % 
+    vlogf(LOG_LOW, format("raw material needs weight above 0.0 (%s : %d)") %
                getName() % objVnum());
   }
   if (!pricePerUnit()) {
-    vlogf(LOG_LOW, format("raw material needs price above 0 (%s : %d)") % 
+    vlogf(LOG_LOW, format("raw material needs price above 0 (%s : %d)") %
                getName() % objVnum());
   }
 
@@ -212,8 +212,8 @@ float TCommodity::demandCurvePrice(int num, float price, int mat, int total_unit
   // max price = 1000, shop capacity = 100000
   // 100000 =  0.0
   //  90000 =  9.15
-  //  75000 = 24.99 
-  //  50000 = 60.21 
+  //  75000 = 24.99
+  //  50000 = 60.21
   //  25000 = 120.41
   //  10000 = 200.00
   //   5000 = 260.21
@@ -315,7 +315,7 @@ int TCommodity::buyMe(TBeing *ch, TMonster *keeper, int num, int shop_nr)
 
   --(*this);
   int num2 = (int) (numUnits()) - num;
-  
+
   if (num2) {
     setWeight(num2/10.0);
   } else {
@@ -352,7 +352,7 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int total_in
   sstring buf;
   TShopOwned tso(keeper, ch);
   int max_num=shop_capacity;
-  
+
   if(tso.isOwned())
     max_num=tso.getMaxNum(ch, this, shop_capacity);
 
@@ -363,16 +363,16 @@ bool TCommodity::sellMeCheck(TBeing *ch, TMonster *keeper, int num, int total_in
 
   if (total_inventory < 0)
     total_inventory = tso.getInventoryCount(this);
-  
+
   if (total_inventory >= max_num) {
-    keeper->doTell(ch->getName(), format("I already have plenty of %s.") % 
+    keeper->doTell(ch->getName(), format("I already have plenty of %s.") %
 		   getName());
     return TRUE;
   } else if (total_inventory + num > max_num) {
     keeper->doTell(ch->getName(), format("I'll buy no more than %d unit%s of %s.") % (max_num - total_inventory) % (max_num - total_inventory > 1 ? "s" : "") % getName());
     return TRUE;
   }
-  
+
   return false;
 }
 
@@ -572,7 +572,7 @@ int TCommodity::getSizeIndex() const
     return 1;
   } else if(weight<=6){
     return 2;
-  } else if(weight<=8){ 
+  } else if(weight<=8){
     return 3;
   } else if(weight<=10){
     return 4;
@@ -589,7 +589,7 @@ void TCommodity::updateDesc()
 {
   int sizeindex=getSizeIndex();
   char buf[256];
-  
+
   const char *metalname [] =
     {
       "bit",
@@ -600,7 +600,7 @@ void TCommodity::updateDesc()
       "bar",
       "pile"
     };
-  
+
   const char *mineralname [] =
     {
       "tiny piece",
@@ -622,7 +622,7 @@ void TCommodity::updateDesc()
       "large pile",
       "huge pile"
     };
-  
+
   if (isObjStat(ITEM_STRUNG)) {
     name = "";
     shortDescr = "";
@@ -645,11 +645,11 @@ void TCommodity::updateDesc()
     sprintf(buf, "%s", ((sstring)(format("commodity %s %s") % mineralname[sizeindex] %
 	    material_nums[getMaterial()].mat_name)).c_str());
     name = buf;
-    
+
     sprintf(buf, "%s", ((sstring)(format("a %s of rough %s") % mineralname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = buf;
-    
+
     sprintf(buf, "%s", ((sstring)(format("A %s of rough %s has been left here.  What luck!") %
 		  mineralname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
@@ -662,7 +662,7 @@ void TCommodity::updateDesc()
     sprintf(buf, "%s", ((sstring)(format("a %s of %s") % metalname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = buf;
-    
+
     sprintf(buf, "%s", ((sstring)(format("A %s of %s has been left here.  What luck!") %
 		  metalname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
@@ -675,7 +675,7 @@ void TCommodity::updateDesc()
     sprintf(buf, "%s", ((sstring)(format("a %s of %s") % miscname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
     shortDescr = buf;
-    
+
     sprintf(buf, "%s", ((sstring)(format("A %s of %s has been left here.  What luck!") %
 		  miscname[sizeindex] %
 		  material_nums[getMaterial()].mat_name)).c_str());
@@ -686,7 +686,7 @@ void TCommodity::updateDesc()
 
 }
 
-int TCommodity::suggestedPrice() const 
+int TCommodity::suggestedPrice() const
 {
   return (int)(numUnits() * pricePerUnit());
 };

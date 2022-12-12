@@ -250,15 +250,15 @@ affectedData *findDrugAffect(TBeing *ch, int drug, int type){
   return NULL;
 }
 
-void reapplyDrugAffect(TBeing *ch, affectedData *affptr, 
+void reapplyDrugAffect(TBeing *ch, affectedData *affptr,
 		       int modifier, int duration){
   int origamt = ch->specials.affectedBy;
 
   ch->affectModify(affptr->location, affptr->modifier, affptr->modifier2, affptr->bitvector, FALSE, SILENT_NO);
-  
+
   affptr->modifier=modifier;
   affptr->duration=duration;
-  
+
   ch->affectModify(affptr->location, affptr->modifier, affptr->modifier2, affptr->bitvector, TRUE, SILENT_NO);
   ch->affectTotal();
   ch->affectChange(origamt, SILENT_NO);
@@ -334,14 +334,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	aff.location = APPLY_SPE;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
       if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_KAR))){
 	aff.location = APPLY_KAR;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
 
@@ -352,14 +352,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	aff.location = APPLY_CHA;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
       if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))){
 	aff.location = APPLY_FOC;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
 
@@ -413,14 +413,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	aff.location = APPLY_SPE;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
       if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_CHA))){
 	aff.location = APPLY_CHA;
 	ch->affectTo(&aff, 1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
 
@@ -431,14 +431,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	aff.location = APPLY_INT;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
       if(!(affptr=findDrugAffect(ch, DRUG_POT, APPLY_FOC))){
 	aff.location = APPLY_FOC;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
 
@@ -475,14 +475,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	aff.location = APPLY_SPE;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
       if(!(affptr=findDrugAffect(ch, DRUG_OPIUM, APPLY_CHA))){
 	aff.location = APPLY_KAR;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
 
@@ -493,14 +493,14 @@ void applyDrugAffects(TBeing *ch, drugTypeT drug, bool istick){
 	aff.location = APPLY_CHA;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
       if(!(affptr=findDrugAffect(ch, DRUG_PIPEWEED, APPLY_FOC))){
 	aff.location = APPLY_FOC;
 	ch->affectTo(&aff, -1);
       } else {
-	reapplyDrugAffect(ch, affptr, aff.modifier, 
+	reapplyDrugAffect(ch, affptr, aff.modifier,
 	 istick?affptr->duration:min(affptr->duration+duration1hit, aff.duration));
       }
 
@@ -619,7 +619,7 @@ void applyAddictionAffects(TBeing *ch, drugTypeT drug, int severity){
 	ch->sendTo(format("You need to smoke some %s to feed your addiction.\n\r") % drugTypes[drug].name);
 	ch->sendTo("You've got a splitting headache and you feel very very tired.\n\r");
 	ch->setMove(max((ch->getMove() - 50), 0));
-	
+
 	aff.type = AFFECT_DRUG;
 	aff.bitvector = 0;
 	aff.modifier2 = drug;
@@ -722,7 +722,7 @@ int TBeing::doSmoke(const char *argument)
 
   //  sendTo("Smoking is bad for your health.\n\r");
   //  return FALSE;
-  
+
 
   strcpy(arg, argument);
 
@@ -743,10 +743,10 @@ int TBeing::doSmoke(const char *argument)
     return FALSE;
   }
 
-  sprintf(buf, "Ok, you smoke the %s from %s.", 
+  sprintf(buf, "Ok, you smoke the %s from %s.",
 	 drugTypes[tdc->getDrugType()].name, tdc->getName().c_str());
   act(buf,TRUE,this,0,0,TO_CHAR);
-  sprintf(buf, "$n smokes %s from %s.", 
+  sprintf(buf, "$n smokes %s from %s.",
 	  drugTypes[tdc->getDrugType()].name, tdc->getName().c_str());
   act(buf,TRUE,this,0,0,TO_ROOM);
 
