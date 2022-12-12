@@ -107,7 +107,7 @@ R 1 3700   4 3724      ; Orc Guard
 E 1 1036 999 3		   hardened steel collar
 ? 0 2 0 E
 E 1 1089 999 1             metal ring
-Y 0 52 5                   Suit Load: Orc Mail
+Y 0 52 9                   Suit Load: Orc Mail
 
 M 0 3701 2 3724      ; Dire Wolf (Sentinel)
 R 1 3700   2 3724      ; Orc Guard
@@ -115,7 +115,7 @@ R 1 3700   2 3724      ; Orc Guard
 E 1 1036 999 3		   hardened steel collar
 ? 0 2 0 E
 E 1 1089 999 1             metal ring
-Y 0 52 5                   Suit Load: Orc Mail
+Y 0 52 9                   Suit Load: Orc Mail
 
 M 0 3711 2 3702       ; Dire Wolf (Wandering)
 R 1 3710 10 3702      ; Orc Guard
@@ -123,7 +123,7 @@ R 1 3710 10 3702      ; Orc Guard
 E 1 1036 999 3		   hardened steel collar
 ? 0 2 0 E
 E 1 1089 999 1             metal ring
-Y 0 52 5                   Suit Load: Orc Mail
+Y 0 52 9                   Suit Load: Orc Mail
 
 
 M 0 3711 2 3711      ; Dire Wolf (Wandering)
@@ -132,7 +132,7 @@ R 1 3710   2 3711      ; Ord Guard
 E 1 1036 999 3		   hardened steel collar
 ? 0 2 0 E
 E 1 1089 999 1             metal ring
-Y 0 52 5                   Suit Load: Orc Mail
+Y 0 52 9                   Suit Load: Orc Mail
 
 
 M 0 3711 2 3713      ; Dire Wolf (Wandering)
@@ -141,7 +141,7 @@ R 1 3710   8 3713      ; Orc Guard
 E 1 1036 999 3		 hardened steel collar
 ? 0 2 0 E
 E 1 1089 999 1         metal ring
-Y 0 52 5               Suit Load: Orc Mail
+Y 0 52 9               Suit Load: Orc Mail
 
 
 M 0 3711 2 3715      ; Dire Wolf (Wandering)
@@ -150,7 +150,7 @@ R 1 3710   8 3715      ; Orc Guard
 E 1 1036 999 3		 hardened steel collar
 ? 0 2 0 E
 E 1 1089 999 1         metal ring
-Y 0 52 5               Suit Load: Orc Mail
+Y 0 52 9               Suit Load: Orc Mail
 
 
 
@@ -161,7 +161,7 @@ E 1 3898 12 16      ; Obsidian Bracer
 E 1 3899 3 19      ; Obsidian Sword of Darkness
 ? 0 6 0 E
 E 1 1151 1 14      ; Runic Cape
-Y 0 30 5           ; onyx suit load
+Y 0 30 10           ; onyx suit load
 M 0 3702 2 3701 1      ; Male Citizen
 M 0 3703 2 3701 1      ; Female Citizen
 M 0 3702 2 3710 0      ; Male Citizen
@@ -233,53 +233,63 @@ M 0 3798 1 3818 18      ; Ghoul
 G 1 3798   4           ; Bone
 
 M 0 3850 1 3851 51      ; Ninja
-? 0 5 0 E		   Ninjato
-E 1 3858 50 19         
-? 0 2 0 E		   Ninja Cowl
+? 0 8 0 E		   Ninjato
+E 1 3858 50 19
+? 0 8 0 E		   Shadow Sai
+E 1 3859 50 19           
+? 0 8 0 E		   Ninja Cowl
 E 1 3860 10 5         
-? 0 2 0 E		   Ninja bodysuit
+? 0 8 0 E		   Ninja bodysuit
 E 1 3861 5  4         
-? 0 3 0 E		   Tab Boot
+? 0 8 0 E		   Tab Boot
 E 1 3862 20 8         
 
 M 0 3850 1 3852 52      ; Ninja
-? 0 5 0 E		   Shadow Sai
+? 0 8 0 E		   Ninjato
+E 1 3858 50 19         
+? 0 8 0 E		   Shadow Sai
 E 1 3859 50 19         
-? 0 2 0 E		   Ninja Cowl
+? 0 8 0 E		   Ninja Cowl
 E 1 3860 10 5         
-? 0 2 0 E		   Ninja bodysuit
+? 0 8 0 E		   Ninja bodysuit
 E 1 3861 5  4         
-? 0 2 0 E		   Tab Boot
+? 0 8 0 E		   Tab Boot
 E 1 3862 20 8         
 
 M 0 3850 1 3853 53      ; Ninja
 ? 0 10 0 E		   Tanto
 E 1 3863 50 19         
-? 0 2 0 E		   Ninja Cowl
+? 0 8 0 E		   Shadow Sai
+E 1 3859 50 19  
+? 0 8 0 E		   Ninja Cowl
 E 1 3860 10 5         
-? 0 2 0 E		   Ninja bodysuit
+? 0 8 0 E		   Ninja bodysuit
 E 1 3861 5  4         
-? 0 2 0 E		   Tab Boot
+? 0 8 0 E		   Tab Boot
 E 1 3862 20 8         
 
 M 0 3850 1 3854 54      ; Ninja
-? 0 6 0 E		   Ninjato
+? 0 8 0 E		   Ninjato
 E 1 3858 50 19         
-? 0 2 0 E		   Ninja Cowl
+? 0 8 0 E		   Shadow Sai
+E 1 3859 50 19  
+? 0 8 0 E		   Ninja Cowl
 E 1 3860 10 5         
-? 0 2 0 E		   Ninja bodysuit
+? 0 8 0 E		   Ninja bodysuit
 E 1 3861 5  4         
-? 0 2 0 E		   Tab Boot
+? 0 8 0 E		   Tab Boot
 E 1 3862 20 8         
 
 M 0 3850 1 3855 55      ; Ninja
+? 0 8 0 E		   Ninjato
+E 1 3858 50 19         
 ? 0 7 0 E		   Shadow Sai
 E 1 3859 50 19         
-? 0 2 0 E		   Ninja Cowl
+? 0 8 0 E		   Ninja Cowl
 E 1 3860 10 5         
-? 0 1 0 E		   Ninja bodysuit
+? 0 8 0 E		   Ninja bodysuit
 E 1 3861 5  4         
-? 0 2 0 E		   Tab Boot
+? 0 8 0 E		   Tab Boot
 E 1 3862 20 8         
 
 O 0 3825   1 3825      ; Tiny Chest
@@ -295,27 +305,27 @@ B 1 3767   1 3767      ; City Treasure
 
 M 0 3704 1 3749 		logrus mayor
 G 1 3765 2			treasury key
-? 0 2 0 E
+? 0 8 0 E
 E 1 1036 999 3		 hardened steel collar
-? 0 3 0 E
+? 0 8 0 E
 E 1 1037 999 7          hardened steel legging
-? 0 3 0 E
+? 0 8 0 E
 E 1 1038 999 18         studded metal shield
-? 0 2 0 E
+? 0 8 0 E
 E 1 1052 999 5        ; hardened steel Helmet
-? 0 2 0 E
+? 0 8 0 E
 E 1 1053 999 4 	       ; hardened steel breastplate
-? 0 2 0 E
+? 0 8 0 E
 E 1 1055 999 15          hardened steel girth
-? 0 3 0 E
+? 0 8 0 E
 E 1 1056 999 10	        hardened steel gauntlet
-? 0 2 0 E
+? 0 8 0 E
 E 1 1057 999 14         hardened metal cloak
-? 0 3 0 E
+? 0 8 0 E
 E 1 1058 999 17         hardened steel bracer
-? 0 2 0 E
+? 0 8 0 E
 E 1 1059 999 12	 	hardened steel armband
-? 0 2 0 E
+? 0 8 0 E
 E 1 1089 999 1         metal ring
 
 D 0 3866 4 2         Adrielz Chest -> A Balcony Overlooking the City

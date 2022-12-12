@@ -23,72 +23,72 @@ M 0 14145 1 -99      -spirit of ariss the assassin
 E 1 14160 30 19        -glowing short sword
 
 M 0 14146 1 14159    -spirit of gnela
-? 0 1 0 E
+? 0 5 0 E
 E 1 14149 1 5          -crown of gnelis
 ? 0 5 0 E
 E 1 14158 20 19        -spirit blade
-Y 0 37 3               -spirit armor set
+Y 0 37 5                       -spirit armor set
 
 M 0 14147 1 14154    -spirit of gnoris
 ? 0 5 0 E
 E 1 14156 20 19        -spirit dagger
-Y 0 37 2               -spirit armor set    
+Y 0 37 5                       -spirit armor set
 
 M 0 14148 1 14165    -spirit of gnora
-? 0 1 0 E
+? 0 5 0 E
 E 1 14162 1 19         -mace of gnolis
-Y 0 110 2              -spirit cloth set
+Y 0 110 5                      -spirit cloth set
 
 M 0 14149 1 14160    -spirit of gniles
 ? 0 5 0 G
 G 1 14159 9999         -spirit scroll of knowledge (true sight-det invis)
-? 0 1 0 E
+? 0 5 0 E
 E 1 14161 1 19         -gnife of gnalis
-Y 0 110 2              -spirit cloth set
+Y 0 110 5                      -spirit cloth set
 
 M 0 14150 1 14156    -statue of gnilis
 
 A 0 14153 14165
 M 0 14151 1 -99      -grieving spirit (cleric)
-? 0 3 0 E
+? 0 5 0 E
 E 1 14157 20 19         -spirit mace
-Y 0 110 1               -spirit cloth set
+Y 0 110 5                       -spirit cloth set
 
 A 0 14153 14165
 M 0 14152 1 -99      -quiet spirit (mage)
 ? 0 3 0 E
 E 1 14156 20 19         -spirit dagger
-Y 0 110 1               -spirit cloth set
+Y 0 110 5                       -spirit cloth set
 
 A 0 14153 14165
 M 0 14153 1 -99      -humble spirit (monk)
-Y 0 110 1               -spirit cloth set
+Y 0 110 5                       -spirit cloth set
 
 M 0 14154 1 14153    -knightly spirit at door
 ? 0 3 0 E
 E 1 14158 20 19         -spirit sword
-Y 0 37 2                -spirit armor set
+Y 0 37 5                        -spirit armor set
 
 M 0 14154 1 14159    -knightly spirit at dais
 ? 0 3 0 E
 E 1 14158 20 19         -spirit sword
-Y 0 37 2                -spirit armor set
+Y 0 37 5                        -spirit armor set
 
 A 0 14153 14165
 M 0 14155 1 -99      -spirit filmy
-Y 0 37 1                -spirit armor set
+Y 0 37 5                        -spirit armor set
 A 0 14153 14165
 M 0 14155 1 -99      -spirit filmy
-Y 0 37 1                -spirit armor set
+Y 0 37 5                        -spirit armor set
 A 0 14150 14152
 M 0 14155 1 -99      -spirit filmy
-Y 0 37 1                -spirit armor set
+Y 0 37 5                        -spirit armor set
 
 A 0 14150 14152
 M 0 14156 1 -99      -calm spirit (ranger)
-? 0 3 0 E
+? 0 5 0 E
 E 1 14158 20 19         -spirit sword
-Y 0 37 2                -spirit armor set
+Y 0 37 5                        -spirit armor set
 
 A 0 14145 14148
 M 0 14157 1 -99      -cougar
@@ -102,4 +102,3 @@ M 0 14160 1 -99      -nervous stag
 M 0 14161 2 14149   badger
 G 1 14100 9999        light blue potion (waterbreath)
 S
-

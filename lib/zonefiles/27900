@@ -180,117 +180,143 @@ B 0 27912 1 27954              a chunk of terbium
 M 0 27913 15 27900             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27913 15 27901             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27907 10 27901             a svirfneblin miner
+Y 0 62 7
 M 0 27909 12 27904             a svirfneblin hauler
+Y 0 62 7
 M 0 27909 12 27904             a svirfneblin hauler
+Y 0 62 7
 M 0 27913 15 27907             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27907 10 27909             a svirfneblin miner
+Y 0 62 7
 M 0 27913 15 27909             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27909 12 27909             a svirfneblin hauler
+Y 0 62 7
 M 0 27908 10 27911             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
+Y 0 62 7
 M 0 27909 12 27915             a svirfneblin hauler
+Y 0 62 7
 M 0 27907 10 27916             a svirfneblin miner
 M 0 27908 10 27919             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
 M 0 27907 10 27924             a svirfneblin miner
+Y 0 62 7
 M 0 27908 10 27929             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
 M 0 27907 10 27938             a svirfneblin miner
 M 0 27909 12 27939             a svirfneblin hauler
 M 0 27908 10 27939             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
 M 0 27908 10 27941             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
 M 0 27907 10 27942             a svirfneblin miner
+Y 0 62 7
 M 0 27909 12 27945             a svirfneblin hauler
+Y 0 62 7
 M 0 27908 10 27945             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
 M 0 27913 15 27950             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27908 10 27953             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
-C 1 27913 15 27953             a svirfneblin worker
+M 1 27913 15 27953             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27913 15 27955             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27907 10 27958             a svirfneblin miner
+Y 0 62 7
 M 0 27909 12 27959             a svirfneblin hauler
+Y 0 62 7
 M 0 27908 10 27959             a rock gnome
-? 0 2 0 E
+? 0 7 0 E
 E 1 27938 10 19                  a gladius
 M 0 27913 15 27961             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
-? 0 3 0 E
+? 0 7 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27914 20 27964             a snirfneblin slave
+Y 0 62 7
 M 0 27921 12 27973             a rough ogre pirate
-Y 0 97 2                         Terbium Set
-? 0 1 0 E
+Y 0 97 7                         Terbium Set
+? 0 7 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27922 1 27974              an ochre jelly
 M 0 27922 1 27975              an ochre jelly
 M 0 27922 1 27976              an ochre jelly
 M 0 27922 1 27978              an ochre jelly
 M 0 27914 20 27982             a snirfneblin slave
+Y 0 62 7
 M 0 27913 15 27988             a svirfneblin worker
 ? 0 10 0 E
 E 1 27916 20 19                  a small red stick
 ? 0 3 0 E
 E 1 27937 10 18                  a blast shield
+Y 0 62 7
 M 0 27906 1 27991              Karn'esh
-? 0 1 0 E
+? 0 10 0 E
 E 1 28055 1 5                    a blood-red basinet
 ? 0 99 0 G
 G 1 27935 1                      a wine skin
 C 1 27905 1 27991              Masstrizial
 G 1 27920 1                      a stone key
 M 0 27914 20 27996             a snirfneblin slave
+Y 0 62 7
 M 0 27914 20 27998             a snirfneblin slave
+Y 0 62 7
 M 0 27914 20 28011             a snirfneblin slave
+Y 0 62 7
 M 0 27921 12 28023             a rough ogre pirate
-Y 0 97 2                         Terbium Set
+Y 0 97 7                         Terbium Set
 ? 0 1 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27921 12 28027             a rough ogre pirate
-Y 0 97 2                         Terbium Set
+Y 0 97 7                         Terbium Set
 ? 0 1 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27921 12 28028             a rough ogre pirate
-Y 0 97 2                         Terbium Set
-? 0 1 0 E
+Y 0 97 7                         Terbium Set
+? 0 7 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27917 10 28039             a penguin
 C 1 27918 20 28039             a young penguin
@@ -324,7 +350,7 @@ M 0 27902 20 28086             a frost giant child
 M 0 27901 10 28086             a frost giantess
 M 0 27911 10 28094             a grimlock
 M 0 27921 12 28097             a rough ogre pirate
-Y 0 97 2                         Terbium Set
+Y 0 97 7                         Terbium Set
 ? 0 1 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27920 10 28206             a walrus
@@ -351,20 +377,20 @@ M 0 27916 10 28429             a polar bear
 M 0 27920 10 28439             a walrus
 M 0 27903 1 28451              Icebrand
 M 0 27904 1 28452              Ganeer
-? 0 1 0 E
+? 0 10 0 E
 E 1 28051 1 19                   Staff of Power
 M 0 27912 1 28458              Gargantuan
 M 0 27921 12 28465             a rough ogre pirate
-Y 0 97 2                         Terbium Set
-? 0 1 0 E
+Y 0 97 7                         Terbium Set
+? 0 7 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27921 12 28466             a rough ogre pirate
-Y 0 97 2                         Terbium Set
-? 0 1 0 E
+Y 0 97 7                         Terbium Set
+? 0 7 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27921 12 28470             a rough ogre pirate
-Y 0 97 2                         Terbium Set
-? 0 1 0 E
+Y 0 97 7                         Terbium Set
+? 0 7 0 E
 E 1 27933 1 19                   a terbium claymore
 M 0 27910 10 28478             a morkoth
 M 0 27910 10 28481             a morkoth

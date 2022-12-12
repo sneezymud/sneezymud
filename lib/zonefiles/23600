@@ -9,27 +9,32 @@ M 0 23607 2 23622 	arena guard gatehouse
 E 1 23665 9999 19		polished steel mace
 ? 0 2 0 E
 E 1 23664 100 2			banded ring
+Y 0 35 9			banded set
 M 0 23614 1 23624 	ticket seller
 M 0 23615 1 23658 	bet taker
+? 0 10 0 E
+E 1 1600 999 4 		ebony breastplate
 G 1 23798 50			small tin key
 G 1 14366 50			michelob key
+
 M 0 23616 1 23656 	head arena guard
 ? 0 10 0 E
 E 1 23625 12 19			golden scimitar
-Y 0 35 8			load set banded
+Y 0 30 20			load set onyx
 M 0 23617 1 23654 	raych
 ? 0 7 0 E
 E 1 23622 6 5			black shawl
 M 0 23618 1 23655 	thraix
 G 1 23797 50			ebony key
-? 0 4 0 E
+? 0 9 0 E
 E 1 23623 3 2			phase ring
 M 0 23612 2 23639        elite arena
 G 1 23799 50			ornate key
-Y 0 35 4			load set banded
+Y 0 35 20			load set banded
 M 0 23619 1 23659 	animal keeper
 ? 0 8 0 E
 E 1 23624 7 3			steel throatguard
+Y 0 35 9			banded set
 M 0 23621 1 23661 	arena accountant
 ? 0 2 0 E
 E 1 23626 6 17			stiff leather bracelet
@@ -37,40 +42,44 @@ M 0 23622 1 23796 	ice devil
 ? 0 10 0 E
 E 1 23627 30 18			great spear
 M 0 23623 1 23795 	clyde
-? 0 5 0 E
+? 0 8 0 E
 E 1 23629 3 14			shadowy cloak
-? 0 6 0 E
+? 0 8 0 E
 E 1 23638 3 18			shield unholy
-? 0 5 0 E
+? 0 7 0 E
 E 1 23628 9 19			bloody spike
 M 0 23624 1 23684 	nissus
-? 0 4 0 E
+? 0 7 0 E
 E 1 23630 10 18			defender sword
-? 0 4 0 E
+? 0 7 0 E
 E 1 23631 5 5			white metal helm
-Y 0 35 2			banded set
+Y 0 11 15                        platemail set
 M 0 23625 1 23687 	trajan
 ? 0 7 0 E
 E 1 23632 12 19			green trident
 ? 0 7 0 G
 E 1 23633 12 18			gladiator net
-Y 0 35 3                        banded set
+Y 0 11 15                        platemail set
 M 0 23626 1 23718 	nethker
-? 0 3 0 E
+? 0 8 0 E
 E 1 23636 20 11			heavy metal gauntlet
-? 0 6 0 E
+? 0 8 0 E
 E 1 23635 2 18			gigantic hammer
-Y 0 54 3                        spiked metal set  
+Y 0 50 11                        bronze  set  
 M 0 23627 1 23717 	skrell
 ? 0 10 0 E
 E 1 23637 15 19			morning star
-Y 0 35 3                        banded set  
+? 0 10 0 E
+E 1 23634 999 4 		onyx breastplate
+Y 0 35 15                        banded set  
 M 0 23628 1 23700 	decimus
-? 0 25 0 E
+? 0 15 0 E
 E 1 23640 7 3			shimmering medallion
-? 0 45 0 E
+? 0 15 0 E
 E 1 23639 1 19			warlord sword 
-Y 0 35 7			loadset banded
+? 0 8 0 E
+E 1 23700 5 5			gigantic golden horns
+Y 0 15 10 			loadset gleaming
 M 0 23629 4 23666 	wolf grey
 M 0 23629 4 23668 
 M 0 23630 3 23675 	tigers
@@ -82,83 +91,118 @@ M 0 23633 1 23672 	young cloud dragon
 M 0 23608 2 23722 	crazed gladiator
 ? 0 15 0 E
 E 1 23600 50 18			military pick
-Y 0 65 2			toughened set
-M 0 23608 2 23678 	crazed gladiator
 ? 0 15 0 E
 E 1 23601 150 19		harpoon
-Y 0 65 2			toughened set
-M 0 23609 2 23696 	arrogant gladiator
+Y 0 65 9			toughened set
+M 0 23608 2 23678 	crazed gladiator		17
+? 0 10 0 E
+E 1 23605 150 19		morning star? 0 15 0 E
+E 1 23600 50 18			military pick
+? 0 15 0 E
+E 1 23601 150 19		harpoon
+Y 0 65 9			toughened set
+M 0 23609 2 23696 	arrogant gladiator		26
+? 0 10 0 E
+E 1 23607 150 19		scimitar
 ? 0 10 0 E
 E 1 23605 150 19		morning star
-Y 0 8 2				studded set
+? 0 10 0 E
+E 1 23609 250 19		trident
+Y 0 8 9				studded set
 M 0 23609 2 23698 	arrogant gladiator
 ? 0 10 0 E
 E 1 23607 150 19		scimitar
-Y 0 8 2				studded set
-M 0 23609 2 23713 	arrogant gladiator
+? 0 10 0 E
+E 1 23605 150 19		morning star
 ? 0 10 0 E
 E 1 23609 250 19		trident
-Y 0 8 2				studded set
-M 0 23610 2 23681 	defiant gladiator
+Y 0 8 9				studded set
+M 0 23609 2 23713 	arrogant gladiator
+? 0 10 0 E
+E 1 23607 150 19		scimitar
+? 0 10 0 E
+E 1 23605 150 19		morning star
+? 0 10 0 E
+E 1 23609 250 19		trident
+Y 0 8 9			studded set
+M 0 23610 2 23681 	defiant gladiator		28
+? 0 10 0 E
+E 1 23607 150 19		scimitar
+? 0 10 0 E
+E 1 23605 150 19		morning star
+? 0 10 0 E
+E 1 23609 250 19		trident
 ? 0 8 0 E
 E 1 23602 250 18		heavy lance
-Y 0 41 2			ringmail set
-M 0 23610 2 23721 	defiant gladiator
-? 0 15 0 E
-E 1 23604 250 18		military fork
-Y 0 41 2			ringmail set
+Y 0 41 9			ringmail set
 M 0 23610 2 23721 	defiant gladiator
 ? 0 10 0 E
+E 1 23607 150 19		scimitar
+? 0 10 0 E
+E 1 23605 150 19		morning star
+? 0 10 0 E
+E 1 23609 250 19		trident
+? 0 15 0 E
+E 1 23604 250 18		military fork
+Y 0 41 9			ringmail set
+M 0 23610 2 23721 	defiant gladiator
+? 0 10 0 E
+E 1 23607 150 19		scimitar
+? 0 10 0 E
+E 1 23605 150 19		morning star
+? 0 10 0 E
+E 1 23609 250 19		trident
+? 0 10 0 E
 E 1 23606 250 18		ranseur
-Y 0 41 2			ringmail set
+Y 0 41 9			ringmail set
 M 0 23611 2 23692 	skilled gladiator
 ? 0 5 0 E
 E 1 23620 25 19			titanium broadsword
-Y 0 54 2			spiked set
+Y 0 54 9			spiked set
 M 0 23611 2 23706 	skilled gladiator
 ? 0 5 0 E
 E 1 23620 25 19			titanium broadsword
-Y 0 54 2			spiked set
+Y 0 54 9			spiked set
 M 0 23611 2 23708 	skilled gladiator
 ? 0 5 0 E
 E 1 23620 25 19			titanium broadsword
-Y 0 54 2			spiked set
+Y 0 54 9			spiked set
 M 0 23606 2 23625 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 1 23628 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 2 23631  	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 1 23634 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 2 23637 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 1 23640 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 2 23643 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 1 23646 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23606 2 23649 	arena guard
 ? 0 7 0 E
 E 1 23665 9999 19		polished steel mace
-Y 0 35 2			banded set
+Y 0 35 9			banded set
 M 0 23600 1 23751 	small children
 M 0 23600 2 23763 
 M 0 23604 2 23757 	lost mothers
