@@ -761,6 +761,14 @@ void TBeing::doSacrifice(const char *arg) {
     return;
   }
 
+  // Don't allow sacrificing corpses that are being butchered or skinned. If
+  // sacrifice finishes before those skills a crash will likely occur.
+  if (corpse->isCorpseFlag(CORPSE_PC_BUTCHERING | CORPSE_PC_SKINNING)) {
+    act("That corpse is currently being... processed... by someone else.",
+      false, this, corpse, nullptr, TO_CHAR);
+      return;
+  }
+
   if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
     act("Someone must be sacrificing $p currently.", false, this, corpse, nullptr, TO_CHAR);
     return;
