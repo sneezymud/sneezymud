@@ -266,6 +266,15 @@ void TThing::butcherMe(TBeing *ch, const char *arg)
     ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
+
+  // Don't allow butchering a corpse that's already being sacrificed, as the
+  // corpse will likely disappear before butcher is done, causing a crash.
+  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    act("$p: That corpse is actively being sacrificed!", false, ch, corpse,
+      nullptr, TO_CHAR);
+      return;
+  }
+
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
     act("$p: You aren't able to butcher that.",

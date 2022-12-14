@@ -697,6 +697,15 @@ void TThing::skinMe(TBeing *ch, const char *arg)
           FALSE, ch, corpse, 0, TO_CHAR);
     return;
   }
+
+  // Don't allow skinning a corpse that's already being sacrificed, as the
+  // corpse will potentially disappear before skinning is done, causing a crash.
+  if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
+    act("$p: That corpse is actively being sacrificed!", false, ch, corpse,
+      nullptr, TO_CHAR);
+    return;
+  }
+
   if (corpse->isCorpseFlag(CORPSE_PC_SKINNING)) {
     act("$p: Someone else is already skinning this.",
         FALSE, ch, corpse, 0, TO_CHAR);
