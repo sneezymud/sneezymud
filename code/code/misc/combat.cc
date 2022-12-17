@@ -1080,10 +1080,11 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
   // but possible for multiple bleeds to be started on the same limb in the
   // same round, and the PART_BLEEDING flag doesn't get set until the first
   // disease pulse tick occurs.
-  affectedData* existingAffect =
-    v->affected->find_if([part_hit, disease](affectedData* aff) {
-      return aff->modifier == disease && aff->level == part_hit;
-    });
+  affectedData* existingAffect = v->affected
+                                   ? v->affected->find_if([part_hit, disease](affectedData* aff) {
+                                       return aff->modifier == disease && aff->level == part_hit;
+                                     })
+                                   : nullptr;
 
   if (!existingAffect) {
     isBluntAttack
