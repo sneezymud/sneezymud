@@ -42,6 +42,7 @@ extern TMonster *read_mobile(int nr, readFileTypeT type);
 extern int number(int from, int to);
 extern int dice(int, int);
 extern bool roll_chance(double);
+extern bool percentChance(int percent);
 
 
 typedef struct _app_typ {
@@ -784,8 +785,10 @@ class TBeing : public TThing {
   bool canSpeak();
   int applySoundproof() const;
   void aiWear(TObj *);
-  int defaultLimbConnections(wearSlotT);
-  int limbConnections(wearSlotT);
+  wearSlotT findNextAttachedBodyPartDefault(wearSlotT slot) const;
+  wearSlotT findNextAttachedBodyPart(wearSlotT slot) const;
+  int isBodyPartAttachedDefault(wearSlotT) const;
+  int isBodyPartAttached(wearSlotT) const;
   void makePartMissing(wearSlotT, bool, TBeing * = NULL);
   void makeLimbTransformed(TBeing *, wearSlotT, bool);
   void doTransformDrop(wearSlotT);
@@ -1392,11 +1395,7 @@ class TBeing : public TThing {
   int getAgiReaction() const;
   int getConShock() const;
   float getConHpModifier() const;
-  double getStatMod(statTypeT statType) const;
-
-  using StatList = std::initializer_list<statTypeT>;
-  bool statCheck(spellNumT spellNum, StatList attackerStatTypes, TBeing *defender, StatList defenderStatTypes, bool useIsNotPowerful = false, double isNotPowerfulBonus = 1.35);
-
+  double getStatMod(statTypeT statType, int multiplier = 1) const;
   float getIntModForPracs() const;
   float getChaShopPenalty() const;
   float getSwindleBonus();
@@ -1454,9 +1453,18 @@ class TBeing : public TThing {
   bool canCounterMove(int);
   bool canFocusedAvoidance(int);
   int trySpringleap(TBeing *);
-  int damageLimb(TBeing *, wearSlotT, TThing *, int *);
+  bool maybeDestroyLimb(wearSlotT part_hit, TBeing* v, const TBaseWeapon* weapon,
+    spellNumT attackType);
+  int damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
+    int* dam);
+  int damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
+    int* dam, spellNumT attackType);
+  affectedData* isBleeding(wearSlotT limb);
+  affectedData* isBruised(wearSlotT limb);
+  affectedData* isInfected(wearSlotT limb);
+  void auditBodyParts(bool dropEq = true);
   int damageHand(TBeing *, wearSlotT);
-  void woundedHand(bool);
+  void dropItemFromDamagedHand(bool);
   bool bothLegsHurt() const;
   bool eitherLegHurt() const;
   bool eitherHandHurt() const;
@@ -1508,7 +1516,7 @@ class TBeing : public TThing {
   void setLimbFlags(wearSlotT limb, unsigned short int num);
   void addToLimbFlags(wearSlotT limb, unsigned short int num);
   void remLimbFlags(wearSlotT limb, unsigned short int num);
-  bool isLimbFlags(wearSlotT limb, int num) const;
+  bool isLimbFlags(wearSlotT limb, int limbFlag) const;
 
   bool isDead() const {
     return (getHit() < -10);

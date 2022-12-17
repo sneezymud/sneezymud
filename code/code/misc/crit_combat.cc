@@ -488,8 +488,6 @@ void TBeing::critHitEqDamage(TBeing *v, TThing *obj, int eqdam)
   }
 }
 
-
-// This will just be a big ass case statement based on random diceroll 
 // returns DELETE_VICT if v dead
 // mod is -1 from generic combat, mod == crit desired from immortal command.
 int TBeing::critSuccessChance(TBeing* victim,
@@ -531,8 +529,9 @@ int TBeing::critSuccessChance(TBeing* victim,
   static constexpr int CRIT_HITTING_SEVERITY_BONUS = 5;
   static constexpr int POWER_MOVE_SEVERITY_BONUS = 15;
 
-  // This value divided by 100 is how much each point of APPLY_CRIT_FREQUENCY from spells
-  // or gear increases crit chance                                
+  // This value divided by 1000 is how much each point of APPLY_CRIT_FREQUENCY from spells
+  // or gear increases crit chance. Value of 50 = 0.05% increased crit chance per point of crit
+  // frequency, meaning 20 points per 1% increase.
   static constexpr int CRIT_FREQUENCY_VALUE_PER_POINT = 50;
 
   if (isAffected(AFF_ENGAGER) || dynamic_cast<TGun*>(weapon))
@@ -552,7 +551,7 @@ int TBeing::critSuccessChance(TBeing* victim,
   if (mod == -1 && victim->affectedBySpell(AFFECT_DUMMY)) {
     for (auto* affect = victim->affected; affect; affect = affect->next) {
       if (affect->type == AFFECT_DUMMY && affect->level == 60) {
-        mod = affect->modifier2;
+        mod = static_cast<int>(affect->modifier2);
       }
     }
     victim->affectFrom(AFFECT_DUMMY);
@@ -585,7 +584,6 @@ int TBeing::critSuccessChance(TBeing* victim,
   // Things like the vorpal proc and the imm "crit" command will send in a specific value
   // for mod, which serves as the crit severity in those cases.
   if (mod == -1) {
-    // sendTo(format("<Y>Roll: %d | CritChance: %d<z>\n\r") % diceRollResult % critChance);
     if (diceRollResult > critChance)
       return 0;
 
@@ -822,7 +820,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 	for (i=1;i<5;i++)
 	  if (v->equipment[WEAR_HAND_R])
 	    v->damageItem(this,WEAR_HAND_R,wtype,weapon,*dam);
-	v->woundedHand(v->isRightHanded());
+	v->dropItemFromDamagedHand(v->isRightHanded());
 	*part_hit = WEAR_HAND_R;
 	if (desc)
 	  desc->career.crit_broken_bones++;
@@ -857,7 +855,7 @@ int TBeing::critBlunt(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 		v->describeBodySlot(WEAR_HAND_L);
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->addToLimbFlags(WEAR_HAND_L, PART_BROKEN);
-	v->woundedHand(!v->isRightHanded());
+	v->dropItemFromDamagedHand(!v->isRightHanded());
 	for (i=1;i<5;i++)
 	  if (v->equipment[WEAR_HAND_L])
 	    v->damageItem(this,WEAR_HAND_L,wtype,weapon,*dam);
@@ -1497,7 +1495,7 @@ buf=format("$n's %s severs $N's %s and sends it flying!") %
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->makePartMissing(WEAR_HAND_R, FALSE, this);
 	v->rawBleed(WEAR_WRIST_R, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	v->woundedHand(v->isRightHanded());
+	v->dropItemFromDamagedHand(v->isRightHanded());
 	*part_hit = WEAR_WRIST_R;
 	if (desc)
 	  desc->career.crit_sev_limbs++;
@@ -1539,7 +1537,7 @@ buf=format("$n's %s severs $N's %s and sends it flying!") %
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->makePartMissing(WEAR_HAND_L, FALSE, this);
 	v->rawBleed(WEAR_WRIST_L, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	v->woundedHand(!v->isRightHanded());
+	v->dropItemFromDamagedHand(!v->isRightHanded());
 	*part_hit = WEAR_WRIST_L;
 	if (desc)
 	  desc->career.crit_sev_limbs++;
@@ -1567,7 +1565,7 @@ buf=format("$n's %s severs $N's %s and sends it flying!") %
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->makePartMissing(WEAR_ARM_R, FALSE, this);
 	v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	v->woundedHand(v->isRightHanded());
+	v->dropItemFromDamagedHand(v->isRightHanded());
 	*part_hit = WEAR_ARM_R;
 	if (desc)
 	  desc->career.crit_sev_limbs++;
@@ -1595,7 +1593,7 @@ buf=format("$n's %s severs $N's %s and sends it flying!") %
 	act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 	v->makePartMissing(WEAR_ARM_L, FALSE, this);
 	v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-	v->woundedHand(!v->isRightHanded());
+	v->dropItemFromDamagedHand(!v->isRightHanded());
 	*part_hit = WEAR_ARM_L;
 	if (desc)
 	  desc->career.crit_sev_limbs++;
@@ -2185,7 +2183,7 @@ int TBeing::critPierce(TBeing *v, TThing *weapon, wearSlotT *part_hit,
 
     	v->makePartMissing(v->getPrimaryHand(), FALSE, this);
     	v->rawBleed(v->getPrimaryWrist(), PERMANENT_DURATION, SILENT_NO, CHECK_IMMUNITY_YES);
-    	v->woundedHand(TRUE);
+    	v->dropItemFromDamagedHand(TRUE);
     	*part_hit = v->getPrimaryHand();
     	if (desc)
     	  desc->career.crit_sev_limbs++;

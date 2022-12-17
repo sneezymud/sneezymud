@@ -155,6 +155,13 @@ bool roll_chance(double fract){
   return FALSE;
 }
 
+// Determine if something with a given percent chance of happening (represented
+// as a whole number) should happen. E.g. percentChance(5) = true means an
+// attempt with a 5% chance of success was successful.
+bool percentChance(int percent) {
+  return ::number(0, 99) < percent;
+}
+
 
 
 

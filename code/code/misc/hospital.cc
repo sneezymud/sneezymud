@@ -360,7 +360,7 @@ int doctor(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *)
             me->doTell(ch->getName(), format("You don't have enough money to regenerate your %s!") % ch->describeBodySlot(i));
             return TRUE;
           } else {
-            if (!ch->limbConnections(i)) {
+            if (!ch->isBodyPartAttached(i)) {
               me->doTell(ch->getName(), format("You can't regenerate your %s until something else is regenerated first.") % ch->describeBodySlot(i));
               return TRUE;
             }

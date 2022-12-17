@@ -1045,7 +1045,7 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   for (wearSlotT j=MIN_WEAR; j < MAX_WEAR; j++) {
     if (!vict->hasPart(j))
       continue;
-    if (!vict->limbConnections(j)) {
+    if (!vict->isBodyPartAttached(j)) {
       vict->setLimbFlags(j, PART_MISSING);
       TThing *tmp = vict->unequip(j);
       if (tmp)
@@ -1054,8 +1054,8 @@ int weaponUnmaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
   }
 
   // check for damage to both hands
-  vict->woundedHand(TRUE);
-  vict->woundedHand(FALSE);
+  vict->dropItemFromDamagedHand(TRUE);
+  vict->dropItemFromDamagedHand(FALSE);
 
   // snipped limb missing code
 
@@ -2614,7 +2614,7 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       for (wearSlotT j=MIN_WEAR; j < MAX_WEAR; j++) {
         if (!vict->hasPart(j))
           continue;
-        if (!vict->limbConnections(j)) {
+        if (!vict->isBodyPartAttached(j)) {
           vict->setLimbFlags(j, PART_MISSING);
           TThing *tmp = vict->unequip(j);
           if (tmp)
@@ -2623,8 +2623,8 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
       }
 
       // check for damage to both hands
-      vict->woundedHand(TRUE);
-      vict->woundedHand(FALSE);
+      vict->dropItemFromDamagedHand(TRUE);
+      vict->dropItemFromDamagedHand(FALSE);
       
       sprintf(limb, "%s", vict->describeBodySlot(slot).c_str());\
         
