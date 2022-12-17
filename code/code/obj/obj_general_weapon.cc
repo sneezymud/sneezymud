@@ -108,7 +108,7 @@ sstring TGenWeapon::statObjInfo() const
   sstring a = "";
   
   a += format("Current %-11s %-7d  Damage Level:     %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % (int) (getWeapDamLvl() / 4.0);
-  a += format("Maximum %-11s %-7d  Damage Deviation: %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getCurSharp() % getWeapDamDev();
+  a += format("Maximum %-11s %-7d  Damage Deviation: %d\n\r") % ((isBluntWeapon() ? "bluntness:" : (isPierceWeapon() ? "pointiness:" : "sharpness:"))) % getMaxSharp() % getWeapDamDev();
   
   double base = baseDamage();
   double flux = base * getWeapDamDev() / 10;
@@ -126,7 +126,7 @@ sstring TGenWeapon::statObjInfo() const
       a += format("Attack Type:        %-8s") % attack_hit_text[getWtype(wt) - TYPE_MIN_HIT].singular;
     }
     if (getWeaponFreq(wt))
-      a += format(" Attack Frequeny:  %d%%") % getWeaponFreq(wt);
+      a += format(" Attack Frequency:  %d%%") % getWeaponFreq(wt);
     a += "\n\r";
   }
   if(isPoisoned()){

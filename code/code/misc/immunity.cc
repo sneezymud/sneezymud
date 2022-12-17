@@ -210,22 +210,10 @@ void TBeing::addToImmunity(immuneTypeT type, short amt)
   immunities.immune_arr[type] = immunities.immune_arr[type] + amt;
 }
 
-bool TBeing::isImmune(immuneTypeT bit, wearSlotT pos, int modifier) const
-{
-  // 'modifier' is not required and defaults to 0
-  // 'modifier' is subtracted from any resistance less than 100%
-  // this function history subtracted (modifier + 50) from the resistance
-  //   this made absolutely no sense
-  //   - Maror 02/2004
-  int gi = getImmunity(bit);
-  if (gi >= 100)
-   return TRUE;
-  if (gi <= -100)
-    return FALSE;
-
-  return (gi - modifier) > ::number(1,100);
+bool TBeing::isImmune(immuneTypeT immunityType, wearSlotT pos,
+  int modifier) const {
+  return (getImmunity(immunityType) + modifier) >= ::number(1, 100);
 }
-
 
 immuneTypeT getTypeImmunity(spellNumT type)
 {

@@ -1061,7 +1061,7 @@ int restoreLimb(TBeing *caster, TBeing *victim, int, short bKnown)
               continue;
             if (!victim->slotChance(j))
               continue;
-            if (!victim->limbConnections(j))
+            if (!victim->isBodyPartAttached(j))
               victim->setLimbFlags(j, PART_MISSING);
           }
         }

@@ -1,6 +1,6 @@
 // magicutils.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <cmath>
 
@@ -9,7 +9,6 @@
 #include "room.h"
 #include "being.h"
 #include "low.h"
-#include "low.h"
 #include "monster.h"
 #include "disease.h"
 #include "obj_open_container.h"
@@ -17,7 +16,6 @@
 #include "obj_component.h"
 #include "person.h"
 #include "obj_key.h"
-#include "being.h"
 
 void TMonster::balanceMakeNPCLikePC()
 {
@@ -1455,189 +1453,126 @@ int TBeing::dropBloodLimb(wearSlotT limb)
   return TRUE;
 }
 
-int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
-{
+static int rawDisease(
+  TBeing* being, const wearSlotT pos, const int duration, const silentTypeT silent,
+  checkImmunityT immcheck, uint16_t limbFlag, immuneTypeT immunityType,
+  diseaseTypeT diseaseType, long modifier2 = 0, const sstring& toChar = "",
+  const sstring& toRoom = "", const char * color = ANSI_NORMAL,
+  const std::function<int(int)>& specialDuration =
+    [](int duration) { return duration; },
+  const std::function<void()>& followupAction = []() { return; }) {
+  if (pos < MIN_WEAR || pos >= MAX_WEAR) {
+    vlogf(LOG_BUG,
+      format("rawDisease called for disease type %i with bad slot: %i on %s") %
+        diseaseType % pos % being->getName());
+    return false;
+  }
+
+  if (!being->hasPart(pos) || being->isLimbFlags(pos, limbFlag) ||
+      (immcheck && being->isImmune(immunityType, pos))) {
+    return false;
+  }
+
   affectedData aff;
-  char buf[256];
-
-  if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, format("rawBruise called with bad slot: %i on %s") % pos % getName());
-    return FALSE;
-  }
-  if (!hasPart(pos) || isLimbFlags(pos, PART_BRUISED)) {
-    return FALSE;
-  }
-
-  // not sure what this is for???
-  if (immcheck) {
-    if (isImmune(IMMUNE_SKIN_COND, pos))
-      return FALSE;
-  }
-
   aff.type = AFFECT_DISEASE;
   aff.level = pos;
   aff.duration = duration;
   aff.location = APPLY_NONE;
-  aff.modifier = DISEASE_BRUISED;
+  aff.modifier = diseaseType;
+  aff.modifier2 = modifier2;
   aff.bitvector = 0;
 
-  // we've already applied a raw immunity check to prevent entirely
-  // however, let immunities also decrease duration
-  aff.duration *= (100 - getImmunity(IMMUNE_SKIN_COND));
-  aff.duration /= 100;
-
-  if(hasQuestBit(TOG_IS_HEMOPHILIAC))
-    aff.duration*=10;
-  else if (hasDisease(DISEASE_SCURVY) || isLimbFlags(pos, PART_LEPROSED))
-    aff.duration*=2;
-
-  affectTo(&aff);
-  disease_start(this, &aff);
-
-  if (!silent) {
-    sendTo(format("%sYour %s is bruised!%s\n\r") % 
-        red() % describeBodySlot(pos) % norm());
-    sprintf(buf, "$n's %s has been bruised!", describeBodySlot(pos).c_str());
-    act(buf, TRUE, this, NULL, NULL, TO_ROOM);
+  if (immcheck && aff.duration != PERMANENT_DURATION) {
+    aff.duration = static_cast<int>(
+      aff.duration * (100 - being->getImmunity(immunityType)) / 100.0);
   }
 
-  return TRUE;
+  aff.duration = specialDuration(aff.duration);
+
+  being->affectTo(&aff);
+  disease_start(being, &aff);
+
+  followupAction();
+
+  if (silent) return true;
+
+  if (!toChar.empty())
+    act(toChar, true, being, nullptr, nullptr, TO_CHAR, color);
+  if (!toRoom.empty())
+    act(toRoom, true, being, nullptr, nullptr, TO_ROOM, color);
+
+  return true;
 }
 
-// assumes you have already checked for immunites, etc
-int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck)
-{
-  affectedData aff;
-  char buf[256];
+int TBeing::rawBruise(wearSlotT pos, int duration, silentTypeT silent,
+  checkImmunityT immcheck) {
+  const long modifier2 = 1;
 
-  if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, format("rawBleed called with bad slot: %i on %s") % pos % getName());
-    return FALSE;
-  }
-  if (!hasPart(pos) || isLimbFlags(pos, PART_BLEEDING)) {
-    return FALSE;
-  }
+  const sstring toChar =
+    format("%sYour %s throbs painfully and begins to bruise.%s\n\r") %
+    purple() % describeBodySlot(pos) % norm();
+  const sstring toRoom = format("%sA bruise begins forming on $n's %s.%s") %
+                         purple() % describeBodySlot(pos) % norm();
 
-  // not sure what this is for???
-  if (immcheck) {
-    if (isImmune(IMMUNE_BLEED, pos))
-      return FALSE;
-  }
+  const auto updateDuration = [this, pos](int dur) {
+    if (hasQuestBit(TOG_IS_HEMOPHILIAC) || hasDisease(DISEASE_SCURVY) ||
+        isLimbFlags(pos, PART_LEPROSED | PART_GANGRENOUS))
+      dur *= 2;
+    return dur;
+  };
 
-  aff.type = AFFECT_DISEASE;
-  aff.level = pos;
-  aff.duration = duration;
-  aff.location = APPLY_NONE;
-  aff.modifier = DISEASE_BLEEDING;
-  aff.bitvector = 0;
-
-  // we've already applied a raw immunity check to prevent entirely
-  // however, let immunities also decrease duration
-  aff.duration *= (100 - getImmunity(IMMUNE_BLEED));
-  aff.duration /= 100;
-
-  if(hasQuestBit(TOG_IS_HEMOPHILIAC))
-    aff.duration=PERMANENT_DURATION;
-
-  affectTo(&aff);
-  disease_start(this, &aff);
-
-  dropBloodLimb(pos);
-
-  if (!silent) {
-    sendTo(format("%sYour %s has started to bleed!%s\n\r") % 
-        red() % describeBodySlot(pos) % norm());
-    sprintf(buf, "$n's %s has begun to bleed!", describeBodySlot(pos).c_str());
-    act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-  }
-
-  return TRUE;
+  return rawDisease(this, pos, duration, silent, immcheck, PART_BRUISED,
+    IMMUNE_BLEED, DISEASE_BRUISED, modifier2, toChar, toRoom, ANSI_PURPLE,
+    updateDuration);
 }
 
-// assumes you have already checked for immunities, etc
-int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck, int level)
-{
-  affectedData aff;
-  char buf[256];
+int TBeing::rawBleed(wearSlotT pos, int duration, silentTypeT silent,
+  checkImmunityT immcheck) {
+  const long modifier2 = 1;
 
-  if (immcheck) {
-    if (isImmune(IMMUNE_SKIN_COND, pos))
-      return FALSE;
-  }
-  if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, format("rawInfect called with bad slot: %i on %s") % pos % getName());
-    return FALSE;
-  }
-  if (!hasPart(pos) || isLimbFlags(pos, PART_INFECTED)) {
-    return FALSE;
-  }
-  if (!level)
-    level = GetMaxLevel();
-  aff.type = AFFECT_DISEASE;
-  aff.level = pos;
-  aff.duration = duration;
-  aff.modifier = DISEASE_INFECTION;
-  aff.location = APPLY_NONE;
-  aff.bitvector = 0;
-  aff.modifier2 = level; // important for infect, it determines damage rate
+  const sstring toChar =
+    format("A wound opens on your %s and begins to bleed.") %
+    describeBodySlot(pos);
 
-  // we've already applied a raw immunity check to prevent entirely
-  // however, let immunities also decrease duration
-  // affect is permanent when gangrene is present, for as long as gangrene is present
-  // (it is reduced once gangrene is removed)
-  if (aff.duration != PERMANENT_DURATION) {
-    aff.duration *= (100 - getImmunity(IMMUNE_SKIN_COND));
-    aff.duration /= 100;
-  }
-  affectTo(&aff);
-  disease_start(this, &aff);
+  const sstring toRoom =
+    format("A wound opens on $n's %s and begins to bleed.") %
+    describeBodySlot(pos);
 
-  if (!silent) {
-    sendTo(format("Your %s has become totally infected!\n\r") % describeBodySlot(pos));
-    sprintf(buf, "$n's %s has become totally infected!", describeBodySlot(pos).c_str());
-    act(buf, TRUE, this, NULL, NULL, TO_ROOM);
-  }
-  return TRUE;
+  const auto updateDuration = [this](int dur) {
+    return hasQuestBit(TOG_IS_HEMOPHILIAC)
+             ? PERMANENT_DURATION
+             : static_cast<int>(
+                 dur * (100 - getImmunity(IMMUNE_BLEED)) / 100.0);
+  };
+
+  const auto followupAction = [this, pos]() { dropBloodLimb(pos); };
+
+  return rawDisease(this, pos, duration, silent, immcheck, PART_BLEEDING,
+    IMMUNE_BLEED, DISEASE_BLEEDING, modifier2, toChar, toRoom, ANSI_RED,
+    updateDuration, followupAction);
 }
 
-int TBeing::rawGangrene(wearSlotT pos, int duration, silentTypeT silent, checkImmunityT immcheck, int level)
-{
-  affectedData aff;
+int TBeing::rawInfect(wearSlotT pos, int duration, silentTypeT silent,
+  checkImmunityT immcheck, int level) {
+  const long modifier2 = level ? level : GetMaxLevel();
 
-  if (immcheck) {
-    if (isImmune(IMMUNE_DISEASE, pos))
-      return FALSE;
-  }
-  if (pos < MIN_WEAR || pos >= MAX_WEAR){
-    vlogf(LOG_BUG, format("rawGangrene called with bad slot: %i on %s") % pos % getName());
-    return FALSE;
-  }
-  if (!hasPart(pos) || isLimbFlags(pos, PART_GANGRENOUS)) {
-    return FALSE;
-  }
-  if (!level)
-    level = GetMaxLevel();
-  aff.type = AFFECT_DISEASE;
-  aff.level = pos;
-  aff.duration = duration;
-  aff.modifier = DISEASE_GANGRENE;
-  aff.location = APPLY_NONE;
-  aff.bitvector = 0;
-  aff.modifier2 = level; // important to pass onto the infection that this will cause
+  const sstring toChar =
+    format("Your %s has become totally infected!") % describeBodySlot(pos);
 
-  if (aff.duration != PERMANENT_DURATION) {
-    // we've already applied a raw immunity check to prevent entirely
-    // however, let immunities also decrease duration
-    aff.duration *= (100 - getImmunity(IMMUNE_DISEASE));
-    aff.duration /= 100;
-  } 
-  affectTo(&aff);
-  disease_start(this, &aff);
+  const sstring toRoom =
+    format("$n's %s has become totally infected!") % describeBodySlot(pos);
 
-  if (!silent) {
-    // start message handled in disease_gangrene()
-  }
-  return TRUE;
+  return rawDisease(this, pos, duration, silent, immcheck, PART_INFECTED,
+    IMMUNE_DISEASE, DISEASE_INFECTION, modifier2, toChar, toRoom);
+}
+
+int TBeing::rawGangrene(wearSlotT pos, int duration, silentTypeT silent,
+  checkImmunityT immcheck, int level) {
+  const long modifier2 = level ? level : GetMaxLevel();
+
+  // Start messages handled in disease_gangrene
+  return rawDisease(this, pos, duration, silent, immcheck, PART_GANGRENOUS,
+    IMMUNE_DISEASE, DISEASE_GANGRENE, modifier2);
 }
 
 void TBeing::spellMessUp(spellNumT spell)

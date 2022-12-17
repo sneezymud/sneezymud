@@ -380,121 +380,141 @@ int disease_numbed(TBeing *victim, int message, affectedData *af)
   return FALSE;
 }
 
-int disease_bruised(TBeing *victim, int message, affectedData *af)
-{
-  char buf[256];
-  // defines the limb that is bruised
-  wearSlotT i = wearSlotT(af->level);
+int disease_bruised(TBeing* victim, int message, affectedData* af) {
+  const auto bruiseLocation = static_cast<wearSlotT>(af->level);
 
-
-  if(i < MIN_WEAR || i >= MAX_WEAR){
-    vlogf(LOG_BUG, format("disease_bruised called with bad slot: %i") % i);
-    return FALSE;
+  if (bruiseLocation < MIN_WEAR || bruiseLocation >= MAX_WEAR) {
+    vlogf(LOG_BUG, format("disease_bruised called with bad slot: %i") % bruiseLocation);
+    return false;
   }
 
-
-  if (victim->isPc() && !victim->desc)
-    return FALSE;
+  if (victim->isPc() && !victim->desc) return false;
 
   switch (message) {
     case DISEASE_BEGUN:
-      victim->addToLimbFlags(i, PART_BRUISED);
+      victim->addToLimbFlags(bruiseLocation, PART_BRUISED);
       break;
     case DISEASE_PULSE:
-      // check to see if somehow the bruised bit got taken off
-      if (!victim->hasPart(i) || !victim->isLimbFlags(i, PART_BRUISED)) {
+      // The salve prayer can remove bruises and does so by manually unsetting
+      // the PART_BRUISED flag on the limb
+      if (!victim->hasPart(bruiseLocation) || !victim->isLimbFlags(bruiseLocation, PART_BRUISED)) {
         af->duration = 0;
         break;
       }
 
-      if (!number(0, 50)) {
-        // just for fun, no damage or anything
-        victim->sendTo(format("You feel your %s throb and the bruise turns a deeper shade of purple.\n\r") % victim->describeBodySlot(i));
+      // #-of-bruise-stacks-% chance to send flavor text. No real effect.
+      if (percentChance(static_cast<int>(af->modifier2))) {
+        victim->sendTo(format("The bruising on your %s throbs painfully.\n\r") %
+                       victim->describeBodySlot(bruiseLocation));
       }
       break;
     case DISEASE_DONE:
-      if (victim->isLimbFlags(i, PART_BRUISED))
-        victim->remLimbFlags(i, PART_BRUISED);
-      if (victim->getPosition() > POSITION_DEAD && victim->hasPart(i)) {
-        victim->sendTo(format("The bruise on your %s fades away!\n\r") % victim->describeBodySlot(i));
-        sprintf(buf, "The bruise on $n's %s fades away!", victim->describeBodySlot(i).c_str());
-        act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
+      if (victim->isLimbFlags(bruiseLocation, PART_BRUISED))
+        victim->remLimbFlags(bruiseLocation, PART_BRUISED);
+      if (victim->getPosition() > POSITION_DEAD && victim->hasPart(bruiseLocation)) {
+        victim->sendTo(format("The bruise on your %s fades away!\n\r") %
+                       victim->describeBodySlot(bruiseLocation));
+        const sstring toRoom = format("The bruise on $n's %s fades away!") %
+                               victim->describeBodySlot(bruiseLocation);
+        act(toRoom, true, victim, nullptr, nullptr, TO_ROOM);
       }
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
-int disease_bleeding(TBeing *victim, int message, affectedData *af)
-{
-  char buf[256];
-  // defines the limb that is bleeding
-  wearSlotT i = wearSlotT(af->level);
-  if(i < MIN_WEAR || i >= MAX_WEAR){
-    vlogf(LOG_BUG, format("disease_bleeding called with bad slot: %i") % i);
-    return FALSE;
-  }
-  if (victim->isPc() && !victim->desc)
-    return FALSE;
+int disease_bleeding(TBeing* victim, int state, affectedData* af) {
+  const auto bleedLocation = static_cast<wearSlotT>(af->level);
 
-  switch (message) {
+  if (bleedLocation < MIN_WEAR || bleedLocation >= MAX_WEAR) {
+    vlogf(LOG_BUG, format("disease_bleeding called with bad slot: %i") % bleedLocation);
+    return false;
+  }
+
+  if (victim->isPc() && !victim->desc) return false;
+
+  switch (state) {
     case DISEASE_BEGUN:
-      victim->addToLimbFlags(i, PART_BLEEDING);
+      victim->addToLimbFlags(bleedLocation, PART_BLEEDING);
       break;
-    case DISEASE_PULSE:
-      // check to see if somehow the bleeding bit got taken off
-      if (!victim->hasPart(i) || !victim->isLimbFlags(i, PART_BLEEDING)) {
+    case DISEASE_PULSE: {
+      // Certain abilities can cure bleeds (bandage, clot prayer). They do so by
+      // removing the PART_BLEEDING limb flag manually. Therefore we check to
+      // make sure the limb is still bleeding here, and if not, set affect
+      // duration to 0 so it expires and triggers the DISEASE_DONE pulse
+      // behavior.
+      if (!victim->hasPart(bleedLocation) ||
+          !victim->isLimbFlags(bleedLocation, PART_BLEEDING)) {
         af->duration = 0;
         break;
       }
 
-      if (!victim->isLimbFlags(i, PART_BANDAGED) && !::number(0, 750)) {
-        // start an infection
-        victim->rawInfect(i, ::number(50, 150), SILENT_NO, CHECK_IMMUNITY_YES, victim->GetMaxLevel());
-      }
-      
-      if (!number(0, 10)) {
-        if (victim->doesKnowSkill(SKILL_SNOFALTE)) {
-          // attempt to dodge it altogether
-          if ((::number(0,99) < 40) &&
-               victim->bSuccess((int) victim->getSkillValue(SKILL_SNOFALTE), SKILL_SNOFALTE)) {
-            victim->sendTo("You utilize the powers of snofalte to slow your bleeding.\n\r");
-            break;
-          }
-        }
-        victim->sendTo(format("You feel your energy drained as your blood drips out of your %s.\n\r") %victim-> describeBodySlot(i));
-        sprintf(buf, "$n looks stunned as blood drips from $s %s.", victim->describeBodySlot(i).c_str());
+      // BLEED_STACKS% chance on every bleed tick for an unbandaged bleed to become
+      // infected if victim fails constitution check. Capped at 5% from bleed stacks.
+      static constexpr long MAX_BLEED_STACKS_FOR_INFECTION_CHANCE = 5;
+      const int bleedStacks = static_cast<int>(
+        min(af->modifier2, MAX_BLEED_STACKS_FOR_INFECTION_CHANCE));
 
-        act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
-        victim->dropBloodLimb(i);
-        int rc = victim->hurtLimb(1, i);
-        if (IS_SET_DELETE(rc, DELETE_THIS))
-          return DELETE_THIS;
+      if (!victim->isLimbFlags(bleedLocation, PART_BANDAGED) &&
+          percentChance(bleedStacks)) {
+        victim->rawInfect(bleedLocation, af->duration * 2, SILENT_NO,
+          CHECK_IMMUNITY_YES, victim->GetMaxLevel());
+      }
+
+      // 10% base chance per disease pulse to take damage bleed. After con mod
+      // will range from 6% to 16%.
+      static constexpr int BASE_BLEED_CHANCE = 10;
+
+      const int realBleedChance =
+        static_cast<int>(BASE_BLEED_CHANCE / victim->getStatMod(STAT_CON, 2));
         
-        // took out the damage computations since it always ended up 1 no matter what slot anyhow
-        // which i think is fine since i upped chances for bleeding from combat and from the disease prayer
-        // and added a chance for infections
-        if (victim->reconcileDamage(victim, 1, SPELL_BLEED) == -1)
+      if (percentChance(realBleedChance)) {
+        if (victim->doesKnowSkill(SKILL_SNOFALTE) &&
+            victim->bSuccess(SKILL_SNOFALTE)) {
+          victim->sendTo(
+            "You focus your mind and forcefully prevent yourself from bleeding.\n\r");
+          break;
+        }
+
+        const sstring toVict =
+          format("Blood drips from a wound on your %s.") %
+          victim->describeBodySlot(bleedLocation);
+        act(toVict, true, victim, nullptr, nullptr, TO_CHAR, ANSI_RED);
+
+        const sstring toRoom =
+          format("Blood drips from a wound on $n's %s.") %
+          victim->describeBodySlot(bleedLocation);
+        act(toRoom, true, victim, nullptr, nullptr, TO_ROOM, ANSI_RED);
+
+        victim->dropBloodLimb(bleedLocation);
+
+        // Apply bleed damage to the affected limb, not the victim's main HP.
+        // One damage per bleed stack (still capped at 5)
+        if (IS_SET_DELETE(victim->hurtLimb(bleedStacks, bleedLocation),
+              DELETE_THIS))
           return DELETE_THIS;
       }
       break;
+    }
     case DISEASE_DONE:
-      if (victim->isLimbFlags(i, PART_BLEEDING))
-        victim->remLimbFlags(i, PART_BLEEDING);
+      if (victim->isLimbFlags(bleedLocation, PART_BLEEDING))
+        victim->remLimbFlags(bleedLocation, PART_BLEEDING);
 
-      if (victim->getPosition() > POSITION_DEAD && victim->hasPart(i)) {
-        victim->sendTo(format("Your %s clots and stops bleeding!\n\r") % victim->describeBodySlot(i));
-        sprintf(buf, "$n's %s clots and stops bleeding!", victim->describeBodySlot(i).c_str());
-        act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
+      if (victim->getPosition() > POSITION_DEAD && victim->hasPart(bleedLocation)) {
+        victim->sendTo(format("The wound on your %s clots and stops bleeding!\n\r") %
+                       victim->describeBodySlot(bleedLocation));
+        const sstring toRoom = format("The wound on $n's %s clots and stops bleeding!") %
+                               victim->describeBodySlot(bleedLocation);
+        act(toRoom, true, victim, nullptr, nullptr, TO_ROOM);
       }
 
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_infection(TBeing *victim, int message, affectedData * af)
