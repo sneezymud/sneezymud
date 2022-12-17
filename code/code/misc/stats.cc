@@ -1157,74 +1157,10 @@ float TBeing::getConHpModifier() const
   return plotStat(STAT_CURRENT, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (double) 1.0);
 }
 
-double TBeing::getStatMod(statTypeT statType) const {
-  return plotStat(STAT_CURRENT, statType, 0.8, 1.25, 1.0);
+double TBeing::getStatMod(statTypeT statType, int multiplier) const {
+  return (
+    ((plotStat(STAT_CURRENT, statType, 0.8, 1.25, 1.0) - 1) * multiplier) + 1);
 }
-
-/*
-  Compare a set of attacker's stats to a set of defender's stats for purposes of stat-based skill
-  success determination.  
-
-  @param skillNum `spellNumT` of the skill being attempted
-  @param attackerStatTypes/defenderStatTypes `std::initializer_list<statTypeT>` containing the
-  `statTypeT` values for attacker and defender. Stat types can be different for each, as often it 
-  will make sense to use a different stats when attacking with a skill vs defending against it.
-  @param defender `TBeing*` to the victim of the skill attempt
-  @param useIsNotPowerful boolean denoting whether this skill attempt should be subject to an
-  `isNotPowerful` check. If the skill should be more difficult when attempted against defenders 
-  of higher level than the attacker, then this should be true
-  @param isNotPowerfulBonus the percent by which the defender's stats should be
-  increased if the attacker fails the isNotPowerful check. Default value is 1.35. At this value,
-  an attacker who fails the isNotPowerful check with maxed stats will have about a 50% chance 
-  to succeed against a defender with min stats, but only about a 2% chance to succeed when 
-  attacker and defender stats are equal.
-  @return True if attacker succeeded, false if defender succeeded
-*/
-bool TBeing::statCheck(spellNumT spellNum, StatList attackerStatTypes, TBeing *defender,
-                       StatList defenderStatTypes, bool useIsNotPowerful,
-                       double isNotPowerfulBonus) {
-  auto attStatTypes = std::vector<statTypeT>(attackerStatTypes);
-  auto defStatTypes = std::vector<statTypeT>(defenderStatTypes);
-
-  mud_assert(attStatTypes.size() == defStatTypes.size(),
-             "TBeing::statCheck called with different number of stats for attacker vs defender");
-
-  /* 
-    Minimum value for a stat mod returned by TBeing::getStatMod() is 0.80. Max value is 1.25. Therefore,
-    after multiplying each by 100, we get minimum total = [# of stat types] * 80, and max total = # * 125.
-
-    Make a roll where lowest roll is -difference and highest is difference. Add this to attacker's stat total
-    to create variance. When attacker and defender have equal stat totals, the roll creates a 50% chance for
-    the attacker to succeed.
-
-    Success chance changes linearly with stat disparity between attacker/defender, as follows:
-
-    SuccessChance = (Diff + AttackerStats - (DefenderStats * isNotPowerful ? 1.35 : 1)) / Diff * 2
-
-    Success Roll Formula:
-    Success = (::number(-diff, diff) + AttackerStats) >= (DefenderStats * isNotPowerful ? 1.35 : 1);
-  */
-  auto minTotal = attStatTypes.size() * 80;
-  auto maxTotal = attStatTypes.size() * 125;
-  auto diff = maxTotal - minTotal;
-  auto roll = ::number(-diff, diff);
-
-  auto calcStatValue = [](TBeing *being, const std::vector<statTypeT> &statTypes) {
-    double total = 0.0;
-    for (const auto &statType : statTypes) {
-      total += being->getStatMod(statType);
-    }
-    return total * 100.0;
-  };
-
-  auto attStatTotal = calcStatValue(this, attStatTypes);
-  auto defStatTotal = calcStatValue(defender, defStatTypes);
-  if (useIsNotPowerful && isNotPowerful(defender, getSkillLevel(spellNum), spellNum, SILENT_YES)) {
-    defStatTotal *= isNotPowerfulBonus;
-  }
-
-  return (attStatTotal + roll) >= defStatTotal;
-};
 
 float TBeing::getIntModForPracs() const
 {
@@ -1286,11 +1222,13 @@ Stats::~Stats()
 {
 }
 
-// Performs a test of a being's given stat against a random roll, to allow stats
-// to affect the success of various actions
+// Uses plotStat to convert a given stat to a percent chance of success, then
+// rolls to see if success happens in this specific instance. Use a midpoint of
+// 25, meaning a character with exactly average stat has a 25% chance to
+// succeed. Chance increases exponentially as stat gets closer to max. As with
+// attacks, have a static 5% chance to fail or succeed.
 bool TBeing::statSelfCheck(statTypeT stat, int num) const {
-  return static_cast<int>(plotStat(STAT_CURRENT, stat, 30, 180, 105, 1.0) + num) >=
-         ::number(30, 200);
+  return percentChance(plotStat(STAT_CURRENT, stat, 5, 95, 25) + num);
 }
 
 bool TBeing::isStrong() const {

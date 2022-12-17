@@ -1015,7 +1015,7 @@ int TBeing::updateTickStuff()
         if (!isVitalPart(p) && !notBleedSlot(p) && isLimbFlags(p, PART_MISSING))
           possibles[cPoss++] = p;
       wearSlotT slot = cPoss > 0 ? possibles[::number(0, cPoss - 1)] : WEAR_NOWHERE;
-      if (slot != WEAR_NOWHERE && limbConnections(slot))
+      if (slot != WEAR_NOWHERE && isBodyPartAttached(slot))
       {
         act(format("Your %s itches slighty.  It seems to finally be growing back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_CHAR);
         act(format("$n's %s begins to grow back!") % describeBodySlot(slot), FALSE, this, 0, 0, TO_ROOM);

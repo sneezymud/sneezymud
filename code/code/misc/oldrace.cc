@@ -3233,123 +3233,25 @@ const sstring TBeing::describeEquipmentSlot(wearSlotT i) const
   return defaultEquipmentSlot(i);
 }
 
-// returns TRUE if slot is connected to body
-// returns false if there's a missing part in the chain
-int TBeing::defaultLimbConnections(wearSlotT slot)
-{
-  int flags = PART_MISSING;
+template <typename T>
+T bodyPartIndex(const TBeing* being, wearSlotT slot,
+  std::function<T(const TBeing*, wearSlotT)> predicate,
+  std::function<T(const TBeing*, wearSlotT)> predicateDefault) {
+  const auto logBadSlot = [being, slot]() {
+    vlogf(LOG_BUG, format("Bogus slot (%d) on char %s") % slot % being->getName());
+  };
 
-  switch (slot) {
-    case WEAR_BODY:
-      return TRUE;
-      break;
-    case WEAR_HEAD:
-      if (!defaultLimbConnections(WEAR_NECK))
-        return FALSE;
-      else if (isLimbFlags(WEAR_NECK, flags))
-        return FALSE;
-      break;
-    case WEAR_NECK:
-    case WEAR_ARM_L:
-    case WEAR_ARM_R:
-    case WEAR_WAIST:
-    case WEAR_BACK:
-      if (!defaultLimbConnections(WEAR_BODY))
-        return FALSE;
-      else if (isLimbFlags(WEAR_BODY, flags))
-        return FALSE;
-      break;
-    case WEAR_WRIST_L:
-      if (!defaultLimbConnections(WEAR_ARM_L))
-        return FALSE;
-      else if (isLimbFlags(WEAR_ARM_L, flags))
-        return FALSE;
-      break;
-    case WEAR_HAND_L:
-      if (!defaultLimbConnections(WEAR_WRIST_L))
-        return FALSE;
-      else if (isLimbFlags(WEAR_WRIST_L, flags))
-        return FALSE;
-      break;
-    case WEAR_FINGER_L:
-    case HOLD_LEFT:
-      if (!defaultLimbConnections(WEAR_HAND_L))
-        return FALSE;
-      else if (isLimbFlags(WEAR_HAND_L, flags))
-        return FALSE;
-      break;
-    case WEAR_WRIST_R:
-      if (!defaultLimbConnections(WEAR_ARM_R))
-        return FALSE;
-      else if (isLimbFlags(WEAR_ARM_R, flags))
-        return FALSE;
-      break;
-    case WEAR_HAND_R:
-      if (!defaultLimbConnections(WEAR_WRIST_R))
-        return FALSE;
-      else if (isLimbFlags(WEAR_WRIST_R, flags))
-        return FALSE;
-      break;
-    case WEAR_FINGER_R:
-    case HOLD_RIGHT:
-      if (!defaultLimbConnections(WEAR_HAND_R))
-        return FALSE;
-      else if (isLimbFlags(WEAR_HAND_R, flags))
-        return FALSE;
-      break;
-    case WEAR_LEG_L:
-    case WEAR_LEG_R:
-    case WEAR_EX_LEG_R:
-    case WEAR_EX_LEG_L:
-      if (!defaultLimbConnections(WEAR_WAIST))
-        return FALSE;
-      else if (isLimbFlags(WEAR_WAIST, flags))
-        return FALSE;
-      break;
-    case WEAR_EX_FOOT_R:
-      if (!defaultLimbConnections(WEAR_EX_LEG_R))
-        return FALSE;
-      else if (isLimbFlags(WEAR_EX_LEG_R, flags))
-        return FALSE;
-      break;
-    case WEAR_EX_FOOT_L:
-      if (!defaultLimbConnections(WEAR_EX_LEG_L))
-        return FALSE;
-      else if (isLimbFlags(WEAR_EX_LEG_L, flags))
-        return FALSE;
-      break;
-    case WEAR_FOOT_L:
-      if (!defaultLimbConnections(WEAR_LEG_L))
-        return FALSE;
-      else if (isLimbFlags(WEAR_LEG_L, flags))
-        return FALSE;
-      break;
-    case WEAR_FOOT_R:
-      if (!defaultLimbConnections(WEAR_LEG_R))
-        return FALSE;
-      else if (isLimbFlags(WEAR_LEG_R, flags))
-        return FALSE;
-      break;
-    default:
-      vlogf(LOG_BUG,format("Error in defaultLimbConnections: slot %d") %  slot);
-      return FALSE;
+  const auto logBadCheck = [being, slot]() {
+    vlogf(LOG_BUG, format("bogus check on %s for slot %d") %
+                     being->getMyRace()->getSingularName() % slot);
+  };
+
+  if (being->slotChance(slot) <= 0) {
+    logBadSlot();
+    return WEAR_NOWHERE;
   }
-  return TRUE;
-}
 
-int TBeing::limbConnections(wearSlotT slot)
-{
-  mud_assert(slot >= MIN_WEAR && slot < MAX_WEAR,
-      "Bad slot in limbConnections %s, %d", getName().c_str(), slot);
-
-  if (slotChance(slot) <= 0) {
-    vlogf(LOG_BUG,format("Bogus slot (%d) on char %s") % slot %getName());
-    return FALSE;
-  }
-  if (slot == WEAR_BODY)
-    return TRUE;
-
-  switch (getMyRace()->getBodyType()) {
+  switch (being->getMyRace()->getBodyType()) {
     case BODY_NONE:
     case BODY_HUMANOID:
     case BODY_GOLEM:
@@ -3364,7 +3266,7 @@ int TBeing::limbConnections(wearSlotT slot)
     case BODY_VEGGIE:
     case BODY_MIMIC:
     case BODY_MEDUSA:
-      return defaultLimbConnections(slot);
+      return predicateDefault(being, slot);
     case BODY_INSECTOID:
     case BODY_ANT:
       switch (slot) {
@@ -3376,13 +3278,12 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_EX_LEG_L:
         case WEAR_EX_FOOT_R:
         case WEAR_EX_FOOT_L:
-          return limbConnections(WEAR_WAIST);
+          return predicate(being, WEAR_WAIST);
         case WEAR_WAIST:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_OTYUGH:
       switch (slot) {
@@ -3393,17 +3294,16 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_LEG_R:
         case WEAR_LEG_L:
         case WEAR_EX_LEG_R:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_EX_FOOT_R:
-          return limbConnections(WEAR_EX_LEG_R);
+          return predicate(being, WEAR_EX_LEG_R);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE; 
       }
     case BODY_KUOTOA:
       switch (slot) {
@@ -3412,26 +3312,25 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_WAIST:
         case WEAR_NECK:
         case WEAR_BACK:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case WEAR_HAND_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_L);
         case WEAR_HAND_R:
         case HOLD_RIGHT:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_R);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
+          return predicate(being, WEAR_NECK);
         case WEAR_LEG_L:
         case WEAR_LEG_R:
-          return limbConnections(WEAR_WAIST);
+          return predicate(being, WEAR_WAIST);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_CRUSTACEAN:
       switch (slot) {
@@ -3441,25 +3340,24 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_LEG_R:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case HOLD_RIGHT:
-          return limbConnections(WEAR_HAND_R);
+          return predicate(being, WEAR_HAND_R);
         case HOLD_LEFT:
-          return limbConnections(WEAR_HAND_L);
+          return predicate(being, WEAR_HAND_L);
         case WEAR_HAND_L:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_L);
         case WEAR_HAND_R:
-          return limbConnections(WEAR_ARM_R);
+          return predicate(being, WEAR_ARM_R);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_DJINN:
     case BODY_MERMAID:
     case BODY_FROGMAN:
     case BODY_FISHMAN:
-      return defaultLimbConnections(slot);
+      return predicateDefault(being, slot);
     case BODY_MANTICORE:
     case BODY_GRIFFON:
     case BODY_SHEDU:
@@ -3472,33 +3370,32 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
-        case WEAR_ARM_R:   // wings
+          return predicate(being, WEAR_NECK);
+        case WEAR_ARM_R:  // wings
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BACK);
+          return predicate(being, WEAR_BACK);
         case HOLD_LEFT:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_L);
         case HOLD_RIGHT:
-          return limbConnections(WEAR_ARM_R);
+          return predicate(being, WEAR_ARM_R);
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
         case WEAR_LEG_R:
         case WEAR_LEG_L:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_EX_FOOT_R:
-          return limbConnections(WEAR_EX_LEG_R);
+          return predicate(being, WEAR_EX_LEG_R);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case WEAR_EX_FOOT_L:
-          return limbConnections(WEAR_EX_LEG_L);
+          return predicate(being, WEAR_EX_LEG_L);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_CENTAUR:
     case BODY_SIMAL:
@@ -3509,65 +3406,63 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_WAIST:
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_FINGER_R:
         case HOLD_RIGHT:
-          return limbConnections(WEAR_HAND_R);
+          return predicate(being, WEAR_HAND_R);
         case WEAR_FINGER_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_HAND_L);
+          return predicate(being, WEAR_HAND_L);
         case WEAR_HAND_R:
-          return limbConnections(WEAR_WRIST_R);
+          return predicate(being, WEAR_WRIST_R);
         case WEAR_HAND_L:
-          return limbConnections(WEAR_WRIST_L);
+          return predicate(being, WEAR_WRIST_L);
         case WEAR_WRIST_R:
-          return limbConnections(WEAR_ARM_R);
+          return predicate(being, WEAR_ARM_R);
         case WEAR_WRIST_L:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_L);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case WEAR_EX_FOOT_R:
-          return limbConnections(WEAR_EX_LEG_R);
+          return predicate(being, WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:
-          return limbConnections(WEAR_EX_LEG_L);
+          return predicate(being, WEAR_EX_LEG_L);
         case WEAR_LEG_R:
         case WEAR_LEG_L:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
-          return limbConnections(WEAR_WAIST);
+          return predicate(being, WEAR_WAIST);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_WYVERN:
       switch (slot) {
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
-        case WEAR_ARM_R:   // wings
+          return predicate(being, WEAR_NECK);
+        case WEAR_ARM_R:  // wings
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BACK);
+          return predicate(being, WEAR_BACK);
         case HOLD_LEFT:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_L);
         case HOLD_RIGHT:
-          return limbConnections(WEAR_ARM_R);
+          return predicate(being, WEAR_ARM_R);
         case WEAR_LEG_R:
         case WEAR_LEG_L:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case WEAR_EX_FOOT_L:
-          return limbConnections(WEAR_EX_LEG_L);
+          return predicate(being, WEAR_EX_LEG_L);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_PEGASUS:
       switch (slot) {
@@ -3578,26 +3473,25 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
+          return predicate(being, WEAR_NECK);
         case WEAR_FOOT_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case HOLD_RIGHT:
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_EX_FOOT_R:
-          return limbConnections(WEAR_EX_LEG_R);
+          return predicate(being, WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:
-          return limbConnections(WEAR_EX_LEG_L);
+          return predicate(being, WEAR_EX_LEG_L);
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BACK);
+          return predicate(being, WEAR_BACK);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_CHIMERA:
     case BODY_LION:
@@ -3619,88 +3513,68 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
+          return predicate(being, WEAR_NECK);
         case WEAR_FOOT_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case HOLD_RIGHT:
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_EX_FOOT_R:
-          return limbConnections(WEAR_EX_LEG_R);
+          return predicate(being, WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:
-          return limbConnections(WEAR_EX_LEG_L);
+          return predicate(being, WEAR_EX_LEG_L);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_COATL:
       switch (slot) {
         case WEAR_HEAD:
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_FISH:
     case BODY_SNAKE:
     case BODY_NAGA:
       switch (slot) {
         case WEAR_HEAD:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_SPIDER:
     case BODY_CENTIPEDE:
-      switch (slot) {
-        case WEAR_HEAD:
-        case WEAR_BACK:
-          return limbConnections(WEAR_BODY);
-        case WEAR_EX_LEG_R:
-        case WEAR_EX_LEG_L:
-        case WEAR_EX_FOOT_R:
-        case WEAR_EX_FOOT_L:
-        case WEAR_LEG_L:
-        case WEAR_LEG_R:
-        case WEAR_FOOT_L:
-        case WEAR_FOOT_R:
-        case HOLD_RIGHT:
-        case HOLD_LEFT:
-          return limbConnections(WEAR_BODY);
-        default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
-      }
     case BODY_OCTOPUS:
       switch (slot) {
         case WEAR_HEAD:
-          return limbConnections(WEAR_BODY);
-        case WEAR_ARM_R:
-        case WEAR_ARM_L:
-        case WEAR_LEG_L:
-        case WEAR_LEG_R:
+        case WEAR_BACK:
         case WEAR_EX_LEG_R:
         case WEAR_EX_LEG_L:
-        case WEAR_FOOT_L:
-        case WEAR_FOOT_R:
+        case WEAR_LEG_L:
+        case WEAR_LEG_R:
         case HOLD_RIGHT:
         case HOLD_LEFT:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
+        case WEAR_EX_FOOT_R:
+          return predicate(being, WEAR_EX_LEG_R);
+        case WEAR_EX_FOOT_L:
+          return predicate(being, WEAR_EX_LEG_L);
+        case WEAR_FOOT_L:
+          return predicate(being, WEAR_LEG_L);
+        case WEAR_FOOT_R:
+          return predicate(being, WEAR_LEG_R);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
-      }      
+          logBadCheck();
+          return WEAR_NOWHERE;
+      }
     case BODY_BIRD:
     case BODY_BAT:
       switch (slot) {
@@ -3710,35 +3584,33 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_ARM_L:
         case WEAR_NECK:
         case WEAR_WAIST:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
+          return predicate(being, WEAR_NECK);
         case HOLD_LEFT:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_L);
         case HOLD_RIGHT:
-          return limbConnections(WEAR_ARM_R);
+          return predicate(being, WEAR_ARM_R);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
-      } 
+          logBadCheck();
+          return WEAR_NOWHERE;
+      }
     case BODY_TREE:
       switch (slot) {
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_DEMON:
       switch (slot) {
-        case WEAR_EX_LEG_R:    // wings
+        case WEAR_EX_LEG_R:  // wings
         case WEAR_EX_LEG_L:
-          return limbConnections(WEAR_BACK);
+          return predicate(being, WEAR_BACK);
         default:
-          return defaultLimbConnections(slot);
+          return predicateDefault(being, slot);
       }
     case BODY_BAANTA:
       switch (slot) {
@@ -3747,24 +3619,23 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_WAIST:
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
+          return predicate(being, WEAR_NECK);
         case WEAR_LEG_R:
         case WEAR_LEG_L:
-          return limbConnections(WEAR_WAIST);
+          return predicate(being, WEAR_WAIST);
         case WEAR_FOOT_L:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_HAND_L:
-          return limbConnections(WEAR_ARM_L);
+          return predicate(being, WEAR_ARM_L);
         case WEAR_HAND_R:
-          return limbConnections(WEAR_ARM_R);
+          return predicate(being, WEAR_ARM_R);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case BODY_WYVELIN:
       switch (slot) {
@@ -3775,32 +3646,137 @@ int TBeing::limbConnections(wearSlotT slot)
         case WEAR_NECK:
         case WEAR_BACK:
         case WEAR_WAIST:
-          return limbConnections(WEAR_BODY);
+          return predicate(being, WEAR_BODY);
         case WEAR_HEAD:
-          return limbConnections(WEAR_NECK);
+          return predicate(being, WEAR_NECK);
         case WEAR_FOOT_L:
         case HOLD_LEFT:
-          return limbConnections(WEAR_LEG_L);
+          return predicate(being, WEAR_LEG_L);
         case HOLD_RIGHT:
         case WEAR_FOOT_R:
-          return limbConnections(WEAR_LEG_R);
+          return predicate(being, WEAR_LEG_R);
         case WEAR_EX_FOOT_R:
-          return limbConnections(WEAR_EX_LEG_R);
+          return predicate(being, WEAR_EX_LEG_R);
         case WEAR_EX_FOOT_L:
-          return limbConnections(WEAR_EX_LEG_L);
+          return predicate(being, WEAR_EX_LEG_L);
         case WEAR_ARM_R:
         case WEAR_ARM_L:
-          return limbConnections(WEAR_BACK);
+          return predicate(being, WEAR_BACK);
         default:
-          vlogf(LOG_BUG,format("bogus check on %s for slot %d") % 
-             getMyRace()->getSingularName() % slot);
-          return FALSE;
+          logBadCheck();
+          return WEAR_NOWHERE;
       }
     case MAX_BODY_TYPES:
       break;
   }
-  vlogf(LOG_BUG, format("Bogus body type (%d) in limb connections") %  getMyRace()->getBodyType());
-  return defaultLimbConnections(slot);
+
+  vlogf(LOG_BUG, format("Bogus body type (%d) in limb connections") %
+                   being->getMyRace()->getBodyType());
+  return predicateDefault(being, slot);
+}
+
+template <typename T>
+T bodyPartDefaultIndex(const TBeing* being, wearSlotT slot,
+  const std::function<T(const TBeing* being, wearSlotT slot)>& predicate) {
+  switch (slot) {
+    case WEAR_BODY:
+      return slot;
+      break;
+    case WEAR_HEAD:
+      return predicate(being, WEAR_NECK);
+    case WEAR_NECK:
+    case WEAR_ARM_L:
+    case WEAR_ARM_R:
+    case WEAR_WAIST:
+    case WEAR_BACK:
+      return predicate(being, WEAR_BODY);
+    case WEAR_WRIST_L:
+      return predicate(being, WEAR_ARM_L);
+    case WEAR_HAND_L:
+      return predicate(being, WEAR_WRIST_L);
+    case WEAR_FINGER_L:
+    case HOLD_LEFT:
+      return predicate(being, WEAR_HAND_L);
+    case WEAR_WRIST_R:
+      return predicate(being, WEAR_ARM_R);
+    case WEAR_HAND_R:
+      return predicate(being, WEAR_WRIST_R);
+    case WEAR_FINGER_R:
+    case HOLD_RIGHT:
+      return predicate(being, WEAR_HAND_R);
+    case WEAR_LEG_L:
+    case WEAR_LEG_R:
+    case WEAR_EX_LEG_R:
+    case WEAR_EX_LEG_L:
+      return predicate(being, WEAR_WAIST);
+    case WEAR_EX_FOOT_R:
+      return predicate(being, WEAR_EX_LEG_R);
+    case WEAR_EX_FOOT_L:
+      return predicate(being, WEAR_EX_LEG_L);
+    case WEAR_FOOT_L:
+      return predicate(being, WEAR_LEG_L);
+    case WEAR_FOOT_R:
+      return predicate(being, WEAR_LEG_R);
+    default:
+      vlogf(LOG_BUG,
+        format("Error in bodyPartDefaultIndex: slot %d") % slot);
+      return WEAR_NOWHERE;
+  }
+};
+
+auto findNextAttachedPredicate = [](const TBeing* being, wearSlotT slot) {
+  return being->isBodyPartAttached(slot)
+           ? slot
+           : being->findNextAttachedBodyPart(slot);
+};
+
+auto isPartAttachedPredicate = [](const TBeing* being, wearSlotT slot) {
+  return being->isBodyPartAttached(slot);
+};
+
+auto findNextAttachedDefaultPredicate = [](const TBeing* being,
+                                          wearSlotT slot) {
+  return being->isBodyPartAttachedDefault(slot)
+           ? slot
+           : being->findNextAttachedBodyPartDefault(slot);
+};
+
+auto isPartAttachedDefaultPredicate = [](const TBeing* being, wearSlotT slot) {
+  return being->isBodyPartAttachedDefault(slot);
+};
+
+int TBeing::isBodyPartAttachedDefault(wearSlotT slot) const {
+  if (slot == WEAR_BODY) return true;
+  return isLimbFlags(slot, PART_MISSING) ? false
+                                         : bodyPartDefaultIndex<int>(this, slot,
+                                             isPartAttachedDefaultPredicate);
+}
+
+wearSlotT TBeing::findNextAttachedBodyPartDefault(wearSlotT slot) const {
+  if (slot == WEAR_BODY) return WEAR_BODY;
+  return !isLimbFlags(slot, PART_MISSING)
+           ? slot
+           : bodyPartDefaultIndex<wearSlotT>(this, slot,
+               findNextAttachedDefaultPredicate);
+}
+
+wearSlotT TBeing::findNextAttachedBodyPart(wearSlotT slot) const {
+  if (slot == WEAR_BODY) return WEAR_BODY;
+  return isBodyPartAttached(slot)
+           ? slot
+           : bodyPartIndex<wearSlotT>(this, slot, findNextAttachedPredicate,
+               findNextAttachedDefaultPredicate);
+}
+
+// Returns `boolean-to-int` representing whether or not the body part at `slot` is
+// currently connected to the `TBeing` 's body. This will be false if any body
+// part between the body and `slot` has been somehow destroyed.
+int TBeing::isBodyPartAttached(wearSlotT slot) const {
+  if (slot == WEAR_BODY) return true;
+  return isLimbFlags(slot, PART_MISSING)
+           ? false
+           : bodyPartIndex<int>(this, slot, isPartAttachedPredicate,
+               isPartAttachedDefaultPredicate);
 }
 
 spellNumT TBeing::getFormType() const

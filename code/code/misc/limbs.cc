@@ -64,9 +64,9 @@ void TBeing::remLimbFlags(wearSlotT limb, unsigned short int num)
   body_parts[limb].remFlags(num);
 }
 
-bool TBeing::isLimbFlags(wearSlotT limb, int num) const
+bool TBeing::isLimbFlags(wearSlotT limb, int limbFlag) const
 {
-  return ((body_parts[limb].getFlags() & num) != 0);
+  return ((body_parts[limb].getFlags() & limbFlag) != 0);
 }
 
 unsigned short TBeing::getMaxLimbHealth(wearSlotT limb) const
@@ -87,10 +87,6 @@ unsigned short TBeing::getMaxLimbHealth(wearSlotT limb) const
   if (getRace() == RACE_HOBBIT) {
     if (limb == WEAR_FOOT_R || limb == WEAR_FOOT_L)
       health *= 2;
-  }
-
-  if(isLimbFlags(limb, PART_BRUISED)){
-    health /= 2;
   }
 
   health = min(max(1,health),255);
@@ -1121,27 +1117,86 @@ void TBeing::stunIfLimbsUseless()
   disease_start(this, &aff);
 }
 
-int TBeing::hurtLimb(int dam, wearSlotT part_hit) {
-  int limbHealth = getCurLimbHealth(part_hit);
+int TBeing::hurtLimb(const int dam, const wearSlotT part_hit) {
+  if (isLimbFlags(part_hit, PART_USELESS)) return false;
 
-  if (limbHealth <= 0)
-    return false;
-
-  addCurLimbHealth(part_hit, -min(dam, limbHealth));
+  addCurLimbHealth(part_hit,
+    -min(dam, static_cast<int>(getCurLimbHealth(part_hit))));
 
   if (getCurLimbHealth(part_hit) <= 0) {
-    sendTo(COLOR_BASIC, format("%sYour %s has become totally useless!%s\n\r") % red() %
-                          describeBodySlot(part_hit) % norm());
+    sendTo(COLOR_BASIC, format("%sYour %s has become totally useless!%s\n\r") %
+                          red() % describeBodySlot(part_hit) % norm());
 
-    act(format("$n's %s has become completely useless!") % describeBodySlot(part_hit), true, this,
-      nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
+    act(format("$n's %s has become completely useless!") %
+          describeBodySlot(part_hit),
+      true, this, nullptr, nullptr, TO_ROOM, ANSI_ORANGE);
     addToLimbFlags(part_hit, PART_USELESS);
 
-    int rc = flightCheck();
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_THIS;
+    if (IS_SET_DELETE(flightCheck(), DELETE_THIS)) return DELETE_THIS;
   }
 
   stunIfLimbsUseless();
   return true;
+}
+
+// Determines if the passed limb is destroyable via violent means. Basically the limbs
+// that are eligible to be damaged in damageLimb().
+bool canDestroyLimbViolently(const TBeing* victim, const wearSlotT limb){
+  return !isVitalPart(limb) && victim->hasPart(limb) && limb != HOLD_LEFT &&
+         limb != HOLD_RIGHT && limb != WEAR_WAIST && victim->slotChance(limb);
+};
+
+static affectedData* findDiseasedLimb(wearSlotT limb, diseaseTypeT disease, TBeing* being) {
+  if (!being || !being->affected) return nullptr;
+
+  return being->affected->find_if([limb, disease](affectedData* aff) {
+    return aff->level == limb && aff->modifier == disease;
+  });
+}
+
+// Member functions that test if a given limb has a certain disease by checking
+// for a related affect and returning it. If result == nullptr, no affect for
+// this disease exists for this limb.
+
+affectedData* TBeing::isBleeding(wearSlotT limb) {
+  return findDiseasedLimb(limb, DISEASE_BLEEDING, this);
+}
+
+affectedData* TBeing::isBruised(wearSlotT limb) {
+  return findDiseasedLimb(limb, DISEASE_BRUISED, this);
+}
+
+affectedData* TBeing::isInfected(wearSlotT limb) {
+  return findDiseasedLimb(limb, DISEASE_INFECTION, this);
+}
+
+// Iterates through all limb locations, testing that each limb is still
+// connected to the body. If not, flags the limb as missing and potentially
+// drops any equipment on that limb to the ground.
+//
+// Example usage: If an arm is severed, this function will set the arm, wrist,
+// hand, and finger as missing, and drop equipment from those parts.
+void TBeing::auditBodyParts(const bool dropEq) {
+  for (wearSlotT part = MIN_WEAR; part < MAX_WEAR; part++) {
+    if (!hasPart(part)) continue;
+    // Don't want to set this flag on HOLD_LEFT/HOLD_RIGHT, so just drop items
+    // if the related hand is missing and continue
+    if (part == HOLD_LEFT || part == HOLD_RIGHT) {
+      if (!dropEq) continue;
+      dropItemFromDamagedHand(true);
+      dropItemFromDamagedHand(false);
+      continue;
+    }
+
+    if (isBodyPartAttached(part)) continue;
+    if (!isLimbFlags(part, PART_MISSING)) setLimbFlags(part, PART_MISSING);
+    if (!dropEq) continue;
+
+    TThing* eq = unequip(part);
+    if (!eq) continue;
+
+    act("$p falls to the $g.", true, this, eq, nullptr, TO_CHAR);
+    act("$p falls to the $g.", true, this, eq, nullptr, TO_ROOM);
+    *roomp += *eq;
+  }
 }

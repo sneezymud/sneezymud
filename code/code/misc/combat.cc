@@ -888,97 +888,294 @@ bool TBeing::checkPierced(TBeing *ch, wearSlotT part_hit, spellNumT wtype, TThin
     return FALSE;
 }
 
-// damageLimb will have to determine if the "limb" is a vital area, and 
-// if it is, then take off max hp, otherwise damage the limb's health   
-// This might get tricky, when we determine how to update a person every 
-// update, and decide what damage will entail loss of hp or loss of other 
-// things like consciousness. Tweak is the operative word here. - Russ  
-
-// DELETE_VICT, v died
-int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, TThing* maybeWeapon, int* dam) {
-  // These areas take off main hp. We still check to see if
-  // damage was done, but we return false, because main hp are taken
-  // off with hit to these vital body parts. - Russ
-
-  if (isVitalPart(part_hit) || !v->slotChance(part_hit))
-    return FALSE;
-
-  if (part_hit == WEAR_FINGER_L)
-    part_hit = WEAR_HAND_L;
-
-  if (part_hit == WEAR_FINGER_R)
-    part_hit = WEAR_HAND_R;
-
-  if (part_hit == HOLD_LEFT)
-    part_hit = WEAR_HAND_L;
-
-  if (part_hit == HOLD_RIGHT)
-    part_hit = WEAR_HAND_R;
-
-  auto* weapon = dynamic_cast<TBaseWeapon*>(maybeWeapon);
-  int sharp = weapon ? weapon->getCurSharp() : sharpness[getFormType() - TYPE_MIN_HIT];
-
-  if (!fight() && setCharFighting(v, 0) == -1)
-    return 0;
-
-  if (!v->fight())
-    setVictFighting(v, 0);
-
-  if (!v->hasPart(part_hit))
+// Handles the possible removal of one of victim's limbs through violence.
+bool TBeing::maybeDestroyLimb(const wearSlotT part_hit, TBeing* v,
+  const TBaseWeapon* weapon, const spellNumT attackType) {
+  if (part_hit <= WEAR_NOWHERE || part_hit >= MAX_WEAR || !v ||
+      !v->hasPart(part_hit) || isVitalPart(part_hit) ||
+      !v->slotChance(part_hit) || !canDestroyLimbViolently(v, part_hit))
     return false;
 
-  // Modify damage based on victim's brawn. Brawnier victims take less limb damage, and vice versa.
-  if (*dam)
-    *dam = static_cast<int>(*dam / v->getStatMod(STAT_BRA));
+  const sstring weaponName =
+    weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash();
+  const sstring limbName = v->describeBodySlot(part_hit);
 
-  if (isPc() && v->isPc() && (roomp->isRoomFlag(ROOM_ARENA) || (inPkZone() && cutPeelPkDam())))
-    *dam /= 2;  // raising this number will lower damage rates in arena
+  // Slash and pierce attacks sever the limb and cause a permanent bleed in
+  // the stump, whereas blunt attacks pulverize it and make it useless.
+  if (!bluntType(attackType)) {
+    const sstring toChar = format(
+                             "$N's horribly lacerated %s is completely severed "
+                             "by a final strike from your %s!") %
+                           weaponName % limbName;
+    const sstring toVict = format(
+                             "You cry out in agony as your horribly lacerated "
+                             "%s is completely severed by $N's %s!") %
+                           weaponName % limbName;
+    const sstring toNotVict =
+      format("$N's horribly lacerated %s is completely severed by $n's %s!") %
+      weaponName % limbName;
 
-  // if bleeding or infected or leprosed or gangrenous, take extra dam
-  if (v->isLimbFlags(part_hit, PART_BLEEDING | PART_INFECTED | PART_LEPROSED | PART_GANGRENOUS)) {
-    *dam *= 2;
+    act(toChar, false, this, weapon, v, TO_CHAR, ANSI_ORANGE);
+    act(toVict, false, this, weapon, v, TO_CHAR, ANSI_RED_BOLD);
+    act(toNotVict, false, this, weapon, v, TO_CHAR, ANSI_ORANGE);
+
+    v->makePartMissing(part_hit,
+      v->isLimbFlags(part_hit, PART_LEPROSED | PART_GANGRENOUS), this);
+    v->rawBleed(v->findNextAttachedBodyPart(part_hit), PERMANENT_DURATION,
+      SILENT_NO, CHECK_IMMUNITY_YES);
+  } else {
+    // No need to manually pulverize the limb - that happens automatically in
+    // the hurtLimb function once a limb is reduced to 0 HP. So for bruise
+    // stacks, simply apply enough damage to instantly bring the limb to 0 HP.
+    const sstring toVict =
+      format("Your severely bruised %s is utterly ruined by $N's %s!") %
+      limbName % weaponName;
+    const sstring toChar =
+      format("$N's severely bruised %s is utterly ruined by your %s!") %
+      limbName % weaponName;
+    const sstring toNotVict =
+      format("$N's severely bruised %s is utterly ruined by $n's %s!") %
+      limbName % weaponName;
+
+    act(toChar, false, this, weapon, v, TO_CHAR, ANSI_PURPLE_BOLD);
+    act(toVict, false, this, weapon, v, TO_CHAR, ANSI_RED_BOLD);
+    act(toNotVict, false, this, weapon, v, TO_CHAR, ANSI_PURPLE_BOLD);
+
+    int rc = v->hurtLimb(v->getCurLimbHealth(part_hit), part_hit);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) return DELETE_THIS;
   }
 
-  // Deal 50% of total limb damage to main health pool, 50% to limb
-  int damageDealt = static_cast<int>(*dam * 0.5);
-  int rc = applyDamage(v, damageDealt, DAMAGE_NORMAL);
-  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+  return true;
+}
+
+
+
+int TBeing::damageLimb(TBeing* v, const wearSlotT part_hit, const TThing* maybeWeapon,
+  int* dam) {
+  const spellNumT attackType = getAttackType(maybeWeapon, HAND_PRIMARY);
+  return damageLimb(v, part_hit, maybeWeapon, dam, attackType);
+}
+
+int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
+  int* dam, const spellNumT attackType) {
+  auto damage = static_cast<double>(*dam);
+
+  // Don't do damage to vital limbs, as destroying one would lead to instant
+  // death and hasn't been coded for. Hits to these limbs do all their damage to
+  // victim's main HP pool. It shouldn't be possible for part_hit to come in as
+  // HOLD_X but test for it just in case.
+  if (isVitalPart(part_hit) || !v->slotChance(part_hit) || damage <= 0 ||
+      part_hit == HOLD_LEFT || part_hit == HOLD_RIGHT || !v->hasPart(part_hit))
+    return false;
+
+  if (part_hit == WEAR_FINGER_L) part_hit = WEAR_HAND_L;
+  if (part_hit == WEAR_FINGER_R) part_hit = WEAR_HAND_R;
+
+  // Modify damage based on victim's brawn. Brawnier victims take less limb
+  // damage, and vice versa.
+  damage /= v->getStatMod(STAT_BRA);
+
+  // Bruised part takes up to 25% more damage from blunt attacks based on
+  // attacker's strength and the number of bruise stacks on the limb. However,
+  // don't want to penalize damage for less than average strength, so use custom
+  // plotStat values to scale from 0% to 25% bonus. Also scale it linearly
+  // instead of exponentially. Bleeding doesn't give similar bonus as bleeding
+  // itself already does regular damage.
+  affectedData* bruiseAffect = v->isBruised(part_hit);
+  if (bruiseAffect && bluntType(attackType)) {
+    // Defines max # of bruise stacks that confer a damage bonus
+    static constexpr int MAX_BRUISE_STACK_BONUS = 5;
+
+    const int bruiseStacks =
+      min(static_cast<int>(bruiseAffect->modifier2), MAX_BRUISE_STACK_BONUS);
+
+    damage *=
+      (plotStat(STAT_CURRENT, STAT_STR, 0.0, 0.05, 0.025, 1.0) * bruiseStacks +
+        1);
+  }
+
+  // Limbs have a very low health pool due to the original coders using a
+  // low-bit number type to contain the value. As this is stored in the pfiles,
+  // changing this variable type now to allow higher limb HP will corrupt
+  // existing pfiles, so we need to avoid that until pfiles are converted to a
+  // modern form. However, limb damage needs to be reduced as it's far too easy
+  // to scrap limbs in just a few hits with the current state of player damage
+  // in the game.
+
+  // Current strategy: Calculate a ratio of the attacker's level to the victim's
+  // level, with a floor of 0.1 and ceiling of 1.0. This determines how much of
+  // the damage from an attack against a limb applies to the main HP pool and
+  // how much applies to the limb HP pool. This will make victims much higher
+  // level than their attackers take only 10% of the damage to their actual
+  // limb, with the rest going to their (much higher) main HP pool. Lowers the
+  // speed at which players can damage the limbs of end-game mobs, but also
+  // compensates the player by giving them extra damage to the mob's main HP.
+  // In contrast, fights against mobs of equal or lower level will see scrapped
+  // limbs quite often.
+  double levelRatio =
+    static_cast<double>(GetMaxLevel()) / static_cast<double>(v->GetMaxLevel());
+  levelRatio = min(1.0, levelRatio);
+  levelRatio = max(0.1, levelRatio);
+
+  // Ensure at least 1 damage is done to the limb
+  const int limbDamage = max(static_cast<int>(damage * levelRatio), 1);
+
+  // Prevent accidental negative damage
+  const int mainHpDamage = max(static_cast<int>(damage - limbDamage), 0);
+
+  if (mainHpDamage > 0 &&
+      IS_SET_DELETE(applyDamage(v, mainHpDamage, DAMAGE_NORMAL), DELETE_VICT)) {
     v->reformGroup();
     return DELETE_VICT;
   }
 
-  rc = v->hurtLimb(damageDealt, part_hit);
-  /*sendTo(format("<G>(%d damage to %s - HP: %d/%d)<z>\n\r") % damageDealt %
-         v->describeBodySlot(part_hit) % v->getCurLimbHealth(part_hit) %
-         v->getMaxLimbHealth(part_hit));*/
-  if (IS_SET_DELETE(rc, DELETE_THIS))
+  if (limbDamage > 0 &&
+      IS_SET_DELETE(v->hurtLimb(limbDamage, part_hit), DELETE_THIS)) {
+    v->reformGroup();
     return DELETE_VICT;
+  }
 
-  // cuts & bruises
-  // would be nice if attack type was available, to check for blunt vs slash/pierce
-  if (v->isLimbFlags(part_hit, PART_BLEEDING)) {
-    // Chance to cut and start bleeding, or if already bleeding infect wound
-    if (!::number(0, 8)) {
-      // Infection rocks! - Russ
-      v->rawInfect(part_hit, ((*dam) * 10) + 100, SILENT_NO, CHECK_IMMUNITY_YES);
-    }
-    // if the attacker is barehanded, then lets reduce chance  -- bat
-  } else if (::number(0, (v->hasDisease(DISEASE_SCURVY) ? 300 : 400)) < (sharp / 2) &&
-             (weapon ||
-              !v->isLucky(levelLuckModifier(min((int)GetMaxLevel(), v->GetMaxLevel() + 10))))) {
-    int wound_duration = max(120, (*dam) * (isPc() ? 10 : 20));
-    v->rawBleed(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
+  const auto* weapon = dynamic_cast<const TBaseWeapon*>(maybeWeapon);
+  const bool isBluntAttack = bluntType(attackType);
+  const int sharp =
+    weapon ? weapon->getCurSharp() : sharpness[getFormType() - TYPE_MIN_HIT];
+  const int diseaseDuration = sharp / 2 * Pulse::UPDATES_PER_MUDHOUR;
+  const bool limbIsWeak =
+    v->hasDisease(DISEASE_SCURVY) ||
+    v->isLimbFlags(part_hit, PART_LEPROSED | PART_GANGRENOUS);
+  const bool limbAlreadyDamaged =
+    (isBluntAttack ? v->isBruised(part_hit) : v->isBleeding(part_hit)) !=
+    nullptr;
+
+  // Base chance is 2% per attack for weapon with max sharpness (100)
+  static constexpr int BASE_CHANCE = 2;
+
+  // Having scurvy or the limb being leprosed/gangrenous makes bleeding/bruising
+  // twice as likely. Having an already damaged limb also makes it more
+  // susceptible to further damage.
+  const int chance = limbIsWeak && limbAlreadyDamaged   ? BASE_CHANCE * 4
+                    : limbIsWeak || limbAlreadyDamaged ? BASE_CHANCE / 2
+                                                       : BASE_CHANCE;
+
+  // TODO (Cirius): Add TBeing::isVicious() function that defines certain races
+  // as vicious fighters. These races get double the chance to cause
+  // bleeds/bruises during combat.
+  if (!percentChance(chance)) return true;
+
+  // TODO (Cirius): Factor weapon/attacker's limb and victim's skin or eq
+  // material in TThing* eq = v->equipment[part_hit]; const auto* victMaterial
+  // =
+  //   eq ? eq->getMaterialTypeNumbers() :
+  //   &material_nums[v->getMaterial(part_hit)];
+  // const auto* attackerMaterial =
+  //   weapon ? weapon->getMaterialTypeNumbers() :
+  //   &material_nums[getMaterial(WEAR_HAND_R)];
+
+  const int disease = isBluntAttack ? DISEASE_BRUISED : DISEASE_BLEEDING;
+
+  static constexpr int MAX_LIMB_STACKS = 5;
+
+  // Check for an existing affect to determine if limb already has this
+  // flag, rather than testing for the PART_BLEEDING flag, as it's unlikely
+  // but possible for multiple bleeds to be started on the same limb in the
+  // same round, and the PART_BLEEDING flag doesn't get set until the first
+  // disease pulse tick occurs.
+  affectedData* existingAffect =
+    v->affected->find_if([part_hit, disease](affectedData* aff) {
+      return aff->modifier == disease && aff->level == part_hit;
+    });
+
+  if (!existingAffect) {
+    isBluntAttack
+      ? v->rawBruise(part_hit, diseaseDuration, SILENT_NO, CHECK_IMMUNITY_YES)
+      : v->rawBleed(part_hit, diseaseDuration, SILENT_NO, CHECK_IMMUNITY_YES);
+    return true;
   }
-  if (!v->isLimbFlags(part_hit, PART_BRUISED) &&
-      !::number(
-        0,
-        ((v->isLimbFlags(part_hit, PART_LEPROSED) || v->hasDisease(DISEASE_SCURVY)) ? 3 : 6)) &&
-      !v->isLucky(levelLuckModifier(min((int)GetMaxLevel(), v->GetMaxLevel() + 10))) &&
-      !v->isLucky(levelLuckModifier(min((int)GetMaxLevel(), v->GetMaxLevel() + 10)))) {
-    int wound_duration = max(240, (*dam) * (isPc() ? 20 : 40));
-    v->rawBruise(part_hit, wound_duration, SILENT_NO, CHECK_IMMUNITY_YES);
+
+  const sstring weaponName =
+    weapon ? fname(weapon->name) : getMyRace()->getBodyLimbSlash();
+  const sstring limbName = v->describeBodySlot(part_hit);
+  const sstring woundType = isBluntAttack ? "bruising" : "wound";
+  const sstring color = isBluntAttack ? ANSI_PURPLE : ANSI_RED;
+  sstring toVict, toChar, toNotVict;
+
+  if (existingAffect->modifier2 < MAX_LIMB_STACKS) existingAffect->modifier2++;
+
+  if (existingAffect->modifier2 < MAX_LIMB_STACKS) {
+    toVict = format("The %s on your %s worsens.") % woundType % limbName;
+    toNotVict = format("The %s on $N's %s worsens.") % woundType % limbName;
+    toChar = toNotVict;
+
+    act(toVict, false, this, weapon, v, TO_VICT, color.c_str());
+    act(toNotVict, false, this, weapon, v, TO_NOTVICT, color.c_str());
+    act(toChar, false, this, weapon, v, TO_CHAR, color.c_str());
+
+    // Refresh the duration even if a stack isn't added. Duration is based on
+    // weapon sharpness (or bluntness). Sharper weapons lead to more and
+    // longer duration bleeds/bruises.
+    existingAffect->duration = diseaseDuration;
+    return true;
   }
-  return 1;
+
+  // Reaching max stacks on a single limb causes it to be instantly
+  // severed/pulverized
+  if (!canDestroyLimbViolently(v, part_hit)) return true;
+
+  // Slash and pierce attacks sever the limb and cause a permanent bleed in
+  // the stump, whereas blunt attacks pulverize it and make it useless.
+  if (isBluntAttack) {
+    // No need to manually pulverize the limb - that happens automatically in
+    // the hurtLimb function once a limb is reduced to 0 HP. So for bruise
+    // stacks, simply apply enough damage to instantly bring the limb to 0 HP.
+    toVict = format("Your severely bruised %s is utterly ruined by $N's %s!") %
+             limbName % weaponName;
+    toChar = format("$N's severely bruised %s is utterly ruined by your %s!") %
+             limbName % weaponName;
+    toNotVict =
+      format("$N's severely bruised %s is utterly ruined by $n's %s!") %
+      limbName % weaponName;
+  } else {
+    toChar = format(
+               "$N's horribly lacerated %s is completely severed "
+               "by your %s!") %
+             limbName % weaponName;
+    toVict = format(
+               "You cry out in agony as your horribly lacerated "
+               "%s is completely severed by $N's %s!") %
+             limbName % weaponName;
+    toNotVict =
+      format("$N's horribly lacerated %s is completely severed by $n's %s!") %
+      weaponName % limbName;
+  }
+
+  act(toChar, false, this, weapon, v, TO_CHAR, ANSI_ORANGE);
+  act(toVict, false, this, weapon, v, TO_VICT, ANSI_RED);
+  act(toNotVict, false, this, weapon, v, TO_NOTVICT, ANSI_ORANGE);
+
+  if (isBluntAttack) {
+    int rc = v->hurtLimb(v->getCurLimbHealth(part_hit), part_hit);
+    if (IS_SET_DELETE(rc, DELETE_THIS)) return DELETE_THIS;
+  } else {
+    v->makePartMissing(part_hit,
+      v->isLimbFlags(part_hit, PART_LEPROSED | PART_GANGRENOUS), this);
+
+    // Start a permanent bleed on the body part to which the now-severed limb
+    // was connected
+    const wearSlotT newBleedLocation = v->findNextAttachedBodyPart(part_hit);
+    const sstring bleedLocationDesc = v->describeBodySlot(newBleedLocation);
+
+    v->rawBleed(newBleedLocation, PERMANENT_DURATION,
+      SILENT_YES, CHECK_IMMUNITY_YES);
+
+    toVict = format("Blood gushes from your %s!") % bleedLocationDesc;
+    const sstring toRoom =
+      format("Blood gushes from $N's %s!") % bleedLocationDesc;
+
+    act(toVict, false, this, weapon, v, TO_VICT, ANSI_RED);
+    act(toRoom, true, this, weapon, v, TO_ROOM, ANSI_RED);
+  }
+
+  return true;
 }
 
 // damage_hand will be called when a person hits something with his/her   
@@ -4091,7 +4288,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if (vict->equipment[part_hit])
       vict->damageItem(this, part_hit, w_type, weapon, dam);
 
-    damaged_limb = damageLimb(vict, part_hit, weapon, &dam);
+    damaged_limb = damageLimb(vict, part_hit, weapon, &dam, w_type);
     if (IS_SET_DELETE(damaged_limb, DELETE_VICT)) {
       critKillCheck(this, vict, mess_sent);
       return retCode | DELETE_VICT;
@@ -5357,19 +5554,19 @@ void TBeing::damageArm(bool isPrimary, int bit)
 //    addToLimbFlags(getPrimaryHold(), bit);
     addToLimbFlags(getPrimaryWrist(), bit);
     addToLimbFlags(getPrimaryFinger(), bit);
-    woundedHand(TRUE);
+    dropItemFromDamagedHand(TRUE);
   } else {
     addToLimbFlags(getSecondaryArm(), bit);
     addToLimbFlags(getSecondaryHand(), bit);
 //    addToLimbFlags(getSecondaryHold(), bit);
     addToLimbFlags(getSecondaryWrist(), bit);
     addToLimbFlags(getSecondaryFinger(), bit);
-    woundedHand(FALSE);
+    dropItemFromDamagedHand(FALSE);
   }
 }
 
 // I couldn't figure out if this should have a weapon->canDrop() check or not
-void TBeing::woundedHand(bool isPrimary)
+void TBeing::dropItemFromDamagedHand(bool isPrimary)
 {
   TThing *w;
   int bit, bit2;
@@ -5380,7 +5577,7 @@ void TBeing::woundedHand(bool isPrimary)
   bit2 = isLimbFlags(slot_hand, (PART_USELESS | PART_MISSING | PART_BROKEN));
   if ((w = equipment[slot_hold]) && (bit || bit2)) {
     act("$p falls from your hand.",TRUE,this,w,0,TO_CHAR, ANSI_RED);
-    act("$n drops $s $o.",TRUE,this,w,0,TO_ROOM);
+    act("$p falls to the $g.",TRUE,this,w,0,TO_ROOM);
     *roomp += *unequip(slot_hold);
   }
 }
@@ -5416,44 +5613,25 @@ int TBeing::dislodgeWeapon(TBeing *v, TThing *weapon, wearSlotT part)
   return FALSE;
 }
 
-void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing *opp)
-{
-  TThing *t;
-
+void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing* opp) {
   if (!hasPart(slot)) {
-    vlogf(LOG_COMBAT, format("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % 
-         slot % getName());
+    vlogf(LOG_COMBAT,
+      format("BOGUS SLOT trying to be made PART_MISSING: %d on %s") % slot %
+        getName());
     return;
   }
-  if (!roomp) {
-    // bat 8-16-96, mob could be dead, this is a bug 
-    vlogf(LOG_COMBAT, format("!roomp for target (%s) of makePartMissing().") %  getName());
-    return;
-  }
+
   if (!diseased)
-    makeBodyPart(slot,opp);
+    makeBodyPart(slot, opp);
   else
     makeDiseasedPart(slot);
 
   setLimbFlags(slot, PART_MISSING);
-
-  if ((t = unequip(slot)))
-    *roomp += *t;
-
-  for (wearSlotT j=MIN_WEAR; j < MAX_WEAR; j++) {
-    if (!hasPart(j))
-      continue;
-    if (!limbConnections(j)) {
-      setLimbFlags(j, PART_MISSING);
-      TThing *tmp = unequip(j);
-      if (tmp)
-        *roomp += *tmp;
-    }
-  }
+  auditBodyParts();
 
   // check for damage to both hands
-  woundedHand(TRUE);
-  woundedHand(FALSE);
+  dropItemFromDamagedHand(TRUE);
+  dropItemFromDamagedHand(FALSE);
   stunIfLimbsUseless();
 }
 
