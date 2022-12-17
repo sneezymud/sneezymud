@@ -575,7 +575,7 @@ int TBeing::critSuccessChance(TBeing* victim,
   critChance -= 2 * getCond(DRUNK);
 
   // Modify crit chance based on APPLY_CRIT_FREQUENCY values from spells and/or equipment
-  const int64_t affectedMod1Total = affected->sumAffectsByApplyType(APPLY_CRIT_FREQUENCY).first;
+  const int64_t affectedMod1Total = affected ? affected->sumAffectsByApplyType(APPLY_CRIT_FREQUENCY).first : 0;
   const int64_t objAffectMod1Total = equipment.sumAffectsByApplyType(APPLY_CRIT_FREQUENCY).first;
   critChance += static_cast<double>(affectedMod1Total + objAffectMod1Total) * CRIT_FREQUENCY_VALUE_PER_POINT;
 

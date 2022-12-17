@@ -1950,8 +1950,11 @@ const char * extraDescription::findExtraDesc(const char *word)
 std::pair<int64_t, int64_t> affectedData::sumAffectsByApplyType(const applyTypeT affectType) const {
   int64_t mod1 = 0;
   int64_t mod2 = 0;
+  const affectedData* aff = this;
 
-  for (const affectedData* aff = this; aff != nullptr; aff = aff->next) {
+  if (!aff) return { mod1, mod2 };
+
+  for (; aff; aff = aff->next) {
     if (aff->location != affectType)
       continue;
 
@@ -1965,7 +1968,11 @@ std::pair<int64_t, int64_t> affectedData::sumAffectsByApplyType(const applyTypeT
 // Search a TBeing's affects, looking for one for which the predicate function returns
 // true when passed the affect. If found, return a pointer to this affect.
 affectedData* affectedData::find_if(const std::function<bool(affectedData*)>& predicate) {
-  for (affectedData* aff = this; aff; aff = aff->next) {
+  affectedData* aff = this;
+
+  if (!aff) return nullptr;
+
+  for (; aff; aff = aff->next) {
     if (!predicate(aff))
       continue;
 
