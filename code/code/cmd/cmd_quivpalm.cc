@@ -59,9 +59,12 @@ static int quiveringPalm(TBeing *c, TBeing *v)
   // Success case
   if (c->bSuccess(bKnown, SKILL_QUIV_PALM) &&
       (specialAttackValue == COMPLETE_SUCCESS || specialAttackValue == GUARANTEED_SUCCESS || specialAttackValue == PARTIAL_SUCCESS)) {
-    dam = v->GetMaxLevel() > 60 ?
-    (double)v->hitLimit() * (double)(c->GetMaxLevel() / (double)(v->GetMaxLevel() * 2)) : 
-    100+v->hitLimit();
+    dam =
+      v->GetMaxLevel() > 60
+        ? static_cast<int>(
+            v->hitLimit() *
+            plotLevelDiff(v->GetMaxLevel() - c->GetMaxLevel(), 0.99, 0.2, 0.5))
+        : 100 + v->hitLimit();
 
     if (specialAttackValue == PARTIAL_SUCCESS) {
       SV(SKILL_QUIV_PALM);
