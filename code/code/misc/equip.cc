@@ -2280,7 +2280,7 @@ float TBeing::maxWieldWeight(const TThing *obj, handTypeT hands) const
 #if 0
   float maxval = plotStat(STAT_CURRENT, STAT_STR, (float) 8.0, (float) 25.0, (float) 12.0);
 #else
-  float maxval = plotStat(STAT_CURRENT, STAT_STR, (float) 16.0, (float) 50.0, (float) 24.0);
+  auto maxval = static_cast<float>(plotStat(STAT_CURRENT, STAT_STR, 16.0, 50.0, 24.0));
 #endif
 
   if (hands == HAND_TYPE_SEC && isAmbidextrous())

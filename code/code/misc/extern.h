@@ -371,7 +371,9 @@ extern double atof_safe(const sstring);
 extern int GetApprox(int, int);
 extern double GetApprox(double, int);
 
-// Template functions need to be defined in header to be visible in other translation units
+// Template functions need to be defined in header to be visible in other
+// translation units. Defining them here in extern.h avoids massive header
+// infinite include loop problem.s
 
 // Helper to retrieve by value a random entry from a vector.
 // Receives a copy of a std::vector<T>, shuffles it in place using C++ <random>
@@ -390,4 +392,77 @@ template <typename T>
 T& getRandomEntryByRef(std::vector<T>& v) {    
   std::shuffle(v.begin(), v.end(), std::minstd_rand{std::random_device{}()});
   return v.front();
+}
+
+// Takes a value of type V where `V value >= than V lowerBound` and `V value <=
+// V upperBound` and passes it to a function in the form `Y(value) = A * value^n
+// + B`.
+//
+// Returns a value of type T where `T value >= T minValue` and `T value <= T
+// maxValue`.
+//
+// A and B will be known constants, and n will be modified to determine how much
+// each point of V value will affect the return value.
+//
+// To ensure that `Y(midline) == average`, model it as two separate curves.
+// First curve is `x = midline` to `x = upperBound`, second is `x = lowerBound`
+// to `x = midline`. This is useful as sometimes we might want `average` to not
+// be exactly equal to '(minValue + maxValue) / 2', which it always will be if
+// we model the entire curve with a single function.
+//
+// A linear formula (power = 1.0) means each point of value counts equally
+// A quadratic (power = 2.0) means point of value at the extremes of the range
+// counts much more than those in the middle. Power = 1.4 was chosen as default
+// as a compromise between those two extremes, resulting in an S-curve that
+// means points of value count more as they get closer to the extremes of
+// lowerBound/upperBound.
+//
+// Boundary Conditions (remembering that Y(value) = A * value^n + B):
+// We want Y(midline) to return 'average'
+// We want Y(upperBound) to return 'maxValue'
+// We want Y(lowerBound) to return 'minValue'
+//
+// Curves are calculated as follows (this is for x = midline to x = maxstat, but
+// other curve is identical). I used Wolfram Alpha for all the following
+// calculations/simplifications, so they should be correct.
+//
+// Start with the formula Y(value) = A * value^n + B
+//   => If we want Y(upperBound) = maxValue, and know Y(upperBound) = A *
+//   upperBound^N + B, then we know maxValue = A * upperBound^N + B.
+//   => Similarly, Y(midline) = average = A * midline^N + B
+//   => Solve one for A:
+//     => A = (average - B) / midline^N
+//   => Substitute this into the other function and solve for B:
+//     => maxValue = (average - B) / midline^N * upperBound^N + B
+//       => B = (average * upperBound^n - maxValue * midline^n) / (upperBound^n
+//       - midline^n)
+//   => Plug this value for B back into the formula for A and simplify:
+//     => A = (average - ((maxValue * midline^n - average * upperBound^n) /
+//     (midline^n - upperBound^n) )) / midline^N
+//       => A = (maxValue - average) / (upperBound^n - midline^n)
+// Final Values:
+// A = (maxValue - average) / (upperBound^n - midline^n)
+// B = (average * upperBound^n - maxValue * midline^n) / (upperBound^n -
+// midline^n)
+//   => Equivalent to: B = average - (midline^n) * A
+//
+// Other curve is identical formula, just swapping values around
+template <typename T, typename V>
+V plotValue(T value, const T lowerBound, const T upperBound, const V minValue,
+  const V maxValue, const V average, const double power = 1.4) {
+  const T midline =
+    static_cast<T>(((upperBound - lowerBound) / 2.0) + lowerBound);
+  value = min(max(value, lowerBound), upperBound);
+  double A = 0.0;
+  double B = 0.0;
+
+  if (value >= midline) {
+    A = (maxValue - average) / (pow(upperBound, power) - pow(midline, power));
+    B = average - pow(midline, power) * A;
+  } else {
+    A = (average - minValue) / (pow(midline, power) - pow(lowerBound, power));
+    B = minValue - pow(lowerBound, power) * A;
+  }
+
+  return static_cast<V>(A * pow(value, power) + B);
 }

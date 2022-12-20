@@ -1000,112 +1000,17 @@ int TBeing::addToStat(statSetT whichSet, statTypeT whichStat, int modifier)
   return 0;
 }
 
-int TBeing::plotStat(statSetT x, statTypeT y, int a, int b, int c, double n) const
-{
-  return (int) plotStat(x, y, (double) a, (double) b, (double) c, n);
-}
-
-float TBeing::plotStat(statSetT x, statTypeT y, float a, float b, float c, double n) const
-{
-  return (float) plotStat(x, y, (double) a, (double) b, (double) c, n);
-}
-
-double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value, double max_value, double avg, double power) const
-{
-  // takes a stat given by whichSet/whichStat and maps it to a curved function
-  // this curved function is like an s turned on its side.  its flat in the
-  // middle, and curves up to the right, and down to the left.
-  // to avoid using some whacky formula, model it as two separate curves
-
-  // in general, we want this curve to be of form
-  // Y(x) = A x ^ n + B
-  // where A and B are known constants, and n we modify some to get nice
-  // numbers.
-
-  mud_assert(((max_value >= avg && avg >= min_value) || (max_value <= avg && avg <= min_value)),
-     "Problem in assignment of values to plotStat (%.2f, %.2f, %.2f)", min_value, max_value, avg);
-
-  // this function gets called A LOT!
-  // as such, it behooves us to try and limit the impact
-  // since it also uses nasty math functions, lets save results
-  // as they get discovered
-#if 0
-  static bool cleared = false;
-  static double storedPlots[250];
-  if (!cleared) {
-    for (int i = 0; i < 250; i++)
-      storedPlots[i] = -10;
-    cleared = true;
-  }
-#endif
- 
-  int MAXSTAT = 205;
-  int MINSTAT = 005;
-  if (whichSet == STAT_CHOSEN) {
-    MAXSTAT = 25;
-    MINSTAT = -25;
-  }
-  int midline = ((MAXSTAT - MINSTAT) /2) + MINSTAT;
-
-  // boundary conditions:
-  // Y(midline) = avg
-  // Y(MAXSTAT) = max_value   : flipside being Y(MINSTAT) = min_value
-  // A linear formula (power = 1.0) somehow seems bad
-  // A quadratic (power = 2.0) meant they had to get 165 stats to get 1/2 max_value
-  // I chose (power = 1.4 by default) since it was more in middle of these two
-  // lowering n causes a stat closer to midline to have a larger number
-
-  // A little algebra and we get:
-  // A = (max_value - avg)/(MAXSTAT ^ power - midline ^ power)
-  // B = avg - (midline^power) * A 
-
-  // March, 2001:
-  // this is incorrect, A = (max_value - avg)/(MAXSTAT-midline)^power
 
 
-  int stat = getStat(whichSet, whichStat);
-  // pin the value if necessary
-  stat = min(max(stat, MINSTAT), MAXSTAT);
-#if 0
-  if (power == 1.4 && whichSet != STAT_CHOSEN) {
-    // we only store for the default value of power
-    // storedPlot will represent the curve as normalized to -1,1,0
-    double num = storedPlots[stat];
-    if (num == -10) {
-      // determine the normalized value
-      double A, B;
-      if (stat >= midline) {
-        A = 1  / (pow(MAXSTAT, power) - pow(midline, power)); 
-      } else {
-        A = 1 / (pow(midline, power) - pow(MINSTAT, power)); 
-      }
+// Use the plotValue function to obtain a result based on a level difference
+// between two beings
+double plotLevelDiff(const int levelDiff, const double minResult,
+  const double maxResult, const double averageResult, const double power) {
+  static constexpr int MIN_LEVEL_DIFF = 0;
+  static constexpr int MAX_LEVEL_DIFF = 70;
 
-      // this if statment is equiv to A = abs(1 / (pow(midline,power) - pow(MAXSTAT,power)))
-      B = - pow(midline, power) * A;
-      num = A * pow(stat, power) + B;
-      storedPlots[stat] = num;
-    }
-
-    // use the stored value, and scale based on the input
-    if (num > 0)
-      return (num * (max_value-avg))+avg;
-    else
-      return (num * (avg-min_value))+avg;
-  }
-#endif
-  double A, B;
-  double num; 
-
-  if (stat >= midline) {
-    A = (max_value - avg) / (pow(MAXSTAT - midline, power)); 
-    B = avg;
-    num = A * pow(stat - midline, power) + B;
-  } else {
-    A = (min_value - avg) / (pow(midline - MINSTAT, power)); 
-    B =  avg;
-    num = A * pow(midline - stat, power) + B;
-  }
-  return num;
+  return plotValue<int, double>(levelDiff, MIN_LEVEL_DIFF, MAX_LEVEL_DIFF,
+    minResult, maxResult, averageResult, power);
 }
 
 // High stat should yield 1.25 * more dam, low 0.80 less dam
@@ -1118,13 +1023,6 @@ float TBeing::getStrDamModifier() const
 float TBeing::getWisDamModifier() const
 {
   return plotStat(STAT_CURRENT, STAT_WIS, 0.8, 1.25, 1.0, 1.0);
-}
-
-float TBeing::getDexDamModifier() const
-{
-  // this is archaic, we don't want dex to affect damage, it is already factored in.
-  return 1.0;
-  //  return plotStat(STAT_CURRENT, STAT_DEX, 0.8, 1.25, 1.0, 1.0);
 }
 
 int TBeing::getDexReaction() const
@@ -1193,33 +1091,9 @@ Stats TBeing::getCurStats() const
   return curStats;
 }
 
-Stats::Stats()
-{
-  statTypeT stat;
-  for(stat=MIN_STAT; stat < MAX_STATS; stat++)
-    values[stat]=150;
-
+Stats::Stats() {
+  std::fill(std::begin(values), std::end(values), 150);
   values[STAT_EXT] = 0;
-}
-
-Stats::Stats(const Stats &a)
-{
-  statTypeT stat;
-  for(stat=MIN_STAT; stat < MAX_STATS; stat++)
-    values[stat]=a.values[stat];
-}
-
-Stats & Stats::operator=(const Stats &a)
-{
-  if (this == &a) return *this;
-  statTypeT stat;
-  for(stat=MIN_STAT; stat < MAX_STATS; stat++)
-    values[stat]=a.values[stat];
-  return *this;
-}
-
-Stats::~Stats()
-{
 }
 
 // Uses plotStat to convert a given stat to a percent chance of success, then

@@ -1258,8 +1258,8 @@ int CheckStorageChar (TBeing *ch, TBeing *other)
 
 float TBeing::carryWeightLimit() const
 {
-  float num;
-  num = plotStat(STAT_CURRENT, STAT_STR, (float) 30.0, (float) 1920.0, (float) 495.0);
+  auto num =
+    static_cast<float>(plotStat(STAT_CURRENT, STAT_STR, 30.0, 1920.0, 495.0));
   if (isFourLegged())
     num *= 2.0;
 
