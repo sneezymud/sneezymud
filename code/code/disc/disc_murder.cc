@@ -27,7 +27,7 @@ const int BS_MSG_DEATH_MAX = 7; // (tMessagesDeath / 2) - 1
 const int BS_MSG_NONDT_MAX = 7; // (tMessagesNonDeath / 2) - 1
 
 // returns DELETE_VICT
-int TBeing::backstabHit(TBeing *victim, TThing *obj)
+int TBeing::backstabHit(TBeing *victim, TThing *obj, int modifier)
 {
   int d;
 
@@ -89,9 +89,11 @@ int TBeing::backstabHit(TBeing *victim, TThing *obj)
 
   d = getSkillDam(victim, SKILL_BACKSTAB, getSkillLevel(SKILL_BACKSTAB), getAdvLearning(SKILL_BACKSTAB));
 
-  int successfulHit = specialAttack(victim, SKILL_BACKSTAB);
-  if ((successfulHit == GUARANTEED_SUCCESS || successfulHit == COMPLETE_SUCCESS) &&
-       successfulHit != GUARANTEED_FAILURE) {
+  int specialAttackValue = specialAttack(victim, SKILL_BACKSTAB, modifier, true);
+  if (!victim->awake() || 
+      specialAttackValue == GUARANTEED_SUCCESS || 
+      specialAttackValue == COMPLETE_SUCCESS || 
+      (specialAttackValue == PARTIAL_SUCCESS && (::number(0,99) + modifier > 50))) {
     if (victim->getPosition() > POSITION_DEAD) {
       if (!(d = getActualDamage(victim, obj, d, SKILL_BACKSTAB))) {
         act("You try to backstab $N, but you can't penetrate $S skin!",  FALSE, this, obj, victim, TO_CHAR);
@@ -255,7 +257,6 @@ int TBeing::doBackstab(const char *argument, TBeing *vict)
 
 int backstab(TBeing *thief, TBeing * victim)
 {
-  int base = 0;
   int rc = 0;
 
   if (thief->checkPeaceful("You cannot backstab in a peaceful room!\n\t"))
@@ -301,59 +302,41 @@ int backstab(TBeing *thief, TBeing * victim)
   }
   thief->reconcileHurt(victim, 0.04);
 
+  int modifier = 0;
+
+  modifier -= noise(thief) / 20;
+  modifier += thief->visibility() / 15;
+
+  if (thief->isAffected(AFF_SNEAK))
+    modifier += 5;
+  if (thief->isAffected(AFF_HIDE))
+    modifier += 5;
+
   if (thief->makesNoise() && victim->awake()) {
-    act("$n's armor makes too much noise, and $N is able to avoid $s backstab.",
+    modifier -= 10;
+
+    act("$n's armor makes too much noise, and $N is alerted to $n's backstab attempt.",
         FALSE, thief, 0, victim, TO_NOTVICT);
-    act("You make too much noise, and $N hears you and avoids your backstab.",
+    act("You make too much noise, and $N hears you coming.",
         FALSE, thief, 0, victim, TO_CHAR);
-    act("You hear $n's armor, and quickly dodge $s attempt to backstab you.",
+    act("You hear $n's armor, and quickly attempt to dodge $s attempt to backstab you.",
         FALSE, thief, 0, victim, TO_VICT);
-    thief->reconcileDamage(victim, 0,SKILL_BACKSTAB);
-    victim->addHated(thief);
-    return TRUE;
   }
   if (victim->awake() && victim->canSee(thief) &&
       !victim->isPc() && dynamic_cast<TMonster *>(victim)->isSusp()) {
-    act("You almost succeed, but $E senses you coming at the last moment.",
+    modifier -= 10;
+
+    act("$E is able to see you and notices you coming at the last moment.",
         FALSE, thief, 0, victim, TO_CHAR);
-    act("$n attempts to backstab you, but you sense $m coming.",
+    act("You sense $m coming as $n attempts to murder you.",
         FALSE, thief, 0, victim, TO_VICT);
-    act("$n attempts to backstab $N, but $N senses $m coming.",
-        FALSE, thief, 0, victim, TO_NOTVICT);
-    thief->reconcileDamage(victim, 0, SKILL_BACKSTAB);
-    victim->addHated(thief);
-    return TRUE;
   }
-  if ((!thief->isAffected(AFF_INVISIBLE) ||
-       victim->isAffected(AFF_DETECT_INVISIBLE)) &&
-      victim->canSee(thief) &&
-      !thief->isAffected(AFF_SNEAK) &&
-      !thief->isAffected(AFF_HIDE) &&
-      victim->awake()) {
-    act("$N notices you walking up behind $M, apparently you were not sneaking and visible...",FALSE,thief,0,victim,TO_CHAR);
-    act("$n makes a pathetic attempt at backstabbing $N.", FALSE, thief, 0, victim, TO_NOTVICT);
-    act("You nearly cut yourself as you try to backstab $N.", FALSE, thief, 0, victim, TO_CHAR);
-    act("You quickly dodge $n's pathetic attempt to backstab you.", FALSE, thief, 0, victim, TO_VICT);
-
-    thief->reconcileDamage(victim, 0,SKILL_BACKSTAB);
-    victim->addHated(thief);
-    return TRUE;
-  }
-  if (victim->fight())
-    base = 0;
-  else
-    base = 4;
-
   int bKnown = thief->getSkillValue(SKILL_BACKSTAB);
 
   if ((thief->bSuccess(bKnown, SKILL_BACKSTAB) || !victim->awake())) {
-    thief->setSpellHitroll(thief->getSpellHitroll() + base);
-    rc = thief->backstabHit(victim, obj);
-    thief->setSpellHitroll(thief->getSpellHitroll() - base);
+    rc = thief->backstabHit(victim, obj, modifier);
     if (IS_SET_DELETE(rc, DELETE_VICT)) 
       return DELETE_VICT;
-    
-    victim->addHated(thief);
   } else {
     act("$n makes a pathetic attempt at backstabbing $N.", FALSE, thief, 0, victim, TO_NOTVICT);
     act("You nearly cut yourself as you try to backstab $N.", FALSE, thief, 0, victim, TO_CHAR);
@@ -361,8 +344,8 @@ int backstab(TBeing *thief, TBeing * victim)
     if (thief->reconcileDamage(victim, 0,SKILL_BACKSTAB) == -1)
       return DELETE_VICT;
 
-    victim->addHated(thief);
   }
+  victim->addHated(thief);
   return TRUE;
 }
 
@@ -433,7 +416,8 @@ int TBeing::throatSlitHit(TBeing *victim, TThing *obj, int modifier)
 
 
   int specialAttackValue = specialAttack(victim, SKILL_THROATSLIT, modifier, true);
-  if (specialAttackValue == GUARANTEED_SUCCESS || 
+  if (!victim->awake() || 
+      specialAttackValue == GUARANTEED_SUCCESS || 
       specialAttackValue == COMPLETE_SUCCESS || 
       (specialAttackValue == PARTIAL_SUCCESS && (::number(0,99) + modifier > 50))) {
     if (victim->getPosition() > POSITION_DEAD) {
@@ -659,8 +643,13 @@ int throatSlit(TBeing *thief, TBeing * victim)
   modifier -= noise(thief) / 20;
   modifier += thief->visibility() / 15;
 
+  if (thief->isAffected(AFF_SNEAK))
+    modifier += 5;
+  if (thief->isAffected(AFF_HIDE))
+    modifier += 5;
+
   if (thief->makesNoise() && victim->awake()) {
-    modifier -= 5;
+    modifier -= 10;
 
     act("$n's armor makes too much noise, and $N is alerted to $n's murder attempt.",
         FALSE, thief, 0, victim, TO_NOTVICT);
@@ -670,10 +659,8 @@ int throatSlit(TBeing *thief, TBeing * victim)
         FALSE, thief, 0, victim, TO_VICT);
   }
   if (victim->awake() && victim->canSee(thief) &&
-      !victim->isPc() && dynamic_cast<TMonster *>(victim)->isSusp() &&
-      !thief->isAffected(AFF_SNEAK) &&
-      !thief->isAffected(AFF_HIDE)){
-    modifier -= 5;
+      !victim->isPc() && dynamic_cast<TMonster *>(victim)->isSusp()) {
+    modifier -= 10;
 
     act("$E is able to see you and notices you coming at the last moment.",
         FALSE, thief, 0, victim, TO_CHAR);
@@ -1242,16 +1229,19 @@ int cudgel(TBeing *thief, TBeing *victim)
   if (victim->fight())
     bKnown /= 2;
   thief->reconcileHurt(victim,0.06);
+  
+  int levelDifference = thief->GetMaxLevel() - victim->GetMaxLevel();
 
   // Success case
-  if ((successfulSkill && (successfulHit == COMPLETE_SUCCESS || successfulHit == GUARANTEED_SUCCESS) && successfulHit != GUARANTEED_FAILURE) || 
-      !thief->isNotPowerful(victim, thief->getSkillLevel(SKILL_CUDGEL), SKILL_CUDGEL, SILENT_YES) || 
-      !victim->awake()) {
-    int levelDifference = thief->GetMaxLevel() - victim->GetMaxLevel();
+  if(successfulSkill &&
+     (successfulHit == COMPLETE_SUCCESS || successfulHit == GUARANTEED_SUCCESS || (successfulHit == PARTIAL_SUCCESS && levelDifference <= -10))) { 
     affectedData aff;
     aff.type = SKILL_CUDGEL;
 
-    if(levelDifference > -10) {
+    // Incap effect
+    if(levelDifference > -10 || 
+      !thief->isNotPowerful(victim, thief->getSkillLevel(SKILL_CUDGEL), SKILL_CUDGEL, SILENT_YES) || 
+      !victim->awake()) {
       act("You knock $N on the noggin, knocking $M unconscious.", FALSE, thief, obj, victim, TO_CHAR);
       act("$n knocks $N on the noggin, knocking $M unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
       act("WHAM!  Something smacks into your skull HARD!", FALSE, thief, obj, victim, TO_VICT, ANSI_RED);
@@ -1265,17 +1255,17 @@ int cudgel(TBeing *thief, TBeing *victim)
       // Add the restrict XP affect, so that you cannot twink newbies with this skill
       // this affect effectively 'marks' the mob as yours
       restrict_xp(thief, victim, Pulse::UPDATES_PER_MUDHOUR / 3);
-    }
-    else {
-      act("You knock $N on the noggin, dazing $S but failing to knock $M unconscious.", FALSE, thief, obj, victim, TO_CHAR);
-      act("$n knocks $N on the noggin, dazing $S but failing to knock $M unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
+    } else {
+      act("You knock $N on the noggin, dazing $M but failing to knock $M unconscious.", FALSE, thief, obj, victim, TO_CHAR);
+      act("$n knocks $N on the noggin, dazing $M but failing to knock $M unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
       act("WHAM!  Something smacks into your skull HARD!", FALSE, thief, obj, victim, TO_VICT, ANSI_RED);
       
       aff.duration = Pulse::UPDATES_PER_MUDHOUR * 2;
       aff.location = APPLY_FOC;
       aff.modifier = -::number(1, thief->GetMaxLevel());
-    }
 
+      victim->addHated(thief);
+    }
     if (victim->spelltask) 
       victim->stopCast(STOP_CAST_CUDGEL);
     if (victim->task) 
@@ -1284,15 +1274,14 @@ int cudgel(TBeing *thief, TBeing *victim)
     victim->affectTo(&aff, -1);
 
     return TRUE;
+} else { 
+    act("You miss your attempt to knock $N unconscious.", FALSE, thief, obj, victim, TO_CHAR);
+    act("$n misses $s attempt to knock $N unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
+    act("$n misses $s attempt to knock you unconscious.", FALSE, thief, obj, victim, TO_VICT);
+
+    thief->reconcileDamage(victim, 0, SKILL_CUDGEL);
+    victim->addHated(thief);
   }
-
-  act("You miss your attempt to knock $N unconscious.", FALSE, thief, obj, victim, TO_CHAR);
-  act("$n misses $s attempt to knock $N unconscious.", FALSE, thief, obj, victim, TO_NOTVICT);
-  act("$n misses $s attempt to knock you unconscious.", FALSE, thief, obj, victim, TO_VICT);
-
-  thief->reconcileDamage(victim, 0, SKILL_CUDGEL);
-  victim->addHated(thief);
 
   return TRUE;
 }
-
