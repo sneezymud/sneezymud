@@ -444,6 +444,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
       break;
 
     // check: should any of these skills have immunity types?
+    case SKILL_QUIV_PALM:
     case SPELL_CARDIAC_STRESS:
     case SPELL_FUMBLE:
     case SPELL_FAERIE_FIRE:

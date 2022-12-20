@@ -51,28 +51,25 @@ static int quiveringPalm(TBeing *c, TBeing *v)
   int bKnown = c->getSkillValue(SKILL_QUIV_PALM);
   int specialAttackValue = c->specialAttack(v, SKILL_QUIV_PALM);
 
-  c->reconcileDamage(v, 0,SKILL_QUIV_PALM);
+  c->reconcileDamage(v, 0, SKILL_QUIV_PALM);
 
-  int killThreshold=bKnown*10;
+
   int dam = 0;
 
   // Success case
   if (c->bSuccess(bKnown, SKILL_QUIV_PALM) &&
       (specialAttackValue == COMPLETE_SUCCESS || specialAttackValue == GUARANTEED_SUCCESS || specialAttackValue == PARTIAL_SUCCESS)) {
-    if (v->getHit() > killThreshold){
+    dam = v->GetMaxLevel() > 60 ?
+    (double)v->hitLimit() * (double)(c->GetMaxLevel() / (double)(v->GetMaxLevel() * 2)) : 
+    100+v->hitLimit();
+
+    if (specialAttackValue == PARTIAL_SUCCESS) {
       SV(SKILL_QUIV_PALM);
       act("$N seems less affected by the vibrations.", FALSE, c, NULL, v, TO_CHAR);
       act("$n touches you, but you resist the vibrations.", FALSE, c, NULL, v, TO_VICT);
       act("$n touches $N, but $E resists it.", FALSE, c, NULL, v, TO_NOTVICT);
 
-      dam = ::number(bKnown * 10, bKnown * c->GetMaxLevel());
-
-      if (specialAttackValue == PARTIAL_SUCCESS) {
-        dam /= 2;
-      }
-    }
-    else {
-      dam = v->getHit()+100;
+      dam /= 2;
     }
 
     if (c->willKill(v, dam, SKILL_QUIV_PALM, false)) {
@@ -95,7 +92,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     aff.location = APPLY_NONE;
     aff.bitvector = 0;
     c->affectTo(&aff, -1);
-    if (c->reconcileDamage(v, dam,SKILL_QUIV_PALM) == -1)
+    if (c->reconcileDamage(v, dam, SKILL_QUIV_PALM) == -1)
       return DELETE_VICT;
     return TRUE;
   } else {
