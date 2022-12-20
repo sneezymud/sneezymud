@@ -12,8 +12,6 @@
 static int quiveringPalm(TBeing *c, TBeing *v)
 {
   affectedData aff;
-  int percent;
-  int i;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
@@ -41,7 +39,6 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     c->sendTo("You are not yet centered enough to attempt this maneuver again.\n\r");
     return FALSE;
   }
-  percent = 0;
 
   if(c->getMana()<100){
     c->sendTo("You lack the chi.\n\r");
@@ -52,32 +49,32 @@ static int quiveringPalm(TBeing *c, TBeing *v)
   c->reconcileHurt(v, 0.1);
 
   int bKnown = c->getSkillValue(SKILL_QUIV_PALM);
+  int specialAttackValue = c->specialAttack(v, SKILL_QUIV_PALM);
 
   c->reconcileDamage(v, 0,SKILL_QUIV_PALM);
 
-  int dmg=bKnown*10;
+  int killThreshold=bKnown*10;
+  int dam = 0;
 
-  if (v->getHit() > dmg){
-    SV(SKILL_QUIV_PALM);
-    act("$N seems unaffected by the vibrations.", 
-         FALSE, c, NULL, v, TO_CHAR);
-    act("$n touches you, but you ignore the puny vibrations.", 
-         FALSE, c, NULL, v, TO_VICT);
-    act("$n touches $N, but $E ignores it.", 
-         FALSE, c, NULL, v, TO_NOTVICT);
-    aff.type = AFFECT_SKILL_ATTEMPT;
-    aff.duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
-    aff.modifier = SKILL_QUIV_PALM;
-    aff.location = APPLY_NONE;
-    aff.bitvector = 0;
-    c->affectTo(&aff, -1);
+  // Success case
+  if (c->bSuccess(bKnown, SKILL_QUIV_PALM) &&
+      (specialAttackValue == COMPLETE_SUCCESS || specialAttackValue == GUARANTEED_SUCCESS || specialAttackValue == PARTIAL_SUCCESS)) {
+    if (v->getHit() > killThreshold){
+      SV(SKILL_QUIV_PALM);
+      act("$N seems less affected by the vibrations.", FALSE, c, NULL, v, TO_CHAR);
+      act("$n touches you, but you resist the vibrations.", FALSE, c, NULL, v, TO_VICT);
+      act("$n touches $N, but $E resists it.", FALSE, c, NULL, v, TO_NOTVICT);
 
-    return TRUE;
-  }
+      dam = ::number(bKnown * 10, bKnown * c->GetMaxLevel());
 
-  if (c->bSuccess(bKnown + percent, SKILL_QUIV_PALM) &&
-      ((i = c->specialAttack(v, SKILL_QUIV_PALM)) || (i == GUARANTEED_SUCCESS))) {
-    int dam = v->getHit()+100;
+      if (specialAttackValue == PARTIAL_SUCCESS) {
+        dam /= 2;
+      }
+    }
+    else {
+      dam = v->getHit()+100;
+    }
+
     if (c->willKill(v, dam, SKILL_QUIV_PALM, false)) {
       act("$N is killed instantly by the dreaded quivering palm.", 
             FALSE, c, NULL, v, TO_CHAR);
@@ -93,7 +90,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     }
 
     aff.type = SKILL_QUIV_PALM;
-    aff.duration = 4 * Pulse::UPDATES_PER_MUDHOUR;
+    aff.duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
     aff.modifier = 0;
     aff.location = APPLY_NONE;
     aff.bitvector = 0;

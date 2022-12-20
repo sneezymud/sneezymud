@@ -1377,7 +1377,7 @@ class TBeing : public TThing {
   void doPrompt(const char *);
   virtual void doPurge(const char *);
   virtual void doSet(const char *);
-  int backstabHit(TBeing *, TThing *);
+  int backstabHit(TBeing *, TThing *, int);
   int throatSlitHit(TBeing *, TThing *, int);
   int critFailureChance(TBeing *, TThing *, spellNumT);
   void critHitEqDamage(TBeing *, TThing *, int);
