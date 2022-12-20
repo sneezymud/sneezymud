@@ -2713,8 +2713,19 @@ void processAllInput()
           continue;
         } 
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
-          delete d->character;
-          d->character = NULL;
+          if (!d->character) continue;
+          
+          if (d == d->character->desc) {
+            vlogf(LOG_BUG, format("d == d->character->desc inside "
+                                  "processAllInput() for %s (Account: %s)") %
+                             d->character->getName() %
+                             (d->account ? d->account->name : "unknown"));
+            delete d->character;
+            d = nullptr;
+          } else {
+            delete d->character;
+            d->character = nullptr;
+          }
           continue;
         }
       } else if (d->str) 
