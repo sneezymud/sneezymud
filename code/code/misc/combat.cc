@@ -1919,8 +1919,7 @@ static int getMonkWeaponDam(const TBeing *ch, const TBeing *v, primaryTypeT ispr
     return (0);
 
   // account for stats
-  // float statDam = (ch->getStrDamModifier() + ch->getDexDamModifier()) / 2;
-  float statDam = ch->getStrDamModifier(); // we already account for dex bonuses in tohit -dash
+  float statDam = ch->getStrDamModifier();
 
   if(ch->doesKnowSkill(SKILL_IRON_FIST) && 
      !ch->equipment[WEAR_HAND_R] && !ch->equipment[WEAR_HAND_L]){
@@ -2048,7 +2047,6 @@ int TBeing::getWeaponDam(const TBeing *v, const TThing *wielded, primaryTypeT is
       // skill2 = SKILL_BAREHAND_SPEC;
       strcpy(buf, "Barehand");
       statDam = getStrDamModifier();
-  //      statDam = (getStrDamModifier() + getDexDamModifier()) / 2;
     } else if (wielded->isBluntWeapon()) {
       skill = SKILL_BLUNT_PROF;
       // skill2 = SKILL_BLUNT_SPEC;

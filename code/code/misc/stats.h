@@ -4,79 +4,77 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 // Stats.h
 //
 // A class for defining the stat system.
 
 #pragma once
 
+#include "enum.h"
+
+class sstring;
+class TBeing;
+
 enum statTypeT {
-     STAT_STR,
-     STAT_BRA,
-     STAT_CON,
-     STAT_DEX,
-     STAT_AGI,
-     STAT_INT,
-     STAT_WIS,
-     STAT_FOC,
-     STAT_PER,
-     STAT_CHA,
-     STAT_KAR,
-     STAT_SPE,
-     STAT_LUC,
-     STAT_EXT,
-     MAX_STATS
+  STAT_STR,
+  STAT_BRA,
+  STAT_CON,
+  STAT_DEX,
+  STAT_AGI,
+  STAT_INT,
+  STAT_WIS,
+  STAT_FOC,
+  STAT_PER,
+  STAT_CHA,
+  STAT_KAR,
+  STAT_SPE,
+  STAT_LUC,
+  STAT_EXT,
+  MAX_STATS,
+  MIN_STAT = STAT_STR,
+  MAX_STATS_USED = STAT_LUC
 };
-const statTypeT MIN_STAT=	statTypeT(0);
-const statTypeT MAX_STATS_USED=	statTypeT(STAT_SPE+1);
-extern statTypeT & operator++(statTypeT &c, int);
+
+extern statTypeT& operator++(statTypeT& c, int);
 
 extern int territory_adjustment(territoryT, statTypeT);
 extern sstring statToString(statTypeT whichStat);
 
-const int MAX_STAT_COMBAT=	5;
-const int MAX_STAT_LEARN=	3;
-const int MAX_STAT_UTIL	=4;
-const int MAX_STAT_EXTS	=2;
+double plotLevelDiff(int levelDiff, double minResult, double maxResult,
+  double averageResult, double power = 1.4);
 
 enum statSetT {
-     STAT_CHOSEN,
-     STAT_NATURAL,
-     STAT_CURRENT,
-     STAT_RACE,
-     STAT_AGE,
-     STAT_TERRITORY,
+  STAT_CHOSEN,
+  STAT_NATURAL,
+  STAT_CURRENT,
+  STAT_RACE,
+  STAT_AGE,
+  STAT_TERRITORY,
 };
 
 class Stats {
-
-  friend class Descriptor;
-  friend class TPerson;
+    friend class Descriptor;
+    friend class TPerson;
 
   private:
-    short values[MAX_STATS];
+    short values[MAX_STATS]{0};
 
-  public: 
+  public:
     Stats();
-    Stats(const Stats &);
-    ~Stats();
-    Stats & operator=(const Stats &);
 
-  Stats operator+(const Stats &operand);
-  Stats operator-(const Stats &operand);
-  
-  short get(statTypeT stat) const;
-  short set(statTypeT stat, short val);
-  short add(statTypeT stat, short mod);
+    Stats operator+(const Stats& operand);
+    Stats operator-(const Stats& operand);
 
-  void zero();
-  int total() const;
-  bool isDefault() const;
+    short get(statTypeT stat) const;
+    short set(statTypeT stat, short val);
+    short add(statTypeT stat, short mod);
 
-  sstring showStats(TBeing *caller);
+    void zero();
+    int total() const;
+    bool isDefault() const;
 
-  const sstring printStatHeader() const;
-  const sstring printRawStats(const TBeing *caller) const;
+    sstring showStats(TBeing* caller);
 
+    const sstring printStatHeader() const;
+    const sstring printRawStats(const TBeing* caller) const;
 };

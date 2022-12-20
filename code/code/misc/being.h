@@ -718,9 +718,6 @@ class TBeing : public TThing {
 
   bool applyTattoo(wearSlotT, const sstring &, silentTypeT);
 
-  double plotStat(statSetT, statTypeT, double, double, double, double n = 1.4) const;
-  int plotStat(statSetT, statTypeT, int a, int b, int c, double n = 1.4) const;
-  float plotStat(statSetT, statTypeT, float a, float b, float c, double n = 1.4) const;
   Stats getCurStats() const;
 
   void checkForStr(silentTypeT);
@@ -1390,7 +1387,6 @@ class TBeing : public TThing {
   int getWeaponDam(const TBeing *, const TThing *, primaryTypeT) const;
   virtual float getStrDamModifier() const;
   virtual float getWisDamModifier() const;
-  virtual float getDexDamModifier() const;
   int getDexReaction() const;
   int getAgiReaction() const;
   int getConShock() const;
@@ -2000,4 +1996,15 @@ class TBeing : public TThing {
   bool isTPerson() const;
   TPerson* toTPerson();
   const TPerson* toTPerson() const;
+
+  // Template functions
+  template <typename T>
+  T plotStat(statSetT whichSet, statTypeT whichStat, T minValue,
+    T maxValue, T average, double power = 1.4) const {
+    static constexpr int MIN_STAT = 5;
+    static constexpr int MAX_STAT = 205;
+    const int stat = getStat(whichSet, whichStat);
+    return plotValue<int, T>(stat, MIN_STAT, MAX_STAT, minValue, maxValue,
+      average, power);
+  }
 };
