@@ -1593,6 +1593,7 @@ class TBeing : public TThing {
   virtual bool getStolenFrom() const { return false; }
   virtual void setStolenFrom(bool) { }
   double getPercentHp() const;
+  double getPercentHpMissing() const;
 
   TBeing *fight() const;
 
