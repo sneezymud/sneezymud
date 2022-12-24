@@ -1899,6 +1899,10 @@ double TBeing::getPercentHp() const {
   return static_cast<double>(getHit()) / static_cast<double>(hitLimit());
 }
 
+double TBeing::getPercentHpMissing() const {
+  return 1.0 - getPercentHp();
+}
+
 bool TBeing::isTMonster() const {
   return dynamic_cast<const TMonster*>(this) != nullptr;
 };
