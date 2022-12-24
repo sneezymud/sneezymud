@@ -1017,6 +1017,12 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
   levelRatio = min(1.0, levelRatio);
   levelRatio = max(0.1, levelRatio);
 
+  // Protect PCs under 50 by gradually scaling limb damage against them up to full.
+  if (v->isPc()) {
+    damage *=
+      plotValue(static_cast<int>(GetMaxLevel()), 1, 50, 0.25, 1.0, 0.625, 1);
+  }
+
   // Ensure at least 1 damage is done to the limb
   const int limbDamage = max(static_cast<int>(damage * levelRatio), 1);
 
@@ -1063,13 +1069,15 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
   if (!percentChance(chance)) return true;
 
   // TODO (Cirius): Factor weapon/attacker's limb and victim's skin or eq
-  // material in TThing* eq = v->equipment[part_hit]; const auto* victMaterial
-  // =
-  //   eq ? eq->getMaterialTypeNumbers() :
-  //   &material_nums[v->getMaterial(part_hit)];
-  // const auto* attackerMaterial =
-  //   weapon ? weapon->getMaterialTypeNumbers() :
-  //   &material_nums[getMaterial(WEAR_HAND_R)];
+  // material into equation somehow.
+#if 0
+  TThing* eq = v->equipment[part_hit];
+  const auto* victMaterial = eq ? eq->getMaterialTypeNumbers()
+                                : &material_nums[v->getMaterial(part_hit)];
+  const auto* attackerMaterial = weapon
+                                   ? weapon->getMaterialTypeNumbers()
+                                   : &material_nums[getMaterial(WEAR_HAND_R)];
+#endif
 
   const int disease = isBluntAttack ? DISEASE_BRUISED : DISEASE_BLEEDING;
 
