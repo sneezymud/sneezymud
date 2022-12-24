@@ -1736,7 +1736,7 @@ int TBeing::chiRoom()
 
   if (bSuccess(bKnown, SKILL_CHI)) {
     act("A bright <W>aura<1> flares up around you, as you unleash your chi in a violent explosion!\n\r", TRUE, this, NULL, NULL, TO_CHAR);
-    act("A bright <W>aura<1> flares up around $N as unleashed chi energy blasts the room!\n\r", TRUE, this, NULL, NULL, TO_NOTVICT);
+    act("A bright <W>aura<1> flares up around $n as unleashed chi energy blasts the room!\n\r", TRUE, this, NULL, NULL, TO_NOTVICT);
 
     // Loop for each person in room
     std::vector<TBeing *> toDelete{};
