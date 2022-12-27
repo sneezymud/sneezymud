@@ -4,281 +4,384 @@ Wrayth - Ryoken~
 
 D 0 11234 5 1           Secret vine to Ryoken
 D 0 11100 4 1
-D 0 11112 5 2  TRAP-DOOR
+D 0 11112 5 2  trap-door
 D 0 11113 4 2
-D 0 11113 2 2  SOLID DOOR  
+D 0 11113 2 2  solid door
 D 0 11114 0 2
-D 0 11171 1 2  RED METAL GATE
+D 0 11171 1 2  red metal gate
 D 0 11166 3 2
-D 0 11161 2 1  BARREKS DOOR
+D 0 11161 2 1  barracks door
 D 0 11162 0 1
-D 0 11162 1 1  ROUND ROOM
+D 0 11162 1 1  round room
 D 0 11157 3 1
-D 0 11163 1 1  GUARDS DINING ROOM
+D 0 11163 1 1  guards dining room
 D 0 11158 3 1
-D 0 11158 0 1  ROUND ROOM
+D 0 11158 0 1  round room
 D 0 11157 2 1
-D 0 11157 1 1  KITCHEN
+D 0 11157 1 1  kitchen
 D 0 11152 3 1
-D 0 11152 2 1  STORAGE
+D 0 11152 2 1  storage
 D 0 11153 0 1
-D 0 11150 0 2  SPARTAN OFFICE
+D 0 11150 0 2  spartan office
 D 0 11149 2 2
-D 0 11159 3 2  BLACKSMITH
+D 0 11159 3 2  blacksmith
 D 0 11164 1 2
-D 0 11164 3 1  FORGE
+D 0 11164 3 1  forge
 D 0 11169 1 1
-D 0 11169 2 1  STORAGE
+D 0 11169 2 1  storage
 D 0 11170 0 1
-D 0 11192 3 1  RYOKEN INTERROGATOR
+D 0 11192 3 1  ryoken interrogator
 D 0 11195 1 1
-D 0 11195 0 1  GUEST QTS
+D 0 11195 0 1  guest quarters
 D 0 11194 2 1
-D 0 11192 0 1  STAIRS/G.GTS
+D 0 11192 0 1  stairs/g.gts
 D 0 11191 2 1
-D 0 11197 2 1  INCINERATOR
+D 0 11197 2 1  incinerator
 D 0 11198 0 1
-D 0 11237 5 1  INCINERATOR Grate
+D 0 11237 5 1  incinerator grate
 D 0 11240 4 1
-D 0 11240 0 1  INCINERATOR Grate
+D 0 11240 0 1  incinerator grate
 D 0 11241 2 1
-D 0 11242 4 1  INCINERATOR Grte
+D 0 11242 4 1  incinerator grate
 D 0 11243 5 1
-D 0 11243 4 1  INCINERATOR Grte
+D 0 11243 4 1  incinerator grate
 D 0 11196 5 1
-D 0 11195 5 1  DARK STAIR
+D 0 11195 5 1  dark stair
 D 0 11200 4 1
-D 0 11200 3 1  RECEPTION
+D 0 11200 3 1  reception
 D 0 11202 1 1
-D 0 11202 0 1  OFFICE
+D 0 11202 0 1  office
 D 0 11201 2 1
-D 0 11201 1 1  LAIR
+D 0 11201 1 1  lair
 D 0 11199 3 1
-D 0 11199 1 1  ASTRAL WALKWAY
+D 0 11199 1 1  astral walkway
 D 0 11203 3 1
-D 0 11203 1 1  SANCTUM
+D 0 11203 1 1  sanctuary
 D 0 11204 3 1
-D 0 11210 1 1  ALARIC
+D 0 11210 1 1  alaric
 D 0 11209 3 1
-D 0 11215 1 1  BENJIMEN
+D 0 11215 1 1  benjamin
 D 0 11214 3 1
-D 0 11220 1 1  EXSIL
+D 0 11220 1 1  exsil
 D 0 11219 3 1
-D 0 11224 2 1  RECORDS
+D 0 11224 2 1  records
 D 0 11229 0 1
-D 0 11231 3 2  BEDCHAMBER
+D 0 11231 3 2  bedchamber
 D 0 11230 1 2
-D 0 11231 1 1  DINING ROOM
+D 0 11231 1 1  dining room
 D 0 11232 3 1
-D 0 11232 1 1  SERVENT HALL
+D 0 11232 1 1  servant hall
 D 0 11233 3 1
-D 0 11228 3 1  WIDE HALL
+D 0 11228 3 1  wide hall
 D 0 11227 1 1
-D 0 11222 3 1  SERVENT QTS.
+D 0 11222 3 1  servant quarters.
 D 0 11223 1 1
-D 0 11218 0 1  STERILE ROOM
+D 0 11218 0 1  sterile room
 D 0 11213 2 1
-D 0 11213 0 1  STORAGE
+D 0 11213 0 1  storage
 D 0 11208 2 1
-O 0 11115 1 11187   SM. RED ST.
-O 0 11115 1 11188    
-O 0 11115 1 11189    
-O 0 11115 1 11185    
-O 0 11115 1 11184    
-O 0 11115 1 11183    
-O 0 11115 1 11182    
-O 0 11115 1 11178    
-O 0 11115 1 11179    
-O 0 11115 1 11180    
-O 0 11115 1 11181    
-O 0 11115 1 11176    
-O 0 11115 1 11175    
-O 0 11115 1 11174    
-O 0 11116 1 11177   LRG. RED ST.
-O 0 11109 1 11149   TITAN. DESK
-O 0 11112 1 11149   CAST IR. CHAIRS
-O 0 11110 1 11149   TITAN CHAIR
-O 0 11134 1 11164   BED
-O 0 11135 1 11164   WASH BASI N
-O 0 11117 1 11195   RED CHAIRS
-O 0 11118 1 11195   LRG. RED DESK
-O 0 11119 1 11195   LRG. RED CHAIR
-O 0 11121 1 11201   DESK
-O 0 11117 1 11201   RED CHAIRS
-O 0 11136 1 11202   COUCH
-O 0 11122 1 11199   TAPESTRY
-O 0 11111 1 11231   THRONE
-O 0 11123 1 11232   BONE TABLE
-O 0 11117 1 11232   RED CHAIRS (12)
-O 0 11125 1 11208   BODIES
-O 0 11124 1 11213   DIAMOND TABLES
-O 0 11126 1 11229   DIRECTION ORB
-O 0 11127 1 11229   SCROLL CASES
-O 0 11137 1 11230   HIGH LORD BED
+O 0 11115 1 11187   small red st.
+O 0 11115 1 11188
+O 0 11115 1 11189
+O 0 11115 1 11185
+O 0 11115 1 11184
+O 0 11115 1 11183
+O 0 11115 1 11182
+O 0 11115 1 11178
+O 0 11115 1 11179
+O 0 11115 1 11180
+O 0 11115 1 11181
+O 0 11115 1 11176
+O 0 11115 1 11175
+O 0 11115 1 11174
+O 0 11116 1 11177   large red st
+O 0 11109 1 11149   titan desk
+O 0 11112 1 11149   cast iron chairs
+O 0 11110 1 11149   titan chair
+O 0 11134 1 11164   bed
+O 0 11135 1 11164   wash basin
+O 0 11117 1 11195   red chairs
+O 0 11118 1 11195   large red desk
+O 0 11119 1 11195   large red chair
+O 0 11121 1 11201   desk
+O 0 11117 1 11201   red chairs
+O 0 11136 1 11202   couch
+O 0 11122 1 11199   tapestry
+O 0 11111 1 11231   throne
+O 0 11123 1 11232   bone table
+O 0 11117 1 11232   red chairs
+O 0 11125 1 11208   bodies
+O 0 11124 1 11213   diamond tables
+O 0 11126 1 11229   direction orb
+O 0 11127 1 11229   scroll cases
+O 0 11137 1 11230   high lord bed
 O 0 151 2 11169                          Anvil
 O 0 152 2 11169                          Forge
 
-M 0 11237 1 11237   PIT FIEND
-? 0 50 0 E   
-E 1 11237 6 19   MYSTIC DAGGER
-M 0 11100 1 11201   SPYMASTER
-H 1 4 6    PALA
-G 1 11199 1    CRYST KEY
-M 0 11107 2 11112   RED ROBED SPY
-G 1 11113 1    SWAMP KEY
-? 0 3 0 E   
-E 1 11102 20 4   BODY
-M 0 11107 3 11103   RED ROBED SPY
-? 0 3 0 E  
-E 1 11102 20 4   BODY
-M 0 11107 2 11109   RED ROBED SPY
-? 0 3 0 E   
-E 1 11102 20 4   BODY
-M 0 11107 3 11118   RED ROBED SPY
-? 0 3 0 E  
-E 1 11102 20 4   BODY
-M 0 11108 2 11113   TEMPLE GUARD
-G 1 11114 1    SOLID METAL KEY
-? 0 5 0 E   
-E 1 11104 15 4   BODY
-M 0 11108 2 11119   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11107 15 5   HEAD
-M 0 11108 1 11139   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11100 15 3   NECK
-M 0 11108 2 11137   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11120 30 17   L. WRIST
-M 0 11108 2 11142   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11138 30 7   L. LEG
-M 0 11108 2 11136   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11139 15 15   WAIST
-M 0 11108 2 11129   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11140 30 9   L. FOOT
-M 0 11108 2 11128   TEMPLE GUARD
-? 0 3 0 E   
-E 1 11141 30 11   L.HAND
-M 0 11108 2 11121   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11142 15 14   BACK
-M 0 11108 2 11133   TEMPLE GUARD
-? 0 5 0 E   
-E 1 11143 30 13   L. ARM
-M 0 11111 1 11171   GATE GUARD
-G 1 11166 1    RED METAL KEY
-? 0 4 0 E
-E 1 11101 10 4   BODY
-M 0 11111 1 11166   GATE GUARD
-? 0 4 0 E
-E 1 11101 10 4   BODY
-M 0 11111 1 11158   GATE GUARD
-? 0 4 0 E
-E 1 11101 10 4   BODY
-M 0 11111 2 11150   GATE GUARD
-G 1 11149 1    TITAN KEY
-? 0 4 0 E
-E 1 11101 10 4   BODY
-M 0 11130 1 11169   BLACKSMITH
-G 1 11170 1    GLOWING RED KEY
-? 0 7 0 E   
-E 1 11105 3 18   HOLD RIGHT (PAIRED)
-M 0 11125 1 11195   INTERROGATOR
-G  1 11200 1    BLACK METAL KEY
-? 0 5 0 E  
-E 1 11133 80 19   HOLD LEFT
-M 0 11124 1 11231   HIGH LORD
-H 1 4 6    PALA
-G 1 11230 1    MYSTIC KEY
-? 0 5 0 E   30%
-E 1 11108 10 5   HEAD
-M 0 11115 1 11187   PRAYING RYOK.
-M 0 11115 1 11188   PRAYING RYOK.
-M 0 11115 1 11189   PRAYING RYOK.
-M 0 11115 1 11182   PRAYING RYOK
-M 0 11115 1 11183   PRAYING RYOK
-M 0 11115 1 11184   PRAYING RYOK
-M 0 11115 1 11185   PRAYING RYOK
-M 0 11115 1 11178   PRAYING RYOK
-M 0 11115 1 11179   PRAYING RYOK
-M 0 11115 1 11180   PRAYING RYOK
-M 0 11115 1 11181   PRAYING RYOK
-M 0 11115 1 11174   PRAYING RYOK
-M 0 11115 1 11175   PRAYING RYOK
-M 0 11115 1 11176   PRAYING RYOK
-M 0 11116 1 11179   PRAYER LEAD
-H 1 4 6    PALA
-? 0 15 0 E   65%
-E 1 11133 80 19    HOLD LEFT
-M 0 11116 1 11183   PRAYER LEAD
-H 1 4 6    PALA
-? 0 15 0 E   65%
-E 1 11133 80 19    HOLD LEFT
-M 0 11116 1 11188   PRAYER LEAD
-H 1 4 6    PALA
-? 0 15 0 E   65%
-E 1 11133 80 19    HOLD LEFT
-M 0 11110 2 11122   TEMPLE CLEAN
-?  0 80 0 G   80%
-G 1 11128 80    BUCKET
-G 1 11129 80    RAG
-M 0 11110 1 11135   TEMPLE CLEAN
-?  0 80 0 G   80%
-G 1 11128 80    BUCKET
-G 1 11129 80    RAG
-M 0 11110 1 11180   TEMPLE CLEAN
-?  0 80 0 G   80%
-G 1 11128 80    BUCKET
-G 1 11129 80    RAG
-M 0 11106 1 11219   GEN EXSIL
-? 0 5 0 E   50%
-E 1 11103 2 19   HOLD LEFT
-M 0 11109 1 11155   YNG GUARD
-M 0 11109 1 11162   YNG GUARD
-M 0 11109 1 11168   YNG GUARD
-M 0 11109 2 11157   YNG GUARD
-M 0 11109 1 11173   YNG GUARD
-M 0 11109 2 11147   YNG GUARD
-M 0 11109 2 11135   YNG GUARD
-M 0 11109 1 11114   YNG GUARD
-M 0 11112 1 11152   COOK FOR GUARDS
-G 1 11144 100    LADLE
-M 0 11113 1 11149   CAPT GUARDS CURRENTLY LOADING ELSEWHERE
-G 1 29022 25       RED ORE
-M 0 11114 1 11153   ESCAPED PRIS
-M 0 11114 1 11154   ESC PRIS
-M 0 11114 1 11192   ESC PRIS
-M 0 11117 1 11204   SEN ARCH
-G 1 11130 30    SKETCH PAD
-M 0 11118 1 11204   JR. ARCH
-M 0 11119 1 11202   BODY GRD.  SPYMASTER
-M 0 11120 2 11233   SLAVE
-M 0 11120 3 11231   SLAVE
-M 0 11120 2 11221   SLAVE
-M 0 11121 1 11213   COOK FOR H.L.
-M 0 11122 2 11213   SERVENT
-M 0 11122 2 11223   SERVENT
-M 0 11122 2 11232   SERVENT
-M 0 11122 2 11231   SERVENT
-M 0 11122 2 11226   SERVENT
-M 0 11123 1 11230   MISTRESS
-M 0 11126 1 11194   PRISONER
-M 0 11126 2 11193   PRISONER
-M 0 11126 1 11190   PRISONER
-M 0 11126 2 11196   PRISONER
-M 0 11126 1 11197   PRISONER
-M 0 11127 3 11193   ASS. INTERR
-? 0 5 0 E   60%
-E 1 11131 50 19   HOLD LEFT
-M 0 11128 1 11214   GEN. BENJ
-H 1 4 6    PALA
-M 0 11129 1 11209   GEN ALA
-H 1 4 6    PALA
-? 0 35 0 E   35%
-E 1 11132 2 18   HOLD RIGHT (PAIRED)
-M 0 11105 1 11173 3  SHADOW CAT
-S
+M 0 11237 1 11237   pit fiend
+? 0 15 0 E
+E 1 11237 6 19   mystic dagger
 
+M 0 11100 1 11201   spymaster		55
+? 0 9 0 E
+E 1 11102 20 4   red robe
+
+G 1 11199 1    crystal key
+
+M 0 11107 2 11112   red robed spy
+G 1 11113 1    swamp key
+? 0 9 0 E
+E 1 11102 20 4   red robe
+
+M 0 11107 3 11103   red robed spy
+? 0 9 0 E
+E 1 11102 20 4   red robe
+
+M 0 11107 2 11109   red robed spy
+? 0 8 0 E
+E 1 11102 20 4   red robe
+
+M 0 11107 3 11118   red robed spy
+? 0 8 0 E
+E 1 11102 20 4   red robe
+
+M 0 11108 2 11113   temple guard
+G 1 11114 1    solid metal key
+Y 0 26 8	red runed set
+
+M 0 11108 2 11119   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 1 11139  	temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 2 11137   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 2 11142   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 2 11136   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 2 11129   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 2 11128   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 2 11121   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11108 2 11133   temple guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11111 1 11171   gate guard
+G 1 11166 1    red metal key
+Y 0 26 8	red runed set
+? 0 4 0 E
+E 1 11101 10 4   red runed suit
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11111 1 11166   gate guard
+Y 0 26 8	red runed set
+? 0 4 0 E
+E 1 11101 10 4   red runed suit
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11111 1 11158   gate guard
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11101 10 4   red runed suit
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11111 2 11150   gate guard
+G 1 11149 1    titanium key
+Y 0 26 8	red runed set
+? 0 8 0 E
+E 1 11101 10 4   red runed suit
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+M 0 11130 1 11169   blacksmith
+G 1 11170 1    GLOWING RED KEY
+? 0 7 0 E
+E 1 11105 3 18   runed hammer
+
+M 0 11125 1 11195   interrogator
+G  1 11200 1    BLACK METAL KEY
+? 0 5 0 E
+E 1 11133 80 19   flaying whip
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+
+
+M 0 11124 1 11231   high lord of ryoken
+G 1 11230 1    mystic key
+? 0 5 0 E   30%
+E 1 11108 10 5   red runed crown
+? 0 8 0 E
+E 1 11101 10 4   red runed suit
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+Y 0 26 8	red runed set
+
+M 0 11115 1 11187  praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11188   praying ryoken
+Y 0 8 7			studded leather
+M 0 11115 1 11189   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11182   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11183   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11184   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11185   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11178   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11179   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11180   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11181   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11174   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11175   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11115 1 11176   praying ryoken
+Y 0 8 7			studded leather
+
+M 0 11116 1 11179   prayer leader
+? 0 15 0 E
+E 1 11133 80 19    flaying whip
+
+M 0 11116 1 11183   PRAYER LEAD
+? 0 15 0 E
+E 1 11133 80 19    flaying whip
+
+M 0 11116 1 11188   prayer leader
+? 0 15 0 E
+E 1 11133 80 19    flaying whip
+
+M 0 11110 2 11122   temple cleaner
+?  0 80 0 G   80%
+G 1 11128 80    bucket
+G 1 11129 80    bloody rag
+
+M 0 11110 1 11135   temple cleaner
+?  0 80 0 G   80%
+G 1 11128 80    bucket
+G 1 11129 80    bloody rag
+M 0 11110 1 11180   temple cleaner
+?  0 80 0 G   80%
+G 1 11128 80    bucket
+G 1 11129 80    bloody rag
+
+M 0 11106 1 11219   general exsil
+? 0 10 0 E
+E 1 11103 2 19   dagger myst
+? 0 4 0 E
+E 1 11101 10 4   red runed suit
+Y 0 26 8	red runed set
+
+M 0 11109 1 11155   young guard
+Y 0 26 4	red runed set
+
+M 0 11109 1 11162   young guard
+Y 0 26 4	red runed set
+
+M 0 11109 1 11168   young guard
+Y 0 26 4	red runed set
+
+M 0 11109 2 11157   young guard
+Y 0 26 4	red runed set
+
+M 0 11109 1 11173   young guard
+Y 0 26 4	red runed set
+
+M 0 11109 2 11147   young guard
+Y 0 26 4	red runed set
+
+M 0 11109 2 11135   young guard
+Y 0 26 4	red runed set
+
+M 0 11109 1 11114   young guard
+Y 0 26 4	red runed set
+
+M 0 11112 1 11152   cook for guards
+G 1 11144 100    ladle
+
+M 0 11113 1 11149   guard captain
+G 1 29022 25       red ore
+
+M 0 11114 1 11153   escaped prisoner
+M 0 11114 1 11154   escaped prisoner
+M 0 11114 1 11192   escaped prisoner
+M 0 11117 1 11204   senior architect
+G 1 11130 30    sketch pad
+M 0 11118 1 11204   junior architect
+
+M 0 11119 1 11202   spymaster bodyguard
+M 0 11120 2 11233   slave
+M 0 11120 3 11231   slave
+M 0 11120 2 11221   slave
+M 0 11121 1 11213   cook
+M 0 11122 2 11213   servant
+M 0 11122 2 11223   servant
+M 0 11122 2 11232   servant
+M 0 11122 2 11231   servant
+M 0 11122 2 11226   servant
+M 0 11123 1 11230   mistress
+M 0 11126 1 11194   prisoner
+M 0 11126 2 11193   prisoner
+M 0 11126 1 11190   prisoner
+M 0 11126 2 11196   prisoner
+M 0 11126 1 11197   prisoner
+M 0 11127 3 11193   assistant interrogator
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+M 0 11128 1 11214   general benjamin
+? 0 8 0 E
+E 1 11131 50 19   red hook sword
+M 0 11129 1 11209   alaric
+? 0 35 0 E
+E 1 11132 2 18   bloody blade of blood
+M 0 11105 1 11173 3  shadow cat
+S

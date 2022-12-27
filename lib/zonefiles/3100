@@ -38,138 +38,208 @@ O 0 3147 1 3285          Stone
 O 0 3148 1 3169          Gravestone
 O 0 3149 1 3149          Sign
 M 0 3101 1 3178         Tuck the Bandit
-? 0 2 0 E
-E 1 3102 1 4             Skimpy Suit
-? 0 20 0 E
+? 0 10 0 E
+E 1 3111 40 4            Camouflage Vest
+? 0 12 0 E
 E 1 3103 1 14             Heavy Cloak
+? 0 12 0 E
+E 1 3102 1 15             purple ribbon belt
+? 0 10 0 E
+E 1 3112 40 6            Camouflage Pants
 ? 0 20 0 E
-E 1 3104 2 19            Paired Epee
+E 1 3104 2 19            Epee
 M 0 3102 1 3239         Major Oak
-? 0 4 0 E
-E 1 3105 5 18            Huge Sword
-? 0 20 0 E
-E 1 3106 50 4            Animal Hides
-? 0 20 0 E
-E 1 3107 100 8           Heavy Boot
-? 0 20 0 E
-E 1 3107 100 9           Heavy Boot
+? 0 8 0 E
+E 1 3150 20 4            big blue suit
+? 0 12 0 E
+E 1 3103 999 14             Heavy Cloak
+? 0 8 0 E
+E 1 3105 999 18            Huge Sword
+? 0 12 0 E
+E 1 3106 999 5            Animal Hides
+? 0 12 0 E
+E 1 3107 999 8           Heavy Boot
+? 0 12 0 E
+E 1 3107 999 9           Heavy Boot
 M 0 3103 1 3239         Wizard
 ? 0 8 0 E
-E 1 3108 1 5             Terrifying Helmet
+E 1 3108 999 5             Terrifying Helmet
 ? 0 8 0 E
-E 1 3109 1 4             Terrifying Armor
+E 1 3109 999 4             Terrifying Armor
 ? 0 8 0 E
-E 1 3110 4 8             Terrifying Boot
+E 1 3110 999 8             Terrifying Boot
 ? 0 8 0 E
-E 1 3110 4 9             Terrifying Boot
+E 1 3110 999 9             Terrifying Boot
+? 0 10 0 E
+E 1 3123 999 4             strange cloak
+? 0 10 0 E
+E 1 3124 999 12            strange sleeve
+? 0 10 0 E
+E 1 3124 999 13           strange sleeve
+? 0 10 0 E
+E 1 3129 999 6             strange leggings
+? 0 2 0 E
+E 1 3102 999 15             purple ribbon belt
+? 0 12 0 E
+E 1 2925 999 2          spikard strange ring
 M 0 3104 1 3285         Shadowfoot the Bandit
 ? 0 10 0 E
-E 1 3111 40 4            Camouflage Vest
+E 1 3111 999 4            Camouflage Vest
+? 0 12 0 E
+E 1 3103 999 14             Heavy Cloak
 ? 0 10 0 E
-E 1 3112 40 6            Camouflage Pants
+E 1 3112 999 6            Camouflage Pants
 ? 0 10 0 E
-E 1 3113 20 19           Brief Blade
+E 1 3113 999 19           Brief Blade
 M 0 3105 1 3229         Falstaff the Huscarl
 ? 0 10 0 E
-E 1 3106 50 4            Animal Hides
+E 1 3106 999 5            Animal Hides
 ? 0 10 0 E
-E 1 3107 100 8           Heavy Boot
+E 1 3107 999 8           Heavy Boot
 ? 0 10 0 E
-E 1 3107 100 9           Heavy Boot
+E 1 3107 999 9           Heavy Boot
 M 0 3106 1 3285         Much the Bandit
 ? 0 5 0 E
-E 1 3111 40 4            Camouflage Vest
+E 1 3111 999 4            Camouflage Vest
+? 0 12 0 E
+E 1 3103 999 14             Heavy Cloak
 ? 0 5 0 E
-E 1 3112 40 6            Camouflage Pants
+E 1 3112 999 6            Camouflage Pants
 ? 0 10 0 E
-E 1 3113 20 19           Brief Blade
+E 1 3113 999 19           Brief Blade
 M 0 3107 1 3159         Yorick the Undead
-? 0 20 0 E
-E 1 3126 3 3             Medallion of Aym
+? 0 8 0 E
+E 1 3108 999 5             Terrifying Helmet
+? 0 8 0 E
+E 1 3109 999 4             Terrifying Armor
+? 0 8 0 E
+E 1 3110 999 8             Terrifying Boot
+? 0 8 0 E
+E 1 3110 999 9             Terrifying Boot
+? 0 10 0 E
+E 1 3123 999 4             strange cloak
+? 0 10 0 E
+E 1 3124 999 12            strange sleeve
+? 0 10 0 E
+E 1 3124 999 13           strange sleeve
+? 0 10 0 E
+E 1 3129 999 6             strange leggings
+? 0 12 0 E
+E 1 3102 999 15             purple ribbon belt
+? 0 12 0 E
+E 1 3126 999 3             Medallion
+? 0 12 0 E
+E 1 2925 999 2          spikard strange ring
 M 0 3108 1 3285         OUNary the Bandit
 ? 0 7 0 E
-E 1 3111 40 4            Camouflage Vest
+E 1 3111 999 4            Camouflage Vest
+? 0 12 0 E
+E 1 3103 999 14             Heavy Cloak
 ? 0 7 0 E
-E 1 3112 40 6            Camouflage Pants
+E 1 3112 999 6            Camouflage Pants
 ? 0 10 0 E
-E 1 3113 20 19           Brief Blade
+E 1 3113 999 19           Brief Blade
 M 0 3109 5 3234         old buck
 ? 0 10 0 E
-E 1 3115 5 5             antlers
+E 1 3115 999 5             antlers
 M 0 3110 9 3206         dactyl
 M 0 3111 1 3285         Took the Bandit
 ? 0 10 0 E
-E 1 3111 40 4            Camouflage Vest
+E 1 3111 999 4            Camouflage Vest
+? 0 12 0 E
+E 1 3103 999 14             Heavy Cloak
 ? 0 10 0 E
-E 1 3112 40 6            Camouflage Pants
+E 1 3112 999 6            Camouflage Pants
 ? 0 10 0 E
-E 1 3113 20 19           Brief Blade
+E 1 3113 999 19           Brief Blade
 M 0 3112 10 3216        a huscarl
 ? 0 10 0 E
-E 1 3106 50 4            Animal Hides
+E 1 3106 999 15            Animal Hides
 ? 0 10 0 E
-E 1 3107 100 8           Heavy Boot
+E 1 3107 999 8           Heavy Boot
 ? 0 10 0 E
-E 1 3107 100 9           Heavy Boot
+E 1 3107 999 9           Heavy Boot
 M 0 3112 10 3177        a huscarl
 ? 0 10 0 E
-E 1 3106 50 4            Animal Hides
+E 1 3106 999 15            Animal Hides
 ? 0 20 0 E
-E 1 3107 100 8           Heavy Boot
+E 1 3107 999 8           Heavy Boot
 ? 0 20 0 E
-E 1 3107 100 9           Heavy Boot
+E 1 3107 999 9           Heavy Boot
 M 0 3113 1 3228         Evelyn Necker
+? 0 8 0 E
+E 1 3108 999 5             Terrifying Helmet
+? 0 8 0 E
+E 1 3109 999 4             Terrifying Armor
+? 0 8 0 E
+E 1 3110 999 8             Terrifying Boot
+? 0 8 0 E
+E 1 3110 999 9             Terrifying Boot
 ? 0 10 0 E
-E 1 3123 4 4             Aym Armor
+E 1 3123 999 4             strange cloak
 ? 0 10 0 E
-E 1 3124 8 12            Aym Sleeve
+E 1 3124 999 12            strange sleeve
 ? 0 10 0 E
-E 1 3124 8 13            Aym Sleeve
+E 1 3124 999 13           strange sleeve
 ? 0 10 0 E
-E 1 3129 4 6             Aym Leggings
+E 1 3129 999 6             strange leggings
+? 0 12 0 E
+E 1 3102 999 15             purple ribbon belt
+? 0 12 0 E
+E 1 3126 999 3             Medallion
+? 0 12 0 E
+E 1 2925 999 2          spikard strange ring
 M 0 3114 20 3109        young buck
 M 0 3115 1 3100         tavern wench
-E 1 3136 5 15            warm blanket
+? 0 20 0 E
+E 1 3136 999 15            warm blanket
 ? 0 50 0 G
 G 1 3138 10              lionseed
 M 0 3116 9 3103         sister
 ? 0 20 0 E
-E 1 3116 36 4            Nun Robe
+E 1 3116 999 4            Nun Robe
 ? 0 10 0 O
 O 1 3122 1 3103            Hassock
 M 0 3117 1 3187         Will Wavepyke
-? 0 20 0 E
-E 1 3117 50 4            shirt
-? 0 20 0 E
-E 1 3118 50 6            pants
-? 0 20 0 E
-E 1 3119 10 19           dirk
+? 0 12 0 E
+E 1 3117 999 4            shirt
+? 0 12 0 E
+E 1 3118 999 6            pants
+? 0 12 0 E
+E 1 3119 999 19           dirk
 M 0 3118 1 3189         Noah
-? 0 20 0 E
-E 1 3117 50 4            shirt
-? 0 20 0 E
-E 1 3118 50 6            pants
-? 0 20 0 E
-E 1 3119 10 19           dirk
+? 0 12 0 E
+E 1 3117 999 4            shirt
+? 0 12 0 E
+E 1 3118 999 6            pants
+? 0 12 0 E
+E 1 3119 999 19           dirk
 M 0 3119 10 3210        gangmember
-? 0 20 0 E
-E 1 3117 50 4            shirt
-? 0 20 0 E
-E 1 3118 50 6            pants
-? 0 20 0 E
-E 1 3119 10 19           dirk
+? 0 12 0 E
+E 1 3117 999 4            shirt
+? 0 12 0 E
+E 1 3118 999 6            pants
+? 0 12 0 E
+E 1 3119 999 19           dirk
 M 0 3120 10 3168        serving wench
-? 0 20 0 E
-E 1 3120 50 4            low-cut blouse
-? 0 20 0 E
-E 1 3121 50 15            short skirt
+? 0 12 0 E
+E 1 3120 999 4            low-cut blouse
+? 0 12 0 E
+E 1 3121 999 15            short skirt
 M 0 3121 4 3178         actress
 ? 0 20 0 G
 G 1 3137 12              lionsblood
 M 0 3122 1 3238         Roderick
-? 0 20 0 E
-E 1 3127 20 4            regal robes
-? 0 20 0 E
-E 1 3128 20 18           sceptre
+? 0 12 0 E
+E 1 3127 999 4            regal robes
+? 0 12 0 E
+E 1 3128 999 18           royal sceptre
+? 0 12 0 E
+E 1 3102 1 15             purple ribbon belt
+? 0 12 0 E
+E 1 3126 999 3             Medallion
+? 0 12 0 E
+E 1 2925 999 2          spikard strange ring
 S
+
 

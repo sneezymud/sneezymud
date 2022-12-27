@@ -29,60 +29,68 @@ D 0 9044 3 1
 D 0 9044 2 1
 D 0 9045 0 1
 
-O 0 9025 1 9025	a single bed
-O 0 9026 1 9025	an old dusty wooden chest
-P 1 801 2 9026		silver potions inside chest
+O 0 9025 1 9025    a single bed
+O 0 9026 1 9025    an old dusty wooden chest
+P 1 801 10 9026        silver potions inside chest
+P 1 9034 3 9026    soaking wand
 O 0 9026 1 9032
-P 1 801 2 9026 		silver potions inside chest
-O 0 9037 1 9037	a huge canopy bed
-O 0 9044 1 9044	a comfortable couch
-O 0 9045 1 9045	a plain bed
-O 0 9043 1 9044	a large stone fireplace
-O 0 632 1 9044	a heavy oak bookshelf
+P 1 801 10 9026         silver potions inside chest
+P 1 9034 3 9026    soaking wand
+O 0 9037 1 9037    a huge canopy bed
+O 0 9044 1 9044    a comfortable couch
+O 0 9045 1 9045    a plain bed
+O 0 9043 1 9044    a large stone fireplace
+P 0 9030 2 9043    smoldering log
+P 0 9033 4 9043    iron poker
+O 0 632 1 9044    a heavy oak bookshelf
+P 1 31368 15 632    gusher scroll
 O 0 632 1 9040
+P 1 31368 15 632    gusher scroll
 O 0 632 1 9036
-O 0 26652 1 9033	a dark mahogany wardrobe
+P 1 31368 15 632    gusher scroll
+
+O 0 26652 1 9033    a dark mahogany wardrobe
 O 0 26652 1 9029
 O 0 26652 1 9037
-O 0 16111 1 9033	a bed
+O 0 16111 1 9033    a bed
 O 0 16111 1 9029
-O 0 6609 1 9032	a large bunk-bed
-O 0 5637 1 9042	a chair
+O 0 6609 1 9032    a large bunk-bed
+O 0 5637 1 9042    a chair
 
-M 0 9025 1 9025	a visiting orc
-M 0 9027 1 9027 	a disgraced chaos knight
+M 0 9025 1 9025    a visiting orc
+M 0 9027 1 9027     a disgraced chaos knight
 ? 0 10 0 E
-E 1 9027 9999 12	a badge of the chaos knight
-M 0 9029 1 9033	the ghost of a Brightmoon lass
+E 1 9027 9999 12    a badge of the chaos knight
+M 0 9029 1 9033    the ghost of a Brightmoon lass
 ? 0 10 0 E
-E 1 9028 9999 4		a set of ghostly robes
+E 1 9028 9999 4        a set of ghostly robes
 ? 0 10 0 E
-E 1 9029 9999 3		a hand-carved locket
-M 0 9031 1 9031	a stern Cult corsair
-M 0 9032 1 9032	the Commandant's servant
-? 0 10 0 E 
-E 1 9032 9999 12	towel
-M 0 9033 1 9042	a lazy dragoon
-M 0 9036 1 9036	a child of logrus	
-M 0 9036 1 9040	
-M 0 9037 1 9037	a visiting initiate
-M 0 9040 1 9043	a Garrison maid
+E 1 9029 9999 3        a hand-carved locket
+M 0 9031 1 9031    a stern Cult corsair
+M 0 9032 1 9032    the Commandant's servant
 ? 0 10 0 E
-E 1 9040 9999 11	a feather duster
+E 1 9032 9999 12    towel
+M 0 9033 1 9042    a lazy dragoon
+M 0 9036 1 9036    a child of logrus
+M 0 9036 1 9040
+M 0 9037 1 9037    a visiting initiate
+M 0 9040 1 9043    a Garrison maid
 ? 0 10 0 E
-E 1 9041 9999 4		a maid's outfit
+E 1 9040 9999 11    a feather duster
+? 0 10 0 E
+E 1 9041 9999 4        a maid's outfit
 M 0 9040 1 9026
 ? 0 10 0 E
-E 1 9040 9999 11	a feather duster
+E 1 9040 9999 11    a feather duster
 ? 0 10 0 E
-E 1 9041 9999 4		a maid's outfit
-M 0 9042 1 9038	Garrison visitor
-M 0 9042 1 9034	
+E 1 9041 9999 4        a maid's outfit
+M 0 9042 1 9038    Garrison visitor
+M 0 9042 1 9034
 M 0 9042 1 9030
 M 0 9042 1 9029
-M 0 9044 1 9044	Commandant's cat
-M 0 9045 1 9045	Commandant's mistress
+M 0 9044 1 9044    Commandant's cat
+M 0 9045 1 9045    Commandant's mistress
 ? 0 10 0 E
-E 1 9042 9999 4		a red satin teddie
+E 1 9042 9999 4        a red satin teddie
+Y 0 104 8        black cloth
 S
-
