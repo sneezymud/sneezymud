@@ -2932,6 +2932,9 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
 int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifier, statTypeT primaryOffenseStat, statTypeT secondaryOffenseStat, statTypeT primaryDefenseStat, statTypeT secondaryDefenseStat, bool partialSuccessAllowed)
 {
   // sendTo(format("specialAttack called with sitMod (%i) ") % situationalModifier);
+  if (isImmortal() && isPlayerAction(PLR_NOHASSLE) &&
+      IS_SET(desc->autobits, AUTO_SUCCESS))
+    return COMPLETE_SUCCESS;
 
   if (situationalModifier < SITUATIONAL_MOD_LOWER_BOUND)
     situationalModifier = SITUATIONAL_MOD_LOWER_BOUND;
@@ -2965,7 +2968,7 @@ int TBeing::specialAttack(TBeing *target, spellNumT skill, int situationalModifi
          getStatMod(primaryOffenseStat) * 
          plotStat(STAT_CURRENT, secondaryOffenseStat, 0.92, 1.08, 1.0) / 
          target->getStatMod(primaryDefenseStat) / 
-         target->plotStat(STAT_CURRENT, primaryDefenseStat, 0.92, 1.08, 1.0);
+         target->plotStat(STAT_CURRENT, secondaryDefenseStat, 0.92, 1.08, 1.0);
 
   // sendTo(format("Modified roll is (%i) - \n") % roll);
 
