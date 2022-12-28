@@ -1621,9 +1621,11 @@ void TBeing::setNatSkillValue(spellNumT skill, int lValue)
   sk->setNatLearnedness(newValue);
 }
 
-double TBeing::getSkillLearnednessPercent(spellNumT skillNumber) const {
-  return (
-    static_cast<double>(getSkillValue(skillNumber)) / static_cast<double>(MAX_SKILL_LEARNEDNESS));
+double TBeing::getSkillLearnednessPercent(const spellNumT skillNumber) const {
+  const spellNumT skill = getSkillNum(skillNumber);
+  if (getSkillValue(skill) == SKILL_MIN) return 0;
+  return (static_cast<double>(getSkillValue(skill)) /
+          static_cast<double>(MAX_SKILL_LEARNEDNESS));
 }
 
 CSkill::CSkill()
