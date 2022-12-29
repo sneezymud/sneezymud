@@ -76,19 +76,23 @@ int TBeing::doWhirlwind()
   aff1.bitvector = 0;
   affectTo(&aff1, -1);
 
-  int castLevel = getSkillLevel(SKILL_WHIRLWIND);
   int skillLevel = getSkillValue(SKILL_WHIRLWIND);
   int successfulSkill = bSuccess(skillLevel, SKILL_WHIRLWIND);
 
   // Unsuccessful skill attempt
   if (!successfulSkill) {
-    act("You attempt to perform a sweeping attack, but fail miserably!", FALSE, this, NULL, NULL, TO_CHAR);
-    act("$n attempts to perform a sweeping attack, but instead just ends up looking silly!", FALSE, this, NULL, NULL, TO_ROOM);
-
-    return FALSE;
+    rc = whirlwindFail();
+  } else { 
+    rc = whirlwindSuccess();
   }
 
-  // Successful skill attempt
+  return rc;
+}
+
+int TBeing::whirlwindSuccess() { 
+  int rc;
+  auto *weapon = dynamic_cast<TBaseWeapon *>(heldInPrimHand());
+
   // Send messages to caster/room
   act("You perform a sweeping attack, striking out at every opponent nearby!", FALSE, this, NULL, NULL, TO_CHAR);
   act("$n performs a sweeping attack, striking out at everyone nearby!", FALSE, this, NULL, NULL, TO_ROOM);
@@ -117,7 +121,7 @@ int TBeing::doWhirlwind()
 
   // Apply whirlwind damage and delete dead victims in a separate loop. This is necessary because
   // when applying the damage from whirlwind there's a chance the victim will have an immediate flee
-  // triggered when taken below 10% health. If this happens during the previous loop, the victim is
+  // triggered when taken below 9% health. If this happens during the previous loop, the victim is
   // removed from the TRoom::stuff list being iterated and causes the iterator to become invalid
   // before the loop is complete, triggering a crash. Doing it in a secondary loop afterwards
   // prevents this.
@@ -125,6 +129,7 @@ int TBeing::doWhirlwind()
     if (being->inRoom() != in_room)
       continue;
 
+    int castLevel = getSkillLevel(SKILL_WHIRLWIND);
     rc = whirlwind(this, being, castLevel, damageType);
     if (!IS_SET_DELETE(rc, DELETE_VICT))
       continue;
@@ -135,4 +140,10 @@ int TBeing::doWhirlwind()
   // end loop 
 
   return rc;
+}
+
+int TBeing::whirlwindFail() {
+    act("You attempt to perform a sweeping attack, but fail miserably!", FALSE, this, NULL, NULL, TO_CHAR);
+    act("$n attempts to perform a sweeping attack, but instead just ends up looking silly!", FALSE, this, NULL, NULL, TO_ROOM);
+    return FALSE;
 }

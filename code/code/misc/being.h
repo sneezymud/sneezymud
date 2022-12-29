@@ -1012,6 +1012,14 @@ class TBeing : public TThing {
   void acidRoom();
   void freezeRoom();
 
+enum skillMissT {
+    TYPE_DEFAULT,
+    TYPE_DEX,
+    TYPE_STR,
+    TYPE_MONK,
+    TYPE_DEFENSE
+};
+
   int parseCommand(const sstring &, bool typedIn, bool doAlias=true);
   TComponent *findComponent(spellNumT) const;
   TSymbol *findHolySym(silentTypeT) const;
@@ -1092,13 +1100,31 @@ class TBeing : public TThing {
   bool canTrip(TBeing *, silentTypeT);
   bool canDisarm(TBeing *, silentTypeT);
   bool canStomp(TBeing *, silentTypeT);
+  int headbutt(TBeing *);
   bool canHeadbutt(TBeing *, silentTypeT);
+  int headbuttMiss(TBeing *);
+  int headbuttHit(TBeing *);
   bool canBodyslam(TBeing *, silentTypeT);
+  int bodyslamMiss(TBeing *, skillMissT);
+  int bodyslamHit(TBeing *);
+  int bodyslam(TBeing *);
   bool canSpin(TBeing *, silentTypeT);
+  int spinMiss(TBeing *, skillMissT);
+  int spinHit(TBeing *);
+  int spin(TBeing *);
   bool canKick(TBeing *, silentTypeT);
   bool canKneestrike(TBeing *, silentTypeT);
+  int kneestrike(TBeing *);
+  int kneestrikeMiss(TBeing *, int );
+  int kneestrikeHit(TBeing *);
+  int stompMiss(TBeing *);
+  int stompHit(TBeing *);
+  int stomp(TBeing *);
   bool canGrapple(TBeing *, silentTypeT);
   bool canDeathstroke(TBeing *, silentTypeT);
+  int deathstrokeSuccess(TBeing *);
+  int deathstrokeFail(TBeing *);
+  int deathstrokeCounterattack(TBeing *);
   bool canWhirlwind(TBeing *, silentTypeT);
   bool canWither(TBeing *, silentTypeT);
   bool canBoneBreak(TBeing *, silentTypeT);
@@ -1315,11 +1341,17 @@ class TBeing : public TThing {
   void doResize(const char *);
   int doDeathstroke(const char *, TBeing *);
   int doFocusAttack(const char *, TBeing *);
+  int focusAttackSuccess(TBeing *);
+  int focusAttackFail(TBeing *);
   int doOrient();
   int doWhirlwind();
+  int whirlwindSuccess();
+  int whirlwindFail();
   int doRally();
   int doFortify();
   int doSlam(const char *, TBeing *);
+  int slamSuccess(TBeing *);
+  int slamFail(TBeing *);
   void doBandage(const sstring &);
   int doBodyslam(const char *, TBeing *);
   int doSpin(const char *, TBeing *);
@@ -1985,6 +2017,9 @@ class TBeing : public TThing {
   // paladin auras
   virtual int checkAura(cmdTypeT cmd, TBeing *t);
   void doAura(sstring const& arg);
+
+  // advanced berserking
+  void doAdvancedBerserk(TBeing *);
 
   // shaman helpers
   TObj *getWornShamanMask();

@@ -2238,14 +2238,12 @@ int TBeing::hit(TBeing *target, int pulse)
   } 
 
   if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
-      // Adding a chance per round to gain a stack of bloodlust while berserking and upon
-      // passing a successful advanced berserking check
-      if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && 
-  	  doesKnowSkill(SKILL_BLOODLUST) && 
-	  !::number(0,5)) {
-        doBloodlust();
-      }
+    // Adding a chance per round to gain a stack of bloodlust while berserking and upon
+    // passing a successful advanced berserking check
+    if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING)) {
+  	  doAdvancedBerserk(target);
     }
+  }
 
   // we come in here multiple times
   // 1 round is Pulse::COMBAT long
