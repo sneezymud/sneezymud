@@ -32,6 +32,7 @@ class CDBrawling : public CDiscipline
     CDBrawling & operator=(const CDBrawling &a);
     virtual ~CDBrawling();
     virtual CDBrawling * cloneMe() { return new CDBrawling(*this); }
+    int procAdvancedBerserk(TBeing *);
 
   private:
 };

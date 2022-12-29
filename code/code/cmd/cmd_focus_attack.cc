@@ -5,7 +5,7 @@
 
 int TBeing::doFocusAttack(const char *argument, TBeing *vict)
 {
-  const int FOCUS_ATTACK_MOVE = 10;
+  const int FOCUS_ATTACK_MOVE = 2;
   TBeing *victim = nullptr;
   
   if (checkBusy()) {
@@ -27,6 +27,11 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
 
   if (getMove() < FOCUS_ATTACK_MOVE) {
     sendTo("You don't have the vitality to make the move!\n\r");
+    return FALSE;
+  }
+  
+  if (getCombatMode() == ATTACK_BERSERK) {
+    sendTo("You are berserking! You aren't able to focus!\n\r ");
     return FALSE;
   }
 
@@ -56,13 +61,19 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
   aff1.bitvector = 0;
   affectTo(&aff1, -1);
 
+  int rc;
   if (!bSuccess(getSkillValue(SKILL_FOCUS_ATTACK), SKILL_FOCUS_ATTACK)) {
-    act("You attempt to perform a focused attack, but lose your concentration!", FALSE, this, NULL, NULL, TO_CHAR);
-    act("$n attempts to focus, but loses $s concentration.", FALSE, this, NULL, NULL, TO_ROOM);
 
-    return FALSE;
+    rc = focusAttackFail(victim);
+      
+  } else {
+    rc = focusAttackSuccess(victim);
   }
 
+  return rc;
+}
+
+int TBeing::focusAttackSuccess(TBeing* victim) {
   act("You focus on identifying a weakness in your opponent's defense.", FALSE, this, NULL, NULL, TO_CHAR);
   act("$n concentrates on $s opponent, focusing intensely!", FALSE, this, NULL, NULL, TO_ROOM);
 
@@ -78,3 +89,10 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
 
   return TRUE;
 }
+
+ int TBeing::focusAttackFail(TBeing *) {
+    act("You attempt to perform a focused attack, but lose your concentration!", FALSE, this, NULL, NULL, TO_CHAR);
+    act("$n attempts to focus, but loses $s concentration.", FALSE, this, NULL, NULL, TO_ROOM);
+
+    return FALSE;
+ }

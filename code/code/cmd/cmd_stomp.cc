@@ -72,138 +72,116 @@ bool TBeing::canStomp(TBeing *victim, silentTypeT silent)
   return TRUE;
 }
 
-static int stompMiss(TBeing *caster, TBeing *victim)
+int TBeing::stompMiss(TBeing *victim)
 {
   if (victim->doesKnowSkill(SKILL_COUNTER_MOVE)) {
-    act("$N deftly avoids $n's stomp.", 
-        FALSE, caster, 0, victim, TO_NOTVICT);
-    act("$N deftly avoids your stomp.", 
-        FALSE, caster, 0, victim, TO_CHAR);
-    act("You deftly avoid $n's stomp.", 
-        FALSE, caster, 0, victim, TO_VICT);
+    act("$N deftly avoids $n's stomp.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("$N deftly avoids your stomp.", FALSE, this, 0, victim, TO_CHAR);
+    act("You deftly avoid $n's stomp.", FALSE, this, 0, victim, TO_VICT);
   } else if (victim->getPosition() == POSITION_STANDING) {
-    act("$N ducks and avoids $n's stomp.", 
-        FALSE, caster, 0, victim, TO_NOTVICT);
-    act("$N ducks aside, and dodges your stomp.",
-        FALSE, caster, 0, victim, TO_CHAR);
-    act("$n tries to stomp you, but you duck to the side just in time.", 
-        FALSE, caster, 0, victim, TO_VICT);
-  } else if ((victim->getPosition() == POSITION_RESTING) ||
-             (victim->getPosition() == POSITION_SLEEPING)) {
-    act("$N rolls and avoids $n's stomp.", 
-        FALSE, caster, 0, victim, TO_NOTVICT);
-    act("$N rolls to the side, and dodges your stomp.",
-        FALSE, caster, 0, victim, TO_CHAR);
-    act("$n tries to stomp you, but you roll to the side.", 
-        FALSE, caster, 0, victim, TO_VICT);
+    act("$N ducks and avoids $n's stomp.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("$N ducks aside, and dodges your stomp.", FALSE, this, 0, victim, TO_CHAR);
+    act("$n tries to stomp you, but you duck to the side just in time.", FALSE, this, 0, victim, TO_VICT);
+  } else if ((victim->getPosition() == POSITION_RESTING) || (victim->getPosition() == POSITION_SLEEPING)) {
+    act("$N rolls and avoids $n's stomp.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("$N rolls to the side, and dodges your stomp.", FALSE, this, 0, victim, TO_CHAR);
+    act("$n tries to stomp you, but you roll to the side.", FALSE, this, 0, victim, TO_VICT);
   } else {
-    act("$N dodges and avoids $n's stomp.", 
-        FALSE, caster, 0, victim, TO_NOTVICT);
-    act("$N dodges to the side, and dodges your stomp.",
-        FALSE, caster, 0, victim, TO_CHAR);
-    act("$n tries to stomp you, but you dodge to the side.", 
-        FALSE, caster, 0, victim, TO_VICT);
+    act("$N dodges and avoids $n's stomp.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("$N dodges to the side, and dodges your stomp.", FALSE, this, 0, victim, TO_CHAR);
+    act("$n tries to stomp you, but you dodge to the side.", FALSE, this, 0, victim, TO_VICT);
   }
 
-  if (caster->reconcileDamage(victim, 0,SKILL_STOMP) == -1)
+  if (reconcileDamage(victim, 0,SKILL_STOMP) == -1)
     return DELETE_VICT;
 
   return TRUE;
 }
 
-static int stompHit(TBeing *caster, TBeing *victim)
+int TBeing::stompHit(TBeing *victim)
 {
   int h_dam;
   int height, targ_height;
   int rc;
 
-  int dam = caster->getSkillDam(victim, SKILL_STOMP, caster->getSkillLevel(SKILL_STOMP), caster->getAdvLearning(SKILL_STOMP));
+  int dam = getSkillDam(victim, SKILL_STOMP, getSkillLevel(SKILL_STOMP), getAdvLearning(SKILL_STOMP));
 
   if (victim->getPosition() == POSITION_STANDING) {
     // can stomp head if my height > 5*victim
     // otherwise, stomp toes
 
-    height = caster->getHeight();
+    height = getHeight();
     targ_height = victim->getPosHeight();
   
     if (height >= 5 * targ_height) {
-      act("$n lifts $s leg high over $N's head, stomping $M hard on the head!",
-           FALSE, caster, 0, victim, TO_NOTVICT);
-      act("You lift your leg high over $N's head, stomping $M hard on the head!",
-           FALSE, caster, 0, victim, TO_CHAR);
-      act("You look upward just in time to see the bottom of $n's foot descending toward you!",
-           FALSE, caster, 0, victim, TO_VICT, ANSI_RED);
+      act("$n lifts $s leg high over $N's head, stomping $M hard on the head!", FALSE, this, 0, victim, TO_NOTVICT);
+      act("You lift your leg high over $N's head, stomping $M hard on the head!", FALSE, this, 0, victim, TO_CHAR);
+      act("You look upward just in time to see the bottom of $n's foot descending toward you!", FALSE, this, 0, victim, TO_VICT, ANSI_RED);
 
       TObj *item = dynamic_cast<TObj *>(victim->equipment[WEAR_HEAD]);
       if (!item) {
         h_dam = 1 + dam/5;
-        rc = caster->damageLimb(victim, WEAR_HEAD, 0, &h_dam);
+        rc = damageLimb(victim, WEAR_HEAD, 0, &h_dam);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
-      } else if (caster->dentItem(victim, item, 1, caster->getPrimaryFoot()) == DELETE_ITEM) {
+      } else if (dentItem(victim, item, 1, getPrimaryFoot()) == DELETE_ITEM) {
         delete item;
         item = NULL;
       }
     } else {
-      act("$n lifts $s leg high, stomping $N's toes hard!",
-           FALSE, caster, 0, victim, TO_NOTVICT);
-      act("You lift your leg high and stomp $N's toes hard.",
-           FALSE, caster, 0, victim, TO_CHAR);
-      act("$n crushes your toes with $s stomp.",
-           FALSE, caster, 0, victim, TO_VICT, ANSI_RED);
+      act("$n lifts $s leg high, stomping $N's toes hard!", FALSE, this, 0, victim, TO_NOTVICT);
+      act("You lift your leg high and stomp $N's toes hard.", FALSE, this, 0, victim, TO_CHAR);
+      act("$n crushes your toes with $s stomp.", FALSE, this, 0, victim, TO_VICT, ANSI_RED);
 
       dam /= 5;
 
       TObj *item = dynamic_cast<TObj *>(victim->equipment[WEAR_FOOT_L]);
       if (!item) {
         h_dam = 1 + dam/4;
-        rc = caster->damageLimb(victim, WEAR_FOOT_L, 0, &h_dam);
+        rc = damageLimb(victim, WEAR_FOOT_L, 0, &h_dam);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
-      } else if (caster->dentItem(victim, item, 1, caster->getPrimaryFoot()) == DELETE_ITEM) {
+      } else if (dentItem(victim, item, 1, getPrimaryFoot()) == DELETE_ITEM) {
         delete item;
         item = NULL;
       }
     }
   } else {
-    act("$n lifts $s leg high, stomping $N while $E is down.",
-         FALSE, caster, 0, victim, TO_NOTVICT);
-    act("You lift your leg high and stomp $N hard while $E is down.",
-         FALSE, caster, 0, victim, TO_CHAR);
-    act("$n stomps you hard while you are down!",
-         FALSE, caster, 0, victim, TO_VICT, ANSI_RED);
+    act("$n lifts $s leg high, stomping $N while $E is down.", FALSE, this, 0, victim, TO_NOTVICT);
+    act("You lift your leg high and stomp $N hard while $E is down.", FALSE, this, 0, victim, TO_CHAR);
+    act("$n stomps you hard while you are down!", FALSE, this, 0, victim, TO_VICT, ANSI_RED);
   }
-  if (caster->reconcileDamage(victim, dam,SKILL_STOMP) == -1)
+  if (reconcileDamage(victim, dam,SKILL_STOMP) == -1)
     return DELETE_VICT;
 
   return TRUE;
 }
 
-static int stomp(TBeing *c, TBeing *victim)
+int TBeing::stomp(TBeing *victim)
 {
   const int STOMP_MOVE  = 10;
   
-  if (!c->canStomp(victim, SILENT_NO))
+  if (!canStomp(victim, SILENT_NO))
     return FALSE;
 
-  if (c->getMove() < STOMP_MOVE) {
-    c->sendTo("You lack the vitality.\n\r");
+  if (getMove() < STOMP_MOVE) {
+    sendTo("You lack the vitality.\n\r");
     return FALSE;
   }
-  c->addToMove(-STOMP_MOVE);
+  addToMove(-STOMP_MOVE);
 
 
-  int bKnown = c->getSkillValue(SKILL_STOMP);
-  int successfulHit = c->specialAttack(victim, SKILL_STOMP);
-  int successfulSkill = c->bSuccess(bKnown, SKILL_STOMP);
+  int bKnown = getSkillValue(SKILL_STOMP);
+  int successfulHit = specialAttack(victim, SKILL_STOMP);
+  int successfulSkill = bSuccess(bKnown, SKILL_STOMP);
 
   if (!victim->awake() ||
       (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE &&
       !victim->canCounterMove(bKnown*2/5) &&
       !victim->canFocusedAvoidance(bKnown*2/5))) {
-    return (stompHit(c, victim));
+    return (stompHit(victim));
   } else {
-    stompMiss(c, victim);
+    stompMiss(victim);
   }
   return TRUE;
 }
@@ -228,7 +206,7 @@ int TBeing::doStomp(const char *argument, TBeing *vict)
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
-  rc = stomp(this, victim);
+  rc = stomp(victim);
   if (rc)
     addSkillLag(SKILL_STOMP, rc);
 
