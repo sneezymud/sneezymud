@@ -385,4 +385,5 @@ class TThing {
     virtual bool isSlashWeapon() const { return FALSE; }
     virtual bool isPierceWeapon() const { return FALSE; }
     virtual bool canCarryMe(const TBeing *, silentTypeT) const;
+    virtual bool isShield() const;
 };
