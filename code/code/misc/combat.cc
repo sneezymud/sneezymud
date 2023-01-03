@@ -1059,9 +1059,9 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
   // Having scurvy or the limb being leprosed/gangrenous makes bleeding/bruising
   // twice as likely. Having an already damaged limb also makes it more
   // susceptible to further damage.
-  const int chance = limbIsWeak && limbAlreadyDamaged   ? BASE_CHANCE * 4
-                    : limbIsWeak || limbAlreadyDamaged ? BASE_CHANCE / 2
-                                                       : BASE_CHANCE;
+  double chance = BASE_CHANCE * sharp / 100.0;
+  if (limbIsWeak) chance *= 2;
+  if (limbAlreadyDamaged) chance *= 2;
 
   // TODO (Cirius): Add TBeing::isVicious() function that defines certain races
   // as vicious fighters. These races get double the chance to cause
