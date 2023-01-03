@@ -10,6 +10,7 @@
 #include "comm.h"
 #include "handler.h"
 #include "materials.h"
+#include "obj_base_clothing.h"
 #include "obj_base_container.h"
 #include "obj_open_container.h"
 #include "obj_component.h"
@@ -330,4 +331,9 @@ int TThing::chiMe(TBeing *tLunatic)
   tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   return true;
+}
+
+bool TThing::isShield() const {
+  const auto* tbc = dynamic_cast<const TBaseClothing*>(this);
+  return tbc && tbc->isShield();
 }
