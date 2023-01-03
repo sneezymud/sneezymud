@@ -2465,7 +2465,7 @@ int TBeing::hit(TBeing *target, int pulse)
   while (fx > 0.999) {
     // check for concentrated blow
     if (isAffected(AFF_FOCUS_ATTACK) && !::number(0,2)) {
-      sendTo(COLOR_BASIC, "<Y>You execute a focused attack, striking your opponent with precision!\n\r");
+      sendTo(COLOR_BASIC, "<Y>You execute a focused attack, striking your opponent with precision!<z>\n\r");
       act("<y>$n executes a focused attack!<z>", TRUE, this, NULL, NULL, TO_ROOM);
       REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
       oneHit(target, HAND_PRIMARY, o, attackRound(target), &fx);
