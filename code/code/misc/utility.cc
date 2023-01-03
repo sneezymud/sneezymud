@@ -162,6 +162,13 @@ bool percentChance(int percent) {
   return ::number(0, 99) < percent;
 }
 
+// Determine if something with a given percent chance of happening (represented
+// as a decimal number) should happen. E.g. percentChance(4.65) = true means an
+// attempt with a 4.65% chance of success was successful.
+bool percentChance(double percent) {
+  return ::number(0, 9'999) < percent * 100.0;
+}
+
 
 
 

@@ -43,7 +43,7 @@ extern int number(int from, int to);
 extern int dice(int, int);
 extern bool roll_chance(double);
 extern bool percentChance(int percent);
-
+extern bool percentChance(double percent);
 
 typedef struct _app_typ {
   bool assignable;
@@ -2020,6 +2020,7 @@ enum skillMissT {
 
   // advanced berserking
   void doAdvancedBerserk(TBeing *);
+  int doAdvancedBerserkAlt(TBeing *);
 
   // shaman helpers
   TObj *getWornShamanMask();
