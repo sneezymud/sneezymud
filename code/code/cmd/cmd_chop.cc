@@ -156,7 +156,7 @@ static int chop(TBeing *c, TBeing *v)
   int rc;
   int percent;
   int i;//level;
-  const int CHOP_MOVE = 9;
+  const int CHOP_MOVE = 5;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
