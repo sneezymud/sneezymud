@@ -110,7 +110,8 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
 
   // this is mostly here to stop auto-loot kicking in while 'zerking
   // do allow them to get a weapon if necessary (disarmed)
-  if (ch->isCombatMode(ATTACK_BERSERK)) {
+  // Also allow looting while berserking if not actively fighting
+  if (ch->isCombatMode(ATTACK_BERSERK) && ch->fight()) {
     if (sub || !dynamic_cast<TBaseWeapon *>(ttt)) {
       ch->sendTo(COLOR_BASIC, "<r>You are way too blood crazed at the moment to be getting stuff.<1>\n\r");
       return FALSE;

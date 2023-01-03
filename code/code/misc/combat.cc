@@ -2237,14 +2237,6 @@ int TBeing::hit(TBeing *target, int pulse)
       target->desc->session.rounds_received[target->getCombatMode()]++;
   } 
 
-  if (isCombatMode(ATTACK_BERSERK) && doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
-    // Adding a chance per round to gain a stack of bloodlust while berserking and upon
-    // passing a successful advanced berserking check
-    if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING)) {
-  	  doAdvancedBerserk(target);
-    }
-  }
-
   // we come in here multiple times
   // 1 round is Pulse::COMBAT long
   // we should get fx hits per round, and fy hits per round with offhand
@@ -5200,6 +5192,29 @@ void perform_violence(int pulse)
       if (ch->awake() && ch->sameRoom(*vict)) {
         vict = ch->fight();
         if (vict) {
+          // Adding a chance per round to gain a stack of bloodlust while
+          // berserking
+          // and upon passing a successful advanced berserking check
+          if (ch->isCombatMode(ATTACK_BERSERK) &&
+              ch->doesKnowSkill(SKILL_ADVANCED_BERSERKING) &&
+              ch->bSuccess(SKILL_ADVANCED_BERSERKING)) {
+            int res = ch->doAdvancedBerserkAlt(vict);
+
+            if (IS_SET_DELETE(res, DELETE_VICT)) {
+              vict->reformGroup();
+              delete vict;
+              vict = nullptr;
+              continue;
+            }
+
+            if (IS_SET_DELETE(res, DELETE_THIS)) {
+              ch->reformGroup();
+              delete ch;
+              ch = nullptr;
+              break;
+            }
+          }
+
           rc = ch->hit(vict, pulse + tmp_pulse);
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             vict->reformGroup();

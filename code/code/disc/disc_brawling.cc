@@ -7,6 +7,7 @@
 
 #include "handler.h"
 #include "extern.h"
+#include "obj_base_weapon.h"
 #include "room.h"
 #include "being.h"
 #include "disc_brawling.h"
@@ -198,5 +199,102 @@ void TBeing::doAdvancedBerserk(TBeing* target)
 	    act("In a <R>berserker rage<z>, $n attempts to finish you with a killing blow!", FALSE, this, 0, target, TO_VICT);     
       deathstrokeSuccess(target);
     }
+  }
+}
+
+namespace {
+  class AdvancedBerserkSkill {
+    public:
+      spellNumT skillNum{MAX_SKILL};
+      double chance{0};
+      std::function<bool(const TBeing*)> canUseSkill{
+        [](const TBeing*) { return true; }};
+
+      double calcRealChance(const TBeing* ch) const;
+  };
+
+  bool isWieldingWeapon(const TBeing* ch) {
+    return dynamic_cast<TBaseWeapon*>(ch->heldInPrimHand()) != nullptr;
+  };
+
+  bool victimIsStanding(const TBeing* ch) {
+    return ch->fight() && ch->fight()->getPosition() >= POSITION_STANDING;
+  }
+
+  const std::vector<AdvancedBerserkSkill> advancedBerserkSkills = {
+    {SKILL_SLAM, 0.8, isWieldingWeapon},
+    {SKILL_BASH, 0.4, victimIsStanding},
+    {SKILL_FOCUS_ATTACK, 0.8, isWieldingWeapon},
+    {SKILL_HEADBUTT, 0.8, victimIsStanding},
+    {SKILL_KNEESTRIKE, 0.8},
+    {SKILL_BODYSLAM, 0.4, victimIsStanding},
+    {SKILL_SPIN, 0.4, victimIsStanding},
+    {SKILL_STOMP, 0.8},
+    {SKILL_DEATHSTROKE, 0.8, isWieldingWeapon},
+  };
+
+  double AdvancedBerserkSkill::calcRealChance(const TBeing* ch) const {
+    double chanceToTestSkill = 1.0;
+
+    for (const auto& skill : advancedBerserkSkills) {
+      if (!skill.canUseSkill(ch)) continue;
+
+      if (skill.skillNum == skillNum)
+        return chance / chanceToTestSkill;
+
+      chanceToTestSkill *= (100.0 - skill.chance) / 100.0;
+    }
+
+    return -1.0;
+  }
+}  // namespace
+
+int TBeing::doAdvancedBerserkAlt(TBeing* target) {
+  static const sstring toChar = "You're overcome by your <R>berserker rage<z>!";
+  static const sstring toRoom = "$n is overcome by <R>berserker rage<z>!";
+
+  if (doesKnowSkill(SKILL_BLOODLUST) && percentChance(15)) doBloodlust();
+
+  const AdvancedBerserkSkill* which = nullptr;
+
+  for (const auto& skill : advancedBerserkSkills) {
+    if (!doesKnowSkill(skill.skillNum) || !skill.canUseSkill(this) ||
+        !percentChance(skill.calcRealChance(this)) || !bSuccess(skill.skillNum))
+      continue;
+
+    which = &skill;
+    break;
+  }
+
+  if (!which) return false;
+
+  act(toChar, false, this, nullptr, nullptr, TO_CHAR);
+  act(toRoom, false, this, nullptr, nullptr, TO_ROOM);
+
+  switch (which->skillNum) {
+    case SKILL_SLAM:
+      return slamSuccess(target);
+    case SKILL_BASH: {
+      auto* item = heldInSecHand();
+
+      return bashSuccess(target, SKILL_BASH, item && item->isShield(),
+        dynamic_cast<TObj*>(item));
+    }
+    case SKILL_FOCUS_ATTACK:
+      return focusAttackSuccess(target);
+    case SKILL_HEADBUTT:
+      return headbuttHit(target);
+    case SKILL_KNEESTRIKE:
+      return kneestrikeHit(target);
+    case SKILL_BODYSLAM:
+      return bodyslamHit(target);
+    case SKILL_SPIN:
+      return spinHit(target);
+    case SKILL_STOMP:
+      return stompHit(target);
+    case SKILL_DEATHSTROKE:
+      return deathstrokeSuccess(target);
+    default:
+      return false;
   }
 }
