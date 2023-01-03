@@ -1191,7 +1191,9 @@ int salve(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT s
   int hurting = 0, soothing = 0, fixed = 0;
   wearSlotT slot;
   char buf[256]; 
-  int max_am = 1 + (level * number(1,6)/2);
+  int max_am = spell == SPELL_SALVE ? 
+                          1 + (level * number(5,8)) :
+                          1 + (level * number(1,6)/2);
 
   if (spell==SKILL_WOHLIN ||
       caster->bSuccess(bKnown, caster->getPerc(), spell)) {
