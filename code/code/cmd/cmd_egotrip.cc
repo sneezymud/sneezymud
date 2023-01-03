@@ -92,20 +92,23 @@ std::map <spellNumT,ego_imm_blessing> init_ego_imm_blessing()
     ego_imm_blessing("Sidartha",
         AFFECT_SIDARTHA_BLESSING,
         APPLY_SPE,
-	"<b>the mongoose<1>",
-	APPLY_HITROLL,
-	5,
-	0);
+	      "<b>the mongoose<1>",
+      	APPLY_HITROLL,
+	      5,
+	      0);
   blessings[AFFECT_DAMESCENA_BLESSING]=
     ego_imm_blessing("Damescena",
         AFFECT_DAMESCENA_BLESSING,
         APPLY_CON,
         "<W>healing<1>");
-  blessings[AFFECT_JESUS_BLESSING]=
-    ego_imm_blessing("Jesus",
-        AFFECT_JESUS_BLESSING,
+  blessings[AFFECT_BOZ_BLESSING]=
+    ego_imm_blessing("Bozwell",
+        AFFECT_BOZ_BLESSING,
         APPLY_STR,
-        "<w>power<1>");
+        "<w>power<1>",
+        APPLY_DAMROLL,
+        10,
+        0);
   blessings[AFFECT_BUMP_BLESSING]=
     ego_imm_blessing("Bump",
         AFFECT_BUMP_BLESSING,

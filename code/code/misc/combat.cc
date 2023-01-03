@@ -2779,12 +2779,16 @@ int TBeing::defendRound(const TBeing * attacker) const
     if (isCombatMode(ATTACK_OFFENSE) || isCombatMode(ATTACK_BERSERK))
       bonus -= my_lev/4;
 
-    // BERSERK gets the offense benefit PLUS this...
+    // Berserk gets a significant penalty to defense
     if (isCombatMode(ATTACK_BERSERK)) {
-      int amt = my_lev/2;
+      int amt = my_lev*8;
 
       // If I'm skilled at berserking, I shouldn't be penalized as much.
-      amt *= doesKnowSkill(SKILL_BERSERK) ? 100 - getSkillValue(SKILL_BERSERK) : 100;
+      amt *= doesKnowSkill(SKILL_BERSERK) ? max(50, 100 - getSkillValue(SKILL_BERSERK)) : 100;
+      // Heighten the penalty if using the advanced form of berserking
+      if (doesKnowSkill(SKILL_ADVANCED_BERSERKING))
+        amt *= 2;
+
       amt /= 100;
       bonus -= amt;
     }
@@ -2821,8 +2825,7 @@ int TBeing::defendRound(const TBeing * attacker) const
 
   if (doesKnowSkill(SKILL_DEFENSE)) {
     int amt = my_lev;
-    // this was max(10, ...) but that seemed silly - Maror
-    amt *= max(100, (int) getSkillValue(SKILL_DEFENSE));
+    amt *= min(100, (int) getSkillValue(SKILL_DEFENSE));
     amt /= 100;
     bonus += amt;
   }
