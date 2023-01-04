@@ -980,14 +980,14 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
       reduction += 10;
     }
 
-    if (percentChance(avoidChance)) return true;
+    if (avoidChance > 0 && percentChance(avoidChance)) return true;
 
     if (v->affectedBySpell(SPELL_ARMOR))
       reduction += 15.0;
     if (v->affectedBySpell(SPELL_STONE_SKIN))
       reduction += 20.0;
 
-    damage *= reduction / 100.0;
+    damage -= damage * reduction / 100.0;
   }
 
   if (part_hit == WEAR_FINGER_L) part_hit = WEAR_HAND_L;
