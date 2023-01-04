@@ -968,6 +968,28 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
       part_hit == HOLD_LEFT || part_hit == HOLD_RIGHT || !v->hasPart(part_hit))
     return false;
 
+  // Prevent or reduce limb damage based on active buffs
+  if (v->affected) {
+    int avoidChance = 0;
+    double reduction = 0.0;
+
+    if (v->affectedBySpell(SPELL_SORCERERS_GLOBE)) avoidChance += 10;
+    if (v->affectedBySpell(SPELL_SANCTUARY)) avoidChance += 15;
+    if (v->affectedBySpell(SPELL_SHIELD_OF_MISTS)) {
+      avoidChance += 10;
+      reduction += 10;
+    }
+
+    if (percentChance(avoidChance)) return true;
+
+    if (v->affectedBySpell(SPELL_ARMOR))
+      reduction += 15.0;
+    if (v->affectedBySpell(SPELL_STONE_SKIN))
+      reduction += 20.0;
+
+    damage *= reduction / 100.0;
+  }
+
   if (part_hit == WEAR_FINGER_L) part_hit = WEAR_HAND_L;
   if (part_hit == WEAR_FINGER_R) part_hit = WEAR_HAND_R;
 
@@ -2456,10 +2478,9 @@ int TBeing::hit(TBeing *target, int pulse)
   
   while (fx > 0.999) {
     // check for concentrated blow
-    if (isAffected(AFF_FOCUS_ATTACK) && !::number(0,2)) {
+    if (isAffected(AFF_FOCUS_ATTACK)) {
       sendTo(COLOR_BASIC, "<Y>You execute a focused attack, striking your opponent with precision!<z>\n\r");
       act("<y>$n executes a focused attack!<z>", TRUE, this, NULL, NULL, TO_ROOM);
-      REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
       oneHit(target, HAND_PRIMARY, o, attackRound(target), &fx);
     }
 
@@ -3885,12 +3906,12 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
       // elemental's owner.  Only hate if the pet was the aggressor, or
       // if the pet's owner is also fighting
       if (!isPc() && isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-	if (master && (master->isPc() || master->desc)) {
-	  if (isAffected(AFF_AGGRESSOR) ||
-	      master->fight() == tmons) {
-	    tmons->developHatred(master);
-	  }
-	}
+	      if (master && (master->isPc() || master->desc)) {
+	        if (isAffected(AFF_AGGRESSOR) ||
+	          master->fight() == tmons) {
+	          tmons->developHatred(master);
+	        }
+	      }
       }
     }
   }
@@ -3912,13 +3933,13 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
     if(vict->equipment[i]){
       rc = vict->equipment[i]->checkSpec(vict, CMD_OBJ_OWNER_HIT, NULL, NULL);
       if (IS_SET_ONLY(rc, DELETE_THIS))
-	retCode |= DELETE_ITEM;
+	      retCode |= DELETE_ITEM;
       if (IS_SET_ONLY(rc, DELETE_VICT)) {
-	retCode |= DELETE_VICT;
-	return retCode;
+	      retCode |= DELETE_VICT;
+	      return retCode;
       }
       if (rc)
-	return retCode;
+	      return retCode;
     }
   }
   
@@ -4175,7 +4196,7 @@ int TBeing::oneHit(TBeing *vict, primaryTypeT isprimary, TThing *weapon, int mod
         
         *f += 1; // one extra attack
       }
-
+  
       affectedData *ch_affected;
       // Remove inevitability if we hit.
       if (affectedBySpell(SKILL_INEVITABILITY))
@@ -5201,7 +5222,7 @@ void perform_violence(int pulse)
           if (ch->isCombatMode(ATTACK_BERSERK) &&
               ch->doesKnowSkill(SKILL_ADVANCED_BERSERKING) &&
               ch->bSuccess(SKILL_ADVANCED_BERSERKING)) {
-            int res = ch->doAdvancedBerserkAlt(vict);
+            int res = ch->doAdvancedBerserk(vict);
 
             if (IS_SET_DELETE(res, DELETE_VICT)) {
               vict->reformGroup();
