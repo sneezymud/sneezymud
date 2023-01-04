@@ -90,7 +90,7 @@ int TBeing::doWhirlwind()
 }
 
 int TBeing::whirlwindSuccess() { 
-  int rc;
+  int rc = 0;
   auto *weapon = dynamic_cast<TBaseWeapon *>(heldInPrimHand());
 
   // Send messages to caster/room
