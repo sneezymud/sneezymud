@@ -1039,10 +1039,11 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
   levelRatio = min(1.0, levelRatio);
   levelRatio = max(0.1, levelRatio);
 
-  // Protect PCs under 50 by gradually scaling limb damage against them up to full.
-  if (v->isPc()) {
+  // Protect PCs in leveling range by gradually scaling limb damage against them
+  // up to full as attacker level approaches 60.
+  if (v->isPc() && isTMonster()) {
     damage *=
-      plotValue(static_cast<int>(GetMaxLevel()), 1, 50, 0.25, 1.0, 0.625, 1);
+      plotValue(static_cast<int>(GetMaxLevel()), 1, 60, 0.25, 1.0, 0.625, 1);
   }
 
   // Ensure at least 1 damage is done to the limb
