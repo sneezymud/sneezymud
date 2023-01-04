@@ -125,82 +125,6 @@ int TBeing::doTaunt(const sstring &arg)
   return TRUE;
 }
 
-void TBeing::doAdvancedBerserk(TBeing* target) 
-{
-  // Chance to gain a bloodlust stack
-  if (doesKnowSkill(SKILL_BLOODLUST) && !::number(0,5)) 
-    doBloodlust();
-
-  // Chance to land a random warrior ability automatically while berserking.
-  // The abilities currently planned are:
-  //   - slam (1-8)
-  //   - headbutt (9,10)
-  //   - kneestrike (11,12)
-  //   - bash (13-18)
-  //   - bodyslam (19-20)
-  //   - spin (21-22)
-  //   - stomp (23-24) (6)
-  //   - focus attack (25-28)
-  //   - whirlwind (29)
-  //   - deathstroke (30)
-  if (bSuccess(getSkillLevel(SKILL_ADVANCED_BERSERKING), SKILL_ADVANCED_BERSERKING) && !::number(0,10)) {
-	  int roll = ::number(1,30);
-	  if (roll >= 1 && roll <= 8 && doesKnowSkill(SKILL_SLAM) && bSuccess(SKILL_SLAM)) {
-	    act("In a <R>berserker rage<z>, you swing wildly at $N!", FALSE, this, 0, target, TO_CHAR);     
-	    act("In a <R>berserker rage<z>, $n swings wildly at $N!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("In a <R>berserker rage<z>, $n swings wildly at you!", FALSE, this, 0, target, TO_VICT);     
-      slamSuccess(target);
-    }
-	  else if (roll >= 9 && roll <= 10 && doesKnowSkill(SKILL_HEADBUTT) && bSuccess(SKILL_HEADBUTT)) {
-	    act("You're overcome by your <R>berserker rage<z>!", FALSE, this, 0, target, TO_CHAR);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_VICT);     
-      headbuttHit(target);
-    }
-	  else if (roll >= 11 && roll <= 12 && doesKnowSkill(SKILL_KNEESTRIKE) && bSuccess(SKILL_KNEESTRIKE)) {
-	    act("You're overcome by your <R>berserker rage<z>!", FALSE, this, 0, target, TO_CHAR);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_VICT);     
-      kneestrikeHit(target);
-    }
-	  else if (roll >= 13 && roll <= 18 && doesKnowSkill(SKILL_BASH) && bSuccess(SKILL_BASH)) {
-	    act("In a <R>berserker rage<z>, you crash into $N with all your might!", FALSE, this, 0, target, TO_CHAR);     
-	    act("In a <R>berserker rage<z>, $n crashes into $N!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("In a <R>berserker rage<z>, $n crashes into you!", FALSE, this, 0, target, TO_VICT);     
-      TBaseClothing *itemInSecondaryHand = dynamic_cast<TBaseClothing *>(heldInSecHand());  
-      bool isHoldingShield = itemInSecondaryHand && itemInSecondaryHand->isShield();
-      bashSuccess(target, SKILL_BASH, isHoldingShield, itemInSecondaryHand);
-	  }
-	  else if (roll >= 19 && roll <= 20 && doesKnowSkill(SKILL_BODYSLAM) && bSuccess(SKILL_BODYSLAM)) {
-	    act("You're overcome by your <R>berserker rage<z>!", FALSE, this, 0, target, TO_CHAR);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_VICT);     
-      bodyslamHit(target); 
-	  }
-	  else if (roll >= 21 && roll <= 22 && doesKnowSkill(SKILL_SPIN) && bSuccess(SKILL_SPIN)) {
-	    act("In a <R>berserker rage<z>, you attempt to throw $N!", FALSE, this, 0, target, TO_CHAR);     
-	    act("In a <R>berserker rage<z>, $n attempts to throw $N!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("In a <R>berserker rage<z>, $n attempts to throw you!", FALSE, this, 0, target, TO_VICT);     
-      spinHit(target);
-	  }
-	  else if (roll >= 23 && roll <= 24 && doesKnowSkill(SKILL_STOMP) && bSuccess(SKILL_STOMP)) {
-	    act("You're overcome by your <R>berserker rage<z>!", FALSE, this, 0, target, TO_CHAR);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("$n is overcome by <R>berserker rage<z>!", FALSE, this, 0, target, TO_VICT);     
-      stompHit(target);
-    }
-	  else if (roll >= 25 && roll <= 29 && doesKnowSkill(SKILL_FOCUS_ATTACK) && bSuccess(SKILL_FOCUS_ATTACK)) {
-	    act("Your <R>berserker rage<z> fuels your attacks!", FALSE, this, 0, target, TO_CHAR);     
-      focusAttackSuccess(target);
-	  }
-	  else if (roll == 30 && doesKnowSkill(SKILL_DEATHSTROKE) && bSuccess(SKILL_DEATHSTROKE)) {
-	    act("In a <R>berserker rage<z>, you attempt to finish $N with a killing blow!", FALSE, this, 0, target, TO_CHAR);     
-	    act("In a <R>berserker rage<z>, $n attempts to finish $N!", FALSE, this, 0, target, TO_NOTVICT);     
-	    act("In a <R>berserker rage<z>, $n attempts to finish you with a killing blow!", FALSE, this, 0, target, TO_VICT);     
-      deathstrokeSuccess(target);
-    }
-  }
-}
 
 namespace {
   class AdvancedBerserkSkill {
@@ -249,7 +173,7 @@ namespace {
   }
 }  // namespace
 
-int TBeing::doAdvancedBerserkAlt(TBeing* target) {
+int TBeing::doAdvancedBerserk(TBeing* target) {
   static const sstring toChar = "You're overcome by your <R>berserker rage<z>!";
   static const sstring toRoom = "$n is overcome by <R>berserker rage<z>!";
 

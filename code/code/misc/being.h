@@ -2019,8 +2019,7 @@ enum skillMissT {
   void doAura(sstring const& arg);
 
   // advanced berserking
-  void doAdvancedBerserk(TBeing *);
-  int doAdvancedBerserkAlt(TBeing *);
+  int doAdvancedBerserk(TBeing *);
 
   // shaman helpers
   TObj *getWornShamanMask();
