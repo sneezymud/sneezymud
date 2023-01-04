@@ -125,12 +125,11 @@ int TBeing::doTaunt(const sstring &arg)
   return TRUE;
 }
 
-
 namespace {
   class AdvancedBerserkSkill {
     public:
       spellNumT skillNum{MAX_SKILL};
-      double chance{0};
+      int weight{0};
       std::function<bool(const TBeing*)> canUseSkill{
         [](const TBeing*) { return true; }};
 
@@ -146,30 +145,38 @@ namespace {
   }
 
   const std::vector<AdvancedBerserkSkill> advancedBerserkSkills = {
-    {SKILL_SLAM, 0.8, isWieldingWeapon},
-    {SKILL_BASH, 0.4, victimIsStanding},
-    {SKILL_FOCUS_ATTACK, 0.8, isWieldingWeapon},
-    {SKILL_HEADBUTT, 0.8, victimIsStanding},
-    {SKILL_KNEESTRIKE, 0.8},
-    {SKILL_BODYSLAM, 0.4, victimIsStanding},
-    {SKILL_SPIN, 0.4, victimIsStanding},
-    {SKILL_STOMP, 0.8},
-    {SKILL_DEATHSTROKE, 0.8, isWieldingWeapon},
+    {SKILL_SLAM, 3, isWieldingWeapon},
+    {SKILL_BASH, 1, victimIsStanding},
+    {SKILL_FOCUS_ATTACK, 2, isWieldingWeapon},
+    {SKILL_HEADBUTT, 3, victimIsStanding},
+    {SKILL_KNEESTRIKE, 3, victimIsStanding},
+    {SKILL_BODYSLAM, 1, victimIsStanding},
+    {SKILL_SPIN, 1, victimIsStanding},
+    {SKILL_STOMP, 3},
+    {SKILL_DEATHSTROKE, 1, isWieldingWeapon},
   };
 
-  double AdvancedBerserkSkill::calcRealChance(const TBeing* ch) const {
-    double chanceToTestSkill = 1.0;
+  const int roll_range = []() {
+    int total = 0;
+    for (const auto& skill : advancedBerserkSkills)
+      total += skill.weight;
+    return total;
+  }();
 
+  const AdvancedBerserkSkill* whichSkill(const int roll) {
+    int total = 0;
     for (const auto& skill : advancedBerserkSkills) {
-      if (!skill.canUseSkill(ch)) continue;
-
-      if (skill.skillNum == skillNum)
-        return chance / chanceToTestSkill;
-
-      chanceToTestSkill *= (100.0 - skill.chance) / 100.0;
+      total += skill.weight;
+      if (roll <= total) return &skill;
     }
+    return nullptr;
+  };
 
-    return -1.0;
+  const AdvancedBerserkSkill* findValidSkill(const TBeing* ch, const int roll) {
+    const auto *skill = whichSkill(roll);
+    if (!skill || !ch->doesKnowSkill(skill->skillNum)) return nullptr;
+    return skill->canUseSkill(ch) ? skill
+                                  : findValidSkill(ch, ::number(1, roll_range));
   }
 }  // namespace
 
@@ -177,18 +184,27 @@ int TBeing::doAdvancedBerserk(TBeing* target) {
   static const sstring toChar = "You're overcome by your <R>berserker rage<z>!";
   static const sstring toRoom = "$n is overcome by <R>berserker rage<z>!";
 
-  if (doesKnowSkill(SKILL_BLOODLUST) && percentChance(15)) doBloodlust();
+  // Pulse::COMBAT is divided into 12 mini-rounds in perform_violence, so
+  // percent chances in here need to be divided by that number to be accurate
+  // for a single round of combat
+  static constexpr double mini_pulses_per_round = 12.0;
 
-  const AdvancedBerserkSkill* which = nullptr;
+  // Chance per combat round to gain a stack of bloodlust buff
+  static constexpr double bloodlust_chance_per_round =
+    15.0 / mini_pulses_per_round;
 
-  for (const auto& skill : advancedBerserkSkills) {
-    if (!doesKnowSkill(skill.skillNum) || !skill.canUseSkill(this) ||
-        !percentChance(skill.calcRealChance(this)) || !bSuccess(skill.skillNum))
-      continue;
+  // Chance per combat round for advanced berserk to execute a random skill from
+  // advancedBerserkSkills
+  static constexpr double skill_chance_per_round = 50.0 / mini_pulses_per_round;
 
-    which = &skill;
-    break;
-  }
+  if (doesKnowSkill(SKILL_BLOODLUST) &&
+      percentChance(bloodlust_chance_per_round))
+    doBloodlust();
+
+  if (!percentChance(skill_chance_per_round)) return false;
+
+  const AdvancedBerserkSkill* which =
+    findValidSkill(this, ::number(1, roll_range));
 
   if (!which) return false;
 
