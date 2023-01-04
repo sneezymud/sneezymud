@@ -134,15 +134,15 @@ int TBeing::doDeathstroke(const char *argument, TBeing *vict)
 
   // Delete victim if success/fail functions set the DELETE_VICT flag
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
-    if (vict)
-      return rc;
+    if (vict) return rc;
     delete victim;
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
+  } else {
+    // Allow victim a chance to counterattack
+    if (victim->doesKnowSkill(SKILL_DEATHSTROKE))
+      rc = deathstrokeCounterattack(victim);
   }
-
-  // Allow victim a chance to counterattack
-  rc = deathstrokeCounterattack(victim);
 
   if (IS_SET_DELETE(rc, DELETE_THIS)) 
     return DELETE_THIS;
