@@ -585,8 +585,10 @@ int TBeing::critSuccessChance(TBeing* victim,
   // Things like the vorpal proc and the imm "crit" command will send in a specific value
   // for mod, which serves as the crit severity in those cases.
   if (mod == -1) {
-    if (diceRollResult > critChance)
+    if (diceRollResult > critChance && !isAffected(AFF_FOCUS_ATTACK)) 
       return 0;
+    else if(isAffected(AFF_FOCUS_ATTACK))
+	  REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
 
     // Crit severity is based on two factors - base severity and max severity.
 
@@ -619,8 +621,7 @@ int TBeing::critSuccessChance(TBeing* victim,
       levelDifference <= 0 ? baseCritSeverity : baseCritSeverity + levelDifference;
     int maxCritSeverity =
       min(baseSeverity +
-            static_cast<int>(victim->getPercentHpMissing() * 100.0),
-        100);
+            static_cast<int>(victim->getPercentHpMissing() * 100.0), 100);
 
     const int powerMoveBonus =
       static_cast<int>(powerMoveSeverityBonus * powerMoveValue / 100.0);
