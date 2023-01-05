@@ -2,7 +2,7 @@
 Smyrke - Gnome Village of Gnath~
 24499 35 2 1
 *
-* RESETTING DOORS 
+* RESETTING DOORS
 D 0 24402 3 1	Gemcutters' Guild
 D 0 24441 1 1
 D 0 24402 1 1	The Bakery
@@ -60,54 +60,54 @@ D 0 24453 2 1   Door for connection to Gnomish Wonders
 *
 * LOADING LAMPPOSTS AND LIGHT FIXTURES
 O 0 24425 1 24401 	Lamppost
-O 0 24425 1 24402 
-O 0 24425 1 24403 
-O 0 24425 1 24404 
-O 0 24425 1 24405 
-O 0 24425 1 24406 
-O 0 24425 1 24407 
-O 0 24425 1 24408 
-O 0 24425 1 24409 
-O 0 24425 1 24410 
-O 0 24425 1 24413 
-O 0 24425 1 24414 
-O 0 24425 1 24415 
-O 0 24425 1 24416 
-O 0 24425 1 24417 
-O 0 24425 1 24418 
-O 0 24425 1 24419 
-O 0 24425 1 24420 
-O 0 24425 1 24421 
-O 0 24425 1 24422 
-O 0 24425 1 24423 
-O 0 24425 1 24424 
-O 0 24425 1 24425 
-O 0 24425 1 24428 
-O 0 24425 1 24429 
+O 0 24425 1 24402
+O 0 24425 1 24403
+O 0 24425 1 24404
+O 0 24425 1 24405
+O 0 24425 1 24406
+O 0 24425 1 24407
+O 0 24425 1 24408
+O 0 24425 1 24409
+O 0 24425 1 24410
+O 0 24425 1 24413
+O 0 24425 1 24414
+O 0 24425 1 24415
+O 0 24425 1 24416
+O 0 24425 1 24417
+O 0 24425 1 24418
+O 0 24425 1 24419
+O 0 24425 1 24420
+O 0 24425 1 24421
+O 0 24425 1 24422
+O 0 24425 1 24423
+O 0 24425 1 24424
+O 0 24425 1 24425
+O 0 24425 1 24428
+O 0 24425 1 24429
 
 O 0 24426 1 24411 	Overhead Light
-O 0 24426 1 24412 
-O 0 24426 1 24426 
-O 0 24426 1 24427 
-O 0 24426 1 24430 
-O 0 24426 1 24431 
-O 0 24426 1 24432 
-O 0 24426 1 24433 
-O 0 24426 1 24434 
-O 0 24426 1 24435 
-O 0 24426 1 24436 
-O 0 24426 1 24437 
-O 0 24426 1 24438 
-O 0 24426 1 24439 
-O 0 24426 1 24440 
-O 0 24426 1 24441 
-O 0 24426 1 24442 
-O 0 24426 1 24443 
-O 0 24426 1 24448 
-O 0 24426 1 24449 
-O 0 24426 1 24450 
-O 0 24426 1 24451 
-O 0 24426 1 24452 
+O 0 24426 1 24412
+O 0 24426 1 24426
+O 0 24426 1 24427
+O 0 24426 1 24430
+O 0 24426 1 24431
+O 0 24426 1 24432
+O 0 24426 1 24433
+O 0 24426 1 24434
+O 0 24426 1 24435
+O 0 24426 1 24436
+O 0 24426 1 24437
+O 0 24426 1 24438
+O 0 24426 1 24439
+O 0 24426 1 24440
+O 0 24426 1 24441
+O 0 24426 1 24442
+O 0 24426 1 24443
+O 0 24426 1 24448
+O 0 24426 1 24449
+O 0 24426 1 24450
+O 0 24426 1 24451
+O 0 24426 1 24452
 *
 * LOADING FURNITURE
 O 0 24400 1 24404 	Town Well
@@ -125,43 +125,43 @@ O 0 24412 1 24488 	Coffee Table
 O 0 24413 1 24493 	China Hutch
 P 1 24414 9999 24413	  Ceramic Plate in Hutch
 O 0 24415 3 24431 	Wooden Pews
-O 0 24415 3 24432 
+O 0 24415 3 24432
 O 0 24416 5 24444 	Sacks of Grain
-O 0 24416 5 24445 
-O 0 24416 5 24446 
-O 0 24416 5 24447 
+O 0 24416 5 24445
+O 0 24416 5 24446
+O 0 24416 5 24447
 O 0 24417 1 24490 	Bearskin Rug
 O 0 293 1 24496 	Pebble
 O 0 24418 1 24438 	Cherrywood Desk
 O 0 24419 1 24475 	Gnome Beds
-O 0 24419 1 24476 
-O 0 24419 1 24477 
-O 0 24419 1 24487 
-O 0 24419 1 24488 
-O 0 24419 1 24489 
-O 0 24419 1 24492 
-O 0 24419 1 24493 
+O 0 24419 1 24476
+O 0 24419 1 24477
+O 0 24419 1 24487
+O 0 24419 1 24488
+O 0 24419 1 24489
+O 0 24419 1 24492
+O 0 24419 1 24493
 O 0 24420 1 24477 	Oaken Bookshelf
-O 0 24420 1 24485 
+O 0 24420 1 24485
 O 0 24421 10 24439 	Sturdy Schooldesks
-O 0 24421 10 24440 
+O 0 24421 10 24440
 O 0 24422 1 24462 	A small rock
-O 0 24437 1 24493 
+O 0 24437 1 24493
 O 0 10934 1 24466     A stone fireplace
-O 0 10934 1 24467 
+O 0 10934 1 24467
 O 0 151 2 24437                          Anvil
 O 0 152 2 24437                          Forge
 
 O 0 34210 1 24499  # mouth of well, entrance to undercroft zone
- 
+
 
 *
 
 * LOADING MOBS AND THEIR ITEMS
 M 0 24400 1 24438	Principal
-? 0 5 0 E
+? 0 10 0 E
 E 1 24423 9999 19	  wooden paddle
-? 0 3 0 E
+? 0 10 0 E
 E 1 24424 12 5		  spectacles [det invis]
 M 0 24401 3 24439	Schoolboys
 M 0 24401 3 24439
@@ -181,19 +181,19 @@ M 0 24404 1 24439	Dunce
 E 1 24427 8 5		  dunce cap
 A 0 24401 24429
 M 0 24405 2 -99		Elderly Gnome Lady
-? 0 5 0 E
+? 0 15 0 E
 E 1 24428 9999 14	  crimson shawl
 A 0 24401 24429
 M 0 24405 2 -99		Elderly Gnome Lady
-? 0 5 0 E
+? 0 15 0 E
 E 1 24428 9999 14	  crimson shawl
 A 0 24401 24429
 M 0 24406 2 -99		Elderly Gnome Man
-? 0 4 0 E
+? 0 14 0 E
 E 1 24429 15 19		  walking stick
 A 0 24401 24429
 M 0 24406 2 -99		Elderly Gnome Man
-? 0 4 0 E
+? 0 14 0 E
 E 1 24429 15 19
 A 0 24401 24429
 M 0 24407 5 -99		A male gnome Citizen
@@ -217,15 +217,19 @@ A 0 24401 24429
 M 0 24408 5 -99		A female gnome citizen
 A 0 24401 24429
 M 0 24409 2 -99		A mischevious gnome
+? 0 15 0 E
+E 1 22413 9999 19		  gnomish gnife
 A 0 24401 24429
 M 0 24409 2 -99		A mischevious gnome
+? 0 15 0 E
+E 1 22413 9999 19		  gnomish gnife
 A 0 24461 24464
 M 0 24410 1 -99		Gnome Explorer
-? 0 5 0 E
+? 0 15 0 E
 E 1 317 9999 19		  studded whip
-? 0 2 0 E
+? 0 12 0 E
 E 1 24431 16 8		  boot-gaff
-? 0 2 0 E
+? 0 12 0 E
 E 1 24431 16 9		  boot-gaff
 ? 0 7 0 G
 G 1 24430 9999		  power bar
@@ -234,12 +238,12 @@ E 1 600 9999 14		  standard backpack
 ? 0 10 0 P
 P 1 404 9999 600	    iron ration in backpack
 M 0 24411 1 24436	Tanner
-? 0 6 0 E
+? 0 16 0 E
 E 1 24432 9999 19	  awl
 M 0 24412 1 24437	Metalsmith
 ? 0 10 0 G
 G 1 24433 200		  steel horseshoe
-? 0 5 0 E
+? 0 15 0 E
 E 1 312 9999 19		  steel hammer
 M 0 24413 1 24441	Gemcutter
 ? 0 6 0 G
@@ -251,16 +255,16 @@ G 1 24435 9999		  paintbrush
 M 0 24415 1 24412	Engineer
 ? 0 25 0 G
 G 1 24436 9999		  slide-rule
-? 0 10 0 E
+? 0 15 0 E
 E 1 24445 9999 5	  hard hat
 M 0 24416 1 24477	Cartographer
 M 0 24417 1 24443	Baker
 G 1 24406 9999		  grain storage key
-? 0 5 0 E
+? 0 15 0 E
 E 1 24438 9999 19	  cookie sheet
 M 0 24419 1 24440	Ms. Gnell
 M 0 24420 1 24439	Ms. Gnelson
-? 0 8 0 E
+? 0 18 0 E
 E 1 24442 9999 19	  ruler
 M 0 24421 1 24434	Gadget Maker Gnarrelus
 ? 0 25 0 G
@@ -269,11 +273,11 @@ G 1 24471 9999		  gear
 G 1 24472 9999		  sprocket
 ? 0 2 0 E
 E 1 24473 2 14		  whirleypack
-? 0 3 0 E
+? 0 13 0 E
 E 1 24485 3 4		  workman's leather armor
-? 0 3 0 E
+? 0 13 0 E
 E 1 24486 3 6		  workman's pants
-Y 0 102 1                 charred leather set
+Y 0 102 15                 charred leather set
 M 0 24422 1 24450	Secretary
 M 0 24423 1 24480	Gnapping Gnome
 M 0 24424 1 24451	Governor
@@ -285,19 +289,19 @@ G 1 24443 9999		  abacus
 ? 0 15 0 E
 E 1 24444 9999 4	  silk robe
 M 0 24426 2 24448	Town Hall Sentry
-Y 0 87 3                  splintmail set
-? 0 8 0 E
-E 1 311 9999 19		  standard steel mace		  
+Y 0 87 13                  splintmail set
+? 0 18 0 E
+E 1 311 9999 19		  standard steel mace
 M 0 24426 2 24448	Town Hall Sentry
-Y 0 87 3                  splintmail set
-? 0 8 0 E
-E 1 311 9999 19		  standard steel mace		  
+Y 0 87 13                  splintmail set
+? 0 18 0 E
+E 1 311 9999 19		  standard steel mace
 M 0 24427 2 24400	Gate Guard
-Y 0 87 3                  splintmail set
-? 0 8 0 E
+Y 0 87 13                  splintmail set
+? 0 18 0 E
 E 1 24487 75 18		  small halberd
 M 0 24427 2 24400	Gate Guard
-Y 0 87 3                  splintmail set
+Y 0 87 13                  splintmail set
 ? 0 8 0 E
 E 1 24487 75 18		  small halberd
 M 0 24428 1 24475	Sleeping males
@@ -312,9 +316,9 @@ M 0 24429 1 24485
 M 0 24429 1 24489
 M 0 24429 1 24492
 M 0 24430 1 24432	Gnome Gnight
-? 0 5 0 E
+? 0 15 0 E
 E 1 24499 9999 19         gnight's lance
-Y 0 111 3                 gnight basic set
+Y 0 111 13                 gnight basic set
 M 0 24431 1 24465	Gnathan the Toymaker
 ? 0 25 0 G
 G 1 24451 9999		  child's doll
@@ -322,38 +326,38 @@ G 1 24451 9999		  child's doll
 G 1 24452 9999		  toy war chariot
 A 0 24401 24429
 M 0 24432 1 -99		Gnicoli the Sheriff
-Y 0 86 4                  brigandine set
-? 0 4 0 E
+Y 0 86 14                  brigandine set
+? 0 14 0 E
 E 1 24470 15 19		  silver mace
 A 0 24401 24429
 M 0 24433 3 -99		Gnight Patrolman
-Y 0 86 2                  brigandine set
-? 0 6 0 E
+Y 0 86 12                  brigandine set
+? 0 16 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
 M 0 24433 3 -99		Gnight Patrolman
-Y 0 86 2                  brigandine set
-? 0 6 0 E
+Y 0 86 12                  brigandine set
+? 0 16 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
 M 0 24433 3 -99		Gnight Patrolman
-Y 0 86 2                  brigandine set
-? 0 6 0 E
+Y 0 86 12                  brigandine set
+? 0 16 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
 M 0 24434 3 -99		Constable
-Y 0 86 1                  brigandine set
-? 0 5 0 E
+Y 0 86 11                  brigandine set
+? 0 15 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
 M 0 24434 3 -99		Constable
-Y 0 86 1                  brigandine set
-? 0 5 0 E
+Y 0 86 11                  brigandine set
+? 0 15 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
 M 0 24434 3 -99		Constable
-Y 0 86 1                  brigandine set
-? 0 5 0 E
+Y 0 86 11                  brigandine set
+? 0 15 0 E
 E 1 311 9999 19		  standard steel mace
 M 0 24435 1 24430	Gnome Usher
 ? 0 25 0 E
@@ -362,11 +366,11 @@ M 0 24436 1 24431	Gnome Deacon
 ? 0 25 0 E
 E 1 24448 9999 4	  blue robe
 M 0 24437 1 24433	Gnome Priest
-? 0 5 0 E
+? 0 15 0 E
 E 1 24449 20 4		  holy robe
 ? 0 5 0 E
 E 1 24474 9999 3	  copper symbol on chain
-? 0 7 0 E
+? 0 17 0 E
 E 1 24450 75 18		  quarterstaff
 M 0 24438 1 24484	Gnome Gnurse
 E 1 24455 9999 4	  gnurse outfit
@@ -393,5 +397,6 @@ M 0 24441 1 24486	Gnome Patient
 M 0 24443 1 24467       Gnancy, Gnathan's Neice
 M 0 24444 1 24466       Gnicholas, Gnathan's Nephew
 
-S 
+S
+
 
