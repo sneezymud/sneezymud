@@ -54,9 +54,9 @@ O 0 22406 1 22423        Gnome Charm
 O 0 22420 1 22482        Gnome Sign
 
 O 0 22437 1 22491        Edge of a Shallow Pond
-O 0 22437 1 22492 
-O 0 22437 1 22493 
-O 0 22437 1 22494 
+O 0 22437 1 22492
+O 0 22437 1 22493
+O 0 22437 1 22494
 
 O 0 22438 1 22462        Slot in a Hunter's Blind (window)
 
@@ -75,238 +75,240 @@ O 0 700 1 22448 	Bunks in gnome barracks
 V 1 1 42		   Set bed size for 42" users
 
 O 0 22428 1 22461    Hearth Cookfire
-O 0 22428 1 22477    
-O 0 22428 1 22495    
-O 0 22428 1 22496    
-O 0 22428 1 22497    
+O 0 22428 1 22477
+O 0 22428 1 22495
+O 0 22428 1 22496
+O 0 22428 1 22497
 
 O 0 22429 1 22420    Embedded Glowstone
-O 0 22429 2 22422    
-O 0 22429 1 22423    
-O 0 22429 2 22424    
-O 0 22429 2 22426    
-O 0 22429 2 22428    
-O 0 22429 1 22429    
-O 0 22429 2 22430    
-O 0 22429 1 22431    
-O 0 22429 1 22432    
-O 0 22429 1 22433    
-O 0 22429 1 22434    
-O 0 22429 2 22436    
-O 0 22429 2 22437    
-O 0 22429 2 22438    
-O 0 22429 2 22439    
-O 0 22429 2 22440    
-O 0 22429 1 22441    
-O 0 22429 2 22442    
-O 0 22429 2 22447    
-O 0 22429 2 22448    
-O 0 22429 1 22449    
-O 0 22429 1 22450    
+O 0 22429 2 22422
+O 0 22429 1 22423
+O 0 22429 2 22424
+O 0 22429 2 22426
+O 0 22429 2 22428
+O 0 22429 1 22429
+O 0 22429 2 22430
+O 0 22429 1 22431
+O 0 22429 1 22432
+O 0 22429 1 22433
+O 0 22429 1 22434
+O 0 22429 2 22436
+O 0 22429 2 22437
+O 0 22429 2 22438
+O 0 22429 2 22439
+O 0 22429 2 22440
+O 0 22429 1 22441
+O 0 22429 2 22442
+O 0 22429 2 22447
+O 0 22429 2 22448
+O 0 22429 1 22449
+O 0 22429 1 22450
 
 M 0 22400 1 22414        Gnome Peasant - M
-M 0 22400 1 22405        
-M 0 22400 1 22414        
-M 0 22400 1 22430        
-M 0 22400 1 22430        
-M 0 22400 1 22430        
-M 0 22400 1 22430        
+M 0 22400 1 22405
+M 0 22400 1 22414
+M 0 22400 1 22430
+M 0 22400 1 22430
+M 0 22400 1 22430
+M 0 22400 1 22430
 
 M 0 22401 1 22418        Gnome Peasant - F
-M 0 22401 1 22414        
-M 0 22401 1 22430        
-M 0 22401 1 22430        
-M 0 22401 1 22430        
-M 0 22401 1 22430        
-M 0 22401 1 22430        
-M 0 22401 1 22437        
+M 0 22401 1 22414
+M 0 22401 1 22430
+M 0 22401 1 22430
+M 0 22401 1 22430
+M 0 22401 1 22430
+M 0 22401 1 22430
+M 0 22401 1 22437
 
 M 0 22402 1 22421        Gnome Guard
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
 ? 0 2 0 E
 E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22402 1 22420        Gnome Guard
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22402 1 22425        Gnome Guard
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22402 1 22427        Gnome Guard
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
-M 0 22402 1 22448        Gnome Guard 
+Y 0 64 12			Moleskin Set - 2%
+M 0 22402 1 22448        Gnome Guard
+? 0 10 0 G
+G 1 22430 9999          Soldier's ration
+? 0 12 0 E
+E 1 22431 50 19           Gnomish Dagger
+Y 0 64 12			Moleskin Set - 2%
+M 0 22402 1 22448        Gnome Guard
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
 ? 0 2 0 E
 E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
-M 0 22402 1 22448        Gnome Guard 
+Y 0 64 12			Moleskin Set - 2%
+M 0 22402 1 22448        Gnome Guard
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
-M 0 22402 1 22448        Gnome Guard 
+Y 0 64 12			Moleskin Set - 2%
+M 0 22402 1 22448        Gnome Guard
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
-M 0 22402 1 22448        Gnome Guard 
-? 0 10 0 G
-G 1 22430 9999          Soldier's ration
-? 0 2 0 E
-E 1 22431 50 19           Gnomish Dagger
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 
 M 0 22403 1 22415        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22403 1 22415        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22403 1 22417        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22403 1 22430        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22403 1 22448        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22403 1 22448        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22403 1 22440        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 M 0 22403 1 22440        Gnome Sentry
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19           Gnomish Spear
-Y 0 64 2			Moleskin Set - 2%
+Y 0 64 12			Moleskin Set - 2%
 
 M 0 22404 4 22412        Gnome outcast
-M 0 22404 4 22412        
-M 0 22404 4 22434        
-M 0 22404 4 22434        
-M 0 22404 1 22443        
-M 0 22404 1 22444        
-M 0 22404 1 22445        
+M 0 22404 4 22412
+M 0 22404 4 22434
+M 0 22404 4 22434
+M 0 22404 1 22443
+M 0 22404 1 22444
+M 0 22404 1 22445
 
 M 0 22405 1 22447        Gnome sergeant
 G 1 22400 1               Key to mole cage
 G 1 22401 1               Key to the cells
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22435 50 19         Gnomish Sword
-Y 0 44 2			Gnomemail Set - 2%
+Y 0 44 12			Gnomemail Set - 2%
 
 M 0 22406 1 22440        Gnome jester
 
 M 0 22407 1 22424        Gnome Tinker (mage)
-Y 0 64 1			Moleskin Set - 1%
+Y 0 64 18			Moleskin Set - 1%
 
 M 0 22409 1 22426        Gnome gnoble of hunters
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19         Gnomish Spear
-Y 0 44 2			Gnomemail Set - 2%
+Y 0 44 12			Gnomemail Set - 2%
 
 M 0 22410 1 22428        Gnome gnoble of workers
 ? 0 10 0 G
 G 1 22430 9999          Soldier's ration
-? 0 2 0 E
+? 0 12 0 E
 E 1 22435 50 19         Gnomish Sword
-Y 0 44 2			Gnomemail Set - 2%
+Y 0 44 12			Gnomemail Set - 2%
 
 M 0 22411 1 22439        Gnome Priestess (Advisor)
 G 1 22402 1               Key to her chest :-)
-? 0 2 0 E
+? 0 12 0 E
 E 1 22436 50 19           Gnomish Hammer
-Y 0 44 3			Gnomemail Set - 3%
+Y 0 44 13			Gnomemail Set - 3%
 
 M 0 22412 1 22440        Gnome Gnight
 G 1 22403 1               Key to the treasure room
-? 0 3 0 E
+? 0 18 0 E
 E 1 24498 9999 19         Gnight's Sword
-Y 0 111 2	          Gnight Basic Set
+? 0 10 0 E
+E 1 24497 9999 14		gnight cloak
+Y 0 111 15	          Gnight Basic Set
 
 M 0 22413 1 22441        Treasure guardian
-M 0 22413 1 22423        
+M 0 22413 1 22423
 
 M 0 22414 1 22459        Gnome Farmer
 ? 0 20 0 G
 G 1 22423 9999
-? 0 2 0 E
+? 0 12 0 E
 E 1 22432 50 19           Short Leather Whip
 M 0 22414 1 22495        Gnome Farmer
 ? 0 20 0 G
 G 1 22423 9999
-? 0 2 0 E
+? 0 12 0 E
 E 1 22432 50 19           Short Leather Whip
 M 0 22414 1 22471        Gnome Farmer
 ? 0 20 0 G
 G 1 22423 9999
-? 0 2 0 E
+? 0 12 0 E
 E 1 22432 50 19           Short Leather Whip
 M 0 22414 1 22496        Gnome Farmer
 ? 0 20 0 G
 G 1 22423 9999
-? 0 2 0 E
+? 0 12 0 E
 E 1 22432 50 19           Short Leather Whip
 M 0 22414 1 22497        Gnome Farmer
 ? 0 20 0 G
 G 1 22423 9999
 
 M 0 22415 1 22461        Gnome Farmer's wife
-M 0 22415 1 22495        
-M 0 22415 1 22477        
-M 0 22415 1 22496        
-M 0 22415 1 22497        
+M 0 22415 1 22495
+M 0 22415 1 22477
+M 0 22415 1 22496
+M 0 22415 1 22497
 
 M 0 22400 1 22400        Gnome Peasant - M
-M 0 22400 1 22480        
-M 0 22400 1 22480        
-M 0 22400 1 22480        
-M 0 22400 1 22481        
-M 0 22400 1 22482        
-M 0 22400 1 22483        
+M 0 22400 1 22480
+M 0 22400 1 22480
+M 0 22400 1 22480
+M 0 22400 1 22481
+M 0 22400 1 22482
+M 0 22400 1 22483
 
 M 0 22416 1 22452        Gnome Cow
 ? 0 20 0 G
@@ -336,44 +338,44 @@ G 1 22422 9999
 A 0 22457 22460
 M 0 22419 2 -99          Gnome Boy
 A 0 22471 22473
-M 0 22419 2 -99          
+M 0 22419 2 -99
 
 A 0 22464 22466
 M 0 22420 2 -99          Gnome Girl
 A 0 22471 22473
-M 0 22420 2 -99          
+M 0 22420 2 -99
 
 M 0 22421 1 22460        Gnome Farmhand
 G 1 22427 9999             Shiny Gnomish Key
-? 0 2 0 E
+? 0 12 0 E
 E 1 22433 50 19            Tiny Wooden Mallet
 M 0 22421 1 22476
 G 1 22427 9999
 ? 0 2 0 E
-E 1 22433 50 19            
+E 1 22433 50 19
 
-A 0 22457 22460         
+A 0 22457 22460
 M 0 22422 2 -99          Gnomish Hog
 A 0 22484 22486
-M 0 22422 2 -99          
+M 0 22422 2 -99
 A 0 22484 22486
-M 0 22422 2 -99          
+M 0 22422 2 -99
 
 A 0 22471 22473
 M 0 22423 2 -99          Gnomish Chicken
 A 0 22457 22460
-M 0 22423 2 -99          
+M 0 22423 2 -99
 A 0 22464 22466
-M 0 22423 2 -99          
+M 0 22423 2 -99
 
 A 0 22454 22460
 M 0 22424 2 -99          Field Squirrel
 A 0 22464 22473
-M 0 22424 2 -99          
+M 0 22424 2 -99
 A 0 22476 22486
-M 0 22424 2 -99          
+M 0 22424 2 -99
 A 0 22476 22486
-M 0 22424 2 -99          
+M 0 22424 2 -99
 
 M 0 22425 2 22408        Young Rustler
 M 0 22425 2 22408
@@ -385,66 +387,66 @@ M 0 22427 1 22410        John the Rustler - Leader
 M 0 22428 1 22411        William - Mage Rustler
 
 M 0 22429 1 22438        Gnome Dignitary
-? 0 2 0 E
+? 0 12 0 E
 E 1 22435 50 19            Gnomish Sword
 M 0 22429 1 22442
-? 0 2 0 E
-E 1 22435 50 19            
+? 0 12 0 E
+E 1 22435 50 19
 
 M 0 22430 1 22425        Gnome Apprentice
-? 0 2 0 E
+? 0 12 0 E
 E 1 22431 50 19            Gnomish Dagger
 
 
 M 0 22431 1 22413        Gnome Outcast Leader
-? 0 2 0 E
+? 0 12 0 E
 E 1 22431 50 19            Gnomish Dagger
 
 M 0 22432 1 22414        Gnome Scout
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19            Gnomish Spear
-Y 0 64 2			   Moleskin Set - 2%
+Y 0 64 12			   Moleskin Set - 2%
 M 0 22432 1 22469        Gnome Scout
-? 0 3 0 E
+? 0 13 0 E
 E 1 307 100 19          chance of bow
-? 0 3 0 G
+? 0 13 0 G
 G 1 3409 1000           chance of arrow
-? 0 3 0 G
+? 0 13 0 G
 G 1 3409 1000           chance of arrow
-? 0 3 0 E
+? 0 13 0 E
 E 1 17 9999 14          chance of quiver
-Y 0 64 2			   Moleskin Set - 2%
+Y 0 64 12			   Moleskin Set - 2%
 
 M 0 22433 1 22455        Female Gnome Missionary
-? 0 1 0 E
+? 0 11 0 E
 E 1 22436 50 19            Gnomish Hammer
-Y 0 64 2			   Moleskin Set - 2%
+Y 0 64 12			   Moleskin Set - 2%
 
 M 0 22434 1 22462        Gnome Trapper
-? 0 2 0 E
+? 0 12 0 E
 E 1 22434 50 19            Gnomish Spear
-Y 0 64 2                           Moleskin Set - 2%
+Y 0 64 12                           Moleskin Set - 2%
 
 M 0 22434 1 22492
-? 0 3 0 E
+? 0 13 0 E
 E 1 307 100 19          chance of bow
-? 0 3 0 G
+? 0 13 0 G
 G 1 3409 1000           chance of arrow
-? 0 3 0 G
+? 0 13 0 G
 G 1 3409 1000           chance of arrow
-? 0 3 0 E
+? 0 13 0 E
 E 1 17 9999 14          chance of quiver
-Y 0 64 2                           Moleskin Set - 2%
+Y 0 64 12                           Moleskin Set - 2%
 
 M 0 22435 1 22467        Gnome Courier
-? 0 1 0 E
+? 0 11 0 E
 E 1 22431 50 19            Gnomish Dagger
-Y 0 64 2			   Moleskin Set - 2%
+Y 0 64 12			   Moleskin Set - 2%
 
 M 0 22436 1 22482        Gnome Squire
-? 0 1 0 E
+? 0 11 0 E
 E 1 22431 50 19            Gnomish Dagger
-Y 0 64 2			   Moleskin Set - 2%
+Y 0 64 12			   Moleskin Set - 2%
 
 M 0 22437 1 22404        Gnome Merchant
 
@@ -458,4 +460,5 @@ M 0 22440 1 22489
 
 M 0 22441 2 22446        Giant Mole in Cage
 S
+
 
