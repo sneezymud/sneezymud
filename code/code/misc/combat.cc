@@ -4571,7 +4571,7 @@ bool TBeing::canFight(TBeing *target)
     }
   }
   // make um fly if appropriate
-  if (!target->isPc() && target->canFly() && !target->isFlying()) 
+  if (!target->isPc() && target->canFly() && !target->isFlying() && !target->getWait()) 
     target->doFly();
 
   return TRUE;
