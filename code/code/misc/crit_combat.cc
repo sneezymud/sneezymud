@@ -587,8 +587,12 @@ int TBeing::critSuccessChance(TBeing* victim,
   if (mod == -1) {
     if (diceRollResult > critChance && !isAffected(AFF_FOCUS_ATTACK)) 
       return 0;
-    else if(isAffected(AFF_FOCUS_ATTACK))
-	  REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
+    
+    if (isAffected(AFF_FOCUS_ATTACK)) {
+      sendTo(COLOR_BASIC, "<Y>You execute a focused attack, striking your opponent with precision!<z>\n\r");
+      act("<y>$n executes a focused attack!<z>", TRUE, this, NULL, NULL, TO_ROOM);
+      REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
+    }
 
     // Crit severity is based on two factors - base severity and max severity.
 

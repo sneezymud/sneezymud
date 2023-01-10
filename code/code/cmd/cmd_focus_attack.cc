@@ -54,12 +54,14 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
     sendTo("You cannot attack an immortal.\n\r");
     return FALSE;
   }
-  
-  affectedData aff1;
-  aff1.type = SKILL_FOCUS_ATTACK;
-  aff1.duration = Pulse::UPDATES_PER_MUDHOUR/2;
-  aff1.bitvector = 0;
-  affectTo(&aff1, -1);
+
+  if (!isImmortal()) {
+    affectedData aff1;
+    aff1.type = SKILL_FOCUS_ATTACK;
+    aff1.duration = Pulse::UPDATES_PER_MUDHOUR / 2;
+    aff1.bitvector = 0;
+    affectTo(&aff1, -1);
+  }
 
   int rc;
   if (!bSuccess(getSkillValue(SKILL_FOCUS_ATTACK), SKILL_FOCUS_ATTACK)) {
@@ -74,9 +76,14 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
 }
 
 int TBeing::focusAttackSuccess(TBeing* victim) {
-  act("You focus on identifying a weakness in your opponent's defense.", FALSE, this, NULL, NULL, TO_CHAR);
-  act("$n concentrates on $s opponent, focusing intensely!", FALSE, this, NULL, NULL, TO_ROOM);
-
+  // Hit happens instantly when skill is triggered by advanced berserking and
+  // can't be used manually while berserk, so in that case suppress this message
+  if (getCombatMode() != ATTACK_BERSERK) {
+    act("You focus on identifying a weakness in your opponent's defense.",
+      FALSE, this, NULL, NULL, TO_CHAR);
+    act("$n concentrates on $s opponent, focusing intensely!", FALSE, this,
+      NULL, NULL, TO_ROOM);
+  }
   // Set the flag that we will later check for to trigger an attack
   SET_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
 

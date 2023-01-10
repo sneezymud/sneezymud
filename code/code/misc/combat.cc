@@ -2475,16 +2475,14 @@ int TBeing::hit(TBeing *target, int pulse)
   if(isAffected(AFF_RIPOSTE)){
     fx++;
     REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
-  }    
+  }
+
+  // Don't remove the flag here, as that happens inside critSuccess()
+  if (isAffected(AFF_FOCUS_ATTACK)) {
+    fx++;
+  }
   
   while (fx > 0.999) {
-    // check for concentrated blow
-    if (isAffected(AFF_FOCUS_ATTACK)) {
-      sendTo(COLOR_BASIC, "<Y>You execute a focused attack, striking your opponent with precision!<z>\n\r");
-      act("<y>$n executes a focused attack!<z>", TRUE, this, NULL, NULL, TO_ROOM);
-      oneHit(target, HAND_PRIMARY, o, attackRound(target), &fx);
-    }
-
     checkLearnFromHit(this, tarLevel, o, true, w_type);
     if ((rc = oneHit(target, HAND_PRIMARY, o,mod, &fx))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
@@ -3017,6 +3015,8 @@ int TBeing::hits(TBeing *v, int mod)
     desc->session.mod_done[getCombatMode()] += mod;
   if (v->desc)
     v->desc->session.mod_received[v->getCombatMode()] += mod;
+
+  if (isAffected(AFF_FOCUS_ATTACK)) return GUARANTEED_SUCCESS;
 
   if (!v->awake() || (v->getPosition() < POSITION_RESTING))
     return GUARANTEED_SUCCESS;
