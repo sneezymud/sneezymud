@@ -13,87 +13,49 @@
 #include "being.h"
 #include "combat.h"
 #include "enum.h"
+#include "skill_handler.h"
 
-bool TBeing::canHeadbutt(TBeing *victim, silentTypeT silent)
-{
-  if (checkBusy()) {
-    return FALSE;
-  }
-  if (!doesKnowSkill(SKILL_HEADBUTT)) {
-    if (!silent)
-      sendTo("You know nothing about headbutting.\n\r");
-    return FALSE;
-  }
-  switch (race->getBodyType()) {
-    case BODY_HUMANOID:
-    case BODY_OWLBEAR:
-    case BODY_MINOTAUR:
-    case BODY_ORB:
-      break;
-    case BODY_KUOTOA:  // thick necks
-    case BODY_OTYUGH:  // no real head
-    default:
-      if (!silent)
-        sendTo("You lack the proper body form to headbutt.\n\r");
-      return FALSE;
-  }
-  if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+bool TBeing::canHeadbutt(TBeing* victim, const silentTypeT silent) const {
+  // Define static vector of tests that need to pass before headbutt can
+  // execute
+  static const SkillHandler::Tests tests = []() -> SkillHandler::Tests {
+    using namespace SkillHandler;
+    
+    // Custom test needed by headbutt
+    static const auto ch_valid_height = SkillHandler::custom(
+      [](const SkillHandler::Config& config) {
+        return config.ch->getPosHeight() * 0.75 <=
+               config.target->getPosHeight();
+      },
+      make_simple_act("Your head is much higher than theirs."));
 
-  if (victim->riding && !dynamic_cast<TBeing *> (victim->riding)) {
-    act("You can't headbutt $N while $E is on $p!", TRUE, this, victim->riding, victim, TO_CHAR);
-    return FALSE;
-  }
+    return {
+      ch_not_busy(),
+      ch_knows_skill("You know nothing about headbutting."),
+      ch_has_valid_body_type(
+        {BODY_HUMANOID, BODY_OWLBEAR, BODY_MINOTAUR, BODY_ORB},
+        "You lack the proper body form to headbutt."),
+      not_peaceful_room(),
+      target_not_on_furniture("You can't headbutt $N while $E is on $p!"),
+      target_not_self("Aren't we funny today..."),
+      ch_not_mounted("You can't butt heads while mounted!"),
+      ch_can_harm_target(),
+      target_not_immortal("You can't butt an immortal."),
+      target_not_flying("") ||
+        ch_is_flying("You can't headbutt something that is flying."),
+      ch_valid_height(),
+    };
+  }();
 
-  if (victim == this) {
-    if (!silent)
-      sendTo("Aren't we funny today...\n\r");
-    return FALSE;
-  }
-  if (riding) {
-    if (!silent)
-      sendTo("You can't butt heads while mounted!\n\r");
-    return FALSE;
-  }
-  if (noHarmCheck(victim))
-    return FALSE;
-
-  if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
-    if (!silent)
-      sendTo("You can't successfully butt an immortal.\n\r");
-    return FALSE;
-  }
-
-  if ((int) (getPosHeight() * 0.9) > victim->getPosHeight()) {
-    if (victim->getPosition() < POSITION_STANDING) {
-      if (!silent)
-
-        sendTo(format("That might work, but your victim seems to be on the %s.\n\r") % roomp->describeGround());
-    } else {
-      if (!silent)
-        sendTo("Your head is much higher than theirs.\n\r");
-    }
-    return FALSE;
-  }
-  if (victim->isFlying()) {
-    if (!silent)
-      sendTo("You can't headbutt something that is flying.\n\r");
-    return FALSE;
-  }
-  if (getPosition() == POSITION_CRAWLING) {
-    if (!silent)
-      sendTo("You can't headbutt while crawling.\n\r");
-    return FALSE;
-  }
-
-  return true;
+  SkillHandler::Config config{SKILL_HEADBUTT, this, victim, silent};
+  return SkillHandler::run_tests(config, tests);
 }
 
 int TBeing::headbuttMiss(TBeing *v)
 {
   int rc;
 
-  if (v->doesKnowSkill(SKILL_COUNTER_MOVE)) {
+  if (v->doesKnowSkill(SKILL_COUNTER_MOVE) || isCombatMode(ATTACK_BERSERK)) {
     // I don't understand this logic
     act("$N deftly avoids $n's headbutt.", FALSE, this, 0, v, TO_NOTVICT); 
     act("$N deftly avoids your headbutt.", FALSE, this, 0, v, TO_CHAR);

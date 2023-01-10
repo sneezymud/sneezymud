@@ -1101,7 +1101,7 @@ enum skillMissT {
   bool canDisarm(TBeing *, silentTypeT);
   bool canStomp(TBeing *, silentTypeT);
   int headbutt(TBeing *);
-  bool canHeadbutt(TBeing *, silentTypeT);
+  bool canHeadbutt(TBeing *, silentTypeT) const;
   int headbuttMiss(TBeing *);
   int headbuttHit(TBeing *);
   bool canBodyslam(TBeing *, silentTypeT);

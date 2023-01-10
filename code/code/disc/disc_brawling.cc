@@ -144,11 +144,15 @@ namespace {
     return ch->fight() && ch->fight()->getPosition() >= POSITION_STANDING;
   }
 
+  bool canHeadbutt(const TBeing* ch) {
+    return ch->fight() && ch->canHeadbutt(ch->fight(), SILENT_YES);
+  }
+
   const std::vector<AdvancedBerserkSkill> advancedBerserkSkills = {
     {SKILL_SLAM, 3, isWieldingWeapon},
     {SKILL_BASH, 1, victimIsStanding},
     {SKILL_FOCUS_ATTACK, 2, isWieldingWeapon},
-    {SKILL_HEADBUTT, 3, victimIsStanding},
+    {SKILL_HEADBUTT, 3, canHeadbutt},
     {SKILL_KNEESTRIKE, 3, victimIsStanding},
     {SKILL_BODYSLAM, 1, victimIsStanding},
     {SKILL_SPIN, 1, victimIsStanding},
@@ -211,29 +215,32 @@ int TBeing::doAdvancedBerserk(TBeing* target) {
   act(toChar, false, this, nullptr, nullptr, TO_CHAR);
   act(toRoom, false, this, nullptr, nullptr, TO_ROOM);
 
+  const bool success = bSuccess(which->skillNum);
+
   switch (which->skillNum) {
     case SKILL_SLAM:
-      return slamSuccess(target);
+      return success ? slamSuccess(target) : slamFail(target);
     case SKILL_BASH: {
       auto* item = heldInSecHand();
 
-      return bashSuccess(target, SKILL_BASH, item && item->isShield(),
-        dynamic_cast<TObj*>(item));
+      return success ? bashSuccess(target, SKILL_BASH, item && item->isShield(),
+                         dynamic_cast<TObj*>(item))
+                     : bashFail(target, SKILL_BASH, false, false, false);
     }
     case SKILL_FOCUS_ATTACK:
-      return focusAttackSuccess(target);
+      return success ? focusAttackSuccess(target) : focusAttackFail(target);
     case SKILL_HEADBUTT:
-      return headbuttHit(target);
+      return success ? headbuttHit(target) : headbuttMiss(target);
     case SKILL_KNEESTRIKE:
-      return kneestrikeHit(target);
+      return success ? kneestrikeHit(target) : kneestrikeMiss(target, 0);
     case SKILL_BODYSLAM:
-      return bodyslamHit(target);
+      return success ? bodyslamHit(target) : bodyslamMiss(target, TYPE_DEX);
     case SKILL_SPIN:
-      return spinHit(target);
+      return success ? spinHit(target) : spinMiss(target, TYPE_DEX);
     case SKILL_STOMP:
-      return stompHit(target);
+      return success ? stompHit(target) : stompMiss(target);
     case SKILL_DEATHSTROKE:
-      return deathstrokeSuccess(target);
+      return success ? deathstrokeSuccess(target) : deathstrokeFail(target);
     default:
       return false;
   }
