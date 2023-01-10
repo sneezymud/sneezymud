@@ -424,8 +424,10 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       // 4/3 factor added here due to save cutting into avg damage
       dam =  genericDam(victim, this, skill, DISC_RANGER, level, adv_learn, 0.529 * HAS_SAVING_THROW, REDUCE_YES, !isPc(), TRIM_NO);
       break;
-    case SKILL_KICK_MONK:
     case SKILL_CHOP:
+      dam = genericDam(victim, this, skill, DISC_MONK, level, adv_learn, 0.4, REDUCE_NO, !isPc(), TRIM_NO);
+      break;
+    case SKILL_KICK_MONK:
     case SKILL_HURL:
     case SKILL_BONEBREAK:
     case SKILL_DEFENESTRATE:
@@ -434,7 +436,7 @@ int TBeing::getSkillDam(const TBeing *victim, spellNumT skill, int level, int ad
       break;
     case SKILL_CHI:
       // there is no hits() check on this, so treat like a spell
-      dam = genericDam(victim, this, skill, DISC_MONK, level, adv_learn, 0.233, REDUCE_YES, !isPc(), TRIM_NO);
+      dam = genericDam(victim, this, skill, DISC_MONK, level, adv_learn, 0.45, REDUCE_YES, !isPc(), TRIM_NO);
       break;
     case SKILL_PSI_BLAST:
     case SKILL_MIND_THRUST:
