@@ -726,8 +726,8 @@ class TBeing : public TThing {
   int addCommandToQue(const sstring &);
   int loseRoundWear(double, bool randomize = TRUE, bool check = FALSE);
   int loseRound(double, bool x = TRUE, bool check = FALSE);
-  void blowCount(bool, float &, float &);
-  bool checkBusy(const sstring &buf="");
+  void blowCount(bool, float &, float &) const;
+  bool checkBusy(const sstring &buf="") const;
   float lagAdjust(lag_t);
   void addSkillLag(spellNumT, int rc);
   virtual void addToWait(int) { return; }
@@ -808,7 +808,7 @@ class TBeing : public TThing {
   bool isLycanthrope() const;
   bool isColdBlooded() const;
   bool isHumanoid() const { return race->isHumanoid(); }
-  bool noHarmCheck(TBeing *);
+  bool noHarmCheck(const TBeing *) const;
   void loadSetEquipment(int, char *, int, bool findLoadPotential = false);
   bool doesKnowSkill(spellNumT) const;
   int getSkillLevel(spellNumT) const;

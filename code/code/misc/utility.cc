@@ -1966,7 +1966,7 @@ int combatRound(double n)
   return (int) (n * Pulse::COMBAT);
 }
 
-bool TBeing::checkBusy(const sstring &buf)
+bool TBeing::checkBusy(const sstring &buf) const
 {
   // I added the max to avoid the 10Mill report
   // which happens if they have like 0.9 attacks a round.

@@ -53,7 +53,7 @@ class TBaseWeapon : public TObj {
     virtual void changeObjValue2(TBeing *);
     virtual void changeObjValue3(TBeing *);
     virtual sstring displayFourValues();
-    virtual void specializationCheck(TBeing *, float *);
+    double specializationCheck(const TBeing *) const override;
     virtual void descMaxStruct(const TBeing *, int) const;
     virtual int expelPrice(const TBeing *, int) const;
     virtual int wieldMe(TBeing *, char *);

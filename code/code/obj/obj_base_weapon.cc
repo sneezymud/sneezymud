@@ -1397,20 +1397,17 @@ void TBaseWeapon::descMaxStruct(const TBeing *ch, int learn) const
                           "be indestructible")))))))))))))))))))))))))));
 }
 
-void TBaseWeapon::specializationCheck(TBeing *ch, float *fx)
-{
-  int skill;
+double TBaseWeapon::specializationCheck(const TBeing* ch) const {
+  int skill = 0;
 
   if (isSlashWeapon() && ch->getDiscipline(DISC_SLASH))
-    skill = ch->getSkillValue(SKILL_SLASH_SPEC) - 20*ch->drunkMinus();
+    skill = ch->getSkillValue(SKILL_SLASH_SPEC);
   else if (isPierceWeapon() && ch->getDiscipline(DISC_PIERCE))
-    skill = ch->getSkillValue(SKILL_PIERCE_SPEC) - 20*ch->drunkMinus();
+    skill = ch->getSkillValue(SKILL_PIERCE_SPEC);
   else if (isBluntWeapon() && ch->getDiscipline(DISC_BLUNT))
-    skill = ch->getSkillValue(SKILL_BLUNT_SPEC) - 20*ch->drunkMinus();
-  else
-    skill = 0;
+    skill = ch->getSkillValue(SKILL_BLUNT_SPEC);
 
-  *fx += (float) (1.0 * skill / 100.0);
+  return 1.0 * skill / 100.0;
 }
 
 int TBaseWeapon::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdist)

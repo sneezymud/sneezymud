@@ -2061,7 +2061,7 @@ void TBeing::chlorineRoom()
   }
 }
 
-bool TBeing::noHarmCheck(TBeing *vict)
+bool TBeing::noHarmCheck(const TBeing *vict) const
 {
   if (this == vict)
     return FALSE;
@@ -2148,7 +2148,7 @@ int TBeing::loseRound(double rounds, bool randomize, bool check)
   return num;
 }
 
-void TBeing::blowCount(bool check, float &fx, float &fy)
+void TBeing::blowCount(bool check, float &fx, float &fy) const
 {
   float num;
   TThing *prim, *sec;
@@ -2206,7 +2206,7 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
 
       // Check specialization after guns
       if (getPosition() >= POSITION_STANDING) {
-        prim->specializationCheck(this, &fx);
+        fx += prim->specializationCheck(this);
       }
 
       // Now we can do the speed mod in here it won't affect monks barehand
@@ -2237,20 +2237,13 @@ void TBeing::blowCount(bool check, float &fx, float &fy)
       fy = 1.0;
     }
 
-
     // berzerk affects any combo
     if (isCombatMode(ATTACK_BERSERK) && getPosition() >= POSITION_STANDING) {
-      if (bSuccess(SKILL_BERSERK)) {
-        if (fx > 0.0)
-          fx += 0.5;
-        if (fy > 0.0)
-	        fy += 0.5;
-      }
-      if (bSuccess(SKILL_ADVANCED_BERSERKING)) {
-        if (fx > 0.0)
-          fx += 0.5;
-        if (fy > 0.0)
-	  fy += 0.5;
+      if (fx > 0.0) fx += 0.5;
+      if (fy > 0.0) fy += 0.5;
+      if (doesKnowSkill(SKILL_ADVANCED_BERSERKING)) {
+        if (fx > 0.0) fx += 0.5;
+        if (fy > 0.0) fy += 0.5;
       }
     }
   }

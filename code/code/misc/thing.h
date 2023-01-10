@@ -354,7 +354,7 @@ class TThing {
     virtual void sharpenMeStoneWeap(TBeing *, TTool *);
     virtual void dullMeFileWeap(TBeing *, TTool *);
     virtual int catchSmack(TBeing *, TBeing **, TRoom *, int, int);
-    virtual void specializationCheck(TBeing *, float *) {}
+    virtual double specializationCheck(const TBeing *) const { return 0.0; }
     virtual int expelPrice(const TBeing *, int) const;
     virtual int wieldMe(TBeing *, char *);
     virtual void curseMe() {}
