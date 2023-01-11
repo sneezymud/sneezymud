@@ -2464,6 +2464,11 @@ TObj *read_object(int nr, readFileTypeT type)
 
   if(/*bootTime &&*/ obj_cache[nr]!=NULL){
     obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[nr]->s["type"])));
+    if (!obj) {
+      vlogf(LOG_BUG,
+        format("makeNewObj failed in read_object: nr = %d, i = %d") % nr % i);
+      return nullptr;
+    }
     obj->number=nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
