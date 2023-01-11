@@ -595,6 +595,12 @@ void TPerson::doShow(const sstring &argument)
         continue;
 
       obj = read_object(objnx, REAL);
+      if (!obj) {
+        vlogf(LOG_BUG,
+          format("read_object failed in doShow(): zone = %d, vnum = %d") %
+            zone % objnx);
+        continue;
+      }
       buf2 = obj->getNameForShow(false, true, this);
       delete obj;
 
