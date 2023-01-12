@@ -1908,10 +1908,12 @@ int weaponBreaker(TBeing *vict, cmdTypeT cmd, const char *, TObj *o, TObj *)
     break;
   }
 
-
   if (vict->isImmune(IMMUNE_BONE_COND, slot) || vict->raceHasNoBones()) {
     return FALSE;
   }
+
+  if(vict->debuffResist())
+    return FALSE;
 
   if (!ch->canBoneBreak(vict, SILENT_YES))
     return FALSE;
@@ -2583,6 +2585,10 @@ int moltenWeapon(TBeing *vict, cmdTypeT cmd, const char *arg, TObj *o, TObj *)
 
       // Accounting for fire immunity since this is heat-based wither limb
       if (vict->isImmune(IMMUNE_HEAT, slot))
+        return false;
+      
+      // Reduce chance if Elite
+      if (vict->debuffResist())
         return false;
 
       // Get a random limb slot and make sure it's valid
