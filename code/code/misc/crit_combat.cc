@@ -635,17 +635,13 @@ int TBeing::critSuccessChance(TBeing* victim,
     maxCritSeverity += critHittingBonus;
 
     // To avoid penalizing players while fighting mobs in the "leveling mob" range (arbitrarily decided as level 55), uncap crit severity in that situation.
-    static constexpr int maxLevelingMobLevel = 60;
-    const bool isLevelingMob =
-      !victim->isPc() && victim->GetMaxLevel() <= maxLevelingMobLevel;
-
-    maxCritSeverity = isLevelingMob ? 100 : min(100, maxCritSeverity);
+    maxCritSeverity = victim->isNormal() ? 100 : min(100, maxCritSeverity);
 
     // Give a bonus to crit severity (by reducing lower end in possible range of
     // rolls) while fighting mobs of level 50 or less. Makes powermove and crit
     // hitting skills fun and noticeable while leveling.
     const int minCritSeverity =
-      isLevelingMob ? max(powerMoveBonus + critHittingBonus, 1) : 1;
+      victim->isNormal() ? max(powerMoveBonus + critHittingBonus, 1) : 1;
 		
     critSeverity = ::number(minCritSeverity, maxCritSeverity);
 

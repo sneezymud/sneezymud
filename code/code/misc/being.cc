@@ -1926,3 +1926,30 @@ TPerson* TBeing::toTPerson() {
 const TPerson* TBeing::toTPerson() const {
   return dynamic_cast<const TPerson*>(this);
 };
+
+static bool isMobType(const TBeing* ch, int threshold) 
+{
+  return !ch->isPc() && ch->GetMaxLevel() > threshold;
+}
+
+bool TBeing::isNormal() {
+  return !isMobType(this, ELITE_THRESHOLD);
+}
+
+bool TBeing::isElite() {
+  return isMobType(this, ELITE_THRESHOLD);
+}
+
+bool TBeing::isEpic() {
+  return isMobType(this, EPIC_THRESHOLD);
+}
+
+bool TBeing::debuffResist() {
+  // Chance to resist if Elite
+  if (isElite() && percentChance(ELITE_RESIST_CHANCE))
+    return true;
+
+  // Always resist if epic
+  if (isEpic() && percentChance(EPIC_RESIST_CHANCE))
+    return false;
+}

@@ -45,6 +45,12 @@ extern bool roll_chance(double);
 extern bool percentChance(int percent);
 extern bool percentChance(double percent);
 
+// NPC thresholds
+const int ELITE_THRESHOLD = 65;
+const int EPIC_THRESHOLD = 85;
+const double ELITE_RESIST_CHANCE = 80.0;
+const double EPIC_RESIST_CHANCE = 100.0;
+
 typedef struct _app_typ {
   bool assignable;
   const char *name;
@@ -2032,6 +2038,12 @@ enum skillMissT {
   bool isTPerson() const;
   TPerson* toTPerson();
   const TPerson* toTPerson() const;
+
+  bool isNormal();
+  bool isElite();
+  bool isEpic();
+  bool debuffResist();
+
 
   // Template functions
   template <typename T>

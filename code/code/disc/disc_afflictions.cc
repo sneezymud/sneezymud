@@ -1277,6 +1277,10 @@ int boneBreaker(TBeing * caster, TBeing * victim, int level, short bKnown, int a
   dam = max(1, dam);
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_BONE_BREAKER)) {
+    // Reduce chance if Elite
+    if (victim->debuffResist())
+      return false;
+
     addTorment(victim, SPELL_BONE_BREAKER);
 
     caster->reconcileHurt(victim, discArray[SPELL_BONE_BREAKER]->alignMod);
@@ -1710,6 +1714,9 @@ int witherLimb(TBeing * caster, TBeing * victim, int level, short bKnown, int ad
   caster->reconcileHurt(victim, discArray[SPELL_WITHER_LIMB]->alignMod);
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_WITHER_LIMB)) {
+    // Reduce chance if Elite or Epic
+    if (victim->debuffResist())
+      return false;
     addTorment(victim, SPELL_WITHER_LIMB);
 
     // find a suitable limb to wither 
@@ -1882,6 +1889,9 @@ int paralyzeLimb(TBeing *caster, TBeing *victim, int level, short bKnown, int ad
   caster->reconcileHurt(victim, discArray[SPELL_PARALYZE_LIMB]->alignMod);
 
   if (caster->bSuccess(bKnown, caster->getPerc(),SPELL_PARALYZE_LIMB)) {
+    if (victim->debuffResist())
+      return SPELL_FAIL; 
+
     addTorment(victim, SPELL_PARALYZE_LIMB);
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->addToLimbFlags(slot, PART_PARALYZED);
@@ -1997,6 +2007,9 @@ int numb(TBeing * caster, TBeing * victim, int level, short bKnown, spellNumT sp
   }
   
   if (caster->bSuccess(bKnown, caster->getPerc(), spell)) {
+    if(victim->debuffResist())
+      return SPELL_FAIL;
+
     caster->reconcileHurt(victim, discArray[spell]->alignMod);
     addTorment(victim, spell);
 
