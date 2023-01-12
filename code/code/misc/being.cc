@@ -1951,5 +1951,7 @@ bool TBeing::debuffResist() {
 
   // Always resist if epic
   if (isEpic() && percentChance(EPIC_RESIST_CHANCE))
-    return false;
+    return true;
+
+  return false;
 }
