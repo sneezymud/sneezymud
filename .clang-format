@@ -1,0 +1,34 @@
+---
+BasedOnStyle: Google
+
+# Override Google rules
+AlignAfterOpenBracket: DontAlign
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortBlocksOnASingleLine: Empty
+AllowShortEnumsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+BinPackArguments: true
+BinPackParameters: true
+BreakConstructorInitializers: AfterColon
+BreakInheritanceList: AfterColon
+ConstructorInitializerIndentWidth: 2
+ContinuationIndentWidth: 2
+DerivePointerAlignment: false
+NamespaceIndentation: All
+SortIncludes: false
+SpacesInContainerLiterals: false
+Standard: c++17
+TabWidth: 2
+
+# Requires clang-format 13
+IndentAccessModifiers: true
+ReferenceAlignment: Left
+
+# Requires clang-format 14
+PackConstructorInitializers: CurrentLine
+QualifierAlignment: Left
+---
+
