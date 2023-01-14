@@ -1,29 +1,22 @@
 #include "disc_offense.h"
 
-
 CDOffense::CDOffense() :
   CDiscipline(),
   skAdvancedOffense(),
-  skInevitability()
-{
-}
+  skInevitability() {}
 
-CDOffense::CDOffense(const CDOffense &a) :
+CDOffense::CDOffense(const CDOffense& a) :
   CDiscipline(a),
   skAdvancedOffense(a.skAdvancedOffense),
-  skInevitability(a.skInevitability)
-{
-}
+  skInevitability(a.skInevitability) {}
 
-CDOffense & CDOffense::operator=(const CDOffense &a)
-{
-  if (this == &a) return *this;
+CDOffense& CDOffense::operator=(const CDOffense& a) {
+  if (this == &a)
+    return *this;
   CDiscipline::operator=(a);
   skAdvancedOffense = a.skAdvancedOffense;
   skInevitability = a.skInevitability;
   return *this;
 }
 
-CDOffense::~CDOffense()
-{
-}
+CDOffense::~CDOffense() {}

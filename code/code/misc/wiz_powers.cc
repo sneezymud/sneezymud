@@ -6,8 +6,7 @@
 #include "extern.h"
 #include "handler.h"
 
-bool TBeing::powerCheck(wizPowerT wpt) const
-{
+bool TBeing::powerCheck(wizPowerT wpt) const {
   if (!hasWizPower(wpt)) {
     sendTo(format("%s: You lack this power.\n\r") % getWizPowerName(wpt));
     return true;
@@ -17,8 +16,10 @@ bool TBeing::powerCheck(wizPowerT wpt) const
 
 bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
   if (!desc) {
-    vlogf(LOG_BUG,format("%s got to limitPowerCheck() without desc, very bad.") %  getName());
-    return TRUE; // if we return FALSE here it could cause a crash
+    vlogf(LOG_BUG,
+      format("%s got to limitPowerCheck() without desc, very bad.") %
+        getName());
+    return TRUE;  // if we return FALSE here it could cause a crash
   }
   if (hasWizPower(POWER_NO_LIMITS))
     return TRUE;
@@ -29,9 +30,7 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
   be = desc->blockbend;
   o = desc->office;
 
-
-
-  switch(cmd) {
+  switch (cmd) {
     case CMD_FORCE:
     case CMD_TRANSFER:
     case CMD_RESTORE:
@@ -39,18 +38,17 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
     case CMD_GIVE:
     case CMD_OUTFIT:
     case CMD_STEAL:
-      if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be)) 
-	return TRUE;
+      if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be))
+        return TRUE;
       break;
     case CMD_GOTO:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
-	  vnum == o || (vnum >= 0 && vnum <= 100))
-	return TRUE;
+          vnum == o || (vnum >= 0 && vnum <= 100))
+        return TRUE;
       break;
     case CMD_EDIT:
     case CMD_REDIT:
-      if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
-	  vnum == o)
+      if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) || vnum == o)
         return TRUE;
       break;
     case CMD_STAT:
@@ -75,40 +73,36 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
         return TRUE;
       break;
     default:
-      vlogf(LOG_DASH, format("%s called limits check with undefined command type (%d)") % 
-	    getName() % (int)cmd);
+      vlogf(LOG_DASH,
+        format("%s called limits check with undefined command type (%d)") %
+          getName() % (int)cmd);
       break;
   }
   return FALSE;
 }
 
-bool TBeing::isGenericObj(int vnum)
-{
-  if ((vnum >= 950 && vnum <= 1013) // training eq
-      || (vnum >= 20 && vnum <= 34) // generic furniture
-      || (vnum >= 100 && vnum <= 110) // generic lightables, window
-      || (vnum >= 130 && vnum <= 139) // generic windows
-      || (vnum >= 300 && vnum <= 342) // generic weapons
-      || (vnum >= 400 && vnum <= 417) // generic food
-      || (vnum >= 420 && vnum <= 443) // generic drink
-      || (vnum < 0) // oed loaded object
-      ) // add other generics here
+bool TBeing::isGenericObj(int vnum) {
+  if ((vnum >= 950 && vnum <= 1013)    // training eq
+      || (vnum >= 20 && vnum <= 34)    // generic furniture
+      || (vnum >= 100 && vnum <= 110)  // generic lightables, window
+      || (vnum >= 130 && vnum <= 139)  // generic windows
+      || (vnum >= 300 && vnum <= 342)  // generic weapons
+      || (vnum >= 400 && vnum <= 417)  // generic food
+      || (vnum >= 420 && vnum <= 443)  // generic drink
+      || (vnum < 0)                    // oed loaded object
+    )                                  // add other generics here
     return TRUE;
   return FALSE;
 }
 
-bool TBeing::isGenericMob(int vnum)
-{
-  if ((vnum >= 1701 && vnum <= 1750) // testmobs
-      || (vnum <= 0)
-      ) // add other generics here
+bool TBeing::isGenericMob(int vnum) {
+  if ((vnum >= 1701 && vnum <= 1750)  // testmobs
+      || (vnum <= 0))                 // add other generics here
     return TRUE;
   return FALSE;
 }
 
-
-void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
-{
+void setWizPowers(const TBeing* doer, TBeing* ch, const sstring& arg) {
   // this is intended to "package" powers into groupings.  Yes, it's sort
   // of like the old "levels" idea that we moved away from, but since there
   // are *SO* many powers (mostly cheesy), it's good to just pump them
@@ -131,7 +125,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->remWizPower(POWER_IMMORTAL_HELP);
     ch->remWizPower(POWER_SETSEV);
   } else if (is_abbrev(arg, "rooms")) {
-    ch->setWizPower(POWER_REDIT);  
+    ch->setWizPower(POWER_REDIT);
     ch->setWizPower(POWER_RSAVE);
     ch->setWizPower(POWER_EDIT);
     ch->setWizPower(POWER_RLOAD);
@@ -139,7 +133,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->setWizPower(POWER_SHOW);
     ch->setWizPower(POWER_PURGE);
   } else if (is_abbrev(arg, "remrooms")) {
-    ch->remWizPower(POWER_REDIT);  
+    ch->remWizPower(POWER_REDIT);
     ch->remWizPower(POWER_RSAVE);
     ch->remWizPower(POWER_EDIT);
     ch->remWizPower(POWER_RLOAD);
@@ -153,7 +147,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->setWizPower(POWER_SEDIT);
     ch->setWizPower(POWER_IMMORTAL_OUTFIT);
     ch->setWizPower(POWER_WIZNET_ALWAYS);
-    ch->setWizPower(POWER_LOAD);  // load rooms backdoor   
+    ch->setWizPower(POWER_LOAD);  // load rooms backdoor
   } else if (is_abbrev(arg, "remmobs")) {
     ch->remWizPower(POWER_MEDIT);
     ch->remWizPower(POWER_STAT_MOBILES);
@@ -161,7 +155,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->remWizPower(POWER_SEDIT);
     ch->remWizPower(POWER_IMMORTAL_OUTFIT);
     ch->remWizPower(POWER_WIZNET_ALWAYS);
-    ch->remWizPower(POWER_LOAD);  // load rooms backdoor   
+    ch->remWizPower(POWER_LOAD);  // load rooms backdoor
   } else if (is_abbrev(arg, "objs")) {
     ch->setWizPower(POWER_LOAD_SET);
     ch->setWizPower(POWER_STAT_OBJECT);
@@ -256,7 +250,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->remWizPower(POWER_ACCESS);
     ch->remWizPower(POWER_USERS);
     ch->remWizPower(POWER_ACCOUNT);
-  } else if (arg=="god") {
+  } else if (arg == "god") {
     ch->setWizPower(POWER_LOW);
     ch->setWizPower(POWER_GOD);
     ch->setWizPower(POWER_COMPARE);
@@ -275,7 +269,7 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->setWizPower(POWER_REPLACE);
     ch->setWizPower(POWER_RESIZE);
     ch->setWizPower(POWER_NO_LIMITS);
-  } else if (arg=="remgod") {
+  } else if (arg == "remgod") {
     ch->remWizPower(POWER_LOW);
     ch->remWizPower(POWER_GOD);
     ch->remWizPower(POWER_COMPARE);
@@ -294,51 +288,53 @@ void setWizPowers(const TBeing *doer, TBeing *ch, const sstring &arg)
     ch->remWizPower(POWER_REPLACE);
     ch->remWizPower(POWER_RESIZE);
     ch->remWizPower(POWER_NO_LIMITS);
-  } else if (arg=="allpowers") {
+  } else if (arg == "allpowers") {
     wizPowerT wpt;
     for (wpt = MIN_POWER_INDEX; wpt < MAX_POWER_INDEX; wpt++)
       ch->setWizPower(wpt);
     ch->remWizPower(POWER_IDLED);
   } else if (is_abbrev(arg, "allpowers")) {
-    doer->sendTo("This gives them *ALL* powers, don't do it unless you really really mean to.\n\r");
-    doer->sendTo("You have to type the whole word 'allpowers' to do it too.\n\r");
+    doer->sendTo(
+      "This gives them *ALL* powers, don't do it unless you really really mean "
+      "to.\n\r");
+    doer->sendTo(
+      "You have to type the whole word 'allpowers' to do it too.\n\r");
     return;
-  } else if (arg=="remall") {
+  } else if (arg == "remall") {
     wizPowerT wpt;
     for (wpt = MIN_POWER_INDEX; wpt < MAX_POWER_INDEX; wpt++)
       ch->remWizPower(wpt);
     ch->setWizPower(POWER_IDLED);
   } else if (is_abbrev(arg, "remall")) {
-    doer->sendTo("This removes *ALL* powers, don't do it unless you really really mean to.\n\r");
+    doer->sendTo(
+      "This removes *ALL* powers, don't do it unless you really really mean "
+      "to.\n\r");
     doer->sendTo("You have to type the whole word 'remall' to do it too.\n\r");
     return;
   } else {
     doer->sendTo("Outside of range.\n\r");
     doer->sendTo("Syntax: @set wizpower <person> <power>.\n\r");
-    doer->sendTo("Syntax: @set wizpower <person> <\"basic\" | \"rooms\" | \"mobs\" | \"objs\" | \"demi\" | \"quest\" | \"trust\" | \"allpowers\">\n\r");
-    doer->sendTo("Syntax: @set wizpower <person> <\"rembasic\" | \"remrooms\" | \"remmobs\" | \"remobjs\" | \"remdemi\" | \"remquest\" | \"remtrust\" | \"remall\">\n\r");
+    doer->sendTo(
+      "Syntax: @set wizpower <person> <\"basic\" | \"rooms\" | \"mobs\" | "
+      "\"objs\" | \"demi\" | \"quest\" | \"trust\" | \"allpowers\">\n\r");
+    doer->sendTo(
+      "Syntax: @set wizpower <person> <\"rembasic\" | \"remrooms\" | "
+      "\"remmobs\" | \"remobjs\" | \"remdemi\" | \"remquest\" | \"remtrust\" | "
+      "\"remall\">\n\r");
     return;
   }
   doer->sendTo("Wizpowers have been toggled.\n\r");
 }
 
-bool TBeing::hasWizPower(wizPowerT) const
-{
-  return false;
-}
+bool TBeing::hasWizPower(wizPowerT) const { return false; }
 
-void TBeing::setWizPower(wizPowerT)
-{
-}
+void TBeing::setWizPower(wizPowerT) {}
 
-void TBeing::remWizPower(wizPowerT)
-{
-}
+void TBeing::remWizPower(wizPowerT) {}
 
-bool TPerson::hasWizPower(wizPowerT value) const
-{
+bool TPerson::hasWizPower(wizPowerT value) const {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of hasWizPower(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of hasWizPower(%d)") % value);
     return FALSE;
   }
 
@@ -357,28 +353,25 @@ bool TPerson::hasWizPower(wizPowerT value) const
   return (wizPowers[value]);
 }
 
-void TPerson::setWizPower(wizPowerT value)
-{
+void TPerson::setWizPower(wizPowerT value) {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of setWizPower(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of setWizPower(%d)") % value);
     return;
   }
 
   wizPowers[value] |= 0x1;
 }
 
-void TPerson::remWizPower(wizPowerT value)
-{
+void TPerson::remWizPower(wizPowerT value) {
   if (value >= MAX_POWER_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of remWizPower(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of remWizPower(%d)") % value);
     return;
   }
 
   wizPowers[value] &= ~(0x1);
 }
 
-void TPerson::saveWizPowers()
-{
+void TPerson::saveWizPowers() {
   if (GetMaxLevel() <= MAX_MORT)
     return;
 
@@ -387,38 +380,36 @@ void TPerson::saveWizPowers()
   for (wizPowerT num = MIN_POWER_INDEX; num < MAX_POWER_INDEX; num++) {
     if (wizPowers[num] != wizPowersOriginal[num]) {
       if (!wizPowersOriginal[num])
-        db.query("insert into wizpower (player_id, wizpower) values (%i, %i)", getPlayerID(), mapWizPowerToFile(num));
+        db.query("insert into wizpower (player_id, wizpower) values (%i, %i)",
+          getPlayerID(), mapWizPowerToFile(num));
       else
-        db.query("delete from wizpower where player_id=%i and wizpower=%i", getPlayerID(), mapWizPowerToFile(num));
+        db.query("delete from wizpower where player_id=%i and wizpower=%i",
+          getPlayerID(), mapWizPowerToFile(num));
     }
     wizPowersOriginal[num] = wizPowers[num];
   }
 }
 
-void TPerson::loadWizPowers()
-{
+void TPerson::loadWizPowers() {
   if (GetMaxLevel() <= MAX_MORT)
     return;
   memset(&wizPowersOriginal, 0, sizeof(wizPowersOriginal));
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("select wizpower from wizpower where player_id=%i",
-	   getPlayerID());
-  
-  while(db.fetchRow()) {
+  db.query("select wizpower from wizpower where player_id=%i", getPlayerID());
+
+  while (db.fetchRow()) {
     setWizPower(mapFileToWizPower(convertTo<int>(db["wizpower"])));
     wizPowersOriginal[mapFileToWizPower(convertTo<int>(db["wizpower"]))] |= 0x1;
   }
 }
 
-void TBeing::doPowers(const sstring &) const
-{
+void TBeing::doPowers(const sstring&) const {
   sendTo("Mobs don't get powers, go away!");
 }
 
-void TPerson::doPowers(const sstring &argument) const
-{
+void TPerson::doPowers(const sstring& argument) const {
   if (!hasWizPower(POWER_POWERS)) {
     incorrectCommand();
     return;
@@ -426,15 +417,15 @@ void TPerson::doPowers(const sstring &argument) const
   if (!desc)
     return;
 
-  sstring    tStName, tStPower, tStString, tString;
-  const     TBeing *ch;
+  sstring tStName, tStPower, tStString, tString;
+  const TBeing* ch;
   wizPowerT tWizPower;
-  bool      wizPowerList[MAX_POWER_INDEX];
+  bool wizPowerList[MAX_POWER_INDEX];
 
   memset(&wizPowerList, 0, sizeof(wizPowerList));
 
-  tStName=argument.word(0);
-  tStPower=argument.word(1);
+  tStName = argument.word(0);
+  tStPower = argument.word(1);
 
   if (!tStName.empty()) {
     ch = get_pc_world(this, tStName, EXACT_YES);
@@ -445,21 +436,27 @@ void TPerson::doPowers(const sstring &argument) const
     if (!ch) {
       TDatabase db(DB_SNEEZY);
 
-      db.query("select wizpower from wizpower w, player p where p.name='%s' and p.id=w.player_id", tStName.lower().c_str());
+      db.query(
+        "select wizpower from wizpower w, player p where p.name='%s' and "
+        "p.id=w.player_id",
+        tStName.lower().c_str());
 
-      if(db.fetchRow()){
+      if (db.fetchRow()) {
         sendTo("Player not logged in but file found.  Reading in...\n\r");
 
-	do {
-          wizPowerList[mapFileToWizPower(convertTo<int>(db["wizpower"]))]|=0x1;
-	} while(db.fetchRow());
+        do {
+          wizPowerList[mapFileToWizPower(convertTo<int>(db["wizpower"]))] |=
+            0x1;
+        } while (db.fetchRow());
       } else {
-        sendTo("Unable to locate them anywhere in the world or in the files.\n\r");
+        sendTo(
+          "Unable to locate them anywhere in the world or in the files.\n\r");
         return;
       }
     } else {
-      for (tWizPower = MIN_POWER_INDEX; tWizPower < MAX_POWER_INDEX; tWizPower++)
-         wizPowerList[tWizPower] = ch->hasWizPower(tWizPower);
+      for (tWizPower = MIN_POWER_INDEX; tWizPower < MAX_POWER_INDEX;
+           tWizPower++)
+        wizPowerList[tWizPower] = ch->hasWizPower(tWizPower);
     }
   } else {
     ch = this;
@@ -469,8 +466,8 @@ void TPerson::doPowers(const sstring &argument) const
   }
 
   tString = format("%s%s Wiz-Powers:\n\r") %
-    (ch == this ? "Your" : (ch ? ch->getName() : tStName)) %
-    (ch == this ? "" : "'s");
+            (ch == this ? "Your" : (ch ? ch->getName() : tStName)) %
+            (ch == this ? "" : "'s");
   tStString += tString;
 
   for (tWizPower = MIN_POWER_INDEX; tWizPower < MAX_POWER_INDEX; tWizPower++) {
@@ -479,11 +476,10 @@ void TPerson::doPowers(const sstring &argument) const
     if (tStPower.empty() ||
         (is_number(tString) && convertTo<int>(tStPower) == (tWizPower + 1)) ||
         (!is_number(tString) &&
-         is_abbrev(tStPower, getWizPowerName(tWizPower)))) {
-      tString = format("%3d.) [%c] %-25.25s") %
-              (tWizPower + 1) %
-              (wizPowerList[tWizPower] ? '*' : ' ') %
-              getWizPowerName(tWizPower);
+          is_abbrev(tStPower, getWizPowerName(tWizPower)))) {
+      tString = format("%3d.) [%c] %-25.25s") % (tWizPower + 1) %
+                (wizPowerList[tWizPower] ? '*' : ' ') %
+                getWizPowerName(tWizPower);
       tStString += tString;
 
       if ((tWizPower % 2) || !tStPower.empty())
@@ -496,11 +492,10 @@ void TPerson::doPowers(const sstring &argument) const
   if ((tWizPower % 2))
     tStString += "\n\r";
 
-  desc->page_string(tStString, SHOWNOW_NO, ALLOWREP_YES);  
+  desc->page_string(tStString, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-const sstring getWizPowerName(wizPowerT wpt)
-{
+const sstring getWizPowerName(wizPowerT wpt) {
   // powers command truncs at 20 chars
   switch (wpt) {
     case POWER_BUILDER:
@@ -734,4 +729,3 @@ const sstring getWizPowerName(wizPowerT wpt)
   }
   return "";
 }
-

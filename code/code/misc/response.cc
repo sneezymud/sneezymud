@@ -4,22 +4,14 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "response.h"
 #include "parse.h"
 #include "structs.h"
 #include "being.h"
 
-command::command() :
-  cmd(MAX_CMD_LIST),
-  args(NULL),
-  next(NULL)
-{
-}
+command::command() : cmd(MAX_CMD_LIST), args(NULL), next(NULL) {}
 
-command::command(const command &a) :
-  cmd(a.cmd)
-{
+command::command(const command& a) : cmd(a.cmd) {
   args = mud_str_dup(a.args);
   if (a.next)
     next = new command(*a.next);
@@ -27,15 +19,15 @@ command::command(const command &a) :
     next = NULL;
 }
 
-command & command::operator=(const command &a)
-{
-  if (this == &a) return *this;
+command& command::operator=(const command& a) {
+  if (this == &a)
+    return *this;
   command *t, *n;
   for (t = next; t; t = n) {
     n = t->next;
     delete t;
   }
-  delete [] args;
+  delete[] args;
 
   cmd = a.cmd;
   args = mud_str_dup(args);
@@ -46,30 +38,18 @@ command & command::operator=(const command &a)
   return *this;
 }
 
-command::command(cmdTypeT c, char *d) :
-  cmd(c),
-  next(NULL)
-{
+command::command(cmdTypeT c, char* d) : cmd(c), next(NULL) {
   args = mud_str_dup(d);
 }
 
-command::~command()
-{
-  delete [] args;
+command::~command() {
+  delete[] args;
   args = NULL;
 }
 
-resp::resp() :
-  cmd(MAX_CMD_LIST),
-  args(NULL),
-  cmds(NULL),
-  next(NULL)
-{
-}
+resp::resp() : cmd(MAX_CMD_LIST), args(NULL), cmds(NULL), next(NULL) {}
 
-resp::resp(const resp &a) :
-  cmd(a.cmd)
-{
+resp::resp(const resp& a) : cmd(a.cmd) {
   args = mud_str_dup(a.args);
   if (a.cmds)
     cmds = new command(*a.cmds);
@@ -81,15 +61,15 @@ resp::resp(const resp &a) :
     next = NULL;
 }
 
-resp & resp::operator=(const resp &a)
-{
-  if (this == &a) return *this;
+resp& resp::operator=(const resp& a) {
+  if (this == &a)
+    return *this;
   resp *t, *n;
   for (t = next; t; t = n) {
     n = t->next;
     delete t;
   }
-  delete [] args;
+  delete[] args;
   delete cmds;
 
   cmd = a.cmd;
@@ -107,22 +87,17 @@ resp & resp::operator=(const resp &a)
   return *this;
 }
 
-resp::resp(cmdTypeT c, char *d) :
-  cmd(c),
-  cmds(NULL),
-  next(NULL)
-{
+resp::resp(cmdTypeT c, char* d) : cmd(c), cmds(NULL), next(NULL) {
   args = mud_str_dup(d);
 }
 
-resp::~resp()
-{
-  delete [] args;
+resp::~resp() {
+  delete[] args;
   args = NULL;
 
-  command *c = cmds;
-  while( c ) {
-    command *tmp = c;
+  command* c = cmds;
+  while (c) {
+    command* tmp = c;
     c = tmp->next;
     delete tmp;
   }
@@ -132,12 +107,9 @@ RespMemory::RespMemory() :
   name(NULL),
   args(NULL),
   cmd(MAX_CMD_LIST),
-  next(NULL)
-{
-}
+  next(NULL) {}
 
-RespMemory::RespMemory(cmdTypeT newCmd, TBeing *tBeing, const sstring &tArg)
-{
+RespMemory::RespMemory(cmdTypeT newCmd, TBeing* tBeing, const sstring& tArg) {
   if (tBeing && !tBeing->getNameNOC(tBeing).empty()) {
     name = mud_str_dup(tBeing->getNameNOC(tBeing));
   } else {
@@ -147,18 +119,16 @@ RespMemory::RespMemory(cmdTypeT newCmd, TBeing *tBeing, const sstring &tArg)
   if (!tArg.empty())
     args = mud_str_dup(tArg);
 
-  cmd  = newCmd;
+  cmd = newCmd;
   next = NULL;
 }
 
-RespMemory::RespMemory(const RespMemory &a) :
-  cmd(a.cmd)
-{
+RespMemory::RespMemory(const RespMemory& a) : cmd(a.cmd) {
   if (a.name)
     name = mud_str_dup(a.name);
 
   if (args) {
-    delete [] args;
+    delete[] args;
     args = NULL;
   }
 
@@ -168,12 +138,12 @@ RespMemory::RespMemory(const RespMemory &a) :
   next = a.next;
 }
 
-RespMemory & RespMemory::operator = (const RespMemory &a)
-{
-  if (this == &a) return *this;
+RespMemory& RespMemory::operator=(const RespMemory& a) {
+  if (this == &a)
+    return *this;
 
   if (name) {
-    delete [] name;
+    delete[] name;
     name = NULL;
   }
 
@@ -181,7 +151,7 @@ RespMemory & RespMemory::operator = (const RespMemory &a)
     name = mud_str_dup(a.name);
 
   if (args) {
-    delete [] args;
+    delete[] args;
     args = NULL;
   }
 
@@ -193,25 +163,17 @@ RespMemory & RespMemory::operator = (const RespMemory &a)
   return *this;
 }
 
-RespMemory::~RespMemory()
-{
-  delete [] name;
+RespMemory::~RespMemory() {
+  delete[] name;
   name = NULL;
-  delete [] args;
+  delete[] args;
   args = NULL;
   next = NULL;
 }
 
-Responses::Responses() :
-  respList(NULL),
-  respCount(0),
-  respMemory(NULL)
-{
-}
+Responses::Responses() : respList(NULL), respCount(0), respMemory(NULL) {}
 
-Responses::Responses(const Responses &a) :
-  respCount(a.respCount)
-{
+Responses::Responses(const Responses& a) : respCount(a.respCount) {
   if (a.respList)
     respList = new resp(*a.respList);
   else
@@ -223,9 +185,9 @@ Responses::Responses(const Responses &a) :
     respMemory = NULL;
 }
 
-Responses & Responses::operator=(const Responses &a)
-{
-  if (this == &a) return *this;
+Responses& Responses::operator=(const Responses& a) {
+  if (this == &a)
+    return *this;
 
   delete respList;
 
@@ -244,10 +206,9 @@ Responses & Responses::operator=(const Responses &a)
   return *this;
 }
 
-Responses::~Responses()
-{
-  resp *r;
-  RespMemory *m;
+Responses::~Responses() {
+  resp* r;
+  RespMemory* m;
 
   while ((r = respList)) {
     respList = r->next;
@@ -259,6 +220,6 @@ Responses::~Responses()
     delete m;
   }
 
-  respList   = NULL;
+  respList = NULL;
   respMemory = NULL;
 }

@@ -13,35 +13,32 @@
 #include "pathfinder.h"
 #include "being.h"
 
-void stop_tracking(TBeing *ch)
-{
+void stop_tracking(TBeing* ch) {
   if (!ch->isLinkdead() && (ch->in_room > 0) &&
       (ch->getPosition() >= POSITION_RESTING)) {
-    act("You stop and look about blankly.",
-            FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops and looks about blankly.",
-            FALSE, ch, 0, 0, TO_ROOM);
+    act("You stop and look about blankly.", FALSE, ch, 0, 0, TO_CHAR);
+    act("$n stops and looks about blankly.", FALSE, ch, 0, 0, TO_ROOM);
   }
   ch->stopTask();
   ch->remPlayerAction(PLR_HUNTING);
-  if (ch->affectedBySpell(SKILL_TRACK)     )
+  if (ch->affectedBySpell(SKILL_TRACK))
     ch->affectFrom(SKILL_TRACK);
-  if (ch->affectedBySpell(SKILL_SEEKWATER) )
+  if (ch->affectedBySpell(SKILL_SEEKWATER))
     ch->affectFrom(SKILL_SEEKWATER);
   ch->specials.hunting = NULL;
   ch->hunt_dist = 0;
 }
 
-int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRoom *, TObj *obj)
-{
+int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
+  TRoom*, TObj* obj) {
   // Do a hard return now if they have already been given their message.
   if ((!ch || !ch->task || (ch->task->flags > 0 && ch->task->flags != 100)) &&
       cmd == CMD_TASK_CONTINUE)
     return FALSE;
 
-  affectedData *aff;
-  roomDirData *Eroom=NULL;
-  int code=-1;
+  affectedData* aff;
+  roomDirData* Eroom = NULL;
+  int code = -1;
   int skill;
   int targetRm = -1;
   bool isSW = ch->affectedBySpell(SKILL_SEEKWATER);
@@ -56,13 +53,12 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
     return FALSE;  // return FALSE lets the command be interpreted
   }
 
-  if (ch->utilityTaskCommand(cmd) ||
-      ch->nobrainerTaskCommand(cmd))
+  if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
   if (!ch->specials.hunting && !isSW) {
-    act("For some reason your quarry can no longer be found.",
-        FALSE, ch, 0, 0, TO_CHAR);
+    act("For some reason your quarry can no longer be found.", FALSE, ch, 0, 0,
+      TO_CHAR);
     stop_tracking(ch);
     return FALSE;
   }
@@ -91,70 +87,74 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
     return TRUE;
   }
 
-  switch(cmd) {
-  case CMD_TRACK:
-    if (!isSW) {
+  switch (cmd) {
+    case CMD_TRACK:
+      if (!isSW) {
         if (*argument)
-          ch->sendTo("You give up tracking your quarry and choose a new one.\n\r");
+          ch->sendTo(
+            "You give up tracking your quarry and choose a new one.\n\r");
         stop_tracking(ch);
         ch->addToWait(combatRound(1));
         if (*argument)
           return FALSE;
         else
           return TRUE;
-    }
+      }
       warn_busy(ch);
       return TRUE;
-  case CMD_SEEKWATER:
-    if (isSW) {
+    case CMD_SEEKWATER:
+      if (isSW) {
         ch->sendTo("Your already seeking water.\n\r");
         return TRUE;
-    }
-      ch->sendTo("You give up tracking your quarry and choose to seek some water.\n\r");
+      }
+      ch->sendTo(
+        "You give up tracking your quarry and choose to seek some water.\n\r");
       stop_tracking(ch);
       ch->addToWait(combatRound(1));
       return FALSE;
-  case CMD_NORTH:
-  case CMD_EAST:
-  case CMD_SOUTH:
-  case CMD_WEST:
-  case CMD_UP:
-  case CMD_DOWN:
-  case CMD_NE:
-  case CMD_NW:
-  case CMD_SE:
-  case CMD_SW:
-      Eroom=ch->exitDir(getDirFromCmd(cmd));
-  case CMD_ENTER:
-    // Each time the person moves we reduce the flags value by 1.  This way
-    // we eat up 1 'CMD_TASK_CONTINUE' when it is called for each move.  Now
-    // we must make sure were not simply dropping this to 0, because if we
-    // moved we apparently need to try and find the target again but we also
-    // don't want this to occure to fast, so we drop it to -1 at Least.
-    // We also eat some moves should the exit exist.
+    case CMD_NORTH:
+    case CMD_EAST:
+    case CMD_SOUTH:
+    case CMD_WEST:
+    case CMD_UP:
+    case CMD_DOWN:
+    case CMD_NE:
+    case CMD_NW:
+    case CMD_SE:
+    case CMD_SW:
+      Eroom = ch->exitDir(getDirFromCmd(cmd));
+    case CMD_ENTER:
+      // Each time the person moves we reduce the flags value by 1.  This way
+      // we eat up 1 'CMD_TASK_CONTINUE' when it is called for each move.  Now
+      // we must make sure were not simply dropping this to 0, because if we
+      // moved we apparently need to try and find the target again but we also
+      // don't want this to occure to fast, so we drop it to -1 at Least.
+      // We also eat some moves should the exit exist.
       if (ch->task->flags > -5)
         ch->task->flags = min(-1, ch->task->flags - 1);
       if (exit_ok(Eroom, NULL))
-        ch->addToMove(-(int) (110-
-			      ch->getSkillValue((isSW ? SKILL_SEEKWATER :
-						 (isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK))))/20);
+        ch->addToMove(
+          -(int)(110 - ch->getSkillValue(
+                         (isSW ? SKILL_SEEKWATER
+                               : (isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK)))) /
+          20);
       return FALSE;
-  case CMD_TELL:
-  case CMD_WHISPER:
+    case CMD_TELL:
+    case CMD_WHISPER:
       if (ch->task->flags > -5 && ch->task->flags < 1)
         ch->task->flags--;
       return FALSE;
-  case CMD_SCAN:
+    case CMD_SCAN:
       if (ch->task->flags > -4 && ch->task->flags < 1)
         ch->task->flags -= 2;
       return FALSE;
-  case CMD_TASK_CONTINUE:
-    // Are we supposed to eat this continue?  If less than 0, you betcha.
-    // Add 1 to flags to mark the eat then return back.
-    if (ch->task->flags < 0) {
+    case CMD_TASK_CONTINUE:
+      // Are we supposed to eat this continue?  If less than 0, you betcha.
+      // Add 1 to flags to mark the eat then return back.
+      if (ch->task->flags < 0) {
         ch->task->flags++;
         return TRUE;
-    }
+      }
       if (ch->task->flags > 0)
         return TRUE;
       // Guess this one wasn't to be ate.  So we check to see if we've found
@@ -186,11 +186,11 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         }
         // Are we seeking water?  Must be if we don't have a hunt target.
         if (!ch->specials.hunting) {
-          if (isSW){
+          if (isSW) {
             TPathFinder path(ch->hunt_dist);
-            
-            code=path.findPath(ch->in_room, findWater());
-            targetRm=path.getDest();
+
+            code = path.findPath(ch->in_room, findWater());
+            targetRm = path.getDest();
           } else {
             vlogf(LOG_BUG, "problem in task_track()");
             stop_tracking(ch);
@@ -201,16 +201,19 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
           TPathFinder path;
 
           path.setRange(ch->hunt_dist);
-          path.setStayZone(ch->GetMaxLevel() < MIN_GLOB_TRACK_LEV && !ch->affectedBySpell(SPELL_TRAIL_SEEK) && ch->isPc());
+          path.setStayZone(ch->GetMaxLevel() < MIN_GLOB_TRACK_LEV &&
+                           !ch->affectedBySpell(SPELL_TRAIL_SEEK) &&
+                           ch->isPc());
           path.setThruDoors(true);
 
-          code = path.findPath(ch->in_room, findRoom(ch->specials.hunting->in_room));
+          code =
+            path.findPath(ch->in_room, findRoom(ch->specials.hunting->in_room));
         }
-        // This is actually checked in track(), which should have been called before
-        // us.  But you never know, bad things Do happen.
-        // An example in this case.  We start to track, fail, mob were tracking moves into
-        // our room, we Don't do a look to trigger track(), and the task pulse hits causeing
-        // this bit of code to become active.
+        // This is actually checked in track(), which should have been called
+        // before us.  But you never know, bad things Do happen. An example in
+        // this case.  We start to track, fail, mob were tracking moves into our
+        // room, we Don't do a look to trigger track(), and the task pulse hits
+        // causeing this bit of code to become active.
         if ((ch->specials.hunting && ch->sameRoom(*ch->specials.hunting)) ||
             (targetRm != -1 && targetRm == ch->inRoom())) {
           ch->sendTo(format("%s###You have found %s!%s\n\r") % ch->orange() %
@@ -219,8 +222,10 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             ch->desc->clientf(format("%d") % CLIENT_TRACKOFF);
           ch->stopTask();
           ch->remPlayerAction(PLR_HUNTING);
-          if (ch->affectedBySpell(SKILL_TRACK)     ) ch->affectFrom(SKILL_TRACK);
-          if (ch->affectedBySpell(SKILL_SEEKWATER) ) ch->affectFrom(SKILL_SEEKWATER);
+          if (ch->affectedBySpell(SKILL_TRACK))
+            ch->affectFrom(SKILL_TRACK);
+          if (ch->affectedBySpell(SKILL_SEEKWATER))
+            ch->affectFrom(SKILL_SEEKWATER);
           ch->specials.hunting = NULL;
           ch->addToWait(combatRound(1));
           return TRUE;
@@ -234,37 +239,41 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
         // Success
         if (worked) {
           // This way we can find out the exit in look and compare.
-          ch->task->flags = code+1;
-          // If the exit code is less than 10, then it has to be on the 10-exit compass
+          ch->task->flags = code + 1;
+          // If the exit code is less than 10, then it has to be on the 10-exit
+          // compass
           if (code >= 0 && code <= 9) {
-            ch->sendTo(format("%s###You track %s %s.%s\n\r") %
-                   ch->purple() %
-		       (isSW ? "some water" : "your target") %
-                   dirs_to_blank[code] % ch->norm());
+            ch->sendTo(format("%s###You track %s %s.%s\n\r") % ch->purple() %
+                       (isSW ? "some water" : "your target") %
+                       dirs_to_blank[code] % ch->norm());
             // Client check
             if (ch->desc && ch->desc->m_bIsClient)
-              ch->desc->clientf(format("%d|%d") % CLIENT_TRACKING % (1 << code));
+              ch->desc->clientf(
+                format("%d|%d") % CLIENT_TRACKING % (1 << code));
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
               strcpy(buf, dirs[code]);
               ch->addCommandToQue(buf);
             }
           } else if (code > 9) {
             // It's above 9, so it's a special exit.  Portal or something.
-            int count = code - 9,
-                seen  = 0;
-	    TPortal *tp=NULL;
-            for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it) {
-              tp = dynamic_cast<TPortal *>(*it);
+            int count = code - 9, seen = 0;
+            TPortal* tp = NULL;
+            for (StuffIter it = ch->roomp->stuff.begin();
+                 it != ch->roomp->stuff.end(); ++it) {
+              tp = dynamic_cast<TPortal*>(*it);
               if (tp) {
                 seen++;
                 if (count == seen) {
-                  ch->sendTo(COLOR_OBJECTS, format("%sYou track %s through %s.%s\n\r") % ch->purple() %
-                             (isSW ? "some water" : "your quarry") % tp->getName() % ch->norm());
+                  ch->sendTo(COLOR_OBJECTS,
+                    format("%sYou track %s through %s.%s\n\r") % ch->purple() %
+                      (isSW ? "some water" : "your quarry") % tp->getName() %
+                      ch->norm());
                   break;
                 }
               }
             }
-            // Bad, our special exit is Gone...even tho it was there a second ago.
+            // Bad, our special exit is Gone...even tho it was there a second
+            // ago.
             if (!tp) {
               ch->sendTo("Error finding path target!  Tell a god.\n\r");
               vlogf(LOG_BUG, "Error finding path (task_tracking).");
@@ -273,7 +282,8 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
             }
             // Client check.
             if (ch->desc && ch->desc->m_bIsClient)
-              ch->desc->clientf(format("%d|%d") % CLIENT_TRACKING % (1 << code));
+              ch->desc->clientf(
+                format("%d|%d") % CLIENT_TRACKING % (1 << code));
             if (ch->desc && (ch->desc->autobits & AUTO_HUNT)) {
               strcpy(buf, tp->name.c_str());
               strcpy(buf, add_bars(buf).c_str());
@@ -284,39 +294,42 @@ int task_tracking(TBeing *ch, cmdTypeT cmd, const char *argument, int pulse, TRo
           return TRUE;
         } else {
           // Failure.
-          ch->sendTo(COLOR_MOBS, format("You continue tracking %s, but fail this turn.\n\r") %
-                     (isSW ? "some water" : ch->specials.hunting->getName()));
+          ch->sendTo(COLOR_MOBS,
+            format("You continue tracking %s, but fail this turn.\n\r") %
+              (isSW ? "some water" : ch->specials.hunting->getName()));
           ch->task->flags -= 2;
           ch->addToWait(combatRound(1));
-          ch->addToMove((int) min(10, (-2-((110-ch->getSkillValue(
-		        (isSW ? SKILL_SEEKWATER : (isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK))))/6))));
+          ch->addToMove((int)min(10,
+            (-2 - ((110 - ch->getSkillValue(
+                            (isSW ? SKILL_SEEKWATER
+                                  : (isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK)))) /
+                    6))));
           if (ch->getMove() <= 0) {
-            act("You just don't feel like you could go on right now.",
-                FALSE, ch, 0, 0, TO_CHAR);
-            act("$n looks incredibly tired.",
-                FALSE, ch, 0, 0, TO_ROOM);
+            act("You just don't feel like you could go on right now.", FALSE,
+              ch, 0, 0, TO_CHAR);
+            act("$n looks incredibly tired.", FALSE, ch, 0, 0, TO_ROOM);
             stop_tracking(ch);
           }
         }
       }
       break;
-  case CMD_ABORT:
-  case CMD_STOP:
-      ch->sendTo(COLOR_MOBS, format("You stop %s %s.\n\r") %
-                 (isSW ? "seeking" : "tracking") %
-                 (isSW ? "water"   : ch->specials.hunting->getName()));
+    case CMD_ABORT:
+    case CMD_STOP:
+      ch->sendTo(COLOR_MOBS,
+        format("You stop %s %s.\n\r") % (isSW ? "seeking" : "tracking") %
+          (isSW ? "water" : ch->specials.hunting->getName()));
       stop_tracking(ch);
       ch->addToWait(combatRound(1));
       break;
-  case CMD_TASK_FIGHTING:
+    case CMD_TASK_FIGHTING:
       ch->sendTo(format("You can not continue %s while under attack!\n\r") %
                  (isSW ? "seeking water" : "tracking"));
       stop_tracking(ch);
       break;
-  default:
+    default:
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
-    break;
+      break;
   }
   return TRUE;
 }

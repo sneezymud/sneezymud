@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "handler.h"
 #include "extern.h"
 #include "room.h"
@@ -12,11 +11,10 @@
 #include "combat.h"
 #include "obj_base_clothing.h"
 
-bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
-{
-  if (checkBusy()) 
+bool TBeing::canTrip(TBeing* victim, silentTypeT silent) {
+  if (checkBusy())
     return FALSE;
-  
+
   spellNumT skill = getSkillNum(SKILL_TRIP);
   if (!doesKnowSkill(skill)) {
     if (!silent)
@@ -61,12 +59,12 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
     default:
       break;
   }
-  if (isFlying())  {
+  if (isFlying()) {
     if (!silent)
       sendTo("You can't trip while flying.\n\r");
     return FALSE;
   }
-  if (victim->isFlying())  {
+  if (victim->isFlying()) {
     if (!silent)
       sendTo("You can't trip them while they are flying.\n\r");
     return FALSE;
@@ -82,7 +80,8 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
 
   if (victim->riding) {
     if (!silent)
-      sendTo(COLOR_MOBS, format("You are unable to trip %s off of %s!\n\r") % victim->getName() % victim->riding->getName());
+      sendTo(COLOR_MOBS, format("You are unable to trip %s off of %s!\n\r") %
+                           victim->getName() % victim->riding->getName());
     return FALSE;
   }
   if (isSwimming()) {
@@ -111,9 +110,10 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
   if (victim->getPosition() <= POSITION_SITTING) {
     if (!silent)
 
-      sendTo(format("How can you trip someone already on the %s?!?\n\r") % roomp->describeGround());
+      sendTo(format("How can you trip someone already on the %s?!?\n\r") %
+             roomp->describeGround());
     return FALSE;
-  }    
+  }
   if (getMove() < 5) {
     if (!silent)
       sendTo("You don't have the vitality to trip anyone!\n\r");
@@ -127,21 +127,24 @@ bool TBeing::canTrip(TBeing *victim, silentTypeT silent)
 
   if (victim->getHeight() < 12) {
     if (!silent)
-      sendTo("That creature has less ground clearance than the height of your foot.\n\r");
+      sendTo(
+        "That creature has less ground clearance than the height of your "
+        "foot.\n\r");
     return FALSE;
   }
-  
-  if (3*getHeight() < victim->getHeight()) {
+
+  if (3 * getHeight() < victim->getHeight()) {
     if (!silent)
-      sendTo("Rule of thumb:  you can't trip someone when their kneecaps are higher than your eye level.\n\r");
+      sendTo(
+        "Rule of thumb:  you can't trip someone when their kneecaps are higher "
+        "than your eye level.\n\r");
     return FALSE;
   }
 
   return TRUE;
 }
 
-static int trip(TBeing *c, TBeing *victim, spellNumT skill)
-{
+static int trip(TBeing* c, TBeing* victim, spellNumT skill) {
   int percent = 0, i = 0, rc = 0;
 
   if (!c->canTrip(victim, SILENT_NO))
@@ -162,25 +165,24 @@ static int trip(TBeing *c, TBeing *victim, spellNumT skill)
   }
 #endif
 
-  // some modifications to account for dexterity, and level 
+  // some modifications to account for dexterity, and level
   percent = 0;
-  percent += ((int) c->getWeight() - (int) victim->getWeight())/20;
+  percent += ((int)c->getWeight() - (int)victim->getWeight()) / 20;
 
   // Make a level based adjustment - Brutius
   int level = c->getSkillLevel(skill);
-  percent += 2*(level - victim->GetMaxLevel());
+  percent += 2 * (level - victim->GetMaxLevel());
 
   // things with more legs are tougher - Maror
   if (victim->isFourLegged()) {
-    c->sendTo("The stability of this creature makes it more difficult to trip.\n\r");
+    c->sendTo(
+      "The stability of this creature makes it more difficult to trip.\n\r");
     percent -= 50;
   }
 
   int bKnown = c->getSkillValue(skill);
-  i = c->specialAttack(victim,skill);
-  if (i &&
-      (bKnown > 0) &&
-      (i != GUARANTEED_FAILURE) &&
+  i = c->specialAttack(victim, skill);
+  if (i && (bKnown > 0) && (i != GUARANTEED_FAILURE) &&
       (!victim->canCounterMove(bKnown)) &&
       (!victim->canFocusedAvoidance(bKnown)) &&
       c->bSuccess(bKnown + percent, skill)) {
@@ -196,24 +198,24 @@ static int trip(TBeing *c, TBeing *victim, spellNumT skill)
   }
 }
 
-int TBeing::tripFail(TBeing *victim, spellNumT skill)
-{
+int TBeing::tripFail(TBeing* victim, spellNumT skill) {
   int rc;
 
-  act("$n attempts to trip $N but $E quickly hops over $n's leg.", 
-      FALSE, this, 0, victim, TO_NOTVICT);
-  act("You attempt to trip $N but $E quickly hops over your leg.", 
-      FALSE, this, 0, victim, TO_CHAR);
-  act("$n tries to trip you but you quickly hop over $s leg.", 
-      FALSE, this, 0, victim, TO_VICT);
+  act("$n attempts to trip $N but $E quickly hops over $n's leg.", FALSE, this,
+    0, victim, TO_NOTVICT);
+  act("You attempt to trip $N but $E quickly hops over your leg.", FALSE, this,
+    0, victim, TO_CHAR);
+  act("$n tries to trip you but you quickly hop over $s leg.", FALSE, this, 0,
+    victim, TO_VICT);
 
   if (hasLegs()) {
     rc = crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    sendTo(format("%sYou lose your balance and fall over.%s\n\r") % red() % norm());
-    act("<r>$n loses $s balance and falls over.<1>",TRUE, this, 0, 0, TO_ROOM);
+    sendTo(
+      format("%sYou lose your balance and fall over.%s\n\r") % red() % norm());
+    act("<r>$n loses $s balance and falls over.<1>", TRUE, this, 0, 0, TO_ROOM);
 
     rc = trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
@@ -223,17 +225,19 @@ int TBeing::tripFail(TBeing *victim, spellNumT skill)
   return FALSE;
 }
 
-int TBeing::tripSuccess(TBeing *victim, spellNumT skill)
-{
+int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
   int rc = 0;
   int distNum = 0;
 
+  act("$n sticks a leg out and trips $N to the ground!", FALSE, this, 0, victim,
+    TO_NOTVICT);
+  act("You quickly stick your leg out and trip $N to the ground!", FALSE, this,
+    0, victim, TO_CHAR);
+  act("$n sticks a leg out and trips you!", FALSE, this, 0, victim, TO_VICT,
+    ANSI_BLUE);
+  act("You fall flat on your face!", FALSE, this, 0, victim, TO_VICT,
+    ANSI_BLUE);
 
-  act("$n sticks a leg out and trips $N to the ground!", FALSE, this, 0, victim, TO_NOTVICT);
-  act("You quickly stick your leg out and trip $N to the ground!", FALSE, this, 0, victim, TO_CHAR);
-  act("$n sticks a leg out and trips you!", FALSE, this, 0, victim, TO_VICT, ANSI_BLUE);
-  act("You fall flat on your face!", FALSE, this, 0, victim, TO_VICT, ANSI_BLUE);
- 
   distNum = 1;
   if (isLucky(levelLuckModifier(victim->GetMaxLevel())))
     distNum++;
@@ -255,9 +259,9 @@ int TBeing::tripSuccess(TBeing *victim, spellNumT skill)
   // round up
   wait += 0.5;
 
-  victim->addToWait((int) wait);
+  victim->addToWait((int)wait);
 
-  if (victim->spelltask) 
+  if (victim->spelltask)
     victim->addToDistracted(distNum, FALSE);
 
   reconcileHurt(victim, 0.01);
@@ -268,10 +272,9 @@ int TBeing::tripSuccess(TBeing *victim, spellNumT skill)
   return FALSE;
 }
 
-int TBeing::doTrip(const char *argument, TBeing *vict)
-{
+int TBeing::doTrip(const char* argument, TBeing* vict) {
   int rc;
-  TBeing *victim;
+  TBeing* victim;
   char name_buf[256];
 
   spellNumT skill = getSkillNum(SKILL_TRIP);
@@ -288,16 +291,15 @@ int TBeing::doTrip(const char *argument, TBeing *vict)
   }
 
   if ((rc = trip(this, victim, skill)))
-    addSkillLag(skill,rc);
+    addSkillLag(skill, rc);
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     if (vict)
       return rc;
-       
+
     delete victim;
     victim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;
 }
-

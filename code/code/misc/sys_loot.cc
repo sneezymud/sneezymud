@@ -13,25 +13,23 @@
 #include "obj_staff.h"
 #include "obj_wand.h"
 
-TLootStructure * tLoot;
-
+TLootStructure* tLoot;
 
 // Put objects that should *NOT* be loaded through the LootBooter here.
 // List these by VNum, Not RNum
-bool isLegalLoot(int tValue)
-{
+bool isLegalLoot(int tValue) {
   switch (tValue) {
-    case 31300: // mystery potion
-    case 29997: // Learning Potion
-    case 29993: // Generic Potion
-    case 29992: // Youth-Potion
-    case 29991: // Stat-Potion
-    case 11130: // Sketch Pad [none/none/none]
-    case 29990: // Generic Scroll
-    case  7816: // Scroll-Withered [portal_quest_prop]
-    case  1210: // Frying Pan
-    case   831: // Sturdy Glass Flask [none/none/none]
-    case 23500: // Warped Staff
+    case 31300:  // mystery potion
+    case 29997:  // Learning Potion
+    case 29993:  // Generic Potion
+    case 29992:  // Youth-Potion
+    case 29991:  // Stat-Potion
+    case 11130:  // Sketch Pad [none/none/none]
+    case 29990:  // Generic Scroll
+    case 7816:   // Scroll-Withered [portal_quest_prop]
+    case 1210:   // Frying Pan
+    case 831:    // Sturdy Glass Flask [none/none/none]
+    case 23500:  // Warped Staff
       return false;
 
     default:
@@ -42,8 +40,7 @@ bool isLegalLoot(int tValue)
 }
 
 // Add names to this list to prevent that way
-bool isLegalLoot(const char * tString)
-{
+bool isLegalLoot(const char* tString) {
   if (isname("[quest]", tString))
     return false;
 
@@ -57,8 +54,7 @@ bool isLegalLoot(const char * tString)
 }
 
 // If you add to this list You MUST Add to the one below
-bool isLegalLoot(itemTypeT tType)
-{
+bool isLegalLoot(itemTypeT tType) {
   switch (tType) {
     case ITEM_POTION:
     case ITEM_WAND:
@@ -73,10 +69,8 @@ bool isLegalLoot(itemTypeT tType)
 }
 
 // Add to this list those 'per-entry' things.
-bool isSpecialLegalLoot(int tValue)
-{
+bool isSpecialLegalLoot(int tValue) {
   switch (tValue) {
-
     default:
       return false;
   }
@@ -85,11 +79,10 @@ bool isSpecialLegalLoot(int tValue)
 }
 
 // This goes through the object lists and makes a db of possible loot.
-bool sysLootBoot()
-{
-  TObj           * tObj       = NULL;
-  TMagicItem     * tMagicItem = NULL;
-  TPotion *pot=NULL;
+bool sysLootBoot() {
+  TObj* tObj = NULL;
+  TMagicItem* tMagicItem = NULL;
+  TPotion* pot = NULL;
 
   int tLevel = 0;
 
@@ -97,19 +90,21 @@ bool sysLootBoot()
 
   for (unsigned int tOIndex = 0; tOIndex < obj_index.size(); tOIndex++)
     if (((isLegalLoot(itemTypeT(obj_index[tOIndex].itemtype)) &&
-          isLegalLoot(obj_index[tOIndex].virt) &&
-          isLegalLoot(obj_index[tOIndex].name)) ||
+           isLegalLoot(obj_index[tOIndex].virt) &&
+           isLegalLoot(obj_index[tOIndex].name)) ||
           isSpecialLegalLoot(tOIndex)) &&
         obj_index[tOIndex].max_exist == 9999) {
-      //vlogf(LOG_BUG, format("Loot Object Debug, reading object: %d") %  tOIndex);
+      // vlogf(LOG_BUG, format("Loot Object Debug, reading object: %d") %
+      // tOIndex);
       tObj = read_object(tOIndex, REAL);
 
-      switch (obj_index[tOIndex].itemtype) { // Set tLevel
+      switch (obj_index[tOIndex].itemtype) {  // Set tLevel
         case ITEM_WAND:
         case ITEM_STAFF:
         case ITEM_SCROLL:
-          if (!(tMagicItem = dynamic_cast<TMagicItem *>(tObj))) {
-            vlogf(LOG_BUG, format("Screwup in Loot Loader: %s") %  tObj->getName());
+          if (!(tMagicItem = dynamic_cast<TMagicItem*>(tObj))) {
+            vlogf(LOG_BUG,
+              format("Screwup in Loot Loader: %s") % tObj->getName());
             delete tObj;
             tObj = NULL;
           } else
@@ -117,30 +112,31 @@ bool sysLootBoot()
 
           break;
         case ITEM_POTION:
-	  if(!(pot = dynamic_cast<TPotion *>(tObj))){
-	    vlogf(LOG_BUG, format("Screwup in Loot Loader (potion): %s") %  tObj->getName());
-	    delete tObj;
-	    tObj = NULL;
-	  } else
-	    tLevel = pot->getDrinkUnits();
-	  break;
+          if (!(pot = dynamic_cast<TPotion*>(tObj))) {
+            vlogf(LOG_BUG,
+              format("Screwup in Loot Loader (potion): %s") % tObj->getName());
+            delete tObj;
+            tObj = NULL;
+          } else
+            tLevel = pot->getDrinkUnits();
+          break;
         default:
-          vlogf(LOG_BUG, format("sysLootBoot Error: Unrecognized Type: %d") % 
-                obj_index[tOIndex].virt);
+          vlogf(LOG_BUG, format("sysLootBoot Error: Unrecognized Type: %d") %
+                           obj_index[tOIndex].virt);
           delete tObj;
           tObj = NULL;
           break;
       }
 
       if (tObj) {
-        //vlogf(LOG_BUG, format("Adding New Loot Object: %s") %  tObj->name);
-        TLootStructure *tNLoot;
+        // vlogf(LOG_BUG, format("Adding New Loot Object: %s") %  tObj->name);
+        TLootStructure* tNLoot;
 
         if (!(tNLoot = new TLootStructure))
           vlogf(LOG_LOW, "Error allocing for TLootStructure");
         else {
           tNLoot->tLevel = tLevel;
-          tNLoot->tRNum  = tOIndex;
+          tNLoot->tRNum = tOIndex;
 
           tNLoot->tNext = tLoot;
           tLoot = tNLoot;
@@ -154,8 +150,7 @@ bool sysLootBoot()
   return true;
 }
 
-bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
-{
+bool sysLootLoad(resetCom& rs, TBeing* tBeing, TObj* tObj, bool isImmortal) {
   // L (if-flag) (level-min) (level-max) (help/harm) (mob/obj/room)
   // (mob/obj/room)
   // 0 = mob
@@ -166,38 +161,37 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
   if (!rs.if_flag)
     return false;
 
-  TRoom  * tRoom   = NULL;
-  TThing * tThing  = NULL;
-  int      tFound  = 0;
-  bool     tLoaded = false,
-           cashLoaded = false;
+  TRoom* tRoom = NULL;
+  TThing* tThing = NULL;
+  int tFound = 0;
+  bool tLoaded = false, cashLoaded = false;
 
   if (rs.arg4 == 0) {
     if (!(tThing = tBeing)) {
-      vlogf(LOG_LOW, format("L used on Mobile failed: %d") %  rs.arg4);
+      vlogf(LOG_LOW, format("L used on Mobile failed: %d") % rs.arg4);
       return false;
     }
   } else if (rs.arg4 == 1) {
     if (!(tThing = tObj)) {
-      vlogf(LOG_LOW, format("L used on Object failed: %d") %  rs.arg4);
+      vlogf(LOG_LOW, format("L used on Object failed: %d") % rs.arg4);
       return false;
     }
   } else if (!(tThing = (tRoom = real_roomp(rs.arg4)))) {
-    vlogf(LOG_LOW, format("L used on Room failed: %d") %  rs.arg4);
+    vlogf(LOG_LOW, format("L used on Room failed: %d") % rs.arg4);
     return false;
   }
 
-  for (TLootStructure * tTLoot = tLoot; tTLoot; tTLoot = tTLoot->tNext)
+  for (TLootStructure* tTLoot = tLoot; tTLoot; tTLoot = tTLoot->tNext)
     if (in_range(tTLoot->tLevel, rs.arg1, rs.arg2))
       tFound++;
 
   if (!isImmortal)
     tFound = (rand() % (tFound + 2));
 
-  for (TLootStructure * tTLoot = tLoot; tTLoot; tTLoot = tTLoot->tNext)
+  for (TLootStructure* tTLoot = tLoot; tTLoot; tTLoot = tTLoot->tNext)
     if (in_range(tTLoot->tLevel, rs.arg1, rs.arg2) &&
         (isImmortal || --tFound == 0)) {
-      TObj *tObj;
+      TObj* tObj;
 
       if (obj_index[tTLoot->tRNum].getNumber() >=
           obj_index[tTLoot->tRNum].max_exist)
@@ -209,7 +203,7 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
 
       if (tObjn < 0 || (size_t)tObjn >= obj_index.size() ||
           !(tObj = read_object(tObjn, REAL))) {
-        vlogf(LOG_LOW, format("Error in Loot Loader: %d") %  tTLoot->tRNum);
+        vlogf(LOG_LOW, format("Error in Loot Loader: %d") % tTLoot->tRNum);
         return false;
       }
 
@@ -235,32 +229,29 @@ bool sysLootLoad(resetCom & rs, TBeing *tBeing, TObj *tObj, bool isImmortal)
       cashLoaded = true;
 
       if (rs.arg4 == 0)
-        tBeing->setMoney((tBeing->getMoney() + (int) tCashValue));
+        tBeing->setMoney((tBeing->getMoney() + (int)tCashValue));
       else {
-        TMoney * tMoney;
+        TMoney* tMoney;
 
-        if (!(tMoney = create_money((int) tCashValue))) {
+        if (!(tMoney = create_money((int)tCashValue))) {
           vlogf(LOG_BUG, "Problem creating money");
           return false;
         }
 
         *tThing += *tMoney;
       }
-
     }
 
   return tLoaded;
 }
 
-bool hasSpellOnIt(TMagicItem * tObj, spellNumT tSpell)
-{
-  TScroll * tScroll = dynamic_cast<TScroll *>(tObj);
-  TWand   * tWand   = dynamic_cast<TWand   *>(tObj);
-  TStaff  * tStaff  = dynamic_cast<TStaff  *>(tObj);
+bool hasSpellOnIt(TMagicItem* tObj, spellNumT tSpell) {
+  TScroll* tScroll = dynamic_cast<TScroll*>(tObj);
+  TWand* tWand = dynamic_cast<TWand*>(tObj);
+  TStaff* tStaff = dynamic_cast<TStaff*>(tObj);
 
   if (tScroll) {
-    if (tScroll->getSpell(0) == tSpell ||
-        tScroll->getSpell(1) == tSpell ||
+    if (tScroll->getSpell(0) == tSpell || tScroll->getSpell(1) == tSpell ||
         tScroll->getSpell(2) == tSpell)
       return true;
   } else if (tWand) {
@@ -274,8 +265,7 @@ bool hasSpellOnIt(TMagicItem * tObj, spellNumT tSpell)
   return false;
 }
 
-void TBeing::doLoot(const sstring & tStString)
-{
+void TBeing::doLoot(const sstring& tStString) {
   if (!desc || !isImmortal())
     return;
 
@@ -284,22 +274,14 @@ void TBeing::doLoot(const sstring & tStString)
     return;
   }
 
-  sstring tStOutput(""),
-         tStBuffer(""),
-         tStArg(tStString),
-         tStCommand(""),
-         tStType(""),
-         tStSpell(""),
-         tStLevelMin(""),
-         tStLevelMax("");
-  char   tString[256];
-  int    tLevelMin =  -1,
-         tLevelMax = 101;
-  TObj  *tObj = NULL;
-  bool   bType  = false,
-         bSpell = false;
+  sstring tStOutput(""), tStBuffer(""), tStArg(tStString), tStCommand(""),
+    tStType(""), tStSpell(""), tStLevelMin(""), tStLevelMax("");
+  char tString[256];
+  int tLevelMin = -1, tLevelMax = 101;
+  TObj* tObj = NULL;
+  bool bType = false, bSpell = false;
 
-  itemTypeT tType  = ITEM_UNDEFINED;
+  itemTypeT tType = ITEM_UNDEFINED;
   spellNumT tSpell = TYPE_UNDEFINED;
 
   tStArg = one_argument(tStArg, tStCommand);
@@ -368,10 +350,9 @@ void TBeing::doLoot(const sstring & tStString)
 
     if (bSpell) {
       for (tSpell = MIN_SPELL; tSpell < MAX_SKILL; tSpell++)
-        if (discArray[tSpell] &&
-            isname(discArray[tSpell]->name, tStSpell) &&
-            (discArray[tSpell]->typ == SPELL_MAGE   ||
-             discArray[tSpell]->typ == SPELL_CLERIC))
+        if (discArray[tSpell] && isname(discArray[tSpell]->name, tStSpell) &&
+            (discArray[tSpell]->typ == SPELL_MAGE ||
+              discArray[tSpell]->typ == SPELL_CLERIC))
           break;
 
       if (tSpell == MAX_SKILL) {
@@ -386,7 +367,7 @@ void TBeing::doLoot(const sstring & tStString)
     if (tLevelMax == 101)
       tLevelMax = 100;
 
-    tStOutput  = "Loot: Min:";
+    tStOutput = "Loot: Min:";
     tStOutput += tStLevelMin;
     tStOutput += " Max:";
     tStOutput += tStLevelMax;
@@ -394,7 +375,7 @@ void TBeing::doLoot(const sstring & tStString)
 
     int tTotalCount = 0;
 
-    for (TLootStructure * tNLoot = tLoot; tNLoot; tNLoot = tNLoot->tNext)
+    for (TLootStructure* tNLoot = tLoot; tNLoot; tNLoot = tNLoot->tNext)
       if (in_range(tNLoot->tLevel, tLevelMin, tLevelMax))
         if ((tObj = read_object(tNLoot->tRNum, REAL))) {
           if (tType != ITEM_UNDEFINED &&
@@ -404,19 +385,16 @@ void TBeing::doLoot(const sstring & tStString)
             continue;
           }
 
-          TMagicItem *tMagicItem = dynamic_cast<TMagicItem *>(tObj);
+          TMagicItem* tMagicItem = dynamic_cast<TMagicItem*>(tObj);
 
-          if (tSpell != TYPE_UNDEFINED &&
-              !hasSpellOnIt(tMagicItem, tSpell)) {
+          if (tSpell != TYPE_UNDEFINED && !hasSpellOnIt(tMagicItem, tSpell)) {
             delete tObj;
             tObj = NULL;
             continue;
           }
 
-          sprintf(tString, "%6d: %3d: %s\n\r",
-                  obj_index[tNLoot->tRNum].virt,
-                  tNLoot->tLevel,
-                  tObj->getNameForShow(false, true, this).c_str());
+          sprintf(tString, "%6d: %3d: %s\n\r", obj_index[tNLoot->tRNum].virt,
+            tNLoot->tLevel, tObj->getNameForShow(false, true, this).c_str());
 
           tTotalCount++;
           tStOutput += tString;
@@ -443,10 +421,10 @@ void TBeing::doLoot(const sstring & tStString)
     tRs.arg4 = 0;
 
     if (sysLootLoad(tRs, this, NULL, true)) {
-      act("You make some funky gestures and load some loot.",
-          FALSE, this, NULL, NULL, TO_CHAR);
-      act("$n makes some funky gestures and loads some loot.",
-          TRUE, this, NULL, NULL, TO_ROOM);
+      act("You make some funky gestures and load some loot.", FALSE, this, NULL,
+        NULL, TO_CHAR);
+      act("$n makes some funky gestures and loads some loot.", TRUE, this, NULL,
+        NULL, TO_ROOM);
     }
 
     return;

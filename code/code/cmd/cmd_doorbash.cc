@@ -8,13 +8,12 @@
 #include "disc_warrior.h"
 
 // returns DELETE_THIS
-int TBeing::slamIntoWall(roomDirData * exitp)
-{
+int TBeing::slamIntoWall(roomDirData* exitp) {
   char doorname[128];
   char buf[256];
 
   if (!exitp->keyword.empty()) {
-    if(fname(exitp->keyword) == "secret" ||
+    if (fname(exitp->keyword) == "secret" ||
         IS_SET(exitp->condition, EXIT_SECRET)) {
       strcpy(doorname, "wall");
     } else
@@ -50,16 +49,15 @@ int TBeing::slamIntoWall(roomDirData * exitp)
   return TRUE;
 }
 
-static int doorbash(TBeing * caster, dirTypeT dir)
-{
+static int doorbash(TBeing* caster, dirTypeT dir) {
   int was_in;
   char buf[256];
-  roomDirData *exitp;
-  TRoom *rp;
+  roomDirData* exitp;
+  TRoom* rp;
   int rc;
   int dam;
   int height;
-  
+
   if (caster->getMove() < 10) {
     caster->sendTo("You're too tired to do that.\n\r");
     return FALSE;
@@ -68,7 +66,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     caster->sendTo("Yeah... right... while mounted.\n\r");
     return FALSE;
   }
-  
+
   if (!(exitp = caster->exitDir(dir))) {
     vlogf(LOG_BUG, "bad exit in doorbash (2)");
     return FALSE;
@@ -77,7 +75,6 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   rp = real_roomp(exitp->to_room);
 
   if (dir == DIR_UP) {
-
     if (rp->isAirSector() && !caster->isFlying()) {
       caster->sendTo("You would need to be flying to go there!\n\r");
       return FALSE;
@@ -86,14 +83,16 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   sprintf(buf, "$n charges %swards.", dirs[dir]);
   act(buf, FALSE, caster, 0, 0, TO_ROOM);
   caster->sendTo(format("You charge %swards.\n\r") % dirs[dir]);
-  
+
   if (caster->willBumpHeadDoor(exitp, &height)) {
-    caster->sendTo("Belatedly, you realize the exit is a bit too short for you to charge at successfully.\n\r");
+    caster->sendTo(
+      "Belatedly, you realize the exit is a bit too short for you to charge at "
+      "successfully.\n\r");
     rc = caster->slamIntoWall(exitp);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     return FALSE;
-  }        
+  }
 
   if ((IS_SET(exitp->condition, EXIT_DESTROYED)) ||
       !IS_SET(exitp->condition, EXIT_CLOSED)) {
@@ -101,7 +100,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     --(*caster);
     thing_to_room(caster, exitp->to_room);
     caster->doLook("", CMD_LOOK);
-    
+
     rc = caster->displayMove(dir, was_in, 1);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -111,11 +110,11 @@ static int doorbash(TBeing * caster, dirTypeT dir)
   }
   if (!caster->isImmortal())
     caster->addToMove(-10);
-  
+
   int bKnown = caster->getSkillValue(SKILL_DOORBASH);
 
-  if ((2*exitp->weight > caster->maxWieldWeight(NULL, HAND_TYPE_PRIM)) ||
-      (2*exitp->lock_difficulty > bKnown) ||
+  if ((2 * exitp->weight > caster->maxWieldWeight(NULL, HAND_TYPE_PRIM)) ||
+      (2 * exitp->lock_difficulty > bKnown) ||
       (exitp->door_type == DOOR_PORTCULLIS) ||
       (exitp->door_type == DOOR_DRAWBRIDGE) ||
       IS_SET(exitp->condition, EXIT_CAVED_IN) ||
@@ -126,7 +125,7 @@ static int doorbash(TBeing * caster, dirTypeT dir)
       return DELETE_THIS;
     return TRUE;
   }
-  dam = dice(exitp->weight, ::number(4,10));
+  dam = dice(exitp->weight, ::number(4, 10));
 
   if (caster->bSuccess(bKnown, SKILL_DOORBASH)) {
     // this check used to be done before the bSuccess roll, but
@@ -142,34 +141,34 @@ static int doorbash(TBeing * caster, dirTypeT dir)
     chance /= exitp->weight;
     chance = min(max(0, chance), 100);
 
-    if (::number(0,99) < chance) {
+    if (::number(0, 99) < chance) {
       rc = caster->slamIntoWall(exitp);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
       return TRUE;
-    } 
+    }
 
-    sprintf(buf, "$n slams into the %s, and it bursts open!", 
-                 fname(exitp->keyword).c_str());
+    sprintf(buf, "$n slams into the %s, and it bursts open!",
+      fname(exitp->keyword).c_str());
     act(buf, FALSE, caster, 0, 0, TO_ROOM);
-    caster->sendTo(format("You slam into the %s, and it bursts open!\n\r") % 
-            fname(exitp->keyword));
+    caster->sendTo(format("You slam into the %s, and it bursts open!\n\r") %
+                   fname(exitp->keyword));
     int room = caster->in_room;
-    if (IS_SET(exitp->condition, EXIT_TRAPPED))
-    {
+    if (IS_SET(exitp->condition, EXIT_TRAPPED)) {
       rc = caster->triggerDoorTrap(dir);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return DELETE_THIS;
       }
-      caster->sendTo("Aarrggh!  You've triggered some insidious door-trap!\n\r");
+      caster->sendTo(
+        "Aarrggh!  You've triggered some insidious door-trap!\n\r");
     }
     exitp->destroyDoor(dir, room);
     if (caster->reconcileDamage(caster, dam, SKILL_DOORBASH) == -1)
       return DELETE_THIS;
-    
+
     if (!caster->isAgile(0)) {
       was_in = caster->in_room;
-      
+
       --(*caster);
       thing_to_room(caster, exitp->to_room);
       caster->doLook("", CMD_LOOK);
@@ -195,36 +194,34 @@ static int doorbash(TBeing * caster, dirTypeT dir)
 }
 
 /* skill to allow fighters to break down doors */
-int TBeing::doDoorbash(const sstring & argument)
-{
+int TBeing::doDoorbash(const sstring& argument) {
   int rc;
   dirTypeT dir;
   bool ok;
-  roomDirData *exitp;
+  roomDirData* exitp;
 
   if (!doesKnowSkill(SKILL_DOORBASH)) {
     sendTo("You know nothing about door bashing.\n\r");
     return FALSE;
   }
-  sstring type=argument.word(0);
-  sstring direction=argument.word(1);
-          
+  sstring type = argument.word(0);
+  sstring direction = argument.word(1);
+
   if (type.empty()) {
     sendTo("You must specify a direction.\n\r");
     return FALSE;
   }
-  
-  if ((dir = findDoor(type.c_str(), direction.c_str(), DOOR_INTENT_OPEN, SILENT_YES)) >= MIN_DIR)
+
+  if ((dir = findDoor(type.c_str(), direction.c_str(), DOOR_INTENT_OPEN,
+         SILENT_YES)) >= MIN_DIR)
     ok = TRUE;
-  else
-  {
+  else {
     act("$n looks around, bewildered.", FALSE, this, 0, 0, TO_ROOM);
     act("You can't seem to find what you are looking for.", FALSE, this, 0, 0,
-TO_CHAR);
+      TO_CHAR);
     return FALSE;
   }
-  if (!ok || !(exitp = exitDir(dir)))
-  {
+  if (!ok || !(exitp = exitDir(dir))) {
     vlogf(LOG_BUG, "Bad exit in doorbash!");
     return FALSE;
   }
@@ -237,4 +234,3 @@ TO_CHAR);
 
   return rc;
 }
-

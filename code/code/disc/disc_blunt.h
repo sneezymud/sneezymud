@@ -20,7 +20,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the BLUNT discipline.
@@ -28,18 +27,17 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDBash : public CDiscipline
-{
-public:
+class CDBash : public CDiscipline {
+  public:
     CSkill skBluntSpec;
 
     CDBash();
-    CDBash(const CDBash &a);
-    CDBash & operator=(const CDBash &a);
+    CDBash(const CDBash& a);
+    CDBash& operator=(const CDBash& a);
     virtual ~CDBash();
-    virtual CDBash * cloneMe() { return new CDBash(*this); }
+    virtual CDBash* cloneMe() { return new CDBash(*this); }
 
-    bool isFast(){ return true; }
+    bool isFast() { return true; }
 
-private:
+  private:
 };

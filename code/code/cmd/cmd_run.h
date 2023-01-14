@@ -4,4 +4,4 @@
 #include <string>
 #include <utility>
 
-bool parse(std::string path, std::deque<std::pair<int, char> >& res );
+bool parse(std::string path, std::deque<std::pair<int, char>>& res);

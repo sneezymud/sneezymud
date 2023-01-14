@@ -3,13 +3,13 @@
 #include "combat.h"
 #include "obj_base_weapon.h"
 
-static int slam(TBeing *caster, TBeing *victim)
-{
+static int slam(TBeing* caster, TBeing* victim) {
   const int SLAM_MOVE = 5;
-  auto *weapon = dynamic_cast<TBaseWeapon *>(caster->heldInPrimHand());  
-  
+  auto* weapon = dynamic_cast<TBaseWeapon*>(caster->heldInPrimHand());
+
   // Ensure this isn't a peaceful room
-  if (caster->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
+  if (caster->checkPeaceful(
+        "You feel too peaceful to contemplate violence.\n\r"))
     return false;
 
   // Make sure the player has enough vitality to use the skill
@@ -42,10 +42,12 @@ static int slam(TBeing *caster, TBeing *victim)
 
   // Ensure the player has a weapon equipped
   if (!weapon) {
-    caster->sendTo("You need to hold a weapon in your primary hand to make this a success.\n\r");
+    caster->sendTo(
+      "You need to hold a weapon in your primary hand to make this a "
+      "success.\n\r");
     return false;
   }
-  
+
   // Only consume vitality for mortals
   if (!(caster->isImmortal() || IS_SET(caster->specials.act, ACT_IMMORTAL)))
     caster->addToMove(-SLAM_MOVE);
@@ -56,43 +58,39 @@ static int slam(TBeing *caster, TBeing *victim)
   int successfulSkill = caster->bSuccess(skillValue, SKILL_SLAM);
 
   // Success use case
-  if (!victim->awake() || 
-    (successfulHit && successfulSkill && successfulHit != GUARANTEED_FAILURE)) {
-      int dam = caster->getSkillDam(victim, SKILL_SLAM, skillLevel, caster->getAdvLearning(SKILL_SLAM));
+  if (!victim->awake() || (successfulHit && successfulSkill &&
+                            successfulHit != GUARANTEED_FAILURE)) {
+    int dam = caster->getSkillDam(victim, SKILL_SLAM, skillLevel,
+      caster->getAdvLearning(SKILL_SLAM));
 
-      // Scaling damage here due to the limitations of getSkillDam and how it treats skills learned at low levels
-      // This formula is designed to allow the damage to scale up to 0.75% of max hp to have some effectiveness against
-      // high level opponents, while dealing a respectable amount of damage to lower level enemies
-      static const std::map<int, float> scalingDamageConstants = {
-              { 10, 0.15 },
-              { 20, 0.08 },
-              { 30, 0.05 },
-              { 40, 0.03 },
-              { 50, 0.02}
-      };
+    // Scaling damage here due to the limitations of getSkillDam and how it
+    // treats skills learned at low levels This formula is designed to allow the
+    // damage to scale up to 0.75% of max hp to have some effectiveness against
+    // high level opponents, while dealing a respectable amount of damage to
+    // lower level enemies
+    static const std::map<int, float> scalingDamageConstants = {{10, 0.15},
+      {20, 0.08}, {30, 0.05}, {40, 0.03}, {50, 0.02}};
 
+    // Default value for higher level enemies
+    float scalingConstant = 0.0075;
 
-      // Default value for higher level enemies
-      float scalingConstant = 0.0075;
-
-      // For enemies level 1-50, retrieving
-      for (const auto &damageConstant : scalingDamageConstants) {
-        if (victim->GetMaxLevel() <= damageConstant.first) {
-          scalingConstant = damageConstant.second;
-          break;
-        }
+    // For enemies level 1-50, retrieving
+    for (const auto& damageConstant : scalingDamageConstants) {
+      if (victim->GetMaxLevel() <= damageConstant.first) {
+        scalingConstant = damageConstant.second;
+        break;
       }
+    }
 
-      // Apply the scaling constant
-      dam = max((int)(victim->hitLimit() * scalingConstant), dam);
+    // Apply the scaling constant
+    dam = max((int)(victim->hitLimit() * scalingConstant), dam);
 
-      // Send description text to players in the room
-      act("$n slams $N with $s weapon, inflicting considerable damage!", FALSE, caster, 0, victim, 
-                TO_NOTVICT);
-      act("You slam your weapon into $N, inflicting considerable damage!", FALSE, caster, 0, victim, 
-                TO_CHAR);
-      act("$n slams $s weapon into you!", FALSE, caster, 0, 
-                victim, TO_VICT);
+    // Send description text to players in the room
+    act("$n slams $N with $s weapon, inflicting considerable damage!", FALSE,
+      caster, 0, victim, TO_NOTVICT);
+    act("You slam your weapon into $N, inflicting considerable damage!", FALSE,
+      caster, 0, victim, TO_CHAR);
+    act("$n slams $s weapon into you!", FALSE, caster, 0, victim, TO_VICT);
 
     // Special use-case for blunt weapons
     // Determine damage type
@@ -105,40 +103,41 @@ static int slam(TBeing *caster, TBeing *victim)
     else if (weapon->isSlashWeapon())
       damageType = DAMAGE_HACKED;
     // Reconcile damage
-    if (caster->reconcileDamage(victim, dam, damageType) == -1) 
+    if (caster->reconcileDamage(victim, dam, damageType) == -1)
       return DELETE_VICT;
   }
   // Failure use case
   else {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("$n's attempt at slamming $N's with $s his weapon fails to make contact.", 
-                  FALSE, caster, 0, victim, TO_NOTVICT);
-      act("Your attempt at slamming $N with your weapon fails to make contact.", FALSE, caster, 0, victim, 
-                  TO_CHAR);
-      act("$n attempts to slam you with $s weapon but comes up short.", 
-                  FALSE, caster, 0, victim, TO_VICT);
+      act(
+        "$n's attempt at slamming $N's with $s his weapon fails to make "
+        "contact.",
+        FALSE, caster, 0, victim, TO_NOTVICT);
+      act("Your attempt at slamming $N with your weapon fails to make contact.",
+        FALSE, caster, 0, victim, TO_CHAR);
+      act("$n attempts to slam you with $s weapon but comes up short.", FALSE,
+        caster, 0, victim, TO_VICT);
     }
 
-    if (caster->reconcileDamage(victim, 0, SKILL_SLAM) == -1) 
+    if (caster->reconcileDamage(victim, 0, SKILL_SLAM) == -1)
       return DELETE_VICT;
-
   }
 
   return true;
 }
 
-int TBeing::doSlam(const char *argument, TBeing *vict)
-{
+int TBeing::doSlam(const char* argument, TBeing* vict) {
   int rc;
-  TBeing *victim;
-  
+  TBeing* victim;
+
   if (checkBusy()) {
     return false;
   }
 
   // Ensure player even knows the skill before continuing
   if (!doesKnowSkill(SKILL_SLAM)) {
-    sendTo("You wouldn't even know where to begin in executing that maneuver.\n\r");
+    sendTo(
+      "You wouldn't even know where to begin in executing that maneuver.\n\r");
     return false;
   }
 
@@ -155,7 +154,7 @@ int TBeing::doSlam(const char *argument, TBeing *vict)
     return false;
   }
 
-  rc = slam(this,victim);
+  rc = slam(this, victim);
 
   if (rc)
     addSkillLag(SKILL_SLAM, rc);
@@ -167,11 +166,10 @@ int TBeing::doSlam(const char *argument, TBeing *vict)
     victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
-  
+
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     return DELETE_THIS;
   }
 
   return rc;
 }
-

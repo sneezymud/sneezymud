@@ -14,26 +14,26 @@ class TStaff : public TMagicItem {
     int maxCharges;
     int curCharges;
     spellNumT spell;
-    
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_STAFF; }
 
-    virtual int changeItemVal4Check(TBeing *, int);
-    virtual void descMagicSpells(TBeing *) const;
-    virtual void divinateMe(TBeing *) const;
-    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
-    virtual int useMe(TBeing *, const char *);
-    virtual int objectSell(TBeing *, TMonster *);
-    virtual int foodItemUsed(TBeing *ch, const char *arg);
+    virtual int changeItemVal4Check(TBeing*, int);
+    virtual void descMagicSpells(TBeing*) const;
+    virtual void divinateMe(TBeing*) const;
+    virtual sstring getNameForShow(bool, bool, const TBeing*) const;
+    virtual int useMe(TBeing*, const char*);
+    virtual int objectSell(TBeing*, TMonster*);
+    virtual int foodItemUsed(TBeing* ch, const char* arg);
     virtual void lowCheck();
-    virtual bool objectRepair(TBeing *, TMonster *, silentTypeT);
+    virtual bool objectRepair(TBeing*, TMonster*, silentTypeT);
     virtual int suggestedPrice() const;
 
-    virtual int taskChargeMe(TBeing *, spellNumT, int &);
-    virtual void taskChargeMeUpdate(TBeing *, spellNumT);
+    virtual int taskChargeMe(TBeing*, spellNumT, int&);
+    virtual void taskChargeMeUpdate(TBeing*, spellNumT);
 
     void setMaxCharges(int n);
     int getMaxCharges() const;
@@ -45,8 +45,7 @@ class TStaff : public TMagicItem {
     spellNumT getSpell() const;
 
     TStaff();
-    TStaff(const TStaff &a);
-    TStaff & operator=(const TStaff &a);
+    TStaff(const TStaff& a);
+    TStaff& operator=(const TStaff& a);
     virtual ~TStaff();
 };
-

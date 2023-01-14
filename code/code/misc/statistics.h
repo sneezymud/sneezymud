@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include <algorithm>
@@ -14,14 +13,14 @@
 #include "enum.h"
 #include "defs.h"
 
-using std::min;
 using std::max;
+using std::min;
 
-const int PC_STAT  = 0;
+const int PC_STAT = 0;
 const int MOB_STAT = 1;
 
-const char * const STATS_FILE     = "txt/stats";
-const char * const STATS_BAK      = "txt/stats.bak";
+const char* const STATS_FILE = "txt/stats";
+const char* const STATS_BAK = "txt/stats.bak";
 
 class GameStats {
   public:
@@ -142,8 +141,7 @@ class GameStats {
       act_71_100(0),
       act_101_127(0),
       num_users(0),
-      useage_iters(0)
-    {
+      useage_iters(0) {
       memset(deaths, 0, sizeof(deaths));
       memset(levels, 0, sizeof(levels));
       memset(time_levels, 0, sizeof(time_levels));
@@ -161,19 +159,19 @@ class GameStats {
 };
 
 extern GameStats stats;
-extern unsigned int  gDescriptorUpdates;
+extern unsigned int gDescriptorUpdates;
 extern unsigned long gTimeGameLoopStarted;
-extern unsigned int  gHBsSinceReboot;
-extern unsigned int  gMaxReadHB;
-extern unsigned int  gMaxWriteHB;
-extern unsigned int  gMaxReadRound;
-extern unsigned int  gMaxWriteRound;
-extern unsigned int  gMaxReadProcess;
-extern unsigned int  gMaxWriteProcess;
+extern unsigned int gHBsSinceReboot;
+extern unsigned int gMaxReadHB;
+extern unsigned int gMaxWriteHB;
+extern unsigned int gMaxReadRound;
+extern unsigned int gMaxWriteRound;
+extern unsigned int gMaxReadProcess;
+extern unsigned int gMaxWriteProcess;
 extern unsigned long gBytesRead;
 extern unsigned long gBytesSent;
-extern unsigned int  gReadThisHB;
-extern unsigned int  gWriteThisHB;
+extern unsigned int gReadThisHB;
+extern unsigned int gWriteThisHB;
 
 extern unsigned int help_used_num;
 extern unsigned int typo_used_num;
@@ -192,18 +190,16 @@ extern long gold_positive[MAX_MONEY_TYPE][MAX_IMMORT];
 
 class TGoldModifier {
   private:
-    float tMin,
-          tMax,
-          tCurrent;
+    float tMin, tMax, tCurrent;
 
   public:
-    float valAssign    (float tCheck) {
+    float valAssign(float tCheck) {
       return (tCurrent = max(tMin, min(tMax, tCheck)));
     }
-    float * operator & (            ) { return &tCurrent; }
-    float   operator  =(float tCheck) { return valAssign(tCurrent =  tCheck); }
-    float   operator +=(float tCheck) { return valAssign(tCurrent += tCheck); }
-    float   operator -=(float tCheck) { return valAssign(tCurrent -= tCheck); }
+    float* operator&() { return &tCurrent; }
+    float operator=(float tCheck) { return valAssign(tCurrent = tCheck); }
+    float operator+=(float tCheck) { return valAssign(tCurrent += tCheck); }
+    float operator-=(float tCheck) { return valAssign(tCurrent -= tCheck); }
     /*
     bool    operator ==(float tCheck) { return valAssign(tCurrent == tCheck); }
     bool    operator > (float tCheck) { return (tCurrent >  tCheck); }
@@ -212,23 +208,18 @@ class TGoldModifier {
     bool    operator <=(float tCheck) { return (tCurrent >= tCheck); }
     */
 
-    float   getVal() { return tCurrent; }
-    void    setMM(float tNMin, float tNMax) {
+    float getVal() { return tCurrent; }
+    void setMM(float tNMin, float tNMax) {
       tMin = tNMin;
       tMax = tNMax;
     }
 
-    TGoldModifier() :
-      tMin(0.0),
-      tMax(100.0),
-      tCurrent(100.0)
-      {}
+    TGoldModifier() : tMin(0.0), tMax(100.0), tCurrent(100.0) {}
 
     TGoldModifier(int tCheck, int tNMin, int tNMax) :
       tMin(tNMin),
       tMax(tNMax),
-      tCurrent(tCheck)
-      {}
+      tCurrent(tCheck) {}
 };
 extern TGoldModifier gold_modifier[MAX_MONEY_TYPE];
 

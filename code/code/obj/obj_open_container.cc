@@ -14,24 +14,20 @@ TOpenContainer::TOpenContainer() :
   trap_type(DOOR_TRAP_NONE),
   trap_dam(0),
   key_num(-1),
-  max_volume(0)
-{
-}
+  max_volume(0) {}
 
-TOpenContainer::TOpenContainer(const TOpenContainer &a) :
+TOpenContainer::TOpenContainer(const TOpenContainer& a) :
   TBaseContainer(a),
   max_weight(a.max_weight),
   container_flags(a.container_flags),
   trap_type(a.trap_type),
   trap_dam(a.trap_dam),
   key_num(a.key_num),
-  max_volume(a.max_volume)
-{
-}
+  max_volume(a.max_volume) {}
 
-TOpenContainer & TOpenContainer::operator=(const TOpenContainer &a)
-{
-  if (this == &a) return *this;
+TOpenContainer& TOpenContainer::operator=(const TOpenContainer& a) {
+  if (this == &a)
+    return *this;
   TBaseContainer::operator=(a);
   max_weight = a.max_weight;
   container_flags = a.container_flags;
@@ -42,13 +38,10 @@ TOpenContainer & TOpenContainer::operator=(const TOpenContainer &a)
   return *this;
 }
 
-TOpenContainer::~TOpenContainer()
-{
-}
+TOpenContainer::~TOpenContainer() {}
 
-void TOpenContainer::assignFourValues(int x1, int x2, int x3, int x4)
-{
-  setCarryWeightLimit((float) x1);
+void TOpenContainer::assignFourValues(int x1, int x2, int x3, int x4) {
+  setCarryWeightLimit((float)x1);
   setContainerFlags(GET_BITS(x2, 15, 16));
   setContainerTrapType(mapFileToDoorTrap(GET_BITS(x2, 23, 8)));
   setContainerTrapDam(GET_BITS(x2, 31, 8));
@@ -56,9 +49,8 @@ void TOpenContainer::assignFourValues(int x1, int x2, int x3, int x4)
   setCarryVolumeLimit(x4);
 }
 
-void TOpenContainer::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
-  *x1 = (int) carryWeightLimit();
+void TOpenContainer::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
+  *x1 = (int)carryWeightLimit();
 
   int r = 0;
   SET_BITS(r, 15, 16, getContainerFlags());
@@ -69,144 +61,98 @@ void TOpenContainer::getFourValues(int *x1, int *x2, int *x3, int *x4) const
   *x4 = carryVolumeLimit();
 }
 
-sstring TOpenContainer::statObjInfo() const
-{
+sstring TOpenContainer::statObjInfo() const {
   char buf[256];
 
-  sprintf(buf, "Max Weight :%.3f, Max Volume : %d\n\rTrap type :%s (%d), Trap damage :%d\n\r",
-          carryWeightLimit(),
-          carryVolumeLimit(),
-          trap_types[getContainerTrapType()].c_str(),
-          getContainerTrapType(),
-          getContainerTrapDam());
-  sprintf(buf + strlen(buf), "Vnum of key that opens: %d",
-           getKeyNum());
+  sprintf(buf,
+    "Max Weight :%.3f, Max Volume : %d\n\rTrap type :%s (%d), Trap damage "
+    ":%d\n\r",
+    carryWeightLimit(), carryVolumeLimit(),
+    trap_types[getContainerTrapType()].c_str(), getContainerTrapType(),
+    getContainerTrapDam());
+  sprintf(buf + strlen(buf), "Vnum of key that opens: %d", getKeyNum());
 
   sstring a(buf);
   return a;
 }
 
-bool TOpenContainer::isCloseable() const
-{
+bool TOpenContainer::isCloseable() const {
   return (isContainerFlag(CONT_CLOSEABLE));
 }
 
-bool TOpenContainer::isClosed() const
-{
-  return (isContainerFlag(CONT_CLOSED));
-}
+bool TOpenContainer::isClosed() const { return (isContainerFlag(CONT_CLOSED)); }
 
-void TOpenContainer::setCarryWeightLimit(float r)
-{
-  max_weight = r;
-}
+void TOpenContainer::setCarryWeightLimit(float r) { max_weight = r; }
 
-float TOpenContainer::carryWeightLimit() const
-{
-  return max_weight;
-}
+float TOpenContainer::carryWeightLimit() const { return max_weight; }
 
-int TOpenContainer::getContainerFlags() const
-{
-  return container_flags;
-}
+int TOpenContainer::getContainerFlags() const { return container_flags; }
 
-void TOpenContainer::setContainerFlags(int r)
-{
-  container_flags = r;
-}
+void TOpenContainer::setContainerFlags(int r) { container_flags = r; }
 
-void TOpenContainer::addContainerFlag(int r)
-{
-  container_flags |= r;
-}
+void TOpenContainer::addContainerFlag(int r) { container_flags |= r; }
 
-void TOpenContainer::remContainerFlag(int r)
-{
-  container_flags &= ~r;
-}
+void TOpenContainer::remContainerFlag(int r) { container_flags &= ~r; }
 
-bool TOpenContainer::isContainerFlag(int r) const
-{
+bool TOpenContainer::isContainerFlag(int r) const {
   return ((container_flags & r) != 0);
 }
 
-doorTrapT TOpenContainer::getContainerTrapType() const
-{
-  return ((trap_type < DOOR_TRAP_NONE || trap_type>=MAX_TRAP_TYPES)?DOOR_TRAP_NONE:trap_type);
+doorTrapT TOpenContainer::getContainerTrapType() const {
+  return ((trap_type < DOOR_TRAP_NONE || trap_type >= MAX_TRAP_TYPES)
+            ? DOOR_TRAP_NONE
+            : trap_type);
 }
 
-void TOpenContainer::setContainerTrapType(doorTrapT r)
-{
-  trap_type = r;
-}
+void TOpenContainer::setContainerTrapType(doorTrapT r) { trap_type = r; }
 
-char TOpenContainer::getContainerTrapDam() const
-{
-  return trap_dam;
-}
+char TOpenContainer::getContainerTrapDam() const { return trap_dam; }
 
-void TOpenContainer::setContainerTrapDam(char r)
-{
-  trap_dam = r;
-}
+void TOpenContainer::setContainerTrapDam(char r) { trap_dam = r; }
 
-void TOpenContainer::setKeyNum(int r)
-{
-  key_num = r;
-}
+void TOpenContainer::setKeyNum(int r) { key_num = r; }
 
-int TOpenContainer::getKeyNum() const
-{
-  return key_num;
-}
+int TOpenContainer::getKeyNum() const { return key_num; }
 
-int TOpenContainer::carryVolumeLimit() const
-{
-  return max_volume;
-}
+int TOpenContainer::carryVolumeLimit() const { return max_volume; }
 
-void TOpenContainer::setCarryVolumeLimit(int r)
-{
-  max_volume = r;
-}
+void TOpenContainer::setCarryVolumeLimit(int r) { max_volume = r; }
 
-void TOpenContainer::changeObjValue2(TBeing *ch)
-{
+void TOpenContainer::changeObjValue2(TBeing* ch) {
   ch->specials.edit = CHANGE_CHEST_VALUE2;
   change_chest_value2(ch, this, "", ENTER_CHECK);
 }
 
-void TOpenContainer::describeContains(const TBeing *ch) const
-{
+void TOpenContainer::describeContains(const TBeing* ch) const {
   if (!stuff.empty() && !isClosed())
-    ch->sendTo(COLOR_OBJECTS, format("%s seems to have something in it...\n\r") %
-	       sstring(getName()).cap());
+    ch->sendTo(COLOR_OBJECTS,
+      format("%s seems to have something in it...\n\r") %
+        sstring(getName()).cap());
 }
 
-void TOpenContainer::lowCheck()
-{
+void TOpenContainer::lowCheck() {
   if (carryWeightLimit() <= 0.0) {
-    vlogf(LOG_LOW, format("Container (%s) with bad weight limit (%5.2f).") % 
-            getName() % carryWeightLimit());
+    vlogf(LOG_LOW, format("Container (%s) with bad weight limit (%5.2f).") %
+                     getName() % carryWeightLimit());
   }
   if (carryVolumeLimit() <= 0) {
-    vlogf(LOG_LOW, format("Container (%s) with bad volume limit (%d).") % 
-            getName() % carryVolumeLimit());
+    vlogf(LOG_LOW, format("Container (%s) with bad volume limit (%d).") %
+                     getName() % carryVolumeLimit());
   }
 
   if (isContainerFlag(CONT_TRAPPED)) {
     if (getContainerTrapType() == DOOR_TRAP_NONE) {
-      vlogf(LOG_LOW, format("Container (%s:%d) trapped with no trap type.  Removing.") % 
-           getName() % objVnum());
+      vlogf(LOG_LOW,
+        format("Container (%s:%d) trapped with no trap type.  Removing.") %
+          getName() % objVnum());
       remContainerFlag(CONT_TRAPPED);
     }
   }
   TBaseContainer::lowCheck();
 }
 
-void TOpenContainer::purchaseMe(TBeing *ch, TMonster *tKeeper, int tCost, int tShop)
-{
+void TOpenContainer::purchaseMe(TBeing* ch, TMonster* tKeeper, int tCost,
+  int tShop) {
   TObj::purchaseMe(ch, tKeeper, tCost, tShop);
 
   // This prevents 'just bought from store' bags from having
@@ -216,28 +162,26 @@ void TOpenContainer::purchaseMe(TBeing *ch, TMonster *tKeeper, int tCost, int tS
     addContainerFlag(CONT_EMPTYTRAP);
 }
 
-sstring TOpenContainer::showModifier(showModeT tMode, const TBeing *tBeing) const
-{
+sstring TOpenContainer::showModifier(showModeT tMode,
+  const TBeing* tBeing) const {
   // recurse if necessary
   sstring tString = TBaseContainer::showModifier(tMode, tBeing);
 
   if (isCloseable()) {
-    tString += " (";                                          
+    tString += " (";
     tString += isClosed() ? "closed" : "opened";
-    tString += ")";                                           
+    tString += ")";
 
-    if(!isClosed() && stuff.empty()){
+    if (!isClosed() && stuff.empty()) {
       tString += " (empty)";
     }
+  }
 
-  }                                                           
-                                                              
-  return tString;                                             
-}                                                             
+  return tString;
+}
 
-void TOpenContainer::putMoneyInto(TBeing *ch, int amount)
-{
-  TMoney * money;
+void TOpenContainer::putMoneyInto(TBeing* ch, int amount) {
+  TMoney* money;
 
   if (isClosed()) {
     act("$p is closed.", FALSE, ch, this, 0, TO_CHAR);
@@ -246,17 +190,16 @@ void TOpenContainer::putMoneyInto(TBeing *ch, int amount)
   ch->sendTo("OK.\n\r");
 
   act("$n puts some money into $p.", FALSE, ch, this, 0, TO_ROOM);
-  money  = create_money(amount);
+  money = create_money(amount);
   *this += *money;
 
   ch->addToMoney(-amount, GOLD_INCOME);
   if (ch->fight())
-    ch->addToWait(combatRound(1 + amount/5000));
+    ch->addToWait(combatRound(1 + amount / 5000));
   ch->doSave(SILENT_YES);
 }
 
-int TOpenContainer::openMe(TBeing *ch)
-{
+int TOpenContainer::openMe(TBeing* ch) {
   char buf[256];
 
   if (!isClosed()) {
@@ -267,25 +210,28 @@ int TOpenContainer::openMe(TBeing *ch)
     return FALSE;
   } else if (isContainerFlag(CONT_LOCKED)) {
     ch->sendTo("It seems to be locked.\n\r");
-    return FALSE;                                             
-  } else if (isContainerFlag(CONT_TRAPPED) ||                 
-             !isContainerFlag(CONT_EMPTYTRAP) ||              
-             isContainerFlag(CONT_GHOSTTRAP)) {               
-    if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {               
-      if (detectTrapObj(ch, this) || isContainerFlag(CONT_GHOSTTRAP)) {      
-        sprintf(buf, "You start to open $p, but then notice an insidious %s trap...",
-              sstring(trap_types[getContainerTrapType()]).uncap().c_str());
+    return FALSE;
+  } else if (isContainerFlag(CONT_TRAPPED) ||
+             !isContainerFlag(CONT_EMPTYTRAP) ||
+             isContainerFlag(CONT_GHOSTTRAP)) {
+    if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
+      if (detectTrapObj(ch, this) || isContainerFlag(CONT_GHOSTTRAP)) {
+        sprintf(buf,
+          "You start to open $p, but then notice an insidious %s trap...",
+          sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
 
         return FALSE;
       } else if (!isContainerFlag(CONT_TRAPPED) &&
                  !ch->bSuccess(SKILL_DETECT_TRAP)) {
-        setContainerTrapType(doorTrapT(::number((DOOR_TRAP_NONE + 1), (MAX_TRAP_TYPES - 1))));
+        setContainerTrapType(
+          doorTrapT(::number((DOOR_TRAP_NONE + 1), (MAX_TRAP_TYPES - 1))));
         setContainerTrapDam(0);
         addContainerFlag(CONT_GHOSTTRAP);
 
-        sprintf(buf, "You start to open $p, but then notice an insidious %s trap...",
-                sstring(trap_types[getContainerTrapType()]).uncap().c_str());
+        sprintf(buf,
+          "You start to open $p, but then notice an insidious %s trap...",
+          sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
 
         return FALSE;
@@ -296,24 +242,21 @@ int TOpenContainer::openMe(TBeing *ch)
     remContainerFlag(CONT_GHOSTTRAP);
     addContainerFlag(CONT_EMPTYTRAP);
 
-
     if (spec) {
       int res = 0;
       int rc = checkSpec(ch, CMD_OBJ_OPENED, NULL, NULL);
       if (IS_SET_ONLY(rc, DELETE_THIS))
-	res |= DELETE_ITEM;
+        res |= DELETE_ITEM;
       if (IS_SET_ONLY(rc, DELETE_VICT)) {
-	res |= DELETE_VICT;
-	return res;
+        res |= DELETE_VICT;
+        return res;
       }
       if (rc)
-	return res;
+        return res;
     }
 
     act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
-
-
 
     if (isContainerFlag(CONT_TRAPPED)) {
       int rc = ch->triggerContTrap(this);
@@ -349,13 +292,11 @@ int TOpenContainer::openMe(TBeing *ch)
     act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
 
-
     return TRUE;
   }
 }
 
-int TOpenContainer::putSomethingInto(TBeing *ch, TThing *obj)
-{
+int TOpenContainer::putSomethingInto(TBeing* ch, TThing* obj) {
   int rc = obj->putSomethingIntoContainer(ch, this);
 
   int ret = 0;
@@ -369,8 +310,7 @@ int TOpenContainer::putSomethingInto(TBeing *ch, TThing *obj)
   return ret;
 }
 
-bool TOpenContainer::getObjFromMeCheck(TBeing *ch)
-{
+bool TOpenContainer::getObjFromMeCheck(TBeing* ch) {
   if (isClosed()) {
     act("$P must be opened first.", 1, ch, 0, this, TO_CHAR);
     return TRUE;
@@ -378,21 +318,14 @@ bool TOpenContainer::getObjFromMeCheck(TBeing *ch)
   return FALSE;
 }
 
-sstring TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
-{
-  const char * sizeLevels[] =
-  {
-    " has a great amount of space more than ",
-    " has a lot more space than ",
-    " has a little bit more space than ",
-    " has the same amount of space as ",
-    " has a little less space than ",
+sstring TOpenContainer::compareMeAgainst(TBeing* ch, TObj* tObj) {
+  const char* sizeLevels[] = {" has a great amount of space more than ",
+    " has a lot more space than ", " has a little bit more space than ",
+    " has the same amount of space as ", " has a little less space than ",
     " has a lot less space than ",
-    " has a great amount less space compared to "
-  };
+    " has a great amount less space compared to "};
 
-  const char *weightLevels[] =
-  {
+  const char* weightLevels[] = {
     " can hold a great amount of weight over ",
     " can hold a lot more weight than ",
     " can hold a little more weight than ",
@@ -402,29 +335,25 @@ sstring TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
     " can hold a great amount less weight compared to ",
   };
 
-  TOpenContainer *tOpenContainer = NULL;
+  TOpenContainer* tOpenContainer = NULL;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
 
   if ((itemType() != tObj->itemType()) ||
-      !(tOpenContainer = dynamic_cast<TOpenContainer *>(tObj)))
+      !(tOpenContainer = dynamic_cast<TOpenContainer*>(tObj)))
     return "These two items cannot be compared against one another.\n\r";
 
-  int    tSize1   = carryVolumeLimit(),
-         tSize2   = tOpenContainer->carryVolumeLimit(),
-         tSizeDiff,
-         tMessage1,
-         tWeight1 = (int)carryWeightLimit(),
-         tWeight2 = (int)tOpenContainer->carryWeightLimit(),
-         tWeightDiff,
-         tMessage2;
+  int tSize1 = carryVolumeLimit(), tSize2 = tOpenContainer->carryVolumeLimit(),
+      tSizeDiff, tMessage1, tWeight1 = (int)carryWeightLimit(),
+      tWeight2 = (int)tOpenContainer->carryWeightLimit(), tWeightDiff,
+      tMessage2;
   sstring StString("");
 
-  tSizeDiff   = (tSize1 - tSize2);
-  tMessage1   = compareDetermineMessage(15, tSizeDiff);
+  tSizeDiff = (tSize1 - tSize2);
+  tMessage1 = compareDetermineMessage(15, tSizeDiff);
   tWeightDiff = (tWeight1 - tWeight2);
-  tMessage2   = compareDetermineMessage(15, tWeightDiff);
+  tMessage2 = compareDetermineMessage(15, tWeightDiff);
 
   StString += sstring(getName()).cap();
   StString += sizeLevels[tMessage1];
@@ -439,8 +368,7 @@ sstring TOpenContainer::compareMeAgainst(TBeing *ch, TObj *tObj)
   return StString;
 }
 
-void TOpenContainer::lookObj(TBeing *ch, int bits) const
-{
+void TOpenContainer::lookObj(TBeing* ch, int bits) const {
   if (isClosed()) {
     ch->sendTo("It is closed.\n\r");
     return;
@@ -461,11 +389,14 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
   if (carryVolumeLimit() && carryWeightLimit()) {
     // moneypouches are occasionally overfilled, so we will just force the
     // info to look right...
-    ch->sendTo(format("%d%c full, %d%c loaded.\n\r") %
-     min(100, getCarriedVolume() * 100 / carryVolumeLimit()) % '%' %
-     min(100, (int) (getCarriedWeight() * 100.0 / carryWeightLimit())) % '%');
+    ch->sendTo(
+      format("%d%c full, %d%c loaded.\n\r") %
+      min(100, getCarriedVolume() * 100 / carryVolumeLimit()) % '%' %
+      min(100, (int)(getCarriedWeight() * 100.0 / carryWeightLimit())) % '%');
   } else {
-    vlogf(LOG_BUG, format("Problem in look in for object: (%s:%d), check vol/weight limit") %  getName() % objVnum());
+    vlogf(LOG_BUG,
+      format("Problem in look in for object: (%s:%d), check vol/weight limit") %
+        getName() % objVnum());
   }
   list_in_heap(stuff, ch, 0, 100);
 
@@ -474,8 +405,7 @@ void TOpenContainer::lookObj(TBeing *ch, int bits) const
   ch->makeOutputPaged();
 }
 
-int TOpenContainer::trapMe(TBeing *ch, const char *trap_type)
-{
+int TOpenContainer::trapMe(TBeing* ch, const char* trap_type) {
   char buf[256];
 
   if (!isCloseable()) {
@@ -483,14 +413,17 @@ int TOpenContainer::trapMe(TBeing *ch, const char *trap_type)
     return FALSE;
   }
   if (!isClosed()) {
-    act("$p must be closed before you may trap it.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p must be closed before you may trap it.", FALSE, ch, this, 0,
+      TO_CHAR);
     return FALSE;
   }
   if (isContainerFlag(CONT_TRAPPED)) {
     if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
       if (detectTrapObj(ch, this)) {
-        sprintf(buf, "You start to trap $p, but then notice an insidious %s trap already present.",
-           sstring(trap_types[getContainerTrapType()]).uncap().c_str());
+        sprintf(buf,
+          "You start to trap $p, but then notice an insidious %s trap already "
+          "present.",
+          sstring(trap_types[getContainerTrapType()]).uncap().c_str());
         act(buf, TRUE, ch, this, NULL, TO_CHAR);
         return FALSE;
       }
@@ -545,23 +478,22 @@ int TOpenContainer::trapMe(TBeing *ch, const char *trap_type)
     return FALSE;
   }
 
-
   ch->sendTo("You start working on your trap.\n\r");
   act("$n starts fiddling with $p.", TRUE, ch, this, 0, TO_ROOM);
-  start_task(ch, this, NULL, TASK_TRAP_CONT, trap_type, 3, ch->inRoom(), type, 0, 5);
+  start_task(ch, this, NULL, TASK_TRAP_CONT, trap_type, 3, ch->inRoom(), type,
+    0, 5);
   return FALSE;
 }
 
-int TOpenContainer::disarmMe(TBeing *thief)
-{
+int TOpenContainer::disarmMe(TBeing* thief) {
   int learnedness;
   int rc;
   char buf[256], trap_type_buf[80];
   int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
 
   if (isContainerFlag(CONT_GHOSTTRAP)) {
-    act("$p isn't trapped after all, must have made a mistake...",
-        FALSE, thief, this, 0, TO_CHAR);
+    act("$p isn't trapped after all, must have made a mistake...", FALSE, thief,
+      this, 0, TO_CHAR);
     remContainerFlag(CONT_GHOSTTRAP);
     addContainerFlag(CONT_EMPTYTRAP);
 
@@ -574,14 +506,14 @@ int TOpenContainer::disarmMe(TBeing *thief)
   }
 
   strcpy(trap_type_buf, trap_types[getContainerTrapType()].c_str());
-  learnedness = min((int) MAX_SKILL_LEARNEDNESS, 3*bKnown/2);
+  learnedness = min((int)MAX_SKILL_LEARNEDNESS, 3 * bKnown / 2);
   addContainerFlag(CONT_EMPTYTRAP);
 
   if (thief->bSuccess(learnedness, SKILL_DISARM_TRAP)) {
     sprintf(buf, "Click.  You disarm the %s trap in the $o.", trap_type_buf);
     act(buf, FALSE, thief, this, 0, TO_CHAR);
     act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
-    remContainerFlag( CONT_TRAPPED);
+    remContainerFlag(CONT_TRAPPED);
 
     return TRUE;
   } else {
@@ -595,11 +527,10 @@ int TOpenContainer::disarmMe(TBeing *thief)
   }
 }
 
-int TOpenContainer::detectMe(TBeing *thief) const
-{
-  int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
+int TOpenContainer::detectMe(TBeing* thief) const {
+  int bKnown = thief->getSkillValue(SKILL_DETECT_TRAP);
 
-  if (!isContainerFlag( CONT_TRAPPED))
+  if (!isContainerFlag(CONT_TRAPPED))
     return FALSE;
 
   // opening a trapped item
@@ -612,8 +543,7 @@ int TOpenContainer::detectMe(TBeing *thief) const
   }
 }
 
-void TOpenContainer::pickMe(TBeing *thief)
-{
+void TOpenContainer::pickMe(TBeing* thief) {
   if (!isContainerFlag(CONT_CLOSED)) {
     act("$p: Silly - it ain't even closed!", false, thief, this, 0, TO_CHAR);
     return;
@@ -639,8 +569,8 @@ void TOpenContainer::pickMe(TBeing *thief)
     act("$n fiddles with $p.", FALSE, thief, this, 0, TO_ROOM);
   } else {
     if (critFail(thief, SKILL_PICK_LOCK)) {
-      act("Uhoh.  $n seems to have jammed the lock!", 
-	  TRUE, thief, 0, 0, TO_ROOM);
+      act("Uhoh.  $n seems to have jammed the lock!", TRUE, thief, 0, 0,
+        TO_ROOM);
       thief->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
       addContainerFlag(CONT_JAMMED);
     } else {
@@ -650,9 +580,9 @@ void TOpenContainer::pickMe(TBeing *thief)
 }
 
 // THIS, VICT(ch), ITEM(bag)
-int TOpenContainer::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing *)
-{
-  TThing *t;
+int TOpenContainer::sellCommod(TBeing* ch, TMonster* keeper, int shop_nr,
+  TThing*) {
+  TThing* t;
   int rc;
   bool wasClosed = false;
 
@@ -668,8 +598,8 @@ int TOpenContainer::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing
     // if its still closed, we errored, or it was locked or something
     return FALSE;
   }
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    t=*(it++);
+  for (StuffIter it = stuff.begin(); it != stuff.end();) {
+    t = *(it++);
     rc = t->sellCommod(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
@@ -690,8 +620,7 @@ int TOpenContainer::sellCommod(TBeing *ch, TMonster *keeper, int shop_nr, TThing
   return FALSE;
 }
 
-void TOpenContainer::closeMe(TBeing *ch)
-{
+void TOpenContainer::closeMe(TBeing* ch) {
   if (isClosed())
     ch->sendTo("But it's already closed!\n\r");
   else if (!isCloseable())
@@ -703,8 +632,7 @@ void TOpenContainer::closeMe(TBeing *ch)
   }
 }
 
-void TOpenContainer::lockMe(TBeing *ch)
-{
+void TOpenContainer::lockMe(TBeing* ch) {
   if (!isClosed())
     ch->sendTo("Maybe you should close it first...\n\r");
   else if (getKeyNum() < 1)
@@ -721,18 +649,16 @@ void TOpenContainer::lockMe(TBeing *ch)
   }
 }
 
-void TOpenContainer::unlockMe(TBeing *ch)                     
-{                                                             
-  if (getKeyNum() < 0)                                        
+void TOpenContainer::unlockMe(TBeing* ch) {
+  if (getKeyNum() < 0)
     ch->sendTo("Odd - you can't seem to find a keyhole.\n\r");
-  else if (!has_key(ch, getKeyNum()))                         
-    ch->sendTo("You don't seem to have the proper key.\n\r"); 
-  else if (!isContainerFlag(CONT_LOCKED))                     
-    ch->sendTo("Oh.. it wasn't locked, after all.\n\r");      
-  else {                                                      
-    remContainerFlag(CONT_LOCKED);                            
-    ch->sendTo("*Click*\n\r");                                
-    act("$n unlocks $p.",TRUE, ch, this, 0, TO_ROOM);         
-  }                                                           
-}                                                             
-
+  else if (!has_key(ch, getKeyNum()))
+    ch->sendTo("You don't seem to have the proper key.\n\r");
+  else if (!isContainerFlag(CONT_LOCKED))
+    ch->sendTo("Oh.. it wasn't locked, after all.\n\r");
+  else {
+    remContainerFlag(CONT_LOCKED);
+    ch->sendTo("*Click*\n\r");
+    act("$n unlocks $p.", TRUE, ch, this, 0, TO_ROOM);
+  }
+}

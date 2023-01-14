@@ -20,7 +20,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the PIERCE discipline.
@@ -28,18 +27,17 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDPierce : public CDiscipline
-{
-public:
+class CDPierce : public CDiscipline {
+  public:
     CSkill skPierceSpec;
 
     CDPierce();
-    CDPierce(const CDPierce &a);
-    CDPierce & operator=(const CDPierce &a);
+    CDPierce(const CDPierce& a);
+    CDPierce& operator=(const CDPierce& a);
     virtual ~CDPierce();
-    virtual CDPierce * cloneMe() { return new CDPierce(*this); }
+    virtual CDPierce* cloneMe() { return new CDPierce(*this); }
 
-    bool isFast(){ return true; }
+    bool isFast() { return true; }
 
-private:
+  private:
 };

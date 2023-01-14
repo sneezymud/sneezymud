@@ -14,23 +14,16 @@
 #include "room.h"
 #include "obj_light.h"
 
-TFuel::TFuel() :
-  TObj(),
-  curFuel(0),
-  maxFuel(0)
-{
-}
+TFuel::TFuel() : TObj(), curFuel(0), maxFuel(0) {}
 
-TFuel::TFuel(const TFuel &a) :
+TFuel::TFuel(const TFuel& a) :
   TObj(a),
   curFuel(a.curFuel),
-  maxFuel(a.maxFuel)
-{
-}
+  maxFuel(a.maxFuel) {}
 
-TFuel & TFuel::operator=(const TFuel &a)
-{
-  if (this == &a) return *this;
+TFuel& TFuel::operator=(const TFuel& a) {
+  if (this == &a)
+    return *this;
 
   TObj::operator=(a);
   curFuel = a.curFuel;
@@ -38,56 +31,36 @@ TFuel & TFuel::operator=(const TFuel &a)
   return *this;
 }
 
-TFuel::~TFuel()
-{
-}
+TFuel::~TFuel() {}
 
-void TFuel::addToMaxFuel(int n)
-{
-  maxFuel += n;
-}
+void TFuel::addToMaxFuel(int n) { maxFuel += n; }
 
-void TFuel::setMaxFuel(int n)
-{
-  maxFuel = n;
-}
+void TFuel::setMaxFuel(int n) { maxFuel = n; }
 
-int TFuel::getMaxFuel() const
-{
-  return maxFuel;
-}
+int TFuel::getMaxFuel() const { return maxFuel; }
 
-void TFuel::addToCurFuel(int n)
-{
-  curFuel += n;
-}
+void TFuel::addToCurFuel(int n) { curFuel += n; }
 
-void TFuel::setCurFuel(int n)
-{
-  curFuel = n;
-}
+void TFuel::setCurFuel(int n) { curFuel = n; }
 
-int TFuel::getCurFuel() const
-{
-  return curFuel;
-}
+int TFuel::getCurFuel() const { return curFuel; }
 
-void TFuel::describeObjectSpecifics(const TBeing *ch) const
-{
+void TFuel::describeObjectSpecifics(const TBeing* ch) const {
   double diff;
 
   if (getMaxFuel()) {
-    diff = (double) ((double) getCurFuel() / (double) getMaxFuel());
+    diff = (double)((double)getCurFuel() / (double)getMaxFuel());
     ch->sendTo(COLOR_OBJECTS,
-	       format("You can tell that %s has %s of its fuel left.\n\r") %
-	       sstring(getName()).uncap() %
-          ((diff < .20) ? "very little" : ((diff < .50) ? "some" :
-          ((diff < .75) ? "a good bit of" : "almost all of its"))));
+      format("You can tell that %s has %s of its fuel left.\n\r") %
+        sstring(getName()).uncap() %
+        ((diff < .20) ? "very little"
+                      : ((diff < .50) ? "some"
+                                      : ((diff < .75) ? "a good bit of"
+                                                      : "almost all of its"))));
   }
 }
 
-void TFuel::refuelMeFuel(TBeing *ch, TLight *lamp)
-{
+void TFuel::refuelMeFuel(TBeing* ch, TLight* lamp) {
   int use;
 
   if (lamp->getMaxBurn() < 0) {
@@ -114,7 +87,7 @@ void TFuel::refuelMeFuel(TBeing *ch, TLight *lamp)
   if (getCurFuel() <= 0) {
     ch->sendTo("Your fuel is all used up, and you discard it.\n\r");
     if (equippedBy) {
-      dynamic_cast<TBeing *>(equippedBy)->unequip(eq_pos);
+      dynamic_cast<TBeing*>(equippedBy)->unequip(eq_pos);
     } else
       --(*this);
 
@@ -122,76 +95,67 @@ void TFuel::refuelMeFuel(TBeing *ch, TLight *lamp)
   }
 }
 
-void TFuel::assignFourValues(int x1, int x2, int, int)
-{
+void TFuel::assignFourValues(int x1, int x2, int, int) {
   setCurFuel(x1);
   setMaxFuel(x2);
 }
 
-void TFuel::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
+void TFuel::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
   *x1 = getCurFuel();
   *x2 = getMaxFuel();
   *x3 = 0;
   *x4 = 0;
 }
 
-void TFuel::lowCheck()
-{
+void TFuel::lowCheck() {
   if (getCurFuel() > getMaxFuel())
-    vlogf(LOG_LOW,format("fuel %s had more current fuel than max.") %  getName());
+    vlogf(LOG_LOW,
+      format("fuel %s had more current fuel than max.") % getName());
 
   TObj::lowCheck();
 }
 
-int TFuel::objectSell(TBeing *ch, TMonster *keeper)
-{
+int TFuel::objectSell(TBeing* ch, TMonster* keeper) {
   keeper->doTell(ch->getName(), "I'm sorry, I don't buy back fuel.");
   return TRUE;
 }
 
-sstring TFuel::statObjInfo() const
-{
+sstring TFuel::statObjInfo() const {
   char buf[256];
 
-  sprintf(buf, "Refuel capability : current : %d, max : %d",
-         getCurFuel(), getMaxFuel());
+  sprintf(buf, "Refuel capability : current : %d, max : %d", getCurFuel(),
+    getMaxFuel());
 
   sstring a(buf);
   return a;
 }
 
-int TFuel::getVolume() const
-{
+int TFuel::getVolume() const {
   int amt = TObj::getVolume();
 
   amt *= getCurFuel();
-  if(getMaxFuel())
+  if (getMaxFuel())
     amt /= getMaxFuel();
 
   return amt;
 }
 
-float TFuel::getTotalWeight(bool pweight) const
-{
+float TFuel::getTotalWeight(bool pweight) const {
   float amt = TObj::getTotalWeight(pweight);
 
   amt *= getCurFuel();
 
-  if(getMaxFuel())
+  if (getMaxFuel())
     amt /= getMaxFuel();
 
   return amt;
 }
 
-int TFuel::chiMe(TBeing *tLunatic)
-{
-  int     tMana  = ::number(10, 30),
-          bKnown = tLunatic->getSkillLevel(SKILL_CHI),
-          tDamage,
-          tRc = DELETE_VICT;
-  TThing *tThing;
-  TBeing *tBeing;
+int TFuel::chiMe(TBeing* tLunatic) {
+  int tMana = ::number(10, 30), bKnown = tLunatic->getSkillLevel(SKILL_CHI),
+      tDamage, tRc = DELETE_VICT;
+  TThing* tThing;
+  TBeing* tBeing;
 
   if (tLunatic->getMana() < tMana) {
     tLunatic->sendTo("You lack the chi to do this!\n\r");
@@ -199,39 +163,42 @@ int TFuel::chiMe(TBeing *tLunatic)
   } else
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
-  if (tLunatic->checkPeaceful("Violent things can not be done here and something tells you that would be violent!"))
+  if (tLunatic->checkPeaceful("Violent things can not be done here and "
+                              "something tells you that would be violent!"))
     return FALSE;
 
   if (!roomp) {
     // added to prevent crashes when item is held, etc.
-    act("You must be more cautious to chi something so volatile.", FALSE, tLunatic, this, NULL, TO_CHAR);
+    act("You must be more cautious to chi something so volatile.", FALSE,
+      tLunatic, this, NULL, TO_CHAR);
     return FALSE;
   }
-  
+
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
-    act("You fail to affect $p in any way.",
-        FALSE, tLunatic, this, NULL, TO_CHAR);
+    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+      TO_CHAR);
     return true;
   }
 
-  act("You focus upon $p causing it to blow up violently!",
-      FALSE, tLunatic, this, NULL, TO_CHAR);
-  act("$n concentrates upon $p, causing it to blow up violently",
-      TRUE, tLunatic, this, NULL, TO_ROOM);
+  act("You focus upon $p causing it to blow up violently!", FALSE, tLunatic,
+    this, NULL, TO_CHAR);
+  act("$n concentrates upon $p, causing it to blow up violently", TRUE,
+    tLunatic, this, NULL, TO_ROOM);
 
   tDamage = max(1, (::number((getCurFuel() / 2), getCurFuel()) / 10));
 
-  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-    tThing=*(it++);
+  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
+    tThing = *(it++);
 
-    if (!(tBeing = dynamic_cast<TBeing *>(tThing)) || tBeing->isImmortal())
+    if (!(tBeing = dynamic_cast<TBeing*>(tThing)) || tBeing->isImmortal())
       continue;
 
-    act("You are struck by the flames, caused by $n!",
-        FALSE, tLunatic, NULL, tBeing, TO_VICT);
+    act("You are struck by the flames, caused by $n!", FALSE, tLunatic, NULL,
+      tBeing, TO_VICT);
 
     if (tBeing->isPc()) {
-      if (tBeing->reconcileDamage(tBeing, ::number(1, tDamage), DAMAGE_FIRE) == -1) {
+      if (tBeing->reconcileDamage(tBeing, ::number(1, tDamage), DAMAGE_FIRE) ==
+          -1) {
         if (tBeing == tLunatic)
           ADD_DELETE(tRc, (DELETE_THIS | RET_STOP_PARSING));
         else {
@@ -240,7 +207,8 @@ int TFuel::chiMe(TBeing *tLunatic)
         }
       }
     } else {
-      if (tLunatic->reconcileDamage(tBeing, ::number(1, tDamage), DAMAGE_FIRE) == -1) {
+      if (tLunatic->reconcileDamage(tBeing, ::number(1, tDamage),
+            DAMAGE_FIRE) == -1) {
         delete tThing;
         tThing = NULL;
       }

@@ -13,9 +13,8 @@
 #include "being.h"
 #include "combat.h"
 
-int TBeing::doTurn(const char *argument, TBeing *vict)
-{
-  TBeing *victim;
+int TBeing::doTurn(const char* argument, TBeing* vict) {
+  TBeing* victim;
   char caName[256];
   int percent;
 
@@ -51,9 +50,9 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
     sendTo("They are not a minion of the darkness!\n\r");
     return FALSE;
   }
- /* Russ, check here if cleric has a symbol, and have them grope
-    around if they can't find it etc.  Basically, copy it outta
-    the cleric spells. */
+  /* Russ, check here if cleric has a symbol, and have them grope
+     around if they can't find it etc.  Basically, copy it outta
+     the cleric spells. */
   percent = ::number(1, 101);
 #if 0
   percent = percent - (getWis() * 2) + (victim->getWis() * 2) -
@@ -65,8 +64,10 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
   if ((percent > getSkillValue(SKILL_TURN) || (victim->GetMaxLevel() > 50)) &&
       (GetMaxLevel() <= 50)) {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("$n attempts to confuse $N, but fails.", FALSE, this, 0, victim, TO_NOTVICT);
-      act("You attempt to confuse $N, but fail.", FALSE, this, 0, victim, TO_CHAR);
+      act("$n attempts to confuse $N, but fails.", FALSE, this, 0, victim,
+        TO_NOTVICT);
+      act("You attempt to confuse $N, but fail.", FALSE, this, 0, victim,
+        TO_CHAR);
       act("$n has just tried to confuse you!", FALSE, this, 0, victim, TO_VICT);
       reconcileDamage(victim, 0, SKILL_TURN);
     }
@@ -149,16 +150,16 @@ int TBeing::doTurn(const char *argument, TBeing *vict)
   return FALSE;
 }
 
-void TBeing::doPenance()
-{
-
+void TBeing::doPenance() {
   if ((roomp->isWaterSector() || roomp->isUnderwaterSector()) && !isAquatic()) {
-    sendTo("Trying to tread water really messes up your ability to repent.\n\r");
+    sendTo(
+      "Trying to tread water really messes up your ability to repent.\n\r");
     return;
   }
-  if(!isImmortal()) {
+  if (!isImmortal()) {
     if (getCond(DRUNK) > 0) {
-      sendTo("Drunkeness really messes up your ability to perform penance.\n\r");
+      sendTo(
+        "Drunkeness really messes up your ability to perform penance.\n\r");
       return;
     }
     if (!getCond(FULL)) {
@@ -173,18 +174,20 @@ void TBeing::doPenance()
   }
 
   if (isCombatMode(ATTACK_BERSERK)) {
-    sendTo("You are a little too keyed up at the moment to properly focus.\n\r");
+    sendTo(
+      "You are a little too keyed up at the moment to properly focus.\n\r");
     return;
   }
   if (!doesKnowSkill(SKILL_PENANCE)) {
     sendTo("You really don't know anything about repenting.\n\r");
     return;
   }
-  if ((riding && dynamic_cast<TBeing *>(riding))  && !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)){
+  if ((riding && dynamic_cast<TBeing*>(riding)) &&
+      !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)) {
     sendTo("It is impossible to be repentive while mounted!\n\r");
     return;
   }
-  if (riding && dynamic_cast<TObj *>(riding)) {
+  if (riding && dynamic_cast<TObj*>(riding)) {
     // penance sets position so don't allow this
     sendTo("You aren't in the proper position, so you stand up.\n\r");
     doStand();
@@ -208,19 +211,19 @@ void TBeing::doPenance()
   start_task(this, NULL, NULL, TASK_PENANCE, "", 0, in_room, 1, 0, 40);
 }
 
-void TBeing::doMeditate()
-{
+void TBeing::doMeditate() {
   if ((roomp->isWaterSector() || roomp->isUnderwaterSector()) && !isAquatic()) {
-    sendTo("Trying to tread water really messes up your ability to meditate.\n\r");
+    sendTo(
+      "Trying to tread water really messes up your ability to meditate.\n\r");
     return;
   }
-  if(!isImmortal()) {
+  if (!isImmortal()) {
     if (getCond(DRUNK) > 0) {
       sendTo("Drunkenness really messes up your ability to meditate.\n\r");
-     return;
+      return;
     }
     if (!getCond(FULL)) {
-      sendTo("You are too hungry to meditate.\n\r"); 
+      sendTo("You are too hungry to meditate.\n\r");
       return;
     }
     if (!getCond(THIRST)) {
@@ -229,18 +232,20 @@ void TBeing::doMeditate()
     }
   }
   if (isCombatMode(ATTACK_BERSERK)) {
-    sendTo("You are a little too keyed up at the moment to properly focus.\n\r");
+    sendTo(
+      "You are a little too keyed up at the moment to properly focus.\n\r");
     return;
   }
   if (!doesKnowSkill(SKILL_MEDITATE)) {
     sendTo("You really don't know anything about meditating.\n\r");
     return;
   }
-  if ((riding && dynamic_cast<TBeing *>(riding))  && !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)){
+  if ((riding && dynamic_cast<TBeing*>(riding)) &&
+      !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)) {
     sendTo("It is impossible to meditate while mounted!\n\r");
     return;
   }
-  if (riding && dynamic_cast<TObj *>(riding)) {
+  if (riding && dynamic_cast<TObj*>(riding)) {
     // meditate sets position so don't allow this
     sendTo("You aren't in the proper position, so you stand up.\n\r");
     doStand();
@@ -254,7 +259,7 @@ void TBeing::doMeditate()
     if (task->task == TASK_MEDITATE) {
       sendTo("You sink deeper into your meditation.\n\r");
       return;
-    } else if (getPosition() <= POSITION_SITTING) 
+    } else if (getPosition() <= POSITION_SITTING)
       stopTask();
   }
   if (!riding) {
@@ -268,32 +273,34 @@ void TBeing::doMeditate()
   start_task(this, NULL, NULL, TASK_MEDITATE, "", 0, in_room, 1, 0, 40);
 }
 
-void TBeing::doYoginsa()
-{
+void TBeing::doYoginsa() {
   if ((roomp->isWaterSector() || roomp->isUnderwaterSector()) && !isAquatic()) {
-    sendTo("Trying to tread water really messes up your ability to meditate.\n\r");
+    sendTo(
+      "Trying to tread water really messes up your ability to meditate.\n\r");
     return;
   }
-  if(!isImmortal()) {
+  if (!isImmortal()) {
     if (getCond(DRUNK) > 0) {
       sendTo("Drunkenness really messes up your ability to meditate.\n\r");
-     return;
+      return;
     }
     // hunger thirst checks ignored
   }
   if (isCombatMode(ATTACK_BERSERK)) {
-    sendTo("You are a little too keyed up at the moment to properly focus.\n\r");
+    sendTo(
+      "You are a little too keyed up at the moment to properly focus.\n\r");
     return;
   }
   if (!doesKnowSkill(SKILL_YOGINSA)) {
     sendTo("You really don't know anything about meditating.\n\r");
     return;
   }
-  if ((riding && dynamic_cast<TBeing *>(riding))  && !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)){
+  if ((riding && dynamic_cast<TBeing*>(riding)) &&
+      !(getSkillValue(SKILL_ADVANCED_RIDING) >= 50)) {
     sendTo("It is impossible to meditate while mounted!\n\r");
     return;
   }
-  if (riding && dynamic_cast<TObj *>(riding)) {
+  if (riding && dynamic_cast<TObj*>(riding)) {
     // meditate sets position so don't allow this
     sendTo("You aren't in the proper position, so you stand up.\n\r");
     doStand();
@@ -307,7 +314,7 @@ void TBeing::doYoginsa()
     if (task->task == TASK_YOGINSA) {
       sendTo("You meditate harder and harder.\n\r");
       return;
-    } else if (getPosition() <= POSITION_SITTING) 
+    } else if (getPosition() <= POSITION_SITTING)
       stopTask();
   }
   if (!riding) {
@@ -321,8 +328,7 @@ void TBeing::doYoginsa()
   start_task(this, NULL, NULL, TASK_YOGINSA, "", 0, in_room, 1, 0, 40);
 }
 
-void TBeing::loseSneak()
-{
+void TBeing::loseSneak() {
   if (affectedBySpell(SKILL_SNEAK)) {
     affectFrom(SKILL_SNEAK);
     sendTo("You are no longer sneaky.\n\r");
@@ -335,4 +341,3 @@ void TBeing::loseSneak()
 
   // don't remove a generalized AFF_SNEAK since this is a character trait
 }
-

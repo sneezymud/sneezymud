@@ -5,7 +5,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "monster.h"
 #include "obj_base_container.h"
 #include "obj_potion.h"
@@ -13,80 +12,66 @@
 #include "extern.h"
 #include "liquids.h"
 
-TPotion::TPotion() :
-  TBaseCup()
-{
-}
+TPotion::TPotion() : TBaseCup() {}
 
-TPotion::TPotion(const TPotion &a) :
-  TBaseCup(a)
-{
-}
+TPotion::TPotion(const TPotion& a) : TBaseCup(a) {}
 
-TPotion & TPotion::operator=(const TPotion &a)
-{
-  if (this == &a) return *this;
+TPotion& TPotion::operator=(const TPotion& a) {
+  if (this == &a)
+    return *this;
   TBaseCup::operator=(a);
   return *this;
 }
 
-TPotion::~TPotion()
-{
-}
-
+TPotion::~TPotion() {}
 
 bool TPotion::potIsEmpty() const {
   if (getDrinkUnits() <= 0)
     return TRUE;
   return FALSE;
 }
-  
-bool TPotion::isSimilar(const TThing *t) const
-{
-  const TPotion *pot = dynamic_cast<const TPotion *>(t);
+
+bool TPotion::isSimilar(const TThing* t) const {
+  const TPotion* pot = dynamic_cast<const TPotion*>(t);
   if (!pot)
     return FALSE;
 
   if (getDescr().empty() || pot->getDescr().empty() ||
-     getDescr() != pot->getDescr()){
+      getDescr() != pot->getDescr()) {
     return false;
   }
 
-  if (name.empty() || pot->name.empty() ||
-      !is_exact_name(name, pot->name)){
+  if (name.empty() || pot->name.empty() || !is_exact_name(name, pot->name)) {
     return false;
   }
-  
+
   // not same if drink types are different, unless both are empty
-  if(getDrinkType() != pot->getDrinkType() &&
-     !(getDrinkUnits()==0 && getDrinkUnits()==0)){
+  if (getDrinkType() != pot->getDrinkType() &&
+      !(getDrinkUnits() == 0 && getDrinkUnits() == 0)) {
     return false;
   }
 
   return true;
 }
 
-
-int TPotion::getValue() const
-{
+int TPotion::getValue() const {
   int cost_per, value;
   cost_per = liquidInfo[getDrinkType()]->price;
-  value = (int) (getDrinkUnits() * cost_per);
-  
+  value = (int)(getDrinkUnits() * cost_per);
+
   if (obj_flags.cost <= 1) {
     value = max(0, value);
   } else {
-    value = max(1, value);  
+    value = max(1, value);
   }
 
   return value;
 }
 
-int TPotion::objectSell(TBeing *ch, TMonster *keeper)
-{
+int TPotion::objectSell(TBeing* ch, TMonster* keeper) {
   sstring buf;
 
-  if(!liquidInfo[getDrinkType()]->potion){
+  if (!liquidInfo[getDrinkType()]->potion) {
     keeper->doTell(ch->getName(), "Hey, that's not a potion!.");
     return TRUE;
   }
@@ -94,29 +79,25 @@ int TPotion::objectSell(TBeing *ch, TMonster *keeper)
   return FALSE;
 }
 
-
-int TPotion::sellPrice(int, int shop_nr, float chr, const TBeing *ch)
-{
+int TPotion::sellPrice(int, int shop_nr, float chr, const TBeing* ch) {
   // adjust cost based on structure
   double cost = getValue();
 
   // adjust cost based on shop pricing
   cost *= shop_index[shop_nr].getProfitSell(this, ch);
 
-
   // adjust for charisma/swindle modifier
-  if (chr != -1 && chr!=0)
+  if (chr != -1 && chr != 0)
     cost /= chr;
 
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
-  return (int) cost;
+  return (int)cost;
 }
 
-
-int TPotion::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
-{
+int TPotion::shopPrice(int num, int shop_nr, float chr,
+  const TBeing* ch) const {
   // adjust cost based on structure
   double cost = getValue();
 
@@ -124,7 +105,7 @@ int TPotion::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
   cost *= shop_index[shop_nr].getProfitBuy(this, ch);
 
   // adjust for charisma/swindle modifier
-  if(chr != -1)
+  if (chr != -1)
     cost *= chr;
 
   // multiply by the number of items
@@ -133,15 +114,13 @@ int TPotion::shopPrice(int num, int shop_nr, float chr, const TBeing *ch) const
   // make sure we don't have a negative cost
   cost = max(1.0, cost);
 
-  return (int) cost;
+  return (int)cost;
 }
-
 
 // return the liquid associated with the shaman spell
 // or LIQ_WATER if it is not an allowed potion to brew
-liqTypeT spell_to_liq(spellNumT which)
-{
-  switch(which){
+liqTypeT spell_to_liq(spellNumT which) {
+  switch (which) {
     case SPELL_CELERITE:
       return LIQ_POT_CELERITE;
     case SPELL_SHIELD_OF_MISTS:

@@ -6,20 +6,18 @@
 #include "immunity.h"
 #include "extern.h"
 
-using std::min;
 using std::max;
+using std::min;
 
 // Constructor.  Zero out everything.
-Immunities::Immunities()
-{
-  for (immuneTypeT i=MIN_IMMUNE; i < MAX_IMMUNES; i++)
+Immunities::Immunities() {
+  for (immuneTypeT i = MIN_IMMUNE; i < MAX_IMMUNES; i++)
     ImmunityArray[i] = 0;
 }
 
 // convert() is a utility function to switch from const char *
 // to immune_t so other functions can access the ImmunityArray.
-immuneTypeT Immunities::convert(const sstring & immunity) const
-{
+immuneTypeT Immunities::convert(const sstring& immunity) const {
   if (!immunity.compare("IMMUNE_HEAT"))
     return IMMUNE_HEAT;
   if (!immunity.compare("IMMUNE_COLD"))
@@ -77,43 +75,40 @@ immuneTypeT Immunities::convert(const sstring & immunity) const
   if (!immunity.compare("IMMUNE_UNUSED2"))
     return IMMUNE_UNUSED2;
 
-  vlogf(LOG_BUG, format("Unknown immunity '%s', in convert()") %  immunity);
+  vlogf(LOG_BUG, format("Unknown immunity '%s', in convert()") % immunity);
   return IMMUNE_NONE;
 }
 
 // setImmunity() assigns a percentage to a particular immunity.
-void Immunities::setImmunity(const sstring &whichImmunity, short percent)
-{
+void Immunities::setImmunity(const sstring& whichImmunity, short percent) {
   immuneTypeT itt = convert(whichImmunity);
   ImmunityArray[itt] = percent;
 }
 
 // getImmunity() returns the value of the particular immunity.
-short Immunities::getImmunity(immuneTypeT whichImmunity) const
-{
+short Immunities::getImmunity(immuneTypeT whichImmunity) const {
   return ImmunityArray[whichImmunity];
 }
 
-short TBeing::getImmunity(immuneTypeT type) const
-{
+short TBeing::getImmunity(immuneTypeT type) const {
   int amount, imm;
 
   imm = immunities.immune_arr[type];
 
-  if(doesKnowSkill(SKILL_DIVINE_GRACE)) {
+  if (doesKnowSkill(SKILL_DIVINE_GRACE)) {
     amount = max((int)getSkillValue(SKILL_DIVINE_GRACE), 0);
-    switch(type){
+    switch (type) {
       case IMMUNE_FEAR:
         imm += amount;
         break;
       case IMMUNE_PARALYSIS:
-        imm += (amount/2);
+        imm += (amount / 2);
         break;
       case IMMUNE_DISEASE:
-        imm += (amount/3);
+        imm += (amount / 3);
         break;
       case IMMUNE_BLEED:
-        imm += (amount/4);
+        imm += (amount / 4);
         break;
       case IMMUNE_CHARM:
         imm += max(0, (amount - 25));
@@ -129,67 +124,68 @@ short TBeing::getImmunity(immuneTypeT type) const
     }
   }
 
-  if(doesKnowSkill(SKILL_DUFALI)) {
+  if (doesKnowSkill(SKILL_DUFALI)) {
     amount = max((int)getSkillValue(SKILL_DUFALI), 0);
-    switch(type){
-      case IMMUNE_PARALYSIS: 
-        imm += (amount/3);
+    switch (type) {
+      case IMMUNE_PARALYSIS:
+        imm += (amount / 3);
         break;
       case IMMUNE_CHARM:
         imm += amount;
         break;
       case IMMUNE_POISON:
-        imm += (amount/2);
+        imm += (amount / 2);
         break;
       default:
         break;
     }
   }
-  
-  if(doesKnowSkill(SKILL_IRON_SKIN)){
+
+  if (doesKnowSkill(SKILL_IRON_SKIN)) {
     amount = max((int)getSkillValue(SKILL_IRON_SKIN), 0);
-    switch(type){
+    switch (type) {
       case IMMUNE_SKIN_COND:
-        imm += (amount/2);
+        imm += (amount / 2);
         break;
       case IMMUNE_BLEED:
-        imm += (int)(amount/1.5);
+        imm += (int)(amount / 1.5);
         break;
       default:
         break;
     }
   }
 
-  if(doesKnowSkill(SKILL_IRON_BONES) && type == IMMUNE_BONE_COND){
+  if (doesKnowSkill(SKILL_IRON_BONES) && type == IMMUNE_BONE_COND) {
     amount = max((int)getSkillValue(SKILL_IRON_BONES), 0);
-    imm += (amount/2);
+    imm += (amount / 2);
   }
 
-  if(doesKnowSkill(SKILL_IRON_WILL) && type == IMMUNE_NONMAGIC){
+  if (doesKnowSkill(SKILL_IRON_WILL) && type == IMMUNE_NONMAGIC) {
     amount = max((int)getSkillValue(SKILL_IRON_WILL), 0);
-    imm += (amount/30);
+    imm += (amount / 30);
   }
 
-  if(hasQuestBit(TOG_IS_HEALTHY) && type == IMMUNE_DISEASE){
+  if (hasQuestBit(TOG_IS_HEALTHY) && type == IMMUNE_DISEASE) {
     imm += 75;
   }
 
-  if(affectedBySpell(AFFECT_WET)) {
+  if (affectedBySpell(AFFECT_WET)) {
     amount = 0;
-    for (affectedData *wetAffect = affected; wetAffect; wetAffect = wetAffect->next)
+    for (affectedData* wetAffect = affected; wetAffect;
+         wetAffect = wetAffect->next)
       if (wetAffect->type == AFFECT_WET) {
         amount = wetAffect->level;
         break;
       }
-    switch(type){
-      case IMMUNE_HEAT: 
-        imm += (amount/3);
+    switch (type) {
+      case IMMUNE_HEAT:
+        imm += (amount / 3);
         break;
       case IMMUNE_ELECTRICITY:
-        imm += -(amount/5);
+        imm += -(amount / 5);
         break;
       case IMMUNE_COLD:
-        imm += -(amount/5);
+        imm += -(amount / 5);
         break;
       default:
         break;
@@ -200,18 +196,15 @@ short TBeing::getImmunity(immuneTypeT type) const
   return imm;
 }
 
-void TBeing::setImmunity(immuneTypeT type, short amt)
-{
+void TBeing::setImmunity(immuneTypeT type, short amt) {
   immunities.immune_arr[type] = amt;
 }
 
-void TBeing::addToImmunity(immuneTypeT type, short amt)
-{
+void TBeing::addToImmunity(immuneTypeT type, short amt) {
   immunities.immune_arr[type] = immunities.immune_arr[type] + amt;
 }
 
-bool TBeing::isImmune(immuneTypeT bit, wearSlotT pos, int modifier) const
-{
+bool TBeing::isImmune(immuneTypeT bit, wearSlotT pos, int modifier) const {
   // 'modifier' is not required and defaults to 0
   // 'modifier' is subtracted from any resistance less than 100%
   // this function history subtracted (modifier + 50) from the resistance
@@ -219,16 +212,14 @@ bool TBeing::isImmune(immuneTypeT bit, wearSlotT pos, int modifier) const
   //   - Maror 02/2004
   int gi = getImmunity(bit);
   if (gi >= 100)
-   return TRUE;
+    return TRUE;
   if (gi <= -100)
     return FALSE;
 
-  return (gi - modifier) > ::number(1,100);
+  return (gi - modifier) > ::number(1, 100);
 }
 
-
-immuneTypeT getTypeImmunity(spellNumT type)
-{
+immuneTypeT getTypeImmunity(spellNumT type) {
   immuneTypeT bit = IMMUNE_NONE;
 
   switch (type) {
@@ -248,7 +239,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case TYPE_FIRE:
       bit = IMMUNE_HEAT;
       break;
-//    case SPELL_LIGHTNING_BOLT:
+      //    case SPELL_LIGHTNING_BOLT:
     case SPELL_CALL_LIGHTNING:
     case SPELL_LIGHTNING_BREATH:
     case DAMAGE_ELECTRIC:
@@ -440,7 +431,7 @@ immuneTypeT getTypeImmunity(spellNumT type)
     case SPELL_FEAR:
     case SPELL_INTIMIDATE:
       bit = IMMUNE_FEAR;
-      break; 
+      break;
     case SPELL_DISEASE:
     case SPELL_INFECT_DEIKHAN:
     case SPELL_INFECT:
@@ -483,5 +474,3 @@ immuneTypeT getTypeImmunity(spellNumT type)
   }
   return bit;
 }
-
-

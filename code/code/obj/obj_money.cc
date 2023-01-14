@@ -18,17 +18,15 @@
 
 #include <map>
 
-class currencyInfoTPimpl
-{
+class currencyInfoTPimpl {
   public:
-  std::map<currencyTypeT, currencyEntry>currencies;
+    std::map<currencyTypeT, currencyEntry> currencies;
 };
 
-const currencyEntry* currencyInfoT::operator[] (const currencyTypeT i) const
-{
+const currencyEntry* currencyInfoT::operator[](const currencyTypeT i) const {
   auto& currencies = pimpl->currencies;
   auto it = currencies.find(i);
-  if(it == currencies.end()){
+  if (it == currencies.end()) {
     vlogf(LOG_BUG, format("invalid currency detected: %i") % i);
     return &(*currencies.find(CURRENCY_GRIMHAVEN)).second;
   } else {
@@ -36,36 +34,30 @@ const currencyEntry* currencyInfoT::operator[] (const currencyTypeT i) const
   }
 }
 
-currencyInfoT::~currencyInfoT()
-{
-  delete pimpl;
-}
+currencyInfoT::~currencyInfoT() { delete pimpl; }
 
-currencyInfoT::currencyInfoT()
-{
+currencyInfoT::currencyInfoT() {
   pimpl = new currencyInfoTPimpl();
   auto& currencies = pimpl->currencies;
-  currencies.emplace_hint(currencies.end(), CURRENCY_GRIMHAVEN, currencyEntry("talen", "Grimhaven"));
-  currencies.emplace_hint(currencies.end(), CURRENCY_LOGRUS, currencyEntry("dinar", "Logrus"));
-  currencies.emplace_hint(currencies.end(), CURRENCY_BRIGHTMOON, currencyEntry("kroner", "Brightmoon"));
-  currencies.emplace_hint(currencies.end(), CURRENCY_AMBER, currencyEntry("guilder", "Amber"));
+  currencies.emplace_hint(currencies.end(), CURRENCY_GRIMHAVEN,
+    currencyEntry("talen", "Grimhaven"));
+  currencies.emplace_hint(currencies.end(), CURRENCY_LOGRUS,
+    currencyEntry("dinar", "Logrus"));
+  currencies.emplace_hint(currencies.end(), CURRENCY_BRIGHTMOON,
+    currencyEntry("kroner", "Brightmoon"));
+  currencies.emplace_hint(currencies.end(), CURRENCY_AMBER,
+    currencyEntry("guilder", "Amber"));
 }
 
-
-float currencyEntry::getExchangeRate(currencyTypeT c) const
-{
-  return 1.0; // no exchange rates... yet
+float currencyEntry::getExchangeRate(currencyTypeT c) const {
+  return 1.0;  // no exchange rates... yet
 }
 
-currencyEntry::currencyEntry(sstring n, sstring a) :
-  name(n),
-  affiliation(a)
-{
-}
+currencyEntry::currencyEntry(sstring n, sstring a) : name(n), affiliation(a) {}
 
-currencyEntry & currencyEntry::operator = (const currencyEntry &a) 
-{
-  if (this == &a) return *this;
+currencyEntry& currencyEntry::operator=(const currencyEntry& a) {
+  if (this == &a)
+    return *this;
 
   name = a.name;
   affiliation = a.affiliation;
@@ -73,28 +65,22 @@ currencyEntry & currencyEntry::operator = (const currencyEntry &a)
   return *this;
 }
 
-currencyEntry::~currencyEntry()
-{
-}
+currencyEntry::~currencyEntry() {}
 
+bool TMoney::willMerge(TMergeable* tm) {
+  TMoney* tMoney;
 
-bool TMoney::willMerge(TMergeable *tm)
-{
-  TMoney *tMoney;
-
-  if(!(tMoney=dynamic_cast<TMoney *>(tm)) ||
-     this==tMoney ||
-     tMoney->getCurrency()!=getCurrency())
+  if (!(tMoney = dynamic_cast<TMoney*>(tm)) || this == tMoney ||
+      tMoney->getCurrency() != getCurrency())
     return false;
 
   return true;
 }
 
-void TMoney::doMerge(TMergeable *tm)
-{
-  TMoney *tMoney;
+void TMoney::doMerge(TMergeable* tm) {
+  TMoney* tMoney;
 
-  if(!(tMoney=dynamic_cast<TMoney *>(tm)))
+  if (!(tMoney = dynamic_cast<TMoney*>(tm)))
     return;
 
   // set m to the full amount
@@ -104,103 +90,86 @@ void TMoney::doMerge(TMergeable *tm)
   delete tMoney;
 }
 
-currencyTypeT TMoney::getCurrency() const
-{
-  return type;
-}
+currencyTypeT TMoney::getCurrency() const { return type; }
 
-TMoney::TMoney() :
-  TMergeable(),
-  money(0)
-{
-}
+TMoney::TMoney() : TMergeable(), money(0) {}
 
-TMoney::TMoney(const TMoney &a) :
-  TMergeable(a),
-  money(a.money)
-{
-}
+TMoney::TMoney(const TMoney& a) : TMergeable(a), money(a.money) {}
 
-TMoney & TMoney::operator=(const TMoney &a)
-{
-  if (this == &a) return *this;
+TMoney& TMoney::operator=(const TMoney& a) {
+  if (this == &a)
+    return *this;
   TObj::operator=(a);
   money = a.money;
   return *this;
 }
 
-TMoney::~TMoney()
-{
-}
+TMoney::~TMoney() {}
 
-void TMoney::assignFourValues(int x1, int x2, int, int)
-{
+void TMoney::assignFourValues(int x1, int x2, int, int) {
   setMoney(x1);
   setCurrency((currencyTypeT)x2);
 }
 
-void TMoney::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
+void TMoney::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
   *x1 = getMoney();
   *x2 = getCurrency();
   *x3 = 0;
   *x4 = 0;
 }
 
-sstring TMoney::statObjInfo() const
-{
+sstring TMoney::statObjInfo() const {
   sstring buf;
 
-  buf=format("%s in pile: %i") % currencyInfo[getCurrency()]->getName().cap() %
-    getMoney();
+  buf = format("%s in pile: %i") %
+        currencyInfo[getCurrency()]->getName().cap() % getMoney();
 
   return buf;
 }
 
-sstring TMoney::getCurrencyName() const
-{
+sstring TMoney::getCurrencyName() const {
   return currencyInfo[getCurrency()]->getName();
 }
 
-TMoney *create_money(int amount, factionTypeT fact)
-{
-  currencyTypeT currency=CURRENCY_GRIMHAVEN;
+TMoney* create_money(int amount, factionTypeT fact) {
+  currencyTypeT currency = CURRENCY_GRIMHAVEN;
 
-  switch(fact){
+  switch (fact) {
     case FACT_NONE:
     case FACT_UNDEFINED:
     case MAX_FACTIONS:
-      currency=CURRENCY_GRIMHAVEN;
+      currency = CURRENCY_GRIMHAVEN;
       break;
     case FACT_BROTHERHOOD:
-      currency=CURRENCY_BRIGHTMOON;
+      currency = CURRENCY_BRIGHTMOON;
       break;
     case FACT_CULT:
-      currency=CURRENCY_LOGRUS;
+      currency = CURRENCY_LOGRUS;
       break;
     case FACT_SNAKE:
-      currency=CURRENCY_AMBER;
+      currency = CURRENCY_AMBER;
       break;
   }
 
   return create_money(amount, currency);
 }
 
-TMoney *create_money(int amount, currencyTypeT currency)
-{
-  TObj *obj;
-  TMoney *money;
+TMoney* create_money(int amount, currencyTypeT currency) {
+  TObj* obj;
+  TMoney* money;
 
   if (amount < 0) {
-    vlogf(LOG_BUG, format("create_money(%i) < 1, clamping") %  amount);
+    vlogf(LOG_BUG, format("create_money(%i) < 1, clamping") % amount);
     amount = 1;
   }
 
   obj = read_object(Obj::GENERIC_TALEN, VIRTUAL);
-  money = dynamic_cast<TMoney *>(obj);
-  mud_assert(money != NULL, "Obj::GENERIC_TALEN is not TMoney type.  obj was: %s", obj ? obj->getName().c_str() : "NO OBJECT");
+  money = dynamic_cast<TMoney*>(obj);
+  mud_assert(money != NULL,
+    "Obj::GENERIC_TALEN is not TMoney type.  obj was: %s",
+    obj ? obj->getName().c_str() : "NO OBJECT");
 
-  extraDescription *new_descr;
+  extraDescription* new_descr;
   sstring buf;
 
   money->swapToStrung();
@@ -216,45 +185,53 @@ TMoney *create_money(int amount, currencyTypeT currency)
 
   if (amount == 1) {
     money->name = money->getCurrencyName() + " money";
-    money->shortDescr = "a "+money->getCurrencyName();
-    money->setDescr(format("One miserable %s lies here.") % money->getCurrencyName());
+    money->shortDescr = "a " + money->getCurrencyName();
+    money->setDescr(
+      format("One miserable %s lies here.") % money->getCurrencyName());
 
     new_descr->keyword = money->getCurrencyName() + " money";
-    new_descr->description = format("One miserable %s.\n\r") % money->getCurrencyName();
+    new_descr->description =
+      format("One miserable %s.\n\r") % money->getCurrencyName();
 
   } else {
-    money->name = money->getCurrencyName() +"s money";
+    money->name = money->getCurrencyName() + "s money";
     money->shortDescr = format("some %ss") % money->getCurrencyName();
     if (amount > 100000)
-      buf=format("A tremendously HUGE pile of %ss lies here.") % money->getCurrencyName();
+      buf = format("A tremendously HUGE pile of %ss lies here.") %
+            money->getCurrencyName();
     else if (amount > 50000)
-      buf=format("A HUGE pile of %ss lies here.") % money->getCurrencyName();
+      buf = format("A HUGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 10000)
-      buf=format("A LARGE pile of %ss lies here.") % money->getCurrencyName();
+      buf = format("A LARGE pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 1000)
-      buf=format("A nice-sized pile of %ss lies here.") % money->getCurrencyName();
+      buf = format("A nice-sized pile of %ss lies here.") %
+            money->getCurrencyName();
     else if (amount > 500)
-      buf=format("A pile of %ss lies here.") % money->getCurrencyName();
+      buf = format("A pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 100)
-      buf=format("A small pile of %ss lies here.") % money->getCurrencyName();
+      buf = format("A small pile of %ss lies here.") % money->getCurrencyName();
     else if (amount > 50)
-      buf=format("A tiny pile of %ss lies here.") % money->getCurrencyName();
+      buf = format("A tiny pile of %ss lies here.") % money->getCurrencyName();
     else
-      buf=format("A few %ss have been left in a pile here.") % money->getCurrencyName();
+      buf = format("A few %ss have been left in a pile here.") %
+            money->getCurrencyName();
 
     money->setDescr(buf);
-    new_descr->keyword = money->getCurrencyName() +"s money";
+    new_descr->keyword = money->getCurrencyName() + "s money";
     if (amount < 10) {
-      buf=format("There are %i %ss.\n\r") % amount % money->getCurrencyName();
+      buf = format("There are %i %ss.\n\r") % amount % money->getCurrencyName();
       new_descr->description = buf;
     } else if (amount < 100) {
-      buf=format("There are about %i %ss.\n\r") % (10 * (amount / 10)) % money->getCurrencyName();
+      buf = format("There are about %i %ss.\n\r") % (10 * (amount / 10)) %
+            money->getCurrencyName();
       new_descr->description = buf;
     } else if (amount < 10000) {
-      buf=format("You guess there are %i %ss.\n\r") % (100 * (amount / 100)) % money->getCurrencyName();
+      buf = format("You guess there are %i %ss.\n\r") % (100 * (amount / 100)) %
+            money->getCurrencyName();
       new_descr->description = buf;
     } else
-      new_descr->description = format("There are a LOT of %ss.\n\r") % money->getCurrencyName();
+      new_descr->description =
+        format("There are a LOT of %ss.\n\r") % money->getCurrencyName();
   }
   new_descr->next = NULL;
   money->ex_description = new_descr;
@@ -264,14 +241,13 @@ TMoney *create_money(int amount, currencyTypeT currency)
   money->setMoney(amount);
   money->obj_flags.cost = amount;
 
-  money->setVolume(max(1, (int)(amount * 0.0048))); // 0.078 cm3
-  money->setWeight(amount/303.0); // 1.5 grams
+  money->setVolume(max(1, (int)(amount * 0.0048)));  // 0.078 cm3
+  money->setWeight(amount / 303.0);                  // 1.5 grams
 
   return money;
 }
 
-int TMoney::getMe(TBeing *ch, TThing *sub)
-{
+int TMoney::getMe(TBeing* ch, TThing* sub) {
   // do baseclass stuff for recusivity
   int rc = TObj::getMe(ch, sub);
   if (rc)
@@ -285,27 +261,19 @@ int TMoney::getMe(TBeing *ch, TThing *sub)
   return TRUE;
 }
 
-int TMoney::getMoney() const
-{
-  return money;
-}
+int TMoney::getMoney() const { return money; }
 
-void TMoney::setMoney(int n)
-{
+void TMoney::setMoney(int n) {
   if (n < 1)
     vlogf(LOG_BUG, format("TMoney::setMoney(%i) < 1, clamping") % n);
   money = max(1, n);
 }
 
-void TMoney::setCurrency(currencyTypeT c)
-{
-  type = c;
-}
+void TMoney::setCurrency(currencyTypeT c) { type = c; }
 
-int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
-{
+int TMoney::moneyMeMoney(TBeing* ch, TThing* sub) {
   int amount;
-  TThing *t=NULL;
+  TThing* t = NULL;
   char buf[256];
   bool isMyCorpse = false;
 
@@ -320,29 +288,32 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
     ch->sendTo(format("There were %d %ss.\n\r") % amount % getCurrencyName());
     /*int amt2 = 0;
     if (!isMyCorpse && !ch->isImmortal())
-      amt2 = (int) (amount * FactionInfo[ch->getFaction()].faction_tithe / 100.0);
+      amt2 = (int) (amount * FactionInfo[ch->getFaction()].faction_tithe /
+    100.0);
 
     if (!amt2)
       ch->sendTo(format("There were %d talens.\n\r") % amount);
     else {
-      ch->sendTo(format("There were %d talens, and you tithe %d of them.\n\r") % amount % amt2);
-      // BUGFIX: tithing was creating money 
+      ch->sendTo(format("There were %d talens, and you tithe %d of them.\n\r") %
+    amount % amt2);
+      // BUGFIX: tithing was creating money
       amount = amount - amt2;
     }*/
   }
 
   if (ch->getMoney() > 500000 && (amount > 100000))
-    vlogf(LOG_MISC, format("%s just got %d %ss") %  ch->getName() % amount % getCurrencyName());
+    vlogf(LOG_MISC, format("%s just got %d %ss") % ch->getName() % amount %
+                      getCurrencyName());
 
-
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
-    TBeing *tb = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = ch->roomp->stuff.begin();
+       it != ch->roomp->stuff.end() && (t = *it); ++it) {
+    TBeing* tb = dynamic_cast<TBeing*>(t);
     if (!tb)
       continue;
     if (!tb->isPc() && tb->canSee(ch) && (tb != ch) &&
         (tb->getPosition() > POSITION_SLEEPING) && !UtilMobProc(tb)) {
-      TMonster *tmons = dynamic_cast<TMonster *>(tb);
-      tmons->UG(1 + amount/1000);
+      TMonster* tmons = dynamic_cast<TMonster*>(tb);
+      tmons->UG(1 + amount / 1000);
       tmons->aiTarget(ch);
       if (tmons->isGreedy())
         tmons->UA(1);
@@ -359,7 +330,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
     // but lets also fix gold_positive so that a L50 dying with 4M coins
     // doesn't cause gold_statistic to = 0, but gold_positive = 4M
     if (ch->isPc() && ch->GetMaxLevel() <= 60)
-      gold_positive[GOLD_INCOME][ch->GetMaxLevel()-1] -= amount;
+      gold_positive[GOLD_INCOME][ch->GetMaxLevel() - 1] -= amount;
   } else
     ch->addToMoney(amount, GOLD_INCOME, !isMyCorpse && !ch->isImmortal());
 
@@ -367,7 +338,7 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   if (!sub || !isname(fname(ch->name), sub->name)) {
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
         IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
-        (ch->master || ch->followers)){
+        (ch->master || ch->followers)) {
       sprintf(buf, "%d", amount);
       ch->doSplit(buf, false);
     }
@@ -376,23 +347,21 @@ int TMoney::moneyMeMoney(TBeing *ch, TThing *sub)
   return DELETE_THIS;
 }
 
-bool TMoney::isPluralItem() const
-{
-  return (getMoney() > 1);
-}
+bool TMoney::isPluralItem() const { return (getMoney() > 1); }
 
-void TMoney::onObjLoad()
-{
+void TMoney::onObjLoad() {
   // adjust the money based on the global modifiers
   int x = getMoney();
-  x = (int) (x * gold_modifier[GOLD_INCOME].getVal());
+  x = (int)(x * gold_modifier[GOLD_INCOME].getVal());
   setMoney(x);
 }
 
-sstring TMoney::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
-{
+sstring TMoney::getNameForShow(bool useColor, bool useName,
+  const TBeing* ch) const {
   char buf2[256];
-  sprintf(buf2, "%s [%d %ss]", useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()), 
-      getMoney(), getCurrencyName().c_str());
+  sprintf(buf2, "%s [%d %ss]",
+    useName ? name.c_str()
+            : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
+    getMoney(), getCurrencyName().c_str());
   return buf2;
 }

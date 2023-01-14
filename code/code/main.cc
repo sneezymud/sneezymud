@@ -18,28 +18,26 @@ extern "C" {
 
 extern int run_the_game();
 
-
 #ifndef LOWTOOLS
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char* argv[]) {
   vlogf(LOG_MISC, "Sneezy version " VERSION);
   int a;
 
-  if(!Config::doConfiguration(argc, argv))
+  if (!Config::doConfiguration(argc, argv))
     return 0;
 
-  if(Config::NoSpecials())
+  if (Config::NoSpecials())
     vlogf(LOG_MISC, "Suppressing assignment of special routines.");
 
-  if(Config::bTrimmed()){
+  if (Config::bTrimmed()) {
     vlogf(LOG_MISC, "Loading as trimmed port.");
     gamePort = Config::Port::GAMMA;
   }
 
   Uptime = time(0);
 
-  vlogf(LOG_MISC, format("Running %s on port %d.") %  MUD_NAME % gamePort);
+  vlogf(LOG_MISC, format("Running %s on port %d.") % MUD_NAME % gamePort);
 
   if (chdir(Config::DataDir().c_str()) < 0) {
     perror("chdir");

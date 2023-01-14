@@ -15,11 +15,10 @@ class TCorpse : public TBaseCorpse {
   public:
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_CORPSE; }
-    virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual void describeObjectSpecifics(const TBeing*) const;
 
     TCorpse();
-    TCorpse(const TCorpse &a);
-    TCorpse & operator=(const TCorpse &a);
+    TCorpse(const TCorpse& a);
+    TCorpse& operator=(const TCorpse& a);
     virtual ~TCorpse();
 };
-

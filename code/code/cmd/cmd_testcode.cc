@@ -3,8 +3,7 @@
 #include "obj_symbol.h"
 #include "obj_base_clothing.h"
 
-void TBeing::doTestCode(const char *arg)
-{
+void TBeing::doTestCode(const char* arg) {
   if (!hasWizPower(POWER_WIZARD)) {
     sendTo("Prototype command.  You need to be a developer to use this.\n\r");
     return;
@@ -214,8 +213,7 @@ void TBeing::doTestCode(const char *arg)
 #endif
 }
 
-void TBeing::doBruttest(const char *)
-{
+void TBeing::doBruttest(const char*) {
   if (!hasWizPower(POWER_WIZARD)) {
     sendTo("Prototype command.  You need to be a developer to use this.\n\r");
     return;
@@ -235,4 +233,3 @@ void TBeing::doBruttest(const char *)
   desc->edit.x = desc->edit.y = 1;
 #endif
 }
-

@@ -4,29 +4,20 @@
 #include "obj_vial.h"
 #include "materials.h"
 
-TVial::TVial() :
-  TBaseCup()
-{
-}
+TVial::TVial() : TBaseCup() {}
 
-TVial::TVial(const TVial &a) :
-  TBaseCup(a)
-{
-}
+TVial::TVial(const TVial& a) : TBaseCup(a) {}
 
-TVial & TVial::operator=(const TVial &a)
-{
-  if (this == &a) return *this;
+TVial& TVial::operator=(const TVial& a) {
+  if (this == &a)
+    return *this;
   TBaseCup::operator=(a);
   return *this;
 }
 
-TVial::~TVial()
-{
-}
+TVial::~TVial() {}
 
-void TVial::getBestVial(TVial **best)
-{
+void TVial::getBestVial(TVial** best) {
   if (getDrinkType() != LIQ_HOLYWATER)
     return;
 
@@ -38,18 +29,17 @@ void TVial::getBestVial(TVial **best)
 
   if (getDrinkUnits() > (*best)->getDrinkUnits())
     *best = this;
-}     
+}
 
-int TVial::objectSell(TBeing *ch, TMonster *keeper)
-{
+int TVial::objectSell(TBeing* ch, TMonster* keeper) {
   sstring buf;
 
-  if(getDrinkType()!=LIQ_HOLYWATER){
+  if (getDrinkType() != LIQ_HOLYWATER) {
     keeper->doTell(ch->getName(), "Hey, that's not holy water!");
     return TRUE;
   }
 
-  if(getDrinkUnits()!=getMaxDrinkUnits()){
+  if (getDrinkUnits() != getMaxDrinkUnits()) {
     keeper->doTell(ch->getName(), "I only purchase full vials.");
     return TRUE;
   }
@@ -57,30 +47,29 @@ int TVial::objectSell(TBeing *ch, TMonster *keeper)
   return FALSE;
 }
 
-bool TVial::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
-{
+bool TVial::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent)
-    repair->doTell(fname(ch->name), "You might wanna take that somewhere else!");
+    repair->doTell(fname(ch->name),
+      "You might wanna take that somewhere else!");
 
   return TRUE;
 }
 
-int TVial::suggestedPrice() const
-{
+int TVial::suggestedPrice() const {
   // c.f. balance notes for this
   if (getDrinkType() != LIQ_HOLYWATER)
     return TBaseCup::suggestedPrice();
 
-  return (int) ((133.34 * (float) getMaxDrinkUnits() + 0.5) +
-		(int)(10.0 * getWeight() * material_nums[getMaterial()].price));
+  return (int)((133.34 * (float)getMaxDrinkUnits() + 0.5) +
+               (int)(10.0 * getWeight() * material_nums[getMaterial()].price));
 }
 
-void TVial::lowCheck()
-{
+void TVial::lowCheck() {
   int ap = suggestedPrice();
   if (ap != obj_flags.cost && ap) {
-    vlogf(LOG_LOW, format("vial (%s:%d) has a bad price (%d).  should be (%d)") % 
-         getName() % objVnum() % obj_flags.cost % ap);
+    vlogf(LOG_LOW,
+      format("vial (%s:%d) has a bad price (%d).  should be (%d)") % getName() %
+        objVnum() % obj_flags.cost % ap);
     obj_flags.cost = ap;
   }
 

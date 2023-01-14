@@ -20,21 +20,19 @@
 
 DrawPokerGame gDrawPoker;
 
-const int ROOM_DRAWPOKER    = 2;
+const int ROOM_DRAWPOKER = 2;
 
 const int DRAWPOKER_MINANTE = 1;
 const int DRAWPOKER_MAXANTE = 100;
-const int DRAWPOKER_MINBID  = 10;
-const int DRAWPOKER_MAXBID  = 50000;
+const int DRAWPOKER_MINBID = 10;
+const int DRAWPOKER_MAXBID = 50000;
 
-int DrawPokerGame::LEFT(const TBeing *ch) const
-{
+int DrawPokerGame::LEFT(const TBeing* ch) const {
   return ((index(ch) == 6) ? 0 : index(ch) + 1);
 }
 
-int DrawPokerGame::LEFT(int playerNum) const
-{
-  TBeing *ch;
+int DrawPokerGame::LEFT(int playerNum) const {
+  TBeing* ch;
 
   for (int playerIndex = (playerNum + 1); playerIndex < 6; playerIndex++)
     if ((ch = get_char_room(names[playerNum], ROOM_DRAWPOKER)))
@@ -47,15 +45,15 @@ int DrawPokerGame::LEFT(int playerNum) const
   return -1;
 }
 
-int DrawPokerGame::getNextPlayer(const TBeing *tChar)
-{
-  TBeing *ch[5];
-  int    playerNum;
+int DrawPokerGame::getNextPlayer(const TBeing* tChar) {
+  TBeing* ch[5];
+  int playerNum;
 
   getPlayers(tChar, &ch[0], &ch[1], &ch[2], &ch[3], &ch[4]);
 
   if ((playerNum = index(tChar)) < 0) {
-    vlogf(LOG_BUG, "DrawPoker::getNextPlayer called by player not at poker table.");
+    vlogf(LOG_BUG,
+      "DrawPoker::getNextPlayer called by player not at poker table.");
     return 0;
   }
 
@@ -63,24 +61,23 @@ int DrawPokerGame::getNextPlayer(const TBeing *tChar)
     if (ch[playerIndex] && hands[playerIndex][0] && inuse[playerIndex])
       return index(ch[playerIndex]);
 
-  vlogf(LOG_BUG, "DrawPoker::getNextPlayer called when apparently no next player!");
+  vlogf(LOG_BUG,
+    "DrawPoker::getNextPlayer called when apparently no next player!");
 
   return index(tChar);
 }
 
-int DrawPokerGame::count(int playerNum) const
-{
+int DrawPokerGame::count(int playerNum) const {
   if (playerNum < 0 || playerNum > 5)
     return 0;
 
   return 5;
 }
 
-const sstring DrawPokerGame::score() const
-{
-  TBeing *ch[6];
-  char    tString[256];
-  sstring  tBuffer("\n\r");
+const sstring DrawPokerGame::score() const {
+  TBeing* ch[6];
+  char tString[256];
+  sstring tBuffer("\n\r");
 
   ch[0] = get_char_room(names[0], ROOM_DRAWPOKER);
   ch[1] = get_char_room(names[1], ROOM_DRAWPOKER);
@@ -95,12 +92,11 @@ const sstring DrawPokerGame::score() const
   }
 
   for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
-    if (!ch[playerIndex] ||
-        !inuse[playerIndex] ||
-        !hands[playerIndex])
+    if (!ch[playerIndex] || !inuse[playerIndex] || !hands[playerIndex])
       continue;
 
-    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName().c_str(), scores[playerIndex]);
+    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName().c_str(),
+      scores[playerIndex]);
     tBuffer += tString;
   }
 
@@ -109,11 +105,10 @@ const sstring DrawPokerGame::score() const
   return tBuffer;
 }
 
-const sstring DrawPokerGame::bets() const
-{
-  TBeing *ch[6];
-  char    tString[256];
-  sstring  tBuffer("\n\r");
+const sstring DrawPokerGame::bets() const {
+  TBeing* ch[6];
+  char tString[256];
+  sstring tBuffer("\n\r");
 
   ch[0] = get_char_room(names[0], ROOM_DRAWPOKER);
   ch[1] = get_char_room(names[1], ROOM_DRAWPOKER);
@@ -131,7 +126,8 @@ const sstring DrawPokerGame::bets() const
     if (!ch[playerIndex] && inuse[playerIndex])
       continue;
 
-    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName().c_str(), playerante[playerIndex]);
+    sprintf(tString, "   %s[%d]", ch[playerIndex]->getName().c_str(),
+      playerante[playerIndex]);
     tBuffer += tString;
   }
 
@@ -140,12 +136,10 @@ const sstring DrawPokerGame::bets() const
   return tBuffer;
 }
 
-bool DrawPokerGame::getPlayers(const TBeing *ch, TBeing **ch2, TBeing **ch3,
-                               TBeing **ch4, TBeing **ch5, TBeing **ch6) const
-{
-  int      playerNum = 0,
-           playerCount = 0;
-  TBeing **tChar[5];
+bool DrawPokerGame::getPlayers(const TBeing* ch, TBeing** ch2, TBeing** ch3,
+  TBeing** ch4, TBeing** ch5, TBeing** ch6) const {
+  int playerNum = 0, playerCount = 0;
+  TBeing** tChar[5];
 
   if ((playerNum = index(ch)) < 0)
     return false;
@@ -157,11 +151,13 @@ bool DrawPokerGame::getPlayers(const TBeing *ch, TBeing **ch2, TBeing **ch3,
   tChar[4] = &(*ch6 = NULL);
 
   for (int playerIndex = (playerNum + 1); playerIndex < 6; playerIndex++)
-    if ((*tChar[playerCount] = get_char_room(names[playerIndex], ROOM_DRAWPOKER)))
+    if ((*tChar[playerCount] =
+            get_char_room(names[playerIndex], ROOM_DRAWPOKER)))
       playerCount++;
 
   for (int playerIndex = 0; playerIndex < playerNum; playerIndex++)
-    if ((*tChar[playerCount] = get_char_room(names[playerIndex], ROOM_DRAWPOKER)))
+    if ((*tChar[playerCount] =
+            get_char_room(names[playerIndex], ROOM_DRAWPOKER)))
       playerCount++;
 
   if (!*tChar[0])
@@ -170,16 +166,11 @@ bool DrawPokerGame::getPlayers(const TBeing *ch, TBeing **ch2, TBeing **ch3,
   return true;
 }
 
-void DrawPokerGame::deal(TBeing *ch, const char *tArg)
-{
-  TBeing *tChar[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
-  int     pointCard = 0,
-          dealerNum = 0,
-          anteCost  = 0,
-          averageLevel;
-  char    tString[256],
-          tBuffer[256];
-  bool    anteSet = false;
+void DrawPokerGame::deal(TBeing* ch, const char* tArg) {
+  TBeing* tChar[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
+  int pointCard = 0, dealerNum = 0, anteCost = 0, averageLevel;
+  char tString[256], tBuffer[256];
+  bool anteSet = false;
 
   if (game) {
     ch->sendTo("Redeal while the game is in progress?  Never!!\n\r");
@@ -187,8 +178,9 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   }
 
   if ((dealerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, format("%s got into DrawPoker::deal without being at the poker table!") % 
-          ch->getName());
+    vlogf(LOG_BUG,
+      format("%s got into DrawPoker::deal without being at the poker table!") %
+        ch->getName());
     return;
   }
 
@@ -199,7 +191,8 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
     return;
   }
 
-  for (; isspace(*tArg); tArg++);
+  for (; isspace(*tArg); tArg++)
+    ;
 
   // ante_min = max(1, levels / 2) =    1,    25
   // ante_max = levels * 2         =    2,   100
@@ -209,12 +202,12 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   averageLevel = max(1, averagePlayerLevel());
   anteCosts[0] = max(DRAWPOKER_MINANTE, (int)(averageLevel / 2));
   anteCosts[1] = min(DRAWPOKER_MAXANTE, (averageLevel * 2));
-  bidCosts[0]  = max(DRAWPOKER_MINBID , averageLevel);
-  bidCosts[1]  = min(DRAWPOKER_MAXBID , (averageLevel * 10000));
-  anteCost     = anteCosts[0];
+  bidCosts[0] = max(DRAWPOKER_MINBID, averageLevel);
+  bidCosts[1] = min(DRAWPOKER_MAXBID, (averageLevel * 10000));
+  anteCost = anteCosts[0];
 
   if (*tArg) {
-    vlogf(LOG_LAPSOS, format("DrawPoker::deal [%s]") %  tArg);
+    vlogf(LOG_LAPSOS, format("DrawPoker::deal [%s]") % tArg);
 
     do {
       half_chop(tArg, tString, tBuffer);
@@ -225,8 +218,9 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           anteCost = convertTo<int>(tString);
 
           if (!in_range(anteCost, anteCosts[0], anteCosts[1])) {
-            ch->sendTo(format("No luck slick.  Ante must be between: %d-%d\n\r") %
-                       anteCosts[0] % anteCosts[1]);
+            ch->sendTo(
+              format("No luck slick.  Ante must be between: %d-%d\n\r") %
+              anteCosts[0] % anteCosts[1]);
             return;
           }
 
@@ -236,8 +230,9 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
           bidCosts[1] = convertTo<int>(tString);
 
           if (!in_range(bidCosts[1], bidCosts[0], oldMax)) {
-            ch->sendTo(format("No luck slick.  Bid max must be between: %d-%d\n\r") %
-                       bidCosts[0] % oldMax);
+            ch->sendTo(
+              format("No luck slick.  Bid max must be between: %d-%d\n\r") %
+              bidCosts[0] % oldMax);
             bidCosts[1] = oldMax;
             return;
           }
@@ -258,12 +253,11 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
   shuffle();
 
   ch->sendTo("You shuffle the cards, and deal them.\n\r");
-  act("$n shuffles the cards and deals them.",
-      FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n shuffles the cards and deals them.", FALSE, ch, NULL, NULL, TO_ROOM);
 
   ch->sendTo("You are dealt:\n\r");
 
-  memset((char *)hands, 0, sizeof(hands));
+  memset((char*)hands, 0, sizeof(hands));
 
   silentBets = false;
 
@@ -273,13 +267,14 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
       silentBets = true;
 
   for (int cardIndex = 0; cardIndex < 5; cardIndex++)
-    for(int playerIndex = 0; playerIndex < 6; playerIndex++)
-      if (tChar[playerIndex] && inuse[playerIndex]){
+    for (int playerIndex = 0; playerIndex < 6; playerIndex++)
+      if (tChar[playerIndex] && inuse[playerIndex]) {
         if ((tChar[playerIndex]->getMoney() < anteCost) && !silentBets) {
-          ch->sendTo(format("You can not cover the ante of %d talens, your forced to sit out.\n\r") %
+          ch->sendTo(format("You can not cover the ante of %d talens, your "
+                            "forced to sit out.\n\r") %
                      anteCost);
-          act("$n is forced to sit out this round due to low talens.",
-              FALSE, ch, NULL, NULL, TO_ROOM);
+          act("$n is forced to sit out this round due to low talens.", FALSE,
+            ch, NULL, NULL, TO_ROOM);
         } else {
           hands[playerIndex][cardIndex] = deck[pointCard++];
 
@@ -297,14 +292,14 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
       discarded[playerIndex] = false;
     }
 
-  iplay         = (silentBets ? 1 : 0);
-  isbidding     = false;
-  nextCard      = pointCard;
-  nextPlayer    = getNextPlayer(ch);
+  iplay = (silentBets ? 1 : 0);
+  isbidding = false;
+  nextCard = pointCard;
+  nextPlayer = getNextPlayer(ch);
   initialPlayer = index(ch);
 
   if (usenewbie) {
-    TBeing *cNewC;
+    TBeing* cNewC;
 
     if ((cNewC = get_char_room(names[nextPlayer], ROOM_DRAWPOKER)))
       cNewC->sendTo("It is your turn now.\n\r");
@@ -314,15 +309,12 @@ void DrawPokerGame::deal(TBeing *ch, const char *tArg)
     sendrpf(ch->roomp, "Betting is currently off.\n\r");
 }
 
-int DrawPokerGame::averagePlayerLevel() const
-{
-  int     wholeLevel  = 0,
-          playerCount = 0;
-  TBeing *ch;
+int DrawPokerGame::averagePlayerLevel() const {
+  int wholeLevel = 0, playerCount = 0;
+  TBeing* ch;
 
   for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
-    if (!hands[playerIndex][0] ||
-        !inuse[playerIndex] ||
+    if (!hands[playerIndex][0] || !inuse[playerIndex] ||
         !(ch = get_char_room(names[playerIndex], ROOM_DRAWPOKER)))
       continue;
 
@@ -336,19 +328,20 @@ int DrawPokerGame::averagePlayerLevel() const
   return ((int)((wholeLevel / playerCount)));
 }
 
-void DrawPokerGame::peek(const TBeing *ch)
-{
-  int    playerNum;
-  char   tArg[256];
+void DrawPokerGame::peek(const TBeing* ch) {
+  int playerNum;
+  char tArg[256];
   sstring tString("");
 
   if (!game) {
-    ch->sendTo("No one has dealt yet, perhaps you should deal the cards yourself.\n\r");
+    ch->sendTo(
+      "No one has dealt yet, perhaps you should deal the cards yourself.\n\r");
     return;
   }
 
   if ((playerNum = index(ch)) < 0) {
-    ch->sendTo("You are not at the Poker table, you have no cards to peek at.\n\r");
+    ch->sendTo(
+      "You are not at the Poker table, you have no cards to peek at.\n\r");
     return;
   }
 
@@ -364,21 +357,17 @@ void DrawPokerGame::peek(const TBeing *ch)
     if (!hands[playerNum][indexCard])
       break;
 
-    sprintf(tArg, "%2d) %-5s | %s\n\r",
-            (indexCard + 1), card_names[CARD_NUM(hands[playerNum][indexCard])],
-            suit(ch, hands[playerNum][indexCard]).c_str());
+    sprintf(tArg, "%2d) %-5s | %s\n\r", (indexCard + 1),
+      card_names[CARD_NUM(hands[playerNum][indexCard])],
+      suit(ch, hands[playerNum][indexCard]).c_str());
     tString += tArg;
   }
 
   ch->sendTo(tString);
 }
 
-int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
-{
-  int playerNum,
-      origSlot,
-      moveSlot,
-      tempCard;
+int DrawPokerGame::move_card(TBeing* ch, const char* tArg) {
+  int playerNum, origSlot, moveSlot, tempCard;
 
   if (!game) {
     ch->sendTo("The game is not in progress, you have no cards to move.\n\r");
@@ -386,18 +375,21 @@ int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
   }
 
   if ((playerNum = index(ch)) < 0) {
-    ch->sendTo("You are not at the Poker table, you have no cards to move around.\n\r");
+    ch->sendTo(
+      "You are not at the Poker table, you have no cards to move around.\n\r");
     return FALSE;
   }
 
   if (!hands[playerNum][0]) {
-    ch->sendTo("Your not in this round, wait until your actually In the game first.\n\r");
+    ch->sendTo(
+      "Your not in this round, wait until your actually In the game "
+      "first.\n\r");
     return FALSE;
   }
 
   if (sscanf(tArg, "%d %d", &origSlot, &moveSlot) == 2) {
-    if ((origSlot < 1) || (origSlot > 32) ||
-        (moveSlot < 1) || (moveSlot > 32)) {
+    if ((origSlot < 1) || (origSlot > 32) || (moveSlot < 1) ||
+        (moveSlot > 32)) {
       ch->sendTo("Poker Syntax: put <old card slot> <new card slot>\n\r");
       return FALSE;
     }
@@ -426,8 +418,8 @@ int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
     }
 
     hands[playerNum][moveSlot] = tempCard;
-    ch->sendTo(format("You move the card %d to slot %d.\n\r") %
-               (origSlot + 1) % (moveSlot + 1));
+    ch->sendTo(format("You move the card %d to slot %d.\n\r") % (origSlot + 1) %
+               (moveSlot + 1));
   } else {
     ch->sendTo("Poker Syntax: put <old card slot> <new card slot>\n\r");
     return FALSE;
@@ -436,19 +428,17 @@ int DrawPokerGame::move_card(TBeing *ch, const char *tArg)
   return TRUE;
 }
 
-bool TBeing::checkDrawPoker(bool inGame) const
-{
+bool TBeing::checkDrawPoker(bool inGame) const {
   if (in_room == ROOM_DRAWPOKER && (inGame || (gDrawPoker.index(this) > -1)))
     return true;
   else
     return false;
 }
 
-int DrawPokerGame::enter(const TBeing *ch)
-{
+int DrawPokerGame::enter(const TBeing* ch) {
   int playerNum = 0;
 
-  if (dynamic_cast<const TMonster *>(ch)) {
+  if (dynamic_cast<const TMonster*>(ch)) {
     ch->sendTo("Silly monster, Poker is for mortals!\n\r");
     return FALSE;
   }
@@ -466,11 +456,11 @@ int DrawPokerGame::enter(const TBeing *ch)
 
     ch->sendTo("You sit down at the Poker table.\n\r");
     strcpy(names[playerNum], ch->getName().c_str());
-    inuse[playerNum]      = true;
-    scores[playerNum]     = 0;
+    inuse[playerNum] = true;
+    scores[playerNum] = 0;
     playerante[playerNum] = 0;
     totalPlayers++;
-    discarded[playerNum]  = false;
+    discarded[playerNum] = false;
 
     if (playerNum == 0)
       game = false;
@@ -484,24 +474,18 @@ int DrawPokerGame::enter(const TBeing *ch)
   return FALSE;
 }
 
-int DrawPokerGame::exitGame(const TBeing *ch)
-{
+int DrawPokerGame::exitGame(const TBeing* ch) {
   int playerNum;
-  TBeing *ch2 = NULL,
-         *ch3 = NULL,
-         *ch4 = NULL,
-         *ch5 = NULL,
-         *ch6 = NULL;
+  TBeing *ch2 = NULL, *ch3 = NULL, *ch4 = NULL, *ch5 = NULL, *ch6 = NULL;
 
   if ((playerNum = index(ch)) < 0) {
-    vlogf(LOG_BUG, format("%s left a poker table %s wasn't at!") % 
-          ch->getName() % ch->hssh());
+    vlogf(LOG_BUG, format("%s left a poker table %s wasn't at!") %
+                     ch->getName() % ch->hssh());
     return FALSE;
   }
 
   ch->sendTo("You leave the poker table.\n\r");
-  act("$n leaves the table.",
-      FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n leaves the table.", FALSE, ch, NULL, NULL, TO_ROOM);
 
   getPlayers(ch, &ch2, &ch3, &ch4, &ch5, &ch6);
 
@@ -514,11 +498,11 @@ int DrawPokerGame::exitGame(const TBeing *ch)
   for (int playerIndex = playerNum; playerIndex < 5; playerIndex++) {
     strcpy(names[playerIndex], names[playerIndex + 1]);
     names[playerIndex + 1][0] = '\0';
-    inuse[playerIndex]        = inuse[playerIndex + 1];
-    inuse[playerIndex + 1]    = false;
+    inuse[playerIndex] = inuse[playerIndex + 1];
+    inuse[playerIndex + 1] = false;
 
     for (int cardIndex = 0; cardIndex < 5; cardIndex++) {
-      hands[playerIndex][cardIndex]     = hands[playerIndex + 1][cardIndex];
+      hands[playerIndex][cardIndex] = hands[playerIndex + 1][cardIndex];
       hands[playerIndex + 1][cardIndex] = 0;
     }
   }
@@ -526,8 +510,7 @@ int DrawPokerGame::exitGame(const TBeing *ch)
   return TRUE;
 }
 
-int DrawPokerGame::index(const TBeing *ch) const
-{
+int DrawPokerGame::index(const TBeing* ch) const {
   for (int indexPlayer = 0; indexPlayer < 6; indexPlayer++)
     if (ch->getName() == names[indexPlayer])
       return indexPlayer;
@@ -535,36 +518,18 @@ int DrawPokerGame::index(const TBeing *ch) const
   return -1;
 }
 
-const char DrawPokerHands[][21] =
-{
-  "Unknown",
-  "Royal Straight Flush",
-  "Straight Flush",
-  "Four of a Kind",
-  "Full House",
-  "Flush",
-  "Straight",
-  "Three of a Kind",
-  "Two Pairs",
-  "One Pair",
-  "High Card",
-  "Error Hand"
-};
+const char DrawPokerHands[][21] = {"Unknown", "Royal Straight Flush",
+  "Straight Flush", "Four of a Kind", "Full House", "Flush", "Straight",
+  "Three of a Kind", "Two Pairs", "One Pair", "High Card", "Error Hand"};
 
-int DrawPokerGame::new_deal()
-{
-  int     tScore        = 0,
-          playerNum     = -1,
-          winnerList[6] = {-1, -1, -1, -1, -1, -1},
-          totalWinners  = 1,
-          whType        = 0;
-  TBeing *tChar[7];
-  char    tString[256],
-          tColor        = 'n';
+int DrawPokerGame::new_deal() {
+  int tScore = 0, playerNum = -1, winnerList[6] = {-1, -1, -1, -1, -1, -1},
+      totalWinners = 1, whType = 0;
+  TBeing* tChar[7];
+  char tString[256], tColor = 'n';
 
   playerNum = findWinner(&winnerList[0], &winnerList[1], &winnerList[2],
-                         &winnerList[3], &winnerList[4], &winnerList[5],
-                         &whType);
+    &winnerList[3], &winnerList[4], &winnerList[5], &whType);
 
   tChar[0] = get_char_room(names[nextPlayer], ROOM_DRAWPOKER);
 
@@ -588,10 +553,9 @@ int DrawPokerGame::new_deal()
     if (CARD_NUM(highCard) == 14)
       highCard = (1 | get_suit(highCard));
 
-    sendrpf(COLOR_OBJECTS, tChar[0]->roomp,  "Winning Hand: <%c>%s%s<z>%s\n\r",
-            tColor, DrawPokerHands[whType],
-            (whType == 10 ? " " : ""),
-            (whType == 10 ? pretty_card_printout(tChar[0], highCard).c_str() : ""));
+    sendrpf(COLOR_OBJECTS, tChar[0]->roomp, "Winning Hand: <%c>%s%s<z>%s\n\r",
+      tColor, DrawPokerHands[whType], (whType == 10 ? " " : ""),
+      (whType == 10 ? pretty_card_printout(tChar[0], highCard).c_str() : ""));
   }
 
   if (!silentBets) {
@@ -600,16 +564,17 @@ int DrawPokerGame::new_deal()
 
     if (tScore)
       for (int playerIndex = 0; playerIndex < totalWinners; playerIndex++) {
-        playerNum              = winnerList[playerIndex];
+        playerNum = winnerList[playerIndex];
         playerante[playerNum] -= (tScore / totalWinners);
-        scores[playerNum]      = (tScore / totalWinners);
+        scores[playerNum] = (tScore / totalWinners);
       }
   }
 
-  game              = false;
-  isbidding         = false;
+  game = false;
+  isbidding = false;
 
-  if (!getPlayers(tChar[0], &tChar[1], &tChar[2], &tChar[3], &tChar[4], &tChar[5])) {
+  if (!getPlayers(tChar[0], &tChar[1], &tChar[2], &tChar[3], &tChar[4],
+        &tChar[5])) {
     vlogf(LOG_BUG, "DrawPoker::new_deal called with less than 2 players!");
     return FALSE;
   }
@@ -617,9 +582,8 @@ int DrawPokerGame::new_deal()
   tChar[6] = get_char_room(names[initialPlayer], ROOM_DRAWPOKER);
 
   initialPlayer = LEFT(initialPlayer);
-  sprintf(tString, "%d%s%d%s",
-          lastAnte   , (csilentBets ? " silentbets " : " "),
-          bidCosts[1], (usenewbie ? " newbie" : ""));
+  sprintf(tString, "%d%s%d%s", lastAnte, (csilentBets ? " silentbets " : " "),
+    bidCosts[1], (usenewbie ? " newbie" : ""));
   deal(tChar[6], tString);
   strcpy(tString, score().c_str());
 
@@ -636,10 +600,9 @@ int DrawPokerGame::new_deal()
   return TRUE;
 }
 
-void DrawPokerGame::pass(const TBeing *ch)
-{
-  int     playerNum;
-  TBeing *tChar[6];
+void DrawPokerGame::pass(const TBeing* ch) {
+  int playerNum;
+  TBeing* tChar[6];
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, "DrawPoker::pass called by player not in game.");
@@ -647,7 +610,8 @@ void DrawPokerGame::pass(const TBeing *ch)
   }
 
   if (!game) {
-    ch->sendTo("No game in progress thus no bidding or discarding to pass.\n\r");
+    ch->sendTo(
+      "No game in progress thus no bidding or discarding to pass.\n\r");
     return;
   }
 
@@ -672,11 +636,11 @@ void DrawPokerGame::pass(const TBeing *ch)
              (iplay == 1 ? "discarding" : "betting"));
 
   if (iplay == 1)
-    act("$n skips $s turn at discarding this time.",
-        FALSE, ch, NULL, NULL, TO_ROOM);
+    act("$n skips $s turn at discarding this time.", FALSE, ch, NULL, NULL,
+      TO_ROOM);
   else
-    act("$n skips $s turn at bidding this time.",
-        FALSE, ch, NULL, NULL, TO_ROOM);
+    act("$n skips $s turn at bidding this time.", FALSE, ch, NULL, NULL,
+      TO_ROOM);
 
   nextPlayer = getNextPlayer(ch);
 
@@ -684,19 +648,17 @@ void DrawPokerGame::pass(const TBeing *ch)
     discarded[playerNum] = true;
 
   if (usenewbie) {
-    TBeing *cNewC;
+    TBeing* cNewC;
 
     if ((cNewC = get_char_room(names[nextPlayer], ROOM_DRAWPOKER)))
       cNewC->sendTo("It is your turn now.\n\r");
   }
 }
 
-void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
-{
-  int     playerNum,
-          newBet;
-  TBeing *tChar[6];
-  char    tBuffer[256];
+void DrawPokerGame::bet(const TBeing* ch, const char* tArg) {
+  int playerNum, newBet;
+  TBeing* tChar[6];
+  char tBuffer[256];
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, "DrawPoker::bet called by player not in game.\n\r");
@@ -735,10 +697,12 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
     return;
   }
 
-  for (; isspace(*tArg); tArg++);
+  for (; isspace(*tArg); tArg++)
+    ;
   strcpy(tBuffer, tArg);
   if (!*tArg || !is_number(tBuffer)) {
-    ch->sendTo(format("Poker Syntax: bet <amount[Limit:%d]>\n\r") % bidCosts[1]);
+    ch->sendTo(
+      format("Poker Syntax: bet <amount[Limit:%d]>\n\r") % bidCosts[1]);
     return;
   }
 
@@ -750,8 +714,9 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
   }
 
   if (!in_range(newBet, bidCosts[0], bidCosts[1])) {
-    ch->sendTo(format("Funny, Real Funny.  Bugger off.  Bid is limited to: %d-%d\n\r") %
-               bidCosts[0] % bidCosts[1]);
+    ch->sendTo(
+      format("Funny, Real Funny.  Bugger off.  Bid is limited to: %d-%d\n\r") %
+      bidCosts[0] % bidCosts[1]);
     return;
   }
 
@@ -778,15 +743,14 @@ void DrawPokerGame::bet(const TBeing *ch, const char *tArg)
     }
 
   if (usenewbie) {
-    TBeing *cNewC;
+    TBeing* cNewC;
 
     if ((cNewC = get_char_room(names[nextPlayer], ROOM_DRAWPOKER)))
       cNewC->sendTo("It is your turn now.\n\r");
   }
 }
 
-bool DrawPokerGame::isBettingClosed() const
-{
+bool DrawPokerGame::isBettingClosed() const {
   int betAverage = playerante[0];
 
   for (int playerIndex = 0; playerIndex < totalPlayers; playerIndex++)
@@ -796,11 +760,10 @@ bool DrawPokerGame::isBettingClosed() const
   return true;
 }
 
-void DrawPokerGame::stop(const TBeing *ch)
-{
-  int     playerNum;
-  TBeing *tChar[6];
-  char    tString[256];
+void DrawPokerGame::stop(const TBeing* ch) {
+  int playerNum;
+  TBeing* tChar[6];
+  char tString[256];
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, "DrawPoker::stop called by player not in game.");
@@ -821,8 +784,8 @@ void DrawPokerGame::stop(const TBeing *ch)
 
   strcpy(tString, sstring(ch->getName()).cap().c_str());
   ch->sendTo("You put down, and leave this hand to the others.\n\r");
-  act("$n puts down, deciding not to play this hand.",
-      FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n puts down, deciding not to play this hand.", FALSE, ch, NULL, NULL,
+    TO_ROOM);
 
   if (!silentBets)
     settleUp(ch, false);
@@ -843,16 +806,16 @@ void DrawPokerGame::stop(const TBeing *ch)
     nextPlayer = getNextPlayer(ch);
 
   if (usenewbie) {
-    TBeing *cNewC;
+    TBeing* cNewC;
 
     if ((cNewC = get_char_room(names[nextPlayer], ROOM_DRAWPOKER)))
       cNewC->sendTo("It is your turn now.\n\r");
   }
 }
 
-int DrawPokerGame::look(const TBeing *ch, const char *tArg)
-{
-  for (; isspace(*tArg); tArg++);
+int DrawPokerGame::look(const TBeing* ch, const char* tArg) {
+  for (; isspace(*tArg); tArg++)
+    ;
   if (!*tArg)
     return FALSE;
 
@@ -861,7 +824,8 @@ int DrawPokerGame::look(const TBeing *ch, const char *tArg)
       ch->sendTo("The game is not yet in progress, nothing to look at.\n\r");
     else {
       if (silentBets) {
-        ch->sendTo("Since there is no bidding there isn't any scores to view.\n\r");
+        ch->sendTo(
+          "Since there is no bidding there isn't any scores to view.\n\r");
       } else {
         ch->sendTo(format("The score is currently:\n\r%s\n\r") % score());
         ch->sendTo(format("The bet is currently:\n\r%s\n\r") % bets());
@@ -873,17 +837,10 @@ int DrawPokerGame::look(const TBeing *ch, const char *tArg)
   return TRUE;
 }
 
-void DrawPokerGame::discard(const TBeing *ch, const char *tArg)
-{
-  int     discardCards[5] = {-1, -1, -1, -1, -1},
-          discardIndex,
-          playerNum;
-  TBeing *ch2,
-         *ch3,
-         *ch4,
-         *ch5,
-         *ch6;
-  char    tString[256];
+void DrawPokerGame::discard(const TBeing* ch, const char* tArg) {
+  int discardCards[5] = {-1, -1, -1, -1, -1}, discardIndex, playerNum;
+  TBeing *ch2, *ch3, *ch4, *ch5, *ch6;
+  char tString[256];
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, "DrawPoker::discard called by player not in game.");
@@ -915,15 +872,15 @@ void DrawPokerGame::discard(const TBeing *ch, const char *tArg)
     return;
   }
 
-  for (; isspace(*tArg); tArg++);
+  for (; isspace(*tArg); tArg++)
+    ;
   if (!*tArg) {
     ch->sendTo("Poker Syntax: discard <card> <card> <card> <card> <card>\n\r");
     return;
   }
 
   discardIndex = sscanf(tArg, "%d %d %d %d %d", &discardCards[0],
-                        &discardCards[1], &discardCards[2],
-                        &discardCards[3], &discardCards[4]);
+    &discardCards[1], &discardCards[2], &discardCards[3], &discardCards[4]);
 
   if (discardIndex <= 0) {
     ch->sendTo("Poker Syntax: discard <card> <card> <card> <card> <card>\n\r");
@@ -931,9 +888,9 @@ void DrawPokerGame::discard(const TBeing *ch, const char *tArg)
   }
 
   for (int cardIndexA = 0; cardIndexA < (discardIndex - 1); cardIndexA++)
-    for (int cardIndexB = (cardIndexA + 1); cardIndexB < discardIndex; cardIndexB++) {
-      if (discardCards[cardIndexA] == -1 ||
-          discardCards[cardIndexB] == -1 ||
+    for (int cardIndexB = (cardIndexA + 1); cardIndexB < discardIndex;
+         cardIndexB++) {
+      if (discardCards[cardIndexA] == -1 || discardCards[cardIndexB] == -1 ||
           discardCards[cardIndexA] != discardCards[cardIndexB])
         continue;
 
@@ -973,24 +930,22 @@ void DrawPokerGame::discard(const TBeing *ch, const char *tArg)
 
   iplay++;
   ch->sendTo("Bidding begins again.\n\r");
-  act("Bidding begins again.",
-      FALSE, ch, NULL, NULL, TO_ROOM);
+  act("Bidding begins again.", FALSE, ch, NULL, NULL, TO_ROOM);
 
   if (usenewbie) {
-    TBeing *cNewC;
+    TBeing* cNewC;
 
     if ((cNewC = get_char_room(names[nextPlayer], ROOM_DRAWPOKER)))
       cNewC->sendTo("It is your turn now.\n\r");
   }
 }
 
-int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
-                              int *PlyWin4, int *PlyWin5, int *PlyWin6,
-                              int *winningHandType)
-{
+int DrawPokerGame::findWinner(int* PlyWin1, int* PlyWin2, int* PlyWin3,
+  int* PlyWin4, int* PlyWin5, int* PlyWin6, int* winningHandType) {
   int handScores[6] = {11, 11, 11, 11, 11, 11},
-    handHighs[6][2] = {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}};
-  int *PlyWinLs[6];
+      handHighs[6][2] = {{-1, -1}, {-1, -1}, {-1, -1}, {-1, -1}, {-1, -1},
+        {-1, -1}};
+  int* PlyWinLs[6];
 
   PlyWinLs[0] = &(*PlyWin1 = -1);
   PlyWinLs[1] = &(*PlyWin2 = -1);
@@ -1003,23 +958,24 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
     if (!inuse[playerIndex] || !hands[playerIndex][0])
       continue;
 
-    bool hasStraight      = isStraight(playerIndex),
-         hasFlush         = isFlush(playerIndex),
-         hasTwoPair       = isPair(playerIndex, 2, &handHighs[playerIndex][0],
-                                   false, &handHighs[playerIndex][1]),
+    bool hasStraight = isStraight(playerIndex), hasFlush = isFlush(playerIndex),
+         hasTwoPair = isPair(playerIndex, 2, &handHighs[playerIndex][0], false,
+           &handHighs[playerIndex][1]),
          hasSecondTwoPair = isPair(playerIndex, 2, &handHighs[playerIndex][0],
-                                   true , &handHighs[playerIndex][1]),
-         hasThreePair     = isPair(playerIndex, 3, &handHighs[playerIndex][0],
-                                   false, &handHighs[playerIndex][1]),
-         hasFourPair      = isPair(playerIndex, 4, &handHighs[playerIndex][0],
-                                   false, &handHighs[playerIndex][1]);
+           true, &handHighs[playerIndex][1]),
+         hasThreePair = isPair(playerIndex, 3, &handHighs[playerIndex][0],
+           false, &handHighs[playerIndex][1]),
+         hasFourPair = isPair(playerIndex, 4, &handHighs[playerIndex][0], false,
+           &handHighs[playerIndex][1]);
 
     if (handHighs[playerIndex][0] == -1)
       handHighs[playerIndex][0] = getHighCard(playerIndex, 0);
 
-    vlogf(LOG_LAPSOS, format("DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d") % 
-          hasStraight % hasFlush % hasTwoPair % hasSecondTwoPair % hasThreePair % hasFourPair %
-          handHighs[playerIndex][0] % handHighs[playerIndex][1] % playerIndex);
+    vlogf(LOG_LAPSOS,
+      format("DrawPoker::S:%d F:%d 2:%d 2x2:%d 3:%d 4:%d H1:%d H2:%d Ply:%d") %
+        hasStraight % hasFlush % hasTwoPair % hasSecondTwoPair % hasThreePair %
+        hasFourPair % handHighs[playerIndex][0] % handHighs[playerIndex][1] %
+        playerIndex);
 
     if (hasStraight && hasFlush) {
       if (CARD_NUM(handHighs[playerIndex][0]) == 14)
@@ -1044,13 +1000,11 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
       handScores[playerIndex] = 10;
   }
 
-  int winnerNum   = 11,
-      winnerPly   = 0,
-      winnerCount = 0;
+  int winnerNum = 11, winnerPly = 0, winnerCount = 0;
 
   for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
-    if (handScores[playerIndex] > winnerNum ||
-        !inuse[playerIndex] || !hands[playerIndex][0])
+    if (handScores[playerIndex] > winnerNum || !inuse[playerIndex] ||
+        !hands[playerIndex][0])
       continue;
 
     if (winnerNum == handScores[playerIndex])
@@ -1064,11 +1018,11 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
   }
 
   if (winnerCount == 0)
-    vlogf(LOG_BUG, "Something went very wrong in DrawPoker::findWinner.  No Winner Found.");
+    vlogf(LOG_BUG,
+      "Something went very wrong in DrawPoker::findWinner.  No Winner Found.");
   else if (winnerCount > 1) {
     for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
-      if (handScores[playerIndex] > winnerNum ||
-          playerIndex == winnerPly ||
+      if (handScores[playerIndex] > winnerNum || playerIndex == winnerPly ||
           !inuse[playerIndex] || !hands[playerIndex][0])
         continue;
 
@@ -1076,11 +1030,13 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
         if (handHighs[playerIndex][0] == handHighs[winnerPly][0]) {
           if (handHighs[playerIndex][1] == handHighs[winnerPly][1]) {
             for (int Runner = 1; Runner < 5; Runner++)
-              if (getHighCard(playerIndex, Runner) > getHighCard(winnerPly, Runner))
+              if (getHighCard(playerIndex, Runner) >
+                  getHighCard(winnerPly, Runner))
                 winnerPly = playerIndex;
 
             if (winnerPly != playerIndex && playerIndex != *PlyWinLs[0]) {
-              for (int newPlayerIndex = 1; newPlayerIndex < 6; newPlayerIndex++) {
+              for (int newPlayerIndex = 1; newPlayerIndex < 6;
+                   newPlayerIndex++) {
                 if (*PlyWinLs[newPlayerIndex] > -1)
                   continue;
 
@@ -1107,16 +1063,14 @@ int DrawPokerGame::findWinner(int *PlyWin1, int *PlyWin2, int *PlyWin3,
   *winningHandType = handScores[winnerPly];
 
   for (int playerIndex = 5; playerIndex > 0; playerIndex--)
-    if (*PlyWinLs[playerIndex] != -1 &&
-        inuse[playerIndex] &&
+    if (*PlyWinLs[playerIndex] != -1 && inuse[playerIndex] &&
         hands[playerIndex][0])
       return ((1 << 31) | (playerIndex + 1));
 
   return winnerPly;
 }
 
-bool DrawPokerGame::isStraight(int playerNum) const
-{
+bool DrawPokerGame::isStraight(int playerNum) const {
   int forCards[6];
 
   for (int Runner = 0; Runner < 5; Runner++)
@@ -1144,8 +1098,7 @@ bool DrawPokerGame::isStraight(int playerNum) const
   return true;
 }
 
-bool DrawPokerGame::isFlush(int playerNum) const
-{
+bool DrawPokerGame::isFlush(int playerNum) const {
   int forCards[6];
 
   for (int Runner = 0; Runner < 5; Runner++)
@@ -1160,11 +1113,10 @@ bool DrawPokerGame::isFlush(int playerNum) const
   return true;
 }
 
-bool DrawPokerGame::isPair(int playerNum, int wantThis, int *highCard,
-                           bool doublePair, int *secondHighCard) const
-{
+bool DrawPokerGame::isPair(int playerNum, int wantThis, int* highCard,
+  bool doublePair, int* secondHighCard) const {
   int forCards[6],
-      matchCards[5][2] = {{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}};
+    matchCards[5][2] = {{-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}, {-1, 0}};
 
   for (int cardIndex = 0; cardIndex < 5; cardIndex++)
     if ((forCards[cardIndex] = CARD_NUM(hands[playerNum][cardIndex])) == 1)
@@ -1197,13 +1149,14 @@ bool DrawPokerGame::isPair(int playerNum, int wantThis, int *highCard,
     if (matchCards[matchIndex][0] == -1)
       return false;
 
-    if (matchCards[matchIndex][1] == wantThis){
+    if (matchCards[matchIndex][1] == wantThis) {
       if (doublePair) {
         doublePair = false;
         *secondHighCard = matchCards[matchIndex][0];
 
         for (int cardIndex = 0; cardIndex < 5; cardIndex++)
-          if (matchCards[matchIndex][0] == CARD_NUM(hands[playerNum][cardIndex])) {
+          if (matchCards[matchIndex][0] ==
+              CARD_NUM(hands[playerNum][cardIndex])) {
             *secondHighCard |= (get_suit(hands[playerNum][cardIndex]));
 
             break;
@@ -1212,7 +1165,8 @@ bool DrawPokerGame::isPair(int playerNum, int wantThis, int *highCard,
         *highCard = matchCards[matchIndex][0];
 
         for (int cardIndex = 0; cardIndex < 5; cardIndex++)
-          if (matchCards[matchIndex][0] == CARD_NUM(hands[playerNum][cardIndex])) {
+          if (matchCards[matchIndex][0] ==
+              CARD_NUM(hands[playerNum][cardIndex])) {
             *highCard |= (get_suit(hands[playerNum][cardIndex]));
 
             break;
@@ -1226,8 +1180,7 @@ bool DrawPokerGame::isPair(int playerNum, int wantThis, int *highCard,
   return false;
 }
 
-int DrawPokerGame::getHighCard(int playerNum, int highCount) const
-{
+int DrawPokerGame::getHighCard(int playerNum, int highCount) const {
   int Cards[5];
 
   if (highCount > 4 || highCount < 0)
@@ -1245,13 +1198,11 @@ int DrawPokerGame::getHighCard(int playerNum, int highCount) const
   return Cards[highCount];
 }
 
-void DrawPokerGame::settleUp(const TBeing *ch, bool doOutputs)
-{
+void DrawPokerGame::settleUp(const TBeing* ch, bool doOutputs) {
   if (silentBets)
     return;
 
-  int playerNum,
-      WinLoss;
+  int playerNum, WinLoss;
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, "DrawPoker::settleUp called by player not in the game!");
@@ -1259,7 +1210,7 @@ void DrawPokerGame::settleUp(const TBeing *ch, bool doOutputs)
   }
 
   WinLoss = playerante[playerNum];
-  TBeing *tChar;
+  TBeing* tChar;
   scores[playerNum] += WinLoss;
 
   if (doOutputs) {
@@ -1273,7 +1224,9 @@ void DrawPokerGame::settleUp(const TBeing *ch, bool doOutputs)
 
   tChar = get_char_room(names[index(ch)], ROOM_DRAWPOKER);
   if (!tChar) {
-    vlogf(LOG_BUG, format("WHOA, lost player in drawpoker [%s][index=%d][name=%s]") %  ch->getName() % index(ch) % names[index(ch)]);
+    vlogf(LOG_BUG,
+      format("WHOA, lost player in drawpoker [%s][index=%d][name=%s]") %
+        ch->getName() % index(ch) % names[index(ch)]);
     return;
   }
 
@@ -1292,17 +1245,16 @@ DrawPokerGame::DrawPokerGame() :
   silentBets(false),
   csilentBets(false),
   isbidding(false),
-  usenewbie(false)
-{
+  usenewbie(false) {
   anteCosts[0] = anteCosts[1] = 0;
   bidCosts[0] = bidCosts[1] = 0;
 
   for (int Runner = 0; Runner < 6; Runner++) {
-    *(names[Runner])   = '\0';
-    scores[Runner]     = 0;
-    inuse[Runner]      = false;
+    *(names[Runner]) = '\0';
+    scores[Runner] = 0;
+    inuse[Runner] = false;
     playerante[Runner] = 0;
-    discarded[Runner]  = false;
+    discarded[Runner] = false;
 
     for (int cardMark = 0; cardMark < 5; cardMark++)
       hands[Runner][cardMark] = 0;

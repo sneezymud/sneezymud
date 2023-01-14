@@ -30,72 +30,68 @@ public:
   bool storing;
 };
 
-
 #endif
 
-
-
-int TBeing::doTrigger(const char *argument){
+int TBeing::doTrigger(const char* argument) {
   char arg[256];
-  TBeing *ch=NULL;
-  TObj *o=NULL;
-  TThing *t=NULL;
+  TBeing* ch = NULL;
+  TObj* o = NULL;
+  TThing* t = NULL;
   int rc;
 
-  if(!preCastCheck())
+  if (!preCastCheck())
     return FALSE;
-  
+
   strcpy(arg, argument);
 
   auto [which, target] = parseSpellNum(argument);
-  if(which == TYPE_UNDEFINED)
+  if (which == TYPE_UNDEFINED)
     return FALSE;
 
   if (!discArray[which]) {
-    vlogf(LOG_BUG, format("doTrigger called with null discArray[] (%d) (%s)") %  which % getName());
+    vlogf(LOG_BUG, format("doTrigger called with null discArray[] (%d) (%s)") %
+                     which % getName());
     return FALSE;
   }
 
-  if (which <= TYPE_UNDEFINED || !preDiscCheck(which) || 
+  if (which <= TYPE_UNDEFINED || !preDiscCheck(which) ||
       !parseTarget(which, arg, &t))
     return FALSE;
 
-  ch=dynamic_cast<TBeing *>(t);
-  o=dynamic_cast<TObj *>(t);
+  ch = dynamic_cast<TBeing*>(t);
+  o = dynamic_cast<TObj*>(t);
 
-  spelltask=spellstore.spelltask;
+  spelltask = spellstore.spelltask;
 
-  rc=doSpellCast(this, ch, o, roomp, which, getSpellType(discArray[which]->typ));
-  spellstore.spelltask=NULL;
-  spellstore.storing=false;
+  rc =
+    doSpellCast(this, ch, o, roomp, which, getSpellType(discArray[which]->typ));
+  spellstore.spelltask = NULL;
+  spellstore.storing = false;
 
   return rc;
 }
 
-int TBeing::doStore(const char *argument)
-{
+int TBeing::doStore(const char* argument) {
   int rc;
 
-  if(spellstore.storing || spelltask){
+  if (spellstore.storing || spelltask) {
     sendTo("You are already casting a spell.\n\r");
     return FALSE;
   }
-  if(spellstore.spelltask){
+  if (spellstore.spelltask) {
     sendTo("You already have a spell stored.\n\r");
     return FALSE;
   }
 
-  spellstore.storing=TRUE;
-  rc=doCast(argument);
+  spellstore.storing = TRUE;
+  rc = doCast(argument);
 
-  if(rc==FALSE){
-    act("Your spell has not been stored.",
-	TRUE,this, NULL, NULL, TO_CHAR, ANSI_RED);
-    spellstore.storing=FALSE;
+  if (rc == FALSE) {
+    act("Your spell has not been stored.", TRUE, this, NULL, NULL, TO_CHAR,
+      ANSI_RED);
+    spellstore.storing = FALSE;
     delete spellstore.spelltask;
   }
 
   return rc;
 }
-
-

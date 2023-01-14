@@ -72,8 +72,7 @@ extern "C" {
 #include "disc_cures.h"
 #include "liquids.h"
 
-void TBeing::doGuard(const sstring &argument)
-{
+void TBeing::doGuard(const sstring& argument) {
   if (isPc()) {
     sendTo("Sorry, you can't just put your brain on autopilot!\n\r");
     return;
@@ -91,14 +90,14 @@ void TBeing::doGuard(const sstring &argument)
       sendTo("You snap to attention.\n\r");
     }
   } else {
-    if(argument.lower() == "on"){
+    if (argument.lower() == "on") {
       if (!IS_SET(specials.act, ACT_GUARDIAN)) {
         SET_BIT(specials.act, ACT_GUARDIAN);
         act("$n alertly watches you.", FALSE, this, 0, master, TO_VICT);
         act("$n alertly watches $N.", FALSE, this, 0, master, TO_NOTVICT);
         sendTo("You snap to attention.\n\r");
       }
-    } else if (argument.lower() == "off"){
+    } else if (argument.lower() == "off") {
       if (IS_SET(specials.act, ACT_GUARDIAN)) {
         act("$n relaxes.", FALSE, this, 0, 0, TO_ROOM);
         sendTo("You relax.\n\r");
@@ -108,24 +107,22 @@ void TBeing::doGuard(const sstring &argument)
   }
 }
 
-void TObj::junkMe(TBeing *ch)
-{
+void TObj::junkMe(TBeing* ch) {
   if (obj_flags.cost > 0 && !isObjStat(ITEM_NEWBIE) && !isname("[prop]", name))
     ch->addToMoney(max(1, obj_flags.cost / 1000), GOLD_INCOME);
 }
 
-static void junkBeing(TBeing *ch, TThing *o, race_t ract)
-{
+static void junkBeing(TBeing* ch, TThing* o, race_t ract) {
   switch (ract) {
     case RACE_OGRE:
     case RACE_GIANT:
     case RACE_TROLL:
     case RACE_GOLEM:
     case RACE_MINOTAUR:
-      act("You rip $p limb by limb and thrash the pieces.",
-          TRUE, ch, o, NULL, TO_CHAR);
-      act("$n rips $p limb by limb and thrashes the pieces.",
-          TRUE, ch, o, NULL, TO_ROOM);
+      act("You rip $p limb by limb and thrash the pieces.", TRUE, ch, o, NULL,
+        TO_CHAR);
+      act("$n rips $p limb by limb and thrashes the pieces.", TRUE, ch, o, NULL,
+        TO_ROOM);
       ch->dropPool(10, LIQ_BLOOD);
       break;
     case RACE_DRAGON:
@@ -135,41 +132,38 @@ static void junkBeing(TBeing *ch, TThing *o, race_t ract)
     case RACE_BEAR:
     case RACE_TIGER:
     case RACE_COUGAR:
-      act("Not wanting to waste good meat you devour $p.",
-          TRUE, ch, o, NULL, TO_CHAR);
-      act("$n devours $p without looking twice.",
-          TRUE, ch, o, NULL, TO_ROOM);
+      act("Not wanting to waste good meat you devour $p.", TRUE, ch, o, NULL,
+        TO_CHAR);
+      act("$n devours $p without looking twice.", TRUE, ch, o, NULL, TO_ROOM);
       ch->dropPool(14, LIQ_BLOOD);
       break;
     case RACE_TYTAN:
-      act("You crumple up $p and cast it over your shoulder.",
-          TRUE, ch, o, NULL, TO_CHAR);
-      act("$n crumples up $p and throws it over $s shoulder.",
-          TRUE, ch, o, NULL, TO_ROOM);
+      act("You crumple up $p and cast it over your shoulder.", TRUE, ch, o,
+        NULL, TO_CHAR);
+      act("$n crumples up $p and throws it over $s shoulder.", TRUE, ch, o,
+        NULL, TO_ROOM);
       ch->dropPool(5, LIQ_BLOOD);
       break;
     default:
       if (ch->isImmortal()) {
-        act("You throw $p into the air and disintegrate it.",
-            TRUE, ch, o, NULL, TO_CHAR);
-        act("$n throws $p into the air and disintegrates it.",
-            TRUE, ch, o, NULL, TO_ROOM);
+        act("You throw $p into the air and disintegrate it.", TRUE, ch, o, NULL,
+          TO_CHAR);
+        act("$n throws $p into the air and disintegrates it.", TRUE, ch, o,
+          NULL, TO_ROOM);
       } else {
-        act("You trash $p, getting rid of any evidence.",
-                  TRUE, ch, o, NULL, TO_CHAR);
-        act("$n trashes $p, getting rid of any evidence.",
-            TRUE, ch, o, NULL, TO_ROOM);
+        act("You trash $p, getting rid of any evidence.", TRUE, ch, o, NULL,
+          TO_CHAR);
+        act("$n trashes $p, getting rid of any evidence.", TRUE, ch, o, NULL,
+          TO_ROOM);
       }
       break;
   }
 }
 
-int TBeing::doNoJunk(const char *argument, TObj *obj)
-{
+int TBeing::doNoJunk(const char* argument, TObj* obj) {
   char arg[100], newarg[100];
-  TObj *o;
+  TObj* o;
   int num, p, count;
-
 
   strcpy(arg, argument);
   if (!*arg && !obj) {
@@ -191,26 +185,27 @@ int TBeing::doNoJunk(const char *argument, TObj *obj)
   count = 0;
   while (num != 0) {
     o = obj;
-    TThing *t_o = NULL;
+    TThing* t_o = NULL;
     if (!o) {
       t_o = searchLinkedListVis(this, arg, stuff);
-      o = dynamic_cast<TObj *>(t_o);
+      o = dynamic_cast<TObj*>(t_o);
     }
     if (o) {
-      if(o->isObjStat(ITEM_NOJUNK_PLAYER)) {
-	o->remObjStat(ITEM_NOJUNK_PLAYER);
-	act("You remove the no-junk flag from $p.", TRUE, this, o, NULL, TO_CHAR);
+      if (o->isObjStat(ITEM_NOJUNK_PLAYER)) {
+        o->remObjStat(ITEM_NOJUNK_PLAYER);
+        act("You remove the no-junk flag from $p.", TRUE, this, o, NULL,
+          TO_CHAR);
       } else {
-	o->addObjStat(ITEM_NOJUNK_PLAYER);
-	act("You set the no-junk flag on $p.", TRUE, this, o, NULL, TO_CHAR);
+        o->addObjStat(ITEM_NOJUNK_PLAYER);
+        act("You set the no-junk flag on $p.", TRUE, this, o, NULL, TO_CHAR);
       }
       count++;
       if (num > 0)
-	num--;
-      else if(num==-1)
-	break;
+        num--;
+      else if (num == -1)
+        break;
 
-    } else 
+    } else
       break;
   }
   if (count)
@@ -220,15 +215,11 @@ int TBeing::doNoJunk(const char *argument, TObj *obj)
   return FALSE;
 }
 
-
-
-
-int TBeing::doJunk(const char *argument, TObj *obj)
-{
+int TBeing::doJunk(const char* argument, TObj* obj) {
   char arg[100], newarg[100];
-  TObj *o;
+  TObj* o;
   int num, p, count;
-  TThing *t=NULL;
+  TThing* t = NULL;
 
   strcpy(arg, argument);
   if (!*arg && !obj) {
@@ -244,20 +235,22 @@ int TBeing::doJunk(const char *argument, TObj *obj)
       strcpy(arg, newarg);
     } else
       num = 1;
-  } else 
+  } else
     num = 1;
 
   count = 0;
   while (num != 0) {
     o = obj;
-    TThing *t_o = NULL;
+    TThing* t_o = NULL;
     if (!o) {
       t_o = searchLinkedListVis(this, arg, stuff);
-      o = dynamic_cast<TObj *>(t_o);
+      o = dynamic_cast<TObj*>(t_o);
     }
     if (o) {
       if (o->isObjStat(ITEM_NOJUNK_PLAYER)) {
-	sendTo("You can't junk that, someone has set a no-junk flag on it!  HELP NOJUNK\n\r");
+        sendTo(
+          "You can't junk that, someone has set a no-junk flag on it!  HELP "
+          "NOJUNK\n\r");
         return FALSE;
       }
       if (o->isObjStat(ITEM_NODROP)) {
@@ -272,33 +265,37 @@ int TBeing::doJunk(const char *argument, TObj *obj)
         sendTo("There is still stuff in there, you choose not to junk it.\n\r");
         return FALSE;
       }
-      for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (t=*it);++it) {
-        TObj *tobj = dynamic_cast<TObj *>(t);
+      for (StuffIter it = o->stuff.begin(); it != o->stuff.end() && (t = *it);
+           ++it) {
+        TObj* tobj = dynamic_cast<TObj*>(t);
         if (!tobj)
           continue;
         if (tobj->isObjStat(ITEM_NODROP)) {
-          sendTo("You can't let go of it, something inside it must be CURSED!\n\r");
+          sendTo(
+            "You can't let go of it, something inside it must be CURSED!\n\r");
           return FALSE;
         }
         if (tobj->isPersonalized()) {
-          sendTo("There is a monogrammed item inside it which can't be junked.\n\r");
+          sendTo(
+            "There is a monogrammed item inside it which can't be junked.\n\r");
           return FALSE;
         }
       }
       o->junkMe(this);
-      
+
       logItem(o, CMD_JUNK);
-      for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (t=*it);++it) 
+      for (StuffIter it = o->stuff.begin(); it != o->stuff.end() && (t = *it);
+           ++it)
         logItem(t, CMD_JUNK);
 
       --(*o);
       if (num > 0)
         num--;
 
-      if (dynamic_cast<TBaseCorpse *>(o)) {
+      if (dynamic_cast<TBaseCorpse*>(o)) {
         junkBeing(this, o, getRace());
       } else {
-        switch(o->getMaterial()) {
+        switch (o->getMaterial()) {
           case MAT_CLOTH:
           case MAT_SILK:
           case MAT_WOOL:
@@ -309,44 +306,44 @@ int TBeing::doJunk(const char *argument, TObj *obj)
           case MAT_GHOSTLY:
           case MAT_DWARF_LEATHER:
           case MAT_SOFT_LEATHER:
-            act("You tear up $p then junk the strips.",
-                TRUE, this, o, NULL, TO_CHAR);
-            act("$n tears up $p then junks the strips.",
-                TRUE, this, o, NULL, TO_ROOM);
+            act("You tear up $p then junk the strips.", TRUE, this, o, NULL,
+              TO_CHAR);
+            act("$n tears up $p then junks the strips.", TRUE, this, o, NULL,
+              TO_ROOM);
             break;
           case MAT_PAPER:
-            act("You crumple up $p then cast it over your shoulder.",
-                TRUE, this, o, NULL, TO_CHAR);
-            act("$n crumples up $p then throws it over $s shoulder.",
-                TRUE, this, o, NULL, TO_ROOM);
-          break;
+            act("You crumple up $p then cast it over your shoulder.", TRUE,
+              this, o, NULL, TO_CHAR);
+            act("$n crumples up $p then throws it over $s shoulder.", TRUE,
+              this, o, NULL, TO_ROOM);
+            break;
           case MAT_GLASS:
           case MAT_CORAL:
           case MAT_ICE:
 
             if (this->roomp->isAirSector()) {
-              act("You thrown $p down to it's doom below.",
-                  TRUE, this, o, NULL, TO_CHAR);
-              act("$n throws $p to it's doom below.",
-                  TRUE, this, o, NULL, TO_ROOM);
+              act("You thrown $p down to it's doom below.", TRUE, this, o, NULL,
+                TO_CHAR);
+              act("$n throws $p to it's doom below.", TRUE, this, o, NULL,
+                TO_ROOM);
             } else if (this->roomp->isVertSector()) {
-              act("You smash $p against the wall.",
-                  TRUE, this, o, NULL, TO_CHAR);
-              act("$n smashes $p against the wall.",
-                  TRUE, this, o, NULL, TO_ROOM);
+              act("You smash $p against the wall.", TRUE, this, o, NULL,
+                TO_CHAR);
+              act("$n smashes $p against the wall.", TRUE, this, o, NULL,
+                TO_ROOM);
             } else {
-              act("You throw $p to the ground, shattering it.",
-                  TRUE, this, o, NULL, TO_CHAR);
-              act("$n throws $p to the ground, shattering it.",
-                  TRUE, this, o, NULL, TO_ROOM);
+              act("You throw $p to the ground, shattering it.", TRUE, this, o,
+                NULL, TO_CHAR);
+              act("$n throws $p to the ground, shattering it.", TRUE, this, o,
+                NULL, TO_ROOM);
             }
-          break;
+            break;
           case MAT_POWDER:
-            act("You cast $p to the wind, scattering it in the breeze.",
-                TRUE, this, o, NULL, TO_CHAR);
-            act("$n casts $p to the wind, scattering it in the breeze.",
-                TRUE, this, o, NULL, TO_ROOM);
-          break;
+            act("You cast $p to the wind, scattering it in the breeze.", TRUE,
+              this, o, NULL, TO_CHAR);
+            act("$n casts $p to the wind, scattering it in the breeze.", TRUE,
+              this, o, NULL, TO_ROOM);
+            break;
           default:
             act("You junk $p.", TRUE, this, o, NULL, TO_CHAR);
             act("$n junks $p.", TRUE, this, o, NULL, TO_ROOM);
@@ -360,7 +357,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
     } else if (t_o) {
       // a non obj, probably a being
 
-      TBeing *tb = dynamic_cast<TBeing *>(t_o);
+      TBeing* tb = dynamic_cast<TBeing*>(t_o);
       if (tb) {
         junkBeing(this, t_o, getRace());
       } else {
@@ -377,7 +374,7 @@ int TBeing::doJunk(const char *argument, TObj *obj)
     } else
       break;
   }
-  if (count) 
+  if (count)
     return DELETE_ITEM;
   else {
     sendTo("You don't have anything like that.\n\r");
@@ -385,14 +382,14 @@ int TBeing::doJunk(const char *argument, TObj *obj)
   }
 }
 
-void TBeing::doCommand(const char *arg)
-{
+void TBeing::doCommand(const char* arg) {
   char buf[256];
 
   if (!desc)
     return;
 
-  for (; isspace(*arg); arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
   if (*arg && arg[0] != '-') {
     sendTo("Syntax: command (-<letter(s)>)\n\r");
@@ -405,7 +402,7 @@ void TBeing::doCommand(const char *arg)
   }
 
   unsigned int i;
-  std::vector<sstring>cmdVec(0);
+  std::vector<sstring> cmdVec(0);
 
   // shove everything into the vector
   for (i = 0; i < MAX_CMD_LIST; i++) {
@@ -432,7 +429,7 @@ void TBeing::doCommand(const char *arg)
   for (num = 0; num < cmdVec.size(); num++) {
     sprintf(buf, "%-11s", cmdVec[num].c_str());
     str += buf;
-    if ((num%7) == 6)
+    if ((num % 7) == 6)
       str += "\n\r";
   }
 
@@ -442,10 +439,8 @@ void TBeing::doCommand(const char *arg)
   desc->page_string(str);
 }
 
-static int splitShares(const TBeing *ch, const TBeing *k)
-{
-  if (!ch->inGroup(*k) ||
-      !ch->sameRoom(*k))
+static int splitShares(const TBeing* ch, const TBeing* k) {
+  if (!ch->inGroup(*k) || !ch->sameRoom(*k))
     return 0;
 
   if (k->desc)
@@ -453,19 +448,18 @@ static int splitShares(const TBeing *ch, const TBeing *k)
 
   // what's left are basically mobs
   // pets and mounts are not forced to fight, so if they do, give 1 share
-//  if (k->isMount() || k->isPet(PETTYPE_PET))
-//    return 1;
-// Took out splitting with pets 4/25/01 -- Cos
+  //  if (k->isMount() || k->isPet(PETTYPE_PET))
+  //    return 1;
+  // Took out splitting with pets 4/25/01 -- Cos
   return 0;
 }
 
-void TBeing::doSplit(const char *argument, bool tell)
-{
+void TBeing::doSplit(const char* argument, bool tell) {
   char buf[256];
   int no_members;
   int tmp_amount;
-  TBeing *k;
-  followData *f;
+  TBeing* k;
+  followData* f;
 
   if (checkBlackjack()) {
     gBj.Split(this, argument, 0);
@@ -494,14 +488,15 @@ void TBeing::doSplit(const char *argument, bool tell)
     for (f = k->followers; f; f = f->next) {
       no_members += splitShares(this, f->follower);
       // took out splitting with pets 4/25/01 -- cos
-        // still need loop no matter what, the no_members tracks total
+      // still need loop no matter what, the no_members tracks total
       if (k == this) {
         if (f->follower->desc)
-	  num_pc_foll++;
+          num_pc_foll++;
       }
     }
 
-    if ((!master && !num_pc_foll) || (no_members <= 1) || !isAffected(AFF_GROUP)) {
+    if ((!master && !num_pc_foll) || (no_members <= 1) ||
+        !isAffected(AFF_GROUP)) {
       // the auto-split logic kicks us in here
       // for some cases when it is not necessary to split
       // e.g. grouped with my pet
@@ -512,7 +507,9 @@ void TBeing::doSplit(const char *argument, bool tell)
       return;
     }
     if (getMoney() < amount && !hasWizPower(POWER_WIZARD)) {
-      sendTo("Sure...Giving away money you don't have is going to make you popular!\n\r");
+      sendTo(
+        "Sure...Giving away money you don't have is going to make you "
+        "popular!\n\r");
       return;
     }
     if (!hasWizPower(POWER_WIZARD)) {
@@ -533,51 +530,57 @@ void TBeing::doSplit(const char *argument, bool tell)
 #endif
 
       k->addToMoney(tmp_amount, GOLD_XFER);
-      if (k->getPosition() >= POSITION_RESTING) 
-        k->sendTo(COLOR_MOBS, format("%s splits %d talens, and you receive %d of them.\n\r") %
-                    getName() % amount % tmp_amount);
+      if (k->getPosition() >= POSITION_RESTING)
+        k->sendTo(COLOR_MOBS,
+          format("%s splits %d talens, and you receive %d of them.\n\r") %
+            getName() % amount % tmp_amount);
     }
     for (f = k->followers; f; f = f->next) {
-      if (f->follower->isAffected(AFF_GROUP) && sameRoom(*f->follower) && f->follower != this) {
+      if (f->follower->isAffected(AFF_GROUP) && sameRoom(*f->follower) &&
+          f->follower != this) {
         int myshares = splitShares(this, f->follower);
         tmp_amount = amount * myshares / no_members;
-        
+
 #if 0
         reconcileHelp(f->follower, (double) tmp_amount/100000);
 #endif
 
         f->follower->addToMoney(tmp_amount, GOLD_XFER);
         if (f->follower->getPosition() >= POSITION_RESTING)
-          f->follower->sendTo(COLOR_MOBS, format("%s splits %d talens, and you receive %d of them.\n\r") % getName() % amount % tmp_amount);
+          f->follower->sendTo(COLOR_MOBS,
+            format("%s splits %d talens, and you receive %d of them.\n\r") %
+              getName() % amount % tmp_amount);
       }
     }
-    sendTo(format("%d talens divided in %d shares of %d talens.\n\r") % amount % no_members % (amount / no_members));
+    sendTo(format("%d talens divided in %d shares of %d talens.\n\r") % amount %
+           no_members % (amount / no_members));
     if ((GetMaxLevel() > MAX_MORT) && (no_members > 1))
-      vlogf(LOG_MISC, format("%s was kind enough to share %d talens with others...") %  getName() % amount);
+      vlogf(LOG_MISC,
+        format("%s was kind enough to share %d talens with others...") %
+          getName() % amount);
   } else {
     int count = 0;
-    TThing *obj2;
+    TThing* obj2;
     if ((!(obj2 = searchLinkedListVis(this, buf, stuff, &count)) &&
-         !(obj2 = searchLinkedListVis(this, buf, roomp->stuff, &count))) ||
-         !obj2->splitMe(this, argument)) {
+          !(obj2 = searchLinkedListVis(this, buf, roomp->stuff, &count))) ||
+        !obj2->splitMe(this, argument)) {
       sendTo("Pardon? Split WHAT?\n\r");
       return;
     }
   }
 }
 
-void TBeing::doReport(const char *argument)
-{
+void TBeing::doReport(const char* argument) {
   char target[80];
 
   sstring Buf, final;
 
-  TThing *t;
+  TThing* t;
   int found = 0;
-  TBeing *targ = NULL;
+  TBeing* targ = NULL;
 
   if (!roomp) {
-    vlogf(LOG_BUG, format("Person %s in bad room in doReport!") %  getName());
+    vlogf(LOG_BUG, format("Person %s in bad room in doReport!") % getName());
     return;
   }
   if (applySoundproof())
@@ -587,7 +590,7 @@ void TBeing::doReport(const char *argument)
     sendTo("You can't make a sound!\n\r");
     return;
   }
-  strncpy(target, argument, sizeof(target)-1);
+  strncpy(target, argument, sizeof(target) - 1);
 
   Buf = format("%.1f%% H, ") % getPercHit();
 
@@ -597,33 +600,38 @@ void TBeing::doReport(const char *argument)
   if (hasClass(CLASS_SHAMAN)) {
     Buf += format("%d LF, ") % getLifeforce();
   }
-  if (hasClass(CLASS_MAGE) || hasClass(CLASS_MONK) || hasQuestBit(TOG_PSIONICIST)) {
+  if (hasClass(CLASS_MAGE) || hasClass(CLASS_MONK) ||
+      hasQuestBit(TOG_PSIONICIST)) {
     Buf += format("%.1f%% M, ") % getPercMana();
   }
 
-  Buf += format("I am %s") % DescMoves((((double) getMove()) / ((double) moveLimit())));
+  Buf += format("I am %s") %
+         DescMoves((((double)getMove()) / ((double)moveLimit())));
 
-  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-    t=*(it++);
-    TBeing *tb = dynamic_cast<TBeing *>(t);
-    if (!tb) continue;
+  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
+    t = *(it++);
+    TBeing* tb = dynamic_cast<TBeing*>(t);
+    if (!tb)
+      continue;
     if (!found && tb->desc) {
       if (is_abbrev(target, tb->getName())) {
-          found = TRUE;
-          targ = tb;
+        found = TRUE;
+        targ = tb;
       }
     }
     if (!tb->isPc())
-      dynamic_cast<TMonster *>(tb)->aiSay(this, 0);
+      dynamic_cast<TMonster*>(tb)->aiSay(this, 0);
   }
   if (found) {
     if ((this == targ)) {
       sendTo("You try to report your status to yourself.\n\r");
       return;
     }
-    sendTo(COLOR_MOBS, format("You report your status to %s.\n\r") % targ->getName());
+    sendTo(COLOR_MOBS,
+      format("You report your status to %s.\n\r") % targ->getName());
 
-    final = format("<G>$n directly reports to you '%s%s%s'<1>") % red() % Buf % norm();
+    final = format("<G>$n directly reports to you '%s%s%s'<1>") % red() % Buf %
+            norm();
     colorAct(COLOR_COMM, final, FALSE, this, 0, targ, TO_VICT);
     disturbMeditation(targ);
   } else {
@@ -633,30 +641,28 @@ void TBeing::doReport(const char *argument)
   }
 }
 
+void TBeing::doTitle(const char*) { sendTo("Mobs don't have titles.\n\r"); }
 
-void TBeing::doTitle(const char *)
-{
-  sendTo("Mobs don't have titles.\n\r");
-}
-
-void TPerson::doTitle(const char *argument)
-{
+void TPerson::doTitle(const char* argument) {
   if (GetMaxLevel() < MAX_NEWBIE_LEVEL) {
-    sendTo(format("You must be level %i before you can change your title.\n\r") %
-	   MAX_NEWBIE_LEVEL);
+    sendTo(
+      format("You must be level %i before you can change your title.\n\r") %
+      MAX_NEWBIE_LEVEL);
     return;
   }
 
-  for (; isspace(*argument); argument++);
+  for (; isspace(*argument); argument++)
+    ;
 
   if (*argument) {
     sstring str = argument;
 
     // Basic name sake checks
     if (str.find("<n>") == sstring::npos &&
-        colorString(this, desc, argument, NULL, COLOR_NONE, TRUE).find(getNameNOC(this).c_str()) ==
-        sstring::npos) {
-      sendTo(format("Your %s or <n> Must appear somewhere in here.\n\r") % getNameNOC(this));
+        colorString(this, desc, argument, NULL, COLOR_NONE, TRUE)
+            .find(getNameNOC(this).c_str()) == sstring::npos) {
+      sendTo(format("Your %s or <n> Must appear somewhere in here.\n\r") %
+             getNameNOC(this));
       return;
     }
 
@@ -670,16 +676,16 @@ void TPerson::doTitle(const char *argument)
       }
     }
 
-
-    sstring stmp=nameColorString(this, desc, str.c_str(), NULL, COLOR_BASIC, FALSE);
-    stmp=stripColorCodes(stmp);
+    sstring stmp =
+      nameColorString(this, desc, str.c_str(), NULL, COLOR_BASIC, FALSE);
+    stmp = stripColorCodes(stmp);
 
     if (stmp.length() > 79) {
       sendTo("Title size is limited to 80 or less characters.\n\r");
       return;
-    }    
+    }
 
-    delete [] title;
+    delete[] title;
     title = mud_str_dup(str);
 
     sendTo(format("Your title has been set to : <%s>\n\r") % str);
@@ -689,22 +695,21 @@ void TPerson::doTitle(const char *argument)
   }
 }
 
-void TBeing::doQuit()
-{
-  sendTo(format("To leave SneezyMUD, please %srent%s at the nearest inn.  To find the nearest inn, type \"goto inn\".\n\r") % red() % norm());
-  sendTo(format("%sQuitting%s from the game will make you lose %sALL%s equipment and talens.\n\r") %
-           red() % norm() % blue() % norm());
-  sendTo(format("If you are sure you would like to do this, type %squit!%s instead of quit.\n\r") %
-           blue() % norm());
+void TBeing::doQuit() {
+  sendTo(format("To leave SneezyMUD, please %srent%s at the nearest inn.  To "
+                "find the nearest inn, type \"goto inn\".\n\r") %
+         red() % norm());
+  sendTo(format("%sQuitting%s from the game will make you lose %sALL%s "
+                "equipment and talens.\n\r") %
+         red() % norm() % blue() % norm());
+  sendTo(format("If you are sure you would like to do this, type %squit!%s "
+                "instead of quit.\n\r") %
+         blue() % norm());
 }
 
-int TMonster::doQuit2()
-{
-  return FALSE;
-}
+int TMonster::doQuit2() { return FALSE; }
 
-int TPerson::doQuit2()
-{
+int TPerson::doQuit2() {
   int rc;
   // char wizbuf[256];
 
@@ -719,8 +724,9 @@ int TPerson::doQuit2()
   }
   if (getPosition() < POSITION_STUNNED) {
     sendTo("You die before your time!\n\r");
-    vlogf(LOG_MISC, format("%s killed by quitting while incapacitated at %s (%d)") % 
-          getName() % roomp->getName() % inRoom());
+    vlogf(LOG_MISC,
+      format("%s killed by quitting while incapacitated at %s (%d)") %
+        getName() % roomp->getName() % inRoom());
     rc = die(DAMAGE_NORMAL);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
@@ -729,8 +735,8 @@ int TPerson::doQuit2()
 
   act("Goodbye, friend.. Come back soon!", FALSE, this, 0, 0, TO_CHAR);
   act("$n has left the game.", TRUE, this, 0, 0, TO_ROOM);
-  vlogf(LOG_PIO, format("%s quit the game at %s (%d).") %  
-       getName() % roomp->name % inRoom());
+  vlogf(LOG_PIO, format("%s quit the game at %s (%d).") % getName() %
+                   roomp->name % inRoom());
   if (!isImmortal() && getMoney()) {
     *roomp += *create_money(getMoney());
     addToMoney(-getMoney(), GOLD_INCOME);
@@ -747,8 +753,7 @@ int TPerson::doQuit2()
   return DELETE_THIS;
 }
 
-void TBeing::verifyWeightVolume()
-{
+void TBeing::verifyWeightVolume() {
 #if 0
   // there is an intrinsic round off error present in float
   // in a get all (or similar) situation, this can propigate to a sizeable
@@ -785,68 +790,65 @@ void TBeing::verifyWeightVolume()
 #endif
 }
 
-void TBeing::doNotHere() const
-{
+void TBeing::doNotHere() const {
   sendTo("Sorry, but you cannot do that here!\n\r");
 }
 
-static const sstring describe_practices(TBeing *ch)
-{
+static const sstring describe_practices(TBeing* ch) {
   sstring buf = "";
 
-  for(int i=0; i<MAX_CLASSES; i++){
-    if(ch->hasClass(ch->getClassNum((classIndT)i)) || ch->practices.prac[i]){
+  for (int i = 0; i < MAX_CLASSES; i++) {
+    if (ch->hasClass(ch->getClassNum((classIndT)i)) || ch->practices.prac[i]) {
       buf += format("You have %d %s practice%s left.\n\r") %
-        ch->practices.prac[i] % classInfo[i].name %
-        ((ch->practices.prac[i] == 1) ? "" : "s");
+             ch->practices.prac[i] % classInfo[i].name %
+             ((ch->practices.prac[i] == 1) ? "" : "s");
     }
   }
 
   return buf;
 }
 
-
-sstring print_discipline(TBeing *tb, discNumT i)
-{
-  if(i==-1)
+sstring print_discipline(TBeing* tb, discNumT i) {
+  if (i == -1)
     return "";
 
-  CDiscipline *cd=tb->getDiscipline(i);
-  sstring buf="";
+  CDiscipline* cd = tb->getDiscipline(i);
+  sstring buf = "";
   sstring col;
 
   if (cd && (tb->isImmortal() || cd->ok_for_class || cd->getLearnedness())) {
     if (cd->getLearnedness()) {
-      if(cd->getLearnedness()==100){
-	col="<Y>";
+      if (cd->getLearnedness() == 100) {
+        col = "<Y>";
       } else {
-	col="<o>";
+        col = "<o>";
       }
 
       if (cd->getLearnedness() == cd->getNatLearnedness()) {
-	buf+=format("%30s : Learnedness: %s%3d%s<1>\n\r") %
-	  discNames[i].properName % col % cd->getLearnedness() % "%";
+        buf += format("%30s : Learnedness: %s%3d%s<1>\n\r") %
+               discNames[i].properName % col % cd->getLearnedness() % "%";
       } else {
-	buf+=format("%30s : Learnedness: Current (%1%3d%s<1>) Natural (%3d%s)\n\r") %
-	  discNames[i].properName % col % cd->getLearnedness() % "%" %
-	  cd->getNatLearnedness() % "%";
+        buf +=
+          format(
+            "%30s : Learnedness: Current (%1%3d%s<1>) Natural (%3d%s)\n\r") %
+          discNames[i].properName % col % cd->getLearnedness() % "%" %
+          cd->getNatLearnedness() % "%";
       }
     } else {
-      buf+=format("%30s : Learnedness: <k>Unlearned<1>\n\r") %
-	discNames[i].properName;
+      buf += format("%30s : Learnedness: <k>Unlearned<1>\n\r") %
+             discNames[i].properName;
     }
   }
   return buf;
 }
 
-void TBeing::doPractice(const char *argument)
-{
+void TBeing::doPractice(const char* argument) {
   char buf[MAX_STRING_LENGTH * 2];
   char arg[256];
   char skillbuf[40];
   discNumT i;
-  Descriptor *d;
-  CDiscipline *cd;
+  Descriptor* d;
+  CDiscipline* cd;
   int classNum = 0;
 
   if (!(d = desc))
@@ -856,36 +858,33 @@ void TBeing::doPractice(const char *argument)
     sendTo("Polymorph types can't use the practice command.");
     return;
   }
-  for (; isspace(*argument); argument++);
+  for (; isspace(*argument); argument++)
+    ;
 
   if (!argument || !*argument) {
     sstring sbuf;
-    sbuf="<r>Basic disciplines:<1>\n\r";
-    sbuf+=print_discipline(this, classInfo[bestClass()].base_disc);
-    sbuf+=print_discipline(this, classInfo[bestClass()].sec_disc);
-    sbuf+=print_discipline(this, DISC_COMBAT);
+    sbuf = "<r>Basic disciplines:<1>\n\r";
+    sbuf += print_discipline(this, classInfo[bestClass()].base_disc);
+    sbuf += print_discipline(this, classInfo[bestClass()].sec_disc);
+    sbuf += print_discipline(this, DISC_COMBAT);
 
-    sbuf+="<r>Automatically learned disciplines:<1>\n\r";
-    sbuf+=print_discipline(this, DISC_ADVENTURING);
-    sbuf+=print_discipline(this, DISC_FAITH);
-    sbuf+=print_discipline(this, DISC_RITUALISM);
-    sbuf+=print_discipline(this, DISC_WIZARDRY);
+    sbuf += "<r>Automatically learned disciplines:<1>\n\r";
+    sbuf += print_discipline(this, DISC_ADVENTURING);
+    sbuf += print_discipline(this, DISC_FAITH);
+    sbuf += print_discipline(this, DISC_RITUALISM);
+    sbuf += print_discipline(this, DISC_WIZARDRY);
 
-
-    sbuf+="<r>Advanced disciplines:<1>\n\r";
-    for (i=MIN_DISC; i < MAX_DISCS; i++) {
-      if(i!=classInfo[bestClass()].base_disc &&
-	 i!=classInfo[bestClass()].sec_disc &&
-	 i!=DISC_COMBAT &&
-	 i!=DISC_ADVENTURING &&
-	 i!=DISC_FAITH &&
-	 i!=DISC_RITUALISM &&
-	 i!=DISC_WIZARDRY){
-	sbuf+=print_discipline(this, i);
+    sbuf += "<r>Advanced disciplines:<1>\n\r";
+    for (i = MIN_DISC; i < MAX_DISCS; i++) {
+      if (i != classInfo[bestClass()].base_disc &&
+          i != classInfo[bestClass()].sec_disc && i != DISC_COMBAT &&
+          i != DISC_ADVENTURING && i != DISC_FAITH && i != DISC_RITUALISM &&
+          i != DISC_WIZARDRY) {
+        sbuf += print_discipline(this, i);
       }
     }
 
-    sbuf+=describe_practices(this);
+    sbuf += describe_practices(this);
     d->page_string(sbuf);
     return;
   }
@@ -895,35 +894,38 @@ void TBeing::doPractice(const char *argument)
     int which = 0;
     argument = one_argument(argument, arg, cElements(arg));
 
-    for(int j=0;j<MAX_CLASSES;++j){
-      if(is_abbrev(arg, classInfo[j].name)){
-	which=classInfo[j].class_num;
-	break;
+    for (int j = 0; j < MAX_CLASSES; ++j) {
+      if (is_abbrev(arg, classInfo[j].name)) {
+        which = classInfo[j].class_num;
+        break;
       }
     }
 
-    if(!which){
+    if (!which) {
       sendTo("That is not a valid class.\n\r");
       sendTo("Syntax: practice class <class>.\n\r");
       return;
     }
 
     sprintf(buf, "The following disciplines are valid:\n\r");
-    for (i=MIN_DISC; i < MAX_DISCS; i++) {
-      if (!strcmp(discNames[i].properName, "unused")) 
+    for (i = MIN_DISC; i < MAX_DISCS; i++) {
+      if (!strcmp(discNames[i].properName, "unused"))
         continue;
       if (!strcmp(discNames[i].properName, "Psionic Abilities"))
         continue;
       if (!(cd = getDiscipline(i))) {
-        vlogf(LOG_BUG, format("Somehow %s was not assigned a discipline (%d), used prac class (%d).") % getName() % i % which);
+        vlogf(LOG_BUG, format("Somehow %s was not assigned a discipline (%d), "
+                              "used prac class (%d).") %
+                         getName() % i % which);
       }
-      if ((discNames[i].class_num == 0) || (IS_SET(discNames[i].class_num, which))) {
+      if ((discNames[i].class_num == 0) ||
+          (IS_SET(discNames[i].class_num, which))) {
         if (cd && cd->getLearnedness() >= 0) {
           sprintf(buf + strlen(buf), "%30s : (Learnedness: %3d%%)\n\r",
-              discNames[i].properName, cd->getLearnedness());
+            discNames[i].properName, cd->getLearnedness());
         } else {
           sprintf(buf + strlen(buf), "%30s : (Learnedness: unlearned)\n\r",
-                  discNames[i].properName);
+            discNames[i].properName);
         }
       }
     }
@@ -935,19 +937,22 @@ void TBeing::doPractice(const char *argument)
   if (is_abbrev(arg, "discipline")) {
     argument = one_argument(argument, arg, cElements(arg));
     if (!*arg) {
-      sendTo("You need to specify a discipline: practice discipline <discipline> <class>.\n\r");
+      sendTo(
+        "You need to specify a discipline: practice discipline <discipline> "
+        "<class>.\n\r");
       return;
     } else {
-      if (is_abbrev(arg, "fighting") || 
-          is_abbrev(arg, "alchemy") || 
-          is_abbrev(arg, "aegis") || 
-          is_abbrev(arg, "wrath") || 
+      if (is_abbrev(arg, "fighting") || is_abbrev(arg, "alchemy") ||
+          is_abbrev(arg, "aegis") || is_abbrev(arg, "wrath") ||
           is_abbrev(arg, "cures")) {
-        for (; isspace(*argument); argument++);
+        for (; isspace(*argument); argument++)
+          ;
         if ((classNum = getClassNum(argument, EXACT_NO))) {
           doPracDisc(arg, classNum);
         } else {
-          sendTo("You need to specify a valid class when looking for that discipline.\n\r");
+          sendTo(
+            "You need to specify a valid class when looking for that "
+            "discipline.\n\r");
           sendTo("Syntax: practice discipline <discipline> <class>.\n\r");
         }
         return;
@@ -960,56 +965,58 @@ void TBeing::doPractice(const char *argument)
   }
 
   if (is_abbrev(arg, "skill")) {
-    for (; isspace(*argument); argument++);
+    for (; isspace(*argument); argument++)
+      ;
 
-    if (!*argument) 
+    if (!*argument)
       sendTo("You need to specify what skill: practice skill <\"skill\">.\n\r");
     else {
-      if (strlen(argument) > 3 && is_abbrev(argument, "wizardry")) 
+      if (strlen(argument) > 3 && is_abbrev(argument, "wizardry"))
         doPracSkill(argument, SKILL_WIZARDRY);
-      else if (strlen(argument) > 3 && is_abbrev(argument, "ritualism")) 
+      else if (strlen(argument) > 3 && is_abbrev(argument, "ritualism"))
         doPracSkill(argument, SKILL_RITUALISM);
-      else if (strlen(argument) > 3 && is_abbrev(argument, "devotion")) 
+      else if (strlen(argument) > 3 && is_abbrev(argument, "devotion"))
         doPracSkill(argument, SKILL_DEVOTION);
-      else 
+      else
         doPracSkill(argument, TYPE_UNDEFINED);
     }
-    return; 
+    return;
   }
   bool found = FALSE;
   bool match = FALSE;
   classNum = FALSE;
 
   discNumT dnt = DISC_NONE;
-  for (i=MIN_DISC; i < MAX_DISCS; i++) {
+  for (i = MIN_DISC; i < MAX_DISCS; i++) {
     strcpy(skillbuf, discNames[i].name);
     classNum = discNames[i].class_num;
     if (is_abbrev(arg, skillbuf, MULTIPLE_YES)) {
       match = TRUE;
-      if (classNum && !hasClass(classNum)) 
+      if (classNum && !hasClass(classNum))
         continue;
       else {
         dnt = discNames[i].disc_num;
         found = TRUE;
         break;
-      }     
+      }
     }
   }
   if (!found) {
     if (match) {
       sendTo("That discipline exists, but is not available to you.\n\r");
-      sendTo("To find out about that discipline use prac discipline <discipline> <class>.\n\r");
+      sendTo(
+        "To find out about that discipline use prac discipline <discipline> "
+        "<class>.\n\r");
     } else
       sendTo("Which discipline???\n\r");
 
     return;
   }
-// new function to send skills lists to pc's
+  // new function to send skills lists to pc's
   sendSkillsList(dnt);
 }
 
-bool skillSorter::operator() (const skillSorter &x, const skillSorter &y) const
-{
+bool skillSorter::operator()(const skillSorter& x, const skillSorter& y) const {
   int xgsv = x.ch->getSkillValue(x.theSkill);
   int ygsv = y.ch->getSkillValue(y.theSkill);
 
@@ -1026,12 +1033,11 @@ extern struct PolyType DisguiseList[];
 extern struct PolyType ShapeShiftList[];
 static const int MaxShapeShiftType = 10;
 
-void TBeing::sendSkillsList(discNumT which)
-{
+void TBeing::sendSkillsList(discNumT which) {
   char buf[MAX_STRING_LENGTH * 2], buffer[MAX_STRING_LENGTH * 2];
   spellNumT i;
-  Descriptor *d;
-  CDiscipline *cd;
+  Descriptor* d;
+  CDiscipline* cd;
   discNumT das;
 
   if (!(d = desc))
@@ -1042,7 +1048,7 @@ void TBeing::sendSkillsList(discNumT which)
   strcat(buffer, buf);
   char how_long[160];
 
-  std::vector<skillSorter>sortDiscVec(0);
+  std::vector<skillSorter> sortDiscVec(0);
 
   for (i = MIN_SPELL; i < MAX_SKILL; i++) {
     if (hideThisSpell(i))
@@ -1061,46 +1067,52 @@ void TBeing::sendSkillsList(discNumT which)
     i = sortDiscVec[j].theSkill;
     das = getDisciplineNumber(i, FALSE);
     if (das == DISC_NONE) {
-      vlogf(LOG_BUG, format("Bad disc for skill %d in doPractice") %  i);
+      vlogf(LOG_BUG, format("Bad disc for skill %d in doPractice") % i);
       continue;
     }
     cd = getDiscipline(das);
 
     // getLearnedness is -99 for an unlearned skill, make that seem like a 0
-    int tmp_var = ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
-    tmp_var = min((int) MAX_DISC_LEARNEDNESS, tmp_var);
+    int tmp_var =
+      ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
+    tmp_var = min((int)MAX_DISC_LEARNEDNESS, tmp_var);
 
-    if (cd && !cd->ok_for_class && getSkillValue(i) <= 0) 
+    if (cd && !cd->ok_for_class && getSkillValue(i) <= 0)
       strcpy(how_long, "(Learned: Not in this Lifetime)");
     else if ((getSkillValue(i) <= 0) &&
-          (!tmp_var || (discArray[i]->start - tmp_var) > 0) &&
-          (i != SKILL_WIZARDRY && i != SKILL_RITUALISM && i != SKILL_DEVOTION)) {
-      sprintf(how_long, "(Learned: %s)", 
-          skill_diff(discArray[i]->start - tmp_var));
+             (!tmp_var || (discArray[i]->start - tmp_var) > 0) &&
+             (i != SKILL_WIZARDRY && i != SKILL_RITUALISM &&
+               i != SKILL_DEVOTION)) {
+      sprintf(how_long, "(Learned: %s)",
+        skill_diff(discArray[i]->start - tmp_var));
     } else if (discArray[i]->toggle && !hasQuestBit(discArray[i]->toggle)) {
-      if(i==SKILL_ADVANCED_KICKING){
-	if(hasQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING)){
-	  strcpy(how_long, "(Learned: When Teacher is Found)");
-	} else {
-	  strcpy(how_long, "(Learned: Not Eligible Yet)");
-	}
+      if (i == SKILL_ADVANCED_KICKING) {
+        if (hasQuestBit(TOG_ELIGIBLE_ADVANCED_KICKING)) {
+          strcpy(how_long, "(Learned: When Teacher is Found)");
+        } else {
+          strcpy(how_long, "(Learned: Not Eligible Yet)");
+        }
       } else {
-	strcpy(how_long, "(Learned: When Teacher is Found)");
+        strcpy(how_long, "(Learned: When Teacher is Found)");
       }
     } else if (i == SKILL_WIZARDRY) {
       wizardryLevelT wiz_lev = getWizardryLevel();
       if (wiz_lev < WIZ_LEV_COMP_PRIM_OTHER_FREE) {
         if (isRightHanded())
-          sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free", skill_diff(discArray[i]->start - tmp_var));
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=right hand, left hand=free",
+            skill_diff(discArray[i]->start - tmp_var));
         else
-          sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free", skill_diff(discArray[i]->start - tmp_var));
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=left hand, right hand=free",
+            skill_diff(discArray[i]->start - tmp_var));
       } else if (wiz_lev == WIZ_LEV_COMP_PRIM_OTHER_FREE) {
         if (isRightHanded())
           strcpy(how_long, "\tcomponent=right hand, left hand=free");
         else
           strcpy(how_long, "\tcomponent=left hand, right hand=free");
       } else if (wiz_lev == WIZ_LEV_COMP_EITHER_OTHER_FREE) {
-        strcpy(how_long,   "\tcomponent=either hand, other free");
+        strcpy(how_long, "\tcomponent=either hand, other free");
       } else if (wiz_lev == WIZ_LEV_COMP_EITHER) {
         strcpy(how_long, "\tcomponent=any hand");
       } else if (wiz_lev == WIZ_LEV_COMP_INV) {
@@ -1108,28 +1120,39 @@ void TBeing::sendSkillsList(discNumT which)
       } else if (wiz_lev == WIZ_LEV_NO_GESTURES) {
         strcpy(how_long, "\tcomponent=any hand or inventory; no gestures");
       } else if (wiz_lev == WIZ_LEV_NO_MANTRA) {
-        strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand or inventory; no speak; no gestures");
       } else if (wiz_lev >= WIZ_LEV_COMP_BELT) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; "
+          "no gestures");
       } else if (wiz_lev >= WIZ_LEV_COMP_NECK) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; "
+          "no gestures");
       } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; "
+          "no gestures");
       }
     } else if (i == SKILL_RITUALISM) {
       ritualismLevelT wiz_lev = getRitualismLevel();
       if (wiz_lev < RIT_LEV_COMP_PRIM_OTHER_FREE) {
         if (isRightHanded())
-          sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free", skill_diff(discArray[i]->start - tmp_var));
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=right hand, left hand=free",
+            skill_diff(discArray[i]->start - tmp_var));
         else
-          sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free", skill_diff(discArray[i]->start - tmp_var));
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=left hand, right hand=free",
+            skill_diff(discArray[i]->start - tmp_var));
       } else if (wiz_lev == RIT_LEV_COMP_PRIM_OTHER_FREE) {
         if (isRightHanded())
           strcpy(how_long, "\tcomponent=right hand, left hand=free");
         else
           strcpy(how_long, "\tcomponent=left hand, right hand=free");
       } else if (wiz_lev == RIT_LEV_COMP_EITHER_OTHER_FREE) {
-        strcpy(how_long,   "\tcomponent=either hand, other free");
+        strcpy(how_long, "\tcomponent=either hand, other free");
       } else if (wiz_lev == RIT_LEV_COMP_EITHER) {
         strcpy(how_long, "\tcomponent=any hand");
       } else if (wiz_lev == RIT_LEV_COMP_INV) {
@@ -1137,33 +1160,46 @@ void TBeing::sendSkillsList(discNumT which)
       } else if (wiz_lev == RIT_LEV_NO_GESTURES) {
         strcpy(how_long, "\tcomponent=any hand or inventory; no gestures");
       } else if (wiz_lev == RIT_LEV_NO_MANTRA) {
-        strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand or inventory; no speak; no gestures");
       } else if (wiz_lev >= RIT_LEV_COMP_BELT) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; "
+          "no gestures");
       } else if (wiz_lev >= RIT_LEV_COMP_NECK) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; "
+          "no gestures");
       } else if (wiz_lev >= RIT_LEV_COMP_WRIST) {
-        strcpy(how_long, "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; no gestures");
+        strcpy(how_long,
+          "\tcomponent=any hand, inventory, waist, wrist, or neck; no speak; "
+          "no gestures");
       }
     } else if (i == SKILL_DEVOTION) {
       devotionLevelT wiz_lev = getDevotionLevel();
       if (wiz_lev < DEV_LEV_SYMB_PRIM_OTHER_FREE) {
         if (isRightHanded())
-          sprintf(how_long, "(Learned: %s)\tsymbol=right hand, left hand=free", skill_diff(discArray[i]->start - tmp_var));
+          sprintf(how_long, "(Learned: %s)\tsymbol=right hand, left hand=free",
+            skill_diff(discArray[i]->start - tmp_var));
         else
-          sprintf(how_long, "(Learned: %s)\tsymbol=left hand, right hand=free", skill_diff(discArray[i]->start - tmp_var));
+          sprintf(how_long, "(Learned: %s)\tsymbol=left hand, right hand=free",
+            skill_diff(discArray[i]->start - tmp_var));
       } else if (wiz_lev == DEV_LEV_SYMB_PRIM_OTHER_FREE) {
         if (isRightHanded())
           strcpy(how_long, "\tsymbol=right hand, left hand=free");
         else
           strcpy(how_long, "\tsymbol=left hand, right hand=free");
       } else if (wiz_lev == DEV_LEV_SYMB_EITHER_OTHER_FREE) {
-        strcpy(how_long,   "\tsymbol=either hand, other free");
+        strcpy(how_long, "\tsymbol=either hand, other free");
       } else if (wiz_lev == DEV_LEV_SYMB_PRIM_OTHER_EQUIP) {
         if (isRightHanded())
-          strcpy(how_long, "\tsymbol=right hand, left hand=no restrictions; or symbol=left hand, right hand free");
+          strcpy(how_long,
+            "\tsymbol=right hand, left hand=no restrictions; or symbol=left "
+            "hand, right hand free");
         else
-          strcpy(how_long, "\tsymbol=left hand, right hand=no restrictions; or symbol=right hand, left hand free");
+          strcpy(how_long,
+            "\tsymbol=left hand, right hand=no restrictions; or symbol=right "
+            "hand, left hand free");
       } else if (wiz_lev == DEV_LEV_SYMB_EITHER_OTHER_EQUIP) {
         strcpy(how_long, "\tsymbol=any hand, no restrictions");
       } else if (wiz_lev == DEV_LEV_SYMB_NECK) {
@@ -1171,22 +1207,22 @@ void TBeing::sendSkillsList(discNumT which)
       } else if (wiz_lev == DEV_LEV_NO_GESTURES) {
         strcpy(how_long, "\tsymbol=any hand or neck; no gestures");
       } else if (wiz_lev >= DEV_LEV_NO_MANTRA) {
-        strcpy(how_long, "\tsymbol=any hand or neck; pray silently; no gestures");
+        strcpy(how_long,
+          "\tsymbol=any hand or neck; pray silently; no gestures");
       }
     } else if (i == SPELL_SHAPESHIFT) {
-
       strcpy(how_long, "\n\r\t");
-      strcpy(how_long, "\n\r\tYou may ShapeShift into the following creatures:\n\r\t");
+      strcpy(how_long,
+        "\n\r\tYou may ShapeShift into the following creatures:\n\r\t");
       for (int tCount = 0; tCount < MaxShapeShiftType; tCount++) {
         if (ShapeShiftList[tCount].learning > getSkillValue(SPELL_SHAPESHIFT) ||
-            ShapeShiftList[tCount].level    > GetMaxLevel())
+            ShapeShiftList[tCount].level > GetMaxLevel())
           continue;
 
-        if ((signed) ShapeShiftList[tCount].tRace != RACE_NORACE)
+        if ((signed)ShapeShiftList[tCount].tRace != RACE_NORACE)
           continue;
 
-        sstring tStArg(ShapeShiftList[tCount].name),
-               tStRes("");
+        sstring tStArg(ShapeShiftList[tCount].name), tStRes("");
 
         one_argument(tStArg, tStRes);
 
@@ -1198,78 +1234,71 @@ void TBeing::sendSkillsList(discNumT which)
 
       if (strlen(how_long) == 3)
         strcpy(how_long, " ");
-    } else { 
+    } else {
       strcpy(how_long, " ");
     }
 
     if (!isImmortal()) {
       if (doesKnowSkill(i)) {
-        if ((i == SKILL_WIZARDRY) || (i == SKILL_RITUALISM) || (i == SKILL_DEVOTION)) {
-            sprintf(buf, "%s%-25.25s%s   Current: %-15s\n\r%-15s.\n\r",
-                   cyan(), discArray[i]->name, norm(),
-                   how_good(getSkillValue(i)), how_long);
+        if ((i == SKILL_WIZARDRY) || (i == SKILL_RITUALISM) ||
+            (i == SKILL_DEVOTION)) {
+          sprintf(buf, "%s%-25.25s%s   Current: %-15s\n\r%-15s.\n\r", cyan(),
+            discArray[i]->name, norm(), how_good(getSkillValue(i)), how_long);
         } else if (getMaxSkillValue(i) < MAX_SKILL_LEARNEDNESS) {
           if (discArray[i]->startLearnDo > 0) {
             sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s%s\n\r",
-                 cyan(), discArray[i]->name, norm(), 
-                 how_good(getSkillValue(i)),
-                 how_good(getMaxSkillValue(i)), how_long);
+              cyan(), discArray[i]->name, norm(), how_good(getSkillValue(i)),
+              how_good(getMaxSkillValue(i)), how_long);
           } else {
-            sprintf(buf, "%s%-25.25s%s   Current: %-15s%s\n\r",
-                   cyan(), discArray[i]->name, norm(), 
-                   how_good(getSkillValue(i)), how_long);
+            sprintf(buf, "%s%-25.25s%s   Current: %-15s%s\n\r", cyan(),
+              discArray[i]->name, norm(), how_good(getSkillValue(i)), how_long);
           }
         } else {
-          sprintf(buf, "%s%-25.25s%s   Current: %-15s%s\n\r",
-            cyan(), discArray[i]->name, norm(), 
-            how_good(getSkillValue(i)), how_long);
+          sprintf(buf, "%s%-25.25s%s   Current: %-15s%s\n\r", cyan(),
+            discArray[i]->name, norm(), how_good(getSkillValue(i)), how_long);
         }
       } else {
-        sprintf(buf, "%s%-25.25s%s   %-25s\n\r", cyan(), discArray[i]->name, norm(), how_long);
+        sprintf(buf, "%s%-25.25s%s   %-25s\n\r", cyan(), discArray[i]->name,
+          norm(), how_long);
       }
     } else {
       if (hasWizPower(POWER_GOD))
-        sprintf(buf, "%s%-22.22s%s Disc:[%3d] SkNum:[%3d] Learn:[%3d/%2d/%2d] Diff:%s\n\r",
-                cyan(), discArray[i]->name, norm(),
-                mapDiscToFile(discNumT(getDisciplineNumber(i, FALSE))),
-                i, discArray[i]->learn,
-                discArray[i]->startLearnDo,
-                discArray[i]->amtLearnDo,
-                displayDifficulty(i).c_str());
+        sprintf(buf,
+          "%s%-22.22s%s Disc:[%3d] SkNum:[%3d] Learn:[%3d/%2d/%2d] Diff:%s\n\r",
+          cyan(), discArray[i]->name, norm(),
+          mapDiscToFile(discNumT(getDisciplineNumber(i, FALSE))), i,
+          discArray[i]->learn, discArray[i]->startLearnDo,
+          discArray[i]->amtLearnDo, displayDifficulty(i).c_str());
       else
-        sprintf(buf, "%s%-22.22s%s Potential: %-12s (%2d) Current: %-12s (%2d)\n\r", 
-                cyan(), discArray[i]->name, norm(), 
-                how_good(getMaxSkillValue(i)),
-                getMaxSkillValue(i),
-                how_good(getSkillValue(i)),
-                getSkillValue(i));
+        sprintf(buf,
+          "%s%-22.22s%s Potential: %-12s (%2d) Current: %-12s (%2d)\n\r",
+          cyan(), discArray[i]->name, norm(), how_good(getMaxSkillValue(i)),
+          getMaxSkillValue(i), how_good(getSkillValue(i)), getSkillValue(i));
     }
     if (strlen(buf) + strlen(buffer) > (MAX_STRING_LENGTH * 2) - 2)
       break;
     strcat(buffer, buf);
-  } 
+  }
   strcat(buffer, describe_practices(this).c_str());
   d->page_string(buffer);
 }
 
-void TBeing::doPracSkill(const char *argument, spellNumT skNum)
-{
+void TBeing::doPracSkill(const char* argument, spellNumT skNum) {
   spellNumT skill = TYPE_UNDEFINED;
   int found = 0;
   int wiz = FALSE;
   char buf[256];
   char how_long[256];
   int tmp_var = FALSE;
-  CDiscipline *cd;
+  CDiscipline* cd;
   discNumT das;
 
-  if (!*argument && skNum == TYPE_UNDEFINED) 
+  if (!*argument && skNum == TYPE_UNDEFINED)
     return;
 
   if (skNum == SKILL_WIZARDRY) {
-    if (hasClass(CLASS_MAGE) ||
-	hasClass(CLASS_RANGER)) {
-      found=2;
+    if (hasClass(CLASS_MAGE) || hasClass(CLASS_RANGER)) {
+      found = 2;
       wiz = 1;
     } else {
       sendTo("You do not know about Wizardry.\n\r");
@@ -1277,13 +1306,13 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     }
   } else if (skNum == SKILL_RITUALISM) {
     if (hasClass(CLASS_SHAMAN)) {
-      found=2;
+      found = 2;
       wiz = 1;
     } else {
       sendTo("You do not know about Ritualism.\n\r");
       found = 1;
     }
-  } else if (skNum == SKILL_DEVOTION){
+  } else if (skNum == SKILL_DEVOTION) {
     if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN)) {
       found = 2;
       wiz = 2;
@@ -1293,121 +1322,153 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     }
   } else if (skNum != TYPE_UNDEFINED) {
     vlogf(LOG_BUG, "Something is sending to doPracSkill with a bad argument.");
-    sendTo("That does not appear to be a valid skill: practice skill <name>\n\r");
+    sendTo(
+      "That does not appear to be a valid skill: practice skill <name>\n\r");
     return;
   } else {
-    for(;*argument && isspace(*argument);argument++);
+    for (; *argument && isspace(*argument); argument++)
+      ;
 
     for (spellNumT i = MIN_SPELL; (i < MAX_SKILL); i++) {
       if (hideThisSpell(i))
         continue;
-      
-      if (!(is_abbrev(argument, discArray[i]->name, MULTIPLE_YES))) 
+
+      if (!(is_abbrev(argument, discArray[i]->name, MULTIPLE_YES)))
         continue;
       else {
-//        skill = getSkillNum(i);
+        //        skill = getSkillNum(i);
         skill = i;
         if (!doesKnowSkill(skill)) {
           found = 1;
           continue;
         } else {
           found = 2;
-          //break;
-          sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skill]->name, norm(), how_good(getSkillValue(skill)), how_good(getMaxSkillValue(skill)));
+          // break;
+          sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r",
+            cyan(), discArray[skill]->name, norm(),
+            how_good(getSkillValue(skill)), how_good(getMaxSkillValue(skill)));
           sendTo(COLOR_BASIC, buf);
-        } 
+        }
       }
-    } 
-  } 
+    }
+  }
   if (wiz && !(found == 1)) {
-    sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skNum]->name, norm(), how_good(getSkillValue(skNum)), how_good(getMaxSkillValue(skNum)));
-     sendTo(COLOR_BASIC, buf);
+    sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(),
+      discArray[skNum]->name, norm(), how_good(getSkillValue(skNum)),
+      how_good(getMaxSkillValue(skNum)));
+    sendTo(COLOR_BASIC, buf);
   } else if (found == 2 || (skill > TYPE_UNDEFINED)) {
-    //sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r", cyan(), discArray[skill]->name, norm(), how_good(getSkillValue(skill)), how_good(getMaxSkillValue(skill))); 
-    //sendTo(COLOR_BASIC, buf);
+    // sprintf(buf, "%s%-25.25s%s   Current: %-12s Potential: %-12s\n\r",
+    // cyan(), discArray[skill]->name, norm(), how_good(getSkillValue(skill)),
+    // how_good(getMaxSkillValue(skill))); sendTo(COLOR_BASIC, buf);
     return;
   } else if (found == 1 && skill > TYPE_UNDEFINED) {
-    sendTo(format("Skill %s: Unlearned. You can only use practice skill about skills that you have learned.\n\r") % discArray[skill]->name);
+    sendTo(format("Skill %s: Unlearned. You can only use practice skill about "
+                  "skills that you have learned.\n\r") %
+           discArray[skill]->name);
     return;
   } else if (!wiz) {
-    sendTo("That does not appear to be a valid skill: practice skill <name>\n\r");
+    sendTo(
+      "That does not appear to be a valid skill: practice skill <name>\n\r");
     return;
-  } 
+  }
 
   das = getDisciplineNumber(skNum, FALSE);
   if (das == DISC_NONE) {
-    vlogf(LOG_BUG, format("Bad disc for skill %d in doPracSkill") %  skNum);
+    vlogf(LOG_BUG, format("Bad disc for skill %d in doPracSkill") % skNum);
     return;
   }
   cd = getDiscipline(das);
   tmp_var = ((!cd || cd->getLearnedness() <= 0) ? 0 : cd->getLearnedness());
-  tmp_var = max((int) MAX_DISC_LEARNEDNESS, tmp_var);
+  tmp_var = max((int)MAX_DISC_LEARNEDNESS, tmp_var);
 
   if (wiz == 1) {
     if (hasClass(CLASS_SHAMAN)) {
       ritualismLevelT wiz_lev = getRitualismLevel();
       if (wiz_lev < RIT_LEV_COMP_PRIM_OTHER_FREE) {
-	if (isRightHanded()) {
-	  sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
-	} else {
-	  sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
-	}
-	sendTo(COLOR_BASIC, how_long);
-	return;
+        if (isRightHanded()) {
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=right hand, left hand=free.\n\r",
+            skill_diff(discArray[skNum]->start - tmp_var));
+        } else {
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=left hand, right hand=free.\n\r",
+            skill_diff(discArray[skNum]->start - tmp_var));
+        }
+        sendTo(COLOR_BASIC, how_long);
+        return;
       } else if (wiz_lev == RIT_LEV_COMP_PRIM_OTHER_FREE) {
-	if (isRightHanded())
-	  strcpy(how_long, "\tcomponent=right hand, left hand=free.\n\r");
-	else
-	  strcpy(how_long, "\tcomponent=left hand, right hand=free.\n\r");
+        if (isRightHanded())
+          strcpy(how_long, "\tcomponent=right hand, left hand=free.\n\r");
+        else
+          strcpy(how_long, "\tcomponent=left hand, right hand=free.\n\r");
       } else if (wiz_lev == RIT_LEV_COMP_EITHER_OTHER_FREE) {
-	strcpy(how_long,   "\tcomponent=either hand, other free.\n\r");
+        strcpy(how_long, "\tcomponent=either hand, other free.\n\r");
       } else if (wiz_lev == RIT_LEV_COMP_EITHER) {
-	strcpy(how_long, "\tcomponent=any hand.\n\r");
+        strcpy(how_long, "\tcomponent=any hand.\n\r");
       } else if (wiz_lev == RIT_LEV_COMP_INV) {
-	strcpy(how_long, "\tcomponent=any hand or inventory.\n\r");
+        strcpy(how_long, "\tcomponent=any hand or inventory.\n\r");
       } else if (wiz_lev == RIT_LEV_NO_GESTURES) {
-	strcpy(how_long, "\tcomponent=any hand or inventory; no gestures.\n\r");
+        strcpy(how_long, "\tcomponent=any hand or inventory; no gestures.\n\r");
       } else if (wiz_lev == RIT_LEV_NO_MANTRA) {
-	strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
       } else if (wiz_lev >= RIT_LEV_COMP_BELT) {
-	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; "
+          "no gestures.\n\r");
       } else if (wiz_lev >= RIT_LEV_COMP_NECK) {
-	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; "
+          "no gestures.\n\r");
       } else if (wiz_lev >= RIT_LEV_COMP_WRIST) {
-	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; "
+          "no gestures.\n\r");
       }
       sendTo(COLOR_BASIC, how_long);
     } else {
       wizardryLevelT wiz_lev = getWizardryLevel();
       if (wiz_lev < WIZ_LEV_COMP_PRIM_OTHER_FREE) {
-	if (isRightHanded()) {
-	  sprintf(how_long, "(Learned: %s)\tcomponent=right hand, left hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
-	} else {
-	  sprintf(how_long, "(Learned: %s)\tcomponent=left hand, right hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
-	}
-	sendTo(COLOR_BASIC, how_long);
-	return;
+        if (isRightHanded()) {
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=right hand, left hand=free.\n\r",
+            skill_diff(discArray[skNum]->start - tmp_var));
+        } else {
+          sprintf(how_long,
+            "(Learned: %s)\tcomponent=left hand, right hand=free.\n\r",
+            skill_diff(discArray[skNum]->start - tmp_var));
+        }
+        sendTo(COLOR_BASIC, how_long);
+        return;
       } else if (wiz_lev == WIZ_LEV_COMP_PRIM_OTHER_FREE) {
-	if (isRightHanded())
-	  strcpy(how_long, "\tcomponent=right hand, left hand=free.\n\r");
-	else
-	  strcpy(how_long, "\tcomponent=left hand, right hand=free.\n\r");
+        if (isRightHanded())
+          strcpy(how_long, "\tcomponent=right hand, left hand=free.\n\r");
+        else
+          strcpy(how_long, "\tcomponent=left hand, right hand=free.\n\r");
       } else if (wiz_lev == WIZ_LEV_COMP_EITHER_OTHER_FREE) {
-	strcpy(how_long,   "\tcomponent=either hand, other free.\n\r");
+        strcpy(how_long, "\tcomponent=either hand, other free.\n\r");
       } else if (wiz_lev == WIZ_LEV_COMP_EITHER) {
-	strcpy(how_long, "\tcomponent=any hand.\n\r");
+        strcpy(how_long, "\tcomponent=any hand.\n\r");
       } else if (wiz_lev == WIZ_LEV_COMP_INV) {
-	strcpy(how_long, "\tcomponent=any hand or inventory.\n\r");
+        strcpy(how_long, "\tcomponent=any hand or inventory.\n\r");
       } else if (wiz_lev == WIZ_LEV_NO_GESTURES) {
-	strcpy(how_long, "\tcomponent=any hand or inventory; no gestures.\n\r");
+        strcpy(how_long, "\tcomponent=any hand or inventory; no gestures.\n\r");
       } else if (wiz_lev == WIZ_LEV_NO_MANTRA) {
-	strcpy(how_long, "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand or inventory; no speak; no gestures.\n\r");
       } else if (wiz_lev >= WIZ_LEV_COMP_BELT) {
-	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; "
+          "no gestures.\n\r");
       } else if (wiz_lev >= WIZ_LEV_COMP_NECK) {
-	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; "
+          "no gestures.\n\r");
       } else if (wiz_lev >= WIZ_LEV_COMP_WRIST) {
-	strcpy(how_long, "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; no gestures.\n\r");
+        strcpy(how_long,
+          "\tcomponent=any hand, waist, wrist, neck, or inventory; no speak; "
+          "no gestures.\n\r");
       }
       sendTo(COLOR_BASIC, how_long);
     }
@@ -1415,9 +1476,13 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     devotionLevelT wiz_lev = getDevotionLevel();
     if (wiz_lev < DEV_LEV_SYMB_PRIM_OTHER_FREE) {
       if (isRightHanded()) {
-        sprintf(how_long, "(Learned: %s)\tsymbol=right hand, left hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
+        sprintf(how_long,
+          "(Learned: %s)\tsymbol=right hand, left hand=free.\n\r",
+          skill_diff(discArray[skNum]->start - tmp_var));
       } else {
-        sprintf(how_long, "(Learned: %s)\tsymbol=left hand, right hand=free.\n\r", skill_diff(discArray[skNum]->start - tmp_var));
+        sprintf(how_long,
+          "(Learned: %s)\tsymbol=left hand, right hand=free.\n\r",
+          skill_diff(discArray[skNum]->start - tmp_var));
       }
       sendTo(COLOR_BASIC, how_long);
       return;
@@ -1427,7 +1492,7 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
       else
         strcpy(how_long, "\tsymbol=left hand, right hand=free.\n\r");
     } else if (wiz_lev == DEV_LEV_SYMB_EITHER_OTHER_FREE) {
-      strcpy(how_long,   "\tsymbol=either hand, other free.\n\r");
+      strcpy(how_long, "\tsymbol=either hand, other free.\n\r");
     } else if (wiz_lev == DEV_LEV_SYMB_PRIM_OTHER_EQUIP) {
       strcpy(how_long, "\tsymbol=any hand, primary hand free.\n\r");
     } else if (wiz_lev == DEV_LEV_SYMB_EITHER_OTHER_EQUIP) {
@@ -1437,21 +1502,21 @@ void TBeing::doPracSkill(const char *argument, spellNumT skNum)
     } else if (wiz_lev == DEV_LEV_NO_GESTURES) {
       strcpy(how_long, "\tsymbol=any hand or neck; no gestures.\n\r");
     } else if (wiz_lev >= DEV_LEV_NO_MANTRA) {
-      strcpy(how_long, "\tsymbol=any hand or neck; pray silently; no gestures.\n\r");
+      strcpy(how_long,
+        "\tsymbol=any hand or neck; pray silently; no gestures.\n\r");
     }
     sendTo(COLOR_BASIC, how_long);
   }
 }
 
-void TBeing::doPracDisc(const char *arg, int classNum)
-{
-//  char buf[256];
+void TBeing::doPracDisc(const char* arg, int classNum) {
+  //  char buf[256];
 
   if (!*arg) {
     return;
   }
 
-//  arg = one_argument(arg, buf);
+  //  arg = one_argument(arg, buf);
 
   for (discNumT i = MIN_DISC; (i < MAX_DISCS); i++) {
     if (!*discNames[i].properName || !(*discNames[i].name)) {
@@ -1461,7 +1526,8 @@ void TBeing::doPracDisc(const char *arg, int classNum)
       continue;
     } else {
       if (classNum) {
-        if (!IS_SET(discNames[i].class_num, classNum) && (discNames[i].class_num != 0)) {
+        if (!IS_SET(discNames[i].class_num, classNum) &&
+            (discNames[i].class_num != 0)) {
           continue;
         }
         sendSkillsList(i);
@@ -1469,78 +1535,76 @@ void TBeing::doPracDisc(const char *arg, int classNum)
       } else {
         sendSkillsList(i);
         return;
-      } 
+      }
     }
   }
   sendTo("You must specify a valid discipline and class.\n\r");
   sendTo("Syntax: practice discipline <discipline> <class>.\n\r");
 }
 
-
-void TBeing::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
-{
+void TBeing::doFeedback(const sstring& type, int clientCmd,
+  const sstring& arg) {
   sendTo("This command is unavailable for you.\n\r");
 }
 
 // sends bugs, etc via mail feedback using Descriptor::send_feedback
-void TPerson::doFeedback(const sstring &type, int clientCmd, const sstring &arg)
-{
+void TPerson::doFeedback(const sstring& type, int clientCmd,
+  const sstring& arg) {
   sstring subject = arg;
 
-  if (fight())
-  {
+  if (fight()) {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }
 
-  // if the subject is standard (they didnt pass an arg), add in something to identify it
-  if (subject.length() <= 0)
-  {
+  // if the subject is standard (they didnt pass an arg), add in something to
+  // identify it
+  if (subject.length() <= 0) {
     time_t now = time(0);
     subject = format("%s at %s") % getName() % ctime(&now);
   }
 
   subject.inlineReplaceString("\n", "");
   subject.inlineReplaceString("\r", "");
-  strncpy(desc->name, ((sstring)(format("%s: %s") % type % subject)).c_str(), cElements(desc->name)-1);
+  strncpy(desc->name, ((sstring)(format("%s: %s") % type % subject)).c_str(),
+    cElements(desc->name) - 1);
 
-  if (!desc->m_bIsClient)
-  {
-    sendTo(format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") % type.lower());
+  if (!desc->m_bIsClient) {
+    sendTo(
+      format("Write your %s report. Use ~ when done, or ` to cancel.\n\r") %
+      type.lower());
     addPlayerAction(PLR_BUGGING);
     desc->connected = CON_WRITING;
     desc->str = &desc->mail_bug_str;
     desc->max_str = MAX_MAIL_SIZE;
-  }
-  else
-  {
+  } else {
     desc->clientf(format("%d") % clientCmd);
   }
 }
 
 // TODO: this needs fixing for multiclass
-void TBeing::doGroup(const char *argument, bool silent)
-{
+void TBeing::doGroup(const char* argument, bool silent) {
   char namebuf[256];
   char buf[256];
   TBeing *victim, *k;
-  followData *f;
-  int found=FALSE;
-  TThing *t=NULL;
+  followData* f;
+  int found = FALSE;
+  TThing* t = NULL;
   int tmp_share;
 
   argument = one_argument(argument, namebuf, cElements(namebuf));
 
   if (!*namebuf) {
     if (!isAffected(AFF_GROUP))
-        sendTo("But you are a member of no group?!\n\r");
+      sendTo("But you are a member of no group?!\n\r");
     else {
-      if (master && master->desc){
-	      sendTo(COLOR_BASIC, format("%s consists of:\n\r\n\r") % master->desc->session.groupName);
+      if (master && master->desc) {
+        sendTo(COLOR_BASIC,
+          format("%s consists of:\n\r\n\r") % master->desc->session.groupName);
       } else {
-	      sendTo(COLOR_BASIC, format("%s consists of:\n\r\n\r") % desc->session.groupName);
+        sendTo(COLOR_BASIC,
+          format("%s consists of:\n\r\n\r") % desc->session.groupName);
       }
-
 
       if (master)
         k = master;
@@ -1548,105 +1612,125 @@ void TBeing::doGroup(const char *argument, bool silent)
         k = this;
 
       sprintf(namebuf, "%s", (k != this ? k->getNameNOC(this).c_str() : "You"));
-      if (k->isAffected(AFF_GROUP)) {// && canSee(k)) {  I changed this on 010398 Russ
+      if (k->isAffected(
+            AFF_GROUP)) {  // && canSee(k)) {  I changed this on 010398 Russ
         if (sameRoom(*k)) {
           tmp_share = splitShares(this, k);
 
           if (k->hasClass(CLASS_CLERIC) || k->hasClass(CLASS_DEIKHAN)) {
-            sendTo(format("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
-              k->getPiety() % '%' %
-              sstring(namebuf).cap().c_str() %
+            sendTo(
+              format(
+                "%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d "
+                "share%s talens, %.1f%c shares XP%s\n\r") %
+              cyan() % sstring(namebuf).cap() % norm() % red() %
+              (((double)(k->getHit())) / ((double)k->hitLimit()) * 100) % '%' %
+              k->getPiety() % '%' % sstring(namebuf).cap().c_str() %
               (k != this ? "s" : "") %
-              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
-              norm() % purple() %
-              tmp_share % ((tmp_share == 1) ? "" : "s") %
-		   k->getExpSharePerc() % '%' %
-              norm());
+              DescMoves((((double)k->getMove()) / ((double)k->moveLimit()))) %
+              norm() % purple() % tmp_share % ((tmp_share == 1) ? "" : "s") %
+              k->getExpSharePerc() % '%' % norm());
           } else if (k->hasClass(CLASS_SHAMAN)) {
-            sendTo(format("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
-              k->getLifeforce() % 
-              sstring(namebuf).cap() %
+            sendTo(
+              format(
+                "%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d "
+                "share%s talens, %.1f%c shares XP%s\n\r") %
+              cyan() % sstring(namebuf).cap() % norm() % red() %
+              (((double)(k->getHit())) / ((double)k->hitLimit()) * 100) % '%' %
+              k->getLifeforce() % sstring(namebuf).cap() %
               (k != this ? "s" : "") %
-              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
-              norm() % purple() %
-              tmp_share % ((tmp_share == 1) ? "" : "s") %
-              k->getExpSharePerc() % '%' %
-              norm());
+              DescMoves((((double)k->getMove()) / ((double)k->moveLimit()))) %
+              norm() % purple() % tmp_share % ((tmp_share == 1) ? "" : "s") %
+              k->getExpSharePerc() % '%' % norm());
           } else {
-            sendTo(format("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
-              (((double) (k->getHit())) / ((double) k->hitLimit()) * 100) % '%' %
-              (((double) (k->getMana())) / ((double) k->manaLimit()) * 100) % '%' %
-              sstring(namebuf).cap() %
-              (k != this ? "s" : "") %
-              DescMoves((((double) k->getMove()) / ((double) k->moveLimit()))) %
-              norm() % purple() %
-              tmp_share % ((tmp_share == 1) ? "" : "s") % 
-              k->getExpSharePerc() % '%' %
-              norm());
+            sendTo(
+              format(
+                "%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d "
+                "share%s talens, %.1f%c shares XP%s\n\r") %
+              cyan() % sstring(namebuf).cap() % norm() % red() %
+              (((double)(k->getHit())) / ((double)k->hitLimit()) * 100) % '%' %
+              (((double)(k->getMana())) / ((double)k->manaLimit()) * 100) %
+              '%' % sstring(namebuf).cap() % (k != this ? "s" : "") %
+              DescMoves((((double)k->getMove()) / ((double)k->moveLimit()))) %
+              norm() % purple() % tmp_share % ((tmp_share == 1) ? "" : "s") %
+              k->getExpSharePerc() % '%' % norm());
           }
-        } else 
+        } else
           sendTo(format("%-15.15s [not around]\n\r") % sstring(namebuf).cap());
       }
       for (f = k->followers; f; f = f->next) {
-        sprintf(namebuf, "%s", (f->follower != this ? f->follower->getNameNOC(this).c_str() : "You"));
+        sprintf(namebuf, "%s",
+          (f->follower != this ? f->follower->getNameNOC(this).c_str()
+                               : "You"));
         if (f->follower->isAffected(AFF_GROUP) && canSee(f->follower)) {
           tmp_share = splitShares(this, f->follower);
 
-          if (sameRoom(*f->follower)) { 
-            if (f->follower->hasClass(CLASS_CLERIC) || 
+          if (sameRoom(*f->follower)) {
+            if (f->follower->hasClass(CLASS_CLERIC) ||
                 f->follower->hasClass(CLASS_DEIKHAN))
-              sendTo(format("%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
-                f->follower->getPiety() % '%' %
-                sstring(namebuf).cap() %
+              sendTo(
+                format(
+                  "%s%-15.15s%s [%s%.1f%chp %.1f%cp. %s look%s "
+                  "%s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") %
+                cyan() % sstring(namebuf).cap() % norm() % red() %
+                (((double)(f->follower->getHit())) /
+                  ((double)f->follower->hitLimit()) * 100) %
+                '%' % f->follower->getPiety() % '%' % sstring(namebuf).cap() %
                 (f->follower != this ? "s" : "") %
-                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
-                norm() % purple() %
-                tmp_share % ((tmp_share == 1) ? "" : "s") % 
-                f->follower->getExpSharePerc() % '%' %
-                norm());
+                DescMoves((((double)f->follower->getMove()) /
+                           ((double)f->follower->moveLimit()))) %
+                norm() % purple() % tmp_share % ((tmp_share == 1) ? "" : "s") %
+                f->follower->getExpSharePerc() % '%' % norm());
             else if (f->follower->hasClass(CLASS_SHAMAN))
-              sendTo(format("%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() %
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
-                f->follower->getLifeforce() %
-                sstring(namebuf).cap() %
+              sendTo(
+                format(
+                  "%s%-15.15s%s [%s%.1f%chp %-4d lf. %s look%s "
+                  "%s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") %
+                cyan() % sstring(namebuf).cap() % norm() % red() %
+                (((double)(f->follower->getHit())) /
+                  ((double)f->follower->hitLimit()) * 100) %
+                '%' % f->follower->getLifeforce() % sstring(namebuf).cap() %
                 (f->follower != this ? "s" : "") %
-                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
-                norm() % purple() %
-                tmp_share % ((tmp_share == 1) ? "" : "s") % 
-                f->follower->getExpSharePerc() % '%' %
-                norm());
+                DescMoves((((double)f->follower->getMove()) /
+                           ((double)f->follower->moveLimit()))) %
+                norm() % purple() % tmp_share % ((tmp_share == 1) ? "" : "s") %
+                f->follower->getExpSharePerc() % '%' % norm());
 
             else {
-              sendTo(format("%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s %s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") % cyan() % sstring(namebuf).cap() % norm() % red() % 
-                (((double) (f->follower->getHit())) / ((double) f->follower->hitLimit()) * 100) % '%' %
-                (((double) (f->follower->getMana())) / ((double) f->follower->manaLimit()) * 100) % '%' %
-                sstring(namebuf).cap() %
+              sendTo(
+                format(
+                  "%s%-15.15s%s [%s%.1f%chp %.1f%cm. %s look%s "
+                  "%s.%s]\n\r\t%s%2d share%s talens, %.1f%c shares XP%s\n\r") %
+                cyan() % sstring(namebuf).cap() % norm() % red() %
+                (((double)(f->follower->getHit())) /
+                  ((double)f->follower->hitLimit()) * 100) %
+                '%' %
+                (((double)(f->follower->getMana())) /
+                  ((double)f->follower->manaLimit()) * 100) %
+                '%' % sstring(namebuf).cap() %
                 (f->follower != this ? "s" : "") %
-                DescMoves((((double) f->follower->getMove()) / ((double) f->follower->moveLimit()))) %
-                norm() % purple() %
-                tmp_share % ((tmp_share == 1) ? "" : "s") % 
-                f->follower->getExpSharePerc() % '%' %
-                norm());
+                DescMoves((((double)f->follower->getMove()) /
+                           ((double)f->follower->moveLimit()))) %
+                norm() % purple() % tmp_share % ((tmp_share == 1) ? "" : "s") %
+                f->follower->getExpSharePerc() % '%' % norm());
             }
-          } else 
-            sendTo(format("%-15.15s [not around]\n\r") % sstring(namebuf).cap());
+          } else
+            sendTo(
+              format("%-15.15s [not around]\n\r") % sstring(namebuf).cap());
         }
       }
     }
     return;
   }
-  if(is_abbrev(namebuf, "name")){
-    if(!argument || !*argument){
+  if (is_abbrev(namebuf, "name")) {
+    if (!argument || !*argument) {
       sendTo("Syntax: group name <name>\n\r");
-      if(isAffected(AFF_GROUP)) {
-	      if(master){
-	        sendTo(format("Current group name: %s") % master->desc->session.groupName);
-	      } else {
-	        sendTo(format("Current group name: %s") % desc->session.groupName);
-	      }
+      if (isAffected(AFF_GROUP)) {
+        if (master) {
+          sendTo(
+            format("Current group name: %s") % master->desc->session.groupName);
+        } else {
+          sendTo(format("Current group name: %s") % desc->session.groupName);
+        }
       }
       return;
     }
@@ -1658,7 +1742,7 @@ void TBeing::doGroup(const char *argument, bool silent)
       sendTo("Only the group leader may set the group name.\n\r");
       return;
     }
-    desc->session.groupName=format("%.60s<1>") % argument;
+    desc->session.groupName = format("%.60s<1>") % argument;
 
     sprintf(buf, "I have just set the group name to %s.", argument);
     doGrouptell(buf);
@@ -1667,14 +1751,16 @@ void TBeing::doGroup(const char *argument, bool silent)
       sendTo("Only the master of a group may throw lots.\n\r");
       return;
     }
-    std::vector <sstring> gnames;
+    std::vector<sstring> gnames;
     gnames.push_back(name);
     for (f = followers; f; f = f->next) {
-      if (!f->follower->isPc()) continue;
+      if (!f->follower->isPc())
+        continue;
       gnames.push_back(f->follower->name);
     }
-    int rnum = ::number(1,gnames.size()) -1;
-    sstring sbuf = format("%s throws lots.  <Y>%s<z> is chosen.") % name % gnames[rnum];
+    int rnum = ::number(1, gnames.size()) - 1;
+    sstring sbuf =
+      format("%s throws lots.  <Y>%s<z> is chosen.") % name % gnames[rnum];
     doGrouptell(sbuf.c_str());
     return;
   } else if (is_abbrev(namebuf, "share")) {
@@ -1717,16 +1803,17 @@ void TBeing::doGroup(const char *argument, bool silent)
       return;
     }
     if (((victim->master == this) || (victim == this)) &&
-           victim->isAffected(AFF_GROUP)) {
+        victim->isAffected(AFF_GROUP)) {
       victim->desc->session.group_share = amt;
-      sprintf(buf, "I have just set %s's group-share to %d.", 
-         victim->getName().c_str(), amt);
+      sprintf(buf, "I have just set %s's group-share to %d.",
+        victim->getName().c_str(), amt);
       doGrouptell(buf);
     } else {
       sendTo("That person isn't in your group.\n\r");
       return;
     }
-  } else if (desc && (is_abbrev(namebuf, "amtank") || is_abbrev(namebuf, "amnottank"))) {
+  } else if (desc && (is_abbrev(namebuf, "amtank") ||
+                       is_abbrev(namebuf, "amnottank"))) {
     if (is_abbrev(namebuf, "amtank")) {
       if (desc->session.amGroupTank)
         sendTo("Yes, you are a group tank.\n\r");
@@ -1743,7 +1830,7 @@ void TBeing::doGroup(const char *argument, bool silent)
       }
     }
   } else if (is_abbrev(namebuf, "seeksgroup")) {
-    char typebuf[256]; 
+    char typebuf[256];
     one_argument(argument, typebuf, cElements(typebuf));
     if (!*typebuf) {
       if (isPlayerAction(PLR_SEEKSGROUP)) {
@@ -1751,86 +1838,116 @@ void TBeing::doGroup(const char *argument, bool silent)
         sendTo("You are no longer seeking a group.\n\r");
       } else {
         addPlayerAction(PLR_SEEKSGROUP);
-        sendTo("You are now flagged as seeking a group in the who command.\n\r");
+        sendTo(
+          "You are now flagged as seeking a group in the who command.\n\r");
       }
-      return; 
+      return;
     } else {
       sendTo("Functionality not available at this time.\n\r");
       return;
     }
-  } else if (is_abbrev(namebuf,"all") || is_abbrev(namebuf, "followers")) {
+  } else if (is_abbrev(namebuf, "all") || is_abbrev(namebuf, "followers")) {
     if (master) {
-      sendTo("You can't group others without being the leader of the group.\n\r");
+      sendTo(
+        "You can't group others without being the leader of the group.\n\r");
       return;
     }
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-      victim = dynamic_cast<TBeing *>(t);
+    for (StuffIter it = roomp->stuff.begin();
+         it != roomp->stuff.end() && (t = *it); ++it) {
+      victim = dynamic_cast<TBeing*>(t);
       if (!victim)
         continue;
 
-      if (victim->isAffected(AFF_GROUP) || !canSee(victim) || 
+      if (victim->isAffected(AFF_GROUP) || !canSee(victim) ||
           (victim == riding))
         continue;
 
-      if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc() 
-          && victim->master == this && this != victim )
-      {
-        sendTo(COLOR_MOBS, format("%s is immortal and has no need of you.  %s does not join your group.\n\r") % victim->getName() % victim->getName());
+      if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc() &&
+          victim->master == this && this != victim) {
+        sendTo(COLOR_MOBS, format("%s is immortal and has no need of you.  %s "
+                                  "does not join your group.\n\r") %
+                             victim->getName() % victim->getName());
         continue;
       }
-      
-      if (victim->isPlayerAction(PLR_SOLOQUEST) && (this != victim)
-          && (victim->master == this)) {
-        sendTo(COLOR_MOBS, format("%s is on a quest! No grouping allowed!\n\r") % victim->getName());
+
+      if (victim->isPlayerAction(PLR_SOLOQUEST) && (this != victim) &&
+          (victim->master == this)) {
+        sendTo(COLOR_MOBS,
+          format("%s is on a quest! No grouping allowed!\n\r") %
+            victim->getName());
         continue;
       }
       if (victim->isPlayerAction(PLR_GRPQUEST)) {
         if (!isPlayerAction(PLR_GRPQUEST)) {
-          sendTo(COLOR_MOBS, format("%s is on a group quest that you aren't on! You can't group!\n\r") %victim->getName());
+          sendTo(COLOR_MOBS, format("%s is on a group quest that you aren't "
+                                    "on! You can't group!\n\r") %
+                               victim->getName());
           continue;
         }
       }
       if (isPlayerAction(PLR_GRPQUEST)) {
         if (!victim->isPlayerAction(PLR_GRPQUEST)) {
-          act("$N isn't on your quest, you can't group with $M.",
-             TRUE,this,0,victim,TO_CHAR);
+          act("$N isn't on your quest, you can't group with $M.", TRUE, this, 0,
+            victim, TO_CHAR);
           continue;
         }
       }
       if (victim == this) {
         sendTo("You group yourself.\n\r");
-        act("$n groups $mself.",TRUE,this,0,0,TO_ROOM);
+        act("$n groups $mself.", TRUE, this, 0, 0, TO_ROOM);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
         int mana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
-        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
-	        desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % mana % attack_modes[getCombatMode()]);
+        if (desc && (desc->m_bIsClient ||
+                      IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+          desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                        colorString(desc->character, desc, getName(), NULL,
+                          COLOR_NONE, FALSE) %
+                        getHit() % mana % attack_modes[getCombatMode()]);
         if (victim->desc)
           victim->desc->session.group_share = 1;
 
         found = TRUE;
         continue;
       } else if (victim->master == this) {
-        sendTo(COLOR_MOBS, format("You add %s to your group.\n\r") %victim->getName());
-        act("$n adds $N to $s group.",TRUE,this,0,victim,TO_NOTVICT);
-        victim->sendTo(COLOR_MOBS, format("You are now a member of %s's group.\n\r") %getName());
+        sendTo(COLOR_MOBS,
+          format("You add %s to your group.\n\r") % victim->getName());
+        act("$n adds $N to $s group.", TRUE, this, 0, victim, TO_NOTVICT);
+        victim->sendTo(COLOR_MOBS,
+          format("You are now a member of %s's group.\n\r") % getName());
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
         int mana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
-        if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) 
-	        desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % mana % attack_modes[victim->getCombatMode()]);
- 
+        if (desc && (desc->m_bIsClient ||
+                      IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+          desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                        colorString(desc->character, desc, victim->getName(),
+                          NULL, COLOR_NONE, FALSE) %
+                        victim->getHit() % mana %
+                        attack_modes[victim->getCombatMode()]);
+
         for (f = followers; f; f = f->next) {
-          TBeing *b = f->follower;
-          if (b->desc && (b->desc->m_bIsClient || IS_SET(b->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
-            int folMana = hasClass(CLASS_SHAMAN) ? victim->getLifeforce() : victim->getMana();
-	          b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % folMana % attack_modes[victim->getCombatMode()]);
+          TBeing* b = f->follower;
+          if (b->desc && (b->desc->m_bIsClient || IS_SET(b->desc->prompt_d.type,
+                                                    PROMPT_CLIENT_PROMPT))) {
+            int folMana = hasClass(CLASS_SHAMAN) ? victim->getLifeforce()
+                                                 : victim->getMana();
+            b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                             colorString(b, b->desc, victim->getName(), NULL,
+                               COLOR_NONE, FALSE) %
+                             victim->getHit() % folMana %
+                             attack_modes[victim->getCombatMode()]);
           }
         }
         found = TRUE;
         if (victim->desc) {
           int victMana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
-          if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
-	          victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % victMana % attack_modes[getCombatMode()]);
-	        victim->desc->session.group_share = 1;
+          if (victim->desc->m_bIsClient ||
+              IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+            victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                                  colorString(victim, victim->desc, getName(),
+                                    NULL, COLOR_NONE, FALSE) %
+                                  getHit() % victMana %
+                                  attack_modes[getCombatMode()]);
+          victim->desc->session.group_share = 1;
         }
         continue;
       }
@@ -1841,12 +1958,12 @@ void TBeing::doGroup(const char *argument, bool silent)
     if (!silent)
       sendTo("No one here by that name.\n\r");
   } else {
-
-    if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc()
-          && victim->master == this && this != victim )
-    {
+    if (IS_SET(victim->specials.act, ACT_IMMORTAL) && !victim->isPc() &&
+        victim->master == this && this != victim) {
       if (!silent)
-        sendTo(COLOR_MOBS, format("%s is immortal and has no need of you.  %s does not join your group.\n\r") % victim->getName() % victim->getName());
+        sendTo(COLOR_MOBS, format("%s is immortal and has no need of you.  %s "
+                                  "does not join your group.\n\r") %
+                             victim->getName() % victim->getName());
       return;
     }
 
@@ -1858,7 +1975,9 @@ void TBeing::doGroup(const char *argument, bool silent)
     if (victim->isPlayerAction(PLR_GRPQUEST)) {
       if (!isPlayerAction(PLR_GRPQUEST)) {
         if (!silent)
-          sendTo("That person is on a group quest that you aren't on! You can't group!\n\r");
+          sendTo(
+            "That person is on a group quest that you aren't on! You can't "
+            "group!\n\r");
         return;
       }
     }
@@ -1871,7 +1990,9 @@ void TBeing::doGroup(const char *argument, bool silent)
     }
     if (master) {
       if (!silent)
-        sendTo("You can not enroll group members without being head of a group.\n\r");
+        sendTo(
+          "You can not enroll group members without being head of a "
+          "group.\n\r");
       return;
     }
     if (!isAffected(AFF_GROUP) && (this != victim)) {
@@ -1895,13 +2016,17 @@ void TBeing::doGroup(const char *argument, bool silent)
       if (victim->isAffected(AFF_GROUP)) {
         if (victim == this) {
           if (followers) {
-            act("$n ungroups $mself, causing the whole group to be disbanded.", FALSE, this, 0, NULL, TO_ROOM);
-            sendTo("You ungroup yourself causing the rest of the group to be ungrouped.\n\r");
+            act("$n ungroups $mself, causing the whole group to be disbanded.",
+              FALSE, this, 0, NULL, TO_ROOM);
+            sendTo(
+              "You ungroup yourself causing the rest of the group to be "
+              "ungrouped.\n\r");
             REMOVE_BIT(specials.affectedBy, AFF_GROUP);
-            
+
             if (desc) {
               desc->session.group_share = 1;
-              if (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+              if (desc->m_bIsClient ||
+                  IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
                 desc->clientf(format("%d") % CLIENT_GROUPDELETEALL);
             }
             for (f = followers; f; f = f->next) {
@@ -1909,8 +2034,11 @@ void TBeing::doGroup(const char *argument, bool silent)
                 REMOVE_BIT(f->follower->specials.affectedBy, AFF_GROUP);
                 if (f->follower->desc) {
                   f->follower->desc->session.group_share = 1;
-                  if (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
-                    f->follower->desc->clientf(format("%d") % CLIENT_GROUPDELETEALL);
+                  if (f->follower->desc->m_bIsClient ||
+                      IS_SET(f->follower->desc->prompt_d.type,
+                        PROMPT_CLIENT_PROMPT))
+                    f->follower->desc->clientf(
+                      format("%d") % CLIENT_GROUPDELETEALL);
                 }
               }
             }
@@ -1919,99 +2047,160 @@ void TBeing::doGroup(const char *argument, bool silent)
             REMOVE_BIT(specials.affectedBy, AFF_GROUP);
             if (desc) {
               desc->session.group_share = 1;
-              if (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+              if (desc->m_bIsClient ||
+                  IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
                 desc->clientf(format("%d") % CLIENT_GROUPDELETEALL);
             }
           }
         } else {
           if (victim->fight()) {
-            act("You can't ungroup $N while $E is fighting.",
-                FALSE, this, 0, victim, TO_CHAR);
+            act("You can't ungroup $N while $E is fighting.", FALSE, this, 0,
+              victim, TO_CHAR);
             return;
           }
-          act("$n has been kicked out of $N's group!", FALSE, victim, 0, this, TO_ROOM);
-          act("You are no longer a member of $N's group!", FALSE, victim, 0, this, TO_CHAR);
+          act("$n has been kicked out of $N's group!", FALSE, victim, 0, this,
+            TO_ROOM);
+          act("You are no longer a member of $N's group!", FALSE, victim, 0,
+            this, TO_CHAR);
           REMOVE_BIT(victim->specials.affectedBy, AFF_GROUP);
           if (victim->desc) {
             victim->desc->session.group_share = 1;
-            if (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
+            if (victim->desc->m_bIsClient ||
+                IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
               victim->desc->clientf(format("%d") % CLIENT_GROUPDELETEALL);
           }
           for (f = followers; f; f = f->next) {
             if (IS_SET(f->follower->specials.affectedBy, AFF_GROUP)) {
-              if (f->follower->desc && (f->follower->desc->m_bIsClient || IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-                f->follower->desc->clientf(format("%d|%s") % CLIENT_GROUPDELETE % colorString(f->follower, f->follower->desc, victim->getName(), NULL, COLOR_NONE, FALSE));
-	    }
+              if (f->follower->desc &&
+                  (f->follower->desc->m_bIsClient ||
+                    IS_SET(f->follower->desc->prompt_d.type,
+                      PROMPT_CLIENT_PROMPT)))
+                f->follower->desc->clientf(
+                  format("%d|%s") % CLIENT_GROUPDELETE %
+                  colorString(f->follower, f->follower->desc, victim->getName(),
+                    NULL, COLOR_NONE, FALSE));
+            }
           }
-          if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-            desc->clientf(format("%d|%s") % CLIENT_GROUPDELETE % colorString(this, desc, victim->getName(), NULL, COLOR_NONE, FALSE));
+          if (desc && (desc->m_bIsClient ||
+                        IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+            desc->clientf(format("%d|%s") % CLIENT_GROUPDELETE %
+                          colorString(this, desc, victim->getName(), NULL,
+                            COLOR_NONE, FALSE));
         }
       } else {
         if (fight()) {
-          if (!silent) act("Not while fighting.", FALSE, this, 0, victim, TO_CHAR);
+          if (!silent)
+            act("Not while fighting.", FALSE, this, 0, victim, TO_CHAR);
           return;
         }
         if (victim->fight()) {
-          if (!silent) act("You can't group $N while $E is fighting.", FALSE, this, 0, victim, TO_CHAR);
+          if (!silent)
+            act("You can't group $N while $E is fighting.", FALSE, this, 0,
+              victim, TO_CHAR);
           return;
         }
-        act("$n is now a member of $N's group.", FALSE, victim, 0, this, TO_ROOM);
-        act("You are now a member of $N's group.", FALSE, victim, 0, this, TO_CHAR);
+        act("$n is now a member of $N's group.", FALSE, victim, 0, this,
+          TO_ROOM);
+        act("You are now a member of $N's group.", FALSE, victim, 0, this,
+          TO_CHAR);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
-	if (hasClass(CLASS_SHAMAN)) {
-	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-	    desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
-	} else {
-	  if (desc && (desc->m_bIsClient || IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-	    desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(desc->character, desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
-	}        
+        if (hasClass(CLASS_SHAMAN)) {
+          if (desc && (desc->m_bIsClient ||
+                        IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+            desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                          colorString(desc->character, desc, victim->getName(),
+                            NULL, COLOR_NONE, FALSE) %
+                          victim->getHit() % victim->getLifeforce() %
+                          attack_modes[victim->getCombatMode()]);
+        } else {
+          if (desc && (desc->m_bIsClient ||
+                        IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+            desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                          colorString(desc->character, desc, victim->getName(),
+                            NULL, COLOR_NONE, FALSE) %
+                          victim->getHit() % victim->getMana() %
+                          attack_modes[victim->getCombatMode()]);
+        }
         if (victim != this) {
           for (f = followers; f; f = f->next) {
-            TBeing *b = f->follower;
-            if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))  {
-	      if (hasClass(CLASS_SHAMAN)) {
-		victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, b->getName(), NULL, COLOR_NONE, FALSE) % b->getHit() % b->getLifeforce() % attack_modes[b->getCombatMode()]);
-	      } else {
-		victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, b->getName(), NULL, COLOR_NONE, FALSE) % b->getHit() % b->getMana() % attack_modes[b->getCombatMode()]);
-	      }
+            TBeing* b = f->follower;
+            if (victim->desc &&
+                (victim->desc->m_bIsClient ||
+                  IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
+              if (hasClass(CLASS_SHAMAN)) {
+                victim->desc->clientf(format("%d|%s|%d|%d|%s") %
+                                      CLIENT_GROUPADD %
+                                      colorString(victim, victim->desc,
+                                        b->getName(), NULL, COLOR_NONE, FALSE) %
+                                      b->getHit() % b->getLifeforce() %
+                                      attack_modes[b->getCombatMode()]);
+              } else {
+                victim->desc->clientf(format("%d|%s|%d|%d|%s") %
+                                      CLIENT_GROUPADD %
+                                      colorString(victim, victim->desc,
+                                        b->getName(), NULL, COLOR_NONE, FALSE) %
+                                      b->getHit() % b->getMana() %
+                                      attack_modes[b->getCombatMode()]);
+              }
             }
-            if (b->desc && (b->desc->m_bIsClient || IS_SET(b->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
-	      if (hasClass(CLASS_SHAMAN)) {
-		b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getLifeforce() % attack_modes[victim->getCombatMode()]);
-	      } else {
-		b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(b, b->desc, victim->getName(), NULL, COLOR_NONE, FALSE) % victim->getHit() % victim->getMana() % attack_modes[victim->getCombatMode()]);
-	      }
+            if (b->desc &&
+                (b->desc->m_bIsClient ||
+                  IS_SET(b->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
+              if (hasClass(CLASS_SHAMAN)) {
+                b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                                 colorString(b, b->desc, victim->getName(),
+                                   NULL, COLOR_NONE, FALSE) %
+                                 victim->getHit() % victim->getLifeforce() %
+                                 attack_modes[victim->getCombatMode()]);
+              } else {
+                b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                                 colorString(b, b->desc, victim->getName(),
+                                   NULL, COLOR_NONE, FALSE) %
+                                 victim->getHit() % victim->getMana() %
+                                 attack_modes[victim->getCombatMode()]);
+              }
             }
           }
         }
         if (victim->desc) {
-	  if (hasClass(CLASS_SHAMAN)) {
-            if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-	      victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getLifeforce() % attack_modes[getCombatMode()]);
-	    victim->desc->session.group_share = 1;
-	  } else {
-            if (victim->desc && (victim->desc->m_bIsClient || IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
-	      victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD % colorString(victim, victim->desc, getName(), NULL, COLOR_NONE, FALSE) % getHit() % getMana() % attack_modes[getCombatMode()]);
-	    victim->desc->session.group_share = 1;
-	  }
+          if (hasClass(CLASS_SHAMAN)) {
+            if (victim->desc &&
+                (victim->desc->m_bIsClient ||
+                  IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+              victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                                    colorString(victim, victim->desc, getName(),
+                                      NULL, COLOR_NONE, FALSE) %
+                                    getHit() % getLifeforce() %
+                                    attack_modes[getCombatMode()]);
+            victim->desc->session.group_share = 1;
+          } else {
+            if (victim->desc &&
+                (victim->desc->m_bIsClient ||
+                  IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
+              victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
+                                    colorString(victim, victim->desc, getName(),
+                                      NULL, COLOR_NONE, FALSE) %
+                                    getHit() % getMana() %
+                                    attack_modes[getCombatMode()]);
+            victim->desc->session.group_share = 1;
+          }
         }
       }
     } else
-      act("$N must follow you to enter the group", FALSE, this, 0, victim, TO_CHAR);
+      act("$N must follow you to enter the group", FALSE, this, 0, victim,
+        TO_CHAR);
   }
 }
 
-int TThing::quaffMe(TBeing *ch)
-{
+int TThing::quaffMe(TBeing* ch) {
   ch->sendTo("Quaff is generally used for liquids.\n\r");
   return FALSE;
 }
 
 // return DELETE_THIS
-int TBeing::doQuaff(sstring argument)
-{
+int TBeing::doQuaff(sstring argument) {
   sstring buf;
-  TThing *t;
+  TThing* t;
   int rc = 0;
 
   one_argument(argument, buf);
@@ -2030,7 +2219,7 @@ int TBeing::doQuaff(sstring argument)
     delete t;
     t = NULL;
   }
-  if (IS_SET_DELETE(rc, DELETE_VICT)) 
+  if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_THIS;
 
   // add some lag.  Prevents multiple quaffs per round
@@ -2039,41 +2228,38 @@ int TBeing::doQuaff(sstring argument)
   return FALSE;
 }
 
-
 // this function handles any special affect that drinking a liquid has
-int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
-{
-  int rc=0, i;
-  int level=max(30, amt*6), learn=max(100, amt*20);
+int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
+  int rc = 0, i;
+  int level = max(30, amt * 6), learn = max(100, amt * 20);
   int duration = (level << 2) * Pulse::UPDATES_PER_MUDHOUR;
   affectedData aff, aff5[5];
   statTypeT whichStat;
 
   // if it's an alcoholic liquid, put it in their bloodstream
-  if(liquidInfo[liq]->drunk > 0){
+  if (liquidInfo[liq]->drunk > 0) {
     vict->gainCondition(DRUNK, (liquidInfo[liq]->drunk / 10));
     // use leftover as chance to go 1 more unit up/down
-    if (::number(0,9) < (abs(liquidInfo[liq]->drunk) % 10))
+    if (::number(0, 9) < (abs(liquidInfo[liq]->drunk) % 10))
       vict->gainCondition(DRUNK, (liquidInfo[liq]->drunk > 0 ? 1 : -1));
   }
 
-
-  switch(liq){
+  switch (liq) {
     case LIQ_BLOOD:
-      if(vict->isVampire()){
-	vict->sendTo("Drinking the dead blood causes you great harm!\n\r");
-	poison(ch,vict,level,learn,SPELL_POISON);
-	slumber(ch,vict,level,learn);
-	rc=harm(ch,vict,level,learn,SPELL_HARM,0);
+      if (vict->isVampire()) {
+        vict->sendTo("Drinking the dead blood causes you great harm!\n\r");
+        poison(ch, vict, level, learn, SPELL_POISON);
+        slumber(ch, vict, level, learn);
+        rc = harm(ch, vict, level, learn, SPELL_HARM, 0);
       }
       break;
     case LIQ_HOLYWATER:
-      if(vict->isUndead())
-	harm(ch,vict,level,learn,SPELL_HARM,0);
-      else if(vict->isDiabolic())
-	harmLight(ch,vict,level,learn,SPELL_HARM,0);
+      if (vict->isUndead())
+        harm(ch, vict, level, learn, SPELL_HARM, 0);
+      else if (vict->isDiabolic())
+        harmLight(ch, vict, level, learn, SPELL_HARM, 0);
       else
-	bless(ch,vict,level/10,learn/10,SPELL_BLESS);
+        bless(ch, vict, level / 10, learn / 10, SPELL_BLESS);
       break;
     case LIQ_COFFEE:
       aff.type = AFFECT_DRUG;
@@ -2106,22 +2292,22 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 
       break;
     case LIQ_POT_CURE_POISON:
-      curePoison(ch,vict,level,learn,SPELL_CURE_POISON);
+      curePoison(ch, vict, level, learn, SPELL_CURE_POISON);
       break;
     case LIQ_POT_HEAL_LIGHT:
     case LIQ_POT_HEAL_LIGHT2:
-      healLight(ch,vict,level,learn,SPELL_HEAL_LIGHT,0);
+      healLight(ch, vict, level, learn, SPELL_HEAL_LIGHT, 0);
       break;
     case LIQ_POT_HEAL_CRIT:
-      healCritical(ch,vict,level,learn,SPELL_HEAL_CRITICAL,0);
+      healCritical(ch, vict, level, learn, SPELL_HEAL_CRITICAL, 0);
       break;
     case LIQ_POT_HEAL:
     case LIQ_POT_HEAL2:
-      heal(ch,vict,level,learn,SPELL_HEAL,0);
+      heal(ch, vict, level, learn, SPELL_HEAL, 0);
       break;
     case LIQ_POT_SANCTUARY:
     case LIQ_POT_SANCTUARY2:
-      sanctuary(ch,vict,level,learn);
+      sanctuary(ch, vict, level, learn);
       break;
     case LIQ_POT_FLIGHT:
       aff.type = SPELL_FLY;
@@ -2130,184 +2316,179 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       aff.modifier = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = AFF_FLYING;
-      
+
       // correct for weight
       weightCorrectDuration(vict, &aff);
-      
-      rc = fly(ch,vict,level,&aff,learn);
+
+      rc = fly(ch, vict, level, &aff, learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
         act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
       } else {
-	vict->nothingHappens();
+        vict->nothingHappens();
       }
       break;
     case LIQ_POT_BIND:
-      bind(ch,vict,level,learn);
+      bind(ch, vict, level, learn);
       break;
     case LIQ_POT_BLINDNESS:
-      blindness(ch,vict,level,learn);
+      blindness(ch, vict, level, learn);
       break;
     case LIQ_POT_ARMOR:
-      rc = armor(ch,vict,level,learn,SPELL_ARMOR);
+      rc = armor(ch, vict, level, learn, SPELL_ARMOR);
       if (IS_SET(rc, SPELL_SUCCESS)) {
         if (ch != vict) {
-          act("$N is now defended by $d!",
-            FALSE, ch, NULL, vict, TO_CHAR);
-          act("$N is now defended by $d!",
-            FALSE, ch, NULL, vict, TO_NOTVICT);
-          act("You are now defended by $d!",
-            FALSE, ch, NULL, vict, TO_VICT);
+          act("$N is now defended by $d!", FALSE, ch, NULL, vict, TO_CHAR);
+          act("$N is now defended by $d!", FALSE, ch, NULL, vict, TO_NOTVICT);
+          act("You are now defended by $d!", FALSE, ch, NULL, vict, TO_VICT);
         } else {
-          act("$n is now defended by $d!",
-            FALSE, ch, NULL, 0, TO_ROOM);
-          act("You are now defended by $d!",
-            FALSE, ch, NULL, 0, TO_CHAR);
+          act("$n is now defended by $d!", FALSE, ch, NULL, 0, TO_ROOM);
+          act("You are now defended by $d!", FALSE, ch, NULL, 0, TO_CHAR);
         }
       } else if (IS_SET(rc, SPELL_CRIT_SUCCESS)) {
         if (ch != vict) {
-          act("$N is now strongly defended by $d!",
-            FALSE, ch, NULL, vict, TO_CHAR);
-          act("$N is now strongly defended by $d!",
-            FALSE, ch, NULL, vict, TO_NOTVICT);
-          act("You are now strongly defended by $d!",
-            FALSE, ch, NULL, vict, TO_VICT);
+          act("$N is now strongly defended by $d!", FALSE, ch, NULL, vict,
+            TO_CHAR);
+          act("$N is now strongly defended by $d!", FALSE, ch, NULL, vict,
+            TO_NOTVICT);
+          act("You are now strongly defended by $d!", FALSE, ch, NULL, vict,
+            TO_VICT);
         } else {
-          act("$n is now strongly defended by $d!",
-            FALSE, ch, NULL, 0, TO_ROOM);
-          act("You are now strongly defended by $d!",
-            FALSE, ch, NULL, 0, TO_CHAR);
+          act("$n is now strongly defended by $d!", FALSE, ch, NULL, 0,
+            TO_ROOM);
+          act("You are now strongly defended by $d!", FALSE, ch, NULL, 0,
+            TO_CHAR);
         }
       } else if (IS_SET(rc, SPELL_FAIL)) {
         vict->sendTo("Your potion fails to bring forth any protection.\n\r");
-        act("$n's potion fails to bring forth any protection.", 
-          FALSE, ch, NULL, NULL, TO_ROOM);
+        act("$n's potion fails to bring forth any protection.", FALSE, ch, NULL,
+          NULL, TO_ROOM);
         ch->deityIgnore(SILENT_YES);
       }
       break;
     case LIQ_POT_REFRESH:
-      refresh(ch,vict,level,learn,SPELL_REFRESH);
+      refresh(ch, vict, level, learn, SPELL_REFRESH);
       break;
     case LIQ_POT_SECOND_WIND:
     case LIQ_POT_SECOND_WIND2:
-      secondWind(ch,vict,level,learn);
+      secondWind(ch, vict, level, learn);
       break;
     case LIQ_POT_CURSE:
-      curse(ch,vict,level,learn,SPELL_CURSE);
+      curse(ch, vict, level, learn, SPELL_CURSE);
       break;
     case LIQ_POT_DETECT_INVIS:
-      detectInvisibility(ch,vict,level,learn);
+      detectInvisibility(ch, vict, level, learn);
       break;
     case LIQ_POT_BLESS:
     case LIQ_POT_BLESS2:
-      bless(ch,vict,level,learn,SPELL_BLESS);
+      bless(ch, vict, level, learn, SPELL_BLESS);
       break;
     case LIQ_POT_INVIS:
-      invisibility(ch,vict,level,learn);
+      invisibility(ch, vict, level, learn);
       break;
     case LIQ_POT_HEAL_FULL:
-      healFull(ch,vict,level,learn,SPELL_HEAL_FULL);
+      healFull(ch, vict, level, learn, SPELL_HEAL_FULL);
       break;
     case LIQ_POT_SUFFOCATE:
-      suffocate(ch,vict,level,learn);
+      suffocate(ch, vict, level, learn);
       break;
     case LIQ_POT_FEATHERY_DESCENT:
     case LIQ_POT_FEATHERY_DESCENT2:
-      featheryDescent(ch,vict,level,learn);
+      featheryDescent(ch, vict, level, learn);
       break;
     case LIQ_POT_DETECT_MAGIC:
-      detectMagic(ch,vict,level,learn);
+      detectMagic(ch, vict, level, learn);
       break;
     case LIQ_POT_DISPEL_MAGIC:
-      dispelMagic(ch,vict,level,learn);
+      dispelMagic(ch, vict, level, learn);
       break;
     case LIQ_POT_STONE_SKIN:
     case LIQ_POT_STONE_SKIN2:
-      stoneSkin(ch,vict,level,learn);
+      stoneSkin(ch, vict, level, learn);
       break;
     case LIQ_POT_TRAIL_SEEK:
-      trailSeek(ch,vict,level,learn);
+      trailSeek(ch, vict, level, learn);
       break;
     case LIQ_POT_FAERIE_FIRE:
-      faerieFire(ch,vict,level,learn);
+      faerieFire(ch, vict, level, learn);
       break;
     case LIQ_POT_FLAMING_FLESH:
-      flamingFlesh(ch,vict,level,learn);
+      flamingFlesh(ch, vict, level, learn);
       break;
     case LIQ_POT_CONJURE_ELE_EARTH:
-      conjureElemEarth(vict,level,learn);
+      conjureElemEarth(vict, level, learn);
       break;
     case LIQ_POT_SENSE_LIFE:
-      senseLife(ch,vict,level,learn);
+      senseLife(ch, vict, level, learn);
       break;
     case LIQ_POT_STEALTH:
-      stealth(ch,vict,level,learn);
+      stealth(ch, vict, level, learn);
       break;
     case LIQ_POT_TRUE_SIGHT:
-      trueSight(ch,vict,level,learn);
+      trueSight(ch, vict, level, learn);
       break;
     case LIQ_POT_ACCELERATE:
-      accelerate(ch,vict,level,learn);
+      accelerate(ch, vict, level, learn);
       break;
     case LIQ_POT_INFRAVISION:
     case LIQ_POT_INFRAVISION2:
-      infravision(ch,vict,level,learn);
+      infravision(ch, vict, level, learn);
       break;
     case LIQ_POT_SORC_GLOBE:
-      sorcerersGlobe(ch,vict,level,learn);
+      sorcerersGlobe(ch, vict, level, learn);
       break;
     case LIQ_POT_POISON:
-      poison(ch,vict,level,learn,SPELL_POISON);
+      poison(ch, vict, level, learn, SPELL_POISON);
       break;
     case LIQ_POT_BONE_BREAKER:
-      boneBreaker(ch,vict,level,learn,SPELL_BONE_BREAKER);
+      boneBreaker(ch, vict, level, learn, SPELL_BONE_BREAKER);
       break;
     case LIQ_POT_AQUALUNG:
-      aqualung(ch,vict,level,learn);
+      aqualung(ch, vict, level, learn);
       break;
     case LIQ_POT_HASTE:
-      haste(ch,vict,level,learn);
+      haste(ch, vict, level, learn);
       break;
     case LIQ_POT_TELEPORT:
     case LIQ_POT_TELEPORT2:
-      teleport(ch,vict,level,learn);
+      teleport(ch, vict, level, learn);
       break;
     case LIQ_POT_GILLS_OF_FLESH:
     case LIQ_POT_GILLS_OF_FLESH2:
-      gillsOfFlesh(ch,vict,level,learn);
+      gillsOfFlesh(ch, vict, level, learn);
       break;
     case LIQ_POT_CURE_BLINDNESS:
-      cureBlindness(ch,vict,level,learn);
+      cureBlindness(ch, vict, level, learn);
       break;
     case LIQ_POT_CURE_DISEASE:
-      cureDisease(ch,vict,level,learn,SPELL_CURE_DISEASE);
+      cureDisease(ch, vict, level, learn, SPELL_CURE_DISEASE);
       break;
     case LIQ_POT_SHIELD_OF_MISTS:
-      shieldOfMists(ch,vict,level,learn);
+      shieldOfMists(ch, vict, level, learn);
       break;
     case LIQ_POT_SENSE_PRESENCE:
-      senseLifeShaman(ch,vict,level,learn);
+      senseLifeShaman(ch, vict, level, learn);
       break;
     case LIQ_POT_CHEVAL:
-      cheval(ch,vict,level,learn);
+      cheval(ch, vict, level, learn);
       break;
     case LIQ_POT_DJALLAS_PROTECTION:
-      djallasProtection(ch,vict,level,learn);
+      djallasProtection(ch, vict, level, learn);
       break;
     case LIQ_POT_LEGBAS_GUIDANCE:
-      legbasGuidance(ch,vict,level,learn);
+      legbasGuidance(ch, vict, level, learn);
       break;
     case LIQ_POT_DETECT_SHADOW:
-      detectShadow(ch,vict,level,learn);
+      detectShadow(ch, vict, level, learn);
       break;
     case LIQ_POT_CELERITE:
     case LIQ_POT_CELERITE2:
     case LIQ_POT_CELERITE3:
-      celerite(ch,vict,level,learn);
+      celerite(ch, vict, level, learn);
       break;
     case LIQ_POT_QUICKSILVER:
-      celerite(ch,vict,level,learn);
-      cheval(ch,vict,level,learn);
-      haste(ch,vict,level,learn);
+      celerite(ch, vict, level, learn);
+      cheval(ch, vict, level, learn);
+      haste(ch, vict, level, learn);
 
       aff.type = SPELL_HASTE;
       aff.level = level;
@@ -2318,235 +2499,236 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
 
       break;
     case LIQ_POT_CLARITY:
-      clarity(ch,vict,level,learn);
+      clarity(ch, vict, level, learn);
       break;
     case LIQ_POT_BOILING_BLOOD:
-      bloodBoil(ch,vict,level,learn,SPELL_BLOOD_BOIL);
+      bloodBoil(ch, vict, level, learn, SPELL_BLOOD_BOIL);
       break;
     case LIQ_POT_STUPIDITY:
-      stupidity(ch,vict,level,learn);
+      stupidity(ch, vict, level, learn);
       break;
     case LIQ_POT_SLUMBER:
-      slumber(ch,vict,level,learn);
+      slumber(ch, vict, level, learn);
       break;
     case LIQ_POT_HEALING_GRASP:
-      healingGrasp(ch,vict,level,learn,SPELL_HEALING_GRASP);
+      healingGrasp(ch, vict, level, learn, SPELL_HEALING_GRASP);
       break;
     case LIQ_POT_CLEANSE:
-      cleanse(ch,vict,level,learn,SPELL_CLEANSE);
+      cleanse(ch, vict, level, learn, SPELL_CLEANSE);
       break;
-    case LIQ_POT_MULTI1: // harm crit, infravision, armor
-      harmCritical(ch,vict,level,learn,SPELL_HARM_CRITICAL,0);
-      infravision(ch,vict,level,learn);
-      armor(ch,vict,level,learn,SPELL_ARMOR);
+    case LIQ_POT_MULTI1:  // harm crit, infravision, armor
+      harmCritical(ch, vict, level, learn, SPELL_HARM_CRITICAL, 0);
+      infravision(ch, vict, level, learn);
+      armor(ch, vict, level, learn, SPELL_ARMOR);
       break;
-    case LIQ_POT_MULTI2: // heal, remove curse, cure poison
-      heal(ch,vict,level,learn,SPELL_HEAL,0);
-      vict->removeCurseBeing(vict,level,learn,SPELL_REMOVE_CURSE);
-      curePoison(ch,vict,level,learn,SPELL_CURE_POISON);
+    case LIQ_POT_MULTI2:  // heal, remove curse, cure poison
+      heal(ch, vict, level, learn, SPELL_HEAL, 0);
+      vict->removeCurseBeing(vict, level, learn, SPELL_REMOVE_CURSE);
+      curePoison(ch, vict, level, learn, SPELL_CURE_POISON);
       break;
-    case LIQ_POT_MULTI3: // sanc, bless
-      sanctuary(ch,vict,level,learn);
-      bless(ch,vict,level,learn,SPELL_BLESS);
+    case LIQ_POT_MULTI3:  // sanc, bless
+      sanctuary(ch, vict, level, learn);
+      bless(ch, vict, level, learn, SPELL_BLESS);
       break;
-    case LIQ_POT_MULTI4: // flight, gills of flesh
+    case LIQ_POT_MULTI4:  // flight, gills of flesh
       aff.type = SPELL_FLY;
       aff.level = level;
       aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR * level;
       aff.modifier = 0;
       aff.location = APPLY_NONE;
       aff.bitvector = AFF_FLYING;
-      
+
       // correct for weight
       weightCorrectDuration(vict, &aff);
-      
-      rc = fly(ch,vict,level,&aff,learn);
+
+      rc = fly(ch, vict, level, &aff, learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
         act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
       } else {
-	vict->nothingHappens();
+        vict->nothingHappens();
       }
 
-      gillsOfFlesh(ch,vict,level,learn);
+      gillsOfFlesh(ch, vict, level, learn);
       break;
-    case LIQ_POT_MULTI5: // harm, stealth, invis
-      harm(ch,vict,level,learn,SPELL_HARM,0);
-      stealth(ch,vict,level,learn);
-      invisibility(ch,vict,level,learn);
+    case LIQ_POT_MULTI5:  // harm, stealth, invis
+      harm(ch, vict, level, learn, SPELL_HARM, 0);
+      stealth(ch, vict, level, learn);
+      invisibility(ch, vict, level, learn);
       break;
-    case LIQ_POT_MULTI6: // heal, salve, refresh
-      heal(ch,vict,level,learn,SPELL_HEAL,0);
-      salve(ch,vict,level,learn,SPELL_SALVE);
-      refresh(ch,vict,level,learn,SPELL_REFRESH);
+    case LIQ_POT_MULTI6:  // heal, salve, refresh
+      heal(ch, vict, level, learn, SPELL_HEAL, 0);
+      salve(ch, vict, level, learn, SPELL_SALVE);
+      refresh(ch, vict, level, learn, SPELL_REFRESH);
       break;
-    case LIQ_POT_MULTI7: // sanc, harm crit
-      sanctuary(ch,vict,level,learn);
-      harmCritical(ch,vict,level,learn,SPELL_HARM_CRITICAL,0);
+    case LIQ_POT_MULTI7:  // sanc, harm crit
+      sanctuary(ch, vict, level, learn);
+      harmCritical(ch, vict, level, learn, SPELL_HARM_CRITICAL, 0);
       break;
-    case LIQ_POT_MULTI8: // sanc, harm ser
-      sanctuary(ch,vict,level,learn);
-      harmSerious(ch,vict,level,learn,SPELL_HARM_SERIOUS,0);
+    case LIQ_POT_MULTI8:  // sanc, harm ser
+      sanctuary(ch, vict, level, learn);
+      harmSerious(ch, vict, level, learn, SPELL_HARM_SERIOUS, 0);
       break;
-    case LIQ_POT_MULTI9: // sanc, armor, bless
-      sanctuary(ch,vict,level,learn);
-      armor(ch,vict,level,learn,SPELL_ARMOR);
-      bless(ch,vict,level,learn,SPELL_BLESS);
+    case LIQ_POT_MULTI9:  // sanc, armor, bless
+      sanctuary(ch, vict, level, learn);
+      armor(ch, vict, level, learn, SPELL_ARMOR);
+      bless(ch, vict, level, learn, SPELL_BLESS);
       break;
-    case LIQ_POT_MULTI10: // blind, sanc, stone skin
-      blindness(ch,vict,level,learn);
-      sanctuary(ch,vict,level,learn);
-      stoneSkin(ch,vict,level,learn);
+    case LIQ_POT_MULTI10:  // blind, sanc, stone skin
+      blindness(ch, vict, level, learn);
+      sanctuary(ch, vict, level, learn);
+      stoneSkin(ch, vict, level, learn);
       break;
-    case LIQ_POT_MULTI11: // heal, second wind, sterilize
-      heal(ch,vict,level,learn,SPELL_HEAL,0);
-      secondWind(ch,vict,level,learn);
-      sterilize(ch,vict,level,learn,SPELL_STERILIZE);
+    case LIQ_POT_MULTI11:  // heal, second wind, sterilize
+      heal(ch, vict, level, learn, SPELL_HEAL, 0);
+      secondWind(ch, vict, level, learn);
+      sterilize(ch, vict, level, learn, SPELL_STERILIZE);
       break;
     case LIQ_POT_YOUTH:
-      if(amt==1)
-	vict->sendTo("You feel a little younger.\n\r");
+      if (amt == 1)
+        vict->sendTo("You feel a little younger.\n\r");
       else
-	vict->sendTo("You feel much younger.\n\r");
+        vict->sendTo("You feel much younger.\n\r");
 
-      while(amt--)
-	vict->age_mod -= ::number(1, 2);
+      while (amt--)
+        vict->age_mod -= ::number(1, 2);
       break;
     case LIQ_POT_STAT:
       whichStat = statTypeT(number(0, MAX_STATS_USED - 1));
       vict->addToStat(STAT_CHOSEN, whichStat, amt);
-      
+
       switch (whichStat) {
-	case STAT_STR:
-	  vict->sendTo("You feel stronger.\n\r");
-	  break;
-	case STAT_BRA:
-	  vict->sendTo("You feel brawnier.\n\r");
-	  break;
-	case STAT_AGI:
-	  vict->sendTo("You feel more agile.\n\r");
-	  break;
-	case STAT_CON:
-	  vict->sendTo("You feel more hardy.\n\r");
-	  break;
-	case STAT_DEX:
-	  vict->sendTo("You feel more dexterous.\n\r");
-	  break;
-	case STAT_INT:
-	  vict->sendTo("You feel smarter.\n\r");
-	  break;
-	case STAT_WIS:
-	  vict->sendTo("You feel more wise.\n\r");
-	  break;
-	case STAT_FOC:
-	  vict->sendTo("You feel more focused.\n\r");
-	  break;
-	case STAT_KAR:
-	  vict->sendTo("You feel luckier.\n\r");
-	  break;
-	case STAT_CHA:
-	  vict->sendTo("You feel more charismatic.\n\r");
-	  break;
-	case STAT_SPE:
-	  vict->sendTo("You feel faster.\n\r");
-	  break;
-	case STAT_PER:
-	  vict->sendTo("You feel more perceptive.\n\r");
-	  break;
-	case STAT_LUC:
-	case STAT_EXT:
-	case MAX_STATS:
-	  vict->age_mod -= 1;
-	  vict->sendTo("You feel younger.\n\r");
-	  break;
+        case STAT_STR:
+          vict->sendTo("You feel stronger.\n\r");
+          break;
+        case STAT_BRA:
+          vict->sendTo("You feel brawnier.\n\r");
+          break;
+        case STAT_AGI:
+          vict->sendTo("You feel more agile.\n\r");
+          break;
+        case STAT_CON:
+          vict->sendTo("You feel more hardy.\n\r");
+          break;
+        case STAT_DEX:
+          vict->sendTo("You feel more dexterous.\n\r");
+          break;
+        case STAT_INT:
+          vict->sendTo("You feel smarter.\n\r");
+          break;
+        case STAT_WIS:
+          vict->sendTo("You feel more wise.\n\r");
+          break;
+        case STAT_FOC:
+          vict->sendTo("You feel more focused.\n\r");
+          break;
+        case STAT_KAR:
+          vict->sendTo("You feel luckier.\n\r");
+          break;
+        case STAT_CHA:
+          vict->sendTo("You feel more charismatic.\n\r");
+          break;
+        case STAT_SPE:
+          vict->sendTo("You feel faster.\n\r");
+          break;
+        case STAT_PER:
+          vict->sendTo("You feel more perceptive.\n\r");
+          break;
+        case STAT_LUC:
+        case STAT_EXT:
+        case MAX_STATS:
+          vict->age_mod -= 1;
+          vict->sendTo("You feel younger.\n\r");
+          break;
       }
       break;
     case LIQ_POT_LEARNING:
       for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
-	if (vict->hasClass(1<<Class)){
-	  vict->addPracs(amt, Class);
-	  break;
-	}
+        if (vict->hasClass(1 << Class)) {
+          vict->addPracs(amt, Class);
+          break;
+        }
       }
-      
+
       vict->sendTo("You feel ready to learn more.\n\r");
       break;
     case LIQ_POT_MYSTERY:
-      switch (::number(0,12)) {
-	case 1:
-	  ch->genericRestore(RESTORE_FULL);
-	  ch->sendTo("You have been healed.\n\r");
-	  break;
-	case 2:
-	  aff.type = SPELL_STONE_SKIN;
-	  aff.level = 30;
-	  aff.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
-	  aff.location = APPLY_ARMOR;
-	  aff.modifier = -75;
-	  ch->affectTo(&aff);
-	  aff.type = SPELL_STONE_SKIN;
-	  aff.level = 30;
-	  aff.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
-	  aff.location = APPLY_IMMUNITY;
-	  aff.modifier = IMMUNE_PIERCE;
-	  aff.modifier2 = 15;
-	  ch->affectTo(&aff);
-	  aff.type = AFFECT_SKILL_ATTEMPT;
-	  aff.level = 0;
-	  aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
-	  aff.location = APPLY_NONE;
-	  aff.modifier = SPELL_STONE_SKIN;
-	  ch->sendTo("Your skin becomes as hard as stone!\n\r");
-	  if (!(ch->isImmortal())) ch->affectTo(&aff);
-	  break;
-	case 10:
-	  ch->age_mod += 1;
-	  ch->sendTo("You feel a tiny bit older.\n\r");
-	  break;
-	case 3:
-	  for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
-	    if (ch->hasClass(1<<Class)) {
-	      ch->addPracs(1, Class);
-	      break;
-	    }
-	  }
-	  ch->sendTo("You feel ready to learn more.\n\r");
-	  break;
-	case 4:
-	  aff.type = SPELL_POISON;
-	  aff.level = 10;
-	  aff.duration = (20) * Pulse::UPDATES_PER_MUDHOUR;
-	  aff.modifier = -20;
-	  aff.location = APPLY_STR;
-	  aff.bitvector = AFF_POISON;
-	  ch->affectTo(&aff);	  
-	  aff.type = AFFECT_DISEASE;
-	  aff.level = 0;
-	  aff.duration = aff.duration;
-	  aff.modifier = DISEASE_POISON;
-	  aff.location = APPLY_NONE;
-	  aff.bitvector = AFF_POISON;
-	  ch->sendTo("You have been poisoned!\n\r");
-	  ch->affectTo(&aff);
-	  disease_start(ch, &aff);
-	  break;
-	case 5:
-	case 11:
-	  ch->age_mod -= 5;
-	  ch->sendTo("You feel a bit younger.\n\r");
-	  break;
-	case 6:
-	  ch->age_mod += 3;
-	  ch->sendTo("You feel a bit older.\n\r");
-	  break;
-	case 7:
-	case 8:
-	case 9:
-	  ch->age_mod -= 3;
-	  ch->sendTo("You feel a tiny bit younger.\n\r");
-	  break;
-	default:
-	  ch->sendTo("Nothing seems to have happened.\n\r");
-	  break;
+      switch (::number(0, 12)) {
+        case 1:
+          ch->genericRestore(RESTORE_FULL);
+          ch->sendTo("You have been healed.\n\r");
+          break;
+        case 2:
+          aff.type = SPELL_STONE_SKIN;
+          aff.level = 30;
+          aff.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
+          aff.location = APPLY_ARMOR;
+          aff.modifier = -75;
+          ch->affectTo(&aff);
+          aff.type = SPELL_STONE_SKIN;
+          aff.level = 30;
+          aff.duration = 8 * Pulse::UPDATES_PER_MUDHOUR;
+          aff.location = APPLY_IMMUNITY;
+          aff.modifier = IMMUNE_PIERCE;
+          aff.modifier2 = 15;
+          ch->affectTo(&aff);
+          aff.type = AFFECT_SKILL_ATTEMPT;
+          aff.level = 0;
+          aff.duration = 24 * Pulse::UPDATES_PER_MUDHOUR;
+          aff.location = APPLY_NONE;
+          aff.modifier = SPELL_STONE_SKIN;
+          ch->sendTo("Your skin becomes as hard as stone!\n\r");
+          if (!(ch->isImmortal()))
+            ch->affectTo(&aff);
+          break;
+        case 10:
+          ch->age_mod += 1;
+          ch->sendTo("You feel a tiny bit older.\n\r");
+          break;
+        case 3:
+          for (classIndT Class = MIN_CLASS_IND; Class < MAX_CLASSES; Class++) {
+            if (ch->hasClass(1 << Class)) {
+              ch->addPracs(1, Class);
+              break;
+            }
+          }
+          ch->sendTo("You feel ready to learn more.\n\r");
+          break;
+        case 4:
+          aff.type = SPELL_POISON;
+          aff.level = 10;
+          aff.duration = (20) * Pulse::UPDATES_PER_MUDHOUR;
+          aff.modifier = -20;
+          aff.location = APPLY_STR;
+          aff.bitvector = AFF_POISON;
+          ch->affectTo(&aff);
+          aff.type = AFFECT_DISEASE;
+          aff.level = 0;
+          aff.duration = aff.duration;
+          aff.modifier = DISEASE_POISON;
+          aff.location = APPLY_NONE;
+          aff.bitvector = AFF_POISON;
+          ch->sendTo("You have been poisoned!\n\r");
+          ch->affectTo(&aff);
+          disease_start(ch, &aff);
+          break;
+        case 5:
+        case 11:
+          ch->age_mod -= 5;
+          ch->sendTo("You feel a bit younger.\n\r");
+          break;
+        case 6:
+          ch->age_mod += 3;
+          ch->sendTo("You feel a bit older.\n\r");
+          break;
+        case 7:
+        case 8:
+        case 9:
+          ch->age_mod -= 3;
+          ch->sendTo("You feel a tiny bit younger.\n\r");
+          break;
+        default:
+          ch->sendTo("Nothing seems to have happened.\n\r");
+          break;
       }
       break;
     case LIQ_MAGICAL_ELIXIR:
@@ -2567,32 +2749,34 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
     case LIQ_POISON_INFANT:
     case LIQ_POISON_PEA_SEED:
     case LIQ_POISON_ACACIA:
-      if(!vict->isImmune(IMMUNE_POISON, WEAR_BODY)){
-	addPoison(aff5, liq, level, duration);
-	
-	for(i=0;i<5;++i){
-	  if(aff5[i].type != TYPE_UNDEFINED){
-	    vict->affectTo(&(aff5[i]), -1);
-	    
-	    if (aff5[i].type == AFFECT_DISEASE)
-	      disease_start(vict, &(aff5[i]));
-	  }
-	}
+      if (!vict->isImmune(IMMUNE_POISON, WEAR_BODY)) {
+        addPoison(aff5, liq, level, duration);
+
+        for (i = 0; i < 5; ++i) {
+          if (aff5[i].type != TYPE_UNDEFINED) {
+            vict->affectTo(&(aff5[i]), -1);
+
+            if (aff5[i].type == AFFECT_DISEASE)
+              disease_start(vict, &(aff5[i]));
+          }
+        }
       }
       break;
     case LIQ_POT_ENLIVEN:
-      enliven(ch,vict,level,learn);
+      enliven(ch, vict, level, learn);
       break;
     case LIQ_POT_PLASMA_MIRROR:
-      plasmaMirror(ch,level,learn);
+      plasmaMirror(ch, level, learn);
       break;
     case LIQ_POT_FILTH:
     case LIQ_GUANO:
-      ch->sendTo("Your stomach twists into a knot and you feel like wretching.\r\n");
+      ch->sendTo(
+        "Your stomach twists into a knot and you feel like wretching.\r\n");
       if (ch->hasDisease(DISEASE_DYSENTERY))
         break;
       if (::number(1, 100) <= ch->getImmunity(IMMUNE_DISEASE)) {
-        ch->sendTo("Something tries to sour your guts, but you fight it off.\r\n");
+        ch->sendTo(
+          "Something tries to sour your guts, but you fight it off.\r\n");
         break;
       }
       aff.type = AFFECT_DISEASE;
@@ -2605,18 +2789,17 @@ int doLiqSpell(TBeing *ch, TBeing *vict, liqTypeT liq, int amt)
       disease_start(ch, &aff);
       break;
     default:
-      rc=0;
+      rc = 0;
   }
 
   return rc;
 }
 
-
 // DELETE_VICT: victim
 // DELETE_THIS: caster
 // DELETE_ITEM: target
-int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, const char *, spellNumT spell)
-{
+int doObjSpell(TBeing* caster, TBeing* victim, TMagicItem* obj, TObj* target,
+  const char*, spellNumT spell) {
   int rc = 0;
 
   // define the spell being used at the global level
@@ -2625,37 +2808,39 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
 
   // validate targetting
   if (!IS_SET(discArray[spell]->targets, TAR_IGNORE | TAR_AREA)) {
-
     if (!victim && !target) {
-      vlogf(LOG_BUG, format("Bad targetting in doObjSpell() %d") %  spell);
+      vlogf(LOG_BUG, format("Bad targetting in doObjSpell() %d") % spell);
       return 0;
     }
 
     // invoked on a being
     // recite, use staff (non-area), use wand, quaff
-    if (victim && 
-        !IS_SET(discArray[spell]->targets, TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)) {
+    if (victim &&
+        !IS_SET(discArray[spell]->targets,
+          TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)) {
       // tried to invoke on being, not designed for that
       caster->sendTo(COLOR_BASIC, format("You can not invoke '%s' on %s.\n\r") %
-          discArray[spell]->name % victim->getName());
+                                    discArray[spell]->name % victim->getName());
       return 0;
     }
 
     // invoked on an obj
     // recite, use wand
-    if (target && 
-        !IS_SET(discArray[spell]->targets, TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_OBJ_ROOM | TAR_OBJ_WORLD)) {
+    if (target &&
+        !IS_SET(discArray[spell]->targets,
+          TAR_OBJ_INV | TAR_OBJ_EQUIP | TAR_OBJ_ROOM | TAR_OBJ_WORLD)) {
       // tried to invoke on being, not designed for that
       caster->sendTo(COLOR_BASIC, format("You can not invoke '%s' on %s.\n\r") %
-          discArray[spell]->name % target->getName());
+                                    discArray[spell]->name % target->getName());
       return 0;
     }
   }
 
-  // check noharm - otherwise players can use this item to get around noharm checks
+  // check noharm - otherwise players can use this item to get around noharm
+  // checks
   if (victim && SPELL_GUST <= spell && spell <= MAX_SKILL &&
-    (spell != SPELL_SLUMBER || !toggleInfo[TOG_SLEEP]->toggle) &&
-    discArray[spell]->targets & TAR_VIOLENT && caster->noHarmCheck(victim))
+      (spell != SPELL_SLUMBER || !toggleInfo[TOG_SLEEP]->toggle) &&
+      discArray[spell]->targets & TAR_VIOLENT && caster->noHarmCheck(victim))
     return 0;
 
   switch (spell) {
@@ -2663,122 +2848,122 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       rc = gust(caster, victim, obj);
       break;
     case SPELL_TORNADO:
-      tornado(caster,obj);
+      tornado(caster, obj);
       break;
     case SPELL_SUFFOCATE:
-      suffocate(caster,victim,obj);
+      suffocate(caster, victim, obj);
       break;
     case SPELL_FEATHERY_DESCENT:
-      featheryDescent(caster,victim,obj);
+      featheryDescent(caster, victim, obj);
       break;
     case SPELL_FALCON_WINGS:
-      falconWings(caster,victim,obj);
+      falconWings(caster, victim, obj);
       break;
     case SPELL_FLY:
-      fly(caster,victim,obj);
+      fly(caster, victim, obj);
       break;
     case SPELL_ILLUMINATE:
-      illuminate(caster,obj,target);
+      illuminate(caster, obj, target);
       break;
     case SPELL_IDENTIFY:
       if (target) {
-        identify(caster,target, obj);
+        identify(caster, target, obj);
       } else {
-        identify(caster,victim,obj);
+        identify(caster, victim, obj);
       }
       break;
     case SPELL_DETECT_MAGIC:
-      detectMagic(caster,victim,obj);
+      detectMagic(caster, victim, obj);
       break;
     case SPELL_DISPEL_MAGIC:
-      if (target) 
-        dispelMagic(caster,target,obj);
+      if (target)
+        dispelMagic(caster, target, obj);
       else
-        rc = dispelMagic(caster,victim,obj);
+        rc = dispelMagic(caster, victim, obj);
       break;
     case SPELL_COPY:
-      copy(caster,obj,target);
+      copy(caster, obj, target);
       break;
     case SPELL_ENHANCE_WEAPON:
-      rc = enhanceWeapon(caster,obj,target);
+      rc = enhanceWeapon(caster, obj, target);
       break;
     case SPELL_METEOR_SWARM:
-      rc = meteorSwarm(caster,victim,obj);
+      rc = meteorSwarm(caster, victim, obj);
       break;
     case SPELL_PROTECTION_FROM_AIR:
-      protectionFromAir(caster,victim,obj);
+      protectionFromAir(caster, victim, obj);
       break;
     case SPELL_CHASE_SPIRIT:
-      if (target) 
-        chaseSpirits(caster,target,obj);
+      if (target)
+        chaseSpirits(caster, target, obj);
       else
-        rc = chaseSpirits(caster,victim,obj);
+        rc = chaseSpirits(caster, victim, obj);
       break;
     case SPELL_DJALLA:
-      djallasProtection(caster,victim,obj);
+      djallasProtection(caster, victim, obj);
       break;
     case SPELL_LEGBA:
-      legbasGuidance(caster,victim,obj);
+      legbasGuidance(caster, victim, obj);
       break;
     case SPELL_PROTECTION_FROM_EARTH:
-      protectionFromEarth(caster,victim,obj);
+      protectionFromEarth(caster, victim, obj);
       break;
     case SPELL_PROTECTION_FROM_ELEMENTS:
-      protectionFromElements(caster,victim,obj);
+      protectionFromElements(caster, victim, obj);
       break;
     case SPELL_PROTECTION_FROM_FIRE:
-      protectionFromFire(caster,victim,obj);
+      protectionFromFire(caster, victim, obj);
       break;
     case SPELL_PROTECTION_FROM_WATER:
-      protectionFromWater(caster,victim,obj);
+      protectionFromWater(caster, victim, obj);
       break;
     case SPELL_STONE_SKIN:
-      stoneSkin(caster,victim,obj);
+      stoneSkin(caster, victim, obj);
       break;
     case SPELL_TRAIL_SEEK:
-      trailSeek(caster,victim,obj);
+      trailSeek(caster, victim, obj);
       break;
     case SPELL_HANDS_OF_FLAME:
-      rc = handsOfFlame(caster,victim,obj);
+      rc = handsOfFlame(caster, victim, obj);
       break;
     case SPELL_HELLFIRE:
-      hellfire(caster,obj);
+      hellfire(caster, obj);
       break;
     case SPELL_FAERIE_FIRE:
-      faerieFire(caster,victim,obj);
+      faerieFire(caster, victim, obj);
       break;
     case SPELL_FIREBALL:
-      rc = fireball(caster,obj);
+      rc = fireball(caster, obj);
       break;
     case SPELL_FLAMING_FLESH:
-      flamingFlesh(caster,victim,obj);
+      flamingFlesh(caster, victim, obj);
       break;
     case SPELL_FLAMING_SWORD:
-      rc = flamingSword(caster,victim,obj);
+      rc = flamingSword(caster, victim, obj);
       break;
     case SPELL_INFERNO:
-      rc = inferno(caster,victim,obj);
+      rc = inferno(caster, victim, obj);
       break;
     case SPELL_INFRAVISION:
-      infravision(caster,victim,obj);
+      infravision(caster, victim, obj);
       break;
     case SPELL_GUSHER:
-      rc = gusher(caster,victim,obj);
+      rc = gusher(caster, victim, obj);
       break;
     case SPELL_AQUATIC_BLAST:
-      rc = aquaticBlast(caster,victim,obj);
+      rc = aquaticBlast(caster, victim, obj);
       break;
     case SPELL_CARDIAC_STRESS:
-      rc = cardiacStress(caster,victim,obj);
+      rc = cardiacStress(caster, victim, obj);
       break;
     case SPELL_ARCTIC_BLAST:
-      rc = arcticBlast(caster,obj);
+      rc = arcticBlast(caster, obj);
       break;
     case SPELL_ICY_GRIP:
-      rc = icyGrip(caster,victim,obj);
+      rc = icyGrip(caster, victim, obj);
       break;
     case SPELL_ICE_STORM:
-      rc = iceStorm(caster,obj);
+      rc = iceStorm(caster, obj);
       break;
     case SPELL_PLASMA_MIRROR:
       // intentionally prohibited - too powerful
@@ -2787,58 +2972,58 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       // intentionally prohibited - too powerful
       break;
     case SPELL_GILLS_OF_FLESH:
-      gillsOfFlesh(caster,victim,obj);
+      gillsOfFlesh(caster, victim, obj);
       break;
     case SPELL_AQUALUNG:
-      aqualung(caster,victim,obj);
+      aqualung(caster, victim, obj);
       break;
     case SPELL_MYSTIC_DARTS:
-      rc = mysticDarts(caster,victim,obj);
+      rc = mysticDarts(caster, victim, obj);
       break;
     case SPELL_STICKS_TO_SNAKES:
-      sticksToSnakes(caster,victim,obj);
+      sticksToSnakes(caster, victim, obj);
       break;
     case SPELL_STUPIDITY:
-      stupidity(caster,victim,obj);
+      stupidity(caster, victim, obj);
       break;
     case SPELL_DISTORT:
-      rc = distort(caster,victim,obj);
+      rc = distort(caster, victim, obj);
       break;
     case SPELL_DEATHWAVE:
-      rc = deathWave(caster,victim,obj);
+      rc = deathWave(caster, victim, obj);
       break;
     case SPELL_FLARE:
-      rc = flare(caster,obj);
+      rc = flare(caster, obj);
       break;
     case SPELL_STUNNING_ARROW:
-      rc = stunningArrow(caster,victim,obj);
+      rc = stunningArrow(caster, victim, obj);
       break;
     case SPELL_SOUL_TWIST:
-      rc = soulTwist(caster,victim,obj);
+      rc = soulTwist(caster, victim, obj);
       break;
     case SPELL_COLOR_SPRAY:
-      rc = colorSpray(caster,obj);
+      rc = colorSpray(caster, obj);
       break;
     case SPELL_SORCERERS_GLOBE:
-      sorcerersGlobe(caster,victim,obj);
+      sorcerersGlobe(caster, victim, obj);
       break;
     case SPELL_BIND:
-      bind(caster,victim,obj);
+      bind(caster, victim, obj);
       break;
     case SPELL_TELEPORT:
-      rc = teleport(caster,victim,obj);
+      rc = teleport(caster, victim, obj);
       break;
     case SPELL_SENSE_LIFE:
-      senseLife(caster,victim,obj);
+      senseLife(caster, victim, obj);
       break;
     case SPELL_SENSE_LIFE_SHAMAN:
-      senseLifeShaman(caster,victim,obj);
+      senseLifeShaman(caster, victim, obj);
       break;
     case SPELL_STEALTH:
-      stealth(caster,victim,obj);
+      stealth(caster, victim, obj);
       break;
     case SPELL_ENSORCER:
-      ensorcer(caster,victim,obj);
+      ensorcer(caster, victim, obj);
       break;
     case SPELL_INVISIBILITY:
       if (target) {
@@ -2855,40 +3040,40 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       }
       break;
     case SPELL_DETECT_INVISIBLE:
-      detectInvisibility(caster,victim,obj);
+      detectInvisibility(caster, victim, obj);
       break;
     case SPELL_DETECT_SHADOW:
-      detectShadow(caster,victim,obj);
+      detectShadow(caster, victim, obj);
       break;
     case SPELL_TRUE_SIGHT:
-      trueSight(caster,victim,obj);
+      trueSight(caster, victim, obj);
       break;
     case SPELL_GARMULS_TAIL:
-      garmulsTail(caster,victim,obj);
+      garmulsTail(caster, victim, obj);
       break;
     case SPELL_ACCELERATE:
-      accelerate(caster,victim,obj);
+      accelerate(caster, victim, obj);
       break;
-    case SPELL_CHEVAL: // shaman
-      cheval(caster,victim,obj);
+    case SPELL_CHEVAL:  // shaman
+      cheval(caster, victim, obj);
       break;
-    case SPELL_CELERITE: // shaman
-      celerite(caster,victim,obj);
+    case SPELL_CELERITE:  // shaman
+      celerite(caster, victim, obj);
       break;
     case SPELL_HASTE:
-      haste(caster,victim,obj);
+      haste(caster, victim, obj);
       break;
     case SPELL_SLUMBER:
-      rc = slumber(caster,victim,obj);
+      rc = slumber(caster, victim, obj);
       break;
     case SPELL_SPONTANEOUS_COMBUST:
-      spontaneousCombust(caster,victim,obj);
+      spontaneousCombust(caster, victim, obj);
       break;
     case SPELL_PILLAR_SALT:
-      pillarOfSalt(caster,victim,obj);
+      pillarOfSalt(caster, victim, obj);
       break;
     case SPELL_RAIN_BRIMSTONE:
-      rainBrimstone(caster,victim,obj, spell);
+      rainBrimstone(caster, victim, obj, spell);
       break;
     case SPELL_HEROES_FEAST:
       heroesFeast(caster);
@@ -2900,57 +3085,57 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       levitate(caster, victim);
       break;
     case SPELL_FLAMESTRIKE:
-      flamestrike(caster,victim,obj);
+      flamestrike(caster, victim, obj);
       break;
     case SPELL_PLAGUE_LOCUSTS:
-      plagueOfLocusts(caster,victim,obj);
+      plagueOfLocusts(caster, victim, obj);
       break;
     case SPELL_CURSE_DEIKHAN:
     case SPELL_CURSE:
       if (target) {
-        curse(caster,target,obj, spell);
+        curse(caster, target, obj, spell);
       } else {
-        curse(caster,victim,obj, spell);
+        curse(caster, victim, obj, spell);
       }
       break;
     case SPELL_EARTHQUAKE:
-      rc = earthquake(caster,obj, spell);
+      rc = earthquake(caster, obj, spell);
       break;
     case SPELL_CALL_LIGHTNING:
-      rc = callLightning(caster,victim,obj, spell);
+      rc = callLightning(caster, victim, obj, spell);
       break;
     case SPELL_HEAL_LIGHT:
     case SPELL_HEAL_LIGHT_DEIKHAN:
-      healLight(caster,victim,obj, spell);
+      healLight(caster, victim, obj, spell);
       break;
     case SPELL_HEAL_SERIOUS:
     case SPELL_HEAL_SERIOUS_DEIKHAN:
-      healSerious(caster,victim,obj, spell);
+      healSerious(caster, victim, obj, spell);
       break;
     case SPELL_HEAL_CRITICAL:
     case SPELL_HEAL_CRITICAL_DEIKHAN:
-      healCritical(caster,victim,obj, spell);
+      healCritical(caster, victim, obj, spell);
       break;
     case SPELL_HEAL:
-      heal(caster,victim,obj, SPELL_HEAL);
+      heal(caster, victim, obj, SPELL_HEAL);
       break;
     case SPELL_HEAL_FULL:
-      healFull(caster,victim,obj);
+      healFull(caster, victim, obj);
       break;
     case SPELL_RESTORE_LIMB:
-      restoreLimb(caster,victim,obj);
+      restoreLimb(caster, victim, obj);
       break;
     case SPELL_CLOT:
     case SPELL_CLOT_DEIKHAN:
-      clot(caster,victim,obj, spell);
+      clot(caster, victim, obj, spell);
       break;
     case SPELL_STERILIZE:
     case SPELL_STERILIZE_DEIKHAN:
-      sterilize(caster,victim,obj, spell);
+      sterilize(caster, victim, obj, spell);
       break;
     case SPELL_SALVE:
     case SPELL_SALVE_DEIKHAN:
-      salve(caster,victim,obj, spell);
+      salve(caster, victim, obj, spell);
       break;
     case SPELL_HEAL_CRITICAL_SPRAY:
       healCritSpray(caster, obj);
@@ -2962,173 +3147,173 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
       healFullSpray(caster, obj);
       break;
     case SPELL_KNIT_BONE:
-      knitBone(caster,victim,obj);
+      knitBone(caster, victim, obj);
       break;
     case SPELL_EXPEL:
     case SPELL_EXPEL_DEIKHAN:
-      expel(caster,victim,obj, spell);
+      expel(caster, victim, obj, spell);
       break;
     case SPELL_BLEED:
-      rc = bleed(caster,victim,obj);
+      rc = bleed(caster, victim, obj);
       break;
     case SPELL_BONE_BREAKER:
-      rc = boneBreaker(caster,victim,obj);
+      rc = boneBreaker(caster, victim, obj);
       break;
     case SPELL_PARALYZE:
-      paralyze(caster,victim,obj);
+      paralyze(caster, victim, obj);
       break;
     case SPELL_POISON_DEIKHAN:
     case SPELL_POISON:
       if (target)
-        poison(caster,target,obj, spell);
+        poison(caster, target, obj, spell);
       else if (victim)
-        poison(caster,victim,obj, spell);
+        poison(caster, victim, obj, spell);
       else
         vlogf(LOG_BUG, "doObjSpell:poison had bogus targets");
       break;
     case SPELL_BLINDNESS:
-      blindness(caster,victim,obj);
+      blindness(caster, victim, obj);
       break;
     case SPELL_HARM_DEIKHAN:
     case SPELL_HARM:
-      harm(caster,victim,obj, spell);
+      harm(caster, victim, obj, spell);
       break;
     case SPELL_HARM_LIGHT_DEIKHAN:
     case SPELL_HARM_LIGHT:
-      harmLight(caster,victim,obj, spell);
+      harmLight(caster, victim, obj, spell);
       break;
     case SPELL_HARM_SERIOUS_DEIKHAN:
     case SPELL_HARM_SERIOUS:
-      harmSerious(caster,victim,obj, spell);
+      harmSerious(caster, victim, obj, spell);
       break;
     case SPELL_HARM_CRITICAL_DEIKHAN:
     case SPELL_HARM_CRITICAL:
-      harmCritical(caster,victim,obj, spell);
+      harmCritical(caster, victim, obj, spell);
       break;
     case SPELL_PARALYZE_LIMB:
-      rc = paralyzeLimb(caster,victim,obj);
+      rc = paralyzeLimb(caster, victim, obj);
       break;
     case SPELL_WITHER_LIMB:
-      rc = witherLimb(caster,victim,obj);
+      rc = witherLimb(caster, victim, obj);
       break;
     case SPELL_INFECT_DEIKHAN:
     case SPELL_INFECT:
-      infect(caster,victim,obj, spell);
+      infect(caster, victim, obj, spell);
       break;
     case SPELL_DISEASE:
-      disease(caster,victim,obj);
+      disease(caster, victim, obj);
       break;
     case SPELL_NUMB_DEIKHAN:
     case SPELL_NUMB:
-      rc = numb(caster,victim,obj, spell);
+      rc = numb(caster, victim, obj, spell);
       break;
     case SPELL_WORD_OF_RECALL:
-      wordOfRecall(caster,victim,obj);
+      wordOfRecall(caster, victim, obj);
       break;
     case SPELL_BLESS:
     case SPELL_BLESS_DEIKHAN:
       if (target) {
-        bless(caster,target,obj, spell);
+        bless(caster, target, obj, spell);
       } else {
-        bless(caster,victim,obj, spell);
+        bless(caster, victim, obj, spell);
       }
       break;
     case SPELL_ARMOR:
     case SPELL_ARMOR_DEIKHAN:
-      armor(caster,victim,obj, spell);
+      armor(caster, victim, obj, spell);
       break;
     case SPELL_SANCTUARY:
-      sanctuary(caster,victim,obj);
+      sanctuary(caster, victim, obj);
       break;
     case SPELL_REMOVE_CURSE:
     case SPELL_REMOVE_CURSE_DEIKHAN:
       if (target) {
-        caster->removeCurseObj(target,obj, spell);
+        caster->removeCurseObj(target, obj, spell);
       } else {
-        caster->removeCurseBeing(victim,obj,spell);
+        caster->removeCurseBeing(victim, obj, spell);
       }
       break;
     case SPELL_CURE_PARALYSIS:
-      cureParalysis(caster,victim,obj);
+      cureParalysis(caster, victim, obj);
       break;
     case SPELL_CURE_DISEASE:
     case SPELL_CURE_DISEASE_DEIKHAN:
-      cureDisease(caster,victim,obj, spell);
+      cureDisease(caster, victim, obj, spell);
       break;
     case SPELL_CURE_POISON:
     case SPELL_CURE_POISON_DEIKHAN:
-      curePoison(caster,victim,obj, spell);
+      curePoison(caster, victim, obj, spell);
       break;
     case SPELL_CLEANSE:
       //      cleanse(caster,victim,obj, spell);
-      cleanse(caster,victim,obj);
+      cleanse(caster, victim, obj);
       break;
     case SPELL_CURE_BLINDNESS:
-      cureBlindness(caster,victim,obj);
+      cureBlindness(caster, victim, obj);
       break;
     case SPELL_REFRESH:
     case SPELL_REFRESH_DEIKHAN:
-      refresh(caster,victim,obj, spell);
+      refresh(caster, victim, obj, spell);
       break;
     case SPELL_SECOND_WIND:
-      secondWind(caster,victim,obj);
+      secondWind(caster, victim, obj);
       break;
     case SPELL_SHIELD_OF_MISTS:
-      shieldOfMists(caster,victim,obj);
+      shieldOfMists(caster, victim, obj);
       break;
     case SPELL_CONTROL_UNDEAD:
-      controlUndead(caster,victim,obj);
+      controlUndead(caster, victim, obj);
       break;
     case SPELL_SHADOW_WALK:
-      shadowWalk(caster,victim,obj);
+      shadowWalk(caster, victim, obj);
       break;
     case SPELL_ENLIVEN:
-      enliven(caster,victim,obj);
+      enliven(caster, victim, obj);
       break;
     case SPELL_HEALING_GRASP:
-      healingGrasp(caster,victim,obj, spell);
+      healingGrasp(caster, victim, obj, spell);
       break;
     case SPELL_RESURRECTION:
-      resurrection(caster,obj);
+      resurrection(caster, obj);
       break;
     case SPELL_DANCING_BONES:
-      dancingBones(caster,obj);
+      dancingBones(caster, obj);
       break;
     case SPELL_VOODOO:
-      voodoo(caster,obj);
+      voodoo(caster, obj);
       break;
     case SKILL_BARKSKIN:
-      barkskin(caster,victim,obj);
+      barkskin(caster, victim, obj);
       break;
     case SPELL_RAZE:
-      rc = raze(caster,victim,obj);
+      rc = raze(caster, victim, obj);
       break;
     case SPELL_LICH_TOUCH:
-      rc = lichTouch(caster,victim,obj);
+      rc = lichTouch(caster, victim, obj);
       break;
     case SPELL_VAMPIRIC_TOUCH:
-      rc = vampiricTouch(caster,victim,obj);
+      rc = vampiricTouch(caster, victim, obj);
       break;
     case SPELL_HYPNOSIS:
-      hypnosis(caster,victim,obj);
+      hypnosis(caster, victim, obj);
       break;
     case SPELL_BLOOD_BOIL:
       rc = bloodBoil(caster, victim, obj);
       break;
     case SPELL_CLARITY:
-      clarity(caster,victim,obj);
+      clarity(caster, victim, obj);
       break;
     case SPELL_LIVING_VINES:
-      livingVines(caster,victim,obj);
+      livingVines(caster, victim, obj);
       break;
     case SPELL_STORMY_SKIES:
-      stormySkies(caster,victim,obj);
+      stormySkies(caster, victim, obj);
       break;
     case SPELL_ATOMIZE:
-      rc = atomize(caster,victim,obj);
+      rc = atomize(caster, victim, obj);
       break;
     case SPELL_ENERGY_DRAIN:
-      rc = energyDrain(caster,victim,obj);
+      rc = energyDrain(caster, victim, obj);
       break;
     case SPELL_BLAST_OF_FURY:
       rc = blastOfFury(caster, victim, obj);
@@ -3142,26 +3327,25 @@ int doObjSpell(TBeing *caster, TBeing *victim, TMagicItem *obj, TObj *target, co
     case SPELL_DIVINATION:
       if (!target) {
         divinationBeing(caster, victim, obj);
-      } else 
+      } else
         divinationObj(caster, target, obj);
       break;
     default:
-      vlogf(LOG_BUG,format("Object (%s) with uncoded spell (%d)!") %  obj->getName() % spell);
+      vlogf(LOG_BUG, format("Object (%s) with uncoded spell (%d)!") %
+                       obj->getName() % spell);
       break;
   }
   return rc;
 }
 
-int TThing::reciteMe(TBeing *ch, const char *)
-{
+int TThing::reciteMe(TBeing* ch, const char*) {
   act("Recite is normally used for scrolls.", FALSE, ch, 0, 0, TO_CHAR);
   return FALSE;
 }
 
-int TBeing::doRecite(const char *argument)
-{
+int TBeing::doRecite(const char* argument) {
   char buf[100];
-  TThing *t;
+  TThing* t;
   int rc;
 
   argument = one_argument(argument, buf, cElements(buf));
@@ -3197,10 +3381,9 @@ int TBeing::doRecite(const char *argument)
   return FALSE;
 }
 
-int TScroll::reciteMe(TBeing *ch, const char * argument)
-{
-  TObj *obj = NULL;
-  TBeing *victim = NULL;
+int TScroll::reciteMe(TBeing* ch, const char* argument) {
+  TObj* obj = NULL;
+  TBeing* victim = NULL;
   int i, bits, rc;
 
   if (ch->isAffected(AFF_SILENT)) {
@@ -3208,7 +3391,9 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
     return FALSE;
   }
 
-  bits = generic_find(argument, FIND_CHAR_ROOM | FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, ch, &victim, &obj);
+  bits = generic_find(argument,
+    FIND_CHAR_ROOM | FIND_OBJ_INV | FIND_OBJ_ROOM | FIND_OBJ_EQUIP, ch, &victim,
+    &obj);
 
   if (!bits) {
     if (!ch->fight() || !ch->sameRoom(*ch->fight())) {
@@ -3219,40 +3404,41 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
     bits = FIND_CHAR_ROOM;
   }
 
-  act("$n recites $p which is consumed by the powers it unleashes.",
-       TRUE, ch, this, 0, TO_ROOM);
-  act("You recite $p which is consumed by the powers it unleashes.",
-       FALSE, ch, this, 0, TO_CHAR);
+  act("$n recites $p which is consumed by the powers it unleashes.", TRUE, ch,
+    this, 0, TO_ROOM);
+  act("You recite $p which is consumed by the powers it unleashes.", FALSE, ch,
+    this, 0, TO_CHAR);
 
-
-  int skill=ch->getSkillValue(SKILL_READ_MAGIC);
-  if(ch->hasClass(CLASS_MAGE))
-    skill=max(skill+50, 100);
+  int skill = ch->getSkillValue(SKILL_READ_MAGIC);
+  if (ch->hasClass(CLASS_MAGE))
+    skill = max(skill + 50, 100);
 
   if (!ch->bSuccess(SKILL_READ_MAGIC)) {
     ch->sendTo("You flub the words and the spell does not fire.\n\r");
     return DELETE_THIS;
   }
-  
-  lag_t max_lag=LAG_0;
 
-  for (i = 0; i < 3; i++)  {
+  lag_t max_lag = LAG_0;
+
+  for (i = 0; i < 3; i++) {
     spellNumT the_spell = getSpell(i);
     if (the_spell >= MIN_SPELL) {
       if (!discArray[the_spell]) {
-        vlogf(LOG_BUG,format("doRecite called spell (%d) that doesnt exist! - Don't do that!") %  the_spell);
+        vlogf(LOG_BUG,
+          format(
+            "doRecite called spell (%d) that doesnt exist! - Don't do that!") %
+            the_spell);
         continue;
       }
       if ((discArray[the_spell]->targets & TAR_VIOLENT) &&
           ch->checkPeaceful("Impolite magic is banned here.\n\r"))
         continue;
 
-      if(max_lag<discArray[the_spell]->lag)
-	max_lag=discArray[the_spell]->lag;
-      
+      if (max_lag < discArray[the_spell]->lag)
+        max_lag = discArray[the_spell]->lag;
 
       setLocked(true);
-      rc=doObjSpell(ch,victim,this,obj,argument,the_spell);
+      rc = doObjSpell(ch, victim, this, obj, argument, the_spell);
       setLocked(false);
       if (IS_SET_DELETE(rc, DELETE_VICT) && victim != ch) {
         delete victim;
@@ -3276,20 +3462,19 @@ int TScroll::reciteMe(TBeing *ch, const char * argument)
   if (equippedBy)
     ch->unequip(ch->getPrimaryHold());
 
-  ch->addToWait(combatRound(max_lag+2));
+  ch->addToWait(combatRound(max_lag + 2));
 
   return DELETE_THIS;
 }
 
 // returns DELETE_THIS if this should be toasted.
-int TBeing::doUse(sstring argument)
-{
+int TBeing::doUse(sstring argument) {
   sstring buf;
   int rc;
 
   argument = one_argument(argument, buf);
 
-  TThing *t = NULL;
+  TThing* t = NULL;
   if (!t) {
     t = heldInPrimHand();
     if (t && !isname(buf, t->name))
@@ -3308,7 +3493,7 @@ int TBeing::doUse(sstring argument)
         continue;
       if (!isname(buf, t->name))
         continue;
-      TArmorWand * taw = dynamic_cast<TArmorWand *>(t);
+      TArmorWand* taw = dynamic_cast<TArmorWand*>(t);
       if (!taw)
         continue;
       break;
@@ -3322,7 +3507,7 @@ int TBeing::doUse(sstring argument)
     sendTo("Mounts can't use stuff...\n\r");
     return FALSE;
   }
-  setQuaffUse(TRUE); // just tells bSuccess its a staff
+  setQuaffUse(TRUE);  // just tells bSuccess its a staff
   rc = t->useMe(this, argument.c_str());
   setQuaffUse(FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -3339,32 +3524,34 @@ int TBeing::doUse(sstring argument)
   return FALSE;
 }
 
-void TBeing::doLight(const sstring & argument)
-{
-  TThing *t = NULL;
+void TBeing::doLight(const sstring& argument) {
+  TThing* t = NULL;
   char tmpname[256], *tmp;
   bool roomOnly, heldOnly;
   int num;
   sstring arg1, arg2;
 
-  arg1=argument.word(0);
-  arg2=argument.word(1);
+  arg1 = argument.word(0);
+  arg2 = argument.word(1);
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
-  
+
   // WARNING: the room and equipped lists do not stack
-  // meaning that if there are 2 lanterns in the room and 2 equipped, light 4.lantern will not find any lantern.
-  // thus the room and held arguments are needed, and supplying a numbered 1st arg without a 2nd arg can produce odd results.
-  // one could write a routine to count objects in the linked list, but perhaps one would then want to reconcile seen vs unseen objects for non-lights.
+  // meaning that if there are 2 lanterns in the room and 2 equipped,
+  // light 4.lantern will not find any lantern. thus the room and held arguments
+  // are needed, and supplying a numbered 1st arg without a 2nd arg can produce
+  // odd results. one could write a routine to count objects in the linked list,
+  // but perhaps one would then want to reconcile seen vs unseen objects for
+  // non-lights.
   roomOnly = is_abbrev(arg2, "room");
   heldOnly = is_abbrev(arg2, "held");
-  
+
   if (arg1.empty()) {
     sendTo("Light what?\n\r");
     return;
   }
-  
+
   if (!(num = get_number(&tmp)))
     return;
 
@@ -3376,10 +3563,10 @@ void TBeing::doLight(const sstring & argument)
       return;
     }
   }
-  
+
   if (!t) {
     // check eq
-    int stack_num = 1; // keep track of which object they are trying to light
+    int stack_num = 1;  // keep track of which object they are trying to light
     for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
       if ((t = equipment[i]) && isname(tmp, t->name)) {
         // keep looking unless name and number argument match
@@ -3389,11 +3576,11 @@ void TBeing::doLight(const sstring & argument)
         } else {
           // don't allow the burning of the clothes on your back -
           // so, if the item is equipped, it can only be lit if it is a light
-          if (dynamic_cast<TLight *>(t) ||
-	      dynamic_cast<TDrugContainer *>(t)){
+          if (dynamic_cast<TLight*>(t) || dynamic_cast<TDrugContainer*>(t)) {
             t->lightMe(this, SILENT_NO);
           } else {
-            act("You cannot light $p while equipped.", FALSE, this, t, 0, TO_CHAR);
+            act("You cannot light $p while equipped.", FALSE, this, t, 0,
+              TO_CHAR);
           }
           return;
         }
@@ -3404,59 +3591,53 @@ void TBeing::doLight(const sstring & argument)
   } else {
     t->lightMe(this, SILENT_NO);
   }
-  
 }
 
-void TObj::setBurning(TBeing *ch){
-  if(dynamic_cast<TPCorpse *>(this))
+void TObj::setBurning(TBeing* ch) {
+  if (dynamic_cast<TPCorpse*>(this))
     return;
 
-  if(!isObjStat(ITEM_BURNING)){
+  if (!isObjStat(ITEM_BURNING)) {
     addObjStat(ITEM_BURNING);
 
-    if(isObjStat(ITEM_CHARRED))
+    if (isObjStat(ITEM_CHARRED))
       remObjStat(ITEM_CHARRED);
-
   }
 }
 
-void TObj::remBurning(TBeing *ch){
-  if(isObjStat(ITEM_BURNING)){
+void TObj::remBurning(TBeing* ch) {
+  if (isObjStat(ITEM_BURNING)) {
     remObjStat(ITEM_BURNING);
-    if(material_nums[getMaterial()].flammability &&
-       !isObjStat(ITEM_CHARRED))
+    if (material_nums[getMaterial()].flammability && !isObjStat(ITEM_CHARRED))
       addObjStat(ITEM_CHARRED);
-
   }
 }
 
-void TThing::extinguishMe(TBeing *ch)
-{
-  TObj *o;
+void TThing::extinguishMe(TBeing* ch) {
+  TObj* o;
 
-  if (!(o=dynamic_cast<TObj *>(this)) || !o->isObjStat(ITEM_BURNING)) {
+  if (!(o = dynamic_cast<TObj*>(this)) || !o->isObjStat(ITEM_BURNING)) {
     ch->sendTo("You begin to extinguish yourself.\n\r");
     act("You stop, drop, and roll on the ground.", FALSE, ch, 0, 0, TO_CHAR);
     act("$n stops, drops, and rolls on the ground.", FALSE, ch, 0, 0, TO_ROOM);
     start_task(ch, 0, 0, TASK_EXTINGUISH_MY_ASS, "", 2, ch->inRoom(), 0, 0, 5);
   } else {
     o->remBurning(ch);
-    act("You extinguish $p, and it smolders slightly before going out.",  
-	FALSE, ch, o, 0, TO_CHAR);
-    act("$n extinguishes $p, and it smolders slightly before going out.",
-	FALSE, ch, o, 0, TO_ROOM);
+    act("You extinguish $p, and it smolders slightly before going out.", FALSE,
+      ch, o, 0, TO_CHAR);
+    act("$n extinguishes $p, and it smolders slightly before going out.", FALSE,
+      ch, o, 0, TO_ROOM);
   }
 }
 
-void TBeing::doExtinguish(const sstring & argument)
-{
-  TThing *t = NULL;
+void TBeing::doExtinguish(const sstring& argument) {
+  TThing* t = NULL;
   char tmpname[256], *tmp;
   int num;
   sstring arg1, arg2;
 
-  arg1=argument.word(0);
-  arg2=argument.word(1);
+  arg1 = argument.word(0);
+  arg2 = argument.word(1);
 
   strcpy(tmpname, arg1.c_str());
   tmp = tmpname;
@@ -3473,7 +3654,7 @@ void TBeing::doExtinguish(const sstring & argument)
     sendTo("Extinguish what?\n\r");
     return;
   }
-  
+
   if (!(num = get_number(&tmp)))
     return;
 
@@ -3485,10 +3666,11 @@ void TBeing::doExtinguish(const sstring & argument)
       return;
     }
   }
-  
+
   if (!t) {
     // check eq
-    int stack_num = 1; // keep track of which object they are trying to extinguish
+    int stack_num =
+      1;  // keep track of which object they are trying to extinguish
     for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
       if ((t = equipment[i]) && isname(tmp, t->name)) {
         // keep looking unless name and number argument match
@@ -3508,33 +3690,30 @@ void TBeing::doExtinguish(const sstring & argument)
   }
 }
 
-void TThing::refuelMeLight(TBeing *ch, TThing *)
-{
+void TThing::refuelMeLight(TBeing* ch, TThing*) {
   ch->sendTo("Refueling is for lights and lamps.\n\r");
 }
 
-void TThing::refuelMeFuel(TBeing *ch, TLight *)
-{
+void TThing::refuelMeFuel(TBeing* ch, TLight*) {
   act("$p isn't a fuel!", FALSE, ch, this, NULL, TO_CHAR);
 }
 
-void TThing::refuelMeDrug(TBeing *ch, TDrugContainer *tdc)
-{
+void TThing::refuelMeDrug(TBeing* ch, TDrugContainer* tdc) {
   char buf[256];
-  sprintf(buf, "$p isn't a drug and shouldn't be put into %s.", tdc->getName().c_str());
+  sprintf(buf, "$p isn't a drug and shouldn't be put into %s.",
+    tdc->getName().c_str());
   act(buf, FALSE, ch, this, NULL, TO_CHAR);
 }
 
-void TBeing::doRefuel(const sstring &argument)
-{
-  TThing *fuel;
-  TThing *t;
+void TBeing::doRefuel(const sstring& argument) {
+  TThing* fuel;
+  TThing* t;
   sstring arg, arg2, arg3;
   int roomOnly, heldOnly;
 
-  arg=argument.word(0);
-  arg2=argument.word(1);
-  arg3=argument.word(2);
+  arg = argument.word(0);
+  arg2 = argument.word(1);
+  arg3 = argument.word(2);
 
   if (arg.empty()) {
     sendTo("Refuel what?\n\r");
@@ -3554,21 +3733,19 @@ void TBeing::doRefuel(const sstring &argument)
   roomOnly = is_abbrev(arg3, "room");
   heldOnly = is_abbrev(arg3, "held");
 
-  if (roomOnly || 
+  if (roomOnly ||
       !(t = get_thing_char_using(this, arg.c_str(), 0, FALSE, FALSE))) {
-    if (heldOnly ||
-        !(t = searchLinkedListVis(this, arg, roomp->stuff))) {
+    if (heldOnly || !(t = searchLinkedListVis(this, arg, roomp->stuff))) {
       sendTo("You can only refuel an object in the room, or held.\n\r");
       sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
       return;
     }
   }
-  // Do some checks to see if it can be refueled. 
+  // Do some checks to see if it can be refueled.
   t->refuelMeLight(this, fuel);
 }
 
-void TBeing::doStop(const sstring &tStArg)
-{
+void TBeing::doStop(const sstring& tStArg) {
   if (tStArg.empty()) {
     sendTo("Stop what?  You aren't doing anything!\n\r");
     return;
@@ -3579,22 +3756,22 @@ void TBeing::doStop(const sstring &tStArg)
     return;
   }
 
-  TBeing * tBeing = get_best_char_room(this, tStArg.c_str());
+  TBeing* tBeing = get_best_char_room(this, tStArg.c_str());
 
   if (!tBeing) {
-    sendTo(format("Whom?  You look around for '%s', but fail to find them...\n\r") %
-           tStArg);
+    sendTo(
+      format("Whom?  You look around for '%s', but fail to find them...\n\r") %
+      tStArg);
     return;
   }
 
-  if (isAffected(AFF_CHARM) ||
-      tBeing->isAffected(AFF_CHARM) ||
-      !tBeing->isPc())
+  if (isAffected(AFF_CHARM) || tBeing->isAffected(AFF_CHARM) || !tBeing->isPc())
     return;
 
-  if ((tBeing->isImmortal() &&
-      !isImmortal()) || GetMaxLevel() < tBeing->GetMaxLevel()) {
-    sendTo("You just don't have the heart, or the guts, to tell them to stop.\n\r");
+  if ((tBeing->isImmortal() && !isImmortal()) ||
+      GetMaxLevel() < tBeing->GetMaxLevel()) {
+    sendTo(
+      "You just don't have the heart, or the guts, to tell them to stop.\n\r");
     return;
   }
 
@@ -3603,17 +3780,16 @@ void TBeing::doStop(const sstring &tStArg)
     return;
   }
 
-  act("$n orders you to stop...You are forced to comply.",
-      TRUE, this, NULL, tBeing, TO_VICT);
+  act("$n orders you to stop...You are forced to comply.", TRUE, this, NULL,
+    tBeing, TO_VICT);
 
   // This just goes through the normal setup to verify that future
   // changes in the follow code are easily filtered into this.
   tBeing->doFollow("self");
 }
 
-void TBeing::doContinue(const char *argument)
-{
-#if 1 
+void TBeing::doContinue(const char* argument) {
+#if 1
   int value = 0;
   char arg[256];
   skillUseTypeT spellType;
@@ -3635,13 +3811,13 @@ void TBeing::doContinue(const char *argument)
       return;
     }
   } else if (spellType == SPELL_DANCER) {
-    if (!reconcileLifeforce(spelltask->spell, TRUE)) { 
+    if (!reconcileLifeforce(spelltask->spell, TRUE)) {
       // will need to change to lifeforce
       sendTo("You can not continue a invokation without enough lifeforce.\n\r");
       return;
     }
   }
- 
+
   if (*arg) {
     if (is_abbrev(arg, "stop") || is_abbrev(arg, "finish")) {
       sendTo(COLOR_SPELLS, "<g>You start finishing your prayer.<1>\n\r");
@@ -3649,51 +3825,63 @@ void TBeing::doContinue(const char *argument)
       REMOVE_BIT(spelltask->flags, CASTFLAG_CAST_INDEFINITE);
       return;
     }
-    value = convertTo<int>(arg);    
+    value = convertTo<int>(arg);
     if (value < 1) {
       sendTo("You can not change your prayer in this manner.\n\r");
       return;
     }
-    if ((spellType == SPELL_PRAYER) && (getPiety() < (value * usePiety(spelltask->spell)))) {
-      sendTo("You do not have the piety to continue your prayer that many times.\n\r");
+    if ((spellType == SPELL_PRAYER) &&
+        (getPiety() < (value * usePiety(spelltask->spell)))) {
+      sendTo(
+        "You do not have the piety to continue your prayer that many "
+        "times.\n\r");
       return;
-    } else if ((spellType == SPELL_CASTER) && (getMana() < (value * useMana(spelltask->spell)))) {
-      sendTo("You do not have the mana to continue your spell that many times.\n\r");
+    } else if ((spellType == SPELL_CASTER) &&
+               (getMana() < (value * useMana(spelltask->spell)))) {
+      sendTo(
+        "You do not have the mana to continue your spell that many times.\n\r");
       return;
-    } else if ((spellType == SPELL_DANCER) && (getLifeforce() < (value * useLifeforce(spelltask->spell)))) {
+    } else if ((spellType == SPELL_DANCER) &&
+               (getLifeforce() < (value * useLifeforce(spelltask->spell)))) {
       sendTo("You do not have the lifeforce to invoke that many times.\n\r");
       return;
     }
     if (IS_SET(discArray[(spelltask->spell)]->comp_types, SPELL_TASKED_EVERY)) {
       spelltask->rounds += value;
       if (!IS_SET(spelltask->flags, CASTFLAG_CAST_INDEFINITE)) {
-        sendTo(COLOR_SPELLS, format("<o>You continue your prayer for %d additional round%s (%d total round%s).<1>\n\r") %
-         value % (value != 1 ? "s" : "") %
-         spelltask->rounds % (spelltask->rounds != 1 ? "s" : ""));
+        sendTo(COLOR_SPELLS,
+          format("<o>You continue your prayer for %d additional round%s (%d "
+                 "total round%s).<1>\n\r") %
+            value % (value != 1 ? "s" : "") % spelltask->rounds %
+            (spelltask->rounds != 1 ? "s" : ""));
       } else {
-         sendTo(COLOR_SPELLS, format("<o>You add %d round%s to your indefinite prayer (%d total round%s).<1>\n\r") % 
-         value % (value != 1 ? "s" : "") %
-         spelltask->rounds % (spelltask->rounds != 1 ? "s" : ""));
-
+        sendTo(COLOR_SPELLS, format("<o>You add %d round%s to your indefinite "
+                                    "prayer (%d total round%s).<1>\n\r") %
+                               value % (value != 1 ? "s" : "") %
+                               spelltask->rounds %
+                               (spelltask->rounds != 1 ? "s" : ""));
       }
       return;
     }
     return;
-  } else if (IS_SET(discArray[(spelltask->spell)]->comp_types, SPELL_TASKED_EVERY)) {
+  } else if (IS_SET(discArray[(spelltask->spell)]->comp_types,
+               SPELL_TASKED_EVERY)) {
     if (!IS_SET(spelltask->flags, CASTFLAG_CAST_INDEFINITE)) {
-      sendTo(COLOR_SPELLS,"<B>You decide to continue your praying indefinitely.<1>\n\r");
+      sendTo(COLOR_SPELLS,
+        "<B>You decide to continue your praying indefinitely.<1>\n\r");
       SET_BIT(spelltask->flags, CASTFLAG_CAST_INDEFINITE);
     } else {
-      sendTo(COLOR_SPELLS,format("<b>You are praying indefinitely with %d rounds to go.<1>\n\r") % max(spelltask->rounds, 1));
+      sendTo(COLOR_SPELLS,
+        format("<b>You are praying indefinitely with %d rounds to go.<1>\n\r") %
+          max(spelltask->rounds, 1));
     }
   }
 #endif
 }
 
-void TBeing::doHistory()
-{
+void TBeing::doHistory() {
   int i;
-  Descriptor *d;
+  Descriptor* d;
 
   if (!(d = desc))
     return;
@@ -3710,28 +3898,26 @@ void TBeing::doHistory()
 
   sendTo("\n\rYour tell history :\n\r\n\r");
 
-  db.query("select tellfrom, tell from tellhistory where tellto='%s' order by telltime desc limit 25", getName().c_str());
+  db.query(
+    "select tellfrom, tell from tellhistory where tellto='%s' order by "
+    "telltime desc limit 25",
+    getName().c_str());
 
-  for(i=0;i<25 && db.fetchRow();i++){
-    sendTo(COLOR_BASIC, format("[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r") %
-	   i % db["tellfrom"] % db["tell"]);
+  for (i = 0; i < 25 && db.fetchRow(); i++) {
+    sendTo(COLOR_BASIC, format("[%d] <p>%s<1> told you, \"<c>%s<1>\"\n\r") % i %
+                          db["tellfrom"] % db["tell"]);
   }
-  
-
 }
 
-
-void TBeing::doDrag(TBeing *v, dirTypeT tdir)
-{
+void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
   int rc;
-  TBeing *heap_ptr[50];
+  TBeing* heap_ptr[50];
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
   int oldr, oldroom;
-  TRoom *rp;
+  TRoom* rp;
 
-  
   if (v == this) {
     sendTo("You can't drag yourself!\n\r");
     sendTo("Syntax : drag <person> <direction>\n\r");
@@ -3742,7 +3928,7 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
     return;
   }
   if (v->riding) {
-    act("You can't drag them off the $o.",TRUE,this,v->riding,0,TO_CHAR);
+    act("You can't drag them off the $o.", TRUE, this, v->riding, 0, TO_CHAR);
     return;
   }
   if (v->rider) {
@@ -3750,23 +3936,22 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
     return;
   }
 
-
   // v-weight > 5 * free carry weight
   if (compareWeights(v->getTotalWeight(TRUE),
-          (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
+        (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to drag $N out of the room but fail.",
-        TRUE, this, NULL, v, TO_CHAR);
+      TRUE, this, NULL, v, TO_CHAR);
     act("$n strains with all $s might to drag $N out of the room but fails.",
-        TRUE, this, NULL, v, TO_ROOM);
+      TRUE, this, NULL, v, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if(rc==TRUE) // not allowed to move
+  if (rc == TRUE)  // not allowed to move
     return;
 
-  // We can drag now. Do necessary checks and make it so. - Brutius 
+  // We can drag now. Do necessary checks and make it so. - Brutius
   sprintf(buf, "You drag $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, v, TO_CHAR);
   sprintf(buf, "$n drags $N %s.", dirs[tdir]);
@@ -3825,7 +4010,7 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E drags $p out of the room.");
-        act(buf, FALSE, k->follower, v, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, v, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -3863,46 +4048,45 @@ void TBeing::doDrag(TBeing *v, dirTypeT tdir)
 }
 
 // Object dragging by Peel
-void TBeing::doDrag(TObj *o, dirTypeT tdir)
-{
-  TBeing *heap_ptr[50];
+void TBeing::doDrag(TObj* o, dirTypeT tdir) {
+  TBeing* heap_ptr[50];
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
   int oldroom, oldr, rc;
-  TRoom *rp;
+  TRoom* rp;
 
-  if(!o) return;
+  if (!o)
+    return;
   if (!isImmortal()) {
-    if(!o->canWear(ITEM_WEAR_TAKE)) {
+    if (!o->canWear(ITEM_WEAR_TAKE)) {
       act("$N : You can't drag that.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }
-    if (dynamic_cast<TTrap *>(o)) {
+    if (dynamic_cast<TTrap*>(o)) {
       // drag grenade into room with shopkeeper
       act("$N : Yeah right.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }
   }
-  if(o->rider){
+  if (o->rider) {
     act("$N : Occupied.\n\r", TRUE, this, NULL, o, TO_CHAR);
     return;
   }
 
   if (compareWeights(o->getTotalWeight(TRUE),
-	      (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
+        (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to drag $N out of the room but fail.",
-	TRUE, this, NULL, o, TO_CHAR);
+      TRUE, this, NULL, o, TO_CHAR);
     act("$n strains with all $s might to drag $N out of the room but fails.",
-        TRUE, this, NULL, o, TO_ROOM);
+      TRUE, this, NULL, o, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if(rc==TRUE) // not allowed to move
+  if (rc == TRUE)  // not allowed to move
     return;
-
 
   sprintf(buf, "You drag $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, o, TO_CHAR);
@@ -3916,7 +4100,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
   *rp += *this;
   *rp += *o;
   act("$n enters the room dragging $N!", TRUE, this, NULL, o, TO_ROOM);
-  TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(o);
+  TPCorpse* tmpcorpse = dynamic_cast<TPCorpse*>(o);
   if (tmpcorpse) {
     tmpcorpse->setRoomNum(oldr);
     tmpcorpse->saveCorpseToFile();
@@ -3928,7 +4112,7 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E drags $p out of the room.");
-        act(buf, FALSE, k->follower, o, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, o, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -3960,34 +4144,32 @@ void TBeing::doDrag(TObj *o, dirTypeT tdir)
     }
   }
 
-
   doLook("", CMD_LOOK);
   addToMove(-20);
   addToWait(combatRound(1));
 }
 
-void TBeing::doDrag(const sstring &arg)
-{
+void TBeing::doDrag(const sstring& arg) {
   sstring caName, dir;
-  TBeing *v;
+  TBeing* v;
   dirTypeT tdir;
   unsigned int bits;
-  roomDirData *exitp;
-  TObj *o;
-  const char *syntax="Syntax : drag <object|person> <direction>\n\r";
+  roomDirData* exitp;
+  TObj* o;
+  const char* syntax = "Syntax : drag <object|person> <direction>\n\r";
 
-  caName=arg.word(0);
-  dir=arg.word(1);
+  caName = arg.word(0);
+  dir = arg.word(1);
 
-
-  if(caName.empty() || dir.empty()){
+  if (caName.empty() || dir.empty()) {
     sendTo(syntax);
     return;
   }
 
-  bits = generic_find(caName.c_str(), FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
+  bits =
+    generic_find(caName.c_str(), FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
 
-  if(!bits){
+  if (!bits) {
     sendTo("You see nothing by that name to drag!\n\r");
     sendTo(syntax);
     return;
@@ -4014,7 +4196,7 @@ void TBeing::doDrag(const sstring &arg)
       sendTo("Drag something with your hands full!?!\n\r");
       return;
     }
-  } 
+  }
 
   exitp = exitDir(tdir);
 
@@ -4023,12 +4205,12 @@ void TBeing::doDrag(const sstring &arg)
     sendTo(syntax);
     return;
   }
-  if (!validMove(tdir)) 
+  if (!validMove(tdir))
     return;
-  
-  if(bits==FIND_CHAR_ROOM){
+
+  if (bits == FIND_CHAR_ROOM) {
     doDrag(v, tdir);
-  } else if(bits==FIND_OBJ_ROOM){
+  } else if (bits == FIND_OBJ_ROOM) {
     doDrag(o, tdir);
   } else {
     // not reached
@@ -4038,8 +4220,7 @@ void TBeing::doDrag(const sstring &arg)
   }
 }
 
-void TBeing::doEmail(const char *arg)
-{
+void TBeing::doEmail(const char* arg) {
   char buf[256];
 
   one_argument(arg, buf, cElements(buf));
@@ -4048,42 +4229,39 @@ void TBeing::doEmail(const char *arg)
     return;
 
   if (!*buf) {
-    sendTo(format("Your present email address is: %s\n\r") % desc->account->email);
+    sendTo(
+      format("Your present email address is: %s\n\r") % desc->account->email);
     return;
   }
   if (illegalEmail(buf, desc, SILENT_NO)) {
     return;
   }
   sendTo(format("Changing email address from %s to %s.\n\r") %
-           desc->account->email % buf);
-  desc->account->email=buf;
+         desc->account->email % buf);
+  desc->account->email = buf;
   desc->saveAccount();
 }
 
-void TBeing::doList(const char *arg)
-{
-  doNotHere();
-}
+void TBeing::doList(const char* arg) { doNotHere(); }
 
-void Descriptor::add_comment(const char *who, const char *msg) 
-{
+void Descriptor::add_comment(const char* who, const char* msg) {
   time_t ct;
-  char *tmstr;
+  char* tmstr;
   char buf[MAX_STRING_LENGTH];
-  FILE *fp;
+  FILE* fp;
   int i, j;
   char cmd_buf[256];
-  struct tm * lt;
+  struct tm* lt;
 
   ct = time(0);
   lt = localtime(&ct);
   tmstr = asctime(lt);
   *(tmstr + strlen(tmstr) - 1) = '\0';
 
-  sprintf(buf, "****** Comment from %s on %s:\n",
-       character->getName().c_str(), tmstr);
+  sprintf(buf, "****** Comment from %s on %s:\n", character->getName().c_str(),
+    tmstr);
 
-  for (i= 0, j=strlen(buf); msg[i];i++) {
+  for (i = 0, j = strlen(buf); msg[i]; i++) {
     if ((strlen(buf) < (MAX_STRING_LENGTH - 1)) && msg[i] != '\r') {
       // all \r skipped, concat to 1 line
       buf[j++] = ((msg[i] == '\n') ? ' ' : msg[i]);
@@ -4091,7 +4269,8 @@ void Descriptor::add_comment(const char *who, const char *msg)
   }
   buf[j] = '\0';
 
-  sprintf(cmd_buf, "account/%c/%s/comment", LOWER(who[0]), sstring(who).lower().c_str());
+  sprintf(cmd_buf, "account/%c/%s/comment", LOWER(who[0]),
+    sstring(who).lower().c_str());
 
   if (!(fp = fopen(cmd_buf, "a+"))) {
     perror("doComment");
@@ -4103,38 +4282,37 @@ void Descriptor::add_comment(const char *who, const char *msg)
   fputs("\n", fp);
   fclose(fp);
 
+  i = 0;
+  while (buf[i++] != '\n')
+    ;
 
-
-  i=0;
-  while(buf[i++]!='\n');
-
-  char *notebuf=(char *)malloc(strlen(&buf[i]));
+  char* notebuf = (char*)malloc(strlen(&buf[i]));
   strcpy(notebuf, &buf[i]);
-  TNote *mynote=createNote(notebuf);
+  TNote* mynote = createNote(notebuf);
   if (!mynote) {
-    character->sendTo("Could not create a note in add_comment, please tell a god.\n\r");
+    character->sendTo(
+      "Could not create a note in add_comment, please tell a god.\n\r");
     return;
   }
   sprintf(buf, "****** Comment on %s", sstring(who).lower().c_str());
-  
+
   *character += *mynote;
 
   character->doAt(((sstring)(format("8 post note %s") % buf)).c_str(), false);
 
   //  mynote->postMe(character, buf, FindBoardInRoom(8, "board"));
-
 }
 
 namespace {
   const char FEEDBACK_FROM_ADDRESS[] = "feedback@sneezymud.org";
   const char FEEDBACK_SENDTO_ADDRESS[] = "mudadmin@sneezymud.org";
-}
+}  // namespace
 
 // sends appropriate feedback (help, bugs, typos) via email to a feedback forum
-void Descriptor::send_feedback(const char *subject, const char *msg)
-{
+void Descriptor::send_feedback(const char* subject, const char* msg) {
   static int tempInc = 0;
-  TBeing *player = (dynamic_cast<TMonster *>(character) && original) ? original : character;
+  TBeing* player =
+    (dynamic_cast<TMonster*>(character) && original) ? original : character;
   sstring message;
   time_t now = time(0);
 
@@ -4148,8 +4326,9 @@ void Descriptor::send_feedback(const char *subject, const char *msg)
   message += format("Account Name: %s\n") % account->name;
   message += format("Character Name: %s\n") % player->getName();
   message += format("Account Email: %s\n") % account->email;
-  message += format("Time: %s") % ctime(&now); // ctime adds a \n
-  message += format("Room: %d\n") % (player->roomp ? player->roomp->number : -1);
+  message += format("Time: %s") % ctime(&now);  // ctime adds a \n
+  message +=
+    format("Room: %d\n") % (player->roomp ? player->roomp->number : -1);
 
   // actual message from user to appear in mail
   message += "\n";
@@ -4159,25 +4338,24 @@ void Descriptor::send_feedback(const char *subject, const char *msg)
   message += "\n";
 
   // could use vsystem, but we want the file i/o outside this thread as well
-  if (0 != vfork())
-  {
-    FILE *fp;
+  if (0 != vfork()) {
+    FILE* fp;
     sstring tempfile = format("/usr/tmp/feedback%d.tmp") % tempInc++;
-    if ((fp = fopen(tempfile.c_str(), "w")))
-    {
-        fputs(message.c_str(), fp);
-        fclose(fp);
-        int err = system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
-        if (err)
-            vlogf(LOG_MISC, format("Call to sendmail returned nonzero status %d") % err);
-        remove(tempfile.c_str());
+    if ((fp = fopen(tempfile.c_str(), "w"))) {
+      fputs(message.c_str(), fp);
+      fclose(fp);
+      int err =
+        system((format("/usr/sbin/sendmail -t < %s") % tempfile).str().c_str());
+      if (err)
+        vlogf(LOG_MISC,
+          format("Call to sendmail returned nonzero status %d") % err);
+      remove(tempfile.c_str());
     }
     exit(-1);
   }
 }
 
-void TBeing::doAfk()
-{
+void TBeing::doAfk() {
   if (isPlayerAction(PLR_AFK)) {
     sendTo("Removing AFK setting.\n\r");
     remPlayerAction(PLR_AFK);
@@ -4189,13 +4367,9 @@ void TBeing::doAfk()
   }
 }
 
-bool TBeing::isWary() const
-{
-  return affectedBySpell(AFFECT_WARY);
-}
+bool TBeing::isWary() const { return affectedBySpell(AFFECT_WARY); }
 
-void TBeing::makeWary()
-{
+void TBeing::makeWary() {
   if (isPc())
     return;
 
@@ -4204,21 +4378,17 @@ void TBeing::makeWary()
   aff.type = AFFECT_WARY;
   aff.duration = 2 * Pulse::UPDATES_PER_MUDHOUR;
   affectTo(&aff);
-
 }
 
-
-void TBeing::doRoll(TBeing *v, dirTypeT tdir)
-{
+void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
   int rc;
-  TBeing *heap_ptr[50];
+  TBeing* heap_ptr[50];
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
   int oldr, oldroom;
-  TRoom *rp;
+  TRoom* rp;
 
-  
   if (v == this) {
     sendTo("You can't roll yourself!\n\r");
     sendTo("Syntax : roll <person> <direction>\n\r");
@@ -4229,7 +4399,7 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
     return;
   }
   if (v->riding) {
-    act("You can't roll them off the $o.",TRUE,this,v->riding,0,TO_CHAR);
+    act("You can't roll them off the $o.", TRUE, this, v->riding, 0, TO_CHAR);
     return;
   }
   if (v->rider) {
@@ -4237,23 +4407,22 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
     return;
   }
 
-
   // v-weight > 5 * free carry weight
   if (compareWeights(v->getTotalWeight(TRUE),
-          (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
+        (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to roll $N out of the room but fail.",
-        TRUE, this, NULL, v, TO_CHAR);
+      TRUE, this, NULL, v, TO_CHAR);
     act("$n strains with all $s might to roll $N out of the room but fails.",
-        TRUE, this, NULL, v, TO_ROOM);
+      TRUE, this, NULL, v, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if(rc==TRUE) // not allowed to move
+  if (rc == TRUE)  // not allowed to move
     return;
 
-  // We can drag now. Do necessary checks and make it so. - Brutius 
+  // We can drag now. Do necessary checks and make it so. - Brutius
   sprintf(buf, "You roll $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, v, TO_CHAR);
   sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
@@ -4312,7 +4481,7 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E rolls $p out of the room.");
-        act(buf, FALSE, k->follower, v, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, v, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -4349,45 +4518,44 @@ void TBeing::doRoll(TBeing *v, dirTypeT tdir)
   addToWait(combatRound(1));
 }
 
-void TBeing::doRoll(TObj *o, dirTypeT tdir)
-{
-  TBeing *heap_ptr[50];
+void TBeing::doRoll(TObj* o, dirTypeT tdir) {
+  TBeing* heap_ptr[50];
   int i, heap_top, heap_tot[50], result;
   followData *k, *n;
   char buf[256];
   int oldroom, oldr, rc;
-  TRoom *rp;
+  TRoom* rp;
 
-  if(!o) return;
+  if (!o)
+    return;
   if (!isImmortal()) {
-    if(!o->canWear(ITEM_WEAR_TAKE)) {
+    if (!o->canWear(ITEM_WEAR_TAKE)) {
       act("$N : You can't roll that.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }
-    if (dynamic_cast<TTrap *>(o)) {
+    if (dynamic_cast<TTrap*>(o)) {
       act("$N : Yeah right.\n\r", TRUE, this, NULL, o, TO_CHAR);
       return;
     }
   }
-  if(o->rider){
+  if (o->rider) {
     act("$N : Occupied.\n\r", TRUE, this, NULL, o, TO_CHAR);
     return;
   }
 
   if (compareWeights(o->getTotalWeight(TRUE),
-	      (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
+        (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to roll $N out of the room but fail.",
-	TRUE, this, NULL, o, TO_CHAR);
+      TRUE, this, NULL, o, TO_CHAR);
     act("$n strains with all $s might to roll $N out of the room but fails.",
-        TRUE, this, NULL, o, TO_ROOM);
+      TRUE, this, NULL, o, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if(rc==TRUE) // not allowed to move
+  if (rc == TRUE)  // not allowed to move
     return;
-
 
   sprintf(buf, "You roll $N %s.", dirs[tdir]);
   act(buf, TRUE, this, NULL, o, TO_CHAR);
@@ -4401,7 +4569,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
   *rp += *this;
   *rp += *o;
   act("$n enters the room rolling $N!", TRUE, this, NULL, o, TO_ROOM);
-  TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(o);
+  TPCorpse* tmpcorpse = dynamic_cast<TPCorpse*>(o);
   if (tmpcorpse) {
     tmpcorpse->setRoomNum(oldr);
     tmpcorpse->saveCorpseToFile();
@@ -4413,7 +4581,7 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E rolls $p out of the room.");
-        act(buf, FALSE, k->follower, o, this, TO_CHAR); 
+        act(buf, FALSE, k->follower, o, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -4445,33 +4613,32 @@ void TBeing::doRoll(TObj *o, dirTypeT tdir)
     }
   }
 
-
   doLook("", CMD_LOOK);
   addToMove(-10);
   addToWait(combatRound(1));
 }
 
-void TBeing::doRoll(const sstring &arg)
-{
+void TBeing::doRoll(const sstring& arg) {
   sstring caName, dir;
-  TBeing *v;
+  TBeing* v;
   dirTypeT tdir;
   unsigned int bits;
-  roomDirData *exitp;
-  TObj *o;
-  const char *syntax="Syntax : roll <object|person> <direction>\n\r";
+  roomDirData* exitp;
+  TObj* o;
+  const char* syntax = "Syntax : roll <object|person> <direction>\n\r";
 
-  caName=arg.word(0);
-  dir=arg.word(1);
+  caName = arg.word(0);
+  dir = arg.word(1);
 
-  if(caName.empty() || dir.empty()){
+  if (caName.empty() || dir.empty()) {
     sendTo(syntax);
     return;
   }
 
-  bits = generic_find(caName.c_str(), FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
+  bits =
+    generic_find(caName.c_str(), FIND_CHAR_ROOM | FIND_OBJ_ROOM, this, &v, &o);
 
-  if(!bits){
+  if (!bits) {
     sendTo("You see nothing by that name to roll!\n\r");
     sendTo(syntax);
     return;
@@ -4498,7 +4665,7 @@ void TBeing::doRoll(const sstring &arg)
       sendTo("Roll something with your hands full!?!\n\r");
       return;
     }
-  } 
+  }
 
   exitp = exitDir(tdir);
 
@@ -4507,12 +4674,12 @@ void TBeing::doRoll(const sstring &arg)
     sendTo(syntax);
     return;
   }
-  if (!validMove(tdir)) 
+  if (!validMove(tdir))
     return;
-  
-  if(bits==FIND_CHAR_ROOM){
+
+  if (bits == FIND_CHAR_ROOM) {
     doRoll(v, tdir);
-  } else if(bits==FIND_OBJ_ROOM){
+  } else if (bits == FIND_OBJ_ROOM) {
     doRoll(o, tdir);
   } else {
     // not reached
@@ -4524,27 +4691,28 @@ void TBeing::doRoll(const sstring &arg)
 
 // adds to stats randomly, but in a weighted function that favours the first
 // stats to which points are added
-// ** also does some subtractions -- the idea here is to mix things up 
+// ** also does some subtractions -- the idea here is to mix things up
 // a bit **
 void TBeing::addToRandomStat(int extra_points) {
   statTypeT whichStat;
   int amt;
-  unsigned i=0;
-  bool firstPass=TRUE;
-  std::vector<statTypeT>stats;
-  for (whichStat=MIN_STAT;whichStat<MAX_STATS_USED;whichStat++){
+  unsigned i = 0;
+  bool firstPass = TRUE;
+  std::vector<statTypeT> stats;
+  for (whichStat = MIN_STAT; whichStat < MAX_STATS_USED; whichStat++) {
     stats.push_back(whichStat);
   }
   std::random_shuffle(stats.begin(), stats.end());
-  while(extra_points != 0) {
+  while (extra_points != 0) {
     if (i >= stats.size()) {
       i = 0;
-      firstPass=FALSE;
+      firstPass = FALSE;
     }
     whichStat = stats[i++];
     if (firstPass) {
-      amt = ::number(-10,extra_points)/2;
-    } else amt = max(1,::number(0,extra_points)/2);
+      amt = ::number(-10, extra_points) / 2;
+    } else
+      amt = max(1, ::number(0, extra_points) / 2);
     addToStat(STAT_CHOSEN, whichStat, amt);
     extra_points -= amt;
   }
@@ -4554,19 +4722,16 @@ void TBeing::addToRandomStat(int extra_points) {
   ignoreList - class used to manage a list of people/accounts to ignore
   by descriptor.  stored on the descriptor class
   ---------------------------------------------------------- */
-ignoreList::ignoreList(Descriptor *desc) :
+ignoreList::ignoreList(Descriptor* desc) :
   m_initialized(false),
   m_useStatic(false),
   m_desc(desc),
   m_ignored(NULL),
-  m_count(0)
-{
-}
+  m_count(0) {}
 
-ignoreList::~ignoreList()
-{
+ignoreList::~ignoreList() {
   if (m_ignored)
-    delete [] m_ignored;
+    delete[] m_ignored;
 }
 
 // statics used by this class
@@ -4576,29 +4741,28 @@ sstring ignoreList::m_staticIgnored[cMax];
 unsigned int ignoreList::m_staticCount = 0;
 
 // lazy init
-void ignoreList::initialize()
-{
+void ignoreList::initialize() {
   static bool isStaticInitialized = false;
 
   if (m_initialized)
     return;
 
-  if (!isStaticInitialized)
-  {
+  if (!isStaticInitialized) {
     isStaticInitialized = true;
     TDatabase db(DB_SNEEZY);
     db.query("select count(*) as size from blockedlist");
 
     // init statics
     m_staticCount = 0;
-    m_staticUseStatic = db.fetchRow() && convertTo<unsigned int>(db["size"]) < cMax;
+    m_staticUseStatic =
+      db.fetchRow() && convertTo<unsigned int>(db["size"]) < cMax;
 
     // init static array from DB
-    if (m_staticUseStatic)
-    {
-      db.query("select player_id, blocked from blockedlist order by player_id, blocked;");
-      while(db.fetchRow())
-      {
+    if (m_staticUseStatic) {
+      db.query(
+        "select player_id, blocked from blockedlist order by player_id, "
+        "blocked;");
+      while (db.fetchRow()) {
         m_staticIds[m_staticCount] = convertTo<int>(db["player_id"]);
         m_staticIgnored[m_staticCount++] = db["blocked"].lower();
       }
@@ -4608,15 +4772,17 @@ void ignoreList::initialize()
   m_useStatic = m_staticUseStatic;
 
   // init individual array if not using statics
-  if (!m_useStatic)
-  {
+  if (!m_useStatic) {
     TDatabase db(DB_SNEEZY);
     int myId = m_desc->playerID;
     m_ignored = new sstring[cMax];
     m_count = 0;
 
-    db.query("select blocked from blockedlist where player_id=%i order by blocked limit %i", myId, cMax);
-    while(db.fetchRow())
+    db.query(
+      "select blocked from blockedlist where player_id=%i order by blocked "
+      "limit %i",
+      myId, cMax);
+    while (db.fetchRow())
       m_ignored[m_count++] = db["blocked"].lower();
   }
 
@@ -4624,25 +4790,25 @@ void ignoreList::initialize()
 }
 
 // simple function to add to database
-void ignoreList::addDB(int playerId, const sstring ignored)
-{
+void ignoreList::addDB(int playerId, const sstring ignored) {
   TDatabase db(DB_SNEEZY);
-  db.query("insert into blockedlist (player_id, blocked) values (%i, '%s')", playerId, ignored.c_str());
+  db.query("insert into blockedlist (player_id, blocked) values (%i, '%s')",
+    playerId, ignored.c_str());
 }
 
 // ismple function to remove from database
-void ignoreList::removeDB(int playerId, const sstring ignored)
-{
+void ignoreList::removeDB(int playerId, const sstring ignored) {
   TDatabase db(DB_SNEEZY);
-  db.query("delete from blockedlist where player_id = %i and blocked = '%s'", playerId, ignored.c_str());
+  db.query("delete from blockedlist where player_id = %i and blocked = '%s'",
+    playerId, ignored.c_str());
 }
 
-
-// this function allows us to, if we are operating agianst the static list (for small ignore lists),
-// convert to a non-static list when the list gets too large
-void ignoreList::convertFromStatic()
-{
-  mud_assert(m_initialized, "Bad codepath - only convert from static if you have initialized first!");
+// this function allows us to, if we are operating agianst the static list (for
+// small ignore lists), convert to a non-static list when the list gets too
+// large
+void ignoreList::convertFromStatic() {
+  mud_assert(m_initialized,
+    "Bad codepath - only convert from static if you have initialized first!");
 
   if (!m_useStatic)
     return;
@@ -4651,43 +4817,42 @@ void ignoreList::convertFromStatic()
   m_count = 0;
   int myId = m_desc->playerID;
 
-  for(int iStatic = int(m_staticCount-1);iStatic >= 0; iStatic--)
-    if (m_staticIds[iStatic] == myId)
-    {
+  for (int iStatic = int(m_staticCount - 1); iStatic >= 0; iStatic--)
+    if (m_staticIds[iStatic] == myId) {
       m_ignored[m_count++] = m_staticIgnored[iStatic].lower();
       m_staticIds[iStatic] = 0;
       m_staticIgnored[iStatic].clear();
     }
 
-  while(m_staticCount > 0 && m_staticIgnored[m_staticCount-1].length() <= 0)
+  while (m_staticCount > 0 && m_staticIgnored[m_staticCount - 1].length() <= 0)
     m_staticCount--;
 
   m_useStatic = false;
 }
 
 // returns the count of entries for just this desc if using the static list
-unsigned int ignoreList::getCount()
-{
+unsigned int ignoreList::getCount() {
   initialize();
 
   if (!shouldUseStatic())
     return m_count;
 
   int myCount = 0;
-  for(unsigned int i=0;i < m_staticCount; i++)
+  for (unsigned int i = 0; i < m_staticCount; i++)
     if (m_staticIds[i] == m_desc->playerID)
       myCount++;
   return myCount;
 }
 
 // returns if this player is being ignored by this desc
-bool ignoreList::isIgnored(Descriptor *desc)
-{
+bool ignoreList::isIgnored(Descriptor* desc) {
   if (!desc)
     return false;
 
   initialize();
-  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+  TBeing* player = (dynamic_cast<TMonster*>(desc->character) && desc->original)
+                     ? desc->original
+                     : desc->character;
 
   if (isIgnored("~" + desc->account->name.lower()))
     return true;
@@ -4695,49 +4860,55 @@ bool ignoreList::isIgnored(Descriptor *desc)
 }
 
 // returns if this string name is ignored
-bool ignoreList::isIgnored(const sstring ignored)
-{
+bool ignoreList::isIgnored(const sstring ignored) {
   initialize();
   sstring name = ignored.lower();
 
-  if (shouldUseStatic())
-  {
+  if (shouldUseStatic()) {
     int myId = m_desc->playerID;
-    for(unsigned int iStatic = 0;iStatic < cMax && iStatic < m_staticCount; iStatic++)
+    for (unsigned int iStatic = 0; iStatic < cMax && iStatic < m_staticCount;
+         iStatic++)
       if (m_staticIds[iStatic] == myId && m_staticIgnored[iStatic] == name)
         return true;
     return false;
   }
 
-  for(unsigned int i = 0;i < cMax && i < m_count; i++)
+  for (unsigned int i = 0; i < cMax && i < m_count; i++)
     if (m_ignored[i] == name)
       return true;
   return false;
 }
 
-// returns true if this descriptor is being ignored by that name for mudmail purposes (use sparingly)
-bool ignoreList::isMailIgnored(Descriptor *desc, const sstring ignored)
-{
-  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+// returns true if this descriptor is being ignored by that name for mudmail
+// purposes (use sparingly)
+bool ignoreList::isMailIgnored(Descriptor* desc, const sstring ignored) {
+  TBeing* player = (dynamic_cast<TMonster*>(desc->character) && desc->original)
+                     ? desc->original
+                     : desc->character;
   TDatabase db(DB_SNEEZY);
-  db.query("select count(*) as c from (player as p, blockedlist as b) where lower(p.name) = '%s' and b.player_id = p.id and (b.blocked = '~%s' or b.blocked = '%s')",
-    ignored.lower().c_str(), desc->account->name.lower().c_str(), sstring(player->getName()).lower().c_str());
+  db.query(
+    "select count(*) as c from (player as p, blockedlist as b) where "
+    "lower(p.name) = '%s' and b.player_id = p.id and (b.blocked = '~%s' or "
+    "b.blocked = '%s')",
+    ignored.lower().c_str(), desc->account->name.lower().c_str(),
+    sstring(player->getName()).lower().c_str());
 
   if (db.fetchRow() && convertTo<int>(db["c"]) > 0)
     return true;
   return false;
 }
 
-
 // private function used for low-size list performance
 // returns true if the name was added, false if over max capacity
-bool ignoreList::staticAdd(const sstring name)
-{
+bool ignoreList::staticAdd(const sstring name) {
   int myId = m_desc->playerID;
   unsigned int iAdded = 0;
-  
+
   // finds the first usable ignore slot
-  for(;iAdded < cMax && iAdded < m_staticCount && !m_staticIgnored[iAdded].empty(); iAdded++);
+  for (; iAdded < cMax && iAdded < m_staticCount &&
+         !m_staticIgnored[iAdded].empty();
+       iAdded++)
+    ;
 
   if (iAdded >= cMax)
     return false;
@@ -4753,49 +4924,47 @@ bool ignoreList::staticAdd(const sstring name)
 
 // adds to the ignore list
 // returns true if the name was added, false if over max capacity
-bool ignoreList::add(Descriptor *desc)
-{
+bool ignoreList::add(Descriptor* desc) {
   initialize();
 
   if (isIgnored(desc))
     return true;
 
-  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+  TBeing* player = (dynamic_cast<TMonster*>(desc->character) && desc->original)
+                     ? desc->original
+                     : desc->character;
   return add(player->getName());
 }
 
 // ignores the whole account
-bool ignoreList::add(const TAccount &acct)
-{
-  return addAccount(acct.name);
-}
+bool ignoreList::add(const TAccount& acct) { return addAccount(acct.name); }
 
 // ignores the whole account
-bool ignoreList::addAccount(const sstring name)
-{
+bool ignoreList::addAccount(const sstring name) {
   return add("~" + name.lower());
 }
 
 // adds to the ignore list
 // returns true if the name was added, false if over max capacity
-bool ignoreList::add(const sstring name)
-{
+bool ignoreList::add(const sstring name) {
   initialize();
 
   if (isIgnored(name))
     return true;
 
-  if (shouldUseStatic())
-  {
+  if (shouldUseStatic()) {
     if (staticAdd(name))
       return true;
-    convertFromStatic(); // if returned false from here, we need to switch to non-static operation
+    convertFromStatic();  // if returned false from here, we need to switch to
+                          // non-static operation
   }
 
   unsigned int iAdded = 0;
-  
+
   // finds the first usable ignore slot
-  for(;iAdded < cMax && iAdded < m_count && !m_ignored[iAdded].empty(); iAdded++);
+  for (; iAdded < cMax && iAdded < m_count && !m_ignored[iAdded].empty();
+       iAdded++)
+    ;
 
   if (iAdded >= cMax)
     return false;
@@ -4810,14 +4979,16 @@ bool ignoreList::add(const sstring name)
 
 // private function used for low-size list performance
 // returns true if the name was removed, false it not
-bool ignoreList::staticRemove(const sstring ignored)
-{
+bool ignoreList::staticRemove(const sstring ignored) {
   int myId = m_desc->playerID;
   unsigned int iRemoved = 0;
   sstring name = ignored.lower();
-  
+
   // finds the matching ignore slot
-  for(;iRemoved < cMax && iRemoved < m_staticCount && m_staticIds[iRemoved] != myId && m_staticIgnored[iRemoved] != name; iRemoved++);
+  for (; iRemoved < cMax && iRemoved < m_staticCount &&
+         m_staticIds[iRemoved] != myId && m_staticIgnored[iRemoved] != name;
+       iRemoved++)
+    ;
 
   if (iRemoved >= cMax)
     return false;
@@ -4826,31 +4997,30 @@ bool ignoreList::staticRemove(const sstring ignored)
   m_staticIgnored[iRemoved].clear();
   removeDB(myId, name);
 
-  while(m_staticCount > 0 && m_staticIgnored[m_staticCount-1].length() <= 0)
+  while (m_staticCount > 0 && m_staticIgnored[m_staticCount - 1].length() <= 0)
     m_staticCount--;
   return true;
 }
 
 // removed from the ignore list
 // returns true if the name was removed, false it not
-bool ignoreList::remove(Descriptor *desc)
-{
+bool ignoreList::remove(Descriptor* desc) {
   initialize();
 
-  TBeing *player = (dynamic_cast<TMonster *>(desc->character) && desc->original) ? desc->original : desc->character;
+  TBeing* player = (dynamic_cast<TMonster*>(desc->character) && desc->original)
+                     ? desc->original
+                     : desc->character;
 
   return remove(player->getName());
 }
 
-bool ignoreList::removeAccount(const sstring name)
-{
+bool ignoreList::removeAccount(const sstring name) {
   return remove("~" + name);
 }
 
 // removed from the ignore list
 // returns true if the name was removed, false it not
-bool ignoreList::remove(const sstring ignored)
-{
+bool ignoreList::remove(const sstring ignored) {
   initialize();
 
   if (shouldUseStatic())
@@ -4858,9 +5028,11 @@ bool ignoreList::remove(const sstring ignored)
 
   unsigned int iRemoved = 0;
   sstring name = ignored.lower();
-  
+
   // finds the matching ignore slot
-  for(;iRemoved < cMax && iRemoved < m_count && m_ignored[iRemoved] != name; iRemoved++);
+  for (; iRemoved < cMax && iRemoved < m_count && m_ignored[iRemoved] != name;
+       iRemoved++)
+    ;
 
   if (iRemoved >= cMax)
     return false;
@@ -4868,23 +5040,20 @@ bool ignoreList::remove(const sstring ignored)
   m_ignored[iRemoved].clear();
   removeDB(m_desc->playerID, name);
 
-  while(m_count > 0 && m_ignored[m_count-1].length() <= 0)
+  while (m_count > 0 && m_ignored[m_count - 1].length() <= 0)
     m_count--;
   return true;
 }
 
 // used to list and index ignored peeps
-sstring ignoreList::operator[](int i)
-{
+sstring ignoreList::operator[](int i) {
   initialize();
 
   if (i < 0 || unsigned(i) > cMax)
     return "";
 
-  if (shouldUseStatic())
-  {
-    for(unsigned int iCheck = 0;iCheck < m_staticCount; iCheck++)
-    {
+  if (shouldUseStatic()) {
+    for (unsigned int iCheck = 0; iCheck < m_staticCount; iCheck++) {
       if (m_staticIds[iCheck] != m_desc->playerID)
         continue;
       if (i > 0)
@@ -4900,31 +5069,29 @@ sstring ignoreList::operator[](int i)
   return m_ignored[i];
 }
 
-
 // used to toggle ignoring other characters
-void TBeing::doIgnore(const sstring &args)
-{
+void TBeing::doIgnore(const sstring& args) {
   if (!desc)
     return;
 
-  bool canBlockAccounts = hasWizPower(POWER_ACCESS) || hasWizPower(POWER_ACCOUNT);
+  bool canBlockAccounts =
+    hasWizPower(POWER_ACCESS) || hasWizPower(POWER_ACCOUNT);
   sstring arg1 = args.word(0).lower();
   sstring arg2 = args.word(1).lower();
   int arg1Len = arg1.length();
   int arg2Len = arg2.length();
 
   // default to add
-  if (!arg2Len && arg1Len)
-  {
+  if (!arg2Len && arg1Len) {
     arg2 = arg1;
     arg1 = "add";
     arg1Len = arg1.length();
     arg2Len = arg2.length();
   }
-  
-  // simple length check - drop overlong commands for safety and simplicity (although technically its safe)
-  if (arg1Len > 20 || arg2Len > 32)
-  {
+
+  // simple length check - drop overlong commands for safety and simplicity
+  // (although technically its safe)
+  if (arg1Len > 20 || arg2Len > 32) {
     sendTo("Sorry, that name is too long to be ignored.\n\r");
     return;
   }
@@ -4933,60 +5100,64 @@ void TBeing::doIgnore(const sstring &args)
   arg2.inlineReplaceString("~", "");
 
   // big ugly block of 'if's
-  if (arg2Len && sstringncmp("add", arg1, arg1Len) == 0)
-  {
+  if (arg2Len && sstringncmp("add", arg1, arg1Len) == 0) {
     if (desc->ignored.add(arg2))
       sendTo(format("Player '%s' is now ignored.\n\r") % arg2);
     else
-      sendTo(format("Could not ignore player '%s'.  You may have reached the max of %d ignore entries.\n\r") % arg2 % desc->ignored.getMax());
-  }
-  else if (arg2Len && sstringncmp("remove", arg1, arg1Len) == 0)
-  {
+      sendTo(format("Could not ignore player '%s'.  You may have reached the "
+                    "max of %d ignore entries.\n\r") %
+             arg2 % desc->ignored.getMax());
+  } else if (arg2Len && sstringncmp("remove", arg1, arg1Len) == 0) {
     if (desc->ignored.remove(arg2))
       sendTo(format("Player '%s' is no longer ignored.\n\r") % arg2);
     else
-      sendTo(format("Could not remove player '%s' from your ignore list.\n\r") % arg2);
-  }
-  else if (arg2Len && canBlockAccounts && sstringncmp("addall", arg1, arg1Len) == 0)
-  {
+      sendTo(format("Could not remove player '%s' from your ignore list.\n\r") %
+             arg2);
+  } else if (arg2Len && canBlockAccounts &&
+             sstringncmp("addall", arg1, arg1Len) == 0) {
     if (desc->ignored.addAccount(arg2))
       sendTo(format("Account '%s' is now ignored.\n\r") % arg2);
     else
-      sendTo(format("Could not ignore account '%s'.  You may have reached the max of %d ignore entries.\n\r") % arg2 % desc->ignored.getMax());
-  }
-  else if (arg2Len && canBlockAccounts && sstringncmp("removeall", arg1, arg1Len) == 0)
-  {
+      sendTo(format("Could not ignore account '%s'.  You may have reached the "
+                    "max of %d ignore entries.\n\r") %
+             arg2 % desc->ignored.getMax());
+  } else if (arg2Len && canBlockAccounts &&
+             sstringncmp("removeall", arg1, arg1Len) == 0) {
     if (desc->ignored.removeAccount(arg2))
       sendTo(format("Account '%s' is no longer ignored.\n\r") % arg2);
     else
-      sendTo(format("Could not remove account '%s' from your ignore list.\n\r") % arg2);
-  }
-  else
-  {
+      sendTo(
+        format("Could not remove account '%s' from your ignore list.\n\r") %
+        arg2);
+  } else {
     // print syntax
     sendTo("Syntax: ignore - lists your ignore list.\n\r");
-    sendTo("Syntax: ignore add <player> - adds a player to your ignore list.\n\r");
-    sendTo("Syntax: ignore remove <player> - removes a player from your ignore list.\n\r");
-    if (canBlockAccounts)
-    {
-      sendTo("Syntax: ignore addall <account> - adds all players in that account to your ignore list.\n\r");
-      sendTo("Syntax: ignore removeall <account> - removes all players in that account from your ignore list.\n\r");
+    sendTo(
+      "Syntax: ignore add <player> - adds a player to your ignore list.\n\r");
+    sendTo(
+      "Syntax: ignore remove <player> - removes a player from your ignore "
+      "list.\n\r");
+    if (canBlockAccounts) {
+      sendTo(
+        "Syntax: ignore addall <account> - adds all players in that account to "
+        "your ignore list.\n\r");
+      sendTo(
+        "Syntax: ignore removeall <account> - removes all players in that "
+        "account from your ignore list.\n\r");
     }
   }
 
   // print list
-  if (desc->ignored.getCount() > 0)
-  {
+  if (desc->ignored.getCount() > 0) {
     sendTo("You are currently ignoring:\n\r");
-    for(unsigned int i=0; i < desc->ignored.getCount(); i++)
-    {
+    for (unsigned int i = 0; i < desc->ignored.getCount(); i++) {
       if (desc->ignored[i].length() <= 0)
         continue;
       if (desc->ignored[i][0] == '~')
-        sendTo(format("The account: %s\n\r") % desc->ignored[i].substr(1, desc->ignored[i].length()-1));
+        sendTo(format("The account: %s\n\r") %
+               desc->ignored[i].substr(1, desc->ignored[i].length() - 1));
       else
         sendTo(format("%s\n\r") % desc->ignored[i]);
     }
   }
 }
-

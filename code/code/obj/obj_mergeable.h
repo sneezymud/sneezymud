@@ -6,16 +6,13 @@
 #include "obj.h"
 
 class TMergeable : public virtual TObj {
- private:
+  private:
+  public:
+    virtual bool willMerge(TMergeable*);
+    virtual void doMerge(TMergeable*);
 
- public:
-  virtual bool willMerge(TMergeable *);
-  virtual void doMerge(TMergeable *);
-
-  TMergeable();
-  TMergeable(const TMergeable &a);
-  TMergeable & operator=(const TMergeable &a);
-  virtual ~TMergeable();
-
+    TMergeable();
+    TMergeable(const TMergeable& a);
+    TMergeable& operator=(const TMergeable& a);
+    virtual ~TMergeable();
 };
-

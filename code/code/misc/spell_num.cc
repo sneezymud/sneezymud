@@ -2,14 +2,12 @@
 //
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
-// spell_num : conversion between internal enums and external ints for 
+// spell_num : conversion between internal enums and external ints for
 //    spell numbers
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "extern.h"
-
 
 #if 0
     case SPELL_FIND_FAMILIAR:
@@ -114,8 +112,7 @@
       return 662;
 #endif
 
-int mapSpellnumToFile(spellNumT stt)
-{
+int mapSpellnumToFile(spellNumT stt) {
   switch (stt) {
     case TYPE_UNDEFINED:
       return -1;
@@ -646,7 +643,7 @@ int mapSpellnumToFile(spellNumT stt)
     case SKILL_SWITCH_MONK:
       return 410;
     case SKILL_JIRIN:
-      return 411; 
+      return 411;
     case SKILL_KUBO:
       return 412;
     case SKILL_CATFALL:
@@ -1257,12 +1254,11 @@ int mapSpellnumToFile(spellNumT stt)
     case ABSOLUTE_MAX_SKILL:
       break;
   }
-  vlogf(LOG_BUG, format("Bogus value (%d) in mapSpellNumToFile") %  stt);
+  vlogf(LOG_BUG, format("Bogus value (%d) in mapSpellNumToFile") % stt);
   return -1;
 }
 
-spellNumT mapFileToSpellnum(int stt)
-{
+spellNumT mapFileToSpellnum(int stt) {
   switch (stt) {
     case -1:
       return TYPE_UNDEFINED;
@@ -1952,7 +1948,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SPELL_CREATE_IRON_GOLEM;
     case 557:
       return SPELL_CREATE_DIAMOND_GOLEM;
-    case 558: 
+    case 558:
       return SPELL_DANCING_BONES;
     case 559:
       return SPELL_CONTROL_UNDEAD;
@@ -2142,11 +2138,11 @@ spellNumT mapFileToSpellnum(int stt)
     case 711:
       return SKILL_LOGGING;
     case 712:
-     return SKILL_GUTTER_CANT;
+      return SKILL_GUTTER_CANT;
     case 713:
-     return SKILL_GNOLL_JARGON;
+      return SKILL_GNOLL_JARGON;
     case 714:
-     return SKILL_TROGLODYTE_PIDGIN;
+      return SKILL_TROGLODYTE_PIDGIN;
     case 715:
       return SKILL_TROLLISH;
     case 716:
@@ -2163,7 +2159,7 @@ spellNumT mapFileToSpellnum(int stt)
       return SKILL_INEVITABILITY;
     case 733:
       return SKILL_DIMENSIONAL_FOLD;
-    case 734: 
+    case 734:
       return SKILL_2H_SPEC;
     case 735:
       return SKILL_ADVANCED_BERSERKING;
@@ -2283,26 +2279,17 @@ spellNumT mapFileToSpellnum(int stt)
       break;
   }
   //  vlogf(LOG_BUG, format("Bad value (%d) in mapFileToSpellnum") %  stt);
-  vlogf(LOG_BUG, format("Bad value (%d) in mapFileToSpellnum") %  stt);
+  vlogf(LOG_BUG, format("Bad value (%d) in mapFileToSpellnum") % stt);
   return MAX_SKILL;
 }
 
-spellNumT & operator++(spellNumT &c, int)
-{
-  return c = (c == MAX_SKILL) ? MIN_SPELL : spellNumT(c+1);
+spellNumT& operator++(spellNumT& c, int) {
+  return c = (c == MAX_SKILL) ? MIN_SPELL : spellNumT(c + 1);
 }
 
 // this guy is primarily so we can convert TYPES_ to a 0-based array
-spellNumT & operator-=(spellNumT &c, spellNumT num)
-{
-  return c = (c < num) ? spellNumT(0) : spellNumT(c-num);
+spellNumT& operator-=(spellNumT& c, spellNumT num) {
+  return c = (c < num) ? spellNumT(0) : spellNumT(c - num);
 }
 
-bool applyTypeShouldBeSpellnum(applyTypeT att)
-{
-  return (att == APPLY_SPELL);
-}
-
-
-
-
+bool applyTypeShouldBeSpellnum(applyTypeT att) { return (att == APPLY_SPELL); }

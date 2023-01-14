@@ -9,35 +9,35 @@
 
 #include "obj.h"
 
-
 class TDrugContainer : public TObj {
   protected:
     drugTypeT drugType;
     int maxBurn;
     int curBurn;
     bool lit;
+
   public:
-    virtual void lookObj(TBeing *, int) const {}
+    virtual void lookObj(TBeing*, int) const {}
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual void lowCheck();
-    virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual void describeObjectSpecifics(const TBeing*) const;
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_DRUG_CONTAINER; }
 
-    virtual bool isSimilar(const TThing *t) const;
+    virtual bool isSimilar(const TThing* t) const;
     virtual void lightDecay();
     virtual int objectDecay();
-    virtual void extinguishWater(TBeing *);
+    virtual void extinguishWater(TBeing*);
     virtual void extinguishWater();
-    virtual sstring showModifier(showModeT, const TBeing *) const;
-    virtual void lightMe(TBeing *, silentTypeT);
-    virtual void extinguishMe(TBeing *);
-    virtual bool monkRestrictedItem(const TBeing *) const;
-    virtual bool shamanRestrictedItem(const TBeing *) const;
-    virtual bool rangerRestrictedItem(const TBeing *) const;
-    virtual void refuelMeLight(TBeing *, TThing *);
-    virtual void peeOnMe(const TBeing *);
+    virtual sstring showModifier(showModeT, const TBeing*) const;
+    virtual void lightMe(TBeing*, silentTypeT);
+    virtual void extinguishMe(TBeing*);
+    virtual bool monkRestrictedItem(const TBeing*) const;
+    virtual bool shamanRestrictedItem(const TBeing*) const;
+    virtual bool rangerRestrictedItem(const TBeing*) const;
+    virtual void refuelMeLight(TBeing*, TThing*);
+    virtual void peeOnMe(const TBeing*);
 
     void putLightOut();
 
@@ -53,9 +53,7 @@ class TDrugContainer : public TObj {
     drugTypeT getDrugType() const;
 
     TDrugContainer();
-    TDrugContainer(const TDrugContainer &a);
-    TDrugContainer & operator=(const TDrugContainer &a);
+    TDrugContainer(const TDrugContainer& a);
+    TDrugContainer& operator=(const TDrugContainer& a);
     virtual ~TDrugContainer();
 };
-
-

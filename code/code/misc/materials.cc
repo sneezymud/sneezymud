@@ -15,8 +15,7 @@
 #include "statistics.h"
 #include "obj_base_weapon.h"
 
-static bool genericDamCheck(int susc, int sharp)
-{
+static bool genericDamCheck(int susc, int sharp) {
 #if 0
   // gold_repair is taken into account in the cost to repair stuff formula
   // this is probably obsolete - 9/30/99
@@ -25,7 +24,7 @@ static bool genericDamCheck(int susc, int sharp)
     return false;
 #endif
 
-  if (::number(0,999) >= 300)
+  if (::number(0, 999) >= 300)
     return false;
 
   // num is the hardness of what i a hitting
@@ -43,28 +42,24 @@ static bool genericDamCheck(int susc, int sharp)
   return false;
 }
 
-bool TObj::willDent(int num)
-{
+bool TObj::willDent(int num) {
   int susc = material_nums[getMaterial()].smash_susc;
   return genericDamCheck(susc, num);
 }
 
-bool TObj::willTear(int num)
-{
+bool TObj::willTear(int num) {
   int susc = material_nums[getMaterial()].cut_susc;
   return genericDamCheck(susc, num);
 }
 
-bool TObj::willPuncture(int num)
-{
+bool TObj::willPuncture(int num) {
   int susc = material_nums[getMaterial()].pierced_susc;
   return genericDamCheck(susc, num);
 }
 
 // item should be the item being dented (victim's)
 // slot should be the bodyslot that is doing the denting (caster's)
-int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
-{
+int TBeing::dentItem(TBeing* victim, TObj* item, int amt, int slot) {
   char buf[256];
   int hardness;
 
@@ -73,9 +68,9 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
     return FALSE;
 
   // use hardness of eq on slot, or use skintype for hardness
-  hardness = equipment[slot] ? 
-     material_nums[(equipment[slot])->getMaterial()].hardness :
-     material_nums[getMaterial((wearSlotT)slot)].hardness;
+  hardness = equipment[slot]
+               ? material_nums[(equipment[slot])->getMaterial()].hardness
+               : material_nums[getMaterial((wearSlotT)slot)].hardness;
 
   if (item->willDent(hardness)) {
     if (item->isMineral()) {
@@ -104,7 +99,7 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-    if(IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
+    if (IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
     return TRUE;
   }
@@ -113,8 +108,7 @@ int TBeing::dentItem(TBeing *victim, TObj *item, int amt, int slot)
 
 // item should be the item being dented (victim's)
 // slot should be the bodyslot that is doing the denting (caster's)
-int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
-{
+int TBeing::tearItem(TBeing* victim, TObj* item, int amt, int slot) {
   char buf[256];
   int sharp = 0;
 
@@ -123,9 +117,9 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
     return FALSE;
 
   // use hardness of eq on slot, or use skintype for hardness
-  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ? 
-     material_nums[(equipment[slot])->getMaterial()].hardness :
-     material_nums[getMaterial((wearSlotT)slot)].hardness;
+  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon*>(equipment[slot]))
+            ? material_nums[(equipment[slot])->getMaterial()].hardness
+            : material_nums[getMaterial((wearSlotT)slot)].hardness;
 
   if (item->willTear(sharp)) {
     if (item->isMineral()) {
@@ -135,7 +129,7 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You scratch $S $o.", TRUE, this, item, victim, TO_CHAR);
-   
+
         sprintf(buf, "Your $o %s scratched.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s scratched.", item->isPaired() ? "are" : "is");
@@ -148,14 +142,14 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You tear $S $o.", TRUE, this, item, victim, TO_CHAR);
- 
+
         sprintf(buf, "Your $o %s torn.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s torn.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-    if(IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
+    if (IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
     return TRUE;
   }
@@ -164,8 +158,7 @@ int TBeing::tearItem(TBeing *victim, TObj *item, int amt, int slot)
 
 // item should be the item being dented (victim's)
 // slot should be the bodyslot that is doing the denting (caster's)
-int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
-{
+int TBeing::pierceItem(TBeing* victim, TObj* item, int amt, int slot) {
   char buf[256];
   int sharp;
 
@@ -174,9 +167,9 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
     return FALSE;
 
   // use hardness of eq on slot, or use skintype for hardness
-  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon *>(equipment[slot])) ? 
-     material_nums[(equipment[slot])->getMaterial()].hardness :
-     material_nums[getMaterial((wearSlotT)slot)].hardness;
+  sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon*>(equipment[slot]))
+            ? material_nums[(equipment[slot])->getMaterial()].hardness
+            : material_nums[getMaterial((wearSlotT)slot)].hardness;
 
   if (item->willPuncture(sharp)) {
     if (item->isMineral()) {
@@ -186,7 +179,7 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You crack $S $o.", TRUE, this, item, victim, TO_CHAR);
- 
+
         sprintf(buf, "Your $o %s cracked.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s cracked.", item->isPaired() ? "are" : "is");
@@ -199,22 +192,21 @@ int TBeing::pierceItem(TBeing *victim, TObj *item, int amt, int slot)
         act(buf, TRUE, this, item, 0, TO_ROOM);
       } else {
         act("You puncture $S $o.", TRUE, this, item, victim, TO_CHAR);
- 
+
         sprintf(buf, "Your $o %s punctured.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s punctured.", item->isPaired() ? "are" : "is");
         act(buf, TRUE, this, item, victim, TO_NOTVICT);
       }
     }
-    if(IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
+    if (IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
     return TRUE;
   }
   return FALSE;
 }
 
-bool TThing::isMetal() const
-{
+bool TThing::isMetal() const {
   ubyte mat = convertV9MaterialToV10(getMaterial());
 
   switch (mat) {
@@ -239,8 +231,7 @@ bool TThing::isMetal() const
   }
 }
 
-bool TThing::isMineral() const
-{
+bool TThing::isMineral() const {
   ubyte mat = convertV9MaterialToV10(getMaterial());
 
   switch (mat) {
@@ -276,8 +267,7 @@ bool TThing::isMineral() const
   }
 }
 
-bool TThing::isOrganic() const
-{
+bool TThing::isOrganic() const {
   ubyte mat = convertV9MaterialToV10(getMaterial());
 
   switch (mat) {
@@ -322,15 +312,14 @@ bool TThing::isOrganic() const
   }
 }
 
-bool TObj::canRust()
-{
+bool TObj::canRust() {
   ubyte mat = convertV9MaterialToV10(getMaterial());
 
   if (material_nums[mat].acid_susc <= 0)
     return FALSE;
   if (!isMetal())
     return FALSE;
-  
+
   switch (mat) {
     case MAT_IRON:
     case MAT_STEEL:
@@ -338,34 +327,30 @@ bool TObj::canRust()
     default:
       return FALSE;
   }
- 
+
   return FALSE;
 }
 
-ubyte convertV9MaterialToV10(ubyte oldMat)
-{
-  switch (oldMat)
-  {
-  case 101: // MAT_JEWELED
-    return MAT_GEN_MINERAL;
+ubyte convertV9MaterialToV10(ubyte oldMat) {
+  switch (oldMat) {
+    case 101:  // MAT_JEWELED
+      return MAT_GEN_MINERAL;
 
-  case 150: // MAT_GEN_METAL
-  case 152: // MAT_SCALE_MAIL
-  case 153: // MAT_BANDED_MAIL
-  case 154: // MAT_CHAIN_MAIL
-  case 155: // MAT_PLATE
-  case 167: // MAT_RINGMAIL
-  case 168: // MAT_GNOMEMAIL
-    return MAT_STEEL;
+    case 150:  // MAT_GEN_METAL
+    case 152:  // MAT_SCALE_MAIL
+    case 153:  // MAT_BANDED_MAIL
+    case 154:  // MAT_CHAIN_MAIL
+    case 155:  // MAT_PLATE
+    case 167:  // MAT_RINGMAIL
+    case 168:  // MAT_GNOMEMAIL
+      return MAT_STEEL;
 
-  case 175: // MAT_ELVENMAIL
-  case 176: // MAT_ELVENSTEEL
-    return MAT_MITHRIL;
+    case 175:  // MAT_ELVENMAIL
+    case 176:  // MAT_ELVENSTEEL
+      return MAT_MITHRIL;
 
-  default:
-    break;
+    default:
+      break;
   }
   return oldMat;
 }
-
-

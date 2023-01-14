@@ -3,8 +3,7 @@
 #include "combat.h"
 #include "obj_base_weapon.h"
 
-int TBeing::doRally()
-{
+int TBeing::doRally() {
   if (!doesKnowSkill(SKILL_RALLY)) {
     sendTo("You know nothing about motivational speaking.\n\r");
     return FALSE;
@@ -22,10 +21,12 @@ int TBeing::doRally()
 
   // Skill failure
   if (!successfulSkill) {
-    act("Your half-hearted battlecry fails to motivate your allies.", FALSE, this, NULL, NULL, TO_CHAR);
-    act("$n attempts a rally battlecry but fails to motivate anyone.", FALSE, this, NULL, NULL, TO_ROOM);
+    act("Your half-hearted battlecry fails to motivate your allies.", FALSE,
+      this, NULL, NULL, TO_CHAR);
+    act("$n attempts a rally battlecry but fails to motivate anyone.", FALSE,
+      this, NULL, NULL, TO_ROOM);
 
-    // Apply a lockout buff on the caster 
+    // Apply a lockout buff on the caster
     affectedData aff1;
     aff1.type = SKILL_RALLY;
     aff1.duration = Pulse::UPDATES_PER_MUDHOUR;
@@ -37,9 +38,12 @@ int TBeing::doRally()
   }
 
   // Skill success
-  act("You bellow a warcry, encouraging your allies to continue the battle!", FALSE, this, NULL, NULL, TO_CHAR);
-  act("$n bellows a motivational warcry, encouraging $s allies to continue the battle!", FALSE, this, NULL, NULL, TO_ROOM);
-
+  act("You bellow a warcry, encouraging your allies to continue the battle!",
+    FALSE, this, NULL, NULL, TO_CHAR);
+  act(
+    "$n bellows a motivational warcry, encouraging $s allies to continue the "
+    "battle!",
+    FALSE, this, NULL, NULL, TO_ROOM);
 
   // Max HP
   affectedData aff1;
@@ -48,24 +52,25 @@ int TBeing::doRally()
   aff1.location = APPLY_HIT;
   aff1.modifier = modifierValue;
   aff1.bitvector = 0;
- 
-  // Max MOVE 
+
+  // Max MOVE
   affectedData aff2;
   aff2.type = SKILL_RALLY;
-  aff2.duration = Pulse::UPDATES_PER_MUDHOUR * 3; 
+  aff2.duration = Pulse::UPDATES_PER_MUDHOUR * 3;
   aff2.location = APPLY_MOVE;
   aff2.modifier = modifierValue;
   aff2.bitvector = 0;
- 
+
   // Loop for each person in room
   bool found = false;
-  for (TThing *thing : roomp->stuff) {
-    auto *person = dynamic_cast<TBeing *>(thing);
+  for (TThing* thing : roomp->stuff) {
+    auto* person = dynamic_cast<TBeing*>(thing);
 
     if (!person || !inGroup(*person))
       continue;
 
-    person->sendTo("You feel revitalized and ready to continue the battle!\n\r");
+    person->sendTo(
+      "You feel revitalized and ready to continue the battle!\n\r");
     person->affectJoin(this, &aff1, AVG_DUR_NO, AVG_EFF_YES, false);
     person->affectJoin(this, &aff2, AVG_DUR_NO, AVG_EFF_YES, false);
     person->addToMove(modifierValue);

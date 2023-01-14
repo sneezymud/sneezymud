@@ -13,19 +13,12 @@
 #include "room.h"
 #include "monster.h"
 
-class mimicStructure
-{
+class mimicStructure {
   public:
-    sstring tName,
-           tShort,
-           tLong,
-           tDesc,
-           tAssumed;
-
+    sstring tName, tShort, tLong, tDesc, tAssumed;
 };
 
-int awardForClass(TBeing *tSucker)
-{
+int awardForClass(TBeing* tSucker) {
   if (tSucker->hasClass(CLASS_CLERIC))
     return 5;
 
@@ -35,17 +28,14 @@ int awardForClass(TBeing *tSucker)
   if (tSucker->hasClass(CLASS_MONK))
     return 1;
 
-  if (tSucker->hasClass(CLASS_RANGER) ||
-      tSucker->hasClass(CLASS_THIEF))
+  if (tSucker->hasClass(CLASS_RANGER) || tSucker->hasClass(CLASS_THIEF))
     return -2;
 
   return 0;
 }
 
-TBeing * dopplegangerFindBetter(TBeing *tSucker, TBeing *tPatsy)
-{
-  int tScores[2] = {0, 0},
-      tValue;
+TBeing* dopplegangerFindBetter(TBeing* tSucker, TBeing* tPatsy) {
+  int tScores[2] = {0, 0}, tValue;
 
   if (!tPatsy)
     return tSucker;
@@ -69,52 +59,51 @@ TBeing * dopplegangerFindBetter(TBeing *tSucker, TBeing *tPatsy)
   tScores[0] += ::number(-20, 20);
   tScores[1] += ::number(-20, 20);
 
-  // Basically the values will range from: 
+  // Basically the values will range from:
   // -23, ..., 77
 
   return (tScores[0] > tScores[1] ? tSucker : tPatsy);
 }
 
-TBeing * dopplegangerFindTarget(TRoom *tRoom)
-{
-  TBeing *tSucker,
-         *tBestSucker = NULL;
-  TThing *tObj=NULL;
-  TRoom  *tNewRoom;
+TBeing* dopplegangerFindTarget(TRoom* tRoom) {
+  TBeing *tSucker, *tBestSucker = NULL;
+  TThing* tObj = NULL;
+  TRoom* tNewRoom;
 
-
-  for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tObj=*it);++it)
-    if ((tSucker = dynamic_cast<TBeing *>(tObj)))
+  for (StuffIter it = tRoom->stuff.begin();
+       it != tRoom->stuff.end() && (tObj = *it); ++it)
+    if ((tSucker = dynamic_cast<TBeing*>(tObj)))
       tBestSucker = dopplegangerFindBetter(tSucker, tBestSucker);
 
   for (dirTypeT tDir = MIN_DIR; tDir < MAX_DIR; tDir++)
     if (tRoom->dir_option[tDir] &&
         (tNewRoom = real_roomp(tRoom->dir_option[tDir]->to_room)))
-      for(StuffIter it=tNewRoom->stuff.begin();it!=tNewRoom->stuff.end() && (tObj=*it);++it)
-        if ((tSucker = dynamic_cast<TBeing *>(tObj)))
+      for (StuffIter it = tNewRoom->stuff.begin();
+           it != tNewRoom->stuff.end() && (tObj = *it); ++it)
+        if ((tSucker = dynamic_cast<TBeing*>(tObj)))
           tBestSucker = dopplegangerFindBetter(tSucker, tBestSucker);
 
   return tBestSucker;
 }
 
-int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, TObj *tObj)
-{
-  mimicStructure *tJob = NULL;
-  TBeing         *tSucker,
-                 *tPatsy;
-  followData     *tFollowerA,
-                 *tFollowerB;
+int doppleganger(TBeing* ch, cmdTypeT cmd, const char* tArg, TMonster* tMyself,
+  TObj* tObj) {
+  mimicStructure* tJob = NULL;
+  TBeing *tSucker, *tPatsy;
+  followData *tFollowerA, *tFollowerB;
 
   if (!tMyself)
     return FALSE;
 
   if (tMyself->act_ptr)
-    tJob = static_cast<mimicStructure *>(tMyself->act_ptr);
+    tJob = static_cast<mimicStructure*>(tMyself->act_ptr);
 
   switch (cmd) {
     case CMD_GENERIC_CREATED:
       if (tMyself->act_ptr) {
-        vlogf(LOG_PROC, format("%s created with action pointer already existing.\n\r") %  tMyself->getName());
+        vlogf(LOG_PROC,
+          format("%s created with action pointer already existing.\n\r") %
+            tMyself->getName());
         return FALSE;
       }
 
@@ -125,17 +114,17 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
 
       vlogf(LOG_LAPSOS, "Mimic: Created");
 
-      tJob = static_cast<mimicStructure *>(tMyself->act_ptr);
-      tJob->tName    = tMyself->getName();
-      tJob->tShort   = tMyself->shortDescr;
-      tJob->tLong    = tMyself->getLongDesc();
-      tJob->tDesc    = tMyself->getDescr();
+      tJob = static_cast<mimicStructure*>(tMyself->act_ptr);
+      tJob->tName = tMyself->getName();
+      tJob->tShort = tMyself->shortDescr;
+      tJob->tLong = tMyself->getLongDesc();
+      tJob->tDesc = tMyself->getDescr();
       tJob->tAssumed = "";
 
       break;
     case CMD_GENERIC_DESTROYED:
       if (tMyself->act_ptr) {
-        delete static_cast<mimicStructure *>(tMyself->act_ptr);
+        delete static_cast<mimicStructure*>(tMyself->act_ptr);
         tMyself->act_ptr = NULL;
       }
 
@@ -144,21 +133,26 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
       break;
     case CMD_MOB_MOVED_INTO_ROOM:
       if (tMyself->act_ptr && !tJob->tAssumed.empty() &&
-          (tSucker = get_char_room_vis(tMyself, tJob->tAssumed, NULL, EXACT_YES)) &&
+          (tSucker =
+              get_char_room_vis(tMyself, tJob->tAssumed, NULL, EXACT_YES)) &&
           tSucker->isPc() && !tSucker->isImmortal()) {
-        if (tSucker->master && tSucker->master->isPc() && !tSucker->isAffected(AFF_CHARM)) {
+        if (tSucker->master && tSucker->master->isPc() &&
+            !tSucker->isAffected(AFF_CHARM)) {
           tSucker->sendTo("Looking upon yourself you lose your focus...\n\r");
           tSucker->stopFollower(TRUE);
 
           tSucker->stopTask();
         } else if (tSucker->followers) {
-          for (tFollowerA = tSucker->followers; tFollowerA; tFollowerA = tFollowerB) {
+          for (tFollowerA = tSucker->followers; tFollowerA;
+               tFollowerA = tFollowerB) {
             tFollowerB = tFollowerA->next;
             tPatsy = tFollowerA->follower;
 
             if (tPatsy->isPc() && !tPatsy->isAffected(AFF_CHARM)) {
-              act("You stop following $n seeing that there is now a pair of them.",
-                  TRUE, tSucker, NULL, tPatsy, TO_VICT);
+              act(
+                "You stop following $n seeing that there is now a pair of "
+                "them.",
+                TRUE, tSucker, NULL, tPatsy, TO_VICT);
               tPatsy->stopFollower(TRUE);
             }
           }
@@ -191,7 +185,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
             tMyself->setExp(tMyself->determineExp());
           }
         } else {
-	  // Verify our 'sucker' is still around and findable.
+          // Verify our 'sucker' is still around and findable.
           // If not then nuke tAssumed and roll over.
           // else just verify a few things and act accordingly.
         }
@@ -206,7 +200,7 @@ int doppleganger(TBeing *ch, cmdTypeT cmd, const char *tArg, TMonster *tMyself, 
       // mimic target <player> to set a target
       // mimic ignore to de-assume current target
       // mimic boost <value> to 'increase' mimic's level by <value>
-      // mimic 
+      // mimic
       break;
     default:
       break;

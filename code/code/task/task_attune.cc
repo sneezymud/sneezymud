@@ -11,26 +11,20 @@
 #include "being.h"
 #include "obj_vial.h"
 
-static void stop_attune(TBeing *ch, silentTypeT silent_char, silentTypeT silent_room)
-{
+static void stop_attune(TBeing* ch, silentTypeT silent_char,
+  silentTypeT silent_room) {
   if (ch->getPosition() >= POSITION_RESTING) {
     if (!silent_char)
-      act("You stop attuning your symbol.",
-             FALSE, ch, 0, 0, TO_CHAR);
+      act("You stop attuning your symbol.", FALSE, ch, 0, 0, TO_CHAR);
     if (!silent_room)
-      act("$n stops attuning $s symbol.",
-             FALSE, ch, 0, 0, TO_ROOM);
+      act("$n stops attuning $s symbol.", FALSE, ch, 0, 0, TO_ROOM);
   }
   ch->stopTask();
 }
 
-void TThing::attunePulse(TBeing *ch)
-{
-  stop_attune(ch, SILENT_NO, SILENT_NO);
-}
+void TThing::attunePulse(TBeing* ch) { stop_attune(ch, SILENT_NO, SILENT_NO); }
 
-void TVial::findVialAttune(TVial **water, int *uses)
-{
+void TVial::findVialAttune(TVial** water, int* uses) {
   if (!(getDrinkType() == LIQ_HOLYWATER))
     return;
   if (getDrinkUnits() <= 0)
@@ -40,78 +34,85 @@ void TVial::findVialAttune(TVial **water, int *uses)
   *uses += getDrinkUnits();
 }
 
-bool checkAttuneUsage(TBeing *ch, int * uses, int * reqUses, TVial **water, TSymbol *sym)
-{
-  TThing *tmp = NULL;
+bool checkAttuneUsage(TBeing* ch, int* uses, int* reqUses, TVial** water,
+  TSymbol* sym) {
+  TThing* tmp = NULL;
 
   *uses = 0;
-  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tmp=*it);++it) {
+  for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (tmp = *it);
+       ++it) {
     tmp->findVialAttune(water, uses);
   }
 
   if (!water) {
-    ch->sendTo("You do not have any holy water to finish the attuning process.\n\r");
+    ch->sendTo(
+      "You do not have any holy water to finish the attuning process.\n\r");
     stop_attune(ch, SILENT_YES, SILENT_NO);
     return false;
   }
 
-  *reqUses = (int) (0.005 * sym->obj_flags.cost);
+  *reqUses = (int)(0.005 * sym->obj_flags.cost);
   if ((*uses + (ch->task ? ch->task->flags : 0)) < *reqUses) {
-    ch->sendTo(COLOR_OBJECTS, format("You do not have enough holy water to finish attuning %s!\n\r") %
-               sym->getName());
+    ch->sendTo(COLOR_OBJECTS,
+      format("You do not have enough holy water to finish attuning %s!\n\r") %
+        sym->getName());
     stop_attune(ch, SILENT_YES, SILENT_NO);
     return false;
   }
   return true;
 }
 
-void TSymbol::attunePulse(TBeing *ch)
-{
+void TSymbol::attunePulse(TBeing* ch) {
   int uses = 0, num = 0, reqUses = 0;
 
   if (getSymbolFaction() != FACT_UNDEFINED) {
-    ch->sendTo(COLOR_OBJECTS, format("%s has already been attuned.\n\r") % getName());
+    ch->sendTo(COLOR_OBJECTS,
+      format("%s has already been attuned.\n\r") % getName());
     stop_attune(ch, SILENT_YES, SILENT_NO);
     return;
   }
 
   ch->addToMove(-1);
   if (ch->getMove() < 10) {
-    act("You are much too tired to continue to attune $p.", FALSE, ch, this, NULL, TO_CHAR);
+    act("You are much too tired to continue to attune $p.", FALSE, ch, this,
+      NULL, TO_CHAR);
     act("$n stops attuning $p and looks up.", FALSE, ch, this, NULL, TO_ROOM);
     stop_attune(ch, SILENT_YES, SILENT_YES);
     return;
   }
 
   // check holy water
-  TVial *water = NULL;
+  TVial* water = NULL;
   if (!checkAttuneUsage(ch, &uses, &reqUses, &water, this))
     return;
 
   if (ch->task->status) {
     // this will randomly add water onto the symbol, we track this so we always
     // use the same amount
-    if (!(::number(0,2)) && (ch->task->flags < reqUses)) {
-      act("You apply some holy water from $N to $p.", FALSE, ch, this, water, TO_CHAR);
+    if (!(::number(0, 2)) && (ch->task->flags < reqUses)) {
+      act("You apply some holy water from $N to $p.", FALSE, ch, this, water,
+        TO_CHAR);
       act("$n applies some holy water to $p.", FALSE, ch, this, NULL, TO_ROOM);
       water->addToDrinkUnits(-1);
       ch->task->flags++;
     }
     if (ch->task->status == 1) {
-      act("You feel that $p has almost been attuned.", FALSE, ch, this, NULL, TO_CHAR);
-    } else if (!(::number(0,1))) {
+      act("You feel that $p has almost been attuned.", FALSE, ch, this, NULL,
+        TO_CHAR);
+    } else if (!(::number(0, 1))) {
       act("You continue attuning $p.", FALSE, ch, this, NULL, TO_CHAR);
       act("$n continues to pray over $p.", TRUE, ch, this, NULL, TO_ROOM);
     }
     return;
   } else {
     // get total uses required
-    uses = (int) (0.005 * obj_flags.cost);
+    uses = (int)(0.005 * obj_flags.cost);
     // account for usage during the  task
     uses = std::max(1, uses - ch->task->flags);
 
-    TThing *tmp=NULL;
-    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (tmp=*it);++it) {
+    TThing* tmp = NULL;
+    for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (tmp = *it);
+         ++it) {
       water = NULL;
       num = 0;
       tmp->findVialAttune(&water, &num);
@@ -135,19 +136,16 @@ void TSymbol::attunePulse(TBeing *ch)
   }
 }
 
-int task_attuning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
-{
-  TThing *o = NULL;
+int task_attuning(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
+  TObj* obj) {
+  TThing* o = NULL;
   int learning;
-  TSymbol *symbol;
+  TSymbol* symbol;
 
   // sanity check
-  if (ch->isLinkdead() ||
-      (ch->in_room != ch->task->wasInRoom) ||
-      (ch->getPosition() < POSITION_RESTING) ||
-      !(o = ch->heldInPrimHand()) ||
-      !obj ||
-      (obj != o)) {
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
+      (ch->getPosition() < POSITION_RESTING) || !(o = ch->heldInPrimHand()) ||
+      !obj || (obj != o)) {
     stop_attune(ch, SILENT_NO, SILENT_NO);
     return FALSE;  // returning FALSE lets command be interpreted
   }
@@ -160,10 +158,10 @@ int task_attuning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
-  symbol = dynamic_cast<TSymbol *>(obj);
+  symbol = dynamic_cast<TSymbol*>(obj);
   switch (cmd) {
-  case CMD_TASK_CONTINUE:
-    if (ch->task->status) {
+    case CMD_TASK_CONTINUE:
+      if (ch->task->status) {
         learning = ch->getSkillValue(SKILL_ATTUNE);
         ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
         if (ch->bSuccess(learning, SKILL_ATTUNE)) {
@@ -174,33 +172,37 @@ int task_attuning(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TO
             ch->stopTask();
             return FALSE;
           }
-        } else if (!(::number(0,1)))
-          act("You continue trying to slowly attune $p.", FALSE, ch, symbol, NULL, TO_CHAR);
+        } else if (!(::number(0, 1)))
+          act("You continue trying to slowly attune $p.", FALSE, ch, symbol,
+            NULL, TO_CHAR);
         return FALSE;
-    } else {
+      } else {
         symbol->attunePulse(ch);
         symbol->setSymbolFaction(ch->getFaction());
         act("Your prayers comes to their end as you finish sanctifying $p.",
-            FALSE, ch, symbol, 0, TO_CHAR);
-        act("You apply a last measure of holy water to $p as you feel it become fully attuned to $d." , FALSE, ch, symbol, 0, TO_CHAR);
+          FALSE, ch, symbol, 0, TO_CHAR);
+        act(
+          "You apply a last measure of holy water to $p as you feel it become "
+          "fully attuned to $d.",
+          FALSE, ch, symbol, 0, TO_CHAR);
         act("$n finishes attuning $p.", FALSE, ch, symbol, 0, TO_ROOM);
         stop_attune(ch, SILENT_YES, SILENT_YES);
         return FALSE;
-    }
-  case CMD_ABORT:
-  case CMD_STOP:
+      }
+    case CMD_ABORT:
+    case CMD_STOP:
       act("You stop trying to attune $p.", FALSE, ch, symbol, 0, TO_CHAR);
       act("$n stops attuning $p.", FALSE, ch, symbol, 0, TO_ROOM);
       ch->stopTask();
       break;
-  case CMD_TASK_FIGHTING:
+    case CMD_TASK_FIGHTING:
       ch->sendTo("You are unable to continue attuning while under attack!\n\r");
       stop_attune(ch, SILENT_YES, SILENT_NO);
       break;
-  default:
+    default:
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
-      break;                    // eat the command
+      break;  // eat the command
   }
   return TRUE;
 }

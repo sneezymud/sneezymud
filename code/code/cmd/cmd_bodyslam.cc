@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "handler.h"
 #include "extern.h"
 #include "room.h"
@@ -14,8 +13,7 @@
 #include "spells.h"
 #include "being.h"
 
-bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
-{
+bool TBeing::canBodyslam(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
     return FALSE;
 
@@ -37,10 +35,11 @@ bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
 
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
-  
+
   if (getCombatMode() == ATTACK_BERSERK) {
     if (!silent)
-      sendTo("You are berserking! You can't focus enough to bodyslam anyone!\n\r ");
+      sendTo(
+        "You are berserking! You can't focus enough to bodyslam anyone!\n\r ");
     return FALSE;
   }
 
@@ -74,8 +73,8 @@ bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
   }
   if (victim->getPosition() < POSITION_STANDING) {
     if (!silent)
-      act("$N is already on the $g.  You can't bodyslam $M.",
-          FALSE, this, 0, victim, TO_CHAR);
+      act("$N is already on the $g.  You can't bodyslam $M.", FALSE, this, 0,
+        victim, TO_CHAR);
     return FALSE;
   }
 
@@ -83,30 +82,29 @@ bool TBeing::canBodyslam(TBeing *victim, silentTypeT silent)
 }
 
 enum bodySlamMissT {
-    TYPE_DEFAULT,
-    TYPE_DEX,
-    TYPE_STR,
-    TYPE_MONK
+  TYPE_DEFAULT,
+  TYPE_DEX,
+  TYPE_STR,
+  TYPE_MONK
 };
 
-static int bodyslamMiss(TBeing *caster, TBeing *victim, bodySlamMissT type)
-{
+static int bodyslamMiss(TBeing* caster, TBeing* victim, bodySlamMissT type) {
   int rc;
 
   if (type == TYPE_DEX) {
-    act("$N deftly avoids your bodyslam attempt.", FALSE, caster, 
-              0, victim, TO_CHAR);
-    act("You deftly avoid $n's bodyslam attempt.", FALSE, caster, 
-              0, victim, TO_VICT);
-    act("$N deftly avoids $n's bodyslam attempt.", FALSE, caster, 
-              0, victim, TO_NOTVICT);
+    act("$N deftly avoids your bodyslam attempt.", FALSE, caster, 0, victim,
+      TO_CHAR);
+    act("You deftly avoid $n's bodyslam attempt.", FALSE, caster, 0, victim,
+      TO_VICT);
+    act("$N deftly avoids $n's bodyslam attempt.", FALSE, caster, 0, victim,
+      TO_NOTVICT);
   } else if (type == TYPE_MONK) {
-    act("$N deftly counters your attempt, throwing you to the $g.", 
-              FALSE, caster, 0, victim, TO_CHAR, ANSI_RED);
-    act("You deftly counter $n's bodyslam attempt, and throw $m to the $g.", 
-              FALSE, caster, 0, victim, TO_VICT);
+    act("$N deftly counters your attempt, throwing you to the $g.", FALSE,
+      caster, 0, victim, TO_CHAR, ANSI_RED);
+    act("You deftly counter $n's bodyslam attempt, and throw $m to the $g.",
+      FALSE, caster, 0, victim, TO_VICT);
     act("$N deftly counters $n's bodyslam attempt, and heaves $m to the $g.",
-              FALSE, caster, 0, victim, TO_NOTVICT);
+      FALSE, caster, 0, victim, TO_NOTVICT);
 
     rc = caster->crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -116,29 +114,30 @@ static int bodyslamMiss(TBeing *caster, TBeing *victim, bodySlamMissT type)
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else if (type == TYPE_STR) {
-    act("$n collapses as $e fails to pick $N up.", FALSE, caster, 
-              0, victim, TO_NOTVICT);
-    act("Your strength gives out as you try to pick $N up for bodyslamming.", 
-              FALSE, caster, 0, victim, TO_CHAR);
+    act("$n collapses as $e fails to pick $N up.", FALSE, caster, 0, victim,
+      TO_NOTVICT);
+    act("Your strength gives out as you try to pick $N up for bodyslamming.",
+      FALSE, caster, 0, victim, TO_CHAR);
     act("$n's strength gives out as $e tries to pick you up for bodyslamming.",
-              FALSE, caster, 0, victim, TO_VICT);
+      FALSE, caster, 0, victim, TO_VICT);
 
     rc = caster->crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
 
-    caster->sendTo(format("%sYou fall to the %s.%s\n\r") % caster->blue() % caster->roomp->describeGround() % caster->norm());
+    caster->sendTo(format("%sYou fall to the %s.%s\n\r") % caster->blue() %
+                   caster->roomp->describeGround() % caster->norm());
 
     rc = caster->trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    act("$n tries to bodyslam $N, but ends up falling down.", FALSE, 
-              caster, 0, victim, TO_NOTVICT);
-    act("You try to bodyslam $N, but end up falling on your face.",
-                         FALSE, caster, 0, victim, TO_CHAR);
-    act("$n fails to bodyslam you, and tumbles to the $g.", FALSE, 
-              caster, 0, victim, TO_VICT);
+    act("$n tries to bodyslam $N, but ends up falling down.", FALSE, caster, 0,
+      victim, TO_NOTVICT);
+    act("You try to bodyslam $N, but end up falling on your face.", FALSE,
+      caster, 0, victim, TO_CHAR);
+    act("$n fails to bodyslam you, and tumbles to the $g.", FALSE, caster, 0,
+      victim, TO_VICT);
 
     rc = caster->crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -149,34 +148,33 @@ static int bodyslamMiss(TBeing *caster, TBeing *victim, bodySlamMissT type)
       return rc;
   }
 
-  if (caster->reconcileDamage(victim, 0,SKILL_BODYSLAM) == -1)
+  if (caster->reconcileDamage(victim, 0, SKILL_BODYSLAM) == -1)
     return DELETE_VICT;
 
   return FALSE;
 }
 
-static int bodyslamHit(TBeing *caster, TBeing *victim)
-{
+static int bodyslamHit(TBeing* caster, TBeing* victim) {
   int rc;
 
   if (!victim->riding) {
-    act("$n lifts $N over $s head and slams $M to the $g.",
-           FALSE, caster, 0, victim, TO_NOTVICT);
-    act("You lift $N over your head and slam $M to the $g.",
-           FALSE, caster, 0, victim, TO_CHAR);
-    act("You get a great view as $n lifts you over $s head.",
-           FALSE, caster, 0, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward and knocks the wind out of you!",
-           FALSE, caster, 0, victim, TO_VICT, ANSI_RED);
+    act("$n lifts $N over $s head and slams $M to the $g.", FALSE, caster, 0,
+      victim, TO_NOTVICT);
+    act("You lift $N over your head and slam $M to the $g.", FALSE, caster, 0,
+      victim, TO_CHAR);
+    act("You get a great view as $n lifts you over $s head.", FALSE, caster, 0,
+      victim, TO_VICT);
+    act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
+      caster, 0, victim, TO_VICT, ANSI_RED);
   } else {
-    act("$n lifts $N off $S $o and slams $M to the $g.",
-           FALSE, caster, victim->riding, victim, TO_NOTVICT);
-    act("You lift $N off $S $o and slam $M to the $g.",
-           FALSE, caster, victim->riding, victim, TO_CHAR);
-    act("You get a great view as $n lifts you off your $o over $s head.",
-           FALSE, caster, victim->riding, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward and knocks the wind out of you!",
-           FALSE, caster, victim->riding, victim, TO_VICT, ANSI_RED);
+    act("$n lifts $N off $S $o and slams $M to the $g.", FALSE, caster,
+      victim->riding, victim, TO_NOTVICT);
+    act("You lift $N off $S $o and slam $M to the $g.", FALSE, caster,
+      victim->riding, victim, TO_CHAR);
+    act("You get a great view as $n lifts you off your $o over $s head.", FALSE,
+      caster, victim->riding, victim, TO_VICT);
+    act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
+      caster, victim->riding, victim, TO_VICT, ANSI_RED);
     victim->dismount(POSITION_RESTING);
   }
 
@@ -204,25 +202,26 @@ static int bodyslamHit(TBeing *caster, TBeing *victim)
   // round up
   wt += 0.5;
 
-  victim->addToWait((int) wt);
+  victim->addToWait((int)wt);
 
   // in general, we should not do BOTH damage and command lock-out
   // however, since Bslam has nasty requirements on strength and
   // dex to lift person up, doing this damage will counter-balance
   // those penalties.  Warrior-skill damage isn't all that high
   // to begin with...
-  int dam = caster->getSkillDam(victim, SKILL_BODYSLAM, caster->getSkillLevel(SKILL_BODYSLAM), caster->getAdvLearning(SKILL_BODYSLAM));
+  int dam = caster->getSkillDam(victim, SKILL_BODYSLAM,
+    caster->getSkillLevel(SKILL_BODYSLAM),
+    caster->getAdvLearning(SKILL_BODYSLAM));
 
-  if (caster->reconcileDamage(victim, dam,SKILL_BODYSLAM) == -1)
+  if (caster->reconcileDamage(victim, dam, SKILL_BODYSLAM) == -1)
     return DELETE_VICT;
 
   return TRUE;
 }
 
-static int bodyslam(TBeing *caster, TBeing *victim)
-{
+static int bodyslam(TBeing* caster, TBeing* victim) {
   int rc;
-  const int BODYSLAM_COST = 15;       // movement cost to slam
+  const int BODYSLAM_COST = 15;  // movement cost to slam
 
   if (!caster->canBodyslam(victim, SILENT_NO))
     return FALSE;
@@ -238,41 +237,39 @@ static int bodyslam(TBeing *caster, TBeing *victim)
   int successfulSkill = caster->bSuccess(bKnown, SKILL_BODYSLAM);
 
   // Success case
-  if (!victim->awake() ||
-      (successfulSkill && successfulHit && successfulHit != GUARANTEED_FAILURE)) {
-
+  if (!victim->awake() || (successfulSkill && successfulHit &&
+                            successfulHit != GUARANTEED_FAILURE)) {
     // Allow victim a chance to counter
-    if (victim->canCounterMove(bKnown/3)) {
+    if (victim->canCounterMove(bKnown / 3)) {
       SV(SKILL_BODYSLAM);
       rc = bodyslamMiss(caster, victim, TYPE_MONK);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
-    // Ensure 
-    } else if (compareWeights(victim->getTotalWeight(TRUE), 
-                              caster->carryWeightLimit() * 3) == -1) {
+      // Ensure
+    } else if (compareWeights(victim->getTotalWeight(TRUE),
+                 caster->carryWeightLimit() * 3) == -1) {
       CF(SKILL_BODYSLAM);
       rc = bodyslamMiss(caster, victim, TYPE_STR);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
-    } else 
+    } else
       return bodyslamHit(caster, victim);
   } else {
     rc = bodyslamMiss(caster, victim, TYPE_DEFAULT);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
-   
+
   return TRUE;
 }
 
-int TBeing::doBodyslam(const char *argument, TBeing *vict)
-{
+int TBeing::doBodyslam(const char* argument, TBeing* vict) {
   int rc = 0, learning = 0;
-  TBeing *victim;
+  TBeing* victim;
   char name_buf[256];
-  
+
   strcpy(name_buf, argument);
-  
+
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {
@@ -288,12 +285,16 @@ int TBeing::doBodyslam(const char *argument, TBeing *vict)
   if (desc) {
     if ((learning = getAdvLearning(SKILL_BODYSLAM)) <= 40) {
       if (heldInPrimHand() || heldInSecHand()) {
-        sendTo("You are not skilled enough to bodyslam with something in your hands!\n\r");
+        sendTo(
+          "You are not skilled enough to bodyslam with something in your "
+          "hands!\n\r");
         return FALSE;
       }
     } else if (learning <= 75) {
       if (heldInPrimHand()) {
-        sendTo("You are not skilled enough to bodyslam with something in your primary hand!\n\r");
+        sendTo(
+          "You are not skilled enough to bodyslam with something in your "
+          "primary hand!\n\r");
         return FALSE;
       }
     } else {
@@ -312,4 +313,3 @@ int TBeing::doBodyslam(const char *argument, TBeing *vict)
   }
   return rc;
 }
-

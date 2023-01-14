@@ -26,7 +26,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the BASIC THIEF discipline.
@@ -34,9 +33,8 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDThief : public CDiscipline
-{
-public:
+class CDThief : public CDiscipline {
+  public:
     CSkill skSwindle;
     CSkill skSneak;
     CSkill skStabbing;
@@ -58,8 +56,8 @@ public:
 
     CSkill skRepairThief;
 
-    CDThief()
-      : CDiscipline(),
+    CDThief() :
+      CDiscipline(),
       skSwindle(),
       skSneak(),
       skStabbing(),
@@ -78,10 +76,9 @@ public:
       skHide(),
       skDisarmThief(),
       skTrack(),
-      skRepairThief() {
-    }
-    CDThief(const CDThief &a)
-      : CDiscipline(a),
+      skRepairThief() {}
+    CDThief(const CDThief& a) :
+      CDiscipline(a),
       skSwindle(a.skSwindle),
       skSneak(a.skSneak),
       skStabbing(a.skStabbing),
@@ -100,10 +97,10 @@ public:
       skHide(a.skHide),
       skDisarmThief(a.skDisarmThief),
       skTrack(a.skTrack),
-      skRepairThief(a.skRepairThief) {
-    }
-    CDThief & operator=(const CDThief &a) {
-      if (this == &a) return *this;
+      skRepairThief(a.skRepairThief) {}
+    CDThief& operator=(const CDThief& a) {
+      if (this == &a)
+        return *this;
       CDiscipline::operator=(a);
       skSwindle = a.skSwindle;
       skSneak = a.skSneak;
@@ -127,16 +124,16 @@ public:
       return *this;
     }
     virtual ~CDThief() {}
-    virtual CDThief * cloneMe() { return new CDThief(*this); }
+    virtual CDThief* cloneMe() { return new CDThief(*this); }
 
-    bool isBasic(){ return true; }
+    bool isBasic() { return true; }
 
-private:
+  private:
 };
 
-    int sneak(TBeing *, spellNumT);
-    int subterfuge(TBeing *, TBeing *);
-    int pickLocks(TBeing *, const char *, const char *, const char *);
-    int spy(TBeing *);
-    int hide(TBeing *, spellNumT);
-    int disguise(TBeing *, char *);
+int sneak(TBeing*, spellNumT);
+int subterfuge(TBeing*, TBeing*);
+int pickLocks(TBeing*, const char*, const char*, const char*);
+int spy(TBeing*);
+int hide(TBeing*, spellNumT);
+int disguise(TBeing*, char*);

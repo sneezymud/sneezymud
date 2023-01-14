@@ -20,17 +20,17 @@
 #include "obj_base_corpse.h"
 #include "low.h"
 
-std::map<unsigned short int, dissectInfo>dissect_array;
+std::map<unsigned short int, dissectInfo> dissect_array;
 
-int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *gl_msg, TBeing *ch)
-{
+int determineDissectionItem(TBaseCorpse* corpse, int* amount, char* msg,
+  char* gl_msg, TBeing* ch) {
   int num = -1;
 
   if (num == -1) {
     // switch based on generic race
-    switch(corpse->getCorpseRace()) {
+    switch (corpse->getCorpseRace()) {
       case RACE_PHOENIX:
-        if (::number(0,1)) {
+        if (::number(0, 1)) {
           num = COMP_FLAMING_SWORD;
           *amount = 50;
           sprintf(msg, "You tear $p off of $N.");
@@ -50,24 +50,24 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
         break;
       default:
         break;
-    }  
+    }
   }
   if (num == -1) {
     // switch based on vnum
     // this switch should ONLY be for VERY special cases now
     // put generic stuff in the dissect file and let the LOWs maintain it
-    switch(corpse->getCorpseVnum()) {
+    switch (corpse->getCorpseVnum()) {
       case Mob::TIGER_SHARK:
-	if(ch && ch->hasQuestBit(TOG_STARTED_MONK_BLUE)){
-	  num = Obj::MONK_QUEST_DOG_COLLAR;
-	  *amount = 100;
-	  sprintf(msg, "You reach deep into $N's maw and pull out $p.");
-	  sprintf(gl_msg, "$n reaches deep into $N's maw and pulls out $p.");
-	}
+        if (ch && ch->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
+          num = Obj::MONK_QUEST_DOG_COLLAR;
+          *amount = 100;
+          sprintf(msg, "You reach deep into $N's maw and pull out $p.");
+          sprintf(gl_msg, "$n reaches deep into $N's maw and pulls out $p.");
+        }
         break;
       default:
         break;
-    }  
+    }
   }
   if (num == -1) {
     std::map<unsigned short int, dissectInfo>::const_iterator CT;
@@ -83,10 +83,9 @@ int determineDissectionItem(TBaseCorpse *corpse, int *amount, char *msg, char *g
   return num;
 }
 
-int TBeing::doDissect(sstring argument)
-{
+int TBeing::doDissect(sstring argument) {
   sstring namebuf;
-  TObj *obj;
+  TObj* obj;
   int rc;
 
   one_argument(argument, namebuf);
@@ -111,9 +110,12 @@ int TBeing::doDissect(sstring argument)
     return FALSE;
   }
 
-  if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, roomp->stuff)))) {
-    if (!(obj = dynamic_cast<TObj *> (searchLinkedListVis(this, namebuf, stuff)))) {
-      sendTo(format("There doesn't seem to be any '%s' here to dissect.\n\r") % namebuf);
+  if (!(obj = dynamic_cast<TObj*>(
+          searchLinkedListVis(this, namebuf, roomp->stuff)))) {
+    if (!(obj =
+            dynamic_cast<TObj*>(searchLinkedListVis(this, namebuf, stuff)))) {
+      sendTo(format("There doesn't seem to be any '%s' here to dissect.\n\r") %
+             namebuf);
       return FALSE;
     }
   }
@@ -125,7 +127,9 @@ int TBeing::doDissect(sstring argument)
 
   // this is mostly here to stop auto-loot kicking in while 'zerking
   if (isCombatMode(ATTACK_BERSERK)) {
-    sendTo(COLOR_BASIC, "<r>You are way too blood crazed at the moment to be dissecting stuff.<1>\n\r");
+    sendTo(COLOR_BASIC,
+      "<r>You are way too blood crazed at the moment to be dissecting "
+      "stuff.<1>\n\r");
     return FALSE;
   }
 
@@ -140,40 +144,34 @@ int TBeing::doDissect(sstring argument)
   return rc;
 }
 
-int dissect(TBeing * caster, TObj * corpse)
-{
-  return corpse->dissectMe(caster);
-}
+int dissect(TBeing* caster, TObj* corpse) { return corpse->dissectMe(caster); }
 
-int TObj::dissectMe(TBeing *caster)
-{
-  act("$p: You can only dissect corpses.", 
-          FALSE, caster, this, 0, TO_CHAR);
+int TObj::dissectMe(TBeing* caster) {
+  act("$p: You can only dissect corpses.", FALSE, caster, this, 0, TO_CHAR);
   return FALSE;
 }
 
-void readDissectionFile()
-{
+void readDissectionFile() {
   dissectInfo di;
-  FILE *fp;
+  FILE* fp;
   unsigned int mobNum;
   char buf[256];
   int res;
 
-  const char * const dissect_file = "objdata/dissect";
+  const char* const dissect_file = "objdata/dissect";
 
   fp = fopen(dissect_file, "r");
   if (!fp) {
-    vlogf(LOG_FILE, format("Unable to open '%s' for reading") %  dissect_file);
+    vlogf(LOG_FILE, format("Unable to open '%s' for reading") % dissect_file);
     return;
   }
 
   while (!feof(fp)) {
-    res = fscanf(fp, " %d ", &mobNum); 
+    res = fscanf(fp, " %d ", &mobNum);
     if (res != 1)
       continue;
-    //    res = fscanf(fp, " %d %d %d ", &di.loadItem, &di.amount, &di.count); 
-    res = fscanf(fp, " %d %d ", &di.loadItem, &di.amount); 
+    //    res = fscanf(fp, " %d %d %d ", &di.loadItem, &di.amount, &di.count);
+    res = fscanf(fp, " %d %d ", &di.loadItem, &di.amount);
     if (res != 2)
       continue;
     if (!fgets(buf, 256, fp))

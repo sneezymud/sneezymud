@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include <cstdarg>
 #include <cmath>
 #include <cstdio>
@@ -35,17 +34,17 @@ extern "C" {
 #include "obj_base_weapon.h"
 #include "obj_base_clothing.h"
 
-
 // fname will look for the first non-alpha character
 // I added - and ' as valid fname chars since this allows us to do better things
 // with items and mobs in the name field.  - Bat 6-30-97
-const sstring fname(sstring const& name)
-{
-  const char *namelist = name.c_str();
+const sstring fname(const sstring& name) {
+  const char* namelist = name.c_str();
   char holder[60];
-  char *point;
+  char* point;
 
-  for (point = holder; isalpha(*namelist) || (*namelist == '-') || (*namelist == '\''); namelist++, point++)
+  for (point = holder;
+       isalpha(*namelist) || (*namelist == '-') || (*namelist == '\'');
+       namelist++, point++)
     *point = *namelist;
 
   *point = '\0';
@@ -55,23 +54,22 @@ const sstring fname(sstring const& name)
 
 // split up "str", using delimiters "sep" and place resulting sstrings in "argv"
 // TODO: move into sstring class
-int split_string(const sstring &str, const sstring &sep, std::vector<sstring> &argv)
-{
-  size_t pos=0, last=0;
+int split_string(const sstring& str, const sstring& sep,
+  std::vector<sstring>& argv) {
+  size_t pos = 0, last = 0;
 
-  while((pos=str.find_first_of(sep,last)) != sstring::npos){
-    argv.push_back(str.substr(last,pos-last));
-    last=pos+1;
+  while ((pos = str.find_first_of(sep, last)) != sstring::npos) {
+    argv.push_back(str.substr(last, pos - last));
+    last = pos + 1;
   }
 
-  argv.push_back(str.substr(last,str.length()-last));
+  argv.push_back(str.substr(last, str.length() - last));
 
   return argv.size();
 }
 
-bool isname(const sstring &str, const sstring &namelist)
-{
-  std::vector <sstring> argv, xargv;
+bool isname(const sstring& str, const sstring& namelist) {
+  std::vector<sstring> argv, xargv;
   unsigned int i, j;
 
   if (namelist.empty())
@@ -80,8 +78,8 @@ bool isname(const sstring &str, const sstring &namelist)
   split_string(str, "- \t\n\r,", argv);
   split_string(namelist, "- \t\n\r,", xargv);
 
-  for(i=0;i < argv.size();i++) {
-    for(j=0;j < xargv.size();j++) {
+  for (i = 0; i < argv.size(); i++) {
+    for (j = 0; j < xargv.size(); j++) {
       if (!xargv[j].empty() && is_abbrev(argv[i], xargv[j])) {
         xargv[j] = "";
         break;
@@ -93,20 +91,19 @@ bool isname(const sstring &str, const sstring &namelist)
   return TRUE;
 }
 
-bool is_exact_spellname(const sstring &str, const sstring &namelist)
-{
-  std::vector <sstring> argv, xargv;
+bool is_exact_spellname(const sstring& str, const sstring& namelist) {
+  std::vector<sstring> argv, xargv;
   unsigned int i, j;
 
   split_string(str, "- \t\n\r,", argv);
   split_string(namelist, "- \t\n\r,", xargv);
 
-  if(!is_abbrev(argv[0], xargv[0]))
+  if (!is_abbrev(argv[0], xargv[0]))
     return FALSE;
 
   for (i = 0; i < argv.size(); i++) {
     for (j = 0; j < xargv.size(); j++) {
-      if(!xargv[j].empty() && argv[i].lower() == xargv[j].lower()){
+      if (!xargv[j].empty() && argv[i].lower() == xargv[j].lower()) {
         xargv[j] = "";
         break;
       }
@@ -117,9 +114,8 @@ bool is_exact_spellname(const sstring &str, const sstring &namelist)
   return TRUE;
 }
 
-bool is_exact_name(const sstring &str, const sstring &namelist)
-{
-  std::vector <sstring> argv, xargv;
+bool is_exact_name(const sstring& str, const sstring& namelist) {
+  std::vector<sstring> argv, xargv;
   unsigned int i, j;
 
   split_string(str, "- \t\n\r,", argv);
@@ -127,7 +123,7 @@ bool is_exact_name(const sstring &str, const sstring &namelist)
 
   for (i = 0; i < argv.size(); i++) {
     for (j = 0; j < xargv.size(); j++) {
-      if(argv[i].lower() == xargv[j].lower()){
+      if (argv[i].lower() == xargv[j].lower()) {
         xargv[j] = "";
         break;
       }
@@ -138,8 +134,7 @@ bool is_exact_name(const sstring &str, const sstring &namelist)
   return TRUE;
 }
 
-void TBeing::affectChange(uint64_t original, silentTypeT silent)
-{
+void TBeing::affectChange(uint64_t original, silentTypeT silent) {
   uint64_t current = specials.affectedBy;
   int rc;
 
@@ -154,19 +149,19 @@ void TBeing::affectChange(uint64_t original, silentTypeT silent)
   }
   if (!IS_SET(current, AFF_INVISIBLE) && IS_SET(original, AFF_INVISIBLE)) {
     sendTo("You are no longer invisible.\n\r");
-    act("$n appears suddenly!", FALSE, this,0,0,TO_ROOM);
+    act("$n appears suddenly!", FALSE, this, 0, 0, TO_ROOM);
   }
   if (IS_SET(current, AFF_INVISIBLE) && !IS_SET(original, AFF_INVISIBLE)) {
     sendTo("You vanish.\n\r");
-    act("$n vanishes!", FALSE, this,0,0,TO_ROOM);
+    act("$n vanishes!", FALSE, this, 0, 0, TO_ROOM);
   }
   if (!IS_SET(current, AFF_SHADOW_WALK) && IS_SET(original, AFF_SHADOW_WALK)) {
     sendTo("You no longer walk among the shadows.\n\r");
-    act("$n suddenly starts making noise.", FALSE, this,0,0,TO_ROOM);
+    act("$n suddenly starts making noise.", FALSE, this, 0, 0, TO_ROOM);
   }
   if (IS_SET(current, AFF_SHADOW_WALK) && !IS_SET(original, AFF_SHADOW_WALK)) {
     sendTo("You become transparent.\n\r");
-    act("$n becomes transparent!", FALSE, this,0,0,TO_ROOM);
+    act("$n becomes transparent!", FALSE, this, 0, 0, TO_ROOM);
   }
   if (!IS_SET(current, AFF_SENSE_LIFE) && IS_SET(original, AFF_SENSE_LIFE)) {
     sendTo("You feel cutoff from your awareness of the life around you.\n\r");
@@ -176,54 +171,56 @@ void TBeing::affectChange(uint64_t original, silentTypeT silent)
   }
   if (!IS_SET(current, AFF_LEVITATING) && IS_SET(original, AFF_LEVITATING)) {
     sendTo("You stop levitating!\n\r");
-    act("$n stops levitating!", FALSE, this,0,0,TO_ROOM);
+    act("$n stops levitating!", FALSE, this, 0, 0, TO_ROOM);
   }
   if (IS_SET(current, AFF_LEVITATING) && !IS_SET(original, AFF_LEVITATING)) {
     sendTo("You float upwards a few inches.  You're levitating!\n\r");
-    act("$n begins to levitate!", FALSE, this,0,0,TO_ROOM);
+    act("$n begins to levitate!", FALSE, this, 0, 0, TO_ROOM);
   }
   if (!IS_SET(current, AFF_SANCTUARY) && IS_SET(original, AFF_SANCTUARY)) {
     sendTo("You are no longer surrounded by a brilliant, white light.\n\r");
-    act("A brilliant, white light disappears from around $n!", FALSE, this,0,0,TO_ROOM);
+    act("A brilliant, white light disappears from around $n!", FALSE, this, 0,
+      0, TO_ROOM);
   }
   if (IS_SET(current, AFF_SANCTUARY) && !IS_SET(original, AFF_SANCTUARY)) {
     sendTo("You are now surrounded by a brilliant, white light.\n\r");
-    act("A brilliant, white light surrounds $n!", FALSE, this,0,0,TO_ROOM);
+    act("A brilliant, white light surrounds $n!", FALSE, this, 0, 0, TO_ROOM);
   }
   if (!IS_SET(current, AFF_FLYING) && IS_SET(original, AFF_FLYING)) {
-
     if (roomp && roomp->isFlyingSector()) {
-      sendTo("You lose your ability to fly. Lucky for you the magic in this room prevents your fall.\n\r");
+      sendTo(
+        "You lose your ability to fly. Lucky for you the magic in this room "
+        "prevents your fall.\n\r");
     } else {
       sendTo("You lose your ability to fly.\n\r");
       if (roomp && isFlying()) {
         // roomp is needed since this is sometimes called by dead critters
         rc = crashLanding(POSITION_SITTING);
         if (IS_SET_DELETE(rc, DELETE_THIS))
-        // I don't think this can happen, so won't bother to do work to pass the return if it does
+          // I don't think this can happen, so won't bother to do work to pass
+          // the return if it does
           vlogf(LOG_BUG, "fix problem in affectChange and crashLanding");
       }
     }
   }
   if (IS_SET(current, AFF_FLYING) && !IS_SET(original, AFF_FLYING)) {
     sendTo("You feel light as a feather.  You bet you could fly.\n\r");
-//        act("$n starts flying about!", FALSE, this,0,0,TO_ROOM);
+    //        act("$n starts flying about!", FALSE, this,0,0,TO_ROOM);
   }
   if (!IS_SET(current, AFF_PARALYSIS) && IS_SET(original, AFF_PARALYSIS)) {
     if (getPosition() > POSITION_DEAD) {
       sendTo("You can move again.\n\r");
-      act("$n starts moving again!", FALSE, this,0,0,TO_ROOM);
+      act("$n starts moving again!", FALSE, this, 0, 0, TO_ROOM);
     }
   }
   if (IS_SET(current, AFF_PARALYSIS) && !IS_SET(original, AFF_PARALYSIS)) {
     sendTo("You freeze up.  You can't seem to move at all.\n\r");
-    act("$n suddenly stops moving!", FALSE, this,0,0,TO_ROOM);
+    act("$n suddenly stops moving!", FALSE, this, 0, 0, TO_ROOM);
   }
 }
 
-void TBeing::addSkillApply(spellNumT skillNum, short amt)
-{
-  skillApplyData *temp = NULL;
+void TBeing::addSkillApply(spellNumT skillNum, short amt) {
+  skillApplyData* temp = NULL;
 
   for (temp = skillApplys; temp; temp = temp->nextApply) {
     if (temp->skillNum == skillNum) {
@@ -231,7 +228,7 @@ void TBeing::addSkillApply(spellNumT skillNum, short amt)
       temp->numApplys += 1;
       return;
     }
-  } 
+  }
 
   // gets here only if didn't find one
   temp = new skillApplyData;
@@ -243,12 +240,14 @@ void TBeing::addSkillApply(spellNumT skillNum, short amt)
   skillApplys = temp;
 }
 
-void TBeing::remSkillApply(spellNumT skillNum, short amt)
-{
+void TBeing::remSkillApply(spellNumT skillNum, short amt) {
   skillApplyData *temp = NULL, *temp2 = NULL;
- 
+
   if (!skillApplys) {
-    vlogf(LOG_BUG, format("Somehow, remSkillApply was called with no skillApplys (%s) (%d)") %  getName() % skillNum);
+    vlogf(LOG_BUG,
+      format(
+        "Somehow, remSkillApply was called with no skillApplys (%s) (%d)") %
+        getName() % skillNum);
     return;
   }
   for (temp = skillApplys; temp; temp = temp2) {
@@ -262,10 +261,13 @@ void TBeing::remSkillApply(spellNumT skillNum, short amt)
           // apply is first in list
           skillApplys = temp->nextApply;
         } else {
-          skillApplyData *prev;
-          for (prev = skillApplys; prev && prev->nextApply != temp; prev = prev->nextApply);
+          skillApplyData* prev;
+          for (prev = skillApplys; prev && prev->nextApply != temp;
+               prev = prev->nextApply)
+            ;
           if (!prev) {
-            vlogf(LOG_BUG, "Could't locate previous skill_apply while removing");
+            vlogf(LOG_BUG,
+              "Could't locate previous skill_apply while removing");
             return;
           }
           // adjust linked list
@@ -274,7 +276,9 @@ void TBeing::remSkillApply(spellNumT skillNum, short amt)
 
         // sanity
         if (temp->amount)
-          vlogf(LOG_BUG, format("Somehow, remSkillApply had a last apply that didnt bring affect to 0 (%s) (%d)") %  getName() % skillNum);
+          vlogf(LOG_BUG, format("Somehow, remSkillApply had a last apply that "
+                                "didnt bring affect to 0 (%s) (%d)") %
+                           getName() % skillNum);
 
         delete temp;
       }
@@ -283,13 +287,15 @@ void TBeing::remSkillApply(spellNumT skillNum, short amt)
   }
 
   // !temp....
-  vlogf(LOG_BUG, format("Somehow, skillApplys had no skill to remove in remSkillApply (%s) (%d)") %  getName() % skillNum); 
+  vlogf(LOG_BUG, format("Somehow, skillApplys had no skill to remove in "
+                        "remSkillApply (%s) (%d)") %
+                   getName() % skillNum);
 }
 
-void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bool add, silentTypeT silent)
-{
+void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv,
+  bool add, silentTypeT silent) {
   int tmpInt;
-  CDiscipline *cd;
+  CDiscipline* cd;
 
   // special case, just treat it as a bitvector
   if (loc == APPLY_SPELL_EFFECT)
@@ -304,7 +310,7 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
     }
   }
 
-  switch(loc) {
+  switch (loc) {
     case APPLY_NONE:
     case APPLY_NOISE:
     case APPLY_LIGHT:
@@ -313,24 +319,27 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
       return;
     case APPLY_SPELL:
       if (!discArray[mod]) {
-        vlogf(LOG_BUG, format("ILLEGAL skill (%d) on being %s.  Ignoring.") %  mod % getName());
+        vlogf(LOG_BUG, format("ILLEGAL skill (%d) on being %s.  Ignoring.") %
+                         mod % getName());
         return;
       }
       if (add) {
         addSkillApply(spellNumT(mod), mod2);
       } else {
-        remSkillApply(spellNumT(mod),mod2);
+        remSkillApply(spellNumT(mod), mod2);
       }
       return;
     case APPLY_DISCIPLINE: {
       discNumT dnt = mapFileToDisc(mod);
       if ((dnt == DISC_NONE) || !discNames[dnt].disc_num) {
-        vlogf(LOG_BUG, format("ILLEGAL Discipline (%d) on being %s.  Ignoring.") %  mod % getName());
+        vlogf(LOG_BUG,
+          format("ILLEGAL Discipline (%d) on being %s.  Ignoring.") % mod %
+            getName());
         return;
       }
       if (!(cd = getDiscipline(dnt))) {
         return;
-      }      
+      }
       if (add) {
         tmpInt = cd->getLearnedness() + mod2;
         if (tmpInt > MAX_DISC_LEARNEDNESS)
@@ -340,20 +349,20 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
         tmpInt = cd->getLearnedness() - mod2;
         if (tmpInt < 0)
           tmpInt = 0;
-        if (cd->getNatLearnedness() == MAX_DISC_LEARNEDNESS) 
+        if (cd->getNatLearnedness() == MAX_DISC_LEARNEDNESS)
           tmpInt = MAX_DISC_LEARNEDNESS;
         cd->setLearnedness(tmpInt);
       }
       return;
-      }
+    }
     case APPLY_IMMUNITY:
       if (mod < MIN_IMMUNE || mod >= MAX_IMMUNES) {
         vlogf(LOG_BUG, "Bad immunity value");
         return;
       }
-      if (add) 
+      if (add)
         addToImmunity(immuneTypeT(mod), mod2);
-      else 
+      else
         addToImmunity(immuneTypeT(mod), -mod2);
       return;
     case APPLY_SPELL_EFFECT:
@@ -396,26 +405,26 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
     case APPLY_CHA:
       addToStat(STAT_CURRENT, STAT_CHA, mod);
       return;
-    case APPLY_AGE:
-      {
-        // changing the age will affect stats
-        // natural stats are recalculated on the fly, so no probs
-        // current stats, however, must be updated to reflect.
-        // figure out how much natural changes by, and change current to match
-        statTypeT whichStat;
-        for (whichStat = MIN_STAT; whichStat < MAX_STATS; whichStat++) {
-          int oldVal = getStat(STAT_NATURAL, whichStat);
-          age_mod += mod;
-          int newVal = getStat(STAT_NATURAL, whichStat);
-
-          setStat(STAT_CURRENT, whichStat, getStat(STAT_CURRENT, whichStat) + newVal - oldVal);
-          age_mod -= mod;
-        }
-
-        // change the age for real
+    case APPLY_AGE: {
+      // changing the age will affect stats
+      // natural stats are recalculated on the fly, so no probs
+      // current stats, however, must be updated to reflect.
+      // figure out how much natural changes by, and change current to match
+      statTypeT whichStat;
+      for (whichStat = MIN_STAT; whichStat < MAX_STATS; whichStat++) {
+        int oldVal = getStat(STAT_NATURAL, whichStat);
         age_mod += mod;
-        return;
+        int newVal = getStat(STAT_NATURAL, whichStat);
+
+        setStat(STAT_CURRENT, whichStat,
+          getStat(STAT_CURRENT, whichStat) + newVal - oldVal);
+        age_mod -= mod;
       }
+
+      // change the age for real
+      age_mod += mod;
+      return;
+    }
     case APPLY_CHAR_WEIGHT:
       setWeight(getWeight() + mod);
       return;
@@ -444,13 +453,13 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
       setSpellHitroll(getSpellHitroll() + mod);
       return;
     case APPLY_HITROLL:
-      setHitroll(getHitroll() + 10*mod);
+      setHitroll(getHitroll() + 10 * mod);
       return;
     case APPLY_DAMROLL:
       setDamroll(getDamroll() + mod);
       return;
     case APPLY_HITNDAM:
-      setHitroll(getHitroll() + 10*mod);
+      setHitroll(getHitroll() + 10 * mod);
       setDamroll(getDamroll() + mod);
       return;
     case APPLY_CAN_BE_SEEN:
@@ -471,62 +480,62 @@ void TBeing::affectModify(applyTypeT loc, long mod, long mod2, uint64_t bitv, bo
         myGarbles |= Garble::TYPE_PG13OUT;
       // add or remove the bit as needed
       if (mod < 0)
-        myGarbles &= ~(1<<(-mod)); // remove bit
+        myGarbles &= ~(1 << (-mod));  // remove bit
       else
-        myGarbles |= (1<<mod); // add bit
+        myGarbles |= (1 << mod);  // add bit
       // if we added or removed a garble
       if (myGarbles != my_garbleFlags)
-        toggleGarble(mod > 0? (Garble::TYPE)mod : (Garble::TYPE)-mod);
+        toggleGarble(mod > 0 ? (Garble::TYPE)mod : (Garble::TYPE)-mod);
       return;
     }
     case MAX_APPLY_TYPES:
       break;
   }
-  vlogf(LOG_BUG, format("Unknown apply adjust attempt (::affectModify()) %s loc: %d.") %  getName() % loc);
+  vlogf(LOG_BUG,
+    format("Unknown apply adjust attempt (::affectModify()) %s loc: %d.") %
+      getName() % loc);
   vlogf(LOG_BUG, "how'd this happen");
 }
 
-bool affectShouldApply(const TObj *obj, wearSlotT pos)
-{
+bool affectShouldApply(const TObj* obj, wearSlotT pos) {
   // this second check is to see if they are holding an item normally worn
   // elsewhere.  While we want to allow them to hold it, its effects should
   // only kick in if its worn in the right manner.
-  if (obj && ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || obj->canWear(ITEM_WEAR_HOLD))) {
+  if (obj && ((pos != HOLD_RIGHT && pos != HOLD_LEFT) ||
+               obj->canWear(ITEM_WEAR_HOLD))) {
     return true;
   }
   return false;
 }
 
-// This updates a character by subtracting everything he is affected by 
-// restoring original abilities, and then affecting all again          
-void TBeing::affectTotal()
-{
-  affectedData *af;
+// This updates a character by subtracting everything he is affected by
+// restoring original abilities, and then affecting all again
+void TBeing::affectTotal() {
+  affectedData* af;
   int j, value = 0;
-  TThing *t;
-  TObj *o = NULL;
-  CDiscipline *cd = NULL;
-  bool discAdd = FALSE; // , skillAdd = FALSE;
-  bool discAfAdd = FALSE; // skillAfAdd = FALSE
-  
+  TThing* t;
+  TObj* o = NULL;
+  CDiscipline* cd = NULL;
+  bool discAdd = FALSE;    // , skillAdd = FALSE;
+  bool discAfAdd = FALSE;  // skillAfAdd = FALSE
+
   wearSlotT i;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
-      if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
-          i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEG_L ||
-          i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
+    if ((t = equipment[i]) && (o = dynamic_cast<TObj*>(t))) {
+      if (o->usedAsPaired() &&
+          (i == WEAR_ARM_L || i == WEAR_WRIST_L || i == WEAR_HAND_L ||
+            i == WEAR_FINGER_L || i == WEAR_LEG_L || i == WEAR_FOOT_L ||
+            i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
         continue;
       if (!affectShouldApply(o, i))
         continue;
       for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-	//        if (o->affected[j].location == APPLY_SPELL)
+        //        if (o->affected[j].location == APPLY_SPELL)
         //  skillAdd = TRUE;
         if (o->affected[j].location == APPLY_DISCIPLINE)
           discAdd = TRUE;
-        affectModify(o->affected[j].location,
-                     o->affected[j].modifier,
-                     o->affected[j].modifier2,
-                     o->obj_flags.bitvector, FALSE, SILENT_YES);
+        affectModify(o->affected[j].location, o->affected[j].modifier,
+          o->affected[j].modifier2, o->obj_flags.bitvector, FALSE, SILENT_YES);
       }
     }
   }
@@ -535,9 +544,10 @@ void TBeing::affectTotal()
     //  skillAfAdd = TRUE;
     if (af->location == APPLY_DISCIPLINE)
       discAfAdd = TRUE;
-    affectModify(af->location, af->modifier, af->modifier2, af->bitvector, FALSE, SILENT_YES);
+    affectModify(af->location, af->modifier, af->modifier2, af->bitvector,
+      FALSE, SILENT_YES);
   }
-//  convertAbilities();
+  //  convertAbilities();
   // if I set myself, don't fix me...
   if (!isImmortal()) {
     statTypeT ij;
@@ -545,13 +555,12 @@ void TBeing::affectTotal()
       setStat(STAT_CURRENT, ij, getStat(STAT_NATURAL, ij));
   }
 
-// discs and skills next
+  // discs and skills next
 
   if (!discs) {
-// if no discs goto end of this section--do not do disc/skills 
+    // if no discs goto end of this section--do not do disc/skills
   } else {
-
-// FIRST DISCIPLINE LEARNING
+    // FIRST DISCIPLINE LEARNING
 
     discNumT dnt;
     for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
@@ -564,19 +573,20 @@ void TBeing::affectTotal()
         continue;
       }
 
-// set learning equal to nat learning
+      // set learning equal to nat learning
 
       cd->setLearnedness(cd->getNatLearnedness());
 
-// add in equipment-- needed here so we can get right skills
-//  in case wearing disc equipment
+      // add in equipment-- needed here so we can get right skills
+      //  in case wearing disc equipment
 
       if (discAdd) {
         for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-          if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
-            if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
-                 i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEG_L ||
-                 i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
+          if ((t = equipment[i]) && (o = dynamic_cast<TObj*>(t))) {
+            if (o->usedAsPaired() &&
+                (i == WEAR_ARM_L || i == WEAR_WRIST_L || i == WEAR_HAND_L ||
+                  i == WEAR_FINGER_L || i == WEAR_LEG_L || i == WEAR_FOOT_L ||
+                  i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
               continue;
             if (!affectShouldApply(o, i))
               continue;
@@ -585,28 +595,28 @@ void TBeing::affectTotal()
                 continue;
               if (mapFileToDisc(o->affected[j].modifier) != dnt)
                 continue;
-              affectModify(o->affected[j].location,
-                     o->affected[j].modifier,
-                     o->affected[j].modifier2,
-                     o->obj_flags.bitvector, TRUE, SILENT_YES);
+              affectModify(o->affected[j].location, o->affected[j].modifier,
+                o->affected[j].modifier2, o->obj_flags.bitvector, TRUE,
+                SILENT_YES);
             }
           }
         }
       }
       if (discAfAdd) {
         for (af = affected; af; af = af->next) {
-          if (af->location != APPLY_DISCIPLINE) 
+          if (af->location != APPLY_DISCIPLINE)
             continue;
           if (mapFileToDisc(af->modifier) != dnt)
             continue;
-          affectModify(af->location, af->modifier, af->modifier2, af->bitvector, TRUE, SILENT_YES);
+          affectModify(af->location, af->modifier, af->modifier2, af->bitvector,
+            TRUE, SILENT_YES);
         }
       }
       // even after all that if the disc is unlearned, make it so
       if (cd->getNatLearnedness() <= 0)
         cd->setLearnedness(0);
     }
-// NOW FOR SKILLS 
+    // NOW FOR SKILLS
 
     spellNumT num;
     for (num = MIN_SPELL; num < MAX_SKILL; num++) {
@@ -615,7 +625,7 @@ void TBeing::affectTotal()
 
       discNumT das = getDisciplineNumber(num, FALSE);
       if (das == DISC_NONE) {
-        vlogf(LOG_BUG, format("Bad disc for skill %d in affectTotal()") %  num);
+        vlogf(LOG_BUG, format("Bad disc for skill %d in affectTotal()") % num);
         continue;
       }
       if (isImmortal()) {
@@ -623,58 +633,59 @@ void TBeing::affectTotal()
         setSkillValue(num, MAX_SKILL_LEARNEDNESS);
         continue;
       }
-      
+
       if (!(cd = getDiscipline(das)))
         continue;
 
-      if (!cd->getNatLearnedness() || (cd->getNatLearnedness() < discArray[num]->start)) {
+      if (!cd->getNatLearnedness() ||
+          (cd->getNatLearnedness() < discArray[num]->start)) {
         // use NatLearning above, if never learned never learned
         // may have to reevaluate but for now it looks right 122297 cos
         setSkillValue(num, SKILL_MIN);
         continue;
       }
-      if ((desc || isPc()) && discArray[num]->toggle && 
-                !hasQuestBit(discArray[num]->toggle)) {
+      if ((desc || isPc()) && discArray[num]->toggle &&
+          !hasQuestBit(discArray[num]->toggle)) {
         setNatSkillValue(num, SKILL_MIN);
         setSkillValue(num, SKILL_MIN);
         continue;
       }
 
-// First skills that are not learn by doing
+      // First skills that are not learn by doing
       if (discArray[num]->startLearnDo < 0) {
-// Set natLearning
-// remember we  store natLearning so be careful with it
+        // Set natLearning
+        // remember we  store natLearning so be careful with it
 
-        value = discArray[num]->learn * 
-                  (cd->getNatLearnedness() - discArray[num]->start + 1);
+        value = discArray[num]->learn *
+                (cd->getNatLearnedness() - discArray[num]->start + 1);
         value = max(value, 1);
         value = max(value, discArray[num]->learn);
-        value = max(value, (int) getRawNatSkillValue(num));
-        value = min(value, (int) MAX_SKILL_LEARNEDNESS);
+        value = max(value, (int)getRawNatSkillValue(num));
+        value = min(value, (int)MAX_SKILL_LEARNEDNESS);
         setNatSkillValue(num, value);
 
-// set Current learning with no learn by doing numbers
+        // set Current learning with no learn by doing numbers
         if (cd->getLearnedness() == cd->getNatLearnedness()) {
           setSkillValue(num, value);
         } else {
           if (cd->getLearnedness() < discArray[num]->start) {
             setSkillValue(num, 0);
           } else {
-            value = getMaxSkillValue(num); // uses Learnedness not NatLear
+            value = getMaxSkillValue(num);  // uses Learnedness not NatLear
             value = max(value, 1);
             value = max(value, discArray[num]->learn);
-            value = min(value, (int) MAX_SKILL_LEARNEDNESS);
+            value = min(value, (int)MAX_SKILL_LEARNEDNESS);
             setSkillValue(num, value);
           }
         }
       } else {  // learn by doing
-// set natural learning, be very careful since permanint numbers
+                // set natural learning, be very careful since permanint numbers
         value = discArray[num]->learn *
-                  (cd->getNatLearnedness() - discArray[num]->start + 1);
-        value = min(value, (int) discArray[num]->startLearnDo);
-        value = max(value, (int) getRawNatSkillValue(num));
+                (cd->getNatLearnedness() - discArray[num]->start + 1);
+        value = min(value, (int)discArray[num]->startLearnDo);
+        value = max(value, (int)getRawNatSkillValue(num));
         value = max(value, 1);
-        value = min(value, (int) MAX_SKILL_LEARNEDNESS);
+        value = min(value, (int)MAX_SKILL_LEARNEDNESS);
 
         setNatSkillValue(num, value);
 
@@ -683,15 +694,15 @@ void TBeing::affectTotal()
           setSkillValue(num, value);
         } else {
           value = getMaxSkillValue(num);  // uses disc Learn not disc NatLearn
-          value = min((int) getRawNatSkillValue(num), value);
+          value = min((int)getRawNatSkillValue(num), value);
           value = max(value, 1);
-          value = min(value, (int) MAX_SKILL_LEARNEDNESS);
+          value = min(value, (int)MAX_SKILL_LEARNEDNESS);
           if (cd->getLearnedness() <= cd->getNatLearnedness()) {
-             setSkillValue(num, value);
-          } else { 
+            setSkillValue(num, value);
+          } else {
             if (discArray[num]->startLearnDo > value) {
               value = getMaxSkillValue(num);
-              value = min(value, (int) discArray[num]->startLearnDo);
+              value = min(value, (int)discArray[num]->startLearnDo);
               setSkillValue(num, value);
             } else {
               setSkillValue(num, value);
@@ -703,22 +714,21 @@ void TBeing::affectTotal()
   }
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if ((t = equipment[i]) && (o = dynamic_cast<TObj *>(t))) {
-      if (o->usedAsPaired() && (i == WEAR_ARM_L || i == WEAR_WRIST_L ||
-          i == WEAR_HAND_L || i == WEAR_FINGER_L || i == WEAR_LEG_L ||
-          i == WEAR_FOOT_L || i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
+    if ((t = equipment[i]) && (o = dynamic_cast<TObj*>(t))) {
+      if (o->usedAsPaired() &&
+          (i == WEAR_ARM_L || i == WEAR_WRIST_L || i == WEAR_HAND_L ||
+            i == WEAR_FINGER_L || i == WEAR_LEG_L || i == WEAR_FOOT_L ||
+            i == WEAR_EX_LEG_L || i == WEAR_EX_FOOT_L))
         continue;
       if (!affectShouldApply(o, i))
         continue;
       for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-// take out discipline since done above
+        // take out discipline since done above
         if (o->affected[j].location == APPLY_DISCIPLINE)
           continue;
 
-        affectModify(o->affected[j].location,
-                     o->affected[j].modifier,
-                     o->affected[j].modifier2,
-                     o->obj_flags.bitvector, TRUE, SILENT_YES);
+        affectModify(o->affected[j].location, o->affected[j].modifier,
+          o->affected[j].modifier2, o->obj_flags.bitvector, TRUE, SILENT_YES);
       }
     }
   }
@@ -726,88 +736,95 @@ void TBeing::affectTotal()
   for (af = affected; af; af = af->next) {
     if (af->location == APPLY_DISCIPLINE)
       continue;
-    affectModify(af->location, af->modifier, af->modifier2, af->bitvector, TRUE, SILENT_YES);
+    affectModify(af->location, af->modifier, af->modifier2, af->bitvector, TRUE,
+      SILENT_YES);
   }
 
   /* Make certain values are between 5..250, not < 5 and not > 30! */
   int minrange, maxrange;
   minrange = 30;
   maxrange = 250;
-  setStat(STAT_CURRENT, STAT_STR, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_STR)), maxrange));
-  setStat(STAT_CURRENT, STAT_BRA, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_BRA)), maxrange));
-  setStat(STAT_CURRENT, STAT_DEX, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_DEX)), maxrange));
-  setStat(STAT_CURRENT, STAT_AGI, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_AGI)), maxrange));
-  setStat(STAT_CURRENT, STAT_CON, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_CON)), maxrange));
+  setStat(STAT_CURRENT, STAT_STR,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_STR)), maxrange));
+  setStat(STAT_CURRENT, STAT_BRA,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_BRA)), maxrange));
+  setStat(STAT_CURRENT, STAT_DEX,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_DEX)), maxrange));
+  setStat(STAT_CURRENT, STAT_AGI,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_AGI)), maxrange));
+  setStat(STAT_CURRENT, STAT_CON,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_CON)), maxrange));
 
-  setStat(STAT_CURRENT, STAT_INT, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_INT)), maxrange));
-  setStat(STAT_CURRENT, STAT_WIS, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_WIS)), maxrange));
-  setStat(STAT_CURRENT, STAT_FOC, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_FOC)), maxrange));
+  setStat(STAT_CURRENT, STAT_INT,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_INT)), maxrange));
+  setStat(STAT_CURRENT, STAT_WIS,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_WIS)), maxrange));
+  setStat(STAT_CURRENT, STAT_FOC,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_FOC)), maxrange));
 
-  setStat(STAT_CURRENT, STAT_CHA, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_CHA)), maxrange));
-  setStat(STAT_CURRENT, STAT_SPE, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_SPE)), maxrange));
-  setStat(STAT_CURRENT, STAT_KAR, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_KAR)), maxrange));
-  setStat(STAT_CURRENT, STAT_PER, 
-          min(max(minrange, getStat(STAT_CURRENT, STAT_PER)), maxrange));
+  setStat(STAT_CURRENT, STAT_CHA,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_CHA)), maxrange));
+  setStat(STAT_CURRENT, STAT_SPE,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_SPE)), maxrange));
+  setStat(STAT_CURRENT, STAT_KAR,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_KAR)), maxrange));
+  setStat(STAT_CURRENT, STAT_PER,
+    min(max(minrange, getStat(STAT_CURRENT, STAT_PER)), maxrange));
 }
 
-void TBeing::affectTo(affectedData *af, int renew, silentTypeT silent)
-{
-  mud_assert(af->type != TYPE_UNDEFINED, "applying undefined affect to %s", getName().c_str());
+void TBeing::affectTo(affectedData* af, int renew, silentTypeT silent) {
+  mud_assert(af->type != TYPE_UNDEFINED, "applying undefined affect to %s",
+    getName().c_str());
 
-  affectedData *a;
+  affectedData* a;
   int origamt = specials.affectedBy;
 
-  //mud_assert(af->duration != 0, "affectTo() with 0 duration affect");
+  // mud_assert(af->duration != 0, "affectTo() with 0 duration affect");
   a = new affectedData(*af);
 
   a->next = affected;
-  if (renew == -1) 
+  if (renew == -1)
     a->renew = -1;
-  else if (renew) 
+  else if (renew)
     a->renew = renew;
-  else 
+  else
     a->renew = a->duration / 2;
-  
+
   affected = a;
 
-  affectModify(a->location, a->modifier, a->modifier2, a->bitvector, TRUE, silent);
+  affectModify(a->location, a->modifier, a->modifier2, a->bitvector, TRUE,
+    silent);
   affectTotal();
 
   affectChange(origamt, silent);
 }
 
-void TBeing::affectRemove(affectedData *af, silentTypeT silent)
-{
-  affectedData *af2;
+void TBeing::affectRemove(affectedData* af, silentTypeT silent) {
+  affectedData* af2;
   uint64_t origamt = specials.affectedBy;
 
   if (!affected) {
-    vlogf(LOG_BUG, format("Affect removed from char (%s) without affect") %  getName());
-    vlogf(LOG_BUG, format("Location : %d, Modifier %d, Bitvector %llu") %  af->location % af->modifier % af->bitvector);
+    vlogf(LOG_BUG,
+      format("Affect removed from char (%s) without affect") % getName());
+    vlogf(LOG_BUG, format("Location : %d, Modifier %d, Bitvector %llu") %
+                     af->location % af->modifier % af->bitvector);
     return;
   } else
-    affectModify(af->location, af->modifier, af->modifier2, af->bitvector, FALSE, silent);
+    affectModify(af->location, af->modifier, af->modifier2, af->bitvector,
+      FALSE, silent);
 
   if (affected == af)
     affected = af->next;
   else {
-    for (af2 = affected; (af2->next) && (af2->next != af); af2 = af2->next);
+    for (af2 = affected; (af2->next) && (af2->next != af); af2 = af2->next)
+      ;
     if (af2->next != af) {
-      vlogf(LOG_BUG, "Could not locate affected_type in affected. (handler.c, affectRemove)");
+      vlogf(LOG_BUG,
+        "Could not locate affected_type in affected. (handler.c, "
+        "affectRemove)");
       return;
     }
-    af2->next = af->next;       /* skip the af element */
+    af2->next = af->next; /* skip the af element */
   }
   delete af;
   af = NULL;
@@ -816,10 +833,8 @@ void TBeing::affectRemove(affectedData *af, silentTypeT silent)
   affectChange(origamt, silent);
 }
 
-
 // Call affect_remove with every spell of spelltype "skill"
-void TBeing::affectFrom(spellNumT skill)
-{
+void TBeing::affectFrom(spellNumT skill) {
   affectedData *hjp, *next_aff;
 
   for (hjp = affected; hjp; hjp = next_aff) {
@@ -829,8 +844,7 @@ void TBeing::affectFrom(spellNumT skill)
   }
 }
 
-void TBeing::removeSkillAttempt(spellNumT skill)
-{
+void TBeing::removeSkillAttempt(spellNumT skill) {
   affectedData *hjp = NULL, *next_aff = NULL;
 
   for (hjp = affected; hjp; hjp = next_aff) {
@@ -842,52 +856,49 @@ void TBeing::removeSkillAttempt(spellNumT skill)
   }
 }
 
-int TBeing::checkForSkillAttempt(spellNumT skill)
-{
-  affectedData *hjp;
+int TBeing::checkForSkillAttempt(spellNumT skill) {
+  affectedData* hjp;
 
   if (!affected)
     return FALSE;
 
   for (hjp = affected; hjp; hjp = hjp->next) {
     if (hjp->type == AFFECT_SKILL_ATTEMPT) {
-      if (hjp->modifier == skill) 
+      if (hjp->modifier == skill)
         return TRUE;
     }
   }
   return FALSE;
 }
 
-
-bool TBeing::affectedBySpell(spellNumT skill) const
-{
-  affectedData *hjp;
+bool TBeing::affectedBySpell(spellNumT skill) const {
+  affectedData* hjp;
 
   for (hjp = affected; hjp; hjp = hjp->next) {
     if (hjp->type == skill)
       return TRUE;
 
-    if(skill==SPELL_HASTE && hjp->type == AFFECT_AION_BLESSING)
+    if (skill == SPELL_HASTE && hjp->type == AFFECT_AION_BLESSING)
       return TRUE;
-    if(skill==SPELL_ENLIVEN && hjp->type == AFFECT_DAMESCENA_BLESSING)
+    if (skill == SPELL_ENLIVEN && hjp->type == AFFECT_DAMESCENA_BLESSING)
       return TRUE;
-    if(skill==SPELL_TRUE_SIGHT && hjp->type == AFFECT_JESUS_BLESSING)
+    if (skill == SPELL_TRUE_SIGHT && hjp->type == AFFECT_JESUS_BLESSING)
       return TRUE;
-    if(skill==SPELL_PLASMA_MIRROR && hjp->type == AFFECT_DASH_BLESSING)
+    if (skill == SPELL_PLASMA_MIRROR && hjp->type == AFFECT_DASH_BLESSING)
       return TRUE;
-    if(skill==SPELL_CELERITE && hjp->type == AFFECT_DEIRDRE_BLESSING)
+    if (skill == SPELL_CELERITE && hjp->type == AFFECT_DEIRDRE_BLESSING)
       return TRUE;
-    if(skill==SPELL_SANCTUARY && hjp->type == AFFECT_GARTHAGK_BLESSING)
+    if (skill == SPELL_SANCTUARY && hjp->type == AFFECT_GARTHAGK_BLESSING)
       return TRUE;
-    if(skill==SPELL_ENLIVEN && hjp->type == AFFECT_MERCURY_BLESSING)
+    if (skill == SPELL_ENLIVEN && hjp->type == AFFECT_MERCURY_BLESSING)
       return TRUE;
-    if(skill==SPELL_STONE_SKIN && hjp->type == AFFECT_MAGDALENA_BLESSING)
+    if (skill == SPELL_STONE_SKIN && hjp->type == AFFECT_MAGDALENA_BLESSING)
       return TRUE;
-    if(skill==SPELL_FLAMING_FLESH && hjp->type == AFFECT_CORAL_BLESSING)
+    if (skill == SPELL_FLAMING_FLESH && hjp->type == AFFECT_CORAL_BLESSING)
       return TRUE;
-    if(skill==SPELL_INFRAVISION && hjp->type == AFFECT_PAPPY_BLESSING)
+    if (skill == SPELL_INFRAVISION && hjp->type == AFFECT_PAPPY_BLESSING)
       return TRUE;
-    if(skill==SPELL_DETECT_INVISIBLE && hjp->type == AFFECT_STAFFA_BLESSING)
+    if (skill == SPELL_DETECT_INVISIBLE && hjp->type == AFFECT_STAFFA_BLESSING)
       return TRUE;
   }
   return FALSE;
@@ -895,15 +906,14 @@ bool TBeing::affectedBySpell(spellNumT skill) const
 
 // used with polymorph transfers of affects
 // transfer spells and 'oddball' stuff (drunk, disease, pkill...)
-int TBeing::polyAffectJoin(TBeing * recipient)
-{
-  affectedData *affp;
+int TBeing::polyAffectJoin(TBeing* recipient) {
+  affectedData* affp;
   for (affp = affected; affp; affp = affp->next) {
     if (!((affp->type > MIN_SPELL && affp->type < MAX_SKILL) ||
-          (affp->type > FIRST_ODDBALL_AFFECT && 
-           affp->type < LAST_ODDBALL_AFFECT) ||
-           affp->type == AFFECT_SKILL_ATTEMPT)) 
-        continue;
+          (affp->type > FIRST_ODDBALL_AFFECT &&
+            affp->type < LAST_ODDBALL_AFFECT) ||
+          affp->type == AFFECT_SKILL_ATTEMPT))
+      continue;
     recipient->affectJoin(recipient, affp, AVG_DUR_NO, AVG_EFF_YES, FALSE);
   }
   return TRUE;
@@ -914,34 +924,35 @@ int TBeing::polyAffectJoin(TBeing * recipient)
 // avg_mod FALSE : modifier will be cumulative
 // avg_mod TRUE : the average of the existing and new affect mod wil be used
 // avg_mod DOES take into account mod2 for skills/immunes
-int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEffT avg_mod, bool text)
-{
-  affectedData *hjp;
+int TBeing::affectJoin(TBeing* caster, affectedData* af, avgDurT avg_dur,
+  avgEffT avg_mod, bool text) {
+  affectedData* hjp;
   int renew = 0;
 
   // Remove any 'bit' that the player may already have set.
   // This prevents a number of casts == lose ability.
   // This is better than tracking down each one and dealing with it.
-  if (af->bitvector && isAffected(af->bitvector) &&
-      !affectedBySpell(af->type))
+  if (af->bitvector && isAffected(af->bitvector) && !affectedBySpell(af->type))
     af->bitvector = 0;
 
   for (hjp = affected; hjp; hjp = hjp->next) {
-    if ((hjp->type == af->type) &&
-        (hjp->location == af->location)) {
-      if (af->location == APPLY_IMMUNITY ||
-          af->location == APPLY_SPELL) {
-        if (af->modifier != hjp->modifier) 
+    if ((hjp->type == af->type) && (hjp->location == af->location)) {
+      if (af->location == APPLY_IMMUNITY || af->location == APPLY_SPELL) {
+        if (af->modifier != hjp->modifier)
           continue;
       }
       if (!hjp->canBeRenewed()) {
         if (text) {
-          if (this == caster || !caster) 
-            sendTo("You can't increase the duration of that effect any further.\n\r"); 
+          if (this == caster || !caster)
+            sendTo(
+              "You can't increase the duration of that effect any "
+              "further.\n\r");
           else {
-            caster->sendTo("You can't increase the duration of that effect any further.\n\r"); 
+            caster->sendTo(
+              "You can't increase the duration of that effect any "
+              "further.\n\r");
             act("$N can't increase the duration of that effect any further.",
-                 FALSE, this, 0, caster, TO_CHAR);
+              FALSE, this, 0, caster, TO_CHAR);
           }
         }
         return FALSE;
@@ -955,8 +966,7 @@ int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEf
       if (avg_dur)
         af->duration /= 2;
 
-      if (af->location == APPLY_IMMUNITY ||
-          af->location == APPLY_SPELL) {
+      if (af->location == APPLY_IMMUNITY || af->location == APPLY_SPELL) {
         af->modifier2 += hjp->modifier2;
         if (avg_mod)
           af->modifier2 /= 2;
@@ -971,17 +981,16 @@ int TBeing::affectJoin(TBeing * caster, affectedData *af, avgDurT avg_dur, avgEf
       return TRUE;
     }
   }
-  affectTo(af);		//This line is responsible for actually applying effects like bless, faerie fire, etc.
+  affectTo(af);  // This line is responsible for actually applying effects like
+                 // bless, faerie fire, etc.
   return TRUE;
 }
 
 // Note from Pappy
 // Essentially I re-wrote affectJoin to allow for more affect management
 // returns true if the affect was applied, false if not
-bool TBeing::affectJoin2(affectedData *af, joinFlag flags)
-{
-  for (affectedData *afOld = affected; afOld; afOld = afOld->next)
-  {
+bool TBeing::affectJoin2(affectedData* af, joinFlag flags) {
+  for (affectedData* afOld = affected; afOld; afOld = afOld->next) {
     if (*afOld != *af)
       continue;
 
@@ -1001,8 +1010,7 @@ bool TBeing::affectJoin2(affectedData *af, joinFlag flags)
     if ((renew = afOld->renew) <= 0)
       renew = max(af->duration, afOld->duration) / 2;
 
-    if (!(flags & joinFlagOverwriteDur))
-    {
+    if (!(flags & joinFlagOverwriteDur)) {
       af->duration += afOld->duration;
 
       if (flags & joinFlagAveDur)
@@ -1012,7 +1020,7 @@ bool TBeing::affectJoin2(affectedData *af, joinFlag flags)
     af->setMod(af->getMod() + afOld->getMod());
 
     if (flags & joinFlagAveMod)
-       af->setMod(af->getMod() / 2);
+      af->setMod(af->getMod() / 2);
 
     affectRemove(afOld, SILENT_YES);
     affectTo(af, renew, SILENT_YES);
@@ -1026,33 +1034,33 @@ bool TBeing::affectJoin2(affectedData *af, joinFlag flags)
   return true;
 }
 
-
-void thing_to_room(TThing *ch, int room)
-{
-  TRoom *rp;
+void thing_to_room(TThing* ch, int room) {
+  TRoom* rp;
 
   if (!(rp = real_roomp(room))) {
-    vlogf(LOG_BUG, format("thing_to_room() called with bogus room: %d") %  room);
+    vlogf(LOG_BUG, format("thing_to_room() called with bogus room: %d") % room);
     room = 0;
     rp = real_roomp(room);
   }
-  
-  *rp += *ch;
 
+  *rp += *ch;
 }
 
-void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
-{
+void TBeing::equipChar(TThing* obj, wearSlotT pos, silentTypeT silent) {
   // silent is used to determine if the effects of equipping should be shown
   // when they equipped.
   // for things where you temporarily remove an item from someone and then
   // put it back on, it should be set to FALSE
   int j;
 
-  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR, "pos in equip_char(%s %s %d) was out of range!!", getName().c_str(), obj->name.c_str(), pos);
+  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR,
+    "pos in equip_char(%s %s %d) was out of range!!", getName().c_str(),
+    obj->name.c_str(), pos);
 
   if (equipment[pos]) {
-    vlogf(LOG_BUG, format("equip_char(%s %s %d) called with position already equipped!") %  getName().c_str() % obj->name.c_str() % pos);
+    vlogf(LOG_BUG,
+      format("equip_char(%s %s %d) called with position already equipped!") %
+        getName().c_str() % obj->name.c_str() % pos);
     return;
   }
   if (obj->parent) {
@@ -1068,7 +1076,7 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
     vlogf(LOG_BUG, "EQUIP: Obj is stuck in someone when equip.");
     obj->stuckIn = NULL;
   }
-  TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
+  TBaseClothing* tbc = dynamic_cast<TBaseClothing*>(obj);
   if (tbc && tbc->isShield() && (pos == getPrimaryHold())) {
     sendTo("You can't equip a shield in your primary hand.\n\r");
     if (!heldInSecHand()) {
@@ -1078,45 +1086,45 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
       *this += *obj;
       return;
     }
-
   }
 
   if (pos == HOLD_RIGHT) {
     if (!canUseLimb(WEAR_HAND_R)) {
       if (roomp) {
-        sendTo(COLOR_BASIC, format("Your hand is damaged and you drop %s.\n\r") %obj->shortDescr);
+        sendTo(COLOR_BASIC,
+          format("Your hand is damaged and you drop %s.\n\r") %
+            obj->shortDescr);
         *roomp += *obj;
-      } else 
+      } else
         *this += *obj;
-      
+
       return;
     }
   } else if (pos == HOLD_LEFT) {
     if (!canUseLimb(WEAR_HAND_L)) {
       if (roomp) {
-        sendTo(COLOR_BASIC, format("Your hand is damaged and you drop %s.\n\r") %obj->shortDescr);
+        sendTo(COLOR_BASIC,
+          format("Your hand is damaged and you drop %s.\n\r") %
+            obj->shortDescr);
         *roomp += *obj;
-      } else 
+      } else
         *this += *obj;
-      
+
       return;
     }
   }
 
-
   obj->equippedBy = this;
-  obj->eq_pos = pos;  
+  obj->eq_pos = pos;
   equipment.wear(obj, pos);
 
   int origamt = specials.affectedBy;
 
-  TObj *to = dynamic_cast<TObj *>(obj);
+  TObj* to = dynamic_cast<TObj*>(obj);
   if (to && affectShouldApply(to, pos)) {
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-      affectModify(to->affected[j].location,
-                   to->affected[j].modifier,
-                   to->affected[j].modifier2,
-                   to->obj_flags.bitvector, TRUE, silent);
+      affectModify(to->affected[j].location, to->affected[j].modifier,
+        to->affected[j].modifier2, to->obj_flags.bitvector, TRUE, silent);
     }
   }
 
@@ -1128,15 +1136,17 @@ void TBeing::equipChar(TThing *obj, wearSlotT pos, silentTypeT silent)
 }
 
 // *res should be -1 if this dies
-TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
-{
+TThing* TBeing::pulloutObj(wearSlotT numx, bool safe, int* res) {
   int dam;
-  TThing *o;
-  
+  TThing* o;
+
   *res = 0;
 
   if (!(o = getStuckIn(numx))) {
-    vlogf(LOG_BUG, format("pulloutObj() called with no stuck in object for pos %d on char %s!") %  numx % getName());
+    vlogf(LOG_BUG,
+      format(
+        "pulloutObj() called with no stuck in object for pos %d on char %s!") %
+        numx % getName());
     return NULL;
   }
   setStuckIn(numx, NULL);
@@ -1144,23 +1154,23 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
   o->stuckIn = NULL;
   o->eq_pos = WEAR_NOWHERE;
   o->eq_stuck = WEAR_NOWHERE;
-  if (o->spec) checkSpec(this, CMD_ARROW_RIPPED, "", NULL);
+  if (o->spec)
+    checkSpec(this, CMD_ARROW_RIPPED, "", NULL);
 
-  TBaseWeapon *tbw = dynamic_cast<TBaseWeapon *>(o); 
+  TBaseWeapon* tbw = dynamic_cast<TBaseWeapon*>(o);
   if (tbw && !safe) {
-
-    dam = (int) (1.0 * tbw->baseDamage());
-    if (reconcileDamage(this, dam,tbw->getWtype()) == -1) {
+    dam = (int)(1.0 * tbw->baseDamage());
+    if (reconcileDamage(this, dam, tbw->getWtype()) == -1) {
       *res = -1;
       return o;
     } else {
       if (dice(1, 100) < tbw->getCurSharp() && !isImmune(IMMUNE_BLEED, numx)) {
         char buf[256];
-        sprintf(buf, "$n's %s starts bleeding as $p is taken out of it.", 
-                 describeBodySlot(numx).c_str());
+        sprintf(buf, "$n's %s starts bleeding as $p is taken out of it.",
+          describeBodySlot(numx).c_str());
         act(buf, TRUE, this, tbw, NULL, TO_ROOM);
         sprintf(buf, "Your %s starts bleeding as $p is taken out of it.",
-                 describeBodySlot(numx).c_str());
+          describeBodySlot(numx).c_str());
         act(buf, FALSE, this, tbw, NULL, TO_CHAR);
         rawBleed(numx, 5 * tbw->getCurSharp(), SILENT_YES, CHECK_IMMUNITY_NO);
       }
@@ -1169,21 +1179,19 @@ TThing *TBeing::pulloutObj(wearSlotT numx, bool safe, int *res)
   return o;
 }
 
-void TTool::unequipMe(TBeing *ch)
-{
+void TTool::unequipMe(TBeing* ch) {
   if (getToolType() == TOOL_GARROTTE) {
     ch->diseaseFrom(DISEASE_GARROTTE);
   }
 }
 
-TThing *TBeing::unequip(wearSlotT pos)
-{
+TThing* TBeing::unequip(wearSlotT pos) {
   int j;
-  TThing *o;
+  TThing* o;
 
   if ((pos < MIN_WEAR) || (pos >= MAX_WEAR))
     return NULL;
- 
+
   if (!equipment[pos])
     return NULL;
 
@@ -1198,16 +1206,14 @@ TThing *TBeing::unequip(wearSlotT pos)
   o->eq_stuck = WEAR_NOWHERE;
 
   uint64_t origamt = specials.affectedBy;
-  TObj *to = dynamic_cast<TObj *>(o);
-  if (to &&
-     ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || to->canWear(ITEM_WEAR_HOLD))) {
+  TObj* to = dynamic_cast<TObj*>(o);
+  if (to && ((pos != HOLD_RIGHT && pos != HOLD_LEFT) ||
+              to->canWear(ITEM_WEAR_HOLD))) {
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-      affectModify(to->affected[j].location,
-                   to->affected[j].modifier,
-                   to->affected[j].modifier2,
-                   to->obj_flags.bitvector, FALSE, SILENT_NO);
+      affectModify(to->affected[j].location, to->affected[j].modifier,
+        to->affected[j].modifier2, to->obj_flags.bitvector, FALSE, SILENT_NO);
     }
-  } 
+  }
 
   affectTotal();
   affectChange(origamt, SILENT_NO);
@@ -1226,10 +1232,9 @@ TThing *TBeing::unequip(wearSlotT pos)
   return (o);
 }
 
-TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos)
-{
+TThing* unequip_char_for_save(TBeing* ch, wearSlotT pos) {
   int j;
-  TThing *o;
+  TThing* o;
 
   if ((pos < MIN_WEAR) || (pos >= MAX_WEAR))
     return NULL;
@@ -1247,21 +1252,19 @@ TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos)
   o->eq_pos = WEAR_NOWHERE;
   o->eq_stuck = WEAR_NOWHERE;
 
-//  int origamt = ch->specials.affectedBy;
-  TObj *to = dynamic_cast<TObj *>(o);
-  if (to &&
-     ((pos != HOLD_RIGHT && pos != HOLD_LEFT) || to->canWear(ITEM_WEAR_HOLD))) {
+  //  int origamt = ch->specials.affectedBy;
+  TObj* to = dynamic_cast<TObj*>(o);
+  if (to && ((pos != HOLD_RIGHT && pos != HOLD_LEFT) ||
+              to->canWear(ITEM_WEAR_HOLD))) {
     for (j = 0; j < MAX_OBJ_AFFECT; j++) {
-      ch->affectModify(to->affected[j].location,
-                   to->affected[j].modifier,
-                   to->affected[j].modifier2,
-                   to->obj_flags.bitvector, FALSE, SILENT_YES);
-    } 
-  } 
+      ch->affectModify(to->affected[j].location, to->affected[j].modifier,
+        to->affected[j].modifier2, to->obj_flags.bitvector, FALSE, SILENT_YES);
+    }
+  }
 
   ch->affectTotal();
 
-//  ch->affectChange(origamt, SILENT_YES);
+  //  ch->affectChange(origamt, SILENT_YES);
 
   ch->addToLight(-o->getLight());
   if (ch->roomp)
@@ -1270,15 +1273,14 @@ TThing *unequip_char_for_save(TBeing *ch, wearSlotT pos)
   return (o);
 }
 
-int get_number(char **name)
-{
+int get_number(char** name) {
   int i;
   char *ppos, numx[MAX_INPUT_LENGTH] = "";
 
-  if ((ppos = (char *) strchr(*name, '.')) && ppos[1]) {
+  if ((ppos = (char*)strchr(*name, '.')) && ppos[1]) {
     *ppos++ = '\0';
-    strncpy(numx, *name, cElements(numx)-1);
-    memmove(*name, ppos, strlen(ppos)+1);
+    strncpy(numx, *name, cElements(numx) - 1);
+    memmove(*name, ppos, strlen(ppos) + 1);
 
     for (i = 0; *(numx + i); i++) {
       if (*(numx + i) == ' ')
@@ -1294,8 +1296,8 @@ int get_number(char **name)
   return 1;
 }
 
-TThing *get_thing_in_equip(TBeing *ch, const char *arg, equipmentData equipment, wearSlotT *j, bool vis, int *count)
-{
+TThing* get_thing_in_equip(TBeing* ch, const char* arg, equipmentData equipment,
+  wearSlotT* j, bool vis, int* count) {
   int num;
   int numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
@@ -1312,19 +1314,19 @@ TThing *get_thing_in_equip(TBeing *ch, const char *arg, equipmentData equipment,
   num = (count ? *count : 0);
 
   for ((*j) = MIN_WEAR; (*j) < MAX_WEAR; (*j)++) {
-    TThing *tt = equipment[(*j)];
+    TThing* tt = equipment[(*j)];
     if (!tt)
       continue;
     if (!vis || ch->canSee(tt)) {
       if (isname(tmp, tt->name)) {
-        TObj *tobj = dynamic_cast<TObj *>(tt);
+        TObj* tobj = dynamic_cast<TObj*>(tt);
         if (tobj && tobj->isPaired()) {
           if (ch->isRightHanded()) {
             if (((*j) == WEAR_LEG_L) || ((*j) == HOLD_LEFT))
               continue;
           } else {
             if (((*j) == WEAR_LEG_L) || ((*j) == HOLD_RIGHT))
-            continue;
+              continue;
           }
         }
         num++;
@@ -1338,12 +1340,12 @@ TThing *get_thing_in_equip(TBeing *ch, const char *arg, equipmentData equipment,
   return NULL;
 }
 
-TThing *get_thing_stuck_in_vis(TBeing *ch, const char *arg, wearSlotT *j, int *count, TBeing *v)
-{
+TThing* get_thing_stuck_in_vis(TBeing* ch, const char* arg, wearSlotT* j,
+  int* count, TBeing* v) {
   int num;
   int numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
-  TThing *t;
+  TThing* t;
 
   if (!*arg)
     return NULL;
@@ -1372,16 +1374,14 @@ TThing *get_thing_stuck_in_vis(TBeing *ch, const char *arg, wearSlotT *j, int *c
   return NULL;
 }
 
-TThing *searchLinkedList(const char * name, StuffList list, thingTypeT type)
-{
+TThing* searchLinkedList(const char* name, StuffList list, thingTypeT type) {
   const sstring tmps = name;
   return searchLinkedList(tmps, list, type);
 }
 
-TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT type)
-{
+TThing* searchLinkedList(const sstring& name, StuffList list, thingTypeT type) {
   TThing *i, *t;
-  int j=1, numx;
+  int j = 1, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
   strcpy(tmpname, name.c_str());
@@ -1389,30 +1389,28 @@ TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT type)
 
   if (!(numx = get_number(&tmp)))
     return (0);
- 
-  for (StuffIter it=list.begin(); 
-       it!=list.end() && (j <= numx); 
-       ++it){
-    t=*it;
+
+  for (StuffIter it = list.begin(); it != list.end() && (j <= numx); ++it) {
+    t = *it;
     if (isname(tmp, t->name)) {
-      if (type == TYPETHING || 
-          ((type == TYPEBEING) && dynamic_cast<TBeing *>(t)) ||
-          ((type == TYPEOBJ) && dynamic_cast<TObj *>(t)) ||
-          ((type == TYPEPC) && dynamic_cast<TPerson *>(t)) ||
-          ((type == TYPEMOB) && dynamic_cast<TMonster *>(t))) {
+      if (type == TYPETHING ||
+          ((type == TYPEBEING) && dynamic_cast<TBeing*>(t)) ||
+          ((type == TYPEOBJ) && dynamic_cast<TObj*>(t)) ||
+          ((type == TYPEPC) && dynamic_cast<TPerson*>(t)) ||
+          ((type == TYPEMOB) && dynamic_cast<TMonster*>(t))) {
         if (j == numx)
           return t;
         j++;
       }
     }
-    if (dynamic_cast<TTable *>(t) && t->rider) {
+    if (dynamic_cast<TTable*>(t) && t->rider) {
       for (i = t->rider; i; i = i->nextRider) {
         if (isname(tmp, i->name)) {
-          if (type == TYPETHING || 
-              ((type == TYPEBEING) && dynamic_cast<TBeing *>(i)) ||
-              ((type == TYPEOBJ) && dynamic_cast<TObj *>(i)) ||
-              ((type == TYPEPC) && dynamic_cast<TPerson *>(i)) ||
-              ((type == TYPEMOB) && dynamic_cast<TMonster *>(i))) {
+          if (type == TYPETHING ||
+              ((type == TYPEBEING) && dynamic_cast<TBeing*>(i)) ||
+              ((type == TYPEOBJ) && dynamic_cast<TObj*>(i)) ||
+              ((type == TYPEPC) && dynamic_cast<TPerson*>(i)) ||
+              ((type == TYPEMOB) && dynamic_cast<TMonster*>(i))) {
             if (j == numx)
               return i;
             j++;
@@ -1424,10 +1422,9 @@ TThing *searchLinkedList(const sstring & name, StuffList list, thingTypeT type)
   return NULL;
 }
 
-// Search a given list for an object, and return a pointer to that object 
-TThing *get_thing_on_list(const char *name, TThing *list)
-{
-  TThing *i;
+// Search a given list for an object, and return a pointer to that object
+TThing* get_thing_on_list(const char* name, TThing* list) {
+  TThing* i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -1446,10 +1443,9 @@ TThing *get_thing_on_list(const char *name, TThing *list)
   return (0);
 }
 
-// Search a given list for an object number, and return a ptr to that obj 
-TThing *get_thing_on_list_num(int num, TThing *list)
-{
-  TThing *i;
+// Search a given list for an object number, and return a ptr to that obj
+TThing* get_thing_on_list_num(int num, TThing* list) {
+  TThing* i;
 
   for (i = list; i; i = i->nextRider)
     if (i->number == num)
@@ -1458,12 +1454,10 @@ TThing *get_thing_on_list_num(int num, TThing *list)
   return NULL;
 }
 
-
 // this gets used by shop code to get the "num"th thing in the "list"
-TObj *get_num_obj_in_list(TBeing *ch, int num, StuffList list, int shop_nr)
-{
-  std::vector<TObj *>cond_obj_vec(0);
-  std::vector<int>cond_tot_vec(0);
+TObj* get_num_obj_in_list(TBeing* ch, int num, StuffList list, int shop_nr) {
+  std::vector<TObj*> cond_obj_vec(0);
+  std::vector<int> cond_tot_vec(0);
 
   bool found = false;
   unsigned int k;
@@ -1471,11 +1465,10 @@ TObj *get_num_obj_in_list(TBeing *ch, int num, StuffList list, int shop_nr)
   if (num <= 0)
     return NULL;
 
-  for(StuffIter it=list.begin();it!=list.end();++it){
-    TObj *to = dynamic_cast<TObj *>(*it);
+  for (StuffIter it = list.begin(); it != list.end(); ++it) {
+    TObj* to = dynamic_cast<TObj*>(*it);
     if (to && ch->canSee(to)) {
-      if ((to->getValue() >= 1) &&
-          !to->isObjStat(ITEM_NEWBIE) &&
+      if ((to->getValue() >= 1) && !to->isObjStat(ITEM_NEWBIE) &&
           shop_index[shop_nr].willBuy(to)) {
         found = FALSE;
         for (k = 0; (k < cond_obj_vec.size() && !found); k++) {
@@ -1492,17 +1485,16 @@ TObj *get_num_obj_in_list(TBeing *ch, int num, StuffList list, int shop_nr)
         }
       }
     }
-  }                             // for loop
+  }  // for loop
   if (cond_obj_vec.size()) {
-    if (((unsigned int) num - 1) < cond_obj_vec.size())
-      return (cond_obj_vec[(num-1)]);
+    if (((unsigned int)num - 1) < cond_obj_vec.size())
+      return (cond_obj_vec[(num - 1)]);
   }
   return NULL;
 }
 
-// search the entire world for an object, and return a pointer  
-TObj *get_obj(const char *name, exactTypeT exact)
-{
+// search the entire world for an object, and return a pointer
+TObj* get_obj(const char* name, exactTypeT exact) {
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -1511,9 +1503,9 @@ TObj *get_obj(const char *name, exactTypeT exact)
   if (!(numx = get_number(&tmp)))
     return (0);
 
-  j=1;
-  for(TObjIter iter=object_list.begin();
-      iter!=object_list.end() && (j <= numx); ++iter){
+  j = 1;
+  for (TObjIter iter = object_list.begin();
+       iter != object_list.end() && (j <= numx); ++iter) {
     if ((exact && is_exact_name(tmp, (*iter)->name)) ||
         (!exact && isname(tmp, (*iter)->name))) {
       if (j == numx)
@@ -1524,24 +1516,21 @@ TObj *get_obj(const char *name, exactTypeT exact)
   return (0);
 }
 
-
-// search the entire world for an object number, and return a pointer  
-TObj *get_obj_num(int nr)
-{
-  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+// search the entire world for an object number, and return a pointer
+TObj* get_obj_num(int nr) {
+  for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter) {
     if ((*iter) && (*iter)->number == nr)
       return (*iter);
   }
   return (0);
 }
 
-// search a room for a char, and return a pointer if found.. 
-TBeing *get_char_room(const sstring &name, int room, int *count)
-{
-  TThing *i=NULL;
+// search a room for a char, and return a pointer if found..
+TBeing* get_char_room(const sstring& name, int room, int* count) {
+  TThing* i = NULL;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH];
-  char *tmp;
+  char* tmp;
 
   strcpy(tmpname, name.c_str());
   tmp = tmpname;
@@ -1550,8 +1539,9 @@ TBeing *get_char_room(const sstring &name, int room, int *count)
 
   j = (count ? *count : 0);
 
-  for(StuffIter it=real_roomp(room)->stuff.begin();it!=real_roomp(room)->stuff.end() && (i=*it);++it) {
-    TBeing *tbt = dynamic_cast<TBeing *>(i);
+  for (StuffIter it = real_roomp(room)->stuff.begin();
+       it != real_roomp(room)->stuff.end() && (i = *it); ++it) {
+    TBeing* tbt = dynamic_cast<TBeing*>(i);
     if (tbt && isname(tmp, tbt->name)) {
       j++;
       if (j == numx)
@@ -1563,10 +1553,9 @@ TBeing *get_char_room(const sstring &name, int room, int *count)
   return NULL;
 }
 
-// search all over the world for a char, and return a pointer if found 
-TBeing *get_char(const char *name, exactTypeT exact)
-{
-  TBeing *i;
+// search all over the world for a char, and return a pointer if found
+TBeing* get_char(const char* name, exactTypeT exact) {
+  TBeing* i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -1591,11 +1580,9 @@ TBeing *get_char(const char *name, exactTypeT exact)
   return (0);
 }
 
-
 // search all over the world for a char num, and return a pointer if found
-TBeing *get_char_num(int nr)
-{
-  TBeing *i;
+TBeing* get_char_num(int nr) {
+  TBeing* i;
 
   for (i = character_list; i; i = i->next)
     if (i->number == nr)
@@ -1604,39 +1591,35 @@ TBeing *get_char_num(int nr)
   return (0);
 }
 
-void TThing::newOwner(TThing *ch)
-{
-  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it)
+void TThing::newOwner(TThing* ch) {
+  for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end(); ++it)
     (*it)->newOwner(ch);
 
   parent = ch;
 }
 
-void TObj::update(int use)
-{
+void TObj::update(int use) {
   if (obj_flags.decay_time > 0) {
     obj_flags.decay_time -= use;
   }
 
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it)
     (*it)->update(use);
-} 
+}
 
-void TBeing::updateCharObjects()
-{
+void TBeing::updateCharObjects() {
   int i;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++)
     if (equipment[i])
       equipment[i]->update(1);
 
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it)
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it)
     (*it)->update(1);
 }
 
-void extract_edit_char(TMonster *ch)
-{                          
-  if (ch->number > -1)         
+void extract_edit_char(TMonster* ch) {
+  if (ch->number > -1)
     mob_index[ch->getMobIndex()].addToNumber(-1);
 
   mobCount--;
@@ -1650,18 +1633,16 @@ void extract_edit_char(TMonster *ch)
   ch = NULL;
 }
 
-
-
 // Here follows high-level versions of some earlier routines, ie functions
-// which incorporate the actual player-data.                              
+// which incorporate the actual player-data.
 
-TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)
-{
-  TThing *i=NULL;
-  TBeing *mob = NULL;
+TBeing* get_char_room_vis(const TBeing* ch, const sstring& name, int* count,
+  exactTypeT exact, infraTypeT infra) {
+  TThing* i = NULL;
+  TBeing* mob = NULL;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH];
-  char *tmp;
+  char* tmp;
   sstring tStName("");
 
   if (!ch) {
@@ -1671,21 +1652,21 @@ TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exa
   if (name.empty() || !ch->roomp)
     return NULL;
 
-  strncpy(tmpname, name.c_str(), cElements(tmpname)-1);
+  strncpy(tmpname, name.c_str(), cElements(tmpname) - 1);
   tmp = tmpname;
 
   if (!(numx = get_number(&tmp)))
     return NULL;
 
   j = (count ? *count : 0);
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (i=*it);++it) {
-    mob = dynamic_cast<TBeing *>(i);
+  for (StuffIter it = ch->roomp->stuff.begin();
+       it != ch->roomp->stuff.end() && (i = *it); ++it) {
+    mob = dynamic_cast<TBeing*>(i);
     if (!mob)
       continue;
 
     if ((!exact && isname(tmp, mob->name)) ||
         (exact && is_exact_name(tmp, mob->name))) {
-
       if (ch->canSee(mob, infra) || (mob == ch->riding)) {
         j++;
         if (j == numx)
@@ -1719,23 +1700,23 @@ TBeing *get_char_room_vis(const TBeing *ch, const sstring &name, int *count, exa
 // if we return non-null, count holds the range
 // otherwise, count will hold the number of matches (for shoot at 3.xx)
 // max_dist is the max-distance we will look at
-TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsigned int max_dist, bool here, unsigned int *count)
-{
-  TThing *t=NULL;
+TBeing* get_char_vis_direction(const TBeing* ch, char* name, dirTypeT dir,
+  unsigned int max_dist, bool here, unsigned int* count) {
+  TThing* t = NULL;
   unsigned int numx;
   int rm;
   unsigned int j = 0;
   unsigned int range = 0;
   char tmpname[256];
-  char *tmp;
-  TRoom *rp;
+  char* tmp;
+  TRoom* rp;
 
   if (!name || !*name)
     return NULL;
 
   strcpy(tmpname, name);
   tmp = tmpname;
-  if (!(numx = (unsigned int) get_number(&tmp)))
+  if (!(numx = (unsigned int)get_number(&tmp)))
     return NULL;
 
   if ((rm = ch->in_room) < 0)
@@ -1749,9 +1730,10 @@ TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsig
 
   while (range <= max_dist) {
     if ((range == 0 && here) || range > 0) {
-      for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-        TBeing *tbt = dynamic_cast<TBeing *>(t);
-        if (tbt && isname(tmp, tbt->name) && 
+      for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+           ++it) {
+        TBeing* tbt = dynamic_cast<TBeing*>(t);
+        if (tbt && isname(tmp, tbt->name) &&
             // use same func as scan.  technically might need a canSeeInfra too
             can_see_char_other_room(ch, tbt, rp)) {
           j++;
@@ -1782,28 +1764,30 @@ TBeing *get_char_vis_direction(const TBeing *ch, char *name, dirTypeT dir, unsig
   return NULL;
 }
 
-TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT infra, bool visible, bool checkPoly)
-{
-  TBeing *i;
+TBeing* get_pc_world(const TBeing* ch, const sstring& name, exactTypeT exact,
+  infraTypeT infra, bool visible, bool checkPoly) {
+  TBeing* i;
 
   if (name.empty())
     return NULL;
 
   for (i = character_list; i; i = i->next) {
     if (i->isPc()) {
-      if ((!exact && isname(name, i->name)) || (exact && is_exact_name(name, i->name))) {
+      if ((!exact && isname(name, i->name)) ||
+          (exact && is_exact_name(name, i->name))) {
         if (visible) {
           if (ch->canSee(i, infra))
             return i;
         } else
-          return i; 
+          return i;
       } else if (checkPoly && i->desc && i->desc->original) {
-        if ((!exact && isname(name, i->desc->original->name)) || (exact && is_exact_name(name, i->desc->original->name))) {
+        if ((!exact && isname(name, i->desc->original->name)) ||
+            (exact && is_exact_name(name, i->desc->original->name))) {
           if (visible) {
             if (ch->canSee(i->desc->original, infra))
               return i->desc->original;
           } else
-            return i->desc->original; 
+            return i->desc->original;
         }
       }
     }
@@ -1811,10 +1795,9 @@ TBeing *get_pc_world(const TBeing *ch, const sstring &name, exactTypeT exact, in
   return NULL;
 }
 
-
-TBeing *get_pc_room(const TBeing *ch, const sstring &name, exactTypeT exact, infraTypeT infra, bool visible, bool checkPoly)
-{
-  TBeing *i;
+TBeing* get_pc_room(const TBeing* ch, const sstring& name, exactTypeT exact,
+  infraTypeT infra, bool visible, bool checkPoly) {
+  TBeing* i;
 
   if (name.empty())
     return NULL;
@@ -1822,24 +1805,27 @@ TBeing *get_pc_room(const TBeing *ch, const sstring &name, exactTypeT exact, inf
   if (ch->roomp == NULL)
     return NULL;
 
-  for(StuffIter it= ch->roomp->stuff.begin();it!= ch->roomp->stuff.end();++it) {
+  for (StuffIter it = ch->roomp->stuff.begin(); it != ch->roomp->stuff.end();
+       ++it) {
     i = dynamic_cast<TBeing*>(*it);
     if (i == NULL)
       continue;
     if (i->isPc()) {
-      if ((!exact && isname(name, i->name)) || (exact && is_exact_name(name, i->name))) {
+      if ((!exact && isname(name, i->name)) ||
+          (exact && is_exact_name(name, i->name))) {
         if (visible) {
           if (ch->canSee(i, infra))
             return i;
         } else
-          return i; 
+          return i;
       } else if (checkPoly && i->desc && i->desc->original) {
-        if ((!exact && isname(name, i->desc->original->name)) || (exact && is_exact_name(name, i->desc->original->name))) {
+        if ((!exact && isname(name, i->desc->original->name)) ||
+            (exact && is_exact_name(name, i->desc->original->name))) {
           if (visible) {
             if (ch->canSee(i->desc->original, infra))
               return i->desc->original;
           } else
-            return i->desc->original; 
+            return i->desc->original;
         }
       }
     }
@@ -1847,12 +1833,11 @@ TBeing *get_pc_room(const TBeing *ch, const sstring &name, exactTypeT exact, inf
   return NULL;
 }
 
-
 // get a character from anywhere in the world, doesn't care much about
-// being in the same room... 
-TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, exactTypeT exact, infraTypeT infra)
-{
-  TBeing *i;
+// being in the same room...
+TBeing* get_char_vis_world(const TBeing* ch, const sstring& name, int* count,
+  exactTypeT exact, infraTypeT infra) {
+  TBeing* i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -1886,9 +1871,9 @@ TBeing *get_char_vis_world(const TBeing *ch, const sstring &name, int *count, ex
   return 0;
 }
 
-TBeing *get_char_vis(const TBeing *ch, const sstring &name, int *count, infraTypeT infra)
-{
-  TBeing *i;
+TBeing* get_char_vis(const TBeing* ch, const sstring& name, int* count,
+  infraTypeT infra) {
+  TBeing* i;
 
   // check locally, then globally
   // look for exact name match before abbreviation
@@ -1907,28 +1892,31 @@ TBeing *get_char_vis(const TBeing *ch, const sstring &name, int *count, infraTyp
   return get_char_vis_world(ch, name, count, EXACT_NO, infra);
 }
 
-TThing *get_thing_in_list_getable(TBeing *ch, const char *name, StuffList list)
-{
-  TThing *o;
+TThing* get_thing_in_list_getable(TBeing* ch, const char* name,
+  StuffList list) {
+  TThing* o;
 
-  for(StuffIter it=list.begin();it!=list.end();++it){
-    o=*it;
+  for (StuffIter it = list.begin(); it != list.end(); ++it) {
+    o = *it;
     if (!ch->canSee(o))
       continue;
     if (((o->thingHolding() == ch) &&
-         ((ch->getCarriedVolume() + (o->getTotalVolume() - o->getReducedVolume(NULL))) <= ch->carryVolumeLimit())) ||
+          ((ch->getCarriedVolume() +
+             (o->getTotalVolume() - o->getReducedVolume(NULL))) <=
+            ch->carryVolumeLimit())) ||
         ((o->thingHolding() != ch) &&
-         ((ch->getCarriedVolume() + o->getTotalVolume()) <= ch->carryVolumeLimit()))) {
+          ((ch->getCarriedVolume() + o->getTotalVolume()) <=
+            ch->carryVolumeLimit()))) {
       if ((o->thingHolding() == ch) ||
           // o->weight <= ch weight limit
           (compareWeights(o->getTotalWeight(TRUE),
-                 ch->carryWeightLimit() - ch->getCarriedWeight()) != -1)) {
-        TObj *tobj = dynamic_cast<TObj *>(o);
+             ch->carryWeightLimit() - ch->getCarriedWeight()) != -1)) {
+        TObj* tobj = dynamic_cast<TObj*>(o);
         if (tobj) {
-          if (ch->isImmortal() || 
-               (tobj->canWear(ITEM_WEAR_TAKE) && !tobj->isObjStat(ITEM_PROTOTYPE))) {
+          if (ch->isImmortal() || (tobj->canWear(ITEM_WEAR_TAKE) &&
+                                    !tobj->isObjStat(ITEM_PROTOTYPE))) {
             if (!*name || isname(name, tobj->name))
-              return(tobj);
+              return (tobj);
           }
         }
       }
@@ -1937,25 +1925,27 @@ TThing *get_thing_in_list_getable(TBeing *ch, const char *name, StuffList list)
   return NULL;
 }
 
-TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list)
-{
+TThing* get_thing_on_list_getable(TBeing* ch, const char* name, TThing* list) {
   TThing *o, *next_o;
 
   for (o = list; o; o = next_o) {
     next_o = o->nextRider;
     if (ch->canSee(o)) {
       if (((o->thingHolding() == ch) &&
-           ((ch->getCarriedVolume() + (o->getTotalVolume() - o->getReducedVolume(NULL))) <= ch->carryVolumeLimit())) ||
+            ((ch->getCarriedVolume() +
+               (o->getTotalVolume() - o->getReducedVolume(NULL))) <=
+              ch->carryVolumeLimit())) ||
           ((o->thingHolding() != ch) &&
-           ((ch->getCarriedVolume() + o->getTotalVolume()) <= ch->carryVolumeLimit()))) {
+            ((ch->getCarriedVolume() + o->getTotalVolume()) <=
+              ch->carryVolumeLimit()))) {
         if ((o->thingHolding() == ch) ||
             // o->weight <= ch weight limit
             (compareWeights(o->getTotalWeight(TRUE),
-                   ch->carryWeightLimit() - ch->getCarriedWeight()) != -1)) {
-          TObj *tobj = dynamic_cast<TObj *>(o);
+               ch->carryWeightLimit() - ch->getCarriedWeight()) != -1)) {
+          TObj* tobj = dynamic_cast<TObj*>(o);
           if (tobj) {
-            if (ch->isImmortal() ||
-              (tobj->canWear(ITEM_WEAR_TAKE) && !tobj->isObjStat(ITEM_PROTOTYPE))) {
+            if (ch->isImmortal() || (tobj->canWear(ITEM_WEAR_TAKE) &&
+                                      !tobj->isObjStat(ITEM_PROTOTYPE))) {
               if (!*name || isname(name, tobj->name))
                 return tobj;
             }
@@ -1968,8 +1958,8 @@ TThing *get_thing_on_list_getable(TBeing *ch, const char *name, TThing *list)
   return NULL;
 }
 
-TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int *count, thingTypeT type)
-{
+TThing* searchLinkedListVis(const TBeing* ch, sstring name, StuffList list,
+  int* count, thingTypeT type) {
   TThing *i, *t;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
@@ -1982,29 +1972,29 @@ TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int 
 
   j = (count ? *count : 0);
 
-  for(StuffIter it=list.begin();it!=list.end() && (j < numx); ++it){
-    t=*it;
+  for (StuffIter it = list.begin(); it != list.end() && (j < numx); ++it) {
+    t = *it;
     if (!t->name.empty() && isname(tmp, t->name)) {
       if (ch->canSee(t)) {
-        if (type == TYPETHING || 
-              ((type == TYPEBEING) && dynamic_cast<TBeing *>(t)) ||
-              ((type == TYPEOBJ) && dynamic_cast<TObj *>(t)) ||
-              ((type == TYPEPC) && dynamic_cast<TPerson *>(t)) ||
-              ((type == TYPEMOB) && dynamic_cast<TMonster *>(t))) {
+        if (type == TYPETHING ||
+            ((type == TYPEBEING) && dynamic_cast<TBeing*>(t)) ||
+            ((type == TYPEOBJ) && dynamic_cast<TObj*>(t)) ||
+            ((type == TYPEPC) && dynamic_cast<TPerson*>(t)) ||
+            ((type == TYPEMOB) && dynamic_cast<TMonster*>(t))) {
           j++;
           if (j == numx)
             return t;
         }
       }
     }
-    if (dynamic_cast<TTable *>(t)) {
+    if (dynamic_cast<TTable*>(t)) {
       for (i = t->rider; i; i = i->nextRider) {
         if (isname(tmp, i->name) && ch->canSee(i)) {
-          if (type == TYPETHING || 
-              ((type == TYPEBEING) && dynamic_cast<TBeing *>(i)) ||
-              ((type == TYPEOBJ) && dynamic_cast<TObj *>(i)) ||
-              ((type == TYPEPC) && dynamic_cast<TPerson *>(i)) ||
-              ((type == TYPEMOB) && dynamic_cast<TMonster *>(i))) {
+          if (type == TYPETHING ||
+              ((type == TYPEBEING) && dynamic_cast<TBeing*>(i)) ||
+              ((type == TYPEOBJ) && dynamic_cast<TObj*>(i)) ||
+              ((type == TYPEPC) && dynamic_cast<TPerson*>(i)) ||
+              ((type == TYPEMOB) && dynamic_cast<TMonster*>(i))) {
             j++;
             if (j == numx)
               return i;
@@ -2013,14 +2003,13 @@ TThing *searchLinkedListVis(const TBeing *ch, sstring name, StuffList list, int 
       }
     }
   }
-  if (count) 
+  if (count)
     *count = j;
   return NULL;
 }
 
-TThing *get_thing_on_list_vis(TBeing *ch, const char *name, TThing *list)
-{
-  TThing *i;
+TThing* get_thing_on_list_vis(TBeing* ch, const char* name, TThing* list) {
+  TThing* i;
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -2043,8 +2032,8 @@ TThing *get_thing_on_list_vis(TBeing *ch, const char *name, TThing *list)
   return (0);
 }
 
-TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exact)
-{
+TObj* get_obj_vis_world(TBeing* ch, const char* name, int* count,
+  exactTypeT exact) {
   int j, numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -2058,9 +2047,9 @@ TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exa
 
   j = count ? *count : 1;
 
-  // ok.. no luck yet. scan the entire obj list 
-  for(TObjIter iter=object_list.begin();
-      iter!=object_list.end() && (j <= numx);++iter){
+  // ok.. no luck yet. scan the entire obj list
+  for (TObjIter iter = object_list.begin();
+       iter != object_list.end() && (j <= numx); ++iter) {
     if ((exact && is_exact_name(tmp, (*iter)->name)) ||
         (!exact && isname(tmp, (*iter)->name))) {
       if (ch->canSee(*iter)) {
@@ -2075,10 +2064,9 @@ TObj *get_obj_vis_world(TBeing *ch, const char *name, int *count, exactTypeT exa
   return (0);
 }
 
-// search the entire world for an object, and return a pointer 
-TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact)
-{
-  TObj *i;
+// search the entire world for an object, and return a pointer
+TObj* get_obj_vis(TBeing* ch, const char* name, int* count, exactTypeT exact) {
+  TObj* i;
   int numx;
   char tmpname[MAX_INPUT_LENGTH], *tmp;
 
@@ -2092,13 +2080,13 @@ TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact)
 
   // int j = count ? *count : 0;
 
-  TThing *ti = searchLinkedListVis(ch, name, ch->stuff, count, TYPEOBJ);
-  i = dynamic_cast<TObj *>(ti);
+  TThing* ti = searchLinkedListVis(ch, name, ch->stuff, count, TYPEOBJ);
+  i = dynamic_cast<TObj*>(ti);
   if (i)
     return (i);
 
   ti = searchLinkedListVis(ch, name, ch->roomp->stuff, count, TYPEOBJ);
-  i = dynamic_cast<TObj *>(ti);
+  i = dynamic_cast<TObj*>(ti);
   if (i)
     return (i);
 
@@ -2106,25 +2094,25 @@ TObj *get_obj_vis(TBeing *ch, const char *name, int *count, exactTypeT exact)
 }
 
 // inv, eq, items in room
-TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
-{
-  TThing *i=NULL;
-  TObj *obj = NULL;
+TObj* get_obj_vis_accessible(TBeing* ch, const sstring& name) {
+  TThing* i = NULL;
+  TObj* obj = NULL;
   int j = 1, numx, k;
   char tmpname[MAX_INPUT_LENGTH];
-  char *tmp;
+  char* tmp;
 
   if (name.empty())
     return NULL;
 
-  strncpy(tmpname, name.c_str(), cElements(tmpname)-1);
+  strncpy(tmpname, name.c_str(), cElements(tmpname) - 1);
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return NULL;
 
   // scan items carried
-  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (i=*it);++it) {
-    obj = dynamic_cast<TObj *>(i);
+  for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (i = *it);
+       ++it) {
+    obj = dynamic_cast<TObj*>(i);
     if (obj && isname(tmp, obj->name) && ch->canSee(obj)) {
       if (j == numx)
         return obj;
@@ -2133,9 +2121,9 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
     }
   }
   // scan through equipment
-//  for (k = MIN_WEAR, j = 1; k < MAX_WEAR && j <= numx; k++) {
+  //  for (k = MIN_WEAR, j = 1; k < MAX_WEAR && j <= numx; k++) {
   for (k = MIN_WEAR; k < MAX_WEAR && j <= numx; k++) {
-    if ((i = ch->equipment[k]) && (obj = dynamic_cast<TObj *>(i)) &&
+    if ((i = ch->equipment[k]) && (obj = dynamic_cast<TObj*>(i)) &&
         isname(tmp, obj->name) && ch->canSee(obj)) {
       if (obj->isPaired()) {
         if (ch->isRightHanded()) {
@@ -2148,12 +2136,13 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
       }
       if (j == numx)
         return obj;
-      else 
+      else
         j++;
     }
   }
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (i=*it);++it) {
-    obj = dynamic_cast<TObj *>(i);
+  for (StuffIter it = ch->roomp->stuff.begin();
+       it != ch->roomp->stuff.end() && (i = *it); ++it) {
+    obj = dynamic_cast<TObj*>(i);
     if (obj && isname(tmp, obj->name) && ch->canSee(obj)) {
       if (j == numx)
         return obj;
@@ -2164,73 +2153,66 @@ TObj *get_obj_vis_accessible(TBeing *ch, const sstring &name)
   return NULL;
 }
 
-// Generic Find, designed to find any object/character                    
-// Calling :                                                              
-//  *arg      is the sting containing the sstring to be searched for.       
-//            This sstring doesn't have to be a single word, the routine    
-//            extracts the next word itself.                              
-//  bv        All those bits that you want to "search through".            
-//            Bit found will be result of the function                     
-//  *ch       This is the person that is trying to "find"                  
-//  **tar_ch  Will be NULL if no character was found, otherwise points     
-//  **tar_obj Will be NULL if no object was found, otherwise points        
-//                                                                        
-// The routine returns a pointer to the next word in *arg (just like the  
-// one_argument routine).                                                 
+// Generic Find, designed to find any object/character
+// Calling :
+//  *arg      is the sting containing the sstring to be searched for.
+//            This sstring doesn't have to be a single word, the routine
+//            extracts the next word itself.
+//  bv        All those bits that you want to "search through".
+//            Bit found will be result of the function
+//  *ch       This is the person that is trying to "find"
+//  **tar_ch  Will be NULL if no character was found, otherwise points
+//  **tar_obj Will be NULL if no object was found, otherwise points
+//
+// The routine returns a pointer to the next word in *arg (just like the
+// one_argument routine).
 
-TObj *generic_find_obj(sstring arg, int bv, TBeing *ch)
-{
-  TBeing *tar_ch=NULL;
-  TObj *o=NULL;
+TObj* generic_find_obj(sstring arg, int bv, TBeing* ch) {
+  TBeing* tar_ch = NULL;
+  TObj* o = NULL;
 
   generic_find(arg.c_str(), bv, ch, &tar_ch, &o);
 
   return o;
 }
 
-TBeing *generic_find_being(sstring arg, int bv, TBeing *ch)
-{
-  TBeing *tar_ch=NULL;
-  TObj *o=NULL;
+TBeing* generic_find_being(sstring arg, int bv, TBeing* ch) {
+  TBeing* tar_ch = NULL;
+  TObj* o = NULL;
 
   generic_find(arg.c_str(), bv, ch, &tar_ch, &o);
 
   return tar_ch;
 }
 
-
-int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **obj)
-{
-  const char *ignore[] =
-  {
-    "the",
-    "in",
-    "on",
-    "at",
-    "\n"
-  };
+int generic_find(const char* arg, int bv, TBeing* ch, TBeing** tar_ch,
+  TObj** obj) {
+  const char* ignore[] = {"the", "in", "on", "at", "\n"};
   unsigned int i;
   bool found = FALSE;
   int count = 0, numx = 0;
   char name[256];
-  TThing *t;
+  TThing* t;
   char tmpname[MAX_INPUT_LENGTH];
-  char *tmp;
+  char* tmp;
 
   *tar_ch = NULL;
   *obj = NULL;
 
-
-//  strcpy(tmpname, name);
-  strncpy(tmpname, arg, cElements(tmpname)-1);
+  //  strcpy(tmpname, name);
+  strncpy(tmpname, arg, cElements(tmpname) - 1);
   tmp = tmpname;
   if (!(numx = get_number(&tmp)))
     return (0);
 
   while (*arg && !found) {
-    for (; *arg == ' '; arg++);
+    for (; *arg == ' '; arg++)
+      ;
 
-    for (i = 0; i < (cElements(name)-1) && (name[i] = *(arg + i)) && (name[i] != ' '); i++);
+    for (i = 0; i < (cElements(name) - 1) && (name[i] = *(arg + i)) &&
+                (name[i] != ' ');
+         i++)
+      ;
     name[i] = 0;
     arg += i;
     if (search_block(name, ignore, TRUE) > -1)
@@ -2246,7 +2228,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
 
   // please leave this ordering alone
   // look for beings first
-  // look in inventory before worn 
+  // look in inventory before worn
   // look at worn before room
   // look in room before world
   //  look for extra descriptions in room before world
@@ -2265,7 +2247,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
   }
   if (bv & FIND_OBJ_INV) {
     if ((t = searchLinkedListVis(ch, name, ch->stuff, &count, TYPEOBJ))) {
-      *obj = dynamic_cast<TObj *>(t);
+      *obj = dynamic_cast<TObj*>(t);
       if (*obj) {
         return FIND_OBJ_INV;
       }
@@ -2276,24 +2258,26 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
     wearSlotT secondary = ch->isRightHanded() ? HOLD_LEFT : HOLD_RIGHT;
     t = ch->equipment[primary];
     if (t && ch->canSee(t) && isname(arg, t->name))
-      *obj = dynamic_cast<TObj *>(t);
-    if (!*obj && (t = ch->equipment[secondary]) && ch->canSee(t) && isname(arg, t->name))
-      *obj = dynamic_cast<TObj *>(t);
+      *obj = dynamic_cast<TObj*>(t);
+    if (!*obj && (t = ch->equipment[secondary]) && ch->canSee(t) &&
+        isname(arg, t->name))
+      *obj = dynamic_cast<TObj*>(t);
     if (*obj)
       return FIND_OBJ_HELD;
   }
   if (bv & FIND_OBJ_EQUIP) {
     wearSlotT j;
     if ((t = get_thing_in_equip(ch, name, ch->equipment, &j, TRUE, &count))) {
-      *obj = dynamic_cast<TObj *>(t);
+      *obj = dynamic_cast<TObj*>(t);
       if (*obj) {
         return FIND_OBJ_EQUIP;
       }
     }
   }
   if (bv & FIND_OBJ_ROOM) {
-    if ((t = searchLinkedListVis(ch, name, ch->roomp->stuff, &count, TYPEOBJ))) {
-      *obj = dynamic_cast<TObj *>(t);
+    if ((t =
+            searchLinkedListVis(ch, name, ch->roomp->stuff, &count, TYPEOBJ))) {
+      *obj = dynamic_cast<TObj*>(t);
       if (*obj) {
         return FIND_OBJ_ROOM;
       }
@@ -2301,7 +2285,7 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
   }
   if (bv & FIND_ROOM_EXTRA) {
     if (ch->roomp && ch->roomp->ex_description &&
-      ch->roomp->ex_description->findExtraDesc(tmp)) {
+        ch->roomp->ex_description->findExtraDesc(tmp)) {
       count++;
       if (count == numx)
         return FIND_ROOM_EXTRA;
@@ -2315,13 +2299,13 @@ int generic_find(const char *arg, int bv, TBeing *ch, TBeing **tar_ch, TObj **ob
 }
 
 // looks in hands and bags
-TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_bag, bool check_spellbag)
-{
-  TThing *t, *t2=NULL;
-  TThing *bag;
+TThing* get_thing_char_using(TBeing* ch, const char* arg, int vnum,
+  bool check_bag, bool check_spellbag) {
+  TThing *t, *t2 = NULL;
+  TThing* bag;
   int num = 1, j = 1;
   char tmpname[MAX_INPUT_LENGTH];
-  char *tmp = NULL;
+  char* tmp = NULL;
 
   if (arg) {
     strcpy(tmpname, arg);
@@ -2333,82 +2317,89 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
 
   t = ch->heldInPrimHand();
   if (t && ch->canSee(t)) {
-    TObj *tobj = dynamic_cast<TObj *>(t);
+    TObj* tobj = dynamic_cast<TObj*>(t);
     if (((vnum >= 0) && tobj && (tobj->objVnum() == vnum)) ||
         (tmp && *tmp && isname(tmp, t->name))) {
-      if (j++ == num) 
+      if (j++ == num)
         return t;
-    } else if (dynamic_cast<TSpellBag *>(t) && check_spellbag) {
+    } else if (dynamic_cast<TSpellBag*>(t) && check_spellbag) {
       bag = t;
-      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
-        TObj *to = dynamic_cast<TObj *>(t);
+      for (StuffIter it = bag->stuff.begin();
+           it != bag->stuff.end() && (t = *it); ++it) {
+        TObj* to = dynamic_cast<TObj*>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
-    } else if (dynamic_cast<TBag *>(t) && check_bag) {       
+    } else if (dynamic_cast<TBag*>(t) && check_bag) {
       bag = t;
-      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
-        TObj *to = dynamic_cast<TObj *>(t);
+      for (StuffIter it = bag->stuff.begin();
+           it != bag->stuff.end() && (t = *it); ++it) {
+        TObj* to = dynamic_cast<TObj*>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
     }
   }
   t = ch->heldInSecHand();
   if (t && ch->canSee(t)) {
-    TObj *tobj = dynamic_cast<TObj *>(t);
+    TObj* tobj = dynamic_cast<TObj*>(t);
     if (((vnum >= 0) && tobj && (tobj->objVnum() == vnum)) ||
         (tmp && *tmp && isname(tmp, t->name))) {
-      if (j++ == num) 
+      if (j++ == num)
         return t;
-    } else if (dynamic_cast<TSpellBag *>(t) && check_spellbag) {
+    } else if (dynamic_cast<TSpellBag*>(t) && check_spellbag) {
       bag = t;
-      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
-        TObj *to = dynamic_cast<TObj *>(t);
+      for (StuffIter it = bag->stuff.begin();
+           it != bag->stuff.end() && (t = *it); ++it) {
+        TObj* to = dynamic_cast<TObj*>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
-    } else if (dynamic_cast<TBag *>(t) && check_bag) {
+    } else if (dynamic_cast<TBag*>(t) && check_bag) {
       bag = t;
-      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t=*it);++it) {
-        TObj *to = dynamic_cast<TObj *>(t);
+      for (StuffIter it = bag->stuff.begin();
+           it != bag->stuff.end() && (t = *it); ++it) {
+        TObj* to = dynamic_cast<TObj*>(t);
         if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t->name)))
+          if (j++ == num)
             return t;
       }
     }
   }
-  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end() && (t=*it);++it) {
+  for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (t = *it);
+       ++it) {
     if (!ch->canSee(t))
       continue;
-    TObj *to = dynamic_cast<TObj *>(t);
+    TObj* to = dynamic_cast<TObj*>(t);
     if (((vnum >= 0) && to && (to->objVnum() == vnum)) ||
         (tmp && *tmp && isname(tmp, t->name))) {
-      if (j++ == num) 
+      if (j++ == num)
         return t;
-    } else if (dynamic_cast<TSpellBag *>(to) && check_spellbag) {
+    } else if (dynamic_cast<TSpellBag*>(to) && check_spellbag) {
       bag = to;
-      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t2=*it);++it) {
-        TObj *to2 = dynamic_cast<TObj *>(t2);
+      for (StuffIter it = bag->stuff.begin();
+           it != bag->stuff.end() && (t2 = *it); ++it) {
+        TObj* to2 = dynamic_cast<TObj*>(t2);
         if (((vnum >= 0) && to2 && (to2->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t2->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t2->name)))
+          if (j++ == num)
             return t2;
       }
-    } else if (dynamic_cast<TBag *>(to) && check_bag) {
+    } else if (dynamic_cast<TBag*>(to) && check_bag) {
       bag = to;
-      for(StuffIter it=bag->stuff.begin();it!=bag->stuff.end() && (t2=*it);++it) {
-        TObj *to2 = dynamic_cast<TObj *>(t2);
+      for (StuffIter it = bag->stuff.begin();
+           it != bag->stuff.end() && (t2 = *it); ++it) {
+        TObj* to2 = dynamic_cast<TObj*>(t2);
         if (((vnum >= 0) && to2 && (to2->objVnum() == vnum)) ||
-            (tmp && *tmp && isname(tmp, t2->name))) 
-          if (j++ == num) 
+            (tmp && *tmp && isname(tmp, t2->name)))
+          if (j++ == num)
             return t2;
       }
     }
@@ -2416,19 +2407,20 @@ TThing *get_thing_char_using(TBeing *ch, const char *arg, int vnum, bool check_b
   return NULL;
 }
 
-void TBeing::addCaptive(TBeing *ch)
-{
+void TBeing::addCaptive(TBeing* ch) {
   if (!ch)
     return;
 
   if (ch->getCaptiveOf()) {
-    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) when they were already captured.") % 
-      ch->getName() % getName());
+    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) "
+                          "when they were already captured.") %
+                     ch->getName() % getName());
     return;
   }
   if (getCaptiveOf()) {
-    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) who is also captive.") % 
-      ch->getName() % getName());
+    vlogf(LOG_BUG, format("addCaptive : trying to add captive (%s) to (%s) who "
+                          "is also captive.") %
+                     ch->getName() % getName());
     return;
   }
 
@@ -2437,24 +2429,26 @@ void TBeing::addCaptive(TBeing *ch)
   ch->setCaptiveOf(this);
 }
 
-void TBeing::remCaptive(TBeing *ch)
-{
+void TBeing::remCaptive(TBeing* ch) {
   TBeing *t, *last;
 
   if (!ch->getCaptiveOf()) {
-    vlogf(LOG_BUG,format("remCaptive : trying to remove %s when not a captive.") %  ch->getName());
+    vlogf(LOG_BUG,
+      format("remCaptive : trying to remove %s when not a captive.") %
+        ch->getName());
     return;
   }
   last = NULL;
-  for (t = getCaptive() ; t; last = t, t = t->getNextCaptive()) {
+  for (t = getCaptive(); t; last = t, t = t->getNextCaptive()) {
     if (t == ch)
       break;
   }
   if (!t) {
-    vlogf(LOG_BUG,format("remCaptive could not find %s in captive list of %s.") % 
-      ch->getName() % getName());
+    vlogf(LOG_BUG,
+      format("remCaptive could not find %s in captive list of %s.") %
+        ch->getName() % getName());
     return;
-  }  
+  }
   if (!last) {
     // head of list
     setCaptive(t->getNextCaptive());
@@ -2468,11 +2462,10 @@ void TBeing::remCaptive(TBeing *ch)
 // this duplicates functionality of the C assert() function
 // if parm is false, the mud will vlogf errorMsg and then drop a core.
 
-void mud_assert(int parm, const char *errorMsg,...)
-{
+void mud_assert(int parm, const char* errorMsg, ...) {
   char message[512];
   va_list ap;
- 
+
   if (parm)
     return;
 
@@ -2480,20 +2473,18 @@ void mud_assert(int parm, const char *errorMsg,...)
   vsnprintf(message, sizeof(message), errorMsg, ap);
   va_end(ap);
 
-  vlogf(LOG_BUG, format("ASSERTION FAILED: %s") %  message);
-  abort();    // force a crash
+  vlogf(LOG_BUG, format("ASSERTION FAILED: %s") % message);
+  abort();  // force a crash
 }
 
-
 // provides "this"'s name, with no color as defined by ch
-const sstring TThing::getNameNOC(const TBeing *ch) const
-{
+const sstring TThing::getNameNOC(const TBeing* ch) const {
   return colorString(ch, ch->desc, getName(), NULL, COLOR_NONE, TRUE);
 }
 
-TBeing *get_best_char_room(const TBeing *ch, const char *name, visibleTypeT visible, infraTypeT infra)
-{
-  TBeing *i;
+TBeing* get_best_char_room(const TBeing* ch, const char* name,
+  visibleTypeT visible, infraTypeT infra) {
+  TBeing* i;
 
   if (visible) {
     i = get_char_room_vis(ch, name, NULL, EXACT_YES, infra);
@@ -2504,6 +2495,6 @@ TBeing *get_best_char_room(const TBeing *ch, const char *name, visibleTypeT visi
     // see invis, who cares about infra in this situation...
     i = get_char_room(name, ch->inRoom(), NULL);
   }
-  
+
   return i;
 }

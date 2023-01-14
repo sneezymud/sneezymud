@@ -10,66 +10,61 @@
 #include "extern.h"
 #include "player_data.h"
 
-class Pfile : public CxxTest::TestSuite
-{
-public:
-  TSocket *tSocket;
-  Descriptor *tDesc;
-  TPerson *tPerson;
-  charFile st;
+class Pfile : public CxxTest::TestSuite {
+  public:
+    TSocket* tSocket;
+    Descriptor* tDesc;
+    TPerson* tPerson;
+    charFile st;
 
-  static Pfile *createSuite(){
-    Config::doConfiguration();
-    freopen("code/tests/output/Pfile.out", "w", stderr);
-    buildSpellArray();
-    chdir("../lib");
-    Races[RACE_HUMAN] = new Race(RACE_HUMAN);
+    static Pfile* createSuite() {
+      Config::doConfiguration();
+      freopen("code/tests/output/Pfile.out", "w", stderr);
+      buildSpellArray();
+      chdir("../lib");
+      Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
-    return new Pfile;
-  }
-  static void destroySuite(Pfile *suite){
-    delete suite;
-  }
+      return new Pfile;
+    }
+    static void destroySuite(Pfile* suite) { delete suite; }
 
-  void setUp(){
-    CxxTest::setAbortTestOnFail(true);
-  }
+    void setUp() { CxxTest::setAbortTestOnFail(true); }
 
-  void testSocket(){
-    tSocket=new TSocket();
-    TS_ASSERT(tSocket);
-  }
+    void testSocket() {
+      tSocket = new TSocket();
+      TS_ASSERT(tSocket);
+    }
 
-  void testDescriptor(){
-    tDesc=new Descriptor(tSocket);
-    TS_ASSERT(tDesc);
+    void testDescriptor() {
+      tDesc = new Descriptor(tSocket);
+      TS_ASSERT(tDesc);
 
-    tDesc->connected=CON_PLYNG;
-  }
+      tDesc->connected = CON_PLYNG;
+    }
 
-  void testAccount(){
-    tDesc->account=new TAccount();
-    TS_ASSERT(tDesc);
-  }
+    void testAccount() {
+      tDesc->account = new TAccount();
+      TS_ASSERT(tDesc);
+    }
 
-  void testPerson(){
-    tPerson=new TPerson(tDesc);
-    TS_ASSERT(tPerson);
+    void testPerson() {
+      tPerson = new TPerson(tDesc);
+      TS_ASSERT(tPerson);
 
-    tDesc->character=tPerson;
-  }
+      tDesc->character = tPerson;
+    }
 
-  void testLoadChar(){
-    auto db = std::make_unique<MockDb>();
-    TS_ASSERT(load_char("test", &st, std::move(db)));
-  }
+    void testLoadChar() {
+      auto db = std::make_unique<MockDb>();
+      TS_ASSERT(load_char("test", &st, std::move(db)));
+    }
 
-  /*
-  // loadFromSt has no error checking apparently
-  tPerson2->loadFromSt(&st);
-  tPerson2->in_room=0;
-  tPerson2->next=character_list;
-  character_list=tPerson2;
-   *testRoom += *tPerson2;
-   */
+    /*
+    // loadFromSt has no error checking apparently
+    tPerson2->loadFromSt(&st);
+    tPerson2->in_room=0;
+    tPerson2->next=character_list;
+    character_list=tPerson2;
+     *testRoom += *tPerson2;
+     */
 };
