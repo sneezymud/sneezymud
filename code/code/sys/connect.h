@@ -6,140 +6,137 @@
 #include "stats.h"
 #include "comm.h"
 
-
-const unsigned int PROMPT_HIT               = (1<<0);
-const unsigned int PROMPT_MANA              = (1<<1);
-const unsigned int PROMPT_MOVE              = (1<<2);
-const unsigned int PROMPT_GOLD              = (1<<3);
-const unsigned int PROMPT_EXP               = (1<<4);
-const unsigned int PROMPT_NAME              = (1<<5);
-const unsigned int PROMPT_OPPONENT          = (1<<6);
-const unsigned int PROMPT_CONDITION         = (1<<7);
-const unsigned int PROMPT_COND_LDR          = (1<<8);
-const unsigned int PROMPT_ROOM              = (1<<9);
-const unsigned int PROMPT_COLOR             = (1<<10);
-const unsigned int PROMPT_TANK              = (1<<11);
-const unsigned int PROMPT_TANK_OTHER        = (1<<12);
-const unsigned int PROMPT_BUILDER_ASSISTANT = (1<<13);
-const unsigned int PROMPT_EXPTONEXT_LEVEL   = (1<<14);
-const unsigned int PROMPT_VTANSI_BAR        = (1<<15);
-const unsigned int PROMPT_PIETY             = (1<<16);
-const unsigned int PROMPT_LIFEFORCE         = (1<<17);
-const unsigned int PROMPT_TIME              = (1<<18);
-const unsigned int PROMPT_CR                = (1<<19);
-const unsigned int PROMPT_ROOM_NAME         = (1<<20);
-const unsigned int PROMPT_ZONE_NUM          = (1<<21);
-const unsigned int PROMPT_COORDS            = (1<<22);
+const unsigned int PROMPT_HIT = (1 << 0);
+const unsigned int PROMPT_MANA = (1 << 1);
+const unsigned int PROMPT_MOVE = (1 << 2);
+const unsigned int PROMPT_GOLD = (1 << 3);
+const unsigned int PROMPT_EXP = (1 << 4);
+const unsigned int PROMPT_NAME = (1 << 5);
+const unsigned int PROMPT_OPPONENT = (1 << 6);
+const unsigned int PROMPT_CONDITION = (1 << 7);
+const unsigned int PROMPT_COND_LDR = (1 << 8);
+const unsigned int PROMPT_ROOM = (1 << 9);
+const unsigned int PROMPT_COLOR = (1 << 10);
+const unsigned int PROMPT_TANK = (1 << 11);
+const unsigned int PROMPT_TANK_OTHER = (1 << 12);
+const unsigned int PROMPT_BUILDER_ASSISTANT = (1 << 13);
+const unsigned int PROMPT_EXPTONEXT_LEVEL = (1 << 14);
+const unsigned int PROMPT_VTANSI_BAR = (1 << 15);
+const unsigned int PROMPT_PIETY = (1 << 16);
+const unsigned int PROMPT_LIFEFORCE = (1 << 17);
+const unsigned int PROMPT_TIME = (1 << 18);
+const unsigned int PROMPT_CR = (1 << 19);
+const unsigned int PROMPT_ROOM_NAME = (1 << 20);
+const unsigned int PROMPT_ZONE_NUM = (1 << 21);
+const unsigned int PROMPT_COORDS = (1 << 22);
 // Add new prompt options here.
-const unsigned int PROMPT_CLASSIC_ANSIBAR   = (1<<30);
-const unsigned int PROMPT_CLIENT_PROMPT     = (unsigned)(1<<31);
+const unsigned int PROMPT_CLASSIC_ANSIBAR = (1 << 30);
+const unsigned int PROMPT_CLIENT_PROMPT = (unsigned)(1 << 31);
 
-const int HISTORY_SIZE=10;
+const int HISTORY_SIZE = 10;
 
-const int MAX_TRAITS=17;
+const int MAX_TRAITS = 17;
 
 struct TTraits {
-  int tog, points;
-  sstring name, desc;
-  int num50race, num50any;
+    int tog, points;
+    sstring name, desc;
+    int num50race, num50any;
 };
 
 enum termTypeT {
-     TERM_NONE = 0,  //         = 0;
-     TERM_VT100,  //        = 1;
-     TERM_ANSI,   //         = 2;
+  TERM_NONE = 0,  //         = 0;
+  TERM_VT100,     //        = 1;
+  TERM_ANSI,      //         = 2;
 
-     TERM_MAX
+  TERM_MAX
 };
 
 enum connectStateT {
-       CON_PLYNG,
-       CON_NME,
-       CON_NMECNF,
-       CON_PWDNRM,
-       CON_PWDCNF,
-       CON_RMOTD,
-       CON_PWDNCNF,
-       CON_WIZLOCK,
-       CON_DELETE,
-       CON_DISCON,
-       CON_NEWACT,
-       CON_ACTPWD,
-       CON_NEWLOG,
-       CON_NEWACTPWD,
-       CON_EMAIL,
-       CON_TERM,
-       CON_CONN,
-       CON_NEWPWD,
-       CON_OLDPWD,
-       CON_RETPWD,
-       CON_DELCHAR,
-       CON_ACTDELCNF,
-       CON_EDITTING,
-       CON_TIME,
-       CON_CHARDELCNF,
-       CON_WIZLOCKNEW,
+  CON_PLYNG,
+  CON_NME,
+  CON_NMECNF,
+  CON_PWDNRM,
+  CON_PWDCNF,
+  CON_RMOTD,
+  CON_PWDNCNF,
+  CON_WIZLOCK,
+  CON_DELETE,
+  CON_DISCON,
+  CON_NEWACT,
+  CON_ACTPWD,
+  CON_NEWLOG,
+  CON_NEWACTPWD,
+  CON_EMAIL,
+  CON_TERM,
+  CON_CONN,
+  CON_NEWPWD,
+  CON_OLDPWD,
+  CON_RETPWD,
+  CON_DELCHAR,
+  CON_ACTDELCNF,
+  CON_EDITTING,
+  CON_TIME,
+  CON_CHARDELCNF,
+  CON_WIZLOCKNEW,
 
-       // new states for streamlined character creation
-       CON_CREATION_ERROR,
-       CON_CREATION_START,
-       CON_CREATION_NAME = CON_CREATION_START,
-       CON_CREATION_DISCLAIM1,
-       CON_CREATION_DISCLAIM2,
-       CON_CREATION_DISCLAIM3,
-       CON_CREATION_MULTIWARN,
-       CON_CREATION_RESET,
-       CON_CREATION_LAUNCHPAD,
-       CON_CREATION_RENAME,
-       CON_CREATION_SEX,
-       CON_CREATION_HANDS,
-       CON_CREATION_RACE,
-       CON_CREATION_HOMETERRAIN,
-       CON_CREATION_CLASS,
-       CON_CREATION_TRAITS1,
-       CON_CREATION_TRAITS2,
-       CON_CREATION_TRAITS3,
-       CON_CREATION_CUSTOMIZE_START,
-       CON_CREATION_CUSTOMIZE_COMBAT,
-       CON_CREATION_CUSTOMIZE_COMBAT2,
-       CON_CREATION_CUSTOMIZE_LEARN,
-       CON_CREATION_CUSTOMIZE_UTIL,
-       CON_CREATION_DONE,
-       CON_CREATION_CONFIG_CODE,
-       CON_CREATION_MAX,
+  // new states for streamlined character creation
+  CON_CREATION_ERROR,
+  CON_CREATION_START,
+  CON_CREATION_NAME = CON_CREATION_START,
+  CON_CREATION_DISCLAIM1,
+  CON_CREATION_DISCLAIM2,
+  CON_CREATION_DISCLAIM3,
+  CON_CREATION_MULTIWARN,
+  CON_CREATION_RESET,
+  CON_CREATION_LAUNCHPAD,
+  CON_CREATION_RENAME,
+  CON_CREATION_SEX,
+  CON_CREATION_HANDS,
+  CON_CREATION_RACE,
+  CON_CREATION_HOMETERRAIN,
+  CON_CREATION_CLASS,
+  CON_CREATION_TRAITS1,
+  CON_CREATION_TRAITS2,
+  CON_CREATION_TRAITS3,
+  CON_CREATION_CUSTOMIZE_START,
+  CON_CREATION_CUSTOMIZE_COMBAT,
+  CON_CREATION_CUSTOMIZE_COMBAT2,
+  CON_CREATION_CUSTOMIZE_LEARN,
+  CON_CREATION_CUSTOMIZE_UTIL,
+  CON_CREATION_DONE,
+  CON_CREATION_CONFIG_CODE,
+  CON_CREATION_MAX,
 
-       // if adding more here, update connected_types array as well
-       MAX_CON_STATUS,
-       // these are intentionally higher than MAX_CON_STATUS
-       CON_REDITING,
-       CON_OEDITING,
-       CON_MEDITING,
-       CON_HELP,
-       CON_WRITING,
+  // if adding more here, update connected_types array as well
+  MAX_CON_STATUS,
+  // these are intentionally higher than MAX_CON_STATUS
+  CON_REDITING,
+  CON_OEDITING,
+  CON_MEDITING,
+  CON_HELP,
+  CON_WRITING,
 };
 
 class TAccount;
 class TPerson;
 class TSocket;
 
-class editStuff
-{
+class editStuff {
   public:
-    int x, y;        // Current x andy position on the screen for cursor
-    int bottom, end; // Bottom of text, and end of current line
-    char **lines;    // Keeps up with text typed in
+    int x, y;         // Current x andy position on the screen for cursor
+    int bottom, end;  // Bottom of text, and end of current line
+    char** lines;     // Keeps up with text typed in
 
     editStuff();
-    editStuff(const editStuff &a);
+    editStuff(const editStuff& a);
     ~editStuff();
 };
-    
-class careerData
-{
+
+class careerData {
   public:
-    unsigned int kills;            // keep up with kills I've made
-    unsigned int group_kills;            // keep up with kills I've made
-    unsigned int deaths;           // total deaths I've suffered
+    unsigned int kills;        // keep up with kills I've made
+    unsigned int group_kills;  // keep up with kills I've made
+    unsigned int deaths;       // total deaths I've suffered
     double exp;                // total xp ever gained
     unsigned int crit_hits;
     unsigned int crit_hits_suff;
@@ -222,8 +219,8 @@ class careerData
       crit_eviscerate = crit_eviscerate_suff = 0;
       crit_kidney = crit_kidney_suff = 0;
       crit_genitalia = crit_genitalia_suff = 0;
-      crit_tooth = crit_tooth_suff =0;
-      crit_ripped_out_heart=crit_ripped_out_heart_suff=0;
+      crit_tooth = crit_tooth_suff = 0;
+      crit_ripped_out_heart = crit_ripped_out_heart_suff = 0;
       arena_victs = arena_loss = 0;
       skill_success_attempts = 0;
       skill_success_pass = 0;
@@ -235,7 +232,7 @@ class careerData
       hit_level40 = hit_level50 = 0;
 
       int i;
-      for (i= 0; i < MAX_ATTACK_MODE_TYPE; i++) {
+      for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
         hits[i] = 0;
         swings[i] = 0;
         dam_done[i] = 0;
@@ -245,12 +242,10 @@ class careerData
       pet_levels_bought = 0;
       stuck_in_foot = 0;
       ounces_of_blood = 0;
-      
     }
 };
 
-class sessionData
-{
+class sessionData {
   public:
     time_t connect;
     int kills;
@@ -282,12 +277,12 @@ class sessionData
     unsigned int prayer_success_attempts;
     unsigned int prayer_success_pass;
     unsigned int hones;
- 
+
     sessionData();
     ~sessionData();
-    sessionData & operator=(const sessionData &assign);
-    sessionData operator-(const sessionData &that);
-    sessionData & operator-=(const sessionData &that);
+    sessionData& operator=(const sessionData& assign);
+    sessionData operator-(const sessionData& that);
+    sessionData& operator-=(const sessionData& that);
 
     void setToZero() {
       connect = time(0);
@@ -307,7 +302,7 @@ class sessionData
       hones = 0;
 
       attack_mode_t i;
-      for (i= ATTACK_NORMAL; i < MAX_ATTACK_MODE_TYPE; i++) {
+      for (i = ATTACK_NORMAL; i < MAX_ATTACK_MODE_TYPE; i++) {
         hits[i] = 0;
         swings[i] = 0;
         rounds[i] = 0;
@@ -326,13 +321,12 @@ class sessionData
       }
     }
 
-private:
-  void minus(sessionData &sd, const sessionData &first, const sessionData &second);
-
+  private:
+    void minus(sessionData& sd, const sessionData& first,
+      const sessionData& second);
 };
 
-class promptData
-{
+class promptData {
   public:
     unsigned int type;
     char hpColor[20];
@@ -346,8 +340,8 @@ class promptData
     char pietyColor[20];
     char lifeforceColor[20];
     char timeColor[20];
-    char *prompt;
-//    double xptnl[MAX_CLASSES];  getExpClassLevel is same for all classes
+    char* prompt;
+    //    double xptnl[MAX_CLASSES];  getExpClassLevel is same for all classes
     double xptnl;
 
     promptData();
@@ -355,115 +349,111 @@ class promptData
 };
 
 class bonusStatPoints {
- public:
-  int total;
-  int combat;
-  int combat2;
-  int learn;
-  int util;
+  public:
+    int total;
+    int combat;
+    int combat2;
+    int learn;
+    int util;
 
-  bonusStatPoints();
-  void clear();
+    bonusStatPoints();
+    void clear();
 };
 
+// The ignore list is for checking if actions from one player are 'ignored' by
+// another This class actually maintains an internal static list as well as its
+// per-descriptor list the asumption is that the ignore list is almost always
+// really small, so we optimize for that implimented in other.cc
+class ignoreList {
+  private:
+    const static unsigned int cMax = 20;
+    bool m_initialized;
+    bool m_useStatic;
+    Descriptor* m_desc;
+    sstring* m_ignored;
+    unsigned int m_count;
 
+    // statics
+    static bool m_staticUseStatic;
+    static int m_staticIds[cMax];
+    static sstring m_staticIgnored[cMax];
+    static unsigned int m_staticCount;
+    static void addDB(int playerId, const sstring ignored);
+    static void removeDB(int playerId, const sstring ignored);
 
-// The ignore list is for checking if actions from one player are 'ignored' by another
-// This class actually maintains an internal static list as well as its per-descriptor list
-// the asumption is that the ignore list is almost always really small, so we optimize for that
-// implimented in other.cc
-class ignoreList
-{
-private:
-  const static unsigned int cMax = 20;
-  bool m_initialized;
-  bool m_useStatic;
-  Descriptor *m_desc;
-  sstring *m_ignored;
-  unsigned int m_count;
+    // hidden methods for interacting with the static list
+    bool shouldUseStatic() { return m_useStatic; }
+    void convertFromStatic();
+    bool staticAdd(const sstring name);
+    bool staticRemove(const sstring name);
 
-  // statics
-  static bool m_staticUseStatic;
-  static int m_staticIds[cMax];
-  static sstring m_staticIgnored[cMax];
-  static unsigned int m_staticCount;
-  static void addDB(int playerId, const sstring ignored);
-  static void removeDB(int playerId, const sstring ignored);
+    // hide default ctor
+    ignoreList() {}
 
-  // hidden methods for interacting with the static list
-  bool shouldUseStatic() { return m_useStatic; }
-  void convertFromStatic();
-  bool staticAdd(const sstring name);
-  bool staticRemove(const sstring name);
+  protected:
+    void initialize();
 
-  // hide default ctor
-  ignoreList() {}
+  public:
+    ignoreList(Descriptor* desc);
+    ~ignoreList();
 
-protected:
-  void initialize();
+    unsigned int getCount();
+    unsigned int getMax() { return cMax; }
 
-public:
-  ignoreList(Descriptor *desc);
-  ~ignoreList();
+    sstring operator[](int i);
 
-  unsigned int getCount();
-  unsigned int getMax() { return cMax; }
+    bool isIgnored(Descriptor* desc);
+    bool isIgnored(const sstring ignored);
+    static bool isMailIgnored(Descriptor* desc, const sstring ignored);
 
-  sstring operator[](int i);
-
-  bool isIgnored(Descriptor *desc);
-  bool isIgnored(const sstring ignored);
-  static bool isMailIgnored(Descriptor *desc, const sstring ignored);
-
-  bool add(Descriptor *desc);
-  bool add(const sstring name);
-  bool add(const TAccount &acct);
-  bool addAccount(const sstring name);
-  bool remove(Descriptor *desc);
-  bool remove(const sstring name);
-  bool removeAccount(const sstring name);
+    bool add(Descriptor* desc);
+    bool add(const sstring name);
+    bool add(const TAccount& acct);
+    bool addAccount(const sstring name);
+    bool remove(Descriptor* desc);
+    bool remove(const sstring name);
+    bool removeAccount(const sstring name);
 };
-
 
 // Descriptor class
-class Descriptor
-{
+class Descriptor {
   public:
-    TSocket *socket;
+    TSocket* socket;
     editStuff edit;
-    sstring host;                 // hostname
-    char pwd[12];                 // password                   
-    connectStateT connected;                // mode of 'connectedness'    
-    int wait;                     // wait for how many loops    
-    char *showstr_head;           // for paging through texts  
-    int tot_pages;               // for tracking paged info
-    int cur_page;                //       -
-    sstring* str;                   // for the modify-str system. Points to the current string being modified.
+    sstring host;             // hostname
+    char pwd[12];             // password
+    connectStateT connected;  // mode of 'connectedness'
+    int wait;                 // wait for how many loops
+    char* showstr_head;       // for paging through texts
+    int tot_pages;            // for tracking paged info
+    int cur_page;             //       -
+    sstring* str;  // for the modify-str system. Points to the current string
+                   // being modified.
     sstring mail_bug_str;
     int max_str;
-    int prompt_mode;              // control of prompt-printing 
-    char m_raw[4096];               // buffer for raw input    
-    std::queue<CommPtr> output;                 // q of sstrings to send
-    std::queue<sstring> input;                  // q of unprocessed input
-    sessionData session;          // data for this session
-    careerData career;            // data for career
+    int prompt_mode;             // control of prompt-printing
+    char m_raw[4096];            // buffer for raw input
+    std::queue<CommPtr> output;  // q of sstrings to send
+    std::queue<sstring> input;   // q of unprocessed input
+    sessionData session;         // data for this session
+    careerData career;           // data for career
     bonusStatPoints bonus_points;
     drugData drugs[MAX_DRUG];
     unsigned int autobits;
     int playerID;
     char last_teller[128];
     char last_told[128];
-    TBeing *character;            // linked to char (might be a poly)
-    TAccount *account;            // linked to account
-    TPerson *original;            // original char (always a person)
-    snoopData snoop;              // to snoop people           
-    Descriptor *next;             // link to next descriptor    
-    char *pagedfile;              // what file is getting paged 
-    char name[80];                // dummy field (idea, bug, mail use it)
-    int amount;                   // dummy field (mail uses it)
-    TObj *obj;                    // for object editor
-    TMonster *mob;                // for monster editor 
-    std::map<sstring, sstring> alias; // aliases for players
+    TBeing* character;                 // linked to char (might be a poly)
+    TAccount* account;                 // linked to account
+    TPerson* original;                 // original char (always a person)
+    snoopData snoop;                   // to snoop people
+    Descriptor* next;                  // link to next descriptor
+    char* pagedfile;                   // what file is getting paged
+    char name[80];                     // dummy field (idea, bug, mail use it)
+    int amount;                        // dummy field (mail uses it)
+    TObj* obj;                         // for object editor
+    TMonster* mob;                     // for monster editor
+    std::map<sstring, sstring> alias;  // aliases for players
     char history[HISTORY_SIZE][MAX_INPUT_LENGTH];
     betData bet;
     cBetData bet_opt;
@@ -471,7 +461,7 @@ class Descriptor
     byte point_roll;
     time_t talkCount;
     bool m_bIsClient;
-    short bad_login;              // login catches for hackers 
+    short bad_login;  // login catches for hackers
     int severity;
     int office;
     int blockastart;
@@ -495,65 +485,66 @@ class Descriptor
   private:
     Descriptor();  // prevent default constructor from being used
   public:
-    Descriptor(TSocket *);
-    Descriptor(const Descriptor &);
-    Descriptor & operator=(const Descriptor &a);
+    Descriptor(TSocket*);
+    Descriptor(const Descriptor&);
+    Descriptor& operator=(const Descriptor& a);
     ~Descriptor();
 
-    void sendGmcp(const sstring& msg, bool strip); // we want stripping in room names, for simple searching, but no stripping in comm
+    void sendGmcp(const sstring& msg,
+      bool strip);  // we want stripping in room names, for simple searching,
+                    // but no stripping in comm
     void startGmcp();
     int outputProcessing();
     int inputProcessing();
     void flush();
     void flushInput();
-    int sendLogin(const sstring &arg);
+    int sendLogin(const sstring& arg);
     bool checkForMultiplay();
-    bool checkForAccount(char *, bool silent = FALSE);
+    bool checkForAccount(char*, bool silent = FALSE);
     bool checkForCharacter(const sstring, bool silent = FALSE);
     bool hasCharacterInAccount(const sstring name) const;
-    int doAccountStuff(char *);
-    int clientCreateAccount(char *);
-    int clientCreateChar(char *);
+    int doAccountStuff(char*);
+    int clientCreateAccount(char*);
+    int clientCreateChar(char*);
     bool isEditing();
-    void Edit(char *);
+    void Edit(char*);
     void deleteAccount();
     void menuWho();
     void saveAccount();
-    int doAccountMenu(const char *);
-    void add_to_history_list(const char *);
+    int doAccountMenu(const char*);
+    void add_to_history_list(const char*);
     int nanny(sstring);
     int creation_nanny(sstring);
     void sendMotd(int);
     sstring assembleMotd(int);
     void sendPermaDeathMessage();
-    bool start_page_file(const char *, const char *);
-    int client_nanny(char *);
-    void writeToQ(const sstring &arg);
-    void clientf(const sstring &msg);
-    bool page_file(const char *);
-    void page_string(const sstring &, showNowT = SHOWNOW_NO, allowReplaceT allow = ALLOWREP_NO);
-    void show_string(const char *, showNowT, allowReplaceT);
+    bool start_page_file(const char*, const char*);
+    int client_nanny(char*);
+    void writeToQ(const sstring& arg);
+    void clientf(const sstring& msg);
+    bool page_file(const char*);
+    void page_string(const sstring&, showNowT = SHOWNOW_NO,
+      allowReplaceT allow = ALLOWREP_NO);
+    void show_string(const char*, showNowT, allowReplaceT);
     void send_client_motd();
     void send_client_inventory();
     void send_client_room_people();
     void send_client_room_objects();
     void send_client_prompt(int, int);
     void send_client_exits();
-    int read_client(char *);
+    int read_client(char*);
     void sstring_add(sstring);
     void fdSocketClose(int);
     void saveAll();
-    static void worldSend(const sstring &, TBeing *);
-    void sendShout(TBeing *, const sstring &);
+    static void worldSend(const sstring&, TBeing*);
+    void sendShout(TBeing*, const sstring&);
     void updateScreenAnsi(unsigned int update);
     void updateScreenVt100(unsigned int update);
     int move(int, int);
-    void add_comment(const char *, const char *);
-    void send_feedback(const char *subject, const char *msg);
+    void add_comment(const char*, const char*);
+    void send_feedback(const char* subject, const char* msg);
     void cleanUpStr();
-    void beep() {
-      writeToQ("");
-    }
+    void beep() { writeToQ(""); }
 
     // used for character creation
     void zeroChosenStats();
@@ -565,41 +556,41 @@ class Descriptor
     int getTerritoryStat(statTypeT stat) const;
 
     const sstring doColorSub() const;
-    const sstring ansi_color_bold(const char *s) const;
-    const sstring ansi_color_bold(const char *s, unsigned int) const;
-    const sstring ansi_color(const char *s) const;
-    const sstring ansi_color(const char *s, unsigned int) const;
+    const sstring ansi_color_bold(const char* s) const;
+    const sstring ansi_color_bold(const char* s, unsigned int) const;
+    const sstring ansi_color(const char* s) const;
+    const sstring ansi_color(const char* s, unsigned int) const;
     bool hasColor() const;
     bool hasColorVt() const;
-    const char *highlight(char *s) const;
-    const char *whiteBold() const;
-    const char *blackBold() const;
-    const char *redBold() const;
-    const char *underBold() const;
-    const char *blueBold() const;
-    const char *cyanBold() const;
-    const char *greenBold() const;
-    const char *orangeBold() const;
-    const char *purpleBold() const;
-    const char *white() const;
-    const char *black() const;
-    const char *red() const;
-    const char *under() const;
-    const char *bold() const;
-    const char *norm() const;
-    const char *blue() const;
-    const char *cyan() const;
-    const char *green() const;
-    const char *orange() const;
-    const char *purple() const;
-    const char *invert() const;
-    const char *flash() const;
-    const char *BlackOnBlack() const;
-    const char *BlackOnWhite() const;
-    const char *WhiteOnBlue() const;
-    const char *WhiteOnCyan() const;
-    const char *WhiteOnGreen() const;
-    const char *WhiteOnOrange() const;
-    const char *WhiteOnPurple() const;
-    const char *WhiteOnRed() const;
+    const char* highlight(char* s) const;
+    const char* whiteBold() const;
+    const char* blackBold() const;
+    const char* redBold() const;
+    const char* underBold() const;
+    const char* blueBold() const;
+    const char* cyanBold() const;
+    const char* greenBold() const;
+    const char* orangeBold() const;
+    const char* purpleBold() const;
+    const char* white() const;
+    const char* black() const;
+    const char* red() const;
+    const char* under() const;
+    const char* bold() const;
+    const char* norm() const;
+    const char* blue() const;
+    const char* cyan() const;
+    const char* green() const;
+    const char* orange() const;
+    const char* purple() const;
+    const char* invert() const;
+    const char* flash() const;
+    const char* BlackOnBlack() const;
+    const char* BlackOnWhite() const;
+    const char* WhiteOnBlue() const;
+    const char* WhiteOnCyan() const;
+    const char* WhiteOnGreen() const;
+    const char* WhiteOnOrange() const;
+    const char* WhiteOnPurple() const;
+    const char* WhiteOnRed() const;
 };

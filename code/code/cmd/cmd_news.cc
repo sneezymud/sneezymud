@@ -11,8 +11,7 @@
 #include "statistics.h"
 #include <fstream>
 
-void TBeing::doNews(const char *argument)
-{
+void TBeing::doNews(const char* argument) {
   if (!desc)
     return;
 
@@ -22,21 +21,21 @@ void TBeing::doNews(const char *argument)
   one_argument(argument, arg, cElements(arg));
   sstring str;
 
-  if (*arg){
+  if (*arg) {
     std::ifstream news(File::NEWS);
     sstring s;
 
     char buf[256];
-    while(news.getline(buf, 256)){
-      if(!*buf){
-	if(s.find(arg) != sstring::npos){
-	  str+=s;
-	}
-	s="";
+    while (news.getline(buf, 256)) {
+      if (!*buf) {
+        if (s.find(arg) != sstring::npos) {
+          str += s;
+        }
+        s = "";
       }
 
-      s+=buf;
-      s+="\n\r";
+      s += buf;
+      s += "\n\r";
     }
   } else {
     file_to_sstring(File::NEWS, str, CONCAT_YES);

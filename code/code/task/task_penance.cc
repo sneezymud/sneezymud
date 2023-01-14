@@ -10,8 +10,8 @@
 #include "obj.h"
 #include "connect.h"
 
-int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *)
-{
+int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
+  TObj*) {
   int learn;
   double val = 0.0;
   double amt = 0.0;
@@ -30,54 +30,57 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
     return FALSE;
   }
 
-  switch(cmd) {
-  case CMD_TASK_CONTINUE:
-    if (ch->getPiety() >= 100.0) {
-        ch->sendTo("You repent your sins and you feel your soul completely cleansed.\n\r");
+  switch (cmd) {
+    case CMD_TASK_CONTINUE:
+      if (ch->getPiety() >= 100.0) {
+        ch->sendTo(
+          "You repent your sins and you feel your soul completely "
+          "cleansed.\n\r");
         ch->stopTask();
         return TRUE;
-    }
+      }
       ch->task->calcNextUpdate(pulse, 5 * Pulse::MOBACT);
       ch->task->timeLeft++;
-      val = (double) ch->task->timeLeft * 0.3;
+      val = (double)ch->task->timeLeft * 0.3;
       if (!ch->task->status) {
         if (!(ch->roomp->getRoomFlags() & ROOM_NO_HEAL)) {
           learn = ch->getSkillValue(SKILL_PENANCE);
           if (ch->bSuccess(learn, ch->getPerc(), SKILL_PENANCE)) {
             amt = ch->pietyGain(val);
-	    
-	    if ((ch->getPiety() + amt) < 100.0){
-	      // we want the value to vary by +-10%   number(-amt/10, amt/10)
-	      // can't randomize a double, so mult by 100 then divide by same
-	      randomizer = (double) (::number((int) (-10 * amt), (int) (10 * amt)) / 100.0);
-	      amt += randomizer;
-	    }
+
+            if ((ch->getPiety() + amt) < 100.0) {
+              // we want the value to vary by +-10%   number(-amt/10, amt/10)
+              // can't randomize a double, so mult by 100 then divide by same
+              randomizer =
+                (double)(::number((int)(-10 * amt), (int)(10 * amt)) / 100.0);
+              amt += randomizer;
+            }
 
             your_deity_val = SKILL_PENANCE;
             if (amt > 0.0) {
-              act("Your repentance has been accepted by $d.",
-                   FALSE, ch, 0, 0, TO_CHAR, ANSI_GREEN);
+              act("Your repentance has been accepted by $d.", FALSE, ch, 0, 0,
+                TO_CHAR, ANSI_GREEN);
               ch->addToPiety(amt);
               if (ch->ansi())
                 ch->desc->updateScreenAnsi(CHANGED_PIETY);
               else if (ch->vt100())
                 ch->desc->updateScreenVt100(CHANGED_PIETY);
             } else if (FactionInfo[ch->getFaction()].faction_power) {
-              act("$d ignores you.  More penance is needed.",
-                     FALSE, ch, 0, 0, TO_CHAR, ANSI_RED);
+              act("$d ignores you.  More penance is needed.", FALSE, ch, 0, 0,
+                TO_CHAR, ANSI_RED);
             } else {
-              act("$d are powerless to help you at this time.",
-                     FALSE, ch, 0, 0, TO_CHAR, ANSI_RED);
+              act("$d are powerless to help you at this time.", FALSE, ch, 0, 0,
+                TO_CHAR, ANSI_RED);
             }
           } else {
-            // penance task pulse is about 3* longer than resting pulse 
+            // penance task pulse is about 3* longer than resting pulse
             // but resting also gives HP, MV and we want penancing to beat
             // resting in general
-            amt = (::number(6,8));
+            amt = (::number(6, 8));
             amt /= 10;
             your_deity_val = SKILL_PENANCE;
-            act("Your repentance has been partially accepted by $d.",
-            FALSE, ch, 0, 0, TO_CHAR, ANSI_GREEN);
+            act("Your repentance has been partially accepted by $d.", FALSE, ch,
+              0, 0, TO_CHAR, ANSI_GREEN);
             ch->addToPiety(amt);
             if (ch->ansi())
               ch->desc->updateScreenAnsi(CHANGED_PIETY);
@@ -85,21 +88,22 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
               ch->desc->updateScreenVt100(CHANGED_PIETY);
           }
         } else {
-          ch->sendTo(format("%sAn earthly force in the room stops your penance!%s\n\r") %
-                     ch->red() % ch->norm());
+          ch->sendTo(
+            format("%sAn earthly force in the room stops your penance!%s\n\r") %
+            ch->red() % ch->norm());
           ch->stopTask();
           return FALSE;
         }
       }
       ch->task->status = 0;
       break;
-  case CMD_ABORT:
-  case CMD_STOP:
+    case CMD_ABORT:
+    case CMD_STOP:
       act("You stop repenting.", FALSE, ch, 0, 0, TO_CHAR);
       act("$n stops repenting.", FALSE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
-  case CMD_STAND:
+    case CMD_STAND:
       if (ch->getPosition() == POSITION_MOUNTED) {
         act("Not while riding you don't!", FALSE, ch, 0, 0, TO_CHAR);
         ch->stopTask();
@@ -110,20 +114,17 @@ int task_penance(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TOb
       ch->setPosition(POSITION_STANDING);
       ch->stopTask();
       break;
-  case CMD_TASK_FIGHTING:
-      ch->sendTo("You are unable to continue your repenting while under attack!\n\r");
+    case CMD_TASK_FIGHTING:
+      ch->sendTo(
+        "You are unable to continue your repenting while under attack!\n\r");
       ch->stopTask();
       break;
-  default:
-    if (cmd < MAX_CMD_LIST) {
+    default:
+      if (cmd < MAX_CMD_LIST) {
         ch->sendTo("You break your focus...\n\r");
         ch->stopTask();
-    }
-    return FALSE;                    // eat the command
+      }
+      return FALSE;  // eat the command
   }
   return TRUE;
 }
-
-
-
-

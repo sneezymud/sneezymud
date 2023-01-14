@@ -24,7 +24,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the MURDER discipline.
@@ -32,40 +31,34 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDMurder : public CDiscipline
-{
-public:
+class CDMurder : public CDiscipline {
+  public:
     CSkill skGarrotte;
     CSkill skThroatSlit;
 
-    CDMurder()
-      : CDiscipline(),
-      skGarrotte(),
-      skThroatSlit() {
-    }
-    CDMurder(const CDMurder &a)
-      : CDiscipline(a),
+    CDMurder() : CDiscipline(), skGarrotte(), skThroatSlit() {}
+    CDMurder(const CDMurder& a) :
+      CDiscipline(a),
       skGarrotte(a.skGarrotte),
-      skThroatSlit(a.skThroatSlit) {
-    }
-    CDMurder & operator=(const CDMurder &a) {
-      if (this == &a) return *this;
+      skThroatSlit(a.skThroatSlit) {}
+    CDMurder& operator=(const CDMurder& a) {
+      if (this == &a)
+        return *this;
       CDiscipline::operator=(a);
       skGarrotte = a.skGarrotte;
       skThroatSlit = a.skThroatSlit;
       return *this;
     }
     virtual ~CDMurder() {}
-    virtual CDMurder * cloneMe() { return new CDMurder(*this); }
-private:
+    virtual CDMurder* cloneMe() { return new CDMurder(*this); }
+
+  private:
 };
 
-    int backstab(TBeing *, TBeing *);
-    int throatSlit(TBeing *, TBeing *);
-    int poisonWeapon(TBeing *, TThing *, TThing *);
-    int garrotte(TBeing *, TBeing *);
-    int cudgel(TBeing *, TBeing *);
+int backstab(TBeing*, TBeing*);
+int throatSlit(TBeing*, TBeing*);
+int poisonWeapon(TBeing*, TThing*, TThing*);
+int garrotte(TBeing*, TBeing*);
+int cudgel(TBeing*, TBeing*);
 
-
-     bool addPoison(affectedData aff[5], 
-		    liqTypeT liq, int level, int duration);
+bool addPoison(affectedData aff[5], liqTypeT liq, int level, int duration);

@@ -32,30 +32,26 @@ TFactionInfo FactionInfo[MAX_FACTIONS];
 double avg_faction_power = 0.0;
 spellNumT your_deity_val = TYPE_UNDEFINED;
 
-
 int TFactionInfo::getMoney() const {
   TCorporation corp(corp_id);
 
   return corp.getMoney();
 }
 
-void TFactionInfo::setMoney(int money){
+void TFactionInfo::setMoney(int money) {
   TCorporation corp(corp_id);
-  
+
   corp.setMoney(money);
 }
 
-void TFactionInfo::addToMoney(int money){
+void TFactionInfo::addToMoney(int money) {
   TCorporation corp(corp_id);
-  
+
   corp.setMoney(corp.getMoney() + money);
 }
 
-
-
-int load_factions()
-{
-  FILE *fp;
+int load_factions() {
+  FILE* fp;
   char buf[256];
   int num, j;
   int inum1, inum2, inum3, inum4;
@@ -64,20 +60,22 @@ int load_factions()
   float num1, num2;
 
   if (!(fp = fopen(FACTION_FILE, "r"))) {
-    vlogf(LOG_FILE, "Couldn't open factionlist file in function load_factions()!");
+    vlogf(LOG_FILE,
+      "Couldn't open factionlist file in function load_factions()!");
     return FALSE;
   }
-  for (factionTypeT i = MIN_FACTION;i < MAX_FACTIONS;i++) {
-    if (fgets(buf,256,fp) == NULL) {
-      vlogf(LOG_FILE,"ERROR: bogus line in FACTION_FILE");
+  for (factionTypeT i = MIN_FACTION; i < MAX_FACTIONS; i++) {
+    if (fgets(buf, 256, fp) == NULL) {
+      vlogf(LOG_FILE, "ERROR: bogus line in FACTION_FILE");
       fclose(fp);
       return FALSE;
     }
-    if (!strcmp(buf,"$"))   // EOF
+    if (!strcmp(buf, "$"))  // EOF
       break;
-    if (sscanf(buf,"#%d\n\r",&num) == 1) {   //   new faction
-      if (fgets(buf,256,fp) == NULL) {
-        vlogf(LOG_FILE,format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
+    if (sscanf(buf, "#%d\n\r", &num) == 1) {  //   new faction
+      if (fgets(buf, 256, fp) == NULL) {
+        vlogf(LOG_FILE,
+          format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
         fclose(fp);
         return FALSE;
       }
@@ -89,55 +87,65 @@ int load_factions()
       // strip off the trailing newline
       buf[strlen(buf) - 1] = '\0';
       FactionInfo[i].faction_name = new char[strlen(buf) + 1];
-      strcpy(FactionInfo[i].faction_name,buf);
+      strcpy(FactionInfo[i].faction_name, buf);
 
-      for (j = 0; j < FACT_LEADER_SLOTS;j++) {
-        if (fgets(buf,256,fp) == NULL) {
-          vlogf(LOG_FILE,format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
+      for (j = 0; j < FACT_LEADER_SLOTS; j++) {
+        if (fgets(buf, 256, fp) == NULL) {
+          vlogf(LOG_FILE,
+            format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
           fclose(fp);
           return FALSE;
         }
         // strip off the trailing newline
         buf[strlen(buf) - 1] = '\0';
         FactionInfo[i].leader[j] = new char[strlen(buf) + 1];
-        strcpy(FactionInfo[i].leader[j],buf);
+        strcpy(FactionInfo[i].leader[j], buf);
       }
-      if (fgets(buf,256,fp) == NULL) {
-        vlogf(LOG_FILE,format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
+      if (fgets(buf, 256, fp) == NULL) {
+        vlogf(LOG_FILE,
+          format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
         fclose(fp);
         return FALSE;
       }
       // strip off the trailing newline
       buf[strlen(buf) - 1] = '\0';
       FactionInfo[i].faction_password = new char[strlen(buf) + 1];
-      strcpy(FactionInfo[i].faction_password,buf);
+      strcpy(FactionInfo[i].faction_password, buf);
 
       factionTypeT ij;
       for (ij = MIN_FACTION; ij < MAX_FACTIONS; ij++) {
         if (fscanf(fp, "%f %f\n", &num1, &num2) != 2) {
-          vlogf(LOG_FILE, format("ERROR: bogus faction array faction (%d) (j=%2)") % i %ij);
+          vlogf(LOG_FILE,
+            format("ERROR: bogus faction array faction (%d) (j=%2)") % i % ij);
           fclose(fp);
           return FALSE;
         }
-        FactionInfo[i].faction_array[ij][0] = (double) num1;
-        FactionInfo[i].faction_array[ij][1] = (double) num2;
+        FactionInfo[i].faction_array[ij][0] = (double)num1;
+        FactionInfo[i].faction_array[ij][1] = (double)num2;
       }
       if (fscanf(fp, "%f\n", &num1) != 1) {
-        vlogf(LOG_FILE, format("ERROR: bogus setting of faction power for faction(%d)") % i);
+        vlogf(LOG_FILE,
+          format("ERROR: bogus setting of faction power for faction(%d)") % i);
         fclose(fp);
         return FALSE;
       }
-      FactionInfo[i].faction_power = (double) num1;
+      FactionInfo[i].faction_power = (double)num1;
       if (fscanf(fp, "%ld %f\n", &ln, &num1) != 2) {
-        vlogf(LOG_FILE, format("ERROR: bogus setting of faction wealth/tithe for faction(%d)") % i);
+        vlogf(LOG_FILE,
+          format(
+            "ERROR: bogus setting of faction wealth/tithe for faction(%d)") %
+            i);
         fclose(fp);
         return FALSE;
       }
-      FactionInfo[i].corp_id=ln;
-      FactionInfo[i].faction_tithe = (double) num1;
+      FactionInfo[i].corp_id = ln;
+      FactionInfo[i].faction_tithe = (double)num1;
 
       if (fscanf(fp, "%d %d %d %d\n", &inum1, &inum2, &inum3, &inum4) != 4) {
-        vlogf(LOG_FILE, format("ERROR: bogus setting of faction caravan info 1 for faction(%d)") % i);
+        vlogf(LOG_FILE,
+          format(
+            "ERROR: bogus setting of faction caravan info 1 for faction(%d)") %
+            i);
         fclose(fp);
         return FALSE;
       }
@@ -147,7 +155,10 @@ int load_factions()
       FactionInfo[i].caravan_defense = inum4;
 
       if (fscanf(fp, "%d %d %u\n", &inum1, &inum2, &uinum) != 3) {
-        vlogf(LOG_FILE, format("ERROR: bogus setting of faction caravan info 2 for faction(%d)") % i);
+        vlogf(LOG_FILE,
+          format(
+            "ERROR: bogus setting of faction caravan info 2 for faction(%d)") %
+            i);
         fclose(fp);
         return FALSE;
       }
@@ -165,61 +176,55 @@ int load_factions()
   return TRUE;
 }
 
-
-void save_factions()
-{
-  FILE *fp;
+void save_factions() {
+  FILE* fp;
   int j;
 
   if (!(fp = fopen(FACTION_FILE, "w+"))) {
-    vlogf(LOG_FILE, "Couldn't open factionlist file in function load_factions()!");
+    vlogf(LOG_FILE,
+      "Couldn't open factionlist file in function load_factions()!");
     return;
   }
-  for (factionTypeT i = MIN_FACTION;i < MAX_FACTIONS;i++) {
-    fprintf(fp,"#%d\n",i);
-    fprintf(fp,"%s\n",FactionInfo[i].faction_name);
-    for (j = 0; j < FACT_LEADER_SLOTS;j++) {
-      fprintf(fp,"%s\n",FactionInfo[i].leader[j]);
+  for (factionTypeT i = MIN_FACTION; i < MAX_FACTIONS; i++) {
+    fprintf(fp, "#%d\n", i);
+    fprintf(fp, "%s\n", FactionInfo[i].faction_name);
+    for (j = 0; j < FACT_LEADER_SLOTS; j++) {
+      fprintf(fp, "%s\n", FactionInfo[i].leader[j]);
     }
-    fprintf(fp,"%s\n",FactionInfo[i].faction_password);
-    for (j = 0;j < MAX_FACTIONS;j++) {
-      fprintf(fp, "%.1f %.1f\n",
-            (float) FactionInfo[i].faction_array[j][0],
-            (float) FactionInfo[i].faction_array[j][1]);
+    fprintf(fp, "%s\n", FactionInfo[i].faction_password);
+    for (j = 0; j < MAX_FACTIONS; j++) {
+      fprintf(fp, "%.1f %.1f\n", (float)FactionInfo[i].faction_array[j][0],
+        (float)FactionInfo[i].faction_array[j][1]);
     }
-    fprintf(fp, "%.4f\n", (float) FactionInfo[i].faction_power);
-    fprintf(fp, "%d %.4f\n", FactionInfo[i].corp_id, FactionInfo[i].faction_tithe);
-    fprintf(fp, "%d %d %d %d\n", FactionInfo[i].caravan_interval, 
-             FactionInfo[i].caravan_counter,
-             FactionInfo[i].caravan_value,
-             FactionInfo[i].caravan_defense);
-    fprintf(fp, "%d %d %u\n", FactionInfo[i].caravan_attempts, 
-             FactionInfo[i].caravan_successes,
-             FactionInfo[i].caravan_flags);
+    fprintf(fp, "%.4f\n", (float)FactionInfo[i].faction_power);
+    fprintf(fp, "%d %.4f\n", FactionInfo[i].corp_id,
+      FactionInfo[i].faction_tithe);
+    fprintf(fp, "%d %d %d %d\n", FactionInfo[i].caravan_interval,
+      FactionInfo[i].caravan_counter, FactionInfo[i].caravan_value,
+      FactionInfo[i].caravan_defense);
+    fprintf(fp, "%d %d %u\n", FactionInfo[i].caravan_attempts,
+      FactionInfo[i].caravan_successes, FactionInfo[i].caravan_flags);
   }
-  fprintf(fp,"$\n");
+  fprintf(fp, "$\n");
   fclose(fp);
 }
 
-
-factionTypeT factionNumber(const sstring name)
-{
-  if (is_abbrev(name,"brotherhood") || is_abbrev(name,"galek"))
+factionTypeT factionNumber(const sstring name) {
+  if (is_abbrev(name, "brotherhood") || is_abbrev(name, "galek"))
     return FACT_BROTHERHOOD;
-  else if (is_abbrev(name,"cult") || is_abbrev(name,"chaos") ||
-            is_abbrev(name,"logrus"))
+  else if (is_abbrev(name, "cult") || is_abbrev(name, "chaos") ||
+           is_abbrev(name, "logrus"))
     return FACT_CULT;
-  else if (is_abbrev(name,"unaffiliated") || is_abbrev(name,"none"))
+  else if (is_abbrev(name, "unaffiliated") || is_abbrev(name, "none"))
     return FACT_NONE;
-  else if (is_abbrev(name,"order") || is_abbrev(name,"serpents") ||
-            is_abbrev(name,"snakes"))
+  else if (is_abbrev(name, "order") || is_abbrev(name, "serpents") ||
+           is_abbrev(name, "snakes"))
     return FACT_SNAKE;
   else
     return FACT_UNDEFINED;
 }
 
-static const sstring factionLeaderTitle(factionTypeT faction, int slot)
-{
+static const sstring factionLeaderTitle(factionTypeT faction, int slot) {
   // display length for this is typically 30 chars
   char buf[64];
 
@@ -238,7 +243,7 @@ static const sstring factionLeaderTitle(factionTypeT faction, int slot)
     else if (slot == 3)
       mud_str_copy(buf, "Master Assassin", 64);
     else if (slot == 4)
-      mud_str_copy(buf, "Unholy Cardinal",64);
+      mud_str_copy(buf, "Unholy Cardinal", 64);
   } else if (faction == FACT_BROTHERHOOD) {
     if (slot == 0)
       mud_str_copy(buf, "Chief Councillor of Three", 64);
@@ -273,26 +278,24 @@ static const sstring factionLeaderTitle(factionTypeT faction, int slot)
 // -1 if not a leader
 // FALSE if a leader but lacking "power"
 // TRUE if leader with "power"
-int TBeing::getFactionAuthority(factionTypeT fnum, int power)
-{
+int TBeing::getFactionAuthority(factionTypeT fnum, int power) {
   if (isImmortal() && hasWizPower(POWER_WIZARD)) {
     return TRUE;
   }
-  for (int i = 0;i < FACT_LEADER_SLOTS;i++) {
+  for (int i = 0; i < FACT_LEADER_SLOTS; i++) {
     if (getName() == FactionInfo[fnum].leader[i])
       return (power >= i);
   }
   return -1;
 }
- 
-void TBeing::doMakeLeader(const char *arg)
-{
+
+void TBeing::doMakeLeader(const char* arg) {
   char namebuf[100];
   factionTypeT fnum = getFaction();
   int which;
   charFile st;
-  TBeing *vict;
-  bool doNoone = FALSE; 
+  TBeing* vict;
+  bool doNoone = FALSE;
 
   arg = one_argument(arg, namebuf, cElements(namebuf));
   if (!*namebuf) {
@@ -301,7 +304,7 @@ void TBeing::doMakeLeader(const char *arg)
     return;
   }
   if (!*arg) {
-    sendTo("You need to define a leader_slot.\n\r");   
+    sendTo("You need to define a leader_slot.\n\r");
     sendTo("Syntax: makeleader <name> <leader slot>\n\r");
     return;
   }
@@ -317,7 +320,7 @@ void TBeing::doMakeLeader(const char *arg)
     return;
   }
 
-  if (getFactionAuthority(fnum,which) <= 0) {
+  if (getFactionAuthority(fnum, which) <= 0) {
     sendTo("You lack the authority to change that.\n\r");
     return;
   }
@@ -327,7 +330,7 @@ void TBeing::doMakeLeader(const char *arg)
   }
   if (fnum == FACT_NONE) {
     sendTo(format("%s don't have or want leaders.\n\r") %
-         sstring(FactionInfo[FACT_NONE].faction_name).cap());
+           sstring(FactionInfo[FACT_NONE].faction_name).cap());
     return;
   }
   if (which == 0 && doNoone) {
@@ -338,40 +341,40 @@ void TBeing::doMakeLeader(const char *arg)
     sendTo("Syntax: makeleader <name> <leader slot>\n\r");
     return;
   } else {
-    vlogf(LOG_FACT,format("Leader slot %d for faction %s changed.") % which %
-           FactionInfo[fnum].faction_name);
-    vlogf(LOG_FACT,format("Changed from %s to %s.") % FactionInfo[fnum].leader[which] %
-           namebuf);
-    sendTo(format("You have set %s's leader %d to %s.\n\r") % 
+    vlogf(LOG_FACT, format("Leader slot %d for faction %s changed.") % which %
+                      FactionInfo[fnum].faction_name);
+    vlogf(LOG_FACT, format("Changed from %s to %s.") %
+                      FactionInfo[fnum].leader[which] % namebuf);
+    sendTo(format("You have set %s's leader %d to %s.\n\r") %
            FactionInfo[fnum].faction_name % which % namebuf);
 
     if (strcmp(namebuf, "Noone")) {
-      strcpy(FactionInfo[fnum].leader[which],namebuf);
+      strcpy(FactionInfo[fnum].leader[which], namebuf);
       if ((vict = get_char(namebuf, EXACT_YES)) ||
           (vict = get_char(namebuf, EXACT_NO))) {
-        vict->sendTo(COLOR_MOBS, format("%s has made you leader %d of %s.\n\r") %
-            getName() % which % FactionInfo[fnum].faction_name);
+        vict->sendTo(COLOR_MOBS,
+          format("%s has made you leader %d of %s.\n\r") % getName() % which %
+            FactionInfo[fnum].faction_name);
       }
     } else
-      strcpy(FactionInfo[fnum].leader[which],"");
+      strcpy(FactionInfo[fnum].leader[which], "");
 
     save_factions();
     return;
   }
 }
 
-void TBeing::doNewMember(const char *arg)
-{
-  TBeing *vict;
+void TBeing::doNewMember(const char* arg) {
+  TBeing* vict;
   char namebuf[100];
   factionTypeT fnum = getFaction();
 
   if (isUnaff()) {
     sendTo(format("You can't apppoint members to %s.\n\r") %
-               FactionInfo[FACT_NONE].faction_name);
+           FactionInfo[FACT_NONE].faction_name);
     return;
   }
-  if (getFactionAuthority(fnum,FACT_LEADER_SLOTS - 1) <= 0) {
+  if (getFactionAuthority(fnum, FACT_LEADER_SLOTS - 1) <= 0) {
     sendTo("You lack the authority to add members.\n\r");
     return;
   }
@@ -384,7 +387,8 @@ void TBeing::doNewMember(const char *arg)
   }
   if (!(vict = get_pc_world(this, namebuf, EXACT_YES))) {
     if (!(vict = get_pc_world(this, namebuf, EXACT_NO))) {
-      sendTo("They don't want to be a member of a faction, they aren't here.\n\r");
+      sendTo(
+        "They don't want to be a member of a faction, they aren't here.\n\r");
       return;
     }
   }
@@ -411,27 +415,26 @@ void TBeing::doNewMember(const char *arg)
 #endif
 
   vict->sendTo(format("You have been made a member of the %s.\n\r") %
-        FactionInfo[fnum].faction_name);
-  sendTo(COLOR_MOBS, format("You have added %s to the %s.\n\r") % vict->getName() %
-        FactionInfo[fnum].faction_name);
-  vlogf(LOG_FACT, format("Newmember: %s adding %s to %s.") % getName() %vict->getName() %
-        FactionInfo[fnum].faction_name); 
+               FactionInfo[fnum].faction_name);
+  sendTo(COLOR_MOBS, format("You have added %s to the %s.\n\r") %
+                       vict->getName() % FactionInfo[fnum].faction_name);
+  vlogf(LOG_FACT, format("Newmember: %s adding %s to %s.") % getName() %
+                    vict->getName() % FactionInfo[fnum].faction_name);
 }
 
-void TBeing::doRMember(const char *arg)
-{
-  TBeing *vict = NULL;
+void TBeing::doRMember(const char* arg) {
+  TBeing* vict = NULL;
   char namebuf[128];
   factionTypeT fnum = getFaction();
   int j;
-  
+
   arg = one_argument(arg, namebuf, cElements(namebuf));
   if (!*namebuf) {
     sendTo("Whom do you wish to remove as a member?\n\r");
     sendTo("Syntax: RMember <name>\n\r");
     return;
   }
-  if (getFactionAuthority(fnum,FACT_LEADER_SLOTS - 1) <= 0) {
+  if (getFactionAuthority(fnum, FACT_LEADER_SLOTS - 1) <= 0) {
     sendTo("You lack the authority to remove members.\n\r");
     return;
   }
@@ -454,10 +457,15 @@ void TBeing::doRMember(const char *arg)
     sendTo("That person is not a member of that faction.\n\r");
     return;
   }
-  for (j = 0;j < FACT_LEADER_SLOTS;j++) {
+  for (j = 0; j < FACT_LEADER_SLOTS; j++) {
     if (FactionInfo[fnum].leader[j] == vict->getName()) {
-      sendTo("Sorry, that person is a leader of that faction and can't be removed.\n\r");
-      sendTo(format("Appoint a new leader to slot %d and then you may remove them.\n\r") %j);
+      sendTo(
+        "Sorry, that person is a leader of that faction and can't be "
+        "removed.\n\r");
+      sendTo(
+        format(
+          "Appoint a new leader to slot %d and then you may remove them.\n\r") %
+        j);
       return;
     }
   }
@@ -470,15 +478,14 @@ void TBeing::doRMember(const char *arg)
 #endif
 
   vict->sendTo(format("You have been kicked out of the %s.\n\r") %
-        FactionInfo[fnum].faction_name);
-  sendTo(COLOR_MOBS, format("You have removed %s from the %s.\n\r") % vict->getName() %
-        FactionInfo[fnum].faction_name);
-  vlogf(LOG_FACT, format("RMember: %s removing %s from %s.") % getName() %vict->getName() %
-        FactionInfo[fnum].faction_name);
+               FactionInfo[fnum].faction_name);
+  sendTo(COLOR_MOBS, format("You have removed %s from the %s.\n\r") %
+                       vict->getName() % FactionInfo[fnum].faction_name);
+  vlogf(LOG_FACT, format("RMember: %s removing %s from %s.") % getName() %
+                    vict->getName() % FactionInfo[fnum].faction_name);
 }
-  
-void TBeing::doDisband()
-{
+
+void TBeing::doDisband() {
   factionTypeT fnum = getFaction();
 
   if (fnum == FACT_NONE) {
@@ -492,15 +499,20 @@ void TBeing::doDisband()
 #endif
 
   int ij;
-  for (ij = 0;ij < FACT_LEADER_SLOTS;ij++) {
+  for (ij = 0; ij < FACT_LEADER_SLOTS; ij++) {
     if (FactionInfo[fnum].leader[ij] == getName()) {
       sendTo("What?!?  And leave them leaderless?\n\r");
-      sendTo(format("Appoint a new leader for slot %d and then you may disband.\n\r") %ij);
+      sendTo(
+        format(
+          "Appoint a new leader for slot %d and then you may disband.\n\r") %
+        ij);
       return;
     }
   }
-  sendTo(format("You have disbanded from %s.\n\r") %FactionInfo[fnum].faction_name);
-  vlogf(LOG_FACT,format("Disband: %s left %s.") % getName() %FactionInfo[fnum].faction_name);
+  sendTo(
+    format("You have disbanded from %s.\n\r") % FactionInfo[fnum].faction_name);
+  vlogf(LOG_FACT, format("Disband: %s left %s.") % getName() %
+                    FactionInfo[fnum].faction_name);
   setFaction(FACT_NONE);
 #if FACTIONS_IN_USE
   setPerc(0.0);
@@ -510,10 +522,9 @@ void TBeing::doDisband()
 #endif
 }
 
-void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
-{
+void sendToFaction(factionTypeT fnum, const TBeing* who, const char* arg) {
   Descriptor *d, *d_next;
-  TBeing *tmpch;
+  TBeing* tmpch;
   sstring garble;
 
   for (d = descriptor_list; d; d = d_next) {
@@ -529,12 +540,14 @@ void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
         !tmpch->hasWizPower(POWER_SEE_FACTION_SENDS))
       continue;
 
-    garble = who->garble(tmpch, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
+    garble =
+      who->garble(tmpch, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
 
     d->character->sendTo(COLOR_SHOUTS, format("<g>%s <c>%s<1>: %s\n\r") %
-			 FactionInfo[fnum].faction_name % who->name % garble);
+                                         FactionInfo[fnum].faction_name %
+                                         who->name % garble);
 
-    if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)){
+    if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
       if (d->character->isImmortal())
         d->clientf(format("%d|%d|%s|%s") % CLIENT_FTELL % fnum % who % arg);
       else
@@ -543,9 +556,7 @@ void sendToFaction(factionTypeT fnum, const TBeing *who, const char *arg)
   }
 }
 
-
-void TBeing::doSend(sstring arg)
-{ 
+void TBeing::doSend(sstring arg) {
   factionTypeT fnum = getFaction();
   sstring msg, faction, new_arg;
 
@@ -561,7 +572,7 @@ void TBeing::doSend(sstring arg)
     }
   }
   if (!wizSent)
-    msg=arg;
+    msg = arg;
 
 #if 0
   if ((getFactionAuthority(fnum,FACT_LEADER_SLOTS - 1) <= 0) &&
@@ -575,11 +586,10 @@ void TBeing::doSend(sstring arg)
     return;
   }
 
-  if(hasQuestBit(TOG_IS_MUTE)){
+  if (hasQuestBit(TOG_IS_MUTE)) {
     sendTo("You're mute, you can't talk.\n\r");
     return;
   }
-
 
   if (desc)
     desc->talkCount = time(0);
@@ -593,11 +603,13 @@ void TBeing::doSend(sstring arg)
   }
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+      0, TO_ROOM);
     return;
   }
 
-  if (isPc() && ((desc && IS_SET(desc->autobits, AUTO_NOSHOUT)) || isPlayerAction(PLR_GODNOSHOUT))) {
+  if (isPc() && ((desc && IS_SET(desc->autobits, AUTO_NOSHOUT)) ||
+                  isPlayerAction(PLR_GODNOSHOUT))) {
     sendTo("You can't send a faction message!!\n\r");
     return;
   }
@@ -610,7 +622,7 @@ void TBeing::doSend(sstring arg)
     }
     return;
   }
-  if (!dynamic_cast<TMonster *>(this) && toggleInfo[TOG_SHOUTING]->toggle && 
+  if (!dynamic_cast<TMonster*>(this) && toggleInfo[TOG_SHOUTING]->toggle &&
       !isImmortal()) {
     sendTo("Faction messages has been banned.\n\r");
     return;
@@ -643,17 +655,16 @@ void TBeing::doSend(sstring arg)
   sendToFaction(fnum, this, msg.c_str());
 }
 
-void TBeing::doRelease(const sstring & arg)
-{
-  TBeing *targ;
+void TBeing::doRelease(const sstring& arg) {
+  TBeing* targ;
   sstring buf;
 
   one_argument(arg, buf);
 
   if (is_abbrev(buf, "all")) {
-    for (targ = getCaptive(); targ; targ = getCaptive()) 
+    for (targ = getCaptive(); targ; targ = getCaptive())
       doRelease(fname(targ->name));
-    
+
     return;
   }
   if (!(targ = get_char_room_vis(this, buf))) {
@@ -668,13 +679,12 @@ void TBeing::doRelease(const sstring & arg)
   sendTo(COLOR_MOBS, format("You release %s.\n\r") % targ->getName());
   act("$n releases you.", TRUE, this, 0, targ, TO_VICT);
   act("$n releases $N.", TRUE, this, 0, targ, TO_NOTVICT);
-  remCaptive(targ);  
+  remCaptive(targ);
   targ->stopFollower(FALSE);
 }
 
-void TBeing::doCapture(const sstring & arg)
-{
-  TBeing *targ;
+void TBeing::doCapture(const sstring& arg) {
+  TBeing* targ;
   sstring buf;
 
   one_argument(arg, buf);
@@ -684,8 +694,8 @@ void TBeing::doCapture(const sstring & arg)
     if (!getCaptive())
       sendTo("No one.\n\r");
     else {
-      for(targ = getCaptive(); targ; targ = targ->getNextCaptive()) {
-        sendTo(COLOR_MOBS, format(" %s") %targ->getName());
+      for (targ = getCaptive(); targ; targ = targ->getNextCaptive()) {
+        sendTo(COLOR_MOBS, format(" %s") % targ->getName());
         if (targ->getNextCaptive())
           sendTo(",");
       }
@@ -713,14 +723,15 @@ void TBeing::doCapture(const sstring & arg)
     targ->stopFollower(TRUE);
   }
   sendTo(COLOR_MOBS, format("You capture %s.\n\r") % targ->getName());
-  targ->sendTo(COLOR_MOBS, format("You have been captured by %s!\n\r") % getName());
+  targ->sendTo(COLOR_MOBS,
+    format("You have been captured by %s!\n\r") % getName());
   act("$n captures $N!", TRUE, this, 0, targ, TO_NOTVICT);
 
   // Don't let captives have captives...
   while (targ->getCaptive())
     targ->doRelease(fname(targ->getCaptive()->name));
 
-  addCaptive(targ);  
+  addCaptive(targ);
 
   if (getPosition() < POSITION_CRAWLING)
     targ->doStand();
@@ -731,8 +742,7 @@ void TBeing::doCapture(const sstring & arg)
   addFollower(targ);
 }
 
-void TBeing::doFactions(const sstring &arg)
-{
+void TBeing::doFactions(const sstring& arg) {
   factionTypeT which;
   sstring buf, sbuf;
   struct stat timestat;
@@ -743,7 +753,7 @@ void TBeing::doFactions(const sstring &arg)
 
   if (!isImmortal() || arg.empty())
     which = getFaction();
-  else { 
+  else {
     which = factionNumber(arg);
     if (which == -1) {
       sendTo("No such faction.\n\r");
@@ -765,10 +775,12 @@ void TBeing::doFactions(const sstring &arg)
     sbuf+=buf;
 
 #endif
-    buf = format("Your faction has %ld talens of wealth, and a tithe percentage of %.2f%c.\n\r") %
-	     FactionInfo[which].getMoney() %
-	     FactionInfo[which].faction_tithe % '%';
-    sbuf+=buf;
+    buf = format(
+            "Your faction has %ld talens of wealth, and a tithe percentage of "
+            "%.2f%c.\n\r") %
+          FactionInfo[which].getMoney() % FactionInfo[which].faction_tithe %
+          '%';
+    sbuf += buf;
   }
 #if 0
   if (which != FACT_NONE || isImmortal()) {
@@ -836,17 +848,17 @@ void TBeing::doFactions(const sstring &arg)
 #endif
 
   if (which != FACT_NONE) {
-    buf = format("%-50.50s:     %-20.20s\n\r") %
-      factionLeaderTitle(which, 0) % FactionInfo[which].leader[0];
+    buf = format("%-50.50s:     %-20.20s\n\r") % factionLeaderTitle(which, 0) %
+          FactionInfo[which].leader[0];
     sbuf += buf;
     buf = format("%-50.50s:        %-20.20s\n\r") %
-      factionLeaderTitle(which, 1) % FactionInfo[which].leader[1];
+          factionLeaderTitle(which, 1) % FactionInfo[which].leader[1];
     sbuf += buf;
     buf = format("%-50.50s:        %-20.20s\n\r") %
           factionLeaderTitle(which, 2) % FactionInfo[which].leader[2];
     sbuf += buf;
     buf = format("%-50.50s:        %-20.20s\n\r") %
-      factionLeaderTitle(which, 3) % FactionInfo[which].leader[3];
+          factionLeaderTitle(which, 3) % FactionInfo[which].leader[3];
     sbuf += buf;
 
     char factname[8];
@@ -859,7 +871,7 @@ void TBeing::doFactions(const sstring &arg)
       strncpy(factname, "snake", 8);
 
     // reveal membership only to leaders, otherwise someone can cross reference
-    if ((getFactionAuthority(which,FACT_LEADER_SLOTS - 1) > 0) ||
+    if ((getFactionAuthority(which, FACT_LEADER_SLOTS - 1) > 0) ||
         isImmortal()) {
       mud_str_copy(timebuf, ctime(&(timestat.st_mtime)), 256);
       timebuf[strlen(timebuf) - 1] = '\0';
@@ -869,20 +881,19 @@ void TBeing::doFactions(const sstring &arg)
 
       TDatabase db(DB_SNEEZY);
       db.query("select name, level from factionmembers where faction='%s'",
-	       factname);
+        factname);
 
-      while(db.fetchRow()){
-	buf = format("      %-10.10s    Level: %s\n\r") %
-		db["name"] % db["level"];
-	sbuf+=buf;
+      while (db.fetchRow()) {
+        buf =
+          format("      %-10.10s    Level: %s\n\r") % db["name"] % db["level"];
+        sbuf += buf;
       }
     }
   }
   desc->page_string(sbuf);
 }
 
-void TBeing::doAdjust(const char *arg)
-{
+void TBeing::doAdjust(const char* arg) {
   char tmpbuf[128];
   char tmpbuf2[128];
   factionTypeT fnum = getFaction();
@@ -893,11 +904,11 @@ void TBeing::doAdjust(const char *arg)
   unsigned int uamount;
 
   enum adjTypeT {
-       ADJ_HELP,
-       ADJ_HURT,
-       ADJ_TITHE,
-       ADJ_NAME,
-       ADJ_CARAVAN
+    ADJ_HELP,
+    ADJ_HURT,
+    ADJ_TITHE,
+    ADJ_NAME,
+    ADJ_CARAVAN
   };
 
   arg = one_argument(arg, tmpbuf, cElements(tmpbuf));
@@ -923,26 +934,29 @@ void TBeing::doAdjust(const char *arg)
     if (getName() != "Batopr") {
       // this works, but it screws up factionNumber() functionality.
       sendTo("Contact Batopr to change the name of the faction.\n\r");
-      return; 
+      return;
     }
-    if ((getFactionAuthority(fnum,0) <= 0) && !isImmortal()) {
+    if ((getFactionAuthority(fnum, 0) <= 0) && !isImmortal()) {
       // must be primary leader
       sendTo("You lack the authority to change the faction's name.\n\r");
       return;
     }
     char oldname[256];
     sprintf(oldname, "%s", FactionInfo[fnum].faction_name);
-    for (; arg && *arg && isspace(*arg);arg++);
+    for (; arg && *arg && isspace(*arg); arg++)
+      ;
 
     if (!arg || !*arg) {
       sendTo("Please specify a new faction name.\n\r");
       return;
     }
-    vlogf(LOG_FACT, format("Faction name changed from %s to %s.\n\r") % 
-          oldname % arg);
+    vlogf(LOG_FACT,
+      format("Faction name changed from %s to %s.\n\r") % oldname % arg);
     sendTo(format("You change the name of the faction from %s to %s.\n\r") %
-          oldname % arg);
-    sendTo("Remember to update factionNumber() in faction.cc with the new abbreviations.\n\r");
+           oldname % arg);
+    sendTo(
+      "Remember to update factionNumber() in faction.cc with the new "
+      "abbreviations.\n\r");
     sprintf(FactionInfo[fnum].faction_name, "%s", arg);
     save_factions();
     return;
@@ -953,7 +967,8 @@ void TBeing::doAdjust(const char *arg)
       return;
     }
 
-    if ((getFactionAuthority(fnum,FACT_LEADER_SLOTS-1) <= 0) && !isImmortal()) {
+    if ((getFactionAuthority(fnum, FACT_LEADER_SLOTS - 1) <= 0) &&
+        !isImmortal()) {
       sendTo("You lack the authority to change caravan parameters.\n\r");
       return;
     }
@@ -966,14 +981,15 @@ void TBeing::doAdjust(const char *arg)
         return;
       }
       amount = convertTo<int>(tmpbuf2);
-      if (amount < MIN_CARAVAN_INTERVAL  && amount != -1) {
-        sendTo(format("You can't specify an interval less than %d.\n\r") % MIN_CARAVAN_INTERVAL);
+      if (amount < MIN_CARAVAN_INTERVAL && amount != -1) {
+        sendTo(format("You can't specify an interval less than %d.\n\r") %
+               MIN_CARAVAN_INTERVAL);
         return;
       }
       FactionInfo[fnum].caravan_interval = amount;
       sendTo(format("You set %s's caravan interval to %d ticks.\n\r") %
-          FactionInfo[fnum].faction_name %
-          FactionInfo[fnum].caravan_interval);
+             FactionInfo[fnum].faction_name %
+             FactionInfo[fnum].caravan_interval);
       return;
     } else if (is_abbrev(tmpbuf, "value")) {
       if (!*tmpbuf2) {
@@ -987,13 +1003,15 @@ void TBeing::doAdjust(const char *arg)
         return;
       }
       if (amount % CARAVAN_TRADE) {
-        sendTo(format("Caravans may only transport goods in multiples of %d.\n\r") % CARAVAN_TRADE);
+        sendTo(
+          format("Caravans may only transport goods in multiples of %d.\n\r") %
+          CARAVAN_TRADE);
         return;
       }
       FactionInfo[fnum].caravan_value = amount;
-      sendTo(format("You set %s's caravan value to %d talens.\n\r") %          FactionInfo[fnum].faction_name %
-          FactionInfo[fnum].caravan_value);
-       return;
+      sendTo(format("You set %s's caravan value to %d talens.\n\r") %
+             FactionInfo[fnum].faction_name % FactionInfo[fnum].caravan_value);
+      return;
     } else if (is_abbrev(tmpbuf, "defense")) {
       if (!*tmpbuf2) {
         sendTo("Specify the amount per caravan to spend on defenses.\n\r");
@@ -1006,9 +1024,10 @@ void TBeing::doAdjust(const char *arg)
         return;
       }
       FactionInfo[fnum].caravan_defense = amount;
-      sendTo(format("You set %s's caravan defense value to %d talens.\n\r") %          FactionInfo[fnum].faction_name %
-          FactionInfo[fnum].caravan_defense);
-       return;
+      sendTo(format("You set %s's caravan defense value to %d talens.\n\r") %
+             FactionInfo[fnum].faction_name %
+             FactionInfo[fnum].caravan_defense);
+      return;
     } else if (is_abbrev(tmpbuf, "destination")) {
       if (!*tmpbuf2) {
         sendTo("Specify the caravan destination city.\n\r");
@@ -1034,14 +1053,18 @@ void TBeing::doAdjust(const char *arg)
       }
       if (fnum == FACT_NONE) {
         if (uamount == CARAVAN_DEST_GH) {
-          sendTo("You are based in that city, and can't just trade with yourself.\n\r");
+          sendTo(
+            "You are based in that city, and can't just trade with "
+            "yourself.\n\r");
           sendTo("Valid <city number>:\n\r");
           sendTo("Grimhaven, Brightmoon, Logrus, Amber\n\r");
           return;
         }
       } else if (fnum == FACT_BROTHERHOOD) {
         if (uamount == CARAVAN_DEST_BM) {
-          sendTo("You are based in that city, and can't just trade with yourself.\n\r");
+          sendTo(
+            "You are based in that city, and can't just trade with "
+            "yourself.\n\r");
           sendTo("Valid <cities>:\n\r");
           sendTo("Grimhaven, Brightmoon, Logrus, Amber\n\r");
           return;
@@ -1054,7 +1077,9 @@ void TBeing::doAdjust(const char *arg)
         }
       } else if (fnum == FACT_CULT) {
         if (uamount == CARAVAN_DEST_LOG) {
-          sendTo("You are based in that city, and can't just trade with yourself.\n\r");
+          sendTo(
+            "You are based in that city, and can't just trade with "
+            "yourself.\n\r");
           sendTo("Valid <cities>:\n\r");
           sendTo("Grimhaven, Brightmoon, Logrus, Amber\n\r");
           return;
@@ -1067,7 +1092,9 @@ void TBeing::doAdjust(const char *arg)
         }
       } else if (fnum == FACT_SNAKE) {
         if (uamount == CARAVAN_DEST_AMBER) {
-          sendTo("You are based in that city, and can't just trade with yourself.\n\r");
+          sendTo(
+            "You are based in that city, and can't just trade with "
+            "yourself.\n\r");
           sendTo("Valid <cities>:\n\r");
           sendTo("Grimhaven, Brightmoon, Logrus, Amber\n\r");
           return;
@@ -1076,12 +1103,11 @@ void TBeing::doAdjust(const char *arg)
       if (!IS_SET(FactionInfo[fnum].caravan_flags, uamount)) {
         SET_BIT(FactionInfo[fnum].caravan_flags, uamount);
         sendTo(format("You set %s's caravan destination to %s.\n\r") %
-            FactionInfo[fnum].faction_name %
-            CaravanDestination(uamount));
+               FactionInfo[fnum].faction_name % CaravanDestination(uamount));
       } else {
         REMOVE_BIT(FactionInfo[fnum].caravan_flags, uamount);
-        sendTo(format("Future caravans of %s will no longer go to %s.\n\r") %            FactionInfo[fnum].faction_name %
-            CaravanDestination(uamount));
+        sendTo(format("Future caravans of %s will no longer go to %s.\n\r") %
+               FactionInfo[fnum].faction_name % CaravanDestination(uamount));
       }
       return;
     } else {
@@ -1108,40 +1134,53 @@ void TBeing::doAdjust(const char *arg)
     sendTo("Syntax: adjust name <new name>\n\r");
     return;
   }
-  if (getFactionAuthority(fnum,FACT_LEADER_SLOTS - 1) <= 0 && !isImmortal()) {
+  if (getFactionAuthority(fnum, FACT_LEADER_SLOTS - 1) <= 0 && !isImmortal()) {
     sendTo("You lack the authority to adjust values.\n\r");
     return;
   }
 
   if (hval == ADJ_HELP || hval == ADJ_HURT) {
 #if !FACTIONS_IN_USE
-    sendTo("You are not permitted to alter the help/harm values because faction percent is not in use.\n\r");
+    sendTo(
+      "You are not permitted to alter the help/harm values because faction "
+      "percent is not in use.\n\r");
     return;
 #else
-    old_val = FactionInfo[fnum].faction_array[verses][(hval == ADJ_HURT ? OFF_HURT : OFF_HELP)];
+    old_val =
+      FactionInfo[fnum]
+        .faction_array[verses][(hval == ADJ_HURT ? OFF_HURT : OFF_HELP)];
 
     if (value < -4.0 || value > 4.0) {
       sendTo("Absolute value of <value> may not exceed 4.0\n\r");
       return;
     }
-    if (((FactionInfo[fnum].faction_array[verses][(hval == ADJ_HURT ? OFF_HELP : OFF_HURT)] > 0.0) &&
-        value > 0.0) ||
-        ((FactionInfo[fnum].faction_array[verses][(hval == ADJ_HURT ? OFF_HELP : OFF_HURT)] < 0.0) &&
-        value < 0.0)) {
+    if (((FactionInfo[fnum].faction_array[verses][(
+            hval == ADJ_HURT ? OFF_HELP : OFF_HURT)] > 0.0) &&
+          value > 0.0) ||
+        ((FactionInfo[fnum].faction_array[verses][(
+            hval == ADJ_HURT ? OFF_HELP : OFF_HURT)] < 0.0) &&
+          value < 0.0)) {
       sendTo("Helping and harming can't BOTH be in same direction.\n\r");
       if (isImmortal())
-        sendTo("Ignoring this error due to immortality.  Please fix this though.\n\r");
+        sendTo(
+          "Ignoring this error due to immortality.  Please fix this "
+          "though.\n\r");
       else
         return;
     }
-    if ((hval == ADJ_HURT && fabs(FactionInfo[fnum].faction_array[verses][OFF_HELP]) < fabs(value)) ||
-        (hval == ADJ_HELP && fabs(FactionInfo[fnum].faction_array[verses][OFF_HURT]) > fabs(value))) {
+    if ((hval == ADJ_HURT &&
+          fabs(FactionInfo[fnum].faction_array[verses][OFF_HELP]) <
+            fabs(value)) ||
+        (hval == ADJ_HELP &&
+          fabs(FactionInfo[fnum].faction_array[verses][OFF_HURT]) >
+            fabs(value))) {
       sendTo("The absolute value of \"helping\" must exceed \"harming\".\n\r");
       return;
     }
     if (fnum == verses) {
       if (hval == ADJ_HURT && value > -1.0) {
-        sendTo("Sorry, harming your own faction must cause some detriments.\n\r");
+        sendTo(
+          "Sorry, harming your own faction must cause some detriments.\n\r");
         return;
       }
       if (hval == ADJ_HELP && value < 1.0) {
@@ -1156,7 +1195,9 @@ void TBeing::doAdjust(const char *arg)
     }
     if (verses == FACT_NONE) {
       if (hval == ADJ_HURT && value > -1.0) {
-        sendTo(format("You have no quarrel with %s, and can not benefit from their destruction.\n\r") % FactionInfo[FACT_NONE].faction_name);
+        sendTo(format("You have no quarrel with %s, and can not benefit from "
+                      "their destruction.\n\r") %
+               FactionInfo[FACT_NONE].faction_name);
         return;
       }
     }
@@ -1185,39 +1226,50 @@ void TBeing::doAdjust(const char *arg)
     } else if (fnum == FACT_SNAKE) {
       if (verses == FACT_BROTHERHOOD) {
         if ((hval == ADJ_HELP) &&
-            (value + FactionInfo[fnum].faction_array[FACT_CULT][OFF_HELP] > 1.0)) {
-          sendTo(format("At present, that value is limited to %5.2f.\n\r") %
-              1.0 - FactionInfo[fnum].faction_array[FACT_CULT][OFF_HELP]);
+            (value + FactionInfo[fnum].faction_array[FACT_CULT][OFF_HELP] >
+              1.0)) {
+          sendTo(
+            format("At present, that value is limited to %5.2f.\n\r") % 1.0 -
+            FactionInfo[fnum].faction_array[FACT_CULT][OFF_HELP]);
           return;
         }
         if ((hval == ADJ_HURT) &&
-            (value + FactionInfo[fnum].faction_array[FACT_CULT][OFF_HURT] > 1.0)) {
-          sendTo(format("At present, that value is limited to %5.2f.\n\r") %
-              1.0 - FactionInfo[fnum].faction_array[FACT_CULT][OFF_HURT]);
+            (value + FactionInfo[fnum].faction_array[FACT_CULT][OFF_HURT] >
+              1.0)) {
+          sendTo(
+            format("At present, that value is limited to %5.2f.\n\r") % 1.0 -
+            FactionInfo[fnum].faction_array[FACT_CULT][OFF_HURT]);
           return;
         }
       } else if (verses == FACT_CULT) {
         if ((hval == ADJ_HELP) &&
-            (value + FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HELP] > 1.0)) {
-          sendTo(format("At present, that value is limited to %5.2f.\n\r") %
-              1.0 - FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HELP]);
+            (value +
+                FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HELP] >
+              1.0)) {
+          sendTo(
+            format("At present, that value is limited to %5.2f.\n\r") % 1.0 -
+            FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HELP]);
           return;
         }
         if ((hval == ADJ_HURT) &&
-            (value + FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HURT] > 1.0)) {
-          sendTo(format("At present, that value is limited to %5.2f.\n\r") %
-              1.0 - FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HURT]);
+            (value +
+                FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HURT] >
+              1.0)) {
+          sendTo(
+            format("At present, that value is limited to %5.2f.\n\r") % 1.0 -
+            FactionInfo[fnum].faction_array[FACT_BROTHERHOOD][OFF_HURT]);
           return;
         }
       }
     }
 
-    sendTo(format("You change %s's %s rating verses %s from %5.2f to %5.2f.\n\r") %
-          FactionInfo[fnum].faction_name,
-          (hval == ADJ_HURT ? "harm" : "help"),
-          FactionInfo[verses].faction_name,
-          old_val, value);
-    FactionInfo[fnum].faction_array[verses][(hval == ADJ_HURT ? OFF_HURT : OFF_HELP)] = value;
+    sendTo(
+      format("You change %s's %s rating verses %s from %5.2f to %5.2f.\n\r") %
+        FactionInfo[fnum].faction_name,
+      (hval == ADJ_HURT ? "harm" : "help"), FactionInfo[verses].faction_name,
+      old_val, value);
+    FactionInfo[fnum]
+      .faction_array[verses][(hval == ADJ_HURT ? OFF_HURT : OFF_HELP)] = value;
 #endif
   } else if (hval == ADJ_TITHE) {
     old_val = FactionInfo[fnum].faction_tithe;
@@ -1226,34 +1278,34 @@ void TBeing::doAdjust(const char *arg)
       sendTo("Tithe <value> must be in range 0.0 to 15.0\n\r");
       return;
     }
-    sendTo(format("You change %s's tithe rate from %5.2f to %5.2f.\n\r") %          FactionInfo[fnum].faction_name % old_val % value);
+    sendTo(format("You change %s's tithe rate from %5.2f to %5.2f.\n\r") %
+           FactionInfo[fnum].faction_name % old_val % value);
     FactionInfo[fnum].faction_tithe = value;
   }
-  
+
   save_factions();
 }
 
-bool TBeing::isOppositeFaction(const TBeing *v) const
-{
-  if ((isCult() && v->isBrother()) ||
-      (isBrother() && v->isCult()))
+bool TBeing::isOppositeFaction(const TBeing* v) const {
+  if ((isCult() && v->isBrother()) || (isBrother() && v->isCult()))
     return TRUE;
 
-  if ((FactionInfo[getFaction()].faction_array[v->getFaction()][OFF_HURT] > 2.0) &&
-     (FactionInfo[getFaction()].faction_array[v->getFaction()][OFF_HELP] < -2.0))
+  if ((FactionInfo[getFaction()].faction_array[v->getFaction()][OFF_HURT] >
+        2.0) &&
+      (FactionInfo[getFaction()].faction_array[v->getFaction()][OFF_HELP] <
+        -2.0))
     return TRUE;
 
   return FALSE;
 }
 
-int TBeing::doTithe()
-{
+int TBeing::doTithe() {
   sendTo("You can only tithe at a bank.\n\r");
   return FALSE;
 }
 
-sstring TBeing::yourDeity(spellNumT skill, personTypeT self, const TBeing *who) const
-{
+sstring TBeing::yourDeity(spellNumT skill, personTypeT self,
+  const TBeing* who) const {
   char buf[256];
   deityTypeT deity = DEITY_NONE;
   factionTypeT fnum = getFaction();
@@ -1389,24 +1441,23 @@ sstring TBeing::yourDeity(spellNumT skill, personTypeT self, const TBeing *who) 
       sprintf(buf, "your deity");
     else
       sprintf(buf, "%s", deities[deity]);
-  } else if (self == SECOND_PERSON) 
+  } else if (self == SECOND_PERSON)
     sprintf(buf, "%s deity", hshr());
   else if (self == THIRD_PERSON) {
-    if (who) 
+    if (who)
       sprintf(buf, "%s's deity", who->pers(this));
     else
       sprintf(buf, "%s's deity", getName().c_str());
-  } 
+  }
   return buf;
 }
 
-int bestFactionPower()
-{
-  factionTypeT i,cur_best;
+int bestFactionPower() {
+  factionTypeT i, cur_best;
   double cur_score = 0.0;
 
   // skip over power of unaffiliated
-  for (i = cur_best = MIN_FACTION;i < MAX_FACTIONS; i++) {
+  for (i = cur_best = MIN_FACTION; i < MAX_FACTIONS; i++) {
     if (FactionInfo[i].faction_power > cur_score) {
       cur_best = i;
       cur_score = FactionInfo[i].faction_power;
@@ -1415,34 +1466,30 @@ int bestFactionPower()
   return cur_best;
 }
 
-
 // procRecalcFactionPower
-procRecalcFactionPower::procRecalcFactionPower(const int &p)
-{
-  trigger_pulse=p;
-  name="procRecalcFactionPower";
+procRecalcFactionPower::procRecalcFactionPower(const int& p) {
+  trigger_pulse = p;
+  name = "procRecalcFactionPower";
 }
 
-void procRecalcFactionPower::run(const TPulse &) const
-{
+void procRecalcFactionPower::run(const TPulse&) const {
   factionTypeT i;
 
   avg_faction_power = 0;
 
   // skip over power of unaffiliated
-  for (i = factionTypeT(FACT_NONE+1);i < MAX_FACTIONS; i++) {
+  for (i = factionTypeT(FACT_NONE + 1); i < MAX_FACTIONS; i++) {
     avg_faction_power += FactionInfo[i].faction_power;
   }
- 
+
   // subtract 1 due to skipping FACT_NONE
-  avg_faction_power /= (double) ( MAX_FACTIONS - 1.0);
- 
+  avg_faction_power /= (double)(MAX_FACTIONS - 1.0);
+
   if (!avg_faction_power)
     avg_faction_power = 1.0;
 }
 
-void TPerson::reconcileHelp(TBeing *victim, double amp)
-{
+void TPerson::reconcileHelp(TBeing* victim, double amp) {
 #if FACTIONS_IN_USE
 
 #undef ALIGN_STUFF
@@ -1463,7 +1510,7 @@ void TPerson::reconcileHelp(TBeing *victim, double amp)
   else
     mob_perc = 100.0;
 
-//  double old_perc = getPerc();
+  //  double old_perc = getPerc();
 
   // KLUDGE TO get things going faster
   amp *= 17.00;
@@ -1472,26 +1519,33 @@ void TPerson::reconcileHelp(TBeing *victim, double amp)
     // helping
     if (victim)
       value = mob_perc *
-        FactionInfo[getFaction()].faction_array[victim->getFaction()][OFF_HELP] / 100.0;
+              FactionInfo[getFaction()]
+                .faction_array[victim->getFaction()][OFF_HELP] /
+              100.0;
     else
       value = mob_perc *
-        FactionInfo[getFaction()].faction_array[getFaction()][OFF_HELP] / 100.0;
+              FactionInfo[getFaction()].faction_array[getFaction()][OFF_HELP] /
+              100.0;
   } else {
     // harming
     if (victim)
       value = -mob_perc *
-        FactionInfo[getFaction()].faction_array[victim->getFaction()][OFF_HURT] / 100.0;
+              FactionInfo[getFaction()]
+                .faction_array[victim->getFaction()][OFF_HURT] /
+              100.0;
     else
       value = -mob_perc *
-        FactionInfo[getFaction()].faction_array[getFaction()][OFF_HURT] / 100.0;
+              FactionInfo[getFaction()].faction_array[getFaction()][OFF_HURT] /
+              100.0;
   }
 
   abso = value * amp;
 
-#ifdef ALIGN_STUFF 
-  vlogf(LOG_MISC, format("align thing: value %2.6f, amp %2.6f abso  %2.6f, %10.10s (%d) vs %10.10s (%d)") % 
-       value % amp % abso % getName() % getFaction() % victim->getName() %
-       victim->getFaction());
+#ifdef ALIGN_STUFF
+  vlogf(LOG_MISC, format("align thing: value %2.6f, amp %2.6f abso  %2.6f, "
+                         "%10.10s (%d) vs %10.10s (%d)") %
+                    value % amp % abso % getName() % getFaction() %
+                    victim->getName() % victim->getFaction());
 #endif
 
   if (victim) {
@@ -1499,21 +1553,26 @@ void TPerson::reconcileHelp(TBeing *victim, double amp)
   } else
     addToPercX(abso, getFaction());
 
-  double avg = (getPercX(FACT_NONE) + getPercX(FACT_BROTHERHOOD) + getPercX(FACT_CULT) + getPercX(FACT_SNAKE)) / 4.0;
+  double avg = (getPercX(FACT_NONE) + getPercX(FACT_BROTHERHOOD) +
+                 getPercX(FACT_CULT) + getPercX(FACT_SNAKE)) /
+               4.0;
   double sigma;
 
-  sigma =  (getPercX(FACT_NONE) - avg) * (getPercX(FACT_NONE) - avg);
-  sigma += (getPercX(FACT_BROTHERHOOD) - avg) * (getPercX(FACT_BROTHERHOOD) - avg);
+  sigma = (getPercX(FACT_NONE) - avg) * (getPercX(FACT_NONE) - avg);
+  sigma +=
+    (getPercX(FACT_BROTHERHOOD) - avg) * (getPercX(FACT_BROTHERHOOD) - avg);
   sigma += (getPercX(FACT_CULT) - avg) * (getPercX(FACT_CULT) - avg);
   sigma += (getPercX(FACT_SNAKE) - avg) * (getPercX(FACT_SNAKE) - avg);
   sigma /= 4.0;
   sigma = sqrt(sigma);
 
-  setPerc(avg - (0.33*sigma));
+  setPerc(avg - (0.33 * sigma));
 #ifdef ALIGN_STUFF
-  vlogf(LOG_MISC, format("avg %2.6f    sigma %2.6f") %  avg % sigma);
-  vlogf(LOG_MISC,format("real %2.6f    0: %2.6f    1: %2.6f    2: %2.6f    3: %2.6f") % 
-     getPerc() % getPercX(FACT_NONE) % getPercX(FACT_BROTHERHOOD) % getPercX(FACT_CULT) % getPercX(FACT_SNAKE)); 
+  vlogf(LOG_MISC, format("avg %2.6f    sigma %2.6f") % avg % sigma);
+  vlogf(LOG_MISC,
+    format("real %2.6f    0: %2.6f    1: %2.6f    2: %2.6f    3: %2.6f") %
+      getPerc() % getPercX(FACT_NONE) % getPercX(FACT_BROTHERHOOD) %
+      getPercX(FACT_CULT) % getPercX(FACT_SNAKE));
 #endif
 
   // adjust faction pool
@@ -1550,7 +1609,7 @@ void TPerson::reconcileHelp(TBeing *victim, double amp)
       // harming victims faction, lower victims
 
       tmp = mob_perc * amp / 100.0;
-//      tmp /= 12.0;  // semi-arbitrary (2.0 causes drop)
+      //      tmp /= 12.0;  // semi-arbitrary (2.0 causes drop)
 
       if (FactionInfo[victim->getFaction()].faction_power + tmp < 0.0)
         tmp = -FactionInfo[victim->getFaction()].faction_power;
@@ -1561,19 +1620,17 @@ void TPerson::reconcileHelp(TBeing *victim, double amp)
 #endif  // factions_in_use
 }
 
-void TPerson::reconcileHurt(TBeing *victim, double amp)
-{
+void TPerson::reconcileHurt(TBeing* victim, double amp) {
   reconcileHelp(victim, -amp);
 }
 
-const char * CaravanDestination(int which)
-{
+const char* CaravanDestination(int which) {
   int i;
 
   if (which < 0)
-    i = FactionInfo[-which - 1].caravan_flags & 
-           (CARAVAN_CUR_DEST_GH | CARAVAN_CUR_DEST_BM | 
-           CARAVAN_CUR_DEST_LOG | CARAVAN_CUR_DEST_AMBER);
+    i = FactionInfo[-which - 1].caravan_flags &
+        (CARAVAN_CUR_DEST_GH | CARAVAN_CUR_DEST_BM | CARAVAN_CUR_DEST_LOG |
+          CARAVAN_CUR_DEST_AMBER);
   else
     i = which;
 
@@ -1593,41 +1650,39 @@ const char * CaravanDestination(int which)
     case CARAVAN_CUR_DEST_AMBER:
       return "Amber";
     default:
-      vlogf(LOG_BUG, format("CaravanDestination had an i of %d (which %d)") %  i % which);
+      vlogf(LOG_BUG,
+        format("CaravanDestination had an i of %d (which %d)") % i % which);
       vlogf(LOG_BUG, "bad carvan");
       return "unknown";
   }
 }
 
-
 // procLaunchCaravans
-procLaunchCaravans::procLaunchCaravans(const int &p)
-{
-  trigger_pulse=p;
-  name="procLaunchCaravans";
+procLaunchCaravans::procLaunchCaravans(const int& p) {
+  trigger_pulse = p;
+  name = "procLaunchCaravans";
 }
 
-void procLaunchCaravans::run(const TPulse &) const
-{
+void procLaunchCaravans::run(const TPulse&) const {
   factionTypeT i;
-  TMonster *mob;
+  TMonster* mob;
 
   // don't launch caravans if in shutdown mode
   if (timeTill)
     return;
 
-  for (i = MIN_FACTION; i < MAX_FACTIONS;i++) {
-    if (!FactionInfo[i].caravan_value) // no gold on board, why go?
+  for (i = MIN_FACTION; i < MAX_FACTIONS; i++) {
+    if (!FactionInfo[i].caravan_value)  // no gold on board, why go?
       continue;
     FactionInfo[i].caravan_counter++;
     if ((FactionInfo[i].caravan_interval == -1) ||
-        (!IS_SET(FactionInfo[i].caravan_flags, 
-                CARAVAN_DEST_BM | CARAVAN_DEST_GH |
-                CARAVAN_DEST_LOG | CARAVAN_DEST_AMBER))) {
+        (!IS_SET(FactionInfo[i].caravan_flags,
+          CARAVAN_DEST_BM | CARAVAN_DEST_GH | CARAVAN_DEST_LOG |
+            CARAVAN_DEST_AMBER))) {
       // no caravans will be launched
       // don't let caravan interval grow out of bounds
-      FactionInfo[i].caravan_counter = min(FactionInfo[i].caravan_counter, 
-                                             MIN_CARAVAN_INTERVAL);
+      FactionInfo[i].caravan_counter =
+        min(FactionInfo[i].caravan_counter, MIN_CARAVAN_INTERVAL);
       continue;
     }
     if (FactionInfo[i].caravan_counter < FactionInfo[i].caravan_interval) {
@@ -1656,15 +1711,14 @@ void procLaunchCaravans::run(const TPulse &) const
         break;
       case MAX_FACTIONS:
       case FACT_UNDEFINED:
-        vlogf(LOG_BUG, format("Bad faction (%d) in LaunchCaravans") %  i);
+        vlogf(LOG_BUG, format("Bad faction (%d) in LaunchCaravans") % i);
         break;
     }
   }
 }
 
-void TBeing::deityIgnore(silentTypeT silent_caster) const
-{
-  int num = ::number(0,2);
+void TBeing::deityIgnore(silentTypeT silent_caster) const {
+  int num = ::number(0, 2);
   switch (num) {
     case 0:
     default:
@@ -1674,21 +1728,23 @@ void TBeing::deityIgnore(silentTypeT silent_caster) const
       break;
     case 1:
       if (!silent_caster)
-        act("$d fails to come to your aid.", FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
+        act("$d fails to come to your aid.", FALSE, this, NULL, NULL, TO_CHAR,
+          ANSI_RED);
 
       act("$n is not aided by $d.", TRUE, this, NULL, NULL, TO_ROOM);
       break;
     case 2:
       if (!silent_caster)
-        act("$d does not answer your prayer.", FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
-      act("$n's prayer is not answered by $d.", TRUE, this, NULL, NULL, TO_ROOM);
+        act("$d does not answer your prayer.", FALSE, this, NULL, NULL, TO_CHAR,
+          ANSI_RED);
+      act("$n's prayer is not answered by $d.", TRUE, this, NULL, NULL,
+        TO_ROOM);
       break;
   }
 }
 
 // a generic modifier for prayer effects
-float TBeing::percModifier() const
-{
+float TBeing::percModifier() const {
 #if FACTIONS_IN_USE
   return (getPerc() + 100.0) / 200.0;
 #else

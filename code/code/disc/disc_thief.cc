@@ -19,8 +19,7 @@
 #include "pathfinder.h"
 #include "obj_portal.h"
 
-int TBeing::doSneak(const char *argument)
-{
+int TBeing::doSneak(const char* argument) {
   int rc = 0;
   char arg[80];
 
@@ -52,9 +51,9 @@ int TBeing::doSneak(const char *argument)
       }
     } else if (is_abbrev(arg, "retry")) {
       if (affectedBySpell(skill) || checkForSkillAttempt(skill)) {
-	removeSkillAttempt(skill);
-	if (affectedBySpell(skill))
-	  affectFrom(skill);
+        removeSkillAttempt(skill);
+        if (affectedBySpell(skill))
+          affectFrom(skill);
       }
     }
   }
@@ -65,8 +64,7 @@ int TBeing::doSneak(const char *argument)
   return rc;
 }
 
-int sneak(TBeing *thief, spellNumT skill)
-{
+int sneak(TBeing* thief, spellNumT skill) {
   affectedData af;
   const int SNEAK_COST = 3;
 
@@ -102,10 +100,10 @@ int sneak(TBeing *thief, spellNumT skill)
   bKnown += thief->plotStat(STAT_CURRENT, STAT_DEX, -70, 15, 0);
 
   if (thief->bSuccess(bKnown, skill)) {
-    af.modifier = 1 + level/2;
+    af.modifier = 1 + level / 2;
     af.type = skill;
     af.duration = 5 * level;
-    af.modifier = 1 + level/2;
+    af.modifier = 1 + level / 2;
     af.location = APPLY_CAN_BE_SEEN;
     af.bitvector = AFF_SNEAK;
     thief->affectTo(&af, -1);
@@ -123,8 +121,7 @@ int sneak(TBeing *thief, spellNumT skill)
   return TRUE;
 }
 
-int TBeing::doHide()
-{
+int TBeing::doHide() {
   spellNumT skill = getSkillNum(SKILL_HIDE);
 
   if (!doesKnowSkill(skill)) {
@@ -138,8 +135,7 @@ int TBeing::doHide()
   return rc;
 }
 
-int hide(TBeing *thief, spellNumT skill)
-{
+int hide(TBeing* thief, spellNumT skill) {
   if (thief->fight()) {
     thief->sendTo("No way!! You simply can NOT hide while fighting!\n\r");
     return FALSE;
@@ -160,9 +156,8 @@ int hide(TBeing *thief, spellNumT skill)
   return TRUE;
 }
 
-int TBeing::doSubterfuge(const char *arg)
-{
-  TBeing *victim;
+int TBeing::doSubterfuge(const char* arg) {
+  TBeing* victim;
   char name_buf[MAX_INPUT_LENGTH];
   int rc;
 
@@ -186,8 +181,7 @@ int TBeing::doSubterfuge(const char *arg)
   return rc;
 }
 
-int subterfuge(TBeing *thief, TBeing *victim)
-{
+int subterfuge(TBeing* thief, TBeing* victim) {
   if (thief->fight()) {
     thief->sendTo("No way!! You simply can NOT concentrate!\n\r");
     return FALSE;
@@ -209,16 +203,17 @@ int subterfuge(TBeing *thief, TBeing *victim)
   thief->setMove(max(0, thief->getMove()));
 
   if (thief->isNotPowerful(victim, level, SKILL_SUBTERFUGE, SILENT_YES)) {
-    act("$s mind is too powerful to be confused.", FALSE, thief, NULL, victim, TO_CHAR);
+    act("$s mind is too powerful to be confused.", FALSE, thief, NULL, victim,
+      TO_CHAR);
     thief->sendTo("You simply fail to confuse your target.\n\r");
     return TRUE;
   }
-  if ((victim->plotStat(STAT_CURRENT, STAT_PER, 3, 18, 12) + 
-       victim->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12)) >
+  if ((victim->plotStat(STAT_CURRENT, STAT_PER, 3, 18, 12) +
+        victim->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12)) >
       (thief->plotStat(STAT_CURRENT, STAT_KAR, 3, 18, 12) +
-       thief->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12))) {
-    act("$N is too smart to fall for this ploy.",
-          FALSE, thief, NULL, victim, TO_CHAR);
+        thief->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12))) {
+    act("$N is too smart to fall for this ploy.", FALSE, thief, NULL, victim,
+      TO_CHAR);
     thief->sendTo("You simply fail to confuse your target.\n\r");
     return TRUE;
   }
@@ -244,8 +239,7 @@ int subterfuge(TBeing *thief, TBeing *victim)
   }
 }
 
-int TBeing::doPick(const char *argument)
-{
+int TBeing::doPick(const char* argument) {
   char type[80], dir[80];
   int rc;
 
@@ -269,29 +263,32 @@ int TBeing::doPick(const char *argument)
   return rc;
 }
 
-int TThing::pickWithMe(TBeing *thief, const char *, const char *, const char *)
-{
-  thief->sendTo("You need to hold a lock pick in your primary hand in order to pick locks.\n\r");
+int TThing::pickWithMe(TBeing* thief, const char*, const char*, const char*) {
+  thief->sendTo(
+    "You need to hold a lock pick in your primary hand in order to pick "
+    "locks.\n\r");
   return FALSE;
 }
 
-int TTool::pickWithMe(TBeing *thief, const char *argument, const char *type, const char *dir)
-{
+int TTool::pickWithMe(TBeing* thief, const char* argument, const char* type,
+  const char* dir) {
   dirTypeT door;
-  roomDirData *exitp = NULL;
-  TObj *obj;
-  TBeing *victim;
+  roomDirData* exitp = NULL;
+  TObj* obj;
+  TBeing* victim;
 
-  if ((getToolType() != TOOL_LOCKPICK) ||
-      (getToolUses() <= 0)) {
-    thief->sendTo("You need to hold a lock pick in your primary hand in order to pick locks.\n\r");
+  if ((getToolType() != TOOL_LOCKPICK) || (getToolUses() <= 0)) {
+    thief->sendTo(
+      "You need to hold a lock pick in your primary hand in order to pick "
+      "locks.\n\r");
     return FALSE;
   }
   int bKnown = thief->getSkillValue(SKILL_PICK_LOCK);
 
   // moved door check before obj check as "pick gate s" seemed to
   // pick up objs with "s" in the name, not sure why gate was ignored though
-  if ((door = thief->findDoor(type, dir, DOOR_INTENT_UNLOCK, SILENT_YES)) >= MIN_DIR) {
+  if ((door = thief->findDoor(type, dir, DOOR_INTENT_UNLOCK, SILENT_YES)) >=
+      MIN_DIR) {
     exitp = thief->exitDir(door);
     if (exitp->door_type == DOOR_NONE)
       thief->sendTo("That's absurd.\n\r");
@@ -300,20 +297,23 @@ int TTool::pickWithMe(TBeing *thief, const char *argument, const char *type, con
       thief->sendTo("You realize that the door is already open.\n\r");
     else if (exitp->key < 0)
       thief->sendTo("You can't seem to spot any lock to pick.\n\r");
-    else if (!IS_SET(exitp->condition , EXIT_LOCKED))
+    else if (!IS_SET(exitp->condition, EXIT_LOCKED))
       thief->sendTo("Oh.. it wasn't locked at all.\n\r");
     else {
       act("$n begins fiddling with a lock.", FALSE, thief, 0, 0, TO_ROOM);
       act("You begin fiddling with a lock.", FALSE, thief, 0, 0, TO_CHAR);
-      thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_PICK_LOCK, 8);
+      thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_PICK_LOCK,
+        8);
 
       // silly, but what if they sit down and pick the lock...
       if (thief->task)
         thief->stopTask();
 
-      start_task(thief, NULL, NULL, TASK_PICKLOCKS,"",0,thief->in_room,door,0,120-bKnown);
+      start_task(thief, NULL, NULL, TASK_PICKLOCKS, "", 0, thief->in_room, door,
+        0, 120 - bKnown);
     }
-  } else if (generic_find(argument, FIND_OBJ_INV | FIND_OBJ_ROOM, thief, &victim, &obj)) {
+  } else if (generic_find(argument, FIND_OBJ_INV | FIND_OBJ_ROOM, thief,
+               &victim, &obj)) {
     obj->pickMe(thief);
   } else
     thief->sendTo("You don't see that here.\n\r");
@@ -321,32 +321,32 @@ int TTool::pickWithMe(TBeing *thief, const char *argument, const char *type, con
   return TRUE;
 }
 
-int pickLocks(TBeing *thief, const char * argument, const char * type, const char * dir)
-{
-  TThing *pick;
+int pickLocks(TBeing* thief, const char* argument, const char* type,
+  const char* dir) {
+  TThing* pick;
 
-  if (!thief->doesKnowSkill(SKILL_PICK_LOCK)){
+  if (!thief->doesKnowSkill(SKILL_PICK_LOCK)) {
     thief->sendTo("You don't know to pick locks!\n\r");
     return FALSE;
   }
   if (!(pick = thief->heldInPrimHand())) {
-    thief->sendTo("You need to hold a lock pick in your primary hand in order to pick locks.\n\r");
+    thief->sendTo(
+      "You need to hold a lock pick in your primary hand in order to pick "
+      "locks.\n\r");
     return FALSE;
   }
   pick->pickWithMe(thief, argument, type, dir);
   return TRUE;
 }
 
-int TBeing::SpyCheck()
-{
+int TBeing::SpyCheck() {
   if (bSuccess(SKILL_SPY))
     return TRUE;
 
   return FALSE;
 }
 
-int TBeing::doSpy()
-{
+int TBeing::doSpy() {
   if (!doesKnowSkill(SKILL_SPY)) {
     sendTo("You know nothing about spying.\n\r");
     return FALSE;
@@ -354,8 +354,7 @@ int TBeing::doSpy()
   return spy(this);
 }
 
-int spy(TBeing *thief)
-{
+int spy(TBeing* thief) {
   affectedData aff;
 
   if (thief->affectedBySpell(SKILL_SPY)) {
@@ -376,7 +375,7 @@ int spy(TBeing *thief)
   // not set the AFF_SCRYING bit so check for isAff(scry) in code to
   // see if spying
   aff.type = SKILL_SPY;
-  aff.duration = (((int) bKnown/ 10) + 1) * Pulse::UPDATES_PER_MUDHOUR;
+  aff.duration = (((int)bKnown / 10) + 1) * Pulse::UPDATES_PER_MUDHOUR;
   aff.modifier = 0;
   aff.location = APPLY_NONE;
 
@@ -384,22 +383,18 @@ int spy(TBeing *thief)
     aff.bitvector = AFF_SCRYING;
     thief->affectTo(&aff, -1);
     return TRUE;
-  } 
+  }
   aff.bitvector = 0;
   thief->affectTo(&aff, -1);
   return TRUE;
 }
 
-
-void TObj::pickMe(TBeing *thief)
-{
+void TObj::pickMe(TBeing* thief) {
   act("$p: That's not a container.", false, thief, this, 0, TO_CHAR);
 }
 
-
-
-int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlotT part_hit)
-{
+int TBeing::thiefDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
+  wearSlotT part_hit) {
   char buf[256], type[16];
 
   // presumes thief is in appropriate position for dodging already
@@ -423,32 +418,32 @@ int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlot
     strcpy(type, "dodge");
     if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "You %s $n's %s at your %s.", type,
-	      attack_hit_text_twink[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());
+        attack_hit_text_twink[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
     } else {
       sprintf(buf, "You %s $n's %s at your %s.", type,
-	      attack_hit_text[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
     }
     act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
-    if (toggleInfo[TOG_TWINK]->toggle) {    
+    if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
-	      attack_hit_text_twink[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());
+        attack_hit_text_twink[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
     } else {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
-	      attack_hit_text[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
     }
     act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
     if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss $n's %s at $S %s.", type,
-	      attack_hit_text_twink[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());
+        attack_hit_text_twink[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
     } else {
       sprintf(buf, "$N %ss $n's %s at $S %s.", type,
-	      attack_hit_text[w_type].singular,
-	      v->describeBodySlot(part_hit).c_str());
+        attack_hit_text[w_type].singular,
+        v->describeBodySlot(part_hit).c_str());
     }
     act(buf, TRUE, this, 0, v, TO_NOTVICT);
 
@@ -457,19 +452,17 @@ int TBeing::thiefDodge(TBeing *v, TThing *weapon, int *dam, int w_type, wearSlot
   return FALSE;
 }
 
-
-void TBeing::doTrack(const char *argument)
-{
+void TBeing::doTrack(const char* argument) {
   char namebuf[256], found = FALSE;
   int dist = 0, targrm, worked, skill;
   int code;
-  TBeing *scan;
+  TBeing* scan;
   affectedData aff, *Vaff;
-  TThing *t = NULL;
-  char buf[256]="\0\0\0", buf2[512]="\0\0\0";
+  TThing* t = NULL;
+  char buf[256] = "\0\0\0", buf2[512] = "\0\0\0";
 
   strcpy(namebuf, argument);
- 
+
   if (!*namebuf && !specials.hunting) {
     sendTo("You need to search for SOMEONE.\n\r");
     return;
@@ -494,8 +487,8 @@ void TBeing::doTrack(const char *argument)
   if (roomp && !isImmortal() &&
 
       (roomp->getLight() + visionBonus <= 0) &&
-      !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-      !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
+      !roomp->isRoomFlag(ROOM_ALWAYS_LIT) && !isAffected(AFF_TRUE_SIGHT) &&
+      !isAffected(AFF_CLARITY)) {
     sendTo("You can't see well enough to track.\n\r");
     return;
   }
@@ -510,26 +503,29 @@ void TBeing::doTrack(const char *argument)
     sendTo("You are unable to find any signs of that.\n\r");
     return;
   }
- 
+
   // Lets determine the distance: [roomCount == 11865 as of 12-18-98]
   //  Ranger  TRAIL_SEEK :  25 - 176
   //  Ranger !TRAIL_SEEK :  20 - 161
   // !Ranger  TRAIL_SEEK :  15 - 153
   int level = 0;
   if (learning > 0) {
-    level = getSkillLevel(SKILL_TRACK); 
+    level = getSkillLevel(SKILL_TRACK);
 
     if (affectedBySpell(SPELL_TRAIL_SEEK))
-      dist = max(25, (int) (((((roomCount*((level+1)/2))/1000)+
-                           min(50, learning)))/2));
+      dist = max(25,
+        (int)(((((roomCount * ((level + 1) / 2)) / 1000) + min(50, learning))) /
+              2));
     else
-      dist = max(20, (int) (((((roomCount*((level+1)/2))/1000)+
-                           min(20, learning)))/2));
+      dist = max(20,
+        (int)(((((roomCount * ((level + 1) / 2)) / 1000) + min(20, learning))) /
+              2));
   } else if (affectedBySpell(SPELL_TRAIL_SEEK)) {
     learning = getSkillValue(SPELL_TRAIL_SEEK);
     level = getSkillLevel(SPELL_TRAIL_SEEK);
-    dist = max(15, (int) (((((roomCount*((level+1)/2))/1000)+
-                         min(5, learning)))/2));
+    dist = max(15,
+      (int)(((((roomCount * ((level + 1) / 2)) / 1000) + min(5, learning))) /
+            2));
   }
 
   if (hasClass(CLASS_THIEF) || hasClass(CLASS_RANGER))
@@ -539,43 +535,42 @@ void TBeing::doTrack(const char *argument)
   else if (hasClass(CLASS_MAGE))
     dist += getLevel(MAGE_LEVEL_IND);
   // else no change
- 
+
   switch (getRace()) {
     case RACE_GIANT:
     case RACE_ELVEN:
-      dist *= 2;                // even better 
+      dist *= 2;  // even better
       break;
     case RACE_DEVIL:
     case RACE_DEMON:
-      dist = MAX_ROOMS;         //  4 as good as can be 
+      dist = MAX_ROOMS;  //  4 as good as can be
       break;
     default:
       break;
   }
- 
+
   if (isImmortal())
     dist = MAX_ROOMS;
- 
+
   hunt_dist = dist;
   specials.hunting = 0;
   TPathFinder path(dist);
- 
+
   // note: -dist will look THRU doors.
   // all subsequent calls use track() which does not go thru doors
   // this is intentional so they lose track after 1 step
-  if ((level < MIN_GLOB_TRACK_LEV) ||
-      (affectedBySpell(SPELL_TRAIL_SEEK))){
+  if ((level < MIN_GLOB_TRACK_LEV) || (affectedBySpell(SPELL_TRAIL_SEEK))) {
     path.setStayZone(true);
     path.setThruDoors(true);
 
-    code=path.findPath(in_room, findBeing(namebuf));
-    targrm=path.getDest();
+    code = path.findPath(in_room, findBeing(namebuf));
+    targrm = path.getDest();
   } else {
     path.setStayZone(false);
     path.setThruDoors(true);
-    
-    code=path.findPath(in_room, findBeing(namebuf));
-    targrm=path.getDest();
+
+    code = path.findPath(in_room, findBeing(namebuf));
+    targrm = path.getDest();
   }
 
   if (code == -1) {
@@ -618,13 +613,15 @@ void TBeing::doTrack(const char *argument)
                dirs_to_blank[code] % norm());
       else {
         int count = code - 9, seen = 0;
-        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-          TPortal *tp = dynamic_cast<TPortal *>(t);
+        for (StuffIter it = roomp->stuff.begin();
+             it != roomp->stuff.end() && (t = *it); ++it) {
+          TPortal* tp = dynamic_cast<TPortal*>(t);
           if (tp) {
             seen++;
             if (count == seen) {
-              sendTo(COLOR_OBJECTS, format("%sYou see traces of your quarry through %s.%s\n\r") % 
-                     purple() % tp->getName() % norm());
+              sendTo(COLOR_OBJECTS,
+                format("%sYou see traces of your quarry through %s.%s\n\r") %
+                  purple() % tp->getName() % norm());
               break;
             }
           }
@@ -637,7 +634,8 @@ void TBeing::doTrack(const char *argument)
       }
     } else {
       code = -2;
-      sendTo(COLOR_MOBS, format("You begin tracking %s.\n\r") % specials.hunting->getName());
+      sendTo(COLOR_MOBS,
+        format("You begin tracking %s.\n\r") % specials.hunting->getName());
     }
   }
 
@@ -655,27 +653,28 @@ void TBeing::doTrack(const char *argument)
       addCommandToQue(buf);
     }
   } else if (desc && (desc->autobits & AUTO_HUNT) && t) {
-      strcpy(buf, t->name.c_str());
-      strcpy(buf, add_bars(buf).c_str());
-      addToWait(combatRound(1));
-      sprintf(buf2, "enter %s", buf);
-      addCommandToQue(buf2);
+    strcpy(buf, t->name.c_str());
+    strcpy(buf, add_bars(buf).c_str());
+    addToWait(combatRound(1));
+    sprintf(buf2, "enter %s", buf);
+    addCommandToQue(buf2);
   }
 
   bool isTR = affectedBySpell(SPELL_TRAIL_SEEK);
 
   addToWait(combatRound(1));
-  addToMove((int) min(10, (-2-((110-getSkillValue((isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK))))/6)));
+  addToMove((int)min(10,
+    (-2 -
+      ((110 - getSkillValue((isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK)))) / 6)));
 
-  start_task(this, NULL, NULL, TASK_TRACKING, "", 1, in_room, 1, code+1, 40);
+  start_task(this, NULL, NULL, TASK_TRACKING, "", 1, in_room, 1, code + 1, 40);
 }
- 
+
 // used by doLook() to display next direction to go.
 // return FALSE to cease tracking
-int TBeing::track(TBeing *vict)
-{
+int TBeing::track(TBeing* vict) {
   int code;
-  TThing *t=NULL;
+  TThing* t = NULL;
   int targetRm = -1;
   int isSW = affectedBySpell(SKILL_SEEKWATER);
   char buf[256];
@@ -684,21 +683,19 @@ int TBeing::track(TBeing *vict)
   path.setUsePortals(false);
 
   if (!vict && !isSW) {
-    vlogf(LOG_BUG, format("Problem in track() %s") %  getName());
+    vlogf(LOG_BUG, format("Problem in track() %s") % getName());
     return TRUE;
   }
-  if (roomp && !isImmortal() && 
-      (roomp->getLight() + visionBonus <= 0) &&
-      !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-      !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
+  if (roomp && !isImmortal() && (roomp->getLight() + visionBonus <= 0) &&
+      !roomp->isRoomFlag(ROOM_ALWAYS_LIT) && !isAffected(AFF_TRUE_SIGHT) &&
+      !isAffected(AFF_CLARITY)) {
     return TRUE;
   }
   if (!vict) {
-    if (isSW){
-      code=path.findPath(in_room, findWater());
-      targetRm=path.getDest();
-    }
-    else {
+    if (isSW) {
+      code = path.findPath(in_room, findWater());
+      targetRm = path.getDest();
+    } else {
       vlogf(LOG_BUG, "problem in track()");
       stopTask();
       return FALSE;
@@ -707,15 +704,14 @@ int TBeing::track(TBeing *vict)
     if (isImmortal())  // look through doors
       code = choose_exit_global(in_room, vict->in_room, hunt_dist);
     else if ((GetMaxLevel() < MIN_GLOB_TRACK_LEV) ||
-           affectedBySpell(SPELL_TRAIL_SEEK))
+             affectedBySpell(SPELL_TRAIL_SEEK))
       code = choose_exit_in_zone(in_room, vict->in_room, hunt_dist);
     else
       code = choose_exit_global(in_room, vict->in_room, hunt_dist);
   }
-  if ((vict && sameRoom(*vict)) ||
-      (targetRm != -1 && targetRm == inRoom())) {
-    sendTo(format("%s###You have found %s!%s\n\r") % orange() % (isSW ? "some water" :
-           "your quarry") % norm());
+  if ((vict && sameRoom(*vict)) || (targetRm != -1 && targetRm == inRoom())) {
+    sendTo(format("%s###You have found %s!%s\n\r") % orange() %
+           (isSW ? "some water" : "your quarry") % norm());
     addToWait(combatRound(1));
     if (desc && desc->m_bIsClient)
       desc->clientf(format("%d") % CLIENT_TRACKOFF);
@@ -731,20 +727,23 @@ int TBeing::track(TBeing *vict)
       return TRUE;
     } else if (code <= 9) {
       sendTo(format("%s###You track %s %s.%s\n\r") % purple() %
-             (isSW ? "some water" : "your target") % dirs_to_blank[code] % norm());
+             (isSW ? "some water" : "your target") % dirs_to_blank[code] %
+             norm());
       if (desc && (desc->autobits & AUTO_HUNT)) {
         strcpy(buf, dirs[code]);
         addCommandToQue(buf);
       }
     } else {
       int count = code - 9, seen = 0;
-      for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-        TPortal *tp = dynamic_cast<TPortal *>(t);
+      for (StuffIter it = roomp->stuff.begin();
+           it != roomp->stuff.end() && (t = *it); ++it) {
+        TPortal* tp = dynamic_cast<TPortal*>(t);
         if (tp) {
           seen++;
           if (count == seen) {
-            sendTo(COLOR_OBJECTS, format("%sYou track %s through %s.%s\n\r") % purple() %
-                   (isSW ? "some water" : "your quarry") % tp->getName() % norm());
+            sendTo(COLOR_OBJECTS,
+              format("%sYou track %s through %s.%s\n\r") % purple() %
+                (isSW ? "some water" : "your quarry") % tp->getName() % norm());
             if (desc && (desc->autobits & AUTO_HUNT)) {
               strcpy(buf, tp->name.c_str());
               strcpy(buf, add_bars(buf).c_str());
@@ -760,70 +759,71 @@ int TBeing::track(TBeing *vict)
   }
   return TRUE;
 }
- 
+
 // this is called exclusively by TMonster::hunt()
 // returns 0-9 for dir to travel, or 10+ for a portal (indexed)
 // return -1 to stop the tracking
-dirTypeT TBeing::dirTrack(TBeing *vict)
-{
+dirTypeT TBeing::dirTrack(TBeing* vict) {
   dirTypeT code;
-  affectedData *aff;
+  affectedData* aff;
 
-  if (roomp && !isImmortal() && 
-      (roomp->getLight() + visionBonus <= 0) &&
-      !roomp->isRoomFlag(ROOM_ALWAYS_LIT) &&
-      !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
+  if (roomp && !isImmortal() && (roomp->getLight() + visionBonus <= 0) &&
+      !roomp->isRoomFlag(ROOM_ALWAYS_LIT) && !isAffected(AFF_TRUE_SIGHT) &&
+      !isAffected(AFF_CLARITY)) {
     sendTo("You can't see well enough to find a trail.\n\r");
     return DIR_NONE;
   }
 
   for (aff = vict->affected; aff; aff = aff->next) {
     if (aff->type == SKILL_CONCEALMENT) {
-      if (::number(1,150) < aff->modifier) {
-        sendTo(format("%s##You have lost the trail.%s\n\r") % orange() % norm());
+      if (::number(1, 150) < aff->modifier) {
+        sendTo(
+          format("%s##You have lost the trail.%s\n\r") % orange() % norm());
 
         if (aff->be == vict) {
-          act("You have successfully concealed your path from $N.",
-                    FALSE, vict, 0, this, TO_CHAR, ANSI_GREEN);
+          act("You have successfully concealed your path from $N.", FALSE, vict,
+            0, this, TO_CHAR, ANSI_GREEN);
           return DIR_NONE;
         } else if (aff->be && vict->sameRoom(*aff->be)) {
-          act("$N has successfully concealed your path from $P.",
-                    FALSE, vict, this, aff->be, TO_CHAR, ANSI_GREEN);
-          act("You have successfully concealed $n's path from $P.",
-                    FALSE, vict, this, aff->be, TO_VICT, ANSI_GREEN);
+          act("$N has successfully concealed your path from $P.", FALSE, vict,
+            this, aff->be, TO_CHAR, ANSI_GREEN);
+          act("You have successfully concealed $n's path from $P.", FALSE, vict,
+            this, aff->be, TO_VICT, ANSI_GREEN);
           return DIR_NONE;
         }
       }
     }
   }
 
-  if ((GetMaxLevel() >= MIN_GLOB_TRACK_LEV) || affectedBySpell(SPELL_TRAIL_SEEK)
-      || IS_SET(specials.act, ACT_HUNTING)) {
+  if ((GetMaxLevel() >= MIN_GLOB_TRACK_LEV) ||
+      affectedBySpell(SPELL_TRAIL_SEEK) || IS_SET(specials.act, ACT_HUNTING)) {
     code = choose_exit_global(in_room, vict->in_room, hunt_dist);
   } else
     code = choose_exit_in_zone(in_room, vict->in_room, hunt_dist);
 
   if (code == DIR_NONE) {
     if (sameRoom(*vict))
-      sendTo(format("%s##You have found your target!%s\n\r") % orange() % norm());
+      sendTo(
+        format("%s##You have found your target!%s\n\r") % orange() % norm());
     else
       sendTo(format("%s##You have lost the trail.%s\n\r") % orange() % norm());
- 
-    return DIR_NONE;                // false to continue the hunt 
+
+    return DIR_NONE;  // false to continue the hunt
   } else if (code < MAX_DIR) {
-    sendTo(format("%s##You see a faint trail %s.%s\n\r") % 
-         purple() % dirs_to_leading[code] % norm());
+    sendTo(format("%s##You see a faint trail %s.%s\n\r") % purple() %
+           dirs_to_leading[code] % norm());
     return code;
   } else {
     int count = code - 9, seen = 0;
-    TPortal *tp=NULL;
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it) {
+    TPortal* tp = NULL;
+    for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
       tp = dynamic_cast<TPortal*>(*it);
       if (tp) {
-         seen++;
+        seen++;
         if (count == seen) {
-          sendTo(COLOR_OBJECTS, format("%sYou see a faint trail through %s.%s\n\r") %
-             purple() % tp->getName() % norm());
+          sendTo(COLOR_OBJECTS,
+            format("%sYou see a faint trail through %s.%s\n\r") % purple() %
+              tp->getName() % norm());
           break;
         }
       }
@@ -835,4 +835,3 @@ dirTypeT TBeing::dirTrack(TBeing *vict)
     return code;
   }
 }
- 

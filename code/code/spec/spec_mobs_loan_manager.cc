@@ -13,50 +13,49 @@
 // interest rate
 // risk
 
-
-
-void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
-{
-  int loan_id=convertTo<int>(arg.word(0));
+void loanBuy(TBeing* ch, TMonster* myself, sstring arg) {
+  int loan_id = convertTo<int>(arg.word(0));
   TDatabase db(DB_SNEEZY);
-  int shop_nr=find_shop_nr(myself->number);
+  int shop_nr = find_shop_nr(myself->number);
   TShopOwned tso(shop_nr, myself, ch);
   TCorporation corp(tso.getCorpID());
-  
-  if(!loan_id){
+
+  if (!loan_id) {
     myself->doTell(ch->getName(), "That isn't a valid loan number");
     return;
   }
 
-  db.query("select amt from shopownednpcloans where loan_id=%i",
-	   loan_id);
-  
-  if(!db.fetchRow()){
+  db.query("select amt from shopownednpcloans where loan_id=%i", loan_id);
+
+  if (!db.fetchRow()) {
     myself->doTell(ch->getName(), "That isn't a valid loan number.");
     return;
   }
 
   // make sure they have money
-  int amt=convertTo<int>(db["amt"]);
-  
-  if(ch->getMoney() < amt){
+  int amt = convertTo<int>(db["amt"]);
+
+  if (ch->getMoney() < amt) {
     myself->doTell(ch->getName(), "You don't have enough money.");
     return;
   }
-  
+
   // make sure they have an account at my bank
   db.query("select 1 from shopownedbank where player_id=%i and shop_nr=%i",
-	   ch->getPlayerID(), corp.getBank());
+    ch->getPlayerID(), corp.getBank());
 
-  if(!db.fetchRow()){
-    TRoom *tr=real_roomp(shop_index[corp.getBank()].in_room);
+  if (!db.fetchRow()) {
+    TRoom* tr = real_roomp(shop_index[corp.getBank()].in_room);
 
-    myself->doTell(ch->getName(), format("You need to have a bank account at %s in order to finance loans.") % tr->getName());
+    myself->doTell(ch->getName(),
+      format(
+        "You need to have a bank account at %s in order to finance loans.") %
+        tr->getName());
     return;
   }
 
   db.query("update shopownednpcloans set owner=%i where loan_id=%i",
-	   ch->getPlayerID(), loan_id);
+    ch->getPlayerID(), loan_id);
 
 #if 0  
   TMonster *sba;
@@ -72,32 +71,30 @@ void loanBuy(TBeing *ch, TMonster *myself, sstring arg)
 
   // give fee amount to myself
 #endif
-  
 }
 
-void loanList(TBeing *ch, TMonster *myself)
-{
+void loanList(TBeing* ch, TMonster* myself) {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select loan_id, amt, rate, risk from shopownednpcloans order by loan_id");
+  db.query(
+    "select loan_id, amt, rate, risk from shopownednpcloans order by loan_id");
 
-  while(db.fetchRow()){
-    ch->sendTo(format("[%s] %s talens at %s, risk %s\n\r") %
-	       db["loan_id"] % db["amt"] % db["rate"] % db["risk"]);
+  while (db.fetchRow()) {
+    ch->sendTo(format("[%s] %s talens at %s, risk %s\n\r") % db["loan_id"] %
+               db["amt"] % db["rate"] % db["risk"]);
   }
 }
 
-
-int loanManager(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
-{
+int loanManager(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
+  TObj*) {
   int shop_nr;
 
-  if(cmd!=CMD_WHISPER && cmd!=CMD_BUY && cmd!=CMD_LIST)
+  if (cmd != CMD_WHISPER && cmd != CMD_BUY && cmd != CMD_LIST)
     return false;
 
-  shop_nr=find_shop_nr(myself->number);
+  shop_nr = find_shop_nr(myself->number);
 
-  switch(cmd){
+  switch (cmd) {
     case CMD_WHISPER:
       return shopWhisper(ch, myself, shop_nr, arg);
     case CMD_LIST:

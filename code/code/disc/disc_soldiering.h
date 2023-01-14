@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the WARRIOR SOLDIERING discipline.
@@ -12,9 +11,8 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDSoldiering : public CDiscipline
-{
-public:
+class CDSoldiering : public CDiscipline {
+  public:
     CSkill skDoorbash;
     CSkill skDualWieldWarrior;
     CSkill skPowerMove;
@@ -23,11 +21,10 @@ public:
     CSkill skFortify;
 
     CDSoldiering();
-    CDSoldiering(const CDSoldiering &a);
-    CDSoldiering & operator=(const CDSoldiering &a);
+    CDSoldiering(const CDSoldiering& a);
+    CDSoldiering& operator=(const CDSoldiering& a);
     virtual ~CDSoldiering();
-    virtual CDSoldiering * cloneMe() { return new CDSoldiering(*this); }
+    virtual CDSoldiering* cloneMe() { return new CDSoldiering(*this); }
 
-private:
+  private:
 };
-

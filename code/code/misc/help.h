@@ -15,8 +15,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
-extern void help_skills(TBeing *, char *);
+extern void help_skills(TBeing*, char*);
 extern void buildHelpIndex();

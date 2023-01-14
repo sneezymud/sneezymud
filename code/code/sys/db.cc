@@ -3,7 +3,6 @@
 #include <dirent.h>
 #include <cmath>
 
-
 #include <boost/filesystem.hpp>
 
 #include "room.h"
@@ -109,27 +108,27 @@
 #include "obj_fruit.h"
 #include "CharacterList.h"
 
-int top_of_world = 0;         // ref to the top element of world 
+int top_of_world = 0;  // ref to the top element of world
 
-TRoom *room_db[WORLD_SIZE];
+TRoom* room_db[WORLD_SIZE];
 
-TObjList object_list; // the global linked list of obj's 
+TObjList object_list;  // the global linked list of obj's
 
 int commod_index[200];
 
-TBeing *character_list = 0; // global l-list of chars          
+TBeing* character_list = 0;  // global l-list of chars
 TCharacterList CharacterList;
-TMonster *pawnman = NULL;
-TPCorpse *pc_corpse_list = NULL;
-// table of reset data 
-std::vector<zoneData>zone_table(0);
+TMonster* pawnman = NULL;
+TPCorpse* pc_corpse_list = NULL;
+// table of reset data
+std::vector<zoneData> zone_table(0);
 
 liqInfoT liquidInfo;
 currencyInfoT currencyInfo;
 
 int top_of_script = 0;
 
-// Lots o' global variables!!!!!! - Russ 
+// Lots o' global variables!!!!!! - Russ
 long total_bc = 0;
 long roomCount = 0;
 long mobCount = 0;
@@ -150,73 +149,76 @@ int faction_number = 0;
 // load rate percentage, overrides rates defined in zonefiles
 int fixed_chance = 5;
 
+const char* const File::BUG = "txt/bugs";        /*         'bug'      */
+const char* const File::CREDITS = "txt/credits"; /* for the credits command */
+const char* const File::HELP_PAGE = "help/general"; /* for HELP <CR> */
+const char* const File::IDEA = "txt/ideas";         /* for the 'idea'-command */
+const char* const File::MOTD = "txt/motd";          /* messages of today */
+const char* const File::NEWS = "txt/news";          /* for the 'news' command */
+const char* const File::SIGN_MESS = "txt/currentmess";
+const char* const File::SOCMESS = "actions"; /* messgs for social acts     */
+const char* const File::TYPO = "txt/typos";  /*         'typo'     */
+const char* const File::WIZLIST = "txt/wizlist"; /* for WIZLIST   */
+const char* const File::WIZMOTD = "txt/wizmotd"; /* MOTD for immorts */
+const char* const File::WIZNEWS = "txt/wiznews";
 
-const char * const File::BUG       = "txt/bugs";      /*         'bug'      */
-const char * const File::CREDITS   = "txt/credits";   /* for the credits command */
-const char * const File::HELP_PAGE = "help/general";  /* for HELP <CR> */
-const char * const File::IDEA      = "txt/ideas"; /* for the 'idea'-command */
-const char * const File::MOTD      = "txt/motd";      /* messages of today */
-const char * const File::NEWS      = "txt/news";  /* for the 'news' command */
-const char * const File::SIGN_MESS = "txt/currentmess";
-const char * const File::SOCMESS   = "actions"; /* messgs for social acts     */
-const char * const File::TYPO      = "txt/typos";     /*         'typo'     */
-const char * const File::WIZLIST   = "txt/wizlist";   /* for WIZLIST   */
-const char * const File::WIZMOTD   = "txt/wizmotd";   /* MOTD for immorts */
-const char * const File::WIZNEWS   = "txt/wiznews";
+const char* const Path::DATA = "lib";   /* default data directory     */
+const char* const Path::HELP = "help/"; /* for HELP <keywrd>          */
+const char* const Path::IMMORTAL_HELP = "help/_immortal";
+const char* const Path::BUILDER_HELP = "help/_builder";
+const char* const Path::SKILL_HELP = "help/_skills";
+const char* const Path::SPELL_HELP = "help/_spells";
 
-const char * const Path::DATA          = "lib";  /* default data directory     */
-const char * const Path::HELP	       = "help/";   /* for HELP <keywrd>          */
-const char * const Path::IMMORTAL_HELP = "help/_immortal";
-const char * const Path::BUILDER_HELP  = "help/_builder";
-const char * const Path::SKILL_HELP    = "help/_skills";
-const char * const Path::SPELL_HELP    = "help/_spells";
+std::vector<TRoom*> roomspec_db(0);
+std::vector<TRoom*> roomsave_db(0);
+std::queue<sstring> queryqueue;
 
-
-
-std::vector<TRoom *>roomspec_db(0);
-std::vector<TRoom *>roomsave_db(0);
-std::queue<sstring>queryqueue;
-
-
-struct cached_object { int number;std::map <sstring, sstring> s; };
-struct cached_mob_extra { int number;sstring keyword; sstring description; };
-struct cached_mob_imm { int number;int type; int amt; };
-
+struct cached_object {
+    int number;
+    std::map<sstring, sstring> s;
+};
+struct cached_mob_extra {
+    int number;
+    sstring keyword;
+    sstring description;
+};
+struct cached_mob_imm {
+    int number;
+    int type;
+    int amt;
+};
 
 class TObjectCache {
-public:
-  std::map<int, cached_object *>cache;
+  public:
+    std::map<int, cached_object*> cache;
 
-  void preload(void);
-  cached_object *operator[](int);
+    void preload(void);
+    cached_object* operator[](int);
 
-  ~TObjectCache()
-  {
-    for (auto& it : cache)
-      delete it.second;
-    cache.clear();
-  }
+    ~TObjectCache() {
+      for (auto& it : cache)
+        delete it.second;
+      cache.clear();
+    }
 } obj_cache;
 
 class TMobileCache {
-public:
-  std::map<int, cached_object *>cache;
-  std::map<int, std::vector <cached_mob_extra *> >extra;
-  std::map<int, std::vector <cached_mob_imm *> >imm;
+  public:
+    std::map<int, cached_object*> cache;
+    std::map<int, std::vector<cached_mob_extra*>> extra;
+    std::map<int, std::vector<cached_mob_imm*>> imm;
 
-  void preload(void);
-  cached_object *operator[](int);
+    void preload(void);
+    cached_object* operator[](int);
 
-  ~TMobileCache()
-  {
-    for (auto& it : cache)
-      delete it.second;
-    cache.clear();
-  }
+    ~TMobileCache() {
+      for (auto& it : cache)
+        delete it.second;
+      cache.clear();
+    }
 } mob_cache;
 
-
-bool bootTime=false;
+bool bootTime = false;
 
 class lag_data lag_info;
 
@@ -230,28 +232,29 @@ static void bootWorld(void);
 // fish init
 void initialize_fish_records(void);
 
-struct reset_q_type
-{
-  resetQElement *head;
-  resetQElement *tail;
+struct reset_q_type {
+    resetQElement* head;
+    resetQElement* tail;
 } r_q;
 
-void update_commod_index()
-{
+void update_commod_index() {
   TDatabase db(DB_SNEEZY);
 
-  for(int i=0;i<200;++i)
-    commod_index[i]=0;
+  for (int i = 0; i < 200; ++i)
+    commod_index[i] = 0;
 
-  db.query("select r.material as material, sum(r.weight*10)/(select count(*) from shoptype st where st.type=%i) as units from rent r, obj o where o.vnum=r.vnum and r.owner_type='shop' and o.type=%i group by r.material", ITEM_RAW_MATERIAL, ITEM_RAW_MATERIAL);
+  db.query(
+    "select r.material as material, sum(r.weight*10)/(select count(*) from "
+    "shoptype st where st.type=%i) as units from rent r, obj o where "
+    "o.vnum=r.vnum and r.owner_type='shop' and o.type=%i group by r.material",
+    ITEM_RAW_MATERIAL, ITEM_RAW_MATERIAL);
 
-  while(db.fetchRow()){
-    commod_index[convertTo<int>(db["material"])]+=convertTo<int>(db["units"]);
+  while (db.fetchRow()) {
+    commod_index[convertTo<int>(db["material"])] += convertTo<int>(db["units"]);
   }
 }
 
-int getObjLoadPotential(const int obj_num)
-{
+int getObjLoadPotential(const int obj_num) {
   std::map<int, int>::iterator tIter;
   int obj_lp;
 
@@ -264,8 +267,7 @@ int getObjLoadPotential(const int obj_num)
   return obj_lp;
 }
 
-void tallyObjLoadPotential(const int obj_num)
-{
+void tallyObjLoadPotential(const int obj_num) {
   std::map<int, int>::iterator tIter;
 
   tIter = obj_load_potential.find(obj_num);
@@ -276,8 +278,7 @@ void tallyObjLoadPotential(const int obj_num)
   }
 }
 
-void bootPulse(const char *str, bool end_str)
-{
+void bootPulse(const char* str, bool end_str) {
   /*  This function gets called periodically during bootup
     It basically will do socket stuff to bind new connections
     And sends some boot info to all descriptors.
@@ -285,7 +286,7 @@ void bootPulse(const char *str, bool end_str)
     But be careful not to send immortal-only info  :)
   */
 
-  Descriptor *d;
+  Descriptor* d;
   sstring sc;
   static sstring tLastRealMessage("");
   bool tLRMN = false;
@@ -296,7 +297,7 @@ void bootPulse(const char *str, bool end_str)
       sc += " Boot Process: ";
 
       // Set the last real output.
-      tLastRealMessage  = sc;
+      tLastRealMessage = sc;
       tLastRealMessage += str;
       tLRMN = true;
     } else
@@ -313,58 +314,54 @@ void bootPulse(const char *str, bool end_str)
   gSocket->addNewDescriptorsDuringBoot((tLRMN ? "\n\r" : tLastRealMessage));
 
   for (d = descriptor_list; d; d = d->next) {
-    d->output.push(CommPtr(new UncategorizedComm(colorString(NULL, d, sc, NULL, COLOR_BASIC, TRUE))));
+    d->output.push(CommPtr(new UncategorizedComm(
+      colorString(NULL, d, sc, NULL, COLOR_BASIC, TRUE))));
     d->outputProcessing();
   }
 
   if (str && strcmp(str, "."))
-    vlogf(LOG_MISC, format("%s") %  str);
+    vlogf(LOG_MISC, format("%s") % str);
 }
 
-void object_stats()
-{
-  int count[MAX_OBJ_TYPES], i=0, li=0, total=0;
+void object_stats() {
+  int count[MAX_OBJ_TYPES], i = 0, li = 0, total = 0;
 
-  for(i=0;i<MAX_OBJ_TYPES;++i)
-    count[i]=0;
-  
-  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter)
+  for (i = 0; i < MAX_OBJ_TYPES; ++i)
+    count[i] = 0;
+
+  for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter)
     count[(*iter)->itemType()]++;
-  
+
   // BUBBLESORT IS L33T!!!
-  while(1){
-    for(i=0;i<MAX_OBJ_TYPES;++i){
-      if(count[i]>count[li])
-        li=i;
+  while (1) {
+    for (i = 0; i < MAX_OBJ_TYPES; ++i) {
+      if (count[i] > count[li])
+        li = i;
     }
-    
-    if(count[li]==-1)
+
+    if (count[li] == -1)
       break;
-    
+
     vlogf(LOG_MISC, format("[%6i] %-17s") % count[li] % ItemInfo[li]->name);
     total += count[li];
-    count[li]=-1;
+    count[li] = -1;
   }
-  
+
   vlogf(LOG_MISC, format("[%6i] %-17s") % total % "Total");
 }
 
-
-void assign_rooms()
-{
+void assign_rooms() {
   TDatabase db(DB_SNEEZY);
 
   db.query("select vnum from room where spec!=0");
-  
-  while(db.fetchRow()){
-    TRoom *rp=real_roomp(convertTo<int>(db["vnum"]));
+
+  while (db.fetchRow()) {
+    TRoom* rp = real_roomp(convertTo<int>(db["vnum"]));
     roomspec_db.push_back(rp);
   }
 }
 
-
-static void verify_path(sstring sp)
-{
+static void verify_path(sstring sp) {
   using namespace boost::filesystem;
   path bpath(sp.c_str());
 
@@ -379,19 +376,17 @@ static void verify_path(sstring sp)
   create_directories(bpath);
 }
 
-static void verify_path_azdir(const char *path)
-{
+static void verify_path_azdir(const char* path) {
   verify_path(format("%s/corrupt") % path);
-  for (char p: "abcdefghijklmnopqrstuvwxyz")
+  for (char p : "abcdefghijklmnopqrstuvwxyz")
     verify_path(format("%s/%c") % path % p);
 }
 
-void bootDb(void)
-{
+void bootDb(void) {
   TTiming t;
   t.start();
 
-  bootTime=true;
+  bootTime = true;
   bootPulse("Boot db -- BEGIN.");
 
   vlogf(LOG_MISC, "Boot timing: begin");
@@ -413,14 +408,14 @@ void bootDb(void)
   bootPulse("Initializing game statistics.");
   if (!init_game_stats()) {
     vlogf(LOG_MISC, "bad result from init_game_stats");
-//    exit(0);
+    //    exit(0);
   }
   bootPulse("Loading global toggles.");
   toggleInfo.loadToggles();
   tweakInfo.loadTweaks();
 
   bootPulse("Loading Races.");
-  for(race_t rindex=RACE_NORACE;rindex<MAX_RACIAL_TYPES;rindex++)
+  for (race_t rindex = RACE_NORACE; rindex < MAX_RACIAL_TYPES; rindex++)
     Races[rindex] = new Race(rindex);
 
   bootPulse("Initializing faction data.");
@@ -442,14 +437,14 @@ void bootDb(void)
   buildSpellArray();
   buildTerrainDamMap();
   buildWeatherDamMap();
-//  buildSpellDamArray();
+  //  buildSpellDamArray();
   bootPulse("Initializing Components.");
   buildComponentArray();
   bootPulse("Initializing Terrains.");
   assignTerrainInfo();
 
-  vlogf(LOG_MISC, format("Boot timing: misc 1: %.2f seconds") % 
-      (t.getElapsedReset()));
+  vlogf(LOG_MISC,
+    format("Boot timing: misc 1: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Generating index tables for mobile file.");
   generate_mob_index();
@@ -457,18 +452,20 @@ void bootDb(void)
   bootPulse("Generating index tables for object file.");
   generate_obj_index();
 
-  vlogf(LOG_MISC, format("Boot timing: mob/obj indexes: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: mob/obj indexes: %.2f seconds") %
+                    (t.getElapsedReset()));
 
   bootPulse("Pre-loading object cache.");
   obj_cache.preload();
 
-  vlogf(LOG_MISC, format("Boot timing: obj cache: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC,
+    format("Boot timing: obj cache: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Pre-loading mobile cache.");
   mob_cache.preload();
 
-  vlogf(LOG_MISC, format("Boot timing: mob cache: %.2f seconds") % (t.getElapsedReset()));
-
+  vlogf(LOG_MISC,
+    format("Boot timing: mob cache: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Building suitset information.");
   suitSets.SetupLoadSetSuits();
@@ -485,25 +482,28 @@ void bootDb(void)
 
   bootPulse("Checking for new species of fish.");
   initialize_fish_records();
-  
-  vlogf(LOG_MISC, format("Boot timing: misc 2: %.2f seconds") % (t.getElapsedReset()));
+
+  vlogf(LOG_MISC,
+    format("Boot timing: misc 2: %.2f seconds") % (t.getElapsedReset()));
 
   unsigned int i;
   bootPulse("Loading rooms:", false);
   bootWorld();
   bootPulse(NULL, true);
 
-  vlogf(LOG_MISC, format("Boot timing: rooms: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC,
+    format("Boot timing: rooms: %.2f seconds") % (t.getElapsedReset()));
 
   vlogf(LOG_MISC, "Assigning function pointers:");
   vlogf(LOG_MISC, "   Shopkeepers.");
   bootTheShops();
 
-  vlogf(LOG_MISC, format("Boot timing: shops: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC,
+    format("Boot timing: shops: %.2f seconds") % (t.getElapsedReset()));
 
-  //bootPulse("Initializing boards.");
-  //InitBoards();
-  
+  // bootPulse("Initializing boards.");
+  // InitBoards();
+
   bootPulse("Initializing room specials.");
   assign_rooms();
 
@@ -526,12 +526,13 @@ void bootDb(void)
   bootPulse("Building whittle information.");
   initWhittle();
 
-  vlogf(LOG_MISC, format("Boot timing: misc 3: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC,
+    format("Boot timing: misc 3: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Updating characters with saved items:", false);
   updateRentFiles();
-  //bootPulse("Processing shop-save files.");
-  //processShopFiles();
+  // bootPulse("Processing shop-save files.");
+  // processShopFiles();
   bootPulse("Processing repair-save files.");
   processRepairFiles();
   bootPulse("Processing saved-room files.");
@@ -539,7 +540,8 @@ void bootDb(void)
   bootPulse("Processing corpse-save files.");
   processCorpseFiles();
 
-  vlogf(LOG_MISC, format("Boot timing: save files: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC,
+    format("Boot timing: save files: %.2f seconds") % (t.getElapsedReset()));
 
   bootPulse("Calculating number of items in rent.");
   vlogf(LOG_MISC, "Totals on limited items:");
@@ -554,51 +556,54 @@ void bootDb(void)
     d = (i ? (zone_table[i - 1].top + 1) : 0);
     e = zone_table[i].top;
 
-    vlogf(LOG_MISC, format("Calculating object load potentials of %s (rooms %d-%d).") % zone_table[i].name % d % e);
+    vlogf(LOG_MISC,
+      format("Calculating object load potentials of %s (rooms %d-%d).") %
+        zone_table[i].name % d % e);
     zone_table[i].resetZone(true, true);
 
-    if (i%10 == 0)
+    if (i % 10 == 0)
       bootPulse(".", false);
   }
   bootPulse(NULL, true);
 
-  vlogf(LOG_MISC, format("Boot timing: load potentials: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: load potentials: %.2f seconds") %
+                    (t.getElapsedReset()));
 
   for (i = 0; i < zone_table.size(); i++) {
     int d, e;
     d = (i ? (zone_table[i - 1].top + 1) : 0);
     e = zone_table[i].top;
 
-    if (i==0) {
+    if (i == 0) {
       // all shopkeepers should load in zone 0
       bootPulse("Loading shops.", false);
-    } else if (i==1) {
+    } else if (i == 1) {
       bootPulse(NULL, true);
       bootPulse("Resetting zones:", false);
       update_commod_index();
     }
 
-
-    vlogf(LOG_MISC, format("Performing boot-time reset of %s (rooms %d-%d).") % zone_table[i].name % d % e);
+    vlogf(LOG_MISC, format("Performing boot-time reset of %s (rooms %d-%d).") %
+                      zone_table[i].name % d % e);
     zone_table[i].resetZone(TRUE);
 
     // stagger reset times
     zone_table[i].age = ::number(0, zone_table[i].lifespan);
 
-    if (i%10 == 0)
+    if (i % 10 == 0)
       bootPulse(".", false);
   }
   bootPulse(NULL, true);
 
-  vlogf(LOG_MISC, format("Boot timing: zones and shop rent: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC, format("Boot timing: zones and shop rent: %.2f seconds") %
+                    (t.getElapsedReset()));
 
   for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
     for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-      if(mob_index[mobnum].virt <= zone_table[zone].top)
+      if (mob_index[mobnum].virt <= zone_table[zone].top)
         mob_index[mobnum].setMaxNumber(mob_index[mobnum].getNumber());
     }
   }
-
 
   bootPulse("Collecting object count statistics.");
   object_stats();
@@ -606,32 +611,29 @@ void bootDb(void)
   // after boot time object loading is minimal, so the cache isn't needed
   //  obj_cache.cache.clear();
 
-  bootPulse("Performing playerfile maintenance and data extraction:",false);
+  bootPulse("Performing playerfile maintenance and data extraction:", false);
   fixup_players();
-  
+
   bootPulse("Initializing light levels.");
   Weather::sunriseAndSunset();
 
   r_q.head = r_q.tail = 0;
 
-  vlogf(LOG_MISC, format("Boot timing: pfiles: %.2f seconds") % (t.getElapsedReset()));
+  vlogf(LOG_MISC,
+    format("Boot timing: pfiles: %.2f seconds") % (t.getElapsedReset()));
 
   db.query("commit");
   bootPulse("Boot -- DONE.");
-  bootTime=false;
+  bootTime = false;
 }
-
-
 
 // procUpdateTime
-procUpdateTime::procUpdateTime(const int &p)
-{
-  trigger_pulse=p;
-  name="procUpdateTime";
+procUpdateTime::procUpdateTime(const int& p) {
+  trigger_pulse = p;
+  name = "procUpdateTime";
 }
 
-void procUpdateTime::run(const TPulse &) const
-{
+void procUpdateTime::run(const TPulse&) const {
   return;
 #if 0
   FILE *f1;
@@ -661,47 +663,50 @@ void procUpdateTime::run(const TPulse &) const
 #endif
 }
 
-void bootWorld(void)
-{
-  int virtual_nr, num=0, tmp;
-  TRoom *rp=NULL;
+void bootWorld(void) {
+  int virtual_nr, num = 0, tmp;
+  TRoom* rp = NULL;
   TDatabase db(DB_SNEEZY), db_extras(DB_SNEEZY), db_exits(DB_SNEEZY);
-  extraDescription *new_descr;
+  extraDescription* new_descr;
 
-  memset((char *) room_db, 0, sizeof(TRoom *) * WORLD_SIZE);
+  memset((char*)room_db, 0, sizeof(TRoom*) * WORLD_SIZE);
   character_list = NULL;
 
   db.query("select * from room order by vnum asc");
-  db_exits.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit order by vnum asc");
+  db_exits.query(
+    "select vnum, direction, name, description, type, condition_flag, "
+    "lock_difficulty, weight, key_num, destination from roomexit order by vnum "
+    "asc");
   bool hasExits = db_exits.fetchRow();
   bool hasExtras = db_extras.query("select * from roomextra order by vnum asc");
   db_extras.fetchRow();
 
-  while(db.fetchRow()){
-    virtual_nr=convertTo<int>(db["vnum"]);
+  while (db.fetchRow()) {
+    virtual_nr = convertTo<int>(db["vnum"]);
 
-    if (virtual_nr/1000 > num) {
-      num = virtual_nr/1000;
-      vlogf(LOG_MISC, format("Room %ld allocated") %  (num*1000));
+    if (virtual_nr / 1000 > num) {
+      num = virtual_nr / 1000;
+      vlogf(LOG_MISC, format("Room %ld allocated") % (num * 1000));
       bootPulse(".", false);
-    } 
+    }
     allocate_room(virtual_nr);
     rp = real_roomp(virtual_nr);
-
 
     rp->setXCoord(convertTo<int>(db["x"]));
     rp->setYCoord(convertTo<int>(db["y"]));
     rp->setZCoord(convertTo<int>(db["z"]));
-    rp->name=db["name"];
+    rp->name = db["name"];
     rp->setDescr(db["description"]);
 
     if (!zone_table.empty()) {
       //      fscanf(fl, " %*d ");  // this is the "zone" value - unused?
       unsigned int z;
-      for (z = 0; rp->number>zone_table[z].top && z<zone_table.size(); z++);
+      for (z = 0; rp->number > zone_table[z].top && z < zone_table.size(); z++)
+        ;
 
       if (z >= zone_table.size()) {
-        vlogf(LOG_EDIT, format("Room %d is outside of any zone.\n") % rp->number);
+        vlogf(LOG_EDIT,
+          format("Room %d is outside of any zone.\n") % rp->number);
         exit(0);
       }
       rp->setZoneNum(z);
@@ -713,7 +718,7 @@ void bootWorld(void)
     rp->setTeleTime(convertTo<int>(db["teleTime"]));
     rp->setTeleTarg(convertTo<int>(db["teleTarg"]));
     rp->setTeleLook(convertTo<int>(db["teleLook"]));
-    
+
     rp->setRiverSpeed(convertTo<int>(db["river_speed"]));
     rp->setRiverDir(mapFileToDir(convertTo<int>(db["river_dir"])));
     rp->setMoblim(convertTo<int>(db["capacity"]));
@@ -730,16 +735,16 @@ void bootWorld(void)
     while (hasExtras && convertTo<int>(db_extras["vnum"]) < rp->number)
       hasExtras = db_extras.fetchRow();
 
-    while(hasExtras && convertTo<int>(db_extras["vnum"]) == rp->number){
+    while (hasExtras && convertTo<int>(db_extras["vnum"]) == rp->number) {
       new_descr = new extraDescription();
       new_descr->keyword = db_extras["name"];
       if (new_descr->keyword.empty())
-        vlogf(LOG_EDIT, format("No keyword in room %d\n") %  rp->number);
-      
+        vlogf(LOG_EDIT, format("No keyword in room %d\n") % rp->number);
+
       new_descr->description = db_extras["description"];
       if (new_descr->description.empty())
-        vlogf(LOG_LOW, format("No desc in room %d\n") %  rp->number);
-      
+        vlogf(LOG_LOW, format("No desc in room %d\n") % rp->number);
+
       new_descr->next = rp->ex_description;
       rp->ex_description = new_descr;
 
@@ -754,51 +759,51 @@ void bootWorld(void)
     while (hasExits && convertTo<int>(db_exits[0]) < rp->number)
       hasExits = db_exits.fetchRow();
 
-
-    while (hasExits && convertTo<int>(db_exits[0]) == rp->number){
-      dir=mapFileToDir(convertTo<int>(db_exits[1]));
+    while (hasExits && convertTo<int>(db_exits[0]) == rp->number) {
+      dir = mapFileToDir(convertTo<int>(db_exits[1]));
 
       rp->dir_option[dir] = new roomDirData();
 
-      if(!db_exits[2].empty())
+      if (!db_exits[2].empty())
         rp->dir_option[dir]->keyword = db_exits[2];
       else
         rp->dir_option[dir]->keyword = NULL;
 
-      if(!db_exits[3].empty())
+      if (!db_exits[3].empty())
         rp->dir_option[dir]->description = db_exits[3];
       else
         rp->dir_option[dir]->description = NULL;
 
-      tmp=convertTo<int>(db_exits[4]);
+      tmp = convertTo<int>(db_exits[4]);
       if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
-        vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") % 
-            tmp % rp->number % dir);
+        vlogf(LOG_LOW, format("bogus door type (%d) in room (%d) dir %d.") %
+                         tmp % rp->number % dir);
         return;
       }
       rp->dir_option[dir]->door_type = doorTypeT(tmp);
-      if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()){
-        vlogf(LOG_LOW,format("door with no name in room %d") % rp->number);
+      if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()) {
+        vlogf(LOG_LOW, format("door with no name in room %d") % rp->number);
       }
 
       rp->dir_option[dir]->condition = convertTo<int>(db_exits[5]);
-      rp->dir_option[dir]->lock_difficulty= convertTo<int>(db_exits[6]);
-      rp->dir_option[dir]->weight= convertTo<int>(db_exits[7]);
+      rp->dir_option[dir]->lock_difficulty = convertTo<int>(db_exits[6]);
+      rp->dir_option[dir]->weight = convertTo<int>(db_exits[7]);
       rp->dir_option[dir]->key = convertTo<int>(db_exits[8]);
 
       rp->dir_option[dir]->to_room = convertTo<int>(db_exits[9]);
 
-      if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) && 
+      if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) &&
           canSeeThruDoor(rp->dir_option[dir])) {
-        if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)){
-          //vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
+        if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)) {
+          // vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room
+          // % dir);
         } else
-          vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") % 
-              rp->number % dir);
+          vlogf(LOG_LOW,
+            format("Secret door saved as open. (%d, %d)") % rp->number % dir);
       }
       hasExits = db_exits.fetchRow();
     }
-    
+
     roomCount++;
 
 #if 0
@@ -813,31 +818,31 @@ void bootWorld(void)
       continue;
 
     if (rp->isRoomFlag(ROOM_PEACEFUL) && !rp->isRoomFlag(ROOM_NO_HEAL))
-      vlogf(LOG_LOW, format("%s room %d set peaceful && !no_heal (bit: %d)") % 
-                rp->name %rp->number % ROOM_NO_HEAL);
+      vlogf(LOG_LOW, format("%s room %d set peaceful && !no_heal (bit: %d)") %
+                       rp->name % rp->number % ROOM_NO_HEAL);
     if (rp->isRoomFlag(ROOM_PEACEFUL) && !rp->isRoomFlag(ROOM_NO_STEAL))
-      vlogf(LOG_LOW, format("%s room %d set peaceful && !no_steal (bit: %d)") % 
-                rp->name %rp->number % ROOM_NO_STEAL);
+      vlogf(LOG_LOW, format("%s room %d set peaceful && !no_steal (bit: %d)") %
+                       rp->name % rp->number % ROOM_NO_STEAL);
     if (rp->isRoomFlag(ROOM_PEACEFUL) && !rp->isRoomFlag(ROOM_NO_MAGIC))
-      vlogf(LOG_LOW, format("%s room %d set PEACEFUL && !no_magic (bit: %d)") % 
-                rp->name %rp->number % ROOM_NO_MAGIC);
+      vlogf(LOG_LOW, format("%s room %d set PEACEFUL && !no_magic (bit: %d)") %
+                       rp->name % rp->number % ROOM_NO_MAGIC);
     if (rp->isRoomFlag(ROOM_NO_HEAL) && rp->isRoomFlag(ROOM_HOSPITAL))
-      vlogf(LOG_LOW, format("%s room %d set NO_HEAL(%d) and HOSPITAL(%d)") % 
-                rp->name %rp->number % ROOM_NO_HEAL % ROOM_HOSPITAL);
+      vlogf(LOG_LOW, format("%s room %d set NO_HEAL(%d) and HOSPITAL(%d)") %
+                       rp->name % rp->number % ROOM_NO_HEAL % ROOM_HOSPITAL);
 
     if (rp->isIndoorSector() && !rp->isRoomFlag(ROOM_INDOORS)) {
       // in general, this is an error
       // of course you could have a bldg whose roof has collapsed...
       if (rp->number != 27349)
-        vlogf(LOG_LOW,format("%s room %d set building & !indoor") % 
-                rp->name %rp->number);
+        vlogf(LOG_LOW,
+          format("%s room %d set building & !indoor") % rp->name % rp->number);
     }
     if (rp->isRoomFlag(ROOM_INDOORS) && rp->getRoomHeight() <= 0)
-      vlogf(LOG_LOW,format("%s indoor room %d set with unlimited height") % 
-                rp->name %rp->number);
+      vlogf(LOG_LOW, format("%s indoor room %d set with unlimited height") %
+                       rp->name % rp->number);
     if (!rp->isRoomFlag(ROOM_INDOORS) && rp->getRoomHeight() >= 0)
-      vlogf(LOG_LOW,format("%s outdoor room %d set with limited height") % 
-                rp->name %rp->number);
+      vlogf(LOG_LOW, format("%s outdoor room %d set with limited height") %
+                       rp->name % rp->number);
 
 #if 0
     if ((rp->getRoomHeight() >= 0) && rp->isFallSector())
@@ -847,21 +852,19 @@ void bootWorld(void)
   }
 }
 
-
-void TRoom::colorRoom(int title, int full)
-{
+void TRoom::colorRoom(int title, int full) {
   int len, place = 0, letter;
   sstring buf, argument, buf2, buf3;
 
   if (title == 1) {
-    argument=name;
+    argument = name;
   } else if (title == 2) {
-    argument=getDescr();
+    argument = getDescr();
   } else {
     return;
   }
-// Found had to initialize with this logic and too tired to figure out why
-  buf3="<z>";
+  // Found had to initialize with this logic and too tired to figure out why
+  buf3 = "<z>";
 
   switch (getSectorType()) {
     case SECT_SUBARCTIC:
@@ -1079,7 +1082,7 @@ void TRoom::colorRoom(int title, int full)
       buf2 = "<p>";
       break;
   }
-  buf="";
+  buf = "";
   if (title == 1) {
     if (!buf2.empty()) {
       buf = buf2;
@@ -1093,10 +1096,10 @@ void TRoom::colorRoom(int title, int full)
   }
 
   len = argument.length();
-  for(letter=0; letter <= len; letter++, place++) {
+  for (letter = 0; letter <= len; letter++, place++) {
     if (letter < 2) {
       buf[place] = argument[letter];
-      continue; 
+      continue;
     }
     if ((argument[letter] == '>') && (argument[letter - 2] == '<')) {
       switch (argument[(letter - 1)]) {
@@ -1107,12 +1110,12 @@ void TRoom::colorRoom(int title, int full)
           if (title == 1) {
             if (!buf2.empty()) {
               buf += buf2;
-              place +=3;
+              place += 3;
             }
           } else if (title == 2) {
             if (!buf3.empty()) {
               buf += buf3;
-              place +=3;
+              place += 3;
             }
           } else {
           }
@@ -1126,7 +1129,6 @@ void TRoom::colorRoom(int title, int full)
     }
   }
 
-
   buf += "<1>";
   if (title == 1) {
     name = buf;
@@ -1135,22 +1137,19 @@ void TRoom::colorRoom(int title, int full)
   }
 }
 
-void allocate_room(int room_number)
-{
+void allocate_room(int room_number) {
   if (room_number > top_of_world)
     top_of_world = room_number;
 
   room_find_or_create(room_number);
 }
 
-
-void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
-{
+void setup_dir(FILE* fl, int room, dirTypeT dir, TRoom* tRoom) {
   int tmp;
-  TRoom *rp;
+  TRoom* rp;
 
   if (!(rp = real_roomp(room)) && !(rp = tRoom)) {
-    vlogf(LOG_MISC, format("Setup_dir called with bad room number %d") %  room);
+    vlogf(LOG_MISC, format("Setup_dir called with bad room number %d") % room);
     return;
   }
   rp->dir_option[dir] = new roomDirData();
@@ -1158,171 +1157,168 @@ void setup_dir(FILE * fl, int room, dirTypeT dir, TRoom *tRoom)
   rp->dir_option[dir]->description = fread_string(fl);
   rp->dir_option[dir]->keyword = fread_string(fl);
 
-  if(fscanf(fl, " %d ", &tmp)==EOF)
+  if (fscanf(fl, " %d ", &tmp) == EOF)
     vlogf(LOG_FILE, "Unexpected read error in setup_dir");
   if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
-    vlogf(LOG_LOW,format("bogus door type (%d) in room (%d) dir %d.") % 
-        tmp % room % dir);
+    vlogf(LOG_LOW,
+      format("bogus door type (%d) in room (%d) dir %d.") % tmp % room % dir);
     return;
   }
   rp->dir_option[dir]->door_type = doorTypeT(tmp);
-  if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()){
-    vlogf(LOG_LOW,format("door with no name in room %d") % room);
+  if ((tmp != DOOR_NONE) && rp->dir_option[dir]->keyword.empty()) {
+    vlogf(LOG_LOW, format("door with no name in room %d") % room);
   }
 
-  if(fscanf(fl, " %d ", &tmp)==EOF)
+  if (fscanf(fl, " %d ", &tmp) == EOF)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->condition = tmp;
-  if(fscanf(fl, " %d ", &tmp)==EOF)
+  if (fscanf(fl, " %d ", &tmp) == EOF)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
-  rp->dir_option[dir]->lock_difficulty= tmp;
-  if(fscanf(fl, " %d ", &tmp)==EOF)
+  rp->dir_option[dir]->lock_difficulty = tmp;
+  if (fscanf(fl, " %d ", &tmp) == EOF)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
-  rp->dir_option[dir]->weight= tmp;
-  if(fscanf(fl, " %d ", &tmp)==EOF)
+  rp->dir_option[dir]->weight = tmp;
+  if (fscanf(fl, " %d ", &tmp) == EOF)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->key = tmp;
 
-  if(fscanf(fl, " %d ", &tmp)==EOF)
+  if (fscanf(fl, " %d ", &tmp) == EOF)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
   rp->dir_option[dir]->to_room = tmp;
 
-  if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) && 
+  if (IS_SET(rp->dir_option[dir]->condition, EXIT_SECRET) &&
       canSeeThruDoor(rp->dir_option[dir])) {
-    if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)){
-      //      vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") %  room % dir);
+    if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED)) {
+      //      vlogf(LOG_LOW, format("See thru door set secret. (%d, %d)") % room
+      //      % dir);
     } else
-      vlogf(LOG_LOW, format("Secret door saved as open. (%d, %d)") %  room % dir);
+      vlogf(LOG_LOW,
+        format("Secret door saved as open. (%d, %d)") % room % dir);
   }
-
-
 }
 
-
-void zoneData::logError(char ch, const char *type, int cmd, int value)
-{
-  vlogf(LOG_LOW, format("zone %s cmd %d (%c) resolving %s number (%d)") % 
-      name % cmd % ch % type % value);
+void zoneData::logError(char ch, const char* type, int cmd, int value) {
+  vlogf(LOG_LOW, format("zone %s cmd %d (%c) resolving %s number (%d)") % name %
+                   cmd % ch % type % value);
 }
 
-void zoneData::renumCmd(void)
-{
+void zoneData::renumCmd(void) {
   int comm;
   int value;
 
   // init the zone_value array
-  if(Config::NukeInactiveMobs())
+  if (Config::NukeInactiveMobs())
     zone_value = ((zone_nr <= 1) ? -1 : 0);
   else
     zone_value = -1;
-  
+
   // clear the stat reporting maps
   stat_mobs.clear();
   stat_objs.clear();
   int argbuf;
-  
+
   std::vector<resetCom> clean_cmd_table;
   clean_cmd_table.reserve(cmd_table.size());
 
   for (comm = 0; cmd_table[comm].command != 'S'; comm++) {
-    resetCom *rs = &cmd_table[comm];
+    resetCom* rs = &cmd_table[comm];
     switch (rs->command) {
       case 'A':
         if (rs->arg1 < 0 || rs->arg1 >= WORLD_SIZE) {
-          logError('A', "room 1",comm, rs->arg1);
+          logError('A', "room 1", comm, rs->arg1);
           continue;
         }
         if (rs->arg2 < 0 || rs->arg2 >= WORLD_SIZE) {
-          logError('A', "room 2",comm, rs->arg2);
+          logError('A', "room 2", comm, rs->arg2);
           continue;
         }
         if (rs->arg2 <= rs->arg1) {
-          logError('A', "no overlap",comm, rs->arg2);
+          logError('A', "no overlap", comm, rs->arg2);
           continue;
         }
         break;
       case 'C':
         rs->arg1 = real_mobile(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('C', "mobile",comm, value);
+          logError('C', "mobile", comm, value);
           continue;
         } else {
-            ++stat_mobs[rs->arg1];
+          ++stat_mobs[rs->arg1];
         }
         if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
-          logError('C', "room",comm, rs->arg3);
+          logError('C', "room", comm, rs->arg3);
           continue;
         }
         break;
       case 'K':
         rs->arg1 = real_mobile(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('K', "mobile",comm, value);
+          logError('K', "mobile", comm, value);
           continue;
         } else {
           ++stat_mobs[rs->arg1];
         }
         if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
-          logError('K', "room",comm, rs->arg3);
+          logError('K', "room", comm, rs->arg3);
           continue;
         }
         break;
       case 'M':
         rs->arg1 = real_mobile(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('M', "mobile",comm, value);
+          logError('M', "mobile", comm, value);
           continue;
         } else {
           ++stat_mobs[rs->arg1];
         }
         if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
-          logError('M', "room",comm, rs->arg3);
+          logError('M', "room", comm, rs->arg3);
           continue;
         }
         break;
       case 'R':
         rs->arg1 = real_mobile(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('R', "mobile",comm, value);
+          logError('R', "mobile", comm, value);
           continue;
         } else {
           ++stat_mobs[rs->arg1];
         }
         if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
-          logError('R', "room",comm, rs->arg3);
+          logError('R', "room", comm, rs->arg3);
           continue;
         }
         break;
       case 'O':
         rs->arg1 = real_object(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('O', "object",comm, value);
+          logError('O', "object", comm, value);
           continue;
         } else {
           ++stat_objs[rs->arg1];
         }
         if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
-          logError('O', "room",comm, rs->arg3);
+          logError('O', "room", comm, rs->arg3);
           continue;
         }
         break;
       case 'G':
         rs->arg1 = real_object(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('G', "object",comm, value);
+          logError('G', "object", comm, value);
           continue;
         } else {
           ++stat_objs[rs->arg1];
         }
         break;
-      case 'X': // X <set num> <slot> <vnum>
+      case 'X':  // X <set num> <slot> <vnum>
         if (rs->arg3 < 0 || rs->arg3 > 15) {
-          logError('X', "macro",comm, rs->arg2);
+          logError('X', "macro", comm, rs->arg2);
           continue;
         }
         rs->arg1 = mapFileToSlot(value = rs->arg1);
         if (rs->arg1 < MIN_WEAR || rs->arg1 >= MAX_WEAR) {
-          logError('X', "bogus slot",comm, value);
+          logError('X', "bogus slot", comm, value);
           continue;
         }
         argbuf = real_object(value = rs->arg2);
@@ -1330,83 +1326,83 @@ void zoneData::renumCmd(void)
         if (argbuf >= 0)
           ++stat_objs[argbuf];
         break;
-      case 'Z': // Z <if flag> <set num> <perc chance>
+      case 'Z':  // Z <if flag> <set num> <perc chance>
         if (rs->arg1 < 0 || rs->arg1 > 15) {
-          logError('Z', "macro",comm, rs->arg3);
+          logError('Z', "macro", comm, rs->arg3);
           continue;
         }
         if (rs->arg2 <= 0 || rs->arg2 > 100) {
-          logError('Z', "percent",comm, rs->arg2);
+          logError('Z', "percent", comm, rs->arg2);
           continue;
         }
         break;
         // Add one for each suit load ..loadset
       case 'Y':
-        if (rs->arg1 <= 0 || rs->arg1 > (signed) suitSets.suits.size()) {
-          logError('Y', "macro",comm, rs->arg1);
+        if (rs->arg1 <= 0 || rs->arg1 > (signed)suitSets.suits.size()) {
+          logError('Y', "macro", comm, rs->arg1);
           continue;
         }
         if (rs->arg2 <= 0 || rs->arg2 > 100) {
-          logError('Y', "percent",comm, rs->arg2);
+          logError('Y', "percent", comm, rs->arg2);
           continue;
         }
         break;
       case 'E':
         rs->arg1 = real_object(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('E', "object",comm, value);
+          logError('E', "object", comm, value);
           continue;
         } else {
           ++stat_objs[rs->arg1];
         }
-        rs->arg3 = mapFileToSlot(value = rs->arg3); 
+        rs->arg3 = mapFileToSlot(value = rs->arg3);
         if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR) {
-          logError('E', "bogus slot",comm, value);
+          logError('E', "bogus slot", comm, value);
           continue;
         }
         break;
       case 'P':
         rs->arg1 = real_object(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('P', "object",comm, value);
+          logError('P', "object", comm, value);
           continue;
         } else {
           ++stat_objs[rs->arg1];
         }
         rs->arg3 = real_object(rs->arg3);
         if (rs->arg3 < 0) {
-          logError('P', "container",comm, rs->arg3);
+          logError('P', "container", comm, rs->arg3);
           continue;
         }
         break;
       case 'D':
         if (rs->arg1 < 0) {
-          logError('D', "room",comm, rs->arg1);
+          logError('D', "room", comm, rs->arg1);
           continue;
         }
         break;
       case 'B':
         rs->arg1 = real_object(value = rs->arg1);
         if (rs->arg1 < 0) {
-          logError('B', "object",comm, value);
+          logError('B', "object", comm, value);
           continue;
         } else {
           ++stat_objs[rs->arg1];
         }
         if (rs->arg3 < 0 && rs->arg3 != ZONE_ROOM_RANDOM) {
-          logError('B', "room",comm, rs->arg3);
+          logError('B', "room", comm, rs->arg3);
           continue;
         }
         break;
       case 'H':
         if (rs->arg1 < MIN_HATE || rs->arg1 >= MAX_HATE) {
-          logError('H', "hate",comm, rs->arg1);
+          logError('H', "hate", comm, rs->arg1);
           rs->arg1 = MIN_HATE;
         }
         break;
       case 'F':
         if (rs->arg1 < MIN_HATE || rs->arg1 >= MAX_HATE) {
-          logError('F', "fear",comm, rs->arg1);
+          logError('F', "fear", comm, rs->arg1);
           rs->arg1 = MIN_HATE;
         }
         break;
@@ -1414,40 +1410,38 @@ void zoneData::renumCmd(void)
     clean_cmd_table.push_back(*rs);
   }
   cmd_table.swap(clean_cmd_table);
-  
+
   // set the object and mob tallies in zoneData
-  std::map<int,int>::iterator iter;
+  std::map<int, int>::iterator iter;
   stat_mobs_total = 0;
   stat_mobs_unique = 0;
-  for (iter = stat_mobs.begin(); iter != stat_mobs.end(); iter++ ) {
+  for (iter = stat_mobs.begin(); iter != stat_mobs.end(); iter++) {
     ++stat_mobs_unique;
     stat_mobs_total += iter->second;
   }
   stat_objs_unique = 0;
-  for (iter = stat_objs.begin(); iter != stat_objs.end(); iter++ ) {
+  for (iter = stat_objs.begin(); iter != stat_objs.end(); iter++) {
     ++stat_objs_unique;
   }
 }
 
-void TBeing::doBoot(const sstring &arg)
-{
-  int z=0;
-  TThing *t;
-  TMonster *mob;
-  TObj *obj;
-  bool found=true;
+void TBeing::doBoot(const sstring& arg) {
+  int z = 0;
+  TThing* t;
+  TMonster* mob;
+  TObj* obj;
+  bool found = true;
 
+  if (arg.word(0) == "zone")
+    z = convertTo<int>(arg.word(1));
 
-  if(arg.word(0)=="zone")
-    z=convertTo<int>(arg.word(1));
-
-  if(!z){
+  if (!z) {
     sendTo("Usage: boot zone <zone_nr>\n\r");
     return;
   }
 
   // reset allows global use
-  if(!hasWizPower(POWER_RESET)){
+  if (!hasWizPower(POWER_RESET)) {
     // otherwise they need zonefile power and to be resetting their zone
     if (!hasWizPower(POWER_ZONEFILE_UTILITY)) {
       sendTo("You have not been given this power yet.\n\r");
@@ -1455,18 +1449,17 @@ void TBeing::doBoot(const sstring &arg)
     }
 
     // ok, check if they're resetting their zone
-    if((desc->blockastart != zone_table[z].bottom
-        || desc->blockaend != zone_table[z].top)
-        && (desc->blockbstart != zone_table[z].bottom
-        || desc->blockbend != zone_table[z].top)){
+    if ((desc->blockastart != zone_table[z].bottom ||
+          desc->blockaend != zone_table[z].top) &&
+        (desc->blockbstart != zone_table[z].bottom ||
+          desc->blockbend != zone_table[z].top)) {
       sendTo("You can only boot your own zones.\n\r");
-      return;      
+      return;
     }
   }
 
-
-  sendTo(format("Rebooting zone %s (%i) (rooms %i-%i)\n\r")
-      % zone_table[z].name % z % zone_table[z].bottom % zone_table[z].top);
+  sendTo(format("Rebooting zone %s (%i) (rooms %i-%i)\n\r") %
+         zone_table[z].name % z % zone_table[z].bottom % zone_table[z].top);
 
   sendTo("Reloading zonefile.\n\r");
   zone_table[z].bootZone(zone_table[z].bottom);
@@ -1474,23 +1467,24 @@ void TBeing::doBoot(const sstring &arg)
   zone_table[z].renumCmd();
 
   sendTo("Purging mobs and objects in zone.\n\r");
-  while(found){
-    found=false;
-    for(int r=zone_table[z].bottom;r<=zone_table[z].top;++r){
-      if(real_roomp(r)){
-        for(StuffIter it=real_roomp(r)->stuff.begin();it!=real_roomp(r)->stuff.end();){
-          t=*(it++);
-          
-          if((obj=dynamic_cast<TObj *>(t))){
-            if(obj->objVnum() >= zone_table[z].bottom ||
-               obj->objVnum() <= zone_table[z].top){
-              found=true;
+  while (found) {
+    found = false;
+    for (int r = zone_table[z].bottom; r <= zone_table[z].top; ++r) {
+      if (real_roomp(r)) {
+        for (StuffIter it = real_roomp(r)->stuff.begin();
+             it != real_roomp(r)->stuff.end();) {
+          t = *(it++);
+
+          if ((obj = dynamic_cast<TObj*>(t))) {
+            if (obj->objVnum() >= zone_table[z].bottom ||
+                obj->objVnum() <= zone_table[z].top) {
+              found = true;
               delete obj;
             }
-          } else if((mob=dynamic_cast<TMonster *>(t))){
-            if(mob->mobVnum() >= zone_table[z].bottom ||
-               mob->mobVnum() <= zone_table[z].top){
-              found=true;
+          } else if ((mob = dynamic_cast<TMonster*>(t))) {
+            if (mob->mobVnum() >= zone_table[z].bottom ||
+                mob->mobVnum() <= zone_table[z].top) {
+              found = true;
               delete mob;
             }
           }
@@ -1500,29 +1494,25 @@ void TBeing::doBoot(const sstring &arg)
   }
 
   sendTo("Boottime resetting zone.\n\r");
-  bool enabled=zone_table[z].enabled;
-  zone_table[z].enabled=true;
+  bool enabled = zone_table[z].enabled;
+  zone_table[z].enabled = true;
   zone_table[z].resetZone(true);
-  zone_table[z].enabled=enabled;
+  zone_table[z].enabled = enabled;
 }
 
-
-
-
-bool zoneData::bootZone(int zone_nr)
-{
+bool zoneData::bootZone(int zone_nr) {
   int tmp;
   char buf[256];
   int i1 = 0, i2, i3, i4;
   int rc;
-  FILE *fl=fopen(((sstring)(format("zonefiles/%i") % zone_nr)).c_str(), "r");
+  FILE* fl = fopen(((sstring)(format("zonefiles/%i") % zone_nr)).c_str(), "r");
 
   if (!fl) {
     perror("bootZone");
     return false;
   }
 
-  if(fscanf(fl, " #%d\n", &bottom)==EOF)
+  if (fscanf(fl, " #%d\n", &bottom) == EOF)
     vlogf(LOG_FILE, "Unexpected read error in bootZone");
   name = fread_string(fl);
 
@@ -1533,7 +1523,7 @@ bool zoneData::bootZone(int zone_nr)
     reset_mode = i3;
     enabled = i4;
     age = 0;
-  } else { 
+  } else {
     vlogf(LOG_LOW, format("Bad zone format for zone %d (%s)") % zone_nr % name);
     return false;
   }
@@ -1542,47 +1532,43 @@ bool zoneData::bootZone(int zone_nr)
 
   for (;;) {
     resetCom rs;
-    
-    if(fscanf(fl, " ")==EOF)
+
+    if (fscanf(fl, " ") == EOF)
       vlogf(LOG_FILE, "Unexpected read error in bootZone");
-    if(fscanf(fl, "%c", &rs.command)==EOF)
+    if (fscanf(fl, "%c", &rs.command) == EOF)
       vlogf(LOG_FILE, "Unexpected read error in bootZone");
-    
+
     if (rs.command == 'S') {
       cmd_table.push_back(rs);
       break;
     }
 
     if (rs.command == '*' || gamePort == Config::Port::GAMMA) {
-      if(!fgets(buf, 255, fl))
-	vlogf(LOG_FILE, "Unexpected read error in bootZone");
+      if (!fgets(buf, 255, fl))
+        vlogf(LOG_FILE, "Unexpected read error in bootZone");
       continue;
     }
 
-
     int numc = fscanf(fl, " %d %d %d", &tmp, &rs.arg1, &rs.arg2);
     if (numc != 3)
-      vlogf(LOG_LOW,format("command %u ('%c') in %s missing some of first three args [%d : %d %d %d]") % 
-          cmd_table.size() %
-          rs.command %
-          name %
-          numc %
-          (numc >= 1 ? tmp : -99) %
-          (numc >= 2 ? rs.arg1 : -99) %
-          (numc >= 3 ? rs.arg2 : -99));
+      vlogf(LOG_LOW, format("command %u ('%c') in %s missing some of first "
+                            "three args [%d : %d %d %d]") %
+                       cmd_table.size() % rs.command % name % numc %
+                       (numc >= 1 ? tmp : -99) % (numc >= 2 ? rs.arg1 : -99) %
+                       (numc >= 3 ? rs.arg2 : -99));
 
-    if(rs.command=='X')
+    if (rs.command == 'X')
       rs.arg3 = tmp;
     else
       rs.if_flag = tmp;
-      
+
     switch (rs.command) {
       case 'G':
       case 'P':
       case 'E':
         if (!rs.if_flag) {
-          vlogf(LOG_LOW,format("command %u in %s has bogus if_flag") % 
-          cmd_table.size() %name);
+          vlogf(LOG_LOW, format("command %u in %s has bogus if_flag") %
+                           cmd_table.size() % name);
           continue;
         }
         break;
@@ -1590,40 +1576,32 @@ bool zoneData::bootZone(int zone_nr)
         break;
     }
 
-    if (rs.command == 'M' ||
-        rs.command == 'O' ||
-        rs.command == 'B' ||
-        rs.command == 'C' ||
-        rs.command == 'K' ||
-        rs.command == 'E' ||
-        rs.command == 'P' ||
-        (rs.command == 'T' && !rs.if_flag) ||
-        rs.command == 'R' ||
-        rs.command == 'D' ||
-        rs.command == 'L')
+    if (rs.command == 'M' || rs.command == 'O' || rs.command == 'B' ||
+        rs.command == 'C' || rs.command == 'K' || rs.command == 'E' ||
+        rs.command == 'P' || (rs.command == 'T' && !rs.if_flag) ||
+        rs.command == 'R' || rs.command == 'D' || rs.command == 'L')
       if ((rc = fscanf(fl, " %d", &rs.arg3)) != 1)
-        vlogf(LOG_LOW,format("command %u ('%c') in %s missing arg3 (rc=%d)") % 
-            cmd_table.size() %
-            rs.command %
-            name % rc);
+        vlogf(LOG_LOW, format("command %u ('%c') in %s missing arg3 (rc=%d)") %
+                         cmd_table.size() % rs.command % name % rc);
 
     if (rs.command == '?')
       if (fscanf(fl, " %c", &rs.character) != 1)
-        vlogf(LOG_LOW,format("command %u ('?') in %s missing character") % cmd_table.size() %name);
+        vlogf(LOG_LOW, format("command %u ('?') in %s missing character") %
+                         cmd_table.size() % name);
 
-    if (rs.command == 'T' && !rs.if_flag) 
+    if (rs.command == 'T' && !rs.if_flag)
       if (fscanf(fl, " %d", &rs.arg4) != 1)
-        vlogf(LOG_LOW,format("command %u ('T') in %s missing arg4") % 
-            cmd_table.size() % name);
+        vlogf(LOG_LOW, format("command %u ('T') in %s missing arg4") %
+                         cmd_table.size() % name);
 
     if (rs.command == 'L')
       if (fscanf(fl, " %d", &rs.arg4) != 1)
-        vlogf(LOG_LOW, format("command %u ('L') in %s missing arg4") % 
-            cmd_table.size() % name);
-    
+        vlogf(LOG_LOW, format("command %u ('L') in %s missing arg4") %
+                         cmd_table.size() % name);
+
     cmd_table.push_back(rs);
 
-    if(!fgets(buf, 255, fl))
+    if (!fgets(buf, 255, fl))
       vlogf(LOG_FILE, "Unexpected read error in bootZone");
   }
 
@@ -1632,69 +1610,72 @@ bool zoneData::bootZone(int zone_nr)
   return true;
 }
 
-void bootOneZone(TDatabase& db, int zoneStart, int& zon)
-{
+void bootOneZone(TDatabase& db, int zoneStart, int& zon) {
   zoneData zd;
   if (zd.bootZone(zoneStart)) {
     zd.renumCmd();
     vlogf(LOG_MISC, format("booting zone %d") % zon);
-    zd.zone_nr=zon++;
-    // note that a zone's zone_nr may change over time if a new zone is inserted before it
-    // so update all records in the zone table
-    db.query("update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = %i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i", zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan, zd.zone_nr);
+    zd.zone_nr = zon++;
+    // note that a zone's zone_nr may change over time if a new zone is inserted
+    // before it so update all records in the zone table
+    db.query(
+      "update zone set zone_name = '%s', zone_enabled = %i, bottom = %i, top = "
+      "%i, reset_mode = %i, lifespan = %i, util_flag = 1 where zone_nr = %i",
+      zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode,
+      zd.lifespan, zd.zone_nr);
     if (db.rowCount() == 0) {
       // unsuccessful update, do an insert
-      db.query("insert into zone (zone_nr, zone_name, zone_enabled, bottom, top, reset_mode, lifespan, util_flag) values (%i, '%s', %i, %i, %i, %i, %i, 1)", zd.zone_nr, zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top, zd.reset_mode, zd.lifespan);
+      db.query(
+        "insert into zone (zone_nr, zone_name, zone_enabled, bottom, top, "
+        "reset_mode, lifespan, util_flag) values (%i, '%s', %i, %i, %i, %i, "
+        "%i, 1)",
+        zd.zone_nr, zd.name.c_str(), (zd.enabled ? 1 : 0), zd.bottom, zd.top,
+        zd.reset_mode, zd.lifespan);
     }
     zone_table.push_back(zd);
   }
 }
 
-void bootZones(void)
-{
-  DIR *dfd;
-  struct dirent *dp;
-  int zon=0, tmp;
-  std::multimap <int, sstring, std::less<int> > files;
-  std::multimap <int, sstring, std::less<int> >::iterator it;
+void bootZones(void) {
+  DIR* dfd;
+  struct dirent* dp;
+  int zon = 0, tmp;
+  std::multimap<int, sstring, std::less<int>> files;
+  std::multimap<int, sstring, std::less<int>>::iterator it;
   TDatabase db(DB_SNEEZY);
-  
-  if(!(dfd=opendir("zonefiles"))){
+
+  if (!(dfd = opendir("zonefiles"))) {
     vlogf(LOG_BUG, "couldn't open zonefiles directory");
     perror("bootZones");
     exit(0);
   }
-  
+
   while ((dp = readdir(dfd))) {
-    if(!strcmp(dp->d_name, ".") ||
-       !strcmp(dp->d_name, ".."))
+    if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
 
-    tmp=convertTo<int>(dp->d_name);
+    tmp = convertTo<int>(dp->d_name);
 
     // convertTo returns 0 on failure, so this means some random file
     // in the zonefiles directory.  Just ignore it.
-    if(tmp==0 && strcmp(dp->d_name, "0"))
+    if (tmp == 0 && strcmp(dp->d_name, "0"))
       continue;
 
-    files.insert(std::pair<int,sstring>(tmp, dp->d_name));
+    files.insert(std::pair<int, sstring>(tmp, dp->d_name));
   }
-  
+
   db.query("update zone set util_flag = 0");
-  for(it=files.begin();it!=files.end();++it){
+  for (it = files.begin(); it != files.end(); ++it) {
     bootOneZone(db, it->first, zon);
   }
-  // trim off any extra entries (zones have been removed since last boot, presumably)
+  // trim off any extra entries (zones have been removed since last boot,
+  // presumably)
   db.query("delete from zone where util_flag = 0");
 }
 
-
-
-
-TMonster *read_mobile(int nr, readFileTypeT type)
-{
-  int i, rc, virt=nr;
-  TMonster *mob = NULL;
+TMonster* read_mobile(int nr, readFileTypeT type) {
+  int i, rc, virt = nr;
+  TMonster* mob = NULL;
 
   i = nr;
 
@@ -1705,7 +1686,7 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   }
 
   if (nr < 0) {
-    vlogf(LOG_FILE, format("Mobile (V) %d does not exist in database.") %  i);
+    vlogf(LOG_FILE, format("Mobile (V) %d does not exist in database.") % i);
     return NULL;
   }
 
@@ -1717,23 +1698,23 @@ TMonster *read_mobile(int nr, readFileTypeT type)
   }
   mob->number = nr;
 
-  // do this here to avoid the 'deleted & not found in character_list' assertion 
+  // do this here to avoid the 'deleted & not found in character_list' assertion
   // in ~TMonster if readMobFromDB fails or returns delete
   mob->next = character_list;
   character_list = mob;
-  
+
   rc = mob->readMobFromDB(virt, FALSE);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
-    vlogf(LOG_BUG, format("Mobile %d returned DELETE_THIS on init.") %  virt);
+    vlogf(LOG_BUG, format("Mobile %d returned DELETE_THIS on init.") % virt);
     delete mob;
     return NULL;
   } else if (!rc) {
-    vlogf(LOG_BUG, format("Mobile %d failed to load from database.") %  virt);
+    vlogf(LOG_BUG, format("Mobile %d failed to load from database.") % virt);
     delete mob;
     return NULL;
   }
 
-  mob->loadResponses( mob_index[nr].virt);
+  mob->loadResponses(mob_index[nr].virt);
 
   mob->setCombatMode(ATTACK_NORMAL);
 
@@ -1805,15 +1786,12 @@ TMonster *read_mobile(int nr, readFileTypeT type)
     return NULL;
   }
 
-
   return (mob);
 }
 
-
-cached_object *TObjectCache::operator[](int nr)
-{
-  std::map<int, cached_object *>::iterator tIter;
-  cached_object *ret;
+cached_object* TObjectCache::operator[](int nr) {
+  std::map<int, cached_object*>::iterator tIter;
+  cached_object* ret;
 
   tIter = cache.find(nr);
   if (tIter != cache.end()) {
@@ -1824,10 +1802,9 @@ cached_object *TObjectCache::operator[](int nr)
   return ret;
 }
 
-cached_object *TMobileCache::operator[](int nr)
-{
-  std::map<int, cached_object *>::iterator tIter;
-  cached_object *ret;
+cached_object* TMobileCache::operator[](int nr) {
+  std::map<int, cached_object*>::iterator tIter;
+  cached_object* ret;
 
   tIter = cache.find(nr);
   if (tIter != cache.end()) {
@@ -1838,191 +1815,199 @@ cached_object *TMobileCache::operator[](int nr)
   return ret;
 }
 
-
-void log_object(TObj *obj)
-{
+void log_object(TObj* obj) {
   // Don't log objects that are flagged as newbie
   if (obj->isObjStat(ITEM_NEWBIE)) {
     return;
   }
   // Don't log tools
-  if (dynamic_cast<TTool *>(obj)) {
+  if (dynamic_cast<TTool*>(obj)) {
     return;
   }
   // Don't log commodities
-  if (dynamic_cast<TCommodity *>(obj)) {
+  if (dynamic_cast<TCommodity*>(obj)) {
     return;
   }
   // Don't log treasures
-  if (dynamic_cast<TTreasure *>(obj)) {
+  if (dynamic_cast<TTreasure*>(obj)) {
     return;
   }
   // Don't log food
-  if (dynamic_cast<TFood *>(obj)) {
+  if (dynamic_cast<TFood*>(obj)) {
     return;
   }
   // Don't log other
-  if (dynamic_cast<TOtherObj *>(obj)) {
+  if (dynamic_cast<TOtherObj*>(obj)) {
     return;
   }
   // Don't log trash
-  if (dynamic_cast<TTrash *>(obj)) {
+  if (dynamic_cast<TTrash*>(obj)) {
     return;
   }
   TDatabase db(DB_SNEEZY);
-  db.query("insert into objlog (vnum, objcount) values (%i, %i)", obj_index[obj->getItemIndex()].virt, obj_index[obj->getItemIndex()].getNumber());
+  db.query("insert into objlog (vnum, objcount) values (%i, %i)",
+    obj_index[obj->getItemIndex()].virt,
+    obj_index[obj->getItemIndex()].getNumber());
 }
 
-void TObjectCache::preload()
-{
+void TObjectCache::preload() {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select vnum, short_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj");
+  db.query(
+    "select vnum, short_desc, type, action_flag, wear_flag, val0, val1, val2, "
+    "val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, "
+    "decay, volume, material, max_exist from obj");
 
-  while(db.fetchRow()){
-    cached_object *c=new cached_object;
-    c->number=real_object(convertTo<int>(db["vnum"]));
-    c->s["type"]=db["type"];
-    c->s["action_flag"]=db["action_flag"];
-    c->s["wear_flag"]=db["wear_flag"];
-    c->s["val0"]=db["val0"];
-    c->s["val1"]=db["val1"];
-    c->s["val2"]=db["val2"];
-    c->s["val3"]=db["val3"];
-    c->s["weight"]=db["weight"];
-    c->s["price"]=db["price"];
-    c->s["can_be_seen"]=db["can_be_seen"];
-    c->s["spec_proc"]=db["spec_proc"];
-    c->s["max_struct"]=db["max_struct"];
-    c->s["cur_struct"]=db["cur_struct"];
-    c->s["decay"]=db["decay"];
-    c->s["volume"]=db["volume"];
-    c->s["material"]=db["material"];
-    c->s["max_exist"]=db["max_exist"];
+  while (db.fetchRow()) {
+    cached_object* c = new cached_object;
+    c->number = real_object(convertTo<int>(db["vnum"]));
+    c->s["type"] = db["type"];
+    c->s["action_flag"] = db["action_flag"];
+    c->s["wear_flag"] = db["wear_flag"];
+    c->s["val0"] = db["val0"];
+    c->s["val1"] = db["val1"];
+    c->s["val2"] = db["val2"];
+    c->s["val3"] = db["val3"];
+    c->s["weight"] = db["weight"];
+    c->s["price"] = db["price"];
+    c->s["can_be_seen"] = db["can_be_seen"];
+    c->s["spec_proc"] = db["spec_proc"];
+    c->s["max_struct"] = db["max_struct"];
+    c->s["cur_struct"] = db["cur_struct"];
+    c->s["decay"] = db["decay"];
+    c->s["volume"] = db["volume"];
+    c->s["material"] = db["material"];
+    c->s["max_exist"] = db["max_exist"];
 
-    cache[c->number]=c;
+    cache[c->number] = c;
   }
 }
 
-void TMobileCache::preload()
-{
+void TMobileCache::preload() {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound from mob");
+  db.query(
+    "select vnum, name, short_desc, long_desc, description, actions, affects, "
+    "faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, "
+    "damage_level, damage_precision, gold, race, weight, height, str, bra, "
+    "con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, "
+    "sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, "
+    "adjacent_sound from mob");
 
-  while(db.fetchRow()){
-    cached_object *c=new cached_object;
-    c->number=real_mobile(convertTo<int>(db["vnum"]));
-    c->s["vnum"]=db["vnum"];
-    c->s["name"]=db["name"];
-    c->s["short_desc"]=db["short_desc"];
-    c->s["long_desc"]=db["long_desc"];
-    c->s["description"]=db["description"];
-    c->s["actions"]=db["actions"];
-    c->s["affects"]=db["affects"];
-    c->s["faction"]=db["faction"];
-    c->s["fact_perc"]=db["fact_perc"];
-    c->s["letter"]=db["letter"];
-    c->s["attacks"]=db["attacks"];
-    c->s["class"]=db["class"];
-    c->s["level"]=db["level"];
-    c->s["tohit"]=db["tohit"];
-    c->s["ac"]=db["ac"];
-    c->s["hpbonus"]=db["hpbonus"];
-    c->s["damage_level"]=db["damage_level"];
-    c->s["damage_precision"]=db["damage_precision"];
-    c->s["gold"]=db["gold"];
-    c->s["race"]=db["race"];
-    c->s["weight"]=db["weight"];
-    c->s["height"]=db["height"];
-    c->s["str"]=db["str"];
-    c->s["bra"]=db["bra"];
-    c->s["con"]=db["con"];
-    c->s["dex"]=db["dex"];
-    c->s["agi"]=db["agi"];
-    c->s["intel"]=db["intel"];
-    c->s["wis"]=db["wis"];
-    c->s["foc"]=db["foc"];
-    c->s["per"]=db["per"];
-    c->s["cha"]=db["cha"];
-    c->s["kar"]=db["kar"];
-    c->s["spe"]=db["spe"];
-    c->s["pos"]=db["pos"];
-    c->s["def_position"]=db["def_position"];
-    c->s["sex"]=db["sex"];
-    c->s["spec_proc"]=db["spec_proc"];
-    c->s["skin"]=db["skin"];
-    c->s["vision"]=db["vision"];
-    c->s["can_be_seen"]=db["can_be_seen"];
-    c->s["max_exist"]=db["max_exist"];
-    c->s["local_sound"]=db["local_sound"];
-    c->s["adjacent_sound"]=db["adjacent_sound"];
-    
-    cache[c->number]=c;
+  while (db.fetchRow()) {
+    cached_object* c = new cached_object;
+    c->number = real_mobile(convertTo<int>(db["vnum"]));
+    c->s["vnum"] = db["vnum"];
+    c->s["name"] = db["name"];
+    c->s["short_desc"] = db["short_desc"];
+    c->s["long_desc"] = db["long_desc"];
+    c->s["description"] = db["description"];
+    c->s["actions"] = db["actions"];
+    c->s["affects"] = db["affects"];
+    c->s["faction"] = db["faction"];
+    c->s["fact_perc"] = db["fact_perc"];
+    c->s["letter"] = db["letter"];
+    c->s["attacks"] = db["attacks"];
+    c->s["class"] = db["class"];
+    c->s["level"] = db["level"];
+    c->s["tohit"] = db["tohit"];
+    c->s["ac"] = db["ac"];
+    c->s["hpbonus"] = db["hpbonus"];
+    c->s["damage_level"] = db["damage_level"];
+    c->s["damage_precision"] = db["damage_precision"];
+    c->s["gold"] = db["gold"];
+    c->s["race"] = db["race"];
+    c->s["weight"] = db["weight"];
+    c->s["height"] = db["height"];
+    c->s["str"] = db["str"];
+    c->s["bra"] = db["bra"];
+    c->s["con"] = db["con"];
+    c->s["dex"] = db["dex"];
+    c->s["agi"] = db["agi"];
+    c->s["intel"] = db["intel"];
+    c->s["wis"] = db["wis"];
+    c->s["foc"] = db["foc"];
+    c->s["per"] = db["per"];
+    c->s["cha"] = db["cha"];
+    c->s["kar"] = db["kar"];
+    c->s["spe"] = db["spe"];
+    c->s["pos"] = db["pos"];
+    c->s["def_position"] = db["def_position"];
+    c->s["sex"] = db["sex"];
+    c->s["spec_proc"] = db["spec_proc"];
+    c->s["skin"] = db["skin"];
+    c->s["vision"] = db["vision"];
+    c->s["can_be_seen"] = db["can_be_seen"];
+    c->s["max_exist"] = db["max_exist"];
+    c->s["local_sound"] = db["local_sound"];
+    c->s["adjacent_sound"] = db["adjacent_sound"];
+
+    cache[c->number] = c;
   }
 
   db.query("select vnum, keyword, description from mob_extra");
 
-  while(db.fetchRow()){
-    cached_mob_extra *c=new cached_mob_extra;
-    c->number=real_mobile(convertTo<int>(db["vnum"]));
-    c->keyword=db["keyword"];
-    c->description=db["description"];
+  while (db.fetchRow()) {
+    cached_mob_extra* c = new cached_mob_extra;
+    c->number = real_mobile(convertTo<int>(db["vnum"]));
+    c->keyword = db["keyword"];
+    c->description = db["description"];
 
     extra[c->number].push_back(c);
   }
 
   db.query("select vnum, type, amt from mob_imm");
 
-  while(db.fetchRow()){
-    cached_mob_imm *c=new cached_mob_imm;
-    c->number=real_mobile(convertTo<int>(db["vnum"]));
-    c->type=convertTo<int>(db["type"]);
-    c->amt=convertTo<int>(db["amt"]);
+  while (db.fetchRow()) {
+    cached_mob_imm* c = new cached_mob_imm;
+    c->number = real_mobile(convertTo<int>(db["vnum"]));
+    c->type = convertTo<int>(db["type"]);
+    c->amt = convertTo<int>(db["amt"]);
 
     imm[c->number].push_back(c);
   }
 }
 
-
-
 // the idea here is to search all shops for the object we want to load
 // and if we find it at a decent price, buy it.
 // if we can't find it, then try to buy some commods to "make it".
 // failing that, just load it.
-TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
-{
-
+TObj* read_object_buy_build(TBeing* buyer, int nr, readFileTypeT type) {
   if (type == VIRTUAL)
     nr = real_object(nr);
 
-  if(bootTime || !obj_cache[nr]){
+  if (bootTime || !obj_cache[nr]) {
     //    vlogf(LOG_BUG, "read_object_buy_build() called during bootTime");
     return read_object(nr, REAL);
   }
 
-  int material=convertTo<int>(obj_cache[nr]->s["material"]);
-  float weight=convertTo<float>(obj_cache[nr]->s["weight"]);
-  sstring name=obj_index[nr].short_desc;
-  int indexed_cost=convertTo<int>(obj_cache[nr]->s["price"]);
+  int material = convertTo<int>(obj_cache[nr]->s["material"]);
+  float weight = convertTo<float>(obj_cache[nr]->s["weight"]);
+  sstring name = obj_index[nr].short_desc;
+  int indexed_cost = convertTo<int>(obj_cache[nr]->s["price"]);
 
-  int price, shop_nr, rent_id=0;
-  int commod_price=0, commod_shop_nr=0, commod_rent_id=0;
-  TObj *o=NULL;
-  TObj *commod=NULL;
+  int price, shop_nr, rent_id = 0;
+  int commod_price = 0, commod_shop_nr = 0, commod_rent_id = 0;
+  TObj* o = NULL;
+  TObj* commod = NULL;
 
   TDatabase db(DB_SNEEZY);
 
   // look for the object in a shop
-  db.query("select r.weight as weight, r.owner as shop_nr, r.rent_id as rent_id from rent r, shopowned so where r.owner=so.shop_nr and r.owner_type='shop' and r.vnum=%i order by profit_buy asc, (r.cur_struct/r.max_struct) asc, price asc", obj_index[nr].virt);
+  db.query(
+    "select r.weight as weight, r.owner as shop_nr, r.rent_id as rent_id from "
+    "rent r, shopowned so where r.owner=so.shop_nr and r.owner_type='shop' and "
+    "r.vnum=%i order by profit_buy asc, (r.cur_struct/r.max_struct) asc, price "
+    "asc",
+    obj_index[nr].virt);
 
-  if(db.fetchRow()){
-    shop_nr=convertTo<int>(db["shop_nr"]);
-    rent_id=convertTo<int>(db["rent_id"]);
+  if (db.fetchRow()) {
+    shop_nr = convertTo<int>(db["shop_nr"]);
+    rent_id = convertTo<int>(db["rent_id"]);
     TShopOwned tso(shop_nr, buyer);
 
     if (tso.getKeeper())
-      o=tso.getKeeper()->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
+      o = tso.getKeeper()->loadItem(shop_nr, convertTo<int>(db["rent_id"]));
     if (o) {
       *tso.getKeeper() += *o;
       price = o->shopPrice(1, shop_nr, -1, buyer);
@@ -2031,58 +2016,61 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
 
   // ok, we now have a cheap object (o) selling for price at shop_nr
   // let's see if we can find a cheaper commod
-  db.query("select r.owner as shop_nr, r.rent_id as rent_id, r.material as material, r.weight*10 as units from rent r, obj o where o.type=%i and r.vnum=o.vnum and r.material=%i and owner_type='shop' and r.weight>=%f order by units desc", ITEM_RAW_MATERIAL, material, weight);
+  db.query(
+    "select r.owner as shop_nr, r.rent_id as rent_id, r.material as material, "
+    "r.weight*10 as units from rent r, obj o where o.type=%i and r.vnum=o.vnum "
+    "and r.material=%i and owner_type='shop' and r.weight>=%f order by units "
+    "desc",
+    ITEM_RAW_MATERIAL, material, weight);
 
-  if(db.fetchRow()){
-    commod_shop_nr=convertTo<int>(db["shop_nr"]);
-    commod_rent_id=convertTo<int>(db["rent_id"]);
+  if (db.fetchRow()) {
+    commod_shop_nr = convertTo<int>(db["shop_nr"]);
+    commod_rent_id = convertTo<int>(db["rent_id"]);
     TShopOwned tso(commod_shop_nr, buyer);
-    TObj *obj = NULL;
+    TObj* obj = NULL;
 
     if (tso.getKeeper())
-      obj=tso.getKeeper()->loadItem(commod_shop_nr, convertTo<int>(db["rent_id"]));
+      obj = tso.getKeeper()->loadItem(commod_shop_nr,
+        convertTo<int>(db["rent_id"]));
     if (obj) {
-      if(!(commod=dynamic_cast<TCommodity *>(obj)))
+      if (!(commod = dynamic_cast<TCommodity*>(obj)))
         return read_object(nr, type);
-      
+
       *tso.getKeeper() += *commod;
 
-      commod_price = commod->shopPrice((int)(weight*10), commod_shop_nr, 
-				       -1, buyer);
+      commod_price =
+        commod->shopPrice((int)(weight * 10), commod_shop_nr, -1, buyer);
     }
   }
 
-
   // if we have a cheap item, and no commodity to consider, OR
   // we do have a commod and it's more expensive...
-  if(o && (!commod || 
-	   (price <= (commod_price+indexed_cost)))){
+  if (o && (!commod || (price <= (commod_price + indexed_cost)))) {
     TShopOwned tso(shop_nr, buyer);
     --(*o);
-    buyer->addToMoney(price, GOLD_XFER); // this is to offset cost
+    buyer->addToMoney(price, GOLD_XFER);  // this is to offset cost
     tso.doBuyTransaction(price, o->getName(), TX_BUYING, o);
     vlogf(LOG_PEEL, format("%s purchased %s from shop %i for %i talens.") %
-	  buyer->getName() % o->getName() % shop_nr % price);
+                      buyer->getName() % o->getName() % shop_nr % price);
 
     if (tso.getKeeper())
       tso.getKeeper()->deleteItem(shop_nr, rent_id);
     delete commod;
     return o;
-  // otherwise buy the commod if it is available
-  } else if(commod){
+    // otherwise buy the commod if it is available
+  } else if (commod) {
     TShopOwned tso(commod_shop_nr, buyer);
-    buyer->addToMoney(commod_price, GOLD_XFER); // this is to offset cost
-    tso.doBuyTransaction(commod_price, commod->getName(), 
-			 TX_BUYING, commod);
+    buyer->addToMoney(commod_price, GOLD_XFER);  // this is to offset cost
+    tso.doBuyTransaction(commod_price, commod->getName(), TX_BUYING, commod);
 
     commod->setWeight(commod->getWeight() - weight);
     vlogf(LOG_PEEL, format("%s purchased %s (%i) from shop %i for %i talens.") %
-	  buyer->getName() %commod->getName() % (int)(weight*10) %
-	  commod_shop_nr % commod_price);
+                      buyer->getName() % commod->getName() %
+                      (int)(weight * 10) % commod_shop_nr % commod_price);
 
     if (tso.getKeeper()) {
       tso.getKeeper()->deleteItem(commod_shop_nr, commod_rent_id);
-      if(commod->getWeight() > 0)
+      if (commod->getWeight() > 0)
         tso.getKeeper()->saveItem(commod_shop_nr, commod);
     }
   }
@@ -2097,34 +2085,33 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
   return read_object(nr, REAL);
 }
 
-int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
-{
-  long tmp; //, tmp2;
+int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
+  long tmp;  //, tmp2;
   // float att;
   int rc;
   char letter;
 
   int nr = real_mobile(virt);
 
-  if(!(ch && should_alloc) && mob_cache[nr]!=NULL){
+  if (!(ch && should_alloc) && mob_cache[nr] != NULL) {
     name = mob_index[number].name;
     shortDescr = mob_index[number].short_desc;
     player.longDescr = mob_index[number].long_desc;
     setDescr(mob_index[number].description);
-    
+
     setMult(1.0);
-    
+
     specials.act = convertTo<int>(mob_cache[nr]->s["actions"]);
     if (should_alloc)
       SET_BIT(specials.act, ACT_STRINGS_CHANGED);
-    
+
     specials.affectedBy = convertTo<int>(mob_cache[nr]->s["affects"]);
-    
+
     if (isAffected(AFF_SANCTUARY)) {
       REMOVE_BIT(this->specials.affectedBy, AFF_SANCTUARY);
-      
+
       affectedData aff;
-      
+
       aff.type = SPELL_SANCTUARY;
       aff.level = 50;
       aff.duration = PERMANENT_DURATION;
@@ -2134,49 +2121,49 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES);
       // setProtection(50);
     }
-    
-    tmp=convertTo<int>(mob_cache[nr]->s["faction"]);
+
+    tmp = convertTo<int>(mob_cache[nr]->s["faction"]);
     mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
     setFaction(factionTypeT(tmp));
-    
-    setPerc((double) convertTo<double>(mob_cache[nr]->s["fact_perc"]));
-    
-    letter=convertTo<char>(mob_cache[nr]->s["letter"]);
-    
+
+    setPerc((double)convertTo<double>(mob_cache[nr]->s["fact_perc"]));
+
+    letter = convertTo<char>(mob_cache[nr]->s["letter"]);
+
     if ((letter == 'A') || (letter == 'L')) {
-      setMult((double) convertTo<double>(mob_cache[nr]->s["attacks"]));
-      
+      setMult((double)convertTo<double>(mob_cache[nr]->s["attacks"]));
+
       setClass(convertTo<int>(mob_cache[nr]->s["class"]));
       fixLevels(convertTo<int>(mob_cache[nr]->s["level"]));
       // int lvl = convertTo<int>(mob_cache[nr]->s["level"]);
-      
+
       setHitroll(convertTo<int>(mob_cache[nr]->s["tohit"]));
-      
+
       setACLevel(convertTo<float>(mob_cache[nr]->s["ac"]));
       setACFromACLevel();
-      
+
       setHPLevel(convertTo<float>(mob_cache[nr]->s["hpbonus"]));
       setHPFromHPLevel();
-      
+
       setDamLevel(convertTo<float>(mob_cache[nr]->s["damage_level"]));
       setDamPrecision(convertTo<int>(mob_cache[nr]->s["damage_precision"]));
-      
+
       setMana(10);
       setMaxMana(10);
       setLifeforce(9000);
-      setMaxMove(50 + 10*GetMaxLevel());
+      setMaxMove(50 + 10 * GetMaxLevel());
       setMove(moveLimit());
-      
-      moneyConst = (ubyte) convertTo<int>(mob_cache[nr]->s["gold"]);
-      
+
+      moneyConst = (ubyte)convertTo<int>(mob_cache[nr]->s["gold"]);
+
       setExp(0);
-      
+
       setRace(race_t(convertTo<int>(mob_cache[nr]->s["race"])));
       setWeight(convertTo<float>(mob_cache[nr]->s["weight"]));
       setHeight(convertTo<int>(mob_cache[nr]->s["height"]));
-      
+
       // statTypeT local_stat;
-      
+
       setStat(STAT_CHOSEN, STAT_STR, convertTo<int>(mob_cache[nr]->s["str"]));
       setStat(STAT_CHOSEN, STAT_BRA, convertTo<int>(mob_cache[nr]->s["bra"]));
       setStat(STAT_CHOSEN, STAT_CON, convertTo<int>(mob_cache[nr]->s["con"]));
@@ -2189,83 +2176,85 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       setStat(STAT_CHOSEN, STAT_CHA, convertTo<int>(mob_cache[nr]->s["cha"]));
       setStat(STAT_CHOSEN, STAT_KAR, convertTo<int>(mob_cache[nr]->s["kar"]));
       setStat(STAT_CHOSEN, STAT_SPE, convertTo<int>(mob_cache[nr]->s["spe"]));
-      
+
       setPosition(mapFileToPos(convertTo<int>(mob_cache[nr]->s["pos"])));
-      
+
       if (getPosition() == POSITION_DEAD) {
-	// can happen.  no legs and trying to set resting, etc
-	vlogf(LOG_LOW, format("Mob (%s) put in dead position during creation.") % 
-	      getName());
+        // can happen.  no legs and trying to set resting, etc
+        vlogf(LOG_LOW,
+          format("Mob (%s) put in dead position during creation.") % getName());
       }
-      
-      default_pos = mapFileToPos(convertTo<int>(mob_cache[nr]->s["def_position"]));
-      
+
+      default_pos =
+        mapFileToPos(convertTo<int>(mob_cache[nr]->s["def_position"]));
+
       setSexUnsafe(convertTo<int>(mob_cache[nr]->s["sex"]));
-      
+
       spec = convertTo<int>(mob_cache[nr]->s["spec_proc"]);
-      
-      if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob()) 
-	//    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
-	{
-	  tmp = (int)((getHPLevel() + getACLevel() + getDamLevel())/3);
-	  fixLevels(tmp);
-	  
-	  //    reallvl = tmp;
-	}
-      
+
+      if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob())
+      //    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
+      {
+        tmp = (int)((getHPLevel() + getACLevel() + getDamLevel()) / 3);
+        fixLevels(tmp);
+
+        //    reallvl = tmp;
+      }
+
       // don't set the xp until here, since a lot of things factor in
       // gold isn't calculated until here either...
       addToExp(determineExp());
-      
+
       setMaterial(convertTo<int>(mob_cache[nr]->s["skin"]));
-      
+
       canBeSeen = convertTo<int>(mob_cache[nr]->s["can_be_seen"]);
-      
+
       visionBonus = convertTo<int>(mob_cache[nr]->s["vision"]);
-      
+
       max_exist = convertTo<int>(mob_cache[nr]->s["max_exist"]);
-      
+
       if (!should_alloc) {
-	rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
-	if (IS_SET_DELETE(rc, DELETE_THIS) ||
-	    IS_SET_DELETE(rc, DELETE_VICT)) {
-	  return DELETE_THIS;
-	}
+        rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+        if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
+          return DELETE_THIS;
+        }
       }
       if (mob_cache[nr]->s["local_sound"].length() > 0)
-	sounds=mob_cache[nr]->s["local_sound"];
+        sounds = mob_cache[nr]->s["local_sound"];
       if (mob_cache[nr]->s["adjacent_sound"].length() > 0)
-	distantSnds=mob_cache[nr]->s["adjacent_sound"];
+        distantSnds = mob_cache[nr]->s["adjacent_sound"];
     }
 
-    for(unsigned int i=0;i<mob_cache.imm[nr].size();++i){
-      setImmunity((immuneTypeT) mob_cache.imm[nr][i]->type, mob_cache.imm[nr][i]->amt);
+    for (unsigned int i = 0; i < mob_cache.imm[nr].size(); ++i) {
+      setImmunity((immuneTypeT)mob_cache.imm[nr][i]->type,
+        mob_cache.imm[nr][i]->amt);
     }
-    
-    extraDescription *tExDescr;
-    for(unsigned int i=0;i<mob_cache.extra[nr].size();++i){
-      tExDescr              = new extraDescription();
-      tExDescr->keyword     = mob_cache.extra[nr][i]->keyword;
+
+    extraDescription* tExDescr;
+    for (unsigned int i = 0; i < mob_cache.extra[nr].size(); ++i) {
+      tExDescr = new extraDescription();
+      tExDescr->keyword = mob_cache.extra[nr][i]->keyword;
       tExDescr->description = mob_cache.extra[nr][i]->description;
-      tExDescr->next        = ex_description;
-      ex_description        = tExDescr;
+      tExDescr->next = ex_description;
+      ex_description = tExDescr;
     }
-
 
   } else {
     TDatabase db(ch && should_alloc ? DB_IMMORTAL : DB_SNEEZY);
     if (ch && should_alloc) {
-      db.query("select * from mob where owner = '%s' and vnum = %i", ch->name.c_str(), virt);
+      db.query("select * from mob where owner = '%s' and vnum = %i",
+        ch->name.c_str(), virt);
     } else {
       db.query("select * from mob where vnum = %i", virt);
     }
     if (!db.fetchRow()) {
       if (!should_alloc) {
-	vlogf(LOG_LOW, format("Failure to load mob vnum %d from database.") % virt);
+        vlogf(LOG_LOW,
+          format("Failure to load mob vnum %d from database.") % virt);
       }
       return FALSE;
     }
-    
+
     if (should_alloc) {
       number = -1;
       name = db["name"];
@@ -2278,20 +2267,20 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       player.longDescr = mob_index[number].long_desc;
       setDescr(mob_index[number].description);
     }
-    
+
     setMult(1.0);
-    
+
     specials.act = convertTo<int>(db["actions"]);
     if (should_alloc)
       SET_BIT(specials.act, ACT_STRINGS_CHANGED);
-    
+
     specials.affectedBy = convertTo<int>(db["affects"]);
-    
+
     if (isAffected(AFF_SANCTUARY)) {
       REMOVE_BIT(this->specials.affectedBy, AFF_SANCTUARY);
-      
+
       affectedData aff;
-      
+
       aff.type = SPELL_SANCTUARY;
       aff.level = 50;
       aff.duration = PERMANENT_DURATION;
@@ -2301,49 +2290,49 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES);
       // setProtection(50);
     }
-    
-    tmp=convertTo<int>(db["faction"]);
+
+    tmp = convertTo<int>(db["faction"]);
     mud_assert(tmp >= MIN_FACTION && tmp < MAX_FACTIONS, "Bad faction value");
     setFaction(factionTypeT(tmp));
-    
-    setPerc((double) convertTo<double>(db["fact_perc"]));
-    
-    letter=convertTo<char>(db["letter"]);
-    
+
+    setPerc((double)convertTo<double>(db["fact_perc"]));
+
+    letter = convertTo<char>(db["letter"]);
+
     if ((letter == 'A') || (letter == 'L')) {
-      setMult((double) convertTo<double>(db["attacks"]));
-      
+      setMult((double)convertTo<double>(db["attacks"]));
+
       setClass(convertTo<int>(db["class"]));
       fixLevels(convertTo<int>(db["level"]));
       // int lvl = convertTo<int>(db["level"]);
-      
+
       setHitroll(convertTo<int>(db["tohit"]));
-      
+
       setACLevel(convertTo<float>(db["ac"]));
       setACFromACLevel();
-      
+
       setHPLevel(convertTo<float>(db["hpbonus"]));
       setHPFromHPLevel();
-      
+
       setDamLevel(convertTo<float>(db["damage_level"]));
       setDamPrecision(convertTo<int>(db["damage_precision"]));
-      
+
       setMana(10);
       setMaxMana(10);
       setLifeforce(9000);
-      setMaxMove(50 + 10*GetMaxLevel());
+      setMaxMove(50 + 10 * GetMaxLevel());
       setMove(moveLimit());
-      
-      moneyConst = (ubyte) convertTo<int>(db["gold"]);
-      
+
+      moneyConst = (ubyte)convertTo<int>(db["gold"]);
+
       setExp(0);
-      
+
       setRace(race_t(convertTo<int>(db["race"])));
       setWeight(convertTo<float>(db["weight"]));
       setHeight(convertTo<int>(db["height"]));
-      
+
       // statTypeT local_stat;
-      
+
       setStat(STAT_CHOSEN, STAT_STR, convertTo<int>(db["str"]));
       setStat(STAT_CHOSEN, STAT_BRA, convertTo<int>(db["bra"]));
       setStat(STAT_CHOSEN, STAT_CON, convertTo<int>(db["con"]));
@@ -2356,89 +2345,87 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
       setStat(STAT_CHOSEN, STAT_CHA, convertTo<int>(db["cha"]));
       setStat(STAT_CHOSEN, STAT_KAR, convertTo<int>(db["kar"]));
       setStat(STAT_CHOSEN, STAT_SPE, convertTo<int>(db["spe"]));
-      
+
       setPosition(mapFileToPos(convertTo<int>(db["pos"])));
-      
+
       if (getPosition() == POSITION_DEAD) {
-	// can happen.  no legs and trying to set resting, etc
-	vlogf(LOG_LOW, format("Mob (%s) put in dead position during creation.") % 
-	      getName());
+        // can happen.  no legs and trying to set resting, etc
+        vlogf(LOG_LOW,
+          format("Mob (%s) put in dead position during creation.") % getName());
       }
-      
+
       default_pos = mapFileToPos(convertTo<int>(db["def_position"]));
-      
+
       setSexUnsafe(convertTo<int>(db["sex"]));
-      
+
       spec = convertTo<int>(db["spec_proc"]);
-      
-      if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob()) 
-	//    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
-	{
-	  tmp = (int)((getHPLevel() + getACLevel() + getDamLevel())/3);
-	  fixLevels(tmp);
-	  
-	  //    reallvl = tmp;
-	}
-      
+
+      if (!UtilProcs(spec) && !GuildProcs(spec) && !isTestmob())
+      //    if !(is_abbrev(name, "trainer") || is_abbrev(name, "guildmaster"))
+      {
+        tmp = (int)((getHPLevel() + getACLevel() + getDamLevel()) / 3);
+        fixLevels(tmp);
+
+        //    reallvl = tmp;
+      }
+
       // don't set the xp until here, since a lot of things factor in
       // gold isn't calculated until here either...
       addToExp(determineExp());
-      
+
       setMaterial(convertTo<int>(db["skin"]));
-      
+
       canBeSeen = convertTo<int>(db["can_be_seen"]);
-      
+
       visionBonus = convertTo<int>(db["vision"]);
-      
+
       max_exist = convertTo<int>(db["max_exist"]);
-      
+
       if (!should_alloc) {
-	rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
-	if (IS_SET_DELETE(rc, DELETE_THIS) ||
-	    IS_SET_DELETE(rc, DELETE_VICT)) {
-	  return DELETE_THIS;
-	}
+        rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+        if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
+          return DELETE_THIS;
+        }
       }
       if (db["local_sound"].length() > 0)
-	sounds=db["local_sound"];
+        sounds = db["local_sound"];
       if (db["adjacent_sound"].length() > 0)
-	distantSnds=db["adjacent_sound"];
-      
+        distantSnds = db["adjacent_sound"];
     }
     db.query("select * from mob_imm where vnum=%i", virt);
-    while(db.fetchRow()){
-      setImmunity((immuneTypeT) convertTo<int>(db["type"]), convertTo<int>(db["amt"]));
+    while (db.fetchRow()) {
+      setImmunity((immuneTypeT)convertTo<int>(db["type"]),
+        convertTo<int>(db["amt"]));
     }
-    
+
     db.query("select * from mob_extra where vnum=%i", virt);
-    extraDescription *tExDescr;
-    while(db.fetchRow()){
-      tExDescr              = new extraDescription();
-      tExDescr->keyword     = db["keyword"];
+    extraDescription* tExDescr;
+    while (db.fetchRow()) {
+      tExDescr = new extraDescription();
+      tExDescr->keyword = db["keyword"];
       tExDescr->description = db["description"];
-      tExDescr->next        = ex_description;
-      ex_description        = tExDescr;
+      tExDescr->next = ex_description;
+      ex_description = tExDescr;
     }
   }
-    
-  
+
   player.time->birth = time(0);
   player.time->played = 0;
   player.time->logon = time(0);
-  
+
   condTypeT ic;
   for (ic = MIN_COND; ic < MAX_COND_TYPE; ++ic)
     setCond(ic, -1);
-  
+
   aiMobCreation();
-  
+
   // have read chosen, must set current stats now
   // curr stats are needed to properly assign discs (next step)
   // have to do this AFTER chosen read and AFTER race assigned
   statTypeT ik;
   for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++)
     setStat(STAT_CURRENT, ik, getStat(STAT_NATURAL, ik));
-  
+
   // assign disc before anything else
   // skills are needed by almost everything
   assignDisciplinesClass();
@@ -2446,10 +2433,8 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing *ch)
   return TRUE;
 }
 
-
-TObj *read_object(int nr, readFileTypeT type)
-{
-  TObj *obj = NULL;
+TObj* read_object(int nr, readFileTypeT type) {
+  TObj* obj = NULL;
   int i, rc, tmpcost;
   TDatabase db(DB_SNEEZY);
 
@@ -2457,30 +2442,34 @@ TObj *read_object(int nr, readFileTypeT type)
   if (type == VIRTUAL)
     nr = real_object(nr);
 
-  if ((nr < 0) || (nr >= (signed int) obj_index.size())) {
+  if ((nr < 0) || (nr >= (signed int)obj_index.size())) {
     vlogf(LOG_BUG, format("read_object: bad nr %d (i = %d)") % nr % i);
     return NULL;
   }
 
-  if(/*bootTime &&*/ obj_cache[nr]!=NULL){
-    obj = makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[nr]->s["type"])));
+  if (/*bootTime &&*/ obj_cache[nr] != NULL) {
+    obj =
+      makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[nr]->s["type"])));
     if (!obj) {
       vlogf(LOG_BUG,
         format("makeNewObj failed in read_object: nr = %d, i = %d") % nr % i);
       return nullptr;
     }
-    obj->number=nr;
+    obj->number = nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
       obj->shortDescr = obj_index[nr].short_desc;
       obj->setDescr(obj_index[nr].long_desc);
       obj->action_description = obj_index[nr].description;
-      obj->ex_description=obj_index[nr].ex_description;
+      obj->ex_description = obj_index[nr].ex_description;
     }
 
     obj->setObjStat(convertTo<int>(obj_cache[nr]->s["action_flag"]));
     obj->obj_flags.wear_flags = convertTo<int>(obj_cache[nr]->s["wear_flag"]);
-    obj->assignFourValues(convertTo<int>(obj_cache[nr]->s["val0"]), convertTo<int>(obj_cache[nr]->s["val1"]), convertTo<int>(obj_cache[nr]->s["val2"]), convertTo<int>(obj_cache[nr]->s["val3"]));
+    obj->assignFourValues(convertTo<int>(obj_cache[nr]->s["val0"]),
+      convertTo<int>(obj_cache[nr]->s["val1"]),
+      convertTo<int>(obj_cache[nr]->s["val2"]),
+      convertTo<int>(obj_cache[nr]->s["val3"]));
     obj->setWeight(convertTo<float>(obj_cache[nr]->s["weight"]));
     obj->obj_flags.cost = convertTo<int>(obj_cache[nr]->s["price"]);
     obj->canBeSeen = convertTo<int>(obj_cache[nr]->s["can_be_seen"]);
@@ -2488,29 +2477,35 @@ TObj *read_object(int nr, readFileTypeT type)
     obj->setMaxStructPoints(convertTo<int>(obj_cache[nr]->s["max_struct"]));
     obj->setStructPoints(convertTo<int>(obj_cache[nr]->s["cur_struct"]));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=convertTo<int>(obj_cache[nr]->s["decay"]);
+    obj->obj_flags.decay_time = convertTo<int>(obj_cache[nr]->s["decay"]);
     obj->setVolume(convertTo<int>(obj_cache[nr]->s["volume"]));
     obj->setMaterial(convertTo<int>(obj_cache[nr]->s["material"]));
     obj->max_exist = convertTo<int>(obj_cache[nr]->s["max_exist"]);
 
   } else {
-    db.query("select type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist from obj where vnum=%i", obj_index[nr].virt);
-  
-    if(!db.fetchRow())
+    db.query(
+      "select type, action_flag, wear_flag, val0, val1, val2, val3, weight, "
+      "price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, "
+      "material, max_exist from obj where vnum=%i",
+      obj_index[nr].virt);
+
+    if (!db.fetchRow())
       return NULL;
-    
+
     obj = makeNewObj(mapFileToItemType(convertTo<int>(db["type"])));
-    obj->number=nr;
+    obj->number = nr;
     if (!obj->isObjStat(ITEM_STRUNG)) {
       obj->name = obj_index[nr].name;
       obj->shortDescr = obj_index[nr].short_desc;
       obj->setDescr(obj_index[nr].long_desc);
       obj->action_description = obj_index[nr].description;
-      obj->ex_description=obj_index[nr].ex_description;
+      obj->ex_description = obj_index[nr].ex_description;
     }
     obj->setObjStat(convertTo<int>(db["action_flag"]));
     obj->obj_flags.wear_flags = convertTo<int>(db["wear_flag"]);
-    obj->assignFourValues(convertTo<int>(db["val0"]), convertTo<int>(db["val1"]), convertTo<int>(db["val2"]), convertTo<int>(db["val3"]));
+    obj->assignFourValues(convertTo<int>(db["val0"]),
+      convertTo<int>(db["val1"]), convertTo<int>(db["val2"]),
+      convertTo<int>(db["val3"]));
     obj->setWeight(convertTo<float>(db["weight"]));
     obj->obj_flags.cost = convertTo<int>(db["price"]);
     obj->canBeSeen = convertTo<int>(db["can_be_seen"]);
@@ -2518,14 +2513,13 @@ TObj *read_object(int nr, readFileTypeT type)
     obj->setMaxStructPoints(convertTo<int>(db["max_struct"]));
     obj->setStructPoints(convertTo<int>(db["cur_struct"]));
     obj->setDepreciation(0);
-    obj->obj_flags.decay_time=convertTo<int>(db["decay"]);
+    obj->obj_flags.decay_time = convertTo<int>(db["decay"]);
     obj->setVolume(convertTo<int>(db["volume"]));
     obj->setMaterial(convertTo<int>(db["material"]));
     obj->max_exist = convertTo<int>(db["max_exist"]);
   }
-  
 
-  for(i=0;i<MAX_OBJ_AFFECT;++i){
+  for (i = 0; i < MAX_OBJ_AFFECT; ++i) {
     obj->affected[i].location = obj_index[nr].affected[i].location;
     obj->affected[i].modifier = obj_index[nr].affected[i].modifier;
     obj->affected[i].modifier2 = obj_index[nr].affected[i].modifier2;
@@ -2538,7 +2532,7 @@ TObj *read_object(int nr, readFileTypeT type)
   }
 
   obj_index[nr].addToNumber(1);
-  
+
   obj->weightCorrection();
   obj->updateDesc();
 
@@ -2549,79 +2543,72 @@ TObj *read_object(int nr, readFileTypeT type)
     return NULL;
   }
 
-
   // use suggested price if available, otherwise use the set price
-  if((tmpcost = obj->suggestedPrice())){
+  if ((tmpcost = obj->suggestedPrice())) {
     obj->obj_flags.cost = tmpcost;
   }
-  
 
   obj->checkObjStats();
 
-  if(/*bootTime &&*/ obj_cache[nr]==NULL){
+  if (/*bootTime &&*/ obj_cache[nr] == NULL) {
     //    vlogf(LOG_PEEL, format("caching object - %s") %  obj->shortDescr);
-    cached_object *c=new cached_object;
-    
-    c->number=nr;
-    c->s["type"]=db["type"];
-    c->s["action_flag"]=db["action_flag"];
-    c->s["wear_flag"]=db["wear_flag"];
-    c->s["val0"]=db["val0"];
-    c->s["val1"]=db["val1"];
-    c->s["val2"]=db["val2"];
-    c->s["val3"]=db["val3"];
-    c->s["weight"]=db["weight"];
-    c->s["price"]=db["price"];
-    c->s["can_be_seen"]=db["can_be_seen"];
-    c->s["spec_proc"]=db["spec_proc"];
-    c->s["max_struct"]=db["max_struct"];
-    c->s["cur_struct"]=db["cur_struct"];
-    c->s["decay"]=db["decay"];
-    c->s["volume"]=db["volume"];
-    c->s["material"]=db["material"];
-    c->s["max_exist"]=db["max_exist"];
+    cached_object* c = new cached_object;
 
-    obj_cache.cache[c->number]=c;
+    c->number = nr;
+    c->s["type"] = db["type"];
+    c->s["action_flag"] = db["action_flag"];
+    c->s["wear_flag"] = db["wear_flag"];
+    c->s["val0"] = db["val0"];
+    c->s["val1"] = db["val1"];
+    c->s["val2"] = db["val2"];
+    c->s["val3"] = db["val3"];
+    c->s["weight"] = db["weight"];
+    c->s["price"] = db["price"];
+    c->s["can_be_seen"] = db["can_be_seen"];
+    c->s["spec_proc"] = db["spec_proc"];
+    c->s["max_struct"] = db["max_struct"];
+    c->s["cur_struct"] = db["cur_struct"];
+    c->s["decay"] = db["decay"];
+    c->s["volume"] = db["volume"];
+    c->s["material"] = db["material"];
+    c->s["max_exist"] = db["max_exist"];
+
+    obj_cache.cache[c->number] = c;
   }
 
   return obj;
 }
 
-void zoneData::closeDoors()
-{
+void zoneData::closeDoors() {
   int bottom, i, x;
-  roomDirData *ep = NULL;
-  TRoom *rp;
+  roomDirData* ep = NULL;
+  TRoom* rp;
 
   bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
   for (i = bottom; i <= top; i++) {
     for (x = 0; x <= 9; x++) {
-      if ((rp = real_roomp(i)) && (ep = rp->dir_option[x]) && 
-          (ep->door_type != DOOR_NONE) && 
+      if ((rp = real_roomp(i)) && (ep = rp->dir_option[x]) &&
+          (ep->door_type != DOOR_NONE) &&
           (!IS_SET(ep->condition, EXIT_DESTROYED)))
         SET_BIT(ep->condition, EXIT_CLOSED);
     }
   }
 }
 
-
 // procZoneUpdate
-procZoneUpdate::procZoneUpdate(const int &p)
-{
-  trigger_pulse=p;
-  name="procZoneUpdate";
+procZoneUpdate::procZoneUpdate(const int& p) {
+  trigger_pulse = p;
+  name = "procZoneUpdate";
 }
 
-void procZoneUpdate::run(const TPulse &) const
-{
-// update zone ages, queue for reset if necessary, and dequeue when possible
+void procZoneUpdate::run(const TPulse&) const {
+  // update zone ages, queue for reset if necessary, and dequeue when possible
   unsigned int i;
   resetQElement *update_u, *temp, *tmp2;
   const int ZO_DEAD = 9999;
 
   for (i = 0; i < zone_table.size(); i++) {
-    if (zone_table[i].age < zone_table[i].lifespan &&
-        zone_table[i].reset_mode)
+    if (zone_table[i].age < zone_table[i].lifespan && zone_table[i].reset_mode)
       (zone_table[i].age)++;
     else if (zone_table[i].age < ZO_DEAD && zone_table[i].reset_mode) {
       // enqueue zone
@@ -2642,24 +2629,25 @@ void procZoneUpdate::run(const TPulse &) const
   for (update_u = r_q.head; update_u; update_u = tmp2) {
     if (update_u->zone_to_reset >= zone_table.size()) {
       // this may or may not work
-      // may result in some lost memory, 
+      // may result in some lost memory,
       // but the loss is not signifigant over the short run
       update_u->zone_to_reset = 0;
       update_u->next = 0;
     }
     tmp2 = update_u->next;
 
-    zoneData *z=&zone_table[update_u->zone_to_reset];
+    zoneData* z = &zone_table[update_u->zone_to_reset];
 
     if (z->reset_mode == 2 || z->isEmpty()) {
       z->closeDoors();
       z->resetZone(FALSE);
-      // dequeue 
+      // dequeue
 
       if (update_u == r_q.head)
         r_q.head = r_q.head->next;
       else {
-        for (temp = r_q.head; temp->next != update_u; temp = temp->next);
+        for (temp = r_q.head; temp->next != update_u; temp = temp->next)
+          ;
 
         if (!update_u->next)
           r_q.tail = temp;
@@ -2672,69 +2660,67 @@ void procZoneUpdate::run(const TPulse &) const
 }
 
 // takes a number stored in the zone file for the slot to load a piece
-//of equipment on, and converts it to a WEAR_SLOT
+// of equipment on, and converts it to a WEAR_SLOT
 // this routine is also used to map slots to their old values in some arrays
-// notably slot_chance and ac_percent_pos 
+// notably slot_chance and ac_percent_pos
 // load == TRUE, num is the slot as it is in the physical file
 // load == FALSE, num is the slot as it is in the mud
-wearSlotT mapFileToSlot(int num)
-{
-    switch (num) {
-      case 1:
-        return WEAR_FINGER_R;
-      case 2:
-        return WEAR_FINGER_L;
-      case 3:
-        return WEAR_NECK;
-      case 4:
-        return WEAR_BODY;
-      case 5:
-        return WEAR_HEAD;
-      case 6:
-        return WEAR_LEG_R;
-      case 7:
-        return WEAR_LEG_L;
-      case 8:
-        return WEAR_FOOT_R;
-      case 9:
-        return WEAR_FOOT_L;
-      case 10:
-        return WEAR_HAND_R;
-      case 11:
-        return WEAR_HAND_L;
-      case 12:
-        return WEAR_ARM_R;
-      case 13:
-        return WEAR_ARM_L;
-      case 14:
-        return WEAR_BACK;
-      case 15:
-        return WEAR_WAIST;
-      case 16:
-        return WEAR_WRIST_R;
-      case 17:
-        return WEAR_WRIST_L;
-      case 18:
-        return HOLD_RIGHT;
-      case 19:
-        return HOLD_LEFT;
-      case 20:
-        return WEAR_EX_LEG_R;
-      case 21:
-        return WEAR_EX_LEG_L;
-      case 22:
-        return WEAR_EX_FOOT_R;
-      case 23:
-        return WEAR_EX_FOOT_L;
-      default:
-        vlogf(LOG_LOW, format("Bogus slot (%d, 1) in zone file") %  num);
-        vlogf(LOG_BUG, "forced crash");
-        return wearSlotT(0);
-    }
+wearSlotT mapFileToSlot(int num) {
+  switch (num) {
+    case 1:
+      return WEAR_FINGER_R;
+    case 2:
+      return WEAR_FINGER_L;
+    case 3:
+      return WEAR_NECK;
+    case 4:
+      return WEAR_BODY;
+    case 5:
+      return WEAR_HEAD;
+    case 6:
+      return WEAR_LEG_R;
+    case 7:
+      return WEAR_LEG_L;
+    case 8:
+      return WEAR_FOOT_R;
+    case 9:
+      return WEAR_FOOT_L;
+    case 10:
+      return WEAR_HAND_R;
+    case 11:
+      return WEAR_HAND_L;
+    case 12:
+      return WEAR_ARM_R;
+    case 13:
+      return WEAR_ARM_L;
+    case 14:
+      return WEAR_BACK;
+    case 15:
+      return WEAR_WAIST;
+    case 16:
+      return WEAR_WRIST_R;
+    case 17:
+      return WEAR_WRIST_L;
+    case 18:
+      return HOLD_RIGHT;
+    case 19:
+      return HOLD_LEFT;
+    case 20:
+      return WEAR_EX_LEG_R;
+    case 21:
+      return WEAR_EX_LEG_L;
+    case 22:
+      return WEAR_EX_FOOT_R;
+    case 23:
+      return WEAR_EX_FOOT_L;
+    default:
+      vlogf(LOG_LOW, format("Bogus slot (%d, 1) in zone file") % num);
+      vlogf(LOG_BUG, "forced crash");
+      return wearSlotT(0);
+  }
 }
 
-int mapSlotToFile(wearSlotT num)
-{
+int mapSlotToFile(wearSlotT num) {
   // saving
   switch (num) {
     case WEAR_FINGER_R:
@@ -2785,14 +2771,13 @@ int mapSlotToFile(wearSlotT num)
       return 23;
     case MAX_WEAR:
     default:
-      vlogf(LOG_LOW, format("Bogus slot (%d, 2) in zone file") %  num);
+      vlogf(LOG_LOW, format("Bogus slot (%d, 2) in zone file") % num);
       vlogf(LOG_BUG, "forced crash");
       return 0;
   }
 }
 
-static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
-{
+static void mobRepop(TMonster* mob, int zone, int tRPNum = 0) {
   mob->specials.zone = zone;
   mob->oldRoom = (!tRPNum ? mob->roomp->number : tRPNum);
 
@@ -2804,18 +2789,20 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
     zone_table[zone].max_mob_level = max(grl, zone_table[zone].max_mob_level);
   }
 
-  colorAct(COLOR_MOBS, ((mob->ex_description && mob->ex_description->findExtraDesc("repop")) ?
-                        mob->ex_description->findExtraDesc("repop") :
-                        "$n appears suddenly in the room."),
-           TRUE, mob, 0, 0, TO_ROOM);
+  colorAct(COLOR_MOBS,
+    ((mob->ex_description && mob->ex_description->findExtraDesc("repop"))
+        ? mob->ex_description->findExtraDesc("repop")
+        : "$n appears suddenly in the room."),
+    TRUE, mob, 0, 0, TO_ROOM);
 
   if (mob->spec && zone && UtilProcs(mob->spec))
-    vlogf(LOG_LOW, format("Mob (%s:%d) has a utility proc (%s:%d) and is not in zone #0") % 
-         mob->getName() % mob->mobVnum() % 
-         mob_specials[mob->spec].name % mob->spec);
+    vlogf(LOG_LOW,
+      format("Mob (%s:%d) has a utility proc (%s:%d) and is not in zone #0") %
+        mob->getName() % mob->mobVnum() % mob_specials[mob->spec].name %
+        mob->spec);
 
   if (mob->roomp->isFlyingSector()) {
-    TBeing *tbr = dynamic_cast<TBeing *>(mob->riding);
+    TBeing* tbr = dynamic_cast<TBeing*>(mob->riding);
     if (!mob->riding && !mob->isFlying()) {
       mob->setPosition(POSITION_FLYING);
       mob->sendTo("You start to fly up in the air.\n\r");
@@ -2835,67 +2822,67 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
 armorSetLoad
 used in zoneflie load/etc to set and update sets of eq
 --------------------------- */
-armorSetLoad::armorSetLoad()
-{
-  mud_assert(cElements(local_armor[0].slots) == MAX_WEAR, "slots not == MAX_WEAR in armorSetLoad ctor");
+armorSetLoad::armorSetLoad() {
+  mud_assert(cElements(local_armor[0].slots) == MAX_WEAR,
+    "slots not == MAX_WEAR in armorSetLoad ctor");
   resetArmor();
 }
 
-void armorSetLoad::resetArmor()
-{
-  memset(local_armor, 0, sizeof(struct armor_set_struct)*16);
+void armorSetLoad::resetArmor() {
+  memset(local_armor, 0, sizeof(struct armor_set_struct) * 16);
 }
 
-void armorSetLoad::setArmor(int set, int slot, int value)
-{
+void armorSetLoad::setArmor(int set, int slot, int value) {
   local_armor[set].slots[slot] = value;
 }
 
-int armorSetLoad::getArmor(int set, int slot)
-{
+int armorSetLoad::getArmor(int set, int slot) {
   return local_armor[set].slots[slot];
 }
 /* ------------------------ */
 
-
 // runs the resetCom command for command = 'E'
-void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
+void runResetCmdE(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  if ((flags & resetFlagFindLoadPotential)) {
     tallyObjLoadPotential(obj_index[rs.arg1].virt);
     return;
   }
 
-  if (!mob)
-  {
-    vlogf(LOG_LOW, format("no mob for 'E' command.  Obj (%i)") %  rs.arg1);
+  if (!mob) {
+    vlogf(LOG_LOW, format("no mob for 'E' command.  Obj (%i)") % rs.arg1);
     last_cmd = objload = false;
     return;
   }
 
   int obj_lp = getObjLoadPotential(obj_index[rs.arg1].virt);
   if (obj_lp == 0) {
-    vlogf(LOG_MISC, format("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
+    vlogf(LOG_MISC,
+      format("Didn't find load potential of %s [%d].  rs.arg1=%d") %
+        obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
     obj_lp = 1;
   }
 
   // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
-  // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
-  // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
-  double adj_obj_lp_ratio = 1 - pow((1 - cbrt((double)obj_lp)/100), 1/(double)obj_lp);
+  // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 -
+  // 0.01*cbrt((double)obj_lp))/(double)obj_lp))); 1 - ((1-0.01*n**1/3)^(1/n)) =
+  // normalized load rate, less math
+  double adj_obj_lp_ratio =
+    1 - pow((1 - cbrt((double)obj_lp) / 100), 1 / (double)obj_lp);
 
   // obj_lp_ratio = 1 - pow((1 - (double)fixed_chance/100), (double)obj_lp);
-  double obj_lp_ratio = (double)fixed_chance/100;
+  double obj_lp_ratio = (double)fixed_chance / 100;
 
   // getting to this point means we've already beat the fixed_chance%
   // chance of loading an object.  This has to be taken into account
   // when computing the odds of the normalized load potential.
-  // vlogf(LOG_MISC, format("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
+  // vlogf(LOG_MISC, format("(10000000 * adj_obj_lp_ratio / obj_lp_ratio *
+  // stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio *
+  // stats.equip));
   bool loadFail = true;
-  if((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-     (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*tweakInfo[TWEAK_LOADRATE]->current)))
-  {
+  if ((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
+      (::number(0, 9999999) < (int)(10000000 * adj_obj_lp_ratio / obj_lp_ratio *
+                                    tweakInfo[TWEAK_LOADRATE]->current))) {
     if (!(flags & resetFlagPropLoad))
       obj = read_object_buy_build(mob, rs.arg1, REAL);
     else
@@ -2914,12 +2901,13 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   mud_assert(realslot >= MIN_WEAR && realslot < MAX_WEAR, "bad slot");
 
   // check for double-equip
-  if (mob->equipment[realslot])
-  {
-    vlogf(LOG_LOW, format("'E' command operating on already equipped slot.  %s, %s slot %d\n\rpre-equipped with %s, is_same: %s") %  
-          mob->getName() % obj->getName() % realslot %
-          mob->equipment[realslot]->getName() %
-          ((mob->equipment[realslot] == obj) ? "true" : "false"));
+  if (mob->equipment[realslot]) {
+    vlogf(LOG_LOW,
+      format("'E' command operating on already equipped slot.  %s, %s slot "
+             "%d\n\rpre-equipped with %s, is_same: %s") %
+        mob->getName() % obj->getName() % realslot %
+        mob->equipment[realslot]->getName() %
+        ((mob->equipment[realslot] == obj) ? "true" : "false"));
     delete obj;
     last_cmd = objload = false;
     return;
@@ -2927,28 +2915,36 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   // these are just safety logs, equipping will be done regardless
   if (!mob->canUseEquipment(obj, SILENT_YES))
-    vlogf(LOG_LOW, format("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
-  TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
-  if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != Config::Port::PROD) {
-    vlogf(LOG_LOW, format("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
-          obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
-          mob->getName() % mob->GetMaxLevel());
+    vlogf(LOG_LOW,
+      format("'E' command equipping unusable item (%s:%d) on (%s:%d).") %
+        obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
+  TBaseClothing* tbc = dynamic_cast<TBaseClothing*>(obj);
+  if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) &&
+      gamePort != Config::Port::PROD) {
+    vlogf(LOG_LOW, format("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") %
+                     obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
+                     mob->getName() % mob->GetMaxLevel());
   }
   if (tbc && !mob->validEquipSlot(realslot) && !tbc->isSaddle())
-    vlogf(LOG_LOW, format("'E' command for %s equipping item (%s) on nonvalid slot %d.") % mob->getName() % tbc->getName() % realslot);
+    vlogf(LOG_LOW,
+      format("'E' command for %s equipping item (%s) on nonvalid slot %d.") %
+        mob->getName() % tbc->getName() % realslot);
   if (!check_size_restrictions(mob, obj, realslot, mob) &&
-      realslot != HOLD_RIGHT && realslot != HOLD_LEFT)
-  {
+      realslot != HOLD_RIGHT && realslot != HOLD_LEFT) {
     int size_per = 100;
-    if (race_vol_constants[mapSlotToFile(realslot)])
-    {
-      size_per = (int)(100.0 * obj->getVolume() / race_vol_constants[mapSlotToFile( realslot)]);
+    if (race_vol_constants[mapSlotToFile(realslot)]) {
+      size_per = (int)(100.0 * obj->getVolume() /
+                       race_vol_constants[mapSlotToFile(realslot)]);
       if (obj->isPaired())
         size_per /= 2;
     }
-    vlogf(LOG_LOW, format("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) change vol to %d, or height to %d.") %  
-        mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum() % (mob->getHeight() * 100) %
-        size_per % (mob->getHeight() * (obj->isPaired() ? 2 : 1) * race_vol_constants[mapSlotToFile( realslot)]) %
+    vlogf(LOG_LOW,
+      format("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) "
+             "change vol to %d, or height to %d.") %
+        mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum() %
+        (mob->getHeight() * 100) % size_per %
+        (mob->getHeight() * (obj->isPaired() ? 2 : 1) *
+          race_vol_constants[mapSlotToFile(realslot)]) %
         (size_per / 100));
   }
   // end sanity checks
@@ -2966,26 +2962,33 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   double al = obj->objLevel();
   double grl = mob->getRealLevel();
   if (al > (grl + 1))
-    vlogf(LOG_LOW, format("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
+    vlogf(LOG_LOW, format("Mob (%s:%d) of level %.1f loading item (%s:%d) "
+                          "thought to be level %.1f.") %
+                     mob->getName() % mob->mobVnum() % grl % obj->getName() %
+                     obj->objVnum() % al);
   if (!Config::LoadOnDeath() && !mob->equipment[realslot])
-    vlogf(LOG_LOW, format("Zone-file %s (%d) failed to equip %s (%d)") % mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
+    vlogf(LOG_LOW, format("Zone-file %s (%d) failed to equip %s (%d)") %
+                     mob->getName() % mob->mobVnum() % obj->getName() %
+                     obj->objVnum());
 
   last_cmd = true;
 }
 
-void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdM(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   mob = NULL;
   last_cmd = mobload = false;
 
   // check if zone is disabled or if mob exceeds absolute max
-  if (rs.arg1 < 0 || rs.arg1 >= (signed int) mob_index.size()) {
-    vlogf(LOG_LOW, format("Detected bogus mob number (%d) on read_mobile call for resetZone (load room %d).") % rs.arg1 % rs.arg3);
+  if (rs.arg1 < 0 || rs.arg1 >= (signed int)mob_index.size()) {
+    vlogf(LOG_LOW, format("Detected bogus mob number (%d) on read_mobile call "
+                          "for resetZone (load room %d).") %
+                     rs.arg1 % rs.arg3);
     return;
   }
 
-  if(zone.zone_value != 0 && (flags & resetFlagBootTime)){
-    mob_index[rs.arg1].doesLoad=true;
+  if (zone.zone_value != 0 && (flags & resetFlagBootTime)) {
+    mob_index[rs.arg1].doesLoad = true;
     mob_index[rs.arg1].numberLoad++;
   }
 
@@ -2993,31 +2996,30 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   // catch cases where builder used global max over zonefile max
-  if (rs.arg2 > mob_index[rs.arg1].max_exist && rs.arg3 != zone.random_room)
-  {
-    vlogf(LOG_LOW, format("Mob %s (%i) tried has improper load max (%i) compared to global (%i) in zonefile") %
-      mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt % rs.arg2 % mob_index[rs.arg1].max_exist);
+  if (rs.arg2 > mob_index[rs.arg1].max_exist && rs.arg3 != zone.random_room) {
+    vlogf(LOG_LOW, format("Mob %s (%i) tried has improper load max (%i) "
+                          "compared to global (%i) in zonefile") %
+                     mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt %
+                     rs.arg2 % mob_index[rs.arg1].max_exist);
   }
 
-  if (mob_index[rs.arg1].getNumber() >= mob_index[rs.arg1].max_exist)
-  {
-    if((flags & resetFlagBootTime))
-      vlogf(LOG_LOW, format("Mob %s (%i) tried to load but hit max_exist") % 
-            mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt);
+  if (mob_index[rs.arg1].getNumber() >= mob_index[rs.arg1].max_exist) {
+    if ((flags & resetFlagBootTime))
+      vlogf(LOG_LOW, format("Mob %s (%i) tried to load but hit max_exist") %
+                       mob_index[rs.arg1].short_desc % mob_index[rs.arg1].virt);
     return;
   }
 
-  TRoom *rp = real_roomp(rs.arg3);
-  if (!rp)
-  {
-    vlogf(LOG_LOW, format("No room (%d) in M command (%d)") % rs.arg3 % rs.arg1);
+  TRoom* rp = real_roomp(rs.arg3);
+  if (!rp) {
+    vlogf(LOG_LOW,
+      format("No room (%d) in M command (%d)") % rs.arg3 % rs.arg1);
     return;
   }
 
   int existingCount = 0;
-  for (TThing *t = rp->tBornInsideMe; t; t = t->nextBorn)
-  {
-    TMonster *tMonster = dynamic_cast<TMonster *>(t);
+  for (TThing* t = rp->tBornInsideMe; t; t = t->nextBorn) {
+    TMonster* tMonster = dynamic_cast<TMonster*>(t);
     if (tMonster && tMonster->mobVnum() == mob_index[rs.arg1].virt)
       existingCount++;
   }
@@ -3027,7 +3029,7 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     return;
 
   if (!(mob = read_mobile(rs.arg1, REAL))) {
-    vlogf(LOG_BUG, format("Error reading mobile (%d).  You suck.") %  rs.arg1);
+    vlogf(LOG_BUG, format("Error reading mobile (%d).  You suck.") % rs.arg1);
     return;
   }
 
@@ -3046,57 +3048,55 @@ void runResetCmdM(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   // Slap the mob on the born list.
   *rp << *mob;
 
-  if (rs.command == 'M')
-  {
+  if (rs.command == 'M') {
     mob->brtRoom = (rp ? rp->number : Room::NOWHERE);
     mobRepop(mob, zone.zone_nr, (rp ? rp->number : Room::NOWHERE));
   }
   last_cmd = mobload = true;
 }
 
-
-void runResetCmdC(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdC(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   last_cmd = mobload = false;
 
   if (!mob)
     return;
 
-  TMonster *charmie = NULL;
+  TMonster* charmie = NULL;
   runResetCmdM(zone, rs, flags, mobload, charmie, objload, obj, last_cmd);
   if (!charmie)
     return;
 
   // set master
-  TBeing *leader = mob;
-  while(leader->master)
+  TBeing* leader = mob;
+  while (leader->master)
     leader = leader->master;
   leader->addFollower(charmie);
   SET_BIT(charmie->specials.affectedBy, AFF_CHARM);
 
   // mob popped
   charmie->brtRoom = (charmie->roomp ? charmie->roomp->number : Room::NOWHERE);
-  mobRepop(charmie, zone.zone_nr, (charmie->roomp ? charmie->roomp->number : Room::NOWHERE));
+  mobRepop(charmie, zone.zone_nr,
+    (charmie->roomp ? charmie->roomp->number : Room::NOWHERE));
   mob = charmie;
   last_cmd = mobload = true;
 }
 
-
-void runResetCmdK(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdK(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   last_cmd = mobload = false;
 
   if (!mob)
     return;
 
-  TMonster *grouper = NULL;
+  TMonster* grouper = NULL;
   runResetCmdM(zone, rs, flags, mobload, grouper, objload, obj, last_cmd);
   if (!grouper)
     return;
 
   // set master
-  TBeing *leader = mob;
-  while(leader->master)
+  TBeing* leader = mob;
+  while (leader->master)
     leader = leader->master;
   leader->addFollower(grouper);
   SET_BIT(leader->specials.affectedBy, AFF_GROUP);
@@ -3104,33 +3104,40 @@ void runResetCmdK(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 
   // mob popped
   grouper->brtRoom = (grouper->roomp ? grouper->roomp->number : Room::NOWHERE);
-  mobRepop(grouper, zone.zone_nr, (grouper->roomp ? grouper->roomp->number : Room::NOWHERE));
+  mobRepop(grouper, zone.zone_nr,
+    (grouper->roomp ? grouper->roomp->number : Room::NOWHERE));
   mob = grouper;
   last_cmd = mobload = true;
 }
 
-
-void runResetCmdR(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdR(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   last_cmd = mobload = false;
 
   if (!mob)
     return;
 
-  TMonster *rider = NULL;
+  TMonster* rider = NULL;
   runResetCmdM(zone, rs, flags, mobload, rider, objload, obj, last_cmd);
   if (!rider)
     return;
 
   // sanity checks
   if (mob->getHeight() <= (6 * rider->getHeight() / 10))
-    vlogf(LOG_LOW, format("Mob mounting mount that is too small.  [%s] [%s]") % rider->getName() % mob->getName());
+    vlogf(LOG_LOW, format("Mob mounting mount that is too small.  [%s] [%s]") %
+                     rider->getName() % mob->getName());
   if (mob->getHeight() >= (5 * rider->getHeight() / 2))
-    vlogf(LOG_LOW, format("Mob mounting mount that is too big.  [%s] [%s]") % rider->getName() % mob->getName());
-  if (compareWeights(rider->getTotalWeight(TRUE),(mob->carryWeightLimit() - mob->getCarriedWeight())) == -1)
-    vlogf(LOG_LOW, format("Mob mounting mount that is too weak.  [%s] [%s]") % rider->getName() % mob->getName());
+    vlogf(LOG_LOW, format("Mob mounting mount that is too big.  [%s] [%s]") %
+                     rider->getName() % mob->getName());
+  if (compareWeights(rider->getTotalWeight(TRUE),
+        (mob->carryWeightLimit() - mob->getCarriedWeight())) == -1)
+    vlogf(LOG_LOW, format("Mob mounting mount that is too weak.  [%s] [%s]") %
+                     rider->getName() % mob->getName());
   if (mob->GetMaxLevel() > rider->GetMaxLevel())
-    vlogf(LOG_LOW, format("Mob mounting mount that is too strong.  [%s:%d] [%s:%d]") % rider->getName() % rider->GetMaxLevel() % mob->getName() % mob->GetMaxLevel());
+    vlogf(LOG_LOW,
+      format("Mob mounting mount that is too strong.  [%s:%d] [%s:%d]") %
+        rider->getName() % rider->GetMaxLevel() % mob->getName() %
+        mob->GetMaxLevel());
 
   // mount up
   rider->mount(mob);
@@ -3147,105 +3154,104 @@ void runResetCmdR(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   last_cmd = mobload = true;
 }
 
-void runResetCmdA(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdA(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   int iRoom;
   for (iRoom = 0; iRoom < 10; iRoom++)
     if (real_roomp(zone.random_room = ::number(rs.arg1, rs.arg2)))
       break;
 
   if (iRoom >= 10)
-    vlogf(LOG_LOW, format("Unable to detect room in 'A' %d %d") % rs.arg1 % rs.arg2);
+    vlogf(LOG_LOW,
+      format("Unable to detect room in 'A' %d %d") % rs.arg1 % rs.arg2);
 }
 
-void runResetCmdQMark(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdQMark(zoneData& zone, resetCom& rs, resetFlag flags,
+  bool& mobload, TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   if (!rs.character)
     return;
 
-  if ((rs.character == 'M') ||
-      (rs.character == 'O') ||
-      (rs.character == 'B') ||
-      (rs.character == 'L') ||
-      (objload && (rs.character == 'P')) ||
+  if ((rs.character == 'M') || (rs.character == 'O') || (rs.character == 'B') ||
+      (rs.character == 'L') || (objload && (rs.character == 'P')) ||
       (mobload && (rs.character != 'P'))) {
-
     // If we are putting certain objects into the world or
     // giving certain objects to mobs, follow the chance defined
     // in the zonefile.  Otherwise, set the chance to fixed_chance.
     int roll = (flags & resetFlagFindLoadPotential) ? 1 : dice(1, 100);
-    bool useArgs = (objload && rs.character == 'P') || (mobload && rs.character == 'G');
+    bool useArgs =
+      (objload && rs.character == 'P') || (mobload && rs.character == 'G');
     int my_chance = useArgs ? rs.arg1 : fixed_chance;
 
     last_cmd = (rs.arg1 >= 98 || roll <= my_chance);
     if (!last_cmd) {
       if (rs.character == 'M')
-        mobload = 0; // cancel all operations after this 'M' which use the mob ptr by setting !mobload
+        mobload = 0;  // cancel all operations after this 'M' which use the mob
+                      // ptr by setting !mobload
       else if (rs.character == 'O' || rs.character == 'B')
-        objload = 0; // cancel all operations after this 'B' or 'O' which use the obj ptr by setting !objload
+        objload = 0;  // cancel all operations after this 'B' or 'O' which use
+                      // the obj ptr by setting !objload
     }
   }
 }
 
 // load object onto floor - usually done for furniture and props
-void runResetCmdB(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdB(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   objload = false;
   last_cmd = false;
 
-  TRoom *rp = real_roomp(rs.arg3);
-  if (!rp)
-  {
-    vlogf(LOG_LOW, format("No room (%d) in B/O command (%d).  cmd=%d, zone=%d") %  rs.arg3 % rs.arg1 % rs.cmd_no % zone.zone_nr);
+  TRoom* rp = real_roomp(rs.arg3);
+  if (!rp) {
+    vlogf(LOG_LOW,
+      format("No room (%d) in B/O command (%d).  cmd=%d, zone=%d") % rs.arg3 %
+        rs.arg1 % rs.cmd_no % zone.zone_nr);
     return;
   }
 
   // count all of the objects
   int count = 0;
-  TObj *found = NULL;
-  for(StuffIter it= rp->stuff.begin();it!= rp->stuff.end();++it)
-  {
-    TObj *objScan = dynamic_cast<TObj *>(*it);
-    if(objScan && objScan->objVnum() == obj_index[rs.arg1].virt)
-    {
+  TObj* found = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end(); ++it) {
+    TObj* objScan = dynamic_cast<TObj*>(*it);
+    if (objScan && objScan->objVnum() == obj_index[rs.arg1].virt) {
       found = objScan;
       count++;
     }
   }
 
   // if we are over or at max, just re-use the last one
-  if (count >= rs.arg2)
-  {
+  if (count >= rs.arg2) {
     obj = found;
     last_cmd = objload = true;
     return;
   }
 
   // if we are at world max, use last one (if exists)
-  if (obj_index[rs.arg1].getNumber() >= obj_index[rs.arg1].max_exist)
-  {
+  if (obj_index[rs.arg1].getNumber() >= obj_index[rs.arg1].max_exist) {
     obj = found;
     last_cmd = objload = (obj != NULL);
     return;
   }
 
   // load is the number we are allowed to load, should always be > 0
-  int load = min(max(rs.arg2, 0), max(0, obj_index[rs.arg1].max_exist - obj_index[rs.arg1].getNumber()));
-  if (load <= 0)
-  {
-    vlogf(LOG_LOW, format("Strange error attempting to load %i of object %i in room %i.") % rs.arg2 % rs.arg1 % rs.arg3);
+  int load = min(max(rs.arg2, 0),
+    max(0, obj_index[rs.arg1].max_exist - obj_index[rs.arg1].getNumber()));
+  if (load <= 0) {
+    vlogf(LOG_LOW,
+      format("Strange error attempting to load %i of object %i in room %i.") %
+        rs.arg2 % rs.arg1 % rs.arg3);
     obj = found;
     last_cmd = objload = (obj != NULL);
     return;
   }
 
   // load the objects
-  for(; count < load; ++count)
-  {
+  for (; count < load; ++count) {
     obj = read_object(rs.arg1, REAL);
-    if (obj == NULL)
-    {
-      vlogf(LOG_LOW, format("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %  rs.arg1 % rs.arg3 % rs.cmd_no % zone.zone_nr);
+    if (obj == NULL) {
+      vlogf(LOG_LOW,
+        format("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %
+          rs.arg1 % rs.arg3 % rs.cmd_no % zone.zone_nr);
       objload = last_cmd = false;
       continue;
     }
@@ -3256,8 +3262,8 @@ void runResetCmdB(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 }
 
 // like 'B' except boot time only
-void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdO(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   objload = last_cmd = false;
 
   if (IS_SET(flags, resetFlagBootTime)) {
@@ -3265,12 +3271,13 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   } else {
     // TODO make this a tweakable percent chance
     // TODO move this into runresetcmdb
-    TRoom *room = real_roomp(rs.arg3);
-    if (!room) // don't need to log this, runresetcmdb already bitched about it
+    TRoom* room = real_roomp(rs.arg3);
+    if (!room)  // don't need to log this, runresetcmdb already bitched about it
       return;
-    for (auto thing: room->stuff) {
-      auto *container = dynamic_cast<TOpenContainer *>(thing);
-      if (!container || container->objVnum() != obj_index[rs.arg1].virt || container->getKeyNum() < 0)
+    for (auto thing : room->stuff) {
+      auto* container = dynamic_cast<TOpenContainer*>(thing);
+      if (!container || container->objVnum() != obj_index[rs.arg1].virt ||
+          container->getKeyNum() < 0)
         continue;
       container->addContainerFlag(CONT_CLOSED);
       container->addContainerFlag(CONT_LOCKED);
@@ -3280,29 +3287,31 @@ void runResetCmdO(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
 }
 
 // used to 'place' objects on tables, into containers, etc
-void runResetCmdP(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdP(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   last_cmd = false;
 
-  if (!obj || obj_index[rs.arg1].getNumber() >= obj_index[rs.arg1].max_exist)
-  {
-    vlogf(LOG_LOW, format("Error placing (%d) in P command.  cmd=%d, zone=%d") %  rs.arg1 % rs.cmd_no % zone.zone_nr);
+  if (!obj || obj_index[rs.arg1].getNumber() >= obj_index[rs.arg1].max_exist) {
+    vlogf(LOG_LOW, format("Error placing (%d) in P command.  cmd=%d, zone=%d") %
+                     rs.arg1 % rs.cmd_no % zone.zone_nr);
     return;
   }
 
-  bool isContainer = dynamic_cast<TBaseContainer *>(obj);
-  bool isTable = dynamic_cast<TTable *>(obj);
-  if (!isContainer && !isTable)
-  {
-    vlogf(LOG_LOW, format("Error placing (%d) in P command into object %d - not a container.  cmd=%d, zone=%d") %  rs.arg1 % obj->objVnum() % rs.cmd_no % zone.zone_nr);
+  bool isContainer = dynamic_cast<TBaseContainer*>(obj);
+  bool isTable = dynamic_cast<TTable*>(obj);
+  if (!isContainer && !isTable) {
+    vlogf(LOG_LOW, format("Error placing (%d) in P command into object %d - "
+                          "not a container.  cmd=%d, zone=%d") %
+                     rs.arg1 % obj->objVnum() % rs.cmd_no % zone.zone_nr);
     return;
   }
 
-  TObj *newobj = read_object(rs.arg1, REAL);
+  TObj* newobj = read_object(rs.arg1, REAL);
   if (!newobj)
     return;
 
-  // don't add up cash loot on resets -- with rare looting, it adds up to way too much
+  // don't add up cash loot on resets -- with rare looting, it adds up to way
+  // too much
   if (newobj->itemType() == ITEM_MONEY) {
     for (const auto contents : obj->stuff) {
       TObj* contentObj = dynamic_cast<TObj*>(contents);
@@ -3323,14 +3332,14 @@ void runResetCmdP(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   log_object(newobj);
 }
 
-// Change ONE value of the four values upon reset- Russ 
-void runResetCmdV(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+// Change ONE value of the four values upon reset- Russ
+void runResetCmdV(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   last_cmd = false;
 
-  if (rs.arg1 < 0 || rs.arg1 >= 4)
-  {
-    vlogf(LOG_LOW, format("Bad slot (%d) for V command (%d)") % rs.arg1 % rs.arg2);
+  if (rs.arg1 < 0 || rs.arg1 >= 4) {
+    vlogf(LOG_LOW,
+      format("Bad slot (%d) for V command (%d)") % rs.arg1 % rs.arg2);
     return;
   }
 
@@ -3344,26 +3353,20 @@ void runResetCmdV(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   last_cmd = true;
 }
 
-
 // Set traps for doors and containers - Russ
-void runResetCmdT(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  // if_flag-->0 : trap door, else trap previous object 
-  if (!rs.if_flag)
-  {
-    TRoom *rp = real_roomp(rs.arg1);
-    if (rp && rp->dir_option[rs.arg2])
-    {
+void runResetCmdT(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  // if_flag-->0 : trap door, else trap previous object
+  if (!rs.if_flag) {
+    TRoom* rp = real_roomp(rs.arg1);
+    if (rp && rp->dir_option[rs.arg2]) {
       SET_BIT(rp->dir_option[rs.arg2]->condition, EXIT_TRAPPED);
       rp->dir_option[rs.arg2]->trap_info = rs.arg3;
       rp->dir_option[rs.arg2]->trap_dam = rs.arg4;
     }
-  }
-  else
-  {
-    TOpenContainer *trc = dynamic_cast<TOpenContainer *>(obj);
-    if (trc)
-    {
+  } else {
+    TOpenContainer* trc = dynamic_cast<TOpenContainer*>(obj);
+    if (trc) {
       trc->addContainerFlag(CONT_TRAPPED);
       trc->setContainerTrapType(mapFileToDoorTrap(rs.arg1));
       trc->setContainerTrapDam(rs.arg2);
@@ -3372,16 +3375,16 @@ void runResetCmdT(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   last_cmd = true;
 }
 
-void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if (rs.arg1 < 0 || rs.arg1 >= (signed int) obj_index.size())
-  {
-    vlogf(LOG_LOW, format("Range error (%d not in obj_index)  G command #%d in %s") % rs.arg1 % rs.cmd_no % zone.name.c_str());
+void runResetCmdG(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  if (rs.arg1 < 0 || rs.arg1 >= (signed int)obj_index.size()) {
+    vlogf(LOG_LOW,
+      format("Range error (%d not in obj_index)  G command #%d in %s") %
+        rs.arg1 % rs.cmd_no % zone.name.c_str());
     return;
   }
 
-  if ((flags & resetFlagFindLoadPotential))
-  {
+  if ((flags & resetFlagFindLoadPotential)) {
     tallyObjLoadPotential(obj_index[rs.arg1].virt);
     return;
   }
@@ -3389,15 +3392,15 @@ void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   objload = last_cmd = false;
 
   if (!(obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist &&
-      (obj = read_object_buy_build(mob, rs.arg1, REAL))))
-  {
+        (obj = read_object_buy_build(mob, rs.arg1, REAL)))) {
     repoCheck(mob, rs.arg1);
     return;
   }
 
-  if (mob == nullptr)
-  {
-    vlogf(LOG_BUG, format("Nullptr mob in G command #%d (%d %d %d %d) in %s") % rs.cmd_no % rs.arg1 % rs.arg2 % rs.arg3 % rs.arg4 % zone.name);
+  if (mob == nullptr) {
+    vlogf(LOG_BUG, format("Nullptr mob in G command #%d (%d %d %d %d) in %s") %
+                     rs.cmd_no % rs.arg1 % rs.arg2 % rs.arg3 % rs.arg4 %
+                     zone.name);
     return;
   }
 
@@ -3407,71 +3410,71 @@ void runResetCmdG(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   objload = last_cmd = true;
 }
 
-
-void runResetCmdH(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdH(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   last_cmd = mob ? mob->addHatred(zoneHateT(rs.arg1), rs.arg2) : 0;
 }
 
 // X <set num>3 <slot>1 <vnum>2
-void runResetCmdX(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if (rs.arg3 >= 0 && rs.arg3 < 16 && rs.arg1 >= MIN_WEAR && rs.arg1 < MAX_WEAR) {
+void runResetCmdX(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  if (rs.arg3 >= 0 && rs.arg3 < 16 && rs.arg1 >= MIN_WEAR &&
+      rs.arg1 < MAX_WEAR) {
     zone.armorSets.setArmor(rs.arg3, rs.arg1, rs.arg2);
   }
 }
 
 // Z <if flag> <set num> <perc chance>
-void runResetCmdZ(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
+void runResetCmdZ(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  if ((flags & resetFlagFindLoadPotential)) {
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
         tallyObjLoadPotential(zone.armorSets.getArmor(rs.arg1, i));
     return;
   }
 
-  if (mob && mobload && rs.arg1 >=0)
-  {
+  if (mob && mobload && rs.arg1 >= 0) {
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
-        loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)");
+        loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),
+          (rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)");
   }
 }
 
-void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
-    mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance, true);
+void runResetCmdY(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  if ((flags & resetFlagFindLoadPotential)) {
+    mob->loadSetEquipment(rs.arg1, NULL,
+      (rs.arg2 >= 98) ? rs.arg2 : fixed_chance, true);
     return;
   }
 
   if (!mob || !mobload)
-    return; // log error here?
+    return;  // log error here?
 
-  mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance);
+  mob->loadSetEquipment(rs.arg1, NULL,
+    (rs.arg2 >= 98) ? rs.arg2 : fixed_chance);
 
   if (!Config::LoadOnDeath() && mob->hasClass(CLASS_MAGE)) {
-    TSpellBag *tBagA = NULL,
-              *tBagB = NULL;
-    TThing    *tThing=NULL;
+    TSpellBag *tBagA = NULL, *tBagB = NULL;
+    TThing* tThing = NULL;
 
     // Find Held Spellbag
-    for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end() && (tThing=*it);++it)
-      if ((tBagA = dynamic_cast<TSpellBag *>(tThing)))
+    for (StuffIter it = mob->stuff.begin();
+         it != mob->stuff.end() && (tThing = *it); ++it)
+      if ((tBagA = dynamic_cast<TSpellBag*>(tThing)))
         break;
 
     // Find Worn Spellbag
     for (wearSlotT tWear = MIN_WEAR; tWear < MAX_WEAR; tWear++)
       if (mob->equipment[tWear] &&
-          (tBagB = dynamic_cast<TSpellBag *>(mob->equipment[tWear])))
+          (tBagB = dynamic_cast<TSpellBag*>(mob->equipment[tWear])))
         break;
 
     if (tBagA && tBagB) {
-      for(StuffIter itt=tBagA->stuff.begin();itt!=tBagA->stuff.end();){
-	tThing=*(itt++);
+      for (StuffIter itt = tBagA->stuff.begin(); itt != tBagA->stuff.end();) {
+        tThing = *(itt++);
         --(*tThing);
         *tBagB += *tThing;
       }
@@ -3484,23 +3487,23 @@ void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   last_cmd = true;
 }
 
-void runResetCmdF(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdF(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   last_cmd = mob ? mob->addFears(zoneHateT(rs.arg1), rs.arg2) : 0;
 }
 
-
-void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{          
-  TRoom *rp = real_roomp(rs.arg1);
+void runResetCmdD(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  TRoom* rp = real_roomp(rs.arg1);
   if (!rp)
     return;
 
-  roomDirData * exitp = rp->dir_option[rs.arg2];
+  roomDirData* exitp = rp->dir_option[rs.arg2];
   if (!exitp || IS_SET(exitp->condition, EXIT_DESTROYED) ||
-      IS_SET(exitp->condition, EXIT_CAVED_IN) || exitp->door_type == DOOR_NONE)
-  {
-    vlogf(LOG_LOW, format("'D' command operating on DOOR_NONE in room %d") %  rp->number);
+      IS_SET(exitp->condition, EXIT_CAVED_IN) ||
+      exitp->door_type == DOOR_NONE) {
+    vlogf(LOG_LOW,
+      format("'D' command operating on DOOR_NONE in room %d") % rp->number);
     return;
   }
 
@@ -3511,8 +3514,7 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     // to see if the exit defaults to destroyed (ugh)
   }
 
-  switch (rs.arg3)
-  {
+  switch (rs.arg3) {
     case 0:
       if (IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s opens.\n\r", exitp->getName().uncap().c_str());
@@ -3526,29 +3528,32 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
       REMOVE_BIT(exitp->condition, EXIT_LOCKED);
       break;
     case 2:
-      if (exitp->key < 0) 
-        vlogf(LOG_LOW, format("Door with key < 0 set to lock in room %d.") % rp->number);
+      if (exitp->key < 0)
+        vlogf(LOG_LOW,
+          format("Door with key < 0 set to lock in room %d.") % rp->number);
       if (!IS_SET(exitp->condition, EXIT_CLOSED))
         sendrpf(rp, "The %s closes.\n\r", exitp->getName().uncap().c_str());
       SET_BIT(exitp->condition, EXIT_LOCKED);
       SET_BIT(exitp->condition, EXIT_CLOSED);
       break;
     default:
-      vlogf(LOG_LOW, format("Error in 'D' command in room %d - bad arg3 parameter of %i.") % rp->number % rs.arg3);
+      vlogf(LOG_LOW,
+        format("Error in 'D' command in room %d - bad arg3 parameter of %i.") %
+          rp->number % rs.arg3);
       break;
   }
 
   last_cmd = true;
 }
 
-void runResetCmdL(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  last_cmd = (flags & resetFlagBootTime) ? sysLootLoad(rs, mob, obj, false) : false;
+void runResetCmdL(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  last_cmd =
+    (flags & resetFlagBootTime) ? sysLootLoad(rs, mob, obj, false) : false;
 }
 
 // marks an object as a 'prop' - not for player use
-void markProp(TObj *obj)
-{
+void markProp(TObj* obj) {
   if (!obj)
     return;
 
@@ -3556,41 +3561,46 @@ void markProp(TObj *obj)
   obj->obj_flags.cost = 0;
 }
 
-// loads eq, just like 'E' command and then marks as 'prop' (counts as regular eq: best to load specialized eq)
-// note: this eq loads without buy_build operations and equips it even if LoadOnDeath is configured on
-void runResetCmdI(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  runResetCmdE(zone, rs, flags & resetFlagPropLoad, mobload, mob, objload, obj, last_cmd);
+// loads eq, just like 'E' command and then marks as 'prop' (counts as regular
+// eq: best to load specialized eq) note: this eq loads without buy_build
+// operations and equips it even if LoadOnDeath is configured on
+void runResetCmdI(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  runResetCmdE(zone, rs, flags & resetFlagPropLoad, mobload, mob, objload, obj,
+    last_cmd);
   if (obj && last_cmd)
     markProp(obj);
 }
 
-// loads a local set of eq as prop objects same syntax as 'Z' (see 'I' cmd for more info on props) 
-void runResetCmdJ(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
+// loads a local set of eq as prop objects same syntax as 'Z' (see 'I' cmd for
+// more info on props)
+void runResetCmdJ(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  if ((flags & resetFlagFindLoadPotential)) {
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
         tallyObjLoadPotential(zone.armorSets.getArmor(rs.arg1, i));
     return;
   }
 
-  if (mob && mobload && rs.arg1 >=0)
+  if (mob && mobload && rs.arg1 >= 0)
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
-        if (loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)", flags & resetFlagPropLoad))
-          markProp(dynamic_cast<TObj*>(mob->equipment[i])); // assume: loadsetCheck returning true = obj on mob in that slot
+        if (loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),
+              (rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)",
+              flags & resetFlagPropLoad))
+          markProp(dynamic_cast<TObj*>(
+            mob->equipment[i]));  // assume: loadsetCheck returning true = obj
+                                  // on mob in that slot
 }
 
-void zoneData::resetZone(bool bootTime, bool findLoadPotential)
-{
+void zoneData::resetZone(bool bootTime, bool findLoadPotential) {
   bool last_cmd = true;
   bool mobload = false;
   bool objload = false;
   bool lastStuck = false;
-  TMonster *mob = NULL;
-  TObj *obj = NULL;
+  TMonster* mob = NULL;
+  TObj* obj = NULL;
   resetFlag flags = resetFlagNone;
 
   if (this->enabled == FALSE && gamePort == Config::Port::PROD) {
@@ -3598,7 +3608,7 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
       vlogf(LOG_MISC, "*** Zone was disabled.");
     return;
   }
-  
+
   if (bootTime)
     flags |= resetFlagBootTime;
   if (findLoadPotential)
@@ -3607,13 +3617,14 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   armorSets.resetArmor();
   random_room = -1;
 
-  if(!bootTime) {
-    vlogf(LOG_SILENT, format("Resetting zone '%s' (rooms %d-%d).") % name % bottom % top);
+  if (!bootTime) {
+    vlogf(LOG_SILENT,
+      format("Resetting zone '%s' (rooms %d-%d).") % name % bottom % top);
     update_commod_index();
   }
 
-  for (int cmd_no = 0;cmd_no < (int)cmd_table.size(); cmd_no++) {
-    resetCom &rs = cmd_table[cmd_no];
+  for (int cmd_no = 0; cmd_no < (int)cmd_table.size(); cmd_no++) {
+    resetCom& rs = cmd_table[cmd_no];
     rs.cmd_no = cmd_no;
 
     // skip non-load commands when checking load potentials
@@ -3630,7 +3641,8 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
       continue;
     }
 
-    // simplify the room assignment logic - if they use a random room, just assign them the proper roomId
+    // simplify the room assignment logic - if they use a random room, just
+    // assign them the proper roomId
     bool random = rs.usesRandomRoom();
     if (random && random_room > 0)
       rs.arg3 = random_room;
@@ -3647,34 +3659,29 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential)
   }
 
   if (!findLoadPotential)
-    doGenericReset(); // sends CMD_GENERIC_RESET to all objects in zone
+    doGenericReset();  // sends CMD_GENERIC_RESET to all objects in zone
 
   this->age = 0;
 }
 
-
-bool zoneData::doGenericReset(void) 
-{
+bool zoneData::doGenericReset(void) {
   int top = 0;
   int bottom = 0;
   int rc;
-  
-  if (zone_nr < 0 || zone_nr >= (signed int) zone_table.size())
-  {
-    vlogf(LOG_BUG, format("Bad zone number in doGenericReset (%d)") %  zone_nr);
+
+  if (zone_nr < 0 || zone_nr >= (signed int)zone_table.size()) {
+    vlogf(LOG_BUG, format("Bad zone number in doGenericReset (%d)") % zone_nr);
     return FALSE;
   }
   bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
   top = zone_table[zone_nr].top;
 
-  TObj *o;
+  TObj* o;
   //  TTrashPile *pile;
-  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
-    o=*iter;
-    if (o->objVnum() >= bottom && o->objVnum() <= top)
-    {
-      if (o->spec)
-      {
+  for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter) {
+    o = *iter;
+    if (o->objVnum() >= bottom && o->objVnum() <= top) {
+      if (o->spec) {
         rc = o->checkSpec(NULL, CMD_GENERIC_RESET, "", NULL);
         if (IS_SET_DELETE(rc, DELETE_ITEM)) {
           delete o;
@@ -3691,27 +3698,23 @@ bool zoneData::doGenericReset(void)
   return TRUE;
 }
 
-
 // echos a sstring to every room in the zone except exclude_room
-void zoneData::sendTo(sstring s, int exclude_room)
-{
+void zoneData::sendTo(sstring s, int exclude_room) {
   TBeing *tmp_victim, *temp;
-  
+
   for (tmp_victim = character_list; tmp_victim; tmp_victim = temp) {
     temp = tmp_victim->next;
-    
-    if(tmp_victim->roomp->getZoneNum() == zone_nr &&
-       tmp_victim->in_room != exclude_room){
+
+    if (tmp_victim->roomp->getZoneNum() == zone_nr &&
+        tmp_victim->in_room != exclude_room) {
       tmp_victim->sendTo(COLOR_BASIC, s);
     }
   }
 }
 
-
-// for use in resetZone; return TRUE if zone 'nr' is free of PC's  
-bool zoneData::isEmpty(void)
-{
-  Descriptor *i;
+// for use in resetZone; return TRUE if zone 'nr' is free of PC's
+bool zoneData::isEmpty(void) {
+  Descriptor* i;
 
   for (i = descriptor_list; i; i = i->next)
     if (!i->connected && i->character && i->character->roomp)
@@ -3721,50 +3724,48 @@ bool zoneData::isEmpty(void)
   return (true);
 }
 
-// read and allocate space for a '~'-terminated sstring from a given file 
-sstring fread_string(FILE *fp)
-{
+// read and allocate space for a '~'-terminated sstring from a given file
+sstring fread_string(FILE* fp) {
   char buf[MAX_STRING_LENGTH], *ptr, *marker = NULL;
 
   *buf = 0;
   ptr = buf;
   unsigned int read_len = MAX_STRING_LENGTH;
-  while(fgets(ptr, read_len, fp)) {
-    //  Check if we've hit the end of sstring marker. 
-    if((marker=strchr(ptr, '~')) != 0) {
+  while (fgets(ptr, read_len, fp)) {
+    //  Check if we've hit the end of sstring marker.
+    if ((marker = strchr(ptr, '~')) != 0) {
       break;
-    }  
+    }
     //  Set the pointer to the end of the sstring. NOTE: This is better then the
-    // strlen because we're not starting at the beggining every time. 
-    if((ptr = strchr(ptr, '\000')) == 0) {
+    // strlen because we're not starting at the beggining every time.
+    if ((ptr = strchr(ptr, '\000')) == 0) {
       vlogf(LOG_FILE, "fread_string(): read error. ack!");
       return "Empty";
     }
-    //  Add the return char. 
+    //  Add the return char.
     *ptr++ = '\r';
 
-    if ((int) (ptr - buf) >= (int) sizeof(buf)) {
-    vlogf(LOG_MISC, "SHIT! buf overflow!");
+    if ((int)(ptr - buf) >= (int)sizeof(buf)) {
+      vlogf(LOG_MISC, "SHIT! buf overflow!");
       vlogf(LOG_BUG, "buf overflow");
     }
 
-    read_len = MAX_STRING_LENGTH - (ptr-buf);
+    read_len = MAX_STRING_LENGTH - (ptr - buf);
   }
   if (marker)
-    *marker = 0;   // Nuke the ~ 
-    // if ((int) (ptr - buf) == 0) {
-      // vlogf(LOG_MISC, "(int) (ptr - buf) == 0");
-      // return NULL;
-      //    }
+    *marker = 0;  // Nuke the ~
+  // if ((int) (ptr - buf) == 0) {
+  // vlogf(LOG_MISC, "(int) (ptr - buf) == 0");
+  // return NULL;
+  //    }
   if (*buf == 0)
     return NULL;
   return buf;
 }
 
-// read contents of a text file, and place in buf 
-bool file_to_sstring(const char *name, sstring &buf, concatT concat)
-{
-  FILE *fl;
+// read contents of a text file, and place in buf
+bool file_to_sstring(const char* name, sstring& buf, concatT concat) {
+  FILE* fl;
   char tmp[256];
 
   if (!concat)
@@ -3774,7 +3775,7 @@ bool file_to_sstring(const char *name, sstring &buf, concatT concat)
     return false;
   }
   do {
-    if(!fgets(tmp, 256, fl) && !feof(fl))
+    if (!fgets(tmp, 256, fl) && !feof(fl))
       vlogf(LOG_FILE, "Unexpected read error in file_to_sstring");
 
     if (!feof(fl)) {
@@ -3782,29 +3783,25 @@ bool file_to_sstring(const char *name, sstring &buf, concatT concat)
       *(tmp + strlen(tmp)) = '\r';
       buf += tmp;
     }
-  }
-  while (!feof(fl));
+  } while (!feof(fl));
 
   fclose(fl);
 
   return true;
 }
 
-TRoom *real_roomp(int virt)
-{
+TRoom* real_roomp(int virt) {
   return ((virt < WORLD_SIZE) && (virt > -1)) ? room_db[virt] : 0;
 }
 
-
-// returns the real number of the monster with given virtual number 
-int real_mobile(int virt)
-{
+// returns the real number of the monster with given virtual number
+int real_mobile(int virt) {
   int bot, top, mid;
 
   bot = 0;
-  top = mob_index.size()-1;
+  top = mob_index.size() - 1;
 
-  // perform binary search on mob-table 
+  // perform binary search on mob-table
   for (;;) {
     mid = (bot + top) / 2;
 
@@ -3819,23 +3816,21 @@ int real_mobile(int virt)
   }
 }
 
-
-// returns the real number of the object with given virtual number 
-int real_object(int virt)
-{
+// returns the real number of the object with given virtual number
+int real_object(int virt) {
   int bot, top, mid;
 
   bot = 0;
-  top = obj_index.size()-1;
+  top = obj_index.size() - 1;
 
-  // perform binary search on obj-table 
+  // perform binary search on obj-table
   for (;;) {
     mid = (bot + top) / 2;
 
     if (obj_index[mid].virt == virt)
       return (mid);
     if (bot >= top) {
-      vlogf(LOG_SILENT, format("real_object: probable failure for %d") %  virt);
+      vlogf(LOG_SILENT, format("real_object: probable failure for %d") % virt);
       return (-1);
     }
     if (obj_index[mid].virt > virt)
@@ -3845,8 +3840,7 @@ int real_object(int virt)
   }
 }
 
-TObj * makeNewObj(itemTypeT tmp)
-{
+TObj* makeNewObj(itemTypeT tmp) {
   switch (tmp) {
     case ITEM_LIGHT:
       return new TLight();
@@ -4001,12 +3995,12 @@ TObj * makeNewObj(itemTypeT tmp)
     case ITEM_UNDEFINED:
     case ITEM_MARTIAL_WEAPON:
     case MAX_OBJ_TYPES:
-      vlogf(LOG_BUG, format("Unknown item type (%d)") %  tmp);
+      vlogf(LOG_BUG, format("Unknown item type (%d)") % tmp);
   }
   return NULL;
 }
 
-resetCom::exec_fn *resetCom::executeMethods[resetCom::cmd_Max];
+resetCom::exec_fn* resetCom::executeMethods[resetCom::cmd_Max];
 
 resetCom::resetCom() :
   command('\0'),
@@ -4015,11 +4009,9 @@ resetCom::resetCom() :
   arg2(0),
   arg3(0),
   arg4(0),
-  character('\0')
-{
+  character('\0') {
   static bool v_isInitialized = false;
-  if (!v_isInitialized)
-  {
+  if (!v_isInitialized) {
     memset(executeMethods, 0, sizeof(executeMethods));
     executeMethods[cmd_Stop] = NULL;
     executeMethods[cmd_LoadMob] = runResetCmdM;
@@ -4047,7 +4039,7 @@ resetCom::resetCom() :
   }
 }
 
-resetCom::resetCom(const resetCom &t) :
+resetCom::resetCom(const resetCom& t) :
   command(t.command),
   if_flag(t.if_flag),
   arg1(t.arg1),
@@ -4055,17 +4047,13 @@ resetCom::resetCom(const resetCom &t) :
   arg3(t.arg3),
   arg4(t.arg4),
   character(t.character),
-  cmd_no(0)
-{
-}
+  cmd_no(0) {}
 
-resetCom::~resetCom()
-{
-}
+resetCom::~resetCom() {}
 
-resetCom & resetCom::operator =(const resetCom &t)
-{
-  if (this == &t) return *this;
+resetCom& resetCom::operator=(const resetCom& t) {
+  if (this == &t)
+    return *this;
 
   command = t.command;
   if_flag = t.if_flag;
@@ -4081,49 +4069,48 @@ resetCom & resetCom::operator =(const resetCom &t)
 }
 
 // helper func for resetCom::hasLoadPotential
-bool comHasLoadPotential(const char cmd)
-{
-  switch(cmd)
-  {
-  case 'E':
-  case 'G':
-  case 'Y':
-  case 'Z':
-  case 'X':
-  case 'I':
-  case 'J':
-    return true;
+bool comHasLoadPotential(const char cmd) {
+  switch (cmd) {
+    case 'E':
+    case 'G':
+    case 'Y':
+    case 'Z':
+    case 'X':
+    case 'I':
+    case 'J':
+      return true;
   }
   return false;
 }
 
 // true if this command possibly affects load potentials
-bool resetCom::hasLoadPotential()
-{
+bool resetCom::hasLoadPotential() {
   if (command == '?')
     return comHasLoadPotential(character);
-  return comHasLoadPotential(command); 
+  return comHasLoadPotential(command);
 }
 
 // returns if this command uses the last set random room
-bool resetCom::usesRandomRoom()
-{
+bool resetCom::usesRandomRoom() {
   return (command == 'C' || command == 'K' || command == 'M' ||
-    command == 'R' || command == 'O' || command == 'B') && arg3 == ZONE_ROOM_RANDOM;
+           command == 'R' || command == 'O' || command == 'B') &&
+         arg3 == ZONE_ROOM_RANDOM;
 }
 
 // returns true if we should stick this to a mob instead of execute during reset
-// lastComStuck - true if the previous resetCom before this one was 'stuck' to a mob
-bool resetCom::shouldStickToMob(bool &lastComStuck)
-{
+// lastComStuck - true if the previous resetCom before this one was 'stuck' to a
+// mob
+bool resetCom::shouldStickToMob(bool& lastComStuck) {
   if (!Config::LoadOnDeath())
     return lastComStuck = false;
 
-  // special case: since V's modify a potentially stuck (non-existant) obj, we need to stick ?'s for V's too
+  // special case: since V's modify a potentially stuck (non-existant) obj, we
+  // need to stick ?'s for V's too
   if (command == '?' && character == 'V' && lastComStuck)
     return lastComStuck = true;
 
-  // all other '?' commands we should just execute it to let further commands stick or not
+  // all other '?' commands we should just execute it to let further commands
+  // stick or not
   if (command == '?')
     return lastComStuck = false;
 
@@ -4131,51 +4118,70 @@ bool resetCom::shouldStickToMob(bool &lastComStuck)
   if (command == 'I' || command == 'J')
     return lastComStuck = false;
 
-  return lastComStuck = (hasLoadPotential() ||
-    (command == 'P' && lastComStuck) ||
-    (command == 'L' && arg4 == 0) ||
-    (command == 'V' && lastComStuck) ||
-    (command == 'T' && if_flag && lastComStuck));
+  return lastComStuck =
+           (hasLoadPotential() || (command == 'P' && lastComStuck) ||
+             (command == 'L' && arg4 == 0) ||
+             (command == 'V' && lastComStuck) ||
+             (command == 'T' && if_flag && lastComStuck));
 }
 
-resetCom::resetCommandId resetCom::getCommandId()
-{
-  switch (command)
-  {
-    case 'S': return cmd_Stop;
-    case 'M': return cmd_LoadMob;
-    case 'K': return cmd_LoadMobGrouped;
-    case 'C': return cmd_LoadMobCharmed;
-    case 'R': return cmd_LoadMobRidden;
-    case 'A': return cmd_SetRandomRoom;
-    case '?': return cmd_LoadChance;
-    case 'B': return cmd_LoadObjGround;
-    case 'O': return cmd_LoadObjGroundBoot;
-    case 'P': return cmd_LoadObjPlaced;
-    case 'G': return cmd_LoadObjInventory;
-    case 'E': return cmd_LoadObjEquipped;
-    case 'X': return cmd_CreateLocalSet;
-    case 'Z': return cmd_LoadObjSetLocal;
-    case 'Y': return cmd_LoadObjSet;
-    case 'V': return cmd_ChangeFourValues;
-    case 'T': return cmd_SetTrap;
-    case 'H': return cmd_SetHate;
-    case 'F': return cmd_SetFear;
-    case 'D': return cmd_SetDoor;
-    case 'L': return cmd_LoadLoot;
+resetCom::resetCommandId resetCom::getCommandId() {
+  switch (command) {
+    case 'S':
+      return cmd_Stop;
+    case 'M':
+      return cmd_LoadMob;
+    case 'K':
+      return cmd_LoadMobGrouped;
+    case 'C':
+      return cmd_LoadMobCharmed;
+    case 'R':
+      return cmd_LoadMobRidden;
+    case 'A':
+      return cmd_SetRandomRoom;
+    case '?':
+      return cmd_LoadChance;
+    case 'B':
+      return cmd_LoadObjGround;
+    case 'O':
+      return cmd_LoadObjGroundBoot;
+    case 'P':
+      return cmd_LoadObjPlaced;
+    case 'G':
+      return cmd_LoadObjInventory;
+    case 'E':
+      return cmd_LoadObjEquipped;
+    case 'X':
+      return cmd_CreateLocalSet;
+    case 'Z':
+      return cmd_LoadObjSetLocal;
+    case 'Y':
+      return cmd_LoadObjSet;
+    case 'V':
+      return cmd_ChangeFourValues;
+    case 'T':
+      return cmd_SetTrap;
+    case 'H':
+      return cmd_SetHate;
+    case 'F':
+      return cmd_SetFear;
+    case 'D':
+      return cmd_SetDoor;
+    case 'L':
+      return cmd_LoadLoot;
   }
   return cmd_Stop;
 }
 
-bool resetCom::execute(zoneData &zone, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+bool resetCom::execute(zoneData& zone, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
   if (!executeMethods[getCommandId()])
     return false;
 
-  executeMethods[getCommandId()](zone, *this, flags, mobload, mob, objload, obj, last_cmd);
+  executeMethods[getCommandId()](zone, *this, flags, mobload, mob, objload, obj,
+    last_cmd);
   return true;
 }
-
 
 zoneData::zoneData() :
   name(NULL),
@@ -4194,11 +4200,9 @@ zoneData::zoneData() :
   stat_mobs_total(0),
   stat_mobs_unique(0),
   stat_objs_unique(0),
-  cmd_table(0)
-{
-}
+  cmd_table(0) {}
 
-zoneData::zoneData(const zoneData &t) :
+zoneData::zoneData(const zoneData& t) :
   name(t.name),
   zone_nr(t.zone_nr),
   lifespan(t.lifespan),
@@ -4217,20 +4221,17 @@ zoneData::zoneData(const zoneData &t) :
   stat_mobs_total(t.stat_mobs_total),
   stat_mobs_unique(t.stat_mobs_unique),
   stat_objs_unique(t.stat_objs_unique),
-  cmd_table(t.cmd_table)
-{
-}
+  cmd_table(t.cmd_table) {}
 
-zoneData::~zoneData()
-{
+zoneData::~zoneData() {
   cmd_table.clear();
   stat_mobs.clear();
   stat_objs.clear();
 }
 
-zoneData & zoneData::operator= (const zoneData &t)
-{
-  if (this == &t) return *this;
+zoneData& zoneData::operator=(const zoneData& t) {
+  if (this == &t)
+    return *this;
 
   name = t.name;
   zone_nr = t.zone_nr;
@@ -4263,8 +4264,7 @@ zoneData & zoneData::operator= (const zoneData &t)
 // it is intended to be called just before exiting
 // obviously, this isn't REALLY necessary since exit frees heap anyway
 // but memory tools (insure/purify) will otherwise say we didn't free memory
-void generic_cleanup()
-{
+void generic_cleanup() {
 #ifdef __INSURE__
   vlogf(LOG_SILENT, "generic_cleanup called");
   unsigned int i;
@@ -4273,40 +4273,40 @@ void generic_cleanup()
   while (character_list)
     delete character_list;
   // purge all objs
-  for(TObjIter iter=object_list.begin();iter!=object_list.end();++iter){
+  for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter) {
     delete *iter;
 
-  // purge all rooms
-  int ii;
-  for (ii = 0; ii < WORLD_SIZE; ii++)
-    delete room_db[ii];
+    // purge all rooms
+    int ii;
+    for (ii = 0; ii < WORLD_SIZE; ii++)
+      delete room_db[ii];
 
-  // no TThings exist anymore at this point
+    // no TThings exist anymore at this point
 
-  // close up open handlers
-  if (mob_f)
-    fclose(mob_f);
+    // close up open handlers
+    if (mob_f)
+      fclose(mob_f);
 
-  // delete some arrays that allocated heap memory
-  for (i = 0; i <= (unsigned int) MAX_SKILL; i++)
-    delete discArray[i];
+    // delete some arrays that allocated heap memory
+    for (i = 0; i <= (unsigned int)MAX_SKILL; i++)
+      delete discArray[i];
 
-  for (i = 0; i < (unsigned int) MAX_SECTOR_TYPES; i++)
-    delete TerrainInfo[i];
+    for (i = 0; i < (unsigned int)MAX_SECTOR_TYPES; i++)
+      delete TerrainInfo[i];
 
-extern void cleanUpHelp();
-  cleanUpHelp();
+    extern void cleanUpHelp();
+    cleanUpHelp();
 
-  for(race_t rindex=RACE_NORACE;rindex<MAX_RACIAL_TYPES;rindex++)
-    delete Races[rindex];
+    for (race_t rindex = RACE_NORACE; rindex < MAX_RACIAL_TYPES; rindex++)
+      delete Races[rindex];
 
-  for (ii=0; ii < MAX_CMD_LIST; ii++)
-    delete commandArray[ii];
+    for (ii = 0; ii < MAX_CMD_LIST; ii++)
+      delete commandArray[ii];
 
-  for (ii=0; ii < MAX_OBJ_TYPES; ii++)
-    delete ItemInfo[ii];
+    for (ii = 0; ii < MAX_OBJ_TYPES; ii++)
+      delete ItemInfo[ii];
 
-extern void cleanUpMail();
-  cleanUpMail();
+    extern void cleanUpMail();
+    cleanUpMail();
 #endif
-}
+  }

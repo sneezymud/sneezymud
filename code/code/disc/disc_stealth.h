@@ -18,7 +18,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the THIEF Stealth discipline.
@@ -26,34 +25,28 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDStealth : public CDiscipline
-{
-public:
+class CDStealth : public CDiscipline {
+  public:
     CSkill skConcealment;
     CSkill skDisguise;
 
-    CDStealth()
-      : CDiscipline(),
-      skConcealment(),
-      skDisguise() {
-    }
-    CDStealth(const CDStealth &a)
-      : CDiscipline(a),
+    CDStealth() : CDiscipline(), skConcealment(), skDisguise() {}
+    CDStealth(const CDStealth& a) :
+      CDiscipline(a),
       skConcealment(a.skConcealment),
-      skDisguise(a.skDisguise) {
-    }
-    CDStealth & operator=(const CDStealth &a) {
-      if (this == &a) return *this;
+      skDisguise(a.skDisguise) {}
+    CDStealth& operator=(const CDStealth& a) {
+      if (this == &a)
+        return *this;
       CDiscipline::operator=(a);
       skConcealment = a.skConcealment;
       skDisguise = a.skDisguise;
       return *this;
     }
     virtual ~CDStealth() {}
-    virtual CDStealth * cloneMe() { return new CDStealth(*this); }
-private:
+    virtual CDStealth* cloneMe() { return new CDStealth(*this); }
+
+  private:
 };
 
-
-int conceal(TBeing *, TBeing *);
-
+int conceal(TBeing*, TBeing*);

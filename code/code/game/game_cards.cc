@@ -1,9 +1,9 @@
 //////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
-//      "cards.cc" - All functions and routines related to general card games 
+//      "cards.cc" - All functions and routines related to general card games
 //
-//      The SneezyMUD card games were coded by Russ Russell, April 1994, 
+//      The SneezyMUD card games were coded by Russ Russell, April 1994,
 //      Last revision, June 1996
 //
 //////////////////////////////////////////////////////////////////////////
@@ -18,21 +18,18 @@
 
 #include <deque>
 
-cardSuitT & operator++(cardSuitT &c, int)
-{
-  return c = (c == MAX_SUIT) ? MIN_SUIT : cardSuitT(c+1);
+cardSuitT& operator++(cardSuitT& c, int) {
+  return c = (c == MAX_SUIT) ? MIN_SUIT : cardSuitT(c + 1);
 }
 
-cardSuitT Card::getSuit() const {
-  return suit;
-}
+cardSuitT Card::getSuit() const { return suit; }
 
-sstring Card::getName() const{
+sstring Card::getName() const {
   sstring buf;
 
   buf = card_names[value];
 
-  switch(suit){
+  switch (suit) {
     case SUIT_WATER:
       buf += " of <b>Blue Water<z>";
       break;
@@ -52,57 +49,47 @@ sstring Card::getName() const{
   return buf;
 }
 
-
-Card::Card(cardSuitT suit, int value)
-{
-  this->suit=suit;
-  this->value=value;
+Card::Card(cardSuitT suit, int value) {
+  this->suit = suit;
+  this->value = value;
 }
 
-
-class CardDeckPimpl
-{
+class CardDeckPimpl {
   public:
-  std::deque<Card*> deck;
+    std::deque<Card*> deck;
 };
 
-const Card *CardDeck::draw()
-{
+const Card* CardDeck::draw() {
   auto& deck = pimpl->deck;
-  Card *tmp;
-  tmp=deck.front();
+  Card* tmp;
+  tmp = deck.front();
   deck.pop_front();
   deck.push_back(tmp);
 
   return tmp;
 }
 
-const Card *CardDeck::undraw()
-{
+const Card* CardDeck::undraw() {
   auto& deck = pimpl->deck;
-  Card *tmp;
-  tmp=deck.back();
+  Card* tmp;
+  tmp = deck.back();
   deck.pop_back();
   deck.push_front(tmp);
 
   return tmp;
 }
 
-
-void CardDeck::shuffle()
-{
+void CardDeck::shuffle() {
   auto& deck = pimpl->deck;
-  std::random_shuffle( deck.begin( ), deck.end( ) );
+  std::random_shuffle(deck.begin(), deck.end());
 }
 
-
-CardDeck::CardDeck()
-{
+CardDeck::CardDeck() {
   pimpl = new CardDeckPimpl();
   auto& deck = pimpl->deck;
 
-  for(cardSuitT suit=MIN_SUIT;suit<MAX_SUIT;suit++){
-    for(int card=1;card<=13;++card){
+  for (cardSuitT suit = MIN_SUIT; suit < MAX_SUIT; suit++) {
+    for (int card = 1; card <= 13; ++card) {
       deck.push_back(new Card(suit, card));
     }
   }
@@ -110,64 +97,49 @@ CardDeck::CardDeck()
   shuffle();
 }
 
-CardDeck::~CardDeck()
-{
+CardDeck::~CardDeck() {
   for (auto& card : pimpl->deck)
     delete card;
   delete pimpl;
 }
 
+unsigned char CARD_NUM(unsigned char card) { return (card & 0x0f); }
 
-
-
-
-
-unsigned char CARD_NUM(unsigned char card)
-{
-  return (card & 0x0f);
-}
-
-unsigned char CARD_NUM_ACEHI(unsigned char card)
-{
+unsigned char CARD_NUM_ACEHI(unsigned char card) {
   int c = (card & 0x0f);
-  
-  if(c==1)
+
+  if (c == 1)
     return 14;
   else
     return c;
 }
 
-
-
-
-void CardGame::setup_deck()
-{
+void CardGame::setup_deck() {
   int i, j, k = 0;
 
   for (i = 0; i < 4; i++) {
     for (j = 1; j <= 13; j++) {
       deck[k] = j;
       switch (i) {
-	case 0:
-	  deck[k] |= CARD_WATER;
-	  break;
-	case 1:
-	  deck[k] |= CARD_FIRE;
-	  break;
-	case 2:
-	  deck[k] |= CARD_EARTH;
-	  break;
-	case 3:
-	  deck[k] |= CARD_ETHER;
-	  break;
+        case 0:
+          deck[k] |= CARD_WATER;
+          break;
+        case 1:
+          deck[k] |= CARD_FIRE;
+          break;
+        case 2:
+          deck[k] |= CARD_EARTH;
+          break;
+        case 3:
+          deck[k] |= CARD_ETHER;
+          break;
       }
       k++;
     }
   }
 }
 
-const sstring CardGame::pretty_card_printout(const TBeing *ch, int card) const
-{
+const sstring CardGame::pretty_card_printout(const TBeing* ch, int card) const {
   char buf[80];
 
   strcpy(buf, card_names[card & 0x0f]);
@@ -176,8 +148,7 @@ const sstring CardGame::pretty_card_printout(const TBeing *ch, int card) const
   return buf;
 }
 
-int CardGame::same_suit(int card1, int card2)
-{
+int CardGame::same_suit(int card1, int card2) {
   if (((card1 & CARD_WATER) && (card2 & CARD_WATER)) ||
       ((card1 & CARD_EARTH) && (card2 & CARD_EARTH)) ||
       ((card1 & CARD_FIRE) && (card2 & CARD_FIRE)) ||
@@ -187,18 +158,13 @@ int CardGame::same_suit(int card1, int card2)
   return FALSE;
 }
 
-bool CardGame::is_heart(int card)
-{
-  return (card & CARD_FIRE);
-}
+bool CardGame::is_heart(int card) { return (card & CARD_FIRE); }
 
-bool CardGame::is_queen_of_spades(int card) 
-{
+bool CardGame::is_queen_of_spades(int card) {
   return ((card & CARD_ETHER) && (CARD_NUM(card) == 12));
 }
 
-bool CardGame::has_suit(int *hand, int suitnum)
-{
+bool CardGame::has_suit(int* hand, int suitnum) {
   int i;
 
   for (i = 0; hand[i] && i < 13; i++) {
@@ -208,8 +174,7 @@ bool CardGame::has_suit(int *hand, int suitnum)
   return FALSE;
 }
 
-int CardGame::add_suit(const TBeing *ch, char *cat_msg, int card) const
-{
+int CardGame::add_suit(const TBeing* ch, char* cat_msg, int card) const {
   if (ch) {
     if (card & CARD_WATER)
       sprintf(cat_msg + strlen(cat_msg), " of <b>Blue Water<z>");
@@ -221,13 +186,12 @@ int CardGame::add_suit(const TBeing *ch, char *cat_msg, int card) const
       sprintf(cat_msg + strlen(cat_msg), " of <p>Purple Ether<z>");
     /*
     if (card & CARD_WATER)
-      sprintf(cat_msg + strlen(cat_msg), " of %sBlue Water%s", ch->blue(), ch->norm());
-    if (card & CARD_FIRE)
-      sprintf(cat_msg + strlen(cat_msg), " of %sRed Fire%s", ch->red(), ch->norm());
-    if (card & CARD_EARTH)
-      sprintf(cat_msg + strlen(cat_msg), " of %sGreen Earth%s", ch->green(), ch->norm());
-    if (card & CARD_ETHER)
-      sprintf(cat_msg + strlen(cat_msg), " of %sPurple Ether%s", ch->purple(), ch->norm());
+      sprintf(cat_msg + strlen(cat_msg), " of %sBlue Water%s", ch->blue(),
+    ch->norm()); if (card & CARD_FIRE) sprintf(cat_msg + strlen(cat_msg), " of
+    %sRed Fire%s", ch->red(), ch->norm()); if (card & CARD_EARTH)
+      sprintf(cat_msg + strlen(cat_msg), " of %sGreen Earth%s", ch->green(),
+    ch->norm()); if (card & CARD_ETHER) sprintf(cat_msg + strlen(cat_msg), " of
+    %sPurple Ether%s", ch->purple(), ch->norm());
     */
   } else {
     if (card & CARD_WATER)
@@ -242,8 +206,7 @@ int CardGame::add_suit(const TBeing *ch, char *cat_msg, int card) const
   return TRUE;
 }
 
-const sstring CardGame::suit(const TBeing *ch, int card) const
-{
+const sstring CardGame::suit(const TBeing* ch, int card) const {
   char buf[80];
 
   if (ch) {
@@ -270,26 +233,21 @@ const sstring CardGame::suit(const TBeing *ch, int card) const
   return "";
 }
 
-
-void TBeing::doCall(const sstring &)
-{
+void TBeing::doCall(const sstring&) {
   if (checkHoldem())
     gHoldem.call(this);
   else
     sendTo("Call is used for casino games.\n\r");
 }
 
-void TBeing::doFold(const sstring &)
-{
+void TBeing::doFold(const sstring&) {
   if (checkHoldem())
     gHoldem.fold(this);
   else
     sendTo("Fold is used for casino games.\n\r");
 }
 
-
-void TBeing::doPeek() const
-{
+void TBeing::doPeek() const {
   if (checkBlackjack())
     gBj.peek(this);
   else if (gGin.check(this))
@@ -310,9 +268,8 @@ void TBeing::doPeek() const
     sendTo("So you think you are at a card table?\n\r");
 }
 
-void TBeing::doDeal(const char *tArg)
-{
-  if (gGin.check(this)) 
+void TBeing::doDeal(const char* tArg) {
+  if (gGin.check(this))
     gGin.deal(this);
   else if (checkHearts())
     gHearts.deal(this);
@@ -326,9 +283,7 @@ void TBeing::doDeal(const char *tArg)
   }
 }
 
-
-void CardGame::shuffle()
-{
+void CardGame::shuffle() {
   int i, num, num2, tmp;
 
   for (num = 0; num < 500; num++) {
@@ -341,8 +296,7 @@ void CardGame::shuffle()
   }
 }
 
-void CardGame::take_card_from_hand(int *hand, int which, int max_num)
-{
+void CardGame::take_card_from_hand(int* hand, int which, int max_num) {
   int i;
 
   for (i = which; i < max_num; i++)
@@ -351,8 +305,7 @@ void CardGame::take_card_from_hand(int *hand, int which, int max_num)
   hand[max_num] = 0;
 }
 
-void TBeing::doPass(const char *arg)
-{
+void TBeing::doPass(const char* arg) {
   if (checkHearts())
     gHearts.pass(this, arg);
 
@@ -363,9 +316,7 @@ void TBeing::doPass(const char *arg)
     gDrawPoker.pass(this);
 }
 
-
-void CardGame::order_high_to_low(int *num1, int *num2, int *num3)
-{
+void CardGame::order_high_to_low(int* num1, int* num2, int* num3) {
   int high = -1, mid = -1, low = -1;
 
   if ((*num1 > *num2) && (*num1 > *num3))
@@ -390,8 +341,7 @@ void CardGame::order_high_to_low(int *num1, int *num2, int *num3)
   *num3 = low;
 }
 
-int get_suit(int card)
-{
+int get_suit(int card) {
   if (card & CARD_WATER)
     return CARD_WATER;
   if (card & CARD_FIRE)
@@ -404,9 +354,8 @@ int get_suit(int card)
   return -1;
 }
 
-int cardnumComparAscend(const void *card1, const void *card2)
-{
-  int temp = *(const int *)card1 - *(const int *)card2;
+int cardnumComparAscend(const void* card1, const void* card2) {
+  int temp = *(const int*)card1 - *(const int*)card2;
   if (temp > 0)
     return 1;
   else if (temp < 0)
@@ -415,17 +364,15 @@ int cardnumComparAscend(const void *card1, const void *card2)
     return 0;
 }
 
-int cardnumComparDescend(const void *card1, const void *card2)
-{
-  return (((*(const int *)card1) > (*(const int *)card2)) ? -1 : 1);
+int cardnumComparDescend(const void* card1, const void* card2) {
+  return (((*(const int*)card1) > (*(const int*)card2)) ? -1 : 1);
 }
 
-
-void TBeing::doSort(const char *arg) const
-{
+void TBeing::doSort(const char* arg) const {
   int index_num, cnt = 0, i;
 
-  for (;isspace(*arg);arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
   if (!*arg) {
     sendTo("Sort : Syntax (sort <ascending | descending>)\n\r");
@@ -437,28 +384,35 @@ void TBeing::doSort(const char *arg) const
       if (cnt % 2) {
         // Kludges rule
         int tmp[12];
-        for (i = 0; i < 11; tmp[i] = gGin.hands[index_num][i], i++);
+        for (i = 0; i < 11; tmp[i] = gGin.hands[index_num][i], i++)
+          ;
         tmp[11] = 999999;
         qsort(tmp, 12, 4, cardnumComparAscend);
-        for (i = 0; i < 11; gGin.hands[index_num][i] = tmp[i], i++); 
+        for (i = 0; i < 11; gGin.hands[index_num][i] = tmp[i], i++)
+          ;
       } else
-        qsort(gGin.hands[index_num], gGin.count(index_num), 4, cardnumComparAscend);
+        qsort(gGin.hands[index_num], gGin.count(index_num), 4,
+          cardnumComparAscend);
     } else {
       if (cnt % 2) {
         // Kludges rule
         int tmp2[12];
-        for (i = 0; i < 11; tmp2[i] = gGin.hands[index_num][i], i++);
+        for (i = 0; i < 11; tmp2[i] = gGin.hands[index_num][i], i++)
+          ;
         tmp2[11] = 0;
         qsort(tmp2, 12, 4, cardnumComparDescend);
-        for (i = 0; i < 11; gGin.hands[index_num][i] = tmp2[i], i++);
+        for (i = 0; i < 11; gGin.hands[index_num][i] = tmp2[i], i++)
+          ;
       } else
-        qsort(gGin.hands[index_num], gGin.count(index_num), 4, cardnumComparDescend);
+        qsort(gGin.hands[index_num], gGin.count(index_num), 4,
+          cardnumComparDescend);
     }
     doPeek();
     return;
   } else if ((index_num = gDrawPoker.index(this)) > -1) {
     int tmp3[6];
-    for (i = 0; i < 5; tmp3[i] = gDrawPoker.hands[index_num][i], i++);
+    for (i = 0; i < 5; tmp3[i] = gDrawPoker.hands[index_num][i], i++)
+      ;
 
     if (is_abbrev(arg, "ascending")) {
       tmp3[5] = 999999;
@@ -468,7 +422,8 @@ void TBeing::doSort(const char *arg) const
       qsort(tmp3, 6, 4, cardnumComparDescend);
     }
 
-    for (i = 0; i < 5; gDrawPoker.hands[index_num][i] = tmp3[i], i++);
+    for (i = 0; i < 5; gDrawPoker.hands[index_num][i] = tmp3[i], i++)
+      ;
 
     doPeek();
     return;
@@ -477,19 +432,23 @@ void TBeing::doSort(const char *arg) const
     if (is_abbrev(arg, "ascending")) {
       if (cnt % 2) {
         int tmp3[cnt + 1];
-        for (i = 0; i < cnt; tmp3[i] = gHearts.hands[index_num][i], i++);
+        for (i = 0; i < cnt; tmp3[i] = gHearts.hands[index_num][i], i++)
+          ;
         tmp3[cnt] = 999999;
         qsort(tmp3, cnt + 1, 4, cardnumComparAscend);
-        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp3[i], i++);
+        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp3[i], i++)
+          ;
       } else
         qsort(gHearts.hands[index_num], cnt, 4, cardnumComparAscend);
     } else {
       if (cnt % 2) {
         int tmp4[cnt + 1];
-        for (i = 0; i < cnt; tmp4[i] = gHearts.hands[index_num][i], i++);
+        for (i = 0; i < cnt; tmp4[i] = gHearts.hands[index_num][i], i++)
+          ;
         tmp4[cnt] = 0;
         qsort(tmp4, cnt + 1, 4, cardnumComparDescend);
-        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp4[i], i++);
+        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp4[i], i++)
+          ;
       } else
         qsort(gHearts.hands[index_num], cnt, 4, cardnumComparDescend);
     }
@@ -502,32 +461,32 @@ void TBeing::doSort(const char *arg) const
       if (cnt % 2) {
         // Kludges rule
         int tmp3[cnt + 1];
-        for (i = 0; i < cnt; tmp3[i] = gHearts.hands[index_num][i], i++);
+        for (i = 0; i < cnt; tmp3[i] = gHearts.hands[index_num][i], i++)
+          ;
         tmp3[cnt] = 999999;
         qsort(tmp3, cnt + 1, 4, cardnumComparAscend);
-        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp3[i], i++);
+        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp3[i], i++)
+          ;
       } else
         qsort(gHearts.hands[index_num], cnt, 4, cardnumComparAscend);
     } else {
       if (cnt % 2) {
         // Kludges rule
         int tmp4[cnt + 1];
-        for (i = 0; i < cnt; tmp4[i] = gHearts.hands[index_num][i], i++);
+        for (i = 0; i < cnt; tmp4[i] = gHearts.hands[index_num][i], i++)
+          ;
         tmp4[cnt] = 0;
         qsort(tmp4, cnt + 1, 4, cardnumComparDescend);
-        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp4[i], i++);
+        for (i = 0; i < cnt; gHearts.hands[index_num][i] = tmp4[i], i++)
+          ;
       } else
-        qsort(gHearts.hands[index_num], gHearts.count(index_num), 4,cardnumComparDescend);
+        qsort(gHearts.hands[index_num], gHearts.count(index_num), 4,
+          cardnumComparDescend);
     }
     doPeek();
     return;
   }
   sendTo("You must be playing a card game to use this command!\n\r");
 }
-  
-CardGame::CardGame() :
-  game(false),
-  bet(0)
-{
-  setup_deck();
-}
+
+CardGame::CardGame() : game(false), bet(0) { setup_deck(); }

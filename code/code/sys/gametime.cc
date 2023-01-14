@@ -5,52 +5,42 @@
 
 // static defs
 time_info_data GameTime::time_info;
-const unsigned long GameTime::BEGINNING_OF_TIME=650336715;
-const int GameTime::YEAR_ADJUST=550;
-
+const unsigned long GameTime::BEGINNING_OF_TIME = 650336715;
+const int GameTime::YEAR_ADJUST = 550;
 
 // to simplify sun and moon time checks, this function returns the
 // combination of hour and minute as a single int [0-95]
 // the hour is simply val/4, and the minute is val%4
-int GameTime::hourminTime()
-{
-  return time_info.hours*4 + (time_info.minutes/15);
+int GameTime::hourminTime() {
+  return time_info.hours * 4 + (time_info.minutes / 15);
 }
 
 // display time (given in hourminTime format) as a string
-sstring GameTime::hmtAsString(int hmt)
-{
-  int hour = hmt/4;
-  int minute = hmt%4 * 15;
+sstring GameTime::hmtAsString(int hmt) {
+  int hour = hmt / 4;
+  int minute = hmt % 4 * 15;
 
   sstring buf;
-  buf = format("%d:%02d %s") %
-    (!(hour % 12) ? 12 : hour%12) %
-    minute %
-    ((hour >= 12) ? "PM" : "AM");
+  buf = format("%d:%02d %s") % (!(hour % 12) ? 12 : hour % 12) % minute %
+        ((hour >= 12) ? "PM" : "AM");
   return buf;
 }
 
-
-bool GameTime::is_daytime()
-{
+bool GameTime::is_daytime() {
   int hmt = hourminTime();
 
   return (hmt >= Weather::sunTime(Weather::SUN_TIME_DAY) &&
-           hmt < Weather::sunTime(Weather::SUN_TIME_SINK));
+          hmt < Weather::sunTime(Weather::SUN_TIME_SINK));
 }
 
-bool GameTime::is_nighttime()
-{
+bool GameTime::is_nighttime() {
   int hmt = hourminTime();
 
   return (hmt < Weather::sunTime(Weather::SUN_TIME_DAWN) ||
           hmt > Weather::sunTime(Weather::SUN_TIME_NIGHT));
 }
 
-
-void GameTime::anotherHour()
-{
+void GameTime::anotherHour() {
   sstring buf;
 
   // we have 4 ticks per mud hour (this is called per tick)
@@ -62,11 +52,13 @@ void GameTime::anotherHour()
     time_info.minutes = 0;
 
     if (time_info.hours == 12)
-      sendToOutdoor(COLOR_BASIC, "<Y>It is noon.<1>\n\r","<Y>It is noon.<1>\n\r");
+      sendToOutdoor(COLOR_BASIC, "<Y>It is noon.<1>\n\r",
+        "<Y>It is noon.<1>\n\r");
 
     // check for new day
     if (time_info.hours >= 24) {
-      sendToOutdoor(COLOR_BASIC, "<k>It is midnight.<1>\n\r","<k>It is midnight.<1>\n\r");
+      sendToOutdoor(COLOR_BASIC, "<k>It is midnight.<1>\n\r",
+        "<k>It is midnight.<1>\n\r");
       time_info.day++;
       time_info.hours = 0;
 
@@ -77,16 +69,17 @@ void GameTime::anotherHour()
 
         // announce new month, etc.
         Weather::GetMonth(time_info.month);
-    
+
         // check for new year
         if (time_info.month >= 12) {
           time_info.month = 0;
           time_info.year++;
-          buf = format("Happy New Year! It is now the Year %d P.S\n\r") % time_info.year;
+          buf = format("Happy New Year! It is now the Year %d P.S\n\r") %
+                time_info.year;
           Descriptor::worldSend(buf, NULL);
         }
       }
-  
+
       // on a new day, update the moontime too
       Weather::addToMoon(1);
 
@@ -102,27 +95,25 @@ void GameTime::anotherHour()
   Weather::fixSunlight();
 }
 
-
 time_info_data::time_info_data() :
   seconds(0),
   minutes(0),
   hours(0),
   day(0),
   month(0),
-  year(0)
-{
-}
+  year(0) {}
 
-time_info_data::time_info_data(const time_info_data &a)
-  : seconds(a.seconds), minutes(a.minutes),
-    hours(a.hours), day(a.day),
-    month(a.month), year(a.year)
-{
-}
+time_info_data::time_info_data(const time_info_data& a) :
+  seconds(a.seconds),
+  minutes(a.minutes),
+  hours(a.hours),
+  day(a.day),
+  month(a.month),
+  year(a.year) {}
 
-time_info_data & time_info_data::operator=(const time_info_data &a)
-{
-  if (this == &a) return *this;
+time_info_data& time_info_data::operator=(const time_info_data& a) {
+  if (this == &a)
+    return *this;
   seconds = a.seconds;
   minutes = a.minutes;
   hours = a.hours;
@@ -132,16 +123,13 @@ time_info_data & time_info_data::operator=(const time_info_data &a)
   return *this;
 }
 
-time_info_data::~time_info_data()
-{
-}
+time_info_data::~time_info_data() {}
 
-// Calculate the REAL time passed over the last t2-t1 centuries (secs) 
-void GameTime::realTimePassed(time_t t2, time_t t1, time_info_data *now)
-{
+// Calculate the REAL time passed over the last t2-t1 centuries (secs)
+void GameTime::realTimePassed(time_t t2, time_t t1, time_info_data* now) {
   long secs;
 
-  secs = (long) (t2 - t1);
+  secs = (long)(t2 - t1);
 
   now->minutes = (secs / SECS_PER_REAL_MIN) % 60;
   secs -= SECS_PER_REAL_MIN * now->minutes;
@@ -157,33 +145,31 @@ void GameTime::realTimePassed(time_t t2, time_t t1, time_info_data *now)
   now->seconds = secs;
 }
 
-// Calculate the MUD time passed over the last t2-t1 centuries (secs) 
-void GameTime::mudTimePassed(time_t t2, time_t t1, time_info_data *now)
-{
+// Calculate the MUD time passed over the last t2-t1 centuries (secs)
+void GameTime::mudTimePassed(time_t t2, time_t t1, time_info_data* now) {
   long secs;
 
-  secs = (long) (t2 - t1);
+  secs = (long)(t2 - t1);
 
-  now->minutes = (secs / Pulse::SECS_PER_UPDATE) % 4;	
+  now->minutes = (secs / Pulse::SECS_PER_UPDATE) % 4;
   secs -= Pulse::SECS_PER_UPDATE * now->minutes;
 
   // values are 0, 15, 30, 45...
   now->minutes *= 15;
 
-  now->hours = (secs / Pulse::SECS_PER_MUDHOUR) % 24;	
+  now->hours = (secs / Pulse::SECS_PER_MUDHOUR) % 24;
   secs -= Pulse::SECS_PER_MUDHOUR * now->hours;
 
-  now->day = (secs / Pulse::SECS_PER_MUD_DAY) % 28;	
+  now->day = (secs / Pulse::SECS_PER_MUD_DAY) % 28;
   secs -= Pulse::SECS_PER_MUD_DAY * now->day;
 
-  now->month = (secs / Pulse::SECS_PER_MUD_MONTH) % 12;		
+  now->month = (secs / Pulse::SECS_PER_MUD_MONTH) % 12;
   secs -= Pulse::SECS_PER_MUD_MONTH * now->month;
 
-  now->year = (secs / Pulse::SECS_PER_MUD_YEAR);	
+  now->year = (secs / Pulse::SECS_PER_MUD_YEAR);
 }
 
-void GameTime::reset_time(void)
-{
+void GameTime::reset_time(void) {
   mudTimePassed(time(0), getBeginningOfTime(), &time_info);
   time_info.year += getYearAdjust();
 
@@ -194,9 +180,9 @@ void GameTime::reset_time(void)
 
   Weather::fixSunlight();
 
-  vlogf(LOG_MISC, format("   Current Gametime: %dm, %dH %dD %dM %dY.") %  
-        getMinutes() % getHours() % getDay() % 
-	getMonth() % getYear());
+  vlogf(LOG_MISC, format("   Current Gametime: %dm, %dH %dD %dM %dY.") %
+                    getMinutes() % getHours() % getDay() % getMonth() %
+                    getYear());
 
   Weather::setPressure(960);
   if ((getMonth() >= 7) && (getMonth() <= 12))
@@ -222,5 +208,3 @@ void GameTime::reset_time(void)
     Weather::setSky(Weather::SKY_CLOUDLESS);
   }
 }
-
-

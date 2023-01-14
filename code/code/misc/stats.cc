@@ -7,87 +7,81 @@
 #include <cmath>
 #include <cstdio>
 
-Stats Stats::operator+(const Stats &operand)
-{
+Stats Stats::operator+(const Stats& operand) {
   Stats sum;
 
-  for(statTypeT stat=MIN_STAT; stat<MAX_STATS; stat++)
+  for (statTypeT stat = MIN_STAT; stat < MAX_STATS; stat++)
     sum.values[stat] = values[stat] + operand.values[stat];
 
   return sum;
 }
 
-Stats Stats::operator-(const Stats &operand)
-{
+Stats Stats::operator-(const Stats& operand) {
   Stats diff;
 
-  for(statTypeT stat=MIN_STAT; stat<MAX_STATS; stat++)
+  for (statTypeT stat = MIN_STAT; stat < MAX_STATS; stat++)
     diff.values[stat] = values[stat] - operand.values[stat];
 
   return diff;
 }
 
-short Stats::get(statTypeT stat) const
-{
+short Stats::get(statTypeT stat) const {
   mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
-        "Something tried to access an invalid stat.");
+    "Something tried to access an invalid stat.");
 
   return values[stat];
 }
 
-short Stats::set(statTypeT stat, short val)
-{
+short Stats::set(statTypeT stat, short val) {
   mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
-        "Something tried to access an invalid stat.");
+    "Something tried to access an invalid stat.");
 
   return values[stat] = val;
 }
 
-short Stats::add(statTypeT stat, short mod)
-{
+short Stats::add(statTypeT stat, short mod) {
   mud_assert(((stat >= MIN_STAT) && (stat < MAX_STATS)),
-	"Something tried to access an invalid stat.");
+    "Something tried to access an invalid stat.");
 
   return values[stat] += mod;
 }
 
-void Stats::zero()
-{
-  for(statTypeT stat=MIN_STAT; stat<MAX_STATS; stat++)
-    values[stat]=0;
+void Stats::zero() {
+  for (statTypeT stat = MIN_STAT; stat < MAX_STATS; stat++)
+    values[stat] = 0;
 }
 
-int Stats::total() const
-{
+int Stats::total() const {
   int total = 0;
-  for(statTypeT stat=MIN_STAT; stat<MAX_STATS; stat++)
+  for (statTypeT stat = MIN_STAT; stat < MAX_STATS; stat++)
     total += values[stat];
   return total;
 }
 
-bool Stats::isDefault() const
-{
-  for(statTypeT stat=MIN_STAT; stat<MAX_STATS; stat++)
+bool Stats::isDefault() const {
+  for (statTypeT stat = MIN_STAT; stat < MAX_STATS; stat++)
     if (values[stat] != 0)
       return false;
   return true;
 }
 
-sstring Stats::showStats(TBeing *caller)
-{
+sstring Stats::showStats(TBeing* caller) {
   byte level = caller->GetMaxLevel();
   Stats showStat;
   char tmpbuf[80];
   sstring buf;
 
-  if(level < GOD_LEVEL1)
+  if (level < GOD_LEVEL1)
     showStat = *this - caller->race->baseStats;
   else
     showStat = *this;
 
-  buf = "<c>[STR]<z> <c>[BRA]<z> <c>[CON]<z> <c>[DEX]<z> <c>[AGI]<z> <c>[INT]<z> <c>[WIS]<z> <c>[FOC]<z> <c>[PER]<z> <c>[CHA]<z> <c>[KAR]<z> <c>[SPE]<z>\n\r";
+  buf =
+    "<c>[STR]<z> <c>[BRA]<z> <c>[CON]<z> <c>[DEX]<z> <c>[AGI]<z> <c>[INT]<z> "
+    "<c>[WIS]<z> <c>[FOC]<z> <c>[PER]<z> <c>[CHA]<z> <c>[KAR]<z> "
+    "<c>[SPE]<z>\n\r";
 
-  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
+  for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
     sprintf(tmpbuf, " %3d  ", showStat.get(stat));
     buf += tmpbuf;
   }
@@ -96,8 +90,7 @@ sstring Stats::showStats(TBeing *caller)
   return buf;
 }
 
-const sstring Stats::printStatHeader() const
-{
+const sstring Stats::printStatHeader() const {
   sstring header;
 
   // Physical Stats
@@ -110,11 +103,10 @@ const sstring Stats::printStatHeader() const
   return header;
 }
 
-const sstring Stats::printRawStats(const TBeing *) const
-{
+const sstring Stats::printRawStats(const TBeing*) const {
   sstring rawStats, buf;
 
-  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
+  for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
     buf = format(" %3d ") % get(stat);
     rawStats += buf;
   }
@@ -123,9 +115,8 @@ const sstring Stats::printRawStats(const TBeing *) const
   return rawStats;
 }
 
-int age_mod_for_stat(const TBeing *tb, int age_num, statTypeT whichStat)
-{
-  if(!tb->hasQuestBit(TOG_REAL_AGING))
+int age_mod_for_stat(const TBeing* tb, int age_num, statTypeT whichStat) {
+  if (!tb->hasQuestBit(TOG_REAL_AGING))
     return 0;
 
   // age_num is the "human" age, realize non-humans have been adjusted
@@ -635,8 +626,7 @@ int age_mod_for_stat(const TBeing *tb, int age_num, statTypeT whichStat)
   return 0;
 }
 
-int territory_adjustment(territoryT ter, statTypeT whichStat)
-{
+int territory_adjustment(territoryT ter, statTypeT whichStat) {
   // This function defines how territorial choice affects natural stats.
   // I'm loosely grouping stats into 3 groups
   // dex, agi. speed
@@ -652,9 +642,10 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
   // cha will raise if high contact with others
   // kar drops for same reason (damage to soul from cynacism)
 
-  // for the later races, we just have a slot for every territory, so adjust to fit the human model
+  // for the later races, we just have a slot for every territory, so adjust to
+  // fit the human model
   if (ter >= HOME_TER_GOBLIN_URBAN)
-    ter = territoryT(1+ ((ter - HOME_TER_GOBLIN_URBAN) % 8));
+    ter = territoryT(1 + ((ter - HOME_TER_GOBLIN_URBAN) % 8));
 
   switch (ter) {
     case HOME_TER_NONE:
@@ -676,7 +667,7 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return 10;
         case STAT_CON:  // poor health environment
           return -10;
-        case STAT_BRA: 
+        case STAT_BRA:
           return -10;
         default:
           return 0;
@@ -701,9 +692,9 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return 20;
         case STAT_CON:  // poor health environment
           return -20;
-        case STAT_BRA: 
+        case STAT_BRA:
           return -20;
-        case STAT_PER:  // over stimulated 
+        case STAT_PER:  // over stimulated
           return -10;
         default:
           return 0;
@@ -723,15 +714,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return 0;
         case STAT_CON:  // mildly healthy environment
           return 5;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 5;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -10;
         case STAT_PER:
           return 15;
-        case STAT_SPE: 
+        case STAT_SPE:
           return -5;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 0;
         default:
           return 0;
@@ -750,15 +741,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -15;
         case STAT_CON:  // mildly healthy environment
           return 25;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 15;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return 15;
         case STAT_PER:
           return -15;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 0;
         default:
           return 0;
@@ -779,15 +770,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -5;
         case STAT_CON:  // mildly healthy environment
           return 10;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 10;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -15;
         case STAT_PER:
           return 10;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 5;
         default:
           return 0;
@@ -806,15 +797,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -15;
         case STAT_CON:  // mildly healthy environment
           return 20;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 15;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -15;
         case STAT_PER:
           return 10;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 5;
         default:
           return 0;
@@ -833,15 +824,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -15;
         case STAT_CON:  // mildly healthy environment
           return 15;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 15;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -15;
         case STAT_PER:
           return 10;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 5;
         default:
           return 0;
@@ -861,15 +852,15 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
           return -5;
         case STAT_CON:  // mildly healthy environment
           return 5;
-        case STAT_BRA: 
+        case STAT_BRA:
           return 5;
-        case STAT_FOC:  // there wasn't a lot to do 
+        case STAT_FOC:  // there wasn't a lot to do
           return -5;
         case STAT_PER:
           return 5;
-        case STAT_SPE: 
+        case STAT_SPE:
           return 0;
-        case STAT_AGI: 
+        case STAT_AGI:
           return 0;
         default:
           return 0;
@@ -879,51 +870,49 @@ int territory_adjustment(territoryT ter, statTypeT whichStat)
   }
 }
 
-sstring statToString(statTypeT whichStat)
-{
-  switch(whichStat){
-    case(STAT_STR):
+sstring statToString(statTypeT whichStat) {
+  switch (whichStat) {
+    case (STAT_STR):
       return "strength";
-    case(STAT_BRA):
+    case (STAT_BRA):
       return "brawn";
-    case(STAT_CON):
+    case (STAT_CON):
       return "constitution";
-    case(STAT_DEX):
+    case (STAT_DEX):
       return "dexterity";
-    case(STAT_AGI):
+    case (STAT_AGI):
       return "agility";
-    case(STAT_SPE):
+    case (STAT_SPE):
       return "speed";
-    case(STAT_INT):
+    case (STAT_INT):
       return "intelligence";
-    case(STAT_WIS):
+    case (STAT_WIS):
       return "wisdom";
-    case(STAT_FOC):
+    case (STAT_FOC):
       return "focus";
-    case(STAT_PER):
+    case (STAT_PER):
       return "perception";
-    case(STAT_CHA):
+    case (STAT_CHA):
       return "charisma";
-    case(STAT_KAR):
+    case (STAT_KAR):
       return "karma";
-    case(STAT_LUC):
+    case (STAT_LUC):
       return "luck";
     default:
       return "none";
   }
 }
 
-int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
-{
+int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const {
   int amount;
   int my_age;
 
-  switch(fromSet){
-    case(STAT_CHOSEN):
+  switch (fromSet) {
+    case (STAT_CHOSEN):
       return chosenStats.get(whichStat);
-    case(STAT_CURRENT):
+    case (STAT_CURRENT):
       return curStats.get(whichStat);
-    case(STAT_NATURAL):
+    case (STAT_NATURAL):
       // natural should be mostly based on race
       amount = race->baseStats.get(whichStat);
 
@@ -932,86 +921,88 @@ int TBeing::getStat(statSetT fromSet, statTypeT whichStat) const
 
       // and add on age modifiers
       my_age = age()->year - getBaseAge() + 17;
-      if(!isVampire())
-	amount += age_mod_for_stat(this, my_age, whichStat);
-    
+      if (!isVampire())
+        amount += age_mod_for_stat(this, my_age, whichStat);
+
       amount += territory_adjustment(player.hometerrain, whichStat);
 
       // monk skill
       // this is kind of a wack place to put it I think, but it's the easiest
       // place to do a dynamic change based on skill
-      if(discs && whichStat == STAT_STR && doesKnowSkill(SKILL_IRON_MUSCLES)){
-	amount += getSkillValue(SKILL_IRON_MUSCLES)/8;
+      if (discs && whichStat == STAT_STR && doesKnowSkill(SKILL_IRON_MUSCLES)) {
+        amount += getSkillValue(SKILL_IRON_MUSCLES) / 8;
       }
 
-      if(isVampire() &&
-	 (whichStat == STAT_STR ||
-	  whichStat == STAT_SPE ||
-	  whichStat == STAT_CHA))
-	amount += 25;
+      if (isVampire() && (whichStat == STAT_STR || whichStat == STAT_SPE ||
+                           whichStat == STAT_CHA))
+        amount += 25;
 
       return amount;
-    case(STAT_RACE):
+    case (STAT_RACE):
       return race->baseStats.get(whichStat);
-    case(STAT_AGE):
-      if(!isVampire())
-	return age_mod_for_stat(this, (age()->year - getBaseAge() + 17), whichStat);
+    case (STAT_AGE):
+      if (!isVampire())
+        return age_mod_for_stat(this, (age()->year - getBaseAge() + 17),
+          whichStat);
       else
-	return 0;
-    case(STAT_TERRITORY):
+        return 0;
+    case (STAT_TERRITORY):
       return territory_adjustment(player.hometerrain, whichStat);
   }
   return 0;
 }
 
-int TBeing::setStat(statSetT whichSet, statTypeT whichStat, int value)
-{
-  switch(whichSet){
-    case(STAT_CHOSEN):
-      return chosenStats.set(whichStat,value);
-    case(STAT_NATURAL):
-      vlogf(LOG_BUG, "some piece of code was trying to set a person's natural stats");
+int TBeing::setStat(statSetT whichSet, statTypeT whichStat, int value) {
+  switch (whichSet) {
+    case (STAT_CHOSEN):
+      return chosenStats.set(whichStat, value);
+    case (STAT_NATURAL):
+      vlogf(LOG_BUG,
+        "some piece of code was trying to set a person's natural stats");
       return 0;
-    case(STAT_CURRENT):
-      return curStats.set(whichStat,value);
-    case(STAT_RACE): case(STAT_AGE): case(STAT_TERRITORY):
-      vlogf(LOG_BUG, "something tried to set STAT_RACE, STAT_AGE or STAT_TERRITORY");
+    case (STAT_CURRENT):
+      return curStats.set(whichStat, value);
+    case (STAT_RACE):
+    case (STAT_AGE):
+    case (STAT_TERRITORY):
+      vlogf(LOG_BUG,
+        "something tried to set STAT_RACE, STAT_AGE or STAT_TERRITORY");
       return 0;
   }
   return 0;
 }
 
-int TBeing::addToStat(statSetT whichSet, statTypeT whichStat, int modifier)
-{
+int TBeing::addToStat(statSetT whichSet, statTypeT whichStat, int modifier) {
   switch (whichSet) {
     case STAT_CHOSEN:
-      return chosenStats.add(whichStat,modifier);
+      return chosenStats.add(whichStat, modifier);
     case STAT_NATURAL:
       vlogf(LOG_BUG, "Illegal attempt to modify Natural Stats.");
       return 0;
     case STAT_CURRENT:
-      return curStats.add(whichStat,modifier);
+      return curStats.add(whichStat, modifier);
     case STAT_RACE:
     case STAT_AGE:
     case STAT_TERRITORY:
-      vlogf(LOG_BUG, "Illegal attempt to modify STAT_RACE, STAT_AGE or STAT_TERRITORY");
+      vlogf(LOG_BUG,
+        "Illegal attempt to modify STAT_RACE, STAT_AGE or STAT_TERRITORY");
       return 0;
   }
   return 0;
 }
 
-int TBeing::plotStat(statSetT x, statTypeT y, int a, int b, int c, double n) const
-{
-  return (int) plotStat(x, y, (double) a, (double) b, (double) c, n);
+int TBeing::plotStat(statSetT x, statTypeT y, int a, int b, int c,
+  double n) const {
+  return (int)plotStat(x, y, (double)a, (double)b, (double)c, n);
 }
 
-float TBeing::plotStat(statSetT x, statTypeT y, float a, float b, float c, double n) const
-{
-  return (float) plotStat(x, y, (double) a, (double) b, (double) c, n);
+float TBeing::plotStat(statSetT x, statTypeT y, float a, float b, float c,
+  double n) const {
+  return (float)plotStat(x, y, (double)a, (double)b, (double)c, n);
 }
 
-double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value, double max_value, double avg, double power) const
-{
+double TBeing::plotStat(statSetT whichSet, statTypeT whichStat,
+  double min_value, double max_value, double avg, double power) const {
   // takes a stat given by whichSet/whichStat and maps it to a curved function
   // this curved function is like an s turned on its side.  its flat in the
   // middle, and curves up to the right, and down to the left.
@@ -1022,8 +1013,10 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
   // where A and B are known constants, and n we modify some to get nice
   // numbers.
 
-  mud_assert(((max_value >= avg && avg >= min_value) || (max_value <= avg && avg <= min_value)),
-     "Problem in assignment of values to plotStat (%.2f, %.2f, %.2f)", min_value, max_value, avg);
+  mud_assert(((max_value >= avg && avg >= min_value) ||
+               (max_value <= avg && avg <= min_value)),
+    "Problem in assignment of values to plotStat (%.2f, %.2f, %.2f)", min_value,
+    max_value, avg);
 
   // this function gets called A LOT!
   // as such, it behooves us to try and limit the impact
@@ -1038,30 +1031,30 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
     cleared = true;
   }
 #endif
- 
+
   int MAXSTAT = 205;
   int MINSTAT = 005;
   if (whichSet == STAT_CHOSEN) {
     MAXSTAT = 25;
     MINSTAT = -25;
   }
-  int midline = ((MAXSTAT - MINSTAT) /2) + MINSTAT;
+  int midline = ((MAXSTAT - MINSTAT) / 2) + MINSTAT;
 
   // boundary conditions:
   // Y(midline) = avg
   // Y(MAXSTAT) = max_value   : flipside being Y(MINSTAT) = min_value
   // A linear formula (power = 1.0) somehow seems bad
-  // A quadratic (power = 2.0) meant they had to get 165 stats to get 1/2 max_value
-  // I chose (power = 1.4 by default) since it was more in middle of these two
-  // lowering n causes a stat closer to midline to have a larger number
+  // A quadratic (power = 2.0) meant they had to get 165 stats to get 1/2
+  // max_value I chose (power = 1.4 by default) since it was more in middle of
+  // these two lowering n causes a stat closer to midline to have a larger
+  // number
 
   // A little algebra and we get:
   // A = (max_value - avg)/(MAXSTAT ^ power - midline ^ power)
-  // B = avg - (midline^power) * A 
+  // B = avg - (midline^power) * A
 
   // March, 2001:
   // this is incorrect, A = (max_value - avg)/(MAXSTAT-midline)^power
-
 
   int stat = getStat(whichSet, whichStat);
   // pin the value if necessary
@@ -1094,15 +1087,15 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
   }
 #endif
   double A, B;
-  double num; 
+  double num;
 
   if (stat >= midline) {
-    A = (max_value - avg) / (pow(MAXSTAT - midline, power)); 
+    A = (max_value - avg) / (pow(MAXSTAT - midline, power));
     B = avg;
     num = A * pow(stat - midline, power) + B;
   } else {
-    A = (min_value - avg) / (pow(midline - MINSTAT, power)); 
-    B =  avg;
+    A = (min_value - avg) / (pow(midline - MINSTAT, power));
+    B = avg;
     num = A * pow(midline - stat, power) + B;
   }
   return num;
@@ -1110,39 +1103,34 @@ double TBeing::plotStat(statSetT whichSet, statTypeT whichStat, double min_value
 
 // Some notes on these two dam formulas
 // High stat should yield 1.25 * more dam, low 0.80 less dam
-float TBeing::getStrDamModifier() const
-{
+float TBeing::getStrDamModifier() const {
   // the name of this function is historical, we want to use brawn (damage)
   // not strength (weight)
   // um no, we use str.
   return plotStat(STAT_CURRENT, STAT_STR, 0.8, 1.25, 1.0, 1.0);
 }
 
-float TBeing::getDexDamModifier() const
-{
-  // this is archaic, we don't want dex to affect damage, it is already factored in.
+float TBeing::getDexDamModifier() const {
+  // this is archaic, we don't want dex to affect damage, it is already factored
+  // in.
   return 1.0;
   //  return plotStat(STAT_CURRENT, STAT_DEX, 0.8, 1.25, 1.0, 1.0);
 }
 
-int TBeing::getDexReaction() const
-{
+int TBeing::getDexReaction() const {
   return plotStat(STAT_CURRENT, STAT_DEX, -4, 6, 0);
 }
 
-int TBeing::getAgiReaction() const
-{
+int TBeing::getAgiReaction() const {
   return plotStat(STAT_CURRENT, STAT_AGI, -4, 6, 0);
 }
 
-int TBeing::getConShock() const
-{
+int TBeing::getConShock() const {
   return plotStat(STAT_CURRENT, STAT_CON, 15, 99, 65);
 }
 
 // extra HPs gotten when you level
-float TBeing::getConHpModifier() const
-{
+float TBeing::getConHpModifier() const {
   // From Balance notes:
   // High con should give 5/4 more HP than normal, and low con should be 4/5
   // assuming that warriors have 8 HP/lev, we want -1.6 and +2.0 as the
@@ -1152,160 +1140,138 @@ float TBeing::getConHpModifier() const
   // the values and used our standards - Dash
   // (and its still following balance notes)
 
-  return plotStat(STAT_CURRENT, STAT_CON, (float) 4.0/5.0, (float) 5.0/4.0, (double) 1.0);
+  return plotStat(STAT_CURRENT, STAT_CON, (float)4.0 / 5.0, (float)5.0 / 4.0,
+    (double)1.0);
 }
 
-float TBeing::getStrMod() const
-{
+float TBeing::getStrMod() const {
   return plotStat(STAT_CURRENT, STAT_STR, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getBraMod() const
-{
+float TBeing::getBraMod() const {
   return plotStat(STAT_CURRENT, STAT_BRA, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getConMod() const
-{
+float TBeing::getConMod() const {
   return plotStat(STAT_CURRENT, STAT_CON, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getDexMod() const
-{
+float TBeing::getDexMod() const {
   return plotStat(STAT_CURRENT, STAT_DEX, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getAgiMod() const
-{
+float TBeing::getAgiMod() const {
   return plotStat(STAT_CURRENT, STAT_AGI, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getSpeMod() const
-{
+float TBeing::getSpeMod() const {
   return plotStat(STAT_CURRENT, STAT_SPE, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getIntMod() const
-{
+float TBeing::getIntMod() const {
   return plotStat(STAT_CURRENT, STAT_INT, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getWisMod() const
-{
+float TBeing::getWisMod() const {
   return plotStat(STAT_CURRENT, STAT_WIS, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getFocMod() const
-{
+float TBeing::getFocMod() const {
   return plotStat(STAT_CURRENT, STAT_FOC, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getPerMod() const
-{
+float TBeing::getPerMod() const {
   return plotStat(STAT_CURRENT, STAT_PER, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getChaMod() const
-{
+float TBeing::getChaMod() const {
   return plotStat(STAT_CURRENT, STAT_CHA, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getKarMod() const
-{
+float TBeing::getKarMod() const {
   return plotStat(STAT_CURRENT, STAT_KAR, 0.8, 1.25, 1.0);
 }
 
-float TBeing::getIntModForPracs() const
-{
-  // this formula is convoluted, and we use stat natural because we don't want them
-  // to carry around +int eq purely for the sake of gaining.
-  return plotStat(STAT_NATURAL, STAT_INT, .8 , 1.25, 1.0);
+float TBeing::getIntModForPracs() const {
+  // this formula is convoluted, and we use stat natural because we don't want
+  // them to carry around +int eq purely for the sake of gaining.
+  return plotStat(STAT_NATURAL, STAT_INT, .8, 1.25, 1.0);
 }
 
-float TBeing::getChaShopPenalty() const
-{
+float TBeing::getChaShopPenalty() const {
   return plotStat(STAT_CURRENT, STAT_CHA, 1.3, 1.0, 1.1);
 }
 
-float TBeing::getSwindleBonus()
-{
-  float chr=0.0;
+float TBeing::getSwindleBonus() {
+  float chr = 0.0;
 
-  if(doesKnowSkill(SKILL_SWINDLE)){
+  if (doesKnowSkill(SKILL_SWINDLE)) {
     // make 5 separate rolls so chr goes up amount based on learning
     for (int i = 0; i < 5; i++)
       if (bSuccess(SKILL_SWINDLE))
-	chr += 0.02;
+        chr += 0.02;
   }
 
   return chr;
 }
 
-Stats TBeing::getCurStats() const
-{
-  return curStats;
-}
+Stats TBeing::getCurStats() const { return curStats; }
 
-Stats::Stats()
-{
+Stats::Stats() {
   statTypeT stat;
-  for(stat=MIN_STAT; stat < MAX_STATS; stat++)
-    values[stat]=150;
+  for (stat = MIN_STAT; stat < MAX_STATS; stat++)
+    values[stat] = 150;
 
   values[STAT_EXT] = 0;
 }
 
-Stats::Stats(const Stats &a)
-{
+Stats::Stats(const Stats& a) {
   statTypeT stat;
-  for(stat=MIN_STAT; stat < MAX_STATS; stat++)
-    values[stat]=a.values[stat];
+  for (stat = MIN_STAT; stat < MAX_STATS; stat++)
+    values[stat] = a.values[stat];
 }
 
-Stats & Stats::operator=(const Stats &a)
-{
-  if (this == &a) return *this;
+Stats& Stats::operator=(const Stats& a) {
+  if (this == &a)
+    return *this;
   statTypeT stat;
-  for(stat=MIN_STAT; stat < MAX_STATS; stat++)
-    values[stat]=a.values[stat];
+  for (stat = MIN_STAT; stat < MAX_STATS; stat++)
+    values[stat] = a.values[stat];
   return *this;
 }
 
-Stats::~Stats()
-{
+Stats::~Stats() {}
+
+bool TBeing::isStrong() const {
+  return (
+    plotStat(STAT_CURRENT, STAT_BRA, 30, 180, 105, 1.0) >= ::number(30, 200));
 }
 
-bool TBeing::isStrong() const
-{
-  return (plotStat(STAT_CURRENT, STAT_BRA, 30, 180, 105, 1.0) >= ::number(30,200));
+bool TBeing::isPerceptive() const {
+  return (
+    plotStat(STAT_CURRENT, STAT_PER, 30, 180, 105, 1.0) >= ::number(30, 200));
 }
 
-bool TBeing::isPerceptive() const
-{
-  return (plotStat(STAT_CURRENT, STAT_PER, 30, 180, 105, 1.0) >= ::number(30,200));
+bool TBeing::isAgile(int num) const {
+  return ((plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 105, 1.0) + num) >=
+          ::number(30, 200));
 }
 
-bool TBeing::isAgile(int num) const
-{
-  return ((plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 105, 1.0) + num) >= ::number(30,200));
+bool TBeing::isDextrous() const {
+  return (
+    plotStat(STAT_CURRENT, STAT_DEX, 30, 180, 105, 1.0) >= ::number(30, 200));
 }
 
-bool TBeing::isDextrous() const
-{
-  return (plotStat(STAT_CURRENT, STAT_DEX, 30, 180, 105, 1.0) >= ::number(30,200));
+bool TBeing::isTough() const {
+  return (
+    plotStat(STAT_CURRENT, STAT_CON, 30, 180, 105, 1.0) >= ::number(30, 200));
 }
 
-bool TBeing::isTough() const
-{
-  return (plotStat(STAT_CURRENT, STAT_CON, 30, 180, 105, 1.0) >= ::number(30,200));
+bool TBeing::isUgly() const {
+  return (
+    plotStat(STAT_CURRENT, STAT_CHA, 30, 180, 105, 1.0) >= ::number(30, 200));
 }
 
-bool TBeing::isUgly() const
-{
-  return (plotStat(STAT_CURRENT, STAT_CHA, 30, 180, 105, 1.0) >= ::number(30,200));
-}
-
-bool TBeing::isRealUgly() const
-{
-  return (isUgly() && isUgly() && !::number(0,1));
+bool TBeing::isRealUgly() const {
+  return (isUgly() && isUgly() && !::number(0, 1));
 }

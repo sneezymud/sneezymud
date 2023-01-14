@@ -6,7 +6,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 // Stats.h
 //
 // A class for defining the stat system.
@@ -15,36 +14,35 @@
 
 class Stats {
   private:
+    int str;
+    int brawn;
 
-   int str;
-   int brawn;
+    int dex;
+    int agility;
+    int speed;
 
-   int dex;
-   int agility;
-   int speed;
+    int con;
+    int hardiness;
 
-   int con;
-   int hardiness;
+    int intel;
+    int focus;
 
-   int intel;
-   int focus;
+    int wis;
 
-   int wis;
+    int luck;
+    int karma;
 
-   int luck;
-   int karma;
+    int perception;
 
-   int perception;
+    int add;
 
-   int add;
-
-  public: 
+  public:
     Stats() {
       str = brawn = dex = agility = speed = con = hardiness = 150;
       intel = focus = wis = luck = karma = perception = add = 150;
     }
 
-    void showStats(TBeing *caller);
+    void showStats(TBeing* caller);
     void report();
 
     inline int getStr() { return str; }

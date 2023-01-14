@@ -25,15 +25,13 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #define NEWBIE_PURGATORY_LENGTH 7257600
 
-enum messageTypeT
-{
-  MSG_ERROR     = 0,
-  MSG_MIN       = 1,
+enum messageTypeT {
+  MSG_ERROR = 0,
+  MSG_MIN = 1,
   MSG_IMM_TITLE = 1,
   MSG_PURGE,
   MSG_PURGE_TARG,
@@ -55,51 +53,50 @@ enum messageTypeT
   MSG_MAX
 };
 
-const int MSG_TYPE_MAX   = MSG_MAX;
-const int MSG_REQ_GNAME  = (1 << 0); // God Name
-const int MSG_REQ_ONAME  = (1 << 1); // Other Name [mobile/object/player]
-const int MSG_REQ_STRING = (1 << 2); // Command sstring
-const int MSG_REQ_DIR    = (1 << 3); // Direction of travel
+const int MSG_TYPE_MAX = MSG_MAX;
+const int MSG_REQ_GNAME = (1 << 0);   // God Name
+const int MSG_REQ_ONAME = (1 << 1);   // Other Name [mobile/object/player]
+const int MSG_REQ_STRING = (1 << 2);  // Command sstring
+const int MSG_REQ_DIR = (1 << 3);     // Direction of travel
 
-struct messageBuffer
-{
-  sstring msgImmTitle;
-  sstring msgPurge;
-  sstring msgPurgeTarg;
-  sstring msgRLoad;
-  sstring msgLoadObj;
-  sstring msgLoadMob;
-  sstring msgMEdit;
-  sstring msgOEdit;
-  sstring msgSwitchTarg;
-  sstring msgMoveIn;
-  sstring msgMoveOut;
-  sstring msgSlay;
-  sstring msgSlayTarg;
-  sstring msgForce;
-  sstring msgBamfin;
-  sstring msgBamfout;
-  sstring msgLongDescr;
-  sstring msgNote;
+struct messageBuffer {
+    sstring msgImmTitle;
+    sstring msgPurge;
+    sstring msgPurgeTarg;
+    sstring msgRLoad;
+    sstring msgLoadObj;
+    sstring msgLoadMob;
+    sstring msgMEdit;
+    sstring msgOEdit;
+    sstring msgSwitchTarg;
+    sstring msgMoveIn;
+    sstring msgMoveOut;
+    sstring msgSlay;
+    sstring msgSlayTarg;
+    sstring msgForce;
+    sstring msgBamfin;
+    sstring msgBamfout;
+    sstring msgLongDescr;
+    sstring msgNote;
 };
 
-class TMessages
-{
+class TMessages {
   public:
     messageBuffer tMessages;
-    TBeing *tPlayer = nullptr;
+    TBeing* tPlayer = nullptr;
 
-    static sstring getImmortalTitles(TBeing *);
+    static sstring getImmortalTitles(TBeing*);
     // Return the old default messages.
-    static sstring getDefaultMessage(messageTypeT, TBeing *);
+    static sstring getDefaultMessage(messageTypeT, TBeing*);
     // ?(Has message type), also checks for appropriate power setting.
-    bool operator== (messageTypeT) const;
+    bool operator==(messageTypeT) const;
     // Set message type to message
-    void operator() (messageTypeT, sstring);
+    void operator()(messageTypeT, sstring);
     // Sets the fields in message  [Call this to actually Get the messages]
-    sstring operator() (messageTypeT, TThing * = NULL, const char * = NULL, bool = true) const;
+    sstring operator()(messageTypeT, TThing* = NULL, const char* = NULL,
+      bool = true) const;
     // Used by  : Get message from type
-    sstring const& operator[] (messageTypeT) const;
+    const sstring& operator[](messageTypeT) const;
     void initialize();
     void savedown();
 };

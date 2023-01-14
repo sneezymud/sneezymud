@@ -4,17 +4,15 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "room.h"
 #include "being.h"
 #include "combat.h"
 #include "disc_mindbody.h"
 #include "monster.h"
 
-static int feignDeath(TBeing * caster)
-{
-  TRoom *rp;
-  TThing *t=NULL;
+static int feignDeath(TBeing* caster) {
+  TRoom* rp;
+  TThing* t = NULL;
 
   if (!caster->fight()) {
     caster->sendTo("But you are not fighting anything...\n\r");
@@ -45,16 +43,17 @@ static int feignDeath(TBeing * caster)
     caster->stopFighting();
     caster->setPosition(POSITION_SLEEPING);
 
-
-    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-      TBeing *tc = dynamic_cast<TBeing *>(t);
-      if (!tc) continue;
+    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+         ++it) {
+      TBeing* tc = dynamic_cast<TBeing*>(t);
+      if (!tc)
+        continue;
       if (tc->fight() == caster) {
-	tc->stopFighting();
-        if (::number(1, 101) < bKnown/ 2) {
-          if (!tc->isPc()){
-            TMonster *tmons = dynamic_cast<TMonster *>(tc);
-            if (tmons->Hates(caster, NULL)) 
+        tc->stopFighting();
+        if (::number(1, 101) < bKnown / 2) {
+          if (!tc->isPc()) {
+            TMonster* tmons = dynamic_cast<TMonster*>(tc);
+            if (tmons->Hates(caster, NULL))
               tmons->remHated(caster, NULL);
           }
         }
@@ -62,23 +61,25 @@ static int feignDeath(TBeing * caster)
     }
   } else {
     caster->deathCry();
-    act("$n makes a lousy attempt at playing possum.", FALSE, caster, 0, 0, TO_ROOM);
+    act("$n makes a lousy attempt at playing possum.", FALSE, caster, 0, 0,
+      TO_ROOM);
 
     switch (critFail(caster, SKILL_FEIGN_DEATH)) {
       case CRIT_F_HITOTHER:
-        caster->sendTo("You stop your heart for too long and kill yourself!\n\r");
-        caster->applyDamage(caster, (20 * caster->hitLimit()), DAMAGE_SUFFOCATION);
+        caster->sendTo(
+          "You stop your heart for too long and kill yourself!\n\r");
+        caster->applyDamage(caster, (20 * caster->hitLimit()),
+          DAMAGE_SUFFOCATION);
         return DELETE_THIS;
       case CRIT_F_HITSELF:
       case CRIT_F_NONE:
         caster->setPosition(POSITION_SLEEPING);
     }
-  } 
+  }
   return TRUE;
 }
 
-int TBeing::doFeignDeath()
-{
+int TBeing::doFeignDeath() {
   int rc;
 
   if (!doesKnowSkill(SKILL_FEIGN_DEATH)) {
@@ -92,4 +93,3 @@ int TBeing::doFeignDeath()
 
   return rc;
 }
-

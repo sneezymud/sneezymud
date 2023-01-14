@@ -4,26 +4,18 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "disc_mindbody.h"
 
-CDMindBody::CDMindBody() :
-  CDiscipline(),
-  skFeignDeath(),
-  skBlur()
-{
-}
+CDMindBody::CDMindBody() : CDiscipline(), skFeignDeath(), skBlur() {}
 
-CDMindBody::CDMindBody(const CDMindBody &a) :
+CDMindBody::CDMindBody(const CDMindBody& a) :
   CDiscipline(a),
   skFeignDeath(a.skFeignDeath),
-  skBlur(a.skBlur)
-{
-}
- 
-CDMindBody & CDMindBody::operator=(const CDMindBody &a)
-{
-  if (this == &a) return *this;
+  skBlur(a.skBlur) {}
+
+CDMindBody& CDMindBody::operator=(const CDMindBody& a) {
+  if (this == &a)
+    return *this;
   CDiscipline::operator=(a);
   skFeignDeath = a.skFeignDeath;
   skBlur = a.skBlur;
@@ -31,11 +23,6 @@ CDMindBody & CDMindBody::operator=(const CDMindBody &a)
   return *this;
 }
 
-CDMindBody::~CDMindBody()
-{
-}
+CDMindBody::~CDMindBody() {}
 
-CDMindBody * CDMindBody::cloneMe()
-{
-  return new CDMindBody(*this);
-}
+CDMindBody* CDMindBody::cloneMe() { return new CDMindBody(*this); }

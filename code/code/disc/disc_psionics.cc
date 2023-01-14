@@ -32,11 +32,9 @@ CDPsionics::CDPsionics() :
   skMindPreservation(),
   skTelekinesis(),
   skPsiDrain(),
-  skDimensionalFold()
-{
-}
+  skDimensionalFold() {}
 
-CDPsionics::CDPsionics(const CDPsionics &a) :
+CDPsionics::CDPsionics(const CDPsionics& a) :
   CDiscipline(a),
   skTelepathy(a.skTelepathy),
   skTeleSight(a.skTeleSight),
@@ -49,13 +47,11 @@ CDPsionics::CDPsionics(const CDPsionics &a) :
   skMindPreservation(a.skMindPreservation),
   skTelekinesis(a.skTelekinesis),
   skPsiDrain(a.skPsiDrain),
-  skDimensionalFold(a.skDimensionalFold)
-{
-}
+  skDimensionalFold(a.skDimensionalFold) {}
 
-CDPsionics & CDPsionics::operator=(const CDPsionics &a)
-{
-  if (this == &a) return *this;
+CDPsionics& CDPsionics::operator=(const CDPsionics& a) {
+  if (this == &a)
+    return *this;
   CDiscipline::operator=(a);
   //  skAdvancedPsionics = a.skAdvancedPsionics;
   skTelepathy = a.skTelepathy;
@@ -74,31 +70,29 @@ CDPsionics & CDPsionics::operator=(const CDPsionics &a)
   return *this;
 }
 
-CDPsionics::~CDPsionics()
-{
-}
+CDPsionics::~CDPsionics() {}
 
-
-int TBeing::doPTell(const char *arg, bool visible){
-  TBeing *vict;
+int TBeing::doPTell(const char* arg, bool visible) {
+  TBeing* vict;
   char name[100], capbuf[256], message[MAX_INPUT_LENGTH + 40];
   int rc;
 
-  if(!doesKnowSkill(SKILL_PSITELEPATHY)){
+  if (!doesKnowSkill(SKILL_PSITELEPATHY)) {
     sendTo("You are not telepathic!\n\r");
     return FALSE;
   }
 
-  if(getMana() < discArray[SKILL_PSITELEPATHY]->minMana){
+  if (getMana() < discArray[SKILL_PSITELEPATHY]->minMana) {
     sendTo("You don't have enough mana.\n\r");
     return FALSE;
   }
 
-  if(affectedBySpell(SKILL_MIND_FOCUS)){
-    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+  if (affectedBySpell(SKILL_MIND_FOCUS)) {
+    sendTo(
+      "You can't use psionic powers until you are done focusing your "
+      "mind.\n\r");
     return FALSE;
   }
-
 
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
     sendTo("What a dumb master you have, charmed mobiles can't tell.\n\r");
@@ -120,14 +114,15 @@ int TBeing::doPTell(const char *arg, bool visible){
     }
   }
   if (isPlayerAction(PLR_GODNOSHOUT) && (vict->GetMaxLevel() <= MAX_MORT)) {
-    sendTo("You have been sanctioned by the gods and can't telepath to them!!\n\r");
+    sendTo(
+      "You have been sanctioned by the gods and can't telepath to them!!\n\r");
     return FALSE;
   }
   if (this == vict) {
     sendTo("You try to telepath yourself something.\n\r");
     return FALSE;
   }
-  if (dynamic_cast<TMonster *>(vict) && !(vict->desc)) {
+  if (dynamic_cast<TMonster*>(vict) && !(vict->desc)) {
     sendTo("No-one by that name here.\n\r");
     return FALSE;
   }
@@ -136,7 +131,8 @@ int TBeing::doPTell(const char *arg, bool visible){
     return FALSE;
   }
   if (vict->desc->connected) {
-    act("$E is editing or writing. Try again later.", TRUE, this, NULL, vict, TO_CHAR);
+    act("$E is editing or writing. Try again later.", TRUE, this, NULL, vict,
+      TO_CHAR);
     return FALSE;
   }
   if (!vict->desc->connected && vict->isPlayerAction(PLR_MAILING)) {
@@ -150,13 +146,14 @@ int TBeing::doPTell(const char *arg, bool visible){
 
   sstring garbed = garble(vict, message, Garble::SPEECH_TELL);
 
-  rc = vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
+  rc =
+    vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
     vict = NULL;
     return DELETE_VICT;
   }
-  if (IS_SET_DELETE(rc, DELETE_VICT)) 
+  if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_THIS;
 
   if (rc)
@@ -164,16 +161,23 @@ int TBeing::doPTell(const char *arg, bool visible){
 
   learnFromDoing(SKILL_PSITELEPATHY, SILENT_NO, 0);
 
-  mud_str_copy(capbuf, vict->pers(this), 256);  // Use Someone for tells (invis gods, etc)
+  mud_str_copy(capbuf, vict->pers(this),
+    256);  // Use Someone for tells (invis gods, etc)
 
   char garbedBuf[256];
   char nameBuf[256];
   if (vict->hasColor()) {
     if (hasColorStrings(NULL, capbuf, 2)) {
       if (IS_SET(vict->desc->plr_color, PLR_COLOR_MOBS)) {
-        sprintf(nameBuf, "%s", colorString(vict, vict->desc, sstring(capbuf).cap().c_str(), NULL, COLOR_MOBS, FALSE).c_str());
+        sprintf(nameBuf, "%s",
+          colorString(vict, vict->desc, sstring(capbuf).cap().c_str(), NULL,
+            COLOR_MOBS, FALSE)
+            .c_str());
       } else {
-        sprintf(nameBuf, "<p>%s<z>", colorString(vict, vict->desc, sstring(capbuf).cap().c_str(), NULL, COLOR_NONE, FALSE).c_str());
+        sprintf(nameBuf, "<p>%s<z>",
+          colorString(vict, vict->desc, sstring(capbuf).cap().c_str(), NULL,
+            COLOR_NONE, FALSE)
+            .c_str());
       }
     } else {
       sprintf(nameBuf, "<p>%s<z>", sstring(capbuf).cap().c_str());
@@ -182,84 +186,95 @@ int TBeing::doPTell(const char *arg, bool visible){
     sprintf(nameBuf, "%s", sstring(capbuf).cap().c_str());
   }
 
-  sendTo(COLOR_COMM, format("<G>You telepath %s<z>, \"%s\"\n\r") % vict->getName() % colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
+  sendTo(COLOR_COMM,
+    format("<G>You telepath %s<z>, \"%s\"\n\r") % vict->getName() %
+      colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
 
   // we only color the sstring to the victim, so leave this AFTER
   // the stuff we send to the teller.
   garbed.convertStringColor("<c>");
-  vict->sendTo(COLOR_COMM, format("%s telepaths you, \"<c>%s<z>\"\n\r") %            nameBuf % garbed);
+  vict->sendTo(COLOR_COMM,
+    format("%s telepaths you, \"<c>%s<z>\"\n\r") % nameBuf % garbed);
 
-  Descriptor *d = vict->desc;
+  Descriptor* d = vict->desc;
   if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
     sprintf(garbedBuf, "<c>%s<z>", garbed.c_str());
-    d->clientf(format("%d|%s|%s") % CLIENT_TELL %
-        colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
-        colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE));
+    d->clientf(
+      format("%d|%s|%s") % CLIENT_TELL %
+      colorString(vict, vict->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+      colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE));
   }
 
   // set up last teller for reply's use
   // If it becomes a "someone tells you", ignore
   if (vict->desc && isPc() && vict->canSee(this, INFRA_YES) && isPc())
-    strncpy(vict->desc->last_teller, this->name.c_str(), cElements(vict->desc->last_teller)-1);
+    strncpy(vict->desc->last_teller, this->name.c_str(),
+      cElements(vict->desc->last_teller) - 1);
 
   if (desc && inGroup(*vict))
     desc->talkCount = time(0);
 
-  if (vict->desc && (vict->isPlayerAction(PLR_AFK) || (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5)))) 
-    act("$N appears to be away from $S terminal at the moment.", TRUE, this, 0, vict, TO_CHAR);
- 
+  if (vict->desc &&
+      (vict->isPlayerAction(PLR_AFK) ||
+        (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5))))
+    act("$N appears to be away from $S terminal at the moment.", TRUE, this, 0,
+      vict, TO_CHAR);
+
   reconcileMana(SKILL_PSITELEPATHY, FALSE);
 
   return TRUE;
 }
 
-int TBeing::doPSay(const char *arg){
+int TBeing::doPSay(const char* arg) {
   char buf[MAX_INPUT_LENGTH + 40];
   char garbed[256];
   *buf = '\0';
-  TThing *tmp;
-  TBeing *mob = NULL;
+  TThing* tmp;
+  TBeing* mob = NULL;
   int rc;
   char capbuf[256];
   char tmpbuf[256], nameBuf[512], garbedBuf[256];
-  Descriptor *d;
+  Descriptor* d;
 
-  if(!doesKnowSkill(SKILL_PSITELEPATHY)){
+  if (!doesKnowSkill(SKILL_PSITELEPATHY)) {
     sendTo("You are not telepathic!\n\r");
     return FALSE;
   }
 
-  if(getMana() < discArray[SKILL_PSITELEPATHY]->minMana){
+  if (getMana() < discArray[SKILL_PSITELEPATHY]->minMana) {
     sendTo("You don't have enough mana.\n\r");
     return FALSE;
   }
 
-  if(affectedBySpell(SKILL_MIND_FOCUS)){
-    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+  if (affectedBySpell(SKILL_MIND_FOCUS)) {
+    sendTo(
+      "You can't use psionic powers until you are done focusing your "
+      "mind.\n\r");
     return FALSE;
   }
-
 
   if (desc)
     desc->talkCount = time(0);
 
-  for (; isspace(*arg); arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
   if (!*arg)
     sendTo("Yes, but WHAT do you want to say telepathically?\n\r");
   else {
-
     learnFromDoing(SKILL_PSITELEPATHY, SILENT_NO, 0);
 
     mud_str_copy(garbed, garble(NULL, arg, Garble::SPEECH_SAY), 256);
 
-    sendTo(COLOR_COMM, format("<g>You think to the room, <z>\"%s%s\"\n\r") %             colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
+    sendTo(COLOR_COMM,
+      format("<g>You think to the room, <z>\"%s%s\"\n\r") %
+        colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE) % norm());
     // show everyone in room the say.
 
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-      tmp=*(it++);
-          
-      if (!(mob = dynamic_cast<TBeing *>(tmp)))
+    for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
+      tmp = *(it++);
+
+      if (!(mob = dynamic_cast<TBeing*>(tmp)))
         continue;
 
       if (!(d = mob->desc) || mob == this)
@@ -267,69 +282,85 @@ int TBeing::doPSay(const char *arg){
 
       mud_str_copy(capbuf, mob->pers(this), 256);
       strcpy(capbuf, sstring(capbuf).cap().c_str());
-      sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str()); 
+      sprintf(tmpbuf, "%s",
+        colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
 
       if (mob->isPc()) {
         if (hasColorStrings(NULL, capbuf, 2)) {
           if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
-            sprintf(tmpbuf, "%s", colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE).c_str());
-	    mob->sendTo(COLOR_COMM, format("%s thinks, \"%s%s\"\n\r") % tmpbuf % garbed % mob->norm());
-            if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
-              sprintf(garbedBuf, "%s", 
-                colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
+            sprintf(tmpbuf, "%s",
+              colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE)
+                .c_str());
+            mob->sendTo(COLOR_COMM, format("%s thinks, \"%s%s\"\n\r") % tmpbuf %
+                                      garbed % mob->norm());
+            if (d->m_bIsClient ||
+                IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+              sprintf(garbedBuf, "%s",
+                colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE)
+                  .c_str());
               d->clientf(format("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
             }
           } else {
-	    mob->sendTo(COLOR_COMM, format("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
-            if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+            mob->sendTo(COLOR_COMM,
+              format("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
+            if (d->m_bIsClient ||
+                IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
               sprintf(nameBuf, "<c>%s<z>", tmpbuf);
-              sprintf(garbedBuf, "%s", 
-                colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-              d->clientf(format("%d|%s|%s") % CLIENT_SAY % 
+              sprintf(garbedBuf, "%s",
+                colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE)
+                  .c_str());
+              d->clientf(
+                format("%d|%s|%s") % CLIENT_SAY %
                 colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
                 garbedBuf);
             }
           }
         } else {
-	  mob->sendTo(COLOR_COMM, format("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
-          if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
+          mob->sendTo(COLOR_COMM,
+            format("<c>%s thinks, <z>\"%s\"\n\r") % tmpbuf % garbed);
+          if (d->m_bIsClient ||
+              IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
             sprintf(nameBuf, "<c>%s<z>", tmpbuf);
             sprintf(garbedBuf, "%s",
-            colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE).c_str());
-            d->clientf(format("%d|%s|%s") % CLIENT_SAY %
-                colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
-                garbedBuf);
+              colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE)
+                .c_str());
+            d->clientf(
+              format("%d|%s|%s") % CLIENT_SAY %
+              colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+              garbedBuf);
           }
         }
       } else {
-	mob->sendTo(COLOR_COMM, format("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() % 
-		    colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
+        mob->sendTo(COLOR_COMM,
+          format("%s thinks, \"%s\"\n\r") % sstring(getName()).cap() %
+            colorString(this, mob->desc, garbed, NULL, COLOR_COMM, FALSE));
         if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
-          d->clientf(format("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
+          d->clientf(
+            format("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
             colorString(this, mob->desc, garbed, NULL, COLOR_NONE, FALSE));
         }
       }
     }
 
     // everyone needs to see the say before the response gets triggered
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-      tmp=*(it++);
-      mob = dynamic_cast<TBeing *>(tmp);
+    for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
+      tmp = *(it++);
+      mob = dynamic_cast<TBeing*>(tmp);
       if (!mob)
         continue;
 
       if (mob == this)
         continue;
 
-      if (isPc() && !mob->isPc()) { 
-        TMonster *tmons = dynamic_cast<TMonster *>(mob);
+      if (isPc() && !mob->isPc()) {
+        TMonster* tmons = dynamic_cast<TMonster*>(mob);
         tmons->aiSay(this, garbed);
         rc = tmons->checkResponses(this, 0, garbed, CMD_SAY);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tmons;
           tmons = NULL;
         }
-        if (IS_SET_DELETE(rc, DELETE_VICT)) 
+        if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
     }
@@ -340,25 +371,26 @@ int TBeing::doPSay(const char *arg){
   return TRUE;
 }
 
-void TBeing::doPShout(const char *msg){
-  Descriptor *i;
+void TBeing::doPShout(const char* msg) {
+  Descriptor* i;
   char garbed[256];
-  
-  if(!doesKnowSkill(SKILL_PSITELEPATHY)){
+
+  if (!doesKnowSkill(SKILL_PSITELEPATHY)) {
     sendTo("You are not telepathic!\n\r");
     return;
   }
 
-  if(getMana() < discArray[SKILL_PSITELEPATHY]->minMana){
+  if (getMana() < discArray[SKILL_PSITELEPATHY]->minMana) {
     sendTo("You don't have enough mana.\n\r");
     return;
   }
 
-  if(affectedBySpell(SKILL_MIND_FOCUS)){
-    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+  if (affectedBySpell(SKILL_MIND_FOCUS)) {
+    sendTo(
+      "You can't use psionic powers until you are done focusing your "
+      "mind.\n\r");
     return;
   }
-  
 
   if (!*msg) {
     sendTo("What do you wish to broadcast to the world?\n\r");
@@ -366,49 +398,58 @@ void TBeing::doPShout(const char *msg){
   } else {
     learnFromDoing(SKILL_PSITELEPATHY, SILENT_NO, 0);
 
-    mud_str_copy(garbed, garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE), 256);
+    mud_str_copy(garbed,
+      garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE), 256);
 
-    sendTo(COLOR_SPELLS, format("You telepathically send the message, \"%s<z>\"\n\r") % garbed);
+    sendTo(COLOR_SPELLS,
+      format("You telepathically send the message, \"%s<z>\"\n\r") % garbed);
     for (i = descriptor_list; i; i = i->next) {
-      if (i->character && (i->character != this) &&
-	  !i->connected && !i->character->checkSoundproof() &&
-	  (dynamic_cast<TMonster *>(i->character) ||
-	   (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
-	   !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
-	     char garbed_individual[256];
-	     mud_str_copy(garbed_individual, garble(i->character, garbed, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL), 256);
-	i->character->sendTo(COLOR_SPELLS, format("Your mind is flooded with a telepathic message from %s.\n\r") % getName());
-	i->character->sendTo(COLOR_SPELLS, format("The message is, \"%s%s\"\n\r") % garbed_individual % i->character->norm());
+      if (i->character && (i->character != this) && !i->connected &&
+          !i->character->checkSoundproof() &&
+          (dynamic_cast<TMonster*>(i->character) ||
+            (!IS_SET(i->autobits, AUTO_NOSHOUT)) ||
+            !i->character->isPlayerAction(PLR_GODNOSHOUT))) {
+        char garbed_individual[256];
+        mud_str_copy(garbed_individual,
+          garble(i->character, garbed, Garble::SPEECH_SHOUT,
+            Garble::SCOPE_INDIVIDUAL),
+          256);
+        i->character->sendTo(COLOR_SPELLS,
+          format(
+            "Your mind is flooded with a telepathic message from %s.\n\r") %
+            getName());
+        i->character->sendTo(COLOR_SPELLS,
+          format("The message is, \"%s%s\"\n\r") % garbed_individual %
+            i->character->norm());
       }
     }
   }
 
-
   reconcileMana(SKILL_PSITELEPATHY, FALSE);
 }
 
-void TBeing::doTelevision(const char *arg)
-{
+void TBeing::doTelevision(const char* arg) {
   int target;
   char buf1[128];
-  TBeing *vict;
+  TBeing* vict;
   bool visible = TRUE;
 
-  if(!doesKnowSkill(SKILL_TELE_VISION)){
+  if (!doesKnowSkill(SKILL_TELE_VISION)) {
     sendTo("You have not yet mastered psionics well enough to do that.\n\r");
     return;
   }
 
-  if(getMana() < discArray[SKILL_TELE_VISION]->minMana){
+  if (getMana() < discArray[SKILL_TELE_VISION]->minMana) {
     sendTo("You don't have enough mana.\n\r");
     return;
   }
 
-  if(affectedBySpell(SKILL_MIND_FOCUS)){
-    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+  if (affectedBySpell(SKILL_MIND_FOCUS)) {
+    sendTo(
+      "You can't use psionic powers until you are done focusing your "
+      "mind.\n\r");
     return;
   }
-
 
   if (!*arg) {
     sendTo("Whom do you wish to television??\n\r");
@@ -426,35 +467,28 @@ void TBeing::doTelevision(const char *arg)
 
   if (vict->isImmortal() || vict->specials.act & ACT_IMMORTAL) {
     nothingHappens(SILENT_YES);
-    act("Look through the eyes of an immortal?  I think not!",
-        false, this, 0, 0, TO_CHAR);
-    return ;
+    act("Look through the eyes of an immortal?  I think not!", false, this, 0,
+      0, TO_CHAR);
+    return;
   }
-
 
   target = vict->roomp->number;
 
-  if (target == Room::NOCTURNAL_STORAGE ||
-      target == Room::VOID ||
-      target == Room::IMPERIA ||
-      target == Room::HELL ||
-      target == Room::STORAGE ||
-      target == Room::POLY_STORAGE ||
-      target == Room::CORPSE_STORAGE ||
-      target == Room::Q_STORAGE ||
-      target == Room::DONATION ||
-      target == Room::DUMP) {
+  if (target == Room::NOCTURNAL_STORAGE || target == Room::VOID ||
+      target == Room::IMPERIA || target == Room::HELL ||
+      target == Room::STORAGE || target == Room::POLY_STORAGE ||
+      target == Room::CORPSE_STORAGE || target == Room::Q_STORAGE ||
+      target == Room::DONATION || target == Room::DUMP) {
     nothingHappens(SILENT_YES);
-    act("You can't seem to look there right now.",
-        false, this, 0, 0, TO_CHAR);
-    return ;
+    act("You can't seem to look there right now.", false, this, 0, 0, TO_CHAR);
+    return;
   }
 
   reconcileMana(SKILL_TELE_VISION, FALSE);
 
   if (bSuccess(SKILL_TELE_VISION)) {
     sprintf(buf1, "You peer through the eyes of %s and see...",
-	    vict->getName().c_str());
+      vict->getName().c_str());
     act(buf1, FALSE, this, 0, 0, TO_CHAR);
 
     sprintf(buf1, "%d look", target);
@@ -463,7 +497,7 @@ void TBeing::doTelevision(const char *arg)
     return;
   } else {
     sprintf(buf1, "You can't seem to get a handle on %s's mind.",
-	    vict->getName().c_str());
+      vict->getName().c_str());
     act(buf1, FALSE, this, 0, 0, TO_CHAR);
 
     return;
@@ -472,33 +506,33 @@ void TBeing::doTelevision(const char *arg)
   return;
 }
 
-void TBeing::doMindfocus(const char *){
+void TBeing::doMindfocus(const char*) {
   if (affectedBySpell(SKILL_MIND_FOCUS)) {
     sendTo("You are already focusing your mind.\n\r");
     return;
   }
 
-
-  if(getMana() < discArray[SKILL_MIND_FOCUS]->minMana){
+  if (getMana() < discArray[SKILL_MIND_FOCUS]->minMana) {
     sendTo("You don't have enough mana.\n\r");
     return;
   }
 
-
-  int bKnown=getSkillValue(SKILL_MIND_FOCUS);
+  int bKnown = getSkillValue(SKILL_MIND_FOCUS);
   affectedData aff;
 
-  if (bSuccess(bKnown, SKILL_MIND_FOCUS)){
-    act("You begin to focus your mind on regenerating your psionic powers.", TRUE, this, NULL, NULL, TO_CHAR);
+  if (bSuccess(bKnown, SKILL_MIND_FOCUS)) {
+    act("You begin to focus your mind on regenerating your psionic powers.",
+      TRUE, this, NULL, NULL, TO_CHAR);
 
-    aff.type      = SKILL_MIND_FOCUS;
-    aff.level     = bKnown;
-    aff.duration  = durationModify(SKILL_MIND_FOCUS, 4 * Pulse::UPDATES_PER_MUDHOUR);
-    aff.location  = APPLY_NONE;
+    aff.type = SKILL_MIND_FOCUS;
+    aff.level = bKnown;
+    aff.duration =
+      durationModify(SKILL_MIND_FOCUS, 4 * Pulse::UPDATES_PER_MUDHOUR);
+    aff.location = APPLY_NONE;
     affectTo(&aff, -1);
   } else {
-    act("You try to focus your mind, but you can't concentrate.",
-	TRUE, this, NULL, NULL, TO_CHAR);
+    act("You try to focus your mind, but you can't concentrate.", TRUE, this,
+      NULL, NULL, TO_CHAR);
   }
 
   reconcileMana(SKILL_MIND_FOCUS, FALSE);
@@ -506,135 +540,139 @@ void TBeing::doMindfocus(const char *){
   return;
 }
 
-TBeing *psiAttackChecks(TBeing *caster, spellNumT sk, const char *tString){
+TBeing* psiAttackChecks(TBeing* caster, spellNumT sk, const char* tString) {
   char tTarget[256];
-  TObj *tobj=NULL;
-  TBeing *tVictim=NULL;
+  TObj* tobj = NULL;
+  TBeing* tVictim = NULL;
 
   if (caster->checkBusy())
     return NULL;
 
   if (!caster->doesKnowSkill(sk)) {
-    caster->sendTo(format("You do not have the skill to use %s.\n\r") % 
-		   discArray[sk]->name);
+    caster->sendTo(
+      format("You do not have the skill to use %s.\n\r") % discArray[sk]->name);
     return NULL;
   }
 
-  if(caster->getMana() < discArray[sk]->minMana){
+  if (caster->getMana() < discArray[sk]->minMana) {
     caster->sendTo("You don't have enough mana.\n\r");
     return NULL;
   }
 
-  if(caster->affectedBySpell(SKILL_MIND_FOCUS)){
-    caster->sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+  if (caster->affectedBySpell(SKILL_MIND_FOCUS)) {
+    caster->sendTo(
+      "You can't use psionic powers until you are done focusing your "
+      "mind.\n\r");
     return NULL;
   }
 
-
-  if (tString && *tString){
+  if (tString && *tString) {
     strcpy(tTarget, tString);
     generic_find(tTarget, FIND_CHAR_ROOM, caster, &tVictim, &tobj);
   } else if (caster->fight()) {
     tVictim = caster->fight();
   }
 
-  if(!tVictim){
-    caster->sendTo(format("Who do you want to use %s on?\n\r") % discArray[sk]->name);
+  if (!tVictim) {
+    caster->sendTo(
+      format("Who do you want to use %s on?\n\r") % discArray[sk]->name);
     return NULL;
   }
 
-  if (caster->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r") 
-      || tVictim->isImmortal() || tVictim->inGroup(*caster))
+  if (caster->checkPeaceful(
+        "You feel too peaceful to contemplate violence here.\n\r") ||
+      tVictim->isImmortal() || tVictim->inGroup(*caster))
     return NULL;
-
 
   caster->reconcileMana(sk, FALSE);
 
   return tVictim;
 }
 
-void psiAttackFailMsg(TBeing *ch, TBeing *tVictim){
-  act("You fail to breach $N's mind with your psionic powers.",
-      FALSE, ch, NULL, tVictim, TO_CHAR);
-  act("You feel a malevolent psionic power emanating from $n towards you, but it quickly dissipates.",
-      TRUE, ch, NULL, tVictim, TO_VICT);
+void psiAttackFailMsg(TBeing* ch, TBeing* tVictim) {
+  act("You fail to breach $N's mind with your psionic powers.", FALSE, ch, NULL,
+    tVictim, TO_CHAR);
+  act(
+    "You feel a malevolent psionic power emanating from $n towards you, but it "
+    "quickly dissipates.",
+    TRUE, ch, NULL, tVictim, TO_VICT);
 }
 
-int TBeing::doPsiblast(const char *tString){
+int TBeing::doPsiblast(const char* tString) {
   // decreases int/wis/foc
-  TBeing *tVictim=NULL;
+  TBeing* tVictim = NULL;
 
-  if(!(tVictim=psiAttackChecks(this, SKILL_PSI_BLAST, tString)))
+  if (!(tVictim = psiAttackChecks(this, SKILL_PSI_BLAST, tString)))
     return FALSE;
-  
-  int bKnown=getSkillValue(SKILL_PSI_BLAST);
-  int tDamage=0;
+
+  int bKnown = getSkillValue(SKILL_PSI_BLAST);
+  int tDamage = 0;
 
   if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
-    act("You send a blast of psionic power towards $N!",
-        FALSE, this, NULL, tVictim, TO_CHAR);
-    
-    act("A look of shocked pain appears on $N's face.",
-	TRUE, this, NULL, tVictim, TO_CHAR);
-    act("$n sends a blast of psionic power into your mind.",
-	TRUE, this, NULL, tVictim, TO_VICT);
-    act("A look of shocked pain appears on $N's face as $n glares at $M.",
-	TRUE, this, NULL, tVictim, TO_NOTVICT);
+    act("You send a blast of psionic power towards $N!", FALSE, this, NULL,
+      tVictim, TO_CHAR);
+
+    act("A look of shocked pain appears on $N's face.", TRUE, this, NULL,
+      tVictim, TO_CHAR);
+    act("$n sends a blast of psionic power into your mind.", TRUE, this, NULL,
+      tVictim, TO_VICT);
+    act("A look of shocked pain appears on $N's face as $n glares at $M.", TRUE,
+      this, NULL, tVictim, TO_NOTVICT);
 
     if (!tVictim->affectedBySpell(SKILL_PSI_BLAST)) {
       affectedData aff;
-      int count=0;
+      int count = 0;
 
       // I do a success roll for each affect to mix things up a bit
 
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
-	aff.type      = SKILL_PSI_BLAST;
-	aff.level     = bKnown;
-	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
-	aff.location  = APPLY_INT;
-	aff.modifier   = -(::number(bKnown/3, bKnown/2));
-	tVictim->affectTo(&aff, -1);
-	++count;
+        aff.type = SKILL_PSI_BLAST;
+        aff.level = bKnown;
+        aff.duration = durationModify(SKILL_PSI_BLAST,
+          (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
+        aff.location = APPLY_INT;
+        aff.modifier = -(::number(bKnown / 3, bKnown / 2));
+        tVictim->affectTo(&aff, -1);
+        ++count;
       }
 
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
-	aff.type      = SKILL_PSI_BLAST;
-	aff.level     = bKnown;
-	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
-	aff.location  = APPLY_WIS;
-	aff.modifier   = -(::number(bKnown/3, bKnown/2));
-	tVictim->affectTo(&aff, -1);
-	++count;
+        aff.type = SKILL_PSI_BLAST;
+        aff.level = bKnown;
+        aff.duration = durationModify(SKILL_PSI_BLAST,
+          (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
+        aff.location = APPLY_WIS;
+        aff.modifier = -(::number(bKnown / 3, bKnown / 2));
+        tVictim->affectTo(&aff, -1);
+        ++count;
       }
 
       if (bSuccess(bKnown, SKILL_PSI_BLAST)) {
-	aff.type      = SKILL_PSI_BLAST;
-	aff.level     = bKnown;
-	aff.duration  = durationModify(SKILL_PSI_BLAST, (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
-	aff.location  = APPLY_FOC;
-	aff.modifier   = -(::number(bKnown/3, bKnown/2));
-	tVictim->affectTo(&aff, -1);
-	++count;
+        aff.type = SKILL_PSI_BLAST;
+        aff.level = bKnown;
+        aff.duration = durationModify(SKILL_PSI_BLAST,
+          (bKnown / 10) * Pulse::UPDATES_PER_MUDHOUR);
+        aff.location = APPLY_FOC;
+        aff.modifier = -(::number(bKnown / 3, bKnown / 2));
+        tVictim->affectTo(&aff, -1);
+        ++count;
       }
 
-      if(count){
-	act("$N seems to have suffered a temporary disorientation.",
-	    TRUE, this, NULL, tVictim, TO_CHAR);
-	act("You seem to be suffering from a temporary disorientation.",
-	    TRUE, this, NULL, tVictim, TO_VICT);
-	act("$N seems to have suffered a temporary disorientation.",
-	    TRUE, this, NULL, tVictim, TO_NOTVICT);
+      if (count) {
+        act("$N seems to have suffered a temporary disorientation.", TRUE, this,
+          NULL, tVictim, TO_CHAR);
+        act("You seem to be suffering from a temporary disorientation.", TRUE,
+          this, NULL, tVictim, TO_VICT);
+        act("$N seems to have suffered a temporary disorientation.", TRUE, this,
+          NULL, tVictim, TO_NOTVICT);
       }
-
     }
 
     tDamage = getSkillDam(tVictim, SKILL_PSI_BLAST,
-                          getSkillLevel(SKILL_PSI_BLAST),
-                          getAdvLearning(SKILL_PSI_BLAST));
+      getSkillLevel(SKILL_PSI_BLAST), getAdvLearning(SKILL_PSI_BLAST));
   } else {
     psiAttackFailMsg(this, tVictim);
   }
-
 
   int rc = reconcileDamage(tVictim, tDamage, SKILL_PSI_BLAST);
 
@@ -645,42 +683,37 @@ int TBeing::doPsiblast(const char *tString){
     tVictim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
-  
 
   return TRUE;
 }
 
+int TBeing::doMindthrust(const char* tString) {
+  TBeing* tVictim = NULL;
 
-int TBeing::doMindthrust(const char *tString){
-  TBeing *tVictim=NULL;
-
-  if(!(tVictim=psiAttackChecks(this, SKILL_MIND_THRUST, tString)))
+  if (!(tVictim = psiAttackChecks(this, SKILL_MIND_THRUST, tString)))
     return FALSE;
-  
-  int bKnown=getSkillValue(SKILL_MIND_THRUST);
-  int tDamage=0;
+
+  int bKnown = getSkillValue(SKILL_MIND_THRUST);
+  int tDamage = 0;
 
   if (bSuccess(bKnown, SKILL_MIND_THRUST)) {
-    act("You use your psionic powers to stab at $N's mind!",
-        FALSE, this, NULL, tVictim, TO_CHAR);
-    
-    act("$N winces in pain.",
-	TRUE, this, NULL, tVictim, TO_CHAR);
-    act("$n squints at you, causing a sharp stabbing pain in your mind.",
-	TRUE, this, NULL, tVictim, TO_VICT);
-    act("$n squints at $N causing $M to wince suddenly.",
-	TRUE, this, NULL, tVictim, TO_NOTVICT);
-    tDamage = getSkillDam(tVictim, SKILL_MIND_THRUST,
-                          getSkillLevel(SKILL_MIND_THRUST),
-                          getAdvLearning(SKILL_MIND_THRUST));
+    act("You use your psionic powers to stab at $N's mind!", FALSE, this, NULL,
+      tVictim, TO_CHAR);
 
-    
-    if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
-      tVictim->addToDistracted(::number(3,7), FALSE);
-    if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
-      tVictim->addToDistracted(::number(3,7), FALSE);
-    if(bSuccess(bKnown/4, SKILL_MIND_THRUST) && tVictim->spelltask)
-      tVictim->addToDistracted(::number(3,7), FALSE);
+    act("$N winces in pain.", TRUE, this, NULL, tVictim, TO_CHAR);
+    act("$n squints at you, causing a sharp stabbing pain in your mind.", TRUE,
+      this, NULL, tVictim, TO_VICT);
+    act("$n squints at $N causing $M to wince suddenly.", TRUE, this, NULL,
+      tVictim, TO_NOTVICT);
+    tDamage = getSkillDam(tVictim, SKILL_MIND_THRUST,
+      getSkillLevel(SKILL_MIND_THRUST), getAdvLearning(SKILL_MIND_THRUST));
+
+    if (bSuccess(bKnown / 4, SKILL_MIND_THRUST) && tVictim->spelltask)
+      tVictim->addToDistracted(::number(3, 7), FALSE);
+    if (bSuccess(bKnown / 4, SKILL_MIND_THRUST) && tVictim->spelltask)
+      tVictim->addToDistracted(::number(3, 7), FALSE);
+    if (bSuccess(bKnown / 4, SKILL_MIND_THRUST) && tVictim->spelltask)
+      tVictim->addToDistracted(::number(3, 7), FALSE);
   } else {
     psiAttackFailMsg(this, tVictim);
   }
@@ -697,34 +730,34 @@ int TBeing::doMindthrust(const char *tString){
   return TRUE;
 }
 
-int TBeing::doPsycrush(const char *tString){
+int TBeing::doPsycrush(const char* tString) {
   // blindness and/or flee
-  TBeing *tVictim=NULL;
-  int doflee=0;
+  TBeing* tVictim = NULL;
+  int doflee = 0;
 
-  if(!(tVictim=psiAttackChecks(this, SKILL_PSYCHIC_CRUSH, tString)))
+  if (!(tVictim = psiAttackChecks(this, SKILL_PSYCHIC_CRUSH, tString)))
     return FALSE;
-  
-  int bKnown=getSkillValue(SKILL_PSYCHIC_CRUSH);
-  int tDamage=0;
+
+  int bKnown = getSkillValue(SKILL_PSYCHIC_CRUSH);
+  int tDamage = 0;
   int level = getSkillLevel(SKILL_PSYCHIC_CRUSH);
 
   if (bSuccess(bKnown, SKILL_PSYCHIC_CRUSH)) {
-    act("You reach out with your psionic powers and CRUSH $N's psyche!",
-        FALSE, this, NULL, tVictim, TO_CHAR);
+    act("You reach out with your psionic powers and CRUSH $N's psyche!", FALSE,
+      this, NULL, tVictim, TO_CHAR);
 
-    if(bSuccess(bKnown/4, SKILL_PSYCHIC_CRUSH) && 
-       !tVictim->affectedBySpell(SPELL_BLINDNESS) &&
-       !tVictim->isAffected(AFF_TRUE_SIGHT) &&
-       !tVictim->isAffected(AFF_CLARITY) &&
-       !isNotPowerful(tVictim, level, SPELL_BLINDNESS, SILENT_YES)){
-				     
-      act("$N's eyes open wide in shock.",
-	  TRUE, this, NULL, tVictim, TO_CHAR);
-      act("$n's psychic crush is too much for you to bear and your vision goes blank.",
-	  TRUE, this, NULL, tVictim, TO_VICT);
-      act("$N's eyes open wide in shock as $n glares at $m.",
-	  TRUE, this, NULL, tVictim, TO_NOTVICT);
+    if (bSuccess(bKnown / 4, SKILL_PSYCHIC_CRUSH) &&
+        !tVictim->affectedBySpell(SPELL_BLINDNESS) &&
+        !tVictim->isAffected(AFF_TRUE_SIGHT) &&
+        !tVictim->isAffected(AFF_CLARITY) &&
+        !isNotPowerful(tVictim, level, SPELL_BLINDNESS, SILENT_YES)) {
+      act("$N's eyes open wide in shock.", TRUE, this, NULL, tVictim, TO_CHAR);
+      act(
+        "$n's psychic crush is too much for you to bear and your vision goes "
+        "blank.",
+        TRUE, this, NULL, tVictim, TO_VICT);
+      act("$N's eyes open wide in shock as $n glares at $m.", TRUE, this, NULL,
+        tVictim, TO_NOTVICT);
 
       // very short duration
       int duration = durationModify(SKILL_PSYCHIC_CRUSH, Pulse::COMBAT * 2);
@@ -732,24 +765,20 @@ int TBeing::doPsycrush(const char *tString){
       tVictim->rawBlind(level, duration, SAVE_NO);
 
     } else {
-      act("$N winces in pain.",
-	  TRUE, this, NULL, tVictim, TO_CHAR);
-      act("$n crushes your psyche.",
-	  TRUE, this, NULL, tVictim, TO_VICT);
-      act("$N winces in pain as $n glares at $m.",
-	  TRUE, this, NULL, tVictim, TO_NOTVICT);
+      act("$N winces in pain.", TRUE, this, NULL, tVictim, TO_CHAR);
+      act("$n crushes your psyche.", TRUE, this, NULL, tVictim, TO_VICT);
+      act("$N winces in pain as $n glares at $m.", TRUE, this, NULL, tVictim,
+        TO_NOTVICT);
     }
 
-    if(bSuccess(bKnown, SKILL_PSYCHIC_CRUSH) &&
-       !isNotPowerful(tVictim, level, SPELL_FEAR, SILENT_YES)){ // flee
-      doflee=1;
+    if (bSuccess(bKnown, SKILL_PSYCHIC_CRUSH) &&
+        !isNotPowerful(tVictim, level, SPELL_FEAR, SILENT_YES)) {  // flee
+      doflee = 1;
     }
 
-    
     tDamage = getSkillDam(tVictim, SKILL_PSYCHIC_CRUSH,
-			  getSkillLevel(SKILL_PSYCHIC_CRUSH),
-			  getAdvLearning(SKILL_PSYCHIC_CRUSH));
-    
+      getSkillLevel(SKILL_PSYCHIC_CRUSH), getAdvLearning(SKILL_PSYCHIC_CRUSH));
+
   } else {
     psiAttackFailMsg(this, tVictim);
   }
@@ -762,66 +791,69 @@ int TBeing::doPsycrush(const char *tString){
     tVictim = NULL;
     REM_DELETE(rc, DELETE_VICT);
   }
-  
-  if(doflee && tVictim){
-      act("An overwhelming sense of panic causes you to flee.",
-	  TRUE, this, NULL, tVictim, TO_VICT);
+
+  if (doflee && tVictim) {
+    act("An overwhelming sense of panic causes you to flee.", TRUE, this, NULL,
+      tVictim, TO_VICT);
     tVictim->doFlee("");
   }
-
 
   return TRUE;
 }
 
-int kwaveDamage(TBeing *caster, TBeing *victim) {
-    int rc = victim->crashLanding(POSITION_SITTING);
-    if (IS_SET_ONLY(rc, DELETE_VICT))
-        return DELETE_VICT;
+int kwaveDamage(TBeing* caster, TBeing* victim) {
+  int rc = victim->crashLanding(POSITION_SITTING);
+  if (IS_SET_ONLY(rc, DELETE_VICT))
+    return DELETE_VICT;
 
-    float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);
-    wt += 1;
-    victim->addToWait((int) wt);
+  float wt = combatRound(discArray[SKILL_KINETIC_WAVE]->lag);
+  wt += 1;
+  victim->addToWait((int)wt);
 
-    if (victim->spelltask)
-        victim->addToDistracted(1, FALSE);
+  if (victim->spelltask)
+    victim->addToDistracted(1, FALSE);
 
-    int damage = caster->getSkillDam(victim, SKILL_KINETIC_WAVE,
-            caster->getSkillLevel(SKILL_KINETIC_WAVE),
-            caster->getAdvLearning(SKILL_KINETIC_WAVE));
-    return caster->reconcileDamage(victim, damage, SKILL_KINETIC_WAVE);
+  int damage = caster->getSkillDam(victim, SKILL_KINETIC_WAVE,
+    caster->getSkillLevel(SKILL_KINETIC_WAVE),
+    caster->getAdvLearning(SKILL_KINETIC_WAVE));
+  return caster->reconcileDamage(victim, damage, SKILL_KINETIC_WAVE);
 }
 
-int TBeing::doKwave(const char *tString){
-  TBeing *tVictim=NULL;
+int TBeing::doKwave(const char* tString) {
+  TBeing* tVictim = NULL;
   int rc = 0;
 
-  if(!(tVictim=psiAttackChecks(this, SKILL_KINETIC_WAVE, tString)))
+  if (!(tVictim = psiAttackChecks(this, SKILL_KINETIC_WAVE, tString)))
     return FALSE;
-  
-  int bKnown=getSkillValue(SKILL_KINETIC_WAVE);
+
+  int bKnown = getSkillValue(SKILL_KINETIC_WAVE);
 
   if (bSuccess(bKnown, SKILL_KINETIC_WAVE)) {
-    act("You set loose a wave of kinetic force at $N!",
-      FALSE, this, NULL, tVictim, TO_CHAR);
+    act("You set loose a wave of kinetic force at $N!", FALSE, this, NULL,
+      tVictim, TO_CHAR);
 
     if (tVictim->riding) {
-      act("You knock $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_CHAR);
-      act("$n knocks $N off $p.", FALSE, this, tVictim->riding, tVictim, TO_NOTVICT);
-      act("$n knocks you off $p.", FALSE, this, tVictim->riding, tVictim, TO_VICT);
+      act("You knock $N off $p.", FALSE, this, tVictim->riding, tVictim,
+        TO_CHAR);
+      act("$n knocks $N off $p.", FALSE, this, tVictim->riding, tVictim,
+        TO_NOTVICT);
+      act("$n knocks you off $p.", FALSE, this, tVictim->riding, tVictim,
+        TO_VICT);
       tVictim->dismount(POSITION_STANDING);
     }
 
-    act("$n sends $N sprawling with a kinetic force wave!", FALSE, this, 0, tVictim, TO_NOTVICT);
+    act("$n sends $N sprawling with a kinetic force wave!", FALSE, this, 0,
+      tVictim, TO_NOTVICT);
     act("You send $N sprawling.", FALSE, this, 0, tVictim, TO_CHAR);
-    act("You tumble as $n knocks you over with a kinetic wave.", FALSE, this, 0, tVictim, TO_VICT, ANSI_BLUE);
+    act("You tumble as $n knocks you over with a kinetic wave.", FALSE, this, 0,
+      tVictim, TO_VICT, ANSI_BLUE);
 
     rc = kwaveDamage(this, tVictim);
     if (IS_SET_ONLY(rc, DELETE_VICT)) {
-        delete tVictim;
-        tVictim = NULL;
+      delete tVictim;
+      tVictim = NULL;
     }
-  }
-  else {
+  } else {
     psiAttackFailMsg(this, tVictim);
     rc = reconcileDamage(tVictim, 0, SKILL_KINETIC_WAVE);
   }
@@ -831,58 +863,60 @@ int TBeing::doKwave(const char *tString){
   return TRUE;
 }
 
+int TBeing::doPsidrain(const char* tString) {
+  TBeing* tVictim = NULL;
 
-int TBeing::doPsidrain(const char *tString){
-  TBeing *tVictim=NULL;
-
-  if(!(tVictim=psiAttackChecks(this, SKILL_PSIDRAIN, tString)))
+  if (!(tVictim = psiAttackChecks(this, SKILL_PSIDRAIN, tString)))
     return FALSE;
 
   // check mindflayer race
-  if(getRace() != RACE_MFLAYER && !isImmortal()){
+  if (getRace() != RACE_MFLAYER && !isImmortal()) {
     sendTo("Only mindflayer psionicists can drain.\n\r");
     return FALSE;
   }
-  
+
   // check incap or mortal etc
-  if(tVictim->getPosition() > POSITION_INCAP){
+  if (tVictim->getPosition() > POSITION_INCAP) {
     sendTo("You can only drain incapacitated victims.\n\r");
     return FALSE;
   }
 
-  int bKnown=getSkillValue(SKILL_PSIDRAIN);
+  int bKnown = getSkillValue(SKILL_PSIDRAIN);
 
   if (bSuccess(bKnown, SKILL_PSIDRAIN)) {
-    int perc=::number(15,25);
+    int perc = ::number(15, 25);
 
     // reduce amount significantly if victim is a dumb animal
-    if(tVictim->isDumbAnimal())
-      perc/=5;
+    if (tVictim->isDumbAnimal())
+      perc /= 5;
 
     // plus or minus 5 percent for level difference
-    if(tVictim->GetMaxLevel() > GetMaxLevel())
-      perc += min(5, tVictim->GetMaxLevel()-GetMaxLevel());
-    else if(tVictim->GetMaxLevel() < GetMaxLevel())
-      perc -= min(5, GetMaxLevel()-tVictim->GetMaxLevel());
-    
-    short int addhit=(int)((hitLimit()*perc)/100.0);
-    short int addmana=(int)((manaLimit()*(perc/2))/100.0);
+    if (tVictim->GetMaxLevel() > GetMaxLevel())
+      perc += min(5, tVictim->GetMaxLevel() - GetMaxLevel());
+    else if (tVictim->GetMaxLevel() < GetMaxLevel())
+      perc -= min(5, GetMaxLevel() - tVictim->GetMaxLevel());
 
-    addhit=min(addhit, tVictim->hitLimit());
-    addmana=min(addmana, tVictim->manaLimit());
+    short int addhit = (int)((hitLimit() * perc) / 100.0);
+    short int addmana = (int)((manaLimit() * (perc / 2)) / 100.0);
+
+    addhit = min(addhit, tVictim->hitLimit());
+    addmana = min(addmana, tVictim->manaLimit());
 
     addToHit(addhit);
     addToMana(addmana);
 
     colorAct(COLOR_SPELLS,
-	"<k>You wrap your tentacles around $N's head and begin to devour $S energy.<1>",
-	TRUE, this, NULL, tVictim, TO_CHAR);
+      "<k>You wrap your tentacles around $N's head and begin to devour $S "
+      "energy.<1>",
+      TRUE, this, NULL, tVictim, TO_CHAR);
     colorAct(COLOR_SPELLS,
-    "<k>$n wraps $s tentacles around your head and begins to devour your energy.<1>",
-	TRUE, this, NULL, tVictim, TO_VICT);
+      "<k>$n wraps $s tentacles around your head and begins to devour your "
+      "energy.<1>",
+      TRUE, this, NULL, tVictim, TO_VICT);
     colorAct(COLOR_SPELLS,
-     "<k>$n wraps $s tentacles around $N's head and begins to devour $S energy.<1>",
-	TRUE, this, NULL, tVictim, TO_NOTVICT);
+      "<k>$n wraps $s tentacles around $N's head and begins to devour $S "
+      "energy.<1>",
+      TRUE, this, NULL, tVictim, TO_NOTVICT);
 
     int rc = reconcileDamage(tVictim, 100, SKILL_PSIDRAIN);
     addSkillLag(SKILL_PSIDRAIN, rc);
@@ -899,36 +933,40 @@ int TBeing::doPsidrain(const char *tString){
   return TRUE;
 }
 
-
-int TBeing::doDfold(const char *tString){
-  TBeing *tVictim=NULL;
-  int rc, location=0;
+int TBeing::doDfold(const char* tString) {
+  TBeing* tVictim = NULL;
+  int rc, location = 0;
   sstring sbuf;
 
-  if(!doesKnowSkill(SKILL_DIMENSIONAL_FOLD)){
+  if (!doesKnowSkill(SKILL_DIMENSIONAL_FOLD)) {
     sendTo("You are not telepathic!\n\r");
     return FALSE;
   }
 
-  if(getMana() < discArray[SKILL_DIMENSIONAL_FOLD]->minMana){
+  if (getMana() < discArray[SKILL_DIMENSIONAL_FOLD]->minMana) {
     sendTo("You don't have enough mana.\n\r");
     return FALSE;
   }
 
-  if(affectedBySpell(SKILL_MIND_FOCUS)){
-    sendTo("You can't use psionic powers until you are done focusing your mind.\n\r");
+  if (affectedBySpell(SKILL_MIND_FOCUS)) {
+    sendTo(
+      "You can't use psionic powers until you are done focusing your "
+      "mind.\n\r");
     return FALSE;
   }
 
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
-    sendTo("What a dumb master you have, charmed mobiles can't open dimensional folds.\n\r");
+    sendTo(
+      "What a dumb master you have, charmed mobiles can't open dimensional "
+      "folds.\n\r");
     return FALSE;
   }
 
   // IF tstring is null or "home" then create a fold to the word of recall spot
-  const char *home = "home";
+  const char* home = "home";
 
-  if (!tString || tString == NULL || tString[0] == '\0' || is_abbrev(tString, home)) {
+  if (!tString || tString == NULL || tString[0] == '\0' ||
+      is_abbrev(tString, home)) {
     if (player.hometown)
       location = player.hometown;
     else
@@ -937,68 +975,85 @@ int TBeing::doDfold(const char *tString){
     // parse to find victim
     if (!(tVictim = get_pc_world(this, tString, EXACT_YES, INFRA_NO, TRUE))) {
       if (!(tVictim = get_pc_world(this, tString, EXACT_NO, INFRA_NO, TRUE))) {
-        sendTo(format("You fail to create a dimensional fold to '%s'\n\r") % tString);
+        sendTo(format("You fail to create a dimensional fold to '%s'\n\r") %
+               tString);
         return FALSE;
       }
     }
     // Valid targets?
     if (this == tVictim) {
-      sendTo("You can't open a dimensional fold to yourself. How would that even work?\n\r");
+      sendTo(
+        "You can't open a dimensional fold to yourself. How would that even "
+        "work?\n\r");
       return FALSE;
     }
 
     if (tVictim->GetMaxLevel() > MAX_MORT && !isImmortal()) {
-      sendTo("Their mind is too powerful for you to open a dimensional fold to.\n\r");
+      sendTo(
+        "Their mind is too powerful for you to open a dimensional fold "
+        "to.\n\r");
       return FALSE;
     }
 
     location = tVictim->in_room;
-
   }
-  
-  TRoom * rp = real_roomp(location);
+
+  TRoom* rp = real_roomp(location);
 
   if (!rp) {
     vlogf(LOG_BUG, "Attempt to dimensional fold to a NULL room.");
     return FALSE;
   }
 
-  if (!isImmortal() && (rp->isRoomFlag(ROOM_PRIVATE) ||
-      rp->isRoomFlag(ROOM_HAVE_TO_WALK) ||
-      zone_table[rp->getZoneNum()].enabled == FALSE)) {
-    act("Your mind can't seem to focus on that area.", FALSE, this, 0, 0, TO_CHAR);
+  if (!isImmortal() &&
+      (rp->isRoomFlag(ROOM_PRIVATE) || rp->isRoomFlag(ROOM_HAVE_TO_WALK) ||
+        zone_table[rp->getZoneNum()].enabled == FALSE)) {
+    act("Your mind can't seem to focus on that area.", FALSE, this, 0, 0,
+      TO_CHAR);
     return FALSE;
   }
 
-  int bKnown=getSkillValue(SKILL_DIMENSIONAL_FOLD);
+  int bKnown = getSkillValue(SKILL_DIMENSIONAL_FOLD);
 
   if (bSuccess(bKnown, SKILL_DIMENSIONAL_FOLD)) {
-    TPortal * tmp_obj = new TPortal(rp);
+    TPortal* tmp_obj = new TPortal(rp);
     tmp_obj->setPortalNumCharges(1);
     tmp_obj->obj_flags.decay_time = 1;
     tmp_obj->name = "portal fold";
-    tmp_obj->shortDescr = "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal<1>";
-    sbuf = format("<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal to %s beckons.<1>") % rp->name;
+    tmp_obj->shortDescr =
+      "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal<1>";
+    sbuf = format(
+             "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> "
+             "portal to %s beckons.<1>") %
+           rp->name;
     tmp_obj->setDescr(sbuf);
 
     *roomp += *tmp_obj;
 
-    TPortal * next_tmp_obj = new TPortal(roomp);
+    TPortal* next_tmp_obj = new TPortal(roomp);
     next_tmp_obj->setPortalNumCharges(1);
     next_tmp_obj->obj_flags.decay_time = 1;
     next_tmp_obj->name = "portal fold";
-    next_tmp_obj->shortDescr = "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal<1>";
-    sbuf = format("<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal to %s beckons.<1>") % roomp->name;
+    next_tmp_obj->shortDescr =
+      "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> portal<1>";
+    sbuf = format(
+             "<k>a darkly pulsating <1><B>bluish<1><k>-<1><P>purple<1><k> "
+             "portal to %s beckons.<1>") %
+           roomp->name;
     next_tmp_obj->setDescr(sbuf);
 
     *rp += *next_tmp_obj;
 
     act("$n winces in concentration.", TRUE, this, NULL, NULL, TO_ROOM);
-    act(format("You wince as you focus on %s.") % rp->name, TRUE, this, NULL, NULL, TO_CHAR);
-    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_ROOM);
-    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj, NULL, TO_CHAR);
+    act(format("You wince as you focus on %s.") % rp->name, TRUE, this, NULL,
+      NULL, TO_CHAR);
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj,
+      NULL, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj,
+      NULL, TO_CHAR);
 
-    rp->sendTo(format("%s suddenly appears out of a swirling mist.\n\r") % next_tmp_obj->shortDescr.cap());
+    rp->sendTo(format("%s suddenly appears out of a swirling mist.\n\r") %
+               next_tmp_obj->shortDescr.cap());
 
     rc = TRUE;
   } else {
@@ -1009,7 +1064,4 @@ int TBeing::doDfold(const char *tString){
   reconcileMana(SKILL_DIMENSIONAL_FOLD, FALSE);
   addSkillLag(SKILL_DIMENSIONAL_FOLD, rc);
   return rc;
-
 }
-
-

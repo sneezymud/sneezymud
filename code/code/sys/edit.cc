@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-//   edit.cc : All routines related to vt100 editor.                        
+//   edit.cc : All routines related to vt100 editor.
 //
 //   Coded by : Russ Russell, June 1995, Last update June 10th 1995
 //
@@ -19,8 +19,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 
-int Descriptor::move(int hor, int vert)
-{
+int Descriptor::move(int hor, int vert) {
   char buf[256];
 
   if (edit.x < 1 || edit.y < 1) {
@@ -34,13 +33,9 @@ int Descriptor::move(int hor, int vert)
   return TRUE;
 }
 
-bool Descriptor::isEditing()
-{
-  return (connected == CON_EDITTING);
-}
+bool Descriptor::isEditing() { return (connected == CON_EDITTING); }
 
-void Descriptor::Edit(char *arg)
-{
+void Descriptor::Edit(char* arg) {
   char buf[256] = "\0";
   char test[] = {static_cast<char>(IAC), static_cast<char>(WONT), '\x03', '\0'};
   char test2[] = {static_cast<char>(IAC), static_cast<char>(DO), '\x18', '\0'};
@@ -54,7 +49,7 @@ void Descriptor::Edit(char *arg)
         switch (*(arg + 1)) {
           case '[':
             switch (*(arg + 2)) {
-              case 'A':   // Up Arrow
+              case 'A':  // Up Arrow
                 move(edit.x, --edit.y);
                 arg += 2;
                 break;
@@ -89,10 +84,10 @@ void Descriptor::Edit(char *arg)
         break;
       case ('X' & 037):
         connected = CON_PLYNG;
-  
-        if(write(socket->m_sock, test, 4)==-1 ||
-	   write(socket->m_sock, test2, 4)==-1)
-	  vlogf(LOG_FILE, "Failed to write to socket in Descriptor::edit");
+
+        if (write(socket->m_sock, test, 4) == -1 ||
+            write(socket->m_sock, test2, 4) == -1)
+          vlogf(LOG_FILE, "Failed to write to socket in Descriptor::edit");
         break;
       case ('M' & 037):
         writeToQ("\n\r");
@@ -100,7 +95,7 @@ void Descriptor::Edit(char *arg)
         edit.x = 1;
         break;
       default:
-	//        if (isascii(*raw) || isprint(*raw) || iscntrl(*raw)) {
+        //        if (isascii(*raw) || isprint(*raw) || iscntrl(*raw)) {
         if (isascii(*buf) || isprint(*buf) || iscntrl(*buf)) {
           sprintf(buf, "%c", *arg);
           writeToQ(buf);

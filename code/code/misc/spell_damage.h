@@ -15,27 +15,27 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
-const int MAX_DAM 		= (1<<0);
-const int BASE_RANGE 		= (1<<1);
-const int INV_RANGE 		= (1<<2);
-const int DAM_MULTI 		= (1<<3);
-const int CAP_LEVEL 		= (1<<4);
-const int INCREMENT 		= (1<<5);
-const int DAM_BEL_CAP 		= (1<<6);
-const int DAM_ABV_CAP 		= (1<<7);
-const int DAM_ABV_50 		= (1<<8);
+const int MAX_DAM = (1 << 0);
+const int BASE_RANGE = (1 << 1);
+const int INV_RANGE = (1 << 2);
+const int DAM_MULTI = (1 << 3);
+const int CAP_LEVEL = (1 << 4);
+const int INCREMENT = (1 << 5);
+const int DAM_BEL_CAP = (1 << 6);
+const int DAM_ABV_CAP = (1 << 7);
+const int DAM_ABV_50 = (1 << 8);
 
 /* DO I NEED TO BUILD THE ARRAY IN THE HEADER?
-          spellDamArray[SPELL_<NAME>] = new spellDamInfo(SPELL_<CLASS>, DISC_<NAME>, DISC_<TYPE>, "<spellname>", TARGE T, BASE_RANGE, INV_RANGE, DAM_MULT, CAP_LEVEL, SLOPE_1, SLOPE_2);
+          spellDamArray[SPELL_<NAME>] = new spellDamInfo(SPELL_<CLASS>,
+   DISC_<NAME>, DISC_<TYPE>, "<spellname>", TARGE T, BASE_RANGE, INV_RANGE,
+   DAM_MULT, CAP_LEVEL, SLOPE_1, SLOPE_2);
 */
 
-extern int getSpellDam(TBeing *, TBeing *, TThing *, TRoom *, int);
+extern int getSpellDam(TBeing*, TBeing*, TThing*, TRoom*, int);
 
-extern int modifyForSector(int, TBeing *, TThing *, TObj *, int, int, char, int);
-
+extern int modifyForSector(int, TBeing*, TThing*, TObj*, int, int, char, int);
 
 class spellDamInfo {
   public:
@@ -45,10 +45,10 @@ class spellDamInfo {
     int capLevel;
     float slope_1;
     float slope_2;
-    spellDamInfo(int baseRange, int invRange, int damMult, int capLevel, float slope_1, float slope_2);
+    spellDamInfo(int baseRange, int invRange, int damMult, int capLevel,
+      float slope_1, float slope_2);
     ~spellDamInfo();
 };
-
 
 #if 0
 discipline, assDiscipline, spellName are all in discArray as constants
@@ -59,4 +59,4 @@ weather too
 	 spellDam(int styp, int discipline, int assDiscipline, char *spellname, int casterLevel, int baseRange, int invRange, unsigned int maxDam, float rawDam, int rawDamMod, int finalDam, int damMult, int capLevel, float slope_1, float slope_2, int wis, float skillLearn, int terrain, int weather);
 };
 #endif
-extern spellDamInfo *spellDamArray[MAX_SKILL+1];
+extern spellDamInfo* spellDamArray[MAX_SKILL + 1];

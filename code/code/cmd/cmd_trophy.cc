@@ -18,39 +18,29 @@
 
 class TTrophyPimpl {
   public:
-  TDatabase db;
-  TBeing *parent = nullptr;
-  sstring name;
+    TDatabase db;
+    TBeing* parent = nullptr;
+    sstring name;
 
-  std::map<int, double> counts; // memoized view of the DB
-  std::set<int> dirty; // which vnums need flushing
+    std::map<int, double> counts;  // memoized view of the DB
+    std::set<int> dirty;           // which vnums need flushing
 
-  TTrophyPimpl(TBeing* parent, sstring const& name)
-    : db(TDatabase(DB_SNEEZY))
-    , parent(parent)
-    , name(name)
-  {}
-  TTrophyPimpl() = delete;
+    TTrophyPimpl(TBeing* parent, const sstring& name) :
+      db(TDatabase(DB_SNEEZY)),
+      parent(parent),
+      name(name) {}
+    TTrophyPimpl() = delete;
 };
 
-TTrophy::TTrophy(sstring n)
-  : pimpl(new TTrophyPimpl(nullptr, n))
-{}
+TTrophy::TTrophy(sstring n) : pimpl(new TTrophyPimpl(nullptr, n)) {}
 
-TTrophy::TTrophy(TBeing *p)
-  : pimpl(new TTrophyPimpl(p, {}))
-{}
+TTrophy::TTrophy(TBeing* p) : pimpl(new TTrophyPimpl(p, {})) {}
 
-TTrophy::~TTrophy()
-{
-  delete pimpl;
-}
+TTrophy::~TTrophy() { delete pimpl; }
 
-sstring TTrophy::getMyName() const
-{
+sstring TTrophy::getMyName() const {
   auto& parent = pimpl->parent;
-  if(parent){
-
+  if (parent) {
     if (parent->specials.act & ACT_POLYSELF) {
       return parent->desc->original->getName();
     } else {
@@ -62,27 +52,26 @@ sstring TTrophy::getMyName() const
   }
 }
 
-void TTrophy::setName(sstring n){
+void TTrophy::setName(sstring n) {
   pimpl->parent = nullptr;
   pimpl->name = n;
 }
 
 // procTrophyDecay
-procTrophyDecay::procTrophyDecay(const int &p)
-{
-  trigger_pulse=p;
-  name="procTrophyDecay";
+procTrophyDecay::procTrophyDecay(const int& p) {
+  trigger_pulse = p;
+  name = "procTrophyDecay";
 }
 
-void procTrophyDecay::run(const TPulse &) const
-{
+void procTrophyDecay::run(const TPulse&) const {
   TDatabase db(DB_SNEEZY);
-  float dec=0.25;
+  float dec = 0.25;
 
-  for(TBeing *tb=character_list;tb;tb=tb->next){
-    if(tb->isPc()){
-      db.query("update trophy set count=count-%f where player_id=%i and count > %f",
-	       dec, tb->getPlayerID(), dec);
+  for (TBeing* tb = character_list; tb; tb = tb->next) {
+    if (tb->isPc()) {
+      db.query(
+        "update trophy set count=count-%f where player_id=%i and count > %f",
+        dec, tb->getPlayerID(), dec);
     }
   }
 }
@@ -93,7 +82,7 @@ void TTrophy::addToCount(int vnum, double add) {
     counts[vnum] = getCount(vnum);
   counts[vnum] += add;
   pimpl->dirty.insert(vnum);
-  pimpl->parent->doQueueSave(); // calls flush soon
+  pimpl->parent->doQueueSave();  // calls flush soon
 }
 
 void TTrophy::flush() {
@@ -105,238 +94,239 @@ void TTrophy::flush() {
   dirty.clear();
 }
 
-void TTrophy::write(int vnum, double count){
+void TTrophy::write(int vnum, double count) {
   auto& parent = pimpl->parent;
-  if(vnum==-1 || vnum==0 || getMyName()==""){ return; }
+  if (vnum == -1 || vnum == 0 || getMyName() == "") {
+    return;
+  }
 
-  int player_id=parent->getPlayerID();
+  int player_id = parent->getPlayerID();
 
   // in most cases we just want to do an update, so start with that
-  pimpl->db.query("update trophy set count=%f, totalcount=totalcount+%f where player_id=%i and mobvnum=%i",
-      count, (count>0 ? count : 0), player_id, vnum);
+  pimpl->db.query(
+    "update trophy set count=%f, totalcount=totalcount+%f where player_id=%i "
+    "and mobvnum=%i",
+    count, (count > 0 ? count : 0), player_id, vnum);
   if (pimpl->db.rowCount() == 0) {
     // no row for this player & mob so do an insert instead
-    pimpl->db.query("insert into trophy values (%i, %i, %f, %f)",
-        player_id, vnum, count, (count>0 ? count : 0));
+    pimpl->db.query("insert into trophy values (%i, %i, %f, %f)", player_id,
+      vnum, count, (count > 0 ? count : 0));
   }
 
-  pimpl->db.query("update trophyplayer set count=(select count(0) from trophy where player_id = %i), total=total+%f where player_id=%i",
-	    player_id, count, player_id);
+  pimpl->db.query(
+    "update trophyplayer set count=(select count(0) from trophy where "
+    "player_id = %i), total=total+%f where player_id=%i",
+    player_id, count, player_id);
   if (pimpl->db.rowCount() == 0) {
     // no row for this player so do an insert instead
-    pimpl->db.query("insert into trophyplayer values (%i, (select count(0) from trophy where player_id = %i), %f)",
-	      player_id, player_id, 1, count);
+    pimpl->db.query(
+      "insert into trophyplayer values (%i, (select count(0) from trophy where "
+      "player_id = %i), %f)",
+      player_id, player_id, 1, count);
   }
-
 }
 
-
-float TTrophy::getCount(int vnum)
-{
+float TTrophy::getCount(int vnum) {
   auto& counts = pimpl->counts;
   auto it = counts.find(vnum);
   if (it != counts.end())
     return it->second;
 
   pimpl->db.query("select count from trophy where player_id=%i and mobvnum=%i",
-	   pimpl->parent->getPlayerID(), vnum);
-  if(pimpl->db.fetchRow()) {
+    pimpl->parent->getPlayerID(), vnum);
+  if (pimpl->db.fetchRow()) {
     auto count = convertTo<float>(pimpl->db["count"]);
     counts[vnum] = count;
     return count;
-  }
-  else
+  } else
     return 0.0;
 }
 
-float TTrophy::getExpModVal(float count, int mobvnum)
-{
-  float min_mod=0.3;
-  float max_mod=1.0; // shouldn't ever be above 1.0
-  float free_kills=8; // how many kills you get before trophy kicks in
-  float step_mod=0.5; // mod per step
-  float num_steps=14.0; // number of steps
+float TTrophy::getExpModVal(float count, int mobvnum) {
+  float min_mod = 0.3;
+  float max_mod = 1.0;     // shouldn't ever be above 1.0
+  float free_kills = 8;    // how many kills you get before trophy kicks in
+  float step_mod = 0.5;    // mod per step
+  float num_steps = 14.0;  // number of steps
 
   int rnum = real_mobile(mobvnum);
-  if(rnum != -1 && mob_index[rnum].numberLoad>0)
-    count/=mob_index[rnum].numberLoad;
+  if (rnum != -1 && mob_index[rnum].numberLoad > 0)
+    count /= mob_index[rnum].numberLoad;
 
   float t1, t2, t3, t4, t5;
 
-  t1=(double)(count-free_kills);
-  t2=step_mod / num_steps;
-  t3=t1*t2;
-  t4=max_mod-t3;
-  t5=(double)(std::max(t4*100, min_mod*100)/100);
-  t5=(double)(std::min(t5*100, max_mod*100)/100);
+  t1 = (double)(count - free_kills);
+  t2 = step_mod / num_steps;
+  t3 = t1 * t2;
+  t4 = max_mod - t3;
+  t5 = (double)(std::max(t4 * 100, min_mod * 100) / 100);
+  t5 = (double)(std::min(t5 * 100, max_mod * 100) / 100);
 
   //  vlogf(LOG_PEEL, format("%f %f %f %f %f") %  t1 % t2 % t3 % t4 % t5);
-
 
   return t5;
 }
 
+const char* TTrophy::getExpModDescr(float count, int mobvnum) {
+  float f = getExpModVal(count, mobvnum);
 
-const char *TTrophy::getExpModDescr(float count, int mobvnum)
-{
-  float f=getExpModVal(count, mobvnum);
-
-  return((f == 1.0) ? "<Y>full<1>" :
-	 ((f >= 0.90) ? "<o>much<1>" :
-	  ((f >= 0.80) ? "a fair amount of" :
-	   ((f >= 0.70) ? "<w>some<1>" : "<k>little<1>"))));
+  return ((f == 1.0)
+            ? "<Y>full<1>"
+            : ((f >= 0.90) ? "<o>much<1>"
+                           : ((f >= 0.80) ? "a fair amount of"
+                                          : ((f >= 0.70) ? "<w>some<1>"
+                                                         : "<k>little<1>"))));
 }
 
 // this function is a little messy, I apologize
-void TBeing::doTrophy(const sstring &arg)
-{
-  int mcount=0, vnum, header=0, zcount=0, bottom=0, zcountt=0;
-  int zonesearch=0, processrow=1, active_zcount=0;
-  bool summary=false;
+void TBeing::doTrophy(const sstring& arg) {
+  int mcount = 0, vnum, header = 0, zcount = 0, bottom = 0, zcountt = 0;
+  int zonesearch = 0, processrow = 1, active_zcount = 0;
+  bool summary = false;
   float count;
   sstring buf, sb, arg1, arg2;
   unsigned int zone;
 
-  if(!isPc()){
+  if (!isPc()) {
     sendTo("Mobs can't use this command!\n\r");
     return;
   }
 
-  TBeing *per = NULL;
+  TBeing* per = NULL;
   if (specials.act & ACT_POLYSELF)
     per = desc->original;
-  else per = this;
-  
+  else
+    per = this;
+
   TTrophy trophy(per->getName());
 
-  arg1=arg.word(0);
-  arg2=arg.word(1);
+  arg1 = arg.word(0);
+  arg2 = arg.word(1);
 
-  if(arg1=="zone"){
-    if(!arg2.empty()){
-      arg1=arg2;
-      zonesearch=-1;
+  if (arg1 == "zone") {
+    if (!arg2.empty()) {
+      arg1 = arg2;
+      zonesearch = -1;
     } else {
-
-      zonesearch=roomp->getZoneNum();
+      zonesearch = roomp->getZoneNum();
     }
-  } else if(arg1=="summary"){
-    summary=true;
+  } else if (arg1 == "summary") {
+    summary = true;
   }
 
   TDatabase db(DB_SNEEZY);
-  db.query("select mobvnum, count from trophy where player_id=%i order by mobvnum", per->getPlayerID());
+  db.query(
+    "select mobvnum, count from trophy where player_id=%i order by mobvnum",
+    per->getPlayerID());
 
   for (zone = 0; zone < zone_table.size(); zone++) {
-    zoneData &zd = zone_table[zone];
-    
-    while(1){
-      if(processrow){
-	if(!db.fetchRow()){
-	  break;
-	}
+    zoneData& zd = zone_table[zone];
+
+    while (1) {
+      if (processrow) {
+        if (!db.fetchRow()) {
+          break;
+        }
       }
 
       // sometimes we get an entry of 0 for med mobs I think
-      vnum=convertTo<int>(db["mobvnum"]);
-      if(vnum==0){
-	continue;
+      vnum = convertTo<int>(db["mobvnum"]);
+      if (vnum == 0) {
+        continue;
       }
 
       // this mob doesn't belong to this zone, so break out to the zone loop
-      if(vnum>zd.top){
-	processrow=0; // don't get the next row yet
-	break;
+      if (vnum > zd.top) {
+        processrow = 0;  // don't get the next row yet
+        break;
       } else {
-	processrow=1;
+        processrow = 1;
       }
 
       int rnum = real_mobile(convertTo<int>(db["mobvnum"]));
       if (rnum < 0) {
-	vlogf(LOG_BUG, format("DoTrophy detected bad mobvnum=%d for name='%s'") %  
-	      convertTo<int>(db["mobvnum"]) % per->getName());
-	continue;
+        vlogf(LOG_BUG,
+          format("DoTrophy detected bad mobvnum=%d for name='%s'") %
+            convertTo<int>(db["mobvnum"]) % per->getName());
+        continue;
       }
 
-      if(zonesearch==-1){
-	if(!isname(arg1, zd.name))
-	  continue;
-      } else if(zonesearch>0){
-	if(zonesearch!=zd.zone_nr)
-	  continue;
-      } else if(!summary){
-	if(!arg1.empty() && !isname(arg1, mob_index[rnum].name))
-	  continue;
+      if (zonesearch == -1) {
+        if (!isname(arg1, zd.name))
+          continue;
+      } else if (zonesearch > 0) {
+        if (zonesearch != zd.zone_nr)
+          continue;
+      } else if (!summary) {
+        if (!arg1.empty() && !isname(arg1, mob_index[rnum].name))
+          continue;
       }
 
       // print the zone header if we haven't already
       // we do it here, so we can prevent printing headers for empty zones
-      if(!header){
-	buf = format("\n--%s\n") % zd.name;
-	sb += buf; 
-	header=1;
+      if (!header) {
+        buf = format("\n--%s\n") % zd.name;
+        sb += buf;
+        header = 1;
       }
 
       // doesn't take into account unflushed t rophies.
-      count=convertTo<float>(db["count"]);
+      count = convertTo<float>(db["count"]);
 
-      if(!summary){
-	buf = format("You will gain %s experience when fighting %s.\n\r") %
-		trophy.getExpModDescr(count,vnum) % mob_index[rnum].short_desc;
-	sb += buf;
+      if (!summary) {
+        buf = format("You will gain %s experience when fighting %s.\n\r") %
+              trophy.getExpModDescr(count, vnum) % mob_index[rnum].short_desc;
+        sb += buf;
       }
 
       ++mcount;
       ++zcount;
 
-      if(mob_index[rnum].doesLoad)
-	++active_zcount;
+      if (mob_index[rnum].doesLoad)
+        ++active_zcount;
 
-      processrow=1; // ok to get the next row
+      processrow = 1;  // ok to get the next row
     }
 
     // we have some mobs for this zone, so do some tallies
-    if(header){
+    if (header) {
       buf = format("Total mobs: %i\n\r") % zcount;
       sb += buf;
 
       unsigned int objnx;
       for (objnx = 0; objnx < mob_index.size(); objnx++) {
-	if(mob_index[objnx].virt >= bottom &&
-	   mob_index[objnx].virt <= zd.top &&
-	   mob_index[objnx].doesLoad){
-	  ++zcountt;
-	}
+        if (mob_index[objnx].virt >= bottom &&
+            mob_index[objnx].virt <= zd.top && mob_index[objnx].doesLoad) {
+          ++zcountt;
+        }
       }
 
-      buf = format("You have killed %1.2f%c of mobs in this zone.\n\r") %((float)((float)active_zcount/(float)zcountt)*100.0) % '%';
+      buf = format("You have killed %1.2f%c of mobs in this zone.\n\r") %
+            ((float)((float)active_zcount / (float)zcountt) * 100.0) % '%';
       sb += buf;
     }
 
-    header=zcount=zcountt=active_zcount=0;
-    bottom=zd.top+1;
+    header = zcount = zcountt = active_zcount = 0;
+    bottom = zd.top + 1;
   }
 
-
-
-  int activemobcount=0;
+  int activemobcount = 0;
   for (unsigned int mobnum = 0; mobnum < mob_index.size(); mobnum++) {
     for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-      if(mob_index[mobnum].virt <= zone_table[zone].top &&
-	 mob_index[mobnum].doesLoad){
-	if(zone_table[zone].enabled)
-	  activemobcount++;
-	break;
+      if (mob_index[mobnum].virt <= zone_table[zone].top &&
+          mob_index[mobnum].doesLoad) {
+        if (zone_table[zone].enabled)
+          activemobcount++;
+        break;
       }
     }
   }
 
-
-
   buf = format("\n--\nTotal mobs: %i\n\r") % mcount;
   sb += buf;
-  if(mcount>0){
-    buf = format("You have killed %1.2f%c of all mobs.\n\r") %((float)((float)mcount/(float)activemobcount)*100.0) % '%';
+  if (mcount > 0) {
+    buf = format("You have killed %1.2f%c of all mobs.\n\r") %
+          ((float)((float)mcount / (float)activemobcount) * 100.0) % '%';
     sb += buf;
   }
 
@@ -344,13 +334,12 @@ void TBeing::doTrophy(const sstring &arg)
     desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-
-
-void TTrophy::wipe(){
+void TTrophy::wipe() {
   pimpl->db.query("select id from player where name='%s'", getMyName().c_str());
-  
-  if(pimpl->db.fetchRow())
-    pimpl->db.query("delete from trophy where player_id=%i", convertTo<int>(pimpl->db["id"]));
+
+  if (pimpl->db.fetchRow())
+    pimpl->db.query("delete from trophy where player_id=%i",
+      convertTo<int>(pimpl->db["id"]));
 
   pimpl->counts.clear();
 }

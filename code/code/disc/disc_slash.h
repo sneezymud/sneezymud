@@ -20,7 +20,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the SLASH discipline.
@@ -28,18 +27,17 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDSlash : public CDiscipline
-{
-public:
+class CDSlash : public CDiscipline {
+  public:
     CSkill skSlashSpec;
 
     CDSlash();
-    CDSlash(const CDSlash &a);
-    CDSlash & operator=(const CDSlash &a);
+    CDSlash(const CDSlash& a);
+    CDSlash& operator=(const CDSlash& a);
     virtual ~CDSlash();
-    virtual CDSlash * cloneMe() { return new CDSlash(*this); }
+    virtual CDSlash* cloneMe() { return new CDSlash(*this); }
 
-    bool isFast(){ return true; }
+    bool isFast() { return true; }
 
-private:
+  private:
 };

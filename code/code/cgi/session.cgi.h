@@ -4,7 +4,6 @@
 #include "sstring.h"
 #include "wiz_powers.h"
 
-
 // TSession is a class for handling session authentication in cgi
 // scripts.  The idea is that the user can login using their sneezy
 // account name and password, and we give them a cookie that we can
@@ -27,55 +26,54 @@
 //   // they are logged in
 // }
 
-
 class TSession {
-  sstring session_id;
-  int account_id;
+    sstring session_id;
+    int account_id;
 
-  sstring cookiename;
-  int cookieduration;
+    sstring cookiename;
+    int cookieduration;
 
-  // probably a better way to deal with this cgi stuff but I'm too lazy to
-  // figure it out.  we use it in this class to get the cookie info.
-  // trying to store it as a non-pointer variable causes runtime errors.
-  cgicc::Cgicc *cgi;
+    // probably a better way to deal with this cgi stuff but I'm too lazy to
+    // figure it out.  we use it in this class to get the cookie info.
+    // trying to store it as a non-pointer variable causes runtime errors.
+    cgicc::Cgicc* cgi;
 
-  // uses the cgicc object to find the cookie and returns the session id
-  sstring getSessionCookie();
-  // generates a hopefully unguessable session id string.
-  sstring generateSessionID();
-  // pulls out the account id that is associated with the stored session id
-  // returns -1 if no account id is found (ie session id is invalid)
-  int validateSessionID();
+    // uses the cgicc object to find the cookie and returns the session id
+    sstring getSessionCookie();
+    // generates a hopefully unguessable session id string.
+    sstring generateSessionID();
+    // pulls out the account id that is associated with the stored session id
+    // returns -1 if no account id is found (ie session id is invalid)
+    int validateSessionID();
 
-public:
-  // creates a new session id string and inserts/replaces it into the database
-  // duration is both the cookie expiration and time duration saved in db
-  void createSession(int duration);
-  void createSession();
+  public:
+    // creates a new session id string and inserts/replaces it into the database
+    // duration is both the cookie expiration and time duration saved in db
+    void createSession(int duration);
+    void createSession();
 
-  // returns false if there is no session id or account id set in the class
-  bool isValid();
-  // deletes the session id string from the database
-  void logout();
+    // returns false if there is no session id or account id set in the class
+    bool isValid();
+    // deletes the session id string from the database
+    void logout();
 
-  // check if this wizpower is available on any player in their account
-  bool hasWizPower(wizPowerT);
+    // check if this wizpower is available on any player in their account
+    bool hasWizPower(wizPowerT);
 
-  // validates name and passwd, user input.
-  bool checkPasswd(sstring name, sstring passwd);
+    // validates name and passwd, user input.
+    bool checkPasswd(sstring name, sstring passwd);
 
-  cgicc::HTTPCookie getCookie();
+    cgicc::HTTPCookie getCookie();
 
-  int getAccountID(){ return account_id; }
-  sstring getSessionID(){ return session_id; }
+    int getAccountID() { return account_id; }
+    sstring getSessionID() { return session_id; }
 
-  // simple stubs for logging in
-  void doLogin(cgicc::Cgicc, sstring);
-  void sendLoginCheck(cgicc::Cgicc, sstring);
-  void sendLoginPage(sstring);
+    // simple stubs for logging in
+    void doLogin(cgicc::Cgicc, sstring);
+    void sendLoginCheck(cgicc::Cgicc, sstring);
+    void sendLoginPage(sstring);
 
-  TSession(cgicc::Cgicc, sstring);
+    TSession(cgicc::Cgicc, sstring);
 };
 
 sstring escape_html(sstring);

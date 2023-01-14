@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////////
 //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
-//      "craps.cc" - All functions and routines related to the craps table 
-//      
+//      "craps.cc" - All functions and routines related to the craps table
+//
 //      Craps table coded by Russ Russell, January 1993. Last revision
 //      December 12, 1997.
 //
@@ -19,15 +19,9 @@
 #include "game_drawpoker.h"
 #include "connect.h"
 
-Craps::Craps() :
-  m_ch(NULL)
-{
-}
+Craps::Craps() : m_ch(NULL) {}
 
-Craps::Craps(TBeing *ch) :
-  m_ch(ch)
-{
-}
+Craps::Craps(TBeing* ch) : m_ch(ch) {}
 
 class Ccraps {
   public:
@@ -37,60 +31,58 @@ class Ccraps {
 };
 
 const char DICE_ONE[] =
-" #########\n\r\
+  " #########\n\r\
  #       #\n\r\
  #   *   #\n\r\
  #       #\n\r\
  #########\n\r\n\r";
 
 const char DICE_TWO[] =
-" #########\n\r\
+  " #########\n\r\
  #     * #\n\r\
  #       #\n\r\
  # *     #\n\r\
  #########\n\r\n\r";
 
-const char DICE_THREE[] = 
-" #########\n\r\
+const char DICE_THREE[] =
+  " #########\n\r\
  #     * #\n\r\
  #   *   #\n\r\
  # *     #\n\r\
  #########\n\r\n\r";
 
 const char DICE_FOUR[] =
-" #########\n\r\
+  " #########\n\r\
  # *   * #\n\r\
  #       #\n\r\
  # *   * #\n\r\
  #########\n\r\n\r";
 
 const char DICE_FIVE[] =
-" #########\n\r\
+  " #########\n\r\
  # *   * #\n\r\
  #   *   #\n\r\
  # *   * #\n\r\
  #########\n\r\n\r";
 
 const char DICE_SIX[] =
-" #########\n\r\
+  " #########\n\r\
  # *   * #\n\r\
  # *   * #\n\r\
  # *   * #\n\r\
  #########\n\r\n\r";
 
-void Craps::loseDice()
-{
-  TObj *the_dice;
-  TMonster *crap_man;
+void Craps::loseDice() {
+  TObj* the_dice;
+  TMonster* crap_man;
 
-  the_dice = dynamic_cast<TObj *>(m_ch->heldInPrimHand());
+  the_dice = dynamic_cast<TObj*>(m_ch->heldInPrimHand());
   if (!the_dice || the_dice->objVnum() != Obj::CRAPS_DICE) {
-    the_dice = dynamic_cast<TObj *>(m_ch->heldInSecHand());
+    the_dice = dynamic_cast<TObj*>(m_ch->heldInSecHand());
     if (!the_dice || the_dice->objVnum() != Obj::CRAPS_DICE) {
       vlogf(LOG_BUG, "loseDice called without dice held???");
     }
   }
-  
 
   if ((crap_man = FindMobInRoomWithProcNum(m_ch->in_room, SPEC_CRAPSGUY))) {
     if (the_dice)
@@ -99,33 +91,32 @@ void Craps::loseDice()
   }
 }
 
-void Craps::getDice()
-{
-}
+void Craps::getDice() {}
 
-bool TBeing::checkForDiceHeld() const
-{
-  TThing *t;
-  TObj *obj;
+bool TBeing::checkForDiceHeld() const {
+  TThing* t;
+  TObj* obj;
 
   t = heldInPrimHand();
-  obj = dynamic_cast<TObj *>(t);
+  obj = dynamic_cast<TObj*>(t);
   if (obj) {
     if (obj->objVnum() == Obj::CRAPS_DICE)
       return TRUE;
-    for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t=*it);++it) {
-      obj = dynamic_cast<TObj *>(t);
+    for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end() && (t = *it);
+         ++it) {
+      obj = dynamic_cast<TObj*>(t);
       if (obj && obj->objVnum() == Obj::CRAPS_DICE)
         return TRUE;
     }
   }
   t = heldInSecHand();
-  obj = dynamic_cast<TObj *>(t);
+  obj = dynamic_cast<TObj*>(t);
   if (obj) {
     if (obj->objVnum() == Obj::CRAPS_DICE)
       return TRUE;
-    for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t=*it);++it) {
-      obj = dynamic_cast<TObj *>(t);
+    for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end() && (t = *it);
+         ++it) {
+      obj = dynamic_cast<TObj*>(t);
       if (obj && obj->objVnum() == Obj::CRAPS_DICE)
         return TRUE;
     }
@@ -133,18 +124,18 @@ bool TBeing::checkForDiceHeld() const
   return FALSE;
 }
 
-TObj *TBeing::checkForDiceInInv() const
-{
-  TThing *t=NULL, *t2=NULL;
+TObj* TBeing::checkForDiceInInv() const {
+  TThing *t = NULL, *t2 = NULL;
   TObj *obj, *obj2;
 
-  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
-    obj = dynamic_cast<TObj *>(t);
+  for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
+    obj = dynamic_cast<TObj*>(t);
     if (obj) {
       if (obj->objVnum() == Obj::CRAPS_DICE)
         return obj;
-      for(StuffIter it=obj->stuff.begin();it!=obj->stuff.end() && (t2=*it);++it) {
-        obj2 = dynamic_cast<TObj *>(t2);
+      for (StuffIter it = obj->stuff.begin();
+           it != obj->stuff.end() && (t2 = *it); ++it) {
+        obj2 = dynamic_cast<TObj*>(t2);
         if (obj2 && obj2->objVnum() == Obj::CRAPS_DICE)
           return obj2;
       }
@@ -157,20 +148,19 @@ TObj *TBeing::checkForDiceInInv() const
 int TRoom::checkPointroll()
 
 {
-  TThing *c=NULL;
+  TThing* c = NULL;
 
-  for(StuffIter it=stuff.begin();it!=stuff.end() && (c=*it);++it) {
+  for (StuffIter it = stuff.begin(); it != stuff.end() && (c = *it); ++it) {
     if (c->desc && c->desc->point_roll)
       return TRUE;
   }
   return FALSE;
 }
 
-void TBeing::doBet(const char *arg)
-{
-  Descriptor *d;
+void TBeing::doBet(const char* arg) {
+  Descriptor* d;
   char amount[15], craps[256];
-  TObj *chip;
+  TObj* chip;
 
   if (!(d = desc))
     return;
@@ -189,20 +179,19 @@ void TBeing::doBet(const char *arg)
     gDrawPoker.bet(this, arg);
     return;
   }
-  if (checkHiLo()){
+  if (checkHiLo()) {
     gHiLo.Bet(this, arg);
     return;
   }
-  if (checkPoker()){
+  if (checkPoker()) {
     gPoker.Bet(this, arg);
     return;
   }
-  if (checkBaccarat()){
+  if (checkBaccarat()) {
     gBaccarat.Bet(this, arg);
     return;
   }
 
-  
   if (!FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY)) {
     sendTo("The bet command is used for casino games.\n\r");
     return;
@@ -212,12 +201,17 @@ void TBeing::doBet(const char *arg)
     sendTo("\n\rSyntax :  bet <option> <amount> \n\r\n\r");
     sendTo("Options :\n\r\n\r");
     sendTo("1)  The craps table :\n\r");
-    sendTo("    a) come : Bet an amount on the come out roll of the roller. \n\r");
+    sendTo(
+      "    a) come : Bet an amount on the come out roll of the roller. \n\r");
     sendTo("    b) crap : Bet on the no pass.\n\r");
     sendTo("    c) OneRolls :\n\r");
-    sendTo("       Type bet one to see the various one roll bets available to you.\n\r");
+    sendTo(
+      "       Type bet one to see the various one roll bets available to "
+      "you.\n\r");
     sendTo("2)  The slot machines :\n\r");
-    sendTo("      The correct syntax for the slots machines is play slots <option>\n\r");
+    sendTo(
+      "      The correct syntax for the slots machines is play slots "
+      "<option>\n\r");
     sendTo("      Type play slots to see the different options.\n\r");
     return;
   } else {
@@ -228,183 +222,197 @@ void TBeing::doBet(const char *arg)
         sendTo("Three : Bet on a one roll acey deucy (3). Pays 15 to 1.\n\r");
         sendTo("Eleven: Bet on a one roll eleven (11). Pays 15 to 1.\n\r");
         sendTo("Twelve: Bet on a one roll box-cars (12). Pay 30 to 1.\n\r");
-        sendTo("Craps : Bet on a one roll craps roll(2,3, or 12). Pays 7 to 1.\n\r");
+        sendTo(
+          "Craps : Bet on a one roll craps roll(2,3, or 12). Pays 7 to 1.\n\r");
         sendTo("Seven : Bet on a one roll seven roll. Pays 4 to 1.\n\r");
-        sendTo("Horn  : Bet on a one roll horn bet. Type help horn for help on the horn bet.\n\r");
-        sendTo("Field : Bet on a one roll field bet. Type help field for help on this bet.\n\r");
-	return;
+        sendTo(
+          "Horn  : Bet on a one roll horn bet. Type help horn for help on the "
+          "horn bet.\n\r");
+        sendTo(
+          "Field : Bet on a one roll field bet. Type help field for help on "
+          "this bet.\n\r");
+        return;
       }
     }
     if (*craps) {
-      if(!(chip=find_chip(this, craps))){
-	sendTo("You don't have that chip!\n\r");
-	return;
+      if (!(chip = find_chip(this, craps))) {
+        sendTo("You don't have that chip!\n\r");
+        return;
       }
 
       if (is_abbrev(amount, "crap")) {
-	if (!d->bet.crap) {
-	  d->bet_opt.crapsOptions += CRAP_OUT;
-	  sendTo(COLOR_OBJECTS, format("You place %s for your bet on the crap roll.\n\r") % 
-		 chip->getName());
+        if (!d->bet.crap) {
+          d->bet_opt.crapsOptions += CRAP_OUT;
+          sendTo(COLOR_OBJECTS,
+            format("You place %s for your bet on the crap roll.\n\r") %
+              chip->getName());
 
-	  d->bet.crap = chip->obj_flags.cost;
+          d->bet.crap = chip->obj_flags.cost;
 
-	  (*chip)--;
-	  delete chip;
-	} else {
-	  sendTo("You've already betted on craps.\n\r");
-	}
+          (*chip)--;
+          delete chip;
+        } else {
+          sendTo("You've already betted on craps.\n\r");
+        }
       } else if (is_abbrev(amount, "come")) {
-	if (!checkForDiceHeld() && !checkForDiceInInv()) {
-	  TObj *the_dice;
-	  TMonster *crap_man;
-	  char buf[80];
+        if (!checkForDiceHeld() && !checkForDiceInInv()) {
+          TObj* the_dice;
+          TMonster* crap_man;
+          char buf[80];
 
-	  if (!(crap_man = FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY))) {
-	  } else {
-	    // no dice in world
-	    if (!obj_index[real_object(Obj::CRAPS_DICE)].getNumber()) {
-	      the_dice = read_object(Obj::CRAPS_DICE, VIRTUAL);
-	      *crap_man += *the_dice;
-	    }
-	    if (!(the_dice = crap_man->checkForDiceInInv())) {
-	      // player doesn't have dice, craps doesn't either
-	      // someone else is the roller
-	    } else {
-	      sprintf(buf, "Fine %s, here are the dice!", getName().c_str());
-	      crap_man->doSay(buf);
-	      crap_man->doSay("Hold the dice, and throw them when I say it's ok!");
-	      --(*the_dice);
-	      *this += *the_dice;
-  
-	      if (!crap_man->act_ptr)
-		crap_man->act_ptr = new Ccraps();
-  
-	      Ccraps *cr = (Ccraps *) crap_man->act_ptr;
-	      cr->pos = 4;
-	      m_craps = new Craps(this);
-	    }
-	  }
-	}
-	if (!d->bet.come) {
-	  d->bet_opt.crapsOptions += COME_OUT;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on the come out roll.\n\r") %
-		 chip->getName());
+          if (!(crap_man = FindMobInRoomWithProcNum(in_room, SPEC_CRAPSGUY))) {
+          } else {
+            // no dice in world
+            if (!obj_index[real_object(Obj::CRAPS_DICE)].getNumber()) {
+              the_dice = read_object(Obj::CRAPS_DICE, VIRTUAL);
+              *crap_man += *the_dice;
+            }
+            if (!(the_dice = crap_man->checkForDiceInInv())) {
+              // player doesn't have dice, craps doesn't either
+              // someone else is the roller
+            } else {
+              sprintf(buf, "Fine %s, here are the dice!", getName().c_str());
+              crap_man->doSay(buf);
+              crap_man->doSay(
+                "Hold the dice, and throw them when I say it's ok!");
+              --(*the_dice);
+              *this += *the_dice;
 
-	  d->bet.come = chip->obj_flags.cost;
+              if (!crap_man->act_ptr)
+                crap_man->act_ptr = new Ccraps();
 
-	  (*chip)--;
+              Ccraps* cr = (Ccraps*)crap_man->act_ptr;
+              cr->pos = 4;
+              m_craps = new Craps(this);
+            }
+          }
+        }
+        if (!d->bet.come) {
+          d->bet_opt.crapsOptions += COME_OUT;
+          sendTo(COLOR_OBJECTS,
+            format("You just placed %s down on the come out roll.\n\r") %
+              chip->getName());
+
+          d->bet.come = chip->obj_flags.cost;
+
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on the come out roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on the come out roll.\n\r");
+        }
       } else if (is_abbrev(amount, "three")) {
-	if (!d->bet.three) {
-	  d->bet_opt.oneRoll += THREE3;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on a oneroll three (3) roll.\n\r") %
-		 chip->getName());
+        if (!d->bet.three) {
+          d->bet_opt.oneRoll += THREE3;
+          sendTo(COLOR_OBJECTS,
+            format("You just placed %s down on a oneroll three (3) roll.\n\r") %
+              chip->getName());
 
-	  d->bet.three = chip->obj_flags.cost;
+          d->bet.three = chip->obj_flags.cost;
 
-	  (*chip)--;
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on a oneroll three (3) roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on a oneroll three (3) roll.\n\r");
+        }
       } else if (is_abbrev(amount, "two")) {
-	if (!d->bet.two) {
-	  d->bet_opt.oneRoll += TWO2;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on a oneroll two (2) roll.\n\r") %
-		 chip->getName());
+        if (!d->bet.two) {
+          d->bet_opt.oneRoll += TWO2;
+          sendTo(COLOR_OBJECTS,
+            format("You just placed %s down on a oneroll two (2) roll.\n\r") %
+              chip->getName());
 
-	  d->bet.two = chip->obj_flags.cost;
+          d->bet.two = chip->obj_flags.cost;
 
-	  (*chip)--;
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on a oneroll two (2) roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on a oneroll two (2) roll.\n\r");
+        }
       } else if (is_abbrev(amount, "eleven")) {
-	if (!d->bet.eleven) {
-	  d->bet_opt.oneRoll += ELEVEN;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on a oneroll eleven (11) roll.\n\r") %
-		 chip->getName());
+        if (!d->bet.eleven) {
+          d->bet_opt.oneRoll += ELEVEN;
+          sendTo(COLOR_OBJECTS,
+            format(
+              "You just placed %s down on a oneroll eleven (11) roll.\n\r") %
+              chip->getName());
 
-	  d->bet.eleven = chip->obj_flags.cost;
+          d->bet.eleven = chip->obj_flags.cost;
 
-	  (*chip)--;
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on a oneroll eleven (11) roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on a oneroll eleven (11) roll.\n\r");
+        }
       } else if (is_abbrev(amount, "twelve")) {
-	if (!d->bet.twelve) {
-	  d->bet_opt.oneRoll += TWELVE;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on a oneroll twelve (12) roll.\n\r") %
-		 chip->getName());
+        if (!d->bet.twelve) {
+          d->bet_opt.oneRoll += TWELVE;
+          sendTo(COLOR_OBJECTS,
+            format(
+              "You just placed %s down on a oneroll twelve (12) roll.\n\r") %
+              chip->getName());
 
-	  d->bet.twelve = chip->obj_flags.cost;
+          d->bet.twelve = chip->obj_flags.cost;
 
-	  (*chip)--;
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on a oneroll twelve (12) roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on a oneroll twelve (12) roll.\n\r");
+        }
       } else if (is_abbrev(amount, "horn")) {
-	if (!d->bet.horn_bet) {
-	  d->bet_opt.oneRoll += HORN_BET;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on a oneroll horn roll.\n\r") %
-		 chip->getName());
+        if (!d->bet.horn_bet) {
+          d->bet_opt.oneRoll += HORN_BET;
+          sendTo(COLOR_OBJECTS,
+            format("You just placed %s down on a oneroll horn roll.\n\r") %
+              chip->getName());
 
-	  d->bet.horn_bet = chip->obj_flags.cost;
+          d->bet.horn_bet = chip->obj_flags.cost;
 
-	  (*chip)--;
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on a oneroll horn roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on a oneroll horn roll.\n\r");
+        }
       } else if (is_abbrev(amount, "field")) {
-	if (!d->bet.field_bet) {
-	  d->bet_opt.oneRoll += FIELD_BET;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on a oneroll field roll.\n\r") %
-		 chip->getName());
+        if (!d->bet.field_bet) {
+          d->bet_opt.oneRoll += FIELD_BET;
+          sendTo(COLOR_OBJECTS,
+            format("You just placed %s down on a oneroll field roll.\n\r") %
+              chip->getName());
 
-	  d->bet.field_bet = chip->obj_flags.cost;
+          d->bet.field_bet = chip->obj_flags.cost;
 
-	  (*chip)--;
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on a oneroll field roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on a oneroll field roll.\n\r");
+        }
       } else if (is_abbrev(amount, "seven")) {
-	if (!d->bet.seven) {
-	  d->bet_opt.oneRoll += SEVEN;
-	  sendTo(COLOR_OBJECTS, format("You just placed %s down on a oneroll seven roll.\n\r") %
-		 chip->getName());
+        if (!d->bet.seven) {
+          d->bet_opt.oneRoll += SEVEN;
+          sendTo(COLOR_OBJECTS,
+            format("You just placed %s down on a oneroll seven roll.\n\r") %
+              chip->getName());
 
-	  d->bet.seven = chip->obj_flags.cost;
+          d->bet.seven = chip->obj_flags.cost;
 
-	  (*chip)--;
+          (*chip)--;
           delete chip;
-	} else {
-	  sendTo("You've already betted on a oneroll seven roll.\n\r");
-	}
+        } else {
+          sendTo("You've already betted on a oneroll seven roll.\n\r");
+        }
       } else {
-	sendTo("Wrong option.\n\r");
-	return;
+        sendTo("Wrong option.\n\r");
+        return;
       }
       observerReaction(this, GAMBLER_BET);
     }
   }
 }
 
-void Craps::clearBets()
-{
-}
+void Craps::clearBets() {}
 
-int can_bet_craps(TBeing *ch)
-{
-  TMonster *crap_man;
+int can_bet_craps(TBeing* ch) {
+  TMonster* crap_man;
 
   if (!(crap_man = FindMobInRoomWithProcNum(ch->in_room, SPEC_CRAPSGUY)))
     return FALSE;
@@ -412,17 +420,16 @@ int can_bet_craps(TBeing *ch)
   if (!crap_man->act_ptr)
     crap_man->act_ptr = new Ccraps();
 
-  Ccraps *cr = (Ccraps *) crap_man->act_ptr;
+  Ccraps* cr = (Ccraps*)crap_man->act_ptr;
   if (!cr->pos)
     return TRUE;
   else
     return FALSE;
 }
 
-int Craps::checkCraps(int diceroll)
-{
-  TThing *t=NULL;
-  Descriptor *d;
+int Craps::checkCraps(int diceroll) {
+  TThing* t = NULL;
+  Descriptor* d;
   int newRoll = FALSE;
 
   if (!m_ch->roomp) {
@@ -433,14 +440,16 @@ int Craps::checkCraps(int diceroll)
   if (m_ch->desc->point_roll)
     return FALSE;
 
-  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end() && (t=*it);++it) {
+  for (StuffIter it = m_ch->roomp->stuff.begin();
+       it != m_ch->roomp->stuff.end() && (t = *it); ++it) {
     if (!(d = t->desc))
       continue;
 
-    if ((diceroll != 2) && (diceroll != 3) && (diceroll != 12)){
-      t->sendTo(format("No Craps....You Lose your bet (%d)!\n\r") % d->bet.crap);
+    if ((diceroll != 2) && (diceroll != 3) && (diceroll != 12)) {
+      t->sendTo(
+        format("No Craps....You Lose your bet (%d)!\n\r") % d->bet.crap);
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
-      d->bet.crap=0;
+      d->bet.crap = 0;
       continue;
     }
 
@@ -449,16 +458,16 @@ int Craps::checkCraps(int diceroll)
       REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
       d->bet.come = 0;
       if (t == m_ch) {
-	loseDice();
+        loseDice();
         newRoll = TRUE;
       }
-      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
+      observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_LOST);
     }
     if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
       t->sendTo(format("Craps....You Win your bet (%d)!\n\r") % d->bet.crap);
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
-      payout(dynamic_cast<TBeing *>(t), 2 * d->bet.crap);
-      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
+      payout(dynamic_cast<TBeing*>(t), 2 * d->bet.crap);
+      observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_WON);
 
       d->bet.crap = 0;
       if (t == m_ch) {
@@ -468,16 +477,14 @@ int Craps::checkCraps(int diceroll)
       }
     }
   }
-  if (newRoll) 
+  if (newRoll)
     return TRUE;
   return FALSE;
 }
 
-
-int Craps::checkSeven(int diceroll)
-{
-  TThing *t=NULL;
-  Descriptor *d;
+int Craps::checkSeven(int diceroll) {
+  TThing* t = NULL;
+  Descriptor* d;
   int pointRoll = FALSE, newRoll = FALSE;
 
   if (diceroll != 7)
@@ -490,8 +497,9 @@ int Craps::checkSeven(int diceroll)
     vlogf(LOG_BUG, "Somehow m_ch without a desc got to checkSeven");
   }
 
-  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end() && (t=*it);++it) {
-    TBeing *tbt = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = m_ch->roomp->stuff.begin();
+       it != m_ch->roomp->stuff.end() && (t = *it); ++it) {
+    TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (!tbt)
       continue;
     if (!(d = tbt->desc))
@@ -499,18 +507,20 @@ int Craps::checkSeven(int diceroll)
 
     if (!pointRoll) {
       if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
-	tbt->sendTo(format("Seven! You win your come out bet (%d)!\n\r") % d->bet.come);
-	payout(tbt, 2 * d->bet.come);
-	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
-	REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
-	d->bet.come = 0;
+        tbt->sendTo(
+          format("Seven! You win your come out bet (%d)!\n\r") % d->bet.come);
+        payout(tbt, 2 * d->bet.come);
+        observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_WON);
+        REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
+        d->bet.come = 0;
       }
       if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
-	tbt->sendTo(format("Seven! You lose your crap out bet (%d)!\n\r") % d->bet.crap);
-	REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
-	d->bet.crap = 0;
-	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
-      
+        tbt->sendTo(
+          format("Seven! You lose your crap out bet (%d)!\n\r") % d->bet.crap);
+        REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
+        d->bet.crap = 0;
+        observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_LOST);
+
 #if 0
 // unless we want them to start with a crapout and get the dice
 	if (tbt == m_ch) {
@@ -521,22 +531,24 @@ int Craps::checkSeven(int diceroll)
       }
     } else {
       if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
-	tbt->sendTo(format("Seven! You lose your come out bet (%d)!\n\r") % d->bet.come);
-	REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
-	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
-	d->bet.come = 0;
-	if (tbt == m_ch) {
-	  loseDice();
+        tbt->sendTo(
+          format("Seven! You lose your come out bet (%d)!\n\r") % d->bet.come);
+        REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
+        observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_LOST);
+        d->bet.come = 0;
+        if (tbt == m_ch) {
+          loseDice();
           newRoll = TRUE;
-	}
+        }
       }
       if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
-	tbt->sendTo(format("Seven! You win your crap out bet (%d)!\n\r") % d->bet.crap);
-	payout(tbt, 2 * d->bet.crap);
-	observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
+        tbt->sendTo(
+          format("Seven! You win your crap out bet (%d)!\n\r") % d->bet.crap);
+        payout(tbt, 2 * d->bet.crap);
+        observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_WON);
 
-	REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
-	d->bet.crap = 0;
+        REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
+        d->bet.crap = 0;
         if (tbt == m_ch) {
           if (!newRoll)
             loseDice();
@@ -551,17 +563,17 @@ int Craps::checkSeven(int diceroll)
   return FALSE;
 }
 
-int Craps::checkEleven(int diceroll)
-{
-  TThing *t=NULL;
-  Descriptor *d;
-//  int newRoll = FALSE;
+int Craps::checkEleven(int diceroll) {
+  TThing* t = NULL;
+  Descriptor* d;
+  //  int newRoll = FALSE;
 
   if ((diceroll != 11) || m_ch->desc->point_roll)
     return FALSE;
 
-  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end() && (t=*it);++it) {
-    TBeing *tbt = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = m_ch->roomp->stuff.begin();
+       it != m_ch->roomp->stuff.end() && (t = *it); ++it) {
+    TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (!tbt)
       continue;
     if (!(d = tbt->desc))
@@ -570,7 +582,7 @@ int Craps::checkEleven(int diceroll)
     if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
       tbt->sendTo("Seven come ELEVEN! You hit your come out bet!\n\r");
       payout(tbt, 2 * d->bet.come);
-      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_WON);
+      observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_WON);
 
       REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
       d->bet.come = 0;
@@ -578,15 +590,14 @@ int Craps::checkEleven(int diceroll)
     if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
       tbt->sendTo("Seven come ELEVEN! You hit the come out bet. You lose!\n\r");
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
-      observerReaction(dynamic_cast<TBeing *>(t), GAMBLER_LOST);
+      observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_LOST);
       d->bet.crap = 0;
     }
   }
   return FALSE;
 }
 
-void Craps::setPoint(int diceroll)
-{
+void Craps::setPoint(int diceroll) {
   char buf[256];
 
   if (!m_ch->desc)
@@ -602,45 +613,47 @@ void Craps::setPoint(int diceroll)
   sendToRoom(buf, m_ch->in_room);
 }
 
-void Craps::checkOnerollSeven(int diceroll, TBeing *ch)
-{
-  Descriptor *d;
+void Craps::checkOnerollSeven(int diceroll, TBeing* ch) {
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in checkOnerollSeven()");
     return;
   }
   if (diceroll == 7) {
-    ch->sendTo(format("You win your oneroll seven bet (%d)!\n\r") % (3 * d->bet.seven));
+    ch->sendTo(
+      format("You win your oneroll seven bet (%d)!\n\r") % (3 * d->bet.seven));
     payout(ch, 4 * d->bet.seven);
     observerReaction(ch, GAMBLER_WON);
   } else {
-    ch->sendTo(format("You lose your oneroll seven bet (%d).\n\r") % d->bet.seven);
-    observerReaction(ch, GAMBLER_LOST);  
+    ch->sendTo(
+      format("You lose your oneroll seven bet (%d).\n\r") % d->bet.seven);
+    observerReaction(ch, GAMBLER_LOST);
   }
 
   REMOVE_BIT(d->bet_opt.oneRoll, SEVEN);
   d->bet.seven = 0;
 }
 
-void Craps::checkHorn(int diceroll, TBeing *ch)
-{
-  Descriptor *d;
+void Craps::checkHorn(int diceroll, TBeing* ch) {
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in checkHorn()");
     return;
   }
-  if ((diceroll > 3) && (diceroll < 11)){
+  if ((diceroll > 3) && (diceroll < 11)) {
     ch->sendTo(format("You lose your horn bet (%d).\n\r") % d->bet.horn_bet);
     observerReaction(ch, GAMBLER_LOST);
   } else {
     if ((diceroll == 2) || (diceroll == 12)) {
-      ch->sendTo(format("The roll is a [%d]. You win your horn bet (%d)!\n\r") % diceroll % (6 * d->bet.horn_bet));
+      ch->sendTo(format("The roll is a [%d]. You win your horn bet (%d)!\n\r") %
+                 diceroll % (6 * d->bet.horn_bet));
       payout(ch, 7 * d->bet.horn_bet);
       observerReaction(ch, GAMBLER_WON);
     } else {
-      ch->sendTo(format("The roll is a [%d]. You win your horn bet (%d)!\n\r") % diceroll % (((int) (3.5 * d->bet.horn_bet)) - d->bet.horn_bet));
+      ch->sendTo(format("The roll is a [%d]. You win your horn bet (%d)!\n\r") %
+                 diceroll % (((int)(3.5 * d->bet.horn_bet)) - d->bet.horn_bet));
       payout(ch, (int)(3.5 * d->bet.horn_bet));
       observerReaction(ch, GAMBLER_WON);
     }
@@ -649,12 +662,11 @@ void Craps::checkHorn(int diceroll, TBeing *ch)
   d->bet.horn_bet = 0;
 }
 
-void Craps::checkField(int diceroll, TBeing *ch)
-{
-  TMonster *crap_man;
+void Craps::checkField(int diceroll, TBeing* ch) {
+  TMonster* crap_man;
   sstring buf;
 
-  Descriptor *d;
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in checkField()");
@@ -664,133 +676,126 @@ void Craps::checkField(int diceroll, TBeing *ch)
 
   if ((diceroll >= 5) && (diceroll <= 8)) {
     if (crap_man) {
-      crap_man->doTell(ch->getName(), format("The roll is %d. You lose your bet on the field (%d).") % diceroll % d->bet.field_bet);
+      crap_man->doTell(ch->getName(),
+        format("The roll is %d. You lose your bet on the field (%d).") %
+          diceroll % d->bet.field_bet);
       observerReaction(ch, GAMBLER_LOST);
     }
   } else {
     if ((diceroll < 12) && (diceroll > 2)) {
-      buf=format("The roll is %d. You win your bet on the field (%d)!") % diceroll % d->bet.field_bet;
+      buf = format("The roll is %d. You win your bet on the field (%d)!") %
+            diceroll % d->bet.field_bet;
       payout(ch, 2 * d->bet.field_bet);
       observerReaction(ch, GAMBLER_WON);
     } else {
-      buf=format("%s The roll is %d. You get your field bet back (%d)!") % diceroll % d->bet.field_bet;
+      buf = format("%s The roll is %d. You get your field bet back (%d)!") %
+            diceroll % d->bet.field_bet;
       payout(ch, d->bet.field_bet);
       observerReaction(ch, GAMBLER_WON);
     }
     if (crap_man) {
       crap_man->doTell(ch->getName(), buf);
     }
-
   }
   d->bet.field_bet = 0;
   REMOVE_BIT(d->bet_opt.oneRoll, FIELD_BET);
 }
 
+void Craps::checkHardFour(int) {}
 
-void Craps::checkHardFour(int)
-{
-}
+void Craps::checkHardSix(int) {}
 
-void Craps::checkHardSix(int)
-{
-}
+void Craps::checkHardEight(int) {}
 
-void Craps::checkHardEight(int)
-{
-}
+void Craps::checkHardTen(int) {}
 
-void Craps::checkHardTen(int)
-{
-}
+void Craps::checkHardrolls(int) {}
 
-void Craps::checkHardrolls(int)
-{
-}
-
-
-void Craps::checkTwo(int diceroll, TBeing *ch)
-{
-  Descriptor *d;
+void Craps::checkTwo(int diceroll, TBeing* ch) {
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in check_two()");
     return;
   }
   if (diceroll == 2) {
-    ch->sendTo(format("Two hit!  Nice bet! You Win your bet (%d)!\n\r") % (30 *
-d->bet.two));
+    ch->sendTo(format("Two hit!  Nice bet! You Win your bet (%d)!\n\r") %
+               (30 * d->bet.two));
     payout(ch, 31 * d->bet.two);
     observerReaction(ch, GAMBLER_WON);
     REMOVE_BIT(d->bet_opt.oneRoll, TWO2);
     d->bet.two = 0;
   } else {
-    ch->sendTo(format("No two....You lose your two bet (%d)!\n\r") % d->bet.two);
+    ch->sendTo(
+      format("No two....You lose your two bet (%d)!\n\r") % d->bet.two);
     REMOVE_BIT(d->bet_opt.oneRoll, TWO2);
     d->bet.two = 0;
     observerReaction(ch, GAMBLER_LOST);
   }
 }
 
-void Craps::checkThree(int diceroll, TBeing *ch)
-{
-  Descriptor *d;
+void Craps::checkThree(int diceroll, TBeing* ch) {
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in check_three()");
     return;
   }
   if (diceroll == 3) {
-    ch->sendTo(format("Three hit! Nice bet! You win your bet (%d)\n\r") % (15 *
-d->bet.three));
+    ch->sendTo(format("Three hit! Nice bet! You win your bet (%d)\n\r") %
+               (15 * d->bet.three));
     payout(ch, 16 * d->bet.three);
     observerReaction(ch, GAMBLER_WON);
     REMOVE_BIT(d->bet_opt.oneRoll, THREE3);
     d->bet.three = 0;
   } else {
-    ch->sendTo(format("No three....You lose your three bet (%d)!\n\r") % d->bet.three);
+    ch->sendTo(
+      format("No three....You lose your three bet (%d)!\n\r") % d->bet.three);
     REMOVE_BIT(d->bet_opt.oneRoll, THREE3);
     d->bet.three = 0;
     observerReaction(ch, GAMBLER_LOST);
   }
 }
 
-void Craps::checkOnerollEleven(int diceroll, TBeing *ch)
-{
-  Descriptor *d;
+void Craps::checkOnerollEleven(int diceroll, TBeing* ch) {
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in check_oneroll_eleven()");
     return;
   }
   if (diceroll == 11) {
-    ch->sendTo(format("Eleven hit! Nice bet! You win your bet (%d)!\n\r") % (15 *
-d->bet.eleven));
+    ch->sendTo(format("Eleven hit! Nice bet! You win your bet (%d)!\n\r") %
+               (15 * d->bet.eleven));
     payout(ch, 16 * d->bet.eleven);
     observerReaction(ch, GAMBLER_WON);
     REMOVE_BIT(d->bet_opt.oneRoll, ELEVEN);
     d->bet.eleven = 0;
   } else {
-    ch->sendTo(format("No eleven....You lose your eleven bet (%d)!\n\r") % d->bet.eleven);
+    ch->sendTo(format("No eleven....You lose your eleven bet (%d)!\n\r") %
+               d->bet.eleven);
     REMOVE_BIT(d->bet_opt.oneRoll, ELEVEN);
     d->bet.eleven = 0;
     observerReaction(ch, GAMBLER_LOST);
   }
 }
 
-void Craps::checkTwelve(int diceroll, TBeing *ch)
-{
-  Descriptor *d;
+void Craps::checkTwelve(int diceroll, TBeing* ch) {
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in check_twelve()");
     return;
   }
   if (diceroll == 12) {
-    ch->sendTo(format("Twelve hit! Nice bet You win your twelve bet (%d)!\n\r") % (30 * d->bet.twelve));
+    ch->sendTo(
+      format("Twelve hit! Nice bet You win your twelve bet (%d)!\n\r") %
+      (30 * d->bet.twelve));
     payout(ch, 31 * d->bet.twelve);
     observerReaction(ch, GAMBLER_WON);
-  } else{
-    ch->sendTo(format("No twelve....You lose your twelve bet (%d)!\n\r") % d->bet.twelve);
+  } else {
+    ch->sendTo(format("No twelve....You lose your twelve bet (%d)!\n\r") %
+               d->bet.twelve);
     observerReaction(ch, GAMBLER_LOST);
   }
 
@@ -798,49 +803,52 @@ void Craps::checkTwelve(int diceroll, TBeing *ch)
   d->bet.twelve = 0;
 }
 
-void Craps::checkOnerollCraps(int diceroll, TBeing *ch)
-{
-  Descriptor *d;
+void Craps::checkOnerollCraps(int diceroll, TBeing* ch) {
+  Descriptor* d;
 
   if (!(d = ch->desc)) {
     vlogf(LOG_BUG, "No better desc in check_oneroll_craps()");
     return;
   }
   if (diceroll == 3) {
-    ch->sendTo(format("Three hit! Your bet on craps hit! You win (%d)!\n\r") % (6 * d->bet.one_craps));
+    ch->sendTo(format("Three hit! Your bet on craps hit! You win (%d)!\n\r") %
+               (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
     payout(ch, 7 * d->bet.one_craps);
     observerReaction(ch, GAMBLER_WON);
   } else if (diceroll == 2) {
-    ch->sendTo(format("Two hit! Your bet on craps hit! You win (%d)!\n\r") % (6 * d->bet.one_craps));
+    ch->sendTo(format("Two hit! Your bet on craps hit! You win (%d)!\n\r") %
+               (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
     payout(ch, 7 * d->bet.one_craps);
     observerReaction(ch, GAMBLER_WON);
   } else if (diceroll == 12) {
-    ch->sendTo(format("Twelve hit. Your bet on craps hit! You win (%d)!\n\r") % (6 * d->bet.one_craps));
+    ch->sendTo(format("Twelve hit. Your bet on craps hit! You win (%d)!\n\r") %
+               (6 * d->bet.one_craps));
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
     payout(ch, 7 * d->bet.one_craps);
     observerReaction(ch, GAMBLER_WON);
   } else {
-    ch->sendTo(format("No craps....You lose your bet on craps (%d)!\n\r") % d->bet.one_craps);
+    ch->sendTo(format("No craps....You lose your bet on craps (%d)!\n\r") %
+               d->bet.one_craps);
     REMOVE_BIT(d->bet_opt.oneRoll, CRAPS);
     observerReaction(ch, GAMBLER_LOST);
   }
   d->bet.one_craps = 0;
 }
 
-void Craps::checkOnerolls(int diceroll)
-{
-  TThing *t;
+void Craps::checkOnerolls(int diceroll) {
+  TThing* t;
 
   // m_ch is the roller
 
-  for(StuffIter it=m_ch->roomp->stuff.begin();it!=m_ch->roomp->stuff.end();++it) {
-    t=*it;
-    Descriptor *d = t->desc;
+  for (StuffIter it = m_ch->roomp->stuff.begin();
+       it != m_ch->roomp->stuff.end(); ++it) {
+    t = *it;
+    Descriptor* d = t->desc;
     if (!d)
       continue;
-    TBeing *ch = dynamic_cast<TBeing *>(t);
+    TBeing* ch = dynamic_cast<TBeing*>(t);
     if (!ch)
       continue;
 
@@ -865,42 +873,44 @@ void Craps::checkOnerolls(int diceroll)
   }
 }
 
-void WinLoseCraps(TBeing *ch, int diceroll)
-{
-  TThing *t=NULL;
-  Descriptor *d;
+void WinLoseCraps(TBeing* ch, int diceroll) {
+  TThing* t = NULL;
+  Descriptor* d;
 
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (t=*it);++it) {
-    TBeing *tbt = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = ch->roomp->stuff.begin();
+       it != ch->roomp->stuff.end() && (t = *it); ++it) {
+    TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (!tbt)
       continue;
     if (!(d = tbt->desc))
       continue;
 
     if (IS_SET(d->bet_opt.crapsOptions, COME_OUT)) {
-      tbt->sendTo(format("The point [%d] was hit. You win your bet (%d)!\n\r") % diceroll % d->bet.come);
+      tbt->sendTo(format("The point [%d] was hit. You win your bet (%d)!\n\r") %
+                  diceroll % d->bet.come);
       payout(tbt, 2 * d->bet.come);
       observerReaction(ch, GAMBLER_WON);
       REMOVE_BIT(d->bet_opt.crapsOptions, COME_OUT);
       d->bet.come = 0;
     }
     if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
-      tbt->sendTo(format("The point [%d] was hit. You lose your bet (%d).\n\r") % diceroll % d->bet.crap);
+      tbt->sendTo(
+        format("The point [%d] was hit. You lose your bet (%d).\n\r") %
+        diceroll % d->bet.crap);
       observerReaction(ch, GAMBLER_LOST);
       REMOVE_BIT(d->bet_opt.crapsOptions, CRAP_OUT);
       d->bet.crap = 0;
       if (tbt == ch)
-	ch->m_craps->loseDice();
+        ch->m_craps->loseDice();
     }
   }
   ch->desc->point_roll = 0;
 }
 
-int Craps::rollDice()
-{
+int Craps::rollDice() {
   int die_one, die_two, dice_roll;
   sstring buf, buf2;
-  TMonster *table_man;
+  TMonster* table_man;
 
   if (!m_ch || !m_ch->desc)
     return TRUE;
@@ -916,7 +926,8 @@ int Craps::rollDice()
       return FALSE;
     }
     if (!m_ch->desc->bet.come) {
-      table_man->doTell(m_ch->getName(), "Sorry to keep the table, you need to place a come bet.");
+      table_man->doTell(m_ch->getName(),
+        "Sorry to keep the table, you need to place a come bet.");
       return FALSE;
     }
   }
@@ -951,23 +962,24 @@ int Craps::rollDice()
     sendToRoom(DICE_SIX, m_ch->in_room);
 
   if (m_ch->desc->point_roll) {
-    buf=format("You rolled a %d and a %d. Total = %d    Point = %d\n\r") %
-      die_one % die_two % dice_roll % m_ch->desc->point_roll;
-    buf2=format("%s rolled a %d and a %d. Total = %d    Point = %d\n\r") %
-      m_ch->getName() % die_one % die_two % dice_roll % m_ch->desc->point_roll;
+    buf = format("You rolled a %d and a %d. Total = %d    Point = %d\n\r") %
+          die_one % die_two % dice_roll % m_ch->desc->point_roll;
+    buf2 = format("%s rolled a %d and a %d. Total = %d    Point = %d\n\r") %
+           m_ch->getName() % die_one % die_two % dice_roll %
+           m_ch->desc->point_roll;
   } else {
-    buf=format("You rolled a %d and a %d. Total = %d\n\r") %
-      die_one % die_two % dice_roll;
-    buf2=format("%s rolled a %d and a %d. Total = %d\n\r") %
-      m_ch->getName() % die_one % die_two % dice_roll;
+    buf = format("You rolled a %d and a %d. Total = %d\n\r") % die_one %
+          die_two % dice_roll;
+    buf2 = format("%s rolled a %d and a %d. Total = %d\n\r") % m_ch->getName() %
+           die_one % die_two % dice_roll;
   }
-  act(buf,TRUE, m_ch, NULL, NULL, TO_CHAR);
-  act(buf2,TRUE, m_ch, NULL, NULL, TO_ROOM);
-//  sendToRoom(buf, m_ch->in_room);
+  act(buf, TRUE, m_ch, NULL, NULL, TO_CHAR);
+  act(buf2, TRUE, m_ch, NULL, NULL, TO_ROOM);
+  //  sendToRoom(buf, m_ch->in_room);
 
   if (checkCraps(dice_roll)) {
     return TRUE;
-  } 
+  }
   if (checkSeven(dice_roll)) {
     return TRUE;
   }
@@ -984,48 +996,46 @@ int Craps::rollDice()
   return FALSE;
 }
 
-int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj *)
-{
+int craps_table_man(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
+  TObj*) {
   char buf[256], amount[256], options[256];
   char dice_buf[256];
 
   if (cmd == CMD_GENERIC_DESTROYED) {
-    delete static_cast<Ccraps *>(myself->act_ptr);
+    delete static_cast<Ccraps*>(myself->act_ptr);
     myself->act_ptr = NULL;
     return FALSE;
   }
 
   if (cmd != CMD_GENERIC_PULSE) {
-    if ((cmd == CMD_GIVE) ||
-        (cmd == CMD_JUNK) ||
-        (cmd == CMD_DONATE) ||
+    if ((cmd == CMD_GIVE) || (cmd == CMD_JUNK) || (cmd == CMD_DONATE) ||
         (cmd == CMD_DROP)) {
       if (!*arg)
         return FALSE;
       one_argument(arg, dice_buf, cElements(dice_buf));
       if (is_abbrev(dice_buf, "dice")) {
-        ch->sendTo("Doing that to the dice is not permitted!\n\r")
-;
+        ch->sendTo("Doing that to the dice is not permitted!\n\r");
         return TRUE;
       }
       return FALSE;
     } else if (cmd == CMD_BET) {
       if (!*arg)
-	return FALSE;
+        return FALSE;
       half_chop(arg, options, amount);
       if (ch->roomp->checkPointroll()) {
-	if (is_abbrev(options, "come")) {
-	  sprintf(buf, "Sorry %s, no bets can be placed on the come", ch->getName().c_str());
-	  myself->doSay(buf);
-	  myself->doSay("or no-pass after a pointroll has been called.");
-	  return TRUE;
-	} else
-	  return FALSE;
+        if (is_abbrev(options, "come")) {
+          sprintf(buf, "Sorry %s, no bets can be placed on the come",
+            ch->getName().c_str());
+          myself->doSay(buf);
+          myself->doSay("or no-pass after a pointroll has been called.");
+          return TRUE;
+        } else
+          return FALSE;
       } else
-	return FALSE;
+        return FALSE;
     } else if (cmd == CMD_THROW || cmd == CMD_ROLL) {
       if (!*arg)
-	return FALSE;
+        return FALSE;
       one_argument(arg, dice_buf, cElements(dice_buf));
       if (is_abbrev(dice_buf, "dice")) {
         if (ch->m_craps) {
@@ -1033,32 +1043,26 @@ int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
             delete ch->m_craps;
             ch->m_craps = NULL;
           }
-	  return TRUE;
+          return TRUE;
         }
-	ch->sendTo("You need to be shooting in the game to throw the dice!\n\r");
+        ch->sendTo(
+          "You need to be shooting in the game to throw the dice!\n\r");
         return TRUE;
       }
       return FALSE;
-    } else if ((cmd == CMD_NORTH) || 
-        (cmd == CMD_SOUTH) ||
-        (cmd == CMD_EAST) ||
-        (cmd == CMD_WEST) ||
-        (cmd == CMD_UP) ||
-        (cmd == CMD_DOWN) ||
-        (cmd == CMD_NE) ||
-        (cmd == CMD_NW) ||
-        (cmd == CMD_SE) ||
-        (cmd == CMD_FLEE) ||
-        (cmd == CMD_SW)) {
+    } else if ((cmd == CMD_NORTH) || (cmd == CMD_SOUTH) || (cmd == CMD_EAST) ||
+               (cmd == CMD_WEST) || (cmd == CMD_UP) || (cmd == CMD_DOWN) ||
+               (cmd == CMD_NE) || (cmd == CMD_NW) || (cmd == CMD_SE) ||
+               (cmd == CMD_FLEE) || (cmd == CMD_SW)) {
       if (ch->checkForDiceHeld()) {
-	ch->sendTo("You can't leave the table with the dice!\n\r");
-	return TRUE;
+        ch->sendTo("You can't leave the table with the dice!\n\r");
+        return TRUE;
       }
       if (ch->checkForDiceInInv()) {
-	ch->sendTo("You can't leave the table with the dice!\n\r");
-	return TRUE;
+        ch->sendTo("You can't leave the table with the dice!\n\r");
+        return TRUE;
       }
-      Descriptor *d;
+      Descriptor* d;
       if ((d = ch->desc)) {
         d->point_roll = 0;
         d->bet_opt.roulOptions = 0;
@@ -1093,26 +1097,26 @@ int craps_table_man(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself,
     if (!myself->act_ptr) {
       myself->act_ptr = new Ccraps();
     }
-    Ccraps *cr = (Ccraps *) myself->act_ptr;
+    Ccraps* cr = (Ccraps*)myself->act_ptr;
 
     switch (cr->pos) {
       case 4:
-	myself->doSay("Place all bets now!");
-	cr->pos--;
-	return TRUE;
+        myself->doSay("Place all bets now!");
+        cr->pos--;
+        return TRUE;
       case 3:
-	cr->pos--;
-	return TRUE;
+        cr->pos--;
+        return TRUE;
       case 2:
-	myself->doSay("Last call for bets!");
-	cr->pos--;
-	return TRUE;
+        myself->doSay("Last call for bets!");
+        cr->pos--;
+        return TRUE;
       case 1:
-	myself->doSay("Ok roller, roll at your will");
-	cr->pos--;
-	return TRUE;
+        myself->doSay("Ok roller, roll at your will");
+        cr->pos--;
+        return TRUE;
       default:
-	return FALSE;
+        return FALSE;
     }
   }
   return FALSE;

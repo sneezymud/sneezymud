@@ -14,22 +14,23 @@ class TBow : public TObj {
     int arrowType;
     unsigned int flags;
     unsigned int max_range;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_BOW; }
 
-    virtual sstring showModifier(showModeT, const TBeing *) const;
-    virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing*) const;
+    virtual void describeObjectSpecifics(const TBeing*) const;
     virtual bool isBluntWeapon() const;
-    virtual void sstringMeBow(TBeing *, TThing *);
-    virtual void evaluateMe(TBeing *) const;
-    virtual int shootMeBow(TBeing *ch, TBeing *, unsigned int, dirTypeT, int);
-    virtual void bloadArrowBow(TBeing *, TArrow *);
-    virtual bool sellMeCheck(TBeing *, TMonster *, int, int) const;
-    virtual sstring compareMeAgainst(TBeing *, TObj *);
-    virtual void dropMe(TBeing *, showMeT, showRoomT);
+    virtual void sstringMeBow(TBeing*, TThing*);
+    virtual void evaluateMe(TBeing*) const;
+    virtual int shootMeBow(TBeing* ch, TBeing*, unsigned int, dirTypeT, int);
+    virtual void bloadArrowBow(TBeing*, TArrow*);
+    virtual bool sellMeCheck(TBeing*, TMonster*, int, int) const;
+    virtual sstring compareMeAgainst(TBeing*, TObj*);
+    virtual void dropMe(TBeing*, showMeT, showRoomT);
 
     int getArrowType() const;
     void setArrowType(int);
@@ -42,8 +43,7 @@ class TBow : public TObj {
     void setMaxRange(unsigned int);
 
     TBow();
-    TBow(const TBow &a);
-    TBow & operator=(const TBow &a);
+    TBow(const TBow& a);
+    TBow& operator=(const TBow& a);
     virtual ~TBow();
 };
-

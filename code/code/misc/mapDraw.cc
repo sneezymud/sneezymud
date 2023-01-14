@@ -3,16 +3,16 @@
 #include <set>
 
 namespace {
-  bool canPathThroughDoor(roomDirData* ex)
-  {
+  bool canPathThroughDoor(roomDirData* ex) {
     if (!ex)
       return false;
 
     if (IS_SET(ex->condition, EXIT_CAVED_IN))
       return false;
 
-    if (IS_SET(ex->condition, EXIT_CLOSED) && (
-          IS_SET(ex->condition, EXIT_SECRET) || IS_SET(ex->condition, EXIT_LOCKED)))
+    if (IS_SET(ex->condition, EXIT_CLOSED) &&
+        (IS_SET(ex->condition, EXIT_SECRET) ||
+          IS_SET(ex->condition, EXIT_LOCKED)))
       return false;
 
     return true;
@@ -20,26 +20,25 @@ namespace {
 
   // colors in TTerrainInfo
   const char* terrainToColor[16] = {
-    "<K>", // black 0
-    "<r>", // maroon 1
-    "<G>", // green 2
-    "<d><g>", // olive 3
-    "<B>", // navy 4
-    "<P>", // purple 5
-    "<c>", // teal 6
-    "<d><k>", // silver 7
-    "<k>", // gray 8
-    "<R>", // red 9
-    "<G>", // lime 10
-    "<y>", // yellow 11
-    "<b>", // blue 12
-    "<p>", // magenta 13
-    "<C>", // cyan 14
-    "<w>", // white 15
+    "<K>",     // black 0
+    "<r>",     // maroon 1
+    "<G>",     // green 2
+    "<d><g>",  // olive 3
+    "<B>",     // navy 4
+    "<P>",     // purple 5
+    "<c>",     // teal 6
+    "<d><k>",  // silver 7
+    "<k>",     // gray 8
+    "<R>",     // red 9
+    "<G>",     // lime 10
+    "<y>",     // yellow 11
+    "<b>",     // blue 12
+    "<p>",     // magenta 13
+    "<C>",     // cyan 14
+    "<w>",     // white 15
   };
 
-  std::vector<std::string> colorize(std::vector<std::string> const& in)
-  {
+  std::vector<std::string> colorize(const std::vector<std::string>& in) {
     std::vector<std::string> out;
     out.reserve(in.size());
 
@@ -50,7 +49,7 @@ namespace {
         if (cell < 0) {
           // cf. TRoom::colorRoom, TerrainInfo
           outRow.append(terrainToColor[TerrainInfo[-cell]->color]);
-          outRow.push_back('#'); // current value is terrain type
+          outRow.push_back('#');  // current value is terrain type
           outRow.append("<z>");
         } else if (cell == '@') {
           outRow.append("<R>@<z>");
@@ -64,8 +63,7 @@ namespace {
     return out;
   }
 
-  int x(int old, dirTypeT dir)
-  {
+  int x(int old, dirTypeT dir) {
     if (dir == DIR_EAST || dir == DIR_NORTHEAST || dir == DIR_SOUTHEAST)
       return old + 1;
     if (dir == DIR_WEST || dir == DIR_NORTHWEST || dir == DIR_SOUTHWEST)
@@ -73,8 +71,7 @@ namespace {
     return old;
   }
 
-  int y(int old, dirTypeT dir)
-  {
+  int y(int old, dirTypeT dir) {
     if (dir == DIR_NORTH || dir == DIR_NORTHEAST || dir == DIR_NORTHWEST)
       return old - 1;
     if (dir == DIR_SOUTH || dir == DIR_SOUTHEAST || dir == DIR_SOUTHWEST)
@@ -82,8 +79,7 @@ namespace {
     return old;
   }
 
-  char exitSym(char old, dirTypeT dir)
-  {
+  char exitSym(char old, dirTypeT dir) {
     switch (dir) {
       case DIR_UP:
         return '^';
@@ -93,97 +89,92 @@ namespace {
     }
 
     switch (old) {
-      case ' ':
-        {
-          switch (dir) {
-            case DIR_NORTH:
-            case DIR_SOUTH:
-              return '|';
-            case DIR_EAST:
-            case DIR_WEST:
-              return '-';
-            case DIR_NORTHEAST:
-            case DIR_SOUTHWEST:
-              return '/';
-            case DIR_NORTHWEST:
-            case DIR_SOUTHEAST:
-              return '\\';
-            default:
-              return '!';
-          };
-        }
-      case '|':
-        {
-          switch (dir) {
-            case DIR_NORTH:
-            case DIR_SOUTH:
-              return '|';
-            case DIR_EAST:
-            case DIR_WEST:
-              return '+';
-            case DIR_NORTHEAST:
-            case DIR_SOUTHWEST:
-            case DIR_NORTHWEST:
-            case DIR_SOUTHEAST:
-              return '*';
-            default:
-              return '!';
-          };
-        }
-      case '-':
-        {
-          switch (dir) {
-            case DIR_NORTH:
-            case DIR_SOUTH:
-              return '+';
-            case DIR_EAST:
-            case DIR_WEST:
-              return '-';
-            case DIR_NORTHEAST:
-            case DIR_SOUTHWEST:
-            case DIR_NORTHWEST:
-            case DIR_SOUTHEAST:
-              return '*';
-            default:
-              return '!';
-          };
-        }
-      case '/':
-        {
-          switch (dir) {
-            case DIR_NORTH:
-            case DIR_SOUTH:
-            case DIR_EAST:
-            case DIR_WEST:
-              return '*';
-            case DIR_NORTHEAST:
-            case DIR_SOUTHWEST:
-              return '/';
-            case DIR_NORTHWEST:
-            case DIR_SOUTHEAST:
-              return 'X';
-            default:
-              return '!';
-          };
-        }
-      case '\\':
-        {
-          switch (dir) {
-            case DIR_NORTH:
-            case DIR_SOUTH:
-            case DIR_EAST:
-            case DIR_WEST:
-              return '*';
-            case DIR_NORTHEAST:
-            case DIR_SOUTHWEST:
-              return 'X';
-            case DIR_NORTHWEST:
-            case DIR_SOUTHEAST:
-              return '\\';
-            default:
-              return '!';
-          };
-        }
+      case ' ': {
+        switch (dir) {
+          case DIR_NORTH:
+          case DIR_SOUTH:
+            return '|';
+          case DIR_EAST:
+          case DIR_WEST:
+            return '-';
+          case DIR_NORTHEAST:
+          case DIR_SOUTHWEST:
+            return '/';
+          case DIR_NORTHWEST:
+          case DIR_SOUTHEAST:
+            return '\\';
+          default:
+            return '!';
+        };
+      }
+      case '|': {
+        switch (dir) {
+          case DIR_NORTH:
+          case DIR_SOUTH:
+            return '|';
+          case DIR_EAST:
+          case DIR_WEST:
+            return '+';
+          case DIR_NORTHEAST:
+          case DIR_SOUTHWEST:
+          case DIR_NORTHWEST:
+          case DIR_SOUTHEAST:
+            return '*';
+          default:
+            return '!';
+        };
+      }
+      case '-': {
+        switch (dir) {
+          case DIR_NORTH:
+          case DIR_SOUTH:
+            return '+';
+          case DIR_EAST:
+          case DIR_WEST:
+            return '-';
+          case DIR_NORTHEAST:
+          case DIR_SOUTHWEST:
+          case DIR_NORTHWEST:
+          case DIR_SOUTHEAST:
+            return '*';
+          default:
+            return '!';
+        };
+      }
+      case '/': {
+        switch (dir) {
+          case DIR_NORTH:
+          case DIR_SOUTH:
+          case DIR_EAST:
+          case DIR_WEST:
+            return '*';
+          case DIR_NORTHEAST:
+          case DIR_SOUTHWEST:
+            return '/';
+          case DIR_NORTHWEST:
+          case DIR_SOUTHEAST:
+            return 'X';
+          default:
+            return '!';
+        };
+      }
+      case '\\': {
+        switch (dir) {
+          case DIR_NORTH:
+          case DIR_SOUTH:
+          case DIR_EAST:
+          case DIR_WEST:
+            return '*';
+          case DIR_NORTHEAST:
+          case DIR_SOUTHWEST:
+            return 'X';
+          case DIR_NORTHWEST:
+          case DIR_SOUTHEAST:
+            return '\\';
+          default:
+            return '!';
+        };
+      }
       case '*':
         return '*';
       default:
@@ -191,8 +182,8 @@ namespace {
     }
   }
 
-  void visit(TPerson const* ch, int halfEdge, int radius, std::vector<std::string>& grid, TRoom const& r)
-  {
+  void visit(const TPerson* ch, int halfEdge, int radius,
+    std::vector<std::string>& grid, const TRoom& r) {
     if (real_roomp(ch->in_room)->getZCoord() != r.getZCoord())
       return;
 
@@ -205,7 +196,8 @@ namespace {
     if (max(abs(dx), abs(dy)) > radius)
       return;
 
-    // Let's agree that negative values are sector types, positive values are exits.
+    // Let's agree that negative values are sector types, positive values are
+    // exits.
     char symbol = -r.getSectorType();
 
     // 2 for the doors
@@ -217,8 +209,7 @@ namespace {
     // exits
     for (auto dir = MIN_DIR; dir < MAX_DIR; dir++) {
       roomDirData* ex = r.exitDir(dir);
-      if (r.exitDir(dir) && canPathThroughDoor(ex))
-      {
+      if (r.exitDir(dir) && canPathThroughDoor(ex)) {
         int exitX = x(hereX, dir);
         int exitY = y(hereY, dir);
         char prevSym = grid.at(exitY).at(exitX);
@@ -229,25 +220,24 @@ namespace {
     grid.at(halfEdge).at(halfEdge) = '@';
   };
 
-}
+}  // namespace
 
 // TODO: replace queue and set with fixed size array with advancing pointer
 // (fixed because the size of map is known in advance)
-void TPerson::drawMap(const int radius) const
-{
+void TPerson::drawMap(const int radius) const {
   // 2n+1 rows/columns to accommodate radius of n
   // *2 to fit doors, +2 because we also want doors leading out
   size_t edgeLen = (radius * 2 + 1) * 2 + 1;
   size_t halfEdge = edgeLen / 2;
 
-  std::vector<std::string> grid; // There's probably a clever way to initialize it in one line, maybe
-  for (int i = edgeLen; i --> 0;)
+  std::vector<std::string>
+    grid;  // There's probably a clever way to initialize it in one line, maybe
+  for (int i = edgeLen; i-- > 0;)
     grid.emplace_back(edgeLen, ' ');
 
-  struct Candidate
-  {
-    int vnum;
-    int distance;
+  struct Candidate {
+      int vnum;
+      int distance;
   };
 
   std::queue<Candidate> candidates;
@@ -267,8 +257,7 @@ void TPerson::drawMap(const int radius) const
     visited.insert(c.vnum);
 
     TRoom* r = real_roomp(c.vnum);
-    if (!r)
-    {
+    if (!r) {
       // sendTo("Error: null roomp\n\r");
       continue;
     }
@@ -280,7 +269,8 @@ void TPerson::drawMap(const int radius) const
       if (canPathThroughDoor(ex)) {
         /*
         if (!real_roomp(ex->to_room))
-          sendTo(boost::format("Error: room %d has weird exit towards %d\n\r") % c.vnum % exitDir);
+          sendTo(boost::format("Error: room %d has weird exit towards %d\n\r") %
+        c.vnum % exitDir);
           */
         candidates.push({ex->to_room, c.distance + 1});
       }

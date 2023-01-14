@@ -23,41 +23,35 @@
 #include "obj_drinkcon.h"
 #include "pathfinder.h"
 
+void TThing::findBandage(int*) {}
 
-void TThing::findBandage(int *)
-{
-}
-
-int findBandages(StuffList list) 
-{
+int findBandages(StuffList list) {
   int count = 0;
 
-  for(StuffIter it=list.begin();it!=list.end();++it){
+  for (StuffIter it = list.begin(); it != list.end(); ++it) {
     (*it)->findBandage(&count);
     count += findBandages((*it)->stuff);
   }
-  return(count);
+  return (count);
 }
 
-int destroy_bandages(StuffList list, int band)
-{
+int destroy_bandages(StuffList list, int band) {
   int count = 0;
-  TThing *t;
+  TThing* t;
 
-  for(StuffIter it=list.begin();it!=list.end();){
-    t=(*it++);
-    count += destroy_bandages(t->stuff, band-count);
+  for (StuffIter it = list.begin(); it != list.end();) {
+    t = (*it++);
+    count += destroy_bandages(t->stuff, band - count);
 
     if (count >= band)
       break;
     t->destroyBandage(&count);
   }
-  return(count);
+  return (count);
 }
 
-void TBeing::bandage(TBeing *victim,wearSlotT slot)
-{
-  TObj *bandage;
+void TBeing::bandage(TBeing* victim, wearSlotT slot) {
+  TObj* bandage;
   char buf[512], limb[256];
   int r_num;
 
@@ -81,41 +75,46 @@ void TBeing::bandage(TBeing *victim,wearSlotT slot)
   if (!victim->validEquipSlot(slot)) {
     sendTo("They don't seem to have that body location.\n\r");
     return;
-  } 
+  }
   victim->equipChar(bandage, slot);
   victim->addToLimbFlags(slot, PART_BANDAGED);
   if (this != victim) {
-    act("You bind $N's wounds and put a $o on $M.",TRUE,this,bandage,victim,TO_CHAR);
-    act("$n binds your wounds and puts a $o on you.",TRUE,this,bandage,victim,TO_VICT);
-    act("$n binds $N's wounds and puts a $o on $M.",TRUE,this,bandage,victim,TO_NOTVICT);
+    act("You bind $N's wounds and put a $o on $M.", TRUE, this, bandage, victim,
+      TO_CHAR);
+    act("$n binds your wounds and puts a $o on you.", TRUE, this, bandage,
+      victim, TO_VICT);
+    act("$n binds $N's wounds and puts a $o on $M.", TRUE, this, bandage,
+      victim, TO_NOTVICT);
   } else {
-    act("You bind your wounds with a $o.",TRUE,this,bandage,0,TO_CHAR);
-    act("$n binds $s wounds with a $o.",TRUE,this,bandage,0,TO_ROOM);
-  } 
+    act("You bind your wounds with a $o.", TRUE, this, bandage, 0, TO_CHAR);
+    act("$n binds $s wounds with a $o.", TRUE, this, bandage, 0, TO_ROOM);
+  }
   if (victim->isLimbFlags(slot, PART_BLEEDING)) {
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->remLimbFlags(slot, PART_BLEEDING);
-    sprintf(buf, "The gash on your %s slowly stops bleeding and the flesh closes up!", limb);
+    sprintf(buf,
+      "The gash on your %s slowly stops bleeding and the flesh closes up!",
+      limb);
     act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
-    sprintf(buf, "The gash on $n's %s slowly stops bleeding and the flesh closes up!", limb);
+    sprintf(buf,
+      "The gash on $n's %s slowly stops bleeding and the flesh closes up!",
+      limb);
     act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
     reconcileHelp(victim, discArray[SKILL_BANDAGE]->alignMod);
   }
 }
 
-void TBeing::doBandage(const sstring &arg)
-{
-  TBeing *vict;
+void TBeing::doBandage(const sstring& arg) {
+  TBeing* vict;
   wearSlotT slot;
   int band_num, count;
   sstring buf, buf2;
 
-  buf=arg.word(0);
-  buf2=arg.word(1);
-
+  buf = arg.word(0);
+  buf2 = arg.word(1);
 
   if (!hasHands() || affectedBySpell(AFFECT_TRANSFORMED_ARMS) ||
-                     affectedBySpell(AFFECT_TRANSFORMED_HANDS)) {
+      affectedBySpell(AFFECT_TRANSFORMED_HANDS)) {
     sendTo("You need a good hand to bandange!\n\r");
     return;
   }
@@ -125,23 +124,25 @@ void TBeing::doBandage(const sstring &arg)
     return;
   }
   // Auto-Target the bandager.
-  if(buf.empty()){
+  if (buf.empty()) {
     vict = this;
   } else if (!(vict = get_char_room_vis(this, buf))) {
     sendTo("Syntax : Bandage <person> <location>\n\r");
     return;
   }
 
-  if (!vict->isPc()){
+  if (!vict->isPc()) {
     sendTo("Bandage non-players has been temporarily disabled.\n\r");
     return;
   }
 
   // Auto-Find bleeding limbs.
   int tmpi;
-  if(buf2.empty()){
+  if (buf2.empty()) {
     for (tmpi = 0; (tmpi < MAX_WEAR) &&
-                   !vict->isLimbFlags(wearSlotT(tmpi), PART_BLEEDING); tmpi++);
+                   !vict->isLimbFlags(wearSlotT(tmpi), PART_BLEEDING);
+         tmpi++)
+      ;
 
     if (tmpi > MAX_WEAR) {
       sendTo("No bleeding body part found.\n\r");
@@ -151,11 +152,12 @@ void TBeing::doBandage(const sstring &arg)
     slot = wearSlotT(tmpi);
   } else {
     int tmpi;
-    if ((tmpi = old_search_block(buf2.c_str(), 0, buf2.length(), bodyParts, 0)) <= 0) {
+    if ((tmpi = old_search_block(buf2.c_str(), 0, buf2.length(), bodyParts,
+           0)) <= 0) {
       sendTo("You must pick a correct body part to bandage!\n\r");
       return;
     }
-    slot = wearSlotT(tmpi-1);
+    slot = wearSlotT(tmpi - 1);
   }
 
   if (vict->equipment[slot]) {
@@ -205,9 +207,9 @@ void TBeing::doBandage(const sstring &arg)
       sendTo("Syntax : Bandage <player> <body part>\n\r");
       return;
   }
-  
+
   // adjust for race
-  band_num = max(1,(int) (band_num * ((double) getHeight()/(double) 70)));
+  band_num = max(1, (int)(band_num * ((double)getHeight() / (double)70)));
 
   count = findBandages(stuff);
   if (count >= band_num) {
@@ -216,12 +218,15 @@ void TBeing::doBandage(const sstring &arg)
       sendTo("code error - tell a god\n\r");
       return;
     } else {
-      if (bSuccess( SKILL_BANDAGE)) {
+      if (bSuccess(SKILL_BANDAGE)) {
         if (band_num > 1) {
-          buf = format("You quickly combine %d bandages into one big enough to bandage that part.\n\r") %band_num;
+          buf = format(
+                  "You quickly combine %d bandages into one big enough to "
+                  "bandage that part.\n\r") %
+                band_num;
           sendTo(buf);
         }
-        bandage(vict,slot);
+        bandage(vict, slot);
       } else {
         sendTo("Your lack of skill causes you to screw up the bandage.\n\r");
         sendTo("The bandage must be thrown out as it is worthless now.\n\r");
@@ -229,29 +234,28 @@ void TBeing::doBandage(const sstring &arg)
       addSkillLag(SKILL_BANDAGE, 0);
     }
   } else
-    sendTo(format("You need %d total bandages to cover that area.  You have %d.\n\r") % band_num % count);
+    sendTo(
+      format(
+        "You need %d total bandages to cover that area.  You have %d.\n\r") %
+      band_num % count);
 }
 
-
-void TBeing::doTan()
-{
-
-}
-
+void TBeing::doTan() {}
 
 // Jesus
 
-void TThing::butcherMe(TBeing *ch, const char *arg)
-{
-  TObj *obj;
-  TBaseCorpse *corpse;
-  TBeing *dummy;
+void TThing::butcherMe(TBeing* ch, const char* arg) {
+  TObj* obj;
+  TBaseCorpse* corpse;
+  TBeing* dummy;
   //  int amount, num, rnum, pulse;
   int num, pulse;
   //  char msg[256], gl_msg[256];
 
   if (!arg || !*arg) {
-    ch->sendTo("You want to butcher WHAT?!?\n\rWhere?!?...fill in the blank!!!\n\rDon't be lame and lazy and not supply an argument!!!\n\r");
+    ch->sendTo(
+      "You want to butcher WHAT?!?\n\rWhere?!?...fill in the blank!!!\n\rDon't "
+      "be lame and lazy and not supply an argument!!!\n\r");
     return;
   }
 
@@ -261,9 +265,10 @@ void TThing::butcherMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
-  if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
+
+  if (!(corpse = dynamic_cast<TBaseCorpse*>(obj))) {
+    ch->sendTo(COLOR_OBJECTS,
+      format("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
 
@@ -272,47 +277,46 @@ void TThing::butcherMe(TBeing *ch, const char *arg)
   if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
     act("$p: That corpse is actively being sacrificed!", false, ch, corpse,
       nullptr, TO_CHAR);
-      return;
+    return;
   }
 
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You aren't able to butcher that.",
-          FALSE, ch, corpse, 0, TO_CHAR);    return;
+    act("$p: You aren't able to butcher that.", FALSE, ch, corpse, 0, TO_CHAR);
+    return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_BUTCHER)) {
-    act("$p: It can't be butchered further.",
-          FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: It can't be butchered further.", FALSE, ch, corpse, 0, TO_CHAR);
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_PC_BUTCHERING)) {
-    act("$p: Someone else is already butchering this.",
-        FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: Someone else is already butchering this.", FALSE, ch, corpse, 0,
+      TO_CHAR);
     return;
   }
   corpse->addCorpseFlag(CORPSE_PC_BUTCHERING);
   if (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)) {
     act("$p: This has been partly butchered, only half the meat remains.",
-        FALSE, ch, corpse, 0, TO_CHAR);
+      FALSE, ch, corpse, 0, TO_CHAR);
   }
 
   ch->sendTo("You start butchering the corpse.\n\r");
   act("$n begins butchering a corpse.", FALSE, ch, NULL, 0, TO_ROOM);
 
-  num         = max(1, (int) (ch->getSkillValue(SKILL_BUTCHER)/25));
-  pulse = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)?2:1);
+  num = max(1, (int)(ch->getSkillValue(SKILL_BUTCHER) / 25));
+  pulse = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED) ? 2 : 1);
   int lev = ch->getSkillLevel(SKILL_BUTCHER);
-  pulse = 5+
-    min(max((int) (lev*2)+((ch->getSkillValue(SKILL_BUTCHER)-70)/10), 4),
-    (int) (((((corpse->getWeight()*.10)/2)/pulse)+1)/num));
+  pulse =
+    5 +
+    min(max((int)(lev * 2) + ((ch->getSkillValue(SKILL_BUTCHER) - 70) / 10), 4),
+      (int)(((((corpse->getWeight() * .10) / 2) / pulse) + 1) / num));
   start_task(ch, corpse, NULL, TASK_BUTCHER, "", pulse, ch->in_room, 1, 0, 40);
 }
 
-void TTool::butcherMe(TBeing *ch, const char *arg)
-{
-  TObj *obj;
-  TBaseCorpse *corpse;
-  TBeing *dummy;
+void TTool::butcherMe(TBeing* ch, const char* arg) {
+  TObj* obj;
+  TBaseCorpse* corpse;
+  TBeing* dummy;
   //  int amount, num, rnum, pulse;
   //  char msg[256], gl_msg[256];
   int pulse;
@@ -327,39 +331,40 @@ void TTool::butcherMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
-  if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
+
+  if (!(corpse = dynamic_cast<TBaseCorpse*>(obj))) {
+    ch->sendTo(COLOR_OBJECTS,
+      format("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You aren't able to butcher that.",
-          FALSE, ch, corpse, 0, TO_CHAR);    return;
+    act("$p: You aren't able to butcher that.", FALSE, ch, corpse, 0, TO_CHAR);
+    return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_BUTCHER)) {
-    act("$p: It can't be butchered further.",
-          FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: It can't be butchered further.", FALSE, ch, corpse, 0, TO_CHAR);
     return;
   }
 
   ch->sendTo("You start butchering a corpse.\n\r");
   act("$n begins butchering a corpse.", FALSE, ch, NULL, 0, TO_ROOM);
 
-  pulse = 20 + ((100 - max(0, (int) ch->getSkillValue(SKILL_BUTCHER))) * 4/3);
+  pulse = 20 + ((100 - max(0, (int)ch->getSkillValue(SKILL_BUTCHER))) * 4 / 3);
 
   start_task(ch, corpse, NULL, TASK_BUTCHER, "", pulse, ch->in_room, 1, 0, 40);
 }
 
-void bareHandButcherMe(TBeing *ch, const char *arg)
-{
-  TObj *obj;
-  TBaseCorpse *corpse;
-  TBeing *dummy;
+void bareHandButcherMe(TBeing* ch, const char* arg) {
+  TObj* obj;
+  TBaseCorpse* corpse;
+  TBeing* dummy;
   int num, pulse;
 
   if (!arg || !*arg) {
-    ch->sendTo("You want to butcher WHAT?!?\n\rWhere?!?...fill in the blank!!!\n\rDon't be lame and lazy and not supply an argument!!!\n\r");
+    ch->sendTo(
+      "You want to butcher WHAT?!?\n\rWhere?!?...fill in the blank!!!\n\rDon't "
+      "be lame and lazy and not supply an argument!!!\n\r");
     return;
   }
 
@@ -369,49 +374,50 @@ void bareHandButcherMe(TBeing *ch, const char *arg)
     return;
   }
   // Check to see if corpse is a corpse
-  
-  if (!(corpse = dynamic_cast<TBaseCorpse *>(obj))) {
-    ch->sendTo(COLOR_OBJECTS, format("You cannot butcher %s.\n\r") % obj->getName());
+
+  if (!(corpse = dynamic_cast<TBaseCorpse*>(obj))) {
+    ch->sendTo(COLOR_OBJECTS,
+      format("You cannot butcher %s.\n\r") % obj->getName());
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You aren't able to butcher that.",
-          FALSE, ch, corpse, 0, TO_CHAR);    return;
+    act("$p: You aren't able to butcher that.", FALSE, ch, corpse, 0, TO_CHAR);
+    return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_BUTCHER)) {
-    act("$p: It can't be butchered further.",
-          FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: It can't be butchered further.", FALSE, ch, corpse, 0, TO_CHAR);
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_PC_BUTCHERING)) {
-    act("$p: Someone else is already butchering this.",
-        FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: Someone else is already butchering this.", FALSE, ch, corpse, 0,
+      TO_CHAR);
     return;
   }
   corpse->addCorpseFlag(CORPSE_PC_BUTCHERING);
   if (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)) {
     act("$p: This has been partly butchered, only half the meat remains.",
-        FALSE, ch, corpse, 0, TO_CHAR);
+      FALSE, ch, corpse, 0, TO_CHAR);
   }
 
   ch->sendTo("You start butchering the corpse.\n\r");
   act("$n begins tearing at a corpse.", FALSE, ch, NULL, 0, TO_ROOM);
 
-  num         = max(1, (int) (ch->getSkillValue(SKILL_BUTCHER)/25));
-  pulse = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED)?2:1);
+  num = max(1, (int)(ch->getSkillValue(SKILL_BUTCHER) / 25));
+  pulse = (corpse->isCorpseFlag(CORPSE_HALF_BUTCHERED) ? 2 : 1);
   int lev = ch->getSkillLevel(SKILL_BUTCHER);
-  pulse = 5+
-    min(max((int) (lev*2)+((ch->getSkillValue(SKILL_BUTCHER)-70)/10), 4),
-    (int) (((((corpse->getWeight()*.10)/2)/pulse)+1)/num));
+  pulse =
+    5 +
+    min(max((int)(lev * 2) + ((ch->getSkillValue(SKILL_BUTCHER) - 70) / 10), 4),
+      (int)(((((corpse->getWeight() * .10) / 2) / pulse) + 1) / num));
   start_task(ch, corpse, NULL, TASK_BUTCHER, "", pulse, ch->in_room, 1, 0, 40);
 }
 
-void TBeing::doButcher(const char *arg)
-{
-  TThing *tobj;
+void TBeing::doButcher(const char* arg) {
+  TThing* tobj;
 
-  for (; isspace(*arg); arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
   if (!doesKnowSkill(SKILL_BUTCHER)) {
     sendTo("You have no clue about butchering.\n\r");
@@ -424,10 +430,12 @@ void TBeing::doButcher(const char *arg)
     bareHandButcherMe(this, arg);
     return;
   } else if (!tobj || (!tobj->isPierceWeapon() && !tobj->isSlashWeapon())) {
-    sendTo("You must be holding a slash or pierce weapon to perform this task.\n\r");
+    sendTo(
+      "You must be holding a slash or pierce weapon to perform this task.\n\r");
     return;
   } else if (tobj->getVolume() > 6000) {
-    sendTo("I'm afraid that weapon is a bit too big and clumsy to do the job.\n\r");
+    sendTo(
+      "I'm afraid that weapon is a bit too big and clumsy to do the job.\n\r");
     return;
   }
   tobj->butcherMe(this, arg);

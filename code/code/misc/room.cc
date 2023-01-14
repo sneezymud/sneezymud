@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 // room.cc
 
 #include "room.h"
@@ -13,8 +12,7 @@
 #include "monster.h"
 #include "weather.h"
 
-bool TRoom::isCitySector() const
-{
+bool TRoom::isCitySector() const {
   switch (getSectorType()) {
     case SECT_TROPICAL_CITY:
     case SECT_TEMPERATE_CITY:
@@ -25,8 +23,7 @@ bool TRoom::isCitySector() const
   }
 }
 
-bool TRoom::isFlyingSector() const
-{
+bool TRoom::isFlyingSector() const {
   switch (getSectorType()) {
     case SECT_MAKE_FLY:
       return TRUE;
@@ -51,8 +48,7 @@ bool TRoom::isRoadSector() const
   }
 }
 
-bool TRoom::isVertSector() const
-{
+bool TRoom::isVertSector() const {
   switch (getSectorType()) {
     case SECT_TROPICAL_CLIMBING:
     case SECT_TEMPERATE_CLIMBING:
@@ -63,8 +59,7 @@ bool TRoom::isVertSector() const
   }
 }
 
-bool TRoom::isUnderwaterSector() const
-{
+bool TRoom::isUnderwaterSector() const {
   switch (getSectorType()) {
     case SECT_TROPICAL_UNDERWATER:
     case SECT_TEMPERATE_UNDERWATER:
@@ -74,8 +69,7 @@ bool TRoom::isUnderwaterSector() const
   }
 }
 
-bool TRoom::isNatureSector() const
-{
+bool TRoom::isNatureSector() const {
   switch (getSectorType()) {
     case SECT_GRASSLANDS:
     case SECT_PLAINS:
@@ -89,15 +83,14 @@ bool TRoom::isNatureSector() const
     case SECT_ARCTIC_FOREST:
     case SECT_ARCTIC_FOREST_ROAD:
     case SECT_RAINFOREST_ROAD:
-    case SECT_DESERT: // adding desert
+    case SECT_DESERT:  // adding desert
       return TRUE;
     default:
       return FALSE;
   }
 }
 
-bool TRoom::isSwampSector() const
-{
+bool TRoom::isSwampSector() const {
   switch (getSectorType()) {
     case SECT_ARCTIC_MARSH:
     case SECT_TEMPERATE_SWAMP:
@@ -108,8 +101,7 @@ bool TRoom::isSwampSector() const
   }
 }
 
-bool TRoom::isBeachSector() const
-{
+bool TRoom::isBeachSector() const {
   switch (getSectorType()) {
     case SECT_COLD_BEACH:
     case SECT_TEMPERATE_BEACH:
@@ -120,8 +112,7 @@ bool TRoom::isBeachSector() const
   }
 }
 
-bool TRoom::isHillSector() const
-{
+bool TRoom::isHillSector() const {
   switch (getSectorType()) {
     case SECT_ARCTIC_WASTE:
     case SECT_TEMPERATE_HILLS:
@@ -132,8 +123,7 @@ bool TRoom::isHillSector() const
   }
 }
 
-bool TRoom::isMountainSector() const
-{
+bool TRoom::isMountainSector() const {
   switch (getSectorType()) {
     case SECT_ARCTIC_MOUNTAINS:
     case SECT_TEMPERATE_MOUNTAINS:
@@ -145,8 +135,7 @@ bool TRoom::isMountainSector() const
   }
 }
 
-bool TRoom::isForestSector() const
-{
+bool TRoom::isForestSector() const {
   switch (getSectorType()) {
     case SECT_JUNGLE:
     case SECT_RAINFOREST:
@@ -162,8 +151,7 @@ bool TRoom::isForestSector() const
   }
 }
 
-bool TRoom::isAirSector() const
-{
+bool TRoom::isAirSector() const {
   switch (getSectorType()) {
     case SECT_TROPICAL_ATMOSPHERE:
     case SECT_TEMPERATE_ATMOSPHERE:
@@ -175,8 +163,7 @@ bool TRoom::isAirSector() const
   }
 }
 
-bool TRoom::isOceanSector() const
-{
+bool TRoom::isOceanSector() const {
   switch (getSectorType()) {
     case SECT_TROPICAL_OCEAN:
     case SECT_TEMPERATE_OCEAN:
@@ -187,8 +174,7 @@ bool TRoom::isOceanSector() const
   }
 }
 
-bool TRoom::isRiverSector() const
-{
+bool TRoom::isRiverSector() const {
   switch (getSectorType()) {
     case SECT_TROPICAL_RIVER_SURFACE:
     case SECT_TEMPERATE_RIVER_SURFACE:
@@ -199,8 +185,7 @@ bool TRoom::isRiverSector() const
   }
 }
 
-bool TRoom::isIndoorSector() const
-{
+bool TRoom::isIndoorSector() const {
   switch (getSectorType()) {
     case SECT_TEMPERATE_BUILDING:
     case SECT_TEMPERATE_CAVE:
@@ -214,80 +199,72 @@ bool TRoom::isIndoorSector() const
   }
 }
 
-bool TRoom::isArcticSector() const
-{
-  return (getSectorType() >= SECT_SUBARCTIC &&
-          getSectorType() < SECT_PLAINS);
+bool TRoom::isArcticSector() const {
+  return (getSectorType() >= SECT_SUBARCTIC && getSectorType() < SECT_PLAINS);
 }
 
-bool TRoom::isTropicalSector() const
-{
+bool TRoom::isTropicalSector() const {
   // changing this from getSectorType() >= SECT_DESERT
   // will probably mess something up but really... desert = tropical?
   // also killing getSectorType() == SECT_FIRE and SECT_FIRE_ATMOSPHERE
-  return (getSectorType() >= SECT_TROPICAL_CITY && getSectorType() < SECT_ASTRAL_ETHREAL);
+  return (getSectorType() >= SECT_TROPICAL_CITY &&
+          getSectorType() < SECT_ASTRAL_ETHREAL);
 }
 
-bool TRoom::isWierdSector() const
-{
+bool TRoom::isWierdSector() const {
   return (getSectorType() == SECT_SOLID_ICE || getSectorType() >= 60);
 }
 
-bool TRoom::isFallSector() const
-{
+bool TRoom::isFallSector() const {
   return (isAirSector() || isVertSector() || isFlyingSector());
 }
 
-bool TRoom::isWaterSector() const
-{
+bool TRoom::isWaterSector() const {
   return (isRiverSector() || isOceanSector());
 }
 
-bool TRoom::isWildernessSector() const
-{
-  return (!isIndoorSector() && !isRoadSector() && !isCitySector() && !isWierdSector());
+bool TRoom::isWildernessSector() const {
+  return (!isIndoorSector() && !isRoadSector() && !isCitySector() &&
+          !isWierdSector());
 }
 
-bool TRoom::notRangerLandSector() const
-{
-  return (isCitySector() || isRoadSector() || isFallSector() || isUnderwaterSector() || isWaterSector() || isIndoorSector());
+bool TRoom::notRangerLandSector() const {
+  return (isCitySector() || isRoadSector() || isFallSector() ||
+          isUnderwaterSector() || isWaterSector() || isIndoorSector());
 }
 
-roomDirData * TRoom::exitDir(dirTypeT door) const
-{
+roomDirData* TRoom::exitDir(dirTypeT door) const {
   // door>=MAX_DIR would mean a portal, sometimes we pass this by accident
-  if(door >= MAX_DIR || door <0)
+  if (door >= MAX_DIR || door < 0)
     return NULL;
 
   return (dir_option[door]);
 }
 
-roomDirData * TBeing::exitDir(dirTypeT door) const
-{
-  return (roomp?roomp->exitDir(door):NULL);
+roomDirData* TBeing::exitDir(dirTypeT door) const {
+  return (roomp ? roomp->exitDir(door) : NULL);
 }
 
-roomDirData * TObj::exitDir(dirTypeT door) const
-{
-  return (roomp?roomp->exitDir(door):NULL);
+roomDirData* TObj::exitDir(dirTypeT door) const {
+  return (roomp ? roomp->exitDir(door) : NULL);
 }
 
-void room_iterate(TRoom *[], void (*func) (int, TRoom *, sstring &, struct show_room_zone_struct *), sstring &sbdata, void *srzdata)
-{
+void room_iterate(TRoom*[],
+  void (*func)(int, TRoom*, sstring&, struct show_room_zone_struct*),
+  sstring& sbdata, void* srzdata) {
   int i;
   for (i = 0; i < WORLD_SIZE; i++) {
-    TRoom *temp = real_roomp(i);
+    TRoom* temp = real_roomp(i);
 
     if (temp)
-      (*func) (i, temp, sbdata, (struct show_room_zone_struct *) srzdata);
+      (*func)(i, temp, sbdata, (struct show_room_zone_struct*)srzdata);
   }
 }
 
 // returns the wintery equivalent of the current sector, if there is one
-sectorTypeT TRoom::getArcticSectorType() const
-{
+sectorTypeT TRoom::getArcticSectorType() const {
   // don't use getSectorType() here, or you'll get into a loop
-  switch(getSectorType()){
+  switch (getSectorType()) {
     case SECT_PLAINS:
       return SECT_SUBARCTIC;
     case SECT_TEMPERATE_CITY:
@@ -326,8 +303,7 @@ sectorTypeT TRoom::getArcticSectorType() const
   }
 }
 
-sectorTypeT TRoom::getSectorType() const
-{
+sectorTypeT TRoom::getSectorType() const {
   // it would be nice if this was non-const, and we could just call
   // some function like "makeRiver()", so we could get tropical/arctic
   // rivers and so on.  we'll have to settle for this for now.
@@ -335,62 +311,44 @@ sectorTypeT TRoom::getSectorType() const
   // this is a really, really stupid kluge to avoid getting into a loop,
   // as getWeather() calls getSectorType().  this is a way of making that
   // getWeather() call (and any sub-calls) to ignore this code.
-  static bool looped=false;
-  if(!looped){
-    looped=true;
-    if(Weather::getWeather(*this) == Weather::SNOWY){
-      sectorTypeT sec=getArcticSectorType();
-      looped=false;
+  static bool looped = false;
+  if (!looped) {
+    looped = true;
+    if (Weather::getWeather(*this) == Weather::SNOWY) {
+      sectorTypeT sec = getArcticSectorType();
+      looped = false;
       return sec;
     }
-    looped=false;
+    looped = false;
   }
 
-  if((roomFlags & ROOM_FLOODED) != 0)
+  if ((roomFlags & ROOM_FLOODED) != 0)
     return SECT_TEMPERATE_RIVER_SURFACE;
 
-  if((roomFlags & ROOM_ON_FIRE) != 0){
-    if(sectorType==SECT_TROPICAL_ATMOSPHERE ||
-       sectorType==SECT_TEMPERATE_ATMOSPHERE ||
-       sectorType==SECT_ARCTIC_ATMOSPHERE ||
-       sectorType==SECT_FIRE_ATMOSPHERE)
+  if ((roomFlags & ROOM_ON_FIRE) != 0) {
+    if (sectorType == SECT_TROPICAL_ATMOSPHERE ||
+        sectorType == SECT_TEMPERATE_ATMOSPHERE ||
+        sectorType == SECT_ARCTIC_ATMOSPHERE ||
+        sectorType == SECT_FIRE_ATMOSPHERE)
       return SECT_FIRE_ATMOSPHERE;
     else
       return SECT_FIRE;
   }
 
-
   return sectorType;
 }
 
-void TRoom::setSectorType(sectorTypeT type)
-{
-  sectorType = type;
-}
+void TRoom::setSectorType(sectorTypeT type) { sectorType = type; }
 
-dirTypeT TRoom::getRiverDir() const
-{
-  return riverDir;
-}
+dirTypeT TRoom::getRiverDir() const { return riverDir; }
 
-short TRoom::getRiverSpeed() const
-{
-  return riverSpeed;
-}
+short TRoom::getRiverSpeed() const { return riverSpeed; }
 
-void TRoom::setDescr(sstring const& tDescription)
-{
-  descr = tDescription;
-}
+void TRoom::setDescr(const sstring& tDescription) { descr = tDescription; }
 
+const sstring& TRoom::getDescr() { return descr; }
 
-sstring const& TRoom::getDescr()
-{
-  return descr;
-}
-
-bool TRoom::putInDb(int vnum)
-{
+bool TRoom::putInDb(int vnum) {
   if (real_roomp(vnum))
     return FALSE;
 
@@ -398,11 +356,10 @@ bool TRoom::putInDb(int vnum)
   return TRUE;
 }
 
-int TRoom::chiMe(TBeing *tLunatic)
-{
-  TBeing *tSucker;
-  int     tRc = 0;
-  TThing *tThing;
+int TRoom::chiMe(TBeing* tLunatic) {
+  TBeing* tSucker;
+  int tRc = 0;
+  TThing* tThing;
 
   if (tLunatic->getSkillValue(SKILL_CHI) < 100 ||
       tLunatic->getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {
@@ -410,18 +367,21 @@ int TRoom::chiMe(TBeing *tLunatic)
     return FALSE;
   }
 
-  if (tLunatic->checkPeaceful("You feel too peaceful to contemplate violence here.\n\r"))
+  if (tLunatic->checkPeaceful(
+        "You feel too peaceful to contemplate violence here.\n\r"))
     return FALSE;
 
-  act("You focus your <c>mind<z> and unleash a <r>blast of chi<z> upon your foes!",
-      FALSE, tLunatic, NULL, NULL, TO_CHAR);
+  act(
+    "You focus your <c>mind<z> and unleash a <r>blast of chi<z> upon your "
+    "foes!",
+    FALSE, tLunatic, NULL, NULL, TO_CHAR);
   act("$n suddenly <r>radiates with power<z> and brings harm to $s enemies!",
-      TRUE, tLunatic, NULL, NULL, TO_ROOM);
+    TRUE, tLunatic, NULL, NULL, TO_ROOM);
 
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    tThing=*(it++);
+  for (StuffIter it = stuff.begin(); it != stuff.end();) {
+    tThing = *(it++);
 
-    if (!(tSucker = dynamic_cast<TBeing *>(tThing)) || tSucker == tLunatic)
+    if (!(tSucker = dynamic_cast<TBeing*>(tThing)) || tSucker == tLunatic)
       continue;
 
     tRc = tSucker->chiMe(tLunatic);
@@ -443,10 +403,9 @@ int TRoom::chiMe(TBeing *tLunatic)
   return true;
 }
 
-void TRoom::operator << (TThing &tThing)
-{
+void TRoom::operator<<(TThing& tThing) {
   // assign birthRoom
-  TMonster * tmon = dynamic_cast<TMonster *>(&tThing);
+  TMonster* tmon = dynamic_cast<TMonster*>(&tThing);
   if (tmon)
     tmon->brtRoom = this->number;
 
@@ -456,12 +415,14 @@ void TRoom::operator << (TThing &tThing)
     return;
   }
 
-  TThing *tList;
+  TThing* tList;
 
   // creates forward-linked list
   for (tList = tBornInsideMe; tList->nextBorn; tList = tList->nextBorn) {
     if (&tThing == tList) {
-      vlogf(LOG_BUG, format("Mob already in born list being added again. [%s]") %  tThing.getName());
+      vlogf(LOG_BUG,
+        format("Mob already in born list being added again. [%s]") %
+          tThing.getName());
       return;
     }
   }
@@ -470,9 +431,8 @@ void TRoom::operator << (TThing &tThing)
   tThing.nextBorn = NULL;
 }
 
-bool TRoom::operator |= (const TThing &tThing)
-{
-  TThing *tList;
+bool TRoom::operator|=(const TThing& tThing) {
+  TThing* tList;
 
   for (tList = tBornInsideMe; tList; tList = tList->nextBorn)
     if (tList == &tThing)
@@ -481,17 +441,15 @@ bool TRoom::operator |= (const TThing &tThing)
   return false;
 }
 
-void TRoom::operator >> (const TThing &tThing)
-{
-  TThing *tList,
-         *tLast = NULL;
+void TRoom::operator>>(const TThing& tThing) {
+  TThing *tList, *tLast = NULL;
 
   for (tList = tBornInsideMe; tList; tList = tList->nextBorn) {
     if (&tThing == tList) {
       if (tLast)
         tLast->nextBorn = tList->nextBorn;
       else
-	tBornInsideMe = tList->nextBorn;
+        tBornInsideMe = tList->nextBorn;
 
       tList->nextBorn = NULL;
 
@@ -501,17 +459,17 @@ void TRoom::operator >> (const TThing &tThing)
     tLast = tList;
   }
 
-  vlogf(LOG_BUG, format("Attempt to remove mob from born list that isn't in born list! [%s]") %  tThing.getName());
+  vlogf(LOG_BUG,
+    format(
+      "Attempt to remove mob from born list that isn't in born list! [%s]") %
+      tThing.getName());
 }
 
-
-int TRoom::getLight()
-{
+int TRoom::getLight() {
   return ((isRoomFlag(ROOM_ALWAYS_LIT)) ? 18 : TThing::getLight());
-
 }
 
-TThing* TRoom::findInRoom(const std::function<bool(TThing*)> &predicate) {
+TThing* TRoom::findInRoom(const std::function<bool(TThing*)>& predicate) {
   auto found = std::find_if(stuff.begin(), stuff.end(), predicate);
   return found != stuff.end() ? *found : nullptr;
 }

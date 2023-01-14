@@ -6,7 +6,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "being.h"
 #include "low.h"
 #include "extern.h"
@@ -22,32 +21,29 @@ charList::charList() :
   iHateStrength(0),
   account_id(0),
   player_id(0),
-  next(NULL)
-{
-}
+  next(NULL) {}
 
-charList::charList(const charList &a)
-{
+charList::charList(const charList& a) {
   name = mud_str_dup(a.name);
   iHateStrength = a.iHateStrength;
   account_id = a.account_id;
   player_id = a.player_id;
-  
+
   if (a.next)
     next = new charList(*a.next);
   else
     next = NULL;
 }
 
-charList & charList::operator=(const charList &a)
-{
-  if (this == &a) return *this;
+charList& charList::operator=(const charList& a) {
+  if (this == &a)
+    return *this;
 
   name = mud_str_dup(a.name);
   iHateStrength = a.iHateStrength;
   account_id = a.account_id;
   player_id = a.player_id;
-  
+
   charList *c, *n;
   for (c = next; c; c = n) {
     n = c->next;
@@ -60,9 +56,8 @@ charList & charList::operator=(const charList &a)
   return *this;
 }
 
-charList::~charList()
-{
-  delete [] name;
+charList::~charList() {
+  delete[] name;
   name = NULL;
 }
 
@@ -71,25 +66,22 @@ opinionData::opinionData() :
   sex(SEX_NEUTER),
   race(RACE_NORACE),
   Class(0),
-  vnum(0)
-{
-}
+  vnum(0) {}
 
-opinionData::opinionData(const opinionData &a) :
+opinionData::opinionData(const opinionData& a) :
   sex(a.sex),
   race(a.race),
   Class(a.Class),
-  vnum(a.vnum)
-{
+  vnum(a.vnum) {
   if (a.clist)
     clist = new charList(*a.clist);
   else
     clist = NULL;
 }
 
-opinionData & opinionData::operator=(const opinionData &a)
-{
-  if (this == &a) return *this;
+opinionData& opinionData::operator=(const opinionData& a) {
+  if (this == &a)
+    return *this;
   sex = a.sex;
   race = a.race;
   Class = a.Class;
@@ -103,8 +95,7 @@ opinionData & opinionData::operator=(const opinionData &a)
 }
 
 // warning: you must remember to manually delete opinionData::next in a loop
-opinionData::~opinionData()
-{
+opinionData::~opinionData() {
   delete clist;
   clist = NULL;
 }
@@ -120,28 +111,24 @@ Mobile_Attitude::Mobile_Attitude() :
   def_anger(0),
   target(NULL),
   random(NULL),
-  last_cmd(-1)
-{
-}
+  last_cmd(-1) {}
 
-Mobile_Attitude::Mobile_Attitude(const Mobile_Attitude &a)
-  : suspicion(a.suspicion),
-    greed(a.greed),
-    malice(a.malice),
-    anger(a.anger),
-    def_suspicion(a.def_suspicion),
-    def_greed(a.def_greed),
-    def_malice(a.def_malice),
-    def_anger(a.def_anger),
-    target(a.target),
-    random(a.random),
-    last_cmd(a.last_cmd)
-{
-}
+Mobile_Attitude::Mobile_Attitude(const Mobile_Attitude& a) :
+  suspicion(a.suspicion),
+  greed(a.greed),
+  malice(a.malice),
+  anger(a.anger),
+  def_suspicion(a.def_suspicion),
+  def_greed(a.def_greed),
+  def_malice(a.def_malice),
+  def_anger(a.def_anger),
+  target(a.target),
+  random(a.random),
+  last_cmd(a.last_cmd) {}
 
-Mobile_Attitude & Mobile_Attitude::operator=(const Mobile_Attitude &a)
-{
-  if (this == &a) return *this;
+Mobile_Attitude& Mobile_Attitude::operator=(const Mobile_Attitude& a) {
+  if (this == &a)
+    return *this;
   suspicion = a.suspicion;
   greed = a.greed;
   malice = a.malice;
@@ -156,9 +143,7 @@ Mobile_Attitude & Mobile_Attitude::operator=(const Mobile_Attitude &a)
   return *this;
 }
 
-Mobile_Attitude::~Mobile_Attitude()
-{
-}
+Mobile_Attitude::~Mobile_Attitude() {}
 
 TMonster::TMonster() :
   TBeing(),
@@ -166,7 +151,7 @@ TMonster::TMonster() :
   opinion(),
   hates(),
   fears(),
-  persist(0), 
+  persist(0),
   oldRoom(Room::NOWHERE),
   brtRoom(Room::NOWHERE),
   hatefield(0),
@@ -179,16 +164,14 @@ TMonster::TMonster() :
   damPrecision(0),
   acLevel(0.0),
   stolenFrom(false),
-  default_pos(POSITION_STANDING)
-{
-}
+  default_pos(POSITION_STANDING) {}
 
-TMonster::TMonster(const TMonster &a) :
+TMonster::TMonster(const TMonster& a) :
   TBeing(a),
   opinion(a.opinion),
   hates(a.hates),
   fears(a.fears),
-  persist(a.persist), 
+  persist(a.persist),
   oldRoom(a.oldRoom),
   brtRoom(a.brtRoom),
   hatefield(a.hatefield),
@@ -199,8 +182,7 @@ TMonster::TMonster(const TMonster &a) :
   damPrecision(a.damPrecision),
   acLevel(a.acLevel),
   stolenFrom(a.stolenFrom),
-  default_pos(a.default_pos)
-{
+  default_pos(a.default_pos) {
   if (a.resps)
     resps = new Responses(*a.resps);
   else
@@ -214,9 +196,9 @@ TThing::TThingKind TMonster::getKind() const {
   return TThing::TThingKind::TMonster;
 }
 
-TMonster & TMonster::operator=(const TMonster &a)
-{
-  if (this == &a) return *this;
+TMonster& TMonster::operator=(const TMonster& a) {
+  if (this == &a)
+    return *this;
   TBeing::operator=(a);
 
   if (a.resps)
@@ -246,8 +228,7 @@ TMonster & TMonster::operator=(const TMonster &a)
   return *this;
 }
 
-TMonster::~TMonster()
-{
+TMonster::~TMonster() {
   charList *k2 = NULL, *n2 = NULL;
 
   if (number >= 0) {
@@ -306,7 +287,7 @@ TMonster::~TMonster()
 
   // if we are using shared sstrings, reallocate them so ~TThing can purge
   // safely
-  if (!IS_SET(specials.act,ACT_STRINGS_CHANGED)) {
+  if (!IS_SET(specials.act, ACT_STRINGS_CHANGED)) {
     player.longDescr = getLongDesc();
 
     if (ex_description)
@@ -316,35 +297,29 @@ TMonster::~TMonster()
   }
   mobCount--;
 
-  TRoom *tRoom;
+  TRoom* tRoom;
 
   if (brtRoom == Room::NOWHERE)
-    ; // Do nothing.  This triggers on immortal loaded mobs so is cool.
+    ;  // Do nothing.  This triggers on immortal loaded mobs so is cool.
   else if (!(tRoom = real_roomp(brtRoom)))
-    vlogf(LOG_BUG, format("Mobile being destroyed with empty birth room! [%s][%i]") %  getName() % brtRoom);
+    vlogf(LOG_BUG,
+      format("Mobile being destroyed with empty birth room! [%s][%i]") %
+        getName() % brtRoom);
   else
     *tRoom >> *this;
 }
 
-unsigned int TMonster::getTimer() const
-{
-  return 0;
-}
+unsigned int TMonster::getTimer() const { return 0; }
 
-void TMonster::setTimer(unsigned int)
-{
-}
+void TMonster::setTimer(unsigned int) {}
 
-void TMonster::addToTimer(unsigned int)
-{
-}
+void TMonster::addToTimer(unsigned int) {}
 
-void TMonster::swapToStrung()
-{
+void TMonster::swapToStrung() {
   if (specials.act & ACT_STRINGS_CHANGED)
     return;
 
-  // Set flags saying editted and point all sstrings to new stuff - Russ 
+  // Set flags saying editted and point all sstrings to new stuff - Russ
   specials.act |= ACT_STRINGS_CHANGED;
   name = mob_index[getMobIndex()].name;
   shortDescr = mob_index[getMobIndex()].short_desc;
@@ -353,43 +328,48 @@ void TMonster::swapToStrung()
 }
 
 // returns the amount of money we're expeted to load with
-double TMonster::getLoadMoney() const
-{
+double TMonster::getLoadMoney() const {
   double rlev = getRealLevel();
 
   // our balance assumptions is that "typical" mob has 1.5 * L^2 gold
   // presume that moneyConst=2 of typical
-  double the_gold = rlev * max(20.0,rlev) * moneyConst * 7.5 / 10;
+  double the_gold = rlev * max(20.0, rlev) * moneyConst * 7.5 / 10;
 
   // adjust for global gold modifier...
-  int CENTRAL_BANK=123;
+  int CENTRAL_BANK = 123;
   the_gold *= shop_index[CENTRAL_BANK].getProfitSell(NULL, NULL);
   //  the_gold *= gold_modifier[GOLD_INCOME].getVal();
   return the_gold;
 }
 
 // called at load/generate time to set this mobs money
-int TMonster::calculateGoldFromConstant()
-{
+int TMonster::calculateGoldFromConstant() {
   double the_gold = getLoadMoney();
 
   if (isShopkeeper()) {
     unsigned int shop_nr;
 
-    for (shop_nr = 0; (shop_nr < shop_index.size()) && (shop_index[shop_nr].keeper != this->number); shop_nr++);
-    
+    for (shop_nr = 0; (shop_nr < shop_index.size()) &&
+                      (shop_index[shop_nr].keeper != this->number);
+         shop_nr++)
+      ;
+
     if (shop_nr >= shop_index.size()) {
-      vlogf(LOG_BUG, format("Warning... shop # for mobile %d (real nr) not found.") %  mob_index[this->number].virt);
+      vlogf(LOG_BUG,
+        format("Warning... shop # for mobile %d (real nr) not found.") %
+          mob_index[this->number].virt);
       return FALSE;
     }
 
     TDatabase db(DB_SNEEZY);
     db.query("select gold from shopowned where shop_nr=%i", shop_nr);
-    
+
     if (db.fetchRow()) {
       the_gold = convertTo<int>(db["gold"]);
       if (the_gold < 0) {
-        vlogf(LOG_BUG, format("TMonster::calculateGoldFromConstant %i < 0 for %i, clamping") %
+        vlogf(LOG_BUG,
+          format(
+            "TMonster::calculateGoldFromConstant %i < 0 for %i, clamping") %
             the_gold % shop_nr);
         the_gold = 0;
       }
@@ -398,56 +378,56 @@ int TMonster::calculateGoldFromConstant()
     }
   }
 
-  setMoney((int) the_gold);
+  setMoney((int)the_gold);
   return FALSE;
 }
 
-bool TMonster::isTestmob() const
-{
+bool TMonster::isTestmob() const {
   unsigned int vn = mobVnum();
   if (vn < 1700 || vn > 1750)
     return false;
   return true;
 }
 
-void TMonster::setACFromACLevel()
-{
+void TMonster::setACFromACLevel() {
   // this is based on the balance doctrine
   // AC should be 600 - 20*level
   //  short num = (short) (20 * getACLevel());
   //  setArmor(600 - num);
 }
 
-void TMonster::setHPFromHPLevel()
-{
+void TMonster::setHPFromHPLevel() {
   // this is based on the balance doctrine
   int amt;
 
   // testmobs and MED mobs should really not fluxuate if at all possible
   if (!isTestmob() && number >= 0)
-    amt = dice((int) getHPLevel(), 8);
+    amt = dice((int)getHPLevel(), 8);
   else
-    amt = (int) (4.5 * getHPLevel());
+    amt = (int)(4.5 * getHPLevel());
 
   // boost for everyone
-  amt += (int) (11 * getHPLevel());
+  amt += (int)(11 * getHPLevel());
   // extra boost for mobs above level 70
-  if(getHPLevel()>70)
-    amt += (int) ( 11 * getHPLevel()  * 
-      (getHPLevel()-70) * (getHPLevel() - 70) / 150 );
+  if (getHPLevel() > 70)
+    amt += (int)(11 * getHPLevel() * (getHPLevel() - 70) * (getHPLevel() - 70) /
+                 150);
 
   // balance stuff:
   // HP for mobs should roughly balance with damage for PCs
   // PC damage (melee) goes up linearly, but between L25 and L35 number
   // of hits doubles (specialize)
   // we need to account for this
-  amt = (int) (amt * balanceCorrectionForLevel(getHPLevel()));
+  amt = (int)(amt * balanceCorrectionForLevel(getHPLevel()));
 
-  double sanct_modifier = (100.0 / (100.0 - min(99.0, (double) getProtection())));
-  amt = (int) (amt / sanct_modifier);
+  double sanct_modifier =
+    (100.0 / (100.0 - min(99.0, (double)getProtection())));
+  amt = (int)(amt / sanct_modifier);
 
   if (amt >= 32768) {
-    vlogf(LOG_DASH, format("mob %s had hp overflow problem with %d hp, capping at 32767.") %  getName() % amt);
+    vlogf(LOG_DASH,
+      format("mob %s had hp overflow problem with %d hp, capping at 32767.") %
+        getName() % amt);
     amt = 32767;
   }
 
@@ -455,48 +435,23 @@ void TMonster::setHPFromHPLevel()
   setHit(hitLimit());
 }
 
-float TMonster::getACLevel() const
-{
-  return acLevel;
-}
+float TMonster::getACLevel() const { return acLevel; }
 
-void TMonster::setACLevel(float n)
-{
-  acLevel = n;
-}
+void TMonster::setACLevel(float n) { acLevel = n; }
 
-float TMonster::getHPLevel() const
-{
-  return hpLevel;
-}
+float TMonster::getHPLevel() const { return hpLevel; }
 
-void TMonster::setHPLevel(float n)
-{
-  hpLevel = n;
-}
+void TMonster::setHPLevel(float n) { hpLevel = n; }
 
-float TMonster::getDamLevel() const
-{
-  return damLevel;
-}
+float TMonster::getDamLevel() const { return damLevel; }
 
-void TMonster::setDamLevel(float n)
-{
-  damLevel = n;
-}
+void TMonster::setDamLevel(float n) { damLevel = n; }
 
-unsigned short TMonster::getDamPrecision() const
-{
-  return damPrecision;
-}
+unsigned short TMonster::getDamPrecision() const { return damPrecision; }
 
-void TMonster::setDamPrecision(unsigned short n)
-{
-  damPrecision = n;
-}
+void TMonster::setDamPrecision(unsigned short n) { damPrecision = n; }
 
-int TMonster::getMobDamage() const
-{
+int TMonster::getMobDamage() const {
   // this function is based on the balance doctrine
   // we want mob damage to be 0.909 * lev per round
   double dam_rnd = getDamLevel() / 1.1;
@@ -504,9 +459,9 @@ int TMonster::getMobDamage() const
   // account for number of hits
   dam_rnd /= getMult();
 
-  int idamrnd = max(1, (int) dam_rnd);
+  int idamrnd = max(1, (int)dam_rnd);
 
-  int randomizer_max = (int) (idamrnd * getDamPrecision() / 100);
+  int randomizer_max = (int)(idamrnd * getDamPrecision() / 100);
   int randomizer_amt = ::number(-randomizer_max, randomizer_max);
 
   idamrnd += randomizer_amt;
@@ -517,8 +472,8 @@ int TMonster::lookForEngaged() {
   if (isPc() || attackers > 0)
     return false;
 
-  auto isEngagedOpponent = [this](TThing *thingInRoom) {
-    auto *thingAsTBeing = dynamic_cast<TBeing *>(thingInRoom);
+  auto isEngagedOpponent = [this](TThing* thingInRoom) {
+    auto* thingAsTBeing = dynamic_cast<TBeing*>(thingInRoom);
     return thingAsTBeing && thingAsTBeing->fight() == this;
   };
 
@@ -542,15 +497,14 @@ int TMonster::lookForEngaged() {
 }
 
 bool TMonster::isShopkeeper() const {
-  if(spec==SPEC_SHOPKEEPER || spec==SPEC_REPAIRMAN ||
-     spec==SPEC_LOAN_SHARK || spec==SPEC_BANKER ||
-     spec==SPEC_DOCTOR     || spec==SPEC_DIVMAN ||
-     spec==SPEC_ATTUNER    || spec==SPEC_ENGRAVER ||
-     spec==SPEC_SHARPENER  || spec==SPEC_POSTMASTER ||
-     spec==SPEC_PET_KEEPER || spec==SPEC_TAXMAN ||
-     spec==SPEC_SIGNMAKER  || spec==SPEC_RECEPTIONIST ||
-     spec==SPEC_AUCTIONEER || spec==SPEC_CENTRAL_BANKER ||
-     spec==SPEC_COMMOD_MAKER || spec==SPEC_BUTLER)
+  if (spec == SPEC_SHOPKEEPER || spec == SPEC_REPAIRMAN ||
+      spec == SPEC_LOAN_SHARK || spec == SPEC_BANKER || spec == SPEC_DOCTOR ||
+      spec == SPEC_DIVMAN || spec == SPEC_ATTUNER || spec == SPEC_ENGRAVER ||
+      spec == SPEC_SHARPENER || spec == SPEC_POSTMASTER ||
+      spec == SPEC_PET_KEEPER || spec == SPEC_TAXMAN ||
+      spec == SPEC_SIGNMAKER || spec == SPEC_RECEPTIONIST ||
+      spec == SPEC_AUCTIONEER || spec == SPEC_CENTRAL_BANKER ||
+      spec == SPEC_COMMOD_MAKER || spec == SPEC_BUTLER)
     return true;
 
   return false;

@@ -29,7 +29,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the WARRIOR discipline.
@@ -37,30 +36,29 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDWarrior : public CDiscipline
-{
-public:
-// Level 2
+class CDWarrior : public CDiscipline {
+  public:
+    // Level 2
     CSkill skSlam;
-//Level 10
+    // Level 10
     CSkill skBash;
     CSkill skFocusAttack;
 
-//Level 15
+    // Level 15
     CSkill skRescue;
 
-//Level 20
+    // Level 20
     CSkill skBlacksmithing;
     CSkill skDisarm;
-//Level 25
+    // Level 25
     CSkill skBerserk;
     CSkill skSwitch;
     CSkill skBloodlust;
     CSkill skWhirlwind;
     CSkill skRally;
 
-    CDWarrior()
-      : CDiscipline(),
+    CDWarrior() :
+      CDiscipline(),
       skSlam(),
       skBash(),
       skFocusAttack(),
@@ -70,11 +68,10 @@ public:
       skBerserk(),
       skSwitch(),
       skBloodlust(),
-      skWhirlwind(),	
-      skRally()	{
-    }
-    CDWarrior(const CDWarrior &a)
-      : CDiscipline(a),
+      skWhirlwind(),
+      skRally() {}
+    CDWarrior(const CDWarrior& a) :
+      CDiscipline(a),
       skSlam(a.skSlam),
       skBash(a.skBash),
       skFocusAttack(a.skFocusAttack),
@@ -85,10 +82,10 @@ public:
       skSwitch(a.skSwitch),
       skBloodlust(a.skBloodlust),
       skWhirlwind(a.skWhirlwind),
-      skRally(a.skRally) {
-    }
-    CDWarrior & operator=(const CDWarrior &a) {
-      if (this == &a) return *this;
+      skRally(a.skRally) {}
+    CDWarrior& operator=(const CDWarrior& a) {
+      if (this == &a)
+        return *this;
       CDiscipline::operator=(a);
       skSlam = a.skSlam;
       skBash = a.skBash;
@@ -104,12 +101,12 @@ public:
       return *this;
     }
     virtual ~CDWarrior() {}
-    virtual CDWarrior * cloneMe() { return new CDWarrior(*this); }
+    virtual CDWarrior* cloneMe() { return new CDWarrior(*this); }
 
-    bool isBasic(){ return true; }
+    bool isBasic() { return true; }
 
-private:
+  private:
 };
 
-    int berserk(TBeing *);
-    void repair(TBeing *, TObj *);
+int berserk(TBeing*);
+void repair(TBeing*, TObj*);

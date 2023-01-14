@@ -23,7 +23,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the CLERIC BASIC discipline.
@@ -31,88 +30,85 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDCleric : public CDiscipline
-{
-public:
-//Level 1
-    CSkill skHealLight;       // MOD   1st level individual
-    CSkill skHarmLight;       // MOD   1st level individual
+class CDCleric : public CDiscipline {
+  public:
+    // Level 1
+    CSkill skHealLight;  // MOD   1st level individual
+    CSkill skHarmLight;  // MOD   1st level individual
 
-//Level 4
+    // Level 4
     CSkill skCreateFood;
     CSkill skCreateWater;
 
-//Level 5
-   CSkill skArmor;
+    // Level 5
+    CSkill skArmor;
 
-//Level 6 
+    // Level 6
     CSkill skBless;
 
-//Level 8 
+    // Level 8
     CSkill skClot;
     CSkill skRainBrimstone;
 
-//Level 9 
-    CSkill skHealSerious;    // MOD  10th level individual
-    CSkill skHarmSerious;    // MOD  10th level individual
+    // Level 9
+    CSkill skHealSerious;  // MOD  10th level individual
+    CSkill skHarmSerious;  // MOD  10th level individual
 
-//Level 10
+    // Level 10
     CSkill skSterilize;
     CSkill skExpel;
     CSkill skCureDisease;
 
-//Level 11
+    // Level 11
 
-//Level 12
+    // Level 12
     CSkill skCurse;
     CSkill skRemoveCurse;
     CSkill skCurePoison;
 
-
-//Level 15
-    CSkill skHealCritical;   // MOD  20th level individual
+    // Level 15
+    CSkill skHealCritical;  // MOD  20th level individual
     CSkill skSalve;
     CSkill skPoison;
 
-//Level18 
-    CSkill skHarmCritical;   // MOD  20th level individual
+    // Level18
+    CSkill skHarmCritical;  // MOD  20th level individual
     CSkill skInfect;
     CSkill skRefresh;
 
-//Level 20
+    // Level 20
     CSkill skNumb;
     CSkill skDisease;
     CSkill skFlamestrike;
     CSkill skPlagueOfLocusts;
 
-// Level 21
+    // Level 21
     CSkill skCureBlindness;
 
-//Level 22
+    // Level 22
     CSkill skSummon;
 
-//Level 25
-    CSkill skHeal;           // MOD  30th level individual
+    // Level 25
+    CSkill skHeal;  // MOD  30th level individual
     CSkill skParalyzeLimb;
     CSkill skWordOfRecall;
 
-//Level 28
-    CSkill skHarm;           // MOD  30th level individual
+    // Level 28
+    CSkill skHarm;  // MOD  30th level individual
 
-//Level 30
+    // Level 30
     CSkill skKnitBone;
     CSkill skBlindness;
 
     CSkill skRepairCleric;
 
     CDCleric();
-    CDCleric(const CDCleric &a);
-    CDCleric & operator=(const CDCleric &a);
+    CDCleric(const CDCleric& a);
+    CDCleric& operator=(const CDCleric& a);
     virtual ~CDCleric();
-    virtual CDCleric * cloneMe();
+    virtual CDCleric* cloneMe();
 
-    bool isBasic(){ return true; }
+    bool isBasic() { return true; }
 
-private:
+  private:
 };
-

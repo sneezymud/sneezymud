@@ -18,11 +18,11 @@
 #include "monster.h"
 #include "player_data.h"
 
-static void renamePersonalizeFix(TThing *t, const char * orig_name, const char * new_name)
-{
+static void renamePersonalizeFix(TThing* t, const char* orig_name,
+  const char* new_name) {
   if (!t)
     return;
-  TObj *obj = dynamic_cast<TObj *>(t);
+  TObj* obj = dynamic_cast<TObj*>(t);
   if (!obj)
     return;
 
@@ -32,33 +32,30 @@ static void renamePersonalizeFix(TThing *t, const char * orig_name, const char *
     if ((sscanf(buf, "This is the personalized object of %s.", persbuf)) == 1) {
       if (!strcmp(persbuf, orig_name)) {
         // we are personalized already, so not bothering to swap to strung again
-        vlogf(LOG_MISC, format("Personalized object (%s) on %s, being restrung.") % 
-           obj->getName() % new_name);
+        vlogf(LOG_MISC,
+          format("Personalized object (%s) on %s, being restrung.") %
+            obj->getName() % new_name);
         sprintf(buf, "This is the personalized object of %s", new_name);
         obj->action_description = buf;
       }
     }
   }
-
 }
 
-void renamePersonalizeFix(StuffList list, const char * orig_name, const char * new_name)
-{
-  for(StuffIter it=list.begin();it!=list.end();++it){
+void renamePersonalizeFix(StuffList list, const char* orig_name,
+  const char* new_name) {
+  for (StuffIter it = list.begin(); it != list.end(); ++it) {
     renamePersonalizeFix(*it, orig_name, new_name);
     renamePersonalizeFix((*it)->stuff, orig_name, new_name);
   }
-
 }
 
-
-void TBeing::doNameChange(const char *argument)
-{
+void TBeing::doNameChange(const char* argument) {
   char orig_name[80], new_name[80], tmp_name[80];
   char tmpbuf2[160], arg[80];
   sstring tmpbuf;
-  TBeing *vict;
-  FILE *fp;
+  TBeing* vict;
+  FILE* fp;
 
   argument = one_argument(argument, orig_name, cElements(orig_name));
   argument = one_argument(argument, new_name, cElements(new_name));
@@ -78,7 +75,7 @@ void TBeing::doNameChange(const char *argument)
   // in case they abbreviated the person's name, grab the true name
   strcpy(orig_name, vict->getName().c_str());
 
-  TMonster *mons = dynamic_cast<TMonster *>(vict);
+  TMonster* mons = dynamic_cast<TMonster*>(vict);
   if (!isImmortal() || !hasWizPower(POWER_RENAME)) {
     // mortal rename for pets
     // have both checks above so Imm can go mort to rename a pet
@@ -116,10 +113,10 @@ void TBeing::doNameChange(const char *argument)
       act("You can't name $N that.", FALSE, this, 0, mons, TO_CHAR);
       return;
     }
-    
+
     mons->swapToStrung();
 
-    //  Remake the pet's name.  
+    //  Remake the pet's name.
     tmpbuf = format("%s %s") % mons->name % new_name;
     mons->name = tmpbuf;
 
@@ -128,8 +125,8 @@ void TBeing::doNameChange(const char *argument)
     sprintf(tmpbuf2, "%s", mons->getName().c_str());
     one_argument(tmpbuf2, arg, cElements(arg));
     if (!strcmp(arg, "a") || !strcmp(arg, "an"))
-      tmpbuf=format("\"%s\", the %s") % sstring(new_name).cap() %
-	one_argument(tmpbuf2, arg, cElements(arg));
+      tmpbuf = format("\"%s\", the %s") % sstring(new_name).cap() %
+               one_argument(tmpbuf2, arg, cElements(arg));
     else
       tmpbuf = format("\"%s\", %s") % sstring(new_name).cap() % mons->getName();
 
@@ -139,12 +136,9 @@ void TBeing::doNameChange(const char *argument)
     tmpbuf += " is here.\n\r";
     mons->player.longDescr = tmpbuf;
 
-    act("You grant $N a new name.",
-        FALSE, this, 0, mons, TO_CHAR);
-    act("$n grants $N a new name.",
-        FALSE, this, 0, mons, TO_NOTVICT);
-    act("$n grants you a new name.",
-        FALSE, this, 0, mons, TO_VICT);
+    act("You grant $N a new name.", FALSE, this, 0, mons, TO_CHAR);
+    act("$n grants $N a new name.", FALSE, this, 0, mons, TO_NOTVICT);
+    act("$n grants you a new name.", FALSE, this, 0, mons, TO_VICT);
     return;
   }
 
@@ -164,7 +158,7 @@ void TBeing::doNameChange(const char *argument)
     sendTo("That player already exists.\n\r");
     return;
   }
-  
+
   // check for corspse file
   tmpbuf = format("corpses/%s") % sstring(orig_name).lower();
   if ((fp = fopen(tmpbuf.c_str(), "r"))) {
@@ -181,23 +175,25 @@ void TBeing::doNameChange(const char *argument)
 
   TDatabase db(DB_SNEEZY);
 
-  db.query("update player set name=lower('%s') where name=lower('%s')", 
-	   tmp_name, orig_name);
+  db.query("update player set name=lower('%s') where name=lower('%s')",
+    tmp_name, orig_name);
 
-  tmpbuf=format("account/%c/%s/%s") % LOWER(vict->desc->account->name[0]) %
-    sstring(vict->desc->account->name).lower() % sstring(orig_name).lower();
+  tmpbuf = format("account/%c/%s/%s") % LOWER(vict->desc->account->name[0]) %
+           sstring(vict->desc->account->name).lower() %
+           sstring(orig_name).lower();
 
   if (unlink(tmpbuf.c_str()) != 0)
-    vlogf(LOG_FILE, format("error in unlink (11) (%s) %d") %  tmpbuf % errno);
-  
+    vlogf(LOG_FILE, format("error in unlink (11) (%s) %d") % tmpbuf % errno);
+
   if (vict->GetMaxLevel() > MAX_MORT) {
-    tmpbuf=format("mv immortals/%s/ immortals/%s/") % orig_name % sstring(tmp_name).cap();
+    tmpbuf = format("mv immortals/%s/ immortals/%s/") % orig_name %
+             sstring(tmp_name).cap();
     vsystem(tmpbuf);
   }
 
   vict->doSave(SILENT_NO);
-  tmpbuf=format("The World shall now know %s as %s.") % sstring(orig_name).cap() %
-    vict->getName();
+  tmpbuf = format("The World shall now know %s as %s.") %
+           sstring(orig_name).cap() % vict->getName();
   doSystem(tmpbuf);
   vict->fixClientPlayerLists(FALSE);
 
@@ -211,12 +207,11 @@ void TBeing::doNameChange(const char *argument)
   renamePersonalizeFix(vict->stuff, orig_name, tmp_name);
 }
 
-void TBeing::doDescription()
-{
+void TBeing::doDescription() {
   if (!desc)
-    return ;
+    return;
 
-  if (fight())  {
+  if (fight()) {
     sendTo("You cannot perform that action while fighting!\n\r");
     return;
   }

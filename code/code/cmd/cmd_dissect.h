@@ -19,13 +19,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include <map>
 
-class dissectInfo
-{
+class dissectInfo {
   public:
     unsigned int loadItem;
     unsigned int amount;
@@ -33,7 +31,7 @@ class dissectInfo
     sstring message_to_self;
     sstring message_to_others;
 
-    dissectInfo *tNext;
+    dissectInfo* tNext;
 
     dissectInfo() :
       loadItem(0),
@@ -41,9 +39,7 @@ class dissectInfo
       count(0),
       message_to_self(),
       message_to_others(),
-      tNext(NULL)
-    {
-    }
+      tNext(NULL) {}
 };
 
-extern std::map<unsigned short int, dissectInfo>dissect_array;
+extern std::map<unsigned short int, dissectInfo> dissect_array;

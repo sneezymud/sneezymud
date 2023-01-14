@@ -14,7 +14,7 @@ class TExpandableContainer : public TOpenContainer {
   private:
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const;
 
     virtual int getTotalVolume() const;
@@ -22,11 +22,10 @@ class TExpandableContainer : public TOpenContainer {
 
   protected:
     TExpandableContainer();
+
   public:
-    TExpandableContainer(const TExpandableContainer &a);
-    TExpandableContainer & operator=(const TExpandableContainer &a);
+    TExpandableContainer(const TExpandableContainer& a);
+    TExpandableContainer& operator=(const TExpandableContainer& a);
     virtual ~TExpandableContainer();
-    virtual TThing & operator+= (TThing & t);
+    virtual TThing& operator+=(TThing& t);
 };
-
-

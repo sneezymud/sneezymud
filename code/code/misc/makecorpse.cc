@@ -23,31 +23,38 @@
 #include "obj_money.h"
 #include "materials.h"
 
-TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost)
-{
-  TMoney *money;
-  TThing *o;
-  TRoom *rp;
+TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
+  float exp_lost) {
+  TMoney* money;
+  TThing* o;
+  TRoom* rp;
   char buf[MAX_INPUT_LENGTH], tmpbuf[MAX_NAME_LENGTH], namebuf[MAX_NAME_LENGTH];
   bool specialCorpse = FALSE;
   int j;
-  TCorpse *corpse = NULL;
-  TPCorpse *pcorpse = NULL;
-  TBaseCorpse *gen_corpse;
+  TCorpse* corpse = NULL;
+  TPCorpse* pcorpse = NULL;
+  TBaseCorpse* gen_corpse;
 
   if (specials.was_in_room != Room::NOWHERE) {
     // character was in void
     // bleeding, infected, etc can cause this
 
-    vlogf(LOG_BUG, format("Character: %s in void when corpse made.  Being moved to room #%d.") %  getName() % specials.was_in_room);
+    vlogf(LOG_BUG,
+      format(
+        "Character: %s in void when corpse made.  Being moved to room #%d.") %
+        getName() % specials.was_in_room);
     --(*this);
     rp = real_roomp(specials.was_in_room);
     *rp += *this;
   }
 
   if (isPc() && !desc && !affectedBySpell(AFFECT_PLAYERKILL)) {
-    vlogf(LOG_BUG, format("Character: %s with no link when creating corpse in rm %d") %  getName() % in_room);
-    vlogf(LOG_BUG, format("%s corpse generated in room %d to avoid possible duplication") %  getName() % Room::STORAGE);
+    vlogf(LOG_BUG,
+      format("Character: %s with no link when creating corpse in rm %d") %
+        getName() % in_room);
+    vlogf(LOG_BUG,
+      format("%s corpse generated in room %d to avoid possible duplication") %
+        getName() % Room::STORAGE);
     --(*this);
     rp = real_roomp(Room::STORAGE);
     *rp += *this;
@@ -61,7 +68,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     pcorpse->setCorpseVnum(-2);  // flag for pc
     pcorpse->addCorpseFlag(CORPSE_NO_REGEN);
 
-    if(isPlayerAction(PLR_DENY_LOOT))
+    if (isPlayerAction(PLR_DENY_LOOT))
       pcorpse->addCorpseFlag(CORPSE_DENY_LOOT);
     else
       pcorpse->remCorpseFlag(CORPSE_DENY_LOOT);
@@ -74,39 +81,39 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     if (mobVnum() < 0)
       corpse->addCorpseFlag(CORPSE_NO_REGEN);
   }
-  
+
   gen_corpse->setCorpseFlags(0);
   gen_corpse->setCorpseLevel(GetMaxLevel());
   gen_corpse->addObjStat(ITEM_STRUNG);
-  
+
   gen_corpse->ex_description = NULL;
   gen_corpse->action_description = NULL;
 
   // Lets make some customized "corpses" for elementals - Brutius 07/26/1999
   if (getMyRace()->getBodyType() == BODY_ELEMENTAL) {
     if (isname("[fire]", name)) {
-      sprintf(buf, "cinders pile %s",name.c_str());
+      sprintf(buf, "cinders pile %s", name.c_str());
       gen_corpse->name = buf;
       gen_corpse->setDescr("A <r>smoldering pile of cinders<1> is here.");
       gen_corpse->shortDescr = "a <r>smoldering pile of cinders<1>";
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
       gen_corpse->setMaterial(MAT_POWDER);
     } else if (isname("[water]", name)) {
-      sprintf(buf, "water puddle %s",name.c_str());
+      sprintf(buf, "water puddle %s", name.c_str());
       gen_corpse->name = buf;
       gen_corpse->setDescr("A <b>stagnant puddle of water<1> is here.");
       gen_corpse->shortDescr = "a <b>stagnant puddle of water<1>";
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
       gen_corpse->setMaterial(MAT_WATER);
     } else if (isname("[earth]", name)) {
-      sprintf(buf, "pile dirt %s",name.c_str());
+      sprintf(buf, "pile dirt %s", name.c_str());
       gen_corpse->name = buf;
       gen_corpse->setDescr("A lifeless pile of dirt is here.");
       gen_corpse->shortDescr = "a lifeless pile of dirt";
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
       gen_corpse->setMaterial(MAT_POWDER);
     } else if (isname("[air]", name)) {
-      sprintf(buf, "tornado natural small %s",name.c_str());
+      sprintf(buf, "tornado natural small %s", name.c_str());
       gen_corpse->name = buf;
       gen_corpse->setDescr("A small uncontrolled tornado is here.");
       gen_corpse->shortDescr = "a small uncontrolled tornado";
@@ -114,7 +121,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       gen_corpse->setMaterial(MAT_POWDER);
     } else {
       // non-standard elementals
-      sprintf(buf, "corpse %s",name.c_str());
+      sprintf(buf, "corpse %s", name.c_str());
       gen_corpse->name = buf;
       gen_corpse->setDescr("The corpse of some sort of elemental is here.");
       gen_corpse->shortDescr = "the corpse of an elemental";
@@ -122,7 +129,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     }
     specialCorpse = TRUE;
   } else if (dmg_type == SPELL_RAZE) {
-    sprintf(buf, "green powder pile strange %s",name.c_str());
+    sprintf(buf, "green powder pile strange %s", name.c_str());
     gen_corpse->name = buf;
     gen_corpse->setDescr("A strange looking pile of green powder lies here.");
     gen_corpse->shortDescr = "a pile of strange green powder";
@@ -130,7 +137,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     gen_corpse->setMaterial(MAT_POWDER);
     specialCorpse = TRUE;
   } else if (isUndead() || (dmg_type == SKILL_TURN)) {
-    sprintf(buf, "dust pile %s",name.c_str());
+    sprintf(buf, "dust pile %s", name.c_str());
     gen_corpse->name = buf;
     gen_corpse->setDescr("A pile of dust is here.");
     gen_corpse->shortDescr = "a pile of dust";
@@ -138,7 +145,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     gen_corpse->setMaterial(MAT_POWDER);
     specialCorpse = TRUE;
   } else if (dmg_type == SPELL_ATOMIZE) {
-    sprintf(buf, "ash pile %s",name.c_str());
+    sprintf(buf, "ash pile %s", name.c_str());
     gen_corpse->name = buf;
     gen_corpse->setDescr("A pile of ash is here.");
     gen_corpse->shortDescr = "a pile of ash";
@@ -152,16 +159,16 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     gen_corpse->setMaterial(getMaterial(WEAR_BODY));
   }
 
-  if(!isname("corpse", gen_corpse->name)){
+  if (!isname("corpse", gen_corpse->name)) {
     sprintf(buf, "%s corpse", gen_corpse->name.c_str());
-    gen_corpse->name=buf;
+    gen_corpse->name = buf;
   }
 
-
-  if (!specialCorpse && roomp && 
+  if (!specialCorpse && roomp &&
 
       (roomp->isUnderwaterSector() || roomp->isWaterSector())) {
-    sprintf(buf, "The bloated, water-filled corpse of %s is floating here.", getName().c_str());
+    sprintf(buf, "The bloated, water-filled corpse of %s is floating here.",
+      getName().c_str());
   } else if (!specialCorpse) {
     switch (dmg_type) {
       case SPELL_GUST:
@@ -175,7 +182,8 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
         break;
       case DAMAGE_TRAP_TNT:
         sprintf(buf,
-          "The skin on %s's corpse has been torn to shreds by something explosive.",
+          "The skin on %s's corpse has been torn to shreds by something "
+          "explosive.",
           getName().c_str());
         break;
       case SPELL_DEATHWAVE:
@@ -186,16 +194,21 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
           namebuf);
         break;
       case SKILL_SHOULDER_THROW:
-         sprintf(buf, "%s's corpse lies shattered here, having been thrown hard to the ground.", namebuf); 
+        sprintf(buf,
+          "%s's corpse lies shattered here, having been thrown hard to the "
+          "ground.",
+          namebuf);
         break;
       case DAMAGE_ELECTRIC:
       case SPELL_CALL_LIGHTNING:
       case SPELL_LIGHTNING_BREATH:
-        sprintf(buf, "The charred and burnt corpse of %s smolders here.",getName().c_str());
+        sprintf(buf, "The charred and burnt corpse of %s smolders here.",
+          getName().c_str());
         break;
       case SPELL_GUSHER:
       case SPELL_AQUATIC_BLAST:
-        sprintf(buf, "The dripping wet corpse of %s is here.",getName().c_str());
+        sprintf(buf, "The dripping wet corpse of %s is here.",
+          getName().c_str());
         break;
       case SPELL_ICY_GRIP:
       case SPELL_ARCTIC_BLAST:
@@ -203,68 +216,101 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SPELL_FROST_BREATH:
       case DAMAGE_TRAP_FROST:
       case DAMAGE_FROST:
-        sprintf(buf, "The frozen solid corpse of %s is embedded in some ice here.",getName().c_str());
+        sprintf(buf,
+          "The frozen solid corpse of %s is embedded in some ice here.",
+          getName().c_str());
         break;
       case DAMAGE_DROWN:
       case SPELL_WATERY_GRAVE:
       case DAMAGE_WHIRLPOOL:
       case TYPE_WATER:
-        sprintf(buf, "%s's corpse's face is blue, and the smell of brine comes from %s mouth.",namebuf, hshr());
+        sprintf(buf,
+          "%s's corpse's face is blue, and the smell of brine comes from %s "
+          "mouth.",
+          namebuf, hshr());
         break;
       case SPELL_TSUNAMI:
-        sprintf(buf, "The bloated, water-filled corpse of %s is here.",getName().c_str());
+        sprintf(buf, "The bloated, water-filled corpse of %s is here.",
+          getName().c_str());
         break;
       case SPELL_CARDIAC_STRESS:
       case DAMAGE_HEMORRHAGE:
-        sprintf(buf, "The skin of %s's corpse is bright red, but no wound presents itself.",getName().c_str());
+        sprintf(buf,
+          "The skin of %s's corpse is bright red, but no wound presents "
+          "itself.",
+          getName().c_str());
         break;
       case DAMAGE_IMPALE:
-        sprintf(buf, "The torso of %s's corpse has a hole going all the way through.  Something must have impaled %s.",getName().c_str(),hmhr());
+        sprintf(buf,
+          "The torso of %s's corpse has a hole going all the way through.  "
+          "Something must have impaled %s.",
+          getName().c_str(), hmhr());
         break;
       case SPELL_CHLORINE_BREATH:
-        sprintf(buf, "%s's corpse is here, melting with a wisp of caustic smoke.  The face looks strangled.",namebuf);
+        sprintf(buf,
+          "%s's corpse is here, melting with a wisp of caustic smoke.  The "
+          "face looks strangled.",
+          namebuf);
         break;
       case SPELL_DUST_BREATH:
-        sprintf(buf, "%s's corpse has been shredded by some unseen force.", namebuf);
+        sprintf(buf, "%s's corpse has been shredded by some unseen force.",
+          namebuf);
         break;
       case SPELL_POISON_DEIKHAN:
       case SPELL_POISON:
       case SPELL_DEATH_MIST:
       case DAMAGE_TRAP_POISON:
-        sprintf(buf, "The sickly, green poisoned corpse of %s is here.",getName().c_str());
+        sprintf(buf, "The sickly, green poisoned corpse of %s is here.",
+          getName().c_str());
         break;
       case SPELL_ACID_BREATH:
       case DAMAGE_ACID:
       case SPELL_ACID_BLAST:
       case DAMAGE_TRAP_ACID:
-        sprintf(buf, "The badly scalded corpse of %s sits in a puddle of acid.",getName().c_str());
+        sprintf(buf, "The badly scalded corpse of %s sits in a puddle of acid.",
+          getName().c_str());
         break;
       case SKILL_BODYSLAM:
-        sprintf(buf, "The body of %s looks as if a great weight has squished %s.",getName().c_str(),hmhr());
+        sprintf(buf,
+          "The body of %s looks as if a great weight has squished %s.",
+          getName().c_str(), hmhr());
         break;
       case SKILL_SPIN:
-	sprintf(buf, "%s's corpse lies here with a dazed look.", getName().c_str());
-	break;
+        sprintf(buf, "%s's corpse lies here with a dazed look.",
+          getName().c_str());
+        break;
       case DAMAGE_COLLISION:
-        sprintf(buf, "%s's corpse lies shattered here, having collided with something massive.", namebuf);
+        sprintf(buf,
+          "%s's corpse lies shattered here, having collided with something "
+          "massive.",
+          namebuf);
         break;
       case DAMAGE_FALL:
-        sprintf(buf, "%s's corpse lies shattered here, having fallen from a great height.", namebuf);
+        sprintf(buf,
+          "%s's corpse lies shattered here, having fallen from a great height.",
+          namebuf);
         break;
       case SKILL_CHARGE:
-        sprintf(buf, "It appears %s was trampled to death as %s corpse is here.",getName().c_str(), hshr());
+        sprintf(buf,
+          "It appears %s was trampled to death as %s corpse is here.",
+          getName().c_str(), hshr());
         break;
       case SKILL_SMITE:
-        sprintf(buf, "Some powerful deity has smitten %s and %s shattered corpse lies here.", getName().c_str(), hshr());
+        sprintf(buf,
+          "Some powerful deity has smitten %s and %s shattered corpse lies "
+          "here.",
+          getName().c_str(), hshr());
         break;
       case SPELL_METEOR_SWARM:
       case SPELL_EARTHQUAKE:
       case DAMAGE_TRAP_BLUNT:
       case TYPE_EARTH:
-        sprintf(buf, "The corpse of %s has been virtually crushed flat.",getName().c_str());
+        sprintf(buf, "The corpse of %s has been virtually crushed flat.",
+          getName().c_str());
         break;
       case SPELL_PILLAR_SALT:
-        sprintf(buf, "The crusty remains of %s has a salty sheen.",getName().c_str());
+        sprintf(buf, "The crusty remains of %s has a salty sheen.",
+          getName().c_str());
         break;
       case SPELL_FIREBALL:
       case SPELL_HANDS_OF_FLAME:
@@ -280,32 +326,43 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case TYPE_FIRE:
       case DAMAGE_FIRE:
       case SPELL_FLARE:
-        sprintf(buf, "The charred remains of %s lies surrounded by soot.",getName().c_str());
+        sprintf(buf, "The charred remains of %s lies surrounded by soot.",
+          getName().c_str());
         break;
       case DAMAGE_DISRUPTION:
       case SPELL_MYSTIC_DARTS:
       case SPELL_STUNNING_ARROW:
       case SPELL_COLOR_SPRAY:
-       sprintf(buf, "Eldritch magic has coursed through %s's corpse here.",getName().c_str());
+        sprintf(buf, "Eldritch magic has coursed through %s's corpse here.",
+          getName().c_str());
         break;
       case SPELL_STORMY_SKIES:
-       sprintf(buf, "The weather eroded corpse of %s is here, charred and dripping wet.",getName().c_str());
+        sprintf(buf,
+          "The weather eroded corpse of %s is here, charred and dripping wet.",
+          getName().c_str());
         break;
       case SPELL_SAND_BLAST:
-        sprintf(buf, "%s's corpse has thousands of tiny pinprick wounds on the exposed skin.", namebuf);
+        sprintf(buf,
+          "%s's corpse has thousands of tiny pinprick wounds on the exposed "
+          "skin.",
+          namebuf);
         break;
       case SPELL_PEBBLE_SPRAY:
-        sprintf(buf, "%s's corpse has many small gory wounds on the exposed skin.", namebuf);
+        sprintf(buf,
+          "%s's corpse has many small gory wounds on the exposed skin.",
+          namebuf);
         break;
       case SPELL_LAVA_STREAM:
         sprintf(buf, "The charred remains of %s lies here, seared by lava.",
-            getName().c_str());
+          getName().c_str());
         break;
       case SPELL_SLING_SHOT:
-        sprintf(buf, "%s's forehead has been caved in by some massive force.", namebuf);
+        sprintf(buf, "%s's forehead has been caved in by some massive force.",
+          namebuf);
         break;
       case SPELL_GRANITE_FISTS:
-        sprintf(buf, "It appears %s was punched incredibly hard by someone.", getName().c_str());
+        sprintf(buf, "It appears %s was punched incredibly hard by someone.",
+          getName().c_str());
         break;
       case SPELL_ENERGY_DRAIN:
       case SPELL_LICH_TOUCH:
@@ -324,62 +381,86 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case SPELL_HARM_CRITICAL:
       case SPELL_WITHER_LIMB:
       case DAMAGE_TRAP_ENERGY:
-        sprintf(buf, "The withered form of what used to be %s is here looking quite pale.",getName().c_str());
+        sprintf(buf,
+          "The withered form of what used to be %s is here looking quite pale.",
+          getName().c_str());
         break;
       case SPELL_BLEED:
-        sprintf(buf, "The corpse of %s lies in a pool of blood.",getName().c_str());
+        sprintf(buf, "The corpse of %s lies in a pool of blood.",
+          getName().c_str());
         break;
       case SPELL_SQUISH:
-        sprintf(buf, "The corpse of %s has been squished into a ball.", getName().c_str());
+        sprintf(buf, "The corpse of %s has been squished into a ball.",
+          getName().c_str());
         break;
       case DAMAGE_KICK_HEAD:
-        sprintf(buf, "The body of %s has a footprint on its forehead.", getName().c_str());
+        sprintf(buf, "The body of %s has a footprint on its forehead.",
+          getName().c_str());
         break;
       case DAMAGE_KICK_SHIN:
-        sprintf(buf, "The body of %s has a footprint near its shin.", getName().c_str());
+        sprintf(buf, "The body of %s has a footprint near its shin.",
+          getName().c_str());
         break;
       case DAMAGE_KICK_SIDE:
-        sprintf(buf, "The body of %s has a footprint in its side.",getName().c_str());
+        sprintf(buf, "The body of %s has a footprint in its side.",
+          getName().c_str());
         break;
       case DAMAGE_KICK_SOLAR:
       case SKILL_KICK_MONK:
       case SKILL_KICK:
       case SKILL_SPRINGLEAP:
       case TYPE_KICK:
-        sprintf(buf, "The body of %s has a footprint in its solar plexus.",getName().c_str());
+        sprintf(buf, "The body of %s has a footprint in its solar plexus.",
+          getName().c_str());
         break;
       case SKILL_DEATHSTROKE:
-        sprintf(buf, "The body of %s has had many vital organs disembowled from it.",getName().c_str());
+        sprintf(buf,
+          "The body of %s has had many vital organs disembowled from it.",
+          getName().c_str());
         break;
       case SKILL_BASH_DEIKHAN:
       case SKILL_BASH:
       case SKILL_TRIP:
-        sprintf(buf, "The corpse of %s has a broken nose from falling down too hard.",getName().c_str());
+        sprintf(buf,
+          "The corpse of %s has a broken nose from falling down too hard.",
+          getName().c_str());
         break;
       case SPELL_BONE_BREAKER:
       case SKILL_BONEBREAK:
-        sprintf(buf, "The twisted and mangled corpse of %s lies in a heap.",getName().c_str());
+        sprintf(buf, "The twisted and mangled corpse of %s lies in a heap.",
+          getName().c_str());
         break;
       case SPELL_PARALYZE:
       case SPELL_PARALYZE_LIMB:
-        sprintf(buf, "The corpse of %s looks stiff from paralysis even before rigor-mortis has begun to set in.",getName().c_str());
+        sprintf(buf,
+          "The corpse of %s looks stiff from paralysis even before "
+          "rigor-mortis has begun to set in.",
+          getName().c_str());
         break;
       case SPELL_INFECT_DEIKHAN:
       case SPELL_INFECT:
-        sprintf(buf, "A strange infection oozes out of the wounds in %s's corpse.",getName().c_str());
+        sprintf(buf,
+          "A strange infection oozes out of the wounds in %s's corpse.",
+          getName().c_str());
         break;
       case SKILL_CHOP:
-        sprintf(buf, "It appears someone beat %s to death with their bare hands.", getName().c_str());
+        sprintf(buf,
+          "It appears someone beat %s to death with their bare hands.",
+          getName().c_str());
         break;
       case SPELL_DISEASE:
       case DAMAGE_TRAP_DISEASE:
-        sprintf(buf, "%s's corpse is here.  It appears %s was consumed by disease.",namebuf, hssh());
+        sprintf(buf,
+          "%s's corpse is here.  It appears %s was consumed by disease.",
+          namebuf, hssh());
         break;
       case SPELL_FLATULENCE:
       case DAMAGE_SUFFOCATION:
       case SPELL_SUFFOCATE:
       case SKILL_GARROTTE:
-        sprintf(buf, "The remains of %s appear blue.  They must have suffocated.",getName().c_str());
+        sprintf(buf,
+          "The remains of %s appear blue.  They must have suffocated.",
+          getName().c_str());
         break;
       case TYPE_CLAW:
       case TYPE_SLASH:
@@ -387,13 +468,17 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case TYPE_SLICE:
       case DAMAGE_TRAP_SLASH:
       case TYPE_SHRED:
-        sprintf(buf, "%s's corpse lies here, slashed in many places.",getName().c_str());
-         break;
+        sprintf(buf, "%s's corpse lies here, slashed in many places.",
+          getName().c_str());
+        break;
       case TYPE_BEAR_CLAW:
-        sprintf(buf, "%s's corpse looks to have been mauled by a bear.",getName().c_str());
+        sprintf(buf, "%s's corpse looks to have been mauled by a bear.",
+          getName().c_str());
         break;
       case TYPE_MAUL:
-	sprintf(buf, "The corpse of %s lying on the ground looks smashed and mauled.", getName().c_str());
+        sprintf(buf,
+          "The corpse of %s lying on the ground looks smashed and mauled.",
+          getName().c_str());
         break;
       case TYPE_SMASH:
       case TYPE_WHIP:
@@ -411,140 +496,183 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
       case TYPE_STRIKE:
       case TYPE_POUND:
       case TYPE_CLUB:
-        sprintf(buf, "The corpse of %s lying on the ground looks bashed and bludgeoned.",getName().c_str());
+        sprintf(buf,
+          "The corpse of %s lying on the ground looks bashed and bludgeoned.",
+          getName().c_str());
         break;
       case SKILL_STABBING:
-        sprintf(buf, "%s's corpse has a large, gaping stab wound.",namebuf);
+        sprintf(buf, "%s's corpse has a large, gaping stab wound.", namebuf);
         break;
       case DAMAGE_ARROWS:
-        sprintf(buf, "Arrows decorate %s's corpse, making %s look like a pincushion.", getName().c_str(), hmhr());
+        sprintf(buf,
+          "Arrows decorate %s's corpse, making %s look like a pincushion.",
+          getName().c_str(), hmhr());
         break;
       case TYPE_PIERCE:
       case TYPE_STAB:
       case TYPE_STING:
       case TYPE_THRUST:
       case TYPE_SPEAR:
-        sprintf(buf, "Many stab wounds cover %s's dead form here.",getName().c_str());
+        sprintf(buf, "Many stab wounds cover %s's dead form here.",
+          getName().c_str());
         break;
       case DAMAGE_TRAP_PIERCE:
-        sprintf(buf, "%s's corpse has been skewered by hundreds of tiny bolts.",namebuf);
+        sprintf(buf, "%s's corpse has been skewered by hundreds of tiny bolts.",
+          namebuf);
         break;
       case TYPE_BEAK:
-        sprintf(buf, "Many tiny peck wounds cover %s's dead form.",getName().c_str());
+        sprintf(buf, "Many tiny peck wounds cover %s's dead form.",
+          getName().c_str());
         break;
       case TYPE_CANNON:
-	sprintf(buf, "A hole the size of a <k>cannonball<1> has been punched through %s's corpse's chest.", getName().c_str());
-	break;
+        sprintf(buf,
+          "A hole the size of a <k>cannonball<1> has been punched through %s's "
+          "corpse's chest.",
+          getName().c_str());
+        break;
       case TYPE_SHOOT:
-        sprintf(buf, "%s's corpse lies in a pool of blood, riddled with bullet holes.", namebuf);
-	break;
+        sprintf(buf,
+          "%s's corpse lies in a pool of blood, riddled with bullet holes.",
+          namebuf);
+        break;
       case TYPE_BITE:
-        sprintf(buf, "%s's corpse looks like %s was bitten to death.",namebuf, hssh());
+        sprintf(buf, "%s's corpse looks like %s was bitten to death.", namebuf,
+          hssh());
         break;
       case SKILL_BACKSTAB:
-        sprintf(buf, "A big gaping wound is in the center of %s's back.", getName().c_str());
+        sprintf(buf, "A big gaping wound is in the center of %s's back.",
+          getName().c_str());
         break;
       case SKILL_THROATSLIT:
-        sprintf(buf, "The throat of %s's corpse has been sliced from ear to ear.", getName().c_str());
+        sprintf(buf,
+          "The throat of %s's corpse has been sliced from ear to ear.",
+          getName().c_str());
         break;
       case DAMAGE_DISEMBOWLED_HR:
-        sprintf(buf, "The corpse of %s has been disembowled with a slash from gullet to groin!",getName().c_str());
+        sprintf(buf,
+          "The corpse of %s has been disembowled with a slash from gullet to "
+          "groin!",
+          getName().c_str());
         break;
       case DAMAGE_DISEMBOWLED_VR:
-        sprintf(buf, "The corpse of %s has a large slash from hip to hip!", getName().c_str());
+        sprintf(buf, "The corpse of %s has a large slash from hip to hip!",
+          getName().c_str());
         break;
       case DAMAGE_EATTEN:
-        sprintf(buf,"%s's corpse has been mawed and chewed upon by something VERY large!",namebuf);
+        sprintf(buf,
+          "%s's corpse has been mawed and chewed upon by something VERY large!",
+          namebuf);
         break;
       case DAMAGE_HACKED:
-        sprintf(buf,"%s's corpse has been hacked in two!",namebuf);
+        sprintf(buf, "%s's corpse has been hacked in two!", namebuf);
         break;
       case DAMAGE_KNEESTRIKE_FOOT:
       case DAMAGE_HEADBUTT_FOOT:
-        sprintf(buf,"%s's corpse has a swollen toe.",
-             namebuf);
+        sprintf(buf, "%s's corpse has a swollen toe.", namebuf);
         break;
       case DAMAGE_KNEESTRIKE_SHIN:
       case DAMAGE_KNEESTRIKE_KNEE:
       case DAMAGE_KNEESTRIKE_THIGH:
       case DAMAGE_HEADBUTT_LEG:
-        sprintf(buf,"%s's corpse has a shattered kneecap.",
-             namebuf);
+        sprintf(buf, "%s's corpse has a shattered kneecap.", namebuf);
         break;
       case DAMAGE_KNEESTRIKE_SOLAR:
       case DAMAGE_HEADBUTT_BODY:
-        sprintf(buf,"%s's corpse lies here with a crushed rib cage.",
-             namebuf);
+        sprintf(buf, "%s's corpse lies here with a crushed rib cage.", namebuf);
         break;
-      case DAMAGE_KNEESTRIKE_CROTCH:      
+      case DAMAGE_KNEESTRIKE_CROTCH:
       case DAMAGE_HEADBUTT_CROTCH:
-        sprintf(buf,"%s's corpse seems folded at the waist, protecting its privates.",
-              namebuf);
-         break;
+        sprintf(buf,
+          "%s's corpse seems folded at the waist, protecting its privates.",
+          namebuf);
+        break;
       case DAMAGE_HEADBUTT_THROAT:
-        sprintf(buf,"%s's corpse displays a broken collar bone.",
-             namebuf);
+        sprintf(buf, "%s's corpse displays a broken collar bone.", namebuf);
         break;
       case DAMAGE_KNEESTRIKE_CHIN:
       case DAMAGE_HEADBUTT_JAW:
-        sprintf(buf,"%s's corpse has a crushed skull and a shattered jaw.",
-             namebuf);
+        sprintf(buf, "%s's corpse has a crushed skull and a shattered jaw.",
+          namebuf);
         break;
       case DAMAGE_KNEESTRIKE_FACE:
       case SKILL_HEADBUTT:
       case DAMAGE_CAVED_SKULL:
       case DAMAGE_HEADBUTT_SKULL:
-        sprintf(buf,"Brains ooze out of the crushed skull of %s's corpse.",getName().c_str());
+        sprintf(buf, "Brains ooze out of the crushed skull of %s's corpse.",
+          getName().c_str());
         break;
       case DAMAGE_RIPPED_OUT_HEART:
-	sprintf(buf,"%s's corpse has a gaping bloody hole where the heart once was.",getName().c_str());
-	break;
+        sprintf(buf,
+          "%s's corpse has a gaping bloody hole where the heart once was.",
+          getName().c_str());
+        break;
       case SKILL_STOMP:
-        sprintf(buf,"Stomped to death, %s's corpse is here.",getName().c_str());
+        sprintf(buf, "Stomped to death, %s's corpse is here.",
+          getName().c_str());
         break;
       case DAMAGE_STARVATION:
-        sprintf(buf, "The emaciated corpse of %s is lying here.", getName().c_str());
+        sprintf(buf, "The emaciated corpse of %s is lying here.",
+          getName().c_str());
         break;
       case DAMAGE_STOMACH_WOUND:
-        sprintf(buf,"%s's intestines protrude through a wound in %s corpse's stomach.",namebuf,hshr());
+        sprintf(buf,
+          "%s's intestines protrude through a wound in %s corpse's stomach.",
+          namebuf, hshr());
         break;
       case DAMAGE_RAMMED:
-         sprintf(buf, "%s's corpse has a huge indention right in the midriff.", namebuf);
-         break;
+        sprintf(buf, "%s's corpse has a huge indention right in the midriff.",
+          namebuf);
+        break;
       case DAMAGE_BEHEADED:
-         sprintf(buf, "%s's corpse is headless, and congealed blood lies around the neck.",namebuf);
-         break;
+        sprintf(buf,
+          "%s's corpse is headless, and congealed blood lies around the neck.",
+          namebuf);
+        break;
       case SPELL_BLAST_OF_FURY:
         sprintf(buf, "%s was torn asunder by powerful magic!", namebuf);
         break;
       case SKILL_CHI:
-	sprintf(buf, "%s's corpse wears a deep grimace of agony.", getName().c_str());
-	break;
+        sprintf(buf, "%s's corpse wears a deep grimace of agony.",
+          getName().c_str());
+        break;
       case SKILL_KINETIC_WAVE:
-	sprintf(buf, "Blood trickles out of the eyes, ears and nose of %s's corpse.", getName().c_str());
-	break;
+        sprintf(buf,
+          "Blood trickles out of the eyes, ears and nose of %s's corpse.",
+          getName().c_str());
+        break;
       case SKILL_PSI_BLAST:
-	sprintf(buf, "Blank eyes stare out of the slackjawed face of %s's corpse.", getName().c_str());
-	break;
+        sprintf(buf,
+          "Blank eyes stare out of the slackjawed face of %s's corpse.",
+          getName().c_str());
+        break;
       case SKILL_PSYCHIC_CRUSH:
-	sprintf(buf, "%s's corpse wears a death mask of pure terror.", getName().c_str());
-	break;
+        sprintf(buf, "%s's corpse wears a death mask of pure terror.",
+          getName().c_str());
+        break;
       case SKILL_PSIDRAIN:
-	sprintf(buf, "The head of %s's corpse is blackened and bears a look of grim terror.", getName().c_str());
-	break;
+        sprintf(buf,
+          "The head of %s's corpse is blackened and bears a look of grim "
+          "terror.",
+          getName().c_str());
+        break;
 
 #if 1
       case SPELL_EARTHMAW:
-	sprintf(buf, "The corpse of %s lies here half buried in the earth.", getName().c_str());
-	break;
+        sprintf(buf, "The corpse of %s lies here half buried in the earth.",
+          getName().c_str());
+        break;
       case SPELL_CREEPING_DOOM:
-        sprintf(buf, "A light coat of pollen covers the wide-eyed corpse of %s.", getName().c_str());
+        sprintf(buf,
+          "A light coat of pollen covers the wide-eyed corpse of %s.",
+          getName().c_str());
         break;
       case SPELL_FERAL_WRATH:
         sprintf(buf, "%s's corpse wears a fierce snarl.", getName().c_str());
         break;
       case SPELL_SKY_SPIRIT:
-        sprintf(buf, "The corpse of %s looks torn apart by some terrible beast.", getName().c_str());
+        sprintf(buf,
+          "The corpse of %s looks torn apart by some terrible beast.",
+          getName().c_str());
         break;
 #endif
       case DAMAGE_NORMAL:
@@ -581,16 +709,17 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 #endif
 
   // generate an empty corpse if in a pk zone
-  if(pcorpse && inPkZone()){
+  if (pcorpse && inPkZone()) {
     pcorpse->obj_flags.decay_time = MAX_NPC_CORPSE_TIME;
-    *roomp+=*pcorpse;
+    *roomp += *pcorpse;
 
     return pcorpse;
   }
 
   if (getMoney() > 0) {
-    if (pcorpse){
-      money = create_money(getMoney() + ::number(GetMaxLevel(), 2*GetMaxLevel()));
+    if (pcorpse) {
+      money =
+        create_money(getMoney() + ::number(GetMaxLevel(), 2 * GetMaxLevel()));
     } else {
       money = create_money(getMoney(), getFaction());
     }
@@ -598,7 +727,7 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     addToMoney(-getMoney(), GOLD_INCOME);
     *gen_corpse += *money;
   }
-  
+
 #if 0
   // this is designed to move the pc's light cuz of items to the corpse
   // this seems to be silly.  makes the corpse glow or shadowy artificially
@@ -607,11 +736,11 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
 
   wearSlotT i;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    TThing *obo;
+    TThing* obo;
     if (equipment[i]) {
       obo = unequip(i);
       *gen_corpse += *obo;
-      logItem(obo, CMD_SOUTH);  //log fact putting into corpse;
+      logItem(obo, CMD_SOUTH);  // log fact putting into corpse;
     }
     if (getStuckIn(i)) {
       obo = pulloutObj(i, TRUE, &j);
@@ -620,53 +749,55 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
     }
   }
 
-  //load a herald and put on corpse - Russ 010298
-  // Grimhaven Newsboy, chance to put herald in corpse
-  if (mobVnum() == Mob::NEWSBOY) { 
-    if (!::number(0, 10)) 
+  // load a herald and put on corpse - Russ 010298
+  //  Grimhaven Newsboy, chance to put herald in corpse
+  if (mobVnum() == Mob::NEWSBOY) {
+    if (!::number(0, 10))
       *gen_corpse += *(read_object(Obj::HERALD, VIRTUAL));
-  } 
+  }
 
   // banshee loading banshee larynx (shatter comp)
   // would be better as dissect, but banshee=undead=dustpile=no-dissect
-  if (mobVnum() == Mob::BANSHEE) { 
-    if (!::number(0, 1)) 
+  if (mobVnum() == Mob::BANSHEE) {
+    if (!::number(0, 1))
       *gen_corpse += *(read_object(COMP_SHATTER, VIRTUAL));
-  } 
+  }
 
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    TThing *obo=*(it++);
+  for (StuffIter it = stuff.begin(); it != stuff.end();) {
+    TThing* obo = *(it++);
     *gen_corpse += (*obo)--;
     logItem(obo, CMD_SOUTH);
   }
 
-  if (dynamic_cast<TMonster *>(this)) 
+  if (dynamic_cast<TMonster*>(this))
     gen_corpse->obj_flags.decay_time = MAX_NPC_CORPSE_TIME;
   else {
-    if (!gen_corpse->stuff.empty()) 
+    if (!gen_corpse->stuff.empty())
       gen_corpse->obj_flags.decay_time = MAX_PC_CORPSE_EQUIPPED_TIME;
-    else 
+    else
       gen_corpse->obj_flags.decay_time = MAX_PC_CORPSE_EMPTY_TIME;
   }
 
   if (roomp) {
-//    *roomp += *gen_corpse;
+    //    *roomp += *gen_corpse;
     rp = roomp;
   } else {
-    vlogf(LOG_BUG, format("%s had NULL roomp pointer, moved to room %d.") %  getName() % Room::STORAGE);
+    vlogf(LOG_BUG, format("%s had NULL roomp pointer, moved to room %d.") %
+                     getName() % Room::STORAGE);
 
     rp = real_roomp(Room::STORAGE);
-//    *rp += *gen_corpse;
+    //    *rp += *gen_corpse;
   }
 
-  // make sure we don't have any "corpses in a corpse" 
-  for(StuffIter it=gen_corpse->stuff.begin();it!=gen_corpse->stuff.end();){
-    o=*(it++);
-    TBaseCorpse *tbc = dynamic_cast<TBaseCorpse *>(o);
+  // make sure we don't have any "corpses in a corpse"
+  for (StuffIter it = gen_corpse->stuff.begin();
+       it != gen_corpse->stuff.end();) {
+    o = *(it++);
+    TBaseCorpse* tbc = dynamic_cast<TBaseCorpse*>(o);
     if (tbc) {
       --(*tbc);
       *rp += *tbc;
-      TPCorpse * tmpcorpse = dynamic_cast<TPCorpse *>(o);
+      TPCorpse* tmpcorpse = dynamic_cast<TPCorpse*>(o);
       if (tmpcorpse) {
         tmpcorpse->setRoomNum(in_room);
         tmpcorpse->removeGlobalNext();
@@ -695,25 +826,28 @@ TThing * TBeing::makeCorpse(spellNumT dmg_type, TBeing * tKiller, float exp_lost
   if (gamePort != Config::Port::PROD)
     gen_corpse->setupDissectionObjects();
 
-
   return gen_corpse;
 }
 
-void TBaseCorpse::setupDissectionObjects()
-{
-  int tPossible = (Races[getCorpseRace()]->tDissectItem[0].loadItem ?
-                   (Races[getCorpseRace()]->tDissectItem[1].loadItem ? 1 : 0) : -1);
+void TBaseCorpse::setupDissectionObjects() {
+  int tPossible =
+    (Races[getCorpseRace()]->tDissectItem[0].loadItem
+        ? (Races[getCorpseRace()]->tDissectItem[1].loadItem ? 1 : 0)
+        : -1);
 
   if (tPossible > -1) {
-    vlogf(LOG_LAPSOS, format("setupDissectionObjects: tPossible(%d)") %  tPossible);
+    vlogf(LOG_LAPSOS,
+      format("setupDissectionObjects: tPossible(%d)") % tPossible);
 
     tPossible = ::number(0, tPossible);
 
     tDissections = new dissectInfo;
 
-    tDissections->loadItem = Races[getCorpseRace()]->tDissectItem[tPossible].loadItem;
-    tDissections->amount   = Races[getCorpseRace()]->tDissectItem[tPossible].amount;
-    tDissections->count    = Races[getCorpseRace()]->tDissectItem[tPossible].count;
+    tDissections->loadItem =
+      Races[getCorpseRace()]->tDissectItem[tPossible].loadItem;
+    tDissections->amount =
+      Races[getCorpseRace()]->tDissectItem[tPossible].amount;
+    tDissections->count = Races[getCorpseRace()]->tDissectItem[tPossible].count;
     tDissections->message_to_self =
       Races[getCorpseRace()]->tDissectItem[tPossible].message_to_self;
     tDissections->message_to_others =
@@ -724,17 +858,17 @@ void TBaseCorpse::setupDissectionObjects()
   std::map<unsigned short int, dissectInfo>::const_iterator tMarker;
 
   if ((tMarker = dissect_array.find(getCorpseVnum())) != dissect_array.end()) {
-    dissectInfo *tDissect;
+    dissectInfo* tDissect;
 
     if (tDissections)
       tDissect = tDissections->tNext = new dissectInfo;
     else
       tDissect = tDissections = new dissectInfo;
 
-    tDissect->loadItem          = tMarker->second.loadItem;
-    tDissect->amount            = tMarker->second.amount;
-    tDissect->count             = tMarker->second.count;
-    tDissect->message_to_self   = tMarker->second.message_to_self;
+    tDissect->loadItem = tMarker->second.loadItem;
+    tDissect->amount = tMarker->second.amount;
+    tDissect->count = tMarker->second.count;
+    tDissect->message_to_self = tMarker->second.message_to_self;
     tDissect->message_to_others = tMarker->second.message_to_others;
     tDissect->tNext = NULL;
   }

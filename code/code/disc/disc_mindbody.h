@@ -15,23 +15,21 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDMindBody : public CDiscipline
-{
-public:
-  CSkill skFeignDeath;
-  CSkill skBlur;
+class CDMindBody : public CDiscipline {
+  public:
+    CSkill skFeignDeath;
+    CSkill skBlur;
 
     CDMindBody();
-    CDMindBody(const CDMindBody &a);
-    CDMindBody & operator=(const CDMindBody &a);
+    CDMindBody(const CDMindBody& a);
+    CDMindBody& operator=(const CDMindBody& a);
     virtual ~CDMindBody();
-    virtual CDMindBody * cloneMe();
+    virtual CDMindBody* cloneMe();
 
-private:
+  private:
 };
