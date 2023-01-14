@@ -1,0 +1,2 @@
+# To enable the use of this file in your local repo, type the following at the CLI:
+# git config blame.ignoreRevsFile .git-blame-ignore-revs

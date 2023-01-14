@@ -1,0 +1,15 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+# To use: install python and/or pip, run `pip install pre-commit`,
+# then run `pre-commit install` in the root directory of your
+# local repo. Then pre-commit will run clang-format every time you
+# push a commit, automatically formatting the files. If it applies
+# any formatting changes the commit will fail, so stage the new
+# changes and commit again.
+files: ^code/code/
+repos:
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v15.0.6
+    hooks:
+      - id: clang-format
+        types_or: [c++, header]
