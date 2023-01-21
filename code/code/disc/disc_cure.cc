@@ -40,9 +40,9 @@ static void adjustHealHp(const TBeing *caster, int &hp, int durat)
   // as of 5.2 the damage constant is .65 so i'm gonna make the heal constant .75
   const TMonster *tmon = dynamic_cast<const TMonster *>(caster); 
   if (tmon)
-    hp = (int)((double)(hp)*(stats.npc_skill_damage_mod * 1.15));
+    hp = (int)((double)(hp)*(stats.npc_heal_amount_mod * 1.15));
   else
-    hp = (int)((double)(hp)*(stats.skill_damage_mod * 1.15));
+    hp = (int)((double)(hp)*(stats.heal_amount_mod * 1.15));
  
   // imms have had an adjustment to rounds made in start_cast
   // so adjust for that

@@ -61,9 +61,11 @@ class GameStats {
     double max_exist;
     double xp_modif;
     double skill_damage_mod;
+    double heal_amount_mod;
     double weapon_damage_mod;
     double barehand_damage_mod;
     double npc_skill_damage_mod;
+    double npc_heal_amount_mod;
     double npc_weapon_damage_mod;
     int absorb_damage_divisor[2];
     long logins;
