@@ -1949,12 +1949,11 @@ void TBeing::statBeing(TBeing* k) {
       case SKILL_BULLYWUGCROAK:
       case SKILL_AVIAN:
       case SKILL_FISHBURBLE:
-#if 1
+      case SKILL_COMMON:
       case SPELL_EARTHMAW:
       case SPELL_CREEPING_DOOM:
       case SPELL_FERAL_WRATH:
       case SPELL_SKY_SPIRIT:
-#endif
         if (!discArray[aff->type]) {
           vlogf(LOG_BUG,
             format("BOGUS AFFECT (%d) on %s") % aff->type % k->getName());

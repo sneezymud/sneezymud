@@ -696,6 +696,15 @@ void TPerson::loadFromSt(charFile* st) {
   spellNumT snt;
   for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
     if (discArray[snt]) {
+      // Races without garbles should have common maxed naturally without any
+      // training
+      if (snt == SKILL_COMMON && getMyRace() &&
+          getMyRace()->getGarbles() == 0) {
+        setNatSkillValue(snt, MAX_SKILL_LEARNEDNESS);
+        setSkillValue(snt, MAX_SKILL_LEARNEDNESS);
+        continue;
+      }
+
       int mappedskill = mapSpellnumToFile(snt);
       setNatSkillValue(snt,
         ((GetMaxLevel() > MAX_MORT) ? MAX_SKILL_LEARNEDNESS
