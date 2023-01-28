@@ -522,7 +522,7 @@ void TBeing::doDisband() {
 #endif
 }
 
-void sendToFaction(factionTypeT fnum, const TBeing* who, const char* arg) {
+void sendToFaction(factionTypeT fnum, TBeing* who, const char* arg) {
   Descriptor *d, *d_next;
   TBeing* tmpch;
   sstring garble;
@@ -820,7 +820,7 @@ void TBeing::doFactions(const sstring& arg) {
         buf = format(" %s") % CaravanDestination(CARAVAN_DEST_AMBER);
 	sbuf+=buf;
       }
-      if (!IS_SET(FactionInfo[which].caravan_flags, 
+      if (!IS_SET(FactionInfo[which].caravan_flags,
                 CARAVAN_DEST_BM | CARAVAN_DEST_GH |
 		  CARAVAN_DEST_LOG | CARAVAN_DEST_AMBER)){
 	sbuf+=" None";

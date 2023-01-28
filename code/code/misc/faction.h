@@ -11,6 +11,9 @@
 
 #include "spells.h"
 
+class sstring;
+class TBeing;
+
 const int FACT_LEADER_SLOTS = 4;  // leader = 0, 3 subleaders
 
 enum factionTypeT {
@@ -73,38 +76,35 @@ const int CARAVAN_TRADE = 100;
 
 class TFactionInfo {
   public:
-    char* faction_name;
-    char* leader[FACT_LEADER_SLOTS];
-    char* faction_password;
-    double faction_array[MAX_FACTIONS][2];
-    double faction_power;
-    int corp_id;
-    double faction_tithe;
-    int caravan_interval;
-    int caravan_counter;
-    unsigned int caravan_flags;
-    int caravan_value;
-    int caravan_defense;
-    int caravan_attempts;
-    int caravan_successes;
+    char* faction_name{nullptr};
+    char* leader[FACT_LEADER_SLOTS]{nullptr};
+    char* faction_password{nullptr};
+    double faction_array[MAX_FACTIONS][2]{{0.0}};
+    double faction_power{0.0};
+    int corp_id{0};
+    double faction_tithe{0.0};
+    int caravan_interval{0};
+    int caravan_counter{0};
+    unsigned int caravan_flags{0};
+    int caravan_value{0};
+    int caravan_defense{0};
+    int caravan_attempts{0};
+    int caravan_successes{0};
 
     int getMoney() const;
     void addToMoney(int);
     void setMoney(int);
 
-    TFactionInfo() {
-      int i;
-      faction_name = NULL;
-      faction_password = NULL;
-      for (i = 0; i < FACT_LEADER_SLOTS; i++)
-        leader[i] = NULL;
-    }
+    TFactionInfo() = default;
+    TFactionInfo(const TFactionInfo&) = delete;
+    TFactionInfo& operator=(const TFactionInfo&) = delete;
+    TFactionInfo(TFactionInfo&&) = delete;
+    TFactionInfo& operator=(TFactionInfo&&) = delete;
     ~TFactionInfo() {
-      int i;
       delete[] faction_name;
       delete[] faction_password;
-      for (i = 0; i < FACT_LEADER_SLOTS; i++)
-        delete[] leader[i];
+      for (char* l : leader)
+        delete[] l;
     }
 };
 
@@ -138,4 +138,4 @@ extern spellNumT your_deity_val;
 extern int bestFactionPower();
 extern void recalcFactionPower();
 extern void launch_caravans();
-extern void sendToFaction(factionTypeT, const TBeing*, const char*);
+extern void sendToFaction(factionTypeT, TBeing*, const char*);

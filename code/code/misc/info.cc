@@ -71,7 +71,7 @@ sstring describeDuration(const TBeing* ch, int dur) {
   // random error
   if (!ch->isImmortal()) {
 #if 0
-    errnum = ch->plotStat(STAT_CURRENT, STAT_PER, 175, 15, 75); 
+    errnum = ch->plotStat(STAT_CURRENT, STAT_PER, 175, 15, 75);
     errnum = ::number(-1 * errnum, 1 * errnum);
 #else
     // bad to randomize it, just have them overestimate it
@@ -440,7 +440,7 @@ bool wordHasPunctuation(const sstring& s) {
   return (t.find_first_of(punctuation, last_char) != t.npos);
 }
 
-sstring TBeing::autoFormatDesc(const sstring& regStr, bool indent) const {
+sstring TBeing::autoFormatDesc(const sstring& regStr, bool indent) {
   sstring line, garbled;
 
   sstring newDescr = "";
@@ -5571,7 +5571,7 @@ void TBeing::sendRoomName(TRoom* rp) const {
   }
 }
 
-void TBeing::sendRoomDesc(TRoom* rp) const {
+void TBeing::sendRoomDesc(TRoom* rp) {
   sstring tmp;
 
   tmp = rp->getDescr();
