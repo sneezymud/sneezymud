@@ -10,6 +10,8 @@
 
 #include "sstring.h"
 
+class TBeing;
+
 #ifndef cElements
 #define cElements(x) (sizeof(x) / sizeof(x[0]))
 #endif
@@ -138,7 +140,7 @@ class Garble {
     const char* const description;  // used by egotrip
     const bool automatic;           // used by egotrip
     const SCOPE scope;
-    sstring (*garbleFunction)(const TBeing*, TBeing*, const sstring&,
+    sstring (*garbleFunction)(TBeing*, TBeing*, const sstring&,
       Garble::SPEECHTYPE);
     const int speechFlags;
 };

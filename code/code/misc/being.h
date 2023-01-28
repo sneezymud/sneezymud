@@ -1160,7 +1160,7 @@ class TBeing : public TThing {
     virtual void sendTo(colorTypeT, const sstring&) const;
     virtual void sendTo(const sstring&) const;
     void sendRoomName(TRoom*) const;
-    void sendRoomDesc(TRoom*) const;
+    void sendRoomDesc(TRoom*);
     void addFollower(TBeing*, bool = FALSE);
     void addSkillApply(spellNumT, short);
     void remSkillApply(spellNumT, short);
@@ -1828,7 +1828,7 @@ class TBeing : public TThing {
     // psionics
     int doPTell(const char*, bool);
     int doPSay(const char*);
-    void doPShout(const char*);
+    void doPShout(const sstring& message);
     void doTelevision(const char*);
     void doMindfocus(const char*);
     int doPsiblast(const char*);
@@ -1897,7 +1897,7 @@ class TBeing : public TThing {
     virtual void doShutdow();
     virtual void doShutdown(bool, const char*);
     const sstring addColorRoom(TRoom*, int) const;
-    sstring autoFormatDesc(const sstring&, bool) const;
+    sstring autoFormatDesc(const sstring&, bool);
     sstring dynColorRoom(TRoom*, int, bool) const;
     void doLook(const sstring&, cmdTypeT, TThing* specific = NULL);
     void lookDark();
@@ -2013,7 +2013,7 @@ class TBeing : public TThing {
     int toggleGarble(Garble::TYPE garble);
     sstring garble(TBeing* to, const sstring& arg,
       Garble::SPEECHTYPE speechType,
-      Garble::SCOPE garbleScope = Garble::SCOPE_ALL) const;
+      Garble::SCOPE garbleScope = Garble::SCOPE_ALL);
 
     // used by doReset
     bool resetPractices(classIndT resetClass, int& practices,
