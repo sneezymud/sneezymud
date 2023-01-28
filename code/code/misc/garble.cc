@@ -302,6 +302,11 @@ int getLanguageChance(const TBeing* from, TBeing* to, spellNumT language) {
   // A natural talent for how good your ear for accents is
   chance += to ? to->plotStat(STAT_CURRENT, STAT_PER, 0, 16, 8) : 0;
 
+  if (from && from->doesKnowSkill(SKILL_COMMON) &&
+      from->bSuccess(SKILL_COMMON)) {
+    chance += from->getSkillValue(SKILL_COMMON) * 4 / 5;
+  }
+
   // -10-116 with bonus based on how smart the speaker is
   chance += from ? from->plotStat(STAT_CURRENT, STAT_INT, -10, 10, 0) : 0;
 

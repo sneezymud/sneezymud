@@ -1619,6 +1619,7 @@ namespace {
     {SKILL_FISHBURBLE, "SKILL_FISHBURBLE"},
     {SKILL_ADVANCED_OFFENSE, "SKILL_ADVANCED_OFFENSE"},
     {SKILL_INEVITABILITY, "SKILL_INEVITABILITY"},
+    {SKILL_COMMON, "SKILL_COMMON"},
     {MAX_SKILL, "MAX_SKILL"},
     {TYPE_HIT, "TYPE_HIT"},
     {TYPE_BLUDGEON, "TYPE_BLUDGEON"},
@@ -1769,12 +1770,12 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
 // COSMO CASTING MARKER
 // check if this is right
   if (isPc() && canSpeak()) {
-    if (discArray[which]->minMana && 
+    if (discArray[which]->minMana &&
         (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
       saySpell(which);
   }
   if (isPc() && canSpeak()) {
-    if (discArray[which]->minLifeforce && 
+    if (discArray[which]->minLifeforce &&
         (getRitualismLevel() < RIT_LEV_NO_MANTRA))
       saySpell(which);
   }

@@ -22,6 +22,7 @@ class CDAdvAdventuring : public CDiscipline {
     CSkill skBullywug;
     CSkill skAvian;
     CSkill skKalysian;
+    CSkill skCommon;
 
     CDAdvAdventuring() :
       CDiscipline(),
@@ -35,7 +36,9 @@ class CDAdvAdventuring : public CDiscipline {
       skTrollish(),
       skBullywug(),
       skAvian(),
-      skKalysian() {}
+      skKalysian(),
+      skCommon() {}
+
     CDAdvAdventuring(const CDAdvAdventuring& a) :
       CDiscipline(a),
       skHiking(a.skHiking),
@@ -48,7 +51,9 @@ class CDAdvAdventuring : public CDiscipline {
       skTrollish(a.skTrollish),
       skBullywug(a.skBullywug),
       skAvian(a.skAvian),
-      skKalysian(a.skKalysian) {}
+      skKalysian(a.skKalysian),
+      skCommon(a.skCommon) {}
+
     CDAdvAdventuring& operator=(const CDAdvAdventuring& a) {
       if (this == &a)
         return *this;
@@ -64,6 +69,7 @@ class CDAdvAdventuring : public CDiscipline {
       skBullywug = a.skBullywug;
       skAvian = a.skAvian;
       skKalysian = a.skKalysian;
+      skCommon = a.skCommon;
       return *this;
     }
     virtual ~CDAdvAdventuring(){};
