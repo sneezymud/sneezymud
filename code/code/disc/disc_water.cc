@@ -312,7 +312,7 @@ int castWateryGrave(TBeing * caster, TBeing * victim)
   caster->reconcileHurt(victim,discArray[SPELL_WATERY_GRAVE]->alignMod);
 
   level = caster->getSkillLevel(SPELL_WATERY_GRAVE);
-  int bKnown = caster->getSkillLevel(SPELL_WATERY_GRAVE);
+  int bKnown = caster->getSkillValue(SPELL_WATERY_GRAVE);
 
   ret=wateryGrave(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_WATERY_GRAVE));
   if (ret == SPELL_SUCCESS) {
@@ -693,7 +693,7 @@ int castTsunami(TBeing * caster)
   int rc = 0;
 
   level = caster->getSkillLevel(SPELL_TSUNAMI);
-  int bKnown = caster->getSkillLevel(SPELL_TSUNAMI);
+  int bKnown = caster->getSkillValue(SPELL_TSUNAMI);
 
   ret=tsunami(caster,level,bKnown, caster->getAdvLearning(SPELL_TSUNAMI));
   if (IS_SET(ret, SPELL_SUCCESS)) {
