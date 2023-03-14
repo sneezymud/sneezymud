@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cxxtest/TestSuite.h>
-#include "sstring.h"
+#include "code/sys/sstring.h"
 
 namespace CxxTest {
   CXXTEST_TEMPLATE_INSTANTIATION
