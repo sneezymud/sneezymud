@@ -568,7 +568,7 @@ static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT typ
   ch->sendTo("\n\r\n\rNew mob long description:\n\r");
   ch->sendTo("Terminate with a ~ ON A SEPERATE LINE. ` on a separate line erases the current long description. Press <ENTER> again to continue.\n\r");
   ch->desc->str = &mob->player.longDescr;
-  ch->desc->max_str = SHORT_STRING_LENGTH;
+  ch->desc->max_str = LONG_STRING_LENGTH;
 }
 
 static void change_mob_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
