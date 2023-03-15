@@ -1956,6 +1956,12 @@ namespace {
 
 void Descriptor::sstring_add(sstring s)
 {
+
+  if (max_str && (int)(str->length() + s.toCRLF().length()) > max_str - 1){
+    writeToQ("Input limit exceeded.  Ignoring!\n\r");
+    return;
+  }
+
   bool terminator = false;
   bool t2 = false;
 
@@ -1992,10 +1998,10 @@ void Descriptor::sstring_add(sstring s)
         return;
       }
       writeToQ(format("Write your %s, use ~ when done, or ` to cancel.\n\r") % sstring(name).uncap());
-      *str += s;
+      *str += s.toCRLF();
     } else {
       // body of idea
-      *str += s;
+      *str += s.toCRLF();
     }
   } else {
     // not a bug/idea
@@ -2352,7 +2358,13 @@ void setPrompts(fd_set out)
       }
 
       if (d->str && (d->prompt_mode != DONT_SEND)) {
-        d->output.push(CommPtr(new UncategorizedComm("-> ")));
+        if (d->max_str) {
+          d->output.push(CommPtr(new UncategorizedComm(format("(%i/%i)-> ")
+                    % d->str->length() 
+                    % (d->max_str - 1))));
+        } else {
+          d->output.push(CommPtr(new UncategorizedComm("-> ")));
+        }
       } else if (d->pagedfile && (d->prompt_mode != DONT_SEND)) {
         sprintf(promptbuf, "\n\r[ %sReturn%s to continue, %s(r)%sefresh, %s(b)%sack, page %s(%d/%d)%s, or %sany other key%s to quit ]\n\r", 
             d->green(),  d->norm(),
