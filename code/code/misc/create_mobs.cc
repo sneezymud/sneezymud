@@ -275,76 +275,6 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
     return;
   }
 
-  char name[128], short_desc[128], long_desc[256], description[MAX_STRING_LENGTH];
-  char local_sound[128], adjacent_sound[128];
-
-  // make sure all of our breaks are \n\r
-  // most of these will never have a line break, but this is just the save routine so whatever...
-  int f, u;
-  for (f = 0, u = 0; u < (int) mob->name.length(); u++) {
-    if (mob->name[u] == 10) {
-      name[f++] = 10;
-      name[f++] = 13;
-    } else if (mob->name[u] != 13) {
-      name[f++] = mob->name[u];
-    }
-  }
-  name[f] = '\0';
-  
-  for (f = 0, u = 0; u < (int) mob->shortDescr.length(); u++) {
-    if (mob->shortDescr[u] == 10) {
-      short_desc[f++] = 10;
-      short_desc[f++] = 13;
-    } else if (mob->shortDescr[u] != 13) {
-      short_desc[f++] = mob->shortDescr[u];
-    }
-  }
-  short_desc[f] = '\0';
-
-  for (f = 0, u = 0; u < (int) mob->getLongDesc().length(); u++) {
-    if (mob->getLongDesc()[u] == 10) {
-      long_desc[f++] = 10;
-      long_desc[f++] = 13;
-    } else if (mob->getLongDesc()[u] != 13) {
-      long_desc[f++] = mob->getLongDesc()[u];
-    }
-  }
-  long_desc[f] = '\0';
-
-  for (f = 0, u = 0; u < (int) mob->getDescr().length(); u++) {
-    if (mob->getDescr()[u] == 10) {
-      description[f++] = 10;
-      description[f++] = 13;
-    } else if (mob->getDescr()[u] != 13) {
-      description[f++] = mob->getDescr()[u];
-    }
-  }
-  description[f] = '\0';
-  
-  if (!mob->sounds.empty()) {
-    for (f = 0, u = 0; u < (int) mob->sounds.length(); u++) {
-      if (mob->sounds[u] == 10) {
-        local_sound[f++] = 10;
-        local_sound[f++] = 13;
-      } else if (mob->sounds[u] != 13) {
-        local_sound[f++] = mob->sounds[u];
-      }
-    }
-    local_sound[f] = '\0';
-  }
-  
-  if (!mob->distantSnds.empty()) {
-    for (f = 0, u = 0; u < (int) mob->distantSnds.length(); u++) {
-      if (mob->distantSnds[u] == 10) {
-        adjacent_sound[f++] = 10;
-        adjacent_sound[f++] = 13;
-      } else if (mob->distantSnds[u] != 13) {
-        adjacent_sound[f++] = mob->distantSnds[u];
-      }
-    }
-    adjacent_sound[f] = '\0';
-  }
-
   // sqladdmob in turn clears STRINGS_CHANGED (some kind of maintenance?)
   unsigned long actions = mob->specials.act | ACT_STRINGS_CHANGED;
   
@@ -355,7 +285,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
   db.query("insert into mob values ('%s', %i, '%s', '%s', '%s', '%s', %i, %i, %i, %i, '%s', %f, %i, %i, %i, %f, %f, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
       ch->name.c_str(),
       vnum, 
-      name, short_desc, long_desc, description, 
+      mob->name.c_str(), mob->shortDescr.c_str(), mob->getLongDesc().c_str(), mob->getDescr().c_str(), 
       actions, static_cast<unsigned long>(mob->specials.affectedBy),
       mob->getFaction(), static_cast<int>(mob->getPerc()), 
       ((mob->sounds.empty() || !mob->distantSnds.empty()) ? "L" : "A"), (float) mob->getMult(), 
@@ -376,7 +306,7 @@ static void TBeingSave(TBeing *ch, TMonster *mob, int vnum)
       mob->getStat(STAT_CHOSEN, STAT_SPE), 
       mapPosToFile(mob->getPosition()), mapPosToFile(mob->default_pos), mob->getSex(), mob->spec, 
       mob->getMaterial(WEAR_BODY), mob->canBeSeen, mob->visionBonus, mob->max_exist, 
-      (!mob->sounds.empty() ? local_sound : ""), (!mob->distantSnds.empty() ? adjacent_sound : ""));
+      (!mob->sounds.empty() ? mob->sounds.c_str() : ""), (!mob->distantSnds.empty() ? mob->distantSnds.c_str() : ""));
   
   // immunties
   db.query("delete from mob_imm where owner = '%s' and vnum = %i", ch->name.c_str(), vnum);
@@ -621,7 +551,7 @@ static void change_mob_short_desc(TBeing *ch, TMonster *mob, editorEnterTypeT ty
   ch->sendTo("Terminate with a ~ ON THE SAME LINE. Press <ENTER> again to continue.\n\r");
   mob->shortDescr = "";
   ch->desc->str = &mob->shortDescr;
-  ch->desc->max_str = MAX_NAME_LENGTH-1;
+  ch->desc->max_str = MAX_NAME_LENGTH;
 }
 
 static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
@@ -638,7 +568,7 @@ static void change_mob_long_desc(TBeing *ch, TMonster *mob, editorEnterTypeT typ
   ch->sendTo("\n\r\n\rNew mob long description:\n\r");
   ch->sendTo("Terminate with a ~ ON A SEPERATE LINE. ` on a separate line erases the current long description. Press <ENTER> again to continue.\n\r");
   ch->desc->str = &mob->player.longDescr;
-  ch->desc->max_str = MAX_STRING_LENGTH;
+  ch->desc->max_str = SHORT_STRING_LENGTH;
 }
 
 static void change_mob_desc(TBeing *ch, TMonster *mob, editorEnterTypeT type)
@@ -1941,7 +1871,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
         ch->sendTo("\n\r\n\rNew room sound:\n\r");
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
         ch->desc->str = &mob->sounds;
-        ch->desc->max_str = MAX_STRING_LENGTH;
+        ch->desc->max_str = SHORT_STRING_LENGTH;
         return;
       case 2:
         ch->sendTo(VT_HOMECLR);
@@ -1951,7 +1881,7 @@ static void change_mob_sounds(TBeing *ch, TMonster *mob, const char *arg, editor
         ch->sendTo("Terminate with a ~ ON A NEW LINE. Press <ENTER> again to continue.\n\r");
         mob->distantSnds = "";
         ch->desc->str = &mob->distantSnds;
-        ch->desc->max_str = MAX_STRING_LENGTH;
+        ch->desc->max_str = SHORT_STRING_LENGTH;
         return;
     }
   }
@@ -2477,7 +2407,7 @@ void TPerson::doMedit(const char *argument)
       }
       sendTo("Enter Room Sound, terminate with a '~' on a NEW line.\n\r");
       desc->str = &cMob->sounds;
-      desc->max_str = MAX_STRING_LENGTH;
+      desc->max_str = LONG_STRING_LENGTH;
       return;
       break;
     case 28: // Other Room Sound
@@ -2487,7 +2417,7 @@ void TPerson::doMedit(const char *argument)
       }
       sendTo("Enter Distant Room Sound, terminate with a '~' on a NEW line.\n\r");
       desc->str = &cMob->distantSnds;
-      desc->max_str = MAX_STRING_LENGTH;
+      desc->max_str = LONG_STRING_LENGTH;
       return;
       break;
     case 29: // medit replace <long/desc> <"text"> <"text">
