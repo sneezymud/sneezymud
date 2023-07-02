@@ -3666,7 +3666,7 @@ int TBeing::doMortalGoto(const sstring& argument) {
       {"maurice", 600},
       {"newbie", 25400},
       {"park", 25400},
-      {"attuner", 584},
+      {"attuner", 775},
       {"dee", 584},
       {"aunt-dee", 584},
       {"welfare", 570},
