@@ -75,6 +75,26 @@ D 0 35497 1 1        Inside a Smokey Shed -> Path Through a Small Village
 D 0 35498 2 1        The Jail -> Path Through a Small Village
 D 0 35498 5 2        The Jail -> A Jail Cell
 D 0 35499 4 2        A Jail Cell -> The Jail
+
+*blue-topaz
+X 1 1 35438
+X 1 2 35438
+X 1 3 35445
+X 1 4 35444
+X 1 5 35446
+X 1 6 35463
+X 1 7 35463
+X 1 10 35443
+X 1 11 35443
+X 1 12 35440
+X 1 13 35440
+X 1 14 35437
+X 1 15 35442
+X 1 16 35441
+X 1 17 35441
+X 1 18 35439
+X 1 19 35464
+
 O 0 35476 1 35412    a woodpile
 O 0 35488 1 35412    a chopping block
 O 0 20 1 35456       a chair
@@ -187,45 +207,46 @@ O 0 35498 1 35499    a small pile of muddy straw
 O 0 35498 1 35499    a small pile of muddy straw
 O 0 35494 1 35499    a small brass candelabra
 A 0 35400 35448
-M 0 35400 1 -99
-Y 0 133 2
+M 0 35400 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35401 1 -99
-Y 0 133 2
+M 0 35401 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35402 1 -99
+M 0 35402 1 -99	fierce ghost
 A 0 35400 35448
-M 0 35400 1 -99
-Y 0 133 2
+M 0 35400 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35401 1 -99
-Y 0 133 2
+M 0 35401 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35402 1 -99
+M 0 35402 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35400 1 -99
-Y 0 133 2
+M 0 35400 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35401 1 -99
-Y 0 133 2
+M 0 35401 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35402 1 -99
+M 0 35402 1 -99	fierce ghost
 A 0 35400 35448
-M 0 35400 1 -99
-Y 0 133 2
+M 0 35400 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35401 1 -99
-Y 0 133 2
+M 0 35401 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35402 1 -99
+M 0 35402 1 -99	fierce ghost
 A 0 35400 35448
-M 0 35400 1 -99
-Y 0 133 2
+M 0 35400 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35401 1 -99
-Y 0 133 2
+M 0 35401 1 -99	village guardsman
+Y 0 133 5			topaz set
 A 0 35400 35448
-M 0 35402 1 -99
+M 0 35402 1 -99	fierce ghost
 M 0 35407 1 35405       Geoff
 M 0 35405 1 35407       Buggie
 M 0 35406 1 35407       Dougie
@@ -270,8 +291,11 @@ G 1 35485 1
 M 0 35428 1 35475       the captain of the guard
 ? 0 2 0 E
 E 1 35413 4 18            a topaz warhammer [hold-right]
+Y 0 133 5			topaz set
+Z 0 1 5			blue topaz local set
 M 0 35424 1 35493       Father Crin
 M 0 35429 1 35498       the jailor
 G 1 35497 1         a key to the cell
+
 M 0 35430 1 35499       a ghostly prisoner
 S

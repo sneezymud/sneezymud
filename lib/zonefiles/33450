@@ -1,305 +1,342 @@
-#33450 
-Vasco - The Ossuary~ 
-33484 30 2 1 
-D 0 33450 0 1 Outside a Stone Archway -> Unearthed Ruins 
-D 0 33450 1 1 Outside a Stone Archway -> Atop an Old Stone Staircase 
-D 0 33451 3 1 Atop an Old Stone Staircase -> Outside a Stone Archway 
-D 0 33453 2 1 Unearthed Ruins -> Outside a Stone Archway 
-D 0 33458 1 1 Before an Ancient Vault -> Before the Ossuary 
-D 0 33459 3 1 Before the Ossuary -> Before an Ancient Vault 
-D 0 33466 3 1 The Ossuary -> Soaking Antechamber 
-D 0 33472 5 1 The Ossuary -> The Mouth of a Wide Tunnel 
-D 0 33474 0 1 The Ossuary -> Tainted Summoning Chamber 
-D 0 33477 1 1 The Ossuary -> Overseer's Den 
-D 0 33478 1 1 Soaking Antechamber -> The Ossuary 
-D 0 33480 3 1 Overseer's Den -> The Ossuary 
-D 0 33481 2 1 Tainted Summoning Chamber -> The Ossuary 
-D 0 33482 4 1 The Mouth of a Wide Tunnel -> The Ossuary 
-D 0 33483 1 1 A Blocked Off Tunnel -> The Den of a Large Beast 
-D 0 33484 3 1 The Den of a Large Beast -> A Blocked Off Tunnel 
+#33450
+Vasco - The Ossuary~
+33484 30 2 1
+D 0 33450 0 1 Outside a Stone Archway -> Unearthed Ruins
+D 0 33450 1 1 Outside a Stone Archway -> Atop an Old Stone Staircase
+D 0 33451 3 1 Atop an Old Stone Staircase -> Outside a Stone Archway
+D 0 33453 2 1 Unearthed Ruins -> Outside a Stone Archway
+D 0 33458 1 1 Before an Ancient Vault -> Before the Ossuary
+D 0 33459 3 1 Before the Ossuary -> Before an Ancient Vault
+D 0 33466 3 1 The Ossuary -> Soaking Antechamber
+D 0 33472 5 1 The Ossuary -> The Mouth of a Wide Tunnel
+D 0 33474 0 1 The Ossuary -> Tainted Summoning Chamber
+D 0 33477 1 1 The Ossuary -> Overseer's Den
+D 0 33478 1 1 Soaking Antechamber -> The Ossuary
+D 0 33480 3 1 Overseer's Den -> The Ossuary
+D 0 33481 2 1 Tainted Summoning Chamber -> The Ossuary
+D 0 33482 4 1 The Mouth of a Wide Tunnel -> The Ossuary
+D 0 33483 1 1 A Blocked Off Tunnel -> The Den of a Large Beast
+D 0 33484 3 1 The Den of a Large Beast -> A Blocked Off Tunnel
 
-M 0 33481 1 33450 Colonel Vaud 
-? 0 5 0 E 
-E 1 33464 1 19 The Sword of the Lightbearer [hold-left] 
-Y 0 15 5 gleaming set 
-? 0 100 0 G
-G 1 1576 9999 
-K 0 33470 1 33450 Hutir 
-Y 0 34 5 emerald 
-? 0 100 0 G
-G 1 31367 9999 
-K 0 33471 1 33450 Hulhash 
-? 0 5 0 E 
-E 1 33466 9999 19 a spike-covered femur from a large troll [hold-left] 
-Y 0 63 5 sturdy iron set 
+*soot-stained red silk
+X 1 1 3370 ring
+X 1 2 3370
+X 1 3 3371 pendant
+X 1 4 3372    robe soot-stained red silk [elf] (L45)
+X 1 5 3373   hood soot-stained red silk [elf] (L44)
+X 1 7 3374    pants pair soot-stained red silk [elf] (L52)
+X 1 8 3375    boot soot-stained red silk [elf] (L44)
+X 1 9 3375    boot soot-stained red silk [elf] (L44)
+X 1 10 3376   wrapping soot-stained red silk [elf] (L44)
+X 1 11 3376   wrapping soot-stained red silk [elf] (L44)
+X 1 12 3377   sleeve soot-stained red silk [elf] (L45)
+X 1 13 3377   sleeve soot-stained red silk [elf] (L45)
+X 1 14 3378   cloak soot-stained red silk [elf] (L44)
+X 1 15 3379   belt soot-stained red silk [elf] (L45)
+X 1 16 3380   bracelet soot-stained red silk [elf] (L44)
+X 1 17 3380   bracelet soot-stained red silk [elf] (L44)
 
-M 0 33469 1 33453 Hexus 
-? 0 5 0 E 
-E 1 33467 1 19 The Name of Needles [hold-left] 
-E 1 34036 1 19 a vampiric dagger 
-Y 0 114 5 pearl-studded set 
-M 0 33461 1 33456 a young black dragon 
-M 0 33480 1 33453 a drunk soldier 
-? 0 5 0 E 
-E 1 33463 9999 19 
-Y 0 136 5 
-M 0 33479 2 33453 a hired solder 
-Y 0 136 5 
-M 0 33478 2 33453 a hired solder 
-Y 0 136 5 
-M 0 33478 1 33453 a hired solder 
-Y 0 136 5 
-M 0 33480 1 33454 a drunk soldier 
-? 0 5 0 E 
-E 1 33463 9999 19 
-Y 0 136 5 
-M 0 33479 2 33454 a hired solder 
-Y 0 136 5 
-M 0 33478 2 33454 a hired solder 
-Y 0 136 5 
-M 0 33478 1 33454 a hired solder 
-Y 0 136 5 
-M 0 33479 1 33455 a hired solder 
-Y 0 136 5 
-M 0 33480 2 33455 a drunk soldier 
-? 0 5 0 E 
-E 1 33463 9999 19 
-Y 0 136 5 
-M 0 33479 2 33455 a hired solder 
-Y 0 136 5 
-M 0 33479 2 33455 a hired solder 
-Y 0 136 5 
-M 0 33478 1 33455 a hired solder 
-Y 0 136 5 
-M 0 33478 1 33455 a hired solder 
-Y 0 136 5 
-M 0 33479 2 33456 a hired solder 
-Y 0 136 5 
-M 0 33480 1 33456 a drunk soldier 
-? 0 10 0 E 
-E 1 33463 9999 19 
-Y 0 136 5 
-M 0 33479 2 33456 a hired solder 
-Y 0 136 5 
-M 0 33479 1 33456 a hired solder 
-Y 0 136 5 
-M 0 33478 2 33456 a hired solder 
-Y 0 136 5 
-M 0 33478 2 33456 a hired solder 
-Y 0 136 5 
-M 0 33473 1 33460 a packrat 
-M 0 33450 2 33465 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-Y 0 135 5 
+*black meteorium
+X 2 4 34071  suit barbed black meteorium [ogre] (L60)
+X 2 3 34072   throatguard barbed black meteorium (L59)
+X 2 5 34073   helm battle barbed black meteorium [ogre] (L59)
+X 2 6 34067  legging barbed black meteorium [ogre] (L60)
+X 2 7 34067  legging barbed black meteorium [ogre] (L60)
+X 2 8 34066  boot barbed black meteorium [ogre] (L60)
+X 2 9 34066  boot barbed black meteorium [ogre] (L60)
+X 2 10  34070  gauntlet barbed black meteorium [ogre] (L60)
+X 2 11  34070  gauntlet barbed black meteorium [ogre] (L60)
+X 2 14 34064 coat barbed black meteorium [ogre] (L60)
+X 2 15 34069  girth barbed black meteorium [ogre] (L60)
+X 2 16 34068  bracer barbed black meteorium [ogre] (L60)
+X 2 17 34068  bracer barbed black meteorium [ogre] (L60)
+X 2 18 34065  shield barbed black meteorium (L59)
+
+M 0 33481 1 33450 Colonel Vaud
+? 0 5 0 E
+E 1 33464 1 19 The Sword of the Lightbearer [hold-left]
+Y 0 15 5 gleaming set
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 4 33465 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-Y 0 135 5 
-M 0 33450 2 33466 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-Y 0 135 5 
+G 1 1576 9999
+K 0 33470 1 33450 Hutir
+Y 0 34 5 emerald
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 4 33466 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-Y 0 135 5 
-M 0 33450 2 33467 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-Y 0 135 5 
+G 1 31367 9999
+K 0 33471 1 33450 Hulhash
+? 0 5 0 E
+E 1 33466 9999 19 a spike-covered femur from a large troll [hold-left]
+Z 0 2 5
+Y 0 63 5 sturdy iron set
+
+M 0 33469 1 33453 Hexus
+? 0 5 0 E
+E 1 33467 1 19 The Name of Needles [hold-left]
+? 0 5 0 E
+E 1 34036 1 19 a vampiric dagger
+Y 0 114 5 pearl-studded set
+M 0 33461 1 33456 a young black dragon
+M 0 33480 1 33453 a drunk soldier
+? 0 5 0 E
+E 1 33463 9999 19
+Y 0 136 5
+M 0 33479 2 33453 a hired solder
+Y 0 136 5
+M 0 33478 2 33453 a hired solder
+Y 0 136 5
+M 0 33478 1 33453 a hired solder
+Y 0 136 5
+M 0 33480 1 33454 a drunk soldier
+? 0 5 0 E
+E 1 33463 9999 19
+Y 0 136 5
+M 0 33479 2 33454 a hired solder
+Y 0 136 5
+M 0 33478 2 33454 a hired solder
+Y 0 136 5
+M 0 33478 1 33454 a hired solder
+Y 0 136 5
+M 0 33479 1 33455 a hired solder
+Y 0 136 5
+M 0 33480 2 33455 a drunk soldier
+? 0 5 0 E
+E 1 33463 9999 19
+Y 0 136 5
+M 0 33479 2 33455 a hired solder
+Y 0 136 5
+M 0 33479 2 33455 a hired solder
+Y 0 136 5
+M 0 33478 1 33455 a hired solder
+Y 0 136 5
+M 0 33478 1 33455 a hired solder
+Y 0 136 5
+M 0 33479 2 33456 a hired solder
+Y 0 136 5
+M 0 33480 1 33456 a drunk soldier
+? 0 10 0 E
+E 1 33463 9999 19
+Y 0 136 5
+M 0 33479 2 33456 a hired solder
+Y 0 136 5
+M 0 33479 1 33456 a hired solder
+Y 0 136 5
+M 0 33478 2 33456 a hired solder
+Y 0 136 5
+M 0 33478 2 33456 a hired solder
+Y 0 136 5
+M 0 33473 1 33460 a packrat
+M 0 33450 2 33465 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 4 33467 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33452 1 33468 Lorhund 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
+G 1 31394 9999
+K 1 33450 4 33465 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+Y 0 135 5
+M 0 33450 2 33466 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33468 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33453 1 33469 Essril 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
+G 1 31394 9999
+K 1 33450 4 33466 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+Y 0 135 5
+M 0 33450 2 33467 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33469 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33454 1 33470 Chenelm 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-G 1 31394 9999 
+G 1 31394 9999
+K 1 33450 4 33467 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33452 1 33468 Lorhund
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
 ? 0 100 0 G
-K 1 33450 2 33470 a steadfast guardian 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33457 1 33471 Untus 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
+G 1 31394 9999
+K 1 33450 2 33468 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33453 1 33469 Essril
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33471 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33456 1 33472 Sertkal 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
+G 1 31394 9999
+K 1 33450 2 33469 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33454 1 33470 Chenelm
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33472 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33455 1 33473 Nuald 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
+G 1 31394 9999
+K 1 33450 2 33470 a steadfast guardian
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33457 1 33471 Untus
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33473 a steadfast guardian 
-? 0 5 0 E 
-E 1 33465 9999 19 thin eternium shortsword 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33458 1 33474 Traftan 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33473 9999 5 a cap of eternium thread [head] 
-? 0 5 0 E 
-E 1 33471 9999 4 a robe of eternium thread [body] 
-? 0 5 0 E 
-E 1 33472 9999 14 a backplate of eternium thread [back] 
-? 0 5 0 E 
-E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right] 
-? 0 5 0 E 
-E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left] 
+G 1 31394 9999
+K 1 33450 2 33471 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33456 1 33472 Sertkal
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33474 a steadfast guardian 
-Y 0 135 5 
-M 0 33459 1 33475 Keethrax 
-? 0 5 0 E 
-E 1 33473 9999 5 a cap of eternium thread [head] 
-? 0 5 0 E 
-E 1 33471 9999 4 a robe of eternium thread [body] 
-? 0 5 0 E 
-E 1 33472 9999 14 a backplate of eternium thread [back] 
-? 0 5 0 E 
-E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right] 
-? 0 5 0 E 
-E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left] 
+G 1 31394 9999
+K 1 33450 2 33472 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33455 1 33473 Nuald
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33475 a steadfast guardian 
-Y 0 135 5 
-M 0 33460 1 33476 Akate 
-? 0 5 0 E 
-E 1 33473 9999 5 a cap of eternium thread [head] 
-? 0 5 0 E 
-E 1 33471 9999 4 a robe of eternium thread [body] 
-? 0 5 0 E 
-E 1 33472 9999 14 a backplate of eternium thread [back] 
-? 0 5 0 E 
-E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right] 
-? 0 5 0 E 
-E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left] 
+G 1 31394 9999
+K 1 33450 2 33473 a steadfast guardian
+? 0 5 0 E
+E 1 33465 9999 19 thin eternium shortsword
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33458 1 33474 Traftan
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33473 9999 5 a cap of eternium thread [head]
+? 0 5 0 E
+E 1 33471 9999 4 a robe of eternium thread [body]
+? 0 5 0 E
+E 1 33472 9999 14 a backplate of eternium thread [back]
+? 0 5 0 E
+E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right]
+? 0 5 0 E
+E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left]
 ? 0 100 0 G
-G 1 31394 9999 
-K 1 33450 2 33476 a steadfast guardian 
-Y 0 135 5 
-M 0 33450 1 33477 a steadfast guardian 
-Y 0 135 5 
-M 0 33482 1 33481 Aziel, prince of hidden treasures 
-M 0 33483 1 33483 Nelchael 
-? 0 5 0 E 
-E 1 33469 9999 15 bat skin belt 
-? 0 5 0 E 
-E 1 33470 9999 19 zweihander 
-M 0 33472 1 33484 Behir 
-M 0 33451 1 33458 hulking guardian 
-? 0 5 0 E 
-E 1 33454 9999 16 bracelet eternium bangles [wrist] 
-? 0 5 0 E 
-E 1 33454 9999 17 bracelet eternium bangles [wrist] 
-Y 0 135 5 
-M 0 33484 1 33479 Chwast 
-? 0 5 0 E 
-E 1 33484 9999 11 a wrapped length of beads [hand-left] 
-? 0 10 0 E 
-E 1 33485 9999 18 a long vicious-looking pronged harpoon [hold-right] 
-? 0 10 0 E 
-E 1 33485 9999 19 a long vicious-looking pronged harpoon [hold-left] 
+G 1 31394 9999
+K 1 33450 2 33474 a steadfast guardian
+Y 0 135 5
+M 0 33459 1 33475 Keethrax
+? 0 5 0 E
+E 1 33473 9999 5 a cap of eternium thread [head]
+? 0 5 0 E
+E 1 33471 9999 4 a robe of eternium thread [body]
+? 0 5 0 E
+E 1 33472 9999 14 a backplate of eternium thread [back]
+? 0 5 0 E
+E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right]
+? 0 5 0 E
+E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left]
+? 0 100 0 G
+G 1 31394 9999
+K 1 33450 2 33475 a steadfast guardian
+Y 0 135 5
+M 0 33460 1 33476 Akate
+? 0 5 0 E
+E 1 33473 9999 5 a cap of eternium thread [head]
+? 0 5 0 E
+E 1 33471 9999 4 a robe of eternium thread [body]
+? 0 5 0 E
+E 1 33472 9999 14 a backplate of eternium thread [back]
+? 0 5 0 E
+E 1 33474 9999 6 a pair of pants made from eternium thread [leg-right]
+? 0 5 0 E
+E 1 33474 9999 7 a pair of pants made from eternium thread [leg-left]
+? 0 100 0 G
+G 1 31394 9999
+K 1 33450 2 33476 a steadfast guardian
+Y 0 135 5
+M 0 33450 1 33477 a steadfast guardian
+Y 0 135 5
+M 0 33482 1 33481 Aziel, prince of hidden treasures
+M 0 33483 1 33483 Nelchael
+? 0 5 0 E
+E 1 33469 9999 15 bat skin belt
+? 0 5 0 E
+E 1 33470 9999 19 zweihander
+Z 0 1 5			local sooty red
+Y 0 135 5		eternium
+M 0 33472 1 33484 Behir
+M 0 33451 1 33458 hulking guardian
+? 0 5 0 E
+E 1 33454 9999 16 bracelet eternium bangles [wrist]
+? 0 5 0 E
+E 1 33454 9999 17 bracelet eternium bangles [wrist]
+Y 0 135 5
+M 0 33484 1 33479 Chwast
+? 0 5 0 E
+E 1 33484 9999 11 a wrapped length of beads [hand-left]
+? 0 10 0 E
+E 1 33485 9999 18 a long vicious-looking pronged harpoon [hold-right]
+? 0 10 0 E
+E 1 33485 9999 19 a long vicious-looking pronged harpoon [hold-left]
 S
-

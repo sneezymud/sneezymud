@@ -10,31 +10,48 @@ D 0 34063 7 1        Small Cave Beneath Some Rubble -> A Collapsed Tunnel
 D 0 34068 1 1        Elaborate Bone Altar -> Bone Littered Tunnel
 D 0 34067 0 1        Connection to Gnath
 
+*web-covered drow mail local set
+X 1 3        34034        sym
+X 1 4        34046        breastplate
+X 1 5         34045        mask
+X 1 6        34040        legging
+X 1 7        34040
+X 1 8        34039        boot
+X 1 9        34039
+X 1 10        34041        wrapping
+X 1 11        34041
+X 1 12        34042        sleeve
+X 1 13        34042
+X 1 14        34047        cloak
+X 1 15        34044        cod
+X 1 16        34043        bracer
+X 1 17        34043        bracer
+
 *prize chest
 O 0 34035 1 34074       a web-covered onyx chest
-? 0 3 0 P
+? 0 50 0 P
 P 1 34038 1 34035         a spider-shaped pendant on a necklace of onyx
-? 0 3 0 P
+? 0 15 0 P
 P 1 34044 1 34035         a spider-shaped onyx codpiece
-? 0 3 0 P
+? 0 15 0 P
 P 1 34045 1 34035         an onyx spider mask
-? 0 3 0 P
+? 0 5 0 P
 P 1 34049 1 34035         Spiderbite
-? 0 3 0 P
+? 0 15 0 P
 P 1 34047 1 34035         Cloak of The Eight-eyed
-? 0 3 0 P
+? 0 15 0 P
 P 1 34039 2 34035         a web-covered boot of drow mail
-? 0 3 0 P
+? 0 15 0 P
 P 1 34040 2 34035         a web-covered legging of drow mail
-? 0 3 0 P
-P 1 34041 2 34035         a web-covered glove of drow mail
-? 0 3 0 P
+? 0 15 0 P
+P 1 34041 2 34035         wrapping spider silk
+? 0 15 0 P
 P 1 34042 2 34035         a web-covered sleeve of drow mail
-? 0 3 0 P
+? 0 15 0 P
 P 1 34043 2 34035         a web-covered bracer of drow mail
-? 0 3 0 P
+? 0 15 0 P
 P 1 34046 1 34035         a web-covered breastplate of drow mail
-? 0 3 0 P
+? 0 5 0 P
 P 1 34048 1 34035         The Spider's Web
 
 *mobs
@@ -45,7 +62,8 @@ M 0 34035 2 34052       a hairy black spider
 M 0 34035 4 34052       a hairy black spider
 M 0 34035 1 34055       a hairy black spider
 M 0 34037 1 34068       Micarven-orvir
-E 1 34037 9999 3          an ornate cobweb-shaped key of onyx [neck]
+G 1 34037 9999            an ornate cobweb-shaped key of onyx [neck]
+Z 0 1 5                   web-covered drow mail local set
 M 0 34035 1 34070       a hairy black spider
 M 0 34036 1 34071       a queen spider of horrifying size
 M 0 34035 2 34072       a hairy black spider

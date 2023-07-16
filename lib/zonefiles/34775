@@ -7,6 +7,56 @@ D 0 34791 2 2
 D 0 34784 0 1            Feanis' Peephole
 D 0 34795 2 1
 
+*red-phoenix
+X 1 1 44807 ring feathers bright red phoenix (L24) [inferno]
+X 1 2 44807 ring feathers bright red phoenix (L24) [inferno]
+X 1 3 44814 pendant phoenix egg golden chain (L27)
+X 1 4 44813 robe bright red phoenix feathers [gnome] (L40)
+X 1 5 44815 cowl red phoenix down [gnome] (L40)
+X 1 6 44808 legging red phoenix down [gnome] (L10)
+X 1 7 44808 legging red phoenix down [gnome] (L10)
+X 1 8 44804 boot red phoenix down [gnome] (L40)
+X 1 9 44804 boot red phoenix down [gnome] (L40)
+X 1 10 44811 glove red phoenix down [gnome] (L40)
+X 1 11 44811 glove red phoenix down [gnome] (L40)
+X 1 12 44812 sleeve red phoenix down [gnome] (L40)
+X 1 13 44812 sleeve red phoenix down [gnome] (L40)
+X 1 14 44805 cloak swirling red [gnome] (L40)
+X 1 15 44810 belt bright red phoenix feathers [gnome] (L40)
+X 1 16 44809 bracelet bright red phoenix feathers [gnome]
+X 1 17 44809 bracelet bright red phoenix feathers [gnome]
+X 1 18 44806 egg phoenix glowing red (L10)
+X 1 19 44816 dagger living flames (L47)
+
+*bright-red
+X 2 1 44821 ring bright red fire (L15)
+X 2 2 44821 ring bright red fire (L15)
+X 2 3 44822 necklace bright red fire [ogre] (L15)
+X 2 6 44818 legging bright red silk [ogre] (L6)
+X 2 7 44818 legging bright red silk [ogre] (L6)
+X 2 10 44819 glove bright red silk [ogre] (L25)
+X 2 11 44819 glove bright red silk [ogre] (L25)
+X 2 14 44817 cloak bright red silk [ogre] (L26)
+X 2 16 44820 bracer bright red silk [ogre] (L26)
+X 2 17 44820 bracer bright red silk [ogre] (L26)
+
+*frilly-pink
+X 3 3 35425 necklet frilly pink (L29)
+X 3 4 35424 tunic frilly pink [ogre] (L30)
+X 3 5 35426 cowl frilly pink [ogre] (L29)
+X 3 6 35419 pants frilly pink [ogre] (L35)
+X 3 8 35428 slipper frilly pink [ogre] (L30)
+X 3 9 35428 slipper frilly pink [ogre] (L30)
+X 3 10 35422 glove frilly pink [ogre] (L29)
+X 3 11 35422 glove frilly pink [ogre] (L29)
+X 3 12 35423 sleeve frilly pink [ogre] (L30)
+X 3 13 35423 sleeve frilly pink [ogre] (L30)
+X 3 14 35417 cape frilly pink [ogre] (L30)
+X 3 15 35421 girdle frilly pink [ogre] (L30)
+X 3 16 35420 bracelet frilly pink [ogre] (L30)
+X 3 17 35420 bracelet frilly pink [ogre] (L30)
+X 3 19 35418 shield frilly pink (L15)
+
 O 0 34775 1 34775    Torches
 O 0 34775 1 34776
 O 0 34775 1 34778
@@ -62,16 +112,18 @@ G 1 34793 9999              rainbow colored waterskin
 M 0 34777 1 34782   Gnewell
 ? 0 5 0 G
 G 1 34786 9999                mystifying gem
+Z 0 1 2			phoenix down
 
 M 0 34779 1 34790   Zombie Faerie
 
 M 0 34781 1 34777   Gnatalie
 ? 0 5 0 G
 G 1 34786 9999                   mystifying gem
+Z 0 1 3			phoenix down
 
 M 0 34783 1 34783   Bruthed
 ? 0 5 0 E
-E 1 34783 9999 3                  fuzzy beard 
+E 1 34783 9999 3                  fuzzy beard
 
 M 0 34784 1 34784   Feanis
 
@@ -85,10 +137,12 @@ M 0 34790 1 34790   Wegort
 E 1 34779 9999 5                 faerie face mask
 ? 0 3 0 E
 E 1 34780 1 14               pixie skin wings
+Z 0 3 5			frilly local set
 
 M 0 34791 9999 34791   Primula
 ? 0 5 0 E
 E 1 34795 9999 6                 stretched faerie skin pants
+Z 0 2 3				bright red silk
 
 M 0 34792 1 34792   Jane
 ? 0 10 0 G
@@ -100,11 +154,5 @@ E 1 34794 9999 3                    feathered scarf
 
 M 0 34796 1 34796   Baulder
 S
-
-
-
-	
-
-
 
 

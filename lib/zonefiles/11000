@@ -3,15 +3,15 @@ Satan - Cloud City of Cimea~
 11099 50 2 1
 
 D 0 11004 7 2		Outside Gate
-D 0 11013 8 2		
+D 0 11013 8 2
 D 0 11022 0 1		Homely Domicile
-D 0 11036 2 1		
+D 0 11036 2 1
 D 0 11024 1 1		Homely Domicile
-D 0 11035 3 1		
+D 0 11035 3 1
 D 0 11024 3 2		Southwestern Spire
 D 0 11045 1 2
 D 0 11026 8 1		Elven Embassy
-D 0 11032 7 1		
+D 0 11032 7 1
 D 0 11016 2 1		Boodle's Pawn Shop
 D 0 11029 0 1
 D 0 11017 2 1		Zank's Chophouse
@@ -61,6 +61,87 @@ D 0 11068 8 1
 D 0 11077 0 1		Vault
 D 0 11070 2 1
 
+*local set - stately green
+X 1 1 10172 band silver leaves ring
+X 1 2 10159 ring gold dull emerald
+X 1 3 10160 collar stately green [elf]
+X 1 4 10161 shirt stately green [elf]
+X 1 5 10162 hood stately green [elf]
+X 1 6 10163 legging stately green [elf]
+X 1 7 10163 legging stately green [elf]
+X 1 8 10164 shoe stately green [elf]
+X 1 9 10164 shoe stately green [elf]
+X 1 10 10165 glove stately green [elf]
+X 1 11 10165 glove stately green [elf]
+X 1 12 10166 sleeve stately green [elf]
+X 1 13 10166 sleeve stately green [elf]
+X 1 14 10167 cape stately green [elf]
+X 1 15 10168 sash stately green [elf]
+X 1 16 10169 cuff stately green [elf]
+X 1 17 10169 cuff stately green [elf]
+X 1 18 10170 shield green silk dull emeralds [elf]
+X 1 19 10158 whip thorny branches
+X 1 19 10171 staff thin gold dull emeralds
+
+*local set - cloudstone plate
+X 2 1 10333 ring runed cloudstone
+X 2 2 10333 ring runed cloudstone
+X 2 3 10334 pendant runed cloudstone gold chain
+X 2 4 10335 suit cloudstone brigandine [human]
+X 2 5 10336 helm great runed cloudstone [human]
+X 2 6 10338 legging cloudstone brigandine [human]
+X 2 7 10338 legging cloudstone brigandine [human]
+X 2 8 10339 boot runed cloudstone [human]
+X 2 9 10339 boot runed cloudstone [human]
+X 2 10 10340 gauntlet runed cloudstone [human]
+X 2 11 10340 gauntlet runed cloudstone [human]
+X 2 12 10341 sleeve cloudstone brigandine [human]
+X 2 13 10341 sleeve cloudstone brigandine [human]
+X 2 14 10342 cloak long regal cloudstone clasp [human]
+X 2 15 10343 belt wide runed cloudstone buckle [human]
+X 2 16 10344 bracer runed cloudstone [human]
+X 2 17 10344 bracer runed cloudstone [human]
+X 2 18 10345 shield runed cloudstone
+X 2 19 10358 martel cloudstone giant
+
+*local set - black camouflage
+X 3 1 10347 band patterned silk
+X 3 2 10347 band patterned silk
+X 3 3 10354 necklace patterned silk rope
+X 3 4 10353 shirt black camouflage [human]
+X 3 5 10355 hood black camouflage [human]
+X 3 6 10348 legging black camouflage [human]
+X 3 7 10348 legging black camouflage [human]
+X 3 10 10351 glove fingerless black camouflage [human]
+X 3 11 10351 glove fingerless black camouflage [human]
+X 3 12 10352 sleeve black camouflage [human]
+X 3 13 10352 sleeve black camouflage [human]
+X 3 14 10346 cape black camouflage [human]
+X 3 15 10350 belt wide black camouflage [human]
+X 3 16 10349 bracer black camouflage [human]
+X 3 17 10349 bracer black camouflage [human]
+X 3 18 10356 statuette black stone fierce-looking bird prey
+X 3 19 10357 shadowshiv shadow shiv blade
+
+*local set - star-lined black velvet
+X 4 1 10359 ring platinum star-seed crystal (L24)
+X 4 2 10359 ring platinum star-seed crystal (L24)
+X 4 3 10360 necklace platinum star-seed crystal (L24)
+X 4 4 10361 robe star-lined black velvet [human] (L40)
+X 4 5 10362 cowl star-lined black velvet [human] (L40)
+X 4 6 10363 pants star-lined black velvet [human] (L46)
+X 4 8 10364 boot black velvet star-lined [human] (L40)
+X 4 9 10364 boot black velvet star-lined [human] (L40)
+X 4 10 10365 glove black velvet star-lined [human] (L40)
+X 4 11 10365 glove black velvet star-lined [human] (L40)
+X 4 12 10366 sleeve black velvet star-lined [human] (L40)
+X 4 13 10366 sleeve black velvet star-lined [human] (L40)
+X 4 14 10367 mantle black velvet star-lined [human] (L40)
+X 4 15 10368 girdle black velvet star-lined [human]  (L40)
+X 4 16 10369 wristlet black velvet star-lined [human]  (L40)
+X 4 17 10369 wristlet black velvet star-lined [human]  (L40)
+X 4 18 10370 shield crystalized star points (L24)
+
 O 0 11066 1 11013 	A green and black lamppost
 O 0 11066 1 11014     A green and black lamppost
 O 0 11066 1 11015     A green and black lamppost
@@ -92,7 +173,7 @@ O 0 11067 4 11078       Wooden guard bunk
 O 0 11068 4 11064       Silken elite bunk
 O 0 11069 1 11028 	A luxuriant fur rug
 O 0 11069 1 11032       A luxuriant fur rug
-O 0 11069 1 11052       A luxuriant fur rug 
+O 0 11069 1 11052       A luxuriant fur rug
 O 0 11069 1 11069       A luxuriant fur rug
 O 0 11069 1 11072       A luxuriant fur rug
 O 0 11069 1 11073       A luxuriant fur rug
@@ -152,7 +233,7 @@ O 0 3344 1 11075      A tapestry
 O 0 3306 1 11028      Trash
 O 0 3306 1 11023      Trash
 O 0 3306 1 11037      Trash
-O 0 10030 1 11028 	Shit
+O 0 10030 1 11028 	Feces
 O 0 3301 1 11004      A flickering ball of light
 O 0 3301 1 11003      A flickering ball of light
 O 0 3301 1 11002      A flickering ball of light
@@ -185,470 +266,468 @@ B 1 23649 1 11070	A pile of coins
 
 M 0 11000 1 11068 	Desade
 ? 0 7 0 E
-E 1 11053 25 3			Amethyst medallion
+E 1 11053 25 3			  Anvil medallion
 ? 0 20 0 E
-E 1 11039 25 17			Crystal bracelet
+E 1 11039 25 17			  Crystal bracelet
 ? 0 4 0 E
-E 1 11032 4 5			Malachite crown
+E 1 11032 4 5				  Malachite crown
 ? 0 4 0 E
-E 1 11031 5 4			Black silk robe
+E 1 11031 5 4				  Black silk robe
 ? 0 2 0 E
-E 1 11023 1 18			Malachite espadon
+E 1 11023 1 18			  Malachite espadon
 ? 0 2 0 G
-G 1 11028 1			Orb of nebular chaos
+G 1 11028 1				    Orb of nebular chaos
+Z 0 2 3					      CLOUDSTONE LOCAL
 ? 0 99 0 G
-G 1 11004 9999			Vault key
-C 0 11041 4 11068	Sycophant
+G 1 11004 9999			  Vault key
+C 1 11026 1 11068 	Giko
+*I 1 11020 5 19        blade pure shadow (PROP-LOAD)
+? 0 5 0 E
+E 1 11041 50 4			  Black silk shirt
+? 0 5 0 E
+E 1 11036 50 6			  Khaki pants
+? 0 99 0 G
+G 1 11096 9999
+C 1 11041 4 11068	  Sycophant
+*I 1 16153 5 19		    PROP HAMMER
+
 M 0 11001 1 11073 	Iris
 ? 0 5 0 E
-E 1 11053 25 3			Amethyst medallion
+E 1 11053 25 3			  Anvil Medallion
 ? 0 7 0 G
-G 1 11044 10			Steel wand
+G 1 11044 10				  Steel Wand
 ? 0 20 0 E
-E 1 11039 25 17			Crystal bracelet
+E 1 11039 25 17			  Crystal Bracelet
 ? 0 4 0 E
-E 1 11032 4 5			Malachite crown
+E 1 11032 4 5				  Malachite crown
 ? 0 4 0 E
-E 1 11033 5 4			White silk robe
+E 1 11033 5 4				  White silk robe
 ? 0 2 0 E
-E 1 11022 1 18			Malachite martel
+E 1 11022 1 18			  Malachite martel
+? 0 99 0 G
+G 1 11096 9999
+C 1 11041 4 11068	  Sycophant
+*I 1 16153 5 19		    PROP HAMMER
+
 M 0 11002 1 11069 	Coel
 ? 0 20 0 E
-E 1 11038 25 3			Crystal necklace
+E 1 11038 25 3			  Crystal Necklace
 ? 0 4 0 E
-E 1 11032 4 5			Malachite crown
+E 1 11032 4 5				  Malachite Crown
 ? 0 4 0 E
-E 1 11031 5 4			Black silk robe
+E 1 11031 5 4				  Black Silk Robe
 ? 0 2 0 G
-G 1 11047 2			Ruby orb
+G 1 11047 2				    Ruby orb
 ? 0 2 0 E
-E 1 11030 1 18			Aegis
-? 0 50 0 G
-G 1 11096 9999			Glass of bourbon
-C 0 11041 4 11069	Sycophant
+E 1 11030 1 18			  Aegis
+Z 0 2 1					      CLOUDSTONE LOCAL
+? 0 99 0 G
+G 1 11096 9999
+C 1 11041 4 11069	  Sycophant
+*I 1 16153 5 19		    PROP HAMMER
+
 M 0 11003 1 11072 	Isis
 ? 0 5 0 G
-G 1 11016 20			Mica Symbol
+G 1 11016 20				  Mica Symbol
 ? 0 7 0 G
-G 1 11044 10			Steel rod
+G 1 11044 10				  Steel rod
 ? 0 8 0 G
-G 1 14183 9999			Goldenrod scroll
+G 1 14183 9999			  Goldenrod scroll
 ? 0 20 0 E
-E 1 11038 25 3			Crystal necklace
+E 1 11038 25 3			  Crystal Necklace
 ? 0 4 0 E
-E 1 11033 5 4			White silk robe
+E 1 11033 5 4				  White Silk Robe
 ? 0 4 0 E
-E 1 11032 4 5			Malachite crown
+E 1 11032 4 5				  Malachite Crown
 M 0 11004 1 11028 	Meekah
 ? 0 8 0 E
-E 1 11057 50 9			Tabaxi-skin boot
+E 1 11057 50 9			  Tabaxi-skin boot
 ? 0 8 0 E
-E 1 11058 25 6			Tabaxi-skin pants
+E 1 11058 25 6			  Tabaxi-skin pants
 ? 0 4 0 E
-E 1 11027 4 19			Stone mallet
-? 0 50 0 G
-G 1 11093 9999			Plate of ribs
-C 0 11015 1 11028	Fatopr
+E 1 11027 4 19			  Stone mallet
+? 0 99 0 G
+G 1 11093 9999			  Plate of ribs
+C 1 11015 1 11028	  Ogre Bodyguard
 ? 0 5 0 E
-E 1 11057 50 9			Tabaxi-skin boot
+E 1 11057 50 9			  Tabaxi-skin boot
 ? 0 5 0 E
-E 1 11058 25 6			Tabaxi-skin pants
+E 1 11058 25 6			  Tabaxi-skin pants
 ? 0 4 0 E
-E 1 11052 20 19			Iron cudgel
+E 1 11052 20 19			  Iron cudgel
+
 M 0 11005 1 11031 	Dakinor
 ? 0 8 0 E
-E 1 11053 25 3			Amethyst medallion
+E 1 11053 25 3			  Amethyst Medallion
 ? 0 8 0 E
-E 1 11054 25 18			Amethyst shield
+E 1 11054 25 18			  Amethyst Shield
 ? 0 4 0 E
-E 1 11026 4 19			Marble warhammer
-? 0 50 0 G
-G 1 11094 9999			Plate of chicken
-C 0 11018 1 11031	Fagohol
+E 1 11026 4 19			  Marble Warhammer
+? 0  0 G
+G 1 11094 9999			  Plate of chicken
+C 1 11018 1 11031	  Dwarven Bodyguard
 ? 0 5 0 E
-E 1 11053 25 3			Amethyst medallion
+E 1 11053 25 3			  Anvil Medallion
 ? 0 5 0 E
-E 1 11054 25 18			Amethyst shield
+E 1 11054 25 18			  Amethyst shield
 ? 0 4 0 E
-E 1 11050 20 19			Jeweled mace
+E 1 11050 20 19			  Jeweled mace
 ? 0 7 0 E
-E 1 9744 6 8                    Boot of Sneaking
+E 1 9744 6 8          Boot of Sneaking
+
 M 0 11006 1 11032 	Thalia
-G 1 11095 9999			Glass of scotch
+G 1 11095 9999			  Glass of scotch
 ? 0 5 0 G
-G 1 11045 10			Delicate parchment
+G 1 11045 10				  Delicate Parchment
 ? 0 4 0 E
-E 1 11025 4 19			Mithril rapier
-Y 0 34 2                        Emerald Set
-M 0 11021 1 11032	Quirk
+E 1 11025 4 19			  Mithril Rapier
+Y 0 34 2              Emerald Set
+
+M 0 11021 1 11032	  Elven Representative
 ? 0 4 0 E
-E 1 11055 20 13			Jade sleeve
+E 1 11055 20 13			  Jade sleeve
 ? 0 4 0 E
-E 1 11056 20 17			Jade wristguard
+E 1 11056 20 17			  Jade wristguard
 ? 0 4 0 E
-E 1 11051 20 19			Jade falchion
+E 1 11051 20 19			  Jade falchion
+Z 0 1 10				      STATELY GREEN LOCAL
+
 M 0 11007 1 11052 	Nadroj
 ? 0 7 0 E
-E 1 11034 50 14                  Black and green tabard
+E 1 11034 50 14       Black and green tabard
 ? 0 7 0 E
-E 1 11036 50 6			Khaki pants
+E 1 11036 50 6			  Khaki pants
 ? 0 5 0 E
-E 1 10044 10 11			Green and black spiked gauntlet
+E 1 10044 10 11			  Green and black spiked gauntlet
+
 M 0 11008 1 11067 	Neppip
 ? 0 7 0 E
-E 1 11034 50 14                  Black and green tabard
+E 1 11034 50 14       Black and green tabard
 ? 0 7 0 E
-E 1 11036 50 6			Khaki pants
+E 1 11036 50 6			  Khaki pants
 ? 0 5 0 E
-E 1 10044 10 11                 Green and black spiked gauntlet
+E 1 10044 10 11       Green and black spiked gauntlet
+
 M 0 11009 1 11092 	Sir Charles
 ? 0 7 0 E
-E 1 11034 50 14                  Black and green tabard
+E 1 11034 50 14       Black and green tabard
 ? 0 5 0 E
-E 1 10044 10 11                 Green and black spiked gauntlet
-? 0 50 0 G
-G 1 11093 9999			Plate of ribs
-C 0 11041 4 11092	Sycophant
+E 1 10044 10 11       Green and black spiked gauntlet
 M 0 11010 1 11087 	Queen bee
 ? 0 20 0 G
-G 1 11061 25			Honey
-M 0 11011 2 11087        Drone bee
+G 1 11061 25				  Honey
+M 0 11011 2 11087   Drone bee
 ? 0 12 0 G
-G 1 11060 50			Nectar
-M 0 11011 1 11012        Drone bee
+G 1 11060 50				  Nectar
+M 0 11011 1 11012   Drone bee
 ? 0 12 0 G
-G 1 11060 50			Nectar
-M 0 11011 1 11010        Drone bee
+G 1 11060 50				  Nectar
+M 0 11011 1 11010   Drone bee
 ? 0 12 0 G
-G 1 11060 50			Nectar
-M 0 11011 1 11006        Drone bee
+G 1 11060 50				  Nectar
+M 0 11011 1 11006   Drone bee
 ? 0 12 0 G
-G 1 11060 50			Nectar
-M 0 11011 1 11011        Drone bee
+G 1 11060 50				  Nectar
+M 0 11011 1 11011   Drone bee
 ? 0 12 0 G
-G 1 11060 50			Nectar
+G 1 11060 50				  Nectar
+
 M 0 11012 1 11066 	Phreak
 ? 0 25 0 E
-E 1 11099 10 18			Skin flute
+E 1 11099 10 18			  Skin flute
 ? 0 5 0 E
-E 1 11036 50 6			Khaki pants
+E 1 11036 50 6			  Khaki pants
 ? 0 5 0 E
-E 1 11040 50 4			Black vest
-M 0 11013 2 11036        Male citizen
+E 1 11040 50 4			  Black vest
+
+M 0 11013 2 11036   Male citizen
 ? 0 10 0 E
-E 1 11041 50 4			Silk shirt
-M 0 11013 1 11037        Male citizen
+E 1 11041 50 4			  Silk shirt
+M 0 11013 1 11037   Male citizen
 ? 0 10 0 E
-E 1 11040 50 4			Black vest
-M 0 11013 1 11015        Male citizen
+E 1 11040 50 4			  Black vest
+M 0 11013 1 11015   Male citizen
 ? 0 10 0 E
-E 1 11036 50 6			Khaki pants
-M 0 11013 1 11025        Male citizen
+E 1 11036 50 6			  Khaki pants
+M 0 11013 1 11025   Male citizen
 ? 0 5 0 E
-E 1 11038 25 3			Crystal necklace
-M 0 11013 2 11021        Male citizen
+E 1 11038 25 3			  Crystal necklace
+M 0 11013 2 11021   Male citizen
 ? 0 5 0 E
-E 1 11039 25 17			Crystal bracelet
-M 0 11013 1 11017        Male citizen
+E 1 11039 25 17			  Crystal bracelet
+M 0 11013 1 11017   Male citizen
 ? 0 10 0 E
-E 1 11040 50 4			Black vest
-M 0 11014 2 11036        Female citizen
+E 1 11040 50 4			  Black vest
+M 0 11014 2 11036   Female citizen
 ? 0 5 0 E
-E 1 11038 25 3                  Crystal necklace
-M 0 11014 1 11035        Female citizen 
+E 1 11038 25 3        Crystal necklace
+M 0 11014 1 11035   Female citizen
 ? 0 5 0 E
-E 1 11039 25 17                 Crystal bracelet
-M 0 11014 1 11038        Female citizen 
+E 1 11039 25 17       Crystal bracelet
+M 0 11014 1 11038   Female citizen
 ? 0 10 0 E
-E 1 11035 50 4			Low-cut blouse
-M 0 11014 2 11026        Female citizen
+E 1 11035 50 4			  Low-cut blouse
+M 0 11014 2 11026   Female citizen
 ? 0 10 0 E
-E 1 11035 50 4                  Low-cut blouse
-M 0 11014 1 11013        Female citizen 
+E 1 11035 50 4        Low-cut blouse
+M 0 11014 1 11013   Female citizen
 ? 0 10 0 E
-E 1 11035 50 4                  Low-cut blouse
-M 0 11014 1 11024        Female citizen
+E 1 11035 50 4        Low-cut blouse
+M 0 11014 1 11024   Female citizen
 ? 0 10 0 E
-E 1 11037 50 9			Black shoe
-M 0 11016 1 11066 	Coznut
+E 1 11037 50 9			  Black shoe
+
+M 0 11016 1 11066 	Meekah
 ? 0 4 0 E
-E 1 11057 50 9			Tabaxi-skin boot
+E 1 11057 50 9			  Tabaxi-skin boot
 ? 0 4 0 E
-E 1 11058 25 6			Tabaxi-skin pants
+E 1 11058 25 6			  Tabaxi-skin pants
 ? 0 3 0 E
-E 1 11052 20 19			Iron cudgel
+E 1 11052 20 19			  Iron cudgel
+
 M 0 11017 2 11019 	Ogre courier
 ? 0 1 0 E
-E 1 11057 50 9			Tabaxi-skin boot
-? 0 1 0 E		
-E 1 11058 25 6			Tabaxi-skin pants
-M 0 11019 1 11038 	Darkanus
+E 1 11057 50 9			  Tabaxi-skin boot
+? 0 1 0 E
+E 1 11058 25 6			  Tabaxi-skin pants
+
+M 0 11019 1 11038 	Dwarf Legate
 ? 0 4 0 E
-E 1 11053 25 3			Amethyst medallion
+E 1 11053 25 3			  Anvil Medallion
 ? 0 4 0 E
-E 1 11054 25 18			Amethyst shield
+E 1 11054 25 18			  Amethyst shield
 ? 0 3 0 E
-E 1 11050 20 19			Jeweled mace
-M 0 11020 2 11021 	Dwarven emissary
+E 1 11050 20 19			  Jeweled mace
+
+M 0 11020 2 11021 	Dwarven Emissary
 ? 0 1 0 E
-E 1 11053 25 3			Amethyst medallion
+E 1 11053 25 3			  Anvil Medallion
 ? 0 1 0 E
-E 1 11054 25 18			Amethyst shield
+E 1 11054 25 18			  Amethyst Shield
+
 M 0 11022 1 11015 	Fawn
 ? 0 1 0 E
-E 1 11055 20 13			Athanor sleeve
+E 1 11055 20 13			  Jade sleeve
 ? 0 1 0 E
-E 1 11056 20 17			Athanor wristguard
+E 1 11056 20 17			  Jade wristguard
+Z 0 1 10				      stately green
+
 M 0 11023 2 11026 	Elven representative
 ? 0 2 0 E
-E 1 11055 20 13			Athanor sleeve
+E 1 11055 20 13			  Jade sleeve
 ? 0 2 0 E
-E 1 11056 20 17			Athanor wristguard
+E 1 11056 20 17			  Jade wristguard
 ? 0 3 0 E
-E 1 11051 20 19			Athanor falchion
+E 1 11051 20 19			  Jade falchion
+Z 0 1 10				      stately green
+
 M 0 11024 2 11054 	Courtier
+*I 1 14144 5 19			  PROP FLAIL
 ? 0 5 0 G
-G 1 11016 20			Mica Symbol
+G 1 11016 20				  Mica Symbol
 ? 0 5 0 E
-E 1 11034 50 14                  Black and green tabard
+E 1 11034 50 14       Black and green tabard
+
 M 0 11024 1 11065 	Courtier
+*I 1 14144 5 19			PROP FLAIL
 ? 0 5 0 G
-G 1 11016 20			Mica Symbol
+G 1 11016 20				  Mica Symbol
 ? 0 5 0 E
-E 1 11034 50 14                  Black and green tabard
+E 1 11034 50 14       Black and green tabard
+
 M 0 11025 1 11065 	Consul
-M 0 11026 1 11068 	Giko
-? 0 5 0 E
-E 1 11041 50 4			Black silk shirt
-? 0 5 0 E
-E 1 11036 50 6			Khaki pants
 M 0 11034 1 11041 	Alsafi
-M 0 11035 1 11075 	Delabia
+M 0 11035 1 11075 	Roxy
 ? 0 10 0 E
-E 1 3329 9999 15		Garter belt
+E 1 3329 9999 15		  Garter belt
 ? 0 8 0 G
-G 1 14183 9999			Goldenrod scroll
+G 1 14183 9999			  Goldenrod scroll
 ? 0 10 0 E
-E 1 3330 9999 7			Fishnet stocking
+E 1 3330 9999 7			  Fishnet stocking
 ? 0 10 0 E
-E 1 11043 10 4			Black neglige
+E 1 11043 10 4			  Black neglige
 ? 0 5 0 G
-G 1 11044 10			Steel rod
+G 1 11044 10				  Steel rod
 ? 0 4 0 E
-E 1 11024 4 19			Diamond whip
+E 1 11024 4 19			  Diamond whip
 M 0 11036 2 11019 	Drunken wanderer
 ? 0 10 0 G
-G 1 11095 9999			Glass of scotch
+G 1 11095 9999			  Glass of scotch
 M 0 11036 1 11024 	Drunken wanderer
 ? 0 10 0 G
-G 1 11096 9999			Glass of bourbon
+G 1 11096 9999			  Glass of bourbon
 M 0 11036 1 11039 	Drunken wanderer
-? 0 11095 9999			Glass of scotch
+? 0 10 0 G
+G 1 11095 9999			  Glass of scotch
 M 0 11037 2 11042 	Star watcher
 ? 0 6 0 E
-E 1 11038 25 3			Crystal necklace
-? 0 6 0 E
-E 1 11037 50 9			Black shoe
+E 1 11037 50 9			  Black shoe
 M 0 11038 1 11037 	Merchant
 ? 0 3 0 G
-G 1 11060 50			Nectar
+G 1 11060 50				  Nectar
 ? 0 1 0 G
-G 1 11061 25			Honey
+G 1 11061 25				  Honey
 ? 0 12 0 E
-E 1 11041 50 4			Silk shirt
+E 1 11041 50 4			  Silk shirt
 M 0 11038 2 11014 	Merchant
 ? 0 12 0 E
-E 1 11040 50 4			Black vest
+E 1 11040 50 4			  Black vest
 M 0 11038 1 11016 	Merchant
 ? 0 12 0 E
-E 1 11036 50 6			Khaki pants
+E 1 11036 50 6			  Khaki pants
 M 0 11039 1 11090 	Caleb
 ? 0 10 0 G
-G 1 11045 10			Delicate parchment
+G 1 11045 10				  Delicate parchment
 ? 0 10 0 G
-G 1 11098 10			Burnt parchment
+G 1 11098 10				  Burnt parchment
 ? 0 2 0 E
-E 1 11046 1 18			Emerald orb
+E 1 11046 1 18			  Emerald orb
 ? 0 2 0 G
-G 1 11029 1			Grimoire of arcane might
+G 1 11029 1				    Grimoire of arcane might
+Z 0 5 5					      star velvet local
 M 0 11040 1 11088 	Cavell
 ? 0 5 0 G
-G 1 11045 10			Delicate parchment
+G 1 11045 10				  Delicate parchment
 ? 0 5 0 G
-G 1 11098 10			Burnt parchment
+G 1 11098 10				  Burnt parchment
 ? 0 2 0 E
-E 1 11048 2 18			Sapphire orb
+E 1 11048 2 18			  Sapphire orb
 ? 0 2 0 E
-E 1 11021 1 19			Spiritshiv
+E 1 11021 1 19			  Spiritshiv
 ? 0 5 0 E
-E 1 10045 10 5			Sigil Cowl
+E 1 10045 10 5			  Sigil Cowl
+Z 0 5 5					      star velvet local
 M 0 11042 2 11005 	Goshawk
 M 0 11043 2 11007 	Wild boar
 M 0 11044 1 11070 	Doom guard
 ? 0 2 0 G
-G 1 11097 2   			Crown jewels
-G 1 16 9999             black dust
+G 1 11097 2   			  Crown jewels
+G 1 16 9999           black dust
 M 0 11045 1 11079 	Sentry
-? 0 6 0 E
-E 1 11006 25 15			Mica fauld
 ? 0 4 0 E
-E 1 11018 25 19			Flamberge
+E 1 11018 25 19			  Flamberge
+Y O 27 8				      MICA SET
 M 0 11045 1 11079 	Sentry
-? 0 6 0 E
-E 1 11005 25 18			Mica buckler
 ? 0 5 0 G
-G 1 11019 25 			Misericord
+G 1 11019 25 			    Misericord
+Y O 27 8				      MICA SET
 M 0 11046 2 11078 	Guard barrack
-? 0 5 0 E
-E 1 11007 25 7			Mica greave
-? 0 5 0 E
-E 1 11008 25 14			Mica mantle
+Y O 27 8				      MICA SET
+
 M 0 11047 2 11016 	Guard roam
 ? 0 6 0 E
-E 1 11009 25 4			Mica cuirass
+E 1 11009 25 4			  Mica cuirass
 ? 0 4 0 E
-E 1 11018 25 19       	 	Flamberge
-? 0 50 0 G
-G 1 11093 9999			Plate of ribs
-C 0 11047 4 11016	Guard roam
-? 0 6 0 E
-E 1 11008 25 14                 Mica mantle
+E 1 11018 25 19       Flamberge
+? 0 99 0 G
+G 1 11093 9999			  Plate of ribs
+C 1 11047 4 11016	  Guard roam
 ? 0 5 0 G
-G 1 11019 25   	        	Misericord
+G 1 11019 25   	   	  Misericord
+Y O 27 8				      MICA SET
+
 M 0 11047 2 11013 	Guard roam
-? 0 6 0 E
-E 1 11010 25 11			Mica gauntlet
 ? 0 4 0 E
-E 1 11018 25 19       	  	Flamberge
-? 0 50 0 E
-G 1 11094 9999			Plate of chicken
-C 0 11047 4 11013	Guard roam
-? 0 5 0 E
-E 1 11015 20 2                  Mica ring
-? 0 6 0 E
-E 1 11007 25 7                  Mica greave
+E 1 11018 25 19       Flamberge
+Y O 27 8				      MICA SET
+? 0 99 0 G
+G 1 11094 9999			  Plate of chicken
+C 1 11047 4 11013	  Guard roam
 ? 0 5 0 G
-G 1 11019 25            	Misericord
+G 1 11019 25          Misericord
+Y O 27 8				      MICA SET
+
 M 0 11048 1 11004 	Guard gate
-G 1 11000 9999			Main gate key
+G 1 11000 9999			  Main gate key
 ? 0 6 0 E
-E 1 11011 25 3			Mica gorget
-? 0 4 0 E
-E 1 11018 25 19         	Flamberge
+E 1 11018 25 19       Flamberge
+Y O 27 8				      MICA SET
 M 0 11048 1 11004 	Guard gate
-? 0 6 0 E
-E 1 11012 25 9			Mica boot
 ? 0 5 0 G
-G 1 11019 25            	Misericord
+G 1 11019 25          Misericord
+Y O 27 8				      MICA SET
 M 0 11049 1 11080 	Guard castle
-G 1 11002 9999			Main gate key
-? 0 6 0 E
-E 1 11006 25 15                 Mica fauld
+G 1 11002 9999			  Main gate key
 ? 0 4 0 E
-E 1 11018 25 19         	Flamberge
+E 1 11018 25 19       Flamberge
+Y O 27 8				      MICA SET
 M 0 11049 1 11080 	Guard castle
-? 0 5 0 E
-E 1 11015 20 2                  Mica ring
-? 0 6 0 E
-E 1 11012 25 9                  Mica boot
 ? 0 5 0 G
-G 1 11019 25            	Misericord
+G 1 11019 25          Misericord
+Y O 27 8				      MICA SET
 M 0 11050 2 11024 	Tower guard
-G 1 11001 9999			Tower key
-? 0 6 0 E
-E 1 11010 25 11                 Mica gauntlet
+G 1 11001 9999			  Tower key
 ? 0 4 0 E
-E 1 11018 25 19         	Flamberge
+E 1 11018 25 19       Flamberge
+Y O 27 8				      MICA SET
 M 0 11050 1 11019 	Tower guard
-G 1 11001 9999			Tower key
-? 0 6 0 E
-E 1 11005 25 18                 Mica buckler
+G 1 11001 9999			  Tower key
 ? 0 5 0 G
-G 1 11019 25            	Misericord
+G 1 11019 25          Misericord
+Y O 27 8				      MICA SET
 M 0 11051 2 11046 	Tower sentry
-? 0 6 0 E
-E 1 11007 25 7                  Mica greave
 ? 0 4 0 E
-E 1 11018 25 19         	Flamberge
+E 1 11018 25 19       Flamberge
+Y O 27 8				      MICA SET
 M 0 11051 1 11044 	Tower sentry
-? 0 6 0 E
-E 1 11013 25 17			Mica band
 ? 0 5 0 G
-G 1 11019 25            	Misericord
+G 1 11019 25          Misericord
+Y O 27 8				      MICA SET
 M 0 11052 1 11057 	Elite king
-G 1 11003 9999			King key
-? 0 8 0 E
-E 1 11007 25 7                  Mica greave
-? 0 8 0 E
-E 1 11006 25 15                 Mica fauld
+G 1 11003 9999			  King key
 ? 0 5 0 E
-E 1 11017 25 18			Mica fauchard
+E 1 11017 25 18			  Mica fauchard
+Y O 27 8				      MICA SET
 M 0 11053 1 11063 	Elite post
 ? 0 5 0 E
-E 1 11015 20 2                  Mica ring
-? 0 8 0 E
-E 1 11009 25 4                  Mica cuirass
-? 0 8 0 E
-E 1 11008 25 14                 Mica mantle
-? 0 5 0 E
-E 1 11017 25 18                 Mica fauchard
+E 1 11017 25 18       Mica fauchard
+Y O 27 8				      MICA SET
 M 0 11053 1 11063 	Elite post
-? 0 8 0 E
-E 1 11010 25 11                 Mica gauntlet
-? 0 8 0 E
-E 1 11007 25 7                  Mica greave
 ? 0 5 0 E
-E 1 11017 25 18                 Mica fauchard
+E 1 11017 25 18       Mica fauchard
+Y O 27 8				      MICA SET
 M 0 11054 2 11064 	Elite barrack
-? 0 8 0 E
-E 1 11014 25 13			Mica armlet
-? 0 8 0 E
-E 1 11013 25 17                    Mica band
-? 0 8 0 E
-E 1 11009 25 4                  Mica cuirass
+Y O 27 8				      MICA SET
 M 0 11055 2 11052 	Elite roam
-? 0 8 0 E
-E 1 11014 25 13			Mica armlet
-? 0 8 0 E
-E 1 11006 25 15                 Mica fauld
-? 0 8 0 E
-E 1 11011 25 3                  Mica gorget
-? 0 5 0 E
-E 1 11015 20 2			Mica ring
+Y O 27 8				      MICA SET
 M 0 11056 1 11048 	Frutius
 ? 0 75 0 G
-G 1 11042 10			Silk noose
+G 1 11042 10				  Silk noose
+
 M 0 11057 1 11051 	Mandor
+*I 1 11020 5 19        blade pure shadow (PROP-LOAD)
 ? 0 5 0 E
-E 1 11031 5 4			Black silk robe
-? 0 2 0 E
-E 1 11020 1 19			Shadowshiv
+E 1 11031 5 4				  Black silk robe
 ? 0 5 0 E
-E 1 10047 10 11			Black silk glove
+E 1 10047 10 11			  Black silk glove
 ? 0 3 0 E
-E 1 10043 10 15			Wide Belt
+E 1 10043 10 15			  Wide Belt
+Z 0 3 8 				      BLACK CAMO LOCAL
+
 M 0 11058 2 11039 	Bar patron
 ? 0 12 0 E
-E 1 11041 50 4			Silk shirt
+E 1 11041 50 4			  Silk shirt
 ? 0 12 0 E
-E 1 11037 50 9			Black shoe
+E 1 11037 50 9			  Black shoe
 ? 0 25 0 G
-G 1 11095 9999			Glass of scotch
+G 1 11095 9999			  Glass of scotch
 M 0 11058 1 11039 	Bar patron
 ? 0 12 0 E
-E 1 11040 50 4			Black vest
+E 1 11040 50 4			  Black vest
 ? 0 12 0 E
-E 1 11036 50 6			Khaki pants
-? 0 11096 9999			Glass of bourbon
+E 1 11036 50 6			  Khaki pants
+? 0 10 0 G
+G 1 11096 9999			  Glass of bourbon
 M 0 11059 1 11022 	Corpulent woman
-G 1 11093 9999			Plate of ribs
-G 1 11094 9999			Plate of chicken
-C 1 11060 1 11022	Nasty
+G 1 11093 9999			  Plate of ribs
+G 1 11094 9999			  Plate of chicken
+C 1 11060 1 11022	  Nasty
 M 0 11061 1 11017 	Cryron
 M 0 11062 1 11050 	Kwiz'on
 ? 0 4 0 E
-E 1 10046 10 7			Studded leather leg wrappings
+E 1 10046 10 7			  Studded leather leg wrappings
+? 0 99 0 G
+G 1 11096 9999			  Glass of bourbon
 C 1 11063 1 11050	Kiefer
 
 S
-
