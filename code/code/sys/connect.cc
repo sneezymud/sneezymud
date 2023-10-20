@@ -1282,7 +1282,6 @@ int Descriptor::nanny(sstring arg)
       character->doLook("", CMD_LOOK);
 
       prompt_mode = 1;
-      dynamic_cast<TPerson *>(character)->fixPracs();
       character->doSave(SILENT_YES);
       character->desc->saveAccount();
 
