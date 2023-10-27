@@ -5142,6 +5142,10 @@ int scaredKid(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *myself, TObj 
 
 static int divCost(TObj *obj, TBeing *ch, unsigned int shop_nr)
 {
+  // Update to address players being unable to see modified gear stats
+  return 1;
+
+  /*
   double cost=obj->obj_flags.cost;
 
   cost *= shop_index[shop_nr].getProfitBuy(obj, ch);
@@ -5150,6 +5154,7 @@ static int divCost(TObj *obj, TBeing *ch, unsigned int shop_nr)
     cost=0;
 
   return (int) cost;
+  */
 }
 
 int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
@@ -5263,6 +5268,9 @@ int divman(TBeing *ch, cmdTypeT cmd, const char *arg, TMonster *me, TObj *o)
       }
 
       cost = divCost(valued, ch, find_shop_nr(me->number));
+
+      // Update to address players being unable to see the stats of modified gear
+      me->doTell(ch->getName(), "Good news!  We've received a pile of stimulus money from the immortals and we're able to offer you a discount!");
 
       me->doTell(ch->getName(), format("It will cost %d talens to identify your %s.") % cost % fname(valued->name));
       return TRUE;
