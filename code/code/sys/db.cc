@@ -147,8 +147,6 @@ int mob_tick_count = 0;
 int repair_number = 0;
 unsigned int total_help_number = 0;
 int faction_number = 0;
-// load rate percentage, overrides rates defined in zonefiles
-int fixed_chance = 5;
 
 
 const char * const File::BUG       = "txt/bugs";      /*         'bug'      */
@@ -2006,7 +2004,7 @@ TObj *read_object_buy_build(TBeing *buyer, int nr, readFileTypeT type)
   sstring name=obj_index[nr].short_desc;
   int indexed_cost=convertTo<int>(obj_cache[nr]->s["price"]);
 
-  int price, shop_nr, rent_id=0;
+  int price = 0, shop_nr = 0, rent_id=0;
   int commod_price=0, commod_shop_nr=0, commod_rent_id=0;
   TObj *o=NULL;
   TObj *commod=NULL;
@@ -2826,6 +2824,16 @@ static void mobRepop(TMonster *mob, int zone, int tRPNum = 0)
   mob->quickieDefend();
 }
 
+// Sets an object up as a "prop" object. Basically a temporary item that can be
+// equipped on a mob without any risk of players permanently owning it if they
+// kill said mob. Allows things like spawning daggers on thief mobs every time
+// they repop. Prop items can't rent and will poof when dropped. Used by I and J
+// zonefile commands.
+void markProp(TObj& obj) {
+  obj.addObjStat(ITEM_NORENT | ITEM_NEWBIE | ITEM_NOLOCATE | ITEM_PROTOTYPE);
+  obj.obj_flags.cost = 0;
+}
+
 /* --------------------------
 armorSetLoad
 used in zoneflie load/etc to set and update sets of eq
@@ -2854,105 +2862,103 @@ int armorSetLoad::getArmor(int set, int slot)
 
 
 // runs the resetCom command for command = 'E'
-void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
-    tallyObjLoadPotential(obj_index[rs.arg1].virt);
+// If this command is executing, the load chance has already succeeded.
+void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  const auto index = static_cast<size_t>(rs.arg1);
+
+  if (index < 0 || index >= obj_index.size()) {
+    last_cmd = false;
+    vlogf(LOG_BUG,
+      format(
+        "Command #%d for zonefile #%d attempted to equip mob with item that "
+        "doesn't exist in object index (object #%d)") %
+        zd.bottom % rs.cmd_no % index);
     return;
   }
 
-  if (!mob)
-  {
-    vlogf(LOG_LOW, format("no mob for 'E' command.  Obj (%i)") %  rs.arg1);
+  objIndexData& itemToEquip = obj_index[index];
+  const int vnum = itemToEquip.virt;
+
+  if (IS_SET(flags, resetFlagFindLoadPotential)) {
+    tallyObjLoadPotential(vnum);
+    return;
+  }
+
+  if (!mob) {
+    vlogf(LOG_LOW, format("no mob for 'E' command.  Obj (%i)") % rs.arg1);
     last_cmd = objload = false;
     return;
   }
 
-  int obj_lp = getObjLoadPotential(obj_index[rs.arg1].virt);
-  if (obj_lp == 0) {
-    vlogf(LOG_MISC, format("Didn't find load potential of %s [%d].  rs.arg1=%d") % obj_index[rs.arg1].short_desc % obj_index[rs.arg1].virt % rs.arg1);
-    obj_lp = 1;
-  }
-
-  // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
-  // adj_obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
-  // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
-  double adj_obj_lp_ratio = 1 - pow((1 - cbrt((double)obj_lp)/100), 1/(double)obj_lp);
-
-  // obj_lp_ratio = 1 - pow((1 - (double)fixed_chance/100), (double)obj_lp);
-  double obj_lp_ratio = (double)fixed_chance/100;
-
-  // getting to this point means we've already beat the fixed_chance%
-  // chance of loading an object.  This has to be taken into account
-  // when computing the odds of the normalized load potential.
-  // vlogf(LOG_MISC, format("(10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio / obj_lp_ratio * stats.equip));
-  bool loadFail = true;
-  if((obj_index[rs.arg1].getNumber() < obj_index[rs.arg1].max_exist) &&
-     (::number(0, 9999999) < (int)(10000000*adj_obj_lp_ratio / obj_lp_ratio*tweakInfo[TWEAK_LOADRATE]->current)))
-  {
-    if (!(flags & resetFlagPropLoad))
-      obj = read_object_buy_build(mob, rs.arg1, REAL);
-    else
-      obj = read_object(rs.arg1, REAL);
-    loadFail = obj == NULL;
-  }
-
-  if (loadFail) {
-    repoCheck(mob, rs.arg1);
-    last_cmd = objload = false;
-    return;
-  }
-
-  // so now we've loaded the item, lets place it
   wearSlotT realslot = wearSlotT(rs.arg3);
   mud_assert(realslot >= MIN_WEAR && realslot < MAX_WEAR, "bad slot");
 
   // check for double-equip
-  if (mob->equipment[realslot])
-  {
-    vlogf(LOG_LOW, format("'E' command operating on already equipped slot.  %s, %s slot %d\n\rpre-equipped with %s, is_same: %s") %  
-          mob->getName() % obj->getName() % realslot %
-          mob->equipment[realslot]->getName() %
-          ((mob->equipment[realslot] == obj) ? "true" : "false"));
-    delete obj;
+  if (mob->equipment[realslot]) {
+    vlogf(LOG_LOW,
+      format("'E' command operating on already equipped slot. Zonefile #: %d; Command #: %d; Existing Item: %s") % zd.bottom % rs.cmd_no % mob->equipment[realslot]->getName());
     last_cmd = objload = false;
     return;
   }
 
+  if (itemToEquip.getNumber() < itemToEquip.max_exist) {
+    obj = !IS_SET(flags, resetFlagPropLoad)
+            ? read_object_buy_build(mob, rs.arg1, REAL)
+            : read_object(rs.arg1, REAL);
+
+    if (!obj) {
+      repoCheck(mob, rs.arg1);
+      last_cmd = objload = false;
+      return;
+    }
+  }
+
   // these are just safety logs, equipping will be done regardless
   if (!mob->canUseEquipment(obj, SILENT_YES))
-    vlogf(LOG_LOW, format("'E' command equipping unusable item (%s:%d) on (%s:%d).") % obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
-  TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
-  if (tbc && tbc->canWear(ITEM_WEAR_FINGERS) && gamePort != Config::Port::PROD) {
-    vlogf(LOG_LOW, format("RINGLOAD: [%s][%-6.2f] loading on [%s][%d]") % 
-          obj->getName() % tbc->armorLevel(ARMOR_LEV_REAL) %
-          mob->getName() % mob->GetMaxLevel());
-  }
-  if (tbc && !mob->validEquipSlot(realslot) && !tbc->isSaddle())
-    vlogf(LOG_LOW, format("'E' command for %s equipping item (%s) on nonvalid slot %d.") % mob->getName() % tbc->getName() % realslot);
+    vlogf(LOG_LOW,
+      format("'E' command equipping unusable item (%s:%d) on (%s:%d).") %
+        obj->getName() % obj->objVnum() % mob->getName() % mob->mobVnum());
+
+  TBaseClothing* itemAsClothing = dynamic_cast<TBaseClothing*>(obj);  
+
+  if (itemAsClothing && !mob->validEquipSlot(realslot) && !itemAsClothing->isSaddle())
+    vlogf(LOG_LOW,
+      format("'E' command for %s equipping item (%s) on nonvalid slot %d.") %
+        mob->getName() % itemAsClothing->getName() % realslot);
+
   if (!check_size_restrictions(mob, obj, realslot, mob) &&
-      realslot != HOLD_RIGHT && realslot != HOLD_LEFT)
-  {
+      realslot != HOLD_RIGHT && realslot != HOLD_LEFT) {
     int size_per = 100;
-    if (race_vol_constants[mapSlotToFile(realslot)])
-    {
-      size_per = (int)(100.0 * obj->getVolume() / race_vol_constants[mapSlotToFile( realslot)]);
-      if (obj->isPaired())
-        size_per /= 2;
+
+    if (race_vol_constants[mapSlotToFile(realslot)] > 0) {
+      size_per = static_cast<int>(100.0 * obj->getVolume() /
+                                  race_vol_constants[mapSlotToFile(realslot)] /
+                                  (obj->isPaired() ? 2 : 1));
     }
-    vlogf(LOG_LOW, format("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) change vol to %d, or height to %d.") %  
-        mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum() % (mob->getHeight() * 100) %
-        size_per % (mob->getHeight() * (obj->isPaired() ? 2 : 1) * race_vol_constants[mapSlotToFile( realslot)]) %
+
+    vlogf(LOG_LOW,
+      format("'E' for (%s:%d) equipping (%s:%d) with bad fit. (m:%d%%/o:%d%%) "
+             "change vol to %d, or height to %d.") %
+        mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum() %
+        (mob->getHeight() * 100) % size_per %
+        (mob->getHeight() * (obj->isPaired() ? 2 : 1) *
+          race_vol_constants[mapSlotToFile(realslot)]) %
         (size_per / 100));
   }
   // end sanity checks
 
-  // OK, actually do the equip
-  if (Config::LoadOnDeath() && !(flags & resetFlagPropLoad))
+  // With load on death active this will trigger after the mob dies, being
+  // stored in the mob's loadCom property until then. Imms can use the stat
+  // command on any mob that was created via zone repop to see if it will load
+  // an item when killed.
+  if (Config::LoadOnDeath() && !IS_SET(flags, resetFlagPropLoad))
     *mob += *obj;
-  else
+  else {
+    if (IS_SET(flags, resetFlagPropLoad))
+      markProp(*obj);
     mob->equipChar(obj, realslot);
+  }
   mob->logItem(obj, CMD_LOAD);
   log_object(obj);
 
@@ -2961,9 +2967,14 @@ void runResetCmdE(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   double al = obj->objLevel();
   double grl = mob->getRealLevel();
   if (al > (grl + 1))
-    vlogf(LOG_LOW, format("Mob (%s:%d) of level %.1f loading item (%s:%d) thought to be level %.1f.") %  mob->getName() % mob->mobVnum() % grl % obj->getName() % obj->objVnum() % al);
+    vlogf(LOG_LOW, format("Mob (%s:%d) of level %.1f loading item (%s:%d) "
+                          "thought to be level %.1f.") %
+                     mob->getName() % mob->mobVnum() % grl % obj->getName() %
+                     obj->objVnum() % al);
   if (!Config::LoadOnDeath() && !mob->equipment[realslot])
-    vlogf(LOG_LOW, format("Zone-file %s (%d) failed to equip %s (%d)") % mob->getName() % mob->mobVnum() % obj->getName() % obj->objVnum());
+    vlogf(LOG_LOW, format("Zone-file %s (%d) failed to equip %s (%d)") %
+                     mob->getName() % mob->mobVnum() % obj->getName() %
+                     obj->objVnum());
 
   last_cmd = true;
 }
@@ -3153,31 +3164,43 @@ void runResetCmdA(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
     vlogf(LOG_LOW, format("Unable to detect room in 'A' %d %d") % rs.arg1 % rs.arg2);
 }
 
-void runResetCmdQMark(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
+void runResetCmdQMark(zoneData&, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*&, bool& objload, TObj*&, bool& last_cmd) {
   if (!rs.character)
     return;
 
-  if ((rs.character == 'M') ||
-      (rs.character == 'O') ||
-      (rs.character == 'B') ||
-      (rs.character == 'L') ||
-      (objload && (rs.character == 'P')) ||
-      (mobload && (rs.character != 'P'))) {
+  if (rs.character == 'M' || rs.character == 'O' || rs.character == 'B' ||
+      rs.character == 'L' || (objload && rs.character == 'P') ||
+      (mobload && rs.character != 'P')) {
+    // If called during boot while calculating load potential, just auto-succeed
+    int roll = IS_SET(flags, resetFlagFindLoadPotential) ? 1 : dice(1, 99);
 
-    // If we are putting certain objects into the world or
-    // giving certain objects to mobs, follow the chance defined
-    // in the zonefile.  Otherwise, set the chance to fixed_chance.
-    int roll = (flags & resetFlagFindLoadPotential) ? 1 : dice(1, 100);
-    bool useArgs = (objload && rs.character == 'P') || (mobload && rs.character == 'G');
-    int my_chance = useArgs ? rs.arg1 : fixed_chance;
+    // Certain G and P loads in zonefiles are used as a workaround to guarantee
+    // that specific chains of commands work properly. These workarounds will
+    // always have a chance of 99 or higher, so in those cases don't scale by
+    // the tweak value (as tweaking them down could cause things to break).
+    int chance =
+      ((objload && rs.character == 'P') || (mobload && rs.character == 'G')) &&
+          rs.arg1 >= 99
+        ? rs.arg1
+        : static_cast<int>(
+            min(max(rs.arg1 * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
 
-    last_cmd = (rs.arg1 >= 98 || roll <= my_chance);
+    // This reference tells the next command whether the immediately preceeding
+    // ? command passed its roll or not, and therefore whether or not the next
+    // command should execute.
+    last_cmd = chance >= 99 || roll <= chance;
+
     if (!last_cmd) {
-      if (rs.character == 'M')
-        mobload = 0; // cancel all operations after this 'M' which use the mob ptr by setting !mobload
-      else if (rs.character == 'O' || rs.character == 'B')
-        objload = 0; // cancel all operations after this 'B' or 'O' which use the obj ptr by setting !objload
+      if (rs.character == 'M') {
+        // cancel all operations after this 'M' which use the mob
+        // ptr by setting !mobload
+        mobload = false;
+      } else if (rs.character == 'O' || rs.character == 'B') {
+        // cancel all operations after this 'B' or 'O' which use
+        // the obj ptr by setting !objload
+        objload = false;
+      }
     }
   }
 }
@@ -3408,74 +3431,52 @@ void runResetCmdH(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   last_cmd = mob ? mob->addHatred(zoneHateT(rs.arg1), rs.arg2) : 0;
 }
 
-// X <set num>3 <slot>1 <vnum>2
-void runResetCmdX(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if (rs.arg3 >= 0 && rs.arg3 < 16 && rs.arg1 >= MIN_WEAR && rs.arg1 < MAX_WEAR) {
+// X Command Syntax:
+// X <set num> <slot> <vnum>
+//      ^ arg3   ^arg1   ^arg2
+void runResetCmdX(zoneData& zone, resetCom& rs, resetFlag, bool&, TMonster*&,
+  bool&, TObj*&, bool&) {
+  if (rs.arg3 >= 0 && rs.arg3 < 16 && rs.arg1 >= MIN_WEAR &&
+      rs.arg1 < MAX_WEAR) {
     zone.armorSets.setArmor(rs.arg3, rs.arg1, rs.arg2);
   }
 }
 
 // Z <if flag> <set num> <perc chance>
-void runResetCmdZ(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
+void runResetCmdZ(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool&, TObj*&, bool&) {
+  if (IS_SET(flags, resetFlagFindLoadPotential)) {
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
         tallyObjLoadPotential(zone.armorSets.getArmor(rs.arg1, i));
     return;
   }
 
-  if (mob && mobload && rs.arg1 >=0)
-  {
+  if (mob && mobload && rs.arg1 >= 0) {
+    const auto chance = static_cast<int>(
+      min(max(rs.arg2 * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
+
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
-        loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)");
+        loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i), chance, i,
+          "(null... for now)");
   }
 }
 
-void runResetCmdY(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
-    mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance, true);
+void runResetCmdY(zoneData&, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool&, TObj*&, bool& last_cmd) {
+  const auto chance = static_cast<int>(
+    min(max(rs.arg2 * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
+
+  if (mob && IS_SET(flags, resetFlagFindLoadPotential)) {
+    mob->loadSetEquipment(rs.arg1, nullptr, chance, true);
     return;
   }
 
   if (!mob || !mobload)
-    return; // log error here?
+    return;
 
-  mob->loadSetEquipment(rs.arg1, NULL, (rs.arg2 >= 98) ? rs.arg2 : fixed_chance);
-
-  if (!Config::LoadOnDeath() && mob->hasClass(CLASS_MAGE)) {
-    TSpellBag *tBagA = NULL,
-              *tBagB = NULL;
-    TThing    *tThing=NULL;
-
-    // Find Held Spellbag
-    for(StuffIter it=mob->stuff.begin();it!=mob->stuff.end() && (tThing=*it);++it)
-      if ((tBagA = dynamic_cast<TSpellBag *>(tThing)))
-        break;
-
-    // Find Worn Spellbag
-    for (wearSlotT tWear = MIN_WEAR; tWear < MAX_WEAR; tWear++)
-      if (mob->equipment[tWear] &&
-          (tBagB = dynamic_cast<TSpellBag *>(mob->equipment[tWear])))
-        break;
-
-    if (tBagA && tBagB) {
-      for(StuffIter itt=tBagA->stuff.begin();itt!=tBagA->stuff.end();){
-	tThing=*(itt++);
-        --(*tThing);
-        *tBagB += *tThing;
-      }
-
-      --(*tBagA);
-      delete tBagA;
-      tBagA = NULL;
-    }
-  }
+  mob->loadSetEquipment(rs.arg1, nullptr, chance);
   last_cmd = true;
 }
 
@@ -3536,46 +3537,48 @@ void runResetCmdD(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, 
   last_cmd = true;
 }
 
-void runResetCmdL(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  last_cmd = (flags & resetFlagBootTime) ? sysLootLoad(rs, mob, obj, false) : false;
+void runResetCmdL(zoneData&, resetCom& rs, resetFlag flags, bool&,
+  TMonster*& mob, bool&, TObj*& obj, bool& last_cmd) {
+  last_cmd =
+    IS_SET(flags, resetFlagBootTime) ? sysLootLoad(rs, mob, obj, false) : false;
 }
 
-// marks an object as a 'prop' - not for player use
-void markProp(TObj *obj)
-{
-  if (!obj)
-    return;
-
-  obj->addObjStat(ITEM_NORENT | ITEM_NEWBIE | ITEM_NOLOCATE | ITEM_PROTOTYPE);
-  obj->obj_flags.cost = 0;
+// loads eq, just like 'E' command and then marks as 'prop' (counts as regular
+// eq: best to load specialized eq) note: this eq loads without buy_build
+// operations and equips it even if LoadOnDeath is configured on.
+void runResetCmdI(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
+  runResetCmdE(zone, rs, (flags | resetFlagPropLoad), mobload, mob, objload,
+    obj, last_cmd);
 }
 
-// loads eq, just like 'E' command and then marks as 'prop' (counts as regular eq: best to load specialized eq)
-// note: this eq loads without buy_build operations and equips it even if LoadOnDeath is configured on
-void runResetCmdI(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  runResetCmdE(zone, rs, flags & resetFlagPropLoad, mobload, mob, objload, obj, last_cmd);
-  if (obj && last_cmd)
-    markProp(obj);
-}
-
-// loads a local set of eq as prop objects same syntax as 'Z' (see 'I' cmd for more info on props) 
-void runResetCmdJ(zoneData &zone, resetCom &rs, resetFlag flags, bool &mobload, TMonster *&mob, bool &objload, TObj *&obj, bool &last_cmd)
-{
-  if ((flags & resetFlagFindLoadPotential))
-  {
+// loads a local set of eq as prop objects same syntax as 'Z' (see 'I' cmd for
+// more info on props)
+void runResetCmdJ(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
+  TMonster*& mob, bool&, TObj*&, bool&) {
+  if (IS_SET(flags, resetFlagFindLoadPotential)) {
     for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
       if (zone.armorSets.getArmor(rs.arg1, i) != 0)
         tallyObjLoadPotential(zone.armorSets.getArmor(rs.arg1, i));
     return;
   }
 
-  if (mob && mobload && rs.arg1 >=0)
-    for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
-      if (zone.armorSets.getArmor(rs.arg1, i) != 0)
-        if (loadsetCheck(mob, zone.armorSets.getArmor(rs.arg1, i),(rs.arg2 >= 98) ? rs.arg2 : fixed_chance, i, "(null... for now)", flags & resetFlagPropLoad))
-          markProp(dynamic_cast<TObj*>(mob->equipment[i])); // assume: loadsetCheck returning true = obj on mob in that slot
+  if (mob && mobload && rs.arg1 >= 0) {
+    for (wearSlotT slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
+      const int armorVnum = zone.armorSets.getArmor(rs.arg1, slot);
+      const int chance =
+        rs.arg2 >= 99
+          ? rs.arg2
+          : static_cast<int>(min(
+              max(rs.arg2 * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
+
+      if (armorVnum != 0 &&
+          loadsetCheck(mob, armorVnum, chance, slot, "(null... for now)",
+            (flags | resetFlagPropLoad))) {
+        
+      }
+    }
+  }
 }
 
 void zoneData::resetZone(bool bootTime, bool findLoadPotential)
@@ -4151,6 +4154,8 @@ resetCom::resetCommandId resetCom::getCommandId()
     case 'E': return cmd_LoadObjEquipped;
     case 'X': return cmd_CreateLocalSet;
     case 'Z': return cmd_LoadObjSetLocal;
+    case 'I': return cmd_LoadObjEquippedProp;
+    case 'J': return cmd_LoadObjSetLocalProp;
     case 'Y': return cmd_LoadObjSet;
     case 'V': return cmd_ChangeFourValues;
     case 'T': return cmd_SetTrap;

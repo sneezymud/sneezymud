@@ -319,3 +319,5 @@ class resetQElement
 };
 
 extern std::queue<sstring>queryqueue;
+
+void markProp(TObj& obj);

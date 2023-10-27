@@ -132,110 +132,90 @@ bool loadSetClass::suitLoad(const char *argument, TBeing *ch, loadSetTypeT tPiec
   return false;
 }
 
-bool loadsetCheck(TBeing *ch, int vnum, int chance, wearSlotT slot, const sstring &slotname, resetFlag flags)
-{
+// Chance comes in as 101 if this function is called via the imm loadset command
+bool loadsetCheck(TBeing* ch, int vnum, int chance, wearSlotT slot,
+  const sstring& slotname, resetFlag flags) {
+  const bool isImmLoad = chance == 101;
+  const bool isPropLoad = IS_SET(flags, resetFlagPropLoad);
+
   if (vnum < 0) {
-    if (chance > 100)
+    if (isImmLoad)
       ch->sendTo(format("No %s exists in that set.\n\r") % slotname);
     return false;
   }
 
-  if (flags & resetFlagFindLoadPotential) {
+  if (IS_SET(flags, resetFlagFindLoadPotential)) {
     tallyObjLoadPotential(vnum);
     return false;
   }
 
-  int rob = real_object(vnum);
-
-  if (rob < 0 || rob >= (signed) obj_index.size())
+  // No reason to proceed if ch already has something equipped in this slot
+  if (!isImmLoad && ch->equipment[slot])
     return false;
 
-  if (obj_index[rob].getNumber() >= obj_index[rob].max_exist) {
-    if (chance <= 100) {
-      // mob trying to load over max
+  objIndexData* objInfo = nullptr;
+  const int index = real_object(vnum);
 
-      TMonster *mon = dynamic_cast<TMonster *>(ch);
-      if (mon && ::number(0,99) < chance)
-        repoCheck(mon, rob);
+  try {
+    objInfo = &obj_index.at(index);
+    if (!objInfo) return false;
+  } catch (const std::out_of_range&) {
+    return false;
+  }
 
+  if (objInfo->getNumber() >= objInfo->max_exist) {
+    if (!isImmLoad)
       return false;
-    } else {
-      ch->sendTo(format("The %s in that suit is over max.\n\r") % slotname);
 
-      // let L58+ gods load full set regardless
-      if (!ch->hasWizPower(POWER_LOAD_LIMITED))
-        return false;
-    }
-  }
+    ch->sendTo(format("The %s in that suit is over max.\n\r") % slotname);
 
-  int obj_lp = 0;
-  obj_lp = getObjLoadPotential(vnum);
-  if (obj_lp == 0) {
-    vlogf(LOG_MISC, format("Didn't find suitset load potential of [%d].") % vnum);
-    obj_lp = 1;
-  }
-
-  // 1-e**((ln(1-0.01n**1/3)/n)) = normalized load rate
-  // Erasmus 3-23-2016 
- // double obj_lp_ratio = 1 - pow(exp(1), ((log(1 - 0.01*cbrt((double)obj_lp))/(double)obj_lp)));
-  // 1 - ((1-0.01*n**1/3)^(1/n)) = normalized load rate, less math
-  double adj_obj_lp_ratio = 1 - pow((1 - 0.01*cbrt((double)obj_lp)), 1/(double)obj_lp);
-  // vlogf(LOG_MISC, format("suitset: (10000000 * adj_obj_lp_ratio * stats.equip) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip));
-  if ((chance >= 99) ||
-      (::number(0,9999999) < (int) (10000000 * adj_obj_lp_ratio * tweakInfo[TWEAK_LOADRATE]->current *.050))) { 
-       // .03 lowers the possible chances, which are initally too high with a fixed values
-
-	// vlogf(LOG_MISC, format("suitset: stats.equip= %d") % stats.equip);
-	// vlogf(LOG_MISC, format("suitset: adj_obj_lp_ratio = %d") % adj_obj_lp_ratio);
-	// vlogf(LOG_MISC, format("suitset: (10000000 * adj_obj_lp_ratio * stats.equip *.050) = %d") % (int) (10000000 * adj_obj_lp_ratio * stats.equip *.050));
-
-
-        // Erasmus 3-23-2016
-	//(::number(0,9999999) < (int) ( 900*adj_obj_lp_ratio / obj_lp_ratio*stats.equip))) {
-	//larger the number x* adj_obj_lp_ratio the large the chance of success -- this is a fix rate whichis very low
-	//
-
-    /*
-    if (chance < 101) {
-      double obj_lp_ratio = (double)chance/100;
-      vlogf(LOG_MISC, format("Adjusted probability for suitset load of %s [%d]: %lf -> %lf") % obj_index[rob].short_desc % vnum % obj_lp_ratio % adj_obj_lp_ratio);
-    }
-    */
-    TObj *obj = NULL;
-    if (!Config::LoadOnDeath() || chance == 101 || (flags & resetFlagPropLoad))
-      obj = read_object(rob, REAL);
-    else
-      obj = read_object_buy_build(ch, rob, REAL);
-    if (obj) {
-      ch->logItem(obj, CMD_LOAD);
-      if (chance < 101) {
-        log_object(obj);
-      }
-      if (obj->isPaired() && slot == WEAR_LEG_L)
-      {
-        delete obj;  // avoid double loads of pants
-        return false;
-      } else if ((Config::LoadOnDeath() || chance == 101) && !(flags & resetFlagPropLoad))
-        *ch += *obj;
-      else if (ch->equipment[slot]){
-	      delete obj;
-	      return false;
-      } else
-        ch->equipChar(obj, slot);
-
-      // Most likely an immortal loading through loadset.
-      // If they cannot load with no proto then they cannot load set
-      //   with no proto.
-      if (chance > 100 && !ch->hasWizPower(POWER_LOAD_NOPROTOS))
-        obj->addObjStat(ITEM_PROTOTYPE);
-      return true;
-
-    } else if (chance > 100) {
-      ch->sendTo(format("The %s was listed but not found, not in db yet?\n\r") % slotname);
+    // let L58+ gods load full set regardless
+    if (!ch->hasWizPower(POWER_LOAD_LIMITED))
       return false;
-    }
   }
-  return false;
+
+  // Scale load chance from zonefile by loadrate tweak value from db.
+  const auto realChance = static_cast<int>(
+    min(max(chance * tweakInfo[TWEAK_LOADRATE]->current, 0.0), 100.0));
+
+  if (!percentChance(realChance))
+    return false;
+
+  TObj* obj = isImmLoad || isPropLoad
+                ? read_object(index, REAL)
+                : read_object_buy_build(ch, index, REAL);
+
+  if (!obj) {
+    if (isImmLoad)
+      ch->sendTo(format("The %s was listed but not found, not in db yet?\n\r") %
+                 slotname);
+    return false;
+  }
+
+  ch->logItem(obj, CMD_LOAD);
+
+  if (!isImmLoad)
+    log_object(obj);
+
+  if (obj->isPaired() && slot == WEAR_LEG_L) {
+    delete obj;  // avoid double loads of pants
+    return false;
+  }
+
+  if (isPropLoad)
+    markProp(*obj);
+
+  if (isImmLoad || (Config::LoadOnDeath() && !isPropLoad))
+    *ch += *obj;
+  else
+    ch->equipChar(obj, slot);
+
+  // Most likely an immortal loading through loadset. If they cannot load with
+  // no proto then they cannot load set with no proto.
+  if (isImmLoad && !ch->hasWizPower(POWER_LOAD_NOPROTOS))
+    obj->addObjStat(ITEM_PROTOTYPE);
+
+  return true;
 }
 
 bool is_floatVal(const char *str)
