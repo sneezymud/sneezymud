@@ -6138,7 +6138,7 @@ void doToughness(TBeing *ch)
 
 void TBeing::doBloodlust()
 {
-  const long MAX_BLOODLUST = 10;
+  const long MAX_BLOODLUST = 25;
   if (!doesKnowSkill(SKILL_BLOODLUST) || !awake() || getPosition() < POSITION_CRAWLING ||
       !bSuccess(SKILL_BLOODLUST))
     return;

@@ -11,7 +11,7 @@ their lust for battle, allowing them to work themselves up into a bloodlust
 even before vanquishing their foes.
 
 
-Technical description: Bloodlust can stack up to 10 times.  Each stack provides
+Technical description: Bloodlust can stack up to 25 times.  Each stack provides
 a regen boost (similar to enliven), with 10 stacks being a little over half as
 strong as the enliven spell.  Each stack also provides +1 damroll to the warrior,
-up to a maximum of +10 damroll.
+up to a maximum of +25 damroll.
