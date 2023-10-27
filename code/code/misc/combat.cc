@@ -968,6 +968,11 @@ int TBeing::damageLimb(TBeing* v, wearSlotT part_hit, const TThing* maybeWeapon,
       part_hit == HOLD_LEFT || part_hit == HOLD_RIGHT || !v->hasPart(part_hit))
     return false;
 
+  if (setCharFighting(v, 0) == -1)
+    return 0;
+
+  setVictFighting(v, 0);
+
   // Prevent or reduce limb damage based on active buffs
   if (v->affected) {
     int avoidChance = 0;
