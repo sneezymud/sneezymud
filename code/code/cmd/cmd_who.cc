@@ -613,3 +613,63 @@ void TBeing::doWhozone() {
   }
   sendTo(format("\n\rTotal visible players: %d\n\r") % count);
 }
+
+static const sstring getWhoNormal(const TBeing* ch, TBeing* p) {
+  TRoom* rp = NULL;
+  sstring tempbuf;
+  char colorBuf[256] = "\0";
+
+  tempbuf += format("%-16s") % p->getName();
+  tempbuf += format("%-12s") % p->getMyRace()->getSingularName();
+
+  if (p->hasWizPower(POWER_WIZARD))
+    strcpy(colorBuf, ch->purple());
+  else if (p->hasWizPower(POWER_GOD))
+    strcpy(colorBuf, ch->red());
+  else if (p->hasWizPower(POWER_BUILDER))
+    strcpy(colorBuf, ch->cyan());
+
+  // Do it this way so you get the default-titles also.
+  if (p && p->GetMaxLevel() > MAX_MORT) {
+    sstring str = stripColorCodes(p->msgVariables(MSG_IMM_TITLE));
+    unsigned int len = str.size();
+    unsigned int padding = 14 - len;
+    unsigned int frontpadding = padding / 2;
+    for (unsigned int iter = 0; iter < frontpadding; iter++)
+      str.insert(0, " ");
+
+    tempbuf += format("%s[%-14s%s] %s") % colorBuf % str % colorBuf % ch->norm();
+  } else {    
+    tempbuf += format("[ %-5s Lev %2d ] ") %
+              TBeing::getProfAbbrevName(p->player.Class) % p->GetMaxLevel();
+
+  }
+
+// (rp->getZoneNum() == p->roomp->getZoneNum()
+  if ( (rp = real_roomp(p->in_room)) ) {
+    tempbuf += format("%-25s") % rp->name;
+  }
+
+  tempbuf += "\n\r";
+
+  return tempbuf;
+}
+
+// format("You are %s %s.\n\r") % gender % getMyRace()->getSingularName());
+void TBeing::doWhoNew() {
+  TBeing *p;
+  sstring buf = "Players:\n\r--------\n\r";
+
+  for (p = character_list; p; p = p->next) {
+    if (p->isPc() && p->polyed == POLY_TYPE_NONE) {
+      if (dynamic_cast<TPerson*>(p)) {
+        buf += getWhoNormal(this, p);
+      }
+    }
+  }
+
+  buf += "\n\r--------\n\r";
+  if (desc)
+    desc->page_string(buf, SHOWNOW_NO, ALLOWREP_YES);
+
+}

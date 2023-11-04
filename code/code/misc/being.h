@@ -1859,6 +1859,7 @@ class TBeing : public TThing {
     void doScore();
     void doTrophy(const sstring&);
     void doWhozone();
+    void doWhoNew();
     void doWho(const char*);
     void doIgnore(const sstring&);
     void doRun(const sstring&);

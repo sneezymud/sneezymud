@@ -915,7 +915,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           addToLifeforce(1);
           break;
         case CMD_WHO:
-          doWho(newarg.c_str());
+          doWhoNew();
           addToLifeforce(1);
           break;
         case CMD_BRUTTEST:
