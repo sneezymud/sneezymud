@@ -394,6 +394,13 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Newbie: Fighting Mouse", Mob::ANY},                                // 368
   {"Newbie: Killed Mouse", Mob::ANY},                                  // 369
   {"Newbie: Has Completed Newbie Quest", Mob::ANY},                    // 370
+  {"Lowbie Weapon Quest: Eligible", Mob::FIRST_WARRIOR_GM},            // 371
+  {"Lowbie Weapon Quest: Gave Egg", Mob::FIRST_WARRIOR_GM},            // 372
+  {"Lowbie Weapon Quest: Completed", Mob::FIRST_WARRIOR_GM},           // 373
+  {"Thief L5 Quest: Eligible", Mob::ANY},                              // 374
+  {"Thief L5 Quest: Accepted", Mob::FIRST_THIEF_GM},                   // 375
+  {"Thief L5 Quest: Gave Cards", Mob::FIRST_THIEF_GM},                 // 376
+  {"Thief L5 Quest: Complete", Mob::FIRST_THIEF_GM},                   // 377
   {"", Mob::NONE},
 };
 

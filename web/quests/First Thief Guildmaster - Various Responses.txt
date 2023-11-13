@@ -1,0 +1,209 @@
+# Guildmaster - Thief L15
+# Created by Stonecold
+# Copyright 1997, SneezyMUD Development Team.  All rights reserved.
+
+# Directions to L40 Thief GM (Little Fellow, mob 219)
+
+say { "hello";
+    say Hello %n, what can I do for you?;
+    say Hello %n, I can advance you and I run a small business on the side.;
+}
+
+say { "next guildmaster";
+    whisper %n Finding your next guildmaster is part of your training.;
+    whisper %n However, I can give you a hint...;
+    whisper %n Seek the little fellow who lurks in darkness,;
+    whisper %n Somewhere in the mountains east of Grimhaven.;
+    whisper %n Look there beneath the earth\'s crust for your master.;
+    whisper %n But beware...the evil chimera lurk near his home.;
+}
+
+# Object Mob - Provides garrottes
+# Created by Cosmo
+# Copyright 1997, SneezyMUD Development Team.  All rights reserved.
+
+# The hooded assassin sells them for 300, so make more expensive
+
+say { "small business";
+    say My hobby is making garrottes.;
+    say I might be willing to sell you one.;
+    say They only cost 500 talens.;
+}
+
+say { "side business";
+    link say small business;
+}
+
+say { "garrotte";
+    say My garrottes are of the finest quality steel, strong and flexible.;
+    say They only cost 500 talens.;
+}
+
+give { "-500";
+    load 154;
+    say Here you go %n, Hide it on your person well...;
+    say but don\'t cut yourself on the wire.;
+    give garrotte %n;
+}
+
+# Level 1-15 guildmaster reset practices quest
+# Created by Deirdre - 19 Feb 2008
+# Copyright 2008, SneezyMUD Development Team.  All rights reserved.
+
+say {"favor";
+    nod;
+    say I am much too busy to deliver this letter to the head of the cityguard.;
+    say It is very important. If you would be so kind as to personally deliver it,;
+    say I would be much obliged.  When you return we can discuss your learning.;
+    load 29030;
+    give envel-seal-wax %n;
+}
+
+give {"29031";
+    toggle 351;
+    say Oh very good!;
+    toroom $n tears open the letter and reads it carefully.;
+    nod;
+    say Thank you, kind adventurer. Now, where were we?  Oh yes, you would like to;
+    say reset your ability to spend some of your practices.   We can do that now.;
+}
+
+give {"29030";
+    frown;
+    say I thought I told you to deliver that to the head of the cityguard!;
+    give envel-seal-wax %n;
+}
+
+# A great thief, 1st thief guildmaster
+# First Day On The Job
+# Created by Vasco - 2023-Nov
+# Copyright 2023, SneezyMUD Development Team.   All rights reserved.
+
+roomenter { \"\";
+    checktoggle 374;
+    nod %n;
+    say Well, well, well. About time you showed up.;
+    nudge %n;
+    say So, you are choosing a life of <W>shadows<z>.;
+    chuckle;
+    say You could choose worse, I suppose...;
+    say Assuming you can <W>handle<z> yourself.;
+}
+
+roomenter {\"\";
+    checktoggle 375;
+    tovict $n looks at you expectantly.;
+    tonotvict $n looks at $N expectantly.;
+}
+
+say { \"shadows"\;
+    checktoggle 374;
+    nod;
+    say Best way to stay alive is to stay hidden and quiet.;
+    think;
+    say You have a lot to learn, but I can help.;
+    say But first, I gotta know that you can <W>handle<z> yourself.;
+}
+
+say { \"handle"\;
+    checktoggle 374;
+    nod;
+    say We gotta know that you know how to act.;
+    say How to keep your head down.;
+    say How to get the job done.;
+    say How and where to put a blade...;
+    brandish;
+    say <W>Reputation<z> is everything in this line of work.;
+    say And honestly, little chickadee...;
+    spit;
+    say You ain\'t done anything yet to earn anyone\'s respect.;
+}
+
+say { \"reputation"\;
+    checktoggle 374;
+    shrug;
+    say Just how it is. Nothing personal.;
+    say Others in the guild tend to not trust people they don\'t know, so...;
+    think;
+    say I guess we need to get you lined up with your <W>first job<z>.;
+}
+
+say { \"first job"\;
+    checktoggle 374;
+    say Right. I have a little gig with a couple regulars at the Old Casino.;
+    smirk;
+    say And, it seems I\'m a little low on stock.;
+    say I need you to go in and grab a deck of cards.;
+    say Can you do that, little chickadee?;
+}
+
+say { \"yes"\;
+    checktoggle 374;
+    untoggle 374;
+    toggle 375;
+    say Okay, first lesson.;
+    point %n;
+    say Don\'t say you can do something. Just do it.;
+    smile;
+    say But since you\'re so enthusiastic, I\'ll cut you in on my <W>take<z> when you return.;
+    clap %n;
+    say Run along, now. Don\'t come back without my <W>cards<z>.;
+}
+
+say { \"cards"\;
+    checktoggle 375;
+    nod %n;
+    say That\'s right.;
+    say My contact usually gets them from the second floor...;
+    say Back in the small rooms where the players bet for high stakes.;
+    say Be quick about it and I\'ll cut you in on my <W>take<z> when you return.;
+    wink %n;
+}
+
+say { \"take"\;
+    checktoggle 375;
+    smile;
+    nod %n;
+    think;
+    toroom $n does some quick math on $s hands.;
+    say How about a cool 50,000 talens?;
+    say Don\'t worry. I won\'t forget.;
+}
+
+give { \"8422"\;
+    checktoggle 375;
+    untoggle 375;
+    toggle 376;
+    say Nice job, little chickadee.;
+    thank %n;
+    smirk;
+    tovict $n goes back to what $e was doing, as if you aren\'t there.;
+    tonotvict $n goes back to what $e was doing, as if $N isn\'t there.;
+    tovict It seems he\'s forgotten your half of the <W>take<z>.;
+}
+
+say { \"take"\;
+    checktoggle 376;
+    say Oh, did you need something?;
+    toroom $n strikes an innocent pose. Who, me?;
+    say Here\'s your second lesson. This one isn\'t free.;
+    say Most people will exploit you unless you give them a reason not to.;
+    say Can you think of anything that would make me want to stop?;
+    arch;
+    say Didn\'t think so.;
+    laugh;
+    say Here. Get good at using this.;
+    tovict $n pulls a <O>small blade<z> from $s boot.;
+    personalize 36397;
+    untoggle 376;
+    toggle 377;
+    say Who\'s a good little chickadee?;
+    smile %n;
+}
+
+say { \"me"\;
+    checktoggle 377;
+    say That\'s right!;
+    smile %n;
+    love %n;
+}

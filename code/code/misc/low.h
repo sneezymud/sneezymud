@@ -429,4 +429,6 @@ class Mob {
     static const int FAT_ELF_2 = 3906;
     static const int FAT_ELF_3 = 3907;
     static const int DEE = 7600;
+    static constexpr int FIRST_WARRIOR_GM = 202;
+    static constexpr int FIRST_THIEF_GM = 203;
 };

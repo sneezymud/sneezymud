@@ -12,6 +12,7 @@
 #include "spec_mobs.h"
 #include "materials.h"
 #include "skills.h"
+#include "obj_note.h"
 
 #define REPRAC_COST_PER_PRAC 1000
 
@@ -846,6 +847,26 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
           setQuestBit(TOG_ELIGIBLE_WARRIOR_L41);
         else if (getLevel(Class) == 40)
           bHasQuestAvailable = true;
+      }
+      break;
+    case THIEF_LEVEL_IND:
+      if (getLevel(Class) >= 5 && !hasQuestBit(TOG_THIEF_L5_ELIGIBLE) &&
+          !hasQuestBit(TOG_THIEF_L5_ACCEPTED) &&
+          !hasQuestBit(TOG_THIEF_L5_GAVE_CARDS) &&
+          !hasQuestBit(TOG_THIEF_L5_COMPLETE)) {
+        setQuestBit(TOG_THIEF_L5_ELIGIBLE);
+
+        TNote* note = createNote(
+          format("%s -\n\n\rGuildmaster wants to see you. South marketplace in "
+                 "Grimhaven, behind Jennica's. Don't be followed.\n\n\r") %
+          getName());
+
+        *this += *note;
+
+        act(
+          "You suddenly realize there's an unfamiliar note in your "
+          "inventory. Where did that come from?",
+          false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
       }
       break;
     default:
