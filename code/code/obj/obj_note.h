@@ -14,23 +14,26 @@ class TNote : public TObj {
     int repairman;
     int time_adjust;
     int obj_v;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_NOTE; }
-    virtual void showMe(TBeing *) const;
+    virtual void showMe(TBeing*) const;
 
-    virtual void postMe(TBeing *, const char *, TBoard *);
-    virtual int personalizedCheck(TBeing *) { return FALSE; }
-    virtual void describeMe(TBeing *) const {}
-    virtual void writeMeNote(TBeing *, TPen *);
-    virtual int objectSell(TBeing *, TMonster *);
-    virtual bool isPersonalized() { return FALSE; } // action_desc is not personalization
-    virtual void giveToRepairNote(TMonster *, TBeing *ch, int *);
-    virtual void giveToRepair(TMonster *, TBeing *ch, int *);
-    virtual void junkMe(TBeing *);
-    virtual void noteMe(TMonster *, TBeing *, TObj *, time_t, int);
+    virtual void postMe(TBeing*, const char*, TBoard*);
+    virtual int personalizedCheck(TBeing*) { return FALSE; }
+    virtual void describeMe(TBeing*) const {}
+    virtual void writeMeNote(TBeing*, TPen*);
+    virtual int objectSell(TBeing*, TMonster*);
+    virtual bool isPersonalized() {
+      return FALSE;
+    }  // action_desc is not personalization
+    virtual void giveToRepairNote(TMonster*, TBeing* ch, int*);
+    virtual void giveToRepair(TMonster*, TBeing* ch, int*);
+    virtual void junkMe(TBeing*);
+    virtual void noteMe(TMonster*, TBeing*, TObj*, time_t, int);
 
     int getRepairman() const;
     void setRepairman(int n);
@@ -40,9 +43,7 @@ class TNote : public TObj {
     void setObjV(int n);
 
     TNote();
-    TNote(const TNote &a);
-    TNote & operator=(const TNote &a);
+    TNote(const TNote& a);
+    TNote& operator=(const TNote& a);
     virtual ~TNote();
 };
-
-

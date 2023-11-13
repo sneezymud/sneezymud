@@ -9,111 +9,109 @@
 #include "room.h"
 
 // pull data from archive
-TShopJournal::TShopJournal(int shop, int y)
-{
+TShopJournal::TShopJournal(int shop, int y) {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop, y);
+  db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i",
+    shop, y);
 
-  if(db.fetchRow()){
-    db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", y, shop);
+  if (db.fetchRow()) {
+    db.query(
+      "select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, "
+      "shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and "
+      "a.post_ref=shoplogjournal.post_ref group by a.name",
+      y, shop);
   } else {
-    db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and shop_nr=%i and a.post_ref=shoplogjournalarchive.post_ref group by a.name", y, shop);
+    db.query(
+      "select a.name, sum(credit)-sum(debit) as amt from "
+      "shoplogjournalarchive, shoplogaccountchart a where sneezy_year=%i and "
+      "shop_nr=%i and a.post_ref=shoplogjournalarchive.post_ref group by "
+      "a.name",
+      y, shop);
   }
 
-  while(db.fetchRow()){
-    if(db["name"] == "Retained Earnings"){
-      values[db["name"]]=convertTo<int>(db["amt"]);
+  while (db.fetchRow()) {
+    if (db["name"] == "Retained Earnings") {
+      values[db["name"]] = convertTo<int>(db["amt"]);
     } else {
-      values[db["name"]]=abs(convertTo<int>(db["amt"]));
+      values[db["name"]] = abs(convertTo<int>(db["amt"]));
     }
   }
 
-  shop_nr=shop;
-  year=y;
+  shop_nr = shop;
+  year = y;
 }
 
 // pull current data
-TShopJournal::TShopJournal(int shop)
-{
+TShopJournal::TShopJournal(int shop) {
   TDatabase db(DB_SNEEZY);
-  year=GameTime::getYear();
+  year = GameTime::getYear();
 
-  db.query("select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, shoplogaccountchart a where shop_nr=%i and a.post_ref=shoplogjournal.post_ref group by a.name", shop);
+  db.query(
+    "select a.name, sum(credit)-sum(debit) as amt from shoplogjournal, "
+    "shoplogaccountchart a where shop_nr=%i and "
+    "a.post_ref=shoplogjournal.post_ref group by a.name",
+    shop);
 
-  while(db.fetchRow()){
-    if(db["name"] == "Retained Earnings"){
-      values[db["name"]]=convertTo<int>(db["amt"]);
+  while (db.fetchRow()) {
+    if (db["name"] == "Retained Earnings") {
+      values[db["name"]] = convertTo<int>(db["amt"]);
     } else {
-      values[db["name"]]=abs(convertTo<int>(db["amt"]));
+      values[db["name"]] = abs(convertTo<int>(db["amt"]));
     }
   }
-  
-  shop_nr=shop;
+
+  shop_nr = shop;
 }
 
-int TShopJournal::getValue(const sstring &val)
-{
-  return values[val];
+int TShopJournal::getValue(const sstring& val) { return values[val]; }
+
+int TShopJournal::getExpenses() {
+  return values["COGS"] + values["Tax"] + values["Expenses"] +
+         values["Interest"];
 }
 
-
-int TShopJournal::getExpenses()
-{
-  return values["COGS"]+values["Tax"]+values["Expenses"]+values["Interest"];
+int TShopJournal::getNetIncome() {
+  return (values["Sales"] + values["Recycling"]) - getExpenses();
 }
 
-int TShopJournal::getNetIncome()
-{
-  return (values["Sales"]+values["Recycling"])-getExpenses();
+int TShopJournal::getRetainedEarnings() {
+  return (getNetIncome() + values["Retained Earnings"]) - values["Dividends"];
 }
 
+int TShopJournal::getAssets() { return values["Cash"] + values["Inventory"]; }
 
-int TShopJournal::getRetainedEarnings()
-{
-  return (getNetIncome()+values["Retained Earnings"])-values["Dividends"];
+int TShopJournal::getLiabilities() { return values["Deposits"]; }
+
+int TShopJournal::getShareholdersEquity() {
+  return values["Paid-in Capital"] + getRetainedEarnings();
 }
 
-int TShopJournal::getAssets()
-{
-  return values["Cash"]+values["Inventory"];
-}
-
-int TShopJournal::getLiabilities()
-{
-  return values["Deposits"];
-}
-
-int TShopJournal::getShareholdersEquity()
-{
-  return values["Paid-in Capital"]+getRetainedEarnings();
-}
-
-
-void TShopJournal::closeTheBooks()
-{
+void TShopJournal::closeTheBooks() {
   TDatabase db(DB_SNEEZY);
 
   // we have to assume here that all of the journal entries for the
   // specified year exist in the shoplogjournal table
 
   // have to clear out any cached shop logs first
-  while(!queryqueue.empty()){
+  while (!queryqueue.empty()) {
     db.query(queryqueue.front().c_str());
     queryqueue.pop();
   }
 
-  if(year == GameTime::getYear()){
+  if (year == GameTime::getYear()) {
     vlogf(LOG_BUG, "closeTheBooks() called for current year!");
     return;
   }
 
   // shouldn't be an entries for last year in here if books have been closed
-  db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
-  
-  if(!db.fetchRow()){
+  db.query("select 1 from shoplogjournal where shop_nr=%i and sneezy_year=%i",
+    shop_nr, year);
+
+  if (!db.fetchRow()) {
     // seems as the books have already been closed.
-    //    vlogf(LOG_BUG, "closeTheBooks() called when retained earnings already set!");
+    //    vlogf(LOG_BUG, "closeTheBooks() called when retained earnings already
+    //    set!");
     return;
   }
 
@@ -121,108 +119,134 @@ void TShopJournal::closeTheBooks()
 
   //// assets
   // carryover entry for cash
-  tso.journalize_debit(100, "Accountant", "Year End Accounting", 
-			getValue("Cash"), true);
+  tso.journalize_debit(100, "Accountant", "Year End Accounting",
+    getValue("Cash"), true);
   // carryover entry for inventory
-  tso.journalize_debit(130, "Accountant", "Year End Accounting", 
-			getValue("Inventory"));
+  tso.journalize_debit(130, "Accountant", "Year End Accounting",
+    getValue("Inventory"));
 
   //// liabilities
   // carryover entry for deposits
   tso.journalize_credit(310, "Accountant", "Year End Accounting",
-			getValue("Deposits"));
+    getValue("Deposits"));
 
   // carryover entry for PIC
-  tso.journalize_credit(300, "Accountant", "Year End Accounting", 
-			getValue("Paid-in Capital"));
+  tso.journalize_credit(300, "Accountant", "Year End Accounting",
+    getValue("Paid-in Capital"));
   // carryover entry for RE
   // sometimes RE can be negative, so debit if needed
-  if(getRetainedEarnings() >= 0){
-    tso.journalize_credit(800, "Accountant", "Year End Accounting", 
-			  getRetainedEarnings());
+  if (getRetainedEarnings() >= 0) {
+    tso.journalize_credit(800, "Accountant", "Year End Accounting",
+      getRetainedEarnings());
   } else {
-    tso.journalize_debit(800, "Accountant", "Year End Accounting", 
-			  -getRetainedEarnings());
+    tso.journalize_debit(800, "Accountant", "Year End Accounting",
+      -getRetainedEarnings());
   }
 
   // move old journal into archive
-  db.query("insert into shoplogjournalarchive select * from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
-  db.query("delete from shoplogjournal where shop_nr=%i and sneezy_year=%i", shop_nr, year);
+  db.query(
+    "insert into shoplogjournalarchive select * from shoplogjournal where "
+    "shop_nr=%i and sneezy_year=%i",
+    shop_nr, year);
+  db.query("delete from shoplogjournal where shop_nr=%i and sneezy_year=%i",
+    shop_nr, year);
 }
 
-
-void TShopOwned::journalize_debit(int post_ref, const sstring &customer,
-				  const sstring &name, int amt, bool new_id)
-{
+void TShopOwned::journalize_debit(int post_ref, const sstring& customer,
+  const sstring& name, int amt, bool new_id) {
   TDatabase db(DB_SNEEZY);
 
-  //    db.query("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr, (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(), GameTime::getYear(), post_ref, amt);
+  //    db.query("insert into shoplogjournal (shop_nr, journal_id,
+  //    customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)
+  //    values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr,
+  //    (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(),
+  //    GameTime::getYear(), post_ref, amt);
 
-  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit) values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape() % customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
+  queryqueue.push(
+    format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
+           "obj_name, sneezy_year, logtime, post_ref, debit, credit) values "
+           "(%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") %
+    shop_nr % ((sstring)(new_id ? "NULL" : "LAST_INSERT_ID()")).escape() %
+    customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
 }
-				  
-void TShopOwned::journalize_credit(int post_ref, const sstring &customer,
-				  const sstring &name, int amt, bool new_id)
-{
+
+void TShopOwned::journalize_credit(int post_ref, const sstring& customer,
+  const sstring& name, int amt, bool new_id) {
   TDatabase db(DB_SNEEZY);
 
-  queryqueue.push(format("insert into shoplogjournal (shop_nr, journal_id, customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)values (%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") % shop_nr % ((sstring)(new_id?"NULL":"LAST_INSERT_ID()")).escape() % customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
+  queryqueue.push(
+    format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
+           "obj_name, sneezy_year, logtime, post_ref, debit, credit)values "
+           "(%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") %
+    shop_nr % ((sstring)(new_id ? "NULL" : "LAST_INSERT_ID()")).escape() %
+    customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
 }
 
-void TShopOwned::COGS_add(const sstring &name, int amt, int num)
-{
+void TShopOwned::COGS_add(const sstring& name, int amt, int num) {
   TDatabase db(DB_SNEEZY);
 
+  db.query("select 1 from shoplogcogs where obj_name='%s' and shop_nr=%i",
+    name.c_str(), shop_nr);
 
-  db.query("select 1 from shoplogcogs where obj_name='%s' and shop_nr=%i", name.c_str(), shop_nr);
-
-  if(!db.fetchRow()){
+  if (!db.fetchRow()) {
     // this needs to be done immediately, otherwise there will be multiple
     // inserts queued up the next time COGS_add() is called, if the queue
     // hasn't been processed yet.
-    db.query("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)", shop_nr, name.escape().c_str(), num, amt);
-    //    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values (%i, '%s', %i, %i)") % shop_nr % name.escape() % num % amt);
+    db.query(
+      "insert into shoplogcogs (shop_nr, obj_name, count, total_cost) values "
+      "(%i, '%s', %i, %i)",
+      shop_nr, name.escape().c_str(), num, amt);
+    //    queryqueue.push(format("insert into shoplogcogs (shop_nr, obj_name,
+    //    count, total_cost) values (%i, '%s', %i, %i)") % shop_nr %
+    //    name.escape() % num % amt);
   } else {
-    queryqueue.push(format("update shoplogcogs set count=count+%i, total_cost=total_cost+%i where obj_name='%s' and shop_nr=%i") % num % amt % name.escape() % shop_nr);
+    queryqueue.push(
+      format("update shoplogcogs set count=count+%i, total_cost=total_cost+%i "
+             "where obj_name='%s' and shop_nr=%i") %
+      num % amt % name.escape() % shop_nr);
   }
 }
 
-void TShopOwned::COGS_remove(const sstring &name, int num)
-{
+void TShopOwned::COGS_remove(const sstring& name, int num) {
   TDatabase db(DB_SNEEZY);
 
-  //  db.query("update shoplogcogs set total_cost=total_cost-((total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
+  //  db.query("update shoplogcogs set
+  //  total_cost=total_cost-((total_cost/count)*%i), count=count-%i where
+  //  obj_name='%s' and shop_nr=%i", num, num, name.c_str(), shop_nr);
 
-  queryqueue.push(format("update shoplogcogs set total_cost=floor(total_cost-(total_cost/count)*%i), count=count-%i where obj_name='%s' and shop_nr=%i") % num % num % name.escape() % shop_nr);
+  queryqueue.push(format("update shoplogcogs set "
+                         "total_cost=floor(total_cost-(total_cost/count)*%i), "
+                         "count=count-%i where obj_name='%s' and shop_nr=%i") %
+                  num % num % name.escape() % shop_nr);
 }
 
-int TShopOwned::COGS_get(const sstring &name, int num)
-{
+int TShopOwned::COGS_get(const sstring& name, int num) {
   TDatabase db(DB_SNEEZY);
 
-  db.query("select (total_cost/count)*%i as cost from shoplogcogs where shop_nr=%i and obj_name='%s'", num, shop_nr, name.c_str());
-  
-  if(db.fetchRow())
+  db.query(
+    "select (total_cost/count)*%i as cost from shoplogcogs where shop_nr=%i "
+    "and obj_name='%s'",
+    num, shop_nr, name.c_str());
+
+  if (db.fetchRow())
     return convertTo<int>(db["cost"]);
   else
     return 0;
 }
 
-void TShopOwned::journalize(const sstring &customer, const sstring &name, 
-			    transactionTypeT action, 
-			    int amt, int tax, int corp_cash, 
-			    int expenses, int num)
-{
+void TShopOwned::journalize(const sstring& customer, const sstring& name,
+  transactionTypeT action, int amt, int tax, int corp_cash, int expenses,
+  int num) {
   TDatabase db(DB_SNEEZY);
-  int COGS=0;
+  int COGS = 0;
 
-  switch(action){
+  switch (action) {
     case TX_RECEIVING_TALENS:
       // shop giving money to owner
       // we might want to record this as salary or something?
-      // perhaps we need a way for owners to differentiate between PIC and 
+      // perhaps we need a way for owners to differentiate between PIC and
       // salary withdrawals
-      
+
       // PIC
       journalize_debit(300, customer, name, amt, true);
       // cash
@@ -249,9 +273,9 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       break;
     case TX_PAYING_INTEREST:
       // interest
-      journalize_debit(610, customer, name, amt, true);      
+      journalize_debit(610, customer, name, amt, true);
       // cash
-      journalize_credit(100, customer, name, amt);      
+      journalize_credit(100, customer, name, amt);
       break;
     case TX_FACTORY:
       break;
@@ -262,7 +286,7 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       journalize_debit(130, customer, name, amt, true);
       // cash
       journalize_credit(100, customer, name, amt);
-      
+
       // record COGS
       COGS_add(name, amt, num);
       break;
@@ -273,36 +297,34 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
       // cash
       journalize_debit(100, customer, name, amt, true);
       // sales
-      if(action == TX_RECYCLING)
-	journalize_credit(510, customer, name, amt);
+      if (action == TX_RECYCLING)
+        journalize_credit(510, customer, name, amt);
       else
-	journalize_credit(500, customer, name, amt);
-      
-      if(action == TX_BUYING_SERVICE){
-      } else if(action == TX_BUYING || action == TX_RECYCLING){
-	// now we have to calculate COGS for this item
-	// (COGS = cost of goods sold)
-	COGS=COGS_get(name, num);
-	
-	// now log it
-	// COGS
-	journalize_debit(600, customer, name, COGS);
-	// inventory
-	journalize_credit(130, customer, name, COGS);
+        journalize_credit(500, customer, name, amt);
 
-	// now update COGS table
-	COGS_remove(name, num);
+      if (action == TX_BUYING_SERVICE) {
+      } else if (action == TX_BUYING || action == TX_RECYCLING) {
+        // now we have to calculate COGS for this item
+        // (COGS = cost of goods sold)
+        COGS = COGS_get(name, num);
+
+        // now log it
+        // COGS
+        journalize_debit(600, customer, name, COGS);
+        // inventory
+        journalize_credit(130, customer, name, COGS);
+
+        // now update COGS table
+        COGS_remove(name, num);
       }
-      
-      
+
       break;
   }
 
   // now we log miscellaneous things that apply to everything if passed
 
-
   ///// log any expenses
-  if(expenses){
+  if (expenses) {
     // expenses
     journalize_debit(630, customer, name, expenses);
     // cash
@@ -310,16 +332,15 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
   }
 
   ///// now log the sales tax
-  if(tax){
+  if (tax) {
     // tax
     journalize_debit(700, customer, name, tax);
     // cash
     journalize_credit(100, customer, name, tax);
-  }      
-
+  }
 
   ///// now log the corporate cash flow
-  if(corp_cash > 0){
+  if (corp_cash > 0) {
     // receiving money from corp, this counts as PIC
     // cash
     journalize_debit(100, customer, name, corp_cash);
@@ -334,67 +355,64 @@ void TShopOwned::journalize(const sstring &customer, const sstring &name,
   }
 }
 
-
-void TShopOwned::giveStatements(sstring arg)
-{
-  if(!hasAccess(SHOPACCESS_LOGS)){
+void TShopOwned::giveStatements(sstring arg) {
+  if (!hasAccess(SHOPACCESS_LOGS)) {
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
     return;
   }
 
-  int year=convertTo<int>(arg);
-  if(!year)
-    year=GameTime::getYear();
+  int year = convertTo<int>(arg);
+  if (!year)
+    year = GameTime::getYear();
 
   TShopJournal tsj(shop_nr, year);
   sstring keywords, short_desc, long_desc, buf, name;
-  
-  name=real_roomp(shop_index[shop_nr].in_room)->getName();
-  keywords=format("statement income financial %i %i %s") % 
-    shop_nr % year % name;
-  short_desc=format("an income statement for '<p>%s<1>', year <r>%i<1>") %
-    name % year;
-  long_desc="A crumpled up financial statement lies here.";
 
-  if(year == GameTime::getYear())
-    buf=format("Income statement for '%s', current year %i.\n\r") % 
-      name % year;
+  name = real_roomp(shop_index[shop_nr].in_room)->getName();
+  keywords =
+    format("statement income financial %i %i %s") % shop_nr % year % name;
+  short_desc =
+    format("an income statement for '<p>%s<1>', year <r>%i<1>") % name % year;
+  long_desc = "A crumpled up financial statement lies here.";
+
+  if (year == GameTime::getYear())
+    buf =
+      format("Income statement for '%s', current year %i.\n\r") % name % year;
   else
-    buf=format("Income statement for '%s', year ending %i.\n\r") % 
-      name % year;
+    buf =
+      format("Income statement for '%s', year ending %i.\n\r") % name % year;
 
-  sstring prev_re=format("Retained earnings %i") % (year-1);
+  sstring prev_re = format("Retained earnings %i") % (year - 1);
 
-  buf+="-----------------------------------------------------------------\n\r";
-  buf+=format("%-36s %10s %10i\n\r") % 
-    "Sales revenue" % "" % tsj.getValue("Sales");
-  if(tsj.getValue("Recycling"))
-    buf+=format("%-36s %10s %10i\n\r") % 
-      "Recycling revenue" % "" % tsj.getValue("Recycling");
-  buf+=format("  %-34s %10i\n\r") %
-    "Cost of goods sold" % tsj.getValue("COGS");
-  buf+=format("  %-34s %10i\n\r") %
-    "Sales tax" % tsj.getValue("Tax");
-  if(tsj.getValue("Expenses"))
-    buf+=format("  %-34s %10i\n\r") %
-      "Service expenses" % tsj.getValue("Expenses");
-  if(tsj.getValue("Interest"))
-    buf+=format("  %-34s %10i\n\r") %
-      "Interest expense" % tsj.getValue("Interest");
-  buf+=format("%-36s %10s %10i\n\r") %
-    "Total expenses" % "" % tsj.getExpenses();
-  buf+=format("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
-  buf+=format("%-36s %10s %10i\n\r") %
-    "Net income" % "" % tsj.getNetIncome();
-  buf+=format("%-36s %10s %10i\n\r") %
-    "Dividends" % "" % tsj.getValue("Dividends");
-  buf+=format("%-36s %10s %10i\n\r") %
-    prev_re % "" % tsj.getValue("Retained Earnings");
-  buf+=format("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
-  buf+=format("%-36s %10s %10i\n\r") %
-    "Retained earnings" % "" % tsj.getRetainedEarnings();
-  
-  TNote *income_statement = createNote(buf);
+  buf +=
+    "-----------------------------------------------------------------\n\r";
+  buf += format("%-36s %10s %10i\n\r") % "Sales revenue" % "" %
+         tsj.getValue("Sales");
+  if (tsj.getValue("Recycling"))
+    buf += format("%-36s %10s %10i\n\r") % "Recycling revenue" % "" %
+           tsj.getValue("Recycling");
+  buf +=
+    format("  %-34s %10i\n\r") % "Cost of goods sold" % tsj.getValue("COGS");
+  buf += format("  %-34s %10i\n\r") % "Sales tax" % tsj.getValue("Tax");
+  if (tsj.getValue("Expenses"))
+    buf += format("  %-34s %10i\n\r") % "Service expenses" %
+           tsj.getValue("Expenses");
+  if (tsj.getValue("Interest"))
+    buf += format("  %-34s %10i\n\r") % "Interest expense" %
+           tsj.getValue("Interest");
+  buf +=
+    format("%-36s %10s %10i\n\r") % "Total expenses" % "" % tsj.getExpenses();
+  buf += format("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
+  buf += format("%-36s %10s %10i\n\r") % "Net income" % "" % tsj.getNetIncome();
+  buf += format("%-36s %10s %10i\n\r") % "Dividends" % "" %
+         tsj.getValue("Dividends");
+  buf += format("%-36s %10s %10i\n\r") % prev_re % "" %
+         tsj.getValue("Retained Earnings");
+  buf += format("%-36s %10s %10s\n\r") % "" % "----------" % "----------";
+  buf += format("%-36s %10s %10i\n\r") % "Retained earnings" % "" %
+         tsj.getRetainedEarnings();
+
+  TNote* income_statement = createNote(buf);
   income_statement->name = keywords;
   income_statement->shortDescr = short_desc;
   income_statement->setDescr(long_desc);
@@ -402,59 +420,50 @@ void TShopOwned::giveStatements(sstring arg)
   *keeper += *income_statement;
   keeper->doGive(ch, income_statement, GIVE_FLAG_DROP_ON_FAIL);
 
+  name = real_roomp(shop_index[shop_nr].in_room)->getName();
+  keywords = format("sheet balance financial statement %i %i %s") % shop_nr %
+             year % name;
+  short_desc =
+    format("a balance sheet for '<p>%s<1>', year <r>%i<1>") % name % year;
+  long_desc = "A crumpled up financial statement lies here.";
 
-  name=real_roomp(shop_index[shop_nr].in_room)->getName();
-  keywords=format("sheet balance financial statement %i %i %s") % 
-    shop_nr % year % name;
-  short_desc=format("a balance sheet for '<p>%s<1>', year <r>%i<1>") %
-    name % year;
-  long_desc="A crumpled up financial statement lies here.";
-
-
-  if(year == GameTime::getYear())
-    buf=format("Balance sheet for '%s', current year %i.\n\r\n\r") % 
-      name % year;
+  if (year == GameTime::getYear())
+    buf =
+      format("Balance sheet for '%s', current year %i.\n\r\n\r") % name % year;
   else
-    buf=format("Balance sheet for '%s', year ending %i.\n\r\n\r") % 
-      name % year;
+    buf =
+      format("Balance sheet for '%s', year ending %i.\n\r\n\r") % name % year;
 
-  buf+=format("%-36s   %-36s\n\r") % 
-    "Assets" % "Liabilities";
-  buf+="-----------------------------------------------------------------\n\r";
-  
-  if(tsj.getValue("Deposits")){
-    buf+=format("%-36s | %-25s\n\r") %
-      "" % "Liabilities";
-    buf+=format("%-25s %10i | %-25s %10i\n") %
-      "Cash" % tsj.getValue("Cash") % 
-      "  Deposits" % tsj.getValue("Deposits");
+  buf += format("%-36s   %-36s\n\r") % "Assets" % "Liabilities";
+  buf +=
+    "-----------------------------------------------------------------\n\r";
+
+  if (tsj.getValue("Deposits")) {
+    buf += format("%-36s | %-25s\n\r") % "" % "Liabilities";
+    buf += format("%-25s %10i | %-25s %10i\n") % "Cash" % tsj.getValue("Cash") %
+           "  Deposits" % tsj.getValue("Deposits");
   } else {
-    buf+=format("%-25s %10i |\n") %
-      "Cash" % tsj.getValue("Cash");
+    buf += format("%-25s %10i |\n") % "Cash" % tsj.getValue("Cash");
   }
 
-  buf+=format("%-25s %10i | %-36s\n\r") %
-    "Inventory" % tsj.getValue("Inventory") % "";
-  buf+=format("%-36s | %-36s\n\r") %
-    "" % "Shareholders' equity";
-  buf+=format("%-36s | %-25s %10i\n\r") %
-    "" % "  Paid-in capital" % tsj.getValue("Paid-in Capital");
-  buf+=format("%-36s | %-25s %10i\n\r") %
-    "" % "  Retained earnings" % tsj.getRetainedEarnings();
-  buf+=format("%-25s %10s | %-25s %10s\n\r") %
-    "" % "----------" % "" % "----------";
-  buf+=format("%-25s %10i | %-25s %10i\n\r") %
-    "Total assets" % tsj.getAssets() %
-    "Total liabilities & SHE" % 
-    (tsj.getLiabilities()+tsj.getShareholdersEquity());
+  buf += format("%-25s %10i | %-36s\n\r") % "Inventory" %
+         tsj.getValue("Inventory") % "";
+  buf += format("%-36s | %-36s\n\r") % "" % "Shareholders' equity";
+  buf += format("%-36s | %-25s %10i\n\r") % "" % "  Paid-in capital" %
+         tsj.getValue("Paid-in Capital");
+  buf += format("%-36s | %-25s %10i\n\r") % "" % "  Retained earnings" %
+         tsj.getRetainedEarnings();
+  buf += format("%-25s %10s | %-25s %10s\n\r") % "" % "----------" % "" %
+         "----------";
+  buf += format("%-25s %10i | %-25s %10i\n\r") % "Total assets" %
+         tsj.getAssets() % "Total liabilities & SHE" %
+         (tsj.getLiabilities() + tsj.getShareholdersEquity());
 
-  
-  TNote *balance_sheet = createNote(buf);
+  TNote* balance_sheet = createNote(buf);
   balance_sheet->name = keywords;
   balance_sheet->shortDescr = short_desc;
   balance_sheet->setDescr(long_desc);
 
   *keeper += *balance_sheet;
   keeper->doGive(ch, balance_sheet, GIVE_FLAG_DROP_ON_FAIL);
-
 }

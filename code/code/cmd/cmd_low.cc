@@ -36,8 +36,7 @@
 #include "low.h"
 #include "configuration.h"
 
-double balanceCorrectionForLevel(double level)
-{
+double balanceCorrectionForLevel(double level) {
   // from balance notes
   // PC damage was miscalculated and the extra hit from specializing
   // was "lost", in essence, allowing PC melee damage to be 2* what it
@@ -45,46 +44,46 @@ double balanceCorrectionForLevel(double level)
   // this returns a value from 1.0 to 2.0 indicating how much more dam
   // a char is getting as a result of this, and we can use this factor
   // in "tweaking" balance
-  double boost = min(max(((level-25) * 0.1) + 1.0, 1.00), 2.0);
+  double boost = min(max(((level - 25) * 0.1) + 1.0, 1.00), 2.0);
 
   return boost;
 }
 
-double get_doubling_level(float real_lev)
-{
+double get_doubling_level(float real_lev) {
   // doubling level is defined as the number of levels over mine at
   // which point a creature is twice as possible
 
   // since what follows is resource intensive, let's just do the calculations
   // once, and do lookups thereafter
   static bool loaded = false;
-  static std::map<int, double>mob_double_table;
+  static std::map<int, double> mob_double_table;
   const double RESOLUTION = .01;
 
   if (!loaded) {
     double k;
-    for (k = 0.0; ; k += RESOLUTION) {
-      double perc = (0.60 - k * 0.03)/(0.60 + k * 0.03);
+    for (k = 0.0;; k += RESOLUTION) {
+      double perc = (0.60 - k * 0.03) / (0.60 + k * 0.03);
 
       double lbla = sqrt(2.0 * perc) - 1.0;
 
       // recall: K = La * (sqrt(2 * Pa/Pb) - 1)
       // K = La * lbla
       // La = K / lbla
-      int lookup_lev = (int) (k/lbla/RESOLUTION);
+      int lookup_lev = (int)(k / lbla / RESOLUTION);
 
       mob_double_table[lookup_lev] = k;
-      
-      if ((int) (lookup_lev*RESOLUTION) >= MAX_MORT)
+
+      if ((int)(lookup_lev * RESOLUTION) >= MAX_MORT)
         break;
     }
     loaded = true;
   }
-  int lookup_lev = (int) (max(real_lev, (float) 1.0)/RESOLUTION);
+  int lookup_lev = (int)(max(real_lev, (float)1.0) / RESOLUTION);
 
   double k_lev = 1.000;
   do {
-    std::map<int, double>::const_iterator CT = mob_double_table.find(lookup_lev);
+    std::map<int, double>::const_iterator CT =
+      mob_double_table.find(lookup_lev);
     if (CT == mob_double_table.end()) {
       // if we aren't an exact match, back up a bit and try again
       k_lev = 0.0;
@@ -99,8 +98,7 @@ double get_doubling_level(float real_lev)
   return k_lev;
 }
 
-static double get_perc_level(float real_lev)
-{
+static double get_perc_level(float real_lev) {
   // Since we know the doubling level, we postulate that at my level
   // we can calculate a percentage growth.
   // That is, if we had a 1% growth, we would double in 69.3 levels....
@@ -110,14 +108,14 @@ static double get_perc_level(float real_lev)
   // this tends also to be resource intensive, so only do it once and
   // save it for later
   static bool loaded = false;
-  static std::map<int, double>mob_perc_table;
+  static std::map<int, double> mob_perc_table;
   const double RESOLUTION = .01;
 
   if (!loaded) {
     double lev;
     for (lev = 0.0; lev < 50.0; lev += RESOLUTION) {
       double dlev = get_doubling_level(lev);
-      double one_ver = 1.0/dlev;
+      double one_ver = 1.0 / dlev;
       double perc = pow(2.0, one_ver) - 1;
 
       // As a final quirk, realize the percentage growth is changing constantly
@@ -127,11 +125,11 @@ static double get_perc_level(float real_lev)
       // to counter act this, I simply assign the percent I just calculated
       // to a level that is slightly lower.  Somewhat arbitrary, but has the
       // desired effect
-      int newlev = (int) ((lev - 0.4*dlev)/RESOLUTION);
+      int newlev = (int)((lev - 0.4 * dlev) / RESOLUTION);
 
       mob_perc_table[newlev] = perc;
 
-      if (newlev > (int) (50.0/RESOLUTION))
+      if (newlev > (int)(50.0 / RESOLUTION))
         break;
     }
 
@@ -139,7 +137,7 @@ static double get_perc_level(float real_lev)
   }
 
   double k_perc = 0.0;
-  int lookup_lev = (int) (real_lev/RESOLUTION);
+  int lookup_lev = (int)(real_lev / RESOLUTION);
   do {
     std::map<int, double>::const_iterator CT = mob_perc_table.find(lookup_lev);
     if (CT == mob_perc_table.end()) {
@@ -156,8 +154,7 @@ static double get_perc_level(float real_lev)
   return min(k_perc, 3.0);
 }
 
-double mob_exp(float real_lev)
-{
+double mob_exp(float real_lev) {
   // This is a new EXP formula devised by Batopr 12/25/98
   // It is predicated on the axiom that a mob that is twice as difficult
   // should award twice the XP.
@@ -217,7 +214,7 @@ double mob_exp(float real_lev)
 
   // Obviously, it's resource intensive, so again, do it once and save
   static bool loaded = false;
-  static std::map<int, double>mob_xp_table;
+  static std::map<int, double> mob_xp_table;
   const double RESOLUTION = .01;
 
   if (!loaded) {
@@ -230,7 +227,7 @@ double mob_exp(float real_lev)
       // that made XP to lev L50 come out nice
       exp += 1.020 * (dlev * exp) * RESOLUTION;
 
-      int newlev = (int) (lev/RESOLUTION);
+      int newlev = (int)(lev / RESOLUTION);
       mob_xp_table[newlev] = exp;
     }
 #if 0
@@ -273,7 +270,7 @@ double mob_exp(float real_lev)
   }
 
   double mob_xp = 0.0;
-  int lookup_lev = (int) (real_lev/RESOLUTION);
+  int lookup_lev = (int)(real_lev / RESOLUTION);
   do {
     std::map<int, double>::const_iterator CT = mob_xp_table.find(lookup_lev);
     if (CT == mob_xp_table.end()) {
@@ -287,53 +284,48 @@ double mob_exp(float real_lev)
   return mob_xp;
 }
 
-int kills_to_level(int lev)
-{
-  return (int) (17 + (1.25 * lev));
+int kills_to_level(int lev) {
+  return (int)(17 + (1.25 * lev));
 #if 0
   // these are alternatives to consider
   return (int) (2 + (1.6 * lev));
   return (int) (0 + (1.7 * lev));
 #endif
 }
-  
-static double hpModifier(const TMonster *ch)
-{
-  double sanct_modifier = (100.0 / (100.0 - min(99.0, (double) ch->getProtection())));
-  double hp_modifier = ((double) ch->hitLimit());
+
+static double hpModifier(const TMonster* ch) {
+  double sanct_modifier =
+    (100.0 / (100.0 - min(99.0, (double)ch->getProtection())));
+  double hp_modifier = ((double)ch->hitLimit());
 
   // adjust hp for correction made in calcHitPoints
   hp_modifier /= balanceCorrectionForLevel(ch->GetMaxLevel());
 
-  if (ch->getHPLevel() <= 70) 
-  {
+  if (ch->getHPLevel() <= 70) {
     hp_modifier *= sanct_modifier * 2.0 / 31.0;
-  }
-  else
+  } else
   // mobs over level 70 get special treatment
   {
-    hp_modifier *= sanct_modifier * 1 / ( 15.5 +
-      11 * (ch->getHPLevel() - 70) * (ch->getHPLevel() - 70) / 150);
+    hp_modifier *=
+      sanct_modifier * 1 /
+      (15.5 + 11 * (ch->getHPLevel() - 70) * (ch->getHPLevel() - 70) / 150);
   }
   return hp_modifier;
 }
 
-static double acModifier(const TBeing *ch)
-{
-  double armor_modifier = max(0.0, (600.0 - ((double) ch->getArmor())) / 20.0);
+static double acModifier(const TBeing* ch) {
+  double armor_modifier = max(0.0, (600.0 - ((double)ch->getArmor())) / 20.0);
   return armor_modifier;
 }
 
-static double avgDam(const TBeing *ch)
-{
+static double avgDam(const TBeing* ch) {
   double av_dam = ch->baseDamage();
-  av_dam += ((double) ch->getDamroll());
+  av_dam += ((double)ch->getDamroll());
   av_dam = av_dam * ch->getMult();
   return av_dam;
 }
 
-static double damModifier(const TBeing *ch)
-{
+static double damModifier(const TBeing* ch) {
   // we essentially wantmobs doing 0.9 * level dam per round
   double av_dam = avgDam(ch);
   float damage_modifier = av_dam * 1.1;
@@ -358,9 +350,8 @@ static double numattModifier(const TBeing *ch)
 }
 #endif
 
-static double thacoModifier(const TBeing *ch)
-{
-  double thaco_level = (double) (ch->GetMaxLevel() + ch->getHitroll() / 10.0);
+static double thacoModifier(const TBeing* ch) {
+  double thaco_level = (double)(ch->GetMaxLevel() + ch->getHitroll() / 10.0);
   return thaco_level;
 }
 
@@ -374,8 +365,7 @@ static double thacoModifier(const TBeing *ch)
 // If a certain class gives out too much xp, and we are just trying
 // to patch around this (until AI improves or whatever), muck with
 // determineExp()  -Batopr 10/26/98
-double TMonster::getRealLevel() const
-{
+double TMonster::getRealLevel() const {
   double hp_modifier, damage_modifier, real_level;
   double armor_modifier;
 
@@ -385,7 +375,7 @@ double TMonster::getRealLevel() const
   armor_modifier = acModifier(this);
   damage_modifier = damModifier(this);
 
-  // modify damage based on absorbtion 
+  // modify damage based on absorbtion
   // (assume 1 point dam absorbed per hit per 10 levels)
   // double hitting_level = numattModifier(this);
 
@@ -398,23 +388,33 @@ double TMonster::getRealLevel() const
   // to dominate.  So what we will do is throw out the high and low
   // and average the other two, then use this value heavily but throw
   // in the other values too.
-  double best_value = max(max(max(hp_modifier, damage_modifier), thaco_level), armor_modifier);
-  double worst_value = min(min(min(hp_modifier, damage_modifier), thaco_level), armor_modifier);
-  double avg_value = (hp_modifier + armor_modifier + damage_modifier + thaco_level - best_value - worst_value) / 2.0;
+  double best_value =
+    max(max(max(hp_modifier, damage_modifier), thaco_level), armor_modifier);
+  double worst_value =
+    min(min(min(hp_modifier, damage_modifier), thaco_level), armor_modifier);
+  double avg_value = (hp_modifier + armor_modifier + damage_modifier +
+                       thaco_level - best_value - worst_value) /
+                     2.0;
 
-  double rough_level = (hp_modifier + armor_modifier + damage_modifier + thaco_level + (8.0 * avg_value) ) / 12.0;
+  double rough_level = (hp_modifier + armor_modifier + damage_modifier +
+                         thaco_level + (8.0 * avg_value)) /
+                       12.0;
 
   // fine tune the range and throw whacked values into line
   hp_modifier = max(min(hp_modifier, 1.1 * rough_level), 0.8 * rough_level);
-  armor_modifier = max(min(armor_modifier, 1.3 * rough_level), 0.7 * rough_level);
-  damage_modifier = max(min(damage_modifier, 1.1 * rough_level), 0.8 * rough_level);
+  armor_modifier =
+    max(min(armor_modifier, 1.3 * rough_level), 0.7 * rough_level);
+  damage_modifier =
+    max(min(damage_modifier, 1.1 * rough_level), 0.8 * rough_level);
   thaco_level = max(min(thaco_level, 1.1 * rough_level), 0.8 * rough_level);
 
   // to get around really small levels vs really large levels, just add a large
   // constant to both and then remove it at the end.  This is TWEAK.
   const int TWEAK = 10000;
-  double attack_level = sqrt((damage_modifier + TWEAK) * (thaco_level + TWEAK)) - TWEAK;
-  double defense_level = sqrt((armor_modifier + TWEAK) * (hp_modifier + TWEAK)) - TWEAK;
+  double attack_level =
+    sqrt((damage_modifier + TWEAK) * (thaco_level + TWEAK)) - TWEAK;
+  double defense_level =
+    sqrt((armor_modifier + TWEAK) * (hp_modifier + TWEAK)) - TWEAK;
 
   // testing has shown defense to be more critical, AC in particular.
   // so we weight it higher
@@ -423,103 +423,104 @@ double TMonster::getRealLevel() const
   // up to this point, we are basically assuming everybody is a warrior
   // make some other adjustments for things that affect overall power and
   // hence level
-if (!isTestmob()) {
-  // flight improves your fighting ability, so allow for this
-  // L5(0.5), L30(1.0)
-  if (canFly())
-    real_level += min(1.00, real_level/10.0);
+  if (!isTestmob()) {
+    // flight improves your fighting ability, so allow for this
+    // L5(0.5), L30(1.0)
+    if (canFly())
+      real_level += min(1.00, real_level / 10.0);
 
-  // class based adjustments
-  // this is based on empiracal data gathered November 1998 - bat
-  // I basically took a warrior test mob, changed its class and determined
-  // what level warrior test mob it could beat.
-  // from there, i derived the curves.
-  // also, assume at L1 all skills suck (low chance of hitting, low damage)
-  // I will report 3 values, one at L15, one at L30, and one at L45
-  // the values represent the number of levels over my level I was able
-  // to beat, thus a value of 2.5 for L15, means that if i take the L15 
-  // warrior test mob, and change its class, It will now beat an L17, but
-  // lose to the L18 warrior test mobs.
-  double class_adjust = 0.0;
-  if (hasClass(CLASS_MAGE | CLASS_SHAMAN)) {
-    // data taken by Batopr 2/2/99
-    double mage_array[] = { 0.00,  // L0
-      -0.02, 0.01, -0.07, -0.07, -0.12,  // L5
-      2.55, 2.63, 2.57, 2.49, 1.50,  // L10
-      3.55, 5.97, 4.18, 4.67, 5.17,  // L15
-      5.40, 4.90, 5.41, 5.25, 4.80,  // L20
-      4.55, 4.34, 4.18, 4.01, 4.00,  // L25
-      3.99, 4.03, 4.04, 4.03, 4.13,  // L30
-      4.94, 6.00, 5.86, 5.55, 5.69,  // L35
-      5.64, 5.56, 5.60, 5.67, 5.56,  // L40
-      5.54, 5.64, 5.54, 5.98    
-    };
-    unsigned int num_elems = (sizeof(mage_array)/sizeof(double))-1;
-    if (real_level >= num_elems)
-      class_adjust = mage_array[num_elems];
-    else {
-      int iLev = (int) real_level;
-      double leftover = real_level - iLev;
-      class_adjust = mage_array[iLev] + leftover * (mage_array[iLev+1] - mage_array[iLev]);
+    // class based adjustments
+    // this is based on empiracal data gathered November 1998 - bat
+    // I basically took a warrior test mob, changed its class and determined
+    // what level warrior test mob it could beat.
+    // from there, i derived the curves.
+    // also, assume at L1 all skills suck (low chance of hitting, low damage)
+    // I will report 3 values, one at L15, one at L30, and one at L45
+    // the values represent the number of levels over my level I was able
+    // to beat, thus a value of 2.5 for L15, means that if i take the L15
+    // warrior test mob, and change its class, It will now beat an L17, but
+    // lose to the L18 warrior test mobs.
+    double class_adjust = 0.0;
+    if (hasClass(CLASS_MAGE | CLASS_SHAMAN)) {
+      // data taken by Batopr 2/2/99
+      double mage_array[] = {0.00,         // L0
+        -0.02, 0.01, -0.07, -0.07, -0.12,  // L5
+        2.55, 2.63, 2.57, 2.49, 1.50,      // L10
+        3.55, 5.97, 4.18, 4.67, 5.17,      // L15
+        5.40, 4.90, 5.41, 5.25, 4.80,      // L20
+        4.55, 4.34, 4.18, 4.01, 4.00,      // L25
+        3.99, 4.03, 4.04, 4.03, 4.13,      // L30
+        4.94, 6.00, 5.86, 5.55, 5.69,      // L35
+        5.64, 5.56, 5.60, 5.67, 5.56,      // L40
+        5.54, 5.64, 5.54, 5.98};
+      unsigned int num_elems = (sizeof(mage_array) / sizeof(double)) - 1;
+      if (real_level >= num_elems)
+        class_adjust = mage_array[num_elems];
+      else {
+        int iLev = (int)real_level;
+        double leftover = real_level - iLev;
+        class_adjust = mage_array[iLev] +
+                       leftover * (mage_array[iLev + 1] - mage_array[iLev]);
+      }
+    } else if (hasClass(CLASS_CLERIC)) {
+      // data taken by Batopr 2/2/99
+      double cleric_array[] = {0.00,   // L0
+        0.00, 0.00, 0.40, 0.60, 0.48,  // L5
+        1.32, 0.94, 1.44, 1.72, 1.93,  // L10
+        5.60, 8.55, 7.33, 7.54, 7.95,  // L15
+        8.16, 7.11, 6.29, 5.69, 5.17,  // L20
+        4.65, 4.13, 3.90, 4.11, 4.73,  // L25
+        5.28, 5.63, 5.85, 5.20, 4.53,  // L30
+        6.27, 6.23, 5.54, 6.64, 6.50,  // L35
+        5.76, 5.33, 5.58, 6.24, 5.93,  // L40
+        6.49, 7.27};
+      unsigned int num_elems = (sizeof(cleric_array) / sizeof(double)) - 1;
+      if (real_level >= num_elems)
+        class_adjust = cleric_array[num_elems];
+      else {
+        int iLev = (int)real_level;
+        double leftover = real_level - iLev;
+        class_adjust = cleric_array[iLev] +
+                       leftover * (cleric_array[iLev + 1] - cleric_array[iLev]);
+      }
+    } else if (hasClass(CLASS_THIEF)) {
+      class_adjust = min(real_level, 15.0) * 0.033;
+      class_adjust += min(max((real_level - 15.0), 0.0), 15.0) * 0;
+      class_adjust += min(max((real_level - 30.0), 0.0), 15.0) * 0.033;
+    } else if (hasClass(CLASS_DEIKHAN)) {
+      // data taken by Batopr 3/6/99
+      double deikhan_array[] = {0.00,   // L0
+        0.00, -0.01, 0.61, 1.49, 0.50,  // L5
+        1.93, 1.49, 2.27, 2.31, 1.34,   // L10
+        2.56, 2.55, 1.47, 1.81, 2.60,   // L15
+        2.06, 1.96, 2.16, 1.56, 0.97,   // L20
+        2.18, 3.13, 2.40, 1.76, 0.41,   // L25
+        0.36, 1.61, 0.99, 1.14, 0.55,   // L30
+        1.47, 1.51, 0.68, 1.88, 0.42,   // L35
+        1.41, 2.19, 1.75, 0.60, 1.17,   // L40
+        1.31, 1.21, 1.38, 1.11, 1.39,   // L45
+        1.41, 2.71};
+      unsigned int num_elems = (sizeof(deikhan_array) / sizeof(double)) - 1;
+      if (real_level >= num_elems)
+        class_adjust = deikhan_array[num_elems];
+      else {
+        int iLev = (int)real_level;
+        double leftover = real_level - iLev;
+        class_adjust =
+          deikhan_array[iLev] +
+          leftover * (deikhan_array[iLev + 1] - deikhan_array[iLev]);
+      }
+    } else if (hasClass(CLASS_MONK)) {
+      class_adjust = min(real_level, 15.0) * 0.067;
+      class_adjust += min(max((real_level - 15.0), 0.0), 15.0) * 0.167;
+      class_adjust += min(max((real_level - 30.0), 0.0), 15.0) * 0.100;
+    } else if (hasClass(CLASS_RANGER)) {
+      class_adjust = min(real_level, 15.0) * 0.083;
+      class_adjust += min(max((real_level - 15.0), 0.0), 15.0) * 0.1;
+      class_adjust += min(max((real_level - 30.0), 0.0), 15.0) * 0.0;
     }
-  } else if (hasClass(CLASS_CLERIC)) {
-    // data taken by Batopr 2/2/99
-    double cleric_array[] = { 0.00,  // L0
-      0.00, 0.00, 0.40, 0.60, 0.48,  // L5
-      1.32, 0.94, 1.44, 1.72, 1.93,  // L10
-      5.60, 8.55, 7.33, 7.54, 7.95,  // L15
-      8.16, 7.11, 6.29, 5.69, 5.17,  // L20
-      4.65, 4.13, 3.90, 4.11, 4.73,  // L25
-      5.28, 5.63, 5.85, 5.20, 4.53,  // L30
-      6.27, 6.23, 5.54, 6.64, 6.50,  // L35
-      5.76, 5.33, 5.58, 6.24, 5.93,  // L40
-      6.49, 7.27
-    };
-    unsigned int num_elems = (sizeof(cleric_array)/sizeof(double))-1;
-    if (real_level >= num_elems)
-      class_adjust = cleric_array[num_elems];
-    else {
-      int iLev = (int) real_level;
-      double leftover = real_level - iLev;
-      class_adjust = cleric_array[iLev] + leftover * (cleric_array[iLev+1] - cleric_array[iLev]);
-    }
-  } else if (hasClass(CLASS_THIEF)) {
-    class_adjust = min(real_level, 15.0) * 0.033;
-    class_adjust += min(max((real_level - 15.0), 0.0), 15.0) * 0;
-    class_adjust += min(max((real_level - 30.0), 0.0), 15.0) * 0.033;
-  } else if (hasClass(CLASS_DEIKHAN)) {
-    // data taken by Batopr 3/6/99
-    double deikhan_array[] = { 0.00,  // L0
-      0.00, -0.01, 0.61, 1.49, 0.50,  // L5
-      1.93, 1.49, 2.27, 2.31, 1.34,  // L10
-      2.56, 2.55, 1.47, 1.81, 2.60,  // L15
-      2.06, 1.96, 2.16, 1.56, 0.97,  // L20
-      2.18, 3.13, 2.40, 1.76, 0.41,  // L25
-      0.36, 1.61, 0.99, 1.14, 0.55,  // L30
-      1.47, 1.51, 0.68, 1.88, 0.42,  // L35
-      1.41, 2.19, 1.75, 0.60, 1.17,  // L40
-      1.31, 1.21, 1.38, 1.11, 1.39,  // L45
-      1.41, 2.71
-    };
-    unsigned int num_elems = (sizeof(deikhan_array)/sizeof(double))-1;
-    if (real_level >= num_elems)
-      class_adjust = deikhan_array[num_elems];
-    else {
-      int iLev = (int) real_level;
-      double leftover = real_level - iLev;
-      class_adjust = deikhan_array[iLev] + leftover * (deikhan_array[iLev+1] - deikhan_array[iLev]);
-    }
-  } else if (hasClass(CLASS_MONK)) {
-    class_adjust = min(real_level, 15.0) * 0.067;
-    class_adjust += min(max((real_level - 15.0), 0.0), 15.0) * 0.167;
-    class_adjust += min(max((real_level - 30.0), 0.0), 15.0) * 0.100;
-  } else if (hasClass(CLASS_RANGER)) {
-    class_adjust = min(real_level, 15.0) * 0.083;
-    class_adjust += min(max((real_level - 15.0), 0.0), 15.0) * 0.1;
-    class_adjust += min(max((real_level - 30.0), 0.0), 15.0) * 0.0;
-  }
-  real_level += class_adjust;
-} // !testmob
+    real_level += class_adjust;
+  }  // !testmob
 
   if (real_level > 127)
     real_level = 127.;
@@ -529,10 +530,9 @@ if (!isTestmob()) {
   return real_level;
 }
 
-double TMonster::determineExp()
-{
+double TMonster::determineExp() {
   double d_exp;
-  float real_level = (float) getRealLevel();
+  float real_level = (float)getRealLevel();
 
   d_exp = mob_exp(real_level);
 
@@ -544,11 +544,11 @@ double TMonster::determineExp()
 
   // what about Config::LoadOnDeath() here?
   if (!getMoney() && (GetMaxLevel() < 12))
-    d_exp += (d_exp * (double) ::number(1,5)) / 100.;   // 1% to 5% increase
+    d_exp += (d_exp * (double)::number(1, 5)) / 100.;  // 1% to 5% increase
 
   // make grimhaven high level mobs crappy exp
   // due to how mobVnum works re: "number", don't trap med mobs in this
-  if ((mobVnum() < 1000) && (GetMaxLevel() > 8) && number >= 0) 
+  if ((mobVnum() < 1000) && (GetMaxLevel() > 8) && number >= 0)
     d_exp *= 0.65;
 
   // arbitrary increase in exp because sneezy is so hard - bat 9-12-96
@@ -557,8 +557,7 @@ double TMonster::determineExp()
   return (d_exp);
 }
 
-bool UtilProcs(int spec)
-{
+bool UtilProcs(int spec) {
   switch (spec) {
     case SPEC_ALIGN_DEITY:
     case SPEC_ENGRAVER:
@@ -581,8 +580,7 @@ bool UtilProcs(int spec)
   }
 }
 
-bool GuildProcs(int spec)
-{
+bool GuildProcs(int spec) {
   switch (spec) {
     case SPEC_GM_SHAMAN:
     case SPEC_GM_MONK:
@@ -649,7 +647,7 @@ bool GuildProcs(int spec)
     case SPEC_TRAINER_SHAMAN_CONTROL:
     case SPEC_TRAINER_RITUALISM:
     case SPEC_TRAINER_STEALTH:
-    case SPEC_TRAINER_TRAPS: 
+    case SPEC_TRAINER_TRAPS:
     case SPEC_TRAINER_LORE:
     case SPEC_TRAINER_THEOLOGY:
     case SPEC_TRAINER_DEFENSE:
@@ -661,8 +659,7 @@ bool GuildProcs(int spec)
   }
 }
 
-bool UtilMobProc(TBeing *ch)
-{
+bool UtilMobProc(TBeing* ch) {
   if (ch->isPc() || !ch->spec)
     return FALSE;
   if (ch->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
@@ -674,28 +671,27 @@ bool UtilMobProc(TBeing *ch)
   if (ch->spec == SPEC_BUTLER)
     return TRUE;
   if (IS_SET(ch->specials.act, ACT_IMMORTAL)) {
-	  return TRUE;
+    return TRUE;
   }
   /*
   switch (ch->mobVnum()) {
-  	// february quest mobs, we don't want them picking things up...
-  	case Mob::GYPSY_ROMANTIC:
-  	case Mob::FLORIST_BUSY:
-  	case Mob::CLOWN_SCARY:
-  	case Mob::MIME_ANIMATED:
-  	case Mob::GUY_LAZY:
-  	case Mob::WIFE_FARMER:
-  	case Mob::DRUNK_TRADER_RICH:
-  		return TRUE;
-  	default:
-  		break;
-  } 
-  */ 
+    // february quest mobs, we don't want them picking things up...
+    case Mob::GYPSY_ROMANTIC:
+    case Mob::FLORIST_BUSY:
+    case Mob::CLOWN_SCARY:
+    case Mob::MIME_ANIMATED:
+    case Mob::GUY_LAZY:
+    case Mob::WIFE_FARMER:
+    case Mob::DRUNK_TRADER_RICH:
+      return TRUE;
+    default:
+      break;
+  }
+  */
   return UtilProcs(ch->spec);
 }
 
-bool GuildMobProc(TBeing *ch)
-{
+bool GuildMobProc(TBeing* ch) {
   if (ch->isPc() || !ch->spec)
     return FALSE;
   if (ch->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
@@ -706,33 +702,32 @@ bool GuildMobProc(TBeing *ch)
   return GuildProcs(ch->spec);
 }
 
-void TMonster::checkMobStats(tinyfileTypeT forReal)
-{
+void TMonster::checkMobStats(tinyfileTypeT forReal) {
   int sumstat;
-  const char *s;
+  const char* s;
 
   if ((getLongDesc().length() > 2) &&
       ((getLongDesc()[getLongDesc().length() - 1] != '\r') ||
-      (getLongDesc()[getLongDesc().length() - 2] != '\n'))) {
-    vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") % 
-          getName() % mobVnum());
+        (getLongDesc()[getLongDesc().length() - 2] != '\n'))) {
+    vlogf(LOG_LOW,
+      format("%s (%d) has bad format of longDescr") % getName() % mobVnum());
   }
   if ((getDescr().length() > 2) &&
       ((getDescr()[getDescr().length() - 1] != '\r') ||
-      (getDescr()[getDescr().length() - 2] != '\n'))) {
-    vlogf(LOG_LOW, format("%s (%d) has bad format of descr") % 
-          getName() % mobVnum());
+        (getDescr()[getDescr().length() - 2] != '\n'))) {
+    vlogf(LOG_LOW,
+      format("%s (%d) has bad format of descr") % getName() % mobVnum());
   }
   if (name.find_first_of("()") != sstring::npos) {
-    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") % 
-          getName() % mobVnum());
+    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") %
+                     getName() % mobVnum());
   }
   if ((s = strchr(name.c_str(), '['))) {
-    for (s++;*s != ']';s++) {
+    for (s++; *s != ']'; s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
-      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") % 
-            getName() % mobVnum() % *s);
+      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") %
+                       getName() % mobVnum() % *s);
     }
   }
 #if 0
@@ -742,205 +737,204 @@ void TMonster::checkMobStats(tinyfileTypeT forReal)
   }
 #endif
 
-  
   if (forReal == TINYFILE_YES) {
     if (IS_SET(specials.act, ACT_STRINGS_CHANGED))
-      vlogf(LOG_LOW, format("%s (%d) strung-mob bit (%d) set") %  getName() % mobVnum() % ACT_STRINGS_CHANGED);
+      vlogf(LOG_LOW, format("%s (%d) strung-mob bit (%d) set") % getName() %
+                       mobVnum() % ACT_STRINGS_CHANGED);
   }
   if (IS_SET(specials.act, ACT_DISGUISED))
-    vlogf(LOG_LOW, format("%s disguise bit (%d)  set") %  getName() % ACT_DISGUISED);
+    vlogf(LOG_LOW,
+      format("%s disguise bit (%d)  set") % getName() % ACT_DISGUISED);
   if (IS_SET(specials.act, ACT_HATEFUL))
-    vlogf(LOG_LOW, format("%s hateful bit (%d) set") %  getName() % ACT_HATEFUL);
+    vlogf(LOG_LOW, format("%s hateful bit (%d) set") % getName() % ACT_HATEFUL);
   if (IS_SET(specials.act, ACT_AFRAID))
-    vlogf(LOG_LOW, format("%s afraid bit (%d) set") %  getName() % ACT_AFRAID);
+    vlogf(LOG_LOW, format("%s afraid bit (%d) set") % getName() % ACT_AFRAID);
   if (IS_SET(specials.act, ACT_HUNTING))
-    vlogf(LOG_LOW, format("%s hunting bit (%d) set") %  getName() % ACT_HUNTING);
+    vlogf(LOG_LOW, format("%s hunting bit (%d) set") % getName() % ACT_HUNTING);
   if (IS_SET(specials.act, ACT_GUARDIAN))
-    vlogf(LOG_LOW, format("%s guardian bit (%d) set") %  getName() % ACT_GUARDIAN);
+    vlogf(LOG_LOW,
+      format("%s guardian bit (%d) set") % getName() % ACT_GUARDIAN);
 
   if (getImmunity(IMMUNE_BLUNT) < 0)
-    vlogf(LOG_LOW,format("mob (%s:%d) with susc blunt.") %
-	  getName() % mobVnum());
+    vlogf(LOG_LOW,
+      format("mob (%s:%d) with susc blunt.") % getName() % mobVnum());
   if (getImmunity(IMMUNE_PIERCE) < 0)
-    vlogf(LOG_LOW,format("mob (%s:%d) with susc pierce.") %
-	  getName() % mobVnum());
+    vlogf(LOG_LOW,
+      format("mob (%s:%d) with susc pierce.") % getName() % mobVnum());
   if (getImmunity(IMMUNE_SLASH) < 0)
-    vlogf(LOG_LOW,format("mob (%s:%d) with susc slash.") %
-	  getName() % mobVnum());
+    vlogf(LOG_LOW,
+      format("mob (%s:%d) with susc slash.") % getName() % mobVnum());
   if (getImmunity(IMMUNE_NONMAGIC) < 0)
-    vlogf(LOG_LOW,format("mob (%s:%d) with susc non-magic.") %
-	  getName() % mobVnum());
+    vlogf(LOG_LOW,
+      format("mob (%s:%d) with susc non-magic.") % getName() % mobVnum());
 
-  if (isAffected(AFF_SLEEP)) 
-    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SLEEP (%d) set.") %
-	  getName() % mobVnum() % AFF_SLEEP);
-  if (isAffected(AFF_CHARM) && !master) 
-    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_CHARM (%d) and no master set.") %
-	  getName() % mobVnum() % AFF_CHARM); 
-  if (isAffected(AFF_STUNNED)) 
+  if (isAffected(AFF_SLEEP))
+    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SLEEP (%d) set.") % getName() %
+                     mobVnum() % AFF_SLEEP);
+  if (isAffected(AFF_CHARM) && !master)
+    vlogf(LOG_LOW,
+      format("mob (%s:%d) with AFF_CHARM (%d) and no master set.") % getName() %
+        mobVnum() % AFF_CHARM);
+  if (isAffected(AFF_STUNNED))
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_STUNNED set. make %d") %
-	  getName() % mobVnum() % (specials.affectedBy & ~AFF_STUNNED));
-  if (isAffected(AFF_SHOCKED)) 
-    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SHOCKED set. make %d") %  
-	  getName() % mobVnum() % (specials.affectedBy & ~AFF_SHOCKED));
-  if (isAffected(AFF_SYPHILIS)) 
+                     getName() % mobVnum() %
+                     (specials.affectedBy & ~AFF_STUNNED));
+  if (isAffected(AFF_SHOCKED))
+    vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SHOCKED set. make %d") %
+                     getName() % mobVnum() %
+                     (specials.affectedBy & ~AFF_SHOCKED));
+  if (isAffected(AFF_SYPHILIS))
     vlogf(LOG_LOW, format("mob (%s:%d) with AFF_SYPHILIS (%d) set.") %
-	  getName() % mobVnum() % AFF_SYPHILIS);
-  sumstat = getStat(STAT_CHOSEN, STAT_STR) +
-            getStat(STAT_CHOSEN, STAT_BRA) +
-            getStat(STAT_CHOSEN, STAT_AGI) +
-            getStat(STAT_CHOSEN, STAT_DEX) +
+                     getName() % mobVnum() % AFF_SYPHILIS);
+  sumstat = getStat(STAT_CHOSEN, STAT_STR) + getStat(STAT_CHOSEN, STAT_BRA) +
+            getStat(STAT_CHOSEN, STAT_AGI) + getStat(STAT_CHOSEN, STAT_DEX) +
             getStat(STAT_CHOSEN, STAT_CON);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,format("mob (%s, %d) with excessive physical stats (%d).") % 
-                getName() % mobVnum() % sumstat);
+    vlogf(LOG_LOW, format("mob (%s, %d) with excessive physical stats (%d).") %
+                     getName() % mobVnum() % sumstat);
   }
 
-  sumstat = getStat(STAT_CHOSEN, STAT_INT) +
-            getStat(STAT_CHOSEN, STAT_WIS) +
+  sumstat = getStat(STAT_CHOSEN, STAT_INT) + getStat(STAT_CHOSEN, STAT_WIS) +
             getStat(STAT_CHOSEN, STAT_FOC);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,format("mob (%s, %d) with excessive mental stats (%d).") % 
-                getName() % mobVnum() % sumstat);
+    vlogf(LOG_LOW, format("mob (%s, %d) with excessive mental stats (%d).") %
+                     getName() % mobVnum() % sumstat);
   }
 
-  sumstat = getStat(STAT_CHOSEN, STAT_CHA) +
-            getStat(STAT_CHOSEN, STAT_KAR) +
-            getStat(STAT_CHOSEN, STAT_SPE) +
-            getStat(STAT_CHOSEN, STAT_PER);
+  sumstat = getStat(STAT_CHOSEN, STAT_CHA) + getStat(STAT_CHOSEN, STAT_KAR) +
+            getStat(STAT_CHOSEN, STAT_SPE) + getStat(STAT_CHOSEN, STAT_PER);
   if (sumstat > 0) {
-    vlogf(LOG_LOW,format("mob (%s, %d) with excessive utility stats (%d).") % 
-                getName() % mobVnum() % sumstat);
+    vlogf(LOG_LOW, format("mob (%s, %d) with excessive utility stats (%d).") %
+                     getName() % mobVnum() % sumstat);
   }
 
   if (!isSingleClass())
-    vlogf(LOG_LOW,format("multiclass mob: %s") % getName());
+    vlogf(LOG_LOW, format("multiclass mob: %s") % getName());
 
   /*
   // Leave this disabled.  With the new tBorn code it is now outdated.
   if (!IS_SET(specials.act, ACT_SENTINEL) && max_exist > 100) {
-    vlogf(LOG_LOW,format("non-sentinel mob (%s : %d) with excessive max exist (%d)") % 
-       getName() % mobVnum() % max_exist);
+    vlogf(LOG_LOW,format("non-sentinel mob (%s : %d) with excessive max exist
+  (%d)") % getName() % mobVnum() % max_exist);
   }
   */
   if (isShopkeeper() && !IS_SET(specials.act, ACT_IMMORTAL)) {
     // have a lot of gold, and otherwise might get killed
-    vlogf(LOG_LOW, format("Shopkeeper (%s:%d) needs to be set immortal(%d).") % 
-         getName() % mobVnum() % ACT_IMMORTAL);
+    vlogf(LOG_LOW, format("Shopkeeper (%s:%d) needs to be set immortal(%d).") %
+                     getName() % mobVnum() % ACT_IMMORTAL);
   }
 
   if (isWinged() && isAffected(AFF_FLYING)) {
-    vlogf(LOG_LOW, format("Winged mob (%s:%d) given magical flight too.  Probably bad") %  getName() % mobVnum());
+    vlogf(LOG_LOW,
+      format("Winged mob (%s:%d) given magical flight too.  Probably bad") %
+        getName() % mobVnum());
   }
 }
 
 // this actually sets some of the items stats (glow/chaos) so has to
 // be done whenever item enters game
-void TObj::checkObjStats()
-{
+void TObj::checkObjStats() {
   int i;
-  const char *s;
+  const char* s;
 
   if ((getDescr().length() > 2) &&
       (getDescr()[getDescr().length() - 1] == '\r') &&
       (getDescr()[getDescr().length() - 2] == '\n')) {
-    vlogf(LOG_LOW, format("%s (%d) has bad format of longDescr") % 
-          getName() % objVnum());
+    vlogf(LOG_LOW,
+      format("%s (%d) has bad format of longDescr") % getName() % objVnum());
   }
   if (strchr(name.c_str(), '(') || strchr(name.c_str(), ')')) {
-    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") % 
-          getName() % objVnum());
+    vlogf(LOG_LOW, format("%s (%d) has illegal parenthetical in name") %
+                     getName() % objVnum());
   }
   if ((s = strchr(name.c_str(), '['))) {
-    for (s++;*s != ']';s++) {
+    for (s++; *s != ']'; s++) {
       if (isalnum(*s) || *s == '_' || *s == '/')
         continue;
-      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") % 
-            getName() % objVnum() % *s);
+      vlogf(LOG_LOW, format("%s (%d) lacked contiguity in braces (%c)") %
+                       getName() % objVnum() % *s);
     }
   }
 
-  if (getName().length() > MAX_NAME_LENGTH-1) {
-    vlogf(LOG_LOW, format("%s (%d) had excessive obj name length.") % 
-         getName() % objVnum());
+  if (getName().length() > MAX_NAME_LENGTH - 1) {
+    vlogf(LOG_LOW,
+      format("%s (%d) had excessive obj name length.") % getName() % objVnum());
   }
 
-  sstring a=stripColorCodes(shortDescr);
-  bool found=false;
-  
-  for(int i=0;a.word(i)!="";++i){
-    if(isname(a.word(i), name)){
-      found=true;
+  sstring a = stripColorCodes(shortDescr);
+  bool found = false;
+
+  for (int i = 0; a.word(i) != ""; ++i) {
+    if (isname(a.word(i), name)) {
+      found = true;
       break;
     }
   }
-  if(!found){
-    vlogf(LOG_LOW, format("Item '%s' (%i) lacks appropriate name keyword (%s).") %
-	  shortDescr % objVnum() % name);
+  if (!found) {
+    vlogf(LOG_LOW,
+      format("Item '%s' (%i) lacks appropriate name keyword (%s).") %
+        shortDescr % objVnum() % name);
   }
-  
-  if(sstring(name) != stripColorCodes(name)){
+
+  if (sstring(name) != stripColorCodes(name)) {
     vlogf(LOG_LOW, format("Item '%s' (%i) has color codes in name (%s).") %
-	  shortDescr % objVnum() % name);
+                     shortDescr % objVnum() % name);
   }
 
-
-  if(!canWear(ITEM_WEAR_TAKE) && obj_flags.wear_flags>0){
+  if (!canWear(ITEM_WEAR_TAKE) && obj_flags.wear_flags > 0) {
     vlogf(LOG_LOW, format("Item '%s' (%i) is !take but has other wear flags.") %
-	  shortDescr % objVnum());
+                     shortDescr % objVnum());
   }
 
   if (isObjStat(ITEM_PROTOTYPE)) {
-    vlogf(LOG_LOW, format("Item %s had a prototype flag. Get rid of it in tinyworld file!\n\rRemoving bit for object going into game.") %  getName());
+    vlogf(LOG_LOW,
+      format("Item %s had a prototype flag. Get rid of it in tinyworld "
+             "file!\n\rRemoving bit for object going into game.") %
+        getName());
     remObjStat(ITEM_PROTOTYPE);
   }
 
-
   // TPool strings itself during constructor, so bypass this
   // these are all classes that implement updateDesc()
-  if (isObjStat(ITEM_STRUNG) && 
-      !dynamic_cast<TPool *>(this) && 
-      !dynamic_cast<TGas *>(this) &&
-      !dynamic_cast<TCommodity *>(this) &&
-      !dynamic_cast<TBaseCup *>(this) &&
-      !dynamic_cast<TTrashPile *>(this) &&
-      !dynamic_cast<TPlant *>(this) &&
-      !dynamic_cast<TToothNecklace *>(this) &&
-      spec!=SPEC_GRAFFITI) {
-    vlogf(LOG_LOW, format("Item %s has been set strung, fix! (%d)") %  getName() % objVnum());
+  if (isObjStat(ITEM_STRUNG) && !dynamic_cast<TPool*>(this) &&
+      !dynamic_cast<TGas*>(this) && !dynamic_cast<TCommodity*>(this) &&
+      !dynamic_cast<TBaseCup*>(this) && !dynamic_cast<TTrashPile*>(this) &&
+      !dynamic_cast<TPlant*>(this) && !dynamic_cast<TToothNecklace*>(this) &&
+      spec != SPEC_GRAFFITI) {
+    vlogf(LOG_LOW,
+      format("Item %s has been set strung, fix! (%d)") % getName() % objVnum());
     remObjStat(ITEM_STRUNG);
   }
 
   lowCheck();
 
   int tmp = getMaterial();
-  if (!((tmp>=0 && tmp < MAX_MAT_GENERAL) ||
-       (tmp>=50 && tmp < (50+MAX_MAT_NATURE)) ||
-       (tmp>=100 && tmp < (100+MAX_MAT_MINERAL)) ||
-       (tmp>=150 && tmp < (150+MAX_MAT_METAL))))
-    vlogf(LOG_LOW, format("Illegal material type %d for %s!") % 
-         tmp % getName());
+  if (!((tmp >= 0 && tmp < MAX_MAT_GENERAL) ||
+        (tmp >= 50 && tmp < (50 + MAX_MAT_NATURE)) ||
+        (tmp >= 100 && tmp < (100 + MAX_MAT_MINERAL)) ||
+        (tmp >= 150 && tmp < (150 + MAX_MAT_METAL))))
+    vlogf(LOG_LOW,
+      format("Illegal material type %d for %s!") % tmp % getName());
 
-  for (i=0; i<MAX_OBJ_AFFECT;i++) {
+  for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     affected[i].checkForBadness(this);
   }
 
-  if (obj_index[number].armor == -99) {   // item not inited
-    if (dynamic_cast<TBaseWeapon *>(this))
-      obj_index[number].armor = -97;    // init to weapon
-    else if (dynamic_cast<TBaseClothing *>(this)) {
+  if (obj_index[number].armor == -99) {  // item not inited
+    if (dynamic_cast<TBaseWeapon*>(this))
+      obj_index[number].armor = -97;  // init to weapon
+    else if (dynamic_cast<TBaseClothing*>(this)) {
       obj_index[number].armor = -itemAC();  // this is positive num
     } else
-      obj_index[number].armor = -98;    // init to unused
+      obj_index[number].armor = -98;  // init to unused
   }
   if (isObjStat(ITEM_GLOW)) {
     if (isObjStat(ITEM_SHADOWY))
-      vlogf(LOG_LOW,format("obj %s is glowing and shadowy.") % 
-               getName());
+      vlogf(LOG_LOW, format("obj %s is glowing and shadowy.") % getName());
     addGlowEffects();
   }
   if (isObjStat(ITEM_SHADOWY)) {
-    canBeSeen += (1 + getVolume()/1500);
+    canBeSeen += (1 + getVolume() / 1500);
 #if 0
     for (i=0; i<MAX_OBJ_AFFECT;i++) {
       if (affected[i].location == APPLY_NONE) {
@@ -958,69 +952,58 @@ void TObj::checkObjStats()
   }
   if (canWear(ITEM_WEAR_TAKE))
     if (isObjStat(ITEM_NOPURGE) && (objVnum() != Obj::CRAPS_DICE)) {
-      TPCorpse *tmpcorpse = dynamic_cast<TPCorpse *>(this);
+      TPCorpse* tmpcorpse = dynamic_cast<TPCorpse*>(this);
       if (!tmpcorpse)
-        vlogf(LOG_LOW,format("item takeable and !purge (%s)") %  getName());
+        vlogf(LOG_LOW, format("item takeable and !purge (%s)") % getName());
     }
 
   lowCheckSlots(SILENT_NO);
 
-  
-  if(getMaxStructPoints()<getStructPoints()){
-    vlogf(LOG_LOW, format("obj %s had greater struct than max struct.") %  getName());
+  if (getMaxStructPoints() < getStructPoints()) {
+    vlogf(LOG_LOW,
+      format("obj %s had greater struct than max struct.") % getName());
   }
-
 }
 
-void objAffData::checkForBadness(TObj *obj)
-{
-  bool removeIt  = false,
-       isIllegal = false;
+void objAffData::checkForBadness(TObj* obj) {
+  bool removeIt = false, isIllegal = false;
 
   if (!apply_types[location].assignable) {
     isIllegal = true;
 
-    if ((location == APPLY_HITROLL ||
-         location == APPLY_DAMROLL ||
-         location == APPLY_HITNDAM) &&
-        (obj->itemType() == ITEM_BOW ||
-         obj->itemType() == ITEM_ARROW ||
-         obj_index[obj->getItemIndex()].max_exist <= 3))
+    if ((location == APPLY_HITROLL || location == APPLY_DAMROLL ||
+          location == APPLY_HITNDAM) &&
+        (obj->itemType() == ITEM_BOW || obj->itemType() == ITEM_ARROW ||
+          obj_index[obj->getItemIndex()].max_exist <= 3))
       isIllegal = false;
   }
 
   if (isIllegal)
-    vlogf(LOG_LOW,format("%s has an unassignable affect") % obj->getName());
+    vlogf(LOG_LOW, format("%s has an unassignable affect") % obj->getName());
 
   // changes to this list should also be added to dispelMagic()
-  if ((location != APPLY_NONE) && 
-      (location != APPLY_LIGHT) &&
-      (location != APPLY_NOISE) &&
-      (location != APPLY_HIT) &&
-      (location != APPLY_CHAR_WEIGHT) &&
-      (location != APPLY_CHAR_HEIGHT) &&
-      (location != APPLY_MOVE) &&
-      (location != APPLY_ARMOR)) {
+  if ((location != APPLY_NONE) && (location != APPLY_LIGHT) &&
+      (location != APPLY_NOISE) && (location != APPLY_HIT) &&
+      (location != APPLY_CHAR_WEIGHT) && (location != APPLY_CHAR_HEIGHT) &&
+      (location != APPLY_MOVE) && (location != APPLY_ARMOR)) {
     if (!obj->isObjStat(ITEM_MAGIC))
-      vlogf(LOG_LOW,format("obj (%s:%d) should be set magic due to %s") % 
-            obj->getName() % obj->objVnum() % 
-            apply_types[location].name);
+      vlogf(LOG_LOW, format("obj (%s:%d) should be set magic due to %s") %
+                       obj->getName() % obj->objVnum() %
+                       apply_types[location].name);
   }
   if (location == APPLY_SPELL &&
-      (modifier < 0 ||
-       modifier >= MAX_SKILL ||
-       !discArray[modifier])) {
-    vlogf(LOG_LOW,format("obj (%s:%d) trying to set skill %d that is not defined.  REMOVING IT!") % 
-          obj->getName() % obj->objVnum() % modifier);
+      (modifier < 0 || modifier >= MAX_SKILL || !discArray[modifier])) {
+    vlogf(LOG_LOW, format("obj (%s:%d) trying to set skill %d that is not "
+                          "defined.  REMOVING IT!") %
+                     obj->getName() % obj->objVnum() % modifier);
     // this would be bad, remove it
     removeIt = true;
   }
-  if (location == APPLY_DISCIPLINE &&
-      (modifier < 0 ||
-       modifier >= MAX_DISCS ||
-       !discNames[modifier].disc_num)) {
-    vlogf(LOG_LOW,format("obj (%s:%d) trying to set discipline %d that is not defined") % 
-         obj->getName() % obj->objVnum() % modifier);
+  if (location == APPLY_DISCIPLINE && (modifier < 0 || modifier >= MAX_DISCS ||
+                                        !discNames[modifier].disc_num)) {
+    vlogf(LOG_LOW,
+      format("obj (%s:%d) trying to set discipline %d that is not defined") %
+        obj->getName() % obj->objVnum() % modifier);
     // this would be bad, remove it
     removeIt = true;
   }
@@ -1031,22 +1014,23 @@ void objAffData::checkForBadness(TObj *obj)
   }
 }
 
-void TBeing::immortalEvaluation(const TMonster * victim) const
-{
+void TBeing::immortalEvaluation(const TMonster* victim) const {
   if (!isImmortal())
     return;
 
   sendTo("********* Immortal Evaluation *********\n\r");
   sendTo(format(" Real Level    : %.2f\n\r") % victim->getRealLevel());
-  sendTo(format("    HP level      : %.2f (theo: %.1f)\n\r") % hpModifier(victim) % victim->getHPLevel());
-  sendTo(format("    Dam level     : %.2f (theo: %.1f)\n\r") % damModifier(victim) % victim->getDamLevel());
-  sendTo(format("    AC level      : %.2f (theo: %.1f)\n\r") % acModifier(victim) % victim->getACLevel());
+  sendTo(format("    HP level      : %.2f (theo: %.1f)\n\r") %
+         hpModifier(victim) % victim->getHPLevel());
+  sendTo(format("    Dam level     : %.2f (theo: %.1f)\n\r") %
+         damModifier(victim) % victim->getDamLevel());
+  sendTo(format("    AC level      : %.2f (theo: %.1f)\n\r") %
+         acModifier(victim) % victim->getACLevel());
   sendTo(format("    Hitroll level : %.2f\n\r") % thacoModifier(victim));
-  sendTo(format("    Spell Hitroll : %d\n\r") % (int) victim->getSpellHitroll());
+  sendTo(format("    Spell Hitroll : %d\n\r") % (int)victim->getSpellHitroll());
 }
 
-static void compare2Mobs(TBeing *ch, TBeing *mob1, TBeing *mob2)
-{
+static void compare2Mobs(TBeing* ch, TBeing* mob1, TBeing* mob2) {
   // what follows is a simplification and extension of logic in combat.cc
   // I'll mark the relavent functions
 
@@ -1061,21 +1045,23 @@ static void compare2Mobs(TBeing *ch, TBeing *mob1, TBeing *mob2)
     if (ret == TRUE || ret == GUARANTEED_SUCCESS)
       num_hits++;
   }
-  float hitRate = (float) num_hits / (float) tot_hits;
+  float hitRate = (float)num_hits / (float)tot_hits;
   ch->sendTo(COLOR_MOBS, format("%s hits %s roughly %.2f%c of the time.\n\r") %
-    mob1->getName() % mob2->getName() % (hitRate * 100.0) % '%');
+                           mob1->getName() % mob2->getName() %
+                           (hitRate * 100.0) % '%');
 
   double avg_dam = avgDam(mob1);
-  float modDam = (float) (avg_dam * hitRate);
-  ch->sendTo(COLOR_MOBS, format("Average damage: %.2f, Modified Damage: %.2f\n\r") %
-       avg_dam % modDam);
+  float modDam = (float)(avg_dam * hitRate);
+  ch->sendTo(COLOR_MOBS,
+    format("Average damage: %.2f, Modified Damage: %.2f\n\r") % avg_dam %
+      modDam);
   float num_rounds = mob2->hitLimit() / modDam;
-  ch->sendTo(COLOR_MOBS, format("%s has %d HPs, so can survive %.2f rounds.\n\r") %
-        mob2->getName() % mob2->hitLimit() % num_rounds);
+  ch->sendTo(COLOR_MOBS,
+    format("%s has %d HPs, so can survive %.2f rounds.\n\r") % mob2->getName() %
+      mob2->hitLimit() % num_rounds);
 }
 
-void TBeing::doCompare(const char *arg)
-{
+void TBeing::doCompare(const char* arg) {
   if (!isImmortal() || !hasWizPower(POWER_COMPARE)) {
     doMortalCompare(arg);
     return;
@@ -1098,7 +1084,7 @@ void TBeing::doCompare(const char *arg)
       }
     }
   } else {
-    sendTo(errMsg);  
+    sendTo(errMsg);
     return;
   }
 
@@ -1116,7 +1102,8 @@ void TBeing::doCompare(const char *arg)
     return;
   }
 
-  sendTo(COLOR_MOBS, format("Comparison of %s vs %s.\n\r") % mob1->getName() % mob2->getName());
+  sendTo(COLOR_MOBS,
+    format("Comparison of %s vs %s.\n\r") % mob1->getName() % mob2->getName());
 
   // first check 1 v 2
   compare2Mobs(this, mob1, mob2);
@@ -1124,49 +1111,46 @@ void TBeing::doCompare(const char *arg)
   compare2Mobs(this, mob2, mob1);
 }
 
-void TBeing::doLow(const sstring &)
-{
+void TBeing::doLow(const sstring&) {
   sendTo("You are a monster now, forget about this command.");
 }
 
 // namespace {
 
-
 // parses args like "13700-13780 13791 13798"
-bool parse_num_args(TPerson& ch, sstring args, std::vector<int> &vnums)
-{
+bool parse_num_args(TPerson& ch, sstring args, std::vector<int>& vnums) {
   int s, e, n;
   sstring tmp;
   size_t npos;
 
   while (!args.empty()) {
-    tmp=args.word(0);
+    tmp = args.word(0);
     args = args.dropWord();
-    npos=tmp.find("-");
+    npos = tmp.find("-");
 
-    if(npos != sstring::npos){
-      s=convertTo<int>(tmp.substr(0, npos));
-      e=convertTo<int>(tmp.substr(npos+1, tmp.size()));
+    if (npos != sstring::npos) {
+      s = convertTo<int>(tmp.substr(0, npos));
+      e = convertTo<int>(tmp.substr(npos + 1, tmp.size()));
 
-      if(s==0 || e==0){
+      if (s == 0 || e == 0) {
         ch.sendTo(format("Bad argument %s, aborting.\n") % tmp);
         return false;
       }
 
-      if(s>e){
+      if (s > e) {
         int tmp;
-        tmp=s;
-        s=e;
-        e=tmp;
+        tmp = s;
+        s = e;
+        e = tmp;
       }
 
-      while(s<=e){
+      while (s <= e) {
         vnums.push_back(s++);
       }
     } else {
-      n=convertTo<int>(tmp);
+      n = convertTo<int>(tmp);
 
-      if(n==0){
+      if (n == 0) {
         ch.sendTo(format("Bad argument %s, aborting.\n") % tmp);
         return false;
       }
@@ -1177,11 +1161,12 @@ bool parse_num_args(TPerson& ch, sstring args, std::vector<int> &vnums)
   return true;
 }
 
-void mvRoom(TPerson& ch, const sstring& immortal, int block, const sstring& rooms)
-{
+void mvRoom(TPerson& ch, const sstring& immortal, int block,
+  const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
-    ch.sendTo("Cannot parse vnum list (should look like 13700-13780 13791 13798)");
+    ch.sendTo(
+      "Cannot parse vnum list (should look like 13700-13780 13791 13798)");
     return;
   }
 
@@ -1192,44 +1177,66 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block, const sstring& room
 
   for (auto vnum : vnums) {
     //// room
-    db_immo.query("select vnum, x, y, z, name, description, room_flag, sector, teletime, teletarg, telelook, river_speed, river_dir, capacity, height, spec from room where owner='%s' and vnum=%i and block=%i",
-        immortal.c_str(), vnum, block);
+    db_immo.query(
+      "select vnum, x, y, z, name, description, room_flag, sector, teletime, "
+      "teletarg, telelook, river_speed, river_dir, capacity, height, spec from "
+      "room where owner='%s' and vnum=%i and block=%i",
+      immortal.c_str(), vnum, block);
 
-    if(db_immo.fetchRow()){
+    if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["name"]);
 
       db_beta.query("delete from room where vnum=%i", vnum);
-      db_beta.query("insert into room (vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,river_speed,river_dir,capacity,height,spec) values (%s,%s,%s,%s, '%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-          db_immo["vnum"].c_str(), db_immo["x"].c_str(),
-          db_immo["y"].c_str(), db_immo["z"].c_str(),
-          db_immo["name"].c_str(), db_immo["description"].c_str(),
-          db_immo["room_flag"].c_str(), db_immo["sector"].c_str(),
-          db_immo["teletime"].c_str(), db_immo["teletarg"].c_str(),
-          db_immo["telelook"].c_str(),db_immo["river_speed"].c_str(),
-          db_immo["river_dir"].c_str(), db_immo["capacity"].c_str(),
-          db_immo["height"].c_str(), db_immo["spec"].c_str());
+      db_beta.query(
+        "insert into room "
+        "(vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,"
+        "telelook,river_speed,river_dir,capacity,height,spec) values "
+        "(%s,%s,%s,%s, '%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        db_immo["vnum"].c_str(), db_immo["x"].c_str(), db_immo["y"].c_str(),
+        db_immo["z"].c_str(), db_immo["name"].c_str(),
+        db_immo["description"].c_str(), db_immo["room_flag"].c_str(),
+        db_immo["sector"].c_str(), db_immo["teletime"].c_str(),
+        db_immo["teletarg"].c_str(), db_immo["telelook"].c_str(),
+        db_immo["river_speed"].c_str(), db_immo["river_dir"].c_str(),
+        db_immo["capacity"].c_str(), db_immo["height"].c_str(),
+        db_immo["spec"].c_str());
 
       //// roomextra
       db_beta.query("delete from roomextra where vnum=%i", vnum);
 
-      db_immo.query("select vnum, name, description from roomextra where owner='%s' and vnum=%i and block=%i", immortal.c_str(), vnum, block);
+      db_immo.query(
+        "select vnum, name, description from roomextra where owner='%s' and "
+        "vnum=%i and block=%i",
+        immortal.c_str(), vnum, block);
 
-      while(db_immo.fetchRow()){
-        db_beta.query("insert into roomextra (vnum, name, description) values (%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
+      while (db_immo.fetchRow()) {
+        db_beta.query(
+          "insert into roomextra (vnum, name, description) values (%s, '%s', "
+          "'%s')",
+          db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+          db_immo["description"].c_str());
       }
 
       //// roomexit
       db_beta.query("delete from roomexit where vnum=%i", vnum);
 
-      db_immo.query("select vnum, direction, name, description, type, condition_flag, lock_difficulty, weight, key_num, destination from roomexit where owner='%s' and vnum=%i and block=%i", immortal.c_str(), vnum, block);
+      db_immo.query(
+        "select vnum, direction, name, description, type, condition_flag, "
+        "lock_difficulty, weight, key_num, destination from roomexit where "
+        "owner='%s' and vnum=%i and block=%i",
+        immortal.c_str(), vnum, block);
 
-      while(db_immo.fetchRow()){
-        db_beta.query("insert into roomexit (vnum,direction,name,description,type,condition_flag,lock_difficulty,weight,key_num,destination) values (%s, %s,'%s','%s',%s,%s,%s,%s,%s,%s)",
-            db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
-            db_immo["name"].c_str(), db_immo["description"].c_str(),
-            db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
-            db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
-            db_immo["key_num"].c_str(), db_immo["destination"].c_str());
+      while (db_immo.fetchRow()) {
+        db_beta.query(
+          "insert into roomexit "
+          "(vnum,direction,name,description,type,condition_flag,lock_"
+          "difficulty,weight,key_num,destination) values (%s, "
+          "%s,'%s','%s',%s,%s,%s,%s,%s,%s)",
+          db_immo["vnum"].c_str(), db_immo["direction"].c_str(),
+          db_immo["name"].c_str(), db_immo["description"].c_str(),
+          db_immo["type"].c_str(), db_immo["condition_flag"].c_str(),
+          db_immo["lock_difficulty"].c_str(), db_immo["weight"].c_str(),
+          db_immo["key_num"].c_str(), db_immo["destination"].c_str());
       }
     } else {
       ch.sendTo(format("Not found: %i\n") % vnum);
@@ -1239,11 +1246,11 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block, const sstring& room
   db_beta.query("commit");
 }
 
-void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms)
-{
+void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
-    ch.sendTo("Cannot parse vnum list (should look like 13700-13780 13791 13798)");
+    ch.sendTo(
+      "Cannot parse vnum list (should look like 13700-13780 13791 13798)");
     return;
   }
 
@@ -1255,53 +1262,69 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms)
 
   for (auto vnum : vnums) {
     //// obj
-    db_immo.query("select vnum,name,short_desc,long_desc,action_desc,type,action_flag,wear_flag,val0,val1,val2,val3,weight,price,can_be_seen,spec_proc,max_exist,max_struct,cur_struct,decay,volume,material from obj where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+    db_immo.query(
+      "select "
+      "vnum,name,short_desc,long_desc,action_desc,type,action_flag,wear_flag,"
+      "val0,val1,val2,val3,weight,price,can_be_seen,spec_proc,max_exist,max_"
+      "struct,cur_struct,decay,volume,material from obj where owner='%s' and "
+      "vnum=%i",
+      immortal.c_str(), vnum);
 
-    if(db_immo.fetchRow()){
+    if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
 
       // fix strung and prototype bits
-      action_flag=convertTo<int>(db_immo["action_flag"]);
-      if(action_flag & (1<<2)){
-	action_flag=action_flag - (1<<2);
+      action_flag = convertTo<int>(db_immo["action_flag"]);
+      if (action_flag & (1 << 2)) {
+        action_flag = action_flag - (1 << 2);
       }
 
-      if(action_flag & (1<<4)){
-	action_flag=action_flag - (1<<4);
+      if (action_flag & (1 << 4)) {
+        action_flag = action_flag - (1 << 4);
       }
-
 
       db_beta.query("delete from obj where vnum=%i", vnum);
-      db_beta.query("insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
-		    db_immo["vnum"].c_str(), db_immo["name"].c_str(),
-		    db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
-		    db_immo["action_desc"].c_str(), db_immo["type"].c_str(),
-		    action_flag, db_immo["wear_flag"].c_str(),
-		    db_immo["val0"].c_str(), db_immo["val1"].c_str(),
-		    db_immo["val2"].c_str(), db_immo["val3"].c_str(),
-		    db_immo["weight"].c_str(), db_immo["price"].c_str(),
-		    db_immo["can_be_seen"].c_str(), db_immo["spec_proc"].c_str(),
-		    db_immo["max_exist"].c_str(), db_immo["max_struct"].c_str(),
-		    db_immo["cur_struct"].c_str(), db_immo["decay"].c_str(),
-		    db_immo["volume"].c_str(), db_immo["material"].c_str());
-
+      db_beta.query(
+        "insert into obj values(%s, '%s', '%s', '%s', '%s', %s, %i, %s, %s, "
+        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+        db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
+        db_immo["action_desc"].c_str(), db_immo["type"].c_str(), action_flag,
+        db_immo["wear_flag"].c_str(), db_immo["val0"].c_str(),
+        db_immo["val1"].c_str(), db_immo["val2"].c_str(),
+        db_immo["val3"].c_str(), db_immo["weight"].c_str(),
+        db_immo["price"].c_str(), db_immo["can_be_seen"].c_str(),
+        db_immo["spec_proc"].c_str(), db_immo["max_exist"].c_str(),
+        db_immo["max_struct"].c_str(), db_immo["cur_struct"].c_str(),
+        db_immo["decay"].c_str(), db_immo["volume"].c_str(),
+        db_immo["material"].c_str());
 
       //// objaffect
       db_beta.query("delete from objaffect where vnum=%i", vnum);
 
-      db_immo.query("select vnum, type, mod1, mod2 from objaffect where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+      db_immo.query(
+        "select vnum, type, mod1, mod2 from objaffect where owner='%s' and "
+        "vnum=%i",
+        immortal.c_str(), vnum);
 
-      while(db_immo.fetchRow()){
-	db_beta.query("insert into objaffect values(%s, %s, %s, %s)", db_immo["vnum"].c_str(), db_immo["type"].c_str(), db_immo["mod1"].c_str(), db_immo["mod2"].c_str());
+      while (db_immo.fetchRow()) {
+        db_beta.query("insert into objaffect values(%s, %s, %s, %s)",
+          db_immo["vnum"].c_str(), db_immo["type"].c_str(),
+          db_immo["mod1"].c_str(), db_immo["mod2"].c_str());
       }
 
       //// obj extra
       db_beta.query("delete from objextra where vnum=%i", vnum);
 
-      db_immo.query("select vnum, name, description from objextra where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+      db_immo.query(
+        "select vnum, name, description from objextra where owner='%s' and "
+        "vnum=%i",
+        immortal.c_str(), vnum);
 
-      while(db_immo.fetchRow()){
-	db_beta.query("insert into objextra values(%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["description"].c_str());
+      while (db_immo.fetchRow()) {
+        db_beta.query("insert into objextra values(%s, '%s', '%s')",
+          db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+          db_immo["description"].c_str());
       }
 
     } else {
@@ -1312,11 +1335,11 @@ void mvObj(TPerson& ch, const sstring& immortal, const sstring& rooms)
   db_beta.query("commit");
 }
 
-void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms)
-{
+void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
   std::vector<int> vnums;
   if (!parse_num_args(ch, rooms, vnums)) {
-    ch.sendTo("Cannot parse vnum list (should look like 13700-13780 13791 13798)");
+    ch.sendTo(
+      "Cannot parse vnum list (should look like 13700-13780 13791 13798)");
     return;
   }
 
@@ -1329,49 +1352,73 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms)
   // loop through item nums
   for (auto vnum : vnums) {
     //// mob
-    db_immo.query("select vnum, name, short_desc, long_desc, description, actions, affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, hpbonus, damage_level, damage_precision, gold, race, weight, height, str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, local_sound, adjacent_sound from mob where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+    db_immo.query(
+      "select vnum, name, short_desc, long_desc, description, actions, "
+      "affects, faction, fact_perc, letter, attacks, class, level, tohit, ac, "
+      "hpbonus, damage_level, damage_precision, gold, race, weight, height, "
+      "str, bra, con, dex, agi, intel, wis, foc, per, cha, kar, spe, pos, "
+      "def_position, sex, spec_proc, skin, vision, can_be_seen, max_exist, "
+      "local_sound, adjacent_sound from mob where owner='%s' and vnum=%i",
+      immortal.c_str(), vnum);
 
-    if (db_immo.fetchRow()){
+    if (db_immo.fetchRow()) {
       ch.sendTo(format("Adding %i ('%s')\n") % vnum % db_immo["short_desc"]);
 
       // clear this bit as set in create_mob.cc
       actions = convertTo<int>(db_immo["actions"]) & ~ACT_STRINGS_CHANGED;
 
       db_beta.query("delete from mob where vnum=%i", vnum);
-      db_beta.query("insert into mob values(%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, '%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', '%s')",
-          db_immo["vnum"].c_str(), db_immo["name"].c_str(), db_immo["short_desc"].c_str(),
-          db_immo["long_desc"].c_str(), db_immo["description"].c_str(), actions,
-          db_immo["affects"].c_str(), db_immo["faction"].c_str(), db_immo["fact_perc"].c_str(),
-          db_immo["letter"].c_str(), db_immo["attacks"].c_str(), db_immo["class"].c_str(),
-          db_immo["level"].c_str(), db_immo["tohit"].c_str(), db_immo["ac"].c_str(),
-          db_immo["hpbonus"].c_str(), db_immo["damage_level"].c_str(), db_immo["damage_precision"].c_str(),
-          db_immo["gold"].c_str(), db_immo["race"].c_str(), db_immo["weight"].c_str(),
-          db_immo["height"].c_str(),
-          db_immo["str"].c_str(), db_immo["bra"].c_str(), db_immo["con"].c_str(),
-          db_immo["dex"].c_str(), db_immo["agi"].c_str(), db_immo["intel"].c_str(),
-          db_immo["wis"].c_str(), db_immo["foc"].c_str(), db_immo["per"].c_str(),
-          db_immo["cha"].c_str(), db_immo["kar"].c_str(), db_immo["spe"].c_str(),
-          db_immo["pos"].c_str(), db_immo["def_position"].c_str(), db_immo["sex"].c_str(),
-          db_immo["spec_proc"].c_str(), db_immo["skin"].c_str(), db_immo["vision"].c_str(),
-          db_immo["can_be_seen"].c_str(), db_immo["max_exist"].c_str(),
-          db_immo["local_sound"].c_str(), db_immo["adjacent_sound"].c_str());
+      db_beta.query(
+        "insert into mob values(%s, '%s', '%s', '%s', '%s', %i, %s, %s, %s, "
+        "'%s', %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
+        "%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, '%s', "
+        "'%s')",
+        db_immo["vnum"].c_str(), db_immo["name"].c_str(),
+        db_immo["short_desc"].c_str(), db_immo["long_desc"].c_str(),
+        db_immo["description"].c_str(), actions, db_immo["affects"].c_str(),
+        db_immo["faction"].c_str(), db_immo["fact_perc"].c_str(),
+        db_immo["letter"].c_str(), db_immo["attacks"].c_str(),
+        db_immo["class"].c_str(), db_immo["level"].c_str(),
+        db_immo["tohit"].c_str(), db_immo["ac"].c_str(),
+        db_immo["hpbonus"].c_str(), db_immo["damage_level"].c_str(),
+        db_immo["damage_precision"].c_str(), db_immo["gold"].c_str(),
+        db_immo["race"].c_str(), db_immo["weight"].c_str(),
+        db_immo["height"].c_str(), db_immo["str"].c_str(),
+        db_immo["bra"].c_str(), db_immo["con"].c_str(), db_immo["dex"].c_str(),
+        db_immo["agi"].c_str(), db_immo["intel"].c_str(),
+        db_immo["wis"].c_str(), db_immo["foc"].c_str(), db_immo["per"].c_str(),
+        db_immo["cha"].c_str(), db_immo["kar"].c_str(), db_immo["spe"].c_str(),
+        db_immo["pos"].c_str(), db_immo["def_position"].c_str(),
+        db_immo["sex"].c_str(), db_immo["spec_proc"].c_str(),
+        db_immo["skin"].c_str(), db_immo["vision"].c_str(),
+        db_immo["can_be_seen"].c_str(), db_immo["max_exist"].c_str(),
+        db_immo["local_sound"].c_str(), db_immo["adjacent_sound"].c_str());
 
       //// mob_imm
       db_beta.query("delete from mob_imm where vnum=%i", vnum);
 
-      db_immo.query("select vnum, type, amt from mob_imm where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+      db_immo.query(
+        "select vnum, type, amt from mob_imm where owner='%s' and vnum=%i",
+        immortal.c_str(), vnum);
 
-      while(db_immo.fetchRow()){
-        db_beta.query("insert into mob_imm values(%s, %s, %s)", db_immo["vnum"].c_str(), db_immo["type"].c_str(), db_immo["amt"].c_str());
+      while (db_immo.fetchRow()) {
+        db_beta.query("insert into mob_imm values(%s, %s, %s)",
+          db_immo["vnum"].c_str(), db_immo["type"].c_str(),
+          db_immo["amt"].c_str());
       }
 
       //// mob_extra
       db_beta.query("delete from mob_extra where vnum=%i", vnum);
 
-      db_immo.query("select vnum, keyword, description from mob_extra where owner='%s' and vnum=%i", immortal.c_str(), vnum);
+      db_immo.query(
+        "select vnum, keyword, description from mob_extra where owner='%s' and "
+        "vnum=%i",
+        immortal.c_str(), vnum);
 
-      while(db_immo.fetchRow()){
-        db_beta.query("insert into mob_extra values(%s, '%s', '%s')", db_immo["vnum"].c_str(), db_immo["keyword"].c_str(), db_immo["description"].c_str());
+      while (db_immo.fetchRow()) {
+        db_beta.query("insert into mob_extra values(%s, '%s', '%s')",
+          db_immo["vnum"].c_str(), db_immo["keyword"].c_str(),
+          db_immo["description"].c_str());
       }
     } else {
       ch.sendTo(format("Not found: %i\n") % vnum);
@@ -1381,18 +1428,22 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms)
   db_beta.query("commit");
 }
 
-void TPerson::doLow(const sstring &argument)
-{
-  sstring buf, arg=argument;
+void TPerson::doLow(const sstring& argument) {
+  sstring buf, arg = argument;
 
   if (!hasWizPower(POWER_LOW)) {
-    sendTo("You do not yet have the low command. If you need something, see a higher level god.");
+    sendTo(
+      "You do not yet have the low command. If you need something, see a "
+      "higher level god.");
     return;
   }
 
-  arg=one_argument(arg, buf);
+  arg = one_argument(arg, buf);
 
-  sstring usage = "Syntax: low <mob | race | statbonus | statcharts | tasks | path room | mvroom <builder> <zone> <vnums> | mvobj <builder> <vnums> | mvmob <builder> <vnums> > ...\n\r";
+  sstring usage =
+    "Syntax: low <mob | race | statbonus | statcharts | tasks | path room | "
+    "mvroom <builder> <zone> <vnums> | mvobj <builder> <vnums> | mvmob "
+    "<builder> <vnums> > ...\n\r";
   if (buf.empty()) {
     sendTo(usage);
     return;
@@ -1407,10 +1458,10 @@ void TPerson::doLow(const sstring &argument)
     mvObj(*this, argument.word(1), argument.dropWords(2));
   } else if (is_abbrev(buf, "mvmob")) {
     mvMob(*this, argument.word(1), argument.dropWords(2));
-  } else if (is_abbrev(buf, "objs") ||
-	     is_abbrev(buf, "weapons")) {
-    sendTo("The low command does not currently work for objects or weapons.\n\r");
-    
+  } else if (is_abbrev(buf, "objs") || is_abbrev(buf, "weapons")) {
+    sendTo(
+      "The low command does not currently work for objects or weapons.\n\r");
+
 #if 0
     lowObjs(arg.c_str());
     return;
@@ -1427,61 +1478,63 @@ void TPerson::doLow(const sstring &argument)
   } else if (is_abbrev(buf, "race")) {
     lowRace(arg.c_str());
     return;
-  } else if (is_abbrev(buf, "path")){
+  } else if (is_abbrev(buf, "path")) {
     lowPath(arg);
   } else if (is_abbrev(buf, "statbonus")) {
     TDatabase db(DB_SNEEZY);
-    db.query("select type, count(*) as count, max(mod1) as max, min(mod1) as min, avg(mod1) as avg, sum(mod1) as sum from objaffect group by type");
+    db.query(
+      "select type, count(*) as count, max(mod1) as max, min(mod1) as min, "
+      "avg(mod1) as avg, sum(mod1) as sum from objaffect group by type");
 
-    sendTo(format("%13s %5s %5s %5s %10s %10s\n\r") % 
-	   "Bonus       :" %"Cnt" %"Max" %"Min" %"Avg" %"Sum");
+    sendTo(format("%13s %5s %5s %5s %10s %10s\n\r") % "Bonus       :" % "Cnt" %
+           "Max" % "Min" % "Avg" % "Sum");
 
-    while(db.fetchRow()){
+    while (db.fetchRow()) {
       buf = format("%5s %5s %5s %10s %10s") % db["count"] % db["max"] %
-	db["min"] % db["avg"] % db["sum"];
+            db["min"] % db["avg"] % db["sum"];
 
-      switch(mapFileToApply(convertTo<int>(db["type"]))){
-	case APPLY_STR:
-	  sendTo(format("Strength    : %s\n\r") % buf);
-	  break;
-	case APPLY_BRA:
-	  sendTo(format("Brawn       : %s\n\r") % buf);
-	  break;
-	case APPLY_CON:
-	  sendTo(format("Constitution: %s\n\r") % buf);
-	  break;
-	case APPLY_DEX:
-	  sendTo(format("Dexterity   : %s\n\r") % buf);
-	  break;
-	case APPLY_AGI:
-	  sendTo(format("Agility     : %s\n\r") % buf);
-	  break;
-	case APPLY_INT:
-	  sendTo(format("Intelligence: %s\n\r") % buf);
-	  break;
-	case APPLY_WIS:
-	  sendTo(format("Wisdom      : %s\n\r") % buf);
-	  break;
-	case APPLY_FOC:
-	  sendTo(format("Focus       : %s\n\r") % buf);
-	  break;
-	case APPLY_PER:
-	  sendTo(format("Perception  : %s\n\r") % buf);
-	  break;
-	case APPLY_CHA:
-	  sendTo(format("Charisma    : %s\n\r") % buf);
-	  break;
-	case APPLY_KAR:
-	  sendTo(format("Karma       : %s\n\r") % buf);
-	  break;
-	case APPLY_SPE:
-	  sendTo(format("Speed       : %s\n\r") % buf);
-    break;
-  case APPLY_CRIT_FREQUENCY:
-    sendTo(format("Crit. Chance: %s\n\r") % buf);
-	  break;
-	default:
-	  break;
+      switch (mapFileToApply(convertTo<int>(db["type"]))) {
+        case APPLY_STR:
+          sendTo(format("Strength    : %s\n\r") % buf);
+          break;
+        case APPLY_BRA:
+          sendTo(format("Brawn       : %s\n\r") % buf);
+          break;
+        case APPLY_CON:
+          sendTo(format("Constitution: %s\n\r") % buf);
+          break;
+        case APPLY_DEX:
+          sendTo(format("Dexterity   : %s\n\r") % buf);
+          break;
+        case APPLY_AGI:
+          sendTo(format("Agility     : %s\n\r") % buf);
+          break;
+        case APPLY_INT:
+          sendTo(format("Intelligence: %s\n\r") % buf);
+          break;
+        case APPLY_WIS:
+          sendTo(format("Wisdom      : %s\n\r") % buf);
+          break;
+        case APPLY_FOC:
+          sendTo(format("Focus       : %s\n\r") % buf);
+          break;
+        case APPLY_PER:
+          sendTo(format("Perception  : %s\n\r") % buf);
+          break;
+        case APPLY_CHA:
+          sendTo(format("Charisma    : %s\n\r") % buf);
+          break;
+        case APPLY_KAR:
+          sendTo(format("Karma       : %s\n\r") % buf);
+          break;
+        case APPLY_SPE:
+          sendTo(format("Speed       : %s\n\r") % buf);
+          break;
+        case APPLY_CRIT_FREQUENCY:
+          sendTo(format("Crit. Chance: %s\n\r") % buf);
+          break;
+        default:
+          break;
       }
     }
 
@@ -1489,100 +1542,101 @@ void TPerson::doLow(const sstring &argument)
     Stats st;
     sstring buf;
     char tmpbuf[256];
-    race_t races[6]={RACE_HUMAN, RACE_GNOME, RACE_ELVEN, RACE_OGRE,
-		     RACE_DWARF, RACE_HOBBIT};
-    int i, total=0;
+    race_t races[6] = {RACE_HUMAN, RACE_GNOME, RACE_ELVEN, RACE_OGRE,
+      RACE_DWARF, RACE_HOBBIT};
+    int i, total = 0;
 
-    sendTo(COLOR_BASIC, "       <c>[STR][BRA][CON][DEX][AGI][INT][WIS][FOC][PER][CHA][KAR][SPE][TOTAL]<1>\n\r");
+    sendTo(COLOR_BASIC,
+      "       "
+      "<c>[STR][BRA][CON][DEX][AGI][INT][WIS][FOC][PER][CHA][KAR][SPE][TOTAL]<"
+      "1>\n\r");
 
-
-    for(i=0;i<6;++i){
+    for (i = 0; i < 6; ++i) {
       sprintf(tmpbuf, "%-8s", Races[races[i]]->getProperName().c_str());
       buf += tmpbuf;
-      st=Races[races[i]]->getBaseStats();
-      for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	sprintf(tmpbuf, "%3d  ", st.get(stat));
-	buf += tmpbuf;
-	total+=st.get(stat);
+      st = Races[races[i]]->getBaseStats();
+      for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+        sprintf(tmpbuf, "%3d  ", st.get(stat));
+        buf += tmpbuf;
+        total += st.get(stat);
       }
       sprintf(tmpbuf, "%5d\n\r", total);
       buf += tmpbuf;
-      total=0;
+      total = 0;
     }
     sendTo(COLOR_BASIC, format("%s\n\r") % buf);
 
-    for(territoryT terr=HOME_TER_NONE;terr<MAX_HOME_TERS;terr++){
-      total=0;
-      switch(terr){
-	case HOME_TER_HUMAN_VILLAGER:
-	  sendTo("Villager");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	case HOME_TER_HUMAN_URBAN:
-	  sendTo("Urban   ");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	case HOME_TER_HUMAN_PLAINS:
-	  sendTo("Plains  ");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	case HOME_TER_HUMAN_RECLUSE:
-	  sendTo("Recluse ");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	case HOME_TER_HUMAN_HILL:
-	  sendTo("Hill    ");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	case HOME_TER_HUMAN_MOUNTAIN:
-	  sendTo("Mountain");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	case HOME_TER_HUMAN_FOREST:
-	  sendTo("Forest  ");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	case HOME_TER_HUMAN_MARINER:
-	  sendTo("Marine  ");
-	  for(statTypeT stat=MIN_STAT; stat<MAX_STATS_USED; stat++) {
-	    sendTo(format("%3d  ") % territory_adjustment(terr, stat));
-	    total += territory_adjustment(terr, stat);
-	  }
-	  sendTo(format("%5d\n\r") % total);
-	  break;
-	default:
-	  break;
+    for (territoryT terr = HOME_TER_NONE; terr < MAX_HOME_TERS; terr++) {
+      total = 0;
+      switch (terr) {
+        case HOME_TER_HUMAN_VILLAGER:
+          sendTo("Villager");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        case HOME_TER_HUMAN_URBAN:
+          sendTo("Urban   ");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        case HOME_TER_HUMAN_PLAINS:
+          sendTo("Plains  ");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        case HOME_TER_HUMAN_RECLUSE:
+          sendTo("Recluse ");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        case HOME_TER_HUMAN_HILL:
+          sendTo("Hill    ");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        case HOME_TER_HUMAN_MOUNTAIN:
+          sendTo("Mountain");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        case HOME_TER_HUMAN_FOREST:
+          sendTo("Forest  ");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        case HOME_TER_HUMAN_MARINER:
+          sendTo("Marine  ");
+          for (statTypeT stat = MIN_STAT; stat < MAX_STATS_USED; stat++) {
+            sendTo(format("%3d  ") % territory_adjustment(terr, stat));
+            total += territory_adjustment(terr, stat);
+          }
+          sendTo(format("%5d\n\r") % total);
+          break;
+        default:
+          break;
       }
     }
-    
 
   } else {
     sendTo(usage);
@@ -1590,20 +1644,18 @@ void TPerson::doLow(const sstring &argument)
   }
 }
 
-
-void TBeing::lowPath(const sstring &arg)
-{
+void TBeing::lowPath(const sstring& arg) {
   dirTypeT dir;
-  int here=in_room;
-  int target=convertTo<int>(arg.word(0));
+  int here = in_room;
+  int target = convertTo<int>(arg.word(0));
   TPathFinder path;
 
-  //path.setUsePortals(false);
+  // path.setUsePortals(false);
 
-  if(path.findPath(here, findRoom(target)) == DIR_NONE){
+  if (path.findPath(here, findRoom(target)) == DIR_NONE) {
     sendTo("No path found, trying again going through no-mob rooms.\n\r");
     path.setNoMob(false);
-    if(path.findPath(here, findRoom(target)) == DIR_NONE){
+    if (path.findPath(here, findRoom(target)) == DIR_NONE) {
       sendTo("No path found.\n\r");
       return;
     }
@@ -1611,30 +1663,25 @@ void TBeing::lowPath(const sstring &arg)
 
   sendTo(format("Distance: %i\n\r") % path.getDist());
 
-  
-  for(unsigned int i=0;i<path.path.size();++i){
-    dir=path.path[i]->direct;
+  for (unsigned int i = 0; i < path.path.size(); ++i) {
+    dir = path.path[i]->direct;
 
-    if(dir >= MAX_DIR){
+    if (dir >= MAX_DIR) {
       sendTo(format("{%i, %i},\n\r") % dir % path.path[i]->room);
     } else {
-      sendTo(format("{DIR_%s, %i},\n\r") % 
-	     (dir<0?"NONE":sstring(dirs[dir]).upper()) %
-	     path.path[i]->room);
+      sendTo(format("{DIR_%s, %i},\n\r") %
+             (dir < 0 ? "NONE" : sstring(dirs[dir]).upper()) %
+             path.path[i]->room);
     }
   }
 }
 
-
-
-
-void TBeing::lowRace(const char *arg)
-{
-  TMonster *mob;
+void TBeing::lowRace(const char* arg) {
+  TMonster* mob;
   char namebuf2[256], buf2[255];
   int race_num;
   sstring str;
-  bool show_stat=true;
+  bool show_stat = true;
 
   arg = one_argument(arg, buf2, cElements(buf2));
   race_num = convertTo<int>(buf2);
@@ -1646,10 +1693,13 @@ void TBeing::lowRace(const char *arg)
   if (*arg)
     show_stat = false;
 
-  str = "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
-  sprintf(buf2,"List of mobs of race %s:\n\r",RaceNames[race_num]);
+  str =
+    "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO "
+    "MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
+  sprintf(buf2, "List of mobs of race %s:\n\r", RaceNames[race_num]);
   str += buf2;
-  sprintf(buf2,"%-23s: %76s", "<c>Name<1>", curStats.printStatHeader().c_str());
+  sprintf(buf2, "%-23s: %76s", "<c>Name<1>",
+    curStats.printStatHeader().c_str());
   str += buf2;
 
   unsigned int mobnum;
@@ -1657,31 +1707,33 @@ void TBeing::lowRace(const char *arg)
     if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)) {
       // not inited, load to init
       if ((mob = read_mobile(mobnum, REAL)) != NULL) {
-        thing_to_room(mob, Room::VOID);   // prevents extracting from "nowhere"
+        thing_to_room(mob, Room::VOID);  // prevents extracting from "nowhere"
         delete mob;
         mob = NULL;
-      } else 
-        vlogf(LOG_BUG,format("BOGUS LOAD of mob %d") % mobnum);
+      } else
+        vlogf(LOG_BUG, format("BOGUS LOAD of mob %d") % mobnum);
     }
     if (mob_index[mobnum].race != race_num)
       continue;
     if (UtilProcs(mob_index[mobnum].spec))
       continue;
     if (!(mob = read_mobile(mobnum, REAL))) {
-      vlogf(LOG_BUG,format("Error during doLowRace in mob rnum %d") % mobnum);
-      continue;     
+      vlogf(LOG_BUG, format("Error during doLowRace in mob rnum %d") % mobnum);
+      continue;
     }
     strcpy(namebuf2, mob->getName().c_str());
-    sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
+    sstring namebuf =
+      colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
     if (show_stat)
-      sprintf(buf2, "%-17.17s: %60s", 
-         namebuf.c_str(), mob->chosenStats.printRawStats(this).c_str());
+      sprintf(buf2, "%-17.17s: %60s", namebuf.c_str(),
+        mob->chosenStats.printRawStats(this).c_str());
     else
       sprintf(buf2, "%5.5d : %-27.27s : L%-3d, C%-3d, Hgt:%-3d\n\r",
-         mob->mobVnum(), namebuf.c_str(), mob->GetMaxLevel(), mob->getClass(), mob->getHeight());
+        mob->mobVnum(), namebuf.c_str(), mob->GetMaxLevel(), mob->getClass(),
+        mob->getHeight());
     str += buf2;
 
-    thing_to_room(mob,Room::VOID);
+    thing_to_room(mob, Room::VOID);
     delete mob;
     mob = NULL;
   }
@@ -1691,8 +1743,7 @@ void TBeing::lowRace(const char *arg)
   desc->page_string(str);
 }
 
-void TBeing::lowTasks(const sstring &oarg)
-{
+void TBeing::lowTasks(const sstring& oarg) {
   // this works a database of tasks that need doing for the low team
   // low tasks list [<name>]
   // low tasks add <priority> <task>
@@ -1702,82 +1753,89 @@ void TBeing::lowTasks(const sstring &oarg)
   // low tasks delete <task ID>
   TDatabase db(DB_SNEEZY);
 
-  sstring buf, buf2, temp, str, arg=oarg;
+  sstring buf, buf2, temp, str, arg = oarg;
   int id, priority;
 
   arg = one_argument(arg, buf);
-  if (buf.empty()){
-    sendTo("Syntax: low  tasks <list | add | assign | priority | delete> ...\n\r");
+  if (buf.empty()) {
+    sendTo(
+      "Syntax: low  tasks <list | add | assign | priority | delete> ...\n\r");
     return;
   } else if (is_abbrev(buf, "list")) {
     arg = one_argument(arg, buf);
-    if(buf.empty()){
-      temp="select id, priority, assigned_to, task, status from lowtasks order by priority";
-      vlogf(LOG_DASH, format("lowtask: %s") %  temp);
+    if (buf.empty()) {
+      temp =
+        "select id, priority, assigned_to, task, status from lowtasks order by "
+        "priority";
+      vlogf(LOG_DASH, format("lowtask: %s") % temp);
       db.query(temp.c_str());
     } else {
-      temp=format("select id, priority, assigned_to, task, status from lowtasks where assign_to='%s' order by priority") % buf;
-      vlogf(LOG_DASH, format("lowtask: %s") %  temp);
+      temp = format(
+               "select id, priority, assigned_to, task, status from lowtasks "
+               "where assign_to='%s' order by priority") %
+             buf;
+      vlogf(LOG_DASH, format("lowtask: %s") % temp);
       db.query(temp.c_str());
-
     }
 
-    str =  "ID  | P |  Assigned To  |  Task Description (Status)\n\r";
+    str = "ID  | P |  Assigned To  |  Task Description (Status)\n\r";
     str += "---------------------------------------------------------\n\r";
 
-    while(db.fetchRow()){
+    while (db.fetchRow()) {
       id = convertTo<int>(db["id"]);
       priority = convertTo<int>(db["priority"]);
-      buf=format("%-4d| %d |  %-13s| %s (%s)\n\r") %
-	id % priority % db["assigned_to"] % db["task"] % db["status"];
+      buf = format("%-4d| %d |  %-13s| %s (%s)\n\r") % id % priority %
+            db["assigned_to"] % db["task"] % db["status"];
       str += buf;
     }
 
     if (desc)
       desc->page_string(str, SHOWNOW_NO, ALLOWREP_YES);
 
-
     return;
   } else if (is_abbrev(buf, "add")) {
     arg = one_argument(arg, buf);
-    if (buf.empty() || arg.empty()){
+    if (buf.empty() || arg.empty()) {
       sendTo("Syntax: low tasks add <priority> <task>\n\r");
       return;
     } else {
       priority = convertTo<int>(buf);
       if (priority < 0 || priority > 9) {
-	sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
-	return;
+        sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
+        return;
       } else {
-	temp="select id from lowtasks order by id desc";
-	vlogf(LOG_DASH, format("lowtask: %s") %  temp);
-	db.query(temp.c_str());
-
-	if(!db.fetchRow()) {
-	  id = 0;
-	} else {
-	  id = convertTo<int>(db["id"]) + 1;
-	}
-        temp=format("insert into lowtasks (id, priority, assigned_to, task, status) values(%d, %d, '%s', '%s', '')") % id % priority % getName() % arg;
-        vlogf(LOG_DASH, format("lowtask: %s") %  temp);
+        temp = "select id from lowtasks order by id desc";
+        vlogf(LOG_DASH, format("lowtask: %s") % temp);
         db.query(temp.c_str());
 
-	sendTo("New task inserted into list.\n\r");
-	return;
+        if (!db.fetchRow()) {
+          id = 0;
+        } else {
+          id = convertTo<int>(db["id"]) + 1;
+        }
+        temp = format(
+                 "insert into lowtasks (id, priority, assigned_to, task, "
+                 "status) values(%d, %d, '%s', '%s', '')") %
+               id % priority % getName() % arg;
+        vlogf(LOG_DASH, format("lowtask: %s") % temp);
+        db.query(temp.c_str());
+
+        sendTo("New task inserted into list.\n\r");
+        return;
       }
     }
     return;
   } else if (is_abbrev(buf, "assign")) {
     arg = one_argument(arg, buf);
     arg = one_argument(arg, buf2);
-    if(buf.empty() || buf2.empty()){
+    if (buf.empty() || buf2.empty()) {
       sendTo("Syntax: low tasks assign <task ID> <name>\n\r");
       return;
     } else {
       id = convertTo<int>(buf);
-      temp=format("update lowtasks set assigned_to='%s' where id=%d") %
-	buf2 % id;
-      vlogf(LOG_DASH, format("lowtask: %s") %  temp);
+      temp =
+        format("update lowtasks set assigned_to='%s' where id=%d") % buf2 % id;
+      vlogf(LOG_DASH, format("lowtask: %s") % temp);
       db.query(temp.c_str());
 
       sendTo("Task assignment updated.\n\r");
@@ -1787,15 +1845,15 @@ void TBeing::lowTasks(const sstring &oarg)
   } else if (is_abbrev(buf, "status")) {
     arg = one_argument(arg, buf);
     arg = one_argument(arg, buf2);
-    if(buf.empty() || buf2.empty()){
+    if (buf.empty() || buf2.empty()) {
       sendTo("Syntax: low tasks status <task ID> <status>\n\r");
       return;
     } else {
       id = convertTo<int>(buf);
-      temp=format("update lowtasks set status='%s' where id=%d") % buf2 % id;
-      vlogf(LOG_DASH, format("lowtask: %s") %  temp);
+      temp = format("update lowtasks set status='%s' where id=%d") % buf2 % id;
+      vlogf(LOG_DASH, format("lowtask: %s") % temp);
       db.query(temp.c_str());
-      
+
       sendTo("Task status updated.\n\r");
       return;
     }
@@ -1803,7 +1861,7 @@ void TBeing::lowTasks(const sstring &oarg)
   } else if (is_abbrev(buf, "priority")) {
     arg = one_argument(arg, buf);
     arg = one_argument(arg, buf2);
-    if(buf.empty() || buf2.empty()){
+    if (buf.empty() || buf2.empty()) {
       sendTo("Syntax: low tasks priority <task ID> <priority>\n\r");
       return;
     } else {
@@ -1813,39 +1871,39 @@ void TBeing::lowTasks(const sstring &oarg)
         sendTo("Priority must be between 0 (highest) and 9 (lowest).\n\r");
         return;
       } else {
-	temp=format("update lowtasks set priority=%d where id=%d") %priority %id;
-	vlogf(LOG_DASH, format("lowtask: %s") %  temp);
-	db.query(temp.c_str());
+        temp =
+          format("update lowtasks set priority=%d where id=%d") % priority % id;
+        vlogf(LOG_DASH, format("lowtask: %s") % temp);
+        db.query(temp.c_str());
 
-	sendTo("Task priority updated.\n\r");
-	return;
+        sendTo("Task priority updated.\n\r");
+        return;
       }
     }
     return;
   } else if (is_abbrev(buf, "delete")) {
     arg = one_argument(arg, buf);
-    if(buf.empty()){
+    if (buf.empty()) {
       sendTo("Syntax: low tasks delete <task ID>\n\r");
       return;
     } else {
       id = convertTo<int>(buf);
 
-      temp=format("delete from lowtasks where id=%d") % id;
-      vlogf(LOG_DASH, format("lowtask: %s") %  temp);
+      temp = format("delete from lowtasks where id=%d") % id;
+      vlogf(LOG_DASH, format("lowtask: %s") % temp);
       db.query(temp.c_str());
 
       sendTo("Task deleted.\n\r");
       return;
     }
- 
+
     return;
   }
 }
 
-void TBeing::lowMobs(const char *arg)
-{
-  TMonster *mob;
-  char namebuf2[256],buf2[255];
+void TBeing::lowMobs(const char* arg) {
+  TMonster* mob;
+  char namebuf2[256], buf2[255];
   int level;
   sstring str;
 
@@ -1855,44 +1913,47 @@ void TBeing::lowMobs(const char *arg)
     sendTo("Level must be between 1 and 127\n\r");
     return;
   }
-  str = "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
-  sprintf(buf2,"List of level %d mobs:\n\r",level);
+  str =
+    "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO "
+    "MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
+  sprintf(buf2, "List of level %d mobs:\n\r", level);
   str += buf2;
-  sprintf(buf2,"%5s %-27s : %6s %5s %5s %5s %5s %5s %5s\n\r\n\r",
-      "vnum","name","class", "hp", "AC", "tohit", "#atts", "damage", "factn");
+  sprintf(buf2, "%5s %-27s : %6s %5s %5s %5s %5s %5s %5s\n\r\n\r", "vnum",
+    "name", "class", "hp", "AC", "tohit", "#atts", "damage", "factn");
   str += buf2;
 
   unsigned int mobnum;
-  for (mobnum = 0; mobnum < mob_index.size();mobnum++) {
-    if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)){
+  for (mobnum = 0; mobnum < mob_index.size(); mobnum++) {
+    if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)) {
       // not inited, load to init
       if ((mob = read_mobile(mobnum, REAL)) != NULL) {
-        thing_to_room(mob, Room::VOID);      // prevents extracting from "nowhere"
+        thing_to_room(mob, Room::VOID);  // prevents extracting from "nowhere"
         delete mob;
         mob = NULL;
-      } else 
-        vlogf(LOG_BUG,format("BOGUS LOAD of mob %d") % mobnum);
+      } else
+        vlogf(LOG_BUG, format("BOGUS LOAD of mob %d") % mobnum);
     }
     if (mob_index[mobnum].level != level)
       continue;
     if (UtilProcs(mob_index[mobnum].spec))
       continue;
     if (!(mob = read_mobile(mobnum, REAL))) {
-      vlogf(LOG_BUG,format("Error during doLowMobs in mob rnum %d") % mobnum);
-      continue;     
+      vlogf(LOG_BUG, format("Error during doLowMobs in mob rnum %d") % mobnum);
+      continue;
     }
 
     strcpy(namebuf2, mob->getName().c_str());
-    sstring namebuf = colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
+    sstring namebuf =
+      colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
 
-    sprintf(buf2, "%5d %-27.27s : %6d %5.2f %5d  %2d    %.1f %5.2f+%d%% %2d\n\r", 
-       mob->mobVnum(), namebuf.c_str(), mob->getClass(), mob->getHPLevel(),
-       mob->getArmor(), mob->getHitroll(), mob->getMult(),
-       mob->getDamLevel(), mob->getDamPrecision(),
-       mob->getFaction());
+    sprintf(buf2,
+      "%5d %-27.27s : %6d %5.2f %5d  %2d    %.1f %5.2f+%d%% %2d\n\r",
+      mob->mobVnum(), namebuf.c_str(), mob->getClass(), mob->getHPLevel(),
+      mob->getArmor(), mob->getHitroll(), mob->getMult(), mob->getDamLevel(),
+      mob->getDamPrecision(), mob->getFaction());
 
     str += buf2;
-    thing_to_room(mob,Room::VOID);
+    thing_to_room(mob, Room::VOID);
     delete mob;
     mob = NULL;
   }
@@ -1901,34 +1962,30 @@ void TBeing::lowMobs(const char *arg)
 }
 
 class lowObjSort {
-public:
-  bool operator() (const int &, const int &) const;
+  public:
+    bool operator()(const int&, const int&) const;
 };
 
-bool lowObjSort::operator() (const int &x, const int &y) const
-{
+bool lowObjSort::operator()(const int& x, const int& y) const {
   // sort in descending order of armor
   // if armor is same, sort in descending struct order
 
-  if (x < 0 || x >= (int) obj_index.size()) {
-    vlogf(LOG_BUG, format("Bogus value for x: %d in lowObjSort") %  x);
+  if (x < 0 || x >= (int)obj_index.size()) {
+    vlogf(LOG_BUG, format("Bogus value for x: %d in lowObjSort") % x);
     return false;
   }
-  if (y < 0 || y >= (int) obj_index.size()) {
-    vlogf(LOG_BUG, format("Bogus value for y: %d in lowObjSort") %  y);
+  if (y < 0 || y >= (int)obj_index.size()) {
+    vlogf(LOG_BUG, format("Bogus value for y: %d in lowObjSort") % y);
     return false;
   }
 
-  if (obj_index[x].armor <
-       obj_index[y].armor) {
+  if (obj_index[x].armor < obj_index[y].armor) {
     return false;
-  } else if (obj_index[x].armor >
-             obj_index[y].armor) {
+  } else if (obj_index[x].armor > obj_index[y].armor) {
     return true;
   } else {
     // sort based on structure
-    if (obj_index[x].max_struct <
-        obj_index[y].max_struct) {
+    if (obj_index[x].max_struct < obj_index[y].max_struct) {
       return false;
     } else {
       return true;
@@ -1937,30 +1994,28 @@ bool lowObjSort::operator() (const int &x, const int &y) const
 }
 
 class lowObjSortValue {
-public:
-  bool operator() (const int &, const int &) const;
+  public:
+    bool operator()(const int&, const int&) const;
 };
 
-bool lowObjSortValue::operator() (const int &x, const int &y) const
-{
+bool lowObjSortValue::operator()(const int& x, const int& y) const {
   // sort in descending order of value
   return (obj_index[x].value >= obj_index[y].value);
 }
 
-void TBeing::lowObjs(const char *arg)
-{
-  TObj *obj;
+void TBeing::lowObjs(const char* arg) {
+  TObj* obj;
   char buf2[255];
   int i;
   wearSlotT slot = WEAR_HEAD;
   unsigned int worn;
   bool val_sort = FALSE;
-  int sort_race=0;
+  int sort_race = 0;
   int sort_race_low = 0;
   int sort_race_high = 0;
   double tmp;
   sstring str;
-  std::vector<int>objList(0);
+  std::vector<int> objList(0);
 
   arg = one_argument(arg, buf2, cElements(buf2));
   if (!*buf2) {
@@ -2006,46 +2061,47 @@ void TBeing::lowObjs(const char *arg)
     sendTo("bogus body slot.\n\r");
     return;
   }
-  arg=one_argument(arg, buf2, cElements(buf2));
+  arg = one_argument(arg, buf2, cElements(buf2));
   if (is_abbrev(buf2, "value"))
     val_sort = TRUE;
-  if (is_abbrev(buf2, "race")){
+  if (is_abbrev(buf2, "race")) {
     one_argument(arg, buf2, cElements(buf2));
-    sort_race=convertTo<int>(buf2);
+    sort_race = convertTo<int>(buf2);
 
-    tmp=Races[sort_race]->getBaseMaleHeight()+
-	Races[sort_race]->getMaleHtNumDice();
-    tmp*=0.85;
-    tmp*=race_vol_constants[mapSlotToFile(slot)];
-    sort_race_low=(int) tmp;
+    tmp = Races[sort_race]->getBaseMaleHeight() +
+          Races[sort_race]->getMaleHtNumDice();
+    tmp *= 0.85;
+    tmp *= race_vol_constants[mapSlotToFile(slot)];
+    sort_race_low = (int)tmp;
 
-    tmp=Races[sort_race]->getBaseMaleHeight()+
-	   (Races[sort_race]->getMaleHtNumDice()*
-	    Races[sort_race]->getMaleHtDieSize());
-    tmp*=1.15;
-    tmp*=race_vol_constants[mapSlotToFile(slot)];
-    sort_race_high=(int) tmp;
+    tmp = Races[sort_race]->getBaseMaleHeight() +
+          (Races[sort_race]->getMaleHtNumDice() *
+            Races[sort_race]->getMaleHtDieSize());
+    tmp *= 1.15;
+    tmp *= race_vol_constants[mapSlotToFile(slot)];
+    sort_race_high = (int)tmp;
   }
 
-// this loop scrolls thru all objs in dbase and creates
-// objbug, an unsorted list of obj real nums meeting criteria
+  // this loop scrolls thru all objs in dbase and creates
+  // objbug, an unsorted list of obj real nums meeting criteria
   unsigned int objnum = 0;
-  for (objnum = 0;objnum < obj_index.size();objnum++) {
-    if (obj_index[objnum].armor == -97)    // a weapon
+  for (objnum = 0; objnum < obj_index.size(); objnum++) {
+    if (obj_index[objnum].armor == -97)  // a weapon
       continue;
-    if (obj_index[objnum].armor == -98)    // not a piece of armor
+    if (obj_index[objnum].armor == -98)  // not a piece of armor
       continue;
 
-    if(sort_race){
+    if (sort_race) {
       if (!(obj = read_object(objnum, REAL))) {
-	vlogf(LOG_BUG,format("Error in doLow::lowObjs.  real obj %d") %  objnum);
-	continue;
+        vlogf(LOG_BUG,
+          format("Error in doLow::lowObjs.  real obj %d") % objnum);
+        continue;
       }
-      
-      if(obj->getVolume() <= sort_race_low ||
-	 obj->getVolume() >= sort_race_high){
-	delete obj;
-	continue;
+
+      if (obj->getVolume() <= sort_race_low ||
+          obj->getVolume() >= sort_race_high) {
+        delete obj;
+        continue;
       }
       delete obj;
     }
@@ -2055,48 +2111,54 @@ void TBeing::lowObjs(const char *arg)
       objList.push_back(objnum);
     }
   }
-  
+
   // now lets do some sorting
   if (val_sort)
     std::sort(objList.begin(), objList.end(), lowObjSortValue());
   else
     std::sort(objList.begin(), objList.end(), lowObjSort());
 
-// sortbuf now holds a sorted list of objects
-// send that to user
-  str = "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
+  // sortbuf now holds a sorted list of objects
+  // send that to user
+  str =
+    "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO "
+    "MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
 
-  sprintf(buf2, "%5s %30s : %3s %5s %4s %6s %4s %5s\n\r","vnum","obj name", 
-          "str", "armor", "wght", "price", "sug.pr" "size", "max #");
+  sprintf(buf2, "%5s %30s : %3s %5s %4s %6s %4s %5s\n\r", "vnum", "obj name",
+    "str", "armor", "wght", "price",
+    "sug.pr"
+    "size",
+    "max #");
   str += buf2;
   for (objnum = 0; objnum < objList.size(); objnum++) {
     if (!(obj = read_object(objList[objnum], REAL))) {
-      vlogf(LOG_BUG,format("Error in doLow::lowObjs.  real obj %d") %  objList[objnum]);
+      vlogf(LOG_BUG,
+        format("Error in doLow::lowObjs.  real obj %d") % objList[objnum]);
       return;
     }
-    TBaseClothing *tbc = dynamic_cast<TBaseClothing *>(obj);
+    TBaseClothing* tbc = dynamic_cast<TBaseClothing*>(obj);
     if (!tbc) {
-      vlogf(LOG_BUG,format("Error in doLow::lowObjs.  Non-clothing (%d)") %  objList[objnum]);
+      vlogf(LOG_BUG, format("Error in doLow::lowObjs.  Non-clothing (%d)") %
+                       objList[objnum]);
       delete obj;
     }
     int size_per = 100;
     // the bogus slots are set to 0
-    if (slot && race_vol_constants[mapSlotToFile( slot)]){
-      size_per = (int)(100.0 * tbc->getVolume() / race_vol_constants[mapSlotToFile(slot)]);
+    if (slot && race_vol_constants[mapSlotToFile(slot)]) {
+      size_per = (int)(100.0 * tbc->getVolume() /
+                       race_vol_constants[mapSlotToFile(slot)]);
       if (tbc->isPaired())
         size_per /= 2;
     }
-    sprintf(buf2, "%s%5d %-30.30s : %3d %2dAC %4.1f %6d %6d %3d%% %4d%s\n\r", 
-      green(), tbc->objVnum(),
-      tbc->getNameNOC(this).c_str(),
-      tbc->obj_flags.max_struct_points, 
-      obj_index[tbc->getItemIndex()].armor, tbc->getWeight(),
-      tbc->obj_flags.cost, tbc->suggestedPrice(), size_per, 
+    sprintf(buf2, "%s%5d %-30.30s : %3d %2dAC %4.1f %6d %6d %3d%% %4d%s\n\r",
+      green(), tbc->objVnum(), tbc->getNameNOC(this).c_str(),
+      tbc->obj_flags.max_struct_points, obj_index[tbc->getItemIndex()].armor,
+      tbc->getWeight(), tbc->obj_flags.cost, tbc->suggestedPrice(), size_per,
       obj_index[tbc->getItemIndex()].max_exist, norm());
     str += buf2;
 
     if (tbc->isPaired()) {
-      sprintf(buf2, "   %sPAIRED%s",blue(),norm());
+      sprintf(buf2, "   %sPAIRED%s", blue(), norm());
       str += buf2;
     }
     for (i = 0; i < MAX_OBJ_AFFECT; i++) {
@@ -2105,21 +2167,27 @@ void TBeing::lowObjs(const char *arg)
       if (tbc->affected[i].location == APPLY_NONE)
         continue;
       if (tbc->affected[i].location == APPLY_SPELL) {
-        sprintf(buf2,"   %s%s by %ld%s", red(),
-        discArray[tbc->affected[i].modifier]->name, tbc->affected[i].modifier2, norm());
+        sprintf(buf2, "   %s%s by %ld%s", red(),
+          discArray[tbc->affected[i].modifier]->name,
+          tbc->affected[i].modifier2, norm());
       } else if (tbc->affected[i].location == APPLY_DISCIPLINE) {
-        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[tbc->affected[i].location].name, discNames[tbc->affected[i].modifier].name, tbc->affected[i].modifier2,
-norm());
+        sprintf(buf2, "   %s%s: %s by %ld%s", red(),
+          apply_types[tbc->affected[i].location].name,
+          discNames[tbc->affected[i].modifier].name, tbc->affected[i].modifier2,
+          norm());
       } else if (tbc->affected[i].location == APPLY_IMMUNITY) {
-        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[tbc->affected[i].location].name,
-          immunity_names[tbc->affected[i].modifier], tbc->affected[i].modifier2,norm());
+        sprintf(buf2, "   %s%s: %s by %ld%s", red(),
+          apply_types[tbc->affected[i].location].name,
+          immunity_names[tbc->affected[i].modifier], tbc->affected[i].modifier2,
+          norm());
       } else {
         if ((tbc->affected[i].location == APPLY_SPELL) ||
             (tbc->affected[i].location == APPLY_DISCIPLINE) ||
             (tbc->affected[i].location == APPLY_IMMUNITY) ||
             (tbc->affected[i].location == APPLY_SPELL_EFFECT))
           str += red();
-        sprintf(buf2,"   %s by %ld",apply_types[tbc->affected[i].location].name,
+        sprintf(buf2, "   %s by %ld",
+          apply_types[tbc->affected[i].location].name,
           tbc->affected[i].modifier);
         if ((tbc->affected[i].location == APPLY_SPELL) ||
             (tbc->affected[i].location == APPLY_DISCIPLINE) ||
@@ -2133,7 +2201,7 @@ norm());
       str += "  MU";
     if (!tbc->isObjStat(ITEM_ANTI_CLERIC))
       str += "  CL";
-    if (!tbc->isObjStat(ITEM_ANTI_MONK) && dynamic_cast<TWorn *>(tbc))
+    if (!tbc->isObjStat(ITEM_ANTI_MONK) && dynamic_cast<TWorn*>(tbc))
       str += "  MK";
 
     str += "\n\r";
@@ -2144,30 +2212,27 @@ norm());
 }
 
 class lowWeapSort {
-public:
-  bool operator() (const int &, const int &) const;
+  public:
+    bool operator()(const int&, const int&) const;
 };
 
-bool lowWeapSort::operator() (const int &x, const int &y) const
-{
+bool lowWeapSort::operator()(const int& x, const int& y) const {
   // sort in descending order of damage
   // if armor is same, sort in descending struct order
 
-  TObj *obj;
-  TBaseWeapon *x_obj = NULL,
-              *y_obj = NULL;
+  TObj* obj;
+  TBaseWeapon *x_obj = NULL, *y_obj = NULL;
 
   if ((obj = read_object(x, REAL)))
-    x_obj = dynamic_cast<TBaseWeapon *>(obj);
+    x_obj = dynamic_cast<TBaseWeapon*>(obj);
 
   if ((obj = read_object(y, REAL)))
-    y_obj = dynamic_cast<TBaseWeapon *>(obj);
+    y_obj = dynamic_cast<TBaseWeapon*>(obj);
 
   if (!x_obj || !y_obj) {
-    vlogf(LOG_BUG, format("Error in lowWeapSort(): x: %s, y: %s, x=%d, y=%d") % 
-        (x_obj ? "true" : "false") %
-        (y_obj ? "true" : "false") %
-        x % y);
+    vlogf(LOG_BUG, format("Error in lowWeapSort(): x: %s, y: %s, x=%d, y=%d") %
+                     (x_obj ? "true" : "false") % (y_obj ? "true" : "false") %
+                     x % y);
     delete x_obj;
     delete y_obj;
     return false;
@@ -2184,12 +2249,11 @@ bool lowWeapSort::operator() (const int &x, const int &y) const
   return x_dam >= y_dam;
 }
 
-void TBeing::lowWeaps(const char *arg)
-{
+void TBeing::lowWeaps(const char* arg) {
   char buf2[255];
   bool blunt = FALSE, pierce = FALSE, slash = FALSE, arrow = false;
   int i;
-  std::vector<int>objList(0);
+  std::vector<int> objList(0);
   bool sort_val = false;
   sstring str;
 
@@ -2197,13 +2261,13 @@ void TBeing::lowWeaps(const char *arg)
   if (!*buf2) {
     sendTo("Syntax: low weapons <slash | blunt | pierce | arrow>\n\r");
     return;
-  } else if (is_abbrev(buf2,"pierce")) {
+  } else if (is_abbrev(buf2, "pierce")) {
     pierce = TRUE;
-  } else if (is_abbrev(buf2,"slash")) {
+  } else if (is_abbrev(buf2, "slash")) {
     slash = TRUE;
-  } else if (is_abbrev(buf2,"blunt")) {
+  } else if (is_abbrev(buf2, "blunt")) {
     blunt = TRUE;
-  } else if (is_abbrev(buf2,"arrow")) {
+  } else if (is_abbrev(buf2, "arrow")) {
     arrow = TRUE;
   } else {
     sendTo("Syntax: low weapons <slash | blunt | pierce | arrow>\n\r");
@@ -2217,17 +2281,17 @@ void TBeing::lowWeaps(const char *arg)
   // objbug, an unsorted list of objs rnums that are weapons of appropriate type
   unsigned int objnum;
   objList.clear();
-  for (objnum = 0;objnum < obj_index.size();objnum++) {
-    if (obj_index[objnum].armor != -97)    // not a weapon
+  for (objnum = 0; objnum < obj_index.size(); objnum++) {
+    if (obj_index[objnum].armor != -97)  // not a weapon
       continue;
-    TObj * obj = read_object(objnum, REAL);
+    TObj* obj = read_object(objnum, REAL);
     if (!obj) {
-      vlogf(LOG_BUG,"Error in lowObjs : lowWeps");
+      vlogf(LOG_BUG, "Error in lowObjs : lowWeps");
       return;
     }
 
-    TBaseWeapon * tbw = dynamic_cast<TBaseWeapon *>(obj);
-    TArrow      * arr = dynamic_cast<TArrow      *>(tbw);
+    TBaseWeapon* tbw = dynamic_cast<TBaseWeapon*>(obj);
+    TArrow* arr = dynamic_cast<TArrow*>(tbw);
 
     if (!tbw || (arrow && !arr)) {
       delete obj;
@@ -2235,11 +2299,10 @@ void TBeing::lowWeaps(const char *arg)
       continue;
     }
 
-    if (arrow ||
-        (blunt  && tbw->isBluntWeapon()) ||
-        (pierce && tbw->isPierceWeapon()) ||
-        (slash  && tbw->isSlashWeapon())) {
-      vlogf(LOG_SILENT, format("Pushing Back Object: %d:%d") %  objnum % obj->objVnum());
+    if (arrow || (blunt && tbw->isBluntWeapon()) ||
+        (pierce && tbw->isPierceWeapon()) || (slash && tbw->isSlashWeapon())) {
+      vlogf(LOG_SILENT,
+        format("Pushing Back Object: %d:%d") % objnum % obj->objVnum());
       objList.push_back(objnum);
     }
 
@@ -2255,25 +2318,27 @@ void TBeing::lowWeaps(const char *arg)
 
   // objList now holds a sorted list of objects
   // send that to user
-  str = "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
-  sprintf(buf2, "%5s %20s %4s: %4s %4s %5s %6s %5s %5s %5s %5s\n\r","vnum","obj name", 
-          "(#H)", "wgt", "vol", "level", "struct", "qual", "price", "recmd", "max #");
+  str =
+    "THIS INFORMATION IS CONSIDERED CLASSIFIED AND SECRET.  RELEASING IT TO "
+    "MORTALS\n\rIS GROUNDS FOR DEMOTION OR DELETION.\n\r";
+  sprintf(buf2, "%5s %20s %4s: %4s %4s %5s %6s %5s %5s %5s %5s\n\r", "vnum",
+    "obj name", "(#H)", "wgt", "vol", "level", "struct", "qual", "price",
+    "recmd", "max #");
   str += buf2;
   for (objnum = 0; objnum < objList.size(); objnum++) {
-    TBaseWeapon * weap = dynamic_cast<TBaseWeapon *>(read_object(objList[objnum], REAL));
+    TBaseWeapon* weap =
+      dynamic_cast<TBaseWeapon*>(read_object(objList[objnum], REAL));
     if (!(weap)) {
-      vlogf(LOG_BUG,format("Error in doLow::lowWeaps.  real obj %d") % objList[objnum]);
+      vlogf(LOG_BUG,
+        format("Error in doLow::lowWeaps.  real obj %d") % objList[objnum]);
       return;
     }
-    sprintf(buf2, "%s%5d %-20.20s %4s: %4.1f %4d %5.2f %6d %5d %6d %6d %4d%s\n\r", 
-      green(), weap->objVnum(),
-      weap->getNameNOC(this).c_str(),
-      (weap->isPaired()) ? "(2H)" : "    ",
-      weap->getWeight(), weap->getVolume(),
-      weap->damageLevel(), 
-      weap->getMaxStructPoints(),
-      weap->getCurSharp(),
-      weap->obj_flags.cost, weap->suggestedPrice(),
+    sprintf(buf2,
+      "%s%5d %-20.20s %4s: %4.1f %4d %5.2f %6d %5d %6d %6d %4d%s\n\r", green(),
+      weap->objVnum(), weap->getNameNOC(this).c_str(),
+      (weap->isPaired()) ? "(2H)" : "    ", weap->getWeight(),
+      weap->getVolume(), weap->damageLevel(), weap->getMaxStructPoints(),
+      weap->getCurSharp(), weap->obj_flags.cost, weap->suggestedPrice(),
       obj_index[weap->getItemIndex()].max_exist, norm());
 
     str += buf2;
@@ -2281,21 +2346,28 @@ void TBeing::lowWeaps(const char *arg)
       if (weap->affected[i].location == APPLY_NONE)
         continue;
       if (weap->affected[i].location == APPLY_SPELL) {
-        sprintf(buf2,"   %s%s by %ld%s", red(),
-          discArray[weap->affected[i].modifier]->name, weap->affected[i].modifier2, norm());
+        sprintf(buf2, "   %s%s by %ld%s", red(),
+          discArray[weap->affected[i].modifier]->name,
+          weap->affected[i].modifier2, norm());
       } else if (weap->affected[i].location == APPLY_DISCIPLINE) {
-        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[weap->affected[i].location].name, discNames[weap->affected[i].modifier].name, weap->affected[i].modifier2, norm());
+        sprintf(buf2, "   %s%s: %s by %ld%s", red(),
+          apply_types[weap->affected[i].location].name,
+          discNames[weap->affected[i].modifier].name,
+          weap->affected[i].modifier2, norm());
       } else if (weap->affected[i].location == APPLY_IMMUNITY) {
-        sprintf(buf2,"   %s%s: %s by %ld%s",red(),apply_types[weap->affected[i].location].name,
-          immunity_names[weap->affected[i].modifier], weap->affected[i].modifier2, norm());
+        sprintf(buf2, "   %s%s: %s by %ld%s", red(),
+          apply_types[weap->affected[i].location].name,
+          immunity_names[weap->affected[i].modifier],
+          weap->affected[i].modifier2, norm());
       } else {
-       // doesnt seem to do anything cept spell effect but never know
+        // doesnt seem to do anything cept spell effect but never know
         if ((weap->affected[i].location == APPLY_SPELL) ||
             (weap->affected[i].location == APPLY_DISCIPLINE) ||
             (weap->affected[i].location == APPLY_IMMUNITY) ||
             (weap->affected[i].location == APPLY_SPELL_EFFECT))
           str += red();
-        sprintf(buf2,"   %s by %ld",apply_types[weap->affected[i].location].name,
+        sprintf(buf2, "   %s by %ld",
+          apply_types[weap->affected[i].location].name,
           weap->affected[i].modifier);
         if ((weap->affected[i].location == APPLY_SPELL) ||
             (weap->affected[i].location == APPLY_DISCIPLINE) ||
@@ -2312,8 +2384,7 @@ void TBeing::lowWeaps(const char *arg)
   desc->page_string(str);
 }
 
-int getSpellCasttime(spellNumT spell)
-{
+int getSpellCasttime(spellNumT spell) {
   int durat = discArray[spell]->lag;
   // tasked spells take an extra round, so account for this
   if (discArray[spell]->comp_types & SPELL_TASKED)
@@ -2324,8 +2395,7 @@ int getSpellCasttime(spellNumT spell)
 // returns the cost in talens for a spell cast at level and learning
 // for the most part, semi-arbitrary
 // it presumes we are calling this for objects
-int getSpellCost(spellNumT spell, int level, int learning)
-{
+int getSpellCost(spellNumT spell, int level, int learning) {
   if (spell < MIN_SPELL || spell >= MAX_SKILL || !discArray[spell])
     return 0;
 
@@ -2333,13 +2403,13 @@ int getSpellCost(spellNumT spell, int level, int learning)
   // since it's an object, treat adv_learn=0
   int min_lev, max_lev;
   getSkillLevelRange(spell, min_lev, max_lev, 0);
-  level = min(max(level, min_lev), max_lev); 
+  level = min(max(level, min_lev), max_lev);
 
   // calculate how long it takes to cast normally
   int durat = getSpellCasttime(spell);
 
   // C.f. the balancing notes for why this is the way it is
-  int value = (int) (level * level * 1.5 * durat / 50);
+  int value = (int)(level * level * 1.5 * durat / 50);
   value = max(value, 10);
 
   // discount defective items

@@ -9,23 +9,23 @@
 
 #include "obj.h"
 
-
 class TOpal : public TObj {
   private:
     int psSize;
     int psStrength;
     int psMana;
     int psFails;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
-    virtual int objectSell(TBeing *, TMonster *);
+    virtual void getFourValues(int*, int*, int*, int*) const;
+    virtual int objectSell(TBeing*, TMonster*);
     virtual sstring statObjInfo() const;
-    virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual void powerstoneCheck(TOpal **);
-    virtual int powerstoneMe(TBeing *, int, short);
+    virtual void describeObjectSpecifics(const TBeing*) const;
+    virtual void powerstoneCheck(TOpal**);
+    virtual int powerstoneMe(TBeing*, int, short);
     virtual itemTypeT itemType() const { return ITEM_OPAL; }
-    virtual sstring compareMeAgainst(TBeing *, TObj *);
+    virtual sstring compareMeAgainst(TBeing*, TObj*);
     virtual int suggestedPrice() const;
     virtual void lowCheck();
 
@@ -40,9 +40,7 @@ class TOpal : public TObj {
     void psSetCarats(int num);
 
     TOpal();
-    TOpal(const TOpal &a);
-    TOpal & operator=(const TOpal &a);
+    TOpal(const TOpal& a);
+    TOpal& operator=(const TOpal& a);
     virtual ~TOpal();
 };
-
-

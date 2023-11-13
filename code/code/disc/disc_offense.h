@@ -3,20 +3,16 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDOffense : public CDiscipline
-{
-public:
+class CDOffense : public CDiscipline {
+  public:
     CSkill skAdvancedOffense;
     CSkill skInevitability;
 
     CDOffense();
-    CDOffense(const CDOffense &a);
-    CDOffense & operator=(const CDOffense &a);
+    CDOffense(const CDOffense& a);
+    CDOffense& operator=(const CDOffense& a);
     virtual ~CDOffense();
-    virtual CDOffense * cloneMe() { return new CDOffense(*this); }
+    virtual CDOffense* cloneMe() { return new CDOffense(*this); }
 
-    bool isFast(){ return true; }
-
+    bool isFast() { return true; }
 };
-
-

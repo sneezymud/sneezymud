@@ -15,24 +15,21 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
-
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDFAttacks : public CDiscipline
-{
-public:
+class CDFAttacks : public CDiscipline {
+  public:
     CSkill skQuiveringPalm;
     CSkill skCriticalHitting;
 
     CDFAttacks();
-    CDFAttacks(const CDFAttacks &a);
-    CDFAttacks & operator=(const CDFAttacks &a);
+    CDFAttacks(const CDFAttacks& a);
+    CDFAttacks& operator=(const CDFAttacks& a);
     virtual ~CDFAttacks();
-    virtual CDFAttacks * cloneMe();
+    virtual CDFAttacks* cloneMe();
 
-private:
+  private:
 };

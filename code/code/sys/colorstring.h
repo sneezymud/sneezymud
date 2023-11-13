@@ -6,7 +6,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include "ansi.h"
@@ -16,13 +15,15 @@ class TBeing;
 class TThing;
 class Descriptor;
 
-sstring stripColorCodes(const sstring &s);
+sstring stripColorCodes(const sstring& s);
 
-bool hasColorStrings(const TBeing *, const sstring &, int);
+bool hasColorStrings(const TBeing*, const sstring&, int);
 
-sstring addNameToBuf(const TBeing *, const Descriptor *, const TThing *, const sstring &, colorTypeT);
+sstring addNameToBuf(const TBeing*, const Descriptor*, const TThing*,
+  const sstring&, colorTypeT);
 
-sstring nameColorString(TBeing *, Descriptor *, const sstring &, int *, colorTypeT, bool = false);
+sstring nameColorString(TBeing*, Descriptor*, const sstring&, int*, colorTypeT,
+  bool = false);
 
-const sstring colorString(const TBeing *, const Descriptor *, const sstring &, int *, colorTypeT, bool, bool = false);
-
+const sstring colorString(const TBeing*, const Descriptor*, const sstring&,
+  int*, colorTypeT, bool, bool = false);

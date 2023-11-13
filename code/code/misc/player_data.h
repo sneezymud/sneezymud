@@ -6,4 +6,5 @@
 class sstring;
 class charFile;
 
-bool load_char(const sstring &name, charFile *char_element, std::unique_ptr<IDatabase> dbase = nullptr);
+bool load_char(const sstring& name, charFile* char_element,
+  std::unique_ptr<IDatabase> dbase = nullptr);

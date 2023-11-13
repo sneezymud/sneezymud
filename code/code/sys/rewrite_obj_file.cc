@@ -3,7 +3,7 @@
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "rewrite_obj_file.cc" - Some optional tack on code that
 //       loads all the objects, and saves tehm out.
-//        
+//
 //       The assumption here is that something was "corrected" during the
 //       loading, and now we are saving it.
 //
@@ -15,19 +15,18 @@
 #include "extern.h"
 #include "obj_base_cup.h"
 
-void rewrite_obj_file()
-{
+void rewrite_obj_file() {
   unsigned int iter;
-  FILE *fp;
+  FILE* fp;
   fp = fopen("tiny_new.obj", "a+");
   if (!fp)
     return;
   for (iter = 0; iter < obj_index.size(); iter++) {
-    TObj * obj = read_object(iter, REAL);
+    TObj* obj = read_object(iter, REAL);
     if (!obj)
       continue;
 
-    // fix problems...
+      // fix problems...
 #if 0
     // remove hit&dam
     int i;
@@ -38,7 +37,7 @@ void rewrite_obj_file()
         obj->affected[i].location = APPLY_NONE;
         obj->affected[i].modifier = 0;
       }
-    }    
+    }
 
 #endif
 #if 0
@@ -68,7 +67,7 @@ void rewrite_obj_file()
     }
 
     // drink containers : get rid of weight of the liquid in it
-    TBaseCup *td = dynamic_cast<TBaseCup *>(obj);
+    TBaseCup* td = dynamic_cast<TBaseCup*>(obj);
     if (td) {
       td->setWeight(obj_index[td->getItemIndex()].weight);
     }
@@ -76,11 +75,11 @@ void rewrite_obj_file()
     // statues, otherobj, etc that allow light and are glow get extra effects
     // this undoes some things done in checkObjStats()
     if (obj->isObjStat(ITEM_GLOW)) {
-      obj->canBeSeen += (1 + obj->getVolume()/1500);
+      obj->canBeSeen += (1 + obj->getVolume() / 1500);
       int i;
-      int lamt = 1 + obj->getVolume()/6000;
-      for (i=0; i < MAX_OBJ_AFFECT; i++ ) {
-        if (obj->affected[i].location == APPLY_LIGHT && 
+      int lamt = 1 + obj->getVolume() / 6000;
+      for (i = 0; i < MAX_OBJ_AFFECT; i++) {
+        if (obj->affected[i].location == APPLY_LIGHT &&
             obj->affected[i].modifier == lamt) {
           obj->affected[i].location = APPLY_NONE;
           obj->affected[i].modifier = 0;
@@ -89,11 +88,11 @@ void rewrite_obj_file()
       }
     }
     if (obj->isObjStat(ITEM_SHADOWY)) {
-      obj->canBeSeen -= (1 + obj->getVolume()/1500);
+      obj->canBeSeen -= (1 + obj->getVolume() / 1500);
       int i;
-      int lamt = 1 + obj->getVolume()/6000;
-      for (i=0; i < MAX_OBJ_AFFECT; i++ ) {
-        if (obj->affected[i].location == APPLY_LIGHT && 
+      int lamt = 1 + obj->getVolume() / 6000;
+      for (i = 0; i < MAX_OBJ_AFFECT; i++) {
+        if (obj->affected[i].location == APPLY_LIGHT &&
             obj->affected[i].modifier == -lamt) {
           obj->affected[i].location = APPLY_NONE;
           obj->affected[i].modifier = 0;

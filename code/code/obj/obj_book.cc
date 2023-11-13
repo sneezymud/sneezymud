@@ -7,47 +7,34 @@
 #include "obj_book.h"
 #include "extern.h"
 
-TBook::TBook() :
-  TObj()
-{
-}
+TBook::TBook() : TObj() {}
 
-TBook::TBook(const TBook &a) :
-  TObj(a)
-{
-}
+TBook::TBook(const TBook& a) : TObj(a) {}
 
-TBook & TBook::operator=(const TBook &a)
-{
-  if (this == &a) return *this;
+TBook& TBook::operator=(const TBook& a) {
+  if (this == &a)
+    return *this;
   TObj::operator=(a);
   return *this;
 }
 
-TBook::~TBook()
-{
-}
+TBook::~TBook() {}
 
-void TBook::assignFourValues(int, int, int, int)
-{
-}
+void TBook::assignFourValues(int, int, int, int) {}
 
-void TBook::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
+void TBook::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
   *x1 = 0;
   *x2 = 0;
   *x3 = 0;
   *x4 = 0;
 }
 
-sstring TBook::statObjInfo() const
-{
+sstring TBook::statObjInfo() const {
   sstring a("");
   return a;
 }
 
-void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
-{
+void TBook::lookAtObj(TBeing* ch, const char* arg, showModeT) const {
   char the_filebuf[256];
   char buf[MAX_STRING_LENGTH];
   int vnum, section = 0;
@@ -58,8 +45,8 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
   sprintf(buf, "With curious eyes, you begin to read the book entitled :\n\r");
   sprintf(buf + strlen(buf), "%s...\n\r", sstring(getName()).cap().c_str());
 
-// spam reduction
-//  act("$n begins reading $p...", TRUE, ch, this, 0, TO_ROOM);
+  // spam reduction
+  //  act("$n begins reading $p...", TRUE, ch, this, 0, TO_ROOM);
 
   vnum = obj_index[getItemIndex()].virt;
   // in next sscanf, buf eats 'words' like 'sect', 'section', 'chapter'
@@ -94,7 +81,7 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
       return;
     }
     sprintf(buf + strlen(buf), "Apparently, %s doesn't have that section.\n\r",
-           getName().c_str());
+      getName().c_str());
     ch->desc->page_string(buf);
     return;
   } else {
@@ -126,10 +113,10 @@ void TBook::lookAtObj(TBeing *ch, const char *arg, showModeT) const
       }
       return;
     }
-    sprintf(buf + strlen(buf), "Apparently, %s is blank.\n\r", getName().c_str());
-    vlogf(LOG_FILE, format("Object %d has no book file!") %  vnum);
+    sprintf(buf + strlen(buf), "Apparently, %s is blank.\n\r",
+      getName().c_str());
+    vlogf(LOG_FILE, format("Object %d has no book file!") % vnum);
     ch->desc->page_string(buf);
     return;
   }
 }
-

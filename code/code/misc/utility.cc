@@ -60,11 +60,9 @@ pid_t vfork(void);
 #include "obj_seethru.h"
 #include "corporation.h"
 
-bool TBeing::canSeeWho(const TBeing *o) const
-{
+bool TBeing::canSeeWho(const TBeing* o) const {
   if (inRoom() < 0 || o->inRoom() < 0 || !o || !o->roomp)
     return FALSE;
-
 
   int illum = o->roomp->getLight();
 
@@ -75,26 +73,27 @@ bool TBeing::canSeeWho(const TBeing *o) const
       return TRUE;
   }
   if ((GetMaxLevel() < o->getInvisLevel()) && (o->isImmortal()))
-    return FALSE;   // invis gods 
+    return FALSE;  // invis gods
 
   if (!isImmortal() && (o->getInvisLevel() >= GOD_LEVEL1))
-    return FALSE;   // link deads 
+    return FALSE;  // link deads
 
-  if (o->isAffected(AFF_INVISIBLE) || (illum < 14 && o->isAffected(AFF_SHADOW_WALK))) {
+  if (o->isAffected(AFF_INVISIBLE) ||
+      (illum < 14 && o->isAffected(AFF_SHADOW_WALK))) {
     if (o->isImmortal())
       return FALSE;
     if (!isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
-  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY))
+  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) &&
+      !isAffected(AFF_CLARITY))
     return FALSE;
 
   return TRUE;
 }
 
-bool exit_ok(roomDirData *exit, TRoom **rpp)
-{
-  TRoom *rp;
+bool exit_ok(roomDirData* exit, TRoom** rpp) {
+  TRoom* rp;
 
   if (!rpp)
     rpp = &rp;
@@ -106,26 +105,23 @@ bool exit_ok(roomDirData *exit, TRoom **rpp)
   return ((*rpp = real_roomp(exit->to_room)) != NULL);
 }
 
-int TMonster::mobVnum() const
-{
+int TMonster::mobVnum() const {
   if (number < 0)
     return number;
 
   return (mob_index[getMobIndex()].virt);
 }
 
-// creates a random number in interval [from;to] 
-int number(int from, int to)
-{
-  if (to - from + 1) 
+// creates a random number in interval [from;to]
+int number(int from, int to) {
+  if (to - from + 1)
     return ((rand() % (to - from + 1)) + from);
   else
     return (from);
 }
 
-// simulates dice roll 
-int dice(int number, int size)
-{
+// simulates dice roll
+int dice(int number, int size) {
   int r;
   int sum = 0;
 
@@ -136,9 +132,9 @@ int dice(int number, int size)
   if (!size)
     return (0);
 
-  for (r = 1; r <= number; r++) 
+  for (r = 1; r <= number; r++)
     sum += ((rand() % size) + 1);
-  
+
   return (sum);
 }
 
@@ -146,10 +142,10 @@ int dice(int number, int size)
 // a random roll is greater equal to it.  ie, fract*100 percent chance of true.
 // this is useful when we want a whole number, so we give a chance of
 // +1 if there is a fraction
-bool roll_chance(double fract){
-  fract*=100.0;
+bool roll_chance(double fract) {
+  fract *= 100.0;
 
-  if(fract >= ::number(0,100)){
+  if (fract >= ::number(0, 100)) {
     return TRUE;
   }
   return FALSE;
@@ -158,9 +154,7 @@ bool roll_chance(double fract){
 // Determine if something with a given percent chance of happening (represented
 // as a whole number) should happen. E.g. percentChance(5) = true means an
 // attempt with a 5% chance of success was successful.
-bool percentChance(int percent) {
-  return ::number(0, 99) < percent;
-}
+bool percentChance(int percent) { return ::number(0, 99) < percent; }
 
 // Determine if something with a given percent chance of happening (represented
 // as a decimal number) should happen. E.g. percentChance(4.65) = true means an
@@ -169,11 +163,7 @@ bool percentChance(double percent) {
   return ::number(0, 9'999) < percent * 100.0;
 }
 
-
-
-
-time_info_data *TBeing::age() const
-{
+time_info_data* TBeing::age() const {
   static time_info_data player_age;
 
   GameTime::mudTimePassed(time(0), player.time->birth, &player_age);
@@ -183,25 +173,25 @@ time_info_data *TBeing::age() const
 
   // this is for the psionics skill mind preservation
   // reduces age by up to 20%
-  if(isPc() && discs && doesKnowSkill(SKILL_MIND_PRESERVATION)){
-    player_age.year = (short)((float)player_age.year * (float)
-              ((100.0 - (getSkillValue(SKILL_MIND_PRESERVATION)/5.0))/100.0));
+  if (isPc() && discs && doesKnowSkill(SKILL_MIND_PRESERVATION)) {
+    player_age.year =
+      (short)((float)player_age.year *
+              (float)((100.0 - (getSkillValue(SKILL_MIND_PRESERVATION) / 5.0)) /
+                      100.0));
   }
 
   return (&player_age);
 }
 
-bool TBeing::inGroup(const TBeing &tbt) const
-{
-  if ((this == &tbt) || 
-      (&tbt == dynamic_cast<const TBeing *>(riding)) || 
-      (&tbt == dynamic_cast<const TBeing *>(rider)))
+bool TBeing::inGroup(const TBeing& tbt) const {
+  if ((this == &tbt) || (&tbt == dynamic_cast<const TBeing*>(riding)) ||
+      (&tbt == dynamic_cast<const TBeing*>(rider)))
     return TRUE;
 
   if (!isAffected(AFF_GROUP))
     return FALSE;
 
-  TBeing *tbt2 = dynamic_cast<TBeing *>(tbt.rider);
+  TBeing* tbt2 = dynamic_cast<TBeing*>(tbt.rider);
   if (tbt2 && inGroup(*tbt2))
     return TRUE;
 
@@ -224,27 +214,26 @@ bool TBeing::inGroup(const TBeing &tbt) const
   return FALSE;
 }
 
-unsigned int TBeing::numberInGroupInRoom() const
-{
-  TThing *t=NULL;
+unsigned int TBeing::numberInGroupInRoom() const {
+  TThing* t = NULL;
   unsigned int count = 0;
 
-  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-    TBeing *tbt = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = roomp->stuff.begin();
+       it != roomp->stuff.end() && (t = *it); ++it) {
+    TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (tbt && inGroup(*tbt))
       count++;
   }
   return count;
 }
 
-bool getall(const char *name, char *newname)
-{
+bool getall(const char* name, char* newname) {
   char arg[40], tmpname[80], otname[80];
   char prd;
 
   *arg = *tmpname = *otname = '\0';
 
-  sscanf(name, "%79s ", otname);	
+  sscanf(name, "%79s ", otname);
   if (strlen(otname) < 5)
     return FALSE;
 
@@ -265,8 +254,7 @@ bool getall(const char *name, char *newname)
   return TRUE;
 }
 
-int getabunch(const char *name, char *newname)
-{
+int getabunch(const char* name, char* newname) {
   int num = 0;
   char tmpname[80] = "\0";
 
@@ -288,29 +276,31 @@ int getabunch(const char *name, char *newname)
   return (num);
 }
 
-int TMonster::standUp()
-{
-  if (((getPosition() < POSITION_STANDING) && 
-         (getPosition() > POSITION_STUNNED)) || 
-          ((getPosition() > POSITION_STUNNED) && riding && 
-                !dynamic_cast<TBeing *>(riding))) {
+int TMonster::standUp() {
+  if (((getPosition() < POSITION_STANDING) &&
+        (getPosition() > POSITION_STUNNED)) ||
+      ((getPosition() > POSITION_STUNNED) && riding &&
+        !dynamic_cast<TBeing*>(riding))) {
     if (isFourLegged()) {
       if (getHit() > (hitLimit() / 2))
-        act("$n quickly rolls over and leaps to $s feet.", 
-               TRUE, this, 0, 0, TO_ROOM);
+        act("$n quickly rolls over and leaps to $s feet.", TRUE, this, 0, 0,
+          TO_ROOM);
       else if (getHit() > (hitLimit() / 6))
-        act("$n slowly rolls over and leaps to $s feet.", 
-               TRUE, this, 0, 0, TO_ROOM);
+        act("$n slowly rolls over and leaps to $s feet.", TRUE, this, 0, 0,
+          TO_ROOM);
       else
-        act("$n rolls over and gets to $s feet very slowly.", 
-               TRUE, this, 0, 0, TO_ROOM);
-    } else if (riding && !dynamic_cast<TBeing *> (riding)) {
+        act("$n rolls over and gets to $s feet very slowly.", TRUE, this, 0, 0,
+          TO_ROOM);
+    } else if (riding && !dynamic_cast<TBeing*>(riding)) {
       if (getHit() > (hitLimit() / 2))
-        act("$n quickly rises off $p onto $s feet.", 1, this, riding, 0, TO_ROOM);
+        act("$n quickly rises off $p onto $s feet.", 1, this, riding, 0,
+          TO_ROOM);
       else if (getHit() > (hitLimit() / 6))
-        act("$n rolls off $p and gets on $s feet.", 1, this, riding, 0, TO_ROOM);
+        act("$n rolls off $p and gets on $s feet.", 1, this, riding, 0,
+          TO_ROOM);
       else
-        act("$n slowly rolls off $p and gets on $s feet.", 1, this, riding, 0, TO_ROOM);
+        act("$n slowly rolls off $p and gets on $s feet.", 1, this, riding, 0,
+          TO_ROOM);
     } else {
       if (getHit() > (hitLimit() / 2))
         act("$n quickly stands up.", 1, this, 0, 0, TO_ROOM);
@@ -349,7 +339,6 @@ int TMonster::standUp()
   return FALSE;
 }
 
-
 #if 0
 bool TThing::hasObject(int ob_num)
 {
@@ -375,8 +364,7 @@ bool TThing::hasObject(int ob_num)
 }
 #endif
 
-int roomOfObject(const TThing *t)
-{
+int roomOfObject(const TThing* t) {
   if (t->in_room != Room::NOWHERE)
     return t->in_room;
   else if (t->equippedBy)
@@ -392,15 +380,14 @@ int roomOfObject(const TThing *t)
 }
 
 // searches recursively and finds character holding the thing
-TThing *TThing::thingHolding() const
-{
+TThing* TThing::thingHolding() const {
   if (in_room != Room::NOWHERE)
     return NULL;
   else if (equippedBy)
     return equippedBy;
   else if (stuckIn)
     return stuckIn;
-  else if (parent && dynamic_cast<TBeing *>(parent))
+  else if (parent && dynamic_cast<TBeing*>(parent))
     return parent;
   else if (parent)
     return parent->thingHolding();
@@ -410,26 +397,24 @@ TThing *TThing::thingHolding() const
     return 0;
 }
 
-int RecCompObjNum(const TObj *o, int obj_num)
-{
+int RecCompObjNum(const TObj* o, int obj_num) {
   int total = 0;
-  TThing *i=NULL;
+  TThing* i = NULL;
 
   if (obj_index[o->getItemIndex()].virt == obj_num)
     total = 1;
 
-  for(StuffIter it=o->stuff.begin();it!=o->stuff.end() && (i=*it);++it) {
-    TObj *to = dynamic_cast<TObj *>(i);
+  for (StuffIter it = o->stuff.begin(); it != o->stuff.end() && (i = *it);
+       ++it) {
+    TObj* to = dynamic_cast<TObj*>(i);
     if (to)
       total += RecCompObjNum(to, obj_num);
   }
 
   return (total);
-
 }
 
-bool TBeing::nomagic(const sstring &msg_ch, const sstring &msg_rm) const
-{
+bool TBeing::nomagic(const sstring& msg_ch, const sstring& msg_rm) const {
   if (isImmortal())
     return FALSE;
 
@@ -446,30 +431,27 @@ bool TBeing::nomagic(const sstring &msg_ch, const sstring &msg_rm) const
 }
 
 // please note, this ignores riders
-int MobCountInRoom(const StuffList list)
-{
-  int i=0;
-  
-  for(StuffIter it=list.begin();it!=list.end();++it){
-    if (dynamic_cast<const TBeing *>(*it))
+int MobCountInRoom(const StuffList list) {
+  int i = 0;
+
+  for (StuffIter it = list.begin(); it != list.end(); ++it) {
+    if (dynamic_cast<const TBeing*>(*it))
       i++;
   }
   return i;
 }
 
-int GetApprox(int num, int perc)
-{
-  return (int) (GetApprox((double) num, perc) + 0.5);
+int GetApprox(int num, int perc) {
+  return (int)(GetApprox((double)num, perc) + 0.5);
 }
 
-double GetApprox(double num, int perc)
-{
-// perc is 0-100 represents how well elarned 
-// num is actual number 
+double GetApprox(double num, int perc) {
+  // perc is 0-100 represents how well elarned
+  // num is actual number
 
   float adj = 100.0 - perc;
-  adj = max((float) 5.0, adj);
-  // the better learned they are, the closer adj will be to 0 
+  adj = max((float)5.0, adj);
+  // the better learned they are, the closer adj will be to 0
 
   // we should be +- 20% at most
   // adj is in range [5-100]
@@ -481,16 +463,15 @@ double GetApprox(double num, int perc)
 
   // number can't do double, so scale by 100
   max_adj *= 100.0;
-  double act_adj = ::number((int) -max_adj, (int) max_adj);
-  act_adj /= 100.0; 
+  double act_adj = ::number((int)-max_adj, (int)max_adj);
+  act_adj /= 100.0;
 
   double fnum = num + act_adj;
 
   return fnum;
 }
 
-int TBeing::numClasses() const
-{
+int TBeing::numClasses() const {
   int x = 0;
   classIndT i;
 
@@ -500,15 +481,14 @@ int TBeing::numClasses() const
   return x;
 }
 
-void TPerson::logf(const char * tString, ...)
-{
+void TPerson::logf(const char* tString, ...) {
   if (!tLogFile)
     return;
 
   va_list tAp;
-  char    tBuffer[256];
-  struct tm * tTime;
-  time_t      tCTime;
+  char tBuffer[256];
+  struct tm* tTime;
+  time_t tCTime;
 
   va_start(tAp, tString);
   vsnprintf(tBuffer, sizeof(tBuffer), tString, tAp);
@@ -518,18 +498,16 @@ void TPerson::logf(const char * tString, ...)
   tTime = localtime(&tCTime);
 
   fprintf(tLogFile, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
-          tTime->tm_year + 1900, tTime->tm_mon + 1, tTime->tm_mday,
-          tTime->tm_hour, tTime->tm_min, tTime->tm_sec, tBuffer);
+    tTime->tm_year + 1900, tTime->tm_mon + 1, tTime->tm_mday, tTime->tm_hour,
+    tTime->tm_min, tTime->tm_sec, tBuffer);
   fflush(tLogFile);
 }
 
-
-void vlogf_trace(logTypeT tError, const sstring &errorMsg)
-{
+void vlogf_trace(logTypeT tError, const sstring& errorMsg) {
 #ifdef __GLIBC__
-  void *trace[5];
+  void* trace[5];
   size_t cTrace;
-  char **trace_symbols;
+  char** trace_symbols;
 #endif
 
   vlogf(tError, errorMsg);
@@ -538,39 +516,38 @@ void vlogf_trace(logTypeT tError, const sstring &errorMsg)
   cTrace = backtrace(trace, cElements(trace));
   trace_symbols = backtrace_symbols(trace, cTrace);
 
-  for(size_t iFrame= 0;iFrame < cTrace; iFrame++)
+  for (size_t iFrame = 0; iFrame < cTrace; iFrame++)
     vlogf(tError, format("\tat function: %s") % trace_symbols[iFrame]);
 
   free(trace_symbols);
 #endif
 }
 
-sstring getLogType(logTypeT tError)
-{
+sstring getLogType(logTypeT tError) {
   sstring buf, name;
 
-  switch(tError){
+  switch (tError) {
     case LOG_LOW:
       buf = "L.O.W. Error";
       break;
-    case LOG_MISC: 
+    case LOG_MISC:
       buf = "Misc";
       break;
     case LOG_FILE:
       buf = "File I/O";
-      break; 
+      break;
     case LOG_BUG:
       buf = "BUG";
-      break;  
+      break;
     case LOG_PROC:
       buf = "Proc";
-      break; 
+      break;
     case LOG_PIO:
       buf = "Player I/O";
-      break;  
+      break;
     case LOG_IIO:
       buf = "Imm I/O";
-      break;   
+      break;
     case LOG_CLIENT:
       buf = "Client";
       break;
@@ -579,10 +556,10 @@ sstring getLogType(logTypeT tError)
       break;
     case LOG_FACT:
       buf = "Faction";
-      break;  
+      break;
     case LOG_MOB:
       buf = "Mob";
-      break;   
+      break;
     case LOG_MOB_AI:
       buf = "Mob AI";
       break;
@@ -591,10 +568,10 @@ sstring getLogType(logTypeT tError)
       break;
     case LOG_OBJ:
       buf = "Object";
-      break;   
+      break;
     case LOG_EDIT:
       buf = "Editor";
-      break;  
+      break;
     case LOG_CHEAT:
       buf = "Cheating";
       break;
@@ -645,32 +622,31 @@ sstring getLogType(logTypeT tError)
   return buf;
 }
 
-sstring getLogPlayer(logTypeT tError)
-{
+sstring getLogPlayer(logTypeT tError) {
   sstring buf, name;
 
-  switch(tError){
+  switch (tError) {
     case LOG_LOW:
       buf = "L.O.W. Error";
       break;
-    case LOG_MISC: 
+    case LOG_MISC:
       buf = "Misc";
       break;
     case LOG_FILE:
       buf = "File I/O";
-      break; 
+      break;
     case LOG_BUG:
       buf = "BUG";
-      break;  
+      break;
     case LOG_PROC:
       buf = "Proc";
-      break; 
+      break;
     case LOG_PIO:
       buf = "Player I/O";
-      break;  
+      break;
     case LOG_IIO:
       buf = "Imm I/O";
-      break;   
+      break;
     case LOG_CLIENT:
       buf = "Client";
       break;
@@ -679,10 +655,10 @@ sstring getLogPlayer(logTypeT tError)
       break;
     case LOG_FACT:
       buf = "Faction";
-      break;  
+      break;
     case LOG_MOB:
       buf = "Mob";
-      break;   
+      break;
     case LOG_MOB_AI:
       buf = "Mob AI";
       break;
@@ -691,10 +667,10 @@ sstring getLogPlayer(logTypeT tError)
       break;
     case LOG_OBJ:
       buf = "Object";
-      break;   
+      break;
     case LOG_EDIT:
       buf = "Editor";
-      break;  
+      break;
     case LOG_CHEAT:
       buf = "Cheating";
       break;
@@ -745,30 +721,27 @@ sstring getLogPlayer(logTypeT tError)
   return name;
 }
 
-
-
-void vlogf(logTypeT tError, const sstring &errorMsg)
-{
+void vlogf(logTypeT tError, const sstring& errorMsg) {
   sstring buf, name;
-  Descriptor *i;
+  Descriptor* i;
   time_t lt;
-  struct tm *this_time;
+  struct tm* this_time;
 
   lt = time(0);
   this_time = localtime(&lt);
 
-  buf=getLogType(tError);
-  name=getLogPlayer(tError);
+  buf = getLogType(tError);
+  name = getLogPlayer(tError);
 
-  if(buf=="")
-    buf=errorMsg;
+  if (buf == "")
+    buf = errorMsg;
   else
     buf = format("%s: %s") % buf % errorMsg;
 
   fprintf(stderr, "%4.4d|%2.2d%2.2d|%2.2d:%2.2d:%2.2d :: %s\n",
-          this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
-          this_time->tm_hour, this_time->tm_min, this_time->tm_sec, buf.c_str());
-  
+    this_time->tm_year + 1900, this_time->tm_mon + 1, this_time->tm_mday,
+    this_time->tm_hour, this_time->tm_min, this_time->tm_sec, buf.c_str());
+
   if (tError >= 0) {
     for (i = descriptor_list; i; i = i->next) {
       if (i->connected)
@@ -782,8 +755,8 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
 
       // if (tError == LOG_LOW && !i->character->hasWizPower(POWER_SETSEV_IMM))
       //   continue;
-      
-      if (!IS_SET(i->severity, 1<<tError))
+
+      if (!IS_SET(i->severity, 1 << tError))
         continue;
 
       if (!name.empty() && name != i->character->name)
@@ -791,20 +764,19 @@ void vlogf(logTypeT tError, const sstring &errorMsg)
 
       if (i->character->isPlayerAction(PLR_MAILING | PLR_BUGGING))
         continue;
- 
+
       i->output.push(CommPtr(new SystemLogComm(lt, tError, errorMsg)));
     }
   }
 }
 
-sstring SystemLogComm::getText(){
+sstring SystemLogComm::getText() {
   return format("// %s: %s\n\r") % getLogType(logtype) % text;
 }
 
-void dirwalk(const sstring &dir, void (*fcn) (const char *))
-{
-  struct dirent *dp;
-  DIR *dfd;
+void dirwalk(const sstring& dir, void (*fcn)(const char*)) {
+  struct dirent* dp;
+  DIR* dfd;
 
   if (dir.empty() || !(dfd = opendir(dir.c_str()))) {
     vlogf(LOG_BUG, format("Unable to dirwalk directory %s") % dir);
@@ -813,16 +785,15 @@ void dirwalk(const sstring &dir, void (*fcn) (const char *))
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
-    (*fcn) (dp->d_name);
+    (*fcn)(dp->d_name);
   }
   closedir(dfd);
 }
 
-void dirwalk_fullname(const char *dir, void (*fcn) (const char *))
-{
+void dirwalk_fullname(const char* dir, void (*fcn)(const char*)) {
   char filepath[1024];
-  struct dirent *dp;
-  DIR *dfd;
+  struct dirent* dp;
+  DIR* dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
     vlogf(LOG_BUG, format("Unable to dirwalk directory %s") % dir);
@@ -832,17 +803,16 @@ void dirwalk_fullname(const char *dir, void (*fcn) (const char *))
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
     sprintf(filepath, "%s/%s", dir, dp->d_name);
-    (*fcn) (filepath);
+    (*fcn)(filepath);
   }
   closedir(dfd);
 }
 
-void dirwalk_subs_fullname(const char *dir, void (*fcn) (const char *))
-{
+void dirwalk_subs_fullname(const char* dir, void (*fcn)(const char*)) {
   char name[1024];
-  struct dirent *dp;
+  struct dirent* dp;
   struct stat stbuf;
-  DIR *dfd;
+  DIR* dfd;
 
   if (!dir || !(dfd = opendir(dir))) {
     vlogf(LOG_BUG, format("Unable to dirwalk_subs directory %s") % dir);
@@ -859,28 +829,27 @@ void dirwalk_subs_fullname(const char *dir, void (*fcn) (const char *))
   closedir(dfd);
 }
 
-bool TBeing::canSee(const TThing *t, infraTypeT infra) const
-{
+bool TBeing::canSee(const TThing* t, infraTypeT infra) const {
   mud_assert(t != NULL, "canSee with NULL t");
 
   return t->canSeeMe(this, infra);
 }
 
-bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
-{
-  TRoom *r;
+bool TBeing::canSeeMe(const TBeing* ch, infraTypeT infra) const {
+  TRoom* r;
 
   if (!(r = roomp)) {
-    if (parent) 
+    if (parent)
       r = parent->roomp;
     else {
-      vlogf(LOG_BUG, format("Thing (%s) has no rp pointer in TBeing::canSeeMe") % name);
+      vlogf(LOG_BUG,
+        format("Thing (%s) has no rp pointer in TBeing::canSeeMe") % name);
       return FALSE;
     }
   }
 
   // hide imms with invis level set, and linkdeads (L51)
-  if (ch->GetMaxLevel() < getInvisLevel()) 
+  if (ch->GetMaxLevel() < getInvisLevel())
     return FALSE;
 
   if (ch->isImmortal())
@@ -893,7 +862,8 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
 
   int illum = roomp->getLight();
 
-  if (isAffected(AFF_INVISIBLE) || (illum < 14 && isAffected(AFF_SHADOW_WALK))) {
+  if (isAffected(AFF_INVISIBLE) ||
+      (illum < 14 && isAffected(AFF_SHADOW_WALK))) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
@@ -925,8 +895,7 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
 
   if (infra && ch->isAffected(AFF_INFRAVISION)) {
     if (!isColdBlooded()) {
-
-      vision_adj += 2;   // basic assistance
+      vision_adj += 2;  // basic assistance
 
       // easier at night, harder at day
       if (outside()) {
@@ -934,7 +903,7 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
           vision_adj += 1;
         else if (GameTime::is_daytime())
           vision_adj -= 1;
-      } else   // indoors or underwater
+      } else  // indoors or underwater
         vision_adj += 1;
 
       if (roomp->isArcticSector())
@@ -953,9 +922,8 @@ bool TBeing::canSeeMe(const TBeing *ch, infraTypeT infra) const
   return FALSE;
 }
 
-bool TObj::canSeeMe(const TBeing *ch, infraTypeT) const
-{
-  TRoom *rp;
+bool TObj::canSeeMe(const TBeing* ch, infraTypeT) const {
+  TRoom* rp;
 
   if (ch->isImmortal())
     return TRUE;
@@ -969,9 +937,9 @@ bool TObj::canSeeMe(const TBeing *ch, infraTypeT) const
   if (room == Room::NOWHERE)
     room = ch->in_room;
 
-  if (!(rp = real_roomp(room))) 
+  if (!(rp = real_roomp(room)))
     return FALSE;
-  
+
   if (ch->isAffected(AFF_TRUE_SIGHT))
     return TRUE;
 
@@ -988,9 +956,12 @@ bool TObj::canSeeMe(const TBeing *ch, infraTypeT) const
     return TRUE;
 
   int s = ch->eyeSight(rp);
-  int mod = (((dynamic_cast<const TBeing *>(equippedBy) == ch) ? -7 : 
-         ((dynamic_cast<const TBeing *>(parent) == ch) ? -4 : 
-         ((dynamic_cast<const TBeing *>(stuckIn) == ch) ? -7 : 0))));
+  int mod =
+    (((dynamic_cast<const TBeing*>(equippedBy) == ch)
+        ? -7
+        : ((dynamic_cast<const TBeing*>(parent) == ch)
+              ? -4
+              : ((dynamic_cast<const TBeing*>(stuckIn) == ch) ? -7 : 0))));
   if (s >= (canBeSeen + mod))
     return TRUE;
 
@@ -1000,21 +971,16 @@ bool TObj::canSeeMe(const TBeing *ch, infraTypeT) const
   return false;
 }
 
-bool TSeeThru::canSeeMe(const TBeing *ch, infraTypeT infra) const
-{
+bool TSeeThru::canSeeMe(const TBeing* ch, infraTypeT infra) const {
   if (givesOutsideLight())
     return TRUE;
 
   return TObj::canSeeMe(ch, infra);
 }
 
-bool TThing::canSeeMe(const TBeing *, infraTypeT) const
-{
-  return FALSE;
-}
+bool TThing::canSeeMe(const TBeing*, infraTypeT) const { return FALSE; }
 
-bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
-{
+bool can_see_char_other_room(const TBeing* ch, TBeing* victim, TRoom*) {
   if (!victim || ch->in_room < 0 || victim->in_room < 0)
     return FALSE;
 
@@ -1031,7 +997,8 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
 
   int illum = victim->roomp->getLight();
 
-  if (victim->isAffected(AFF_INVISIBLE) || (illum < 14 && victim->isAffected(AFF_SHADOW_WALK))) {
+  if (victim->isAffected(AFF_INVISIBLE) ||
+      (illum < 14 && victim->isAffected(AFF_SHADOW_WALK))) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
       return FALSE;
   }
@@ -1049,7 +1016,8 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
 
   short sight = ch->eyeSight(victim->roomp);
 
-  if ((sight >= victim->visibility()) || victim->roomp->isRoomFlag(ROOM_ALWAYS_LIT))
+  if ((sight >= victim->visibility()) ||
+      victim->roomp->isRoomFlag(ROOM_ALWAYS_LIT))
     return TRUE;
   if (victim->getLight() > 0)
     return TRUE;
@@ -1062,14 +1030,12 @@ bool can_see_char_other_room(const TBeing *ch, TBeing *victim, TRoom *)
 }
 
 // disallow any bogus characters in automated system requests.
-//   this is intented to prevent 'hacking' 
-bool safe_to_be_in_system(const sstring &cp)
-{
+//   this is intented to prevent 'hacking'
+bool safe_to_be_in_system(const sstring& cp) {
   return (cp.find_first_of("\"';`", 0) == sstring::npos);
 }
 
-bool TBeing::makesNoise() const
-{
+bool TBeing::makesNoise() const {
   int n;
 
   if (isImmortal())
@@ -1077,7 +1043,7 @@ bool TBeing::makesNoise() const
 
   n = noise(this);
 
-  // The higher the noise, the better chance <= 80 fails. - Russ 
+  // The higher the noise, the better chance <= 80 fails. - Russ
   if (n <= 1)
     return FALSE;
 
@@ -1087,23 +1053,21 @@ bool TBeing::makesNoise() const
     return TRUE;
 }
 
-// vsystem - do a system command without duplicating the core image. 
+// vsystem - do a system command without duplicating the core image.
 //   This should save a lot of CPU time considering the mud can be
-//  over 10 megs in size.  - SG                                    
-int vsystem(const sstring &buf)
-{
-  extern char **environ;
+//  over 10 megs in size.  - SG
+int vsystem(const sstring& buf) {
+  extern char** environ;
   int pid;
   char sh[64];
-  char *prog;
+  char* prog;
   char tmp[64];
   char *argv[4], buf2[MAX_STRING_LENGTH];
 #ifndef SUN
-  int *status = NULL;
+  int* status = NULL;
 #else
   union wait status;
 #endif
-
 
   if (buf.empty()) {
     vlogf(LOG_BUG, "vsystem called with NULL parameter.");
@@ -1129,21 +1093,19 @@ int vsystem(const sstring &buf)
     return FALSE;
   }
 #ifndef SUN
-  while (wait(status) != pid);
+  while (wait(status) != pid)
+    ;
 #else
-  while (wait(&status) != pid);
+  while (wait(&status) != pid)
+    ;
 #endif
 
   return TRUE;
 }
 
-bool TThing::shouldntBeShown(wearSlotT pos) const
-{
-  return FALSE;
-}
+bool TThing::shouldntBeShown(wearSlotT pos) const { return FALSE; }
 
-bool TObj::shouldntBeShown(wearSlotT pos) const
-{
+bool TObj::shouldntBeShown(wearSlotT pos) const {
   if (!isPaired())
     return FALSE;
 
@@ -1153,40 +1115,37 @@ bool TObj::shouldntBeShown(wearSlotT pos) const
   return FALSE;
 }
 
-void TBeing::fixLevels(int lev)
-{
-  for(classIndT i=MIN_CLASS_IND;i<MAX_CLASSES;i++){
-    if(hasClass(classInfo[i].class_num))
+void TBeing::fixLevels(int lev) {
+  for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
+    if (hasClass(classInfo[i].class_num))
       setLevel(i, lev);
   }
 
   calcMaxLevel();
 }
 
-bool should_be_logged(const TBeing *ch)
-{
+bool should_be_logged(const TBeing* ch) {
   // Everybody gets logged, admins most of all.
   return true;
 }
 
-// I hate typing > x && < y  -  Russ 
-bool in_range(int num, int low, int high)
-{
+// I hate typing > x && < y  -  Russ
+bool in_range(int num, int low, int high) {
   if ((num < low) || (num > high))
     return FALSE;
 
   return TRUE;
 }
 
-bool thingsInRoomVis(TThing *ch, TRoom *rp)
-{
-  TThing *o=NULL;
+bool thingsInRoomVis(TThing* ch, TRoom* rp) {
+  TThing* o = NULL;
 
   if (!ch || !rp) {
     vlogf(LOG_BUG, "thingsInRoomVis() called with NULL ch, or room!");
     return FALSE;
   }
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (o=*it);++it) {
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (o = *it);
+       ++it) {
     if (ch->canSee(o))
       return TRUE;
   }
@@ -1195,37 +1154,35 @@ bool thingsInRoomVis(TThing *ch, TRoom *rp)
 
 // can_get - Russ Russell c June 1994. last editted June 96
 // can_get returns TRUE if the ch can get the thing
-// passed to it. If the ch can't get it, it sends to  
+// passed to it. If the ch can't get it, it sends to
 // the ch why it can't get it, and then returns FALSE.
 
-bool TBeing::canGet(const TThing *t, silentTypeT silent) const
-{
+bool TBeing::canGet(const TThing* t, silentTypeT silent) const {
   return t->canGetMe(this, silent);
 }
 
-bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
-{
+bool TObj::canGetMe(const TBeing* ch, silentTypeT silent) const {
   // sanity check
   if (shortDescr.empty()) {
     vlogf(LOG_BUG, "!shortDescr for obj in canGetMe");
     return false;
   }
 
-  if (!ch->canSee(this)) 
+  if (!ch->canSee(this))
     return FALSE;
 
   // This is a safty bit, mostly auto-done by the storage
   // monitoring code.
   if ((isname("[wizard]", name) ||
-       (parent && isname("[wizard]", parent->name))) &&
+        (parent && isname("[wizard]", parent->name))) &&
       !ch->hasWizPower(POWER_WIZARD)) {
     ch->sendTo("I'm afraid you are not permitted to touch this.");
     vlogf(LOG_OBJ, format("%s tried to pick up wizard set object %s") %
-          ch->getNameNOC(ch) % getNameNOC(ch));
+                     ch->getNameNOC(ch) % getNameNOC(ch));
     return FALSE;
   }
 
-  if (ch->isImmortal() || 
+  if (ch->isImmortal() ||
       (canWear(ITEM_WEAR_TAKE) && !isObjStat(ITEM_PROTOTYPE))) {
     // flat out deny
     if (canGetMeDeny(ch, silent))
@@ -1233,22 +1190,27 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
 
     if (rider) {
       if (!silent)
-        ch->sendTo(COLOR_OBJECTS, format("%s : Occupied.\n\r") % sstring(shortDescr).cap());
+        ch->sendTo(COLOR_OBJECTS,
+          format("%s : Occupied.\n\r") % sstring(shortDescr).cap());
       return FALSE;
     }
 
-    // attached items 
+    // attached items
     if (isObjStat(ITEM_ATTACHED)) {
       if (!ch->isImmortal()) {
         if (canWear(ITEM_WEAR_TAKE)) {
           if (riding) {
-            ch->sendTo(COLOR_OBJECTS, format("%s is attached to %s and is not currently getable.\n\r") % getName() % riding->getName());
+            ch->sendTo(COLOR_OBJECTS,
+              format("%s is attached to %s and is not currently getable.\n\r") %
+                getName() % riding->getName());
           } else {
-            ch->sendTo(COLOR_OBJECTS, format("%s is attached and is not currently getable.\n\r") % getName());
-          
+            ch->sendTo(COLOR_OBJECTS,
+              format("%s is attached and is not currently getable.\n\r") %
+                getName());
           }
         } else {
-          ch->sendTo(COLOR_OBJECTS, format("%s : You can't take that.\n\r") % getName());
+          ch->sendTo(COLOR_OBJECTS,
+            format("%s : You can't take that.\n\r") % getName());
         }
         return FALSE;
       }
@@ -1264,81 +1226,78 @@ bool TObj::canGetMe(const TBeing *ch, silentTypeT silent) const
     // attached items
     if (isObjStat(ITEM_ATTACHED)) {
       if (canWear(ITEM_WEAR_TAKE))
-        ch->sendTo(COLOR_OBJECTS, format("%s is attached and is not currently getable.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS,
+          format("%s is attached and is not currently getable.\n\r") %
+            getName());
       else
-        ch->sendTo(COLOR_OBJECTS, format("%s : You can't take that.\n\r") % getName());
+        ch->sendTo(COLOR_OBJECTS,
+          format("%s : You can't take that.\n\r") % getName());
       return FALSE;
     }
 
     if (!silent)
-      ch->sendTo(COLOR_OBJECTS, format("%s : You can't take that.\n\r") % sstring(shortDescr).cap());
+      ch->sendTo(COLOR_OBJECTS,
+        format("%s : You can't take that.\n\r") % sstring(shortDescr).cap());
 
     return FALSE;
   }
   return TRUE;
 }
 
-bool TBeing::canGetMe(const TBeing *ch, silentTypeT) const
-{
+bool TBeing::canGetMe(const TBeing* ch, silentTypeT) const {
   return ((ch->GetMaxLevel() == MAX_IMMORT) && (ch != this) && !desc);
   // return ((ch->GetMaxLevel() == MAX_IMMORT) && (ch != this));
 }
 
-bool TThing::canGetMe(const TBeing *, silentTypeT) const
-{
-  return FALSE;
-}
+bool TThing::canGetMe(const TBeing*, silentTypeT) const { return FALSE; }
 
-const sstring TBeing::movementType(bool enter) const
-{
+const sstring TBeing::movementType(bool enter) const {
   if (!roomp) {
     vlogf(LOG_BUG, "NULL roomp in MovementType()!");
     return "";
   }
   if (getPosition() == POSITION_CRAWLING)
-    return(enter ? "crawls in" : "crawls");
+    return (enter ? "crawls in" : "crawls");
 
   if (isFlying())
-    return(enter ? "flies in" : "flies");
-
+    return (enter ? "flies in" : "flies");
 
   if (roomp->isUnderwaterSector() ||
-      (roomp->isWaterSector() && !isLevitating() &&
-      !isFlying())) {
+      (roomp->isWaterSector() && !isLevitating() && !isFlying())) {
     if (hasBoat()) {
-      return(enter ? "boats in" : "boats");
+      return (enter ? "boats in" : "boats");
     }
-    return(enter ? "swims in" : "swims");
+    return (enter ? "swims in" : "swims");
   }
 
   if (IS_SET(specials.act, ACT_GHOST))
     return (enter ? "glides in" : "glides");
   if (IS_SET(specials.act, ACT_ZOMBIE))
-    return(enter ? "shuffles in" : "shuffles");
+    return (enter ? "shuffles in" : "shuffles");
 
   if (getCond(DRUNK) > 6)
-    return(enter ? "staggers in" : "staggers");
+    return (enter ? "staggers in" : "staggers");
 
   return (enter ? race->moveIn() : race->moveOut());
 }
 
 // limit followers based on total power of all pets and sheer number
 // of pets owned
-bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
-{
-  followData *k;
+bool TBeing::tooManyFollowers(const TBeing* pet, newFolTypeT type) const {
+  followData* k;
   int max_followers = 0;  // total power of pets allowed
-  int count = 0;  // current power of pets
-  int tot_num = 0;  // actual number of pets ALREADY IN GROUP
+  int count = 0;          // current power of pets
+  int tot_num = 0;        // actual number of pets ALREADY IN GROUP
 
   //  max_followers = GetMaxLevel() / 20; //changed this from 5
   //  max_followers += plotStat(STAT_CURRENT, STAT_CHA, 1, 19, 9);
   //  int max_count = GetMaxLevel() / 5;
 
-  max_followers = (GetMaxLevel() + plotStat(STAT_CURRENT, STAT_CHA, -20, 20, 0)) / 30 + 1; 
-  max_followers = max(1, (min(3,max_followers)));
+  max_followers =
+    (GetMaxLevel() + plotStat(STAT_CURRENT, STAT_CHA, -20, 20, 0)) / 30 + 1;
+  max_followers = max(1, (min(3, max_followers)));
 
-  for(k = followers, count = 0; k; k = k->next) {
+  for (k = followers, count = 0; k; k = k->next) {
     if (k->follower->isPet(PETTYPE_THRALL)) {
       count += 1 + (k->follower->GetMaxLevel() / 10);
       tot_num++;
@@ -1359,37 +1318,38 @@ bool TBeing::tooManyFollowers(const TBeing *pet, newFolTypeT type) const
   else if (type == FOL_PET)
     count += 1 + (pet->GetMaxLevel() / 7);
 
-  //  vlogf(LOG_DASH, format("tooManyFollowers(): %s has %d followers & %d count with max of %d.") %  getName() % tot_num % count % max_followers);
-  //  vlogf(LOG_DASH, format("tooManyFollowers(): %d = (%d + %d) / 20") %  max_followers % GetMaxLevel() %
-  //plotStat(STAT_CURRENT % STAT_CHA % -15 % 15 % 0));
+  //  vlogf(LOG_DASH, format("tooManyFollowers(): %s has %d followers & %d count
+  //  with max of %d.") %  getName() % tot_num % count % max_followers);
+  //  vlogf(LOG_DASH, format("tooManyFollowers(): %d = (%d + %d) / 20") %
+  //  max_followers % GetMaxLevel() %
+  // plotStat(STAT_CURRENT % STAT_CHA % -15 % 15 % 0));
 
   //  if (count > max_count)
   //  return TRUE;
   //  if (tot_num >= 3)  // allow 3 pets max
-  if (tot_num >= max_followers) // nah, make it 1.  pets suck.
+  if (tot_num >= max_followers)  // nah, make it 1.  pets suck.
     return TRUE;
 
   return FALSE;
 }
 
-int TBeing::followTime() const
-{
-  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) * (Pulse::UPDATES_PER_MUDHOUR / 2));
+int TBeing::followTime() const {
+  return (plotStat(STAT_CURRENT, STAT_CHA, 6, 36, 22) *
+          (Pulse::UPDATES_PER_MUDHOUR / 2));
 }
 
 // a higher value = harder to see
-int TThing::visibility() const
-{
+int TThing::visibility() const {
   // sneak sets canBeSeen
-  int cbs = canBeSeen;   // natural amount
+  int cbs = canBeSeen;  // natural amount
 
   if (!roomp)
     return cbs;
 
-  const TBeing *tbt = dynamic_cast<const TBeing *>(this);
+  const TBeing* tbt = dynamic_cast<const TBeing*>(this);
   if (tbt) {
     if (tbt->isAffected(AFF_HIDE) && !tbt->fight())
-      cbs += 5 + tbt->GetMaxLevel()/2;
+      cbs += 5 + tbt->GetMaxLevel() / 2;
 
     // adjust for other stuff here
     if (tbt->getRace() == RACE_ELVEN) {
@@ -1397,21 +1357,20 @@ int TThing::visibility() const
         cbs += 5;
     }
 
-  // shadowy eq
-    int eqbonus=0, j;
-    TObj *to;
+    // shadowy eq
+    int eqbonus = 0, j;
+    TObj* to;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
-      TThing *tt = tbt->equipment[j];
-      if((to=dynamic_cast<TObj *>(tt)) && to->isObjStat(ITEM_SHADOWY)){
-	// silly to use getVolume; that'd make ogres sneakier than elves
-	eqbonus+=(int)(race_vol_constants[j+1]*70.0);
+      TThing* tt = tbt->equipment[j];
+      if ((to = dynamic_cast<TObj*>(tt)) && to->isObjStat(ITEM_SHADOWY)) {
+        // silly to use getVolume; that'd make ogres sneakier than elves
+        eqbonus += (int)(race_vol_constants[j + 1] * 70.0);
       }
     }
-    if(tbt->isAffected(AFF_SNEAK) || tbt->isAffected(AFF_HIDE))
-      cbs += (eqbonus/2000);
+    if (tbt->isAffected(AFF_SNEAK) || tbt->isAffected(AFF_HIDE))
+      cbs += (eqbonus / 2000);
     else
-      cbs += (eqbonus/6000);
-
+      cbs += (eqbonus / 6000);
   }
 
   if (roomp->isForestSector())
@@ -1426,21 +1385,20 @@ int TThing::visibility() const
   return cbs;
 }
 
-int TBeing::eyeSight(TRoom *rp) const
-{
+int TBeing::eyeSight(TRoom* rp) const {
   int vision = 0;
 
   vision = visionBonus;
   vision += getMyRace()->visionBonus;
-  
-  // this is here so that items carried (!rp) are treated as being in room i 
+
+  // this is here so that items carried (!rp) are treated as being in room i
   // am looking from
   if (!rp)
     rp = roomp;
 
-  if ((isAffected(AFF_TRUE_SIGHT)) || (isAffected(AFF_CLARITY))) 
+  if ((isAffected(AFF_TRUE_SIGHT)) || (isAffected(AFF_CLARITY)))
     vision += 25;
-  
+
   if (rp) {
     int light = rp->getLight();
     vision += light;
@@ -1451,7 +1409,7 @@ int TBeing::eyeSight(TRoom *rp) const
       vision -= 2;
     else if (Weather::getWeather(*rp) == Weather::LIGHTNING)
       vision -= 1;
-  
+
     // if they are indoors, the lighting of the room should be "subdued"
     if (rp->isRoomFlag(ROOM_INDOORS))
       vision -= light / 2;
@@ -1460,8 +1418,7 @@ int TBeing::eyeSight(TRoom *rp) const
   return vision;
 }
 
-bool TBeing::willBumpHeadDoor(roomDirData *exitp, int *height) const
-{
+bool TBeing::willBumpHeadDoor(roomDirData* exitp, int* height) const {
   if (!roomp)
     return FALSE;
 
@@ -1481,16 +1438,15 @@ bool TBeing::willBumpHeadDoor(roomDirData *exitp, int *height) const
     return FALSE;
 
   if (exitp->door_type != DOOR_NONE)
-    *height = 9 * *height / 10;   //  doors are 90% size of room 
+    *height = 9 * *height / 10;  //  doors are 90% size of room
 
   return (willBump(*height));
 }
 
 // returns DELETE_THIS
-int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
-{
+int TBeing::bumpHeadDoor(roomDirData* exitp, int* height) {
   sstring buf, doorbuf;
-  TThing *helm;
+  TThing* helm;
   int hardness, check;
 
   if (isImmortal())
@@ -1499,13 +1455,13 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
   if (!willBumpHeadDoor(exitp, height))
     return FALSE;
 
-  doorbuf=exitp->getName();
+  doorbuf = exitp->getName();
   if (::number(1, 300) > plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 110)) {
     sendTo(format("You bump your head as you go through the %s.  OUCH!\n\r") %
-	   doorbuf.uncap());
+           doorbuf.uncap());
     buf = format("$n bumps $s head on the %s.  That had to hurt.") %
-	     doorbuf.uncap();
-    act(buf,TRUE, this, 0,0,TO_ROOM);
+          doorbuf.uncap();
+    act(buf, TRUE, this, 0, 0, TO_ROOM);
     // Lets do some head-gear checks to see if gear can absorb or negate damage
     // Very simple to start - Brutius - 12-31-95
     if ((helm = equipment[WEAR_HEAD])) {
@@ -1513,23 +1469,22 @@ int TBeing::bumpHeadDoor(roomDirData *exitp, int *height)
       // The harder the material the less chance of damage to head or item
       check = ::number(0, hardness);
       if (!check) {
-        if (reconcileDamage(this,::number(1,3),DAMAGE_NORMAL) == -1)
+        if (reconcileDamage(this, ::number(1, 3), DAMAGE_NORMAL) == -1)
           return DELETE_THIS;
       }
     } else {
       // no helm, just take damage
-      if (reconcileDamage(this,::number(1,3),DAMAGE_NORMAL) == -1)
+      if (reconcileDamage(this, ::number(1, 3), DAMAGE_NORMAL) == -1)
         return DELETE_THIS;
-    } 
-  } else 
-    sendTo(format("You duck down as you go through the %s.\n\r") %
-	   doorbuf.uncap());
-  
+    }
+  } else
+    sendTo(
+      format("You duck down as you go through the %s.\n\r") % doorbuf.uncap());
+
   return FALSE;
 }
 
-bool TBeing::willBumpHead(TRoom *rp) const
-{
+bool TBeing::willBumpHead(TRoom* rp) const {
   int height = rp->getRoomHeight();
 
   if (isImmortal())
@@ -1541,8 +1496,7 @@ bool TBeing::willBumpHead(TRoom *rp) const
   return (willBump(height));
 }
 
-bool TBeing::willBump(int height) const
-{
+bool TBeing::willBump(int height) const {
   if (height <= 0)
     return FALSE;
 
@@ -1555,9 +1509,7 @@ bool TBeing::willBump(int height) const
   return TRUE;
 }
 
-
-bool TBeing::isNaked() const
-{
+bool TBeing::isNaked() const {
   int i;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if (i == HOLD_RIGHT || i == HOLD_LEFT)
@@ -1569,19 +1521,17 @@ bool TBeing::isNaked() const
 }
 
 // posistive mod makes them smarter
-bool TMonster::isSmartMob(int mod) const
-{
+bool TMonster::isSmartMob(int mod) const {
   int i = plotStat(STAT_CURRENT, STAT_INT, 8, 50, 23);
 
   // a negative mod makes them dumber
-  if (::number(0,100) < (i + mod))
+  if (::number(0, 100) < (i + mod))
     return TRUE;
   else
     return FALSE;
 }
 
-void TPerson::addToWait(int orig_amt)
-{
+void TPerson::addToWait(int orig_amt) {
   int mod = 100;
   if (affectedBySpell(SPELL_ACCELERATE))
     mod = 80;
@@ -1596,14 +1546,13 @@ void TPerson::addToWait(int orig_amt)
 
   if (desc && !isImmortal()) {
     if (orig_amt >= 1)
-      desc->wait += max(1,amt);
-    else 
-      desc->wait += max(0,amt);
+      desc->wait += max(1, amt);
+    else
+      desc->wait += max(0, amt);
   }
 }
 
-void TMonster::addToWait(int amt)
-{
+void TMonster::addToWait(int amt) {
   // pulse_mobact == pulse_combat
   // combat gets done before mobacts in the main socket.cc loop
   // so if combat adds 1 round of lag, mobact wills strip it off immediately
@@ -1615,23 +1564,22 @@ void TMonster::addToWait(int amt)
   // obviously, this is mob only due to way we handle wait differently
   // - Batopr 2-6-97
 
-// Cos- 7/98-- needed for polymorph type spells
+  // Cos- 7/98-- needed for polymorph type spells
   if (desc) {
-    if(!(desc->original && desc->original->GetMaxLevel()>MAX_MORT &&
-       IS_SET(desc->autobits, AUTO_SUCCESS))){
+    if (!(desc->original && desc->original->GetMaxLevel() > MAX_MORT &&
+          IS_SET(desc->autobits, AUTO_SUCCESS))) {
       desc->wait += amt;
     }
   } else {
     wait += amt;
-    wait += 1; // 1 extra lag
+    wait += 1;  // 1 extra lag
   }
 }
 
-float TBeing::getTotalWeight(bool pweight) const
-{
+float TBeing::getTotalWeight(bool pweight) const {
   float calc = getCarriedWeight();
   int i;
-  TThing *t;
+  TThing* t;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i])) {
@@ -1645,8 +1593,7 @@ float TBeing::getTotalWeight(bool pweight) const
   return calc;
 }
 
-void TThing::addToCarriedWeight(float num)
-{
+void TThing::addToCarriedWeight(float num) {
   carried_weight += num;
 
   if (parent)
@@ -1655,16 +1602,13 @@ void TThing::addToCarriedWeight(float num)
     riding->addToCarriedWeight(num);
 }
 
-void TThing::addToCarriedVolume(int num)
-{
-  carried_volume += num;
-}
+void TThing::addToCarriedVolume(int num) { carried_volume += num; }
 
-bool TBeing::isElemental() const
-{
-  int  mVn         = mobVnum();
-  bool isElemental = (mVn == Mob::FIRE_ELEMENTAL  || mVn == Mob::WATER_ELEMENTAL ||
-                        mVn == Mob::EARTH_ELEMENTAL || mVn == Mob::AIR_ELEMENTAL);
+bool TBeing::isElemental() const {
+  int mVn = mobVnum();
+  bool isElemental =
+    (mVn == Mob::FIRE_ELEMENTAL || mVn == Mob::WATER_ELEMENTAL ||
+      mVn == Mob::EARTH_ELEMENTAL || mVn == Mob::AIR_ELEMENTAL);
   return isElemental;
 }
 
@@ -1672,13 +1616,12 @@ bool TBeing::isElemental() const
 // returns TRUE if no pc's are around
 // ignore_imms allows imms to be considered or not
 // eg ignore_imms==TRUE, room with just an immortal will be considered empty
-bool TRoom::roomIsEmpty(bool ignore_imms) const
-{
-  TThing *t=NULL;
-  TBeing *vict;
+bool TRoom::roomIsEmpty(bool ignore_imms) const {
+  TThing* t = NULL;
+  TBeing* vict;
 
-  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
-    vict = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
+    vict = dynamic_cast<TBeing*>(t);
     if (!vict)
       continue;
     if (vict->isPc() && !vict->isImmortal())  // mortals trigger always
@@ -1689,20 +1632,18 @@ bool TRoom::roomIsEmpty(bool ignore_imms) const
   return TRUE;
 }
 
-void TBeing::giveMoney(TBeing *ch, int money, moneyTypeT type)
-{
+void TBeing::giveMoney(TBeing* ch, int money, moneyTypeT type) {
   if (money < 0) {
     vlogf(LOG_BUG, format("%s just tried to give negative money (%i) to %s") %
-	  getName() % money % ch->getName());
+                     getName() % money % ch->getName());
     return;
   }
-    
+
   addToMoney(-money, type);
   ch->addToMoney(money, type);
 }
 
-void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
-{
+void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe) {
   int lev = 0;
   TDatabase db(DB_SNEEZY);
 
@@ -1710,7 +1651,7 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
     vlogf(LOG_SILENT, format("%s talens changed by %i.") % getName() % money);
 
   setMoney(getMoney() + money);
- 
+
   // due to the way the stats are set up, don't try to change this 60 to
   // a #define value
   if (isPc() && ((lev = GetMaxLevel()) <= 60)) {
@@ -1719,46 +1660,51 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
         // do not track, essentially an internal transfer (to/from bank)
         break;
       case GOLD_INCOME:
-        gold_statistics[GOLD_INCOME][lev-1] += money;
-        gold_positive[GOLD_INCOME][lev-1] += max(money, 0);
+        gold_statistics[GOLD_INCOME][lev - 1] += money;
+        gold_positive[GOLD_INCOME][lev - 1] += max(money, 0);
 
         // figure out tithe
         if (money > 0 && allowTithe) {
           int amount = money * FactionInfo[getFaction()].faction_tithe / 100.0;
           // subtract the tithe amount from me
           setMoney(getMoney() - amount);
-          gold_statistics[GOLD_INCOME][(lev-1)] -= amount;
-          gold_positive[GOLD_INCOME][(lev-1)] -= max(amount, 0);
+          gold_statistics[GOLD_INCOME][(lev - 1)] -= amount;
+          gold_positive[GOLD_INCOME][(lev - 1)] -= max(amount, 0);
 
           FactionInfo[getFaction()].addToMoney(amount);
-	  TCorporation corp(FactionInfo[getFaction()].corp_id);
-	  if(amount!=0)
-	    corp.corpLog(getName(), "tithe", amount);
+          TCorporation corp(FactionInfo[getFaction()].corp_id);
+          if (amount != 0)
+            corp.corpLog(getName(), "tithe", amount);
 
-          gold_statistics[GOLD_TITHE][(lev-1)] += amount;
-          gold_positive[GOLD_TITHE][(lev-1)] += max(amount, 0);
+          gold_statistics[GOLD_TITHE][(lev - 1)] += amount;
+          gold_positive[GOLD_TITHE][(lev - 1)] += max(amount, 0);
           reconcileHelp(NULL, amount * TITHE_FACTOR);
 
-	  if(amount>0)
-	    sendTo(format("You tithe %i talens.\n\r") % amount);
+          if (amount > 0)
+            sendTo(format("You tithe %i talens.\n\r") % amount);
         }
         break;
       case GOLD_TITHE:
-        gold_statistics[GOLD_TITHE][(lev-1)] += money;
-        gold_positive[GOLD_TITHE][(lev-1)] += max(money, 0);
+        gold_statistics[GOLD_TITHE][(lev - 1)] += money;
+        gold_positive[GOLD_TITHE][(lev - 1)] += max(money, 0);
         // note, this will cause leaders percent to drop if they withdraw.
         // no other good way to do it without letting leaders get huge boost
         // it's helpful, if they GIVE money by tithing (money would be < 0)
         reconcileHelp(NULL, -money * TITHE_FACTOR);
         break;
       case GOLD_GAMBLE:
-	db.query("select 1 from gamblers where getPlayerName(player_id)='%s'", getName().c_str());
-	if(!db.fetchRow()){
-	  db.query("insert into gamblers values (getPlayerID('%s'), %i)", getName().c_str(), money);
-	} else {
-	  db.query("update gamblers set money=money+%i where getPlayerName(player_id)='%s'", money, getName().c_str());
-	}
-	// fall through
+        db.query("select 1 from gamblers where getPlayerName(player_id)='%s'",
+          getName().c_str());
+        if (!db.fetchRow()) {
+          db.query("insert into gamblers values (getPlayerID('%s'), %i)",
+            getName().c_str(), money);
+        } else {
+          db.query(
+            "update gamblers set money=money+%i where "
+            "getPlayerName(player_id)='%s'",
+            money, getName().c_str());
+        }
+        // fall through
       case GOLD_REPAIR:
       case GOLD_SHOP:
       case GOLD_COMM:
@@ -1772,8 +1718,8 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
       case GOLD_SHOP_FOOD:
       case GOLD_SHOP_RESPONSES:
       case GOLD_SHOP_COMPONENTS:
-        gold_statistics[type][(lev-1)] += money;
-        gold_positive[type][(lev-1)] += max(money, 0);
+        gold_statistics[type][(lev - 1)] += money;
+        gold_positive[type][(lev - 1)] += max(money, 0);
         break;
       case MAX_MONEY_TYPE:
         break;
@@ -1782,56 +1728,48 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe)
   }
 }
 
-bool TThing::outside() const
-{
-  return (!roomp->isRoomFlag(ROOM_INDOORS) &&
-          !roomp->isUnderwaterSector() &&
+bool TThing::outside() const {
+  return (!roomp->isRoomFlag(ROOM_INDOORS) && !roomp->isUnderwaterSector() &&
           roomp->getSectorType() != SECT_ASTRAL_ETHREAL);
 }
 
-bool TBeing::isSimilar(const TThing *t) const
-{
-  const TBeing *tb = dynamic_cast<const TBeing *>(t);
- 
+bool TBeing::isSimilar(const TThing* t) const {
+  const TBeing* tb = dynamic_cast<const TBeing*>(t);
+
   if (!tb)
     return FALSE;
 
-  
-   if ((tb->number == number) && (tb->getPosition() == getPosition()) &&
-     (tb->specials.affectedBy == specials.affectedBy) &&
-     // if they have spells on them, prevent being similar
-     !affected && !tb->affected &&
-     (tb->fight() == fight())) {
-     
-     if (!tb->name.empty() && !name.empty()) {
-       if (is_exact_name(tb->name, name)) {
-          return TRUE;
-       }
-     }
-  }   
+  if ((tb->number == number) && (tb->getPosition() == getPosition()) &&
+      (tb->specials.affectedBy == specials.affectedBy) &&
+      // if they have spells on them, prevent being similar
+      !affected && !tb->affected && (tb->fight() == fight())) {
+    if (!tb->name.empty() && !name.empty()) {
+      if (is_exact_name(tb->name, name)) {
+        return TRUE;
+      }
+    }
+  }
   return FALSE;
 }
 
 // same as isSimilar, but uses some more stuff for shops
 // eg structure
-bool TObj::isShopSimilar(const TThing *t) const
-{
-  if(!isSimilar(t))
+bool TObj::isShopSimilar(const TThing* t) const {
+  if (!isSimilar(t))
     return false;
 
-  const TObj *obj = dynamic_cast<const TObj *>(t);
+  const TObj* obj = dynamic_cast<const TObj*>(t);
   if (!obj)
     return FALSE;
-  
+
   if (getStructPoints() != obj->getStructPoints())
     return false;
 
   return true;
 }
 
-bool TObj::isSimilar(const TThing *t) const
-{
-  const TObj *obj = dynamic_cast<const TObj *>(t);
+bool TObj::isSimilar(const TThing* t) const {
+  const TObj* obj = dynamic_cast<const TObj*>(t);
   if (!obj)
     return FALSE;
 
@@ -1840,8 +1778,7 @@ bool TObj::isSimilar(const TThing *t) const
   if (getDescr().empty() || obj->getDescr().empty() ||
       getDescr() != obj->getDescr())
     return false;
-  if (name.empty() || obj->name.empty() ||
-       !is_exact_name(name, obj->name))
+  if (name.empty() || obj->name.empty() || !is_exact_name(name, obj->name))
     return false;
 
   // requires the effects be in same order (as well as identical)
@@ -1864,8 +1801,7 @@ bool TObj::isSimilar(const TThing *t) const
 }
 
 // the more NEGATIVE this is, the better the item is
-int TObj::itemAC() const
-{
+int TObj::itemAC() const {
   int j, armor = 0;
 
   for (j = 0; j < MAX_OBJ_AFFECT; j++) {
@@ -1875,8 +1811,7 @@ int TObj::itemAC() const
   return armor;
 }
 
-int TObj::itemNoise() const
-{
+int TObj::itemNoise() const {
   int j, noise = 0;
 
   noise = material_nums[getMaterial()].noise;
@@ -1888,8 +1823,7 @@ int TObj::itemNoise() const
   return noise;
 }
 
-int TObj::itemDamroll() const
-{
+int TObj::itemDamroll() const {
   int j, total = 0;
 
   for (j = 0; j < MAX_OBJ_AFFECT; j++) {
@@ -1901,8 +1835,7 @@ int TObj::itemDamroll() const
   return total;
 }
 
-int TObj::itemHitroll() const
-{
+int TObj::itemHitroll() const {
   int j, total = 0;
 
   for (j = 0; j < MAX_OBJ_AFFECT; j++) {
@@ -1914,8 +1847,7 @@ int TObj::itemHitroll() const
   return total;
 }
 
-double TMonster::baseDamage() const
-{
+double TMonster::baseDamage() const {
   // follows concepts developed in balance theorems
   double amt = (getDamLevel() / 1.1);
   // adjust for numAtt
@@ -1924,8 +1856,7 @@ double TMonster::baseDamage() const
   return amt;
 }
 
-int TBeing::getVolume() const
-{
+int TBeing::getVolume() const {
   // we are going to fudge a value for volume
   // model a being as a cylinder of height h and radius r.
   // For the typical human, height is 175 cm (70 in), and r is 13 cm (5 in)
@@ -1935,39 +1866,26 @@ int TBeing::getVolume() const
   // since we want V for a 70 inch human to = 42500 (sum of limb volumes)
   // this becomes a k of 0.2
   // we have set corpse_const on all races equivalent to k
- 
 
   int vol;
 
   mud_assert(race != NULL, "No race in getVolume()");
 
-  vol = (int) ((race->corpse_const) * (race->corpse_const) * M_PI * getHeight() * getHeight() * getHeight());
+  vol = (int)((race->corpse_const) * (race->corpse_const) * M_PI * getHeight() *
+              getHeight() * getHeight());
 
   return vol;
 }
 
-char LOWER(char c)
-{
-  return ((c >= 'A' && c <= 'Z') ? (c+('a'-'A')) : c);
-}
+char LOWER(char c) { return ((c >= 'A' && c <= 'Z') ? (c + ('a' - 'A')) : c); }
 
-char UPPER(char c)
-{
-  return ((c >= 'a' && c <= 'z') ? (c+('A'-'a')) : c );
-}
+char UPPER(char c) { return ((c >= 'a' && c <= 'z') ? (c + ('A' - 'a')) : c); }
 
-char ISNEWL(char ch) 
-{
-  return (ch == '\n' || ch == '\r');
-}
+char ISNEWL(char ch) { return (ch == '\n' || ch == '\r'); }
 
-int combatRound(double n)
-{
-  return (int) (n * Pulse::COMBAT);
-}
+int combatRound(double n) { return (int)(n * Pulse::COMBAT); }
 
-bool TBeing::checkBusy(const sstring &buf) const
-{
+bool TBeing::checkBusy(const sstring& buf) const {
   // I added the max to avoid the 10Mill report
   // which happens if they have like 0.9 attacks a round.
   float fx, fy;
@@ -1987,7 +1905,7 @@ bool TBeing::checkBusy(const sstring &buf) const
   int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000); 
   sendTo(format(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
 #else
-  float tmpnum = (hitsPerRound ? (cantHit/hitsPerRound) : 1000000); 
+  float tmpnum = (hitsPerRound ? (cantHit / hitsPerRound) : 1000000);
   tmpnum *= Pulse::COMBAT;
   tmpnum /= Pulse::ONE_SECOND;
 
@@ -1996,8 +1914,7 @@ bool TBeing::checkBusy(const sstring &buf) const
   return TRUE;
 }
 
-float TBeing::lagAdjust(lag_t orig_lag)
-{
+float TBeing::lagAdjust(lag_t orig_lag) {
   // basically, take a fixed amount of "orig_lag", and adjust it for speed
   //  float min_lag = 0.80 * orig_lag;
   //  float max_lag = 1.25 * orig_lag;
@@ -2005,13 +1922,13 @@ float TBeing::lagAdjust(lag_t orig_lag)
   // remember that the min_lag should be held by max-stat, and vice-versa
   float act_lag = (float)(orig_lag) / getStatMod(STAT_SPE);
 
-  act_lag = max(act_lag, (float) 0.0);
+  act_lag = max(act_lag, (float)0.0);
   return act_lag;
 }
 
-sstring secsToString(time_t num)
-{
-  /// passing a negative time appears to have crashed the mud at some point - Maror
+sstring secsToString(time_t num) {
+  /// passing a negative time appears to have crashed the mud at some point -
+  /// Maror
   if (num < 0) {
     vlogf(LOG_BUG, "Passed a negative time to secsToString in utility.cc.");
     return "BUG A CODER: something bad happened.";
@@ -2057,44 +1974,44 @@ sstring secsToString(time_t num)
   return timesstring;
 }
 
-sstring talenDisplay(int talens)
-{
+sstring talenDisplay(int talens) {
   float t;
 
-  if(talens>1000000){
-    t=(int)(talens/100000);
-    return format("%.1fM") % (t/10.0);
-  } else if(talens > 10000){
-    t=(int)(talens/1000);
+  if (talens > 1000000) {
+    t = (int)(talens / 100000);
+    return format("%.1fM") % (t / 10.0);
+  } else if (talens > 10000) {
+    t = (int)(talens / 1000);
     return format("%ik") % (int)t;
   }
 
   return format("%i") % talens;
 }
 
-sstring volumeDisplay(int volume)
-{
-  volume = ((volume >= 100) ? volume/100 * 100 :
-	    ((volume >= 10) ? volume/10 * 10 : volume));
-    
+sstring volumeDisplay(int volume) {
+  volume = ((volume >= 100) ? volume / 100 * 100
+                            : ((volume >= 10) ? volume / 10 * 10 : volume));
+
   int volumeTmp, yards = 0;
   int feet = 0;
   int inches;
   sstring volumeBuf;
-  
+
   volumeTmp = volume;
   if (volumeTmp > CUBIC_INCHES_PER_YARD) {
-    yards = volume/CUBIC_INCHES_PER_YARD;
+    yards = volume / CUBIC_INCHES_PER_YARD;
     volumeTmp = volume % CUBIC_INCHES_PER_YARD;
-    volumeBuf=format("%d cubic yard%s, ") % yards % ((yards == 1) ? "" : "s");
+    volumeBuf = format("%d cubic yard%s, ") % yards % ((yards == 1) ? "" : "s");
   }
   if (volumeTmp > CUBIC_INCHES_PER_FOOT) {
-    feet = volumeTmp/CUBIC_INCHES_PER_FOOT;
+    feet = volumeTmp / CUBIC_INCHES_PER_FOOT;
     volumeTmp = volume % CUBIC_INCHES_PER_FOOT;
-    volumeBuf += format("%d cubic %s, ") % feet % ((yards == 1) ? "foot":"feet");
+    volumeBuf +=
+      format("%d cubic %s, ") % feet % ((yards == 1) ? "foot" : "feet");
   }
   if ((inches = volumeTmp))
-    volumeBuf += format("%d cubic inch%s") % inches % ((inches == 1) ? "" : "es");
+    volumeBuf +=
+      format("%d cubic inch%s") % inches % ((inches == 1) ? "" : "es");
   if (!volume) {
     // this only kicks in if no volume
     volumeBuf += "0 cubic inches";

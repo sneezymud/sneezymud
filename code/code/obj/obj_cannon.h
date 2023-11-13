@@ -2,19 +2,17 @@
 
 #include "obj_gun.h"
 
-
 class TCannon : public TGun {
- public:
-  virtual void loadMe(TBeing *ch, TAmmo *ammo);
-  virtual void unloadMe(TBeing *ch, TAmmo *ammo);
+  public:
+    virtual void loadMe(TBeing* ch, TAmmo* ammo);
+    virtual void unloadMe(TBeing* ch, TAmmo* ammo);
 
-  virtual itemTypeT itemType() const { return ITEM_CANNON; }
+    virtual itemTypeT itemType() const { return ITEM_CANNON; }
 
-  int shootMeBow(TBeing *, TBeing *, unsigned int, dirTypeT, int);
+    int shootMeBow(TBeing*, TBeing*, unsigned int, dirTypeT, int);
 
-  TCannon();
-  TCannon(const TCannon &a);
-  TCannon & operator=(const TCannon &a);
-  virtual ~TCannon();
+    TCannon();
+    TCannon(const TCannon& a);
+    TCannon& operator=(const TCannon& a);
+    virtual ~TCannon();
 };
-

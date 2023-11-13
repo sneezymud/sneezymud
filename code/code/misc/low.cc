@@ -397,10 +397,3 @@ const int Mob::CANDY_HEART_EATER;
 const int Mob::FAT_ELF_2;
 const int Mob::FAT_ELF_3;
 const int Mob::DEE;
-
-
-
-
-
-
-

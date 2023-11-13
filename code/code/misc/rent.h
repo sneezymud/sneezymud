@@ -4,10 +4,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
-const int CURRENT_RENT_VERSION     =10;
+const int CURRENT_RENT_VERSION = 10;
 // 0        3.x - initial version
 // 1        4.1 rev 61  - changed weight from int to float
 // 2        pre 4.5 - added depreciation to rentObject structure
@@ -19,8 +18,7 @@ const int CURRENT_RENT_VERSION     =10;
 // 8        5.2 : June 4 2002 : shuffled 4vals for weapons
 // 9........5.2 : November 23, 2007 : Update/Consolidation of material types
 
-class pcorpseObject
-{
+class pcorpseObject {
   public:
     int corpse_room;
     int num_corpses_room;
@@ -44,8 +42,7 @@ class rentObjAffData {
     rentObjAffData();
 };
 
-class rentObject
-{
+class rentObject {
   public:
     int item_number;
     int value[4];
@@ -58,7 +55,7 @@ class rentObject
     int max_struct_points;
     ubyte material_points;
     int volume;
-    int cost; 
+    int cost;
     byte depreciation;
 
     rentObject();
@@ -66,88 +63,86 @@ class rentObject
 
 class rentHeader {
   public:
-    unsigned char version;     /* version # of the rent file */
-    char owner[20];    /* Name of player                     */
+    unsigned char version; /* version # of the rent file */
+    char owner[20];        /* Name of player                     */
     // these entries were for the since-removed rent charge code
     int ___unused1;
     int ___unused2;
     int ___unused3;
     long last_update;  /* Time in seconds, when last updated */
     long first_update; /* Time in seconds, when first updated*/
-    int  number;       /* number of objects */
+    int number;        /* number of objects */
     rentHeader();
 };
 
 class ItemLoad {
-  FILE *fp;
-  unsigned char version;
+    FILE* fp;
+    unsigned char version;
 
- public:
-  rentHeader st;
+  public:
+    rentHeader st;
 
-  bool openFile(const sstring &);
-  bool fileExists(const sstring &);
-  void setFile(FILE *);
-  void setVersion(unsigned char);
-  
-  bool readVersion();
-  bool readHeader();
+    bool openFile(const sstring&);
+    bool fileExists(const sstring&);
+    void setFile(FILE*);
+    void setVersion(unsigned char);
 
-  bool objsFromStore(TObj *, int *, TBeing *, TRoom *, bool);
-  bool objToParent(signed char, TObj *, TObj *, TRoom *, TBeing *);
-  bool objToEquipChar(unsigned char, TBeing *, TObj *, TRoom *);
-  bool objToTarg(unsigned char, TBeing *, TObj *, TRoom *);
-  TObj *raw_read_item();
+    bool readVersion();
+    bool readHeader();
 
-  ItemLoad();
-  ~ItemLoad();
+    bool objsFromStore(TObj*, int*, TBeing*, TRoom*, bool);
+    bool objToParent(signed char, TObj*, TObj*, TRoom*, TBeing*);
+    bool objToEquipChar(unsigned char, TBeing*, TObj*, TRoom*);
+    bool objToTarg(unsigned char, TBeing*, TObj*, TRoom*);
+    TObj* raw_read_item();
+
+    ItemLoad();
+    ~ItemLoad();
 };
 
-
 class ItemSave {
-  FILE *fp;
+    FILE* fp;
 
- public:
-  rentHeader st;
+  public:
+    rentHeader st;
 
-  bool openFile(const sstring &);
-  void setFile(FILE *);
+    bool openFile(const sstring&);
+    void setFile(FILE*);
 
-  bool writeVersion();
-  bool writeHeader();
-  void writeFooter();
+    bool writeVersion();
+    bool writeHeader();
+    void writeFooter();
 
-  bool raw_write_item(TObj *);
-  void objToStore(signed char, TObj *, TBeing *, bool, bool);
-  void objsToStore(signed char, StuffList, TBeing *, bool, bool);
+    bool raw_write_item(TObj*);
+    void objToStore(signed char, TObj*, TBeing*, bool, bool);
+    void objsToStore(signed char, StuffList, TBeing*, bool, bool);
 
-  ItemSave();
-  ~ItemSave();
+    ItemSave();
+    ~ItemSave();
 };
 
 class ItemSaveDB {
-  sstring owner_type;
-  int owner;
+    sstring owner_type;
+    int owner;
 
- public:
-  void clearRent();
-  int raw_write_item(TObj *, int, int, int=-1);
+  public:
+    void clearRent();
+    int raw_write_item(TObj*, int, int, int = -1);
 
-  void objToStore(signed char, TObj *, TBeing *, bool, bool, int);
-  void objsToStore(signed char, StuffList, TBeing *, bool, bool, int);
+    void objToStore(signed char, TObj*, TBeing*, bool, bool, int);
+    void objsToStore(signed char, StuffList, TBeing*, bool, bool, int);
 
-  ItemSaveDB(sstring, int);
-  ~ItemSaveDB();
+    ItemSaveDB(sstring, int);
+    ~ItemSaveDB();
 };
 
-
 class ItemLoadDB {
-  sstring owner_type;
-  int owner;
+    sstring owner_type;
+    int owner;
 
- public:
-  TObj *raw_read_item(int, int &);
+  public:
+    TObj* raw_read_item(int, int&);
 
-  ItemLoadDB(sstring, int);
-  ~ItemLoadDB();
+    ItemLoadDB(sstring, int);
+    ~ItemLoadDB();
 };

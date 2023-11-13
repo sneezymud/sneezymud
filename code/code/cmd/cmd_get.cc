@@ -19,14 +19,12 @@
 #include "low.h"
 #include "game_crazyeights.h"
 
-void TThing::getMeFrom(TBeing *ch, TThing *t)
-{
-}
+void TThing::getMeFrom(TBeing* ch, TThing* t) {}
 
-void TPCorpse::getMeFrom(TBeing *ch, TThing *t)
-{
+void TPCorpse::getMeFrom(TBeing* ch, TThing* t) {
   if (!checkOnLists()) {
-//    vlogf(LOG_BUG, format("Something wrong with get from a corpse, corpse not set right %s (%s).") %  ch->getName() % getName());
+    //    vlogf(LOG_BUG, format("Something wrong with get from a corpse, corpse
+    //    not set right %s (%s).") %  ch->getName() % getName());
   } else {
     if (!stuff.empty())
       saveCorpseToFile();
@@ -35,16 +33,14 @@ void TPCorpse::getMeFrom(TBeing *ch, TThing *t)
   }
 }
 
-int TThing::getMe(TBeing *ch, TThing *sub)
-{
+int TThing::getMe(TBeing* ch, TThing* sub) {
   if (sub)
     sub->getMeFrom(ch, this);
 
   return FALSE;
 }
 
-int TTrap::getMe(TBeing *ch, TThing *sub)
-{
+int TTrap::getMe(TBeing* ch, TThing* sub) {
   // do baseclass stuff for recusivity
   int rc = TObj::getMe(ch, sub);
   if (rc)
@@ -75,13 +71,12 @@ int TTrap::getMe(TBeing *ch, TThing *sub)
   return FALSE;
 }
 
-// procedures related to get 
+// procedures related to get
 // might return DELETE_THIS for ch
 // might return DELETE_ITEM for obj
 // might return DELETE_VICT for sub
 // returns FALSE if get failed
-int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
-{
+int get(TBeing* ch, TThing* ttt, TThing* sub, getTypeT tType, bool isFirst) {
   int rc = 0;
 
   // redundant checks also done in doGet but allows code to call get() directly
@@ -89,7 +84,7 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
     ch->sendTo("How do you expect to do that without any hands?!?\n\r");
     return FALSE;
   }
-  TObj *obj = dynamic_cast<TObj *>(ttt);
+  TObj* obj = dynamic_cast<TObj*>(ttt);
   if (!obj) {
     if (!ch->canGet(ttt, SILENT_NO))
       return FALSE;
@@ -97,13 +92,18 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
   if (obj && obj->isObjStat(ITEM_ATTACHED)) {
     if (!ch->isImmortal()) {
       if (obj->canWear(ITEM_WEAR_TAKE)) {
-        if (obj->riding) { 
-          ch->sendTo(COLOR_OBJECTS, format("%s is attached to %s and is not currently getable.\n\r") % obj->getName() % obj->riding->getName());
-        } else 
-          ch->sendTo(COLOR_OBJECTS, format("%s is attached and is not currently getable.\n\r") % obj->getName());
-      } else 
-        ch->sendTo(COLOR_OBJECTS, format("%s is attached and is not getable.\n\r") % obj->getName());
-      
+        if (obj->riding) {
+          ch->sendTo(COLOR_OBJECTS,
+            format("%s is attached to %s and is not currently getable.\n\r") %
+              obj->getName() % obj->riding->getName());
+        } else
+          ch->sendTo(COLOR_OBJECTS,
+            format("%s is attached and is not currently getable.\n\r") %
+              obj->getName());
+      } else
+        ch->sendTo(COLOR_OBJECTS,
+          format("%s is attached and is not getable.\n\r") % obj->getName());
+
       return FALSE;
     }
   }
@@ -112,8 +112,10 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
   // do allow them to get a weapon if necessary (disarmed)
   // Also allow looting while berserking if not actively fighting
   if (ch->isCombatMode(ATTACK_BERSERK) && ch->fight()) {
-    if (sub || !dynamic_cast<TBaseWeapon *>(ttt)) {
-      ch->sendTo(COLOR_BASIC, "<r>You are way too blood crazed at the moment to be getting stuff.<1>\n\r");
+    if (sub || !dynamic_cast<TBaseWeapon*>(ttt)) {
+      ch->sendTo(COLOR_BASIC,
+        "<r>You are way too blood crazed at the moment to be getting "
+        "stuff.<1>\n\r");
       return FALSE;
     }
   }
@@ -129,15 +131,16 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
   else {
     if (ttt->parent && ttt->parent != sub) {
       // very bad
-      vlogf(LOG_BUG, format("get(): obj (%s) gotten with parent (%s) and sub (%s)") % 
+      vlogf(LOG_BUG,
+        format("get(): obj (%s) gotten with parent (%s) and sub (%s)") %
           ttt->getName() % ttt->parent->getName() % sub->getName());
     }
   }
 
   if (sub) {
-    if (sub->getObjFromMeCheck(ch)) 
+    if (sub->getObjFromMeCheck(ch))
       return FALSE;
-    
+
     // getting from a bag ought to cause some loss of attacks
     if (ch->fight())
       ch->cantHit += ch->loseRound(1 + ttt->getVolume() / 2250);
@@ -151,7 +154,7 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
       return DELETE_THIS;
     if (rc)
       return FALSE;
-  
+
     rc = ch->checkForGetTrap(ttt);
     if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_THIS))
       return DELETE_ITEM | DELETE_THIS;
@@ -161,7 +164,7 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
       return DELETE_THIS;
     if (rc)
       return FALSE;
-  
+
     sub->getObjFromMeText(ch, ttt, tType, isFirst);
 
     ch->logItem(ttt, CMD_GET);
@@ -190,7 +193,7 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
 
     --(*ttt);
     *ch += *ttt;
-    TObj *tobj = dynamic_cast<TObj *>(ttt);
+    TObj* tobj = dynamic_cast<TObj*>(ttt);
     if (tobj && tobj->isObjStat(ITEM_ATTACHED)) {
       act("You detach $p from its place and get it.", 0, ch, ttt, 0, TO_CHAR);
       act("$n detachs $p from its place and gets it.", 1, ch, ttt, 0, TO_ROOM);
@@ -201,20 +204,18 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
     ch->logItem(ttt, CMD_GET);
     ch->aiGet(ttt);
     rc = ch->genericItemCheck(ttt);
-    if (IS_SET_DELETE(rc, DELETE_ITEM) ||
-        IS_SET_DELETE(rc, DELETE_THIS)) {
+    if (IS_SET_DELETE(rc, DELETE_ITEM) || IS_SET_DELETE(rc, DELETE_THIS)) {
       return rc;
     }
   }
 
   rc = ttt->getMe(ch, sub);
-  if (IS_SET_DELETE(rc, DELETE_THIS)) 
+  if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_ITEM;
   else if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_THIS;
   else if (rc)  // stop parsing further
     return TRUE;
-
 
   rc = ttt->checkSpec(ch, CMD_OBJ_GOTTEN, NULL, sub);
   if (IS_SET_DELETE(rc, DELETE_ITEM))
@@ -229,12 +230,11 @@ int get(TBeing *ch, TThing *ttt, TThing *sub, getTypeT tType, bool isFirst)
   return TRUE;
 }
 
-static bool getAllObjChecks(TBeing *ch)
-{
+static bool getAllObjChecks(TBeing* ch) {
   if (ch->getPosition() <= POSITION_SITTING) {
     ch->sendTo("You need to be standing to do that.\n\r");
     if (!ch->awake())
-      return true;   // sleeping
+      return true;  // sleeping
     ch->doStand();
 
     if (ch->fight())
@@ -244,24 +244,23 @@ static bool getAllObjChecks(TBeing *ch)
 }
 
 // might return DELETE_THIS (for traps)
-int TBeing::doGet(const char *a)
-{
-  sstring arg=a;
+int TBeing::doGet(const char* a) {
+  sstring arg = a;
   char argument[256];
   char arg1[160], arg2[160], newarg[100];
-  const char *tmp_desc = NULL;
-  TObj *sub;
-  TThing *t;
+  const char* tmp_desc = NULL;
+  TObj* sub;
+  TThing* t;
   bool found = FALSE, autoloot = FALSE;
   int rc;
-  TBeing *horse = NULL;
-  TObj *tmpobj = NULL;
+  TBeing* horse = NULL;
+  TObj* tmpobj = NULL;
 
   int p;
   getTypeT type = GETALLALL;
 
-  if(arg.find("-autoloot") != std::string::npos){
-    autoloot=TRUE;
+  if (arg.find("-autoloot") != std::string::npos) {
+    autoloot = TRUE;
     arg = arg.replaceString("-autoloot", "");
   }
   strcpy(argument, arg.c_str());
@@ -314,27 +313,28 @@ int TBeing::doGet(const char *a)
       if (getPosition() <= POSITION_SITTING) {
         sendTo("You need to be standing to do that.\n\r");
         if (!awake())
-          return FALSE;   // sleeping
+          return FALSE;  // sleeping
         doStand();
 
         if (fight())
           return FALSE;  // don't fall through
       }
       if (riding) {
-        sendTo("The things are spread around too much to get from horseback!\n\r");
+        sendTo(
+          "The things are spread around too much to get from horseback!\n\r");
         return FALSE;
       }
       sendTo("You start picking up things from the room.\n\r");
-      act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
+      act("$n starts picking up things from the room.", TRUE, this, 0, 0,
+        TO_ROOM);
       start_task(this, NULL, roomp, TASK_GET_ALL, "", 350, in_room, 0, 0, 0);
 
       // this is a kludge, task_get still has a tiny delay on it
       // this dumps around it and goes right to the guts
-      rc = (*(tasks[TASK_GET_ALL].taskf))
-          (this, CMD_TASK_CONTINUE, "", 0, roomp, 0);
-      if (IS_SET_ONLY(rc, DELETE_THIS)) 
+      rc = (*(tasks[TASK_GET_ALL].taskf))(this, CMD_TASK_CONTINUE, "", 0, roomp,
+        0);
+      if (IS_SET_ONLY(rc, DELETE_THIS))
         return DELETE_THIS;
-      
 
       break;
     case GETOBJ:
@@ -343,60 +343,67 @@ int TBeing::doGet(const char *a)
         return FALSE;
       }
       if (getall(arg1, newarg)) {
-
         if (!searchLinkedListVis(this, newarg, roomp->stuff)) {
-          sendTo(format("There are no \"%s\"'s visible in this room.\n\r") % newarg);
-          return FALSE;    
+          sendTo(
+            format("There are no \"%s\"'s visible in this room.\n\r") % newarg);
+          return FALSE;
         }
         if (getPosition() <= POSITION_SITTING) {
           sendTo("You need to be standing to do that.\n\r");
           if (!awake())
-            return FALSE;   // sleeping
+            return FALSE;  // sleeping
           doStand();
-  
+
           if (fight())
             return FALSE;  // don't fall through
         }
-        if (riding && dynamic_cast<TBeing *>(riding) && getSkillValue(SKILL_ADVANCED_RIDING) < 50){
+        if (riding && dynamic_cast<TBeing*>(riding) &&
+            getSkillValue(SKILL_ADVANCED_RIDING) < 50) {
           sendTo("You can't get things from the room while mounted!\n\r");
           return FALSE;
         }
         sendTo("You start picking up things from the room.\n\r");
-        act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-        start_task(this, NULL, roomp, TASK_GET_ALL, newarg, 350, in_room, 0, 0 ,0);
+        act("$n starts picking up things from the room.", TRUE, this, 0, 0,
+          TO_ROOM);
+        start_task(this, NULL, roomp, TASK_GET_ALL, newarg, 350, in_room, 0, 0,
+          0);
         // this is a kludge, task_get still has a tiny delay on it
         // this dumps around it and goes right to the guts
-        rc = (*(tasks[TASK_GET_ALL].taskf))
-            (this, CMD_TASK_CONTINUE, "", 0, roomp, 0);
-        if (IS_SET_ONLY(rc, DELETE_THIS)) 
+        rc = (*(tasks[TASK_GET_ALL].taskf))(this, CMD_TASK_CONTINUE, "", 0,
+          roomp, 0);
+        if (IS_SET_ONLY(rc, DELETE_THIS))
           return DELETE_THIS;
 
         break;
       } else if ((p = getabunch(arg1, newarg))) {
         if (!searchLinkedListVis(this, newarg, roomp->stuff)) {
-          sendTo(format("There are no \"%s\"'s visible in this room.\n\r") % newarg);
+          sendTo(
+            format("There are no \"%s\"'s visible in this room.\n\r") % newarg);
           return FALSE;
         }
         if (getPosition() <= POSITION_SITTING) {
           sendTo("You need to be standing to do that.\n\r");
           if (!awake())
-            return FALSE;   // sleeping
+            return FALSE;  // sleeping
           doStand();
- 
+
           if (fight())
             return FALSE;  // don't fall through
         }
-        if (riding && dynamic_cast<TBeing *>(riding) && getSkillValue(SKILL_ADVANCED_RIDING) < 50){
+        if (riding && dynamic_cast<TBeing*>(riding) &&
+            getSkillValue(SKILL_ADVANCED_RIDING) < 50) {
           sendTo("You can't get things from the room while mounted!\n\r");
           return FALSE;
         }
         sendTo("You start picking up things from the room.\n\r");
-        act("$n starts picking up things from the room.",TRUE, this, 0, 0, TO_ROOM);
-        start_task(this, NULL, roomp, TASK_GET_ALL, newarg, 350, in_room, 0, p + 1, 0);
+        act("$n starts picking up things from the room.", TRUE, this, 0, 0,
+          TO_ROOM);
+        start_task(this, NULL, roomp, TASK_GET_ALL, newarg, 350, in_room, 0,
+          p + 1, 0);
         // this is a kludge, task_get still has a tiny delay on it
         // this dumps around it and goes right to the guts
-        rc = (*(tasks[TASK_GET_ALL].taskf))
-            (this, CMD_TASK_CONTINUE, "", 0, roomp, 0);
+        rc = (*(tasks[TASK_GET_ALL].taskf))(this, CMD_TASK_CONTINUE, "", 0,
+          roomp, 0);
         if (IS_SET_ONLY(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
@@ -405,14 +412,14 @@ int TBeing::doGet(const char *a)
       }
       if ((t = searchLinkedListVis(this, arg1, roomp->stuff))) {
         if (canGet(t, SILENT_NO)) {
-          rc = get(this,t, NULL, GETOBJ, found);
+          rc = get(this, t, NULL, GETOBJ, found);
           // get all has no lag, is this needed?
           // addToWait(Pulse::ONE_SECOND);
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            if (!t->makeScraps()){
+            if (!t->makeScraps()) {
               delete t;
-	      t = NULL;
-	    }
+              t = NULL;
+            }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             return DELETE_THIS;
@@ -420,7 +427,8 @@ int TBeing::doGet(const char *a)
           found = TRUE;
         }
       } else {
-        if (roomp && roomp->ex_description && (tmp_desc = roomp->ex_description->findExtraDesc(arg1)))
+        if (roomp && roomp->ex_description &&
+            (tmp_desc = roomp->ex_description->findExtraDesc(arg1)))
           sendTo(format("You can't get a %s.\n\r") % arg1);
         else
           sendTo(format("You don't see a %s here.\n\r") % arg1);
@@ -434,30 +442,32 @@ int TBeing::doGet(const char *a)
       if (is_abbrev(arg2, "all.corpse") && strlen(arg2) > 6) {
         if (getAllObjChecks(this))
           return FALSE;
-        if (riding && dynamic_cast<TBeing *>(riding) && getSkillValue(SKILL_ADVANCED_RIDING) < 50){
-          act("You can't get things from corpses while mounted!", 
-               FALSE, this, NULL, 0, TO_CHAR);
+        if (riding && dynamic_cast<TBeing*>(riding) &&
+            getSkillValue(SKILL_ADVANCED_RIDING) < 50) {
+          act("You can't get things from corpses while mounted!", FALSE, this,
+            NULL, 0, TO_CHAR);
           return FALSE;
         }
 
-        TThing *t=NULL;
-        for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-          TBaseCorpse *tbc = dynamic_cast<TBaseCorpse *>(t);
+        TThing* t = NULL;
+        for (StuffIter it = roomp->stuff.begin();
+             it != roomp->stuff.end() && (t = *it); ++it) {
+          TBaseCorpse* tbc = dynamic_cast<TBaseCorpse*>(t);
           // we do no name check here, since "pile dust" won't hit "corpse"
           if (tbc) {
-	    sstring namebuf;
-	    TThing *tt=NULL;
-	    int counter=1;
-	    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (tt=*it);++it) {
-	      if(dynamic_cast<TBaseCorpse *>(tt) == tbc)
-		break;
-	      if(dynamic_cast<TBaseCorpse *>(tt) &&
-		 tbc->name == tt->name){
-		++counter;
-	      }
-	    }
-	    namebuf=format("all %i.%s") % counter % add_bars(tbc->name);
-	    
+            sstring namebuf;
+            TThing* tt = NULL;
+            int counter = 1;
+            for (StuffIter it = roomp->stuff.begin();
+                 it != roomp->stuff.end() && (tt = *it); ++it) {
+              if (dynamic_cast<TBaseCorpse*>(tt) == tbc)
+                break;
+              if (dynamic_cast<TBaseCorpse*>(tt) && tbc->name == tt->name) {
+                ++counter;
+              }
+            }
+            namebuf = format("all %i.%s") % counter % add_bars(tbc->name);
+
             rc = tbc->getAllFrom(this, namebuf.c_str());
             if (IS_SET_DELETE(rc, DELETE_VICT))
               return DELETE_THIS;
@@ -470,34 +480,38 @@ int TBeing::doGet(const char *a)
       sub = get_obj_vis_accessible(this, arg2);
 
       if (!sub) {
-	int bits = generic_find(arg2, FIND_CHAR_ROOM, this, &horse, &tmpobj);
-	if (bits)
-	  if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
-	    TBaseContainer *saddlebag = dynamic_cast<TBaseContainer *>(horse->equipment[WEAR_BACK]);
-	    if (saddlebag && saddlebag->isSaddle()) {
-	      sub = dynamic_cast<TObj *>(saddlebag);
-	      act("You reach over to $N and open the $o on $s back.",FALSE,this,saddlebag,horse,TO_CHAR);
-	      act("$n reaches over to $N and opens the $o on $s back.",FALSE,this,saddlebag,horse,TO_NOTVICT);
-	      act("$n reaches over to you and opens the $o on your back.",FALSE,this,saddlebag,horse,TO_VICT);
-	    }
-	  }
+        int bits = generic_find(arg2, FIND_CHAR_ROOM, this, &horse, &tmpobj);
+        if (bits)
+          if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
+            TBaseContainer* saddlebag =
+              dynamic_cast<TBaseContainer*>(horse->equipment[WEAR_BACK]);
+            if (saddlebag && saddlebag->isSaddle()) {
+              sub = dynamic_cast<TObj*>(saddlebag);
+              act("You reach over to $N and open the $o on $s back.", FALSE,
+                this, saddlebag, horse, TO_CHAR);
+              act("$n reaches over to $N and opens the $o on $s back.", FALSE,
+                this, saddlebag, horse, TO_NOTVICT);
+              act("$n reaches over to you and opens the $o on your back.",
+                FALSE, this, saddlebag, horse, TO_VICT);
+            }
+          }
       }
-      
+
       if (!sub) {
-	if(autoloot==TRUE)
-	  sendTo("You do not see or have the corpse.\n\r");
-	else 
-	  sendTo(format("You do not see or have the %s.\n\r") % arg2);
+        if (autoloot == TRUE)
+          sendTo("You do not see or have the corpse.\n\r");
+        else
+          sendTo(format("You do not see or have the %s.\n\r") % arg2);
         break;
       } else {
         if (getAllObjChecks(this))
           return FALSE;
 
-        if (riding && dynamic_cast<TBeing *>(riding) 
-            && (getSkillValue(SKILL_ADVANCED_RIDING) < 50) 
-            && (sub->inRoom() != Room::NOWHERE)) {
-          act("You can't get things from $p while mounted!", 
-               FALSE, this, sub, 0, TO_CHAR);
+        if (riding && dynamic_cast<TBeing*>(riding) &&
+            (getSkillValue(SKILL_ADVANCED_RIDING) < 50) &&
+            (sub->inRoom() != Room::NOWHERE)) {
+          act("You can't get things from $p while mounted!", FALSE, this, sub,
+            0, TO_CHAR);
           return FALSE;
         }
         rc = sub->getAllFrom(this, argument);
@@ -516,13 +530,17 @@ int TBeing::doGet(const char *a)
         int bits = generic_find(arg2, FIND_CHAR_ROOM, this, &horse, &tmpobj);
         if (bits)
           if (horse->isRideable() && horse->equipment[WEAR_BACK]) {
-            TBaseContainer *saddlebag = dynamic_cast<TBaseContainer *>(horse->equipment[WEAR_BACK]);
+            TBaseContainer* saddlebag =
+              dynamic_cast<TBaseContainer*>(horse->equipment[WEAR_BACK]);
             if (saddlebag && saddlebag->isSaddle()) {
-              sub = dynamic_cast<TObj *>(saddlebag);
-	      act("You reach over to $N and open the $o on $s back.",FALSE,this,saddlebag,horse,TO_CHAR);
-	      act("$n reaches over to $N and opens the $o on $s back.",FALSE,this,saddlebag,horse,TO_NOTVICT);
-	      act("$n reaches over to you and opens the $o on your back.",FALSE,this,saddlebag,horse,TO_VICT);
-	    }
+              sub = dynamic_cast<TObj*>(saddlebag);
+              act("You reach over to $N and open the $o on $s back.", FALSE,
+                this, saddlebag, horse, TO_CHAR);
+              act("$n reaches over to $N and opens the $o on $s back.", FALSE,
+                this, saddlebag, horse, TO_NOTVICT);
+              act("$n reaches over to you and opens the $o on your back.",
+                FALSE, this, saddlebag, horse, TO_VICT);
+            }
           }
       }
 
@@ -533,10 +551,10 @@ int TBeing::doGet(const char *a)
         else if (rc)
           return TRUE;
       } else {
-	if(autoloot==TRUE)
-	  sendTo("You do not see or have the corpse.\n\r");
-	else
-	  sendTo(format("You do not see or have the %s.\n\r") % arg2);
+        if (autoloot == TRUE)
+          sendTo("You do not see or have the corpse.\n\r");
+        else
+          sendTo(format("You do not see or have the %s.\n\r") % arg2);
         break;
       }
       if ((t = searchLinkedListVis(this, arg1, sub->stuff))) {
@@ -547,16 +565,16 @@ int TBeing::doGet(const char *a)
           // addToWait(Pulse::ONE_SECOND);
 
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            if (!t->makeScraps()){
+            if (!t->makeScraps()) {
               delete t;
-	      t = NULL;
-	    }
+              t = NULL;
+            }
           }
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            if (!sub->makeScraps()){
+            if (!sub->makeScraps()) {
               delete sub;
-	      sub = NULL;
-	    }
+              sub = NULL;
+            }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             return DELETE_THIS;
@@ -571,16 +589,16 @@ int TBeing::doGet(const char *a)
           // addToWait(Pulse::ONE_SECOND);
 
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
-            if (!t->makeScraps()){
+            if (!t->makeScraps()) {
               delete t;
-	      t = NULL;
-	    }
+              t = NULL;
+            }
           }
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
-            if (!sub->makeScraps()){
+            if (!sub->makeScraps()) {
               delete sub;
-	      sub = NULL;
-	    }
+              sub = NULL;
+            }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             return DELETE_THIS;
@@ -589,7 +607,7 @@ int TBeing::doGet(const char *a)
         }
       } else {
         sendTo(COLOR_OBJECTS, format("%s does not contain the %s.\n\r") %
-	       sstring(sub->getName()).cap() % arg1);
+                                sstring(sub->getName()).cap() % arg1);
       }
       break;
   }

@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include <stdio.h>
 
 #include "room.h"
@@ -15,38 +14,39 @@
 #include "colorstring.h"
 #include "monster.h"
 
-int RecGetObjRoom(const TThing *obj)
-{
+int RecGetObjRoom(const TThing* obj) {
   if (obj->in_room != Room::NOWHERE)
-    return(obj->in_room);
-  if (dynamic_cast<TBeing *>(obj->parent))
-    return(obj->parent->in_room);
+    return (obj->in_room);
+  if (dynamic_cast<TBeing*>(obj->parent))
+    return (obj->parent->in_room);
   if (obj->equippedBy)
-    return(obj->equippedBy->in_room);
+    return (obj->equippedBy->in_room);
   if (obj->parent)
-    return(RecGetObjRoom(obj->parent));
+    return (RecGetObjRoom(obj->parent));
   if (obj->riding)
-    return(RecGetObjRoom(obj->riding));
+    return (RecGetObjRoom(obj->riding));
 
   return Room::NOWHERE;
 }
 
-void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *distant_snd)
-{
+void MakeRoomNoise(TMonster* mob, int room, const char* local_snd,
+  const char* distant_snd) {
   dirTypeT door;
-  TBeing *ch = NULL;
+  TBeing* ch = NULL;
   TRoom *rp, *orp;
-  TThing *t=NULL;
+  TThing* t = NULL;
   char buf[256];
 
   if ((rp = real_roomp(room)) && local_snd && *local_snd) {
-    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-      ch = dynamic_cast<TBeing *>(t);
+    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+         ++it) {
+      ch = dynamic_cast<TBeing*>(t);
       if (!ch || !ch->desc) {
         continue;
       }
       if (ch->awake()) {
-        sprintf(buf, "%s", addNameToBuf(ch, ch->desc, mob, local_snd, COLOR_MOBS).c_str());
+        sprintf(buf, "%s",
+          addNameToBuf(ch, ch->desc, mob, local_snd, COLOR_MOBS).c_str());
         ch->sendTo(COLOR_BASIC, buf);
       }
     }
@@ -54,15 +54,20 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
 
   if (rp && distant_snd) {
     for (door = MIN_DIR; door < MAX_DIR; door++) {
-      if (rp->dir_option[door] && (orp = real_roomp(rp->dir_option[door]->to_room))) {
-        for(StuffIter it=orp->stuff.begin();it!=orp->stuff.end() && (t=*it);++it) {
-          ch = dynamic_cast<TBeing *>(t);
+      if (rp->dir_option[door] &&
+          (orp = real_roomp(rp->dir_option[door]->to_room))) {
+        for (StuffIter it = orp->stuff.begin();
+             it != orp->stuff.end() && (t = *it); ++it) {
+          ch = dynamic_cast<TBeing*>(t);
           if (!ch) {
             continue;
           }
-          if (ch->desc && !IS_SET(ch->desc->autobits, AUTO_NOSHOUT) && ch->awake()) {
-            sprintf(buf, "%s", addNameToBuf(ch, ch->desc, mob, distant_snd, COLOR_MOBS).c_str());
-//            sprintf(buf, "%s", colorString(ch, ch->desc, distant_snd, NULL, COLOR_BASIC, TRUE));
+          if (ch->desc && !IS_SET(ch->desc->autobits, AUTO_NOSHOUT) &&
+              ch->awake()) {
+            sprintf(buf, "%s",
+              addNameToBuf(ch, ch->desc, mob, distant_snd, COLOR_MOBS).c_str());
+            //            sprintf(buf, "%s", colorString(ch, ch->desc,
+            //            distant_snd, NULL, COLOR_BASIC, TRUE));
             ch->sendTo(COLOR_BASIC, buf);
           }
         }
@@ -71,16 +76,16 @@ void MakeRoomNoise(TMonster *mob, int room, const char *local_snd, const char *d
   }
 }
 
-void MakeNoise(int room, const char *local_snd, const char *distant_snd)
-{
+void MakeNoise(int room, const char* local_snd, const char* distant_snd) {
   dirTypeT door;
-  TBeing *ch = NULL;
+  TBeing* ch = NULL;
   TRoom *rp = NULL, *orp = NULL;
-  TThing *t = NULL;
+  TThing* t = NULL;
 
   if ((rp = real_roomp(room))) {
-    for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-      ch = dynamic_cast<TBeing *>(t);
+    for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+         ++it) {
+      ch = dynamic_cast<TBeing*>(t);
       if (!ch) {
         continue;
       }
@@ -90,35 +95,38 @@ void MakeNoise(int room, const char *local_snd, const char *distant_snd)
     }
   }
   if (!rp) {
-    vlogf(LOG_MISC, format("Testing log: No rp in MakeNoise for %s") % ch->name);
+    vlogf(LOG_MISC,
+      format("Testing log: No rp in MakeNoise for %s") % ch->name);
     return;
   }
   for (door = MIN_DIR; door < MAX_DIR; door++) {
-    if (rp->dir_option[door] && (orp = real_roomp(rp->dir_option[door]->to_room))) {
-      for(StuffIter it=orp->stuff.begin();it!=orp->stuff.end() && (t=*it);++it) {
-        ch = dynamic_cast<TBeing *>(t);
+    if (rp->dir_option[door] &&
+        (orp = real_roomp(rp->dir_option[door]->to_room))) {
+      for (StuffIter it = orp->stuff.begin();
+           it != orp->stuff.end() && (t = *it); ++it) {
+        ch = dynamic_cast<TBeing*>(t);
         if (!ch) {
           continue;
         }
-	if (ch->desc && !IS_SET(ch->desc->autobits, AUTO_NOSHOUT) && ch->awake()) {
-	  ch->sendTo(COLOR_BASIC, distant_snd);
+        if (ch->desc && !IS_SET(ch->desc->autobits, AUTO_NOSHOUT) &&
+            ch->awake()) {
+          ch->sendTo(COLOR_BASIC, distant_snd);
         }
       }
     }
   }
 }
 
-int noise(const TBeing *ch)
-{
+int noise(const TBeing* ch) {
   int i, total = 0;
-  affectedData *af;
+  affectedData* af;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
-    if ((i == WEAR_FINGER_L) || (i == WEAR_FINGER_R) || 
-        (i == HOLD_RIGHT) || (i == HOLD_LEFT))
+    if ((i == WEAR_FINGER_L) || (i == WEAR_FINGER_R) || (i == HOLD_RIGHT) ||
+        (i == HOLD_LEFT))
       continue;
 
-    TObj *tobj = dynamic_cast<TObj *>(ch->equipment[i]);
+    TObj* tobj = dynamic_cast<TObj*>(ch->equipment[i]);
     if (tobj)
       total += tobj->itemNoise();
   }
@@ -141,7 +149,7 @@ int noise(const TBeing *ch)
         break;
       default:
         total -= 20;
-      break;
+        break;
     }
   }
 
@@ -160,24 +168,22 @@ int noise(const TBeing *ch)
   return (total);
 }
 
-int TBeing::applySoundproof() const
-{
+int TBeing::applySoundproof() const {
   if (checkSoundproof() && !isImmortal()) {
     sendTo("You are in a silence zone, you can't make a sound!\n\r");
-    return TRUE;		/* for shouts, emotes, etc */
+    return TRUE; /* for shouts, emotes, etc */
   }
   return FALSE;
 }
 
-int TThing::checkSoundproof() const
-{
+int TThing::checkSoundproof() const {
   return (roomp->isRoomFlag(ROOM_SILENCE));
 }
 
-void TRoom::playsound(soundNumT sound, const sstring &type, int vol, int prior, int loop) const
-{
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
-    TBeing * chb = dynamic_cast<TBeing *>(*it);
+void TRoom::playsound(soundNumT sound, const sstring& type, int vol, int prior,
+  int loop) const {
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
+    TBeing* chb = dynamic_cast<TBeing*>(*it);
     if (chb)
       chb->playsound(sound, type, vol, prior, loop);
   }
@@ -186,32 +192,31 @@ void TRoom::playsound(soundNumT sound, const sstring &type, int vol, int prior, 
 void TRoom::stopsound() const
 
 {
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
-    TBeing * chb = dynamic_cast<TBeing *>(*it);
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
+    TBeing* chb = dynamic_cast<TBeing*>(*it);
     if (chb)
       chb->stopsound();
   }
 }
 
-void TBeing::stopmusic()
-{
+void TBeing::stopmusic() {
   if (desc) {
     if (IS_SET(desc->account->flags, TAccount::MSP) || desc->m_bIsClient) {
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sendTo(CommPtr(new SoundComm("music", "http://sneezymud.org/sounds/", "Off",
-				   "", -1, -1, -1, -1)));
+      sendTo(CommPtr(new SoundComm("music", "http://sneezymud.org/sounds/",
+        "Off", "", -1, -1, -1, -1)));
     }
   }
 }
 
-const sstring & MUSIC_TYPE_DEATH = "death";
-const sstring & MUSIC_TYPE_ZONE = "zone";
-const sstring & MUSIC_TYPE_COMBAT = "combat";
+const sstring& MUSIC_TYPE_DEATH = "death";
+const sstring& MUSIC_TYPE_ZONE = "zone";
+const sstring& MUSIC_TYPE_COMBAT = "combat";
 
-void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, int loop)
-{
+void TBeing::playmusic(musicNumT music, const sstring& type, int vol, int cont,
+  int loop) {
   const sstring musicStruct[MAX_MUSIC_NUM] = {
     "Off",
     "combat_01",
@@ -229,47 +234,43 @@ void TBeing::playmusic(musicNumT music, const sstring &type, int vol, int cont, 
       // the other options should only get sent if they differ from the
       // defaults (to lessen spam)
 
-      sendTo(CommPtr(new SoundComm("music", "", musicStruct[music], type,
-				   vol, -1, loop, cont)));
-      
+      sendTo(CommPtr(new SoundComm("music", "", musicStruct[music], type, vol,
+        -1, loop, cont)));
     }
   }
 }
 
-void TBeing::stopsound()
-{
+void TBeing::stopsound() {
   if (desc) {
     if (IS_SET(desc->account->flags, TAccount::MSP) || desc->m_bIsClient) {
       // the U= command for MSP is supposed to set a default download
       // directory, so it oonly needs to be sent once, prior to all downloads
       // we will send a stopsound() when they enable MSP
-      sendTo(CommPtr(new SoundComm("sound", "http://sneezymud.org/sounds/", "Off", 
-				   "", -1,-1,-1, -1)));
+      sendTo(CommPtr(new SoundComm("sound", "http://sneezymud.org/sounds/",
+        "Off", "", -1, -1, -1, -1)));
     }
   }
 }
 
-const sstring & SOUND_TYPE_SOCIAL = "socials";
-const sstring & SOUND_TYPE_NOISE = "noise";
-const sstring & SOUND_TYPE_COMBAT = "combat";
-const sstring & SOUND_TYPE_MAGIC = "magic";
+const sstring& SOUND_TYPE_SOCIAL = "socials";
+const sstring& SOUND_TYPE_NOISE = "noise";
+const sstring& SOUND_TYPE_COMBAT = "combat";
+const sstring& SOUND_TYPE_MAGIC = "magic";
 
 // randomly chooses a sound from a sequential range
 // we should group any sounds we want together
-soundNumT pickRandSound(soundNumT s1, soundNumT s2)
-{
+soundNumT pickRandSound(soundNumT s1, soundNumT s2) {
   return soundNumT(::number(s1, s2));
 }
 
 // randomly chooses a song from a sequential range of musics
 // we should group any musics we want together
-musicNumT pickRandMusic(musicNumT s1, musicNumT s2)
-{
+musicNumT pickRandMusic(musicNumT s1, musicNumT s2) {
   return musicNumT(::number(s1, s2));
 }
 
-void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior, int loop)
-{
+void TBeing::playsound(soundNumT sound, const sstring& type, int vol, int prior,
+  int loop) {
   const sstring soundStruct[MAX_SOUND_NUM] = {
     "Off",
     "snore",
@@ -291,7 +292,7 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
     "laugh",
     "burp",
     "bogus",  // clap
-    "fart",  // fart
+    "fart",   // fart
     "sneeze",
     "cackle",
     "Dm-laugh",
@@ -446,7 +447,8 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
   };
 
   if (desc) {
-    if (((desc->account && IS_SET(desc->account->flags, TAccount::MSP)) || desc->m_bIsClient) &&
+    if (((desc->account && IS_SET(desc->account->flags, TAccount::MSP)) ||
+          desc->m_bIsClient) &&
         sound >= MIN_SOUND_NUM && sound < MAX_SOUND_NUM) {
       // please note, we do NOT send the U= command intentionally.
       // According to Zugg (of zMud), the U is meant to set a default
@@ -455,41 +457,40 @@ void TBeing::playsound(soundNumT sound, const sstring &type, int vol, int prior,
       // the other options should only get sent if they differ from the
       // defaults (to lessen spam)
 
-      // This is done so that the client message isn't somehow combined 
+      // This is done so that the client message isn't somehow combined
       // with other text and missed by the client interpreter - Russ 061299
       desc->outputProcessing();
 
-      sendTo(CommPtr(new SoundComm("sound", "", soundStruct[sound], type,
-				   vol, prior, loop, -1)));
+      sendTo(CommPtr(new SoundComm("sound", "", soundStruct[sound], type, vol,
+        prior, loop, -1)));
     }
   }
 }
 
-sstring SoundComm::getText(){
-  sstring buf="";
+sstring SoundComm::getText() {
+  sstring buf = "";
 
-  buf+=format("!!%s(%s") % soundtype.upper()% text;
-  
-  if(type!="")
-    buf+=format(" T=%s") % type;
+  buf += format("!!%s(%s") % soundtype.upper() % text;
 
-  if(url!="")
-    buf+=format(" U=%s") % url;
+  if (type != "")
+    buf += format(" T=%s") % type;
 
-  if(volume!=-1)
-    buf+=format(" V=%i") % volume;
+  if (url != "")
+    buf += format(" U=%s") % url;
 
-  if(priority!=-1)
-    buf+=format(" P=%i") % priority;
+  if (volume != -1)
+    buf += format(" V=%i") % volume;
 
-  if(repeats!=-1)
-    buf+=format(" L=%i") % repeats;
+  if (priority != -1)
+    buf += format(" P=%i") % priority;
 
-  if(cont!=-1)
-    buf+=format(" C=%i") % cont;
+  if (repeats != -1)
+    buf += format(" L=%i") % repeats;
 
+  if (cont != -1)
+    buf += format(" C=%i") % cont;
 
-  buf+=format(")\n\r");
+  buf += format(")\n\r");
 
   return buf;
 }

@@ -5,71 +5,61 @@
 #include "person.h"
 #include "race.h"
 
-bool TBeing::hasQuestBit(int value) const
-{
+bool TBeing::hasQuestBit(int value) const {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of hasQuestBit(%d)") %  value);
-    return FALSE;
-  }
-
-  return (toggles[value]);
-
-}
-
-void TBeing::setQuestBit(int value)
-{
-  if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of setQuestBit(%d)") %  value);
-    return;
-  }
-
-  toggles[value] |= 0x1;
-
-}
-
-void TBeing::remQuestBit(int value)
-{
-  if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of remQuestBit(%d)") %  value);
-    return;
-  }
-
-  toggles[value] &= ~(0x1);
-
-}
-
-bool TPerson::hasQuestBit(int value) const
-{
-  if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of hasQuestBit(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of hasQuestBit(%d)") % value);
     return FALSE;
   }
 
   return (toggles[value]);
 }
 
-void TPerson::setQuestBit(int value)
-{
+void TBeing::setQuestBit(int value) {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of setQuestBit(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of setQuestBit(%d)") % value);
     return;
   }
 
   toggles[value] |= 0x1;
 }
 
-void TPerson::remQuestBit(int value)
-{
+void TBeing::remQuestBit(int value) {
   if (value < 0 || value >= MAX_TOG_INDEX) {
-    vlogf(LOG_BUG, format("Bad check of remQuestBit(%d)") %  value);
+    vlogf(LOG_BUG, format("Bad check of remQuestBit(%d)") % value);
     return;
   }
 
   toggles[value] &= ~(0x1);
 }
 
-void TBeing::doMortalQuest(const char *tArg)
-{
+bool TPerson::hasQuestBit(int value) const {
+  if (value < 0 || value >= MAX_TOG_INDEX) {
+    vlogf(LOG_BUG, format("Bad check of hasQuestBit(%d)") % value);
+    return FALSE;
+  }
+
+  return (toggles[value]);
+}
+
+void TPerson::setQuestBit(int value) {
+  if (value < 0 || value >= MAX_TOG_INDEX) {
+    vlogf(LOG_BUG, format("Bad check of setQuestBit(%d)") % value);
+    return;
+  }
+
+  toggles[value] |= 0x1;
+}
+
+void TPerson::remQuestBit(int value) {
+  if (value < 0 || value >= MAX_TOG_INDEX) {
+    vlogf(LOG_BUG, format("Bad check of remQuestBit(%d)") % value);
+    return;
+  }
+
+  toggles[value] &= ~(0x1);
+}
+
+void TBeing::doMortalQuest(const char* tArg) {
   /********************************************
    Quest information is no longer housed here.
    use: lib/mobdata/responses/help/tog_number
@@ -79,8 +69,8 @@ void TBeing::doMortalQuest(const char *tArg)
 
   if (GetMaxLevel() > MAX_MORT) {
     char buf[256];
-    const char * t2 = one_argument(tArg, buf, cElements(buf));
-    char   questPath[256];
+    const char* t2 = one_argument(tArg, buf, cElements(buf));
+    char questPath[256];
     sstring tStString("");
 
     // check "immorts" for "quest real 3"
@@ -104,7 +94,7 @@ void TBeing::doMortalQuest(const char *tArg)
   int questNumber = convertTo<int>(tArg);
   unsigned int totFound = 0;
   int questRes = -1;
-  char   questPath[256];
+  char questPath[256];
   sstring tStString("");
 
   if (questNumber <= 0)
@@ -113,11 +103,11 @@ void TBeing::doMortalQuest(const char *tArg)
   for (int questIndex = (MAX_TOG_INDEX - 1); questIndex > -1; questIndex--) {
     if (hasQuestBit(questIndex)) {
       sprintf(questPath, "mobdata/responses/help/%d", questIndex);
-      FILE *fp = fopen(questPath, "r");
+      FILE* fp = fopen(questPath, "r");
       if (fp) {
         totFound++;
         fclose(fp);
-        if (questNumber == (int) totFound)
+        if (questNumber == (int)totFound)
           questRes = questIndex;
       }
     }
@@ -134,4 +124,3 @@ void TBeing::doMortalQuest(const char *tArg)
     desc->page_string(tStString);
   // else condition not needed, it should be valid based on above logic
 }
-

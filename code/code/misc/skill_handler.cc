@@ -26,7 +26,8 @@ bool SkillHandler::run_tests(const Config& config, const Tests& tests) {
 TestWithAct SkillHandler::make_test(const Test& test, const Act& do_act) {
   return [test, do_act](const Config& config) {
     const bool result = test(config);
-    if (!result && config.silent == SILENT_NO) do_act(config);
+    if (!result && config.silent == SILENT_NO)
+      do_act(config);
     return result;
   };
 }
@@ -132,6 +133,7 @@ TestWithAct SkillHandler::target_not_self(const sstring& message) {
     make_simple_act(message));
 }
 
-std::function<TestWithAct()> SkillHandler::custom(const Test& test, const Act& act) {
+std::function<TestWithAct()> SkillHandler::custom(const Test& test,
+  const Act& act) {
   return [test, act]() { return make_test(test, act); };
 }

@@ -6,7 +6,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 extern "C" {
 #include <stdio.h>
 
@@ -27,25 +26,31 @@ extern pid_t vfork(void);
 const char TMPFILE[] = "task.output";
 
 class _task {
-  public: 
-    TBeing *owner;
+  public:
+    TBeing* owner;
     char tsk;
-    char *cmd;
-    int	pid;
-    _task *next;
-    _task *prev;
+    char* cmd;
+    int pid;
+    _task* next;
+    _task* prev;
 
-    _task(TBeing *m, char t)	{ owner=m; tsk=t; cmd=0;  pid = 0; next = 0; prev = 0; }
-    ~_task()			{ delete [] cmd; }
+    _task(TBeing* m, char t) {
+      owner = m;
+      tsk = t;
+      cmd = 0;
+      pid = 0;
+      next = 0;
+      prev = 0;
+    }
+    ~_task() { delete[] cmd; }
 };
 
 //
 //  SystemTask::AddTask(TBeing *, char, char *)
 //
-void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
-{
-  char	lbuf[256], opt1[128];
-  _task	*tmp;
+void SystemTask::AddTask(TBeing* own, char tsk, const char* opt) {
+  char lbuf[256], opt1[128];
+  _task* tmp;
 
   //  Check if the task system is enabled.
   if (!taskstatus) {
@@ -54,7 +59,8 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
   }
   //  See if someone is trying to send shell commands to the script.
   if (opt) {
-    if (strchr(opt, '`') || strchr(opt, '|') || strchr(opt, '>') || strchr(opt, ';')) {
+    if (strchr(opt, '`') || strchr(opt, '|') || strchr(opt, '>') ||
+        strchr(opt, ';')) {
       vlogf(LOG_BUG, "Invalid char found in task option.  Tasks disabled.");
       taskstatus = false;
       return;
@@ -62,7 +68,8 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
   }
   //  Allocate space for the new task.
   if (!(tmp = new _task(own, tsk))) {
-    vlogf(LOG_BUG, "ERROR: SystemTask::AddTask(): malloc of struct _task failed");
+    vlogf(LOG_BUG,
+      "ERROR: SystemTask::AddTask(): malloc of struct _task failed");
     return;
   }
   //  Insert the new task into the linked list.
@@ -70,11 +77,11 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
     bot->next = tmp;
     tmp->prev = bot;
     bot = tmp;
-  } else 
+  } else
     top = bot = tmp;
-  
+
   //  Create the command that is send to the shell.
-  switch(tmp->tsk) {
+  switch (tmp->tsk) {
     case SYSTEM_TRACEROUTE:
       sscanf(opt, "%s", opt1);
       sprintf(lbuf, "bin/traceroute %s", opt1);
@@ -105,29 +112,29 @@ void SystemTask::AddTask(TBeing *own, char tsk, const char *opt)
 //
 // SystemTask::CheckTask()
 //
-void SystemTask::CheckTask() 
-{
+void SystemTask::CheckTask() {
   char file[32];
   int pstatus;
   struct stat fstatus;
 
-  if (!top) 
+  if (!top)
     return;
 
   //  Check if the top task is running and start it if it isn't.
   if (!top->pid) {
     start_task();
-  //  Check on the running task.
+    //  Check on the running task.
   } else {
     if (waitpid(top->pid, &pstatus, WNOHANG) < 0) {
-      vlogf(LOG_SILENT, format("INFO: task '%s' completed.") %  top->cmd);
+      vlogf(LOG_SILENT, format("INFO: task '%s' completed.") % top->cmd);
       //  Process the output.
-      memset((char *) &fstatus, 0, sizeof(struct stat));
-      if (stat(TMPFILE, &fstatus) < 0) 
+      memset((char*)&fstatus, 0, sizeof(struct stat));
+      if (stat(TMPFILE, &fstatus) < 0)
 #if defined(__linux__)
         vlogf(LOG_BUG, "WARNING: SystemTask::CheckTask(): stat()");
 #else
-        vlogf(LOG_BUG, format("WARNING: SystemTask::CheckTask(): stat(): errno=%d") %  errno);
+        vlogf(LOG_BUG,
+          format("WARNING: SystemTask::CheckTask(): stat(): errno=%d") % errno);
 #endif
 
       // there's no real technical reason we couldn't shove all the
@@ -139,21 +146,26 @@ void SystemTask::CheckTask()
         sstring str;
         file_to_sstring(TMPFILE, str);
         // Create a note and put the output in it.
-        TNote * note = createNote(mud_str_dup(str));
+        TNote* note = createNote(mud_str_dup(str));
         // Inform the requester and give them the note.
-	if (note) {
+        if (note) {
           *(top->owner) += *note;
-          top->owner->sendTo("Your task has completed.  A note with your output is in your inventory.\n\r");
+          top->owner->sendTo(
+            "Your task has completed.  A note with your output is in your "
+            "inventory.\n\r");
         } else {
-	  top->owner->sendTo("There was a problem making a note, please tell a god.\n\r");
+          top->owner->sendTo(
+            "There was a problem making a note, please tell a god.\n\r");
         }
       } else if (fstatus.st_size > maxnotesize) {
         sprintf(file, "tmp/%s.output", top->owner->getName().c_str());
         rename(TMPFILE, file);
-        top->owner->sendTo("Your task has completed but is to large to be loaded into a note.  Use\n\rviewoutput to read it.\n\r");
+        top->owner->sendTo(
+          "Your task has completed but is to large to be loaded into a note.  "
+          "Use\n\rviewoutput to read it.\n\r");
       } else
         top->owner->sendTo("Your task has completed.  You have no output.\n\r");
-      
+
       remove(top);
     }
   }
@@ -163,9 +175,8 @@ void SystemTask::CheckTask()
 //  SystemTask::Tasks(TBeing *, char *)
 //
 
-sstring SystemTask::Tasks(TBeing *ch, const char *args) 
-{
-  _task	*tsk;
+sstring SystemTask::Tasks(TBeing* ch, const char* args) {
+  _task* tsk;
 
   if (is_abbrev(args, "enabled") && ch->hasWizPower(POWER_WIZARD)) {
     taskstatus = true;
@@ -179,7 +190,7 @@ sstring SystemTask::Tasks(TBeing *ch, const char *args)
       sstring str;
       sprintf(lbuf, "%-10s %s\n\r", "Owner", "Task");
       str = lbuf;
-      for(tsk=top; tsk; tsk=tsk->next) {
+      for (tsk = top; tsk; tsk = tsk->next) {
         sprintf(lbuf, "%-10s %s\n\r", tsk->owner->getName().c_str(), tsk->cmd);
         str += lbuf;
       }
@@ -193,22 +204,21 @@ sstring SystemTask::Tasks(TBeing *ch, const char *args)
 //
 //  SystemTask::remove(_task)
 //
-void SystemTask::remove(_task *tsk) 
-{
+void SystemTask::remove(_task* tsk) {
   if (!tsk) {
     vlogf(LOG_BUG, "WARNING: SystemTask::remove(): trying to remove NULL task");
     return;
   }
-  if (tsk == top) 
+  if (tsk == top)
     top = tsk->next;
 
   if (tsk == bot)
-     bot = tsk->prev;
+    bot = tsk->prev;
 
   if (tsk->prev)
-     tsk->prev->next = tsk->next;
+    tsk->prev->next = tsk->next;
 
-  if (tsk->next) 
+  if (tsk->next)
     tsk->next->prev = tsk->prev;
 
   delete tsk;
@@ -216,19 +226,22 @@ void SystemTask::remove(_task *tsk)
 
 //
 // SystemTask::start_task()
-//  
-void SystemTask::start_task()
-{
-  if (!top) 
+//
+void SystemTask::start_task() {
+  if (!top)
     return;
 
   if (top->pid) {
-    vlogf(LOG_BUG, format("ERROR: SystemTask::start_task(): task '%s' is already running.") %  top->cmd);
+    vlogf(LOG_BUG,
+      format("ERROR: SystemTask::start_task(): task '%s' is already running.") %
+        top->cmd);
     return;
   }
   unlink(TMPFILE);
   if (forktask(top)) {
-    vlogf(LOG_BUG, format("ERROR: SystemTask::AddTask(): forktask() for task '%s' failed.") %  top->cmd);
+    vlogf(LOG_BUG,
+      format("ERROR: SystemTask::AddTask(): forktask() for task '%s' failed.") %
+        top->cmd);
     top->owner->sendTo("Your task failed and has been deleted.\n\r");
     remove(top);
   }
@@ -237,23 +250,22 @@ void SystemTask::start_task()
 //
 //  SystemTask::forktask(_task *)
 //
-int SystemTask::forktask(_task *tsk)
-{
-  extern char **environ;
+int SystemTask::forktask(_task* tsk) {
+  extern char** environ;
   char cmd[32], *argv[4];
 
   if (!tsk) {
     vlogf(LOG_BUG, "SystemTask::forktask tsk is NULL!");
-    return(1);
+    return (1);
   }
   if (!tsk->cmd) {
     vlogf(LOG_BUG, "SystemTask::forktask tsk->cmd is NULL!");
     remove(tsk);
-    return(1);
+    return (1);
   }
-  vlogf(LOG_SILENT, format("INFO: task '%s' started.") %  tsk->cmd);
+  vlogf(LOG_SILENT, format("INFO: task '%s' started.") % tsk->cmd);
   top->owner->sendTo("Your task has started.\n\r");
-  
+
   sscanf(tsk->cmd, "%s", cmd);
   char tmp[9];
   strcpy(tmp, "-c");
@@ -268,7 +280,7 @@ int SystemTask::forktask(_task *tsk)
   }
   if (tsk->pid < 0) {
     vlogf(LOG_BUG, "ERROR: SystemTask::forktask(): vfork() failed.");
-    return(1);
+    return (1);
   }
-  return(0);
+  return (0);
 }

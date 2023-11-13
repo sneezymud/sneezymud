@@ -20,16 +20,14 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
-// This contains the general combat skills.  
+// This contains the general combat skills.
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDCombat : public CDiscipline
-{
+class CDCombat : public CDiscipline {
   public:
     CSkill skBarehand;
     CSkill skArmorUse;
@@ -41,15 +39,15 @@ class CDCombat : public CDiscipline
     CSkill skDull;
 
     CDCombat();
-    CDCombat(const CDCombat &a);
-    CDCombat & operator=(const CDCombat &a);
+    CDCombat(const CDCombat& a);
+    CDCombat& operator=(const CDCombat& a);
     virtual ~CDCombat();
-    virtual CDCombat * cloneMe() { return new CDCombat(*this); }
+    virtual CDCombat* cloneMe() { return new CDCombat(*this); }
 
-    bool isBasic(){ return true; }
+    bool isBasic() { return true; }
 
-private:
+  private:
 };
 
-    void sharpen(TBeing *, TThing *);
-    void dull(TBeing *, TThing *);
+void sharpen(TBeing*, TThing*);
+void dull(TBeing*, TThing*);

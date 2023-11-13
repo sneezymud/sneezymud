@@ -4,15 +4,12 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
-
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDAdvAdventuring : public CDiscipline
-{
+class CDAdvAdventuring : public CDiscipline {
   public:
     CSkill skHiking;
     CSkill skForage;
@@ -26,8 +23,8 @@ class CDAdvAdventuring : public CDiscipline
     CSkill skAvian;
     CSkill skKalysian;
 
-    CDAdvAdventuring()
-      : CDiscipline(),
+    CDAdvAdventuring() :
+      CDiscipline(),
       skHiking(),
       skForage(),
       skSeekWater(),
@@ -38,11 +35,9 @@ class CDAdvAdventuring : public CDiscipline
       skTrollish(),
       skBullywug(),
       skAvian(),
-      skKalysian()
-      {
-      }
-    CDAdvAdventuring(const CDAdvAdventuring &a)
-      : CDiscipline(a),
+      skKalysian() {}
+    CDAdvAdventuring(const CDAdvAdventuring& a) :
+      CDiscipline(a),
       skHiking(a.skHiking),
       skForage(a.skForage),
       skSeekWater(a.skSeekWater),
@@ -53,11 +48,10 @@ class CDAdvAdventuring : public CDiscipline
       skTrollish(a.skTrollish),
       skBullywug(a.skBullywug),
       skAvian(a.skAvian),
-      skKalysian(a.skKalysian)
-      {
-      }
-    CDAdvAdventuring & operator=(const CDAdvAdventuring &a) {
-      if (this == &a) return *this;
+      skKalysian(a.skKalysian) {}
+    CDAdvAdventuring& operator=(const CDAdvAdventuring& a) {
+      if (this == &a)
+        return *this;
       CDiscipline::operator=(a);
       skHiking = a.skHiking;
       skForage = a.skForage;
@@ -72,23 +66,20 @@ class CDAdvAdventuring : public CDiscipline
       skKalysian = a.skKalysian;
       return *this;
     }
-    virtual ~CDAdvAdventuring() {};
+    virtual ~CDAdvAdventuring(){};
 
-    virtual CDAdvAdventuring * cloneMe() {
-      return new CDAdvAdventuring(*this);
-    }
+    virtual CDAdvAdventuring* cloneMe() { return new CDAdvAdventuring(*this); }
 
-    bool isFast(){ return true; }
+    bool isFast() { return true; }
 
-private:
+  private:
 };
 
-    void forage(TBeing *);
-    int forage(TBeing *, short);
-    int forage_insect(TBeing *caster);
+void forage(TBeing*);
+int forage(TBeing*, short);
+int forage_insect(TBeing* caster);
 
-    void divine(TBeing *, TThing *);
-    int divine(TBeing *, int, short, TThing *);
+void divine(TBeing*, TThing*);
+int divine(TBeing*, int, short, TThing*);
 
-    int encamp(TBeing *);
-
+int encamp(TBeing*);

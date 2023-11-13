@@ -3,7 +3,7 @@
 // SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //
 //      "cmd_stat.cc" - The stat command
-//  
+//
 //////////////////////////////////////////////////////////////////////////
 
 #include "extern.h"
@@ -24,16 +24,15 @@
 #include "shop.h"
 #include "configuration.h"
 
-extern int eqHpBonus(const TPerson *);
+extern int eqHpBonus(const TPerson*);
 extern int baseHp();
-extern float classHpPerLevel(const TPerson *);
-extern int ageHpMod(const TPerson *);
+extern float classHpPerLevel(const TPerson*);
+extern int ageHpMod(const TPerson*);
 extern int getObjLoadPotential(const int obj_num);
 
-void TBeing::statZone(const sstring &zoneNumber)
-{
+void TBeing::statZone(const sstring& zoneNumber) {
   // this probably has the potential to be wildly innaccurate now
-  
+
   int zone_num;
   int count_descriptions = 0;
   int count_titles = 0;
@@ -45,11 +44,11 @@ void TBeing::statZone(const sstring &zoneNumber)
   int room_loop = 0;
   sstring out("");
   sstring sb;
-  TRoom *roomp_current;
-  
+  TRoom* roomp_current;
+
   int count_mobs_in_block = 0;
   int count_objs_in_block = 0;
-  
+
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
@@ -61,25 +60,25 @@ void TBeing::statZone(const sstring &zoneNumber)
     zone_num = convertTo<int>(zoneNumber);
   }
 
-  if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
+  if (zone_num < 0 || zone_num >= (signed int)zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
     return;
   }
-  
+
   zoneData zoned = zone_table[zone_num];
-  
+
   room_start = (zone_num ? zone_table[zone_num - 1].top + 1 : 0);
   room_end = zoned.top;
-  
+
   for (room_loop = room_start; room_loop < (room_end + 1); room_loop++) {
     if ((roomp_current = real_roomp(room_loop))) {
       ++count_rooms;
-      
+
       if (roomp_current->getDescr() != "Empty") {
         // count of non 'Empty' descriptions
         ++count_descriptions;
       }
-      
+
       if (!roomp_current->name.empty()) {
         // count titles
         sstring name_num = format("%d") % roomp_current->number;
@@ -89,62 +88,67 @@ void TBeing::statZone(const sstring &zoneNumber)
           ++count_titles;
         }
       }
-      
+
       if (roomp_current->ex_description) {
         // count extra descriptions
         ++count_extras;
       }
-      
-      if (roomp_current->isRoomFlag(ROOM_DEATH    ))// Count DEATH_ROOM flags
+
+      if (roomp_current->isRoomFlag(ROOM_DEATH))  // Count DEATH_ROOM flags
         count_flags[0]++;
-      if (roomp_current->isRoomFlag(ROOM_NO_FLEE  ))// Count NO_FLEE flags
+      if (roomp_current->isRoomFlag(ROOM_NO_FLEE))  // Count NO_FLEE flags
         count_flags[1]++;
-      if (roomp_current->isRoomFlag(ROOM_PEACEFUL ))// Count PEACEFUL flags
+      if (roomp_current->isRoomFlag(ROOM_PEACEFUL))  // Count PEACEFUL flags
         count_flags[2]++;
-      if (roomp_current->isRoomFlag(ROOM_NO_HEAL  ))// Count NO_HEAL flags
+      if (roomp_current->isRoomFlag(ROOM_NO_HEAL))  // Count NO_HEAL flags
         count_flags[3]++;
-      if (roomp_current->isRoomFlag(ROOM_SAVE_ROOM))// Count SAVE_ROOM flags
+      if (roomp_current->isRoomFlag(ROOM_SAVE_ROOM))  // Count SAVE_ROOM flags
         count_flags[4]++;
-      if (roomp_current->isRoomFlag(ROOM_INDOORS  ))// Count INDOOR flags
+      if (roomp_current->isRoomFlag(ROOM_INDOORS))  // Count INDOOR flags
         count_flags[5]++;
       if (roomp_current->isRoomFlag(ROOM_PEACEFUL) &&
-          !roomp_current->isRoomFlag(ROOM_NO_HEAL))// If is Peaceful should ALWAYS be no-heal
+          !roomp_current->isRoomFlag(
+            ROOM_NO_HEAL))  // If is Peaceful should ALWAYS be no-heal
         count_flags[6]++;
-      
+
       // if (roomp_current->getSectorType() != SECT_ASTRAL_ETHREAL) {
       //   ++count_non_ethereal;
       // }
     }
   }
-  
+
   int mob_lvl_avg_block = 0;
   int mob_lvl_low_block = 0;
   int mob_lvl_high_block = 0;
   for (unsigned int mi = 0; mi < mob_index.size(); mi++) {
     if (mob_index[mi].virt < room_start || mob_index[mi].virt > room_end)
       continue;
-    // sendTo(format("Mob %u %i %s\n\r") % mi % mob_index[mi].virt % mob_index[mi].short_desc);
+    // sendTo(format("Mob %u %i %s\n\r") % mi % mob_index[mi].virt %
+    // mob_index[mi].short_desc);
     if (!mob_lvl_low_block)
-      mob_lvl_low_block = (int) mob_index[mi].level;
-    mob_lvl_avg_block += (int) mob_index[mi].level;
-    mob_lvl_low_block = min(mob_lvl_low_block, (int) mob_index[mi].level);
-    mob_lvl_high_block = max(mob_lvl_high_block, (int) mob_index[mi].level);
+      mob_lvl_low_block = (int)mob_index[mi].level;
+    mob_lvl_avg_block += (int)mob_index[mi].level;
+    mob_lvl_low_block = min(mob_lvl_low_block, (int)mob_index[mi].level);
+    mob_lvl_high_block = max(mob_lvl_high_block, (int)mob_index[mi].level);
     ++count_mobs_in_block;
   }
   if (count_mobs_in_block)
     mob_lvl_avg_block /= count_mobs_in_block;
-  
+
   for (unsigned int oi = 0; oi < obj_index.size(); oi++) {
     if (obj_index[oi].virt < room_start || obj_index[oi].virt > room_end)
       continue;
-    // sendTo(format("Obj %u %i %s\n\r") % oi % obj_index[oi].virt % obj_index[oi].short_desc);
+    // sendTo(format("Obj %u %i %s\n\r") % oi % obj_index[oi].virt %
+    // obj_index[oi].short_desc);
     ++count_objs_in_block;
   }
-  
+
   out += "<g>General Zone Info<1>\n\r";
   out += format("Name:         <c>%-s<1>\n\r") % zoned.name;
-  out += format("Zone num:     <c>%-3d<1>       Active:   <c>%-s<1>\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-  out += format("Start room:   <c>%-5d<1>     End room: <c>%-5d<1>\n\r") % room_start % room_end;
+  out += format("Zone num:     <c>%-3d<1>       Active:   <c>%-s<1>\n\r") %
+         zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+  out += format("Start room:   <c>%-5d<1>     End room: <c>%-5d<1>\n\r") %
+         room_start % room_end;
   sstring reset_mode;
   switch (zoned.reset_mode) {
     case 0:
@@ -162,43 +166,58 @@ void TBeing::statZone(const sstring &zoneNumber)
   }
   out += format("Reset mode:   %s\n\r") % reset_mode;
   sb = format("<c>%i<1>/<c>%i<1>") % zoned.lifespan % zoned.age;
-  out += format("Lifespan/age: %-21s Block size/used: <c>%i<1>/<c>%i<1>\n\r\n\r")  % sb % ((room_end - room_start) + 1) % count_rooms;
-  
+  out +=
+    format("Lifespan/age: %-21s Block size/used: <c>%i<1>/<c>%i<1>\n\r\n\r") %
+    sb % ((room_end - room_start) + 1) % count_rooms;
+
   out += "<g>Room Info<1>\n\r";
   out += format("Descriptions: <c>%-d<1>\n\r") % count_descriptions;
   out += format("Titles:       <c>%-d<1>\n\r") % count_titles;
   out += format("Extras:       <c>%-d<1>\n\r") % count_extras;
   out += format("Indoors:      <c>%-d<1>\n\r\n\r") % count_flags[5];
-  //out += format("Non-ethereal sectors: <c>%d<1>\n\r\n\r") % count_non_ethereal;
-  
+  // out += format("Non-ethereal sectors: <c>%d<1>\n\r\n\r") %
+  // count_non_ethereal;
+
   int mob_lvl_low = 0;
   int mob_lvl_high = 0;
   int mob_lvl_avg_unique = 0;
   int mob_lvl_avg_total = 0;
-  
-  std::map<int,int>::iterator iter;
-  for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
+
+  std::map<int, int>::iterator iter;
+  for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++) {
     if (!mob_lvl_low)
-      mob_lvl_low = (int) mob_index[iter->first].level;
-    mob_lvl_low = min(mob_lvl_low, (int) mob_index[iter->first].level);
-    mob_lvl_high = max(mob_lvl_high, (int) mob_index[iter->first].level);
-    mob_lvl_avg_unique += (int) mob_index[iter->first].level;
-    mob_lvl_avg_total += ((int) mob_index[iter->first].level) * iter->second;
+      mob_lvl_low = (int)mob_index[iter->first].level;
+    mob_lvl_low = min(mob_lvl_low, (int)mob_index[iter->first].level);
+    mob_lvl_high = max(mob_lvl_high, (int)mob_index[iter->first].level);
+    mob_lvl_avg_unique += (int)mob_index[iter->first].level;
+    mob_lvl_avg_total += ((int)mob_index[iter->first].level) * iter->second;
   }
   if (zoned.stat_mobs_unique)
     mob_lvl_avg_unique /= zoned.stat_mobs_unique;
   if (zoned.stat_mobs_total)
     mob_lvl_avg_total /= zoned.stat_mobs_total;
   out += "<g>Mob Info<1>\n\r";
-  out += format("Unique mobs in zonefile:    <c>%-4d<1>  Low/avg/high: <c>%d<1>/<c>%d<1>/<c>%d<1>\n\r") % zoned.stat_mobs_unique % mob_lvl_low % mob_lvl_avg_unique % mob_lvl_high;
-  out += format("Total mobs in zonefile:     <c>%-4d<1>  Avg:          <c>%d<1>\n\r") % zoned.stat_mobs_total % mob_lvl_avg_total;
-  out += format("Unique mobs in block:       <c>%-4d<1>  Low/avg/high: <c>%d<1>/<c>%d<1>/<c>%d<1>\n\r") % count_mobs_in_block % mob_lvl_low_block % mob_lvl_avg_block % mob_lvl_high_block;
-  TBeing *b;
-  TMonster *monst;
+  out += format(
+           "Unique mobs in zonefile:    <c>%-4d<1>  Low/avg/high: "
+           "<c>%d<1>/<c>%d<1>/<c>%d<1>\n\r") %
+         zoned.stat_mobs_unique % mob_lvl_low % mob_lvl_avg_unique %
+         mob_lvl_high;
+  out +=
+    format(
+      "Total mobs in zonefile:     <c>%-4d<1>  Avg:          <c>%d<1>\n\r") %
+    zoned.stat_mobs_total % mob_lvl_avg_total;
+  out += format(
+           "Unique mobs in block:       <c>%-4d<1>  Low/avg/high: "
+           "<c>%d<1>/<c>%d<1>/<c>%d<1>\n\r") %
+         count_mobs_in_block % mob_lvl_low_block % mob_lvl_avg_block %
+         mob_lvl_high_block;
+  TBeing* b;
+  TMonster* monst;
   int response_scripts_block = 0;
   int response_scripts_zonefile = 0;
   for (b = character_list; b; b = b->next) {
-    if ((monst = dynamic_cast<TMonster *>(b)) && monst->resps && monst->resps->respList) {
+    if ((monst = dynamic_cast<TMonster*>(b)) && monst->resps &&
+        monst->resps->respList) {
       if (!(monst->mobVnum() < room_start || monst->mobVnum() > room_end)) {
         ++response_scripts_block;
       }
@@ -207,20 +226,24 @@ void TBeing::statZone(const sstring &zoneNumber)
       }
     }
   }
-  out += format("Response mobs in zonefile:  <c>%-4d<1>  Response mobs in block: <c>%-4d<1>\n\r\n\r") % response_scripts_zonefile % response_scripts_block;
-  
+  out += format(
+           "Response mobs in zonefile:  <c>%-4d<1>  Response mobs in block: "
+           "<c>%-4d<1>\n\r\n\r") %
+         response_scripts_zonefile % response_scripts_block;
+
   out += "<g>Object Info<1>\n\r";
-  out += format("Unique objects in zonefile: <c>%-d<1>\n\r") % zoned.stat_objs_unique;
-  out += format("Unique objects in block:    <c>%-d<1>\n\r") % count_objs_in_block;
-  
+  out += format("Unique objects in zonefile: <c>%-d<1>\n\r") %
+         zoned.stat_objs_unique;
+  out +=
+    format("Unique objects in block:    <c>%-d<1>\n\r") % count_objs_in_block;
+
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-void TBeing::statZoneMobs(sstring zoneNumber)
-{
+void TBeing::statZoneMobs(sstring zoneNumber) {
   int zone_num;
   sstring out("");
-  
+
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
@@ -230,30 +253,32 @@ void TBeing::statZoneMobs(sstring zoneNumber)
   } else {
     zone_num = convertTo<int>(zoneNumber);
   }
-  
-  if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
+
+  if (zone_num < 0 || zone_num >= (signed int)zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
     return;
   }
-  
+
   zoneData zoned = zone_table[zone_num];
-  
+
   int count = 0;
-  std::map<int,int>::iterator iter;
-  
+  std::map<int, int>::iterator iter;
+
   out += "<g>Zonefile Mobile Report<1>\n\r";
   out += format("<g>Zone name:<1>  %-s\n\r") % zoned.name;
-  out += format("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-  
+  out += format("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") %
+         zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+
   out += "      <c>Vnum   Max Count Class    Level Name<1>\n\r";
-  for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++ ) {
+  for (iter = zoned.stat_mobs.begin(); iter != zoned.stat_mobs.end(); iter++) {
     ++count;
-    // grab the class data, do funny stuff to display possible multi-classes with abbreviations
+    // grab the class data, do funny stuff to display possible multi-classes
+    // with abbreviations
     sstring classy;
     bool got_class = FALSE;
     bool reset = FALSE;
     for (classIndT cl = MIN_CLASS_IND; cl < MAX_CLASSES; cl++) {
-      if (IS_SET((int) mob_index[iter->first].Class, 1<<cl)) {
+      if (IS_SET((int)mob_index[iter->first].Class, 1 << cl)) {
         if (got_class && !reset) {
           // mob is multi-classed, erase and start over with abbreviations
           cl = MIN_CLASS_IND;
@@ -270,25 +295,26 @@ void TBeing::statZoneMobs(sstring zoneNumber)
     }
     if (classy.size() == 0) {
       classy = format("<R>%-8d<1>") % mob_index[iter->first].Class;
-      vlogf(LOG_BUG, format("Unknown class bit (%d) in TBeing::statZoneMobs.") % mob_index[iter->first].Class);
+      vlogf(LOG_BUG, format("Unknown class bit (%d) in TBeing::statZoneMobs.") %
+                       mob_index[iter->first].Class);
     }
-    
+
     // output the row
-    out += format("<c>%-4d<1> %5d %5d %5d %-8s %5ld %s\n\r") % count 
-    % mob_index[iter->first].virt % mob_index[iter->first].max_exist 
-    % mob_index[iter->first].getNumber() % classy
-    % mob_index[iter->first].level % mob_index[iter->first].name;
-    // out += format("<c>%3d)<1> %5d  %s\n\r") % count % mob_index[iter->first].virt % mob_index[iter->first].short_desc;
+    out += format("<c>%-4d<1> %5d %5d %5d %-8s %5ld %s\n\r") % count %
+           mob_index[iter->first].virt % mob_index[iter->first].max_exist %
+           mob_index[iter->first].getNumber() % classy %
+           mob_index[iter->first].level % mob_index[iter->first].name;
+    // out += format("<c>%3d)<1> %5d  %s\n\r") % count %
+    // mob_index[iter->first].virt % mob_index[iter->first].short_desc;
   }
-  
+
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-void TBeing::statZoneObjs(sstring zoneNumber)
-{
+void TBeing::statZoneObjs(sstring zoneNumber) {
   int zone_num;
   sstring out("");
-  
+
   if (zoneNumber.empty()) {
     if (!roomp) {
       vlogf(LOG_BUG, "statZone called by being with no current room.");
@@ -298,67 +324,69 @@ void TBeing::statZoneObjs(sstring zoneNumber)
   } else {
     zone_num = convertTo<int>(zoneNumber);
   }
-  
-  if (zone_num < 0 || zone_num >= (signed int) zone_table.size()) {
+
+  if (zone_num < 0 || zone_num >= (signed int)zone_table.size()) {
     sendTo("Zone number incorrect.\n\r");
     return;
   }
-  
+
   zoneData zoned = zone_table[zone_num];
-  
+
   int count = 0;
-  std::map<int,int>::iterator iter;
+  std::map<int, int>::iterator iter;
   out += "<g>Zonefile Object Report<1>\n\r";
   out += format("<g>Zone name:<1>  %-s\n\r") % zoned.name;
-  out += format("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") % zone_num % (zoned.enabled ? "Enabled" : "Disabled");
-  
+  out += format("<g>Zone num:<1>   %-3d       <g>Active:<1>   %-s\n\r\n\r") %
+         zone_num % (zoned.enabled ? "Enabled" : "Disabled");
+
   if (!hasWizPower(POWER_SHOW_TRUSTED)) {
     out += "      <c>Vnum Type              Name<1>\n\r";
   } else {
-    out += "      <c>Vnum   Max Count  Value Type              Level Name<1>\n\r";
+    out +=
+      "      <c>Vnum   Max Count  Value Type              Level Name<1>\n\r";
   }
-  for (iter = zoned.stat_objs.begin(); iter != zoned.stat_objs.end(); iter++ ) {
+  for (iter = zoned.stat_objs.begin(); iter != zoned.stat_objs.end(); iter++) {
     ++count;
-    
+
     // try to speed things up - don't init an object unless we really need to
     // it's only used to determine level for certain item types
     // leaving the rest blank also helps with readability
     sstring olevel;
-    if (obj_index[iter->first].itemtype == ITEM_WEAPON
-        || obj_index[iter->first].itemtype == ITEM_ARMOR
-        || obj_index[iter->first].itemtype == ITEM_WORN
-        || obj_index[iter->first].itemtype == ITEM_HANDGONNE
-        || obj_index[iter->first].itemtype == ITEM_HOLY_SYM
-        || obj_index[iter->first].itemtype == ITEM_MARTIAL_WEAPON
-        || obj_index[iter->first].itemtype == ITEM_JEWELRY
-        || obj_index[iter->first].itemtype == ITEM_CANNON
-        || obj_index[iter->first].itemtype == ITEM_GUN
-        || obj_index[iter->first].itemtype == ITEM_ARROW) {
-      TObj *obj = read_object(obj_index[iter->first].virt, VIRTUAL);
-      olevel = format("%d") % (int) obj->objLevel();
+    if (obj_index[iter->first].itemtype == ITEM_WEAPON ||
+        obj_index[iter->first].itemtype == ITEM_ARMOR ||
+        obj_index[iter->first].itemtype == ITEM_WORN ||
+        obj_index[iter->first].itemtype == ITEM_HANDGONNE ||
+        obj_index[iter->first].itemtype == ITEM_HOLY_SYM ||
+        obj_index[iter->first].itemtype == ITEM_MARTIAL_WEAPON ||
+        obj_index[iter->first].itemtype == ITEM_JEWELRY ||
+        obj_index[iter->first].itemtype == ITEM_CANNON ||
+        obj_index[iter->first].itemtype == ITEM_GUN ||
+        obj_index[iter->first].itemtype == ITEM_ARROW) {
+      TObj* obj = read_object(obj_index[iter->first].virt, VIRTUAL);
+      olevel = format("%d") % (int)obj->objLevel();
       delete obj;
     }
     sstring itype = ItemInfo[obj_index[iter->first].itemtype]->name;
-    
+
     if (!hasWizPower(POWER_SHOW_TRUSTED)) {
-      out += format("<c>%-4d<1> %5d %-17s %s\n\r") % count % obj_index[iter->first].virt % itype % obj_index[iter->first].name;
+      out += format("<c>%-4d<1> %5d %-17s %s\n\r") % count %
+             obj_index[iter->first].virt % itype % obj_index[iter->first].name;
     } else {
-      out += format("<c>%-4d<1> %5d %5d %5d %6d %-17s %5s %s\n\r") % count 
-        % obj_index[iter->first].virt % obj_index[iter->first].max_exist
-        % obj_index[iter->first].getNumber() % obj_index[iter->first].value
-        % itype % olevel % obj_index[iter->first].name;
+      out += format("<c>%-4d<1> %5d %5d %5d %6d %-17s %5s %s\n\r") % count %
+             obj_index[iter->first].virt % obj_index[iter->first].max_exist %
+             obj_index[iter->first].getNumber() % obj_index[iter->first].value %
+             itype % olevel % obj_index[iter->first].name;
     }
   }
   desc->page_string(out, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-void TBeing::statRoom(TRoom *rmp)
-{
+void TBeing::statRoom(TRoom* rmp) {
   sstring str;
   sstring tmp_str;
   sstring buf2, buf3, buf4;
-  extraDescription *e;
-  TThing *t=NULL;
+  extraDescription* e;
+  TThing* t = NULL;
   int counter = 0, volume;
 
   if (!limitPowerCheck(CMD_EDIT, rmp->number)) {
@@ -366,41 +394,42 @@ void TBeing::statRoom(TRoom *rmp)
     return;
   }
 
+  str = format(
+          "%sRoom name:%s %s, %sOf zone:%s %d. %sV-Number:%s %d, %sR-number:%s "
+          "%d\n\r") %
+        cyan() % norm() % rmp->name % cyan() % norm() % rmp->getZoneNum() %
+        cyan() % norm() % rmp->number % cyan() % norm() % in_room;
 
-  str = format("%sRoom name:%s %s, %sOf zone:%s %d. %sV-Number:%s %d, %sR-number:%s %d\n\r") %
-    cyan() % norm() % rmp->name %
-    cyan() % norm() % rmp->getZoneNum() %
-    cyan() % norm() % rmp->number %
-    cyan() % norm() % in_room;
+  str += format("%sRoom Coords:%s %d, %d, %d\n\r") % cyan() % norm() %
+         rmp->getXCoord() % rmp->getYCoord() % rmp->getZCoord();
 
-  str += format("%sRoom Coords:%s %d, %d, %d\n\r") %
-    cyan() % norm() %
-    rmp->getXCoord() % rmp->getYCoord() % rmp->getZCoord();
-
-  unsigned int shop_nr=0;
-  for (shop_nr = 0; (shop_nr < shop_index.size()) && 
-	 (shop_index[shop_nr].in_room != rmp->number); shop_nr++);
+  unsigned int shop_nr = 0;
+  for (shop_nr = 0; (shop_nr < shop_index.size()) &&
+                    (shop_index[shop_nr].in_room != rmp->number);
+       shop_nr++)
+    ;
 
   if (shop_nr < shop_index.size())
-    str += format("%sShop Number:%s %i, %sShop Keeper:%s %i\n\r") %
-      cyan() % norm() % shop_nr % cyan() % norm() % 
-      mob_index[shop_index[shop_nr].keeper].virt;
+    str += format("%sShop Number:%s %i, %sShop Keeper:%s %i\n\r") % cyan() %
+           norm() % shop_nr % cyan() % norm() %
+           mob_index[shop_index[shop_nr].keeper].virt;
 
-  str += format("%sSector type:%s %s") %
-    cyan() % norm() % TerrainInfo[rmp->getSectorType()]->name;
+  str += format("%sSector type:%s %s") % cyan() % norm() %
+         TerrainInfo[rmp->getSectorType()]->name;
 
   str += format("  %sSpecial procedure:%s ") % cyan() % norm();
 
-  str += format("%s\n\r") % ((rmp->spec) ? roomSpecials[rmp->spec].name : "None");
+  str +=
+    format("%s\n\r") % ((rmp->spec) ? roomSpecials[rmp->spec].name : "None");
 
   str += format("%sRoom flags:%s ") % cyan() % norm();
 
-  str += sprintbit((long) rmp->getRoomFlags(), room_bits);
+  str += sprintbit((long)rmp->getRoomFlags(), room_bits);
   str += "\n\r";
 
   str += format("%sRoom flag bit vector:%s ") % cyan() % norm();
 
-  str += format("%d\n\r") % ((unsigned int) rmp->getRoomFlags());
+  str += format("%d\n\r") % ((unsigned int)rmp->getRoomFlags());
 
   str += format("%sDescription:%s\n\r") % cyan() % norm();
   tmp_str = rmp->getDescr();
@@ -424,74 +453,77 @@ void TBeing::statRoom(TRoom *rmp)
 
   buf3 = format("%d") % rmp->getRoomHeight();
   buf4 = format("%d") % rmp->getMoblim();
-  str += format("%sLight:%s %d   %sRoom Height:%s %s    %sMaximum capacity:%s %s\n\r") %
-    cyan() % norm() % rmp->getLight() %
-    cyan() % norm() % ((rmp->getRoomHeight() <= 0) ? "Unlimited" : buf3) %
-    cyan() % norm() % ((rmp->getMoblim()) ? buf4 : "Infinite");
+  str +=
+    format(
+      "%sLight:%s %d   %sRoom Height:%s %s    %sMaximum capacity:%s %s\n\r") %
+    cyan() % norm() % rmp->getLight() % cyan() % norm() %
+    ((rmp->getRoomHeight() <= 0) ? "Unlimited" : buf3) % cyan() % norm() %
+    ((rmp->getMoblim()) ? buf4 : "Infinite");
 
   if (rmp->isWaterSector() || rmp->isUnderwaterSector()) {
-    str += format("%sRiver direction:%s %s") % 
-      cyan() % norm() %
-      ((rmp->getRiverDir() < 0) ? "None" : dirs[rmp->getRiverDir()]);
+    str += format("%sRiver direction:%s %s") % cyan() % norm() %
+           ((rmp->getRiverDir() < 0) ? "None" : dirs[rmp->getRiverDir()]);
 
     str += format("   %sRiver speed:%s ") % cyan() % norm();
     if (rmp->getRiverSpeed() >= 1)
-      str += format("Every %d heartbeat%s\n\r") %
-	rmp->getRiverSpeed() % ((rmp->getRiverSpeed() != 1) ? "s." : ".");
+      str += format("Every %d heartbeat%s\n\r") % rmp->getRiverSpeed() %
+             ((rmp->getRiverSpeed() != 1) ? "s." : ".");
     else
       str += format("no current.\n\r");
 
-    str += format("%sFish caught:%s %i\n\r") %
-      cyan() % norm() % rmp->getFished();
-
+    str +=
+      format("%sFish caught:%s %i\n\r") % cyan() % norm() % rmp->getFished();
   }
   if (rmp->isForestSector())
-    str += format("Number of logs harvested: %i\n\r")
-      % rmp->getLogsHarvested();
+    str += format("Number of logs harvested: %i\n\r") % rmp->getLogsHarvested();
   if ((rmp->getTeleTarg() > 0) && (rmp->getTeleTime() > 0)) {
-    str += format("%sTeleport speed:%s Every %d heartbeats.  %sTo room:%s %d  %sLook?%s %s.\n\r") %
-      cyan() % norm() % rmp->getTeleTime() %
-      cyan() % norm() % rmp->getTeleTarg() %
-      cyan() % norm() % (rmp->getTeleLook() ? "yes" : "no");
+    str += format(
+             "%sTeleport speed:%s Every %d heartbeats.  %sTo room:%s %d  "
+             "%sLook?%s %s.\n\r") %
+           cyan() % norm() % rmp->getTeleTime() % cyan() % norm() %
+           rmp->getTeleTarg() % cyan() % norm() %
+           (rmp->getTeleLook() ? "yes" : "no");
   }
   str += format("%s------- Chars present -------%s\n\r") % cyan() % norm();
   counter = 0;
-  for(StuffIter it=rmp->stuff.begin();it!=rmp->stuff.end() && (t=*it);++it) {
+  for (StuffIter it = rmp->stuff.begin(); it != rmp->stuff.end() && (t = *it);
+       ++it) {
     // canSee prevents seeing invis gods of higher level
-    if (dynamic_cast<TBeing *>(t) && canSee(t)) {
+    if (dynamic_cast<TBeing*>(t) && canSee(t)) {
       counter++;
       if (counter > 15) {
-         str += "Too Many In Room to Stat More\n\r";
-         break;
+        str += "Too Many In Room to Stat More\n\r";
+        break;
       } else {
-        str += format("%s%s   (%s)\n\r") %
-	  t->getName() % (dynamic_cast<TPerson *>(t) ? "(PC)" : "(NPC)") %
-	  t->name;
+        str += format("%s%s   (%s)\n\r") % t->getName() %
+               (dynamic_cast<TPerson*>(t) ? "(PC)" : "(NPC)") % t->name;
       }
     }
   }
   str += format("%s--------- Born Here ---------%s\n\r") % cyan() % norm();
   counter = 0;
   for (t = rmp->tBornInsideMe; t; t = t->nextBorn) {
-    TMonster *tMonster;
+    TMonster* tMonster;
 
-    if ((tMonster = dynamic_cast<TMonster *>(t))) {
+    if ((tMonster = dynamic_cast<TMonster*>(t))) {
       counter++;
 
       if (counter > 5) {
         str += "Too Many Creators Born In Room To Show More\n\r";
         break;
       } else {
-        str += format("[%6d] %s\n\r") % tMonster->mobVnum() % tMonster->getName();
+        str +=
+          format("[%6d] %s\n\r") % tMonster->mobVnum() % tMonster->getName();
       }
     }
   }
   str += format("%s--------- Contents ---------%s\n\r") % cyan() % norm();
   counter = 0;
   volume = 0;
-  buf2="";
-  for(StuffIter it=rmp->stuff.begin();it!=rmp->stuff.end() && (t=*it);++it) {
-    if (!dynamic_cast<TBeing *>(t)) {
+  buf2 = "";
+  for (StuffIter it = rmp->stuff.begin(); it != rmp->stuff.end() && (t = *it);
+       ++it) {
+    if (!dynamic_cast<TBeing*>(t)) {
       volume += t->getVolume();
       counter++;
       if (counter > 30) {
@@ -502,8 +534,8 @@ void TBeing::statRoom(TRoom *rmp)
       }
     }
   }
-  str += format("%sTotal Volume:%s %s\n\r") %
-    cyan() % norm() % volumeDisplay(volume);
+  str += format("%sTotal Volume:%s %s\n\r") % cyan() % norm() %
+         volumeDisplay(volume);
   str += buf2;
 
   str += format("%s------- Exits defined -------%s\n\r") % cyan() % norm();
@@ -512,36 +544,30 @@ void TBeing::statRoom(TRoom *rmp)
     if (!rmp->dir_option[dir]) {
       continue;
     } else {
-      str+=format("%sDirection:%s %-10s    %sDoor Type:%s %-12s     %sTo-Room:%s %d\n\r") %
-        cyan() % norm() %
-	dirs[dir] %
-        cyan() % norm() %
-        door_types[rmp->dir_option[dir]->door_type] %
-        cyan() % norm() %
-	rmp->dir_option[dir]->to_room;
+      str += format(
+               "%sDirection:%s %-10s    %sDoor Type:%s %-12s     %sTo-Room:%s "
+               "%d\n\r") %
+             cyan() % norm() % dirs[dir] % cyan() % norm() %
+             door_types[rmp->dir_option[dir]->door_type] % cyan() % norm() %
+             rmp->dir_option[dir]->to_room;
       if (rmp->dir_option[dir]->door_type != DOOR_NONE) {
-        str += format("%sWeight:%s %d      %sExit Flags:%s %s\n\r%sKeywords:%s %s\n\r") %
-          cyan() % norm() %
-          rmp->dir_option[dir]->weight % 
-          cyan() % norm() %
-          sprintbit(rmp->dir_option[dir]->condition, exit_bits) %
-          cyan() % norm() %
-	  rmp->dir_option[dir]->keyword;
-        if ((rmp->dir_option[dir]->key > 0) || 
-             (rmp->dir_option[dir]->lock_difficulty >= 0)) {
+        str +=
+          format(
+            "%sWeight:%s %d      %sExit Flags:%s %s\n\r%sKeywords:%s %s\n\r") %
+          cyan() % norm() % rmp->dir_option[dir]->weight % cyan() % norm() %
+          sprintbit(rmp->dir_option[dir]->condition, exit_bits) % cyan() %
+          norm() % rmp->dir_option[dir]->keyword;
+        if ((rmp->dir_option[dir]->key > 0) ||
+            (rmp->dir_option[dir]->lock_difficulty >= 0)) {
           str += format("%sKey Number:%s %d     %sLock Difficulty:%s %d\n\r") %
-            cyan() % norm() %
-	    rmp->dir_option[dir]->key %
-            cyan() % norm() %
-            rmp->dir_option[dir]->lock_difficulty;
+                 cyan() % norm() % rmp->dir_option[dir]->key % cyan() % norm() %
+                 rmp->dir_option[dir]->lock_difficulty;
         }
         if (IS_SET(rmp->dir_option[dir]->condition, EXIT_TRAPPED)) {
           buf2 = sprinttype(rmp->dir_option[dir]->trap_info, trap_types);
-          str += format("%sTrap type:%s %s,  %sTrap damage:%s %d (d8)\n\r") % 
-            cyan() % norm() %
-	    buf2 %
-            cyan() % norm() %
-            rmp->dir_option[dir]->trap_dam;
+          str += format("%sTrap type:%s %s,  %sTrap damage:%s %d (d8)\n\r") %
+                 cyan() % norm() % buf2 % cyan() % norm() %
+                 rmp->dir_option[dir]->trap_dam;
         }
       } else if (IS_SET(rmp->dir_option[dir]->condition, EXIT_SLOPED_UP)) {
         str += format("%sSloped:%s Up\n\r") % cyan() % norm();
@@ -560,10 +586,9 @@ void TBeing::statRoom(TRoom *rmp)
   desc->page_string(str);
 }
 
-void TBeing::statObj(const TObj *j)
-{
-  extraDescription *e;
-  TThing *t=NULL;
+void TBeing::statObj(const TObj* j) {
+  extraDescription* e;
+  TThing* t = NULL;
   int i;
   sstring str;
 
@@ -572,22 +597,23 @@ void TBeing::statObj(const TObj *j)
     return;
   }
 
-  str = format("Object name: [%s], R-number: [%d], V-number: [%d] Item type: ") %
+  str =
+    format("Object name: [%s], R-number: [%d], V-number: [%d] Item type: ") %
     j->name % j->number % obj_index[j->getItemIndex()].virt;
 
   str += ItemInfo[j->itemType()]->name;
   str += "\n\r";
 
   for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-    if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top){
+    if (obj_index[j->getItemIndex()].virt <= zone_table[zone].top) {
       str += format("Zone: %s\n\r") % zone_table[zone].name;
       break;
-    }    
+    }
   }
 
   str += format("Short description: %s\n\rLong description:\n\r%s\n\r") %
-    ((!j->shortDescr.empty()) ? j->shortDescr.c_str() : "None") %
-    ((!j->getDescr().empty()) ? j->getDescr().c_str() : "None");
+         ((!j->shortDescr.empty()) ? j->shortDescr.c_str() : "None") %
+         ((!j->getDescr().empty()) ? j->getDescr().c_str() : "None");
 
   if (!j->action_description.empty()) {
     str += "Action Description: ";
@@ -629,46 +655,49 @@ void TBeing::statObj(const TObj *j)
 
   // Cost/day remnant of the old rent charge code
   str += format("Volume: %d, Weight: %.1f, Value: %d, Cost/day: 0\n\r") %
-    j->getVolume() % j->getWeight() % j->obj_flags.cost;
+         j->getVolume() % j->getWeight() % j->obj_flags.cost;
 
-  str += format("Indexed Cost: %d, Suggested Price: %d, Material Value: %d\n\r") %
+  str +=
+    format("Indexed Cost: %d, Suggested Price: %d, Material Value: %d\n\r") %
     obj_index[j->getItemIndex()].value % j->suggestedPrice() %
     (int)(j->getWeight() * 10.0 * material_nums[j->getMaterial()].price);
 
-
-  str += format("Decay: %d, Max Struct: %d, Struct Left: %d, Depreciation: %d\n\r") %
-    j->obj_flags.decay_time % j->getMaxStructPoints() %
-    j->getStructPoints() % j->getDepreciation();
+  str +=
+    format("Decay: %d, Max Struct: %d, Struct Left: %d, Depreciation: %d\n\r") %
+    j->obj_flags.decay_time % j->getMaxStructPoints() % j->getStructPoints() %
+    j->getDepreciation();
 
   str += format("Light: %3d          Material Type: %s (%i)\n\r") %
-    j->getLight() % material_nums[j->getMaterial()].mat_name %
-    j->getMaterial();
+         j->getLight() % material_nums[j->getMaterial()].mat_name %
+         j->getMaterial();
 
   if (j->inRoom() != Room::NOWHERE)
     str += format("In Room: %d\n\r") % j->inRoom();
   else if (j->parent)
     str += format("Inside: %s\n\r") % j->parent->getName();
   else if (j->stuckIn)
-    str += format("Stuck-In: %s (slot=%d)\n\r") %
-      j->stuckIn->getName() % j->eq_stuck;
+    str += format("Stuck-In: %s (slot=%d)\n\r") % j->stuckIn->getName() %
+           j->eq_stuck;
   else if (j->equippedBy)
-    str += format("Equipped-by: %s (slot=%d)\n\r") %
-      j->equippedBy->getName() % j->eq_pos;
+    str += format("Equipped-by: %s (slot=%d)\n\r") % j->equippedBy->getName() %
+           j->eq_pos;
   else
     str += "UNKNOWN LOCATION !!!!!!\n\r";
 
   str += format("Carried weight: %.1f   Carried volume: %d\n\r") %
-    j->getCarriedWeight() % j->getCarriedVolume();
+         j->getCarriedWeight() % j->getCarriedVolume();
 
   str += j->statObjInfo();
 
-  str += format("\n\rSpecial procedure: %s   ") % (j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "none");
+  str += format("\n\rSpecial procedure: %s   ") %
+         (j->spec ? objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name : "none");
 
-  if(j->stuff.empty())
+  if (j->stuff.empty())
     str += "Contains : Nothing\n\r";
   else {
     str += "Contains :\n\r";
-    for(StuffIter it=j->stuff.begin();it!=j->stuff.end() && (t=*it);++it) {
+    for (StuffIter it = j->stuff.begin(); it != j->stuff.end() && (t = *it);
+         ++it) {
       //      str += fname(t->name);
       str += t->shortDescr;
       str += " (";
@@ -683,131 +712,156 @@ void TBeing::statObj(const TObj *j)
     if (j->affected[i].location == APPLY_SPELL) {
       if (discArray[j->affected[i].modifier]) {
         str += format("    Affect:  %s: %s by %ld\n\r") %
-          apply_types[j->affected[i].location].name %
-          discArray[j->affected[i].modifier]->name %
-          j->affected[i].modifier2;
+               apply_types[j->affected[i].location].name %
+               discArray[j->affected[i].modifier]->name %
+               j->affected[i].modifier2;
       } else {
         vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
-          j->affected[i].modifier % j->getName());
+                         j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
       if (discNames[j->affected[i].modifier].disc_num) {
         str += format("    Affect:  %s: %s by %ld\n\r") %
-          apply_types[j->affected[i].location].name %
-          discNames[j->affected[i].modifier].name %
-          j->affected[i].modifier2;
+               apply_types[j->affected[i].location].name %
+               discNames[j->affected[i].modifier].name %
+               j->affected[i].modifier2;
       } else {
         vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
-          j->affected[i].modifier % j->getName());
+                         j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
       str += format("    Affect:  %s: %s by %ld\n\r") %
-        apply_types[j->affected[i].location].name %
-        immunity_names[j->affected[i].modifier] %
-        j->affected[i].modifier2;
+             apply_types[j->affected[i].location].name %
+             immunity_names[j->affected[i].modifier] % j->affected[i].modifier2;
     } else if (j->affected[i].location != APPLY_NONE) {
       if (!strcmp(apply_types[j->affected[i].location].name, "Magic Affect")) {
-        for (unsigned long nr = 0; ; ++nr) {
+        for (unsigned long nr = 0;; ++nr) {
           // loop over all item perma-affect flags
           if (*affected_bits[nr] == '\n')
             break;
-          if (1<<nr & j->affected[i].modifier) {
+          if (1 << nr & j->affected[i].modifier) {
             // item has affect
             if (*affected_bits[nr]) {
-              str += format("    Affect:  Magic Affect of %s (%d)\n\r") % affected_bits[nr] % int(1<<nr);
+              str += format("    Affect:  Magic Affect of %s (%d)\n\r") %
+                     affected_bits[nr] % int(1 << nr);
             } else {
-              str += format("    Affect:  Magic Affect of %d\n\r") % int(1<<nr);
+              str +=
+                format("    Affect:  Magic Affect of %d\n\r") % int(1 << nr);
             }
           }
         }
       } else {
-        str += format("    Affect:  %s by %ld\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
+        str += format("    Affect:  %s by %ld\n\r") %
+               apply_types[j->affected[i].location].name %
+               j->affected[i].modifier;
       }
     }
   }
   desc->page_string(str);
 }
 
-void TBeing::statObjForDivman(const TObj *j)
-{
-  TThing *t=NULL;
+void TBeing::statObjForDivman(const TObj* j) {
+  TThing* t = NULL;
   sstring str = "\n\r";
   sstring sitem = j->shortDescr;
-  
-  str += format("%s is %s made of %s.\n\r") % sitem.cap() % ItemInfo[j->itemType()]->common_name % material_nums[j->getMaterial()].mat_name;
-  
+
+  str += format("%s is %s made of %s.\n\r") % sitem.cap() %
+         ItemInfo[j->itemType()]->common_name %
+         material_nums[j->getMaterial()].mat_name;
+
   for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
-    if(obj_index[j->getItemIndex()].virt <= zone_table[zone].top) {
+    if (obj_index[j->getItemIndex()].virt <= zone_table[zone].top) {
       str += format("It is from %s.\n\r") % zone_table[zone].name;
       break;
-    }    
+    }
   }
-  
+
   str += (j->wear_flags_to_sentence());
-  
-  str += "Its extra flags are: " + sprintbit(j->getObjStat(), extra_bits) + "\n\r\n\r";
-  
+
+  str += "Its extra flags are: " + sprintbit(j->getObjStat(), extra_bits) +
+         "\n\r\n\r";
+
   str += format("%s modifies light by %d.\n\r") % sitem.cap() % j->getLight();
-  str += format("At least %d units of light are needed to see it.\n\r") % int(j->canBeSeen);
+  str += format("At least %d units of light are needed to see it.\n\r") %
+         int(j->canBeSeen);
   if (j->obj_flags.decay_time < 0) {
     str += "It will not decay.\n\r";
   } else {
-    str += format("It will decay in approximately %d MUD hours.\n\r") % j->obj_flags.decay_time;
+    str += format("It will decay in approximately %d MUD hours.\n\r") %
+           j->obj_flags.decay_time;
   }
-  str += format("Current structure:    %-5d  Weight in pounds:       %-10.2f  \n\r") % j->getStructPoints() % j->getWeight();
-  str += format("Maximum structure:    %-5d  Volume in cubic inches: %d\n\r") % j->getMaxStructPoints() % j->getVolume();
+  str +=
+    format(
+      "Current structure:    %-5d  Weight in pounds:       %-10.2f  \n\r") %
+    j->getStructPoints() % j->getWeight();
+  str += format("Maximum structure:    %-5d  Volume in cubic inches: %d\n\r") %
+         j->getMaxStructPoints() % j->getVolume();
   str += format("Base value in talens: %d\n\r") % j->obj_flags.cost;
   str += j->statObjInfo();
   if (j->spec) {
-    str += format("It possesses the special trait known as %s.\n\r\n\r") % objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name;
+    str += format("It possesses the special trait known as %s.\n\r\n\r") %
+           objSpecials[GET_OBJ_SPE_INDEX(j->spec)].name;
   } else {
     str += "It has not been imbued with with any special traits.\n\r\n\r";
   }
-  
-  if(!j->stuff.empty()){
+
+  if (!j->stuff.empty()) {
     str += sitem.cap() + " contains:\n\r";
-    for(StuffIter it=j->stuff.begin();it!=j->stuff.end() && (t=*it);++it) {
+    for (StuffIter it = j->stuff.begin(); it != j->stuff.end() && (t = *it);
+         ++it) {
       str += t->shortDescr;
       str += "\n\r";
     }
     str += "\n\r";
   }
-  
+
   sstring buf = "";
   for (int i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (j->affected[i].location == APPLY_SPELL) {
       if (discArray[j->affected[i].modifier]) {
-        buf += format("    Affect:  %s: %s by %ld\n\r") % apply_types[j->affected[i].location].name % discArray[j->affected[i].modifier]->name % j->affected[i].modifier2;
+        buf += format("    Affect:  %s: %s by %ld\n\r") %
+               apply_types[j->affected[i].location].name %
+               discArray[j->affected[i].modifier]->name %
+               j->affected[i].modifier2;
       } else {
         vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
-          j->affected[i].modifier % j->getName());
+                         j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_DISCIPLINE) {
-     if (discNames[j->affected[i].modifier].disc_num) {
-        buf += format("    Affect:  %s: %s by %ld\n\r") % apply_types[j->affected[i].location].name % discNames[j->affected[i].modifier].name % j->affected[i].modifier2;
+      if (discNames[j->affected[i].modifier].disc_num) {
+        buf += format("    Affect:  %s: %s by %ld\n\r") %
+               apply_types[j->affected[i].location].name %
+               discNames[j->affected[i].modifier].name %
+               j->affected[i].modifier2;
       } else {
         vlogf(LOG_BUG, format("BOGUS AFFECT (%ld) on %s") %
-          j->affected[i].modifier % j->getName());
+                         j->affected[i].modifier % j->getName());
       }
     } else if (j->affected[i].location == APPLY_IMMUNITY) {
-      buf += format("    Affect:  %s: %s by %ld\n\r") % apply_types[j->affected[i].location].name % immunity_names[j->affected[i].modifier] % j->affected[i].modifier2;
+      buf += format("    Affect:  %s: %s by %ld\n\r") %
+             apply_types[j->affected[i].location].name %
+             immunity_names[j->affected[i].modifier] % j->affected[i].modifier2;
     } else if (j->affected[i].location != APPLY_NONE) {
       if (!strcmp(apply_types[j->affected[i].location].name, "Magic Affect")) {
-        for (unsigned long nr = 0; ; ++nr) {
+        for (unsigned long nr = 0;; ++nr) {
           // loop over all item perma-affect flags
           if (*affected_bits[nr] == '\n')
             break;
-          if (1<<nr & j->affected[i].modifier) {
+          if (1 << nr & j->affected[i].modifier) {
             // item has affect
             if (*affected_bits[nr]) {
-              buf += format("    Affect:  Magic Affect of %s\n\r") % affected_bits[nr];
+              buf += format("    Affect:  Magic Affect of %s\n\r") %
+                     affected_bits[nr];
             } else {
-              buf += format("    Affect:  Magic Affect of %d\n\r") % int(1<<nr);
+              buf +=
+                format("    Affect:  Magic Affect of %d\n\r") % int(1 << nr);
             }
           }
         }
       } else {
-        buf += format("    Affect:  %s by %ld\n\r") % apply_types[j->affected[i].location].name % j->affected[i].modifier;
+        buf += format("    Affect:  %s by %ld\n\r") %
+               apply_types[j->affected[i].location].name %
+               j->affected[i].modifier;
       }
     }
   }
@@ -817,21 +871,20 @@ void TBeing::statObjForDivman(const TObj *j)
     str += "It can affect you with:\n\r";
     str += buf;
   }
-  
-  str += "\n\r";       
+
+  str += "\n\r";
   str += "The cloud of smoke is quickly dispersed and the air is clear.\n\r";
   desc->page_string(str);
 }
 
-void TBeing::statBeing(TBeing *k)
-{
+void TBeing::statBeing(TBeing* k) {
   sstring str = "";
   sstring buf2, buf3;
-  TGuild *f = NULL;
-  const TMonster *km = dynamic_cast<const TMonster *>(k);
-  resp *respy;
-  followData *fol;
-  charList *list;
+  TGuild* f = NULL;
+  const TMonster* km = dynamic_cast<const TMonster*>(k);
+  resp* respy;
+  followData* fol;
+  charList* list;
   time_info_data playing_time;
   int objused;
   int i;
@@ -853,47 +906,51 @@ void TBeing::statBeing(TBeing *k)
       break;
   }
 
-  bool is_player=dynamic_cast<const TPerson *>(k);
+  bool is_player = dynamic_cast<const TPerson*>(k);
 
   if (km) {
-    str += format("%s - Name : %s [M-Num: %d]\n\r     In-Room[%d] Old-Room[%d] Birth-Room[%d] V-Number[%d]\n\r") %
-      (is_player ? "PC" : "NPC") %
-      k->name % k->number % k->in_room % km->oldRoom % km->brtRoom %
-      (k->number >= 0 ? mob_index[km->getMobIndex()].virt : -1);
+    str += format(
+             "%s - Name : %s [M-Num: %d]\n\r     In-Room[%d] Old-Room[%d] "
+             "Birth-Room[%d] V-Number[%d]\n\r") %
+           (is_player ? "PC" : "NPC") % k->name % k->number % k->in_room %
+           km->oldRoom % km->brtRoom %
+           (k->number >= 0 ? mob_index[km->getMobIndex()].virt : -1);
   } else {
     str += format("%s - Name : %s [%s: %d] Room[%d]\n\r") %
-      (is_player ? "PC" : "NPC") %
-      k->name % (is_player ? "PID  " : "M-Num") %
-      (is_player ? k->getPlayerID() : k->number) % k->in_room;
+           (is_player ? "PC" : "NPC") % k->name %
+           (is_player ? "PID  " : "M-Num") %
+           (is_player ? k->getPlayerID() : k->number) % k->in_room;
   }
 
-  str += "-----------------------------------------------------------------------------\n\r";
+  str +=
+    "--------------------------------------------------------------------------"
+    "---\n\r";
   if (km) {
-    str += format("%sShort description:%s %s\n\r") %
-      cyan() % norm() %
-      (!km->shortDescr.empty() ? km->shortDescr : "NONE");
-    str += format("%sLong description:%s\n\r%s") %
-      cyan() % norm() %
-      (!km->player.longDescr.empty() ? km->player.longDescr : "NONE");
+    str += format("%sShort description:%s %s\n\r") % cyan() % norm() %
+           (!km->shortDescr.empty() ? km->shortDescr : "NONE");
+    str += format("%sLong description:%s\n\r%s") % cyan() % norm() %
+           (!km->player.longDescr.empty() ? km->player.longDescr : "NONE");
   } else {
-    Descriptor *d = k->desc;
+    Descriptor* d = k->desc;
 
     if (d && k->isPc() && k->GetMaxLevel() > MAX_MORT) {
       str += format("%sIMM Office  :%s %d\n\r") % cyan() % norm() % d->office;
 
       if (d->blockastart) {
-        str += format("%sIMM Block A :%s %d - %d\n\r") % cyan() % norm() % d->blockastart % d->blockaend;
+        str += format("%sIMM Block A :%s %d - %d\n\r") % cyan() % norm() %
+               d->blockastart % d->blockaend;
       }
 
       if (d->blockbstart) {
-        str += format("%sIMM Block B :%s %d - %d\n\r") % cyan() % norm() % d->blockbstart % d->blockbend;
+        str += format("%sIMM Block B :%s %d - %d\n\r") % cyan() % norm() %
+               d->blockbstart % d->blockbend;
       }
     }
   }
 
   buf2 = "";
   for (classIndT ijc = MIN_CLASS_IND; ijc < MAX_CLASSES; ijc++) {
-    if (k->hasClass(1<<ijc)) {
+    if (k->hasClass(1 << ijc)) {
       buf2 += classInfo[ijc].name.cap();
       buf2 += " ";
     }
@@ -903,25 +960,24 @@ void TBeing::statBeing(TBeing *k)
 
   str += format("%sLevel       :%s [") % cyan() % norm();
   for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
-    str += format("%c%c:%d ") %
-      classInfo[i].name.cap()[0] % classInfo[i].name.cap()[1] %
-      int(k->getLevel(i));
+    str += format("%c%c:%d ") % classInfo[i].name.cap()[0] %
+           classInfo[i].name.cap()[1] % int(k->getLevel(i));
   }
   str += "]\n\r";
 
-  str += format("%sRace        :%s %-10s") %
-    cyan() % norm() % k->getMyRace()->getSingularName();
+  str += format("%sRace        :%s %-10s") % cyan() % norm() %
+         k->getMyRace()->getSingularName();
 
-  str += format("%sHome:%s %-17s") % 
-    cyan() % norm() % home_terrains[k->player.hometerrain];
+  str += format("%sHome:%s %-17s") % cyan() % norm() %
+         home_terrains[k->player.hometerrain];
 
   if (k->desc && k->desc->account) {
     if (IS_SET(k->desc->account->flags, TAccount::IMMORTAL) &&
         !hasWizPower(POWER_VIEW_IMM_ACCOUNTS)) {
       str += "Account : *** Information Concealed ***\n\r";
     } else {
-      str += format("%sAccount: %s%s\n\r") % purple() %
-        k->desc->account->name % norm();
+      str += format("%sAccount: %s%s\n\r") % purple() % k->desc->account->name %
+             norm();
     }
   } else {
     str += "\n\r";
@@ -938,170 +994,186 @@ void TBeing::statBeing(TBeing *k)
     // Chop off trailing \n from the output of localtime
     logon_buf = logon_buf.substr(0, logon_buf.length() - 1);
 
-    GameTime::realTimePassed((time(0) - k->player.time->logon) +
-			     k->player.time->played, 0, &playing_time);
-    str += format("%sBirth       : %s%s     %sLogon:%s %s\n\r") %
-      cyan() % norm() % birth_buf % cyan() % norm() % logon_buf;
-    str += format("%sPlaying time:%s %d days, %d hours.      %sBase age:%s %d    %sAge Mod:%s %d\n\r") %
-      cyan() % norm() % int(playing_time.day) % int(playing_time.hours) %
-      cyan() % norm() % int(k->getBaseAge()) %
-      cyan() % norm() % int(k->age_mod);
+    GameTime::realTimePassed(
+      (time(0) - k->player.time->logon) + k->player.time->played, 0,
+      &playing_time);
+    str += format("%sBirth       : %s%s     %sLogon:%s %s\n\r") % cyan() %
+           norm() % birth_buf % cyan() % norm() % logon_buf;
+    str += format(
+             "%sPlaying time:%s %d days, %d hours.      %sBase age:%s %d    "
+             "%sAge Mod:%s %d\n\r") %
+           cyan() % norm() % int(playing_time.day) % int(playing_time.hours) %
+           cyan() % norm() % int(k->getBaseAge()) % cyan() % norm() %
+           int(k->age_mod);
     if (!k->desc) {
-      str += format("%sWARNING%s, player is offline, age will not be accurate.\n\r") % red() % norm();
+      str +=
+        format(
+          "%sWARNING%s, player is offline, age will not be accurate.\n\r") %
+        red() % norm();
     }
 
-    str += format("%sPlayer age  :%s %d years, %d months, %d days, %d hours\n\r\n\r") %
+    str +=
+      format(
+        "%sPlayer age  :%s %d years, %d months, %d days, %d hours\n\r\n\r") %
       cyan() % norm() % int(k->age()->year) % int(k->age()->month) %
       int(k->age()->day) % int(k->age()->hours);
   }
 
   buf3 = format("[%5.2f]") % k->getExp();
   buf2 = format("[%5.2f]") % k->getMaxExp();
-  str += format("%sDef Rnd:%s [%5d]   %sExp      :%s %-16s %sMax Exp :%s %-13s\n\r") %
-    cyan() % norm() % k->defendRound(NULL) %
-    cyan() % norm() % buf3 %
-    cyan() % norm() % buf2;
+  str +=
+    format(
+      "%sDef Rnd:%s [%5d]   %sExp      :%s %-16s %sMax Exp :%s %-13s\n\r") %
+    cyan() % norm() % k->defendRound(NULL) % cyan() % norm() % buf3 % cyan() %
+    norm() % buf2;
 
   buf2 = format("[%5d]") % k->getMoney();
   buf3 = format("[%5d]") % k->getBank();
-  str += format("%sVision :%s [%5d]   %sTalens   :%s %-16s %sBank Bal:%s %-13s\n\r") %
-    cyan() % norm() % k->visionBonus %
-    cyan() % norm() % buf2 %
-    cyan() % norm() % buf3;
+  str +=
+    format(
+      "%sVision :%s [%5d]   %sTalens   :%s %-16s %sBank Bal:%s %-13s\n\r") %
+    cyan() % norm() % k->visionBonus % cyan() % norm() % buf2 % cyan() %
+    norm() % buf3;
 
   buf2 = format("[%5d]") % k->getHitroll();
   buf3 = format("[%5d]") % k->getDamroll();
-  str += format("%sAtt Rnd:%s [%5d]   %sHitroll  :%s %-16s %sDamroll :%s %-13s\n\r") %
-    cyan() % norm() % k->attackRound(NULL) %
-    cyan() % norm() % buf2 %
-    cyan() % norm() % buf3;
+  str +=
+    format(
+      "%sAtt Rnd:%s [%5d]   %sHitroll  :%s %-16s %sDamroll :%s %-13s\n\r") %
+    cyan() % norm() % k->attackRound(NULL) % cyan() % norm() % buf2 % cyan() %
+    norm() % buf3;
 
-  str += format("%sPiety  :%s [%5.1f]   %sLifeForce:%s [%5d]\n\r") %
-    cyan() % norm() % k->getPiety() %
-    cyan() % norm() % k->getLifeforce();
+  str += format("%sPiety  :%s [%5.1f]   %sLifeForce:%s [%5d]\n\r") % cyan() %
+         norm() % k->getPiety() % cyan() % norm() % k->getLifeforce();
 
   buf2 = format("[%5d]") % k->getHit();
   buf3 = format("[%5d]") % k->getMove();
-  str += format("%sMana   :%s [%5d]   %sHP       :%s %-16s %sMove    :%s %-13s\n\r") %
-    cyan() % norm() % k->getMana() %
-    cyan() % norm() % buf2 %
-    cyan() % norm() % buf3;
+  str +=
+    format(
+      "%sMana   :%s [%5d]   %sHP       :%s %-16s %sMove    :%s %-13s\n\r") %
+    cyan() % norm() % k->getMana() % cyan() % norm() % buf2 % cyan() % norm() %
+    buf3;
 
   buf2 = format("[%5d]") % k->hitLimit();
   buf3 = format("[%5d]") % k->moveLimit();
-  str += format("%sMaxMana:%s [%5d]   %sMax HP   :%s %-16s %sMax Move:%s %-13s\n\r") %
-    cyan() % norm() % k->manaLimit() %
-    cyan() % norm() % buf2 %
-    cyan() % norm() % buf3;
+  str +=
+    format(
+      "%sMaxMana:%s [%5d]   %sMax HP   :%s %-16s %sMax Move:%s %-13s\n\r") %
+    cyan() % norm() % k->manaLimit() % cyan() % norm() % buf2 % cyan() %
+    norm() % buf3;
 
-  if(dynamic_cast<TPerson *>(k)){
-    buf2 = format("[%5d]") % ageHpMod(dynamic_cast<TPerson *>(k));
+  if (dynamic_cast<TPerson*>(k)) {
+    buf2 = format("[%5d]") % ageHpMod(dynamic_cast<TPerson*>(k));
     buf3 = format("[%f]") % k->getConHpModifier();
-    str += format("%sEq HP  :%s [%5d]   %sAge HP   :%s %-16s %sConHpMod:%s %-13s\n\r") %
-      cyan() % norm() % eqHpBonus(dynamic_cast<TPerson *>(k)) %
-      cyan() % norm() % buf2 %
-      cyan() % norm() % buf3;
+    str +=
+      format(
+        "%sEq HP  :%s [%5d]   %sAge HP   :%s %-16s %sConHpMod:%s %-13s\n\r") %
+      cyan() % norm() % eqHpBonus(dynamic_cast<TPerson*>(k)) % cyan() % norm() %
+      buf2 % cyan() % norm() % buf3;
   }
 
   buf2 = format("[%5d]") % k->visibility();
   buf3 = format("[%5.1f]") % k->getWeight();
-  str += format("%sHeight :%s [%5d]   %sWt. (lbs):%s %-14s %sVisibility:%s %-13s\n\r") %
-    cyan() % norm() % k->getHeight() %
-    cyan() % norm() % buf3 %
-    cyan() % norm() % buf2;
+  str +=
+    format(
+      "%sHeight :%s [%5d]   %sWt. (lbs):%s %-14s %sVisibility:%s %-13s\n\r") %
+    cyan() % norm() % k->getHeight() % cyan() % norm() % buf3 % cyan() %
+    norm() % buf2;
 
   buf2 = format("[%5d]") % int(k->specials.conditions[FULL]);
   buf3 = format("[%5d]") % int(k->specials.conditions[DRUNK]);
-  str += format("%sThirst :%s [%5d]   %sHunger   :%s %-16s %sDrunk   :%s %-13s\n\r") %
-    cyan() % norm() % int(k->specials.conditions[THIRST]) %
-    cyan() % norm() % buf2 %
-    cyan() % norm() % buf3;
+  str +=
+    format(
+      "%sThirst :%s [%5d]   %sHunger   :%s %-16s %sDrunk   :%s %-13s\n\r") %
+    cyan() % norm() % int(k->specials.conditions[THIRST]) % cyan() % norm() %
+    buf2 % cyan() % norm() % buf3;
 
-  str += format("%sPee    :%s [%5d]   %sPoop     :%s [%5d]\n\r") %
-    cyan() % norm() % int(k->specials.conditions[PEE]) %
-    cyan() % norm() % int(k->specials.conditions[POOP]);
+  str += format("%sPee    :%s [%5d]   %sPoop     :%s [%5d]\n\r") % cyan() %
+         norm() % int(k->specials.conditions[PEE]) % cyan() % norm() %
+         int(k->specials.conditions[POOP]);
 
   buf2 = format("[%5d]") % k->getArmor();
   buf3 = format("[%5d]") % noise(k);
-  str += format("%sLight  :%s [%5d]   %sNoise    :%s %-16s %sArmor   :%s %-13s\n\r") %
-    cyan() % norm() % k->getLight() %
-    cyan() % norm() % buf3 %
-    cyan() % norm() % buf2;
+  str +=
+    format(
+      "%sLight  :%s [%5d]   %sNoise    :%s %-16s %sArmor   :%s %-13s\n\r") %
+    cyan() % norm() % k->getLight() % cyan() % norm() % buf3 % cyan() % norm() %
+    buf2;
 
   buf2 = format("[%5d]") % k->eyeSight(k->roomp);
   buf3 = format("[%5d]") % k->getSpellHitroll();
-  str += format("%sProt.  :%s [%5d]   %sEyesight :%s %-11s %sSpell Hitroll:%s %-13s\n\r") %
-    cyan() % norm() % k->getProtection() %
-    cyan() % norm() % buf2 %
-    cyan() % norm() % buf3;
+  str += format(
+           "%sProt.  :%s [%5d]   %sEyesight :%s %-11s %sSpell Hitroll:%s "
+           "%-13s\n\r") %
+         cyan() % norm() % k->getProtection() % cyan() % norm() % buf2 %
+         cyan() % norm() % buf3;
 
   if (km && !(polyed == POLY_TYPE_DISGUISE)) {
-    str += format("%sNumber of attacks :%s %.1f") %
-      cyan() % norm() % km->getMult();
-    str += format("        %sNPC Damage:%s %.1f+%d%%.\n\r") %
-      cyan() % norm() % km->getDamLevel() % km->getDamPrecision();
+    str +=
+      format("%sNumber of attacks :%s %.1f") % cyan() % norm() % km->getMult();
+    str += format("        %sNPC Damage:%s %.1f+%d%%.\n\r") % cyan() % norm() %
+           km->getDamLevel() % km->getDamPrecision();
     double bd = km->baseDamage();
-    int chg = (int) (bd * km->getDamPrecision() / 100);
+    int chg = (int)(bd * km->getDamPrecision() / 100);
     str += format("%sNPC Damage range  :%s %d-%d.\n\r") % cyan() % norm() %
-      max(1, (int) bd-chg) % max(1, (int) bd+chg);
+           max(1, (int)bd - chg) % max(1, (int)bd + chg);
   } else {
     if (k->hasClass(CLASS_MONK)) {
-      str += format("%sNumber of attacks:%s %.2f\n\r") %
-        cyan() % norm() % k->getMult();
+      str += format("%sNumber of attacks:%s %.2f\n\r") % cyan() % norm() %
+             k->getMult();
     }
 
     float fx, fy;
     k->blowCount(false, fx, fy);
     str += format("%sPrim attacks:%s %.2f, %sOff attacks:%s %.2f\n\r") %
-      cyan() % norm() % fx %
-      cyan() % norm() % fy;
+           cyan() % norm() % fx % cyan() % norm() % fy;
 
-    int dam=0;
-    int prim_min=9999, prim_max=0;
-    int sec_min=9999, sec_max=0;
-    for(i=0;i<100;++i){
-      dam=k->getWeaponDam(this, k->heldInPrimHand(), HAND_PRIMARY);
-      if(dam<prim_min)
-	prim_min=dam;
-      if(dam>prim_max)
-	prim_max=dam;
+    int dam = 0;
+    int prim_min = 9999, prim_max = 0;
+    int sec_min = 9999, sec_max = 0;
+    for (i = 0; i < 100; ++i) {
+      dam = k->getWeaponDam(this, k->heldInPrimHand(), HAND_PRIMARY);
+      if (dam < prim_min)
+        prim_min = dam;
+      if (dam > prim_max)
+        prim_max = dam;
 
-      dam=k->getWeaponDam(this, k->heldInSecHand(), HAND_SECONDARY);
-      if(dam<sec_min)
-	sec_min=dam;
-      if(dam>sec_max)
-	sec_max=dam;
+      dam = k->getWeaponDam(this, k->heldInSecHand(), HAND_SECONDARY);
+      if (dam < sec_min)
+        sec_min = dam;
+      if (dam > sec_max)
+        sec_max = dam;
     }
 
     str += format("%sPrim damage:%s %i-%i, %sOff damage:%s %i-%i\n\r") %
-      cyan() % norm() % prim_min % prim_max %
-      cyan() % norm() % sec_min % sec_max;
+           cyan() % norm() % prim_min % prim_max % cyan() % norm() % sec_min %
+           sec_max;
 
-    str += format("%sApproximate damage per round:%s %i-%i\n\r") %
-      cyan() % norm() %
-      (int)((fx*(float)prim_min)+((fy*(float)sec_min))) %
-      (int)((fx*(float)prim_max)+((fy*(float)sec_max)));
+    str += format("%sApproximate damage per round:%s %i-%i\n\r") % cyan() %
+           norm() % (int)((fx * (float)prim_min) + ((fy * (float)sec_min))) %
+           (int)((fx * (float)prim_max) + ((fy * (float)sec_max)));
   }
   if (toggleInfo[TOG_TESTCODE5]->toggle && k->newguild()) {
-    if(k->isPc()) {
-      str += format("%sFaction:%s %s%s,   %sRank :%s %s%s\n\r") %
-        cyan() % norm() % k->newguild()->getName() % norm() %
-        cyan() % norm() % k->rank() % norm();
+    if (k->isPc()) {
+      str += format("%sFaction:%s %s%s,   %sRank :%s %s%s\n\r") % cyan() %
+             norm() % k->newguild()->getName() % norm() % cyan() % norm() %
+             k->rank() % norm();
     }
   } else {
-    str += format("%sFaction:%s %s,   %sFaction Percent:%s %.4f\n\r") %
-      cyan() % norm() % FactionInfo[k->getFaction()].faction_name %
-      cyan() % norm() % k->getPerc();
+    str += format("%sFaction:%s %s,   %sFaction Percent:%s %.4f\n\r") % cyan() %
+           norm() % FactionInfo[k->getFaction()].faction_name % cyan() %
+           norm() % k->getPerc();
 #if FACTIONS_IN_USE
-    str += format("%sPerc_0:%s %.4f   %sPerc_1:%s %.4f   %sPerc_2:%s %.4f   %sPerc_3:%s %.4f\n\r") %
-      cyan() % norm() % k->getPercX(FACT_NONE) %
-      cyan() % norm() % k->getPercX(FACT_BROTHERHOOD) %
-      cyan() % norm() % k->getPercX(FACT_CULT) %
-      cyan() % norm() % k->getPercX(FACT_SNAKE);
+    str += format(
+             "%sPerc_0:%s %.4f   %sPerc_1:%s %.4f   %sPerc_2:%s %.4f   "
+             "%sPerc_3:%s %.4f\n\r") %
+           cyan() % norm() % k->getPercX(FACT_NONE) % cyan() % norm() %
+           k->getPercX(FACT_BROTHERHOOD) % cyan() % norm() %
+           k->getPercX(FACT_CULT) % cyan() % norm() % k->getPercX(FACT_SNAKE);
 #endif
   }
-//  str += format("%sFaction :%s %s\n\r") %
-//    cyan() % norm() % FactionInfo[k->getFaction()].faction_name;
+  //  str += format("%sFaction :%s %s\n\r") %
+  //    cyan() % norm() % FactionInfo[k->getFaction()].faction_name;
 
   str += "Stats    :";
   str += k->chosenStats.printStatHeader();
@@ -1109,51 +1181,51 @@ void TBeing::statBeing(TBeing *k)
   statTypeT ik;
 
   str += "Race     :";
-  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+  for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++) {
     str += format(" %3d ") % k->getStat(STAT_RACE, ik);
   }
   str += "\n\r";
 
   str += "Chosen   :";
-  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+  for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++) {
     str += format(" %3d ") % k->getStat(STAT_CHOSEN, ik);
   }
   str += "\n\r";
 
   str += "Age      :";
-  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+  for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++) {
     str += format(" %3d ") % k->getStat(STAT_AGE, ik);
   }
   str += "\n\r";
 
   str += "Territory:";
-  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+  for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++) {
     str += format(" %3d ") % k->getStat(STAT_TERRITORY, ik);
   }
   str += "\n\r";
 
   str += "Natural  :";
-  for(ik=MIN_STAT; ik<MAX_STATS_USED; ik++) {
+  for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++) {
     str += format(" %3d ") % k->getStat(STAT_NATURAL, ik);
   }
   str += "\n\r";
-    
+
   str += "Current  :";
-  for(ik = MIN_STAT; ik<MAX_STATS_USED; ik++) {
+  for (ik = MIN_STAT; ik < MAX_STATS_USED; ik++) {
     str += format(" %3d ") % k->getStat(STAT_CURRENT, ik);
   }
   str += "\n\r";
 
   // only show captive info when needed
   if (k->getCaptiveOf() || k->getCaptive()) {
-    str += format("%sCaptive Of:%s %s         %sCaptives :%s ") %
-       cyan() % norm() %
-       (k->getCaptiveOf() ? k->getCaptiveOf()->getName() : "NO ONE") %
-       cyan() % norm();
+    str += format("%sCaptive Of:%s %s         %sCaptives :%s ") % cyan() %
+           norm() %
+           (k->getCaptiveOf() ? k->getCaptiveOf()->getName() : "NO ONE") %
+           cyan() % norm();
     if (!k->getCaptive())
       str += "NONE\n\r";
     else {
-      TBeing *x1;
+      TBeing* x1;
       for (x1 = k->getCaptive(); x1; x1 = x1->getNextCaptive()) {
         str += x1->getName();
         str += " ";
@@ -1161,8 +1233,8 @@ void TBeing::statBeing(TBeing *k)
       str += "\n\r";
     }
   }
-  str += format("Master is '%s'") %
-          ((k->master) ? k->master->getName() : "NOBODY");
+  str +=
+    format("Master is '%s'") % ((k->master) ? k->master->getName() : "NOBODY");
   str += "           Followers are:";
   for (fol = k->followers; fol; fol = fol->next) {
     str += fol->follower->getName();
@@ -1172,10 +1244,12 @@ void TBeing::statBeing(TBeing *k)
   if (km) {
     buf2 = sprinttype(km->getPosition(), position_types);
     buf3 = sprinttype((km->default_pos), position_types);
-    str += format("%sPosition:%s %s  %sFighting:%s %s  %sDefault Position:%s %s\n\r") %
-      cyan() % norm() % buf2 %
-      cyan() % norm() % (km->fight() ? km->fight()->getName() : "Nobody") %
-      cyan() % norm() % buf3;
+    str +=
+      format(
+        "%sPosition:%s %s  %sFighting:%s %s  %sDefault Position:%s %s\n\r") %
+      cyan() % norm() % buf2 % cyan() % norm() %
+      (km->fight() ? km->fight()->getName() : "Nobody") % cyan() % norm() %
+      buf3;
 
     str += format("%sNPC flags:%s ") % cyan() % norm();
     if (km->specials.act) {
@@ -1186,10 +1260,10 @@ void TBeing::statBeing(TBeing *k)
     }
   } else {
     buf2 = sprinttype(k->getPosition(), position_types);
-    str += format("%sPosition:%s %s  %sFighting:%s %s\n\r") %
-          cyan() % norm() % buf2 %
-          cyan() % norm() % (k->fight() ? k->fight()->getName() : "Nobody");
-  } 
+    str += format("%sPosition:%s %s  %sFighting:%s %s\n\r") % cyan() % norm() %
+           buf2 % cyan() % norm() %
+           (k->fight() ? k->fight()->getName() : "Nobody");
+  }
   if (k->desc) {
     str += format("\n\r%sFlags (Specials Act):%s ") % cyan() % norm();
     str += sprintbit(k->desc->plr_act, player_bits);
@@ -1197,40 +1271,37 @@ void TBeing::statBeing(TBeing *k)
   }
 
   str += format("%sCarried weight:%s %.1f   %sCarried volume:%s %d\n\r") %
-          cyan() % norm() % k->getCarriedWeight() %
-          cyan() % norm() % k->getCarriedVolume();
+         cyan() % norm() % k->getCarriedWeight() % cyan() % norm() %
+         k->getCarriedVolume();
 
   immuneTypeT ij;
-  for (ij = MIN_IMMUNE;ij < MAX_IMMUNES; ij++) {
+  for (ij = MIN_IMMUNE; ij < MAX_IMMUNES; ij++) {
     if (k->getImmunity(ij) == 0 || !*immunity_names[ij])
       continue;
     if (k->getImmunity(ij) > 0)
-      buf2 = format("%d%% resistant to %s.\n\r") %
-        k->getImmunity(ij) % immunity_names[ij];
+      buf2 = format("%d%% resistant to %s.\n\r") % k->getImmunity(ij) %
+             immunity_names[ij];
     if (k->getImmunity(ij) < 0)
-      buf2 = format("%d%% susceptible to %s.\n\r") %
-        -k->getImmunity(ij) % immunity_names[ij];
+      buf2 = format("%d%% susceptible to %s.\n\r") % -k->getImmunity(ij) %
+             immunity_names[ij];
     str += buf2;
   }
 
   if (!k->isPc()) {
-    const TMonster *tmons = dynamic_cast<const TMonster *>(k);
-    str += format("%sAction pointer:%s %s") % 
-      cyan() % norm() %
-      ((tmons->act_ptr ? "YES" : "no") );
-    str += format("    %sSpecial Procedure:%s %s\n\r") %
-      cyan() % norm() %
-      ((tmons->spec) ? mob_specials[GET_MOB_SPE_INDEX(tmons->spec)].name : "none");
-    str += format("%sAnger:%s %d/%d     %sMalice:%s %d/%d     %sSuspicion:%s %d/%d   %sGreed:%s %d/%d\n\r") %
-      cyan() % norm() %
-      tmons->anger() % tmons->defanger() %
-      cyan() % norm() %
-      tmons->malice() % tmons->defmalice() %
-      cyan() % norm() %
-      tmons->susp() % tmons->defsusp() %
-      cyan() % norm() %
-      tmons->greed() % tmons->defgreed();
-    str += format("%sHates:%s " ) % cyan() % norm();
+    const TMonster* tmons = dynamic_cast<const TMonster*>(k);
+    str += format("%sAction pointer:%s %s") % cyan() % norm() %
+           ((tmons->act_ptr ? "YES" : "no"));
+    str += format("    %sSpecial Procedure:%s %s\n\r") % cyan() % norm() %
+           ((tmons->spec) ? mob_specials[GET_MOB_SPE_INDEX(tmons->spec)].name
+                          : "none");
+    str += format(
+             "%sAnger:%s %d/%d     %sMalice:%s %d/%d     %sSuspicion:%s %d/%d  "
+             " %sGreed:%s %d/%d\n\r") %
+           cyan() % norm() % tmons->anger() % tmons->defanger() % cyan() %
+           norm() % tmons->malice() % tmons->defmalice() % cyan() % norm() %
+           tmons->susp() % tmons->defsusp() % cyan() % norm() % tmons->greed() %
+           tmons->defgreed();
+    str += format("%sHates:%s ") % cyan() % norm();
     if (IS_SET(tmons->hatefield, HATE_CHAR)) {
       if (tmons->hates.clist) {
         for (list = tmons->hates.clist; list; list = list->next) {
@@ -1262,7 +1333,7 @@ void TBeing::statBeing(TBeing *k)
     }
     str += "    ";
 
-    str += format("%sFears:%s " ) % cyan() % norm();
+    str += format("%sFears:%s ") % cyan() % norm();
     if (IS_SET(tmons->fearfield, FEAR_CHAR)) {
       if (tmons->fears.clist) {
         for (list = tmons->fears.clist; list; list = list->next) {
@@ -1293,37 +1364,31 @@ void TBeing::statBeing(TBeing *k)
       }
     }
     if (IS_SET(tmons->fearfield, FEAR_CLASS)) {
-       str += format("CLASS=%d ") % tmons->fears.Class;
+      str += format("CLASS=%d ") % tmons->fears.Class;
     }
     if (IS_SET(tmons->fearfield, FEAR_VNUM)) {
-       str += format("VNUM=%d ") % tmons->fears.vnum;
+      str += format("VNUM=%d ") % tmons->fears.vnum;
     }
     if (IS_SET(tmons->specials.act, ACT_HUNTING)) {
-      str += format("\n\r%sHunting:%s %s  %spersist:%s %d  %sorigin:%s %d  %shunt distance:%s %d") %
-        cyan() % norm() %
-        (tmons->specials.hunting ? tmons->specials.hunting->getName() : "Unknown") %
-        cyan() % norm() %
-        tmons->persist %
-        cyan() % norm() %
-        tmons->oldRoom %
-        cyan() % norm() %
-        tmons->hunt_dist;
+      str += format(
+               "\n\r%sHunting:%s %s  %spersist:%s %d  %sorigin:%s %d  %shunt "
+               "distance:%s %d") %
+             cyan() % norm() %
+             (tmons->specials.hunting ? tmons->specials.hunting->getName()
+                                      : "Unknown") %
+             cyan() % norm() % tmons->persist % cyan() % norm() %
+             tmons->oldRoom % cyan() % norm() % tmons->hunt_dist;
     } else if (tmons->specials.hunting) {
-      str += format("\n\r%sTracking:%s %s  %spersist:%s %d  %sorigin:%s %d  %srange:%s %d") %
-        cyan() % norm() %
-        tmons->specials.hunting->getName() %
-        cyan() % norm() %
-        tmons->persist %
-        cyan() % norm() %
-        tmons->oldRoom %
-        cyan() % norm() %
-        tmons->hunt_dist;
+      str += format(
+               "\n\r%sTracking:%s %s  %spersist:%s %d  %sorigin:%s %d  "
+               "%srange:%s %d") %
+             cyan() % norm() % tmons->specials.hunting->getName() % cyan() %
+             norm() % tmons->persist % cyan() % norm() % tmons->oldRoom %
+             cyan() % norm() % tmons->hunt_dist;
     }
-    str += format("\n\r%sAI Target:%s %s  %sRandom:%s %s") %
-      cyan() % norm() %
-      (tmons->targ() ? tmons->targ()->getName() : "-") %
-      cyan() % norm() %
-      (tmons->opinion.random ? tmons->opinion.random->getName() : "-");
+    str += format("\n\r%sAI Target:%s %s  %sRandom:%s %s") % cyan() % norm() %
+           (tmons->targ() ? tmons->targ()->getName() : "-") % cyan() % norm() %
+           (tmons->opinion.random ? tmons->opinion.random->getName() : "-");
 
     if (Config::LoadOnDeath() && !tmons->loadCom.empty()) {
       str += "\n\rThis mob has the following zonefile load-on-death commands:";
@@ -1337,14 +1402,13 @@ void TBeing::statBeing(TBeing *k)
   } else {
     // PCs only
     if (k->specials.hunting) {
-      str += format("%sHunting:%s %s\n\r") %
-        cyan() % norm() %
-        k->specials.hunting->getName();
+      str += format("%sHunting:%s %s\n\r") % cyan() % norm() %
+             k->specials.hunting->getName();
     }
-    const TPerson *tper = dynamic_cast<const TPerson *>(k);
+    const TPerson* tper = dynamic_cast<const TPerson*>(k);
     if (tper) {
-      str += format("%sTitle:%s\n\r%s%s\n\r") %
-        cyan() % norm() % tper->title % norm();
+      str += format("%sTitle:%s\n\r%s%s\n\r") % cyan() % norm() % tper->title %
+             norm();
     }
   }
 
@@ -1352,21 +1416,20 @@ void TBeing::statBeing(TBeing *k)
   str += sprintbit_64(k->specials.affectedBy, affected_bits);
   str += "\n\r\n\r";
 
-  str += format("%sBody part          Hth Max Flgs  StuckIn%s\n\r") %
-    cyan() % norm();
-  str += format("%s----------------------------------------%s\n\r") %
-    cyan() % norm();
+  str += format("%sBody part          Hth Max Flgs  StuckIn%s\n\r") % cyan() %
+         norm();
+  str += format("%s----------------------------------------%s\n\r") % cyan() %
+         norm();
   wearSlotT il;
   for (il = MIN_WEAR; il < MAX_WEAR; il++) {
     if (il == HOLD_RIGHT || il == HOLD_LEFT)
       continue;
     if (k->slotChance(il)) {
       buf2 = format("[%s]") % k->describeBodySlot(il);
-      str += format("%-18s %-3d %-3d %-5d %s\n\r") %
-        buf2 % k->getCurLimbHealth(il) %
-        k->getMaxLimbHealth(il) %
-        k->getLimbFlags(il) %
-        (k->getStuckIn(il) ? k->getStuckIn(il)->getName() : "None");
+      str += format("%-18s %-3d %-3d %-5d %s\n\r") % buf2 %
+             k->getCurLimbHealth(il) % k->getMaxLimbHealth(il) %
+             k->getLimbFlags(il) %
+             (k->getStuckIn(il) ? k->getStuckIn(il)->getName() : "None");
     }
   }
 
@@ -1375,8 +1438,8 @@ void TBeing::statBeing(TBeing *k)
       str += format("%sResponse(s):\n\r------------%s\n\r") % cyan() % norm();
       for (respy = km->resps->respList; respy; respy = respy->next) {
         if (respy->cmd < MAX_CMD_LIST) {
-          str += format("%s %s\n\r") % commandArray[respy->cmd]->name %
-            respy->args;
+          str +=
+            format("%s %s\n\r") % commandArray[respy->cmd]->name % respy->args;
         } else if (respy->cmd == CMD_RESP_ROOM_ENTER) {
           str += "roomenter\n\r";
         } else if (respy->cmd == CMD_RESP_PACKAGE) {
@@ -1398,25 +1461,22 @@ void TBeing::statBeing(TBeing *k)
       str += format("%s------------%s\n\r") % cyan() % norm();
 
       if (km->resps->respMemory) {
-        str += format("%sResponse Memory:\n\r----------------\n\r%s") %
-          cyan() % norm();
+        str += format("%sResponse Memory:\n\r----------------\n\r%s") % cyan() %
+               norm();
 
-        for (RespMemory *rMem = km->resps->respMemory; rMem; rMem = rMem->next)
+        for (RespMemory* rMem = km->resps->respMemory; rMem; rMem = rMem->next)
           if (rMem->cmd < MAX_CMD_LIST) {
+            str +=
+              format("%s %s %s\n\r") % (rMem->name ? rMem->name : "Unknown") %
+              commandArray[rMem->cmd]->name % (rMem->args ? rMem->args : "");
+          } else if (rMem->cmd == CMD_RESP_ROOM_ENTER) {
             str += format("%s %s %s\n\r") %
-              (rMem->name ? rMem->name : "Unknown") %
-              commandArray[rMem->cmd]->name %
-              (rMem->args ? rMem->args : "");
-	  } else if (rMem->cmd == CMD_RESP_ROOM_ENTER) {
-            str += format("%s %s %s\n\r") %
-              (rMem->name ? rMem->name : "Unknown") %
-              "roomenter" %
-              (rMem->args ? rMem->args : "");
+                   (rMem->name ? rMem->name : "Unknown") % "roomenter" %
+                   (rMem->args ? rMem->args : "");
           } else {
             str += format("%s %d %s\n\r") %
-              (rMem->name ? rMem->name : "Unknown") %
-              rMem->cmd %
-              (rMem->args ? rMem->args : "");
+                   (rMem->name ? rMem->name : "Unknown") % rMem->cmd %
+                   (rMem->args ? rMem->args : "");
           }
 
         str += format("----------------\n\r%s") % cyan() % norm();
@@ -1425,8 +1485,8 @@ void TBeing::statBeing(TBeing *k)
       str += format("%sResponse(s):%s None.\n\r") % cyan() % norm();
   }
 
-  str += format("\n\r%sAffecting Spells:\n\r-----------------%s\n\r") %
-    cyan() % norm();
+  str += format("\n\r%sAffecting Spells:\n\r-----------------%s\n\r") % cyan() %
+         norm();
   affectedData *aff, *af2;
   for (aff = k->affected; aff; aff = af2) {
     // technically, shouldn't need to save next, but apparently
@@ -1495,12 +1555,12 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_SLING_SHOT:
       case SPELL_GRANITE_FISTS:
       case SPELL_STICKS_TO_SNAKES:
-      case SPELL_DISTORT: // shaman
-      case SPELL_DEATHWAVE: // shaman
-      case SPELL_SOUL_TWIST: // shaman
-      case SPELL_SQUISH: // shaman
+      case SPELL_DISTORT:     // shaman
+      case SPELL_DEATHWAVE:   // shaman
+      case SPELL_SOUL_TWIST:  // shaman
+      case SPELL_SQUISH:      // shaman
       case SPELL_ENERGY_DRAIN:
-      case SPELL_LICH_TOUCH: // shaman
+      case SPELL_LICH_TOUCH:  // shaman
       case SPELL_SYNOSTODWEOMER:
       case SKILL_DIVINE_GRACE:
       case SKILL_DIVINE_RESCUE:
@@ -1565,19 +1625,19 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_TELEPORT:
       case SPELL_KNOT:
       case SPELL_SENSE_LIFE:
-      case SPELL_SENSE_LIFE_SHAMAN: // shaman
+      case SPELL_SENSE_LIFE_SHAMAN:  // shaman
       case SPELL_CALM:
       case SPELL_ACCELERATE:
-      case SPELL_CHEVAL: // shaman
+      case SPELL_CHEVAL:  // shaman
       case SPELL_CELERITE:
       case SPELL_LEVITATE:
       case SPELL_FEATHERY_DESCENT:
       case SPELL_STEALTH:
       case SPELL_GILLS_OF_FLESH:
       case SPELL_TELEPATHY:
-      case SPELL_ROMBLER: // shaman
-      case SPELL_INTIMIDATE: //shaman
-      case SPELL_CLEANSE: // shaman
+      case SPELL_ROMBLER:     // shaman
+      case SPELL_INTIMIDATE:  // shaman
+      case SPELL_CLEANSE:     // shaman
       case SPELL_FEAR:
       case SPELL_SLUMBER:
       case SPELL_CONJURE_EARTH:
@@ -1585,11 +1645,11 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_CONJURE_FIRE:
       case SPELL_CONJURE_WATER:
       case SPELL_DISPEL_MAGIC:
-      case SPELL_CHASE_SPIRIT: // shaman
+      case SPELL_CHASE_SPIRIT:  // shaman
       case SPELL_ENHANCE_WEAPON:
       case SPELL_GALVANIZE:
       case SPELL_DETECT_INVISIBLE:
-      case SPELL_DETECT_SHADOW: // shaman
+      case SPELL_DETECT_SHADOW:  // shaman
       case SPELL_DISPEL_INVISIBLE:
       case SPELL_FARLOOK:
       case SPELL_FALCON_WINGS:
@@ -1896,8 +1956,8 @@ void TBeing::statBeing(TBeing *k)
       case SPELL_SKY_SPIRIT:
 #endif
         if (!discArray[aff->type]) {
-          vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s") %
-            aff->type % k->getName());
+          vlogf(LOG_BUG,
+            format("BOGUS AFFECT (%d) on %s") % aff->type % k->getName());
           k->affectRemove(aff);
           break;
         }
@@ -1905,134 +1965,142 @@ void TBeing::statBeing(TBeing *k)
         str += format("Spell : '%s'\n\r") % discArray[aff->type]->name;
         if (aff->location == APPLY_IMMUNITY) {
           str += format("     Modifies %s to %s by %ld points\n\r") %
-            apply_types[aff->location].name %
-            immunity_names[aff->modifier] %
-            aff->modifier2;
+                 apply_types[aff->location].name %
+                 immunity_names[aff->modifier] % aff->modifier2;
         } else if (aff->location == APPLY_SPELL) {
           str += format("     Modifies %s (%s) by %ld points\n\r") %
-            apply_types[aff->location].name %
-            (discArray[aff->modifier] ? discArray[aff->modifier]->name : "BOGUS") %
-            aff->modifier2;
+                 apply_types[aff->location].name %
+                 (discArray[aff->modifier] ? discArray[aff->modifier]->name
+                                           : "BOGUS") %
+                 aff->modifier2;
         } else if (aff->location == APPLY_DISCIPLINE) {
-          str += format("     Modifies %s (%s) by %ld points\n\r" ) %
-            apply_types[aff->location].name %
-            (discNames[aff->modifier].disc_num ? discNames[aff->modifier].properName : "BOGUS") %
-            aff->modifier2;
+          str += format("     Modifies %s (%s) by %ld points\n\r") %
+                 apply_types[aff->location].name %
+                 (discNames[aff->modifier].disc_num
+                     ? discNames[aff->modifier].properName
+                     : "BOGUS") %
+                 aff->modifier2;
         } else {
           str += format("     Modifies %s by %ld points\n\r") %
-            apply_types[aff->location].name % aff->modifier;
+                 apply_types[aff->location].name % aff->modifier;
         }
         str += format("     Expires in %6d updates, Bits set: %s\n\r\n\r") %
-          aff->duration % sprintbit_64(aff->bitvector, affected_bits);
+               aff->duration % sprintbit_64(aff->bitvector, affected_bits);
         break;
 
       case AFFECT_DISEASE:
-        str += format("Disease: '%s'\n\r") % DiseaseInfo[affToDisease(*aff)].name;
+        str +=
+          format("Disease: '%s'\n\r") % DiseaseInfo[affToDisease(*aff)].name;
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_DUMMY:
         str += "Dummy Affect: \n\r";
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_WAS_INDOORS:
         str += "Was indoors (immune to frostbite): \n\r";
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_FREE_DEATHS:
         str += "Free Deaths: \n\r";
-        str += format("     Remaining %ld.  Status = %d.\n\r") %
-          aff->modifier % aff->level;
+        str += format("     Remaining %ld.  Status = %d.\n\r") % aff->modifier %
+               aff->level;
         break;
 
       case AFFECT_HORSEOWNED:
         str += "Horse-owned: \n\r";
-        str += format("     Expires in %d updates.\n\r") %
-          aff->duration;
+        str += format("     Expires in %d updates.\n\r") % aff->duration;
         break;
 
       case AFFECT_PLAYERKILL:
         str += "Player-Killer: \n\r";
-        str += format("     Expires in %d updates.\n\r") %
-          aff->duration;
+        str += format("     Expires in %d updates.\n\r") % aff->duration;
         break;
 
       case AFFECT_PLAYERLOOT:
         str += "Player-Looter: \n\r";
-        str += format("     Expires in %d updates.\n\r") %
-          aff->duration;
+        str += format("     Expires in %d updates.\n\r") % aff->duration;
         break;
 
       case AFFECT_TEST_FIGHT_MOB:
         str += "Test Fight Mob: \n\r";
-        str += format("     Remaining %ld.  Status = %d.\n\r") %
-          aff->modifier % aff->level;
+        str += format("     Remaining %ld.  Status = %d.\n\r") % aff->modifier %
+               aff->level;
         break;
 
       case AFFECT_SKILL_ATTEMPT:
         str += "Skill Attempt: \n\r";
         str += format("     Expires in %d updates.  Skill = %d.\n\r") %
-          aff->duration % (int) aff->bitvector; 
+               aff->duration % (int)aff->bitvector;
         break;
 
       case AFFECT_NEWBIE:
         str += "Got Newbie Equipment: \n\r";
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_DRUNK:
         str += "Drunken slumber: \n\r";
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_DRUG:
         str += format("%s: \n\r") % drugTypes[aff->modifier2].name;
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         str += format("renew %i\n\r") % aff->renew;
         break;
 
       case AFFECT_COMBAT:
         if (aff->modifier == COMBAT_SOLO_KILL) {
-          str += format("Combat: '%s'\n\r") % (aff->be ? static_cast<TBeing *>(aff->be)->getName() : "No aff->be!");
-          str += format("     Expires in %d updates.  Status = %d.\n\r") % aff->duration % aff->level;
-        }else if (aff->modifier == COMBAT_RESTRICT_XP) {
-          str += format("Restricted Experience: '%s'\n\r") % (aff->be ? static_cast<char *>((void*)aff->be) : "No aff->be!");
+          str += format("Combat: '%s'\n\r") %
+                 (aff->be ? static_cast<TBeing*>(aff->be)->getName()
+                          : "No aff->be!");
+          str += format("     Expires in %d updates.  Status = %d.\n\r") %
+                 aff->duration % aff->level;
+        } else if (aff->modifier == COMBAT_RESTRICT_XP) {
+          str += format("Restricted Experience: '%s'\n\r") %
+                 (aff->be ? static_cast<char*>((void*)aff->be) : "No aff->be!");
           str += format("     Expires in %d updates.\n\r") % aff->duration;
         }
         break;
 
       case AFFECT_PET:
-        str += format("Pet of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
+        str += format("Pet of: '%s'\n\r") %
+               (aff->be ? (char*)aff->be : "No aff->be!");
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_CHARM:
-        str += format("Charm of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
+        str += format("Charm of: '%s'\n\r") %
+               (aff->be ? (char*)aff->be : "No aff->be!");
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_THRALL:
-        str += format("Thrall of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
+        str += format("Thrall of: '%s'\n\r") %
+               (aff->be ? (char*)aff->be : "No aff->be!");
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_ORPHAN_PET:
-        str += format("Orphan pet of: '%s'\n\r") % (aff->be ? (char *) aff->be : "No aff->be!");
+        str += format("Orphan pet of: '%s'\n\r") %
+               (aff->be ? (char*)aff->be : "No aff->be!");
         str += format("     Expires in %d updates.  Status = %d.\n\r") %
-          aff->duration % aff->level;
+               aff->duration % aff->level;
         break;
 
       case AFFECT_TRANSFORMED_ARMS:
@@ -2042,257 +2110,259 @@ void TBeing::statBeing(TBeing *k)
       case AFFECT_TRANSFORMED_NECK:
         str += "Spell : 'Transformed Limb'\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates, Bits set: %s\n\r") %
-          aff->duration % sprintbit_64(aff->bitvector, affected_bits);
+               aff->duration % sprintbit_64(aff->bitvector, affected_bits);
         break;
 
       case AFFECT_GROWTH_POTION:
         str += "Spell : 'Growth'\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates, Bits set: %s\n\r") %
-          aff->duration % sprintbit_64(aff->bitvector, affected_bits);
+               aff->duration % sprintbit_64(aff->bitvector, affected_bits);
         break;
-	
+
       case AFFECT_WARY:
-	str += "State: Wary\n\r";
-	str += "     Decreases chance of multiple cudgels\n\r";
-	break;
+        str += "State: Wary\n\r";
+        str += "     Decreases chance of multiple cudgels\n\r";
+        break;
 
       case AFFECT_DEFECTED:
-	str += "Player recently defected from a faction.\n\r";
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
-	
+        str += "Player recently defected from a faction.\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
+
       case AFFECT_OFFER:
-	f = get_guild_by_ID(aff->modifier);
-	if (!f) {
-	  vlogf(LOG_FACT, "char had faction offer from non-existant faction in cmd_stat");
-	  break;
-	}
-	str += format("Received offer to join %s (%d).\n\r") %
-          f->getName() % f->ID;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
-	
+        f = get_guild_by_ID(aff->modifier);
+        if (!f) {
+          vlogf(LOG_FACT,
+            "char had faction offer from non-existant faction in cmd_stat");
+          break;
+        }
+        str +=
+          format("Received offer to join %s (%d).\n\r") % f->getName() % f->ID;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
+
       case AFFECT_OBJECT_USED:
         objused = aff->modifier;
 
-	str += format("Used magical object: %s\n\r") %
-          obj_index[objused].short_desc;
+        str +=
+          format("Used magical object: %s\n\r") % obj_index[objused].short_desc;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
         break;
 
       case AFFECT_BITTEN_BY_VAMPIRE:
-	str += "Bitten by vampire.\n\r";
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
-
+        str += "Bitten by vampire.\n\r";
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
 
       case AFFECT_IMMORTAL_BLESSING:
-	str += "Immortal's Blessing.\n\r";
+        str += "Immortal's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_AION_BLESSING:
-	str += "Aion's Blessing.\n\r";
+        str += "Aion's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_VASCO_BLESSING:
-	str += "Vasco's Blessing.\n\r";
+        str += "Vasco's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_CORAL_BLESSING:
-	str += "Coral's Blessing.\n\r";
+        str += "Coral's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_SIDARTHA_BLESSING:
-	str += "Sidartha's Blessing.\n\r";
+        str += "Sidartha's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_BOZ_BLESSING:
-	str += "Boz's Blessing.\n\r";
+        str += "Boz's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_DAMESCENA_BLESSING:
-	str += "Damescena's Blessing.\n\r";
+        str += "Damescena's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_BUMP_BLESSING:
-	str += "Bump's Blessing.\n\r";
+        str += "Bump's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
       case AFFECT_ONSLAUGHT_BLESSING:
-	str += "Onslaughts's Blessing.\n\r";
+        str += "Onslaughts's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
-    case AFFECT_DASH_BLESSING:
-      str += "Dash's Blessing.\n\r";
-      str += format("     Modifies %s by %ld points\n\r") %
-	apply_types[aff->location].name % aff->modifier;
-      str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
+      case AFFECT_DASH_BLESSING:
+        str += "Dash's Blessing.\n\r";
+        str += format("     Modifies %s by %ld points\n\r") %
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_DEIRDRE_BLESSING:
-	str += "Deirdre's Blessing.\n\r";
+        str += "Deirdre's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_GARTHAGK_BLESSING:
-	str += "Garthagk's Blessing.\n\r";
+        str += "Garthagk's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_MERCURY_BLESSING:
-	str += "Mercury's Blessing.\n\r";
+        str += "Mercury's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_METROHEP_BLESSING:
-	str += "Metrohep's Blessing.\n\r";
+        str += "Metrohep's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_MAGDALENA_BLESSING:
-	str += "Magdalena's Blessing.\n\r";
+        str += "Magdalena's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
-	str += format("     Expires in %6d updates.\n\r") % aff->duration;
-	break;
+               apply_types[aff->location].name % aff->modifier;
+        str += format("     Expires in %6d updates.\n\r") % aff->duration;
+        break;
       case AFFECT_MACROSS_BLESSING:
         str += "Macross's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
         break;
       case AFFECT_PAPPY_BLESSING:
         str += "Pappy's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
       case AFFECT_STAFFA_BLESSING:
         str += "Staffa's Blessing.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case AFFECT_UNHOLY_WRATH:
         str += "Unholy Wrath.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case AFFECT_HOLY_WRATH:
         str += "Holy Wrath.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case AFFECT_GUARDIANS_LIGHT:
         str += "Guardians Light.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SKILL_AURA_MIGHT:
         str += "Projecting : Aura of Might\n\r";
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SKILL_AURA_REGENERATION:
         str += "Projecting : Aura of Regeneration\n\r";
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SKILL_AURA_GUARDIAN:
         str += "Projecting : Aura of the Guardian\n\r";
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SKILL_AURA_VENGEANCE:
         str += "Projecting : Aura of Vengeance\n\r";
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SKILL_AURA_ABSOLUTION:
         str += "Projecting : Aura of Absolution\n\r";
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SPELL_AURA_GUARDIAN:
         str += "Aura of the Guardian.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SPELL_AURA_REGENERATION:
         str += "Aura of Regeneration.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SPELL_AURA_MIGHT:
         str += "Aura of Might.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SPELL_AURA_VENGEANCE:
         str += "Aura of Vengeance.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case SPELL_AURA_ABSOLUTION:
         str += "Aura of Absolution.\n\r";
         str += format("     Modifies %s by %ld points\n\r") %
-          apply_types[aff->location].name % aff->modifier;
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
 
       case AFFECT_PREENED:
         str += "Preened.\n\r";
         str += format("     Enables %s for winged, feathered creatures.\n\r") %
-          sprintbit_64(aff->bitvector, affected_bits);
+               sprintbit_64(aff->bitvector, affected_bits);
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
-      break;
+        break;
       case AFFECT_WET:
         str += "Wet.\n\r";
-        str += format("     Covered by %d fluid ounces of water.\n\r") % aff->modifier;
-      break;
+        str += format("     Covered by %d fluid ounces of water.\n\r") %
+               aff->modifier;
+        break;
 
       case AFFECT_FORTIFY:
         str += "Shield Wall.\n\r";
-        str += format("     Modifies %s by %ld points\n\r") % apply_types[aff->location].name % aff->modifier;
+        str += format("     Modifies %s by %ld points\n\r") %
+               apply_types[aff->location].name % aff->modifier;
         str += format("     Expires in %6d updates.\n\r") % aff->duration;
         break;
 
@@ -2340,7 +2410,7 @@ void TBeing::statBeing(TBeing *k)
       case DAMAGE_HEADBUTT_LEG:
       case DAMAGE_KNEESTRIKE_SOLAR:
       case DAMAGE_HEADBUTT_BODY:
-      case DAMAGE_KNEESTRIKE_CROTCH:      
+      case DAMAGE_KNEESTRIKE_CROTCH:
       case DAMAGE_HEADBUTT_CROTCH:
       case DAMAGE_HEADBUTT_THROAT:
       case DAMAGE_KNEESTRIKE_CHIN:
@@ -2397,7 +2467,8 @@ void TBeing::statBeing(TBeing *k)
       case TYPE_UNDEFINED:
       case TYPE_MAX_HIT:
       case ABSOLUTE_MAX_SKILL:
-        vlogf(LOG_BUG, format("BOGUS AFFECT (%d) on %s") % aff->type % k->getName());
+        vlogf(LOG_BUG,
+          format("BOGUS AFFECT (%d) on %s") % aff->type % k->getName());
         k->affectRemove(aff);
         break;
     }
@@ -2405,15 +2476,15 @@ void TBeing::statBeing(TBeing *k)
   if (k->task) {
     str += format("Player is busy '%s'.\n\r") % tasks[k->task->task].name;
     str += format("Time left:    %6d updates     Orignal argument:  %s\n\r") %
-      k->task->timeLeft % k->task->orig_arg;
-    str += format("Was in room:  %6d             Status/Flags:      %6d/%6d\n\r") %
+           k->task->timeLeft % k->task->orig_arg;
+    str +=
+      format("Was in room:  %6d             Status/Flags:      %6d/%6d\n\r") %
       k->task->wasInRoom % k->task->status % k->task->flags;
   }
-  for (i = 1; i < MAX_TOG_INDEX;i++) {
-    if (k->hasQuestBit(i))  {
-      str += format("%sToggle Set:%s (%d) %s\n\r") %
-        cyan() % norm() %
-        i % TogIndex[i].name;
+  for (i = 1; i < MAX_TOG_INDEX; i++) {
+    if (k->hasQuestBit(i)) {
+      str += format("%sToggle Set:%s (%d) %s\n\r") % cyan() % norm() % i %
+             TogIndex[i].name;
     }
   }
 #if 0
@@ -2426,37 +2497,29 @@ void TBeing::statBeing(TBeing *k)
   }
 #endif
   if (k->desc) {
-    str += format("%sClient:%s %s\n\r") %
-      cyan() % norm() %
-      (k->desc->m_bIsClient ? "Yes" : "No");
+    str += format("%sClient:%s %s\n\r") % cyan() % norm() %
+           (k->desc->m_bIsClient ? "Yes" : "No");
   }
-  
+
   if (km) {
     if (!km->sounds.empty()) {
-      str += format("%sLocal Sound:%s\n\r%s") %
-        cyan() % norm() %
-        km->sounds;
+      str += format("%sLocal Sound:%s\n\r%s") % cyan() % norm() % km->sounds;
     }
     if (!km->distantSnds.empty()) {
-      str += format("%sDistant Sound:%s\n\r%s") %
-        cyan() % norm() %
-        km->distantSnds;
+      str +=
+        format("%sDistant Sound:%s\n\r%s") % cyan() % norm() % km->distantSnds;
     }
   }
   desc->page_string(str);
 }
 
-void TBeing::doStat(const sstring &)
-{
-  return;
-}
+void TBeing::doStat(const sstring&) { return; }
 
-void TPerson::doStat(const sstring &argument)
-{
+void TPerson::doStat(const sstring& argument) {
   sstring arg1, arg2, arg3;
   sstring tmp_arg;
-  TBeing *k = NULL;
-  TObj *j = NULL;
+  TBeing* k = NULL;
+  TObj* j = NULL;
   int count, parm = 0;
   int foundNum = FALSE;
 
@@ -2464,15 +2527,15 @@ void TPerson::doStat(const sstring &argument)
     incorrectCommand();
     return;
   }
-  
+
   if (!desc)
     return;
-  
+
   if (!hasWizPower(POWER_STAT)) {
     sendTo("Sorry, you lack the power to use the stat command.\n\r");
     return;
   }
-  
+
   if (argument.empty()) {
     sendTo("Usage :\n\r");
     sendTo("        stat mob <name or vnum>\n\r");
@@ -2487,7 +2550,7 @@ void TPerson::doStat(const sstring &argument)
     sendTo("        stat <name> donebasic\n\r");
     return;
   }
-  
+
   tmp_arg = argument;
   tmp_arg = one_argument(tmp_arg, arg1);
   tmp_arg = one_argument(tmp_arg, arg2);
@@ -2499,7 +2562,7 @@ void TPerson::doStat(const sstring &argument)
   } else {
     arg3 = "";
   }
-  
+
   if (arg1 == "mob") {
     // ***** begin stat mob
     if (!hasWizPower(POWER_STAT_MOBILES)) {
@@ -2508,7 +2571,7 @@ void TPerson::doStat(const sstring &argument)
     }
     if (is_number(arg2) && (parm = convertTo<int>(arg2))) {
       // check by vnum
-      TMonster *tMonster;
+      TMonster* tMonster;
       long rnum = real_mobile(parm);
       if (rnum >= 0 && (size_t)rnum < mob_index.size()) {
         if ((tMonster = read_mobile(rnum, REAL))) {
@@ -2525,7 +2588,7 @@ void TPerson::doStat(const sstring &argument)
       return;
     }
     // check by name
-    count = 1; // looks like not all of the get_ routines incrememnt count
+    count = 1;  // looks like not all of the get_ routines incrememnt count
     if (!(k = get_char_room(arg2, in_room))) {
       if (!(k = get_char_vis_world(this, arg2, &count, EXACT_YES))) {
         if (!(k = get_char_vis_world(this, arg2, &count, EXACT_NO))) {
@@ -2537,7 +2600,7 @@ void TPerson::doStat(const sstring &argument)
     statBeing(k);
     return;
     // ***** end stat mob
-    
+
   } else if (arg1 == "obj") {
     // ***** begin stat obj
     if (!hasWizPower(POWER_STAT_OBJECT)) {
@@ -2546,7 +2609,7 @@ void TPerson::doStat(const sstring &argument)
     }
     if (is_number(arg2) && (parm = convertTo<int>(arg2))) {
       // check by vnum
-      TObj *tObj;
+      TObj* tObj;
       long rnum = real_object(parm);
       if (rnum >= 0 && (size_t)rnum < obj_index.size()) {
         if ((tObj = read_object(rnum, REAL))) {
@@ -2563,7 +2626,8 @@ void TPerson::doStat(const sstring &argument)
       return;
     }
     count = 1;
-    if ((j = get_obj_vis_accessible(this, arg2)) || (j = get_obj_vis(this, arg2.c_str(), &count, EXACT_NO))) {
+    if ((j = get_obj_vis_accessible(this, arg2)) ||
+        (j = get_obj_vis(this, arg2.c_str(), &count, EXACT_NO))) {
       statObj(j);
       return;
     } else {
@@ -2571,13 +2635,13 @@ void TPerson::doStat(const sstring &argument)
       return;
     }
     // ***** end stat obj
-    
+
   } else if (arg1 == "room") {
     // ***** begin stat room
     statRoom(roomp);
     return;
     // ***** end stat room
-    
+
   } else if (arg1 == "zone") {
     // ***** begin stat zone
     if (!hasWizPower(POWER_STAT_OBJECT) || !hasWizPower(POWER_STAT_MOBILES)) {
@@ -2585,7 +2649,8 @@ void TPerson::doStat(const sstring &argument)
       return;
     }
     // mobs and objs options added to spit out items from the zonefile
-    // kind of like show mobs or show objs does it based on the zone's vnum range
+    // kind of like show mobs or show objs does it based on the zone's vnum
+    // range
     if (is_abbrev(arg2, "mobs")) {
       statZoneMobs(arg3);
     } else if (is_abbrev(arg2, "objs")) {
@@ -2595,7 +2660,7 @@ void TPerson::doStat(const sstring &argument)
     }
     return;
     // ***** end stat zone
-    
+
   } else {
     // // ***** begin stat player
     if (!hasWizPower(POWER_STAT_SKILL)) {
@@ -2619,31 +2684,39 @@ void TPerson::doStat(const sstring &argument)
       sstring cap_name = k->getName();
       cap_name = cap_name.cap();
       if (!k->discs) {
-        sendTo(COLOR_MOBS, format("%s does not have any disciplines allocated yet.\n\r") % cap_name);
+        sendTo(COLOR_MOBS,
+          format("%s does not have any disciplines allocated yet.\n\r") %
+            cap_name);
         return;
       }
       discNumT dnt;
-      CDiscipline *cd;
+      CDiscipline* cd;
       if (arg3.empty()) {
         // discipline summary
-        sendTo(COLOR_MOBS, format("%s has the following disciplines:\n\r\n\r") % cap_name);
-        sendTo(COLOR_MOBS, "                    <c>Discipline Num   Current Natural<1>\n\r");
+        sendTo(COLOR_MOBS,
+          format("%s has the following disciplines:\n\r\n\r") % cap_name);
+        sendTo(COLOR_MOBS,
+          "                    <c>Discipline Num   Current Natural<1>\n\r");
         for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
           if (!(cd = k->getDiscipline(dnt))) {
             continue;
           }
-          if (cd->getNatLearnedness() == 0 && cd->getLearnedness() == 0) 
+          if (cd->getNatLearnedness() == 0 && cd->getLearnedness() == 0)
             continue;
-          sendTo(COLOR_MOBS, format("%30s %3d :     %3d     %3d\n\r") % discNames[dnt].properName % mapDiscToFile(dnt) % cd->getLearnedness()  % cd->getNatLearnedness());
-          /* sendTo(COLOR_MOBS, format("%30s : Current (%d) Natural (%d).\n\r") % discNames[dnt].properName % cd->getLearnedness()  % cd->getNatLearnedness()); */
+          sendTo(COLOR_MOBS, format("%30s %3d :     %3d     %3d\n\r") %
+                               discNames[dnt].properName % mapDiscToFile(dnt) %
+                               cd->getLearnedness() % cd->getNatLearnedness());
+          /* sendTo(COLOR_MOBS, format("%30s : Current (%d) Natural (%d).\n\r")
+           * % discNames[dnt].properName % cd->getLearnedness()  %
+           * cd->getNatLearnedness()); */
         }
         return;
       }
-      
+
       if (is_number(arg3)) {
         // search by number
-        // should search by mapped disc number because that's what someone would probably be entering here, no?
-        // why are these mapped, anyway?
+        // should search by mapped disc number because that's what someone would
+        // probably be entering here, no? why are these mapped, anyway?
         parm = convertTo<int>(arg3);
         dnt = mapFileToDisc(parm);
         if (dnt < MIN_DISC || dnt >= MAX_DISCS) {
@@ -2660,30 +2733,36 @@ void TPerson::doStat(const sstring &argument)
             break;
           }
         }
-        // search by abbr name (probably need to account for disciplines that are partial names of others somehow)
+        // search by abbr name (probably need to account for disciplines that
+        // are partial names of others somehow)
         if (!foundNum) {
           for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
             if (isname(arg3, discNames[dnt].name)) {
               foundNum = TRUE;
               break;
             }
-          } 
+          }
         }
         if (!foundNum) {
           sendTo("No discipline by that name found.\n\r");
           return;
         }
       }
-      
-      sendTo(COLOR_MOBS, format("<c>%s<1> is discipline number <c>%d<1>.\n\r") % discNames[dnt].properName % mapDiscToFile(dnt));
-      
+
+      sendTo(COLOR_MOBS, format("<c>%s<1> is discipline number <c>%d<1>.\n\r") %
+                           discNames[dnt].properName % mapDiscToFile(dnt));
+
       if (!(cd = k->getDiscipline(dnt))) {
-        sendTo(COLOR_MOBS, format("%s does not appear to have <c>%s<1>.\n\r") % cap_name % discNames[dnt].properName);
+        sendTo(COLOR_MOBS, format("%s does not appear to have <c>%s<1>.\n\r") %
+                             cap_name % discNames[dnt].properName);
         return;
       }
-      sendTo(COLOR_MOBS, format("%s's learning in <c>%s<1>: Current (%d) Natural (%d).\n\r") % cap_name % discNames[dnt].properName % cd->getLearnedness() % cd->getNatLearnedness());
+      sendTo(COLOR_MOBS,
+        format("%s's learning in <c>%s<1>: Current (%d) Natural (%d).\n\r") %
+          cap_name % discNames[dnt].properName % cd->getLearnedness() %
+          cd->getNatLearnedness());
       return;
-      
+
       // ***** end stat discipline
     } else if (is_abbrev(arg2, "skill")) {
       // ***** begin stat skill
@@ -2744,42 +2823,62 @@ void TPerson::doStat(const sstring &argument)
               foundNum = TRUE;
               break;
             }
-          } 
+          }
         }
         if (!foundNum) {
           sendTo("No skill by that name found.\n\r");
           return;
         }
-        sendTo(COLOR_MOBS, format("<c>%s<1> is skill number <c>%d<1>.\n\r") % ((sstring)(discArray[snt]->name ? discArray[snt]->name : "unknown")).cap() % snt);
+        sendTo(COLOR_MOBS,
+          format("<c>%s<1> is skill number <c>%d<1>.\n\r") %
+            ((sstring)(discArray[snt]->name ? discArray[snt]->name : "unknown"))
+              .cap() %
+            snt);
       }
-      
+
       if (!k->doesKnowSkill(snt)) {
         if (discArray[snt]) {
-          sendTo(COLOR_MOBS, format("%s does not appear to know <c>%s<1>.\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+          sendTo(COLOR_MOBS,
+            format("%s does not appear to know <c>%s<1>.\n\r") % cap_name %
+              (discArray[snt]->name ? discArray[snt]->name : "unknown"));
         } else {
-          sendTo(COLOR_MOBS, format("%s does not appear to know that skill.\n\r") % cap_name);
+          sendTo(COLOR_MOBS,
+            format("%s does not appear to know that skill.\n\r") % cap_name);
         }
         return;
       }
-      CSkill *sk = k->getSkill(snt);
+      CSkill* sk = k->getSkill(snt);
       if (!sk) {
         if (discArray[snt]) {
-          sendTo(COLOR_MOBS, format("%s does not appear to know <c>%s<1>.\n\r") % cap_name % (discArray[snt]->name ? discArray[snt]->name : "unknown"));
+          sendTo(COLOR_MOBS,
+            format("%s does not appear to know <c>%s<1>.\n\r") % cap_name %
+              (discArray[snt]->name ? discArray[snt]->name : "unknown"));
         } else {
-          sendTo(COLOR_MOBS, format("%s does not appear to know that skill.\n\r") % cap_name);
+          sendTo(COLOR_MOBS,
+            format("%s does not appear to know that skill.\n\r") % cap_name);
         }
         return;
       }
-      sendTo(COLOR_MOBS, format("%s's <c>%s<1>: Raw (stored) learning:  Current (%d) Natural (%d).\n\r") % cap_name % discArray[snt]->name % k->getRawSkillValue(snt) % k->getRawNatSkillValue(snt));
-      sendTo(COLOR_MOBS, format("%s's <c>%s<1>: Actual (used) learning: Current (%d) Natural (%d) Max (%d).\n\r") % cap_name % discArray[snt]->name % k->getSkillValue(snt) % k->getNatSkillValue(snt) % k->getMaxSkillValue(snt));
+      sendTo(COLOR_MOBS, format("%s's <c>%s<1>: Raw (stored) learning:  "
+                                "Current (%d) Natural (%d).\n\r") %
+                           cap_name % discArray[snt]->name %
+                           k->getRawSkillValue(snt) %
+                           k->getRawNatSkillValue(snt));
+      sendTo(COLOR_MOBS, format("%s's <c>%s<1>: Actual (used) learning: "
+                                "Current (%d) Natural (%d) Max (%d).\n\r") %
+                           cap_name % discArray[snt]->name %
+                           k->getSkillValue(snt) % k->getNatSkillValue(snt) %
+                           k->getMaxSkillValue(snt));
 
       time_t ct = sk->lastUsed;
-      char *tmstr = (char *) asctime(localtime(&ct));
+      char* tmstr = (char*)asctime(localtime(&ct));
       *(tmstr + strlen(tmstr) - 1) = '\0';
-      sendTo(COLOR_MOBS, format("%s's <c>%s<1>: Last increased:         %s\n\r") % cap_name % discArray[snt]->name % tmstr);
+      sendTo(COLOR_MOBS,
+        format("%s's <c>%s<1>: Last increased:         %s\n\r") % cap_name %
+          discArray[snt]->name % tmstr);
       return;
       // ***** end stat skill
-      
+
     } else if (is_abbrev(arg2, "donebasic")) {
       // ***** begin stat donebasic
       // search for pc in world
@@ -2792,7 +2891,8 @@ void TPerson::doStat(const sstring &argument)
       }
       sstring cap_name = k->getName();
       cap_name = cap_name.cap();
-      sendTo(COLOR_MOBS, format("Basic discipline completion data for %s.\n\r") % k->getName());
+      sendTo(COLOR_MOBS,
+        format("Basic discipline completion data for %s.\n\r") % k->getName());
       sendTo("Lvl    Class\n\r");
       sstring buf;
       for (count = 0; count < MAX_CLASSES; count++) {
@@ -2803,7 +2903,8 @@ void TPerson::doStat(const sstring &argument)
         } else {
           buf = "NA";
         }
-        sendTo(format("<c>%2s<1>  :  %s\n\r") % buf % classInfo[count].name.cap());
+        sendTo(
+          format("<c>%2s<1>  :  %s\n\r") % buf % classInfo[count].name.cap());
       }
       return;
       // ***** end stat donebasic
@@ -2816,7 +2917,9 @@ void TPerson::doStat(const sstring &argument)
             if (!(k = get_char_vis_world(this, arg1, &count, EXACT_YES))) {
               if (!(k = get_char_vis_world(this, arg1, &count, EXACT_NO))) {
                 if (!(j = get_obj_vis(this, arg1.c_str(), &count, EXACT_NO))) {
-                  sendTo("No such mobile or object could be found in the World.\n\r");
+                  sendTo(
+                    "No such mobile or object could be found in the "
+                    "World.\n\r");
                   return;
                 }
               }
@@ -2832,5 +2935,5 @@ void TPerson::doStat(const sstring &argument)
         vlogf(LOG_BUG, format("doStat fell through looking for %s.") % arg1);
       }
     }
-  }  
+  }
 }

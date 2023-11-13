@@ -4,13 +4,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "being.h"
 #include "extern.h"
 
 // assumption is that mod/20 is "level" of the effect being defended against
-bool TBeing::isLucky(int mod) const
-{
+bool TBeing::isLucky(int mod) const {
   // this is basically a saving throw
   // we will reduce it to basically a level comparison which is basically
   // a 50% +- 1.5% per level.
@@ -26,16 +24,16 @@ bool TBeing::isLucky(int mod) const
   int lev = GetMaxLevel() * 20;
 
   // make a karma adjustment
-  lev = (int) (lev * plotStat(STAT_CURRENT, STAT_KAR, 0.8, 1.25, 1.0));
+  lev = (int)(lev * plotStat(STAT_CURRENT, STAT_KAR, 0.8, 1.25, 1.0));
 
   // kinda convert to a percentage, but multiply by 100 so 50%=5000 pts
   // diff = 0 should be 50%
   // if diff > 0, should be > 50% chance
   // every 20 points of diff represents 1.5%=150 pts
   int diff = lev - mod;
-  int chance = 5000 + (int) (7.5 * diff);
+  int chance = 5000 + (int)(7.5 * diff);
 
-  if (::number(0,9999) < chance)
+  if (::number(0, 9999) < chance)
     return true;
   return false;
 }
@@ -44,17 +42,13 @@ bool TBeing::isLucky(int mod) const
 // for isLucky.  Pretty silly under the hood, but given history, we seem
 // to change how saving throws work every 10 months, so this simplifies
 // that process
-int levelLuckModifier(float lev)
-{
-  return (int) (lev * 20);
-}
+int levelLuckModifier(float lev) { return (int)(lev * 20); }
 
 // takes a spell/skill as an argument and returns a modifier appropriate
 // for passing into isLucky as the "mod" argument.
 // essentially, it figures what level this is casting the skill at and
 // makes it a mod.
-int TBeing::spellLuckModifier(spellNumT spell)
-{
+int TBeing::spellLuckModifier(spellNumT spell) {
   if (isImmortal())
     return 5000;
 
@@ -69,4 +63,3 @@ int TBeing::spellLuckModifier(spellNumT spell)
 
   return mod;
 }
-

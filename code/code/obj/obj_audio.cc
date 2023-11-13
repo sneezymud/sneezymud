@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 // audio.cc
 
 #include <stdio.h>
@@ -12,57 +11,36 @@
 #include "low.h"
 #include "extern.h"
 #include "obj_audio.h"
-#include "being.h" // for number()... groan
+#include "being.h"  // for number()... groan
 
-int TAudio::getFreq() const
-{
-  return freq;
-}
+int TAudio::getFreq() const { return freq; }
 
-void TAudio::setFreq(int n)
-{
-  freq = n;
-}
+void TAudio::setFreq(int n) { freq = n; }
 
-TAudio::TAudio() :
-  TObj(), 
-  freq(0)
-{
-}
+TAudio::TAudio() : TObj(), freq(0) {}
 
-TAudio::TAudio(const TAudio &a) :
-  TObj(a),
-  freq(a.freq)
-{
-}
+TAudio::TAudio(const TAudio& a) : TObj(a), freq(a.freq) {}
 
-TAudio & TAudio::operator=(const TAudio &a)
-{
-  if (this == &a) return *this;
+TAudio& TAudio::operator=(const TAudio& a) {
+  if (this == &a)
+    return *this;
   TObj::operator=(a);
   freq = a.freq;
   return *this;
 }
 
-TAudio::~TAudio()
-{
-}
+TAudio::~TAudio() {}
 
-void TAudio::assignFourValues(int x1, int, int, int)
-{
-  setFreq(x1);
-}
+void TAudio::assignFourValues(int x1, int, int, int) { setFreq(x1); }
 
-void TAudio::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
+void TAudio::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
   *x1 = getFreq();
   *x2 = 0;
   *x3 = 0;
   *x4 = 0;
 }
 
-sstring TAudio::statObjInfo() const
-{
+sstring TAudio::statObjInfo() const {
   char buf[256];
 
   sprintf(buf, "Frequency: %d", getFreq());
@@ -71,12 +49,10 @@ sstring TAudio::statObjInfo() const
   return a;
 }
 
-void TAudio::audioCheck(int pulse) const
-{
+void TAudio::audioCheck(int pulse) const {
   int room = 0;
 
-  if ((getFreq() && !(pulse % getFreq())) ||
-      !::number(0, 5)) {
+  if ((getFreq() && !(pulse % getFreq())) || !::number(0, 5)) {
     if (parent)
       room = parent->in_room;
     else if (equippedBy)
@@ -90,4 +66,3 @@ void TAudio::audioCheck(int pulse) const
       MakeNoise(room, action_description.c_str(), action_description.c_str());
   }
 }
-

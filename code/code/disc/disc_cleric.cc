@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 // disc_cleric.cc
 
 #include "disc_cleric.h"
@@ -44,11 +43,9 @@ CDCleric::CDCleric() :
   skWordOfRecall(),
   skHarm(),
   skKnitBone(),
-  skBlindness()
-{
-}
+  skBlindness() {}
 
-CDCleric::CDCleric(const CDCleric &a) :
+CDCleric::CDCleric(const CDCleric& a) :
   CDiscipline(a),
   skHealLight(a.skHealLight),
   skHarmLight(a.skHarmLight),
@@ -83,13 +80,11 @@ CDCleric::CDCleric(const CDCleric &a) :
   skWordOfRecall(a.skWordOfRecall),
   skHarm(a.skHarm),
   skKnitBone(a.skKnitBone),
-  skBlindness(a.skBlindness)
-{
-}
+  skBlindness(a.skBlindness) {}
 
-CDCleric & CDCleric::operator=(const CDCleric &a)
-{
-  if (this == &a) return *this;
+CDCleric& CDCleric::operator=(const CDCleric& a) {
+  if (this == &a)
+    return *this;
   CDiscipline::operator=(a);
   skHealLight = a.skHealLight;
   skHarmLight = a.skHarmLight;
@@ -128,11 +123,6 @@ CDCleric & CDCleric::operator=(const CDCleric &a)
   return *this;
 }
 
-CDCleric::~CDCleric()
-{
-}
+CDCleric::~CDCleric() {}
 
-CDCleric * CDCleric::cloneMe()
-{
-  return new CDCleric(*this);
-}
+CDCleric* CDCleric::cloneMe() { return new CDCleric(*this); }

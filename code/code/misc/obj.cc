@@ -8,89 +8,50 @@
 #include "extern.h"
 #include "being.h"
 
-bool TObj::isPluralItem() const
-{
-  return FALSE;
-}
+bool TObj::isPluralItem() const { return FALSE; }
 
-bool TObj::engraveMe(TBeing *, TMonster *, bool)
-{
-  return FALSE;
-}
+bool TObj::engraveMe(TBeing*, TMonster*, bool) { return FALSE; }
 
-bool TObj::isUnique() const
-{
-  return (!obj_index[getItemIndex()].getNumber());
-}
+bool TObj::isUnique() const { return (!obj_index[getItemIndex()].getNumber()); }
 
-int TObj::objVnum() const
-{
+int TObj::objVnum() const {
   return ((number < 0) ? -1 : obj_index[number].virt);
 }
 
-int TObj::getValue() const
-{
-  return obj_flags.cost;
-}
+int TObj::getValue() const { return obj_flags.cost; }
 
-bool TObj::isObjStat(unsigned int num) const
-{
+bool TObj::isObjStat(unsigned int num) const {
   return (obj_flags.extra_flags & num) != 0;
 }
 
-unsigned int TObj::getObjStat() const
-{
-  return obj_flags.extra_flags;
+unsigned int TObj::getObjStat() const { return obj_flags.extra_flags; }
+
+void TObj::setObjStat(unsigned int num) { obj_flags.extra_flags = num; }
+
+void TObj::remObjStat(unsigned int num) { obj_flags.extra_flags &= ~num; }
+
+void TObj::addObjStat(unsigned int num) { obj_flags.extra_flags |= num; }
+
+bool TObj::isPaired() const { return (isObjStat(ITEM_PAIRED)); }
+
+bool TObj::usedAsPaired() const {
+  return (isPaired() && (eq_pos == WEAR_LEG_L || eq_pos == WEAR_LEG_R ||
+                          eq_pos == WEAR_EX_LEG_R || eq_pos == WEAR_EX_LEG_L ||
+                          eq_pos == HOLD_RIGHT || eq_pos == HOLD_LEFT));
 }
 
-void TObj::setObjStat(unsigned int num)
-{
-  obj_flags.extra_flags = num;
+bool TObj::isLevitating() const { return isObjStat(ITEM_HOVER); }
+
+bool TObj::fitInShop(const char* buf3, const TBeing*) const {
+  return (!strcmp(buf3, "yes") || !strcmp(buf3, "N/A") ||
+          !strcmp(buf3, "paired") || !strcmp(buf3, "either hand") ||
+          !strcmp(buf3, "secondary only") || !strcmp(buf3, "primary only"));
 }
 
-void TObj::remObjStat(unsigned int num)
-{
-  obj_flags.extra_flags &= ~num;
-}
-
-void TObj::addObjStat(unsigned int num)
-{
-  obj_flags.extra_flags |= num;
-}
-
-bool TObj::isPaired() const
-{
-  return (isObjStat(ITEM_PAIRED));
-}
-
-bool TObj::usedAsPaired() const
-{
-  return (isPaired() &&
-          (eq_pos == WEAR_LEG_L || eq_pos == WEAR_LEG_R ||
-           eq_pos == WEAR_EX_LEG_R || eq_pos == WEAR_EX_LEG_L ||
-           eq_pos == HOLD_RIGHT || eq_pos == HOLD_LEFT));
-}
-
-bool TObj::isLevitating() const
-{
-  return isObjStat(ITEM_HOVER);
-}
-
-bool TObj::fitInShop(const char *buf3, const TBeing *) const
-{
-  return (!strcmp(buf3, "yes") || 
-          !strcmp(buf3, "N/A") || 
-          !strcmp(buf3, "paired") ||
-          !strcmp(buf3, "either hand") || 
-          !strcmp(buf3, "secondary only") || 
-          !strcmp(buf3, "primary only"));
-}
-
-int TObj::suggestedPrice() const
-{
-  float units=10.0 * getWeight();
-  float price_per_unit=material_nums[getMaterial()].price;
-  int price=(int)(units*price_per_unit);
+int TObj::suggestedPrice() const {
+  float units = 10.0 * getWeight();
+  float price_per_unit = material_nums[getMaterial()].price;
+  int price = (int)(units * price_per_unit);
 
   return price + obj_index[getItemIndex()].value;
 }
@@ -99,15 +60,12 @@ int TObj::suggestedPrice() const
 // default is simply value of item - material cost
 // some types may have a special cost structure, eg food goes by
 // "makes full" rather than weight
-int TObj::productionPrice() const
-{
+int TObj::productionPrice() const {
   // just the indexed cost
-  return obj_index[getItemIndex()].value;  
+  return obj_index[getItemIndex()].value;
 }
 
-
-void TObj::swapToStrung()
-{
+void TObj::swapToStrung() {
   if (isObjStat(ITEM_STRUNG))
     return;
 
@@ -130,13 +88,12 @@ void TObj::swapToStrung()
     ex_description = NULL;
 }
 
-sstring TObj::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
-{
+sstring TObj::getNameForShow(bool useColor, bool useName,
+  const TBeing* ch) const {
   return useName ? name : (useColor ? getName() : getNameNOC(ch));
 }
 
-itemTypeT mapFileToItemType(int num)
-{
+itemTypeT mapFileToItemType(int num) {
   switch (num) {
     case 0:
       return ITEM_UNDEFINED;
@@ -293,12 +250,11 @@ itemTypeT mapFileToItemType(int num)
     case 76:
       return ITEM_FRUIT;
   }
-  vlogf(LOG_BUG, format("Unknown type %d in map file") %  num);
+  vlogf(LOG_BUG, format("Unknown type %d in map file") % num);
   return ITEM_UNDEFINED;
 }
 
-int mapItemTypeToFile(itemTypeT itt)
-{
+int mapItemTypeToFile(itemTypeT itt) {
   switch (itt) {
     case ITEM_UNDEFINED:
       return 0;
@@ -457,34 +413,31 @@ int mapItemTypeToFile(itemTypeT itt)
     case MAX_OBJ_TYPES:
       break;
   }
-  vlogf(LOG_BUG, format("Unknown type %d in map item") %  itt);
+  vlogf(LOG_BUG, format("Unknown type %d in map item") % itt);
   return 0;
 }
 
-itemTypeT & operator++(itemTypeT &c, int)
-{
-  return c = (c == MAX_OBJ_TYPES) ? MIN_OBJ_TYPE : itemTypeT(c+1);
-
+itemTypeT& operator++(itemTypeT& c, int) {
+  return c = (c == MAX_OBJ_TYPES) ? MIN_OBJ_TYPE : itemTypeT(c + 1);
 }
-void TObj::lowCheck()
-{
+void TObj::lowCheck() {
   int i;
 
   if (!getVolume() && canWear(ITEM_WEAR_TAKE))
-    vlogf(LOG_LOW,format("item (%s:%d) had 0 volume.") % getName() % objVnum());
+    vlogf(LOG_LOW,
+      format("item (%s:%d) had 0 volume.") % getName() % objVnum());
 
-  // not sure logically, but would a canWear(ITEM_WEAR_TAKE) check be appropriate here?
-  // allow APPLY_LIGHT on untakeable things?
-  // ^ yes... Maror 08/04
-  for (i=0; i<MAX_OBJ_AFFECT;i++) {
+  // not sure logically, but would a canWear(ITEM_WEAR_TAKE) check be
+  // appropriate here? allow APPLY_LIGHT on untakeable things? ^ yes... Maror
+  // 08/04
+  for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (affected[i].location == APPLY_LIGHT && canWear(ITEM_WEAR_TAKE)) {
-      vlogf(LOG_LOW,format("item %s was defined apply-light.") % getName());
+      vlogf(LOG_LOW, format("item %s was defined apply-light.") % getName());
     }
   }
 }
 
-bool TObj::lowCheckSlots(silentTypeT silent)
-{
+bool TObj::lowCheckSlots(silentTypeT silent) {
   unsigned int ui;
 
   // check for multiple wear slots
@@ -493,73 +446,61 @@ bool TObj::lowCheckSlots(silentTypeT silent)
   REMOVE_BIT(value, ITEM_WEAR_THROW);
 
   for (ui = 0; ui < MAX_ITEM_WEARS; ui++) {
-    if (IS_SET(value, (unsigned) (1<<ui)))
-      if (value != (unsigned) (1<<ui)) {
+    if (IS_SET(value, (unsigned)(1 << ui)))
+      if (value != (unsigned)(1 << ui)) {
         if (!silent)
-          vlogf(LOG_LOW, format("item (%s) with multiple wear slots: %s") % 
-               getName() % wear_bits[ui]);
+          vlogf(LOG_LOW, format("item (%s) with multiple wear slots: %s") %
+                           getName() % wear_bits[ui]);
         return true;
       }
   }
   return false;
 }
 
-void TObj::waterCreate(const TBeing *caster, int)
-{
-  caster->nothingHappens();
-}
+void TObj::waterCreate(const TBeing* caster, int) { caster->nothingHappens(); }
 
-void TObj::fillMe(const TBeing *ch, liqTypeT)
-{
+void TObj::fillMe(const TBeing* ch, liqTypeT) {
   ch->sendTo("That's not a drink container!\n\r");
 }
 
-void TObj::addGlowEffects()
-{
-  canBeSeen -= (1 + getVolume()/1500);
+void TObj::addGlowEffects() {
+  canBeSeen -= (1 + getVolume() / 1500);
 
   int i;
-  for (i=0; i<MAX_OBJ_AFFECT;i++) {
+  for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (affected[i].location == APPLY_NONE) {
       affected[i].location = APPLY_LIGHT;
-      affected[i].modifier = (1 + getVolume()/6000);
+      affected[i].modifier = (1 + getVolume() / 6000);
       addToLight(affected[i].modifier);
       if (affected[i].modifier > 5 && canWear(ITEM_WEAR_TAKE))
-        vlogf(LOG_LOW,format("Mega light on %s") % getName());
+        vlogf(LOG_LOW, format("Mega light on %s") % getName());
       break;
-    } else if (i==(MAX_OBJ_AFFECT-1))
-      vlogf(LOG_LOW,format("obj %s has too many affects to set glow on it.") % 
-             getName());
+    } else if (i == (MAX_OBJ_AFFECT - 1))
+      vlogf(LOG_LOW,
+        format("obj %s has too many affects to set glow on it.") % getName());
   }
 }
 
-double TObj::objLevel() const
-{
-  return 0.0;
-}
+double TObj::objLevel() const { return 0.0; }
 
-void TObj::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
-{
+void TObj::purchaseMe(TBeing* ch, TMonster* keeper, int cost, int shop_nr) {
   TShopOwned tso(shop_nr, keeper, ch);
   tso.doBuyTransaction(cost, getName(), TX_BUYING, this);
 }
 
-void TObj::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
-{
+void TObj::sellMeMoney(TBeing* ch, TMonster* keeper, int cost, int shop_nr) {
   TShopOwned tso(shop_nr, keeper, ch);
   tso.doSellTransaction(cost, getName(), TX_SELLING);
 }
 
-void TObj::peeOnMe(const TBeing *ch)
-{
-  act("With no apparent shame, $n happily relieves $mself on $p.",
-             TRUE, ch, this, NULL, TO_ROOM);
+void TObj::peeOnMe(const TBeing* ch) {
+  act("With no apparent shame, $n happily relieves $mself on $p.", TRUE, ch,
+    this, NULL, TO_ROOM);
   ch->sendTo("Ok, but have you no pride?\n\r");
 }
 
-void TObj::extinguishWater(TBeing *ch)
-{
-  if (isObjStat(ITEM_BURNING)){
+void TObj::extinguishWater(TBeing* ch) {
+  if (isObjStat(ITEM_BURNING)) {
     remBurning(ch);
 
     act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_CHAR);
@@ -567,47 +508,40 @@ void TObj::extinguishWater(TBeing *ch)
   }
 }
 
-void TObj::extinguishWater()
-{
+void TObj::extinguishWater() {
   if (isObjStat(ITEM_BURNING)) {
     remBurning(NULL);
     act("$p is put out by the room's water.", TRUE, 0, this, 0, TO_ROOM);
   }
 }
 
-bool TObj::canGetMeDeny(const TBeing *, silentTypeT) const
-{
-  return false;
-}
+bool TObj::canGetMeDeny(const TBeing*, silentTypeT) const { return false; }
 
-int TObj::galvanizeMe(TBeing *caster, short bKnown)
-{
+int TObj::galvanizeMe(TBeing* caster, short bKnown) {
   caster->sendTo("You can't galvanize that!\n\r");
   caster->nothingHappens(SILENT_YES);
   return SPELL_FAIL;
 }
 
-void TObj::onObjLoad()
-{
-}
+void TObj::onObjLoad() {}
 
-//returns who owns this monogram (or empty)
-sstring TObj::monogramOwner() const 
-{
+// returns who owns this monogram (or empty)
+sstring TObj::monogramOwner() const {
   char namebuf[MAX_INPUT_LENGTH];
-  /* added an 'immortal' type monogram to differentiate between engraver & immortal monogramming */
+  /* added an 'immortal' type monogram to differentiate between engraver &
+   * immortal monogramming */
   /* so %*s might read 'personalized' or 'immortalized' */
-  if(!action_description.empty() &&
-     (sscanf(action_description.c_str(), "This is the %*s object of %s.", namebuf) == 1))
+  if (!action_description.empty() &&
+      (sscanf(action_description.c_str(), "This is the %*s object of %s.",
+         namebuf) == 1))
     return sstring(namebuf);
 
   return "";
 }
 
-//returns true if this being is the monogram owner
-//can check for all characters on this account
-bool TObj::isMonogramOwner(TBeing *b, bool crossAccount) const
-{
+// returns true if this being is the monogram owner
+// can check for all characters on this account
+bool TObj::isMonogramOwner(TBeing* b, bool crossAccount) const {
   sstring o = monogramOwner();
   if (o.empty())
     return true;
@@ -619,74 +553,78 @@ bool TObj::isMonogramOwner(TBeing *b, bool crossAccount) const
   return false;
 }
 
-//checks for special-case monogramming (a subset of regular monogram)
-bool TObj::isImmMonogrammed() const 
-{
+// checks for special-case monogramming (a subset of regular monogram)
+bool TObj::isImmMonogrammed() const {
   char namebuf[MAX_INPUT_LENGTH];
-  /* added an 'immortal' type monogram to differentiate between engraver & immortal monogramming */
+  /* added an 'immortal' type monogram to differentiate between engraver &
+   * immortal monogramming */
   /* so %*s might read 'personalized' or 'immortalized' */
-  if(!action_description.empty() &&
-     (sscanf(action_description.c_str(), "This is the immortalized object of %s.", namebuf) == 1))
+  if (!action_description.empty() &&
+      (sscanf(action_description.c_str(),
+         "This is the immortalized object of %s.", namebuf) == 1))
     return true;
 
   return false;
 }
 
-bool TObj::deMonogram(bool erase_imm_monogram)
-{
-	/* remove a monogram from an item and strip off the monogrammed name from the obj name */
-	if (isMonogrammed()) {
-		if (isImmMonogrammed() && !erase_imm_monogram) {
-			return FALSE;
-		}
-		
-		// remove it and return!
-		
-		/* trim character's name from obj->name, if it's the last word */
-		/* not convinced that it was a good idea to append the char name in the first place, but will leave that for now */
-		char looking_for_name[MAX_INPUT_LENGTH];
-		if (!action_description.empty() && (sscanf(action_description.c_str(), "This is the %*s object of %s.", looking_for_name) == 1)) {
-			sstring obj_name = name;
-			unsigned int last_space_loc = obj_name.rfind(' ', obj_name.size());
-			if (last_space_loc > 0 && last_space_loc < obj_name.size()) {
-				if (obj_name.substr(last_space_loc + 1, obj_name.size()).compare(looking_for_name) == 0) {
-					// last word matches name, let's strip it off
-					obj_name = obj_name.substr(0, last_space_loc);
-					name = obj_name;
-				}
-			}
-		}
-		
-		action_description = "";
-		
-		return TRUE;
-		
-	}
-	return FALSE; // or we could return true to indicate that it's clean. whatever.
+bool TObj::deMonogram(bool erase_imm_monogram) {
+  /* remove a monogram from an item and strip off the monogrammed name from the
+   * obj name */
+  if (isMonogrammed()) {
+    if (isImmMonogrammed() && !erase_imm_monogram) {
+      return FALSE;
+    }
+
+    // remove it and return!
+
+    /* trim character's name from obj->name, if it's the last word */
+    /* not convinced that it was a good idea to append the char name in the
+     * first place, but will leave that for now */
+    char looking_for_name[MAX_INPUT_LENGTH];
+    if (!action_description.empty() &&
+        (sscanf(action_description.c_str(), "This is the %*s object of %s.",
+           looking_for_name) == 1)) {
+      sstring obj_name = name;
+      unsigned int last_space_loc = obj_name.rfind(' ', obj_name.size());
+      if (last_space_loc > 0 && last_space_loc < obj_name.size()) {
+        if (obj_name.substr(last_space_loc + 1, obj_name.size())
+              .compare(looking_for_name) == 0) {
+          // last word matches name, let's strip it off
+          obj_name = obj_name.substr(0, last_space_loc);
+          name = obj_name;
+        }
+      }
+    }
+
+    action_description = "";
+
+    return TRUE;
+  }
+  return FALSE;  // or we could return true to indicate that it's clean.
+                 // whatever.
 }
 
-sstring TObj::wear_flags_to_sentence() const
-{
+sstring TObj::wear_flags_to_sentence() const {
   // i know, this is ridiculous but we get a complete sentence out of it...
   sstring msg_wear_flag = "";
   bool worn = FALSE;
   bool ok_or = FALSE;
-  int wf = obj_flags.wear_flags; 
-  if (IS_SET(wf, 1<<0)) {
+  int wf = obj_flags.wear_flags;
+  if (IS_SET(wf, 1 << 0)) {
     // take flag
     msg_wear_flag = "It may be taken";
-    if (IS_SET(wf, 1<<14)) {
+    if (IS_SET(wf, 1 << 14)) {
       // hold
       msg_wear_flag += " and held";
       ok_or = TRUE;
     }
-    if (IS_SET(wf, 1<<15)) {
+    if (IS_SET(wf, 1 << 15)) {
       // throwable
       msg_wear_flag += " and thrown";
       ok_or = TRUE;
     }
     for (int x = 1; x < 14; ++x) {
-      if (IS_SET(wf, 1<<x) && *wear_bits[x]) {
+      if (IS_SET(wf, 1 << x) && *wear_bits[x]) {
         if (!worn) {
           if (ok_or) {
             msg_wear_flag += " or worn on the";
@@ -700,15 +638,15 @@ sstring TObj::wear_flags_to_sentence() const
         msg_wear_flag += " " + ((sstring)(wear_bits[x])).uncap();
       }
     }
-  } else if (IS_SET(wf, 1<<14)) {
+  } else if (IS_SET(wf, 1 << 14)) {
     // hold
     msg_wear_flag = "It may be held";
-    if (IS_SET(wf, 1<<15)) {
+    if (IS_SET(wf, 1 << 15)) {
       // throwable
       msg_wear_flag += " and thrown";
     }
     for (int x = 1; x < 14; ++x) {
-      if (IS_SET(wf, 1<<x) && *wear_bits[x-1]) {
+      if (IS_SET(wf, 1 << x) && *wear_bits[x - 1]) {
         if (!worn) {
           msg_wear_flag += " or worn on the";
           worn = TRUE;
@@ -718,11 +656,11 @@ sstring TObj::wear_flags_to_sentence() const
         msg_wear_flag += " " + ((sstring)wear_bits[x]).uncap();
       }
     }
-  } else if (IS_SET(wf, 1<<15)) {
+  } else if (IS_SET(wf, 1 << 15)) {
     // throwable
     msg_wear_flag = "It may be thrown";
     for (int x = 1; x < 14; ++x) {
-      if (IS_SET(wf, 1<<x) && *wear_bits[x-1]) {
+      if (IS_SET(wf, 1 << x) && *wear_bits[x - 1]) {
         if (!worn) {
           msg_wear_flag += " or worn on the";
           worn = TRUE;
@@ -735,7 +673,7 @@ sstring TObj::wear_flags_to_sentence() const
   } else {
     msg_wear_flag = "It cannot be worn at all.";
     for (int x = 1; x < 14; ++x) {
-      if (IS_SET(wf, 1<<x) && *wear_bits[x]) {
+      if (IS_SET(wf, 1 << x) && *wear_bits[x]) {
         if (!worn) {
           msg_wear_flag = "It may be worn on the";
           worn = TRUE;
@@ -750,9 +688,10 @@ sstring TObj::wear_flags_to_sentence() const
   return msg_wear_flag;
 }
 
-// Helper to quickly find the sum of either modifier or modifier2 for all affects with the given
-// applyTypeT as their location
-std::pair<int64_t, int64_t> TObj::sumAffectedByApplyType(applyTypeT location) const {
+// Helper to quickly find the sum of either modifier or modifier2 for all
+// affects with the given applyTypeT as their location
+std::pair<int64_t, int64_t> TObj::sumAffectedByApplyType(
+  applyTypeT location) const {
   int64_t mod1 = 0.0;
   int64_t mod2 = 0.0;
 

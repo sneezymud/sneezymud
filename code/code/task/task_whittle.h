@@ -19,11 +19,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
-enum whittleTypeT
-{
+enum whittleTypeT {
   WHITTLE_ERROR,
   WHITTLE_GENERAL,
   WHITTLE_EASY,
@@ -39,8 +37,7 @@ enum whittleTypeT
   WHITTLE_MAX
 };
 
-enum whittlePulseT
-{
+enum whittlePulseT {
   WHITTLE_PULSE_ZEROOUT,
   WHITTLE_PULSE_CARVED,
   WHITTLE_PULSE_SCRAPED,
@@ -48,23 +45,17 @@ enum whittlePulseT
   WHITTLE_PULSE_MAX
 };
 
-class taskWhittleEntry
-{
+class taskWhittleEntry {
   public:
-    sstring        name;
-    double        volSize,
-                  weiSize,
-                  weaSize;
-    int           whittleReq,
-                  itemVnum,
-                  tClass;
-    whittleTypeT  itemType;
-    bool          valid,
-                  affectValue;
+    sstring name;
+    double volSize, weiSize, weaSize;
+    int whittleReq, itemVnum, tClass;
+    whittleTypeT itemType;
+    bool valid, affectValue;
 
-    bool   operator==(sstring);
+    bool operator==(sstring);
     sstring getName(bool);
-    void   operator()(sstring, int, int, int, bool, whittleTypeT);
+    void operator()(sstring, int, int, int, bool, whittleTypeT);
 
     taskWhittleEntry();
     ~taskWhittleEntry();

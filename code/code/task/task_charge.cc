@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include <stdio.h>
 
 #include "room.h"
@@ -14,18 +13,15 @@
 #include "monster.h"
 #include "spec_mobs.h"
 
-extern void warn_busy(TBeing *);
+extern void warn_busy(TBeing*);
 
-void stop_charge(TBeing *ch)
-{
+void stop_charge(TBeing* ch) {
   ch->sendTo("You pull your steed to a violent halt!\n\r");
-  act("$n pulls $N to a violent halt.",
-      FALSE, ch, 0, ch->riding, TO_ROOM);
+  act("$n pulls $N to a violent halt.", FALSE, ch, 0, ch->riding, TO_ROOM);
   ch->stopTask();
 }
 
-int TThing::ChargePulse(TBeing *ch)
-{
+int TThing::ChargePulse(TBeing* ch) {
   ch->sendTo("We think were funny today, don't we?\n\r");
   ch->stopTask();
   return TRUE;
@@ -40,28 +36,22 @@ int TThing::ChargePulse(TBeing *ch)
 //      -2 = Clean fly, Continue
 //   FALSE = In the Same Room
 //    TRUE = In the Next room but we already did messages.
-int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
-{
-  TRoom  *from_here,
-         *to_here;
-  int     iHeight = 0,
-          nRc,
-          nMoveCost;
-  char    tString[256];
-  TBeing *tHorse;
+int taskChargeMoveInto(int to_room, TBeing* ch, bool moveHorse) {
+  TRoom *from_here, *to_here;
+  int iHeight = 0, nRc, nMoveCost;
+  char tString[256];
+  TBeing* tHorse;
 
   from_here = ch->roomp;
-  to_here   = real_roomp(to_room);
-  tHorse    = dynamic_cast<TBeing *>(ch->riding);
+  to_here = real_roomp(to_room);
+  tHorse = dynamic_cast<TBeing*>(ch->riding);
   sprintf(tString, "%i", ch->task->flags);
 
   // Handle 'flying out of the room' check first.
   if (!moveHorse) {
-
     if (from_here->isFlyingSector()) {
       ch->sendTo("Luckily you can fly freely here.\n\r");
-      act("$n begins to fly after taking to the air.",
-          TRUE, ch, 0, 0, TO_ROOM);
+      act("$n begins to fly after taking to the air.", TRUE, ch, 0, 0, TO_ROOM);
       ch->setPosition(POSITION_FLYING);
 
       return FALSE;
@@ -69,17 +59,22 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
 
     if (from_here->isUnderwaterSector()) {
       ch->sendTo("You are plunged into the water and stop shortly after.\n\r");
-      act("$n flies through the water like a torpedo and stops shortly afterwards.",
-          TRUE, ch, 0, 0, TO_ROOM);
+      act(
+        "$n flies through the water like a torpedo and stops shortly "
+        "afterwards.",
+        TRUE, ch, 0, 0, TO_ROOM);
 
       return FALSE;
     }
 
-    if (ch->willBumpHeadDoor(from_here->dir_option[ch->task->flags], &iHeight) &&
+    if (ch->willBumpHeadDoor(from_here->dir_option[ch->task->flags],
+          &iHeight) &&
         ((ch->getPosHeight() * 4 / 5) > iHeight)) {
       ch->sendTo("Your head suddenly impacts above the exit, OUCH!!!\n\r");
-      act("$n slams into the area above the exit which stops them ever so gently...",
-          TRUE, ch, 0, 0, TO_ROOM);
+      act(
+        "$n slams into the area above the exit which stops them ever so "
+        "gently...",
+        TRUE, ch, 0, 0, TO_ROOM);
 
       if (ch->reconcileDamage(ch, ::number(20, 40), DAMAGE_NORMAL) == -1)
         return DELETE_THIS;
@@ -95,7 +90,7 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     if (nRc == TRUE || !to_here || to_here->isRoomFlag(ROOM_PEACEFUL)) {
       ch->sendTo("You slam into something which suddenly stops you.\n\r");
       act("$n suddenly slams into something which stops there flight plan.",
-          TRUE, ch, 0, 0, TO_ROOM);
+        TRUE, ch, 0, 0, TO_ROOM);
 
       if (ch->reconcileDamage(ch, ::number(10, 20), DAMAGE_NORMAL) == -1)
         return DELETE_THIS;
@@ -112,9 +107,9 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     thing_to_room(ch, to_room);
 
     if (to_here->isAirSector() || to_here->isVertSector()) {
-      ch->sendTo("As you fly into the room you land on a cushion of....AIR!!!!\n\r");
-      act("$n looks downwards in horror.",
-          TRUE, ch, 0, 0, TO_ROOM);
+      ch->sendTo(
+        "As you fly into the room you land on a cushion of....AIR!!!!\n\r");
+      act("$n looks downwards in horror.", TRUE, ch, 0, 0, TO_ROOM);
 
       nRc = ch->checkFalling();
       if (IS_SET_DELETE(nRc, DELETE_THIS))
@@ -124,9 +119,9 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     }
 
     if (to_here->isFlyingSector()) {
-      ch->sendTo("As you fly into the room you realize you can now fly freely.\n\r");
-      act("$n beings to fly after taking to the air.",
-          TRUE, ch, 0, 0, TO_ROOM);
+      ch->sendTo(
+        "As you fly into the room you realize you can now fly freely.\n\r");
+      act("$n beings to fly after taking to the air.", TRUE, ch, 0, 0, TO_ROOM);
       ch->setPosition(POSITION_FLYING);
 
       return TRUE;
@@ -134,8 +129,10 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
 
     if (to_here->isWaterSector()) {
       ch->sendTo("You Slam into the water as you come down full force!\n\r");
-      act("$n slams into the water making a huge splash and killing there swan dive.",
-          TRUE, ch, 0, 0, TO_ROOM);
+      act(
+        "$n slams into the water making a huge splash and killing there swan "
+        "dive.",
+        TRUE, ch, 0, 0, TO_ROOM);
 
       if (ch->reconcileDamage(ch, ::number(20, 30), DAMAGE_NORMAL) == -1)
         return DELETE_THIS;
@@ -152,9 +149,12 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       return FALSE;
     }
 
-    if (ch->willBumpHeadDoor(from_here->dir_option[ch->task->flags], &iHeight) &&
+    if (ch->willBumpHeadDoor(from_here->dir_option[ch->task->flags],
+          &iHeight) &&
         ((ch->getPosHeight() * 4 / 5) > iHeight)) {
-      ch->sendTo("You notice that the exit is not tall enough for you and your mount.\n\r");
+      ch->sendTo(
+        "You notice that the exit is not tall enough for you and your "
+        "mount.\n\r");
       stop_charge(ch);
 
       return FALSE;
@@ -167,37 +167,46 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       return DELETE_THIS;
 
     if (nRc == TRUE || !to_room || to_here->isRoomFlag(ROOM_PEACEFUL) ||
-        (to_here->getMoblim() && (MobCountInRoom(to_here->stuff) >= to_here->getMoblim()))) {
-      ch->sendTo("Your mount refuses to continue in your charge so you decide to stop.\n\r");
+        (to_here->getMoblim() &&
+          (MobCountInRoom(to_here->stuff) >= to_here->getMoblim()))) {
+      ch->sendTo(
+        "Your mount refuses to continue in your charge so you decide to "
+        "stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
     }
 
     nMoveCost = (TerrainInfo[from_here->getSectorType()]->movement +
-                 TerrainInfo[to_here->getSectorType()]->movement) / 2;
+                  TerrainInfo[to_here->getSectorType()]->movement) /
+                2;
 
     if ((TerrainInfo[from_here->getSectorType()]->movement % 2) &&
         !(TerrainInfo[to_here->getSectorType()]->movement % 2))
       nMoveCost++;
 
     if (to_here->isWaterSector()) {
-      ch->sendTo("Your mount refuses to charge into the water, you're forced to stop.\n\r");
+      ch->sendTo(
+        "Your mount refuses to charge into the water, you're forced to "
+        "stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
     }
 
     if (from_here->isWaterSector()) {
-      ch->sendTo("Your mount refuses to charge out of the water, you're forced to stop.\n\r");
+      ch->sendTo(
+        "Your mount refuses to charge out of the water, you're forced to "
+        "stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
     }
 
     if (ch->bothLegsHurt()) {
-      ch->sendTo(COLOR_MOBS, format("Riding %s without working legs is painful!\n\r") %
-                 tHorse->getName());
+      ch->sendTo(COLOR_MOBS,
+        format("Riding %s without working legs is painful!\n\r") %
+          tHorse->getName());
       ch->addToMove(-5);
       if (!::number(0, 1)) {
         nRc = ch->fallOffMount(tHorse, POSITION_SITTING);
@@ -222,8 +231,8 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     }
 
     if (tHorse->bothLegsHurt()) {
-      act("$N has no working legs for you to charge with.",
-          FALSE, ch, 0, tHorse, TO_CHAR);
+      act("$N has no working legs for you to charge with.", FALSE, ch, 0,
+        tHorse, TO_CHAR);
       stop_charge(ch);
 
       return FALSE;
@@ -262,8 +271,8 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       }
 
       if (!::number(0, 3)) {
-        act("$N stumbles due to $S injuries and throws you.",
-            FALSE, ch, 0, tHorse, TO_CHAR);
+        act("$N stumbles due to $S injuries and throws you.", FALSE, ch, 0,
+          tHorse, TO_CHAR);
 
         if (ch->reconcileDamage(ch, ::number(0, 3), DAMAGE_NORMAL) == -1)
           return DELETE_THIS;
@@ -281,13 +290,14 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       }
     }
 
-    if (compareWeights(ch->riding->getWeight(), ch->getTotalWeight(TRUE)) == 1) {
-      act("$N collapses beneath your weight.",
-               FALSE, ch, 0, ch->riding, TO_CHAR);
-      act("$N collapses beneath $n's weight.",
-               FALSE, ch, 0, ch->riding, TO_NOTVICT);
-      act("You collapse beneath $n's weight.",
-          FALSE, ch, 0, ch->riding, TO_VICT);
+    if (compareWeights(ch->riding->getWeight(), ch->getTotalWeight(TRUE)) ==
+        1) {
+      act("$N collapses beneath your weight.", FALSE, ch, 0, ch->riding,
+        TO_CHAR);
+      act("$N collapses beneath $n's weight.", FALSE, ch, 0, ch->riding,
+        TO_NOTVICT);
+      act("You collapse beneath $n's weight.", FALSE, ch, 0, ch->riding,
+        TO_VICT);
 
       if (tHorse)
         tHorse->setMove(0);
@@ -305,9 +315,11 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     }
 
     if (ch->getCond(DRUNK) > 9) {
-      ch->sendTo("You are just a wee bit too drunk to charge, sober up a little first.\n\r");
-      act("$n drives $s mount a bit odd and decides to stop.",
-          FALSE, ch, 0, tHorse, TO_ROOM);
+      ch->sendTo(
+        "You are just a wee bit too drunk to charge, sober up a little "
+        "first.\n\r");
+      act("$n drives $s mount a bit odd and decides to stop.", FALSE, ch, 0,
+        tHorse, TO_ROOM);
       ch->stopTask();
 
       return FALSE;
@@ -333,8 +345,11 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
       return FALSE;
     }
 
-    if ((to_here->isFlyingSector() || to_here->isAirSector()) && !tHorse->isFlying()) {
-      ch->sendTo("Your mount doesn't seem to want to charge into there, so you stop.\n\r");
+    if ((to_here->isFlyingSector() || to_here->isAirSector()) &&
+        !tHorse->isFlying()) {
+      ch->sendTo(
+        "Your mount doesn't seem to want to charge into there, so you "
+        "stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
@@ -355,7 +370,9 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
     }
 
     if (to_here->isVertSector()) {
-      ch->sendTo("Your mount refuses to charge in that direction, you're forced to stop.\n\r");
+      ch->sendTo(
+        "Your mount refuses to charge in that direction, you're forced to "
+        "stop.\n\r");
       stop_charge(ch);
 
       return FALSE;
@@ -385,17 +402,16 @@ int taskChargeMoveInto(int to_room, TBeing *ch, bool moveHorse)
 // is called when the player is just charging into the room.
 // First stop in moving to the next room.
 // Make basic checks and act appropriatly.
-int ChargeRoom(TBeing *ch)
-{
+int ChargeRoom(TBeing* ch) {
   int nRc;
 
-  nRc = taskChargeMoveInto(ch->roomp->dir_option[ch->task->flags]->to_room, ch, true);
+  nRc = taskChargeMoveInto(ch->roomp->dir_option[ch->task->flags]->to_room, ch,
+    true);
 
   if (IS_SET_DELETE(nRc, DELETE_THIS))
     return DELETE_THIS;
 
-  act("$n charges into the room upon $N.",
-      FALSE, ch, 0, ch->riding, TO_ROOM);
+  act("$n charges into the room upon $N.", FALSE, ch, 0, ch->riding, TO_ROOM);
   ch->doLook("", CMD_LOOK);
 
   return TRUE;
@@ -404,10 +420,8 @@ int ChargeRoom(TBeing *ch)
 // is called when player is jettisoned from his mount into the next room.
 // First stop in flying to next room.
 // Make basic checks and act appropriatly.
-int ChargeFlyIntoRoom(TBeing *ch, roomDirData *rExit)
-{
-  int  nRoom = rExit->to_room,
-       nRc;
+int ChargeFlyIntoRoom(TBeing* ch, roomDirData* rExit) {
+  int nRoom = rExit->to_room, nRc;
   sstring nString;
 
   nRc = taskChargeMoveInto(nRoom, ch, false);
@@ -421,8 +435,8 @@ int ChargeFlyIntoRoom(TBeing *ch, roomDirData *rExit)
   if (nRc == TRUE || nRc == FALSE)
     return TRUE;
 
-  nString=format("$n suddenly flies into the room and smashes into the %s.") %
-    real_roomp(nRoom)->describeGround();
+  nString = format("$n suddenly flies into the room and smashes into the %s.") %
+            real_roomp(nRoom)->describeGround();
   act(nString, TRUE, ch, 0, 0, TO_ROOM);
   ch->sendTo(format("You fly into the next room and smash into the %s.\n\r") %
              real_roomp(nRoom)->describeGround());
@@ -431,47 +445,46 @@ int ChargeFlyIntoRoom(TBeing *ch, roomDirData *rExit)
   return TRUE;
 }
 
-int ChargeHitDoor(TBeing *ch, roomDirData *rExit)
-{
-  int     Damage = 0;
-  float   FracDam;
-  TBeing *tHorse;
+int ChargeHitDoor(TBeing* ch, roomDirData* rExit) {
+  int Damage = 0;
+  float FracDam;
+  TBeing* tHorse;
 
-  tHorse = dynamic_cast<TBeing *>(ch->riding);
+  tHorse = dynamic_cast<TBeing*>(ch->riding);
   ch->sendTo(format("You charge towards %s!\n\r") %
              (IS_SET(rExit->condition, EXIT_CLOSED) ? "a door" : "the exit"));
 
   if (!ch->isAgile(0) && tHorse && !tHorse->hasSaddle() && !::number(0, 3)) {
-    Damage  = ::number(10, 20);
+    Damage = ::number(10, 20);
     FracDam = (float)Damage / 100;
-    Damage  = (int)(ch->getHit() * FracDam);
+    Damage = (int)(ch->getHit() * FracDam);
 
     Damage = max(10, (ch->getHit() > 0 ? Damage : 10));
 
     if (IS_SET(rExit->condition, EXIT_CLOSED)) {
-      act("$N suddenly halts, sending you flying into the door.",
-          TRUE, ch, 0, ch->riding, TO_CHAR);
-      act("$N suddenly halts, sending $n flying into a door.",
-          TRUE, ch, 0, ch->riding, TO_ROOM);
+      act("$N suddenly halts, sending you flying into the door.", TRUE, ch, 0,
+        ch->riding, TO_CHAR);
+      act("$N suddenly halts, sending $n flying into a door.", TRUE, ch, 0,
+        ch->riding, TO_ROOM);
     } else if (IS_SET(rExit->condition, EXIT_CAVED_IN)) {
-      act("$N suddenly halts, sending you flying into the cave in.",
-          TRUE, ch, 0, ch->riding, TO_CHAR);
-      act("$N suddenly halts, sending $n flying into a cave in.",
-          TRUE, ch, 0, ch->riding, TO_ROOM);
+      act("$N suddenly halts, sending you flying into the cave in.", TRUE, ch,
+        0, ch->riding, TO_CHAR);
+      act("$N suddenly halts, sending $n flying into a cave in.", TRUE, ch, 0,
+        ch->riding, TO_ROOM);
     } else if (IS_SET(rExit->condition, EXIT_NOENTER) ||
-             IS_SET(rExit->condition, EXIT_WARDED)) {
-      act("$N suddenly halts, sending you flying towards the exit.",
-          TRUE, ch, 0, ch->riding, TO_CHAR);
+               IS_SET(rExit->condition, EXIT_WARDED)) {
+      act("$N suddenly halts, sending you flying towards the exit.", TRUE, ch,
+        0, ch->riding, TO_CHAR);
       ch->sendTo("You suddenly hit something and fall to the ground.\n\r");
-      act("$N suddenly halts, sending $n flying towards an exit.",
-          TRUE, ch, 0, ch->riding, TO_ROOM);
-      act("$n suddenly hits something and falls to the ground.",
-          TRUE, ch, 0, ch->riding, TO_ROOM);
+      act("$N suddenly halts, sending $n flying towards an exit.", TRUE, ch, 0,
+        ch->riding, TO_ROOM);
+      act("$n suddenly hits something and falls to the ground.", TRUE, ch, 0,
+        ch->riding, TO_ROOM);
     } else {
-      act("$N suddenly halts, sending you flying into the next room.",
-          TRUE, ch, 0, ch->riding, TO_CHAR);
-      act("$N suddenly halts, sending $n flying into the next room.",
-          TRUE, ch, 0, ch->riding, TO_ROOM);
+      act("$N suddenly halts, sending you flying into the next room.", TRUE, ch,
+        0, ch->riding, TO_CHAR);
+      act("$N suddenly halts, sending $n flying into the next room.", TRUE, ch,
+        0, ch->riding, TO_ROOM);
       ChargeFlyIntoRoom(ch, rExit);
     }
 
@@ -479,15 +492,15 @@ int ChargeHitDoor(TBeing *ch, roomDirData *rExit)
       return DELETE_THIS;
   } else {
     if (tHorse && tHorse->hasSaddle()) {
-      act("$N suddenly halts, but you luckily stay in the saddle.",
-          TRUE, ch, 0, ch->riding, TO_CHAR);
-      act("$N suddenly halts, luckly $n was able to stay in the saddle.",
-          TRUE, ch, 0, ch->riding, TO_ROOM);
+      act("$N suddenly halts, but you luckily stay in the saddle.", TRUE, ch, 0,
+        ch->riding, TO_CHAR);
+      act("$N suddenly halts, luckly $n was able to stay in the saddle.", TRUE,
+        ch, 0, ch->riding, TO_ROOM);
     } else {
       act("$N suddenly halts, but you were able to stay seated...this time.",
-          TRUE, ch, 0, ch->riding, TO_CHAR);
-      act("$N suddenly halts, luckly $n was able to stay seated.",
-          TRUE, ch, 0, ch->riding, TO_ROOM);
+        TRUE, ch, 0, ch->riding, TO_CHAR);
+      act("$N suddenly halts, luckly $n was able to stay seated.", TRUE, ch, 0,
+        ch->riding, TO_ROOM);
     }
   }
 
@@ -495,53 +508,50 @@ int ChargeHitDoor(TBeing *ch, roomDirData *rExit)
   return TRUE;
 }
 
-int ChargeHitWall(TBeing *ch)
-{
-  int     Damage;
-  float   FracDam;
-  TBeing *tHorse;
+int ChargeHitWall(TBeing* ch) {
+  int Damage;
+  float FracDam;
+  TBeing* tHorse;
 
-  tHorse = dynamic_cast<TBeing *>(ch->riding);
+  tHorse = dynamic_cast<TBeing*>(ch->riding);
   ch->stopTask();
 
   ch->sendTo("You charge towards a wall!\n\r");
   if (!ch->isAgile(0) && tHorse && !tHorse->hasSaddle() && !::number(0, 3)) {
-    act("$N suddenly halts, sending you flying into the wall.",
-        TRUE, ch, 0, ch->riding, TO_CHAR);
+    act("$N suddenly halts, sending you flying into the wall.", TRUE, ch, 0,
+      ch->riding, TO_CHAR);
 
-    Damage  = ::number(10, 20);
+    Damage = ::number(10, 20);
     FracDam = (float)Damage / 100;
-    Damage  = (int)(ch->getHit() * FracDam);
-    Damage  = max(10, (ch->getHit() > 0 ? Damage : 10));
+    Damage = (int)(ch->getHit() * FracDam);
+    Damage = max(10, (ch->getHit() > 0 ? Damage : 10));
 
     if (ch->reconcileDamage(ch, Damage, DAMAGE_NORMAL) == -1)
       return DELETE_THIS;
   } else {
-    act("$N suddenly halts, but you luckily stay in the saddle.",
-        TRUE, ch, 0, ch->riding, TO_CHAR);
+    act("$N suddenly halts, but you luckily stay in the saddle.", TRUE, ch, 0,
+      ch->riding, TO_CHAR);
   }
 
   return TRUE;
 }
 
-int TBeing::ChargePulse(TBeing *ch)
-{
-  roomDirData *rExit;
-  TThing      *tMonster=NULL;
-  char         nString[256];
-  int          nRc = TRUE;
+int TBeing::ChargePulse(TBeing* ch) {
+  roomDirData* rExit;
+  TThing* tMonster = NULL;
+  char nString[256];
+  int nRc = TRUE;
 
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tMonster=*it);++it) {
-    if (!dynamic_cast<TMonster *>(tMonster))
+  for (StuffIter it = ch->roomp->stuff.begin();
+       it != ch->roomp->stuff.end() && (tMonster = *it); ++it) {
+    if (!dynamic_cast<TMonster*>(tMonster))
       continue;
 
     if (mob_specials[GET_MOB_SPE_INDEX(tMonster->spec)].proc == payToll) {
-      act("You usher $n and his mount to a stop.",
-          FALSE, tMonster, 0, ch, TO_CHAR);
-      act("$n ushers you to a stop.",
-          FALSE, tMonster, 0, ch, TO_VICT);
-      act("$N ushers $n to a stop.",
-          FALSE, tMonster, 0, ch, TO_NOTVICT);
+      act("You usher $n and his mount to a stop.", FALSE, tMonster, 0, ch,
+        TO_CHAR);
+      act("$n ushers you to a stop.", FALSE, tMonster, 0, ch, TO_VICT);
+      act("$N ushers $n to a stop.", FALSE, tMonster, 0, ch, TO_NOTVICT);
       stop_charge(ch);
       return TRUE;
     }
@@ -549,13 +559,14 @@ int TBeing::ChargePulse(TBeing *ch)
 
   if (ch->task->timeLeft > 0) {
     if (!(rExit = ch->roomp->dir_option[ch->task->flags]) ||
-        (IS_SET(rExit->condition, EXIT_CLOSED) && IS_SET(rExit->condition, EXIT_SECRET)))
+        (IS_SET(rExit->condition, EXIT_CLOSED) &&
+          IS_SET(rExit->condition, EXIT_SECRET)))
       return ChargeHitWall(ch);
 
-    if (IS_SET(rExit->condition, EXIT_CLOSED  ) ||
-        IS_SET(rExit->condition, EXIT_NOENTER ) ||
+    if (IS_SET(rExit->condition, EXIT_CLOSED) ||
+        IS_SET(rExit->condition, EXIT_NOENTER) ||
         IS_SET(rExit->condition, EXIT_CAVED_IN) ||
-        IS_SET(rExit->condition, EXIT_WARDED  ) ||
+        IS_SET(rExit->condition, EXIT_WARDED) ||
         real_roomp(rExit->to_room)->isRoomFlag(ROOM_PEACEFUL)) {
       return ChargeHitDoor(ch, rExit);
     }
@@ -568,8 +579,9 @@ int TBeing::ChargePulse(TBeing *ch)
     nRc = ChargeRoom(ch);
   } else {
     // Either hit 0 or were doing an inf run-until-hit thing.
-    for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end() && (tMonster=*it);++it) {
-      if (!dynamic_cast<TMonster *>(tMonster))
+    for (StuffIter it = ch->roomp->stuff.begin();
+         it != ch->roomp->stuff.end() && (tMonster = *it); ++it) {
+      if (!dynamic_cast<TMonster*>(tMonster))
         continue;
 
       if (isname(ch->task->orig_arg, tMonster->name)) {
@@ -583,13 +595,14 @@ int TBeing::ChargePulse(TBeing *ch)
 
     if (ch->task->timeLeft < 0) {
       if (!(rExit = ch->roomp->dir_option[ch->task->flags]) ||
-          (IS_SET(rExit->condition, EXIT_CLOSED) && IS_SET(rExit->condition, EXIT_SECRET)))
+          (IS_SET(rExit->condition, EXIT_CLOSED) &&
+            IS_SET(rExit->condition, EXIT_SECRET)))
         return ChargeHitWall(ch);
 
-      if (IS_SET(rExit->condition, EXIT_CLOSED  ) ||
-          IS_SET(rExit->condition, EXIT_NOENTER ) ||
+      if (IS_SET(rExit->condition, EXIT_CLOSED) ||
+          IS_SET(rExit->condition, EXIT_NOENTER) ||
           IS_SET(rExit->condition, EXIT_CAVED_IN) ||
-          IS_SET(rExit->condition, EXIT_WARDED  ) ||
+          IS_SET(rExit->condition, EXIT_WARDED) ||
           real_roomp(rExit->to_room)->isRoomFlag(ROOM_PEACEFUL)) {
         return ChargeHitDoor(ch, rExit);
       }
@@ -600,9 +613,10 @@ int TBeing::ChargePulse(TBeing *ch)
 
       nRc = ChargeRoom(ch);
     } else {
-      ch->sendTo("You pull your mount to a stop seeing your target isn't here.\n\r");
-      act("$n suddenly stops, looking around for something or someone.",
-          FALSE, ch, 0, 0, TO_ROOM);
+      ch->sendTo(
+        "You pull your mount to a stop seeing your target isn't here.\n\r");
+      act("$n suddenly stops, looking around for something or someone.", FALSE,
+        ch, 0, 0, TO_ROOM);
       ch->stopTask();
     }
   }
@@ -610,17 +624,15 @@ int TBeing::ChargePulse(TBeing *ch)
   return nRc;
 }
 
-void startChargeTask(TBeing *ch, const char *tString)
-{
-        char  Name[256]    = "\0",
-              nString[256] = "\0",
-              zString[256] = "\0";
-  const char *tArg;
-        int   Distance     = -1;
-  dirTypeT    Direction    = DIR_NONE;
+void startChargeTask(TBeing* ch, const char* tString) {
+  char Name[256] = "\0", nString[256] = "\0", zString[256] = "\0";
+  const char* tArg;
+  int Distance = -1;
+  dirTypeT Direction = DIR_NONE;
 
   tArg = tString;
-  for (; isspace(*tArg); tArg++);
+  for (; isspace(*tArg); tArg++)
+    ;
 
   if (!ch || !tString || !*tString) {
     vlogf(LOG_BUG, "startChargeTask() called with bad arguments.");
@@ -628,7 +640,8 @@ void startChargeTask(TBeing *ch, const char *tString)
   }
 
   if (!ch->riding) {
-    ch->sendTo("Next time try riding something first, it actually helps...\n\r");
+    ch->sendTo(
+      "Next time try riding something first, it actually helps...\n\r");
     return;
   }
 
@@ -637,15 +650,16 @@ void startChargeTask(TBeing *ch, const char *tString)
     return;
   }
 
-  if (!dynamic_cast<TMonster *>(ch->riding)) {
-    act("You slap the back of $P but it doesn't seem to move much...",
-        TRUE, ch, ch->riding, 0, TO_CHAR);
+  if (!dynamic_cast<TMonster*>(ch->riding)) {
+    act("You slap the back of $P but it doesn't seem to move much...", TRUE, ch,
+      ch->riding, 0, TO_CHAR);
     return;
   }
 
   half_chop(tArg, nString, zString);
   tArg = zString;
-  for (; isspace(*tArg); tArg++);
+  for (; isspace(*tArg); tArg++)
+    ;
 
   // charge <north/east/south/ect..> bird (1)
   Direction = getDirFromChar(nString);
@@ -657,7 +671,8 @@ void startChargeTask(TBeing *ch, const char *tString)
 
   half_chop(tArg, Name, zString);
   tArg = zString;
-  for (; isspace(*tArg); tArg++);
+  for (; isspace(*tArg); tArg++)
+    ;
 
   if (*tArg) {
     Distance = convertTo<int>(tArg);
@@ -666,20 +681,24 @@ void startChargeTask(TBeing *ch, const char *tString)
       ch->sendTo("That's funny, might we try it again?\n\r");
       return;
     } else if (Distance >= 100) {
-      ch->sendTo("Sure you want to push your mount like that, lets try a lesser distance.\n\r");
+      ch->sendTo(
+        "Sure you want to push your mount like that, lets try a lesser "
+        "distance.\n\r");
       return;
     }
   }
 
   if (!ch->roomp->dir_option[Direction]) {
-    sprintf(nString, "You point $N %s...Right at a wall, let's not.", dirs[Direction]);
+    sprintf(nString, "You point $N %s...Right at a wall, let's not.",
+      dirs[Direction]);
     act(nString, TRUE, ch, 0, ch->riding, TO_CHAR);
     return;
   }
 
   // timeLeft = Distance of charge, -1 if no distance supplied
   // flags    = Direction of charge
-  start_task(ch, NULL, NULL, TASK_MOUNTCHARGING, Name, Distance, ch->in_room, 0, Direction, 40);
+  start_task(ch, NULL, NULL, TASK_MOUNTCHARGING, Name, Distance, ch->in_room, 0,
+    Direction, 40);
 
   sprintf(nString, "You point $N %s.", dirs[Direction]);
   act(nString, TRUE, ch, 0, ch->riding, TO_CHAR);
@@ -687,11 +706,12 @@ void startChargeTask(TBeing *ch, const char *tString)
   act(nString, FALSE, ch, 0, ch->riding, TO_ROOM);
 }
 
-int task_charge(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
-{
-  TBeing *Mount = NULL;
+int task_charge(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
+  TObj* obj) {
+  TBeing* Mount = NULL;
 
-  if (ch->isLinkdead() || ch->in_room < 0 || ch->getPosition() < POSITION_RESTING) {
+  if (ch->isLinkdead() || ch->in_room < 0 ||
+      ch->getPosition() < POSITION_RESTING) {
     ch->stopTask();
     return FALSE;
   }
@@ -699,7 +719,7 @@ int task_charge(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
-  if (!(Mount = dynamic_cast<TBeing *>(ch->riding))) {
+  if (!(Mount = dynamic_cast<TBeing*>(ch->riding))) {
     ch->sendTo("Where'd your mount go??\n\r");
     ch->stopTask();
     return TRUE;
@@ -712,14 +732,13 @@ int task_charge(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You pull your mount to a sudden stop.",
-          FALSE, ch, 0, 0, TO_CHAR);
-      act("$n pulls $N to a sudden stop.",
-          FALSE, ch, 0, Mount, TO_ROOM);
+      act("You pull your mount to a sudden stop.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n pulls $N to a sudden stop.", FALSE, ch, 0, Mount, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
-      ch->sendTo("You are unable to continue your charge while under attack!\n\r");
+      ch->sendTo(
+        "You are unable to continue your charge while under attack!\n\r");
       ch->stopTask();
       break;
     default:

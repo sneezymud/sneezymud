@@ -2,8 +2,8 @@
 //
 //      SneezyMUD - All rights reserved, SneezyMUD Coding Team
 //      "blackjack.c" - All functions and routines related to blackjack
-//      
-//      The blackjack table coded by Russ Russell, January 1993, 
+//
+//      The blackjack table coded by Russ Russell, January 1993,
 //      Changed to c++ October 1994
 //      Last revision, October 13th, 1994.
 //
@@ -20,25 +20,22 @@ const unsigned short MAX_BLACKJACK = 1;
 
 BjGame gBj;
 
-bool TBeing::checkBlackjack(bool inGame) const
-{
+bool TBeing::checkBlackjack(bool inGame) const {
   if (in_room == Room::BLACKJACK && (inGame || (gBj.index(this) > -1)))
     return true;
   else
     return false;
 }
 
-void BjGame::bj_shuffle(int, const TBeing *ch)
-{
-  act("The ghostly dealer shuffles the deck.",FALSE, ch, 0, 0, TO_CHAR);
-  act("The ghostly dealer shuffles the deck.",FALSE, ch, 0, 0, TO_ROOM);
+void BjGame::bj_shuffle(int, const TBeing* ch) {
+  act("The ghostly dealer shuffles the deck.", FALSE, ch, 0, 0, TO_CHAR);
+  act("The ghostly dealer shuffles the deck.", FALSE, ch, 0, 0, TO_ROOM);
 
   shuffle();
   deck_inx = 0;
 }
 
-bool BjGame::enter(const TBeing *ch)
-{
+bool BjGame::enter(const TBeing* ch) {
   int player, inx;
 
   for (player = 0, inx = -1; player < MAX_BLACKJACK; player++) {
@@ -63,12 +60,11 @@ bool BjGame::enter(const TBeing *ch)
   return TRUE;
 }
 
-int BjGame::exitGame(const TBeing *ch)
-{
+int BjGame::exitGame(const TBeing* ch) {
   int inx, i;
 
   if ((inx = index(ch)) < 0) {
-    vlogf(LOG_BUG, format("%s left a table he was not at!") %  ch->name);
+    vlogf(LOG_BUG, format("%s left a table he was not at!") % ch->name);
     return FALSE;
   }
   *name = '\0';
@@ -89,13 +85,11 @@ int BjGame::exitGame(const TBeing *ch)
   return TRUE;
 }
 
-
-void BjGame::Bet(TBeing *ch, const char *arg)
-{
+void BjGame::Bet(TBeing* ch, const char* arg) {
   int inx, player;
   char coin_str[20], log_msg[2048];
   sstring buf;
-  TObj *chip;
+  TObj* chip;
 
   if (ch->checkBlackjack()) {
     inx = index(ch);
@@ -113,7 +107,7 @@ void BjGame::Bet(TBeing *ch, const char *arg)
       return;
     }
 
-    if(!(chip=find_chip(ch, coin_str))){
+    if (!(chip = find_chip(ch, coin_str))) {
       ch->sendTo("You don't have that chip!\n\r");
       return;
     }
@@ -132,7 +126,9 @@ void BjGame::Bet(TBeing *ch, const char *arg)
 
     nd = 0;
     np = 0;
-    for (player = 0; player < 12; hand[player] = 0, dealer[player] = 0, player++);
+    for (player = 0; player < 12;
+         hand[player] = 0, dealer[player] = 0, player++)
+      ;
     if (deck_inx > 10)
       bj_shuffle(inx, ch);
 
@@ -141,40 +137,44 @@ void BjGame::Bet(TBeing *ch, const char *arg)
     dealer[nd++] = deck[deck_inx++];
     dealer[nd++] = deck[deck_inx++];
 
-    sprintf(log_msg, "You are dealt:\n\r%s (down)\n\r", pretty_card_printout(ch, hand[0]).c_str());
-    sprintf(log_msg + strlen(log_msg), "%s\n\r\n\r", pretty_card_printout(ch, hand[1]).c_str());
-    sprintf(log_msg + strlen(log_msg), "The dealer is showing:\n\r%s\n\r", pretty_card_printout(ch, dealer[1]).c_str());
+    sprintf(log_msg, "You are dealt:\n\r%s (down)\n\r",
+      pretty_card_printout(ch, hand[0]).c_str());
+    sprintf(log_msg + strlen(log_msg), "%s\n\r\n\r",
+      pretty_card_printout(ch, hand[1]).c_str());
+    sprintf(log_msg + strlen(log_msg), "The dealer is showing:\n\r%s\n\r",
+      pretty_card_printout(ch, dealer[1]).c_str());
     ch->sendTo(COLOR_BASIC, log_msg);
 
-    sprintf(log_msg, "$n is dealt:\n\r%s (down)\n\r", pretty_card_printout(ch, hand[0]).c_str());
-    sprintf(log_msg + strlen(log_msg), "%s\n\r\n\r", pretty_card_printout(ch, hand[1]).c_str());
-    sprintf(log_msg + strlen(log_msg), "The dealer is showing:\n\r%s", pretty_card_printout(ch, dealer[1]).c_str());
+    sprintf(log_msg, "$n is dealt:\n\r%s (down)\n\r",
+      pretty_card_printout(ch, hand[0]).c_str());
+    sprintf(log_msg + strlen(log_msg), "%s\n\r\n\r",
+      pretty_card_printout(ch, hand[1]).c_str());
+    sprintf(log_msg + strlen(log_msg), "The dealer is showing:\n\r%s",
+      pretty_card_printout(ch, dealer[1]).c_str());
     act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
-
     if (((CARD_NUM(hand[0]) == 1) && (CARD_NUM(hand[1]) >= 10)) ||
-	((CARD_NUM(hand[1]) == 1) && (CARD_NUM(hand[0]) >= 10))) {
+        ((CARD_NUM(hand[1]) == 1) && (CARD_NUM(hand[0]) >= 10))) {
       ch->sendTo("You get a blackjack!\n\r");
       act("$n gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
-      payout(ch, (int) (bet * 2.5));
+      payout(ch, (int)(bet * 2.5));
       bet = 0;
       observerReaction(ch, GAMBLER_WON);
     }
     if (((CARD_NUM(dealer[0]) == 1) && (CARD_NUM(dealer[1]) >= 10)) ||
-	((CARD_NUM(dealer[1]) == 1) && (CARD_NUM(dealer[0]) >= 10))) {
+        ((CARD_NUM(dealer[1]) == 1) && (CARD_NUM(dealer[0]) >= 10))) {
       ch->sendTo("The dealer gets a blackjack!\n\r");
       act("The dealer gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
       bet = 0;
       observerReaction(ch, GAMBLER_LOST);
     }
 
-    if(bet>0)
+    if (bet > 0)
       observerReaction(ch, GAMBLER_BLACKJACK_BET);
   }
 }
 
-void TBeing::doStay()
-{
+void TBeing::doStay() {
   int inx;
 
   if (checkBlackjack()) {
@@ -187,50 +187,49 @@ void TBeing::doStay()
       return;
     }
     gBj.stay(this);
-  } else if(checkHiLo()){
-    if ((inx = gHiLo.index(this)) < 0){
+  } else if (checkHiLo()) {
+    if ((inx = gHiLo.index(this)) < 0) {
       sendTo("You are not sitting at the table yet.\n\r");
       return;
     }
-    
-    if(!gHiLo.check_for_bet()) {
+
+    if (!gHiLo.check_for_bet()) {
       sendTo("You are not playing a game.\n\r");
       return;
     }
     gHiLo.stay(this);
-  } else if(checkPoker()){
-    if ((inx = gPoker.index(this)) < 0){
+  } else if (checkPoker()) {
+    if ((inx = gPoker.index(this)) < 0) {
       sendTo("You are not sitting at the table yet.\n\r");
       return;
     }
-    
-    if(!gPoker.check_for_bet()) {
+
+    if (!gPoker.check_for_bet()) {
       sendTo("You are not playing a game.\n\r");
       return;
     }
     gPoker.stay(this);
-  } else if(checkBaccarat()){
-    if ((inx = gBaccarat.index(this)) < 0){
+  } else if (checkBaccarat()) {
+    if ((inx = gBaccarat.index(this)) < 0) {
       sendTo("You are not sitting at the table yet.\n\r");
       return;
     }
-    
-    if(!gBaccarat.check_for_bet()) {
+
+    if (!gBaccarat.check_for_bet()) {
       sendTo("You are not playing a game.\n\r");
       return;
     }
-    gBaccarat.stay(this);    
+    gBaccarat.stay(this);
   } else
     sendTo("So you think you are in a casino?\n\r");
 }
 
-void BjGame::stay(TBeing *ch)
-{
+void BjGame::stay(TBeing* ch) {
   int pbest, dbest, player;
   char log_msg[2048];
 
-  sprintf(log_msg, "The dealer flips up his down card:\n\r%s\n\r", 
-      pretty_card_printout(ch, dealer[0]).c_str());
+  sprintf(log_msg, "The dealer flips up his down card:\n\r%s\n\r",
+    pretty_card_printout(ch, dealer[0]).c_str());
   ch->sendTo(COLOR_BASIC, log_msg);
   act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
@@ -291,12 +290,12 @@ void BjGame::stay(TBeing *ch)
   if (pbest > dbest || dbest > 21) {
     ch->sendTo("You win.\n\r");
     act("$n wins.", TRUE, ch, 0, 0, TO_ROOM);
-    payout(ch, (int) (bet * 2));
+    payout(ch, (int)(bet * 2));
     observerReaction(ch, GAMBLER_WON);
   } else if (pbest == dbest) {
     ch->sendTo("You push. You retain your original bid.\n\r");
     act("$n pushes.", TRUE, ch, 0, 0, TO_ROOM);
-    payout(ch, (int) (bet));
+    payout(ch, (int)(bet));
   } else {
     ch->sendTo("You lose.\n\r");
     act("$n loses.", TRUE, ch, 0, 0, TO_ROOM);
@@ -306,8 +305,7 @@ void BjGame::stay(TBeing *ch)
   bet = 0;
 }
 
-void BjGame::peek(const TBeing *ch)
-{
+void BjGame::peek(const TBeing* ch) {
   int inx, player;
   char log_msg[2048];
 
@@ -334,13 +332,11 @@ void BjGame::peek(const TBeing *ch)
   ch->sendTo(COLOR_BASIC, log_msg);
 }
 
-void BjGame::Split(TBeing *ch, const char *, int)
-{
+void BjGame::Split(TBeing* ch, const char*, int) {
   ch->sendTo("Not implemented yet.\n\r");
 }
 
-void BjGame::Hit(const TBeing *ch)
-{
+void BjGame::Hit(const TBeing* ch) {
   int inx;
   char log_msg[2048];
 
@@ -368,7 +364,6 @@ void BjGame::Hit(const TBeing *ch)
   strcat(log_msg, ".");
   act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
 
-
   if (min_score() > 21) {
     ch->sendTo("You have busted!\n\r");
     act("$n has busted!", TRUE, ch, 0, 0, TO_ROOM);
@@ -376,8 +371,7 @@ void BjGame::Hit(const TBeing *ch)
   }
 }
 
-int BjGame::index(const TBeing *ch) const
-{
+int BjGame::index(const TBeing* ch) const {
   int player, inx;
 
   for (player = 0, inx = -1; inx < 0 && player < MAX_BLACKJACK; player++) {
@@ -387,9 +381,7 @@ int BjGame::index(const TBeing *ch) const
   return inx;
 }
 
-
-int BjGame::min_score()
-{
+int BjGame::min_score() {
   int player, player2;
 
   for (player = 0, player2 = 0; player < np; player++) {
@@ -401,8 +393,7 @@ int BjGame::min_score()
   return player2;
 }
 
-int BjGame::best_dealer()
-{
+int BjGame::best_dealer() {
   int player, player2, player3;
 
   for (player = 0, player2 = 0, player3 = 0; player < nd; player++) {
@@ -421,8 +412,7 @@ int BjGame::best_dealer()
   return player2;
 }
 
-int BjGame::best_score()
-{
+int BjGame::best_score() {
   int player = 0, player2 = 0, player3 = 0;
 
   for (; player < np; player++) {
@@ -441,13 +431,7 @@ int BjGame::best_score()
   return player2;
 }
 
-BjGame::BjGame() :
-  CardGame(),
-  inuse(false),
-  np(0),
-  nd(0),
-  deck_inx(0)
-{
+BjGame::BjGame() : CardGame(), inuse(false), np(0), nd(0), deck_inx(0) {
   *name = '\0';
   memset(&hand, 0, sizeof(hand));
   memset(&dealer, 0, sizeof(dealer));

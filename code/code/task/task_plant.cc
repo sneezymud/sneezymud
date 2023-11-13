@@ -6,28 +6,26 @@
 #include "obj_tool.h"
 #include "obj_plant.h"
 
-int TBeing::doPlant(sstring arg)
-{
-  sstring obj_arg, vict_arg, orig=arg;
+int TBeing::doPlant(sstring arg) {
+  sstring obj_arg, vict_arg, orig = arg;
 
-  arg=one_argument(arg, obj_arg);
-  arg=one_argument(arg, vict_arg);
+  arg = one_argument(arg, obj_arg);
+  arg = one_argument(arg, vict_arg);
 
-  if(!obj_arg.empty() && vict_arg.empty())
+  if (!obj_arg.empty() && vict_arg.empty())
     return doSeedPlant(orig);
   else
     return doThiefPlant(orig);
 }
 
-
-
-static bool genericCanPlantThief(TBeing *thief, TBeing *victim)
-{
+static bool genericCanPlantThief(TBeing* thief, TBeing* victim) {
   bool is_imp = thief->hasWizPower(POWER_WIZARD);
 
-  if ((thief->equipment[HOLD_LEFT] || thief->equipment[HOLD_RIGHT]) && 
+  if ((thief->equipment[HOLD_LEFT] || thief->equipment[HOLD_RIGHT]) &&
       !is_imp) {
-    thief->sendTo("It is impossible to plant something with your hand(s) already full!\n\r");
+    thief->sendTo(
+      "It is impossible to plant something with your hand(s) already "
+      "full!\n\r");
     return FALSE;
   }
   if (victim->isImmortal()) {
@@ -38,7 +36,7 @@ static bool genericCanPlantThief(TBeing *thief, TBeing *victim)
     thief->sendTo("You know nothing about planting.\n\r");
     return FALSE;
   }
-  if (!is_imp) { 
+  if (!is_imp) {
     if (thief->checkPeaceful("What if they caught you?\n\r"))
       return FALSE;
     if (thief->roomp->isRoomFlag(ROOM_NO_STEAL)) {
@@ -58,26 +56,26 @@ static bool genericCanPlantThief(TBeing *thief, TBeing *victim)
   }
 
   if (thief->isFlying()) {
-    thief->sendTo("The fact that you are flying makes you a bit too conspicuous to steal.\n\r");
+    thief->sendTo(
+      "The fact that you are flying makes you a bit too conspicuous to "
+      "steal.\n\r");
     return FALSE;
   }
 
   if (victim->isShopkeeper() && !is_imp) {
     thief->sendTo("Oh, Bad Move.  Bad Move.\n\r");
-    vlogf(LOG_CHEAT, format("%s just tried to plant on a shopkeeper! [%s]") % 
-          thief->getName() % victim->getName());
+    vlogf(LOG_CHEAT, format("%s just tried to plant on a shopkeeper! [%s]") %
+                       thief->getName() % victim->getName());
     return FALSE;
   }
 
   return true;
 }
 
-
-static int getPlantThiefChance(TBeing *thief, TBeing *victim)
-{
+static int getPlantThiefChance(TBeing* thief, TBeing* victim) {
   int vict_lev = victim->GetMaxLevel();
   int level = thief->getSkillLevel(SKILL_PLANT);
-  int modifier = (level - vict_lev)/3;
+  int modifier = (level - vict_lev) / 3;
 
   modifier += thief->plotStat(STAT_CURRENT, STAT_DEX, -70, 15, 0);
 
@@ -88,140 +86,128 @@ static int getPlantThiefChance(TBeing *thief, TBeing *victim)
       victim->isLucky(thief->spellLuckModifier(SKILL_PLANT)))
     modifier -= 45;
 
-  modifier += victim->getCond(DRUNK)/4;
+  modifier += victim->getCond(DRUNK) / 4;
 
   if (!victim->isPc())
-    modifier -= dynamic_cast<TMonster *>(victim)->susp()/2;
+    modifier -= dynamic_cast<TMonster*>(victim)->susp() / 2;
 
   int bKnown = thief->getSkillValue(SKILL_PLANT);
 
   modifier = max(min(modifier, 100 - bKnown), -100);
 
-  return bKnown+modifier;
+  return bKnown + modifier;
 }
 
-
-int TBeing::doThiefPlant(sstring arg)
-{
+int TBeing::doThiefPlant(sstring arg) {
   sstring obj_arg, vict_arg;
-  TObj *obj;
-  TBeing *vict;
+  TObj* obj;
+  TBeing* vict;
 
-  obj_arg=arg.word(0);
-  vict_arg=arg.word(1);
+  obj_arg = arg.word(0);
+  vict_arg = arg.word(1);
 
-  if(obj_arg.empty() || vict_arg.empty()){
+  if (obj_arg.empty() || vict_arg.empty()) {
     sendTo("Plant what on whom?\n\r");
     return FALSE;
   }
-  
-  if(!(obj=generic_find_obj(obj_arg, FIND_OBJ_INV|FIND_OBJ_EQUIP, this))){
+
+  if (!(obj = generic_find_obj(obj_arg, FIND_OBJ_INV | FIND_OBJ_EQUIP, this))) {
     sendTo("You don't have that object.\n\r");
     return FALSE;
   }
-  
-  if(!(vict=generic_find_being(vict_arg, FIND_CHAR_ROOM, this))){
+
+  if (!(vict = generic_find_being(vict_arg, FIND_CHAR_ROOM, this))) {
     sendTo("You don't see that person.\n\r");
     return FALSE;
   }
 
-  if(!genericCanPlantThief(this, vict))
+  if (!genericCanPlantThief(this, vict))
     return FALSE;
 
-  if(this->bSuccess(getPlantThiefChance(this, vict), SKILL_PLANT)){
+  if (this->bSuccess(getPlantThiefChance(this, vict), SKILL_PLANT)) {
     return doGive(vict, obj, GIVE_FLAG_SILENT_VICT);
     // sendTo("You were not detected.\n\r"); // Why after return?
   } else {
-    int rc=doGive(vict, obj);
+    int rc = doGive(vict, obj);
     vict->sendTo("That seemed suspicious.\n\r");
     sendTo("You were detected.\n\r");
     return rc;
   }
 }
 
-int TBeing::doSeedPlant(sstring arg){
-  TThing *t;
-  TTool *seeds;
-  int found=0, count;  
+int TBeing::doSeedPlant(sstring arg) {
+  TThing* t;
+  TTool* seeds;
+  int found = 0, count;
 
-  if ((t = searchLinkedListVis(this, arg, stuff, NULL))){
-    if((seeds=dynamic_cast<TTool *>(t))){
-      if(seeds->getToolType() == TOOL_SEED){
-	found=1;
+  if ((t = searchLinkedListVis(this, arg, stuff, NULL))) {
+    if ((seeds = dynamic_cast<TTool*>(t))) {
+      if (seeds->getToolType() == TOOL_SEED) {
+        found = 1;
       }
     }
   }
-  if(!found){
+  if (!found) {
     sendTo("You need to specify some seeds to plant.\n\r");
     return FALSE;
   }
 
-
-  if(roomp->isFallSector() || roomp->isWaterSector() || 
-     roomp->isIndoorSector() || roomp->isUnderwaterSector()){
+  if (roomp->isFallSector() || roomp->isWaterSector() ||
+      roomp->isIndoorSector() || roomp->isUnderwaterSector()) {
     sendTo("You can't plant anything here.\n\r");
     return FALSE;
   }
 
-  count=0;
-  for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();++it){
-    if(dynamic_cast<TPlant *>(*it))
+  count = 0;
+  for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
+    if (dynamic_cast<TPlant*>(*it))
       ++count;
-  }    
+  }
 
-  if(count>=8){
+  if (count >= 8) {
     sendTo("There isn't any room for more plants in here.\n\r");
     return FALSE;
   }
-
 
   sendTo("You begin to plant some seeds.\n\r");
   start_task(this, t, NULL, TASK_PLANT, "", 2, inRoom(), 0, 0, 5);
   return TRUE;
 }
 
+int task_plant(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
+  TObj* obj) {
+  TTool* tt;
 
-int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj *obj)
-{
-  TTool *tt;
-
-  if (ch->utilityTaskCommand(cmd) ||
-      ch->nobrainerTaskCommand(cmd))
+  if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
-  
   // basic tasky safechecking
-  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || !obj){
-    act("You stop planting your seeds.",
-        FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops planting seeds.",
-        TRUE, ch, 0, 0, TO_ROOM);
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || !obj) {
+    act("You stop planting your seeds.", FALSE, ch, 0, 0, TO_CHAR);
+    act("$n stops planting seeds.", TRUE, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE; // returning FALSE lets command be interpreted
+    return FALSE;  // returning FALSE lets command be interpreted
   }
 
-  tt=dynamic_cast<TTool *>(obj);
+  tt = dynamic_cast<TTool*>(obj);
 
-  if (ch->task->timeLeft < 0){
-    act("You finish planting $p.",
-	FALSE, ch, obj, 0, TO_CHAR);
-    act("$n finishes planting $p.",
-	TRUE, ch, obj, 0, TO_ROOM);
+  if (ch->task->timeLeft < 0) {
+    act("You finish planting $p.", FALSE, ch, obj, 0, TO_CHAR);
+    act("$n finishes planting $p.", TRUE, ch, obj, 0, TO_ROOM);
     ch->stopTask();
 
-    TObj *tp;
-    TPlant *tplant;
+    TObj* tp;
+    TPlant* tplant;
     tp = read_object(Obj::GENERIC_PLANT, VIRTUAL);
-    if((tplant=dynamic_cast<TPlant *>(tp))){
+    if ((tplant = dynamic_cast<TPlant*>(tp))) {
       tplant->setType(seed_to_plant(tt->objVnum()));
       tplant->updateDesc();
     }
-    
+
     *ch->roomp += *tp;
 
     if (tt->getToolUses() <= 0) {
-      act("You discard $p because it is empty.",
-	  FALSE, ch, tt, 0, TO_CHAR);
+      act("You discard $p because it is empty.", FALSE, ch, tt, 0, TO_CHAR);
       delete tt;
     }
 
@@ -233,51 +219,43 @@ int task_plant(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *, TObj 
       ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 3);
 
       switch (ch->task->timeLeft) {
-	case 2:
-          act("You dig a little hole for some seeds from $p.",
-              FALSE, ch, obj, 0, TO_CHAR);
-          act("$n digs a little hole.",
-              TRUE, ch, obj, 0, TO_ROOM);
+        case 2:
+          act("You dig a little hole for some seeds from $p.", FALSE, ch, obj,
+            0, TO_CHAR);
+          act("$n digs a little hole.", TRUE, ch, obj, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
-	case 1:
-          act("You put some seeds from $p into your hole.",
-              FALSE, ch, tt, 0, TO_CHAR);
-          act("$n puts some seeds from $p into the hole.",
-              TRUE, ch, tt, 0, TO_ROOM);
+        case 1:
+          act("You put some seeds from $p into your hole.", FALSE, ch, tt, 0,
+            TO_CHAR);
+          act("$n puts some seeds from $p into the hole.", TRUE, ch, tt, 0,
+            TO_ROOM);
           ch->task->timeLeft--;
 
-	  tt->addToToolUses(-1);
+          tt->addToToolUses(-1);
 
           break;
-	case 0:
-	  act("You cover up the hole.",
-              FALSE, ch, obj, 0, TO_CHAR);
-	  act("$n covers up the hole.",
-	      TRUE, ch, obj, 0, TO_ROOM);
-	  ch->task->timeLeft--;
-	  break;
+        case 0:
+          act("You cover up the hole.", FALSE, ch, obj, 0, TO_CHAR);
+          act("$n covers up the hole.", TRUE, ch, obj, 0, TO_ROOM);
+          ch->task->timeLeft--;
+          break;
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop planting seeds.",
-          FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops planting seeds.",
-          TRUE, ch, 0, 0, TO_ROOM);
+      act("You stop planting seeds.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops planting seeds.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
       ch->sendTo("You can't properly plant seeds while under attack.\n\r");
       ch->stopTask();
       break;
-  default:
+    default:
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
-      break;                    // eat the command
+      break;  // eat the command
   }
   return TRUE;
-
-
 }
-

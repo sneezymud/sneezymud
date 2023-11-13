@@ -18,25 +18,26 @@ class TBaseCorpse : public TBaseContainer {
     race_t corpse_race;
     unsigned int corpse_level;
     int corpse_vnum;
+
   public:
-    dissectInfo *tDissections;
+    dissectInfo* tDissections;
 
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const = 0;
 
-    virtual int chiMe(TBeing *);
-    virtual void peeOnMe(const TBeing *);
-    virtual int dissectMe(TBeing *);
+    virtual int chiMe(TBeing*);
+    virtual void peeOnMe(const TBeing*);
+    virtual int dissectMe(TBeing*);
     virtual void update(int);
-    virtual void lookObj(TBeing *, int) const;
-    virtual int scavengeMe(TBeing *, TObj **);
+    virtual void lookObj(TBeing*, int) const;
+    virtual int scavengeMe(TBeing*, TObj**);
     virtual void decayMe();
     virtual int objectDecay();
-    virtual int putSomethingInto(TBeing *, TThing *);
-    virtual int putMeInto(TBeing *, TOpenContainer *);
-    virtual void describeObjectSpecifics(const TBeing *) const {}
-    void getObjFromMeText(TBeing *, TThing *, getTypeT, bool);
+    virtual int putSomethingInto(TBeing*, TThing*);
+    virtual int putMeInto(TBeing*, TOpenContainer*);
+    virtual void describeObjectSpecifics(const TBeing*) const {}
+    void getObjFromMeText(TBeing*, TThing*, getTypeT, bool);
 
     void setCorpseFlags(unsigned int);
     unsigned int getCorpseFlags() const;
@@ -54,10 +55,9 @@ class TBaseCorpse : public TBaseContainer {
 
   protected:
     TBaseCorpse();
+
   public:
-    TBaseCorpse(const TBaseCorpse &a);
-    TBaseCorpse & operator=(const TBaseCorpse &a);
+    TBaseCorpse(const TBaseCorpse& a);
+    TBaseCorpse& operator=(const TBaseCorpse& a);
     virtual ~TBaseCorpse();
 };
-
-

@@ -5,7 +5,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include "parse.h"
@@ -15,60 +14,58 @@ class TBeing;
 class command {
   public:
     cmdTypeT cmd;
-    char *args;
-    command *next;
+    char* args;
+    command* next;
 
   private:
-    command();  //intentionally private, so can't be called
+    command();  // intentionally private, so can't be called
   public:
-    command(cmdTypeT c, char *d);
-    command(const command &a);
-    command & operator=(const command &a);
+    command(cmdTypeT c, char* d);
+    command(const command& a);
+    command& operator=(const command& a);
     ~command();
 };
 
-  
 class resp {
   public:
     cmdTypeT cmd;
-    char *args;
-    command *cmds;
-    resp *next;
-  
+    char* args;
+    command* cmds;
+    resp* next;
+
   private:
     resp();  // made private, so intentionally can not be called
   public:
-    resp(cmdTypeT c, char *d);
-    resp(const resp &a);
-    resp & operator=(const resp &a);
+    resp(cmdTypeT c, char* d);
+    resp(const resp& a);
+    resp& operator=(const resp& a);
     ~resp();
 };
 
 class RespMemory {
   public:
-    char             *name,
-                     *args;
-    cmdTypeT          cmd;
-    class RespMemory *next;
+    char *name, *args;
+    cmdTypeT cmd;
+    class RespMemory* next;
 
   private:
     RespMemory();
 
   public:
-    RespMemory(cmdTypeT, TBeing *, const sstring &);
-    RespMemory(const RespMemory &);
-    RespMemory & operator = (const RespMemory &);
+    RespMemory(cmdTypeT, TBeing*, const sstring&);
+    RespMemory(const RespMemory&);
+    RespMemory& operator=(const RespMemory&);
     ~RespMemory();
 };
 
 class Responses {
   public:
-    resp       *respList;
-    int	        respCount;
-    RespMemory *respMemory;
+    resp* respList;
+    int respCount;
+    RespMemory* respMemory;
 
     Responses();
-    Responses(const Responses &a);
-    Responses & operator=(const Responses &a);
+    Responses(const Responses& a);
+    Responses& operator=(const Responses& a);
     virtual ~Responses();
 };

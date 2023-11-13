@@ -12,9 +12,10 @@
 class TAudio : public TObj {
   private:
     int freq;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_AUDIO; }
 
@@ -23,10 +24,7 @@ class TAudio : public TObj {
     int getFreq() const;
     void setFreq(int n);
     TAudio();
-    TAudio(const TAudio &a);
-    TAudio & operator=(const TAudio &a);
+    TAudio(const TAudio& a);
+    TAudio& operator=(const TAudio& a);
     virtual ~TAudio();
 };
-
-
-

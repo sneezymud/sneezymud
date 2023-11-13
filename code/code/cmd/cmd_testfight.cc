@@ -27,8 +27,7 @@ static int changed_class = 0;
 
 static void fastFight();
 
-static void test_fight_start(bool same_time)
-{
+static void test_fight_start(bool same_time) {
   num_fighting = 0;
   left1 = 0;
   tot1 = 0;
@@ -37,23 +36,24 @@ static void test_fight_start(bool same_time)
   tot2 = 0;
   iter2 = 0;
 
-  vlogf(LOG_MISC, format("Testing mob %d vs %d.   %s") %  mob1_num % mob2_num %
-      (same_time ? "Same time fight" : "mob1 hitting"));
+  vlogf(LOG_MISC, format("Testing mob %d vs %d.   %s") % mob1_num % mob2_num %
+                    (same_time ? "Same time fight" : "mob1 hitting"));
 
   if (changed_class)
-    vlogf(LOG_MISC, format("Creating mob %d as class %d") %  mob1_num % changed_class);
+    vlogf(LOG_MISC,
+      format("Creating mob %d as class %d") % mob1_num % changed_class);
 
   int vnum;
   for (vnum = 0; vnum < WORLD_SIZE; vnum++) {
     if (real_roomp(vnum))
       continue;
 
-    TMonster *mob1;
-    TMonster *mob2;
+    TMonster* mob1;
+    TMonster* mob2;
 
     // position in charcter_list affects whic one gets to do specials first
     // so don't let that be a factor by switching back and forth
-    if (num_fighting%2 == 0) {
+    if (num_fighting % 2 == 0) {
       mob1 = read_mobile(mob1_num, VIRTUAL);
       mob2 = read_mobile(mob2_num, VIRTUAL);
     } else {
@@ -68,8 +68,7 @@ static void test_fight_start(bool same_time)
       return;
     }
 
-
-    TRoom *rp = new TRoom(vnum);
+    TRoom* rp = new TRoom(vnum);
     if (!rp) {
       vlogf(LOG_MISC, "Failed testfight room load");
       delete mob1;
@@ -87,7 +86,7 @@ static void test_fight_start(bool same_time)
       mob1->setClass(changed_class);
       mob1->fixLevels(mob1->GetMaxLevel());
       mob1->setExp(mob1->determineExp());
-      
+
       // fix disciplines too
       delete mob1->discs;
       mob1->discs = NULL;
@@ -105,11 +104,11 @@ static void test_fight_start(bool same_time)
     aff.type = AFFECT_TEST_FIGHT_MOB;
     aff.duration = PERMANENT_DURATION;
     aff.modifier = 1;
-  
+
     aff.level = 1;
     aff.be = mob2;
     mob1->affectTo(&aff, -1);
-  
+
     aff.level = 2;
     aff.be = mob1;
     mob2->affectTo(&aff, -1);
@@ -132,27 +131,22 @@ static void test_fight_start(bool same_time)
   fastFight();
 }
 
-static void repTheStats()
-{
+static void repTheStats() {
   unsigned iTot = iter1 + iter2;
   // these will report the average %HP they had left
-  float perc1 = (float) left1 * 100.0 * iTot / (float) tot1 / (float) iter1;
-  float perc2 = (float) left2 * 100.0 * iTot / (float) tot2 / (float) iter2;
+  float perc1 = (float)left1 * 100.0 * iTot / (float)tot1 / (float)iter1;
+  float perc2 = (float)left2 * 100.0 * iTot / (float)tot2 / (float)iter2;
 
-  vlogf(LOG_MISC, format("m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)") % 
-        mob1_num % left1 % tot1 %
-        perc1 % iter1 %
-        mob2_num % left2 % tot2 %
-        perc2 % iter2);
+  vlogf(LOG_MISC,
+    format("m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)") %
+      mob1_num % left1 % tot1 % perc1 % iter1 % mob2_num % left2 % tot2 %
+      perc2 % iter2);
 
-  FILE *fp;
+  FILE* fp;
   fp = fopen("testfight.log", "a+");
   if (fp) {
     fprintf(fp, "m1(%d): %lu/%lu (%.4f%%)(%d) : m2(%d): %lu/%lu (%.4f%%)(%d)\n",
-        mob1_num, left1, tot1,
-        perc1, iter1,
-        mob2_num, left2, tot2,
-        perc2, iter2);
+      mob1_num, left1, tot1, perc1, iter1, mob2_num, left2, tot2, perc2, iter2);
     fclose(fp);
   }
 
@@ -168,11 +162,12 @@ static void repTheStats()
       }
 
       // useful for class testing
-      if ((changed_class &&
-           ((highNum >= ((int) iTot/2) && lowNum <= ((int) iTot/2) && lowNum >= 0) || mob2_num > 1750 || mob2_num < 1701)) ||
-      // useful for finding doubling level, and a good default
-          (!changed_class &&
-           ((mob2_num > (mob1_num + 5)) || (perc2 > 50.0) || mob2_num > 1750))) {
+      if ((changed_class && ((highNum >= ((int)iTot / 2) &&
+                               lowNum <= ((int)iTot / 2) && lowNum >= 0) ||
+                              mob2_num > 1750 || mob2_num < 1701)) ||
+          // useful for finding doubling level, and a good default
+          (!changed_class && ((mob2_num > (mob1_num + 5)) || (perc2 > 50.0) ||
+                               mob2_num > 1750))) {
         // be a bit smart about this and start next test properly
         int offset = old_mob2 - mob1_num;
         if (mob1_num == 1750)
@@ -197,32 +192,32 @@ static void repTheStats()
 
 // we get here primarily from damageEpilog() via die()
 // don't delete ch or v since we aren't set up for it...
-void test_fight_death(TBeing *ch, TBeing *v, int mod)
-{
+void test_fight_death(TBeing* ch, TBeing* v, int mod) {
   // we can't delete ch or v, but we CAN clean up the void from past fights
   // so do this first..
-  TRoom *rp2 = real_roomp(Room::VOID);
-  TThing *t;
-  for(StuffIter it=rp2->stuff.begin();it!=rp2->stuff.end();){
-    t=*(it++);
+  TRoom* rp2 = real_roomp(Room::VOID);
+  TThing* t;
+  for (StuffIter it = rp2->stuff.begin(); it != rp2->stuff.end();) {
+    t = *(it++);
     t->purgeMe(NULL);
   }
 
   // ch is dead and had the TEST_FIGHT_MOB affect
   // update statistics, and remove this room since it was a mock up
 
-  TRoom *rp = ch->roomp;
+  TRoom* rp = ch->roomp;
 
   num_fighting--;
-  
+
 #if 0
   vlogf(LOG_MISC, format("Test fight in room %d: %s beat %s by %.2f%% (%d)") % 
      ch->in_room % v->getName() % ch->getName() % v->getPercHit() % num_fighting);
 #else
-  if (!(num_fighting%100) ||
-      (!(num_fighting/100) && !(num_fighting%10)) ||
-      (!(num_fighting/10))) {
-      vlogf(LOG_MISC, format("There are %d fights remaining (%d to %d).") %  num_fighting % iter1 % iter2);
+  if (!(num_fighting % 100) ||
+      (!(num_fighting / 100) && !(num_fighting % 10)) ||
+      (!(num_fighting / 10))) {
+    vlogf(LOG_MISC, format("There are %d fights remaining (%d to %d).") %
+                      num_fighting % iter1 % iter2);
   }
 #endif
 
@@ -251,16 +246,15 @@ void test_fight_death(TBeing *ch, TBeing *v, int mod)
   --(*ch);
   thing_to_room(ch, Room::VOID);
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-    t=*(it++);
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end();) {
+    t = *(it++);
     --(*t);
     thing_to_room(t, Room::VOID);
   }
   delete rp;
 }
 
-void TBeing::doTestFight(const char *arg)
-{
+void TBeing::doTestFight(const char* arg) {
   if (!hasWizPower(POWER_WIZARD)) {
     sendTo("Prototype command.  You need to be a developer to use this.\n\r");
     return;
@@ -311,8 +305,7 @@ void TBeing::doTestFight(const char *arg)
   test_fight_start(*arg ? false : true);
 }
 
-static void fastFight()
-{
+static void fastFight() {
   // fights take 5-10 minutes to finish
   // some of this is actual CPU usage, but rest is just inter round lag
   // so lets sit in a tight loop and force things to resolve...
@@ -394,7 +387,7 @@ static void fastFight()
       for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
         temp = tmp_ch->next;  // just for safety
 
-        TMonster * tm = dynamic_cast<TMonster *>(tmp_ch);
+        TMonster* tm = dynamic_cast<TMonster*>(tmp_ch);
         if (tm && !tm->isTestmob()) {
           if (gamePort == Config::Port::PROD) {
             temp = tm->next;
@@ -434,7 +427,6 @@ static void fastFight()
         }
 
         if (!combat) {
-
           if (tmp_ch->spelltask) {
             rc = (tmp_ch->cast_spell(tmp_ch, CMD_TASK_CONTINUE, pulse));
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -474,7 +466,7 @@ static void fastFight()
           rc = tmp_ch->updateTickStuff();
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             temp = tmp_ch->next;
-            if (!dynamic_cast<TBeing *>(tmp_ch)) {
+            if (!dynamic_cast<TBeing*>(tmp_ch)) {
               // something may be corrupting tmp_ch below - bat 8-18-98
               vlogf(LOG_BUG, "forced crash.  How did we get here?");
             }

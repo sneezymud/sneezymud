@@ -3,11 +3,10 @@
 #include "combat.h"
 #include "obj_base_weapon.h"
 
-int TBeing::doFocusAttack(const char *argument, TBeing *vict)
-{
+int TBeing::doFocusAttack(const char* argument, TBeing* vict) {
   const int FOCUS_ATTACK_MOVE = 2;
-  TBeing *victim = nullptr;
-  
+  TBeing* victim = nullptr;
+
   if (checkBusy()) {
     return FALSE;
   }
@@ -19,9 +18,11 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  // Adding a lockout 
+  // Adding a lockout
   if (affectedBySpell(SKILL_FOCUS_ATTACK)) {
-    sendTo("You are still recovering from your last focused attack and cannot use this ability again at this time.\n\r");
+    sendTo(
+      "You are still recovering from your last focused attack and cannot use "
+      "this ability again at this time.\n\r");
     return FALSE;
   }
 
@@ -29,27 +30,26 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
     sendTo("You don't have the vitality to make the move!\n\r");
     return FALSE;
   }
-  
+
   if (getCombatMode() == ATTACK_BERSERK) {
     sendTo("You are berserking! You aren't able to focus!\n\r ");
     return FALSE;
   }
 
-  if (!(isImmortal() || IS_SET(specials.act, ACT_IMMORTAL))) 
+  if (!(isImmortal() || IS_SET(specials.act, ACT_IMMORTAL)))
     addToMove(-FOCUS_ATTACK_MOVE);
-  
-  if (!(victim = vict) && 
-     (!(victim = get_char_room_vis(this, argument))) && 
-     (!(victim = fight()))) {
+
+  if (!(victim = vict) && (!(victim = get_char_room_vis(this, argument))) &&
+      (!(victim = fight()))) {
     sendTo("Who do you want to attack?\n\r");
     return FALSE;
   }
 
-  if (!sameRoom(*victim)) { 
+  if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
     return FALSE;
   }
-  
+
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
     sendTo("You cannot attack an immortal.\n\r");
     return FALSE;
@@ -65,9 +65,8 @@ int TBeing::doFocusAttack(const char *argument, TBeing *vict)
 
   int rc;
   if (!bSuccess(getSkillValue(SKILL_FOCUS_ATTACK), SKILL_FOCUS_ATTACK)) {
-
     rc = focusAttackFail(victim);
-      
+
   } else {
     rc = focusAttackSuccess(victim);
   }
@@ -97,9 +96,11 @@ int TBeing::focusAttackSuccess(TBeing* victim) {
   return TRUE;
 }
 
- int TBeing::focusAttackFail(TBeing *) {
-    act("You attempt to perform a focused attack, but lose your concentration!", FALSE, this, NULL, NULL, TO_CHAR);
-    act("$n attempts to focus, but loses $s concentration.", FALSE, this, NULL, NULL, TO_ROOM);
+int TBeing::focusAttackFail(TBeing*) {
+  act("You attempt to perform a focused attack, but lose your concentration!",
+    FALSE, this, NULL, NULL, TO_CHAR);
+  act("$n attempts to focus, but loses $s concentration.", FALSE, this, NULL,
+    NULL, TO_ROOM);
 
-    return FALSE;
- }
+  return FALSE;
+}

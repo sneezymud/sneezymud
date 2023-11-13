@@ -4,13 +4,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "handler.h"
 #include "being.h"
 #include "combat.h"
 
-static int quiveringPalm(TBeing *c, TBeing *v)
-{
+static int quiveringPalm(TBeing* c, TBeing* v) {
   affectedData aff;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
@@ -27,7 +25,7 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     return FALSE;
   }
   //  if (IS_SET(v->specials.act, ACT_IMMORTAL)) {
-  if(v->isImmortal()){
+  if (v->isImmortal()) {
     c->sendTo("You decide not to waste your concentration on an immortal.\n\r");
     return FALSE;
   }
@@ -35,16 +33,18 @@ static int quiveringPalm(TBeing *c, TBeing *v)
     c->sendTo("You can only do this to humanoid opponents.\n\r");
     return FALSE;
   }
-  if (c->affectedBySpell(SKILL_QUIV_PALM) || c->checkForSkillAttempt(SKILL_QUIV_PALM)) {
-    c->sendTo("You are not yet centered enough to attempt this maneuver again.\n\r");
+  if (c->affectedBySpell(SKILL_QUIV_PALM) ||
+      c->checkForSkillAttempt(SKILL_QUIV_PALM)) {
+    c->sendTo(
+      "You are not yet centered enough to attempt this maneuver again.\n\r");
     return FALSE;
   }
 
-  if(c->getMana()<100){
+  if (c->getMana() < 100) {
     c->sendTo("You lack the chi.\n\r");
   }
   c->reconcileMana(TYPE_UNDEFINED, 0, 100);
-  
+
   c->sendTo("You begin to work on the vibrations.\n\r");
   c->reconcileHurt(v, 0.1);
 
@@ -53,12 +53,13 @@ static int quiveringPalm(TBeing *c, TBeing *v)
 
   c->reconcileDamage(v, 0, SKILL_QUIV_PALM);
 
-
   int dam = 0;
 
   // Success case
   if (c->bSuccess(bKnown, SKILL_QUIV_PALM) &&
-      (specialAttackValue == COMPLETE_SUCCESS || specialAttackValue == GUARANTEED_SUCCESS || specialAttackValue == PARTIAL_SUCCESS)) {
+      (specialAttackValue == COMPLETE_SUCCESS ||
+        specialAttackValue == GUARANTEED_SUCCESS ||
+        specialAttackValue == PARTIAL_SUCCESS)) {
     dam =
       v->GetMaxLevel() > 60
         ? static_cast<int>(
@@ -68,25 +69,28 @@ static int quiveringPalm(TBeing *c, TBeing *v)
 
     if (specialAttackValue == PARTIAL_SUCCESS) {
       SV(SKILL_QUIV_PALM);
-      act("$N seems less affected by the vibrations.", FALSE, c, NULL, v, TO_CHAR);
-      act("$n touches you, but you resist the vibrations.", FALSE, c, NULL, v, TO_VICT);
+      act("$N seems less affected by the vibrations.", FALSE, c, NULL, v,
+        TO_CHAR);
+      act("$n touches you, but you resist the vibrations.", FALSE, c, NULL, v,
+        TO_VICT);
       act("$n touches $N, but $E resists it.", FALSE, c, NULL, v, TO_NOTVICT);
 
       dam /= 2;
     }
 
     if (c->willKill(v, dam, SKILL_QUIV_PALM, false)) {
-      act("$N is killed instantly by the dreaded quivering palm.", 
-            FALSE, c, NULL, v, TO_CHAR);
-      act("As $n touches you, you feel your bones and organs shatter inside.", 
-              FALSE, c, NULL, v, TO_VICT);
+      act("$N is killed instantly by the dreaded quivering palm.", FALSE, c,
+        NULL, v, TO_CHAR);
+      act("As $n touches you, you feel your bones and organs shatter inside.",
+        FALSE, c, NULL, v, TO_VICT);
       act("$N dies as $n touches $M.", FALSE, c, NULL, v, TO_NOTVICT);
     } else {
-      act("$N is heinously wounded by the dreaded quivering palm.", 
-            FALSE, c, NULL, v, TO_CHAR);
-      act("As $n touches you, you feel your bones and organs shatter inside.", 
-              FALSE, c, NULL, v, TO_VICT);
-      act("$N is grievously wounded as $n touches $M.", FALSE, c, NULL, v, TO_NOTVICT);
+      act("$N is heinously wounded by the dreaded quivering palm.", FALSE, c,
+        NULL, v, TO_CHAR);
+      act("As $n touches you, you feel your bones and organs shatter inside.",
+        FALSE, c, NULL, v, TO_VICT);
+      act("$N is grievously wounded as $n touches $M.", FALSE, c, NULL, v,
+        TO_NOTVICT);
     }
 
     aff.type = SKILL_QUIV_PALM;
@@ -114,9 +118,8 @@ static int quiveringPalm(TBeing *c, TBeing *v)
   return TRUE;
 }
 
-int TBeing::doQuiveringPalm(const char *arg, TBeing *vict)
-{
-  TBeing *victim;
+int TBeing::doQuiveringPalm(const char* arg, TBeing* vict) {
+  TBeing* victim;
   char v_name[MAX_INPUT_LENGTH];
   int rc;
 
@@ -155,5 +158,3 @@ int TBeing::doQuiveringPalm(const char *arg, TBeing *vict)
   }
   return rc;
 }
-
-

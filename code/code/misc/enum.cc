@@ -4,12 +4,10 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "extern.h"
 #include "obj_money.h"
 
-int mapApplyToFile(applyTypeT att)
-{
+int mapApplyToFile(applyTypeT att) {
   switch (att) {
     case APPLY_NONE:
       return 0;
@@ -88,12 +86,11 @@ int mapApplyToFile(applyTypeT att)
     case MAX_APPLY_TYPES:
       break;
   }
-  vlogf(LOG_BUG, format("Unknown apply in mapApplyToFile (%d)") %  att);
+  vlogf(LOG_BUG, format("Unknown apply in mapApplyToFile (%d)") % att);
   return 0;
 }
 
-applyTypeT mapFileToApply(int att)
-{
+applyTypeT mapFileToApply(int att) {
   switch (att) {
     case 0:
     case 15:
@@ -178,52 +175,43 @@ applyTypeT mapFileToApply(int att)
     default:
       break;
   }
-  vlogf(LOG_BUG, format("Unknown apply in mapFileToApply. (%d)") %  att);
+  vlogf(LOG_BUG, format("Unknown apply in mapFileToApply. (%d)") % att);
   return APPLY_NONE;
 }
 
-currencyTypeT & operator++(currencyTypeT &c, int)
-{
-  return c = (c == MAX_CURRENCY) ? CURRENCY_GRIMHAVEN : currencyTypeT(c+1);
+currencyTypeT& operator++(currencyTypeT& c, int) {
+  return c = (c == MAX_CURRENCY) ? CURRENCY_GRIMHAVEN : currencyTypeT(c + 1);
 }
 
-territoryT & operator++(territoryT &c, int)
-{
-  return c = (c == MAX_HOME_TERS) ? HOME_TER_NONE : territoryT(c+1);
+territoryT& operator++(territoryT& c, int) {
+  return c = (c == MAX_HOME_TERS) ? HOME_TER_NONE : territoryT(c + 1);
 }
 
-applyTypeT & operator++(applyTypeT &c, int)
-{
-  return c = (c == MAX_APPLY_TYPES) ? MIN_APPLY : applyTypeT(c+1);
+applyTypeT& operator++(applyTypeT& c, int) {
+  return c = (c == MAX_APPLY_TYPES) ? MIN_APPLY : applyTypeT(c + 1);
 }
 
-attack_mode_t & operator++(attack_mode_t &c, int)
-{
-  return c = (c == MAX_ATTACK_MODE_TYPE) ? ATTACK_NORMAL : attack_mode_t(c+1);
+attack_mode_t& operator++(attack_mode_t& c, int) {
+  return c = (c == MAX_ATTACK_MODE_TYPE) ? ATTACK_NORMAL : attack_mode_t(c + 1);
 }
 
-condTypeT & operator++(condTypeT &c)
-{
-  return c = (c == MAX_COND_TYPE) ? MIN_COND : condTypeT(c+1);
+condTypeT& operator++(condTypeT& c) {
+  return c = (c == MAX_COND_TYPE) ? MIN_COND : condTypeT(c + 1);
 }
 
-liqTypeT & operator++(liqTypeT &c, int)
-{
-  return c = (c == MAX_DRINK_TYPES) ? MIN_DRINK_TYPES : liqTypeT(c+1);
+liqTypeT& operator++(liqTypeT& c, int) {
+  return c = (c == MAX_DRINK_TYPES) ? MIN_DRINK_TYPES : liqTypeT(c + 1);
 }
 
-immuneTypeT & operator++(immuneTypeT &c, int)
-{
-  return c = (c == MAX_IMMUNES) ? IMMUNE_HEAT : immuneTypeT(c+1);
+immuneTypeT& operator++(immuneTypeT& c, int) {
+  return c = (c == MAX_IMMUNES) ? IMMUNE_HEAT : immuneTypeT(c + 1);
 }
 
-cmdTypeT & operator++(cmdTypeT &c, int)
-{
-  return c = (c == MAX_CMD_LIST) ? MIN_CMD : cmdTypeT(c+1);
+cmdTypeT& operator++(cmdTypeT& c, int) {
+  return c = (c == MAX_CMD_LIST) ? MIN_CMD : cmdTypeT(c + 1);
 }
 
-int mapDiscToFile(discNumT dn)
-{
+int mapDiscToFile(discNumT dn) {
   switch (dn) {
     case DISC_MAGE:
       return 0;
@@ -372,8 +360,7 @@ int mapDiscToFile(discNumT dn)
   return -1;
 }
 
-discNumT mapFileToDisc(int num)
-{
+discNumT mapFileToDisc(int num) {
   switch (num) {
     case 0:
       return DISC_MAGE;
@@ -516,28 +503,23 @@ discNumT mapFileToDisc(int num)
   return DISC_NONE;
 }
 
-discNumT & operator++(discNumT &c, int)
-{
-  return c = (c == MAX_DISCS) ? MIN_DISC : discNumT(c+1);
+discNumT& operator++(discNumT& c, int) {
+  return c = (c == MAX_DISCS) ? MIN_DISC : discNumT(c + 1);
 }
 
-factionTypeT & operator++(factionTypeT &c, int)
-{
-  return c = (c == ABS_MAX_FACTION) ? MIN_FACTION : factionTypeT(c+1);
+factionTypeT& operator++(factionTypeT& c, int) {
+  return c = (c == ABS_MAX_FACTION) ? MIN_FACTION : factionTypeT(c + 1);
 }
 
-wearSlotT & operator++(wearSlotT &c, int)
-{
-  return c = (c == MAX_WEAR) ? MIN_WEAR : wearSlotT(c+1);
+wearSlotT& operator++(wearSlotT& c, int) {
+  return c = (c == MAX_WEAR) ? MIN_WEAR : wearSlotT(c + 1);
 }
 
-dirTypeT & operator++(dirTypeT &c, int)
-{
-   return c = (c == MAX_DIR) ? MIN_DIR : dirTypeT(c+1);
+dirTypeT& operator++(dirTypeT& c, int) {
+  return c = (c == MAX_DIR) ? MIN_DIR : dirTypeT(c + 1);
 }
 
-dirTypeT getDirFromCmd(cmdTypeT cmd)
-{
+dirTypeT getDirFromCmd(cmdTypeT cmd) {
   switch (cmd) {
     case CMD_NORTH:
       return DIR_NORTH;
@@ -565,8 +547,7 @@ dirTypeT getDirFromCmd(cmdTypeT cmd)
   }
 }
 
-dirTypeT getDirFromChar(const sstring direction)
-{
+dirTypeT getDirFromChar(const sstring direction) {
   sstring dirbuf;
 
   one_argument(direction, dirbuf);
@@ -574,7 +555,7 @@ dirTypeT getDirFromChar(const sstring direction)
     return DIR_NONE;
 
   // KLUDGE for abbreviated directions - bat
-  if(dirbuf.lower() == "northeast")
+  if (dirbuf.lower() == "northeast")
     dirbuf = "ne";
   else if (dirbuf.lower() == "northwest")
     dirbuf = "nw";
@@ -590,13 +571,11 @@ dirTypeT getDirFromChar(const sstring direction)
   return dirTypeT(dr);
 }
 
-statTypeT & operator++(statTypeT &c, int)
-{
-  return c = (c == MAX_STATS) ? MIN_STAT : statTypeT(c+1);
+statTypeT& operator++(statTypeT& c, int) {
+  return c = (c == MAX_STATS) ? MIN_STAT : statTypeT(c + 1);
 }
 
-sectorTypeT mapFileToSector(int num)
-{
+sectorTypeT mapFileToSector(int num) {
   switch (num) {
     case 0:
       return SECT_SUBARCTIC;
@@ -721,13 +700,12 @@ sectorTypeT mapFileToSector(int num)
     case 66:
       return SECT_DEAD_WOODS;
     default:
-      vlogf(LOG_BUG, format("Bad num (%d) in file to sector") %  num);
+      vlogf(LOG_BUG, format("Bad num (%d) in file to sector") % num);
       return SECT_ASTRAL_ETHREAL;
   }
 }
 
-int mapSectorToFile(sectorTypeT sec)
-{
+int mapSectorToFile(sectorTypeT sec) {
   switch (sec) {
     case SECT_SUBARCTIC:
       return 0;
@@ -854,17 +832,15 @@ int mapSectorToFile(sectorTypeT sec)
     case MAX_SECTOR_TYPES:
       break;
   }
-  vlogf(LOG_BUG, format("Bad sec (%d) in file to sector") %  sec);
+  vlogf(LOG_BUG, format("Bad sec (%d) in file to sector") % sec);
   return -1;
 }
 
-sectorTypeT & operator++(sectorTypeT &c, int)
-{
-  return c = (c == MAX_SECTOR_TYPES) ? MIN_SECTOR_TYPE : sectorTypeT(c+1);
+sectorTypeT& operator++(sectorTypeT& c, int) {
+  return c = (c == MAX_SECTOR_TYPES) ? MIN_SECTOR_TYPE : sectorTypeT(c + 1);
 }
 
-int mapWizPowerToFile(wizPowerT att)
-{
+int mapWizPowerToFile(wizPowerT att) {
   switch (att) {
     case POWER_WIZNET:
       return 0;
@@ -1095,12 +1071,11 @@ int mapWizPowerToFile(wizPowerT att)
     case MAX_POWER_INDEX:
       break;
   }
-  vlogf(LOG_BUG, format("Bad power (%d) in mapWizPowerToFile") %  att);
+  vlogf(LOG_BUG, format("Bad power (%d) in mapWizPowerToFile") % att);
   return -1;
 }
 
-wizPowerT mapFileToWizPower(int att)
-{
+wizPowerT mapFileToWizPower(int att) {
   switch (att) {
     case 0:
       return POWER_WIZNET;
@@ -1331,17 +1306,15 @@ wizPowerT mapFileToWizPower(int att)
     default:
       break;
   }
-  vlogf(LOG_BUG, format("Unknown power (%d) in mapFileToWizPower") %  att);
+  vlogf(LOG_BUG, format("Unknown power (%d) in mapFileToWizPower") % att);
   return MAX_POWER_INDEX;
 }
 
-wizPowerT & operator++(wizPowerT &c, int)
-{
-  return c = (c == MAX_POWER_INDEX) ? MIN_POWER_INDEX : wizPowerT(c+1);
+wizPowerT& operator++(wizPowerT& c, int) {
+  return c = (c == MAX_POWER_INDEX) ? MIN_POWER_INDEX : wizPowerT(c + 1);
 }
 
-int mapDrugToFile(drugTypeT d)
-{
+int mapDrugToFile(drugTypeT d) {
   switch (d) {
     case DRUG_NONE:
       return 0;
@@ -1356,12 +1329,11 @@ int mapDrugToFile(drugTypeT d)
     case MAX_DRUG:
       break;
   }
-  vlogf(LOG_BUG, format("Bad drug to mapDrugToFile %d") %  d);
+  vlogf(LOG_BUG, format("Bad drug to mapDrugToFile %d") % d);
   return -1;
 }
 
-drugTypeT mapFileToDrug(int d)
-{
+drugTypeT mapFileToDrug(int d) {
   switch (d) {
     case 0:
       return DRUG_NONE;
@@ -1376,13 +1348,11 @@ drugTypeT mapFileToDrug(int d)
     default:
       break;
   }
-  vlogf(LOG_BUG, format("Bad drug to mapFileToDrug %d") %  d);
+  vlogf(LOG_BUG, format("Bad drug to mapFileToDrug %d") % d);
   return MAX_DRUG;
 }
 
-
-spellNumT mapWeaponT(weaponT w) 
-{
+spellNumT mapWeaponT(weaponT w) {
   // divorced this from TGenWeapon
   switch (w) {
     case WEAPON_TYPE_NONE:

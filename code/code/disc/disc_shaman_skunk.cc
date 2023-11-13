@@ -6,7 +6,7 @@
  *   SneezyMUD Development - All Rights Reserved                   *
  *                                                                 *
  *******************************************************************/
- 
+
 #include <stdio.h>
 
 #include "room.h"
@@ -17,64 +17,67 @@
 #include "obj_magic_item.h"
 #include "person.h"
 
-int deathMist(TBeing *caster, int level, short bKnown)
-{
-  TBeing *tmp_victim;
-  TThing *t;
+int deathMist(TBeing* caster, int level, short bKnown) {
+  TBeing* tmp_victim;
+  TThing* t;
   affectedData aff, aff2;
   int found = FALSE;
 
   if (caster->bSuccess(bKnown, SPELL_DEATH_MIST)) {
-    act("<g>A misty cloud escapes your open mouth.<1>",
-        FALSE, caster, NULL, NULL, TO_CHAR);
-    act("$n opens $s mouth and a chilling green mist pours out.",
-        TRUE,caster,0,0,TO_ROOM,ANSI_GREEN);
+    act("<g>A misty cloud escapes your open mouth.<1>", FALSE, caster, NULL,
+      NULL, TO_CHAR);
+    act("$n opens $s mouth and a chilling green mist pours out.", TRUE, caster,
+      0, 0, TO_ROOM, ANSI_GREEN);
 
     aff.type = SPELL_DEATH_MIST;
     aff.level = 30;
-    aff.duration = caster->durationModify(SPELL_DEATH_MIST, (25) * Pulse::UPDATES_PER_MUDHOUR);
+    aff.duration = caster->durationModify(SPELL_DEATH_MIST,
+      (25) * Pulse::UPDATES_PER_MUDHOUR);
     aff.modifier = -10;
     aff.location = APPLY_STR;
     aff.bitvector = AFF_SYPHILIS;
 
     aff2.type = AFFECT_DISEASE;
     aff2.level = 30;
-    aff2.duration = caster->durationModify(SPELL_DEATH_MIST, (25) * Pulse::UPDATES_PER_MUDHOUR);
+    aff2.duration = caster->durationModify(SPELL_DEATH_MIST,
+      (25) * Pulse::UPDATES_PER_MUDHOUR);
     aff2.modifier = DISEASE_SYPHILIS;
     aff2.location = APPLY_NONE;
     aff2.bitvector = AFF_SYPHILIS;
 
-
-    for(StuffIter it=caster->roomp->stuff.begin();it!=caster->roomp->stuff.end();){
-      t=*(it++);
-      tmp_victim = dynamic_cast<TBeing *>(t);
+    for (StuffIter it = caster->roomp->stuff.begin();
+         it != caster->roomp->stuff.end();) {
+      t = *(it++);
+      tmp_victim = dynamic_cast<TBeing*>(t);
       if (!tmp_victim)
         continue;
       if (caster != tmp_victim && !tmp_victim->isImmortal() &&
           !tmp_victim->isImmune(IMMUNE_DISEASE, WEAR_WAIST) &&
           !tmp_victim->isAffected(AFF_SYPHILIS)) {
-	      if (caster->inGroup(*tmp_victim)) {
+        if (caster->inGroup(*tmp_victim)) {
           if (!caster->bSuccess(bKnown, SPELL_DEATH_MIST)) {
-            caster->reconcileHelp(tmp_victim,discArray[SPELL_DEATH_MIST]->alignMod);
+            caster->reconcileHelp(tmp_victim,
+              discArray[SPELL_DEATH_MIST]->alignMod);
             tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
             tmp_victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
             found = TRUE;
-            act("You feel a stinging in your waist.",
-                FALSE, caster, NULL, tmp_victim, TO_VICT);
-            act("$n starts to look a little uncomfortable.",
-                TRUE, tmp_victim, NULL, NULL, TO_ROOM);
+            act("You feel a stinging in your waist.", FALSE, caster, NULL,
+              tmp_victim, TO_VICT);
+            act("$n starts to look a little uncomfortable.", TRUE, tmp_victim,
+              NULL, NULL, TO_ROOM);
           }
         } else {
-          caster->reconcileHelp(tmp_victim,discArray[SPELL_DEATH_MIST]->alignMod);
+          caster->reconcileHelp(tmp_victim,
+            discArray[SPELL_DEATH_MIST]->alignMod);
           tmp_victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
           tmp_victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
           found = TRUE;
-          act("You feel a stinging in your waist.",
-              FALSE, caster, NULL, tmp_victim, TO_VICT);
-          act("$n starts to look a little uncomfortable.",
-              TRUE, tmp_victim, NULL, NULL, TO_ROOM);
+          act("You feel a stinging in your waist.", FALSE, caster, NULL,
+            tmp_victim, TO_VICT);
+          act("$n starts to look a little uncomfortable.", TRUE, tmp_victim,
+            NULL, NULL, TO_ROOM);
         }
-      } 
+      }
     }
     if (!caster->isAffected(AFF_SYPHILIS) &&
         !caster->bSuccess(bKnown, SPELL_DEATH_MIST) &&
@@ -83,14 +86,16 @@ int deathMist(TBeing *caster, int level, short bKnown)
       caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
       caster->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
       found = TRUE;
-      act("You feel a stinging in your waist.",
-          FALSE, caster, NULL, NULL, TO_CHAR);
-      act("$n starts to look a little uncomfortable.",
-          TRUE, caster, NULL, NULL, TO_ROOM);
+      act("You feel a stinging in your waist.", FALSE, caster, NULL, NULL,
+        TO_CHAR);
+      act("$n starts to look a little uncomfortable.", TRUE, caster, NULL, NULL,
+        TO_ROOM);
     }
     if (!found) {
-      caster->sendTo("Nothing in the vicinity appears to have been further discomforted by your ritual.\n\r");
-    //  return SPELL_FAIL;
+      caster->sendTo(
+        "Nothing in the vicinity appears to have been further discomforted by "
+        "your ritual.\n\r");
+      //  return SPELL_FAIL;
     }
     return SPELL_SUCCESS;
   } else {
@@ -98,8 +103,7 @@ int deathMist(TBeing *caster, int level, short bKnown)
   }
 }
 
-int deathMist(TBeing *caster)
-{
+int deathMist(TBeing* caster) {
   taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_DEATH_MIST, NULL))
@@ -108,19 +112,19 @@ int deathMist(TBeing *caster)
   lag_t rounds = discArray[SPELL_DEATH_MIST]->lag;
   diff = discArray[SPELL_DEATH_MIST]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_DEATH_MIST, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  start_cast(caster, NULL, NULL, caster->roomp, SPELL_DEATH_MIST, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
 
   return TRUE;
 }
 
-int castDeathMist(TBeing *caster)
-{
-int ret,level;
+int castDeathMist(TBeing* caster) {
+  int ret, level;
 
   level = caster->getSkillLevel(SPELL_DEATH_MIST);
   int bKnown = caster->getSkillValue(SPELL_DEATH_MIST);
 
-  if ((ret=deathMist(caster,level,bKnown)) == SPELL_SUCCESS) {
+  if ((ret = deathMist(caster, level, bKnown)) == SPELL_SUCCESS) {
   } else {
     caster->nothingHappens();
   }
@@ -128,27 +132,35 @@ int ret,level;
 }
 // END DEATH MIST
 
-int cleanse(TBeing *caster, TBeing * victim, int level, short learn, spellNumT spell)
-{
+int cleanse(TBeing* caster, TBeing* victim, int level, short learn,
+  spellNumT spell) {
   char buf[256];
   affectedData aff;
 
-  if (spell==SKILL_WOHLIN || caster->bSuccess(learn, caster->getPerc(), spell)) {
-    if (victim->isAffected(AFF_SYPHILIS) || victim->affectedBySpell(SPELL_DEATH_MIST) || 
-	victim->hasDisease(DISEASE_SYPHILIS)) {
-      sprintf(buf, "You succeed in curing the syphilis in %s body.", (caster == victim) ? "your" : "$N's");
+  if (spell == SKILL_WOHLIN ||
+      caster->bSuccess(learn, caster->getPerc(), spell)) {
+    if (victim->isAffected(AFF_SYPHILIS) ||
+        victim->affectedBySpell(SPELL_DEATH_MIST) ||
+        victim->hasDisease(DISEASE_SYPHILIS)) {
+      sprintf(buf, "You succeed in curing the syphilis in %s body.",
+        (caster == victim) ? "your" : "$N's");
       act(buf, FALSE, caster, NULL, victim, TO_CHAR);
       if (caster != victim)
-        act("With a sigh of relief you feel that your syphilis has been removed.", FALSE, caster, NULL, victim, TO_VICT);
-      act("The syphilis in $N's body has been removed!", FALSE, caster, NULL, victim, TO_NOTVICT);
-      act("The syphilis in your body has been removed! What a relief!", FALSE, victim, NULL, NULL, TO_CHAR);
+        act(
+          "With a sigh of relief you feel that your syphilis has been removed.",
+          FALSE, caster, NULL, victim, TO_VICT);
+      act("The syphilis in $N's body has been removed!", FALSE, caster, NULL,
+        victim, TO_NOTVICT);
+      act("The syphilis in your body has been removed! What a relief!", FALSE,
+        victim, NULL, NULL, TO_CHAR);
       victim->affectFrom(SPELL_DEATH_MIST);
       victim->diseaseFrom(DISEASE_SYPHILIS);
-      caster->reconcileHelp(victim,discArray[spell]->alignMod);
+      caster->reconcileHelp(victim, discArray[spell]->alignMod);
     } else {
-      if(spell==SKILL_WOHLIN)
-	return FALSE;
-      act("Can't do this...noone here has syphilis.", FALSE, caster, NULL, NULL, TO_CHAR);
+      if (spell == SKILL_WOHLIN)
+        return FALSE;
+      act("Can't do this...noone here has syphilis.", FALSE, caster, NULL, NULL,
+        TO_CHAR);
       caster->nothingHappens(SILENT_YES);
       return FALSE;
     }
@@ -173,40 +185,41 @@ int cleanse(TBeing *caster, TBeing * victim, int level, short learn, spellNumT s
   }
 }
 
-int cleanse(TBeing *caster, TBeing *victim)
-{
+int cleanse(TBeing* caster, TBeing* victim) {
   if (!bPassShamanChecks(caster, SPELL_CLEANSE, victim))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_CLEANSE]->lag;
   taskDiffT diff = discArray[SPELL_CLEANSE]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_CLEANSE, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_CLEANSE, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
 
-  return TRUE; 
+  return TRUE;
 }
 
-int castCleanse(TBeing *caster, TBeing *victim)
-{
-  int ret,level;
+int castCleanse(TBeing* caster, TBeing* victim) {
+  int ret, level;
 
   level = caster->getSkillLevel(SPELL_CLEANSE);
   int bKnown = caster->getSkillValue(SPELL_CLEANSE);
 
-  if ((ret=cleanse(caster,victim,level,bKnown,SPELL_CLEANSE)) == SPELL_SUCCESS) {
+  if ((ret = cleanse(caster, victim, level, bKnown, SPELL_CLEANSE)) ==
+      SPELL_SUCCESS) {
   } else {
     caster->nothingHappens();
   }
   return TRUE;
 }
 
-int cleanse(TBeing *caster, TBeing *victim, TMagicItem *tMagItem)
-{
-  int tRc = FALSE; 
+int cleanse(TBeing* caster, TBeing* victim, TMagicItem* tMagItem) {
+  int tRc = FALSE;
   int tReturn;
 
-  //  tReturn = cleanse(caster, victim, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
-  tReturn = cleanse(caster, victim, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), SPELL_CLEANSE);
+  //  tReturn = cleanse(caster, victim, tMagItem->getMagicLevel(),
+  //  tMagItem->getMagicLearnedness(), 0);
+  tReturn = cleanse(caster, victim, tMagItem->getMagicLevel(),
+    tMagItem->getMagicLearnedness(), SPELL_CLEANSE);
 
   if (IS_SET(tReturn, VICTIM_DEAD))
     ADD_DELETE(tRc, DELETE_VICT);
@@ -219,11 +232,11 @@ int cleanse(TBeing *caster, TBeing *victim, TMagicItem *tMagItem)
 
 // LICH TOUCH
 
-int lichTouch(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
-{
+int lichTouch(TBeing* caster, TBeing* victim, int level, short bKnown,
+  int adv_learn) {
   if (victim->isImmortal()) {
-    act("You can't touch a god in that manner!",
-             FALSE, caster, NULL, victim, TO_CHAR);
+    act("You can't touch a god in that manner!", FALSE, caster, NULL, victim,
+      TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
@@ -231,39 +244,46 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
   int dam = caster->getSkillDam(victim, SPELL_LICH_TOUCH, level, adv_learn);
   caster->reconcileHurt(victim, discArray[SPELL_LICH_TOUCH]->alignMod);
   bool save = victim->isLucky(caster->spellLuckModifier(SPELL_LICH_TOUCH));
-  int vit = dice(number(1,level),4);
-  int lfmod = ::number(20,(level*5));
-  int hpgain = ::number(30,(level*2));
+  int vit = dice(number(1, level), 4);
+  int lfmod = ::number(20, (level * 5));
+  int hpgain = ::number(30, (level * 2));
 
   if (victim->getImmunity(IMMUNE_DRAIN) >= 100) {
     act("$N is immune to draining!", FALSE, caster, NULL, victim, TO_CHAR);
-    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim,
+      TO_NOTVICT);
+    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL,
+      victim, TO_VICT);
     return SPELL_FAIL;
   }
 
-  if (caster->bSuccess(bKnown,SPELL_LICH_TOUCH)) {
-    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL, victim, TO_CHAR);
-    act("You groan in pain as life is drawn from your body!", FALSE, caster, NULL, victim, TO_VICT);
+  if (caster->bSuccess(bKnown, SPELL_LICH_TOUCH)) {
+    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL,
+      victim, TO_NOTVICT);
+    act("$N groans in pain as life is drawn from $S body!", FALSE, caster, NULL,
+      victim, TO_CHAR);
+    act("You groan in pain as life is drawn from your body!", FALSE, caster,
+      NULL, victim, TO_VICT);
     caster->addToHit(hpgain);
     caster->updatePos();
-    TPerson *pers;
+    TPerson* pers;
     switch (critSuccess(caster, SPELL_LICH_TOUCH)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
         CS(SPELL_LICH_TOUCH);
-        dam *=2;
-        vit *=2;
+        dam *= 2;
+        vit *= 2;
         lfmod *= 2;
         break;
       case CRIT_S_KILL:
         CS(SPELL_LICH_TOUCH);
-        pers = dynamic_cast<TPerson *>(victim);
+        pers = dynamic_cast<TPerson*>(victim);
         if (pers && !save) {
           pers->dropLevel(pers->bestClass());
           pers->setTitle(false);
-          vlogf(LOG_MISC, format("%s just lost a level from a critical lich touch!") %  pers->getName());
+          vlogf(LOG_MISC,
+            format("%s just lost a level from a critical lich touch!") %
+              pers->getName());
         }
         break;
       case CRIT_S_NONE:
@@ -286,13 +306,15 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_LICH_TOUCH);
-        act("$n's body glows a dark, evil-looking red!", 
-               FALSE, caster, NULL, NULL, TO_ROOM);
-        act("You sang the invokation incorrectly! The ancestors are EXTREMELY pissed!", 
-               FALSE, caster, NULL, NULL, TO_CHAR);
+        act("$n's body glows a dark, evil-looking red!", FALSE, caster, NULL,
+          NULL, TO_ROOM);
+        act(
+          "You sang the invokation incorrectly! The ancestors are EXTREMELY "
+          "pissed!",
+          FALSE, caster, NULL, NULL, TO_CHAR);
         caster->addToMove(-vit);
         caster->addToLifeforce(0);
-	caster->updatePos();
+        caster->updatePos();
         dam /= 3;
         if (caster->reconcileDamage(caster, dam, SPELL_LICH_TOUCH) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -305,32 +327,31 @@ int lichTouch(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
   }
 }
 
-int lichTouch(TBeing *caster, TBeing *victim)
-{
+int lichTouch(TBeing* caster, TBeing* victim) {
   if (!bPassShamanChecks(caster, SPELL_LICH_TOUCH, victim))
     return FALSE;
 
   lag_t rounds = discArray[SPELL_LICH_TOUCH]->lag;
   taskDiffT diff = discArray[SPELL_LICH_TOUCH]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_LICH_TOUCH, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 
-0);
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_LICH_TOUCH, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
 
-  return TRUE; 
+  return TRUE;
 }
 
-int castLichTouch(TBeing *caster, TBeing *victim)
-{
-  int ret,level;
+int castLichTouch(TBeing* caster, TBeing* victim) {
+  int ret, level;
   int rc = 0;
 
   level = caster->getSkillLevel(SPELL_LICH_TOUCH);
   int bKnown = caster->getSkillValue(SPELL_LICH_TOUCH);
 
-  ret=lichTouch(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_LICH_TOUCH));
+  ret = lichTouch(caster, victim, level, bKnown,
+    caster->getAdvLearning(SPELL_LICH_TOUCH));
   if (ret == SPELL_SUCCESS) {
   } else {
-    if (ret==SPELL_CRIT_FAIL) {
+    if (ret == SPELL_CRIT_FAIL) {
     } else {
     }
   }
@@ -341,12 +362,11 @@ int castLichTouch(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int lichTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
-{
-  int tRc = FALSE,
-      tReturn;
+int lichTouch(TBeing* tMaster, TBeing* tSucker, TMagicItem* tMagItem) {
+  int tRc = FALSE, tReturn;
 
-  tReturn = lichTouch(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+  tReturn = lichTouch(tMaster, tSucker, tMagItem->getMagicLevel(),
+    tMagItem->getMagicLearnedness(), 0);
 
   if (IS_SET(tReturn, VICTIM_DEAD))
     ADD_DELETE(tRc, DELETE_VICT);
@@ -358,10 +378,11 @@ int lichTouch(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
 }
 // END LICH TOUCH
 
-int cardiacStress(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
-{
+int cardiacStress(TBeing* caster, TBeing* victim, int level, short bKnown,
+  int adv_learn) {
   if (victim->isImmortal()) {
-    act("Gods dont have heart attacks, they don't have hearts!", FALSE, caster, NULL, victim, TO_CHAR);
+    act("Gods dont have heart attacks, they don't have hearts!", FALSE, caster,
+      NULL, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
@@ -370,14 +391,15 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, short bKnown, int a
 
   caster->reconcileHurt(victim, discArray[SPELL_CARDIAC_STRESS]->alignMod);
 
-  if (caster->bSuccess(bKnown,SPELL_CARDIAC_STRESS)) {
-    act("$N clutches $S chest and keels over in EXTREME pain!",
-	FALSE, caster, NULL, victim, TO_CHAR, ANSI_RED_BOLD);
+  if (caster->bSuccess(bKnown, SPELL_CARDIAC_STRESS)) {
+    act("$N clutches $S chest and keels over in EXTREME pain!", FALSE, caster,
+      NULL, victim, TO_CHAR, ANSI_RED_BOLD);
     act("The stress on your heart is INTENSE!! You fall down from the pain!",
-	FALSE, caster, NULL, victim, TO_VICT, ANSI_RED_BOLD);
-    act("$n spits on $N who clutches at $S chest and keels over in EXTREME pain!",
-	FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_RED_BOLD);
-    switch(critSuccess(caster, SPELL_CARDIAC_STRESS)) {
+      FALSE, caster, NULL, victim, TO_VICT, ANSI_RED_BOLD);
+    act(
+      "$n spits on $N who clutches at $S chest and keels over in EXTREME pain!",
+      FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_RED_BOLD);
+    switch (critSuccess(caster, SPELL_CARDIAC_STRESS)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
@@ -397,18 +419,21 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, short bKnown, int a
     switch (critFail(caster, SPELL_CARDIAC_STRESS)) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
-        act("You screwed up the ritual and the loa make you pay for your mistake!",
-	    FALSE, caster, NULL, 0, TO_CHAR, ANSI_RED_BOLD);
-        act("$n clutches $s chest in EXTREME agony!",
-	    FALSE, caster, NULL, 0, TO_ROOM, ANSI_RED_BOLD);
+        act(
+          "You screwed up the ritual and the loa make you pay for your "
+          "mistake!",
+          FALSE, caster, NULL, 0, TO_CHAR, ANSI_RED_BOLD);
+        act("$n clutches $s chest in EXTREME agony!", FALSE, caster, NULL, 0,
+          TO_ROOM, ANSI_RED_BOLD);
         if (caster->isLucky(caster->spellLuckModifier(SPELL_CARDIAC_STRESS))) {
           SV(SPELL_CARDIAC_STRESS);
           dam /= 2;
         }
-        if (caster->reconcileDamage(caster, dam/3, SPELL_CARDIAC_STRESS) == -1)
+        if (caster->reconcileDamage(caster, dam / 3, SPELL_CARDIAC_STRESS) ==
+            -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
-        act("Oops! You nearly exploded your own heart!", 
-            FALSE, caster, NULL, victim, TO_CHAR);
+        act("Oops! You nearly exploded your own heart!", FALSE, caster, NULL,
+          victim, TO_CHAR);
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
         break;
@@ -418,27 +443,27 @@ int cardiacStress(TBeing *caster, TBeing *victim, int level, short bKnown, int a
   }
 }
 
-int cardiacStress(TBeing *caster, TBeing *victim)
-{
+int cardiacStress(TBeing* caster, TBeing* victim) {
   if (!bPassShamanChecks(caster, SPELL_CARDIAC_STRESS, victim))
     return FALSE;
-  
+
   lag_t rounds = discArray[SPELL_CARDIAC_STRESS]->lag;
   taskDiffT diff = discArray[SPELL_CARDIAC_STRESS]->task;
-  
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_CARDIAC_STRESS, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
-  
+
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_CARDIAC_STRESS, diff, 1,
+    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+
   return TRUE;
 }
 
-int castCardiacStress(TBeing *caster, TBeing *victim)
-{
+int castCardiacStress(TBeing* caster, TBeing* victim) {
   int rc = 0;
-  
+
   int level = caster->getSkillLevel(SPELL_CARDIAC_STRESS);
   int bKnown = caster->getSkillValue(SPELL_CARDIAC_STRESS);
-  
-  int ret=cardiacStress(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_CARDIAC_STRESS));
+
+  int ret = cardiacStress(caster, victim, level, bKnown,
+    caster->getAdvLearning(SPELL_CARDIAC_STRESS));
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else {
   }
@@ -449,26 +474,23 @@ int castCardiacStress(TBeing *caster, TBeing *victim)
   return rc;
 }
 
-int cardiacStress(TBeing *tMaster, TBeing *tSucker, TMagicItem *tMagItem)
-{
-  int tRc = FALSE,
-    tReturn;
-  
-  tReturn = cardiacStress(tMaster, tSucker, tMagItem->getMagicLevel(), tMagItem->getMagicLearnedness(), 0);
+int cardiacStress(TBeing* tMaster, TBeing* tSucker, TMagicItem* tMagItem) {
+  int tRc = FALSE, tReturn;
+
+  tReturn = cardiacStress(tMaster, tSucker, tMagItem->getMagicLevel(),
+    tMagItem->getMagicLearnedness(), 0);
 
   if (IS_SET(tReturn, VICTIM_DEAD))
     ADD_DELETE(tRc, DELETE_VICT);
-  
+
   if (IS_SET(tReturn, CASTER_DEAD))
     ADD_DELETE(tRc, DELETE_THIS);
-  
+
   return tRc;
 }
 
-int bloodBoil(TBeing *caster, TBeing *victim, TMagicItem *tObj)
-{
-  int tLevel = tObj->getMagicLevel(),
-      tKnown = tObj->getMagicLearnedness(),
+int bloodBoil(TBeing* caster, TBeing* victim, TMagicItem* tObj) {
+  int tLevel = tObj->getMagicLevel(), tKnown = tObj->getMagicLearnedness(),
       tReturn = 0;
 
   tReturn = bloodBoil(caster, victim, tLevel, tKnown, 0);
@@ -479,10 +501,11 @@ int bloodBoil(TBeing *caster, TBeing *victim, TMagicItem *tObj)
   return tReturn;
 }
 
-int bloodBoil(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_learn)
-{
+int bloodBoil(TBeing* caster, TBeing* victim, int level, short bKnown,
+  int adv_learn) {
   if (victim->isImmortal()) {
-    act("You can't boil $N's blood -- $E's a god! ", FALSE, caster, NULL, victim, TO_CHAR);
+    act("You can't boil $N's blood -- $E's a god! ", FALSE, caster, NULL,
+      victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
@@ -498,30 +521,36 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
       case CRIT_S_DOUBLE:
         CS(SPELL_BLOOD_BOIL);
         dam <<= 1;
-        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling $N's blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("<R>You direct <W>**INTENSE HEAT**<R> from your hands, boiling $N's blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_CHAR);
-        act("<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling your blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_VICT);
+        act(
+          "<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling $N's "
+          "blood!<z>",
+          FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(
+          "<R>You direct <W>**INTENSE HEAT**<R> from your hands, boiling $N's "
+          "blood!<z>",
+          FALSE, caster, NULL, victim, TO_CHAR);
+        act(
+          "<R>$n directs <W>**INTENSE HEAT**<R> from $s hands, boiling your "
+          "blood!<z>",
+          FALSE, caster, NULL, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
         if (victim->isLucky(caster->spellLuckModifier(SPELL_BLOOD_BOIL))) {
           SV(SPELL_BLOOD_BOIL);
           dam /= 2;
-          act("<r>$n directs heat from $s hands, boiling $N's blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_NOTVICT);
-          act("<r>You direct heat from your hands, boiling $N's blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_CHAR);
-          act("<r>$n directs heat from $s hands, boiling your blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_VICT);
+          act("<r>$n directs heat from $s hands, boiling $N's blood!<z>", FALSE,
+            caster, NULL, victim, TO_NOTVICT);
+          act("<r>You direct heat from your hands, boiling $N's blood!<z>",
+            FALSE, caster, NULL, victim, TO_CHAR);
+          act("<r>$n directs heat from $s hands, boiling your blood!<z>", FALSE,
+            caster, NULL, victim, TO_VICT);
         } else {
-          act("<R>$n directs heat from $s hands, boiling $N's blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_NOTVICT);
-          act("<R>You direct heat from your hands, boiling $N's blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_CHAR);
-          act("<R>$n directs heat from $s hands, boiling your blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_VICT);
+          act("<R>$n directs heat from $s hands, boiling $N's blood!<z>", FALSE,
+            caster, NULL, victim, TO_NOTVICT);
+          act("<R>You direct heat from your hands, boiling $N's blood!<z>",
+            FALSE, caster, NULL, victim, TO_CHAR);
+          act("<R>$n directs heat from $s hands, boiling your blood!<z>", FALSE,
+            caster, NULL, victim, TO_VICT);
         }
         break;
     }
@@ -529,18 +558,20 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
       return SPELL_FAIL + VICTIM_DEAD;
     return SPELL_FAIL;
   } else {
-    switch(critFail(caster, SPELL_BLOOD_BOIL)) {
+    switch (critFail(caster, SPELL_BLOOD_BOIL)) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_BLOOD_BOIL);
         caster->setCharFighting(victim);
         caster->setVictFighting(victim);
-        act("<R>$n screwed up $s ritual and burned $mself!<z>", 
-                  FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("<R>You direct <W>**INTENSE HEAT**<R> heat from your hands, boiling <W>YOUR OWN<R> blood!<z>", 
-                  FALSE, caster, NULL, victim, TO_CHAR);
-        act("<R>$n has just tried to harm you!<z>", 
-                  FALSE, caster, NULL, victim, TO_VICT);
+        act("<R>$n screwed up $s ritual and burned $mself!<z>", FALSE, caster,
+          NULL, victim, TO_NOTVICT);
+        act(
+          "<R>You direct <W>**INTENSE HEAT**<R> heat from your hands, boiling "
+          "<W>YOUR OWN<R> blood!<z>",
+          FALSE, caster, NULL, victim, TO_CHAR);
+        act("<R>$n has just tried to harm you!<z>", FALSE, caster, NULL, victim,
+          TO_VICT);
         if (caster->reconcileDamage(caster, dam, SPELL_BLOOD_BOIL) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
         return SPELL_CRIT_FAIL;
@@ -552,33 +583,33 @@ int bloodBoil(TBeing *caster, TBeing *victim, int level, short bKnown, int adv_l
   }
 }
 
-int bloodBoil(TBeing *caster, TBeing *victim)
-{
+int bloodBoil(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
-    if (!bPassShamanChecks(caster, SPELL_BLOOD_BOIL, victim))
-       return FALSE;
+  if (!bPassShamanChecks(caster, SPELL_BLOOD_BOIL, victim))
+    return FALSE;
 
   lag_t rounds = discArray[SPELL_BLOOD_BOIL]->lag;
   diff = discArray[SPELL_BLOOD_BOIL]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_BLOOD_BOIL, diff, 1, "", rounds, caster->in_room, 0, 0,TRUE, 0);
+  start_cast(caster, victim, NULL, caster->roomp, SPELL_BLOOD_BOIL, diff, 1, "",
+    rounds, caster->in_room, 0, 0, TRUE, 0);
 
-     return TRUE;
+  return TRUE;
 }
 
-int castBloodBoil(TBeing *caster, TBeing *victim)
-{
-  int ret,level;
+int castBloodBoil(TBeing* caster, TBeing* victim) {
+  int ret, level;
   int rc = 0;
 
   level = caster->getSkillLevel(SPELL_BLOOD_BOIL);
   int bKnown = caster->getSkillValue(SPELL_BLOOD_BOIL);
 
-  ret=bloodBoil(caster,victim,level,bKnown, caster->getAdvLearning(SPELL_BLOOD_BOIL));
+  ret = bloodBoil(caster, victim, level, bKnown,
+    caster->getAdvLearning(SPELL_BLOOD_BOIL));
   if (IS_SET(ret, SPELL_SUCCESS)) {
   } else {
-    if (ret==SPELL_CRIT_FAIL) {
+    if (ret == SPELL_CRIT_FAIL) {
     } else {
     }
   }

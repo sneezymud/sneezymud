@@ -4,27 +4,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include "discipline.h"
 #include "skills.h"
 
-class CDDefense : public CDiscipline
-{
-public:
+class CDDefense : public CDiscipline {
+  public:
     CSkill skAdvancedDefense;
     CSkill skFocusedAvoidance;
     CSkill skToughness;
 
     CDDefense();
-    CDDefense(const CDDefense &a);
-    CDDefense & operator=(const CDDefense &a);
+    CDDefense(const CDDefense& a);
+    CDDefense& operator=(const CDDefense& a);
     virtual ~CDDefense();
-    virtual CDDefense * cloneMe() { return new CDDefense(*this); }
+    virtual CDDefense* cloneMe() { return new CDDefense(*this); }
 
-    bool isFast(){ return true; }
+    bool isFast() { return true; }
 
-private:
+  private:
 };
-    void doToughness(TBeing *ch);
+void doToughness(TBeing* ch);

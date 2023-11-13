@@ -15,7 +15,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // this class serves two related purposes
@@ -23,11 +22,11 @@
 // second, it stores the data that will be needed by that sorting routine.
 class skillSorter {
   public:
-    const TBeing *ch{nullptr};
+    const TBeing* ch{nullptr};
     spellNumT theSkill{TYPE_UNDEFINED};
 
     skillSorter() = default;
-    skillSorter(const TBeing *c2, const spellNumT ts) : ch(c2), theSkill(ts) {};
+    skillSorter(const TBeing* c2, const spellNumT ts) : ch(c2), theSkill(ts){};
 
-    bool operator() (const skillSorter &, const skillSorter &) const;
+    bool operator()(const skillSorter&, const skillSorter&) const;
 };

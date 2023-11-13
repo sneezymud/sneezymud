@@ -19,10 +19,9 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 class dirlistSort {
   public:
-    bool operator() (const sstring &, const sstring &) const;
+    bool operator()(const sstring&, const sstring&) const;
 };

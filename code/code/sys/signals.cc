@@ -21,10 +21,9 @@ void purgeRequest(int);
 void logsig(int);
 void hupsig(int);
 void profsig(int);
-extern void genericPurgeLdead(TBeing *ch);
+extern void genericPurgeLdead(TBeing* ch);
 
-void signalSetup(void)
-{
+void signalSetup(void) {
   signal(SIGUSR1, purgeRequest);
   signal(SIGUSR2, shutdownAndPurgeRequest);
   signal(SIGQUIT, shutdownRequest);
@@ -33,14 +32,14 @@ void signalSetup(void)
   signal(SIGINT, hupsig);
   signal(SIGALRM, logsig);
   signal(SIGTERM, hupsig);
-// Trapping PROF PREVENTS the timing signals from working correctly
-//   signal(SIGPROF, profsig);
+  // Trapping PROF PREVENTS the timing signals from working correctly
+  //   signal(SIGPROF, profsig);
 
   struct itimerval itime;
   struct timeval interval;
 
   // This stuff crashes on the Solaris machine
-  // set up the deadlock-protection 
+  // set up the deadlock-protection
 
   interval.tv_sec = 1200;
   interval.tv_usec = 0;
@@ -50,27 +49,23 @@ void signalSetup(void)
   signal(SIGVTALRM, checkpointing);
 }
 
-void checkpointing(int)
-{
+void checkpointing(int) {
   mud_assert(tics, "CHECKPOINT shutdown: tics not updated. (%d)", tics);
   tics = 0;
 }
 
-void shutdownAndPurgeRequest(int num)
-{
+void shutdownAndPurgeRequest(int num) {
   purgeRequest(num);
   shutdownRequest(num);
 }
 
-void purgeRequest(int)
-{
+void purgeRequest(int) {
   vlogf(LOG_MISC, "Received USR1 or USR2 signal - request to purge linkdeads");
 
   genericPurgeLdead(NULL);
 }
 
-void shutdownRequest(int)
-{
+void shutdownRequest(int) {
   vlogf(LOG_MISC, "Received USR2 or QUIT - shutdown request");
   char buf[2000];
 
@@ -84,26 +79,22 @@ void shutdownRequest(int)
     timeTill = time(0) + (num * SECS_PER_REAL_MIN);
   }
 
-  sprintf(buf, "<r>******* SYSTEM MESSAGE ******<z>\n\r<c>%s in %ld minute%s.<z>\n\r",
-     shutdown_or_reboot().c_str(),
-     ((timeTill - time(0)) / 60), (((timeTill - time(0)) / 60) == 1) ? "" : "s");
+  sprintf(buf,
+    "<r>******* SYSTEM MESSAGE ******<z>\n\r<c>%s in %ld minute%s.<z>\n\r",
+    shutdown_or_reboot().c_str(), ((timeTill - time(0)) / 60),
+    (((timeTill - time(0)) / 60) == 1) ? "" : "s");
   Descriptor::worldSend(buf, NULL);
 }
 
-void hupsig(int)
-{
+void hupsig(int) {
   vlogf(LOG_MISC, "Received SIGHUP, SIGINT, or SIGTERM. Shutting down");
   exit(0); /* something more elegant should perhaps be substituted */
 }
 
-void logsig(int)
-{
-  vlogf(LOG_MISC, "Signal received. Ignoring.");
-}
+void logsig(int) { vlogf(LOG_MISC, "Signal received. Ignoring."); }
 
-void profsig(int)
-{
-// prof signals come in if prof/gprof is enabled
-// we have to process these sigs, but ignore them
+void profsig(int) {
+  // prof signals come in if prof/gprof is enabled
+  // we have to process these sigs, but ignore them
   vlogf(LOG_MISC, "SIGPROF caught.  Ignoring.");
 }

@@ -15,21 +15,22 @@ class TEgg : public TFood {
     bool touched;
     int incubationTimer;
     int mobVNum;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring displayFourValues();
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_EGG; }
-    virtual void changeObjValue1(TBeing *);
+    virtual void changeObjValue1(TBeing*);
 
     virtual void lowCheck();
-    virtual int chiMe(TBeing *);
-    virtual int getMe(TBeing *, TThing *);
-    virtual void eatMe(TBeing *);
-    virtual void tasteMe(TBeing *);
+    virtual int chiMe(TBeing*);
+    virtual int getMe(TBeing*, TThing*);
+    virtual void eatMe(TBeing*);
+    virtual void tasteMe(TBeing*);
 
-    void hatch(TRoom *);
+    void hatch(TRoom*);
     bool getEggTouched() const;
     void setEggTouched(bool r);
     int eggIncubate();
@@ -39,8 +40,7 @@ class TEgg : public TFood {
     void setEggMobVNum(int r);
 
     TEgg();
-    TEgg(const TEgg &a);
-    TEgg & operator=(const TEgg &a);
+    TEgg(const TEgg& a);
+    TEgg& operator=(const TEgg& a);
     virtual ~TEgg();
-
 };

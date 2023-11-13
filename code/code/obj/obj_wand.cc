@@ -9,26 +9,21 @@
 #include "obj_wand.h"
 #include "materials.h"
 
-
 TWand::TWand() :
   TMagicItem(),
   maxCharges(0),
   curCharges(0),
-  spell(TYPE_UNDEFINED)
-{
-}
+  spell(TYPE_UNDEFINED) {}
 
-TWand::TWand(const TWand &a) :
+TWand::TWand(const TWand& a) :
   TMagicItem(a),
   maxCharges(a.maxCharges),
   curCharges(a.curCharges),
-  spell(a.spell)
-{
-}
+  spell(a.spell) {}
 
-TWand & TWand::operator=(const TWand &a)
-{
-  if (this == &a) return *this;
+TWand& TWand::operator=(const TWand& a) {
+  if (this == &a)
+    return *this;
   TMagicItem::operator=(a);
   maxCharges = a.maxCharges;
   curCharges = a.curCharges;
@@ -36,156 +31,125 @@ TWand & TWand::operator=(const TWand &a)
   return *this;
 }
 
-TWand::~TWand()
-{
-}
+TWand::~TWand() {}
 
-void TWand::setMaxCharges(int n)
-{
-  maxCharges = n;
-}
+void TWand::setMaxCharges(int n) { maxCharges = n; }
 
-int TWand::getMaxCharges() const
-{
-  return maxCharges;
-}
+int TWand::getMaxCharges() const { return maxCharges; }
 
-void TWand::addToMaxCharges(int n)
-{
-  maxCharges += n;
-}
+void TWand::addToMaxCharges(int n) { maxCharges += n; }
 
-void TWand::setCurCharges(int n)
-{
-  curCharges = n;
-}
+void TWand::setCurCharges(int n) { curCharges = n; }
 
-int TWand::getCurCharges() const
-{
-  return curCharges;
-}
+int TWand::getCurCharges() const { return curCharges; }
 
-void TWand::addToCurCharges(int n)
-{
-  curCharges += n;
-}
+void TWand::addToCurCharges(int n) { curCharges += n; }
 
-void TWand::setSpell(spellNumT n)
-{
-  spell = n;
-}
+void TWand::setSpell(spellNumT n) { spell = n; }
 
-spellNumT TWand::getSpell() const
-{
-  return spell;
-}
+spellNumT TWand::getSpell() const { return spell; }
 
-int TWand::changeItemVal4Check(TBeing *ch, int the_update)
-{
+int TWand::changeItemVal4Check(TBeing* ch, int the_update) {
   if (the_update != -1 &&
-      (!discArray[the_update] ||
-       (!discArray[the_update]->minMana && !discArray[the_update]->minLifeforce && !discArray[the_update]->minPiety))) {
+      (!discArray[the_update] || (!discArray[the_update]->minMana &&
+                                   !discArray[the_update]->minLifeforce &&
+                                   !discArray[the_update]->minPiety))) {
     ch->sendTo("Invalid value or value is not a spell.\n\r");
     return TRUE;
   }
   return FALSE;
 }
 
-void TWand::divinateMe(TBeing *caster) const
-{
+void TWand::divinateMe(TBeing* caster) const {
   caster->sendTo(format("It has %d out of %d charges left.\n\r") %
-           getCurCharges() % getMaxCharges());
+                 getCurCharges() % getMaxCharges());
   caster->describeMagicLevel(this, 101);
   caster->describeMagicLearnedness(this, 101);
   caster->describeMagicSpell(this, 101);
 }
 
-void TWand::assignFourValues(int x1, int x2, int x3, int x4)
-{
-  TMagicItem::assignFourValues(x1,x2,x3,x4);
+void TWand::assignFourValues(int x1, int x2, int x3, int x4) {
+  TMagicItem::assignFourValues(x1, x2, x3, x4);
 
   setMaxCharges(x2);
   setCurCharges(x3);
   setSpell(mapFileToSpellnum(x4));
 }
 
-void TWand::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
-  TMagicItem::getFourValues(x1,x2,x3,x4);
+void TWand::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
+  TMagicItem::getFourValues(x1, x2, x3, x4);
 
   *x2 = getMaxCharges();
   *x3 = getCurCharges();
   *x4 = mapSpellnumToFile(getSpell());
 }
 
-sstring TWand::statObjInfo() const
-{
+sstring TWand::statObjInfo() const {
   char buf[256];
 
-  sprintf(buf, "Level:   %d        Learnedness:   %d\n\rSpell: %s    Charges: %d/%d",
-              getMagicLevel(), getMagicLearnedness(),
-              (getSpell() == TYPE_UNDEFINED ? "No Spell" :
-                (discArray[getSpell()] ?
-                    discArray[getSpell()]->name :
-                    "BOGUS SPELL.  Bug this")),
-              getCurCharges(),
-              getMaxCharges());
+  sprintf(buf,
+    "Level:   %d        Learnedness:   %d\n\rSpell: %s    Charges: %d/%d",
+    getMagicLevel(), getMagicLearnedness(),
+    (getSpell() == TYPE_UNDEFINED
+        ? "No Spell"
+        : (discArray[getSpell()] ? discArray[getSpell()]->name
+                                 : "BOGUS SPELL.  Bug this")),
+    getCurCharges(), getMaxCharges());
 
   sstring a(buf);
   return a;
 }
 
-int TWand::objectSell(TBeing *ch, TMonster *keeper)
-{
+int TWand::objectSell(TBeing* ch, TMonster* keeper) {
   if (getCurCharges() != getMaxCharges()) {
-    keeper->doTell(ch->getName(), "I'm sorry, I don't buy back expended wands.");
+    keeper->doTell(ch->getName(),
+      "I'm sorry, I don't buy back expended wands.");
     return TRUE;
   }
 
   return TMagicItem::objectSell(ch, keeper);
 }
 
-void TWand::lowCheck()
-{
+void TWand::lowCheck() {
   spellNumT curspell = getSpell();
   if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL) ||
       ((curspell > TYPE_UNDEFINED) &&
-       ((!discArray[curspell] ||
-        ((discArray[curspell]->typ != SPELL_RANGER) && 
-         !discArray[curspell]->minMana && 
-         !discArray[curspell]->minLifeforce && 
-         !discArray[curspell]->minPiety)) ||
-      (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
-    vlogf(LOG_LOW, format("wand (%s:%d) has messed up spell(%d)") % 
-         getName() % objVnum() % curspell);
+        ((!discArray[curspell] || ((discArray[curspell]->typ != SPELL_RANGER) &&
+                                    !discArray[curspell]->minMana &&
+                                    !discArray[curspell]->minLifeforce &&
+                                    !discArray[curspell]->minPiety)) ||
+          (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
+    vlogf(LOG_LOW, format("wand (%s:%d) has messed up spell(%d)") % getName() %
+                     objVnum() % curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
       vlogf(LOG_LOW, "bogus range");
     else if (!discArray[curspell])
-      vlogf(LOG_LOW, format("bogus spell, %d") %  curspell);
-    else if ((!discArray[curspell]->minMana && !discArray[curspell]->minLifeforce && 
-      !discArray[curspell]->minPiety))
+      vlogf(LOG_LOW, format("bogus spell, %d") % curspell);
+    else if ((!discArray[curspell]->minMana &&
+               !discArray[curspell]->minLifeforce &&
+               !discArray[curspell]->minPiety))
       vlogf(LOG_LOW, "non-spell");
   }
   if (curspell > TYPE_UNDEFINED &&
       discArray[curspell]->targets & TAR_CHAR_WORLD) {
     // spells that use this setting are not a good choice for obj spells
-    vlogf(LOG_LOW, format("Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)") %
+    vlogf(LOG_LOW,
+      format("Obj (%s : %d) had spell that shouldn't be on objs (%s : %d)") %
         getName() % objVnum() % discArray[curspell]->name % curspell);
   }
 
   TMagicItem::lowCheck();
 }
 
-bool TWand::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
-{
+bool TWand::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent)
-    repair->doTell(fname(ch->name), "You might wanna take that to the magic shop!");
+    repair->doTell(fname(ch->name),
+      "You might wanna take that to the magic shop!");
 
   return TRUE;
 }
 
-int TWand::suggestedPrice() const
-{
+int TWand::suggestedPrice() const {
   spellNumT curspell = getSpell();
   int value = 0;
   if (curspell > TYPE_UNDEFINED) {
@@ -201,7 +165,6 @@ int TWand::suggestedPrice() const
     value *= 15;
     if (curspell == SPELL_FLY)
       value *= 4;
-
   }
 
   // add material value
@@ -210,17 +173,19 @@ int TWand::suggestedPrice() const
   return value;
 }
 
-int TWand::useMe(TBeing *ch, const char * argument)
-{
-  TBeing *tmp_char;
-  TObj *o;
+int TWand::useMe(TBeing* ch, const char* argument) {
+  TBeing* tmp_char;
+  TObj* o;
   int rc;
   unsigned int bits;
   spellNumT the_spell;
 
   the_spell = getSpell();
   if (!discArray[the_spell]) {
-    vlogf(LOG_BUG,format("doUse (%s) called spell (%d) that does not exist! - Don't do that!") %  getName() % getSpell());
+    vlogf(LOG_BUG,
+      format(
+        "doUse (%s) called spell (%d) that does not exist! - Don't do that!") %
+        getName() % getSpell());
     return FALSE;
   }
 
@@ -240,7 +205,7 @@ int TWand::useMe(TBeing *ch, const char * argument)
     // then we ought to use some other magic-item (probably scroll)
     act("Sparks and smoke come forth from $p.", FALSE, ch, this, 0, TO_CHAR);
     act("Sparks and smoke come forth from $p.", FALSE, ch, this, 0, TO_ROOM);
-    return FALSE; 
+    return FALSE;
   }
 
   bits = generic_find(argument, bv, ch, &tmp_char, &o);
@@ -251,10 +216,10 @@ int TWand::useMe(TBeing *ch, const char * argument)
         ch->checkPeaceful("Impolite magic is banned here.\n\r"))
       return FALSE;
 
-    if (getCurCharges() > 0) {      // Is there any charges left?
+    if (getCurCharges() > 0) {  // Is there any charges left?
       addToCurCharges(-1);
       ch->addToWait(combatRound(1));
-      rc = doObjSpell(ch,tmp_char,this,o,argument,the_spell);
+      rc = doObjSpell(ch, tmp_char, this, o, argument, the_spell);
       if (IS_SET_DELETE(rc, DELETE_VICT) && ch != tmp_char) {
         delete tmp_char;
         tmp_char = NULL;
@@ -264,7 +229,7 @@ int TWand::useMe(TBeing *ch, const char * argument)
         o = NULL;
       }
       if ((IS_SET_DELETE(rc, DELETE_VICT) && ch == tmp_char) ||
-           IS_SET_DELETE(rc, DELETE_THIS))
+          IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
     } else
       act("$p seems powerless.", FALSE, ch, this, 0, TO_CHAR);
@@ -274,8 +239,8 @@ int TWand::useMe(TBeing *ch, const char * argument)
   return FALSE;
 }
 
-void TWand::generalUseMessage(const TBeing *ch, unsigned int bits, const TBeing *tmp_char, const TObj *o) const
-{
+void TWand::generalUseMessage(const TBeing* ch, unsigned int bits,
+  const TBeing* tmp_char, const TObj* o) const {
   if (bits == FIND_CHAR_ROOM) {
     act("$n points $p at you.", TRUE, ch, this, tmp_char, TO_VICT);
     act("$n points $p at $N.", TRUE, ch, this, tmp_char, TO_NOTVICT);
@@ -286,12 +251,14 @@ void TWand::generalUseMessage(const TBeing *ch, unsigned int bits, const TBeing 
   }
 }
 
-sstring TWand::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
-{
+sstring TWand::getNameForShow(bool useColor, bool useName,
+  const TBeing* ch) const {
   char buf2[256];
   sprintf(buf2, "%s [%s]",
-       useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
-       (getSpell() > TYPE_UNDEFINED ? (discArray[getSpell()] ? discArray[getSpell()]->name : "Unknown") : "None"));
+    useName ? name.c_str()
+            : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
+    (getSpell() > TYPE_UNDEFINED
+        ? (discArray[getSpell()] ? discArray[getSpell()]->name : "Unknown")
+        : "None"));
   return buf2;
 }
-

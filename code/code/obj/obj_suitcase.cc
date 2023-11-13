@@ -4,51 +4,38 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 // suitcase.cc
 // Peel
 
 #include "monster.h"
 #include "obj_suitcase.h"
 
-TSuitcase::TSuitcase() :
-  TExpandableContainer()
-{
-}
+TSuitcase::TSuitcase() : TExpandableContainer() {}
 
-TSuitcase::TSuitcase(const TSuitcase &a) :
-  TExpandableContainer(a)
-{
-}
+TSuitcase::TSuitcase(const TSuitcase& a) : TExpandableContainer(a) {}
 
-TSuitcase & TSuitcase::operator=(const TSuitcase &a)
-{
-  if (this == &a) return *this;
+TSuitcase& TSuitcase::operator=(const TSuitcase& a) {
+  if (this == &a)
+    return *this;
   TExpandableContainer::operator=(a);
   return *this;
 }
 
-TSuitcase::~TSuitcase()
-{
-}
+TSuitcase::~TSuitcase() {}
 
-void TSuitcase::assignFourValues(int x1, int x2, int x3, int x4)
-{
+void TSuitcase::assignFourValues(int x1, int x2, int x3, int x4) {
   TExpandableContainer::assignFourValues(x1, x2, x3, x4);
 }
 
-void TSuitcase::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
+void TSuitcase::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
   TExpandableContainer::getFourValues(x1, x2, x3, x4);
 }
 
-sstring TSuitcase::statObjInfo() const
-{
+sstring TSuitcase::statObjInfo() const {
   return TExpandableContainer::statObjInfo();
 }
 
-bool TSuitcase::objectRepair(TBeing *ch, TMonster *repair, silentTypeT silent)
-{
+bool TSuitcase::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "I can't repair suitcases.");
   }
