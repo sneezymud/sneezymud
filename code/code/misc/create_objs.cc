@@ -47,42 +47,43 @@ extern "C" {
 #include "obj_egg.h"
 #include "garble.h"
 
-static void update_obj_menu(const TBeing *ch, const TObj *obj)
-{
-  const char *obj_edit_menu_basic =
- "%s 1)%s Name                        %s 2)%s Short Description\n\r"
- "%s 3)%s Item Type                   %s 4)%s Long Description\n\r"
- "%s 5)%s Weight                      %s 6)%s Volume\n\r"
- "%s 7)%s Extra Flags                 %s 8)%s Take Flags\n\r"
- "%s 9)%s Unused                      %s10)%s Cost/Value\n\r"
- "%s11)%s Four Values                 %s12)%s Decay time\n\r"
- "%s13)%s Max struct points           %s14)%s Struct points\n\r"
- "%s15)%s Extra Description           %s16)%s Material type\n\r"
- "%s17)%s Applys                      %s18)%s Can be seen\n\r"
- "%s19)%s Delete all extra descs      %s20)%s Change Object Special Proc\n\r"
- "%s21)%s Set item max_exist\n\r"
- "\n\r";
-  const char *obj_edit_menu_advanced =
- "%s 1)%s %-20s  %s 2)%s %s\n\r"
- "%s 3)%s %-20s  %s 4)%s %s\n\r"
- "%s 5)%s %sWeight%s: %-12s  %s 6)%s %sVolume%s: %s\n\r"
- "%s 7)%s %sExtra Flags%s           %s 8)%s %sTake Flags%s\n\r"
- "%s 9)%s %sUnused%s                %s10)%s %sCost%s: %s\n\r"
- "%s11)%s %sFour Values%s           %s12)%s %sDecay%s: %s\n\r"
- "%s13)%s %sMax-Str%s: %-11s  %s14)%s %sCur-Str%s: %s\n\r"
- "%s15)%s %sExtra Description%s     %s16)%s %s\n\r"
- "%s17)%s %sApplys%s                %s18)%s %sCBS%s: %s\n\r"
- "%s19)%s %sDelete extra descs%s    %s20)%s %s\n\r"
- "%s21)%s %sMax-Exist%s: %s\n\r"
- "\n\r";
+static void update_obj_menu(const TBeing* ch, const TObj* obj) {
+  const char* obj_edit_menu_basic =
+    "%s 1)%s Name                        %s 2)%s Short Description\n\r"
+    "%s 3)%s Item Type                   %s 4)%s Long Description\n\r"
+    "%s 5)%s Weight                      %s 6)%s Volume\n\r"
+    "%s 7)%s Extra Flags                 %s 8)%s Take Flags\n\r"
+    "%s 9)%s Unused                      %s10)%s Cost/Value\n\r"
+    "%s11)%s Four Values                 %s12)%s Decay time\n\r"
+    "%s13)%s Max struct points           %s14)%s Struct points\n\r"
+    "%s15)%s Extra Description           %s16)%s Material type\n\r"
+    "%s17)%s Applys                      %s18)%s Can be seen\n\r"
+    "%s19)%s Delete all extra descs      %s20)%s Change Object Special Proc\n\r"
+    "%s21)%s Set item max_exist\n\r"
+    "\n\r";
+  const char* obj_edit_menu_advanced =
+    "%s 1)%s %-20s  %s 2)%s %s\n\r"
+    "%s 3)%s %-20s  %s 4)%s %s\n\r"
+    "%s 5)%s %sWeight%s: %-12s  %s 6)%s %sVolume%s: %s\n\r"
+    "%s 7)%s %sExtra Flags%s           %s 8)%s %sTake Flags%s\n\r"
+    "%s 9)%s %sUnused%s                %s10)%s %sCost%s: %s\n\r"
+    "%s11)%s %sFour Values%s           %s12)%s %sDecay%s: %s\n\r"
+    "%s13)%s %sMax-Str%s: %-11s  %s14)%s %sCur-Str%s: %s\n\r"
+    "%s15)%s %sExtra Description%s     %s16)%s %s\n\r"
+    "%s17)%s %sApplys%s                %s18)%s %sCBS%s: %s\n\r"
+    "%s19)%s %sDelete extra descs%s    %s20)%s %s\n\r"
+    "%s21)%s %sMax-Exist%s: %s\n\r"
+    "\n\r";
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format(VT_CURSPOS) % 1 % 1);
-  ch->sendTo(format("%sObject Name:%s %s") % ch->cyan() % ch->norm() % obj->name);
+  ch->sendTo(
+    format("%sObject Name:%s %s") % ch->cyan() % ch->norm() % obj->name);
   ch->sendTo(format(VT_CURSPOS) % 2 % 1);
 
   itemTypeT itt = obj->itemType();
-  ch->sendTo(format("%sItem Type :%s %s") % ch->purple() % ch->norm() % ItemInfo[itt]->name);
+  ch->sendTo(format("%sItem Type :%s %s") % ch->purple() % ch->norm() %
+             ItemInfo[itt]->name);
 
   // this possibly adds item-specific stuff on line 3
   obj->objMenu(ch);
@@ -95,9 +96,9 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
 
     class str_or_unknown_ {
       public:
-      const char* operator()(const sstring& s) {
-        return !s.empty() ? s.c_str() : "Unknown";
-      }
+        const char* operator()(const sstring& s) {
+          return !s.empty() ? s.c_str() : "Unknown";
+        }
     } str_or_unknown;
 
     strcpy(tStringOut[0], str_or_unknown(obj->name));
@@ -112,7 +113,11 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
     sprintf(tStringOut[9], "%d", obj->getStructPoints());
     strcpy(tStringOut[10], material_nums[obj->getMaterial()].mat_name);
     sprintf(tStringOut[11], "%d", obj->canBeSeen);
-    strcpy(tStringOut[12], ((obj->spec <= NUM_OBJ_SPECIALS) ? (obj->spec <= 0 ? "Proc: none" : objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].name) : "Confused..."));
+    strcpy(tStringOut[12],
+      ((obj->spec <= NUM_OBJ_SPECIALS)
+          ? (obj->spec <= 0 ? "Proc: none"
+                            : objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].name)
+          : "Confused..."));
     sprintf(tStringOut[13], "%d", obj->max_exist);
 
     for (int tMsgIndex = 0; tMsgIndex < 14; tMsgIndex++)
@@ -121,80 +126,76 @@ static void update_obj_menu(const TBeing *ch, const TObj *obj)
         strcat(tStringOut[tMsgIndex], "...");
       }
 
-    ch->sendTo(format(obj_edit_menu_advanced) %
-               ch->cyan()   % ch->norm() %                           tStringOut[0] %
-               ch->purple() % ch->norm() %                           tStringOut[1] %
-               ch->cyan()   % ch->norm() %                           tStringOut[2] %
-               ch->purple() % ch->norm() %                           tStringOut[3] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() % tStringOut[4] %
-               ch->purple() % ch->norm() % ch->cyan()   % ch->norm() % tStringOut[5] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() %
-               ch->purple() % ch->norm() % ch->cyan()   % ch->norm() %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() %
-               ch->purple() % ch->norm() % ch->cyan()   % ch->norm() % tStringOut[6] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() %
-               ch->purple() % ch->norm() % ch->cyan()   % ch->norm() % tStringOut[7] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() % tStringOut[8] %
-               ch->purple() % ch->norm() % ch->cyan()   % ch->norm() % tStringOut[9] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() %
-               ch->purple() % ch->norm() %                           tStringOut[10] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() %
-               ch->purple() % ch->norm() % ch->cyan()   % ch->norm() % tStringOut[11] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() %
-               ch->purple() % ch->norm() %                           tStringOut[12] %
-               ch->cyan()   % ch->norm() % ch->purple() % ch->norm() % tStringOut[13]);
+    ch->sendTo(
+      format(obj_edit_menu_advanced) % ch->cyan() % ch->norm() % tStringOut[0] %
+      ch->purple() % ch->norm() % tStringOut[1] % ch->cyan() % ch->norm() %
+      tStringOut[2] % ch->purple() % ch->norm() % tStringOut[3] % ch->cyan() %
+      ch->norm() % ch->purple() % ch->norm() % tStringOut[4] % ch->purple() %
+      ch->norm() % ch->cyan() % ch->norm() % tStringOut[5] % ch->cyan() %
+      ch->norm() % ch->purple() % ch->norm() % ch->purple() % ch->norm() %
+      ch->cyan() % ch->norm() % ch->cyan() % ch->norm() % ch->purple() %
+      ch->norm() % ch->purple() % ch->norm() % ch->cyan() % ch->norm() %
+      tStringOut[6] % ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
+      ch->purple() % ch->norm() % ch->cyan() % ch->norm() % tStringOut[7] %
+      ch->cyan() % ch->norm() % ch->purple() % ch->norm() % tStringOut[8] %
+      ch->purple() % ch->norm() % ch->cyan() % ch->norm() % tStringOut[9] %
+      ch->cyan() % ch->norm() % ch->purple() % ch->norm() % ch->purple() %
+      ch->norm() % tStringOut[10] % ch->cyan() % ch->norm() % ch->purple() %
+      ch->norm() % ch->purple() % ch->norm() % ch->cyan() % ch->norm() %
+      tStringOut[11] % ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
+      ch->purple() % ch->norm() % tStringOut[12] % ch->cyan() % ch->norm() %
+      ch->purple() % ch->norm() % tStringOut[13]);
   } else
-    ch->sendTo(format(obj_edit_menu_basic) %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
-               ch->cyan() % ch->norm());
-
+    ch->sendTo(
+      format(obj_edit_menu_basic) % ch->cyan() % ch->norm() % ch->purple() %
+      ch->norm() % ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
+      ch->cyan() % ch->norm() % ch->purple() % ch->norm() % ch->cyan() %
+      ch->norm() % ch->purple() % ch->norm() % ch->cyan() % ch->norm() %
+      ch->purple() % ch->norm() % ch->cyan() % ch->norm() % ch->purple() %
+      ch->norm() % ch->cyan() % ch->norm() % ch->purple() % ch->norm() %
+      ch->cyan() % ch->norm() % ch->purple() % ch->norm() % ch->cyan() %
+      ch->norm() % ch->purple() % ch->norm() % ch->cyan() % ch->norm() %
+      ch->purple() % ch->norm() % ch->cyan() % ch->norm());
 
   ch->sendTo("--> ");
 }
 
-// Loading/Saving functions are below 
+// Loading/Saving functions are below
 
-void TBeing::doOEdit(const char *)
-{
-  sendTo("Mobs may not edit.\n\r");
-}
+void TBeing::doOEdit(const char*) { sendTo("Mobs may not edit.\n\r"); }
 
-void ObjLoad(TBeing *ch, int vnum)
-{
-  TObj *o;
-  TBaseClothing *tbc;
+void ObjLoad(TBeing* ch, int vnum) {
+  TObj* o;
+  TBaseClothing* tbc;
   int i;
-  extraDescription *new_descr;
+  extraDescription* new_descr;
   TDatabase db(DB_IMMORTAL);
 
-  db.query("select type, name, short_desc, long_desc, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, cur_struct, decay, volume, material, max_exist, action_desc from obj where vnum=%i and owner='%s'", vnum, ch->name.c_str());
+  db.query(
+    "select type, name, short_desc, long_desc, action_flag, wear_flag, val0, "
+    "val1, val2, val3, weight, price, can_be_seen, spec_proc, max_struct, "
+    "cur_struct, decay, volume, material, max_exist, action_desc from obj "
+    "where vnum=%i and owner='%s'",
+    vnum, ch->name.c_str());
 
-  if(!db.isResults()){
+  if (!db.isResults()) {
     ch->sendTo("Object not found.\n\r");
     return;
   }
 
-  if(!db.fetchRow())
+  if (!db.fetchRow())
     return;
 
   ch->sendTo(format("Loading saved object number %d.\n\r") % vnum);
 
   o = makeNewObj(mapFileToItemType(convertTo<int>(db["type"])));
   if (!o) {
-    vlogf(LOG_BUG, format("%s failed to load vnum %d from immortal.obj.") % ch->name % vnum);
+    vlogf(LOG_BUG,
+      format("%s failed to load vnum %d from immortal.obj.") % ch->name % vnum);
     ch->sendTo("Bad news.  Couldn't load that.\n\r");
     return;
   }
-  o->snum   = vnum;
+  o->snum = vnum;
   o->number = -1;
 
   o->name = db["name"];
@@ -204,7 +205,8 @@ void ObjLoad(TBeing *ch, int vnum)
   o->setObjStat(convertTo<int>(db["action_flag"]));
   o->obj_flags.wear_flags = convertTo<int>(db["wear_flag"]);
 
-  o->assignFourValues(convertTo<int>(db["val0"]), convertTo<int>(db["val1"]), convertTo<int>(db["val2"]), convertTo<int>(db["val3"]));
+  o->assignFourValues(convertTo<int>(db["val0"]), convertTo<int>(db["val1"]),
+    convertTo<int>(db["val2"]), convertTo<int>(db["val3"]));
 
   o->setWeight(convertTo<float>(db["weight"]));
   o->obj_flags.cost = convertTo<int>(db["price"]);
@@ -216,16 +218,18 @@ void ObjLoad(TBeing *ch, int vnum)
   o->setVolume(convertTo<int>(db["volume"]));
   o->setMaterial(convertTo<int>(db["material"]));
   o->max_exist = convertTo<int>(db["max_exist"]);
-  if(!db["action_desc"].empty())
-    o->action_description=db["action_desc"];
-  else o->action_description=NULL;
+  if (!db["action_desc"].empty())
+    o->action_description = db["action_desc"];
+  else
+    o->action_description = NULL;
 
   o->ex_description = NULL;
 
+  db.query(
+    "select name, description from objextra where vnum=%i and owner='%s'", vnum,
+    ch->name.c_str());
 
-  db.query("select name, description from objextra where vnum=%i and owner='%s'", vnum, ch->name.c_str());
-  
-  while(db.fetchRow()){
+  while (db.fetchRow()) {
     new_descr = new extraDescription();
     new_descr->keyword = db["name"];
     new_descr->description = db["description"];
@@ -234,18 +238,20 @@ void ObjLoad(TBeing *ch, int vnum)
   }
 
   o->setLight(0);
-  i=0;
+  i = 0;
 
-  db.query("select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum, ch->name.c_str());
+  db.query(
+    "select type, mod1, mod2 from objaffect where vnum=%i and owner='%s'", vnum,
+    ch->name.c_str());
 
-  while(db.fetchRow()){
+  while (db.fetchRow()) {
     o->affected[i].location = mapFileToApply(convertTo<int>(db["type"]));
 
     if (applyTypeShouldBeSpellnum(o->affected[i].location))
       o->affected[i].modifier = mapFileToSpellnum(convertTo<int>(db["mod1"]));
     else
       o->affected[i].modifier = convertTo<int>(db["mod1"]);
- 
+
     o->affected[i].modifier2 = convertTo<int>(db["mod2"]);
 
     if (o->affected[i].location == APPLY_LIGHT)
@@ -271,8 +277,8 @@ void ObjLoad(TBeing *ch, int vnum)
   if (!ch->hasWizPower(POWER_OEDIT_NOPROTOS))
     o->addObjStat(ITEM_PROTOTYPE);
 
-  if(o->obj_flags.cost == -1){
-    if((tbc=dynamic_cast<TBaseClothing *>(o))){
+  if (o->obj_flags.cost == -1) {
+    if ((tbc = dynamic_cast<TBaseClothing*>(o))) {
       o->obj_flags.cost = tbc->suggestedPrice();
     }
   }
@@ -281,8 +287,7 @@ void ObjLoad(TBeing *ch, int vnum)
 
   *ch += *o;
 }
-static void ObjSave(TBeing *ch, TObj *o, int vnum)
-{
+static void ObjSave(TBeing* ch, TObj* o, int vnum) {
   ch->sendTo("Saving.\n\r");
 
   int tmp1, tmp2, tmp3, tmp4;
@@ -291,50 +296,62 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
   TDatabase db(DB_IMMORTAL);
 
   //  db.query("delete from obj where vnum=%i", vnum);
-  if(!db.query("insert into obj (vnum, name, short_desc, long_desc, type, action_flag, wear_flag, val0, val1, val2, val3, weight, price, can_be_seen, spec_proc, max_exist, cur_struct, max_struct, decay, volume, material, owner, action_desc) values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, %i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')", 
-	  vnum, o->name.c_str(), o->shortDescr.c_str(), o->getDescr().c_str(), o->itemType(), 
-	  o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2, tmp3, tmp4, 
-	  o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec, 
-	  o->max_exist, o->obj_flags.struct_points, 
-	  o->obj_flags.max_struct_points, o->obj_flags.decay_time, 
-		 o->getVolume(), o->getMaterial(), ch->name.c_str(), 
-	       o->action_description.c_str())){
-    ch->sendTo("Unable to save object.  Make sure that an object doesn't already exist in that slot.\n\r");
+  if (!db.query("insert into obj (vnum, name, short_desc, long_desc, type, "
+                "action_flag, wear_flag, val0, val1, val2, val3, weight, "
+                "price, can_be_seen, spec_proc, max_exist, cur_struct, "
+                "max_struct, decay, volume, material, owner, action_desc) "
+                "values (%i, '%s', '%s', '%s', %i, %i, %i, %i, %i, %i, %i, %f, "
+                "%i, %i, %i, %i, %i, %i, %i, %i, %i, '%s', '%s')",
+        vnum, o->name.c_str(), o->shortDescr.c_str(), o->getDescr().c_str(),
+        o->itemType(), o->getObjStat(), o->obj_flags.wear_flags, tmp1, tmp2,
+        tmp3, tmp4, o->getWeight(), o->obj_flags.cost, o->canBeSeen, o->spec,
+        o->max_exist, o->obj_flags.struct_points,
+        o->obj_flags.max_struct_points, o->obj_flags.decay_time, o->getVolume(),
+        o->getMaterial(), ch->name.c_str(), o->action_description.c_str())) {
+    ch->sendTo(
+      "Unable to save object.  Make sure that an object doesn't already exist "
+      "in that slot.\n\r");
     //    ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
 
-  db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name.c_str());
+  db.query("delete from objextra where vnum=%i and owner='%s'", vnum,
+    ch->name.c_str());
 
   int i, j, k;
   char temp[2048];
-  extraDescription *exdes;
+  extraDescription* exdes;
   for (exdes = o->ex_description; exdes; exdes = exdes->next) {
     j = 0;
     if (!exdes->description.empty()) {
-      for (k = 0; k <= (int) exdes->description.length(); k++) {
-	if (exdes->description.c_str()[k] != 13)
-	  temp[j++] = exdes->description.c_str()[k];
+      for (k = 0; k <= (int)exdes->description.length(); k++) {
+        if (exdes->description.c_str()[k] != 13)
+          temp[j++] = exdes->description.c_str()[k];
       }
       temp[j] = '\0';
 
-      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '%s', '%s', %i)", exdes->keyword.c_str(), temp, ch->name.c_str(), vnum)){
-	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-	return;
+      if (!db.query("insert into objextra (name, description, owner, vnum) "
+                    "values ('%s', '%s', '%s', %i)",
+            exdes->keyword.c_str(), temp, ch->name.c_str(), vnum)) {
+        ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+        return;
       }
     } else {
-      if(!db.query("insert into objextra (name, description, owner, vnum) values ('%s', '', '%s', %i)", exdes->keyword.c_str(), ch->name.c_str(), vnum)){
-	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-	return;
+      if (!db.query("insert into objextra (name, description, owner, vnum) "
+                    "values ('%s', '', '%s', %i)",
+            exdes->keyword.c_str(), ch->name.c_str(), vnum)) {
+        ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+        return;
       }
     }
   }
 
-  if(!db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name.c_str())){
+  if (!db.query("delete from objaffect where vnum=%i and owner='%s'", vnum,
+        ch->name.c_str())) {
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
-  
+
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
 #if 0
     // Dummy proofing against newb builders who'd confuse Shadowy/Glow with light.
@@ -343,28 +360,30 @@ static void ObjSave(TBeing *ch, TObj *o, int vnum)
       continue;
     }
 #endif
-    
+
     if (o->affected[i].location != APPLY_NONE) {
-      if(!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) values (%i, %i, %i, '%s', %i)",
-		 mapApplyToFile(o->affected[i].location), 
-		 applyTypeShouldBeSpellnum(o->affected[i].location) ? mapSpellnumToFile(spellNumT(o->affected[i].modifier)) : o->affected[i].modifier,
-		 o->affected[i].modifier2, ch->name.c_str(), vnum)){
-	ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
-	return;
+      if (!db.query("insert into objaffect (type, mod1, mod2, owner, vnum) "
+                    "values (%i, %i, %i, '%s', %i)",
+            mapApplyToFile(o->affected[i].location),
+            applyTypeShouldBeSpellnum(o->affected[i].location)
+              ? mapSpellnumToFile(spellNumT(o->affected[i].modifier))
+              : o->affected[i].modifier,
+            o->affected[i].modifier2, ch->name.c_str(), vnum)) {
+        ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
+        return;
       }
     }
   }
-
 }
 
-static void osave(TBeing *ch, const char *argument)
-{
+static void osave(TBeing* ch, const char* argument) {
   char i, buf[80];
   int vnum;
 
-  TObj *obj;
+  TObj* obj;
 
-  for (i = 0; *(argument + i) == ' '; i++);
+  for (i = 0; *(argument + i) == ' '; i++)
+    ;
   if (!*(argument + i)) {
     ch->sendTo("Syntax :oedit save <object name> <vnum>\n\r");
     return;
@@ -373,8 +392,8 @@ static void osave(TBeing *ch, const char *argument)
     ch->sendTo("Syntax :oedit save <object name> <vnum>\n\r");
     return;
   }
-  TThing *t_obj = searchLinkedListVis(ch, buf, ch->stuff);
-  obj = dynamic_cast<TObj *>(t_obj);
+  TThing* t_obj = searchLinkedListVis(ch, buf, ch->stuff);
+  obj = dynamic_cast<TObj*>(t_obj);
 
   if (obj && vnum)
     ObjSave(ch, obj, vnum);
@@ -384,25 +403,27 @@ static void osave(TBeing *ch, const char *argument)
   }
 }
 
-static void olist(TPerson *ch, bool zone=false)
-{
+static void olist(TPerson* ch, bool zone = false) {
   sstring longstr;
   TDatabase db(DB_IMMORTAL);
 
-  if(zone){
-    db.query("select vnum, name from obj where owner='%s' and vnum>%i and vnum<=%i order by vnum", ch->name.c_str(), zone_table[ch->roomp->getZone()->zone_nr-1].top, ch->roomp->getZone()->top);
+  if (zone) {
+    db.query(
+      "select vnum, name from obj where owner='%s' and vnum>%i and vnum<=%i "
+      "order by vnum",
+      ch->name.c_str(), zone_table[ch->roomp->getZone()->zone_nr - 1].top,
+      ch->roomp->getZone()->top);
   } else {
-    db.query("select vnum, name from obj where owner='%s' order by vnum", ch->name.c_str());
+    db.query("select vnum, name from obj where owner='%s' order by vnum",
+      ch->name.c_str());
   }
 
-
-  if(!db.isResults()){
+  if (!db.isResults()) {
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   }
-    
 
-  while(db.fetchRow()){
+  while (db.fetchRow()) {
     longstr += db["vnum"];
     longstr += " ";
     longstr += db["name"];
@@ -412,10 +433,8 @@ static void olist(TPerson *ch, bool zone=false)
   ch->desc->page_string(longstr, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-
-static void ocreate(TBeing *ch)
-{
-  TTrash *tmp_obj;
+static void ocreate(TBeing* ch) {
+  TTrash* tmp_obj;
 
   tmp_obj = new TTrash();
 
@@ -436,21 +455,21 @@ static void ocreate(TBeing *ch)
   ch->sendTo("You make a dummy object.\n\r");
 }
 
-static void oedit(TBeing *ch, const char *arg)
-{
-  TObj *o;
+static void oedit(TBeing* ch, const char* arg) {
+  TObj* o;
 
   if (!ch->isPc() || !ch->desc)
     return;
 
-  TThing *t_obj = searchLinkedListVis(ch, arg, ch->stuff);
-  o = dynamic_cast<TObj *>(t_obj);
+  TThing* t_obj = searchLinkedListVis(ch, arg, ch->stuff);
+  o = dynamic_cast<TObj*>(t_obj);
   if (!o) {
     ch->sendTo("You don't have such an object.\n\r");
     return;
   }
   if (!o->stuff.empty() || o->rider) {
-    ch->sendTo("You can't edit an object unless it's empty and standalone.\n\r");
+    ch->sendTo(
+      "You can't edit an object unless it's empty and standalone.\n\r");
     return;
   }
 
@@ -458,8 +477,6 @@ static void oedit(TBeing *ch, const char *arg)
     ch->sendTo("You are not allowed to edit that object, sorry.\n\r");
     return;
   }
-
-
 
   if (!o->isObjStat(ITEM_PROTOTYPE) && !ch->hasWizPower(POWER_OEDIT_NOPROTOS)) {
     // Turn objects into prototype to curb cheating
@@ -477,41 +494,39 @@ static void oedit(TBeing *ch, const char *arg)
   update_obj_menu(ch, ch->desc->obj);
 }
 
-void oremove(TBeing *ch, int vnum)
-{
+void oremove(TBeing* ch, int vnum) {
   TDatabase db(DB_IMMORTAL);
-  
-  db.query("select * from obj where vnum=%i and owner='%s'", vnum, ch->name.c_str());
 
-  if(!db.isResults()){
+  db.query("select * from obj where vnum=%i and owner='%s'", vnum,
+    ch->name.c_str());
+
+  if (!db.isResults()) {
     ch->sendTo("Object not found.\n\r");
     return;
   }
 
-  if(!db.query("delete from obj where vnum=%i and owner='%s'", vnum, ch->name.c_str()) ||
-     !db.query("delete from objaffect where vnum=%i and owner='%s'", vnum, ch->name.c_str()) ||
-     !db.query("delete from objextra where vnum=%i and owner='%s'", vnum, ch->name.c_str())){
+  if (!db.query("delete from obj where vnum=%i and owner='%s'", vnum,
+        ch->name.c_str()) ||
+      !db.query("delete from objaffect where vnum=%i and owner='%s'", vnum,
+        ch->name.c_str()) ||
+      !db.query("delete from objextra where vnum=%i and owner='%s'", vnum,
+        ch->name.c_str())) {
     ch->sendTo("Database error!  Talk to a coder ASAP.\n\r");
     return;
   } else
     ch->sendTo("Removed.\n\r");
 }
 
-// This is the main function that controls all the object stuff - Russ 
-void TPerson::doOEdit(const char *argument)
-{
-  const char *tString = NULL;
-  int vnum, field, zGot, oValue/*, ac_orig, str_orig, price_orig*/;
+// This is the main function that controls all the object stuff - Russ
+void TPerson::doOEdit(const char* argument) {
+  const char* tString = NULL;
+  int vnum, field, zGot, oValue /*, ac_orig, str_orig, price_orig*/;
   float oFValue;
-  TObj *cObj = NULL;
+  TObj* cObj = NULL;
   sstring tStr;
-  sstring tStString(""),
-         tStBuffer(""),
-         tStArg("");
-  char sstring[256],
-       object[80],
-       Buf[1024],
-       tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
+  sstring tStString(""), tStBuffer(""), tStArg("");
+  char sstring[256], object[80], Buf[1024],
+    tTextLns[4][256] = {"\0", "\0", "\0", "\0"};
 
   if (!hasWizPower(POWER_OEDIT)) {
     sendTo("You do not have the power to edit objects.\n\r");
@@ -524,13 +539,17 @@ void TPerson::doOEdit(const char *argument)
     case 21:
       if (!*sstring)
         sendTo("Syntax: oed resave <object>\n\r");
-      else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, sstring, stuff))))
-	sendTo(format("Unable to find %s...Sorry...\n\r") % sstring);
-      else if (cObj->getSnum() == cObj->objVnum() && !hasWizPower(POWER_OEDIT_IMP_POWER))
-        sendTo("Unknown value on this object.  resave only usable on oed loaded objects...\n\r");
+      else if (!(cObj = dynamic_cast<TObj*>(
+                   searchLinkedListVis(this, sstring, stuff))))
+        sendTo(format("Unable to find %s...Sorry...\n\r") % sstring);
+      else if (cObj->getSnum() == cObj->objVnum() &&
+               !hasWizPower(POWER_OEDIT_IMP_POWER))
+        sendTo(
+          "Unknown value on this object.  resave only usable on oed loaded "
+          "objects...\n\r");
 
       else if (!limitPowerCheck(CMD_OEDIT, cObj->getSnum()))
-	sendTo("You are not allowed to oedit that object, sorry.\n\r");
+        sendTo("You are not allowed to oedit that object, sorry.\n\r");
 
       else {
         snprintf(Buf, sizeof(Buf), "%s %d", sstring, cObj->getSnum());
@@ -540,12 +559,11 @@ void TPerson::doOEdit(const char *argument)
       }
       return;
       break;
-    case 1:			// save 
+    case 1:  // save
 #if 1
       tStArg = sstring;
-      tStString=tStArg.word(0);
-      tStBuffer=tStArg.word(1);
-
+      tStString = tStArg.word(0);
+      tStBuffer = tStArg.word(1);
 
       if (tStString.empty() || tStBuffer.empty())
         sendTo("Syntax: oed save <object> <vnum>\n\r");
@@ -553,15 +571,16 @@ void TPerson::doOEdit(const char *argument)
         if (is_abbrev(tStBuffer, "resave")) {
           if (!hasWizPower(POWER_OEDIT_IMP_POWER))
             sendTo("Syntax: oed save <object> <vnum>\n\r");
-          else if (!(cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, tStString, stuff))))
+          else if (!(cObj = dynamic_cast<TObj*>(
+                       searchLinkedListVis(this, tStString, stuff))))
             sendTo(format("Unable to find %s...Sorry...\n\r") % tStString);
           else if (cObj->getSnum() <= 0)
             sendTo("That object has a bad snum.  Sorry.  Can not resave.\n\r");
 
-	  else if (!limitPowerCheck(CMD_OEDIT, cObj->getSnum()))
-	    sendTo("You are not allowed to oedit that object, sorry.\n\r");
+          else if (!limitPowerCheck(CMD_OEDIT, cObj->getSnum()))
+            sendTo("You are not allowed to oedit that object, sorry.\n\r");
 
-	  else {
+          else {
             sprintf(sstring, "%s %d", tStString.c_str(), cObj->getSnum());
 
             osave(this, sstring);
@@ -578,7 +597,7 @@ void TPerson::doOEdit(const char *argument)
           osave(this, sstring);
       }
 #else
-      // zGot, cObj, tString are additions for Mithros for:
+             // zGot, cObj, tString are additions for Mithros for:
       //   load obj 100
       //   **modify obj_100**
       //   oed save obj_100 resave
@@ -586,14 +605,16 @@ void TPerson::doOEdit(const char *argument)
       // Basically for doing large db changes online.
       if ((zGot = sscanf(sstring, "%s %d", object, &vnum)) != 2) {
         if (zGot == 1) {
-          cObj = dynamic_cast<TObj *>(searchLinkedListVis(this, object, stuff));
+          cObj = dynamic_cast<TObj*>(searchLinkedListVis(this, object, stuff));
           tString = one_argument(sstring, object);
-          if (*tString) tString++;
+          if (*tString)
+            tString++;
         }
-        if (!hasWizPower(POWER_OEDIT_IMP_POWER) || !cObj || (cObj->objVnum() < 0) ||
-            !*tString || !is_abbrev(tString, "resave")) {
-	  sendTo("Syntax : oed save <object> <vnum>\n\r");
-	  return;
+        if (!hasWizPower(POWER_OEDIT_IMP_POWER) || !cObj ||
+            (cObj->objVnum() < 0) || !*tString ||
+            !is_abbrev(tString, "resave")) {
+          sendTo("Syntax : oed save <object> <vnum>\n\r");
+          return;
         } else
           sprintf(sstring, "%s %d", object, cObj->objVnum());
       }
@@ -611,55 +632,56 @@ void TPerson::doOEdit(const char *argument)
 #endif
       return;
       break;
-    case 2:			// load 
+    case 2:  // load
       if (sscanf(sstring, "%d", &vnum) != 1) {
-	// assume that sstring is an object name
-	TDatabase db(DB_IMMORTAL);
+        // assume that sstring is an object name
+        TDatabase db(DB_IMMORTAL);
 
-	db.query("select vnum, name from obj where owner='%s'", getName().c_str());
-  
-	vnum=-1;
-	while(db.fetchRow()){
-	  if(isname(sstring, db["vnum"])){
-	    vnum=convertTo<int>(db["name"]);
-	    break;
-	  }
-	}
+        db.query("select vnum, name from obj where owner='%s'",
+          getName().c_str());
 
-	if(vnum==-1){
-	  sendTo("Syntax : oed load <vnum>\n\r");
-	  return;
-	}
+        vnum = -1;
+        while (db.fetchRow()) {
+          if (isname(sstring, db["vnum"])) {
+            vnum = convertTo<int>(db["name"]);
+            break;
+          }
+        }
+
+        if (vnum == -1) {
+          sendTo("Syntax : oed load <vnum>\n\r");
+          return;
+        }
       }
 
       ObjLoad(this, vnum);
       return;
       break;
-    case 3:			// modify 
+    case 3:  // modify
       if (sscanf(sstring, "%s", object) != 1) {
-	sendTo("Syntax : oed modify <object name>\n\r");
-	return;
+        sendTo("Syntax : oed modify <object name>\n\r");
+        return;
       }
       oedit(this, sstring);
       return;
       break;
-    case 4:			// list 
+    case 4:  // list
       sscanf(sstring, "%s", object);
-      if(!strcmp(object, "zone"))
-	olist(this, true);
+      if (!strcmp(object, "zone"))
+        olist(this, true);
       else
-	olist(this, false);
+        olist(this, false);
       return;
       break;
-    case 5:			// remove 
+    case 5:  // remove
       if (sscanf(sstring, "%d", &vnum) != 1) {
-	sendTo("Syntax : oed remove <vnum>\n\r");
-	return;
+        sendTo("Syntax : oed remove <vnum>\n\r");
+        return;
       }
       oremove(this, vnum);
       return;
       break;
-    case 6:			// create 
+    case 6:  // create
       ocreate(this);
       return;
       break;
@@ -672,7 +694,7 @@ void TPerson::doOEdit(const char *argument)
   tString = sstring;
   half_chop(std::string(tString).c_str(), object, sstring);
 
-  if (!(cObj = dynamic_cast<TObj *>(searchLinkedList(object, stuff)))) {
+  if (!(cObj = dynamic_cast<TObj*>(searchLinkedList(object, stuff)))) {
     sendTo("Try an object next time, it works better.\n\r");
     return;
   }
@@ -690,7 +712,7 @@ void TPerson::doOEdit(const char *argument)
   }
 
   switch (field) {
-    case 7: // Name
+    case 7:  // Name
       if (!*sstring) {
         sendTo("You need to give me some keywords.\n\r");
         sendTo(format("Current keywords: %s\n\r") % cObj->name);
@@ -700,7 +722,7 @@ void TPerson::doOEdit(const char *argument)
       cObj->name = sstring;
       return;
       break;
-    case 8: // Long Description
+    case 8:  // Long Description
       if (!*sstring) {
         sendTo("You need to give me a long description.\n\r");
         sendTo(format("Current Long is:\n\r%s\n\r") % cObj->descr);
@@ -710,7 +732,7 @@ void TPerson::doOEdit(const char *argument)
       cObj->descr = sstring;
       return;
       break;
-    case 9: // Short Description
+    case 9:  // Short Description
       if (!*sstring) {
         sendTo("You need to give me a short description.\n\r");
         sendTo(format("Current Short is:\n\r%s\n\r") % cObj->shortDescr);
@@ -720,45 +742,46 @@ void TPerson::doOEdit(const char *argument)
       cObj->shortDescr = sstring;
       return;
       break;
-    case 10: // Max Structure Points
-      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < -1 || oValue > 32767) {
+    case 10:  // Max Structure Points
+      if ((sscanf(sstring, "%d", &oValue)) != 1 || oValue < -1 ||
+          oValue > 32767) {
         sendTo("Incorrect Max Structure, Must be between -1 and 32767.\n\r");
         return;
       }
       cObj->obj_flags.max_struct_points = oValue;
       return;
       break;
-    case 11: // Cur Structure Points
-      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < -1 || oValue > 32767) {
-        sendTo("Incorrect Current Structure, Must be between -1 and 32767.\n\r");
+    case 11:  // Cur Structure Points
+      if ((sscanf(sstring, "%d", &oValue)) != 1 || oValue < -1 ||
+          oValue > 32767) {
+        sendTo(
+          "Incorrect Current Structure, Must be between -1 and 32767.\n\r");
         return;
       }
       cObj->obj_flags.struct_points = oValue;
       return;
       break;
-    case 12: // Weight
-      if ((sscanf(sstring, "%f", &oFValue)) != 1 ||
-          oFValue < 0.0 || oFValue > 500000.0) {
+    case 12:  // Weight
+      if ((sscanf(sstring, "%f", &oFValue)) != 1 || oFValue < 0.0 ||
+          oFValue > 500000.0) {
         sendTo("Incorrect Weight, Must be between 0 and 500000.\n\r");
         return;
       }
       cObj->setWeight(oFValue);
       return;
       break;
-    case 13: // Volume
-      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < 0 || oValue > 50000) {
+    case 13:  // Volume
+      if ((sscanf(sstring, "%d", &oValue)) != 1 || oValue < 0 ||
+          oValue > 50000) {
         sendTo("Incorrect Volume, Must be between 0 and 50000.\n\r");
         return;
       }
       cObj->setVolume(oValue);
       return;
       break;
-    case 14: // Cost & Value
-      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < 0 || oValue > 1000000) {
+    case 14:  // Cost & Value
+      if ((sscanf(sstring, "%d", &oValue)) != 1 || oValue < 0 ||
+          oValue > 1000000) {
         sendTo("Incorrect Cost/Value, Must be between 0 and 1000000.\n\r");
         return;
       }
@@ -768,18 +791,19 @@ void TPerson::doOEdit(const char *argument)
         sendTo("Do not worry about setting cost yourself until level 52.\n\r");
       return;
       break;
-    case 15: // Decay Time
-      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < -1 || oValue > 10000) {
-        sendTo("Incorrect Decay Time, Must be between -1(never) and 10000.\n\r");
+    case 15:  // Decay Time
+      if ((sscanf(sstring, "%d", &oValue)) != 1 || oValue < -1 ||
+          oValue > 10000) {
+        sendTo(
+          "Incorrect Decay Time, Must be between -1(never) and 10000.\n\r");
         return;
       }
       cObj->obj_flags.decay_time = oValue;
       return;
       break;
-    case 16: // Extra Description
-      extraDescription *ed;
-      if (dynamic_cast<TBook *>(cObj)) {
+    case 16:  // Extra Description
+      extraDescription* ed;
+      if (dynamic_cast<TBook*>(cObj)) {
         sendTo("Please don't add extra desciptions to books.\n\r");
         return;
       }
@@ -788,7 +812,7 @@ void TPerson::doOEdit(const char *argument)
         sendTo("Assuming Object name for extra description.\n\r");
         strcpy(sstring, cObj->name.c_str());
       }
-      for (ed = cObj->ex_description; ; ed = ed->next) {
+      for (ed = cObj->ex_description;; ed = ed->next) {
         if (!ed) {
           ed = new extraDescription();
           ed->next = cObj->ex_description;
@@ -797,30 +821,32 @@ void TPerson::doOEdit(const char *argument)
           desc->str = &ed->description;
           break;
         } else if (boost::iequals(ed->keyword, sstring)) {
-          sendTo(format("Extra already exists, Currently is:\n\r%s\n\r") % ed->description);
+          sendTo(format("Extra already exists, Currently is:\n\r%s\n\r") %
+                 ed->description);
           ed->description = "";
         }
       }
-      sendTo("Enter extra description.  Terminate with a '~' on a NEW line.\n\r");
+      sendTo(
+        "Enter extra description.  Terminate with a '~' on a NEW line.\n\r");
       if (desc->m_bIsClient)
         desc->clientf(format("%d") % CLIENT_STARTEDIT % 4000);
       *desc->str = NULL;
       desc->max_str = MAX_INPUT_LENGTH;
       return;
       break;
-    case 17: // Can Be Seen
-      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < 0 || oValue > 25) {
+    case 17:  // Can Be Seen
+      if ((sscanf(sstring, "%d", &oValue)) != 1 || oValue < 0 || oValue > 25) {
         sendTo("Incorrect Can Be Seen, Must be between 0 and 25.\n\r");
         return;
       }
       cObj->canBeSeen = oValue;
       return;
       break;
-    case 18: // Max Exist
-      if ((sscanf(sstring, "%d", &oValue)) != 1 ||
-          oValue < 0 || oValue > 9999) {
-        sendTo("Incorrect Max Exist, Must be between 0 and 9999(Unlimited).\n\r");
+    case 18:  // Max Exist
+      if ((sscanf(sstring, "%d", &oValue)) != 1 || oValue < 0 ||
+          oValue > 9999) {
+        sendTo(
+          "Incorrect Max Exist, Must be between 0 and 9999(Unlimited).\n\r");
         return;
       }
       cObj->max_exist = oValue;
@@ -833,48 +859,53 @@ void TPerson::doOEdit(const char *argument)
       else
         cObj->editAverageMe(this, sstring);
 #else
-      if ((sscanf(sstring, "%f", &oFValue)) != 1 || oValue < 0){
-	sendTo("Syntax : oed default_ac_str <object> <level>\n\r");
-	return;
+      if ((sscanf(sstring, "%f", &oFValue)) != 1 || oValue < 0) {
+        sendTo("Syntax : oed default_ac_str <object> <level>\n\r");
+        return;
       }
-      TBaseClothing *tbc;
-      if (!(tbc = dynamic_cast<TBaseClothing *>(cObj))) {
-	sendTo("This only works on armor.\n\r");
-	return;
+      TBaseClothing* tbc;
+      if (!(tbc = dynamic_cast<TBaseClothing*>(cObj))) {
+        sendTo("This only works on armor.\n\r");
+        return;
       }
-      str_orig   = tbc->getMaxStructPoints();
-      ac_orig    = tbc->itemAC();
+      str_orig = tbc->getMaxStructPoints();
+      ac_orig = tbc->itemAC();
       price_orig = tbc->obj_flags.cost;
       tbc->setDefArmorLevel(oFValue);
       tbc->obj_flags.cost = tbc->suggestedPrice();
       sendTo(format("Modified AC by %i, Structure by %i and Price by %i.\n\r") %
-	     (tbc->itemAC() - ac_orig), (tbc->getMaxStructPoints() - str_orig),
-	     (tbc->obj_flags.cost - price_orig));
+               (tbc->itemAC() - ac_orig),
+        (tbc->getMaxStructPoints() - str_orig),
+        (tbc->obj_flags.cost - price_orig));
       sendTo(format("Real Level: %.2f  AC Level: %.2f   Str Level: %.2f\n\r") %
-             tbc->armorLevel(ARMOR_LEV_REAL),
-             tbc->armorLevel(ARMOR_LEV_AC),
-             tbc->armorLevel(ARMOR_LEV_STR));
+               tbc->armorLevel(ARMOR_LEV_REAL),
+        tbc->armorLevel(ARMOR_LEV_AC), tbc->armorLevel(ARMOR_LEV_STR));
 #endif
       return;
       break;
-    case 20: // oedit replace <long/extra> <"extra"/"text"> <"text"> <"text">
+    case 20:  // oedit replace <long/extra> <"extra"/"text"> <"text"> <"text">
       /*
       if (strcmp("Lapsos", getName())) {
-        sendTo("Please don't use this option yet, it is still being tested.\n\r");
-        return;
+        sendTo("Please don't use this option yet, it is still being
+      tested.\n\r"); return;
       }
       */
 
       strcpy(tTextLns[0], "[]A-Za-z0-9~`!@#$%&*()_+-={}[;\':,./<>? ]");
-      sprintf(Buf, "%%s \"%%%s\" \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0], tTextLns[0]);
+      sprintf(Buf, "%%s \"%%%s\" \"%%%s\" \"%%%s\"", tTextLns[0], tTextLns[0],
+        tTextLns[0]);
       tTextLns[0][0] = '\0';
 
-      vnum = sscanf(sstring, Buf, tTextLns[0], tTextLns[1], tTextLns[2], tTextLns[3]);
+      vnum = sscanf(sstring, Buf, tTextLns[0], tTextLns[1], tTextLns[2],
+        tTextLns[3]);
 
-      if (((!is_abbrev(tTextLns[0], "long" )                    || vnum < 2) &&
-           (!is_abbrev(tTextLns[0], "extra") || !tTextLns[2][0] || vnum < 3)) ||
+      if (((!is_abbrev(tTextLns[0], "long") || vnum < 2) &&
+            (!is_abbrev(tTextLns[0], "extra") || !tTextLns[2][0] ||
+              vnum < 3)) ||
           !tTextLns[1][0]) {
-        sendTo("Syntax: oedit replace <long/extra> <\"extra\"/\"text\"> <\"text\"> <\"text\">\n\r");
+        sendTo(
+          "Syntax: oedit replace <long/extra> <\"extra\"/\"text\"> <\"text\"> "
+          "<\"text\">\n\r");
         return;
       }
 
@@ -930,51 +961,49 @@ void TPerson::doOEdit(const char *argument)
   }
 }
 
-void TObj::writeAffects(int i, FILE *fp) const
-{
+void TObj::writeAffects(int i, FILE* fp) const {
   if (affected[i].location == APPLY_LIGHT && canWear(ITEM_WEAR_TAKE))
     return;
 
   if (affected[i].location != APPLY_NONE) {
-    fprintf(fp, "A\n%d %ld %ld\n", 
-        mapApplyToFile(affected[i].location),
-        applyTypeShouldBeSpellnum(affected[i].location) ? mapSpellnumToFile(spellNumT(affected[i].modifier)) : affected[i].modifier,
-        affected[i].modifier2);
+    fprintf(fp, "A\n%d %ld %ld\n", mapApplyToFile(affected[i].location),
+      applyTypeShouldBeSpellnum(affected[i].location)
+        ? mapSpellnumToFile(spellNumT(affected[i].modifier))
+        : affected[i].modifier,
+      affected[i].modifier2);
   }
 }
 
-void raw_write_out_object(const TObj *o, FILE *fp, unsigned int vnum)
-{
+void raw_write_out_object(const TObj* o, FILE* fp, unsigned int vnum) {
   if (!o->action_description.empty())
     fprintf(fp, "#%d\n%s~\n%s~\n%s~\n%s~\n", vnum, o->name.c_str(),
-	  o->shortDescr.c_str(), o->getDescr().c_str(), 
-          o->action_description.c_str());
-  else 
-    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->name.c_str(), 
-           o->shortDescr.c_str(), o->getDescr().c_str());
-  fprintf(fp, "%d %d %d\n", mapItemTypeToFile(o->itemType()),
-	  o->getObjStat(), o->obj_flags.wear_flags);
+      o->shortDescr.c_str(), o->getDescr().c_str(),
+      o->action_description.c_str());
+  else
+    fprintf(fp, "#%d\n%s~\n%s~\n%s~\n~\n", vnum, o->name.c_str(),
+      o->shortDescr.c_str(), o->getDescr().c_str());
+  fprintf(fp, "%d %d %d\n", mapItemTypeToFile(o->itemType()), o->getObjStat(),
+    o->obj_flags.wear_flags);
 
   int tmp1, tmp2, tmp3, tmp4;
   o->getFourValues(&tmp1, &tmp2, &tmp3, &tmp4);
-  fprintf(fp, "%d %d %d %d\n",
-          tmp1, tmp2, tmp3, tmp4);
+  fprintf(fp, "%d %d %d %d\n", tmp1, tmp2, tmp3, tmp4);
 
-  fprintf(fp, "%.1f %d %d %d %d\n", o->getWeight(),
-	  o->obj_flags.cost, o->canBeSeen, o->spec, o->max_exist);
+  fprintf(fp, "%.1f %d %d %d %d\n", o->getWeight(), o->obj_flags.cost,
+    o->canBeSeen, o->spec, o->max_exist);
   fprintf(fp, "%d %d %d %d %d\n", o->obj_flags.struct_points,
-	  o->obj_flags.max_struct_points, o->obj_flags.decay_time,
-	  o->getVolume(), o->getMaterial());
+    o->obj_flags.max_struct_points, o->obj_flags.decay_time, o->getVolume(),
+    o->getMaterial());
 
   int i, j, k;
   char temp[2048];
-  extraDescription *exdes;
+  extraDescription* exdes;
   for (exdes = o->ex_description; exdes; exdes = exdes->next) {
     j = 0;
     if (!exdes->description.empty()) {
-      for (k = 0; k <= (int) exdes->description.length(); k++) {
-	if (exdes->description.c_str()[k] != 13)
-	  temp[j++] = exdes->description.c_str()[k];
+      for (k = 0; k <= (int)exdes->description.length(); k++) {
+        if (exdes->description.c_str()[k] != 13)
+          temp[j++] = exdes->description.c_str()[k];
       }
       temp[j] = '\0';
       fprintf(fp, "E\n%s~\n%s~\n", exdes->keyword.c_str(), temp);
@@ -986,12 +1015,10 @@ void raw_write_out_object(const TObj *o, FILE *fp, unsigned int vnum)
   }
 }
 
-void TObj::objMenu(const TBeing *ch) const
-{
-}
+void TObj::objMenu(const TBeing* ch) const {}
 
-static void change_obj_name(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_name(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   if (type != ENTER_CHECK)
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = MAIN_MENU;
@@ -1009,8 +1036,7 @@ static void change_obj_name(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
   ch->sendTo("\n\r\n\rNew Object Name: ");
 }
 
-static void change_obj_long_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
-{
+static void change_obj_long_desc(TBeing* ch, TObj* o, editorEnterTypeT type) {
   if (type != ENTER_CHECK) {
     ch->specials.edit = MAIN_MENU;
     update_obj_menu(ch, o);
@@ -1021,14 +1047,16 @@ static void change_obj_long_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo("Current Object Long Description:\n\r");
   ch->sendTo(o->getDescr());
   ch->sendTo("\n\r\n\rNew Object Description:\n\r");
-  ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
+  ch->sendTo(
+    "(Terminate with a ~ on the SAME LINE. Press <ENTER> again to "
+    "continue)\n\r");
   o->setDescr("");
   ch->desc->str = &o->descr;
   ch->desc->max_str = MAX_STRING_LENGTH;
 }
 
-static void change_obj_weight(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_weight(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   float new_weight;
 
   if (type != ENTER_CHECK) {
@@ -1055,8 +1083,8 @@ static void change_obj_weight(TBeing *ch, TObj *o, const char *arg, editorEnterT
   ch->sendTo("Select a new weight.\n\r--> ");
 }
 
-static void change_obj_volume(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_volume(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int new_vol;
 
   if (type != ENTER_CHECK) {
@@ -1083,8 +1111,7 @@ static void change_obj_volume(TBeing *ch, TObj *o, const char *arg, editorEnterT
   ch->sendTo("Select a new volume.\n\r--> ");
 }
 
-static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
-{
+static void change_obj_short_desc(TBeing* ch, TObj* o, editorEnterTypeT type) {
   if (type != ENTER_CHECK) {
     ch->specials.edit = MAIN_MENU;
     update_obj_menu(ch, o);
@@ -1096,15 +1123,17 @@ static void change_obj_short_desc(TBeing *ch, TObj *o, editorEnterTypeT type)
   ch->sendTo(o->shortDescr);
   ch->sendTo("\n\r\n\rNew Object Short Description:\n\r");
   ch->sendTo("ALWAYS start the short description with a lowercase letter.\n\r");
-  ch->sendTo("(Terminate with a ~ on the SAME LINE. Press <ENTER> again to continue)\n\r");
+  ch->sendTo(
+    "(Terminate with a ~ on the SAME LINE. Press <ENTER> again to "
+    "continue)\n\r");
   o->shortDescr = "";
   ch->desc->str = &o->shortDescr;
-//  ch->desc->max_str = MAX_STRING_LENGTH;
-  ch->desc->max_str = MAX_NAME_LENGTH-1;
+  //  ch->desc->max_str = MAX_STRING_LENGTH;
+  ch->desc->max_str = MAX_NAME_LENGTH - 1;
 }
 
-static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_type(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   itemTypeT update;
   char buf[256];
 
@@ -1123,10 +1152,9 @@ static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
       return;
 
     update = itemTypeT(num);
-  
+
     // disallow creating player corpses or "unknown" items
-    if (update == ITEM_PCORPSE ||
-        update == ITEM_MARTIAL_WEAPON ||
+    if (update == ITEM_PCORPSE || update == ITEM_MARTIAL_WEAPON ||
         update == ITEM_UNDEFINED) {
       ch->sendTo("You can't set that object type.\n\r");
       return;
@@ -1137,7 +1165,7 @@ static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
     // we essentially want to create a "new" item of the right type
     // and then move all the data members from TObj on down over
     // ie. the base TObj is the same, above that is the default constructor.
-    TObj *o2;
+    TObj* o2;
     o2 = makeNewObj(update);
     *o2 = *o;  // intentional use of TObj assignment operator
 
@@ -1164,14 +1192,15 @@ static void change_obj_type(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
     if (!((i + 1) % 3))
       row++;
     ch->sendTo(buf);
-    ch->sendTo(format("%2d %s") % (i+1) % ItemInfo[i]->name);
+    ch->sendTo(format("%2d %s") % (i + 1) % ItemInfo[i]->name);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-  ch->sendTo("Select the number to set to, <ENTER> to return to main menu.\n\r--> ");
+  ch->sendTo(
+    "Select the number to set to, <ENTER> to return to main menu.\n\r--> ");
 }
 
-static void change_obj_cost(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_cost(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int new_cost;
 
   if (type != ENTER_CHECK) {
@@ -1198,8 +1227,8 @@ static void change_obj_cost(TBeing *ch, TObj *o, const char *arg, editorEnterTyp
   ch->sendTo("Select a new cost.\n\r--> ");
 }
 
-static void change_obj_extra_flags(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_extra_flags(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int row, update;
   unsigned int i;
   int j;
@@ -1221,7 +1250,9 @@ static void change_obj_extra_flags(TBeing *ch, TObj *o, const char *arg, editorE
     i = 1 << update;
 
     if (i == ITEM_STRUNG) {
-      ch->sendTo("This bit gets set automatically, and should never need to be manually changed.\n\r"); 
+      ch->sendTo(
+        "This bit gets set automatically, and should never need to be manually "
+        "changed.\n\r");
       return;
     }
     if ((i == ITEM_PROTOTYPE) && !ch->hasWizPower(POWER_OEDIT_NOPROTOS)) {
@@ -1243,14 +1274,16 @@ static void change_obj_extra_flags(TBeing *ch, TObj *o, const char *arg, editorE
       row++;
     ch->sendTo(buf);
 
-    ch->sendTo(format("%2d [%s] %s") % (j + 1) % ((o->isObjStat(1 << j)) ? "X" : " ") % extra_bits[j]);
+    ch->sendTo(format("%2d [%s] %s") % (j + 1) %
+               ((o->isObjStat(1 << j)) ? "X" : " ") % extra_bits[j]);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-  ch->sendTo("Select to number to toggle, <ENTER> to return to the main menu.\n\r--> ");
+  ch->sendTo(
+    "Select to number to toggle, <ENTER> to return to the main menu.\n\r--> ");
 }
 
-static void change_obj_wear_flags(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_wear_flags(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int row, update;
   unsigned int i;
   char buf[256];
@@ -1269,7 +1302,7 @@ static void change_obj_wear_flags(TBeing *ch, TObj *o, const char *arg, editorEn
   update--;
 
   if (type != ENTER_CHECK) {
-    if (update < 0 || update >= (int) MAX_ITEM_WEARS)
+    if (update < 0 || update >= (int)MAX_ITEM_WEARS)
       return;
     i = 1 << update;
 
@@ -1294,14 +1327,17 @@ static void change_obj_wear_flags(TBeing *ch, TObj *o, const char *arg, editorEn
       row++;
     ch->sendTo(buf);
 
-    ch->sendTo(format("%2d [%s] %s") % (i+1) % ((o->obj_flags.wear_flags & (1 << i)) ? "X" : " ") % wear_bits[i]);
+    ch->sendTo(format("%2d [%s] %s") % (i + 1) %
+               ((o->obj_flags.wear_flags & (1 << i)) ? "X" : " ") %
+               wear_bits[i]);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-  ch->sendTo("Select to number to toggle, <ENTER> to return to the main menu.\n\r--> ");
+  ch->sendTo(
+    "Select to number to toggle, <ENTER> to return to the main menu.\n\r--> ");
 }
 
-static void change_obj_max_struct_points(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_max_struct_points(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int new_struct;
 
   if (type != ENTER_CHECK) {
@@ -1323,13 +1359,14 @@ static void change_obj_max_struct_points(TBeing *ch, TObj *o, const char *arg, e
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(format("Current object max structs: %d") % o->obj_flags.max_struct_points);
+  ch->sendTo(
+    format("Current object max structs: %d") % o->obj_flags.max_struct_points);
   ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new max struct point.\n\r--> ");
 }
 
-static void change_obj_max_exist(TBeing *ch, TObj *obj, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_max_exist(TBeing* ch, TObj* obj, const char* arg,
+  editorEnterTypeT type) {
   int max_exist;
 
   if (type != ENTER_CHECK) {
@@ -1350,14 +1387,14 @@ static void change_obj_max_exist(TBeing *ch, TObj *obj, const char *arg, editorE
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(format("Current max_exist: %d") %obj->max_exist);
+  ch->sendTo(format("Current max_exist: %d") % obj->max_exist);
   ch->sendTo(format(VT_CURSPOS) % 22 % 1);
 
   ch->sendTo("Select a new max_exist.\n\r--> ");
 }
 
-static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_applys(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int row, apply, num, number1 = 0, number2 = 0;
   int done = FALSE;
   char buf[256];
@@ -1373,18 +1410,18 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     num = sscanf(arg, "%d %d %d", &apply, &number1, &number2);
 
     // apply should be in range 1..MAX_APPLY
-    if ((apply-1) < MIN_APPLY || (apply-1) >= MAX_APPLY_TYPES)
+    if ((apply - 1) < MIN_APPLY || (apply - 1) >= MAX_APPLY_TYPES)
       return;
 
-    //applyTypeT att = mapFileToApply(apply-1);
-    applyTypeT att = applyTypeT(apply-1);
+    // applyTypeT att = mapFileToApply(apply-1);
+    applyTypeT att = applyTypeT(apply - 1);
 
     if ((num != 2) && (num != 3)) {
       ch->sendTo("Syntax : <apply number> <arg>\n\r");
       return;
     }
     if (num == 3) {
-      // offset the arrays for applies 
+      // offset the arrays for applies
       if (att == APPLY_IMMUNITY)
         number1--;
 
@@ -1394,48 +1431,53 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       }
     }
     if ((att == APPLY_IMMUNITY) && (num != 3)) {
-      ch->sendTo(format("Syntax : %d <immunity #> <amount>\n\r") % (APPLY_IMMUNITY+1));
+      ch->sendTo(
+        format("Syntax : %d <immunity #> <amount>\n\r") % (APPLY_IMMUNITY + 1));
       return;
     } else if ((att == APPLY_SPELL) && (num != 3)) {
-      ch->sendTo(format("Syntax : %d <skill #> <amount>\n\r") % (APPLY_SPELL + 1));
+      ch->sendTo(
+        format("Syntax : %d <skill #> <amount>\n\r") % (APPLY_SPELL + 1));
       return;
     } else if ((att == APPLY_DISCIPLINE) && (num != 3)) {
-      ch->sendTo(format("Syntax : %d <discipline #> <amount>\n\r") % (APPLY_DISCIPLINE + 1));
+      ch->sendTo(format("Syntax : %d <discipline #> <amount>\n\r") %
+                 (APPLY_DISCIPLINE + 1));
       return;
-    } else if ((att != APPLY_SPELL) &&
-               (att != APPLY_DISCIPLINE) &&
-               (att != APPLY_IMMUNITY) && 
-         (num == 3) && (number2 != 0)) {
+    } else if ((att != APPLY_SPELL) && (att != APPLY_DISCIPLINE) &&
+               (att != APPLY_IMMUNITY) && (num == 3) && (number2 != 0)) {
       ch->sendTo("Syntax : <apply number> <arg>\n\r");
       return;
-    } else if ((att == APPLY_SPELL) && 
+    } else if ((att == APPLY_SPELL) &&
                (!discArray[number1] || !strcmp(discArray[number1]->name, ""))) {
       ch->sendTo("Illegal skill/spell!\n\r");
       return;
     } else if ((att == APPLY_DISCIPLINE) &&
-         ((number1 < 0) || (number1 >= MAX_DISCS)  || 
-          !(*discNames[number1].name))) {
+               ((number1 < 0) || (number1 >= MAX_DISCS) ||
+                 !(*discNames[number1].name))) {
       ch->sendTo("Illegal Discipline!\n\r");
       return;
-    } else if ((att == APPLY_IMMUNITY) && (number1 < 0 || number1 >= MAX_IMMUNES)) {
+    } else if ((att == APPLY_IMMUNITY) &&
+               (number1 < 0 || number1 >= MAX_IMMUNES)) {
       ch->sendTo("Illegal immunity!\n\r");
       return;
     } else if (att == APPLY_GARBLE && num != 2) {
       ch->sendTo("Syntax: %d <garble number>\n\r");
       return;
-    } else if (att == APPLY_GARBLE && (number1 < 0 || number1 >= Garble::TYPE_MAX)) {
-      ch->sendTo(format("Illegal Garble!  Please choose a number between 0 and %d\n\r") % (Garble::TYPE_MAX-1));
+    } else if (att == APPLY_GARBLE &&
+               (number1 < 0 || number1 >= Garble::TYPE_MAX)) {
+      ch->sendTo(
+        format("Illegal Garble!  Please choose a number between 0 and %d\n\r") %
+        (Garble::TYPE_MAX - 1));
       return;
-    } else if (num == 2) 
+    } else if (num == 2)
       number2 = 0;
 
     if (!apply_types[att].assignable) {
       ch->sendTo("You can't set that number.\n\r");
       return;
-    } else if ((att == APPLY_SPELL) &&!discArray[number1]) {
+    } else if ((att == APPLY_SPELL) && !discArray[number1]) {
       ch->sendTo("Illegal skill/spell number.\n\r");
       return;
-    } else if (o->addApply(ch, att)) 
+    } else if (o->addApply(ch, att))
       return;
     else {
       if (att == APPLY_LIGHT)
@@ -1446,7 +1488,8 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
       if (att == APPLY_GARBLE) {
         remove = false;
         for (int j = 0; !remove && j < MAX_OBJ_AFFECT; j++)
-          remove = o->affected[j].location == att && o->affected[j].modifier == number1;
+          remove = o->affected[j].location == att &&
+                   o->affected[j].modifier == number1;
       }
 
       for (int i = 0; (!done && (i < MAX_OBJ_AFFECT)); i++) {
@@ -1456,12 +1499,13 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
           o->affected[i].modifier = 0;
           o->affected[i].modifier2 = 0;
           done = TRUE;
-        // re-use armor slot
-        } else if (att == APPLY_ARMOR && o->affected[i].location == APPLY_ARMOR) {
+          // re-use armor slot
+        } else if (att == APPLY_ARMOR &&
+                   o->affected[i].location == APPLY_ARMOR) {
           o->affected[i].modifier = number1;
           o->affected[i].modifier2 = number2;
           done = TRUE;
-        // add affect
+          // add affect
         } else if (o->affected[i].location == APPLY_NONE) {
           o->affected[i].location = att;
           o->affected[i].modifier = number1;
@@ -1470,7 +1514,9 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
         }
       }
       if (!done) {
-        ch->sendTo("Sorry, you can only have 5 applys. Remove an apply if you want another.\n\r");
+        ch->sendTo(
+          "Sorry, you can only have 5 applys. Remove an apply if you want "
+          "another.\n\r");
         return;
       }
       change_obj_applys(ch, o, "", ENTER_CHECK);
@@ -1491,7 +1537,8 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
     iter++;
 
     ch->sendTo(buf);
-    // ch->sendTo(format("%2d %s") % mapApplyToFile(att) + 1 % apply_types[att].name);
+    // ch->sendTo(format("%2d %s") % mapApplyToFile(att) + 1 %
+    // apply_types[att].name);
     ch->sendTo(format("%2d %s") % (att + 1) % apply_types[att].name);
   }
   ch->sendTo(format(VT_CURSPOS) % 15 % 1);
@@ -1500,36 +1547,37 @@ static void change_obj_applys(TBeing *ch, TObj *o, const char *arg, editorEnterT
   for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     if (o->affected[i].location == APPLY_SPELL) {
       ch->sendTo(format("Affects %s: %s (%d) by %d\n\r") %
-        apply_types[o->affected[i].location].name %
-        discArray[o->affected[i].modifier]->name % 
-        o->affected[i].modifier %
-        o->affected[i].modifier2);
+                 apply_types[o->affected[i].location].name %
+                 discArray[o->affected[i].modifier]->name %
+                 o->affected[i].modifier % o->affected[i].modifier2);
     } else if (o->affected[i].location == APPLY_IMMUNITY) {
       ch->sendTo(format("Affects %s: %s (%d) by %d\n\r") %
-        apply_types[o->affected[i].location].name %
-        immunity_names[o->affected[i].modifier] % (o->affected[i].modifier+1) %
-        o->affected[i].modifier2);
+                 apply_types[o->affected[i].location].name %
+                 immunity_names[o->affected[i].modifier] %
+                 (o->affected[i].modifier + 1) % o->affected[i].modifier2);
     } else if (o->affected[i].location == APPLY_ARMOR &&
-               (dynamic_cast<TBaseClothing *>(o))) {
-      TBaseClothing *aObj = dynamic_cast<TBaseClothing *>(o);
+               (dynamic_cast<TBaseClothing*>(o))) {
+      TBaseClothing* aObj = dynamic_cast<TBaseClothing*>(o);
       ch->sendTo(format("Affects %s by %d  [Level:%.2f]\n\r") %
-                 apply_types[o->affected[i].location].name % o->affected[i].modifier %
-                 aObj->armorLevel(ARMOR_LEV_AC));
+                 apply_types[o->affected[i].location].name %
+                 o->affected[i].modifier % aObj->armorLevel(ARMOR_LEV_AC));
     } else {
       ch->sendTo(format("Affects %s by %d\n\r") %
-          apply_types[o->affected[i].location].name %
-          o->affected[i].modifier);
+                 apply_types[o->affected[i].location].name %
+                 o->affected[i].modifier);
     }
   }
   ch->sendTo(format(VT_CURSPOS) % 20 % 1);
-  ch->sendTo("Enter the number of apply and amount to apply seperated by a space.\n\r");
-  ch->sendTo("To delete an apply, type the number and 0 seperated by a space.\n\r");
+  ch->sendTo(
+    "Enter the number of apply and amount to apply seperated by a space.\n\r");
+  ch->sendTo(
+    "To delete an apply, type the number and 0 seperated by a space.\n\r");
   ch->sendTo("For example enter 21 2 to give a +2 hitndam apply.\n\r");
   ch->sendTo("Press <ENTER> to return to main menu.\n\r--> ");
 }
 
-static void change_obj_struct_points(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_struct_points(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int new_struct;
 
   if (type != ENTER_CHECK) {
@@ -1556,8 +1604,8 @@ static void change_obj_struct_points(TBeing *ch, TObj *o, const char *arg, edito
   ch->sendTo("Select a new struct point.\n\r--> ");
 }
 
-void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_obj_values(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int update;
   int x1, x2, x3, x4;
 
@@ -1577,55 +1625,58 @@ void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
     switch (ch->specials.edit) {
       case CHANGE_OBJ_VALUES:
         switch (update) {
-	  case 0:
+          case 0:
             o->changeObjValue1(ch);
             break;
-	  case 1:
+          case 1:
             o->changeObjValue2(ch);
             break;
-	  case 2:
+          case 2:
             o->changeObjValue3(ch);
             break;
-	  case 3:
+          case 3:
             o->changeObjValue4(ch);
             break;
-	  default:
+          default:
             break;
-	}
+        }
         return;
       case CHANGE_OBJ_VALUE1:
-	update++;
-	if (update > ItemInfo[o->itemType()]->val0_max) {
-	  ch->sendTo(format("Value 1 for this item type can't be over %d.\n\r") %
-		ItemInfo[o->itemType()]->val0_max);
-	  return;
-	}
-	if (update < ItemInfo[o->itemType()]->val0_min) {
-	  ch->sendTo(format("Value 1 for this item type can't be under %d.\n\r") %
-		ItemInfo[o->itemType()]->val0_min);
-	  return;
-	}
+        update++;
+        if (update > ItemInfo[o->itemType()]->val0_max) {
+          ch->sendTo(
+            format("Value 1 for this item type can't be over %d.\n\r") %
+            ItemInfo[o->itemType()]->val0_max);
+          return;
+        }
+        if (update < ItemInfo[o->itemType()]->val0_min) {
+          ch->sendTo(
+            format("Value 1 for this item type can't be under %d.\n\r") %
+            ItemInfo[o->itemType()]->val0_min);
+          return;
+        }
         o->assignFourValues(update, x2, x3, x4);
-	ch->specials.edit = CHANGE_OBJ_VALUES;
-	change_obj_values(ch, o, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_VALUES;
+        change_obj_values(ch, o, "", ENTER_CHECK);
+        return;
       case CHANGE_OBJ_VALUE2:
-	update++;
-	if (update > ItemInfo[o->itemType()]->val1_max) {
-	  ch->sendTo(format("Value 2 for this item type can't be over %d.\n\r") %
-		ItemInfo[o->itemType()]->val1_max);
-	  return;
-	}
-	if (update < ItemInfo[o->itemType()]->val1_min) {
-	  ch->sendTo(format("Value 2 for this item type can't be under %d.\n\r") %
-		ItemInfo[o->itemType()]->val1_min);
-	  return;
-	}
+        update++;
+        if (update > ItemInfo[o->itemType()]->val1_max) {
+          ch->sendTo(
+            format("Value 2 for this item type can't be over %d.\n\r") %
+            ItemInfo[o->itemType()]->val1_max);
+          return;
+        }
+        if (update < ItemInfo[o->itemType()]->val1_min) {
+          ch->sendTo(
+            format("Value 2 for this item type can't be under %d.\n\r") %
+            ItemInfo[o->itemType()]->val1_min);
+          return;
+        }
         if (o->changeItemVal2Check(ch, update))
           return;
 
-        if (dynamic_cast<TScroll *>(o) ||
-            dynamic_cast<TPotion *>(o)) {
+        if (dynamic_cast<TScroll*>(o) || dynamic_cast<TPotion*>(o)) {
           // update here is the spellNumT value, and shouldn't need mapping
           // unfortunately, assignFourValues is about to map it for us (like
           // we want for tinyfile values) so make a kludge for this
@@ -1633,26 +1684,27 @@ void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
         }
 
         o->assignFourValues(x1, update, x3, x4);
-	ch->specials.edit = CHANGE_OBJ_VALUES;
-	change_obj_values(ch, o, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_VALUES;
+        change_obj_values(ch, o, "", ENTER_CHECK);
+        return;
       case CHANGE_OBJ_VALUE3:
-	update++;
-	if (update > ItemInfo[o->itemType()]->val2_max) {
-	  ch->sendTo(format("Value 3 for this item type can't be over %d.\n\r") %
-		ItemInfo[o->itemType()]->val2_max);
-	  return;
-	}
-	if (update < ItemInfo[o->itemType()]->val2_min) {
-	  ch->sendTo(format("Value 3 for this item type can't be under %d.\n\r") %
-		ItemInfo[o->itemType()]->val2_min);
-	  return;
-	}
+        update++;
+        if (update > ItemInfo[o->itemType()]->val2_max) {
+          ch->sendTo(
+            format("Value 3 for this item type can't be over %d.\n\r") %
+            ItemInfo[o->itemType()]->val2_max);
+          return;
+        }
+        if (update < ItemInfo[o->itemType()]->val2_min) {
+          ch->sendTo(
+            format("Value 3 for this item type can't be under %d.\n\r") %
+            ItemInfo[o->itemType()]->val2_min);
+          return;
+        }
         if (o->changeItemVal3Check(ch, update))
           return;
 
-        if (dynamic_cast<TScroll *>(o) ||
-            dynamic_cast<TPotion *>(o)) {
+        if (dynamic_cast<TScroll*>(o) || dynamic_cast<TPotion*>(o)) {
           // update here is the spellNumT value, and shouldn't need mapping
           // unfortunately, assignFourValues is about to map it for us (like
           // we want for tinyfile values) so make a kludge for this
@@ -1660,28 +1712,28 @@ void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
         }
 
         o->assignFourValues(x1, x2, update, x4);
-	ch->specials.edit = CHANGE_OBJ_VALUES;
-	change_obj_values(ch, o, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_VALUES;
+        change_obj_values(ch, o, "", ENTER_CHECK);
+        return;
       case CHANGE_OBJ_VALUE4:
-	update++;
-	if (update > ItemInfo[o->itemType()]->val3_max) {
-	  ch->sendTo(format("Value 4 for this item type can't be over %d.\n\r") %
-		ItemInfo[o->itemType()]->val3_max);
-	  return;
-	}
-	if (update < ItemInfo[o->itemType()]->val3_min) {
-	  ch->sendTo(format("Value 4 for this item type can't be under %d.\n\r") %
-		ItemInfo[o->itemType()]->val3_min);
-	  return;
-	}
+        update++;
+        if (update > ItemInfo[o->itemType()]->val3_max) {
+          ch->sendTo(
+            format("Value 4 for this item type can't be over %d.\n\r") %
+            ItemInfo[o->itemType()]->val3_max);
+          return;
+        }
+        if (update < ItemInfo[o->itemType()]->val3_min) {
+          ch->sendTo(
+            format("Value 4 for this item type can't be under %d.\n\r") %
+            ItemInfo[o->itemType()]->val3_min);
+          return;
+        }
         if (o->changeItemVal4Check(ch, update))
           return;
 
-        if (dynamic_cast<TScroll *>(o) ||
-            dynamic_cast<TWand *>(o) ||
-            dynamic_cast<TStaff *>(o) ||
-            dynamic_cast<TPotion *>(o)) {
+        if (dynamic_cast<TScroll*>(o) || dynamic_cast<TWand*>(o) ||
+            dynamic_cast<TStaff*>(o) || dynamic_cast<TPotion*>(o)) {
           // update here is the spellNumT value, and shouldn't need mapping
           // unfortunately, assignFourValues is about to map it for us (like
           // we want for tinyfile values) so make a kludge for this
@@ -1689,9 +1741,9 @@ void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
         }
 
         o->assignFourValues(x1, x2, x3, update);
-	ch->specials.edit = CHANGE_OBJ_VALUES;
-	change_obj_values(ch, o, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_VALUES;
+        change_obj_values(ch, o, "", ENTER_CHECK);
+        return;
       default:
         return;
     }
@@ -1704,18 +1756,17 @@ void change_obj_values(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT ty
   */
   ch->sendTo(format(VT_CURSPOS) % 5 % 1);
   ch->sendTo("What the values mean :\n\r");
-  ch->sendTo(format("1) %s\n\r2) %s\n\r3) %s\n\r4) %s\n\r") %
-	ItemInfo[o->itemType()]->val0_info %
-	ItemInfo[o->itemType()]->val1_info %
-	ItemInfo[o->itemType()]->val2_info %
-	ItemInfo[o->itemType()]->val3_info);
+  ch->sendTo(
+    format("1) %s\n\r2) %s\n\r3) %s\n\r4) %s\n\r") %
+    ItemInfo[o->itemType()]->val0_info % ItemInfo[o->itemType()]->val1_info %
+    ItemInfo[o->itemType()]->val2_info % ItemInfo[o->itemType()]->val3_info);
 
   ch->sendTo(format(VT_CURSPOS) % 20 % 1);
   ch->sendTo("Which value to change?\n\r--> ");
 }
 
-static void change_obj_decay(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_decay(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int new_decay;
 
   if (type != ENTER_CHECK) {
@@ -1742,8 +1793,8 @@ static void change_obj_decay(TBeing *ch, TObj *o, const char *arg, editorEnterTy
   ch->sendTo("Select a new decay time.\n\r--> ");
 }
 
-static void change_obj_mat_type(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_mat_type(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int i, row, update;
   char buf[1024];
 
@@ -1758,98 +1809,103 @@ static void change_obj_mat_type(TBeing *ch, TObj *o, const char *arg, editorEnte
 
     switch (ch->specials.edit) {
       case CHANGE_OBJ_MAT_TYPE:
-	if (update < 0 || update > 3)
-	  return;
-	else {
-	  ch->sendTo(VT_HOMECLR);
-	  switch (update) {
-	    case 0:
-	      ch->specials.edit = CHANGE_OBJ_MAT_TYPE1;
-	      for (i = row = 0; i < MAX_MAT_GENERAL; i++) {
-		sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
-		if (i & 1)
-		  row++;
-		ch->sendTo(buf);
-		ch->sendTo(format("%2d %s") % (i+1) % material_nums[i].mat_name);
-	      }
-	      break;
-	    case 1:
-	      ch->specials.edit = CHANGE_OBJ_MAT_TYPE2;
-	      for (i = row = 0; i < MAX_MAT_NATURE; i++) {
-		sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
-		if (i & 1)
-		  row++;
-		ch->sendTo(buf);
-		ch->sendTo(format("%2d %s") % (i+1) % material_nums[i+50].mat_name);
-	      }
-	      break;
-	    case 2:
-	      ch->specials.edit = CHANGE_OBJ_MAT_TYPE3;
-	      for (i = row = 0; i < MAX_MAT_MINERAL; i++) {
-		sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
-		if (i & 1)
-		  row++;
-		ch->sendTo(buf);
-		ch->sendTo(format("%2d %s") % (i+1) % material_nums[i+100].mat_name);
-	      }
-	      break;
-	    case 3:
-	      ch->specials.edit = CHANGE_OBJ_MAT_TYPE4;
-	      for (i = row = 0; i < MAX_MAT_METAL; i++) {
-		sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
-		if (i & 1)
-		  row++;
-		ch->sendTo(buf);
-		ch->sendTo(format("%2d %s") % (i+1) % material_nums[i+150].mat_name);
-	      }
-	      break;
-	  }
-	  ch->sendTo(format(VT_CURSPOS) % 20 % 1);
-	  ch->sendTo("Enter a new material type.\n\r--> ");
-	  return;
-	}
+        if (update < 0 || update > 3)
+          return;
+        else {
+          ch->sendTo(VT_HOMECLR);
+          switch (update) {
+            case 0:
+              ch->specials.edit = CHANGE_OBJ_MAT_TYPE1;
+              for (i = row = 0; i < MAX_MAT_GENERAL; i++) {
+                sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
+                if (i & 1)
+                  row++;
+                ch->sendTo(buf);
+                ch->sendTo(
+                  format("%2d %s") % (i + 1) % material_nums[i].mat_name);
+              }
+              break;
+            case 1:
+              ch->specials.edit = CHANGE_OBJ_MAT_TYPE2;
+              for (i = row = 0; i < MAX_MAT_NATURE; i++) {
+                sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
+                if (i & 1)
+                  row++;
+                ch->sendTo(buf);
+                ch->sendTo(
+                  format("%2d %s") % (i + 1) % material_nums[i + 50].mat_name);
+              }
+              break;
+            case 2:
+              ch->specials.edit = CHANGE_OBJ_MAT_TYPE3;
+              for (i = row = 0; i < MAX_MAT_MINERAL; i++) {
+                sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
+                if (i & 1)
+                  row++;
+                ch->sendTo(buf);
+                ch->sendTo(
+                  format("%2d %s") % (i + 1) % material_nums[i + 100].mat_name);
+              }
+              break;
+            case 3:
+              ch->specials.edit = CHANGE_OBJ_MAT_TYPE4;
+              for (i = row = 0; i < MAX_MAT_METAL; i++) {
+                sprintf(buf, VT_CURSPOS, row + 3, ((i & 1) ? 45 : 5));
+                if (i & 1)
+                  row++;
+                ch->sendTo(buf);
+                ch->sendTo(
+                  format("%2d %s") % (i + 1) % material_nums[i + 150].mat_name);
+              }
+              break;
+          }
+          ch->sendTo(format(VT_CURSPOS) % 20 % 1);
+          ch->sendTo("Enter a new material type.\n\r--> ");
+          return;
+        }
       case CHANGE_OBJ_MAT_TYPE1:
-	if (update < 0 || update >= MAX_MAT_GENERAL)
-	  return;
-	else {
-	  o->setMaterial(update);
-	  ch->specials.edit = MAIN_MENU;
-	  update_obj_menu(ch, o);
-	  return;
-	}
+        if (update < 0 || update >= MAX_MAT_GENERAL)
+          return;
+        else {
+          o->setMaterial(update);
+          ch->specials.edit = MAIN_MENU;
+          update_obj_menu(ch, o);
+          return;
+        }
       case CHANGE_OBJ_MAT_TYPE2:
-	if (update < 0 || update >= MAX_MAT_NATURE)
-	  return;
-	else {
-	  o->setMaterial(update + 50);
-	  ch->specials.edit = MAIN_MENU;
-	  update_obj_menu(ch, o);
-	  return;
-	}
+        if (update < 0 || update >= MAX_MAT_NATURE)
+          return;
+        else {
+          o->setMaterial(update + 50);
+          ch->specials.edit = MAIN_MENU;
+          update_obj_menu(ch, o);
+          return;
+        }
       case CHANGE_OBJ_MAT_TYPE3:
-	if (update < 0 || update >= MAX_MAT_MINERAL)
-	  return;
-	else {
-	  o->setMaterial(update + 100);
-	  ch->specials.edit = MAIN_MENU;
-	  update_obj_menu(ch, o);
-	  return;
-	}
+        if (update < 0 || update >= MAX_MAT_MINERAL)
+          return;
+        else {
+          o->setMaterial(update + 100);
+          ch->specials.edit = MAIN_MENU;
+          update_obj_menu(ch, o);
+          return;
+        }
       case CHANGE_OBJ_MAT_TYPE4:
-	if (update < 0 || update >= MAX_MAT_METAL)
-	  return;
-	else {
-	  o->setMaterial(update + 150);
-	  ch->specials.edit = MAIN_MENU;
-	  update_obj_menu(ch, o);
-	  return;
-	}
+        if (update < 0 || update >= MAX_MAT_METAL)
+          return;
+        else {
+          o->setMaterial(update + 150);
+          ch->specials.edit = MAIN_MENU;
+          update_obj_menu(ch, o);
+          return;
+        }
       default:
         return;
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(format("Current material type : %s\n\r\n\r") % material_nums[o->getMaterial()].mat_name);
+  ch->sendTo(format("Current material type : %s\n\r\n\r") %
+             material_nums[o->getMaterial()].mat_name);
   for (i = 0; i <= 3; i++)
     ch->sendTo(format("%d) %s\n\r") % (i + 1) % material_groups[i]);
 
@@ -1857,11 +1913,11 @@ static void change_obj_mat_type(TBeing *ch, TObj *o, const char *arg, editorEnte
   ch->sendTo("Which general group do you want?\n\r--> ");
 }
 
-static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_extra(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   extraDescription *ed, *prev;
 
-  if (dynamic_cast<TBook *>(o)) {
+  if (dynamic_cast<TBook*>(o)) {
     ch->sendTo("Please don't add extra descriptions to books.\n\r");
     ch->specials.edit = MAIN_MENU;
     update_obj_menu(ch, o);
@@ -1874,19 +1930,22 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
       update_obj_menu(ch, o);
       return;
     }
-    for ( prev = ed = o->ex_description;; prev = ed, ed = ed->next) {
+    for (prev = ed = o->ex_description;; prev = ed, ed = ed->next) {
       if (!ed) {
         ed = new extraDescription();
-	ed->next = o->ex_description;
-	o->ex_description = ed;
+        ed->next = o->ex_description;
+        o->ex_description = ed;
         ed->keyword = arg;
-	ed->description = NULL;
-	ch->desc->str = &ed->description;
-	ch->sendTo("Enter the description. Terminate with a '~' on a NEW line.\n\r");
-	break;
+        ed->description = NULL;
+        ch->desc->str = &ed->description;
+        ch->sendTo(
+          "Enter the description. Terminate with a '~' on a NEW line.\n\r");
+        break;
       } else if (boost::iequals(ed->keyword, arg)) {
         ch->sendTo(format("Current description:\n\r%s\n\r") % ed->description);
-        ch->sendTo("This description has been deleted.  If you needed to modify it, simply readd it.\n\r");
+        ch->sendTo(
+          "This description has been deleted.  If you needed to modify it, "
+          "simply readd it.\n\r");
         ch->sendTo("Press return to proceed.\n\r");
         if (prev == ed) {
           o->ex_description = ed->next;
@@ -1895,22 +1954,22 @@ static void change_obj_extra(TBeing *ch, TObj *o, const char *arg, editorEnterTy
           prev->next = ed->next;
           delete ed;
         }
-	return;
+        return;
       }
     }
     ch->desc->max_str = MAX_STRING_LENGTH;
     return;
   }
   ch->sendTo("Existing keywords:\n\r");
-  for ( ed = o->ex_description;ed ; ed = ed->next) {
+  for (ed = o->ex_description; ed; ed = ed->next) {
     ch->sendTo(format("%s\n\r") % ed->keyword);
   }
   ch->sendTo("\n\rEnter the keyword for the extra description.\n\r--> ");
   ch->specials.edit = CHANGE_OBJ_EXDESC;
 }
 
-static void change_obj_can_be_seen(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_can_be_seen(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   int new_seen;
 
   if (type != ENTER_CHECK) {
@@ -1937,8 +1996,7 @@ static void change_obj_can_be_seen(TBeing *ch, TObj *o, const char *arg, editorE
   ch->sendTo("Select a new can be seen.\n\r--> ");
 }
 
-void delete_obj_extra_desc(TBeing *ch, TObj *o, const char *, editorEnterTypeT)
-{
+void delete_obj_extra_desc(TBeing* ch, TObj* o, const char*, editorEnterTypeT) {
   extraDescription *exptr, *nptr;
 
   if (o->ex_description) {
@@ -1951,8 +2009,8 @@ void delete_obj_extra_desc(TBeing *ch, TObj *o, const char *, editorEnterTypeT)
   update_obj_menu(ch, o);
 }
 
-static void change_obj_spec(TBeing *ch, TObj *obj, const char *arg, editorEnterTypeT type)
-{
+static void change_obj_spec(TBeing* ch, TObj* obj, const char* arg,
+  editorEnterTypeT type) {
   char buf[256];
   int row, j, i, new_spec;
 
@@ -1964,10 +2022,13 @@ static void change_obj_spec(TBeing *ch, TObj *obj, const char *arg, editorEnterT
     }
     new_spec = convertTo<int>(arg);
     if (new_spec < 0 || new_spec > NUM_OBJ_SPECIALS) {
-      ch->sendTo(format("Please enter a number from 0 to %d.\n\r") % NUM_OBJ_SPECIALS);
+      ch->sendTo(
+        format("Please enter a number from 0 to %d.\n\r") % NUM_OBJ_SPECIALS);
       return;
-    } else if (!objSpecials[new_spec].assignable && !ch->hasWizPower(POWER_OEDIT_IMP_POWER)) {
-      ch->sendTo("That spec_proc has been deemed unassignable by builders sorry.\n\r");
+    } else if (!objSpecials[new_spec].assignable &&
+               !ch->hasWizPower(POWER_OEDIT_IMP_POWER)) {
+      ch->sendTo(
+        "That spec_proc has been deemed unassignable by builders sorry.\n\r");
       return;
     } else {
       obj->spec = new_spec;
@@ -1977,9 +2038,11 @@ static void change_obj_spec(TBeing *ch, TObj *obj, const char *arg, editorEnterT
     }
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(format("Current obj spec: %s") % ((obj->spec) ? objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].name : "none"));
+  ch->sendTo(
+    format("Current obj spec: %s") %
+    ((obj->spec) ? objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].name : "none"));
   row = 0;
-  for (i = 1, j=1; i <= NUM_OBJ_SPECIALS; i++) {
+  for (i = 1, j = 1; i <= NUM_OBJ_SPECIALS; i++) {
     if (!objSpecials[i].assignable)
       continue;
     sprintf(buf, VT_CURSPOS, row + 3, ((((j - 1) % 3) * 25) + 5));
@@ -1994,8 +2057,8 @@ static void change_obj_spec(TBeing *ch, TObj *obj, const char *arg, editorEnterT
   ch->sendTo("Select a new special procedure (0 = no procedure).\n\r--> ");
 }
 
-void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorEnterTypeT type)
-{
+void change_chest_value2(TBeing* ch, TOpenContainer* o, const char* arg,
+  editorEnterTypeT type) {
   long loc_update;
   int row;
   unsigned int i;
@@ -2013,67 +2076,67 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
   switch (ch->specials.edit) {
     case CHANGE_CHEST_VALUE2:
       switch (loc_update) {
-	case 1:
-	  ch->specials.edit = CHANGE_CHEST_CONT_FLAGS;
-	  change_chest_value2(ch, o, "", ENTER_CHECK);
-	  return;
-	case 2:
-	  ch->specials.edit = CHANGE_CHEST_TRAP_TYPE;
-	  change_chest_value2(ch, o, "", ENTER_CHECK);
-	  return;
-	case 3:
-	  ch->specials.edit = CHANGE_CHEST_TRAP_DAM;
-	  change_chest_value2(ch, o, "", ENTER_CHECK);
-	  return;
-	  return;
+        case 1:
+          ch->specials.edit = CHANGE_CHEST_CONT_FLAGS;
+          change_chest_value2(ch, o, "", ENTER_CHECK);
+          return;
+        case 2:
+          ch->specials.edit = CHANGE_CHEST_TRAP_TYPE;
+          change_chest_value2(ch, o, "", ENTER_CHECK);
+          return;
+        case 3:
+          ch->specials.edit = CHANGE_CHEST_TRAP_DAM;
+          change_chest_value2(ch, o, "", ENTER_CHECK);
+          return;
+          return;
       }
       break;
     case CHANGE_CHEST_CONT_FLAGS:
       loc_update--;
 
       if (type != ENTER_CHECK) {
-	if (loc_update < 0 || loc_update >= MAX_CONTAINER_FLAG)
-	  return;
-	i = 1 << loc_update;
+        if (loc_update < 0 || loc_update >= MAX_CONTAINER_FLAG)
+          return;
+        i = 1 << loc_update;
 
-        if (i == CONT_TRAPPED ||
-            i == CONT_EMPTYTRAP ||
-            i == CONT_GHOSTTRAP ||
+        if (i == CONT_TRAPPED || i == CONT_EMPTYTRAP || i == CONT_GHOSTTRAP ||
             i == CONT_JAMMED) {
-          ch->sendTo("This flag is set automatically and can not be changed.\n\r"); 
+          ch->sendTo(
+            "This flag is set automatically and can not be changed.\n\r");
           return;
         }
-     
-	if (o->isContainerFlag(i))
-	  o->remContainerFlag(i);
-	else
-	  o->addContainerFlag(i);
+
+        if (o->isContainerFlag(i))
+          o->remContainerFlag(i);
+        else
+          o->addContainerFlag(i);
       }
       ch->sendTo(VT_HOMECLR);
       row = 0;
       for (i = 0; i < MAX_CONTAINER_FLAG; i++) {
-	sprintf(buf, VT_CURSPOS, row + 4, ((i & 1) ? 45 : 5));
-	if (i & 1)
-	  row++;
-	ch->sendTo(buf);
+        sprintf(buf, VT_CURSPOS, row + 4, ((i & 1) ? 45 : 5));
+        if (i & 1)
+          row++;
+        ch->sendTo(buf);
 
-	ch->sendTo(format("%2d [%s] %s") % (i+1) % (o->isContainerFlag(1 << i) ? "X" : " ") % chest_bits[i]);
+        ch->sendTo(format("%2d [%s] %s") % (i + 1) %
+                   (o->isContainerFlag(1 << i) ? "X" : " ") % chest_bits[i]);
       }
       ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-      ch->sendTo("Select number to toggle. <ENTER> to return back to main menu.\n\r");
+      ch->sendTo(
+        "Select number to toggle. <ENTER> to return back to main menu.\n\r");
       return;
     case CHANGE_CHEST_TRAP_TYPE:
       if (type != ENTER_CHECK) {
-	if (loc_update < 0 || loc_update > MAX_TRAP_TYPES)
-	  return;
-        if (loc_update == DOOR_TRAP_BOLT ||
-            loc_update == DOOR_TRAP_DISK ||
+        if (loc_update < 0 || loc_update > MAX_TRAP_TYPES)
+          return;
+        if (loc_update == DOOR_TRAP_BOLT || loc_update == DOOR_TRAP_DISK ||
             loc_update == DOOR_TRAP_HAMMER) {
           ch->sendTo("That trap type is not supported for containers.\n\r");
           return;
         }
         if (loc_update == 0) {
-          o->remContainerFlag( CONT_TRAPPED);
+          o->remContainerFlag(CONT_TRAPPED);
           o->setContainerTrapType(DOOR_TRAP_NONE);
           o->setContainerTrapDam(0);
           ch->specials.edit = CHANGE_OBJ_VALUES;
@@ -2090,12 +2153,12 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
       ch->sendTo(VT_HOMECLR);
       row = 0;
       for (i = 0; i < MAX_TRAP_TYPES; i++) {
-	sprintf(buf, VT_CURSPOS, row + 4, (((i%2) == 0) ? 5 : 45));
-	if ((i%2) == 1)
-	  row++;
-	ch->sendTo(buf);
+        sprintf(buf, VT_CURSPOS, row + 4, (((i % 2) == 0) ? 5 : 45));
+        if ((i % 2) == 1)
+          row++;
+        ch->sendTo(buf);
 
-	ch->sendTo(format("%2d %s") % i % trap_types[i]);
+        ch->sendTo(format("%2d %s") % i % trap_types[i]);
       }
       ch->sendTo(format(VT_CURSPOS) % 21 % 1);
       ch->sendTo("Select number to select.\n\r");
@@ -2107,7 +2170,7 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
           return;
         }
 
-        o->addContainerFlag( CONT_TRAPPED);
+        o->addContainerFlag(CONT_TRAPPED);
 
         o->setContainerTrapDam(loc_update);
         ch->specials.edit = CHANGE_OBJ_VALUES;
@@ -2116,7 +2179,8 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
       }
       ch->sendTo(VT_HOMECLR);
       ch->sendTo("The value set will be how much damage the trap does.\n\r");
-      ch->sendTo("This is a fixed value adjusted only for immunites or sancts.\n\r");
+      ch->sendTo(
+        "This is a fixed value adjusted only for immunites or sancts.\n\r");
       ch->sendTo("It is non-variable.\n\r");
       ch->sendTo(format(VT_CURSPOS) % 21 % 1);
       ch->sendTo("Select damage for trap.\n\r");
@@ -2132,45 +2196,44 @@ void change_chest_value2(TBeing *ch, TOpenContainer *o, const char *arg, editorE
   ch->sendTo("Enter your choise to modify.\n\r--> ");
 }
 
-void change_trap_value2(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_trap_value2(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   o->changeTrapValue2(ch, arg, type);
 }
 
-
-void change_weapon_value1(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_weapon_value1(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   o->changeBaseWeaponValue1(ch, arg, type);
 }
 
 #if 1
-void change_weapon_value2(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
-  //o->changeBaseWeaponValue2(ch, arg, type);
+void change_weapon_value2(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
+  // o->changeBaseWeaponValue2(ch, arg, type);
 }
 
-void change_weapon_value3(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_weapon_value3(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   //  o->changeBaseWeaponValue3(ch, arg, type);
 }
 #endif
-void change_trap_value3(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_trap_value3(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   o->changeTrapValue3(ch, arg, type);
 }
 
-void change_magicitem_value1(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_magicitem_value1(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   o->changeMagicItemValue1(ch, arg, type);
 }
 
-void change_bed_value1(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_bed_value1(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   o->changeBedValue1(ch, arg, type);
 }
 
-void change_egg_value1(TBeing *ch, TEgg *o, const char *arg, editorEnterTypeT type)
-{
+void change_egg_value1(TBeing* ch, TEgg* o, const char* arg,
+  editorEnterTypeT type) {
   int loc_update;
 
   if (type != ENTER_CHECK) {
@@ -2185,16 +2248,16 @@ void change_egg_value1(TBeing *ch, TEgg *o, const char *arg, editorEnterTypeT ty
   switch (ch->specials.edit) {
     case CHANGE_EGG_VALUE1:
       switch (loc_update) {
-	case 1:
-	  ch->sendTo(VT_HOMECLR);
-	  ch->sendTo("Set whether touched.\n\r--> ");
-	  ch->specials.edit = CHANGE_EGG_TOUCHED;
-	  return;
-	case 2:
-	  ch->sendTo(VT_HOMECLR);
-	  ch->sendTo("Enter new food fill value.\n\r--> ");
-	  ch->specials.edit = CHANGE_EGG_FILL;
-	  return;
+        case 1:
+          ch->sendTo(VT_HOMECLR);
+          ch->sendTo("Set whether touched.\n\r--> ");
+          ch->specials.edit = CHANGE_EGG_TOUCHED;
+          return;
+        case 2:
+          ch->sendTo(VT_HOMECLR);
+          ch->sendTo("Enter new food fill value.\n\r--> ");
+          ch->specials.edit = CHANGE_EGG_FILL;
+          return;
       }
       break;
     case CHANGE_EGG_TOUCHED:
@@ -2231,8 +2294,8 @@ void change_egg_value1(TBeing *ch, TEgg *o, const char *arg, editorEnterTypeT ty
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
-void change_portal_value1(TBeing *ch, TPortal *o, const char *arg, editorEnterTypeT type)
-{
+void change_portal_value1(TBeing* ch, TPortal* o, const char* arg,
+  editorEnterTypeT type) {
   int loc_update;
 
   if (type != ENTER_CHECK) {
@@ -2247,60 +2310,62 @@ void change_portal_value1(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
   switch (ch->specials.edit) {
     case CHANGE_PORTAL_VALUE1:
       switch (loc_update) {
-	case 1:
-	  ch->sendTo(VT_HOMECLR);
-	  ch->sendTo("Enter new room destination number.\n\r--> ");
-	  ch->specials.edit = CHANGE_PORTAL_VNUM;
-	  return;
-	case 2:
-	  ch->sendTo(VT_HOMECLR);
-	  ch->sendTo("Enter new max number of entries.\n\r--> ");
-	  ch->specials.edit = CHANGE_PORTAL_MAX;
-	  return;
+        case 1:
+          ch->sendTo(VT_HOMECLR);
+          ch->sendTo("Enter new room destination number.\n\r--> ");
+          ch->specials.edit = CHANGE_PORTAL_VNUM;
+          return;
+        case 2:
+          ch->sendTo(VT_HOMECLR);
+          ch->sendTo("Enter new max number of entries.\n\r--> ");
+          ch->specials.edit = CHANGE_PORTAL_MAX;
+          return;
       }
       break;
     case CHANGE_PORTAL_MAX:
       if (type != ENTER_CHECK) {
-	if ((loc_update > 100) || (loc_update < -1)) {
-	  ch->sendTo("Please enter a number from -1 to 100.\n\r");
-	  return;
-	}
-	o->setPortalNumCharges(loc_update);
+        if ((loc_update > 100) || (loc_update < -1)) {
+          ch->sendTo("Please enter a number from -1 to 100.\n\r");
+          return;
+        }
+        o->setPortalNumCharges(loc_update);
         ch->specials.edit = CHANGE_PORTAL_VALUE1;
         change_portal_value1(ch, o, "", ENTER_CHECK);
-	return;
+        return;
       }
       break;
     case CHANGE_PORTAL_VNUM:
       if (type != ENTER_CHECK) {
-	/*
-	if ((loc_update >= WORLD_SIZE) || (loc_update < 0)) {
-	  ch->sendTo(format("Please enter a number from 0-%d.\n\r") % WORLD_SIZE-1);
-	  return;
-	}
-	*/
-	o->setTarget(loc_update);
+        /*
+        if ((loc_update >= WORLD_SIZE) || (loc_update < 0)) {
+          ch->sendTo(format("Please enter a number from 0-%d.\n\r") %
+        WORLD_SIZE-1); return;
+        }
+        */
+        o->setTarget(loc_update);
         ch->specials.edit = CHANGE_PORTAL_VALUE1;
         change_portal_value1(ch, o, "", ENTER_CHECK);
-	return;
+        return;
       }
     default:
       return;
   }
   ch->sendTo(VT_HOMECLR);
   ch->sendTo("1) Portal Destination (Room portal enters into).\n\r");
-  ch->sendTo("2) Max charges (Maximum number of people who can enter portal   before it is destroyed. -1 means permanent).\n\r");
+  ch->sendTo(
+    "2) Max charges (Maximum number of people who can enter portal   before it "
+    "is destroyed. -1 means permanent).\n\r");
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
-void change_component_value4(TBeing *ch, TObj *o, const char *arg, editorEnterTypeT type)
-{
+void change_component_value4(TBeing* ch, TObj* o, const char* arg,
+  editorEnterTypeT type) {
   o->changeComponentValue4(ch, arg, type);
 }
 
-void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTypeT type)
-{
+void change_portal_value3(TBeing* ch, TPortal* o, const char* arg,
+  editorEnterTypeT type) {
   int loc_update, i, row;
   char buf[256];
 
@@ -2316,35 +2381,37 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
   switch (ch->specials.edit) {
     case CHANGE_PORTAL_VALUE3:
       switch (loc_update) {
-	case 1:
-	  ch->sendTo(format("Current portal trap damage: %d\n\r") % o->getPortalTrapDam());
-	  ch->sendTo("Enter new portal trap damage.\n\r--> ");
-	  ch->specials.edit = CHANGE_PORTAL_TRAP_DAM;
-	  return;
-	case 2:
+        case 1:
+          ch->sendTo(format("Current portal trap damage: %d\n\r") %
+                     o->getPortalTrapDam());
+          ch->sendTo("Enter new portal trap damage.\n\r--> ");
+          ch->specials.edit = CHANGE_PORTAL_TRAP_DAM;
+          return;
+        case 2:
           ch->sendTo(VT_HOMECLR);
-	  ch->sendTo(format("Current portal trap type: %d\n\r") % o->getPortalTrapType());
+          ch->sendTo(format("Current portal trap type: %d\n\r") %
+                     o->getPortalTrapType());
           row = 0;
           for (i = 0; i < MAX_TRAP_TYPES; i++) {
-            sprintf(buf, VT_CURSPOS, row + 4, (((i%2) == 0) ? 5 : 45));
-            if ((i%2) == 1)
+            sprintf(buf, VT_CURSPOS, row + 4, (((i % 2) == 0) ? 5 : 45));
+            if ((i % 2) == 1)
               row++;
             ch->sendTo(buf);
             ch->sendTo(format("%2d %s") % i % trap_types[i]);
           }
           ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-	  ch->sendTo("Enter new portal trap type.\n\r--> ");
-	  ch->specials.edit = CHANGE_PORTAL_TRAP_TYPE;
-	  return;
+          ch->sendTo("Enter new portal trap type.\n\r--> ");
+          ch->specials.edit = CHANGE_PORTAL_TRAP_TYPE;
+          return;
       }
       break;
     case CHANGE_PORTAL_TRAP_DAM:
       if (type != ENTER_CHECK) {
-	if ((loc_update > 100) || (loc_update < 0)) {
-	  ch->sendTo("Please enter a number from 0-100.\n\r");
-	  return;
-	}
-	o->setPortalTrapDam(loc_update);
+        if ((loc_update > 100) || (loc_update < 0)) {
+          ch->sendTo("Please enter a number from 0-100.\n\r");
+          return;
+        }
+        o->setPortalTrapDam(loc_update);
         if (loc_update == 0) {
           o->remPortalFlag(EXIT_TRAPPED);
           o->setPortalTrapType(DOOR_TRAP_NONE);
@@ -2353,20 +2420,20 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
         }
         ch->specials.edit = CHANGE_PORTAL_VALUE3;
         change_portal_value3(ch, o, "", ENTER_CHECK);
-	return;
+        return;
       }
       break;
     case CHANGE_PORTAL_TRAP_TYPE:
       if (type != ENTER_CHECK) {
-	if (loc_update < 0 || loc_update > MAX_TRAP_TYPES) {
-	  ch->sendTo(format("Please enter a number from 0-%d.\n\r") % MAX_TRAP_TYPES);
-	  return;
+        if (loc_update < 0 || loc_update > MAX_TRAP_TYPES) {
+          ch->sendTo(
+            format("Please enter a number from 0-%d.\n\r") % MAX_TRAP_TYPES);
+          return;
         }
-	if (loc_update == DOOR_TRAP_BOLT ||
-	    loc_update == DOOR_TRAP_DISK ||
-	    loc_update == DOOR_TRAP_PEBBLE) {
+        if (loc_update == DOOR_TRAP_BOLT || loc_update == DOOR_TRAP_DISK ||
+            loc_update == DOOR_TRAP_PEBBLE) {
           ch->sendTo("That trap type is not supported for portals.\n\r");
-	  return;
+          return;
         }
         o->setPortalTrapType(loc_update);
         if (loc_update == DOOR_TRAP_NONE) {
@@ -2377,22 +2444,23 @@ void change_portal_value3(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
         }
         ch->specials.edit = CHANGE_PORTAL_VALUE3;
         change_portal_value3(ch, o, "", ENTER_CHECK);
-	return;
+        return;
       }
       break;
     default:
       return;
   }
   ch->sendTo(VT_HOMECLR);
-  ch->sendTo(format("1) Portal Trap Damage.   Current: %d\n\r") % o->getPortalTrapDam());
-  ch->sendTo(format("2) Portal Trap Type.     Current: %s\n\r") % trap_types[o->getPortalTrapType()]);
+  ch->sendTo(
+    format("1) Portal Trap Damage.   Current: %d\n\r") % o->getPortalTrapDam());
+  ch->sendTo(format("2) Portal Trap Type.     Current: %s\n\r") %
+             trap_types[o->getPortalTrapType()]);
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
-
-void change_portal_value4(TBeing *ch, TPortal *o, const char *arg, editorEnterTypeT type)
-{
+void change_portal_value4(TBeing* ch, TPortal* o, const char* arg,
+  editorEnterTypeT type) {
   int loc_update, row;
   unsigned int i;
   int j;
@@ -2410,51 +2478,55 @@ void change_portal_value4(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
   switch (ch->specials.edit) {
     case CHANGE_PORTAL_VALUE4:
       switch (loc_update) {
-	case 1:
-	  ch->sendTo("Enter new key number.\n\r--> ");
-	  ch->specials.edit = CHANGE_PORTAL_KEY;
-	  return;
-	case 2:
-	  ch->specials.edit = CHANGE_PORTAL_DOOR_FLAGS;
-	  change_portal_value4(ch, o, "", ENTER_CHECK);
-	  return;
+        case 1:
+          ch->sendTo("Enter new key number.\n\r--> ");
+          ch->specials.edit = CHANGE_PORTAL_KEY;
+          return;
+        case 2:
+          ch->specials.edit = CHANGE_PORTAL_DOOR_FLAGS;
+          change_portal_value4(ch, o, "", ENTER_CHECK);
+          return;
       }
       break;
     case CHANGE_PORTAL_KEY:
       if (type != ENTER_CHECK) {
-	if ((loc_update >= WORLD_SIZE) || (loc_update < 1)) {
-	  ch->sendTo(format("Please enter a number from 1-%d.\n\r") % (WORLD_SIZE-1));
-	  return;
-	}
-	o->setPortalKey(loc_update);
+        if ((loc_update >= WORLD_SIZE) || (loc_update < 1)) {
+          ch->sendTo(
+            format("Please enter a number from 1-%d.\n\r") % (WORLD_SIZE - 1));
+          return;
+        }
+        o->setPortalKey(loc_update);
         ch->specials.edit = CHANGE_PORTAL_VALUE4;
         change_portal_value4(ch, o, "", ENTER_CHECK);
-	return;
+        return;
       }
     case CHANGE_PORTAL_DOOR_FLAGS:
       loc_update--;
 
       if (type != ENTER_CHECK) {
-	if (loc_update < 0 || loc_update >= MAX_DOOR_CONDITIONS)
-	  return;
-	i = 1 << loc_update;
+        if (loc_update < 0 || loc_update >= MAX_DOOR_CONDITIONS)
+          return;
+        i = 1 << loc_update;
 
-	if (o->isPortalFlag(i))
-	  o->remPortalFlag(i);
-	else
-	  o->addPortalFlag(i);
+        if (o->isPortalFlag(i))
+          o->remPortalFlag(i);
+        else
+          o->addPortalFlag(i);
       }
       ch->sendTo(VT_HOMECLR);
       row = 0;
       for (j = 0; j < MAX_DOOR_CONDITIONS; j++) {
-	sprintf(buf, VT_CURSPOS, row + 4, ((j & 1) ? 45 : 5));
-	if (j & 1)
-	  row++;
-	ch->sendTo(buf);
-	ch->sendTo(format("%2d [%s] %s") % (j + 1) % ((o->isPortalFlag(1 << j)) ? "X" : " ") % exit_bits[j]);
+        sprintf(buf, VT_CURSPOS, row + 4, ((j & 1) ? 45 : 5));
+        if (j & 1)
+          row++;
+        ch->sendTo(buf);
+        ch->sendTo(format("%2d [%s] %s") % (j + 1) %
+                   ((o->isPortalFlag(1 << j)) ? "X" : " ") % exit_bits[j]);
       }
       ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-      ch->sendTo("Select number to toggle. <ENTER> to return back to main menu,\n\r--> ");
+      ch->sendTo(
+        "Select number to toggle. <ENTER> to return back to main "
+        "menu,\n\r--> ");
       return;
     default:
       return;
@@ -2465,11 +2537,11 @@ void change_portal_value4(TBeing *ch, TPortal *o, const char *arg, editorEnterTy
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
-void change_arrow_value3(TBeing *ch, TArrow *o, const char *arg, editorEnterTypeT type)
-{
+void change_arrow_value3(TBeing* ch, TArrow* o, const char* arg,
+  editorEnterTypeT type) {
   int loc_update;
 
-  if(type != ENTER_CHECK) {
+  if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = CHANGE_OBJ_VALUES;
       change_obj_values(ch, o, "", ENTER_CHECK);
@@ -2482,89 +2554,94 @@ void change_arrow_value3(TBeing *ch, TArrow *o, const char *arg, editorEnterType
   switch (ch->specials.edit) {
     case CHANGE_ARROW_VALUE3:
       switch (loc_update) {
-	case 1:
-	  ch->sendTo(VT_HOMECLR);
-	  ch->sendTo("Enter Arrow Trap Type.\n\r");
-	  ch->sendTo("NOTE: DOOR_TRAP_TYPE does not correlate to the number of the menu choices below.  Eval the weapon after to ensure the proper trap has been set.\n\r");
-	  ch->sendTo(" 0) None\n\r");
-	  ch->sendTo(" 1) Fire\n\r");
-	  ch->sendTo(" 2) Explosive\n\r");
-	  ch->sendTo(" 3) Sleep\n\r");
-	  ch->sendTo(" 4) Acid\n\r");
-	  ch->sendTo(" 5) Spore\n\r");
-	  ch->sendTo(" 6) Frost\n\r");
-	  ch->sendTo(" 7) Spike\n\r");
-	  ch->sendTo(" 8) Pebble\n\r");
-	  ch->sendTo(" 9) Power\n\r");
-	  ch->sendTo("10) Teleport\n\r");
-	  ch->sendTo(" Your Selection [0-10]\n\r--> ");
-	  ch->specials.edit = CHANGE_ARROW_TRAPTYPE;
-	  return;
-	case 2:
-	  ch->sendTo(VT_HOMECLR);
-	  ch->sendTo("Enter Arrow Trap Level.  [0-65]\n\r--> ");
-	  ch->specials.edit = CHANGE_ARROW_TRAPLVL;
-	  return;
+        case 1:
+          ch->sendTo(VT_HOMECLR);
+          ch->sendTo("Enter Arrow Trap Type.\n\r");
+          ch->sendTo(
+            "NOTE: DOOR_TRAP_TYPE does not correlate to the number of the menu "
+            "choices below.  Eval the weapon after to ensure the proper trap "
+            "has been set.\n\r");
+          ch->sendTo(" 0) None\n\r");
+          ch->sendTo(" 1) Fire\n\r");
+          ch->sendTo(" 2) Explosive\n\r");
+          ch->sendTo(" 3) Sleep\n\r");
+          ch->sendTo(" 4) Acid\n\r");
+          ch->sendTo(" 5) Spore\n\r");
+          ch->sendTo(" 6) Frost\n\r");
+          ch->sendTo(" 7) Spike\n\r");
+          ch->sendTo(" 8) Pebble\n\r");
+          ch->sendTo(" 9) Power\n\r");
+          ch->sendTo("10) Teleport\n\r");
+          ch->sendTo(" Your Selection [0-10]\n\r--> ");
+          ch->specials.edit = CHANGE_ARROW_TRAPTYPE;
+          return;
+        case 2:
+          ch->sendTo(VT_HOMECLR);
+          ch->sendTo("Enter Arrow Trap Level.  [0-65]\n\r--> ");
+          ch->specials.edit = CHANGE_ARROW_TRAPLVL;
+          return;
       }
       break;
     case CHANGE_ARROW_TRAPTYPE:
-      if (type!= ENTER_CHECK) {
-	if((loc_update > 10) || (loc_update < 0)) {
-	  ch->sendTo("Invalid value.  Please enter a value between 0 and 10.\n\r");
-	  return;
-	}
+      if (type != ENTER_CHECK) {
+        if ((loc_update > 10) || (loc_update < 0)) {
+          ch->sendTo(
+            "Invalid value.  Please enter a value between 0 and 10.\n\r");
+          return;
+        }
 
-	switch(loc_update) {
-	  case 0:
-	    o->setTrapDamType(DOOR_TRAP_NONE);
-	    break;
-	  case 1:
-	    o->setTrapDamType(DOOR_TRAP_FIRE);
-	    break;
-	  case 2:
-	    o->setTrapDamType(DOOR_TRAP_TNT);
-	    break;
-	  case 3:
-	    o->setTrapDamType(DOOR_TRAP_SLEEP);
-	    break;
-	  case 4:
-	    o->setTrapDamType(DOOR_TRAP_ACID);
-	    break;
-	  case 5:
-	    o->setTrapDamType(DOOR_TRAP_DISEASE);
-	    break;
-	  case 6:
-	    o->setTrapDamType(DOOR_TRAP_FROST);
-	    break;
-	  case 7:
-	    o->setTrapDamType(DOOR_TRAP_SPIKE);
-	    break;
-	  case 8:
-	    o->setTrapDamType(DOOR_TRAP_PEBBLE);
-	    break;
-	  case 9:
-	    o->setTrapDamType(DOOR_TRAP_ENERGY);
-	    break;
-	  case 10:
-	    o->setTrapDamType(DOOR_TRAP_TELEPORT);
-	    break;
-	}
-	ch->specials.edit = CHANGE_ARROW_VALUE3;
-	change_arrow_value3(ch, o, "", ENTER_CHECK);
-	return;
+        switch (loc_update) {
+          case 0:
+            o->setTrapDamType(DOOR_TRAP_NONE);
+            break;
+          case 1:
+            o->setTrapDamType(DOOR_TRAP_FIRE);
+            break;
+          case 2:
+            o->setTrapDamType(DOOR_TRAP_TNT);
+            break;
+          case 3:
+            o->setTrapDamType(DOOR_TRAP_SLEEP);
+            break;
+          case 4:
+            o->setTrapDamType(DOOR_TRAP_ACID);
+            break;
+          case 5:
+            o->setTrapDamType(DOOR_TRAP_DISEASE);
+            break;
+          case 6:
+            o->setTrapDamType(DOOR_TRAP_FROST);
+            break;
+          case 7:
+            o->setTrapDamType(DOOR_TRAP_SPIKE);
+            break;
+          case 8:
+            o->setTrapDamType(DOOR_TRAP_PEBBLE);
+            break;
+          case 9:
+            o->setTrapDamType(DOOR_TRAP_ENERGY);
+            break;
+          case 10:
+            o->setTrapDamType(DOOR_TRAP_TELEPORT);
+            break;
+        }
+        ch->specials.edit = CHANGE_ARROW_VALUE3;
+        change_arrow_value3(ch, o, "", ENTER_CHECK);
+        return;
       }
       break;
     case CHANGE_ARROW_TRAPLVL:
       if (type != ENTER_CHECK) {
-	if ((loc_update > 65) || (loc_update < 0)) {
-	  ch->sendTo("Invalid value.  Please enter a value between 0 and 65.\n\r");
-	  return;
-	}
+        if ((loc_update > 65) || (loc_update < 0)) {
+          ch->sendTo(
+            "Invalid value.  Please enter a value between 0 and 65.\n\r");
+          return;
+        }
 
-	o->setTrapLevel((unsigned char) loc_update);
-	ch->specials.edit = CHANGE_ARROW_VALUE3;
-	change_arrow_value3(ch, o, "", ENTER_CHECK);
-	return;
+        o->setTrapLevel((unsigned char)loc_update);
+        ch->specials.edit = CHANGE_ARROW_VALUE3;
+        change_arrow_value3(ch, o, "", ENTER_CHECK);
+        return;
       }
       break;
     default:
@@ -2577,9 +2654,9 @@ void change_arrow_value3(TBeing *ch, TArrow *o, const char *arg, editorEnterType
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter your choice.\n\r--> ");
 }
-	
-void change_arrow_value4(TBeing *ch, TArrow *o, const char *arg, editorEnterTypeT type)
-{
+
+void change_arrow_value4(TBeing* ch, TArrow* o, const char* arg,
+  editorEnterTypeT type) {
   int loc_update;
 
   if (type != ENTER_CHECK) {
@@ -2610,11 +2687,12 @@ void change_arrow_value4(TBeing *ch, TArrow *o, const char *arg, editorEnterType
     case CHANGE_ARROW_HEAD:
       if (type != ENTER_CHECK) {
         if ((loc_update > 5) || (loc_update < 0)) {
-          ch->sendTo("Invalid value.  Please enter a value between 0 and 5.\n\r");
+          ch->sendTo(
+            "Invalid value.  Please enter a value between 0 and 5.\n\r");
           return;
         }
 
-        o->setArrowHead((unsigned char) loc_update);
+        o->setArrowHead((unsigned char)loc_update);
         ch->specials.edit = CHANGE_ARROW_VALUE4;
         change_arrow_value4(ch, o, "", ENTER_CHECK);
         return;
@@ -2623,11 +2701,12 @@ void change_arrow_value4(TBeing *ch, TArrow *o, const char *arg, editorEnterType
     case CHANGE_ARROW_TYPE:
       if (type != ENTER_CHECK) {
         if ((loc_update > 7) || (loc_update < 0)) {
-          ch->sendTo("Invalid value.  Please enter a value between 0 and 7.\n\r");
+          ch->sendTo(
+            "Invalid value.  Please enter a value between 0 and 7.\n\r");
           return;
         }
 
-        o->setArrowType((unsigned char) loc_update);
+        o->setArrowType((unsigned char)loc_update);
         ch->specials.edit = CHANGE_ARROW_VALUE4;
         change_arrow_value4(ch, o, "", ENTER_CHECK);
         return;
@@ -2644,15 +2723,14 @@ void change_arrow_value4(TBeing *ch, TArrow *o, const char *arg, editorEnterType
   ch->sendTo("Enter your choice.\n\r--> ");
 }
 
-void obj_edit(TBeing *ch, const char *arg)
-{
+void obj_edit(TBeing* ch, const char* arg) {
   if (ch->specials.edit == MAIN_MENU) {
     if (!*arg || *arg == '\n') {
       ch->desc->connected = CON_PLYNG;
       act("$n has returned from editing objects.", TRUE, ch, 0, 0, TO_ROOM);
       if (ch->desc->obj) {
-	*ch += *(ch->desc->obj);
-	ch->desc->obj = NULL;
+        *ch += *(ch->desc->obj);
+        ch->desc->obj = NULL;
       }
       // reset the terminal bars
       if (ch->vt100() || ch->ansi())
@@ -2662,89 +2740,91 @@ void obj_edit(TBeing *ch, const char *arg)
     switch (convertTo<int>(arg)) {
       case 0:
         ch->specials.edit = MAIN_MENU;
-	update_obj_menu(ch, ch->desc->obj);
-	return;
+        update_obj_menu(ch, ch->desc->obj);
+        return;
       case 1:
-	ch->specials.edit = CHANGE_NAME;
-	change_obj_name(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_NAME;
+        change_obj_name(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 2:
-	ch->specials.edit = CHANGE_SHORT_DESC;
-	change_obj_short_desc(ch, ch->desc->obj, ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_SHORT_DESC;
+        change_obj_short_desc(ch, ch->desc->obj, ENTER_CHECK);
+        return;
       case 3:
-	ch->specials.edit = CHANGE_OBJ_TYPE;
-	change_obj_type(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_TYPE;
+        change_obj_type(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 4:
-	ch->specials.edit = CHANGE_LONG_DESC;
-	change_obj_long_desc(ch, ch->desc->obj, ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_LONG_DESC;
+        change_obj_long_desc(ch, ch->desc->obj, ENTER_CHECK);
+        return;
       case 5:
-	ch->specials.edit = CHANGE_OBJ_WEIGHT;
-	change_obj_weight(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_WEIGHT;
+        change_obj_weight(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 6:
-	ch->specials.edit = CHANGE_OBJ_VOLUME;
-	change_obj_volume(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_VOLUME;
+        change_obj_volume(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 7:
-	ch->specials.edit = CHANGE_OBJ_EXTRA_FLAGS;
-	change_obj_extra_flags(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_EXTRA_FLAGS;
+        change_obj_extra_flags(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 8:
-	ch->specials.edit = CHANGE_OBJ_WEAR_FLAGS;
-	change_obj_wear_flags(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_WEAR_FLAGS;
+        change_obj_wear_flags(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 10:
         if (ch->hasWizPower(POWER_OEDIT_COST)) {
           ch->specials.edit = CHANGE_OBJ_COST;
-	  change_obj_cost(ch, ch->desc->obj, "", ENTER_CHECK);
+          change_obj_cost(ch, ch->desc->obj, "", ENTER_CHECK);
         } else {
-          ch->sendTo("Do not worry about setting cost yourself until level 52.\n\r");
+          ch->sendTo(
+            "Do not worry about setting cost yourself until level 52.\n\r");
         }
-	return;
+        return;
       case 11:
         ch->specials.edit = CHANGE_OBJ_VALUES;
         change_obj_values(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        return;
       case 12:
-	ch->specials.edit = CHANGE_OBJ_DECAY;
-	change_obj_decay(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_DECAY;
+        change_obj_decay(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 13:
-	ch->specials.edit = CHANGE_OBJ_MAX_STRUCTS;
-	change_obj_max_struct_points(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_MAX_STRUCTS;
+        change_obj_max_struct_points(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 14:
-	ch->specials.edit = CHANGE_OBJ_STRUCT_POINTS;
-	change_obj_struct_points(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_STRUCT_POINTS;
+        change_obj_struct_points(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 15:
-	ch->specials.edit = CHANGE_OBJ_EXTRA;
-	change_obj_extra(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_EXTRA;
+        change_obj_extra(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 16:
-	ch->specials.edit = CHANGE_OBJ_MAT_TYPE;
-	change_obj_mat_type(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_MAT_TYPE;
+        change_obj_mat_type(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 17:
         if (ch->hasWizPower(POWER_OEDIT_APPLYS)) {
           ch->specials.edit = CHANGE_OBJ_APPLYS;
           change_obj_applys(ch, ch->desc->obj, "", ENTER_CHECK);
         } else {
-          ch->sendTo("Do not worry about changing applys yourself until level 53.\n\r");
+          ch->sendTo(
+            "Do not worry about changing applys yourself until level 53.\n\r");
           ch->specials.edit = MAIN_MENU;
         }
-	return;
+        return;
       case 18:
-	ch->specials.edit = CHANGE_OBJ_CAN_BE_SEEN;
-	change_obj_can_be_seen(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = CHANGE_OBJ_CAN_BE_SEEN;
+        change_obj_can_be_seen(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 19:
-	ch->specials.edit = MAIN_MENU;
-	delete_obj_extra_desc(ch, ch->desc->obj, "", ENTER_CHECK);
-	return;
+        ch->specials.edit = MAIN_MENU;
+        delete_obj_extra_desc(ch, ch->desc->obj, "", ENTER_CHECK);
+        return;
       case 20:
         ch->specials.edit = CHANGE_OBJ_SPEC;
         change_obj_spec(ch, ch->desc->obj, "", ENTER_CHECK);
@@ -2754,8 +2834,8 @@ void obj_edit(TBeing *ch, const char *arg)
         change_obj_max_exist(ch, ch->desc->obj, "", ENTER_CHECK);
         return;
       default:
-	ch->specials.edit = MAIN_MENU;
-	update_obj_menu(ch, ch->desc->obj);
+        ch->specials.edit = MAIN_MENU;
+        update_obj_menu(ch, ch->desc->obj);
     }
   }
   switch (ch->specials.edit) {
@@ -2829,7 +2909,8 @@ void obj_edit(TBeing *ch, const char *arg)
     case CHANGE_CHEST_CONT_FLAGS:
     case CHANGE_CHEST_TRAP_TYPE:
     case CHANGE_CHEST_TRAP_DAM:
-      change_chest_value2(ch, dynamic_cast<TOpenContainer *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_chest_value2(ch, dynamic_cast<TOpenContainer*>(ch->desc->obj), arg,
+        ENTER_REENTRANT);
       return;
     case CHANGE_TRAP_VALUE2:
       change_trap_value2(ch, ch->desc->obj, arg, ENTER_REENTRANT);
@@ -2860,22 +2941,26 @@ void obj_edit(TBeing *ch, const char *arg)
     case CHANGE_EGG_VALUE1:
     case CHANGE_EGG_TOUCHED:
     case CHANGE_EGG_FILL:
-      change_egg_value1(ch, dynamic_cast<TEgg *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_egg_value1(ch, dynamic_cast<TEgg*>(ch->desc->obj), arg,
+        ENTER_REENTRANT);
       return;
     case CHANGE_PORTAL_VALUE1:
     case CHANGE_PORTAL_VNUM:
     case CHANGE_PORTAL_MAX:
-      change_portal_value1(ch, dynamic_cast<TPortal *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_portal_value1(ch, dynamic_cast<TPortal*>(ch->desc->obj), arg,
+        ENTER_REENTRANT);
       return;
     case CHANGE_PORTAL_VALUE3:
     case CHANGE_PORTAL_TRAP_TYPE:
     case CHANGE_PORTAL_TRAP_DAM:
-      change_portal_value3(ch, dynamic_cast<TPortal *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_portal_value3(ch, dynamic_cast<TPortal*>(ch->desc->obj), arg,
+        ENTER_REENTRANT);
       return;
     case CHANGE_PORTAL_VALUE4:
     case CHANGE_PORTAL_KEY:
     case CHANGE_PORTAL_DOOR_FLAGS:
-      change_portal_value4(ch, dynamic_cast<TPortal *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_portal_value4(ch, dynamic_cast<TPortal*>(ch->desc->obj), arg,
+        ENTER_REENTRANT);
       return;
     case CHANGE_COMPONENT_VALUE4:
       change_component_value4(ch, ch->desc->obj, arg, ENTER_REENTRANT);
@@ -2890,115 +2975,100 @@ void obj_edit(TBeing *ch, const char *arg)
     case CHANGE_ARROW_VALUE3:
     case CHANGE_ARROW_TRAPLVL:
     case CHANGE_ARROW_TRAPTYPE:
-      change_arrow_value3(ch, dynamic_cast<TArrow *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_arrow_value3(ch, dynamic_cast<TArrow*>(ch->desc->obj), arg,
+        ENTER_REENTRANT);
       return;
     case CHANGE_ARROW_VALUE4:
     case CHANGE_ARROW_HEAD:
     case CHANGE_ARROW_TYPE:
-      change_arrow_value4(ch, dynamic_cast<TArrow *>(ch->desc->obj), arg, ENTER_REENTRANT);
+      change_arrow_value4(ch, dynamic_cast<TArrow*>(ch->desc->obj), arg,
+        ENTER_REENTRANT);
       return;
     default:
-      vlogf(LOG_EDIT, format("Got to bad spot in obj_edit.  char: %s   case: %d") % ch->getName() %ch->specials.edit);
+      vlogf(LOG_EDIT,
+        format("Got to bad spot in obj_edit.  char: %s   case: %d") %
+          ch->getName() % ch->specials.edit);
       return;
   }
 }
 
-void TObj::changeObjValue1(TBeing *ch)
-{
+void TObj::changeObjValue1(TBeing* ch) {
   int x1, x2, x3, x4;
   getFourValues(&x1, &x2, &x3, &x4);
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("What does this value do? :\n\r%s\n\r") %
-    ItemInfo[itemType()]->val0_info);
+             ItemInfo[itemType()]->val0_info);
   ch->specials.edit = CHANGE_OBJ_VALUE1;
 
-  ch->sendTo(format("Value 1 for %s : %d\n\r\n\r") %
-       sstring(getName()).uncap() % x1);
+  ch->sendTo(
+    format("Value 1 for %s : %d\n\r\n\r") % sstring(getName()).uncap() % x1);
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
-void TObj::changeObjValue2(TBeing *ch)
-{
+void TObj::changeObjValue2(TBeing* ch) {
   int x1, x2, x3, x4;
   getFourValues(&x1, &x2, &x3, &x4);
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("What does this value do? :\n\r %s\n\r") %
-        ItemInfo[itemType()]->val1_info);
+             ItemInfo[itemType()]->val1_info);
   ch->specials.edit = CHANGE_OBJ_VALUE2;
 
-  ch->sendTo(format("Value 2 for %s : %d\n\r\n\r") %
-       sstring(getName()).uncap() % x2);
+  ch->sendTo(
+    format("Value 2 for %s : %d\n\r\n\r") % sstring(getName()).uncap() % x2);
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
-void TObj::changeObjValue3(TBeing *ch)
-{
+void TObj::changeObjValue3(TBeing* ch) {
   int x1, x2, x3, x4;
   getFourValues(&x1, &x2, &x3, &x4);
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("What does this value do? :\n\r %s\n\r") %
-       ItemInfo[itemType()]->val2_info);
+             ItemInfo[itemType()]->val2_info);
   ch->specials.edit = CHANGE_OBJ_VALUE3;
 
-  ch->sendTo(format("Value 3 for %s : %d\n\r\n\r") %
-       sstring(getName()).uncap() % x3);
+  ch->sendTo(
+    format("Value 3 for %s : %d\n\r\n\r") % sstring(getName()).uncap() % x3);
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
-void TObj::changeObjValue4(TBeing *ch)
-{
+void TObj::changeObjValue4(TBeing* ch) {
   int x1, x2, x3, x4;
   getFourValues(&x1, &x2, &x3, &x4);
 
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("What does this value do? :\n\r %s\n\r") %
-	    ItemInfo[itemType()]->val3_info);
+             ItemInfo[itemType()]->val3_info);
   ch->specials.edit = CHANGE_OBJ_VALUE4;
 
-  ch->sendTo(format("Value 4 for %s : %d\n\r\n\r") %
-       sstring(getName()).uncap() % x4);
+  ch->sendTo(
+    format("Value 4 for %s : %d\n\r\n\r") % sstring(getName()).uncap() % x4);
   ch->sendTo(format(VT_CURSPOS) % 10 % 1);
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
-int TObj::changeItemVal2Check(TBeing *, int)
-{
-  return FALSE;
-}
+int TObj::changeItemVal2Check(TBeing*, int) { return FALSE; }
 
-int TObj::changeItemVal3Check(TBeing *, int)
-{
-  return FALSE;
-}
+int TObj::changeItemVal3Check(TBeing*, int) { return FALSE; }
 
-int TObj::changeItemVal4Check(TBeing *, int)
-{
-  return FALSE;
-}
+int TObj::changeItemVal4Check(TBeing*, int) { return FALSE; }
 
-sstring TObj::displayFourValues()
-{
+sstring TObj::displayFourValues() {
   char tString[256];
-  int  x1,
-       x2,
-       x3,
-       x4;
+  int x1, x2, x3, x4;
 
   getFourValues(&x1, &x2, &x3, &x4);
-  sprintf(tString, "Current values : %d %d %d %d\n\r",
-          x1, x2, x3, x4);
+  sprintf(tString, "Current values : %d %d %d %d\n\r", x1, x2, x3, x4);
 
   return tString;
 }
 
-bool dirlistSort::operator() (const sstring &xstr, const sstring &ystr) const
-{
+bool dirlistSort::operator()(const sstring& xstr, const sstring& ystr) const {
   // sstrings come in of the form "1234 object name"
   // yank the 1st argument, parse as a number, and put in numerical order
 
@@ -3012,13 +3082,12 @@ bool dirlistSort::operator() (const sstring &xstr, const sstring &ystr) const
   return xint < yint;
 }
 
-void generic_dirlist(const char *buf, const TBeing *ch)
-{
-  struct dirent *dp;
-  DIR *dfd;
+void generic_dirlist(const char* buf, const TBeing* ch) {
+  struct dirent* dp;
+  DIR* dfd;
 
   if (!(dfd = opendir(buf))) {
-    vlogf(LOG_FILE, format("Unable to dirwalk directory %s") %  buf);
+    vlogf(LOG_FILE, format("Unable to dirwalk directory %s") % buf);
     return;
   }
   unsigned int totcnt = 0;
@@ -3031,7 +3100,7 @@ void generic_dirlist(const char *buf, const TBeing *ch)
   // alphabetic order anyway -> (1, 10, 11, 2, 20, 200, 3, ...) BAD!
 
   // this will be a vector that we can sort later
-  std::vector<sstring>sort_str(0);
+  std::vector<sstring> sort_str(0);
 
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
@@ -3039,19 +3108,19 @@ void generic_dirlist(const char *buf, const TBeing *ch)
     sstring str = buf;
     str += "/";
     str += dp->d_name;
-    FILE *fp = fopen(str.c_str(), "r");
+    FILE* fp = fopen(str.c_str(), "r");
     if (fp) {
       int num;
       int rc = fscanf(fp, "#%d\n", &num);
       if (rc == 1) {
         // only handle if it's of right form
         sstring n = fread_string(fp);
-  
+
         sstring newstr;
         newstr += dp->d_name;
         newstr += " ";
         newstr += n;
-        newstr += (++totcnt%2 == 0 ? "\n\r" : "\n\r");
+        newstr += (++totcnt % 2 == 0 ? "\n\r" : "\n\r");
 
         sort_str.push_back(newstr);
       }
@@ -3073,19 +3142,20 @@ void generic_dirlist(const char *buf, const TBeing *ch)
   ch->desc->page_string(longstr, SHOWNOW_NO, ALLOWREP_YES);
 }
 
-int TObj::addApply(TBeing *ch, applyTypeT apply)
-{
+int TObj::addApply(TBeing* ch, applyTypeT apply) {
   if (apply == APPLY_LIGHT && !canWear(ITEM_WEAR_TAKE)) {
-    ch->sendTo("If you want light on a takeable object, please do so by setting GLOW.\n\r");
+    ch->sendTo(
+      "If you want light on a takeable object, please do so by setting "
+      "GLOW.\n\r");
     return TRUE;
   }
   return FALSE;
 }
 
-void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
-{
+void TMagicItem::changeMagicItemValue1(TBeing* ch, const char* arg,
+  editorEnterTypeT type) {
   int loc_update;
- 
+
   if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = CHANGE_OBJ_VALUES;
@@ -3094,7 +3164,7 @@ void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterT
     }
   }
   loc_update = convertTo<int>(arg);
- 
+
   switch (ch->specials.edit) {
     case CHANGE_MAGICITEM_VALUE1:
       switch (loc_update) {
@@ -3106,7 +3176,8 @@ void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterT
           return;
         case 2:
           ch->sendTo(VT_HOMECLR);
-          ch->sendTo(format("Current learnedness: %d\n\r") % getMagicLearnedness());
+          ch->sendTo(
+            format("Current learnedness: %d\n\r") % getMagicLearnedness());
           ch->sendTo("Enter new learnedness.\n\r--> ");
           ch->specials.edit = CHANGE_MAGICITEM_LEARNEDNESS;
           return;
@@ -3146,8 +3217,8 @@ void TMagicItem::changeMagicItemValue1(TBeing *ch, const char *arg, editorEnterT
   ch->sendTo("Enter your choice to modify.\n\r--> ");
 }
 
-void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
-{ 
+void TTrap::changeTrapValue2(TBeing* ch, const char* arg,
+  editorEnterTypeT type) {
   int i, row, loc_update;
   char buf[256];
 
@@ -3176,26 +3247,26 @@ void TTrap::changeTrapValue2(TBeing *ch, const char *arg, editorEnterTypeT type)
 
   row = 0;
   for (i = 0; i < MAX_TRAP_EFF; i++) {
-    sprintf(buf, VT_CURSPOS, row + 4, ((i%2) ? 45 : 5));
-    if (i%2)
+    sprintf(buf, VT_CURSPOS, row + 4, ((i % 2) ? 45 : 5));
+    if (i % 2)
       row++;
     ch->sendTo(buf);
 
-    ch->sendTo(format("%2d [%s] %s") % (i+1) % 
-              ((getTrapEffectType() & (1 << i)) ? "X" : " ") % 
-              trap_effects[i]);
+    ch->sendTo(format("%2d [%s] %s") % (i + 1) %
+               ((getTrapEffectType() & (1 << i)) ? "X" : " ") %
+               trap_effects[i]);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-  ch->sendTo("Select to number to toggle, <ENTER> to return to the main menu.\n\r--> ");
+  ch->sendTo(
+    "Select to number to toggle, <ENTER> to return to the main menu.\n\r--> ");
 }
 
-
-void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
-{ 
+void TTrap::changeTrapValue3(TBeing* ch, const char* arg,
+  editorEnterTypeT type) {
   int i, row;
   doorTrapT loc_update;
   char buf[256];
- 
+
   if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = MAIN_MENU;
@@ -3208,8 +3279,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
   if (type != ENTER_CHECK) {
     if (loc_update <= 0 || loc_update > MAX_TRAP_TYPES) {
       return;
-    } else if (loc_update == DOOR_TRAP_SPIKE ||
-               loc_update == DOOR_TRAP_BLADE ||
+    } else if (loc_update == DOOR_TRAP_SPIKE || loc_update == DOOR_TRAP_BLADE ||
                loc_update == DOOR_TRAP_HAMMER) {
       ch->sendTo("That trap type is not supported for item:trap.\n\r");
       return;
@@ -3222,7 +3292,7 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
   }
   ch->sendTo(VT_HOMECLR);
   ch->sendTo(format("Trap Damage Type: %s") % trap_types[getTrapDamType()]);
- 
+
   row = 0;
   for (i = 0; i < MAX_TRAP_TYPES; i++) {
     sprintf(buf, VT_CURSPOS, row + 3, (((i % 3) * 25) + 5));
@@ -3233,31 +3303,25 @@ void TTrap::changeTrapValue3(TBeing *ch, const char *arg, editorEnterTypeT type)
     ch->sendTo(buf);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);
-  ch->sendTo("Select the number to set to, <ENTER> to return to main menu.\n\r--> ");
+  ch->sendTo(
+    "Select the number to set to, <ENTER> to return to main menu.\n\r--> ");
 }
 
-
-
-int TThing::editAverageMe(TBeing *tBeing, const char *)
-{
+int TThing::editAverageMe(TBeing* tBeing, const char*) {
   tBeing->sendTo("Can not average this.  Sorry.\n\r");
   return FALSE;
 }
 
-int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
-{
-  sstring tStString(""),
-         tStBuffer(""),
-         tStArg(tString);
+int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
+  sstring tStString(""), tStBuffer(""), tStArg(tString);
 
   if (!tString || !*tString) {
     tBeing->sendTo("Syntax: med average <level[1.0-60.0]> <class>\n\r");
     return FALSE;
   }
 
-  tStString=tStArg.word(0);
-  tStBuffer=tStArg.word(1);
-
+  tStString = tStArg.word(0);
+  tStBuffer = tStArg.word(1);
 
   classIndT tClass;
   int tStr, tBra, tCon, tDex, tAgi, tInt, tWis, tFoc, tPer, tCha, tKar, tSpe;
@@ -3268,9 +3332,9 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
     return FALSE;
   }
 
-  TMonster *tMonster;
+  TMonster* tMonster;
 
-  if (!(tMonster = dynamic_cast<TMonster *>(this))) {
+  if (!(tMonster = dynamic_cast<TMonster*>(this))) {
     tBeing->sendTo("Target is not a monster.  Cannot do this, sorry.\n\r");
     return FALSE;
   }
@@ -3278,7 +3342,8 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
   if (tStBuffer.empty()) {
     for (tClass = MIN_CLASS_IND; tClass < MAX_CLASSES; tClass++)
       if (hasClass((1 << tClass))) {
-        tBeing->sendTo(format("Setting class to current: %s\n\r") % classInfo[tClass].name.cap());
+        tBeing->sendTo(format("Setting class to current: %s\n\r") %
+                       classInfo[tClass].name.cap());
         break;
       }
 
@@ -3312,31 +3377,31 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
         tInt = +20;
         tWis = +20;
         tFoc = +20;
-        tPer = - 5;
-        tCha = - 5;
+        tPer = -5;
+        tCha = -5;
         tKar = +20;
         tSpe = -10;
         break;
       case CLERIC_LEVEL_IND:
-        tStr =   0;
+        tStr = 0;
         tBra = -10;
         tCon = -10;
         tDex = +10;
-        tAgi =   0;
+        tAgi = 0;
         tInt = +10;
-        tWis =   0;
+        tWis = 0;
         tFoc = +10;
         tPer = -20;
-        tCha =   0;
+        tCha = 0;
         tKar = +20;
-        tSpe =   0;
+        tSpe = 0;
         break;
       case WARRIOR_LEVEL_IND:
         tStr = +20;
         tBra = +10;
         tCon = +20;
-        tDex = + 5;
-        tAgi = + 5;
+        tDex = +5;
+        tAgi = +5;
         tInt = -20;
         tWis = -20;
         tFoc = -10;
@@ -3356,7 +3421,7 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
         tFoc = +10;
         tPer = +20;
         tCha = +10;
-        tKar =   0;
+        tKar = 0;
         tSpe = +25;
         break;
       case SHAMAN_LEVEL_IND:
@@ -3378,18 +3443,18 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
         tBra = -10;
         tCon = -20;
         tDex = -10;
-        tAgi =   0;
+        tAgi = 0;
         tInt = +10;
         tWis = +20;
         tFoc = +20;
         tPer = -10;
         tCha = -10;
-        tKar =   0;
-        tSpe =   0;
+        tKar = 0;
+        tSpe = 0;
         break;
       case MONK_LEVEL_IND:
         tStr = +10;
-        tBra =   0;
+        tBra = 0;
         tCon = -20;
         tDex = +10;
         tAgi = +20;
@@ -3397,8 +3462,8 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
         tWis = -20;
         tFoc = +20;
         tPer = -20;
-        tCha =   0;
-        tKar =   0;
+        tCha = 0;
+        tKar = 0;
         tSpe = +20;
         break;
       case RANGER_LEVEL_IND:
@@ -3447,26 +3512,28 @@ int TBeing::editAverageMe(TBeing *tBeing, const char *tString)
 
   setClass((1 << tClass));
 
-  for (classIndT tNewClass = MIN_CLASS_IND; tNewClass < MAX_CLASSES; tNewClass++)
+  for (classIndT tNewClass = MIN_CLASS_IND; tNewClass < MAX_CLASSES;
+       tNewClass++)
     setLevel(tNewClass, 0);
 
-  setLevel(tClass, (int) tLevel);
+  setLevel(tClass, (int)tLevel);
 
   tMonster->setHPLevel(tLevel);
   tMonster->setHPFromHPLevel();
   tMonster->setDamLevel(tLevel);
   tMonster->setACLevel(tLevel);
   tMonster->setACFromACLevel();
-  //tMonster->setHitroll(10.0 * tLevel);
-  tMonster->setHitroll(0); // hitroll is a bonus ABOVE your level
+  // tMonster->setHitroll(10.0 * tLevel);
+  tMonster->setHitroll(0);  // hitroll is a bonus ABOVE your level
 
   return FALSE;
 }
 
-int TBaseWeapon::editAverageMe(TBeing *tBeing, const char *tString)
-{
+int TBaseWeapon::editAverageMe(TBeing* tBeing, const char* tString) {
   if (!tBeing->hasWizPower(POWER_OEDIT_WEAPONS)) {
-    tBeing->sendTo("You don't have the power to modify weapons, thus you can not use this.\n\r");
+    tBeing->sendTo(
+      "You don't have the power to modify weapons, thus you can not use "
+      "this.\n\r");
     return FALSE;
   }
 
@@ -3487,27 +3554,28 @@ int TBaseWeapon::editAverageMe(TBeing *tBeing, const char *tString)
   double tNewShr = ((tLevel * 3.0) / 2.0) + 10;
   double tNewAvg = 10 - ((tLevel / 60) * 10);
 
-  tBeing->sendTo(COLOR_OBJECTS, format("Setting %s to:  [Level: %6.2f]\n\r") % getName() % tLevel);
+  tBeing->sendTo(COLOR_OBJECTS,
+    format("Setting %s to:  [Level: %6.2f]\n\r") % getName() % tLevel);
   tBeing->sendTo(format("Strength : %6.2f\n\r") % tNewStr);
   tBeing->sendTo(format("Damage   : %6.2f\n\r") % tNewDam);
   tBeing->sendTo(format("Shrapness: %6.2f\n\r") % tNewShr);
   tBeing->sendTo(format("Precison : %6.2f\n\r") % tNewAvg);
 
-  setMaxSharp((int) tNewShr);
-  setCurSharp((int) tNewShr);
-  setWeapDamLvl((int) tNewDam);
-  setWeapDamDev((int) tNewAvg);
-  setStructPoints((int) tNewStr);
-  setMaxStructPoints((int) tNewStr);
+  setMaxSharp((int)tNewShr);
+  setCurSharp((int)tNewShr);
+  setWeapDamLvl((int)tNewDam);
+  setWeapDamDev((int)tNewAvg);
+  setStructPoints((int)tNewStr);
+  setMaxStructPoints((int)tNewStr);
   obj_flags.cost = suggestedPrice();
 
   return FALSE;
 }
 
-int TBaseClothing::editAverageMe(TBeing *tBeing, const char *tString)
-{
+int TBaseClothing::editAverageMe(TBeing* tBeing, const char* tString) {
   if (!tBeing->hasWizPower(POWER_OEDIT_APPLYS)) {
-    tBeing->sendTo("You can not set applies, AC is based off this.  Sorry.\n\r");
+    tBeing->sendTo(
+      "You can not set applies, AC is based off this.  Sorry.\n\r");
     return FALSE;
   }
 
@@ -3529,15 +3597,11 @@ int TBaseClothing::editAverageMe(TBeing *tBeing, const char *tString)
   return FALSE;
 }
 
-
-
-
-
-void TGun::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnterTypeT type)
-{
+void TGun::changeBaseWeaponValue1(TBeing* ch, const char* arg,
+  editorEnterTypeT type) {
   int new_rof;
-  TGun *o=this;
-  
+  TGun* o = this;
+
   if (type != ENTER_CHECK) {
     if (!*arg || (*arg == '\n')) {
       ch->specials.edit = MAIN_MENU;
@@ -3560,6 +3624,4 @@ void TGun::changeBaseWeaponValue1(TBeing *ch, const char *arg, editorEnterTypeT 
   ch->sendTo(format("Current rate of fire: %i") % o->getROF());
   ch->sendTo(format(VT_CURSPOS) % 4 % 1);
   ch->sendTo("Select a new rate of fire.\n\r--> ");
-
-
 }

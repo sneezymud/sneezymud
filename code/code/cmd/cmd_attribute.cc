@@ -18,26 +18,23 @@
 #include "weather.h"
 #include "gametime.h"
 
-static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff)
-{
+static void showStatsTo(const Descriptor* d, const TBeing* ch,
+  bool hidden_stuff) {
   time_info_data playing_time;
   char time_buf[160];
   char buffer[512];
   char buf3[120], buf4[120];
   sstring str;
 
-  GameTime::realTimePassed((time(0) - d->session.connect),0, &playing_time);
+  GameTime::realTimePassed((time(0) - d->session.connect), 0, &playing_time);
   if (playing_time.day)
     playing_time.hours += playing_time.day * 24;
-  snprintf(time_buf, sizeof(time_buf), "%d hour%s, %d minute%s and %d second%s", 
-        playing_time.hours, 
-        ((playing_time.hours == 1) ? "" : "s"),
-        playing_time.minutes,
-        ((playing_time.minutes== 1) ? "" : "s"),
-        playing_time.seconds,
-        ((playing_time.seconds== 1) ? "" : "s"));
+  snprintf(time_buf, sizeof(time_buf), "%d hour%s, %d minute%s and %d second%s",
+    playing_time.hours, ((playing_time.hours == 1) ? "" : "s"),
+    playing_time.minutes, ((playing_time.minutes == 1) ? "" : "s"),
+    playing_time.seconds, ((playing_time.seconds == 1) ? "" : "s"));
 
-  TBeing *victim = d->character;
+  TBeing* victim = d->character;
 
   snprintf(buffer, sizeof(buffer), "In this session:\n\r");
   str += buffer;
@@ -45,423 +42,511 @@ static void showStatsTo(const Descriptor *d, const TBeing *ch, bool hidden_stuff
   if (d == ch->desc)
     snprintf(buffer, sizeof(buffer), "You have");
   else
-    snprintf(buffer, sizeof(buffer), "%s (L%d:%d) has", victim->getName().c_str(), victim->GetMaxLevel(), victim->GetMaxLevel() * 50 / 3);
+    snprintf(buffer, sizeof(buffer), "%s (L%d:%d) has",
+      victim->getName().c_str(), victim->GetMaxLevel(),
+      victim->GetMaxLevel() * 50 / 3);
   str += buffer;
 
-  snprintf(buffer, sizeof(buffer), " been playing %s%s%s.\n\r", ch->green(), time_buf, ch->norm());
+  snprintf(buffer, sizeof(buffer), " been playing %s%s%s.\n\r", ch->green(),
+    time_buf, ch->norm());
   str += buffer;
 
-  snprintf(buffer, sizeof(buffer), "Contribution to deities' potency: %s%5.2f%s\n\r", ch->cyan(), d->session.perc, ch->norm());
+  snprintf(buffer, sizeof(buffer),
+    "Contribution to deities' potency: %s%5.2f%s\n\r", ch->cyan(),
+    d->session.perc, ch->norm());
   str += buffer;
-  snprintf(buffer, sizeof(buffer), "Creatures killed : Alone  %s%d%s, Group %s%d%s. Exp Gained : %s%.2f%s\n\r",
-         ch->cyan(), d->session.kills, ch->norm(),
-         ch->cyan(), d->session.groupKills, ch->norm(),
-         ch->cyan(), d->session.xp, ch->norm());
+  snprintf(buffer, sizeof(buffer),
+    "Creatures killed : Alone  %s%d%s, Group %s%d%s. Exp Gained : %s%.2f%s\n\r",
+    ch->cyan(), d->session.kills, ch->norm(), ch->cyan(), d->session.groupKills,
+    ch->norm(), ch->cyan(), d->session.xp, ch->norm());
   str += buffer;
 
   int i;
   if (hidden_stuff) {
-    snprintf(buffer, sizeof(buffer), "Offense: %d      Defense: %d    mode: %s\n\r",
-        victim->attackRound(NULL), victim->defendRound(NULL),
-          attack_modes[victim->getCombatMode()]);
+    snprintf(buffer, sizeof(buffer),
+      "Offense: %d      Defense: %d    mode: %s\n\r", victim->attackRound(NULL),
+      victim->defendRound(NULL), attack_modes[victim->getCombatMode()]);
     str += buffer;
-    snprintf(buffer, sizeof(buffer), "Combat   :            hits swings   rnds   hit%%  ComDam SklDam  Mod  Pot\n\r");
+    snprintf(buffer, sizeof(buffer),
+      "Combat   :            hits swings   rnds   hit%%  ComDam SklDam  Mod  "
+      "Pot\n\r");
     str += buffer;
-  
+
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       // prevent them from using this to see specific damage of a weapon
-      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: inflict: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s %s%6d%s %s%4d%s %s%4.1f%s\n\r",
-           ch->cyan(), attack_modes[i], ch->norm(),
-           ch->cyan(), d->session.hits[i], ch->norm(),
-           ch->cyan(), d->session.swings[i], ch->norm(),
-           ch->cyan(), d->session.rounds[i], ch->norm(),
-           ch->cyan(), (d->session.swings[i] ? 100.0 * d->session.hits[i] / d->session.swings[i] : 0.0), ch->norm(),
-           ch->cyan(), d->session.combat_dam_done[i], ch->norm(),
-           ch->cyan(), d->session.skill_dam_done[i], ch->norm(),
-           ch->cyan(), (d->session.swings[i] ? d->session.mod_done[i] / (int) d->session.swings[i] :0), ch->norm(),
-           ch->cyan(), (d->session.hits[i] ? (float) d->session.potential_dam_done[i] / d->session.hits[i] :0), ch->norm());
+      snprintf(buffer, sizeof(buffer),
+        "%s%-9.9s%s: inflict: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s "
+        "%s%6d%s %s%4d%s %s%4.1f%s\n\r",
+        ch->cyan(), attack_modes[i], ch->norm(), ch->cyan(), d->session.hits[i],
+        ch->norm(), ch->cyan(), d->session.swings[i], ch->norm(), ch->cyan(),
+        d->session.rounds[i], ch->norm(), ch->cyan(),
+        (d->session.swings[i]
+            ? 100.0 * d->session.hits[i] / d->session.swings[i]
+            : 0.0),
+        ch->norm(), ch->cyan(), d->session.combat_dam_done[i], ch->norm(),
+        ch->cyan(), d->session.skill_dam_done[i], ch->norm(), ch->cyan(),
+        (d->session.swings[i]
+            ? d->session.mod_done[i] / (int)d->session.swings[i]
+            : 0),
+        ch->norm(), ch->cyan(),
+        (d->session.hits[i]
+            ? (float)d->session.potential_dam_done[i] / d->session.hits[i]
+            : 0),
+        ch->norm());
       str += buffer;
 
-      snprintf(buffer, sizeof(buffer), "  %sL%6.2f%s: receive: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s %s%6d%s %s%4d%s %s%4.1f%s\n\r",
-           ch->cyan(), (d->session.swings_received[i] ? (float) d->session.level_attacked[i] / d->session.swings_received[i] : 0.0), ch->norm(),
-           ch->cyan(), d->session.hits_received[i], ch->norm(),
-           ch->cyan(), d->session.swings_received[i], ch->norm(),
-           ch->cyan(), d->session.rounds_received[i], ch->norm(),
-           ch->cyan(), (d->session.swings_received[i] ? 100.0 * d->session.hits_received[i] / d->session.swings_received[i] : 0.0), ch->norm(),
-           ch->cyan(), d->session.combat_dam_received[i], ch->norm(),
-           ch->cyan(), d->session.skill_dam_received[i], ch->norm(),
-           ch->cyan(), (d->session.swings_received[i] ? d->session.mod_received[i] / (int) d->session.swings_received[i] :0), ch->norm(),
-           ch->cyan(), (d->session.hits_received[i] ? (float) d->session.potential_dam_received[i] / d->session.hits_received[i] :0), ch->norm());
+      snprintf(buffer, sizeof(buffer),
+        "  %sL%6.2f%s: receive: %s%6u%s %s%6u%s %s%6u%s (%s%4.1f%%%s) %s%6d%s "
+        "%s%6d%s %s%4d%s %s%4.1f%s\n\r",
+        ch->cyan(),
+        (d->session.swings_received[i] ? (float)d->session.level_attacked[i] /
+                                           d->session.swings_received[i]
+                                       : 0.0),
+        ch->norm(), ch->cyan(), d->session.hits_received[i], ch->norm(),
+        ch->cyan(), d->session.swings_received[i], ch->norm(), ch->cyan(),
+        d->session.rounds_received[i], ch->norm(), ch->cyan(),
+        (d->session.swings_received[i] ? 100.0 * d->session.hits_received[i] /
+                                           d->session.swings_received[i]
+                                       : 0.0),
+        ch->norm(), ch->cyan(), d->session.combat_dam_received[i], ch->norm(),
+        ch->cyan(), d->session.skill_dam_received[i], ch->norm(), ch->cyan(),
+        (d->session.swings_received[i]
+            ? d->session.mod_received[i] / (int)d->session.swings_received[i]
+            : 0),
+        ch->norm(), ch->cyan(),
+        (d->session.hits_received[i]
+            ? (float)d->session.potential_dam_received[i] /
+                d->session.hits_received[i]
+            : 0),
+        ch->norm());
       str += buffer;
     }
-    snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
-           100.0 * ((float) d->session.skill_success_pass/
-            (float) max((unsigned int) 1, d->session.skill_success_attempts)),
-           d->session.skill_success_pass,
-           d->session.skill_success_attempts);
+    snprintf(buffer, sizeof(buffer),
+      "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
+      100.0 * ((float)d->session.skill_success_pass /
+                (float)max((unsigned int)1, d->session.skill_success_attempts)),
+      d->session.skill_success_pass, d->session.skill_success_attempts);
     str += buffer;
-    snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
-           100.0 * ((float) d->session.spell_success_pass/
-            (float) max((unsigned int) 1, d->session.spell_success_attempts)),
-           d->session.spell_success_pass,
-           d->session.spell_success_attempts);
+    snprintf(buffer, sizeof(buffer),
+      "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
+      100.0 * ((float)d->session.spell_success_pass /
+                (float)max((unsigned int)1, d->session.spell_success_attempts)),
+      d->session.spell_success_pass, d->session.spell_success_attempts);
     str += buffer;
-    snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
-           100.0 * ((float) d->session.prayer_success_pass/
-            (float) max((unsigned int) 1, d->session.prayer_success_attempts)),
-           d->session.prayer_success_pass,
-           d->session.prayer_success_attempts);
+    snprintf(buffer, sizeof(buffer),
+      "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
+      100.0 *
+        ((float)d->session.prayer_success_pass /
+          (float)max((unsigned int)1, d->session.prayer_success_attempts)),
+      d->session.prayer_success_pass, d->session.prayer_success_attempts);
     str += buffer;
   } else {
     // !hiddenstuff
-    snprintf(buffer, sizeof(buffer), "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
+    snprintf(buffer, sizeof(buffer),
+      "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
     str += buffer;
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       if (d->session.combat_dam_received[i])
-        snprintf(buf3, sizeof(buf3), "%5.3f:1.0", (float) (((float) d->session.combat_dam_done[i])/((float) d->session.combat_dam_received[i])));
+        snprintf(buf3, sizeof(buf3), "%5.3f:1.0",
+          (float)(((float)d->session.combat_dam_done[i]) /
+                  ((float)d->session.combat_dam_received[i])));
       else
         snprintf(buf3, sizeof(buf3), "0.0:1.0");
-      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r",
-           ch->cyan(), attack_modes[i], ch->norm(),
-           ch->cyan(), (d->session.swings[i] ? 100.0 * d->session.hits[i] / d->session.swings[i] : 0.0), ch->norm(),
-           ch->cyan(), buf3, ch->norm());
+      snprintf(buffer, sizeof(buffer),
+        "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r", ch->cyan(),
+        attack_modes[i], ch->norm(), ch->cyan(),
+        (d->session.swings[i]
+            ? 100.0 * d->session.hits[i] / d->session.swings[i]
+            : 0.0),
+        ch->norm(), ch->cyan(), buf3, ch->norm());
       str += buffer;
     }
     spellNumT skill = victim->getSkillNum(SKILL_SNEAK);
-    if (!ch->isImmortal() && 
-         (victim->affectedBySpell(skill) || victim->checkForSkillAttempt(skill))) {
-      snprintf(buffer, sizeof(buffer), "Skill Success  : info concealed at present time.\n\r");
+    if (!ch->isImmortal() && (victim->affectedBySpell(skill) ||
+                               victim->checkForSkillAttempt(skill))) {
+      snprintf(buffer, sizeof(buffer),
+        "Skill Success  : info concealed at present time.\n\r");
     } else {
       snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%\n\r",
-             100.0 * ((float) d->session.skill_success_pass/
-              (float) max((unsigned int) 1, d->session.skill_success_attempts)));
+        100.0 *
+          ((float)d->session.skill_success_pass /
+            (float)max((unsigned int)1, d->session.skill_success_attempts)));
     }
     str += buffer;
     snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%\n\r",
-           100.0 * ((float) d->session.spell_success_pass/
-            (float) max((unsigned int) 1, d->session.spell_success_attempts)));
+      100.0 *
+        ((float)d->session.spell_success_pass /
+          (float)max((unsigned int)1, d->session.spell_success_attempts)));
     str += buffer;
     snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%\n\r",
-           100.0 * ((float) d->session.prayer_success_pass/
-            (float) max((unsigned int) 1, d->session.prayer_success_attempts)));
+      100.0 *
+        ((float)d->session.prayer_success_pass /
+          (float)max((unsigned int)1, d->session.prayer_success_attempts)));
     str += buffer;
   }
 
   if (ch->desc == d)
     snprintf(buffer, sizeof(buffer), "\n\rIn your career:\n\rYou have");
   else
-    snprintf(buffer, sizeof(buffer), "\n\rIn %s's career:\n\r%s has", victim->getName().c_str(), victim->getName().c_str());
+    snprintf(buffer, sizeof(buffer), "\n\rIn %s's career:\n\r%s has",
+      victim->getName().c_str(), victim->getName().c_str());
   str += buffer;
-  GameTime::realTimePassed((time(0) - victim->player.time->logon) +
-                                victim->player.time->played, 0, &playing_time);
+  GameTime::realTimePassed(
+    (time(0) - victim->player.time->logon) + victim->player.time->played, 0,
+    &playing_time);
 
-  snprintf(buffer, sizeof(buffer), " been playing for %s%d%s days and %s%d%s hours.\n\r",
-      ch->purple(), playing_time.day, ch->norm(),
-      ch->purple(), playing_time.hours, ch->norm());
+  snprintf(buffer, sizeof(buffer),
+    " been playing for %s%d%s days and %s%d%s hours.\n\r", ch->purple(),
+    playing_time.day, ch->norm(), ch->purple(), playing_time.hours, ch->norm());
   str += buffer;
 
-  snprintf(buffer, sizeof(buffer), "Creatures killed : Alone  %s%u%s, Group %s%u%s. Exp Gained : %s%.2f%s\n\r",
-         ch->cyan(), d->career.kills, ch->norm(),
-         ch->cyan(), d->career.group_kills, ch->norm(),
-         ch->cyan(), d->career.exp, ch->norm());
+  snprintf(buffer, sizeof(buffer),
+    "Creatures killed : Alone  %s%u%s, Group %s%u%s. Exp Gained : %s%.2f%s\n\r",
+    ch->cyan(), d->career.kills, ch->norm(), ch->cyan(), d->career.group_kills,
+    ch->norm(), ch->cyan(), d->career.exp, ch->norm());
   str += buffer;
 
   if (hidden_stuff) {
-    snprintf(buffer, sizeof(buffer), "Combat   : hits     swings           dam done dam received\n\r");
+    snprintf(buffer, sizeof(buffer),
+      "Combat   : hits     swings           dam done dam received\n\r");
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       // prevent them from using this to see specific damage of a weapon
       snprintf(buf3, sizeof(buf3), "%8d", d->career.dam_done[i]);
       snprintf(buf4, sizeof(buf4), "%8d", d->career.dam_received[i]);
-      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: %s%8u%s %s%8u%s (%s%4.1f%%%s) %s%8s%s %s%8s%s\n\r",
-           ch->cyan(), attack_modes[i], ch->norm(),
-           ch->cyan(), d->career.hits[i], ch->norm(),
-           ch->cyan(), d->career.swings[i], ch->norm(),
-           ch->cyan(), (d->career.swings[i] ? 100.0 * d->career.hits[i] / d->career.swings[i] : 0.0), ch->norm(),
-           ch->cyan(), buf3, ch->norm(),
-           ch->cyan(), buf4, ch->norm());
+      snprintf(buffer, sizeof(buffer),
+        "%s%-9.9s%s: %s%8u%s %s%8u%s (%s%4.1f%%%s) %s%8s%s %s%8s%s\n\r",
+        ch->cyan(), attack_modes[i], ch->norm(), ch->cyan(), d->career.hits[i],
+        ch->norm(), ch->cyan(), d->career.swings[i], ch->norm(), ch->cyan(),
+        (d->career.swings[i] ? 100.0 * d->career.hits[i] / d->career.swings[i]
+                             : 0.0),
+        ch->norm(), ch->cyan(), buf3, ch->norm(), ch->cyan(), buf4, ch->norm());
       str += buffer;
     }
   } else {
     // !hidden_stuff
-    snprintf(buffer, sizeof(buffer), "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
+    snprintf(buffer, sizeof(buffer),
+      "Combat   : hit%%      damage ratio (inflicted:received)\n\r");
     str += buffer;
     for (i = 0; i < MAX_ATTACK_MODE_TYPE; i++) {
       if (d->career.dam_received[i])
-        snprintf(buf3, sizeof(buf3), "%5.3f:1.0", (float) (((float) d->career.dam_done[i])/((float) d->career.dam_received[i])));
+        snprintf(buf3, sizeof(buf3), "%5.3f:1.0",
+          (float)(((float)d->career.dam_done[i]) /
+                  ((float)d->career.dam_received[i])));
       else
         snprintf(buf3, sizeof(buf3), "0.0:1.0");
-      snprintf(buffer, sizeof(buffer), "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r",
-           ch->cyan(), attack_modes[i], ch->norm(),
-           ch->cyan(), (d->career.swings[i] ? 100.0 * d->career.hits[i] / d->career.swings[i] : 0.0), ch->norm(),
-           ch->cyan(), buf3, ch->norm());
+      snprintf(buffer, sizeof(buffer),
+        "%s%-9.9s%s: (%s%5.2f%%%s)     %s%-10s%s\n\r", ch->cyan(),
+        attack_modes[i], ch->norm(), ch->cyan(),
+        (d->career.swings[i] ? 100.0 * d->career.hits[i] / d->career.swings[i]
+                             : 0.0),
+        ch->norm(), ch->cyan(), buf3, ch->norm());
       str += buffer;
     }
   }
-  snprintf(buffer, sizeof(buffer), "Total deaths: %s%u%s, Arena deaths: %s%u%s, Arena victories: %s%u%s\n\r",
-         ch->cyan(), d->career.deaths, ch->norm(),
-         ch->cyan(), d->career.arena_loss, ch->norm(),
-         ch->cyan(), d->career.arena_victs, ch->norm());
+  snprintf(buffer, sizeof(buffer),
+    "Total deaths: %s%u%s, Arena deaths: %s%u%s, Arena victories: %s%u%s\n\r",
+    ch->cyan(), d->career.deaths, ch->norm(), ch->cyan(), d->career.arena_loss,
+    ch->norm(), ch->cyan(), d->career.arena_victs, ch->norm());
   str += buffer;
 
   if (hidden_stuff) {
-    snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
-           100.0 * ((float) d->career.skill_success_pass/
-            (float) max((unsigned int) 1, d->career.skill_success_attempts)),
-           d->career.skill_success_pass,
-           d->career.skill_success_attempts);
+    snprintf(buffer, sizeof(buffer),
+      "Skill Success  : %5.3f%%   pass: %d, att: %d\n\r",
+      100.0 * ((float)d->career.skill_success_pass /
+                (float)max((unsigned int)1, d->career.skill_success_attempts)),
+      d->career.skill_success_pass, d->career.skill_success_attempts);
     str += buffer;
-    snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
-           100.0 * ((float) d->career.spell_success_pass/
-            (float) max((unsigned int) 1, d->career.spell_success_attempts)),
-           d->career.spell_success_pass,
-           d->career.spell_success_attempts);
+    snprintf(buffer, sizeof(buffer),
+      "Spell Success  : %5.3f%%   pass: %d, att: %d\n\r",
+      100.0 * ((float)d->career.spell_success_pass /
+                (float)max((unsigned int)1, d->career.spell_success_attempts)),
+      d->career.spell_success_pass, d->career.spell_success_attempts);
     str += buffer;
-    snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
-           100.0 * ((float) d->career.prayer_success_pass/
-            (float) max((unsigned int) 1, d->career.prayer_success_attempts)),
-           d->career.prayer_success_pass,
-           d->career.prayer_success_attempts);
+    snprintf(buffer, sizeof(buffer),
+      "Prayer Success : %5.3f%%   pass: %d, att: %d\n\r",
+      100.0 * ((float)d->career.prayer_success_pass /
+                (float)max((unsigned int)1, d->career.prayer_success_attempts)),
+      d->career.prayer_success_pass, d->career.prayer_success_attempts);
     str += buffer;
   } else {
     // !hidden_stuff
     spellNumT skill = victim->getSkillNum(SKILL_SNEAK);
-    if (!ch->isImmortal() && 
-         (victim->affectedBySpell(skill) || victim->checkForSkillAttempt(skill))) {
-      snprintf(buffer, sizeof(buffer), "Skill Success  : info concealed at present time.\n\r");
+    if (!ch->isImmortal() && (victim->affectedBySpell(skill) ||
+                               victim->checkForSkillAttempt(skill))) {
+      snprintf(buffer, sizeof(buffer),
+        "Skill Success  : info concealed at present time.\n\r");
     } else {
       snprintf(buffer, sizeof(buffer), "Skill Success  : %5.3f%%\n\r",
-             100.0 * ((float) d->career.skill_success_pass/
-             (float) max((unsigned int) 1, d->career.skill_success_attempts)));
+        100.0 *
+          ((float)d->career.skill_success_pass /
+            (float)max((unsigned int)1, d->career.skill_success_attempts)));
     }
     str += buffer;
     snprintf(buffer, sizeof(buffer), "Spell Success  : %5.3f%%\n\r",
-           100.0 * ((float) d->career.spell_success_pass/
-            (float) max((unsigned int) 1, d->career.spell_success_attempts)));
+      100.0 * ((float)d->career.spell_success_pass /
+                (float)max((unsigned int)1, d->career.spell_success_attempts)));
     str += buffer;
     snprintf(buffer, sizeof(buffer), "Prayer Success : %5.3f%%\n\r",
-           100.0 * ((float) d->career.prayer_success_pass/
-            (float) max((unsigned int) 1, d->career.prayer_success_attempts)));
+      100.0 *
+        ((float)d->career.prayer_success_pass /
+          (float)max((unsigned int)1, d->career.prayer_success_attempts)));
     str += buffer;
   }
-  snprintf(buffer, sizeof(buffer), "Pets owned: %d of an average level of %5.3f\n\r",
-         d->career.pets_bought,
-         ((float) d->career.pet_levels_bought/
-            (float) max((unsigned int) 1, d->career.pets_bought)));
+  snprintf(buffer, sizeof(buffer),
+    "Pets owned: %d of an average level of %5.3f\n\r", d->career.pets_bought,
+    ((float)d->career.pet_levels_bought /
+      (float)max((unsigned int)1, d->career.pets_bought)));
   str += buffer;
 
   if (hidden_stuff) {
-    char * local_time;
+    char* local_time;
     if (d->career.hit_level40) {
       local_time = ctime(&d->career.hit_level40);
-      local_time[strlen(local_time) -1] = '\0';
+      local_time[strlen(local_time) - 1] = '\0';
       snprintf(buffer, sizeof(buffer), "Hit level 40 on: %s\n\r", local_time);
       str += buffer;
     }
     if (d->career.hit_level50) {
       local_time = ctime(&d->career.hit_level50);
-      local_time[strlen(local_time) -1] = '\0';
+      local_time[strlen(local_time) - 1] = '\0';
       snprintf(buffer, sizeof(buffer), "Hit level 50 on: %s\n\r", local_time);
       str += buffer;
     }
   }
 
-  snprintf(buffer, sizeof(buffer), "Combat inflicted : crit-hits %s%u%s, crit-misses %s%u%s, crit-kills %s%u%s\n\r",
-         ch->cyan(), d->career.crit_hits, ch->norm(),
-         ch->cyan(), d->career.crit_misses, ch->norm(),
-         ch->cyan(), d->career.crit_kills, ch->norm());
+  snprintf(buffer, sizeof(buffer),
+    "Combat inflicted : crit-hits %s%u%s, crit-misses %s%u%s, crit-kills "
+    "%s%u%s\n\r",
+    ch->cyan(), d->career.crit_hits, ch->norm(), ch->cyan(),
+    d->career.crit_misses, ch->norm(), ch->cyan(), d->career.crit_kills,
+    ch->norm());
   str += buffer;
-  snprintf(buffer, sizeof(buffer), "Combat suffered  : crit-hits %s%u%s, crit-kills %s%u%s\n\r",
-         ch->cyan(), d->career.crit_hits_suff, ch->norm(),
-         ch->cyan(), d->career.crit_kills_suff, ch->norm());
+  snprintf(buffer, sizeof(buffer),
+    "Combat suffered  : crit-hits %s%u%s, crit-kills %s%u%s\n\r", ch->cyan(),
+    d->career.crit_hits_suff, ch->norm(), ch->cyan(), d->career.crit_kills_suff,
+    ch->norm());
   str += buffer;
   if (d->career.ounces_of_blood) {
-    snprintf(buffer, sizeof(buffer), "Ounces of blood lost                    : %s%u%s\n\r",
-           ch->cyan(), d->career.ounces_of_blood, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "Ounces of blood lost                    : %s%u%s\n\r", ch->cyan(),
+      d->career.ounces_of_blood, ch->norm());
     str += buffer;
-  } 
+  }
   if (d->career.stuck_in_foot) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Weapons stuck in foot      : %s%u%s\n\r",
-           ch->cyan(), d->career.stuck_in_foot, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Weapons stuck in foot      : %s%u%s\n\r", ch->cyan(),
+      d->career.stuck_in_foot, ch->norm());
     str += buffer;
-  } 
+  }
   if (d->career.crit_beheads) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Beheadings inflicted       : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_beheads, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Beheadings inflicted       : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_beheads, ch->norm());
     str += buffer;
   }
   if (d->career.crit_beheads_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Beheadings suffered        : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_beheads_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Beheadings suffered        : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_beheads_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_sev_limbs) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Severed limbs inflicted    : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_sev_limbs, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Severed limbs inflicted    : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_sev_limbs, ch->norm());
     str += buffer;
   }
   if (d->career.crit_sev_limbs_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Severed limbs suffered     : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_sev_limbs_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Severed limbs suffered     : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_sev_limbs_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cranial_pierce) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cranial piercings inflicted: %s%u%s\n\r",
-           ch->cyan(), d->career.crit_cranial_pierce, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Cranial piercings inflicted: %s%u%s\n\r", ch->cyan(),
+      d->career.crit_cranial_pierce, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cranial_pierce_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cranial piercings suffered : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_cranial_pierce_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Cranial piercings suffered : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_cranial_pierce_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_broken_bones) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Broken bones inflicted     : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_broken_bones, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Broken bones inflicted     : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_broken_bones, ch->norm());
     str += buffer;
   }
   if (d->career.crit_broken_bones_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Broken bones suffered      : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_broken_bones_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Broken bones suffered      : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_broken_bones_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_skull) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed skulls inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_crushed_skull, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Crushed skulls inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_crushed_skull, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_skull_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed skulls suffered    : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_crushed_skull_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Crushed skulls suffered    : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_crushed_skull_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cleave_two) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cleaved in two inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_cleave_two, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Cleaved in two inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_cleave_two, ch->norm());
     str += buffer;
   }
   if (d->career.crit_cleave_two_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Cleaved in two suffered    : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_cleave_two_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Cleaved in two suffered    : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_cleave_two_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_disembowel) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Disembowels inflicted      : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_disembowel, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Disembowels inflicted      : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_disembowel, ch->norm());
     str += buffer;
   }
   if (d->career.crit_disembowel_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Disembowels suffered       : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_disembowel_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Disembowels suffered       : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_disembowel_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_nerve) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed Nerves/Muscles inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_crushed_nerve, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Crushed Nerves/Muscles inflicted   : %s%u%s\n\r",
+      ch->cyan(), d->career.crit_crushed_nerve, ch->norm());
     str += buffer;
   }
   if (d->career.crit_crushed_nerve_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Crushed Nerves/Muscles suffered   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_crushed_nerve_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Crushed Nerves/Muscles suffered   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_crushed_nerve_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_voice) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Voice Boxes inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_voice, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Punctured Voice Boxes inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_voice, ch->norm());
     str += buffer;
   }
   if (d->career.crit_voice_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Voice Boxes suffered   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_voice_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Punctured Voice Boxes suffered   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_voice_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eye_pop) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Gouged Out Eyeballs inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_eye_pop, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Gouged Out Eyeballs inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_eye_pop, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eye_pop_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Gouged Out Eyeballs suffered   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_eye_pop_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Gouged Out Eyeballs suffered   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_eye_pop_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_lung_punct) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Lungs inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_lung_punct, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Punctured Lungs inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_lung_punct, ch->norm());
     str += buffer;
   }
   if (d->career.crit_lung_punct_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Punctured Lungs suffered   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_lung_punct_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Punctured Lungs suffered   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_lung_punct_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_impale) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Weapon Impalings inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_impale, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Weapon Impalings inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_impale, ch->norm());
     str += buffer;
   }
   if (d->career.crit_impale_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Weapon Impalings suffered   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_impale_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Weapon Impalings suffered   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_impale_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eviscerate) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Eviscerations inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_eviscerate, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Eviscerations inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_eviscerate, ch->norm());
     str += buffer;
   }
   if (d->career.crit_eviscerate_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Eviscerations suffered   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_eviscerate_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Eviscerations suffered   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_eviscerate_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_kidney) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Kidney Wounds inflicted   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_kidney, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Kidney Wounds inflicted   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_kidney, ch->norm());
     str += buffer;
   }
   if (d->career.crit_kidney_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT-CRIT: Kidney Wounds suffered   : %s%u%s\n\r",
-           ch->cyan(), d->career.crit_kidney_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT-CRIT: Kidney Wounds suffered   : %s%u%s\n\r", ch->cyan(),
+      d->career.crit_kidney_suff, ch->norm());
     str += buffer;
   }
   if (d->career.crit_genitalia) {
-    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Genitalia Severings inflicted   : %s %u%s\n\r",
-	    ch->cyan(), d->career.crit_genitalia, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT_CRIT: Genitalia Severings inflicted   : %s %u%s\n\r", ch->cyan(),
+      d->career.crit_genitalia, ch->norm());
     str += buffer;
   }
   if (d->career.crit_genitalia_suff) {
-    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Genitalia Severings suffered   : %s %u%s\n\r",
-	    ch->cyan(), d->career.crit_genitalia_suff, ch->norm());
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT_CRIT: Genitalia Severings suffered   : %s %u%s\n\r", ch->cyan(),
+      d->career.crit_genitalia_suff, ch->norm());
     str += buffer;
   }
-  if (d->career.crit_tooth){
-    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Teeth knocked out inflicted : %s %u%s\n\r",
-	    ch->cyan(), d->career.crit_tooth, ch->norm());
+  if (d->career.crit_tooth) {
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT_CRIT: Teeth knocked out inflicted : %s %u%s\n\r", ch->cyan(),
+      d->career.crit_tooth, ch->norm());
     str += buffer;
   }
-  if (d->career.crit_tooth_suff){
-    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Teeth knocked out suffered : %s %u%s\n\r",
-	    ch->cyan(), d->career.crit_tooth_suff, ch->norm());
+  if (d->career.crit_tooth_suff) {
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT_CRIT: Teeth knocked out suffered : %s %u%s\n\r", ch->cyan(),
+      d->career.crit_tooth_suff, ch->norm());
     str += buffer;
   }
-  if (d->career.crit_ripped_out_heart){
-    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Hearts ripped out inflicted : %s %u%s\n\r",
-	    ch->cyan(), d->career.crit_ripped_out_heart, ch->norm());
+  if (d->career.crit_ripped_out_heart) {
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT_CRIT: Hearts ripped out inflicted : %s %u%s\n\r", ch->cyan(),
+      d->career.crit_ripped_out_heart, ch->norm());
     str += buffer;
   }
-  if (d->career.crit_ripped_out_heart_suff){
-    snprintf(buffer, sizeof(buffer), "COMBAT_CRIT: Hearts ripped out suffered : %s %u%s\n\r",
-	    ch->cyan(), d->career.crit_ripped_out_heart_suff, ch->norm());
+  if (d->career.crit_ripped_out_heart_suff) {
+    snprintf(buffer, sizeof(buffer),
+      "COMBAT_CRIT: Hearts ripped out suffered : %s %u%s\n\r", ch->cyan(),
+      d->career.crit_ripped_out_heart_suff, ch->norm());
     str += buffer;
   }
-
-
 
   ch->desc->page_string(str);
 }
 
-const char *statBonusDescr(int percent)
-{
+const char* statBonusDescr(int percent) {
   if (percent <= 80)
     return "a terrible";
   else if (percent <= 83)
@@ -498,15 +583,12 @@ const char *statBonusDescr(int percent)
     return "an unknown";
 }
 
-
-
-void TBeing::doAttribute(const char *arg)
-{
+void TBeing::doAttribute(const char* arg) {
   sstring buf, buf2, cmdbuf;
   time_info_data playing_time;
   time_info_data birth_data;
   int day;
-  Descriptor *d;
+  Descriptor* d;
 
   if (!desc)
     return;
@@ -518,14 +600,16 @@ void TBeing::doAttribute(const char *arg)
   }
   // I put immortal check before the regular since there is a PC called "per"
   if (isImmortal()) {
-    TBeing *victim;
+    TBeing* victim;
     victim = get_pc_world(this, cmdbuf, EXACT_YES);
     if (!victim)
       victim = get_pc_world(this, cmdbuf, EXACT_NO);
 
     if (victim) {
       if (!(d = victim->desc)) {
-        sendTo(COLOR_MOBS, format("%s doesn't seem to have a connection right now.\n\r") % victim->getName());
+        sendTo(COLOR_MOBS,
+          format("%s doesn't seem to have a connection right now.\n\r") %
+            victim->getName());
         return;
       }
       showStatsTo(d, this, true);
@@ -533,18 +617,22 @@ void TBeing::doAttribute(const char *arg)
     }
   }
   if (is_abbrev(cmdbuf, "personal")) {
-    GameTime::mudTimePassed(player.time->birth, GameTime::getBeginningOfTime(), &birth_data);
+    GameTime::mudTimePassed(player.time->birth, GameTime::getBeginningOfTime(),
+      &birth_data);
     birth_data.year += GameTime::getYearAdjust();
     birth_data.year -= getBaseAge();
 
-    day = birth_data.day + 1;        // day in [1..35] 
+    day = birth_data.day + 1;  // day in [1..35]
 
     sendTo(format("You were born on the %s of %s, in the year %d P.S.\n\r") %
-	   numberAsString(day) % month_name[birth_data.month]%birth_data.year);
+           numberAsString(day) % month_name[birth_data.month] %
+           birth_data.year);
 
-    sendTo(format("You grew up as %s %s and began adventuring at the age of %d.\n\r") %
-	   (sstring(home_terrains[player.hometerrain]).startsVowel()?"an":"a")%
-	   home_terrains[player.hometerrain] % getBaseAge());
+    sendTo(
+      format(
+        "You grew up as %s %s and began adventuring at the age of %d.\n\r") %
+      (sstring(home_terrains[player.hometerrain]).startsVowel() ? "an" : "a") %
+      home_terrains[player.hometerrain] % getBaseAge());
 
     sstring gender;
     switch (getSex()) {
@@ -562,56 +650,67 @@ void TBeing::doAttribute(const char *arg)
         vlogf(LOG_BUG, format("%s is sexless!") % getName());
         break;
     }
-    sendTo(format("You are %s %s.\n\r") % gender % getMyRace()->getSingularName());
-    
-    sendTo(format("You are %d years and %d months old, %d inches tall, and you weigh %d lbs.\n\r") %
-        age()->year % age()->month % getHeight() % (int) getWeight());
+    sendTo(
+      format("You are %s %s.\n\r") % gender % getMyRace()->getSingularName());
+
+    sendTo(format("You are %d years and %d months old, %d inches tall, and you "
+                  "weigh %d lbs.\n\r") %
+           age()->year % age()->month % getHeight() % (int)getWeight());
     if (!age()->month && !age()->day)
       sendTo(" It's your birthday today.\n\r");
 
-    buf="Your social flags are: ";
-    buf2=sprintbit(desc->plr_act, attr_player_bits);
-    buf+=buf2;
-    buf+="\n\r";
+    buf = "Your social flags are: ";
+    buf2 = sprintbit(desc->plr_act, attr_player_bits);
+    buf += buf2;
+    buf += "\n\r";
     sendTo(buf);
-    if (toggleInfo[TOG_TESTCODE5]->toggle){
-      sendTo(COLOR_BASIC, format("You are a member of %s<1>, and have a rank of %s<1>.\n\r") %
-	     newguild()->getName() % rank());
+    if (toggleInfo[TOG_TESTCODE5]->toggle) {
+      sendTo(COLOR_BASIC,
+        format("You are a member of %s<1>, and have a rank of %s<1>.\n\r") %
+          newguild()->getName() % rank());
     } else {
 #if FACTIONS_IN_USE
       sendTo(format("You are allied to %s, and have a %.4f%c rating.\n\r") %
-	     FactionInfo[getFaction()].faction_name % getPerc() % '%');
+             FactionInfo[getFaction()].faction_name % getPerc() % '%');
 #else
       sendTo(format("You are allied to %s.\n\r") %
-	     FactionInfo[getFaction()].faction_name);
+             FactionInfo[getFaction()].faction_name);
 #endif
     }
-    
-    buf="";
-    for(int i=0;i<MAX_TRAITS;++i){
-      if(hasQuestBit(traits[i].tog)){
-	buf+=traits[i].name;
-	buf+=" ";
+
+    buf = "";
+    for (int i = 0; i < MAX_TRAITS; ++i) {
+      if (hasQuestBit(traits[i].tog)) {
+        buf += traits[i].name;
+        buf += " ";
       }
     }
-    if(buf != "")
+    if (buf != "")
       sendTo(format("Your character traits are: %s\n\r") % buf);
-    
+
     return;
   } else if (is_abbrev(cmdbuf, "condition")) {
     if (GetMaxLevel() > 10) {
       if (!isImmortal()) {
-        sendTo(format("You are carrying %3.f%c of your maximum weight capacity.\n\r") %
-          ((getCarriedWeight()/carryWeightLimit()) * 100.0) % '%');
-        sendTo(format("You are carrying %3.f%c of your maximum volume capacity.\n\r") %
-          ((float) ((float) getCarriedVolume()/(float) carryVolumeLimit()) * 100) % '%');
+        sendTo(
+          format(
+            "You are carrying %3.f%c of your maximum weight capacity.\n\r") %
+          ((getCarriedWeight() / carryWeightLimit()) * 100.0) % '%');
+        sendTo(
+          format(
+            "You are carrying %3.f%c of your maximum volume capacity.\n\r") %
+          ((float)((float)getCarriedVolume() / (float)carryVolumeLimit()) *
+            100) %
+          '%');
       } else {
-        sendTo(format("You have %.1f lbs of equipment, and can carry up to %.1f lbs - %.1f spare lbs.\n\r") %
-            getCarriedWeight() % carryWeightLimit() % 
-            (carryWeightLimit() - getCarriedWeight()));
-        sendTo(format("You have %d volume in inventory.\n\rYou can carry up to %d volume - You have %d spare volume capacity.\n\r") %
-            getCarriedVolume() % carryVolumeLimit() % 
-            (carryVolumeLimit() - getCarriedVolume()));
+        sendTo(format("You have %.1f lbs of equipment, and can carry up to "
+                      "%.1f lbs - %.1f spare lbs.\n\r") %
+               getCarriedWeight() % carryWeightLimit() %
+               (carryWeightLimit() - getCarriedWeight()));
+        sendTo(format("You have %d volume in inventory.\n\rYou can carry up to "
+                      "%d volume - You have %d spare volume capacity.\n\r") %
+               getCarriedVolume() % carryVolumeLimit() %
+               (carryVolumeLimit() - getCarriedVolume()));
       }
     }
     sendTo(COLOR_MOBS, "<c>Stats  :<z>");
@@ -619,149 +718,155 @@ void TBeing::doAttribute(const char *arg)
 
     Stats mortalStats;
 
-    if (GetMaxLevel() >= 1){
-      sendTo(COLOR_MOBS,"<c>Chosen:<z>");
+    if (GetMaxLevel() >= 1) {
+      sendTo(COLOR_MOBS, "<c>Chosen:<z>");
       sendTo(COLOR_MOBS, chosenStats.printRawStats(this));
     }
 
     if (GetMaxLevel() >= 20) {
       // use to be immortal only, best to show it as avoids confusion about
       // new whacky stat system
-      sendTo(COLOR_MOBS,"<c>Natural:<z>");
+      sendTo(COLOR_MOBS, "<c>Natural:<z>");
       statTypeT ij;
-      for(ij = MIN_STAT; ij<MAX_STATS_USED; ij++) {
+      for (ij = MIN_STAT; ij < MAX_STATS_USED; ij++) {
         sendTo(format(" %3d ") % getStat(STAT_NATURAL, ij));
       }
       sendTo("\n\r");
 
-      sendTo(COLOR_MOBS,"<c>Current:<z>");
+      sendTo(COLOR_MOBS, "<c>Current:<z>");
       sendTo(COLOR_MOBS, curStats.printRawStats(this));
-    } else if (GetMaxLevel() >= 1){
-      sendTo(COLOR_MOBS,"<c>Natural:<z>");
+    } else if (GetMaxLevel() >= 1) {
+      sendTo(COLOR_MOBS, "<c>Natural:<z>");
       statTypeT ij;
-      for(ij = MIN_STAT; ij<MAX_STATS_USED; ij++) {
+      for (ij = MIN_STAT; ij < MAX_STATS_USED; ij++) {
         sendTo(format(" %3d ") % getStat(STAT_NATURAL, ij));
       }
       sendTo("\n\r");
-
     }
 
-
-
-    if(GetMaxLevel() >= 5){
+    if (GetMaxLevel() >= 5) {
       int mod;
-      
-      //// str
-      mod=(int)(getStrDamModifier()*100)-100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your strength gives you a %i%c damage %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      //// str
+      mod = (int)(getStrDamModifier() * 100) - 100;
+
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your strength gives you a %i%c damage %s.\n\r") % mod % '%' %
+            ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your strength gives you %s damage %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS, format("Your strength gives you %s damage %s.\n\r") %
+                             statBonusDescr(mod + 100) %
+                             ((mod > 0) ? "bonus" : "penalty"));
       }
 
       //// bra
-      mod=(int)(getStatMod(STAT_BRA)*100)-100;
+      mod = (int)(getStatMod(STAT_BRA) * 100) - 100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your brawn gives you a %i%c damage absorption %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your brawn gives you a %i%c damage absorption %s.\n\r") %
+            mod % '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your brawn gives you %s damage absorption %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your brawn gives you %s damage absorption %s.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
 
       //// con
-      mod=(int)(getConHpModifier()*100)-100;
+      mod = (int)(getConHpModifier() * 100) - 100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your constitution gives you a %i%c hit point %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your constitution gives you a %i%c hit point %s.\n\r") % mod %
+            '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your constitution gives you %s hit point %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your constitution gives you %s hit point %s.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
 
-      
       //// dex
-      mod=(int)(getStatMod(STAT_DEX)*100)-100;
+      mod = (int)(getStatMod(STAT_DEX) * 100) - 100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your dexterity gives you a %i%c hitting %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your dexterity gives you a %i%c hitting %s.\n\r") % mod %
+            '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your dexterity gives you %s hitting %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your dexterity gives you %s hitting %s.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
 
       //// agi
-      mod=(int)(getStatMod(STAT_AGI)*100)-100;
+      mod = (int)(getStatMod(STAT_AGI) * 100) - 100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your agility gives you a %i%c armor class %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your agility gives you a %i%c armor class %s.\n\r") % mod %
+            '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your agility gives you %s armor class %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your agility gives you %s armor class %s.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
 
-
-
       //// int
-      mod=(int)(getIntModForPracs()*100)-100;
+      mod = (int)(getIntModForPracs() * 100) - 100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your intelligence gives you a %i%c practice %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your intelligence gives you a %i%c practice %s.\n\r") % mod %
+            '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your intelligence gives you %s practice %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your intelligence gives you %s practice %s.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
 
       //// foc
-      mod=(int)(getStatMod(STAT_FOC)*100)-100;
+      mod = (int)(getStatMod(STAT_FOC) * 100) - 100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your focus gives you a %i%c skill success %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your focus gives you a %i%c skill success %s.\n\r") % mod %
+            '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your focus gives you %s skill success %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your focus gives you %s skill success %s.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
 
       //// cha
-      mod=(int)(getChaShopPenalty()*100)-100;
+      mod = (int)(getChaShopPenalty() * 100) - 100;
 
-      mod=-mod;
-	
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your charisma gives you a %i%c shop price %s.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      mod = -mod;
+
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format("Your charisma gives you a %i%c shop price %s.\n\r") % mod %
+            '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your charisma gives you %s shop price %s.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your charisma gives you %s shop price %s.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
 
       //// spe
-      mod=(int)(getStatMod(STAT_SPE)*100)-100;
+      mod = (int)(getStatMod(STAT_SPE) * 100) - 100;
 
-      if(GetMaxLevel()>=25){
-	sendTo(COLOR_MOBS, format("Your speed gives you a %i%c %s to your number of attacks.\n\r") %
-	       mod % '%' % ((mod>0)?"bonus":"penalty"));
+      if (GetMaxLevel() >= 25) {
+        sendTo(COLOR_MOBS,
+          format(
+            "Your speed gives you a %i%c %s to your number of attacks.\n\r") %
+            mod % '%' % ((mod > 0) ? "bonus" : "penalty"));
       } else {
-	sendTo(COLOR_MOBS, format("Your speed gives you %s %s to your number of attacks.\n\r") %
-	       statBonusDescr(mod+100) % ((mod>0)?"bonus":"penalty"));
+        sendTo(COLOR_MOBS,
+          format("Your speed gives you %s %s to your number of attacks.\n\r") %
+            statBonusDescr(mod + 100) % ((mod > 0) ? "bonus" : "penalty"));
       }
-
-
-
     }
-
-
-
-
 
     if (GetMaxLevel() >= 5)
       sendTo(describeImmunities(this, 100));
@@ -799,14 +904,13 @@ void TBeing::doAttribute(const char *arg)
     else if (getCond(DRUNK) > 0)
       sendTo("You are feeling tipsy.\n\r");
 
-
     if (fight())
       act("You are fighting $N.", FALSE, this, NULL, fight(), TO_CHAR);
     else if (task) {
       buf = format("You are %s.\n\r") % tasks[task->task].name;
       sendTo(buf);
     } else {
-      TBeing *tbr;
+      TBeing* tbr;
       switch (getPosition()) {
         case POSITION_DEAD:
           sendTo("You are DEAD!\n\r");
@@ -822,46 +926,46 @@ void TBeing::doAttribute(const char *arg)
           break;
         case POSITION_SLEEPING:
           if (riding) {
-            buf="You are sleeping on ";
+            buf = "You are sleeping on ";
             if (!riding->getName().empty())
-              buf+=objs(riding);
+              buf += objs(riding);
             else
-              buf+="A bad object";
-  
-            buf+=".\n\r";
+              buf += "A bad object";
+
+            buf += ".\n\r";
           } else
-            buf="You are sleeping.\n\r";
+            buf = "You are sleeping.\n\r";
           sendTo(buf);
           break;
         case POSITION_RESTING:
           if (riding) {
-            buf="You are resting on ";
+            buf = "You are resting on ";
             if (!riding->getName().empty())
-              buf+=objs(riding);
+              buf += objs(riding);
             else
-              buf+="A horse with a bad short description, BUG THIS!";
-            buf+=".\n\r";
+              buf += "A horse with a bad short description, BUG THIS!";
+            buf += ".\n\r";
           } else
-            buf="You are resting.\n\r";
+            buf = "You are resting.\n\r";
           sendTo(buf);
-            break;
+          break;
         case POSITION_CRAWLING:
-          buf="You are crawling.\n\r";
+          buf = "You are crawling.\n\r";
           break;
         case POSITION_SITTING:
           if (riding) {
-            buf="You are sitting on ";
+            buf = "You are sitting on ";
             if (!riding->getName().empty())
-              buf+=objs(riding);
+              buf += objs(riding);
             else
-              buf+="A bad object!";
-            buf+=".\n\r";
+              buf += "A bad object!";
+            buf += ".\n\r";
           } else
-            buf="You are sitting.\n\r";
+            buf = "You are sitting.\n\r";
           sendTo(buf);
           break;
         case POSITION_FLYING:
-           if (roomp && roomp->isUnderwaterSector()) 
+          if (roomp && roomp->isUnderwaterSector())
             sendTo("You are swimming about.");
           else
             sendTo("You are flying about.\n\r");
@@ -871,17 +975,17 @@ void TBeing::doAttribute(const char *arg)
           sendTo("You are standing.\n\r");
           break;
         case POSITION_MOUNTED:
-          tbr = dynamic_cast<TBeing *>(riding);
+          tbr = dynamic_cast<TBeing*>(riding);
           if (tbr && tbr->horseMaster() == this) {
-            buf="You are here, riding ";
-            buf+=pers(tbr);
-            buf+=".\n\r";
+            buf = "You are here, riding ";
+            buf += pers(tbr);
+            buf += ".\n\r";
             sendTo(COLOR_MOBS, buf);
           } else if (tbr) {
             sendTo(COLOR_MOBS,
-		   format("You are here, also riding on %s's %s%s.\n\r") %
-		   pers(tbr->horseMaster()) % persfname(tbr) %
-		   (tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : ""));
+              format("You are here, also riding on %s's %s%s.\n\r") %
+                pers(tbr->horseMaster()) % persfname(tbr) %
+                (tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : ""));
           } else {
             sendTo("You are standing.\n\r");
           }
@@ -900,19 +1004,21 @@ void TBeing::doAttribute(const char *arg)
       if (discArray[which]->minLifeforce)
         sendTo("You are invoking a ritual.\n\r");
     }
-    sendTo(format("You are in %s%s%s attack mode.\n\r") %
-          cyan() % attack_modes[getCombatMode()] % norm());
+    sendTo(format("You are in %s%s%s attack mode.\n\r") % cyan() %
+           attack_modes[getCombatMode()] % norm());
 
     if (getWimpy())
-      sendTo(format("You are in wimpy mode, and will flee at %d hit points.\n\r") % getWimpy());
+      sendTo(
+        format("You are in wimpy mode, and will flee at %d hit points.\n\r") %
+        getWimpy());
     if (IS_SET(desc->account->flags, TAccount::BOSS))
       sendTo("Your account is in boss-mode.\n\r");
     if (IS_SET(desc->account->flags, TAccount::MSP))
       sendTo("Your account has MUD Sound Protocol enabled.\n\r");
-  
+
     describeLimbDamage(this);
     sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME));
-  
+
     return;
   } else if (is_abbrev(cmdbuf, "statistics")) {
     showStatsTo(desc, this, false);
@@ -920,35 +1026,36 @@ void TBeing::doAttribute(const char *arg)
     return;
   } else if (is_abbrev(cmdbuf, "drugs")) {
     int i;
-    for(i=MIN_DRUG;i<MAX_DRUG;++i){
-      if(desc->drugs[i].total_consumed>0){
-	sendTo(format("%s (%i):\n\r") % drugTypes[i].name % i);
-	sendTo(format("You first used %s on the %s day of %s, Year %d P.S.\n\r") % 
-	       drugTypes[i].name %
-	       numberAsString(desc->drugs[i].first_use.day+1) %
-	       month_name[desc->drugs[i].first_use.month] % 
-	       desc->drugs[i].first_use.year);
-	sendTo(format("You last used %s on the %s day of %s, Year %d P.S.\n\r") % 
-	       drugTypes[i].name %
-	       numberAsString(desc->drugs[i].last_use.day+1) %
-	       month_name[desc->drugs[i].last_use.month] % 
-	       desc->drugs[i].last_use.year);
-	sendTo(format("You have consumed %i units of %s.\n\r") % 
-	       desc->drugs[i].total_consumed % drugTypes[i].name);
-	sendTo(format("You currently have %i units of %s in your body.\n\r") % 
-	       desc->drugs[i].current_consumed % drugTypes[i].name);
-	
+    for (i = MIN_DRUG; i < MAX_DRUG; ++i) {
+      if (desc->drugs[i].total_consumed > 0) {
+        sendTo(format("%s (%i):\n\r") % drugTypes[i].name % i);
+        sendTo(
+          format("You first used %s on the %s day of %s, Year %d P.S.\n\r") %
+          drugTypes[i].name % numberAsString(desc->drugs[i].first_use.day + 1) %
+          month_name[desc->drugs[i].first_use.month] %
+          desc->drugs[i].first_use.year);
+        sendTo(
+          format("You last used %s on the %s day of %s, Year %d P.S.\n\r") %
+          drugTypes[i].name % numberAsString(desc->drugs[i].last_use.day + 1) %
+          month_name[desc->drugs[i].last_use.month] %
+          desc->drugs[i].last_use.year);
+        sendTo(format("You have consumed %i units of %s.\n\r") %
+               desc->drugs[i].total_consumed % drugTypes[i].name);
+        sendTo(format("You currently have %i units of %s in your body.\n\r") %
+               desc->drugs[i].current_consumed % drugTypes[i].name);
       }
     }
   } else if (is_abbrev(cmdbuf, "reset")) {
-    if (cmdbuf=="reset")
+    if (cmdbuf == "reset")
       desc->session.setToZero();
     else {
       sendTo("This will reset all of your current session stats.\n\r");
       sendTo("Enter the entire option, <c>reset<1>, to do this.\n\r");
     }
   } else {
-    sendTo("Syntax: attribute <statistics | personal | condition | drugs | reset>\n\r");
+    sendTo(
+      "Syntax: attribute <statistics | personal | condition | drugs | "
+      "reset>\n\r");
     return;
   }
 }

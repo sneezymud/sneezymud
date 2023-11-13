@@ -15,8 +15,7 @@
 #include "person.h"
 #include "account.h"
 
-void TBeing::doPrompt(const char *arg)
-{
+void TBeing::doPrompt(const char* arg) {
   sstring tStString("");
   char str[512];
   char caColor[50], caStat[200];
@@ -24,69 +23,23 @@ void TBeing::doPrompt(const char *arg)
   int kolor2;
   setColorKolorT kolor;
 
-  const char *colors[] =
-  {
-    "blue",
-    "red",
-    "green",
-    "white",
-    "purple",
-    "cyan",
-    "orange",
-    "yellow",
-    "charcoal",
-    "white_on_blue",
-    "invert",
-    "white_on_cyan",
-    "white_on_red",
-    "white_on_purple",
-    "white_on_green",
-    "white_on_yellow",
-    "blinking",
-    "boldred",
-    "boldgreen",
-    "boldblue",
-    "boldpurple",
-    "boldcyan",
-    "\n"
-  };
+  const char* colors[] = {"blue", "red", "green", "white", "purple", "cyan",
+    "orange", "yellow", "charcoal", "white_on_blue", "invert", "white_on_cyan",
+    "white_on_red", "white_on_purple", "white_on_green", "white_on_yellow",
+    "blinking", "boldred", "boldgreen", "boldblue", "boldpurple", "boldcyan",
+    "\n"};
 
-  const char *stat_fields[] =
-  {
-    "hit",
-    "mana",
-    "movement",
-    "talens",
-    "exp",
-    "opponent",
-    "color",
-    "room",
-    "off",
-    "all",
-    "none",
-    "tank",
-    "tank-other",
-    "piety",
-    "builder_assistant",
-    "exp_tolevel",
-    "bar",
-    "lifeforce",
-    "client-prompt",
-    "classic-ansi-bar",
-    "time",
-    "cr",
-    "roomname",
-    "zone",
-    "coordinates",
-    "\n"
-  };
+  const char* stat_fields[] = {"hit", "mana", "movement", "talens", "exp",
+    "opponent", "color", "room", "off", "all", "none", "tank", "tank-other",
+    "piety", "builder_assistant", "exp_tolevel", "bar", "lifeforce",
+    "client-prompt", "classic-ansi-bar", "time", "cr", "roomname", "zone",
+    "coordinates", "\n"};
 
   if (!desc)
     return;
 
   if (!arg || !*arg || *arg == '\n') {
-    bool tPrompts[] =
-    {
+    bool tPrompts[] = {
       IS_SET(desc->prompt_d.type, PROMPT_HIT),
       IS_SET(desc->prompt_d.type, PROMPT_MANA),
       IS_SET(desc->prompt_d.type, PROMPT_MOVE),
@@ -116,27 +69,34 @@ void TBeing::doPrompt(const char *arg)
 
     tStString += "Prompt Line Options:\n\r--------------------\n\r";
 
-    sprintf(str, "Hit        : (%s): H:%d\n\r", (tPrompts[0] ? "yes" : " no"), getHit());
+    sprintf(str, "Hit        : (%s): H:%d\n\r", (tPrompts[0] ? "yes" : " no"),
+      getHit());
     tStString += str;
 
-    sprintf(str, "Piety      : (%s): P:%.1f\n\r", (tPrompts[16] ? "yes" : " no"), getPiety());
+    sprintf(str, "Piety      : (%s): P:%.1f\n\r",
+      (tPrompts[16] ? "yes" : " no"), getPiety());
     tStString += str;
 
-    sprintf(str, "Lifeforce  : (%s): LF:%d\n\r", (tPrompts[17] ? "yes" : " no"), getLifeforce());
+    sprintf(str, "Lifeforce  : (%s): LF:%d\n\r", (tPrompts[17] ? "yes" : " no"),
+      getLifeforce());
     tStString += str;
 
-    sprintf(str, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"), getMana());
+    sprintf(str, "Mana       : (%s): M:%d\n\r", (tPrompts[1] ? "yes" : " no"),
+      getMana());
     tStString += str;
 
-    sprintf(str, "Movement   : (%s): V:%d\n\r", (tPrompts[2] ? "yes" : " no"), getMove());
+    sprintf(str, "Movement   : (%s): V:%d\n\r", (tPrompts[2] ? "yes" : " no"),
+      getMove());
     tStString += str;
 
-    sprintf(str, "Talens     : (%s): T:%d\n\r", (tPrompts[3] ? "yes" : " no"), getMoney());
+    sprintf(str, "Talens     : (%s): T:%d\n\r", (tPrompts[3] ? "yes" : " no"),
+      getMoney());
     tStString += str;
 
     strcpy(caStat, displayExp().comify().c_str());
 
-    sprintf(str, "Exp        : (%s): E:%s\n\r", (tPrompts[4] ? "yes" : " no"), caStat);
+    sprintf(str, "Exp        : (%s): E:%s\n\r", (tPrompts[4] ? "yes" : " no"),
+      caStat);
     tStString += str;
 
     // we need some sort of standard time handling function
@@ -145,14 +105,14 @@ void TBeing::doPrompt(const char *arg)
       ct = time(0) + 3600 * desc->account->time_adjust;
     else
       ct = time(0);
-    struct tm *tm=localtime(&ct);
+    struct tm* tm = localtime(&ct);
 
-    sprintf(str, "Time       : (%s): t:%i:%i:%i\n\r", 
-	    (tPrompts[20] ? "yes" : " no"),
-	    tm->tm_hour, tm->tm_min, tm->tm_sec);
+    sprintf(str, "Time       : (%s): t:%i:%i:%i\n\r",
+      (tPrompts[20] ? "yes" : " no"), tm->tm_hour, tm->tm_min, tm->tm_sec);
     tStString += str;
 
-    for (classIndT tClassIndex = MAGE_LEVEL_IND; tClassIndex < MAX_CLASSES; tClassIndex++)
+    for (classIndT tClassIndex = MAGE_LEVEL_IND; tClassIndex < MAX_CLASSES;
+         tClassIndex++)
       if (getLevel(tClassIndex) && getLevel(tClassIndex) < MAX_MORT) {
         if (getExp() > desc->prompt_d.xptnl)
           desc->prompt_d.xptnl = getExpClassLevel(getLevel(tClassIndex) + 1);
@@ -163,25 +123,31 @@ void TBeing::doPrompt(const char *arg)
 
         strcpy(caStat, sstring(caStat).comify().c_str());
 
-        sprintf(str, "Exp_tolevel: (%s): N:%s\n\r", (tPrompts[14] ? "yes" : " no"), caStat);
+        sprintf(str, "Exp_tolevel: (%s): N:%s\n\r",
+          (tPrompts[14] ? "yes" : " no"), caStat);
         tStString += str;
       }
 
-    sprintf(str, "Room       : (%s): R:%d\n\r", (tPrompts[9] ? "yes" : " no"), roomp->number);
+    sprintf(str, "Room       : (%s): R:%d\n\r", (tPrompts[9] ? "yes" : " no"),
+      roomp->number);
     tStString += str;
 
-    sprintf(str, "Coordinate : (%s): (%d,%d,%d)\n\r", (tPrompts[9] ? "yes" : " no"), roomp->getXCoord(), roomp->getYCoord(), roomp->getZCoord());
+    sprintf(str, "Coordinate : (%s): (%d,%d,%d)\n\r",
+      (tPrompts[9] ? "yes" : " no"), roomp->getXCoord(), roomp->getYCoord(),
+      roomp->getZCoord());
     tStString += str;
 
     tStString += "--------------------\n\r";
     sprintf(str, "Opponent  : (%s): Current target when in battle.\n\r",
-            (tPrompts[6] ? "yes" : " no"));
+      (tPrompts[6] ? "yes" : " no"));
     tStString += str;
-    sprintf(str, "Tank      : (%s): Current tank when in battle, including self.\n\r",
-            (tPrompts[11] ? "yes" : " no"));
+    sprintf(str,
+      "Tank      : (%s): Current tank when in battle, including self.\n\r",
+      (tPrompts[11] ? "yes" : " no"));
     tStString += str;
-    sprintf(str, "Tank-other: (%s): Current tank when in battle, excluding self.\n\r",
-            (tPrompts[12] ? "yes" : " no"));
+    sprintf(str,
+      "Tank-other: (%s): Current tank when in battle, excluding self.\n\r",
+      (tPrompts[12] ? "yes" : " no"));
     tStString += str;
     tStString += "--------------------\n\r";
 
@@ -193,7 +159,6 @@ void TBeing::doPrompt(const char *arg)
 
     sprintf(str, "Carriage Return: %s\n\r", (tPrompts[21] ? "On" : "Off"));
     tStString += str;
-
 
     tStString += "--------------------\n\r";
 
@@ -216,28 +181,28 @@ void TBeing::doPrompt(const char *arg)
       break;
     case 2:
       if (IS_SET(desc->prompt_d.type, PROMPT_MANA)) {
-	sendTo("Taking mana out of prompt.\n\r");
+        sendTo("Taking mana out of prompt.\n\r");
         REMOVE_BIT(desc->prompt_d.type, PROMPT_MANA);
       } else {
-	sendTo("Adding mana points to prompt.\n\r");
+        sendTo("Adding mana points to prompt.\n\r");
         SET_BIT(desc->prompt_d.type, PROMPT_MANA);
       }
       break;
     case 18:
       if (IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE)) {
-	sendTo("Taking lifeforce out of prompt.\n\r");
+        sendTo("Taking lifeforce out of prompt.\n\r");
         REMOVE_BIT(desc->prompt_d.type, PROMPT_LIFEFORCE);
       } else {
-	sendTo("Adding lifeforce points to prompt.\n\r");
+        sendTo("Adding lifeforce points to prompt.\n\r");
         SET_BIT(desc->prompt_d.type, PROMPT_LIFEFORCE);
       }
       break;
     case 14:
       if (IS_SET(desc->prompt_d.type, PROMPT_PIETY)) {
-	sendTo("Taking piety out of prompt.\n\r");
+        sendTo("Taking piety out of prompt.\n\r");
         REMOVE_BIT(desc->prompt_d.type, PROMPT_PIETY);
       } else {
-	sendTo("Adding piety to prompt.\n\r");
+        sendTo("Adding piety to prompt.\n\r");
         SET_BIT(desc->prompt_d.type, PROMPT_PIETY);
       }
       break;
@@ -278,43 +243,43 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 21:
-      if(IS_SET(desc->prompt_d.type, PROMPT_TIME)){
-	sendTo("Taking time out of prompt.\n\r");
-	REMOVE_BIT(desc->prompt_d.type, PROMPT_TIME);
+      if (IS_SET(desc->prompt_d.type, PROMPT_TIME)) {
+        sendTo("Taking time out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_TIME);
       } else {
-	sendTo("Adding time to prompt.\n\r");
-	SET_BIT(desc->prompt_d.type, PROMPT_TIME);
+        sendTo("Adding time to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_TIME);
       }
       break;
     case 22:
-      if(IS_SET(desc->prompt_d.type, PROMPT_CR)){
-	sendTo("Taking carriage return out of prompt.\n\r");
-	REMOVE_BIT(desc->prompt_d.type, PROMPT_CR);
+      if (IS_SET(desc->prompt_d.type, PROMPT_CR)) {
+        sendTo("Taking carriage return out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_CR);
       } else {
-	sendTo("Adding carriage return to prompt.\n\r");
-	SET_BIT(desc->prompt_d.type, PROMPT_CR);
+        sendTo("Adding carriage return to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_CR);
       }
       break;
     case 23:
-      if(IS_SET(desc->prompt_d.type, PROMPT_ROOM_NAME)){
-	sendTo("Taking room name out of prompt.\n\r");
-	REMOVE_BIT(desc->prompt_d.type, PROMPT_ROOM_NAME);
+      if (IS_SET(desc->prompt_d.type, PROMPT_ROOM_NAME)) {
+        sendTo("Taking room name out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_ROOM_NAME);
       } else {
-	sendTo("Adding room name to prompt.\n\r");
-	SET_BIT(desc->prompt_d.type, PROMPT_ROOM_NAME);
+        sendTo("Adding room name to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_ROOM_NAME);
       }
       break;
     case 24:
-      if(IS_SET(desc->prompt_d.type, PROMPT_ZONE_NUM)){
-	sendTo("Taking zone number out of prompt.\n\r");
-	REMOVE_BIT(desc->prompt_d.type, PROMPT_ZONE_NUM);
+      if (IS_SET(desc->prompt_d.type, PROMPT_ZONE_NUM)) {
+        sendTo("Taking zone number out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_ZONE_NUM);
       } else {
-	sendTo("Adding zone number to prompt.\n\r");
-	SET_BIT(desc->prompt_d.type, PROMPT_ZONE_NUM);
+        sendTo("Adding zone number to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_ZONE_NUM);
       }
       break;
     case 25:
-      if(IS_SET(desc->prompt_d.type, PROMPT_COORDS)){
+      if (IS_SET(desc->prompt_d.type, PROMPT_COORDS)) {
         sendTo("Taking coordinates out of prompt.\n\r");
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COORDS);
       } else {
@@ -322,7 +287,6 @@ void TBeing::doPrompt(const char *arg)
         SET_BIT(desc->prompt_d.type, PROMPT_COORDS);
       }
       break;
-
 
     case 7:
       sscanf(str, "%s %s ", caStat, caColor);
@@ -339,7 +303,7 @@ void TBeing::doPrompt(const char *arg)
         *desc->prompt_d.tankColor = '\0';
         *desc->prompt_d.pietyColor = '\0';
         *desc->prompt_d.lifeforceColor = '\0';
-	*desc->prompt_d.timeColor = '\0';
+        *desc->prompt_d.timeColor = '\0';
         return;
       }
       statnum = old_search_block(caStat, 0, strlen(caStat), stat_fields, 0);
@@ -351,24 +315,25 @@ void TBeing::doPrompt(const char *arg)
           sendTo(format("\t%s\n\r") % stat_fields[ui]);
         return;
       }
-      if (is_abbrev(caColor, "off")) 
+      if (is_abbrev(caColor, "off"))
         kolor2 = 0;
       else {
         kolor2 = old_search_block(caColor, 0, strlen(caColor), colors, 0);
         if (!kolor2 || (kolor2 <= 0)) {
           sendTo("Invalid color.\n\r");
-          sendTo(COLOR_BASIC, "Valid arguments are: "
-             "  <b>blue<1>               <p>purple<1>\n\r"
-             "  <r>red<1>                <g>green<1>\n\r"
-             "  <o>orange<1>             <c>cyan<1>\n\r"
-             "  <Y>yellow<1>             <k>charcoal<1>\n\r"
-             "  <C>boldcyan<1>           <W>white<1> (bright/bold)\n\r"
-             "  <R>boldred<1>            <G>boldgreen<1>\n\r"
-             "  <B>boldblue<1>           <P>boldpurple<1>\n\r"
-             "  <u>white_on_blue<1>      <v>white_on_purple<1>\n\r"
-             "  <l>white_on_red<1>       <q>white_on_green<1>\n\r"
-             "  <t>white_on_yellow<1>    <x>white_on_cyan<1>\n\r"
-             "  <i>inverted<1>");
+          sendTo(COLOR_BASIC,
+            "Valid arguments are: "
+            "  <b>blue<1>               <p>purple<1>\n\r"
+            "  <r>red<1>                <g>green<1>\n\r"
+            "  <o>orange<1>             <c>cyan<1>\n\r"
+            "  <Y>yellow<1>             <k>charcoal<1>\n\r"
+            "  <C>boldcyan<1>           <W>white<1> (bright/bold)\n\r"
+            "  <R>boldred<1>            <G>boldgreen<1>\n\r"
+            "  <B>boldblue<1>           <P>boldpurple<1>\n\r"
+            "  <u>white_on_blue<1>      <v>white_on_purple<1>\n\r"
+            "  <l>white_on_red<1>       <q>white_on_green<1>\n\r"
+            "  <t>white_on_yellow<1>    <x>white_on_cyan<1>\n\r"
+            "  <i>inverted<1>");
           return;
         }
       }
@@ -377,39 +342,46 @@ void TBeing::doPrompt(const char *arg)
 
       if (statnum == 1) {
         if (!IS_SET(desc->prompt_d.type, PROMPT_HIT)) {
-          sendTo("You can't color hit points, without them in your prompt.\n\r");
+          sendTo(
+            "You can't color hit points, without them in your prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_HIT, kolor);
       } else if (statnum == 2) {
         if (!IS_SET(desc->prompt_d.type, PROMPT_MANA)) {
-          sendTo("You can't color mana points, without them in your prompt.\n\r");
+          sendTo(
+            "You can't color mana points, without them in your prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_MANA, kolor);
       } else if (statnum == 14) {
-         // YES, MANA
+        // YES, MANA
         if (!IS_SET(desc->prompt_d.type, PROMPT_PIETY)) {
-          sendTo("You can't color piety points, without them in your prompt.\n\r");
+          sendTo(
+            "You can't color piety points, without them in your prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_PIETY, kolor);
       } else if (statnum == 18) {
-         // YES, MANA
+        // YES, MANA
         if (!IS_SET(desc->prompt_d.type, PROMPT_LIFEFORCE)) {
-          sendTo("You can't color lifeforce points, without them in your prompt.\n\r");
+          sendTo(
+            "You can't color lifeforce points, without them in your "
+            "prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_LIFEFORCE, kolor);
       } else if (statnum == 21) {
-	if(!IS_SET(desc->prompt_d.type, PROMPT_TIME)){
-	  sendTo("You can't color time, without it in your prompt.\n\r");
-	  return;
-	} else
-	  setColor(SET_COL_FIELD_TIME, kolor);
+        if (!IS_SET(desc->prompt_d.type, PROMPT_TIME)) {
+          sendTo("You can't color time, without it in your prompt.\n\r");
+          return;
+        } else
+          setColor(SET_COL_FIELD_TIME, kolor);
       } else if (statnum == 3) {
         if (!IS_SET(desc->prompt_d.type, PROMPT_MOVE)) {
-          sendTo("You can't color movement points, without them in your prompt.\n\r");
+          sendTo(
+            "You can't color movement points, without them in your "
+            "prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_MOVE, kolor);
@@ -421,13 +393,16 @@ void TBeing::doPrompt(const char *arg)
           setColor(SET_COL_FIELD_TALEN, kolor);
       } else if (statnum == 5) {
         if (!IS_SET(desc->prompt_d.type, PROMPT_EXP)) {
-          sendTo("You can't color exp points, without them in your prompt.\n\r");
+          sendTo(
+            "You can't color exp points, without them in your prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_XP, kolor);
       } else if (statnum == 16) {
         if (!IS_SET(desc->prompt_d.type, PROMPT_EXPTONEXT_LEVEL)) {
-          sendTo("You can't color exp to next level, without them in your prompt.\n\r");
+          sendTo(
+            "You can't color exp to next level, without them in your "
+            "prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_XP, kolor);
@@ -444,14 +419,20 @@ void TBeing::doPrompt(const char *arg)
         } else
           setColor(SET_COL_FIELD_ROOM, kolor);
       } else if (statnum == 12) {
-        if ((!(IS_SET(desc->prompt_d.type, PROMPT_TANK))) && (!(IS_SET(desc->prompt_d.type, PROMPT_TANK_OTHER)))) {
-          sendTo("You can't color tank, without tank or tank-other in your prompt.\n\r");
+        if ((!(IS_SET(desc->prompt_d.type, PROMPT_TANK))) &&
+            (!(IS_SET(desc->prompt_d.type, PROMPT_TANK_OTHER)))) {
+          sendTo(
+            "You can't color tank, without tank or tank-other in your "
+            "prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_TANK, kolor);
       } else if (statnum == 13) {
-        if ((!(IS_SET(desc->prompt_d.type, PROMPT_TANK))) && (!(IS_SET(desc->prompt_d.type, PROMPT_TANK_OTHER)))) {
-          sendTo("You can't color tank-other, without tank or tank-other in your prompt.\n\r");
+        if ((!(IS_SET(desc->prompt_d.type, PROMPT_TANK))) &&
+            (!(IS_SET(desc->prompt_d.type, PROMPT_TANK_OTHER)))) {
+          sendTo(
+            "You can't color tank-other, without tank or tank-other in your "
+            "prompt.\n\r");
           return;
         } else
           setColor(SET_COL_FIELD_TANK_OTHER, kolor);
@@ -466,14 +447,14 @@ void TBeing::doPrompt(const char *arg)
       //
       // Elmo on 2012-11-10
       // if (isImmortal()) {
-        if (IS_SET(desc->prompt_d.type, PROMPT_ROOM)) {
-          sendTo("Taking room out of prompt.\n\r");
-          REMOVE_BIT(desc->prompt_d.type, PROMPT_ROOM);
-        } else {
-          sendTo("Adding room to prompt.\n\r");
-          SET_BIT(desc->prompt_d.type, PROMPT_ROOM);
-        }
-	//}
+      if (IS_SET(desc->prompt_d.type, PROMPT_ROOM)) {
+        sendTo("Taking room out of prompt.\n\r");
+        REMOVE_BIT(desc->prompt_d.type, PROMPT_ROOM);
+      } else {
+        sendTo("Adding room to prompt.\n\r");
+        SET_BIT(desc->prompt_d.type, PROMPT_ROOM);
+      }
+      //}
       break;
     case 9:
       sendTo("Setting prompt to none.\n\r");
@@ -482,12 +463,11 @@ void TBeing::doPrompt(const char *arg)
     case 10:
       sendTo("Setting prompt to all available prompts.\n\r");
       // add PROMPT_TANK_OTHER rather than TANK
-      desc->prompt_d.type = PROMPT_HIT | PROMPT_MOVE | PROMPT_MANA |
-                    PROMPT_GOLD | PROMPT_EXP | PROMPT_OPPONENT |
-                    PROMPT_TANK_OTHER | PROMPT_EXPTONEXT_LEVEL |
-	            PROMPT_PIETY | PROMPT_LIFEFORCE | PROMPT_TIME |
-                    PROMPT_ROOM | PROMPT_ROOM_NAME | PROMPT_ZONE_NUM |
-	            PROMPT_CR | PROMPT_COORDS;
+      desc->prompt_d.type =
+        PROMPT_HIT | PROMPT_MOVE | PROMPT_MANA | PROMPT_GOLD | PROMPT_EXP |
+        PROMPT_OPPONENT | PROMPT_TANK_OTHER | PROMPT_EXPTONEXT_LEVEL |
+        PROMPT_PIETY | PROMPT_LIFEFORCE | PROMPT_TIME | PROMPT_ROOM |
+        PROMPT_ROOM_NAME | PROMPT_ZONE_NUM | PROMPT_CR | PROMPT_COORDS;
       break;
     case 11:
       sendTo("Setting prompt to none.\n\r");
@@ -516,7 +496,7 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 15:
-      if (isImmortal()){
+      if (isImmortal()) {
         if (IS_SET(desc->prompt_d.type, PROMPT_BUILDER_ASSISTANT)) {
           sendTo("Shutting builder assistant down.\n\r");
           REMOVE_BIT(desc->prompt_d.type, PROMPT_BUILDER_ASSISTANT);
@@ -536,7 +516,7 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     case 17:
-      if (ansi() || vt100()){
+      if (ansi() || vt100()) {
         if (IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)) {
           REMOVE_BIT(desc->prompt_d.type, PROMPT_VTANSI_BAR);
           cls();
@@ -559,35 +539,40 @@ void TBeing::doPrompt(const char *arg)
         SET_BIT(desc->prompt_d.type, PROMPT_CLIENT_PROMPT);
 
         if (desc) {
-	  Descriptor *d;
-	  char buf[256] = "\0";
+          Descriptor* d;
+          char buf[256] = "\0";
 
           desc->send_client_prompt(TRUE, 16383);
 
-	  for (d = descriptor_list; d; d = d->next) {
-	    if (d->character) {
-	      if (d->character->isLinkdead() && isImmortal())
-		sprintf(buf, "[%s]", d->character->getName().c_str());
-	      else
-		strcpy(buf, d->character->getName().c_str());
+          for (d = descriptor_list; d; d = d->next) {
+            if (d->character) {
+              if (d->character->isLinkdead() && isImmortal())
+                sprintf(buf, "[%s]", d->character->getName().c_str());
+              else
+                strcpy(buf, d->character->getName().c_str());
 
-	      if (canSeeWho(d->character)) {
-	        desc->prompt_mode = -1;
-	        desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
-	        desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % d->character->getName().c_str() % DELETE);
+              if (canSeeWho(d->character)) {
+                desc->prompt_mode = -1;
+                desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO % buf % DELETE);
+                desc->clientf(format("%d|%s|%d|0") % CLIENT_WHO %
+                              d->character->getName().c_str() % DELETE);
 
-	        if (d->character->isPlayerAction(PLR_ANONYMOUS) && !isImmortal())
-	          desc->clientf(format("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
-	        else
-	          desc->clientf(format("%d|%s|%d|%d|1") % CLIENT_WHO % buf % ADD % d->character->GetMaxLevel());
-	      }
-	    }
-	  }
+                if (d->character->isPlayerAction(PLR_ANONYMOUS) &&
+                    !isImmortal())
+                  desc->clientf(
+                    format("%d|%s|%d|0|1") % CLIENT_WHO % buf % ADD);
+                else
+                  desc->clientf(format("%d|%s|%d|%d|1") % CLIENT_WHO % buf %
+                                ADD % d->character->GetMaxLevel());
+              }
+            }
+          }
         }
       }
       break;
     case 20:
-      if ((ansi() || vt100()) && IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)){
+      if ((ansi() || vt100()) &&
+          IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR)) {
         if (IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
           REMOVE_BIT(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR);
           cls();
@@ -604,13 +589,14 @@ void TBeing::doPrompt(const char *arg)
       }
       break;
     default:
-      sendTo("Invalid argument(s) to prompt command. See help file for PROMPT for more information.\n\r");
+      sendTo(
+        "Invalid argument(s) to prompt command. See help file for PROMPT for "
+        "more information.\n\r");
       break;
   }
 }
 
-void TBeing::doCls(bool tell)
-{
+void TBeing::doCls(bool tell) {
   char buf[600] = "\0";
 
   if (!isPc())
@@ -619,7 +605,9 @@ void TBeing::doCls(bool tell)
   if (desc && !desc->connected) {
     if (!isPlayerAction(PLR_VT100 | PLR_ANSI)) {
       if (tell)
-        sendTo("Your terminal options do not indicate you can receive the CLS sequence.\n\rChange to VT100 or Ansi if you can.\n\r");
+        sendTo(
+          "Your terminal options do not indicate you can receive the CLS "
+          "sequence.\n\rChange to VT100 or Ansi if you can.\n\r");
       return;
     }
     if (tell || IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
@@ -630,99 +618,129 @@ void TBeing::doCls(bool tell)
 
     sendTo(format(VT_MARGSET) % 1 % (getScreen() - 4));
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 3, 1);
-    sprintf(buf + strlen(buf), "_____________________________________________________________________________");
+    sprintf(buf + strlen(buf),
+      "________________________________________________________________________"
+      "_____");
     sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 2, 1);
 
     if (IS_SET(desc->prompt_d.type, PROMPT_CLASSIC_ANSIBAR)) {
       if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-        sprintf(buf + strlen(buf), "Hits:                     Piety:                      Moves:                 ");
+        sprintf(buf + strlen(buf),
+          "Hits:                     Piety:                      Moves:        "
+          "         ");
       else if (hasClass(CLASS_SHAMAN))
-        sprintf(buf + strlen(buf), "Hits:                 Lifeforce:                      Moves:                 ");
+        sprintf(buf + strlen(buf),
+          "Hits:                 Lifeforce:                      Moves:        "
+          "         ");
       else
-        sprintf(buf + strlen(buf), "Hits:                      Mana:                      Moves:                 ");
+        sprintf(buf + strlen(buf),
+          "Hits:                      Mana:                      Moves:        "
+          "         ");
 
-      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() -1 , 1);
+      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 1, 1);
 
       if (!isImmortal()) {
 #if FACTIONS_IN_USE
-	sprintf(buf + strlen(buf), "Aff%%:                    Talens:                    Exp:                     ");
+        sprintf(buf + strlen(buf),
+          "Aff%%:                    Talens:                    Exp:           "
+          "          ");
 #else
-        sprintf(buf + strlen(buf), "                         Talens:                    Exp:                     ");
+        sprintf(buf + strlen(buf),
+          "                         Talens:                    Exp:            "
+          "         ");
 #endif
       } else
-        sprintf(buf + strlen(buf), "Room:                    Talens:                    Exp:                     ");
+        sprintf(buf + strlen(buf),
+          "Room:                    Talens:                    Exp:            "
+          "         ");
 
       sprintf(buf + strlen(buf), VT_CURSPOS, getScreen(), 1);
     } else {
       if (hasClass(CLASS_CLERIC) || hasClass(CLASS_DEIKHAN))
-        sprintf(buf + strlen(buf), "Hits:                     Piety:                      Moves:                 ");
+        sprintf(buf + strlen(buf),
+          "Hits:                     Piety:                      Moves:        "
+          "         ");
       else if (hasClass(CLASS_SHAMAN))
-        sprintf(buf + strlen(buf), "Hits:                 Lifeforce:                      Moves:                 ");
+        sprintf(buf + strlen(buf),
+          "Hits:                 Lifeforce:                      Moves:        "
+          "         ");
       else
-        sprintf(buf + strlen(buf), "Hits:                      Mana:                      Moves:                 ");
+        sprintf(buf + strlen(buf),
+          "Hits:                      Mana:                      Moves:        "
+          "         ");
 
-      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() -1 , 1);
+      sprintf(buf + strlen(buf), VT_CURSPOS, getScreen() - 1, 1);
 
       if (!isImmortal()) {
 #if FACTIONS_IN_USE
-        sprintf(buf + strlen(buf), "                            Exp:                      Aff %%:                 ");
+        sprintf(buf + strlen(buf),
+          "                            Exp:                      Aff %%:       "
+          "          ");
 #else
-        sprintf(buf + strlen(buf), "                            Exp:                                             ");
+        sprintf(buf + strlen(buf),
+          "                            Exp:                                    "
+          "         ");
 #endif
       } else
-        sprintf(buf + strlen(buf), "                            Exp:                       Room:                 ");
+        sprintf(buf + strlen(buf),
+          "                            Exp:                       Room:        "
+          "         ");
 
       sprintf(buf + strlen(buf), VT_CURSPOS, getScreen(), 1);
-      sprintf(buf + strlen(buf), "                            TNL:                     Talens:                 ");
+      sprintf(buf + strlen(buf),
+        "                            TNL:                     Talens:          "
+        "       ");
     }
 
     sendTo(buf);
     sendTo(format(VT_CURSPOS) % 1 % 1);
 
     if (vt100()) {
-      desc->updateScreenVt100(2*CHANGED_PIETY - 1);
-    } else if (ansi()) 
-      desc->updateScreenAnsi(2*CHANGED_PIETY - 1);
+      desc->updateScreenVt100(2 * CHANGED_PIETY - 1);
+    } else if (ansi())
+      desc->updateScreenAnsi(2 * CHANGED_PIETY - 1);
 
     sendTo(format("%s") % norm());
   } else if (tell || !desc || IS_SET(desc->prompt_d.type, PROMPT_VTANSI_BAR))
     cls();
 }
 
-void TBeing::doColor(const char *)
-{
-  sendTo("Mobs can't have color.\n\r");
-}
+void TBeing::doColor(const char*) { sendTo("Mobs can't have color.\n\r"); }
 
-void TPerson::doColor(const char *buf)
-{
+void TPerson::doColor(const char* buf) {
   char arg[160], arg2[160];
-  char  tempBuf[20];
+  char tempBuf[20];
   unsigned int i;
   int toggle = TRUE;
 
   if (!desc) {
-    vlogf(LOG_BUG, format("Something without a desc (%s) is trying to set a colorLevel") %  getName());
+    vlogf(LOG_BUG,
+      format("Something without a desc (%s) is trying to set a colorLevel") %
+        getName());
     return;
   }
   if (!isPc()) {
     sendTo("Mobs can't have color.\n\r");
     return;
-  } 
+  }
   buf = one_argument(buf, arg, cElements(arg));
   strcpy(arg2, buf);
 
   if (!*arg) {
-    for (i = 0;i < (MAX_PLR_COLOR - 1);i++) {
+    for (i = 0; i < (MAX_PLR_COLOR - 1); i++) {
       if (*color_options[i]) {
-        if (isImmortal() || (!(i == PLR_COLOR_CODES) && !(i == PLR_COLOR_LOGS))) {  
-          sendTo(format("%-45s : %s\n\r") % color_options[i] %
-            ((IS_SET(desc->plr_color, (unsigned) (1<<i))) ? "on" : "off"));
+        if (isImmortal() ||
+            (!(i == PLR_COLOR_CODES) && !(i == PLR_COLOR_LOGS))) {
+          sendTo(
+            format("%-45s : %s\n\r") % color_options[i] %
+            ((IS_SET(desc->plr_color, (unsigned)(1 << i))) ? "on" : "off"));
         }
       }
     }
-    sendTo(format("%-45s : %s\n\r") % "Color Substitute" % (desc->plr_colorSub ? "yes" : "no")); 
-    sendTo(format("%-45s : %s\n\r") % "Color Replacements" % (desc->plr_colorOff ? "yes" : "no"));
+    sendTo(format("%-45s : %s\n\r") % "Color Substitute" %
+           (desc->plr_colorSub ? "yes" : "no"));
+    sendTo(format("%-45s : %s\n\r") % "Color Replacements" %
+           (desc->plr_colorOff ? "yes" : "no"));
     return;
   }
   if (is_abbrev(arg, "test")) {
@@ -752,19 +770,20 @@ void TPerson::doColor(const char *buf)
     // one_argument ignores "on", so 2nd option doesn't work at all
     if (IS_SET(desc->plr_color, PLR_COLOR_BASIC)) {
       sendTo("Your basic color is already turned on.\n\r");
-      
-      if (!(isPlayerAction(PLR_COLOR))) 
+
+      if (!(isPlayerAction(PLR_COLOR)))
         addPlayerAction(PLR_COLOR);
-      
+
       if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
     } else {
       SET_BIT(desc->plr_color, PLR_COLOR_BASIC);
-      sendTo(format("%sC%so%sl%so%sr%s mode enabled.\n\r") % ANSI_RED % ANSI_CYAN % ANSI_BLUE % ANSI_ORANGE % ANSI_PURPLE % ANSI_NORMAL);
-      
-      if (!(isPlayerAction(PLR_COLOR))) 
+      sendTo(format("%sC%so%sl%so%sr%s mode enabled.\n\r") % ANSI_RED %
+             ANSI_CYAN % ANSI_BLUE % ANSI_ORANGE % ANSI_PURPLE % ANSI_NORMAL);
+
+      if (!(isPlayerAction(PLR_COLOR)))
         addPlayerAction(PLR_COLOR);
-      
+
       if (!IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         SET_BIT(desc->prompt_d.type, PROMPT_COLOR);
     }
@@ -772,22 +791,23 @@ void TPerson::doColor(const char *buf)
     if (IS_SET(desc->plr_color, PLR_COLOR_BASIC)) {
       sendTo("You will no longer see color.\n\r");
       REMOVE_BIT(desc->plr_color, PLR_COLOR_BASIC);
-      if (isPlayerAction(PLR_COLOR)) 
+      if (isPlayerAction(PLR_COLOR))
         remPlayerAction(PLR_COLOR);
-      
+
       if (IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
     } else {
       sendTo("Your color is already turned off.\n\r");
-      if (isPlayerAction(PLR_COLOR)) 
+      if (isPlayerAction(PLR_COLOR))
         remPlayerAction(PLR_COLOR);
-      
+
       if (IS_SET(desc->prompt_d.type, PROMPT_COLOR))
         REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
     }
   } else if (is_abbrev(arg, "everything") || is_abbrev(arg, "all")) {
     if (!IS_SET(desc->plr_color, PLR_COLOR_BASIC)) {
-      sendTo("You must first enable color before setting it to everything.\n\r");
+      sendTo(
+        "You must first enable color before setting it to everything.\n\r");
       return;
     }
     addPlayerAction(PLR_COLOR);
@@ -808,7 +828,8 @@ void TPerson::doColor(const char *buf)
     if (hasWizPower(POWER_COLOR_LOGS))
       SET_BIT(desc->plr_color, PLR_COLOR_LOGS);
 
-    act("Your color has been set to all available color.", FALSE, this, NULL, NULL, TO_CHAR);
+    act("Your color has been set to all available color.", FALSE, this, NULL,
+      NULL, TO_CHAR);
   } else if (is_abbrev(arg, "none")) {
     remPlayerAction(PLR_COLOR);
     REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
@@ -822,7 +843,8 @@ void TPerson::doColor(const char *buf)
     REMOVE_BIT(desc->plr_color, PLR_COLOR_SHOUTS);
     REMOVE_BIT(desc->plr_color, PLR_COLOR_SPELLS);
 
-    act("All color options have been toggled off.", FALSE, this, NULL, NULL, TO_CHAR);
+    act("All color options have been toggled off.", FALSE, this, NULL, NULL,
+      TO_CHAR);
   } else if (is_abbrev(arg, "communications")) {
     if (IS_SET(desc->plr_color, PLR_COLOR_COMM)) {
       sendTo("You will no longer see colored communications.\n\r");
@@ -847,8 +869,10 @@ void TPerson::doColor(const char *buf)
     } else {
       sendTo("You have to pick one or more supported color level(s).\n\r");
       sendTo("Syntax: color <enabled | disabled>\n\r");
-      sendTo("Syntax: color <all | none | communications | objects | mobiles | rooms\n\r               room_name | shouts | spells | substitute | replace | test>\n\r");
-
+      sendTo(
+        "Syntax: color <all | none | communications | objects | mobiles | "
+        "rooms\n\r               room_name | shouts | spells | substitute | "
+        "replace | test>\n\r");
     }
   } else if (is_abbrev(arg, "logs")) {
     if (isImmortal()) {
@@ -867,8 +891,10 @@ void TPerson::doColor(const char *buf)
     } else {
       sendTo("You have to pick one or more supported color level(s).\n\r");
       sendTo("Syntax: color <enabled | disabled>\n\r");
-      sendTo("Syntax: color <all | none | communicate | objects | mobiles | rooms\n\r               room_name | shouts | spells | substitute | replace | test>\n\r");
-
+      sendTo(
+        "Syntax: color <all | none | communicate | objects | mobiles | "
+        "rooms\n\r               room_name | shouts | spells | substitute | "
+        "replace | test>\n\r");
     }
   } else if (is_abbrev(arg, "objects")) {
     if (IS_SET(desc->plr_color, PLR_COLOR_OBJECTS)) {
@@ -882,13 +908,14 @@ void TPerson::doColor(const char *buf)
       sendTo("You will now see color in objects.\n\r");
       SET_BIT(desc->plr_color, PLR_COLOR_OBJECTS);
     }
-  } else if (is_abbrev(arg, "creatures") || is_abbrev(arg, "mobiles") ) {
+  } else if (is_abbrev(arg, "creatures") || is_abbrev(arg, "mobiles")) {
     if (IS_SET(desc->plr_color, PLR_COLOR_MOBS)) {
       sendTo("You will no longer see color in creatures.\n\r");
       REMOVE_BIT(desc->plr_color, PLR_COLOR_MOBS);
     } else {
       if (!IS_SET(desc->plr_color, PLR_COLOR_BASIC)) {
-        sendTo("Your basic color must be turned enabled to add advanced color.\n\r");
+        sendTo(
+          "Your basic color must be turned enabled to add advanced color.\n\r");
         return;
       }
       sendTo("You will now see color in creatures.\n\r");
@@ -908,8 +935,11 @@ void TPerson::doColor(const char *buf)
     }
   } else if (is_abbrev(arg, "room_name")) {
     if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
-      sendTo("You will no longer see different colors in different room names.\n\r");
-      sendTo("You will still have them in a color unless you turn all color off.\n\r");
+      sendTo(
+        "You will no longer see different colors in different room names.\n\r");
+      sendTo(
+        "You will still have them in a color unless you turn all color "
+        "off.\n\r");
       REMOVE_BIT(desc->plr_color, PLR_COLOR_ROOM_NAME);
     } else {
       if (!IS_SET(desc->plr_color, PLR_COLOR_BASIC)) {
@@ -917,7 +947,9 @@ void TPerson::doColor(const char *buf)
         return;
       }
       sendTo("You will now see different colors in different rooms.\n\r");
-      sendTo("If you want all of them in only one color, turn this off but use basic color.\n\r");
+      sendTo(
+        "If you want all of them in only one color, turn this off but use "
+        "basic color.\n\r");
       SET_BIT(desc->plr_color, PLR_COLOR_ROOM_NAME);
     }
   } else if (is_abbrev(arg, "shouts")) {
@@ -1168,131 +1200,150 @@ void TPerson::doColor(const char *buf)
       sendTo("You have not chosen a valid color to replace.\n\r");
       sendTo("Syntax: color replace <color>\n\r");
       return;
-    } 
+    }
     if (toggle) {
-      sendTo(format("You have chosen to replace %s as a color with your substitute.\n\r") % tempBuf);
+      sendTo(format("You have chosen to replace %s as a color with your "
+                    "substitute.\n\r") %
+             tempBuf);
     } else {
       sendTo(format("You will no longer replace %s as a color.\n\r") % tempBuf);
     }
   } else if (is_abbrev(arg, "substitute.\n\r")) {
-    if (is_abbrev(arg2, "none")) { 
+    if (is_abbrev(arg2, "none")) {
       desc->plr_colorSub = COLOR_SUB_NONE;
       sprintf(tempBuf, "%s", "none");
     } else if (is_abbrev(arg2, "black")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BLACK)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BLACK;
       sprintf(tempBuf, "%s", "black");
     } else if (is_abbrev(arg2, "red")) {
       if (IS_SET(desc->plr_colorOff, COLOR_RED)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_RED;
       sprintf(tempBuf, "%s", "red");
     } else if (is_abbrev(arg2, "green")) {
       if (IS_SET(desc->plr_colorOff, COLOR_GREEN)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_GREEN;
       sprintf(tempBuf, "%s", "green");
     } else if (is_abbrev(arg2, "orange")) {
       if (IS_SET(desc->plr_colorOff, COLOR_ORANGE)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_ORANGE;
       sprintf(tempBuf, "%s", "orange");
     } else if (is_abbrev(arg2, "blue")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BLUE)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BLUE;
       sprintf(tempBuf, "%s", "blue");
     } else if (is_abbrev(arg2, "purple")) {
       if (IS_SET(desc->plr_colorOff, COLOR_PURPLE)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_PURPLE;
       sprintf(tempBuf, "%s", "purple");
     } else if (is_abbrev(arg2, "cyan")) {
       if (IS_SET(desc->plr_colorOff, COLOR_CYAN)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_CYAN;
       sprintf(tempBuf, "%s", "cyan");
     } else if (is_abbrev(arg2, "white")) {
       if (IS_SET(desc->plr_colorOff, COLOR_WHITE)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_WHITE;
       sprintf(tempBuf, "%s", "white");
     } else if (is_abbrev(arg2, "yellow")) {
       if (IS_SET(desc->plr_colorOff, COLOR_YELLOW)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_YELLOW;
       sprintf(tempBuf, "%s", "yellow");
     } else if (is_abbrev(arg2, "gray")) {
       if (IS_SET(desc->plr_colorOff, COLOR_GRAY)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_GRAY;
       sprintf(tempBuf, "%s", "gray");
     } else if (is_abbrev(arg2, "bold")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BOLD;
       sprintf(tempBuf, "%s", "bold");
     } else if (is_abbrev(arg2, "bold_red")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_RED)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BOLD_RED;
       sprintf(tempBuf, "%s", "bold red");
     } else if (is_abbrev(arg2, "bold_green")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_GREEN)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BOLD_GREEN;
       sprintf(tempBuf, "%s", "bold green");
     } else if (is_abbrev(arg2, "bold_blue")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_BLUE)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BOLD_BLUE;
       sprintf(tempBuf, "%s", "bold blue");
     } else if (is_abbrev(arg2, "bold_purple")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_PURPLE)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BOLD_PURPLE;
       sprintf(tempBuf, "%s", "bold purple");
     } else if (is_abbrev(arg2, "bold_cyan")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_CYAN)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BOLD_CYAN;
       sprintf(tempBuf, "%s", "bold cyan");
     } else if (is_abbrev(arg2, "bold_white")) {
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_WHITE)) {
-        sendTo("You can not use a color you have replaced as a substitute.\n\r");
+        sendTo(
+          "You can not use a color you have replaced as a substitute.\n\r");
         return;
       }
       desc->plr_colorSub = COLOR_SUB_BOLD_WHITE;
@@ -1302,10 +1353,13 @@ void TPerson::doColor(const char *buf)
       sendTo("Syntax: color substitute <color>\n\r");
       return;
     }
-    sendTo(format("You have chosen %s as your substitute color.\n\r") % tempBuf);
+    sendTo(
+      format("You have chosen %s as your substitute color.\n\r") % tempBuf);
   } else {
     sendTo("You have to pick one or more supported color level(s).\n\r");
     sendTo("Syntax: color <enabled | disabled>\n\r");
-    sendTo("Syntax: color <all | none | communicate | objects | mobiles | rooms\n\r               shouts | spells | substitute | replace | test>\n\r");
+    sendTo(
+      "Syntax: color <all | none | communicate | objects | mobiles | rooms\n\r "
+      "              shouts | spells | substitute | replace | test>\n\r");
   }
 }

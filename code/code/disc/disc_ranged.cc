@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include <stdio.h>
 
 #include "being.h"
@@ -12,18 +11,15 @@
 #include "obj_bow.h"
 #include "obj_tool.h"
 
-void TThing::sstringMeBow(TBeing *ch, TThing *)
-{
+void TThing::sstringMeBow(TBeing* ch, TThing*) {
   act("$p isn't a bow.", FALSE, ch, this, 0, TO_CHAR);
 }
 
-void TThing::sstringMeString(TBeing *ch, TBow *)
-{
+void TThing::sstringMeString(TBeing* ch, TBow*) {
   act("$p isn't bowsstring.", FALSE, ch, this, 0, TO_CHAR);
 }
 
-void TTool::sstringMeString(TBeing *ch, TBow *bow)
-{
+void TTool::sstringMeString(TBeing* ch, TBow* bow) {
   if (getToolType() != TOOL_BOWSTRING) {
     act("$p isn't bowsstring.", FALSE, ch, this, 0, TO_CHAR);
     return;
@@ -45,10 +41,9 @@ void TTool::sstringMeString(TBeing *ch, TBow *bow)
   }
 }
 
-void TBeing::doRestring(const sstring &argument)
-{
-  TThing *bow = NULL;
-  TThing *bstr = NULL;
+void TBeing::doRestring(const sstring& argument) {
+  TThing* bow = NULL;
+  TThing* bstr = NULL;
   char arg1[256], arg2[256];
 
   if (sscanf(argument.c_str(), "%s %s", arg1, arg2) != 2) {
@@ -56,15 +51,15 @@ void TBeing::doRestring(const sstring &argument)
     return;
   }
 #if 1
-  TThing *t=NULL;
-  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it) {
+  TThing* t = NULL;
+  for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
     if (!bow) {
-      bow = dynamic_cast<TBow *>(t);
+      bow = dynamic_cast<TBow*>(t);
       if (bow && !isname(arg1, bow->name))
         bow = NULL;
     }
     if (!bstr) {
-      bstr = dynamic_cast<TTool *>(t);
+      bstr = dynamic_cast<TTool*>(t);
       if (bstr && !isname(arg2, bstr->name))
         bstr = NULL;
     }

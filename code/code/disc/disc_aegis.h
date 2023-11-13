@@ -25,61 +25,53 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDAegis : public CDiscipline
-{
-public:
+class CDAegis : public CDiscipline {
+  public:
     CSkill skSanctuary;
     CSkill skCureParalyze;
     CSkill skSecondWind;
     CSkill skRelive;
     CSkill skCrusade;
 
-    CDAegis()
-        : CDiscipline(),
-        skSanctuary(), skCureParalyze(),
-        skSecondWind(), skRelive(),
-        skCrusade()
-    {
-    }
+    CDAegis() :
+      CDiscipline(),
+      skSanctuary(),
+      skCureParalyze(),
+      skSecondWind(),
+      skRelive(),
+      skCrusade() {}
 
-    CDAegis(const CDAegis& a)
-        : CDiscipline(a),
-        skSanctuary(a.skSanctuary), skCureParalyze(a.skCureParalyze),
-        skSecondWind(a.skSecondWind), skRelive(a.skRelive),
-        skCrusade(a.skCrusade)
-    {
-    }
+    CDAegis(const CDAegis& a) :
+      CDiscipline(a),
+      skSanctuary(a.skSanctuary),
+      skCureParalyze(a.skCureParalyze),
+      skSecondWind(a.skSecondWind),
+      skRelive(a.skRelive),
+      skCrusade(a.skCrusade) {}
 
-    CDAegis& operator=(const CDAegis& a)
-    {
-        if (this == &a) {
-            return *this;
-        }
-
-        CDiscipline::operator=(a),
-        skSanctuary = a.skSanctuary;
-        skCureParalyze = a.skCureParalyze;
-        skSecondWind = a.skSecondWind;
-        skRelive = a.skRelive;
-        skCrusade = a.skCrusade;
+    CDAegis& operator=(const CDAegis& a) {
+      if (this == &a) {
         return *this;
+      }
+
+      CDiscipline::operator=(a), skSanctuary = a.skSanctuary;
+      skCureParalyze = a.skCureParalyze;
+      skSecondWind = a.skSecondWind;
+      skRelive = a.skRelive;
+      skCrusade = a.skCrusade;
+      return *this;
     }
 
-    virtual ~CDAegis()
-    {
-    }
+    virtual ~CDAegis() {}
 
-    virtual CDAegis* cloneMe()
-    {
-        return new CDAegis(*this);
-    }
+    virtual CDAegis* cloneMe() { return new CDAegis(*this); }
 
-private:
+  private:
 };
 
 void armor(TBeing*, TBeing*);
 
-void armor(TBeing*, TBeing*, TMagicItem * obj, spellNumT);
+void armor(TBeing*, TBeing*, TMagicItem* obj, spellNumT);
 int armor(TBeing*, TBeing*, int, short, spellNumT);
 
 void sanctuary(TBeing*, TBeing*);
@@ -93,7 +85,7 @@ int bless(TBeing*, TObj*, int, short, spellNumT);
 
 void bless(TBeing*, TBeing*);
 
-void bless(TBeing*, TBeing*, TMagicItem * obj, spellNumT);
+void bless(TBeing*, TBeing*, TMagicItem* obj, spellNumT);
 int bless(TBeing*, TBeing*, int, short, spellNumT);
 
 void cureBlindness(TBeing*, TBeing*);

@@ -9,8 +9,7 @@
 #include <set>
 #include <string>
 
-class TPersonPimpl
-{
+class TPersonPimpl {
   public:
     std::unordered_map<std::string, int> favoriteRooms;
 };
@@ -19,13 +18,12 @@ TThing::TThingKind TPerson::getKind() const {
   return TThing::TThingKind::TPerson;
 }
 
-TPerson::TPerson(Descriptor *thedesc) :
+TPerson::TPerson(Descriptor* thedesc) :
   TBeing(),
   base_age(0),
   tLogFile(NULL),
   title(NULL),
-  timer(0)
-{
+  timer(0) {
   d = new TPersonPimpl();
   *lastHost = '\0';
   memset(toggles, 0, sizeof(toggles));
@@ -44,15 +42,15 @@ TPerson::TPerson(Descriptor *thedesc) :
   desc->prompt_d.xptnl = 0;
 
   AccountStats::player_num++;
-  AccountStats::max_player_since_reboot = max(AccountStats::max_player_since_reboot, AccountStats::player_num);
+  AccountStats::max_player_since_reboot =
+    max(AccountStats::max_player_since_reboot, AccountStats::player_num);
 }
 
-TPerson::TPerson(const TPerson &a) :
+TPerson::TPerson(const TPerson& a) :
   TBeing(a),
   base_age(a.base_age),
   tLogFile(a.tLogFile),
-  timer(a.timer)
-{
+  timer(a.timer) {
   d = new TPersonPimpl(*a.d);
   title = mud_str_dup(a.title);
   strcpy(lastHost, a.lastHost);
@@ -61,18 +59,19 @@ TPerson::TPerson(const TPerson &a) :
   memcpy(wizPowersOriginal, a.wizPowers, sizeof(wizPowersOriginal));
 
   AccountStats::player_num++;
-  AccountStats::max_player_since_reboot = max(AccountStats::max_player_since_reboot, AccountStats::player_num);
+  AccountStats::max_player_since_reboot =
+    max(AccountStats::max_player_since_reboot, AccountStats::player_num);
 }
 
-TPerson & TPerson::operator=(const TPerson &a)
-{
-  if (this == &a) return *this;
+TPerson& TPerson::operator=(const TPerson& a) {
+  if (this == &a)
+    return *this;
   TBeing::operator=(a);
   d = new TPersonPimpl(*a.d);
   base_age = a.base_age;
   timer = a.timer;
 
-  delete [] title;
+  delete[] title;
   title = mud_str_dup(a.title);
 
   strcpy(lastHost, a.lastHost);
@@ -82,9 +81,8 @@ TPerson & TPerson::operator=(const TPerson &a)
   return *this;
 }
 
-TPerson::~TPerson()
-{
-  Descriptor *t_desc;
+TPerson::~TPerson() {
+  Descriptor* t_desc;
 
   if (!desc) {
     for (t_desc = descriptor_list; t_desc; t_desc = t_desc->next) {
@@ -95,19 +93,19 @@ TPerson::~TPerson()
     }
   }
 
-  setInvisLevel(MAX_IMMORT+1);
+  setInvisLevel(MAX_IMMORT + 1);
   fixClientPlayerLists(TRUE);
 
   // We use to let this be a handler for quit
   // however, if we accidentally delete a player (bad return code?)
   // this gets called and duplicates items
-  // quit should now have similar code to what was here, so regard 
+  // quit should now have similar code to what was here, so regard
   // getting here as an error.
   dropItemsToRoom(SAFE_NO, DROP_IN_ROOM);
 
   AccountStats::player_num--;
 
-  delete [] title;
+  delete[] title;
   title = NULL;
 
   if (tLogFile) {
@@ -119,8 +117,8 @@ TPerson::~TPerson()
   d = nullptr;
 }
 
-std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd, const sstring & argument, TThing *, bool)
-{
+std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd,
+  const sstring& argument, TThing*, bool) {
   switch (cmd) {
     case CMD_MAP:
       doMap(argument);
@@ -144,8 +142,9 @@ std::pair<bool, int> TPerson::doPersonCommand(cmdTypeT cmd, const sstring & argu
 }
 
 namespace {
-  void doRememberCommon(TPerson& me, bool shouldPrint, sstring const& arg, sstring const& cmd, sstring const& table, sstring const& foreignKey, int foreignValue)
-  {
+  void doRememberCommon(TPerson& me, bool shouldPrint, const sstring& arg,
+    const sstring& cmd, const sstring& table, const sstring& foreignKey,
+    int foreignValue) {
     auto sendTo = [&me, shouldPrint](const sstring& s) {
       if (shouldPrint)
         me.sendTo(s);
@@ -156,19 +155,24 @@ namespace {
 
     if (key.empty()) {
       sendTo(format("Usage: %s key value\n") % cmd);
-      sendTo(format("Example: %s tanelorn from spruce e se d 2w sw sw\n") % cmd);
+      sendTo(
+        format("Example: %s tanelorn from spruce e se d 2w sw sw\n") % cmd);
       sendTo("Also check help remember\n");
       return;
     }
 
     TDatabase db(DB_SNEEZY);
     bool success = false;
-    success = db.query(("delete from " + table + " where " + foreignKey + " = %i and name = '%s'").c_str(),
-        foreignValue, key.c_str());
+    success = db.query(("delete from " + table + " where " + foreignKey +
+                         " = %i and name = '%s'")
+                         .c_str(),
+      foreignValue, key.c_str());
 
     if (success && !value.empty()) {
-      success = db.query(("insert into " + table + " (" + foreignKey + ", name, value) values (%i, '%s', '%s')").c_str(),
-          foreignValue, key.c_str(), value.c_str());
+      success = db.query(("insert into " + table + " (" + foreignKey +
+                           ", name, value) values (%i, '%s', '%s')")
+                           .c_str(),
+        foreignValue, key.c_str(), value.c_str());
     }
 
     if (success)
@@ -176,20 +180,19 @@ namespace {
     else
       sendTo("DB error, report a bug :(\n");
   }
+}  // namespace
+
+void TPerson::doRemember(bool print, const sstring& arg) {
+  doRememberCommon(*this, print, arg, "remember", "accountnotes", "account_id",
+    getAccountID());
 }
 
-void TPerson::doRemember(bool print, sstring const& arg)
-{
-  doRememberCommon(*this, print, arg, "remember", "accountnotes", "account_id", getAccountID());
+void TPerson::doRememberPlayer(bool print, const sstring& arg) {
+  doRememberCommon(*this, print, arg, "rememberplayer", "playernotes",
+    "player_id", getPlayerID());
 }
 
-void TPerson::doRememberPlayer(bool print, sstring const& arg)
-{
-  doRememberCommon(*this, print, arg, "rememberplayer", "playernotes", "player_id", getPlayerID());
-}
-
-void TPerson::doRetrieve(bool shouldPrint, sstring const& arg)
-{
+void TPerson::doRetrieve(bool shouldPrint, const sstring& arg) {
   auto sendTo = [this, shouldPrint](const sstring& s) {
     if (shouldPrint)
       this->sendTo(s);
@@ -198,10 +201,14 @@ void TPerson::doRetrieve(bool shouldPrint, sstring const& arg)
   sstring key = arg.word(0);
 
   TDatabase db(DB_SNEEZY);
-  bool success = db.query("select name, value from playernotes where player_id = %i and ('%s' = '' or name = '%s') "
-      "union "
-      "select name, value from accountnotes where account_id = %i and ('%s' = '' or name = '%s')",
-      getPlayerID(), key.c_str(), key.c_str(), getAccountID(), key.c_str(), key.c_str());
+  bool success = db.query(
+    "select name, value from playernotes where player_id = %i and ('%s' = '' "
+    "or name = '%s') "
+    "union "
+    "select name, value from accountnotes where account_id = %i and ('%s' = '' "
+    "or name = '%s')",
+    getPlayerID(), key.c_str(), key.c_str(), getAccountID(), key.c_str(),
+    key.c_str());
 
   if (!success) {
     sendTo("DB error, report a bug :(\n");
@@ -219,38 +226,38 @@ void TPerson::doRetrieve(bool shouldPrint, sstring const& arg)
     desc->sendGmcp(str, false);
 
     sendTo(format("%s: %s\n") % db["name"] % db["value"]);
-  } while (arg.empty() && db.fetchRow()); // only print other matches if listing everything
+  } while (arg.empty() &&
+           db.fetchRow());  // only print other matches if listing everything
 }
 
-void TPerson::loadMapData()
-{
+void TPerson::loadMapData() {
   TDatabase db(DB_SNEEZY);
-  db.query("select name, room from savedroomsacct where account_id = %i", getAccountID());
+  db.query("select name, room from savedroomsacct where account_id = %i",
+    getAccountID());
   while (db.fetchRow())
     d->favoriteRooms[db["name"]] = convertTo<int>(db["room"]);
 }
 
-void TPerson::doMapList(sstring const& arg) const
-{
+void TPerson::doMapList(const sstring& arg) const {
   sstring filter = arg.lower();
 
   bool found = false;
   for (const auto& pair : d->favoriteRooms) {
-    if (filter.empty() || sstring(pair.first).lower().find(filter) != sstring::npos) {
+    if (filter.empty() ||
+        sstring(pair.first).lower().find(filter) != sstring::npos) {
       sendTo(format("%s -> %i\n") % pair.first % pair.second);
       found = true;
     }
   }
 
   if (!found) {
-    sendTo(sstring("No rooms in list")
-        + (filter.empty() ? "" : " match the filter")
-        + ". Add some with `map add myCoolRoom`\n");
+    sendTo(sstring("No rooms in list") +
+           (filter.empty() ? "" : " match the filter") +
+           ". Add some with `map add myCoolRoom`\n");
   }
 }
 
-void TPerson::doMapAdd(sstring const& arg)
-{
+void TPerson::doMapAdd(const sstring& arg) {
   if (arg.empty()) {
     sendTo("Usage: map add myCoolRoom\n");
     return;
@@ -259,14 +266,14 @@ void TPerson::doMapAdd(sstring const& arg)
   d->favoriteRooms[arg] = this->inRoom();
   TTransaction db(DB_SNEEZY);
   db.query("delete from savedroomsacct where account_id = %i and name = '%s'",
-      getAccountID(), arg.c_str());
-  db.query("insert into savedroomsacct (account_id, name, room) values (%i, '%s', %i)",
-      getAccountID(), arg.c_str(), this->inRoom());
+    getAccountID(), arg.c_str());
+  db.query(
+    "insert into savedroomsacct (account_id, name, room) values (%i, '%s', %i)",
+    getAccountID(), arg.c_str(), this->inRoom());
   sendTo(format("Saved %s -> %i") % arg % this->inRoom());
 }
 
-void TPerson::doMapRm(sstring const& arg)
-{
+void TPerson::doMapRm(const sstring& arg) {
   if (arg.empty()) {
     sendTo("Usage: map rm myCoolRoom");
     return;
@@ -279,11 +286,10 @@ void TPerson::doMapRm(sstring const& arg)
 
   TDatabase db(DB_SNEEZY);
   db.query("delete from savedroomsacct where account_id = %i and name = '%s'",
-      getAccountID(), arg.c_str());
+    getAccountID(), arg.c_str());
 }
 
-void TPerson::doMapGo(sstring const& arg)
-{
+void TPerson::doMapGo(const sstring& arg) {
   auto it = d->favoriteRooms.find(arg);
   if (it == d->favoriteRooms.end()) {
     sendTo(format("You can't seem to locate '%s'.\n\r") % arg);
@@ -291,7 +297,8 @@ void TPerson::doMapGo(sstring const& arg)
   }
   auto dst = it->second;
 
-  auto path = pathfind(*this, findRoom(dst), "Uhm, not for nothing, but I think you are already there...\n\r");
+  auto path = pathfind(*this, findRoom(dst),
+    "Uhm, not for nothing, but I think you are already there...\n\r");
   if (!path)
     return;
 
@@ -301,8 +308,7 @@ void TPerson::doMapGo(sstring const& arg)
   addCommandToQue(run);
 }
 
-void TPerson::doMap(sstring const& arg)
-{
+void TPerson::doMap(const sstring& arg) {
   sstring cmd = arg.word(0);
   sstring rest = arg.dropWord();
 
@@ -312,16 +318,13 @@ void TPerson::doMap(sstring const& arg)
     doMapAdd(rest);
   else if (is_abbrev(cmd, "remove") || cmd == "rm")
     doMapRm(rest);
-  else if (cmd == "recalc")
-  {
+  else if (cmd == "recalc") {
     if (this->GetMaxLevel() < 60) {
       sendTo("Nuh-uh.\n\r");
       return;
     }
     doMapRecalc(convertTo<int>(rest));
-  }
-  else if (cmd == "reset")
-  {
+  } else if (cmd == "reset") {
     TDatabase db(DB_SNEEZY);
     db.query("update room set x = 0, y = 0, z = 0");
     sendTo("Reset done. Forcing a reboot to flush the room cache.\n");
@@ -329,8 +332,7 @@ void TPerson::doMap(sstring const& arg)
     extern bool Shutdown;
     Reboot = 1;
     Shutdown = 1;
-  }
-  else if (is_abbrev(cmd, "go"))
+  } else if (is_abbrev(cmd, "go"))
     doMapGo(rest);
   else
     drawMap(cmd.empty() ? 5 : max(0, min(20, convertTo<int>(cmd))));

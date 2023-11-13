@@ -10,31 +10,29 @@
 
 using std::vector;
 
-findFairFight::findFairFight(TBeing *tb)
-{
-  myself=tb;
-}
+findFairFight::findFairFight(TBeing* tb) { myself = tb; }
 
-bool findFairFight::isTarget(int room) const
-{
-  TRoom *rp = real_roomp(room);
+bool findFairFight::isTarget(int room) const {
+  TRoom* rp = real_roomp(room);
 
   if (!rp->inGrimhaven())
     return false;
-  if(rp->isRoomFlag(ROOM_PEACEFUL))
+  if (rp->isRoomFlag(ROOM_PEACEFUL))
     return false;
 
-  TThing *t=NULL;
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TMonster *tmon=dynamic_cast<TMonster *>(t);
+  TThing* t = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TMonster* tmon = dynamic_cast<TMonster*>(t);
     if (!tmon)
       continue;
     if (tmon->isPlayerAction(PLR_IMMORTAL))
       continue;
 
-    //    vlogf(LOG_PEEL, format("level %f %i") % tmon->getRealLevel() % myself->GetMaxLevel());
+    //    vlogf(LOG_PEEL, format("level %f %i") % tmon->getRealLevel() %
+    //    myself->GetMaxLevel());
 
-    if((int)((tmon->getRealLevel()+0.5)-myself->GetMaxLevel()))
+    if ((int)((tmon->getRealLevel() + 0.5) - myself->GetMaxLevel()))
       return false;
 
     return true;
@@ -43,39 +41,29 @@ bool findFairFight::isTarget(int room) const
 }
 
 // findRoom
-findRoom::findRoom(int d)
-{
-  dest=d;
-}
+findRoom::findRoom(int d) { dest = d; }
 
-bool findRoom::isTarget(int room) const
-{
-  return (room==dest);
-}
+bool findRoom::isTarget(int room) const { return (room == dest); }
 //////////////
 
-
 // findClutter
-findClutter::findClutter(TBeing *tb)
-{
-  myself=tb;
-}
+findClutter::findClutter(TBeing* tb) { myself = tb; }
 
-bool findClutter::isTarget(int room) const
-{
+bool findClutter::isTarget(int room) const {
   if (room == Room::DONATION)
     return false;
 
-  TRoom *rp = real_roomp(room);
+  TRoom* rp = real_roomp(room);
   if (!rp->inGrimhaven())
     return false;
 
-  TThing *t=NULL;
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TObj * obj = dynamic_cast<TObj *>(t);
+  TThing* t = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TObj* obj = dynamic_cast<TObj*>(t);
     if (!obj)
       continue;
-    if (!okForJanitor((TMonster *) myself, obj))
+    if (!okForJanitor((TMonster*)myself, obj))
       continue;
     return true;
   }
@@ -84,26 +72,23 @@ bool findClutter::isTarget(int room) const
 ////////////
 
 //////////// findClutterPrison
-findClutterPrison::findClutterPrison(TBeing *tb)
-{
-  myself=tb;
-}
+findClutterPrison::findClutterPrison(TBeing* tb) { myself = tb; }
 
-bool findClutterPrison::isTarget(int room) const
-{
-  if (room == 31905 || room > 7499 || room <7300)
+bool findClutterPrison::isTarget(int room) const {
+  if (room == 31905 || room > 7499 || room < 7300)
     return false;
 
-  TRoom *rp = real_roomp(room);
+  TRoom* rp = real_roomp(room);
 
-  TThing *t=NULL;
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TObj * obj = dynamic_cast<TObj *>(t);
+  TThing* t = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TObj* obj = dynamic_cast<TObj*>(t);
     if (!obj)
       continue;
-    if(obj->objVnum() == 26688)
+    if (obj->objVnum() == 26688)
       continue;
-    if (!okForJanitor((TMonster *) myself, obj))
+    if (!okForJanitor((TMonster*)myself, obj))
       continue;
     return true;
   }
@@ -112,57 +97,48 @@ bool findClutterPrison::isTarget(int room) const
 ////////////
 
 //////////// findClutterAmber
-findClutterAmber::findClutterAmber(TBeing *tb)
-{
-  myself=tb;
-}
+findClutterAmber::findClutterAmber(TBeing* tb) { myself = tb; }
 
-bool findClutterAmber::isTarget(int room) const
-{
-  if (room == 33281 || (room < 2750 || 
-        (room > 2849 && room < 8700) ||
-        (room > 8899 && room < 16200) ||
-        (room > 16249 && room < 33270) ||
-        room > 33299))
+bool findClutterAmber::isTarget(int room) const {
+  if (room == 33281 || (room < 2750 || (room > 2849 && room < 8700) ||
+                         (room > 8899 && room < 16200) ||
+                         (room > 16249 && room < 33270) || room > 33299))
     return false;
 
-  TRoom *rp = real_roomp(room);
+  TRoom* rp = real_roomp(room);
 
-  TThing *t=NULL;
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TObj * obj = dynamic_cast<TObj *>(t);
+  TThing* t = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TObj* obj = dynamic_cast<TObj*>(t);
     if (!obj)
       continue;
-    if (!okForJanitor((TMonster *) myself, obj))
+    if (!okForJanitor((TMonster*)myself, obj))
       continue;
     return true;
   }
   return false;
 }
 ////////////
-
 
 //////////// findClutterBrightmoon
-findClutterBrightmoon::findClutterBrightmoon(TBeing *tb)
-{
-  myself=tb;
-}
+findClutterBrightmoon::findClutterBrightmoon(TBeing* tb) { myself = tb; }
 
-bool findClutterBrightmoon::isTarget(int room) const
-{
-  if (room == 1385 || room<1200 || room >1399)
+bool findClutterBrightmoon::isTarget(int room) const {
+  if (room == 1385 || room < 1200 || room > 1399)
     return false;
 
-  TRoom *rp = real_roomp(room);
+  TRoom* rp = real_roomp(room);
 
-  TThing *t=NULL;
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TObj * obj = dynamic_cast<TObj *>(t);
+  TThing* t = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TObj* obj = dynamic_cast<TObj*>(t);
     if (!obj)
       continue;
-    if(obj->objVnum()==Obj::BM_TRASHCAN && !obj->stuff.empty())
+    if (obj->objVnum() == Obj::BM_TRASHCAN && !obj->stuff.empty())
       return true;
-    if(!okForJanitor((TMonster *) myself, obj))
+    if (!okForJanitor((TMonster*)myself, obj))
       continue;
     return true;
   }
@@ -170,19 +146,17 @@ bool findClutterBrightmoon::isTarget(int room) const
 }
 ////////////
 
-
 // findPolice
-findPolice::findPolice(){
-}
+findPolice::findPolice() {}
 
-bool findPolice::isTarget(int room) const
-{
-  TRoom *rp;
-  TThing *t=NULL;
+bool findPolice::isTarget(int room) const {
+  TRoom* rp;
+  TThing* t = NULL;
   rp = real_roomp(room);
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TBeing *ch = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TBeing* ch = dynamic_cast<TBeing*>(t);
     if (!ch)
       continue;
     if (ch->isPc() && !ch->isImmortal())
@@ -196,43 +170,37 @@ bool findPolice::isTarget(int room) const
 
 // findOutdoors
 
-findOutdoors::findOutdoors(){
-}
+findOutdoors::findOutdoors() {}
 
-bool findOutdoors::isTarget(int room) const
-{
-  TRoom *rp = real_roomp(room);
+bool findOutdoors::isTarget(int room) const {
+  TRoom* rp = real_roomp(room);
 
-  if(rp->isRoomFlag(ROOM_INDOORS))
+  if (rp->isRoomFlag(ROOM_INDOORS))
     return FALSE;
 
   return TRUE;
 }
 
-
 ///////////////
 
-
-
 // findCorpse
-findCorpse::findCorpse(){
-}
+findCorpse::findCorpse() {}
 
-bool findCorpse::isTarget(int room) const
-{
+bool findCorpse::isTarget(int room) const {
   // don't track corpses in the morgue
   if (room == Room::MORGUE)
     return FALSE;
 
-  TRoom *rp = real_roomp(room);
+  TRoom* rp = real_roomp(room);
 
   // don't leave gh
   if (!rp->inGrimhaven())
     return FALSE;
 
-  TThing *t=NULL;
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    if (!dynamic_cast<TBaseCorpse *>(t) || !t->stuff.empty())
+  TThing* t = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    if (!dynamic_cast<TBaseCorpse*>(t) || !t->stuff.empty())
       continue;
     return TRUE;
   }
@@ -241,24 +209,23 @@ bool findCorpse::isTarget(int room) const
 ///////////////
 
 // findFire
-findFire::findFire(){
-}
+findFire::findFire() {}
 
-bool findFire::isTarget(int room) const
-{
-  TRoom *rp = real_roomp(room);
-  TObj *o;
+bool findFire::isTarget(int room) const {
+  TRoom* rp = real_roomp(room);
+  TObj* o;
 
   // don't leave gh
   if (!rp->inGrimhaven())
     return FALSE;
 
-  if(rp->isRoomFlag(ROOM_ON_FIRE))
+  if (rp->isRoomFlag(ROOM_ON_FIRE))
     return TRUE;
 
-  TThing *t=NULL;
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    if((o=dynamic_cast<TObj *>(t)) && o->isObjStat(ITEM_BURNING))
+  TThing* t = NULL;
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    if ((o = dynamic_cast<TObj*>(t)) && o->isObjStat(ITEM_BURNING))
       return TRUE;
   }
   return FALSE;
@@ -267,35 +234,28 @@ bool findFire::isTarget(int room) const
 
 // findBeing
 
-findBeing::findBeing(sstring n){
-  name=n;
-}
+findBeing::findBeing(sstring n) { name = n; }
 
-bool findBeing::isTarget(int room) const
-{
+bool findBeing::isTarget(int room) const {
   return (searchLinkedList(name, real_roomp(room)->stuff, TYPEBEING) != NULL);
 }
 
-
 //////////
-
 
 // findWater
 
-findWater::findWater(){
-}
+findWater::findWater() {}
 
-
-bool findWater::isTarget(int room) const
-{
-  TRoom *rp;
-  TThing *t=NULL;
+bool findWater::isTarget(int room) const {
+  TRoom* rp;
+  TThing* t = NULL;
   rp = real_roomp(room);
 
   if (rp->isRiverSector())
     return TRUE;
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
     if (t->spec == SPEC_FOUNTAIN)
       return TRUE;
     if (t->waterSource())
@@ -304,57 +264,47 @@ bool findWater::isTarget(int room) const
   return FALSE;
 }
 
-
-
-
 //////////
-
 
 // findLeper
 
+findLeper::findLeper() {}
 
-findLeper::findLeper(){
-}
-
-bool findLeper::isTarget(int room) const
-{
-  TRoom *rp;
-  TThing *t=NULL;
+bool findLeper::isTarget(int room) const {
+  TRoom* rp;
+  TThing* t = NULL;
   rp = real_roomp(room);
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TMonster *leper = dynamic_cast<TMonster *>(t);
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TMonster* leper = dynamic_cast<TMonster*>(t);
     if (!leper)
       continue;
-    if (leper->hasDisease(DISEASE_LEPROSY) || leper->spec==SPEC_LEPER)
+    if (leper->hasDisease(DISEASE_LEPROSY) || leper->spec == SPEC_LEPER)
       return true;
   }
   return false;
 }
 
-
 //////////
 
 // findEquipment finds eq once belonging to a specific being
 
-bool findEquipment::isTarget(int room) const
-{
+bool findEquipment::isTarget(int room) const {
   return findInStuff(real_roomp(room)->stuff);
 }
 
-bool findEquipment::findInStuff(StuffList stuff) const
-{
+bool findEquipment::findInStuff(StuffList stuff) const {
   // loop all objects in stuff, check obj
-  for(StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
-    TThing *t = *it;
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
+    TThing* t = *it;
     if (findInThing(t))
       return true;
   }
   return false;
 }
 
-bool findEquipment::findInThing(TThing *t) const
-{
+bool findEquipment::findInThing(TThing* t) const {
   if (!t)
     return false;
 
@@ -366,9 +316,10 @@ bool findEquipment::findInThing(TThing *t) const
   if (contains(t))
     return false;
 
-  // check if this is our obj (cheat to allow us to modify this obj in const function)
-  if (checkOwner(dynamic_cast<TObj *>(t))) {
-    findEquipment *pThis = const_cast<findEquipment *>(this);
+  // check if this is our obj (cheat to allow us to modify this obj in const
+  // function)
+  if (checkOwner(dynamic_cast<TObj*>(t))) {
+    findEquipment* pThis = const_cast<findEquipment*>(this);
     pThis->foundlist.push_back(t);
     return true;
   }
@@ -378,16 +329,16 @@ bool findEquipment::findInThing(TThing *t) const
     return true;
 
   // if thing is table, loop that
-  TThing *r = t->rider;
-  while(r) {
+  TThing* r = t->rider;
+  while (r) {
     if (findInThing(r))
       return true;
     r = r->nextRider;
   }
 
   // loop mobs worn and stuckIn too
-  TBeing *b = dynamic_cast<TBeing*>(t);
-  for(wearSlotT slot = WEAR_HEAD; b && slot < MAX_WEAR; slot++) {
+  TBeing* b = dynamic_cast<TBeing*>(t);
+  for (wearSlotT slot = WEAR_HEAD; b && slot < MAX_WEAR; slot++) {
     if (findInThing(b->equipment[slot]))
       return true;
     if (findInThing(b->getStuckIn(slot)))
@@ -397,16 +348,15 @@ bool findEquipment::findInThing(TThing *t) const
   return false;
 }
 
-bool findEquipment::contains(TThing *t) const
-{
-  for(vector<TThing *>::const_iterator it = foundlist.begin(); it < foundlist.end(); it++)
+bool findEquipment::contains(TThing* t) const {
+  for (vector<TThing*>::const_iterator it = foundlist.begin();
+       it < foundlist.end(); it++)
     if (t == *it)
       return true;
   return false;
 }
 
-bool findEquipment::checkOwner(TObj *o) const
-{
+bool findEquipment::checkOwner(TObj* o) const {
   if (!o)
     return false;
 
@@ -414,7 +364,7 @@ bool findEquipment::checkOwner(TObj *o) const
   sstring prevOwner;
 
   ownerList = one_argument(ownerList, prevOwner);
-  while (!prevOwner.empty()) {  
+  while (!prevOwner.empty()) {
     if (owner->getName() == prevOwner)
       return true;
     ownerList = one_argument(ownerList, prevOwner);
@@ -423,15 +373,11 @@ bool findEquipment::checkOwner(TObj *o) const
   return false;
 }
 
-
 //////////
-
 
 ///////////
 
-TPathFinder::~TPathFinder()
-{
-}
+TPathFinder::~TPathFinder() {}
 
 TPathFinder::TPathFinder() :
   thru_doors(true),
@@ -442,9 +388,7 @@ TPathFinder::TPathFinder() :
   ship_only(false),
   use_cached(false),
   dest(Room::NOWHERE),
-  dist(0)
-{
-}
+  dist(0) {}
 
 TPathFinder::TPathFinder(int depth) :
   thru_doors(true),
@@ -455,55 +399,54 @@ TPathFinder::TPathFinder(int depth) :
   ship_only(false),
   use_cached(false),
   dest(Room::NOWHERE),
-  dist(0)
-{
+  dist(0) {
   setRange(depth);
 }
 
-void TPathFinder::setRange(int d){ 
-  if(d<0){
+void TPathFinder::setRange(int d) {
+  if (d < 0) {
     // old find_path used negative depth to set certain options
     // this is depreciated, so check for erroneous usage
-    vlogf(LOG_BUG, format("TPathFinder::setRange called with negative depth (%i)!") % d);
-    d=-d;
+    vlogf(LOG_BUG,
+      format("TPathFinder::setRange called with negative depth (%i)!") % d);
+    d = -d;
   }
 
-  range=d; 
+  range = d;
 }
 
-
-dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
-{
+dirTypeT TPathFinder::findPath(int here, const TPathTarget& pt) {
   // just to be dumb, check my own room first
-  if(pt.isTarget(here)){
+  if (pt.isTarget(here)) {
     dest = here;
     dist = 0;
     return DIR_NONE;
   }
 
-  if(use_cached && (path.size()>0 && pt.isTarget(path[path.size()-1]->room))){
-    for(unsigned int i=0;i<path.size();++i){
+  if (use_cached &&
+      (path.size() > 0 && pt.isTarget(path[path.size() - 1]->room))) {
+    for (unsigned int i = 0; i < path.size(); ++i) {
       // reached end of path, but let's re-calc it before we report that
       // the target was found - it may have moved
-      if(i==path.size()-1)
+      if (i == path.size() - 1)
         break;
 
-      if(path[i]->room==here)
-        return path[i+1]->direct;
+      if (path[i]->room == here)
+        return path[i + 1]->direct;
     }
   }
 
   // create this room as a starting point
-  std::map<int, pathData *>path_map;
+  std::map<int, pathData*> path_map;
   path_map[here] = new pathData(here, DIR_NONE, -1, false, 0);
 
-  std::map<int, pathData *>::const_iterator CI;
-  bool found=true;
-  pathData *pd;
-  int distance=0;
+  std::map<int, pathData*>::const_iterator CI;
+  bool found = true;
+  pathData* pd;
+  int distance = 0;
 
-  for(distance=0;found;++distance){
-    found=false;
+  for (distance = 0; found; ++distance) {
+    found = false;
 
     if (distance > range) {
       dest = path_map.size();
@@ -522,45 +465,43 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       if (pd->checked)
         continue;
 
-      if(pd->distance > distance)
+      if (pd->distance > distance)
         continue;
 
       dirTypeT dir;
-      TRoom *rp = real_roomp(CI->first);
+      TRoom* rp = real_roomp(CI->first);
       if (!rp) {
         vlogf(LOG_BUG, "Problem iterating path map.");
         continue;
       }
 
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        roomDirData *exitp = rp->dir_option[dir];
-        TRoom *hp = NULL;
-        if (exitp && 
-            (hp = real_roomp(exitp->to_room)) &&
+        roomDirData* exitp = rp->dir_option[dir];
+        TRoom* hp = NULL;
+        if (exitp && (hp = real_roomp(exitp->to_room)) &&
             (!no_mob || !(hp->isRoomFlag(ROOM_NO_MOB))) &&
             (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
           // check stay_zone criteria
           if (stay_zone && (hp->getZoneNum() != rp->getZoneNum()))
             continue;
 
-          if(ship_only && (!hp->isWaterSector() && !rp->isWaterSector()))
+          if (ship_only && (!hp->isWaterSector() && !rp->isWaterSector()))
             continue;
 
           // do we have this room already?
-          std::map<int, pathData *>::const_iterator CT;
+          std::map<int, pathData*>::const_iterator CT;
           CT = path_map.find(exitp->to_room);
           if (CT != path_map.end())
             continue;
 
           // is this our target?
-          if(pt.isTarget(exitp->to_room)){
+          if (pt.isTarget(exitp->to_room)) {
             // found our target, walk our list backwards
             dest = exitp->to_room;
             dist = distance;
 
-
             path.push_front(pathDataPtr(new pathData(exitp->to_room, dir,
-                    CI->first, false, distance+1)));
+              CI->first, false, distance + 1)));
 
             pd = CI->second;
             for (;;) {
@@ -577,9 +518,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
             }
           }
           // it's not our target, and we don't have this room yet
-          path_map[exitp->to_room] = new pathData(exitp->to_room, dir, 
-              CI->first, false, distance+1);
-          found=true;
+          path_map[exitp->to_room] =
+            new pathData(exitp->to_room, dir, CI->first, false, distance + 1);
+          found = true;
         }
       }
 
@@ -587,18 +528,19 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
       // return 10 if its the 1st portal in the room, 11 for 2nd, etc
       // 0-9 are obviously real exits (see above)
       if (use_portals) {
-        dir = dirTypeT(MAX_DIR-1);
-        TThing *t=NULL;
-        for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-          TPortal *tp = dynamic_cast<TPortal *>(t);
-          if (!tp) 
+        dir = dirTypeT(MAX_DIR - 1);
+        TThing* t = NULL;
+        for (StuffIter it = rp->stuff.begin();
+             it != rp->stuff.end() && (t = *it); ++it) {
+          TPortal* tp = dynamic_cast<TPortal*>(t);
+          if (!tp)
             continue;
           // dirTypeT ++ wraps around - stupid
-          dir = (dirTypeT) (dir + 1);
+          dir = (dirTypeT)(dir + 1);
           if (tp->isPortalFlag(EXIT_LOCKED | EXIT_CLOSED))
             continue;
-          int tmp_room = tp->getTarget();   // next room
-          TRoom *hp = real_roomp(tmp_room);
+          int tmp_room = tp->getTarget();  // next room
+          TRoom* hp = real_roomp(tmp_room);
           if (!hp || hp->isRoomFlag(ROOM_NO_MOB)) {
             continue;
           }
@@ -609,22 +551,22 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           }
 
           // do we have this room already?
-          std::map<int, pathData *>::const_iterator CT;
+          std::map<int, pathData*>::const_iterator CT;
           CT = path_map.find(tmp_room);
           if (CT != path_map.end())
             continue;
 
           // is this our target?
-          if(pt.isTarget(tmp_room)){
+          if (pt.isTarget(tmp_room)) {
             // found our target, walk our list backwards
             dest = tmp_room;
             dist = distance;
 
-            path.push_front(pathDataPtr(new pathData(tmp_room, dir,
-                    CI->first, false, distance+1)));
+            path.push_front(pathDataPtr(
+              new pathData(tmp_room, dir, CI->first, false, distance + 1)));
 
             pd = CI->second;
-            dirTypeT tmpdir=dir;
+            dirTypeT tmpdir = dir;
             for (;;) {
               path.push_front(pathDataPtr(new pathData(pd)));
               if (pd->source == -1) {
@@ -640,10 +582,10 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
           }
 
           // it's not our target, and we don't have this room yet
-          path_map[tmp_room] = new pathData(tmp_room, dir, CI->first, 
-              false, distance+1);
+          path_map[tmp_room] =
+            new pathData(tmp_room, dir, CI->first, false, distance + 1);
 
-          found=true;
+          found = true;
         }  // stuff in room
       }
       // end portal check
@@ -654,10 +596,9 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
     }
   }
 
-
   // if we failed to find any new rooms, abort, or be in an endless loop
-  dest=Room::NOWHERE;
-  dist=distance;
+  dest = Room::NOWHERE;
+  dist = distance;
 
   // clean up allocated memory
   for (CI = path_map.begin(); CI != path_map.end(); ++CI)
@@ -666,8 +607,8 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget &pt)
   return DIR_NONE;
 }
 
-boost::optional<TPathFinder const> pathfind(TBeing& ch, TPathTarget const& to, std::string const& hereMsg)
-{
+boost::optional<const TPathFinder> pathfind(TBeing& ch, const TPathTarget& to,
+  const std::string& hereMsg) {
   TPathFinder path;
   path.setNoMob(false);
   auto dir = path.findPath(ch.inRoom(), to);
@@ -676,26 +617,28 @@ boost::optional<TPathFinder const> pathfind(TBeing& ch, TPathTarget const& to, s
     return {};
   }
   if (dir < DIR_NORTH || dir > DIR_SOUTHWEST) {
-    ch.sendTo("Strangely, you can't quite figure out how to get there from here.\n\r");
+    ch.sendTo(
+      "Strangely, you can't quite figure out how to get there from here.\n\r");
     return {};
   }
   return path;
 }
 
-void printPath(TBeing& ch, TPathFinder const& path) {
-  for(unsigned int i=1;i<path.path.size()-1;++i){
-    if(path.path[i]->direct >= 10)
+void printPath(TBeing& ch, const TPathFinder& path) {
+  for (unsigned int i = 1; i < path.path.size() - 1; ++i) {
+    if (path.path[i]->direct >= 10)
       ch.sendTo(COLOR_MOBS, "enter portal, ");
     else
       ch.sendTo(COLOR_MOBS, format("%s, ") % dirs[path.path[i]->direct]);
   }
-  if(path.path[path.path.size()-1]->direct >= 10)
+  if (path.path[path.path.size() - 1]->direct >= 10)
     ch.sendTo(COLOR_MOBS, "enter portal.\n\r");
   else
-    ch.sendTo(COLOR_MOBS, format("%s.\n\r") % dirs[path.path[path.path.size()-1]->direct]);
+    ch.sendTo(COLOR_MOBS,
+      format("%s.\n\r") % dirs[path.path[path.path.size() - 1]->direct]);
 }
 
-std::string runify(TPathFinder const& path) {
+std::string runify(const TPathFinder& path) {
   std::string out;
   int count = 1;
   bool first = true;
@@ -706,7 +649,7 @@ std::string runify(TPathFinder const& path) {
   };
 
   for (size_t i = 2; i < path.path.size(); ++i) {
-    if (path.path[i-1]->direct == path.path[i]->direct) {
+    if (path.path[i - 1]->direct == path.path[i]->direct) {
       ++count;
     } else {
       if (first)
@@ -716,7 +659,7 @@ std::string runify(TPathFinder const& path) {
 
       if (count != 1)
         out += std::to_string(count);
-      out += toStr(path.path[i-1]->direct);
+      out += toStr(path.path[i - 1]->direct);
       count = 1;
     }
   }

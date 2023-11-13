@@ -16,8 +16,7 @@
 #include "obj_trap.h"
 #include "obj_portal.h"
 
-int TBeing::doSearch(const char *argument)
-{
+int TBeing::doSearch(const char* argument) {
   int rc;
 
   if (!doesKnowSkill(SKILL_SEARCH)) {
@@ -29,45 +28,49 @@ int TBeing::doSearch(const char *argument)
     sendTo("You cannot search while riding.\n\r");
     return FALSE;
   }
-  for (; isspace(*argument); argument++);
+  for (; isspace(*argument); argument++)
+    ;
 
   if (!*argument) {
     sendTo("You begin searching for secret exits.\n\r");
-    act("$n begins searching the walls for something.",
-        FALSE, this, 0, 0, TO_ROOM);
+    act("$n begins searching the walls for something.", FALSE, this, 0, 0,
+      TO_ROOM);
     start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, 0, 4);
   } else {
-    for(rc = 0; rc < MAX_DIR; rc++){
+    for (rc = 0; rc < MAX_DIR; rc++) {
       if (is_abbrev(argument, dirs[rc])) {
-        start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, rc+100, 4);
+        start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, rc + 100,
+          4);
         return TRUE;
       }
     }
     // there's probably a better way to do this
-    if(!strcmp(argument, "ne")){
-      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_NORTHEAST+100, 4);
+    if (!strcmp(argument, "ne")) {
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1,
+        DIR_NORTHEAST + 100, 4);
       return TRUE;
-    } else if(!strcmp(argument, "nw")){
-      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_NORTHWEST+100, 4);
+    } else if (!strcmp(argument, "nw")) {
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1,
+        DIR_NORTHWEST + 100, 4);
       return TRUE;
-    } else if(!strcmp(argument, "se")){
-      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_SOUTHEAST+100, 4);
+    } else if (!strcmp(argument, "se")) {
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1,
+        DIR_SOUTHEAST + 100, 4);
       return TRUE;
-    } else if(!strcmp(argument, "sw")){
-      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1, DIR_SOUTHWEST+100, 4);
+    } else if (!strcmp(argument, "sw")) {
+      start_task(this, NULL, NULL, TASK_SEARCH, "", 0, in_room, 1,
+        DIR_SOUTHWEST + 100, 4);
       return TRUE;
     }
-
 
     sendTo("You look and look, but cannot seem to find that direction.\n\r");
   }
   return TRUE;
 }
 
-int detectSecret(TBeing * thief)
-{
+int detectSecret(TBeing* thief) {
   int j;
-  roomDirData *fdd;
+  roomDirData* fdd;
   char buf[128];
   int move_cost;
 
@@ -85,49 +88,51 @@ int detectSecret(TBeing * thief)
   }
   int bKnown = thief->getSkillValue(SKILL_SEARCH);
 
-  if (thief->doesKnowSkill(SKILL_SEARCH)) 
+  if (thief->doesKnowSkill(SKILL_SEARCH))
     thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_SEARCH, 5);
 
   for (j = 0; j < 10; j++) {
-
     if ((fdd = thief->roomp->dir_option[j])) {
       if (((j < 4) || (j > 5))) {
-	sprintf(buf, "$n searches the %s wall for secret doors.", dirs[j]);
-	act(buf, FALSE, thief, 0, 0, TO_ROOM);
+        sprintf(buf, "$n searches the %s wall for secret doors.", dirs[j]);
+        act(buf, FALSE, thief, 0, 0, TO_ROOM);
       } else if (j == 4)
-	act("$n searches the ceiling for secret doors.",
-                FALSE, thief, 0, 0, TO_ROOM);
+        act("$n searches the ceiling for secret doors.", FALSE, thief, 0, 0,
+          TO_ROOM);
       else
-	act("$n searches the $g for secret doors.",
-                FALSE, thief, 0, 0, TO_ROOM);
+        act("$n searches the $g for secret doors.", FALSE, thief, 0, 0,
+          TO_ROOM);
 
-      if (!IS_SET(fdd->condition, EXIT_SECRET) || 
+      if (!IS_SET(fdd->condition, EXIT_SECRET) ||
           !IS_SET(fdd->condition, EXIT_CLOSED) ||
           fdd->keyword == "_unique_door_")
         continue;
 
-      if (thief->bSuccess(bKnown,SKILL_SEARCH)) {
-	thief->sendTo(format("Secret door found %s! Door is named %s.\n\r") %
-	      dirs[j] % (!fdd->keyword.empty() ? fname(fdd->keyword) : "NO NAME. TELL A GOD"));
-	sprintf(buf, "$n exclaims, \"Look %s! A SECRET door named %s!\"\n\r", dirs[j], 
-                       (!fdd->keyword.empty() ? fname(fdd->keyword).c_str() : "NO NAME. TELL A GOD"));
-	act(buf, FALSE, thief, 0, 0, TO_ROOM);
-	thief->setMove(max(0, (thief->getMove() - 30)));
-	return TRUE;
+      if (thief->bSuccess(bKnown, SKILL_SEARCH)) {
+        thief->sendTo(format("Secret door found %s! Door is named %s.\n\r") %
+                      dirs[j] %
+                      (!fdd->keyword.empty() ? fname(fdd->keyword)
+                                             : "NO NAME. TELL A GOD"));
+        sprintf(buf, "$n exclaims, \"Look %s! A SECRET door named %s!\"\n\r",
+          dirs[j],
+          (!fdd->keyword.empty() ? fname(fdd->keyword).c_str()
+                                 : "NO NAME. TELL A GOD"));
+        act(buf, FALSE, thief, 0, 0, TO_ROOM);
+        thief->setMove(max(0, (thief->getMove() - 30)));
+        return TRUE;
       }
     }
   }
   thief->sendTo("No secret doors found in this area.\n\r");
-  act("$n searches and searches, but comes up empty.",
-         FALSE, thief, 0, 0, TO_ROOM);
+  act("$n searches and searches, but comes up empty.", FALSE, thief, 0, 0,
+    TO_ROOM);
   thief->setMove(max(0, (thief->getMove() - 30)));
   return TRUE;
 }
 
-int TBeing::disarmTrap(const char *arg, TObj *tp)
-{
+int TBeing::disarmTrap(const char* arg, TObj* tp) {
   int rc;
-  TObj *trap;
+  TObj* trap;
   char type[256], dir[256];
   dirTypeT door;
 
@@ -169,14 +174,12 @@ int TBeing::disarmTrap(const char *arg, TObj *tp)
   return FALSE;
 }
 
-int TObj::disarmMe(TBeing *thief)
-{
+int TObj::disarmMe(TBeing* thief) {
   thief->sendTo("I don't think that's a trap.\n\r");
   return FALSE;
 }
 
-int TTrap::disarmMe(TBeing *thief)
-{
+int TTrap::disarmMe(TBeing* thief) {
   int rc;
   char trap_type[80];
   int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
@@ -204,8 +207,7 @@ int TTrap::disarmMe(TBeing *thief)
   }
 }
 
-int disarmTrapObj(TBeing * thief, TObj *trap)
-{
+int disarmTrapObj(TBeing* thief, TObj* trap) {
   int rc;
   rc = trap->disarmMe(thief);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
@@ -214,12 +216,11 @@ int disarmTrapObj(TBeing * thief, TObj *trap)
   return FALSE;
 }
 
-int disarmTrapDoor(TBeing * thief, dirTypeT door)
-{
+int disarmTrapDoor(TBeing* thief, dirTypeT door) {
   int learnedness;
   int rc;
   roomDirData *exitp, *back = NULL;
-  TRoom *rp;
+  TRoom* rp;
   char buf[256], doorbuf[80], trap_type[80];
 
   exitp = thief->exitDir(door);
@@ -233,10 +234,11 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
   int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
 
   strcpy(trap_type, trap_types[exitp->trap_info].c_str());
-  learnedness = min((int) MAX_SKILL_LEARNEDNESS, 2*bKnown);
+  learnedness = min((int)MAX_SKILL_LEARNEDNESS, 2 * bKnown);
 
   if (thief->bSuccess(learnedness, SKILL_DISARM_TRAP)) {
-    thief->sendTo(format("Click.  You disarm the %s trap in the %s.\n\r") % trap_type % doorbuf);
+    thief->sendTo(format("Click.  You disarm the %s trap in the %s.\n\r") %
+                  trap_type % doorbuf);
     sprintf(buf, "$n disarms the %s trap in the %s.", trap_type, doorbuf);
     act(buf, FALSE, thief, 0, 0, TO_ROOM);
     REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
@@ -257,14 +259,10 @@ int disarmTrapDoor(TBeing * thief, dirTypeT door)
   }
 }
 
-int TThing::detectMe(TBeing *thief) const
-{
-  return FALSE;
-}
+int TThing::detectMe(TBeing* thief) const { return FALSE; }
 
-int TPortal::detectMe(TBeing *thief) const
-{
-  int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
+int TPortal::detectMe(TBeing* thief) const {
+  int bKnown = thief->getSkillValue(SKILL_DETECT_TRAP);
 
   if (!isPortalFlag(EXIT_TRAPPED))
     return FALSE;
@@ -279,30 +277,27 @@ int TPortal::detectMe(TBeing *thief) const
   }
 }
 
-int TTrap::detectMe(TBeing *thief) const
-{
-  int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
+int TTrap::detectMe(TBeing* thief) const {
+  int bKnown = thief->getSkillValue(SKILL_DETECT_TRAP);
 
   // randomly seen when in room
   // reduced detection rate
-  if (thief->bSuccess(bKnown/10 + 1, SKILL_DETECT_TRAP)) 
+  if (thief->bSuccess(bKnown / 10 + 1, SKILL_DETECT_TRAP))
     return TRUE;
-  else 
+  else
     return FALSE;
 }
 
 // returns TRUE if trap detected
-int detectTrapObj(TBeing * thief, const TThing *trap)
-{
+int detectTrapObj(TBeing* thief, const TThing* trap) {
   return trap->detectMe(thief);
 }
 
-int detectTrapDoor(TBeing * thief, int)
-{
-  int bKnown =  thief->getSkillValue(SKILL_DETECT_TRAP);
+int detectTrapDoor(TBeing* thief, int) {
+  int bKnown = thief->getSkillValue(SKILL_DETECT_TRAP);
 
-  if (thief->bSuccess(bKnown/3 + 1, SKILL_DETECT_TRAP)) 
+  if (thief->bSuccess(bKnown / 3 + 1, SKILL_DETECT_TRAP))
     return TRUE;
-  else 
+  else
     return FALSE;
 }

@@ -15,13 +15,13 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 class SignalHandler {
   private:
     int mask, checkpoint;
-  public :
+
+  public:
     SignalHandler();
     int startup();
     void signalIgnore(void);
@@ -29,9 +29,7 @@ class SignalHandler {
     void signalShutdown(void);
     void sleep();
     void wake();
-    void resetCheckpoint() {
-      checkpoint = 0;
-    }
+    void resetCheckpoint() { checkpoint = 0; }
 };
 
-extern SignalHandler *gSigHandler;
+extern SignalHandler* gSigHandler;

@@ -3,8 +3,7 @@
 #include "combat.h"
 #include "obj_base_clothing.h"
 
-int TBeing::doFortify()
-{
+int TBeing::doFortify() {
   affectedData aff1, aff2;
   // Check if caster at least knows the skill they're attempting to use
   if (!doesKnowSkill(SKILL_FORTIFY)) {
@@ -19,9 +18,11 @@ int TBeing::doFortify()
   }
 
   // Ensure player is using a shield
-  auto *obj = dynamic_cast<TBaseClothing *>(heldInSecHand());
+  auto* obj = dynamic_cast<TBaseClothing*>(heldInSecHand());
   if (!obj || !obj->isShield()) {
-    sendTo("You cannot execute this defensive maneuver without a shield equipped!\n\r");
+    sendTo(
+      "You cannot execute this defensive maneuver without a shield "
+      "equipped!\n\r");
     return FALSE;
   }
 
@@ -29,7 +30,7 @@ int TBeing::doFortify()
   int skillLevel = getSkillValue(SKILL_FORTIFY);
   int successfulSkill = bSuccess(skillLevel, SKILL_FORTIFY);
 
-  // Apply a lockout buff on the caster 
+  // Apply a lockout buff on the caster
   aff1.type = SKILL_FORTIFY;
   aff1.duration = Pulse::UPDATES_PER_MUDHOUR;
   aff1.modifier = 0;
@@ -38,16 +39,20 @@ int TBeing::doFortify()
 
   // Skill failure
   if (!successfulSkill) {
-    act("You attempt to fortify your defenses but fail to execute the maneuver.", FALSE, this, NULL, NULL, TO_CHAR);
-    act("$n attempts a defensive maneuver but fails.", FALSE, this, NULL, NULL, TO_ROOM);
+    act(
+      "You attempt to fortify your defenses but fail to execute the maneuver.",
+      FALSE, this, NULL, NULL, TO_CHAR);
+    act("$n attempts a defensive maneuver but fails.", FALSE, this, NULL, NULL,
+      TO_ROOM);
 
     return FALSE;
   }
 
   // Skill success
-  act("You sink in behind your shield and defend against incoming attacks!", FALSE, this, NULL, NULL, TO_CHAR);
-  act("$n raises $s shield and strikes a defensive posture!", FALSE, this, NULL, NULL, TO_ROOM);
-
+  act("You sink in behind your shield and defend against incoming attacks!",
+    FALSE, this, NULL, NULL, TO_CHAR);
+  act("$n raises $s shield and strikes a defensive posture!", FALSE, this, NULL,
+    NULL, TO_ROOM);
 
   // Damage resistance
   aff2.type = AFFECT_FORTIFY;

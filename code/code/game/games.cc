@@ -4,52 +4,51 @@
 #include "obj_casino_chip.h"
 #include "handler.h"
 
-void payout(TBeing *ch, int talens, int chip_vnum)
-{
-  TObj *chip;
+void payout(TBeing* ch, int talens, int chip_vnum) {
+  TObj* chip;
   sstring buf;
-  std::map <sstring, int> chipout;
-  std::map <sstring, int>::iterator iter;
+  std::map<sstring, int> chipout;
+  std::map<sstring, int>::iterator iter;
 
-  while(talens>0){
-    if(!chip_vnum){
-      if(talens >= 1000000){
-	chip=read_object(CHIP_1000000, VIRTUAL);
-      } else if(talens >= 500000){
-	chip=read_object(CHIP_500000, VIRTUAL);
-      } else if(talens >= 100000){
-	chip=read_object(CHIP_100000, VIRTUAL);
-      } else if(talens >= 50000){
-	chip=read_object(CHIP_50000, VIRTUAL);
-      } else if(talens >= 10000){
-	chip=read_object(CHIP_10000, VIRTUAL);
-      } else if(talens >= 5000){
-	chip=read_object(CHIP_5000, VIRTUAL);
-      } else if(talens >= 1000){
-	chip=read_object(CHIP_1000, VIRTUAL);
-      } else if(talens >= 500){
-	chip=read_object(CHIP_500, VIRTUAL);
-      } else if(talens >= 100){
-	chip=read_object(CHIP_100, VIRTUAL);
+  while (talens > 0) {
+    if (!chip_vnum) {
+      if (talens >= 1000000) {
+        chip = read_object(CHIP_1000000, VIRTUAL);
+      } else if (talens >= 500000) {
+        chip = read_object(CHIP_500000, VIRTUAL);
+      } else if (talens >= 100000) {
+        chip = read_object(CHIP_100000, VIRTUAL);
+      } else if (talens >= 50000) {
+        chip = read_object(CHIP_50000, VIRTUAL);
+      } else if (talens >= 10000) {
+        chip = read_object(CHIP_10000, VIRTUAL);
+      } else if (talens >= 5000) {
+        chip = read_object(CHIP_5000, VIRTUAL);
+      } else if (talens >= 1000) {
+        chip = read_object(CHIP_1000, VIRTUAL);
+      } else if (talens >= 500) {
+        chip = read_object(CHIP_500, VIRTUAL);
+      } else if (talens >= 100) {
+        chip = read_object(CHIP_100, VIRTUAL);
       } else {
-	buf = format("You receive %i talens.") % talens;
-	act(buf, TRUE, ch, 0, 0, TO_CHAR);
-	buf = format("$n receives %i talens.") % talens;
-	act(buf, TRUE, ch, 0, 0, TO_ROOM);
-	ch->addToMoney(talens, GOLD_GAMBLE);
-	break;
+        buf = format("You receive %i talens.") % talens;
+        act(buf, TRUE, ch, 0, 0, TO_CHAR);
+        buf = format("$n receives %i talens.") % talens;
+        act(buf, TRUE, ch, 0, 0, TO_ROOM);
+        ch->addToMoney(talens, GOLD_GAMBLE);
+        break;
       }
     } else {
-      chip=read_object(chip_vnum, VIRTUAL);
+      chip = read_object(chip_vnum, VIRTUAL);
 
-      if((talens-chip->obj_flags.cost) < 0){
-	delete chip;
-	chip_vnum=0;
-	continue;
+      if ((talens - chip->obj_flags.cost) < 0) {
+        delete chip;
+        chip_vnum = 0;
+        continue;
       }
     }
 
-    if(!chip){
+    if (!chip) {
       vlogf(LOG_BUG, "couldn't load chip in payout");
       return;
     }
@@ -61,14 +60,11 @@ void payout(TBeing *ch, int talens, int chip_vnum)
     *ch += *chip;
   }
 
-
-  for(iter=chipout.begin();iter!=chipout.end();++iter){
-    if((*iter).second > 1){
-      buf = format("You receive %s. [%i]") %
-	       (*iter).first % (*iter).second;
+  for (iter = chipout.begin(); iter != chipout.end(); ++iter) {
+    if ((*iter).second > 1) {
+      buf = format("You receive %s. [%i]") % (*iter).first % (*iter).second;
       act(buf, FALSE, ch, 0, 0, TO_CHAR);
-      buf = format("$n receives %s. [%i]") %
-	       (*iter).first % (*iter).second;
+      buf = format("$n receives %s. [%i]") % (*iter).first % (*iter).second;
       act(buf, FALSE, ch, 0, 0, TO_ROOM);
     } else {
       buf = format("You receive %s.") % (*iter).first;
@@ -79,35 +75,30 @@ void payout(TBeing *ch, int talens, int chip_vnum)
   }
 }
 
+TObj* find_chip(TBeing* ch, const int& chip) {
+  TObj* o;
 
-TObj *find_chip(TBeing *ch, const int &chip)
-{
-  TObj *o;
-
-  for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it)
-    if((o=dynamic_cast<TObj *>(*it)) && dynamic_cast<TCasinoChip *>(o) &&
-       o->objVnum()==chip)
+  for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end(); ++it)
+    if ((o = dynamic_cast<TObj*>(*it)) && dynamic_cast<TCasinoChip*>(o) &&
+        o->objVnum() == chip)
       return o;
-  
+
   return NULL;
 }
 
+TObj* find_chip(TBeing* ch, const sstring& coin_str) {
+  TObj* chip;
 
-TObj *find_chip(TBeing *ch, const sstring &coin_str)
-{
-  TObj *chip;
-
-  if(!(chip=generic_find_obj(coin_str, FIND_OBJ_INV, ch)) ||
-     !(dynamic_cast<TCasinoChip *>(chip))){
+  if (!(chip = generic_find_obj(coin_str, FIND_OBJ_INV, ch)) ||
+      !(dynamic_cast<TCasinoChip*>(chip))) {
     return NULL;
   }
-  
+
   return chip;
 }
 
-void react_gambler_won(TBeing *ch, TMonster *tm)
-{
-  switch(::number(0,3)){
+void react_gambler_won(TBeing* ch, TMonster* tm) {
+  switch (::number(0, 3)) {
     case 0:
       tm->doSay("Keep it going!");
       break;
@@ -124,26 +115,23 @@ void react_gambler_won(TBeing *ch, TMonster *tm)
   }
 }
 
-
-void react_gambler_lost(TBeing *ch, TMonster *tm)
-{
-  switch(tm->mobVnum()){
-    case 2364: // pit boss
+void react_gambler_lost(TBeing* ch, TMonster* tm) {
+  switch (tm->mobVnum()) {
+    case 2364:  // pit boss
       tm->doSay("Please enjoy your stay at the casino.");
       payout(ch, 100);
       return;
-    case 2365: // waitress
+    case 2365:  // waitress
       tm->doSay("Please enjoy your stay at the casino.");
-      *ch += *(read_object(3526, VIRTUAL)); // margarita
+      *ch += *(read_object(3526, VIRTUAL));  // margarita
       return;
-    case 2366: // bartender
+    case 2366:  // bartender
       tm->doSay("Please enjoy your stay at the casino.");
-      *ch += *(read_object(3503, VIRTUAL)); // chips
+      *ch += *(read_object(3503, VIRTUAL));  // chips
       return;
-  }      
+  }
 
-
-  switch(::number(0,5)){
+  switch (::number(0, 5)) {
     case 0:
       tm->doSay("Ouch!  Blood on the floor!");
       break;
@@ -165,9 +153,8 @@ void react_gambler_lost(TBeing *ch, TMonster *tm)
   }
 }
 
-void react_gambler_bet(TBeing *ch, TMonster *tm)
-{
-  switch(::number(0,4)){
+void react_gambler_bet(TBeing* ch, TMonster* tm) {
+  switch (::number(0, 4)) {
     case 0:
       tm->doSay("Go for it!");
       break;
@@ -183,13 +170,11 @@ void react_gambler_bet(TBeing *ch, TMonster *tm)
     case 4:
       tm->doSay("You're just throwing money away.  There's no way you'll win.");
       break;
-
   }
 }
 
-void react_gambler_hilo_bet(TBeing *ch, TMonster *tm)
-{
-  switch(::number(0,5)){
+void react_gambler_hilo_bet(TBeing* ch, TMonster* tm) {
+  switch (::number(0, 5)) {
     case 0:
       tm->doSay("Bet hi!");
       break;
@@ -207,9 +192,8 @@ void react_gambler_hilo_bet(TBeing *ch, TMonster *tm)
   }
 }
 
-void react_gambler_blackjack_bet(TBeing *ch, TMonster *tm)
-{
-  switch(::number(0,5)){
+void react_gambler_blackjack_bet(TBeing* ch, TMonster* tm) {
+  switch (::number(0, 5)) {
     case 0:
       tm->doSay("Hit!");
       break;
@@ -225,41 +209,30 @@ void react_gambler_blackjack_bet(TBeing *ch, TMonster *tm)
   }
 }
 
-void observerReaction(TBeing *ch, int what)
-{
-  TMonster *tm;
+void observerReaction(TBeing* ch, int what) {
+  TMonster* tm;
 
-
-
-  for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
-    if((tm=dynamic_cast<TMonster *>(*it)) &&
-       isname("gambler", tm->name) && !::number(0,9)){
-      switch(what){
-	case GAMBLER_WON:
-	  react_gambler_won(ch, tm);
-	  break;
-	case GAMBLER_LOST:
-	  react_gambler_lost(ch, tm);
-	  break;
-	case GAMBLER_BET:
-	  react_gambler_bet(ch, tm);
-	  break;
-	case GAMBLER_HILO_BET:
-	  react_gambler_hilo_bet(ch, tm);
-	  break;
-	case GAMBLER_BLACKJACK_BET:
-	  react_gambler_blackjack_bet(ch, tm);
-	  break;
+  for (StuffIter it = ch->roomp->stuff.begin(); it != ch->roomp->stuff.end();
+       ++it) {
+    if ((tm = dynamic_cast<TMonster*>(*it)) && isname("gambler", tm->name) &&
+        !::number(0, 9)) {
+      switch (what) {
+        case GAMBLER_WON:
+          react_gambler_won(ch, tm);
+          break;
+        case GAMBLER_LOST:
+          react_gambler_lost(ch, tm);
+          break;
+        case GAMBLER_BET:
+          react_gambler_bet(ch, tm);
+          break;
+        case GAMBLER_HILO_BET:
+          react_gambler_hilo_bet(ch, tm);
+          break;
+        case GAMBLER_BLACKJACK_BET:
+          react_gambler_blackjack_bet(ch, tm);
+          break;
       }
     }
   }
 }
-
-
-
-
-
-
-
-
-

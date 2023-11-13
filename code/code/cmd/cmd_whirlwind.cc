@@ -3,38 +3,42 @@
 #include "combat.h"
 #include "obj_base_weapon.h"
 
-static int whirlwind(TBeing *caster, TBeing *victim, int castLevel, spellNumT damageType)
-{
+static int whirlwind(TBeing* caster, TBeing* victim, int castLevel,
+  spellNumT damageType) {
   int successfulHit = caster->specialAttack(victim, SKILL_WHIRLWIND);
   int dam = 0;
 
   // Success case
-  if (!victim->awake() || 
-    (successfulHit && successfulHit != GUARANTEED_FAILURE)) {
-    act("$n hits $N with a spinning attack!", FALSE, caster, 0, victim, TO_NOTVICT);
-    act("You hit $N with a spinning attack!", FALSE, caster, 0, victim, TO_CHAR);
-    act("$n hits you with a spinning attack!", FALSE, caster, 0, victim, TO_VICT);
-    dam = caster->getSkillDam(victim, SKILL_WHIRLWIND, castLevel, caster->getAdvLearning(SKILL_WHIRLWIND));
+  if (!victim->awake() ||
+      (successfulHit && successfulHit != GUARANTEED_FAILURE)) {
+    act("$n hits $N with a spinning attack!", FALSE, caster, 0, victim,
+      TO_NOTVICT);
+    act("You hit $N with a spinning attack!", FALSE, caster, 0, victim,
+      TO_CHAR);
+    act("$n hits you with a spinning attack!", FALSE, caster, 0, victim,
+      TO_VICT);
+    dam = caster->getSkillDam(victim, SKILL_WHIRLWIND, castLevel,
+      caster->getAdvLearning(SKILL_WHIRLWIND));
   }
   // Failure case
   else {
-    act("$n's spinning attack misses $N.", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("$n's spinning attack misses $N.", FALSE, caster, 0, victim,
+      TO_NOTVICT);
     act("Your spinning attack misses $N.", FALSE, caster, 0, victim, TO_CHAR);
     act("$n's spinning attack misses you.", FALSE, caster, 0, victim, TO_VICT);
   }
 
-  if (caster->reconcileDamage(victim, dam, damageType) == -1) 
+  if (caster->reconcileDamage(victim, dam, damageType) == -1)
     return DELETE_VICT;
 
   return TRUE;
 }
 
-int TBeing::doWhirlwind()
-{
+int TBeing::doWhirlwind() {
   const int WHIRLWIND_MOVE = 20;
   int rc = 0;
   affectedData aff1;
-  
+
   if (checkBusy()) {
     return FALSE;
   }
@@ -46,9 +50,11 @@ int TBeing::doWhirlwind()
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
-  // Adding a lockout 
+  // Adding a lockout
   if (affectedBySpell(SKILL_WHIRLWIND)) {
-    sendTo("You are still recovering from your last whirlwind attack and cannot use this ability again at this time.\n\r");
+    sendTo(
+      "You are still recovering from your last whirlwind attack and cannot use "
+      "this ability again at this time.\n\r");
     return FALSE;
   }
 
@@ -57,18 +63,19 @@ int TBeing::doWhirlwind()
     return FALSE;
   }
 
-  auto *weapon = dynamic_cast<TBaseWeapon *>(heldInPrimHand());
-  if (!weapon){
-      sendTo("You need to hold a weapon in your primary attack to attempt this maneuver.\n\r");	 
-      return FALSE;
+  auto* weapon = dynamic_cast<TBaseWeapon*>(heldInPrimHand());
+  if (!weapon) {
+    sendTo(
+      "You need to hold a weapon in your primary attack to attempt this "
+      "maneuver.\n\r");
+    return FALSE;
   }
 
   if (!(isImmortal() || IS_SET(specials.act, ACT_IMMORTAL)))
     addToMove(-WHIRLWIND_MOVE);
-  
-  
-  // Assessing an armor penalty regardless of success - this penalty greatly scales with level
-  // to ensure that players are not overly penalized early on
+
+  // Assessing an armor penalty regardless of success - this penalty greatly
+  // scales with level to ensure that players are not overly penalized early on
   aff1.type = SKILL_WHIRLWIND;
   aff1.duration = Pulse::UPDATES_PER_MUDHOUR;
   aff1.location = APPLY_ARMOR;
@@ -82,21 +89,23 @@ int TBeing::doWhirlwind()
   // Unsuccessful skill attempt
   if (!successfulSkill) {
     rc = whirlwindFail();
-  } else { 
+  } else {
     rc = whirlwindSuccess();
   }
 
   return rc;
 }
 
-int TBeing::whirlwindSuccess() { 
+int TBeing::whirlwindSuccess() {
   int rc = 0;
-  auto *weapon = dynamic_cast<TBaseWeapon *>(heldInPrimHand());
+  auto* weapon = dynamic_cast<TBaseWeapon*>(heldInPrimHand());
 
   // Send messages to caster/room
-  act("You perform a sweeping attack, striking out at every opponent nearby!", FALSE, this, NULL, NULL, TO_CHAR);
-  act("$n performs a sweeping attack, striking out at everyone nearby!", FALSE, this, NULL, NULL, TO_ROOM);
-  
+  act("You perform a sweeping attack, striking out at every opponent nearby!",
+    FALSE, this, NULL, NULL, TO_CHAR);
+  act("$n performs a sweeping attack, striking out at everyone nearby!", FALSE,
+    this, NULL, NULL, TO_ROOM);
+
   // Determine damage type
   spellNumT damageType = DAMAGE_NORMAL;
   if (weapon->isBluntWeapon())
@@ -106,26 +115,27 @@ int TBeing::whirlwindSuccess() {
   else if (weapon->isSlashWeapon())
     damageType = DAMAGE_HACKED;
 
-  // Loop for each person in room and determine if they're a valid whirlwind target. If so, add them
-  // to the vector for later.
-  std::vector<TBeing *> validTargets{};
-  for (TThing *thing : roomp->stuff) {
-    auto *being = dynamic_cast<TBeing *>(thing);
+  // Loop for each person in room and determine if they're a valid whirlwind
+  // target. If so, add them to the vector for later.
+  std::vector<TBeing*> validTargets{};
+  for (TThing* thing : roomp->stuff) {
+    auto* being = dynamic_cast<TBeing*>(thing);
     if (!being || (being == this) || inGroup(*being) ||
-        (being->isPc() && IS_SET(desc->autobits, AUTO_NOHARM)) || being->isImmortal() ||
-        IS_SET(being->specials.act, ACT_IMMORTAL))
+        (being->isPc() && IS_SET(desc->autobits, AUTO_NOHARM)) ||
+        being->isImmortal() || IS_SET(being->specials.act, ACT_IMMORTAL))
       continue;
 
     validTargets.push_back(being);
   }
 
-  // Apply whirlwind damage and delete dead victims in a separate loop. This is necessary because
-  // when applying the damage from whirlwind there's a chance the victim will have an immediate flee
-  // triggered when taken below 9% health. If this happens during the previous loop, the victim is
-  // removed from the TRoom::stuff list being iterated and causes the iterator to become invalid
-  // before the loop is complete, triggering a crash. Doing it in a secondary loop afterwards
-  // prevents this.
-  for (TBeing *being: validTargets) {
+  // Apply whirlwind damage and delete dead victims in a separate loop. This is
+  // necessary because when applying the damage from whirlwind there's a chance
+  // the victim will have an immediate flee triggered when taken below 9%
+  // health. If this happens during the previous loop, the victim is removed
+  // from the TRoom::stuff list being iterated and causes the iterator to become
+  // invalid before the loop is complete, triggering a crash. Doing it in a
+  // secondary loop afterwards prevents this.
+  for (TBeing* being : validTargets) {
     if (being->inRoom() != in_room)
       continue;
 
@@ -137,13 +147,17 @@ int TBeing::whirlwindSuccess() {
     delete being;
     being = nullptr;
   }
-  // end loop 
+  // end loop
 
   return rc;
 }
 
 int TBeing::whirlwindFail() {
-    act("You attempt to perform a sweeping attack, but fail miserably!", FALSE, this, NULL, NULL, TO_CHAR);
-    act("$n attempts to perform a sweeping attack, but instead just ends up looking silly!", FALSE, this, NULL, NULL, TO_ROOM);
-    return FALSE;
+  act("You attempt to perform a sweeping attack, but fail miserably!", FALSE,
+    this, NULL, NULL, TO_CHAR);
+  act(
+    "$n attempts to perform a sweeping attack, but instead just ends up "
+    "looking silly!",
+    FALSE, this, NULL, NULL, TO_ROOM);
+  return FALSE;
 }

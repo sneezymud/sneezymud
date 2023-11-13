@@ -2,7 +2,7 @@
 //
 //      SneezyMUD++ - All rights reserved, SneezyMUD Coding Team
 //      "parse.cc" - All functions and routines related to command parsing
-//      
+//
 //
 ///////////////////////////////////////////////////////////////////////////
 
@@ -28,11 +28,10 @@ extern "C" {
 #include "client.h"
 
 sstring lockmess;
-commandInfo *commandArray[MAX_CMD_LIST];
+commandInfo* commandArray[MAX_CMD_LIST];
 bool WizLock;
 
-int search_block(const sstring &arg, const char * const *list, bool exact)
-{
+int search_block(const sstring& arg, const char* const* list, bool exact) {
   int i, l;
 
   l = arg.length();
@@ -52,24 +51,24 @@ int search_block(const sstring &arg, const char * const *list, bool exact)
   return (-1);
 }
 
-
-int old_search_block(const char *argument, int bgin, int length, const char * const * list, bool mode)
-{
+int old_search_block(const char* argument, int bgin, int length,
+  const char* const* list, bool mode) {
   int guess, search;
   bool found;
 
-  // If the word contain 0 letters, then a match is already found 
+  // If the word contain 0 letters, then a match is already found
   found = (length < 1);
 
   guess = 0;
 
   if (mode)
     while (!found && *(list[guess]) != '\n') {
-      found = (length == (int) strlen(list[guess]));
+      found = (length == (int)strlen(list[guess]));
       for (search = 0; (search < length && found); search++)
         found = (*(argument + bgin + search) == *(list[guess] + search));
       guess++;
-  } else {
+    }
+  else {
     while (!found && *(list[guess]) != '\n') {
       found = 1;
       for (search = 0; (search < length && found); search++)
@@ -80,8 +79,7 @@ int old_search_block(const char *argument, int bgin, int length, const char * co
   return (found ? guess : -1);
 }
 
-cmdTypeT searchForCommandNum(const sstring &argument)
-{
+cmdTypeT searchForCommandNum(const sstring& argument) {
   cmdTypeT i;
 
   for (i = MIN_CMD; i < MAX_CMD_LIST; i++) {
@@ -94,13 +92,13 @@ cmdTypeT searchForCommandNum(const sstring &argument)
   return MAX_CMD_LIST;
 }
 
-void TBeing::incorrectCommand() const
-{
-  sendTo(format("%sIncorrect%s command. Please see help files if you need assistance!\n\r") % red() % norm());
+void TBeing::incorrectCommand() const {
+  sendTo(format("%sIncorrect%s command. Please see help files if you need "
+                "assistance!\n\r") %
+         red() % norm());
 }
 
-bool willBreakHide(cmdTypeT tCmd, bool isPre)
-{
+bool willBreakHide(cmdTypeT tCmd, bool isPre) {
   switch (tCmd) {
     case CMD_BACKSTAB:
       return (isPre ? false : true);
@@ -157,23 +155,24 @@ bool willBreakHide(cmdTypeT tCmd, bool isPre)
   return true;
 }
 
-extern int handleMobileResponse(TBeing *, cmdTypeT, const sstring &);
+extern int handleMobileResponse(TBeing*, cmdTypeT, const sstring&);
 
 // returns DELETE_THIS if this should be nuked
 // returns DELETE_VICT if vict should be nuked
 // otherwise returns FALSE
-int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool typedIn)
-{
+int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
+  bool typedIn) {
   int rc = 0;
-  TBeing *ch;
+  TBeing* ch;
   bool isPoly = FALSE;
   sstring newarg = "";
   sstring tStNewArg = "";
   sstring buf, bufname;
   size_t tVar = 0;
- 
-  // sendrpf(COLOR_NONE, roomp, "doCommand:argument=[%s]\n\r", argument.c_str());
-  newarg=stripColorCodes(argument);
+
+  // sendrpf(COLOR_NONE, roomp, "doCommand:argument=[%s]\n\r",
+  // argument.c_str());
+  newarg = stripColorCodes(argument);
   // sendrpf(COLOR_NONE, roomp, "doCommand:newarg=[%s]\n\r", newarg.c_str());
   int i = 0;
   tStNewArg += newarg.word(i++);
@@ -187,7 +186,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     tStNewArg += arg_word;
   }
   tStNewArg = stripColorCodes(tStNewArg);
-  // sendrpf(COLOR_NONE, roomp, "doCommand:tStNewArg=[%s]\n\r", tStNewArg.c_str());
+  // sendrpf(COLOR_NONE, roomp, "doCommand:tStNewArg=[%s]\n\r",
+  // tStNewArg.c_str());
 
   // The pray code is extremely messed up so this is really
   // better put here until pray can get fixed.
@@ -205,19 +205,21 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       tStNewArg.replace(tStNewArg.find("me"), 2, getName());
 
     else if ((tVar = tStNewArg.find(" tank")) != sstring::npos && fight() &&
-             !(tStNewArg.size() - tVar - 5) &&
-             isAffected(AFF_GROUP) && fight()->fight()) {
-      tStNewArg.replace(tStNewArg.find("tank"), 4, persfname(fight()->fight()).c_str());
+             !(tStNewArg.size() - tVar - 5) && isAffected(AFF_GROUP) &&
+             fight()->fight()) {
+      tStNewArg.replace(tStNewArg.find("tank"), 4,
+        persfname(fight()->fight()).c_str());
     } else if ((tVar = tStNewArg.find(" tank")) != sstring::npos &&
-               !(tStNewArg.size() - tVar - 5) &&
-               cmd == CMD_PRAY && isAffected(AFF_GROUP)) {
+               !(tStNewArg.size() - tVar - 5) && cmd == CMD_PRAY &&
+               isAffected(AFF_GROUP)) {
       if ((master && master->followers) || followers) {
-        followData * tF = (master ? master->followers : followers);
+        followData* tF = (master ? master->followers : followers);
 
         for (; tF; tF = tF->next)
           if ((ch = tF->follower->specials.fighting) &&
               ch->specials.fighting == tF->follower) {
-            tStNewArg.replace(tStNewArg.find("tank"), 4, persfname(tF->follower).c_str());
+            tStNewArg.replace(tStNewArg.find("tank"), 4,
+              persfname(tF->follower).c_str());
             break;
           }
 
@@ -242,12 +244,12 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
     newarg = tStNewArg;
   }
 
-  if (typedIn && desc && dynamic_cast<TMonster *>(this)) 
+  if (typedIn && desc && dynamic_cast<TMonster*>(this))
     isPoly = TRUE;
-  
+
   if (GetMaxLevel() < commandArray[cmd]->minLevel &&
       ((cmd != CMD_WIZNET) || !desc || !desc->original ||
-       desc->original->GetMaxLevel() < commandArray[cmd]->minLevel)) {
+        desc->original->GetMaxLevel() < commandArray[cmd]->minLevel)) {
     incorrectCommand();
     return FALSE;
   }
@@ -265,83 +267,89 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   if (hasClass(CLASS_SHAMAN)) {
     if (isPc()) {
       if (-10 > getHit()) {
-  vlogf(LOG_MISC, format("Half-tick force updated for %s (Shaman).") %  getName());
-  sendTo("The loa are disappointed in your state of life.\n\r");
-  updateHalfTickStuff();
-  doSave(SILENT_YES);
+        vlogf(LOG_MISC,
+          format("Half-tick force updated for %s (Shaman).") % getName());
+        sendTo("The loa are disappointed in your state of life.\n\r");
+        updateHalfTickStuff();
+        doSave(SILENT_YES);
       }
     }
   }
 
   // ADDED THIS TO MAKE SURE POSITIONS ARE UPDATED ON SHAMAN
 
-  if ((commandArray[cmd]->minPosition >= POSITION_CRAWLING) && fight()){
+  if ((commandArray[cmd]->minPosition >= POSITION_CRAWLING) && fight()) {
     sendTo("You can't concentrate enough while fighting!\n\r");
     return FALSE;
   } else if (getPosition() < commandArray[cmd]->minPosition) {
     switch (getPosition()) {
       case POSITION_DEAD:
-  sendTo("You cannot do that while dead!\n\r");
-  break;
+        sendTo("You cannot do that while dead!\n\r");
+        break;
       case POSITION_INCAP:
       case POSITION_MORTALLYW:
-  sendTo("You cannot do that while mortally wounded!\n\r");
-  break;
+        sendTo("You cannot do that while mortally wounded!\n\r");
+        break;
       case POSITION_STUNNED:
-  sendTo("You cannot do that while stunned!!\n\r");
-  break;
+        sendTo("You cannot do that while stunned!!\n\r");
+        break;
       case POSITION_SLEEPING:
-  sendTo("You cannot do that while sleeping!\n\r");
-  break;
+        sendTo("You cannot do that while sleeping!\n\r");
+        break;
       case POSITION_RESTING:
-  sendTo("You cannot do that while resting!\n\r");
-  break;
+        sendTo("You cannot do that while resting!\n\r");
+        break;
       case POSITION_SITTING:
-  sendTo("You cannot do that while sitting!?\n\r");
-  break;
+        sendTo("You cannot do that while sitting!?\n\r");
+        break;
       case POSITION_CRAWLING:
-  sendTo("You cannot do that while crawling!\n\r");
-  break;
+        sendTo("You cannot do that while crawling!\n\r");
+        break;
       case POSITION_ENGAGED:
-  sendTo("You cannot do that while engaged!\n\r");
-  break;
+        sendTo("You cannot do that while engaged!\n\r");
+        break;
       case POSITION_FIGHTING:
-  sendTo("You cannot do that while fighting!\n\r");
-  break;
+        sendTo("You cannot do that while fighting!\n\r");
+        break;
       case POSITION_STANDING:
-  sendTo("You cannot do that while standing!\n\r");
-  break;
+        sendTo("You cannot do that while standing!\n\r");
+        break;
       case POSITION_MOUNTED:
-  sendTo("You cannot do that while mounted!\n\r");
-  break;
+        sendTo("You cannot do that while mounted!\n\r");
+        break;
       case POSITION_FLYING:
-  sendTo("You cannot do that while flying!\n\r");
-  break;
+        sendTo("You cannot do that while flying!\n\r");
+        break;
     }
   } else {
     ch = ((desc && desc->original) ? desc->original : this);
-    if (should_be_logged(ch) && ch->isPc()){
-      TPerson * tPerson = dynamic_cast<TPerson *>(ch);
+    if (should_be_logged(ch) && ch->isPc()) {
+      TPerson* tPerson = dynamic_cast<TPerson*>(ch);
 
       if (ch == this) {
-  vlogf(LOG_SILENT, format("%s (%i):%s %s") %  name % in_room % commandArray[cmd]->name % newarg);
+        vlogf(LOG_SILENT, format("%s (%i):%s %s") % name % in_room %
+                            commandArray[cmd]->name % newarg);
 
-  if (tPerson)
-    tPerson->logf("%s:%s %s", name.c_str(), commandArray[cmd]->name, newarg.c_str());
+        if (tPerson)
+          tPerson->logf("%s:%s %s", name.c_str(), commandArray[cmd]->name,
+            newarg.c_str());
       } else {
-  vlogf(LOG_SILENT, format("%s (%s) (%i):%s %s") %  name % desc->original->name % 
-        in_room % commandArray[cmd]->name % newarg);
+        vlogf(LOG_SILENT, format("%s (%s) (%i):%s %s") % name %
+                            desc->original->name % in_room %
+                            commandArray[cmd]->name % newarg);
 
-  if (tPerson)
-    tPerson->logf("%s:%s %s", name.c_str(),
-      commandArray[cmd]->name, newarg.c_str());
+        if (tPerson)
+          tPerson->logf("%s:%s %s", name.c_str(), commandArray[cmd]->name,
+            newarg.c_str());
       }
     } else if (ch->isPc() && ch->isPlayerAction(PLR_LOGGED))
-      vlogf(LOG_SILENT, format("%s %s%s") %  name % commandArray[cmd]->name % newarg);
+      vlogf(LOG_SILENT,
+        format("%s %s%s") % name % commandArray[cmd]->name % newarg);
     else if (numberLogHosts && desc) {
       for (int a = 0; a < numberLogHosts; a++) {
         if (desc->host.lower() == sstring(hostLogList[a]).lower())
-    vlogf(LOG_SILENT, format("%s %s%s") %  name % commandArray[cmd]->name % newarg);
+          vlogf(LOG_SILENT,
+            format("%s %s%s") % name % commandArray[cmd]->name % newarg);
       }
     }
 
@@ -349,23 +357,23 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
       REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
     rc = triggerSpecial(NULL, cmd, newarg.c_str());
-    if (IS_SET_DELETE(rc, DELETE_THIS)) 
+    if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    else if (rc) 
+    else if (rc)
       return FALSE;
 
     auto ret = doPersonCommand(cmd, argument, vict, typedIn);
     rc = ret.second;
-    if (!ret.first) { // handled
-      switch(cmd) {
-	case CMD_NOP:
-	  break;
+    if (!ret.first) {  // handled
+      switch (cmd) {
+        case CMD_NOP:
+          break;
         case CMD_UNHARNESS:
         case CMD_UNSADDLE:
           doUnsaddle(newarg);
           break;
         case CMD_SPRINGLEAP:
-          doSpringleap(newarg, true, dynamic_cast<TBeing *>(vict));
+          doSpringleap(newarg, true, dynamic_cast<TBeing*>(vict));
           break;
         case CMD_HARNESS:
         case CMD_SADDLE:
@@ -386,9 +394,11 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           break;
         case CMD_RELEASE:
           if (!hasWizPower(POWER_WIZARD)) {
-            sendTo("Prototype command.  You need to be a developer to use this.\n\r");
+            sendTo(
+              "Prototype command.  You need to be a developer to use "
+              "this.\n\r");
             break;
-          }   
+          }
           doRelease(newarg);
           break;
         case CMD_CRIT:
@@ -400,7 +410,9 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           break;
         case CMD_CAPTURE:
           if (!hasWizPower(POWER_WIZARD)) {
-            sendTo("Prototype command.  You need to be a developer to use this.\n\r");
+            sendTo(
+              "Prototype command.  You need to be a developer to use "
+              "this.\n\r");
             break;
           }
           doCapture(newarg);
@@ -801,7 +813,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           rc = doEmote(newarg.c_str());
           addToLifeforce(1);
           break;
-        case CMD_ECHO: 
+        case CMD_ECHO:
           doEcho(newarg.c_str());
           break;
         case CMD_SHOW:
@@ -843,7 +855,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           addToLifeforce(1);
           break;
         case CMD_STEAL:
-          rc = doSteal(newarg, dynamic_cast<TBeing *>(vict));
+          rc = doSteal(newarg, dynamic_cast<TBeing*>(vict));
           break;
         case CMD_INVISIBLE:
           doInvis(newarg.c_str());
@@ -899,7 +911,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           doHostlog(newarg.c_str());
           break;
         case CMD_ASSIST:
-          rc = doAssist(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doAssist(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           addToLifeforce(1);
           break;
         case CMD_WHO:
@@ -946,8 +958,8 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           addToLifeforce(1);
           break;
         case CMD_TELL:
-          buf=newarg;
-          buf=one_argument(buf, bufname);
+          buf = newarg;
+          buf = one_argument(buf, bufname);
 
           rc = doTell(bufname, buf);
           addToLifeforce(1);
@@ -1150,13 +1162,13 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           break;
         case CMD_KILL:
         case CMD_SLAY:
-          rc = doKill(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doKill(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_HIT:
-          rc = doHit(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doHit(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_ENGAGE:
-          rc = doEngage(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doEngage(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_DISENGAGE:
           rc = doDisengage();
@@ -1210,22 +1222,22 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           rc = doBerserk();
           break;
         case CMD_SHOVE:
-          rc = doShove(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doShove(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_GRAPPLE:
-          rc = doGrapple(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doGrapple(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_RESCUE:
           rc = doRescue(newarg.c_str());
           break;
         case CMD_DEATHSTROKE:
-          rc = doDeathstroke(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doDeathstroke(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_WHIRLWIND:
           rc = doWhirlwind();
           break;
         case CMD_FOCUS_ATTACK:
-          rc = doFocusAttack(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doFocusAttack(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_RALLY:
           rc = doRally();
@@ -1234,26 +1246,26 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           rc = doFortify();
           break;
         case CMD_SLAM:
-          rc = doSlam(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doSlam(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_BODYSLAM:
-          rc = doBodyslam(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doBodyslam(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_SPIN:
-          rc = doSpin(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doSpin(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_STOMP:
-          rc = doStomp(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doStomp(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_EMAIL:
           doEmail(newarg.c_str());
           addToLifeforce(1);
           break;
         case CMD_HEADBUTT:
-          rc = doHeadbutt(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doHeadbutt(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_KNEESTRIKE:
-          rc = doKneestrike(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doKneestrike(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_DOORBASH:
           rc = doDoorbash(newarg);
@@ -1276,7 +1288,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           doDull(newarg.c_str());
           addToLifeforce(1);
           break;
-        case CMD_MEND:     // just aliasing this to repair
+        case CMD_MEND:  // just aliasing this to repair
         case CMD_REPAIR:
           doRepair(newarg.c_str());
           addToLifeforce(1);
@@ -1366,7 +1378,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           doScribe(newarg.c_str());
           break;
         case CMD_TURN:
-          doTurn(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          doTurn(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_YOGINSA:
           doYoginsa();
@@ -1469,28 +1481,28 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           rc = doFeignDeath();
           break;
         case CMD_JUNK:
-          rc = doJunk(newarg.c_str(), dynamic_cast<TObj *>(vict));
+          rc = doJunk(newarg.c_str(), dynamic_cast<TObj*>(vict));
           break;
         case CMD_NOJUNK:
-          rc = doNoJunk(newarg.c_str(), dynamic_cast<TObj *>(vict));
+          rc = doNoJunk(newarg.c_str(), dynamic_cast<TObj*>(vict));
           break;
         case CMD_KICK:
-          rc = doKick(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doKick(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_SHOULDER_THROW:
-          rc = doShoulderThrow(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doShoulderThrow(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_CHOP:
-          rc = doChop(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doChop(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_HURL:
-          rc = doHurl(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doHurl(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_BONEBREAK:
-          rc = doBoneBreak(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doBoneBreak(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_DEFENESTRATE:
-          rc = doDefenestrate(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doDefenestrate(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_CHI:
           rc = doChi(newarg.c_str(), vict);
@@ -1511,12 +1523,12 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           doSnoop(newarg.c_str());
           break;
         case CMD_QUIVPALM:
-          rc = doQuiveringPalm(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doQuiveringPalm(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_RIDE:
         case CMD_MOUNT:
         case CMD_DISMOUNT:
-          rc = doMount(newarg.c_str(), cmd, dynamic_cast<TBeing *>(vict));
+          rc = doMount(newarg.c_str(), cmd, dynamic_cast<TBeing*>(vict));
           break;
         case CMD_FORCE:
           doForce(newarg.c_str());
@@ -1559,13 +1571,13 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           addToLifeforce(1);
           break;
         case CMD_BASH:
-          rc = doBash(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doBash(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_BACKSTAB:
-          rc = doBackstab(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doBackstab(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_SLIT:
-          rc = doThroatSlit(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doThroatSlit(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_HIDE:
           rc = doHide();
@@ -1593,16 +1605,16 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           rc = doPoisonWeapon(newarg.c_str());
           break;
         case CMD_GARROTTE:
-          rc = doGarrotte(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doGarrotte(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_STAB:
-          rc = doStab(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doStab(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_CUDGEL:
-          rc = doCudgel(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doCudgel(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_CHARGE:
-          rc = doCharge(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doCharge(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_ORIENT:
           rc = doOrient();
@@ -1612,10 +1624,10 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           addToLifeforce(1);
           break;
         case CMD_TRIP:
-          rc = doTrip(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doTrip(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_SMITE:
-          rc = doSmite(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doSmite(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           break;
         case CMD_FORAGE:
           doForage();
@@ -1665,7 +1677,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
           rc = doCharmBeast(newarg.c_str());
           break;
         case CMD_RETRAIN:
-          rc = doRetrainPet(newarg.c_str(), dynamic_cast<TBeing *>(vict));
+          rc = doRetrainPet(newarg.c_str(), dynamic_cast<TBeing*>(vict));
           addToLifeforce(1);
           break;
         case CMD_BEFRIEND:
@@ -1937,25 +1949,22 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring &argument, TThing *vict, bool 
   return FALSE;
 }
 
-
 // call this if command should be executed right now (no lag)
 // otherwise use addToCommandQue()
 // return DELETE_THIS if tbeing has been killed
-int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
-{
+int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
   unsigned int pos;
   sstring argument, aliasbuf, arg1, arg2;
-  sstring whitespace=" \f\n\r\t\v";
+  sstring whitespace = " \f\n\r\t\v";
 
-  argument=orig_arg;
+  argument = orig_arg;
 
-  arg2=one_argument(orig_arg, arg1);
+  arg2 = one_argument(orig_arg, arg1);
 
-  if(orig_arg.substr(0,3) == "at "){
-    arg1="at";
-    arg2=arg1+arg2;
+  if (orig_arg.substr(0, 3) == "at ") {
+    arg1 = "at";
+    arg2 = arg1 + arg2;
   }
-
 
   if (arg1.empty())
     return FALSE;
@@ -1973,7 +1982,7 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
       std::stack<sstring> send;
       if (command.find("~") != sstring::npos) {
         size_t begin = 0;
-        while (begin != sstring::npos) // iterate over lines in multiline
+        while (begin != sstring::npos)  // iterate over lines in multiline
         {
           size_t nextSplit = command.find("~", begin);
           sstring fragment = command.substr(begin, nextSplit - begin);
@@ -1984,8 +1993,8 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
           begin = nextSplit == sstring::npos ? sstring::npos : nextSplit + 1;
         }
         while (!send.empty()) {
-            prependCommandToQue(send.top());
-            send.pop();
+          prependCommandToQue(send.top());
+          send.pop();
         }
         return FALSE;
       }
@@ -1998,68 +2007,69 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
       }
 
       if (!arg2.empty() && !found)
-        aliasbuf=format("%s %s") % command % arg2;
+        aliasbuf = format("%s %s") % command % arg2;
       else
-        aliasbuf=command;
+        aliasbuf = command;
 
-      argument=aliasbuf;
-      arg2=one_argument(aliasbuf, arg1);
+      argument = aliasbuf;
+      arg2 = one_argument(aliasbuf, arg1);
     }
   }
-
 
   // Let people use say and emote shortcuts with no spaces - Russ
   if ((argument[0] == '\'') || (argument[0] == ':') || (argument[0] == ',')) {
-    arg1 = argument.substr(0,1);
-    argument.erase(0,1); // remove first character
+    arg1 = argument.substr(0, 1);
+    argument.erase(0, 1);  // remove first character
   } else {
-    if (!argument.substr(0,3).compare("low") && !isImmortal()){
+    if (!argument.substr(0, 3).compare("low") && !isImmortal()) {
       // KLUDGE - for low and lower command
       // l and lo == look, so we need not check for them
-      arg1="lower";
-    } else if (!argument.substr(0,4).compare("repl") && !isImmortal()){
+      arg1 = "lower";
+    } else if (!argument.substr(0, 4).compare("repl") && !isImmortal()) {
       // KLUDGE - for reply and replace command
       // rep == report, so we need not check for shorter
-      arg1="reply";
-    } else if (!argument.substr(0,3).compare("med") && !isImmortal()){
+      arg1 = "reply";
+    } else if (!argument.substr(0, 3).compare("med") && !isImmortal()) {
       // KLUDGE - for meditate and medit command
       // me == mend limb, so we need not check for shorter
-      arg1="meditate";
-    } else if (!(argument.lower().substr(0,6).compare("southe"))){
-      arg1="se";
-    } else if (!(argument.lower().substr(0,6).compare("northw"))){
-      arg1="nw";
-    } else if (!(argument.lower().substr(0,6).compare("southw"))){
-      arg1="sw";
-    } else if (!(argument.lower().substr(0,6).compare("northe"))){
-      arg1="ne";
+      arg1 = "meditate";
+    } else if (!(argument.lower().substr(0, 6).compare("southe"))) {
+      arg1 = "se";
+    } else if (!(argument.lower().substr(0, 6).compare("northw"))) {
+      arg1 = "nw";
+    } else if (!(argument.lower().substr(0, 6).compare("southw"))) {
+      arg1 = "sw";
+    } else if (!(argument.lower().substr(0, 6).compare("northe"))) {
+      arg1 = "ne";
     }
 
     // strip out first word
-    pos=argument.find_first_not_of(whitespace,0);
+    pos = argument.find_first_not_of(whitespace, 0);
     argument.erase(0, argument.find_first_of(whitespace, pos));
   }
 
-
   cmdTypeT cmd = searchForCommandNum(arg1);
   if (cmd >= MAX_CMD_LIST) {
-    // sendrpf(COLOR_NONE, roomp, "parseCommand:incorrectCommand=[%s]\n\r", arg1.c_str());
-    arg1=stripColorCodes(arg1);
-    // sendrpf(COLOR_NONE, roomp, "parseCommand:incorrectCommand=[%s]\n\r", arg1.c_str());
+    // sendrpf(COLOR_NONE, roomp, "parseCommand:incorrectCommand=[%s]\n\r",
+    // arg1.c_str());
+    arg1 = stripColorCodes(arg1);
+    // sendrpf(COLOR_NONE, roomp, "parseCommand:incorrectCommand=[%s]\n\r",
+    // arg1.c_str());
     incorrectCommand();
     return FALSE;
   }
 
   if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_BACKSTAB)
-    REMOVE_BIT(specials.affectedBy,AFF_HIDE);
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
   if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_SLIT)
-    REMOVE_BIT(specials.affectedBy,AFF_HIDE);
+    REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
   if (getCaptiveOf()) {
-    if(!sameRoom(*getCaptiveOf())){
-      sendTo("Your capturer has left, so you deftly slip out of your bonds.\n\r");
+    if (!sameRoom(*getCaptiveOf())) {
+      sendTo(
+        "Your capturer has left, so you deftly slip out of your bonds.\n\r");
       getCaptiveOf()->remCaptive(this);
-    } else if(!utilityTaskCommand(cmd) && !nobrainerTaskCommand(cmd)){
+    } else if (!utilityTaskCommand(cmd) && !nobrainerTaskCommand(cmd)) {
       sendTo("You are unable to do that while a captive.\n\r");
       return FALSE;
     }
@@ -2080,8 +2090,8 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
   // END LIFEFORCE
 
   // strip leading whitespace, if any
-  if(argument.find_first_not_of(whitespace) != sstring::npos)
-    argument=argument.substr(argument.find_first_not_of(whitespace));
+  if (argument.find_first_not_of(whitespace) != sstring::npos)
+    argument = argument.substr(argument.find_first_not_of(whitespace));
 
   return (doCommand(cmd, argument, NULL, typedIn));
 }
@@ -2089,87 +2099,72 @@ int TBeing::parseCommand(const sstring &orig_arg, bool typedIn, bool doAlias)
 // I tried it this way, but had a memory leak reported by insure from it
 // bat 2/19/99
 // static bool fill_word(sstring & argument)
-static bool fill_word(const char * argument)
-{
-  const char *filler_word[] =
-  {
-    "in",
-    "from",
-    "with",
-    "the",
-    "on",
-    "at",
-    "to",
-    "\n"
-  };
+static bool fill_word(const char* argument) {
+  const char* filler_word[] = {"in", "from", "with", "the", "on", "at", "to",
+    "\n"};
 
   return (search_block(argument, filler_word, TRUE) >= 0);
 }
 
-
-void argument_interpreter(const char *argument, char *first_arg, unsigned int first_arg_size, char *second_arg, unsigned int second_arg_size)
-{
+void argument_interpreter(const char* argument, char* first_arg,
+  unsigned int first_arg_size, char* second_arg, unsigned int second_arg_size) {
   try {
     sstring tf1, tf2;
     argument_interpreter(argument, tf1, tf2);
     strncpy(first_arg, tf1.c_str(), first_arg_size);
-    first_arg[first_arg_size-1] = '\0';
+    first_arg[first_arg_size - 1] = '\0';
     strncpy(second_arg, tf2.c_str(), second_arg_size);
-    second_arg[second_arg_size-1] = '\0';
+    second_arg[second_arg_size - 1] = '\0';
   } catch (...) {
     mud_assert(0, "Failure in argument_interpreter");
   }
 }
 
-void argument_interpreter(sstring argument, sstring &first_arg, sstring &second_arg)
-{
+void argument_interpreter(sstring argument, sstring& first_arg,
+  sstring& second_arg) {
   sstring st = one_argument(argument, first_arg);
   one_argument(st, second_arg);
 }
 
-bool is_number(const sstring &str)
-{
-    boost::smatch what;  //Not really used here, since we're just doing go/no-go
-    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+(\.\d+)?$)" ));
+bool is_number(const sstring& str) {
+  boost::smatch what;  // Not really used here, since we're just doing go/no-go
+  return boost::regex_match(str, what, boost::regex(R"(^[\+-]?\d+(\.\d+)?$)"));
 }
 
-bool is_integer(const sstring &str)
-{
-    boost::smatch what;  //Not really used here, since we're just doing go/no-go
-    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+$)" ));
+bool is_integer(const sstring& str) {
+  boost::smatch what;  // Not really used here, since we're just doing go/no-go
+  return boost::regex_match(str, what, boost::regex(R"(^[\+-]?\d+$)"));
 }
 
-bool is_float(const sstring &str)
-{
-    boost::smatch what;  //Not really used here, since we're just doing go/no-go
-    return boost::regex_match(str, what, boost::regex( R"(^[\+-]?\d+(\.\d+)$)" ));
+bool is_float(const sstring& str) {
+  boost::smatch what;  // Not really used here, since we're just doing go/no-go
+  return boost::regex_match(str, what, boost::regex(R"(^[\+-]?\d+(\.\d+)$)"));
 }
 
-const char *one_argument(const char *argument, char *first_arg, unsigned int first_arg_size)
-{
- // char * temp;
+const char* one_argument(const char* argument, char* first_arg,
+  unsigned int first_arg_size) {
+  // char * temp;
   sstring s;
   sstring tmp_fa;
   try {
     s = one_argument(sstring(argument), tmp_fa);
     strncpy(first_arg, tmp_fa.c_str(), first_arg_size);
-  
+
     // we should return a pointer into argument equivalent to s.c_str
     if (s.empty())
       return &argument[strlen(argument)];  // return pointer to the NULL
     else {
-     return strstr(argument+strlen(first_arg), s.c_str());
+      return strstr(argument + strlen(first_arg), s.c_str());
     }
   } catch (...) {
     mud_assert(0, "Bat's expirimental code don't work - exception caught");
     return NULL;
   }
-// COSMO STRING FIX
+  // COSMO STRING FIX
   return NULL;
 }
 
-sstring one_argument(sstring argument, sstring & first_arg)
-{
+sstring one_argument(sstring argument, sstring& first_arg) {
   size_t bgin, look_at;
   sstring a2;
   sstring whitespace = " \n\r\t";
@@ -2195,29 +2190,27 @@ sstring one_argument(sstring argument, sstring & first_arg)
     }
   } while (fill_word(first_arg.c_str()));
 
-
   // strip leading whitespace from argument
-  if((bgin = argument.find_first_not_of(whitespace))!= sstring::npos){
+  if ((bgin = argument.find_first_not_of(whitespace)) != sstring::npos) {
     a2 = argument.substr(bgin);
     argument = a2;
   }
   return argument;
 }
 
-
-bool is_abbrev(const char *arg1, const char *arg2, multipleTypeT multiple, exactTypeT exact)
-{
+bool is_abbrev(const char* arg1, const char* arg2, multipleTypeT multiple,
+  exactTypeT exact) {
   const sstring str1 = arg1;
   const sstring str2 = arg2;
   return is_abbrev(str1, str2, multiple, exact);
 }
 
-// determine if a given sstring is an abbreviation of another 
+// determine if a given sstring is an abbreviation of another
 // multiple word functionality FALSE by c++ default - Russ
 // Must be explicitly passed TRUE otherwise defaults to FALSE
 
-bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple, exactTypeT exact)
-{
+bool is_abbrev(const sstring& arg1, const sstring& arg2, multipleTypeT multiple,
+  exactTypeT exact) {
   int spaces1 = 0;
   int spaces2 = 0;
   const sstring whitespace = " \n\r\t";
@@ -2229,7 +2222,7 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
     trimString(carg1);
     sstring::size_type pos = carg1.find_last_not_of(whitespace);
     if (pos != sstring::npos)
-      carg1.erase(pos+1);
+      carg1.erase(pos + 1);
 
     pos = 0;
     do {
@@ -2261,14 +2254,14 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
 
     // may have converted the following code incorrectly
     // I wasn't entirely certain what it was doing - peel
-    std::vector <sstring> buf1, buf2;
+    std::vector<sstring> buf1, buf2;
 
     split_string(carg1, " ", buf1);
     split_string(carg2, " ", buf2);
 
-    for(unsigned int i=0;i<buf1.size();++i){
-      if(buf1[i].lower() != buf2[i].lower().substr(0,buf1[i].size()))
-  return false;
+    for (unsigned int i = 0; i < buf1.size(); ++i) {
+      if (buf1[i].lower() != buf2[i].lower().substr(0, buf1[i].size()))
+        return false;
     }
 
     return true;
@@ -2294,43 +2287,43 @@ bool is_abbrev(const sstring &arg1, const sstring &arg2, multipleTypeT multiple,
   return false;
 }
 
-// return first 'word' plus trailing subsstring of input sstring 
-void half_chop_safe(const char *sstring, char *arg1, unsigned int arg1Len, char *arg2, unsigned int arg2Len)
-{
-  for (; *sstring && isspace(*sstring); sstring++);
+// return first 'word' plus trailing subsstring of input sstring
+void half_chop_safe(const char* sstring, char* arg1, unsigned int arg1Len,
+  char* arg2, unsigned int arg2Len) {
+  for (; *sstring && isspace(*sstring); sstring++)
+    ;
   const char* firstWordStart = sstring;
-  for (; *sstring && !isspace(*sstring); sstring++);
+  for (; *sstring && !isspace(*sstring); sstring++)
+    ;
   const char* firstWordEnd = sstring;
-  for (; isspace(*sstring); sstring++);
+  for (; isspace(*sstring); sstring++)
+    ;
 
-  arg1Len = min<unsigned int>(arg1Len-1, firstWordEnd-firstWordStart); 
+  arg1Len = min<unsigned int>(arg1Len - 1, firstWordEnd - firstWordStart);
   strncpy(arg1, firstWordStart, arg1Len);
   arg1[arg1Len] = '\0';
 
   strncpy(arg2, sstring, arg2Len);
 }
 
-sstring add_bars(const sstring &s){
-  sstring whitespace=" \f\n\r\t\v";
-  sstring stmp=s;
+sstring add_bars(const sstring& s) {
+  sstring whitespace = " \f\n\r\t\v";
+  sstring stmp = s;
 
-  for(size_t pos=stmp.find_first_of(whitespace);
-      pos != sstring::npos;
-      pos=stmp.find_first_of(whitespace, pos)){
+  for (size_t pos = stmp.find_first_of(whitespace); pos != sstring::npos;
+       pos = stmp.find_first_of(whitespace, pos)) {
     // replace any contiguous string of white space with a single -
-    stmp.replace(pos, stmp.find_first_not_of(whitespace, pos)-pos, "-");
+    stmp.replace(pos, stmp.find_first_not_of(whitespace, pos) - pos, "-");
   }
 
   return stmp;
 }
 
-
 // returns DELETE_THIS, DELETE_VICT, TRUE or FALSE
-int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
-{
+int TBeing::triggerSpecialOnPerson(TThing* ch, cmdTypeT cmd, const char* arg) {
   wearSlotT j;
   int rc;
-  TThing *t;
+  TThing* t;
 
   // special in equipment list?
   for (j = MIN_WEAR; j < MAX_WEAR; j++) {
@@ -2363,8 +2356,8 @@ int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
     }
   }
   // special in inventory?
-  for(StuffIter it=stuff.begin();it!=stuff.end();){
-    t=*(it++);
+  for (StuffIter it = stuff.begin(); it != stuff.end();) {
+    t = *(it++);
     if (t->spec) {
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -2384,30 +2377,30 @@ int TBeing::triggerSpecialOnPerson(TThing *ch, cmdTypeT cmd, const char *arg)
 
 // this function is a generic trigger for any/all special procs that
 // "this" might trigger by doing cmd.  ch is here for future implementation
-// if we want to add the capability to trigger with 2ndary parameters.  
+// if we want to add the capability to trigger with 2ndary parameters.
 // ch is not used now
 // return DELETE_THIS will cause this to be destroyed
 // return DELETE_VICT will cause ch to be destroyed
-int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
-{
+int TBeing::triggerSpecial(TThing* ch, cmdTypeT cmd, const char* arg) {
   int rc;
-  TThing *t;
+  TThing* t;
 
-  // is the player busy doing something else? 
-  if (task && task->task >= TASK_BOGUS && task->task < NUM_TASKS && tasks[task->task].taskf &&
-        ((*(tasks[task->task].taskf))(this, cmd, arg, 0, roomp, task->obj)))
+  // is the player busy doing something else?
+  if (task && task->task >= TASK_BOGUS && task->task < NUM_TASKS &&
+      tasks[task->task].taskf &&
+      ((*(tasks[task->task].taskf))(this, cmd, arg, 0, roomp, task->obj)))
     return TRUE;
 
   // is the player busy doing something else?
   if (spelltask && cast_spell(this, cmd, 0))
     return TRUE;
 
-  // special in room? 
+  // special in room?
   if (roomp) {
     rc = roomp->checkSpec(this, cmd, arg, NULL);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // delete room?
-      vlogf(LOG_BUG, format("checkSpec indicated delete room (%d)") %  in_room);
+      vlogf(LOG_BUG, format("checkSpec indicated delete room (%d)") % in_room);
     }
     if (IS_SET_ONLY(rc, DELETE_VICT))
       return DELETE_THIS;
@@ -2425,18 +2418,18 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
 
   if (roomp) {
     // special in mobile/object present?
-    std::vector<TThing *> things;
+    std::vector<TThing*> things;
 
     // NOTE: we iterate through objects and get a list of things
     // then we iterate that list seperately.  This way checkSpec
     // can alterate roomp->stuff and we wont crash
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end();){
-      if (!(t=*(it++)))
+    for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
+      if (!(t = *(it++)))
         continue;
       things.push_back(t);
     }
 
-    for(unsigned int iThing = 0; iThing < things.size(); iThing++) {
+    for (unsigned int iThing = 0; iThing < things.size(); iThing++) {
       t = things[iThing];
       if (!t || t->in_room != roomp->number)
         continue;
@@ -2453,13 +2446,12 @@ int TBeing::triggerSpecial(TThing *ch, cmdTypeT cmd, const char *arg)
         return DELETE_VICT;
       if (rc)
         return TRUE;
-    } 
-  } 
+    }
+  }
   return FALSE;
 }
 
-void buildCommandArray(void)
-{
+void buildCommandArray(void) {
   commandArray[CMD_NORTH] = new commandInfo("north", POSITION_CRAWLING, 0);
   commandArray[CMD_EAST] = new commandInfo("east", POSITION_CRAWLING, 0);
   commandArray[CMD_SOUTH] = new commandInfo("south", POSITION_CRAWLING, 0);
@@ -2479,8 +2471,9 @@ void buildCommandArray(void)
   commandArray[CMD_TROPHY] = new commandInfo("trophy", POSITION_DEAD, 0);
   commandArray[CMD_CACKLE] = new commandInfo("cackle", POSITION_RESTING, 0);
   commandArray[CMD_SHOUT] = new commandInfo("shout", POSITION_RESTING, 0);
-  commandArray[CMD_TELL] = new commandInfo("tell",POSITION_RESTING, 0);
-  commandArray[CMD_INVENTORY]=new commandInfo("inventory", POSITION_RESTING, 0);
+  commandArray[CMD_TELL] = new commandInfo("tell", POSITION_RESTING, 0);
+  commandArray[CMD_INVENTORY] =
+    new commandInfo("inventory", POSITION_RESTING, 0);
   commandArray[CMD_GET] = new commandInfo("get", POSITION_RESTING, 0);
   commandArray[CMD_SAY] = new commandInfo("say", POSITION_RESTING, 0);
   commandArray[CMD_SMILE] = new commandInfo("smile", POSITION_RESTING, 0);
@@ -2501,22 +2494,27 @@ void buildCommandArray(void)
   commandArray[CMD_HELP] = new commandInfo("help", POSITION_DEAD, 0);
   commandArray[CMD_WHO] = new commandInfo("who", POSITION_DEAD, 0);
   commandArray[CMD_EMOTE] = new commandInfo("emote", POSITION_RESTING, 0);
-  commandArray[CMD_ECHO]=new commandInfo("echo", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_ECHO] =
+    new commandInfo("echo", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_STAND] = new commandInfo("stand", POSITION_RESTING, 0);
   commandArray[CMD_SIT] = new commandInfo("sit", POSITION_RESTING, 0);
   commandArray[CMD_REST] = new commandInfo("rest", POSITION_RESTING, 0);
   commandArray[CMD_SLEEP] = new commandInfo("sleep", POSITION_SLEEPING, 0);
   commandArray[CMD_WAKE] = new commandInfo("wake", POSITION_SLEEPING, 0);
-  commandArray[CMD_FORCE]=new commandInfo("force",POSITION_SLEEPING,GOD_LEVEL1);
-  commandArray[CMD_DISTRIBUTE]=new commandInfo("distribute",POSITION_SLEEPING,GOD_LEVEL1);
-  commandArray[CMD_TRANSFER]=new commandInfo("transfer",POSITION_SLEEPING,GOD_LEVEL1);
+  commandArray[CMD_FORCE] =
+    new commandInfo("force", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_DISTRIBUTE] =
+    new commandInfo("distribute", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_TRANSFER] =
+    new commandInfo("transfer", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_HUG] = new commandInfo("hug", POSITION_RESTING, 0);
   commandArray[CMD_SNUGGLE] = new commandInfo("snuggle", POSITION_RESTING, 0);
   commandArray[CMD_CUDDLE] = new commandInfo("cuddle", POSITION_RESTING, 0);
   commandArray[CMD_NUZZLE] = new commandInfo("nuzzle", POSITION_RESTING, 0);
   commandArray[CMD_CRY] = new commandInfo("cry", POSITION_RESTING, 0);
   commandArray[CMD_NEWS] = new commandInfo("news", POSITION_DEAD, 0);
-  commandArray[CMD_EQUIPMENT]=new commandInfo("equipment", POSITION_RESTING, 0);
+  commandArray[CMD_EQUIPMENT] =
+    new commandInfo("equipment", POSITION_RESTING, 0);
   commandArray[CMD_BUY] = new commandInfo("buy", POSITION_SITTING, 0);
   commandArray[CMD_SELL] = new commandInfo("sell", POSITION_SITTING, 0);
   commandArray[CMD_VALUE] = new commandInfo("value", POSITION_SITTING, 0);
@@ -2529,8 +2527,9 @@ void buildCommandArray(void)
   commandArray[CMD_GRAB] = new commandInfo("grab", POSITION_RESTING, 0);
   commandArray[CMD_REMOVE] = new commandInfo("remove", POSITION_RESTING, 0);
   commandArray[CMD_PUT] = new commandInfo("put", POSITION_RESTING, 0);
-  commandArray[CMD_SHUTDOW]=new commandInfo("shutdow",POSITION_DEAD,GOD_LEVEL1);
-  commandArray[CMD_REBOO]=new commandInfo("reboo",POSITION_DEAD,GOD_LEVEL1);
+  commandArray[CMD_SHUTDOW] =
+    new commandInfo("shutdow", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_REBOO] = new commandInfo("reboo", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SAVE] = new commandInfo("save", POSITION_SLEEPING, 0);
   commandArray[CMD_HIT] = new commandInfo("hit", POSITION_SITTING, 0);
   commandArray[CMD_EXITS] = new commandInfo("exits", POSITION_RESTING, 0);
@@ -2541,15 +2540,18 @@ void buildCommandArray(void)
   commandArray[CMD_TIME] = new commandInfo("time", POSITION_DEAD, 0);
   commandArray[CMD_LOAD] = new commandInfo("load", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PURGE] = new commandInfo("purge", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_SHUTDOWN] = new commandInfo("shutdown", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_REBOOT] = new commandInfo("reboot", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_SHUTDOWN] =
+    new commandInfo("shutdown", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_REBOOT] =
+    new commandInfo("reboot", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_IDEA] = new commandInfo("ideas", POSITION_DEAD, 0);
   commandArray[CMD_TYPO] = new commandInfo("typos", POSITION_DEAD, 0);
   commandArray[CMD_BUG] = new commandInfo("bugs", POSITION_DEAD, 0);
   commandArray[CMD_WHISPER] = new commandInfo("whisper", POSITION_RESTING, 0);
   commandArray[CMD_CAST] = new commandInfo("cast", POSITION_SITTING, 0);
   commandArray[CMD_AT] = new commandInfo("at", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_AS] = new commandInfo("as", POSITION_DEAD, 0);  // needs to be 0 so any mob can do it
+  commandArray[CMD_AS] = new commandInfo("as", POSITION_DEAD,
+    0);  // needs to be 0 so any mob can do it
   commandArray[CMD_ORDER] = new commandInfo("order", POSITION_RESTING, 0);
   commandArray[CMD_SIP] = new commandInfo("sip", POSITION_RESTING, 0);
   commandArray[CMD_TASTE] = new commandInfo("taste", POSITION_RESTING, 0);
@@ -2609,14 +2611,16 @@ void buildCommandArray(void)
   commandArray[CMD_WIGGLE] = new commandInfo("wiggle", POSITION_CRAWLING, 0);
   commandArray[CMD_WINK] = new commandInfo("wink", POSITION_RESTING, 0);
   commandArray[CMD_YAWN] = new commandInfo("yawn", POSITION_RESTING, 0);
-  commandArray[CMD_SNOWBALL] = new commandInfo("snowball", POSITION_CRAWLING, GOD_LEVEL1);
+  commandArray[CMD_SNOWBALL] =
+    new commandInfo("snowball", POSITION_CRAWLING, GOD_LEVEL1);
   commandArray[CMD_WRITE] = new commandInfo("write", POSITION_RESTING, 0);
   commandArray[CMD_HOLD] = new commandInfo("hold", POSITION_RESTING, 0);
   commandArray[CMD_FLIP] = new commandInfo("flip", POSITION_STANDING, 0);
   commandArray[CMD_SNEAK] = new commandInfo("sneak", POSITION_CRAWLING, 0);
   commandArray[CMD_HIDE] = new commandInfo("hide", POSITION_STANDING, 0);
-  commandArray[CMD_BACKSTAB]=new commandInfo("backstab", POSITION_STANDING, 0);
-  commandArray[CMD_SLIT]=new commandInfo("slit", POSITION_STANDING, 0);
+  commandArray[CMD_BACKSTAB] =
+    new commandInfo("backstab", POSITION_STANDING, 0);
+  commandArray[CMD_SLIT] = new commandInfo("slit", POSITION_STANDING, 0);
   commandArray[CMD_PICK] = new commandInfo("pick", POSITION_SITTING, 0);
   commandArray[CMD_STEAL] = new commandInfo("steal", POSITION_STANDING, 0);
   commandArray[CMD_BASH] = new commandInfo("bash", POSITION_FIGHTING, 0);
@@ -2630,9 +2634,10 @@ void buildCommandArray(void)
   commandArray[CMD_PAT] = new commandInfo("pat", POSITION_RESTING, 0);
   commandArray[CMD_QUIT2] = new commandInfo("quit!", POSITION_DEAD, 0);
   commandArray[CMD_TAKE] = new commandInfo("take", POSITION_RESTING, 0);
-  commandArray[CMD_INFO]=new commandInfo("info", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_INFO] =
+    new commandInfo("info", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_SAY2] = new commandInfo("'", POSITION_RESTING, 0);
-  commandArray[CMD_QUEST]=new commandInfo("quest",POSITION_SLEEPING, 0);
+  commandArray[CMD_QUEST] = new commandInfo("quest", POSITION_SLEEPING, 0);
   commandArray[CMD_CURSE] = new commandInfo("curse", POSITION_RESTING, 0);
   commandArray[CMD_USE] = new commandInfo("use", POSITION_SITTING, 0);
   commandArray[CMD_WHERE] = new commandInfo("where", POSITION_DEAD, GOD_LEVEL1);
@@ -2642,7 +2647,8 @@ void buildCommandArray(void)
   commandArray[CMD_BEG] = new commandInfo("beg", POSITION_RESTING, 0);
   commandArray[CMD_BLEED] = new commandInfo("bleed", POSITION_RESTING, 0);
   commandArray[CMD_CRINGE] = new commandInfo("cringe", POSITION_RESTING, 0);
-  commandArray[CMD_DAYDREAM]= new commandInfo("daydream", POSITION_SLEEPING, 0);
+  commandArray[CMD_DAYDREAM] =
+    new commandInfo("daydream", POSITION_SLEEPING, 0);
   commandArray[CMD_FUME] = new commandInfo("fume", POSITION_RESTING, 0);
   commandArray[CMD_GROVEL] = new commandInfo("grovel", POSITION_RESTING, 0);
   commandArray[CMD_HOP] = new commandInfo("hop", POSITION_STANDING, 0);
@@ -2656,54 +2662,65 @@ void buildCommandArray(void)
   commandArray[CMD_STEAM] = new commandInfo("steam", POSITION_RESTING, 0);
   commandArray[CMD_TACKLE] = new commandInfo("tackle", POSITION_RESTING, 0);
   commandArray[CMD_TAUNT] = new commandInfo("taunt", POSITION_RESTING, 0);
-  commandArray[CMD_WIZNET] = new commandInfo("wiznet", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_WIZNET] =
+    new commandInfo("wiznet", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_WHINE] = new commandInfo("whine", POSITION_RESTING, 0);
   commandArray[CMD_WORSHIP] = new commandInfo("worship", POSITION_RESTING, 0);
   commandArray[CMD_YODEL] = new commandInfo("yodel", POSITION_RESTING, 0);
   commandArray[CMD_WIZLIST] = new commandInfo("wizlist", POSITION_DEAD, 0);
   commandArray[CMD_CONSIDER] = new commandInfo("consider", POSITION_RESTING, 0);
   commandArray[CMD_GIGGLE] = new commandInfo("giggle", POSITION_RESTING, 0);
-  commandArray[CMD_RESTORE]=new commandInfo("restore",POSITION_DEAD,GOD_LEVEL1);
+  commandArray[CMD_RESTORE] =
+    new commandInfo("restore", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_RETURN] = new commandInfo("return", POSITION_DEAD, 0);
-  commandArray[CMD_SWITCH]=new commandInfo("switch", POSITION_DEAD, 0);
+  commandArray[CMD_SWITCH] = new commandInfo("switch", POSITION_DEAD, 0);
   commandArray[CMD_QUAFF] = new commandInfo("quaff", POSITION_RESTING, 0);
   commandArray[CMD_RECITE] = new commandInfo("recite", POSITION_FIGHTING, 0);
   commandArray[CMD_USERS] = new commandInfo("users", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PROTECT] = new commandInfo("protect", POSITION_CRAWLING, 0);
   commandArray[CMD_NOSHOUT] = new commandInfo("noshout", POSITION_SLEEPING, 2);
-  commandArray[CMD_WIZHELP] = new commandInfo("wizhelp", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_WIZHELP] =
+    new commandInfo("wizhelp", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_CREDITS] = new commandInfo("credits", POSITION_DEAD, 0);
   commandArray[CMD_EMOTE2] = new commandInfo(":", POSITION_RESTING, 0);
-  commandArray[CMD_EXTINGUISH]=new commandInfo("extinguish",POSITION_RESTING,0);
+  commandArray[CMD_EXTINGUISH] =
+    new commandInfo("extinguish", POSITION_RESTING, 0);
   commandArray[CMD_SLAY] = new commandInfo("slay", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_JUNK] = new commandInfo("junk", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_JUNK] =
+    new commandInfo("junk", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_NOJUNK] = new commandInfo("nojunk", POSITION_RESTING, 0);
   commandArray[CMD_DEPOSIT] = new commandInfo("deposit", POSITION_RESTING, 0);
   commandArray[CMD_WITHDRAW] = new commandInfo("withdraw", POSITION_RESTING, 0);
   commandArray[CMD_BALANCE] = new commandInfo("balance", POSITION_RESTING, 0);
-  commandArray[CMD_SYSTEM]=new commandInfo("system", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_SYSTEM] =
+    new commandInfo("system", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PULL] = new commandInfo("pull", POSITION_CRAWLING, 0);
   commandArray[CMD_EDIT] = new commandInfo("edit", POSITION_DEAD, 0);
   commandArray[CMD_SET] = new commandInfo("@set", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_RSAVE] = new commandInfo("rsave", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_RLOAD] = new commandInfo("rload", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_TRACK] = new commandInfo("track", POSITION_CRAWLING, 0);
-  commandArray[CMD_WIZLOCK]=new commandInfo("wizlock",POSITION_DEAD,GOD_LEVEL1);
+  commandArray[CMD_WIZLOCK] =
+    new commandInfo("wizlock", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_HIGHFIVE] = new commandInfo("highfive", POSITION_RESTING, 0);
   commandArray[CMD_TITLE] = new commandInfo("title", POSITION_DEAD, 0);
-  commandArray[CMD_WHOZONE]=new commandInfo("whozone",POSITION_DEAD,GOD_LEVEL1);
+  commandArray[CMD_WHOZONE] =
+    new commandInfo("whozone", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_ASSIST] = new commandInfo("assist", POSITION_FIGHTING, 0);
   commandArray[CMD_ATTRIBUTE] = new commandInfo("attribute", POSITION_DEAD, 0);
   commandArray[CMD_WORLD] = new commandInfo("world", POSITION_DEAD, 0);
   commandArray[CMD_BREAK] = new commandInfo("break", POSITION_CRAWLING, 0);
   commandArray[CMD_REFUEL] = new commandInfo("refuel", POSITION_RESTING, 0);
   commandArray[CMD_SHOW] = new commandInfo("show", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_BODYSLAM] =new commandInfo("bodyslam", POSITION_FIGHTING, 0);
-  commandArray[CMD_SPIN] =new commandInfo("spin", POSITION_FIGHTING, 0);
-  commandArray[CMD_TRANCE_OF_BLADES] = new commandInfo("trance", POSITION_SITTING, 0);
+  commandArray[CMD_BODYSLAM] =
+    new commandInfo("bodyslam", POSITION_FIGHTING, 0);
+  commandArray[CMD_SPIN] = new commandInfo("spin", POSITION_FIGHTING, 0);
+  commandArray[CMD_TRANCE_OF_BLADES] =
+    new commandInfo("trance", POSITION_SITTING, 0);
   commandArray[CMD_INVISIBLE] = new commandInfo("invisible", POSITION_DEAD, 0);
   commandArray[CMD_GAIN] = new commandInfo("gain", POSITION_CRAWLING, 0);
-  commandArray[CMD_TIMESHIFT] = new commandInfo("timeshift", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_TIMESHIFT] =
+    new commandInfo("timeshift", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_DISARM] = new commandInfo("disarm", POSITION_FIGHTING, 0);
   commandArray[CMD_THINK] = new commandInfo("think", POSITION_RESTING, 0);
   commandArray[CMD_ENTER] = new commandInfo("enter", POSITION_SITTING, 0);
@@ -2711,10 +2728,12 @@ void buildCommandArray(void)
   commandArray[CMD_SHOVE] = new commandInfo("shove", POSITION_STANDING, 0);
   commandArray[CMD_SCAN] = new commandInfo("scan", POSITION_CRAWLING, 0);
   commandArray[CMD_TOGGLE] = new commandInfo("toggle", POSITION_DEAD, 0);
-  commandArray[CMD_BREATH] = new commandInfo("breathe", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_BREATH] =
+    new commandInfo("breathe", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_GT] = new commandInfo("gtell", POSITION_RESTING, 0);
   commandArray[CMD_WHAP] = new commandInfo("whap", POSITION_RESTING, 0);
-  commandArray[CMD_DEFORESTATION] = new commandInfo("cutlog", POSITION_RESTING, 0);
+  commandArray[CMD_DEFORESTATION] =
+    new commandInfo("cutlog", POSITION_RESTING, 0);
   commandArray[CMD_LOG] = new commandInfo("log", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_BEAM] = new commandInfo("beam", POSITION_SLEEPING, 0);
   commandArray[CMD_CHORTLE] = new commandInfo("chortle", POSITION_RESTING, 0);
@@ -2728,17 +2747,21 @@ void buildCommandArray(void)
   commandArray[CMD_STRETCH] = new commandInfo("stretch", POSITION_RESTING, 0);
   commandArray[CMD_SPLIT] = new commandInfo("split", POSITION_RESTING, 0);
   commandArray[CMD_COMMAND] = new commandInfo("commands", POSITION_SLEEPING, 0);
-  commandArray[CMD_DEATHSTROKE] = new commandInfo("deathstroke", POSITION_FIGHTING, 0);
-  commandArray[CMD_WHIRLWIND] = new commandInfo("whirlwind", POSITION_FIGHTING, 0);
+  commandArray[CMD_DEATHSTROKE] =
+    new commandInfo("deathstroke", POSITION_FIGHTING, 0);
+  commandArray[CMD_WHIRLWIND] =
+    new commandInfo("whirlwind", POSITION_FIGHTING, 0);
   commandArray[CMD_RALLY] = new commandInfo("rally", POSITION_FIGHTING, 0);
   commandArray[CMD_FORTIFY] = new commandInfo("fortify", POSITION_FIGHTING, 0);
   commandArray[CMD_SLAM] = new commandInfo("slam", POSITION_FIGHTING, 0);
   commandArray[CMD_PIMP] = new commandInfo("pimp", POSITION_STANDING, 0);
   commandArray[CMD_LIGHT] = new commandInfo("light", POSITION_RESTING, 0);
   commandArray[CMD_FISH] = new commandInfo("fish", POSITION_RESTING, 0);
-  commandArray[CMD_PRAC_INFO] = new commandInfo("pracinfo", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_PRAC_INFO] =
+    new commandInfo("pracinfo", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_BELITTLE] = new commandInfo("belittle", POSITION_RESTING, 0);
-  commandArray[CMD_PILEDRIVE]=new commandInfo("piledrive",POSITION_STANDING, 0);
+  commandArray[CMD_PILEDRIVE] =
+    new commandInfo("piledrive", POSITION_STANDING, 0);
   commandArray[CMD_TAP] = new commandInfo("tap", POSITION_CRAWLING, 0);
   commandArray[CMD_BET] = new commandInfo("bet", POSITION_RESTING, 0);
   commandArray[CMD_CALL] = new commandInfo("call", POSITION_RESTING, 0);
@@ -2746,12 +2769,15 @@ void buildCommandArray(void)
   commandArray[CMD_STAY] = new commandInfo("stay", POSITION_RESTING, 0);
   commandArray[CMD_PEEK] = new commandInfo("peek", POSITION_RESTING, 0);
   commandArray[CMD_COLOR] = new commandInfo("color", POSITION_SLEEPING, 0);
-  commandArray[CMD_HEADBUTT]=new commandInfo("headbutt", POSITION_FIGHTING, 0);
-  commandArray[CMD_KNEESTRIKE]=new commandInfo("kneestrike",POSITION_FIGHTING, 0);
-  commandArray[CMD_SUBTERFUGE] = new commandInfo("subterfuge", POSITION_CRAWLING, 0);
+  commandArray[CMD_HEADBUTT] =
+    new commandInfo("headbutt", POSITION_FIGHTING, 0);
+  commandArray[CMD_KNEESTRIKE] =
+    new commandInfo("kneestrike", POSITION_FIGHTING, 0);
+  commandArray[CMD_SUBTERFUGE] =
+    new commandInfo("subterfuge", POSITION_CRAWLING, 0);
   commandArray[CMD_THROW] = new commandInfo("throw", POSITION_FIGHTING, 0);
   commandArray[CMD_EXAMINE] = new commandInfo("examine", POSITION_RESTING, 0);
-  commandArray[CMD_SCRIBE]=new commandInfo("scribe", POSITION_DEAD, 0);
+  commandArray[CMD_SCRIBE] = new commandInfo("scribe", POSITION_DEAD, 0);
   commandArray[CMD_BREW] = new commandInfo("brew", POSITION_STANDING, 0);
   commandArray[CMD_GRAPPLE] = new commandInfo("grapple", POSITION_FIGHTING, 0);
   commandArray[CMD_FLIPOFF] = new commandInfo("flipoff", POSITION_SITTING, 0);
@@ -2760,33 +2786,45 @@ void buildCommandArray(void)
   commandArray[CMD_BITE] = new commandInfo("bite", POSITION_FIGHTING, 0);
   commandArray[CMD_SEARCH] = new commandInfo("search", POSITION_CRAWLING, 0);
   commandArray[CMD_SPY] = new commandInfo("spy", POSITION_CRAWLING, 0);
-  commandArray[CMD_DOORBASH]= new commandInfo("doorbash", POSITION_STANDING, 0);
+  commandArray[CMD_DOORBASH] =
+    new commandInfo("doorbash", POSITION_STANDING, 0);
   commandArray[CMD_PLAY] = new commandInfo("play", POSITION_DEAD, 0);
-  commandArray[CMD_FLAG] = new commandInfo("flag", POSITION_SLEEPING, GOD_LEVEL1);
-  commandArray[CMD_QUIVPALM] = new commandInfo("quivering palm", POSITION_FIGHTING, 0);
-  commandArray[CMD_FEIGNDEATH] = new commandInfo("feign death", POSITION_RESTING, 0);
-  commandArray[CMD_SPRINGLEAP] = new commandInfo("springleap", POSITION_RESTING, 0);
-  commandArray[CMD_MEND_LIMB]=new commandInfo("mend limb", POSITION_RESTING, 0);
+  commandArray[CMD_FLAG] =
+    new commandInfo("flag", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_QUIVPALM] =
+    new commandInfo("quivering palm", POSITION_FIGHTING, 0);
+  commandArray[CMD_FEIGNDEATH] =
+    new commandInfo("feign death", POSITION_RESTING, 0);
+  commandArray[CMD_SPRINGLEAP] =
+    new commandInfo("springleap", POSITION_RESTING, 0);
+  commandArray[CMD_MEND_LIMB] =
+    new commandInfo("mend limb", POSITION_RESTING, 0);
   commandArray[CMD_ABORT] = new commandInfo("abort", POSITION_DEAD, 0);
   commandArray[CMD_SIGN] = new commandInfo("sign", POSITION_RESTING, 0);
-  commandArray[CMD_CUTLINK]=new commandInfo("cutlink",POSITION_DEAD,GOD_LEVEL1);
-  commandArray[CMD_LAYHANDS]=new commandInfo("lay-hands", POSITION_RESTING, 0);
-  commandArray[CMD_WIZNEWS]=new commandInfo("wiznews",POSITION_DEAD, 0);
+  commandArray[CMD_CUTLINK] =
+    new commandInfo("cutlink", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_LAYHANDS] =
+    new commandInfo("lay-hands", POSITION_RESTING, 0);
+  commandArray[CMD_WIZNEWS] = new commandInfo("wiznews", POSITION_DEAD, 0);
   commandArray[CMD_MAIL] = new commandInfo("mail", POSITION_CRAWLING, 0);
   commandArray[CMD_CHECK] = new commandInfo("check", POSITION_CRAWLING, 0);
   commandArray[CMD_RECEIVE] = new commandInfo("receive", POSITION_CRAWLING, 0);
   commandArray[CMD_CLS] = new commandInfo("cls", POSITION_DEAD, 0);
   commandArray[CMD_REPAIR] = new commandInfo("repair", POSITION_CRAWLING, 0);
   commandArray[CMD_MEND] = new commandInfo("mend", POSITION_CRAWLING, 0);
-  commandArray[CMD_SACRIFICE] = new commandInfo("sacrifice", POSITION_CRAWLING, 0);
+  commandArray[CMD_SACRIFICE] =
+    new commandInfo("sacrifice", POSITION_CRAWLING, 0);
   commandArray[CMD_PROMPT] = new commandInfo("prompt", POSITION_DEAD, 0);
   commandArray[CMD_GLANCE] = new commandInfo("glance", POSITION_RESTING, 0);
-  commandArray[CMD_CHECKLOG] = new commandInfo("checklog", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_LOGLIST]=new commandInfo("loglist",POSITION_DEAD,GOD_LEVEL1);
-  commandArray[CMD_DEATHCHECK] = new commandInfo("deathcheck", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_CHECKLOG] =
+    new commandInfo("checklog", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_LOGLIST] =
+    new commandInfo("loglist", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_DEATHCHECK] =
+    new commandInfo("deathcheck", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SET_TRAP] = new commandInfo("trap", POSITION_RESTING, 0);
   commandArray[CMD_CHANGE] = new commandInfo("change", POSITION_RESTING, 0);
-  commandArray[CMD_REDIT]=new commandInfo("redit", POSITION_DEAD, GOD_LEVEL1); 
+  commandArray[CMD_REDIT] = new commandInfo("redit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_OEDIT] = new commandInfo("oedit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_FEDIT] = new commandInfo("fedit", POSITION_DEAD, 0);
   commandArray[CMD_JOIN] = new commandInfo("join", POSITION_RESTING, 0);
@@ -2801,28 +2839,36 @@ void buildCommandArray(void)
   commandArray[CMD_BLOAD] = new commandInfo("bload", POSITION_CRAWLING, 0);
   commandArray[CMD_GLOAD] = new commandInfo("gload", POSITION_RESTING, 0);
   commandArray[CMD_MOUNT] = new commandInfo("mount", POSITION_ENGAGED, 0);
-  commandArray[CMD_DISMOUNT]= new commandInfo("dismount", POSITION_ENGAGED, 0);
+  commandArray[CMD_DISMOUNT] = new commandInfo("dismount", POSITION_ENGAGED, 0);
   commandArray[CMD_RIDE] = new commandInfo("ride", POSITION_ENGAGED, 0);
   commandArray[CMD_POST] = new commandInfo("post", POSITION_CRAWLING, 0);
   commandArray[CMD_ASK] = new commandInfo("ask", POSITION_RESTING, 0);
   commandArray[CMD_ATTACK] = new commandInfo("attack", POSITION_SLEEPING, 0);
   commandArray[CMD_SHARPEN] = new commandInfo("sharpen", POSITION_SITTING, 0);
   commandArray[CMD_KISS] = new commandInfo("kiss", POSITION_RESTING, 0);
-  commandArray[CMD_ACCESS] = new commandInfo("access", POSITION_RESTING, GOD_LEVEL1);
-  commandArray[CMD_OFFICE] = new commandInfo("office", POSITION_RESTING, GOD_LEVEL1);
-  commandArray[CMD_CLONE] = new commandInfo("clone", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_ACCESS] =
+    new commandInfo("access", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_OFFICE] =
+    new commandInfo("office", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_CLONE] =
+    new commandInfo("clone", POSITION_RESTING, GOD_LEVEL1);
   commandArray[CMD_MOTD] = new commandInfo("motd", POSITION_DEAD, 0);
-  commandArray[CMD_REPLACE] = new commandInfo("replace", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_REPLACE] =
+    new commandInfo("replace", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LIMBS] = new commandInfo("limbs", POSITION_SLEEPING, 0);
   commandArray[CMD_PRACTICE] = new commandInfo("practice", POSITION_DEAD, 0);
-  commandArray[CMD_GAMESTATS] = new commandInfo("gamestats", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_GAMESTATS] =
+    new commandInfo("gamestats", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_BANDAGE] = new commandInfo("bandage", POSITION_SITTING, 0);
-  commandArray[CMD_SETSEV]=new commandInfo("setsev", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_TURN]=new commandInfo("turn", POSITION_CRAWLING, 0);
+  commandArray[CMD_SETSEV] =
+    new commandInfo("setsev", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_TURN] = new commandInfo("turn", POSITION_CRAWLING, 0);
   commandArray[CMD_DEAL] = new commandInfo("deal", POSITION_SITTING, 0);
   commandArray[CMD_PASS] = new commandInfo("pass", POSITION_SITTING, 0);
-  commandArray[CMD_MAKELEADER]=new commandInfo("makeleader", POSITION_DEAD, 0);
-  commandArray[CMD_NEWMEMBER]=new commandInfo("newmember",POSITION_RESTING,  0);
+  commandArray[CMD_MAKELEADER] =
+    new commandInfo("makeleader", POSITION_DEAD, 0);
+  commandArray[CMD_NEWMEMBER] =
+    new commandInfo("newmember", POSITION_RESTING, 0);
   commandArray[CMD_RMEMBER] = new commandInfo("rmember", POSITION_DEAD, 0);
   commandArray[CMD_HISTORY] = new commandInfo("history", POSITION_SLEEPING, 0);
   commandArray[CMD_DRAG] = new commandInfo("drag", POSITION_STANDING, 0);
@@ -2832,49 +2878,64 @@ void buildCommandArray(void)
   commandArray[CMD_CHEER] = new commandInfo("cheer", POSITION_RESTING, 0);
   commandArray[CMD_WOO] = new commandInfo("woo", POSITION_RESTING, 0);
   commandArray[CMD_GRUMBLE] = new commandInfo("grumble", POSITION_RESTING, 0);
-  commandArray[CMD_APOLOGIZE]=new commandInfo("apologize", POSITION_RESTING, 0);
+  commandArray[CMD_APOLOGIZE] =
+    new commandInfo("apologize", POSITION_RESTING, 0);
   commandArray[CMD_SEND] = new commandInfo("send", POSITION_RESTING, 0);
   commandArray[CMD_AGREE] = new commandInfo("agree", POSITION_RESTING, 0);
   commandArray[CMD_DISAGREE] = new commandInfo("disagree", POSITION_RESTING, 0);
   commandArray[CMD_BERSERK] = new commandInfo("berserk", POSITION_FIGHTING, 0);
-  commandArray[CMD_TESTCODE] = new commandInfo("testcode", POSITION_SLEEPING, GOD_LEVEL1);
-  commandArray[CMD_SPAM] = new commandInfo("spam", POSITION_RESTING,0);
-  commandArray[CMD_RAISE] = new commandInfo("raise", POSITION_RESTING,0);
-  commandArray[CMD_ROLL] = new commandInfo("roll", POSITION_RESTING,0);
-  commandArray[CMD_BLINK] = new commandInfo("blink", POSITION_RESTING,0);
-  commandArray[CMD_BRUTTEST]=new commandInfo("bruttest",POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_HOSTLOG]=new commandInfo("hostlog",POSITION_DEAD,GOD_LEVEL1);
-  commandArray[CMD_PRESS] = new commandInfo("press",POSITION_SITTING,0);
-  commandArray[CMD_TWIST] = new commandInfo("twist",POSITION_SITTING,0);
-  commandArray[CMD_TRACEROUTE] = new commandInfo("traceroute", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_TESTCODE] =
+    new commandInfo("testcode", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_SPAM] = new commandInfo("spam", POSITION_RESTING, 0);
+  commandArray[CMD_RAISE] = new commandInfo("raise", POSITION_RESTING, 0);
+  commandArray[CMD_ROLL] = new commandInfo("roll", POSITION_RESTING, 0);
+  commandArray[CMD_BLINK] = new commandInfo("blink", POSITION_RESTING, 0);
+  commandArray[CMD_BRUTTEST] =
+    new commandInfo("bruttest", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_HOSTLOG] =
+    new commandInfo("hostlog", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_PRESS] = new commandInfo("press", POSITION_SITTING, 0);
+  commandArray[CMD_TWIST] = new commandInfo("twist", POSITION_SITTING, 0);
+  commandArray[CMD_TRACEROUTE] =
+    new commandInfo("traceroute", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_TASKS] = new commandInfo("tasks", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_VIEWOUTPUT] = new commandInfo("viewoutput", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_VIEWOUTPUT] =
+    new commandInfo("viewoutput", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_EVALUATE] = new commandInfo("evaluate", POSITION_RESTING, 0);
   commandArray[CMD_EXEC] = new commandInfo("exec", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LOW] = new commandInfo("low", POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_PUSH] = new commandInfo("push",POSITION_RESTING,0);
-  commandArray[CMD_RESIZE] = new commandInfo("resize",POSITION_RESTING,GOD_LEVEL1);
-  commandArray[CMD_DISBAND] = new commandInfo("disband",POSITION_DEAD,0);
-  commandArray[CMD_LIFT] = new commandInfo("lift",POSITION_CRAWLING,0);
-  commandArray[CMD_ARCH] = new commandInfo("arch",POSITION_RESTING,0);
-  commandArray[CMD_BOUNCE] = new commandInfo("bounce",POSITION_STANDING,0);
-  commandArray[CMD_DISGUISE] = new commandInfo("disguise", POSITION_STANDING, 0); 
+  commandArray[CMD_PUSH] = new commandInfo("push", POSITION_RESTING, 0);
+  commandArray[CMD_RESIZE] =
+    new commandInfo("resize", POSITION_RESTING, GOD_LEVEL1);
+  commandArray[CMD_DISBAND] = new commandInfo("disband", POSITION_DEAD, 0);
+  commandArray[CMD_LIFT] = new commandInfo("lift", POSITION_CRAWLING, 0);
+  commandArray[CMD_ARCH] = new commandInfo("arch", POSITION_RESTING, 0);
+  commandArray[CMD_BOUNCE] = new commandInfo("bounce", POSITION_STANDING, 0);
+  commandArray[CMD_DISGUISE] =
+    new commandInfo("disguise", POSITION_STANDING, 0);
   commandArray[CMD_RENAME] = new commandInfo("rename", POSITION_DEAD, 0);
-  commandArray[CMD_DESCRIPTION]=new commandInfo("description",POSITION_DEAD,0);
-  commandArray[CMD_POISON_WEAPON] = new commandInfo("poison-weapon", POSITION_STANDING, 0); 
-  commandArray[CMD_GARROTTE]=new commandInfo("garrotte", POSITION_STANDING, 0); 
-  commandArray[CMD_STAB] = new commandInfo("stab", POSITION_FIGHTING, 0); 
-  commandArray[CMD_CUDGEL] = new commandInfo("cudgel", POSITION_STANDING, 0); 
+  commandArray[CMD_DESCRIPTION] =
+    new commandInfo("description", POSITION_DEAD, 0);
+  commandArray[CMD_POISON_WEAPON] =
+    new commandInfo("poison-weapon", POSITION_STANDING, 0);
+  commandArray[CMD_GARROTTE] =
+    new commandInfo("garrotte", POSITION_STANDING, 0);
+  commandArray[CMD_STAB] = new commandInfo("stab", POSITION_FIGHTING, 0);
+  commandArray[CMD_CUDGEL] = new commandInfo("cudgel", POSITION_STANDING, 0);
   commandArray[CMD_PENANCE] = new commandInfo("penance", POSITION_RESTING, 0);
   commandArray[CMD_SMITE] = new commandInfo("smite", POSITION_SITTING, 0);
   commandArray[CMD_CHARGE] = new commandInfo("charge", POSITION_SITTING, 0);
   commandArray[CMD_ORIENT] = new commandInfo("orient", POSITION_SITTING, 0);
   commandArray[CMD_LOWER] = new commandInfo("lower", POSITION_STANDING, 0);
   commandArray[CMD_REPLY] = new commandInfo("reply", POSITION_RESTING, 0);
-  commandArray[CMD_HEAVEN]=new commandInfo("heaven",POSITION_DEAD, GOD_LEVEL1);
-  commandArray[CMD_CAPTURE] = new commandInfo("capture", POSITION_CRAWLING, GOD_LEVEL1);
-  commandArray[CMD_ACCOUNT]=new commandInfo("account",POSITION_DEAD,GOD_LEVEL1);
-  commandArray[CMD_RELEASE] = new commandInfo("release", POSITION_CRAWLING, GOD_LEVEL1);
+  commandArray[CMD_HEAVEN] =
+    new commandInfo("heaven", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_CAPTURE] =
+    new commandInfo("capture", POSITION_CRAWLING, GOD_LEVEL1);
+  commandArray[CMD_ACCOUNT] =
+    new commandInfo("account", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_RELEASE] =
+    new commandInfo("release", POSITION_CRAWLING, GOD_LEVEL1);
   commandArray[CMD_FAINT] = new commandInfo("faint", POSITION_RESTING, 0);
   commandArray[CMD_GREET] = new commandInfo("greet", POSITION_RESTING, 0);
   commandArray[CMD_TIP] = new commandInfo("tip", POSITION_RESTING, 0);
@@ -2895,7 +2956,8 @@ void buildCommandArray(void)
   commandArray[CMD_WEDGIE] = new commandInfo("wedgie", POSITION_STANDING, 0);
   commandArray[CMD_SCUFF] = new commandInfo("scuff", POSITION_STANDING, 0);
   commandArray[CMD_NOOGIE] = new commandInfo("noogie", POSITION_STANDING, 0);
-  commandArray[CMD_BRANDISH] = new commandInfo("brandish",POSITION_STANDING, 0);
+  commandArray[CMD_BRANDISH] =
+    new commandInfo("brandish", POSITION_STANDING, 0);
   commandArray[CMD_DUCK] = new commandInfo("duck", POSITION_RESTING, 0);
   commandArray[CMD_BECKON] = new commandInfo("beckon", POSITION_RESTING, 0);
   commandArray[CMD_WINCE] = new commandInfo("wince", POSITION_RESTING, 0);
@@ -2906,7 +2968,8 @@ void buildCommandArray(void)
   commandArray[CMD_SALUTE] = new commandInfo("salute", POSITION_STANDING, 0);
   commandArray[CMD_PET] = new commandInfo("pet", POSITION_RESTING, 0);
   commandArray[CMD_GRIMACE] = new commandInfo("grimace", POSITION_RESTING, 0);
-  commandArray[CMD_SEEKWATER]=new commandInfo("seekwater",POSITION_CRAWLING, 0);
+  commandArray[CMD_SEEKWATER] =
+    new commandInfo("seekwater", POSITION_CRAWLING, 0);
   commandArray[CMD_CRIT] = new commandInfo("crit", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_FORAGE] = new commandInfo("forage", POSITION_CRAWLING, 0);
   commandArray[CMD_RESET] = new commandInfo("reset", POSITION_DEAD, GOD_LEVEL1);
@@ -2918,20 +2981,26 @@ void buildCommandArray(void)
   commandArray[CMD_SORT] = new commandInfo("sort", POSITION_SITTING, 0);
   commandArray[CMD_SADDLE] = new commandInfo("saddle", POSITION_STANDING, 0);
   commandArray[CMD_HARNESS] = new commandInfo("harness", POSITION_STANDING, 0);
-  commandArray[CMD_UNHARNESS] = new commandInfo("unharness", POSITION_STANDING, 0);
-  commandArray[CMD_UNSADDLE]=new commandInfo("unsaddle", POSITION_STANDING, 0);
-  commandArray[CMD_SHOULDER_THROW] = new commandInfo("shoulder throw", POSITION_FIGHTING, 0);
+  commandArray[CMD_UNHARNESS] =
+    new commandInfo("unharness", POSITION_STANDING, 0);
+  commandArray[CMD_UNSADDLE] =
+    new commandInfo("unsaddle", POSITION_STANDING, 0);
+  commandArray[CMD_SHOULDER_THROW] =
+    new commandInfo("shoulder throw", POSITION_FIGHTING, 0);
   commandArray[CMD_CHOP] = new commandInfo("chop", POSITION_FIGHTING, 0);
   commandArray[CMD_HURL] = new commandInfo("hurl", POSITION_FIGHTING, 0);
-  commandArray[CMD_BONEBREAK] = new commandInfo("bonebreak", POSITION_FIGHTING, 0);
-  commandArray[CMD_DEFENESTRATE] = new commandInfo("defenestrate", POSITION_FIGHTING, 0);
+  commandArray[CMD_BONEBREAK] =
+    new commandInfo("bonebreak", POSITION_FIGHTING, 0);
+  commandArray[CMD_DEFENESTRATE] =
+    new commandInfo("defenestrate", POSITION_FIGHTING, 0);
   commandArray[CMD_CHI] = new commandInfo("chi", POSITION_FIGHTING, 0);
   commandArray[CMD_LEAP] = new commandInfo("leap", POSITION_STANDING, 0);
   commandArray[CMD_VOTE] = new commandInfo("vote", POSITION_STANDING, 0);
   commandArray[CMD_BID] = new commandInfo("bid", POSITION_STANDING, 0);
   commandArray[CMD_DIVINE] = new commandInfo("divine", POSITION_STANDING, 0);
   commandArray[CMD_OUTFIT] = new commandInfo("outfit", POSITION_STANDING, 0);
-  commandArray[CMD_CLIENTS] = new commandInfo("clients", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_CLIENTS] =
+    new commandInfo("clients", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_DULL] = new commandInfo("smooth", POSITION_SITTING, 0);
   commandArray[CMD_ADJUST] = new commandInfo("adjust", POSITION_SLEEPING, 0);
   commandArray[CMD_BUTCHER] = new commandInfo("butcher", POSITION_STANDING, 0);
@@ -2941,13 +3010,18 @@ void buildCommandArray(void)
   commandArray[CMD_SKIN] = new commandInfo("skin", POSITION_STANDING, 0);
   commandArray[CMD_TAN] = new commandInfo("tan", POSITION_STANDING, 0);
   commandArray[CMD_TITHE] = new commandInfo("tithe", POSITION_STANDING, 0);
-  commandArray[CMD_DISSECT] = new commandInfo("dissection",POSITION_SITTING, 0);
-  commandArray[CMD_FINDEMAIL] = new commandInfo("findemail", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_DISSECT] =
+    new commandInfo("dissection", POSITION_SITTING, 0);
+  commandArray[CMD_FINDEMAIL] =
+    new commandInfo("findemail", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_ENGAGE] = new commandInfo("engage", POSITION_FIGHTING, 0);
-  commandArray[CMD_DISENGAGE]=new commandInfo("disengage",POSITION_FIGHTING, 0);
-  commandArray[CMD_RESTRING]= new commandInfo("restring", POSITION_FIGHTING, 0);
+  commandArray[CMD_DISENGAGE] =
+    new commandInfo("disengage", POSITION_FIGHTING, 0);
+  commandArray[CMD_RESTRING] =
+    new commandInfo("restring", POSITION_FIGHTING, 0);
   commandArray[CMD_CONCEAL] = new commandInfo("conceal", POSITION_STANDING, 0);
-  commandArray[CMD_COMMENT] = new commandInfo("comment", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_COMMENT] =
+    new commandInfo("comment", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_CAMP] = new commandInfo("camp", POSITION_CRAWLING, 0);
   commandArray[CMD_YOGINSA] = new commandInfo("yoginsa", POSITION_RESTING, 0);
   commandArray[CMD_FLY] = new commandInfo("fly", POSITION_FIGHTING, 0);
@@ -2959,14 +3033,21 @@ void buildCommandArray(void)
   commandArray[CMD_SOOTH] = new commandInfo("sooth", POSITION_STANDING, 0);
   commandArray[CMD_SUMMON] = new commandInfo("summon", POSITION_STANDING, 0);
   commandArray[CMD_CHARM] = new commandInfo("charm", POSITION_STANDING, 0);
-  commandArray[CMD_BEFRIEND] = new commandInfo("befriend", POSITION_STANDING, 0);
-  commandArray[CMD_TRANSFIX] = new commandInfo("transfix", POSITION_STANDING, 0);
-  commandArray[CMD_BARKSKIN] = new commandInfo("barkskin", POSITION_STANDING, 0);
-  commandArray[CMD_FERAL_WRATH] = new commandInfo("feral", POSITION_STANDING, 0);
+  commandArray[CMD_BEFRIEND] =
+    new commandInfo("befriend", POSITION_STANDING, 0);
+  commandArray[CMD_TRANSFIX] =
+    new commandInfo("transfix", POSITION_STANDING, 0);
+  commandArray[CMD_BARKSKIN] =
+    new commandInfo("barkskin", POSITION_STANDING, 0);
+  commandArray[CMD_FERAL_WRATH] =
+    new commandInfo("feral", POSITION_STANDING, 0);
   commandArray[CMD_SKY_SPIRIT] = new commandInfo("sky", POSITION_FIGHTING, 0);
-  commandArray[CMD_EARTHMAW] = new commandInfo("earthmaw", POSITION_FIGHTING, 0);
-  commandArray[CMD_TRANSFORM] = new commandInfo("transform", POSITION_STANDING, 0);
-  commandArray[CMD_EGOTRIP] = new commandInfo("egotrip", POSITION_STANDING, GOD_LEVEL1);
+  commandArray[CMD_EARTHMAW] =
+    new commandInfo("earthmaw", POSITION_FIGHTING, 0);
+  commandArray[CMD_TRANSFORM] =
+    new commandInfo("transform", POSITION_STANDING, 0);
+  commandArray[CMD_EGOTRIP] =
+    new commandInfo("egotrip", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_CHIP] = new commandInfo("chip", POSITION_STANDING, 0);
   commandArray[CMD_DIG] = new commandInfo("dig", POSITION_STANDING, 0);
   commandArray[CMD_COVER] = new commandInfo("cover", POSITION_STANDING, 0);
@@ -2975,28 +3056,39 @@ void buildCommandArray(void)
   commandArray[CMD_RITUALS] = new commandInfo("rituals", POSITION_DEAD, 0);
   commandArray[CMD_PRAYERS] = new commandInfo("prayers", POSITION_DEAD, 0);
   commandArray[CMD_COMPARE] = new commandInfo("compare", POSITION_DEAD, 0);
-  commandArray[CMD_TEST_FIGHT] = new commandInfo("testfight", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_TEST_FIGHT] =
+    new commandInfo("testfight", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_DONATE] = new commandInfo("donate", POSITION_RESTING, 0);
   commandArray[CMD_ZONES] = new commandInfo("zones", POSITION_SLEEPING, 0);
-  commandArray[CMD_FACTIONS] = new commandInfo("factions", POSITION_SLEEPING, 0);
-  commandArray[CMD_POWERS] = new commandInfo("powers", POSITION_STANDING, GOD_LEVEL1);
+  commandArray[CMD_FACTIONS] =
+    new commandInfo("factions", POSITION_SLEEPING, 0);
+  commandArray[CMD_POWERS] =
+    new commandInfo("powers", POSITION_STANDING, GOD_LEVEL1);
   commandArray[CMD_WHITTLE] = new commandInfo("whittle", POSITION_STANDING, 0);
-  commandArray[CMD_MESSAGE] = new commandInfo("message", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_MESSAGE] =
+    new commandInfo("message", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_SMOKE] = new commandInfo("smoke", POSITION_RESTING, 0);
-  commandArray[CMD_CLIENTMESSAGE] = new commandInfo("clientmessage", POSITION_RESTING, 60);
+  commandArray[CMD_CLIENTMESSAGE] =
+    new commandInfo("clientmessage", POSITION_RESTING, 60);
   commandArray[CMD_RETRAIN] = new commandInfo("retrain", POSITION_STANDING, 0);
   commandArray[CMD_VISIBLE] = new commandInfo("visible", POSITION_STANDING, 0);
-  commandArray[CMD_TRIGGER] = new commandInfo("trigger", POSITION_STANDING, GOD_LEVEL1);
-  commandArray[CMD_STORE] = new commandInfo("store", POSITION_STANDING, GOD_LEVEL1);
-  commandArray[CMD_ZONEFILE] = new commandInfo("zonefile", POSITION_DEAD, GOD_LEVEL1);
+  commandArray[CMD_TRIGGER] =
+    new commandInfo("trigger", POSITION_STANDING, GOD_LEVEL1);
+  commandArray[CMD_STORE] =
+    new commandInfo("store", POSITION_STANDING, GOD_LEVEL1);
+  commandArray[CMD_ZONEFILE] =
+    new commandInfo("zonefile", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_LOOT] = new commandInfo("loot", POSITION_DEAD, GOD_LEVEL1);
   commandArray[CMD_PSAY] = new commandInfo("psay", POSITION_DEAD, 0);
   commandArray[CMD_PTELL] = new commandInfo("ptell", POSITION_DEAD, 0);
   commandArray[CMD_PSHOUT] = new commandInfo("pshout", POSITION_DEAD, 0);
-  commandArray[CMD_TELEVISION] = new commandInfo("television", POSITION_RESTING, 0);
-  commandArray[CMD_MINDFOCUS] = new commandInfo("mindfocus", POSITION_RESTING, 0);
+  commandArray[CMD_TELEVISION] =
+    new commandInfo("television", POSITION_RESTING, 0);
+  commandArray[CMD_MINDFOCUS] =
+    new commandInfo("mindfocus", POSITION_RESTING, 0);
   commandArray[CMD_PSIBLAST] = new commandInfo("psiblast", POSITION_RESTING, 0);
-  commandArray[CMD_MINDTHRUST] = new commandInfo("mindthrust", POSITION_RESTING, 0);
+  commandArray[CMD_MINDTHRUST] =
+    new commandInfo("mindthrust", POSITION_RESTING, 0);
   commandArray[CMD_PSYCRUSH] = new commandInfo("psycrush", POSITION_RESTING, 0);
   commandArray[CMD_KWAVE] = new commandInfo("kwave", POSITION_RESTING, 0);
   commandArray[CMD_PSIDRAIN] = new commandInfo("psidrain", POSITION_RESTING, 0);
@@ -3010,7 +3102,8 @@ void buildCommandArray(void)
   commandArray[CMD_TIE] = new commandInfo("tie", POSITION_RESTING, 0);
   commandArray[CMD_UNTIE] = new commandInfo("untie", POSITION_RESTING, 0);
   commandArray[CMD_TOAST] = new commandInfo("toast", POSITION_RESTING, 0);
-  commandArray[CMD_BESTOW] = new commandInfo("bestow", POSITION_SLEEPING, GOD_LEVEL1);
+  commandArray[CMD_BESTOW] =
+    new commandInfo("bestow", POSITION_SLEEPING, GOD_LEVEL1);
   commandArray[CMD_PREEN] = new commandInfo("preen", POSITION_RESTING, 0);
   commandArray[CMD_BUILDHELP] = new commandInfo("buildhelp", POSITION_DEAD, 0);
   commandArray[CMD_NEWBIE] = new commandInfo("newbie", POSITION_RESTING, 0);
@@ -3019,20 +3112,23 @@ void buildCommandArray(void)
   commandArray[CMD_RUN] = new commandInfo("run", POSITION_CRAWLING, 0);
   commandArray[CMD_MAP] = new commandInfo("map", POSITION_STANDING, 0);
   commandArray[CMD_REMEMBER] = new commandInfo("remember", POSITION_DEAD, 0);
-  commandArray[CMD_REMEMBERPLAYER] = new commandInfo("rememberplayer", POSITION_DEAD, 0);
+  commandArray[CMD_REMEMBERPLAYER] =
+    new commandInfo("rememberplayer", POSITION_DEAD, 0);
   commandArray[CMD_RETRIEVE] = new commandInfo("retrieve", POSITION_DEAD, 0);
-  commandArray[CMD_RECHARGE] = new commandInfo("recharge", POSITION_STANDING, 0);
+  commandArray[CMD_RECHARGE] =
+    new commandInfo("recharge", POSITION_STANDING, 0);
   commandArray[CMD_NOP] = new commandInfo("noop", POSITION_DEAD, 0);
   commandArray[CMD_AURA] = new commandInfo("aura", POSITION_RESTING, 0);
-  commandArray[CMD_FOCUS_ATTACK] = new commandInfo("focus", POSITION_FIGHTING, 0);
+  commandArray[CMD_FOCUS_ATTACK] =
+    new commandInfo("focus", POSITION_FIGHTING, 0);
 }
 
-bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
-{
+bool _parse_name_safe(const char* arg, char* name, unsigned int nameLen) {
   char buf[80];
   unsigned int i;
 
-  for (; isspace(*arg); arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
   if (strlen(arg) < 3)
     return TRUE;
@@ -3047,7 +3143,7 @@ bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
     }
   }
   if (!toggleInfo[TOG_MOBNAMES]->toggle) {
-    for (i= 0; i < mob_index.size(); i++) {
+    for (i = 0; i < mob_index.size(); i++) {
       snprintf(buf, cElements(buf), "%s", fname(mob_index[i].name).c_str());
       if (!strcasecmp(buf, arg))
         return TRUE;
@@ -3059,7 +3155,7 @@ bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
     if (!strcasecmp(buf, arg))
       return TRUE;
   }
-#endif    
+#endif
   for (i = 0; i < nameLen && (*name = *arg); arg++, i++, name++)
     if ((*arg < 0) || !isalpha(*arg) || i > 15)
       return TRUE;
@@ -3071,18 +3167,16 @@ bool _parse_name_safe(const char *arg, char *name, unsigned int nameLen)
 }
 
 // return TRUE if this is an illegal name
-bool is_illegal_name(const char *check)
-{
+bool is_illegal_name(const char* check) {
   sstring lower = sstring(check);
-  for (int i = 0; *illegalnames[i] != '\n'; i++)
-  {
+  for (int i = 0; *illegalnames[i] != '\n'; i++) {
     if (*illegalnames[i] == '*' && strstr(lower.c_str(), illegalnames[i] + 1))
-        return true;
+      return true;
     else if (!strcasecmp(illegalnames[i], check))
-        return true;
+      return true;
   }
   if (!toggleInfo[TOG_MOBNAMES]->toggle) {
-    for (unsigned int i= 0; i < mob_index.size(); i++) {
+    for (unsigned int i = 0; i < mob_index.size(); i++) {
       if (!strcasecmp(fname(mob_index[i].name).c_str(), check))
         return true;
     }
@@ -3090,10 +3184,8 @@ bool is_illegal_name(const char *check)
   return false;
 }
 
-
 // return TRUE if no name was found (error)
-bool parse_name_sstring(const sstring arg, sstring &name)
-{
+bool parse_name_sstring(const sstring arg, sstring& name) {
   name = arg.trim().word(0);
 
   if (name.length() < 3 || name.length() > 15)
@@ -3101,15 +3193,13 @@ bool parse_name_sstring(const sstring arg, sstring &name)
 
   if (is_illegal_name(name.c_str()))
     return TRUE;
-  
-  for(unsigned int i = 0; i < name.length(); i++)
+
+  for (unsigned int i = 0; i < name.length(); i++)
     if (!isalpha(name[i]))
       return TRUE;
 
   return FALSE;
 }
-
-
 
 #if 0
 int min_stat(race_t race, statTypeT iStat)
@@ -3235,21 +3325,18 @@ int max_stat(race_t race, statTypeT iStat)
 
 // for mobs, it causes instanteous execution (no que)
 // will return DELETE_THIS if this should be deleted
-int TBeing::prependCommandToQue(const sstring &msg)
-{
+int TBeing::prependCommandToQue(const sstring& msg) {
   int rc;
 
-  if (isPc() && desc){
-    if (!isPlayerAction(PLR_MAILING) &&
-        desc->connected != CON_WRITING)
-    {
-        std::queue<sstring> tmp;
-        tmp.push(msg);
-        while (!desc->input.empty()) {
-            tmp.push(desc->input.front());
-            desc->input.pop();
-        }
-        desc->input.swap(tmp);
+  if (isPc() && desc) {
+    if (!isPlayerAction(PLR_MAILING) && desc->connected != CON_WRITING) {
+      std::queue<sstring> tmp;
+      tmp.push(msg);
+      while (!desc->input.empty()) {
+        tmp.push(desc->input.front());
+        desc->input.pop();
+      }
+      desc->input.swap(tmp);
     }
   } else {
     rc = parseCommand(msg, TRUE);
@@ -3262,14 +3349,12 @@ int TBeing::prependCommandToQue(const sstring &msg)
 // This will put a command into player's command que.
 // for mobs, it causes instanteous execution (no que)
 // will return DELETE_THIS if this should be deleted
-int TBeing::addCommandToQue(const sstring &msg)
-{
+int TBeing::addCommandToQue(const sstring& msg) {
   int rc;
 
-  if (isPc() && desc){
-    if (!isPlayerAction(PLR_MAILING) && 
-        desc->connected != CON_WRITING) 
-    desc->input.push(msg);
+  if (isPc() && desc) {
+    if (!isPlayerAction(PLR_MAILING) && desc->connected != CON_WRITING)
+      desc->input.push(msg);
   } else {
     rc = parseCommand(msg, TRUE);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3278,29 +3363,27 @@ int TBeing::addCommandToQue(const sstring &msg)
   return FALSE;
 }
 
-sstring sprintbit(unsigned long vektor, const char * const names[])
-{
+sstring sprintbit(unsigned long vektor, const char* const names[]) {
   long nr;
   sstring result;
 
   for (nr = 0; vektor; vektor >>= 1) {
-    if (IS_SET(vektor, (unsigned long) 1L))
+    if (IS_SET(vektor, (unsigned long)1L))
       if (*names[nr]) {
-  result += names[nr];
-  result += " ";
+        result += names[nr];
+        result += " ";
       }
     if (*names[nr] != '\n')
       nr++;
   }
 
   if (result.empty())
-    result="NOBITS";
+    result = "NOBITS";
 
   return result;
 }
 
-sstring sprintbit_64(uint64_t vektor, const char * const names[])
-{
+sstring sprintbit_64(uint64_t vektor, const char* const names[]) {
   long nr;
   sstring result;
 
@@ -3315,17 +3398,17 @@ sstring sprintbit_64(uint64_t vektor, const char * const names[])
   }
 
   if (result.empty())
-    result="NOBITS";
+    result = "NOBITS";
 
   return result;
 }
 
-sstring sprinttype(int type, const sstring names[])
-{
+sstring sprinttype(int type, const sstring names[]) {
   int nr;
   sstring result;
 
-  for (nr = 0; (names[nr] != "\n"); nr++);
+  for (nr = 0; (names[nr] != "\n"); nr++)
+    ;
 
   if (type < nr) {
     result = names[type];
@@ -3335,30 +3418,29 @@ sstring sprinttype(int type, const sstring names[])
   return result;
 }
 
-// I redid this function to make it more flexible. It has a new argument  
-// for the array, making it useful with any array.  - Russ                
-void bisect_arg_safe(const char *arg, int *field, char *sstring, unsigned int sstringLen, const char * const array[])
-{
+// I redid this function to make it more flexible. It has a new argument
+// for the array, making it useful with any array.  - Russ
+void bisect_arg_safe(const char* arg, int* field, char* sstring,
+  unsigned int sstringLen, const char* const array[]) {
   char buf[MAX_INPUT_LENGTH];
 
   arg = one_argument(arg, buf, cElements(buf));
   if (!(*field = old_search_block(buf, 0, strlen(buf), array, 0)))
     return;
 
-  for (; isspace(*arg); arg++);
-  for (;sstringLen-- > 0 && (*sstring = *arg); arg++, sstring++);
+  for (; isspace(*arg); arg++)
+    ;
+  for (; sstringLen-- > 0 && (*sstring = *arg); arg++, sstring++)
+    ;
 }
 
-
-
-char *fold(char *line)
-{
+char* fold(char* line) {
   const unsigned int FOLDAT = 78;
 
   int i, j = 0, folded;
 
   if (strlen(line) > FOLDAT)
-    for (i = FOLDAT; i < (int) strlen(line); i += FOLDAT) {
+    for (i = FOLDAT; i < (int)strlen(line); i += FOLDAT) {
       folded = FALSE;
       for (j = i; !folded; j--)
         if (line[j] == ' ') {
@@ -3370,8 +3452,7 @@ char *fold(char *line)
   return line;
 }
 
-int ctoi(char c)
-{
+int ctoi(char c) {
   char buf[5];
 
   sprintf(buf, "%c", c);
@@ -3379,68 +3460,64 @@ int ctoi(char c)
 }
 
 // essentially, strips out multiple ' ' truncating to a single space
-void cleanCharBuf(char *buf)
-{
+void cleanCharBuf(char* buf) {
   char *from, *to;
-  char p =' ';
+  char p = ' ';
 
   from = to = buf;
 
-  while(*from) {
-    if (*from != ' ' || (*from == ' ' && p != ' ')) 
+  while (*from) {
+    if (*from != ' ' || (*from == ' ' && p != ' '))
       *to++ = *from;
     p = *from++;
   }
 
-  if (p == ' ' && to != buf) 
-    *(to-1) = '\000';
-  else 
+  if (p == ' ' && to != buf)
+    *(to - 1) = '\000';
+  else
     *to = '\000';
 }
 
-void str_shiftleft(char *str, int n)
-{
-  char *cp;
+void str_shiftleft(char* str, int n) {
+  char* cp;
 
-  for (cp = str + n; (*(cp - n) = *cp); cp++);
+  for (cp = str + n; (*(cp - n) = *cp); cp++)
+    ;
 }
 
-sstring nextToken(char delim, unsigned int maxSize, char *str)
-{
+sstring nextToken(char delim, unsigned int maxSize, char* str) {
   char retbuf[256];
-  char *cp;
-  
-  if (maxSize >= cElements(retbuf))
-    maxSize = cElements(retbuf)-1;
+  char* cp;
 
-  for (cp = str; *cp && (*cp != delim); cp++);
-  if ((cp - str) > (int) maxSize) {
+  if (maxSize >= cElements(retbuf))
+    maxSize = cElements(retbuf) - 1;
+
+  for (cp = str; *cp && (*cp != delim); cp++)
+    ;
+  if ((cp - str) > (int)maxSize) {
     strncpy(retbuf, str, maxSize);
     retbuf[maxSize] = '\0';
   } else {
-    strncpy(retbuf, str, (int) (cp - str));
-    retbuf[(int) (cp - str)] = '\0';
+    strncpy(retbuf, str, (int)(cp - str));
+    retbuf[(int)(cp - str)] = '\0';
   }
   if (!*cp)
     *str = '\0';
   else
-    str_shiftleft(str, (int) (cp - str + 1));
- 
+    str_shiftleft(str, (int)(cp - str + 1));
+
   return retbuf;
 }
 
-char *mud_str_dup(const char *buf)
-{
+char* mud_str_dup(const char* buf) {
   if (!buf)
     return NULL;
-  
-  return mud_str_dup((sstring) buf);
+
+  return mud_str_dup((sstring)buf);
 }
 
-
-char * mud_str_dup(const sstring &buf)
-{
-  char *tmp = NULL;
+char* mud_str_dup(const sstring& buf) {
+  char* tmp = NULL;
   unsigned int len = buf.length() + 1;
 
   try {
@@ -3455,22 +3532,20 @@ char * mud_str_dup(const sstring &buf)
 // copy n bytes of src to dest
 // if src is bigger than n, copy as much as possible to dest and null terminate
 // then generate an error log
-char *mud_str_copy(char *dest, const sstring &src, size_t n)
-{
+char* mud_str_copy(char* dest, const sstring& src, size_t n) {
   strncpy(dest, src.c_str(), n);
 
-  if(src.length() > n){
-    dest[n-1]='\0';
-    vlogf(LOG_BUG, format("mud_str_copy: source sstring too long.  Truncated to: %s") %  dest);
+  if (src.length() > n) {
+    dest[n - 1] = '\0';
+    vlogf(LOG_BUG,
+      format("mud_str_copy: source sstring too long.  Truncated to: %s") %
+        dest);
   }
 
   return dest;
 }
 
-
-
-void trimString(sstring &arg)
-{
+void trimString(sstring& arg) {
   if (arg.empty())
     return;
   size_t iter = arg.find_first_not_of(" \n\r");
@@ -3479,8 +3554,7 @@ void trimString(sstring &arg)
   arg.erase(0, iter);  // erase the leading whitespace
 }
 
-int sstringncmp(const sstring str1, const sstring str2, unsigned int len)
-{
+int sstringncmp(const sstring str1, const sstring str2, unsigned int len) {
   // ANSI doesn't provide a strncmp for sstrings
   // I've hacked this together cuz I think it's needed
 
@@ -3488,13 +3562,10 @@ int sstringncmp(const sstring str1, const sstring str2, unsigned int len)
   return std::string(str1, 0, len).compare(std::string(str2, 0, len));
 }
 
-commandInfo::~commandInfo()
-{
-}
+commandInfo::~commandInfo() {}
 
 // take what is in the output buffer, cat into single sstring, and page it
-void TBeing::makeOutputPaged()
-{
+void TBeing::makeOutputPaged() {
   if (!desc)
     return;
 

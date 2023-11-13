@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include "comm.h"
@@ -16,48 +15,48 @@ class TSocket;
 
 extern int maxdesc, avail_descs;
 
-const int OPT_USEC = 100000; 
+const int OPT_USEC = 100000;
 
 extern char hostlist[MAX_BAN_HOSTS][40];
 
 class TMainSocket {
- private:
-  int m_mainSockFD;
+  private:
+    int m_mainSockFD;
 
-  struct timeval handleTimeAndSockets();
-  bool handleShutdown();
-  TSocket *newConnection(int);
-  int newDescriptor(int);
-  timeval sleeptime;
+    struct timeval handleTimeAndSockets();
+    bool handleShutdown();
+    TSocket* newConnection(int);
+    int newDescriptor(int);
+    timeval sleeptime;
 
- public:
-  friend class procHandleTimeAndSockets;
-  friend class procIdle;
+  public:
+    friend class procHandleTimeAndSockets;
+    friend class procIdle;
 
-  void addNewDescriptorsDuringBoot(sstring);
-  void closeAllSockets();
-  void initSocket(int);
-  int gameLoop();
+    void addNewDescriptorsDuringBoot(sstring);
+    void closeAllSockets();
+    void initSocket(int);
+    int gameLoop();
 
-  TMainSocket();
-  ~TMainSocket();
+    TMainSocket();
+    ~TMainSocket();
 };
 
 class TSocket {
-  friend class TMainSocket;
+    friend class TMainSocket;
 
- private:
-  void nonBlock();
-  void setKeepalive(bool enabled);
+  private:
+    void nonBlock();
+    void setKeepalive(bool enabled);
 
- public:
-  int m_sock;
-  int port;
-  int writeToSocket(const char *);
-  int writeNull();
+  public:
+    int m_sock;
+    int port;
+    int writeToSocket(const char*);
+    int writeNull();
 
-  TSocket();
-  ~TSocket();
+    TSocket();
+    ~TSocket();
 };
 
-extern TMainSocket *gSocket;
+extern TMainSocket* gSocket;

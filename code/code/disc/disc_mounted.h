@@ -15,7 +15,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the DEIKHAN MOUNT discipline.
@@ -23,9 +22,8 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDMounted : public CDiscipline
-{
-public:
+class CDMounted : public CDiscipline {
+  public:
     CSkill skCalmMount;
     CSkill skTrainMount;
     CSkill skAdvancedRiding;
@@ -34,28 +32,27 @@ public:
     CSkill skRideWinged;
     CSkill skRideExotic;
 
-    CDMounted()
-      : CDiscipline(),
+    CDMounted() :
+      CDiscipline(),
       skCalmMount(),
       skTrainMount(),
       skAdvancedRiding(),
       skRideDomestic(),
       skRideNonDomestic(),
       skRideWinged(),
-      skRideExotic() {
-    }
-    CDMounted(const CDMounted &a)
-      : CDiscipline(a),
+      skRideExotic() {}
+    CDMounted(const CDMounted& a) :
+      CDiscipline(a),
       skCalmMount(a.skCalmMount),
       skTrainMount(a.skTrainMount),
       skAdvancedRiding(a.skAdvancedRiding),
       skRideDomestic(a.skRideDomestic),
       skRideNonDomestic(a.skRideNonDomestic),
       skRideWinged(a.skRideWinged),
-      skRideExotic(a.skRideExotic) {
-    }
-    CDMounted & operator=(const CDMounted &a) {
-      if (this == &a) return *this;
+      skRideExotic(a.skRideExotic) {}
+    CDMounted& operator=(const CDMounted& a) {
+      if (this == &a)
+        return *this;
       CDiscipline::operator=(a);
       skCalmMount = a.skCalmMount;
       skTrainMount = a.skTrainMount;
@@ -67,7 +64,7 @@ public:
       return *this;
     }
     virtual ~CDMounted() {}
-    virtual CDMounted * cloneMe() { return new CDMounted(*this); }
+    virtual CDMounted* cloneMe() { return new CDMounted(*this); }
 
-private:
+  private:
 };

@@ -17,54 +17,55 @@ class TBaseWeapon : public TObj {
     int damLevel;
     int damDev;
     liqTypeT poison;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const = 0;
 
     virtual bool isPoisoned() const;
-    virtual void applyPoison(TBeing *);
+    virtual void applyPoison(TBeing*);
     virtual void setPoison(liqTypeT);
     virtual liqTypeT getPoison() const { return poison; }
-    virtual int editAverageMe(TBeing *, const char *);
+    virtual int editAverageMe(TBeing*, const char*);
     virtual double baseDamage() const;
-    virtual int swungObjectDamage(const TBeing *, const TBeing *) const;
+    virtual int swungObjectDamage(const TBeing*, const TBeing*) const;
     virtual void lowCheck();
-    virtual sstring showModifier(showModeT, const TBeing *) const;
-    virtual void divinateMe(TBeing *) const;
-    virtual int damageMe(TBeing *, TBeing *, wearSlotT);
-    virtual void changeBaseWeaponValue1(TBeing *, const char *, editorEnterTypeT);
-    virtual int sharpenerValueMe(const TBeing *, TMonster *) const;
-    virtual int sharpenerGiveMe(TBeing *,TMonster *);
-    virtual void sharpenMe(TBeing *, TTool *);
-    virtual void dullMe(TBeing *, TTool *);
-    virtual void describeObjectSpecifics(const TBeing *) const;
-    virtual sstring describeMySharp(const TBeing *) const;
-    virtual void evaluateMe(TBeing *) const;
+    virtual sstring showModifier(showModeT, const TBeing*) const;
+    virtual void divinateMe(TBeing*) const;
+    virtual int damageMe(TBeing*, TBeing*, wearSlotT);
+    virtual void changeBaseWeaponValue1(TBeing*, const char*, editorEnterTypeT);
+    virtual int sharpenerValueMe(const TBeing*, TMonster*) const;
+    virtual int sharpenerGiveMe(TBeing*, TMonster*);
+    virtual void sharpenMe(TBeing*, TTool*);
+    virtual void dullMe(TBeing*, TTool*);
+    virtual void describeObjectSpecifics(const TBeing*) const;
+    virtual sstring describeMySharp(const TBeing*) const;
+    virtual void evaluateMe(TBeing*) const;
     virtual int suggestedPrice() const;
-    virtual void sharpenMeStoneWeap(TBeing *, TTool *);
-    virtual void dullMeFileWeap(TBeing *, TTool *);
-    virtual int catchSmack(TBeing *, TBeing **, TRoom *, int, int);
+    virtual void sharpenMeStoneWeap(TBeing*, TTool*);
+    virtual void dullMeFileWeap(TBeing*, TTool*);
+    virtual int catchSmack(TBeing*, TBeing**, TRoom*, int, int);
     virtual bool isBluntWeapon() const;
     virtual bool isSlashWeapon() const;
     virtual bool isPierceWeapon() const;
-    virtual void objMenu(const TBeing *) const;
-    virtual void changeObjValue1(TBeing *);
-    virtual void changeObjValue2(TBeing *);
-    virtual void changeObjValue3(TBeing *);
+    virtual void objMenu(const TBeing*) const;
+    virtual void changeObjValue1(TBeing*);
+    virtual void changeObjValue2(TBeing*);
+    virtual void changeObjValue3(TBeing*);
     virtual sstring displayFourValues();
-    double specializationCheck(const TBeing *) const override;
-    virtual void descMaxStruct(const TBeing *, int) const;
-    virtual int expelPrice(const TBeing *, int) const;
-    virtual int wieldMe(TBeing *, char *);
+    double specializationCheck(const TBeing*) const override;
+    virtual void descMaxStruct(const TBeing*, int) const;
+    virtual int expelPrice(const TBeing*, int) const;
+    virtual int wieldMe(TBeing*, char*);
     virtual void curseMe();
-    virtual int poisonWeaponWeapon(TBeing *, TThing *);
-    virtual int galvanizeMe(TBeing *, short);
-    virtual int enhanceMe(TBeing *, int, short);
-    virtual sstring compareMeAgainst(TBeing *, TObj *);
-    virtual sstring getNameForShow(bool, bool, const TBeing *) const;
-    virtual void purchaseMe(TBeing *, TMonster *, int, int);
-    virtual void sellMeMoney(TBeing *, TMonster *, int, int);
+    virtual int poisonWeaponWeapon(TBeing*, TThing*);
+    virtual int galvanizeMe(TBeing*, short);
+    virtual int enhanceMe(TBeing*, int, short);
+    virtual sstring compareMeAgainst(TBeing*, TObj*);
+    virtual sstring getNameForShow(bool, bool, const TBeing*) const;
+    virtual void purchaseMe(TBeing*, TMonster*, int, int);
+    virtual void sellMeMoney(TBeing*, TMonster*, int, int);
 
     double weaponLevel() const;
     int sharpenPrice() const;
@@ -86,9 +87,9 @@ class TBaseWeapon : public TObj {
 
   protected:
     TBaseWeapon();
+
   public:
-    TBaseWeapon(const TBaseWeapon &a);
-    TBaseWeapon & operator=(const TBaseWeapon &a);
+    TBaseWeapon(const TBaseWeapon& a);
+    TBaseWeapon& operator=(const TBaseWeapon& a);
     virtual ~TBaseWeapon();
 };
-

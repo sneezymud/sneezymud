@@ -10,7 +10,7 @@ extern "C" {
 #include <sys/socket.h>
 #include <dirent.h>
 }
- 
+
 #include "help.h"
 #include "obj_component.h"
 #include "statistics.h"
@@ -19,11 +19,11 @@ extern "C" {
 
 #define ARTICLE_LIST_WIDTH 80
 
-static std::vector<sstring>helpIndex(0);
-static std::vector<char *>immortalIndex(0);
-static std::vector<char *>builderIndex(0);
-static std::vector<char *>skillIndex(0);
-static std::vector<char *>spellIndex(0);
+static std::vector<sstring> helpIndex(0);
+static std::vector<char*> immortalIndex(0);
+static std::vector<char*> builderIndex(0);
+static std::vector<char*> skillIndex(0);
+static std::vector<char*> spellIndex(0);
 
 #if 0
 static const char *start_name(byte num)
@@ -47,8 +47,7 @@ static const char *start_name(byte num)
 }
 #endif
 
-wizPowerT wizPowerFromCmd(cmdTypeT cmd)
-{
+wizPowerT wizPowerFromCmd(cmdTypeT cmd) {
   switch (cmd) {
     case CMD_CHANGE:
       return POWER_CHANGE;
@@ -216,8 +215,8 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_CRIT:
       return POWER_CRIT;
       break;
-    case CMD_RELEASE: // ???
-    case CMD_CAPTURE: // ???
+    case CMD_RELEASE:  // ???
+    case CMD_CAPTURE:  // ???
     case CMD_TASKS:
     case CMD_TEST_FIGHT:
     case CMD_PEELPK:
@@ -225,7 +224,7 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
     case CMD_BRUTTEST:
       return POWER_WIZARD;
       break;
-    break;
+      break;
     default:
       break;
   }
@@ -233,8 +232,7 @@ wizPowerT wizPowerFromCmd(cmdTypeT cmd)
   return MAX_POWER_INDEX;
 }
 
-static const char *learn_name(byte num)
-{
+static const char* learn_name(byte num) {
   if (num <= 1)
     return "Really Slow";
   else if (num == 2)
@@ -252,36 +250,34 @@ static const char *learn_name(byte num)
 }
 
 static const sstring wikiColors[][2] = {
-  { "darkred", "<R>" },
-  { "red", "<r>" },
-  { "darkblue", "<B>" },
-  { "blue", "<b>" },
-  { "darkgreen", "<G>" },
-  { "green", "<g>" },
-  { "cyan", "<c>" },
-  { "turquoise", "<C>" },
-  { "magenta", "<p>" },
-  { "purple", "<P>" },
-  { "orange", "<o>" },
-  { "yellow", "<y>" },
-  { "gray", "<k>" },
-  { "black", "<K>" },
-  { "ghostwhite", "<w>" },
-  { "white", "<W>" },
-  { "invert", "<i>" },
+  {"darkred", "<R>"},
+  {"red", "<r>"},
+  {"darkblue", "<B>"},
+  {"blue", "<b>"},
+  {"darkgreen", "<G>"},
+  {"green", "<g>"},
+  {"cyan", "<c>"},
+  {"turquoise", "<C>"},
+  {"magenta", "<p>"},
+  {"purple", "<P>"},
+  {"orange", "<o>"},
+  {"yellow", "<y>"},
+  {"gray", "<k>"},
+  {"black", "<K>"},
+  {"ghostwhite", "<w>"},
+  {"white", "<W>"},
+  {"invert", "<i>"},
 };
 
 // sucks the data out of wiki tables and re-gens them for text
-void replaceWikiTable(sstring &data)
-{
+void replaceWikiTable(sstring& data) {
   size_t tablePos = data.find("{|");
-  size_t tableEnd = data.find("|}", tablePos+1);
-  while(tablePos != sstring::npos && tableEnd != sstring::npos)
-  {
-    static const char * colColorHdr[] = { "<p>", "", "<g>", "", "<c>" };
-    static const char * colColorFtr[] = { "<z>", "", "<z>", "", "<z>" };
-    sstring table = data.substr(tablePos, tableEnd-tablePos+2);
-    sstring *rgTableData;
+  size_t tableEnd = data.find("|}", tablePos + 1);
+  while (tablePos != sstring::npos && tableEnd != sstring::npos) {
+    static const char* colColorHdr[] = {"<p>", "", "<g>", "", "<c>"};
+    static const char* colColorFtr[] = {"<z>", "", "<z>", "", "<z>"};
+    sstring table = data.substr(tablePos, tableEnd - tablePos + 2);
+    sstring* rgTableData;
     sstring tableReplace;
     int cData = 0;
     int cRows = table.countSubstr("|-\n!");
@@ -298,7 +294,7 @@ void replaceWikiTable(sstring &data)
     table.inlineRemoveBetween("!", "|", false);
     table.inlineReplaceString("!|", "||");
     table.inlineReplaceString("\n", "");
-    table.inlineReplaceString("\r", ""); // not really used in wikitext
+    table.inlineReplaceString("\r", "");  // not really used in wikitext
     table.inlineReplaceString("|}", "");
     table.inlineReplaceString("|-", "\255");
     table.inlineReplaceString("||", "\255");
@@ -312,23 +308,24 @@ void replaceWikiTable(sstring &data)
     cCols = cData / cRows;
 
     // trim strings, calc width for each column
-    int *rgWidth = new int[cCols];
-    memset(rgWidth, 0, sizeof(rgWidth)*cCols);
-    for(int iWidth = 0;iWidth < cData; iWidth++)
-    {
+    int* rgWidth = new int[cCols];
+    memset(rgWidth, 0, sizeof(rgWidth) * cCols);
+    for (int iWidth = 0; iWidth < cData; iWidth++) {
       rgTableData[iWidth] = rgTableData[iWidth].trim();
-      rgWidth[iWidth%cCols] = max(rgWidth[iWidth%cCols], int(rgTableData[iWidth].lengthNoColor()));
+      rgWidth[iWidth % cCols] =
+        max(rgWidth[iWidth % cCols], int(rgTableData[iWidth].lengthNoColor()));
     }
 
     // write the table
-    for(int iData = 0;iData < cData; iData++)
-    {
+    for (int iData = 0; iData < cData; iData++) {
       int iCol = iData % cCols;
-      rgTableData[iData].resize(rgTableData[iData].length() +
-                                rgWidth[iCol] - rgTableData[iData].lengthNoColor(), ' ');
-      tableReplace += format("%s%s%s") % colColorHdr[iCol%cElements(colColorHdr)] %
-                        rgTableData[iData] % colColorFtr[iCol%cElements(colColorFtr)];
-      if (iCol == cCols-1)
+      rgTableData[iData].resize(rgTableData[iData].length() + rgWidth[iCol] -
+                                  rgTableData[iData].lengthNoColor(),
+        ' ');
+      tableReplace +=
+        format("%s%s%s") % colColorHdr[iCol % cElements(colColorHdr)] %
+        rgTableData[iData] % colColorFtr[iCol % cElements(colColorFtr)];
+      if (iCol == cCols - 1)
         tableReplace += "\n";
       else
         tableReplace += " : ";
@@ -339,42 +336,49 @@ void replaceWikiTable(sstring &data)
     delete[] rgWidth;
 
     // re-generate table as text into tableReplace
-    data.replace(tablePos, tableEnd-tablePos+2, tableReplace.c_str(), tableReplace.length());
+    data.replace(tablePos, tableEnd - tablePos + 2, tableReplace.c_str(),
+      tableReplace.length());
 
     tablePos = data.find("{|", tablePos + tableReplace.length());
-    tableEnd = data.find("|}", tablePos+1);
+    tableEnd = data.find("|}", tablePos + 1);
   }
 }
 
-void /*TBeing::*/displayHelpFile(TBeing *ch, char *helppath, char *namebuf){
+void /*TBeing::*/ displayHelpFile(TBeing* ch, char* helppath, char* namebuf) {
   int j;
   struct stat timestat;
   char timebuf[1024], buf2[2048];
   sstring str;
 
   // make the topic name upper case
-  for (j = 0;namebuf[j] != '\0';j++)
+  for (j = 0; namebuf[j] != '\0'; j++)
     namebuf[j] = UPPER(namebuf[j]);
 
   // find the last modified time on the file
   if (stat(helppath, &timestat)) {
-    vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
+    vlogf(LOG_BUG,
+      format("bad call to help function %s, rebuilding indices") % namebuf);
     buildHelpIndex();
     ch->sendTo("There was an error, try again.\n\r");
     return;
   }
   strcpy(timebuf, ctime(&(timestat.st_mtime)));
   timebuf[strlen(timebuf) - 1] = '\0';
-  sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", ch->green(),
-	  namebuf,timebuf, ch->norm());
+  sprintf(buf2, "%s%-30.30s (Last Updated: %s)%s\n\r\n\r", ch->green(), namebuf,
+    timebuf, ch->norm());
   str = buf2;
-  
-  
+
   // special message for nextversion file
   if (!strcmp(namebuf, "NEXTVERSION")) {
-    str += "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME THERE\n\r";
-    str += "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO GIVE\n\r";
-    str += "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES ARE\n\r";
+    str +=
+      "THIS HELP FILE REFLECTS WHAT THE \"news\" COMMAND WILL SHOW NEXT TIME "
+      "THERE\n\r";
+    str +=
+      "IS A CHANGE IN CODE (PROBABLY IN THE NEXT FEW DAYS).  IT IS HERE TO "
+      "GIVE\n\r";
+    str +=
+      "YOU SOME IDEA OF WHAT THINGS HAVE BEEN FIXED ALREADY, OR WHAT FEATURES "
+      "ARE\n\r";
     str += "FORTHCOMING...\n\r\n\r";
   }
 
@@ -384,8 +388,7 @@ void /*TBeing::*/displayHelpFile(TBeing *ch, char *helppath, char *namebuf){
   ch->desc->page_string(str);
 }
 
-void TBeing::doHelp(const char *arg)
-{
+void TBeing::doHelp(const char* arg) {
   sstring str;
   int j;
   bool found = FALSE;
@@ -399,14 +402,15 @@ void TBeing::doHelp(const char *arg)
   if (!desc)
     return;
 
-  for (; isspace(*arg); arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
   char searchBuf[256];
 
   one_argument(arg, searchBuf, cElements(searchBuf));
 
   // this prevents "help ../../being.h" and "help _skills"
-  const char *c;
+  const char* c;
   for (c = arg; *c; c++) {
     if (!isalnum(*c) && !isspace(*c)) {
       sendTo("Illegal argument.\n\r");
@@ -422,14 +426,14 @@ void TBeing::doHelp(const char *arg)
     return;
   }
 
-  if(!strcasecmp(arg, "index")){
-    FILE *index=popen("bin/helpindex", "r");
-    
-    while(fread(buf2, 1, MAX_STRING_LENGTH, index)){
-      str+=buf2;
+  if (!strcasecmp(arg, "index")) {
+    FILE* index = popen("bin/helpindex", "r");
+
+    while (fread(buf2, 1, MAX_STRING_LENGTH, index)) {
+      str += buf2;
     }
     pclose(index);
-    
+
     desc->page_string(str);
 
     return;
@@ -458,19 +462,20 @@ void TBeing::doHelp(const char *arg)
           strcpy(helppath, ansipath);
         }
       }
-      for (j = 0;namebuf[j] != '\0';j++)
+      for (j = 0; namebuf[j] != '\0'; j++)
         namebuf[j] = UPPER(namebuf[j]);
 
       if (stat(helppath, &timestat)) {
-	vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
-	buildHelpIndex();
-	sendTo("There was an error, try again.\n\r");
-	return;
+        vlogf(LOG_BUG,
+          format("bad call to help function %s, rebuilding indices") % namebuf);
+        buildHelpIndex();
+        sendTo("There was an error, try again.\n\r");
+        return;
       }
       strcpy(timebuf, ctime(&(timestat.st_mtime)));
       timebuf[strlen(timebuf) - 1] = '\0';
-      sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
-            namebuf,timebuf, norm());
+      sprintf(buf2, "%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(), namebuf,
+        timebuf, norm());
       str = buf2;
       file_to_sstring(helppath, str, CONCAT_YES);
       str += "\n\r";
@@ -501,18 +506,19 @@ void TBeing::doHelp(const char *arg)
           strcpy(helppath, ansipath);
         }
       }
-      for (j = 0;namebuf[j] != '\0';j++)
+      for (j = 0; namebuf[j] != '\0'; j++)
         namebuf[j] = UPPER(namebuf[j]);
       if (stat(helppath, &timestat)) {
-	vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
-	buildHelpIndex();
-	sendTo("There was an error, try again.\n\r");
-	return;
+        vlogf(LOG_BUG,
+          format("bad call to help function %s, rebuilding indices") % namebuf);
+        buildHelpIndex();
+        sendTo("There was an error, try again.\n\r");
+        return;
       }
       strcpy(timebuf, ctime(&(timestat.st_mtime)));
       timebuf[strlen(timebuf) - 1] = '\0';
-      sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
-            namebuf,timebuf, norm());
+      sprintf(buf2, "%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(), namebuf,
+        timebuf, norm());
       str = buf2;
       file_to_sstring(helppath, str, CONCAT_YES);
       str += "\n\r";
@@ -525,11 +531,10 @@ void TBeing::doHelp(const char *arg)
     // force help armor to hit spell, not armor proficiency
     // force help bleed to hit prayer, not bleeding
     // force help sharpen to hit skill, not sharpener
-    if (!strcasecmp(arg, "armor") ||
-        !strcasecmp(arg, "sharpen") ||
+    if (!strcasecmp(arg, "armor") || !strcasecmp(arg, "sharpen") ||
         !strcasecmp(arg, "bleed"))
       break;
-    if(sstring(arg).lower() == helpIndex[i].lower()){
+    if (sstring(arg).lower() == helpIndex[i].lower()) {
       sprintf(helppath, "%s/%s", Path::HELP, helpIndex[i].c_str());
       helpnum = i;
       found = TRUE;
@@ -575,18 +580,19 @@ void TBeing::doHelp(const char *arg)
         strcpy(helppath, ansipath);
       }
     }
-    for (j = 0;namebuf[j] != '\0';j++)
+    for (j = 0; namebuf[j] != '\0'; j++)
       namebuf[j] = UPPER(namebuf[j]);
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
+      vlogf(LOG_BUG,
+        format("bad call to help function %s, rebuilding indices") % namebuf);
       buildHelpIndex();
       sendTo("There was an error, try again.\n\r");
       return;
     }
     strcpy(timebuf, ctime(&(timestat.st_mtime)));
     timebuf[strlen(timebuf) - 1] = '\0';
-    sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
-            namebuf,timebuf, norm());
+    sprintf(buf2, "%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(), namebuf,
+      timebuf, norm());
     str = buf2;
     spellNumT skill;
     discNumT disc_num;
@@ -601,7 +607,7 @@ void TBeing::doHelp(const char *arg)
 
       if (strcasecmp(discArray[snt]->name, spellIndex[i]))
         continue;
-   
+
       if (doesKnowSkill(snt))
         break;
     }
@@ -611,7 +617,7 @@ void TBeing::doHelp(const char *arg)
       for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
         if (hideThisSpell(snt))
           continue;
-  
+
         if (!strcasecmp(discArray[snt]->name, spellIndex[i]))
           break;
       }
@@ -619,12 +625,12 @@ void TBeing::doHelp(const char *arg)
 
     skill = snt;
     if (skill >= MAX_SKILL) {
-      vlogf(LOG_BUG,format("Bogus spell help file: %s") %  spellIndex[i]);
+      vlogf(LOG_BUG, format("Bogus spell help file: %s") % spellIndex[i]);
       return;
     }
     skill = getSkillNum(skill);
     if (skill < 0) {
-      vlogf(LOG_BUG,format("Bogus spell help file: %s") %  spellIndex[i]);
+      vlogf(LOG_BUG, format("Bogus spell help file: %s") % spellIndex[i]);
       return;
     }
     disc_num = getDisciplineNumber(skill, FALSE);
@@ -635,11 +641,13 @@ void TBeing::doHelp(const char *arg)
       str += discNames[disc_num].properName;
       str += purple();
       if (isImmortal()) {
-        sprintf(buf2, "    (disc: %d, spell %d)", mapDiscToFile(disc_num), skill);
+        sprintf(buf2, "    (disc: %d, spell %d)", mapDiscToFile(disc_num),
+          skill);
         str += buf2;
       }
     } else {
-      vlogf(LOG_BUG, format("Bad skill %d to getDisciplineNumber in doHelp") %  skill);
+      vlogf(LOG_BUG,
+        format("Bad skill %d to getDisciplineNumber in doHelp") % skill);
     }
     str += purple();
     str += "\n\rSpecialization   : ";
@@ -661,7 +669,7 @@ void TBeing::doHelp(const char *arg)
 
     str += "\n\rDisc. Learn Rate : ";
     str += norm();
-    str +=learn_name(discArray[skill]->learn);
+    str += learn_name(discArray[skill]->learn);
     str += purple();
 
     if (isImmortal()) {
@@ -673,7 +681,8 @@ void TBeing::doHelp(const char *arg)
     str += ((discArray[skill]->startLearnDo == -1) ? "No" : "Yes");
 
     if (isImmortal()) {
-      sprintf(buf2, "  %s(%d) (%d) %s", purple(), discArray[skill]->startLearnDo, discArray[skill]->amtLearnDo, norm());
+      sprintf(buf2, "  %s(%d) (%d) %s", purple(),
+        discArray[skill]->startLearnDo, discArray[skill]->amtLearnDo, norm());
       str += buf2;
     }
 
@@ -694,42 +703,51 @@ void TBeing::doHelp(const char *arg)
 #endif
     } else if (skill == SPELL_MATERIALIZE ||
                skill == SPELL_SPONTANEOUS_GENERATION) {
-      sprintf(buf2, "%sSpell Component  :%s SPECIAL (see below)\n\r", purple(), norm());
+      sprintf(buf2, "%sSpell Component  :%s SPECIAL (see below)\n\r", purple(),
+        norm());
       str += buf2;
     } else if (IS_SET(discArray[skill]->comp_types, COMP_MATERIAL)) {
       unsigned int comp;
-      for (comp = 0; (comp < CompInfo.size()) &&
-                (skill != CompInfo[comp].spell_num);comp++);
+      for (comp = 0;
+           (comp < CompInfo.size()) && (skill != CompInfo[comp].spell_num);
+           comp++)
+        ;
       if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
-        sprintf(buf2, "%sSpell Component  :%s %s\n\r",
-		purple(), norm(), 
-		sstring(obj_index[real_object(CompInfo[comp].comp_num)].short_desc).cap().c_str());
+        sprintf(buf2, "%sSpell Component  :%s %s\n\r", purple(), norm(),
+          sstring(obj_index[real_object(CompInfo[comp].comp_num)].short_desc)
+            .cap()
+            .c_str());
         str += buf2;
       } else
-        vlogf(LOG_BUG, format("Problem in help file for skill=%d, comp=%d.  (component definition)") %  skill % comp);
+        vlogf(LOG_BUG, format("Problem in help file for skill=%d, comp=%d.  "
+                              "(component definition)") %
+                         skill % comp);
     } else {
       sprintf(buf2, "%sSpell Component  :%s NONE\n\r", purple(), norm());
       str += buf2;
     }
-    sprintf(buf2, "%sDifficulty       :%s %s\n\r",
-         purple(), norm(), displayDifficulty(skill).c_str());
+    sprintf(buf2, "%sDifficulty       :%s %s\n\r", purple(), norm(),
+      displayDifficulty(skill).c_str());
     str += buf2;
 
     int immy = getTypeImmunity(skill);
     sprintf(buf2, "%sImmunity Type    :%s %s\n\r", purple(), norm(),
-         ((immy != -1) ? immunity_names[immy] : "NONE"));
+      ((immy != -1) ? immunity_names[immy] : "NONE"));
     str += buf2;
 
     if (IS_SET(discArray[skill]->comp_types, SPELL_TASKED)) {
-        sprintf(buf2, "%sCasting rounds   :%s %d casting rounds\n\r" ,purple(), norm(), discArray[skill]->lag + 2);
-        str += buf2;
+      sprintf(buf2, "%sCasting rounds   :%s %d casting rounds\n\r", purple(),
+        norm(), discArray[skill]->lag + 2);
+      str += buf2;
 
-        sprintf(buf2, "%sCombat rounds    :%s %d combat rounds\n\r" ,purple(), norm(), discArray[skill]->lag + 1);
-        str += buf2;
+      sprintf(buf2, "%sCombat rounds    :%s %d combat rounds\n\r", purple(),
+        norm(), discArray[skill]->lag + 1);
+      str += buf2;
     } else {
       lag_t lag = discArray[skill]->lag;
       if (lag > LAG_0) {
-        sprintf(buf2, "%sCommand lock-out :%s %.1f seconds",purple(), norm(), lagAdjust(lag) * combatRound(1)/Pulse::ONE_SECOND);
+        sprintf(buf2, "%sCommand lock-out :%s %.1f seconds", purple(), norm(),
+          lagAdjust(lag) * combatRound(1) / Pulse::ONE_SECOND);
         str += buf2;
 
         if (isImmortal()) {
@@ -738,69 +756,73 @@ void TBeing::doHelp(const char *arg)
         }
         str += "\n\r";
       } else {
-        sprintf(buf2, "%sCommand lock-out :%s None\n\r",purple(), norm());
+        sprintf(buf2, "%sCommand lock-out :%s None\n\r", purple(), norm());
         str += buf2;
       }
     }
     if (discArray[skill]->minMana) {
-      if (doesKnowSkill(skill) && (IS_SET(discArray[skill]->comp_types, SPELL_TASKED))) {
+      if (doesKnowSkill(skill) &&
+          (IS_SET(discArray[skill]->comp_types, SPELL_TASKED))) {
         sprintf(buf2, "%sMinimum Mana     :%s %d, per round amount : %d\n\r",
-            purple(), norm(),
-            ((discArray[skill]->minMana / (discArray[skill]->lag +2)) * (discArray[skill]->lag +2)),
-            (discArray[skill]->minMana / (discArray[skill]->lag +2)));
-        sprintf(buf2 + strlen(buf2), "%sCurrent Mana     :%s %d, per round amount : %d\n\r",
-            purple(), norm(),
-            useMana(skill) * (discArray[skill]->lag +2),
-            useMana(skill));
+          purple(), norm(),
+          ((discArray[skill]->minMana / (discArray[skill]->lag + 2)) *
+            (discArray[skill]->lag + 2)),
+          (discArray[skill]->minMana / (discArray[skill]->lag + 2)));
+        sprintf(buf2 + strlen(buf2),
+          "%sCurrent Mana     :%s %d, per round amount : %d\n\r", purple(),
+          norm(), useMana(skill) * (discArray[skill]->lag + 2), useMana(skill));
       } else if (doesKnowSkill(skill)) {
-        sprintf(buf2, "%sMinimum Mana     :%s %d, current : %d\n\r",
-              purple(),  norm(), discArray[skill]->minMana, useMana(skill));
+        sprintf(buf2, "%sMinimum Mana     :%s %d, current : %d\n\r", purple(),
+          norm(), discArray[skill]->minMana, useMana(skill));
       } else {
-        sprintf(buf2, "%sMana (min/cur)   :%s %d/spell-not-known\n\r",
-                       purple(),  norm(), discArray[skill]->minMana);
+        sprintf(buf2, "%sMana (min/cur)   :%s %d/spell-not-known\n\r", purple(),
+          norm(), discArray[skill]->minMana);
       }
     }
     if (discArray[skill]->minLifeforce) {
-      if (doesKnowSkill(skill) && (IS_SET(discArray[skill]->comp_types, SPELL_TASKED))) {
+      if (doesKnowSkill(skill) &&
+          (IS_SET(discArray[skill]->comp_types, SPELL_TASKED))) {
         sprintf(buf2, "%sMinimum Lifeforce:%s %d, per round amount : %d\n\r",
-            purple(), norm(),
-            ((discArray[skill]->minLifeforce / (discArray[skill]->lag +2)) * (discArray[skill]->lag +2)),
-            (discArray[skill]->minLifeforce / (discArray[skill]->lag +2)));
-        sprintf(buf2 + strlen(buf2), "%sCurrent Lifeforce:%s %d, per round amount : %d\n\r",
-            purple(), norm(),
-            useLifeforce(skill) * (discArray[skill]->lag +2),
-            useLifeforce(skill));
+          purple(), norm(),
+          ((discArray[skill]->minLifeforce / (discArray[skill]->lag + 2)) *
+            (discArray[skill]->lag + 2)),
+          (discArray[skill]->minLifeforce / (discArray[skill]->lag + 2)));
+        sprintf(buf2 + strlen(buf2),
+          "%sCurrent Lifeforce:%s %d, per round amount : %d\n\r", purple(),
+          norm(), useLifeforce(skill) * (discArray[skill]->lag + 2),
+          useLifeforce(skill));
       } else if (doesKnowSkill(skill)) {
-        sprintf(buf2, "%sMinimum Lifeforce:%s %d, current : %d\n\r",
-              purple(),  norm(), discArray[skill]->minLifeforce, useLifeforce(skill));
+        sprintf(buf2, "%sMinimum Lifeforce:%s %d, current : %d\n\r", purple(),
+          norm(), discArray[skill]->minLifeforce, useLifeforce(skill));
       } else {
-        sprintf(buf2, "%sLifeforce:min/cur:%s %d/spell-not-known\n\r",
-                       purple(),  norm(), discArray[skill]->minLifeforce);
+        sprintf(buf2, "%sLifeforce:min/cur:%s %d/spell-not-known\n\r", purple(),
+          norm(), discArray[skill]->minLifeforce);
       }
     }
     if (discArray[skill]->minPiety) {
-      if (doesKnowSkill(skill) && (IS_SET(discArray[skill]->comp_types, SPELL_TASKED))) {
-
-        sprintf(buf2, "%sMinimum Piety    :%s %.2f, per round amount : %.2f\n\r",
-              purple(), norm(),
-              ((discArray[skill]->minPiety / (discArray[skill]->lag +2)) *
-(discArray[skill]->lag +2)),
-              (discArray[skill]->minPiety / (discArray[skill]->lag +2)));
-        sprintf(buf2 + strlen(buf2), "%sCurrent Piety    :%s %.2f, per round amount : %.2f\n\r",
-              purple(), norm(),
-                 (usePiety(skill) * (discArray[skill]->lag +2)),
-               usePiety(skill));
+      if (doesKnowSkill(skill) &&
+          (IS_SET(discArray[skill]->comp_types, SPELL_TASKED))) {
+        sprintf(buf2,
+          "%sMinimum Piety    :%s %.2f, per round amount : %.2f\n\r", purple(),
+          norm(),
+          ((discArray[skill]->minPiety / (discArray[skill]->lag + 2)) *
+            (discArray[skill]->lag + 2)),
+          (discArray[skill]->minPiety / (discArray[skill]->lag + 2)));
+        sprintf(buf2 + strlen(buf2),
+          "%sCurrent Piety    :%s %.2f, per round amount : %.2f\n\r", purple(),
+          norm(), (usePiety(skill) * (discArray[skill]->lag + 2)),
+          usePiety(skill));
       } else if (doesKnowSkill(skill)) {
         sprintf(buf2, "%sMinimum Piety    :%s %.2f  Current Piety  : %.2f\n\r",
-                    purple(),  norm(), discArray[skill]->minPiety, usePiety(skill));
+          purple(), norm(), discArray[skill]->minPiety, usePiety(skill));
       } else {
         sprintf(buf2, "%sPiety (min/cur)  :%s %.2f/prayer-not-known\n\r",
-              purple(),  norm(), discArray[skill]->minPiety);
+          purple(), norm(), discArray[skill]->minPiety);
       }
     }
     str += buf2;
     if (discArray[skill]->comp_types) {
-      sprintf(buf2,  "%sRequires         :%s ", purple(), norm());
+      sprintf(buf2, "%sRequires         :%s ", purple(), norm());
       str += buf2;
 
       if (discArray[skill]->comp_types & COMP_GESTURAL)
@@ -816,25 +838,31 @@ void TBeing::doHelp(const char *arg)
       }
       str += "\n\r";
     }
-    sprintf(buf2, "%sOffensive        : %s%s\t%sArea Effect          : %s%s\n\r", 
-      purple(), norm(), 
-      (discArray[skill]->targets & TAR_VIOLENT) ? "Yes" : "No",
+    sprintf(buf2,
+      "%sOffensive        : %s%s\t%sArea Effect          : %s%s\n\r", purple(),
+      norm(), (discArray[skill]->targets & TAR_VIOLENT) ? "Yes" : "No",
+      purple(), norm(), (discArray[skill]->targets & TAR_AREA) ? "Yes" : "No");
+    str += buf2;
+
+    sprintf(buf2,
+      "%sCast on Self     : %s%s\t%sObject Castable      : %s%s\n\r", purple(),
+      norm(),
+      (discArray[skill]->targets & TAR_SELF_NONO ? "No"
+        : (discArray[skill]->targets &
+            (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY))
+          ? "Yes"
+          : "No"),
       purple(), norm(),
-      (discArray[skill]->targets & TAR_AREA) ? "Yes" : "No");
+      (discArray[skill]->targets &
+        (TAR_OBJ_INV | TAR_OBJ_ROOM | TAR_OBJ_WORLD | TAR_OBJ_EQUIP))
+        ? "Yes"
+        : "No");
     str += buf2;
 
-    sprintf(buf2, "%sCast on Self     : %s%s\t%sObject Castable      : %s%s\n\r", 
-      purple(), norm(), 
-      (discArray[skill]->targets & TAR_SELF_NONO ? "No" :
-       (discArray[skill]->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD | TAR_FIGHT_SELF | TAR_SELF_ONLY)) ? "Yes" : "No"),
-      purple(), norm(), 
-      (discArray[skill]->targets & (TAR_OBJ_INV | TAR_OBJ_ROOM | TAR_OBJ_WORLD | TAR_OBJ_EQUIP)) ? "Yes" : "No");
-    str += buf2;
-
-    sprintf(buf2, "%sCast on Others   : %s%s \n\r", 
-      purple(), norm(), 
-      (discArray[skill]->targets & TAR_SELF_ONLY) ? "No" :
-      (discArray[skill]->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD)) ? "Yes" : "No");
+    sprintf(buf2, "%sCast on Others   : %s%s \n\r", purple(), norm(),
+      (discArray[skill]->targets & TAR_SELF_ONLY)                      ? "No"
+      : (discArray[skill]->targets & (TAR_CHAR_ROOM | TAR_CHAR_WORLD)) ? "Yes"
+                                                                       : "No");
     str += buf2;
 
     str += "\n\r";
@@ -870,19 +898,20 @@ void TBeing::doHelp(const char *arg)
         strcpy(helppath, ansipath);
       }
     }
-    for (j = 0;namebuf[j] != '\0';j++)
+    for (j = 0; namebuf[j] != '\0'; j++)
       namebuf[j] = UPPER(namebuf[j]);
 
     if (stat(helppath, &timestat)) {
-      vlogf(LOG_BUG,format("bad call to help function %s, rebuilding indices") %  namebuf);
+      vlogf(LOG_BUG,
+        format("bad call to help function %s, rebuilding indices") % namebuf);
       buildHelpIndex();
       sendTo("There was an error, try again.\n\r");
       return;
     }
     strcpy(timebuf, ctime(&(timestat.st_mtime)));
     timebuf[strlen(timebuf) - 1] = '\0';
-    sprintf(buf2,"%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(),
-            namebuf,timebuf, norm());
+    sprintf(buf2, "%s%-30.30s (Last Updated: %s)%s\n\r\n\r", green(), namebuf,
+      timebuf, norm());
     str = buf2;
 
     spellNumT skill;
@@ -898,7 +927,7 @@ void TBeing::doHelp(const char *arg)
 
       if (strcasecmp(discArray[snt]->name, skillIndex[i]))
         continue;
-   
+
       if (doesKnowSkill(snt))
         break;
     }
@@ -908,7 +937,7 @@ void TBeing::doHelp(const char *arg)
       for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
         if (hideThisSpell(snt))
           continue;
-  
+
         if (!strcasecmp(discArray[snt]->name, skillIndex[i]))
           break;
       }
@@ -917,7 +946,7 @@ void TBeing::doHelp(const char *arg)
     skill = snt;
 
     if (skill >= MAX_SKILL) {
-      vlogf(LOG_BUG,format("Bogus skill help file: %s") %  skillIndex[i]);
+      vlogf(LOG_BUG, format("Bogus skill help file: %s") % skillIndex[i]);
       return;
     }
     disc_num = getDisciplineNumber(skill, FALSE);
@@ -928,12 +957,13 @@ void TBeing::doHelp(const char *arg)
       str += discNames[disc_num].properName;
       str += purple();
       if (isImmortal()) {
-        sprintf(buf2, "    (disc: %d, skill %d)", mapDiscToFile(disc_num), skill);
+        sprintf(buf2, "    (disc: %d, skill %d)", mapDiscToFile(disc_num),
+          skill);
         str += buf2;
       }
-    } else 
-      vlogf(LOG_BUG, format("Bad disc for skill %d in doHelp()") %  skill);
-    
+    } else
+      vlogf(LOG_BUG, format("Bad disc for skill %d in doHelp()") % skill);
+
     str += purple();
     str += "\n\rSpecialization   : ";
     str += norm();
@@ -967,8 +997,8 @@ void TBeing::doHelp(const char *arg)
     str += norm();
     str += ((discArray[skill]->startLearnDo == -1) ? "No" : "Yes");
     if (isImmortal()) {
-      sprintf(buf2, "  %s(%d) (%d) %s", 
-         purple(), discArray[skill]->startLearnDo, discArray[skill]->amtLearnDo, norm());
+      sprintf(buf2, "  %s(%d) (%d) %s", purple(),
+        discArray[skill]->startLearnDo, discArray[skill]->amtLearnDo, norm());
       str += buf2;
     }
 
@@ -978,14 +1008,14 @@ void TBeing::doHelp(const char *arg)
     str += statToString(discArray[skill]->modifierStat);
     str += "\n\r\n\r";
 
-    sprintf(buf2, "%sDifficulty       :%s %s\n\r",
-         purple(), norm(), displayDifficulty(skill).c_str());
+    sprintf(buf2, "%sDifficulty       :%s %s\n\r", purple(), norm(),
+      displayDifficulty(skill).c_str());
     str += buf2;
 
     lag_t lag = discArray[skill]->lag;
     if (lag > LAG_0) {
-      sprintf(buf2, "%sCommand lock-out :%s %.1f seconds",
-	      purple(), norm(), lagAdjust(lag) * combatRound(1)/Pulse::ONE_SECOND);
+      sprintf(buf2, "%sCommand lock-out :%s %.1f seconds", purple(), norm(),
+        lagAdjust(lag) * combatRound(1) / Pulse::ONE_SECOND);
       str += buf2;
 
       if (isImmortal()) {
@@ -994,7 +1024,7 @@ void TBeing::doHelp(const char *arg)
       }
       str += "\n\r";
     } else {
-      sprintf(buf2, "%sCommand lock-out :%s None\n\r",purple(), norm());
+      sprintf(buf2, "%sCommand lock-out :%s None\n\r", purple(), norm());
       str += buf2;
     }
 
@@ -1008,24 +1038,22 @@ void TBeing::doHelp(const char *arg)
   sendTo("No such help file available.\n\r");
 }
 
-void TBeing::doBuildhelp(const char* arg)
-{
+void TBeing::doBuildhelp(const char* arg) {
   if (!desc)
     return;
-  for (; isspace(*arg); arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
-  if (!isImmortal() || GetMaxLevel() < GOD_LEVEL1 || !hasWizPower(POWER_BUILDER))
-  {
+  if (!isImmortal() || GetMaxLevel() < GOD_LEVEL1 ||
+      !hasWizPower(POWER_BUILDER)) {
     sendTo("Sorry, only builders may access build help files.\n\r");
     return;
   }
 }
 
-void TBeing::doWizhelp(const char *arg)
-{
+void TBeing::doWizhelp(const char* arg) {
   sstring sbuf, buf, tString;
-  int       no,
-            tLength = 2;
+  int no, tLength = 2;
   unsigned int i;
   wizPowerT tPower;
 
@@ -1034,7 +1062,8 @@ void TBeing::doWizhelp(const char *arg)
 
   if (!desc)
     return;
-  for (; isspace(*arg); arg++);
+  for (; isspace(*arg); arg++)
+    ;
 
   for (i = 0; i < MAX_CMD_LIST; i++) {
     if (!commandArray[i])
@@ -1043,8 +1072,8 @@ void TBeing::doWizhelp(const char *arg)
     if ((GetMaxLevel() >= commandArray[i]->minLevel) &&
         (commandArray[i]->minLevel > MAX_MORT) &&
         ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
-         hasWizPower(tPower)))
-      tLength = max(strlen(commandArray[i]->name), (size_t) tLength);
+          hasWizPower(tPower)))
+      tLength = max(strlen(commandArray[i]->name), (size_t)tLength);
   }
 
   tString = format("%c-%ds") % '%' % (tLength + 1);
@@ -1063,27 +1092,26 @@ void TBeing::doWizhelp(const char *arg)
     if ((GetMaxLevel() >= commandArray[i]->minLevel) &&
         (commandArray[i]->minLevel > MAX_MORT) &&
         ((tPower = wizPowerFromCmd(cmdTypeT(i))) == MAX_POWER_INDEX ||
-         hasWizPower(tPower))) {
-
+          hasWizPower(tPower))) {
       sbuf = format(tString) % commandArray[i]->name;
       buf += sbuf;
 
       if (!(no % (tLength - 1)))
-	buf += "\n\r";
+        buf += "\n\r";
 
       no++;
     }
   }
 
-  buf += "\n\r      Check out HELP GODS (or HELP BUILDERS) for an index of help files.\n\r";
+  buf +=
+    "\n\r      Check out HELP GODS (or HELP BUILDERS) for an index of help "
+    "files.\n\r";
   desc->page_string(buf);
 }
 
-
-void buildHelpIndex()
-{
-  DIR *dfd;
-  struct dirent *dp;
+void buildHelpIndex() {
+  DIR* dfd;
+  struct dirent* dp;
 
   // set a reasonable initial size
   immortalIndex.clear();
@@ -1095,10 +1123,10 @@ void buildHelpIndex()
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&
-         !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
-      continue; 
+          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
+      continue;
 
-    char *tmpc = mud_str_dup(dp->d_name);
+    char* tmpc = mud_str_dup(dp->d_name);
     immortalIndex.push_back(tmpc);
   }
   closedir(dfd);
@@ -1113,10 +1141,10 @@ void buildHelpIndex()
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&
-         !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
+          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
 
-    char *tmpc = mud_str_dup(dp->d_name);
+    char* tmpc = mud_str_dup(dp->d_name);
     builderIndex.push_back(tmpc);
   }
   closedir(dfd);
@@ -1133,13 +1161,13 @@ void buildHelpIndex()
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&
-         !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
+          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
     str = dp->d_name;
     helpIndex.push_back(str);
   }
-// COSMO STRING  
-//  delete str;
+  // COSMO STRING
+  //  delete str;
   closedir(dfd);
 
   // set a reasonable initial size
@@ -1152,10 +1180,10 @@ void buildHelpIndex()
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&
-         !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
+          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
 
-    char *tmpc = mud_str_dup(dp->d_name);
+    char* tmpc = mud_str_dup(dp->d_name);
     skillIndex.push_back(tmpc);
   }
   closedir(dfd);
@@ -1170,25 +1198,23 @@ void buildHelpIndex()
   while ((dp = readdir(dfd))) {
     if (!strcmp(dp->d_name, ".") || !strcmp(dp->d_name, "..") ||
         (strlen(dp->d_name) >= 5 &&
-         !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
+          !strcmp(&dp->d_name[strlen(dp->d_name) - 5], ".ansi")))
       continue;
 
-    char *tmpc = mud_str_dup(dp->d_name);
+    char* tmpc = mud_str_dup(dp->d_name);
     spellIndex.push_back(tmpc);
   }
   closedir(dfd);
 }
 
-
-void cleanUpHelp()
-{
+void cleanUpHelp() {
   unsigned int i;
   for (i = 0; i < immortalIndex.size(); i++)
-    delete [] immortalIndex[i];
+    delete[] immortalIndex[i];
   for (i = 0; i < builderIndex.size(); i++)
-    delete [] builderIndex[i];
+    delete[] builderIndex[i];
   for (i = 0; i < skillIndex.size(); i++)
-    delete [] skillIndex[i];
+    delete[] skillIndex[i];
   for (i = 0; i < spellIndex.size(); i++)
-    delete [] spellIndex[i];
+    delete[] spellIndex[i];
 }

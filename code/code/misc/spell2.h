@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include <map>
@@ -12,244 +11,252 @@
 #include "stats.h"
 
 enum skillUseTypeT {
-     SPELL_UNDEFINED,
-     SPELL_CASTER,
-     SPELL_DANCER,
-     SPELL_PRAYER,
-     SKILL_CASTER ,
-     SKILL_DANCER,
-     SKILL_PRAYER ,
-     SKILL_FIGHTER,
+  SPELL_UNDEFINED,
+  SPELL_CASTER,
+  SPELL_DANCER,
+  SPELL_PRAYER,
+  SKILL_CASTER,
+  SKILL_DANCER,
+  SKILL_PRAYER,
+  SKILL_FIGHTER,
 };
 
 enum skillUseClassT {
-     SPELL_NOCLASS,
-     SPELL_SHAMAN,
-     SPELL_MAGE ,
-     SPELL_RANGER ,
-     SPELL_ANTI   ,
-     SPELL_CLERIC ,
-     SPELL_DEIKHAN,
-     SKILL_GENERAL,
-     SKILL_WARRIOR,
-     SKILL_DEIKHAN,
-     SKILL_THIEF ,
-     SKILL_MONK  ,
-     SKILL_RANGER,
-     SKILL_CLERIC,
-     SKILL_MAGE,
-     SKILL_SHAMAN,
-     SKILL_CLERIC_TYPES,
-     SKILL_MAGE_TYPES
+  SPELL_NOCLASS,
+  SPELL_SHAMAN,
+  SPELL_MAGE,
+  SPELL_RANGER,
+  SPELL_ANTI,
+  SPELL_CLERIC,
+  SPELL_DEIKHAN,
+  SKILL_GENERAL,
+  SKILL_WARRIOR,
+  SKILL_DEIKHAN,
+  SKILL_THIEF,
+  SKILL_MONK,
+  SKILL_RANGER,
+  SKILL_CLERIC,
+  SKILL_MAGE,
+  SKILL_SHAMAN,
+  SKILL_CLERIC_TYPES,
+  SKILL_MAGE_TYPES
 };
 
 extern skillUseTypeT getSpellType(skillUseClassT);
 
-const unsigned int TAR_IGNORE		 = (1<<0);
-const unsigned int TAR_CHAR_ROOM    = (1<<1);
-const unsigned int TAR_CHAR_WORLD   = (1<<2);
-const unsigned int TAR_FIGHT_SELF   = (1<<3);
-const unsigned int TAR_FIGHT_VICT   = (1<<4);
-const unsigned int TAR_SELF_ONLY    = (1<<5) ;
-const unsigned int TAR_SELF_NONO    = (1<<6) ;
-const unsigned int TAR_OBJ_INV		  = (1<<7);
-const unsigned int TAR_OBJ_ROOM     = (1<<8);
-const unsigned int TAR_OBJ_WORLD    = (1<<9);
-const unsigned int TAR_OBJ_EQUIP    = (1<<10);
-const unsigned int TAR_NAME	       = (1<<11);
-const unsigned int TAR_VIOLENT		  = (1<<12);
-const unsigned int TAR_ROOM	       = (1<<13); 
-const unsigned int TAR_AREA	       = (1<<14); 
-const unsigned int TAR_CHAR_VIS_WORLD  = (1<<15);
+const unsigned int TAR_IGNORE = (1 << 0);
+const unsigned int TAR_CHAR_ROOM = (1 << 1);
+const unsigned int TAR_CHAR_WORLD = (1 << 2);
+const unsigned int TAR_FIGHT_SELF = (1 << 3);
+const unsigned int TAR_FIGHT_VICT = (1 << 4);
+const unsigned int TAR_SELF_ONLY = (1 << 5);
+const unsigned int TAR_SELF_NONO = (1 << 6);
+const unsigned int TAR_OBJ_INV = (1 << 7);
+const unsigned int TAR_OBJ_ROOM = (1 << 8);
+const unsigned int TAR_OBJ_WORLD = (1 << 9);
+const unsigned int TAR_OBJ_EQUIP = (1 << 10);
+const unsigned int TAR_NAME = (1 << 11);
+const unsigned int TAR_VIOLENT = (1 << 12);
+const unsigned int TAR_ROOM = (1 << 13);
+const unsigned int TAR_AREA = (1 << 14);
+const unsigned int TAR_CHAR_VIS_WORLD = (1 << 15);
 
-const unsigned int COMP_GESTURAL		= (1<<0);
-const unsigned int COMP_GESTURAL_INIT		     = (1<<1);
-const unsigned int COMP_GESTURAL_END		    = (1<<2);
-const unsigned int COMP_GESTURAL_ALWAYS		       = (1<<3);
-const unsigned int COMP_GESTURAL_RANDOM		       = (1<<4);
-const unsigned int COMP_VERBAL			      = (1<<5);
-const unsigned int COMP_VERBAL_INIT		   = (1<<6);
-const unsigned int COMP_VERBAL_END		  = (1<<7);
-const unsigned int COMP_VERBAL_ALWAYS		     = (1<<8);
-const unsigned int COMP_VERBAL_RANDOM		     = (1<<9);
-const unsigned int COMP_MATERIAL		= (1<<10);
-const unsigned int COMP_MATERIAL_INIT		     = (1<<11);
-const unsigned int COMP_MATERIAL_END		    = (1<<12);
-const unsigned int COMP_MATERIAL_ALWAYS		       = (1<<13);
-const unsigned int COMP_MATERIAL_RANDOM		       = (1<<14);
-const unsigned int COMP_MATERIAL_ALMOST_END	   = (1<<15);
-const unsigned int SPELL_TASKED			       = (1<<16);
-const unsigned int SPELL_IGNORE_POSITION          = (1<<17);
-const unsigned int SPELL_TASKED_EVERY             = (1<<18);
+const unsigned int COMP_GESTURAL = (1 << 0);
+const unsigned int COMP_GESTURAL_INIT = (1 << 1);
+const unsigned int COMP_GESTURAL_END = (1 << 2);
+const unsigned int COMP_GESTURAL_ALWAYS = (1 << 3);
+const unsigned int COMP_GESTURAL_RANDOM = (1 << 4);
+const unsigned int COMP_VERBAL = (1 << 5);
+const unsigned int COMP_VERBAL_INIT = (1 << 6);
+const unsigned int COMP_VERBAL_END = (1 << 7);
+const unsigned int COMP_VERBAL_ALWAYS = (1 << 8);
+const unsigned int COMP_VERBAL_RANDOM = (1 << 9);
+const unsigned int COMP_MATERIAL = (1 << 10);
+const unsigned int COMP_MATERIAL_INIT = (1 << 11);
+const unsigned int COMP_MATERIAL_END = (1 << 12);
+const unsigned int COMP_MATERIAL_ALWAYS = (1 << 13);
+const unsigned int COMP_MATERIAL_RANDOM = (1 << 14);
+const unsigned int COMP_MATERIAL_ALMOST_END = (1 << 15);
+const unsigned int SPELL_TASKED = (1 << 16);
+const unsigned int SPELL_IGNORE_POSITION = (1 << 17);
+const unsigned int SPELL_TASKED_EVERY = (1 << 18);
 
 // this set will be obsolete eventually
 enum taskDiffT {
-     TASK_TRIVIAL,
-     TASK_EASY,
-     TASK_NORMAL,
-     TASK_DIFFICULT,
-     TASK_DANGEROUS,
-     TASK_HOPELESS,
-     TASK_IMPOSSIBLE
+  TASK_TRIVIAL,
+  TASK_EASY,
+  TASK_NORMAL,
+  TASK_DIFFICULT,
+  TASK_DANGEROUS,
+  TASK_HOPELESS,
+  TASK_IMPOSSIBLE
 };
 
 enum lag_t {
-   LAG_0, LAG_1, LAG_2, LAG_3, LAG_4,
-   LAG_5, LAG_6, LAG_7, LAG_8, LAG_9
+  LAG_0,
+  LAG_1,
+  LAG_2,
+  LAG_3,
+  LAG_4,
+  LAG_5,
+  LAG_6,
+  LAG_7,
+  LAG_8,
+  LAG_9
 };
 
 enum manaCostT {
   MANA_0 = 0,
-  MANA_5          =  5,
-  MANA_10         = 10,
-  MANA_15         = 15,
-  MANA_17         = 17,
-  MANA_20         = 20,
-  MANA_23         = 23,
-  MANA_25         = 25,
-  MANA_27         = 27,
-  MANA_30         = 30,
-  MANA_33         = 33,
-  MANA_35         = 35,
-  MANA_38         = 38,
-  MANA_40         = 40,
-  MANA_45         = 45,
-  MANA_47         = 47,
-  MANA_50         = 50,
-  MANA_53         = 53,
-  MANA_54         = 54,
-  MANA_55         = 55,
-  MANA_60         = 60,
-  MANA_65         = 65,
-  MANA_70         = 70,
-  MANA_75         = 75,
-  MANA_80         = 80,
-  MANA_85         = 85,
-  MANA_90         = 90,
-  MANA_95         = 95,
-  MANA_100        = 100,
-  MANA_200        = 200
+  MANA_5 = 5,
+  MANA_10 = 10,
+  MANA_15 = 15,
+  MANA_17 = 17,
+  MANA_20 = 20,
+  MANA_23 = 23,
+  MANA_25 = 25,
+  MANA_27 = 27,
+  MANA_30 = 30,
+  MANA_33 = 33,
+  MANA_35 = 35,
+  MANA_38 = 38,
+  MANA_40 = 40,
+  MANA_45 = 45,
+  MANA_47 = 47,
+  MANA_50 = 50,
+  MANA_53 = 53,
+  MANA_54 = 54,
+  MANA_55 = 55,
+  MANA_60 = 60,
+  MANA_65 = 65,
+  MANA_70 = 70,
+  MANA_75 = 75,
+  MANA_80 = 80,
+  MANA_85 = 85,
+  MANA_90 = 90,
+  MANA_95 = 95,
+  MANA_100 = 100,
+  MANA_200 = 200
 };
 
 enum lifeforceCostT {
   LIFEFORCE_0 = 0,
-  LIFEFORCE_5          =  5,
-  LIFEFORCE_10         = 10,
-  LIFEFORCE_15         = 15,
-  LIFEFORCE_20         = 20,
-  LIFEFORCE_25         = 25,
-  LIFEFORCE_30         = 30,
-  LIFEFORCE_35         = 35,
-  LIFEFORCE_40         = 40,
-  LIFEFORCE_45         = 45,
-  LIFEFORCE_50         = 50,
-  LIFEFORCE_55         = 55,
-  LIFEFORCE_60         = 60,
-  LIFEFORCE_65         = 65,
-  LIFEFORCE_70         = 70,
-  LIFEFORCE_75         = 75,
-  LIFEFORCE_80         = 80,
-  LIFEFORCE_85         = 85,
-  LIFEFORCE_90         = 90,
-  LIFEFORCE_95         = 95,
-  LIFEFORCE_100        = 100,
-  LIFEFORCE_110        = 110,
-  LIFEFORCE_120        = 120,
-  LIFEFORCE_125        = 125,
-  LIFEFORCE_130        = 130,
-  LIFEFORCE_140        = 140,
-  LIFEFORCE_150        = 150,
-  LIFEFORCE_160        = 160,
-  LIFEFORCE_170        = 170,
-  LIFEFORCE_175        = 175,
-  LIFEFORCE_180        = 180,
-  LIFEFORCE_190        = 190,
-  LIFEFORCE_200        = 200,
-  LIFEFORCE_210        = 210,
-  LIFEFORCE_220        = 220,
-  LIFEFORCE_225        = 225,
-  LIFEFORCE_230        = 230,
-  LIFEFORCE_240        = 240,
-  LIFEFORCE_250        = 250,
-  LIFEFORCE_260        = 260,
-  LIFEFORCE_270        = 270,
-  LIFEFORCE_275        = 275,
-  LIFEFORCE_280        = 280,
-  LIFEFORCE_290        = 290,
-  LIFEFORCE_300        = 300,
-  LIFEFORCE_310        = 310,
-  LIFEFORCE_320        = 320,
-  LIFEFORCE_325        = 325,
-  LIFEFORCE_330        = 330,
-  LIFEFORCE_340        = 340,
-  LIFEFORCE_350        = 350,
-  LIFEFORCE_360        = 360,
-  LIFEFORCE_370        = 370,
-  LIFEFORCE_375        = 375,
-  LIFEFORCE_380        = 380,
-  LIFEFORCE_390        = 390,
-  LIFEFORCE_400        = 400,
-  LIFEFORCE_410        = 410,
-  LIFEFORCE_420        = 420,
-  LIFEFORCE_425        = 425,
-  LIFEFORCE_430        = 430,
-  LIFEFORCE_440        = 440,
-  LIFEFORCE_450        = 450,
-  LIFEFORCE_460        = 460,
-  LIFEFORCE_470        = 470,
-  LIFEFORCE_475        = 475,
-  LIFEFORCE_480        = 480,
-  LIFEFORCE_490        = 490,
-  LIFEFORCE_500        = 500
+  LIFEFORCE_5 = 5,
+  LIFEFORCE_10 = 10,
+  LIFEFORCE_15 = 15,
+  LIFEFORCE_20 = 20,
+  LIFEFORCE_25 = 25,
+  LIFEFORCE_30 = 30,
+  LIFEFORCE_35 = 35,
+  LIFEFORCE_40 = 40,
+  LIFEFORCE_45 = 45,
+  LIFEFORCE_50 = 50,
+  LIFEFORCE_55 = 55,
+  LIFEFORCE_60 = 60,
+  LIFEFORCE_65 = 65,
+  LIFEFORCE_70 = 70,
+  LIFEFORCE_75 = 75,
+  LIFEFORCE_80 = 80,
+  LIFEFORCE_85 = 85,
+  LIFEFORCE_90 = 90,
+  LIFEFORCE_95 = 95,
+  LIFEFORCE_100 = 100,
+  LIFEFORCE_110 = 110,
+  LIFEFORCE_120 = 120,
+  LIFEFORCE_125 = 125,
+  LIFEFORCE_130 = 130,
+  LIFEFORCE_140 = 140,
+  LIFEFORCE_150 = 150,
+  LIFEFORCE_160 = 160,
+  LIFEFORCE_170 = 170,
+  LIFEFORCE_175 = 175,
+  LIFEFORCE_180 = 180,
+  LIFEFORCE_190 = 190,
+  LIFEFORCE_200 = 200,
+  LIFEFORCE_210 = 210,
+  LIFEFORCE_220 = 220,
+  LIFEFORCE_225 = 225,
+  LIFEFORCE_230 = 230,
+  LIFEFORCE_240 = 240,
+  LIFEFORCE_250 = 250,
+  LIFEFORCE_260 = 260,
+  LIFEFORCE_270 = 270,
+  LIFEFORCE_275 = 275,
+  LIFEFORCE_280 = 280,
+  LIFEFORCE_290 = 290,
+  LIFEFORCE_300 = 300,
+  LIFEFORCE_310 = 310,
+  LIFEFORCE_320 = 320,
+  LIFEFORCE_325 = 325,
+  LIFEFORCE_330 = 330,
+  LIFEFORCE_340 = 340,
+  LIFEFORCE_350 = 350,
+  LIFEFORCE_360 = 360,
+  LIFEFORCE_370 = 370,
+  LIFEFORCE_375 = 375,
+  LIFEFORCE_380 = 380,
+  LIFEFORCE_390 = 390,
+  LIFEFORCE_400 = 400,
+  LIFEFORCE_410 = 410,
+  LIFEFORCE_420 = 420,
+  LIFEFORCE_425 = 425,
+  LIFEFORCE_430 = 430,
+  LIFEFORCE_440 = 440,
+  LIFEFORCE_450 = 450,
+  LIFEFORCE_460 = 460,
+  LIFEFORCE_470 = 470,
+  LIFEFORCE_475 = 475,
+  LIFEFORCE_480 = 480,
+  LIFEFORCE_490 = 490,
+  LIFEFORCE_500 = 500
 };
 
 // enum can't be float unfortunately, which we want
-// KLUDGE: values here will be 4* the float we really want 
+// KLUDGE: values here will be 4* the float we really want
 // the ctor for spellInfo will turn into float
 enum pietyCostT {
-   PRAY_0 = 0,
-   PRAY_025       = 5,
-   PRAY_050       = 10,
-   PRAY_075       = 15,
-   PRAY_100       = 20,
-   PRAY_150       = 30,
-   PRAY_200       = 40,
-   PRAY_250       = 50,
-   PRAY_300       = 60,
-   PRAY_350       = 75,
-   PRAY_400       = 80,
-   PRAY_450       = 90,
-   PRAY_500       = 100
+  PRAY_0 = 0,
+  PRAY_025 = 5,
+  PRAY_050 = 10,
+  PRAY_075 = 15,
+  PRAY_100 = 20,
+  PRAY_150 = 30,
+  PRAY_200 = 40,
+  PRAY_250 = 50,
+  PRAY_300 = 60,
+  PRAY_350 = 75,
+  PRAY_400 = 80,
+  PRAY_450 = 90,
+  PRAY_500 = 100
 };
 
 enum symbolStressT {
-    SYMBOL_STRESS_0          = 0,
-    SYMBOL_STRESS_5         =  5,
-    SYMBOL_STRESS_10        = 10,
-    SYMBOL_STRESS_12      = 12,
-    SYMBOL_STRESS_15        = 15,
-    SYMBOL_STRESS_17        = 17,
-    SYMBOL_STRESS_18        = 18,
-    SYMBOL_STRESS_20        = 20,
-    SYMBOL_STRESS_24      = 24,
-    SYMBOL_STRESS_25        = 25,
-    SYMBOL_STRESS_30        = 30,
-    SYMBOL_STRESS_35        = 35,
-    SYMBOL_STRESS_36      = 36,
-    SYMBOL_STRESS_40        = 40,
-    SYMBOL_STRESS_45        = 45,
-    SYMBOL_STRESS_48      = 48,
-    SYMBOL_STRESS_50        = 50,
-    SYMBOL_STRESS_55        = 55,
-    SYMBOL_STRESS_60        = 60,
-    SYMBOL_STRESS_65        = 65,
-    SYMBOL_STRESS_70        = 70,
-    SYMBOL_STRESS_75        = 75,
-    SYMBOL_STRESS_80        = 80,
-    SYMBOL_STRESS_85        = 85,
-    SYMBOL_STRESS_90        = 90,
-    SYMBOL_STRESS_95        = 95,
-    SYMBOL_STRESS_100      = 100  // high
+  SYMBOL_STRESS_0 = 0,
+  SYMBOL_STRESS_5 = 5,
+  SYMBOL_STRESS_10 = 10,
+  SYMBOL_STRESS_12 = 12,
+  SYMBOL_STRESS_15 = 15,
+  SYMBOL_STRESS_17 = 17,
+  SYMBOL_STRESS_18 = 18,
+  SYMBOL_STRESS_20 = 20,
+  SYMBOL_STRESS_24 = 24,
+  SYMBOL_STRESS_25 = 25,
+  SYMBOL_STRESS_30 = 30,
+  SYMBOL_STRESS_35 = 35,
+  SYMBOL_STRESS_36 = 36,
+  SYMBOL_STRESS_40 = 40,
+  SYMBOL_STRESS_45 = 45,
+  SYMBOL_STRESS_48 = 48,
+  SYMBOL_STRESS_50 = 50,
+  SYMBOL_STRESS_55 = 55,
+  SYMBOL_STRESS_60 = 60,
+  SYMBOL_STRESS_65 = 65,
+  SYMBOL_STRESS_70 = 70,
+  SYMBOL_STRESS_75 = 75,
+  SYMBOL_STRESS_80 = 80,
+  SYMBOL_STRESS_85 = 85,
+  SYMBOL_STRESS_90 = 90,
+  SYMBOL_STRESS_95 = 95,
+  SYMBOL_STRESS_100 = 100  // high
 };
 
 enum discStartT {
@@ -465,37 +472,38 @@ class spellInfo {
     std::map<int, int> weatherData{};
 
     spellInfo() = default;
-    spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc, statTypeT modifierStat,
-      const char* name, taskDiffT task, lag_t lag, positionTypeT minPosition, manaCostT minMana,
-      lifeforceCostT minLifeforce, pietyCostT minPiety, uint32_t targets,
-      symbolStressT holyStrength, const char* fadeAway, const char* fadeAwayRoom,
-      const char* fadeAwaySoon, const char* fadeAwaySoonRoom, discStartT start, discLearnT learn,
-      discStartDoT startLearnDo, discLearnDoT amtLearnDo, discStartDoT secStartLearnDo,
-      discLearnDoT secAmtLearnDo, int learnDoDiff, float alignMod, uint32_t comp_types,
-      uint32_t toggle);
+    spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc,
+      statTypeT modifierStat, const char* name, taskDiffT task, lag_t lag,
+      positionTypeT minPosition, manaCostT minMana, lifeforceCostT minLifeforce,
+      pietyCostT minPiety, uint32_t targets, symbolStressT holyStrength,
+      const char* fadeAway, const char* fadeAwayRoom, const char* fadeAwaySoon,
+      const char* fadeAwaySoonRoom, discStartT start, discLearnT learn,
+      discStartDoT startLearnDo, discLearnDoT amtLearnDo,
+      discStartDoT secStartLearnDo, discLearnDoT secAmtLearnDo, int learnDoDiff,
+      float alignMod, uint32_t comp_types, uint32_t toggle);
 
     spellNumT getSpellNum() const;
 };
 
 struct attack_hit_type {
-  const char *singular;
-  const char *plural;
-  const char *hitting;
+    const char* singular;
+    const char* plural;
+    const char* hitting;
 };
 
-const int LEARN_DIFF_UNUSUAL  = -1;
-const int LEARN_DIFF_NORMAL    = 0;
-const int LEARN_DIFF_SPELLS    = 0;
-const int LEARN_DIFF_PRAYERS    = 0;
-const int LEARN_DIFF_SKILLS    = 0;
+const int LEARN_DIFF_UNUSUAL = -1;
+const int LEARN_DIFF_NORMAL = 0;
+const int LEARN_DIFF_SPELLS = 0;
+const int LEARN_DIFF_PRAYERS = 0;
+const int LEARN_DIFF_SKILLS = 0;
 
 struct PolyType {
-  const char * const name;
-  int  level;
-  int  learning;
-  int  number;
-  discNumT  discipline;
-  unsigned long int tRace;
+    const char* const name;
+    int level;
+    int learning;
+    int number;
+    discNumT discipline;
+    unsigned long int tRace;
 };
 
 extern spellInfo* discArray[MAX_SKILL + 1];

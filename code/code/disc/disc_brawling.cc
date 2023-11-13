@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "handler.h"
 #include "extern.h"
 #include "obj_base_weapon.h"
@@ -25,11 +24,9 @@ CDBrawling::CDBrawling() :
   skCloseQuartersFighting(),
   skTaunt(),
   skTrip(),
-  skAdvBerserk()
-{
-}
+  skAdvBerserk() {}
 
-CDBrawling::CDBrawling(const CDBrawling &a) :
+CDBrawling::CDBrawling(const CDBrawling& a) :
   CDiscipline(a),
   skGrapple(a.skGrapple),
   skStomp(a.skStomp),
@@ -41,13 +38,11 @@ CDBrawling::CDBrawling(const CDBrawling &a) :
   skCloseQuartersFighting(a.skCloseQuartersFighting),
   skTaunt(a.skTaunt),
   skTrip(a.skTrip),
-  skAdvBerserk(a.skAdvBerserk)
-{
-}
+  skAdvBerserk(a.skAdvBerserk) {}
 
-CDBrawling & CDBrawling::operator=(const CDBrawling &a)
-{
-  if (this == &a) return *this;
+CDBrawling& CDBrawling::operator=(const CDBrawling& a) {
+  if (this == &a)
+    return *this;
   CDiscipline::operator=(a);
   skGrapple = a.skGrapple;
   skStomp = a.skStomp;
@@ -63,18 +58,14 @@ CDBrawling & CDBrawling::operator=(const CDBrawling &a)
   return *this;
 }
 
-CDBrawling::~CDBrawling()
-{
-}
+CDBrawling::~CDBrawling() {}
 
-
-int TBeing::doTaunt(const sstring &arg)
-{
-  TBeing *victim;
+int TBeing::doTaunt(const sstring& arg) {
+  TBeing* victim;
   char name_buf[256];
-  
+
   strcpy(name_buf, arg.c_str());
-  
+
   if (!(victim = get_char_room_vis(this, name_buf))) {
     if (!(victim = fight())) {
       sendTo("Taunt whom?\n\r");
@@ -86,28 +77,28 @@ int TBeing::doTaunt(const sstring &arg)
     return FALSE;
   }
 
-  if(!doesKnowSkill(SKILL_TAUNT) ||
+  if (!doesKnowSkill(SKILL_TAUNT) ||
 
-     (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) ||
-     victim==this || noHarmCheck(victim) || checkBusy() ||
-     victim->isDumbAnimal() || !canSpeak() || victim != fight()){
+      (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) || victim == this ||
+      noHarmCheck(victim) || checkBusy() || victim->isDumbAnimal() ||
+      !canSpeak() || victim != fight()) {
     return doAction(arg, CMD_TAUNT);
   }
 
+  if (bSuccess(SKILL_TAUNT)) {
+    act("You taunt $N ruthlessly, drawing their ire.", FALSE, this, 0, victim,
+      TO_CHAR);
+    act("$n taunts you ruthlessly, drawing your ire.", FALSE, this, 0, victim,
+      TO_VICT);
+    act("$n taunts $N ruthlessly, drawing their ire.", FALSE, this, 0, victim,
+      TO_NOTVICT);
 
-  if(bSuccess(SKILL_TAUNT)){
-    act("You taunt $N ruthlessly, drawing their ire.",
-	FALSE, this, 0, victim, TO_CHAR);
-    act("$n taunts you ruthlessly, drawing your ire.",
-	FALSE, this, 0, victim, TO_VICT);
-    act("$n taunts $N ruthlessly, drawing their ire.",
-	FALSE, this, 0, victim, TO_NOTVICT);
-    
     affectedData af;
 
     af.type = SKILL_TAUNT;
     af.level = getSkillValue(SKILL_TAUNT);
-    af.duration = durationModify(SKILL_TAUNT, Pulse::COMBAT * ::number(1, (int)(af.level/10)));
+    af.duration = durationModify(SKILL_TAUNT,
+      Pulse::COMBAT * ::number(1, (int)(af.level / 10)));
     af.location = APPLY_NONE;
     af.modifier = 0;
     af.bitvector = 0;
@@ -115,12 +106,11 @@ int TBeing::doTaunt(const sstring &arg)
     victim->affectTo(&af, -1);
 
   } else {
-    act("You taunt yourself ruthlessly, confusing yourself.",
-	FALSE, this, 0, this, TO_CHAR);
-    act("$n taunts $mself ruthlessly, confusing $mself.",
-	FALSE, this, 0, this, TO_NOTVICT);
+    act("You taunt yourself ruthlessly, confusing yourself.", FALSE, this, 0,
+      this, TO_CHAR);
+    act("$n taunts $mself ruthlessly, confusing $mself.", FALSE, this, 0, this,
+      TO_NOTVICT);
   }
-
 
   return TRUE;
 }
@@ -171,14 +161,16 @@ namespace {
     int total = 0;
     for (const auto& skill : advancedBerserkSkills) {
       total += skill.weight;
-      if (roll <= total) return &skill;
+      if (roll <= total)
+        return &skill;
     }
     return nullptr;
   };
 
   const AdvancedBerserkSkill* findValidSkill(const TBeing* ch, const int roll) {
-    const auto *skill = whichSkill(roll);
-    if (!skill || !ch->doesKnowSkill(skill->skillNum)) return nullptr;
+    const auto* skill = whichSkill(roll);
+    if (!skill || !ch->doesKnowSkill(skill->skillNum))
+      return nullptr;
     return skill->canUseSkill(ch) ? skill
                                   : findValidSkill(ch, ::number(1, roll_range));
   }
@@ -205,12 +197,14 @@ int TBeing::doAdvancedBerserk(TBeing* target) {
       percentChance(bloodlust_chance_per_round))
     doBloodlust();
 
-  if (!percentChance(skill_chance_per_round)) return false;
+  if (!percentChance(skill_chance_per_round))
+    return false;
 
   const AdvancedBerserkSkill* which =
     findValidSkill(this, ::number(1, roll_range));
 
-  if (!which) return false;
+  if (!which)
+    return false;
 
   act(toChar, false, this, nullptr, nullptr, TO_CHAR);
   act(toRoom, false, this, nullptr, nullptr, TO_ROOM);

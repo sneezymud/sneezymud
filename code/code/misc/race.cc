@@ -15,54 +15,143 @@
 #include "obj_corpse.h"
 #include "garble.h"
 
+const char* RaceNames[MAX_RACIAL_TYPES] = {
+  "RACE_NORACE",
+  "RACE_HUMAN",
+  "RACE_ELVEN",
+  "RACE_DWARF",
+  "RACE_HOBBIT",
+  "RACE_GNOME",
+  "RACE_OGRE",
 
-const char * RaceNames[MAX_RACIAL_TYPES] = {
-  "RACE_NORACE", "RACE_HUMAN", "RACE_ELVEN", "RACE_DWARF", "RACE_HOBBIT",
-  "RACE_GNOME", "RACE_OGRE",
+  /* end of player races */
 
-/* end of player races */
-
-  "RACE_PEGASUS", "RACE_LYCANTH", "RACE_DRAGON", "RACE_UNDEAD", "RACE_ORC",
-  "RACE_INSECT", "RACE_ARACHNID", "RACE_DINOSAUR", "RACE_FISH","RACE_BIRD",
-  "RACE_GIANT", "RACE_BIRDMAN", "RACE_PARASITE","RACE_SLIME", "RACE_DEMON",
-  "RACE_SNAKE", "RACE_HIPPOPOTAMUS", "RACE_TREE", "RACE_VEGGIE", "RACE_ELEMENT",
-  "RACE_ANT", "RACE_DEVIL", "RACE_FROGMAN", "RACE_GOBLIN", "RACE_TROLL",
-  "RACE_ANGEL", "RACE_MFLAYER", "RACE_PRIMATE", "RACE_FAERIE", "RACE_DROW",
-  "RACE_GOLEM", "RACE_BANSHEE", "RACE_PANTATH", "RACE_MERMAID", "RACE_RODENT",
-  "RACE_FISHMAN", "RACE_TYTAN", "RACE_WOODELF", "RACE_FELINE", "RACE_CANINE",
-  "RACE_HORSE", "RACE_AMPHIB", "RACE_VAMPIRE", "RACE_REPTILE", "RACE_UNCERT",
-  "RACE_VAMPIREBAT", "RACE_OCTOPUS", "RACE_CRUSTACEAN", "RACE_MOSS", "RACE_BOVINE",
-  "RACE_GOAT", "RACE_SHEEP", "RACE_DEER", "RACE_BEAR", "RACE_WEASEL",
-  "RACE_SQUIRREL", "RACE_RABBIT", "RACE_BADGER", "RACE_OTTER", "RACE_BEAVER",
-  "RACE_PIG", "RACE_BOAR", "RACE_TURTLE", "RACE_GIRAFFE", "RACE_CENTIPEDE",
-  "RACE_MOUND", "RACE_PIERCER", "RACE_ORB", "RACE_MANTICORE", "RACE_GRIFFON",
-  "RACE_SPHINX", "RACE_SHEDU", "RACE_LAMMASU", "RACE_DJINN", "RACE_PHOENIX",
-  "RACE_DRAGONNE", "RACE_HIPPOGRIFF", "RACE_RUST_MON", "RACE_LION",
-  "RACE_TIGER", "RACE_LEOPARD", "RACE_COUGAR", "RACE_FROG", "RACE_ELEPHANT",
-  "RACE_RHINO", "RACE_NAGA", "RACE_OTYUGH", "RACE_OX", "RACE_GREMLIN",
-  "RACE_OWLBEAR", "RACE_CHIMERA", "RACE_SATYR", "RACE_DRYAD", "RACE_BUGBEAR",
-  "RACE_MINOTAUR", "RACE_GORGON", "RACE_KOBOLD", "RACE_BASILISK",
-  "RACE_LIZARD_MAN", "RACE_CENTAUR", "RACE_GOPHER", "RACE_LAMIA",
-  "RACE_SAHUAGIN", "RACE_BAT", "RACE_PYGMY", "RACE_WYVERN", "RACE_KUOTOA",
-  "RACE_BAANTA", "RACE_GNOLL", "RACE_HOBGOBLIN", "RACE_MIMIC", "RACE_MEDUSA",
-  "RACE_PENGUIN", "RACE_OSTRICH", "RACE_TROG", "RACE_COATL", "RACE_SIMAL",
-  "RACE_WYVELIN", "RACE_FLYINSECT", "RACE_RATMAN",
+  "RACE_PEGASUS",
+  "RACE_LYCANTH",
+  "RACE_DRAGON",
+  "RACE_UNDEAD",
+  "RACE_ORC",
+  "RACE_INSECT",
+  "RACE_ARACHNID",
+  "RACE_DINOSAUR",
+  "RACE_FISH",
+  "RACE_BIRD",
+  "RACE_GIANT",
+  "RACE_BIRDMAN",
+  "RACE_PARASITE",
+  "RACE_SLIME",
+  "RACE_DEMON",
+  "RACE_SNAKE",
+  "RACE_HIPPOPOTAMUS",
+  "RACE_TREE",
+  "RACE_VEGGIE",
+  "RACE_ELEMENT",
+  "RACE_ANT",
+  "RACE_DEVIL",
+  "RACE_FROGMAN",
+  "RACE_GOBLIN",
+  "RACE_TROLL",
+  "RACE_ANGEL",
+  "RACE_MFLAYER",
+  "RACE_PRIMATE",
+  "RACE_FAERIE",
+  "RACE_DROW",
+  "RACE_GOLEM",
+  "RACE_BANSHEE",
+  "RACE_PANTATH",
+  "RACE_MERMAID",
+  "RACE_RODENT",
+  "RACE_FISHMAN",
+  "RACE_TYTAN",
+  "RACE_WOODELF",
+  "RACE_FELINE",
+  "RACE_CANINE",
+  "RACE_HORSE",
+  "RACE_AMPHIB",
+  "RACE_VAMPIRE",
+  "RACE_REPTILE",
+  "RACE_UNCERT",
+  "RACE_VAMPIREBAT",
+  "RACE_OCTOPUS",
+  "RACE_CRUSTACEAN",
+  "RACE_MOSS",
+  "RACE_BOVINE",
+  "RACE_GOAT",
+  "RACE_SHEEP",
+  "RACE_DEER",
+  "RACE_BEAR",
+  "RACE_WEASEL",
+  "RACE_SQUIRREL",
+  "RACE_RABBIT",
+  "RACE_BADGER",
+  "RACE_OTTER",
+  "RACE_BEAVER",
+  "RACE_PIG",
+  "RACE_BOAR",
+  "RACE_TURTLE",
+  "RACE_GIRAFFE",
+  "RACE_CENTIPEDE",
+  "RACE_MOUND",
+  "RACE_PIERCER",
+  "RACE_ORB",
+  "RACE_MANTICORE",
+  "RACE_GRIFFON",
+  "RACE_SPHINX",
+  "RACE_SHEDU",
+  "RACE_LAMMASU",
+  "RACE_DJINN",
+  "RACE_PHOENIX",
+  "RACE_DRAGONNE",
+  "RACE_HIPPOGRIFF",
+  "RACE_RUST_MON",
+  "RACE_LION",
+  "RACE_TIGER",
+  "RACE_LEOPARD",
+  "RACE_COUGAR",
+  "RACE_FROG",
+  "RACE_ELEPHANT",
+  "RACE_RHINO",
+  "RACE_NAGA",
+  "RACE_OTYUGH",
+  "RACE_OX",
+  "RACE_GREMLIN",
+  "RACE_OWLBEAR",
+  "RACE_CHIMERA",
+  "RACE_SATYR",
+  "RACE_DRYAD",
+  "RACE_BUGBEAR",
+  "RACE_MINOTAUR",
+  "RACE_GORGON",
+  "RACE_KOBOLD",
+  "RACE_BASILISK",
+  "RACE_LIZARD_MAN",
+  "RACE_CENTAUR",
+  "RACE_GOPHER",
+  "RACE_LAMIA",
+  "RACE_SAHUAGIN",
+  "RACE_BAT",
+  "RACE_PYGMY",
+  "RACE_WYVERN",
+  "RACE_KUOTOA",
+  "RACE_BAANTA",
+  "RACE_GNOLL",
+  "RACE_HOBGOBLIN",
+  "RACE_MIMIC",
+  "RACE_MEDUSA",
+  "RACE_PENGUIN",
+  "RACE_OSTRICH",
+  "RACE_TROG",
+  "RACE_COATL",
+  "RACE_SIMAL",
+  "RACE_WYVELIN",
+  "RACE_FLYINSECT",
+  "RACE_RATMAN",
 };
 
-const char * const Lores[MAX_LORES] =
-{
-  "ANIMAL",
-  "VEGGIE",
-  "DIABOLIC",
-  "REPTILE",
-  "UNDEAD",
-  "GIANT",
-  "PEOPLE",
-  "OTHER"
-};
+const char* const Lores[MAX_LORES] = {"ANIMAL", "VEGGIE", "DIABOLIC", "REPTILE",
+  "UNDEAD", "GIANT", "PEOPLE", "OTHER"};
 
-const char * const talents[MAX_TALENTS] =
-{
+const char* const talents[MAX_TALENTS] = {
   "fast_regen",
   "fish_eater",
   "meat_eater",
@@ -74,12 +163,11 @@ const char * const talents[MAX_TALENTS] =
   "musk",
 };
 
-Race *Races[MAX_RACIAL_TYPES];
+Race* Races[MAX_RACIAL_TYPES];
 
 // listRaces() prints out a formatted list of all the races with their index
 // as part of the 'show race' command.
-void listRaces(TBeing *caller)
-{
+void listRaces(TBeing* caller) {
   if (!caller->desc)
     return;
 
@@ -88,11 +176,10 @@ void listRaces(TBeing *caller)
 
   sprintf(buf + strlen(buf), "Valid Races\n\r");
   sprintf(buf + strlen(buf), "-----------\n\r");
-  for(race_t race = RACE_NORACE; race < MAX_RACIAL_TYPES; race++) {
-
+  for (race_t race = RACE_NORACE; race < MAX_RACIAL_TYPES; race++) {
     // Format to 3 columns.
-    sprintf(buf + strlen(buf), "%3d %-15s%s", race, RaceNames[race], (race%3 ? "\t" : "\n\r"));
-
+    sprintf(buf + strlen(buf), "%3d %-15s%s", race, RaceNames[race],
+      (race % 3 ? "\t" : "\n\r"));
   }
   caller->desc->page_string(buf);
 }
@@ -139,9 +226,8 @@ Race::Race(race_t aRace) :
   bodyType(BODY_HUMANOID),
   naturalImmunities(),
   baseStats(),
-  tDissectItem()
-{
-  initRace(RaceNames[aRace]);   // reads in the appropriate race file.
+  tDissectItem() {
+  initRace(RaceNames[aRace]);  // reads in the appropriate race file.
 }
 
 Race::Race() :
@@ -182,12 +268,11 @@ Race::Race() :
   moveMessageOut("leaves"),
   bodyType(BODY_HUMANOID),
   naturalImmunities(),
-  baseStats()
-{
+  baseStats() {
   initRace("RACE_HUMAN");
 }
 
-Race::Race(const Race &a) :
+Race::Race(const Race& a) :
   corpse_const(a.corpse_const),
   singular_name(a.singular_name),
   plural_name(a.plural_name),
@@ -224,16 +309,15 @@ Race::Race(const Race &a) :
   moveMessageOut(a.moveMessageOut),
   bodyType(a.bodyType),
   naturalImmunities(a.naturalImmunities),
-  baseStats(a.baseStats)
-{
+  baseStats(a.baseStats) {
   // copy racial toggles
-  for(cToggles = 0;a.cToggles && cToggles < a.cToggles; cToggles++)
+  for (cToggles = 0; a.cToggles && cToggles < a.cToggles; cToggles++)
     toggles[cToggles] = a.toggles[cToggles];
 }
 
-Race & Race::operator=(const Race &a)
-{
-  if (this == &a) return *this;
+Race& Race::operator=(const Race& a) {
+  if (this == &a)
+    return *this;
 
   corpse_const = a.corpse_const;
   singular_name = a.singular_name;
@@ -274,30 +358,27 @@ Race & Race::operator=(const Race &a)
   garbles = a.garbles;
 
   // copy racial toggles
-  for(cToggles = 0;a.cToggles && cToggles < a.cToggles; cToggles++)
+  for (cToggles = 0; a.cToggles && cToggles < a.cToggles; cToggles++)
     toggles[cToggles] = a.toggles[cToggles];
 
   return *this;
 }
 
-Race::~Race()
-{
-}
+Race::~Race() {}
 
 // initRace() takes in a race name and finds the appropriate file in
 // /mud/code/lib/races, parses each line and initializes the object
 // with the information.  Specific keywords are searched for, so the
 // file can contain generic notes that won't affect initialization.
 
-void Race::initRace(const char *whichRace)
-{
+void Race::initRace(const char* whichRace) {
   char keyword[256], value[256];
   char buf[256];
   char aFilename[256];
-  FILE * raceFile;
+  FILE* raceFile;
 
   sprintf(aFilename, "races/%s", whichRace);
-  vlogf(LOG_FILE, format("initRace races/%s") %  whichRace);
+  vlogf(LOG_FILE, format("initRace races/%s") % whichRace);
 
   raceFile = fopen(aFilename, "r");
   if (!raceFile) {
@@ -310,8 +391,8 @@ void Race::initRace(const char *whichRace)
   // into the appropriate data member.
   // COSMO STRING
   sstring buf_sstring;
-  const char *buf2;
-  
+  const char* buf2;
+
   while (fgets(buf, 256, raceFile)) {
     buf2 = one_argument(buf, keyword, cElements(keyword));
     memmove(buf, buf2, strlen(buf2) + 1);
@@ -324,7 +405,7 @@ void Race::initRace(const char *whichRace)
       buf_sstring.erase(end_whitespace);
     trimString(buf_sstring);
 
-    //Names
+    // Names
     if (!strcasecmp(keyword, "singname")) {
       singular_name = buf_sstring;
     } else if (!strcasecmp(keyword, "plurname")) {
@@ -333,27 +414,28 @@ void Race::initRace(const char *whichRace)
       proper_name = buf_sstring;
     }
 
-    //Lore
+    // Lore
     else if (!strcasecmp(keyword, "lore")) {
       one_argument(buf, value, cElements(value));
       if (!strcasecmp(value, "animal"))
-	Kingdom = LORE_ANIMAL;
+        Kingdom = LORE_ANIMAL;
       else if (!strcasecmp(value, "veggie"))
-	Kingdom = LORE_VEGGIE;
+        Kingdom = LORE_VEGGIE;
       else if (!strcasecmp(value, "diabolic"))
-	Kingdom = LORE_DIABOLIC;
+        Kingdom = LORE_DIABOLIC;
       else if (!strcasecmp(value, "reptile"))
-	Kingdom = LORE_REPTILE;
+        Kingdom = LORE_REPTILE;
       else if (!strcasecmp(value, "undead"))
-	Kingdom = LORE_UNDEAD;
+        Kingdom = LORE_UNDEAD;
       else if (!strcasecmp(value, "giant"))
-	Kingdom = LORE_GIANT;
+        Kingdom = LORE_GIANT;
       else if (!strcasecmp(value, "people"))
-	Kingdom = LORE_PEOPLE;
+        Kingdom = LORE_PEOPLE;
       else if (!strcasecmp(value, "other"))
-	Kingdom = LORE_OTHER;
+        Kingdom = LORE_OTHER;
       else {
-        vlogf(LOG_LOW, format("Bad lore %s, defined for %s") %  value % whichRace);
+        vlogf(LOG_LOW,
+          format("Bad lore %s, defined for %s") % value % whichRace);
         Kingdom = LORE_PEOPLE;
       }
     }
@@ -361,9 +443,8 @@ void Race::initRace(const char *whichRace)
     // talents
     else if (!strcasecmp(keyword, "talent")) {
       one_argument(buf, value, cElements(value));
-      for(unsigned int iTalent=0; iTalent < MAX_TALENTS; iTalent++)
-        if (!strcasecmp(value, ::talents[iTalent]))
-        {
+      for (unsigned int iTalent = 0; iTalent < MAX_TALENTS; iTalent++)
+        if (!strcasecmp(value, ::talents[iTalent])) {
           addToTalents(1 << iTalent);
           break;
         }
@@ -373,7 +454,7 @@ void Race::initRace(const char *whichRace)
       one_argument(buf, value, cElements(value));
       int iGarble = convertTo<int>(value);
       if (iGarble >= 0 && iGarble < Garble::TYPE_MAX)
-        garbles |= (1<<iGarble);
+        garbles |= (1 << iGarble);
     }
     // toggles
     else if (!strcasecmp(keyword, "toggle")) {
@@ -384,39 +465,34 @@ void Race::initRace(const char *whichRace)
     }
 
     // Dimensional stuff.  Used to set individual values later.
-    else if (!strcasecmp(keyword,  "age")) {
-      if (sscanf(buf, " %d+%dd%d",
-         &baseAge, &ageNumDice, &ageDieSize) != 3) {
-        vlogf(LOG_LOW, format("Bad format for age on %s") %  whichRace);
+    else if (!strcasecmp(keyword, "age")) {
+      if (sscanf(buf, " %d+%dd%d", &baseAge, &ageNumDice, &ageDieSize) != 3) {
+        vlogf(LOG_LOW, format("Bad format for age on %s") % whichRace);
       }
-    }
-    else if (!strcasecmp(keyword,  "maleht")) {
-      if (sscanf(buf, " %d+%dd%d",
-         &baseMaleHeight, &maleHtNumDice, &maleHtDieSize) != 3) {
-        vlogf(LOG_LOW, format("Bad format for male height on %s") %  whichRace);
+    } else if (!strcasecmp(keyword, "maleht")) {
+      if (sscanf(buf, " %d+%dd%d", &baseMaleHeight, &maleHtNumDice,
+            &maleHtDieSize) != 3) {
+        vlogf(LOG_LOW, format("Bad format for male height on %s") % whichRace);
       }
-    }
-    else if (!strcasecmp(keyword,  "femaleht")) {
-      if (sscanf(buf, " %d+%dd%d",
-         &baseFemaleHeight, &femaleHtNumDice, &femaleHtDieSize) != 3) {
-        vlogf(LOG_LOW, format("Bad format for female height on %s") %  whichRace);
+    } else if (!strcasecmp(keyword, "femaleht")) {
+      if (sscanf(buf, " %d+%dd%d", &baseFemaleHeight, &femaleHtNumDice,
+            &femaleHtDieSize) != 3) {
+        vlogf(LOG_LOW,
+          format("Bad format for female height on %s") % whichRace);
       }
-    }
-    else if (!strcasecmp(keyword,  "malewt")) {
-      if (sscanf(buf, " %d+%dd%d",
-         &baseMaleWeight, &maleWtNumDice, &maleWtDieSize) != 3) {
-        vlogf(LOG_LOW, format("Bad format for male weight on %s") %  whichRace);
+    } else if (!strcasecmp(keyword, "malewt")) {
+      if (sscanf(buf, " %d+%dd%d", &baseMaleWeight, &maleWtNumDice,
+            &maleWtDieSize) != 3) {
+        vlogf(LOG_LOW, format("Bad format for male weight on %s") % whichRace);
       }
-    }
-    else if (!strcasecmp(keyword,  "femalewt")) {
-      if (sscanf(buf, " %d+%dd%d",
-         &baseFemaleWeight, &femaleWtNumDice, &femaleWtDieSize) != 3) {
-        vlogf(LOG_LOW, format("Bad format for male weight on %s") %  whichRace);
+    } else if (!strcasecmp(keyword, "femalewt")) {
+      if (sscanf(buf, " %d+%dd%d", &baseFemaleWeight, &femaleWtNumDice,
+            &femaleWtDieSize) != 3) {
+        vlogf(LOG_LOW, format("Bad format for male weight on %s") % whichRace);
       }
-    }
-    else if (!strcasecmp(keyword,  "corpse")) {
+    } else if (!strcasecmp(keyword, "corpse")) {
       if (sscanf(buf, " %f", &corpse_const) != 1) {
-        vlogf(LOG_LOW, format("Bad format for corpse const on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Bad format for corpse const on %s") % whichRace);
       }
     }
 
@@ -462,9 +538,9 @@ void Race::initRace(const char *whichRace)
 
     // Movement Messages
     else if (!strcasecmp(keyword, "movein"))
-      moveMessageIn=buf_sstring;
+      moveMessageIn = buf_sstring;
     else if (!strcasecmp(keyword, "moveout"))
-      moveMessageOut=buf_sstring;
+      moveMessageOut = buf_sstring;
 
     // Body stuff
     else if (!strcasecmp(keyword, "body")) {
@@ -590,11 +666,10 @@ void Race::initRace(const char *whichRace)
       else if (!strcasecmp(value, "fishman"))
         bodyType = BODY_FISHMAN;
       else {
-        vlogf(LOG_LOW, format("Unknown body on %s") %  whichRace);
+        vlogf(LOG_LOW, format("Unknown body on %s") % whichRace);
         bodyType = BODY_HUMANOID;
       }
     }
-
 #if 1
     // Build the natural immunity list.
     else if (!strncasecmp(keyword, "immune", 6)) {
@@ -606,38 +681,34 @@ void Race::initRace(const char *whichRace)
     else if (!strcasecmp(keyword, "str"))
       baseStats.set(STAT_STR, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "bra"))
-      baseStats.set(STAT_BRA,convertTo<int>(buf));
+      baseStats.set(STAT_BRA, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "con"))
-      baseStats.set(STAT_CON,convertTo<int>(buf));
+      baseStats.set(STAT_CON, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "dex"))
-      baseStats.set(STAT_DEX,convertTo<int>(buf));
+      baseStats.set(STAT_DEX, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "agi"))
-      baseStats.set(STAT_AGI,convertTo<int>(buf));
+      baseStats.set(STAT_AGI, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "int"))
-      baseStats.set(STAT_INT,convertTo<int>(buf));
+      baseStats.set(STAT_INT, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "wis"))
-      baseStats.set(STAT_WIS,convertTo<int>(buf));
+      baseStats.set(STAT_WIS, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "foc"))
-      baseStats.set(STAT_FOC,convertTo<int>(buf));
+      baseStats.set(STAT_FOC, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "per"))
-      baseStats.set(STAT_PER,convertTo<int>(buf));
+      baseStats.set(STAT_PER, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "cha"))
-      baseStats.set(STAT_CHA,convertTo<int>(buf));
-    else if (!strcasecmp(keyword, "kar") )
-      baseStats.set(STAT_KAR,convertTo<int>(buf));
+      baseStats.set(STAT_CHA, convertTo<int>(buf));
+    else if (!strcasecmp(keyword, "kar"))
+      baseStats.set(STAT_KAR, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "spe"))
-      baseStats.set(STAT_SPE,convertTo<int>(buf));
+      baseStats.set(STAT_SPE, convertTo<int>(buf));
     else if (!strcasecmp(keyword, "DISSECT_INFO")) {
       if (!tDissectItem[0].loadItem)
-        sscanf(buf, " %d %d %d",
-               &tDissectItem[0].loadItem,
-               &tDissectItem[0].count,
-               &tDissectItem[0].amount);
+        sscanf(buf, " %d %d %d", &tDissectItem[0].loadItem,
+          &tDissectItem[0].count, &tDissectItem[0].amount);
       else
-        sscanf(buf, " %d %d %d",
-               &tDissectItem[1].loadItem,
-               &tDissectItem[1].count,
-               &tDissectItem[1].amount);
+        sscanf(buf, " %d %d %d", &tDissectItem[1].loadItem,
+          &tDissectItem[1].count, &tDissectItem[1].amount);
     } else if (!strcasecmp(keyword, "DISSECT_MSGA")) {
       if (tDissectItem[0].message_to_self.empty())
         tDissectItem[0].message_to_self = buf_sstring;
@@ -650,39 +721,34 @@ void Race::initRace(const char *whichRace)
         tDissectItem[1].message_to_others = buf_sstring;
     }
   }
-// COSMO STRING
-//  delete buf_sstring;
+  // COSMO STRING
+  //  delete buf_sstring;
   fclose(raceFile);
   //  vlogf(LOG_FILE, "Racefile fclose.");
-
 }
 
-int Race::getMinWeight(sexTypeT sex) const
-{
-  if(sex==SEX_MALE){
-    return(baseMaleWeight + maleWtNumDice);
-  } else if(sex==SEX_FEMALE){
-    return(baseFemaleWeight + femaleWtNumDice);
+int Race::getMinWeight(sexTypeT sex) const {
+  if (sex == SEX_MALE) {
+    return (baseMaleWeight + maleWtNumDice);
+  } else if (sex == SEX_FEMALE) {
+    return (baseFemaleWeight + femaleWtNumDice);
   }
   return 0;
 }
 
-int Race::getMaxWeight(sexTypeT sex) const
-{
-  if(sex==SEX_MALE){
-    return(baseMaleWeight + (maleWtNumDice * maleWtDieSize));
-  } else if(sex==SEX_FEMALE){
-    return(baseFemaleWeight + (femaleWtNumDice * femaleWtDieSize));
+int Race::getMaxWeight(sexTypeT sex) const {
+  if (sex == SEX_MALE) {
+    return (baseMaleWeight + (maleWtNumDice * maleWtDieSize));
+  } else if (sex == SEX_FEMALE) {
+    return (baseFemaleWeight + (femaleWtNumDice * femaleWtDieSize));
   }
   return 0;
 }
-
 
 // showTo() is called by immortal.cc's doShow command.  It takes a single
 // argument which is a pointer to the person who called the show command.
 
-void Race::showTo(TBeing *caller)
-{
+void Race::showTo(TBeing* caller) {
   char buf[256];
   sstring str;
 
@@ -710,27 +776,25 @@ void Race::showTo(TBeing *caller)
   str += buf;
 
   str += "Male Dimensions:    ";
-  sprintf(buf, "Height: %d+%dd%d\tWeight: %d+%dd%d\n\r",
-		    baseMaleHeight, maleHtNumDice, maleHtDieSize,
-		    baseMaleWeight, maleWtNumDice, maleWtDieSize);
+  sprintf(buf, "Height: %d+%dd%d\tWeight: %d+%dd%d\n\r", baseMaleHeight,
+    maleHtNumDice, maleHtDieSize, baseMaleWeight, maleWtNumDice, maleWtDieSize);
   str += buf;
 
   str += "Female Dimensions:  ";
-  sprintf(buf, "Height: %d+%dd%d\tWeight: %d+%dd%d\n\r",
-		    baseFemaleHeight, femaleHtNumDice, femaleHtDieSize,
-		    baseFemaleWeight, femaleWtNumDice, femaleWtDieSize);
+  sprintf(buf, "Height: %d+%dd%d\tWeight: %d+%dd%d\n\r", baseFemaleHeight,
+    femaleHtNumDice, femaleHtDieSize, baseFemaleWeight, femaleWtNumDice,
+    femaleWtDieSize);
   str += buf;
 
   str += "Modifiers:\n\r";
   sprintf(buf, "\tHP:\t%d\tMV:\t%d\tMANA:\t%d\n\r", hpMod, moveMod, manaMod);
   str += buf;
 
-  sprintf(buf, "\tSearch:\t%d\tSight:\t%d\tVision:\t%d\n\r", 
-        searchMod, lineOfSightMod, visionBonus);
+  sprintf(buf, "\tSearch:\t%d\tSight:\t%d\tVision:\t%d\n\r", searchMod,
+    lineOfSightMod, visionBonus);
   str += buf;
 
-  sprintf(buf, "\tDrink:\t%.2f\tFood:\t%.2f\n\r", 
-	  	    drinkMod, foodMod);
+  sprintf(buf, "\tDrink:\t%.2f\tFood:\t%.2f\n\r", drinkMod, foodMod);
   str += buf;
 
   str += sstring("Move In: ") + moveMessageIn + sstring("\n\r");
@@ -740,35 +804,35 @@ void Race::showTo(TBeing *caller)
   str += sstring(", pierce: ") + getBodyLimbPierce(NULL);
   str += sstring(", blunt: ") + getBodyLimbBlunt() + sstring("\n\r");
 
-  if(isDumbAnimal())
+  if (isDumbAnimal())
     str += "CHARACTERISTIC: \tDUMB_ANIMAL\n\r";
-  if(hasNoBones())
+  if (hasNoBones())
     str += "CHARACTERISTIC: \tNO_BONES\n\r";
-  if(hasMagicFly())
+  if (hasMagicFly())
     str += "CHARACTERISTIC: \tMAGICFLY\n\r";
-  if(hasNaturalClimb())
+  if (hasNaturalClimb())
     str += "CHARACTERISTIC: \tCLIMBER\n\r";
-  if(isHumanoid())
+  if (isHumanoid())
     str += "CHARACTERISTIC: \tHUMANOID\n\r";
-  if(isExtraPlanar())
+  if (isExtraPlanar())
     str += "CHARACTERISTIC: \tEXTRAPLANAR\n\r";
-  if(isAquatic())
+  if (isAquatic())
     str += "CHARACTERISTIC: \tAQUATIC\n\r";
-  if(isFourLegged())
+  if (isFourLegged())
     str += "CHARACTERISTIC: \tFOURLEGGED\n\r";
-  if(isWinged())
+  if (isWinged())
     str += "CHARACTERISTIC: \tWINGED\n\r";
-  if(isColdBlooded())
+  if (isColdBlooded())
     str += "CHARACTERISTIC: \tCOLDBLOODED\n\r";
-  if(isRidable())
+  if (isRidable())
     str += "CHARACTERISTIC: \tRIDABLE\n\r";
 
   // talent handling
   unsigned int i;
   for (i = 0; i < MAX_TALENTS; i++) {
-    if (hasTalent(1<<i)) {
+    if (hasTalent(1 << i)) {
       sprintf(buf, "TALENT: \t%s\n\r", ::talents[i]);
-      str+= buf;
+      str += buf;
     }
   }
 
@@ -790,59 +854,52 @@ void Race::showTo(TBeing *caller)
 // initNoRace() just dumps in bogus information and zeros out racial
 // statistics.  I guess I did this here since two constructors call it.
 
-void Race::initNoRace()
-{
-}
+void Race::initNoRace() {}
 
 // generateHeight() calculates a height for a being based on race and the
 // numbers read in at initialization for the race.  This is called upon
 // character creation.  Hopefully mob creation will call this too.
 
-int Race::generateHeight(sexTypeT sex) const
-{
+int Race::generateHeight(sexTypeT sex) const {
   if (sex == SEX_FEMALE)
-    return baseFemaleHeight + (dice(femaleHtNumDice,femaleHtDieSize));
+    return baseFemaleHeight + (dice(femaleHtNumDice, femaleHtDieSize));
   else
-    return baseMaleHeight + (dice(maleHtNumDice,maleHtDieSize));
+    return baseMaleHeight + (dice(maleHtNumDice, maleHtDieSize));
 }
-  
+
 // generateWeight() calculates a weight for a being based on race and the
 // numbers read in at initialization for the race.  This is called upon
 // character creation.  Hopefully mob creation will call this too.
 
-int Race::generateWeight(sexTypeT sex) const
-{
-  if(sex == SEX_FEMALE)
-    return baseFemaleWeight + (dice(femaleWtNumDice,femaleWtDieSize));
+int Race::generateWeight(sexTypeT sex) const {
+  if (sex == SEX_FEMALE)
+    return baseFemaleWeight + (dice(femaleWtNumDice, femaleWtDieSize));
   else
-    return baseMaleWeight + (dice(maleWtNumDice,maleWtDieSize));
+    return baseMaleWeight + (dice(maleWtNumDice, maleWtDieSize));
 }
 
 // generateAge() calculates an age for a being based on race and the
 // numbers read in at initialization for the race.  This is called upon
 // character creation.  Hopefully mob creation will call this too.
 
-int Race::generateAge() const
-{
-  return baseAge + (dice(ageNumDice,ageDieSize));
+int Race::generateAge() const {
+  return baseAge + (dice(ageNumDice, ageDieSize));
 };
 
 // makeCorpse() should be called by TBeing::makeCorpse().  Right now, it
 // doesn't do much other than setting the corpse race.  We may do more with
 // it once we figure out how we are going to save corpses for silly mortals.
 
-TCorpse *Race::makeCorpse() const
-{
-  TCorpse *corpse = new TCorpse();
+TCorpse* Race::makeCorpse() const {
+  TCorpse* corpse = new TCorpse();
 
   corpse->setCorpseRace(getRace());
   return corpse;
 }
 
-TPCorpse *Race::makePCorpse() const
-{
-  TObj *obj = read_object(10558, VIRTUAL);
-  TPCorpse *corpse = dynamic_cast<TPCorpse *>(obj);
+TPCorpse* Race::makePCorpse() const {
+  TObj* obj = read_object(10558, VIRTUAL);
+  TPCorpse* corpse = dynamic_cast<TPCorpse*>(obj);
 
   if (corpse) {
 #if 0
@@ -856,7 +913,7 @@ TPCorpse *Race::makePCorpse() const
 #endif
   } else {
     corpse = NULL;
-    vlogf(LOG_BUG,"Problem in making corpses in makePCorpse");
+    vlogf(LOG_BUG, "Problem in making corpses in makePCorpse");
   }
   return corpse;
 }
@@ -864,38 +921,28 @@ TPCorpse *Race::makePCorpse() const
 // getRaceIndex() takes a Race name and generates its index in the
 // Races array.
 
-race_t TBeing::getRaceIndex(const char *ccName) const
-{
-  for(race_t index=RACE_NORACE;index < MAX_RACIAL_TYPES; index++)
-    if(!strcmp(ccName, RaceNames[index]))
+race_t TBeing::getRaceIndex(const char* ccName) const {
+  for (race_t index = RACE_NORACE; index < MAX_RACIAL_TYPES; index++)
+    if (!strcmp(ccName, RaceNames[index]))
       return index;
   return RACE_NORACE;
 }
 
-race_t TBeing::getRace() const
-{
-  //  if (is_disguised == TRUE && disguise_race) 
+race_t TBeing::getRace() const {
+  //  if (is_disguised == TRUE && disguise_race)
   //  return disguise_race->getRace();
   return race->getRace();
 }
 
-Race * TBeing::getMyRace() const
-{
-  return race;
-}
+Race* TBeing::getMyRace() const { return race; }
 
-bool TBeing::isSameRace(const TBeing *ch) const
-{
+bool TBeing::isSameRace(const TBeing* ch) const {
   return (getRace() == ch->getRace());
 }
 
-const Stats & Race::getBaseStats() const
-{
-  return baseStats;
-}
+const Stats& Race::getBaseStats() const { return baseStats; }
 
-const sstring Race::getBodyLimbBlunt() const
-{
+const sstring Race::getBodyLimbBlunt() const {
   switch (bodyType) {
     case BODY_AMPHIBEAN:
       return "leg";
@@ -980,12 +1027,10 @@ const sstring Race::getBodyLimbBlunt() const
   return "";
 }
 
-const sstring Race::getBodyLimbPierce(TBeing *tb) const
-{
-  if(tb &&
-     (tb->hasQuestBit(TOG_HOOK_HAND_R) || tb->hasQuestBit(TOG_HOOK_HAND_L)))
+const sstring Race::getBodyLimbPierce(TBeing* tb) const {
+  if (tb &&
+      (tb->hasQuestBit(TOG_HOOK_HAND_R) || tb->hasQuestBit(TOG_HOOK_HAND_L)))
     return "hook";
-
 
   switch (bodyType) {
     case BODY_DEMON:
@@ -1065,8 +1110,7 @@ const sstring Race::getBodyLimbPierce(TBeing *tb) const
   return "";
 }
 
-const sstring Race::getBodyLimbSlash() const
-{
+const sstring Race::getBodyLimbSlash() const {
   switch (bodyType) {
     case BODY_OCTOPUS:
       return "suckers";
@@ -1140,280 +1184,131 @@ const sstring Race::getBodyLimbSlash() const
   return "";
 }
 
-race_t & operator++(race_t &c, int)
-{
-  return c = (c == MAX_RACIAL_TYPES) ? RACE_NORACE : race_t(c+1);
+race_t& operator++(race_t& c, int) {
+  return c = (c == MAX_RACIAL_TYPES) ? RACE_NORACE : race_t(c + 1);
 }
 
-const char * Race::moveIn() const
-{
+const char* Race::moveIn() const {
   static char buf[256];
   strcpy(buf, moveMessageIn.c_str());
   return buf;
 }
 
-const char * Race::moveOut() const
-{
+const char* Race::moveOut() const {
   static char buf[256];
   strcpy(buf, moveMessageOut.c_str());
   return buf;
 }
 
-race_t Race::getRace() const
-{
-  return raceType;
-}
+race_t Race::getRace() const { return raceType; }
 
-int Race::getHpMod() const
-{
-  return hpMod;
-}
+int Race::getHpMod() const { return hpMod; }
 
-int Race::getMoveMod() const
-{
-  return moveMod;
-}
+int Race::getMoveMod() const { return moveMod; }
 
-int Race::getManaMod() const
-{
-  return manaMod;
-}
+int Race::getManaMod() const { return manaMod; }
 
-float Race::getDrinkMod() const
-{
-  return drinkMod;
-}
+float Race::getDrinkMod() const { return drinkMod; }
 
-void Race::setDrinkMod(float n)
-{
-  drinkMod = n;
-}
+void Race::setDrinkMod(float n) { drinkMod = n; }
 
-float Race::getFoodMod() const
-{
-  return foodMod;
-}
+float Race::getFoodMod() const { return foodMod; }
 
-void Race::setFoodMod(float n)
-{
-  foodMod = n;
-}
+void Race::setFoodMod(float n) { foodMod = n; }
 
-bool Race::isAnimal() const
-{
-  return Kingdom == LORE_ANIMAL;
-}
+bool Race::isAnimal() const { return Kingdom == LORE_ANIMAL; }
 
-bool Race::isVeggie() const
-{
-  return Kingdom == LORE_VEGGIE;
-}
+bool Race::isVeggie() const { return Kingdom == LORE_VEGGIE; }
 
-bool Race::isDiabolic() const
-{
-  return Kingdom == LORE_DIABOLIC;
-}
+bool Race::isDiabolic() const { return Kingdom == LORE_DIABOLIC; }
 
-bool Race::isReptile() const
-{
-  return Kingdom == LORE_REPTILE;
-}
+bool Race::isReptile() const { return Kingdom == LORE_REPTILE; }
 
-bool Race::isUndead() const
-{
-  return Kingdom == LORE_UNDEAD;
-}
+bool Race::isUndead() const { return Kingdom == LORE_UNDEAD; }
 
-bool Race::isGiantish() const
-{
-  return Kingdom == LORE_GIANT;
-}
+bool Race::isGiantish() const { return Kingdom == LORE_GIANT; }
 
-bool Race::isPeople() const
-{
-  return Kingdom == LORE_PEOPLE;
-}
+bool Race::isPeople() const { return Kingdom == LORE_PEOPLE; }
 
-bool Race::isOther() const
-{
-  return Kingdom == LORE_OTHER;
-}
+bool Race::isOther() const { return Kingdom == LORE_OTHER; }
 
-bool Race::hasNoBones() const
-{
-  return racialCharacteristics & BONELESS;
-}
+bool Race::hasNoBones() const { return racialCharacteristics & BONELESS; }
 
-bool Race::hasMagicFly() const
-{
-  return racialCharacteristics & MAGICFLY;
-}
+bool Race::hasMagicFly() const { return racialCharacteristics & MAGICFLY; }
 
-bool Race::hasNaturalClimb() const
-{
-  return racialCharacteristics & CLIMBER;
-}
+bool Race::hasNaturalClimb() const { return racialCharacteristics & CLIMBER; }
 
-int Race::getBaseMaleHeight() const
-{
-  return baseMaleHeight;
-}
+int Race::getBaseMaleHeight() const { return baseMaleHeight; }
 
-int Race::getMaleHtNumDice() const
-{
-  return maleHtNumDice;
-}
+int Race::getMaleHtNumDice() const { return maleHtNumDice; }
 
-int Race::getMaleHtDieSize() const
-{
-  return maleHtDieSize;
-}
+int Race::getMaleHtDieSize() const { return maleHtDieSize; }
 
-sstring Race::getSingularName() const
-{
-  return singular_name;
-}
+sstring Race::getSingularName() const { return singular_name; }
 
-sstring Race::getPluralName() const
-{
-  return plural_name;
-}
+sstring Race::getPluralName() const { return plural_name; }
 
-sstring Race::getProperName() const
-{
-  return proper_name;
-}
+sstring Race::getProperName() const { return proper_name; }
 
-int Race::getLOS() const
-{
-  return lineOfSightMod;
-}
+int Race::getLOS() const { return lineOfSightMod; }
 
-void Race::setLOS(int x)
-{
-  lineOfSightMod = x;
-}
+void Race::setLOS(int x) { lineOfSightMod = x; }
 
-float Race::getCorpseConst() const
-{
-  return corpse_const;
-}
+float Race::getCorpseConst() const { return corpse_const; }
 
-void Race::setCorpseConst(float n)
-{
-  corpse_const = n;
-}
+void Race::setCorpseConst(float n) { corpse_const = n; }
 
-unsigned int Race::getTalents() const
-{
-  return talents;
-}
+unsigned int Race::getTalents() const { return talents; }
 
-void Race::setTalents(unsigned int n)
-{ talents = n;
-}
+void Race::setTalents(unsigned int n) { talents = n; }
 
-bool Race::hasTalent(unsigned int n) const
-{
-  return talents & n;
-}
+bool Race::hasTalent(unsigned int n) const { return talents & n; }
 
-void Race::addToTalents(unsigned int n)
-{
-  talents |= n;
-}
+void Race::addToTalents(unsigned int n) { talents |= n; }
 
-void Race::remTalent(unsigned int n)
-{
-  talents &= ~n;
-}
+void Race::remTalent(unsigned int n) { talents &= ~n; }
 
+const Immunities& Race::getImmunities() const { return naturalImmunities; }
 
-const Immunities & Race::getImmunities() const
-{
-  return naturalImmunities;
-}
+void Race::setBodyType(body_t body_type) { bodyType = body_type; }
 
-void Race::setBodyType(body_t body_type)
-{
-  bodyType = body_type;
-}
+body_t Race::getBodyType() const { return bodyType; }
 
-body_t Race::getBodyType() const
-{
-  return bodyType;
-}
-
-bool Race::isHumanoid() const
-{
-  return bodyType == BODY_HUMANOID ||
-         bodyType == BODY_FROGMAN ||
+bool Race::isHumanoid() const {
+  return bodyType == BODY_HUMANOID || bodyType == BODY_FROGMAN ||
          bodyType == BODY_FISHMAN;
 }
 
-bool Race::isLycanthrope() const
-{
-  return raceType == RACE_LYCANTH;
-}
+bool Race::isLycanthrope() const { return raceType == RACE_LYCANTH; }
 
-bool Race::isExtraPlanar() const
-{
-  return racialCharacteristics & EXTRAPLANAR;
-}
+bool Race::isExtraPlanar() const { return racialCharacteristics & EXTRAPLANAR; }
 
-bool Race::isAquatic() const
-{
-  return racialCharacteristics & AQUATIC;
-}
+bool Race::isAquatic() const { return racialCharacteristics & AQUATIC; }
 
-bool Race::isFourLegged() const
-{
-  return racialCharacteristics & FOURLEGGED;
-}
+bool Race::isFourLegged() const { return racialCharacteristics & FOURLEGGED; }
 
-bool Race::isWinged() const
-{
-  return racialCharacteristics & WINGED;
-}
+bool Race::isWinged() const { return racialCharacteristics & WINGED; }
 
-bool Race::isColdBlooded() const
-{
-  return racialCharacteristics & COLDBLOODED;
-}
+bool Race::isColdBlooded() const { return racialCharacteristics & COLDBLOODED; }
 
-bool Race::isRidable() const
-{
-  return racialCharacteristics & RIDABLE;
-}
+bool Race::isRidable() const { return racialCharacteristics & RIDABLE; }
 
-bool Race::isDumbAnimal() const
-{
-  return racialCharacteristics & DUMBANIMAL;
-}
+bool Race::isDumbAnimal() const { return racialCharacteristics & DUMBANIMAL; }
 
-bool Race::isFeathered() const
-{
-  return racialCharacteristics & FEATHERED;
-}
+bool Race::isFeathered() const { return racialCharacteristics & FEATHERED; }
 
-int Race::getBaseArmor() const
-{
+int Race::getBaseArmor() const {
   if (getRace() == RACE_FISHMAN)
     return 900;
   return 1000;
 }
 
-int Race::getGarbles() const
-{
-  return garbles;
-}
+int Race::getGarbles() const { return garbles; }
 
 // applies racial toggles to the character
-void Race::applyToggles(TBeing *character) const
-{
+void Race::applyToggles(TBeing* character) const {
   for (unsigned int iTogg = 0; iTogg < cToggles; iTogg++)
     character->setQuestBit(toggles[iTogg]);
 }
-
 
 //              hit location (constants.cc)

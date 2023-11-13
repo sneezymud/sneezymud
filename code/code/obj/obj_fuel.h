@@ -13,15 +13,16 @@ class TFuel : public TObj {
   private:
     int curFuel;
     int maxFuel;
+
   public:
-    virtual int chiMe(TBeing *);
+    virtual int chiMe(TBeing*);
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual void lowCheck();
-    virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual void describeObjectSpecifics(const TBeing*) const;
     virtual sstring statObjInfo() const;
-    virtual int objectSell(TBeing *, TMonster *);
-    virtual void refuelMeFuel(TBeing *, TLight *);
+    virtual int objectSell(TBeing*, TMonster*);
+    virtual void refuelMeFuel(TBeing*, TLight*);
     virtual itemTypeT itemType() const { return ITEM_FUEL; }
     virtual int getVolume() const;
     virtual float getTotalWeight(bool) const;
@@ -34,8 +35,7 @@ class TFuel : public TObj {
     int getCurFuel() const;
 
     TFuel();
-    TFuel(const TFuel &a);
-    TFuel & operator=(const TFuel &a);
+    TFuel(const TFuel& a);
+    TFuel& operator=(const TFuel& a);
     virtual ~TFuel();
 };
-

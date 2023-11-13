@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "being.h"
 #include "disease.h"
 #include "combat.h"
@@ -12,11 +11,10 @@
 #include "obj_tool.h"
 #include "materials.h"
 
-using std::min;
 using std::max;
+using std::min;
 
-int TBeing::doBerserk() 
-{
+int TBeing::doBerserk() {
   int rc;
 
   if (!doesKnowSkill(SKILL_BERSERK)) {
@@ -30,8 +28,10 @@ int TBeing::doBerserk()
     sendTo("You are unable to work up the bloodlust at this time.\n\r");
     return FALSE;
   }
-  if (affectedBySpell(SKILL_DISGUISE)){
-    sendTo("You can't work up the bloodlust while pretending to be someone else.\n\r");
+  if (affectedBySpell(SKILL_DISGUISE)) {
+    sendTo(
+      "You can't work up the bloodlust while pretending to be someone "
+      "else.\n\r");
     return FALSE;
   }
 
@@ -41,22 +41,21 @@ int TBeing::doBerserk()
   return FALSE;
 }
 
-int berserk(TBeing * caster)
-{
+int berserk(TBeing* caster) {
   int level;
   affectedData af;
 
   if (caster->riding) {
-    act("Not while riding.",TRUE,caster,0,0,TO_CHAR);
+    act("Not while riding.", TRUE, caster, 0, 0, TO_CHAR);
     return FALSE;
   }
   if (caster->getCombatMode() == ATTACK_BERSERK) {
-    act("You are already berserking!",TRUE,caster,0,0,TO_CHAR);
+    act("You are already berserking!", TRUE, caster, 0, 0, TO_CHAR);
     return FALSE;
   }
 
   if (caster->checkPeaceful("This room is too tranquil to go berserk in.\n\r"))
-    return FALSE;    
+    return FALSE;
 
   if (!caster->isPc())
     return FALSE;
@@ -65,13 +64,13 @@ int berserk(TBeing * caster)
   int bKnown = caster->getSkillValue(SKILL_BERSERK);
   if (caster->bSuccess(bKnown, SKILL_BERSERK)) {
     caster->setCombatMode(ATTACK_BERSERK);
-    act("You go berserk!",TRUE,caster,0,0,TO_CHAR);
-    act("$n goes berserk!", TRUE, caster,0,0,TO_ROOM);
+    act("You go berserk!", TRUE, caster, 0, 0, TO_CHAR);
+    act("$n goes berserk!", TRUE, caster, 0, 0, TO_ROOM);
 
-    if(caster->getHit() > (caster->hitLimit()/2)){
+    if (caster->getHit() > (caster->hitLimit() / 2)) {
       af.type = SKILL_BERSERK;
       af.modifier = ::number(caster->getSkillValue(SKILL_BERSERK),
-			     caster->getSkillValue(SKILL_BERSERK)*2);
+        caster->getSkillValue(SKILL_BERSERK) * 2);
       af.level = level;
       //      af.duration = caster->getSkillValue(SKILL_BERSERK);
       af.duration = PERMANENT_DURATION;
@@ -82,20 +81,23 @@ int berserk(TBeing * caster)
       af.location = APPLY_CURRENT_HIT;
       caster->affectTo(&af, -1);
 
-      caster->sendTo("Berserking increases your ability to withstand damage!\n\r");
+      caster->sendTo(
+        "Berserking increases your ability to withstand damage!\n\r");
     }
 
     if (!caster->fight())
       caster->goBerserk(NULL);
   } else {
-    act("You try to go berserk and bite yourself in the tongue!", TRUE, caster, 0, 0, TO_CHAR);
-    act("$n bites $mself in the tongue while trying to go berserk!", TRUE, caster, 0, 0, TO_ROOM);
+    act("You try to go berserk and bite yourself in the tongue!", TRUE, caster,
+      0, 0, TO_CHAR);
+    act("$n bites $mself in the tongue while trying to go berserk!", TRUE,
+      caster, 0, 0, TO_ROOM);
     if (caster->reconcileDamage(caster, 1, SKILL_BERSERK) == -1)
       return DELETE_THIS;
 
     af.type = SKILL_BERSERK;
     af.level = level;
-    af.duration = Pulse::UPDATES_PER_MUDHOUR/2;
+    af.duration = Pulse::UPDATES_PER_MUDHOUR / 2;
     af.location = APPLY_NONE;
     af.modifier = 0;
     af.bitvector = 0;
@@ -105,10 +107,9 @@ int berserk(TBeing * caster)
   return TRUE;
 }
 
-void TBeing::doRepair(const char *arg)
-{
+void TBeing::doRepair(const char* arg) {
   char v_name[MAX_INPUT_LENGTH];
-  TThing *obj=NULL;
+  TThing* obj = NULL;
 
   strcpy(v_name, arg);
 
@@ -117,12 +118,12 @@ void TBeing::doRepair(const char *arg)
     return;
   }
 
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it){
-    obj=*it;
-    if(isname(v_name, obj->name))
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
+    obj = *it;
+    if (isname(v_name, obj->name))
       break;
   }
-  if(!obj){
+  if (!obj) {
     sendTo("You'll have to have that item in your inventory to repair it.\n\r");
     return;
   }
@@ -134,32 +135,30 @@ void TBeing::doRepair(const char *arg)
   }
 #endif
 
-  TObj *item = dynamic_cast<TObj *>(obj);
+  TObj* item = dynamic_cast<TObj*>(obj);
   if (!item) {
     sendTo("You can only repair objects.\n\r");
     return;
   }
 
-  if (material_nums[min(max((int) obj->getMaterial(), 0), 200)].repair_proc)
-    (*(material_nums[min(max((int) obj->getMaterial(), 0), 200)].repair_proc)) (this, item);
+  if (material_nums[min(max((int)obj->getMaterial(), 0), 200)].repair_proc)
+    (*(material_nums[min(max((int)obj->getMaterial(), 0), 200)].repair_proc))(
+      this, item);
   else
     sendTo("You have no idea how to repair something like that.\n\r");
-
 
   //  repair(this,item);
 }
 
-void TThing::repairMeHammer(TBeing *caster, TObj *obj)
-{
+void TThing::repairMeHammer(TBeing* caster, TObj* obj) {
   act("You need to hold a hammer in your primary hand in order to repair $p",
-           TRUE, caster, obj, NULL, TO_CHAR);
+    TRUE, caster, obj, NULL, TO_CHAR);
 }
 
-void TTool::repairMeHammer(TBeing *caster, TObj *obj)
-{
+void TTool::repairMeHammer(TBeing* caster, TObj* obj) {
   if (getToolType() != TOOL_HAMMER) {
-   act("You need to hold a hammer in your primary hand in order to repair $p",
-           TRUE, caster, obj, NULL, TO_CHAR);
+    act("You need to hold a hammer in your primary hand in order to repair $p",
+      TRUE, caster, obj, NULL, TO_CHAR);
     return;
   }
 
@@ -168,22 +167,24 @@ void TTool::repairMeHammer(TBeing *caster, TObj *obj)
     return;
   }
   if (caster->getMove() < 10) {
-    caster->sendTo("You are much too tired to repair things right now.  Take a nap or something.\n\r");
+    caster->sendTo(
+      "You are much too tired to repair things right now.  Take a nap or "
+      "something.\n\r");
     return;
   }
-  if (material_nums[min(max((int) obj->getMaterial(), 0), 200)].repair_proc)
-    (*(material_nums[min(max((int) obj->getMaterial(), 0), 200)].repair_proc)) (caster, obj);
+  if (material_nums[min(max((int)obj->getMaterial(), 0), 200)].repair_proc)
+    (*(material_nums[min(max((int)obj->getMaterial(), 0), 200)].repair_proc))(
+      caster, obj);
   else
     caster->sendTo("You have no idea how to repair something like that.\n\r");
 }
 
-void repair(TBeing * caster, TObj *obj)
-{
-  TThing *hammer;
+void repair(TBeing* caster, TObj* obj) {
+  TThing* hammer;
 
   if (!(hammer = caster->heldInPrimHand())) {
     act("You need to hold a hammer in your primary hand in order to repair $p",
-           TRUE, caster, obj, NULL, TO_CHAR);
+      TRUE, caster, obj, NULL, TO_CHAR);
     return;
   }
   hammer->repairMeHammer(caster, obj);

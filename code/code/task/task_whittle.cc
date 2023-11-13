@@ -21,16 +21,14 @@
 using std::max;
 using std::min;
 
+std::map<unsigned long int, taskWhittleEntry> whittleItems;
 
-std::map<unsigned long int, taskWhittleEntry>whittleItems;
-
-void initWhittle()
-{
+void initWhittle() {
   int i = 0;
 
   // Dummy *** DO NOT TOUCH/MOVE/REMOVE THIS ENTRY! ***
-  whittleItems[i++]("big-error dummy empty nada zip",
-                    CLASS_RANGER, 101, -1, false, WHITTLE_ERROR);
+  whittleItems[i++]("big-error dummy empty nada zip", CLASS_RANGER, 101, -1,
+    false, WHITTLE_ERROR);
 
   // Please Read:
   // Formating for bows and arrows is very strict:
@@ -57,123 +55,115 @@ void initWhittle()
   // Extra Notes:
 
   // Arrows
-  whittleItems[i++]("hunting-arrow arrow long",
-                    -1, 30, 166, true, WHITTLE_TIMECONSUMING);
-  whittleItems[i++]("fighting-arrow arrow short",
-                    -1, 30, 167, true, WHITTLE_TIMECONSUMING);
-  whittleItems[i++]("melee-quarrel quarrel long",
-                    -1, 30, 168, true, WHITTLE_TIMECONSUMING);
-  whittleItems[i++]("common-quarrel quarrel short",
-                    -1, 30, 169, true, WHITTLE_TIMECONSUMING);
-  whittleItems[i++]("totem small wooden",
-                    CLASS_SHAMAN, 1, 31395, true, WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("hunting-arrow arrow long", -1, 30, 166, true,
+    WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("fighting-arrow arrow short", -1, 30, 167, true,
+    WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("melee-quarrel quarrel long", -1, 30, 168, true,
+    WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("common-quarrel quarrel short", -1, 30, 169, true,
+    WHITTLE_TIMECONSUMING);
+  whittleItems[i++]("totem small wooden", CLASS_SHAMAN, 1, 31395, true,
+    WHITTLE_TIMECONSUMING);
 
   // Bows
-  whittleItems[i++]("hunting-bow bow long",
-                    -1, 70, 170, true, WHITTLE_STANDARD);
-  whittleItems[i++]("fighting-bow bow short",
-                    -1, 70, 171, true, WHITTLE_STANDARD);
-  whittleItems[i++]("melee-crossbow crossbow long",
-                    -1, 70, 172, true, WHITTLE_STANDARD);
-  whittleItems[i++]("common-crossbow crossbow short",
-                    -1, 70, 173, true, WHITTLE_STANDARD);
+  whittleItems[i++]("hunting-bow bow long", -1, 70, 170, true,
+    WHITTLE_STANDARD);
+  whittleItems[i++]("fighting-bow bow short", -1, 70, 171, true,
+    WHITTLE_STANDARD);
+  whittleItems[i++]("melee-crossbow crossbow long", -1, 70, 172, true,
+    WHITTLE_STANDARD);
+  whittleItems[i++]("common-crossbow crossbow short", -1, 70, 173, true,
+    WHITTLE_STANDARD);
 
   // Other
-  whittleItems[i++]("small-boat simple boat toy",
-                    -1,  1,  188, false, WHITTLE_DELICATE);
-  whittleItems[i++]("wooden-staff training staff",
-                    -1, 10,  177, false, WHITTLE_GENERAL);
-  whittleItems[i++]("wooden-sword training sword",
-                    -1, 10, 329, false, WHITTLE_GENERAL);
-  whittleItems[i++]("chair-wooden sturdy wooden",
-                    -1, 40,  174, false, WHITTLE_EASY);
-  whittleItems[i++]("wooden-chest small simple chest",
-                    -1, 20,  185, false, WHITTLE_GENERAL);
-  whittleItems[i++]("wooden-shield small simple shield",
-                    -1, 70,  178, false, WHITTLE_HARD);
-  whittleItems[i++]("small-wood-canister carved wood canister",
-                    CLASS_RANGER, 45, -1  /* 556 */, false, WHITTLE_GENERAL);
-  whittleItems[i++]("large-wood-canister carved wood canister",
-                    CLASS_RANGER, 45, -1 /* 557 */, false, WHITTLE_GENERAL);
-  whittleItems[i++]("small-box box container wood",
-                    -1,  1,  186, false, WHITTLE_EASY);
-  whittleItems[i++]("wood-ring ring small simple",
-                    -1,  8,  179, false, WHITTLE_VALUABLE);
-  whittleItems[i++]("wood-club light small",
-                    -1, 50,  176, false, WHITTLE_HARD);
-  whittleItems[i++]("minature-figurine figurine small delicate",
-                    -1, 99,  191, false, WHITTLE_DELICATE);
-  whittleItems[i++]("tiny-statuette statuette small declicate",
-                    -1, 99,  190, false, WHITTLE_INVOLVED);
-  whittleItems[i++]("simple-dart dart wooden",
-                    -1, 30,  175, false, WHITTLE_VALUABLE);
-  whittleItems[i++]("simple-pipe pipe wooden",
-                    -1, 40,  180, false, WHITTLE_HARD);
-  whittleItems[i++]("wooden-pen pen",
-                    -1, 20,  181, false, WHITTLE_VALUABLE);
-  whittleItems[i++]("toothpick",
-                    -1,  1,  182, false, WHITTLE_VALUABLE);
-  whittleItems[i++]("wood length sturdy",
-                    -1, 20,  189, false, WHITTLE_EASY);
-  whittleItems[i++]("stick walking",
-                    -1, 40,  183, false, WHITTLE_INVOLVED);
-  whittleItems[i++]("totem wooden",
-                    -1, 80,  184, false, WHITTLE_DELICATE);
-  whittleItems[i++]("wooden-dagger dagger small",
-                    -1, 20,  187, false, WHITTLE_HARD);
-  whittleItems[i++]("miniature-idol-moath",
-                    -1, 99, 192, false, WHITTLE_INVOLVED);
-  whittleItems[i++]("miniature-idol-lapsos",
-                    -1, 99, 193, false, WHITTLE_INVOLVED);
-  whittleItems[i++]("miniature-idol-mithros",
-                    -1, 99, 194, false, WHITTLE_INVOLVED);
-  whittleItems[i++]("miniature-idol-gringar",
-                    -1, 99, 195, false, WHITTLE_INVOLVED);
-  whittleItems[i++]("miniature-idol-peel",
-                    -1, 99, 197, false, WHITTLE_INVOLVED);
-  whittleItems[i++]("pole-fishingpole-very-nice", 
-                    -1, 60, 13862, false, WHITTLE_GENERAL);
-  
-  whittleItems[i++]("elongated-strip strip wood", // For 'create splint' later on
-                    -1, 30,  -1, false, WHITTLE_EASY);
+  whittleItems[i++]("small-boat simple boat toy", -1, 1, 188, false,
+    WHITTLE_DELICATE);
+  whittleItems[i++]("wooden-staff training staff", -1, 10, 177, false,
+    WHITTLE_GENERAL);
+  whittleItems[i++]("wooden-sword training sword", -1, 10, 329, false,
+    WHITTLE_GENERAL);
+  whittleItems[i++]("chair-wooden sturdy wooden", -1, 40, 174, false,
+    WHITTLE_EASY);
+  whittleItems[i++]("wooden-chest small simple chest", -1, 20, 185, false,
+    WHITTLE_GENERAL);
+  whittleItems[i++]("wooden-shield small simple shield", -1, 70, 178, false,
+    WHITTLE_HARD);
+  whittleItems[i++]("small-wood-canister carved wood canister", CLASS_RANGER,
+    45, -1 /* 556 */, false, WHITTLE_GENERAL);
+  whittleItems[i++]("large-wood-canister carved wood canister", CLASS_RANGER,
+    45, -1 /* 557 */, false, WHITTLE_GENERAL);
+  whittleItems[i++]("small-box box container wood", -1, 1, 186, false,
+    WHITTLE_EASY);
+  whittleItems[i++]("wood-ring ring small simple", -1, 8, 179, false,
+    WHITTLE_VALUABLE);
+  whittleItems[i++]("wood-club light small", -1, 50, 176, false, WHITTLE_HARD);
+  whittleItems[i++]("minature-figurine figurine small delicate", -1, 99, 191,
+    false, WHITTLE_DELICATE);
+  whittleItems[i++]("tiny-statuette statuette small declicate", -1, 99, 190,
+    false, WHITTLE_INVOLVED);
+  whittleItems[i++]("simple-dart dart wooden", -1, 30, 175, false,
+    WHITTLE_VALUABLE);
+  whittleItems[i++]("simple-pipe pipe wooden", -1, 40, 180, false,
+    WHITTLE_HARD);
+  whittleItems[i++]("wooden-pen pen", -1, 20, 181, false, WHITTLE_VALUABLE);
+  whittleItems[i++]("toothpick", -1, 1, 182, false, WHITTLE_VALUABLE);
+  whittleItems[i++]("wood length sturdy", -1, 20, 189, false, WHITTLE_EASY);
+  whittleItems[i++]("stick walking", -1, 40, 183, false, WHITTLE_INVOLVED);
+  whittleItems[i++]("totem wooden", -1, 80, 184, false, WHITTLE_DELICATE);
+  whittleItems[i++]("wooden-dagger dagger small", -1, 20, 187, false,
+    WHITTLE_HARD);
+  whittleItems[i++]("miniature-idol-moath", -1, 99, 192, false,
+    WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-lapsos", -1, 99, 193, false,
+    WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-mithros", -1, 99, 194, false,
+    WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-gringar", -1, 99, 195, false,
+    WHITTLE_INVOLVED);
+  whittleItems[i++]("miniature-idol-peel", -1, 99, 197, false,
+    WHITTLE_INVOLVED);
+  whittleItems[i++]("pole-fishingpole-very-nice", -1, 60, 13862, false,
+    WHITTLE_GENERAL);
+
+  whittleItems[i++](
+    "elongated-strip strip wood",  // For 'create splint' later on
+    -1, 30, -1, false, WHITTLE_EASY);
 }
 
-void stop_whittling(TBeing *ch)
-{
-  if (ch->task->obj){
+void stop_whittling(TBeing* ch) {
+  if (ch->task->obj) {
     if (whittleItems[ch->task->flags].affectValue) {
       ch->sendTo("Even if partly finished this item is still good.\n\r");
-      act("$n stores $s unfinished object.",
-          FALSE, ch, NULL, NULL, TO_ROOM);
+      act("$n stores $s unfinished object.", FALSE, ch, NULL, NULL, TO_ROOM);
       *ch += *ch->task->obj;
       ch->task->obj = NULL;
     } else {
-      ch->sendTo("Unfortunatly this object is useless if not finished, so you trash it.\n\r");
-      act("$n throws $s unfinished object away.",
-          FALSE, ch, NULL, NULL, TO_ROOM);
+      ch->sendTo(
+        "Unfortunatly this object is useless if not finished, so you trash "
+        "it.\n\r");
+      act("$n throws $s unfinished object away.", FALSE, ch, NULL, NULL,
+        TO_ROOM);
       delete ch->task->obj;
       ch->task->obj = NULL;
     }
   }
 
   ch->sendTo("You stop what you are doing and look around.\n\r");
-  act("$n stops what $e is doing and looks around.",
-      FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n stops what $e is doing and looks around.", FALSE, ch, NULL, NULL,
+    TO_ROOM);
   ch->stopTask();
 }
 
-void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
-{
+void task_whittlePulse(TBeing* ch, TArrow* tArrow, whittlePulseT tWhitLevel) {
   if (!tArrow)
     return;
 
-  double tValue,
-         tTemp,
-         tLevel = min(50, (int)ch->GetMaxLevel()),
-         tSkill = max( 1, (int)ch->getSkillValue(SKILL_WHITTLE));
+  double tValue, tTemp, tLevel = min(50, (int)ch->GetMaxLevel()),
+                        tSkill = max(1, (int)ch->getSkillValue(SKILL_WHITTLE));
 
   switch (tWhitLevel) {
-    case WHITTLE_PULSE_ZEROOUT: // Zero everything out.
+    case WHITTLE_PULSE_ZEROOUT:  // Zero everything out.
       tArrow->setArrowHead(0);
       tArrow->setArrowHeadMat(0);
       tArrow->setArrowFlags(0);
@@ -184,7 +174,7 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       tArrow->setWeapDamLvl(1);
       tArrow->setWeapDamDev(1);
       break;
-    case WHITTLE_PULSE_CARVED: // Set Structure
+    case WHITTLE_PULSE_CARVED:  // Set Structure
       tValue = (tSkill / 100);
       tValue = max(0.0, min(50.0, ((tLevel * tValue) + ::number(-5, 5))));
 
@@ -192,11 +182,11 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       tValue = (((tValue * 3.0) / 2.0) + 10);
 
       tArrow->setMaxStructPoints((short)tValue);
-      tTemp  = (tValue * (tSkill / 100));
+      tTemp = (tValue * (tSkill / 100));
       tTemp += (double)::number(0, (int)((tValue - tTemp) / 2));
       tArrow->setStructPoints((short)tTemp);
       break;
-    case WHITTLE_PULSE_SCRAPED: // Set Sharpness
+    case WHITTLE_PULSE_SCRAPED:  // Set Sharpness
       tValue = (tSkill / 100);
       tValue = max(0.0, min(50.0, ((tLevel * tValue) + ::number(-5, 5))));
 
@@ -204,11 +194,11 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       tValue = (((tValue * 2.0) / 2.0) + 10);
 
       tArrow->setMaxSharp((int)tValue);
-      tTemp  = (tValue * (tSkill / 100));
+      tTemp = (tValue * (tSkill / 100));
       tTemp += (double)::number(0, (int)((tValue - tTemp) / 2));
       tArrow->setCurSharp((int)tTemp);
       break;
-    case WHITTLE_PULSE_SMOOTHED: // Set Damage&Damage Deviation
+    case WHITTLE_PULSE_SMOOTHED:  // Set Damage&Damage Deviation
       tValue = (tSkill / 100);
       tValue = max(0.0, min(50.0, ((tLevel * tValue) + ::number(-5, 5))));
 
@@ -216,34 +206,33 @@ void task_whittlePulse(TBeing *ch, TArrow *tArrow, whittlePulseT tWhitLevel)
       tValue = (tValue * 4.0);
 
       tArrow->setWeapDamLvl((int)tValue);
-      tTemp  = max(0.0, (tValue - (tSkill * (tSkill / 100))));
+      tTemp = max(0.0, (tValue - (tSkill * (tSkill / 100))));
       tTemp -= max(0.0, (double)::number(0, (int)((tValue - tTemp) / 2)));
       tArrow->setWeapDamDev((int)tTemp);
       break;
     default:
-      vlogf(LOG_BUG, format("task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]") % 
-            tWhitLevel);
+      vlogf(LOG_BUG,
+        format(
+          "task_shittlePulse(TArrow) called with invalid tWhitLevel.  [%d]") %
+          tWhitLevel);
       break;
   }
 }
 
-void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
-{
+void task_whittlePulse(TBeing* ch, TBow* tBow, whittlePulseT tWhitLevel) {
   if (!tBow)
     return;
 
-  double tValue,
-         tTemp,
-         tLevel = min(50, (int) ch->GetMaxLevel()),
-         tSkill = max( 1, (int) ch->getSkillValue(SKILL_WHITTLE));
+  double tValue, tTemp, tLevel = min(50, (int)ch->GetMaxLevel()),
+                        tSkill = max(1, (int)ch->getSkillValue(SKILL_WHITTLE));
 
   switch (tWhitLevel) {
-    case WHITTLE_PULSE_ZEROOUT: // Zero everything out.
+    case WHITTLE_PULSE_ZEROOUT:  // Zero everything out.
       tBow->setBowFlags(0);
       tBow->addBowFlags(BOW_STRING_BROKE);
       tBow->setMaxRange(1);
       break;
-    case WHITTLE_PULSE_CARVED: // Set Structure
+    case WHITTLE_PULSE_CARVED:  // Set Structure
       tValue = (tSkill / 100);
       tValue = max(0.0, min(50.0, ((tLevel * tValue) + ::number(-5, 5))));
 
@@ -251,11 +240,11 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
       tValue = (((tValue * 3.0) / 2.0) + 10);
 
       tBow->setMaxStructPoints((int)tValue);
-      tTemp  = (tValue * (tSkill / 100));
+      tTemp = (tValue * (tSkill / 100));
       tTemp += (double)::number(0, (int)((tValue - tTemp) / 2));
       tBow->setStructPoints((int)tTemp);
       break;
-    case WHITTLE_PULSE_SCRAPED: // Set 1/2 Range
+    case WHITTLE_PULSE_SCRAPED:  // Set 1/2 Range
       tValue = (tSkill / 100);
       tValue = max(0.0, min(50.0, ((tLevel * tValue) + ::number(-5, 5))));
 
@@ -263,7 +252,7 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
 
       tBow->setMaxRange((int)tValue);
       break;
-    case WHITTLE_PULSE_SMOOTHED: // Set 1/2 Range
+    case WHITTLE_PULSE_SMOOTHED:  // Set 1/2 Range
       tValue = (tSkill / 100);
       tValue = max(0.0, min(50.0, ((tLevel * tValue) + ::number(-5, 5))));
 
@@ -272,20 +261,17 @@ void task_whittlePulse(TBeing *ch, TBow *tBow, whittlePulseT tWhitLevel)
       tBow->setMaxRange((int)(tValue + tBow->getMaxRange()));
       break;
     default:
-      vlogf(LOG_BUG, format("task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]") % 
-            tWhitLevel);
+      vlogf(LOG_BUG,
+        format(
+          "task_shittlePulse(TBow) called with invalid tWhitLevel.  [%d]") %
+          tWhitLevel);
       break;
   }
 }
 
-const char *tailMessages[] =
-{
-  "has been left on the $g here.",
-  "rests upon the $g.",
-  "lies upon the $g here.",
-  "sits upon the $g here.",
-  "is here on the $g."
-};
+const char* tailMessages[] = {"has been left on the $g here.",
+  "rests upon the $g.", "lies upon the $g here.", "sits upon the $g here.",
+  "is here on the $g."};
 
 // tStPost will contain the pre-word, such as 'a' or 'an', and also
 // the intial color index should it exist.  So:
@@ -293,32 +279,30 @@ const char *tailMessages[] =
 // Will become:
 //   <R>an oak arrow<z>
 //   <R>An oak arrow sits upon the $g here.<z>
-void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex)
-{
-  TArrow *tArrow = NULL;
-  TBow   *tBow   = NULL;
-  sstring  tStPost, tStWood, tStObject, tStString, tString;
+void task_whittleSetupObject(TBeing* ch, TObj* tObj, TOrganic* tWood,
+  int tIndex) {
+  TArrow* tArrow = NULL;
+  TBow* tBow = NULL;
+  sstring tStPost, tStWood, tStObject, tStString, tString;
 
-  if ((tArrow = dynamic_cast<TArrow *>(tObj)) ||
-      (tBow   = dynamic_cast<TBow   *>(tObj))) {
+  if ((tArrow = dynamic_cast<TArrow*>(tObj)) ||
+      (tBow = dynamic_cast<TBow*>(tObj))) {
     tObj->swapToStrung();
 
     tStString = tWood->getName();
-    tStPost=tStString.word(0);
-    tStWood=tStString.word(1);
+    tStPost = tStString.word(0);
+    tStWood = tStString.word(1);
     tStObject = whittleItems[tIndex].getName(true);
 
-    tString=format("%s %s %s<z>") %
-      tStPost % tStWood % tStObject;
+    tString = format("%s %s %s<z>") % tStPost % tStWood % tStObject;
     tObj->shortDescr = tString;
 
-    tString=format("%s %s %s") %
-            tStObject % tStWood % whittleItems[tIndex].getName(false);
+    tString = format("%s %s %s") % tStObject % tStWood %
+              whittleItems[tIndex].getName(false);
     tObj->name = tString;
 
-    tString=format("%s %s %s %s<z>") %
-      sstring(tStPost).cap() % tStWood %
-      tStObject % tailMessages[::number(0, 4)];
+    tString = format("%s %s %s %s<z>") % sstring(tStPost).cap() % tStWood %
+              tStObject % tailMessages[::number(0, 4)];
     tObj->descr = tString;
 
     tObj->setWeight((whittleItems[tIndex].weiSize / 1.10));
@@ -336,26 +320,23 @@ void task_whittleSetupObject(TBeing *ch, TObj *tObj, TOrganic *tWood, int tIndex
   tObj->setMaterial(tWood->getMaterial());
 }
 
-bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
-{
-  TOrganic *tWood        = NULL,
-           *tOldWood     = NULL;
-  bool      realCreate   = (ch->task ? true : false),
-            deleteOld    = false;
-  double    totalWood[2] = {0, 0};
+bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
+  TOrganic *tWood = NULL, *tOldWood = NULL;
+  bool realCreate = (ch->task ? true : false), deleteOld = false;
+  double totalWood[2] = {0, 0};
 
-  if(ch){
-    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();++it){
-      if(isname((*it)->name, tStWood)){
-	if ((tWood = dynamic_cast<TOrganic *>(*it))) {
-	  if (tWood->getOType() != ORGANIC_WOOD) {
-	    tWood = NULL;
-	    continue;
-	  }
-	  
-	  totalWood[0] += tWood->getWeight();
-	  totalWood[1] += tWood->getVolume();
-	}
+  if (ch) {
+    for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end(); ++it) {
+      if (isname((*it)->name, tStWood)) {
+        if ((tWood = dynamic_cast<TOrganic*>(*it))) {
+          if (tWood->getOType() != ORGANIC_WOOD) {
+            tWood = NULL;
+            continue;
+          }
+
+          totalWood[0] += tWood->getWeight();
+          totalWood[1] += tWood->getVolume();
+        }
       }
     }
   }
@@ -365,27 +346,26 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
 
   double newWeight = whittleItems[tIndex].weiSize,
          newVolume = whittleItems[tIndex].volSize;
-  int    totalUsed = 0;
+  int totalUsed = 0;
 
   if (totalWood[0] >= newWeight && totalWood[1] >= newVolume) {
     if (!realCreate)
       return true;
 
-    for(StuffIter it=ch->stuff.begin();it!=ch->stuff.end();){
-      TThing *tObjTemp=*(it++);
+    for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end();) {
+      TThing* tObjTemp = *(it++);
 
-      if(!isname(tObjTemp->name, tStWood))
-	continue;
+      if (!isname(tObjTemp->name, tStWood))
+        continue;
 
-      if ((tWood = dynamic_cast<TOrganic *>(tObjTemp))) {
+      if ((tWood = dynamic_cast<TOrganic*>(tObjTemp))) {
         if (tWood->getOType() != ORGANIC_WOOD)
           continue;
 
         if (!tOldWood)
           tOldWood = tWood;
 
-        act("You use $p for your object.",
-            FALSE, ch, tWood, NULL, TO_CHAR);
+        act("You use $p for your object.", FALSE, ch, tWood, NULL, TO_CHAR);
 
         if (newWeight > 0)
           newWeight -= tWood->getWeight();
@@ -394,8 +374,8 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
           newVolume -= tWood->getVolume();
 
         if (newWeight > -1 || newVolume > -1) {
-          act("$p is pretty much used up so you scrap what's left.",
-              FALSE, ch, tWood, NULL, TO_CHAR);
+          act("$p is pretty much used up so you scrap what's left.", FALSE, ch,
+            tWood, NULL, TO_CHAR);
           totalUsed++;
 
           --(*tWood);
@@ -407,18 +387,20 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
         } else {
           tWood->setWeight(-(newWeight));
           tWood->setVolume((int)(-newVolume));
-          act("You cut a chunk of wood off of $p to create the object.",
-              FALSE, ch, tWood, NULL, TO_CHAR);
+          act("You cut a chunk of wood off of $p to create the object.", FALSE,
+            ch, tWood, NULL, TO_CHAR);
 
           break;
         }
       }
     }
 
-    if (!(ch->task->obj = read_object(real_object(whittleItems[tIndex].itemVnum), REAL))) {
+    if (!(ch->task->obj =
+            read_object(real_object(whittleItems[tIndex].itemVnum), REAL))) {
       ch->sendTo("Something bad happened.  Tell a god.\n\r");
-      vlogf(LOG_BUG, format("Player in whittle got to item that doesn't exist!  [%d]") % 
-            whittleItems[tIndex].itemVnum);
+      vlogf(LOG_BUG,
+        format("Player in whittle got to item that doesn't exist!  [%d]") %
+          whittleItems[tIndex].itemVnum);
       return false;
     }
 
@@ -435,26 +417,25 @@ bool task_whittleCreateNew(TBeing *ch, sstring tStWood, int tIndex)
   return false;
 }
 
-int checkForSlipup(TBeing *ch)
-{
-  int        tCheck   = min(100, max(0, (ch->getSkillValue(SKILL_WHITTLE) - 10)));
-  TThing     *tWeapon = NULL;
-  TGenWeapon *tWeap   = NULL;
+int checkForSlipup(TBeing* ch) {
+  int tCheck = min(100, max(0, (ch->getSkillValue(SKILL_WHITTLE) - 10)));
+  TThing* tWeapon = NULL;
+  TGenWeapon* tWeap = NULL;
 
-  tWeap = dynamic_cast<TGenWeapon *>((tWeapon = ch->heldInPrimHand()));
+  tWeap = dynamic_cast<TGenWeapon*>((tWeapon = ch->heldInPrimHand()));
 
   if (tCheck < ::number(-50, 100) && !ch->isImmortal()) {
-    act("You slip up and cut yourself on $p.",
-        FALSE, ch, tWeapon, NULL, TO_CHAR);
-    act("$n slips up and cuts $mself on $p",
-        FALSE, ch, tWeapon, NULL, TO_ROOM);
+    act("You slip up and cut yourself on $p.", FALSE, ch, tWeapon, NULL,
+      TO_CHAR);
+    act("$n slips up and cuts $mself on $p", FALSE, ch, tWeapon, NULL, TO_ROOM);
 
     if (tWeap->getCurSharp() > 4)
       tWeap->addToCurSharp(-3);
 
     ch->dropBloodLimb((ch->isRightHanded() ? WEAR_FINGER_L : WEAR_FINGER_R));
 
-    if (ch->reconcileDamage(ch, 5+(min(20, tWeap->getCurSharp()) / 2), SKILL_WHITTLE) == -1) {
+    if (ch->reconcileDamage(ch, 5 + (min(20, tWeap->getCurSharp()) / 2),
+          SKILL_WHITTLE) == -1) {
       if (ch->task->obj) {
         delete ch->task->obj;
         ch->task->obj = NULL;
@@ -476,12 +457,11 @@ int checkForSlipup(TBeing *ch)
 }
 
 // This process is supposed to take a TON of time.  Please keep it that way.
-int task_whittleObject(TBeing *ch, sstring tStWood)
-{
-  int    nRc = TRUE;
-    // dRc;
-  TArrow *tArrow = dynamic_cast<TArrow *>(ch->task->obj);
-  TBow   *tBow   = dynamic_cast<TBow   *>(ch->task->obj);
+int task_whittleObject(TBeing* ch, sstring tStWood) {
+  int nRc = TRUE;
+  // dRc;
+  TArrow* tArrow = dynamic_cast<TArrow*>(ch->task->obj);
+  TBow* tBow = dynamic_cast<TBow*>(ch->task->obj);
 
   //  Dash requested damage from whittle be removed
   //
@@ -490,14 +470,14 @@ int task_whittleObject(TBeing *ch, sstring tStWood)
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_WHITTLE, 1);
 
-  double objSize = (((ch->task->obj->getWeight() +
-                      ch->task->obj->getVolume()) / 25) *
-                    whittleItems[ch->task->flags].itemType);
+  double objSize =
+    (((ch->task->obj->getWeight() + ch->task->obj->getVolume()) / 25) *
+      whittleItems[ch->task->flags].itemType);
   double process = ((++ch->task->timeLeft) / objSize);
 
   if (process >= 0.00 && process <= 0.40) {
-    act("You gently carve a part of $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_CHAR);
+    act("You gently carve a part of $p.", FALSE, ch, ch->task->obj, NULL,
+      TO_CHAR);
   }
 
   if (process >= 0.41 && process <= 0.80) {
@@ -510,8 +490,8 @@ int task_whittleObject(TBeing *ch, sstring tStWood)
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_CARVED);
     }
 
-    act("You gently scrape the nodes off of $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_CHAR);
+    act("You gently scrape the nodes off of $p.", FALSE, ch, ch->task->obj,
+      NULL, TO_CHAR);
   }
 
   if (process >= 0.81 && process <= 0.99) {
@@ -524,8 +504,7 @@ int task_whittleObject(TBeing *ch, sstring tStWood)
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_SCRAPED);
     }
 
-    act("You gently smooth $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_CHAR);
+    act("You gently smooth $p.", FALSE, ch, ch->task->obj, NULL, TO_CHAR);
   }
 
   if (process >= 1.00) {
@@ -538,11 +517,9 @@ int task_whittleObject(TBeing *ch, sstring tStWood)
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_SMOOTHED);
     }
 
-    act("You are done with $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_CHAR);
-    act("$n finishes whittling $p.",
-        FALSE, ch, ch->task->obj, NULL, TO_ROOM);
-    TThing *tThing;
+    act("You are done with $p.", FALSE, ch, ch->task->obj, NULL, TO_CHAR);
+    act("$n finishes whittling $p.", FALSE, ch, ch->task->obj, NULL, TO_ROOM);
+    TThing* tThing;
     tThing = ch->task->obj;
     *ch += *tThing;
     ch->task->obj = NULL;
@@ -550,16 +527,14 @@ int task_whittleObject(TBeing *ch, sstring tStWood)
     if (tArrow) {
       if (tStWood.empty()) {
         ch->sendTo("You finish your modifications and stop.\n\r");
-        act("$n finishes $s work and stops.",
-            FALSE, ch, NULL, NULL, TO_ROOM);
+        act("$n finishes $s work and stops.", FALSE, ch, NULL, NULL, TO_ROOM);
         ch->stopTask();
       } else if (!task_whittleCreateNew(ch, tStWood, ch->task->flags)) {
         ch->sendTo("You don't have enough wood to make another arrow.\n\r");
         ch->stopTask();
       } else {
         ch->sendTo("You begin making another arrow.\n\r");
-        act("$n starts on a new arrow.",
-            FALSE, ch, NULL, NULL, TO_ROOM);
+        act("$n starts on a new arrow.", FALSE, ch, NULL, NULL, TO_ROOM);
       }
     } else
       ch->stopTask();
@@ -569,23 +544,28 @@ int task_whittleObject(TBeing *ch, sstring tStWood)
 }
 
 // whittle <object> <wood>
-void TBeing::doWhittle(const char *tArg)
-{
+void TBeing::doWhittle(const char* tArg) {
   if (!doesKnowSkill(SKILL_WHITTLE)) {
     sendTo("I bet you wish you knew how to whittle.\n\r");
     return;
   }
 
   if (!tArg || !*tArg) {
-      sendTo("Syntax: whittle <object> <wood>\n\r");
+    sendTo("Syntax: whittle <object> <wood>\n\r");
 
     if (isImmortal()) {
-      sendTo("Object Name                                      Vol    Wei Req% VNum  Df Time\n\r");
-      sendTo("------------------------------------------------------------------------------\n\r");
+      sendTo(
+        "Object Name                                      Vol    Wei Req% VNum "
+        " Df Time\n\r");
+      sendTo(
+        "----------------------------------------------------------------------"
+        "--------\n\r");
 
-      for (int whittleIndex = 0; whittleIndex < (signed) whittleItems.size(); whittleIndex++) {
+      for (int whittleIndex = 0; whittleIndex < (signed)whittleItems.size();
+           whittleIndex++) {
         double whittleTime = (((whittleItems[whittleIndex].volSize +
-                                whittleItems[whittleIndex].weiSize) / 25) *
+                                 whittleItems[whittleIndex].weiSize) /
+                                25) *
                               whittleItems[whittleIndex].itemType);
 
         sendTo(format("%-45s:%c: %6.0f %3.0f %3.0d%c %5d %2d %4.0f\n\r") %
@@ -595,33 +575,28 @@ void TBeing::doWhittle(const char *tArg)
                whittleItems[whittleIndex].weiSize %
                whittleItems[whittleIndex].whittleReq % '%' %
                whittleItems[whittleIndex].itemVnum %
-               whittleItems[whittleIndex].itemType %
-               whittleTime);
+               whittleItems[whittleIndex].itemType % whittleTime);
       }
     }
 
     return;
   }
 
-  sstring      tStString(tArg),
-              tStObject(""),
-              tStWood("");
-  TThing     *tObj;
-  int         knownLevel = 0;
-  int         tIndex     = -1;
-  TGenWeapon *tWeapon = dynamic_cast<TGenWeapon *>(heldInPrimHand());
+  sstring tStString(tArg), tStObject(""), tStWood("");
+  TThing* tObj;
+  int knownLevel = 0;
+  int tIndex = -1;
+  TGenWeapon* tWeapon = dynamic_cast<TGenWeapon*>(heldInPrimHand());
 
-  tStObject=tStString.word(0);
-  tStWood=tStString.word(1);
-
+  tStObject = tStString.word(0);
+  tStWood = tStString.word(1);
 
   if (tStObject.empty()) {
     sendTo("Syntax: whittle <object> <wood>\n\r");
     return;
   }
 
-  if (!tWeapon || (!tWeapon->isPierceWeapon() &&
-                   !tWeapon->isSlashWeapon())) {
+  if (!tWeapon || (!tWeapon->isPierceWeapon() && !tWeapon->isSlashWeapon())) {
     sendTo("You must be wielding a slash or pierce weapon to do this.\n\r");
     return;
   }
@@ -632,22 +607,25 @@ void TBeing::doWhittle(const char *tArg)
       return;
     }
 
-    TArrow *tArrow = nullptr;
-    TBow   *tBow = nullptr;
+    TArrow* tArrow = nullptr;
+    TBow* tBow = nullptr;
 
-    if (!(tArrow = dynamic_cast<TArrow *>(tObj)) &&
-        !(tBow   = dynamic_cast<TBow   *>(tObj))) {
+    if (!(tArrow = dynamic_cast<TArrow*>(tObj)) &&
+        !(tBow = dynamic_cast<TBow*>(tObj))) {
       sendTo("I'm afraid you cannot continue whittling on that item.\n\r");
       return;
     }
 
     if (tArrow) {
       if (tArrow->isArrowFlag(ARROW_SMOOTHED)) {
-        sendTo("That arrow is already finished, you cannot continue whittling it.\n\r");
+        sendTo(
+          "That arrow is already finished, you cannot continue whittling "
+          "it.\n\r");
         return;
       }
 
-      // int knownLevel = 0; I assume this is a bug. this knownLevel overrides the function-scoped one.
+      // int knownLevel = 0; I assume this is a bug. this knownLevel overrides
+      // the function-scoped one.
 
       if (tArrow->isArrowFlag(ARROW_CARVED))
         knownLevel = 5;
@@ -656,7 +634,9 @@ void TBeing::doWhittle(const char *tArg)
         knownLevel = 7;
     } else {
       if (tBow->isBowFlag(BOW_SMOOTHED)) {
-        sendTo("That bow is already finished, you cannot continue whittling it.\n\r");
+        sendTo(
+          "That bow is already finished, you cannot continue whittling "
+          "it.\n\r");
         return;
       }
 
@@ -667,10 +647,11 @@ void TBeing::doWhittle(const char *tArg)
         knownLevel = 15;
     }
 
-    TObj *tObjTemp = dynamic_cast<TObj *>(tObj);
+    TObj* tObjTemp = dynamic_cast<TObj*>(tObj);
 
     if (tObjTemp)
-      for (int objectIndex = 0; objectIndex < (signed) whittleItems.size(); objectIndex++)
+      for (int objectIndex = 0; objectIndex < (signed)whittleItems.size();
+           objectIndex++)
         if (tObjTemp->objVnum() == whittleItems[objectIndex].itemVnum) {
           tIndex = objectIndex;
           break;
@@ -683,14 +664,16 @@ void TBeing::doWhittle(const char *tArg)
 
     --(*tObj);
 
-    start_task(this, tObj, roomp, TASK_WHITTLE, "", knownLevel, in_room, 1, tIndex, 40);
+    start_task(this, tObj, roomp, TASK_WHITTLE, "", knownLevel, in_room, 1,
+      tIndex, 40);
   } else {
-    for (int objectIndex = 0; objectIndex < (signed) whittleItems.size(); objectIndex++)
+    for (int objectIndex = 0; objectIndex < (signed)whittleItems.size();
+         objectIndex++)
       if (whittleItems[objectIndex] == tStObject &&
           ((whittleItems[objectIndex].tClass == -1 ||
-            hasClass(whittleItems[objectIndex].tClass) ||
-            isImmortal())) &&
-          getSkillValue(SKILL_WHITTLE) >= whittleItems[objectIndex].whittleReq) {
+            hasClass(whittleItems[objectIndex].tClass) || isImmortal())) &&
+          getSkillValue(SKILL_WHITTLE) >=
+            whittleItems[objectIndex].whittleReq) {
         tIndex = objectIndex;
         break;
       }
@@ -710,7 +693,8 @@ void TBeing::doWhittle(const char *tArg)
       return;
     }
 
-    start_task(this, NULL, roomp, TASK_WHITTLE, tStWood.c_str(), 0, in_room, 1, tIndex, 40);
+    start_task(this, NULL, roomp, TASK_WHITTLE, tStWood.c_str(), 0, in_room, 1,
+      tIndex, 40);
 
     if (!task_whittleCreateNew(this, tStWood, tIndex)) {
       sendTo("You did something bad.  Tell a god.\n\r");
@@ -720,14 +704,14 @@ void TBeing::doWhittle(const char *tArg)
   }
 }
 
-int task_whittle(TBeing *ch, cmdTypeT cmd, const char *tArg, int pulse, TRoom *, TObj *tObj)
-{
-  int         nRc = TRUE;
-  sstring      tStWood(tArg);
-  TGenWeapon *tWeapon;
+int task_whittle(TBeing* ch, cmdTypeT cmd, const char* tArg, int pulse, TRoom*,
+  TObj* tObj) {
+  int nRc = TRUE;
+  sstring tStWood(tArg);
+  TGenWeapon* tWeapon;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
-      ch->task->flags < 1 || ch->task->flags >= (signed) whittleItems.size()) {
+      ch->task->flags < 1 || ch->task->flags >= (signed)whittleItems.size()) {
     stop_whittling(ch);
     return FALSE;
   }
@@ -737,18 +721,19 @@ int task_whittle(TBeing *ch, cmdTypeT cmd, const char *tArg, int pulse, TRoom *,
     return FALSE;
 
   if (!tObj) {
-    ch->sendTo("Somehow the object you were making has vanished, how odd...\n\r");
-    act("$n looks around really confused.",
-        FALSE, ch, NULL, NULL, TO_ROOM);
+    ch->sendTo(
+      "Somehow the object you were making has vanished, how odd...\n\r");
+    act("$n looks around really confused.", FALSE, ch, NULL, NULL, TO_ROOM);
     ch->stopTask();
     return TRUE;
   }
 
-  if (!(tWeapon = dynamic_cast<TGenWeapon *>(ch->heldInPrimHand())) ||
+  if (!(tWeapon = dynamic_cast<TGenWeapon*>(ch->heldInPrimHand())) ||
       (!tWeapon->isPierceWeapon() && !tWeapon->isSlashWeapon())) {
-    ch->sendTo("Hrm.  Your no longer using an appropriate weapon, so you are forced to stop.\n\r");
-    act("$n looks around really confused.",
-        FALSE, ch, NULL, NULL, TO_ROOM);
+    ch->sendTo(
+      "Hrm.  Your no longer using an appropriate weapon, so you are forced to "
+      "stop.\n\r");
+    act("$n looks around really confused.", FALSE, ch, NULL, NULL, TO_ROOM);
     stop_whittling(ch);
     return TRUE;
   }
@@ -762,7 +747,8 @@ int task_whittle(TBeing *ch, cmdTypeT cmd, const char *tArg, int pulse, TRoom *,
       stop_whittling(ch);
       break;
     case CMD_TASK_FIGHTING:
-      ch->sendTo("You are unable to continue whittling while under attack!\n\r");
+      ch->sendTo(
+        "You are unable to continue whittling while under attack!\n\r");
       stop_whittling(ch);
       break;
     default:
@@ -777,49 +763,45 @@ int task_whittle(TBeing *ch, cmdTypeT cmd, const char *tArg, int pulse, TRoom *,
 
 //***** All below here is for the 'class taskWhittleEntry' stuff
 
-bool taskWhittleEntry::operator==(sstring tString)
-{
+bool taskWhittleEntry::operator==(sstring tString) {
   return (valid && isname(tString, name));
 }
 
-sstring taskWhittleEntry::getName(bool showSecond)
-{
+sstring taskWhittleEntry::getName(bool showSecond) {
   sstring tStString(name), tStName, tStExcess, tName;
 
-  tStName=tStString.word(0);
-  tStExcess=tStString.word(1);
+  tStName = tStString.word(0);
+  tStExcess = tStString.word(1);
 
   if (showSecond)
-    tName=tStExcess;
+    tName = tStExcess;
   else
-    tName=tStName;
+    tName = tStName;
 
-  for(unsigned int i=0;i<tName.size();++i)
-    if(tName[i] == '-')
-      tName[i]=' ';
+  for (unsigned int i = 0; i < tName.size(); ++i)
+    if (tName[i] == '-')
+      tName[i] = ' ';
 
   return (tName);
 }
 
 void taskWhittleEntry::operator()(sstring tString, int newtClass,
-                                  int newWhittleReq, int newItemVnum,
-                                  bool newAffectValue,
-                                  whittleTypeT newItemType = WHITTLE_ERROR)
-{
-  TObj *tObj = NULL;
-  int   tRealNum = -1;
+  int newWhittleReq, int newItemVnum, bool newAffectValue,
+  whittleTypeT newItemType = WHITTLE_ERROR) {
+  TObj* tObj = NULL;
+  int tRealNum = -1;
 
-  name        = tString;
-  itemType    = newItemType;
-  whittleReq  = newWhittleReq;
-  itemVnum    = newItemVnum;
+  name = tString;
+  itemType = newItemType;
+  whittleReq = newWhittleReq;
+  itemVnum = newItemVnum;
   affectValue = newAffectValue;
-  tClass      = newtClass;
+  tClass = newtClass;
 
   if (itemVnum >= 0)
     tRealNum = real_object(itemVnum);
 
-  if (tRealNum < 0 || tRealNum > (signed) obj_index.size() ||
+  if (tRealNum < 0 || tRealNum > (signed)obj_index.size() ||
       !(tObj = read_object(tRealNum, REAL)))
     valid = false;
   else {
@@ -829,9 +811,10 @@ void taskWhittleEntry::operator()(sstring tString, int newtClass,
     weiSize *= 1.10;
     weaSize = max(400.0, ((volSize + weiSize) / 10));
 
-    vlogf(LOG_MISC, format("Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]") % 
-          volSize % tObj->getVolume() % (tObj->getVolume() * 1.10) %
-          weiSize % tObj->getWeight() % (tObj->getWeight() * 1.10));
+    vlogf(LOG_MISC,
+      format("Adding Whittle: [%.1f %d : %.1f] [%.1f %.1f : %.1f]") % volSize %
+        tObj->getVolume() % (tObj->getVolume() * 1.10) % weiSize %
+        tObj->getWeight() % (tObj->getWeight() * 1.10));
 
     valid = true;
     delete tObj;
@@ -849,10 +832,6 @@ taskWhittleEntry::taskWhittleEntry() :
   tClass(-1),
   itemType(WHITTLE_ERROR),
   valid(false),
-  affectValue(false)
-{
-}
+  affectValue(false) {}
 
-taskWhittleEntry::~taskWhittleEntry()
-{
-}
+taskWhittleEntry::~taskWhittleEntry() {}

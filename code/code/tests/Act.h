@@ -10,75 +10,80 @@
 #include "socket.h"
 #include "player_data.h"
 
-class Act : public CxxTest::TestSuite
-{
- public:
-  Descriptor *testDesc;
-  Descriptor *testDesc2;
-  Descriptor *testHorseDesc;
-  TPerson *testPerson;
-  TPerson *testPerson2;
-  TPerson *testHorse;
-  TRoom *testRoom;
-  charFile st;
+class Act : public CxxTest::TestSuite {
+  public:
+    Descriptor* testDesc;
+    Descriptor* testDesc2;
+    Descriptor* testHorseDesc;
+    TPerson* testPerson;
+    TPerson* testPerson2;
+    TPerson* testHorse;
+    TRoom* testRoom;
+    charFile st;
 
-  void setUp(){
-    Config::doConfiguration();
+    void setUp() {
+      Config::doConfiguration();
 
-    buildSpellArray();
-    chdir("../lib");
-    Races[RACE_HUMAN] = new Race(RACE_HUMAN);
+      buildSpellArray();
+      chdir("../lib");
+      Races[RACE_HUMAN] = new Race(RACE_HUMAN);
 
-    testRoom=new TRoom(100);
-    testRoom->setRoomFlagBit(ROOM_ALWAYS_LIT);
+      testRoom = new TRoom(100);
+      testRoom->setRoomFlagBit(ROOM_ALWAYS_LIT);
 
-    testDesc=new Descriptor(new TSocket());
-    testPerson=new TPerson(testDesc);
-    load_char("test", &st, std::unique_ptr<MockDb>());
-    testPerson->loadFromSt(&st);
-    testPerson->in_room=0;
-    *testRoom += *testPerson;
+      testDesc = new Descriptor(new TSocket());
+      testPerson = new TPerson(testDesc);
+      load_char("test", &st, std::unique_ptr<MockDb>());
+      testPerson->loadFromSt(&st);
+      testPerson->in_room = 0;
+      *testRoom += *testPerson;
 
-    testDesc2=new Descriptor(new TSocket());
-    testPerson2=new TPerson(testDesc2);
-    load_char("testone", &st, std::unique_ptr<MockDb>());
-    testPerson2->loadFromSt(&st);
-    testPerson2->in_room=0;
-    *testRoom += *testPerson2;
+      testDesc2 = new Descriptor(new TSocket());
+      testPerson2 = new TPerson(testDesc2);
+      load_char("testone", &st, std::unique_ptr<MockDb>());
+      testPerson2->loadFromSt(&st);
+      testPerson2->in_room = 0;
+      *testRoom += *testPerson2;
 
-    testHorseDesc=new Descriptor(new TSocket());
-    testHorse=new TPerson(testHorseDesc);
-    load_char("testtwo", &st, std::unique_ptr<MockDb>());
-    testHorse->loadFromSt(&st);
-    testHorse->in_room=0;
-    *testRoom += *testHorse;
-  }
+      testHorseDesc = new Descriptor(new TSocket());
+      testHorse = new TPerson(testHorseDesc);
+      load_char("testtwo", &st, std::unique_ptr<MockDb>());
+      testHorse->loadFromSt(&st);
+      testHorse->in_room = 0;
+      *testRoom += *testHorse;
+    }
 
-  void testSimple(){
-    CommPtr c;
+    void testSimple() {
+      CommPtr c;
 
-    act("You start riding $N.", FALSE, testPerson, 0, testHorse, TO_CHAR, NULL, -1);
-    act("$n starts riding $N.", FALSE, testPerson, 0, testHorse, TO_NOTVICT, NULL, -1);
-    act("$n hops on your back!", FALSE, testPerson, 0, testHorse, TO_VICT, NULL, -1);
+      act("You start riding $N.", FALSE, testPerson, 0, testHorse, TO_CHAR,
+        NULL, -1);
+      act("$n starts riding $N.", FALSE, testPerson, 0, testHorse, TO_NOTVICT,
+        NULL, -1);
+      act("$n hops on your back!", FALSE, testPerson, 0, testHorse, TO_VICT,
+        NULL, -1);
 
-    TS_ASSERT(!testPerson->desc->output.empty());
-    TS_ASSERT_EQUALS(testPerson->desc->output.front()->getComm(), "You start riding Testone.\n\r");
+      TS_ASSERT(!testPerson->desc->output.empty());
+      TS_ASSERT_EQUALS(testPerson->desc->output.front()->getComm(),
+        "You start riding Testone.\n\r");
 
-    TS_ASSERT(!testPerson2->desc->output.empty());
-    TS_ASSERT_EQUALS(testPerson2->desc->output.front()->getComm(), "Test starts riding Testone.\n\r");
+      TS_ASSERT(!testPerson2->desc->output.empty());
+      TS_ASSERT_EQUALS(testPerson2->desc->output.front()->getComm(),
+        "Test starts riding Testone.\n\r");
 
-    TS_ASSERT(!testHorse->desc->output.empty());
-    TS_ASSERT_EQUALS(testHorse->desc->output.front()->getComm(), "Test hops on your back!\n\r");
-  }
+      TS_ASSERT(!testHorse->desc->output.empty());
+      TS_ASSERT_EQUALS(testHorse->desc->output.front()->getComm(),
+        "Test hops on your back!\n\r");
+    }
 
-  void tearDown() {
-    delete testHorse;
-    delete testPerson2;
-    delete testPerson;
-    delete testDesc2;
-    delete testDesc;
-    delete testHorseDesc;
-    delete testRoom;
-    delete Races[RACE_HUMAN];
-  }
+    void tearDown() {
+      delete testHorse;
+      delete testPerson2;
+      delete testPerson;
+      delete testDesc2;
+      delete testDesc;
+      delete testHorseDesc;
+      delete testRoom;
+      delete Races[RACE_HUMAN];
+    }
 };

@@ -5,83 +5,95 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "extern.h"
 #include "room.h"
 #include "being.h"
 #include "weather.h"
 
-void TBeing::doScore()
-{
+void TBeing::doScore() {
   time_info_data playing_time;
   sstring Buf, tString;
 
-  Buf = format("You have %s%d%s/%s%d%s hit points, ") % red() % getHit() % norm() % green() % hitLimit() % norm();
+  Buf = format("You have %s%d%s/%s%d%s hit points, ") % red() % getHit() %
+        norm() % green() % hitLimit() % norm();
 
   if (hasClass(CLASS_DEIKHAN) || hasClass(CLASS_CLERIC)) {
-    Buf+=format("%s%.2f%s %spiety, ") % cyan() % getPiety() % "%" % norm();
+    Buf += format("%s%.2f%s %spiety, ") % cyan() % getPiety() % "%" % norm();
   }
 
   if (hasClass(CLASS_SHAMAN)) {
-    Buf+=format("%s%d %slifeforce, ") % red() % getLifeforce() % norm();
+    Buf += format("%s%d %slifeforce, ") % red() % getLifeforce() % norm();
   }
 
-  if (hasClass(CLASS_MAGE) || hasClass(CLASS_MONK) || hasQuestBit(TOG_PSIONICIST)) {
-    Buf+=format("%s%d%s/%s%d%s mana, ") % orange() %  getMana() % norm() % green() % manaLimit() % norm();
+  if (hasClass(CLASS_MAGE) || hasClass(CLASS_MONK) ||
+      hasQuestBit(TOG_PSIONICIST)) {
+    Buf += format("%s%d%s/%s%d%s mana, ") % orange() % getMana() % norm() %
+           green() % manaLimit() % norm();
   }
 
-  Buf+=format("and %s%d%s/%s%d%s moves.\n\r") % purple() % getMove() % norm() % green() % moveLimit()% norm();
+  Buf += format("and %s%d%s/%s%d%s moves.\n\r") % purple() % getMove() %
+         norm() % green() % moveLimit() % norm();
   sendTo(Buf);
 
-  sendTo(format("You are %s.\n\r") % DescMoves((((double) getMove()) / ((double) moveLimit()))));
+  sendTo(format("You are %s.\n\r") %
+         DescMoves((((double)getMove()) / ((double)moveLimit()))));
 
   tString = displayExp().comify();
 
-  sendTo(format("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s talens in the bank.\n\r") % cyan() % tString % norm() %
-         purple() % getMoney() % norm() %
-         purple() % getBank() % norm());
+  sendTo(format("You have %s%s%s exp, and have %s%d%s talens plus %s%d%s "
+                "talens in the bank.\n\r") %
+         cyan() % tString % norm() % purple() % getMoney() % norm() % purple() %
+         getBank() % norm());
 
   if (desc) {
     tString = ((sstring)(format("%.2f") % desc->session.xp)).comify();
 
-    sendTo(format("You have earned %s%s%s exp this session.\n\r") % cyan() % tString % norm());
+    sendTo(format("You have earned %s%s%s exp this session.\n\r") % cyan() %
+           tString % norm());
 
     if (getExp() < getMaxExp()) {
       tString = ((sstring)(format("%.2f") % getMaxExp())).comify();
-      sendTo(format("Your most exp before your last death was: %s%s%s\n\r") % cyan() % tString % norm());
+      sendTo(format("Your most exp before your last death was: %s%s%s\n\r") %
+             cyan() % tString % norm());
     }
 
-    int total=0, count=0;
-    for (spellNumT tSpell = MIN_SPELL; tSpell < MAX_SKILL; tSpell++){
-      if(getDisciplineNumber(tSpell, FALSE)!=DISC_NONE &&
-	 doesKnowSkill(tSpell)){
-	total += getSkillValue(tSpell);
-	++count;
+    int total = 0, count = 0;
+    for (spellNumT tSpell = MIN_SPELL; tSpell < MAX_SKILL; tSpell++) {
+      if (getDisciplineNumber(tSpell, FALSE) != DISC_NONE &&
+          doesKnowSkill(tSpell)) {
+        total += getSkillValue(tSpell);
+        ++count;
       }
     }
-    if(count > 0){
-      sendTo(format("You have a total of %s%i%s skill points with an average of %s%i%s per skill.\n\r") % 
-	     cyan() % total % norm() %
-	     cyan() % (int)(total/count) % norm());
+    if (count > 0) {
+      sendTo(format("You have a total of %s%i%s skill points with an average "
+                    "of %s%i%s per skill.\n\r") %
+             cyan() % total % norm() % cyan() % (int)(total / count) % norm());
     }
 
-
-    GameTime::realTimePassed((time(0) - desc->session.connect), 0, &playing_time);
+    GameTime::realTimePassed((time(0) - desc->session.connect), 0,
+      &playing_time);
     if (playing_time.day)
       playing_time.hours += playing_time.day * 24;
 
-    sendTo(format("You have been playing for %s%d%s hour%s, %s%d%s minute%s and %s%d%s second%s in this session.\n\r") %
-         purple() % int(playing_time.hours)   % norm() % (playing_time.hours   == 1 ? "" : "s") %
-         purple() % int(playing_time.minutes) % norm() % (playing_time.minutes == 1 ? "" : "s") %
-         purple() % int(playing_time.seconds) % norm() % (playing_time.seconds == 1 ? "" : "s"));
+    sendTo(format("You have been playing for %s%d%s hour%s, %s%d%s minute%s "
+                  "and %s%d%s second%s in this session.\n\r") %
+           purple() % int(playing_time.hours) % norm() %
+           (playing_time.hours == 1 ? "" : "s") % purple() %
+           int(playing_time.minutes) % norm() %
+           (playing_time.minutes == 1 ? "" : "s") % purple() %
+           int(playing_time.seconds) % norm() %
+           (playing_time.seconds == 1 ? "" : "s"));
   }
 
   GameTime::realTimePassed((time(0) - player.time->logon) + player.time->played,
-                 0, &playing_time);
+    0, &playing_time);
 
   sendTo(format("For a lifetime total of %s%d%s day%s and %s%d%s hour%s.\n\r") %
-         purple() % int(playing_time.day)   % norm() % (playing_time.day   == 1 ? "" : "s") %
-         purple() % int(playing_time.hours) % norm() % (playing_time.hours == 1 ? "" : "s"));
+         purple() % int(playing_time.day) % norm() %
+         (playing_time.day == 1 ? "" : "s") % purple() %
+         int(playing_time.hours) % norm() %
+         (playing_time.hours == 1 ? "" : "s"));
 
   classIndT i;
   // since XP tables are all the same, the only time this should be
@@ -93,14 +105,15 @@ void TBeing::doScore()
       allClassesSame = false;
 
   if (allClassesSame)
-    sendTo(format("Your level: %s lev %2d          This ranks you as:\n\r") %           getProfName() % GetMaxLevel());
+    sendTo(format("Your level: %s lev %2d          This ranks you as:\n\r") %
+           getProfName() % GetMaxLevel());
   else {
     sendTo("Your level: ");
     bool shownFirst = false;
     for (i = MAGE_LEVEL_IND; i < MAX_CLASSES; i++) {
       if (getLevel(i)) {
-        sendTo(format("%s%s lev %2d") %             (shownFirst ? ", " : "") %
-	       classInfo[i].name.cap() % getLevel(i));
+        sendTo(format("%s%s lev %2d") % (shownFirst ? ", " : "") %
+               classInfo[i].name.cap() % getLevel(i));
         shownFirst = true;
       }
     }
@@ -118,13 +131,19 @@ void TBeing::doScore()
       tString = ((sstring)(format("%.2f") % need)).comify();
 
       if (allClassesSame) {
-        sendTo(format("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %             purple() % tString % norm() % purple() % (getLevel(i)+1) %
-	       getProfName() % norm());
+        sendTo(
+          format(
+            "You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %
+          purple() % tString % norm() % purple() % (getLevel(i) + 1) %
+          getProfName() % norm());
         break;
       } else {
         // leveled in one class, but not another, show each class as own line
-        sendTo(format("You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %             purple() % tString % norm() % purple() % (getLevel(i)+1) %
-             classInfo[i].name.cap() % norm());
+        sendTo(
+          format(
+            "You need %s%s%s experience points to be a %sLevel %d %s%s.\n\r") %
+          purple() % tString % norm() % purple() % (getLevel(i) + 1) %
+          classInfo[i].name.cap() % norm());
       }
     }
   }
@@ -167,7 +186,7 @@ void TBeing::doScore()
   else if (task) {
     sendTo(format("You are %s.\n\r") % tasks[task->task].name);
   } else {
-    TBeing *tbr;
+    TBeing* tbr;
     switch (getPosition()) {
       case POSITION_DEAD:
         sendTo("You are DEAD!\n\r");
@@ -183,16 +202,16 @@ void TBeing::doScore()
         break;
       case POSITION_SLEEPING:
         if (riding) {
-          Buf="You are sleeping on ";
+          Buf = "You are sleeping on ";
 
           if (!riding->getName().empty())
-            Buf+=objs(riding);
+            Buf += objs(riding);
           else
-            Buf+="A bad object";
+            Buf += "A bad object";
 
-          Buf+=".\n\r";
+          Buf += ".\n\r";
         } else
-          Buf="You are sleeping.\n\r";
+          Buf = "You are sleeping.\n\r";
 
         sendTo(Buf);
         break;
@@ -200,11 +219,11 @@ void TBeing::doScore()
         if (riding) {
           Buf = "You are resting on ";
           if (!riding->getName().empty())
-            Buf+=objs(riding);
+            Buf += objs(riding);
           else
-            Buf+="A horse with a bad short description, BUG THIS!";
+            Buf += "A horse with a bad short description, BUG THIS!";
 
-          Buf+=".\n\r";
+          Buf += ".\n\r";
         } else
           Buf = "You are resting.\n\r";
 
@@ -215,21 +234,21 @@ void TBeing::doScore()
         break;
       case POSITION_SITTING:
         if (riding) {
-          Buf="You are sitting on ";
+          Buf = "You are sitting on ";
           if (!riding->getName().empty())
             Buf += objs(riding);
           else
-	    Buf += "A bad object!";
+            Buf += "A bad object!";
 
           Buf += ".\n\r";
         } else
-          Buf="You are sitting.\n\r";
+          Buf = "You are sitting.\n\r";
 
         sendTo(Buf);
         break;
       case POSITION_FLYING:
 
-         if (roomp && roomp->isUnderwaterSector())
+        if (roomp && roomp->isUnderwaterSector())
           sendTo("You are swimming about.");
         else
           sendTo("You are flying about.\n\r");
@@ -239,17 +258,16 @@ void TBeing::doScore()
         sendTo("You are standing.\n\r");
         break;
       case POSITION_MOUNTED:
-        tbr = dynamic_cast<TBeing *>(riding);
+        tbr = dynamic_cast<TBeing*>(riding);
         if (tbr && tbr->horseMaster() == this) {
-	  Buf = "You are here, riding ";
-	  Buf += pers(tbr);
-	  Buf += ".\n\r";
+          Buf = "You are here, riding ";
+          Buf += pers(tbr);
+          Buf += ".\n\r";
           sendTo(COLOR_MOBS, Buf);
         } else if (tbr) {
-	  Buf = format("You are here, also riding on %s's %s%s.\n\r") %
-	    pers(tbr->horseMaster()) %
-	    persfname(tbr) %
-	    (tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
+          Buf = format("You are here, also riding on %s's %s%s.\n\r") %
+                pers(tbr->horseMaster()) % persfname(tbr) %
+                (tbr->isAffected(AFF_INVISIBLE) ? " (invisible)" : "");
 
           sendTo(COLOR_MOBS, Buf);
         } else
@@ -264,11 +282,13 @@ void TBeing::doScore()
   if (affectedBySpell(AFFECT_WET))
     sendTo(format("You feel %s.\n\r") % Weather::describeWet(this));
 
-  sendTo(format("You are in %s%s%s attack mode.\n\r") %         cyan() % attack_modes[getCombatMode()] % norm());
+  sendTo(format("You are in %s%s%s attack mode.\n\r") % cyan() %
+         attack_modes[getCombatMode()] % norm());
 
   if (getWimpy())
-    sendTo(format("You are in wimpy mode, and will flee at %d hit points.\n\r") %
-	   getWimpy());
+    sendTo(
+      format("You are in wimpy mode, and will flee at %d hit points.\n\r") %
+      getWimpy());
 
   describeLimbDamage(this);
   sendTo(COLOR_BASIC, describeAffects(this, SHOW_ME));

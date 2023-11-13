@@ -22,32 +22,29 @@
 #include "person.h"
 
 const int SLEEPTAG_CONTROL_ROOM = 23599;
-const int SLEEPTAG_STAFF        = 23500;
-const int SLEEPTAG_START        = 23400;
-const int SLEEPTAG_END          = 23598;
+const int SLEEPTAG_STAFF = 23500;
+const int SLEEPTAG_START = 23400;
+const int SLEEPTAG_END = 23598;
 
 #define ACTIVE 0
 
-void sleepTagReport(int, const char *, ...);
+void sleepTagReport(int, const char*, ...);
 
-struct SPEntry
-{
-  bool isActive;
+struct SPEntry {
+    bool isActive;
 
-  TThing *tPlayer;
-  struct SPEntry *tNext;
+    TThing* tPlayer;
+    struct SPEntry* tNext;
 };
 
-struct SSTControl
-{
-  bool   isActive;
-  time_t tTimeStarted;
+struct SSTControl {
+    bool isActive;
+    time_t tTimeStarted;
 
-  struct SPEntry *tPlayer;
+    struct SPEntry* tPlayer;
 };
 
-void sleepTagEndGame(SSTControl *);
-
+void sleepTagEndGame(SSTControl*);
 
 /*
   To-Be-Added:
@@ -56,46 +53,41 @@ void sleepTagEndGame(SSTControl *);
     4. Code to end a game, declare a winner and specify total time passed.
     5. Code to force ending of a game.
  */
-int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
-{
+int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
+  TRoom* tRoom) {
   if (gamePort == Config::Port::PROD || !ACTIVE)
     return FALSE;
 
-  SSTControl *tJob   = NULL;
-  SPEntry    *tEntry = NULL;
-  TThing     *tThing,
-             *tIThing,
-             *tCThing,
-             *tEThing;
-  sstring      tStOrig(tArg),
-              tStString(""),
-              tStBuffer("");
+  SSTControl* tJob = NULL;
+  SPEntry* tEntry = NULL;
+  TThing *tThing, *tIThing, *tCThing, *tEThing;
+  sstring tStOrig(tArg), tStString(""), tStBuffer("");
 
   if (tRoom->act_ptr)
-    tJob = static_cast<SSTControl *>(tRoom->act_ptr);
+    tJob = static_cast<SSTControl*>(tRoom->act_ptr);
 
   switch (tCmd) {
     case CMD_SAY:
-      tStString=tStOrig.word(0);
-      tStBuffer=tStOrig.word(1);
+      tStString = tStOrig.word(0);
+      tStBuffer = tStOrig.word(1);
 
-
-      if(tStString.lower() != "sleeptag")
+      if (tStString.lower() != "sleeptag")
         return FALSE;
 
-      if(tStBuffer.lower() == "start"){
+      if (tStBuffer.lower() == "start") {
         if (!(tRoom->act_ptr = new SSTControl())) {
           vlogf(LOG_PROC, "Unable to allocate new SSTControl structure");
           return FALSE;
         }
 
-        tJob = static_cast<SSTControl *>(tRoom->act_ptr);
+        tJob = static_cast<SSTControl*>(tRoom->act_ptr);
 
         tJob->isActive = true;
-        tJob->tPlayer  = NULL;
+        tJob->tPlayer = NULL;
 
-        for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing=*it);++it) {
-          TBeing *tPlayer = dynamic_cast<TBeing *>(tThing);
+        for (StuffIter it = tRoom->stuff.begin();
+             it != tRoom->stuff.end() && (tThing = *it); ++it) {
+          TBeing* tPlayer = dynamic_cast<TBeing*>(tThing);
 
           if (tPlayer && tPlayer->isPc() && !tPlayer->isImmortal()) {
             if (!tJob->tPlayer) {
@@ -110,12 +102,14 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
             tEntry->tPlayer = tThing;
 
             int tNewRoom = ::number(SLEEPTAG_START, SLEEPTAG_END);
-            TRoom *tNRoom = real_roomp(tNewRoom);
+            TRoom* tNRoom = real_roomp(tNewRoom);
 
-            TObj *tStaff = read_object(SLEEPTAG_STAFF, VIRTUAL);
+            TObj* tStaff = read_object(SLEEPTAG_STAFF, VIRTUAL);
 
             if (!tNRoom || !tRoom) {
-              vlogf(LOG_PROC, format("Serious problems in Sleeptag.  [0: %d/%d]") %  !tNRoom % !tStaff);
+              vlogf(LOG_PROC,
+                format("Serious problems in Sleeptag.  [0: %d/%d]") % !tNRoom %
+                  !tStaff);
               return FALSE;
             }
 
@@ -128,17 +122,18 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
           tBeing->sendTo("Not enough players to start game.\n\r");
 
           sleepTagEndGame(tJob);
-          delete static_cast<SSTControl *>(tRoom->act_ptr);
+          delete static_cast<SSTControl*>(tRoom->act_ptr);
           tRoom->act_ptr = NULL;
         }
 
         return TRUE;
       }
 
-      if(tStBuffer.lower() == "help"){
+      if (tStBuffer.lower() == "help") {
         tBeing->sendTo("Welcome to Automated SleepTag.\n\r");
         tBeing->sendTo("To start a game do:\n\rsay sleeptag start\n\r");
-        tBeing->sendTo("Be warned that everyone in the room will be put into play.\n\r");
+        tBeing->sendTo(
+          "Be warned that everyone in the room will be put into play.\n\r");
 
         return TRUE;
       }
@@ -150,7 +145,8 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
             continue;
 
           // If they are active an in the game, then just return;
-          if (tEntry->tPlayer->roomp && tEntry->tPlayer->roomp->getZoneNum() == tRoom->getZoneNum())
+          if (tEntry->tPlayer->roomp &&
+              tEntry->tPlayer->roomp->getZoneNum() == tRoom->getZoneNum())
             return FALSE;
 
           tEntry->isActive = false;
@@ -158,7 +154,7 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
 
         // We have 0 active players and the game is still active.  End it now.
         sleepTagEndGame(tJob);
-        delete static_cast<SSTControl *>(tRoom->act_ptr);
+        delete static_cast<SSTControl*>(tRoom->act_ptr);
         tRoom->act_ptr = NULL;
       }
 
@@ -166,18 +162,19 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
     case CMD_UP:
       tBeing->sendTo("Hope you had a good time.\n\r");
 
-      for(StuffIter it=tBeing->stuff.begin();it!=tBeing->stuff.end();){
-	tThing=*(it++);
-        TObj *tObj = dynamic_cast<TObj *>(tThing);
+      for (StuffIter it = tBeing->stuff.begin(); it != tBeing->stuff.end();) {
+        tThing = *(it++);
+        TObj* tObj = dynamic_cast<TObj*>(tThing);
 
         if (tObj && tObj->objVnum() == SLEEPTAG_STAFF) {
           --(*tThing);
           delete tThing;
           tThing = NULL;
         } else if (!tThing->stuff.empty())
-	  for(StuffIter itt=tThing->stuff.begin();itt!=tThing->stuff.end();){
-            tCThing=*(it++);
-            TObj *tCObj = dynamic_cast<TObj *>(tCThing);
+          for (StuffIter itt = tThing->stuff.begin();
+               itt != tThing->stuff.end();) {
+            tCThing = *(it++);
+            TObj* tCObj = dynamic_cast<TObj*>(tCThing);
 
             if (tCObj && tCObj->objVnum() == SLEEPTAG_STAFF) {
               --(*tCThing);
@@ -211,12 +208,10 @@ int sleepTagControl(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoo
   return FALSE;
 }
 
-void sleepTagEndGame(SSTControl *tJob)
-{
-  SPEntry *tEntry,
-          *tNextEntry;
+void sleepTagEndGame(SSTControl* tJob) {
+  SPEntry *tEntry, *tNextEntry;
 
-  for (tEntry = tJob->tPlayer; tEntry; ) {
+  for (tEntry = tJob->tPlayer; tEntry;) {
     tNextEntry = tEntry->tNext;
     delete tEntry;
     tEntry = tNextEntry;
@@ -225,38 +220,42 @@ void sleepTagEndGame(SSTControl *tJob)
   tJob->tPlayer = NULL;
 }
 
-int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
-{
+int sleepTagRoom(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
+  TRoom* tRoom) {
   if (gamePort == Config::Port::PROD || !ACTIVE)
     return FALSE;
 
-  TThing *tThing;
-  TBeing *tPerson;
-  TRoom  *tRP;
-  TStaff *tStaff = NULL;
-  TWand  *tWand = NULL;
+  TThing* tThing;
+  TBeing* tPerson;
+  TRoom* tRP;
+  TStaff* tStaff = NULL;
+  TWand* tWand = NULL;
 
   switch (tCmd) {
     case CMD_GENERIC_PULSE:
 
-      for(StuffIter it=tRoom->stuff.begin();it!=tRoom->stuff.end() && (tThing=*it);++it)
-        if ((tPerson = dynamic_cast<TBeing *>(tThing))) {
+      for (StuffIter it = tRoom->stuff.begin();
+           it != tRoom->stuff.end() && (tThing = *it); ++it)
+        if ((tPerson = dynamic_cast<TBeing*>(tThing))) {
           tPerson->setMove(tPerson->getMaxMove());
 
           if (tPerson->isPc() && !tPerson->isImmortal()) {
             tPerson->setCond(FULL, 20);
             tPerson->setCond(THIRST, 24);
 
-            if (tPerson->isAffected(AFF_SLEEP)){
+            if (tPerson->isAffected(AFF_SLEEP)) {
               if ((tRP = real_roomp(SLEEPTAG_CONTROL_ROOM))) {
                 --(*tPerson);
                 *tRP += *tPerson;
                 tPerson->affectFrom(SPELL_SLUMBER);
               } else
-                vlogf(LOG_PROC, format("Unable to load room %d for sleeptag move!") %  SLEEPTAG_CONTROL_ROOM);
-	    }
+                vlogf(LOG_PROC,
+                  format("Unable to load room %d for sleeptag move!") %
+                    SLEEPTAG_CONTROL_ROOM);
+            }
 
-            sleepTagReport(tRoom->getZoneNum(), "%s has lost this game...", tPerson->getName().c_str());
+            sleepTagReport(tRoom->getZoneNum(), "%s has lost this game...",
+              tPerson->getName().c_str());
           } else {
             if (tPerson->isAffected(AFF_SLEEP)) {
               --(*tPerson);
@@ -264,7 +263,7 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
               tPerson = NULL;
             } else
               ;
-	      //tPerson->sleepTagMonsterSearch();
+            // tPerson->sleepTagMonsterSearch();
           }
         }
 
@@ -274,8 +273,8 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
       if (!tArg || !*tArg)
         tBeing->sendTo("Shout is good, but usually you shout something...\n\r");
       else
-        sleepTagReport(tRoom->getZoneNum(),
-                       "<g>%s<z> shouts, \"%s<1>\"\n\r", tBeing->getName().c_str(), tArg);
+        sleepTagReport(tRoom->getZoneNum(), "<g>%s<z> shouts, \"%s<1>\"\n\r",
+          tBeing->getName().c_str(), tArg);
 
       return TRUE;
       break;
@@ -300,11 +299,12 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
         else
           tThing = tBeing->equipment[HOLD_RIGHT];
 
-        if (!(tStaff = dynamic_cast<TStaff *>(tThing)) &&
-            !(tWand  = dynamic_cast<TWand  *>(tThing)))
-          tBeing->sendTo("That object is neither staff nor wand, not allowed here.\n\r");
+        if (!(tStaff = dynamic_cast<TStaff*>(tThing)) &&
+            !(tWand = dynamic_cast<TWand*>(tThing)))
+          tBeing->sendTo(
+            "That object is neither staff nor wand, not allowed here.\n\r");
         else if ((tStaff && tStaff->getSpell() != SPELL_SLUMBER) ||
-                 (tWand  && tWand->getSpell() != SPELL_SLUMBER))
+                 (tWand && tWand->getSpell() != SPELL_SLUMBER))
           tBeing->sendTo("That is not a slumber attempt, bad bad person!\n\r");
         else {
           // Set charges to 1 so the following useMe eats it up.
@@ -314,7 +314,8 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
           else
             tWand->setCurCharges(1);
 
-          int tRc = (tStaff ? tStaff->useMe(tBeing, NULL) : tWand->useMe(tBeing, NULL));
+          int tRc =
+            (tStaff ? tStaff->useMe(tBeing, NULL) : tWand->useMe(tBeing, NULL));
 
           if (IS_SET_DELETE(tRc, DELETE_THIS)) {
             if (tStaff) {
@@ -400,7 +401,8 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
     case CMD_WHITTLE:
     case CMD_SMOKE:
     case CMD_RETRAIN:
-      tBeing->sendTo("This command has been sanctioned as not-usable.  Sorry...\n\r");
+      tBeing->sendTo(
+        "This command has been sanctioned as not-usable.  Sorry...\n\r");
       return TRUE;
       break;
     case CMD_IDEA:
@@ -417,24 +419,22 @@ int sleepTagRoom(TBeing *tBeing, cmdTypeT tCmd, const char *tArg, TRoom *tRoom)
   return FALSE;
 }
 
-void sleepTagReport(int tZone, const char *tString, ...)
-{
-  TBeing *tBeing;
-  char   *tBuffer;
+void sleepTagReport(int tZone, const char* tString, ...) {
+  TBeing* tBeing;
+  char* tBuffer;
   va_list tAp;
 
   tBuffer = new char[2 * MAX_STRING_LENGTH];
 
   va_start(tAp, tString);
-  (void) vsnprintf(tBuffer, (2 * MAX_STRING_LENGTH), tString, tAp);
+  (void)vsnprintf(tBuffer, (2 * MAX_STRING_LENGTH), tString, tAp);
   va_end(tAp);
 
   for (tBeing = character_list; tBeing; tBeing = tBeing->next)
     if (tBeing->isPc() && tBeing->roomp &&
-        tBeing->roomp->getZoneNum() == tZone &&
-        dynamic_cast<TPerson *>(tBeing))
+        tBeing->roomp->getZoneNum() == tZone && dynamic_cast<TPerson*>(tBeing))
       tBeing->sendTo(COLOR_COMM, tBuffer);
 
-  delete [] tBuffer;
+  delete[] tBuffer;
   tBuffer = NULL;
 }

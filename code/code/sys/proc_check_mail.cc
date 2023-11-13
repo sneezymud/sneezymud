@@ -5,18 +5,16 @@
 #include "mail.h"
 
 // procCheckMail
-procCheckMail::procCheckMail(const int &p)
-{
-  trigger_pulse=p;
-  name="procCheckMail";
+procCheckMail::procCheckMail(const int& p) {
+  trigger_pulse = p;
+  name = "procCheckMail";
 }
 
-void procCheckMail::run(const TPulse &) const
-{
-  Descriptor *d;
+void procCheckMail::run(const TPulse&) const {
+  Descriptor* d;
 
   for (d = descriptor_list; d; d = d->next) {
-    TBeing *ch = d->original ? d->original : d->character;
+    TBeing* ch = d->original ? d->original : d->character;
     if (!Config::NoMail() && !d->connected && ch) {
       sstring recipient;
 
@@ -24,8 +22,8 @@ void procCheckMail::run(const TPulse &) const
         continue;
       }
       if (has_mail(recipient.lower()))
-        ch->sendTo(format("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
+        ch->sendTo(
+          format("You have %sMAIL!%s\n\r") % ch->cyan() % ch->norm());
     }
   }
 }
-

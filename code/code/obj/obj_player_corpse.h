@@ -17,23 +17,24 @@ class TPCorpse : public TBaseCorpse {
     int num_corpses_in_room;
     float exp_lost;
     sstring fileName;
-    TPCorpse *nextGlobalCorpse;
-    TPCorpse *nextCorpse;
-    TPCorpse *previousCorpse;
+    TPCorpse* nextGlobalCorpse;
+    TPCorpse* nextCorpse;
+    TPCorpse* previousCorpse;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual sstring statObjInfo() const;
     virtual void decayMe();
-    virtual int getMe(TBeing *, TThing *);
-    virtual void getMeFrom(TBeing *, TThing *);
-    virtual void dropMe(TBeing *, showMeT, showRoomT);
+    virtual int getMe(TBeing*, TThing*);
+    virtual void getMeFrom(TBeing*, TThing*);
+    virtual void dropMe(TBeing*, showMeT, showRoomT);
     virtual itemTypeT itemType() const { return ITEM_PCORPSE; }
-    virtual int scavengeMe(TBeing *ch, TObj **);
+    virtual int scavengeMe(TBeing* ch, TObj**);
     void removeCorpseFromList(bool updateFile = TRUE);
     void addCorpseToLists();
     void saveCorpseToFile();
-//    void assignCorpsesToRooms();
+    //    void assignCorpsesToRooms();
     int checkOnLists();
     void togOnCorpseListsOn();
     void togOnCorpseListsOff();
@@ -44,22 +45,21 @@ class TPCorpse : public TBaseCorpse {
     void addToNumInRoom(int n);
     float getExpLost() const;
     void setExpLost(float exp);
-    void setOwner(const sstring &Name);
+    void setOwner(const sstring& Name);
     sstring getOwner() const;
     void clearOwner();
-    void setNext(TPCorpse *n);
+    void setNext(TPCorpse* n);
     void removeNext();
-    TPCorpse *getNext() const;
-    void setPrevious(TPCorpse *n);
+    TPCorpse* getNext() const;
+    void setPrevious(TPCorpse* n);
     void removePrevious();
-    TPCorpse *getPrevious() const;
-    void setNextGlobal(TPCorpse *n);
+    TPCorpse* getPrevious() const;
+    void setNextGlobal(TPCorpse* n);
     void removeGlobalNext();
-    virtual void describeObjectSpecifics(const TBeing *) const {};
-    TPCorpse *getGlobalNext() const;
+    virtual void describeObjectSpecifics(const TBeing*) const {};
+    TPCorpse* getGlobalNext() const;
     TPCorpse();
-    TPCorpse(const TPCorpse &a);
-    TPCorpse & operator=(const TPCorpse &a);
+    TPCorpse(const TPCorpse& a);
+    TPCorpse& operator=(const TPCorpse& a);
     virtual ~TPCorpse();
 };
-

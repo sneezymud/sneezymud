@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #include "handler.h"
 #include "extern.h"
 #include "being.h"
@@ -14,10 +13,9 @@
 #include "disc_combat.h"
 #include "obj_tool.h"
 
-void TBeing::doSharpen(const char *argument)
-{
+void TBeing::doSharpen(const char* argument) {
   char name_buf[256];
-  TThing *obj;
+  TThing* obj;
 
   strcpy(name_buf, argument);
 
@@ -33,7 +31,8 @@ void TBeing::doSharpen(const char *argument)
     }
   } else {
     if (!(obj = equipment[getPrimaryHold()]) || !isname(name_buf, obj->name)) {
-      sendTo("You have to be holding that in your primary hand to sharpen it.\n\r");
+      sendTo(
+        "You have to be holding that in your primary hand to sharpen it.\n\r");
       return;
     }
   }
@@ -41,13 +40,11 @@ void TBeing::doSharpen(const char *argument)
   sharpen(this, obj);
 }
 
-void TThing::sharpenMeStone(TBeing *caster, TThing *)
-{
+void TThing::sharpenMeStone(TBeing* caster, TThing*) {
   caster->sendTo("You need to own a whetstone.\n\r");
 }
 
-void TTool::sharpenMeStone(TBeing *caster, TThing *obj)
-{
+void TTool::sharpenMeStone(TBeing* caster, TThing* obj) {
   if (getToolType() != TOOL_WHETSTONE) {
     caster->sendTo("You need to own a whetstone.\n\r");
     return;
@@ -55,14 +52,12 @@ void TTool::sharpenMeStone(TBeing *caster, TThing *obj)
   obj->sharpenMeStoneWeap(caster, this);
 }
 
-void TThing::sharpenMeStoneWeap(TBeing *caster, TTool *)
-{
+void TThing::sharpenMeStoneWeap(TBeing* caster, TTool*) {
   caster->sendTo("Sorry.  You only know how to sharpen weapons.\n\r");
 }
 
-void sharpen(TBeing * caster, TThing * obj)
-{
-  TThing *stone;
+void sharpen(TBeing* caster, TThing* obj) {
+  TThing* stone;
 
   if (caster->fight()) {
     caster->sendTo("Not while fighting..\n\r");
@@ -76,13 +71,12 @@ void sharpen(TBeing * caster, TThing * obj)
   stone->sharpenMeStone(caster, obj);
 }
 
-void TBeing::doDull(const char *argument)
-{
+void TBeing::doDull(const char* argument) {
   char name_buf[256];
-  TThing *obj;
- 
+  TThing* obj;
+
   strcpy(name_buf, argument);
- 
+
   if (!doesKnowSkill(SKILL_DULL)) {
     sendTo("You know nothing about dulling weapons.\n\r");
     return;
@@ -95,21 +89,20 @@ void TBeing::doDull(const char *argument)
     }
   } else {
     if (!(obj = equipment[getPrimaryHold()]) || !isname(name_buf, obj->name)) {
-      sendTo("You have to be holding that in your primary hand to dull it.\n\r");
+      sendTo(
+        "You have to be holding that in your primary hand to dull it.\n\r");
       return;
     }
   }
- 
+
   dull(this, obj);
 }
- 
-void TThing::dullMeFile(TBeing *caster, TThing *)
-{
+
+void TThing::dullMeFile(TBeing* caster, TThing*) {
   caster->sendTo("You need to own a file.\n\r");
 }
 
-void TTool::dullMeFile(TBeing *caster, TThing *obj)
-{
+void TTool::dullMeFile(TBeing* caster, TThing* obj) {
   if (getToolType() != TOOL_FILE) {
     caster->sendTo("You need to own a file.\n\r");
     return;
@@ -117,15 +110,13 @@ void TTool::dullMeFile(TBeing *caster, TThing *obj)
   obj->dullMeFileWeap(caster, this);
 }
 
-void TThing::dullMeFileWeap(TBeing *caster, TTool *)
-{
+void TThing::dullMeFileWeap(TBeing* caster, TTool*) {
   caster->sendTo("Sorry.  You only know how to dull weapons.\n\r");
 }
- 
-void dull(TBeing * caster, TThing * obj)
-{
-  TThing *file;
- 
+
+void dull(TBeing* caster, TThing* obj) {
+  TThing* file;
+
   if (!(file = get_thing_char_using(caster, "file", 0, FALSE, FALSE))) {
     caster->sendTo("You need to own a file.\n\r");
     return;
@@ -133,35 +124,31 @@ void dull(TBeing * caster, TThing * obj)
   file->dullMeFile(caster, obj);
 }
 
-CDCombat::CDCombat()
-  : CDiscipline(),
-    skBarehand(),
-    skArmorUse(),
-    skSlash(),
-    skBow(),
-    skPierce(),
-    skBlunt(),
-    skSharpen(),
-    skDull()
-{
-}
+CDCombat::CDCombat() :
+  CDiscipline(),
+  skBarehand(),
+  skArmorUse(),
+  skSlash(),
+  skBow(),
+  skPierce(),
+  skBlunt(),
+  skSharpen(),
+  skDull() {}
 
-CDCombat::CDCombat(const CDCombat &a)
-  : CDiscipline(a),
-    skBarehand(a.skBarehand),
-    skArmorUse(a.skArmorUse),
-    skSlash(a.skSlash),
-    skBow(a.skBow),
-    skPierce(a.skPierce),
-    skBlunt(a.skBlunt),
-    skSharpen(a.skSharpen),
-    skDull(a.skDull)
-{
-}
+CDCombat::CDCombat(const CDCombat& a) :
+  CDiscipline(a),
+  skBarehand(a.skBarehand),
+  skArmorUse(a.skArmorUse),
+  skSlash(a.skSlash),
+  skBow(a.skBow),
+  skPierce(a.skPierce),
+  skBlunt(a.skBlunt),
+  skSharpen(a.skSharpen),
+  skDull(a.skDull) {}
 
-CDCombat & CDCombat::operator=(const CDCombat &a)
-{
-  if (this == &a) return *this;
+CDCombat& CDCombat::operator=(const CDCombat& a) {
+  if (this == &a)
+    return *this;
   CDiscipline::operator=(a);
   skBarehand = a.skBarehand;
   skArmorUse = a.skArmorUse;
@@ -174,6 +161,4 @@ CDCombat & CDCombat::operator=(const CDCombat &a)
   return *this;
 }
 
-CDCombat::~CDCombat()
-{
-}
+CDCombat::~CDCombat() {}

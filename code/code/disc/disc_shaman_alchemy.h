@@ -15,7 +15,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the SHAMAN ALCHEMY discipline.
@@ -23,27 +22,22 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDShamanAlchemy : public CDiscipline
-{
-public:
+class CDShamanAlchemy : public CDiscipline {
+  public:
     CSkill skBrew;
 
-    CDShamanAlchemy()
-      : CDiscipline(),
-      skBrew() {
-    }
-    CDShamanAlchemy(const CDShamanAlchemy &a)
-      : CDiscipline(a),
-      skBrew(a.skBrew) {
-    }
-    CDShamanAlchemy & operator=(const CDShamanAlchemy &a) {
-      if (this == &a) return *this;
-      CDiscipline::operator=(a),
-      skBrew = a.skBrew;
+    CDShamanAlchemy() : CDiscipline(), skBrew() {}
+    CDShamanAlchemy(const CDShamanAlchemy& a) :
+      CDiscipline(a),
+      skBrew(a.skBrew) {}
+    CDShamanAlchemy& operator=(const CDShamanAlchemy& a) {
+      if (this == &a)
+        return *this;
+      CDiscipline::operator=(a), skBrew = a.skBrew;
       return *this;
     }
     virtual ~CDShamanAlchemy() {}
-    virtual CDShamanAlchemy * cloneMe() { return new CDShamanAlchemy(*this); }
-private:
-};
+    virtual CDShamanAlchemy* cloneMe() { return new CDShamanAlchemy(*this); }
 
+  private:
+};

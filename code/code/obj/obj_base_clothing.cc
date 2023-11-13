@@ -17,29 +17,20 @@
 #include "obj_harness.h"
 #include "obj_low.h"
 
-TBaseClothing::TBaseClothing() :
-  TObj()
-{
-}
+TBaseClothing::TBaseClothing() : TObj() {}
 
-TBaseClothing::TBaseClothing(const TBaseClothing &a) :
-  TObj(a)
-{
-}
+TBaseClothing::TBaseClothing(const TBaseClothing& a) : TObj(a) {}
 
-TBaseClothing & TBaseClothing::operator=(const TBaseClothing &a)
-{
-  if (this == &a) return *this;
+TBaseClothing& TBaseClothing::operator=(const TBaseClothing& a) {
+  if (this == &a)
+    return *this;
   TObj::operator=(a);
   return *this;
 }
 
-TBaseClothing::~TBaseClothing()
-{
-}
+TBaseClothing::~TBaseClothing() {}
 
-void TBaseClothing::lowCheck()
-{
+void TBaseClothing::lowCheck() {
   int ap = suggestedPrice();
 #if 0
   // apparently, turning compiler optimization off (or not -O3) causes
@@ -52,86 +43,79 @@ void TBaseClothing::lowCheck()
 #else
   // only correct prices that are too low
   // warn about prices that are WAY too high though too
-  if ((ap > obj_flags.cost || ap < obj_flags.cost-200) && !isSaddle()) {
+  if ((ap > obj_flags.cost || ap < obj_flags.cost - 200) && !isSaddle()) {
 #endif
-    vlogf(LOG_LOW, format("base_clothing (%s:%d) has a bad price (%d).  should be (%d)") % 
-         getName() % objVnum() % obj_flags.cost % ap);
-    obj_flags.cost = ap;
-  }
-
-  if (isShield()) {
-    float amt = -(float) itemAC();
-
-    if ((20*getWeight()) < amt)
-      vlogf(LOG_LOW, format("shield %s has a bad weight.  should be (%.1f)") % 
-           getName() % (amt/20.0+0.1));
-  } else {
-    if (canWear(ITEM_WEAR_HOLD)) {
-      int amt = -itemAC();
-      if (amt)
-        vlogf(LOG_LOW, format("Holdable item (%s:%d) with AC that was not a shield.") % 
-            getName() % objVnum());
-    }
-  }
-
-  // insure proper wearability
-  unsigned int ui = obj_flags.wear_flags;
-  REMOVE_BIT(ui, ITEM_WEAR_TAKE);
-  REMOVE_BIT(ui, ITEM_WEAR_THROW);
-
-  if (ui != ITEM_WEAR_HOLD) {
-    int num = CountBits(ui) - 1;
-    if (num < 0) {
-      vlogf(LOG_LOW, format("Base Clothing (%s:%d) with insufficient wearability.") % 
-            getName() % objVnum());
-    }
-  }
-  TObj::lowCheck();
+  vlogf(LOG_LOW,
+    format("base_clothing (%s:%d) has a bad price (%d).  should be (%d)") %
+      getName() % objVnum() % obj_flags.cost % ap);
+  obj_flags.cost = ap;
 }
 
-bool TBaseClothing::isSaddle() const
-{
-  if(dynamic_cast<const TSaddle *>(this))
+if (isShield()) {
+  float amt = -(float)itemAC();
+
+  if ((20 * getWeight()) < amt)
+    vlogf(LOG_LOW, format("shield %s has a bad weight.  should be (%.1f)") %
+                     getName() % (amt / 20.0 + 0.1));
+} else {
+  if (canWear(ITEM_WEAR_HOLD)) {
+    int amt = -itemAC();
+    if (amt)
+      vlogf(LOG_LOW,
+        format("Holdable item (%s:%d) with AC that was not a shield.") %
+          getName() % objVnum());
+  }
+}
+
+// insure proper wearability
+unsigned int ui = obj_flags.wear_flags;
+REMOVE_BIT(ui, ITEM_WEAR_TAKE);
+REMOVE_BIT(ui, ITEM_WEAR_THROW);
+
+if (ui != ITEM_WEAR_HOLD) {
+  int num = CountBits(ui) - 1;
+  if (num < 0) {
+    vlogf(LOG_LOW,
+      format("Base Clothing (%s:%d) with insufficient wearability.") %
+        getName() % objVnum());
+  }
+}
+TObj::lowCheck();
+}
+
+bool TBaseClothing::isSaddle() const {
+  if (dynamic_cast<const TSaddle*>(this))
     return true;
   return false;
 }
 
-bool TBaseClothing::isHarness() const
-{
-  if(dynamic_cast<const THarness *>(this))
+bool TBaseClothing::isHarness() const {
+  if (dynamic_cast<const THarness*>(this))
     return true;
   return false;
 }
 
-bool TBaseClothing::isShield() const
-{
-  return isname("shield", name);
-}
+bool TBaseClothing::isShield() const { return isname("shield", name); }
 
-bool TBaseClothing::isBarding() const
-{
-  return isname("barding", name);
-}
+bool TBaseClothing::isBarding() const { return isname("barding", name); }
 
-void TBaseClothing::objMenu(const TBeing *ch) const
-{
+void TBaseClothing::objMenu(const TBeing* ch) const {
   ch->sendTo(format(VT_CURSPOS) % 3 % 1);
-  ch->sendTo(format("%sSuggested price:%s %d%s") %
-             ch->purple() % ch->norm() % suggestedPrice() %
+  ch->sendTo(format("%sSuggested price:%s %d%s") % ch->purple() % ch->norm() %
+             suggestedPrice() %
              (suggestedPrice() != obj_flags.cost ? " *" : ""));
   ch->sendTo(format(VT_CURSPOS) % 3 % 25);
-  ch->sendTo(format("%sReal Level:%s %.2f") %
-             ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_REAL));
+  ch->sendTo(format("%sReal Level:%s %.2f") % ch->purple() % ch->norm() %
+             armorLevel(ARMOR_LEV_REAL));
   ch->sendTo(format(VT_CURSPOS) % 3 % 45);
-  ch->sendTo(format("%sAC Lev:%s %.2f") %
-             ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_AC));
+  ch->sendTo(format("%sAC Lev:%s %.2f") % ch->purple() % ch->norm() %
+             armorLevel(ARMOR_LEV_AC));
   ch->sendTo(format(VT_CURSPOS) % 3 % 60);
-  ch->sendTo(format("%sStr Lev:%s %.2f") %
-             ch->purple() % ch->norm() % armorLevel(ARMOR_LEV_STR));
+  ch->sendTo(format("%sStr Lev:%s %.2f") % ch->purple() % ch->norm() %
+             armorLevel(ARMOR_LEV_STR));
 }
 
-void TBaseClothing::evaluateMe(TBeing *ch) const
-{
+void TBaseClothing::evaluateMe(TBeing* ch) const {
   int learn;
 
   learn = ch->getSkillValue(SKILL_EVALUATE);
@@ -146,19 +130,32 @@ void TBaseClothing::evaluateMe(TBeing *ch) const
     ch->describeArmor(this, learn);
 
   if (ch->isImmortal()) {
-    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s originally rates as %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_REAL));
-    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s has structure of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_STR));
-    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL: %s has armor of %.2f gear.\n\r") % getName() % armorLevel(ARMOR_LEV_AC));
+    ch->sendTo(COLOR_OBJECTS,
+      format("IMMORTAL EVAL: %s originally rates as %.2f gear.\n\r") %
+        getName() % armorLevel(ARMOR_LEV_REAL));
+    ch->sendTo(COLOR_OBJECTS,
+      format("IMMORTAL EVAL: %s has structure of %.2f gear.\n\r") % getName() %
+        armorLevel(ARMOR_LEV_STR));
+    ch->sendTo(COLOR_OBJECTS,
+      format("IMMORTAL EVAL: %s has armor of %.2f gear.\n\r") % getName() %
+        armorLevel(ARMOR_LEV_AC));
 
     ArmorEvaluator ae(this);
-    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s is considered '%s'.\n\r") % getName() % ae.getTierString());
-    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s is using %i armor, %i stat points (%i total).\n\r") % getName() % ae.getPointValue(PointType_Main) % ae.getPointValue(PointType_Stats) % ae.getPointValue(PointType_All));
-    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s should load on level %.2f or lower mobs.\n\r") % getName() % ae.getLoadLevel());
+    ch->sendTo(COLOR_OBJECTS,
+      format("IMMORTAL EVAL (new): %s is considered '%s'.\n\r") % getName() %
+        ae.getTierString());
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s is using %i "
+                                     "armor, %i stat points (%i total).\n\r") %
+                                getName() % ae.getPointValue(PointType_Main) %
+                                ae.getPointValue(PointType_Stats) %
+                                ae.getPointValue(PointType_All));
+    ch->sendTo(COLOR_OBJECTS, format("IMMORTAL EVAL (new): %s should load on "
+                                     "level %.2f or lower mobs.\n\r") %
+                                getName() % ae.getLoadLevel());
   }
 }
 
-void TBaseClothing::descMaxStruct(const TBeing *ch, int learn) const
-{
+void TBaseClothing::descMaxStruct(const TBeing* ch, int learn) const {
   char capbuf[80];
 
   if (!ch->hasClass(CLASS_RANGER) && !ch->hasClass(CLASS_WARRIOR) &&
@@ -167,108 +164,95 @@ void TBaseClothing::descMaxStruct(const TBeing *ch, int learn) const
 
   int maxstruct = GetApprox(getMaxStructPoints(), learn);
 
-  strncpy(capbuf, ch->objs(this), cElements(capbuf)-1);
-  ch->sendTo(COLOR_OBJECTS,format("%s seems to %s.\n\r") %
-           sstring(capbuf).cap() %
-          ((maxstruct >= 99) ? "be virtually indestructible" :
-           ((maxstruct >= 95) ? "be very durable" :
-           ((maxstruct >= 91) ? "be durable" :
-           ((maxstruct >= 87) ? "be fairly durable" :
-           ((maxstruct >= 83) ? "be incredibly sturdy" :
-           ((maxstruct >= 79) ? "be very sturdy" :
-           ((maxstruct >= 75) ? "be sturdy" :
-           ((maxstruct >= 71) ? "be somewhat sturdy" :
-           ((maxstruct >= 67) ? "be fairly sturdy" :
-           ((maxstruct >= 63) ? "be very substantial" :
-           ((maxstruct >= 59) ? "be substantial" :
-           ((maxstruct >= 55) ? "be somewhat substantial" :
-           ((maxstruct >= 51) ? "be very well-constructed" :
-           ((maxstruct >= 47) ? "be well-constructed" :
-           ((maxstruct >= 43) ? "be fairly well-constructed" :
-           ((maxstruct >= 39) ? "be incredibly rugged" :
-           ((maxstruct >= 35) ? "be rugged" :
-           ((maxstruct >= 31) ? "be somewhat rugged" :
-           ((maxstruct >= 27) ? "be very strong" :
-           ((maxstruct >= 23) ? "be strong" :
-           ((maxstruct >= 19) ? "be somewhat strong" :
-           ((maxstruct >= 15) ? "be fairly flimsy" :
-           ((maxstruct >= 11) ? "be somewhat flimsy" :
-           ((maxstruct >= 7) ? "be flimsy" :
-           ((maxstruct >= 3) ? "be very flimsy" :
-           ((maxstruct >= 0) ? "be incredibly flimsy" :
-                          "be indestructible")))))))))))))))))))))))))));
+  strncpy(capbuf, ch->objs(this), cElements(capbuf) - 1);
+  ch
+    ->sendTo(COLOR_OBJECTS,
+      format("%s seems to %s.\n\r") % sstring(capbuf).cap() %
+        ((maxstruct >= 99)
+            ? "be virtually indestructible"
+            : ((maxstruct >= 95)
+                  ? "be very durable"
+                  : ((maxstruct >= 91)
+                        ? "be durable"
+                        : ((maxstruct >= 87)
+                              ? "be fairly durable"
+                              : ((maxstruct >= 83)
+                                    ? "be incredibly sturdy"
+                                    : ((maxstruct >= 79)
+                                          ? "be very sturdy"
+                                          : (
+                                              (maxstruct >= 75) ? "be sturdy"
+                                                                : (
+                                                                    (maxstruct >= 71) ? "be somewhat sturdy"
+                                                                                      : (
+                                                                                          (maxstruct >= 67) ? "be fairly sturdy" : ((maxstruct >= 63) ? "be very substantial" : ((maxstruct >= 59) ? "be substantial" : ((maxstruct >= 55) ? "be somewhat substantial" : ((maxstruct >= 51) ? "be very well-constructed" : ((maxstruct >= 47) ? "be well-constructed" : ((maxstruct >= 43) ? "be fairly well-constructed" : ((maxstruct >= 39) ? "be incredibly rugged" : ((maxstruct >= 35) ? "be rugged" : ((maxstruct >= 31) ? "be somewhat rugged" : ((maxstruct >= 27) ? "be very strong" : ((maxstruct >= 23) ? "be strong" : ((maxstruct >= 19) ? "be somewhat strong" : ((maxstruct >= 15) ? "be fairly flimsy" : ((maxstruct >= 11) ? "be somewhat flimsy" : ((maxstruct >= 7) ? "be flimsy" : ((maxstruct >= 3) ? "be very flimsy" : ((maxstruct >= 0) ? "be incredibly flimsy" : "be indestructible")))))))))))))))))))))))))));
 }
 
-void TBaseClothing::armorPercs(double *ac_perc, double *str_perc) const
-{
+void TBaseClothing::armorPercs(double* ac_perc, double* str_perc) const {
   if (canWear(ITEM_WEAR_HEAD)) {
-    *ac_perc  = 0.07;
+    *ac_perc = 0.07;
     *str_perc = 0.07;
   } else if (canWear(ITEM_WEAR_NECK)) {
-    *ac_perc  = 0.04;
+    *ac_perc = 0.04;
     *str_perc = 0.04;
   } else if (canWear(ITEM_WEAR_BODY)) {
-    *ac_perc  = 0.15;
+    *ac_perc = 0.15;
     *str_perc = 0.26;
   } else if (canWear(ITEM_WEAR_BACK)) {
-    *ac_perc  = 0.07;
+    *ac_perc = 0.07;
     *str_perc = 0.10;
   } else if (canWear(ITEM_WEAR_WAIST)) {
-    *ac_perc  = 0.08;
+    *ac_perc = 0.08;
     *str_perc = 0.05;
   } else if (canWear(ITEM_WEAR_ARMS)) {
-    *ac_perc  = 0.04;
+    *ac_perc = 0.04;
     *str_perc = 0.05;
   } else if (canWear(ITEM_WEAR_WRISTS)) {
-    *ac_perc  = 0.02;
+    *ac_perc = 0.02;
     *str_perc = 0.03;
   } else if (canWear(ITEM_WEAR_HANDS)) {
-    *ac_perc  = 0.03;
+    *ac_perc = 0.03;
     *str_perc = 0.03;
   } else if (canWear(ITEM_WEAR_FINGERS)) {
-    *ac_perc  = 0.01;
+    *ac_perc = 0.01;
     *str_perc = 0.01;
   } else if (canWear(ITEM_WEAR_LEGS)) {
-    *ac_perc  = 0.05;
+    *ac_perc = 0.05;
     *str_perc = 0.03;
   } else if (canWear(ITEM_WEAR_FEET)) {
-    *ac_perc  = 0.02;
+    *ac_perc = 0.02;
     *str_perc = 0.02;
   } else if (canWear(ITEM_WEAR_HOLD)) {
-    *ac_perc  = 0.25;
+    *ac_perc = 0.25;
     *str_perc = 0.07;
   } else {
-    vlogf(LOG_LOW, format("Item %s needs a definition of where worn") %  getName());
+    vlogf(LOG_LOW,
+      format("Item %s needs a definition of where worn") % getName());
     *ac_perc = 0.01;
     *str_perc = 0.01;
   }
 }
 
 // this is simplistic
-void TBaseClothing::setDefArmorLevel(float lev)
-{
+void TBaseClothing::setDefArmorLevel(float lev) {
   if (isSaddle())
     return;
 
-  double ac_perc,
-         str_perc,
-         new_acVal,
-         new_strVal;
+  double ac_perc, str_perc, new_acVal, new_strVal;
 
-  const double NEWBIE_AC  = 500.0,
-               NEWBIE_STR = 30.0,
-               BODY_STR   = 0.26;
+  const double NEWBIE_AC = 500.0, NEWBIE_STR = 30.0, BODY_STR = 0.26;
 
   armorPercs(&ac_perc, &str_perc);
 
-  new_acVal = (((lev * 25) * ac_perc) + ((NEWBIE_AC * ac_perc))) * (isPaired() ? 2.0 : 1.0);
+  new_acVal = (((lev * 25) * ac_perc) + ((NEWBIE_AC * ac_perc))) *
+              (isPaired() ? 2.0 : 1.0);
 
   new_strVal = (((lev * 1.1) / sqrt(BODY_STR / str_perc)) +
-                ((NEWBIE_STR * sqrt(str_perc / BODY_STR)))) * 
-                (isPaired() ? 2.0 : 1.0);
+                 ((NEWBIE_STR * sqrt(str_perc / BODY_STR)))) *
+               (isPaired() ? 2.0 : 1.0);
 
-  new_acVal  = min(1000.0, max(-1000.0, new_acVal ));
-  new_strVal = min( 100.0, max(    0.0, new_strVal));
+  new_acVal = min(1000.0, max(-1000.0, new_acVal));
+  new_strVal = min(100.0, max(0.0, new_strVal));
 
   setMaxStructPoints((int)new_strVal);
   setStructPoints((int)new_strVal);
@@ -283,16 +267,15 @@ void TBaseClothing::setDefArmorLevel(float lev)
 // spread armor over all pieces based on armorPercs
 // struct is 30 + 1 per level for jacket
 // scale struct for non-jacket based on armorPercs
-double TBaseClothing::armorLevel(armorLevT type) const
-{
+double TBaseClothing::armorLevel(armorLevT type) const {
   int armor = 0;
 
   if (isSaddle())
     return 0;
 
-  double ac_perc;    // these are arbitrary numbers I chose
-  double str_perc;   // these should be identical to whats stored in
-                     // constants.cc
+  double ac_perc;   // these are arbitrary numbers I chose
+  double str_perc;  // these should be identical to whats stored in
+                    // constants.cc
   armorPercs(&ac_perc, &str_perc);
 
   armor = -itemAC();
@@ -306,8 +289,7 @@ double TBaseClothing::armorLevel(armorLevT type) const
   const double NEWBIE_AC = 500.0;
 
   // This calculates the AC of each body part of the newbie suit
-  int ac_min = (int) ((NEWBIE_AC * ac_perc) +
-         (isPaired() ? 1.0 : 0.5));
+  int ac_min = (int)((NEWBIE_AC * ac_perc) + (isPaired() ? 1.0 : 0.5));
 
   // this is the struct of the BODY slot on newbie suit
   const double NEWBIE_STR = 30.0;
@@ -318,18 +300,17 @@ double TBaseClothing::armorLevel(armorLevT type) const
   // this calculates the struct of each body part on the newbie suit
   // I am not positive exactly why the sqrt is in there, but I stuck
   // it in the original equation, so I probably had a reason...
-  int str_min = (int) ((NEWBIE_STR *
-           sqrt((double) str_perc / BODY_STR)) +
-            (isPaired() ? 1.0 : 0.5));
+  int str_min = (int)((NEWBIE_STR * sqrt((double)str_perc / BODY_STR)) +
+                      (isPaired() ? 1.0 : 0.5));
 
   // newbie suit has 50 AC and 30 struct
   // high level gear (L60?) should have 200 AC and 90 struct
   // so we linearilize this and say 2.5 AC/level and 1.1 struct/level
   // but that is per SUIT, not per piece
-  double quality_ac = ((double) armor - (double) ac_min);
+  double quality_ac = ((double)armor - (double)ac_min);
   quality_ac = max(quality_ac, 0.0);
 
-  double quality_struct = (double) (((double) str - (double) str_min));
+  double quality_struct = (double)(((double)str - (double)str_min));
   quality_struct = max(quality_struct, 0.0);
 
   // adjust for the piece
@@ -350,14 +331,13 @@ double TBaseClothing::armorLevel(armorLevT type) const
 }
 
 // evaluates a "price" for the EQ based on AC and struct
-int TBaseClothing::armorPriceStruct(armorLevT type, double *lev) const
-{
+int TBaseClothing::armorPriceStruct(armorLevT type, double* lev) const {
   double ac_lev = armorLevel(ARMOR_LEV_AC);
   double str_lev = armorLevel(ARMOR_LEV_STR);
 
-  double ac_perc;    // these are arbitrary numbers I chose
-  double str_perc;   // these should be identical to whats stored in
-                     // constants.cc
+  double ac_perc;   // these are arbitrary numbers I chose
+  double str_perc;  // these should be identical to whats stored in
+                    // constants.cc
   armorPercs(&ac_perc, &str_perc);
 
   // make the price structure mirror the rent credit formula
@@ -367,15 +347,15 @@ int TBaseClothing::armorPriceStruct(armorLevT type, double *lev) const
   double str_price = (str_lev * max(str_lev, 20.0) * 75);
 
   // now adjust above number so that it splits it over all the pieces...
-  int ac_comp = (int) (ac_price * ac_perc);
-  int str_comp = (int) (str_price * str_perc);
+  int ac_comp = (int)(ac_price * ac_perc);
+  int str_comp = (int)(str_price * str_perc);
 
   int price = 0;
   *lev = 0.0;
   if (type == ARMOR_LEV_REAL) {
     // true price should be 1 part struct, 3 parts AC
-    price = (int) ((3.0 * ac_comp + 1.0 * str_comp) / 4.0);
-    *lev = (3.0 * ac_lev + str_lev)/4.0;
+    price = (int)((3.0 * ac_comp + 1.0 * str_comp) / 4.0);
+    *lev = (3.0 * ac_lev + str_lev) / 4.0;
   } else if (type == ARMOR_LEV_AC) {
     price = ac_comp;
     *lev = ac_lev;
@@ -389,15 +369,15 @@ int TBaseClothing::armorPriceStruct(armorLevT type, double *lev) const
   // double it since cost = 2 * rent
   price *= 2;
 
-// vlogf(LOG_MISC, format("ac_lev: %.2f, str_lev: %.2f, price: %d") %  ac_lev % str_lev % price);
+  // vlogf(LOG_MISC, format("ac_lev: %.2f, str_lev: %.2f, price: %d") %  ac_lev
+  // % str_lev % price);
 
   return price;
 }
 
 // this function adjusts price based on other qualities
 // price from armor/struct calculated elsewhere is used.
-int TBaseClothing::suggestedPrice() const
-{
+int TBaseClothing::suggestedPrice() const {
   int i;
   if (isSaddle())
     return 0;
@@ -455,11 +435,11 @@ int TBaseClothing::suggestedPrice() const
 // vlogf(LOG_MISC, format("%s had a wearability modifier of %.3f (%.3f)") %  getName() % modif % lev_mod);
   price = (int) (price * modif);
 #endif
-  
+
   int adjustments = 0;
-  for (i = 0;i < MAX_OBJ_AFFECT;i++) {
+  for (i = 0; i < MAX_OBJ_AFFECT; i++) {
     int num = affected[i].modifier;
-    num = max(0,num);
+    num = max(0, num);
     switch (affected[i].location) {
       case APPLY_NONE:
         break;
@@ -475,7 +455,7 @@ int TBaseClothing::suggestedPrice() const
       case APPLY_CHA:
       case APPLY_SPE:
       case APPLY_KAR:
-        adjustments += max(100, (175 * (num / 3))); // cosmo changed to convert
+        adjustments += max(100, (175 * (num / 3)));  // cosmo changed to convert
         break;
       case APPLY_AGE:
         adjustments += 2000 * num;
@@ -496,7 +476,7 @@ int TBaseClothing::suggestedPrice() const
       case APPLY_LIGHT:
         adjustments += 100 * num * num;
         break;
-      case APPLY_NOISE:   // negative = good
+      case APPLY_NOISE:  // negative = good
         adjustments -= 250 * affected[i].modifier;
         break;
       case APPLY_CAN_BE_SEEN:
@@ -526,38 +506,38 @@ int TBaseClothing::suggestedPrice() const
     }
     if (affected[i].location == APPLY_HITROLL ||
         affected[i].location == APPLY_HITNDAM) {
-      // add directly to price since we don't want to be scaled 
+      // add directly to price since we don't want to be scaled
       // this formula is in balance notes
-      int amt  = (int) (lev * max(lev, 20.0) * 450/4);
-          amt -= (int) ((lev-num) * max(lev-num, 20.0)* 450/4);
+      int amt = (int)(lev * max(lev, 20.0) * 450 / 4);
+      amt -= (int)((lev - num) * max(lev - num, 20.0) * 450 / 4);
       price += amt;
     }
     if (canWear(ITEM_WEAR_FINGERS)) {
       if ((affected[i].location == APPLY_DAMROLL) ||
-            (affected[i].location == APPLY_HITNDAM))
+          (affected[i].location == APPLY_HITNDAM))
         adjustments += 6700 * num;
     } else if ((canWear(ITEM_WEAR_HANDS)) || (canWear(ITEM_WEAR_WRISTS))) {
       if ((affected[i].location == APPLY_DAMROLL) ||
-            (affected[i].location == APPLY_HITNDAM))
+          (affected[i].location == APPLY_HITNDAM))
         adjustments += 10800 * num;
     } else if (canWear(ITEM_WEAR_ARMS)) {
       if ((affected[i].location == APPLY_DAMROLL) ||
-            (affected[i].location == APPLY_HITNDAM))
+          (affected[i].location == APPLY_HITNDAM))
         adjustments += 14500 * num;
     } else if (canWear(ITEM_WEAR_BACK)) {
       if ((affected[i].location == APPLY_DAMROLL) ||
-            (affected[i].location == APPLY_HITNDAM))
+          (affected[i].location == APPLY_HITNDAM))
         adjustments += 12400 * num;
     } else {
       if ((affected[i].location == APPLY_DAMROLL) ||
-            (affected[i].location == APPLY_HITNDAM))
+          (affected[i].location == APPLY_HITNDAM))
         adjustments += 40000 * num;
     }
   }
   // now scale the ajustments based on the gear
-  lev = max(10.0,lev);
-  lev = min(50.0,lev);
-  adjustments = (int) (adjustments * lev / 40.0);
+  lev = max(10.0, lev);
+  lev = min(50.0, lev);
+  adjustments = (int)(adjustments * lev / 40.0);
   price += adjustments;
 
   // add value of raw material
@@ -566,26 +546,22 @@ int TBaseClothing::suggestedPrice() const
   return price;
 }
 
-int TBaseClothing::scavengeMe(TBeing *ch, TObj **best_o)
-{
+int TBaseClothing::scavengeMe(TBeing* ch, TObj** best_o) {
   wearSlotT sl;
 
   sl = slot_from_bit(obj_flags.wear_flags);
-  TObj * tobj = dynamic_cast<TObj *>(ch->equipment[sl]);
+  TObj* tobj = dynamic_cast<TObj*>(ch->equipment[sl]);
   if (itemAC() < (tobj ? tobj->itemAC() : 0)) {
     *best_o = this;
   }
   return FALSE;
 }
 
-bool TBaseClothing::sellMeCheck(TBeing *ch, TMonster *keeper, int, int) const
-{
+bool TBaseClothing::sellMeCheck(TBeing* ch, TMonster* keeper, int, int) const {
   return TObj::sellMeCheck(ch, keeper, 1, 10);
 }
 
-
-void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
-{
+void TBaseClothing::describeObjectSpecifics(const TBeing* ch) const {
   unsigned int ui = obj_flags.wear_flags;
   REMOVE_BIT(ui, ITEM_WEAR_TAKE);
   REMOVE_BIT(ui, ITEM_WEAR_THROW);
@@ -601,127 +577,119 @@ void TBaseClothing::describeObjectSpecifics(const TBeing *ch) const
       buf += ".";
       act(buf, FALSE, ch, this, 0, TO_CHAR);
     } else {
-      vlogf(LOG_LOW, format("Base Clothing (%s:%d) with insufficient wearability.") % 
-            getName() % objVnum());
+      vlogf(LOG_LOW,
+        format("Base Clothing (%s:%d) with insufficient wearability.") %
+          getName() % objVnum());
     }
   }
 }
 
-sstring TBaseClothing::showModifier(showModeT mode, const TBeing *ch) const
-{
+sstring TBaseClothing::showModifier(showModeT mode, const TBeing* ch) const {
   sstring a;
-  if (mode == SHOW_MODE_SHORT_PLUS ||
-       mode == SHOW_MODE_SHORT_PLUS_INV ||
-       mode == SHOW_MODE_SHORT) {
+  if (mode == SHOW_MODE_SHORT_PLUS || mode == SHOW_MODE_SHORT_PLUS_INV ||
+      mode == SHOW_MODE_SHORT) {
     a = " (";
     a += equip_condition(-1);
     a += ")";
     if (ch->hasWizPower(POWER_IMM_EVAL) || toggleInfo[TOG_TESTCODE2]->toggle) {
       char buf[256];
-      sprintf(buf, " (L%d)", (int) (objLevel() + 0.5));
+      sprintf(buf, " (L%d)", (int)(objLevel() + 0.5));
       a += buf;
     }
   }
   return a;
 }
 
-double TBaseClothing::objLevel() const
-{
-  return armorLevel(ARMOR_LEV_REAL);
-}
+double TBaseClothing::objLevel() const { return armorLevel(ARMOR_LEV_REAL); }
 
-sstring TBaseClothing::getNameForShow(bool useColor, bool useName, const TBeing *ch) const
-{
+sstring TBaseClothing::getNameForShow(bool useColor, bool useName,
+  const TBeing* ch) const {
   char buf2[256];
   sprintf(buf2, "%s (L%d)",
-       useName ? name.c_str() : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
-       (int) (objLevel() + 0.5));
+    useName ? name.c_str()
+            : (useColor ? getName().c_str() : getNameNOC(ch).c_str()),
+    (int)(objLevel() + 0.5));
   return buf2;
 }
 
-bool TBaseClothing::isPluralItem() const
-{
+bool TBaseClothing::isPluralItem() const {
   return (isPaired() && canWear(ITEM_WEAR_LEGS));
 }
 
-void TBaseClothing::purchaseMe(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
-{
+void TBaseClothing::purchaseMe(TBeing* ch, TMonster* keeper, int cost,
+  int shop_nr) {
   TShopOwned tso(shop_nr, keeper, ch);
   tso.doBuyTransaction(cost, getName(), TX_BUYING, this);
 }
 
-void TBaseClothing::sellMeMoney(TBeing *ch, TMonster *keeper, int cost, int shop_nr)
-{
+void TBaseClothing::sellMeMoney(TBeing* ch, TMonster* keeper, int cost,
+  int shop_nr) {
   TShopOwned tso(shop_nr, keeper, ch);
   tso.doSellTransaction(cost, getName(), TX_SELLING);
 }
 
-int TBaseClothing::putMeInto(TBeing *ch, TOpenContainer *container)
-{
-  TObj *o;
-  TThing *t=NULL;
-  int fingers=0, legs=0, feet=0, arms=0, wrists=0, hands=0;
+int TBaseClothing::putMeInto(TBeing* ch, TOpenContainer* container) {
+  TObj* o;
+  TThing* t = NULL;
+  int fingers = 0, legs = 0, feet = 0, arms = 0, wrists = 0, hands = 0;
 
-  if(!dynamic_cast<TSuitcase *>(container))
+  if (!dynamic_cast<TSuitcase*>(container))
     return FALSE;
 
-  for(StuffIter it=container->stuff.begin();it!=container->stuff.end() && (t=*it);++it){
-    o = dynamic_cast<TBaseClothing *>(t);
+  for (StuffIter it = container->stuff.begin();
+       it != container->stuff.end() && (t = *it); ++it) {
+    o = dynamic_cast<TBaseClothing*>(t);
 
     if (!o)
       continue;
 
-    if(o->canWear(ITEM_WEAR_FINGERS))
+    if (o->canWear(ITEM_WEAR_FINGERS))
       fingers++;
-    if(o->canWear(ITEM_WEAR_LEGS))
+    if (o->canWear(ITEM_WEAR_LEGS))
       legs++;
-    if(o->canWear(ITEM_WEAR_FEET))
+    if (o->canWear(ITEM_WEAR_FEET))
       feet++;
-    if(o->canWear(ITEM_WEAR_ARMS))
+    if (o->canWear(ITEM_WEAR_ARMS))
       arms++;
-    if(o->canWear(ITEM_WEAR_WRISTS))
+    if (o->canWear(ITEM_WEAR_WRISTS))
       wrists++;
-    if(o->canWear(ITEM_WEAR_HANDS))
+    if (o->canWear(ITEM_WEAR_HANDS))
       hands++;
-    
-    if((o->canWear(ITEM_WEAR_NECK) && canWear(ITEM_WEAR_NECK)) ||
-       (o->canWear(ITEM_WEAR_BODY) && canWear(ITEM_WEAR_BODY)) ||
-       (o->canWear(ITEM_WEAR_HEAD) && canWear(ITEM_WEAR_HEAD)) ||
-       (o->canWear(ITEM_WEAR_BACK) && canWear(ITEM_WEAR_BACK)) ||
-       (o->canWear(ITEM_WEAR_WAIST) && canWear(ITEM_WEAR_WAIST))){
-      ch->sendTo(format("You already have something that fits that slot in your %s.\n\r") % fname(container->name));
+
+    if ((o->canWear(ITEM_WEAR_NECK) && canWear(ITEM_WEAR_NECK)) ||
+        (o->canWear(ITEM_WEAR_BODY) && canWear(ITEM_WEAR_BODY)) ||
+        (o->canWear(ITEM_WEAR_HEAD) && canWear(ITEM_WEAR_HEAD)) ||
+        (o->canWear(ITEM_WEAR_BACK) && canWear(ITEM_WEAR_BACK)) ||
+        (o->canWear(ITEM_WEAR_WAIST) && canWear(ITEM_WEAR_WAIST))) {
+      ch->sendTo(
+        format(
+          "You already have something that fits that slot in your %s.\n\r") %
+        fname(container->name));
       return TRUE;
     }
   }
 
-  if((canWear(ITEM_WEAR_FINGERS) && fingers >= 2) ||
-     (canWear(ITEM_WEAR_LEGS) && legs >= 2) ||
-     (canWear(ITEM_WEAR_FEET) && feet >= 2) ||
-     (canWear(ITEM_WEAR_ARMS) && arms >= 2) ||
-     (canWear(ITEM_WEAR_WRISTS) && wrists >= 2) ||
-     (canWear(ITEM_WEAR_HANDS) && hands >= 2)){
-    ch->sendTo(format("You already have two things that fit that slot in your %s.\n\r") % fname(container->name));
+  if ((canWear(ITEM_WEAR_FINGERS) && fingers >= 2) ||
+      (canWear(ITEM_WEAR_LEGS) && legs >= 2) ||
+      (canWear(ITEM_WEAR_FEET) && feet >= 2) ||
+      (canWear(ITEM_WEAR_ARMS) && arms >= 2) ||
+      (canWear(ITEM_WEAR_WRISTS) && wrists >= 2) ||
+      (canWear(ITEM_WEAR_HANDS) && hands >= 2)) {
+    ch->sendTo(
+      format("You already have two things that fit that slot in your %s.\n\r") %
+      fname(container->name));
     return TRUE;
   }
 
-
-  if(!canWear(ITEM_WEAR_FINGERS) &&
-     !canWear(ITEM_WEAR_NECK) &&
-     !canWear(ITEM_WEAR_BODY) &&
-     !canWear(ITEM_WEAR_HEAD) &&
-     !canWear(ITEM_WEAR_LEGS) &&
-     !canWear(ITEM_WEAR_FEET) &&
-     !canWear(ITEM_WEAR_HANDS) &&
-     !canWear(ITEM_WEAR_ARMS) &&
-     !canWear(ITEM_WEAR_BACK) &&
-     !canWear(ITEM_WEAR_WAIST) &&
-     !canWear(ITEM_WEAR_WRISTS)){
+  if (!canWear(ITEM_WEAR_FINGERS) && !canWear(ITEM_WEAR_NECK) &&
+      !canWear(ITEM_WEAR_BODY) && !canWear(ITEM_WEAR_HEAD) &&
+      !canWear(ITEM_WEAR_LEGS) && !canWear(ITEM_WEAR_FEET) &&
+      !canWear(ITEM_WEAR_HANDS) && !canWear(ITEM_WEAR_ARMS) &&
+      !canWear(ITEM_WEAR_BACK) && !canWear(ITEM_WEAR_WAIST) &&
+      !canWear(ITEM_WEAR_WRISTS)) {
     ch->sendTo("You can only put clothing or armor into that.\n\r");
     return TRUE;
   }
-
-
-
 
   return FALSE;
 }

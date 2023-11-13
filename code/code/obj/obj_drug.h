@@ -5,39 +5,37 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 #include "obj.h"
 #include "gametime.h"
 
 enum drugTypeT {
-     DRUG_NONE,
-     DRUG_PIPEWEED,
-     DRUG_OPIUM,
-     DRUG_POT,
-     DRUG_FROGSLIME,
-     MAX_DRUG
+  DRUG_NONE,
+  DRUG_PIPEWEED,
+  DRUG_OPIUM,
+  DRUG_POT,
+  DRUG_FROGSLIME,
+  MAX_DRUG
 };
 const drugTypeT MIN_DRUG = drugTypeT(1);
 
-class TDrugInfo
-{
+class TDrugInfo {
   public:
-    const char *name;
-    int potency; // max units of drug in body that takes affect
-    int duration; 
-    TDrugInfo(const char *n, int p, int d);
-    TDrugInfo(const TDrugInfo &);
-    TDrugInfo & operator=(const TDrugInfo &);
+    const char* name;
+    int potency;  // max units of drug in body that takes affect
+    int duration;
+    TDrugInfo(const char* n, int p, int d);
+    TDrugInfo(const TDrugInfo&);
+    TDrugInfo& operator=(const TDrugInfo&);
     ~TDrugInfo();
 
     TDrugInfo();  // not supposed to be called, but needed for vector
 };
-extern std::vector<TDrugInfo>drugTypes;
+extern std::vector<TDrugInfo> drugTypes;
 
 class drugData {
- public:
+  public:
     time_info_data first_use;
     time_info_data last_use;
     unsigned int total_consumed;
@@ -45,9 +43,8 @@ class drugData {
 
     drugData();
     ~drugData();
-    drugData(const drugData &t);
-    drugData & operator =(const drugData &t);
-
+    drugData(const drugData& t);
+    drugData& operator=(const drugData& t);
 };
 
 class TDrug : public TObj {
@@ -55,14 +52,15 @@ class TDrug : public TObj {
     int curFuel;
     int maxFuel;
     drugTypeT drugType;
+
   public:
     virtual void assignFourValues(int, int, int, int);
-    virtual void getFourValues(int *, int *, int *, int *) const;
+    virtual void getFourValues(int*, int*, int*, int*) const;
     virtual void lowCheck();
-    virtual void describeObjectSpecifics(const TBeing *) const;
+    virtual void describeObjectSpecifics(const TBeing*) const;
     virtual sstring statObjInfo() const;
-    virtual int objectSell(TBeing *, TMonster *);
-    virtual void refuelMeDrug(TBeing *, TDrugContainer *);
+    virtual int objectSell(TBeing*, TMonster*);
+    virtual void refuelMeDrug(TBeing*, TDrugContainer*);
     virtual itemTypeT itemType() const { return ITEM_DRUG; }
     virtual int getVolume() const;
     virtual float getTotalWeight(bool) const;
@@ -77,12 +75,10 @@ class TDrug : public TObj {
     drugTypeT getDrugType() const;
 
     TDrug();
-    TDrug(const TDrug &a);
-    TDrug & operator=(const TDrug &a);
+    TDrug(const TDrug& a);
+    TDrug& operator=(const TDrug& a);
     virtual ~TDrug();
 };
 
-
-
-void applyDrugAffects(TBeing *, drugTypeT, bool);
-void applyAddictionAffects(TBeing *, drugTypeT, int);
+void applyDrugAffects(TBeing*, drugTypeT, bool);
+void applyAddictionAffects(TBeing*, drugTypeT, int);

@@ -8,33 +8,24 @@
 #include "obj_note.h"
 #include "extern.h"
 
-TNote::TNote() :
-  TObj(),
-  repairman(0),
-  time_adjust(0),
-  obj_v(0)
-{
-}
+TNote::TNote() : TObj(), repairman(0), time_adjust(0), obj_v(0) {}
 
-TNote::TNote(const TNote &a) :
+TNote::TNote(const TNote& a) :
   TObj(a),
   repairman(a.repairman),
   time_adjust(a.time_adjust),
-  obj_v(a.obj_v)
-{
-}
+  obj_v(a.obj_v) {}
 
-TNote * createNote(sstring const& msg)
-{
-  TObj  *obj;
-  TNote *note;
+TNote* createNote(const sstring& msg) {
+  TObj* obj;
+  TNote* note;
 
   if (!(obj = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
-     vlogf(LOG_BUG, "Unable to load note in createNote");
-     return NULL;
+    vlogf(LOG_BUG, "Unable to load note in createNote");
+    return NULL;
   }
-				  
-  note = dynamic_cast<TNote *>(obj);
+
+  note = dynamic_cast<TNote*>(obj);
 
   //  Create the note with the output.
   note->swapToStrung();
@@ -43,9 +34,9 @@ TNote * createNote(sstring const& msg)
   return note;
 }
 
-TNote & TNote::operator=(const TNote &a)
-{
-  if (this == &a) return *this;
+TNote& TNote::operator=(const TNote& a) {
+  if (this == &a)
+    return *this;
   TObj::operator=(a);
   repairman = a.repairman;
   time_adjust = a.time_adjust;
@@ -53,75 +44,50 @@ TNote & TNote::operator=(const TNote &a)
   return *this;
 }
 
-TNote::~TNote()
-{
-}
+TNote::~TNote() {}
 
-int TNote::getRepairman() const
-{
-  return repairman;
-}
+int TNote::getRepairman() const { return repairman; }
 
-void TNote::setRepairman(int n)
-{
-  repairman = n;
-}
+void TNote::setRepairman(int n) { repairman = n; }
 
-int TNote::getTimeAdj() const
-{
-  return time_adjust;
-}
+int TNote::getTimeAdj() const { return time_adjust; }
 
-void TNote::setTimeAdj(int n)
-{
-  time_adjust = n;
-}
+void TNote::setTimeAdj(int n) { time_adjust = n; }
 
-int TNote::getObjV() const
-{
-  return obj_v;
-}
+int TNote::getObjV() const { return obj_v; }
 
-void TNote::setObjV(int n)
-{
-  obj_v = n;
-}
+void TNote::setObjV(int n) { obj_v = n; }
 
-void TNote::assignFourValues(int x1, int x2, int x3, int)
-{
+void TNote::assignFourValues(int x1, int x2, int x3, int) {
   setRepairman(x1);
   setTimeAdj(x2);
   setObjV(x3);
 }
 
-void TNote::getFourValues(int *x1, int *x2, int *x3, int *x4) const
-{
+void TNote::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
   *x1 = getRepairman();
   *x2 = getTimeAdj();
   *x3 = getObjV();
   *x4 = 0;
 }
 
-sstring TNote::statObjInfo() const
-{
+sstring TNote::statObjInfo() const {
   char buf[256];
   int rc = real_mobile(getRepairman());
 
   sprintf(buf, "Repairman: %s : %d",
-      (rc >= 0 ? mob_index[rc].short_desc : "Unknown"), getRepairman());
+    (rc >= 0 ? mob_index[rc].short_desc : "Unknown"), getRepairman());
 
   sstring a(buf);
   return a;
 }
 
-int TNote::objectSell(TBeing *ch, TMonster *keeper)
-{
+int TNote::objectSell(TBeing* ch, TMonster* keeper) {
   keeper->doTell(ch->getName(), "I'm sorry, I don't buy back notes.");
   return TRUE;
 }
 
-void TNote::junkMe(TBeing *ch)
-{
+void TNote::junkMe(TBeing* ch) {
   char buf[256];
   int tmpnum;
 
@@ -133,18 +99,18 @@ void TNote::junkMe(TBeing *ch)
       sprintf(buf, "mobdata/repairs/%d/%d", getRepairman(), tmpnum);
       int rc = unlink(buf);
       if (rc != 0) {
-        vlogf(LOG_BUG, format("%s junking apparent ticket (#%d) [%s] that failed to unlink: err=%d, rc=%d") % 
-            ch->getName() % tmpnum % buf % errno % rc);
+        vlogf(LOG_BUG, format("%s junking apparent ticket (#%d) [%s] that "
+                              "failed to unlink: err=%d, rc=%d") %
+                         ch->getName() % tmpnum % buf % errno % rc);
       } else {
         // successfully unlinked the repair
         // we should update the count
         int objv = getObjV();
         int objr = real_object(objv);
-        if (objr >= 0 && objr < (int) obj_index.size()){
+        if (objr >= 0 && objr < (int)obj_index.size()) {
           obj_index[objr].addToNumber(-1);
         }
       }
     }
   }
 }
-

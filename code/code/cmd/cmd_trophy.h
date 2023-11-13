@@ -39,30 +39,29 @@
 // On retrospect, it'd probably be better to move getCount and AddToCount
 // into TBeing, and leave TTrophy as a generic trophy count manipulation class
 
-
 class TDatabase;
 
 class TTrophyPimpl;
 class TTrophy {
-private:
-  TTrophyPimpl* pimpl;
-  sstring getMyName() const;
+  private:
+    TTrophyPimpl* pimpl;
+    sstring getMyName() const;
 
-  TTrophy() = delete;
-  void write(int, double);
- public:
-  void setName(sstring);
+    TTrophy() = delete;
+    void write(int, double);
 
-  float getExpModVal(float, int);
-  const char *getExpModDescr(float, int);
-  void addToCount(int, double);
-  void flush();
-  float getCount(int);
+  public:
+    void setName(sstring);
 
-  void wipe();
+    float getExpModVal(float, int);
+    const char* getExpModDescr(float, int);
+    void addToCount(int, double);
+    void flush();
+    float getCount(int);
 
-  TTrophy(sstring);
-  TTrophy(TBeing *);
-  ~TTrophy();
+    void wipe();
+
+    TTrophy(sstring);
+    TTrophy(TBeing*);
+    ~TTrophy();
 };
-

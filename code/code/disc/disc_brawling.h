@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 #pragma once
 
 // This is the Brawling discipline.
@@ -12,8 +11,7 @@
 #include "discipline.h"
 #include "skills.h"
 
-class CDBrawling : public CDiscipline
-{
+class CDBrawling : public CDiscipline {
   public:
     CSkill skGrapple;
     CSkill skStomp;
@@ -28,11 +26,11 @@ class CDBrawling : public CDiscipline
     CSkill skAdvBerserk;
 
     CDBrawling();
-    CDBrawling(const CDBrawling &a);
-    CDBrawling & operator=(const CDBrawling &a);
+    CDBrawling(const CDBrawling& a);
+    CDBrawling& operator=(const CDBrawling& a);
     virtual ~CDBrawling();
-    virtual CDBrawling * cloneMe() { return new CDBrawling(*this); }
-    int procAdvancedBerserk(TBeing *);
+    virtual CDBrawling* cloneMe() { return new CDBrawling(*this); }
+    int procAdvancedBerserk(TBeing*);
 
   private:
 };

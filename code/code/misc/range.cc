@@ -30,22 +30,13 @@
 
 #define RANGE_DEBUG 0
 
-const char *directions[][2] =
-{
-  {"north", "from the south"},
-  {"east", "from the west"},
-  {"south", "from the north"},
-  {"west", "from the east"},
-  {"up", "from below"},
-  {"down", "from above"},
-  {"northeast", "from the southwest"},
-  {"northwest", "from the southeast"},
-  {"southeast", "from the northwest"},
-  {"southwest", "from the northeast"}
-};
+const char* directions[][2] = {{"north", "from the south"},
+  {"east", "from the west"}, {"south", "from the north"},
+  {"west", "from the east"}, {"up", "from below"}, {"down", "from above"},
+  {"northeast", "from the southwest"}, {"northwest", "from the southeast"},
+  {"southeast", "from the northwest"}, {"southwest", "from the northeast"}};
 
-const char *dir_name[] =
-{
+const char* dir_name[] = {
   "the north",
   "the east",
   "the south",
@@ -58,13 +49,12 @@ const char *dir_name[] =
   "the southwest",
 };
 
-int TThing::throwMe(TBeing *ch, dirTypeT tdir, const char *vict)
-{
+int TThing::throwMe(TBeing* ch, dirTypeT tdir, const char* vict) {
   int iDist, rc;
   unsigned int max_distance;
   double mult;
-  TBeing *targ;
-  TThing *tmp;
+  TBeing* targ;
+  TThing* tmp;
   unsigned int count;
   char local_vict[256];
 
@@ -73,7 +63,7 @@ int TThing::throwMe(TBeing *ch, dirTypeT tdir, const char *vict)
   // F = f(brawn) = mass * accelleration
   // acc = f(brawn)/m
   float acc = ch->plotStat(STAT_CURRENT, STAT_BRA, 500.0, 5000.0, 2500.0);
-  acc /= max((float) 3.0, getWeight());
+  acc /= max((float)3.0, getWeight());
   // regard acc as a ft/sec^2
   // assume a throw has this constant acceleration for 0.2 secs
   // which yields a final velocity v0x
@@ -86,7 +76,7 @@ int TThing::throwMe(TBeing *ch, dirTypeT tdir, const char *vict)
   // time aloft is then given by: h = 1/2 gt^2
   // h being height thrown from, g = gravity
   // using Earth's gravity of 32 ft/sec^2 and converting height to feet
-  float tt = sqrt(2 * (ch->getPartMinHeight(ITEM_WEAR_NECK)/12.0) / 32.0);
+  float tt = sqrt(2 * (ch->getPartMinHeight(ITEM_WEAR_NECK) / 12.0) / 32.0);
   // regard this as secs
   // lets toss in some "smarts" checking
   // the above assumed the trajectory was at an up angle of 0 degrees
@@ -102,61 +92,69 @@ int TThing::throwMe(TBeing *ch, dirTypeT tdir, const char *vict)
   if (ch->roomp->getRoomHeight() >= 0) {
     // vf^2 = 2ax
     // (vo sin(lim_ang))^2 = 2 * 32.0 * (room_height - my height)
-    float lim_ang = sqrt(2 * 32.0 * (ch->roomp->getRoomHeight() - ch->getPartMinHeight(ITEM_WEAR_NECK))/12.0 / v0 / v0);
+    float lim_ang =
+      sqrt(2 * 32.0 *
+           (ch->roomp->getRoomHeight() - ch->getPartMinHeight(ITEM_WEAR_NECK)) /
+           12.0 / v0 / v0);
     lim_ang = asin(lim_ang);
     lim_ang = lim_ang * 360.0 / 2 / M_PI;  // convert from radians
-    ang = min(ang, (int) lim_ang);
+    ang = min(ang, (int)lim_ang);
   }
   ang = min(max(ang, 0), 45);
   // and FINALLY, we translate all this into a range...
   // the upangle range = v0^2/g sin 2(ang)
-  mult = ((v0 * v0)/32.0) * sin(2*ang*(2.0*M_PI/360.0));
+  mult = ((v0 * v0) / 32.0) * sin(2 * ang * (2.0 * M_PI / 360.0));
   // the above formula is for returning to same height we started from
   // make allowance for how high we started from (from tt above)
-  mult += v0 * cos(ang * (2.0*M_PI/360.0)) * tt;
-  
+  mult += v0 * cos(ang * (2.0 * M_PI / 360.0)) * tt;
+
   // regard the average "room" as 50 feet across, exterior = 100 ft across
   if (ch->outside())
-    max_distance = (unsigned int) (mult / 100);
+    max_distance = (unsigned int)(mult / 100);
   else
-    max_distance = (unsigned int) (mult / 50);
+    max_distance = (unsigned int)(mult / 50);
 
   // this results in typical max distances of 3-4 rooms
   // arbitrarily scale it so get 1-2 range limit
   max_distance /= 2;
 
-  TObj *tobj = dynamic_cast<TObj *>(this);
+  TObj* tobj = dynamic_cast<TObj*>(this);
   if (tobj && !tobj->canWear(ITEM_WEAR_THROW))
     max_distance /= 2;
 
   // allow it to go 1 room, people get pissy otherwise
-  max_distance = max(max_distance, (unsigned int) 1);
+  max_distance = max(max_distance, (unsigned int)1);
 
 #if RANGE_DEBUG
-char buf[256];
-sprintf(buf, "Ranged debug: max_distance: %d\n\racceleration: %6.2f, velocity: %6.2f\n\rhangtime: %6.2f, angle: %d", max_distance, acc, v0, tt, ang);
-vlogf(LOG_BUG, buf);
+  char buf[256];
+  sprintf(buf,
+    "Ranged debug: max_distance: %d\n\racceleration: %6.2f, velocity: "
+    "%6.2f\n\rhangtime: %6.2f, angle: %d",
+    max_distance, acc, v0, tt, ang);
+  vlogf(LOG_BUG, buf);
 #endif
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 15);
-  
+
   strncpy(local_vict, vict, sizeof(local_vict - 1));
 
-  if(sstring(local_vict).isNumber() && (sscanf(local_vict, "%d", &iDist) == 1))
+  if (sstring(local_vict).isNumber() && (sscanf(local_vict, "%d", &iDist) == 1))
     *local_vict = '\0';
   else
-    iDist = min(50, (int) max_distance);
+    iDist = min(50, (int)max_distance);
 
   if (iDist < 0) {
     ch->sendTo("You need to supply a positive (or 0) distance to throw.\n\r");
     return FALSE;
   }
   if (tdir == 4)
-    max_distance /= 2; // you can only throw upwards half as far 
+    max_distance /= 2;  // you can only throw upwards half as far
 
-  if ((iDist > 50) || (max_distance < (unsigned int) iDist)) {
+  if ((iDist > 50) || (max_distance < (unsigned int)iDist)) {
     ch->sendTo("Much too far.  Maybe in your dreams!\n\r");
-    ch->sendTo(format("You couldn't possibly throw it further than %d rooms.\n\r") % max_distance);
+    ch->sendTo(
+      format("You couldn't possibly throw it further than %d rooms.\n\r") %
+      max_distance);
     return FALSE;
   }
 
@@ -166,16 +164,19 @@ vlogf(LOG_BUG, buf);
   else
     targ = NULL;
 
-  if (targ && ch->checkPeacefulVictim("A strange force prevents you from contemplating hurting your target.\n\r", targ))
+  if (targ && ch->checkPeacefulVictim("A strange force prevents you from "
+                                      "contemplating hurting your target.\n\r",
+                targ))
     return FALSE;
 
   if (targ && ch->noHarmCheck(targ))
     return FALSE;
 
   // treat fliers as being 1 room further away
-  if (targ && targ->isFlying() && !ch->isFlying() && ((count+1) > max_distance)){
+  if (targ && targ->isFlying() && !ch->isFlying() &&
+      ((count + 1) > max_distance)) {
     act("Unfortunately, $N is flying and you can't quite reach that far.",
-       FALSE, ch, 0, targ, TO_CHAR);
+      FALSE, ch, 0, targ, TO_CHAR);
     return FALSE;
   }
 
@@ -183,12 +184,13 @@ vlogf(LOG_BUG, buf);
   act("$n throws $p!", TRUE, ch, this, 0, TO_ROOM);
   tmp = ch->unequip(ch->getPrimaryHold());
   if (!tmp) {
-    vlogf(LOG_BUG, format("Bad unequip in throwThing (%s : %s)") %  getName() % ch->getName());
+    vlogf(LOG_BUG, format("Bad unequip in throwThing (%s : %s)") % getName() %
+                     ch->getName());
     ch->sendTo("Something real bad happened.  Talk to a god.\n\r");
     return FALSE;
   }
   *ch->roomp += *tmp;
-  rc = throwThing(this, tdir, ch->in_room, &targ, iDist, max_distance,ch);
+  rc = throwThing(this, tdir, ch->in_room, &targ, iDist, max_distance, ch);
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
     return DELETE_THIS;
   }
@@ -204,9 +206,8 @@ vlogf(LOG_BUG, buf);
   return TRUE;
 }
 
-void TBeing::doThrow(const sstring &argument)
-{
-  TThing *t;
+void TBeing::doThrow(const sstring& argument) {
+  TThing* t;
   sstring object, dir, vict;
   int rc;
   dirTypeT tdir;
@@ -218,10 +219,10 @@ void TBeing::doThrow(const sstring &argument)
     sendTo("You are too tired to throw anything!\n\r");
     return;
   }
-  vict="";
-  object=argument.word(0);
-  dir=argument.word(1);
-  vict=argument.word(2);
+  vict = "";
+  object = argument.word(0);
+  dir = argument.word(1);
+  vict = argument.word(2);
 
   if (object.empty()) {
     sendTo("Syntax: throw <object> [direction] [character | distance]\n\r");
@@ -230,23 +231,25 @@ void TBeing::doThrow(const sstring &argument)
 
   tdir = getDirFromChar(dir);
   if (tdir == DIR_NONE) {
-    vict=dir;
-    tdir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+    vict = dir;
+    tdir = dirTypeT(::number(MIN_DIR, MAX_DIR - 1));
   }
   if (vict.empty()) {
     if (fight())
-      vict=fight()->name;
+      vict = fight()->name;
     else
-      vict="mama-o-Brutius";
+      vict = "mama-o-Brutius";
   }
   if (!(t = equipment[getPrimaryHold()])) {
-    sendTo("You can only throw objects you are holding in your primary hand.\n\r");
+    sendTo(
+      "You can only throw objects you are holding in your primary hand.\n\r");
     return;
   }
-  TObj * tobj = dynamic_cast<TObj *>(t);
+  TObj* tobj = dynamic_cast<TObj*>(t);
   if (tobj) {
     if (tobj->isObjStat(ITEM_NEWBIE)) {
-      sendTo("That item might suck, but you can't just go throwing it around.\n\r");
+      sendTo(
+        "That item might suck, but you can't just go throwing it around.\n\r");
       return;
     }
     if (tobj->isObjStat(ITEM_NODROP)) {
@@ -255,7 +258,8 @@ void TBeing::doThrow(const sstring &argument)
     }
   }
   if (!isname(object, t->name)) {
-    sendTo("You can only throw objects you are holding in your primary hand.\n\r");
+    sendTo(
+      "You can only throw objects you are holding in your primary hand.\n\r");
     return;
   }
 
@@ -266,8 +270,8 @@ void TBeing::doThrow(const sstring &argument)
   }
 }
 
-int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellNumT attacktype)
-{
+int get_range_actual_damage(TBeing* ch, TBeing* victim, TObj* o, int dam,
+  spellNumT attacktype) {
   if (ch->damCheckDeny(victim, attacktype))
     return 0;
   dam = victim->skipImmortals(dam);
@@ -279,12 +283,12 @@ int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellN
   // adjust the damage based on their skill
   if (dam) {
     int q;
-    if (dynamic_cast<TArrow *>(o)) {
+    if (dynamic_cast<TArrow*>(o)) {
       // shot objects are here
       // ranged spec basically allows arrow to do extra damage...
       q = 100;
-      q += (ch->getSkillValue(SKILL_RANGED_PROF)/2); // 50%-100% damage
-      q += (ch->getSkillValue(SKILL_RANGED_SPEC)/2); // 100%-150% damage
+      q += (ch->getSkillValue(SKILL_RANGED_PROF) / 2);  // 50%-100% damage
+      q += (ch->getSkillValue(SKILL_RANGED_SPEC) / 2);  // 100%-150% damage
 
       dam *= q;
       dam /= 100;
@@ -294,15 +298,14 @@ int get_range_actual_damage(TBeing *ch, TBeing *victim, TObj *o, int dam, spellN
       dam *= q;
       dam /= 100;
     }
-    dam = max(dam,1);
+    dam = max(dam, 1);
   }
   return (dam);
 }
 
-void pissOff(TMonster *irritated, TBeing *reason)
-{
+void pissOff(TMonster* irritated, TBeing* reason) {
   affectedData af;
-  const int PISSED_MOB_PERSIST = 250;    // make em damn persistant 
+  const int PISSED_MOB_PERSIST = 250;  // make em damn persistant
 
   if (!(irritated->canSee(reason, INFRA_YES)) || reason->isImmortal())
     return;
@@ -311,19 +314,23 @@ void pissOff(TMonster *irritated, TBeing *reason)
     if (!irritated->isDumbAnimal()) {
       switch (dice(1, 10)) {
         case 1:
-          act("$n screams 'I must kill $N!", TRUE, irritated, 0, reason, TO_ROOM);
+          act("$n screams 'I must kill $N!", TRUE, irritated, 0, reason,
+            TO_ROOM);
           break;
         case 2:
-          act("$n says 'That's it, $N is toast.'", TRUE, irritated, 0, reason, TO_ROOM);
+          act("$n says 'That's it, $N is toast.'", TRUE, irritated, 0, reason,
+            TO_ROOM);
           break;
         case 3:
           act("$n growls '$N must die'", TRUE, irritated, 0, reason, TO_ROOM);
           break;
         case 4:
-          act("$n begins to curse about $N.", TRUE, irritated, 0, reason, TO_ROOM);
+          act("$n begins to curse about $N.", TRUE, irritated, 0, reason,
+            TO_ROOM);
           break;
         case 5:
-          act("$n says 'Time to go killing.'", TRUE, irritated, 0, reason, TO_ROOM);
+          act("$n says 'Time to go killing.'", TRUE, irritated, 0, reason,
+            TO_ROOM);
           break;
         default:
           act("$n screams in rage!", TRUE, irritated, 0, reason, TO_ROOM);
@@ -339,7 +346,7 @@ void pissOff(TMonster *irritated, TBeing *reason)
     irritated->oldRoom = irritated->inRoom();
     irritated->addHated(reason);
     if (!irritated->affectedBySpell(SPELL_TRAIL_SEEK)) {
-      af.type = SPELL_TRAIL_SEEK;        // make sure mob hunts global 
+      af.type = SPELL_TRAIL_SEEK;  // make sure mob hunts global
       af.duration = PISSED_MOB_PERSIST;
       af.modifier = 0;
       af.location = APPLY_NONE;
@@ -351,23 +358,22 @@ void pissOff(TMonster *irritated, TBeing *reason)
 
 // ch is thrower of thing (sometimes NULL - falling objects)
 // vict is potential victim
-bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
-{
+bool hitInnocent(const TBeing* ch, const TThing* thing, const TThing* vict) {
   // hit innocent due to misthrow
 
-  const TBeing * tbc = dynamic_cast<const TBeing *>(vict);
+  const TBeing* tbc = dynamic_cast<const TBeing*>(vict);
 
   if (ch) {
     if (ch->isImmortal())
       return FALSE;
- 
+
     // presume anyone near thrower is safely out of the way
     if (tbc && tbc->sameRoom(*ch))
       return false;
-  
+
     // protect the mounts of group members too
     if (tbc && tbc->rider) {
-      TBeing *temp = dynamic_cast<TBeing *>(tbc->horseMaster());
+      TBeing* temp = dynamic_cast<TBeing*>(tbc->horseMaster());
       if (temp && temp->inGroup(*ch) && temp->sameRoom(*ch))
         return false;
     }
@@ -381,15 +387,15 @@ bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
   num /= 1000;
   // num should be on order of 15 - 70
 
-  num += 1 + thing->getVolume()/1000;
+  num += 1 + thing->getVolume() / 1000;
 
   if (ch) {
-    num -= ch->plotStat(STAT_CURRENT, STAT_AGI, -10, 10, 0); 
+    num -= ch->plotStat(STAT_CURRENT, STAT_AGI, -10, 10, 0);
   }
 
   if (tbc) {
-    num -= tbc->plotStat(STAT_CURRENT, STAT_PER, -5, 5, 0); 
-    num -= tbc->plotStat(STAT_CURRENT, STAT_SPE, -5, 5, 0); 
+    num -= tbc->plotStat(STAT_CURRENT, STAT_PER, -5, 5, 0);
+    num -= tbc->plotStat(STAT_CURRENT, STAT_SPE, -5, 5, 0);
   }
 
   return (::number(20, 100) < num);
@@ -400,23 +406,23 @@ bool hitInnocent(const TBeing *ch, const TThing *thing, const TThing *vict)
 // return TRUE if it hits something (stops moving), otherwise false
 // cdist = current dist traveled
 // mdist =  max range item can go
-int catch_or_smack(TRoom *rp, TBeing **targ, TThing *thing, TBeing *ch, int cdist, int mdist)
-{
+int catch_or_smack(TRoom* rp, TBeing** targ, TThing* thing, TBeing* ch,
+  int cdist, int mdist) {
   return thing->catchSmack(ch, targ, rp, cdist, mdist);
 }
 
-int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdist)
-{
-  TThing *c;
+int TThing::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
+  int mdist) {
+  TThing* c;
   int d = 0;
   bool true_targ;
   int i;
   int resCode = 0;
   int range;
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end();){
-    c=*(it++);
-    TBeing *tbt = dynamic_cast<TBeing *>(c);
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end();) {
+    c = *(it++);
+    TBeing* tbt = dynamic_cast<TBeing*>(c);
     if (!tbt || (tbt == ch))
       continue;
 
@@ -426,98 +432,101 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
     else
       range = cdist;
 
-    // anyone we want to hit here?  (including innocents) 
+    // anyone we want to hit here?  (including innocents)
     // the ch->isImmortal() checks prevent gods from hitting innocents
-    if ((true_targ = (tbt == *targ)) || 
-         hitInnocent(ch, this, tbt)) {
+    if ((true_targ = (tbt == *targ)) || hitInnocent(ch, this, tbt)) {
       // if we hit an innocent, treat range as being greater so that damage
       // is less than if it was intentional
       if (!true_targ && range != mdist)
         range++;
 
-      if ((::number(1, 25) < tbt->plotStat(STAT_CURRENT, STAT_SPE, 3, 18, 13)) &&
-           tbt->hasHands() && !tbt->bothHandsHurt() &&
-           tbt->awake() && tbt->canGet(this, SILENT_YES)) {
+      if ((::number(1, 25) <
+            tbt->plotStat(STAT_CURRENT, STAT_SPE, 3, 18, 13)) &&
+          tbt->hasHands() && !tbt->bothHandsHurt() && tbt->awake() &&
+          tbt->canGet(this, SILENT_YES)) {
         resCode = TRUE;
         act("$n catches $p.", FALSE, tbt, this, NULL, TO_ROOM);
         if (!ch->sameRoom(*tbt))
-          act("In the distance, $N catches your $o.",TRUE,ch,this,tbt,TO_CHAR);
- 
+          act("In the distance, $N catches your $o.", TRUE, ch, this, tbt,
+            TO_CHAR);
+
         if (!tbt->heldInPrimHand()) {
-          act("You catch $p.",
-                       FALSE,tbt,this,0,TO_CHAR);
+          act("You catch $p.", FALSE, tbt, this, 0, TO_CHAR);
           --(*this);
           tbt->equipChar(this, tbt->getPrimaryHold());
         } else if (!tbt->heldInSecHand()) {
-          act("You catch $p.",
-                       FALSE,tbt,this,0,TO_CHAR);
+          act("You catch $p.", FALSE, tbt, this, 0, TO_CHAR);
           --(*this);
           tbt->equipChar(this, tbt->getSecondaryHold());
         } else {
-          act("You catch $p, and add it to your inventory.",
-                       FALSE,tbt,this,0,TO_CHAR);
+          act("You catch $p, and add it to your inventory.", FALSE, tbt, this,
+            0, TO_CHAR);
           --(*this);
           *tbt += *this;
         }
-        if (!tbt->isPc()) 
-          pissOff(dynamic_cast<TMonster *>(tbt), ch);
+        if (!tbt->isPc())
+          pissOff(dynamic_cast<TMonster*>(tbt), ch);
         if (cdist == 0)
           ch->setCharFighting(tbt, 0);
         return resCode;
       } else if (!ch->isImmortal() &&
-                  (!(i = ch->specialAttack(tbt, SKILL_RANGED_PROF)) || 
+                 (!(i = ch->specialAttack(tbt, SKILL_RANGED_PROF)) ||
                    i == GUARANTEED_FAILURE)) {
         act("$n dodges out of the way of $p.", FALSE, tbt, this, NULL, TO_ROOM);
         tbt->sendTo("You dodge out of its way.\n\r");
         if (!ch->sameRoom(*tbt))
-          act("In the distance, $N dodges out of the way of $p.",
-                 TRUE,ch,this,tbt,TO_CHAR);
+          act("In the distance, $N dodges out of the way of $p.", TRUE, ch,
+            this, tbt, TO_CHAR);
         resCode = FALSE;
         if (!tbt->isPc())
-          pissOff(dynamic_cast<TMonster *>(tbt), ch);
+          pissOff(dynamic_cast<TMonster*>(tbt), ch);
         if (cdist == 0)
           ch->setCharFighting(tbt, 0);
         return resCode;
       } else {
-       // smacked by non-weapon/arrow
+        // smacked by non-weapon/arrow
         if (true_targ)
           act("$n is smacked by $p!", FALSE, tbt, this, NULL, TO_ROOM);
         else
-          act("$n is accidentally smacked by $p!", FALSE, tbt, this, NULL, TO_ROOM);
-        act("You are unable to dodge being hit by $p!",
-                  FALSE, tbt, this, NULL, TO_CHAR);
+          act("$n is accidentally smacked by $p!", FALSE, tbt, this, NULL,
+            TO_ROOM);
+        act("You are unable to dodge being hit by $p!", FALSE, tbt, this, NULL,
+          TO_CHAR);
         if (!ch->sameRoom(*tbt))
-          act("In the distance, $N is hit by $p.",TRUE,ch,this,tbt,TO_CHAR);
+          act("In the distance, $N is hit by $p.", TRUE, ch, this, tbt,
+            TO_CHAR);
         resCode = TRUE;
-        d = min(max(0, (int) (getWeight() - 5)), 10);
+        d = min(max(0, (int)(getWeight() - 5)), 10);
 #if RANGE_DEBUG
-        vlogf(LOG_BUG, format("Range debug: (2) dam ping 1: %d") %  d);
+        vlogf(LOG_BUG, format("Range debug: (2) dam ping 1: %d") % d);
 #endif
 // don't do this or we wind up with acorns killing people
 //        d *= mdist - range + 1;  // modify for point blank range - bat
 #if RANGE_DEBUG
-        vlogf(LOG_BUG, format("Range debug: (2) dam ping 3: %d") %  d);
+        vlogf(LOG_BUG, format("Range debug: (2) dam ping 3: %d") % d);
 #endif
-        TObj *tobj = dynamic_cast<TObj *>(this);
+        TObj* tobj = dynamic_cast<TObj*>(this);
         if (tobj) {
           d = get_range_actual_damage(ch, tbt, tobj, d, TYPE_HIT);
 #if RANGE_DEBUG
-          vlogf(LOG_BUG, format("Range debug: (2) dam ping 4: %d") %  d);
+          vlogf(LOG_BUG, format("Range debug: (2) dam ping 4: %d") % d);
 #endif
 
-          if (::number(1, d) <= tobj->getStructPoints() &&
-              tbt->roomp && !tbt->roomp->isRoomFlag(ROOM_ARENA)) {
+          if (::number(1, d) <= tobj->getStructPoints() && tbt->roomp &&
+              !tbt->roomp->isRoomFlag(ROOM_ARENA)) {
             tobj->addToStructPoints(-1);
             if (tobj->getStructPoints() <= 0) {
               if (!ch->sameRoom(*tbt))
-                act("In the distance, $p is destroyed.",TRUE,ch,tobj,0,TO_CHAR);
+                act("In the distance, $p is destroyed.", TRUE, ch, tobj, 0,
+                  TO_CHAR);
               if (!tobj->makeScraps())
                 ADD_DELETE(resCode, DELETE_ITEM);
             }
           }
 #if RANGE_DEBUG
-          vlogf(LOG_BUG, format("Range debug: (2) %s damaging %s with %s for %d dam") % 
-                 ch->getName() % tbt->getName() % tobj->getName() % d);
+          vlogf(LOG_BUG,
+            format("Range debug: (2) %s damaging %s with %s for %d dam") %
+              ch->getName() % tbt->getName() % tobj->getName() % d);
 #endif
           if (ch->reconcileDamage(tbt, d, getWtype()) == -1) {
             if (true_targ) {
@@ -531,7 +540,7 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
         }
 
         if (tbt && !tbt->isPc())
-          pissOff(dynamic_cast<TMonster *>(tbt), ch);
+          pissOff(dynamic_cast<TMonster*>(tbt), ch);
         if (cdist == 0)
           ch->setCharFighting(tbt, 0);
         if (true_targ)
@@ -544,19 +553,20 @@ int TThing::catchSmack(TBeing *ch, TBeing **targ, TRoom *rp, int cdist, int mdis
   return FALSE;
 }
 
-int hit_obstacle_in_room(TRoom *rp, TThing *thing, TBeing *ch)
-{
-  TThing *t=NULL;
+int hit_obstacle_in_room(TRoom* rp, TThing* thing, TBeing* ch) {
+  TThing* t = NULL;
 
-  for(StuffIter it=rp->stuff.begin();it!=rp->stuff.end() && (t=*it);++it) {
-    TObj *obj = dynamic_cast<TObj *>(t);
+  for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
+       ++it) {
+    TObj* obj = dynamic_cast<TObj*>(t);
     if (obj) {
       if ((obj != thing) && (!number(0, 4)) && (obj->getVolume() > 10000) &&
           (obj->getVolume() > ((dice(1, 1000) * 1000)) - thing->getVolume())) {
-        act("$n smacks into $N, and falls to the $g.",
-             TRUE, thing, 0, obj, TO_ROOM);
-        act("$p smacked into $N.", FALSE, ch, thing, obj, TO_CHAR); 
-	if (thing->spec) thing->checkSpec(NULL, CMD_ARROW_HIT_OBJ, "", obj);
+        act("$n smacks into $N, and falls to the $g.", TRUE, thing, 0, obj,
+          TO_ROOM);
+        act("$p smacked into $N.", FALSE, ch, thing, obj, TO_CHAR);
+        if (thing->spec)
+          thing->checkSpec(NULL, CMD_ARROW_HIT_OBJ, "", obj);
         return TRUE;
       }
     }
@@ -564,8 +574,7 @@ int hit_obstacle_in_room(TRoom *rp, TThing *thing, TBeing *ch)
   return FALSE;
 }
 
-static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
-{
+static void barrier(TRoom* rp, dirTypeT dir, TThing* t) {
   char buf[256];
 
   switch (rp->getSectorType()) {
@@ -576,7 +585,8 @@ static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
     case SECT_TEMPERATE_CAVE:
     case SECT_ARCTIC_CAVE:
       if (dir == 5)
-        sprintf(buf, "$n glances off the $g at a strange angle and comes to rest.");
+        sprintf(buf,
+          "$n glances off the $g at a strange angle and comes to rest.");
       else if (dir == 4)
         sprintf(buf, "$n bounces off the ceiling and drops to the $g.");
       else
@@ -586,9 +596,11 @@ static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
     case SECT_TEMPERATE_CITY:
     case SECT_TROPICAL_CITY:
       if (dir == 5)
-        sprintf(buf, "$n glances off the $g at a strange angle and comes to rest.");
+        sprintf(buf,
+          "$n glances off the $g at a strange angle and comes to rest.");
       else if (dir == 4)
-        sprintf(buf, "$n sails briefly into the air above before falling to the $g.");
+        sprintf(buf,
+          "$n sails briefly into the air above before falling to the $g.");
       else
         sprintf(buf, "$n bounces off a wall and drops to the $g.");
       break;
@@ -614,7 +626,8 @@ static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
       else if (dir == 4)
         sprintf(buf, "$n flies into the air, and falls into the water below.");
       else
-        sprintf(buf, "$n flies through the air a ways before splashing into the water.");
+        sprintf(buf,
+          "$n flies through the air a ways before splashing into the water.");
       break;
     case SECT_TROPICAL_UNDERWATER:
     case SECT_TEMPERATE_UNDERWATER:
@@ -649,9 +662,12 @@ static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
     case SECT_FIRE:
     case SECT_VOLCANO_LAVA:
       if (dir == 5)
-        sprintf(buf, "$n disappears as it hits the flaming molten surface below.");
+        sprintf(buf,
+          "$n disappears as it hits the flaming molten surface below.");
       else
-        sprintf(buf, "$n goes a short ways before falling into the flaming surface below.");
+        sprintf(buf,
+          "$n goes a short ways before falling into the flaming surface "
+          "below.");
       break;
     case SECT_SUBARCTIC:
     case SECT_ARCTIC_WASTE:
@@ -670,98 +686,113 @@ static void barrier(TRoom *rp, dirTypeT dir, TThing *t)
     case SECT_TROPICAL_MOUNTAINS:
     default:
       if (dir == 5)
-        sprintf(buf, "$n glances off the $g at a strange angle and comes to rest.");
+        sprintf(buf,
+          "$n glances off the $g at a strange angle and comes to rest.");
       else if (dir == 4)
-        sprintf(buf, "$n sails briefly into the air above before falling to the $g.");
+        sprintf(buf,
+          "$n sails briefly into the air above before falling to the $g.");
       else
-        sprintf(buf, "$n flies through the air a ways before dropping to the $g.");
+        sprintf(buf,
+          "$n flies through the air a ways before dropping to the $g.");
   }
   act(buf, TRUE, t, 0, 0, TO_ROOM);
-  if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
+  if (t->spec)
+    t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
 }
 
-// max_dist is the maximum distance that "o" can be thrown. 
-// iDist is how far user wants item to go 
+// max_dist is the maximum distance that "o" can be thrown.
+// iDist is how far user wants item to go
 // distance is actual amount flown
 // return DELETE_ITEM if t should go poof
 // returns DELETE_VICT if *targ should die   (|| able)
-int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int max_dist, TBeing *ch)
-{
+int throwThing(TThing* t, dirTypeT dir, int from, TBeing** targ, int dist,
+  int max_dist, TBeing* ch) {
   char capbuf[256];
   TRoom *rp, *newrp;
   int iDist = 0;
   int rc;
 
-  // send the thing up to "dist" rooms away, checking for our target 
+  // send the thing up to "dist" rooms away, checking for our target
   while ((rp = real_roomp(from))) {
     if (iDist) {
-      sprintf(capbuf, "$n %s into the room %s.", (dir == 5 ? "drops" : "flies"), directions[dir][1]);
+      sprintf(capbuf, "$n %s into the room %s.", (dir == 5 ? "drops" : "flies"),
+        directions[dir][1]);
       act(capbuf, TRUE, t, 0, 0, TO_ROOM);
-      if (t->spec) t->checkSpec(NULL, CMD_ARROW_INTO_ROOM, "", NULL);
+      if (t->spec)
+        t->checkSpec(NULL, CMD_ARROW_INTO_ROOM, "", NULL);
 
     } else {
-      if (t->spec) t->checkSpec(NULL, CMD_ARROW_SHOT, "", NULL);
+      if (t->spec)
+        t->checkSpec(NULL, CMD_ARROW_SHOT, "", NULL);
     }
 
     if (hit_obstacle_in_room(rp, t, ch))
       return FALSE;
 
-
     // max_dist here is used to modify damage based on how far away they are.
     // use the absolute max it can go (max_dist) for this calculation
     rc = catch_or_smack(rp, targ, t, ch, iDist, max_dist);
     if (IS_SET_DELETE(rc, DELETE_ITEM) || IS_SET_DELETE(rc, DELETE_VICT))
-       return rc;
+      return rc;
     else if (rc)
       return FALSE;
 
-    // users specified to fly "dist" rooms, so probably only provided 
+    // users specified to fly "dist" rooms, so probably only provided
     // momentum for that far.  Use dist in this check, rather than max_dist
     iDist++;
     if (iDist > dist || iDist > max_dist) {
       act("$n drops to the $g.", TRUE, t, 0, 0, TO_ROOM);
 
       if (dir != DIR_DOWN)
-        act("$p ran out of momentum and fell.", FALSE, ch, t, 0, TO_CHAR); 
-      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
+        act("$p ran out of momentum and fell.", FALSE, ch, t, 0, TO_CHAR);
+      if (t->spec)
+        t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
       return FALSE;
     } else if (!clearpath(from, dir) || rp->isUnderwaterSector()) {
-      barrier(rp, dir,t);
-      act("$p hit an obstacle and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR); 
-      
-      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
+      barrier(rp, dir, t);
+      act("$p hit an obstacle and dropped to the $g.", FALSE, ch, t, 0,
+        TO_CHAR);
+
+      if (t->spec)
+        t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
       return FALSE;
     }
-    // No need to check for a NULL newrp, clearpath() does that. - Russ 
+    // No need to check for a NULL newrp, clearpath() does that. - Russ
     newrp = real_roomp(rp->dir_option[dir]->to_room);
     if (newrp->isRoomFlag(ROOM_PEACEFUL) || newrp->isRoomFlag(ROOM_NO_MOB)) {
-      act("Strangely, $n hits a magical barrier and falls to the $g.", 
-             FALSE, t, 0, 0, TO_ROOM);
-      act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR); 
+      act("Strangely, $n hits a magical barrier and falls to the $g.", FALSE, t,
+        0, 0, TO_ROOM);
+      act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0,
+        TO_CHAR);
 
-      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
+      if (t->spec)
+        t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
 
       return FALSE;
     }
 
     if (newrp->isRoomFlag(ROOM_NO_HEAL)) {
-      act("Strangely, $n hits a magical barrier and falls to the $g.",
-	  FALSE, t, 0, 0, TO_ROOM);
-      act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0, TO_CHAR);
+      act("Strangely, $n hits a magical barrier and falls to the $g.", FALSE, t,
+        0, 0, TO_ROOM);
+      act("$p hit a magic barrier and dropped to the $g.", FALSE, ch, t, 0,
+        TO_CHAR);
 
-      if (t->spec) t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
+      if (t->spec)
+        t->checkSpec(NULL, CMD_ARROW_MISSED, "", NULL);
 
       return FALSE;
     }
 
-    sprintf(capbuf, "$n %s %s out of the room.", (dir == 5 ? "drops" : "flies"), directions[dir][0]);
+    sprintf(capbuf, "$n %s %s out of the room.", (dir == 5 ? "drops" : "flies"),
+      directions[dir][0]);
     act(capbuf, TRUE, t, 0, 0, TO_ROOM);
     --(*t);
     from = rp->dir_option[dir]->to_room;
     *(real_roomp(from)) += *t;
   }
   if (!rp) {
-    vlogf(LOG_BUG, format("%s thrown into non-existant room #%d") %  capbuf % from);
+    vlogf(LOG_BUG,
+      format("%s thrown into non-existant room #%d") % capbuf % from);
     --(*t);
     thing_to_room(t, Room::VOID);
     return FALSE;
@@ -772,34 +803,35 @@ int throwThing(TThing *t, dirTypeT dir, int from, TBeing **targ, int dist, int m
 // ch attempts to see targ by looking linearly in all cardinal directions
 // returns the direction targ was spotted in, or -1 (failure)
 // range and dir are also passed as formal vars
-dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT *dr)
-{
+dirTypeT can_see_linear(const TBeing* ch, const TBeing* targ, int* rng,
+  dirTypeT* dr) {
   int rm, max_range = 15, range = 0;
   int height = 0;
 
   // add bonus from race
   max_range += ch->getMyRace()->getLOS();
 
-  max_range += (ch->visionBonus + 1)/2;
+  max_range += (ch->visionBonus + 1) / 2;
 
   switch (ch->getPosition()) {
     case POSITION_MOUNTED:
-      height = 4*dynamic_cast<TBeing *>(ch->riding)->getHeight()/5 + 2*ch->getHeight()/3;
-      break;  
+      height = 4 * dynamic_cast<TBeing*>(ch->riding)->getHeight() / 5 +
+               2 * ch->getHeight() / 3;
+      break;
     case POSITION_STANDING:
     case POSITION_FIGHTING:
       height = ch->getHeight();
       break;
     case POSITION_SITTING:
-      height = ch->getHeight()/3;
-      break; 
+      height = ch->getHeight() / 3;
+      break;
     case POSITION_CRAWLING:
-      height = ch->getHeight()/4;
+      height = ch->getHeight() / 4;
       break;
     case POSITION_RESTING:
     case POSITION_SLEEPING:
     default:
-      height = ch->getHeight()/6;
+      height = ch->getHeight() / 6;
       break;
   }
   if (height > 80)
@@ -811,7 +843,7 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
   else if (height < 65)
     max_range -= 1;
 
-  if(ch->hasQuestBit(TOG_REAL_AGING)){
+  if (ch->hasQuestBit(TOG_REAL_AGING)) {
     if ((ch->age()->year - ch->getBaseAge() + 17) > 80)
       max_range -= 3;
     else if ((ch->age()->year - ch->getBaseAge() + 17) > 60)
@@ -821,8 +853,6 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
     else if ((ch->age()->year - ch->getBaseAge() + 17) < 20)
       max_range += 1;
   }
-
-
 
   if ((Weather::getWeather(*ch->roomp) == Weather::RAINY) ||
       (Weather::getWeather(*ch->roomp) == Weather::LIGHTNING))
@@ -839,8 +869,9 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
       max_range -= TerrainInfo[real_roomp(rm)->getSectorType()]->thickness;
       if (clearpath(rm, i)) {
         rm = real_roomp(rm)->dir_option[i]->to_room;
-        const TThing *t=NULL;
-        for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
+        const TThing* t = NULL;
+        for (StuffIter it = real_roomp(rm)->stuff.begin();
+             it != real_roomp(rm)->stuff.end() && (t = *it); ++it) {
           if ((t == targ) && ch->canSee(t)) {
             *rng = range;
             *dr = i;
@@ -853,16 +884,15 @@ dirTypeT can_see_linear(const TBeing *ch, const TBeing *targ, int *rng, dirTypeT
   return DIR_NONE;
 }
 
-TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
-{
+TBeing* get_char_linear(const TBeing* ch, char* arg, int* rf, dirTypeT* df) {
   int rm, max_range = 15, range = 0, n, n_sofar = 0;
-  TThing *t=NULL;
+  TThing* t = NULL;
   char *tmp, tmpname[256];
 
   if ((ch->getRace() == RACE_ELVEN) || (ch->getRace() == RACE_DROW))
     max_range += 5;
 
-  max_range += (ch->visionBonus + 1)/2;
+  max_range += (ch->visionBonus + 1) / 2;
 
   if ((Weather::getWeather(*ch->roomp) == Weather::RAINY) ||
       (Weather::getWeather(*ch->roomp) == Weather::LIGHTNING))
@@ -875,12 +905,13 @@ TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
   if (!(n = get_number(&tmp)))
     return NULL;
 
-  // This routine counts folks in your room 
+  // This routine counts folks in your room
   rm = ch->in_room;
   dirTypeT i = DIR_NONE;
   range = 0;
-  for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
-    TBeing *tbt = dynamic_cast<TBeing *>(t);
+  for (StuffIter it = real_roomp(rm)->stuff.begin();
+       it != real_roomp(rm)->stuff.end() && (t = *it); ++it) {
+    TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (tbt && (isname(tmp, tbt->name)) && ch->canSee(tbt)) {
       n_sofar++;
       if (n_sofar == n) {
@@ -898,8 +929,9 @@ TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
       max_range -= TerrainInfo[real_roomp(rm)->getSectorType()]->thickness;
       if (clearpath(rm, i)) {
         rm = real_roomp(rm)->dir_option[i]->to_room;
-        for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
-          TBeing *tbt = dynamic_cast<TBeing *>(t);
+        for (StuffIter it = real_roomp(rm)->stuff.begin();
+             it != real_roomp(rm)->stuff.end() && (t = *it); ++it) {
+          TBeing* tbt = dynamic_cast<TBeing*>(t);
           if (tbt && (isname(tmp, tbt->getName())) && ch->canSee(tbt)) {
             n_sofar++;
             if (n_sofar == n) {
@@ -916,10 +948,8 @@ TBeing *get_char_linear(const TBeing *ch, char *arg, int *rf, dirTypeT *df)
   return NULL;
 }
 
-
-int clearpath(int room, dirTypeT dir)
-{
-  TRoom *rp;
+int clearpath(int room, dirTypeT dir) {
+  TRoom* rp;
 
   rp = real_roomp(room);
 
@@ -930,7 +960,9 @@ int clearpath(int room, dirTypeT dir)
     return FALSE;
 
   if (!real_roomp(rp->dir_option[dir]->to_room)) {
-    vlogf(LOG_BUG, format("Range function done in room with bad exit. (%d) Dir:[%d]") %  room % dir);
+    vlogf(LOG_BUG,
+      format("Range function done in room with bad exit. (%d) Dir:[%d]") %
+        room % dir);
     return FALSE;
   }
   if (IS_SET(rp->dir_option[dir]->condition, EXIT_CLOSED))
@@ -939,47 +971,27 @@ int clearpath(int room, dirTypeT dir)
   return (real_roomp(room)->dir_option[dir]->to_room);
 }
 
-
-static bool wordBeginsWith(sstring const& haystack, sstring const& needle) {
+static bool wordBeginsWith(const sstring& haystack, const sstring& needle) {
   size_t pos = haystack.lower().find(needle.lower());
-  return pos != sstring::npos && (pos == 0 || haystack[pos-1] == ' ');
+  return pos != sstring::npos && (pos == 0 || haystack[pos - 1] == ' ');
 }
 
-void TBeing::doScan(const char *argument)
-{
-  const char *rng_desc[] =
-  {
-    "right here",    // 0
-    "immediately",
-    "nearby",
-    "a short ways",
-    "not too far",
-    "a ways",        // 5 room
-    "quite a ways",
-    "way off",
-    "way off",
-    "far",
-    "far",           // 10 rooms
-    "way way off",
-    "way way off",
-    "real far",
-    "real far",
-    "very far",      // 15 rooms
-    "very far",
-    "extremely far",
-    "extremely far",
-    "on the horizon",
-    "on the horizon",    // 20 rooms
-    "on the horizon",
-    "on the horizon",
-    "on the horizon",
-    "on the horizon" 
-  };
+void TBeing::doScan(const char* argument) {
+  const char* rng_desc[] = {"right here",  // 0
+    "immediately", "nearby", "a short ways", "not too far",
+    "a ways",  // 5 room
+    "quite a ways", "way off", "way off", "far",
+    "far",  // 10 rooms
+    "way way off", "way way off", "real far", "real far",
+    "very far",  // 15 rooms
+    "very far", "extremely far", "extremely far", "on the horizon",
+    "on the horizon",  // 20 rooms
+    "on the horizon", "on the horizon", "on the horizon", "on the horizon"};
   char buf[256], buf2[256];
   int max_range = 15, range, new_rm, rm, nfnd;
   int hindered;
   bool found = FALSE;
-  TThing *t=NULL;
+  TThing* t = NULL;
   bool all = FALSE;
   sstring grepBy;
   float swt;
@@ -992,7 +1004,7 @@ void TBeing::doScan(const char *argument)
   if (sd == DIR_NONE) {
     grepBy = arg1;
     smin = MIN_DIR;
-    smax = dirTypeT(MAX_DIR-1);
+    smax = dirTypeT(MAX_DIR - 1);
     swt = 1.5;
     sprintf(buf, "$n peers intently all around.");
     sprintf(buf2, "You peer intently all around, and see :\n\r");
@@ -1007,7 +1019,7 @@ void TBeing::doScan(const char *argument)
   if (getMove() < (all ? 10 : 2)) {
     sendTo("You are simply too exhausted!\n\r");
     return;
-  } 
+  }
 
   act(buf, TRUE, this, 0, 0, TO_ROOM);
   sendTo(buf2);
@@ -1015,7 +1027,8 @@ void TBeing::doScan(const char *argument)
   if (!inLethargica())
     addToMove(all ? -10 : -2);
 
-  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
+  if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) &&
+      !isAffected(AFF_CLARITY)) {
     sendTo("Nothing, you are blind.\n\r");
     return;
   }
@@ -1023,8 +1036,9 @@ void TBeing::doScan(const char *argument)
   // Check in room first
   if (all) {
     // for specific directions, skip room so it doesn't count toward "nfnd"
-    for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
-      if (!dynamic_cast<TBeing *>(t))
+    for (StuffIter it = roomp->stuff.begin();
+         it != roomp->stuff.end() && (t = *it); ++it) {
+      if (!dynamic_cast<TBeing*>(t))
         continue;
       if (t == this)
         continue;
@@ -1032,7 +1046,7 @@ void TBeing::doScan(const char *argument)
         sstring nc_name = format("%30s") % t->getNameNOC(this);
         int name_pos = nc_name.find_first_not_of(" ");
 
-        nc_name.replace(name_pos, nc_name.length()-name_pos, t->getName());
+        nc_name.replace(name_pos, nc_name.length() - name_pos, t->getName());
 
         sendTo(COLOR_MOBS, format("%s : right here\n\r") % nc_name);
         found = TRUE;
@@ -1056,9 +1070,10 @@ void TBeing::doScan(const char *argument)
       max_range -= 2;
       sendTo(COLOR_BASIC, "The <B>RAIN<1> decreases your view!\n\r");
     } else if (Weather::getWeather(*roomp) == Weather::CLOUDY) {
-    max_range -= 1;
-        sendTo(COLOR_BASIC, "The <k>FOG<1> slightly decreases your view!\n\r");
-      //sendTo(COLOR_BASIC, "The <k>CLOUDS<1> slightly decrease your view!\n\r");
+      max_range -= 1;
+      sendTo(COLOR_BASIC, "The <k>FOG<1> slightly decreases your view!\n\r");
+      // sendTo(COLOR_BASIC, "The <k>CLOUDS<1> slightly decrease your
+      // view!\n\r");
     } else if (Weather::getWeather(*roomp) == Weather::CLOUDLESS) {
       max_range += 1;
       sendTo(COLOR_BASIC, "The <c>clear skies<1> enhance your view!\n\r");
@@ -1080,29 +1095,41 @@ void TBeing::doScan(const char *argument)
         else
           rm = new_rm;
 
-        for(StuffIter it=real_roomp(rm)->stuff.begin();it!=real_roomp(rm)->stuff.end() && (t=*it);++it) {
-          TBeing *tbt = dynamic_cast<TBeing *>(t);
+        for (StuffIter it = real_roomp(rm)->stuff.begin();
+             it != real_roomp(rm)->stuff.end() && (t = *it); ++it) {
+          TBeing* tbt = dynamic_cast<TBeing*>(t);
           if (!tbt)
             continue;
-          if (can_see_char_other_room(this, tbt, real_roomp(rm)) && wordBeginsWith(t->name, grepBy)) {
+          if (can_see_char_other_room(this, tbt, real_roomp(rm)) &&
+              wordBeginsWith(t->name, grepBy)) {
             sstring nc_name = format("%30s") % tbt->getNameNOC(this);
             int name_pos = nc_name.find_first_not_of(" ");
 
-            nc_name.replace(name_pos, nc_name.length()-name_pos, tbt->getName());
-            sendTo(COLOR_MOBS, format("%s : %s %s\n\r") % nc_name % rng_desc[range] % dirs_to_blank[i]);
+            nc_name.replace(name_pos, nc_name.length() - name_pos,
+              tbt->getName());
+            sendTo(COLOR_MOBS, format("%s : %s %s\n\r") % nc_name %
+                                 rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
             if (nfnd > (5 + visionBonus / 3)) {
-              sendTo(format("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
+              sendTo(
+                format(
+                  "The crowd hinders you from seeing any further %s.\n\r") %
+                dirs_to_blank[i]);
               hindered = TRUE;
               break;
             }
-          } else if (canSee(tbt, INFRA_YES) && wordBeginsWith(t->name, grepBy)) {
-            sendTo(COLOR_MOBS, format("%30s : %s %s\n\r") % "A blob of heat" % rng_desc[range] % dirs_to_blank[i]);
+          } else if (canSee(tbt, INFRA_YES) &&
+                     wordBeginsWith(t->name, grepBy)) {
+            sendTo(COLOR_MOBS, format("%30s : %s %s\n\r") % "A blob of heat" %
+                                 rng_desc[range] % dirs_to_blank[i]);
             nfnd++;
             found = TRUE;
             if (nfnd > (5 + visionBonus / 3)) {
-              sendTo(format("The crowd hinders you from seeing any further %s.\n\r") % dirs_to_blank[i]);
+              sendTo(
+                format(
+                  "The crowd hinders you from seeing any further %s.\n\r") %
+                dirs_to_blank[i]);
               hindered = TRUE;
               break;
             }
@@ -1119,8 +1146,7 @@ void TBeing::doScan(const char *argument)
 }
 
 // returns DELETE_THIS
-int TBeing::stickIn(TThing *o, wearSlotT pos, silentTypeT silent)
-{
+int TBeing::stickIn(TThing* o, wearSlotT pos, silentTypeT silent) {
   int rc;
   char buf[80];
 
@@ -1131,15 +1157,14 @@ int TBeing::stickIn(TThing *o, wearSlotT pos, silentTypeT silent)
   }
 
   mud_assert(!o->equippedBy && !o->parent && (o->in_room == -1),
-      "stickIn: item had owner at invocation");
-  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR,
-         "Bad slot in stickIn, %s %d", getName().c_str(), pos);
-  mud_assert(slotChance(pos),
-         "No slot chance in stickIn, %s %d", getName().c_str(), pos);
+    "stickIn: item had owner at invocation");
+  mud_assert(pos >= MIN_WEAR && pos < MAX_WEAR, "Bad slot in stickIn, %s %d",
+    getName().c_str(), pos);
+  mud_assert(slotChance(pos), "No slot chance in stickIn, %s %d",
+    getName().c_str(), pos);
   mud_assert(getStuckIn(pos) == NULL,
-      "stickIn: bodyPart had item stuckIn already");
-  mud_assert(roomp != NULL,
-      "stickIn: ch with no roomp");
+    "stickIn: bodyPart had item stuckIn already");
+  mud_assert(roomp != NULL, "stickIn: ch with no roomp");
 
   setStuckIn(pos, o);
   o->eq_stuck = pos;
@@ -1150,40 +1175,40 @@ int TBeing::stickIn(TThing *o, wearSlotT pos, silentTypeT silent)
     sprintf(buf, "$p sticks in your %s!", describeBodySlot(pos).c_str());
     act(buf, FALSE, this, o, 0, TO_CHAR);
   }
-  TObj *obj = dynamic_cast<TObj *>(o);
+  TObj* obj = dynamic_cast<TObj*>(o);
   if (obj && obj->spec) {
-    rc = ((objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].proc)
-           (this, CMD_OBJ_STUCK_IN, "", obj, NULL));
+    rc = ((objSpecials[GET_OBJ_SPE_INDEX(obj->spec)].proc)(this,
+      CMD_OBJ_STUCK_IN, "", obj, NULL));
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
   return TRUE;
 }
 
-TThing *has_range_object(TBeing *ch, int *pos)
-{
-  TThing *hucked;
-  TObj *tobj;
+TThing* has_range_object(TBeing* ch, int* pos) {
+  TThing* hucked;
+  TObj* tobj;
 
-  if (!ch->equipment[HOLD_RIGHT] && !ch->equipment[HOLD_LEFT] && ch->stuff.empty())
+  if (!ch->equipment[HOLD_RIGHT] && !ch->equipment[HOLD_LEFT] &&
+      ch->stuff.empty())
     return NULL;
 
-  // Go thru possible places for throwing objects. 
+  // Go thru possible places for throwing objects.
   if ((hucked = ch->equipment[HOLD_RIGHT])) {
-    tobj = dynamic_cast<TObj *>(hucked);
+    tobj = dynamic_cast<TObj*>(hucked);
     if (tobj && tobj->canWear(ITEM_WEAR_THROW)) {
       *pos = HOLD_RIGHT;
       return (tobj);
     }
   } else if ((hucked = ch->equipment[HOLD_LEFT])) {
-    tobj = dynamic_cast<TObj *>(hucked);
+    tobj = dynamic_cast<TObj*>(hucked);
     if (tobj && tobj->canWear(ITEM_WEAR_THROW)) {
       *pos = HOLD_LEFT;
       return (tobj);
     }
   } else {
-    for(StuffIter it= ch->stuff.begin();it!= ch->stuff.end();++it) {
-      tobj = dynamic_cast<TObj *>(*it);
+    for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end(); ++it) {
+      tobj = dynamic_cast<TObj*>(*it);
       if (tobj && tobj->canWear(ITEM_WEAR_THROW)) {
         *pos = -1;
         return tobj;
@@ -1194,82 +1219,80 @@ TThing *has_range_object(TBeing *ch, int *pos)
 }
 
 // ----------------------------------------------
-int go_ok(roomDirData *exitp)
-{
+int go_ok(roomDirData* exitp) {
   return (!IS_SET(exitp->condition, EXIT_CLOSED | EXIT_LOCKED | EXIT_SECRET) &&
           (exitp->to_room != Room::NOWHERE));
 }
 
-int go_ok_smarter(roomDirData *exitp)
-{
+int go_ok_smarter(roomDirData* exitp) {
   return (!IS_SET(exitp->condition, EXIT_LOCKED | EXIT_SECRET) &&
           (exitp->to_room != Room::NOWHERE));
 }
 
-
-dirTypeT choose_exit_global(int in_room, int tgt_room, int depth)
-{
+dirTypeT choose_exit_global(int in_room, int tgt_room, int depth) {
   TPathFinder path(depth);
 
   return path.findPath(in_room, findRoom(tgt_room));
 }
- 
-dirTypeT choose_exit_in_zone(int in_room, int tgt_room, int depth)
-{
+
+dirTypeT choose_exit_in_zone(int in_room, int tgt_room, int depth) {
   TPathFinder path(depth);
   path.setStayZone(true);
 
   return path.findPath(in_room, findRoom(tgt_room));
 }
 
-int TBeing::doShoot(const char *arg)
-{
+int TBeing::doShoot(const char* arg) {
   char arg1[128], arg2[128];
-  TBeing *targ = NULL;
+  TBeing* targ = NULL;
   int rc, iDist;
   dirTypeT dir;
-  TThing *t;
+  TThing* t;
   unsigned int count = 0;
   // Prevent: order elemental shoot <blah>
   // for Free xp.
-  if ((!desc || (!isPc() && !orig)) && !(spec)) //added spec for the BM archers.. hopefully wont cause problems - Dash
+  if ((!desc || (!isPc() && !orig)) &&
+      !(spec))  // added spec for the BM archers.. hopefully wont cause problems
+                // - Dash
     return FALSE;
 
   rc = sscanf(arg, "%s %s %d", arg2, arg1, &iDist);
-  if (rc < 3) 
+  if (rc < 3)
     iDist = 99;
   if (rc < 2)
-    *arg1='\0';
+    *arg1 = '\0';
   if (rc < 1 || rc > 3) {
     sendTo("Syntax : shoot <direction> <creature> <max-distance>\n\r");
     return FALSE;
   }
 
   dir = getDirFromChar(arg2);
-  
+
   if (dir == DIR_NONE) {
     strcpy(arg1, arg2);
-    dir = dirTypeT(::number(MIN_DIR, MAX_DIR-1));
+    dir = dirTypeT(::number(MIN_DIR, MAX_DIR - 1));
   }
 
   if (checkPeaceful("You feel much too peaceful to contemplate violence.\n\r"))
     return FALSE;
 
   if (!(t = equipment[getPrimaryHold()])) {
-    if(!(t=generic_find_obj("cannon", FIND_OBJ_ROOM, this))){
+    if (!(t = generic_find_obj("cannon", FIND_OBJ_ROOM, this))) {
       sendTo("You are not holding a bow to shoot!\n\r");
       return FALSE;
     }
   }
 
-  if (getSkillValue(SKILL_RANGED_PROF) <= 0 && !dynamic_cast<TGun *>(t)) {
+  if (getSkillValue(SKILL_RANGED_PROF) <= 0 && !dynamic_cast<TGun*>(t)) {
     sendTo("You almost shoot yourself in the foot!\n\r");
-    sendTo("You realize you don't have any clue what you're doing...get some training.\n\r");
+    sendTo(
+      "You realize you don't have any clue what you're doing...get some "
+      "training.\n\r");
     return FALSE;
   }
 
   if (*arg1 &&
-   !(targ = get_char_vis_direction(this, arg1, dir, iDist, TRUE, &count))) {
+      !(targ = get_char_vis_direction(this, arg1, dir, iDist, TRUE, &count))) {
     sendTo("No creature with that name in that room.\n\r");
     sendTo("Syntax : shoot <direction> <creature> <max-distance>\n\r");
     return FALSE;
@@ -1284,8 +1307,8 @@ int TBeing::doShoot(const char *arg)
   }
 
   // this is mainly for dual wielding guns, bows should be 2-handed
-  if((t = equipment[getSecondaryHold()]) && 
-     dynamic_cast<TObj *>(t) && !dynamic_cast<TObj *>(t)->usedAsPaired()){
+  if ((t = equipment[getSecondaryHold()]) && dynamic_cast<TObj*>(t) &&
+      !dynamic_cast<TObj*>(t)->usedAsPaired()) {
     rc = t->shootMeBow(this, targ, count, dir, iDist);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
@@ -1300,67 +1323,60 @@ int TBeing::doShoot(const char *arg)
 }
 
 // DELETE_THIS, DELETE_VICT(ch)
-int TThing::shootMeBow(TBeing *ch, TBeing *, unsigned int, dirTypeT, int)
-{
+int TThing::shootMeBow(TBeing* ch, TBeing*, unsigned int, dirTypeT, int) {
   act("$p isn't a bow!", FALSE, ch, this, 0, TO_CHAR);
   return FALSE;
 }
 
-int TBeing::unloadBow(const char *arg)
-{
-  TObj *arrow;
-  TBow *bow = NULL;
-  TThing *t;
- 
-  if (!(t = equipment[getPrimaryHold()]) ||
-      !(bow = dynamic_cast<TBow *>(t)) ||
-      bow->stuff.empty() || !dynamic_cast<TArrow *>(bow->stuff.front()))
+int TBeing::unloadBow(const char* arg) {
+  TObj* arrow;
+  TBow* bow = NULL;
+  TThing* t;
+
+  if (!(t = equipment[getPrimaryHold()]) || !(bow = dynamic_cast<TBow*>(t)) ||
+      bow->stuff.empty() || !dynamic_cast<TArrow*>(bow->stuff.front()))
     return FALSE;
- 
-  arrow = dynamic_cast<TObj *>(bow->stuff.front());
+
+  arrow = dynamic_cast<TObj*>(bow->stuff.front());
   --(*arrow);
   sendTo("You uncock your bow and take out its arrow!\n\r");
-  act("$n uncocks $s bow and takes out its arrow!", 
-              TRUE, this, NULL, NULL, TO_ROOM);
+  act("$n uncocks $s bow and takes out its arrow!", TRUE, this, NULL, NULL,
+    TO_ROOM);
   *this += *(unequip(getPrimaryHold()));
   *this += *arrow;
   return TRUE;
 }
- 
-TThing * TBeing::findArrow(const char *buf, silentTypeT silent) const
-{
-  TThing *arrow;
-  TQuiver *tQuiver;
-  int     curPos;
-  TThing  *tThing=NULL;
+
+TThing* TBeing::findArrow(const char* buf, silentTypeT silent) const {
+  TThing* arrow;
+  TQuiver* tQuiver;
+  int curPos;
+  TThing* tThing = NULL;
 
   arrow = searchLinkedListVis(this, buf, stuff);
   if (!arrow) {
     for (curPos = MIN_WEAR; curPos < MAX_WEAR; curPos++) {
-      if ((tQuiver = dynamic_cast<TQuiver *>(equipment[curPos])) &&
-           !tQuiver->isClosed()) {
+      if ((tQuiver = dynamic_cast<TQuiver*>(equipment[curPos])) &&
+          !tQuiver->isClosed()) {
         if ((arrow = searchLinkedListVis(this, buf, tQuiver->stuff))) {
           if (!silent) {
-            act("You pull $p from $N.",
-                TRUE, this, arrow, tQuiver, TO_CHAR);
-            act("$n pulls $p from $N.",
-                TRUE, this, arrow, tQuiver, TO_ROOM);
+            act("You pull $p from $N.", TRUE, this, arrow, tQuiver, TO_CHAR);
+            act("$n pulls $p from $N.", TRUE, this, arrow, tQuiver, TO_ROOM);
           }
           return arrow;
         }
       }
     }
-    for(StuffIter it=stuff.begin();it!=stuff.end() && (tThing=*it);++it) {
-      if (!(tQuiver = dynamic_cast<TQuiver *>(tThing)) ||
-           tQuiver->isClosed())
+    for (StuffIter it = stuff.begin(); it != stuff.end() && (tThing = *it);
+         ++it) {
+      if (!(tQuiver = dynamic_cast<TQuiver*>(tThing)) || tQuiver->isClosed())
         continue;
 
       if (!(arrow = searchLinkedListVis(this, buf, tThing->stuff)))
         continue;
 
       if (!silent) {
-        act("You pull $p from $N.",
-            TRUE, this, arrow, tQuiver, TO_CHAR);
+        act("You pull $p from $N.", TRUE, this, arrow, tQuiver, TO_CHAR);
       }
       return arrow;
     }
@@ -1370,33 +1386,37 @@ TThing * TBeing::findArrow(const char *buf, silentTypeT silent) const
   return arrow;
 }
 
-void TBeing::doBload(const char *arg)
-{
-  char    arg1[128],
-          arg2[128];
-  TThing  *bow;
-  TThing  *arrow;
- 
+void TBeing::doBload(const char* arg) {
+  char arg1[128], arg2[128];
+  TThing* bow;
+  TThing* arrow;
+
   if (sscanf(arg, "%s %s", arg1, arg2) != 2) {
     sendTo("Syntax : bload <bow> <arrow>\n\r");
     return;
   }
   if (heldInPrimHand()) {
     if (!isname(arg1, heldInPrimHand()->name)) {
-      sendTo(COLOR_OBJECTS, format("You would have a hard time firing your %s, while holding %s.\n\r") %            arg1 % sstring(heldInPrimHand()->getName()).uncap());
+      sendTo(COLOR_OBJECTS,
+        format(
+          "You would have a hard time firing your %s, while holding %s.\n\r") %
+          arg1 % sstring(heldInPrimHand()->getName()).uncap());
       return;
     } else {
-      TThing *tObj = heldInPrimHand();
+      TThing* tObj = heldInPrimHand();
 
       *this += *(unequip(getPrimaryHold()));
       //--(*tObj);
       //*this += *tObj;
       sendTo(COLOR_OBJECTS, format("You remove %s to load it.\n\r") %
-             sstring(tObj->getName()).uncap());
+                              sstring(tObj->getName()).uncap());
     }
   }
   if (heldInSecHand()) {
-    sendTo(COLOR_OBJECTS, format("You would have a hard time firing your %s, while holding %s.\n\r") %          arg1 % sstring(heldInSecHand()->getName()).uncap());
+    sendTo(COLOR_OBJECTS,
+      format(
+        "You would have a hard time firing your %s, while holding %s.\n\r") %
+        arg1 % sstring(heldInSecHand()->getName()).uncap());
     return;
   }
   if (!(bow = searchLinkedListVis(this, arg1, stuff))) {
@@ -1404,7 +1424,7 @@ void TBeing::doBload(const char *arg)
     return;
   }
 
-  if(dynamic_cast<TGun *>(bow)){
+  if (dynamic_cast<TGun*>(bow)) {
     sendTo("Use gload to load a gun.\n\r");
     return;
   } else {
@@ -1417,12 +1437,10 @@ void TBeing::doBload(const char *arg)
   }
 }
 
-void TThing::bloadBowArrow(TBeing *ch, TThing *)
-{
+void TThing::bloadBowArrow(TBeing* ch, TThing*) {
   ch->sendTo("You can only load your bow with arrows!\n\r");
 }
 
-void TThing::bloadArrowBow(TBeing *ch, TArrow *arrow)
-{
+void TThing::bloadArrowBow(TBeing* ch, TArrow* arrow) {
   ch->sendTo("Arrows are usually loaded into bows!\n\r");
 }

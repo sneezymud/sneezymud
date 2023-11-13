@@ -8,23 +8,22 @@
 #define LAST_WOOD_TYPE 0
 #define LOGS_PER_ROOM 5
 
-std::map <int, bool> mRoomsLogsHarvested;
-    
-void TBeing::doLogging(){
+std::map<int, bool> mRoomsLogsHarvested;
 
-  std::vector<int>treetypes;
-  const int woodtypes[] = { 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85,
-    86, 87, 88, 0 };
+void TBeing::doLogging() {
+  std::vector<int> treetypes;
+  const int woodtypes[] = {75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87,
+    88, 0};
   int i = 0;
-  
 
-
-  if(!roomp->isForestSector()){
-    sendTo("Forests are said to be a good place to find trees.  Maybe you should find one?\n\r");
+  if (!roomp->isForestSector()) {
+    sendTo(
+      "Forests are said to be a good place to find trees.  Maybe you should "
+      "find one?\n\r");
     return;
   }
 
-  if(task){
+  if (task) {
     stopTask();
   }
 
@@ -42,52 +41,51 @@ void TBeing::doLogging(){
   start_task(this, NULL, roomp, TASK_LOGGING, "", 3, inRoom(), 0, 0, 5);
 }
 
-
-TObj *harvest_a_log(TRoom *rp){
-  TObj *log=NULL;
+TObj* harvest_a_log(TRoom* rp) {
+  TObj* log = NULL;
   int log_vnum = rp->getTreetype();
-  
+
   if (rp->getLogsHarvested() > LOGS_PER_ROOM) {
     vlogf(LOG_BUG, "Lumberjack in a treeless room.");
-    rp->setLogsHarvested(LOGS_PER_ROOM-1);
+    rp->setLogsHarvested(LOGS_PER_ROOM - 1);
   }
   log = read_object(log_vnum, VIRTUAL);
 
-  rp->setLogsHarvested(rp->getLogsHarvested()+1);
+  rp->setLogsHarvested(rp->getLogsHarvested() + 1);
   if (mRoomsLogsHarvested.find(rp->number) == mRoomsLogsHarvested.end())
     mRoomsLogsHarvested[rp->number] = true;
 
   return log;
 }
 
-
-int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, TObj *)
-{
-  TObj *log=NULL;
-  TBaseWeapon *tool=NULL;
+int task_logging(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
+  TObj*) {
+  TObj* log = NULL;
+  TBaseWeapon* tool = NULL;
   int learning = ch->getSkillValue(SKILL_LOGGING);
   int dam, critnum, log_vnum;
   wearSlotT part_hit;
 
-  if(ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
+  if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
     return FALSE;
 
   // basic tasky safechecking
-  // adding the learning check - we had an arithmetic exception trying to divide...
-  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || learning == 0){
-    act("You cease your deforestation activities.",
-        FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops $s deforestation activities.",
-        TRUE, ch, 0, 0, TO_ROOM);
+  // adding the learning check - we had an arithmetic exception trying to
+  // divide...
+  if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
+      learning == 0) {
+    act("You cease your deforestation activities.", FALSE, ch, 0, 0, TO_CHAR);
+    act("$n stops $s deforestation activities.", TRUE, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE; // returning FALSE lets command be interpreted
+    return FALSE;  // returning FALSE lets command be interpreted
   }
 
   // find our axe or whatever here
-  tool = dynamic_cast<TBaseWeapon *>(ch->heldInPrimHand());
-  if((!tool || !tool->isSlashWeapon()))
-  {
-    ch->sendTo("You need to hold a slash weapon in your primary hand to engage in deforestation!\n\r");
+  tool = dynamic_cast<TBaseWeapon*>(ch->heldInPrimHand());
+  if ((!tool || !tool->isSlashWeapon())) {
+    ch->sendTo(
+      "You need to hold a slash weapon in your primary hand to engage in "
+      "deforestation!\n\r");
     ch->stopTask();
     return TRUE;
   }
@@ -96,15 +94,16 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
     do generic checks here
    */
 
-
-  if(rp && !rp->isForestSector()){
+  if (rp && !rp->isForestSector()) {
     vlogf(LOG_BUG, "Somehow chopping wood in an unforested area.");
-    ch->sendTo("Forests are said to be a good place to find trees.  Maybe you should find one?\n\r");
+    ch->sendTo(
+      "Forests are said to be a good place to find trees.  Maybe you should "
+      "find one?\n\r");
     ch->stopTask();
     return TRUE;
   }
 
-  if (ch->task && ch->task->timeLeft < 0){
+  if (ch->task && ch->task->timeLeft < 0) {
     ch->sendTo("You give up on your deforestation activities.\n\r");
     ch->stopTask();
     return TRUE;
@@ -114,21 +113,19 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
     case CMD_TASK_CONTINUE:
       ch->task->calcNextUpdate(pulse, Pulse::MOBACT * 5);
 
-      switch (ch->task->timeLeft)
-      {
+      switch (ch->task->timeLeft) {
         case 3:
           // looking for a tree
-          act("You look around for a tree to chop down with your $o.",
-            FALSE, ch, tool, 0, TO_CHAR);
-          act("$n looks around for something.",
-            TRUE, ch, NULL, 0, TO_ROOM);
-          if (!::number(0,100/learning))
+          act("You look around for a tree to chop down with your $o.", FALSE,
+            ch, tool, 0, TO_CHAR);
+          act("$n looks around for something.", TRUE, ch, NULL, 0, TO_ROOM);
+          if (!::number(0, 100 / learning))
             ch->task->timeLeft--;
-          if(!(ch->bSuccess(SKILL_LOGGING) || 
-                (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0,99))) ||
-                !(::number(1,LOGS_PER_ROOM*3/2) > rp->getLogsHarvested())) {
-            act("You don't find any promising trees.",
-              FALSE, ch, NULL, 0, TO_CHAR);
+          if (!(ch->bSuccess(SKILL_LOGGING) ||
+                (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0, 99))) ||
+              !(::number(1, LOGS_PER_ROOM * 3 / 2) > rp->getLogsHarvested())) {
+            act("You don't find any promising trees.", FALSE, ch, NULL, 0,
+              TO_CHAR);
             act("$n doesn't seem to have found whatever $e was looking for.",
               TRUE, ch, NULL, 0, TO_ROOM);
             ch->stopTask();
@@ -139,32 +136,32 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
           // find a tree
           log_vnum = rp->getTreetype();
           log = read_object(log_vnum, VIRTUAL);
-          if(log && (ch->bSuccess(SKILL_LOGGING) || 
-                (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0,99))) &&
-                (::number(1,LOGS_PER_ROOM*3/2) > rp->getLogsHarvested())) {
-            if (!(ch->canSee(log)))
-            {
-              act("You decide that swinging $p around in the dark at trees you can't see is a bad idea.",
+          if (log &&
+              (ch->bSuccess(SKILL_LOGGING) ||
+                (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0, 99))) &&
+              (::number(1, LOGS_PER_ROOM * 3 / 2) > rp->getLogsHarvested())) {
+            if (!(ch->canSee(log))) {
+              act(
+                "You decide that swinging $p around in the dark at trees you "
+                "can't see is a bad idea.",
                 FALSE, ch, tool, 0, TO_CHAR);
               act("$n doesn't seem to have found whatever $e was looking for.",
                 TRUE, ch, tool, 0, TO_ROOM);
               ch->stopTask();
               return TRUE;
             }
-            ch->sendTo(format("You've found a %s tree!\n\r") 
-                % sstring(log->getName()).word(1));
-            act("You begin to chop at the tree.",
-              FALSE, ch, NULL, 0, TO_CHAR);
-            act("$n begins to chop at a tree.",
-              TRUE, ch, NULL, 0, TO_ROOM);
+            ch->sendTo(format("You've found a %s tree!\n\r") %
+                       sstring(log->getName()).word(1));
+            act("You begin to chop at the tree.", FALSE, ch, NULL, 0, TO_CHAR);
+            act("$n begins to chop at a tree.", TRUE, ch, NULL, 0, TO_ROOM);
             delete log;
             log = NULL;
           } else {
             if (!log)
-              vlogf(LOG_BUG, format("Error loading log %d in lumberjack task.")
-                % log_vnum);
-            act("You don't find any promising trees.",
-              FALSE, ch, NULL, 0, TO_CHAR);
+              vlogf(LOG_BUG,
+                format("Error loading log %d in lumberjack task.") % log_vnum);
+            act("You don't find any promising trees.", FALSE, ch, NULL, 0,
+              TO_CHAR);
             act("$n doesn't seem to have found whatever $e was looking for.",
               TRUE, ch, NULL, 0, TO_ROOM);
             ch->stopTask();
@@ -173,32 +170,36 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
           ch->task->timeLeft--;
           break;
         case 1:
-          ch->addToMove(::number(-1,-10+ch->getSkillValue(SKILL_LOGGING)/10));
+          ch->addToMove(
+            ::number(-1, -10 + ch->getSkillValue(SKILL_LOGGING) / 10));
           if (ch->getMove() < 5) {
-            act("You are much too tired to continue chopping.", 
-                FALSE, ch, tool, 0, TO_CHAR);
-            act("$n stops chopping, and wipes sweat from $s brow.", 
-                TRUE, ch, tool, 0, TO_ROOM);
+            act("You are much too tired to continue chopping.", FALSE, ch, tool,
+              0, TO_CHAR);
+            act("$n stops chopping, and wipes sweat from $s brow.", TRUE, ch,
+              tool, 0, TO_ROOM);
             ch->stopTask();
             return TRUE;
           }
-          
-          act("You chop at the tree with your $o.",
-                    FALSE, ch, tool, 0, TO_CHAR);
-          act("$n chops at a tree with $s $o.",
-                    TRUE, ch, tool, 0, TO_ROOM);
-          if (!::number(0,3)) {
+
+          act("You chop at the tree with your $o.", FALSE, ch, tool, 0,
+            TO_CHAR);
+          act("$n chops at a tree with $s $o.", TRUE, ch, tool, 0, TO_ROOM);
+          if (!::number(0, 3)) {
             if (tool->getCurSharp() > 1)
               tool->addToCurSharp(-1);
           }
           if (critFail(ch, SKILL_BUTCHER)) {
-            dam = (5+min(20, tool->getCurSharp()/2));
-            act("You chop at the tree with your $o, but you miss terribly and cut yourself!",
-                      FALSE, ch, tool, 0, TO_CHAR);
-            act("$n chops at a tree with $s $o, but misses terribly and cuts $sself!",
-                      TRUE, ch, NULL, 0, TO_ROOM);
-            if (critFail(ch, SKILL_BUTCHER)) { // double crit
-              critnum = ::number(67,82);
+            dam = (5 + min(20, tool->getCurSharp() / 2));
+            act(
+              "You chop at the tree with your $o, but you miss terribly and "
+              "cut yourself!",
+              FALSE, ch, tool, 0, TO_CHAR);
+            act(
+              "$n chops at a tree with $s $o, but misses terribly and cuts "
+              "$sself!",
+              TRUE, ch, NULL, 0, TO_ROOM);
+            if (critFail(ch, SKILL_BUTCHER)) {  // double crit
+              critnum = ::number(67, 82);
               ch->critSlash(ch, tool, &part_hit, TYPE_SLASH, &dam, critnum);
             }
             if (ch->reconcileDamage(ch, dam, SKILL_LOGGING) == -1) {
@@ -206,62 +207,59 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
               ch->doSave(SILENT_YES);
               return DELETE_THIS;
             }
-            act("You stop your lumberjack activities.",
-                FALSE, ch, 0, 0, TO_CHAR);
-            act("$n stops $s lumberjack activities.",
-                TRUE, ch, 0, 0, TO_ROOM);
+            act("You stop your lumberjack activities.", FALSE, ch, 0, 0,
+              TO_CHAR);
+            act("$n stops $s lumberjack activities.", TRUE, ch, 0, 0, TO_ROOM);
             ch->stopTask();
             break;
           }
-          if (!::number(0,200/learning))
+          if (!::number(0, 200 / learning))
             ch->task->timeLeft--;
           break;
         case 0:
-          if((ch->bSuccess(SKILL_LOGGING) ||
-              (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0,99))) &&
-             (log=harvest_a_log(rp))) 
-          {
-            
+          if ((ch->bSuccess(SKILL_LOGGING) ||
+                (!ch->doesKnowSkill(SKILL_LOGGING) && !::number(0, 99))) &&
+              (log = harvest_a_log(rp))) {
             *rp += *log;
 
-            int lvl=ch->GetMaxLevel();
-            if(lvl>15)
-              lvl-=15;
+            int lvl = ch->GetMaxLevel();
+            if (lvl > 15)
+              lvl -= 15;
             else
-              lvl=1;
+              lvl = 1;
 
             // 10% exp variance
-            double exp=mob_exp(lvl);
-            exp *= 0.1*(1.0+((::number(0,20)-10)/100.0)); // 0.1 x fishing xp
-            
+            double exp = mob_exp(lvl);
+            exp *=
+              0.1 *
+              (1.0 + ((::number(0, 20) - 10) / 100.0));  // 0.1 x fishing xp
+
             gain_exp(ch, exp, -1);
 
             ch->doSave(SILENT_YES);
 
-            act("You harvest $p.",
-              FALSE, ch, log, 0, TO_CHAR);
-            act("$n harvests $p.",
-              TRUE, ch, log, 0, TO_ROOM);
+            act("You harvest $p.", FALSE, ch, log, 0, TO_CHAR);
+            act("$n harvests $p.", TRUE, ch, log, 0, TO_ROOM);
           } else {
-            if(log) {
+            if (log) {
               delete log;
               log = NULL;
             }
-            act("You don't manage to harvest any useable logs.",
-              FALSE, ch, NULL, 0, TO_CHAR);
-            act("$n doesn't seem to have harvested anything useful from the tree.",
+            act("You don't manage to harvest any useable logs.", FALSE, ch,
+              NULL, 0, TO_CHAR);
+            act(
+              "$n doesn't seem to have harvested anything useful from the "
+              "tree.",
               TRUE, ch, NULL, 0, TO_ROOM);
           }
           ch->stopTask();
           break;
-        }
+      }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop your lumberjack activities.",
-          FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops $s lumberjack activities.",
-          TRUE, ch, 0, 0, TO_ROOM);
+      act("You stop your lumberjack activities.", FALSE, ch, 0, 0, TO_CHAR);
+      act("$n stops $s lumberjack activities.", TRUE, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -271,34 +269,34 @@ int task_logging(TBeing *ch, cmdTypeT cmd, const char *, int pulse, TRoom *rp, T
     default:
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
-      break;                    // eat the command
+      break;  // eat the command
   }
   return TRUE;
 }
 
 // procReforestation
-procReforestation::procReforestation(const int &p)
-{
-  trigger_pulse=p;
-  name="procReforestation";
+procReforestation::procReforestation(const int& p) {
+  trigger_pulse = p;
+  name = "procReforestation";
 }
 
-void procReforestation::run(const TPulse &) const
-{
-  std::map <int, bool> ::iterator tIter     = mRoomsLogsHarvested.begin(),
-                             tLastGood = mRoomsLogsHarvested.begin();
+void procReforestation::run(const TPulse&) const {
+  std::map<int, bool>::iterator tIter = mRoomsLogsHarvested.begin(),
+                                tLastGood = mRoomsLogsHarvested.begin();
 
   while (tIter != mRoomsLogsHarvested.end()) {
-    TRoom * tRoom = real_roomp((*tIter).first);
+    TRoom* tRoom = real_roomp((*tIter).first);
 
     if (!tRoom) {
-      vlogf(LOG_BUG, format("procReforestation() handling non-existent room! (%d)") % (*tIter).first);
+      vlogf(LOG_BUG,
+        format("procReforestation() handling non-existent room! (%d)") %
+          (*tIter).first);
       continue;
     }
 
     // Make it only a chance.
     if ((tRoom->getLogsHarvested() >= LOGS_PER_ROOM) && !::number(0, 24))
-      tRoom->setLogsHarvested(tRoom->getLogsHarvested()-1);
+      tRoom->setLogsHarvested(tRoom->getLogsHarvested() - 1);
 
     if (tRoom->getLogsHarvested() <= 0) {
       if (tIter == tLastGood) {

@@ -4,7 +4,6 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-
 // container.cc
 //
 
@@ -21,33 +20,24 @@
 #include "obj_saddlebag.h"
 #include "obj_component.h"
 
-TBaseContainer::TBaseContainer() :
-  TObj()
-{
-}
+TBaseContainer::TBaseContainer() : TObj() {}
 
-TBaseContainer::TBaseContainer(const TBaseContainer &a) :
-  TObj(a)
-{
-}
+TBaseContainer::TBaseContainer(const TBaseContainer& a) : TObj(a) {}
 
-TBaseContainer & TBaseContainer::operator=(const TBaseContainer &a)
-{
-  if (this == &a) return *this;
+TBaseContainer& TBaseContainer::operator=(const TBaseContainer& a) {
+  if (this == &a)
+    return *this;
   TObj::operator=(a);
   return *this;
 }
 
-TBaseContainer::~TBaseContainer()
-{
-}
+TBaseContainer::~TBaseContainer() {}
 
 TThing::TThingKind TBaseContainer::getKind() const {
   return TThing::TThingKind::TBaseContainer;
 }
 
-bool TBaseContainer::engraveMe(TBeing *ch, TMonster *me, bool give)
-{
+bool TBaseContainer::engraveMe(TBeing* ch, TMonster* me, bool give) {
   char buf[256];
 
   // engraved bags would protect too many things
@@ -62,51 +52,49 @@ bool TBaseContainer::engraveMe(TBeing *ch, TMonster *me, bool give)
   return TRUE;
 }
 
-int TBaseContainer::stealModifier()
-{
-  return 50;   // make bags tough to steal
+int TBaseContainer::stealModifier() {
+  return 50;  // make bags tough to steal
 }
 
-int TBaseContainer::getReducedVolume(const TThing *) const
-{
+int TBaseContainer::getReducedVolume(const TThing*) const {
   return getTotalVolume();
 }
 
-int TBaseContainer::getCarriedVolume() const
-{
-  TThing *t;
-  int total=0;
+int TBaseContainer::getCarriedVolume() const {
+  TThing* t;
+  int total = 0;
 
-  for(t=rider;t;t=t->nextRider){
-    total+=t->getTotalVolume();
+  for (t = rider; t; t = t->nextRider) {
+    total += t->getTotalVolume();
   }
 
   // since we're already dealing with container contents, we don't need
   // to worry about subcontainers (unsupported on sneezy), so we don't
   // need to use getTotalVolume() here
-  for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it){
-    if(t->getKind() == TThing::TThingKind::TComponent)
-      total+=(int)(t->getReducedVolume(this)*0.10);
+  for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
+    if (t->getKind() == TThing::TThingKind::TComponent)
+      total += (int)(t->getReducedVolume(this) * 0.10);
     else {
-      total+=t->getReducedVolume(this);
+      total += t->getReducedVolume(this);
     }
   }
 
   return total;
 }
 
-sstring TBaseContainer::showModifier(showModeT tMode, const TBeing *tBeing) const
-{
+sstring TBaseContainer::showModifier(showModeT tMode,
+  const TBeing* tBeing) const {
   sstring tString("");
 
   // Take 1 higher than the current used and minus 1 from it to get All of the
   // bits set.  From there remove the hold/thrown/take items as we only care
   // about those worn containers.  Ex: Mage Belt
-  int    tCanWear = canWear((1 << MAX_ITEM_WEARS) - 1 - ITEM_WEAR_HOLD - ITEM_WEAR_THROW - ITEM_WEAR_TAKE);
+  int tCanWear = canWear((1 << MAX_ITEM_WEARS) - 1 - ITEM_WEAR_HOLD -
+                         ITEM_WEAR_THROW - ITEM_WEAR_TAKE);
 
-  if ((tMode == SHOW_MODE_SHORT_PLUS ||
-       tMode == SHOW_MODE_SHORT_PLUS_INV ||
-       tMode == SHOW_MODE_SHORT) && tCanWear) {
+  if ((tMode == SHOW_MODE_SHORT_PLUS || tMode == SHOW_MODE_SHORT_PLUS_INV ||
+        tMode == SHOW_MODE_SHORT) &&
+      tCanWear) {
     tString += " (";
     tString += equip_condition(-1);
     tString += ")";
@@ -115,13 +103,12 @@ sstring TBaseContainer::showModifier(showModeT tMode, const TBeing *tBeing) cons
   return tString;
 }
 
-void TBaseContainer::purchaseMe(TBeing *ch, TMonster *tKeeper, int tCost, int tShop)
-{
+void TBaseContainer::purchaseMe(TBeing* ch, TMonster* tKeeper, int tCost,
+  int tShop) {
   TObj::purchaseMe(ch, tKeeper, tCost, tShop);
 }
 
-void TBaseContainer::examineObj(TBeing *ch) const
-{
+void TBaseContainer::examineObj(TBeing* ch) const {
   int bits = FALSE;
 
   if (parent && (ch == parent)) {
@@ -136,63 +123,53 @@ void TBaseContainer::examineObj(TBeing *ch) const
   lookObj(ch, bits);
 }
 
-void TBaseContainer::logMe(const TBeing *ch, const char *cmdbuf) const
-{
+void TBaseContainer::logMe(const TBeing* ch, const char* cmdbuf) const {
   TObj::logMe(ch, cmdbuf);
 
-  const char *last = NULL;
-  if(!stuff.empty())
-    last=stuff.front()->getName().c_str();
-  int runcount=1;
-  TThing *t;
-  for(StuffIter it=stuff.begin();it!=stuff.end(); ++runcount){
-    t=*(it++);
-    if(it==stuff.end() || strcmp(last, (*it)->getName().c_str())){
-      if(runcount>1){
-        vlogf(LOG_SILENT, format("%s%s%s %s containing %s [%i].") %     
-              (ch ? ch->getName() : "") %                      
-              (ch ? " " : "") %                                
-              cmdbuf % getName() % t->getName() % runcount);     
-      } else                                                  
-        vlogf(LOG_SILENT, format("%s%s%s %s containing %s.") %          
-          (ch ? ch->getName() : "") %                          
-          (ch ? " " : "") %                                    
-          cmdbuf % getName() % t->getName());                   
-      runcount=0;                                             
-      if(it!=stuff.end())
-        last=(*it)->getName().c_str();
+  const char* last = NULL;
+  if (!stuff.empty())
+    last = stuff.front()->getName().c_str();
+  int runcount = 1;
+  TThing* t;
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++runcount) {
+    t = *(it++);
+    if (it == stuff.end() || strcmp(last, (*it)->getName().c_str())) {
+      if (runcount > 1) {
+        vlogf(LOG_SILENT, format("%s%s%s %s containing %s [%i].") %
+                            (ch ? ch->getName() : "") % (ch ? " " : "") %
+                            cmdbuf % getName() % t->getName() % runcount);
+      } else
+        vlogf(LOG_SILENT, format("%s%s%s %s containing %s.") %
+                            (ch ? ch->getName() : "") % (ch ? " " : "") %
+                            cmdbuf % getName() % t->getName());
+      runcount = 0;
+      if (it != stuff.end())
+        last = (*it)->getName().c_str();
       else
-        last=t->getName().c_str();
+        last = t->getName().c_str();
     } else
-      last=t->getName().c_str();
+      last = t->getName().c_str();
   }
 }
 
-int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
-{
+int TBaseContainer::getAllFrom(TBeing* ch, const char* argument) {
   int rc;
-  TPCorpse * tCorpse;
-  TBaseCorpse *corpse;
+  TPCorpse* tCorpse;
+  TBaseCorpse* corpse;
 
-
-  if((tCorpse=dynamic_cast<TPCorpse *>(this)) &&
-     ((sstring)ch->getName()).lower() == tCorpse->getOwner()){
+  if ((tCorpse = dynamic_cast<TPCorpse*>(this)) &&
+      ((sstring)ch->getName()).lower() == tCorpse->getOwner()) {
     // allow loot
-  } else if((corpse=dynamic_cast<TBaseCorpse *>(this)) &&
-	    corpse->isCorpseFlag(CORPSE_DENY_LOOT) &&
-	    !ch->isImmortal()){
-    act("Looting $p isn't allowed.",
-	TRUE, ch, this, NULL, TO_CHAR);
+  } else if ((corpse = dynamic_cast<TBaseCorpse*>(this)) &&
+             corpse->isCorpseFlag(CORPSE_DENY_LOOT) && !ch->isImmortal()) {
+    act("Looting $p isn't allowed.", TRUE, ch, this, NULL, TO_CHAR);
     return TRUE;
   }
 
-
   act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
   act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 
-            350, ch->in_room, 0, 0, 0);
-
-
+  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,
+    0, 0);
 
   /*
   if ((tCorpse = dynamic_cast<TPCorpse *>(this)) &&
@@ -209,60 +186,56 @@ int TBaseContainer::getAllFrom(TBeing *ch, const char *argument)
 
   // this is a kludge, task_get still has a tiny delay on it
   // this dumps around it and goes right to the guts
-  rc = (*(tasks[TASK_GET_ALL].taskf))
-        (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
-  if (IS_SET_DELETE(rc, DELETE_THIS))                         
-    return DELETE_VICT;                                       
-  return FALSE;                                               
-}                                                             
+  rc =
+    (*(tasks[TASK_GET_ALL].taskf))(ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_VICT;
+  return FALSE;
+}
 
-int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
-{                                                             
+int TBaseContainer::getObjFrom(TBeing* ch, const char* arg1, const char* arg2) {
   char newarg[100], capbuf[256];
   int rc;
   int p;
-  TPCorpse * tCorpse;
-  TBaseCorpse *corpse;
+  TPCorpse* tCorpse;
+  TBaseCorpse* corpse;
 
-  if (getall(arg1, newarg)) {                                 
-    if (!searchLinkedListVis(ch, newarg, stuff)) {            
-      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible in %s.\n\r") %
-               newarg % getName());
-      return TRUE;                                            
-    }                                                         
-    if (ch->getPosition() <= POSITION_SITTING) {              
-      ch->sendTo("You need to be standing to do that.\n\r");  
-      if (!ch->awake())                                       
-        return TRUE;   // sleeping                            
-      ch->doStand();                                          
-                                                              
-      if (ch->fight())                                        
-        return TRUE;  // don't fall through                   
-    }                                                         
-    if (dynamic_cast<TBeing *>(ch->riding) 
-        && (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) 
-        && (in_room != Room::NOWHERE)) {  
-      act("You can't get things from $p while mounted!",      
-             FALSE, ch, this, 0, TO_CHAR);
+  if (getall(arg1, newarg)) {
+    if (!searchLinkedListVis(ch, newarg, stuff)) {
+      ch->sendTo(COLOR_OBJECTS,
+        format("There are no \"%s\"'s visible in %s.\n\r") % newarg %
+          getName());
+      return TRUE;
+    }
+    if (ch->getPosition() <= POSITION_SITTING) {
+      ch->sendTo("You need to be standing to do that.\n\r");
+      if (!ch->awake())
+        return TRUE;  // sleeping
+      ch->doStand();
+
+      if (ch->fight())
+        return TRUE;  // don't fall through
+    }
+    if (dynamic_cast<TBeing*>(ch->riding) &&
+        (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) &&
+        (in_room != Room::NOWHERE)) {
+      act("You can't get things from $p while mounted!", FALSE, ch, this, 0,
+        TO_CHAR);
       return TRUE;
     }
 
-    if((tCorpse=dynamic_cast<TPCorpse *>(this)) &&
-       ((sstring)ch->getName()).lower() == tCorpse->getOwner()){
+    if ((tCorpse = dynamic_cast<TPCorpse*>(this)) &&
+        ((sstring)ch->getName()).lower() == tCorpse->getOwner()) {
       // allow loot
-    } else if((corpse=dynamic_cast<TBaseCorpse *>(this)) &&
-       corpse->isCorpseFlag(CORPSE_DENY_LOOT) &&
-       !ch->isImmortal()){
-      act("Looting $p isn't allowed.",
-	  TRUE, ch, this, NULL, TO_CHAR);
+    } else if ((corpse = dynamic_cast<TBaseCorpse*>(this)) &&
+               corpse->isCorpseFlag(CORPSE_DENY_LOOT) && !ch->isImmortal()) {
+      act("Looting $p isn't allowed.", TRUE, ch, this, NULL, TO_CHAR);
       return TRUE;
     }
-
 
     sprintf(capbuf, "%s %s", newarg, arg2);
     act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-
 
     /*
     if ((tCorpse = dynamic_cast<TPCorpse *>(this)) &&
@@ -277,56 +250,53 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
     }
     */
 
-    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf, 
-            350, ch->in_room, 1, 0, 0);
+    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 1,
+      0, 0);
     // this is a kludge, task_get still has a tiny delay on it
     // this dumps around it and goes right to the guts
-    rc = (*(tasks[TASK_GET_ALL].taskf))
-          (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
+    rc = (*(tasks[TASK_GET_ALL].taskf))(ch, CMD_TASK_CONTINUE, "", 0, ch->roomp,
+      0);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_VICT;
     }
     return TRUE;
   } else if ((p = getabunch(arg1, newarg))) {
     if (!searchLinkedListVis(ch, newarg, stuff)) {
-      ch->sendTo(COLOR_OBJECTS, format("There are no \"%s\"'s visible in %s.\n\r") %
-              newarg % getName());
+      ch->sendTo(COLOR_OBJECTS,
+        format("There are no \"%s\"'s visible in %s.\n\r") % newarg %
+          getName());
       return TRUE;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
       ch->sendTo("You need to be standing to do that.\n\r");
       if (!ch->awake())
-        return TRUE;   // sleeping
+        return TRUE;  // sleeping
       ch->doStand();
 
       if (ch->fight())
         return TRUE;  // don't fall through
     }
-    if (dynamic_cast<TBeing *>(ch->riding) 
-        && (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) 
-        && (ch->in_room != Room::NOWHERE)) {
-      act("You can't get things from $p while mounted!",
-           FALSE, ch, this, 0, TO_CHAR);
+    if (dynamic_cast<TBeing*>(ch->riding) &&
+        (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) &&
+        (ch->in_room != Room::NOWHERE)) {
+      act("You can't get things from $p while mounted!", FALSE, ch, this, 0,
+        TO_CHAR);
       return TRUE;
     }
-    if((tCorpse=dynamic_cast<TPCorpse *>(this)) &&
-       ((sstring)ch->getName()).lower() == tCorpse->getOwner()){
+    if ((tCorpse = dynamic_cast<TPCorpse*>(this)) &&
+        ((sstring)ch->getName()).lower() == tCorpse->getOwner()) {
       // allow loot
-    } else if((corpse=dynamic_cast<TBaseCorpse *>(this)) &&
-       corpse->isCorpseFlag(CORPSE_DENY_LOOT) &&
-       !ch->isImmortal()){
-      act("Looting $p isn't allowed.",
-	  TRUE, ch, this, NULL, TO_CHAR);
+    } else if ((corpse = dynamic_cast<TBaseCorpse*>(this)) &&
+               corpse->isCorpseFlag(CORPSE_DENY_LOOT) && !ch->isImmortal()) {
+      act("Looting $p isn't allowed.", TRUE, ch, this, NULL, TO_CHAR);
       return TRUE;
     }
-
-
 
     sprintf(capbuf, "%s %s", newarg, arg2);
     act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
     act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf,
-            350, ch->in_room, 0, p + 1, 0);
+    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 0,
+      p + 1, 0);
 
     /*
     if ((tCorpse = dynamic_cast<TPCorpse *>(this)) &&
@@ -343,8 +313,8 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
 
     // this is a kludge, task_get still has a tiny delay on it
     // this dumps around it and goes right to the guts
-    rc = (*(tasks[TASK_GET_ALL].taskf))
-        (ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
+    rc = (*(tasks[TASK_GET_ALL].taskf))(ch, CMD_TASK_CONTINUE, "", 0, ch->roomp,
+      0);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_VICT;
     }
@@ -353,19 +323,20 @@ int TBaseContainer::getObjFrom(TBeing *ch, const char *arg1, const char *arg2)
   return FALSE;
 }
 
-int TBaseContainer::putSomethingIntoContainer(TBeing *ch, TOpenContainer *cont)
-{
-  if(!stuff.empty()){
-    act("Containers can't hold other containers unless they're empty.", FALSE, ch, cont,this, TO_CHAR);
+int TBaseContainer::putSomethingIntoContainer(TBeing* ch,
+  TOpenContainer* cont) {
+  if (!stuff.empty()) {
+    act("Containers can't hold other containers unless they're empty.", FALSE,
+      ch, cont, this, TO_CHAR);
     return FALSE;
   }
 
   return TThing::putSomethingIntoContainer(ch, cont);
 }
 
-void TBaseContainer::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_cont, TBaseContainer *)
-{
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+void TBaseContainer::findSomeDrink(TDrinkCon** last_good,
+  TBaseContainer** last_cont, TBaseContainer*) {
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
     (*it)->findSomeDrink(last_good, last_cont, this);
 
     if (last_good)
@@ -373,56 +344,50 @@ void TBaseContainer::findSomeDrink(TDrinkCon **last_good, TBaseContainer **last_
   }
 }
 
-void TBaseContainer::findSomeFood(TFood **last_good, TBaseContainer **last_cont, TBaseContainer *)
-{
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it)       
-    (*it)->findSomeFood(last_good, last_cont, this);              
-}                                                             
+void TBaseContainer::findSomeFood(TFood** last_good, TBaseContainer** last_cont,
+  TBaseContainer*) {
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it)
+    (*it)->findSomeFood(last_good, last_cont, this);
+}
 
-void TBaseContainer::powerstoneCheck(TOpal **topMax)
-{
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+void TBaseContainer::powerstoneCheck(TOpal** topMax) {
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
     (*it)->powerstoneCheck(topMax);
   }
 }
 
-void TBaseContainer::powerstoneCheckCharged(TOpal **topMax)
-{
-                                                              
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {                      
+void TBaseContainer::powerstoneCheckCharged(TOpal** topMax) {
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
     (*it)->powerstoneCheckCharged(topMax);
-  }                                                           
-}                                                             
-                                                              
-void TBaseContainer::powerstoneMostMana(int *topMax)
-{
-  for(StuffIter it=stuff.begin();it!=stuff.end();++it) {
+  }
+}
+
+void TBaseContainer::powerstoneMostMana(int* topMax) {
+  for (StuffIter it = stuff.begin(); it != stuff.end(); ++it) {
     (*it)->powerstoneMostMana(topMax);
   }
 }
 
-bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip,
-                              TBeing *ch, TMonster *tKeeper,
-                              sstring tStString, itemTypeT tItemType,
-                              int & tCount, int tShop)
-{
-  TThing         *tThing;
-  TObj           *tObj;
-  TOpenContainer *tContainer = dynamic_cast<TOpenContainer *>(this);
+bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip, TBeing* ch,
+  TMonster* tKeeper, sstring tStString, itemTypeT tItemType, int& tCount,
+  int tShop) {
+  TThing* tThing;
+  TObj* tObj;
+  TOpenContainer* tContainer = dynamic_cast<TOpenContainer*>(this);
 
-  if ((tObjectManip == OBJMAN_FIT ||
-       tObjectManip == OBJMAN_NOFIT ||
-       tObjectManip == OBJMAN_TYPE) &&
+  if ((tObjectManip == OBJMAN_FIT || tObjectManip == OBJMAN_NOFIT ||
+        tObjectManip == OBJMAN_TYPE) &&
       (!tContainer || !tContainer->isClosed())) {
-    for(StuffIter it=stuff.begin();it!=stuff.end();){
-      tThing=*(it++);
+    for (StuffIter it = stuff.begin(); it != stuff.end();) {
+      tThing = *(it++);
 
       if (!ch->sameRoom(*tKeeper) || !ch->awake())
         break;
 
-      if (!(tObj = dynamic_cast<TObj *>(tThing)))
+      if (!(tObj = dynamic_cast<TObj*>(tThing)))
         continue;
-      if (tObj->fitsSellType(tObjectManip, ch, tKeeper, tStString, tItemType, tCount, tShop)) {
+      if (tObj->fitsSellType(tObjectManip, ch, tKeeper, tStString, tItemType,
+            tCount, tShop)) {
         --(*tObj);
         *ch += *tObj;
         generic_sell(ch, tKeeper, tObj, tShop);
@@ -436,15 +401,16 @@ bool TBaseContainer::fitsSellType(tObjectManipT tObjectManip,
   if (tObjectManip == OBJMAN_FIT)
     return false;
   else
-    return TObj::fitsSellType(tObjectManip, ch, tKeeper, tStString, tItemType, tCount, tShop);
+    return TObj::fitsSellType(tObjectManip, ch, tKeeper, tStString, tItemType,
+      tCount, tShop);
 }
 
-int TBaseContainer::isSaddle() const
-{
-  if(dynamic_cast<const TSaddlebag *>(this)){
-    if (isname ("[CAN_RIDE]",name))
+int TBaseContainer::isSaddle() const {
+  if (dynamic_cast<const TSaddlebag*>(this)) {
+    if (isname("[CAN_RIDE]", name))
       return 1;
-    else return 2;
+    else
+      return 2;
   }
   return FALSE;
 }
