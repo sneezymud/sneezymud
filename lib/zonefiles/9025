@@ -40,8 +40,8 @@ O 0 9037 1 9037    a huge canopy bed
 O 0 9044 1 9044    a comfortable couch
 O 0 9045 1 9045    a plain bed
 O 0 9043 1 9044    a large stone fireplace
-P 0 9030 2 9043    smoldering log
-P 0 9033 4 9043    iron poker
+P 1 9030 2 9043    smoldering log
+P 1 9033 4 9043    iron poker
 O 0 632 1 9044    a heavy oak bookshelf
 P 1 31368 15 632    gusher scroll
 O 0 632 1 9040

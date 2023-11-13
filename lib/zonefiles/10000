@@ -56,7 +56,7 @@ M 0 10002 1 10084 	Fugeo 85
 ? 0 6 0 E
 E 1 10032 2 18			Scepter
 ? 0 9 0 E
-G 1 10009 10			Neural prod
+E 1 10009 10			Neural prod
 ? 0 25 0 G
 G 1 10006 20			Mauve Potion
 ? 0 6 0 E
@@ -65,7 +65,7 @@ Z 0 1 5 				mesh set
 
 M 0 10003 1 10041 	Myung 78
 ? 0 9 0 E
-G 1 10011 10			Stun stick
+E 1 10011 10			Stun stick
 ? 0 6 0 E
 E 1 10023 20 4			Rime-covered Vest
 Z 0 1 5 				mesh set
@@ -125,7 +125,6 @@ M 0 10013 1 10058 	Wai 72
 E 1 10023 20 4			Rime-covered Vest
 ? 0 6 0 E
 E 1 10031 30 19			Saber
-? 0 4 0 E
 ? 0 15 0 G
 G 1 10008 9999			Bolt
 Z 0 1 5 				mesh set
@@ -236,14 +235,13 @@ Z 0 1 5 				mesh set
 ? 0 20 0 G
 G 1 10029 9999			MRE
 ? 0 50 0 M
-
-M 0 10022 2 10029 	Freezing mist
+M 1 10022 2 10029 	Freezing mist
 
 M 0 10023 1 10007 	Vicious marauder 70
 ? 0 8 0 E
 E 1 10039 10 19			Onyx Kris
 ? 0 12 0 E
-G 1 10013 50			Shuriken
+E 1 10013 50			Shuriken
 
 M 0 10024 1 10090 	Quivering horde of maggots
 

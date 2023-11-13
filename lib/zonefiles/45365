@@ -404,47 +404,37 @@ M 0 45417 2 45400       a well trained troll guard
 E 1 45406 9999 19         a guard's truncheon [hold-left]
 
 M 0 45432 1 45408       a troll oracle
-? 0 2 0 E
 Z 0 1 2                   rune etched set [full set]
 
 M 0 45367 1 45409       a sick dwarven slave worker
 
 M 0 45398 1 45410       Fusarium the Shunned
 G 1 45417 1               a spare key [opens cladosporiums room]
-? 0 2 0 E
 Z 0 2 2                   thorny fungus set [full set]
 
 M 0 45395 1 45424       Cladosporium the exiled overseer [Nocturnal]
 G 1 45412 1               a frozen key [opens frozen chest in cladosporiums room]
-? 0 2 0 E
 Z 0 3 2                   effervescent spore set [full set]
 
 M 0 45394 1 45428       Cladosporium the exiled overseer [Diurnal]
-? 0 2 0 E
 Z 0 4 2                   spore set [full set]
 
 M 0 45380 2 45428       an overseer's bodyguard
-? 0 2 0 E
 Z 0 5 2                   stitched gingham set [full set]
 
 M 0 45380 2 45428       an overseer's bodyguard
-? 0 2 0 E
 Z 0 5 2                   stitched gingham set [full set]
 
 M 0 45380 2 45430       an overseer's bodyguard
-? 0 2 0 E
 Z 0 5 2                   stitched gingham set [full set]
 
 M 0 45380 2 45430       an overseer's bodyguard
-? 0 2 0 E
 Z 0 5 2                   stitched gingham set [full set]
 
 M 0 45380 2 45431       an overseer's bodyguard
-? 0 2 0 E
 Z 0 5 2                   stitched gingham set [full set]
 
 M 0 45380 2 45431       an overseer's bodyguard
-? 0 2 0 E
 Z 0 5 2                   stitched gingham set [full set]
 
 M 0 45365 1 45433  	a sniveling sycophant
@@ -463,7 +453,6 @@ M 0 45431 3 45437       a resistance member
 M 0 45431 3 45437       a resistance member
 
 M 0 45408 1 45437       Mycotox, the Deformed
-? 0 2 0 E
 Z 0 6 2                   mold infested set [full set]
 
 M 0 45431 4 45438       a resistance member
@@ -534,7 +523,6 @@ P 1 9751 1 45370          a pile of talens
 
 M 0 45412 1 45458       an angry foreman
 G 1 45481 1              key [elevator_mine_shaft_portal]
-? 0 2 0 E
 Z 0 7 2                  mold infested set [limited pieces]
 
 *****************
@@ -567,7 +555,6 @@ M 0 45417 1 45371       a well trained troll guard
 E 1 45406 9999 19         a guard's truncheon [hold-left]
 
 M 0 45400 1 45381       Jalashzach the Feared
-? 0 2 0 E
 Z 0 0 2                   spore set [limited pieces]
 
 M 0 45417 2 45382       a well trained troll guard
@@ -579,6 +566,5 @@ M 0 45417 2 45382       a well trained troll guard
 E 1 45406 9999 19         a guard's truncheon [hold-left]
 
 M 0 45399 1 45464       Aspergillus the Cruel
-? 0 2 0 E
 Z 0 8 2                   thorny fungus set [limited pieces]
 S

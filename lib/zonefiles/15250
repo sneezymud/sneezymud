@@ -15,7 +15,7 @@ O 0 15276 1 15276         Tent portal
 O 0 15284 1 15284         Flap portal out of Tent
 
 ? 0 10 0 O
-O 0 15255 1 15250      Rusty Sledgehammer, for Amber Quest?
+O 1 15255 1 15250      Rusty Sledgehammer, for Amber Quest?
 O 0 15264 1 15264         Cooking Grill in center of camp
 P 1 15265 3 15264        Meat on grill
 O 0 15262 3 15262         Moss covered stones (load 3)

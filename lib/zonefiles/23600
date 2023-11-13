@@ -12,10 +12,10 @@ E 1 23664 100 2			banded ring
 Y 0 35 9			banded set
 M 0 23614 1 23624 	ticket seller
 M 0 23615 1 23658 	bet taker
-? 0 10 0 E
-E 1 1600 999 4 		ebony breastplate
 G 1 23798 50			small tin key
 G 1 14366 50			michelob key
+? 0 10 0 E
+E 1 1600 999 4 		ebony breastplate
 
 M 0 23616 1 23656 	head arena guard
 ? 0 10 0 E
@@ -57,7 +57,7 @@ Y 0 11 15                        platemail set
 M 0 23625 1 23687 	trajan
 ? 0 7 0 E
 E 1 23632 12 19			green trident
-? 0 7 0 G
+? 0 7 0 E
 E 1 23633 12 18			gladiator net
 Y 0 11 15                        platemail set
 M 0 23626 1 23718 	nethker

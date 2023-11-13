@@ -660,7 +660,6 @@ E 1 7007 10 19		; Blacksmiths Hammer
 E 1 1042 9999 4		; Studded Leather Vest
 ? 0 4 0 E
 E 1 1043 9999 13		; Studded Leather Sleeve
-G 1 7056 1			; Chest/Desk Key - BlackSmiths
 ? 0 4 0 E
 E 1 1044 9999 11		; Studded Leather Glove
 ? 0 4 0 E

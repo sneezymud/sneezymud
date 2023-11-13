@@ -168,6 +168,6 @@ M 0 9542 1 9536		ward robe mistress
 
 M 0 9543 3 9545		Ogre Bouncer
 ? 0 75 0 M
-M 0 9543 3 9545		Ogre Bouncer
+M 1 9543 3 9545		Ogre Bouncer
 M 0 9543 3 9549		Ogre Bouncer
 S

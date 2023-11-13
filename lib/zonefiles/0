@@ -56,25 +56,21 @@ G 1 29901 9999		Kitten pie
 M 0 29903 1 101      orc trader
 G 1 29901 9999		Kitten pie
 
-? 0 1 0 M
-M 0 10550 1 257       construction worker (quest)
+M 1 10550 1 257       construction worker (quest)
 ? 0 15 0 E
-E 1 3365 3 19               crowbar (quest0
+E 1 3365 3 19               crowbar (quest)
 
-? 0 3 0 M
-M 0 10550 1 536       construction worker (quest)
+M 1 10550 1 536       construction worker (quest)
 ? 0 15 0 E
-E 1 3365 3 19               crowbar (quest0
+E 1 3365 3 19               crowbar (quest)
 
-? 0 4 0 M
-M 0 10550 1 324       construction worker (quest)
+M 1 10550 1 324       construction worker (quest)
 ? 0 15 0 E
-E 1 3365 3 19               crowbar (quest0
+E 1 3365 3 19               crowbar (quest)
 
-? 0 4 0 M
-M 0 10550 1 249       construction worker (quest)
+M 1 10550 1 249       construction worker (quest)
 ? 0 15 0 E
-E 1 3365 3 19               crowbar (quest0
+E 1 3365 3 19               crowbar (quest)
 
 M 0 407 1 1396       Fistlantius (quest)
 

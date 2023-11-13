@@ -237,7 +237,7 @@ G 1 27502 10
 M 0 27505 1 27683		Warrior villager
 ? 0 8 0 E
 E 1 27505 9999 18           barbed hunting spear
-? 0 5 0 E
+? 0 5 0 G
 G 1 27501 9999              boomerang
 M 0 27561 1 27561		Keeper of the stars (star key)
 ? 0 3 0 E

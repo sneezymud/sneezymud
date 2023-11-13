@@ -269,7 +269,7 @@ M 0 1340 1 1341  ; prisoner
 M 0 1340 1 1342  ; prisoner
 M 0 1340 1 1343  ; prisoner
 ? 0 7 0 E
-G 1 1344 1      ; 	golden greaves
+E 1 1344 1      ; 	golden greaves
 M 0 1354 1 1354 54 ; Priest of Brightmoon
 M 0 1354 1 1354 54 ; Priest of Brightmoon
 M 0 1354 1 1354 54 ; Priest of Brightmoon

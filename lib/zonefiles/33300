@@ -80,11 +80,11 @@ E 1 33305 9999 15 belt with old pouches
 ? 0 99 0 G              give to satisfy K command
 G 1 22430 9999 
 K 1 33307 1 33327 Forth hobbit cleric (grouped)
-? 0 10 0 E
+? 0 10 0 G
 G 1 163 9999 tiny vial
-? 0 10 0 E
+? 0 10 0 G
 G 1 501 9999 porcelain symbol
-? 0 10 0 E
+? 0 10 0 G
 G 1 33306 9999 frying pan
 ? 0 4 0 E
 E 1 14302 9999 4 hobbit studded vest

@@ -124,9 +124,10 @@ Y 0 33 4		Ionic Set - 2%
 M 0 6838 1 6972  ; Guard in Hall of Mages
 Y 0 33 4		Ionic Set - 2%
 M 0 6839 1 6949  ; Sentinel Guard Foreman
-G 1 6949 1
 Y 0 33 4		Ionic Set - 2%
-C 0 6840 1 6949 ; Sentinel Guard to Study Hall
+? 0 99 0 G
+G 1 6949 1
+C 1 6840 1 6949 ; Sentinel Guard to Study Hall
 G 1 6949 2
 Y 0 33 4		Ionic Set - 2%
 M 0 6809 1 6913  ; Guard 1st floor hall
