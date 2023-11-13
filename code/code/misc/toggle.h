@@ -628,7 +628,19 @@ const int TOG_NOOB_FIGHTING_MOUSE = 368;
 const int TOG_NOOB_KILLED_MOUSE = 369;
 const int TOG_NOOB_COMPLETED_QUEST = 370;
 
-const int MAX_TOG_INDEX = 371;  // move and change
+// Lowbie starter weapon quest (for all classes)
+inline constexpr int TOG_COMBAT_NOSTALGIA_QUEST_ELIGIBLE = 371;
+inline constexpr int TOG_COMBAT_NOSTALGIA_GAVE_EGG = 372;
+inline constexpr int TOG_COMBAT_NOSTALGIA_QUEST_COMPLETE = 373;
+
+// Thief L5 Weapon Quest
+inline constexpr int TOG_THIEF_L5_ELIGIBLE = 374;
+inline constexpr int TOG_THIEF_L5_ACCEPTED = 375;
+inline constexpr int TOG_THIEF_L5_GAVE_CARDS = 376;
+inline constexpr int TOG_THIEF_L5_COMPLETE = 377;
+
+// move and change - should be one higher than last toggle
+inline constexpr int MAX_TOG_INDEX = 378;
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

@@ -1,0 +1,211 @@
+# Brawny Warrior
+# Guildmaster - Warrior L15
+# Created by Stonecold
+# Copyright 1997, SneezyMUD Development Team. All rights reserved.
+
+# Directions to L40 Warrior GM (Mighty Warrior, mob 218)
+
+say { \"hello\";
+    smile %n;
+    say Hello %n, what can I do for you?;
+}
+
+say { \"next guildmaster\";
+    tell %n Finding your next guildmaster is part of your training.;
+    tell %n However, I can give you a hint...;
+    tell %n The one you seek fights in a battle....;
+    tell %n ... where blood runs in the streets.;
+    tell %n Find one in T\'ir Na Z\'goth...;
+    tell %n not to far south is where I\'m told.;
+    tell %n Up above is where he lies...;
+    tell %n behind the rubble you must muster;
+    tell %n with great strength I\'m sure you\'ll find.;
+}
+
+# Level 1-15 guildmaster reset practices quest
+# Created by Deirdre - 19 Feb 2008
+# Copyright 2008, SneezyMUD Development Team. All rights reserved.
+
+say {\"favor\";
+    nod;
+    say I am much too busy to deliver this letter to the head of the cityguard.;
+    say It is very important. If you would be so kind as to personally deliver it,;
+    say I would be much obliged. When you return we can discuss your learning.;
+    load 29030;
+    give envel-seal-wax %n;
+}
+
+give {\"29031\";
+    toggle 351;
+    say Oh very good!;
+    toroom $n tears open the letter and reads it carefully.;
+    nod;
+    say Thank you, kind adventurer. Now, where were we? Oh yes, you would like to;
+    say reset your ability to spend some of your practices. We can do that now.;
+}
+
+give {\"29030\";
+    frown;
+    say I thought I told you to deliver that to the head of the cityguard!;
+    give envel-seal-wax %n;
+}
+
+# Warrior, 1st guildmaster
+# Combat Nostalgia (Low level weapon reward quest)
+# Created by Vasco - 2023-Nov
+# Copyright 2023, SneezyMUD Development Team. All rights reserved.
+
+roomenter { \"\";
+    checkuntoggle 371;
+    checkuntoggle 372;
+    checkuntoggle 373;
+    toggle 371;
+    tovict $n looks up at you.;
+    tovict For a brief moment there is excitement in $s eyes.;
+    tovict $n sighs and returns to $s <W>drills<z>.;
+    tovict <C>You\'ve discovered a new, optional quest! Type <W>quest<C> for details.<z>;
+}
+
+roomenter { \"\";
+    checktoggle 371;
+    tovict $n looks up at you.;
+    tovict For a brief moment there is excitement in $s eyes.;
+    tovict $n sighs and returns to $s <W>drills<z>.;
+}
+
+roomenter { \"\";
+    checktoggle 372;
+    tovict $n looks up at you hopefully.;
+}
+
+roomenter { \"\";
+    checktoggle 373;
+    tovict $n tells you, "Have you made your <W>decision<z> then?";
+}
+
+roomenter { \"\";
+    checktoggle 374;
+    smile %n;
+    greet %n;
+}
+
+say { \"drills"\;
+    checktoggle 371;
+    smile;
+    say Oh, have you come to train?;
+    say There was a time when every new warrior came to me.;
+    say I would teach each of them well, honing them as a <W>blade.<z>;
+    sigh;
+    say But those days have moved on.;
+}
+
+say { \"blade"\;
+    checktoggle 371;
+    nod;
+    say Oh yes, each warrior is a weapon.;
+    say At first, they are untested. But through use and practice…;
+    toroom $e pulls a sword from $s sheath and sets $s feet.;
+    say Banzai!;
+    toroom $n begins to dart to and fro, swinging $s sword in perfect arcs.;
+    toroom Abruptly, $e stops and looks down in sadness.;
+    sigh;
+    say Oh well.;
+    toroom $n chucks $s sword into a pile of weapons in the corner.;
+    toroom You can see $e is <W>lonely.<z>;
+}
+
+say { \"lonely"\;
+    checktoggle 371;
+    tovict $n looks at you with a tear in his eye.;
+    tonotvict $n looks at $N with a tear in $s eye.;
+    say Lonely? Aye... I suppose I am.;
+    toroom $n gestures to $s pile of forgotten weapons.;
+    say I would gladly trade any and all of of these for a <W>friend<z>.;
+}
+
+say { \"friend"\;
+    checktoggle 371;
+    nod;
+    smile;
+    chuckle;
+    toroom Yes, I suppose this old hen just misses $s chicks.;
+    think;
+    say Hey, now there is an idea! I could hatch an <W>egg<z>...;
+    say And then raise a chicken to be my friend!;
+}
+
+say { \"egg"\;
+    checktoggle 371;
+    nod;
+    say Oh yeah, from a good strong bird.;
+    think;
+    say I know just the place, too. Outside the east gate…;
+    say South of the market, there is a narrow alley with a dead end.;
+    say If you look hard enough, you will find the entrance to a club…”;
+    say Where people pay to watch chickens fight.;
+    smile;
+    say If I had an egg from one of those birds...;
+    say I could train it to be the strongest friend ever!;
+    say Bring me one and you can have any of these weapons.;
+    say What do you think, %n? Will you <W>help<z> me?;
+}
+
+say { \"help"\;
+    checktoggle 371;
+    untoggle 371;
+    toggle 372;
+    cheer;
+    say Thank you! I can\'t wait to meet my new pal!;
+}
+
+say { \"yes\";
+    link say help;
+}
+
+give { \"2376"\;
+    untoggle 372;
+    toggle 373;
+    shout Woohoo! %n is so kind and helpful!;
+    jump;
+    say This is just what I needed!;
+    toroom $n holds the egg in $s hand and pets it lovingly, then leans in close to it.;
+    whisper I love you, little buddy.;
+    blink;
+    toroom The guildmaster seems to suddenly remember that you are here.;
+    cough;
+    say So, %n, do you want a <W>sword<z> or a <W>mace<z>?;
+}
+
+say { \"sword"\;
+    checktoggle 373;
+    say I love a good sword, too.;
+    toroom $n grabs a longsword from a pile of weapons in the corner.;
+    load 300;
+    give long-sword %n;
+    nod;
+    say Well earned. Keep that sharp and it will keep you alive.;
+    say Now, if you don\'t mind, I would like to be left alone.;
+    smile;
+    untoggle 373;
+    toggle 374;
+}
+
+say { \"mace"\;
+    checktoggle 373;
+    say Nothing beats a good beating.;
+    toroom $n moves to a pile of weapons in the corner and pulls out a small steel mace.;
+    load 311;
+    give steel-mace %n;
+    nod;
+    say Well earned. Just swing it as hard as you can at anyone who opposes you.;
+    say Now, if you don\t mind, I would like to be left alone.;
+    smile;
+    untoggle 373;
+    toggle 374;
+}
+
+say { \"decision\";
+    checktoggle 373;
+    say You never told me which weapon you\'d like - a <W>sword<z> or a <W>mace<z>.;
+    tap;
+}
