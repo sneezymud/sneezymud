@@ -2,7 +2,7 @@
 Batopr - Roads to Lionheart~
 1899 15 2 1
 D 0 1396 1 1   ; Fistandantilus forge
-D 0 1637 3 1  
+D 0 1637 3 1
 
 M 0 1600 1 1616            stone giant
 M 0 706 1 1635             merchant
@@ -33,7 +33,7 @@ M 0 1660 1 1677
 M 0 25532 1 1671	Mouldan
 Y 0 96 5                  Heavy Cloth Set
 M 0 7875 1 1710         Dwarven Metalsmith - mage robe quest
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 
 A 0 1721 1729
 M 0 1611 1 -99      traveling missionary (zutanji path)

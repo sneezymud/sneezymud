@@ -146,12 +146,12 @@ M 0 4592 2 4509         a young student
 M 0 4593 2 4509         a young student
 M 0 4528 15 4509        a male settler
 M 0 4530 10 4509        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4525 6 4509         a small tomcat
 M 0 4540 15 4509        a street walker
 M 0 4529 15 4509        a female settler
 M 0 4530 10 4510        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4511 1 4511         Gumdrop
 M 0 4543 5 4514         a gobblin courier
 M 0 4552 5 4514         a gobblin shaman
@@ -247,7 +247,7 @@ M 0 4521 25 4531        a settlement sentry
 M 0 4550 12 4531        a young boy
 M 0 4541 10 4532        a young thief
 M 0 4530 10 4532        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4551 12 4532        a young girl
 M 0 4540 15 4532        a street walker
 M 0 4549 8 4532         a fat orc
@@ -311,7 +311,7 @@ M 0 4534 100 4557       a stubborn pack mule
 M 0 4527 10 4557        a vagrant
 M 0 4510 25 4558        a cityguard
 M 0 4530 10 4558        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4528 15 4560        a male settler
 G 1 10030 9999           a stinking pile of offal
 M 0 4592 2 4563         a young student
@@ -361,7 +361,7 @@ M 0 4552 5 4601         a gobblin shaman
 M 0 4523 12 4601        an elite sentry
 M 0 4523 12 4601        an elite sentry
 M 0 4530 10 4602        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4524 20 4604        a sanitation worker
 M 0 4529 15 4604        a female settler
 M 0 4521 25 4607        a settlement sentry
@@ -370,9 +370,9 @@ M 0 4520 35 4607        a settlement watchman
 M 0 4549 8 4607         a fat orc
 G 1 10030 9999           a stinking pile of offal
 M 0 4530 10 4607        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4530 10 4607        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4534 100 4607       a stubborn pack mule
 M 0 4527 10 4607        a vagrant
 M 0 4526 10 4609        a small mangy dog
@@ -446,7 +446,7 @@ M 0 4665 1 4673         Mist
 M 0 4541 10 4673        a young thief
 M 0 4529 15 4673        a female settler
 M 0 4673 1 4673         Angus McCloud
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 G 1 4476 1              lift key
 E 1 4480 9999 5           a fireman's helmet [head]
 M 0 4675 4 4673         a firehorse
@@ -485,7 +485,7 @@ M 0 4510 25 4691        a cityguard
 M 0 4520 35 4691        a settlement watchman
 M 0 4528 15 4691        a male settler
 M 0 4530 10 4691        a dwarven traveler
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 4549 8 4691         a fat orc
 M 0 4524 20 4691        a sanitation worker
 M 0 4530 10 4692        a dwarven traveler

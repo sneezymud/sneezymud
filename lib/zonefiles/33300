@@ -78,7 +78,7 @@ E 1 14309 9999 2  clear tourmaline ring
 ? 0 5 0 E
 E 1 33305 9999 15 belt with old pouches
 ? 0 99 0 G              give to satisfy K command
-G 1 22430 9999 
+G 1 22430 9999
 K 1 33307 1 33327 Forth hobbit cleric (grouped)
 ? 0 10 0 G
 G 1 163 9999 tiny vial

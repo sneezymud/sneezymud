@@ -19,14 +19,14 @@ P 1 10740 9999 17100         wire ring
 O 0 17101 1 17100          smoldering campfire
 O 0 17102 1 17110          Stone well
 O 0 10500 1 17112          campfire large
-O 0 17101 1 17119 
-O 0 10500 1 17122 
-O 0 10500 1 17127 
-O 0 17101 1 17131 
-O 0 17101 1 17136 
-O 0 10500 1 17146 
-O 0 10500 1 17150 
-O 0 17101 1 17157 
+O 0 17101 1 17119
+O 0 10500 1 17122
+O 0 10500 1 17127
+O 0 17101 1 17131
+O 0 17101 1 17136
+O 0 10500 1 17146
+O 0 10500 1 17150
+O 0 17101 1 17157
 O 0 17104 1 17127          Haycock
 O 0 17105 1 17197          Nest Owlbears
 P 1 845 9999  17105          light yellow potion-Feathery Descent
@@ -35,7 +35,7 @@ P 1 813 9999 17106           torn scroll-recall
 O 0 17107 1 17184          Desk-jeweled
 O 0 17108 1 17184          Bookcase
 P 1 814 9999 17108           scroll-color spray
-P 1 1301 9999 17108          scroll-mystic darts 
+P 1 1301 9999 17108          scroll-mystic darts
 P 1 17117 9999 17108         Blue book (Birth of Overlords)
 P 1 17118 9999 17108         Orange book (Gunderi's quest)
 O 0 17109 1 17183          Altar of Zelpth
@@ -57,68 +57,68 @@ Y 0 50 8		     Load-Suit-Bronze (ogre)
 M 0 17101 1 17181             Ogre Lord
 H 1 2 1
 Y 0 50 2		     Load-Suit-Bronze (ogre)
-M 0 17101 1 17181 
+M 0 17101 1 17181
 H 1 2 1
 Y 0 50 2		     Load-Suit-Bronze (ogre)
-M 0 17101 1 17180 
+M 0 17101 1 17180
 H 1 2 1
 Y 0 50 2		     Load-Suit-Bronze (ogre)
-M 0 17101 1 17180 
+M 0 17101 1 17180
 H 1 2 1
 Y 0 50 2		  Load-Suit-Bronze (ogre)
-M 0 17101 1 17179 
+M 0 17101 1 17179
 H 1 2 1
 Y 0 50 2		  Load-Suit-Bronze (ogre)
-M 0 17101 1 17179 
+M 0 17101 1 17179
 H 1 2 1
 Y 0 50 2		  Load-Suit-Bronze (ogre)
-M 0 17101 1 17178 
+M 0 17101 1 17178
 H 1 2 1
 Y 0 50 2		  Load-Suit-Bronze (ogre)
-M 0 17101 1 17178         
+M 0 17101 1 17178
 H 1 2 1
 Y 0 50 2		  Load-Suit-Bronze (ogre)
 
 M 0 17113 1 17110          Ogre Monk
 H 1 2 1
 Y 0 51 2		    Load-Suit-Tornleather (ogre)
-M 0 17113 1 17114         
+M 0 17113 1 17114
 H 1 2 1
 Y 0 51 2		    Load-Suit-Tornleather (ogre)
-M 0 17113 1 17173          
+M 0 17113 1 17173
 H 1 2 1
 Y 0 51 2		    Load-Suit-Tornleather (ogre)
-M 0 17113 1 17162          
+M 0 17113 1 17162
 H 1 2 1
 Y 0 51 2		    Load-Suit-Tornleather (ogre)
-M 0 17113 1 17100          
+M 0 17113 1 17100
 H 1 2 1
 Y 0 51 2		    Load-Suit-Tornleather (ogre)
 
 
 M 0 17100 1 17101          Ogre hunter
 H 1 2 1
-M 0 17100 2 17108 
+M 0 17100 2 17108
 H 1 2 1
-M 0 17100 1 17126 
+M 0 17100 1 17126
 H 1 2 1
-M 0 17100 1 17127 
+M 0 17100 1 17127
 H 1 2 1
-M 0 17100 2 17135 
+M 0 17100 2 17135
 H 1 2 1
-M 0 17100 1 17138 
+M 0 17100 1 17138
 H 1 2 1
-M 0 17100 1 17142 
+M 0 17100 1 17142
 H 1 2 1
-M 0 17100 1 17145 
+M 0 17100 1 17145
 H 1 2 1
-M 0 17100 2 17152 
+M 0 17100 2 17152
 H 1 2 1
-M 0 17100 1 17157 
+M 0 17100 1 17157
 H 1 2 1
-M 0 17100 2 17123 
+M 0 17100 2 17123
 H 1 2 1
-M 0 17100 1 17169 
+M 0 17100 1 17169
 H 1 2 1
 M 0 17100 1 17118
 H 1 2 1
@@ -143,11 +143,11 @@ M 0 17102 1 17153
 M 0 17102 1 17126
 M 0 17102 1 17127
 M 0 17107 1 17126           Driders non-drain
-M 0 17107 1 17130 
-M 0 17107 1 17150 
+M 0 17107 1 17130
+M 0 17107 1 17150
 M 0 17108 1 17197             Owlbear
 M 0 17109 1 17195             Wasp giant
-M 0 17109 1 17195 
+M 0 17109 1 17195
 M 0 14350 1 17190             Crows
 S
 

@@ -1,29 +1,29 @@
 #16250
 Bump - Haunted Mansion~
 16299 22 2 1
-D 0 16250 0 1 
-D 0 16252 2 1 
-D 0 16251 5 1 
-D 0 16286 4 1 
+D 0 16250 0 1
+D 0 16252 2 1
+D 0 16251 5 1
+D 0 16286 4 1
 D 0 16255 1 1
 D 0 16256 3 1
 D 0 16261 3 1
-D 0 16262 1 1 
+D 0 16262 1 1
 D 0 16275 3 1
 D 0 16274 1 1
-D 0 16260 7 1 
-D 0 16263 8 1 
+D 0 16260 7 1
+D 0 16263 8 1
 D 0 16263 0 1
-D 0 16264 2 1   
-D 0 16264 0 1 
+D 0 16264 2 1
+D 0 16264 0 1
 D 0 16266 2 1
-D 0 16297 1 2 
-O 0 15405 1 16250  Rocking chair 
+D 0 16297 1 2
+O 0 15405 1 16250  Rocking chair
 O 0 1858 2 16250  tree ebony dark
 O 0 16290 1 16250  skull human cracked
-M 0 16250 1 16250 Vivian 
+M 0 16250 1 16250 Vivian
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
 M 0 16251 1 16252 elf dark shaman
@@ -31,49 +31,49 @@ M 0 16251 1 16252 elf dark shaman
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
-M 0 16253 2 16251 
+M 0 16253 2 16251
 ? 0 2 0 E
-E 1 16275 30 18 falchion dragon bone 
+E 1 16275 30 18 falchion dragon bone
 Y 0 128 2 werewolf set
 
-M 0 16256 1 16251 Vampire lesser 
-M 0 16254 1 16251 shaman dark 
+M 0 16256 1 16251 Vampire lesser
+M 0 16254 1 16251 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16255 2 16251 dragon trainer 
+M 0 16255 2 16251 dragon trainer
 ? 0 2 0 E
-E 1 16275 30 18 falchion dragon bone  
+E 1 16275 30 18 falchion dragon bone
 Y 0 127 2 green scaled set
 
-M 0 16257 1 16255 zombie dwarven 
+M 0 16257 1 16255 zombie dwarven
 ? 0 2 0 E
-E 1 16276 75 4 vest bloody decrepit 
+E 1 16276 75 4 vest bloody decrepit
 ? 0 2 0 E
-E 1 16277 50 5 helm dwarven war dented 
+E 1 16277 50 5 helm dwarven war dented
 ? 0 2 0 E
 E 1 16278 60 19 dwarven shield ornamental
 ? 0 2 0 E
-E 1 16279 100 18 spear dwarven battle 
+E 1 16279 100 18 spear dwarven battle
 
-M 0 16251 1 16253 elf shaman dark 
+M 0 16251 1 16253 elf shaman dark
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
-M 0 16253 1 16253 elf warrio dark 
+M 0 16253 1 16253 elf warrio dark
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
-M 0 16259 1 16253 troll undead 
+M 0 16259 1 16253 troll undead
 ? 0 2 0 E
 E 1 16288 10 5 skull minotaur bleached
-? 0 2 0 E 
-E 1 16289 10 18 axe great dragon bone 
-M 0 16264 1 16254 follower devout 
-M 0 16262 1 16254 slave tortured 
+? 0 2 0 E
+E 1 16289 10 18 axe great dragon bone
+M 0 16264 1 16254 follower devout
+M 0 16262 1 16254 slave tortured
 
 M 0 16265 1 16254 drow shaman
 ? 0 2 0 E
@@ -81,34 +81,34 @@ E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
 M 0 16258 1 16254 banshee howling
-M 0 16254 1 16255 shaman dark 
+M 0 16254 1 16255 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16255 1 16255 trainer dragon 
+M 0 16255 1 16255 trainer dragon
 ? 0 2 0 E
-E 1 16281 20 18 club dragon bone 
+E 1 16281 20 18 club dragon bone
 Y 0 127 2 green scaled set
 
 M 0 16260 1 16255 zombie ogre
 ? 0 2 0 E
-E 1 16282 10 18 spear dragon tooth 
-M 0 16271 1 16256 student deranged 
-M 0 16251 1 16256 elf dark shaman 
+E 1 16282 10 18 spear dragon tooth
+M 0 16271 1 16256 student deranged
+M 0 16251 1 16256 elf dark shaman
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
 M 0 16270 1 16256 student ghost
-M 0 16253 2 16257 warrior elf dark 
+M 0 16253 2 16257 warrior elf dark
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
-M 0 16264 1 16257 follower devout 
+M 0 16264 1 16257 follower devout
 M 0 16269 1 16257 warrior skeletal
-M 0 16268 1 16257 shaman skeletal 
+M 0 16268 1 16257 shaman skeletal
 M 0 16254 2 16258 shaman dark
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
@@ -116,194 +116,194 @@ Y 0 128 2 werewolf set
 
 M 0 16266 1 16258 warrior skeletal
 M 0 16267 1 16258 shaman skelatal
-M 0 16254 2 16259 shaman dark 
+M 0 16254 2 16259 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16261 1 16259 master zombie 
-M 0 16260 1 16259 zombie ogre 
+M 0 16261 1 16259 master zombie
+M 0 16260 1 16259 zombie ogre
 ? 0 2 0 E
 E 1 16280 9999 18 sword long red
 M 0 16257 1 16259 zombie dwarven
 ? 0 2 0 E
-E 1 16276 75 4 vest bloody decrepit 
+E 1 16276 75 4 vest bloody decrepit
 ? 0 2 0 E
-E 1 16277 50 5 helm dwarven war dented 
+E 1 16277 50 5 helm dwarven war dented
 ? 0 2 0 E
 E 1 16278 60 19 dwarven shield ornamental
 ? 0 2 0 E
-E 1 16279 100 18 spear dwarven battle 
-M 0 16264 1 16260 follower devout 
-M 0 16262 2 16260 slave tortured 
-M 0 16263 1 16260 master undead 
+E 1 16279 100 18 spear dwarven battle
+M 0 16264 1 16260 follower devout
+M 0 16262 2 16260 slave tortured
+M 0 16263 1 16260 master undead
 M 0 16269 1 16260 warrior skeletal
 M 0 16268 1 16260 shaman skeletal
 M 0 16272 1 16260 waiter ghostly
-M 0 16254 1 16261 shaman dark 
+M 0 16254 1 16261 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16265 2 16261 shaman drow 
+M 0 16265 2 16261 shaman drow
 Y 0 128 2 werewolf set
 
-M 0 16256 1 16261 vampire lesser 
+M 0 16256 1 16261 vampire lesser
 M 0 16262 3 16262 slave tortured
-M 0 16259 1 16262 troll undead 
+M 0 16259 1 16262 troll undead
 ? 0 2 0 E
 E 1 16288 10 5 skull minotaur bleached
-? 0 2 0 E 
+? 0 2 0 E
 E 1 16289 10 18 axe great dragon bone
-M 0 16273 1 16263 woman stunning 
+M 0 16273 1 16263 woman stunning
 ? 0 2 0 E
 E 1 16283 6 18 dagger diamond hilted
-M 0 16254 2 16263 shaman dark 
+M 0 16254 2 16263 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16274 1 16264 caretaker psychotic 
-? 0 2 0 E 
-E 1 16284 20 18 
-M 0 16275 1 16265 archeologist energetic 
+M 0 16274 1 16264 caretaker psychotic
+? 0 2 0 E
+E 1 16284 20 18
+M 0 16275 1 16265 archeologist energetic
 ? 0 2 0 E
 E 1 16285 6 5 hat wide brimmed
 ? 0 2 0 E
 E 1 16286 50 8 boot brown leather
-? 0 2 0 E 
-E 1 16286 50 9 boot brown leather 
-? 0 2 0 E 
-E 1 16287 1 3 necklace vampire eye 
+? 0 2 0 E
+E 1 16286 50 9 boot brown leather
+? 0 2 0 E
+E 1 16287 1 3 necklace vampire eye
 M 0 16276 1 16265 mercenary hulking
 M 0 16257 1 16265 zombie dwarven
 ? 0 2 0 E
-E 1 16276 75 4 vest bloody decrepit 
+E 1 16276 75 4 vest bloody decrepit
 ? 0 2 0 E
-E 1 16277 50 5 helm dwarven war dented 
+E 1 16277 50 5 helm dwarven war dented
 ? 0 2 0 E
 E 1 16278 60 19 dwarven shield ornamental
 ? 0 2 0 E
-E 1 16279 100 18 spear dwarven battle 
-M 0 16255 2 16266 trainer dragon 
+E 1 16279 100 18 spear dwarven battle
+M 0 16255 2 16266 trainer dragon
 ? 0 2 0 E
-E 1 16275 30 18 falchion dragon bone 
+E 1 16275 30 18 falchion dragon bone
 M 0 16258 1 16266 banshee howling
-M 0 16258 1 16267 banshee howling 
-M 0 16264 1 16267 follower devout 
+M 0 16258 1 16267 banshee howling
+M 0 16264 1 16267 follower devout
 ? 0 2 0 E
-E 1 16281 20 18 club dragon bone 
+E 1 16281 20 18 club dragon bone
 M 0 16253 2 16267 elf dark warrior
 ? 0 2 0 E
 E 1 16280 9999 18 sword long red
-M 0 16265 2 16268 shaman drow 
+M 0 16265 2 16268 shaman drow
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
 M 0 16266 2 16268 warrior skeletal
-? 0 1 0 E 
+? 0 1 0 E
 E 1 16280 9999 18 sword long red
-M 0 16255 1 16269 trainer dragon 
+M 0 16255 1 16269 trainer dragon
 ? 0 2 0 E
-E 1 16282 12 18 spear dragon tooth 
+E 1 16282 12 18 spear dragon tooth
 M 0 16261 1 16269 master zombie
-M 0 16271 1 16270 student deranged 
+M 0 16271 1 16270 student deranged
 M 0 16263 1 16270 master undead
 M 0 16251 1 16271 elf dark shaman
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 M 0 16256 1 16271 vampire lesser
-M 0 16272 1 16272 student deranged 
+M 0 16272 1 16272 student deranged
 M 0 16259 1 16272 troll undead
 ? 0 2 0 E
 E 1 16288 10 5 skull minotaur bleached
 ? 0 2 0 E
 E 1 16289 10 18 axe great dragon bone
 M 0 16264 1 16273 follower devout
-M 0 16265 1 16273 shaman drow 
+M 0 16265 1 16273 shaman drow
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
 M 0 16267 2 16273 shaman skeletal
-M 0 16262 2 16274 slave tortured 
-M 0 16258 1 16274 banshee howling 
-M 0 16256 1 16275 vampire lesser 
-M 0 16254 2 16275 shaman dark 
+M 0 16262 2 16274 slave tortured
+M 0 16258 1 16274 banshee howling
+M 0 16256 1 16275 vampire lesser
+M 0 16254 2 16275 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16260 1 16276 zombie ogre 
+M 0 16260 1 16276 zombie ogre
 ? 0 2 0 E
 E 1 16280 9999 18 sword long red
-M 0 16261 1 16276 master zombie 
-M 0 16255 2 16277 trainer dragon 
+M 0 16261 1 16276 master zombie
+M 0 16255 2 16277 trainer dragon
 ? 0 2 0 E
 E 1 16280 9999 18 sword red long
-M 0 16251 2 16278 shaman dark elf 
+M 0 16251 2 16278 shaman dark elf
 ? 0 2 0 E
 E 1 16274 16 18 tooth werewolf
 Y 0 128 2 werewolf set
 
-M 0 16271 2 16279 student deranged 
+M 0 16271 2 16279 student deranged
 ? 0 1 0 E
 E 1 16280 9999 18 sword long red
-M 0 16264 1 16278 follower devout 
-M 0 16254 2 16278 shaman dark 
+M 0 16264 1 16278 follower devout
+M 0 16254 2 16278 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16259 1 16280 troll undead 
-M 0 16255 2 16281 trainer dragon 
+M 0 16259 1 16280 troll undead
+M 0 16255 2 16281 trainer dragon
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
 M 0 16263 1 16281 master zombie
 M 0 16271 2 16282 student deranged
 M 0 16254 1 16283 shaman dark
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16255 1 16283 trainer dragon 
+M 0 16255 1 16283 trainer dragon
 ? 0 2 0 E
-E 1 16261 20 18 tooth dragon sacrificial 
+E 1 16261 20 18 tooth dragon sacrificial
 Y 0 127 2 green scaled set
 
-M 0 16257 1 16283 zombie dwarven 
+M 0 16257 1 16283 zombie dwarven
 ? 0 2 0 E
-E 1 16276 75 4 vest bloody decrepit 
+E 1 16276 75 4 vest bloody decrepit
 ? 0 2 0 E
-E 1 16277 50 5 helm dwarven war dented 
+E 1 16277 50 5 helm dwarven war dented
 ? 0 2 0 E
 E 1 16278 60 19 dwarven shield ornamental
 ? 0 2 0 E
-E 1 16279 100 18 spear dwarven battle 
-M 0 16269 2 16284 warrior skeletal 
-M 0 16272 2 16271 student deranged 
+E 1 16279 100 18 spear dwarven battle
+M 0 16269 2 16284 warrior skeletal
+M 0 16272 2 16271 student deranged
 M 0 16277 2 16286 mercenary dark elf
-? 0 1 0 E 
-E 1 16280 9999 18 sword long red 
-M 0 16277 2 16287 mercenary dark elf
-? 0 1 0 E 
+? 0 1 0 E
 E 1 16280 9999 18 sword long red
-M 0 16278 1 16287 elf dark stealthy 
-? 0 1 0 E 
-E 1 16282 12 18 spear dragon tooth 
+M 0 16277 2 16287 mercenary dark elf
+? 0 1 0 E
+E 1 16280 9999 18 sword long red
+M 0 16278 1 16287 elf dark stealthy
+? 0 1 0 E
+E 1 16282 12 18 spear dragon tooth
 M 0 16277 2 16288 mercenary elf dark
 M 0 16277 2 16289 mercenary elf dark
 M 0 16278 2 16289 elf stealthy dark
-? 0 1 0 E 
-E 1 16282 12 18 spear dragon tooth 
+? 0 1 0 E
+E 1 16282 12 18 spear dragon tooth
 M 0 16279 1 16290 guard market
 M 0 16280 1 16290 thief stealthy
 M 0 16281 1 16290 merchant market Sephead
-M 0 16282 2 16290 customer market 
+M 0 16282 2 16290 customer market
 M 0 16279 1 16291 guard market
 M 0 16280 1 16291 thief stealthy
 M 0 16284 1 16295 merchant market Hanz

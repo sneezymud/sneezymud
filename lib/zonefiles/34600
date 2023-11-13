@@ -44,7 +44,7 @@ O 0 34608 1 34620	a small barred window
 O 0 34620 1 34620       a small iron safe
 P 1 802 2 34620		2 golden potions in safe - load always on reboot
 ? 0 50 0 P
-P 1 35 1 34620		500 talens - loads half of the time. 
+P 1 35 1 34620		500 talens - loads half of the time.
 
 *	Downstairs
 O 0 34622 1 34610       a window looking into a well-furnished room
@@ -75,7 +75,7 @@ M 0 34605 1 34601       a tired ogre bouncer
 M 0 34601 2 34602       a compulsive gambler
 M 0 34601 4 34604       a compulsive gambler
 M 0 34602 1 34602       an eager spectator
-M 0 34604 2 34607	a golden treasure boy 
+M 0 34604 2 34607	a golden treasure boy
 M 0 34611 2 34607       a graffiti artist
 ? 0 2 0 E
 E 1 34605 9999 19         a crude metal shank [hold-left]

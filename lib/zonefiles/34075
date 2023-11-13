@@ -6,7 +6,7 @@ Magdalena - Maze of the Faerie Folk~
 D 0 34094 2 1                    Gate into the Maze
 D 0 5305 0 1                     gate entrance to maze
 
-D 0 34109 4 1                    Wegort room          
+D 0 34109 4 1                    Wegort room
 D 0 34075 5 1
 D 0 34075 0 1                    Room of Rubble
 D 0 34076 2 1
@@ -15,17 +15,17 @@ D 0 34077 9 1
 D 0 34075 1 1                    Room of Rubble
 D 0 34078 3 1
 D 0 34075 8 1                    Room of Rubble
-D 0 34079 7 1                    
+D 0 34079 7 1
 D 0 34075 2 1                    Room of Rubble
 D 0 34080 0 1
 D 0 34075 9 1                    Room of Rubble
 D 0 34081 6 1
 D 0 34075 3 1                     Room of Rubble
-D 0 34082 1 1 
+D 0 34082 1 1
 D 0 34075 7 1                     Room of Rubble
 D 0 34083 8 1
 D 0 34075 4 1                    Room of Rubble
-D 0 34084 5 1          
+D 0 34084 5 1
 D 0 34088 3 1                    Gate
 D 0 34089 1 1
 D 0 34101 3 1                     Gate
@@ -68,7 +68,7 @@ O 0 34080 1 34103
 P 1 34076 1 34080
 O 0 34080 1 34104
 P 1 34076 1 34080
-O 0 34080 1 34105 
+O 0 34080 1 34105
 P 1 34076 1 34080
 O 0 34080 1 34106
 P 1 34076 1 34080
@@ -129,7 +129,7 @@ E 1 34088 9999 19                              a hand-held mirror
 
 M 0 34093 1 34107                    Clarissa
 ? 0 15 0 E
-E 1 34087 9999 19                              a basket of flowers          
+E 1 34087 9999 19                              a basket of flowers
 
 M 0 34094 1 34094                    elven guard
 ? 0 2 0 E

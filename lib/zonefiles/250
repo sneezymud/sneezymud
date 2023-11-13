@@ -6,7 +6,7 @@ M 0 267 1 274        Head Cityguard
 Y 0 9 3			Chainmail Set - 3%
 
 A 0 250 296
-M 0 100 1 -99        city watchman 
+M 0 100 1 -99        city watchman
 ? 0 4 0 E
 E 1 304 100 19          chance of short sword
 Y 0 7 4                 chance of hard leather

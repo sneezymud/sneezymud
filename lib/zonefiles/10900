@@ -14,7 +14,7 @@ D 0 10996 8 1              ; Sticks in Lake
 D 0 10997 7 1              ; Sticks in Lake
 
 O 0 17101 1 10914          smoldering campfire (from ogre's)
-O 0 31357 1 10938 
+O 0 31357 1 10938
 M 0 31307 3 10978           ; Blue mare for juju quest
 M 0 10900 4 10923           ; Mockingbird
 M 0 10900 4 10954           ; Mockingbird
@@ -110,7 +110,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 1 10937            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -123,7 +123,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 1 10945            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -136,7 +136,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 1 10959            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -149,7 +149,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 2 10959            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -162,7 +162,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 3 10959            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -175,7 +175,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 1 10961            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -188,7 +188,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 1 10968            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -201,7 +201,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 1 10969            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow
@@ -214,7 +214,7 @@ Y 0 8 3                         ; Studded Set
 M 0 10921 1 10977            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G 
+? 0 3 0 G
 G 1 307 9999                    ; Small Bow
 ? 0 5 0 G
 G 1 308 9999                    ; Small Arrow

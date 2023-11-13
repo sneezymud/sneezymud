@@ -6,15 +6,15 @@ Coral - Sparse Forest (Haon-Dor)~
 *Doors
 *******
 D 0 8907 0 1	-door to tent
-D 0 8904 2 1     
+D 0 8904 2 1
 
 D 0 8918 9 1	-secret door to inside the tree
-D 0 8913 6 1     
+D 0 8913 6 1
 
 D 0 8942 1 1    -secret from path to pygmy path
 
 D 0 8946 5 1	-trapdoor do access tunnel
-D 0 8926 4 1     
+D 0 8926 4 1
 
 *******
 *Local Sets
@@ -33,14 +33,14 @@ O 0 8935 1 8904      -hole
 
 O 0 8937 1 8919      -desk
 
-O 0 8944 1 8936      -cushion            
+O 0 8944 1 8936      -cushion
 O 0 8944 1 8937      -
 O 0 8944 1 8938      -
 O 0 8944 1 8943      -
 O 0 8944 1 8944      -
 
 O 0 8945 1 8921      - spring
-O 0 8945 1 8927      - 
+O 0 8945 1 8927      -
 
 O 0 8933 1 8936      -candle
 O 0 8933 1 8937      -
@@ -62,7 +62,7 @@ O 0 8946 1 8946      -
 O 0 8934 1 8905      -twig
 
 O 0 8941 5 8919     -basket
-P 1 8936 10 8941     -apple 
+P 1 8936 10 8941     -apple
 P 1 8936 10 8941     -apple
 
 O 0 8941 1 8919      -basket
@@ -73,7 +73,7 @@ P 1 8930 10 8941     -orange
 O 0 8941 1 8945      -basket
 P 1 8931 10 8941     -lime
 P 1 8931 10 8941     -lime
-P 1 8936 10 8941     -apple 
+P 1 8936 10 8941     -apple
 
 O 0 8941 1 8945      -basket
 P 1 8932 10 8941     -pineapple

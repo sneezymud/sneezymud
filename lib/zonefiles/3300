@@ -4,7 +4,7 @@ Saint - Caves of the Ancients~
 
 O 0 20027 1 3343         Chest (kraegin)
 ? 0 10 0 P
-P 1 3346 5 20027	  Gleaming Necklace 
+P 1 3346 5 20027	  Gleaming Necklace
 ? 0 10 0 P
 P 1 3349 5 20027	  Ivory-hilted Poinard
 
@@ -95,16 +95,16 @@ E 1 3327 9999 19                  Stiletto
 M 0 3354 1 3321 		Weary Soldier
 
 M 0 3303 1 3309 		Deserter
-? 0 3 0 E   
+? 0 3 0 E
 E 1 3327 9999 19                  Stiletto
 M 0 3303 2 3311 		Deserter
-? 0 3 0 E 
+? 0 3 0 E
 E 1 3327 9999 19                  Stiletto
 M 0 3303 1 3314                 Deserter
-? 0 3 0 E 
+? 0 3 0 E
 E 1 3327 9999 19                  Stiletto
 M 0 3303 1 3318 		Deserter
-? 0 3 0 E 
+? 0 3 0 E
 E 1 3327 9999 19                  Stiletto
 
 M 0 3304 2 3302 		Green Slime
@@ -119,10 +119,10 @@ M 0 3306 1 3305 		Large Rat
 M 0 3306 2 3316 		Large Rat
 
 M 0 3307 1 3307 		Looter
-? 0 3 0 E 
+? 0 3 0 E
 E 1 3327 9999 19                  Stiletto
 M 0 3307 1 3312 		Looter
-? 0 3 0 E 
+? 0 3 0 E
 E 1 3327 9999 19                  Stiletto
 
 M 0 3308 1 3324 		Makirian Sentry
@@ -198,28 +198,28 @@ M 0 3362 1 3354 		Ghost
 E 1 3340 10 6                     Ghostly Pants
 
 M 0 3315 1 3363 		Museum Curator
-? 0 50 0 G                 
+? 0 50 0 G
 G 1 3361 9999		          Sandwich
 ? 0 20 0 G
 G 1 819 7		          Balsa Staff
 
 M 0 3316 1 3365 		Tour Guide - Jack
-? 0 50 0 G               
+? 0 50 0 G
 G 1 3361 9999		          Sandwich
 
 M 0 3317 1 3362 		Tour Guide - Zach
-? 0 50 0 G                
+? 0 50 0 G
 G 1 3361 9999		          Sandwich
 
 M 0 3318 1 3366 		Teacher
-? 0 50 0 G                
+? 0 50 0 G
 G 1 3362 9999		          Apple
 
 M 0 3319 1 3367 		Lost Waif
-? 0 40 0 G               
+? 0 40 0 G
 G 1 3364 9999		          Sweet Bread
 M 0 3319 1 3369 		Lost Waif
-? 0 40 0 G               
+? 0 40 0 G
 G 1 3364 9999		          Sweet Bread
 
 M 0 3320 1 3395 		Slab of Beef
@@ -239,7 +239,7 @@ M 0 3323 1 3386 		Haggard Waitress - Hikaru
 ? 0 15 0 G
 G 1 3345 10   		          Serving Tray
 ? 0 5 0 G
-G 1 3324 25		          Fried Chicken Dinner 
+G 1 3324 25		          Fried Chicken Dinner
 
 M 0 3324 1 3385 		Smoking Patron
 G 1 3325 25		          Prime Rib Dinner
@@ -276,7 +276,7 @@ M 0 3328 1 3372 		Pipe Smoker
 E 1 3333 100 19		          Pipe
 
 M 0 3329 1 3394 		Sin
-? 0 75 0 G              
+? 0 75 0 G
 G 1 3361 9999		          Sandwich
 ? 0 3 0 E
 E 1 3335 30  4		          Malachite Mantle
@@ -290,13 +290,13 @@ M 0 3330 1 3396 		Madoka
 E 1 3334 30  2		          Malachite Ring
 
 M 0 3331 1 3392 		Depraved Man - John
-? 0 40 0 G              
+? 0 40 0 G
 G 1 3361 9999		          Sandwich
 ? 0 20 0 E
 E 1 3327 25 19		          Stiletto
 
 M 0 3363 1 3374 		Depraved Man - James
-? 0 40 0 G              
+? 0 40 0 G
 G 1 3361 9999		          Sandwich
 ? 0 20 0 E
 E 1 3327 25 19		          Stiletto
@@ -331,12 +331,12 @@ M 0 3336 1 3368 		Wax Figure - Colonel Sanders
 Y 0 45 4                          Load Set Wax - 4%
 
 M 0 3349 1 3371 		Drunk
-? 0 30 0 G 
+? 0 30 0 G
 G 1 412 999		          Shot of Whiskey
 M 0 3349 1 3371 		Drunk
 ? 0 30 0 G
 G 1 412 999 		          Shot of Whiskey
-? 0 50 0 G 
+? 0 50 0 G
 G 1 3360 999	                  Nuts
 
 M 0 3337 1 3357 		Stone Statue - Niko

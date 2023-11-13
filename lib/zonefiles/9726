@@ -8,19 +8,19 @@ D 0 9737 0 1
 D 0 9737 2 1           Entrance to castle from Courtyard
 D 0 9738 0 1
 D 0 9741 1 1           Messenger's room
-D 0 9743 3 1     
+D 0 9743 3 1
 D 0 9741 3 1           Headguard's room
 D 0 9742 1 1
 D 0 9747 2 2           Master Chamber
-D 0 9748 0 2 
+D 0 9748 0 2
 D 0 9748 2 2           Pool of Eternal Damnation
-D 0 9749 0 2 
+D 0 9749 0 2
 D 0 9748 1 1           Laichen's room
 D 0 9750 3 1
-D 0 9748 3 1           Surak's room 
+D 0 9748 3 1           Surak's room
 D 0 9751 1 1
 D 0 9766 1 1           Ildace's room
-D 0 9767 3 1 
+D 0 9767 3 1
 D 0 9768 1 2           Temujin's room
 D 0 9769 3 2
 D 0 9772 0 1           Dungeonkeeper's room
@@ -53,13 +53,13 @@ O 1 815 1 9795          A Deep Blue Scroll
 O 1 9757 1 9795         A pile of coins (30000)
 
 ? 0 7 0 O
-O 1 9735 1 9795         A skull Amulet 
+O 1 9735 1 9795         A skull Amulet
 
 M 0 9723 1 9743         Rexor
 ? 0 50 0 G
 G 1 9764 9999              Ancient quiver
 ? 0 40 0 G
-G 1 9765 500		   Ancient Arrow               
+G 1 9765 500		   Ancient Arrow
 ? 0 20 0 G
 G 1 9766 15                Ancient Bow
 M 0 9700 1 9736         Moat Monster
@@ -67,22 +67,22 @@ M 0 9700 1 9736         Moat Monster
 G 1 9706 5               Decayed Fang
 M 0 9701 1 9737         Roc
 ? 0 10 0 G
-G 1 9704 1              White Feather 
+G 1 9704 1              White Feather
 ? 0 10 0 G
-G 1 9705 30               Roc's Talon 
+G 1 9705 30               Roc's Talon
 M 0 9702 1 9734         Tangle Tree
 ? 0 50 0 G
-G 1 9701 15               Gnarled Branch 
+G 1 9701 15               Gnarled Branch
 ? 0 40 0 G
 G 1 9702 5               Ancient Branch
 ? 0 20 0 G
-G 1 9703 100             Vine 
+G 1 9703 100             Vine
 M 0 9703 1 9738         Zombie guards
-M 0 9703 1 9738 
-M 0 9703 1 9739 
-M 0 9703 1 9739 
-M 0 9703 1 9741 
-M 0 9703 1 9742 
+M 0 9703 1 9738
+M 0 9703 1 9739
+M 0 9703 1 9739
+M 0 9703 1 9741
+M 0 9703 1 9742
 
 M 0 9704 1 9742         Muqali the Headguard
 G 1 9748 1               Key to the Master Chamber
@@ -93,18 +93,18 @@ E 1 9708 30 14           Prestigeous Cloak
 ? 0 10 0 E
 E 1 9709 30 12           Prestigeous Sash
 ? 0 10 0 E
-E 1 9709 30 13           Prestigeous Sash  
+E 1 9709 30 13           Prestigeous Sash
 M 0 9705 1 9759         Zombie Servant
-M 0 9705 1 9768 
-M 0 9705 1 9744 
-M 0 9705 1 9747 
-M 0 9705 1 9748 
+M 0 9705 1 9768
+M 0 9705 1 9744
+M 0 9705 1 9747
+M 0 9705 1 9748
 
 M 0 9706 1 9754         Pierre, the chef
 ? 0 20 0 E
 E 1 9710 30 19            Stirring Spoon
 ? 0 17 0 E
-E 1 9711 50 4             Slimy Apron 
+E 1 9711 50 4             Slimy Apron
 M 0 9707 1 9756         Jussen, the launderer
 ? 0 50 0 E
 E 1 9712 50 4             Simple Shirt
@@ -113,7 +113,7 @@ E 1 9713 50 15            Simple Loin-cloth
 *? 0 10 0 E
 *E 1 9714 100 11           Thick glove
 *? 0 10 0 E
-*E 1 9714 100 10           Thick glove 
+*E 1 9714 100 10           Thick glove
 M 0 9708 1 9758         Uquafa, the weaver
 ? 0 18 0 E
 E 1 9715 50 19            Spool of thread
@@ -144,7 +144,7 @@ E 1 9726 40 17            Embroidered Bracelet
 E 1 9726 40 16            Embroidered Bracelet
 ? 0 5 0 E
 E 1 9727 20 7             Embroidered Pants
-? 0 4 0 E 
+? 0 4 0 E
 E 1 9728 40 9             Embroidered Slipper
 ? 0 4 0 E
 E 1 9728 40 8             Embroidered Slipper
@@ -153,7 +153,7 @@ E 1 9729 6 2              Embroidered Band
 ? 0 4 0 E
 E 1 9729 6 1              Embroidered Band
 ? 0 5 0 E
-E 1 9731 4 14             Embroidered Cloak 
+E 1 9731 4 14             Embroidered Cloak
 M 0 9711 1 9763         Aybuk, the High Cleric
 G 1 9755 20               Effervescent Potion (great haste)
 G 1 9752 20		Emerald Holy Symbol
@@ -185,7 +185,7 @@ E 1 9734 25 19            Emerald Dagger
 ? 0 3 0 E
 E 1 9717 40 2             Small Emerald Ring
 ? 0 3 0 E
-E 1 9717 40 1             Small Emerald Ring 
+E 1 9717 40 1             Small Emerald Ring
 M 0 9715 1 9750         Laichen, the mistress
 ? 0 5 0 E
 E 1 9737 6 3              Charming Brooch
@@ -199,9 +199,9 @@ E 1 9739 3 5              Mysterious Headdress
 ? 0 3 0 E
 E 1 9740 3 14             Mysterious Cloak
 M 0 9717 1 9779         Skeleton
-M 0 9717 1 9782 
-M 0 9717 1 9793 
-M 0 9717 1 9787 
+M 0 9717 1 9782
+M 0 9717 1 9793
+M 0 9717 1 9787
 
 M 0 9718 1 9791         Minotaur
 G 1 9795 1
@@ -217,7 +217,7 @@ E 1 9745 3 3              Silent Amulet
 E 1 9746 6 11            Glove of Thievery
 ? 0 7 0 E
 E 1 9746 6 10            Glove of Thievery
-M 0 9720 1 9777         Kirgii, the prisoner 
+M 0 9720 1 9777         Kirgii, the prisoner
 ? 0 4 0 E
 E 1 9753 6 11            Shadowy Glove
 ? 0 4 0 E
@@ -227,17 +227,17 @@ E 1 9754 6 17            Shadowy Bracer
 ? 0 4 0 E
 E 1 9754 6 16            Shadowy Bracer
 ? 0 6 0 E
-E 1 9759 10 15            Shadowy Belt 
+E 1 9759 10 15            Shadowy Belt
 M 0 9721 1 9773         Barjuk, the dungeonkeeper
 G 1 9774 1
 G 1 9776 1
 G 1 9777 1
 ? 0 5 0 E
-E 1 9730 20 18            Embroidered Shield 
-M 0 9722 1 9774         Shoqulak, the torturer 
+E 1 9730 20 18            Embroidered Shield
+M 0 9722 1 9774         Shoqulak, the torturer
 ? 0 5 0 E
 E 1 9741 20 5             Mask of Judgement
 ? 0 5 0 E
-E 1 9742 5 19             Whip of Intimidation 
+E 1 9742 5 19             Whip of Intimidation
 S
 

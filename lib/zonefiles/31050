@@ -133,13 +133,13 @@ G 1 31095 9999		10% duck egg
 M 0 31061 1 31073	Gnifico, in mid-section of Drossway Road
 Z 0 5 2			2% sooty mithril set
 ? 0 99 0 G              give to satisfy K command
-G 1 22430 9999 
+G 1 22430 9999
 K 1 31062 1 31073	Gnifico's cleric, the holy squire
 ? 0 99 0 G              give to satisfy K command
-G 1 22430 9999 
+G 1 22430 9999
 K 1 31063 1 31073	Scorch, Gnifico's mount
 Z 0 6 2			2% bejeweled saddle
-? 0 99 0 E		
+? 0 99 0 E
 E 1 18 9999 14		100% worn saddle load
 
 
@@ -149,7 +149,7 @@ E 1 31056 9999 19	5% brass hilted broadsword
 Z 0 3 5			5% grogam beret set
 
 ? 0 99 0 G              give to satisfy K command
-G 1 22430 9999 
+G 1 22430 9999
 K 1 31059 1 31057	rogue bodyguard
 ? 0 5 0 E
 E 1 31056 9999 19	5% kestrel dagger

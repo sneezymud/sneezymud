@@ -3,41 +3,41 @@ Armagedon - Sea of Sorrows~
 28499 45 2 1
 
 D 0 28036 5 1                  a desolate beach
-D 0 28090 4 1       
+D 0 28090 4 1
 D 0 28451 9 1                  living quarters
-D 0 28452 6 1 
+D 0 28452 6 1
 D 0 28487 9 1                  top of spiral stiars
-D 0 28487 6 1  
+D 0 28487 6 1
 D 0 28086 3 1                  living quarters
-D 0 28085 1 1  
+D 0 28085 1 1
 D 0 28080 3 1                  living quarters
-D 0 28079 1 1   
+D 0 28079 1 1
 D 0 28068 3 1                  spiral stair
-D 0 28067 1 1  
+D 0 28067 1 1
 D 0 28063 1 1                  living quarters
-D 0 28064 3 1  
+D 0 28064 3 1
 D 0 28069 1 1                  living quarters
-D 0 28070 3 1 
+D 0 28070 3 1
 D 0 28075 1 1                  living quarters
-D 0 28076 3 1 
+D 0 28076 3 1
 D 0 28081 1 1                  living quarters
-D 0 28082 3 1 
+D 0 28082 3 1
 D 0 27973 1 1                  inside a shack
-D 0 28464 3 1      
+D 0 28464 3 1
 D 0 28465 3 1                  inside a shack
-D 0 28464 1 1 
+D 0 28464 1 1
 D 0 28466 1 1                  inside a shack
-D 0 28467 3 1 
+D 0 28467 3 1
 D 0 28023 1 1                  inside a shack
-D 0 28024 3 1                  
+D 0 28024 3 1
 D 0 28028 1 1                  inside a shack
-D 0 28029 3 1 
+D 0 28029 3 1
 D 0 28097 3 1                  inside a shack
-D 0 28029 1 1 
+D 0 28029 1 1
 D 0 28027 3 1                  inside a shack
-D 0 28026 1 1 
+D 0 28026 1 1
 D 0 28470 3 1                  inside a shack
-D 0 28469 1 1 
+D 0 28469 1 1
 
 O 0 27911 1 27900              a mine lantern
 O 0 27911 1 27901              a mine lantern
@@ -97,7 +97,7 @@ O 0 27919 1 27991               a large stone chest
 P 1 28052 1 27919                the drakkalan
 O 0 27919 1 27991               a large stone chest
 ? 1 5 0 P
-P 1 27913 1 27919                icy death   
+P 1 27913 1 27919                icy death
 O 0 27919 1 27991               a large stone chest
 P 1 27936 1 27919                treasure-talens
 O 0 27911 1 28010              a mine lantern

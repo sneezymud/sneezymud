@@ -3,21 +3,21 @@ Mithros - Obsidian Citadel/Keep~
 10899 50 2 1
 
 D 0 10716 9 1   ; Slab
-D 0 10717 6 1  
+D 0 10717 6 1
 D 0 10717 7 1   ; Door
 D 0 10718 8 1
 D 0 10720 9 1   ; Door
-D 0 10721 6 1  
+D 0 10721 6 1
 D 0 10721 2 1   ; Dsecret
-D 0 10730 0 1   
+D 0 10730 0 1
 D 0 10739 0 0   ; Door
-D 0 10731 2 0   
+D 0 10731 2 0
 D 0 10842 1 2   ; Door
 D 0 10746 3 2
 D 0 10737 0 1   ; Door
-D 0 10729 2 1 
+D 0 10729 2 1
 D 0 10737 2 0   ; Door
-D 0 10745 0 0   
+D 0 10745 0 0
 D 0 10727 0 1   ; Dsecret
 D 0 10722 2 1
 D 0 10735 3 2   ; Steel Prison Door
@@ -49,13 +49,13 @@ D 0 10752 8 1
 D 0 10757 0 2   ; Advisors Quarters
 D 0 10751 2 2
 D 0 10757 7 1   ; Generals Quarters
-D 0 10750 8 1  
+D 0 10750 8 1
 D 0 10757 3 1   ; Commanders Quarters
 D 0 10756 1 1
 D 0 10760 6 1   ; Dsecret
 D 0 10753 9 1
 D 0 10760 1 1   ; Door
-D 0 10761 3 1 
+D 0 10761 3 1
 D 0 10768 1 1   ; Door
 D 0 10769 3 1
 D 0 10768 1 1   ; Obsidian Throne Room Door
@@ -64,7 +64,7 @@ D 0 10776 1 0   ; Door
 D 0 10777 3 0
 D 0 10776 2 2   ; Keep Door
 D 0 10775 2 2   ; Keep Door
-D 0 10778 1 1   ; Swinging 
+D 0 10778 1 1   ; Swinging
 D 0 10779 3 1
 D 0 10762 0 2   ; Headmasters Quarters
 D 0 10754 2 2
@@ -85,11 +85,11 @@ D 0 10794 2 0
 D 0 10793 2 0   ; Door
 D 0 10800 0 0
 D 0 10799 0 2   ; Princes Room
-D 0 10792 2 2   
+D 0 10792 2 2
 D 0 10785 0 1   ; Dsecret
 D 0 10782 2 1
 D 0 10785 3 1   ; Wardrobe
-D 0 10784 1 1   
+D 0 10784 1 1
 D 0 10791 3 1   ; Dsecret
 D 0 10790 1 1
 D 0 10791 2 2   ; Princess's Room
@@ -109,7 +109,7 @@ D 0 10806 8 1
 D 0 10811 6 1   ; Tapestry
 D 0 10807 9 1
 D 0 10812 3 0   ; Door
-D 0 10811 1 0  
+D 0 10811 1 0
 D 0 10812 0 1   ; Bookshelf
 D 0 10807 2 1
 D 0 10820 1 1   ; Dsecret
@@ -121,12 +121,12 @@ D 0 10827 0 0
 D 0 10827 3 1   ; Door
 D 0 10826 1 1
 D 0 10819 3 1   ; Door
-D 0 10818 1 1 
+D 0 10818 1 1
 D 0 10818 2 0   ; Door
 D 0 10825 0 0
 D 0 10749 1 1	; secret to Tower: panel
 D 0 10748 9 1	; secret to Cathedral: panel
-D 0 10718 8 2	; Mine Door 
+D 0 10718 8 2	; Mine Door
 
 
 M 0 10700 1 10760    ; Obsidian Man
@@ -445,7 +445,7 @@ E 1 10725 500 5   ; Velvet Hat
 ? 0 10 0 E
 E 1 14142 8 19    ; pearl handled rapier
 Y 0 114 1         ; pearl studded set
- 
+
 ? 0 10 0 M
 M 1 10723 1 10795    ; Spirit of the Halfling Ambassador
 ? 0 30 0 E
@@ -462,11 +462,11 @@ G 1 10737 500   ; Burnt Out Globe
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10742 500 11   ; Tattered Glove
- 
+
 M 0 10724 1 10755    ; Spirit of a Servant
 ? 0 2 0 G
 G 1 10737 500   ; Burnt Out Globe
@@ -476,7 +476,7 @@ G 1 10748 10   ; Steel Key
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10742 500 11   ; Tattered Glove
@@ -488,7 +488,7 @@ G 1 10737 500   ; Burnt Out Globe
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10770 500 7   ; Tattered Pants
@@ -502,7 +502,7 @@ G 1 10748 10   ; Steel Key
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10769 500 4   ; Tattered Shirt
@@ -514,7 +514,7 @@ G 1 10737 500   ; Burnt Out Globe
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10742 500 11   ; Tattered Glove
@@ -529,7 +529,7 @@ G 1 10748 10   ; Steel Key
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10770 500 7   ; Tattered Pants
@@ -542,7 +542,7 @@ G 1 10737 500   ; Burnt Out Globe
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10769 500 4   ; Tattered Shirt
@@ -553,7 +553,7 @@ M 1 10724 1 10757    ; Spirit of a Servant
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10742 500 11   ; Tattered Glove
@@ -566,7 +566,7 @@ M 1 10724 1 10800    ; Spirit of a Servant
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10770 500 7   ; Tattered Pants
@@ -579,7 +579,7 @@ M 1 10724 1 10824    ; Spirit of a Servant
 E 1 10727 500 9   ; Leather Shoe
 ? 0 10 0 E
 E 1 10737 500 14   ; Thin Cloak
-? 0 5 0 E 
+? 0 5 0 E
 E 1 10741 500 2   ; Brass Ring
 ? 0 5 0 E
 E 1 10769 500 4   ; Tattered Shirt
@@ -612,7 +612,7 @@ E 1 10743 500 11   ; Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 ? 0 10 0 E
@@ -626,7 +626,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 ? 0 10 0 E
@@ -640,7 +640,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 ? 0 10 0 E
@@ -654,7 +654,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 ? 0 10 0 E
@@ -668,7 +668,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 ? 0 10 0 E
@@ -685,7 +685,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 ? 0 10 0 E
@@ -702,7 +702,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 ? 0 10 0 E
@@ -717,7 +717,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 
@@ -730,7 +730,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 
@@ -743,7 +743,7 @@ E 1 10743 500 11   ; Sturdy Wool Glve
 ? 0 8 0 E
 E 1 10740 500 2   ; Wire Ring
 ? 0 5 0 E
-E 1 10739 500 5   ; Blue Feather 
+E 1 10739 500 5   ; Blue Feather
 ? 0 1 0 E
 E 1 10736 300 18   ; Globe of Light
 
@@ -798,16 +798,16 @@ T 1 6 6   ; 6d8 Fire Trap
 P 1 10718 2 10780   ; Obsidian Shaft (Arrow)
 
 O 0 10765 2 10798    ; Blood-Soaked Pillow
-O 0 10765 2 10826   
+O 0 10765 2 10826
 O 0 10766 1 10810    ; Silk Pillow w/ Black Lace
-O 0 10766 1 10811 
+O 0 10766 1 10811
 O 0 10738 1 10738    ; Torch Stub
 O 0 10738 1 10726    ; Torch Stub
 O 0 10738 1 10761    ; Torch Stub
 O 0 10738 1 10758    ; Torch Stub
 O 0 10738 1 10797    ; Torch Stub
 O 0 10731 1 10779    ; Bowl
-O 0 10731 1 10740   
+O 0 10731 1 10740
 ? 0 10 0 O
 O 1 10732 1 10755    ; Blanket
 ? 0 10 0 O
@@ -860,7 +860,7 @@ O 1 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 3932701	; 60 hp Blade Trap
 V 1 2 -1		; No Key
 ? 0 30 0 P
-P 1 28809 10 10798	; Ruby Potion	
+P 1 28809 10 10798	; Ruby Potion
 P 1 804 9999 10798	; Platinum Potion
 P 1 823 9999 10798	; Vermilion Potion
 

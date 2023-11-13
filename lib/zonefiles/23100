@@ -1,183 +1,183 @@
 #23100
 Damian  - Ocean Volcano~
 23199 30 2 1
-D 0 23121 6 1           A Narrow Tunnel -> A Small Experiment Room 
-D 0 23140 6 1           A Narrow Ledge -> An Underground Lab 
-D 0 23143 8 1           A Small Tunnel -> A Plain Bedroom 
-D 0 23153 9 1           An Underground Lab -> A Narrow Ledge 
-D 0 23161 2 2           A Platform of Solid Rock -> A Small Treasure Room 
-D 0 23193 9 1           A Small Experiment Room -> A Narrow Tunnel 
-D 0 23194 0 2           A Small Treasure Room -> A Platform of Solid Rock 
-D 0 23195 7 1           A Plain Bedroom -> A Small Tunnel 
-O 0 23107 1 23118       a battered wooden crate 
-O 0 23107 1 23150       a battered wooden crate 
-O 0 23104 1 23153       a crystal ball perched atop a makeshift platform 
-O 0 23171 1 23193       a small wooden table 
-O 0 23170 1 23193       a small cot 
-O 0 23175 1 23194       a fiery hole 
-O 0 23171 1 23195       a small wooden table 
-O 0 23170 1 23195       a small cot 
-B 0 23110 1 23125       a chunk of obsidian 
-B 0 23110 1 23133       a chunk of obsidian 
-B 0 23110 1 23142       a chunk of obsidian 
-B 0 23110 1 23152       a chunk of obsidian 
-B 0 23110 1 23153       a chunk of obsidian 
-B 0 23110 1 23193       a chunk of obsidian 
-B 0 23110 1 23195       a chunk of obsidian 
-M 0 23110 1 23100       an elven ranger 
-? 0 3 0 E 
+D 0 23121 6 1           A Narrow Tunnel -> A Small Experiment Room
+D 0 23140 6 1           A Narrow Ledge -> An Underground Lab
+D 0 23143 8 1           A Small Tunnel -> A Plain Bedroom
+D 0 23153 9 1           An Underground Lab -> A Narrow Ledge
+D 0 23161 2 2           A Platform of Solid Rock -> A Small Treasure Room
+D 0 23193 9 1           A Small Experiment Room -> A Narrow Tunnel
+D 0 23194 0 2           A Small Treasure Room -> A Platform of Solid Rock
+D 0 23195 7 1           A Plain Bedroom -> A Small Tunnel
+O 0 23107 1 23118       a battered wooden crate
+O 0 23107 1 23150       a battered wooden crate
+O 0 23104 1 23153       a crystal ball perched atop a makeshift platform
+O 0 23171 1 23193       a small wooden table
+O 0 23170 1 23193       a small cot
+O 0 23175 1 23194       a fiery hole
+O 0 23171 1 23195       a small wooden table
+O 0 23170 1 23195       a small cot
+B 0 23110 1 23125       a chunk of obsidian
+B 0 23110 1 23133       a chunk of obsidian
+B 0 23110 1 23142       a chunk of obsidian
+B 0 23110 1 23152       a chunk of obsidian
+B 0 23110 1 23153       a chunk of obsidian
+B 0 23110 1 23193       a chunk of obsidian
+B 0 23110 1 23195       a chunk of obsidian
+M 0 23110 1 23100       an elven ranger
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23140       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23140       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23148       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23148       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23160       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23160       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23102       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23102       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23105       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23105       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23113       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23113       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23156       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23156       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23100 1 23170       a fire golem 
-? 0 3 0 E 
+M 0 23100 1 23170       a fire golem
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23103 1 23115       an elemental of mist 
-? 0 1 0 E 
+M 0 23103 1 23115       an elemental of mist
+? 0 1 0 E
 E 1 23105 25 18         mist shield
-M 0 23103 1 23116       an elemental of mist 
-? 0 1 0 E 
+M 0 23103 1 23116       an elemental of mist
+? 0 1 0 E
 E 1 23105 25 18         mist shield
-M 0 23103 1 23117       an elemental of mist 
-? 0 1 0 E 
+M 0 23103 1 23117       an elemental of mist
+? 0 1 0 E
 E 1 23105 25 18         mist shield
-M 0 23103 1 23136       an elemental of mist 
-? 0 1 0 E 
+M 0 23103 1 23136       an elemental of mist
+? 0 1 0 E
 E 1 23105 25 18         mist shield
-M 0 23103 1 23152       an elemental of mist 
-? 0 1 0 E 
+M 0 23103 1 23152       an elemental of mist
+? 0 1 0 E
 E 1 23105 25 18         mist shield
-M 0 23103 1 23137       an elemental of mist 
-? 0 1 0 E 
+M 0 23103 1 23137       an elemental of mist
+? 0 1 0 E
 E 1 23105 25 18         mist shield
-M 0 23103 1 23134       an elemental of mist 
-? 0 1 0 E 
+M 0 23103 1 23134       an elemental of mist
+? 0 1 0 E
 E 1 23105 25 18         mist shield
-M 0 23101 1 23164       an obsidian golem 
-? 0 2 0 E 
+M 0 23101 1 23164       an obsidian golem
+? 0 2 0 E
 E 1 23106 25 19         necklace
-M 0 23101 1 23121       an obsidian golem 
-? 0 2 0 E 
+M 0 23101 1 23121       an obsidian golem
+? 0 2 0 E
 E 1 23106 25 19         necklace
-M 0 23101 1 23111       an obsidian golem 
-? 0 2 0 E 
+M 0 23101 1 23111       an obsidian golem
+? 0 2 0 E
 E 1 23106 25 19         necklace
-M 0 23101 1 23115       an obsidian golem 
-? 0 2 0 E 
+M 0 23101 1 23115       an obsidian golem
+? 0 2 0 E
 E 1 23106 25 19         necklace
-M 0 23101 1 23125       an obsidian golem 
-? 0 2 0 E 
+M 0 23101 1 23125       an obsidian golem
+? 0 2 0 E
 E 1 23106 25 19         necklace
-M 0 23101 1 23158       an obsidian golem 
-? 0 2 0 E 
+M 0 23101 1 23158       an obsidian golem
+? 0 2 0 E
 E 1 23106 25 19         necklace
-M 0 23101 1 23148       an obsidian golem 
-? 0 2 0 E 
+M 0 23101 1 23148       an obsidian golem
+? 0 2 0 E
 E 1 23106 25 19         necklace
-M 0 23102 1 23136       a fire drake 
-? 0 2 0 E 
+M 0 23102 1 23136       a fire drake
+? 0 2 0 E
 E 1 23103 25 19         fire talon
-M 0 23102 1 23139       a fire drake 
-? 0 2 0 E 
-E 1 23103 25 19         fire talon 
-M 0 23102 1 23143       a fire drake 
-? 0 2 0 E 
+M 0 23102 1 23139       a fire drake
+? 0 2 0 E
 E 1 23103 25 19         fire talon
-M 0 23102 1 23149       a fire drake 
-? 0 2 0 E 
+M 0 23102 1 23143       a fire drake
+? 0 2 0 E
 E 1 23103 25 19         fire talon
-M 0 23102 1 23184       a fire drake 
-? 0 2 0 E 
+M 0 23102 1 23149       a fire drake
+? 0 2 0 E
 E 1 23103 25 19         fire talon
-M 0 23102 1 23101       a fire drake 
-? 0 2 0 E 
+M 0 23102 1 23184       a fire drake
+? 0 2 0 E
 E 1 23103 25 19         fire talon
-M 0 23102 1 23155       a fire drake 
-? 0 2 0 E 
+M 0 23102 1 23101       a fire drake
+? 0 2 0 E
 E 1 23103 25 19         fire talon
-M 0 23105 1 23153       Tergon 
-? 0 2 0 E 
-E 1 23166 12 17         bracelet 
-? 0 2 0 E 
+M 0 23102 1 23155       a fire drake
+? 0 2 0 E
+E 1 23103 25 19         fire talon
+M 0 23105 1 23153       Tergon
+? 0 2 0 E
+E 1 23166 12 17         bracelet
+? 0 2 0 E
 E 1 23167 12 16         bracelet
-? 0 2 0 E 
-E 1 23101 1 4           Robe of Elements (Artifact) 
-? 0 3 0 E 
+? 0 2 0 E
+E 1 23101 1 4           Robe of Elements (Artifact)
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23107 1 23161       the efreeti flamelord 
-G 1 23172 1             magma key 
-? 0 3 0 E 
+M 0 23107 1 23161       the efreeti flamelord
+G 1 23172 1             magma key
+? 0 3 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23163       an efreeti guard 
-? 0 3 0 E 
+M 0 23106 1 23163       an efreeti guard
+? 0 3 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23159       an efreeti guard 
-? 0 2 0 E 
+M 0 23106 1 23159       an efreeti guard
+? 0 2 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23137       an efreeti guard 
-? 0 3 0 E 
+M 0 23106 1 23137       an efreeti guard
+? 0 3 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23170       an efreeti guard 
-? 0 3 0 E 
+M 0 23106 1 23170       an efreeti guard
+? 0 3 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23171       an efreeti guard 
-? 0 3 0 E 
+M 0 23106 1 23171       an efreeti guard
+? 0 3 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23171       an efreeti guard 
-? 0 1 0 E 
+M 0 23106 1 23171       an efreeti guard
+? 0 1 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23135       an efreeti guard 
-? 0 1 0 E 
+M 0 23106 1 23135       an efreeti guard
+? 0 1 0 E
 E 1 23100 25 19         fire sword
-M 0 23106 1 23172       an efreeti guard 
-? 0 2 0 E 
+M 0 23106 1 23172       an efreeti guard
+? 0 2 0 E
 E 1 23100 25 19         fire sword
-M 0 23109 1 23193       Smeelia 
-? 0 2 0 E 
+M 0 23109 1 23193       Smeelia
+? 0 2 0 E
 E 1 23150 25 4          shroud
-? 0 2 0 E 
-E 1 23160 12 17         bracelet 
-? 0 2 0 E 
-E 1 23161 12 16         bracelet 
-? 0 3 0 E 
+? 0 2 0 E
+E 1 23160 12 17         bracelet
+? 0 2 0 E
+E 1 23161 12 16         bracelet
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23104 1 23194       an evil duergar dwarf 
-? 0 2 0 E 
-E 1 23162 12 17         bracelet 
-? 0 2 0 E 
+M 0 23104 1 23194       an evil duergar dwarf
+? 0 2 0 E
+E 1 23162 12 17         bracelet
+? 0 2 0 E
 E 1 23163 12 16         bracelet
-? 0 3 0 E 
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23111 1 23195       a gnomish mage apprentice 
-? 0 2 0 E 
-E 1 23164 12 17         bracelet 
-? 0 2 0 E 
-E 1 23165 12 16         bracelet 
-? 0 3 0 E 
+M 0 23111 1 23195       a gnomish mage apprentice
+? 0 2 0 E
+E 1 23164 12 17         bracelet
+? 0 2 0 E
+E 1 23165 12 16         bracelet
+? 0 3 0 E
 E 1 23102 25 19         fire staff
-M 0 23108 1 23134       a lava slider 
-M 0 23108 1 23103       a lava slider 
-M 0 23108 1 23123       a lava slider 
-M 0 23108 1 23125       a lava slider 
-M 0 23108 1 23139       a lava slider 
-M 0 23108 1 23164       a lava slider 
+M 0 23108 1 23134       a lava slider
+M 0 23108 1 23103       a lava slider
+M 0 23108 1 23123       a lava slider
+M 0 23108 1 23125       a lava slider
+M 0 23108 1 23139       a lava slider
+M 0 23108 1 23164       a lava slider
 S

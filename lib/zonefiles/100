@@ -12,7 +12,7 @@ D 0 338 2 1            Doors to/out of Houses Oak lane
 D 0 162 0 1
 M 0 357 1 338 	       Writer(Quest)
 ? 0 5 0 G                         ;load script
-G 1 10519 1                     
+G 1 10519 1
 D 0 339 2 1            Doors to/out of Houses Oak lane
 D 0 163 0 1
 D 0 340 2 1            Doors to/out of Houses Oak lane
@@ -27,7 +27,7 @@ M 0 201 1 771               Cleric  level 15 guildmaster
 M 0 202 1 296               Warrior level 15 guildmaster
 M 0 203 1 645               Thief   level 15 guildmaster
 ? 0 8 0 G                         ;load garrotte
-G 1 154 999                     
+G 1 154 999
 M 0 204 1 25453             Ranger  level 15 guildmaster
 M 0 205 1 411               Paladin level 15 guildmaster
 M 0 206 1 433               Shaman  level 15 guildmaster
@@ -112,13 +112,13 @@ M 0 245 1 11376           Cleric-Aegis trainer 60 Zardan
 M 0 242 1 10312           Cleric-Aegis trainer 100 Graydon
 M 0 235 1 10273           GALEKIAN POPE 100
 
-* Shaman trainers --------------- 
+* Shaman trainers ---------------
 
 M 0 247 1 432  	          FIRST SHAMAN
 M 0 234 1 10917           SECOND SHAMAN
 M 0 232 1 3381            FIRST SPIDER
 M 0 233 1 7832            SECOND SPIDER
-M 0 244 1 9917            FIRST SKUNK 
+M 0 244 1 9917            FIRST SKUNK
 M 0 243 1 28852           SECOND SKUNK
 M 0 311 1 9341            FIRST ARMADILLO
 M 0 310 1 3461            SECOND ARMADILLO
@@ -139,9 +139,9 @@ M 0 332 1 189             Cleric-Faith trainer 25
 M 0 314 1 5740            Cleric-Faith trainer 60 Feldon
 M 0 274 1 231             Cleric-Wrath trainer 25
 M 0 324 1 5750            Cleric-Wrath trainer 60 Talar
-M 0 279 1 3725            Cleric-Wrath trainer 100 
-M 0 335 1 120		  Cleric-Theology trainer 
-M 0 336 1 5312		  Cleric-Theology trainer Grisham 
+M 0 279 1 3725            Cleric-Wrath trainer 100
+M 0 335 1 120		  Cleric-Theology trainer
+M 0 336 1 5312		  Cleric-Theology trainer Grisham
 
 M 0 333 1 239		   Mage-Lore trainer
 M 0 334 1 10506	 	   Mage-Lore trainer Dafyyd
@@ -198,7 +198,7 @@ M 0 6804 1 6815            Tsarnek - trainer sorcery 100
 M 0 9325 1 9444            high druid
 M 0 3311 1 3332            Makirian Torturer
 M 0 3100 1 3204            Hood the Bandit
-M 0 2740 1 23287           Caine'lo - Trainer HTH 100 
+M 0 2740 1 23287           Caine'lo - Trainer HTH 100
 M 0 284 1 23666            Wulf - Trainer HTH 60
 M 0 23620 1 23660          warrior trainer
 M 0 268 1 8616              Ninja Trainer
@@ -206,11 +206,11 @@ M 0 268 1 8616              Ninja Trainer
 *M 0 271 1 22537           medic battered
 M 0 2934 1 2905            MERLIN - trainer wizardry 100
 ? 0 2 0 E                    Shadowwalker
-E 1 2856 1 8    	     
+E 1 2856 1 8
 ? 0 10 0 E                   Spikard
-E 1 2925 1 1 
+E 1 2925 1 1
 ? 0 10 0 E                   Frakir
-E 1 2924 1 17                 
+E 1 2924 1 17
 M 0 2113 1 2249            High Priest
 ? 0 10 0 E
 E 1 2105 1 19                 dagger of Thrombul
@@ -303,176 +303,176 @@ E 1 327 1 19			Oblivion Blade
 M 0 140 1 419 19           Grimhaven Doctor
 
 O 0 100 1 100         grimhaven streetlamp
-O 0 100 1 101 
-O 0 100 1 102 
-O 0 100 1 103 
-O 0 100 1 104 
-O 0 100 1 105 
-O 0 100 1 106 
-O 0 100 1 107 
-O 0 100 1 108 
-O 0 100 1 109 
-O 0 100 1 110 
-O 0 100 1 111 
-O 0 100 1 112 
-O 0 100 1 113 
-O 0 100 1 114 
-O 0 100 1 115 
-O 0 100 1 116 
-O 0 100 1 117 
-O 0 100 1 118 
-O 0 100 1 119 
-O 0 100 1 120 
-O 0 100 1 121 
-O 0 100 1 122 
-O 0 100 1 123 
-O 0 100 1 124 
-O 0 100 1 125 
-O 0 100 1 126 
-O 0 100 1 127 
-O 0 100 1 128 
-O 0 100 1 129 
-O 0 100 1 130 
-O 0 100 1 131 
-O 0 100 1 132 
-O 0 100 1 133 
-O 0 100 1 134 
-O 0 100 1 135 
-O 0 100 1 136 
-O 0 100 1 137 
-O 0 100 1 138 
-O 0 100 1 139 
-O 0 100 1 140 
-O 0 100 1 141 
-O 0 100 1 142 
-O 0 100 1 143 
-O 0 100 1 144 
-O 0 100 1 145 
-O 0 100 1 146 
-O 0 100 1 147 
-O 0 100 1 148 
-O 0 100 1 149 
-O 0 100 1 150 
-O 0 100 1 151 
-O 0 100 1 154 
-O 0 100 1 155 
-O 0 100 1 156 
-O 0 100 1 157 
-O 0 100 1 158 
-O 0 100 1 159 
-O 0 100 1 160 
-O 0 100 1 161 
-O 0 100 1 162 
-O 0 100 1 163 
-O 0 100 1 164 
-O 0 100 1 165 
-O 0 100 1 166 
-O 0 100 1 167 
-O 0 100 1 168 
-O 0 100 1 169 
-O 0 100 1 170 
-O 0 100 1 171 
-O 0 100 1 172 
-O 0 100 1 173 
-O 0 100 1 174 
-O 0 100 1 175 
-O 0 100 1 176 
-O 0 100 1 177 
-O 0 100 1 178 
-O 0 100 1 179 
-O 0 100 1 180 
-O 0 100 1 181 
-O 0 100 1 182 
-O 0 100 1 183 
-O 0 100 1 184 
-O 0 100 1 185 
-O 0 100 1 186 
-O 0 100 1 187 
-O 0 100 1 188 
-O 0 100 1 189 
-O 0 100 1 190 
-O 0 100 1 191 
-O 0 100 1 192 
-O 0 100 1 193 
-O 0 100 1 194 
-O 0 100 1 195 
-O 0 100 1 196 
-O 0 100 1 197 
-O 0 100 1 198 
-O 0 100 1 199 
-O 0 100 1 200 
-O 0 100 1 201 
-O 0 100 1 202 
-O 0 100 1 203 
-O 0 100 1 204 
-O 0 100 1 205 
-O 0 100 1 206 
-O 0 100 1 207 
-O 0 100 1 208 
-O 0 100 1 209 
-O 0 100 1 210 
-O 0 100 1 211 
-O 0 100 1 212 
-O 0 100 1 213 
-O 0 100 1 214 
-O 0 100 1 215 
-O 0 100 1 216 
-O 0 100 1 217 
-O 0 100 1 218 
-O 0 100 1 219 
-O 0 100 1 220 
-O 0 100 1 221 
-O 0 100 1 222 
-O 0 100 1 223 
-O 0 100 1 224 
-O 0 100 1 225 
-O 0 100 1 226 
-O 0 100 1 228 
-O 0 100 1 229 
-O 0 100 1 230 
-O 0 100 1 231 
-O 0 100 1 232 
-O 0 100 1 233 
-O 0 100 1 234 
-O 0 100 1 235 
-O 0 100 1 236 
-O 0 100 1 237 
-O 0 100 1 238 
-O 0 100 1 239 
-O 0 100 1 240 
-O 0 100 1 241 
-O 0 100 1 242 
-O 0 100 1 243 
-O 0 100 1 244 
-O 0 100 1 350 
-O 0 100 1 351 
+O 0 100 1 101
+O 0 100 1 102
+O 0 100 1 103
+O 0 100 1 104
+O 0 100 1 105
+O 0 100 1 106
+O 0 100 1 107
+O 0 100 1 108
+O 0 100 1 109
+O 0 100 1 110
+O 0 100 1 111
+O 0 100 1 112
+O 0 100 1 113
+O 0 100 1 114
+O 0 100 1 115
+O 0 100 1 116
+O 0 100 1 117
+O 0 100 1 118
+O 0 100 1 119
+O 0 100 1 120
+O 0 100 1 121
+O 0 100 1 122
+O 0 100 1 123
+O 0 100 1 124
+O 0 100 1 125
+O 0 100 1 126
+O 0 100 1 127
+O 0 100 1 128
+O 0 100 1 129
+O 0 100 1 130
+O 0 100 1 131
+O 0 100 1 132
+O 0 100 1 133
+O 0 100 1 134
+O 0 100 1 135
+O 0 100 1 136
+O 0 100 1 137
+O 0 100 1 138
+O 0 100 1 139
+O 0 100 1 140
+O 0 100 1 141
+O 0 100 1 142
+O 0 100 1 143
+O 0 100 1 144
+O 0 100 1 145
+O 0 100 1 146
+O 0 100 1 147
+O 0 100 1 148
+O 0 100 1 149
+O 0 100 1 150
+O 0 100 1 151
+O 0 100 1 154
+O 0 100 1 155
+O 0 100 1 156
+O 0 100 1 157
+O 0 100 1 158
+O 0 100 1 159
+O 0 100 1 160
+O 0 100 1 161
+O 0 100 1 162
+O 0 100 1 163
+O 0 100 1 164
+O 0 100 1 165
+O 0 100 1 166
+O 0 100 1 167
+O 0 100 1 168
+O 0 100 1 169
+O 0 100 1 170
+O 0 100 1 171
+O 0 100 1 172
+O 0 100 1 173
+O 0 100 1 174
+O 0 100 1 175
+O 0 100 1 176
+O 0 100 1 177
+O 0 100 1 178
+O 0 100 1 179
+O 0 100 1 180
+O 0 100 1 181
+O 0 100 1 182
+O 0 100 1 183
+O 0 100 1 184
+O 0 100 1 185
+O 0 100 1 186
+O 0 100 1 187
+O 0 100 1 188
+O 0 100 1 189
+O 0 100 1 190
+O 0 100 1 191
+O 0 100 1 192
+O 0 100 1 193
+O 0 100 1 194
+O 0 100 1 195
+O 0 100 1 196
+O 0 100 1 197
+O 0 100 1 198
+O 0 100 1 199
+O 0 100 1 200
+O 0 100 1 201
+O 0 100 1 202
+O 0 100 1 203
+O 0 100 1 204
+O 0 100 1 205
+O 0 100 1 206
+O 0 100 1 207
+O 0 100 1 208
+O 0 100 1 209
+O 0 100 1 210
+O 0 100 1 211
+O 0 100 1 212
+O 0 100 1 213
+O 0 100 1 214
+O 0 100 1 215
+O 0 100 1 216
+O 0 100 1 217
+O 0 100 1 218
+O 0 100 1 219
+O 0 100 1 220
+O 0 100 1 221
+O 0 100 1 222
+O 0 100 1 223
+O 0 100 1 224
+O 0 100 1 225
+O 0 100 1 226
+O 0 100 1 228
+O 0 100 1 229
+O 0 100 1 230
+O 0 100 1 231
+O 0 100 1 232
+O 0 100 1 233
+O 0 100 1 234
+O 0 100 1 235
+O 0 100 1 236
+O 0 100 1 237
+O 0 100 1 238
+O 0 100 1 239
+O 0 100 1 240
+O 0 100 1 241
+O 0 100 1 242
+O 0 100 1 243
+O 0 100 1 244
+O 0 100 1 350
+O 0 100 1 351
 O 0 100 1 245         End of the Grimhaven streetlamps
 
 
 
 
 O 0 3760 1 25400      Grimhaven Park lamp posts
-O 0 3760 1 25426 
-O 0 3760 1 25404 
-O 0 3760 1 25420 
-O 0 3760 1 25401 
-O 0 3760 1 25402 
-O 0 3760 1 25406 
-O 0 3760 1 25418 
-O 0 3760 1 25419 
-O 0 3760 1 25422 
-O 0 3760 1 25405 
-O 0 3760 1 25417 
-O 0 3760 1 25424 
-O 0 3760 1 25423 
-O 0 3760 1 25409 
-O 0 3760 1 25411 
-O 0 3760 1 25415 
-O 0 3760 1 25416 
-O 0 3760 1 25403 
-O 0 3760 1 25410 
-O 0 3760 1 25412 
-O 0 3760 1 25413 
+O 0 3760 1 25426
+O 0 3760 1 25404
+O 0 3760 1 25420
+O 0 3760 1 25401
+O 0 3760 1 25402
+O 0 3760 1 25406
+O 0 3760 1 25418
+O 0 3760 1 25419
+O 0 3760 1 25422
+O 0 3760 1 25405
+O 0 3760 1 25417
+O 0 3760 1 25424
+O 0 3760 1 25423
+O 0 3760 1 25409
+O 0 3760 1 25411
+O 0 3760 1 25415
+O 0 3760 1 25416
+O 0 3760 1 25403
+O 0 3760 1 25410
+O 0 3760 1 25412
+O 0 3760 1 25413
 O 0 3760 1 25414      End of the Grimhaven Park streetlamps
 
 
@@ -517,24 +517,24 @@ O 0 103 1 1326  ; ""	End of the Brightmoon streetlamps
 
 O 0 3702 1 3724        Logrus streetlamps/FirePot first
 O 0 3705 1 3701 	 Lampposts
-O 0 3705 1 3717 
-O 0 3705 1 3726 
-O 0 3705 1 3732 
-O 0 3705 1 3734 
-O 0 3705 1 3752 
-O 0 3705 1 3714 
-O 0 3705 1 3704 
+O 0 3705 1 3717
+O 0 3705 1 3726
+O 0 3705 1 3732
+O 0 3705 1 3734
+O 0 3705 1 3752
+O 0 3705 1 3714
+O 0 3705 1 3704
 O 0 3700 1 3723 	Broken lampposts
-O 0 3700 1 3720 
-O 0 3700 1 3760 
-O 0 3701 1 3711 
-O 0 3701 1 3751 
-O 0 3703 1 3722 
-O 0 3703 1 3725 
-O 0 3703 1 3775 
-O 0 3704 1 3702 
-O 0 3704 1 3719 
-O 0 3704 1 3757 
+O 0 3700 1 3720
+O 0 3700 1 3760
+O 0 3701 1 3711
+O 0 3701 1 3751
+O 0 3703 1 3722
+O 0 3703 1 3725
+O 0 3703 1 3775
+O 0 3704 1 3702
+O 0 3704 1 3719
+O 0 3704 1 3757
 
 
 O 0 3704 1 3745         End of the Logrus streetlamps
@@ -727,21 +727,21 @@ M 0 123 1 112       leprechaun
 M 0 123 1 160       leprechaun
 M 0 123 1 112       leprechaun
 M 0 252 1 133       elderly shaman
-M 0 252 1 167       
-M 0 252 1 213       
-M 0 252 1 219       
-M 0 252 1 228       
-M 0 252 1 120       
-M 0 252 1 104       
-M 0 252 1 119       
-M 0 252 1 175       
-M 0 252 1 216       
-M 0 252 1 174       
-M 0 252 1 226       
-M 0 252 1 148       
-M 0 252 1 193       
-M 0 252 1 110       
-M 0 252 1 164       
+M 0 252 1 167
+M 0 252 1 213
+M 0 252 1 219
+M 0 252 1 228
+M 0 252 1 120
+M 0 252 1 104
+M 0 252 1 119
+M 0 252 1 175
+M 0 252 1 216
+M 0 252 1 174
+M 0 252 1 226
+M 0 252 1 148
+M 0 252 1 193
+M 0 252 1 110
+M 0 252 1 164
 
 M 0 250 1 222       apprentice shaman
 M 0 250 1 218       apprentice shaman
@@ -912,12 +912,12 @@ M 0 134 1 109       2nd-storyman
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 M 0 135 1 230       kobold maruader
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 M 0 135 1 200       kobold maruader
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
@@ -926,12 +926,12 @@ M 0 135 1 167       kobold maruader
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 M 0 135 1 156       kobold maruader
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 M 0 135 1 198       kobold maruader
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
@@ -940,43 +940,43 @@ M 0 33312 1 100      Cagrane the limb collector (quest mob)
 
 M 0 136 1 169        gremlin
 Y 0 64 8
-M 0 136 1 142       
+M 0 136 1 142
 Y 0 64 8
-M 0 136 1 184        
+M 0 136 1 184
 Y 0 64 8
-M 0 136 1 173       
+M 0 136 1 173
 Y 0 64 8
-M 0 136 1 103       
+M 0 136 1 103
 Y 0 64 8
 M 0 248 1 170        shaman
 Y 0 64 8
-M 0 248 1 143       
+M 0 248 1 143
 Y 0 64 8
-M 0 248 1 185        
+M 0 248 1 185
 Y 0 64 8
-M 0 248 1 174       
+M 0 248 1 174
 Y 0 64 8
-M 0 248 1 104       
+M 0 248 1 104
 Y 0 64 8
 M 0 137 1 106        convert
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 184        
+M 0 137 1 184
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 5				Set - Hard Leather (5%)
-M 0 137 1 173        
+M 0 137 1 173
 ? 0 5 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 213     
+M 0 137 1 213
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
-M 0 137 1 227       
+M 0 137 1 227
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
@@ -986,24 +986,24 @@ M 0 137 1 242        convert
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 174      
+M 0 137 1 174
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 121  
-? 0 15 0 E
-E 1 341 1000 19                  dagger in r hand
-Y 0 7 25				Set - Hard Leather (5%)     
-M 0 137 1 169       
+M 0 137 1 121
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
-M 0 137 1 185       
+M 0 137 1 169
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
-M 0 137 1 150      
+M 0 137 1 185
+? 0 15 0 E
+E 1 341 1000 19                  dagger in r hand
+Y 0 7 25				Set - Hard Leather (5%)
+M 0 137 1 150
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
@@ -1013,22 +1013,22 @@ M 0 137 1 170        convert
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 142       
+M 0 137 1 142
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 233       
+M 0 137 1 233
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 104     
+M 0 137 1 104
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
 G 1 29913 9999                  Way of Logrus
-M 0 137 1 121      
+M 0 137 1 121
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
@@ -1036,23 +1036,23 @@ M 0 137 1 130        convert
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
-M 0 137 1 115 
+M 0 137 1 115
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
-M 0 137 1 120    
-? 0 15 0 E
-E 1 341 1000 19                  dagger in r hand
-Y 0 7 25				Set - Hard Leather (5%) 
-M 0 137 1 114    
+M 0 137 1 120
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
-M 0 137 1 106   
+M 0 137 1 114
 ? 0 15 0 E
 E 1 341 1000 19                  dagger in r hand
 Y 0 7 25				Set - Hard Leather (5%)
-M 0 137 1 101       
+M 0 137 1 106
+? 0 15 0 E
+E 1 341 1000 19                  dagger in r hand
+Y 0 7 25				Set - Hard Leather (5%)
+M 0 137 1 101
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 Y 0 7 25				Set - Hard Leather (5%)
@@ -1105,8 +1105,8 @@ Y 0 65 15                           toughened leather
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 
-A 0 100 245	
-M 0 100 1 -99        city watchman 
+A 0 100 245
+M 0 100 1 -99        city watchman
 Y 1 7 15                 chance of hard leather
 ? 0 25 0 E
 E 1 304 100 19          chance of short sword
@@ -1135,16 +1135,16 @@ A 0 100 245
 M 0 110 1 -99        peasant
 ? 0 25 0 E
 E 1 318 100 19          chance of knife
-                                            
+
 A 0 100 245
 M 0 108 1 -99        male citizen
 ? 0 25 0 E
 E 1 318 100 19          chance of regular knife
-A 0 100 245                                 
+A 0 100 245
 M 0 108 1 -99        male citizen
 ? 0 25 0 E
 E 1 318 100 19          chance of regular knife
-A 0 100 245                                 
+A 0 100 245
 M 0 108 1 -99        male citizen
 ? 0 25 0 E
 E 1 318 100 19          chance of regular knife
@@ -1161,10 +1161,10 @@ A 0 100 245
 M 0 109 1 -99        female citizen
 ? 0 15 0 E
 E 1 305 100 19          chance of dagger
-                                         
+
 A 0 100 245
 M 0 125 1 -99        dwarf advent
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 ? 0 15 0 E
 E 1 340 100 19          chance of small hand axe
 Y 0 65 15                           toughened leather
@@ -1237,51 +1237,51 @@ M 0 170 1 -99         peasant boy
 A 0 100 245
 M 0 171 1 -99         peasant girl
 A 0 100 245
-M 0 171 1 -99         peasant girl 
+M 0 171 1 -99         peasant girl
 A 0 100 245
-M 0 171 1 -99         peasant girl 
+M 0 171 1 -99         peasant girl
 
 A 0 100 245
 M 0 172 1 -99         pigeon
 A 0 100 245
-M 0 172 1 -99         pigeon  
+M 0 172 1 -99         pigeon
 
 A 0 100 245
 M 0 173 1 -99         tradesman apprentice
 A 0 100 245
-M 0 173 1 -99         tradesman apprentice 
+M 0 173 1 -99         tradesman apprentice
 G 1 29912 9999                 Coils of the Serpent
 
 A 0 100 245
 M 0 174 1 -99         old man
 A 0 100 245
 M 0 174 1 -99         old man
-                              
+
 A 0 100 245
 M 0 175 1 -99         old woman
 A 0 100 245
-M 0 175 1 -99         old woman  
+M 0 175 1 -99         old woman
 
 A 0 100 245
 M 0 176 1 -99         knight's squire
 A 0 100 245
 M 0 176 1 -99         knight's squire
-                                        
+
 A 0 100 245
 M 0 177 1 -99         rumormonger
 A 0 100 245
-M 0 177 1 -99         rumormonger  
+M 0 177 1 -99         rumormonger
 
 A 0 100 245
 M 0 178 1 -99         delinquent
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 A 0 100 245
-M 0 178 1 -99         delinquent 
+M 0 178 1 -99         delinquent
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 A 0 100 245
-M 0 178 1 -99         delinquent 
+M 0 178 1 -99         delinquent
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 
@@ -1293,14 +1293,14 @@ M 0 180 1 -99         pickpocket
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 A 0 100 245
-M 0 180 1 -99         pickpocket  
+M 0 180 1 -99         pickpocket
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 
 A 0 100 245
 M 0 181 1 -99         fat peasant
 A 0 100 245
-M 0 181 1 -99         fat peasant 
+M 0 181 1 -99         fat peasant
 
 A 0 100 245
 M 0 182 1 -99         farmer
@@ -1325,9 +1325,9 @@ E 1 176 1000 19                  club in r hand
 A 0 100 245
 M 0 185 1 -99         draft horse
 A 0 100 245
-M 0 185 1 -99         draft horse  
+M 0 185 1 -99         draft horse
 A 0 100 245
-M 0 185 1 -99         draft horse  
+M 0 185 1 -99         draft horse
 
 A 0 100 245
 M 0 186 1 -99         pilgrim
@@ -1340,7 +1340,7 @@ M 0 187 1 -99         gambler
 E 1 176 1000 19                  club in r hand
 
 A 0 100 245
-M 0 187 1 -99         gambler 
+M 0 187 1 -99         gambler
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 
@@ -1352,13 +1352,13 @@ M 0 189 1 -99         royal page
 
 A 0 100 245
 M 0 190 1 -99         amazon warrior
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 Y 0 7 25				Set - Hard Leather (5%)
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
 A 0 100 245
 M 0 190 1 -99         amazon warrior
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 Y 0 7 25				Set - Hard Leather (5%)
 ? 0 15 0 E
 E 1 176 1000 19                  club in r hand
@@ -1378,7 +1378,7 @@ A 0 100 245
 M 0 193 1 -99         trash collector
 A 0 100 245
 M 0 193 1 -99         trash collector
-                                      
+
 A 0 100 245
 M 0 194 1 -99         burly man
 ? 0 15 0 E
@@ -1397,14 +1397,14 @@ E 1 176 1000 19                  club in r hand
 
 A 0 100 245
 M 0 197 1 -99         dwarf merchant
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 Y 0 65 15		Toughened Set - 8%
 A 0 100 245
 M 0 197 1 -99         dwarf merchant
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 Y 0 65 15		Toughened Set - 8%
 G 1 29912 9999                 Coils of the Serpent
-                                    
+
 A 0 100 245
 M 0 198 1 -99         hobbit trader
 G 1 29912 9999                 Coils of the Serpent
@@ -1496,7 +1496,7 @@ M 0 144 2 246
 Y 0 48 15		hobstud Set - 8%
 ? 0 5 0 E
 E 1 10938 100 19	platinum dagger
-M 0 144 3 249       
+M 0 144 3 249
 Y 0 48 15		hobstud Set - 8%
 ? 0 15 0 E
 E 1 10938 100 19	platinum dagger

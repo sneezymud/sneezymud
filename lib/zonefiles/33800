@@ -172,7 +172,7 @@ M 0 33809 5 33828       a monohog
 
 M 0 33807 10 33828      the monohog keeper
 ? 0 2 0 E
-E 1 33827 9999 18         a whip made from a monohog tail [hold-right] 
+E 1 33827 9999 18         a whip made from a monohog tail [hold-right]
 Z 0 2 2                   monohog hide set
 
 
@@ -223,7 +223,7 @@ M 0 33805 1 33800	a subjugated paladin
 
 M 0 33803 2 33800       a dreaded cyclops chief
 ? 0 2 0 E
-E 1 33829 9999 19         a tree trunk [hold-left] 
+E 1 33829 9999 19         a tree trunk [hold-left]
 Z 0 1 2                   trollhide set
 
 M 0 33804 4 33800       an battle hardened cyclops

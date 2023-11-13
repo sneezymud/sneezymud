@@ -22,39 +22,39 @@ Y 0 68 2		    deerskin set
 M 0 23200 1 23211	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18	  	    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23222	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23233	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23244	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23225	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23266	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23277	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23258	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23200 1 23219	 wild elf
 ? 0 4 0 E
 E 1 23224 20 18		    elven longspear
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23201 	 archer (8)
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -62,7 +62,7 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23204
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -70,7 +70,7 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23220	archer
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -78,7 +78,7 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23213	archer
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -86,7 +86,7 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23260	archer
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -94,7 +94,7 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23261	archer
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -102,7 +102,7 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23252	archer
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -110,7 +110,7 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23201 1 23267	archer
 ? 0 4 0 E
 E 1 23209 10 17		    archer's wristguard
@@ -118,73 +118,73 @@ E 1 23209 10 17		    archer's wristguard
 E 1 3405 999 19		    medium bow/arrows
 G 1 3412 999
 G 1 3412 999
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23240 	scout (10)
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23250	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23273	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23279	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23259	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23206	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23208	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23246	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23229	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23202 1 23264	scout
 ? 0 3 0 E
 E 1 23225 10 8		    elven hiking boot
 ? 0 3 0 E
 E 1 23225 10 9		    elven hiking boot
-Y 0 68 2		    deerskin set 
+Y 0 68 2		    deerskin set
 M 0 23203 1 23279 	stalker (3)
-Y 0 69 2		    darkblue set 
+Y 0 69 2		    darkblue set
 M 0 23203 1 23254
-Y 0 69 2		    darkblue set 
+Y 0 69 2		    darkblue set
 M 0 23203 1 23247
-Y 0 69 2		    darkblue set 
+Y 0 69 2		    darkblue set
 M 0 23204 1 23277	 werewolf (3)
 M 0 23204 1 23246
 M 0 23204 1 23264
@@ -214,7 +214,7 @@ M 0 23210 1 23270 	chipmunk
 M 0 23261 1 23261 	geldoran
 ? 0 3 0 G
 G 1 23212 1      	   black elfstone
-Y 0 68 3		    deerskin set 
+Y 0 68 3		    deerskin set
 M 0 23291 1 23291	 yyrn
 ? 0 3 0 G
 G 1 23211 1      	   purple elfstone

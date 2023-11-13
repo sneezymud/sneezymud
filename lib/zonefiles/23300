@@ -5,8 +5,8 @@ Omen - Gnome Antrider Tunnels~
 O 0 23310 1 23310  	western portal out (to arden)
 O 0 23328 1 23328  	eastern portal out (to arden)
 O 0 23315 1 23315 	 pool of water (3)
-O 0 23315 1 23317 
-O 0 23315 1 23355 
+O 0 23315 1 23317
+O 0 23315 1 23355
 O 0 23361 1 23361  	queen's throne
 
 B 0 23337 1 23302	Fungus (edible)
@@ -154,7 +154,7 @@ Y 0 103 2                   spider set
 ? 0 99 0 G
 G 1 23317 9999              key made of webbing
 C 1 23310 1 23399      spider pet
-C 1 23310 2 23399  
+C 1 23310 2 23399
 
 S
 

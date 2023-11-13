@@ -235,61 +235,61 @@ M 0 3850 1 3851 51      ; Ninja
 ? 0 8 0 E		   Ninjato
 E 1 3858 50 19
 ? 0 8 0 E		   Shadow Sai
-E 1 3859 50 19           
+E 1 3859 50 19
 ? 0 8 0 E		   Ninja Cowl
-E 1 3860 10 5         
+E 1 3860 10 5
 ? 0 8 0 E		   Ninja bodysuit
-E 1 3861 5  4         
+E 1 3861 5  4
 ? 0 8 0 E		   Tab Boot
-E 1 3862 20 8         
+E 1 3862 20 8
 
 M 0 3850 1 3852 52      ; Ninja
 ? 0 8 0 E		   Ninjato
-E 1 3858 50 19         
+E 1 3858 50 19
 ? 0 8 0 E		   Shadow Sai
-E 1 3859 50 19         
+E 1 3859 50 19
 ? 0 8 0 E		   Ninja Cowl
-E 1 3860 10 5         
+E 1 3860 10 5
 ? 0 8 0 E		   Ninja bodysuit
-E 1 3861 5  4         
+E 1 3861 5  4
 ? 0 8 0 E		   Tab Boot
-E 1 3862 20 8         
+E 1 3862 20 8
 
 M 0 3850 1 3853 53      ; Ninja
 ? 0 10 0 E		   Tanto
-E 1 3863 50 19         
+E 1 3863 50 19
 ? 0 8 0 E		   Shadow Sai
-E 1 3859 50 19  
+E 1 3859 50 19
 ? 0 8 0 E		   Ninja Cowl
-E 1 3860 10 5         
+E 1 3860 10 5
 ? 0 8 0 E		   Ninja bodysuit
-E 1 3861 5  4         
+E 1 3861 5  4
 ? 0 8 0 E		   Tab Boot
-E 1 3862 20 8         
+E 1 3862 20 8
 
 M 0 3850 1 3854 54      ; Ninja
 ? 0 8 0 E		   Ninjato
-E 1 3858 50 19         
+E 1 3858 50 19
 ? 0 8 0 E		   Shadow Sai
-E 1 3859 50 19  
+E 1 3859 50 19
 ? 0 8 0 E		   Ninja Cowl
-E 1 3860 10 5         
+E 1 3860 10 5
 ? 0 8 0 E		   Ninja bodysuit
-E 1 3861 5  4         
+E 1 3861 5  4
 ? 0 8 0 E		   Tab Boot
-E 1 3862 20 8         
+E 1 3862 20 8
 
 M 0 3850 1 3855 55      ; Ninja
 ? 0 8 0 E		   Ninjato
-E 1 3858 50 19         
+E 1 3858 50 19
 ? 0 7 0 E		   Shadow Sai
-E 1 3859 50 19         
+E 1 3859 50 19
 ? 0 8 0 E		   Ninja Cowl
-E 1 3860 10 5         
+E 1 3860 10 5
 ? 0 8 0 E		   Ninja bodysuit
-E 1 3861 5  4         
+E 1 3861 5  4
 ? 0 8 0 E		   Tab Boot
-E 1 3862 20 8         
+E 1 3862 20 8
 
 O 0 3825   1 3825      ; Tiny Chest
 T 1 7 20                    Acid Trap
@@ -297,7 +297,7 @@ P 1 3799   1 3825      ; Key
 O 0 3814   1 3808      ; Key
 O 0 3791   1 3791      ; Block
 T 1 7 20                    Acid Trap
-P 1 3808   1 3791      ; Key 
+P 1 3808   1 3791      ; Key
 
 ? 0 4 0 B
 B 1 3767   1 3767      ; City Treasure
@@ -330,10 +330,10 @@ E 1 1089 999 1         metal ring
 D 0 3866 4 2         Adrielz Chest -> A Balcony Overlooking the City
 D 0 3867 5 2         A Balcony Overlooking the City -> Adrielz Chest
 D 0 3867 7 1         A Balcony Overlooking the City -> Inside the Spire
-D 0 3869 4 2         Skull Duggory's  -> A Balcony Overlooking the City 
-D 0 3870 5 2         A Balcony Overlooking the City  -> Skull Duggory's 
+D 0 3869 4 2         Skull Duggory's  -> A Balcony Overlooking the City
+D 0 3870 5 2         A Balcony Overlooking the City  -> Skull Duggory's
 D 0 3870 8 1         A Balcony Overlooking the City  -> Inside the Blood Red Tower
-D 0 3871 7 1         Inside the Blood Red Tower -> A Balcony Overlooking the City 
+D 0 3871 7 1         Inside the Blood Red Tower -> A Balcony Overlooking the City
 D 0 3872 8 1         Inside the Spire -> A Balcony Overlooking the City
 
 O 0 8721 2 3866      Lights in Adrielz
@@ -347,9 +347,9 @@ M 0 3768 1 3768      Logrus postmaster
 O 0 16712 2 3870     Equipment rack in a private home
 O 0 16712 3 3871     Equipment rack in a private home
 O 0 16712 2 3873     Equipment rack in a private home
-O 0 16712 2 3867     Equipment rack in a private home    
+O 0 16712 2 3867     Equipment rack in a private home
 O 0 16761 1 3867	Toy box in a private home
-O 0 16712 2 3872     Equipment rack in a private home        
+O 0 16712 2 3872     Equipment rack in a private home
 O 0 16722 1 3873     Wall-mounted lantern in a private home
 O 0 16719 1 3868	Waste basket in a private home
 O 0 16715 1 3868	Medicine cabinet in a private home
@@ -362,7 +362,7 @@ O 0 16706 1 3868	Workbench in a private home
 O 0 16707 1 3868	Anvil in a private home
 O 0 16720 1 3868	Forge in a private home
 O 0 16721 1 3868	Chalk pentagram in a private home
-O 0 16708 1 3868	Operating table in a private home 
+O 0 16708 1 3868	Operating table in a private home
 
 
 S

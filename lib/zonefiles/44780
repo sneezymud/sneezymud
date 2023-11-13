@@ -17,7 +17,7 @@ Deirdre - Salamander Swamp~
 *P 1 35485 1 44780           a small sack of turnip seeds
 *P 1 13880 1 44780           a small sack of tomato seeds
 
-* Man, these mobs just sort of load wherever. 
+* Man, these mobs just sort of load wherever.
 * They wander so much it doesn't even matter.
 * Goldfish get a talen.
 * Frogs get a fly (celerite comp).
@@ -30,7 +30,7 @@ M 0 44786 15 44780      a green and yellow salamander
 M 0 44782 1 44780       a swallow
 
 M 0 44787 3 44781       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44781       a bright white suckerfish
 M 0 44786 15 44781      a green and yellow salamander
 M 0 44780 4 44781       a shiny green frog
@@ -38,12 +38,12 @@ G 1 31337 9999            fly component shaman [celerite]
 M 0 44782 1 44781       a swallow
 
 M 0 44787 3 44782       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44782       a bright white suckerfish
 M 0 44786 15 44782      a green and yellow salamander
 
 M 0 44787 3 44783       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44783       a bright white suckerfish
 M 0 44786 15 44783      a green and yellow salamander
 M 0 44780 4 44783       a shiny green frog
@@ -55,7 +55,7 @@ G 1 31337 9999 	       	  fly component	shaman [celerite]
 M 0 44782 1 44784       a swallow
 
 M 0 44787 3 44785       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44785       a bright white suckerfish
 M 0 44786 15 44785      a green and yellow salamander
 M 0 44780 4 44785       a shiny green frog
@@ -63,12 +63,12 @@ G 1 31337 9999 	       	  fly component	shaman [celerite]
 M 0 44782 1 44785       a swallow
 
 M 0 44787 3 44786       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44786       a bright white suckerfish
 M 0 44786 15 44786      a green and yellow salamander
 
 M 0 44787 3 44787       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44787       a bright white suckerfish
 M 0 44786 15 44787      a green and yellow salamander
 M 0 44780 4 44787       a shiny green frog
@@ -80,7 +80,7 @@ G 1 31337 9999 	       	  fly component	shaman [celerite]
 M 0 44782 1 44788       a swallow
 
 M 0 44787 3 44789       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44789       a bright white suckerfish
 M 0 44786 15 44789      a green and yellow salamander
 M 0 44780 4 44789       a shiny green frog
@@ -88,7 +88,7 @@ G 1 31337 9999 	       	  fly component	shaman [celerite]
 M 0 44782 1 44789       a swallow
 
 M 0 44787 3 44790       a fancy speckled goldfish
-G 1 13 9999               a talen  
+G 1 13 9999               a talen
 M 0 44781 1 44790       a bright white suckerfish
 M 0 44786 15 44790      a green and yellow salamander
 M 0 44780 4 44790       a shiny green frog
@@ -125,7 +125,7 @@ G 1 258 9999                carrot golden component mage [true sight]
 M 0 44783 15 44793      a brown rabbit
 G 1 258 9999                carrot golden component mage [true sight]
 M 0 44785 15 44793      a stealthy raccoon
-E 1 710 9999 5             black cloth mask  
+E 1 710 9999 5             black cloth mask
 M 0 44793 4 44793       a handmaiden to the acolyte
 
 ** Secluded glade with acolyte

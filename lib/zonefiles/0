@@ -16,20 +16,20 @@ Void~
 *M 0 54 3 118      Angry Barhopper
 
 *O 0 29904 1 119      recruitment poster
-  
+
 *O 0 29903 1 10144    bier
 *P 1 29902 1 29903         corpse
 *O 0 1 1 13	  Load of jendar (10115) disabled
 
 *M 0 29904 3 10144     mourners
-*M 0 29905 3 10144 
+*M 0 29905 3 10144
 
 *M 0 29906 2 10144    Honor guard
 
 *O 0 1 1 13	  New stuff in castle
 *M 0 29901 1 356    reginor
-*M 0 29908 3 356    
-*M 0 29909 3 356    
+*M 0 29908 3 356
+*M 0 29909 3 356
 
 *Grimhaven Gatekeepers
 M 0 210 1 200
@@ -41,14 +41,14 @@ M 0 211 1 215
 *O 0 1 1 13	  END OF QUEST LOADS
 
 O 0 561 1 415       Repair object loads
-O 0 561 1 426 
-O 0 577 1 500 
-O 0 577 1 504 
-O 0 577 1 516 
-O 0 577 1 518 
-O 0 577 1 532 
-O 0 577 1 549 
-O 0 585 1 503 
+O 0 561 1 426
+O 0 577 1 500
+O 0 577 1 504
+O 0 577 1 516
+O 0 577 1 518
+O 0 577 1 532
+O 0 577 1 549
+O 0 585 1 503
 O 0 2345 1 772     End of repair objects.
 
 M 0 29903 1 200      orc trader
@@ -80,25 +80,25 @@ M 0 9638 1 13108 	weathered fisherman old
 
 *O 0 1 1 13  STONECOLD'S FUNKY QUEST LOADS
 
-M 0 2273 1 2273 
-M 0 2495 1 2495 
-M 0 2874 1 2854 
-M 0 3210 1 3210 
-M 0 3459 1 3459 
-M 0 3857 1 3857 
-M 0 5347 1 5347 
-M 0 5555 1 5554 
-M 0 6761 1 6761 
-M 0 7531 1 7531 
-M 0 8677 1 8677 
-*M 0 9148 1 9148    Yola moved from FOG island to myrian zone temp. 
-M 0 9148 1 12889 
-M 0 9326 1 9326 
-M 0 9331 1 9331 
+M 0 2273 1 2273
+M 0 2495 1 2495
+M 0 2874 1 2854
+M 0 3210 1 3210
+M 0 3459 1 3459
+M 0 3857 1 3857
+M 0 5347 1 5347
+M 0 5555 1 5554
+M 0 6761 1 6761
+M 0 7531 1 7531
+M 0 8677 1 8677
+*M 0 9148 1 9148    Yola moved from FOG island to myrian zone temp.
+M 0 9148 1 12889
+M 0 9326 1 9326
+M 0 9331 1 9331
 M 0 14159 1 14162
-M 0 14227 1 14227 
-M 0 14404 1 14404  
-M 0 28876 1 28876 
+M 0 14227 1 14227
+M 0 14404 1 14404
+M 0 28876 1 28876
 
 *O 0 0 1 13	END OF STONECOLD's FUNKY QUEST LOADS
 
@@ -106,7 +106,7 @@ M 0 28876 1 28876
 *TOWN CRIER LOADS
 
 * Deirdre disabled the Town Criers until they can be updated and remotely useful again.
-* Right now, their "news" is pathetically out of date, so they're just annoying and 
+* Right now, their "news" is pathetically out of date, so they're just annoying and
 * fill up the tell history.  11/24/07
 
 *M 0 111 1 100 	Town Crier (Center Square)
@@ -205,7 +205,7 @@ M 0 593 1 579		Yun, grocery/cooking shop       (shop 112)
 M 0 3866 1 3866         Adrielz                         (shop 172)
 M 0 3869 1 3869         Turk                            (shop 173)
 M 0 31906 1 31906       Boeckx, prison ration factory   (shop 251)
-M 0 35412 1 35463       Bartley				(shop 174)		
+M 0 35412 1 35463       Bartley				(shop 174)
 M 0 35414 1 35466       Kort				(shop 175)
 M 0 35417 1 35470       Bess				(shop 176)
 M 0 35422 1 35476       Garn				(shop 177)
@@ -243,7 +243,7 @@ M 0 23636 1 23665       arena armourer			(shop 40)
 M 0 23637 1 23664       weaponsmith arena		(shop 41)
 M 0 24418 1 24442	Baker's wife (shopkeeper)       (shop 106)
 M 0 14324 1 14377 	Three Toes [Bartender]		(shop 50)
-M 0 14326 1 14372 	Galdor Sugarfoot [Baker]	(shop 49)	
+M 0 14326 1 14372 	Galdor Sugarfoot [Baker]	(shop 49)
 M 0 14325 1 14378 	Robin [Waitress]		(shop 51)
 M 0 14332 1 14385 	Lightfingers Fastfeet [Trader]	(shop 60)
 M 0 20000 1 20000       Fay (Tournament Guy)		(shop 42)
@@ -300,7 +300,7 @@ M 0 12294 1 12294	Stone's Glass Shop		(shop 101)
 M 0 12295 1 12295	Stone's Plastic Shop		(shop 102)
 M 0 12298 1 12298	Stone's Wax Shop		(shop 103)
 M 0 27806 1 27899       Nefkar (Amber Bay Boats)        (shop 108)
-M 0 31352 1 578         Mystic Man (divination guy in Grimhaven) 
+M 0 31352 1 578         Mystic Man (divination guy in Grimhaven)
 
 *O 0 0 1 13	END SHOPKEEPER LOADS
 

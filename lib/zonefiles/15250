@@ -21,62 +21,62 @@ P 1 15265 3 15264        Meat on grill
 O 0 15262 3 15262         Moss covered stones (load 3)
 O 0 15261 1 15261         Game Racks (in 2 rooms)
 P 1 15260 2 15261        Meat on rack (on both racks)
-O 0 15261 1 15260 
+O 0 15261 1 15260
 P 1 15260 2 15261
 O 0 15286 1 15286         Bed of Needles (7 places)
-O 0 15286 1 15284     
-O 0 15286 2 15268 
-O 0 15286 1 15265 
-O 0 15286 1 15263 
-O 0 15286 1 15266 
+O 0 15286 1 15284
+O 0 15286 2 15268
+O 0 15286 1 15265
+O 0 15286 1 15263
+O 0 15286 1 15266
 O 0 15270 1 15283         Window to river
 O 0 15271 1 15283         Window to GH
 O 0 15275 1 15275         'Window' through trees (3 types, 3 places)
-O 0 15274 1 15277 
-O 0 15278 1 15278 
+O 0 15274 1 15277
+O 0 15278 1 15278
 O 0 15282 1 15282          Raft hidden in clearing
 
 M 0 15260 1 15260           Gnome poacher load (2)
 ? 0 5 0 G                        possible skinning knife load
 G 1 14407 999
-M 0 15260 1 15261 
+M 0 15260 1 15261
 ? 0 5 0 G
 G 1 14407 999
 M 0 15268 1 15268           Human poacher load (3)
 ? 0 5 0 E                    wooden long sword load
-E 1 15251 9999 19               
-Y 0 8 2                      studded suit   
-M 0 15268 1 15265 
+E 1 15251 9999 19
+Y 0 8 2                      studded suit
+M 0 15268 1 15265
 ? 0 5 0 E
 E 1 15251 9999 19
-Y 0 8 2                      studded suit   
-M 0 15268 1 15262 
+Y 0 8 2                      studded suit
+M 0 15268 1 15262
 ? 0 5 0 E
 E 1 15251 9999 19
-Y 0 46 2                      supple suit   
+Y 0 46 2                      supple suit
 M 0 15266 1 15266              Ogre poacher load (2)
 ? 0 5 0 E                        possible wood axe load
 E 1 15252 9999 19
-Y 0 55 1                        rawhide suit   
-M 0 15266 1 15258 
+Y 0 55 1                        rawhide suit
+M 0 15266 1 15258
 ? 0 5 0 E
 E 1 15252 9999 19
-Y 0 55 1                        rawhide suit   
+Y 0 55 1                        rawhide suit
 M 0 15269 1 15269               Hobbit poacher load (2)
 ? 0 5 0 E                         possible main gauche load
 E 1 15253 9999 19
 Y 0 48 3
-M 0 15269 1 15270 
+M 0 15269 1 15270
 ? 0 5 0 E
 E 1 15253 9999 19
 Y 0 48 3
 M 0 15259 1 15259           Guard east of river
-Y 0 8 2                      studded suit   
+Y 0 8 2                      studded suit
 M 0 15264 1 15264 	   Mangy Mutt
 M 0 15277 1 15277           Ranger west of river
-Y 0 46 2                      supple suit   
+Y 0 46 2                      supple suit
 M 0 15283 1 15283           Spytower lookout guard
-Y 0 8 2                      studded suit   
+Y 0 8 2                      studded suit
 M 0 15284 1 15284           Merritt
 ? 0 5 0 E                   metal kris load
 E 1 15254 1 19

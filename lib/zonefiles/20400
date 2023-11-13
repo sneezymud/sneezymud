@@ -19,16 +19,16 @@ D 0 20528 1 2	Gate into Caverns
 D 0 20531 3 2
 
 D 0 20534 8 1	Boulder/Rubble
-D 0 20535 7 1	
+D 0 20535 7 1
 
 D 0 20536 9 1	Lid of Barrel in Cave-In
-D 0 20537 6 1	
+D 0 20537 6 1
 
 D 0 20538 1 1	Rubble
-D 0 20539 3 1	
+D 0 20539 3 1
 
 D 0 20539 2 1 	Stone Grate
-D 0 20546 0 1	
+D 0 20546 0 1
 
 D 0 20545 2 1	Slab
 D 0 20544 0 1
@@ -39,7 +39,7 @@ D 0 20542 1 2
 D 0 20541 7 2	Portcullis
 D 0 20540 8 2
 
-D 0 20547 6 1	Archway	
+D 0 20547 6 1	Archway
 D 0 20548 9 1
 
 D 0 20555 6 2	Heavy Gate
@@ -77,21 +77,21 @@ O 0 700 2 20529 	Miltary Cot/Bunk in Guards Outpost
 ? 0 10 0 O
 O 1 20460 1 20412 	Dull Chunk of Ice (River Quest 1)
 ? 0 10 0 O
-O 1 20460 1 20413 	
+O 1 20460 1 20413
 ? 0 10 0 O
-O 1 20460 1 20414 
+O 1 20460 1 20414
 ? 0 10 0 O
-O 1 20460 1 20564 
+O 1 20460 1 20564
 ? 0 10 0 O
-O 1 20460 1 20582 
+O 1 20460 1 20582
 ? 0 10 0 O
-O 1 20460 1 20585 
+O 1 20460 1 20585
 ? 0 10 0 O
-O 1 20460 1 20593 
+O 1 20460 1 20593
 ? 0 10 0 O
-O 1 20460 1 20594 
+O 1 20460 1 20594
 ? 0 10 0 O
-O 1 20460 1 20597 
+O 1 20460 1 20597
 
 A 0 20531 20561
 O 1 20474 5 -99		A Colorful Rock (River Quest 3)
@@ -308,26 +308,26 @@ G 1 20427 9999			Rusted Bracer
 M 0 20411 2 20562		Bloated Corpse (Male)
 ? 0 3 0 E
 E 1 20428 9999 9			Soaked Leather Boot
-? 0 3 0 E 
+? 0 3 0 E
 E 1 20429 9999 14			Shredded Leather Cloak
 
 ? 0 50 0 M
 M 1 20411 2 20562		Bloated Corpse (Male)
 ? 0 3 0 E
 E 1 20428 9999 9			Soaked Leather Boot
-? 0 3 0 E 
+? 0 3 0 E
 E 1 20429 9999 14			Shredded Leather Cloak
 
 M 0 20411 2 20591		Bloated Corpse (Male)
 ? 0 3 0 E
 E 1 20428 9999 9			Soaked Leather Boot
-? 0 3 0 E 
+? 0 3 0 E
 E 1 20429 9999 14			Shredded Leather Cloak
 
 M 0 20411 2 20584		Bloated Corpse (Male)
 ? 0 3 0 E
 E 1 20428 9999 9			Soaked Leather Boot
-? 0 3 0 E 
+? 0 3 0 E
 E 1 20429 9999 14			Shredded Leather Cloak
 
 M 0 20412 2 20563		Bloated Corpse (Merchant)
@@ -445,10 +445,10 @@ M 0 20421 1 20582		Lost Ice Scout
 ? 0 25 0 M
 M 1 20421 1 20564		Lost Ice Scout
 
-? 0 25 0 M	
+? 0 25 0 M
 M 1 20422 1 20585		Arctic Bear "Snow"
 
-? 0 25 0 M 
+? 0 25 0 M
 M 1 20423 1 20585		Arctic Bear "Klondike"
 
 ? 0 25 0 M
@@ -483,7 +483,7 @@ M 0 20428 1 20419		Golden Eagle
 M 0 20428 1 20426		Golden Eagle
 
 M 0 20428 1 20434		Golden Eagle
- 
+
 M 0 20429 1 20568		Giggling Goblin Hunter
 ? 0 5 0 G
 G 1 20444 9999				Medium Animal Hide
@@ -636,7 +636,7 @@ M 0 20440 1 20540		Crazed Dwarf
 ? 0 5 0 E
 E 1 20454 20 19				Battered Battle Axe
 ? 0 99 0 G
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 
 M 0 20441 1 20542		Glowing Dwarf
 ? 0 5 0 G
@@ -644,7 +644,7 @@ G 1 20455 9999 				Cracked Obsidian Symbol
 
 M 0 20442 1 20539		Crippled Dwarf
 ? 0 99 0 G
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 
 M 0 20443 1 20544		Dwarven Princess
 G 1 20404 9999                          Heavy Key

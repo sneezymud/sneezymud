@@ -3,13 +3,13 @@ Stonecold - Inverse GH - East Gate Settlement~
 12399 22 2 1
 
 O 0 12351 1 12351    Portal to Grimhaven park
-D 0 12225 1 1          Small Dwelling 
+D 0 12225 1 1          Small Dwelling
 D 0 12233 3 1
 D 0 12310 2 1          Shelter
 D 0 12321 0 1
 D 0 12305 2 1          Shelter
 D 0 12307 0 1
-D 0 12306 0 1          
+D 0 12306 0 1
 D 0 12319 2 1
 D 0 12317 0 1
 D 0 12320 2 1
@@ -44,13 +44,13 @@ D 0 12313 2 1          Temple Door
 D 0 12299 0 1
 
 O 0 12202 1 12307       table ruined wrecked
-O 0 12202 1 12319 
-O 0 12202 1 12320 
-O 0 12202 1 12311 
-O 0 12202 1 12321 
+O 0 12202 1 12319
+O 0 12202 1 12320
+O 0 12202 1 12311
+O 0 12202 1 12321
 O 0 17109 1 12299        Altar Zelpth
 O 0 12203 1 12235        Water purifier
-O 0 12226 1 12259 
+O 0 12226 1 12259
 
 M 0 12200 1 12322        Woodsman
 M 0 12200 1 12339

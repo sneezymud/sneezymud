@@ -51,7 +51,7 @@ D 0 7590   1    2 ; An Ancient Training Room
 D 0 7589   3    2 ; ""
 M 0 7500 1 7503 ; songbird
 M 0 7501 1 7512 ; kamodo dragon
-O 1 7502   1 7512 ; Lyrus flower
+O 1 7502 1 7512 ; Lyrus flower
 M 0 7502 1 7514 ; rust monster
 M 0 7502 1 7514 ; rust monster
 M 0 7502 1 7514 ; rust monster

@@ -1,6 +1,6 @@
 #30900
 Bump - Troll Temple~
-30974 30 2 1 
+30974 30 2 1
 O 0 30915 1 30900 Glowing Gnome Skull
 O 0 30915 1 30901
 O 0 30915 1 30902
@@ -73,42 +73,42 @@ O 0 30915 1 30968
 O 0 30915 1 30969
 O 0 30915 1 30970
 O 0 30914 2 30904 Rotting Gnome Corpse
-O 0 30914 2 30965 
+O 0 30914 2 30965
 O 0 30917 1 30920 Vat Rain Water
 O 0 30940 1 30940 Bed Gnome Clothes
 O 0 30941 1 30940 Vast Gnome Skull
-M 0 30901 1 30900 Gnome Mason 
+M 0 30901 1 30900 Gnome Mason
 M 0 30901 1 30912
-M 0 30904 1 30900 Crow 
+M 0 30904 1 30900 Crow
 M 0 30904 1 30902
 M 0 30904 1 30911
 M 0 30904 1 30915
-M 0 30902 1 30900 Troll Overseer 
+M 0 30902 1 30900 Troll Overseer
 H 1 2 5 Hate Gnomes
 G 1 30913 9999 Kabob Gnome Eyes
 ? 0 2 0 E
-E 1 30900 9999 19 Whip Rotting Flesh 
+E 1 30900 9999 19 Whip Rotting Flesh
 M 0 30902 1 30902
 H 1 2 5 Hate Gnomes
-G 1 30913 9999 
+G 1 30913 9999
 ? 0 2 0 E
-E 1 30900 9999 19 Whip Rotting Flesh 
+E 1 30900 9999 19 Whip Rotting Flesh
 M 0 30902 1 30912
 H 1 2 5 Hate Gnomes
-G 1 30913 9999 
+G 1 30913 9999
 ? 0 2 0 E
-E 1 30900 9999 19 Whip Rotting Flesh 
+E 1 30900 9999 19 Whip Rotting Flesh
 M 0 30902 1 30967
 H 1 2 5 Hate Gnomes
-G 1 30913 9999 
+G 1 30913 9999
 ? 0 2 0 E
-E 1 30900 9999 19 Whip Rotting Flesh 
+E 1 30900 9999 19 Whip Rotting Flesh
 M 0 30902 1 30969
 H 1 2 5 Hate Gnomes
-G 1 30913 9999 
+G 1 30913 9999
 ? 0 2 0 E
-E 1 30900 9999 19 Whip Rotting Flesh 
-M 0 30905 3 30901 Troll Toddler 
+E 1 30900 9999 19 Whip Rotting Flesh
+M 0 30905 3 30901 Troll Toddler
 H 1 2 5 Hate Gnomes
 G 1 30913 9999 Kabob Gnome Eyes
 M 0 30905 3 30959
@@ -127,13 +127,13 @@ M 0 30903 1 30963
 M 0 30903 1 30970
 M 0 30908 1 30901 Troll Oracle
 H 1 2 5 Hate Gnomes
-M 0 30908 1 30938 
+M 0 30908 1 30938
 H 1 2 5 Hate Gnomes
-M 0 30907 3 30902 Troll Elderly 
+M 0 30907 3 30902 Troll Elderly
 H 1 2 5 Hate Gnomes
 G 1 30913 9999
 M 0 30907 1 30910
-H 1 2 5 Hate Gnomes 
+H 1 2 5 Hate Gnomes
 G 1 30913 9999
 M 0 30907 1 30919
 H 1 2 5 Hate Gnomes
@@ -162,7 +162,7 @@ G 1 30913 9999
 M 0 30907 1 30968
 H 1 2 5 Hate Gnomes
 G 1 30913 9999
-M 0 30906 1 30902 Gnome Worker 
+M 0 30906 1 30902 Gnome Worker
 M 0 30906 1 30908
 M 0 30906 1 30911
 M 0 30906 1 30913
@@ -180,10 +180,10 @@ M 0 30906 1 30969
 M 0 30909 4 30903 Gnome Slave
 M 0 30909 4 30918
 M 0 30909 4 30964
-M 0 30910 1 30903 Troll Slave Master 
+M 0 30910 1 30903 Troll Slave Master
 H 1 2 5 Hate Gnomes
 ? 0 2 0 E
-E 1 30901 9999 3 Collar Gnome Skin 
+E 1 30901 9999 3 Collar Gnome Skin
 ? 0 2 0 E
 E 1 30902 9999 1 Ring Gnome Skin
 ? 0 2 0 E
@@ -218,10 +218,10 @@ E 1 30911 9999 12 Sleeve Gnome Skin
 E 1 30911 9999 13 Sleeve Gnome Skin
 ? 0 2 0 E
 E 1 30912 9999 13 Flap Gnome Skin
-M 0 30910 1 30918 Troll Slave Master 
+M 0 30910 1 30918 Troll Slave Master
 H 1 2 5 Hate Gnomes
 ? 0 2 0 E
-E 1 30901 9999 3 Collar Gnome Skin 
+E 1 30901 9999 3 Collar Gnome Skin
 ? 0 2 0 E
 E 1 30902 9999 1 Ring Gnome Skin
 ? 0 2 0 E
@@ -256,10 +256,10 @@ E 1 30911 9999 12 Sleeve Gnome Skin
 E 1 30911 9999 13 Sleeve Gnome Skin
 ? 0 2 0 E
 E 1 30912 9999 13 Flap Gnome Skin
-M 0 30910 1 30964 Troll Slave Master 
+M 0 30910 1 30964 Troll Slave Master
 H 1 2 5 Hate Gnomes
 ? 0 2 0 E
-E 1 30901 9999 3 Collar Gnome Skin 
+E 1 30901 9999 3 Collar Gnome Skin
 ? 0 2 0 E
 E 1 30902 9999 1 Ring Gnome Skin
 ? 0 2 0 E
@@ -294,7 +294,7 @@ E 1 30911 9999 12 Sleeve Gnome Skin
 E 1 30911 9999 13 Sleeve Gnome Skin
 ? 0 2 0 E
 E 1 30912 9999 13 Flap Gnome Skin
-M 0 30911 1 30904 Troll Feeding 
+M 0 30911 1 30904 Troll Feeding
 H 1 2 5 Hate Gnomes
 M 0 30911 1 30965
 H 1 2 5 Hate Gnomes
@@ -311,17 +311,17 @@ M 0 30917 1 30948
 M 0 30917 1 30965
 M 0 30917 1 30966
 M 0 30917 1 30970
-M 0 30912 3 30905 Ox 
+M 0 30912 3 30905 Ox
 M 0 30912 3 30966
-M 0 30913 1 30905 Troll Grungy 
+M 0 30913 1 30905 Troll Grungy
 H 1 2 5 Hate Gnomes
 M 0 30913 1 30966
 H 1 2 5 Hate Gnomes
-M 0 30914 1 30906 Gnome Scout 
-M 0 30914 1 30914 
+M 0 30914 1 30906 Gnome Scout
+M 0 30914 1 30914
 M 0 30915 1 30907 Framer Troll
 H 1 2 5 Hate Gnomes
-M 0 30915 1 30908 
+M 0 30915 1 30908
 H 1 2 5 Hate Gnomes
 M 0 30915 1 30911
 H 1 2 5 Hate Gnomes
@@ -349,28 +349,28 @@ H 1 2 5 Hate Gnomes
 E 1 30916 9999 19 Club Gnome Bones
 M 0 30928 1 30917 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30928 1 30926 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30928 1 30931 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30928 1 30941 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30928 1 30943 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30928 1 30944 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30928 1 30957 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30928 1 30961 Warg Puppy
 ? 0 3 0 E
-E 1 30938 99999 3 Spiked Collar 
+E 1 30938 99999 3 Spiked Collar
 M 0 30918 1 30920 Troll Sickly
 H 1 2 5 Hate Gnomes
 G 1 30918 9999 Spleen Gnome
@@ -386,7 +386,7 @@ G 1 30918 9999
 M 0 30918 1 30962
 H 1 2 5 Hate Gnomes
 G 1 30918 9999
-M 0 30919 1 30920 Pudgy Troll 
+M 0 30919 1 30920 Pudgy Troll
 H 1 2 5 Hate Gnomes
 ? 0 15 0 G
 G 1 30919 9999 Potion Clumpy Gold
@@ -399,15 +399,15 @@ H 1 2 5 Hate Gnomes
 ? 0 15 0 G
 G 1 30919 9999
 M 0 30920 1 30921 Troll Midget
-H 1 2 5 Hate Gnomes 
+H 1 2 5 Hate Gnomes
 M 0 30921 1 30921 Troll Albino
 H 1 2 5 Hate Gnomes
 ? 0 5 0 E
 E 1 30921 99999 3 Collar Outcast
-M 0 30922 1 30922 Troll Drunk 
+M 0 30922 1 30922 Troll Drunk
 H 1 2 5 Hate Gnomes
 ? 0 35 0 G
-G 1 30920 9999 Bottle Fermented Gnome Juice 
+G 1 30920 9999 Bottle Fermented Gnome Juice
 M 0 30926 1 30926
 H 1 2 5 Hate Gnomes
 ? 0 35 0 G
@@ -420,11 +420,11 @@ M 0 30926 1 30961
 H 1 2 5 Hate Gnomes
 ? 0 35 0 G
 G 1 30920 9999
-M 0 30923 1 30924 Darolict Beedmin 
+M 0 30923 1 30924 Darolict Beedmin
 H 1 2 5 Hate Gnomes
 ? 0 5 0 E
 E 1 30922 9999 1 Ring traitors
-M 0 30963 4 30928 Mouse 
+M 0 30963 4 30928 Mouse
 M 0 30963 3 30933
 M 0 30963 3 30942
 M 0 30963 3 30958
@@ -432,11 +432,11 @@ M 0 30924 1 30929 Zaillion Troll Butcher
 H 1 2 5 Hate Gnomes
 ? 0 5 0 E
 E 1 30923 9999 1 Ring Five Points
-M 0 30925 1 30930 Troll Executioner 
+M 0 30925 1 30930 Troll Executioner
 H 1 2 5 Hate Gnomes
-M 0 30925 1 30942 
+M 0 30925 1 30942
 H 1 2 5 Hate Gnomes
-M 0 30926 1 30930 Gnome Missionary 
+M 0 30926 1 30930 Gnome Missionary
 M 0 30926 1 30942
 M 0 30927 3 30931 Young Troll
 H 1 2 5 Hate Gnomes
@@ -448,17 +448,17 @@ H 1 2 5 Hate Gnomes
 G 1 30937 9999 Gnome Femur
 M 0 30930 1 30944
 H 1 2 5 Hate Gnomes
-G 1 30937 9999 
+G 1 30937 9999
 M 0 30931 1 30933 Troll Peddler
 M 0 30957 1 30933 Llama
 M 0 30957 1 30947
 M 0 30957 1 30956
 M 0 30957 1 30970
-M 0 30932 1 30935 Troll Foreman 
+M 0 30932 1 30935 Troll Foreman
 H 1 2 5 Hate Gnomes
 M 0 30932 1 30947
 H 1 2 5 Hate Gnomes
-M 0 30950 1 30936 Troll female 
+M 0 30950 1 30936 Troll female
 H 1 2 5 Hate Gnomes
 M 0 30950 1 30924
 H 1 2 5 Hate Gnomes
@@ -485,15 +485,15 @@ H 1 2 5 Hate Gnomes
 E 1 30939 9999 18 mirror vanity shield
 M 0 30952 3 30947 Falcon Young
 M 0 30952 3 30954
-M 0 30940 1 30949 Macrove Troll 
+M 0 30940 1 30949 Macrove Troll
 H 1 2 5 Hate Gnomes
 M 0 30941 1 30949 Evilola   Troll
-H 1 2 5 Hate Gnomes 
-M 0 30942 1 30950 Sow Diseased 
+H 1 2 5 Hate Gnomes
+M 0 30942 1 30950 Sow Diseased
 M 0 30942 1 30907
 M 0 30943 1 30950 Ravaerris Troll
 H 1 2 5 Hate Gnomes
-M 0 30944 1 30951 Quimorel Troll 
+M 0 30944 1 30951 Quimorel Troll
 H 1 2 5 Hate Gnomes
 M 0 30945 1 30945 Carpenter Troll
 H 1 2 5 Hate Gnomes
@@ -505,21 +505,21 @@ H 1 2 5 Hate Gnomes
 E 1 30942 9999 10 Glove Stiff Leather
 ? 0 99 0 G
 G 1 431 9999 Donut
-C 1 30947 1 30952 Pigeon Attack 
+C 1 30947 1 30952 Pigeon Attack
 M 0 30948 1 30953 Yllalynn Troll
 H 1 2 5 Hate Gnomes
-M 0 30949 1 30953 Xyrkahn Troll 
+M 0 30949 1 30953 Xyrkahn Troll
 H 1 2 5 Hate Gnomes
-M 0 30951 1 30954 Purhama Troll 
+M 0 30951 1 30954 Purhama Troll
 H 1 2 5 Hate Gnomes
 ? 0 5 0 E
-E 1 30943 9999 3 Collar Gnome Scalps 
-M 0 30953 1 30955 Irielyassa troll nurse 
+E 1 30943 9999 3 Collar Gnome Scalps
+M 0 30953 1 30955 Irielyassa troll nurse
 H 1 2 5 Hate Gnomes
 M 0 30954 1 30955 Fhathana Troll
 H 1 2 5 Hate Gnomes
 ? 0 15 0 G
-G 1 30944 9999 Scroll Scribbled Troll Graffiti 
+G 1 30944 9999 Scroll Scribbled Troll Graffiti
 M 0 30955 1 30956 Zinnaonna Troll
 H 1 2 5 Hate Gnomes
 M 0 30956 1 30956 Nerisstine Troll
@@ -531,9 +531,9 @@ H 1 2 5 Hate Gnomes
 M 0 30960 1 30959 Gnome Bite Marks
 M 0 30961 1 30960 Petlannan troll
 H 1 2 5 Hate Gnomes
-M 0 30962 1 30961 Oolarath Oracle Fire Troll 
+M 0 30962 1 30961 Oolarath Oracle Fire Troll
 H 1 2 5 Hate Gnomes
-M 0 30900 1 30970 Guard Troll 
+M 0 30900 1 30970 Guard Troll
 H 1 2 5 Hate Gnomes
 G 1 30913 9999 Kabob Gnome Eyes
 S

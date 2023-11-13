@@ -3,17 +3,17 @@ Mithros - Obsidian Citadel/Town~
 7212 25 2 1
 
 D 0 7000 1 1	; house door
-D 0 7001 3 1	
+D 0 7001 3 1
 D 0 7001 0 2	; Mine GateA
 D 0 7002 2 1	; kitchen
-D 0 7012 0 1 
+D 0 7012 0 1
 D 0 7003 2 1	; dining hall
 D 0 7013 0 1
 D 0 7004 2 1	; closet
 D 0 7014 0 1
 D 0 7213 3 1	; door to Keep 10749
 D 0 7213 1 1	; door to Lab
-D 0 7005 3 1	
+D 0 7005 3 1
 D 0 7005 8 1	; lab
 D 0 7017 7 1
 D 0 7005 5 1    	; Dsecret: pit (ladder)
@@ -24,7 +24,7 @@ D 0 7007 2 1	; kitchen door
 D 0 7018 0 1
 D 0 7008 0 2	; Mine GateB
 D 0 7008 1 1	; house door
-D 0 7009 3 1	 
+D 0 7009 3 1
 D 0 7010 1 1	; house door
 D 0 7011 3 1
 D 0 7012 2 1	; storage room
@@ -33,11 +33,11 @@ D 0 7013 2 1	; Mizell's cell
 D 0 7024 0 1
 D 0 7014 2 1	; clerics cell
 D 0 7025 0 1
-D 0 7015 6 1	; dsecret to keep 
+D 0 7015 6 1	; dsecret to keep
 D 0 7017 1 1	; dining hall
 D 0 7018 3 1
 D 0 7019 1 1 	; house
-D 0 7020 3 1 
+D 0 7020 3 1
 D 0 7021 1 1	; house
 D 0 7022 3 1
 D 0 7023 9 1	; dsecret between Mordel Ave. and Cathedral
@@ -57,7 +57,7 @@ D 0 7045 0 1
 D 0 7040 2 1	; Bailey Tower
 D 0 7048 0 1
 D 0 7041 2 0 	; Black Dragon Inn
-D 0 7050 0 0	
+D 0 7050 0 0
 D 0 7041 1 0	; Grunting Boar Inn
 D 0 7042 3 0
 D 0 7043 1 0	; Gena's Bakery
@@ -115,7 +115,7 @@ D 0 7110 3 1
 D 0 7109 2 1	; blacksmiths quarters
 D 0 7116 0 1
 D 0 7118 1 1	; Bailey Gate Tower
-D 0 7119 3 1	
+D 0 7119 3 1
 D 0 7119 2 1	; Bailey Gates
 D 0 7046 0 1
 D 0 7120 2 1	; Bailey Gates
@@ -151,7 +151,7 @@ O 0 1212 1 7058 	; Small Wooden Chest - Maid's key
 V 1 2 7053			; Change to key 7053
 ? 1 25 0 P
 P 1 10726 500 1212		; Slipper
-O 0 1212 1 7058 
+O 0 1212 1 7058
 V 1 2 7053
 ? 1 25 0 P
 P 1 10778 500 1212		; Ivory and Gold Brush
@@ -159,31 +159,31 @@ O 0 1212 1 7071 	; Small Wooden Chest - Student's key
 V 1 2 7054			; Change to key 7054
 ? 1 10 0 P
 P 1 814 9999 1212		; Colorful Scroll (color spray)
-O 0 1212 1 7071 
+O 0 1212 1 7071
 V 1 2 7054
 ? 1 10 0 P
 P 1 1301 9999 1212		; Yellow Scroll (magic missile)
-O 0 1212 1 7072 
+O 0 1212 1 7072
 V 1 2 7054
 ? 1 10 0 P
 P 1 1302 9999 1212		; Light Blue Scroll (chill touch)
-O 0 1212 1 7072 
+O 0 1212 1 7072
 V 1 2 7054
 ? 1 10 0 P
 P 1 1304 9999 1212		; Red Scroll (burning hands)
-O 0 1212 1 7099 
+O 0 1212 1 7099
 V 1 2 7054
 ? 1 10 0 P
 P 1 1305 9999 1212		; Slivery Blue Scroll (shocking grasp)
-O 0 1212 1 7099 
+O 0 1212 1 7099
 V 1 2 7054
 ? 1 10 0 P
 P 1 1306 9999 1212		; Beige Scroll (sense life)
-O 0 1212 1 7100 
+O 0 1212 1 7100
 V 1 2 7054
 ? 1 10 0 P
 P 1 10915 9999 1212		; Aquamarine Scroll (water breath)
-O 0 1212 1 7100 
+O 0 1212 1 7100
 V 1 2 7054
 ? 1 10 0 P
 P 1 1303 9999 1212		; White Scroll (identify)
@@ -191,7 +191,7 @@ O 0 1212 1 7075 	; Small Wooden Chest - Peasant's key
 V 1 2 7055			; Change to key 7055
 ? 1 25 0 P
 P 1 10729 500 1212		; Pendant set w/ a Red Stone
-O 0 1212 1 7088 
+O 0 1212 1 7088
 V 1 2 7055
 ? 1 25 0 P
 P 1 10728 500 1212		; Pendant set w/ a Blue Stone
@@ -199,7 +199,7 @@ O 0 1212 1 7116 	; Small Wooden Chest - Blacksmith's key
 V 1 2 7056			; Change to key 7056
 ? 1 15 0 P
 P 1 7012 500 1212		; Fancy Silk Shirt
-O 0 1212 1 7116 
+O 0 1212 1 7116
 V 1 2 7056
 ? 1 15 0 P
 P 1 7007 10 1212		; Blacksmiths Hammer
@@ -214,93 +214,93 @@ P 1 7018 9999 1212		; Chunk of Polished Obsidian
 
 ? 0 20 0 B
 B 1 7020 1 7024        ; Bowl of Human Blood
-? 0 20 0 B  
-B 1 7020 1 7076        
+? 0 20 0 B
+B 1 7020 1 7076
 
 O 0 7020 1 7024 	; Bowl of Human Blood
-O 0 7020 1 7076 
-O 0 7020 1 7066 
-O 0 7020 1 7091 
-O 0 7020 1 7135 
-O 0 7020 1 7136 
-O 0 7020 1 7152 
+O 0 7020 1 7076
+O 0 7020 1 7066
+O 0 7020 1 7091
+O 0 7020 1 7135
+O 0 7020 1 7136
+O 0 7020 1 7152
 O 0 7031 1 7076 		; Corpse of an Innocent Maiden
 O 0 7032 1 7095 	; Inner Bailey Fountain
-O 0 7032 1 7096 
-O 0 7032 1 7106 
-O 0 7032 1 7107 
+O 0 7032 1 7096
+O 0 7032 1 7106
+O 0 7032 1 7107
 O 0 7033 1 7001 	; Lamp Post
-O 0 7033 1 7008 
-O 0 7033 1 7011 
-O 0 7033 1 7019 
-O 0 7033 1 7022 
-O 0 7033 1 7029 
-O 0 7033 1 7031 
-O 0 7033 1 7032 
-O 0 7033 1 7033 
-O 0 7033 1 7034 
-O 0 7033 1 7035 
-O 0 7033 1 7036 
-O 0 7033 1 7038 
-O 0 7033 1 7041 
-O 0 7033 1 7044 
-O 0 7033 1 7045 
-O 0 7033 1 7046 
-O 0 7033 1 7047 
-O 0 7033 1 7048 
-O 0 7033 1 7049 
-O 0 7033 1 7054 
-O 0 7033 1 7055 
-O 0 7033 1 7060 
-O 0 7033 1 7061 
-O 0 7033 1 7067 
-O 0 7033 1 7070 
-O 0 7033 1 7080 
-O 0 7033 1 7081 
-O 0 7033 1 7082 
-O 0 7033 1 7083 
-O 0 7033 1 7093 
-O 0 7033 1 7094 
-O 0 7033 1 7095 
-O 0 7033 1 7096 
-O 0 7033 1 7097 
-O 0 7033 1 7098 
-O 0 7033 1 7105 
-O 0 7033 1 7106 
-O 0 7033 1 7107 
-O 0 7033 1 7108 
-O 0 7033 1 7112 
-O 0 7033 1 7113 
-O 0 7033 1 7114 
-O 0 7033 1 7115 
-O 0 7033 1 7119 
-O 0 7033 1 7120 
+O 0 7033 1 7008
+O 0 7033 1 7011
+O 0 7033 1 7019
+O 0 7033 1 7022
+O 0 7033 1 7029
+O 0 7033 1 7031
+O 0 7033 1 7032
+O 0 7033 1 7033
+O 0 7033 1 7034
+O 0 7033 1 7035
+O 0 7033 1 7036
+O 0 7033 1 7038
+O 0 7033 1 7041
+O 0 7033 1 7044
+O 0 7033 1 7045
+O 0 7033 1 7046
+O 0 7033 1 7047
+O 0 7033 1 7048
+O 0 7033 1 7049
+O 0 7033 1 7054
+O 0 7033 1 7055
+O 0 7033 1 7060
+O 0 7033 1 7061
+O 0 7033 1 7067
+O 0 7033 1 7070
+O 0 7033 1 7080
+O 0 7033 1 7081
+O 0 7033 1 7082
+O 0 7033 1 7083
+O 0 7033 1 7093
+O 0 7033 1 7094
+O 0 7033 1 7095
+O 0 7033 1 7096
+O 0 7033 1 7097
+O 0 7033 1 7098
+O 0 7033 1 7105
+O 0 7033 1 7106
+O 0 7033 1 7107
+O 0 7033 1 7108
+O 0 7033 1 7112
+O 0 7033 1 7113
+O 0 7033 1 7114
+O 0 7033 1 7115
+O 0 7033 1 7119
+O 0 7033 1 7120
 O 0 7034 1 7070 	; Small Garden Fountain
-O 0 7034 1 7093 
-O 0 7034 1 7098 
+O 0 7034 1 7093
+O 0 7034 1 7098
 O 0 7035 1 7073 	; Tome of History
 O 0 7048 1 7067 	; Royal Garden Fountain (very short term bless)
 O 0 7050 1 7025 	; Small Cot
-O 0 7050 2 7058 
-O 0 7050 2 7071 
-O 0 7050 2 7072 
-O 0 7050 1 7075 
-O 0 7050 1 7088 
-O 0 7050 2 7099 
-O 0 7050 2 7100 
-O 0 7050 1 7116 
-O 0 7050 2 7122 
-O 0 7050 1 7123 
-O 0 7050 3 7160 
-O 0 7050 1 7167 
-O 0 7050 1 7168 
+O 0 7050 2 7058
+O 0 7050 2 7071
+O 0 7050 2 7072
+O 0 7050 1 7075
+O 0 7050 1 7088
+O 0 7050 2 7099
+O 0 7050 2 7100
+O 0 7050 1 7116
+O 0 7050 2 7122
+O 0 7050 1 7123
+O 0 7050 3 7160
+O 0 7050 1 7167
+O 0 7050 1 7168
 O 0 7051 1 7087 	; Librarians Desk - Librarian's key
 V 1 2 7062			; Change to key 7062
 ? 1 3 0 P
 P 1 7064 10 7051		; Ancient Parchment Scroll (divination)
 O 0 7052 1 7137 	; Classroom Experimenting Table
 O 0 7063 3 7087  	; Classroom desk/table
-O 0 7063 3 7138 
+O 0 7063 3 7138
 O 0 10757 1 7064 	; Solid Oak Desk - Mercees' Key
 V 1 2 7059			; Change to key 7059
 ? 1 7 0 P
@@ -316,14 +316,14 @@ V 1 2 7057			; Change to key 7057
 O 0 10757 1 7168                       - Obsidian Cutter's key
 V 1 2 7058			; Change to key 7058
 O 0 10758 3 7087 	; Solid Oak Chair
-O 0 10758 1 7109 
-O 0 10758 1 7111 
-O 0 10758 3 7138 
-O 0 10758 3 7146 
+O 0 10758 1 7109
+O 0 10758 1 7111
+O 0 10758 3 7138
+O 0 10758 3 7146
 O 0 10760 1 7064 	; Plush Oak Chair
-O 0 10760 1 7087 
-O 0 10760 1 7090 
-O 0 10760 2 7148 
+O 0 10760 1 7087
+O 0 10760 1 7090
+O 0 10760 2 7148
 O 0 10762 1 7064 	; Solid Oak Wardrobe - Mercees' key
 V 1 2 7059			; Change to key 7059
 ? 1 10 0 P
@@ -335,9 +335,9 @@ P 1 818 9999 10762		; Wooden Staff (cure light)
 O 0 10762 1 7168                           - Obsidian Cutters key
 V 1 2 7058			; Change to key 7058
 O 0 10763 1 7134 	; Solid Oak Bed
-O 0 10763 1 7139 
-O 0 10763 1 7151 
-O 0 10763 1 7156 
+O 0 10763 1 7139
+O 0 10763 1 7151
+O 0 10763 1 7156
 
 O 0 7095 1 7139 	; Mages Glass-Steel Window
 V 1 0 7185	; look into room 7185
@@ -577,20 +577,20 @@ M 0 7016 1 7025      ; Cleric
 E 1 7013 25 4		; Clerical Robe
 ? 0 5 0 E
 E 1 10750 100 3		; Obsidian Unholy Symbol (wearable symbol)
- 
+
 M 0 7016 1 7078 	   ; Cleric
 ? 0 10 0 E
 E 1 7013 25 4		; Clerical Robe
 ? 0 5 0 E
 E 1 10750 100 3		; Obsidian Unholy Symbol (wearable symbol)
- 
+
 ? 0 30 0 M
 M 1 7016 1 7205      ; Cleric
 ? 0 10 0 E
 E 1 7013 25 4		; Clerical Robe
 ? 0 10 0 E
 E 1 10750 100 3		; Obsidian Unholy Symbol (wearable symbol)
- 
+
 M 0 7019 1 7053      ; Merchant
 ? 0 5 0 E
 E 1 10746 100 4 		; Gray Silk Shirt
@@ -972,7 +972,7 @@ E 1 1028 9999 9		; Hard Leather Boot
 E 1 7019 25 19		; Horse Whip
 
 M 0 7039 1 7058      ; Inn Maid
-G 1 7053 3			; Chest Key - Maids	
+G 1 7053 3			; Chest Key - Maids
 ? 0 8 0 E
 E 1 10774 100 4		; Wool Gown
 ? 0 4 0 E

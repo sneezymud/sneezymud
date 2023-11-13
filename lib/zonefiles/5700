@@ -3,7 +3,7 @@ Streak - Aurian Valley~
 5899 50 2 1
 D 0 5704 0 1            South door into tower
 D 0 5705 2 1
-D 0 5706 4 2            Grate into top of tower 
+D 0 5706 4 2            Grate into top of tower
 D 0 5707 5 2
 D 0 5708 2 1            North door into tower
 D 0 5705 0 1
@@ -14,7 +14,7 @@ D 0 5731 8 2
 D 0 5735 1 1            Secret Door onto vista
 D 0 5736 3 1
 D 0 5742 0 1            South gate of Stratos
-D 0 5743 2 1        
+D 0 5743 2 1
 D 0 5743 7 1            Door into Left guardroom at south gate
 D 0 5744 8 1
 D 0 5743 6 1            Door into Right guardroom at south gate
@@ -92,7 +92,7 @@ O 0 5704 1 5706          Cabinet
 P 1 5701 20 5704         Berries
 O 0 5702 1 5732           Table
 O 0 5748 1 5731           Safe
-P 1 813 9999 5748        recall scroll 
+P 1 813 9999 5748        recall scroll
 O 0 5749 1 5731           Bed
 O 0 5700 1 5736          Bush
 O 0 3 1 5750           Fountain
@@ -101,7 +101,7 @@ P 1 7523 9999 5704         paralyze wand
 ? 0 45 0 O
 O 1 5738 1 5844          stratian plate armor
 ? 0 5 0 O
-O 1 5737 1 5844          wearable holy symbol 
+O 1 5737 1 5844          wearable holy symbol
 O 0 3 1 5854           Fountain
 O 0 5751 1 5896           chair
 O 0 5751 1 5897           chair
@@ -183,7 +183,7 @@ E 1 5709 30 19            Pumice Longsword
 ? 0 10 0 E
 E 1 5708 20 3             Pumice Pendant
 M 0 5716 1 5756          Abbot Stratos
-? 0 5 0 E 
+? 0 5 0 E
 E 1 5736 1 19             Blade of Righteous Man
 ? 0 3 0 E
 E 1 5768 4 3              stratian medal of honor
@@ -193,9 +193,9 @@ M 0 5717 1 5770          Dvalien
 E 1 5737 12 3             Wearable white holy symb
 Y 0 15 1                  1% Gleaming Set
 M 0 5718 1 5772          Faeryth McLoebin
-? 0 3 0 E              
+? 0 3 0 E
 E 1 5734 4 19             Dagger with Turquoise handle
-Y 0 28 1                  1% Turquoise Set 
+Y 0 28 1                  1% Turquoise Set
 M 0 5719 1 5774          Yunghai
 Y 0 15 1                  1% Gleaming Set
 M 0 5720 1 5775          Nitellion
@@ -205,7 +205,7 @@ Y 0 15 1                  1% Gleaming Set
 M 0 5721 1 5779          Aradon
 G 1 5773 1                garrison key
 ? 0 3 0 E
-E 1 5735 12 3             Opal affixed to silken rope 
+E 1 5735 12 3             Opal affixed to silken rope
 M 0 5722 1 5790          Commander of Stratian army
 G 1 5843 1                vault key
 ? 0 5 0 E
@@ -327,7 +327,7 @@ E 1 5743 12 17             Dragonscale Bracelet
 ? 0 3 0 E
 E 1 5743 12 16             Dragonscale Bracelet
 M 0 5740 1 5863          Malovhor
-? 0 5 0 E              
+? 0 5 0 E
 E 1 5734 4 19             Dagger with Turquoise handle
 Y 0 28 1			Turquoise Set - 1%
 M 0 5741 1 5865          Tharos

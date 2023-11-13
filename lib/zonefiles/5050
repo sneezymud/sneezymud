@@ -1,21 +1,21 @@
 #5050
 Magdalena - Repo Swamp~
-5099 30 2 1 
+5099 30 2 1
 
 D 0 5050 4 1		Door out of zone
 *D 0 4377 5 1		door command needed for bullywug swamp exit
 
 D 0 5050 2 1		Door out of main room
-D 0 5051 0 1				
+D 0 5051 0 1
 D 0 5066 1 1		Door into Fern Niche
 D 0 5067 3 1
-D 0 5082 2 1		Door into Padalin/Dalia.Pantin		
+D 0 5082 2 1		Door into Padalin/Dalia.Pantin
 D 0 5068 0 1
 D 0 5059 0 1		Door into Fern Niche
 D 0 5060 2 1
 D 0 5060 0 1		Door into Fern Niche
-D 0 5078 2 1 
-D 0 5086 2 1		Door into Undisturbed Niche	
+D 0 5078 2 1
+D 0 5086 2 1		Door into Undisturbed Niche
 D 0 5087 0 1
 D 0 5096 5 1		Door into Under the Rubble
 D 0 5069 4 1

@@ -4,7 +4,7 @@ Ichiban - Gnath Undercroft~
 
 D 0 30975 4 1 # trapdoor to Gnath temple
 D 0 24433 5 1
- 
+
 D 0 30980 2 1 # temple records doors
 D 0 30998 0 1
 D 0 30998 1 1
@@ -13,9 +13,9 @@ D 0 30999 3 1
 D 0 30975 4 1 # exit beneath temple altar
 
 O 0 30988 1 30979  # glass boules for light
-O 0 30988 1 30980 
-O 0 30988 1 30988 
-O 0 30988 1 30981 
+O 0 30988 1 30980
+O 0 30988 1 30988
+O 0 30988 1 30981
 
 O 0 30999 1 30999  # waste can, storage room
 O 0 30998 1 30999  # shelves
@@ -39,7 +39,7 @@ P 1 30997 9999 30998
 P 1 30997 9999 30998
 P 1 30997 9999 30998
 P 1 30997 9999 30998
-O 0 30997 4 30999 
+O 0 30997 4 30999
 
 O 0 30998 2 30998  # shelves, records room
 O 0 30996 1 30998  # table

@@ -2,14 +2,14 @@
 Bump - Dracolich Lair~
 31449 1728 1 1
 
-		
+
 D 0 31403 6 2 A Small Cave
 D 0 31404 9 2 Adjacent to a Dark Pool
 D 0 31420 0 1 Eery Cave
 D 0 31421 2 1 Unholy Chapel
 D 0 31424 2 2 Smoky Hallway
 D 0 31425 0 2 Before a Wrought Iron Gate
-D 0 31425 2 1 Before a Wrought Iron Gate		
+D 0 31425 2 1 Before a Wrought Iron Gate
 D 0 31426 0 1 Entrance to a Graveyard
 D 0 31428 0 1 Graveyard
 D 0 31429 2 1 Martyrium
@@ -19,7 +19,7 @@ D 0 31438 1 1 Before a Fiery Gate
 D 0 31439 3 1 Temple Entrance
 D 0 31440 8 1 Penance Chamber
 D 0 31441 7 1 Bottom of a Large Pool
-D 0 31442 1 1 Before a Large Altar 
+D 0 31442 1 1 Before a Large Altar
 D 0 31443 3 1 Behind the Altar
 D 0 31443 6 1 Behind the Altar
 D 0 31444 9 1 Laboratory
@@ -30,7 +30,7 @@ D 0 31447 7 1 Corpse Storage Room
 
 O 0 31400 1 31400 Fleshy portal
 O 0 31409 1 31408 Orb green
-O 0 31408 1 31410 Mirror Smoky 
+O 0 31408 1 31410 Mirror Smoky
 O 0 31409 1 31411 Orb green
 O 0 31409 1 31422 Orb green
 O 0 31415 1 31414 Pool Lava
@@ -40,8 +40,8 @@ O 0 31425 1 31425 Tree Deadwood
 O 0 31430 1 31429 Pool Dark
 O 0 31444 1 31430 Speculum Cowardice
 O 0 31444 1 31437 Speculum Cowardice
-O 0 31444 1 31444 Speculum Cowardice	
-B 0 31407 1 31406 Shell spindly		
+O 0 31444 1 31444 Speculum Cowardice
+B 0 31407 1 31406 Shell spindly
 M 0 31400 1 31400 Gatekeeper
 *dissects fleshy key 7403*
 M 0 31401 1 31401 Necromancer Fire
@@ -51,25 +51,25 @@ E 1 31401 9999 3 Pendant Volcanic Rock
 ? 0 99 0 G
 G 1 294 9999 Red Pebble
 C 1 31402 1 31401 Imp Lava
-M 0 31403 1 31402 Azazel 
-G 1 31402 9999 Key Teeth	
+M 0 31403 1 31402 Azazel
+G 1 31402 9999 Key Teeth
 ? 0 5 0 E
-E 1 7461 9999 1 circlet lava 
+E 1 7461 9999 1 circlet lava
 ? 0 5 0 E
 E 1 7462 9999 8 boot smoking
-M 0 31404 1 31403 Usha 
+M 0 31404 1 31403 Usha
 ? 0 5 0 E
 E 1 31403 9999 18 Shield Granite Flecks
 ? 0 5 0 E
 E 1 7463 9999 17 bracer granite
-M 0 31405 1 31404 Vrtira 
+M 0 31405 1 31404 Vrtira
 ? 0 5 0 G
-G 1 31404 1 Shard Phylactery 
+G 1 31404 1 Shard Phylactery
 M 0 31406 1 31405 Chartones
 ? 0 5 0 E
 E 1 31406 9999 18 Shield Smoke
 ? 0 5 0 E
-E 1 31405 9999 19 Paddle Smoke		
+E 1 31405 9999 19 Paddle Smoke
 
 M 0 31407 1 31407 Leinth
 M 0 31408 1 31408 Lethan
@@ -113,21 +113,21 @@ E 1 31417 9999 19 Whip Chaos
 M 0 31418 3 31417 Slave
 M 0 31418 3 31418 Slave
 M 0 31419 1 31419 Libbrecht
-? 0 5 0 E 
+? 0 5 0 E
 E 1 31418 9999 4 Shirt snowflake
 M 0 31420 1 31420 Miner
 M 0 31422 1 31421 Sacellum
-? 0 5 0 E 
+? 0 5 0 E
 E 1 31420 9999 4 Suit Dragon Teeth
 M 0 31421 1 31422 Clerk
 ? 0 5 0 E
 E 1 31419 9999 19 Bolo Ebony
 M 0 31423 1 31423 Guardian Cult
 G 1 31423 9999 Key Skull Handled
-M 0 31423 1 31430 Guardian Cult 
-M 0 31423 1 31437 Guardian Cult 
+M 0 31423 1 31430 Guardian Cult
+M 0 31423 1 31437 Guardian Cult
 M 0 31424 1 31424 Lethe
-? 0 5 0 E 
+? 0 5 0 E
 E 1 31424 9999 4 Breastplate Ceremonial
 M 0 31425 1 31425 Caretaker Deadwood
 ? 0 5 0 E
@@ -137,11 +137,11 @@ G 1 31427 9999 Acorn Deadwood
 M 0 31426 1 31426 Marca
 ? 0 5 0 E
 E 1 31428 9999 19 Bone Dracolich
-M 0 31427 1 31427 Harvester 
+M 0 31427 1 31427 Harvester
 M 0 31428 1 31427 Digger Grave
 ? 0 3 0 E
 E 1 31429 9999 5 Mask Grave Digger
-M 0 31427 1 31428 Harvester 
+M 0 31427 1 31428 Harvester
 M 0 31428 1 31428 Digger Grave
 M 0 31428 1 31428 Digger Grave
 ? 0 1 0 E
@@ -207,10 +207,10 @@ E 1 31445 1 19 Sword Bane Unholy
 ? 0 5 0 E
 E 1 31447 9999 4 Vest Dracolich
 ? 0 5 0 E
-E 1 31446 1 3 phylactery unholy 
+E 1 31446 1 3 phylactery unholy
 ? 0 5 0 E
 E 1 31448 9999 15 Kilt Dracolich
-? 0 5 0 E 
+? 0 5 0 E
 E 1 31449 9999 14 Cloak Dracolich
 
 S
