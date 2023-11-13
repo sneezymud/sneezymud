@@ -206,7 +206,7 @@ M 0 8519 1 8534 		Aborigine Hunter
 ? 0 50 0 E
 E 1 8508 99 15			   Loincloth
 ? 0 25 0 G
-? 0 8512 50			   Blow Pipe
+G 1 8512 50			   Blow Pipe
 M 0 8519 1 8500 		Aborigine Hunter
 ? 0 50 0 E
 E 1 8508 99 15			   Loincloth

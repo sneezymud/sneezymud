@@ -9,8 +9,8 @@ D 0 15206 2 1
 D 0 15213 1 1          Metal Door to Lab
 D 0 15238 3 1
 D 0 15239 0 1          Skin Curtain to Shaman Lair
-D 0 15240 2 1
 T 0 15239 0 6 4        Firetrap on Shaman's door
+D 0 15240 2 1
 T 0 15240 2 6 4
 
 O 0 33 1 15240          generic chest in shaman's room

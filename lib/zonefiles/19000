@@ -236,7 +236,6 @@ Z 0 1 100                scurvy sailor's local set
 A 0 19000 19006
 M 0 19005 1 -99          Tequila, the fishing cat
 H 1 2 41                 hates rodents
-* ? 0 100 0 E            flask harness should load 100% of the time
 E 1 19017 9999 14        a tiny harness with a flask holster [back]
 P 1 19026 1 19017        a silver flask engraved with a bloody sunrise
 

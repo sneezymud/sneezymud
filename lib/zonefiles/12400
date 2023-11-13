@@ -237,7 +237,7 @@ G 1 12445 500			; Chunk of Seaweed
 G 1 12447 500			; Black Algae
 
 ? 0 50 0 M
-M 0 12417 1 12993 	; Male Sahaugin Warrior
+M 1 12417 1 12993 	; Male Sahaugin Warrior
 ? 0 4 0 E
 E 1 12430 12 5			; Shark-Skin Helm
 ? 0 5 0 E

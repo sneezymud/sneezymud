@@ -98,7 +98,6 @@ M 0 30703 7 30708      an elite village warrior
 E 1 30701 15 18         equip battle spear on the Elite village warrior (low probability -- good weapon)
 ? 0 2 0 E
 E 1 30733 4 4           Equip the warrior with a tooled Vest (4% chance)
-? 0 4 0 E
 Z 0 1 5                 Load the dynamic Armor Sets on the Mob.
 Z 0 2 5
 Z 0 3 6

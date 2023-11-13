@@ -225,9 +225,9 @@ G 1 3364 9999		          Sweet Bread
 M 0 3320 1 3395 		Slab of Beef
 
 M 0 3321 1 3387 		Cook
+G 1 3321 9    		          Spatula
 ? 0 30 0 E
 E 1 3320 9   4		          Apron
-G 1 3321 9    		          Spatula
 
 M 0 3322 1 3385 		Haggard Waitress - Nikita
 ? 0 15 0 G

@@ -137,9 +137,9 @@ E 1 34102 9999 19                              a sword of elven protection
 Y 0 154 2                                        thin elven chain set
 
 M 0 34094 1 34094                    elven guard
-? 0 2 0 E
-Y 0 154 2                                        thin elven chain set
+? 0 2 0 E                                        thin elven chain set
 E 1 34102 9999 19                              a sword of elven protection
+Y 0 154 2
 
 M 0 34094 1 34106                    an elven guard
 ? 0 2 0 E

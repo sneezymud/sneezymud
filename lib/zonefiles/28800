@@ -61,14 +61,14 @@ E 1 1150 5 18                  runic shield
 M 0 28804 1 28826        Priest
 ? 0 30 0 G
 G 1 510 75			titanium symbol
-? 0 50 0 E
+? 0 50 0 G
 G 1 28809 35          Ruby Potion
 G 1 28809 35
 M 0 28805 1 28830        Worshipper
 M 0 28805 1 28832        Worshipper
 M 0 28801 1 28839        Bishop Seklor
 G 1 28804 1 			Large Ruby Key
-? 0 50 0 E
+? 0 50 0 G
 G 1 510 75			titanium symbol
 ? 0 3 0 E
 E 1 1140 5 5                   runic helm

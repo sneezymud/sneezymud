@@ -48,6 +48,7 @@ M 0 31401 1 31401 Necromancer Fire
 G 1 805 9999 Potion Cyan
 ? 0 5 0 E
 E 1 31401 9999 3 Pendant Volcanic Rock
+? 0 99 0 G
 G 1 294 9999 Red Pebble
 C 1 31402 1 31401 Imp Lava
 M 0 31403 1 31402 Azazel 
@@ -62,7 +63,7 @@ E 1 31403 9999 18 Shield Granite Flecks
 ? 0 5 0 E
 E 1 7463 9999 17 bracer granite
 M 0 31405 1 31404 Vrtira 
-? 0 5 0 E
+? 0 5 0 G
 G 1 31404 1 Shard Phylactery 
 M 0 31406 1 31405 Chartones
 ? 0 5 0 E
@@ -131,7 +132,7 @@ E 1 31424 9999 4 Breastplate Ceremonial
 M 0 31425 1 31425 Caretaker Deadwood
 ? 0 5 0 E
 E 1 31426 9999 19 Staff Deadwood
-? 0 5 0 E
+? 0 5 0 G
 G 1 31427 9999 Acorn Deadwood
 M 0 31426 1 31426 Marca
 ? 0 5 0 E
@@ -202,7 +203,7 @@ M 0 31443 1 31447 Priest Undead
 M 0 31444 1 31448 Priest Undead
 M 0 31445 1 31449 Cadeyrn (16252)
 ? 0 3 0 E
-G 1 31445 1 Sword Bane Unholy
+E 1 31445 1 19 Sword Bane Unholy
 ? 0 5 0 E
 E 1 31447 9999 4 Vest Dracolich
 ? 0 5 0 E

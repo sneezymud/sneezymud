@@ -335,18 +335,18 @@ E 1 8508 9999 15                Loincloth
 G 1 7742 9999                   Arm
 M 0 7719 1 7737 	 Tunnel Guard
 G 1 7704 10			Key Tunnel
-? 0 20 0 G
-E 1 7734 10 19                  Onyx Falchion
 G 1 10029 9999			Packaged Ration
+? 0 20 0 E
+E 1 7734 10 19                  Onyx Falchion
 ? 0 2 0 G
 G 1 157 9999                    Large Whetstone
 ? 0 4 0 E
 E 1 11013 40 17			Mica Band
 M 0 7720 1 7742 	 Gate Guard
 G 1 7705 10			Key Gate
-? 0 20 0 G
-E 1 7734 10 19                  Onyx Falchion
 G 1 10029 9999			Packaged Ration
+? 0 20 0 E
+E 1 7734 10 19                  Onyx Falchion
 ? 0 2 0 G
 G 1 157 9999                    Large Whetstone
 ? 0 4 0 E

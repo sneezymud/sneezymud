@@ -8,7 +8,9 @@ D 0 24726 7 1
 D 0 24741 2 1 East side rushes
 D 0 24744 0 1
 D 0 24745 2 1 Thorns to Mucluck's area
+T 0 24745 2 5 6 slash trap on thorns to Mucluck's
 D 0 24758 0 1
+T 0 24758 0 5 6
 D 0 24761 4 1 Trapdoor up to Mucluck's hut
 D 0 24762 5 1
 *Objects section, load once at boot time
@@ -272,9 +274,6 @@ M 0 24725 1 24717 Mommaluck
 H 1 1 2 hates humans
 ? 0 20 0 G
 G 1 24774 9999
-
-T 0 24745 2 5 6 slash trap on thorns to Mucluck's
-T 0 24758 0 5 6
 
 S
 

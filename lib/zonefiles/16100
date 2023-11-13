@@ -227,59 +227,93 @@ M 0 16135 2 16135      human soldiers
 ? 0 2 0 E
 E 1 14408 9999 19         load pike
 Y 0 8 2                   load set of human studded leather
+
 M 0 16117 1 16100      warhorse
 R 1 16124 1 16100      human knight
-G 1 16120 9999            forged pass scroll
 ? 0 5 0 E
 E 1 303 9999 19           load broad sword
 Y 0 9 3                   load set of chainmail human
-C 0 16128 1 16100      ogre soldiers
+? 0 99 0 G
+G 1 16120 9999            forged pass scroll
+C 1 16128 1 16100      ogre soldiers
 Y 0 55 2                  load set of ogre rawhide
-C 0 16132 1 16100      dwarven soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16132 1 16100      dwarven soldiers
 ? 0 2 0 E
 E 1 314 9999 19           load hand axe
 Y 0 59 2                  load set of dwarven studded leather
-C 0 16136 1 16100      human soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16136 1 16100      human soldiers
 ? 0 5 0 E
 E 1 14408 9999 19         load pike
 Y 0 8 2                   load set of human studded leather
+
 M 0 16115 1 16112      griffin
 R 1 16141 1 16112      elven knight [Mounted]
 ? 0 5 0 E
 E 1 303 9999 19           load broad sword
 Y 0 41 3                  load set of ringmail
-C 0 16128 1 16112      ogre soldiers
+? 0 99 0 G
+G 1 16120 9999            forged pass scroll
+C 1 16128 1 16112      ogre soldiers
 Y 0 55 2                  load set of ogre rawhide
-C 0 16132 1 16112      dwarven soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16132 1 16112      dwarven soldiers
 ? 0 2 0 E
 E 1 314 9999 19           load hand axe
 Y 0 59 2                  load set of dwarven studded leather
-C 0 16136 1 16112      human soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16136 1 16112      human soldiers
 ? 0 2 0 E
 E 1 14408 9999 19         load pike
 Y 0 8 2                   load set of human studded leather
+
 M 0 16120 1 16107      human corporal
-C 0 16128 1 16107      ogre soldiers
+? 0 5 0 E
+E 1 303 9999 19           load broad sword
+Y 0 9 3                   load set of chainmail human
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16128 1 16107      ogre soldiers
 Y 0 55 2                  load set of ogre rawhide
-C 0 16132 1 16107      dwarven soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16132 1 16107      dwarven soldiers
 ? 0 2 0 E
 E 1 314 9999 19           load battle axe
 Y 0 59 2                  load set of dwarven studded leather
-C 0 16136 1 16107      human soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16136 1 16107      human soldiers
 ? 0 2 0 E
 E 1 14408 9999 19         load pike
 Y 0 8 2                   load set of human studded leather
-M 0 16120 1 16115
-C 0 16128 1 16115      ogre soldiers
+
+M 0 16120 1 16115      human corporal
+? 0 5 0 E
+E 1 303 9999 19           load broad sword
+Y 0 9 3                   load set of chainmail human
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16128 1 16115      ogre soldiers
 Y 0 55 2                  load set of ogre rawhide
-C 0 16132 1 16115      dwarven soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16132 1 16115      dwarven soldiers
 ? 0 2 0 E
 E 1 314 9999 19           load battle axe
 Y 0 59 2                  load set of dwarven studded leather
-C 0 16136 1 16115      human soldiers
+? 0 99 0 G
+G 1 11095 9999			  Glass of scotch
+C 1 16136 1 16115      human soldiers
 ? 0 2 0 E
 E 1 14408 9999 19         load pike 
 Y 0 8 2                   load set of human studded leather
+
 M 0 16122 1 16113      highwayman
 M 0 16122 1 16102
 M 0 16122 1 16109

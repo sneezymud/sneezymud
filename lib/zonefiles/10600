@@ -76,8 +76,8 @@ E 1 10631 15 18                     a elven steel stag charm [hold-right]
 E 1 10632 10 19                     a runed sylvan staff [hold-left]
 
 M 0 10607 1 10648              Rivencron-gil
-*? 0 5 0 E
-*E 1 10691 1 19                      Ary'Cor'Keryn - Rulersblade [hold-left]
+? 0 5 0 E
+E 1 10691 1 19                      Ary'Cor'Keryn - Rulersblade [hold-left]
 Y 0 115 2                           sylvan plate set
 
 M 0 10608 1 10669              Fenlannul-gil
@@ -89,13 +89,13 @@ E 1 5737 9999 18                    a titanium holy symbol [hold-right]
 
 M 0 10610 1 10637              Nosnietor-tir
 ? 0 7 0 E
-*E 1 10692 1 19                      Ary'Velahr'Keryn - Warblade [hold-left]
-*Y 0 115 1                           sylvan plate set
+E 1 10692 1 19                      Ary'Velahr'Keryn - Warblade [hold-left]
+Y 0 115 1                           sylvan plate set
 
 M 0 10611 1 10695              Lyenel-tir
 ? 0 7 0 E
-*E 1 10690 1 19                      Ary'Fearn'Keryn - Artblade [hold-left]
-*Y 0 115 1                           sylvan plate set
+E 1 10690 1 19                      Ary'Fearn'Keryn - Artblade [hold-left]
+Y 0 115 1                           sylvan plate set
 
 M 0 10612 30 10646             a member of the House Guard
 Y 0 116 2                           sylvan silk set

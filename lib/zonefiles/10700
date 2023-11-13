@@ -246,7 +246,7 @@ Y 0 29 3			; Obsidian-Plate Set
 
 M 0 10708 1 10752    ; Spirit of the Royal Advisor
 ? 0 3 0 E
-G 1 10751 20   ; Obsidian Staff
+E 1 10751 20   ; Obsidian Staff
 ? 0 7 0 E
 E 1 10708 100 4   ; Obsidian Robe
 
@@ -828,14 +828,14 @@ O 1 10767 1 10819    ; Gray Silk Gown
 O 1 10736 1 10722    ; Small Globe of Light
 
 ? 0 50 0 O
-O 0 10798 1 10747 		; Obsidian Chest (normal)
+O 1 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 6229021	; No-Pick, 95 hp Energy Trap
 V 1 2 -1		; No Key
 ? 0 30 0 P
 P 1 10702 5 10798   ; Runed Obsidian Sword
 
 ? 0 50 0 O
-O 0 10798 1 10747 		; Obsidian Chest (normal)
+O 1 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 6555165	; No-Pick, 100 hp Fire Trap
 V 1 2 10799		; Key 10799
 ? 0 30 0 P
@@ -846,7 +846,7 @@ P 1 10718 10 10798   ; Obsidian Shaft (Arrow)
 P 1 10718 10 10798   ; Obsidian Shaft (Arrow)
 
 ? 0 50 0 O
-O 0 10798 1 10747 		; Obsidian Chest (normal)
+O 1 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 2845		; No-Pick, Teleport Trap
 V 1 2 10800		; Key 10800
 ? 0 30 0 P
@@ -856,7 +856,7 @@ O 0 10789 1 10747    ; Obsidian Chest [obsquest1]
 P 1 10788 1 10789   ; Obsidian Scepter [obsquest1]
 
 ? 0 50 0 O
-O 0 10798 1 10747 		; Obsidian Chest (normal)
+O 1 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 3932701	; 60 hp Blade Trap
 V 1 2 -1		; No Key
 ? 0 30 0 P
@@ -865,14 +865,14 @@ P 1 804 9999 10798	; Platinum Potion
 P 1 823 9999 10798	; Vermilion Potion
 
 ? 0 50 0 O
-O 0 10798 1 10747 		; Obsidian Chest (normal)
+O 1 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 1968159	; No-Pick, 30hp Disease Trap
 V 1 2 10803		; Non-Loading Key 10803, but in DB for Quests
-* ? 0 30 0 P
-* P 1 29992 10 10798	; Youth Potion - Key does not load in game.
+? 0 30 0 P
+P 1 29992 10 10798	; Youth Potion - Key does not load in game.
 
 ? 0 50 0 O
-O 0 10798 1 10747 		; Obsidian Chest (normal)
+O 1 10798 1 10747 		; Obsidian Chest (normal)
 V 1 1 3932701	; 60 hp Blade Trap
 V 1 2 -1		; No Key
 ? 0 30 0 P

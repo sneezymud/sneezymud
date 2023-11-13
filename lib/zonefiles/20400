@@ -109,23 +109,23 @@ A 0 20531 20561
 O 1 20475 5 -99
 
 ? 0 5 0 A
-A 0 20562 20563
+A 1 20562 20563
 O 1 20468 5 -99		Rough Cut Emeralds - (River Quest 2)
 
 ? 0 5 0 A
-A 0 20565 20567
+A 1 20565 20567
 O 1 20468 5 -99
 
 ? 0 5 0 A
-A 0 20569 20581
+A 1 20569 20581
 O 1 20468 5 -99
 
 ? 0 5 0 A
-A 0 20583 20584
+A 1 20583 20584
 O 1 20468 5 -99
 
 ? 0 5 0 A
-A 0 20586 20589
+A 1 20586 20589
 O 1 20468 5 -99
 
 M 0 20400 1 20521		Vazir (River Dragon)
@@ -336,7 +336,7 @@ G 1 20430 9999			Soaked Leather Sachel
 P 1 20469 25 20430              dirty pile of cut amethysts
 
 ? 0 50 0 M
-M 0 20412 2 20563		Bloated Corpse (Merchant)
+M 1 20412 2 20563		Bloated Corpse (Merchant)
 ? 0 5 0 G
 G 1 20430 9999			Soaked Leather Sachel
 P 1 20469 25 20430              dirty pile of cut amethysts
@@ -421,7 +421,7 @@ M 0 20418 1 20586		Shadowy Hawk
 M 0 20419 2 20571		Skitter
 
 ? 0 25 0 M
-M 0 20419 2 20571		Skitter
+M 1 20419 2 20571		Skitter
 
 M 0 20419 1 20500		Skitter
 
@@ -443,16 +443,16 @@ M 0 20420 1 20564		Lost Ice Commander
 M 0 20421 1 20582		Lost Ice Scout
 
 ? 0 25 0 M
-M 0 20421 1 20564		Lost Ice Scout
+M 1 20421 1 20564		Lost Ice Scout
 
 ? 0 25 0 M	
-M 0 20422 1 20585		Arctic Bear "Snow"
+M 1 20422 1 20585		Arctic Bear "Snow"
 
 ? 0 25 0 M 
-M 0 20423 1 20585		Arctic Bear "Klondike"
+M 1 20423 1 20585		Arctic Bear "Klondike"
 
 ? 0 25 0 M
-M 0 20424 1 20597		Snow Beast
+M 1 20424 1 20597		Snow Beast
 
 M 0 20425 1 20597		Adult Penquin
 
@@ -467,10 +467,10 @@ M 0 20426 1 20594		Young Penquin
 M 0 20426 1 20593		Young Penquin
 
 ? 0 25 0 M
-M 0 20427 1 20582		Mountain Cat
+M 1 20427 1 20582		Mountain Cat
 
 ? 0 25 0 M
-M 0 20427 1 20526		Mountain Cat
+M 1 20427 1 20526		Mountain Cat
 
 M 0 20428 1 20406		Golden Eagle
 
@@ -501,7 +501,7 @@ G 1 20449 9999				Hunting Net
 M 0 20430 1 20417		Wild Sea Lion
 
 ? 0 25 0 M
-M 0 20430 2 20417		Wild Sea Lion
+M 1 20430 2 20417		Wild Sea Lion
 
 M 0 20430 1 20404		Wild Sea Lion
 
@@ -512,77 +512,77 @@ M 0 20430 1 20413		Wild Sea Lion
 M 0 20431 1 20405		Large Fish
 
 ? 0 25 0 M
-M 0 20431 2 20405		Large Fish
+M 1 20431 2 20405		Large Fish
 
 M 0 20431 1 20410		Large Fish
 
 ? 0 25 0 M
-M 0 20431 2 20410		Large Fish
+M 1 20431 2 20410		Large Fish
 
 M 0 20431 1 20416		Large Fish
 
 ? 0 25 0 M
-M 0 20431 2 20416		Large Fish
+M 1 20431 2 20416		Large Fish
 
 M 0 20431 1 20422		Large Fish
 
 ? 0 25 0 M
-M 0 20431 2 20422		Large Fish
+M 1 20431 2 20422		Large Fish
 
 M 0 20431 1 20431		Large Fish
 
 ? 0 25 0 M
-M 0 20431 2 20431		Large Fish
+M 1 20431 2 20431		Large Fish
 
 M 0 20432 1 20407		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20407		Small Fish
+M 1 20432 2 20407		Small Fish
 
 M 0 20432 1 20408		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20408		Small Fish
+M 1 20432 2 20408		Small Fish
 
 M 0 20432 1 20412		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20412		Small Fish
+M 1 20432 2 20412		Small Fish
 
 M 0 20432 1 20414		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20414		Small Fish
+M 1 20432 2 20414		Small Fish
 
 M 0 20432 1 20418		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20418		Small Fish
+M 1 20432 2 20418		Small Fish
 
 M 0 20432 1 20420		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20420		Small Fish
+M 1 20432 2 20420		Small Fish
 
 M 0 20432 1 20433		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20433		Small Fish
+M 1 20432 2 20433		Small Fish
 
 M 0 20432 1 20424		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20424		Small Fish
+M 1 20432 2 20424		Small Fish
 
 M 0 20432 1 20429		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20429		Small Fish
+M 1 20432 2 20429		Small Fish
 
 M 0 20432 1 20425		Small Fish
 
 ? 0 25 0 M
-M 0 20432 2 20425		Small Fish
+M 1 20432 2 20425		Small Fish
 
 M 0 20433 1 20529		Outpost Commander
 G 1 20401 9999				Key to Cavern Gates
@@ -603,26 +603,26 @@ M 0 20434 1 20530		Outpost Guard
 Y 0 60 1				1% Chance on Obsidian Scale set
 
 ? 0 10 0 M
-M 0 20435 1 20550		Banshee
+M 1 20435 1 20550		Banshee
 
 M 0 20436 1 20534		Rock Worm
 
 M 0 20436 1 20536		Rock Worm
 
 ? 0 25 0 M
-M 0 20437 1 20557		Souless Shadow
+M 1 20437 1 20557		Souless Shadow
 
 ? 0 25 0 M
-M 0 20437 1 20559		Souless Shadow
+M 1 20437 1 20559		Souless Shadow
 
 ? 0 25 0 M
-M 0 20437 1 20561		Souless Shadow
+M 1 20437 1 20561		Souless Shadow
 
 ? 0 50 0 M
-M 0 20438 1 20554		Minor Earth Elemental
+M 1 20438 1 20554		Minor Earth Elemental
 
 ? 0 50 0 M
-M 0 20438 1 20548		Minor Earth Elemental
+M 1 20438 1 20548		Minor Earth Elemental
 
 M 0 20439 1 20556		Citadel Smuggler
 ? 0 2 0 E
@@ -668,7 +668,7 @@ M 0 20445 1 20459		Slimy Troll (male)
 E 1 20458 50 19				Broken Spear
 
 ? 0 25 0 M
-M 0 20445 2 20459		Slimy Troll (male)
+M 1 20445 2 20459		Slimy Troll (male)
 ? 0 5 0 E
 E 1 20458 50 19				Broken Spear
 

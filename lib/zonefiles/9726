@@ -48,9 +48,9 @@ O 1 9747 1 9785        A Huge Opal
 O 1 9751 1 9785         A pile of coins (30000)
 
 ? 0 5 0 O
-O 0 815 1 9795          A Deep Blue Scroll
+O 1 815 1 9795          A Deep Blue Scroll
 ? 0 5 0 O
-O 0 9757 1 9795         A pile of coins (30000)
+O 1 9757 1 9795         A pile of coins (30000)
 
 ? 0 7 0 O
 O 1 9735 1 9795         A skull Amulet 
@@ -156,6 +156,7 @@ E 1 9729 6 1              Embroidered Band
 E 1 9731 4 14             Embroidered Cloak 
 M 0 9711 1 9763         Aybuk, the High Cleric
 G 1 9755 20               Effervescent Potion (great haste)
+G 1 9752 20		Emerald Holy Symbol
 ? 0 5 0 E
 E 1 9732 20 19            Emerald Mace
 ? 0 3 0 E
@@ -164,7 +165,6 @@ E 1 9717 40 2             Small Emerald Ring
 E 1 9717 40 1             Small Emerald Ring
 ? 0 3 0 E
 E 1 9719 10 14            Emerald Cloak
-G 1 9752 20		Emerald Holy Symbol
 M 0 9712 1 9765         Naidasa, the priestess
 G 1 9763 20               Granite colored potion (stone-skin)
 G 1 9752 20		Emerald Holy Symbol

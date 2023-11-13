@@ -19,9 +19,9 @@ E 1 31001 9999 4 vest oilskin 2%
 E 1 31002 9999 6 pants oilskin 2%
 ? 0 2 0 E
 E 1 31003 9999 5 hat oilskin 2%
-? 0 10 0 E
+? 0 10 0 G
 G 1 31004 9999 grenade 10%
-? 0 100 0 E
+? 0 100 0 G
 G 1 31005 9999 exploded fish bits 100%
 
 M 0 31002 1 31024 traveler dusty
