@@ -57,15 +57,15 @@ O 0 521 1 509 		potter's wheel
 O 0 522 1 503 	silvery cauldron
 O 0 523 2 528 	meditation pillow
 O 0 524 2 505 	school desk
-O 0 524 2 509 
-O 0 524 2 511 
-O 0 524 2 519 
-O 0 524 1 525 
-O 0 524 6 533 
-O 0 524 2 535 
-O 0 524 2 537 
-O 0 524 6 538 
-O 0 524 4 547 
+O 0 524 2 509
+O 0 524 2 511
+O 0 524 2 519
+O 0 524 1 525
+O 0 524 6 533
+O 0 524 2 535
+O 0 524 2 537
+O 0 524 6 538
+O 0 524 4 547
 O 0 525 1 530 	comfortable chair
 O 0 526 1 503 	statue of gold chipmunk
 O 0 527 1 504 	statue of stone squirrel
@@ -101,11 +101,11 @@ M 0 501 1 533
 M 0 501 1 542
 G 1 372 20
 M 0 505 1 512		grimy janitor
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 505 1 515
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 505 1 545
-G 1 150 9999                    ball pien hammer (smythe tool)   
+G 1 150 9999                    ball pien hammer (smythe tool)
 M 0 506 1 540		Head Librarian
 M 0 507 1 500		lab assistant
 M 0 507 1 503
@@ -127,7 +127,7 @@ M 0 514 1 505		Pyros fire dean
 M 0 515 1 511		Hydros water dean
 M 0 516 1 539		library assistant
 M 0 517 1 507		mage applicant
-M 0 517 1 524	
+M 0 517 1 524
 M 0 517 2 524
 M 0 518 1 531		mage technician
 M 0 518 1 538

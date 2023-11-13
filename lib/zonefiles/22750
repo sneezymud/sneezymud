@@ -109,7 +109,7 @@ E 1 22762 9999 8 		  riding boot
 G 1 22430 9999
 K 1 22761 1 22750 	STURDY STEED
 ? 0 5 0 E
-E 1 22761 9999 14 	  ornate saddle 
+E 1 22761 9999 14 	  ornate saddle
 M 0 22758 1 22755
 ? 0 4 0 E
 E 1 22758 9999 14 	  Brightmoon cape
@@ -121,7 +121,7 @@ E 1 22762 9999 8 		  riding boot
 G 1 22430 9999
 K 1 22761 1 22755 	STURDY STEED
 ? 0 5 0 E
-E 1 22761 9999 14 	  ornate saddle 
+E 1 22761 9999 14 	  ornate saddle
 M 0 22758 1 22759
 ? 0 4 0 E
 E 1 22758 9999 14 	  Brightmoon cape
@@ -133,7 +133,7 @@ E 1 22762 9999 8 		  riding boot
 G 1 22430 9999
 K 1 22761 1 22759 	STURDY STEED
 ? 0 5 0 E
-E 1 22761 9999 14 	  ornate saddle 
+E 1 22761 9999 14 	  ornate saddle
 M 0 22758 1 22765
 ? 0 4 0 E
 E 1 22758 9999 14 	  Brightmoon cape
@@ -145,7 +145,7 @@ E 1 22762 9999 8 		  riding boot
 G 1 22430 9999
 K 1 22761 1 22765 	STURDY STEED
 ? 0 5 0 E
-E 1 22761 9999 14 	  ornate saddle 
+E 1 22761 9999 14 	  ornate saddle
 M 0 22758 1 22770
 ? 0 4 0 E
 E 1 22758 9999 14 	  Brightmoon cape
@@ -157,7 +157,7 @@ E 1 22762 9999 8 		  riding boot
 G 1 22430 9999
 K 1 22761 1 22770 	STURDY STEED
 ? 0 5 0 E
-E 1 22761 9999 14 	  ornate saddle 
+E 1 22761 9999 14 	  ornate saddle
 M 0 22759 1 22752 	HUMAN BRIGHTMOON CITIZEN MALE
 ? 0 2 0 E
 E 1 300 9999 19 	  simple long sword

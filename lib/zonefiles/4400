@@ -13,7 +13,7 @@ Y 0 8 3                   3% chance of Studded set
 A 0 4401 4416
 M 0 4402 1 -99		Random load of road night patrolman
 ? 0 5 0 E
-E 1 300 100 19            chance of long sword       
+E 1 300 100 19            chance of long sword
 Y 0 8 5                   5% chance of Studded set
 
 A 0 4401 4416
@@ -28,7 +28,7 @@ M 0 4406 1 -99          Random load of a groundhog
 A 0 4401 4416
 M 0 4408 1 -99          Random load of angry ram
 
-A 0 4401 4416 
+A 0 4401 4416
 M 0 4407 1 -99          Random load of fallow deer
 
 *Northwest Quadrant
@@ -89,7 +89,7 @@ M 0 4403 1 -99          Random load of Goblin Scout (nocturnal)
 ? 0 10 0 E
 E 1 341 9999 19           Dagger
 
-A 0 4435 4450  
+A 0 4435 4450
 M 0 4403 1 -99          Random load of Goblin Scout (nocturnal)
 ? 0 10 0 E
 E 1 341 9999 19           Dagger
@@ -117,12 +117,12 @@ M 0 4400 1 -99          Random load of small crow
 A 0 4452 4467
 M 0 4406 1 -99          Random load of a groundhog
 
-A 0 4452 4467  
+A 0 4452 4467
 M 0 4404 1 -99          Random load of Drow Scout (nocturnal)
 ? 0 10 0 E
 E 1 306 9999 19           Runed Dagger
 
-A 0 4452 4467  
+A 0 4452 4467
 M 0 4409 1 -99          Random load of Kobold Scout (nocturnal)
 ? 0 10 0 E
 E 1 341 9999 19           Dagger

@@ -95,7 +95,7 @@ Y 0 80 1                1% chance of wide leather set
 A 0 20887 20888
 M 0 20882 1 -99       Young Teral (earth elemental)
 
-M 0 20883 1 20882     Tirmas 
+M 0 20883 1 20882     Tirmas
 ? 0 25 0 G
 G 1 20888 9999          hard tack ration
 ? 0 5 0 E
@@ -108,7 +108,7 @@ G 1 20424 9999 			Large Boulder
 A 0 20889 20896
 M 0 20885 1 -99       Scavenger Beasts
 
-A 0 20889 20896 
+A 0 20889 20896
 M 0 20886 1 -99       Shadow Beast (wolf)
 
 A 0 20875 20886

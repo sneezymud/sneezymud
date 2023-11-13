@@ -128,13 +128,13 @@ D 0 1347   1    1 ; Ylorin's Weapons Sharpening
 D 0 1347   8    1 ; ""
 D 0 1347   2    1 ; ""
 D 0 1349   1    1 ; Small Chapel
-D 0 1348   3    1 ; 
+D 0 1348   3    1 ;
 D 0 1350   2    1 ; Infirmary
-D 0 1337   0    1 ; 
+D 0 1337   0    1 ;
 D 0 1360   7    1 ; Sacristy
-D 0 1361   8    1 ; 
+D 0 1361   8    1 ;
 D 0 1360   9    1 ; Fazoul
-D 0 1394   6    1 ; 
+D 0 1394   6    1 ;
 D 0 1362   0    1 ; Hourne's Fine Armours
 D 0 1362   6    1 ; ""
 D 0 1362   1    1 ; ""
@@ -368,7 +368,7 @@ O 0 1201  1 1286 ; ""
 O 0 1201  1 1287 ; ""
 O 0 1298 1 1298  ; Portal : Post Office & Bulliten Boards
 O 0 1299 1 1299  ; Portal : City Dump
-O 0 1341 1 1340  ; Cell Window 
+O 0 1341 1 1340  ; Cell Window
 O 0 1342   1 1340 ; Cell Window
 O 0 1343   1 1340 ; Cell Window
 O 0 1385   1 1385 ; Portal : Portal Room

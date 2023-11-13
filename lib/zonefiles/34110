@@ -25,25 +25,25 @@ D 0 34156 2 1
 
 O 0 34111 1 34111  # window between road and pintallow's kitchen
 V 1 0 34163
-O 0 34163 1 34163 
+O 0 34163 1 34163
 V 1 0 34111
 
 O 0 34160 1 34160  # window between road and pintallow's sitting room
 V 1 0 34162
-O 0 34161 1 34162 
+O 0 34161 1 34162
 V 1 0 34160
 
-O 0 34160 1 34164  # window in pintallow's bedroom onto picnic spot 
+O 0 34160 1 34164  # window in pintallow's bedroom onto picnic spot
 V 1 0 34174
 
 O 0 33663 1 34187  # window between tobaccanist's kitchen and patio
 V 1 0 34180
-O 0 33662 1 34180 
+O 0 33662 1 34180
 V 1 0 34187
 
 O 0 34160 1 34186  # window between road and tobaccanist's burrow
 V 1 0 34185
-O 0 34161 1 34185 
+O 0 34161 1 34185
 V 1 0 34186
 
 O 0 34160 1 34170  # window in dockmaster's office looking onto dock
@@ -86,15 +86,15 @@ V 1 2 17
 
 O 0 34200 1 34189  # hogshead, mead
 V 1 2 15
-O 0 34200 1 34189 
+O 0 34200 1 34189
 V 1 2 15
 
 
 O 0 34167 2 34167  # crates, stashroom
-O 0 34167 2 34169 
+O 0 34167 2 34169
 
 O 0 34168 2 34168  # trunks, stashroom
-O 0 34168 2 34189 
+O 0 34168 2 34189
 
 X 1 14 34120 # shoulder pads, road sentry
 X 1 5 34121 # basinet
@@ -156,15 +156,15 @@ M 0 34175 1 34175 # owl
 
 A 0 34190 34239 # toads
 M 0 34191 10 -99
-A 0 34190 34239 
+A 0 34190 34239
 M 0 34191 10 -99
-A 0 34190 34239 
+A 0 34190 34239
 M 0 34191 10 -99
-A 0 34190 34239 
+A 0 34190 34239
 M 0 34191 10 -99
-A 0 34190 34239 
+A 0 34190 34239
 M 0 34191 10 -99
-A 0 34190 34239 
+A 0 34190 34239
 M 0 34191 10 -99
 
 A 0 34197 34239 # angry snakes
@@ -198,7 +198,7 @@ M 0 34179 2 -99
 A 0 34110 34120
 M 0 34179 2 -99
 
-A 0 34120 34159 # plump goose 
+A 0 34120 34159 # plump goose
 M 0 34116 6 -99
 A 0 34120 34159
 M 0 34116 6 -99

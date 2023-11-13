@@ -6,7 +6,7 @@ D 0 6115 3 2  pantathian altar
 D 0 6118 1 2
 D 0 6119 3 1  panels to secret lake stairs
 D 0 6162 1 1
-D 0 6163 0 1  
+D 0 6163 0 1
 D 0 6183 2 1
 D 0 6122 1 2  ancient grotto
 D 0 6125 3 2
@@ -46,9 +46,9 @@ O 0 6131 1 6117          alcove
 O 0 6131 1 6125          kinslayer
 O 0 6131 2 6128          stone chamber
 O 0 6131 2 6129          commons
-O 0 6131 2 6130          
+O 0 6131 2 6130
 O 0 6131 1 6131          dwelling
-O 0 6131 1 6132 
+O 0 6131 1 6132
 O 0 6131 2 6133          dining hall
 O 0 6131 1 6134          kitchen
 O 0 6131 1 6144          wizard's workshop
@@ -59,7 +59,7 @@ O 0 6131 2 6148          throne
 O 0 6131 1 6149          prince's quarters
 O 0 6131 1 6150          library
 O 0 6131 1 6156          wizard's lair
-O 0 6136 1 6158 
+O 0 6136 1 6158
 
 M 0 6100 1 6112         pantathian guard
 G 1 1213 9999
@@ -171,7 +171,7 @@ E 1 6111 200 4             polished metal breastplate
 ? 0 3 0 E
 E 1 6109 200 15            ivory belt
 ? 0 5 0 E
-E 1 6118 20 19             ivory headed spear 
+E 1 6118 20 19             ivory headed spear
 Y 0 41 3                   Ringmail load
 
 M 0 6109 1 6125        kinslayer
@@ -247,36 +247,36 @@ E 1 6114 20 18             stone knife
 A 0 6181 6194
 M 0 6123 1 -99          young guardian serpent
 A 0 6181 6194
-M 0 6123 1 -99          
+M 0 6123 1 -99
 
 A 0 6195 6198
 M 0 6124 1 -99          pantathian monk scout
 Y 0 53 1                   Flowwhite Set
 A 0 6162 6163
 M 0 6124 1 -99
-Y 0 53 1                   
+Y 0 53 1
 A 0 6119 6124
 M 0 6124 1 -99
-Y 0 53 1                   
+Y 0 53 1
 A 0 6119 6124
 M 0 6124 1 -99
-Y 0 53 1                   
+Y 0 53 1
 
 A 0 6181 6194
 M 0 6125 2 -99          large illuminous fish
 A 0 6181 6194
-M 0 6125 2 -99          
+M 0 6125 2 -99
 A 0 6181 6194
-M 0 6125 2 -99          
+M 0 6125 2 -99
 A 0 6181 6194
-M 0 6125 2 -99          
+M 0 6125 2 -99
 
 A 0 6181 6194
 M 0 6126 2 -99          blood-red fish
 A 0 6181 6194
-M 0 6126 2 -99          
+M 0 6126 2 -99
 A 0 6181 6194
-M 0 6126 2 -99          
+M 0 6126 2 -99
 
 A 0 6196 6197
 M 0 914 1 -99           doppleganger

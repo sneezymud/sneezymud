@@ -5,12 +5,12 @@ Albria - Ruins of a Tower~
 D 0 27304 2 1     Pantry
 D 0 27305 0 1
 D 0 27304 3 1     Closet - 1st floor
-D 0 27320 1 1   
+D 0 27320 1 1
 D 0 27305 5 1     Secret door
 D 0 27306 4 1
 D 0 27306 0 1     Rubble Secret - (Dungeon  D 0 27277 2 1 -Colin's zone)
 D 0 27307 2 1     Study Door
-D 0 27308 0 1 
+D 0 27308 0 1
 D 0 27314 2 1     Storage Room 1st floor
 D 0 27315 0 1
 D 0 27321 1 1     Storage Room 2nd floor
@@ -18,13 +18,13 @@ D 0 27323 3 1
 D 0 27322 1 1     Closet - 2nd floor
 D 0 27326 3 1
 D 0 27323 2 1     End of a Long Hall 2nd floor
-D 0 27324 0 1   
+D 0 27324 0 1
 D 0 27325 2 1     Student Dorm
 D 0 27326 0 1
 D 0 27326 2 1     Workroom - west
 D 0 27327 0 1
 D 0 27329 2 1     Student Dorm
-D 0 27330 1 1     
+D 0 27330 1 1
 D 0 27330 1 1     Workroom - east
 D 0 27333 3 1
 D 0 27331 2 1     Long Hall - 2nd floor
@@ -36,90 +36,90 @@ D 0 27337 3 1
 D 0 27338 3 1     Supply Room
 D 0 27340 1 1
 D 0 27339 2 1     Sleeping Room
-D 0 27340 0 1   
+D 0 27340 0 1
 D 0 27342 2 1     Hallway 3rd Floor
 D 0 27343 0 1
 D 0 27344 2 1     Sleeping Chamber
-D 0 27345 0 1 
+D 0 27345 0 1
 D 0 27345 2 1     End of a Hall - 3rd floor
 D 0 27346 0 1
-D 0 27347 1 2     Laboratory 
+D 0 27347 1 2     Laboratory
 D 0 27348 3 2
 D 0 27348 2 1     Library
 D 0 27349 0 1
 O 0 27301 1 27303      fireplaces
-O 0 27301 1 27309 
-O 0 27301 1 27310 
-O 0 27301 1 27313 
-O 0 27301 1 27315 
-O 0 27301 1 27318 
-O 0 27301 1 27344 
+O 0 27301 1 27309
+O 0 27301 1 27310
+O 0 27301 1 27313
+O 0 27301 1 27315
+O 0 27301 1 27318
+O 0 27301 1 27344
 O 0 27302 4 27324      fire
-O 0 27302 1 27340 
+O 0 27302 1 27340
 O 0 27303 15 27314      bedding - bundle of rags - gnolls
-O 0 27304 1 27319      iron-bed frame 
-O 0 27304 1 27329 
+O 0 27304 1 27319      iron-bed frame
+O 0 27304 1 27329
 O 0 27309 1 27305      crate - broken (out of order so it loads first)
 O 0 27305 1 27319      crate - whole  (works with proc for secret door)
 O 0 27305 1 27338      crate - whole (normal)
-O 0 27305 1 27340 
-O 0 27305 1 27346 
+O 0 27305 1 27340
+O 0 27305 1 27346
 O 0 27306 1 27310      big black pot
-O 0 27306 1 27313 
-O 0 27306 6 27324 
+O 0 27306 1 27313
+O 0 27306 6 27324
 O 0 27307 6 27307      broken chairs
-O 0 27307 5 27326 
-O 0 27307 7 27330 
+O 0 27307 5 27326
+O 0 27307 7 27330
 O 0 27308 1 27306      wine rack
 O 0 27309 1 27338      broken crate
 O 0 27310 1 27305      shelves - broken
-O 0 27310 1 27321 
-O 0 27310 1 27322 
-O 0 27310 1 27328 
-O 0 27310 1 27346 
+O 0 27310 1 27321
+O 0 27310 1 27322
+O 0 27310 1 27328
+O 0 27310 1 27346
 O 0 27311 1 27334      torch
 O 0 27312 1 27306      broken pottery/glass
-O 0 27312 1 27322 
-O 0 27312 1 27326 
-O 0 27312 1 27327 
-O 0 27312 1 27328 
-O 0 27312 1 27330 
+O 0 27312 1 27322
+O 0 27312 1 27326
+O 0 27312 1 27327
+O 0 27312 1 27328
+O 0 27312 1 27330
 O 0 27313 1 27323      stacked barrels
-O 0 27313 1 27324 
-O 0 27313 1 27327 
-O 0 27313 1 27340 
+O 0 27313 1 27324
+O 0 27313 1 27327
+O 0 27313 1 27340
 O 0 27314 3 27304      trestle table
-O 0 27314 3 27309 
+O 0 27314 3 27309
 O 0 27315 1 27339      weapon rack
 O 0 27316 1 27343      bookshelf
-O 0 27316 1 27348 
+O 0 27316 1 27348
 O 0 27317 7 27322      pallet of bright colors - hobgoblins
-O 0 27317 5 27337 
-O 0 27317 12 27343 
-O 0 27317 8 27344 
-O 0 27317 11 27346 
+O 0 27317 5 27337
+O 0 27317 12 27343
+O 0 27317 8 27344
+O 0 27317 11 27346
 O 0 15300 1 27326      crude bookshelf
-O 0 15300 1 27330 
-O 0 15300 1 27343 
-O 0 15300 1 27348 
+O 0 15300 1 27330
+O 0 15300 1 27343
+O 0 15300 1 27348
 O 0 27320 1 27307      table
 O 0 27321 1 27320      hole - looks into (Colin's zone - dungeon room 27276)
 O 0 27322 1 27328      scarred worktable
-O 0 27322 1 27326 
-O 0 27322 1 27330 
+O 0 27322 1 27326
+O 0 27322 1 27330
 O 0 27324 1 27339      pile of dirty armor
 O 0 27325 1 27319      altar
 O 0 27327 1 27326      moldy book
-O 0 27327 1 27329 
-O 0 27327 1 27330 
-O 0 27327 1 27347 
-O 0 27327 1 27348 
+O 0 27327 1 27329
+O 0 27327 1 27330
+O 0 27327 1 27347
+O 0 27327 1 27348
 O 0 27328 2 27343      moldy pages
-O 0 27328 2 27348 
+O 0 27328 2 27348
 O 0 27331 1 27342      tapestry
 O 0 27332 2 27343      ripped chairs
 O 0 27333 1 27339      pile of broken spears
-O 0 27333 1 27345 
+O 0 27333 1 27345
 O 0 27337 1 27340      grill
 P 1 27330 5 27337        meat on grill
 P 1 27330 5 27337
@@ -139,7 +139,7 @@ M 0 27306 1 27302        gnoll boy
 ? 0 2 0 E
 E 1 27339 150 3           collar
 M 0 27307 1 27302        gnoll girl
-M 0 27307 2 27311        
+M 0 27307 2 27311
 M 0 27307 2 27311
 M 0 27308 1 27303        gnoll female
 M 0 27308 2 27314        gnoll female
@@ -148,7 +148,7 @@ M 0 27308 2 27314        gnoll female
 E 1 27339 150 3           collar
 M 0 27308 1 27320        gnoll female
 M 0 27310 1 27300        gnoll warrior
-M 0 27310 1 27301 
+M 0 27310 1 27301
 M 0 27310 1 27308
 ? 0 20 0 E
 E 1 27349 150 19
@@ -193,7 +193,7 @@ M 0 27317 2 27343
 M 0 27317 2 27343
 M 0 27319 1 27327        hobgoblin male
 M 0 27320 1 27321        burly hobgoblin warrior
-M 0 27320 1 27343        
+M 0 27320 1 27343
 M 0 27320 1 27341        burly hobgoblin warrior
 ? 0 1 0 E
 E 1 27338 150 5           helmet
@@ -210,22 +210,22 @@ M 0 27321 1 27321        hobgoblin female
 M 0 27321 2 27340
 M 0 27321 2 27340
 ? 0 1 0 E
-E 1 27338 150 5           helmet 
+E 1 27338 150 5           helmet
 M 0 27321 4 27344        hobgoblin female
 M 0 27321 4 27344
-M 0 27321 4 27344        
+M 0 27321 4 27344
 ? 0 1 0 E
 E 1 27341 150 14          cloak
 M 0 27321 4 27344        hobgoblin female
 M 0 27321 2 27346
-M 0 27321 2 27346        
+M 0 27321 2 27346
 ? 0 1 0 E
 E 1 27339 150 3           collar
 M 0 27321 2 27323        hobgoblin female
 ? 0 1 0 E
 E 1 27340 150 4           chestplate
 M 0 27321 2 27323        hobgoblin female
-M 0 27321 2 27337        
+M 0 27321 2 27337
 ? 0 1 0 E
 E 1 27339 150 3           collar
 M 0 27321 2 27337        hobgoblin female
@@ -264,7 +264,7 @@ M 0 27325 3 27345
 M 0 27326 1 27344       tired hobgoblin
 M 0 27326 2 27345
 M 0 27326 2 27345
-M 0 27326 2 27329       
+M 0 27326 2 27329
 ? 0 1 0 E
 E 1 27341 150 14          cloak
 M 0 27326 2 27329       tired hobgoblin

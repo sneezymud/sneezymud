@@ -11,7 +11,7 @@ D 0 28945 0 1
 D 0 28945 9 2 Adjoining bedroom door
 D 0 28951 6 2
 D 0 28951 3 1 Tidy Room entrance door
-D 0 28950 1 1 
+D 0 28950 1 1
 D 0 28962 2 1 Chicken coop door
 D 0 28967 0 1
 D 0 28962 3 1 Door house entrance
@@ -42,7 +42,7 @@ D 0 28904 1 1 ruined door kitchen
 D 0 28905 3 1
 
 O 0 28943 2 28901  Pallet bed
-O 0 28943 2 28902 
+O 0 28943 2 28902
 O 0 28901 1 28903  Tent Entrance
 O 0 28937 1 28904  Cookstove blood
 P 1 28953 9999 28937 Cookstove fuels
@@ -50,13 +50,13 @@ P 1 28953 9999 28937
 P 1 28953 9999 28937
 O 0 28944 1 28906  woodpile
 O 0 28921 1 28909  Large rock
-O 0 28921 1 28920 
-O 0 28921 1 28944 
+O 0 28921 1 28920
+O 0 28921 1 28944
 O 0 28945 1 28926  mound wool bed
 O 0 28941 1 28945  small bed
-O 0 28941 1 28965 
+O 0 28941 1 28965
 O 0 28942 1 28951  large bed
-O 0 28942 1 28960 
+O 0 28942 1 28960
 O 0 28912 1 28954  scraps bag
 O 0 28911 1 28956  large well
 B 0 28917 3 28956 red rose
@@ -71,7 +71,7 @@ O 0 28951 1 28961  couch
 O 0 28913 1 28951  cookstove
 P 1 28953 9999 28913 cookstove fuels
 P 1 28953 9999 28913
-O 0 28913 1 28966 
+O 0 28913 1 28966
 P 1 28953 9999 28913 cookstove fuels
 P 1 28953 9999 28913
 P 1 28953 9999 28913
@@ -79,7 +79,7 @@ O 0 28952 1 28966  kitchen table
 O 0 28904 1 28969  bloody head
 O 0 28903 1 28969  Destroyed bed
 O 0 28905 1 28970  destroyed cot
-O 0 28900 1 28970  bloody body 
+O 0 28900 1 28970  bloody body
 O 0 28906 1 28980  Altar
 P 1 28954 9999 28906 offering of talens
 ? 0 1 0 P
@@ -149,7 +149,7 @@ E 1 28916 32 19 Woodcutters axe
 M 0 28923 1 28917 Clearer
 M 0 28924 1 28924 Planter
 ? 0 15 0 E Seeds
-G 1 28915 9999 
+G 1 28915 9999
 M 0 28925 1 28980 Worshipper
 E 1 28938 9999 1 Amber faction sigil
 M 0 28926 1 28916 Masked trolloc

@@ -20,10 +20,10 @@ D 0 9072 3 1                   West Colonnade Balcony -> The Cathedral Library
 D 0 9073 0 2                   West Attic Landing -> The Attic
 
 O 0 1443 1 9055                 ceiling opening
-O 0 1443 1 9057 
+O 0 1443 1 9057
 V 1 0 -16768143
 O 0 1444 1 9070                 floor opening
-O 0 1444 1 9073 
+O 0 1444 1 9073
 V 1 0 -16768159
 
 O 0 9051 1 9050              a flickering wrought iron torch
@@ -100,7 +100,7 @@ V 1 0 757
 O 0 1439 1 9058              the stained glass window onto the street below
 V 1 0 116
 O 0 1425 1 9065              the colonnade down into the nave.
-V 1 0 767           
+V 1 0 767
 O 0 1428 1 9065              the colonnade down into the nave.
 V 1 0 762
 O 0 1424 1 9067              the colonnade down into the nave.

@@ -2,7 +2,7 @@
 Glint - Nomadic Village~
 30799 30 2 1
 D 0 30709 3 1           flap to chief's tent
-D 0 30708 1 1 
+D 0 30708 1 1
 D 0 30708 0 1           screen to chief's private quarters
 D 0 30702 2 1
 D 0 30744 1 1           flap to shaman's tent
@@ -12,15 +12,15 @@ D 0 30748 0 1
 X 1 10 30732            defines a dynamic set of tooled armor (gauntlets and belt)
 X 1 11 30732
 X 1 15 30730
-X 2 6 30728             defines the dynamic set of tooled armor (pants and neckguard) 
+X 2 6 30728             defines the dynamic set of tooled armor (pants and neckguard)
 X 2 3 30744
-X 3 9 30727             defines the dynamic set of tooled armor (boots and cap) 
+X 3 9 30727             defines the dynamic set of tooled armor (boots and cap)
 X 3 8 30727
 X 3 5 30746
 X 4 18 30745            defines the dynamic set of tooled armor (bracers and shield)
 X 4 16 30729
 X 4 17 30729
-X 5 14 30726            defines the dynamic set of tooled armor (cape and armbands) 
+X 5 14 30726            defines the dynamic set of tooled armor (cape and armbands)
 X 5 12 30731
 X 5 13 30731
 O 0 30747 1 30706     a small hooded lantern.

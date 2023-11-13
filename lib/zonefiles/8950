@@ -1,27 +1,27 @@
-#8950 
+#8950
 Therias - Arabian Caravan Camp~
 8974 30 2 1
 
-D 0 8969 5 1       A Strange Corner of the Lake -> An Uncomfortably Warm Cavern 
-D 0 8972 4 1       An Uncomfortably Warm Cavern -> A Strange Corner of the Lake 
+D 0 8969 5 1       A Strange Corner of the Lake -> An Uncomfortably Warm Cavern
+D 0 8972 4 1       An Uncomfortably Warm Cavern -> A Strange Corner of the Lake
 
 O 0 8962 1 8950              the ramp to the cage (ladder proc)
-O 0 8962 1 8973 
+O 0 8962 1 8973
 
-O 0 8950 1 8972              a flying carpet 
+O 0 8950 1 8972              a flying carpet
 O 0 8952 1 8969              an exit object
-O 0 8964 3 8952              a sitting stone 
-O 0 8965 1 8954              a brass oil lamp 
-O 0 8965 1 8957               
-O 0 8965 1 8960               
-O 0 8965 1 8961              
-O 0 8965 3 8971               
-O 0 8967 1 8971              a large pillow 
-O 0 8968 1 8956              a lone tessian lily 
-O 0 8970 1 8974              a pile of rocks 
+O 0 8964 3 8952              a sitting stone
+O 0 8965 1 8954              a brass oil lamp
+O 0 8965 1 8957
+O 0 8965 1 8960
+O 0 8965 1 8961
+O 0 8965 3 8971
+O 0 8967 1 8971              a large pillow
+O 0 8968 1 8956              a lone tessian lily
+O 0 8970 1 8974              a pile of rocks
 P 1 8963 9999 8970                  a tarnished gold key
 ? 0 80 0 P
-P 1 35 9999 8970                    some talens  
+P 1 35 9999 8970                    some talens
 ? 0 60 0 P
 P 1 35 9999 8970
 ? 0 40 0 P
@@ -30,36 +30,36 @@ P 1 35 9999 8970
 P 1 35 9999 8970
 
 
-M 0 8950 1 8973                the Rhentek 
-M 0 8951 2 8950                a caravan guard 
-M 0 8951 2 8952               
-M 0 8951 2 8955               
-M 0 8951 2 8956                
-M 0 8951 2 8966              
-M 0 8951 2 8966               
-M 0 8951 2 8970               
-M 0 8952 1 8950                a frightened caravan guard 
-M 0 8953 1 8960                a great cobra 
-M 0 8955 1 8954                Adim 
+M 0 8950 1 8973                the Rhentek
+M 0 8951 2 8950                a caravan guard
+M 0 8951 2 8952
+M 0 8951 2 8955
+M 0 8951 2 8956
+M 0 8951 2 8966
+M 0 8951 2 8966
+M 0 8951 2 8970
+M 0 8952 1 8950                a frightened caravan guard
+M 0 8953 1 8960                a great cobra
+M 0 8955 1 8954                Adim
 ? 0 15 0 E
-E 1 8957 9999 5                    an ornate black bejewelled agal [head] 
+E 1 8957 9999 5                    an ornate black bejewelled agal [head]
 ? 0 12 0 E
-E 1 8955 9999 4                    an ornate black caftan [body] 
+E 1 8955 9999 4                    an ornate black caftan [body]
 ? 0 18 0 E
-E 1 8956 9999 15                   an ornate black sash made of silk [waist] 
+E 1 8956 9999 15                   an ornate black sash made of silk [waist]
 ? 0 11 0 E
-E 1 8953 9999 19                   a silver jambiya [hold-left] 
-M 0 8954 1 8971                Ahmud 
+E 1 8953 9999 19                   a silver jambiya [hold-left]
+M 0 8954 1 8971                Ahmud
 ? 0 7 0 E
-E 1 8960 24 18                     a great scimitar [hold-right] 
-M 0 8956 2 8955                a spotted lion 
-M 0 8956 2 8970                
-M 0 8958 1 8959                Jaheira 
+E 1 8960 24 18                     a great scimitar [hold-right]
+M 0 8956 2 8955                a spotted lion
+M 0 8956 2 8970
+M 0 8958 1 8959                Jaheira
 ? 0 15 0 E
 E 1 8958 9999 9                    golden anklet with small bells [foot-left]
-M 0 8959 1 8961                "Keira", the white tiger 
-M 0 8960 2 8957                a black scorpion 
-M 0 8961 1 8960                the caravan leader 
+M 0 8959 1 8961                "Keira", the white tiger
+M 0 8960 2 8957                a black scorpion
+M 0 8961 1 8960                the caravan leader
 M 0 8962 1 8957                dragon whelp
 M 0 8963 1 8972                Salam
 ? 0 1 0 E
@@ -69,5 +69,5 @@ E 1 8951 6 2                    a black scarab ring [finger-left]
 ? 0 4 0 E
 E 1 8954 3 3                    a black opal scarab on a gold chain [neck]
 
-S 
+S
 

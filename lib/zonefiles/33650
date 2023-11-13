@@ -100,7 +100,7 @@ M 0 33679 2 33679	bushranger on road
 Z 0 3 5			bushranger set
 
 ? 0 99 0 G              give to satisfy K command
-G 1 22430 9999 
+G 1 22430 9999
 K 1 33679 2 33679	bushranger on road
 Z 0 3 5			bushranger set
 

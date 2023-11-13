@@ -6,13 +6,13 @@ D 0 27803 5 1       bayside pier to Nefkars
 D 0 27899 4 1
 D 0 27828 5 1       up to wall
 D 0 27890 4 1
-D 0 27896 1 1       hermit igloo                    
+D 0 27896 1 1       hermit igloo
 D 0 27897 3 1
 D 0 27894 1 1       hermit igloo
-D 0 27895 3 1       
+D 0 27895 3 1
 D 0 27892 1 1       Hermans igloo
 D 0 27893 3 1
-D 0 27893 1 1       Hermans igloo<secret to hermans loot>       
+D 0 27893 1 1       Hermans igloo<secret to hermans loot>
 D 0 27898 3 1
 
 O 1 27810 1 27899    Picture in shop
@@ -27,7 +27,7 @@ O 0 112 1 27893      hobbit desk
 O 0 14380 1 27893    hobbit bed
 O 0 5702 1 27899     small wooden table
 O 0 27805 1 27807    mussel
-O 0 27805 1 27811    mussel 
+O 0 27805 1 27811    mussel
 O 0 27805 1 27817    mussel
 O 0 27805 1 27822    mussel
 O 0 27805 1 27825    mussel

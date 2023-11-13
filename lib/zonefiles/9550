@@ -26,7 +26,7 @@ D 0 5276 0 2
 O 0 9550 1 9559 		guitar
 O 0 9551 1 9559 		black box
 O 0 9552 1 9559 		large pile pictures
-O 0 9553 1 9557 		blue portal 
+O 0 9553 1 9557 		blue portal
 O 0 9554 1 9557 		red portal
 O 0 9555 1 9557 		transparent portal
 O 0 9556 1 9557 		brown portal
@@ -34,20 +34,20 @@ O 0 9557 1 9552 		arena portal - entrance
 O 0 9558 1 9555 		arena portal - exit
 O 0 9559 1 9552 		hospital portal
 O 0 9560 1 9550 		Image portal exit training
-O 0 9560 1 9551 		
-O 0 9560 1 9554 		
-O 0 9560 1 9553 		
+O 0 9560 1 9551
+O 0 9560 1 9554
+O 0 9560 1 9553
 O 0 9561 1 9556 		red velvet couch
-O 0 9561 1 9558 		
-O 0 9561 1 9566 		
-O 0 9561 1 9568 		
+O 0 9561 1 9558
+O 0 9561 1 9566
+O 0 9561 1 9568
 O 0 9568 8 9571 		comfortable chair
 O 0 9569 1 9571 		large table
 P 1 413 9999 9569			put beer table
 O 0 9569 1 9571 		large table
 P 1 412 9999 9569			put whiskey table
-P 1 412 9999 9569			
-P 1 412 9999 9569			
+P 1 412 9999 9569
+P 1 412 9999 9569
 O 0 9569 1 9571 		large table
 O 0 9570 1 9574 		rat bones
 O 0 9571 1 9562 		massive opal

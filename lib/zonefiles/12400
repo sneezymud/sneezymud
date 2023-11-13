@@ -6,7 +6,7 @@ D 0 12437 6 2   	; Stone Door to Kassdedra's Lair
 D 0 12438 9 2
 D 0 13142 9 1           ; Rubble secret on Strange Island to 9734
 D 0 13480 0 1		; Door from Belimus's throat to windpipe
-D 0 13493 2 1 
+D 0 13493 2 1
 D 0 13490 5 1		; Door from Belimus's stomach to instestine
 D 0 13492 4 1
 D 0 13496 3 1		; Door from Belimus's right lung to blowhole
@@ -92,7 +92,7 @@ P 1 12406 1 12463		; Carved Silver Key
 
 M 0 12406 1 12874 	; Siren
 ? 0 20 0 E
-E 1 12407 15 4			; Shimmering Black Dress 
+E 1 12407 15 4			; Shimmering Black Dress
 ? 0 70 0 M
 M 1 12406 1 12874 	; Siren
 ? 0 20 0 E
@@ -133,7 +133,7 @@ A 0 12401 13479
 M 0 12413 1 -99 	; Tiger Shark  (previously in 12750)
 
 M 0 12414 1 12864 	; Hammerhead Shark
-? 0 50 0 M 
+? 0 50 0 M
 M 1 12414 1 12822 	; Hammerhead Shark
 
 M 0 12415 1 13310 	; Humpback Whale
@@ -740,7 +740,7 @@ E 1 12424 15 19			; Blue Coral Knife
 G 1 12446 500			; Green Algae
 G 1 12446 500			; Green Algae
 
-M 0 12431 1 12907 	; Small Shark 
+M 0 12431 1 12907 	; Small Shark
 M 0 12431 1 12444 	; Small Shark
 M 0 12431 1 12516 	; Small Shark
 M 0 12431 1 12626 	; Small Shark

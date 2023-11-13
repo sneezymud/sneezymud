@@ -6,7 +6,7 @@ D 0 10630 5 1     Arden Lake -> Beneath the lake
 D 0 10664 5 1     Sanctuary -> Hall of King Loranth-gil
 D 0 10667 1 1     Private quarters  -> Hall of King Loranth-gil
 D 0 10668 1 2     Hall of King Loranth-gil -> Study of Loranth-gil
-D 0 10668 3 1     Hall of King Loranth-gil -> Private quarters 
+D 0 10668 3 1     Hall of King Loranth-gil -> Private quarters
 D 0 10668 4 1     Hall of King Loranth-gil -> Sanctuary
 D 0 10669 3 2     Study of Loranth-gil -> Hall of King Loranth-gil
 D 0 10671 4 1     Before a Gigantic Elm -> Platform high in the trees
@@ -46,7 +46,7 @@ M 0 10600 20 10662             a lake elf
 E 1 10687 40 19                     a fishing net [hold-left]
 
 M 0 10601 1 10689              Shorenjin
-G 1 10684 9999                      a golden key with tiny iron strapping 
+G 1 10684 9999                      a golden key with tiny iron strapping
 
 M 0 10602 1 10668              Loranth-gil
 ? 0 14 0 E

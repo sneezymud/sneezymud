@@ -3,7 +3,7 @@ Onslaught - Hold of Smuggler's Ship~
 9624 30 2 1
 
 D 0 9600 2 2                   Captain's Quarters  -> Storage area
-D 0 9602 0 2                   Storage area -> Captain's Quarters 
+D 0 9602 0 2                   Storage area -> Captain's Quarters
 D 0 9616 2 1                   Before the Sleeping Quarters -> Sleeping Area
 D 0 9617 2 2                   Below Decks -> Storage Area
 D 0 9619 0 1                   Sleeping Area -> Before the Sleeping Quarters

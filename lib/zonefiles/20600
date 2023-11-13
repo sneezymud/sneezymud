@@ -3,7 +3,7 @@ Mithros - Chaos Plains-Simal Plainsmen~
 20674 40 2 1
 
 D 0 20606 0 1  tent
-D 0 20657 2 1  
+D 0 20657 2 1
 D 0 20607 3 1  apprentice's tent
 D 0 20661 1 1
 D 0 20607 2 1  shaman's tent
@@ -39,31 +39,31 @@ D 0 20668 7 1
 
 O 0 20629 1 20600      thin hide sleeping mat in guard's tent
 O 0 20629 2 20653      in a tent
-O 0 20629 2 20657      
+O 0 20629 2 20657
 O 0 20629 1 20661      in apprentice's tent
 O 0 20629 2 20664      in a tent
-O 0 20629 2 20665 
+O 0 20629 2 20665
 
 O 0 20630 2 20654      thick hide sleeping mat in chief's tent
 O 0 20630 1 20662      in shaman's tent
 
 O 0 20631 1 20605      painted rocks along path
-O 0 20631 1 20606 
-O 0 20631 1 20607 
-O 0 20631 1 20608 
-O 0 20631 1 20609 
-O 0 20631 1 20610 
-O 0 20631 1 20611 
-O 0 20631 1 20612 
-O 0 20631 1 20614 
+O 0 20631 1 20606
+O 0 20631 1 20607
+O 0 20631 1 20608
+O 0 20631 1 20609
+O 0 20631 1 20610
+O 0 20631 1 20611
+O 0 20631 1 20612
+O 0 20631 1 20614
 
 O 0 20632 2 20611      reed torches outside meeting hall
 O 0 20632 2 20612      outside chief's meeting tent and hunter's tent
 O 0 20632 1 20655      in chief's meeting tent
 O 0 20632 1 20656      in hunter's tent
 O 0 20632 1 20658      in meeting tent
-O 0 20632 1 20659 
-O 0 20632 1 20660 
+O 0 20632 1 20659
+O 0 20632 1 20660
 
 O 0 20633 1 20600      small cookfire in guard's tent
 O 0 20633 1 20653      in a tent
@@ -72,7 +72,7 @@ O 0 20633 1 20657      in a tent
 O 0 20633 1 20661      in apprentice's tent
 O 0 20633 1 20662      in shaman's tent
 O 0 20633 1 20664      in a tent
-O 0 20633 1 20665 
+O 0 20633 1 20665
 
 O 0 20634 1 20611      small make-shift raft near springs
 
@@ -80,43 +80,43 @@ O 0 20647 1 20620      ancient white oak
 
 O 0 20648 1 20627      window down canyon river
 V 1 0 20469              change room window looks into
-O 0 20648 1 20628 
+O 0 20648 1 20628
 V 1 0 20470
-O 0 20648 1 20629 
+O 0 20648 1 20629
 V 1 0 20471
-O 0 20648 1 20630 
+O 0 20648 1 20630
 V 1 0 20580
-O 0 20648 1 20631 
+O 0 20648 1 20631
 V 1 0 20579
-O 0 20648 1 20632 
+O 0 20648 1 20632
 V 1 0 20474
-O 0 20648 1 20633 
+O 0 20648 1 20633
 V 1 0 20475
-O 0 20648 1 20634 
+O 0 20648 1 20634
 V 1 0 20478
-O 0 20648 1 20635 
+O 0 20648 1 20635
 V 1 0 20569
-O 0 20648 1 20636 
+O 0 20648 1 20636
 V 1 0 20569
-O 0 20648 1 20637 
+O 0 20648 1 20637
 V 1 0 20488
-O 0 20648 1 20638 
+O 0 20648 1 20638
 V 1 0 20445
-O 0 20648 1 20639 
+O 0 20648 1 20639
 V 1 0 20444
-O 0 20648 1 20640 
+O 0 20648 1 20640
 V 1 0 20443
-O 0 20648 1 20641 
+O 0 20648 1 20641
 V 1 0 20442
-O 0 20648 1 20642 
+O 0 20648 1 20642
 V 1 0 20441
-O 0 20648 1 20643 
+O 0 20648 1 20643
 V 1 0 20440
-O 0 20648 1 20644 
+O 0 20648 1 20644
 V 1 0 20563
 
 O 0 135 1 20622        window down into terraqu shaman's hut
-V 1 0 20590             
+V 1 0 20590
 O 0 138 1 20622        window southeast looking in front of terraqu shaman's hut
 V 1 0 20461
 
@@ -135,7 +135,6 @@ M 0 20601 1 20654     simal chieftess in chieftains hut
 G 1 20618 10               long curved reed bow
 ? 0 5 0 G
 G 1 20619 9999             long reed arrow
-? 0 2 0 E
 Y 0 99 3                   chance of dyed hide
 
 ? 0 40 0 M
@@ -184,7 +183,7 @@ G 1 20641 9999             huge water skin
 E 1 20612 20 19            heavy reed spear
 Y 0 99 2                   chance of dyed hide
 ? 0 60 0 M
-M 1 20604 1 20622     in a lookout  
+M 1 20604 1 20622     in a lookout
 ? 0 25 0 G
 G 1 20641 9999             huge water skin
 ? 0 5 0 E
@@ -202,13 +201,13 @@ E 1 20612 20 19            heavy reed spear
 Y 0 99 2                   chance of dyed hide
 ? 0 99 0 G
 G 1 20640 9999             some dried trail food
-C 1 20615 1 20656     
+C 1 20615 1 20656
 
-A 0 20628 20652 
+A 0 20628 20652
 M 0 20632 1 -99       simal midwife
 
- 
-A 0 20628 20652 
+
+A 0 20628 20652
 M 0 20605 2 -99       simal tracker on the plains
 ? 0 25 0 G
 G 1 20641 9999             huge water skin
@@ -230,7 +229,7 @@ G 1 20615 9999             short reed arrow
 Y 0 99 2                   chance of dyed hide
 ? 0 99 0 G
 G 1 20640 9999             some dried trail food
-C 1 20615 1 20602     pet hunter's hawk       
+C 1 20615 1 20602     pet hunter's hawk
 ? 0 60 0 M
 M 1 20605 1 20619     next to a large tree
 ? 0 25 0 G
@@ -242,7 +241,7 @@ G 1 20615 9999             short reed arrow
 Y 0 99 2                   chance of dyed hide
 ? 0 99 0 G
 G 1 20640 9999             some dried trail food
-C 1 20615 1 20619           
+C 1 20615 1 20619
 
 M 0 20606 1 20600     simal adult warrior in guards tent
 ? 0 5 0 E
@@ -275,12 +274,12 @@ M 0 20607 1 -99       simal young warrior in village
 E 1 20613 20 19            thin reed spear
 Y 0 99 1                   chance of dyed hide
 A 0 20605 20614
-M 0 20607 1 -99       
+M 0 20607 1 -99
 ? 0 4 0 E
 E 1 20613 20 19            thin reed spear
 Y 0 99 1                   chance of dyed hide
 A 0 20655 20660
-M 0 20607 1 -99       chance in various tents       
+M 0 20607 1 -99       chance in various tents
 ? 0 4 0 E
 E 1 20613 20 19            thin reed spear
 Y 0 99 1                   chance of dyed hide
@@ -289,13 +288,13 @@ Y 0 99 1                   chance of dyed hide
 M 1 20608 1 20653     simal female in tent
 K 1 20610 1 20653     simal baby following mother
 ? 0 60 0 M
-M 1 20608 1 20657     
-K 1 20610 1 20657     
+M 1 20608 1 20657
+K 1 20610 1 20657
 ? 0 60 0 M
-M 1 20608 1 20664     
-K 1 20610 1 20664     
+M 1 20608 1 20664
+K 1 20610 1 20664
 ? 0 60 0 M
-M 1 20608 1 20665     
+M 1 20608 1 20665
 K 1 20610 1 20665
 A 0 20605 20614
 M 0 20608 1 -99      simal female in village
@@ -307,7 +306,7 @@ A 0 20606 20612
 M 0 20609 1 -99      simal youth in village
 A 0 20655 20660
 M 0 20609 1 -99      in various tents
-A 0 20666 20669  
+A 0 20666 20669
 M 0 20609 1 -99      in pasture or fields
 
 A 0 20666 20669
@@ -322,9 +321,9 @@ M 0 20613 2 -99      othora in fields or pasture
 A 0 20605 20614
 M 0 20614 2 -99      docile skitter about town
 A 0 20605 20614
-M 0 20614 2 -99      
+M 0 20614 2 -99
 A 0 20605 20614
-M 0 20614 2 -99      
+M 0 20614 2 -99
 
 M 1 20616 1 20663    shadow cat in cage
 
@@ -368,7 +367,7 @@ M 1 20624 1 20617    south of village
 A 0 20624 20626
 M 0 20625 1 -99      kelk stag in forest
 
-A 0 20616 20621   
+A 0 20616 20621
 M 0 20626 1 -99      timid kelk south of village
 
 A 0 20616 20621
@@ -384,14 +383,14 @@ M 0 20628 1 -99      west of village
 A 0 20627 20652
 M 0 20629 3 -99      prarie digger on plains
 A 0 20627 20652
-M 0 20629 3 -99      
+M 0 20629 3 -99
 A 0 20627 20652
-M 0 20629 3 -99      
+M 0 20629 3 -99
 
 A 0 20670 20672
 M 0 20630 2 -99      small barbed fish near surface of tiscal springs
 A 0 20670 20672
-M 0 20630 2 -99      
+M 0 20630 2 -99
 
 A 0 20673 20674
 M 0 20631 2 -99      large barbed fish in tiscal depths

@@ -9,9 +9,9 @@ D 0 8682 0 1
 D 0 8682 1 1			An Ancient Burial Crypt (tapestry secret)
 D 0 8683 3 1
 D 0 8514 1 1			A Small Hut
-D 0 8515 3 1			
+D 0 8515 3 1
 D 0 8515 2 1			A Small Hut
-D 0 8532 0 1			
+D 0 8532 0 1
 
 O 0 8503 1 8655 			Watering Hole
 O 0 8503 1 8649 			Watering Hole
@@ -232,12 +232,12 @@ E 1 8511 25 18			   Stone Mallet
 M 0 8521 1 8532		Herder
 ? 0 75 0 E
 E 1 8508 99 15			   Loincloth
-? 0 20 0 E			
+? 0 20 0 E
 E 1 8514 10 18			   Bowling Ball
 M 0 8522 1 8514		Herder
 ? 0 75 0 E
 E 1 8508 99 15			   Loincloth
-? 0 40 0 E			
+? 0 40 0 E
 E 1 8509 50 19			   Herder's Staff
 
 M 0 8523 2 8681		Tomb Guardian

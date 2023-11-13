@@ -6,7 +6,7 @@ M 0 3400 2 3405     ; wolf in rm 3405
 M 0 3400 2 3453     ; wolf in rm 3453
 M 0 3401 2 3462     ; duck by pond
 M 0 3401 2 3464     ; duck by pond
-M 0 3402 1 3404     ; dryad 
+M 0 3402 1 3404     ; dryad
 M 0 3402 1 3413     ; dryad
 M 0 3402 1 3428     ; dryad
 M 0 3402 1 3456     ; dryad
@@ -15,7 +15,7 @@ M 0 3403 2 3470     ; bear
 M 0 3404 2 3423     ; lynx
 M 0 3404 2 3440     ; lynx
 M 0 3405 2 3447     ; owlbear
-M 0 3405 2 3450     ; owlbear 
+M 0 3405 2 3450     ; owlbear
 M 0 3406 2 3422     ; shedu
 M 0 3406 2 3437     ; shedu
 M 0 3407 4 3451     ; vercraucher
@@ -25,7 +25,7 @@ M 0 3409 2 3444     ; treant
 M 0 3409 2 3457     ; treant
 M 0 3410 1 3475     ; man-o-grove in sacred grove
 M 0 3410 1 3477     ; man-o-grove in sacred grove
-M 0 3410 1 3479     ; man-o-grove in sacred grove 
+M 0 3410 1 3479     ; man-o-grove in sacred grove
 M 0 3410 1 3481     ; man-o-grove in sacred grove
 M 0 3411 2 3418     ; will-o-wisp
 M 0 3411 2 3433     ; will-o-wisp
@@ -55,26 +55,26 @@ E 1 1028 500 8     ;    boots
 E 1 1028 500 9     ;    boots
 G 1 3411 999       ;      give him a medium arrow
 G 1 3412 500       ;      give him a medium hunting arrow
-M 0 3415 2 3449     ; ranger (lord) 
+M 0 3415 2 3449     ; ranger (lord)
 E 1 3406 100 18    ;    hold a large bow
 E 1 1042 500 4     ;    leather jerkin
 E 1 1028 500 8     ;    boots
 E 1 1028 500 9     ;    boots
-E 1 1047 500 6     ;    pants 
+E 1 1047 500 6     ;    pants
 G 1 3413 999       ;      give him a long arrow
 G 1 3414 500       ;      give him a long hunting arrow
-M 0 3415 1 3459     ; ranger (lord) 
+M 0 3415 1 3459     ; ranger (lord)
 E 1 1042 500 4     ;    leather jerkin
 E 1 1028 500 8     ;    boots
 E 1 1028 500 9     ;    boots
-E 1 1047 500 6     ;    pants 
+E 1 1047 500 6     ;    pants
 G 1 3415 999       ;      give him a great arrow
 G 1 3416 500       ;      give him a great hunting arrow
 M 0 3416 1 3460     ; Shracknir in his cave
 G 1 6 999          ;    give a bag
-P 1 3426 1 6       ;      put gwarthir in bag  
-M 0 3418 1 3463     ; put the horse by the pond 
-O 0 3400 1 3401     ; purple mushroom 
+P 1 3426 1 6       ;      put gwarthir in bag
+M 0 3418 1 3463     ; put the horse by the pond
+O 0 3400 1 3401     ; purple mushroom
 O 0 3400 1 3415     ; purple mushroom
 O 0 3400 1 3442     ; purple mushroom
 O 0 3400 1 3448     ; purple mushroom
@@ -97,7 +97,7 @@ O 0 3418 1 3425     ; normal branch
 O 0 3418 1 3471     ; normal branch
 O 0 3418 1 3457     ; normal branch
 O 0 3418 1 3446     ; normal branch
-O 0 3420 1 3460     ; +mana log 
+O 0 3420 1 3460     ; +mana log
 O 0 3420 1 3480     ; +mana log
 O 0 3421 1 3410     ; normal log
 O 0 3421 1 3434     ; normal log

@@ -11,7 +11,7 @@ D 0 641 3 1
 D 0 642 1 1		Evil Abode
 D 0 644 3 1
 D 0 643 3 1		Training Room
-D 0 645 1 1 
+D 0 645 1 1
 D 0 16708 4 2   Saltheart's Home
 D 0 639 4 2     Lord Deslok's Chamber aka Rock's Serpent Faction House
 
@@ -63,9 +63,9 @@ O 0 3530 5 2366        a barstool
 O 0 3531 1 2366        the bar
 O 0 3533 1 2366        a vibrant palm tree
 
-M 0 263 1 624              shady man 
+M 0 263 1 624              shady man
 M 0 264 1 644              hooded assassin
 ? 0 10 0 G                   load garrotte
-G 1 154 999                     
+G 1 154 999
 S
 

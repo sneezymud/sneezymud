@@ -16,7 +16,7 @@ O 0 1442 1 9092                 floor trapdoor
 O 0 1445 1 9081                 gap in catwalk ropes
 O 0 1446 1 9081                 hole through catwalk ropes
 O 0 1447 1 9077                 opening through catwalk ropes
-O 0 1447 1 9080                 
+O 0 1447 1 9080
 
 O 0 9054 1 9082              a flickering torch
 O 0 9054 1 9092              a flickering torch
@@ -69,7 +69,7 @@ V 1 0 156
 O 0 1436 1 9074              the crenellation down on to the street
 V 1 0 155
 O 0 1425 1 9075              the colonnade down into the nave.
-V 1 0 757 
+V 1 0 757
 O 0 1429 1 9075              the colonnade down into the nave.
 V 1 0 762
 O 0 1429 1 9076              the colonnade down into the nave.
@@ -101,7 +101,7 @@ V 1 0 155
 O 0 1436 1 9083              the crenellation down on to the street
 V 1 0 154
 O 0 1436 1 9084              the crenellation down on to the street
-V 1 0 117 
+V 1 0 117
 O 0 1433 1 9084              the crenellation down on to the street
 V 1 0 154
 O 0 1432 1 9084              the crenellation down on to the street

@@ -38,7 +38,7 @@ O 0 8437  1 8437   antique table
 O 0 8432  1 8436   wastebasket
 O 0 14362 1 8436    desk
 O 0 8438  1 8438   pile talens
-O 0 50    1 8438   commodity ignot 
+O 0 50    1 8438   commodity ignot
 O 0 51    1 8438   commodity silver bar
 O 0 64    1 8438   commodity bronze ignot
 O 0 15251 1 8440    long sword
@@ -56,15 +56,15 @@ O 0 3305 1 8443     Bench need low approval
 O 0 8450  1   8450    painting (Window)
 O 0 8447 1 8447     nightstand
 P 1 8442  100 8447    Book tattered
-O 0 22   1 8448    Bed 
+O 0 22   1 8448    Bed
 O 0 8433 1 8448     couch antique
-O 0 701  1 8450    Table 
+O 0 701  1 8450    Table
 O 0 8431 1 8445     Bed linen
 
 M 0 8435 1 8435    Miser Ben (quest mob deik)
 Y 0 80 3              Wide leather
 M 0 8436 1 8436    Casino Clerk
-Y 0 9 3               
+Y 0 9 3
 M 0 8437 1 8433    lounge guard
 Y 0 1 5               soft leather
 M 0 8437 1 8434    lounge guard

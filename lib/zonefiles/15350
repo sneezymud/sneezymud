@@ -6,14 +6,14 @@ D 0 15371 1 1		   door to hatchery
 D 0 15372 3 1
 D 0 15368 1 1		   hidden doory to hatchery
 D 0 15369 3 1
-* D 0 15355 0 0		   destroyed door in the pantry 
+* D 0 15355 0 0		   destroyed door in the pantry
 *   (batopr said i should prolly leave
 *   this part off so i REM'd it)
 D 0 15359 2 0
 O 0 15359 1 15360 		   large hot springs
-O 0 15359 1 15364 
+O 0 15359 1 15364
 O 0 15360 1 15360 		   fairly large hot springs
-O 0 15360 1 15364 
+O 0 15360 1 15364
 O 0 15355 1 15359 		   cook fire
 O 0 15356 1 15359 		   iron cookpot
 O 0 15358 1 15359 		   stalactite table
@@ -23,7 +23,7 @@ M 0 15353 10 15351		   troglodyte warrior
 ? 0 10 0 E
 E 1 15351 9999 19        	    troglodyte javelin
 M 0 15353 10 15351		   troglodyte warrior
-? 0 10 0 E   
+? 0 10 0 E
 E 1 15351 9999 19		    troglodyte javelin
 A 0 15354 15360
 M 0 15353 10 -99		   troglodyte warrior
@@ -102,7 +102,7 @@ M 0 15350 10 -99
 E 1 15353 9999 19		    stone morning star
 A 0 15354 15373			   troglodyte female
 M 0 15350 10 -99
-? 0 10 0 E   
+? 0 10 0 E
 E 1 15353 9999 19		    stone morning star
 A 0 15354 15373			   troglodyte female
 M 0 15350 10 -99
@@ -123,7 +123,7 @@ E 1 15353 9999 19		    stone morning star
 M 0 15355 3 15373		   Troglodyte sub-chief
 ? 0 15 0 E
 E 1 15354 9999 19		    rusty sword
-A 0 15354 15373   
+A 0 15354 15373
 M 0 15355 3 -99			   Troglodyte sub-chief
 ? 0 15 0 E
 E 1 15354 9999 19		    rusty sword

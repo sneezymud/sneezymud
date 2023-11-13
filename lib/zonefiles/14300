@@ -35,7 +35,7 @@ D 0 14334 3 1
 D 0 14333 0 1		Barn 1 North Door
 D 0 14338 2 1
 D 0 14334 0 1		Pasture 1 Gate
-D 0 14337 2 1  
+D 0 14337 2 1
 D 0 14340 1 1		Farmhouse 2 Door
 D 0 14341 3 1
 D 0 14341 1 1		Animal Pen 2 Gate
@@ -182,71 +182,71 @@ O 0 14381 1 14329 		Fruit Basket
 P 1 14344 999 14381		   Put an apple in the basket
 P 1 14344 999 14381		   Put an apple in the basket
 P 1 14344 999 14381		   Put an apple in the basket
-O 0 14382 1 14333 		Haypile 
-O 0 14382 1 14343 		        
+O 0 14382 1 14333 		Haypile
+O 0 14382 1 14343
 O 0 14383 1 14335 		Scarecrow
-O 0 14383 1 14345 
+O 0 14383 1 14345
 O 0 14384 1 14334 		Well Pump
-O 0 14384 1 14344 
+O 0 14384 1 14344
 O 0 14385 1 14330 		Hurricane Lamp
-O 0 14385 1 14333 
-O 0 14385 2 14339 
-O 0 14385 1 14340 
-O 0 14385 1 14343 
-O 0 14385 1 14365 
-O 0 14385 2 14372 
-O 0 14385 2 14373 
-O 0 14385 2 14374 
-O 0 14385 1 14375 
-O 0 14385 1 14376 
-O 0 14385 1 14377 
-O 0 14385 2 14380 
-O 0 14385 2 14381 
-O 0 14385 1 14382 
-O 0 14385 2 14384 
-O 0 14385 2 14385 
-O 0 14385 2 14401 
-O 0 14385 2 14402 
-O 0 14385 2 14403 
-O 0 14385 1 14430 
-O 0 14385 2 14431 
-O 0 14385 1 14432 
+O 0 14385 1 14333
+O 0 14385 2 14339
+O 0 14385 1 14340
+O 0 14385 1 14343
+O 0 14385 1 14365
+O 0 14385 2 14372
+O 0 14385 2 14373
+O 0 14385 2 14374
+O 0 14385 1 14375
+O 0 14385 1 14376
+O 0 14385 1 14377
+O 0 14385 2 14380
+O 0 14385 2 14381
+O 0 14385 1 14382
+O 0 14385 2 14384
+O 0 14385 2 14385
+O 0 14385 2 14401
+O 0 14385 2 14402
+O 0 14385 2 14403
+O 0 14385 1 14430
+O 0 14385 2 14431
+O 0 14385 1 14432
 O 0 14386 1 14313 		North Window
 V 1 0 14330				looking into room 14330
-O 0 14386 1 14330 	
-O 0 14386 1 14340 		
+O 0 14386 1 14330
+O 0 14386 1 14340
 V 1 0 14315				looking into room 14315
-O 0 14386 1 14345 		
+O 0 14386 1 14345
 V 1 0 14340				looking into room 14340
-O 0 14386 1 14365 		
+O 0 14386 1 14365
 V 1 0 14459				looking into room 14459
-O 0 14386 1 14477 		
+O 0 14386 1 14477
 V 1 0 14382				looking into room 14382
 O 0 14387 1 14315 		South Window
 V 1 0 14340				looking into room 14340
-O 0 14387 1 14330 		
-O 0 14387 1 14335 		
+O 0 14387 1 14330
+O 0 14387 1 14335
 V 1 0 14330				looking into room 14330
-O 0 14387 1 14340 		
+O 0 14387 1 14340
 V 1 0 14345				looking into room 14345
-O 0 14387 1 14382 		
+O 0 14387 1 14382
 V 1 0 14477				looking into room 14477
-O 0 14387 1 14459 		
+O 0 14387 1 14459
 V 1 0 14365				looking into room 14365
 O 0 14388 1 14330 		East Window
-O 0 14388 1 14460 		
+O 0 14388 1 14460
 V 1 0 14365				looking into room 14365
 O 0 14389 1 14312 		West Window
 V 1 0 14330				looking into room 14330
-O 0 14389 1 14362 		
+O 0 14389 1 14362
 V 1 0 14462				looking into room 14462
-O 0 14389 1 14363 		
+O 0 14389 1 14363
 V 1 0 14461				looking into room 14461
-O 0 14389 1 14365 		
+O 0 14389 1 14365
 V 1 0 14460				looking into room 14460
 O 0 14392 1 14308 		Welcome Sign
-O 0 14392 1 14412 
-O 0 14392 1 14421 
+O 0 14392 1 14412
+O 0 14392 1 14421
 O 0 14393 1 14386 		Raft
 O 0 14396 2 14429 		Garden Bench
 
@@ -270,7 +270,7 @@ E 1 10938 999 19			Platinum Dagger @
 E 1 14304 999 14			Hobbit Studded Cloak
 ? 0 1 0 E
 E 1 14309 999 2				Clear Tourmaline Ring
-? 0 10 0 E	
+? 0 10 0 E
 E 1 14333 999 4				Cotton Shirt
 ? 0 10 0 E
 E 1 14334 999 6				Cotton Pants
@@ -604,15 +604,15 @@ E 1 14334 999 6				Cotton Pants
 
 M 0 14314 2 14361		Embassy Guard
 ? 0 5 0 G
-G 1 303 999 				Broad Sword 
+G 1 303 999 				Broad Sword
 ? 0 7 0 E
-E 1 14339 999 14			Red & Gold Cape 
+E 1 14339 999 14			Red & Gold Cape
 Y 0 9 5					Chainmail Set - 5%
 M 0 14314 2 14361		Embassy Guard
 ? 0 5 0 G
-G 1 303 999 				Broad Sword 
+G 1 303 999 				Broad Sword
 ? 0 7 0 E
-E 1 14339 999 14			Red & Gold Cape 
+E 1 14339 999 14			Red & Gold Cape
 Y 0 9 5					Chainmail Set - 5%
 
 M 0 14315 3 14308 		Hobbit Adventurer

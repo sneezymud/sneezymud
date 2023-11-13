@@ -3,16 +3,16 @@ Aislyn - Spirit Ruins~
 14165 35 2 1
 
 D 0 14152 0 1      -solitary door (time)
-D 0 14153 2 1 
+D 0 14153 2 1
 D 0 14154 2 1      -door to bedroom
-D 0 14164 0 1 
+D 0 14164 0 1
 
 O 0 14150 1 14159   -crumbling marble chair/throne
 O 0 14153 2 14159   -decaying plush oak chair
 O 0 14151 1 14159   -decaying tapestry of knowledge
 O 0 14154 1 14152   -spirit orb of light
-O 0 14154 1 14153 
-O 0 14154 2 14159 
+O 0 14154 1 14153
+O 0 14154 2 14159
 O 0 14155 1 14150   -decaying ancient oak tree
 
 M 0 31310 1 14163

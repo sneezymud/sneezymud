@@ -8,58 +8,58 @@ D 0 5678 4 2  panel secret locked
 D 0 5679 5 2
 
 O 0 5634 1 5678   shelf
-  P 1 5626 9999 5634 swamp hen
-  P 1 5626 9999 5634
-  P 1 5626 9999 5634
-  P 1 5625 9999 5634 elf brain
-  P 1 5625 9999 5634
-  P 1 5625 9999 5634
+P 1 5626 9999 5634 swamp hen
+P 1 5626 9999 5634
+P 1 5626 9999 5634
+P 1 5625 9999 5634 elf brain
+P 1 5625 9999 5634
+P 1 5625 9999 5634
 O 0 5635 1 5678   bed
 O 0 5636 1 5678   table
 O 0 5637 2 5678   chair
 
 
 M 0 5620 1 5674  kobold captain
-  ? 0 10 0 E
-  E 1 5628 9999 18  waraxe
-  ? 0 99 0 G
-  G 1 22430 9999  soldiers ration to satisfy K command
+? 0 10 0 E
+E 1 5628 9999 18  waraxe
+? 0 99 0 G
+G 1 22430 9999  soldiers ration to satisfy K command
 K 1 5621 3 5674  kobold marauders (group)
 K 1 5621 3 5674  kobold marauders (group)
 K 1 5621 3 5674  kobold marauders (group)
 
 M 0 5622 1 5679  Biklid kobold monk
-  G 1 5625 9999 elf brain
-  G 1 5620 9999 key for panel
+G 1 5625 9999 elf brain
+G 1 5620 9999 key for panel
 ? 0 20 0 G
-  G 1 5627 9999 faerie tears
-  ? 0 4 0 E
-  E 1 5629 9999 15  sash/waist
-  ? 0 4 0 E
-  E 1 5630 9999 4   shirt/body
-  ? 0 4 0 E
-  E 1 5631 9999 6   legging
-  ? 0 4 0 E
-  E 1 5631 9999 7   legging
-  ? 0 4 0 E
-  E 1 5632 9999 3   necklace
-  ? 0 4 0 E
-  E 1 5633 9999 16  wrist
-  ? 0 4 0 E
-  E 1 5633 9999 17  wrist
+G 1 5627 9999 faerie tears
+? 0 4 0 E
+E 1 5629 9999 15  sash/waist
+? 0 4 0 E
+E 1 5630 9999 4   shirt/body
+? 0 4 0 E
+E 1 5631 9999 6   legging
+? 0 4 0 E
+E 1 5631 9999 7   legging
+? 0 4 0 E
+E 1 5632 9999 3   necklace
+? 0 4 0 E
+E 1 5633 9999 16  wrist
+? 0 4 0 E
+E 1 5633 9999 17  wrist
 
 M 0 5623 1 5678  Egdinia kobold cleric female
-  G 1 5626 9999 swamp hen
-  ? 0 4 0 E
-  E 1 5621 9999 3  neck sym
-  ? 0 4 0 E
-  E 1 5622 9999 4  robe/body
-  ? 0 4 0 E
-  E 1 5623 9999 6  legging
-  ? 0 4 0 E
-  E 1 5623 9999 7  legging
-  ? 0 4 0 E
-  E 1 5624 9999 5  cowl
+G 1 5626 9999 swamp hen
+? 0 4 0 E
+E 1 5621 9999 3  neck sym
+? 0 4 0 E
+E 1 5622 9999 4  robe/body
+? 0 4 0 E
+E 1 5623 9999 6  legging
+? 0 4 0 E
+E 1 5623 9999 7  legging
+? 0 4 0 E
+E 1 5624 9999 5  cowl
 
 M 0 5624 1 5664  Marsh hen
 M 0 5624 2 5670  Marsh hens
