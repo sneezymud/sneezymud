@@ -122,12 +122,6 @@ int doHarm(TBeing* ch, TBeing* vict, TObj* o) {
 int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBeing* ch;
 
-  TBaseWeapon* tWeap;
-  if (!(tWeap = dynamic_cast<TBaseWeapon*>(o)))
-    return FALSE;
-  // damageLevel of the weapon (devastator is 52)
-  int weaponLevel = tWeap->damageLevel();
-
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
     return FALSE;  // weapon not equipped (carried or on ground)
 
@@ -145,6 +139,12 @@ int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   }
 
   if (cmd == CMD_OBJ_HIT && vict) {
+    TBaseWeapon* tWeap;
+    if (!(tWeap = dynamic_cast<TBaseWeapon*>(o)))
+      return FALSE;
+    // damageLevel of the weapon (devastator is 52)
+    int weaponLevel = tWeap->damageLevel();
+
     if (!::number(0, 24) && weaponLevel >= 40) {
       doBlind(ch, vict, o);
       return TRUE;
