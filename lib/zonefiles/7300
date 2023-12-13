@@ -2,6 +2,24 @@
 Bump - Tsirin Prison~
 7499 50 2 1
 
+*blue leather gangmember set
+X 0 1 7351 		blue leather ring
+X 0 2 7351 		blue leather ring
+X 0 3 7352 		blue leather necklace
+X 0 16 7353 		blue leather bracelet
+X 0 17 7353 		blue leather bracelet
+X 0 15 7355 		leather belt with blue pouches
+X 0 19 7350		pottery shard
+
+* prison guard set
+X 1 5 7345	spiked metal helm
+X 1 6 7344	spiked kneepad
+X 1 7 7344	spiked kneepad
+X 1 8 7319	spiked mithril boot
+X 1 9 7319	spiked mithril boot
+X 1 19 7313	gold hilted longsword
+X 1 18 7303	prison shield
+
 *
 * resetting doors
 
@@ -296,507 +314,302 @@ B 0 403 3 7427
 *
 *loading mobs and their eq
 M 0 7352 1 7354 prison cell guard
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5 orcish war helm
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19 stone mace
 M 0 7352 1 7355
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 1 7356
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 1 7357
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 2 7358
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 1 7359
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 2 7360
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 2 7361
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 2 7362
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7352 2 7363
-? 0 4 0 E
+? 0 6 0 E
 E 1 7348 9999 5
-? 0 2 0 E
+? 0 6 0 E
 E 1 7349 50 19
+Z 0 1 5 		prison set
 M 0 7300 2 7300 prison gate guard
+Z 0 1 5 		prison set
 G 1 7300 9999 prison gate key
 M 0 7300 2 7323 prison gate guard
+Z 0 1 5 		prison set
 M 0 7301 1 7301 paroled convict
-? 0 4 0 E
+? 0 6 0 E
 E 1 7301 24 1 drow mithril ring
 M 0 7302 1 7302 Mitchell
 M 0 7303 2 7303 scrawny gate guard
-? 0 2 0 E
+? 0 6 0 E
 E 1 7302 30 19 metal halberd
+Z 0 1 5 		prison set
 M 0 7303 2 7304
-? 0 2 0 E
+? 0 6 0 E
 E 1 7302 30 19
+Z 0 1 5 		prison set
 M 0 7303 1 7314
-? 0 2 0 E
+? 0 6 0 E
 E 1 7302 30 19
+Z 0 1 5 		prison set
 M 0 7303 1 7315
-? 0 2 0 E
+? 0 6 0 E
 E 1 7302 30 19
+Z 0 1 5 		prison set
 M 0 7303 1 7326
-? 0 2 0 E
+? 0 6 0 E
 E 1 7302 30 19
+Z 0 1 5 		prison set
 M 0 7303 1 7345
-? 0 2 0 E
+? 0 6 0 E
 E 1 7302 30 19
+Z 0 1 5 		prison set
 M 0 7303 1 7346
-? 0 2 0 E
+? 0 6 0 E
 E 1 7302 30 19
+Z 0 1 5 		prison set
 M 0 7304 2 7305 prison patrol guard
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7311
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7313
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 2 7316
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7320
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7321
-? 0 2 0 E
+? 0 6 0 E
 E 1 7303 50 18 prison shield
-? 0 1 0 E
+? 0 6 0 E
 E 1 7313 15 19 gold hilted long sword
 M 0 7304 1 7327
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7331
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7342
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7390
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7391
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7398
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7408
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7409
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7417
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 2 7418
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7419
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7428
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7439
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7440
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7465
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7304 1 7466
-? 0 2 0 E
-E 1 7303 50 18 prison shield
-? 0 1 0 E
-E 1 7313 15 19 gold hilted long sword
+Z 0 1 5 		prison set
 M 0 7323 1 7322 prison guard
-? 0 1 0 E
-E 1 7319 40 8 spiked mithril boot
-? 0 1 0 E
-E 1 7345 30 5 spiked metal helm
+Z 0 1 5 		prison set
 M 0 7323 2 7323
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7324
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7325
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7326
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7327
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7331
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7332
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7333
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7337
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7338
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7343
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7345
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7346
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7348
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7351
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7352
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7368
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7372
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7376
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7377
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7380
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7381
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7384
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7385
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7386
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7388
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7389
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7390
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7391
+Z 0 1 5 		prison set
 G 1 7391 9999 titanium key
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
-M 0 7323 2 7393
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7396
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7399
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7400
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7402
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7414
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7415
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7416
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7419
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7420
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7423
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7425
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7428
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7429
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7432
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7437
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7438
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7440
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7441
 G 1 7450 9999 yellow key
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7443
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7444
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7445
 G 1 7445 9999 flimsy key
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7454
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7455
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7456
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7475
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 1 7476
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
+Z 0 1 5 		prison set
 M 0 7323 2 7491
-? 0 1 0 E
-E 1 7319 40 8
-? 0 1 0 E
-E 1 7345 30 5
-M 0 7305 1 7306 Fagin
+Z 0 1 5 		prison set
+M 0 7305 1 7306 Fabin
 ? 0 5 0 E
 E 1 7304 50 15 black leather weight belt
+M 0 3365 1 7306	adolescent gangmember
+Z 0 0 5				blue leather set
+I 1 7350 19		PROP pottery shard
+M 0 3365 1 7306	adolescent gangmember
+Z 0 0 5				blue leather set
+I 1 7350 19		PROP pottery shard 
+M 0 3365 1 7306	adolescent gangmember
+Z 0 0 5				blue leather set
+I 1 7350 19		PROP pottery shard 
+M 0 3365 1 7306	adolescent gangmember
+Z 0 0 5				blue leather set
+I 1 7350 19		PROP pottery shard 
+M 0 3365 1 7306	adolescent gangmember
+Z 0 0 5				blue leather set
+I 1 7350 19		PROP pottery shard 	
 M 0 7306 1 7307 Ratcliff
 ? 0 5 0 E
 E 1 7305 16 4 gnomish mithril shirt
 M 0 7307 1 7307 Goneril
 M 0 7308 1 7398 Magwitch
-? 0 3 0 E
+? 0 6 0 E
 E 1 7306 50 19 prison shank
 M 0 7309 1 7309 Nico
 M 0 7310 1 7310 Maxell
-? 0 3 0 E
+? 0 6 0 E
 E 1 7307 9999 5 cotton cap
 M 0 7311 1 7311 Bluto
-? 0 3 0 E
+? 0 6 0 E
 E 1 7308 9999 19 club homemade
 M 0 7312 1 7312 Grimson
 ? 0 5 0 E
 E 1 7309 200 2 ring serpent gold
-? 0 2 0 E
+? 0 6 0 E
 E 1 7310 200 3 collar priests white
 M 0 7313 1 7313 Deridas
 ? 0 5 0 G
@@ -804,29 +617,29 @@ G 1 7311 9999 wand speckled
 ? 0 5 0 E
 E 1 7312 35 5 helm mithril mesh
 M 0 7318 1 7318 Yiro
-? 0 2 0 E
+? 0 6 0 E
 E 1 7315 11 2 ring gadgets many
 M 0 7319 1 7318 Thayil
-? 0 3 0 E
+? 0 6 0 E
 E 1 7314 14 2 ring rope vine
 M 0 7320 1 7319 Atticus
 ? 0 5 0 E
 E 1 7316 5 5 cap wisdom
 M 0 7321 1 7319 Librarian prison
-? 0 4 0 E
+? 0 6 0 E
 E 1 7317 5 14 cape shadows
-? 0 1 0 E
+? 0 6 0 E
 E 1 7314 14 2
-? 0 1 0 E
+? 0 6 0 E
 E 1 7315 11 1
 M 0 7322 1 7322 Maudie
-? 0 2 0 E
+? 0 6 0 E
 E 1 7318 40 19 ivory dagger
 M 0 7374 1 7328 Visitor Stern
-? 0 1 0 E
+? 0 6 0 E
 E 1 7320 2 19 hammer valor
 M 0 7325 1 7328 visitor woman mournful
-? 0 2 0 E
+? 0 6 0 E
 E 1 7321 16 5 veil black
 M 0 7326 1 7329 brother
 M 0 7327 1 7329 sister
@@ -848,23 +661,23 @@ M 0 7332 1 7336 Punchy
 ? 0 5 0 E
 E 1 7328 12 19 axe crudely made
 M 0 7333 1 7336 Bowers
-? 0 4 0 E
+? 0 6 0 E
 E 1 7329 100 16 bracelet identification
 M 0 7334 1 7337 Thierye
-? 0 3 0 E
+? 0 6 0 E
 E 1 7330 70 15 belt gnomish healer
 M 0 7335 1 7338 Myshkin
 ? 0 5 0 E
 E 1 7331 10 3 Pendant goblin war
 M 0 7336 1 7339 Deckard
-? 0 4 0 E
+? 0 6 0 E
 E 1 7332 16 4 tunic blood stained
 M 0 7337 1 7339 Berliac
 ? 0 1 0 G
 G 1 7333 9999 key skeleton
 M 0 7338 1 7340 Liam
 M 0 7339 1 7340 Tortugas
-? 0 3 0 E
+? 0 6 0 E
 E 1 7334 23 19 sword onyx long
 M 0 7340 1 7341 O�karz
 M 0 7341 1 7341 Griswold
@@ -872,7 +685,7 @@ M 0 7342 1 7342 Talbot
 ? 0 5 0 E
 E 1 7335 45 3 necklace dolphin scale
 M 0 7343 1 7343 Tess
-? 0 3 0 E
+? 0 6 0 E
 E 1 7336 9999 19 hammer lucern onyx
 M 0 7344 1 7344 Dalton
 ? 0 6 0 E
@@ -884,23 +697,23 @@ E 1 7338 50 16 bracelet gnome skin
 ? 0 5 0 E
 E 1 7339 6 5 skull ogre bleached
 M 0 7347 1 7347 Wisdom
-? 0 4 0 E
+? 0 6 0 E
 E 1 7340 8 14 cloak moon
 M 0 7348 1 7349 Cicconne
 ? 0 6 0 E
 E 1 7344 20 7 kneepad spiked metal
 M 0 7349 1 7349 Foucault
-? 0 2 0 E
+? 0 6 0 E
 E 1 7341 50 18 buckler emerald
-? 0 3 0 E
+? 0 6 0 E
 E 1 7342 100 19 dagger emerald
 M 0 7314 1 7349 Chomsky
-? 0 3 0 E
+? 0 10 0 E
 E 1 7343 50 3 necklace holy ogre
 M 0 7315 1 7350 Peal
 M 0 7316 1 7350 Lacan
 M 0 7317 1 7353 Ghost prisoner dead
-? 0 4 0 E
+? 0 6 0 E
 E 1 7346 3 19 sickle shadow
 M 0 7350 1 7353 Exorcist
 G 1 164 9999 vial water holy
@@ -924,12 +737,12 @@ M 0 7359 1 7365 Jake
 M 0 7360 1 7365 Elwood
 M 0 7361 1 7366 Chip
 G 1 414 9999 ale pint
-? 0 1 0 E
+? 0 6 0 E
 E 1 7359 5 5 cap cotton red
 M 1 7362 1 7366 Chips Brother
 G 1 414 9999 ale pint
 M 0 7363 1 7367 Egon
-? 0 3 0 E
+? 0 6 0 E
 E 1 7360 1 19 dagger egonti
 M 0 7364 1 7367 Peter
 M 0 7365 1 7367 Ray
@@ -952,7 +765,7 @@ E 1 7368 14 10 glove blood soaked
 ? 0 5 0 E
 E 1 7369 45 15 belt blood soaked
 M 0 7375 1 7373 Nagan
-? 0 3 0 E
+? 0 6 0 E
 E 1 7370 14 19 dagger titanium hilted
 M 0 7376 1 7373 Tomba
 M 0 7377 1 7374 Ghulag
@@ -961,16 +774,16 @@ M 0 7379 1 7377 Crynth
 ? 0 6 0 E
 E 1 7371 16 14 cape purple
 M 0 7380 1 7378 Dryken
-? 0 1 0 E
+? 0 6 0 E
 E 1 7370 14 19
 M 0 7381 1 7379 Albelin
 M 0 7382 1 7381 Gravano
 M 0 7383 1 7382 Warden prison
-? 0 4 0 E
+? 0 6 0 E
 E 1 7372 12 3 pendant amethyst
-? 0 4 0 E
+? 0 6 0 E
 E 1 7373 30 16 bracer amethyst
-? 0 4 0 E
+? 0 6 0 E
 E 1 7374 40 8 boot amethyst
 M 0 7384 1 7382 Troll bodyguard
 M 0 7386 1 7389 puppy
@@ -983,32 +796,32 @@ M 0 7389 1 7394 Acheynumb
 G 1 506 9999 symbol iron
 M 0 7390 1 7394 Bassen
 M 0 7392 1 7396 Nurse Prison
-? 0 2 0 G
+? 0 15 0 G
 G 1 508 9999 symbol metal
-? 0 2 0 E
+? 0 6 0 E
 E 1 7376 25 5 cap nurse
 M 0 7392 1 7397
-? 0 2 0 G
+? 0 15 0 G
 G 1 508 9999 symbol metal
-? 0 2 0 E
+? 0 6 0 E
 E 1 7376 25 5 cap nurse
 M 0 7392 1 7398
-? 0 2 0 G
+? 0 15 0 G
 G 1 508 9999 symbol metal
-? 0 2 0 E
+? 0 6 0 E
 E 1 7376 25 5 cap nurse
 M 0 7392 1 7399
-? 0 2 0 G
+? 0 15 0 G
 G 1 508 9999 symbol metal
-? 0 2 0 E
+? 0 6 0 E
 E 1 7376 25 5 cap nurse
 M 0 7391 1 7396 Bertuzzi
-? 0 2 0 E
+? 0 6 0 E
 E 1 7306 50 19 shank prison
 ? 0 6 0 E
 E 1 7377 30 3 necklace talon eagle
 M 0 7393 1 7397 Chara
-? 0 2 0 E
+? 0 6 0 E
 E 1 7306 50 19 shank prison
 M 0 7394 1 7400 Doctor deranged
 G 1 7400 9999 key green
@@ -1025,19 +838,19 @@ M 0 7398 1 7404 Saku
 M 0 7399 1 7405 Dudley
 M 0 7400 1 7405 Stevens
 M 0 7401 1 7406 Radek
-? 0 2 0 E
+? 0 6 0 E
 E 1 7380 30 4 suit bronze green
 M 0 7402 1 7406 Dvorak
-? 0 2 0 E
+? 0 6 0 E
 E 1 7380 30 4
 M 0 7403 1 7407 Theoren
-? 0 2 0 E
+? 0 6 0 E
 E 1 7381 25 4 vest silk purple
 M 0 7404 1 7407 Gonchar
-? 0 2 0 E
+? 0 6 0 E
 E 1 7381 25 4 vest silk purple
 M 0 7405 1 7408 Wendel
-? 0 2 0 E
+? 0 6 0 E
 E 1 7341 50 18 buckler emerald
 M 0 7407 1 7410 Warden assistant
 ? 0 6 0 E
@@ -1046,25 +859,25 @@ M 0 7408 1 7410 inspector grimhaven
 ? 0 5 0 G
 G 1 509 9999 symbol gold
 M 0 7409 1 7411 morgue worker
-? 0 1 0 E
+? 0 6 0 E
 E 1 7383 30 14 cloak blood stained
-? 0 1 0 E
+? 0 6 0 E
 E 1 7384 60 8 sandal blood stained
-? 0 1 0 E
+? 0 6 0 E
 E 1 7385 50 2 ring metal sharpened
 M 0 7409 2 7412
-? 0 1 0 E
+? 0 6 0 E
 E 1 7383 30 14 cloak blood stained
-? 0 1 0 E
+? 0 6 0 E
 E 1 7384 60 8 sandal blood stained
-? 0 1 0 E
+? 0 6 0 E
 E 1 7385 50 2 ring metal sharpened
 M 0 7409 2 7413
-? 0 1 0 E
+? 0 6 0 E
 E 1 7383 30 14 cloak blood stained
-? 0 1 0 E
+? 0 6 0 E
 E 1 7384 60 8 sandal blood stained
-? 0 1 0 E
+? 0 6 0 E
 E 1 7385 50 2 ring metal sharpened
 M 0 7410 1 7420 Hrkac
 M 0 7411 1 7421 Hrdina
@@ -1073,13 +886,13 @@ M 0 7413 1 7422 Brewmeister Smith
 ? 0 6 0 E
 E 1 7386 24 19 scimitar obsidian
 M 0 7414 1 7422 Hoglund
-? 0 4 0 E
+? 0 6 0 E
 E 1 7387 12 11 glove dragon claw
 M 0 7415 1 7423 Outlaw Pantathian
 M 0 7416 1 7424 George
-? 0 1 0 E
+? 0 6 0 E
 E 1 7387 12 11 glove dragon claw
-? 0 2 0 E
+? 0 6 0 E
 E 1 7308 9999 19 club homemade
 M 0 7417 1 7424 Renfield
 ? 0 4 0 G
@@ -1089,25 +902,25 @@ M 0 7419 1 7427 Spy Industrial
 M 0 7420 1 7429 Hogfoot
 ? 0 7 0 E
 E 1 7388 50 6 pants expandable waist
-? 0 3 0 E
+? 0 6 0 E
 E 1 7389 50 4 suspenders
 M 0 7421 1 7430 Dino
 ? 0 5 0 E
 E 1 7390 9999 1 ring steel foil
 M 0 7422 1 7430 Domi
-? 0 1 0 E
+? 0 6 0 E
 E 1 7494 40 4 shirt leaf red
 M 0 7423 1 7431 Bylsma
 M 0 7424 1 7431 Johan
-? 0 2 0 E
+? 0 6 0 E
 E 1 7318 40 19 ivory dagger
 M 0 7425 1 7432 Zyntar
 M 0 7426 1 7433 Feller
 M 0 7427 1 7433 Helton
-? 0 3 0 E
+? 0 6 0 E
 E 1 7306 50 19 prison shank
 M 0 7428 1 7434 Brynth
-? 0 1 0 E
+? 0 6 0 E
 E 1 7494 40 4 shirt leaf red
 M 0 7429 1 7434 Cyrin Forgehammer
 M 0 7430 1 7436 Cook Prison
@@ -1115,7 +928,7 @@ M 0 7430 1 7436 Cook Prison
 E 1 2802 9999 19 knife butcher
 M 0 7431 1 7446 Oglethorp
 M 0 7432 1 7446 Priest prison drunk
-? 0 2 0 E
+? 0 6 0 E
 E 1 7310 200 3 collar priests white
 M 0 7433 1 7447 Darmok
 M 0 7434 1 7448 Syvn
@@ -1123,7 +936,7 @@ M 0 7435 1 7449 Executioner Prison
 ? 0 5 0 E
 E 1 7392 10 19 dagger sacrificial jet black
 M 0 7436 1 7449 executioners assistant
-? 0 2 0 G
+? 0 3 0 G
 G 1 5753 9999 symbol unholy
 M 0 7437 1 7450 Lady Byng
 M 0 7438 1 7450 Jack Adams
@@ -1131,17 +944,17 @@ M 0 7439 1 7451 Kryvrkian
 ? 0 5 0 G
 G 1 510 9999 symbol silver
 M 0 7440 1 7451 Kreough
-? 0 2 0 E
+? 0 6 0 E
 E 1 7315 11 2 ring gadgets many
 M 0 7441 1 7452 Bomtset
-? 0 2 0 E
+? 0 6 0 E
 E 1 7328 12 19 axe crudely made
 M 0 7442 1 7453 Vlade
 ? 0 5 0 G
 G 1 510 9999 symbol silver
 M 0 7443 1 7453 Hamrlyk
 M 0 7444 1 7457 Lector
-? 0 2 0 G
+? 0 3 0 G
 G 1 5753 9999 unholy symbol necklace
 ? 0 5 0 E
 E 1 7393 20 5 muzzle blood soaked
@@ -1167,17 +980,17 @@ M 0 7447 2 7488
 M 0 7447 2 7489
 M 0 7448 1 7461 Cronell
 M 0 7449 1 7462 Dorian
-? 0 2 0 E
+? 0 6 0 E
 E 1 7310 200 3 collar priests white
 M 0 7450 1 7462 Jaffy
-? 0 4 0 E
+? 0 6 0 E
 E 1 7394 15 14 cloak chicken feather
 M 0 7451 1 7463 Crystal
 M 0 7452 1 7463 Tryndel
 M 0 7352 1 7464 Bryn Squarefoot
 G 1 323 9999 spellbag large
 M 0 7455 1 7465 Ratchet Nurse
-? 0 2 0 G
+? 0 15 0 G
 G 1 505 9999 symbol brass
 ? 0 5 0 E
 E 1 7395 60 8 shoe squeaky white
@@ -1186,15 +999,15 @@ E 1 7396 40 5 cap pointy white
 M 0 7454 1 7466 Travis
 M 0 7456 1 7467 Pynder
 M 0 7457 1 7468 Gordon Stubtoe
-? 0 2 0 E
+? 0 6 0 E
 E 1 7389 50 4 suspenders
 M 0 7458 1 7469 Stauber
 ? 0 5 0 E
 E 1 7397 50 12 sleeve red runed
 M 0 7459 1 7470 Abbot
-? 0 1 0 E
+? 0 6 0 E
 E 1 7349 50 19 mace stone
-? 0 2 0 G
+? 0 10 0 G
 G 1 509 9999 symbol holy
 M 0 7460 1 7472 Briere
 M 0 7461 1 7473 Hogarth
@@ -1208,11 +1021,11 @@ M 0 7464 1 7478 Grough
 ? 0 6 0 E
 E 1 7399 40 14 cloak shiny green
 M 0 7465 1 7480 Gnary
-? 0 2 0 G
+? 0 10 0 G
 G 1 509 9999 symbol holy
 M 0 7466 1 7481 Kaslan
 M 0 7467 1 7482 Neogul
-? 0 2 0 E
+? 0 6 0 E
 E 1 7328 12 19 axe crudely made
 M 0 7475 1 7483 Jimmy Threetoes
 ? 0 5 0 E
@@ -1226,10 +1039,10 @@ M 0 7469 2 7495
 M 0 7469 2 7496
 M 0 7469 2 7497
 M 0 7470 1 7493 assassin
-? 0 3 0 E
+? 0 6 0 E
 E 1 7306 50 19 prison shank
 M 0 7470 1 7494
-? 0 3 0 E
+? 0 6 0 E
 E 1 7306 50 19 prison shank
 M 0 7471 1 7494 Heyer
 ? 0 6 0 E

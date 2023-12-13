@@ -1,6 +1,25 @@
 #35700
 Jesus/Archon - Ratling Caves~
 35799 30 2 1
+
+*tiny torn local set
+
+X 1 3 35709	choker
+X 1 4 35705	toga
+X 1 5 35708	skullcap
+X 1 6 35702	trousers
+X 1 8 35701	sandal
+X 1 9 35701	sandal
+X 1 10 35706	glove
+X 1 11 35706	glove
+X 1 12 35707	armband
+X 1 13 35707	armband
+X 1 14 35700	cloak
+X 1 15 35704	strap
+X 1 16 35703 wrist
+X 1 17 35703 wrist
+
+
 D 0 35700 0 1        The Side of a Hill -> A Dark Tunnel
 D 0 35701 2 1        A Dark Tunnel -> The Side of a Hill
 D 0 35705 3 1        Dark Tunnel -> Entrance to the Burrows
@@ -23,93 +42,96 @@ D 0 35786 0 1        Dark Tunnel -> Top of a Deep, Hot Cavern
 D 0 35787 0 1        Wide Dark Tunnel -> Treasure Room
 D 0 35788 2 1        Treasure Room -> Wide Dark Tunnel
 D 0 35789 2 1        Top of a Deep, Hot Cavern -> Dark Tunnel
-O 0 35713 2 35701    a bone pile
-O 0 35713 2 35701    a bone pile
-O 0 35713 2 35704    a bone pile
-O 0 35713 2 35704    a bone pile
-O 0 35713 2 35724    a bone pile
-O 0 35713 2 35724    a bone pile
-O 0 35713 2 35736    a bone pile
-O 0 35714 1 35706    a tiny rickety table
-O 0 35714 1 35708    a tiny rickety table
-O 0 35714 1 35708    a tiny rickety table
-O 0 35714 1 35710    a tiny rickety table
-O 0 35714 1 35710    a tiny rickety table
-O 0 35714 1 35711    a tiny rickety table
-O 0 35714 1 35711    a tiny rickety table
-O 0 35714 1 35712    a tiny rickety table
-O 0 35714 1 35712    a tiny rickety table
-O 0 35714 1 35713    a tiny rickety table
-O 0 35714 1 35713    a tiny rickety table
-O 0 35714 1 35714    a tiny rickety table
-O 0 35714 1 35720    a tiny rickety table
-O 0 35714 1 35720    a tiny rickety table
-O 0 35714 1 35723    a tiny rickety table
-O 0 35714 1 35723    a tiny rickety table
-O 0 35714 1 35725    a tiny rickety table
-O 0 35714 1 35726    a tiny rickety table
-O 0 35714 1 35727    a tiny rickety table
-O 0 35714 1 35733    a tiny rickety table
-O 0 35714 1 35733    a tiny rickety table
-O 0 35714 1 35736    a tiny rickety table
-O 0 35714 1 35736    a tiny rickety table
-O 0 35714 1 35744    a tiny rickety table
-O 0 35714 1 35746    a tiny rickety table
-O 0 35719 1 35762    a tiny rickety table
-O 0 35714 1 35768    a tiny rickety table
-O 0 35714 1 35769    a tiny rickety table
-O 0 35714 1 35770    a tiny rickety table
-O 0 35714 1 35771    a tiny rickety table
-O 0 35714 1 35772    a tiny rickety table
-O 0 35714 1 35775    a tiny rickety table
-O 0 35714 1 35776    a tiny rickety table
-O 0 35715 3 35760    a large iron cauldron
-P 1 35716 1 35715      a large mushroom
-O 0 35715 3 35760    a large iron cauldron
-P 1 35716 1 35715      a large mushroom
-O 0 35715 3 35760    a large iron cauldron
-P 1 35716 1 35715      a large mushroom
-O 0 35719 1 35761    a wide rickety wooden table
-O 0 35718 1 35763    a rickety wooden throne
-O 0 35713 1 35764    a bone pile
-P 1 35764 1 35764      a small key on a hemp cord
-O 0 35713 1 35736    a bone pile
-P 1 35736 1 35736      a dirty wooden key
-O 0 35713 1 35785    a bone pile
-P 1 59 1 35713      treasure
-O 0 35713 1 35788    a bone pile
-P 1 58 1 35713      treasure
-B 0 35717 3 35778    a huge mushroom
-B 0 35717 3 35778    a huge mushroom
-B 0 35717 3 35778    a huge mushroom
-B 0 35716 4 35778    a large mushroom
-B 0 35716 4 35778    a large mushroom
-B 0 35716 4 35778    a large mushroom
-B 0 35716 4 35778    a large mushroom
-B 0 35717 3 35780    a huge mushroom
-B 0 35717 3 35780    a huge mushroom
-B 0 35717 3 35780    a huge mushroom
-B 0 35716 4 35780    a large mushroom
-B 0 35716 4 35780    a large mushroom
-B 0 35716 4 35780    a large mushroom
-B 0 35716 4 35780    a large mushroom
-B 0 35717 3 35781    a huge mushroom
-B 0 35717 3 35781    a huge mushroom
-B 0 35717 3 35781    a huge mushroom
-B 0 35716 4 35781    a large mushroom
-B 0 35716 4 35781    a large mushroom
-B 0 35716 4 35781    a large mushroom
-B 0 35716 4 35781    a large mushroom
-B 0 35712 1 35791    some colorful flowers
-B 0 35712 1 35792    some colorful flowers
-B 0 35712 1 35793    some colorful flowers
-B 0 35712 1 35794    some colorful flowers
-B 0 35712 1 35795    some colorful flowers
-B 0 35712 1 35796    some colorful flowers
-B 0 35712 1 35797    some colorful flowers
+O 0 35713 2 35701    	a bone pile
+O 0 35713 2 35701    	a bone pile
+O 0 35713 2 35704   		 a bone pile
+O 0 35713 2 35704   		 a bone pile
+O 0 35713 2 35724    	a bone pile
+O 0 35713 2 35724    	a bone pile
+O 0 35713 2 35736    	a bone pile
+O 0 35714 1 35706    	a tiny rickety table
+O 0 35714 1 35708    	a tiny rickety table
+O 0 35714 1 35708    	a tiny rickety table
+O 0 35714 1 35710    	a tiny rickety table
+O 0 35714 1 35710    	a tiny rickety table
+O 0 35714 1 35711    	a tiny rickety table
+O 0 35714 1 35711    	a tiny rickety table
+O 0 35714 1 35712    	a tiny rickety table
+O 0 35714 1 35712    	a tiny rickety table
+O 0 35714 1 35713    	a tiny rickety table
+O 0 35714 1 35713    	a tiny rickety table
+O 0 35714 1 35714    	a tiny rickety table
+O 0 35714 1 35720    	a tiny rickety table
+O 0 35714 1 35720    	a tiny rickety table
+O 0 35714 1 35723    	a tiny rickety table
+O 0 35714 1 35723    	a tiny rickety table
+O 0 35714 1 35725    	a tiny rickety table
+O 0 35714 1 35726    	a tiny rickety table
+O 0 35714 1 35727    	a tiny rickety table
+O 0 35714 1 35733    	a tiny rickety table
+O 0 35714 1 35733    	a tiny rickety table
+O 0 35714 1 35736    	a tiny rickety table
+O 0 35714 1 35736    	a tiny rickety table
+O 0 35714 1 35744    	a tiny rickety table
+O 0 35714 1 35746    	a tiny rickety table
+O 0 35719 1 35762    	a tiny rickety table
+O 0 35714 1 35768    	a tiny rickety table
+O 0 35714 1 35769    	a tiny rickety table
+O 0 35714 1 35770    	a tiny rickety table
+O 0 35714 1 35771    	a tiny rickety table
+O 0 35714 1 35772    	a tiny rickety table
+O 0 35714 1 35775    	a tiny rickety table
+O 0 35714 1 35776    	a tiny rickety table
+O 0 35715 3 35760    	a large iron cauldron
+P 1 35716 1 35715      	a large mushroom
+O 0 35715 3 35760    	a large iron cauldron
+P 1 35716 1 35715      	a large mushroom
+O 0 35715 3 35760    	a large iron cauldron
+P 1 35716 1 35715      	a large mushroom
+O 0 35719 1 35761   		 a wide rickety wooden table
+O 0 35718 1 35763    	a rickety wooden throne
+O 0 35713 1 35764    	a bone pile
+P 1 35764 1 35764      	a small key on a hemp cord
+O 0 35713 1 35736    	a bone pile
+P 1 35736 1 35736      	a dirty wooden key
+O 0 35713 1 35785    	a bone pile
+P 1 59 1 35713     		 treasure
+O 0 35713 1 35788    	a bone pile
+P 1 58 1 35713      		treasure
+B 0 35717 3 35778    		a huge mushroom
+B 0 35717 3 35778   		 a huge mushroom
+B 0 35717 3 35778   		 a huge mushroom
+B 0 35716 4 35778    		a large mushroom
+B 0 35716 4 35778    		a large mushroom
+B 0 35716 4 35778    		a large mushroom
+B 0 35716 4 35778    		a large mushroom
+B 0 35717 3 35780    		a huge mushroom
+B 0 35717 3 35780    		a huge mushroom
+B 0 35717 3 35780    		a huge mushroom
+B 0 35716 4 35780    		a large mushroom
+B 0 35716 4 35780    		a large mushroom
+B 0 35716 4 35780    		a large mushroom
+B 0 35716 4 35780    		a large mushroom
+B 0 35717 3 35781    		a huge mushroom
+B 0 35717 3 35781    		a huge mushroom
+B 0 35717 3 35781    		a huge mushroom
+B 0 35716 4 35781    		a large mushroom
+B 0 35716 4 35781    		a large mushroom
+B 0 35716 4 35781    		a large mushroom
+B 0 35716 4 35781    		a large mushroom
+B 0 35712 1 35791    		some colorful flowers
+B 0 35712 1 35792    		some colorful flowers
+B 0 35712 1 35793    		some colorful flowers
+B 0 35712 1 35794    		some colorful flowers
+B 0 35712 1 35795    		some colorful flowers
+B 0 35712 1 35796    		some colorful flowers
+B 0 35712 1 35797    		some colorful flowers
 M 0 35711 9 35746       a ratling royal guard
+Z 0 0 5				tiny torn set
 M 0 35711 9 35754       a ratling royal guard
+Z 0 0 5				tiny torn set
 M 0 35707 1 35755       Raphilite, Ratling Prince
+Z 0 0 5				tiny torn set
 M 0 35721 1 35755       a ratling princess
 M 0 35713 1 35756       a ratling midwife
 M 0 35720 1 35757       a ratling royal baby
@@ -118,10 +140,13 @@ M 0 35720 1 35757       a ratling royal baby
 M 0 35720 1 35757       a ratling royal baby
 M 0 35710 1 35760       a ratling cook
 M 0 35714 1 35763       Ralyn, Ratling Queen
-? 0 2 0 E
-E 1 35720 199 19          a crystal shard [hold-left]
+Z 0 0 5				tiny torn set
+? 0 8 0 E
+E 1 35720 199 19          	a crystal shard [hold-left]
 M 0 35716 1 35763       Rhameu, Ratling King
+Z 0 0 5				tiny torn set
 M 0 35711 1 35766       a ratling royal guard
+Z 0 0 5				tiny torn set
 M 0 35719 1 35767       a ratling baby
 M 0 35719 1 35767       a ratling baby
 M 0 35719 1 35767       a ratling baby
@@ -129,161 +154,161 @@ M 0 35719 1 35767       a ratling baby
 M 0 35719 1 35767       a ratling baby
 M 0 35719 1 35767       a ratling baby
 M 0 35709 1 35778       a ratling farmer
-G 1 35717 1           a huge mushroom
+G 1 35717 1           		a huge mushroom
 M 0 35709 1 35780       a ratling farmer
-G 1 35717 1           a huge mushroom
+G 1 35717 1           		a huge mushroom
 M 0 35709 1 35781       a ratling farmer
-G 1 35717 1           a huge mushroom
+G 1 35717 1          		 a huge mushroom
 A 0 35751 35754
-M 0 35712 1 -99
+M 0 35712 1 -99	ratling female concubine young
 A 0 35751 35754
-M 0 35712 1 -99
+M 0 35712 1 -99	ratling female concubine young
 A 0 35751 35754
-M 0 35712 1 -99
+M 0 35712 1 -99	ratling female concubine young
 A 0 35751 35754
-M 0 35712 1 -99
+M 0 35712 1 -99	ratling female concubine young
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35700 1 -99
+M 0 35700 1 -99	rat large squeak
 A 0 35702 35749
-M 0 35701 1 -99
+M 0 35701 1 -99	ratling guard ears
 A 0 35702 35749
-M 0 35701 1 -99
+M 0 35701 1 -99	ratling guard ears
 A 0 35702 35749
-M 0 35715 1 -99
+M 0 35715 1 -99	Rabilical
 A 0 35702 35749
-M 0 35701 1 -99
+M 0 35701 1 -99	ratling guard ears
 A 0 35702 35749
-M 0 35701 1 -99
+M 0 35701 1 -99	ratling guard ears
 A 0 35702 35749
-M 0 35701 1 -99
+M 0 35701 1 -99	ratling guard ears
 A 0 35702 35749
-M 0 35702 1 -99
+M 0 35702 1 -99 	ratling male
 A 0 35702 35749
-M 0 35702 1 -99
+M 0 35702 1 -99 	ratling male
 A 0 35702 35749
-M 0 35702 1 -99
+M 0 35702 1 -99 	ratling male
 A 0 35702 35749
-M 0 35702 1 -99
+M 0 35702 1 -99	 ratling male
 A 0 35702 35749
-M 0 35702 1 -99
+M 0 35702 1 -99 	ratling male
 A 0 35702 35749
-M 0 35703 1 -99
+M 0 35703 1 -99	ratling female
 A 0 35702 35749
-M 0 35703 1 -99
+M 0 35703 1 -99	ratling female
 A 0 35702 35749
-M 0 35703 1 -99
+M 0 35703 1 -99	ratling female
 A 0 35702 35749
-M 0 35703 1 -99
+M 0 35703 1 -99	ratling female
 A 0 35702 35749
-M 0 35703 1 -99
+M 0 35703 1 -99	ratling female
 A 0 35702 35749
-M 0 35704 1 -99
+M 0 35704 1 -99	ratling boy bug
 A 0 35702 35749
-M 0 35704 1 -99
+M 0 35704 1 -99	ratling boy bug
 A 0 35702 35749
-M 0 35704 1 -99
+M 0 35704 1 -99	ratling boy bug
 A 0 35702 35749
-M 0 35704 1 -99
+M 0 35704 1 -99	ratling boy bug
 A 0 35702 35749
-M 0 35704 1 -99
+M 0 35704 1 -99	ratling boy bug
 A 0 35702 35749
-M 0 35705 1 -99
+M 0 35705 1 -99	ratling girl bounces giggles
 A 0 35702 35749
-M 0 35705 1 -99
+M 0 35705 1 -99	ratling girl bounces giggles
 A 0 35702 35749
-M 0 35705 1 -99
+M 0 35705 1 -99	ratling girl bounces giggles
 A 0 35702 35749
-M 0 35705 1 -99
+M 0 35705 1 -99	ratling girl bounces giggles
 A 0 35702 35749
-M 0 35705 1 -99
+M 0 35705 1 -99	ratling girl bounces giggles
 A 0 35702 35749
-M 0 35706 1 -99
+M 0 35706 1 -99	ratling guard watching
 A 0 35702 35749
-M 0 35706 1 -99
+M 0 35706 1 -99	ratling guard watching
 A 0 35702 35749
-M 0 35706 1 -99
+M 0 35706 1 -99	ratling guard watching
 A 0 35702 35749
-M 0 35706 1 -99
+M 0 35706 1 -99	ratling guard watching
 A 0 35702 35749
-M 0 35706 1 -99
+M 0 35706 1 -99	ratling guard watching
 A 0 35750 35789
-M 0 35723 1 -99
+M 0 35723 1 -99	ratling priest older kneels prays
 A 0 35750 35789
-M 0 35723 1 -99
+M 0 35723 1 -99	ratling priest older kneels prays
 A 0 35750 35789
-M 0 35723 1 -99
+M 0 35723 1 -99	ratling priest older kneels prays
 A 0 35750 35789
-M 0 35722 1 -99
+M 0 35722 1 -99	ratling outcast male angry
 A 0 35750 35789
-M 0 35722 1 -99
+M 0 35722 1 -99	ratling outcast male angry
 A 0 35750 35789
-M 0 35722 1 -99
+M 0 35722 1 -99	ratling outcast male angry
 A 0 35750 35789
-M 0 35717 1 -99
+M 0 35717 1 -99	ratling feral vicious snarling man floor
 A 0 35750 35789
-M 0 35717 1 -99
+M 0 35717 1 -99	ratling feral vicious snarling man floor
 A 0 35750 35789
-M 0 35717 1 -99
+M 0 35717 1 -99	ratling feral vicious snarling man floor
 A 0 35750 35789
-M 0 35718 1 -99
+M 0 35718 1 -99	ratling feral vicious snarling chained guard
 A 0 35750 35789
-M 0 35718 1 -99
+M 0 35718 1 -99	ratling feral vicious snarling chained guard
 A 0 35750 35789
-M 0 35718 1 -99
+M 0 35718 1 -99	ratling feral vicious snarling chained guard
 M 0 35708 1 35755       a pet rat
 ? 0 15 0 E
-E 1 35710 40 3            a spiked leather collar [neck]
+E 1 35710 40 3            	a spiked leather collar [neck]
 M 0 35708 1 35755       a pet rat
 ? 0 15 0 E
-E 1 35710 40 3            a spiked leather collar [neck]
+E 1 35710 40 3            	a spiked leather collar [neck]
 A 0 35750 35789
-M 0 35711 1 -99
-Y 0 134 2
+M 0 35711 1 -99	ratling royal guard strong beefy sneers
+Y 0 134 2			tiny torn set
 A 0 35750 35789
-M 0 35711 1 -99
-Y 0 134 2
+M 0 35711 1 -99	ratling royal guard strong beefy sneers
+Y 0 134 2			tiny torn set
 A 0 35750 35789
-M 0 35711 1 -99
-Y 0 134 2
+M 0 35711 1 -99	ratling royal guard strong beefy sneers
+Y 0 134 2			tiny torn set
 A 0 35750 35789
-M 0 35711 1 -99
-Y 0 134 2
+M 0 35711 1 -99	ratling royal guard strong beefy sneers
+Y 0 134 2			tiny torn set
 A 0 35750 35789
-M 0 35711 1 -99
-Y 0 134 2
+M 0 35711 1 -99	ratling royal guard strong beefy sneers
+Y 0 134 2			tiny torn set
 A 0 35750 35789
-M 0 35711 1 -99
-Y 0 134 2
+M 0 35711 1 -99	ratling royal guard strong beefy sneers
+Y 0 134 2			tiny torn set
 A 0 35750 35789
-M 0 35711 1 -99
-Y 0 134 2
+M 0 35711 1 -99	ratling royal guard strong beefy sneers
+Y 0 134 2			tiny torn set
 A 0 35742 35769
-M 0 35724 1 -99
+M 0 35724 1 -99	ratling pickpocket dirty
 A 0 35742 35769
-M 0 35724 1 -99
+M 0 35724 1 -99	ratling pickpocket dirty
 A 0 35742 35769
-M 0 35724 1 -99
+M 0 35724 1 -99	ratling pickpocket dirty
 A 0 35742 35769
-M 0 35724 1 -99
+M 0 35724 1 -99	ratling pickpocket dirty
 A 0 35742 35769
-M 0 35724 1 -99
+M 0 35724 1 -99	ratling pickpocket dirty
 S
 
