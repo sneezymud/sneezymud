@@ -2,6 +2,37 @@
 Third Ring of Roads~
 1199 25 2 1
 
+*dark oiled leather
+X 0 1 9923    ring
+X 0 2 9923     ring
+X 0 3 9930     collar
+X 0 4 9929    frock
+X 0 5 9931    hood
+X 0 6 9924    legging
+X 0 7 9924    legging
+X 0 8 9921    boot
+X 0 9 9921    boot
+X 0 10 9927    glove
+X 0 11 9927    glove
+X 0 12 9928    sleeve
+X 0 13 9928    sleeve
+X 0 14 9922    cape
+X 0 15 9926    belt
+X 0 16 9925    wrist
+X 0 17 9925    wrist
+X 0 18 9932    shield
+X 0 19 9933    splinter
+
+*hobbit traveler set
+X 1 4 1753         vest shale gnome (L20)
+X 1 5 1754         helmet shale gnome (L20)
+X 1 6 1752    fluorescent pants
+X 1 12 1750    gnome armband
+X 1 13 1750     gnome armband
+X 1 14 1755        cloak gnome feathery (L2)
+X 1 16 1751    thin gnomemail bracer
+X 1 17 1751    thin gnomemail bracer
+
 D 0 1152 2 1                  Secret south into Jungle Road
 D 0 1160 9 1                  Secret from Road to Gnoll Tower
 D 0 1045 6 1
@@ -37,18 +68,29 @@ M 0 1005 1 1033               Traveller
 M 0 1006 1 1042               Merchant
 M 0 1006 1 1078               Merchant
 
-M 0 1024 1 1024		Bulge - Toll Ogre
-M 0 1025 1 1028		Hardened Mercenary
-M 0 1026 1 1020		Hobbit Traveller
-? 0 20 0 E
-E 1 1753 9999 4         vest shale gnome
-? 0 20 0 E
-E 1 1754 9999 5         helmet shale gnome
-M 0 1027 1 1016		Logrus Sentry
-M 0 1027 1 1032		Logrus Sentry
-M 0 1028 1 1009		Drow Raider Captain
-M 0 1029 1 1006		Drow Raider
-M 0 1029 1 1012		Drow Raider
+M 0 1024 1 1024        Bulge - Toll Ogre
+M 0 1025 1 1028        Hardened Mercenary
+A 0 1016 1023
+M 0 1026 1 -99        Hobbit Traveller
+Z 0 1 5                    hobbit traveller local set
+A 0 1016 1023
+M 0 1026 1 -99        Hobbit Traveller
+Z 0 1 5                    hobbit traveller local set
+A 0 1016 1023
+M 0 1026 1 -99        Hobbit Traveller
+Z 0 1 5                    hobbit traveller local set
+M 0 1027 1 1016        Logrus Sentry
+Z 0 0 5                    dark leather local
+M 0 1027 1 1032        Logrus Sentry
+Z 0 0 5                    dark leather local
+M 0 1027 1 1035        Logrus Sentry
+Z 0 0 5                    dark leather local
+M 0 1027 1 1038        Logrus Sentry
+Z 0 0 5                    dark leather local
+
+M 0 1028 1 1009        Drow Raider Captain
+M 0 1029 1 1006        Drow Raider
+M 0 1029 1 1012        Drow Raider
 
 A 0 1160 1164
 M 0 1160 1 -99          Random load of large crow near tower
