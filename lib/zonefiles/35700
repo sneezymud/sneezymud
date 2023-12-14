@@ -140,9 +140,9 @@ M 0 35720 1 35757       a ratling royal baby
 M 0 35720 1 35757       a ratling royal baby
 M 0 35710 1 35760       a ratling cook
 M 0 35714 1 35763       Ralyn, Ratling Queen
-Z 0 0 5				tiny torn set
 ? 0 8 0 E
 E 1 35720 199 19          	a crystal shard [hold-left]
+Z 0 0 5				tiny torn set
 M 0 35716 1 35763       Rhameu, Ratling King
 Z 0 0 5				tiny torn set
 M 0 35711 1 35766       a ratling royal guard

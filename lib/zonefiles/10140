@@ -150,63 +150,63 @@ Y 0 61 7                          7% Chance for Elf Stud
 
 M 0 10113 1 10143 		elven hunter type1
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in r.hand
+Y 0 25 6                          6% chance of mithril set
 M 0 10113 1 10147 		elven hunter type1
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in r.hand
+Y 0 25 6                          6% chance of mithril set
 M 0 10113 1 10159 		elven hunter type1
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in r.hand
+Y 0 25 6                          6% chance of mithril set
 M 0 10113 1 10192 		elven hunter type1
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in r.hand
+Y 0 25 6                          6% chance of mithril set
 M 0 10113 1 10151 		elven hunter type1
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in r.hand
+Y 0 25 6                          6% chance of mithril set
 
 M 0 10114 1 10146 		elven hunter type2
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in held_right
+Y 0 25 6                          6% chance of mithril set
 M 0 10114 1 10178 		elven hunter type2
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in held_right
+Y 0 25 6                          6% chance of mithril set
 M 0 10114 1 10184 		elven hunter type2
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in held_right
+Y 0 25 6                          6% chance of mithril set
 M 0 10114 1 10188 		elven hunter type2
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in held_right
+Y 0 25 6                          6% chance of mithril set
 M 0 10114 1 10150 		elven hunter type2
 H 1 2 3				  hate dwarf
-Y 0 25 6                          6% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in held_right
+Y 0 25 6                          6% chance of mithril set
 
 M 0 10115 1 10193		Jendar, head elf hunter
 H 1 2 3				  hate dwarf
-Y 0 25 7                          7% chance of mithril set
 ? 0 6 0 E
 E 1 10142 150 19		  elven sword in held_right
 ? 0 3 0 E
 E 1 10158 150 18		  thorny whip in left hand
+Y 0 25 7                          7% chance of mithril set
 
 
 
@@ -276,7 +276,6 @@ M 0 10123 1 10198 		elf husband
 M 0 10124 1 10198 		elf wife
 
 M 0 10131 1 10181               Quiny
-Y 0 91 6                         6% chance of Tatterred
 ? 0 5 0 E
 E 1 10172 200 1			  chance of leaf ring on r-finger
 ? 0 3 0 E
@@ -285,6 +284,7 @@ E 1 10173 200 16		  chance of mithril bracelet on r-wrist
 E 1 10173 200 17		  chance of mithril bracelet on l-wrist
 ? 0 6 0 E
 E 1 10158 150 18		  thorny whip in left hand
+Y 0 91 6                         6% chance of Tatterred
 
 S
 
