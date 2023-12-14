@@ -1,29 +1,40 @@
-FROM docker.io/ubuntu:focal as build
+FROM ubuntu:focal AS build
 LABEL maintainer Elmo Todurov <elmo.todurov@eesti.ee>
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=utc apt-get install --yes --no-install-recommends build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadbclient-dev scons libcurl4-openssl-dev git ca-certificates
-ARG UID=1000
-RUN useradd -m -u $UID sneezy
-USER sneezy
-ARG BRANCH="master"
-# COPY . /home/sneezy/sneezymud
-WORKDIR /home/sneezy
-ARG FORCE_REBUILD=1
-RUN echo Building from branch: $BRANCH; git clone --depth 1 --shallow-submodules --recurse-submodules --single-branch --branch $BRANCH --no-tags https://github.com/sneezymud/sneezymud
-WORKDIR /home/sneezy/sneezymud/code
-RUN scons -j`nproc` -Q debug=1 sanitize=1 fortify=1 olevel=2 sneezy
+# Set this first to ensure it applies to all commands
+ENV DEBIAN_FRONTEND=noninteractive
 
-FROM docker.io/ubuntu:focal as run
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive TZ=utc apt-get install --yes --no-install-recommends libboost-program-options1.71.0 libboost-regex1.71.0 libboost-filesystem1.71.0 libboost-system1.71.0 libmariadb3 libcurl4 libasan5 gdb
+# Removing cache after install reduces image size
+RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadbclient-dev scons libcurl4-openssl-dev git ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 ARG UID=1000
-RUN useradd -m -u $UID sneezy
-RUN mkdir -p /home/sneezy/code/objs/
-RUN mkdir -p /home/sneezy/lib
+ARG BRANCH="master"
+
+# This could possibly also be accomplished by passing the --no-cache flag
+ARG FORCE_REBUILD=1
+
+# Combining commands reduces the number of layers, which reduces image size
+RUN useradd -m -u "$UID" sneezy && \
+  echo Building from branch: "$BRANCH" && \
+  git clone --depth 1 --shallow-submodules --recurse-submodules --single-branch --branch "$BRANCH" --no-tags https://github.com/sneezymud/sneezymud /home/sneezy/sneezymud && \
+  scons -C /home/sneezy/sneezymud/code -j`nproc` -Q debug=1 sanitize=1 fortify=1 olevel=2 sneezy
+
+FROM ubuntu:focal AS run
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends libboost-program-options1.71.0 libboost-regex1.71.0 libboost-filesystem1.71.0 libboost-system1.71.0 libmariadb3 libcurl4 libasan5 gdb && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+ARG UID=1000
+
+RUN useradd -m -u "$UID" sneezy && \
+  mkdir -p /home/sneezy/code/objs/ && \
+  mkdir -p /home/sneezy/lib
 WORKDIR /home/sneezy/code
 COPY --from=build /home/sneezy/sneezymud/code/sneezy /home/sneezy/code/sneezy
 COPY --from=build /home/sneezy/sneezymud/lib /home/sneezy/lib
-COPY --from=build /home/sneezy/sneezymud/code/sneezy.cfg /home/sneezy/code/sneezy.cfg 
+COPY --from=build /home/sneezy/sneezymud/code/sneezy.cfg /home/sneezy/code/sneezy.cfg
 RUN chown -R sneezy:sneezy /home/sneezy
-USER sneezy
 EXPOSE 7900
-CMD ./sneezy
+USER sneezy
+RUN ./sneezy
