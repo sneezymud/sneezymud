@@ -300,13 +300,13 @@ static void save_repairman_file(TBeing* repair, TBeing* buyer, TObj* o,
   }
 
   // open the file we will write to
-  if (mkdir("mobdata/repairs", 0770) && errno != EEXIST) {
-    vlogf(LOG_BUG, "Unable to create the repairs directory mobdata/repairs");
+  if (mkdir("mutable/repairs", 0770) && errno != EEXIST) {
+    vlogf(LOG_BUG, "Unable to create the repairs directory mutable/repairs");
     return;
   }
-  sprintf(buf, "mobdata/repairs/%d/%d", repair->mobVnum(), repair_number);
+  sprintf(buf, "mutable/repairs/%d/%d", repair->mobVnum(), repair_number);
   if (!(fp = fopen(buf, "w"))) {
-    sprintf(buf2, "mobdata/repairs/%d", repair->mobVnum());
+    sprintf(buf2, "mutable/repairs/%d", repair->mobVnum());
     if (mkdir(buf2, 0770)) {
       vlogf(LOG_BUG, format("Unable to create a repair directory %s for %s.") %
                        buf2 % repair->getName());
@@ -361,7 +361,7 @@ TObj* loadRepairItem(TBeing* repair, int ticket, long& time, int& cost,
 
   // open the repair file for this ticket
   sstring filename =
-    format("mobdata/repairs/%d/%d") % repair->mobVnum() % ticket;
+    format("mutable/repairs/%d/%d") % repair->mobVnum() % ticket;
 
   if (!(fp = fopen(filename.c_str(), "r"))) {
     repair->doSay(
@@ -460,7 +460,7 @@ static int getRepairItem(TBeing* repair, TBeing* buyer, int ticket,
   }
 
   unlink(
-    ((sstring)(format("mobdata/repairs/%d/%d") % repair->mobVnum() % ticket))
+    ((sstring)(format("mutable/repairs/%d/%d") % repair->mobVnum() % ticket))
       .c_str());
 
   repair->doTell(fname(buyer->name), format("Ah yes, %s, here is %s.") %
@@ -835,7 +835,7 @@ void TObj::giveToRepair(TMonster* repair, TBeing* buyer, int* found) {
   // %s.") %
   // fname(buyer->name).c_str() % getName() % (int)getStructPoints() %
   // (int)getMaxStructPoints() % (int)(this->objLevel()*1) %
-  // secsToString(when_ready-ct).c_str());
+  //secsToString(when_ready-ct).c_str());
 
   buyer->logItem(this, CMD_REPAIR);
 
@@ -907,7 +907,7 @@ sstring repairList(TMonster* repair) {
   TObj* o;
 
   if (!(dfd =
-          opendir(((sstring)(format("mobdata/repairs/%d") % repair->mobVnum()))
+          opendir(((sstring)(format("mutable/repairs/%d") % repair->mobVnum()))
                     .c_str()))) {
     vlogf(LOG_BUG, format("Unable to dirwalk directory in repairList for %i") %
                      repair->mobVnum());
@@ -968,7 +968,7 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
         }
       }
 
-      sprintf(buf, "mobdata/repairs/%d", (repair)->mobVnum());
+      sprintf(buf, "mutable/repairs/%d", (repair)->mobVnum());
       global_repair = (repair)->mobVnum();
       dirwalk(buf, count_repair_items);
 
@@ -1116,7 +1116,7 @@ void count_repair_items(const char* name) {
   FILE* fp;
   char buf[128];
 
-  sprintf(buf, "mobdata/repairs/%d/%s", global_repair, name);
+  sprintf(buf, "mutable/repairs/%d/%s", global_repair, name);
   if (!(fp = fopen(buf, "r"))) {
     vlogf(LOG_BUG,
       format("Had a bad time opening repair file (%s) for initialization.") %
@@ -1200,7 +1200,7 @@ void processRepairFile(const char* name) {
 }
 
 void processRepairFiles(void) {
-  dirwalk_subs_fullname("mobdata/repairs", processRepairFile);
+  dirwalk_subs_fullname("mutable/repairs", processRepairFile);
 }
 
 int repairMetal(TBeing* ch, TObj* o) {

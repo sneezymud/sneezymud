@@ -184,7 +184,7 @@ void runMigrations() {
         sstring buf;
         wizSaveData saveData;
 
-        buf = format("immortals/%s/wizdata") % file.name;
+        buf = format("mutable/immortals/%s/wizdata") % file.name;
         fp = fopen(buf.c_str(), "r");
         if (!fp) {
           continue;

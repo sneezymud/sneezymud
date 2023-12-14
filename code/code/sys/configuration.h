@@ -26,7 +26,7 @@ class Config {
 
     // causes items left in repair to be deleted after a set number of days.
     // Good to keep things circulating, but bad if extended downtime
-    // anticipated. Simply deletes the file in mobdata/repairs/, the tickets
+    // anticipated. Simply deletes the file in mutable/repairs/, the tickets
     // still exist and the repairman will say he doesn't have the item.
     static bool NUKE_REPAIR_ITEMS;
 

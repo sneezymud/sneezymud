@@ -160,7 +160,7 @@ void TBeing::doNameChange(const char* argument) {
   }
 
   // check for corspse file
-  tmpbuf = format("corpses/%s") % sstring(orig_name).lower();
+  tmpbuf = format("mutable/corpses/%s") % sstring(orig_name).lower();
   if ((fp = fopen(tmpbuf.c_str(), "r"))) {
     fclose(fp);
     sendTo("That player has a corpse file.\n\r");
@@ -178,16 +178,16 @@ void TBeing::doNameChange(const char* argument) {
   db.query("update player set name=lower('%s') where name=lower('%s')",
     tmp_name, orig_name);
 
-  tmpbuf = format("account/%c/%s/%s") % LOWER(vict->desc->account->name[0]) %
-           sstring(vict->desc->account->name).lower() %
-           sstring(orig_name).lower();
+  tmpbuf =
+    format("mutable/account/%c/%s/%s") % LOWER(vict->desc->account->name[0]) %
+    sstring(vict->desc->account->name).lower() % sstring(orig_name).lower();
 
   if (unlink(tmpbuf.c_str()) != 0)
     vlogf(LOG_FILE, format("error in unlink (11) (%s) %d") % tmpbuf % errno);
 
   if (vict->GetMaxLevel() > MAX_MORT) {
-    tmpbuf = format("mv immortals/%s/ immortals/%s/") % orig_name %
-             sstring(tmp_name).cap();
+    tmpbuf = format("mv mutable/immortals/%s/ mutable/immortals/%s/") %
+             orig_name % sstring(tmp_name).cap();
     vsystem(tmpbuf);
   }
 
@@ -219,7 +219,7 @@ void TBeing::doDescription() {
     sendTo("Ugly monsters like you can't change a description!\n\r");
     return;
   }
-#if 0 
+#if 0
   if (desc->m_bIsClient) {
     // it winds up sending their desc as a bug report...
 

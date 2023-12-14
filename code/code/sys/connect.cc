@@ -357,7 +357,7 @@ bool Descriptor::checkForMultiplay() {
         oChar = tChar->next;
 
         if (tChar != character && tChar->isPc() && tChar->isLinkdead()) {
-          sprintf(tAccount, "account/%c/%s/%s", LOWER(account->name[0]),
+          sprintf(tAccount, "mutable/account/%c/%s/%s", LOWER(account->name[0]),
             sstring(account->name).lower().c_str(),
             tChar->getNameNOC(character).lower().c_str());
 
@@ -3041,7 +3041,7 @@ bool Descriptor::checkForCharacter(const sstring arg, bool silent) {
   if (arg.length() <= 0)
     return FALSE;
 
-  sprintf(buf, "player/%c/%s", LOWER(arg[0]), arg.lower().c_str());
+  sprintf(buf, "mutable/player/%c/%s", LOWER(arg[0]), arg.lower().c_str());
 
   if (!stat(buf, &timestat)) {
     if (!m_bIsClient && !silent)
@@ -3398,10 +3398,10 @@ int Descriptor::doAccountStuff(char* arg) {
       }
 
       // lower() returns static buf, so add one at a time
-      sprintf(buf, "account/%c/%s", LOWER(account->name[0]),
+      sprintf(buf, "mutable/account/%c/%s", LOWER(account->name[0]),
         sstring(account->name).lower().c_str());
       sprintf(buf + strlen(buf), "/%s", sstring(arg).lower().c_str());
-      // sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]),
+      // sprintf(buf, "mutable/account/%c/%s/%s", LOWER(account->name[0]),
       //                                  account->name.lower(), arg.lower());
       if (stat(buf, &timestat)) {
         writeToQ("No such character.\n\r");
@@ -3506,7 +3506,7 @@ int Descriptor::doAccountStuff(char* arg) {
       vlogf(LOG_PIO, format("Deleting mail for character %s.") % delname);
       db.query("delete from mail where lower(mailto)=lower('%s')", delname);
 
-      sprintf(buf, "account/%c/%s/%s", LOWER(account->name[0]),
+      sprintf(buf, "mutable/account/%c/%s/%s", LOWER(account->name[0]),
         sstring(account->name).lower().c_str(), delname);
       if (unlink(buf) != 0)
         vlogf(LOG_FILE, format("error in unlink (3) (%s) %d") % buf % errno);
@@ -3789,7 +3789,8 @@ void Descriptor::saveAccount() {
       format("Big problems in saveAccount (%s)") % account->name.lower());
   }
 
-  path = ((sstring)(format("account/%c/%s") % account->name[0] % account->name))
+  path = ((sstring)(format("mutable/account/%c/%s") % account->name[0] %
+                    account->name))
            .lower();
   if (mkdir(path.c_str(), 0770) && errno != EEXIST) {
     vlogf(LOG_FILE,
@@ -3804,9 +3805,9 @@ void Descriptor::deleteAccount() {
 
   vlogf(LOG_PIO, format("Account %s self-deleted.") % account->name);
 
-  sstring dir_path =
-    ((sstring)(format("account/%c/%s") % account->name[0] % account->name))
-      .lower();
+  sstring dir_path = ((sstring)(format("mutable/account/%c/%s") %
+                                account->name[0] % account->name))
+                       .lower();
   if (!(dfd = opendir(dir_path.c_str()))) {
     vlogf(LOG_FILE,
       format("Unable to walk directory for delete account (%s account)") %
