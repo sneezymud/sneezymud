@@ -50,7 +50,7 @@ void TBeing::wizFileRead() {
   if (tPerson && !tPerson->tLogFile && should_be_logged(tPerson)) {
     sstring tString;
 
-    tString = format("immortals/%s/logfile") % name;
+    tString = format("mutable/immortals/%s/logfile") % name;
 
     if (!(tPerson->tLogFile = fopen(tString.c_str(), "a")))
       vlogf(LOG_FILE, format("Unable to open Log File for %s") % name);

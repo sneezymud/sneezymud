@@ -522,7 +522,7 @@ void TMessages::initialize() {
   char tString[256], tBuffer[MAX_STRING_LENGTH], tChar;
   FILE* tFile = NULL;
 
-  sprintf(tString, "player/%c/%s.strings", LOWER(tPlayer->name[0]),
+  sprintf(tString, "mutable/player/%c/%s.strings", LOWER(tPlayer->name[0]),
     sstring(tPlayer->name).lower().c_str());
 
   // They don't have a sstrings file, so just return.
@@ -562,7 +562,7 @@ void TMessages::savedown() {
   sstring tStString("");
   bool didWrite = false;
 
-  sprintf(tString, "player/%c/%s.strings", LOWER(tPlayer->name[0]),
+  sprintf(tString, "mutable/player/%c/%s.strings", LOWER(tPlayer->name[0]),
     sstring(tPlayer->name).lower().c_str());
 
   if (!(tFile = fopen(tString, "w")))

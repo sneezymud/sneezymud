@@ -1315,7 +1315,7 @@ void TBeing::saveGuildStats() {
   if (!isPc() || !desc || getGuildID() == -1)
     return;
 
-  sprintf(buf, "player/%c/%s.guild", LOWER(name[0]),
+  sprintf(buf, "mutable/player/%c/%s.guild", LOWER(name[0]),
     sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "w"))) {
@@ -1358,7 +1358,7 @@ void TBeing::loadGuildStats() {
   if (!isPc() || !desc)
     return;
 
-  sprintf(buf, "player/%c/%s.guild", LOWER(name[0]),
+  sprintf(buf, "mutable/player/%c/%s.guild", LOWER(name[0]),
     sstring(name).lower().c_str());
 
   if (!(fp = fopen(buf, "r"))) {  // file may not exist

@@ -21,6 +21,7 @@ cscope.*out
 /lib/mobdata/repairs/
 /lib/txt/stats
 /lib/txt/stats.bak
+/lib/mutable/
 
 # local config file
 sneezy.cfg

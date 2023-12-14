@@ -160,13 +160,6 @@ const char* const File::WIZLIST = "txt/wizlist"; /* for WIZLIST   */
 const char* const File::WIZMOTD = "txt/wizmotd"; /* MOTD for immorts */
 const char* const File::WIZNEWS = "txt/wiznews";
 
-const char* const Path::DATA = "lib";   /* default data directory     */
-const char* const Path::HELP = "help/"; /* for HELP <keywrd>          */
-const char* const Path::IMMORTAL_HELP = "help/_immortal";
-const char* const Path::BUILDER_HELP = "help/_builder";
-const char* const Path::SKILL_HELP = "help/_skills";
-const char* const Path::SPELL_HELP = "help/_spells";
-
 std::vector<TRoom*> roomspec_db(0);
 std::vector<TRoom*> roomsave_db(0);
 std::queue<sstring> queryqueue;
@@ -393,12 +386,12 @@ void bootDb(void) {
   db.query("begin");
 
   bootPulse("Verifying runtime lib dirs.");
-  verify_path("roomdata/saved");
-  verify_path("immortals");
-  verify_path("corpses/corrupt");
-  verify_path_azdir("rent");
-  verify_path_azdir("account");
-  verify_path_azdir("player");
+  verify_path("mutable/roomdata/saved");
+  verify_path("mutable/immortals");
+  verify_path("mutable/corpses/corrupt");
+  verify_path_azdir("mutable/rent");
+  verify_path_azdir("mutable/account");
+  verify_path_azdir("mutable/player");
 
   bootPulse("Resetting the game time.");
   GameTime::reset_time();
@@ -844,7 +837,7 @@ void bootWorld(void) {
 
 #if 0
     if ((rp->getRoomHeight() >= 0) && rp->isFallSector())
-      vlogf(LOG_LOW,format("%s fall room %d set with limited height") % 
+      vlogf(LOG_LOW,format("%s fall room %d set with limited height") %
                 rp->name %rp->number);
 #endif
   }

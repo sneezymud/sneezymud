@@ -51,16 +51,32 @@ class File {
 };
 
 class Path {
-  private:
-    Path();
-
   public:
-    static const char* const HELP;
-    static const char* const DATA;
-    static const char* const IMMORTAL_HELP;
-    static const char* const BUILDER_HELP;
-    static const char* const SKILL_HELP;
-    static const char* const SPELL_HELP;
+    static constexpr const char* HELP = "help/";
+    static constexpr const char* DATA = "lib";
+    static constexpr const char* IMMORTAL_HELP = "help/_immortal";
+    static constexpr const char* BUILDER_HELP = "help/_builder";
+    static constexpr const char* SKILL_HELP = "help/_skills";
+    static constexpr const char* SPELL_HELP = "help/_spells";
+
+    // Paths to mutable files in lib/mutable. These are all the directory/files
+    // that need to be persisted for each separate instance of the game and
+    // therefore must be stored in a Docker volume if running in Docker. These
+    // are good candidates for being moved to the database.
+    // TODO: Replace all hardcoded instances of any of these paths throughout
+    // the codebase with their respective Path::MUTABLE_* constants. Will
+    // require large amount of refactoring.
+    static constexpr const char* MUTABLE_ACCOUNT = "mutable/account";
+    static constexpr const char* MUTABLE_CORPSES = "mutable/corpses";
+    static constexpr const char* MUTABLE_IMMORTALS = "mutable/immortals";
+    static constexpr const char* MUTABLE_PLAYER = "mutable/player";
+    static constexpr const char* MUTABLE_RENT = "mutable/rent";
+    static constexpr const char* MUTABLE_ROOMDATA = "mutable/roomdata";
+    static constexpr const char* MUTABLE_REPAIRS = "mutable/repairs";
+    static constexpr const char* MUTABLE_STATS_FILE = "mutable/stats";
+    static constexpr const char* MUTABLE_STATS_BAK = "mutable/stats.bak";
+
+    Path() = delete;
 };
 
 const char* const MUDADMIN_EMAIL = "support@sneezymud.org";

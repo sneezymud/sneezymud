@@ -2907,7 +2907,7 @@ static void welcomeNewPlayer(const TPerson* ch) {
   struct dirent* dp;
   unsigned int count = 0;
 
-  sprintf(buf, "account/%c/%s", LOWER(ch->name[0]),
+  sprintf(buf, "mutable/account/%c/%s", LOWER(ch->name[0]),
     sstring(ch->name).lower().c_str());
   if (!(dfd = opendir(buf))) {
     return;
@@ -3379,12 +3379,14 @@ void TBeing::doRestore(const char* argument) {
       return;
     }
     if (!(fp2 = fopen("reimburse.new", "w+"))) {
+      fclose(fp);
       vlogf(LOG_FILE, "Couldn't open reimbursement list for restore pracs.");
       return;
     }
     if (fgets(buf, 60, fp) == NULL && !strcmp("START\n", buf)) {
       vlogf(LOG_FILE, "ERROR: bad format of reimbursement list");
       fclose(fp);
+      fclose(fp2);
       return;
     }
     fprintf(fp2, "%s", buf);
@@ -3393,6 +3395,7 @@ void TBeing::doRestore(const char* argument) {
       if (fgets(buf, 60, fp) == NULL) {
         vlogf(LOG_FILE, "ERROR: bad format of reimbursement list");
         fclose(fp);
+        fclose(fp2);
         return;
       }
       if (!strcmp(buf, "END"))  // end of list
@@ -3400,6 +3403,7 @@ void TBeing::doRestore(const char* argument) {
       if (sscanf(buf, "%d %s\n", &pracs, name) != 2) {
         vlogf(LOG_FILE, "ERROR: bad format of reimbursement list");
         fclose(fp);
+        fclose(fp2);
         return;
       }
       if (name == victim->getName()) {
@@ -3778,7 +3782,7 @@ void TBeing::doWipe(const char* argument) {
 
   db.query("delete from player where lower(name)=lower('%s')", namebuf);
 
-  sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),
+  sprintf(buf, "mutable/account/%c/%s/%s", LOWER(st.aname[0]),
     sstring(st.aname).lower().c_str(), sstring(namebuf).lower().c_str());
 
   if (unlink(buf) != 0)
@@ -3980,8 +3984,8 @@ void TPerson::doAccess(const sstring& arg) {
       format("Height:  %d,    Weight:  %.1f\n\r") % st.height % st.weight;
     buf += tmpbuf;
 
-    arg1 =
-      format("account/%c/%s") % LOWER(st.aname[0]) % sstring(st.aname).lower();
+    arg1 = format("mutable/account/%c/%s") % LOWER(st.aname[0]) %
+           sstring(st.aname).lower();
     arg2 = format("%s/comment") % arg1;
     if ((fp = fopen(arg2.c_str(), "r"))) {
       while (fgets(filebuf, 255, fp))
@@ -4061,12 +4065,12 @@ void TBeing::doReplace(const sstring& argument) {
     if (powerCheck(POWER_REPLACE_PFILE))
       return;
 
-    strcpy(dir2, "player");
+    strcpy(dir2, "mutable/player");
     dontMove = TRUE;
   } else if (is_abbrev(arg2, "account"))
-    strcpy(dir2, "account");
+    strcpy(dir2, "mutable/account");
   else if (is_abbrev(arg2, "rent"))
-    strcpy(dir2, "rent");
+    strcpy(dir2, "mutable/rent");
   else {
     sendTo(
       "Syntax : replace <playername> <player | rent | account> <today | "
@@ -4104,11 +4108,11 @@ void TBeing::doReplace(const sstring& argument) {
       // Check for account directory here maybe. This won't work
       // if account directory isn't there.
 
-      sprintf(buf, "rm player/%c/%s", arg1[0], arg1.c_str());
+      sprintf(buf, "rm mutable/player/%c/%s", arg1[0], arg1.c_str());
       vsystem(buf);
-      sprintf(buf, "account/%c/%s/%s", LOWER(st.aname[0]),
+      sprintf(buf, "mutable/account/%c/%s/%s", LOWER(st.aname[0]),
         sstring(st.aname).lower().c_str(), arg1.c_str());
-      sprintf(dir2, "player/%c/%s", arg1[0], arg1.c_str());
+      sprintf(dir2, "mutable/player/%c/%s", arg1[0], arg1.c_str());
       if (link(buf, dir2))
         vlogf(LOG_BUG, format("link failed in doReplace() for %s") % arg1);
       sendTo("Done.\n\r");
@@ -5363,7 +5367,7 @@ static void TimeTravel(const char* ch) {
   if (!ch)
     return;
 
-  sprintf(fileName, "rent/%c/%s", ch[0], ch);
+  sprintf(fileName, "mutable/rent/%c/%s", ch[0], ch);
 
   // skip followers data
   if (strlen(fileName) > 4 && !strcmp(&fileName[strlen(fileName) - 4], ".fol"))
@@ -5415,32 +5419,12 @@ void TBeing::doTimeshift(const char* arg) {
 #endif
     vlogf(LOG_MISC,
       format("%s moving time back %d minutes.") % getName() % deltatime);
-    dirwalk("rent/a", TimeTravel);
-    dirwalk("rent/b", TimeTravel);
-    dirwalk("rent/c", TimeTravel);
-    dirwalk("rent/d", TimeTravel);
-    dirwalk("rent/e", TimeTravel);
-    dirwalk("rent/f", TimeTravel);
-    dirwalk("rent/g", TimeTravel);
-    dirwalk("rent/h", TimeTravel);
-    dirwalk("rent/i", TimeTravel);
-    dirwalk("rent/j", TimeTravel);
-    dirwalk("rent/k", TimeTravel);
-    dirwalk("rent/l", TimeTravel);
-    dirwalk("rent/m", TimeTravel);
-    dirwalk("rent/n", TimeTravel);
-    dirwalk("rent/o", TimeTravel);
-    dirwalk("rent/p", TimeTravel);
-    dirwalk("rent/q", TimeTravel);
-    dirwalk("rent/r", TimeTravel);
-    dirwalk("rent/s", TimeTravel);
-    dirwalk("rent/t", TimeTravel);
-    dirwalk("rent/u", TimeTravel);
-    dirwalk("rent/v", TimeTravel);
-    dirwalk("rent/w", TimeTravel);
-    dirwalk("rent/x", TimeTravel);
-    dirwalk("rent/y", TimeTravel);
-    dirwalk("rent/z", TimeTravel);
+
+    static constexpr std::string_view alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+    for (const auto& letter : alphabet) {
+      dirwalk(format("mutable/rent/%s") % letter, TimeTravel);
+    }
 
 #if 0
 // there's no good reason to do this
@@ -6090,7 +6074,8 @@ void TBeing::doAccount(const sstring& arg) {
     }
   }
 
-  sstring path = format("account/%c/%s") % name.lower()[0] % name.lower();
+  sstring path =
+    format("mutable/account/%c/%s") % name.lower()[0] % name.lower();
   if (!(dfd = opendir(path.c_str()))) {
     sendTo("No account by that name exists.\n\r");
     sendTo("Syntax: account <account name>\n\r");
@@ -6284,7 +6269,7 @@ void TBeing::doAccount(const sstring& arg) {
   if (hasWizPower(POWER_ACCOUNT)) {
     FILE* fp;
     sstring path =
-      format("account/%c/%s/comment") % name.lower()[0] % name.lower();
+      format("mutable/account/%c/%s/comment") % name.lower()[0] % name.lower();
     if ((fp = fopen(path.c_str(), "r"))) {
       char buf3[256];
       while (fgets(buf3, 255, fp))
@@ -6412,7 +6397,8 @@ static bool verifyName(const sstring tStString) {
   bool isNotCreator = true;
 
   // Knocks it to lower case then ups the first letter.
-  sprintf(tString, "immortals/%s/wizdata", tStString.lower().cap().c_str());
+  sprintf(tString, "mutable/immortals/%s/wizdata",
+    tStString.lower().cap().c_str());
 
   // Wizfile doesn't exist, not an immortal or something else.
   // this is a moot check, go back with a false.
