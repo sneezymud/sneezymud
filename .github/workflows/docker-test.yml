@@ -1,0 +1,33 @@
+name: Build and Publish - Test Server
+on:
+  push:
+    branches:
+      - "test"
+jobs:
+  build_image:
+    runs-on: ubuntu-20.04
+    name: Build Image
+    steps:
+      - name: Checkout main repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: "true"
+
+      - name: Checkout sneezymud-docker repo
+        uses: actions/checkout@v4
+        with:
+          repository: sneezymud/sneezymud-docker
+          path: sneezymud-docker
+
+      - uses: mr-smithers-excellent/docker-build-push@v5
+        name: Build & Push Docker image
+        with:
+          image: sneezymud/sneezymud:test
+          addLatest: false
+          registry: registry.hub.docker.com
+          dockerfile: sneezymud-docker/docker/Dockerfile
+          buildArgs:
+            - "BRANCH=test"
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
