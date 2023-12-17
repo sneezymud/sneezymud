@@ -81,7 +81,7 @@ sstring TFFlame::statObjInfo() const {
   else if (hasMagBV(TFFLAME_IMMORTAL))
     sprintf(Buf[1] + strlen(Buf[1]), " [Immortal]");
 
-  sprintf(Buf[0], "Light: %s (%d) Heat: %d Magics:\n\r\t%s",
+  sprintf(Buf[0], "Light: %s (%d) Heat: %d Magics:\n\r\t%.200s",
     describe_light(getLightAmt()), getLightAmt(), getMaxBurn(),
     (strlen(Buf[1]) > 0 ? Buf[1] : " --none--"));
 
