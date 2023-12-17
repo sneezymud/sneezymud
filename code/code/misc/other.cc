@@ -782,7 +782,7 @@ void TBeing::verifyWeightVolume() {
     rw += t->getTotalWeight(TRUE);
     rv += t->getTotalVolume();
   }
-  if ((compareWeights(rw, getCarriedWeight()) != 0) || 
+  if ((compareWeights(rw, getCarriedWeight()) != 0) ||
       rv != getCarriedVolume()) {
     setCarriedWeight(rw);
     setCarriedVolume(rv);
