@@ -907,7 +907,7 @@ void TBeing::doPunch(const sstring& arg) {
   for (wearSlotT slot = MIN_WEAR; slot < MAX_WEAR; slot++) {
     slots.push_back(slot);
   }
-  std::random_shuffle(slots.begin(), slots.end());
+  std::shuffle(slots.begin(), slots.end(), rng);
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {

@@ -81,7 +81,7 @@ const Card* CardDeck::undraw() {
 
 void CardDeck::shuffle() {
   auto& deck = pimpl->deck;
-  std::random_shuffle(deck.begin(), deck.end());
+  std::shuffle(deck.begin(), deck.end(), rng);
 }
 
 CardDeck::CardDeck() {

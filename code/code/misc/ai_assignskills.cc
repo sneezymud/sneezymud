@@ -201,7 +201,7 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
 
     // first, let's choose a favored disc, this is our "specialization"
     if (!favored) {
-      std::random_shuffle(favorites.begin(), favorites.end());
+      std::shuffle(favorites.begin(), favorites.end(), rng);
       favoredNum = favorites[0];
 
       if (!(favored = getDiscipline(favoredNum))) {
@@ -219,7 +219,7 @@ void TBeing::assignSkills(classIndT Class, discNumT primDisc,
 
     // now let's learn some random discs
     // first, shuffle our list
-    std::random_shuffle(disclist.begin(), disclist.end());
+    std::shuffle(disclist.begin(), disclist.end(), rng);
 
     // now go down the list and practice the first one that isn't maxed
     bool found = false;

@@ -35,7 +35,7 @@ void TBeing::doShuffle(const sstring& arg) {
     cards.push_back(t);
   }
 
-  std::random_shuffle(cards.begin(), cards.end());
+  std::shuffle(cards.begin(), cards.end(), rng);
 
   for (unsigned int i = 0; i < cards.size(); ++i) {
     *deck += *cards[i];

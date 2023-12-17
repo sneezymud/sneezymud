@@ -23,6 +23,7 @@ class charFile;
 using std::max;
 using std::min;
 
+extern std::mt19937 rng;
 extern wearSlotT slot_from_bit(int);
 extern void cleanCharBuf(char*);
 extern int split_string(const sstring& str, const sstring& sep,
