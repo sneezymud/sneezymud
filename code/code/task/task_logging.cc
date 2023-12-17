@@ -32,7 +32,7 @@ void TBeing::doLogging() {
       treetypes.push_back(woodtypes[i]);
       i++;
     }
-    std::random_shuffle(treetypes.begin(), treetypes.end());
+    std::shuffle(treetypes.begin(), treetypes.end(), rng);
     roomp->setTreetype(treetypes[0]);
   }
 

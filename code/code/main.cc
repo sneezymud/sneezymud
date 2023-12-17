@@ -20,6 +20,8 @@ extern int run_the_game();
 
 #ifndef LOWTOOLS
 
+std::mt19937 rng;
+
 int main(int argc, char* argv[]) {
   vlogf(LOG_MISC, "Sneezy version " VERSION);
   int a;
@@ -46,6 +48,8 @@ int main(int argc, char* argv[]) {
   vlogf(LOG_MISC, format("Using %s as data directory.") % Config::DataDir());
 
   srand(time(0));
+  std::random_device rd;
+  rng = std::mt19937(rd());
 
   WizLock = false;
 

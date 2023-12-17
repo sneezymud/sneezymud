@@ -4702,7 +4702,7 @@ void TBeing::addToRandomStat(int extra_points) {
   for (whichStat = MIN_STAT; whichStat < MAX_STATS_USED; whichStat++) {
     stats.push_back(whichStat);
   }
-  std::random_shuffle(stats.begin(), stats.end());
+  std::shuffle(stats.begin(), stats.end(), rng);
   while (extra_points != 0) {
     if (i >= stats.size()) {
       i = 0;
