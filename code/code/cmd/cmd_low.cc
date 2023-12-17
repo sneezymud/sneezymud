@@ -732,7 +732,7 @@ void TMonster::checkMobStats(tinyfileTypeT forReal) {
   }
 #if 0
   if (strlen(getName()) > MAX_NAME_LENGTH-1) {
-    vlogf(LOG_LOW, format("%s (%d) had excessive mob name length.") % 
+    vlogf(LOG_LOW, format("%s (%d) had excessive mob name length.") %
          getName() % mobVnum());
   }
 #endif
@@ -945,7 +945,7 @@ void TObj::checkObjStats() {
           vlogf(LOG_LOW,format("Mega shadow on %s") % getName());
         break;
       } else if (i==(MAX_OBJ_AFFECT-1))
-        vlogf(LOG_LOW,format("obj %s has too many affects to set shadow on it.") % 
+        vlogf(LOG_LOW,format("obj %s has too many affects to set shadow on it.") %
                getName());
     }
 #endif
@@ -1178,9 +1178,9 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block,
   for (auto vnum : vnums) {
     //// room
     db_immo.query(
-      "select vnum, x, y, z, name, description, room_flag, sector, teletime, "
-      "teletarg, telelook, river_speed, river_dir, capacity, height, spec from "
-      "room where owner='%s' and vnum=%i and block=%i",
+      "select vnum, x, y, z, name, description, zone, room_flag, sector, "
+      "teletime, teletarg, telelook, river_speed, river_dir, capacity, height, "
+      "spec from room where owner='%s' and vnum=%i and block=%i",
       immortal.c_str(), vnum, block);
 
     if (db_immo.fetchRow()) {
@@ -1189,17 +1189,17 @@ void mvRoom(TPerson& ch, const sstring& immortal, int block,
       db_beta.query("delete from room where vnum=%i", vnum);
       db_beta.query(
         "insert into room "
-        "(vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,"
+        "(vnum,x,y,z,name,description,zone,room_flag,sector,teletime,teletarg,"
         "telelook,river_speed,river_dir,capacity,height,spec) values "
-        "(%s,%s,%s,%s, '%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+        "(%s,%s,%s,%s,'%s','%s',%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
         db_immo["vnum"].c_str(), db_immo["x"].c_str(), db_immo["y"].c_str(),
         db_immo["z"].c_str(), db_immo["name"].c_str(),
-        db_immo["description"].c_str(), db_immo["room_flag"].c_str(),
-        db_immo["sector"].c_str(), db_immo["teletime"].c_str(),
-        db_immo["teletarg"].c_str(), db_immo["telelook"].c_str(),
-        db_immo["river_speed"].c_str(), db_immo["river_dir"].c_str(),
-        db_immo["capacity"].c_str(), db_immo["height"].c_str(),
-        db_immo["spec"].c_str());
+        db_immo["description"].c_str(), db_immo["zone"].c_str(),
+        db_immo["room_flag"].c_str(), db_immo["sector"].c_str(),
+        db_immo["teletime"].c_str(), db_immo["teletarg"].c_str(),
+        db_immo["telelook"].c_str(), db_immo["river_speed"].c_str(),
+        db_immo["river_dir"].c_str(), db_immo["capacity"].c_str(),
+        db_immo["height"].c_str(), db_immo["spec"].c_str());
 
       //// roomextra
       db_beta.query("delete from roomextra where vnum=%i", vnum);
