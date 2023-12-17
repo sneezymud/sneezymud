@@ -92,7 +92,7 @@ const sstring DrawPokerGame::score() const {
   }
 
   for (int playerIndex = 0; playerIndex < 6; playerIndex++) {
-    if (!ch[playerIndex] || !inuse[playerIndex] || !hands[playerIndex])
+    if (!ch[playerIndex] || !inuse[playerIndex])
       continue;
 
     sprintf(tString, "   %s[%d]", ch[playerIndex]->getName().c_str(),
