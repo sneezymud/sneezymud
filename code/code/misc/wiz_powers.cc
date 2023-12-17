@@ -269,6 +269,7 @@ void setWizPowers(const TBeing* doer, TBeing* ch, const sstring& arg) {
     ch->setWizPower(POWER_REPLACE);
     ch->setWizPower(POWER_RESIZE);
     ch->setWizPower(POWER_NO_LIMITS);
+    ch->setWizPower(POWER_MAP_RECALC);
   } else if (arg == "remgod") {
     ch->remWizPower(POWER_LOW);
     ch->remWizPower(POWER_GOD);
@@ -288,6 +289,7 @@ void setWizPowers(const TBeing* doer, TBeing* ch, const sstring& arg) {
     ch->remWizPower(POWER_REPLACE);
     ch->remWizPower(POWER_RESIZE);
     ch->remWizPower(POWER_NO_LIMITS);
+    ch->remWizPower(POWER_MAP_RECALC);
   } else if (arg == "allpowers") {
     wizPowerT wpt;
     for (wpt = MIN_POWER_INDEX; wpt < MAX_POWER_INDEX; wpt++)
@@ -724,6 +726,8 @@ const sstring getWizPowerName(wizPowerT wpt) {
       return "No Limitations";
     case POWER_CLONE:
       return "Clone";
+    case POWER_MAP_RECALC:
+      return "Recalculate Map";
     case MAX_POWER_INDEX:
       break;
   }

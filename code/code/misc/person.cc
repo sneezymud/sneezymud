@@ -319,8 +319,8 @@ void TPerson::doMap(const sstring& arg) {
   else if (is_abbrev(cmd, "remove") || cmd == "rm")
     doMapRm(rest);
   else if (cmd == "recalc") {
-    if (this->GetMaxLevel() < 60) {
-      sendTo("Nuh-uh.\n\r");
+    if (!this->hasWizPower(POWER_MAP_RECALC)) {
+      sendTo("You haven't been granted this power.");
       return;
     }
     doMapRecalc(convertTo<int>(rest));
