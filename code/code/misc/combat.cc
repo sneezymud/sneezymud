@@ -3526,7 +3526,7 @@ static int REALNUM(TBeing* ch, wearSlotT part_hit) {
 
 void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
   int dam, wearSlotT part_hit) {
-  char buf[256];
+  char buf[512];
   TThing* t = NULL;
   TBeing* other;
 
