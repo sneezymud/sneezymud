@@ -3498,8 +3498,9 @@ sstring nextToken(char delim, unsigned int maxSize, char* str) {
     strncpy(retbuf, str, maxSize);
     retbuf[maxSize] = '\0';
   } else {
-    strncpy(retbuf, str, (int)(cp - str));
-    retbuf[(int)(cp - str)] = '\0';
+    if (cp > str)
+      strncpy(retbuf, str, cp - str);
+    retbuf[cp - str] = '\0';
   }
   if (!*cp)
     *str = '\0';
