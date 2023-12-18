@@ -703,7 +703,7 @@ void Descriptor::add_to_history_list(const char* arg) {
     history[i][hist_size - 1] = '\0';
   }
 
-  strncpy(history[0], arg, hist_size - 1);
+  memcpy(history[0], arg, hist_size - 1);
   history[0][hist_size - 1] = '\0';
 }
 
