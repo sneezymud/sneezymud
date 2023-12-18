@@ -918,7 +918,7 @@ bool ItemLoadDB::objToParent(signed char slot, TObj *parent, TObj *new_obj, TRoo
     vlogf(LOG_BUG, "Error in objsFromStore (3)");
     return false;
   }
-  
+
   *parent += *new_obj;
 
   return true;
@@ -955,7 +955,7 @@ bool ItemLoadDB::objToEquipChar(unsigned char slot, TBeing *ch, TObj *new_obj, T
     else
       ch->equipChar(new_obj, mapped_slot, SILENT_YES);
   } else {
-    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %  
+    vlogf(LOG_BUG, format("Room %d has invalid slot #.") %
 	  ((r) ? r->number : -99));
     return false;
   }
@@ -980,7 +980,7 @@ bool ItemLoad::objToTarg(unsigned char slot, TBeing* ch, TObj* new_obj,
   return true;
 }
 
-#if 0    
+#if 0
 bool ItemLoadDB::objToTarg(unsigned char slot, TBeing *ch, TObj *new_obj, TRoom *r)
 {
   //  vlogf(LOG_PEEL, format("objToTarg: %s") % new_obj->name);
@@ -1073,7 +1073,7 @@ bool ItemLoad::objsFromStore(TObj* parent, int* numread, TBeing* ch, TRoom* r,
 }
 
 #if 0
-// read a list of items and their contents from storage 
+// read a list of items and their contents from storage
 bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r, bool corpse)
 {
   signed char slot;
@@ -1098,7 +1098,7 @@ bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r,
       vlogf(LOG_BUG, "Error in objsFromStore (4)");
       return true;
     }
-    
+
     if (slot == CONTENTS_END)
       return false;
 
@@ -1128,10 +1128,10 @@ bool ItemLoadDB::objsFromStore(TObj *parent, int *numread, TBeing *ch, TRoom *r,
       }
     }
 
-    
+
     if (immortalityNukeCheck(ch, new_obj, corpse))
       continue;  // new_obj invalid if this was true
-    
+
     repoCheckForRent(ch, new_obj, corpse);
 
     if(!container)
