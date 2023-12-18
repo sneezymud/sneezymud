@@ -2583,7 +2583,7 @@ void countAccounts(const char* arg) {
 
 static bool parseFollowerRentEntry(FILE* fp, TBeing* ch, const char* arg,
   int num) {
-  TMonster* mob;
+  TMonster* mob = nullptr;
   int tmp = 0;
   int tmp2 = 0;
   int i = 0;
