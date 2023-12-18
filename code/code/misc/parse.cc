@@ -3204,64 +3204,64 @@ bool parse_name_sstring(const sstring arg, sstring& name) {
 #if 0
 int min_stat(race_t race, statTypeT iStat)
 {
-  // 1=str 2=dex 3=int 4=wis 5=con 6=chr 
-  if (iStat == 1) {                                                              
-    if (race == RACE_DWARF) 
-      return (8);            
-    else if (race == RACE_GNOME)                                                 
-      return (6);                                                              
-    else if (race == RACE_OGRE)                                                 
-      return (7);                                                              
-    else                                                                        
-      return (3);                                                              
-  } else if (iStat == 2) {                                                       
-    if (race == RACE_HOBBIT)
-      return (8);                                                              
+  // 1=str 2=dex 3=int 4=wis 5=con 6=chr
+  if (iStat == 1) {
+    if (race == RACE_DWARF)
+      return (8);
+    else if (race == RACE_GNOME)
+      return (6);
     else if (race == RACE_OGRE)
-      return (5); 
+      return (7);
+    else
+      return (3);
+  } else if (iStat == 2) {
+    if (race == RACE_HOBBIT)
+      return (8);
+    else if (race == RACE_OGRE)
+      return (5);
     else if (race == RACE_ELVEN)
       return (6);
     else
       return (3);
-  } else if (iStat == 3) {                                                       
-    if ((race == RACE_GNOME) || (race == RACE_ELVEN))                           
-      return (7);                                                               
-    else                                                                        
+  } else if (iStat == 3) {
+    if ((race == RACE_GNOME) || (race == RACE_ELVEN))
+      return (7);
+    else
       return (3);
-  } else if (iStat == 4) {                                                       
-    if ((race == RACE_GNOME) || (race == RACE_ELVEN)) 
-      return (7);                                                              
-    else                                                                        
-      return (3);                                                              
-  } else if (iStat == 5) {                                                       
+  } else if (iStat == 4) {
+    if ((race == RACE_GNOME) || (race == RACE_ELVEN))
+      return (7);
+    else
+      return (3);
+  } else if (iStat == 5) {
     if ((race == RACE_DWARF) || (race == RACE_HOBBIT))
-      return (8); 
-    else if (race == RACE_OGRE)                                                
-      return (7);                                                              
-    else                                                                        
-      return (3);                                                              
-  } else if (iStat == 6) {                                                       
-    if (race == RACE_ELVEN)                                                     
-      return (7);                                                              
+      return (8);
+    else if (race == RACE_OGRE)
+      return (7);
+    else
+      return (3);
+  } else if (iStat == 6) {
+    if (race == RACE_ELVEN)
+      return (7);
     else if (race == RACE_HOBBIT)
       return (6);
-    else                                                                        
-      return (3);                                                              
-  }                                                                             
-  return (3);                                                                  
-} 
+    else
+      return (3);
+  }
+  return (3);
+}
 
 
 int max_stat(race_t race, statTypeT iStat)
 {
-  // 1=str 2=dex 3=int 4=wis 5=con 6=chr 
+  // 1=str 2=dex 3=int 4=wis 5=con 6=chr
 
   if (iStat == 1) {
     if ((race == RACE_HOBBIT))
       return (14);
     else if (race == RACE_ELVEN)
       return (14);
-    else if (race == RACE_GNOME) 
+    else if (race == RACE_GNOME)
       return (14);
     else if (race == RACE_OGRE)
       return (19);
