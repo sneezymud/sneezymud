@@ -642,7 +642,7 @@ void HoldemGame::call(TBeing* ch) {
 
 void HoldemGame::raise(TBeing* ch, const sstring& arg) {
   sstring buf;
-  TObj* chip;
+  TObj* chip = nullptr;
   std::vector<TObj*> chipl;
 
   if (!ch->checkHoldem())
