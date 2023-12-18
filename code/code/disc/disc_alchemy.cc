@@ -1687,7 +1687,7 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
     }
   }
 
-  if (!caster && victim->isAffected(AFF_SANCTUARY)) {
+  if (caster && victim->isAffected(AFF_SANCTUARY)) {
     if (immortal ||
         !victim->isLucky(caster->spellLuckModifier(SPELL_DISPEL_MAGIC))) {
       REMOVE_BIT(victim->specials.affectedBy, AFF_SANCTUARY);
