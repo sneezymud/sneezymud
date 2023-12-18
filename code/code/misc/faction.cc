@@ -1483,7 +1483,7 @@ void procRecalcFactionPower::run(const TPulse&) const {
   }
 
   // subtract 1 due to skipping FACT_NONE
-  avg_faction_power /= (double)(MAX_FACTIONS - 1.0);
+  avg_faction_power /= (double)(MAX_FACTIONS) - 1.0;
 
   if (!avg_faction_power)
     avg_faction_power = 1.0;

@@ -472,7 +472,7 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
 
   double objSize =
     (((ch->task->obj->getWeight() + ch->task->obj->getVolume()) / 25) *
-      whittleItems[ch->task->flags].itemType);
+      (double)whittleItems[ch->task->flags].itemType);
   double process = ((++ch->task->timeLeft) / objSize);
 
   if (process >= 0.00 && process <= 0.40) {
@@ -566,7 +566,7 @@ void TBeing::doWhittle(const char* tArg) {
         double whittleTime = (((whittleItems[whittleIndex].volSize +
                                  whittleItems[whittleIndex].weiSize) /
                                 25) *
-                              whittleItems[whittleIndex].itemType);
+                              (double)whittleItems[whittleIndex].itemType);
 
         sendTo(format("%-45s:%c: %6.0f %3.0f %3.0d%c %5d %2d %4.0f\n\r") %
                whittleItems[whittleIndex].name %
