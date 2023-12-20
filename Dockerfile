@@ -37,4 +37,4 @@ COPY --from=build /home/sneezy/sneezymud/code/sneezy.cfg /home/sneezy/code/sneez
 RUN chown -R sneezy:sneezy /home/sneezy
 EXPOSE 7900
 USER sneezy
-RUN ./sneezy
+CMD ./sneezy
