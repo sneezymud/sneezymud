@@ -30,11 +30,13 @@ ARG UID=1000
 RUN useradd -m -u "$UID" sneezy && \
   mkdir -p /home/sneezy/code/objs/ && \
   mkdir -p /home/sneezy/lib
+
 WORKDIR /home/sneezy/code
-COPY --from=build /home/sneezy/sneezymud/code/sneezy /home/sneezy/code/sneezy
-COPY --from=build /home/sneezy/sneezymud/lib /home/sneezy/lib
-COPY --from=build /home/sneezy/sneezymud/code/sneezy.cfg /home/sneezy/code/sneezy.cfg
-RUN chown -R sneezy:sneezy /home/sneezy
+
+COPY --from=build --chown=sneezy:sneezy /home/sneezy/sneezymud/code/sneezy /home/sneezy/code/sneezy
+COPY --from=build --chown=sneezy:sneezy /home/sneezy/sneezymud/lib /home/sneezy/lib
+COPY --from=build --chown=sneezy:sneezy /home/sneezy/sneezymud/code/sneezy.cfg /home/sneezy/code/sneezy.cfg
+
 EXPOSE 7900
 USER sneezy
 CMD ./sneezy
