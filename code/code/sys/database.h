@@ -126,7 +126,7 @@ class TDatabase : public IDatabase {
     virtual ~TDatabase();
 
   private:
-    TDatabasePimpl* pimpl;
+    TDatabasePimpl& pimpl;
 };
 
 class TTransaction : public TDatabase {
