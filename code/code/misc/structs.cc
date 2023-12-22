@@ -456,11 +456,6 @@ TObj::~TObj() {
   // so that TThing delete can clean up without problem
   // Also, must use number and not objVnum
   if (!isObjStat(ITEM_STRUNG) && (number != -1)) {
-    name = name;
-    setDescr(getDescr());
-    shortDescr = shortDescr;
-    action_description = action_description;
-
     if (ex_description)
       ex_description = new extraDescription(*ex_description);
     else
