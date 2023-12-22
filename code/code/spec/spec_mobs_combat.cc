@@ -1184,7 +1184,6 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
           meleetotalin = 0;
       int swingstotalout = 0, swingstotalin = 0, hitstotalout = 0,
           hitstotalin = 0;
-      int potentialdamin = 0, potentialdamout = 0;
 
       for (attack_mode_t iMode = ATTACK_NORMAL; iMode < MAX_ATTACK_MODE_TYPE;
            iMode++) {
@@ -1198,8 +1197,6 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
         swingstotalin += sdCompare.swings_received[iMode];
         hitstotalout += sdCompare.hits[iMode];
         hitstotalin += sdCompare.hits_received[iMode];
-        potentialdamout += sdCompare.potential_dam_done[iMode];
-        potentialdamin += sdCompare.potential_dam_received[iMode];
       }
 
       float meleedprout = 0, specialdprout = 0, meleedprin = 0,

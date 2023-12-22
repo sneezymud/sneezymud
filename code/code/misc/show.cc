@@ -397,10 +397,8 @@ void list_in_heap(StuffList list, TBeing* ch, bool show_all, int perc) {
   if (cond_ptr.empty())
     ch->sendTo("Nothing.\n\r");
 
-  //  int Num_Inventory = 1;
   for (k = 0; k < cond_ptr.size(); k++) {
     if (cond_tot[k] > 1) {
-      //      Num_Inventory += cond_tot[k] - 1;
       ch->showMultTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV, cond_tot[k]);
     } else
       ch->showTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV);
@@ -463,10 +461,8 @@ bool list_in_heap_filtered(StuffList list, TBeing* ch, sstring filter,
   if (!suppress_nothing && silent == SILENT_NO)
     ch->sendTo("Nothing.\n\r");
 
-  //  int Num_Inventory = 1;
   for (k = 0; k < cond_ptr.size(); k++) {
     if (cond_tot[k] > 1) {
-      //      Num_Inventory += cond_tot[k] - 1;
       ch->showMultTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV, cond_tot[k]);
     } else
       ch->showTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV);
@@ -480,7 +476,6 @@ void list_thing_on_heap(const TThing* list, TBeing* ch, bool show_all) {
   unsigned int cond_tot[50];
   bool found = FALSE;
 
-  int Num_Inventory = 1;
   cond_top = 0;
 
   for (i = list; i; i = i->nextRider) {
@@ -509,7 +504,6 @@ void list_thing_on_heap(const TThing* list, TBeing* ch, bool show_all) {
   if (cond_top) {
     for (k = 0; k < cond_top; k++) {
       if (cond_tot[k] > 1) {
-        Num_Inventory += cond_tot[k] - 1;
         ch->showMultTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV, cond_tot[k]);
       } else
         ch->showTo(cond_ptr[k], SHOW_MODE_SHORT_PLUS_INV);

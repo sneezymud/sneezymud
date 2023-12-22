@@ -189,7 +189,7 @@ int bonebreakHit(TBeing* c, TBeing* victim) {
 }
 
 int bonebreak(TBeing* caster, TBeing* victim) {
-  int found = 0, ok = 0, rc = 0;
+  int ok = 0, rc = 0;
   wearSlotT slot;
   const int BONEBREAK_MOVE = 15;
 
@@ -243,7 +243,6 @@ int bonebreak(TBeing* caster, TBeing* victim) {
     if (!victim->slotChance(slot))
       continue;
     if (victim->isLimbFlags(slot, PART_BROKEN)) {
-      ++found;
       continue;
     }
     if (!victim->hasPart(slot))

@@ -346,7 +346,6 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
 
   double newWeight = whittleItems[tIndex].weiSize,
          newVolume = whittleItems[tIndex].volSize;
-  int totalUsed = 0;
 
   if (totalWood[0] >= newWeight && totalWood[1] >= newVolume) {
     if (!realCreate)
@@ -376,7 +375,6 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
         if (newWeight > -1 || newVolume > -1) {
           act("$p is pretty much used up so you scrap what's left.", FALSE, ch,
             tWood, NULL, TO_CHAR);
-          totalUsed++;
 
           --(*tWood);
 

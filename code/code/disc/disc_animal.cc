@@ -469,7 +469,6 @@ int TBeing::doCharmBeast(const char* argument) {
 }
 
 int beastSummon(TBeing* caster, const char* arg, int level, short bKnown) {
-  int i;
   int max_dist, num_sum = 0, max_num;
   char targ_name[1024];
   TBeing* v;
@@ -496,7 +495,6 @@ int beastSummon(TBeing* caster, const char* arg, int level, short bKnown) {
     max_dist = caster->isImmortal() ? 1000 : level;
     max_num = caster->isImmortal() ? 100 : level / 2;
 
-    i = 0;
     for (v = character_list; v; v = v->next) {
       if (!v->isPc() && v->awake() && isname(targ_name, v->name) &&
           !v->fight() && (caster->isImmortal() || v->isDumbAnimal()) &&
@@ -514,7 +512,6 @@ int beastSummon(TBeing* caster, const char* arg, int level, short bKnown) {
         if (++num_sum > max_num)
           break;
       }
-      i++;
     }
 
     if (!num_sum) {

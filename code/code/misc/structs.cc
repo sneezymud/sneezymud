@@ -230,7 +230,7 @@ TBeing::~TBeing() {
       // hates/fears on others need to be handled BEFORE my name is deleted
       if (tmons->Hates(this, NULL))
         tmons->remHated(this, NULL);
- 
+
       if (tmons->Fears(this, NULL))
         tmons->remFeared(this, NULL);
 #endif
