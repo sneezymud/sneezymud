@@ -1096,7 +1096,6 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 
     // Mark a groupKill for all in the group
 
-    int ngroup = 1;
     if (isAffected(AFF_GROUP) && (master || followers)) {
       if (master)
         k = master;
@@ -1115,7 +1114,6 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
         if (f->follower->isAffected(AFF_GROUP) && canSee(f->follower)) {
           if (sameRoom(*f->follower)) {
             if (f->follower->desc) {
-              ngroup++;
               f->follower->desc->session.groupKills++;
               f->follower->desc->career.group_kills++;
             }
