@@ -1688,12 +1688,7 @@ TMonster* read_mobile(int nr, readFileTypeT type) {
     return NULL;
   }
 
-  try {
-    mob = new TMonster();
-  } catch (...) {
-    vlogf(LOG_BUG, "caught an exception in read_mobile");
-    return NULL;
-  }
+  mob = new TMonster();
   mob->number = nr;
 
   // do this here to avoid the 'deleted & not found in character_list' assertion

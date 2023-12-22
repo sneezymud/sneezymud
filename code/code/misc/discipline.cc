@@ -1916,12 +1916,7 @@ void TBeing::assignDisciplinesClass() {
   // verify that disciplines haven't already been initted
   mud_assert(discs == NULL,
     "assignDisc(): assignment when already initted (1)");
-  try {
-    discs = new CMasterDiscipline();
-  } catch (...) {
-    vlogf(LOG_BUG, "assignDisc(): assertion trapped");
-  }
-  mud_assert(discs != NULL, "assignDisc(): discs was null after new");
+  discs = new CMasterDiscipline();
 
   if (isPc()) {
     discs->disc[DISC_MAGE] = new CDMage();
