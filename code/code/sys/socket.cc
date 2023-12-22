@@ -1481,15 +1481,11 @@ procRoomPulse::procRoomPulse(const int& p) {
 }
 
 void procRoomPulse::run(const TPulse& pl) const {
-  int count = 0;
-
   for (int i = 0; i < WORLD_SIZE; i++) {
     TRoom* rp = real_roomp(i);
 
     if (!rp)
       continue;
-
-    //    ++count;
 
     // rain
     if (pl.mobstuff) {
@@ -1497,12 +1493,9 @@ void procRoomPulse::run(const TPulse& pl) const {
             Weather::getWeather(*rp) == Weather::LIGHTNING) &&
           !::number(0, 999)) {
         rp->dropPool(::number(2, 5), LIQ_WATER);
-        ++count;
       }
     }
   }
-
-  //  return count;
 }
 
 procCheckTask::procCheckTask(const int& p) {
