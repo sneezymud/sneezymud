@@ -1,0 +1,12 @@
+clang
+%h -std=c++17
+%cpp -std=c++17
+-Icode/sys
+-Icode/misc
+-Icode/cmd
+-Icode/disc
+-Icode/game
+-Icode/obj
+-Icode/spec
+-Icode/task
+-Ilibs/json/src
