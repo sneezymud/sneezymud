@@ -648,7 +648,7 @@ int TBeing::doPray(const char* argument) {
     return FALSE;
   }
 
-  auto findSpecialCaseByName = [this](const sstring& name) {
+  auto findSpecialCaseByName = [](const sstring& name) {
     // vector, not map, because we need ordered lookup
     const std::vector<std::pair<sstring, spellNumT>> specialCases{
       {"paralyze limb", SPELL_PARALYZE_LIMB},
