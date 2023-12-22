@@ -5,6 +5,7 @@
 
 #include <boost/filesystem.hpp>
 
+#include "spell_info.h"
 #include "room.h"
 #include "being.h"
 #include "low.h"
@@ -844,7 +845,7 @@ void bootWorld(void) {
 
 #if 0
     if ((rp->getRoomHeight() >= 0) && rp->isFallSector())
-      vlogf(LOG_LOW,format("%s fall room %d set with limited height") % 
+      vlogf(LOG_LOW,format("%s fall room %d set with limited height") %
                 rp->name %rp->number);
 #endif
   }

@@ -4,6 +4,7 @@
 #include <vector>
 #include <cmath>
 
+#include "spell_info.h"
 #include "extern.h"
 #include "room.h"
 #include "being.h"
@@ -1355,7 +1356,7 @@ static void logLearnFail(TBeing *caster, spellNumT spell, int type)
 
   if (caster->GetMaxLevel() > MAX_MORT) {
     return;
-  } 
+  }
 
   if (!caster->desc) {
     vlogf(LOG_BUG,format("Something went into logLearnFail with no desc (%d)") %  spell);
@@ -2156,31 +2157,38 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num) {
     getName().c_str());
 
   // mob skills are always maxed for their disc-training
-  if (!(cd = getDiscipline(disc_num))) {}
+  cd = getDiscipline(disc_num);
   disc_learn = cd->getLearnedness();
 
-  spellNumT i;
-  for (i = MIN_SPELL; i < MAX_SKILL; i++) {
+  for (spellNumT i : spellsOfDiscipline[disc_num]) {
     if (hideThisSpell(i))
       continue;
-    if (discArray[i]->disc == disc_num) {
-      if (!getSkill(i))
-        continue;
+    if (!getSkill(i))
+      continue;
 
-      if (disc_learn < discArray[i]->start)
-        continue;
+    if (disc_learn < discArray[i]->start)
+      continue;
 
-      if (isPc()) {
-        setNatSkillValue(i, getMaxSkillValue(i));
-        setSkillValue(i, getMaxSkillValue(i));
-      } else {
-        max_amt = (disc_learn - discArray[i]->start + 1) * discArray[i]->learn;
-        max_amt = max(max_amt, 1);
-        max_amt = min(max_amt, (int)MAX_SKILL_LEARNEDNESS);
-        if (discArray[i]->startLearnDo >= 0) {
-          boost = min(max_amt, (int)discArray[i]->startLearnDo);
-          if ((5 * discArray[i]->learn) >= MAX_SKILL_LEARNEDNESS) {
-            value = 50 + ((disc_learn - discArray[i]->start) * 2);
+    if (isPc()) {
+      setNatSkillValue(i, getMaxSkillValue(i));
+      setSkillValue(i, getMaxSkillValue(i));
+    } else {
+      max_amt = (disc_learn - discArray[i]->start + 1) * discArray[i]->learn;
+      max_amt = max(max_amt, 1);
+      max_amt = min(max_amt, (int)MAX_SKILL_LEARNEDNESS);
+      if (discArray[i]->startLearnDo >= 0) {
+        boost = min(max_amt, (int)discArray[i]->startLearnDo);
+        if ((5 * discArray[i]->learn) >= MAX_SKILL_LEARNEDNESS) {
+          value = 50 + ((disc_learn - discArray[i]->start) * 2);
+          min(value, 100);
+          value = value * max_amt;
+          value /= 100;
+          value = min((int)MAX_SKILL_LEARNEDNESS, value);
+          value = max(value, 10);
+          value = max(boost, value);
+        } else {
+          if (disc_learn <= MAX_DISC_LEARNEDNESS) {
+            value = 75 + (disc_learn - discArray[i]->start);
             min(value, 100);
             value = value * max_amt;
             value /= 100;
@@ -2188,31 +2196,21 @@ void TBeing::initSkillsBasedOnDiscLearning(discNumT disc_num) {
             value = max(value, 10);
             value = max(boost, value);
           } else {
-            if (disc_learn <= MAX_DISC_LEARNEDNESS) {
-              value = 75 + (disc_learn - discArray[i]->start);
-              min(value, 100);
-              value = value * max_amt;
-              value /= 100;
-              value = min((int)MAX_SKILL_LEARNEDNESS, value);
-              value = max(value, 10);
-              value = max(boost, value);
-            } else {
-              value = max_amt;
-            }
+            value = max_amt;
           }
-        } else {
-          value = max_amt;
         }
-        setNatSkillValue(i, value);
-        setSkillValue(i, value);
-        if (i == SKILL_TACTICS) {
-          setNatSkillValue(SKILL_TACTICS, min(100, (GetMaxLevel() * 12)));
-          setSkillValue(SKILL_TACTICS, min(100, (GetMaxLevel() * 12)));
-        }
-        if (i == SKILL_RIDE) {
-          setNatSkillValue(SKILL_RIDE, min(100, 5 + GetMaxLevel() * 2));
-          setSkillValue(SKILL_RIDE, min(100, 5 + GetMaxLevel() * 2));
-        }
+      } else {
+        value = max_amt;
+      }
+      setNatSkillValue(i, value);
+      setSkillValue(i, value);
+      if (i == SKILL_TACTICS) {
+        setNatSkillValue(SKILL_TACTICS, min(100, (GetMaxLevel() * 12)));
+        setSkillValue(SKILL_TACTICS, min(100, (GetMaxLevel() * 12)));
+      }
+      if (i == SKILL_RIDE) {
+        setNatSkillValue(SKILL_RIDE, min(100, 5 + GetMaxLevel() * 2));
+        setSkillValue(SKILL_RIDE, min(100, 5 + GetMaxLevel() * 2));
       }
     }
   }
@@ -2666,7 +2664,7 @@ static void logLearnAttempts(TBeing *caster, spellNumT spell, logLearnAttemptT t
     case LEARN_ATT_ADD:
       discArray[spell]->learnAttempts++;
       discArray[spell]->learnLearn += caster->getSkillValue(spell);
-      discArray[spell]->learnLevel += caster->GetMaxLevel(); 
+      discArray[spell]->learnLevel += caster->GetMaxLevel();
       break;
     case LEARN_ATT_REM:
       discArray[spell]->learnAttempts -= 1;
@@ -2686,7 +2684,7 @@ enum logLearnSuccessT {
 
 static void logLearnSuccess(TBeing *caster, spellNumT spell, logLearnSuccessT type, int boost)
 {
-  // this is used to log learn success 
+  // this is used to log learn success
   // there is usually no need to call this directly as it sits inside i
   // learnFromDoing and learnFromDoingUnusual
 
