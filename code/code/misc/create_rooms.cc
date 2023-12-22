@@ -1324,10 +1324,10 @@ void TPerson::doEdit(const char* arg) {
       // B) There should be two spaces and only two spaces after each sentence end
       // C) Lines should be no longer than 80 characters, and should not break in the
       //    middle of a word.
-      
+
       whitespace = " \n\r";
 
-      punctuation = ".!?;:"; 
+      punctuation = ".!?;:";
       colors = "<";
 
       size_t bgin, look_at;
@@ -1340,7 +1340,7 @@ void TPerson::doEdit(const char* arg) {
 
 	bgin = tStr.find_first_not_of(whitespace);
 	look_at = tStr.find_first_of(whitespace, bgin);
-	
+
 	if (look_at != sstring::npos) {
 	  // normal, return the part between
 	  word = tStr.substr(bgin, look_at - bgin);
@@ -1387,7 +1387,7 @@ void TPerson::doEdit(const char* arg) {
       }
       newDescr += line;
       newDescr += "\n\r";
-     
+
 
       delete [] roomp->descr;
       roomp->descr = newDescr;
