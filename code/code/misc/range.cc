@@ -136,7 +136,7 @@ int TThing::throwMe(TBeing* ch, dirTypeT tdir, const char* vict) {
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_RANGED_PROF, 15);
 
-  strncpy(local_vict, vict, sizeof(local_vict - 1));
+  strncpy(local_vict, vict, sizeof(local_vict) - 1);
 
   if (sstring(local_vict).isNumber() && (sscanf(local_vict, "%d", &iDist) == 1))
     *local_vict = '\0';
