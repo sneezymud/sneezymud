@@ -110,30 +110,30 @@ MYSQL* TDatabaseConnection::getDB(dbTypeT type) {
   return databases[type];
 }
 
-TDatabase::TDatabase(dbTypeT tdb, bool log) {
-  pimpl = new TDatabasePimpl();
-  pimpl->db = database_connection.getDB(tdb);
-  pimpl->row_count = 0;
-  pimpl->log = log;
+TDatabase::TDatabase(dbTypeT tdb, bool log)
+  : pimpl(*new TDatabasePimpl()) {
+  pimpl.db = database_connection.getDB(tdb);
+  pimpl.row_count = 0;
+  pimpl.log = log;
 }
 
 TDatabase::~TDatabase() {
-  mysql_free_result(pimpl->res);
-  delete pimpl;
+  mysql_free_result(pimpl.res);
+  delete &pimpl;
 }
 
 long TDatabase::lastInsertId() {
-  return pimpl->db ? mysql_insert_id(pimpl->db) : 0;
+  return pimpl.db ? mysql_insert_id(pimpl.db) : 0;
 }
 
 // advance to the next row of the current query
 // this is a little funky under postgres.  we initialize row to -1 when
 // we do a query, then fetchRow increments it each time.
 bool TDatabase::fetchRow() {
-  if (!pimpl->res)
+  if (!pimpl.res)
     return FALSE;
 
-  if (!(pimpl->row = mysql_fetch_row(pimpl->res)))
+  if (!(pimpl.row = mysql_fetch_row(pimpl.res)))
     return FALSE;
 
   return TRUE;
@@ -141,7 +141,7 @@ bool TDatabase::fetchRow() {
 
 unsigned long TDatabase::escape_string(char* to, const char* from,
   unsigned long length) {
-  return mysql_real_escape_string(pimpl->db, to, from, length);
+  return mysql_real_escape_string(pimpl.db, to, from, length);
 }
 
 unsigned long IDatabase::escape_string_ugly(char* to, const char* from,
@@ -151,27 +151,27 @@ unsigned long IDatabase::escape_string_ugly(char* to, const char* from,
 }
 
 const sstring TDatabase::operator[](unsigned int i) const {
-  if (pimpl->res && i > (mysql_num_fields(pimpl->res) - 1)) {
+  if (pimpl.res && i > (mysql_num_fields(pimpl.res) - 1)) {
     vlogf(LOG_DB, format("TDatabase::operator[%i] - invalid column index") % i);
     return empty;
   } else {
-    return pimpl->row[i];
+    return pimpl.row[i];
   }
 }
 
 const sstring TDatabase::operator[](const sstring& s) const {
-  if (!pimpl->res || !pimpl->row)
+  if (!pimpl.res || !pimpl.row)
     return NULL;
 
   std::map<const char*, int, ltstr>::const_iterator cur =
-    pimpl->column_names.find(s.lower().c_str());
+    pimpl.column_names.find(s.lower().c_str());
 
-  if (cur == pimpl->column_names.end()) {
+  if (cur == pimpl.column_names.end()) {
     vlogf(LOG_DB, format("TDatabase::operator[%s] - invalid column name") % s);
     return empty;
   }
 
-  return pimpl->row[(*cur).second];
+  return pimpl.row[(*cur).second];
 }
 
 // execute a query
@@ -185,12 +185,6 @@ bool TDatabase::query(const char* query, ...) {
   TTiming t;
 
   t.start();
-
-  // no db set yet
-  if (!pimpl)
-    return FALSE;
-  if (!pimpl->db)
-    return FALSE;
 
   va_start(ap, query);
   do {
@@ -251,39 +245,39 @@ bool TDatabase::query(const char* query, ...) {
   } while (*query++);
   va_end(ap);
 
-  if (pimpl->log ||
+  if (pimpl.log ||
       (toggleInfo.isLoaded() && toggleInfo[TOG_DBLOGGING]->toggle))
     vlogf(LOG_DB, buf);
 
-  if (mysql_query(pimpl->db, buf.c_str())) {
-    vlogf(LOG_DB, format("query failed: %s") % mysql_error(pimpl->db));
+  if (mysql_query(pimpl.db, buf.c_str())) {
+    vlogf(LOG_DB, format("query failed: %s") % mysql_error(pimpl.db));
     vlogf(LOG_DB, format("%s") % buf);
     return FALSE;
   }
-  restmp = mysql_store_result(pimpl->db);
+  restmp = mysql_store_result(pimpl.db);
 
   // if there is supposed to be some results from this query,
   // free the previous results (if any) and assign the new results
   // if there aren't supposed to be results (update, insert, delete, etc)
   // then don't do anything with the results, they might still be used
   if (restmp) {
-    if (pimpl->res)
-      mysql_free_result(pimpl->res);
-    pimpl->res = restmp;
+    if (pimpl.res)
+      mysql_free_result(pimpl.res);
+    pimpl.res = restmp;
   }
 
   // capture rowcount here, because the db pointer state changes when
   // db timing is on
-  pimpl->row_count = (long)mysql_affected_rows(pimpl->db);
+  pimpl.row_count = (long)mysql_affected_rows(pimpl.db);
 
   // store the column names and offsets
-  if (pimpl->res) {
-    pimpl->column_names.clear();
-    unsigned int num_fields = mysql_num_fields(pimpl->res);
-    MYSQL_FIELD* fields = mysql_fetch_fields(pimpl->res);
+  if (pimpl.res) {
+    pimpl.column_names.clear();
+    unsigned int num_fields = mysql_num_fields(pimpl.res);
+    MYSQL_FIELD* fields = mysql_fetch_fields(pimpl.res);
 
     for (unsigned int i = 0; i < num_fields; ++i)
-      pimpl->column_names[fields[i].name] = i;
+      pimpl.column_names[fields[i].name] = i;
   }
 
   t.end();
@@ -310,7 +304,7 @@ bool TDatabase::query(const char* query, ...) {
     buf = format("insert into querytimes (query, secs) values ('%s', %f)") %
           buf % t.getElapsed();
 
-    mysql_query(pimpl->db, buf.c_str());
+    mysql_query(pimpl.db, buf.c_str());
   }
 
   //  if(res)
@@ -320,7 +314,7 @@ bool TDatabase::query(const char* query, ...) {
 }
 
 bool TDatabase::isResults() {
-  if (pimpl->res && mysql_num_rows(pimpl->res))
+  if (pimpl.res && mysql_num_rows(pimpl.res))
     return TRUE;
 
   return FALSE;
@@ -332,5 +326,5 @@ long TDatabase::rowCount() {
 
   // this gets set in TDatabase::query
   // because the db pointer will have changed state if query timing is on
-  return pimpl->row_count;
+  return pimpl.row_count;
 }
