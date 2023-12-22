@@ -484,7 +484,7 @@ void TBeing::doWizlock(const char* argument) {
     for (a = 0; a <= numberhosts - 1; a++) {
       if (!strncmp(hostlist[a], buf, length)) {
         for (b = a; b <= numberhosts; b++)
-          strcpy(hostlist[b], hostlist[b + 1]);
+          memcpy(hostlist[b], hostlist[b + 1], sizeof(hostlist[b]));
         vlogf(LOG_MISC,
           format("%s has removed host %s from the access denied list.") %
             getName() % buf);
@@ -5608,7 +5608,7 @@ void TBeing::doHostlog(const char* argument) {
     for (a = 0; a <= numberLogHosts - 1; a++) {
       if (!strncmp(hostLogList[a], buf, length)) {
         for (b = a; b <= numberLogHosts; b++)
-          strcpy(hostLogList[b], hostLogList[b + 1]);
+          memcpy(hostLogList[b], hostLogList[b + 1], sizeof(hostLogList[b]));
         vlogf(LOG_MISC,
           format("%s has removed host %s from the hostlog list.") % getName() %
             buf);
