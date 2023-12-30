@@ -193,10 +193,10 @@ def position_rooms():
 
     # Start exploring from Market Square
     to_explore.append((238, coord))
+    explored.add(238)
 
     while len(to_explore) > 0:
         (room_vnum, coord) = to_explore.pop()
-        explored.add(room_vnum)
 
         room = Room.get(Room.vnum == room_vnum)
 
@@ -204,6 +204,8 @@ def position_rooms():
 
         for exit in room.exits:
             if exit.destination >= 0 and exit.destination not in explored:
+                explored.add(exit.destination)
+
                 if exit.direction == 0:
                     # N
                     parsed_exits.append(
@@ -228,13 +230,12 @@ def position_rooms():
                         ParsedExit(coord.clone(), coord.translate(-1, 0, 0))
                     )
                     to_explore.append((exit.destination, coord.translate(-1, 0, 0)))
-                # Up and down is broken. So we disable it here.
-                # elif exit.direction == 4:
-                #     # U
-                #     to_explore.append((exit.destination, coord.translate(0, 0, 1)))
-                # elif exit.direction == 5:
-                #     # D
-                #     to_explore.append((exit.destination, coord.translate(0, 0, -1)))
+                elif exit.direction == 4:
+                    # U
+                    to_explore.append((exit.destination, coord.translate(0, 0, 1)))
+                elif exit.direction == 5:
+                    # D
+                    to_explore.append((exit.destination, coord.translate(0, 0, -1)))
                 elif exit.direction == 6:
                     # NE
                     parsed_exits.append(
@@ -321,17 +322,18 @@ def draw_exit(svg, exit):
     svg.add(line)
 
 
-def draw_room(svg, rect):
+def draw_room(svg, room):
     rect = svg.rect(
         insert=(
-            rect.coord.x * (ROOM_SIZE + PATH_SIZE),
-            rect.coord.y * (ROOM_SIZE + PATH_SIZE),
+            room.coord.x * (ROOM_SIZE + PATH_SIZE),
+            room.coord.y * (ROOM_SIZE + PATH_SIZE),
         ),
         size=(ROOM_SIZE, ROOM_SIZE),
         stroke="black",
         stroke_width="1",
-        fill=rect.color,
+        fill=room.color,
     )
+    rect.set_desc(title=f"{room.name} ({room.vnum})")
     svg.add(rect)
 
 
