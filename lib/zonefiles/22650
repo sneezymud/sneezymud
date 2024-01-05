@@ -91,23 +91,40 @@ O 0 3360 1 22656
 O 0 3360 1 22681
 O 0 3360 1 22675
 
-M 0 22654 1 22669	sacra
-M 0 22650 1 22685	hobbit-hunter
-M 0 22650 1 22664
-Y 0 75 2
-M 0 22650 1 22681
-M 0 22650 1 22656
-Y 0 75 2
-M 0 22651 1 22684	hobbit-trapper
-Y 0 75 5
-M 0 22651 1 22653
-Y 0 75 5
-M 0 22652 1 22682	elven-hunter
-M 0 22652 1 22652
-M 0 22653 1 22650	dirty trapper
-Y 0 75 2
-M 0 22653 1 22654
-M 0 22653 1 22659
+M 0 22654 1 22669    sacra
+G 1 3406 999            longbow
+G 1 3414 999            long hunting arrow
+G 1 3414 999            long hunting arrow
+G 1 3414 999            long hunting arrow
+M 0 22650 1 22685    hobbit-hunter
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22650 1 22664    hobbit hunter
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22650 1 22681    hobbit hunter
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22650 1 22656    hobbit hunter
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22651 1 22684    hobbit-trapper
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22651 1 22653    hobbit trapper
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22652 1 22682    elven-hunter
+M 0 22652 1 22652    elven hunter
+M 0 22653 1 22650    dirty trapper
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22653 1 22654    dirty trapper
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
+M 0 22653 1 22659    dirty trapper
+G 1 308 999            small steel arrow
+Y 0 75 5             dark camouflage set
 M 0 15106 1 22679	bunny
 M 0 15106 1 22665
 M 0 15106 1 22668
@@ -126,14 +143,14 @@ M 0 22655 6 22668
 M 0 22655 6 22668
 M 0 22655 6 22668
 M 0 22655 6 22668
-M 0 22656 1 22682	shaman
+M 0 22656 1 22682   shaman
 ? 0 3 0 E
-E 1 22661 5 14		brown cloak
+E 1 22661 5 14        brown cloak
 ? 0 3 0 E
-E 1 22662 12 5		elk skull
+E 1 22662 12 5        elk skull
 ? 0 3 0 E
-E 1 22663 21 3		lapis necklace
+E 1 22663 21 3        lapis necklace
 ? 0 3 0 E
-E 1 22664 25 19		twisted staff
+E 1 22664 25 19       twisted staff
+Y 0 75 5              dark camouflage set
 S
-

@@ -1,5 +1,66 @@
 #2500
-Lucifer Zone (200 rooms)~
-2699 25 2 0
-S
+Sidartha - North Valley~
+2699 20 2 1
 
+D 0 2545 7 2	foxglove reserve entrance
+D 0 2696 8 2
+D 0 2565 1 2	cave in the bluff
+D 0 2691 3 2
+D 0 2515 6 1	path to Avalon Outpost
+D 0 2600 9 1
+
+M 0 2501 5 2502 	Weary trapper
+M 0 2501 5 2505
+M 0 2501 5 2508
+M 0 2501 5 2511
+M 0 2501 5 2514
+
+M 0 2502 3 2600	tracker
+M 0 2502 3 2603
+M 0 2502 3 2606
+
+M 0 2503 5 2608	caribou
+M 0 2503 5 2605
+M 0 2503 5 2602
+M 0 2503 5 2613
+M 0 2503 5 2607
+
+M 0 2504 5 2521 	retired soldier
+M 0 2504 5 2523
+M 0 2504 5 2525
+M 0 2504 5 2527
+M 0 2504 5 2529
+
+M 0 2505 5 2540 	weary traveler
+M 0 2505 5 2538
+M 0 2505 5 2536
+M 0 2505 5 2534
+M 0 2505 5 2532
+
+M 0 2506 5 2545 	goat
+M 0 2506 5 2548
+M 0 2506 5 2553
+M 0 2506 5 2557
+M 0 2506 5 2571
+
+M 0 2507 5 2615	river snake
+M 0 2507 5 2624
+M 0 2507 5 2634
+M 0 2507 5 2644
+M 0 2507 5 2654
+
+M 0 46564 1 2685 	bespoke man bolo key trader bolo
+M 0 46565 1 2690	squinting jeweler key trader loupe
+
+M 0 2508 1 2565	dedgle cave key holder
+G 1 2565 1
+
+M 0 2509 4 2691	smugglers
+M 0 2509 4 2692
+M 0 2509 4 2694
+M 0 2509 4 2695
+
+M 0 2510 1 2545 	Ashton the Gardener and key for foxglove
+G 1 2545 1
+
+S
