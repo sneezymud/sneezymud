@@ -515,6 +515,7 @@ Z 0 1 5 		prison set
 M 0 7323 1 7390
 Z 0 1 5 		prison set
 M 0 7323 2 7391
+Z 0 1 5 		prison set
 G 1 7391 9999 titanium key
 Z 0 1 5 		prison set
 M 0 7323 1 7396
@@ -576,21 +577,21 @@ Z 0 1 5 		prison set
 M 0 7305 1 7306 Fabin
 ? 0 5 0 E
 E 1 7304 50 15 black leather weight belt
-M 0 3365 1 7306	adolescent gangmember
+M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-I 1 7350 19		PROP pottery shard
-M 0 3365 1 7306	adolescent gangmember
+*I 1 7350 9999 19		PROP pottery shard
+M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-I 1 7350 19		PROP pottery shard
-M 0 3365 1 7306	adolescent gangmember
+*I 1 7350 9999 19		PROP pottery shard
+M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-I 1 7350 19		PROP pottery shard
-M 0 3365 1 7306	adolescent gangmember
+*I 1 7350 9999 19		PROP pottery shard
+M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-I 1 7350 19		PROP pottery shard
-M 0 3365 1 7306	adolescent gangmember
+*I 1 7350 9999 19		PROP pottery shard
+M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-I 1 7350 19		PROP pottery shard
+*I 1 7350 9999 19		PROP pottery shard
 M 0 7306 1 7307 Ratcliff
 ? 0 5 0 E
 E 1 7305 16 4 gnomish mithril shirt
@@ -1053,4 +1054,3 @@ M 0 7473 1 7498 Cook
 M 0 7474 1 7499 Bookie
 
 S
-
