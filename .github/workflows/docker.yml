@@ -1,26 +1,32 @@
 name: Build and Publish
 on:
   push:
-    branches:    
+    branches:
       - 'master'
-      - 'add_github_actions'
+
 jobs:
   build_image:
     runs-on: ubuntu-20.04
     name: Build Image
     steps:
-      - uses: actions/checkout@v2
-        name: Check out code
+      - name: Checkout main repo
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: 'true'
 
-      - uses: mr-smithers-excellent/docker-build-push@v5
+      - name: Checkout sneezymud-docker repo
+        uses: actions/checkout@v4
+        with:
+          repository: sneezymud/sneezymud-docker
+          path: sneezymud-docker
+
+      - uses: mr-smithers-excellent/docker-build-push@v6
         name: Build & Push Docker image
         with:
           image: sneezymud/sneezymud
           addLatest: true
           registry: registry.hub.docker.com
-          dockerfile: Dockerfile
+          dockerfile: sneezymud-docker/docker/Dockerfile
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
