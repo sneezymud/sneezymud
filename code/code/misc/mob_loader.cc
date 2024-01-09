@@ -926,7 +926,7 @@ void TMonster::buffMobLoader() {
   while (num < (int)cElements(vnums))
     vnums[num++] = Obj::STATS_POTION;  // default is stats pot
 
-  num = vnums[::number(0, cElements(vnums)) - 1];
+  num = vnums[::number(0, cElements(vnums) - 1)];
 
   TObj* obj = read_object(num, VIRTUAL);
   if (!obj) {
