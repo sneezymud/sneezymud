@@ -119,6 +119,12 @@ bool TBeing::isWieldingWeapon() {
 
 bool TBeing::canUseEquipment(const TObj* o, silentTypeT silent,
   wearKeyT key) const {
+  if (!o) {
+    vlogf(LOG_BUG,
+      format("canUseEquipment: null object passed (being: %s)") % getName());
+    return false;
+  }
+
   bool held = false;
 
   if (key == WEAR_KEY_HOLD || key == WEAR_KEY_HOLD_R || key == WEAR_KEY_HOLD_L)
