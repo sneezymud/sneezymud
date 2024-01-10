@@ -1,3 +1,5 @@
+01-10-24 : Fixed a couple crash bugs
+
 08-10-22 : Spells/rituals/prayers commands updated. All three commands now do the same
            thing, and should make seeing all spells/prayers/rituals available to a
            multiclass character much easier. See helpfiles for usage.
@@ -6,13 +8,13 @@
 
            These two mob procs have been broken for a long time. Mobs with these
            procs might be noticeably more dangerous now, so step carefully.
-          
-           - Vampire bite proc: Vampires around The World have remembered how to 
+
+           - Vampire bite proc: Vampires around The World have remembered how to
              use their fangs properly and are again able to drain health and
-             vitality from their victims with a bite. This fix doesn't affect the 
-             special vampire bite that turns a PC into a vampire - that's a 
-             separate thing which happens much less frequently. 
-             
+             vitality from their victims with a bite. This fix doesn't affect the
+             special vampire bite that turns a PC into a vampire - that's a
+             separate thing which happens much less frequently.
+
              The following mobs have the vampire bite proc:
               - Dalia'Pantin
               - a female vampire
@@ -21,7 +23,7 @@
               - the arch vampire
               - Lorto
 
-           - Energy drain touch proc: You may have previously noticed these mobs 
+           - Energy drain touch proc: You may have previously noticed these mobs
              touching you with no perceivable effect (because there wasn't one),
              but be assured something can now actually happen.
 
@@ -47,7 +49,7 @@
 
 06-22-22 : Limb Damage Redesign
            - With the changes to critical hits, it's now possible (and even likely)
-           with the current limb damage code for players to scrap the limbs of 
+           with the current limb damage code for players to scrap the limbs of
            end-game mobs in a single crit, trivializing combat.
            - To allow limb damage to work within the critical hit update, the way it's
            calculated and applied has been redesigned.
@@ -63,15 +65,15 @@
 06-18-22 : Basic Attack Critical Hit Redesign
            - The way critical hit chance and severity are calculated for basic attacks
            has been completely redesigned.
-           - Similarly to before, every successful attack has a chance to become a 
-           critical hit. This chance is based on karma then modified by the crit 
-           hitting, powermove, and the Aura of Vengeance skills, plus any Crit 
+           - Similarly to before, every successful attack has a chance to become a
+           critical hit. This chance is based on karma then modified by the crit
+           hitting, powermove, and the Aura of Vengeance skills, plus any Crit
            Frequency bonuses from spells and/or worn equipment.
-           - Previously, crit hits were arbitrarily impossible against a target 19 or 
+           - Previously, crit hits were arbitrarily impossible against a target 19 or
            more levels higher than the attacker. Crit hits are now possible against
            targets of any level, and chance to crit is not affected by level
            difference.
-           - Crit severity (that is, the actual flavor of crit that gets performed, 
+           - Crit severity (that is, the actual flavor of crit that gets performed,
            with instant death crits being the most severe) is now capped and scales
            based on the target's % of remaining hitpoints. This means that as the
            victim's health is reduced more severe crits will become possible against
@@ -80,12 +82,12 @@
            more quickly, so characters with these skills will be able to cause
            more damaging crits when the victim is at higher remaining health.
            - This also means that players won't be vulnerable to instakill crits
-           from mobs while at high health, and staying healed up is the best way 
+           from mobs while at high health, and staying healed up is the best way
            to protect against receiving more damaging crits.
-           - The intent was to make crit hits slightly more frequent and possible 
-           against high level mobs again, while making fishing for instakill crits a 
-           non-viable strategy. Additionally, mobs should now achieve crits against 
-           players slightly more often, but crits resulting in instant player death 
+           - The intent was to make crit hits slightly more frequent and possible
+           against high level mobs again, while making fishing for instakill crits a
+           non-viable strategy. Additionally, mobs should now achieve crits against
+           players slightly more often, but crits resulting in instant player death
            should be much less common and generally only occur due to insufficient
            healing.
 
@@ -96,36 +98,36 @@
              lycanthropes to make it at least somewhat useful
 
 05-18-22 : Warrior Revamp
-            - Updates to legacy warrior abilities (bodyslam, stomp, etc.) to make 
+            - Updates to legacy warrior abilities (bodyslam, stomp, etc.) to make
             them worth using.
-            - Refactoring of warrior abilities to move abilities into more logical 
-            disciplines and to spread the abilities around more evenly. 
+            - Refactoring of warrior abilities to move abilities into more logical
+            disciplines and to spread the abilities around more evenly.
             - Added 2h specialization to warriors.
-            - Reworked deathstroke - this ability now deals more damage overall 
-            and scales inversely with victim health. Added a lockout and a 
+            - Reworked deathstroke - this ability now deals more damage overall
+            and scales inversely with victim health. Added a lockout and a
             significant debuff to discourage tanks from using this offensive ability.
             - New ability - Rally - short duration AoE buff that raises max hp/mv.
             - New ability - Whirlwind - AoE attack with a lockout.
             - New ability - Focus Attack - a reliable autoattack with a lockout.
             - New ability - Slam - a low damage melee attack with no lockout.
-            - New ability - Fortify - drastically reduces incoming damage for the 
+            - New ability - Fortify - drastically reduces incoming damage for the
             warrior for a very short duration. Lockout and requires a shield.
-            - New ability - Bloodlust - combat and healing bonuses that stack as the 
-            warrior kills opponents. Short duration and buffs will fall off if the 
+            - New ability - Bloodlust - combat and healing bonuses that stack as the
+            warrior kills opponents. Short duration and buffs will fall off if the
             warrior is out of combat for long.
-            - Berserk tweaks and new ability - advanced berserking that strengthens 
-            the base berserk ability and provides increased bloodlust stacks while 
+            - Berserk tweaks and new ability - advanced berserking that strengthens
+            the base berserk ability and provides increased bloodlust stacks while
             berserking.
 
 07-31-21 : Learn by doing
            - made subtle changes accross various parts of LBD all to mkae it easier
-           to hone skills. 
+           to hone skills.
 
 07-29-21 : Hitpoints and locusts
            - Plague of locusts should work again
            - Player health gain is once again based on levels. All single class 50s
            should have identical health but multiclass might be slightly different.
-           
+
 06-25-21 : Buff spells and Armor rebalance
            - Starting to update buff spells so they have the same affects when cast
            on self versus cast on others. looking to add group versions of buffs but
@@ -155,10 +157,10 @@
            - Portal should never close leaving a mount behind now
            - Cleric portals now have the same number of uses on each side
            - New Skill: The illithid wizard now teaches his desciples a bit
-             of his knowledge of dimensional manipulation. 
+             of his knowledge of dimensional manipulation.
            - New Skill: Ethereal Gate is now available to advanced alchemists
 
-01-05-21 : List characters in the account menu now shows the race and 
+01-05-21 : List characters in the account menu now shows the race and
              classes of each of the characters.
 
 01-01-21 : More Garble tweaks
@@ -186,7 +188,7 @@
 09-15-20 : Fixed a crash bug in the Glacial Proc
 
 09-15-20 : Stat updates
-            - Spells and skills now have a modification stat that affects 
+            - Spells and skills now have a modification stat that affects
               damage and duration of buffs/debuffs. See helpfiles
 
 08-22-20 : Deikhan Changes
@@ -228,12 +230,12 @@
             on failure rates.
             Here's how this will be working now:
             difficulty | Success | Damage
-            - trivial      100%    100%  
+            - trivial      100%    100%
             - easy          90%    111%
             - normal        80%    125%
             - difficult     70%    143%
             - dangerous     60%    167%
-            Focus is the primary stat to increase the above success percentage. 
+            Focus is the primary stat to increase the above success percentage.
             I added Karma as a smaller secondary modifier.
 
 07-07-20 : Synostodweomer tweak
@@ -247,11 +249,11 @@
 07-01-20 : New skill in defensive abilities called Toughness. A stacking buff
             that procs when getting hit and provides some immunity to
             non-magic.
-            
-06-21-20 : New Discipline for Thieves and Monks called Offensive ABilities 
+
+06-21-20 : New Discipline for Thieves and Monks called Offensive ABilities
             and a Advanced Offense skill.
 
-05-01-20 : New Skill! Focused Avoidance is available in the advanced defense 
+05-01-20 : New Skill! Focused Avoidance is available in the advanced defense
             disc. This should help reduce the amount of time warriors and
             deikhans spend on their butts.
 
@@ -262,15 +264,15 @@
            - "list fit" at shops should now work correctly
            - Fixed a typo in a previous news entry!
            - Fixed score output to show all relevant resources
-           - Monks who wield weapons now have a speed modifier to number of 
+           - Monks who wield weapons now have a speed modifier to number of
              attacks like all other classes
-           - Monk/Warrior multiclass now gets extra attacks when berserking 
+           - Monk/Warrior multiclass now gets extra attacks when berserking
 
 03-25-20 : Multiclass hitpoint fixes:
-           - Monks base hitpoints have been increased but they no longer 
+           - Monks base hitpoints have been increased but they no longer
              have access to advanced defense. Overall this should even out. If
              you have a single class monk that put points into advanced defense
-             you can get that fixed up by an admin. This change paves the way 
+             you can get that fixed up by an admin. This change paves the way
              for future improvements to the skill for War/Deik.
            - Fixed a bug with multiclass hitpoints where previously it chose
              the base hitpoints of the first class now it takes the average.
@@ -280,15 +282,15 @@
            - Synostodweomer enabled and reimagined as a small hit point buff.
              It has a cooldown matching it's duration so can be maintained
 
-01-10-20 : First bit of Deikhan rework. Those who are well learned in advanced 
+01-10-20 : First bit of Deikhan rework. Those who are well learned in advanced
            riding can now do new amazing feats. Super powererful things like
            loot corpses and pen/yogi/med while on horseback.
-           
+
 01-07-20 : Fix molten proc, Fix blind on deikhan swords.
 
-02-16-19 : Immunity to +1/+2/+3 no longer have any effect in the game. 
+02-16-19 : Immunity to +1/+2/+3 no longer have any effect in the game.
            Immunity to non-magic is still circumvented by magic weapons. Also,
-           the enhance weapon spell no longer makes weapons glow. 
+           the enhance weapon spell no longer makes weapons glow.
            Thieves Rejoice!
 
 11-29-18 : Class Quest rewards have been updated.
@@ -297,7 +299,7 @@
 
 11-27-18 : The duration of the Blindness skill has been slightly increased,
            scaling with level.
-	   
+
 11-27-18 : Demons now have 66% non-magic immunity, down from 100. Angels have
            been buffed to match their demonic counterparts. Angels will no longer
            trigger guard code.
@@ -307,14 +309,14 @@
 11-25-18 : Many existing objects have been updated and more will also improve.
            The following have been affected: Dracolich Lair, The Light Demon,
            Black Sun proc, shield of spores.
-	   
+
 11-24-18 : Charge Stave in the Mage Alchemy disc has had a syntax update.
            Now recharge <object> instead of charge, to remove the conflict with
            Deikhans charge ability.
 
-11-22-18 : Portal skill has been buffed. Now has 20 charges, up from 10. Its 
-           duration is now 10 minutes, up from 5. 
-   
+11-22-18 : Portal skill has been buffed. Now has 20 charges, up from 10. Its
+           duration is now 10 minutes, up from 5.
+
 02-05-18 : Those who lose the use of both of their fighting limbs in combat
            will be rendered insensate by debilitating pain for a period.
 
@@ -511,13 +513,13 @@
            used up, instead of the number of brewed charges.  Scribe was
            working correctly in this case, but brew was not.
 
-01-13-09 : Reports have reached the King's ears that citizens of 
-           Grimhaven and from abroad are being abducted!  Rumor has it 
+01-13-09 : Reports have reached the King's ears that citizens of
+           Grimhaven and from abroad are being abducted!  Rumor has it
            that the Troll Elders have commissioned a large excavation dig
            in search of something mysterious and they are kidnapping
            and forcing these poor people into hard labor.
 
-           The King is quoted as saying, "Everywhere that freedom stirs, 
+           The King is quoted as saying, "Everywhere that freedom stirs,
            let tyrants fear!"
 
 01-01-09 : Commodity prices and loads should now be more intuitive.
@@ -559,7 +561,7 @@
 08-25-08 : Monogrammed items are now virtually un-scrappable.  If you find
            a way to destroy a monogrammed item, please report it.
            Monogrammed items also require less materials to repair.
-           
+
 08-22-08 : Some updates have been made to the repair skills.  All skills
            can now repair objects to 100%, monogrammed items cannot drop
            below 0 struct, tool damage has been evened out, and some
@@ -587,7 +589,7 @@
            role in playerfile corruption.
 
 06-23-08 : Commodity shops *still* don't work right.  We apologize for
-           the delay in getting these shops working correctly.  
+           the delay in getting these shops working correctly.
 
 06-19-08 : Rust has been added, so you may see your platemail get rusty
            if you stand around in the rain or go swimming in it.  Don't
@@ -595,11 +597,11 @@
 
 06-18-08 : IMPORTANT: Update your email address using the "email" command.
 
-06-18-08:  Reminder: If you have issues with your account, please email 
+06-18-08:  Reminder: If you have issues with your account, please email
            mudadmin@sneezymud.com from the email address you've registered
            with (use the "email" account to see your current email address).
-           DO NOT CREATE A NEW ACCOUNT.  We will not just give passwords 
-           for accounts to any old Moe Schmoe claiming to be you, even if 
+           DO NOT CREATE A NEW ACCOUNT.  We will not just give passwords
+           for accounts to any old Moe Schmoe claiming to be you, even if
            they come from your IP address.
 
 06-16-08 : Mob tracking speed has been toned down slightly.
@@ -627,7 +629,7 @@
 05-20-08 : Cleric mobs are now a little more active in healing themselves
            and other friendly mobs.
 
-05-02-08 : The governments of Logrus, Brightmoon and Amber have begun 
+05-02-08 : The governments of Logrus, Brightmoon and Amber have begun
            minting their own currencies.  Currently these coins are
            interchangeable with the talen.
 
@@ -642,7 +644,7 @@
 
 04-18-08 : Shops have been completely overhauled to improve performance
            of the MUD.  Shop inventories are now in the database instead
-           of shopkeeper's inventories. 
+           of shopkeeper's inventories.
            See http://forums.sneezymud.com/smf/index.php/topic,5603.0.html
            for more details.
 
@@ -694,7 +696,7 @@
 02-01-08 : QUEST ALERT: Mom always said to avoid strangers with candy, but
            we always knew strangers had the best candy.  Enjoy!
 
-01-24-08 : A bug with cudgel was fixed.  Using cudgel as it was intended, 
+01-24-08 : A bug with cudgel was fixed.  Using cudgel as it was intended,
            thieves shouldn't notice a difference.
 
 01-17-08 : Removed a couple of more offensive insults from the insult code
@@ -705,7 +707,7 @@
 01-03-08 : Temporarily disabled use of commodities in repair.
 
 01-03-08 : Fixed level 15 shaman juju bag quest - it should no longer
-           require immortal intervention to complete.  All shamans who 
+           require immortal intervention to complete.  All shamans who
            are currently mid-juju-bag-quest please see an immortal to
            verify your ability to complete the quest. Inform Deirdre of
            any further bugs or typos in the quest.
@@ -755,9 +757,9 @@
 11-22-07 : Repair shopkeepers now list material costs along with total
            repair cost. Please report any strange material costs you see.
 
-11-21-07 : While investigating reports of some disturbances, Grimhaven  
-           spies have uncovered several previously forgotten routes to 
-           the castle of King Gnumble. 
+11-21-07 : While investigating reports of some disturbances, Grimhaven
+           spies have uncovered several previously forgotten routes to
+           the castle of King Gnumble.
 
 11-11-07 : When returning, thralls now drop all of their talens.
 
@@ -768,7 +770,7 @@
            This means the price of repairs is heavily influenced by the
            availability (and thus price) of commodities.
 
-11-04-07 : Salve now cures bruises. 
+11-04-07 : Salve now cures bruises.
 
 10-31-07 : Fixed a crashing bug when selling commodities.
 
@@ -790,7 +792,7 @@
            instead can break down any item made of metal or mineral into
            commodities... for a fee.
 
-10-09-07 : All objects now have a value assigned that is based on the 
+10-09-07 : All objects now have a value assigned that is based on the
            material type it is made of, in addition to the usual price.
            This has upsides and downsides; consider it to be an experimental
            change for the time being, we may want to roll it back.
@@ -827,7 +829,7 @@
            Please report any strageness.
 
 09-29-07 : QUEST: Try your paw at being an animal, and race your way to
-           level 50.  Sign up to create your unique character! 
+           level 50.  Sign up to create your unique character!
            http://forums.sneezymud.com/smf/index.php/topic,5041.0.html
            The quest starts October 1 and runs all month.
 
@@ -842,8 +844,8 @@
 
 09-15-07 : Peel the untouchable moody god of miracles has granted us with
            an astonishingly reduced reboot time and rent-in lag.
-           Renting out still produces the same amount of lag, so those of 
-           you with portable holes and homes, please continue to drop your 
+           Renting out still produces the same amount of lag, so those of
+           you with portable holes and homes, please continue to drop your
            holes in your homes before renting.
 
 09-09-07 : Please update your email addresses using the "email" command:
@@ -899,11 +901,11 @@
            been spotted somewhere off of Lionheart. And frontier guards report
            that another avalanche was felt near the Tundra trail.
 
-03-20-07 : You may now encamp in a wider range of room types.  However, there 
-           are other conditions that may keep you from hunkering down in 
+03-20-07 : You may now encamp in a wider range of room types.  However, there
+           are other conditions that may keep you from hunkering down in
            certain once hospitable spots.  Oh, and forage and divine too.
 
-03-09-07 : As if the Lan'Quin forest didn't have enough twisting paths, a small 
+03-09-07 : As if the Lan'Quin forest didn't have enough twisting paths, a small
            maze has been discovered in the area.
 
 02-28-07 : A weary traveler reported finding a way through the Sympathian
@@ -921,9 +923,9 @@
 
 02-20-07 : SneezyMUD's web presence has expanded!  Visit Sneezy's web
            site at http://www.sneezymud.com - to submit feedback on the
-           website, or with ideas or suggestions, contact Deirdre. 
+           website, or with ideas or suggestions, contact Deirdre.
 
-02-16-07 : Bullywugs are jittery due to sightings of retired bounty hunters 
+02-16-07 : Bullywugs are jittery due to sightings of retired bounty hunters
            around the swamp.
 
 02-04-07 : Frontier guards report that an avalanche on the Tundra trail has
@@ -947,7 +949,7 @@
 10-04-06 : Fixed some bugs with disguise and re-enabled it.
 
 09-23-06 : Added some flavor to death. This is for informational purposes
-           but I didn't want to add an information channel. 
+           but I didn't want to add an information channel.
 
 08-28-06 : Glass potions may have a tendency to freeze and shatter in cold
            weather now.  I suggest you keep them warm in a bag or something,
@@ -956,7 +958,7 @@
 08-27-06 : Added a few more weather effects.  Be careful walking around in
            lightning storms while wearing metal armor, or strutting around
            in the nude during the winter.
-           
+
 08-17-06 : You can now "whisper logs" to a banker to see logs for your account
            only.  Also, interest is now logged for individual accounts.
 
@@ -970,9 +972,9 @@
            the change command.  Suitcases are available for sale in the
            Fashion Barn, on Drossway Road south of GH.
 
-07-24-06 : Removed egotrip sanctuary, bless, haste and enliven. Re-added 
-           egotrip bless, which gives an immortal's blessing and added 
-           custom blessings for Peel, Angus, Jesus, Damescena. 
+07-24-06 : Removed egotrip sanctuary, bless, haste and enliven. Re-added
+           egotrip bless, which gives an immortal's blessing and added
+           custom blessings for Peel, Angus, Jesus, Damescena.
 
 07-22-06 : The message that is put on engraved equipment has been
            shortened to just two curly braces, eg "{Peel}".  Previously
@@ -1086,7 +1088,7 @@
 10-09-05 : Mystery potions are now normal liquids like other potions, so you
            can sip them, pour them into other containers, etc.
 
-10-01-05 : Added a "time" option to prompt.  I've also moved prompt 
+10-01-05 : Added a "time" option to prompt.  I've also moved prompt
            information to database storage, so your prompts have been reset.
            Sorry.
 
@@ -1170,7 +1172,7 @@
 
 03-27-05 : Selecting no traits should no longer cause -1 starting stat points.
 
-03-24-05 : All small spellbags, grenulpa bags, and herbal pouches that are 
+03-24-05 : All small spellbags, grenulpa bags, and herbal pouches that are
            empty will now poof when dropped. Hope this helps with trash.
 
 03-21-05 : Changed the crit hit modifier to be a curve rather than linear.
@@ -1289,7 +1291,7 @@
 08-24-04 : Added an advanced adventuring discipline.  This discipline is
            20 pracs, available to all classes, and containts a few skills
            formerly belonging to rangers.  It requires that the Adventuring
-           discipline be learned to a high level first.  There isn't a 
+           discipline be learned to a high level first.  There isn't a
            trainer yet, but there will be soon.
 
 08-24-04 : The concealment skill has been moved to the Stealth discipline.
@@ -1303,7 +1305,7 @@
 
 08-21-04 : Casting from the wrist should now work.
 
-08-20-04 : The Blunt, Pierce, Slash and Ranged Specialization disciplines 
+08-20-04 : The Blunt, Pierce, Slash and Ranged Specialization disciplines
            have been added to all classes.
 
 08-17-04 : Player corpses are no longer saved with special code, but now
@@ -1493,7 +1495,7 @@
 05-11-04 : Food style liquid containers no longer decay.
 
 05-05-04 : Trophy is now scaled based on the number of each mob that loads.
-           In other words, you will trophy 10 times slower on a mob if 
+           In other words, you will trophy 10 times slower on a mob if
            there are 10 copies of that mob loading, rather than 1.
 
 04-16-04 : A stock listing board has been added to the bank lobby,
@@ -1688,9 +1690,9 @@
 12-28-03 : spell effects that change AC will now affect mobs
 
 12-28-03 : Polymorph/shapechange/disguise/lycanthropy/vampiricism changes: name
-           retention, trophy retention, forced return when spell runs out, 
-           AC/hp/damage corrections, keep spells when switching, don't reset 
-           quest skills when switching, fixed moves, fixed riding bug, fixed 
+           retention, trophy retention, forced return when spell runs out,
+           AC/hp/damage corrections, keep spells when switching, don't reset
+           quest skills when switching, fixed moves, fixed riding bug, fixed
            experience reset bug, fixed a bunch of crash bugs
 
 12-28-03 : Started making some equipment changes.  Don't be surprised if
@@ -1713,7 +1715,7 @@
            You will no longer get "wholesale" prices for buying unlimited
            items.  You will also no longer have to pay to produce the
            items - unless you only have one left.  In other words,
-           unlimited items are just like other items, except when you 
+           unlimited items are just like other items, except when you
            hit 1 item, in which case you pay to produce them so you
            don't run out.
 
@@ -1822,10 +1824,10 @@
 09-09-03 : A cure for lycanthropy has been added.
 
 09-09-03 : Many of the roads in the world have been greatly extended and
-           the world has been generally more spread out.  This will 
+           the world has been generally more spread out.  This will
            facilitate the addition of more zones (we were getting rather
            cramped) as well as possible thematic rearrangment in the near
-           future.  It should also provide a greater sense of distance 
+           future.  It should also provide a greater sense of distance
            and realism.
 
 08-21-03 : Added a garbageman to the GH dump.  He will buy some items,
@@ -1982,7 +1984,7 @@
            type, although only poisons will have any actual affect.
 
 12-29-02 : Poisons have been converted to be true liquid types.
-           Everything should work pretty much the same, except now you 
+           Everything should work pretty much the same, except now you
            can move the poison around, hold it in a water skin, drink
            it, etc.  The company assumes no responsibility should you
            choose to drink poison.
@@ -2081,7 +2083,7 @@
            secret.
 
 11-11-02 : Totally rewrote the practice calculation formula.  I also
-           fixed a huge bug with mob pracs in the process.  Mobs 
+           fixed a huge bug with mob pracs in the process.  Mobs
            (particularly mages) will have a lot less pracs - in fact,
            they should have pracs appropriate for their levels.
            You may notice a slight change in the number of pracs you
@@ -2114,11 +2116,11 @@
            penalty.  That penalty is gone, so lower level rangers
            should do more damage.
 
-10-23-02 : Few shaman tweaks. There are some other features that have 
+10-23-02 : Few shaman tweaks. There are some other features that have
            become random somehow with shaman that I will address as I
-           can. 
+           can.
 
-10-23-02 : Evaluate was too slow to increase and it doesn't make sense 
+10-23-02 : Evaluate was too slow to increase and it doesn't make sense
            that evaluate and examine give you alot of the same infor-
            mation SO I will examine and evaluate evaluate and examine
            and possibly change them to make the evaluate skill a bit
@@ -2167,7 +2169,7 @@
 09-04-02 : Changed butcher to take the size of the corpse into account
            when determining how much food you get out of it.
 
-09-04-02 : Cudgeled cityguards will no longer try to assist themselves 
+09-04-02 : Cudgeled cityguards will no longer try to assist themselves
            (or others)
 
 09-04-02 : Made elementals a lil weaker again.
@@ -2377,7 +2379,7 @@
            from in the event you don't give them what they want.
 
 02-28-02 : Adding a message whenever you tithe talens.  This should clear up
-           all of those annoying "I did X and I'm losing money" questions, 
+           all of those annoying "I did X and I'm losing money" questions,
            where X is picking up money, stealing, etc.  If your faction
            has a tithe percent set, you tithe talens automatically.
 
@@ -2397,15 +2399,15 @@
 02-25-02 : Added some stat info to "att cond".
 
 02-22-02 : Converted 'who' to use strings instead of char pounters.  This
-           will cut down on our crashes some.  Let me know if you see 
+           will cut down on our crashes some.  Let me know if you see
            something funky with 'who'.
 
 02-20-02 : New shaman healing disc with a new skill 'healing grasp'.
 
-02-20-02 : Major slip up fixed. When I added mage scribe to the game I 
+02-20-02 : Major slip up fixed. When I added mage scribe to the game I
            never set the learning rate and start to what it was intended.
            This is fixed so you may want to check your skill level and
-           re-evaluate the worth of the skill. The rate that was set was 
+           re-evaluate the worth of the skill. The rate that was set was
            intended as a testing level. (so I could see increases etc.)
 
 02-13-02 : Modified some prompt stuff, so all your prompt configurations
@@ -2414,7 +2416,7 @@
            fingers.
 
 02-13-02 : Adjusted the faction score board formulas slightly and added
-           a help file "faction score" to explain them.  It might take 
+           a help file "faction score" to explain them.  It might take
            awhile to get these working well.
 
 02-10-02 : Due to repeated attacks, the city of Brightmoon has begun
@@ -2445,7 +2447,7 @@
            limited in the items that it can detect.
 
 01-31-02 : The shop change mentioned on the board is now in place.  When
-           selling a shop, you no longer receive money for the shops 
+           selling a shop, you no longer receive money for the shops
            inventory.
 
 01-29-02 : There is a new informational board in the GH Casino.

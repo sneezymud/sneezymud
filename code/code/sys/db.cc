@@ -2889,12 +2889,12 @@ void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
     obj = !IS_SET(flags, resetFlagPropLoad)
             ? read_object_buy_build(mob, rs.arg1, REAL)
             : read_object(rs.arg1, REAL);
+  }
 
-    if (!obj) {
-      repoCheck(mob, rs.arg1);
-      last_cmd = objload = false;
-      return;
-    }
+  if (!obj) {
+    repoCheck(mob, rs.arg1);
+    last_cmd = objload = false;
+    return;
   }
 
   // these are just safety logs, equipping will be done regardless
