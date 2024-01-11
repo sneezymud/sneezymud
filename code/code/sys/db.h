@@ -9,10 +9,7 @@
 
 #pragma once
 
-#ifndef __STRUCTS_H
 #include "structs.h"
-#endif
-
 #include "sstring.h"
 
 #include <map>

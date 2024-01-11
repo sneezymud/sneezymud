@@ -12,10 +12,7 @@
 
 #pragma once
 
-#ifndef __BODY_H
 #include "body.h"
-#endif
-
 #include "cmd_dissect.h"
 #include "immunity.h"
 #include "stats.h"
