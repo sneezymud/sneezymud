@@ -6,171 +6,290 @@ D 0 4377 5 1	Door to Repo Swamp 5050
 
 O 0 4307 1 4300
 
-M 0 4309 1 4300       Young Bullywug
-M 0 4300 1 4300  ; Toddler Bullywug
+M 0 4300 1 4300   	Bullywug Toddler
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 44839 0 4306  mosquito larv
-M 0 4309 1 4306     young bullywug
-M 0 44838 0 4306  mosquito
-M 0 4300 1 4306  ; Toddler Bullywug
+G 1 4306 9999	    	  Swamp Root
+Y 0 22 3              Frogskin set
+M 0 4300 1 4303
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 44838 0 4303  mosquito
-M 0 44839 0 4303  mosquito larv
-M 0 4309 1 4303     young bullywug
-M 0 4300 1 4303  ; Toddler  Bullywug
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4306
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 44838 0 4342  mosquito
-M 0 44838 0 4342  mosquito
-M 0 4309 1 4342     young bullywug
-M 0 4300 1 4342  ; Toddler Bullywug
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4330
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 44838 0 4348  mosquito
-M 0 44838 0 4348  mosquito
-M 0 4309 1 4348     young bullywug
-M 0 4300 1 4348  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4332
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 44838 0 4330  mosquito
-M 0 44839 0 4330  mosquito
-M 0 4309 1 4330     young bullywug
-M 0 4300 1 4330  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4334
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 44838 0 4377  mosquito
-M 0 44838 0 4377  mosquito
-M 0 4309 1 4377     young bullywug
-M 0 4300 1 4377  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4342
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4309 1 4334     young bullywug
-M 0 4300 1 4334  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4348
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4309 1 4356     young bullywug
-M 0 4300 1 4356  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4356
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4309 1 4332     young bullywug
-M 0 4300 1 4332  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4300 1 4377
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4310     Green bullywug
-M 0 4301 1 4310  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+
+M 0 4301 1 4308     Bullywug Child
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4370     green bullywug
-M 0 4301 1 4370  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999	        Swamp Root
+Y 0 22 3              Frogskin set
+M 0 4301 1 4310
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4328     green bullywug
-M 0 4301 1 4328  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4315
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4326     green bullywug
-M 0 4301 1 4326  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4326
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4308     green bullywug
-M 0 4301 1 4308  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4328
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4367     green bullywug
-M 0 4301 1 4367  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4339
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4374     green bullywug
-M 0 4301 1 4374  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4349
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4339     green bullywug
-M 0 4301 1 4339  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4367
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4315     green bullywug
-M 0 4301 1 4315  ; child Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4370
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4349     green bullywug
-M 0 4301 1 4349  ; child  Bullywug
-Y 0 22 5 frogskin
+G 1 4306 9999
+Y 0 22 3
+M 0 4301 1 4374
 ? 0 30 0 G
-G 1 4306 9999	    Swamp Root
-M 0 4310 1 4379     green bullywug
-Y 0 22 5 frogskin
-M 0 4302 1 4379  ; child bullywug
-Y 0 22 5              frogskin
-M 0 4311 0 4381    large bullywug
-M 0 4302 1 4381  ; child Bullywug
-Y 0 22 5              frogskin
-M 0 4311 0 4336    large bullywug
-M 0 4302 1 4336  ; Large Bullywug
-Y 0 22 5              frogskin
-M 0 4311 0 4393    large bullywug
-M 0 4302 1 4393  ; Large Bullywug
-Y 0 22 5              frogskin
-M 0 4311 0 4378    large bullywug
-M 0 4302 1 4378  ; Large Bullywug
-Y 0 22 5              frogskin
-M 0 4311 0 4311    large bullywug
-M 0 4302 1 4311  ; Large Bullywug
-Y 0 22 5              frogskin
-M 0 4311 0 4395    large bullywug
-M 0 4302 1 4395  ; Large Bullywug
-Y 0 22 5              frogskin
-M 0 4311 0 4396    large bullywug
-M 0 4304 1 4396  ; Bullywug Shamen
+G 1 4306 9999
+Y 0 22 3
+
+M 0 4302 1 4311     Bullywug Child (Different VNum)
+? 0 30 0 G
+G 1 4306 9999	        Swamp Root
+Y 0 22 3              Frogskin set
+M 0 4302 1 4336
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4302 1 4378
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4302 1 4379
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4302 1 4381
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4302 1 4393
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4302 1 4395
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+
+M 0 4309 1 4300     Young Bullywug
+? 0 30 0 G
+G 1 4306 9999	        Swamp Root
+Y 0 22 3              Frogskin set
+M 0 4309 1 4303
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4306
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4330
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4332
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4334
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4342
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4348
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4356
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4309 1 4377
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+
+M 0 4310 1 4308     Green Bullywug
+? 0 30 0 G
+G 1 4306 9999	    	  Swamp Root
+Y 0 22 3              Frogskin set
+M 0 4310 1 4310
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4315
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4326
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4328
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4339
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4349
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4367
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4370
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4374
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4310 1 4379
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+
+M 0 4311 1 4311    	Large Bullywug
+? 0 30 0 G
+G 1 4306 9999	    	  Swamp Root
+Y 0 22 3              Frogskin set
+M 0 4311 1 4336
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4311 1 4378
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4311 1 4381
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4311 1 4393
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4311 1 4395
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+M 0 4311 1 4396
+? 0 30 0 G
+G 1 4306 9999
+Y 0 22 3
+
+M 0 4304 1 4396  	  Bullywug Shaman
 ? 0 15 0 E
-E 1 4300 50 8         swamp boot
-M 0 4305 1 4397  ; Bullywug Tracker
+E 1 4304 50 19        Ceremonial Staff (Ranger L21 Quest Item)
+? 0 7 0 E
+E 1 4300 50 8         Swamp Boot
+? 0 7 0 E
+E 1 4300 50 9         Swamp Boot
+Y 0 22 10             Frogskin set
+
+M 0 4305 1 4397  	  Bullywug Tracker
 ? 0 15 0 E
-E 1 4305 50 18        bullywug shield
-M 0 44839 0 4350  mosquito larv
-M 0 44839 0 4350  mosquito larv
-M 0 44839 0 4350  mosquito larv
-M 0 44839 0 4350  mosquito larv
-M 0 44839 0 4350  mosquito larv
-M 0 44838 0 4350  mosquito
-M 0 44838 0 4350  mosquito
-M 0 44838 0 4350  mosquito
-M 0 4306 1 4398  ; Bullywug Chieftain
+E 1 4329 50 19        Muddy Spear
+? 0 15 0 E
+E 1 4305 50 18        Bullywug Shield
+Y 0 22 10             Frogskin set
+
+M 0 4306 1 4398   	Bullywug Chieftain
 ? 0 13 0 E
-E 1 4302 50 5         chieftain headdress
+E 1 4302 50 5         Chieftain Headdress
+Y 0 22 10             Frogskin set
 ? 0 99 0 G
-G 1 4301 9999         bullywug bait to sastify K load
-C 1 7818 1 4398       large chameleon pet
+G 1 4301 9999         Bullywug bait to satisfy C load
+C 1 7818 1 4398       Large chameleon pet
 
-M 0 4307 2 4399         bandits in swamp
-Y 0 104 3                 black cloth set
-? 0 4 0 E
-E 1 341 9999 19           long dagger
+M 0 4307 2 4399     Bandit
+? 0 15 0 E
+E 1 341 9999 19       Long Dagger
+Y 0 104 3             Black Cloth set
 M 0 4307 2 4399
-Y 0 104 3                 black cloth set
-? 0 4 0 E
-E 1 341 9999 19           long dagger
+? 0 15 0 E
+E 1 341 9999 19
+Y 0 104 3
 
-M 0 4308 1 4399         venol - bandit leader (ranger L21 quest)
-Y 0 104 3                 black cloth set
-? 0 6 0 E
-E 1 4311 30 19            tarnished sturdy long dagger
+M 0 4308 1 4399         Venol - Bandit Leader (Ranger L21 Quest)
+? 0 15 0 E
+E 1 4311 30 19          Tarnished Long Sturdy Dagger
+Y 0 104 10               Black Cloth set
+
+M 0 44839 0 4303  	Mosquito Larvae
+M 0 44839 0 4306
+M 0 44839 1 4350
+M 0 44839 1 4350
+M 0 44839 1 4350
+M 0 44839 1 4350
+M 0 44839 1 4350
+
+M 0 44838 0 4303  	Mosquito
+M 0 44838 0 4306
+M 0 44838 0 4330
+M 0 44839 0 4330
+M 0 44838 0 4342
+M 0 44838 0 4342
+M 0 44838 0 4348
+M 0 44838 0 4348
+M 0 44838 1 4350
+M 0 44838 1 4350
+M 0 44838 1 4350
+M 0 44838 0 4377
+M 0 44838 0 4377
 
 S
-

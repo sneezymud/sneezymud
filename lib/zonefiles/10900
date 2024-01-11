@@ -12,6 +12,10 @@ D 0 10981 7 1              ; Cabin Door
 D 0 10915 8 1              ; Cabin Door
 D 0 10996 8 1              ; Sticks in Lake
 D 0 10997 7 1              ; Sticks in Lake
+D 0 10932 0 2
+D 0 10907 2 2
+D 0 703 2 2
+D 0 10909 0 2
 
 O 0 17101 1 10914          smoldering campfire (from ogre's)
 O 0 31357 1 10938
@@ -73,7 +77,7 @@ G 1 10916 999                   ; Harmonica
 E 1 10918 999 7                 ; Denim Pants
 ? 0 6 0 E
 E 1 10919 999 9                 ; Hiking Boot
-? 0 2 0 G
+? 0 15 0 G
 G 1 10920 100                   ; Birch Branch
 ? 0 7 0 E
 E 1 10921 999 5                 ; Coonskin Cap
@@ -81,9 +85,9 @@ E 1 10921 999 5                 ; Coonskin Cap
 E 1 10922 999 14                ; Bearskin Cloak
 ? 0 12 0 E
 E 1 10923 999 4                 ; Flannel Shirt
-? 0 2 0 E
+? 0 8 0 E
 E 1 10931 20 18                 ; Platinum Bastard Sword
-? 0 5 0 G
+? 0 10 0 G
 G 1 10924 999                   ; Hunting Knife
 ? 0 6 0 E
 E 1 10926 999 17                ; Feather Bracelet
@@ -97,132 +101,132 @@ E 1 10933 999 2                 ; Wooden Ring
 M 0 10921 1 10936            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 15 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 1 10937            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 1 10945            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 1 10959            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 2 10959            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 3 10959            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 1 10961            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 1 10968            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 1 10969            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 M 0 10921 1 10977            ; Camper
 ? 0 5 0 E
 E 1 300 9999 19                 ; Simple Long Sword
-? 0 3 0 G
+? 0 9 0 G
 G 1 307 9999                    ; Small Bow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
-? 0 5 0 G
+? 0 50 0 G
 G 1 308 9999                    ; Small Arrow
 ? 0 40 0 G
 G 1 10942 9999                  ; Honey Comb
-Y 0 8 3                         ; Studded Set
+Y 0 8 8                         ; Studded Set
 
 
 M 0 10922 1 10900            ; Scrawny Kobold
@@ -311,4 +315,3 @@ O 1 10913 1 10910             ; Small Rock
 ? 0 8 0 O
 O 1 10913 1 10991             ; Small Rock
 S
-

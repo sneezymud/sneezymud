@@ -4,6 +4,12 @@ King's Palace~
 
 D 0 372 4 2
 D 0 380 5 2
+D 0 293 2 1
+D 0 361 0 1
+D 0 364 5 2
+D 0 295 4 2
+
+O 1 22472 1 280    bubbling cauldron
 
 M 0 372 1 372        Royal Guard/Qst
 Y 0 10 10            metal set
@@ -35,4 +41,5 @@ M 0 353 1 392        King (quest_mob_avenger)
 M 0 354 1 393        Queen
 M 0 356 1 390        Princess
 M 0 394 1 394        Business agent
+
 S
