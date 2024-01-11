@@ -20,6 +20,7 @@ extern "C" {
 #include "obj_bed.h"
 #include "obj_drinkcon.h"
 #include "obj_opal.h"
+#include "discord.h"
 
 #if 0
 static const sstring ClassTitles(const TBeing *ch)
@@ -674,6 +675,12 @@ void TPerson::advanceLevel(classIndT Class) {
         "<r>Congratulations on obtaining L50!<z>\n\rYou may now create "
         "<y>triple-class characters<z>!\n\r");
       desc->saveAccount();
+    }
+    // discord webhook announcement
+    if (GetMaxLevel() == 50) {
+      sstring discord_msg;
+      discord_msg = format("%s has achieved level 50 as a %s!") % getName() % getProfName();
+      Discord::sendMessage(Discord::CHANNEL_LEVELUP, discord_msg);
     }
   }
 
