@@ -40,7 +40,7 @@ Build options and defaults:
     CXX=        g++     Specify C++ compiler to use
     CPPPATH=            Add to the header include search path
     LIBPATH=            Add to the library linker search path
-    LIBS=               Extra libs. Defaults to mariadbclient, override with mysqlclient
+    LIBS=               Extra libs.
     olevel=             Compiler -O flag optimization level
 
 Build boolean options: (accept 1/0 y/n yes/no on/off)
@@ -85,7 +85,7 @@ flag_twitter =  get_bool_option('twitter',     False)
 
 opt_includes =       get_option('CPPPATH',     '')
 opt_libdirs =        get_option('LIBPATH',     '')
-opt_libs =           get_option('LIBS', 'mariadbclient')
+opt_libs =           get_option('LIBS',        '')
 opt_olevel =         get_option('olevel',      '')
 opt_cxx =            get_option('CXX',         'g++')
 
@@ -194,6 +194,7 @@ if flag_debug:
         env.Append(CXXFLAGS='-fsanitize=integer')
 
 env.Append(extra_libs=[opt_libs])
+env.ParseConfig('pkg-config --cflags --libs mariadb')
 
 ## harden: security flags, slows runtime a bit
 if flag_harden:
