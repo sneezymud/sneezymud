@@ -56,6 +56,12 @@ D 0 24466 1 1
 D 0 24466 3 1   Toymaker's Residence to a Small Home
 D 0 24467 1 1
 D 0 24453 2 1   Door for connection to Gnomish Wonders
+D 0 24469 4 2
+D 0 24470 5 2
+D 0 24470 2 2
+D 0 24487 0 2
+D 0 24494 0 2
+D 0 24495 2 2
 
 *
 * LOADING LAMPPOSTS AND LIGHT FIXTURES
@@ -151,7 +157,15 @@ O 0 10934 1 24466     A stone fireplace
 O 0 10934 1 24467
 O 0 151 2 24437                          Anvil
 O 0 152 2 24437                          Forge
-
+O 0 22466 1 24469			barrel of gold pot
+O 0 22467 1 24469			barrel of black pot
+O 0 22468 1 24469			chest
+P 1 834 1 22468			sturdy flask
+P 1 828 1 22468			sturdy flask
+P 1 825 1 22468			sturdy flask
+P 1 840 1 22468			sturdy flask
+O 0 5372 1 24470			lab table
+P 1 22470 1 5372			bronze flask antidote
 O 0 34210 1 24499  # mouth of well, entrance to undercroft zone
 
 
@@ -163,6 +177,7 @@ M 0 24400 1 24438	Principal
 E 1 24423 9999 19	  wooden paddle
 ? 0 10 0 E
 E 1 24424 12 5		  spectacles [det invis]
+Y 0 118 15			gnickel set
 M 0 24401 3 24439	Schoolboys
 M 0 24401 3 24439
 M 0 24401 3 24439
@@ -331,17 +346,17 @@ Y 0 86 14                  brigandine set
 E 1 24470 15 19		  silver mace
 A 0 24401 24429
 M 0 24433 3 -99		Gnight Patrolman
-Y 0 86 12                  brigandine set
+Y 0 118 15			gnickel set
 ? 0 16 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
 M 0 24433 3 -99		Gnight Patrolman
-Y 0 86 12                  brigandine set
+Y 0 118 15			gnickel set
 ? 0 16 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
 M 0 24433 3 -99		Gnight Patrolman
-Y 0 86 12                  brigandine set
+Y 0 118 15			gnickel set
 ? 0 16 0 E
 E 1 311 9999 19		  standard steel mace
 A 0 24401 24429
@@ -362,9 +377,11 @@ E 1 311 9999 19		  standard steel mace
 M 0 24435 1 24430	Gnome Usher
 ? 0 25 0 E
 E 1 24448 9999 4	  blue robe
+Y 0 118 15			gnickel set
 M 0 24436 1 24431	Gnome Deacon
 ? 0 25 0 E
 E 1 24448 9999 4	  blue robe
+Y 0 118 15			gnickel set
 M 0 24437 1 24433	Gnome Priest
 ? 0 15 0 E
 E 1 24449 20 4		  holy robe
@@ -398,5 +415,3 @@ M 0 24443 1 24467       Gnancy, Gnathan's Neice
 M 0 24444 1 24466       Gnicholas, Gnathan's Nephew
 
 S
-
-
