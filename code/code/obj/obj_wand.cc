@@ -1,6 +1,6 @@
 // wand.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "extern.h"
 #include "monster.h"

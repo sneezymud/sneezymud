@@ -1,6 +1,6 @@
 // tool.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "monster.h"
 #include "obj_tool.h"

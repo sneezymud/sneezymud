@@ -1,6 +1,6 @@
 // book.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "client.h"
 #include "being.h"

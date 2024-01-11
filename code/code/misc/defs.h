@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdint.h>
+#include <cstdint>
 
 const unsigned long ACT_STRINGS_CHANGED = (1 << 0);  // 1
 const unsigned long ACT_SENTINEL = (1 << 1);         // 2

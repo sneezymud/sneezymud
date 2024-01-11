@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <dirent.h>
-#include <stdio.h>
+#include <cstdio>
 
 #include "extern.h"
 #include "room.h"

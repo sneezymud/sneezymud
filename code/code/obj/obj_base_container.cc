@@ -7,7 +7,7 @@
 // container.cc
 //
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "handler.h"
 #include "low.h"

@@ -6,7 +6,7 @@
 
 // commodity.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <cmath>
 

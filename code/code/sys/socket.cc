@@ -12,7 +12,7 @@
 #include <cstdarg>
 #include <cmath>
 #include <errno.h>
-#include <stdio.h>
+#include <cstdio>
 
 extern "C" {
 #include <unistd.h>

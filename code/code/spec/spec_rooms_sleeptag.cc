@@ -9,7 +9,7 @@
 
 ******************************************************************************/
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <stdarg.h>
 #include <cmath>

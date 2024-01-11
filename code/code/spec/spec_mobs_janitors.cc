@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 #include "room.h"
 #include "being.h"

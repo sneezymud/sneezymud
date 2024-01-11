@@ -7,7 +7,7 @@
 // bag.cc
 //
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "monster.h"
 #include "obj_bag.h"

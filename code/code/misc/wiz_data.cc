@@ -6,7 +6,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 extern "C" {
-#include <stdio.h>
+#include <cstdio>
 
 #include <unistd.h>
 #include <sys/stat.h>

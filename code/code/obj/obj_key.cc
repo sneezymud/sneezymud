@@ -1,6 +1,6 @@
 // key.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "monster.h"
 #include "obj_open_container.h"

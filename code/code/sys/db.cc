@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <sys/types.h>
 #include <dirent.h>
 #include <cmath>

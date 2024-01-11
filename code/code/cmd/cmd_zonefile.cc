@@ -9,7 +9,7 @@
 
  *****************************************************************************/
 
-#include <stdio.h>
+#include <cstdio>
 #include <fstream>
 #include <boost/filesystem.hpp>
 

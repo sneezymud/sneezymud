@@ -6,7 +6,7 @@
 
 // organic.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "monster.h"
 #include "shop.h"

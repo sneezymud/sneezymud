@@ -7,8 +7,8 @@
 #pragma once
 
 #include <algorithm>
-#include <string.h>
-#include <time.h>
+#include <cstring>
+#include <ctime>
 
 #include "enum.h"
 #include "defs.h"

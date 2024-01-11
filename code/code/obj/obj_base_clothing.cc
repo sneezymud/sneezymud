@@ -1,6 +1,6 @@
 // base_clothing.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <cmath>
 

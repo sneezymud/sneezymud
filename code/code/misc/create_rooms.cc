@@ -10,7 +10,7 @@
  **                                                                         **
  *****************************************************************************/
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <boost/algorithm/string.hpp>
 

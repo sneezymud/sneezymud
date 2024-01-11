@@ -14,7 +14,7 @@
 
 //  return values are unimportant.  if char(s) are lost, return a -1
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "room.h"
 #include "being.h"

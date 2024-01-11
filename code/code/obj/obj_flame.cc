@@ -6,7 +6,7 @@
 
 // flame.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "handler.h"
 #include "extern.h"

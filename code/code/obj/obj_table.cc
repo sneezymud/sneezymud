@@ -1,7 +1,7 @@
 // table.cc
 //
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "extern.h"
 #include "obj_table.h"

@@ -33,7 +33,7 @@
       return DELETE_THIS if second TBeing gone
 #endif
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <errno.h>
 

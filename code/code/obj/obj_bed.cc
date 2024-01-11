@@ -1,6 +1,6 @@
 // bed.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "low.h"
 #include "monster.h"

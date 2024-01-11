@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 #include "obj_player_corpse.h"
 #include "obj_base_corpse.h"

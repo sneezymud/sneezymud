@@ -10,7 +10,7 @@
 #include "enum.h"
 #include "version.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 extern "C" {
 #include <unistd.h>

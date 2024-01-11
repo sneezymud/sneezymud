@@ -6,7 +6,7 @@
 
 // quiver.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "monster.h"
 #include "disc_looting.h"

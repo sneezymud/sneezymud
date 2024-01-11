@@ -6,7 +6,7 @@
 
 #pragma once
 
-#include <string.h>
+#include <cstring>
 #include <list>
 
 #include "limbs.h"

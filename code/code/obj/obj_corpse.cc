@@ -6,7 +6,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "obj_corpse.h"
 #include "obj_base_corpse.h"

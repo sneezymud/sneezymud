@@ -17,7 +17,7 @@
 // It keeps track of where being was and temporarily moves them back and
 // forth in order to echo things properly.
 
-#include <stdio.h>
+#include <cstdio>
 #include <boost/optional.hpp>
 
 #include "handler.h"

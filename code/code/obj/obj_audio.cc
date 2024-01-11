@@ -6,7 +6,7 @@
 
 // audio.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "low.h"
 #include "extern.h"

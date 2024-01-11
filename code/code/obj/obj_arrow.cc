@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 #include "monster.h"
 #include "extern.h"

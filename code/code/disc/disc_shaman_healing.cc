@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 
 #include "colorstring.h"
 #include "disease.h"

@@ -7,7 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 extern "C" {
-#include <stdio.h>
+#include <cstdio>
 
 #include <sys/wait.h>
 #include <sys/stat.h>

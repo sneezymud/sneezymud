@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "obj_base_weapon.h"
 #include "extern.h"

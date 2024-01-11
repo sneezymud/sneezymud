@@ -1,8 +1,8 @@
 #pragma once
 
-#include <time.h>
-#include <string.h>
-#include <stdint.h>
+#include <ctime>
+#include <cstring>
+#include <cstdint>
 
 #include "parse.h"
 #include "spells.h"

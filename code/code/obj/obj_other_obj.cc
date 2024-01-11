@@ -1,6 +1,6 @@
 // other_obj.cc
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "obj_other_obj.h"
 #include "extern.h"

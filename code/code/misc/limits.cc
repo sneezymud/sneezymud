@@ -1,5 +1,5 @@
 extern "C" {
-#include <stdio.h>
+#include <cstdio>
 
 #include <unistd.h>
 }

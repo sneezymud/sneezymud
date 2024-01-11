@@ -7,7 +7,7 @@
 // portal.cc
 //
 
-#include <stdio.h>
+#include <cstdio>
 
 #include "configuration.h"
 #include "extern.h"
