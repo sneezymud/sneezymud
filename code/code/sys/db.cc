@@ -107,6 +107,7 @@
 #include "weather.h"
 #include "obj_fruit.h"
 #include "CharacterList.h"
+#include "discord.h"
 
 int top_of_world = 0;  // ref to the top element of world
 
@@ -615,6 +616,7 @@ void bootDb(void) {
 
   db.query("commit");
   bootPulse("Boot -- DONE.");
+  Discord::sendMessage(Discord::CHANNEL_SYS,"Boot process completed, game is up!");
   bootTime = false;
 }
 

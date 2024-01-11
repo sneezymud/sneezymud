@@ -91,13 +91,16 @@ opt_cxx =            get_option('CXX',         'g++')
 
 
 ## ensure submodules are ready to go
-submodules = subprocess.check_output(['git', 'submodule', 'status']).decode('utf-8').split()
-if any(sub.startswith('-') for sub in submodules):
-    info('Initializing submodule dependencies, please wait...')
-    try:
-        subprocess.check_call(['git', 'submodule', 'update', '--init'])
-    except submodule.CalledProcessError:
-        error_exit('Submodule init failed, is your Internet connection working?')
+try: 
+    submodules = subprocess.check_output(['git', 'submodule', 'status']).decode('utf-8').split()
+    if any(sub.startswith('-') for sub in submodules):
+        info('Initializing submodule dependencies, please wait...')
+        try:
+            subprocess.check_call(['git', 'submodule', 'update', '--init'])
+        except submodule.CalledProcessError:
+            error_exit('Submodule init failed, is your Internet connection working?')
+except Exception:
+    warning('Submodules could not be listed')
 
 
 ## detect compiler and version
@@ -236,6 +239,8 @@ if flag_twitter:
     env.Append(CXXFLAGS='-DTWITTER')
     env.Append(extra_libs=['curl'])
 
+## we want to use this for discord webhooks too, so include it
+env.Append(extra_libs=['curl'])
 
 ## universal flags
 env.Append(LINKFLAGS='-g')
@@ -276,12 +281,17 @@ if flag_pretty:
     Progress([ "\033[32mChecking targets\033[0m %s\r" % s for s in '-\\|/' ],
              interval=5)
 
-git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
+try:
+    git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
+except Exception:
+    warning("git_hash could not be read.")
+    git_hash = "?"
 
 try:
     git_dirty = "+" if subprocess.check_output(['git', 'status', '--short']).decode('uft-8') else ""
 except Exception:
-    # Nobody ever figured out why it fails on some systems
+    # Nobody ever figured out why it fails on some systems  
+    warning("git status could not be read.")
     git_dirty = "?"
 
 with open('code/version.h', 'w') as f:

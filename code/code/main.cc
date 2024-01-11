@@ -9,6 +9,7 @@
 #include "extern.h"
 #include "enum.h"
 #include "version.h"
+#include "discord.h"
 
 #include <stdio.h>
 
@@ -29,6 +30,9 @@ int main(int argc, char* argv[]) {
   if (!Config::doConfiguration(argc, argv))
     return 0;
 
+  if (!Discord::doConfig()) 
+    vlogf(LOG_MISC, "Discord configuration failed.");
+  
   if (Config::NoSpecials())
     vlogf(LOG_MISC, "Suppressing assignment of special routines.");
 

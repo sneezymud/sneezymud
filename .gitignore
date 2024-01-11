@@ -25,6 +25,7 @@ cscope.*out
 
 # local config file
 sneezy.cfg
+discord.cfg
 
 # editor tmp files
 .sw?
@@ -35,3 +36,4 @@ sneezy.cfg
 *.pyc
 *.pyo
 /lib/core
+lib/txt/wizlist

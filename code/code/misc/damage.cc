@@ -20,6 +20,7 @@
 #include "person.h"
 #include "cmd_trophy.h"
 #include "configuration.h"
+#include "discord.h"
 
 // there is another one of these defines in combat.cc
 #define DAMAGE_DEFINE 0
@@ -410,6 +411,7 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
 int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
   char buf[512], buf2[256];
   sstring taunt_buf;
+  sstring discord_taunt_msg;
   int rc = 0, questmob;
   TBeing* k = NULL;
   followData* f;
@@ -991,6 +993,8 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
           }
           doShout(taunt_buf);
+          discord_taunt_msg = format("%s shouts, \"%s\"") % getName().cap() % taunt_buf;
+          Discord::sendMessage(Discord::CHANNEL_DEATHS, discord_taunt_msg);
         } else {
 #if 1
           if (v == this && isPc())
