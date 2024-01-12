@@ -2,10 +2,11 @@ name: Build and Test
 on:
   pull_request:
     paths:
-      # Only run on changes to files that are actually included in the build
+      # Only run on changes to files that are actually included in the build or this file itself
       - "code/code/**.cpp"
       - "code/code/**.cc"
       - "code/code/**.h"
+      - ".github/workflows/test.yml"
 
 jobs:
   build_and_test:
