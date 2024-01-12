@@ -1,19 +1,18 @@
 name: Build and Test
-on: [ pull_request ]
+on: [pull_request]
 
 jobs:
   build_and_test:
     runs-on: ubuntu-20.04
     name: Build and Test
     steps:
-    - name: Checkout this commit
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
+      - name: Checkout this commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - run: sudo apt-get update
-    - run: sudo apt-get install software-properties-common
-    - run: sudo apt-get update
-    - run: sudo apt-get install scons g++-9 libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libmariadb-dev libmariadb3 ccache
-    - run: scons -C code -j4 -Q ccache=1 pretty=0 sanitize=1 shared=0
-
+      - run: sudo apt-get update
+      - run: sudo apt-get install software-properties-common
+      - run: sudo apt-get update
+      - run: sudo apt-get install --yes --no-install-recommends build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadbclient-dev scons curl
+      - run: scons -C code -j`nproc` -Q pretty=0 debug=1 sanitize=1 olevel=2 sneezy
