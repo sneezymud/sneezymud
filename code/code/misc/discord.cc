@@ -102,12 +102,8 @@ void Discord::sendMessage(sstring channel, sstring msg, bool detach)
     vlogf(LOG_MISC, format("Discord webhooks: '%s'")  % msg);
 
     // we want to do this asynchronously so POST lag doesn't hang the mud
-    std::thread thread(
-        [](sstring channel, sstring msg) {
-            sendMessageAsync(channel, msg);
-        },
-        channel, msg
-    );
+    std::thread thread(sendMessageAsync, channel, msg);
+
     if (!detach) {
         thread.join();
     } else {

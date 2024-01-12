@@ -5,6 +5,7 @@
 class Discord {
     private: 
         Discord();
+        static bool sendMessageAsync(sstring channel, sstring msg);
 
     public:
         static sstring CHANNEL_DEATHS;
@@ -14,6 +15,5 @@ class Discord {
         static int ACHIEVEMENT_THRESHOLD;
 
         static bool doConfig();
-        static bool sendMessageAsync(sstring channel, sstring msg);
         static void sendMessage(sstring channel, sstring msg, bool detach = true);
 };
