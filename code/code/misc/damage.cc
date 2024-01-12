@@ -1151,22 +1151,18 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     sstring achievement_msg;
     if((isPc() || (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && (master && master->isPc()))) && !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
       // player killed an notable mob, send message to our discord webhook
-      // ideally we'd like to list all the group members...
       if (group_members == 0) {
         // killer is solo
         achievement_msg = format(":crossed_swords: **%s** has taken down **%s**!") % getName() % v->getName();
+      } else if (group_members == 1) {
+        // killer + one other group member
+        achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s**!") % getName() % v->getName() % lastname;
       } else {
-        if (group_members == 1) {
-          // killer + one other name
-          achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s**!") % getName() % v->getName() % lastname;
-        } else {
-          // killer + a group of 2+ others
-          achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s** and **%s**!") % getName() % v->getName() % grouplist.str() % lastname;
-        }
+        // killer + a group of 2+ others
+        achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s** and **%s**!") % getName() % v->getName() % grouplist.str() % lastname;
       }
-
+      
       Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
-
     }
 
     strcpy(buf2, v->name.c_str());
