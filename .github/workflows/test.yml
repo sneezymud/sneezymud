@@ -1,5 +1,11 @@
 name: Build and Test
-on: [pull_request]
+on:
+  pull_request:
+    paths:
+      # Only run on changes to files that are actually included in the build
+      - "code/code/**.cpp"
+      - "code/code/**.cc"
+      - "code/code/**.h"
 
 jobs:
   build_and_test:
