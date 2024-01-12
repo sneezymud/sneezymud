@@ -207,7 +207,7 @@ namespace {
       if (!(tRoom = real_roomp(roomIndex)))
         continue;
 
-      TThing *tThing = NULL, *tThing2 = NULL;
+      TThing *tThing = nullptr, *tThing2 = nullptr;
       TObj *tObj, *tObj2;
       int iMaxExist = 0;
 
@@ -235,7 +235,7 @@ namespace {
         fputs(tBuffer, tFile);
 
         if (!tObj->stuff.empty()) {
-          TThing *sThing = NULL, *sThing2 = NULL;
+          TThing *sThing = nullptr, *sThing2 = nullptr;
           TObj *sObj, *sObj2;
 
           iMaxExist = 0;
@@ -274,7 +274,7 @@ namespace {
       if (!(tRoom = real_roomp(roomIndex)))
         continue;
 
-      TThing *tThing = NULL, *tThing2 = NULL;
+      TThing *tThing = nullptr, *tThing2 = nullptr;
       TObj *tObj, *tObj2;
       int iMaxExist = 0;
 
@@ -302,7 +302,7 @@ namespace {
         fputs(tBuffer, tFile);
 
         if (!tObj->stuff.empty()) {
-          TThing *sThing = NULL, *sThing2 = NULL;
+          TThing *sThing = nullptr, *sThing2 = nullptr;
           TObj *sObj, *sObj2;
 
           iMaxExist = 0;
@@ -342,7 +342,7 @@ namespace {
       if (!(tRoom = real_roomp(roomIndex)))
         continue;
 
-      TThing *tThing = NULL, *tThing2 = NULL;
+      TThing *tThing = nullptr, *tThing2 = nullptr;
       TMonster *tMob, *tMob2;
       int iMaxExist = 0;
 
@@ -368,7 +368,7 @@ namespace {
         fputs(tBuffer, tFile);
 
         if (!tMob->stuff.empty()) {
-          TThing* sThing = NULL;
+          TThing* sThing = nullptr;
           TObj* sObj;
 
           for (StuffIter it = tMob->stuff.begin();
@@ -478,12 +478,12 @@ namespace {
       if (!(tRoom = real_roomp(roomIndex)))
         continue;
 
-      TThing * tThing = NULL;
+      TThing * tThing = nullptr;
 
       while ((tThing = tRoom->getStuff())) {
         --(*tThing);
         delete tThing;
-        tThing = NULL;
+        tThing = nullptr;
       }
 
       tStString += ".";
@@ -492,7 +492,7 @@ namespace {
     tStString += "\n\rLoading zonefile";
 
     char tChar,
-         *tString = NULL;
+         *tString = nullptr;
 
     fscanf(tFile, " #%*d\n");
 
@@ -506,7 +506,7 @@ namespace {
     tStString += "\n\rDone.\n\r";
 
     delete tString;
-    tString = NULL;
+    tString = nullptr;
     tStString += "A copy of your zonefile is in your output.  Use 'viewoutput' to see it.\n\r";
 
     tBeing->sendTo(tStString);

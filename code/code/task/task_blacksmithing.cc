@@ -38,10 +38,10 @@ class BaseRepair {
     TTool* GetPrimaryTool() { return GetTool(GetPrimaryToolId(), true); }
     TTool* GetSecondaryTool() { return GetTool(GetSecondaryToolId(), false); }
     bool HasPrimaryTool() {
-      return !GetPrimaryToolId() || GetPrimaryTool() != NULL;
+      return !GetPrimaryToolId() || GetPrimaryTool() != nullptr;
     }
     bool HasSecondaryTool() {
-      return !GetSecondaryToolId() || GetSecondaryTool() != NULL;
+      return !GetSecondaryToolId() || GetSecondaryTool() != nullptr;
     }
     bool HasRoom1Tool() {
       return !GetRoom1ToolId() || HasRoomTool(GetRoom1ToolId());
@@ -106,10 +106,10 @@ class BaseRepair {
 
 TTool* BaseRepair::GetTool(int vnum, bool primary) {
   if (0 == vnum)
-    return NULL;
+    return nullptr;
 
-  TTool* tt = NULL;
-  TTool* tool = NULL;
+  TTool* tt = nullptr;
+  TTool* tool = nullptr;
 
   if ((primary || m_ch->isAmbidextrous()) && m_ch->heldInPrimHand() &&
       (tt = dynamic_cast<TTool*>(m_ch->heldInPrimHand())) &&
@@ -129,10 +129,10 @@ TTool* BaseRepair::GetTool(int vnum, bool primary) {
 TTool* BaseRepair::GetRoomTool(int vnum) {
   TRoom* rp;
   if (vnum == 0)
-    return NULL;
+    return nullptr;
 
   if (!(rp = real_roomp(m_ch->in_room)))
-    return NULL;
+    return nullptr;
 
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end(); ++it) {
     TTool* tt = dynamic_cast<TTool*>(*it);
@@ -140,15 +140,15 @@ TTool* BaseRepair::GetRoomTool(int vnum) {
       return tt;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 bool BaseRepair::DamageTool(bool primary, TObj* o, bool makeScraps) {
   TTool* tool = primary ? GetPrimaryTool() : GetSecondaryTool();
   if (!tool->addToToolUses(-1)) {
-    act(primary ? DiePToolMsgC() : DieSToolMsgC(), FALSE, m_ch, o, tool,
+    act(primary ? DiePToolMsgC() : DieSToolMsgC(), false, m_ch, o, tool,
       TO_CHAR);
-    act(primary ? DiePToolMsgR() : DieSToolMsgR(), FALSE, m_ch, o, tool,
+    act(primary ? DiePToolMsgR() : DieSToolMsgR(), false, m_ch, o, tool,
       TO_ROOM);
     if (!makeScraps || !tool->makeScraps())
       delete tool;
@@ -186,7 +186,7 @@ TCommodity* getRepairMaterial(StuffList list, ubyte mat) {
     if ((tc = dynamic_cast<TCommodity*>(*it)) && tc->getMaterial() == mat)
       return tc;
   }
-  return NULL;
+  return nullptr;
 }
 
 bool BaseRepair::ConsumeRepairMats(TObj* o) {
@@ -203,7 +203,7 @@ bool BaseRepair::ConsumeRepairMats(TObj* o) {
         mat->numUnits() < mats_needed) {
       act(format("You don't have enough %s to continue repairing $p.") %
             material_nums[o->getMaterial()].mat_name,
-        FALSE, m_ch, o, 0, TO_CHAR);
+        false, m_ch, o, 0, TO_CHAR);
       return false;
     }
     mat->setWeight(mat->getWeight() - (mats_needed / 10.0));
@@ -218,8 +218,8 @@ bool BaseRepair::OnError() {
     act(
       "You stop repairing, and look about confused.  Are you missing "
       "something?",
-      FALSE, m_ch, 0, 0, TO_CHAR);
-    act("$n stops repairing, and looks about confused and embarrassed.", FALSE,
+      false, m_ch, 0, 0, TO_CHAR);
+    act("$n stops repairing, and looks about confused and embarrassed.", false,
       m_ch, 0, 0, TO_ROOM);
   }
   return true;
@@ -227,8 +227,8 @@ bool BaseRepair::OnError() {
 
 bool BaseRepair::OnPulse(TObj* o) {
   if (::number(0, 1)) {
-    act("$n examines $p carefully.", FALSE, m_ch, o, 0, TO_ROOM);
-    act("You carefully examine $p.", FALSE, m_ch, o, 0, TO_CHAR);
+    act("$n examines $p carefully.", false, m_ch, o, 0, TO_ROOM);
+    act("You carefully examine $p.", false, m_ch, o, 0, TO_CHAR);
   }
   return false;
 }
@@ -236,16 +236,16 @@ bool BaseRepair::OnPulse(TObj* o) {
 // the main message pump for all repair - you probably don't need to override
 // this
 int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse) {
-  TObj* o = NULL;
+  TObj* o = nullptr;
   int learning;
   int percent;
-  bool didSucceed = FALSE;
+  bool didSucceed = false;
 
   // get object
   for (StuffIter it = m_ch->stuff.begin(); it != m_ch->stuff.end(); ++it) {
     if ((o = dynamic_cast<TObj*>(*it)) && isname(m_ch->task->orig_arg, o->name))
       break;
-    o = NULL;
+    o = nullptr;
   }
 
   // check if linkdead etc
@@ -271,7 +271,7 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse) {
 
   // just ignore these
   if (m_ch->utilityTaskCommand(cmd) || m_ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // from here on, we are continuing the task
   if (cmd != CMD_TASK_CONTINUE) {
@@ -327,15 +327,15 @@ int BaseRepair::PumpMessage(cmdTypeT cmd, int pulse) {
       }
 
       if (o->getStructPoints() <= 1) {
-        act("$n screws up repairing $p and wrecks it.", FALSE, m_ch, o, NULL,
+        act("$n screws up repairing $p and wrecks it.", false, m_ch, o, nullptr,
           TO_ROOM);
-        act("You screw up your job by dropping $p and wrecking it.", FALSE,
-          m_ch, o, NULL, TO_CHAR);
+        act("You screw up your job by dropping $p and wrecking it.", false,
+          m_ch, o, nullptr, TO_CHAR);
         if (!o->makeScraps())
           delete o;
 
         m_ch->stopTask();
-        return FALSE;
+        return false;
       }  // (o->getStructPoints() <= 1)
     }    // OnSuccess > 0
     else if (succ < 0) {
@@ -394,24 +394,24 @@ class MetalRepair : public BaseRepair {
 };
 
 bool MetalRepair::OnStop(TObj* o) {
-  act("You stop trying to repair $p.", FALSE, m_ch, o, 0, TO_CHAR);
+  act("You stop trying to repair $p.", false, m_ch, o, 0, TO_CHAR);
   m_ch->sendTo("Isn't there a professional around here somewhere?\n\r");
-  act("$n stops repairing $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops repairing $p.", false, m_ch, o, 0, TO_ROOM);
   if (m_ch->task->status > 0) {
-    act("You let $p cool down.", FALSE, m_ch, o, 0, TO_CHAR);
-    act("$n lets $p cool down.", FALSE, m_ch, o, 0, TO_ROOM);
+    act("You let $p cool down.", false, m_ch, o, 0, TO_CHAR);
+    act("$n lets $p cool down.", false, m_ch, o, 0, TO_ROOM);
   }
   return true;  // stop
 }
 
 bool MetalRepair::OnComplete(TObj* o) {
-  act("$n finishes repairing $p and proudly smiles.", FALSE, m_ch, o, 0,
+  act("$n finishes repairing $p and proudly smiles.", false, m_ch, o, 0,
     TO_ROOM);
-  act("You finish repairing $p and smile triumphantly.", FALSE, m_ch, o, 0,
+  act("You finish repairing $p and smile triumphantly.", false, m_ch, o, 0,
     TO_CHAR);
   if (m_ch->task->status > 0) {
-    act("You let $p cool down.", FALSE, m_ch, o, 0, TO_CHAR);
-    act("$n lets $p cool down.", FALSE, m_ch, o, 0, TO_ROOM);
+    act("You let $p cool down.", false, m_ch, o, 0, TO_CHAR);
+    act("$n lets $p cool down.", false, m_ch, o, 0, TO_ROOM);
   }
   return true;  // stop
 }
@@ -423,9 +423,9 @@ bool MetalRepair::OnDrain(TObj* o) {
   m_ch->addToMove(min(-1, ::number(-10, -25) + ::number(1, amt) + add));
 
   if (m_ch->getMove() < 10) {
-    act("You are much too tired to continue repairing $p.", FALSE, m_ch, o, 0,
+    act("You are much too tired to continue repairing $p.", false, m_ch, o, 0,
       TO_CHAR);
-    act("$n stops repairing, and wipes sweat from $s brow.", FALSE, m_ch, o, 0,
+    act("$n stops repairing, and wipes sweat from $s brow.", false, m_ch, o, 0,
       TO_ROOM);
     return true;  // stop
   }
@@ -441,23 +441,23 @@ int MetalRepair::OnSuccess(TObj* o) {
   TTool* tongs = GetSecondaryTool();
 
   if (!m_ch->task->status) {
-    act("$n allows $p to heat in $P.", FALSE, m_ch, o, forge, TO_ROOM);
-    act("You allow $p to heat in $P.", FALSE, m_ch, o, forge, TO_CHAR);
+    act("$n allows $p to heat in $P.", false, m_ch, o, forge, TO_ROOM);
+    act("You allow $p to heat in $P.", false, m_ch, o, forge, TO_CHAR);
   } else if (m_ch->task->status < HEATING_TIME) {
-    act("$n continues to let $p heat in $P.", FALSE, m_ch, o, forge, TO_ROOM);
-    act("You continue to let $p heat in $P.", FALSE, m_ch, o, forge, TO_CHAR);
+    act("$n continues to let $p heat in $P.", false, m_ch, o, forge, TO_ROOM);
+    act("You continue to let $p heat in $P.", false, m_ch, o, forge, TO_CHAR);
   } else if (m_ch->task->status == HEATING_TIME) {
-    act("$n removes $p with $P, as it glows red hot.", FALSE, m_ch, o, tongs,
+    act("$n removes $p with $P, as it glows red hot.", false, m_ch, o, tongs,
       TO_ROOM);
-    act("You remove $p with $P, as it glows red hot.", FALSE, m_ch, o, tongs,
+    act("You remove $p with $P, as it glows red hot.", false, m_ch, o, tongs,
       TO_CHAR);
     if (DamageTool(false, o, true))
       return -1;  // stop
   } else {
     bool primary = ::number(0, 3) != 0;
-    act(format("$n pounds $p on %s with $s $O.") % anvil->getName(), FALSE,
+    act(format("$n pounds $p on %s with $s $O.") % anvil->getName(), false,
       m_ch, o, hammer, TO_ROOM);
-    act(format("You pound $p on %s with your $O.") % m_ch->objs(anvil), FALSE,
+    act(format("You pound $p on %s with your $O.") % m_ch->objs(anvil), false,
       m_ch, o, hammer, TO_CHAR);
     if (DamageTool(primary, o, true))
       return -1;  // stop
@@ -514,12 +514,12 @@ class DeadRepair : public BaseRepair {
 
 bool DeadRepair::OnComplete(TObj* o) {
   TTool* operatingtable = GetRoomTool(GetRoom1ToolId());
-  act("$n finishes operating on $p and smiles triumphantly.", FALSE, m_ch, o, 0,
+  act("$n finishes operating on $p and smiles triumphantly.", false, m_ch, o, 0,
     TO_ROOM);
-  act("You finish operating on $p and smile triumphantly.", FALSE, m_ch, o, 0,
+  act("You finish operating on $p and smile triumphantly.", false, m_ch, o, 0,
     TO_CHAR);
-  act("You remove $p from $P.", FALSE, m_ch, o, operatingtable, TO_CHAR);
-  act("$n removes $p from $P.", FALSE, m_ch, o, operatingtable, TO_ROOM);
+  act("You remove $p from $P.", false, m_ch, o, operatingtable, TO_CHAR);
+  act("$n removes $p from $P.", false, m_ch, o, operatingtable, TO_ROOM);
   return true;
 }
 
@@ -527,16 +527,16 @@ bool DeadRepair::OnDrain(TObj* o) {
   m_ch->addToMove(min(-1,
     ::number(-10, -15) + ::number(1, ((m_ch->getSkillValue(m_skill) / 20)))));
   if (m_ch->getMove() < 10) {
-    act("You are much too tired to continue operating on $p.", FALSE, m_ch, o,
+    act("You are much too tired to continue operating on $p.", false, m_ch, o,
       0, TO_CHAR);
-    act("$n stops operating on $p, and wipes sweat from $s brow.", FALSE, m_ch,
+    act("$n stops operating on $p, and wipes sweat from $s brow.", false, m_ch,
       o, 0, TO_ROOM);
     return true;  // stop
   }
   if (m_ch->getLifeforce() < 30) {
-    act("You are too low on lifeforce to continue operating on $p.", FALSE,
+    act("You are too low on lifeforce to continue operating on $p.", false,
       m_ch, o, 0, TO_CHAR);
-    act("$n looks pale, and stops operating on $p.", FALSE, m_ch, o, 0,
+    act("$n looks pale, and stops operating on $p.", false, m_ch, o, 0,
       TO_ROOM);
     return true;
   }
@@ -549,30 +549,30 @@ int DeadRepair::OnSuccess(TObj* o) {
   TTool* forceps = GetSecondaryTool();
 
   if (!m_ch->task->status) {
-    act("$n carefully places $p atop $P.", FALSE, m_ch, o, operatingtable,
+    act("$n carefully places $p atop $P.", false, m_ch, o, operatingtable,
       TO_ROOM);
-    act("You carefully place $p atop $P.", FALSE, m_ch, o, operatingtable,
+    act("You carefully place $p atop $P.", false, m_ch, o, operatingtable,
       TO_CHAR);
   } else if (::number(0, 1)) {
     if (::number(0, 1)) {
-      act("$n delicately operates on $p with $P.", FALSE, m_ch, o, scalpel,
+      act("$n delicately operates on $p with $P.", false, m_ch, o, scalpel,
         TO_ROOM);
-      act("You delicately operate on $p with $P.", FALSE, m_ch, o, scalpel,
+      act("You delicately operate on $p with $P.", false, m_ch, o, scalpel,
         TO_CHAR);
       if (DamageTool(true, o, true))
         return -1;
     } else {
-      act("$n removes a damaged piece from $p with $s $O.", FALSE, m_ch, o,
+      act("$n removes a damaged piece from $p with $s $O.", false, m_ch, o,
         forceps, TO_ROOM);
-      act("You remove a damaged piece from $p with your $O.", FALSE, m_ch, o,
+      act("You remove a damaged piece from $p with your $O.", false, m_ch, o,
         forceps, TO_CHAR);
       if (DamageTool(false, o, true))
         return -1;
     }
   } else {
-    act("$n focuses $s lifeforce, regrowing the damaged part of $p.", FALSE,
+    act("$n focuses $s lifeforce, regrowing the damaged part of $p.", false,
       m_ch, o, 0, TO_ROOM);
-    act("You focus your lifeforce, regrowing the damaged part of $p.", FALSE,
+    act("You focus your lifeforce, regrowing the damaged part of $p.", false,
       m_ch, o, 0, TO_CHAR);
     m_ch->addToLifeforce(-(::number(15, 30)));
     return 1;
@@ -582,9 +582,9 @@ int DeadRepair::OnSuccess(TObj* o) {
 }
 
 bool DeadRepair::OnStop(TObj* o) {
-  act("You stop trying to operate on $p.", FALSE, m_ch, o, 0, TO_CHAR);
+  act("You stop trying to operate on $p.", false, m_ch, o, 0, TO_CHAR);
   m_ch->sendTo("Isn't there a professional around here somewhere?\n\r");
-  act("$n stops operating on $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops operating on $p.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 
@@ -640,12 +640,12 @@ bool WoodRepair::HasTools() {
 }
 
 bool WoodRepair::OnComplete(TObj* o) {
-  act("$n finishes regrowing $p and proudly smiles.", FALSE, m_ch, o, 0,
+  act("$n finishes regrowing $p and proudly smiles.", false, m_ch, o, 0,
     TO_ROOM);
-  act("You finish regrowing $p and smile triumphantly.", FALSE, m_ch, o, 0,
+  act("You finish regrowing $p and smile triumphantly.", false, m_ch, o, 0,
     TO_CHAR);
-  act("You uncover $p.", FALSE, m_ch, o, 0, TO_CHAR);
-  act("$n uncovers $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("You uncover $p.", false, m_ch, o, 0, TO_CHAR);
+  act("$n uncovers $p.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 
@@ -656,16 +656,16 @@ bool WoodRepair::OnDrain(TObj* o) {
               ::number(1, ((m_ch->getSkillValue(m_skill) / 20))) + add));
 
   if (m_ch->getMove() < 10) {
-    act("You are much too tired to continue regrowing $p.", FALSE, m_ch, o, 0,
+    act("You are much too tired to continue regrowing $p.", false, m_ch, o, 0,
       TO_CHAR);
-    act("$n stops regrowing $p, and wipes sweat from $s brow.", FALSE, m_ch, o,
+    act("$n stops regrowing $p, and wipes sweat from $s brow.", false, m_ch, o,
       0, TO_ROOM);
     return true;
   }
   if (m_ch->getMana() < 10) {
-    act("You are too low on mana to continue regrowing $p.", FALSE, m_ch, o, 0,
+    act("You are too low on mana to continue regrowing $p.", false, m_ch, o, 0,
       TO_CHAR);
-    act("$n looks faint, and stops regrowing $p.", FALSE, m_ch, o, 0, TO_ROOM);
+    act("$n looks faint, and stops regrowing $p.", false, m_ch, o, 0, TO_ROOM);
     return true;
   }
   return false;
@@ -673,35 +673,35 @@ bool WoodRepair::OnDrain(TObj* o) {
 
 int WoodRepair::OnSuccess(TObj* o) {
   if (!m_ch->task->status) {
-    act("$n makes a clearing on the ground large enough to hold $p.", FALSE,
+    act("$n makes a clearing on the ground large enough to hold $p.", false,
       m_ch, o, 0, TO_ROOM);
-    act("You make a clearing on the ground large enough to hold $p.", FALSE,
+    act("You make a clearing on the ground large enough to hold $p.", false,
       m_ch, o, 0, TO_CHAR);
   } else if (m_ch->task->status == 1) {
-    act("$n places $p in the clearing.", FALSE, m_ch, o, 0, TO_ROOM);
-    act("You place $p in the clearing.", FALSE, m_ch, o, 0, TO_CHAR);
+    act("$n places $p in the clearing.", false, m_ch, o, 0, TO_ROOM);
+    act("You place $p in the clearing.", false, m_ch, o, 0, TO_CHAR);
   } else if (::number(0, 1)) {
     if (::number(0, 1)) {
       TTool* ladle = GetPrimaryTool();
-      act("$n scoops some soil with $P and pours it on $p.", FALSE, m_ch, o,
+      act("$n scoops some soil with $P and pours it on $p.", false, m_ch, o,
         ladle, TO_ROOM);
-      act("You scoop some soil with $P and pour it on $p.", FALSE, m_ch, o,
+      act("You scoop some soil with $P and pour it on $p.", false, m_ch, o,
         ladle, TO_CHAR);
       if (DamageTool(true, o, true))
         return -1;
     } else {
       TTool* soil = GetSecondaryTool();
-      act("$n stirs manure from $P into the soil covering $p.", FALSE, m_ch, o,
+      act("$n stirs manure from $P into the soil covering $p.", false, m_ch, o,
         soil, TO_ROOM);
-      act("You stir manure from $P into the soil covering $p.", FALSE, m_ch, o,
+      act("You stir manure from $P into the soil covering $p.", false, m_ch, o,
         soil, TO_CHAR);
       if (DamageTool(false, o, false))
         return -1;
     }
   } else {
-    act("$n places a hand over $p and concentrates, regrowing it.", FALSE, m_ch,
+    act("$n places a hand over $p and concentrates, regrowing it.", false, m_ch,
       o, 0, TO_ROOM);
-    act("You place a hand over $p and concentrate, regrowing it.", FALSE, m_ch,
+    act("You place a hand over $p and concentrate, regrowing it.", false, m_ch,
       o, 0, TO_CHAR);
     m_ch->addToMana(::number(-3, -8));
     return 1;
@@ -711,12 +711,12 @@ int WoodRepair::OnSuccess(TObj* o) {
 }
 
 bool WoodRepair::OnStop(TObj* o) {
-  act("You stop trying to regrowing $p.", FALSE, m_ch, o, 0, TO_CHAR);
+  act("You stop trying to regrowing $p.", false, m_ch, o, 0, TO_CHAR);
   m_ch->sendTo("Isn't there a druid around here somewhere?\n\r");
-  act("$n stops regrowing $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops regrowing $p.", false, m_ch, o, 0, TO_ROOM);
   if (m_ch->task->status > 0) {
-    act("You uncover $p.", FALSE, m_ch, o, 0, TO_CHAR);
-    act("$n uncovers $p.", FALSE, m_ch, o, 0, TO_ROOM);
+    act("You uncover $p.", false, m_ch, o, 0, TO_CHAR);
+    act("$n uncovers $p.", false, m_ch, o, 0, TO_ROOM);
   }
   return true;
 }
@@ -773,12 +773,12 @@ bool OrganicRepair::HasTools() {
 }
 
 bool OrganicRepair::OnComplete(TObj* o) {
-  act("$n finishes regenerating $p and proudly smiles.", FALSE, m_ch, o, 0,
+  act("$n finishes regenerating $p and proudly smiles.", false, m_ch, o, 0,
     TO_ROOM);
-  act("You finish regenerating $p and smile triumphantly.", FALSE, m_ch, o, 0,
+  act("You finish regenerating $p and smile triumphantly.", false, m_ch, o, 0,
     TO_CHAR);
-  act("You dry $p off.", FALSE, m_ch, o, 0, TO_CHAR);
-  act("$n dries $p off.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("You dry $p off.", false, m_ch, o, 0, TO_CHAR);
+  act("$n dries $p off.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 
@@ -789,16 +789,16 @@ bool OrganicRepair::OnDrain(TObj* o) {
               ::number(1, ((m_ch->getSkillValue(m_skill) / 20))) + add));
 
   if (m_ch->getMove() < 10) {
-    act("You are much too tired to continue regenerating $p.", FALSE, m_ch, o,
+    act("You are much too tired to continue regenerating $p.", false, m_ch, o,
       0, TO_CHAR);
-    act("$n stops regenerating $p, and wipes sweat from $s brow.", FALSE, m_ch,
+    act("$n stops regenerating $p, and wipes sweat from $s brow.", false, m_ch,
       o, 0, TO_ROOM);
     return true;
   }
   if (m_ch->getMana() < 10) {
-    act("You are too low on mana to continue regenerating $p.", FALSE, m_ch, o,
+    act("You are too low on mana to continue regenerating $p.", false, m_ch, o,
       0, TO_CHAR);
-    act("$n looks faint, and stops regenerating $p.", FALSE, m_ch, o, 0,
+    act("$n looks faint, and stops regenerating $p.", false, m_ch, o, 0,
       TO_ROOM);
     return true;
   }
@@ -807,33 +807,33 @@ bool OrganicRepair::OnDrain(TObj* o) {
 
 int OrganicRepair::OnSuccess(TObj* o) {
   if (!m_ch->task->status) {
-    act("$n holds $p under the water for a moment.", FALSE, m_ch, o, 0,
+    act("$n holds $p under the water for a moment.", false, m_ch, o, 0,
       TO_ROOM);
-    act("You hold $p under the water for a moment.", FALSE, m_ch, o, 0,
+    act("You hold $p under the water for a moment.", false, m_ch, o, 0,
       TO_CHAR);
   } else if (m_ch->task->status == 1) {
-    act("$n removes $p from the water.", FALSE, m_ch, o, 0, TO_ROOM);
-    act("You remove $p from the water.", FALSE, m_ch, o, 0, TO_CHAR);
+    act("$n removes $p from the water.", false, m_ch, o, 0, TO_ROOM);
+    act("You remove $p from the water.", false, m_ch, o, 0, TO_CHAR);
   } else if (::number(0, 1)) {
     if (::number(0, 1)) {
       TTool* ladle = GetPrimaryTool();
-      act("$n pours water over $p with $P.", FALSE, m_ch, o, ladle, TO_ROOM);
-      act("You pour water over $p with $P.", FALSE, m_ch, o, ladle, TO_CHAR);
+      act("$n pours water over $p with $P.", false, m_ch, o, ladle, TO_ROOM);
+      act("You pour water over $p with $P.", false, m_ch, o, ladle, TO_CHAR);
       if (DamageTool(true, o, true))
         return -1;
     } else {
       TTool* oils = GetSecondaryTool();
-      act("$n drops oil from $P and rubs it across $p.", FALSE, m_ch, o, oils,
+      act("$n drops oil from $P and rubs it across $p.", false, m_ch, o, oils,
         TO_ROOM);
-      act("You take oil from $P and rub it across $p.", FALSE, m_ch, o, oils,
+      act("You take oil from $P and rub it across $p.", false, m_ch, o, oils,
         TO_CHAR);
       if (DamageTool(false, o, false))
         return -1;
     }
   } else {
-    act("$n places a hand over $p and concentrates, regenerating it.", FALSE,
+    act("$n places a hand over $p and concentrates, regenerating it.", false,
       m_ch, o, 0, TO_ROOM);
-    act("You place a hand over $p and concentrate, regenerating it.", FALSE,
+    act("You place a hand over $p and concentrate, regenerating it.", false,
       m_ch, o, 0, TO_CHAR);
     m_ch->addToMana(::number(-3, -8));
     return 1;
@@ -843,12 +843,12 @@ int OrganicRepair::OnSuccess(TObj* o) {
 }
 
 bool OrganicRepair::OnStop(TObj* o) {
-  act("You stop trying to regenerate $p.", FALSE, m_ch, o, 0, TO_CHAR);
+  act("You stop trying to regenerate $p.", false, m_ch, o, 0, TO_CHAR);
   m_ch->sendTo("Isn't there a druid around here somewhere?\n\r");
-  act("$n stops regenerating $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops regenerating $p.", false, m_ch, o, 0, TO_ROOM);
   if (m_ch->task->status > 0) {
-    act("You dry $p off.", FALSE, m_ch, o, 0, TO_CHAR);
-    act("$n dries $p off.", FALSE, m_ch, o, 0, TO_ROOM);
+    act("You dry $p off.", false, m_ch, o, 0, TO_CHAR);
+    act("$n dries $p off.", false, m_ch, o, 0, TO_ROOM);
   }
   return true;
 }
@@ -902,12 +902,12 @@ class MagicRepair : public BaseRepair {
 
 bool MagicRepair::OnComplete(TObj* o) {
   TTool* pentagram = GetRoomTool(GetRoom1ToolId());
-  act("$n finishes refocusing the energy in $p and proudly smiles.", FALSE,
+  act("$n finishes refocusing the energy in $p and proudly smiles.", false,
     m_ch, o, 0, TO_ROOM);
-  act("You finish refocusing the energy in $p and smile triumphantly.", FALSE,
+  act("You finish refocusing the energy in $p and smile triumphantly.", false,
     m_ch, o, 0, TO_CHAR);
-  act("You remove $p from $P.", FALSE, m_ch, o, pentagram, TO_CHAR);
-  act("$n removes $p from $P.", FALSE, m_ch, o, pentagram, TO_ROOM);
+  act("You remove $p from $P.", false, m_ch, o, pentagram, TO_CHAR);
+  act("$n removes $p from $P.", false, m_ch, o, pentagram, TO_ROOM);
   return true;
 }
 
@@ -919,15 +919,15 @@ bool MagicRepair::OnDrain(TObj* o) {
 
   if (m_ch->getMove() < 10) {
     act("You are much too tired to continue refocusing the energy in $p.",
-      FALSE, m_ch, o, 0, TO_CHAR);
+      false, m_ch, o, 0, TO_CHAR);
     act("$n stops refocusing the energy in $p, and wipes sweat from $s brow.",
-      FALSE, m_ch, o, 0, TO_ROOM);
+      false, m_ch, o, 0, TO_ROOM);
     return true;
   }
   if (m_ch->getMana() < 10) {
     act("You are too low on mana to continue refocusing the energy in $p.",
-      FALSE, m_ch, o, 0, TO_CHAR);
-    act("$n looks faint, and stops refocusing the energy in $p.", FALSE, m_ch,
+      false, m_ch, o, 0, TO_CHAR);
+    act("$n looks faint, and stops refocusing the energy in $p.", false, m_ch,
       o, 0, TO_ROOM);
     return true;
   }
@@ -936,19 +936,19 @@ bool MagicRepair::OnDrain(TObj* o) {
 
 int MagicRepair::OnSuccess(TObj* o) {
   if (!m_ch->task->status) {
-    act("$n concentrates intensly on $p.", FALSE, m_ch, o, 0, TO_ROOM);
-    act("You concentrate intensly on $p.", FALSE, m_ch, o, 0, TO_CHAR);
+    act("$n concentrates intensly on $p.", false, m_ch, o, 0, TO_ROOM);
+    act("You concentrate intensly on $p.", false, m_ch, o, 0, TO_CHAR);
   } else if (m_ch->task->status == 1) {
     TTool* pentagram = GetRoomTool(GetRoom1ToolId());
-    act("$n focuses on the $o, and places it in the center of $P.", FALSE, m_ch,
+    act("$n focuses on the $o, and places it in the center of $P.", false, m_ch,
       o, pentagram, TO_ROOM);
-    act("You focus on the $o, and place it in the center of $P.", FALSE, m_ch,
+    act("You focus on the $o, and place it in the center of $P.", false, m_ch,
       o, pentagram, TO_CHAR);
   } else if (::number(0, 1)) {
     TTool* energy = GetSecondaryTool();
-    act("$n channels some energy from the $O into $p.", FALSE, m_ch, o, energy,
+    act("$n channels some energy from the $O into $p.", false, m_ch, o, energy,
       TO_ROOM);
-    act("You channel some energy from the $O into $p.", FALSE, m_ch, o, energy,
+    act("You channel some energy from the $O into $p.", false, m_ch, o, energy,
       TO_CHAR);
     if (DamageTool(false, o, false))
       return -1;
@@ -957,11 +957,11 @@ int MagicRepair::OnSuccess(TObj* o) {
     act(
       "$n places a rune of binding upon the $o, which quickly fades after a "
       "moment.",
-      FALSE, m_ch, o, 0, TO_ROOM);
+      false, m_ch, o, 0, TO_ROOM);
     act(
       "You place a rune of binding upon the $o, which quickly fades after a "
       "moment.",
-      FALSE, m_ch, o, 0, TO_CHAR);
+      false, m_ch, o, 0, TO_CHAR);
     if (DamageTool(true, o, false))
       return -1;
     return 1;
@@ -971,10 +971,10 @@ int MagicRepair::OnSuccess(TObj* o) {
 }
 
 bool MagicRepair::OnStop(TObj* o) {
-  act("You stop trying to refocus the energy in $p.", FALSE, m_ch, o, 0,
+  act("You stop trying to refocus the energy in $p.", false, m_ch, o, 0,
     TO_CHAR);
   m_ch->sendTo("Isn't there an artificer around here somewhere?\n\r");
-  act("$n stops regenerating $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops regenerating $p.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 
@@ -1027,12 +1027,12 @@ class RockRepair : public BaseRepair {
 
 bool RockRepair::OnComplete(TObj* o) {
   TTool* pentagram = GetRoomTool(GetRoom1ToolId());
-  act("$n finishes reforming the crystals in $p and proudly smiles.", FALSE,
+  act("$n finishes reforming the crystals in $p and proudly smiles.", false,
     m_ch, o, 0, TO_ROOM);
-  act("You finish reforming the crystals in $p and smile triumphantly.", FALSE,
+  act("You finish reforming the crystals in $p and smile triumphantly.", false,
     m_ch, o, 0, TO_CHAR);
-  act("You remove $p from $P.", FALSE, m_ch, o, pentagram, TO_CHAR);
-  act("$n removes $p from $P.", FALSE, m_ch, o, pentagram, TO_ROOM);
+  act("You remove $p from $P.", false, m_ch, o, pentagram, TO_CHAR);
+  act("$n removes $p from $P.", false, m_ch, o, pentagram, TO_ROOM);
   return true;
 }
 
@@ -1042,15 +1042,15 @@ bool RockRepair::OnDrain(TObj* o) {
 
   if (m_ch->getMove() < 10) {
     act("You are much too tired to continue reforming the crystals in $p.",
-      FALSE, m_ch, o, 0, TO_CHAR);
+      false, m_ch, o, 0, TO_CHAR);
     act("$n stops reforming the crystals in $p, and wipes sweat from $s brow.",
-      FALSE, m_ch, o, 0, TO_ROOM);
+      false, m_ch, o, 0, TO_ROOM);
     return true;
   }
   if (m_ch->getMana() < 10) {
     act("You are too low on mana to continue reforming the crystals in $p.",
-      FALSE, m_ch, o, 0, TO_CHAR);
-    act("$n looks faint, and stops reforming the crystals in $p.", FALSE, m_ch,
+      false, m_ch, o, 0, TO_CHAR);
+    act("$n looks faint, and stops reforming the crystals in $p.", false, m_ch,
       o, 0, TO_ROOM);
     return true;
   }
@@ -1063,24 +1063,24 @@ int RockRepair::OnSuccess(TObj* o) {
   TTool* silica = GetSecondaryTool();
 
   if (!m_ch->task->status) {
-    act("$n concentrates intensly on $p.", FALSE, m_ch, o, 0, TO_ROOM);
-    act("You concentrate intensly on $p.", FALSE, m_ch, o, 0, TO_CHAR);
+    act("$n concentrates intensly on $p.", false, m_ch, o, 0, TO_ROOM);
+    act("You concentrate intensly on $p.", false, m_ch, o, 0, TO_CHAR);
   } else if (m_ch->task->status == 1) {
-    act("$n focuses on the $o, and places it in the center of $P.", FALSE, m_ch,
+    act("$n focuses on the $o, and places it in the center of $P.", false, m_ch,
       o, pentagram, TO_ROOM);
-    act("You focus on the $o, and place it in the center of $P.", FALSE, m_ch,
+    act("You focus on the $o, and place it in the center of $P.", false, m_ch,
       o, pentagram, TO_CHAR);
   } else if (::number(0, 1)) {
-    act("$n chips some damaged rock away from $p.", FALSE, m_ch, o, chisel,
+    act("$n chips some damaged rock away from $p.", false, m_ch, o, chisel,
       TO_ROOM);
-    act("You chip some damaged rock away from $p.", FALSE, m_ch, o, chisel,
+    act("You chip some damaged rock away from $p.", false, m_ch, o, chisel,
       TO_CHAR);
     if (DamageTool(true, o, true))
       return -1;
   } else {
-    act("$n sprinkles the $o with $P, reforming the crystal structures.", FALSE,
+    act("$n sprinkles the $o with $P, reforming the crystal structures.", false,
       m_ch, o, silica, TO_ROOM);
-    act("You sprinkle the $o with $P, reforming the crystal structures.", FALSE,
+    act("You sprinkle the $o with $P, reforming the crystal structures.", false,
       m_ch, o, silica, TO_CHAR);
     if (DamageTool(false, o, false))
       return -1;
@@ -1092,10 +1092,10 @@ int RockRepair::OnSuccess(TObj* o) {
 }
 
 bool RockRepair::OnStop(TObj* o) {
-  act("You stop trying to reforming the crystals in $p.", FALSE, m_ch, o, 0,
+  act("You stop trying to reforming the crystals in $p.", false, m_ch, o, 0,
     TO_CHAR);
   m_ch->sendTo("Isn't there an geologist around here somewhere?\n\r");
-  act("$n stops reforming the crystals in $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops reforming the crystals in $p.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 
@@ -1154,12 +1154,12 @@ class GemRepair : public BaseRepair {
 
 bool GemRepair::OnComplete(TObj* o) {
   TTool* workbench = GetRoomTool(GetRoom1ToolId());
-  act("$n finishes rearranging the gems in $p and proudly smiles.", FALSE, m_ch,
+  act("$n finishes rearranging the gems in $p and proudly smiles.", false, m_ch,
     o, 0, TO_ROOM);
-  act("You finish rearranging the gems in $p and smile triumphantly.", FALSE,
+  act("You finish rearranging the gems in $p and smile triumphantly.", false,
     m_ch, o, 0, TO_CHAR);
-  act("You remove $p from $P.", FALSE, m_ch, o, workbench, TO_CHAR);
-  act("$n removes $p from $P.", FALSE, m_ch, o, workbench, TO_ROOM);
+  act("You remove $p from $P.", false, m_ch, o, workbench, TO_CHAR);
+  act("$n removes $p from $P.", false, m_ch, o, workbench, TO_ROOM);
   return true;
 }
 
@@ -1168,9 +1168,9 @@ bool GemRepair::OnDrain(TObj* o) {
     ::number(-15, -25) + ::number(1, ((m_ch->getSkillValue(m_skill) / 10)))));
 
   if (m_ch->getMove() < 10) {
-    act("You are much too tired to continue repairing $p.", FALSE, m_ch, o, 0,
+    act("You are much too tired to continue repairing $p.", false, m_ch, o, 0,
       TO_CHAR);
-    act("$n stops fixing $p, and wipes sweat from $s brow.", FALSE, m_ch, o, 0,
+    act("$n stops fixing $p, and wipes sweat from $s brow.", false, m_ch, o, 0,
       TO_ROOM);
     return true;
   }
@@ -1183,25 +1183,25 @@ int GemRepair::OnSuccess(TObj* o) {
   TTool* workbench = GetRoomTool(GetRoom1ToolId());
 
   if (!m_ch->task->status) {
-    act("$n carefully inspects $p with $s $O.", FALSE, m_ch, o, loupe, TO_ROOM);
-    act("You carefully inspect $p with your $O.", FALSE, m_ch, o, loupe,
+    act("$n carefully inspects $p with $s $O.", false, m_ch, o, loupe, TO_ROOM);
+    act("You carefully inspect $p with your $O.", false, m_ch, o, loupe,
       TO_CHAR);
   } else if (m_ch->task->status == 1) {
-    act("$n delicately places the $o on $P.", FALSE, m_ch, o, workbench,
+    act("$n delicately places the $o on $P.", false, m_ch, o, workbench,
       TO_ROOM);
-    act("You delicately place the $o on $P.", FALSE, m_ch, o, workbench,
+    act("You delicately place the $o on $P.", false, m_ch, o, workbench,
       TO_CHAR);
   } else if (::number(0, 1)) {
-    act("$n looks intently through $s $O at $p.", FALSE, m_ch, o, loupe,
+    act("$n looks intently through $s $O at $p.", false, m_ch, o, loupe,
       TO_ROOM);
-    act("You look intently through your $O at $p.", FALSE, m_ch, o, loupe,
+    act("You look intently through your $O at $p.", false, m_ch, o, loupe,
       TO_CHAR);
     if (DamageTool(true, o, true))
       return -1;
   } else {
-    act("$n carefully uses $s $O to rearrange the gems in $p.", FALSE, m_ch, o,
+    act("$n carefully uses $s $O to rearrange the gems in $p.", false, m_ch, o,
       pliers, TO_ROOM);
-    act("You carefully use your $O to rearrange the gems in $p.", FALSE, m_ch,
+    act("You carefully use your $O to rearrange the gems in $p.", false, m_ch,
       o, pliers, TO_CHAR);
     if (DamageTool(false, 0, true))
       return -1;
@@ -1212,10 +1212,10 @@ int GemRepair::OnSuccess(TObj* o) {
 }
 
 bool GemRepair::OnStop(TObj* o) {
-  act("You stop trying to rearranging the gems in $p.", FALSE, m_ch, o, 0,
+  act("You stop trying to rearranging the gems in $p.", false, m_ch, o, 0,
     TO_CHAR);
   m_ch->sendTo("Isn't there an jeweler around here somewhere?\n\r");
-  act("$n stops rearranging the gems in $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops rearranging the gems in $p.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 
@@ -1262,8 +1262,8 @@ class LeatherRepair : public BaseRepair {
 };
 
 bool LeatherRepair::OnComplete(TObj* o) {
-  act("$n finishes mending $p and proudly smiles.", FALSE, m_ch, o, 0, TO_ROOM);
-  act("You finish mending $p and smile triumphantly.", FALSE, m_ch, o, 0,
+  act("$n finishes mending $p and proudly smiles.", false, m_ch, o, 0, TO_ROOM);
+  act("You finish mending $p and smile triumphantly.", false, m_ch, o, 0,
     TO_CHAR);
   return true;
 }
@@ -1273,9 +1273,9 @@ bool LeatherRepair::OnDrain(TObj* o) {
     ::number(-10, -15) + ::number(1, ((m_ch->getSkillValue(m_skill) / 20)))));
 
   if (m_ch->getMove() < 10) {
-    act("You are much too tired to continue mending $p.", FALSE, m_ch, o, 0,
+    act("You are much too tired to continue mending $p.", false, m_ch, o, 0,
       TO_CHAR);
-    act("$n stops mending $p, and wipes sweat from $s brow.", FALSE, m_ch, o, 0,
+    act("$n stops mending $p, and wipes sweat from $s brow.", false, m_ch, o, 0,
       TO_ROOM);
     return true;
   }
@@ -1286,19 +1286,19 @@ int LeatherRepair::OnSuccess(TObj* o) {
   TTool* punch = GetPrimaryTool();
   TTool* cording = GetSecondaryTool();
   if (!m_ch->task->status) {
-    act("$n carefully inspects $p.", FALSE, m_ch, o, 0, TO_ROOM);
-    act("You carefully inspect $p.", FALSE, m_ch, o, 0, TO_CHAR);
+    act("$n carefully inspects $p.", false, m_ch, o, 0, TO_ROOM);
+    act("You carefully inspect $p.", false, m_ch, o, 0, TO_CHAR);
   } else if (1 == m_ch->task->status % 2) {
-    act("$n makes a few holes around a tear in $p.", FALSE, m_ch, o, punch,
+    act("$n makes a few holes around a tear in $p.", false, m_ch, o, punch,
       TO_ROOM);
-    act("You make a few holes around a tear in $p.", FALSE, m_ch, o, punch,
+    act("You make a few holes around a tear in $p.", false, m_ch, o, punch,
       TO_CHAR);
     if (DamageTool(true, o, true))
       return -1;
   } else {
-    act("$n sews up a tear in the $o with $P.", FALSE, m_ch, o, cording,
+    act("$n sews up a tear in the $o with $P.", false, m_ch, o, cording,
       TO_ROOM);
-    act("You sew up a tear in the $o with $P.", FALSE, m_ch, o, cording,
+    act("You sew up a tear in the $o with $P.", false, m_ch, o, cording,
       TO_CHAR);
     if (DamageTool(false, o, false))
       return -1;
@@ -1309,9 +1309,9 @@ int LeatherRepair::OnSuccess(TObj* o) {
 }
 
 bool LeatherRepair::OnStop(TObj* o) {
-  act("You stop trying to mend $p.", FALSE, m_ch, o, 0, TO_CHAR);
+  act("You stop trying to mend $p.", false, m_ch, o, 0, TO_CHAR);
   m_ch->sendTo("Isn't there an seamstress around here somewhere?\n\r");
-  act("$n stops mending $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops mending $p.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 
@@ -1334,7 +1334,7 @@ int task_mend_hide(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 int task_mend(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
   ch->sendTo("This skill is not yet implemented.\n\r");
   ch->stopTask();
-  return TRUE;
+  return true;
 }
 
 // repair spiritual: ghostly (72), foodstuff (7)
@@ -1383,11 +1383,11 @@ class SpiritRepair : public BaseRepair {
 
 bool SpiritRepair::OnComplete(TObj* o) {
   TTool* altar = GetRoomTool(GetRoom1ToolId());
-  act("$n finishes mending $p and proudly smiles.", FALSE, m_ch, o, 0, TO_ROOM);
-  act("You finish mending $p and smile triumphantly.", FALSE, m_ch, o, 0,
+  act("$n finishes mending $p and proudly smiles.", false, m_ch, o, 0, TO_ROOM);
+  act("You finish mending $p and smile triumphantly.", false, m_ch, o, 0,
     TO_CHAR);
-  act("You remove $p from $P.", FALSE, m_ch, o, altar, TO_CHAR);
-  act("$n removes $p from $P.", FALSE, m_ch, o, altar, TO_ROOM);
+  act("You remove $p from $P.", false, m_ch, o, altar, TO_CHAR);
+  act("$n removes $p from $P.", false, m_ch, o, altar, TO_ROOM);
   return true;
 }
 
@@ -1396,17 +1396,17 @@ bool SpiritRepair::OnDrain(TObj* o) {
     ::number(-10, -15) + ::number(1, ((m_ch->getSkillValue(m_skill) / 20)))));
 
   if (m_ch->getMove() < 10) {
-    act("You are much too tired to continue mending $p.", FALSE, m_ch, o, 0,
+    act("You are much too tired to continue mending $p.", false, m_ch, o, 0,
       TO_CHAR);
-    act("$n stops mending $p, and wipes sweat from $s brow.", FALSE, m_ch, o, 0,
+    act("$n stops mending $p, and wipes sweat from $s brow.", false, m_ch, o, 0,
       TO_ROOM);
     return true;
   }
 
   if (m_ch->getPiety() < 10) {
-    act("You are much too drained to continue mending $p.", FALSE, m_ch, o, 0,
+    act("You are much too drained to continue mending $p.", false, m_ch, o, 0,
       TO_CHAR);
-    act("$n looks faint, and stops mending $p.", FALSE, m_ch, o, 0, TO_ROOM);
+    act("$n looks faint, and stops mending $p.", false, m_ch, o, 0, TO_ROOM);
     return true;
   }
   return false;
@@ -1417,23 +1417,23 @@ int SpiritRepair::OnSuccess(TObj* o) {
   TTool* altar = GetRoomTool(GetRoom1ToolId());
 
   if (!m_ch->task->status) {
-    act("$n carefully inspects $p.", FALSE, m_ch, o, 0, TO_ROOM);
-    act("You carefully inspect $p.", FALSE, m_ch, o, 0, TO_CHAR);
+    act("$n carefully inspects $p.", false, m_ch, o, 0, TO_ROOM);
+    act("You carefully inspect $p.", false, m_ch, o, 0, TO_CHAR);
   } else if (m_ch->task->status == 1) {
-    act("$n delicately places the $o on $P.", FALSE, m_ch, o, altar, TO_ROOM);
-    act("You delicately place the $o on $P.", FALSE, m_ch, o, altar, TO_CHAR);
+    act("$n delicately places the $o on $P.", false, m_ch, o, altar, TO_ROOM);
+    act("You delicately place the $o on $P.", false, m_ch, o, altar, TO_CHAR);
   } else if (::number(0, 2)) {
     bool which = ::number(0, 1) == 1;
-    act("$n applies some resin to the $o using $s $O.", FALSE, m_ch, o, brush,
+    act("$n applies some resin to the $o using $s $O.", false, m_ch, o, brush,
       TO_ROOM);
-    act("You apply some resin to the $o using your $O.", FALSE, m_ch, o, brush,
+    act("You apply some resin to the $o using your $O.", false, m_ch, o, brush,
       TO_CHAR);
     if (DamageTool(which, o, which))
       return -1;
   } else {
-    act("$n channels the will of $s deity into $p, mending it.", FALSE, m_ch, o,
+    act("$n channels the will of $s deity into $p, mending it.", false, m_ch, o,
       0, TO_ROOM);
-    act("You channel the will of your deity into $p, mending it.", FALSE, m_ch,
+    act("You channel the will of your deity into $p, mending it.", false, m_ch,
       o, 0, TO_CHAR);
     m_ch->addToPiety(::number(-2, -7));
     return 1;
@@ -1443,9 +1443,9 @@ int SpiritRepair::OnSuccess(TObj* o) {
 }
 
 bool SpiritRepair::OnStop(TObj* o) {
-  act("You stop trying to mending $p.", FALSE, m_ch, o, 0, TO_CHAR);
+  act("You stop trying to mending $p.", false, m_ch, o, 0, TO_CHAR);
   m_ch->sendTo("Isn't there an priest around here somewhere?\n\r");
-  act("$n stops mending $p.", FALSE, m_ch, o, 0, TO_ROOM);
+  act("$n stops mending $p.", false, m_ch, o, 0, TO_ROOM);
   return true;
 }
 

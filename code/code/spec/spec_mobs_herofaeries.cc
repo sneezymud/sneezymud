@@ -87,23 +87,23 @@ void addUniqueTrophyEffects(TBeing* faerie, TBeing* targ) {
     if (aff2.location == APPLY_STR) {
       act(
         "The misty shape of a large bear settles on you.\n\rYou feel stronger.",
-        FALSE, targ, NULL, NULL, TO_CHAR);
-      act("A light mist in the shape of a large bear settles on $n.", FALSE,
-        targ, NULL, NULL, TO_ROOM);
+        false, targ, nullptr, nullptr, TO_CHAR);
+      act("A light mist in the shape of a large bear settles on $n.", false,
+        targ, nullptr, nullptr, TO_ROOM);
     } else if (aff2.location == APPLY_DEX) {
       act(
         "The misty shape of a great cat settles on you.\n\rYou feel your "
         "reflexes quicken.",
-        FALSE, targ, NULL, NULL, TO_CHAR);
-      act("A light mist in the shape of a great cat settles on $n.", FALSE,
-        targ, NULL, NULL, TO_ROOM);
+        false, targ, nullptr, nullptr, TO_CHAR);
+      act("A light mist in the shape of a great cat settles on $n.", false,
+        targ, nullptr, nullptr, TO_ROOM);
     } else if (aff2.location == APPLY_SPE) {
       act(
         "The misty shape of a snake settles on you.\n\rYou feel you can strike "
         "with great speed.",
-        FALSE, targ, NULL, NULL, TO_CHAR);
-      act("A light mist in the shape of a snake settles on $n.", FALSE, targ,
-        NULL, NULL, TO_ROOM);
+        false, targ, nullptr, nullptr, TO_CHAR);
+      act("A light mist in the shape of a snake settles on $n.", false, targ,
+        nullptr, nullptr, TO_ROOM);
     }
   }
 }
@@ -113,18 +113,18 @@ int clearUniqueTrophyEffects(TBeing* faerie, TBeing* targ) {
 
   if (!targ) {
     vlogf(LOG_BUG, "Missing target in clearUniqueTrophyEffects.");
-    return FALSE;
+    return false;
   }
   if (!faerie) {
     vlogf(LOG_BUG, "Missing faerie in clearUniqueTrophyEffects.");
-    return FALSE;
+    return false;
   }
   rc = targ->spellWearOff(SPELL_FERAL_WRATH, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
   targ->affectFrom(SPELL_FERAL_WRATH);
 
-  return TRUE;
+  return true;
 }
 
 // only important that higher is better
@@ -176,10 +176,10 @@ void addPermaDeathEffects(TBeing* faerie, TBeing* targ) {
     vlogf(LOG_BUG, "Failed to join aff in addPermaDeathEffects");
     targ->sendTo("The faerie's magic fails.");
   } else {
-    act("Your skin turns into an extremely hard, oak-like bark.", FALSE, targ,
-      NULL, NULL, TO_CHAR);
-    act("$n's skin turns into an extremely hard, oak-like bark.", TRUE, targ,
-      NULL, NULL, TO_ROOM);
+    act("Your skin turns into an extremely hard, oak-like bark.", false, targ,
+      nullptr, nullptr, TO_CHAR);
+    act("$n's skin turns into an extremely hard, oak-like bark.", true, targ,
+      nullptr, nullptr, TO_ROOM);
   }
 }
 
@@ -188,53 +188,53 @@ int clearPermaDeathEffects(TBeing* faerie, TBeing* targ) {
 
   if (!targ) {
     vlogf(LOG_BUG, "Missing target in clearPermaDeathEffects.");
-    return FALSE;
+    return false;
   }
   if (!faerie) {
     vlogf(LOG_BUG, "Missing faerie in clearPermaDeathEffects.");
-    return FALSE;
+    return false;
   }
   rc = targ->spellWearOff(SKILL_BARKSKIN, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
   targ->affectFrom(SKILL_BARKSKIN);
 
-  return TRUE;
+  return true;
 }
 
 // wrapper function
 int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TObj*) {
-  return heroFaerie(ch, cmd, arg, myself, NULL, FALSE);
+  return heroFaerie(ch, cmd, arg, myself, nullptr, false);
 }
 
 int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TObj*, bool login) {
-  int rc = FALSE;
+  int rc = false;
 
   if (!ch || !cmd || !myself)
-    return FALSE;
+    return false;
 
   if (cmd == CMD_GIVE) {
     sstring sarg = arg;
     if (!isname(sarg.word(1), myself->name)) {
-      return FALSE;
+      return false;
     } else {
       act("$n tells you, <1>\"<c>But I can't carry your things for you!<1>\"",
-        TRUE, myself, 0, ch, TO_VICT);
-      return TRUE;
+        true, myself, 0, ch, TO_VICT);
+      return true;
     }
   }
 
   if (!login && cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (myself->master && myself->roomp == myself->master->roomp &&
       ::number(0, 119) &&
       !(myself->master->desc &&
         myself->master->desc->autobits & AUTO_NOSPRITE)) {
     // want it on most of the time but not too spammy
-    return FALSE;
+    return false;
   }
 
   if (login)
@@ -248,29 +248,29 @@ int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
   // put faerie and master in the same room
   if (myself->master && myself->roomp != myself->master->roomp) {
-    act("$N left without you!  Can't have that!  *pop*", FALSE, myself, 0,
+    act("$N left without you!  Can't have that!  *pop*", false, myself, 0,
       myself->master, TO_CHAR);
-    act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
+    act("$n disappears.  *pop*", true, myself, 0, nullptr, TO_ROOM);
     --(*myself);
 
     thing_to_room(myself, myself->master->roomp->number);
     myself->doLook("", CMD_LOOK);
-    act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
-    act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", TRUE,
+    act("$n appears in the room.  *pop*", true, myself, 0, nullptr, TO_ROOM);
+    act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", true,
       myself, 0, myself->master, TO_VICT);
-    return TRUE;
+    return true;
   }
 
-  bool stop_following = FALSE;
+  bool stop_following = false;
   if (myself->master && myself->master->desc &&
       myself->master->desc->autobits & AUTO_NOSPRITE) {
     myself->doSay("Oh, so it's like that!");
-    stop_following = TRUE;
+    stop_following = true;
   }
 
   if (myself->master && myself->master->getTimer() > MAX_TIME) {
     myself->doSay("I'm bored.");
-    stop_following = TRUE;
+    stop_following = true;
   }
 
   // erase effects on current target
@@ -278,10 +278,10 @@ int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     act(
       "Time for something new!  You point at $N, then touch your nose and "
       "wiggle your bottom.",
-      FALSE, myself, 0, myself->master, TO_CHAR);
-    act("$n points at you, then touches $s nose and wiggles $s bottom.", FALSE,
+      false, myself, 0, myself->master, TO_CHAR);
+    act("$n points at you, then touches $s nose and wiggles $s bottom.", false,
       myself, 0, myself->master, TO_VICT);
-    act("$n points at $N, then touches $s nose and wiggles $s bottom.", FALSE,
+    act("$n points at $N, then touches $s nose and wiggles $s bottom.", false,
       myself, 0, myself->master, TO_NOTVICT);
     switch (myself->mobVnum()) {
       case UNIQUE_TROPHY_FAERIE:
@@ -296,19 +296,19 @@ int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       myself->master->reformGroup();
       delete myself->master;
-      myself->master = NULL;
+      myself->master = nullptr;
     }
   }
 
   if (myself->master && stop_following) {
     vlogf(LOG_PROC,
       format("Hero Faerie stopping follow in room %d.") % myself->in_room);
-    myself->stopFollower(FALSE);
+    myself->stopFollower(false);
   }
 
   // identify new master
   Descriptor* d;
-  TBeing* newMaster = NULL;
+  TBeing* newMaster = nullptr;
   for (d = descriptor_list; d; d = d->next) {
     if (d->connected != CON_PLYNG)
       continue;
@@ -354,52 +354,52 @@ int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   // check for new target, if no target return DELETE_THIS
   // if target is new, move there and give intro message
   if (!newMaster) {
-    act("You can't find a master, so you go on your way. *pop*", FALSE, myself,
-      0, NULL, TO_CHAR);
-    act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
+    act("You can't find a master, so you go on your way. *pop*", false, myself,
+      0, nullptr, TO_CHAR);
+    act("$n disappears.  *pop*", true, myself, 0, nullptr, TO_ROOM);
     if (myself->master) {
       vlogf(LOG_PROC, format("Hero Faerie clearing follower: was %s") %
                         myself->master->getName());
-      myself->stopFollower(FALSE);
+      myself->stopFollower(false);
     }
     --(*myself);
     // reinsert at birth room
     thing_to_room(myself, myself->brtRoom);
     myself->doLook("", CMD_LOOK);
-    act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
-    return TRUE;
+    act("$n appears in the room.  *pop*", true, myself, 0, nullptr, TO_ROOM);
+    return true;
   } else if (myself->master != newMaster) {
     if (myself->master) {
       act(
         "$n tells you, <1>\"<c>Sorry, gotta go.  Someone more interesting has "
         "arrived.<1>\"",
-        TRUE, myself, 0, myself->master, TO_VICT);
+        true, myself, 0, myself->master, TO_VICT);
       vlogf(LOG_PROC, format("Hero Faerie switching follower: was %s") %
                         (myself->master ? myself->master->getName() : "None"));
-      myself->stopFollower(FALSE);
+      myself->stopFollower(false);
     }
 
     if (myself->circleFollow(newMaster)) {
       vlogf(LOG_BUG,
         format("Sprite %s following %s in a circle, bugging out.") %
           myself->name % newMaster->name);
-      return TRUE;
+      return true;
     }
 
     if (myself == newMaster) {
       vlogf(LOG_BUG,
         format("Sprite %s is trying to follow itself, bugging out.") %
           myself->name);
-      return TRUE;
+      return true;
     }
 
-    act("You go to $N, your new master.  *pop*", FALSE, myself, 0, newMaster,
+    act("You go to $N, your new master.  *pop*", false, myself, 0, newMaster,
       TO_CHAR);
-    act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
+    act("$n disappears.  *pop*", true, myself, 0, nullptr, TO_ROOM);
     --(*myself);
     thing_to_room(myself, newMaster->roomp->number);
     myself->doLook("", CMD_LOOK);
-    act("$n appears in the room.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
+    act("$n appears in the room.  *pop*", true, myself, 0, nullptr, TO_ROOM);
 
     newMaster->addFollower(myself);
 
@@ -418,20 +418,20 @@ int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     vlogf(LOG_BUG,
       "Master and heroFaerie in different rooms - this should not happen at "
       "this point.");
-    act("$N left without you!  Can't have that!.  *pop*", FALSE, myself, 0,
+    act("$N left without you!  Can't have that!.  *pop*", false, myself, 0,
       myself->master, TO_CHAR);
-    act("$n disappears.  *pop*", TRUE, myself, 0, NULL, TO_ROOM);
+    act("$n disappears.  *pop*", true, myself, 0, nullptr, TO_ROOM);
     --(*myself);
     thing_to_room(myself, myself->master->roomp->number);
     myself->doLook("", CMD_LOOK);
-    act("$n appears in the room.  *pop", TRUE, myself, 0, NULL, TO_ROOM);
-    act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", TRUE,
+    act("$n appears in the room.  *pop", true, myself, 0, nullptr, TO_ROOM);
+    act("$n tells you, <1>\"<c>Hey!  Why'd you leave me behind?<1>\"", true,
       myself, 0, myself->master, TO_VICT);
   }
 
-  act("$n claps $s hands twice and sprinkles you with glittery dust.", TRUE,
+  act("$n claps $s hands twice and sprinkles you with glittery dust.", true,
     myself, 0, myself->master, TO_VICT);
-  act("$n claps $s hands twice and sprinkles $N with glittery dust.", TRUE,
+  act("$n claps $s hands twice and sprinkles $N with glittery dust.", true,
     myself, 0, myself->master, TO_NOTVICT);
 
   // spell up target
@@ -446,5 +446,5 @@ int heroFaerie(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       break;
   }
 
-  return TRUE;
+  return true;
 }

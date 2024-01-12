@@ -35,12 +35,12 @@ bool TLight::isLit() const { return lit; }
 
 int TLight::illuminateMe(TBeing* caster, int, short) {
   caster->sendTo("That object is a light; why don't you just light it?!?\n\r");
-  act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+  act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
   return SPELL_FAIL;
 }
 
 void TLight::putLightOut() {
-  setLit(FALSE);
+  setLit(false);
 
   TBaseLight::putLightOut();
 }
@@ -49,7 +49,7 @@ void TLight::unequipMe(TBeing* ch) { genericExtinguish(ch); }
 
 void TLight::genericExtinguish(const TBeing* ch) {
   if (isLit()) {
-    act("You extinguish $p.", FALSE, ch, this, 0, TO_CHAR);
+    act("You extinguish $p.", false, ch, this, 0, TO_CHAR);
     putLightOut();
   }
 }
@@ -58,8 +58,8 @@ void TLight::extinguishWater(TBeing* ch) {
   if (isLit()) {
     ch->roomp->addToLight(-getLightAmt());
     ch->addToLight(-getLightAmt());
-    act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_CHAR);
-    act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_ROOM);
+    act("$p is put out by the room's water.", true, ch, this, 0, TO_CHAR);
+    act("$p is put out by the room's water.", true, ch, this, 0, TO_ROOM);
 
     putLightOut();
   }
@@ -68,7 +68,7 @@ void TLight::extinguishWater(TBeing* ch) {
 void TLight::extinguishWater() {
   if (isLit()) {
     roomp->addToLight(-getLightAmt());
-    act("$p is put out by the room's water.", TRUE, 0, this, 0, TO_ROOM);
+    act("$p is put out by the room's water.", true, 0, this, 0, TO_ROOM);
     putLightOut();
   }
 }
@@ -86,10 +86,10 @@ void TLight::lampLightStuff(TMonster* ch) {
   }
   // refill if < 90% full.  val1 = max, val2 = current
   if (10 * getCurBurn() < 9 * getMaxBurn()) {
-    act("$n opens $p and looks inside.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n opens $p and looks inside.", true, ch, this, 0, TO_ROOM);
     ch->doSay("Hmm, looks a bit low.");
-    act("$n takes out a supply of fuel.", TRUE, ch, 0, 0, TO_ROOM);
-    act("$n reaches high up on the lamppost, and refuels it.", TRUE, ch, 0, 0,
+    act("$n takes out a supply of fuel.", true, ch, 0, 0, TO_ROOM);
+    act("$n reaches high up on the lamppost, and refuels it.", true, ch, 0, 0,
       TO_ROOM);
     setCurBurn(getMaxBurn());
   }
@@ -103,28 +103,28 @@ void TLight::lightDecay() {
       putLightOut();
 
       if (roomp && !roomp->stuff.empty()) {
-        act("$n flickers a bit, and then burns out.", FALSE, this, 0, 0,
+        act("$n flickers a bit, and then burns out.", false, this, 0, 0,
           TO_ROOM);
         roomp->addToLight(-getLightAmt());
       } else if (parent) {
-        act("$p flickers a bit, and then burns out.", FALSE, parent, this, 0,
+        act("$p flickers a bit, and then burns out.", false, parent, this, 0,
           TO_CHAR);
         parent->addToLight(-getLightAmt());
         if (parent->roomp)
           parent->roomp->addToLight(-getLightAmt());
       } else if (equippedBy) {
-        act("$p flickers a bit, and then burns out.", FALSE, equippedBy, this,
+        act("$p flickers a bit, and then burns out.", false, equippedBy, this,
           0, TO_CHAR);
         equippedBy->addToLight(-getLightAmt());
         equippedBy->roomp->addToLight(-getLightAmt());
       }
     } else if (getCurBurn() < 4) {
       if (roomp && !roomp->stuff.empty())
-        act("$n flickers a bit.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n flickers a bit.", false, this, 0, 0, TO_ROOM);
       else if (parent)
-        act("$p flickers a bit.", FALSE, parent, this, 0, TO_CHAR);
+        act("$p flickers a bit.", false, parent, this, 0, TO_CHAR);
       else if (equippedBy)
-        act("$p flickers a bit.", FALSE, equippedBy, this, 0, TO_CHAR);
+        act("$p flickers a bit.", false, equippedBy, this, 0, TO_CHAR);
     }
   }
 }
@@ -144,9 +144,9 @@ void TLight::extinguishMe(TBeing* ch) {
   if (equippedBy == ch)
     ch->addToLight(-getLightAmt());
 
-  act("You extinguish $p, and it smolders slightly before going out.", FALSE,
+  act("You extinguish $p, and it smolders slightly before going out.", false,
     ch, this, 0, TO_CHAR);
-  act("$n extinguishes $p, and it smolders slightly before going out.", FALSE,
+  act("$n extinguishes $p, and it smolders slightly before going out.", false,
     ch, this, 0, TO_ROOM);
 }
 
@@ -215,7 +215,7 @@ int TLight::getMe(TBeing* ch, TThing*) {
     // mob now wielding a cursed lantern = can't hit
     if (!ch->isPc() && isObjStat(ITEM_NODROP)) {
       genericExtinguish(ch);
-      return FALSE;
+      return false;
     }
 
     if (!ch->heldInSecHand() && ch->canUseLimb(ch->getSecondaryHold()) &&
@@ -227,7 +227,7 @@ int TLight::getMe(TBeing* ch, TThing*) {
           -1)) {
       --(*this);
       ch->equipChar(this, ch->getSecondaryHold());
-      act("You hold $p in your secondary hand.", FALSE, ch, this, 0, TO_CHAR);
+      act("You hold $p in your secondary hand.", false, ch, this, 0, TO_CHAR);
     } else if (!ch->heldInPrimHand() && ch->canUseLimb(ch->getPrimaryHold()) &&
                !ch->isLimbFlags(ch->getPrimaryHold(), PART_TRANSFORMED) &&
                ch->canUseLimb(ch->getPrimaryHand()) &&
@@ -237,24 +237,24 @@ int TLight::getMe(TBeing* ch, TThing*) {
                   ch->maxWieldWeight(this, HAND_TYPE_PRIM)) != -1)) {
       --(*this);
       ch->equipChar(this, ch->getPrimaryHold());
-      act("You hold $p in your primary hand.", FALSE, ch, this, 0, TO_CHAR);
+      act("You hold $p in your primary hand.", false, ch, this, 0, TO_CHAR);
     } else {
       genericExtinguish(ch);
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TLight::describeObjectSpecifics(const TBeing* ch) const {
   double diff;
 
   if (!isLit())
-    act("$p is not lit.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p is not lit.", false, ch, this, 0, TO_CHAR);
   else
-    act("$p is lit.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p is lit.", false, ch, this, 0, TO_CHAR);
 
   if (getMaxBurn() < 0)
-    act("You see no way to refuel $p.", FALSE, ch, this, 0, TO_CHAR);
+    act("You see no way to refuel $p.", false, ch, this, 0, TO_CHAR);
   else {
     diff = (double)((double)getCurBurn() / max(1.0, (double)getMaxBurn()));
     ch->sendTo(COLOR_OBJECTS,
@@ -291,18 +291,18 @@ void TLight::peeOnMe(const TBeing* ch) {
     act(
       "$p sputters, sparks then finally relents to $n's downpour of <y>pee<1> "
       "and goes out.",
-      TRUE, ch, this, NULL, TO_ROOM);
+      true, ch, this, nullptr, TO_ROOM);
     act(
       "$p sputters, sparks then finally relents to your downpour of <y>pee<1> "
       "and goes out.",
-      TRUE, ch, this, NULL, TO_CHAR);
+      true, ch, this, nullptr, TO_CHAR);
 
     putLightOut();
   } else
     act(
       "You try to light $p by peeing on it, but sadly it does not appear to be "
       "working.",
-      TRUE, ch, this, NULL, TO_CHAR);
+      true, ch, this, nullptr, TO_CHAR);
 }
 
 void TLight::refuelMeLight(TBeing* ch, TThing* fuel) {
@@ -311,12 +311,12 @@ void TLight::refuelMeLight(TBeing* ch, TThing* fuel) {
 
 int TLight::objectDecay() {
   if (roomp) {
-    act("$p flickers then fades into insignificance.", TRUE,
+    act("$p flickers then fades into insignificance.", true,
       roomp->stuff.front(), this, 0, TO_CHAR);
-    act("$p flickers then fades into insignificance.", TRUE,
+    act("$p flickers then fades into insignificance.", true,
       roomp->stuff.front(), this, 0, TO_ROOM);
   } else {
-    TThing* t = NULL;
+    TThing* t = nullptr;
     if (parent)
       t = parent;
     else if (equippedBy)
@@ -325,9 +325,9 @@ int TLight::objectDecay() {
       t = stuckIn;
 
     if (t) {
-      act("Your $o flickers then fades into insignificance.", TRUE, t, this, 0,
+      act("Your $o flickers then fades into insignificance.", true, t, this, 0,
         TO_CHAR);
-      act("$n's $o flickers then fades into insignificance.", TRUE, t, this, 0,
+      act("$n's $o flickers then fades into insignificance.", true, t, this, 0,
         TO_ROOM);
     }
   }
@@ -336,11 +336,11 @@ int TLight::objectDecay() {
 
 void TLight::lightMe(TBeing* ch, silentTypeT silent) {
   int i;
-  bool iLit = FALSE;
+  bool iLit = false;
 
   if (isLit()) {
     if (!silent)
-      act("$p is already lit!", FALSE, ch, this, 0, TO_CHAR);
+      act("$p is already lit!", false, ch, this, 0, TO_CHAR);
     return;
   }
   if (ch->roomp->isUnderwaterSector()) {
@@ -350,7 +350,7 @@ void TLight::lightMe(TBeing* ch, silentTypeT silent) {
   }
   if (getCurBurn() <= 0) {
     if (!silent)
-      act("$p is totally burned out!", FALSE, ch, this, 0, TO_CHAR);
+      act("$p is totally burned out!", false, ch, this, 0, TO_CHAR);
     return;
   }
   for (i = 0; (!iLit && i < MAX_OBJ_AFFECT); i++) {
@@ -358,18 +358,18 @@ void TLight::lightMe(TBeing* ch, silentTypeT silent) {
       affected[i].location = APPLY_LIGHT;
       affected[i].modifier = getLightAmt();
       addToLight(affected[i].modifier);
-      setLit(TRUE);
-      iLit = TRUE;
+      setLit(true);
+      iLit = true;
     }
   }
-  if (iLit == TRUE) {
+  if (iLit == true) {
     ch->roomp->addToLight(getLightAmt());
     if (equippedBy == ch)
       ch->addToLight(getLightAmt());
     if (!silent) {
-      act("You light $p, and it begins to burn brightly.", FALSE, ch, this, 0,
+      act("You light $p, and it begins to burn brightly.", false, ch, this, 0,
         TO_CHAR);
-      act("$n lights $p, and it begins to burn brightly.", TRUE, ch, this, 0,
+      act("$n lights $p, and it begins to burn brightly.", true, ch, this, 0,
         TO_ROOM);
     }
     return;
@@ -391,31 +391,31 @@ int TLight::chiMe(TBeing* tLunatic) {
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
-    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+    act("You fail to affect $p in any way.", false, tLunatic, this, nullptr,
       TO_CHAR);
     return true;
   }
 
   if (isLit()) {
-    act("You concentrate hard on $p, then clap twice.  It goes out.", TRUE,
-      tLunatic, this, NULL, TO_CHAR);
+    act("You concentrate hard on $p, then clap twice.  It goes out.", true,
+      tLunatic, this, nullptr, TO_CHAR);
     act(
       "$n knits $s brow in concentration then claps twice causing $p to go "
       "out.",
-      TRUE, tLunatic, this, NULL, TO_ROOM);
+      true, tLunatic, this, nullptr, TO_ROOM);
 
     putLightOut();
   } else {
     if (tLunatic->roomp->isUnderwaterSector() || getCurBurn() <= 0) {
       tLunatic->sendTo("You seem unable to do anything to that.\n\r");
-      return FALSE;
+      return false;
     }
 
-    act("You furrow your brow in concentration then clap twice.", TRUE,
-      tLunatic, this, NULL, TO_CHAR);
-    act("$n furrows $s brow in concentration then claps twice.", TRUE, tLunatic,
-      this, NULL, TO_ROOM);
-    act("$p springs into light.", FALSE, tLunatic, this, NULL, TO_ROOM);
+    act("You furrow your brow in concentration then clap twice.", true,
+      tLunatic, this, nullptr, TO_CHAR);
+    act("$n furrows $s brow in concentration then claps twice.", true, tLunatic,
+      this, nullptr, TO_ROOM);
+    act("$p springs into light.", false, tLunatic, this, nullptr, TO_ROOM);
 
     lightMe(tLunatic, SILENT_YES);
   }

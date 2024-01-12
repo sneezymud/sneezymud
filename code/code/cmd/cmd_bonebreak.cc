@@ -12,29 +12,29 @@ int TBeing::doBoneBreak(const char* argument, TBeing* vict) {
   int rc;
   TBeing* v;
 
-  if (checkBusy(NULL)) {
-    return FALSE;
+  if (checkBusy(nullptr)) {
+    return false;
   }
   if (getPosition() == POSITION_CRAWLING) {
     sendTo("You can't bone break while crawling.\n\r");
-    return FALSE;
+    return false;
   }
   if (!doesKnowSkill(SKILL_BONEBREAK)) {
     sendTo("You know nothing about breaking bones.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!(v = vict)) {
     if (!(v = get_char_room_vis(this, argument))) {
       if (!(v = fight())) {
         sendTo("Break whose bones?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
   if (!sameRoom(*v)) {
     sendTo("That person doesn't seem to be around.\n\r");
-    return FALSE;
+    return false;
   }
   rc = bonebreak(this, v);
   addSkillLag(SKILL_BONEBREAK, rc);
@@ -43,7 +43,7 @@ int TBeing::doBoneBreak(const char* argument, TBeing* vict) {
     if (vict)
       return rc;
     delete v;
-    v = NULL;
+    v = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;
@@ -58,35 +58,35 @@ enum bbMissType {
 int bonebreakMiss(TBeing* c, TBeing* v, bbMissType type) {
   switch (type) {
     case TYPE_MONK:
-      act("$n tries to grapple $N, but $E cleverly avoids $s moves.", FALSE, c,
+      act("$n tries to grapple $N, but $E cleverly avoids $s moves.", false, c,
         0, v, TO_NOTVICT);
       act(
         "$N cleverly avoids your attempt to get $M into a bone breaking hold.",
-        FALSE, c, 0, v, TO_CHAR);
+        false, c, 0, v, TO_CHAR);
       act("$n tries grapple you into a bone breaking hold but you avoid it.",
-        FALSE, c, 0, v, TO_VICT);
+        false, c, 0, v, TO_VICT);
       break;
     case TYPE_DEFENSE:
-      act("$n attempts to get $N into a bone breaking hold, but fails.", FALSE,
+      act("$n attempts to get $N into a bone breaking hold, but fails.", false,
         c, 0, v, TO_NOTVICT);
-      act("$N's focus is too great for your bone breaking hold.", FALSE, c, 0,
+      act("$N's focus is too great for your bone breaking hold.", false, c, 0,
         v, TO_CHAR);
       act(
         "$n tries get you into a bone breaking hold, but your focus is too "
         "great.",
-        FALSE, c, 0, v, TO_VICT);
+        false, c, 0, v, TO_VICT);
       break;
     default:  // TYPE_DEFAULT
-      act("$n attempts to get $N into a bone breaking hold, but fails.", FALSE,
+      act("$n attempts to get $N into a bone breaking hold, but fails.", false,
         c, 0, v, TO_NOTVICT);
       act("$N avoids your puny attempt to get $M into a bone breaking hold.",
-        FALSE, c, 0, v, TO_CHAR);
+        false, c, 0, v, TO_CHAR);
       act("$n tries get you into a bone breaking hold, but you avoid it.",
-        FALSE, c, 0, v, TO_VICT);
+        false, c, 0, v, TO_VICT);
   }
 
   c->reconcileDamage(v, 0, SKILL_BONEBREAK);
-  return TRUE;
+  return true;
 }
 
 int bonebreakHit(TBeing* c, TBeing* victim) {
@@ -110,16 +110,16 @@ int bonebreakHit(TBeing* c, TBeing* victim) {
 
     if (victim->isImmune(IMMUNE_BONE_COND, slot, c->GetMaxLevel())) {
       act("You grab ahold of $N but you just can't seem to break any bones.",
-        FALSE, c, 0, victim, TO_CHAR);
+        false, c, 0, victim, TO_CHAR);
       act("$n grabs ahold of you, but is incapable of breaking your bones.",
-        FALSE, c, 0, victim, TO_VICT);
+        false, c, 0, victim, TO_VICT);
       act(
         "$n grabs ahold of $N, but doesn't seem to be able to break any bones.",
-        FALSE, c, 0, victim, TO_NOTVICT);
+        false, c, 0, victim, TO_NOTVICT);
 
       if ((rc = c->reconcileDamage(victim, 0, SKILL_BONEBREAK)) == -1)
         return DELETE_VICT;
-      return TRUE;  // lag them anyway
+      return true;  // lag them anyway
     }
 
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
@@ -127,17 +127,17 @@ int bonebreakHit(TBeing* c, TBeing* victim) {
       case CRIT_S_KILL:
         sprintf(buf,
           "You yell out a mighty warcry and rip $N's %s completely off!", limb);
-        act(buf, FALSE, c, 0, victim, TO_CHAR);
+        act(buf, false, c, 0, victim, TO_CHAR);
         sprintf(buf,
           "$n yells out a mighty warcry and rips your %s completely off!",
           limb);
-        act(buf, FALSE, c, 0, victim, TO_VICT);
+        act(buf, false, c, 0, victim, TO_VICT);
         sprintf(buf,
           "$n yells out a mighty warcry and rips $N's %s completely off!",
           limb);
-        act(buf, FALSE, c, 0, victim, TO_NOTVICT);
+        act(buf, false, c, 0, victim, TO_NOTVICT);
 
-        victim->makePartMissing(slot, FALSE);
+        victim->makePartMissing(slot, false);
         victim->rawBleed(slot, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
         if (c->desc)
@@ -147,12 +147,12 @@ int bonebreakHit(TBeing* c, TBeing* victim) {
         break;
       default:
         sprintf(buf, "You grab onto $N's %s and break it!", limb);
-        act(buf, FALSE, c, 0, victim, TO_CHAR);
+        act(buf, false, c, 0, victim, TO_CHAR);
         sprintf(buf, "$n grabs your %s and breaks it.  Ohh the pain!", limb);
-        act(buf, FALSE, c, 0, victim, TO_VICT);
+        act(buf, false, c, 0, victim, TO_VICT);
         sprintf(buf,
           "You hear a muffled SNAP as $n grabs $N's %s and breaks it!", limb);
-        act(buf, FALSE, c, 0, victim, TO_NOTVICT);
+        act(buf, false, c, 0, victim, TO_NOTVICT);
         victim->addToLimbFlags(slot, PART_BROKEN);
     }
 
@@ -162,17 +162,17 @@ int bonebreakHit(TBeing* c, TBeing* victim) {
       "You slam your leg into $N's %s, inflicting considerable damage but "
       "failing to break the bone!",
       limb);
-    act(buf, FALSE, c, 0, victim, TO_CHAR);
+    act(buf, false, c, 0, victim, TO_CHAR);
     sprintf(buf,
       "$n slams $s leg into your %s, inflicting considerable damage but "
       "failing to break the bone.  Ohh the pain!",
       limb);
-    act(buf, FALSE, c, 0, victim, TO_VICT);
+    act(buf, false, c, 0, victim, TO_VICT);
     sprintf(buf,
       "You hear a meaty THUD as $n slams $s leg into $N's %s, dealing "
       "considerable damage but failing to break any bones!",
       limb);
-    act(buf, FALSE, c, 0, victim, TO_NOTVICT);
+    act(buf, false, c, 0, victim, TO_NOTVICT);
 
     affectedData aff1;
     aff1.type = SKILL_BONEBREAK;
@@ -185,7 +185,7 @@ int bonebreakHit(TBeing* c, TBeing* victim) {
   if ((rc = c->reconcileDamage(victim, dam, SKILL_BONEBREAK)) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 int bonebreak(TBeing* caster, TBeing* victim) {
@@ -195,45 +195,45 @@ int bonebreak(TBeing* caster, TBeing* victim) {
 
   if (caster->checkPeaceful(
         "You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (victim == caster) {
     caster->sendTo(
       "You consider breaking your own bones, but can't determine how to get "
       "leverage...\n\r");
-    return FALSE;
+    return false;
   }
   if (caster->riding) {
     caster->sendTo("You would fall off your mount if you tried that!\n\r");
-    return FALSE;
+    return false;
   }
   if (caster->noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   if ((victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) &&
       caster->GetMaxLevel() < victim->GetMaxLevel()) {
     caster->sendTo("Attacking an immortal wouldn't be very smart.\n\r");
-    return FALSE;
+    return false;
   }
   if (caster->getMove() < BONEBREAK_MOVE) {
     caster->sendTo("You lack the vitality.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->isFlying()) {
     caster->sendTo("You can't get ahold of something that is flying.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->raceHasNoBones()) {
     caster->sendTo("You can't seem to locate anything worth breaking.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->affectedBySpell(SKILL_BONEBREAK)) {
     caster->sendTo(
       "You can't attempt that maneuver again so soon against this target.\n\r");
-    return FALSE;
+    return false;
   }
 
   // check whether or not there is a bone left to break
@@ -251,7 +251,7 @@ int bonebreak(TBeing* caster, TBeing* victim) {
   }
   if (!ok) {
     caster->sendTo("You've already broken everything you can.\n\r");
-    return FALSE;
+    return false;
   }
 
   int level = caster->getSkillLevel(SKILL_BONEBREAK);
@@ -268,7 +268,7 @@ int bonebreak(TBeing* caster, TBeing* victim) {
       rc = bonebreakMiss(caster, victim, TYPE_MONK);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
-      return TRUE;
+      return true;
     }
 
     if (victim->canFocusedAvoidance(bKnown / 2)) {
@@ -276,7 +276,7 @@ int bonebreak(TBeing* caster, TBeing* victim) {
       rc = bonebreakMiss(caster, victim, TYPE_DEFENSE);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
-      return TRUE;
+      return true;
     }
 
     return (bonebreakHit(caster, victim));
@@ -285,5 +285,5 @@ int bonebreak(TBeing* caster, TBeing* victim) {
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
-  return TRUE;
+  return true;
 }

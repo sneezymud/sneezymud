@@ -15,29 +15,29 @@
 int tunnelerEarthquake(TBeing* ch, cmdTypeT tCmd, const char* tArg,
   TMonster* tMyself, TObj* tObj) {
   if (!tMyself || !tMyself->roomp)
-    return FALSE;
+    return false;
 
   if (tMyself->roomp->isUnderwaterSector() || tMyself->roomp->isWierdSector() ||
       tMyself->roomp->isFallSector() || tMyself->roomp->isWaterSector())
-    return FALSE;
+    return false;
 
   if (tCmd != CMD_GENERIC_PULSE && tCmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (tCmd == CMD_GENERIC_PULSE && !::number(0, 9) && !tMyself->fight()) {
-    act("$n rams into the ground then thunders up somewhere else.", FALSE,
-      tMyself, NULL, NULL, TO_ROOM);
+    act("$n rams into the ground then thunders up somewhere else.", false,
+      tMyself, nullptr, nullptr, TO_ROOM);
 
-    return FALSE;
+    return false;
   }
 
   if (tCmd == CMD_MOB_COMBAT && !::number(0, 1) && tMyself->fight()) {
     int tFighters = 0, tDamage;
-    TThing* tThing = NULL;
+    TThing* tThing = nullptr;
     TBeing* tBeing;
 
-    act("$n rises into the air then slams into the ground, vanishing.", FALSE,
-      tMyself, NULL, NULL, TO_ROOM);
+    act("$n rises into the air then slams into the ground, vanishing.", false,
+      tMyself, nullptr, nullptr, TO_ROOM);
 
     for (StuffIter it = tMyself->roomp->stuff.begin();
          it != tMyself->roomp->stuff.end();) {
@@ -45,20 +45,20 @@ int tunnelerEarthquake(TBeing* ch, cmdTypeT tCmd, const char* tArg,
 
       if ((tBeing = dynamic_cast<TBeing*>(tThing))) {
         if (tBeing->isFlying())
-          act("The ground, far below you, shakes violently.", FALSE, tBeing,
-            NULL, NULL, TO_CHAR);
+          act("The ground, far below you, shakes violently.", false, tBeing,
+            nullptr, nullptr, TO_CHAR);
         else if (tBeing->isLevitating())
-          act("The ground below you shakes violently.", FALSE, tBeing, NULL,
-            NULL, TO_CHAR);
+          act("The ground below you shakes violently.", false, tBeing, nullptr,
+            nullptr, TO_CHAR);
         else if (!::number(0, tMyself->GetMaxLevel()))
           act(
             "The ground below you shakes violently, but you manage to stay on "
             "your feet.",
-            FALSE, tBeing, NULL, NULL, TO_CHAR);
+            false, tBeing, nullptr, nullptr, TO_CHAR);
         else {
           act(
             "The ground below you shakes violently and you fall on your face!",
-            FALSE, tBeing, NULL, NULL, TO_CHAR);
+            false, tBeing, nullptr, nullptr, TO_CHAR);
           tBeing->setPosition(POSITION_SITTING);
 
           tDamage = max(4, (tMyself->GetMaxLevel() / 4));
@@ -67,7 +67,7 @@ int tunnelerEarthquake(TBeing* ch, cmdTypeT tCmd, const char* tArg,
             if (tMyself->reconcileDamage(tBeing, tDamage, SPELL_EARTHQUAKE) ==
                 -1) {
               delete tBeing;
-              tBeing = NULL;
+              tBeing = nullptr;
             } else
               tFighters++;
           }
@@ -78,10 +78,10 @@ int tunnelerEarthquake(TBeing* ch, cmdTypeT tCmd, const char* tArg,
     // We only switch if our attackers are more than 3.
     if (tFighters < 3 ||
         ::number(-(tMyself->GetMaxLevel() / 2), tMyself->GetMaxLevel()) <= 0) {
-      act("$n thunders back out of the ground.", TRUE, tMyself, NULL, NULL,
+      act("$n thunders back out of the ground.", true, tMyself, nullptr, nullptr,
         TO_ROOM);
 
-      return TRUE;
+      return true;
     }
 
     tFighters = ::number(1, tFighters);
@@ -93,18 +93,18 @@ int tunnelerEarthquake(TBeing* ch, cmdTypeT tCmd, const char* tArg,
         tMyself->stopFighting();
         tMyself->setCharFighting(tBeing);
 
-        act("$n thunders out of the ground and lunges towards you!", FALSE,
-          tMyself, NULL, tBeing, TO_VICT);
-        act("$n thunders out of the ground towards $N!", FALSE, tMyself, NULL,
+        act("$n thunders out of the ground and lunges towards you!", false,
+          tMyself, nullptr, tBeing, TO_VICT);
+        act("$n thunders out of the ground towards $N!", false, tMyself, nullptr,
           tBeing, TO_NOTVICT);
-        act("You thunder out of the ground towards $N!", FALSE, tMyself, NULL,
+        act("You thunder out of the ground towards $N!", false, tMyself, nullptr,
           tBeing, TO_CHAR);
 
-        return TRUE;
+        return true;
       }
 
     vlogf(LOG_BUG, "earthquake_digger had a problem, tell a coder.");
   }
 
-  return FALSE;
+  return false;
 }

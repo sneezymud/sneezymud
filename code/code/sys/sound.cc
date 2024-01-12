@@ -32,9 +32,9 @@ int RecGetObjRoom(const TThing* obj) {
 void MakeRoomNoise(TMonster* mob, int room, const char* local_snd,
   const char* distant_snd) {
   dirTypeT door;
-  TBeing* ch = NULL;
+  TBeing* ch = nullptr;
   TRoom *rp, *orp;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   char buf[256];
 
   if ((rp = real_roomp(room)) && local_snd && *local_snd) {
@@ -67,7 +67,7 @@ void MakeRoomNoise(TMonster* mob, int room, const char* local_snd,
             sprintf(buf, "%s",
               addNameToBuf(ch, ch->desc, mob, distant_snd, COLOR_MOBS).c_str());
             //            sprintf(buf, "%s", colorString(ch, ch->desc,
-            //            distant_snd, NULL, COLOR_BASIC, TRUE));
+            //            distant_snd, nullptr, COLOR_BASIC, true));
             ch->sendTo(COLOR_BASIC, buf);
           }
         }
@@ -78,9 +78,9 @@ void MakeRoomNoise(TMonster* mob, int room, const char* local_snd,
 
 void MakeNoise(int room, const char* local_snd, const char* distant_snd) {
   dirTypeT door;
-  TBeing* ch = NULL;
-  TRoom *rp = NULL, *orp = NULL;
-  TThing* t = NULL;
+  TBeing* ch = nullptr;
+  TRoom *rp = nullptr, *orp = nullptr;
+  TThing* t = nullptr;
 
   if ((rp = real_roomp(room))) {
     for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
@@ -171,9 +171,9 @@ int noise(const TBeing* ch) {
 int TBeing::applySoundproof() const {
   if (checkSoundproof() && !isImmortal()) {
     sendTo("You are in a silence zone, you can't make a sound!\n\r");
-    return TRUE; /* for shouts, emotes, etc */
+    return true; /* for shouts, emotes, etc */
   }
-  return FALSE;
+  return false;
 }
 
 int TThing::checkSoundproof() const {

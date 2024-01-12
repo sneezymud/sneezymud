@@ -58,7 +58,7 @@ int kraken(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TBeing* opp;
 
   if ((cmd != CMD_MOB_COMBAT) || !ch->awake())
-    return FALSE;
+    return false;
 
   if ((opp = ch->fight()) && opp->sameRoom(*ch)) {
     act("$n sprays $N with an inky black cloud!", 1, ch, 0, opp, TO_NOTVICT);
@@ -70,9 +70,9 @@ int kraken(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         (myself->GetMaxLevel() / 20 + 1) * Pulse::UPDATES_PER_MUDHOUR,
         SAVE_YES);
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int ascallion(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -81,39 +81,39 @@ int ascallion(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   TMonster* mob;
 
   if ((cmd != CMD_MOB_COMBAT) || !me->awake())
-    return FALSE;
+    return false;
   if (!(vict = me->fight()))
-    return FALSE;
+    return false;
   if (!vict->sameRoom(*me))
-    return FALSE;
+    return false;
   if (::number(0, 10))
-    return FALSE;
+    return false;
 
   act("$n spews forth young to protect her!", 0, me, 0, 0, TO_ROOM);
   for (i = 0; i < dice(2, 3); i++) {
     if (!(mob = read_mobile(Mob::ASCALLION, VIRTUAL))) {
       vlogf(LOG_PROC, "Bad mob in ascallion spec_proc");
-      return FALSE;
+      return false;
     }
     *me->roomp += *mob;
     me->addFollower(mob);
     mob->reconcileDamage(vict, 0, DAMAGE_NORMAL);
     mob->addHated(vict);
   }
-  return TRUE;
+  return true;
 }
 
 int electricEel(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TBeing* vict;
 
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
   if (!(vict = myself->fight()))
-    return FALSE;
+    return false;
   if (!vict->sameRoom(*myself))
-    return FALSE;
+    return false;
   if (::number(0, 10))
-    return FALSE;
+    return false;
 
   int dam = dice(3, 6);
   act("$n emits a shock into the water!", 0, myself, 0, 0, TO_ROOM);
@@ -122,28 +122,28 @@ int electricEel(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (myself->reconcileDamage(vict, dam, DAMAGE_ELECTRIC) == -1) {
     delete vict;
-    vict = NULL;
+    vict = nullptr;
   }
 
-  return TRUE;
+  return true;
 }
 
 int poisonHit(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TBeing* vict;
 
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
   if (!(vict = myself->fight()))
-    return FALSE;
+    return false;
   if (!vict->sameRoom(*myself))
-    return FALSE;
+    return false;
   if (vict->isImmune(IMMUNE_POISON, WEAR_BODY))
-    return FALSE;
+    return false;
   if (vict->affectedBySpell(SPELL_POISON))
-    return FALSE;
+    return false;
 
   if (::number(1, 10) > 3)
-    return FALSE;
+    return false;
 
   affectedData aff;
   aff.type = SPELL_POISON;
@@ -159,25 +159,25 @@ int poisonHit(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   vict->sendTo("You've been poisoned!\n\r");
   vict->affectTo(&aff);
 
-  return TRUE;
+  return true;
 }
 
 int poisonBite(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TBeing* vict;
 
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
   if (!(vict = myself->fight()))
-    return FALSE;
+    return false;
   if (!vict->sameRoom(*myself))
-    return FALSE;
+    return false;
   if (vict->isImmune(IMMUNE_POISON, WEAR_BODY))
-    return FALSE;
+    return false;
   if (vict->affectedBySpell(SPELL_POISON))
-    return FALSE;
+    return false;
 
   if (::number(0, 9))
-    return FALSE;
+    return false;
 
   affectedData aff;
   aff.type = SPELL_POISON;
@@ -194,7 +194,7 @@ int poisonBite(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   vict->sendTo("You've been poisoned!\n\r");
   vict->affectTo(&aff);
 
-  return TRUE;
+  return true;
 }
 
 // These are {MobVNum, ToRoom, ChanceOfSwallow, ChanceOfDeath}
@@ -211,13 +211,13 @@ int belimus(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TBeing* tmp;
 
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
 
   if (!(vict = myself->fight()))
-    return FALSE;
+    return false;
 
   if (!vict->sameRoom(*myself))
-    return FALSE;
+    return false;
 
   for (int swallowerIndex = 0; swallowerIndex < MAX_SWALLOWER_TO_ROOM;
        swallowerIndex++)
@@ -230,34 +230,34 @@ int belimus(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     vlogf(LOG_PROC,
       format("Mobile in belimus() proc that isn't hard coded.  [%s] [%d]") %
         myself->getName() % myself->mobVnum());
-    return FALSE;
+    return false;
   }
 
   if (::number(0, 100) > SWALLOWER_TO_ROOM_PROC[targetSwallower][2])
-    return FALSE;
+    return false;
 
-  act("$n lunges at $N with $s maw gaping wide!", FALSE, myself, 0, vict,
+  act("$n lunges at $N with $s maw gaping wide!", false, myself, 0, vict,
     TO_NOTVICT);
-  act("$n lunges at you with $s maw gaping wide!", FALSE, myself, 0, vict,
+  act("$n lunges at you with $s maw gaping wide!", false, myself, 0, vict,
     TO_VICT);
 
   if (vict->isLucky(levelLuckModifier(30))) {
     vict->sendTo("Thank your deities, You leap aside at the last moment!\n\r");
-    act("$n leaps aside at the last moment!", FALSE, vict, 0, 0, TO_ROOM);
-    return TRUE;
+    act("$n leaps aside at the last moment!", false, vict, 0, 0, TO_ROOM);
+    return true;
   }
 
   if (vict->getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN) && ::number(0, 1)) {
-    act("Your skin-poison defenses activate in the panic!", TRUE, vict, 0,
+    act("Your skin-poison defenses activate in the panic!", true, vict, 0,
       myself, TO_CHAR);
-    act("$N starts to choke on you and spits you out!", TRUE, vict, 0, myself,
+    act("$N starts to choke on you and spits you out!", true, vict, 0, myself,
       TO_CHAR);
-    act("Oh wait!  That creature's skin tastes horrible!", TRUE, vict, 0,
+    act("Oh wait!  That creature's skin tastes horrible!", true, vict, 0,
       myself, TO_VICT);
-    act("You spit out the little blighter.", TRUE, vict, 0, myself, TO_VICT);
-    act("$N looks sick.", TRUE, vict, 0, myself, TO_ROOM);
-    act("$N spits out $n in disgust.", TRUE, vict, 0, myself, TO_ROOM);
-    return TRUE;
+    act("You spit out the little blighter.", true, vict, 0, myself, TO_VICT);
+    act("$N looks sick.", true, vict, 0, myself, TO_ROOM);
+    act("$N spits out $n in disgust.", true, vict, 0, myself, TO_ROOM);
+    return true;
   }
 
   if (myself->fight())
@@ -265,14 +265,14 @@ int belimus(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   if (vict->fight())
     vict->stopFighting();
 
-  act("$n screams as $e is swallowed whole!", FALSE, vict, 0, 0, TO_ROOM);
+  act("$n screams as $e is swallowed whole!", false, vict, 0, 0, TO_ROOM);
 
   tmp = dynamic_cast<TBeing*>(vict->riding);
   if (tmp) {
     vict->dismount(POSITION_STANDING);
     --(*tmp);
     thing_to_room(tmp, SWALLOWER_TO_ROOM_PROC[targetSwallower][1]);
-    act("$n's mawed corpse arrives tumbling down $N's throat!", FALSE, tmp, 0,
+    act("$n's mawed corpse arrives tumbling down $N's throat!", false, tmp, 0,
       myself, TO_ROOM);
     vlogf(LOG_PROC, format("%s killed by belimus-swallow[%s] at %s (%d)") %
                       tmp->getName() % myself->getName() %
@@ -281,7 +281,7 @@ int belimus(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     rc = tmp->die(DAMAGE_EATTEN);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete tmp;
-      tmp = NULL;
+      tmp = nullptr;
     }
   }
   tmp = dynamic_cast<TBeing*>(vict->rider);
@@ -289,11 +289,11 @@ int belimus(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     tmp->dismount(POSITION_STANDING);
     --(*tmp);
     thing_to_room(tmp, SWALLOWER_TO_ROOM_PROC[targetSwallower][1]);
-    act("$n's mawed corpse arrives tumbling down $N's throat!", FALSE, tmp, 0,
+    act("$n's mawed corpse arrives tumbling down $N's throat!", false, tmp, 0,
       myself, TO_ROOM);
     tmp->rawKill(DAMAGE_EATTEN, myself);
     delete tmp;
-    tmp = NULL;
+    tmp = nullptr;
   }
 
   --(*vict);
@@ -305,7 +305,7 @@ int belimus(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       (::number(1, 100) < SWALLOWER_TO_ROOM_PROC[targetSwallower][3])) {
     vict->sendTo(format("%s chomps down upon you, biting you in two!!!!\n\r") %
                  myself->getName());
-    act("$n's mawed corpse arrives tumbling down $N's throat!", FALSE, vict, 0,
+    act("$n's mawed corpse arrives tumbling down $N's throat!", false, vict, 0,
       myself, TO_ROOM);
     vlogf(LOG_PROC, format("%s killed by Belimus-swallow[%s] at %s (%d)") %
                       vict->getName() % myself->getName() %
@@ -314,58 +314,58 @@ int belimus(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     rc = vict->die(DAMAGE_EATTEN);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete vict;
-      vict = NULL;
+      vict = nullptr;
     }
-    return TRUE;
+    return true;
   }
-  act("$n arrives tumbling down $N's throat screaming!", FALSE, vict, 0, myself,
+  act("$n arrives tumbling down $N's throat screaming!", false, vict, 0, myself,
     TO_ROOM);
   vict->doLook("", CMD_LOOK);
-  return TRUE;
+  return true;
 }
 
 int ram(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
 
   TBeing* vict = myself->fight();
   if (!vict)
-    return FALSE;
+    return false;
 
   if (!vict->sameRoom(*myself))
-    return FALSE;
+    return false;
   if (vict->riding)
-    return FALSE;
+    return false;
   if (vict->getPosition() > POSITION_STANDING)
-    return FALSE;
+    return false;
   if (::number(0, 5))
-    return FALSE;
+    return false;
 
   int damage = dice(5, 6);
 
-  act("$n lowers $s head and charges at you!", FALSE, myself, 0, vict, TO_VICT);
-  act("$n lowers $s head and charges at $N!", FALSE, myself, 0, vict,
+  act("$n lowers $s head and charges at you!", false, myself, 0, vict, TO_VICT);
+  act("$n lowers $s head and charges at $N!", false, myself, 0, vict,
     TO_NOTVICT);
   if (!vict->isLucky(levelLuckModifier(myself->GetMaxLevel()))) {
-    act("$n slams $s head into your midriff.", FALSE, myself, 0, vict, TO_VICT);
-    act("$n slams $s head into $N's midriff.", FALSE, myself, 0, vict,
+    act("$n slams $s head into your midriff.", false, myself, 0, vict, TO_VICT);
+    act("$n slams $s head into $N's midriff.", false, myself, 0, vict,
       TO_NOTVICT);
     if (myself->reconcileDamage(vict, damage, DAMAGE_RAMMED) == -1) {
       delete vict;
-      vict = NULL;
-      return TRUE;
+      vict = nullptr;
+      return true;
     }
     myself->cantHit += myself->loseRound(1);
     vict->cantHit += vict->loseRound(2);
 
     vict->setPosition(POSITION_SITTING);
   } else {
-    act("You sidestep quickly, and $n thunders by.   TORO!", FALSE, myself, 0,
+    act("You sidestep quickly, and $n thunders by.   TORO!", false, myself, 0,
       vict, TO_VICT);
-    act("$N sidesteps quickly, and $n thunders by $M.   TORO!", FALSE, myself,
+    act("$N sidesteps quickly, and $n thunders by $M.   TORO!", false, myself,
       0, vict, TO_NOTVICT);
   }
-  return TRUE;
+  return true;
 }
 
 int paralyzeBreath(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
@@ -374,26 +374,26 @@ int paralyzeBreath(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   affectedData aff;
   affectedData aff2;
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
 
   if (!(v = myself->fight()) || !v->sameRoom(*myself))
-    return FALSE;
+    return false;
 
   if (v->isAffected(AFF_PARALYSIS) ||
       myself->checkForSkillAttempt(SPELL_PARALYZE)) {
-    return FALSE;
+    return false;
   }
 
-  act("$n spits out some noxious fumes at $N.", TRUE, myself, NULL, v,
+  act("$n spits out some noxious fumes at $N.", true, myself, nullptr, v,
     TO_NOTVICT);
-  act("$n spits out some noxious fumes at you!", TRUE, myself, NULL, v,
+  act("$n spits out some noxious fumes at you!", true, myself, nullptr, v,
     TO_VICT);
-  act("You spit some noxious fumes out at $N.", TRUE, myself, NULL, v, TO_CHAR);
+  act("You spit some noxious fumes out at $N.", true, myself, nullptr, v, TO_CHAR);
 
   if (v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_CHAR);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
-    return FALSE;
+    return false;
   }
 
   if (!v->isImmortal()) {
@@ -424,7 +424,7 @@ int paralyzeBreath(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
     v->sendTo("Good thing you are immortal.\n\r");
   }
 
-  return TRUE;
+  return true;
 }
 
 int paralyzeBite(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
@@ -432,14 +432,14 @@ int paralyzeBite(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   affectedData aff;
   affectedData aff2;
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
 
   if (!(v = myself->fight()) || !v->sameRoom(*myself))
-    return FALSE;
+    return false;
 
   if (v->isAffected(AFF_PARALYSIS) ||
       myself->checkForSkillAttempt(SPELL_PARALYZE)) {
-    return FALSE;
+    return false;
   }
 
   act("You bite $N!", 1, myself, 0, v, TO_CHAR);
@@ -449,7 +449,7 @@ int paralyzeBite(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   if (v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_CHAR);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
-    return FALSE;
+    return false;
   }
 
   if (!v->isImmortal()) {
@@ -476,7 +476,7 @@ int paralyzeBite(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     v->sendTo("Good thing you are immortal.\n\r");
   }
 
-  return TRUE;
+  return true;
 }
 
 // If this proc is deemed too punishing we can gate it behind a random roll or
@@ -555,13 +555,13 @@ int rust_monster(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   TThing* t;
 
   if ((cmd != CMD_MOB_COMBAT))
-    return FALSE;
+    return false;
 
   if (!me->fight())
-    return FALSE;
+    return false;
 
   if (!me->roomp || me->roomp->isRoomFlag(ROOM_ARENA))
-    return FALSE;
+    return false;
 
   for (StuffIter it = me->roomp->stuff.begin(); it != me->roomp->stuff.end();) {
     t = *(it++);
@@ -575,30 +575,30 @@ int rust_monster(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
           if (eq->canRust()) {
             if ((number(0, eq->getStructPoints()) < 10) &&
                 number(0, 101) <= material_nums[eq->getMaterial()].acid_susc) {
-              act("$n reaches out and touches your $o!", FALSE, me, eq, tmp_ch,
+              act("$n reaches out and touches your $o!", false, me, eq, tmp_ch,
                 TO_VICT);
-              act("$n reaches out and touches $N's $o!", FALSE, me, eq, tmp_ch,
+              act("$n reaches out and touches $N's $o!", false, me, eq, tmp_ch,
                 TO_NOTVICT);
-              act("$p is decayed by $N's rust!", FALSE, tmp_ch, eq, me,
+              act("$p is decayed by $N's rust!", false, tmp_ch, eq, me,
                 TO_ROOM);
-              act("$p is decayed by $N's rust!", FALSE, tmp_ch, eq, me,
+              act("$p is decayed by $N's rust!", false, tmp_ch, eq, me,
                 TO_CHAR);
               eq->addToStructPoints(-1);
               if (eq->getStructPoints() <= 0) {
                 if (!eq->makeScraps()) {
                   delete eq;
-                  eq = NULL;
+                  eq = nullptr;
                 }
               }
 
-              return TRUE;
+              return true;
             }
           }
         }
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 int Fireballer(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -607,24 +607,24 @@ int Fireballer(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int dam;
 
   if (!me || !ch || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!me->fight())
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
   if (!(rp = me->roomp))
-    return FALSE;
+    return false;
 
   if (rp->isUnderwaterSector()) {
     me->sendTo("The water completely dissolves your fireball!\n\r");
-    return FALSE;
+    return false;
   }
-  act("$n calls forth a mighty Djinn to do $s bidding.", TRUE, me, 0, 0,
+  act("$n calls forth a mighty Djinn to do $s bidding.", true, me, 0, 0,
     TO_ROOM);
-  act("You call forth a mighty Djinn to smite your foes.", TRUE, me, 0, 0,
+  act("You call forth a mighty Djinn to smite your foes.", true, me, 0, 0,
     TO_CHAR);
 
   for (tmp = character_list; tmp; tmp = temp) {
@@ -633,33 +633,33 @@ int Fireballer(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
       if (!me->inGroup(*tmp)) {
         dam = dice(me->GetMaxLevel(), 4);
         me->reconcileHurt(tmp, 0.02);
-        act("The Djinn breathes a gust of flame at you!", TRUE, tmp, 0, 0,
+        act("The Djinn breathes a gust of flame at you!", true, tmp, 0, 0,
           TO_CHAR);
-        act("The Djinn bathes $n in a breath of flame.", TRUE, tmp, 0, 0,
+        act("The Djinn bathes $n in a breath of flame.", true, tmp, 0, 0,
           TO_ROOM);
         if (tmp->isLucky(levelLuckModifier(me->GetMaxLevel()))) {
-          act("....You are able to dodge the majority of the flame.", TRUE, tmp,
+          act("....You are able to dodge the majority of the flame.", true, tmp,
             0, 0, TO_CHAR);
           dam /= 2;
         }
         if (me->reconcileDamage(tmp, dam, SPELL_FIRE_BREATH) == -1) {
           delete tmp;
-          tmp = NULL;
+          tmp = nullptr;
         }
       }
     } else if (tmp->isImmortal() && me->sameRoom(*tmp)) {
-      act("The Djinn chokes on a hairball.", TRUE, tmp, 0, 0, TO_CHAR);
+      act("The Djinn chokes on a hairball.", true, tmp, 0, 0, TO_CHAR);
       act(
         "$n causes the Djinn to choke on a hairball before it can breathe at "
         "$m.",
-        TRUE, tmp, 0, 0, TO_ROOM);
+        true, tmp, 0, 0, TO_ROOM);
     } else if ((me != tmp) && (tmp->in_room != Room::NOWHERE) &&
                (rp->getZoneNum() == tmp->roomp->getZoneNum())) {
       tmp->sendTo("You hear a loud explosion and feel a gust of hot air.\n\r");
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 int Teleporter(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -667,29 +667,29 @@ int Teleporter(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   TBeing* vict;
 
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!(vict = me->fight()))
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
-  act("$n summons a Djinn to do $s bidding.", TRUE, me, 0, 0, TO_ROOM);
-  act("You summon forth a Djinn.", TRUE, me, 0, 0, TO_CHAR);
+  act("$n summons a Djinn to do $s bidding.", true, me, 0, 0, TO_ROOM);
+  act("You summon forth a Djinn.", true, me, 0, 0, TO_CHAR);
 
-  act("The Djinn looks in your direction and snaps his fingers!", TRUE, vict, 0,
+  act("The Djinn looks in your direction and snaps his fingers!", true, vict, 0,
     0, TO_CHAR);
-  act("The Djinn looks in $n's direction and snaps his fingers.", TRUE, vict, 0,
+  act("The Djinn looks in $n's direction and snaps his fingers.", true, vict, 0,
     0, TO_ROOM);
 
   rc = vict->genericTeleport(SILENT_NO);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
-    vict = NULL;
+    vict = nullptr;
   }
 
-  return TRUE;
+  return true;
 }
 
 int MSwarmer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -697,18 +697,18 @@ int MSwarmer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int ret, rc = 0;
 
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
   if (!me->fight())
-    return FALSE;
+    return false;
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
-  act("$n pulls a small stone out of $s robes.", TRUE, me, 0, 0, TO_ROOM);
-  act("You pull a small stone out of your robes.", TRUE, me, 0, 0, TO_CHAR);
+  act("$n pulls a small stone out of $s robes.", true, me, 0, 0, TO_ROOM);
+  act("You pull a small stone out of your robes.", true, me, 0, 0, TO_CHAR);
 
-  act("$e throws it to the $g and looks skyward hopefully.", TRUE, me, 0, 0,
+  act("$e throws it to the $g and looks skyward hopefully.", true, me, 0, 0,
     TO_ROOM);
-  act("You toss the stone to the $g in hopes of bringing forth meteors.", TRUE,
+  act("You toss the stone to the $g in hopes of bringing forth meteors.", true,
     me, 0, 0, TO_CHAR);
 
   me->setSkillValue(SPELL_METEOR_SWARM, 100);
@@ -717,40 +717,40 @@ int MSwarmer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     ret = castMeteorSwarm(me, me->fight());
     if (IS_SET(ret, CASTER_DEAD)) {
       ADD_DELETE(rc, DELETE_THIS);
-      return (rc + TRUE);
+      return (rc + true);
     }
   } else {
     stone = read_object(COMP_SKY_ROCK, VIRTUAL);
     *me->roomp += *stone;
-    act("$n curses as $s spell fizzles.", TRUE, me, 0, 0, TO_ROOM);
-    act("The spell fizzles  :(", TRUE, me, 0, 0, TO_CHAR);
+    act("$n curses as $s spell fizzles.", true, me, 0, 0, TO_ROOM);
+    act("The spell fizzles  :(", true, me, 0, 0, TO_CHAR);
   }
   me->addSkillLag(SPELL_METEOR_SWARM, 0);
-  return TRUE;
+  return true;
 }
 
 int IceStormer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int ret, rc = 0;
 
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!me->fight())
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
   if (!me->in_room || me->in_room == Room::NOWHERE)
-    return FALSE;
+    return false;
 
-  act("$n pulls a small cube of ice from out of a pouch.", TRUE, me, 0, 0,
+  act("$n pulls a small cube of ice from out of a pouch.", true, me, 0, 0,
     TO_ROOM);
-  act("You pull a small cube of ice from out of a pouch.", TRUE, me, 0, 0,
+  act("You pull a small cube of ice from out of a pouch.", true, me, 0, 0,
     TO_CHAR);
-  act("$e crushes it against $s belt and throws the flakes to the $g.", TRUE,
+  act("$e crushes it against $s belt and throws the flakes to the $g.", true,
     me, 0, 0, TO_ROOM);
-  act("You crush the flakes and throw them to the $g.", TRUE, me, 0, 0,
+  act("You crush the flakes and throw them to the $g.", true, me, 0, 0,
     TO_CHAR);
 
   me->setSkillValue(SPELL_ICE_STORM, 100);
@@ -759,40 +759,40 @@ int IceStormer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     ret = castIceStorm(me);
     if (IS_SET(ret, CASTER_DEAD)) {
       ADD_DELETE(rc, DELETE_THIS);
-      return (rc + TRUE);
+      return (rc + true);
     }
 
   } else {
     *me->roomp += *read_object(COMP_ICEBERG_CORE, VIRTUAL);
-    act("$n curses as $s spell fizzles.", TRUE, me, 0, 0, TO_ROOM);
-    act("The spell fizzles  :(", TRUE, me, 0, 0, TO_CHAR);
+    act("$n curses as $s spell fizzles.", true, me, 0, 0, TO_ROOM);
+    act("The spell fizzles  :(", true, me, 0, 0, TO_CHAR);
   }
   me->addSkillLag(SPELL_ICE_STORM, 0);
-  return TRUE;
+  return true;
 }
 
 int Edrain(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
-  int ret, rc = FALSE;
+  int ret, rc = false;
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!me->fight())
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
-  act("$n utters some mysterious words and holds forth $s hand.", TRUE, me, 0,
+  act("$n utters some mysterious words and holds forth $s hand.", true, me, 0,
     0, TO_ROOM);
-  act("You utter some dark words of power and hold forth your hand.", TRUE, me,
+  act("You utter some dark words of power and hold forth your hand.", true, me,
     0, 0, TO_CHAR);
-  act("A black orb rises from $n's hand - it spins straight up...", TRUE, me, 0,
+  act("A black orb rises from $n's hand - it spins straight up...", true, me, 0,
     0, TO_ROOM);
-  act("You create a black orb and see it rise before you...", TRUE, me, 0, 0,
+  act("You create a black orb and see it rise before you...", true, me, 0, 0,
     TO_CHAR);
-  act("A scathing beam of light from the orb sears $n!!", TRUE, me->fight(), 0,
+  act("A scathing beam of light from the orb sears $n!!", true, me->fight(), 0,
     0, TO_ROOM);
-  act("A scathing beam of light from the orb sears you!!!", TRUE, me->fight(),
+  act("A scathing beam of light from the orb sears you!!!", true, me->fight(),
     0, 0, TO_CHAR);
 
   me->setSkillValue(SPELL_ENERGY_DRAIN, 100);
@@ -801,73 +801,73 @@ int Edrain(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     ret = castEnergyDrain(me, me->fight());
     if (IS_SET(ret, CASTER_DEAD)) {
       ADD_DELETE(rc, DELETE_THIS);
-      return (rc + TRUE);
+      return (rc + true);
     }
   } else {
-    act("$n curses as $s spell fizzles.", TRUE, me, 0, 0, TO_ROOM);
-    act("The spell fizzles  :(", TRUE, me, 0, 0, TO_CHAR);
+    act("$n curses as $s spell fizzles.", true, me, 0, 0, TO_ROOM);
+    act("The spell fizzles  :(", true, me, 0, 0, TO_CHAR);
   }
   me->addSkillLag(SPELL_ENERGY_DRAIN, 0);
-  return TRUE;
+  return true;
 }
 
 int LBolter(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int ret, rc = 0;
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!me->fight())
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
-  act("$n utters some mysterious words and holds forth $s hand.", TRUE, me, 0,
+  act("$n utters some mysterious words and holds forth $s hand.", true, me, 0,
     0, TO_ROOM);
-  act("You utter some dark words of power and hold forth your hand.", TRUE, me,
+  act("You utter some dark words of power and hold forth your hand.", true, me,
     0, 0, TO_CHAR);
   act("A brilliant red orb crackling with power rises slowly from $s palm.",
-    TRUE, me, 0, 0, TO_ROOM);
-  act("A brilliant red orb crackling with power rises skyward.", TRUE, me, 0, 0,
+    true, me, 0, 0, TO_ROOM);
+  act("A brilliant red orb crackling with power rises skyward.", true, me, 0, 0,
     TO_CHAR);
-  act("A mighty blast is unleashed from the orb aimed at $n.", TRUE,
+  act("A mighty blast is unleashed from the orb aimed at $n.", true,
     me->fight(), 0, 0, TO_ROOM);
-  act("A mighty blast is unleashed from the orb at you!!!", TRUE, me->fight(),
+  act("A mighty blast is unleashed from the orb at you!!!", true, me->fight(),
     0, 0, TO_CHAR);
 
   if (number(1, 5) > 2) {
     ret = castBlastOfFury(me, me->fight());
     if (IS_SET(ret, CASTER_DEAD)) {
       ADD_DELETE(rc, DELETE_THIS);
-      return (rc + TRUE);
+      return (rc + true);
     }
   } else {
     *me->roomp += *read_object(COMP_BLOOD_SCORN_WOMAN, VIRTUAL);
-    act("$n curses as $s spell fizzles.", TRUE, me, 0, 0, TO_ROOM);
-    act("The spell fizzles  :(", TRUE, me, 0, 0, TO_CHAR);
+    act("$n curses as $s spell fizzles.", true, me, 0, 0, TO_ROOM);
+    act("The spell fizzles  :(", true, me, 0, 0, TO_CHAR);
   }
   me->addSkillLag(SPELL_BLAST_OF_FURY, 0);
-  return TRUE;
+  return true;
 }
 
 int Disser(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int rc = 0, ret;
 
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!me->fight())
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
-  act("$n begins to chant a incantation...", TRUE, me, 0, 0, TO_ROOM);
-  act("You begin to chant a incantation...", TRUE, me, 0, 0, TO_CHAR);
+  act("$n begins to chant a incantation...", true, me, 0, 0, TO_ROOM);
+  act("You begin to chant a incantation...", true, me, 0, 0, TO_CHAR);
   me->doSay("Ashes to ashes, dust to dust... Ashes to ashes, dust to dust...");
-  act("$n points at $N ominously.", TRUE, me, 0, me->fight(), TO_NOTVICT);
-  act("$n points at you ominously.", TRUE, me, 0, me->fight(), TO_VICT);
-  act("You point at $N.", TRUE, me, 0, me->fight(), TO_CHAR);
+  act("$n points at $N ominously.", true, me, 0, me->fight(), TO_NOTVICT);
+  act("$n points at you ominously.", true, me, 0, me->fight(), TO_VICT);
+  act("You point at $N.", true, me, 0, me->fight(), TO_CHAR);
 
   me->setSkillValue(SPELL_ATOMIZE, 100);
 
@@ -875,34 +875,34 @@ int Disser(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     ret = atomize(me, me->fight());
     if (IS_SET(ret, CASTER_DEAD)) {
       ADD_DELETE(rc, DELETE_THIS);
-      return (rc + TRUE);
+      return (rc + true);
     }
 
   } else {
     *me->roomp += *read_object(COMP_DRAGON_BONE, VIRTUAL);
-    act("$n curses as $s spell fizzles.", TRUE, me, 0, 0, TO_ROOM);
-    act("The spell fizzles  :(", TRUE, me, 0, 0, TO_CHAR);
+    act("$n curses as $s spell fizzles.", true, me, 0, 0, TO_ROOM);
+    act("The spell fizzles  :(", true, me, 0, 0, TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 int Witherer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   TBeing* vict = me->fight();
   if (!vict)
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
-  act("$n begins to chant a mantra...", TRUE, me, 0, 0, TO_ROOM);
-  act("You begin to chant a mantra...", TRUE, me, 0, 0, TO_CHAR);
+  act("$n begins to chant a mantra...", true, me, 0, 0, TO_ROOM);
+  act("You begin to chant a mantra...", true, me, 0, 0, TO_CHAR);
   me->doSay("You put you left foot in... You take your left foot out...");
-  act("$n points at $N ominously.", TRUE, me, 0, vict, TO_NOTVICT);
-  act("$n points at you ominously.", TRUE, me, 0, vict, TO_VICT);
-  act("You point at $N.", TRUE, me, 0, vict, TO_CHAR);
+  act("$n points at $N ominously.", true, me, 0, vict, TO_NOTVICT);
+  act("$n points at you ominously.", true, me, 0, vict, TO_VICT);
+  act("You point at $N.", true, me, 0, vict, TO_CHAR);
 
   me->setSkillValue(SPELL_WITHER_LIMB, 100);
 
@@ -910,13 +910,13 @@ int Witherer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     int ret = witherLimb(me, vict);
     if (IS_SET_DELETE(ret, DELETE_VICT)) {
       delete vict;
-      vict = NULL;
+      vict = nullptr;
     }
   } else {
-    act("$n curses as $s spell fizzles.", TRUE, me, 0, 0, TO_ROOM);
-    act("The spell fizzles  :(", TRUE, me, 0, 0, TO_CHAR);
+    act("$n curses as $s spell fizzles.", true, me, 0, 0, TO_ROOM);
+    act("The spell fizzles  :(", true, me, 0, 0, TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 int Paralyzer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -924,30 +924,30 @@ int Paralyzer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   TBeing* v;
 
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!(v = me->fight()))
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
   if (v->isAffected(AFF_PARALYSIS) ||
       v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
-    return FALSE;
+    return false;
   }
 
-  act("$n utters something unintelligible...", TRUE, me, 0, 0, TO_ROOM);
-  act("You utter something in a foreign tongue...", TRUE, me, 0, 0, TO_CHAR);
+  act("$n utters something unintelligible...", true, me, 0, 0, TO_ROOM);
+  act("You utter something in a foreign tongue...", true, me, 0, 0, TO_CHAR);
   me->doSay("  ...rigor mortis corpus feline a mehi inamici.. ");
-  act("$n pulls a dead cat out of a bag and throws it at $N's feet.", TRUE, me,
+  act("$n pulls a dead cat out of a bag and throws it at $N's feet.", true, me,
     0, v, TO_NOTVICT);
-  act("$n pulls a dead cat from a bag and throws it at your feet.", TRUE, me, 0,
+  act("$n pulls a dead cat from a bag and throws it at your feet.", true, me, 0,
     v, TO_VICT);
-  act("You throw a dead cat at $N's feet.", TRUE, me, 0, v, TO_CHAR);
+  act("You throw a dead cat at $N's feet.", true, me, 0, v, TO_CHAR);
 
-  act("Suddenly, the cat comes back to life!!", TRUE, me, 0, 0, TO_ROOM);
-  act("Suddenly, the cat comes back to life!!", TRUE, me, 0, 0, TO_CHAR);
+  act("Suddenly, the cat comes back to life!!", true, me, 0, 0, TO_ROOM);
+  act("Suddenly, the cat comes back to life!!", true, me, 0, 0, TO_CHAR);
 
   aff.type = SPELL_PARALYZE;
   aff.level = me->GetMaxLevel();
@@ -959,7 +959,7 @@ int Paralyzer(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   v->affectTo(&aff);
   *me->roomp += *read_mobile(Mob::SMALL_CAT, VIRTUAL);
 
-  return TRUE;
+  return true;
 }
 
 int AcidBlaster(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -967,38 +967,38 @@ int AcidBlaster(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int rc = 0, ret;
 
   if (!me || cmd != CMD_MOB_COMBAT)
-    return FALSE;
+    return false;
 
   if (!me->fight())
-    return FALSE;
+    return false;
 
   if (me->getPosition() <= POSITION_SITTING)
-    return FALSE;
+    return false;
 
-  act("$n produces an opaque vial from inside $s robes.", TRUE, me, 0, 0,
+  act("$n produces an opaque vial from inside $s robes.", true, me, 0, 0,
     TO_ROOM);
-  act("You produce an opaque vial from inside your robes.", TRUE, me, 0, 0,
+  act("You produce an opaque vial from inside your robes.", true, me, 0, 0,
     TO_CHAR);
-  act("$n grins and heaves it in $N's direction.", TRUE, me, 0, me->fight(),
+  act("$n grins and heaves it in $N's direction.", true, me, 0, me->fight(),
     TO_ROOM);
-  act("You grin and heave it at $N.", TRUE, me, 0, me->fight(), TO_CHAR);
+  act("You grin and heave it at $N.", true, me, 0, me->fight(), TO_CHAR);
 
   me->setSkillValue(SPELL_ACID_BLAST, 100);
 
   if (number(1, 5) > 2) {
-    act("The vial shatters and acid spews forth!!", TRUE, me, 0, 0, TO_ROOM);
+    act("The vial shatters and acid spews forth!!", true, me, 0, 0, TO_ROOM);
     ret = acidBlast(me);
     if (IS_SET(ret, CASTER_DEAD)) {
       ADD_DELETE(rc, DELETE_THIS);
-      return (rc + TRUE);
+      return (rc + true);
     }
   } else {
     obj = read_object(COMP_ACID_BLAST, VIRTUAL);
     *me->roomp += *obj;
-    act("$p remains intact.", TRUE, me, obj, 0, TO_ROOM);
-    act("The spell fizzles  :(", TRUE, me, 0, 0, TO_CHAR);
+    act("$p remains intact.", true, me, obj, 0, TO_ROOM);
+    act("The spell fizzles  :(", true, me, 0, 0, TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 int kingUrik(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -1006,54 +1006,54 @@ int kingUrik(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   TBeing* vict;
 
   if (!me)
-    return FALSE;
+    return false;
   if ((cmd != CMD_MOB_COMBAT))
-    return FALSE;
+    return false;
   if (!(vict = me->fight()))
-    return FALSE;
+    return false;
 
   if (number(0, 2))
-    return FALSE;
+    return false;
 
   me->wait += 4;
 
-  act("$n touches you, sucking your life energy.", TRUE, me, 0, vict, TO_VICT);
-  act("You touch $N and slurp some emergy.", TRUE, me, 0, vict, TO_CHAR);
-  act("$n touches $N and drains some life energy from $M.", TRUE, ch, 0, vict,
+  act("$n touches you, sucking your life energy.", true, me, 0, vict, TO_VICT);
+  act("You touch $N and slurp some emergy.", true, me, 0, vict, TO_CHAR);
+  act("$n touches $N and drains some life energy from $M.", true, ch, 0, vict,
     TO_NOTVICT);
 
   int dam = dice((me->GetMaxLevel() / 2), 3);
-  if (!(dam = vict->getActualDamage(me, NULL, dam, DAMAGE_DRAIN))) {
+  if (!(dam = vict->getActualDamage(me, nullptr, dam, DAMAGE_DRAIN))) {
     vict->sendTo("Fortunately, it has no effect on you.\n\r");
-    return FALSE;
+    return false;
   }
   rc = me->applyDamage(vict, dam, DAMAGE_DRAIN);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     delete vict;
-    vict = NULL;
-    return TRUE;
+    vict = nullptr;
+    return true;
   }
 
   vict->addToMana(-min(vict->getMana(), dice(12, 4)));
   vict->addToMove(-dice(10, 4));
 
-  return TRUE;
+  return true;
 }
 
 int rock_worm(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   TBeing* vict;
 
   if (!me)
-    return FALSE;
+    return false;
   if ((cmd != CMD_MOB_COMBAT))
-    return FALSE;
+    return false;
   if (!(vict = me->fight()))
-    return FALSE;
+    return false;
 
   if (number(0, 2))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 int paralyzeGaze(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
@@ -1061,30 +1061,30 @@ int paralyzeGaze(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   affectedData aff;
 
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
 
   if (!(v = myself->fight()) || !v->sameRoom(*myself))
-    return FALSE;
+    return false;
 
   if (::number(0, 10))
-    return FALSE;
+    return false;
 
-  act("$n fixes $N with a penetrating gaze.", TRUE, myself, NULL, v,
+  act("$n fixes $N with a penetrating gaze.", true, myself, nullptr, v,
     TO_NOTVICT);
   act(
     "$n fixes you with a penetrating gaze.  Suddenly, you have trouble moving.",
-    TRUE, myself, NULL, v, TO_VICT);
-  act("You fix $N with a penetrating gaze.", TRUE, myself, NULL, v, TO_CHAR);
+    true, myself, nullptr, v, TO_VICT);
+  act("You fix $N with a penetrating gaze.", true, myself, nullptr, v, TO_CHAR);
 
   if (v->isAffected(AFF_PARALYSIS) ||
       v->isImmune(IMMUNE_PARALYSIS, WEAR_BODY)) {
     act("Your immunity saves you.", false, v, 0, 0, TO_VICT);
     act("$n's immunity saves $m.", false, v, 0, 0, TO_ROOM);
-    return FALSE;
+    return false;
   } else {
-    act("Suddenly, $N has trouble moving!", TRUE, myself, NULL, v, TO_NOTVICT);
-    act("Suddenly, you have trouble moving!", TRUE, myself, NULL, v, TO_VICT);
-    act("Suddenly, $N has trouble moving!", TRUE, myself, NULL, v, TO_CHAR);
+    act("Suddenly, $N has trouble moving!", true, myself, nullptr, v, TO_NOTVICT);
+    act("Suddenly, you have trouble moving!", true, myself, nullptr, v, TO_VICT);
+    act("Suddenly, $N has trouble moving!", true, myself, nullptr, v, TO_CHAR);
   }
 
   if (!v->isImmortal()) {
@@ -1098,7 +1098,7 @@ int paralyzeGaze(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     v->affectTo(&aff);
   }
 
-  return TRUE;
+  return true;
 }
 
 /* -------------------------------------------------------------------
@@ -1109,7 +1109,7 @@ int paralyzeGaze(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
   TMonster* myself, TObj*) {
   if (!myself)
-    return FALSE;
+    return false;
 
   static std::map<sstring, sessionData> s_beginningSession;
 
@@ -1128,7 +1128,7 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
   // initialize logic
   if (cmd == CMD_GENERIC_INIT) {
     myself->setExp(0);
-    return FALSE;
+    return false;
   }
 
   // we are ending practice combat
@@ -1144,22 +1144,22 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
         sstring::npos ==
           myself->procData.find("    ", myself->procData.length() - 4)) {
       myself->procData += " ";
-      return TRUE;
+      return true;
     }
 
     // clear hate list
     REMOVE_BIT(myself->specials.act, ACT_HUNTING);
     REMOVE_BIT(myself->specials.act, ACT_HATEFUL);
     while (myself->hates.clist)
-      myself->remHated(NULL, myself->hates.clist->name);
+      myself->remHated(nullptr, myself->hates.clist->name);
     while (myself->fears.clist)
-      myself->remFeared(NULL, myself->fears.clist->name);
+      myself->remFeared(nullptr, myself->fears.clist->name);
     myself->setSusp(myself->defsusp());
 
     // get list of players to report to
-    int cPlayers = myself->procData.trim().split(',', NULL);
+    int cPlayers = myself->procData.trim().split(',', nullptr);
     if (cPlayers < 1)
-      return TRUE;
+      return true;
 
     sstring* players = new sstring[cPlayers];
     myself->procData.split(',', players);
@@ -1168,8 +1168,8 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
       if (players[iPlayer].empty())
         continue;
       TBeing* player =
-        get_pc_world(NULL, players[iPlayer], EXACT_YES, INFRA_YES, false);
-      if (NULL == player)
+        get_pc_world(nullptr, players[iPlayer], EXACT_YES, INFRA_YES, false);
+      if (nullptr == player)
         continue;
 
       // first, get the descriptor of our last target
@@ -1246,7 +1246,7 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
     delete[] players;
     myself->procData.clear();
 
-    return TRUE;
+    return true;
   }
 
   // our opponent is asking us to stop fighting
@@ -1262,9 +1262,9 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
     REMOVE_BIT(myself->specials.act, ACT_HUNTING);
     REMOVE_BIT(myself->specials.act, ACT_HATEFUL);
     while (myself->hates.clist)
-      myself->remHated(NULL, myself->hates.clist->name);
+      myself->remHated(nullptr, myself->hates.clist->name);
     while (myself->fears.clist)
-      myself->remFeared(NULL, myself->fears.clist->name);
+      myself->remFeared(nullptr, myself->fears.clist->name);
     myself->setSusp(myself->defsusp());
 
     // set tick marks so we report right away
@@ -1274,7 +1274,7 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
       "Dequeuing magical imperitave: Halting training session!  SIGTHAUM "
       "fault.");
 
-    return FALSE;  // returning true will cancel the speak
+    return false;  // returning true will cancel the speak
   }
 
   // we are beginning practice combat
@@ -1288,7 +1288,7 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
     if (!attacker || !attacker->desc) {
       vlogf(LOG_PROC,
         "targetDummy proc being attacked by invalid attacker (mob)!");
-      return FALSE;
+      return false;
     }
 
     // save the target
@@ -1307,7 +1307,7 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
 
   // anything other than combat?  just stop now
   if (cmd != CMD_MOB_COMBAT && cmd != CMD_MOB_COMBAT2)
-    return FALSE;
+    return false;
 
   // clear out tick marks
   myself->procData = myself->procData.trim();
@@ -1316,8 +1316,8 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
   // reporting damage here can be misleading, so we'll not do that for now.
   int damage = myself->hitLimit() - myself->getHit();
   if (damage > 0) {
-    act("The wounds on $n magically heal!", TRUE, myself, NULL, NULL, TO_ROOM);
-    act("The wounds on your body completely heal!", TRUE, myself, NULL, NULL,
+    act("The wounds on $n magically heal!", true, myself, nullptr, nullptr, TO_ROOM);
+    act("The wounds on your body completely heal!", true, myself, nullptr, nullptr,
       TO_CHAR);
     myself->genericRestore(RESTORE_FULL);
   }
@@ -1325,13 +1325,13 @@ int targetDummy(TBeing* character, cmdTypeT cmd, const char* argIn,
              ? 0
              : myself->fight()->hitLimit() - myself->fight()->getHit();
   if (damage > 0 && myself->fight()->fight() == myself) {
-    act("The wounds on $n magically heal!", TRUE, myself->fight(), NULL, NULL,
+    act("The wounds on $n magically heal!", true, myself->fight(), nullptr, nullptr,
       TO_ROOM);
-    act("The wounds on your body completely heal!", TRUE, myself->fight(), NULL,
-      NULL, TO_CHAR);
+    act("The wounds on your body completely heal!", true, myself->fight(), nullptr,
+      nullptr, TO_CHAR);
     myself->fight()->genericRestore(RESTORE_FULL);
   }
 
-  return TRUE;  // returning true from here will cancel normal mob class-based
+  return true;  // returning true from here will cancel normal mob class-based
                 // moves
 }

@@ -42,7 +42,7 @@ bool TAccount::read(const sstring& aname) {
   last_logon = convertTo<int>(db["last_logon"]);
 
   login = time(0);
-  status = FALSE;
+  status = false;
 
   return true;
 }

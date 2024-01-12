@@ -231,11 +231,11 @@ const sstring TBeing::doColorSub() const {
 const sstring TBeing::ansi_color_bold(const char* s,
   unsigned int ans_color) const {
   sstring buf;
-  int repFound = FALSE;
+  int repFound = false;
 
   if (desc) {
     if (IS_SET(desc->plr_colorOff, ans_color)) {
-      repFound = TRUE;
+      repFound = true;
     }
   }
 
@@ -277,11 +277,11 @@ const sstring TBeing::ansi_color(const char* s) const {
 }
 
 const sstring TBeing::ansi_color(const char* s, unsigned int ans_color) const {
-  int repFound = FALSE;
+  int repFound = false;
 
   if (desc) {
     if (IS_SET(desc->plr_colorOff, ans_color)) {
-      repFound = TRUE;
+      repFound = true;
     }
   }
 
@@ -590,10 +590,10 @@ const sstring Descriptor::ansi_color_bold(const char* s) const {
 const sstring Descriptor::ansi_color_bold(const char* s,
   unsigned int color) const {
   sstring buf;
-  int repFound = FALSE;
+  int repFound = false;
 
   if (IS_SET(plr_colorOff, color))
-    repFound = TRUE;
+    repFound = true;
 
   if (repFound) {
     if (plr_colorSub)
@@ -634,10 +634,10 @@ const sstring Descriptor::ansi_color(const char* s) const {
 }
 
 const sstring Descriptor::ansi_color(const char* s, unsigned int color) const {
-  int repFound = FALSE;
+  int repFound = false;
 
   if (IS_SET(plr_colorOff, color)) {
-    repFound = TRUE;
+    repFound = true;
   }
 
   if (repFound) {

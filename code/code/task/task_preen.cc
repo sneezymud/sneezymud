@@ -7,16 +7,16 @@
 // simple function to do the non-bird social
 void preen_social(TBeing* ch, TThing* target) {
   if (!target || target == dynamic_cast<TThing*>(ch)) {
-    act("You clean yourself up a bit.  Don't you look dandy?", FALSE, ch, NULL,
+    act("You clean yourself up a bit.  Don't you look dandy?", false, ch, nullptr,
       target, TO_CHAR);
-    act("$n vainly cleans $mself up.", TRUE, ch, NULL, target, TO_ROOM);
+    act("$n vainly cleans $mself up.", true, ch, nullptr, target, TO_ROOM);
     return;
   }
-  act("You clean $N up a bit.  Well, as much as you can.", FALSE, ch, NULL,
+  act("You clean $N up a bit.  Well, as much as you can.", false, ch, nullptr,
     target, TO_CHAR);
-  act("$n cleans you up a bit.  Well, isn't that nice?", FALSE, ch, NULL,
+  act("$n cleans you up a bit.  Well, isn't that nice?", false, ch, nullptr,
     target, TO_VICT);
-  act("$n cleans $N up a bit.  Well, isn't that nice?", TRUE, ch, NULL, target,
+  act("$n cleans $N up a bit.  Well, isn't that nice?", true, ch, nullptr, target,
     TO_NOTVICT);
 }
 
@@ -30,7 +30,7 @@ void TBeing::doPreen(sstring& argument) {
   TThing* target = !argument.empty()
                      ? searchLinkedListVis(this, argument, roomp->stuff)
                      : dynamic_cast<TThing*>(this);
-  bool being = target && dynamic_cast<TBeing*>(target) != NULL;
+  bool being = target && dynamic_cast<TBeing*>(target) != nullptr;
   bool feathered =
     being && dynamic_cast<TBeing*>(target)->getMyRace()->isFeathered();
 
@@ -61,51 +61,51 @@ void TBeing::doPreen(sstring& argument) {
 
   // self
   if (!target || target == dynamic_cast<TThing*>(this)) {
-    act("You begin to clean up some of your feathers.", FALSE, this, NULL,
+    act("You begin to clean up some of your feathers.", false, this, nullptr,
       target, TO_CHAR);
-    act("$n begins to preen $s feathers.", TRUE, this, NULL, target, TO_ROOM);
+    act("$n begins to preen $s feathers.", true, this, nullptr, target, TO_ROOM);
   } else  // someone else
   {
-    act("You begin to clean up some of $Ns feathers.", FALSE, this, NULL,
+    act("You begin to clean up some of $Ns feathers.", false, this, nullptr,
       target, TO_CHAR);
-    act("$n begins preening your feathers for you.", FALSE, this, NULL, target,
+    act("$n begins preening your feathers for you.", false, this, nullptr, target,
       TO_VICT);
-    act("$n begins to preen $Ns feathers.", TRUE, this, NULL, target,
+    act("$n begins to preen $Ns feathers.", true, this, nullptr, target,
       TO_NOTVICT);
   }
 
   // start a preen task
-  start_task(this, NULL, roomp, TASK_PREEN, target->name.c_str(), 3, inRoom(),
+  start_task(this, nullptr, roomp, TASK_PREEN, target->name.c_str(), 3, inRoom(),
     0, 0, 5);
 }
 
 // feather-cleaning task
 int task_preen(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom* rp,
   TObj*) {
-  TBeing* target = NULL;
+  TBeing* target = nullptr;
   if (!ch || ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // stop preening
   if (!ch->task || ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom)) {
-    act("You stop your preening.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops $s preening.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You stop your preening.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops $s preening.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->task->timeLeft < 0) {
     ch->sendTo("You can't find any feathers that need preening.\n\r");
     ch->stopTask();
-    return TRUE;
+    return true;
   }
 
   target =
-    get_char_room_vis(ch, ch->task->orig_arg, NULL, EXACT_YES, INFRA_YES);
+    get_char_room_vis(ch, ch->task->orig_arg, nullptr, EXACT_YES, INFRA_YES);
   if (!target) {
     ch->sendTo("The person you were preening is no longer here!\n\r");
     ch->stopTask();
-    return TRUE;
+    return true;
   }
 
   static const sstring selfPreen[18] = {
@@ -183,18 +183,18 @@ int task_preen(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom* rp,
       ch->addToMove(-1);
       if (ch->getMove() < 6) {
         ch->sendTo("You are much too tired to continue preening.\n\r");
-        act(preenAct[15], FALSE, ch, NULL, target, TO_CHAR);
-        act(preenAct[16], TRUE, ch, NULL, target, TO_VICT);
-        act(preenAct[17], TRUE, ch, NULL, target, TO_NOTVICT);
+        act(preenAct[15], false, ch, nullptr, target, TO_CHAR);
+        act(preenAct[16], true, ch, nullptr, target, TO_VICT);
+        act(preenAct[17], true, ch, nullptr, target, TO_NOTVICT);
         ch->stopTask();
-        return FALSE;
+        return false;
       }
 
       // send regular preen message for state
       int index = 9 - (3 * ch->task->timeLeft);
-      act(preenAct[index++], FALSE, ch, NULL, target, TO_CHAR);
-      act(preenAct[index++], TRUE, ch, NULL, target, TO_VICT);
-      act(preenAct[index++], TRUE, ch, NULL, target, TO_NOTVICT);
+      act(preenAct[index++], false, ch, nullptr, target, TO_CHAR);
+      act(preenAct[index++], true, ch, nullptr, target, TO_VICT);
+      act(preenAct[index++], true, ch, nullptr, target, TO_NOTVICT);
 
       // random chance to drop a feather during grooming (3% chance)
       if (ch->task->timeLeft < 3 && ch->task->timeLeft > 0 &&
@@ -202,11 +202,11 @@ int task_preen(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom* rp,
         TObj* obj = read_object(Obj::PREEN_FEATHER, VIRTUAL);
         if (!obj) {
           vlogf(LOG_BUG, "problem loading feather in task_preen()");
-          return TRUE;
+          return true;
         }
-        act(preenAct[12], FALSE, ch, NULL, target, TO_CHAR);
-        act(preenAct[13], TRUE, ch, NULL, target, TO_VICT);
-        act(preenAct[14], TRUE, ch, NULL, target, TO_NOTVICT);
+        act(preenAct[12], false, ch, nullptr, target, TO_CHAR);
+        act(preenAct[13], true, ch, nullptr, target, TO_VICT);
+        act(preenAct[14], true, ch, nullptr, target, TO_NOTVICT);
         *ch->roomp += *obj;
       }
 
@@ -242,9 +242,9 @@ int task_preen(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom* rp,
     }
     case CMD_ABORT:
     case CMD_STOP:
-      act(preenAct[15], FALSE, ch, NULL, target, TO_CHAR);
-      act(preenAct[16], TRUE, ch, NULL, target, TO_VICT);
-      act(preenAct[17], TRUE, ch, NULL, target, TO_NOTVICT);
+      act(preenAct[15], false, ch, nullptr, target, TO_CHAR);
+      act(preenAct[16], true, ch, nullptr, target, TO_VICT);
+      act(preenAct[17], true, ch, nullptr, target, TO_NOTVICT);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -256,5 +256,5 @@ int task_preen(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom* rp,
         warn_busy(ch);
       break;
   }
-  return TRUE;
+  return true;
 }

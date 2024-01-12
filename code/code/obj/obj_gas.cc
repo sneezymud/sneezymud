@@ -97,7 +97,7 @@ void doScent(TGas* myself) {
     TPlant* plant = dynamic_cast<TPlant*>(*it);
     if (plant) {
       plant->updateAge();
-      act("$n wilts slightly from exposure to $N!", FALSE, plant, NULL, myself,
+      act("$n wilts slightly from exposure to $N!", false, plant, nullptr, myself,
         TO_ROOM);
       continue;
     }
@@ -109,19 +109,19 @@ void doScent(TGas* myself) {
     if (/*!being->isImmortal() && */ !being->isImmune(IMMUNE_SUFFOCATION,
           WEAR_BODY) &&
         !being->getMyRace()->hasTalent(TALENT_MUSK)) {
-      act("The smell of $N in this room makes you gag!", FALSE, being, NULL,
+      act("The smell of $N in this room makes you gag!", false, being, nullptr,
         myself, TO_CHAR);
-      act("$n coughs and gags on $N in the room!", FALSE, being, NULL, myself,
+      act("$n coughs and gags on $N in the room!", false, being, nullptr, myself,
         TO_ROOM);
       if (!being->isTough()) {
-        act("You feel really queasy.", FALSE, being, NULL, myself, TO_CHAR);
-        act("$n turns a sickly pale color.", FALSE, being, NULL, myself,
+        act("You feel really queasy.", false, being, nullptr, myself, TO_CHAR);
+        act("$n turns a sickly pale color.", false, being, nullptr, myself,
           TO_ROOM);
         being->doAction("", CMD_PUKE);
       }
       continue;
     }
-    const sstring* scents = NULL;
+    const sstring* scents = nullptr;
     if (myself->hasCreator(being->name))
       scents = self_scents;
     else if (createdBy && being->getSex() == createdBy->getSex())
@@ -129,7 +129,7 @@ void doScent(TGas* myself) {
     else
       scents = opp_scents;
 
-    act(scents[::number(0, NUM_SCENTS - 1)], FALSE, being, NULL, myself,
+    act(scents[::number(0, NUM_SCENTS - 1)], false, being, nullptr, myself,
       TO_CHAR);
   }
 }
@@ -237,10 +237,10 @@ void TGas::doDrift() {
   if ((exitp = roomp->exitDir(DIR_UP)) &&
       !IS_SET(exitp->condition, EXIT_CLOSED) &&
       (rp = real_roomp(exitp->to_room))) {
-    act("$n drifts upwards.", FALSE, this, 0, 0, TO_ROOM);
+    act("$n drifts upwards.", false, this, 0, 0, TO_ROOM);
     --(*this);
     *rp += *this;
-    act("$n drifts in from below.", FALSE, this, 0, 0, TO_ROOM);
+    act("$n drifts in from below.", false, this, 0, 0, TO_ROOM);
   } else {
     dirTypeT dir;
 
@@ -265,11 +265,11 @@ void TGas::doDrift() {
 
         if ((tp = dynamic_cast<TPortal*>(t)) && dir == seen &&
             (rp = real_roomp(tp->getTarget()))) {
-          act(format("$n drifts into %s.") % tp->getName(), FALSE, this, 0, 0,
+          act(format("$n drifts into %s.") % tp->getName(), false, this, 0, 0,
             TO_ROOM);
           --(*this);
           *rp += *this;
-          act(format("$n drifts in from %s.") % tp->getName(), FALSE, this, 0,
+          act(format("$n drifts in from %s.") % tp->getName(), false, this, 0,
             0, TO_ROOM);
           break;
         }
@@ -277,11 +277,11 @@ void TGas::doDrift() {
     } else if (dir >= MIN_DIR && dir != DIR_DOWN &&
                (exitp = roomp->exitDir(dir)) &&
                (rp = real_roomp(exitp->to_room))) {
-      act(format("$n drifts %s.") % dirs_to_blank[dir], FALSE, this, 0, 0,
+      act(format("$n drifts %s.") % dirs_to_blank[dir], false, this, 0, 0,
         TO_ROOM);
       --(*this);
       *rp += *this;
-      act(format("$n drifts in from the %s.") % dirs[rev_dir(dir)], FALSE, this,
+      act(format("$n drifts in from the %s.") % dirs[rev_dir(dir)], false, this,
         0, 0, TO_ROOM);
     }
   }
@@ -291,12 +291,12 @@ TGas::~TGas() { delete driftPath; }
 
 TGas::TGas(gasTypeT gasType) : TObj() {
   type = gasType;
-  driftPath = NULL;
+  driftPath = nullptr;
 }
 
 TGas::TGas(const TGas& a) : TObj(a) {
   type = a.type;
-  driftPath = NULL;
+  driftPath = nullptr;
 }
 
 void TGas::setVolume(int n) {
@@ -345,12 +345,12 @@ void TGas::updateDesc() {
       ex_description = exd->next;
       delete exd;
     }
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
     name = obj_index[getItemIndex()].name;
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   }
 
@@ -368,34 +368,34 @@ bool TGas::isPluralItem() const {
 }
 
 int TThing::dropGas(int amt, gasTypeT type) {
-  TGas* gas = NULL;
+  TGas* gas = nullptr;
 
   if (amt == 0 || !roomp || type >= GAS_MAX)
-    return FALSE;
+    return false;
 
   // look for preexisting smoke
   for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
     gas = dynamic_cast<TGas*>(*it);
     if (gas && gas->getType() == type)
       break;
-    gas = NULL;
+    gas = nullptr;
   }
 
   // create new gas
   if (!gas) {
-    TObj* obj = NULL;
+    TObj* obj = nullptr;
     int robj = real_object(Obj::GENERIC_GAS);
     if (robj < 0 || robj >= (signed int)obj_index.size()) {
       vlogf(LOG_BUG, format("dropGas(): No object (%d) in database!") % robj);
-      return FALSE;
+      return false;
     }
     if (!(obj = read_object(robj, REAL))) {
       vlogf(LOG_LOW, format("Error, No gas object created  (%d)") % robj);
-      return FALSE;
+      return false;
     }
     if (!(gas = dynamic_cast<TGas*>(obj))) {
       vlogf(LOG_LOW, "Error, Could not cast gas to TGas");
-      return FALSE;
+      return false;
     }
 
     gas->setType(type);
@@ -413,7 +413,7 @@ int TThing::dropGas(int amt, gasTypeT type) {
     gas->addCreator(name.c_str());
   gas->addToVolume(amt);
 
-  return TRUE;
+  return true;
 }
 
 void TGas::decayMe() {

@@ -53,4 +53,4 @@ void TStatue::writeAffects(int i, FILE* fp) const {
   }
 }
 
-int TStatue::addApply(TBeing*, applyTypeT) { return FALSE; }
+int TStatue::addApply(TBeing*, applyTypeT) { return false; }

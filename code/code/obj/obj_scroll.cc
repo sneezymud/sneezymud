@@ -41,9 +41,9 @@ int TScroll::changeItemVal2Check(TBeing* ch, int the_update) {
                                    !discArray[the_update]->minLifeforce &&
                                    !discArray[the_update]->minPiety))) {
     ch->sendTo("Invalid value or value is not a spell.\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TScroll::changeItemVal3Check(TBeing* ch, int the_update) {
@@ -109,7 +109,7 @@ void TScroll::lowCheck() {
                !discArray[curspell]->minMana &&
                !discArray[curspell]->minLifeforce &&
                !discArray[curspell]->minPiety)) ||
-            (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
+            (getDisciplineNumber(curspell, false) == DISC_NONE)))) {
       vlogf(LOG_LOW,
         format("scroll (%s:%d) has messed up spell (slot %d: %d)") % getName() %
           objVnum() % (i + 1) % curspell);
@@ -140,7 +140,7 @@ bool TScroll::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "You might wanna take that to the magic shop!");
   }
-  return TRUE;
+  return true;
 }
 
 spellNumT TScroll::getSpell(int num) const {

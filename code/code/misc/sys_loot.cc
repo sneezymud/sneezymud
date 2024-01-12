@@ -80,13 +80,13 @@ bool isSpecialLegalLoot(int tValue) {
 
 // This goes through the object lists and makes a db of possible loot.
 bool sysLootBoot() {
-  TObj* tObj = NULL;
-  TMagicItem* tMagicItem = NULL;
-  TPotion* pot = NULL;
+  TObj* tObj = nullptr;
+  TMagicItem* tMagicItem = nullptr;
+  TPotion* pot = nullptr;
 
   int tLevel = 0;
 
-  tLoot = NULL;
+  tLoot = nullptr;
 
   for (unsigned int tOIndex = 0; tOIndex < obj_index.size(); tOIndex++)
     if (((isLegalLoot(itemTypeT(obj_index[tOIndex].itemtype)) &&
@@ -106,7 +106,7 @@ bool sysLootBoot() {
             vlogf(LOG_BUG,
               format("Screwup in Loot Loader: %s") % tObj->getName());
             delete tObj;
-            tObj = NULL;
+            tObj = nullptr;
           } else
             tLevel = tMagicItem->getMagicLevel();
 
@@ -116,7 +116,7 @@ bool sysLootBoot() {
             vlogf(LOG_BUG,
               format("Screwup in Loot Loader (potion): %s") % tObj->getName());
             delete tObj;
-            tObj = NULL;
+            tObj = nullptr;
           } else
             tLevel = pot->getDrinkUnits();
           break;
@@ -124,7 +124,7 @@ bool sysLootBoot() {
           vlogf(LOG_BUG, format("sysLootBoot Error: Unrecognized Type: %d") %
                            obj_index[tOIndex].virt);
           delete tObj;
-          tObj = NULL;
+          tObj = nullptr;
           break;
       }
 
@@ -143,7 +143,7 @@ bool sysLootBoot() {
         }
 
         delete tObj;
-        tObj = NULL;
+        tObj = nullptr;
       }
     }
 
@@ -161,8 +161,8 @@ bool sysLootLoad(resetCom& rs, TBeing* tBeing, TObj* tObj, bool isImmortal) {
   if (!rs.if_flag)
     return false;
 
-  TRoom* tRoom = NULL;
-  TThing* tThing = NULL;
+  TRoom* tRoom = nullptr;
+  TThing* tThing = nullptr;
   int tFound = 0;
   bool tLoaded = false, cashLoaded = false;
 
@@ -278,7 +278,7 @@ void TBeing::doLoot(const sstring& tStString) {
     tStType(""), tStSpell(""), tStLevelMin(""), tStLevelMax("");
   char tString[256];
   int tLevelMin = -1, tLevelMax = 101;
-  TObj* tObj = NULL;
+  TObj* tObj = nullptr;
   bool bType = false, bSpell = false;
 
   itemTypeT tType = ITEM_UNDEFINED;
@@ -381,7 +381,7 @@ void TBeing::doLoot(const sstring& tStString) {
           if (tType != ITEM_UNDEFINED &&
               obj_index[tNLoot->tRNum].itemtype != tType) {
             delete tObj;
-            tObj = NULL;
+            tObj = nullptr;
             continue;
           }
 
@@ -389,7 +389,7 @@ void TBeing::doLoot(const sstring& tStString) {
 
           if (tSpell != TYPE_UNDEFINED && !hasSpellOnIt(tMagicItem, tSpell)) {
             delete tObj;
-            tObj = NULL;
+            tObj = nullptr;
             continue;
           }
 
@@ -399,7 +399,7 @@ void TBeing::doLoot(const sstring& tStString) {
           tTotalCount++;
           tStOutput += tString;
           delete tObj;
-          tObj = NULL;
+          tObj = nullptr;
         }
 
     tStOutput += "__________\n\r";
@@ -420,11 +420,11 @@ void TBeing::doLoot(const sstring& tStString) {
     tRs.arg3 = 0;
     tRs.arg4 = 0;
 
-    if (sysLootLoad(tRs, this, NULL, true)) {
-      act("You make some funky gestures and load some loot.", FALSE, this, NULL,
-        NULL, TO_CHAR);
-      act("$n makes some funky gestures and loads some loot.", TRUE, this, NULL,
-        NULL, TO_ROOM);
+    if (sysLootLoad(tRs, this, nullptr, true)) {
+      act("You make some funky gestures and load some loot.", false, this, nullptr,
+        nullptr, TO_CHAR);
+      act("$n makes some funky gestures and loads some loot.", true, this, nullptr,
+        nullptr, TO_ROOM);
     }
 
     return;

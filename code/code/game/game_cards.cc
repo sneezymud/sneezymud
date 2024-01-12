@@ -153,9 +153,9 @@ int CardGame::same_suit(int card1, int card2) {
       ((card1 & CARD_EARTH) && (card2 & CARD_EARTH)) ||
       ((card1 & CARD_FIRE) && (card2 & CARD_FIRE)) ||
       ((card1 & CARD_ETHER) && (card2 & CARD_ETHER)))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 bool CardGame::is_heart(int card) { return (card & CARD_FIRE); }
@@ -169,9 +169,9 @@ bool CardGame::has_suit(int* hand, int suitnum) {
 
   for (i = 0; hand[i] && i < 13; i++) {
     if (hand[i] & suitnum)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 int CardGame::add_suit(const TBeing* ch, char* cat_msg, int card) const {
@@ -203,7 +203,7 @@ int CardGame::add_suit(const TBeing* ch, char* cat_msg, int card) const {
     if (card & CARD_ETHER)
       strcat(cat_msg, " of Purple Ether");
   }
-  return TRUE;
+  return true;
 }
 
 const sstring CardGame::suit(const TBeing* ch, int card) const {

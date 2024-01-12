@@ -72,8 +72,8 @@ namespace {
   void stop_stavecharging(TBeing* ch, TObj* tObj) {
     if (ch->isLinkdead() || (ch->in_room < 0) ||
         (ch->getPosition() < POSITION_RESTING)) {
-      act("You stop charging $p and stand up.", FALSE, ch, tObj, NULL, TO_CHAR);
-      act("$n shops charging $p and stands up.", FALSE, ch, tObj, NULL,
+      act("You stop charging $p and stand up.", false, ch, tObj, nullptr, TO_CHAR);
+      act("$n shops charging $p and stands up.", false, ch, tObj, nullptr,
         TO_ROOM);
     }
 
@@ -90,8 +90,8 @@ namespace {
       if ((tComponent = dynamic_cast<TComponent*>(tThing))) {
         if (tDestroy) {
           if (!tIteration) {
-            act("$p shatters from the charge effect.", FALSE, ch, tComponent,
-              NULL, TO_CHAR);
+            act("$p shatters from the charge effect.", false, ch, tComponent,
+              nullptr, TO_CHAR);
             tIteration = true;
           }
 
@@ -130,7 +130,7 @@ namespace {
       tValue = task_staveChargingCompLookup(ch, false, tSpell, tCount);
 
       if (tValue < tCount)
-        return FALSE;
+        return false;
     }
 
     if ((tThing = ch->heldInPrimHand()) && tCost > 0)
@@ -150,7 +150,7 @@ namespace {
         tIteration);
 
     if (tDestroy)
-      return TRUE;
+      return true;
 
     return tValue;
   }
@@ -288,11 +288,11 @@ void TBeing::doChargeStave(sstring tStString) {
 
   sprintf(tString, "You rest and begin to charge $p with the powers of %s.",
     discArray[tSpell]->name);
-  act(tString, FALSE, this, tStaff, NULL, TO_CHAR);
-  act("$n begins to focus on $p.", FALSE, this, tStaff, NULL, TO_ROOM);
+  act(tString, false, this, tStaff, nullptr, TO_CHAR);
+  act("$n begins to focus on $p.", false, this, tStaff, nullptr, TO_ROOM);
   setPosition(POSITION_SITTING);
 
-  start_task(this, tStaff, NULL, TASK_STAVECHARGE, NULL, tCharge, in_room, 0,
+  start_task(this, tStaff, nullptr, TASK_STAVECHARGE, nullptr, tCharge, in_room, 0,
     tSpell, 40);
 }
 
@@ -300,7 +300,7 @@ int TObj::taskChargeMe(TBeing* ch, spellNumT, int&) {
   ch->sendTo("How strange...This is not a staff...\n\r");
   stop_stavecharging(ch, this);
 
-  return TRUE;
+  return true;
 }
 
 void TStaff::taskChargeMeUpdate(TBeing* ch, spellNumT tSpell) {
@@ -322,7 +322,7 @@ void TStaff::taskChargeMeUpdate(TBeing* ch, spellNumT tSpell) {
   }
 
   sprintf(tString, "$p glows with the powers of %s.", discArray[tSpell]->name);
-  act(tString, FALSE, ch, this, NULL, TO_CHAR);
+  act(tString, false, ch, this, nullptr, TO_CHAR);
 
   tLevel = max(1, min(70, (int)((getMagicLevel() + ch->GetMaxLevel()) / 2)));
   tLearn = max(1,
@@ -336,21 +336,21 @@ void TStaff::taskChargeMeUpdate(TBeing* ch, spellNumT tSpell) {
 
 int TStaff::taskChargeMe(TBeing* ch, spellNumT tSpell, int& tCharge) {
   if (!tCharge) {
-    act("You have successfully charged $p.", FALSE, ch, this, NULL, TO_CHAR);
-    act("$n beams with pride as they finish charging $p.", FALSE, ch, this,
-      NULL, TO_ROOM);
+    act("You have successfully charged $p.", false, ch, this, nullptr, TO_CHAR);
+    act("$n beams with pride as they finish charging $p.", false, ch, this,
+      nullptr, TO_ROOM);
     ch->stopTask();
 
     taskChargeMeUpdate(ch, tSpell);
 
-    return TRUE;
+    return true;
   }
 
   if (tSpell <= TYPE_UNDEFINED || tSpell >= MAX_SKILL) {
     ch->sendTo("That is not a magic spell, how strange.\n\r");
     stop_stavecharging(ch, this);
 
-    return TRUE;
+    return true;
   }
 
   if (tSpell != getSpell() && getCurCharges() != 0) {
@@ -358,7 +358,7 @@ int TStaff::taskChargeMe(TBeing* ch, spellNumT tSpell, int& tCharge) {
       "Unfortunatly that spell is not the same as the one in the stave.\n\r");
     stop_stavecharging(ch, this);
 
-    return TRUE;
+    return true;
   }
 
   int tLearn = ch->getSkillValue(SKILL_STAVECHARGE),
@@ -394,12 +394,12 @@ int TStaff::taskChargeMe(TBeing* ch, spellNumT tSpell, int& tCharge) {
     tManaReq *= 2;
   }
 
-  act(tStaveChargeMessages[tMasterBlock][tSlaveBlock][0], FALSE, ch, this, NULL,
+  act(tStaveChargeMessages[tMasterBlock][tSlaveBlock][0], false, ch, this, nullptr,
     TO_CHAR);
 
   if (!(tCharge % 10) || tMasterBlock == 0 || tMasterBlock == 3)
-    act(tStaveChargeMessages[tMasterBlock][tSlaveBlock][1], FALSE, ch, this,
-      NULL, TO_ROOM);
+    act(tStaveChargeMessages[tMasterBlock][tSlaveBlock][1], false, ch, this,
+      nullptr, TO_ROOM);
 
   // Mana Cost:
   //      Crit: Half of 1 rounds worth.
@@ -443,7 +443,7 @@ int TStaff::taskChargeMe(TBeing* ch, spellNumT tSpell, int& tCharge) {
     ch->stopTask();
   }
 
-  return TRUE;
+  return true;
 }
 
 int task_stavecharging(TBeing* ch, cmdTypeT tCmd, const char*, int pulse,
@@ -453,21 +453,21 @@ int task_stavecharging(TBeing* ch, cmdTypeT tCmd, const char*, int pulse,
   if (ch->isLinkdead() || (ch->in_room < 0) ||
       (ch->getPosition() < POSITION_RESTING)) {
     stop_stavecharging(ch, tObj);
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(tCmd) || ch->nobrainerTaskCommand(tCmd))
-    return FALSE;
+    return false;
 
   switch (tCmd) {
     case CMD_TASK_CONTINUE:
       if (!tObj) {
         ch->sendTo(
           "How strange, the stave you were charging has vanished!\n\r");
-        act("$n stares about, something is apparently wrong.", FALSE, ch, NULL,
-          NULL, TO_ROOM);
+        act("$n stares about, something is apparently wrong.", false, ch, nullptr,
+          nullptr, TO_ROOM);
         ch->stopTask();
-        return TRUE;
+        return true;
       }
 
       return tObj->taskChargeMe(ch, tSpell, ch->task->timeLeft);
@@ -475,7 +475,7 @@ int task_stavecharging(TBeing* ch, cmdTypeT tCmd, const char*, int pulse,
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop charging $p", FALSE, ch, tObj, NULL, TO_CHAR);
+      act("You stop charging $p", false, ch, tObj, nullptr, TO_CHAR);
       stop_stavecharging(ch, tObj);
 
       break;
@@ -491,5 +491,5 @@ int task_stavecharging(TBeing* ch, cmdTypeT tCmd, const char*, int pulse,
       break;
   };
 
-  return TRUE;
+  return true;
 }

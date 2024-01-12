@@ -67,15 +67,15 @@ class TGuild {
     TGuild() {
       int i;
       relations.clear();
-      proper_name = NULL;
-      slang_name = NULL;
-      keywords = NULL;
-      password = NULL;
+      proper_name = nullptr;
+      slang_name = nullptr;
+      keywords = nullptr;
+      password = nullptr;
 
       faction_affiliation = FACT_NONE;
 
       for (i = 0; i < NUM_MAX_RANK; i++) {
-        rank[i] = NULL;
+        rank[i] = nullptr;
       }
     }
     ~TGuild() {

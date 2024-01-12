@@ -117,7 +117,7 @@ void zoneData::nukeMobs() {
       if (mob->equipment[i]) {
         TThing* t_obj = mob->unequip(i);
         delete t_obj;
-        t_obj = NULL;
+        t_obj = nullptr;
       }
     }
     for (StuffIter it = mob->stuff.begin(); it != mob->stuff.end();) {
@@ -125,7 +125,7 @@ void zoneData::nukeMobs() {
       delete t;
     }
     delete mob;
-    mob = NULL;
+    mob = nullptr;
   }
 }
 
@@ -142,7 +142,7 @@ void TBeing::sendTo(colorTypeT lev, const sstring& msg) const {
   if (desc->connected == CON_WRITING)
     return;
 
-  sstring messageBuffer = colorString(this, desc, msg, NULL, lev, FALSE);
+  sstring messageBuffer = colorString(this, desc, msg, nullptr, lev, false);
   desc->output.push(CommPtr(new UncategorizedComm(messageBuffer)));
 }
 
@@ -156,7 +156,7 @@ void TRoom::sendTo(colorTypeT lev, const sstring& text) const {
       if ((lev == COLOR_NEVER) || (lev == COLOR_NONE)) {
       } else {
         sstring messageBuffer =
-          colorString(tbt, i->desc, text, NULL, lev, TRUE);
+          colorString(tbt, i->desc, text, nullptr, lev, true);
         tbt->desc->output.push(CommPtr(new UncategorizedComm(messageBuffer)));
       }
     }
@@ -251,7 +251,7 @@ void TBeing::sendMaxStatsGmcp() const {
 }
 
 void TBeing::sendRoomGmcp(bool changedZones) const {
-  if (desc == NULL)
+  if (desc == nullptr)
     return;
 
   sendMobsGmcp();
@@ -333,9 +333,9 @@ void sendToOutdoor(colorTypeT lev, const sstring& text,
           } else {
             sstring buf;
             if (ch->roomp->isTropicalSector()) {
-              buf = colorString(ch, i, text_tropic, NULL, lev, FALSE);
+              buf = colorString(ch, i, text_tropic, nullptr, lev, false);
             } else {
-              buf = colorString(ch, i, text, NULL, lev, FALSE);
+              buf = colorString(ch, i, text, nullptr, lev, false);
             }
             i->output.push(CommPtr(new UncategorizedComm(buf)));
           }
@@ -355,7 +355,7 @@ void sendToExcept(char* text, TBeing* ch) {
 }
 
 void sendToRoom(colorTypeT color, const char* text, int room) {
-  TThing* i = NULL;
+  TThing* i = nullptr;
 
   if (!real_roomp(room)) {
     vlogf(LOG_MISC, format("BOGUS room %d in sendToRoom") % room);
@@ -366,7 +366,7 @@ void sendToRoom(colorTypeT color, const char* text, int room) {
          it != real_roomp(room)->stuff.end() && (i = *it); ++it) {
       TBeing* tbt = dynamic_cast<TBeing*>(i);
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake()) {
-        sstring buf = colorString(tbt, tbt->desc, text, NULL, color, FALSE);
+        sstring buf = colorString(tbt, tbt->desc, text, nullptr, color, false);
         tbt->desc->output.push(CommPtr(new UncategorizedComm(buf)));
       }
     }
@@ -374,7 +374,7 @@ void sendToRoom(colorTypeT color, const char* text, int room) {
 }
 
 void sendToRoom(const char* text, int room) {
-  TThing* i = NULL;
+  TThing* i = nullptr;
 
   if (!real_roomp(room)) {
     vlogf(LOG_MISC, format("BOGUS room %d in sendToRoom") % room);
@@ -408,7 +408,7 @@ void sendrpf(colorTypeT color, TRoom* rp, const char* msg, ...) {
 void sendrpf(int tslevel, colorTypeT color, TRoom* rp, const char* msg, ...) {
   char messageBuffer[MAX_STRING_LENGTH];
   va_list ap;
-  TThing* i = NULL;
+  TThing* i = nullptr;
 
   if (rp && msg) {
     va_start(ap, msg);
@@ -420,7 +420,7 @@ void sendrpf(int tslevel, colorTypeT color, TRoom* rp, const char* msg, ...) {
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
         tbt->desc->output.push(CommPtr(new UncategorizedComm(
-          colorString(tbt, tbt->desc, messageBuffer, NULL, color, TRUE))));
+          colorString(tbt, tbt->desc, messageBuffer, nullptr, color, true))));
     }
   }
 }
@@ -441,7 +441,7 @@ void sendrpf(TRoom* rp, const char* msg, ...) {
 void sendrpf(int tslevel, TRoom* rp, const char* msg, ...) {
   char messageBuffer[MAX_STRING_LENGTH];
   va_list ap;
-  TThing* i = NULL;
+  TThing* i = nullptr;
 
   if (rp && msg) {
     va_start(ap, msg);
@@ -453,7 +453,7 @@ void sendrpf(int tslevel, TRoom* rp, const char* msg, ...) {
       if (tbt && tbt->desc && !tbt->desc->connected && tbt->awake() &&
           tbt->GetMaxLevel() > tslevel)
         tbt->desc->output.push(CommPtr(new UncategorizedComm(
-          colorString(tbt, tbt->desc, messageBuffer, NULL, COLOR_NONE, TRUE))));
+          colorString(tbt, tbt->desc, messageBuffer, nullptr, COLOR_NONE, true))));
     }
   }
 }
@@ -508,12 +508,12 @@ void colorAct(colorTypeT colorLevel, const sstring& str, bool hide,
 
   if (type == TO_VICT) {
     to = t3;
-    which = TRUE;
+    which = true;
   } else if (type == TO_CHAR) {
     to = t1;
-    which = TRUE;
+    which = true;
   } else {
-    which = FALSE;
+    which = false;
     to = t1->roomp->stuff.front();
   }
 
@@ -524,71 +524,71 @@ void colorAct(colorTypeT colorLevel, const sstring& str, bool hide,
     switch (colorLevel) {
       case COLOR_ALWAYS:
       case COLOR_BASIC:  // allows for basic ansi
-        colorize = TRUE;
+        colorize = true;
         break;
       case COLOR_NONE:
       case COLOR_NEVER:
-        colorize = FALSE;
+        colorize = false;
         break;
       case COLOR_COMM:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_COMM))) {
-          colorize = FALSE;
+          colorize = false;
         } else {
-          colorize = TRUE;
+          colorize = true;
         }
         break;
       case COLOR_OBJECTS:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_OBJECTS)))
-          colorize = FALSE;
+          colorize = false;
         else
-          colorize = TRUE;
+          colorize = true;
 
         break;
       case COLOR_MOBS:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_MOBS))) {
-          colorize = FALSE;
+          colorize = false;
         } else {
-          colorize = TRUE;
+          colorize = true;
         }
         break;
       case COLOR_ROOMS:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_ROOMS))) {
-          colorize = FALSE;
+          colorize = false;
         } else {
-          colorize = TRUE;
+          colorize = true;
         }
         break;
       case COLOR_ROOM_NAME:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_ROOM_NAME))) {
-          colorize = FALSE;
+          colorize = false;
         } else {
-          colorize = TRUE;
+          colorize = true;
         }
         break;
       case COLOR_SHOUTS:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_SHOUTS))) {
-          colorize = FALSE;
+          colorize = false;
         } else {
-          colorize = TRUE;
+          colorize = true;
         }
         break;
       case COLOR_SPELLS:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_SPELLS))) {
-          colorize = FALSE;
+          colorize = false;
         } else {
-          colorize = TRUE;
+          colorize = true;
         }
         break;
       case COLOR_LOGS:
         if (!(IS_SET(to->desc->plr_color, PLR_COLOR_LOGS))) {
-          colorize = FALSE;
+          colorize = false;
         } else {
-          colorize = TRUE;
+          colorize = true;
         }
         break;
       default:
         vlogf(LOG_MISC, "colorAct with a default COLOR setting");
-        colorize = TRUE;
+        colorize = true;
         break;
     }
     if (colorize) {
@@ -596,7 +596,7 @@ void colorAct(colorTypeT colorLevel, const sstring& str, bool hide,
     } else {
       snprintf(buf, cElements(buf), "%s",
         colorString(dynamic_cast<const TBeing*>(to), to->desc, str.c_str(),
-          NULL, COLOR_NONE, TRUE)
+          nullptr, COLOR_NONE, true)
           .c_str());
     }
     act(buf, hide, t1, obj, t3, type, color);
@@ -628,11 +628,11 @@ void act(const sstring& str, bool hide, const TThing* actor, const TThing* obj,
   char ibuf[MAX_STRING_LENGTH];
   char buf[MAX_STRING_LENGTH];
   char lastColor[3];
-  const char* codes = NULL;
-  const char* codes2 = NULL;
+  const char* codes = nullptr;
+  const char* codes2 = nullptr;
   int x = 0;
   personTypeT per;
-  const TObj* tobj = NULL;
+  const TObj* tobj = nullptr;
   sstring catstr;
 
   if (str.empty())
@@ -705,8 +705,8 @@ void act(const sstring& str, bool hide, const TThing* actor, const TThing* obj,
                 i = i.cap();
               }
               strncpy(ibuf,
-                colorString(to, to->desc, i, NULL,
-                  tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE)
+                colorString(to, to->desc, i, nullptr,
+                  tbtt ? COLOR_MOBS : COLOR_OBJECTS, false)
                   .c_str(),
                 cElements(ibuf) - 1);
               i = ibuf;
@@ -749,8 +749,8 @@ void act(const sstring& str, bool hide, const TThing* actor, const TThing* obj,
                 }
               }
               strncpy(ibuf,
-                colorString(to, to->desc, i, NULL,
-                  tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE)
+                colorString(to, to->desc, i, nullptr,
+                  tbtt ? COLOR_MOBS : COLOR_OBJECTS, false)
                   .c_str(),
                 cElements(ibuf) - 1);
               i = ibuf;
@@ -777,7 +777,7 @@ void act(const sstring& str, bool hide, const TThing* actor, const TThing* obj,
               strncpy(ibuf,
                 actor
                   ->yourDeity(your_deity_val, per,
-                    (per == THIRD_PERSON) ? to : NULL)
+                    (per == THIRD_PERSON) ? to : nullptr)
                   .c_str(),
                 cElements(ibuf) - 1);
               i = ibuf;
@@ -929,8 +929,8 @@ void act(const sstring& str, bool hide, const TThing* actor, const TThing* obj,
                 i = i.cap();
               }
               strncpy(ibuf,
-                colorString(to, to->desc, i, NULL,
-                  tbtt ? COLOR_MOBS : COLOR_OBJECTS, FALSE)
+                colorString(to, to->desc, i, nullptr,
+                  tbtt ? COLOR_MOBS : COLOR_OBJECTS, false)
                   .c_str(),
                 cElements(ibuf) - 1);
               i = ibuf;
@@ -995,7 +995,7 @@ void act(const sstring& str, bool hide, const TThing* actor, const TThing* obj,
       if (!((to->GetMaxLevel() > MAX_MORT) &&
             (IS_SET(to->desc->plr_color, PLR_COLOR_CODES)))) {
         snprintf(buf, cElements(buf), "%s",
-          colorString(to, to->desc, buf, NULL, COLOR_BASIC, FALSE).c_str());
+          colorString(to, to->desc, buf, nullptr, COLOR_BASIC, false).c_str());
       }
 
       sstring s = buf;
@@ -1112,7 +1112,7 @@ void Descriptor::updateScreenVt100(unsigned int update) {
 
     // Line 3:
 
-    if ((f = ch->fight()) != NULL) {
+    if ((f = ch->fight()) != nullptr) {
       if (f->sameRoom(*ch)) {
         int maxh = max(1, (int)f->hitLimit());
         int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
@@ -1120,7 +1120,7 @@ void Descriptor::updateScreenVt100(unsigned int update) {
           ch->getScreen(), 3);
         snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), "<%s=%s>",
           fname(f->name).c_str(), prompt_mesg[ratio]);
-        last.fighting = TRUE;
+        last.fighting = true;
 
         ratio = fname(f->name).length() + strlen(prompt_mesg[ratio]);
 
@@ -1135,7 +1135,7 @@ void Descriptor::updateScreenVt100(unsigned int update) {
           ch->getScreen(), 3);
         snprintf(buf + strlen(buf), cElements(buf) - strlen(buf),
           "                         ");
-        last.fighting = FALSE;
+        last.fighting = false;
       }
     }
 
@@ -1209,7 +1209,7 @@ void Descriptor::updateScreenVt100(unsigned int update) {
 
     // Line 2:
 
-    if ((f = ch->fight()) != NULL) {
+    if ((f = ch->fight()) != nullptr) {
       if (f->sameRoom(*ch)) {
         char StTemp[120];
         int maxh = max(1, (int)f->hitLimit());
@@ -1234,7 +1234,7 @@ void Descriptor::updateScreenVt100(unsigned int update) {
           ch->getScreen() - 1, 1);
         strncat(buf + strlen(buf), StTemp, cElements(buf) - strlen(buf));
 
-        last.fighting = TRUE;
+        last.fighting = true;
       }
     } else {
       if (last.fighting) {
@@ -1242,7 +1242,7 @@ void Descriptor::updateScreenVt100(unsigned int update) {
           ch->getScreen() - 1, 1);
         snprintf(buf + strlen(buf), cElements(buf) - strlen(buf),
           "                      ");
-        last.fighting = FALSE;
+        last.fighting = false;
       }
     }
 
@@ -1293,7 +1293,7 @@ void Descriptor::updateScreenVt100(unsigned int update) {
             ch->getScreen() - 1, 55);
           strncat(buf + strlen(buf), StTemp, cElements(buf) - strlen(buf));
 
-          last.fighting = TRUE;
+          last.fighting = true;
         } else {
           snprintf(buf + strlen(buf), cElements(buf) - strlen(buf), VT_CURSPOS,
             ch->getScreen() - 1, 55);
@@ -1526,14 +1526,14 @@ void Descriptor::updateScreenAnsi(unsigned int update) {
 
     // Line 3:
 
-    if ((f = ch->fight()) != NULL) {
+    if ((f = ch->fight()) != nullptr) {
       if (f->sameRoom(*ch)) {
         int maxh = max(1, (int)f->hitLimit());
         int ratio = min(10, max(0, ((f->getHit() * 9) / maxh)));
         buf += format(VT_CURSPOS) % ch->getScreen() % 3;
         buf += format("%s<%s=%s>%s") % ch->purple() % fname(f->name) %
                prompt_mesg[ratio] % ch->norm();
-        last.fighting = TRUE;
+        last.fighting = true;
 
         ratio = fname(f->name).length() + strlen(prompt_mesg[ratio]);
 
@@ -1546,7 +1546,7 @@ void Descriptor::updateScreenAnsi(unsigned int update) {
       if (last.fighting) {
         buf += format(VT_CURSPOS) % ch->getScreen() % 3;
         buf += "                         ";
-        last.fighting = FALSE;
+        last.fighting = false;
       }
     }
 
@@ -1635,7 +1635,7 @@ void Descriptor::updateScreenAnsi(unsigned int update) {
 
     // Line 2:
 
-    if ((f = ch->fight()) != NULL) {
+    if ((f = ch->fight()) != nullptr) {
       if (f->sameRoom(*ch)) {
         char StTemp[120];
         int ratio = min(10, max(0, ((f->getHit() * 9) / f->hitLimit())));
@@ -1658,13 +1658,13 @@ void Descriptor::updateScreenAnsi(unsigned int update) {
         buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 1;
         buf += format("%s%s%s") % ch->purple() % StTemp % ch->norm();
 
-        last.fighting = TRUE;
+        last.fighting = true;
       }
     } else {
       if (last.fighting) {
         buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 1;
         buf += "                      ";
-        last.fighting = FALSE;
+        last.fighting = false;
       }
     }
 
@@ -1710,7 +1710,7 @@ void Descriptor::updateScreenAnsi(unsigned int update) {
           buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
           buf += format("%s%s%s") % ch->purple() % StTemp % ch->norm();
 
-          last.fighting = TRUE;
+          last.fighting = true;
         } else {
           buf += format(VT_CURSPOS) % (ch->getScreen() - 1) % 55;
           buf += "                      ";

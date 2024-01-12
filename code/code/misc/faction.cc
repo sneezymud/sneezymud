@@ -62,27 +62,27 @@ int load_factions() {
   if (!(fp = fopen(FACTION_FILE, "r"))) {
     vlogf(LOG_FILE,
       "Couldn't open factionlist file in function load_factions()!");
-    return FALSE;
+    return false;
   }
   for (factionTypeT i = MIN_FACTION; i < MAX_FACTIONS; i++) {
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, "ERROR: bogus line in FACTION_FILE");
       fclose(fp);
-      return FALSE;
+      return false;
     }
     if (!strcmp(buf, "$"))  // EOF
       break;
     if (sscanf(buf, "#%d\n\r", &num) == 1) {  //   new faction
-      if (fgets(buf, 256, fp) == NULL) {
+      if (fgets(buf, 256, fp) == nullptr) {
         vlogf(LOG_FILE,
           format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
         fclose(fp);
-        return FALSE;
+        return false;
       }
       if (!strcmp(buf, "")) {
         vlogf(LOG_FILE, "ERROR: Null faction name.");
         fclose(fp);
-        return FALSE;
+        return false;
       }
       // strip off the trailing newline
       buf[strlen(buf) - 1] = '\0';
@@ -90,22 +90,22 @@ int load_factions() {
       strcpy(FactionInfo[i].faction_name, buf);
 
       for (j = 0; j < FACT_LEADER_SLOTS; j++) {
-        if (fgets(buf, 256, fp) == NULL) {
+        if (fgets(buf, 256, fp) == nullptr) {
           vlogf(LOG_FILE,
             format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
           fclose(fp);
-          return FALSE;
+          return false;
         }
         // strip off the trailing newline
         buf[strlen(buf) - 1] = '\0';
         FactionInfo[i].leader[j] = new char[strlen(buf) + 1];
         strcpy(FactionInfo[i].leader[j], buf);
       }
-      if (fgets(buf, 256, fp) == NULL) {
+      if (fgets(buf, 256, fp) == nullptr) {
         vlogf(LOG_FILE,
           format("ERROR: bogus line in FACTION_FILE: faction %d") % num);
         fclose(fp);
-        return FALSE;
+        return false;
       }
       // strip off the trailing newline
       buf[strlen(buf) - 1] = '\0';
@@ -118,7 +118,7 @@ int load_factions() {
           vlogf(LOG_FILE,
             format("ERROR: bogus faction array faction (%d) (j=%2)") % i % ij);
           fclose(fp);
-          return FALSE;
+          return false;
         }
         FactionInfo[i].faction_array[ij][0] = (double)num1;
         FactionInfo[i].faction_array[ij][1] = (double)num2;
@@ -127,7 +127,7 @@ int load_factions() {
         vlogf(LOG_FILE,
           format("ERROR: bogus setting of faction power for faction(%d)") % i);
         fclose(fp);
-        return FALSE;
+        return false;
       }
       FactionInfo[i].faction_power = (double)num1;
       if (fscanf(fp, "%ld %f\n", &ln, &num1) != 2) {
@@ -136,7 +136,7 @@ int load_factions() {
             "ERROR: bogus setting of faction wealth/tithe for faction(%d)") %
             i);
         fclose(fp);
-        return FALSE;
+        return false;
       }
       FactionInfo[i].corp_id = ln;
       FactionInfo[i].faction_tithe = (double)num1;
@@ -147,7 +147,7 @@ int load_factions() {
             "ERROR: bogus setting of faction caravan info 1 for faction(%d)") %
             i);
         fclose(fp);
-        return FALSE;
+        return false;
       }
       FactionInfo[i].caravan_interval = inum1;
       FactionInfo[i].caravan_counter = inum2;
@@ -160,7 +160,7 @@ int load_factions() {
             "ERROR: bogus setting of faction caravan info 2 for faction(%d)") %
             i);
         fclose(fp);
-        return FALSE;
+        return false;
       }
       FactionInfo[i].caravan_attempts = inum1;
       FactionInfo[i].caravan_successes = inum2;
@@ -173,7 +173,7 @@ int load_factions() {
   sprintf(buf, "cp %s %s", FACTION_FILE, FACTION_BAK);
   vsystem(buf);
 
-  return TRUE;
+  return true;
 }
 
 void save_factions() {
@@ -276,11 +276,11 @@ static const sstring factionLeaderTitle(factionTypeT faction, int slot) {
 
 // for determining leadership position within the faction
 // -1 if not a leader
-// FALSE if a leader but lacking "power"
-// TRUE if leader with "power"
+// false if a leader but lacking "power"
+// true if leader with "power"
 int TBeing::getFactionAuthority(factionTypeT fnum, int power) {
   if (isImmortal() && hasWizPower(POWER_WIZARD)) {
-    return TRUE;
+    return true;
   }
   for (int i = 0; i < FACT_LEADER_SLOTS; i++) {
     if (getName() == FactionInfo[fnum].leader[i])
@@ -295,7 +295,7 @@ void TBeing::doMakeLeader(const char* arg) {
   int which;
   charFile st;
   TBeing* vict;
-  bool doNoone = FALSE;
+  bool doNoone = false;
 
   arg = one_argument(arg, namebuf, cElements(namebuf));
   if (!*namebuf) {
@@ -313,7 +313,7 @@ void TBeing::doMakeLeader(const char* arg) {
   strcpy(namebuf, sstring(namebuf).cap().c_str());
 
   if (!strcmp("Noone", namebuf) || !strcmp("noone", namebuf))
-    doNoone = TRUE;
+    doNoone = true;
 
   if (!doNoone && !load_char(namebuf, &st)) {
     sendTo("No such person exists.\n\r");
@@ -423,7 +423,7 @@ void TBeing::doNewMember(const char* arg) {
 }
 
 void TBeing::doRMember(const char* arg) {
-  TBeing* vict = NULL;
+  TBeing* vict = nullptr;
   char namebuf[128];
   factionTypeT fnum = getFaction();
   int j;
@@ -603,7 +603,7 @@ void TBeing::doSend(sstring arg) {
   }
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+    act("$n waves $s hands and points silently toward $s mouth.", true, this, 0,
       0, TO_ROOM);
     return;
   }
@@ -650,7 +650,7 @@ void TBeing::doSend(sstring arg) {
 
   addToWait(combatRound(0.5));
 
-  msg = garble(NULL, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
+  msg = garble(nullptr, msg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
 
   sendToFaction(fnum, this, msg.c_str());
 }
@@ -677,10 +677,10 @@ void TBeing::doRelease(const sstring& arg) {
   }
 
   sendTo(COLOR_MOBS, format("You release %s.\n\r") % targ->getName());
-  act("$n releases you.", TRUE, this, 0, targ, TO_VICT);
-  act("$n releases $N.", TRUE, this, 0, targ, TO_NOTVICT);
+  act("$n releases you.", true, this, 0, targ, TO_VICT);
+  act("$n releases $N.", true, this, 0, targ, TO_NOTVICT);
   remCaptive(targ);
-  targ->stopFollower(FALSE);
+  targ->stopFollower(false);
 }
 
 void TBeing::doCapture(const sstring& arg) {
@@ -720,12 +720,12 @@ void TBeing::doCapture(const sstring& arg) {
     return;
   }
   if (targ->master) {
-    targ->stopFollower(TRUE);
+    targ->stopFollower(true);
   }
   sendTo(COLOR_MOBS, format("You capture %s.\n\r") % targ->getName());
   targ->sendTo(COLOR_MOBS,
     format("You have been captured by %s!\n\r") % getName());
-  act("$n captures $N!", TRUE, this, 0, targ, TO_NOTVICT);
+  act("$n captures $N!", true, this, 0, targ, TO_NOTVICT);
 
   // Don't let captives have captives...
   while (targ->getCaptive())
@@ -737,7 +737,7 @@ void TBeing::doCapture(const sstring& arg) {
     targ->doStand();
 
   if (master)
-    targ->stopFollower(TRUE);
+    targ->stopFollower(true);
 
   addFollower(targ);
 }
@@ -1288,20 +1288,20 @@ void TBeing::doAdjust(const char* arg) {
 
 bool TBeing::isOppositeFaction(const TBeing* v) const {
   if ((isCult() && v->isBrother()) || (isBrother() && v->isCult()))
-    return TRUE;
+    return true;
 
   if ((FactionInfo[getFaction()].faction_array[v->getFaction()][OFF_HURT] >
         2.0) &&
       (FactionInfo[getFaction()].faction_array[v->getFaction()][OFF_HELP] <
         -2.0))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::doTithe() {
   sendTo("You can only tithe at a bank.\n\r");
-  return FALSE;
+  return false;
 }
 
 sstring TBeing::yourDeity(spellNumT skill, personTypeT self,
@@ -1361,7 +1361,7 @@ sstring TBeing::yourDeity(spellNumT skill, personTypeT self,
 
   // switch for discipline
   if (deity == DEITY_NONE) {
-    switch (getDisciplineNumber(skill, FALSE)) {
+    switch (getDisciplineNumber(skill, false)) {
       case DISC_AEGIS:
         if (fnum == FACT_NONE)
           deity = DEITY_SASUKEY;
@@ -1723,21 +1723,21 @@ void TBeing::deityIgnore(silentTypeT silent_caster) const {
     case 0:
     default:
       if (!silent_caster)
-        act("$d ignores you.", FALSE, this, NULL, NULL, TO_CHAR, ANSI_RED);
-      act("$n's request is ignored by $d.", TRUE, this, NULL, NULL, TO_ROOM);
+        act("$d ignores you.", false, this, nullptr, nullptr, TO_CHAR, ANSI_RED);
+      act("$n's request is ignored by $d.", true, this, nullptr, nullptr, TO_ROOM);
       break;
     case 1:
       if (!silent_caster)
-        act("$d fails to come to your aid.", FALSE, this, NULL, NULL, TO_CHAR,
+        act("$d fails to come to your aid.", false, this, nullptr, nullptr, TO_CHAR,
           ANSI_RED);
 
-      act("$n is not aided by $d.", TRUE, this, NULL, NULL, TO_ROOM);
+      act("$n is not aided by $d.", true, this, nullptr, nullptr, TO_ROOM);
       break;
     case 2:
       if (!silent_caster)
-        act("$d does not answer your prayer.", FALSE, this, NULL, NULL, TO_CHAR,
+        act("$d does not answer your prayer.", false, this, nullptr, nullptr, TO_CHAR,
           ANSI_RED);
-      act("$n's prayer is not answered by $d.", TRUE, this, NULL, NULL,
+      act("$n's prayer is not answered by $d.", true, this, nullptr, nullptr,
         TO_ROOM);
       break;
   }

@@ -39,19 +39,19 @@
 
 TBeing::TBeing() :
   TThing(),
-  race(NULL),
+  race(nullptr),
   points(),
   chosenStats(),
   curStats(),
   multAtt(1.0),
   heroNum(0),
-  m_craps(NULL),
+  m_craps(nullptr),
   invisLevel(0),
   my_protection(0),
   combatMode(ATTACK_NORMAL),
   my_garbleFlags(0),
   faction(),
-  discs(NULL),
+  discs(nullptr),
   inPraying(0),
   inQuaffUse(0),
   attackers(0),
@@ -62,22 +62,22 @@ TBeing::TBeing() :
   polyed(POLY_TYPE_NONE),
   hunt_dist(0),
   wimpy(0),
-  delaySave(FALSE),
+  delaySave(false),
   immunities(),
   player(),
   specials(),
   practices(),
-  affected(NULL),
-  master(NULL),
-  orig(NULL),
-  next(NULL),
-  next_fighting(NULL),
-  next_caster(NULL),
-  followers(NULL),
-  spelltask(NULL),
-  task(NULL),
-  skillApplys(NULL),
-  trophy(NULL) {
+  affected(nullptr),
+  master(nullptr),
+  orig(nullptr),
+  next(nullptr),
+  next_fighting(nullptr),
+  next_caster(nullptr),
+  followers(nullptr),
+  spelltask(nullptr),
+  task(nullptr),
+  skillApplys(nullptr),
+  trophy(nullptr) {
   // change the default value here
   number = -1;
 
@@ -95,11 +95,11 @@ TThing::TThingKind TBeing::getKind() const {
 }
 
 TBeing::~TBeing() {
-  affectedData *af = NULL, *af2 = NULL;
-  skillApplyData *tempApply = NULL, *temp2Apply = NULL;
-  TThing* i = NULL;
-  TBeing *k = NULL, *next_char = NULL;
-  TRoom* rp = NULL;
+  affectedData *af = nullptr, *af2 = nullptr;
+  skillApplyData *tempApply = nullptr, *temp2Apply = nullptr;
+  TThing* i = nullptr;
+  TBeing *k = nullptr, *next_char = nullptr;
+  TRoom* rp = nullptr;
   int rc = 0;
 
   if ((!roomp || in_room == Room::NOWHERE) &&
@@ -108,7 +108,7 @@ TBeing::~TBeing() {
       --(*this);
     else if (stuckIn) {
       if (eq_stuck > WEAR_NOWHERE) {
-        stuckIn->setStuckIn(eq_stuck, NULL);
+        stuckIn->setStuckIn(eq_stuck, nullptr);
       } else {
         vlogf(LOG_BUG, format("Extract on stuck in items %s in slot -1 on %s") %
                          name % stuckIn->name);
@@ -133,7 +133,7 @@ TBeing::~TBeing() {
   // yank um out of casino situations
   removeAllCasinoGames();
   delete m_craps;
-  m_craps = NULL;
+  m_craps = nullptr;
 
   if (task)
     stopTask();
@@ -184,13 +184,13 @@ TBeing::~TBeing() {
       i = *(it++);
       --(*i);
       delete i;
-      i = NULL;
+      i = nullptr;
     }
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
       if (equipment[j]) {
         i = unequip(j);
         delete i;
-        i = NULL;
+        i = nullptr;
       }
     }
   } else {
@@ -199,7 +199,7 @@ TBeing::~TBeing() {
         if (equipment[j]) {
           i = unequip(j);
           delete i;
-          i = NULL;
+          i = nullptr;
         }
       }
     } else {
@@ -209,7 +209,7 @@ TBeing::~TBeing() {
   for (k = character_list; k; k = k->next) {
     if (k->specials.hunting) {
       if (k->specials.hunting == this) {
-        k->specials.hunting = NULL;
+        k->specials.hunting = nullptr;
         REMOVE_BIT(k->specials.act, ACT_HUNTING);
 
         if (k->affectedBySpell(SKILL_TRACK)) {
@@ -228,18 +228,18 @@ TBeing::~TBeing() {
 // but renting out should preserve hatreds toward me
 
       // hates/fears on others need to be handled BEFORE my name is deleted
-      if (tmons->Hates(this, NULL))
-        tmons->remHated(this, NULL);
+      if (tmons->Hates(this, nullptr))
+        tmons->remHated(this, nullptr);
 
-      if (tmons->Fears(this, NULL))
-        tmons->remFeared(this, NULL);
+      if (tmons->Fears(this, nullptr))
+        tmons->remFeared(this, nullptr);
 #endif
 
       if (tmons->targ() == this)
-        tmons->setTarg(NULL);
+        tmons->setTarg(nullptr);
 
       if (tmons->opinion.random == this)
-        tmons->opinion.random = NULL;
+        tmons->opinion.random = nullptr;
     }
   }
 
@@ -274,7 +274,7 @@ TBeing::~TBeing() {
   int res;
   for (l = MIN_WEAR; l < MAX_WEAR; l++) {
     if (getStuckIn(l))
-      *rp += *pulloutObj(l, TRUE, &res);
+      *rp += *pulloutObj(l, true, &res);
   }
 
   if (!desc || !desc->connected || desc->connected >= CON_REDITING) {
@@ -286,8 +286,8 @@ TBeing::~TBeing() {
 
       // this isn't a critical problem, but using it to figure out how it
       // happens
-      mud_assert(k != NULL, "Character not found in character_list");
-      if (k != NULL)
+      mud_assert(k != nullptr, "Character not found in character_list");
+      if (k != nullptr)
         k->next = next;
     }
   } else {  // has to have both a desc and a desc->connected
@@ -312,28 +312,28 @@ TBeing::~TBeing() {
 
   if (desc) {
     if (desc->account)
-      desc->account->status = TRUE;
+      desc->account->status = true;
     desc->connected = CON_CONN;
-    desc->character = NULL;
+    desc->character = nullptr;
     rc = desc->doAccountMenu("");
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete desc;
-      desc = NULL;
+      desc = nullptr;
     }
   }
   if (rp)
 
     rp->initLight();
   else
-    vlogf(LOG_BUG, "NULL rp in TBeing destructor at initLight call.");
+    vlogf(LOG_BUG, "nullptr rp in TBeing destructor at initLight call.");
 
   // get rid of discipline stuff
   delete discs;
-  discs = NULL;
+  discs = nullptr;
 
   if (getCaster()) {
     remCastingList(this);
-    setCaster(NULL);
+    setCaster(nullptr);
   }
   for (af = affected; af; af = af2) {
     af2 = af->next;
@@ -345,7 +345,7 @@ TBeing::~TBeing() {
     temp2Apply = tempApply->nextApply;
     delete tempApply;
   }
-  skillApplys = NULL;
+  skillApplys = nullptr;
 
   setRace(RACE_NORACE);
 
@@ -357,8 +357,8 @@ TThing::TThingKind TObj::getKind() const { return TThing::TThingKind::TObj; }
 TObj::TObj() :
   TThing(),
   obj_flags(),
-  action_description(NULL),
-  owners(NULL),
+  action_description(nullptr),
+  owners(nullptr),
   isTasked(false),
   isLocked(false) {
   // change the default value here
@@ -369,14 +369,14 @@ TObj::TObj() :
 }
 
 TObj::~TObj() {
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (spec)
-    checkSpec(NULL, CMD_GENERIC_DESTROYED, "", NULL);
+    checkSpec(nullptr, CMD_GENERIC_DESTROYED, "", nullptr);
 
   if (getCaster()) {
     remCastingList(this);
-    setCaster(NULL);
+    setCaster(nullptr);
   }
 
   // corpses have had items removed from them in ~TBaseCorpse()
@@ -385,7 +385,7 @@ TObj::~TObj() {
     --(*t);
     if (t) {
       delete t;
-      t = NULL;
+      t = nullptr;
     }
   }
 
@@ -393,7 +393,7 @@ TObj::~TObj() {
     --(*this);
   else if (stuckIn) {
     if (eq_stuck > WEAR_NOWHERE) {
-      stuckIn->setStuckIn(eq_stuck, NULL);
+      stuckIn->setStuckIn(eq_stuck, nullptr);
     } else {
       vlogf(LOG_BUG, format("Extract on stuck in items %s in slot -1 on %s") %
                        name % stuckIn->name);
@@ -459,12 +459,12 @@ TObj::~TObj() {
     if (ex_description)
       ex_description = new extraDescription(*ex_description);
     else
-      ex_description = NULL;
+      ex_description = nullptr;
   }
   action_description = "";
 
   delete[] owners;
-  owners = NULL;
+  owners = nullptr;
 }
 
 TThing::TThingKind TRoom::getKind() const { return TThing::TThingKind::TRoom; }
@@ -474,9 +474,9 @@ TRoom::TRoom(int r) :
   sectorType(MIN_SECTOR_TYPE),
   riverDir(DIR_NONE),
   riverSpeed(0),
-  hasWindow(FALSE),
+  hasWindow(false),
   teleLook(0),
-  zone(NULL),
+  zone(nullptr),
   teleTime(0),
   teleTarg(0),
   moblim(0),
@@ -486,12 +486,12 @@ TRoom::TRoom(int r) :
   fished(0),
   logsHarvested(0),
   treetype(0),
-  tBornInsideMe(NULL) {
+  tBornInsideMe(nullptr) {
   spec = 0;
   number = in_room = r;
 
   for (dirTypeT i = MIN_DIR; i < MAX_DIR; i++)
-    dir_option[i] = NULL;
+    dir_option[i] = nullptr;
 }
 
 TRoom::~TRoom() {
@@ -512,7 +512,7 @@ TRoom::~TRoom() {
       continue;
     }
     delete t;
-    t = NULL;
+    t = nullptr;
   }
 
   // remove room from specials vector
@@ -537,12 +537,12 @@ TRoom::~TRoom() {
     vlogf(LOG_BUG,
       "TRoom dtor removing room from database that isn't in the database");
   else
-    room_db[in_room] = NULL;
+    room_db[in_room] = nullptr;
 
   dirTypeT i;
   for (i = MIN_DIR; i < MAX_DIR; i++) {
     delete dir_option[i];
-    dir_option[i] = NULL;
+    dir_option[i] = nullptr;
   }
 }
 
@@ -614,7 +614,7 @@ bool TObj::checkOwnersList(const TPerson* ch, bool tPreserve) {
   }
 
   // check contents too
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
     TObj* obj = dynamic_cast<TObj*>(t);
     if (obj)
@@ -665,13 +665,13 @@ TThing& TThing::operator+=(TThing& t) {
   if (rp2)
     vlogf(LOG_BUG, "Operator += trying to put a room somewhere");
 
-  mud_assert(t.parent == NULL,
+  mud_assert(t.parent == nullptr,
     ((sstring)(format("TThing += : t.parent existed: %s") %
                (!t.name.empty() ? t.name.c_str() : "null")))
       .c_str());
-  mud_assert(t.equippedBy == NULL, "TThing += : t.equippedBy existed");
-  mud_assert(t.stuckIn == NULL, "TThing += : t.stuckIn existed");
-  mud_assert(t.roomp == NULL, "TThing += : t.roomp existed");
+  mud_assert(t.equippedBy == nullptr, "TThing += : t.equippedBy existed");
+  mud_assert(t.stuckIn == nullptr, "TThing += : t.stuckIn existed");
+  mud_assert(t.roomp == nullptr, "TThing += : t.roomp existed");
   //
   mud_assert(((t.inRoom() == Room::VOID) || (t.inRoom() == Room::NOWHERE) ||
                (t.inRoom() == Room::AUTO_RENT)),
@@ -709,7 +709,7 @@ TThing& TRoom::operator+=(TThing& t) {
   TSeeThru* tst = dynamic_cast<TSeeThru*>(&t);
   if (tst && tst->givesOutsideLight()) {
     int best = 0, curr = 0;
-    TThing* i = NULL;
+    TThing* i = nullptr;
     for (StuffIter it = stuff.begin(); it != stuff.end() && (i = *it); ++it) {
       TSeeThru* tst2 = dynamic_cast<TSeeThru*>(i);
       if (tst2 && (tst2 != tst) && tst2->givesOutsideLight()) {
@@ -737,7 +737,7 @@ TThing& TRoom::operator+=(TThing& t) {
     if ((zd.zone_value == 0) && zd.enabled) {
       zd.zone_value = ZONE_MAX_TIME;
       // init to non-zero before resetting so mobs load
-      zone_table[getZoneNum()].resetZone(FALSE);
+      zone_table[getZoneNum()].resetZone(false);
     }
     if (zd.zone_value >= 0)
       zd.zone_value = ZONE_MAX_TIME;
@@ -745,9 +745,9 @@ TThing& TRoom::operator+=(TThing& t) {
              getZoneNum() < ((signed int)zone_table.size())) {
 #if 1
     if (zone_table[getZoneNum()].enabled) {
-      TThing *tThing = NULL, *tObj = NULL;
-      TBeing* tBeing = NULL;
-      TObj *tObjTemp, *tObjTemp2 = NULL;
+      TThing *tThing = nullptr, *tObj = nullptr;
+      TBeing* tBeing = nullptr;
+      TObj *tObjTemp, *tObjTemp2 = nullptr;
 
       if ((tBeing = dynamic_cast<TBeing*>((tThing = &t)))) {
         for (wearSlotT wearIndex = MIN_WEAR; wearIndex < MAX_WEAR;
@@ -756,7 +756,7 @@ TThing& TRoom::operator+=(TThing& t) {
             if (tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
               tBeing->unequip(wearIndex);
               delete tObjTemp;
-              tObjTemp = NULL;
+              tObjTemp = nullptr;
             }
 
             if (!tObjTemp)
@@ -770,7 +770,7 @@ TThing& TRoom::operator+=(TThing& t) {
                   tObjTemp2->isObjStat(ITEM_PROTOTYPE)) {
                 --(*tObj);
                 delete tObj;
-                tObj = NULL;
+                tObj = nullptr;
               }
             }
           }
@@ -784,7 +784,7 @@ TThing& TRoom::operator+=(TThing& t) {
             tObjTemp->isObjStat(ITEM_PROTOTYPE)) {
           --(*tObj);
           delete tObj;
-          tObj = NULL;
+          tObj = nullptr;
         }
 
         if (!tObjTemp)
@@ -798,7 +798,7 @@ TThing& TRoom::operator+=(TThing& t) {
               tObjTemp2->isObjStat(ITEM_PROTOTYPE)) {
             --(*tThing);
             delete tThing;
-            tThing = NULL;
+            tThing = nullptr;
           }
         }
       }
@@ -820,18 +820,18 @@ TThing& TBeing::operator--() {
 }
 
 TThing& TThing::operator--() {
-  TThing *tmp = NULL, *t_in = NULL;
-  TRoom* rp = NULL;
+  TThing *tmp = nullptr, *t_in = nullptr;
+  TRoom* rp = nullptr;
   int light_mod = 0;
 
-  mud_assert(equippedBy == NULL, "TThing -- : equippedBy existed");
-  mud_assert(stuckIn == NULL, "TThing -- : stuckIn existed");
+  mud_assert(equippedBy == nullptr, "TThing -- : equippedBy existed");
+  mud_assert(stuckIn == nullptr, "TThing -- : stuckIn existed");
 
   if ((t_in = parent)) {
     // obj from char
     // obj from obj
     mud_assert(!t_in->stuff.empty(), "TThing -- : parent had no stuff");
-    mud_assert(roomp == NULL,
+    mud_assert(roomp == nullptr,
       "TThing -- : had roomp and parent simultaneously");
     mud_assert(inRoom() == Room::NOWHERE || inRoom() == Room::AUTO_RENT,
       "TThing -- : had parent and in room simultaneously");
@@ -870,8 +870,8 @@ TThing& TThing::operator--() {
     }
 
     if (tied_to) {
-      tied_to->tied_to = NULL;
-      tied_to = NULL;
+      tied_to->tied_to = nullptr;
+      tied_to = nullptr;
     }
 
     // adjust room light levels
@@ -913,39 +913,39 @@ TThing& TThing::operator--() {
   }
 
   // set the obj
-  equippedBy = NULL;
-  stuckIn = NULL;
-  parent = NULL;
+  equippedBy = nullptr;
+  stuckIn = nullptr;
+  parent = nullptr;
   in_room = Room::NOWHERE;
-  roomp = NULL;
+  roomp = nullptr;
 
   return *this;
 }
 
 TThing::~TThing() {
-  extraDescription *exd = NULL, *next_one = NULL;
+  extraDescription *exd = nullptr, *next_one = nullptr;
 
   for (exd = ex_description; exd; exd = next_one) {
     next_one = exd->next;
     delete exd;  // extraDesc desctructor takes care of freeing everything
   }
-  ex_description = NULL;
+  ex_description = nullptr;
 
   if (getCaster()) {
     remCastingList(this);
-    setCaster(NULL);
+    setCaster(nullptr);
   }
 
   if (tied_to) {
-    tied_to->tied_to = NULL;
-    tied_to = NULL;
+    tied_to->tied_to = nullptr;
+    tied_to = nullptr;
   }
 
   if (act_ptr) {
     vlogf(LOG_BUG, format("Memory leaked: act_ptr on %s") % getName());
 #if 0
     delete act_ptr;
-    act_ptr = NULL;
+    act_ptr = nullptr;
 #endif
   }
   name = "";
@@ -960,14 +960,14 @@ TThing::TThing() :
   material_type(MAT_UNDEFINED),
   carried_weight(0.0),
   carried_volume(0),
-  the_caster(NULL),
-  descr(NULL),
-  stuckIn(NULL),
-  equippedBy(NULL),
-  tied_to(NULL),
+  the_caster(nullptr),
+  descr(nullptr),
+  stuckIn(nullptr),
+  equippedBy(nullptr),
+  tied_to(nullptr),
   eq_pos(WEAR_NOWHERE),
   eq_stuck(WEAR_NOWHERE),
-  act_ptr(NULL),
+  act_ptr(nullptr),
   max_exist(9999),
   in_room(Room::NOWHERE),
   spec(0),
@@ -975,16 +975,16 @@ TThing::TThing() :
   number(0),
   height(0),
   canBeSeen(0),
-  name(NULL),
-  shortDescr(NULL),
-  parent(NULL),
-  nextBorn(NULL),
-  roomp(NULL),
-  desc(NULL),
-  ex_description(NULL),
-  rider(NULL),
-  riding(NULL),
-  nextRider(NULL) {}
+  name(nullptr),
+  shortDescr(nullptr),
+  parent(nullptr),
+  nextBorn(nullptr),
+  roomp(nullptr),
+  desc(nullptr),
+  ex_description(nullptr),
+  rider(nullptr),
+  riding(nullptr),
+  nextRider(nullptr) {}
 
 /*
 A NOTE ON compareWeights
@@ -1031,8 +1031,8 @@ int compareWeights(const float x1, const float x2) {
 }
 
 specialData::specialData() :
-  fighting(NULL),
-  hunting(NULL),
+  fighting(nullptr),
+  hunting(nullptr),
   affectedBy(0),
   position(POSITION_STANDING),
   last_direction(DIR_NONE),
@@ -1161,27 +1161,27 @@ TBeing::TBeing(const TBeing& a) :
   if (a.discs)
     discs = new CMasterDiscipline(*a.discs);
   else
-    discs = NULL;
+    discs = nullptr;
 
   if (a.affected)
     affected = new affectedData(*a.affected);
   else
-    affected = NULL;
+    affected = nullptr;
 
   if (a.followers)
     followers = new followData(*a.followers);
   else
-    followers = NULL;
+    followers = nullptr;
 
   if (a.task)
     task = new taskData(*a.task);
   else
-    task = NULL;
+    task = nullptr;
 
   if (a.spelltask)
     spelltask = new spellTaskData(*a.spelltask);
   else
-    spelltask = NULL;
+    spelltask = nullptr;
 
   if (IS_SET(a.specials.act, ACT_STRINGS_CHANGED)) {
     name = a.name;
@@ -1192,7 +1192,7 @@ TBeing::TBeing(const TBeing& a) :
     if (ex_description)
       ex_description = new extraDescription(*a.ex_description);
     else
-      ex_description = NULL;
+      ex_description = nullptr;
   }
   mobCount++;
 
@@ -1233,7 +1233,7 @@ TBeing& TBeing::operator=(const TBeing& a) {
   if (a.discs)
     discs = new CMasterDiscipline(*a.discs);
   else
-    discs = NULL;
+    discs = nullptr;
 
   inPraying = a.inPraying;
   inQuaffUse = a.inQuaffUse;
@@ -1261,7 +1261,7 @@ TBeing& TBeing::operator=(const TBeing& a) {
   if (a.affected)
     affected = new affectedData(*a.affected);
   else
-    affected = NULL;
+    affected = nullptr;
 
   master = a.master;
   orig = a.orig;
@@ -1272,17 +1272,17 @@ TBeing& TBeing::operator=(const TBeing& a) {
   if (a.followers)
     followers = new followData(*a.followers);
   else
-    followers = NULL;
+    followers = nullptr;
 
   if (a.task)
     task = new taskData(*a.task);
   else
-    task = NULL;
+    task = nullptr;
 
   if (a.spelltask)
     spelltask = new spellTaskData(*a.spelltask);
   else
-    spelltask = NULL;
+    spelltask = nullptr;
 
   if (IS_SET(a.specials.act, ACT_STRINGS_CHANGED)) {
     name = a.name;
@@ -1293,7 +1293,7 @@ TBeing& TBeing::operator=(const TBeing& a) {
     if (a.ex_description)
       ex_description = new extraDescription(*a.ex_description);
     else
-      ex_description = NULL;
+      ex_description = nullptr;
   }
 
   return *this;
@@ -1396,7 +1396,7 @@ TObj::TObj(const TObj& a) :
     if (a.ex_description)
       ex_description = new extraDescription(*a.ex_description);
     else
-      ex_description = NULL;
+      ex_description = nullptr;
   } else
     action_description = a.action_description;
 
@@ -1430,7 +1430,7 @@ TObj& TObj::operator=(const TObj& a) {
     if (a.ex_description)
       ex_description = new extraDescription(*a.ex_description);
     else
-      ex_description = NULL;
+      ex_description = nullptr;
   } else {
     // this is only sstring that is obj specific, others got assigned by TThing
     action_description = a.action_description;
@@ -1447,9 +1447,9 @@ TObj& TObj::operator=(const TObj& a) {
 }
 
 extraDescription::extraDescription() :
-  keyword(NULL),
-  description(NULL),
-  next(NULL) {}
+  keyword(nullptr),
+  description(nullptr),
+  next(nullptr) {}
 
 extraDescription::~extraDescription() {}
 
@@ -1468,7 +1468,7 @@ extraDescription& extraDescription::operator=(const extraDescription& a) {
   if (a.next)
     next = new extraDescription(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 
   return *this;
 }
@@ -1479,7 +1479,7 @@ extraDescription::extraDescription(const extraDescription& a) {
   if (a.next)
     next = new extraDescription(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 }
 
 objFlagData::objFlagData() :
@@ -1523,7 +1523,7 @@ objFlagData& objFlagData::operator=(const objFlagData& a) {
 
 objFlagData::~objFlagData() {}
 
-snoopData::snoopData() : snooping(NULL), snoop_by(NULL) {}
+snoopData::snoopData() : snooping(nullptr), snoop_by(nullptr) {}
 
 snoopData::snoopData(const snoopData& a) :
   snooping(a.snooping),
@@ -1688,8 +1688,8 @@ objAffData& objAffData::operator=(const objAffData& a) {
 objAffData::~objAffData() {}
 
 roomDirData::roomDirData() :
-  description(NULL),
-  keyword(NULL),
+  description(nullptr),
+  keyword(nullptr),
   door_type(DOOR_NONE),
   condition(0),
   lock_difficulty(-1),
@@ -1753,7 +1753,7 @@ saveAffectedData::saveAffectedData() :
   modifier2(0),
   location(0),
   bitvector(0),
-  unused2(NULL) {}
+  unused2(nullptr) {}
 
 saveAffectedData& saveAffectedData::operator=(const affectedData& a) {
   type = mapSpellnumToFile(a.type);
@@ -1769,7 +1769,7 @@ saveAffectedData& saveAffectedData::operator=(const affectedData& a) {
 
   modifier2 = a.modifier2;
   bitvector = a.bitvector;
-  unused2 = NULL;
+  unused2 = nullptr;
 
   return *this;
 }
@@ -1783,8 +1783,8 @@ affectedData::affectedData() :
   modifier2(0),
   location(APPLY_NONE),
   bitvector(0),
-  be(NULL),
-  next(NULL) {}
+  be(nullptr),
+  next(nullptr) {}
 
 affectedData::affectedData(const affectedData& a) :
   type(a.type),
@@ -1799,7 +1799,7 @@ affectedData::affectedData(const affectedData& a) :
   if (a.next)
     next = new affectedData(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 
   if ((type == AFFECT_PET) || (type == AFFECT_CHARM) ||
       (type == AFFECT_THRALL) || (type == AFFECT_ORPHAN_PET) ||
@@ -1818,8 +1818,8 @@ affectedData::affectedData(const saveAffectedData& a) :
   modifier2(a.modifier2),
   location(APPLY_NONE),
   bitvector(a.bitvector),
-  be(NULL),
-  next(NULL) {
+  be(nullptr),
+  next(nullptr) {
   location = mapFileToApply(a.location);
   if (applyTypeShouldBeSpellnum(location))
     modifier = mapFileToSpellnum(a.modifier);
@@ -1850,7 +1850,7 @@ affectedData& affectedData::operator=(const affectedData& a) {
   if (a.next)
     next = new affectedData(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 
   if ((type == AFFECT_PET) || (type == AFFECT_CHARM) ||
       (type == AFFECT_THRALL) || (type == AFFECT_ORPHAN_PET) ||
@@ -1871,9 +1871,9 @@ affectedData::~affectedData() {
       (type == AFFECT_THRALL) || (type == AFFECT_ORPHAN_PET) ||
       (type == AFFECT_COMBAT && modifier == COMBAT_RESTRICT_XP)) {
     char* tmp = (char*)be;
-    be = NULL;
+    be = nullptr;
     delete[] tmp;
-    tmp = NULL;
+    tmp = nullptr;
   }
 }
 
@@ -1901,7 +1901,7 @@ const char* extraDescription::findExtraDesc(const char* word) {
     if (!i->keyword.empty() && isname(word, i->keyword))
       return (i->description.c_str());
   }
-  return NULL;
+  return nullptr;
 }
 
 // Find the total sums of aff->modifier and aff->modifier2 amongst all active

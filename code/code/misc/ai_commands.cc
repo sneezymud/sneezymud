@@ -26,58 +26,58 @@ int TMonster::aiBounce(TBeing* doer, TBeing*, aiTarg cond) {
     case TARGET_NONE:
       if (!isPerceptive()) {
         if (!::number(0, 2)) {
-          act("$n's head bobs up and down following your antics.", TRUE, this,
+          act("$n's head bobs up and down following your antics.", true, this,
             0, doer, TO_VICT);
-          act("$n's head bobs up and down as $e watches $N.", TRUE, this, 0,
+          act("$n's head bobs up and down as $e watches $N.", true, this, 0,
             doer, TO_NOTVICT);
         }
       } else {
         US(1);
         if (!::number(0, 2)) {
-          act("$n thinks you are strange.", TRUE, this, 0, doer, TO_VICT);
-          act("$n looks at $N strangely.", TRUE, this, 0, doer, TO_NOTVICT);
+          act("$n thinks you are strange.", true, this, 0, doer, TO_VICT);
+          act("$n looks at $N strangely.", true, this, 0, doer, TO_NOTVICT);
         }
       }
       break;
     case TARGET_SELF:
       if (!isPerceptive()) {
         if (!::number(0, 2)) {
-          act("$n's head bobs up and down following your antics.", TRUE, this,
+          act("$n's head bobs up and down following your antics.", true, this,
             0, doer, TO_VICT);
-          act("$n's head bobs up and down as $e watches $N.", TRUE, this, 0,
+          act("$n's head bobs up and down as $e watches $N.", true, this, 0,
             doer, TO_NOTVICT);
         }
       } else {
         US(1);
         if (!::number(0, 2)) {
-          act("$n thinks you are strange.", TRUE, this, 0, doer, TO_VICT);
-          act("$n looks at $N strangely.", TRUE, this, 0, doer, TO_NOTVICT);
+          act("$n thinks you are strange.", true, this, 0, doer, TO_VICT);
+          act("$n looks at $N strangely.", true, this, 0, doer, TO_NOTVICT);
         }
       }
       break;
     case TARGET_MOB:
       if (isAngry()) {
-        act("$n looks a bit uncomfortable doing this.", TRUE, this, 0, doer,
+        act("$n looks a bit uncomfortable doing this.", true, this, 0, doer,
           TO_VICT);
-        act("$n doesn't like all this bouncing.", TRUE, this, 0, doer,
+        act("$n doesn't like all this bouncing.", true, this, 0, doer,
           TO_NOTVICT);
         UA(2);
         UM(1);
       } else {
-        act("$n enjoys $mself.", TRUE, this, 0, doer, TO_VICT);
-        act("$n likes to bounce like this.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n enjoys $mself.", true, this, 0, doer, TO_VICT);
+        act("$n likes to bounce like this.", true, this, 0, doer, TO_NOTVICT);
         DA(2);
         DMal(1);
       }
       break;
     case TARGET_OTHER:
       if (!::number(0, 2))
-        act("$n head bobs about watching people bounce around.", TRUE, this, 0,
+        act("$n head bobs about watching people bounce around.", true, this, 0,
           doer, TO_ROOM);
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
@@ -86,10 +86,10 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
       UA(3);
       US(4);
       UM(1);
-      act("$n doesn't like dancing as $e is an animal.", TRUE, this, 0, doer,
+      act("$n doesn't like dancing as $e is an animal.", true, this, 0, doer,
         TO_VICT);
     }
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -98,39 +98,39 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
         DA(2);
         DMal(1);
         if (!::number(0, 2)) {
-          act("$n checks out your moves.", TRUE, this, 0, doer, TO_VICT);
-          act("$n watches $N's moves.", TRUE, this, 0, doer, TO_NOTVICT);
+          act("$n checks out your moves.", true, this, 0, doer, TO_VICT);
+          act("$n watches $N's moves.", true, this, 0, doer, TO_NOTVICT);
         }
       } else if (!doer->isUgly()) {
         DA(1);
         if (!::number(0, 2)) {
-          act("$n thinks you're cute, but clumsy.", TRUE, this, 0, doer,
+          act("$n thinks you're cute, but clumsy.", true, this, 0, doer,
             TO_VICT);
-          act("$n watches $N dance.", TRUE, this, 0, doer, TO_NOTVICT);
+          act("$n watches $N dance.", true, this, 0, doer, TO_NOTVICT);
         }
       } else if (doer->isAgile(0)) {
         DA(1);
         if (!::number(0, 2)) {
-          act("$n watches your fancy footwork.", TRUE, this, 0, doer, TO_VICT);
-          act("$n watches $N dance.", TRUE, this, 0, doer, TO_NOTVICT);
+          act("$n watches your fancy footwork.", true, this, 0, doer, TO_VICT);
+          act("$n watches $N dance.", true, this, 0, doer, TO_NOTVICT);
         }
       } else {
         US(1);
         if (!::number(0, 2)) {
-          act("$n looks at you strangely.", TRUE, this, 0, doer, TO_VICT);
-          act("$n looks at $N's move with disgust.", TRUE, this, 0, doer,
+          act("$n looks at you strangely.", true, this, 0, doer, TO_VICT);
+          act("$n looks at $N's move with disgust.", true, this, 0, doer,
             TO_NOTVICT);
         }
       }
       break;
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
-        act("$n dances with you without emotion.", TRUE, this, 0, doer,
+        act("$n dances with you without emotion.", true, this, 0, doer,
           TO_VICT);
-        act("$n dances emotionlessly with $N.", TRUE, this, 0, doer,
+        act("$n dances emotionlessly with $N.", true, this, 0, doer,
           TO_NOTVICT);
       } else if (doer->getSex() == getSex()) {
-        act("$n prefers dancing with the opposite sex!", TRUE, this, 0, doer,
+        act("$n prefers dancing with the opposite sex!", true, this, 0, doer,
           TO_ROOM);
         if (pissed() && !::number(0, 2)) {
           return takeFirstHit(*doer);
@@ -139,19 +139,19 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
       } else if (!doer->isUgly() && doer->isAgile(0)) {
         DA(6);
         DMal(3);
-        act("$n enjoys dancing with you.", TRUE, this, 0, doer, TO_VICT);
-        act("$n enjoys dancing with $N.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n enjoys dancing with you.", true, this, 0, doer, TO_VICT);
+        act("$n enjoys dancing with $N.", true, this, 0, doer, TO_NOTVICT);
       } else if (!doer->isUgly()) {
-        act("$n gazes longingly into your eyes as your dance.", TRUE, this, 0,
+        act("$n gazes longingly into your eyes as your dance.", true, this, 0,
           doer, TO_VICT);
         DMal(2);
         DA(4);
       } else if (doer->isUgly()) {
         UA(6);
         UM(3);
-        act("$n is totally repulsed by your looks!", TRUE, this, 0, doer,
+        act("$n is totally repulsed by your looks!", true, this, 0, doer,
           TO_VICT);
-        act("$n is repulsed by $N's ugliness as they dance.", TRUE, this, 0,
+        act("$n is repulsed by $N's ugliness as they dance.", true, this, 0,
           doer, TO_NOTVICT);
         if (pissed()) {
           return takeFirstHit(*doer);
@@ -159,13 +159,13 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
       } else if (doer->isAgile(0)) {
         DMal(2);
         DA(4);
-        act("$n is enthralled by your superb dancing.", TRUE, this, 0, doer,
+        act("$n is enthralled by your superb dancing.", true, this, 0, doer,
           TO_VICT);
       } else {
         US(3);
         UA(5);
         UM(1);
-        act("$n winces in pain as you step on $s foot.", TRUE, this, 0, doer,
+        act("$n winces in pain as you step on $s foot.", true, this, 0, doer,
           TO_VICT);
       }
       break;
@@ -176,10 +176,10 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
       } else if (doer->getSex() == other->getSex()) {
         if (!::number(0, 3)) {
           if (doer->getSex() == SEX_MALE)
-            act("$n would prefer not to watch two guys dance together.", TRUE,
+            act("$n would prefer not to watch two guys dance together.", true,
               this, 0, doer, TO_ROOM);
           else
-            act("$n would prefer not to watch two girls dance together.", TRUE,
+            act("$n would prefer not to watch two girls dance together.", true,
               this, 0, doer, TO_ROOM);
         }
         if (pissed() && !::number(0, 3)) {
@@ -190,36 +190,36 @@ int TMonster::aiDance(TBeing* doer, TBeing* other, aiTarg cond) {
         UA(2);
         UM(1);
         if (::number(0, 1)) {
-          act("$n seems upset to see $N dancing with someone else.", TRUE, this,
+          act("$n seems upset to see $N dancing with someone else.", true, this,
             0, other, TO_NOTVICT);
-          act("$n watches you dance with someone else.", TRUE, this, 0, other,
+          act("$n watches you dance with someone else.", true, this, 0, other,
             TO_VICT);
         }
       } else if (!doer->isUgly() && (doer->getSex() != getSex())) {
         UA(2);
         UM(1);
         if (!::number(0, 1)) {
-          act("$n seems upset to see $N dancing with someone else.", TRUE, this,
+          act("$n seems upset to see $N dancing with someone else.", true, this,
             0, doer, TO_NOTVICT);
-          act("$n watches you dance with someone else.", TRUE, this, 0, doer,
+          act("$n watches you dance with someone else.", true, this, 0, doer,
             TO_VICT);
         }
       } else {
         US(1);
         if (!::number(0, 2)) {
-          act("$n looks at you strangely.", TRUE, this, 0, doer, TO_VICT);
-          act("$n looks at $N's strangely.", TRUE, this, 0, doer, TO_NOTVICT);
+          act("$n looks at you strangely.", true, this, 0, doer, TO_VICT);
+          act("$n looks at $N's strangely.", true, this, 0, doer, TO_NOTVICT);
         }
       }
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
   if (!isHumanoid())
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -229,50 +229,50 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
         DMal(1);
         DS(2);
         if (!::number(0, 2)) {
-          act("$n's face brightens up as you smile.", TRUE, this, 0, doer,
+          act("$n's face brightens up as you smile.", true, this, 0, doer,
             TO_VICT);
-          act("$n's face brightens as $N smiles.", TRUE, this, 0, doer,
+          act("$n's face brightens as $N smiles.", true, this, 0, doer,
             TO_NOTVICT);
         }
       } else if (!doer->isUgly()) {
         US(1);
         DA(2);
         if (!::number(0, 2)) {
-          act("$n smiles back nervously.", TRUE, this, 0, doer, TO_VICT);
-          act("$n smiles nervously back at $N.", TRUE, this, 0, doer,
+          act("$n smiles back nervously.", true, this, 0, doer, TO_VICT);
+          act("$n smiles nervously back at $N.", true, this, 0, doer,
             TO_NOTVICT);
         }
       } else if (isSusp()) {
         UA(1);
         US(2);
         if (!::number(0, 2)) {
-          act("$n smiles back, but begins to watch you.", TRUE, this, 0, doer,
+          act("$n smiles back, but begins to watch you.", true, this, 0, doer,
             TO_VICT);
-          act("$n smiles as $e begins to watch $N more closely.", TRUE, this, 0,
+          act("$n smiles as $e begins to watch $N more closely.", true, this, 0,
             doer, TO_NOTVICT);
         }
       } else {
         US(4);
         UA(1);
         if (!::number(0, 2)) {
-          act("$n looks at you suspiciously.", TRUE, this, 0, doer, TO_VICT);
-          act("$n looks at $N suspiciously.", TRUE, this, 0, doer, TO_NOTVICT);
+          act("$n looks at you suspiciously.", true, this, 0, doer, TO_VICT);
+          act("$n looks at $N suspiciously.", true, this, 0, doer, TO_NOTVICT);
         }
       }
       break;
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
-        act("$n emotionlessly smiles back.", TRUE, this, 0, doer, TO_VICT);
-        act("$n emotionlessly smiles back at $N.", TRUE, this, 0, doer,
+        act("$n emotionlessly smiles back.", true, this, 0, doer, TO_VICT);
+        act("$n emotionlessly smiles back at $N.", true, this, 0, doer,
           TO_NOTVICT);
       } else if (doer->getSex() == getSex()) {
         if (doer->getSex() == SEX_MALE)
-          act("$n wonders about men who smile at him.", TRUE, this, 0, doer,
+          act("$n wonders about men who smile at him.", true, this, 0, doer,
             TO_ROOM);
         else {
-          act("$n gives you that fake little smile girls use.", TRUE, this, 0,
+          act("$n gives you that fake little smile girls use.", true, this, 0,
             doer, TO_VICT);
-          act("$n gives $N a fake-smile back.", TRUE, this, 0, doer,
+          act("$n gives $N a fake-smile back.", true, this, 0, doer,
             TO_NOTVICT);
         }
         UM(1);
@@ -284,8 +284,8 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
         UA(5);
         UM(2);
         US(6);
-        act("$n watches you cautiously.", TRUE, this, 0, doer, TO_VICT);
-        act("$n watches $N alertly.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n watches you cautiously.", true, this, 0, doer, TO_VICT);
+        act("$n watches $N alertly.", true, this, 0, doer, TO_NOTVICT);
       } else if (doer->isUgly()) {
         doAction(fname(doer->name), CMD_SMILE);
         DA(2);
@@ -293,7 +293,7 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
         US(1);
         DA(3);
         DMal(1);
-        act("$n likes it when you smile at $m.", TRUE, this, 0, doer, TO_VICT);
+        act("$n likes it when you smile at $m.", true, this, 0, doer, TO_VICT);
       }
       break;
     case TARGET_OTHER:
@@ -304,14 +304,14 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
         UA(2);
         UM(1);
         if (::number(0, 1)) {
-          act("$n smiles at $N too.", TRUE, this, 0, other, TO_NOTVICT);
-          act("$n smiles at you as well.", TRUE, this, 0, other, TO_VICT);
+          act("$n smiles at $N too.", true, this, 0, other, TO_NOTVICT);
+          act("$n smiles at you as well.", true, this, 0, other, TO_VICT);
         }
       } else if (!doer->isUgly() && (doer->getSex() != getSex())) {
         UA(2);
         UM(1);
         if (!::number(0, 1))
-          act("$n seems upset that you didn't smile at $m.", TRUE, this, 0,
+          act("$n seems upset that you didn't smile at $m.", true, this, 0,
             doer, TO_VICT);
       } else {
         // who cares?  they're ugly   :)
@@ -319,13 +319,13 @@ int TMonster::aiSmile(TBeing* doer, TBeing* other, aiTarg cond) {
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCackle(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     aiRudeNoise(doer);
-    return FALSE;
+    return false;
   }
 
   switch (cond) {
@@ -339,13 +339,13 @@ int TMonster::aiCackle(TBeing* doer, TBeing*, aiTarg cond) {
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiLaugh(TBeing* doer, TBeing* other, aiTarg cond) {
   if (!isHumanoid()) {
     aiRudeNoise(doer);
-    return FALSE;
+    return false;
   }
 
   switch (cond) {
@@ -384,13 +384,13 @@ int TMonster::aiLaugh(TBeing* doer, TBeing* other, aiTarg cond) {
       aiOtherInsulted(doer, other);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGiggle(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     // doubt they would understand a giggle
-    return FALSE;
+    return false;
   }
 
   switch (cond) {
@@ -404,43 +404,43 @@ int TMonster::aiGiggle(TBeing* doer, TBeing*, aiTarg cond) {
       if (!::number(0, 3) && !isAngry() && (getSex() == SEX_FEMALE))
         doAction("", CMD_GIGGLE);
       else if (!::number(0, 4)) {
-        act("$n thinks you're weird.", TRUE, this, 0, doer, TO_VICT);
-        act("$n looks at $N oddly.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n thinks you're weird.", true, this, 0, doer, TO_VICT);
+        act("$n looks at $N oddly.", true, this, 0, doer, TO_NOTVICT);
         US(1);
       }
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiShake(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     US(1);
     if (cond == TARGET_SELF) {
-      act("$n looks at you questiongly.", TRUE, this, 0, doer, TO_VICT);
+      act("$n looks at you questiongly.", true, this, 0, doer, TO_VICT);
       if (doer->getSex() == SEX_MALE)
-        act("$n watches the jello-man wobble around.", TRUE, this, 0, doer,
+        act("$n watches the jello-man wobble around.", true, this, 0, doer,
           TO_NOTVICT);
       else if (doer->getSex() == SEX_FEMALE)
-        act("$n watches the jello-girl wobble around.", TRUE, this, 0, doer,
+        act("$n watches the jello-girl wobble around.", true, this, 0, doer,
           TO_NOTVICT);
       else
-        act("$n watches the jello-thing wobble around.", TRUE, this, 0, doer,
+        act("$n watches the jello-thing wobble around.", true, this, 0, doer,
           TO_NOTVICT);
     } else if ((cond == TARGET_MOB) && (getRace() == RACE_CANINE)) {
       if (isPerceptive())
-        act("$n learned this trick in obedience school.", TRUE, this, 0, doer,
+        act("$n learned this trick in obedience school.", true, this, 0, doer,
           TO_ROOM);
       else {
         act(
           "$n doesn't know that trick and gets mad when you force $m to do it.",
-          TRUE, this, 0, doer, TO_VICT);
+          true, this, 0, doer, TO_VICT);
         doAction(fname(doer->name), CMD_GROWL);
         UA(1);
       }
     } else if ((cond == TARGET_MOB) && isStrong()) {
-      act("$n has been known to rip the arms off of folks who do that...", TRUE,
+      act("$n has been known to rip the arms off of folks who do that...", true,
         this, 0, doer, TO_VICT);
       UA(2);
       UM(1);
@@ -450,21 +450,21 @@ int TMonster::aiShake(TBeing* doer, TBeing*, aiTarg cond) {
       }
     } else
       US(1);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
       break;  // shakes their head
     case TARGET_SELF:
-      act("$n looks at you questiongly.", TRUE, this, 0, doer, TO_VICT);
+      act("$n looks at you questiongly.", true, this, 0, doer, TO_VICT);
       if (doer->getSex() == SEX_MALE)
-        act("$n watches the jello-man wobble around.", TRUE, this, 0, doer,
+        act("$n watches the jello-man wobble around.", true, this, 0, doer,
           TO_NOTVICT);
       else if (doer->getSex() == SEX_FEMALE)
-        act("$n watches the jello-girl wobble around.", TRUE, this, 0, doer,
+        act("$n watches the jello-girl wobble around.", true, this, 0, doer,
           TO_NOTVICT);
       else
-        act("$n watches the jello-thing wobble around.", TRUE, this, 0, doer,
+        act("$n watches the jello-thing wobble around.", true, this, 0, doer,
           TO_NOTVICT);
       if (!::number(0, 2)) {
         doAction("", CMD_SNICKER);
@@ -491,7 +491,7 @@ int TMonster::aiShake(TBeing* doer, TBeing*, aiTarg cond) {
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPuke(TBeing* doer, TBeing*, aiTarg cond) {
@@ -505,7 +505,7 @@ int TMonster::aiPuke(TBeing* doer, TBeing*, aiTarg cond) {
         return takeFirstHit(*doer);
       }
     }
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_MOB:
@@ -530,7 +530,7 @@ int TMonster::aiPuke(TBeing* doer, TBeing*, aiTarg cond) {
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGrowl(TBeing* doer, TBeing*, aiTarg cond) {
@@ -542,13 +542,13 @@ int TMonster::aiGrowl(TBeing* doer, TBeing*, aiTarg cond) {
       UM(2);
       US(4);
       if (getMaterial(WEAR_BACK) == MAT_FUR_DOG)
-        act("The hair on $n's back bristles.", TRUE, this, 0, doer, TO_ROOM);
+        act("The hair on $n's back bristles.", true, this, 0, doer, TO_ROOM);
       if (pissed()) {
         doAction("", CMD_SNARL);
         return takeFirstHit(*doer);
       }
     }
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_SELF:
@@ -562,7 +562,7 @@ int TMonster::aiGrowl(TBeing* doer, TBeing*, aiTarg cond) {
     case TARGET_MOB:
       aiUpset(doer);
       if (getMaterial(WEAR_BACK) == MAT_FUR_DOG)
-        act("The hair on $n's back bristles.", TRUE, this, 0, doer, TO_ROOM);
+        act("The hair on $n's back bristles.", true, this, 0, doer, TO_ROOM);
       if (pissed()) {
         return takeFirstHit(*doer);
       }
@@ -570,23 +570,23 @@ int TMonster::aiGrowl(TBeing* doer, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiScream(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     aiRudeNoise(doer);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
       US(3);
       if (!isSusp()) {
         if (!::number(0, 3)) {
-          act("$N gets startled and jumps slightly.", TRUE, doer, 0, this,
+          act("$N gets startled and jumps slightly.", true, doer, 0, this,
             TO_CHAR);
-          act("You jump as $N startles you.", TRUE, doer, 0, this, TO_VICT);
-          act("$N jumps slightly as $n startles $M.", TRUE, doer, 0, this,
+          act("You jump as $N startles you.", true, doer, 0, this, TO_VICT);
+          act("$N jumps slightly as $n startles $M.", true, doer, 0, this,
             TO_ROOM);
           UM(1);
           US(1);
@@ -607,13 +607,13 @@ int TMonster::aiScream(TBeing* doer, TBeing*, aiTarg cond) {
       vlogf(LOG_MOB_AI, "TMonster::aiScream is whacky.");
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiComfort(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     // lets just assume they do nothing
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -638,13 +638,13 @@ int TMonster::aiComfort(TBeing* doer, TBeing*, aiTarg cond) {
       // comfort reaction towards other is in cry, whine, etc
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiNod(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     // sheyah, like they know what that would mean
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -657,12 +657,12 @@ int TMonster::aiNod(TBeing* doer, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSigh(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -684,12 +684,12 @@ int TMonster::aiSigh(TBeing*, TBeing*, aiTarg cond) {
       vlogf(LOG_MOB_AI, "Wierd call into TMonster::aiSigh.");
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSulk(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -705,12 +705,12 @@ int TMonster::aiSulk(TBeing*, TBeing*, aiTarg cond) {
         doSay("Stop being such a crybaby.");
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiHug(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -720,8 +720,8 @@ int TMonster::aiHug(TBeing* doer, TBeing* other, aiTarg cond) {
       break;
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
-        act("$n holds you without emotion.", TRUE, this, 0, doer, TO_VICT);
-        act("$n emotionlessly hugs $N back.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n holds you without emotion.", true, this, 0, doer, TO_VICT);
+        act("$n emotionlessly hugs $N back.", true, this, 0, doer, TO_NOTVICT);
       } else if (doer->getSex() == getSex()) {
         if (doer->getSex() == SEX_FEMALE) {
           aiFag(doer, 1);
@@ -753,12 +753,12 @@ int TMonster::aiHug(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSnuggle(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -768,8 +768,8 @@ int TMonster::aiSnuggle(TBeing* doer, TBeing* other, aiTarg cond) {
       break;
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
-        act("$n holds you without emotion.", TRUE, this, 0, doer, TO_VICT);
-        act("$n emotionlessly holds $N.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n holds you without emotion.", true, this, 0, doer, TO_VICT);
+        act("$n emotionlessly holds $N.", true, this, 0, doer, TO_NOTVICT);
       } else if (doer->getSex() == getSex()) {
         if (doer->getSex() == SEX_FEMALE) {
           aiFag(doer, 1);
@@ -800,12 +800,12 @@ int TMonster::aiSnuggle(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCuddle(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -815,8 +815,8 @@ int TMonster::aiCuddle(TBeing* doer, TBeing* other, aiTarg cond) {
       break;
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
-        act("$n holds you without emotion.", TRUE, this, 0, doer, TO_VICT);
-        act("$n emotionlessly cuddles $N.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n holds you without emotion.", true, this, 0, doer, TO_VICT);
+        act("$n emotionlessly cuddles $N.", true, this, 0, doer, TO_NOTVICT);
       } else if (doer->getSex() == getSex()) {
         if (doer->getSex() == SEX_FEMALE) {
           aiFag(doer, 1);
@@ -842,12 +842,12 @@ int TMonster::aiCuddle(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiNuzzle(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -857,8 +857,8 @@ int TMonster::aiNuzzle(TBeing* doer, TBeing* other, aiTarg cond) {
       break;
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
-        act("$n holds you without emotion.", TRUE, this, 0, doer, TO_VICT);
-        act("$n emotionlessly hugs $N back.", TRUE, this, 0, doer, TO_NOTVICT);
+        act("$n holds you without emotion.", true, this, 0, doer, TO_VICT);
+        act("$n emotionlessly hugs $N back.", true, this, 0, doer, TO_NOTVICT);
       } else if (doer->getSex() == getSex()) {
         if (doer->getSex() == SEX_FEMALE) {
           aiFag(doer, 1);
@@ -889,13 +889,13 @@ int TMonster::aiNuzzle(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCry(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     // do nothing
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -924,13 +924,13 @@ int TMonster::aiCry(TBeing* doer, TBeing*, aiTarg cond) {
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPoke(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     if (cond != TARGET_MOB)
-      return FALSE;
+      return false;
     US(2);
     UA(2);
     UM(1);
@@ -938,7 +938,7 @@ int TMonster::aiPoke(TBeing* doer, TBeing*, aiTarg cond) {
       act("$n yips at you and seems displeased.", 0, this, 0, 0, TO_ROOM);
     else
       act("$n makes a growling noise.", 0, this, 0, 0, TO_ROOM);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -963,16 +963,16 @@ int TMonster::aiPoke(TBeing* doer, TBeing*, aiTarg cond) {
       // ignore poking others
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiAccuse(TBeing* doer, TBeing* other, aiTarg cond) {
   if (!isHumanoid()) {
     if ((cond != TARGET_MOB) || ::number(0, 2))
-      return FALSE;
+      return false;
     US(1);
     act("$n looks sheepish and wears a guilty look.", 0, this, 0, 0, TO_ROOM);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -986,21 +986,21 @@ int TMonster::aiAccuse(TBeing* doer, TBeing* other, aiTarg cond) {
     case TARGET_OTHER:
       if (::number(0, 1) && canSpeak()) {
         act("You point at $N and say, \"Yeah, it was $M, I saw $M do it!\"",
-          FALSE, this, 0, other, TO_CHAR);
+          false, this, 0, other, TO_CHAR);
         act("$n points at you and says, \"Yeah, it was $M, I saw $M do it!\"",
-          FALSE, this, 0, other, TO_VICT);
+          false, this, 0, other, TO_VICT);
         act("$n points at $N and says, \"Yeah, it was $M, I saw $M do it!\"",
-          FALSE, this, 0, other, TO_NOTVICT);
+          false, this, 0, other, TO_NOTVICT);
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGrin(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     US(1);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1022,12 +1022,12 @@ int TMonster::aiGrin(TBeing* doer, TBeing*, aiTarg cond) {
         doSay("Uh oh.");
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBow(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid())
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -1049,13 +1049,13 @@ int TMonster::aiBow(TBeing* doer, TBeing*, aiTarg cond) {
         doAction(fname(doer->name), CMD_BOW);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiApplaud(TBeing* doer, TBeing* other, aiTarg cond) {
   if (!isHumanoid()) {
     aiRudeNoise(doer);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1080,12 +1080,12 @@ int TMonster::aiApplaud(TBeing* doer, TBeing* other, aiTarg cond) {
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBlush(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid())
-    return FALSE;  // do nothing
+    return false;  // do nothing
 
   switch (cond) {
     case TARGET_NONE:
@@ -1097,12 +1097,12 @@ int TMonster::aiBlush(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBurp(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1115,12 +1115,12 @@ int TMonster::aiBurp(TBeing* doer, TBeing*, aiTarg cond) {
         aiBadManners(doer);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiChuckle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1136,13 +1136,13 @@ int TMonster::aiChuckle(TBeing*, TBeing*, aiTarg cond) {
         doAction("", CMD_SMILE);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiClap(TBeing* doer, TBeing* other, aiTarg cond) {
   if (!isHumanoid()) {
     aiRudeNoise(doer);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1169,13 +1169,13 @@ int TMonster::aiClap(TBeing* doer, TBeing* other, aiTarg cond) {
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCough(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     aiRudeNoise(doer);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1190,12 +1190,12 @@ int TMonster::aiCough(TBeing* doer, TBeing*, aiTarg cond) {
         doSay("Don't cough near me!");
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCurtsey(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid())
-    return FALSE;
+    return false;
 
   if (doer->getSex() != SEX_FEMALE)
     doWhisper(format("%s Pssst, usually it's the WOMEN that curtsey...") %
@@ -1221,12 +1221,12 @@ int TMonster::aiCurtsey(TBeing* doer, TBeing*, aiTarg cond) {
         doAction(fname(doer->name), CMD_BOW);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFart(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1244,14 +1244,14 @@ int TMonster::aiFart(TBeing* doer, TBeing*, aiTarg cond) {
         aiUpset(doer);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFlip(TBeing* doer, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
     US(2);
     aiMobShock(doer);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1263,12 +1263,12 @@ int TMonster::aiFlip(TBeing* doer, TBeing*, aiTarg cond) {
       // these aren't possible, right?
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFondle(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -1278,7 +1278,7 @@ int TMonster::aiFondle(TBeing* doer, TBeing* other, aiTarg cond) {
       break;
     case TARGET_MOB:
       if (getSex() == doer->getSex())
-        aiFag(doer, TRUE);
+        aiFag(doer, true);
       else {
         aiMudSex(doer);
       }
@@ -1287,18 +1287,18 @@ int TMonster::aiFondle(TBeing* doer, TBeing* other, aiTarg cond) {
       if (getSex() == SEX_NEUTER) {
         // who cares, i'm a eunich
       } else if (getSex() == doer->getSex()) {
-        aiFag(doer, FALSE);
+        aiFag(doer, false);
       } else {
         aiMudSexOther(doer, other);
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFrown(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1307,12 +1307,12 @@ int TMonster::aiFrown(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGasp(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1321,12 +1321,12 @@ int TMonster::aiGasp(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGlare(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1335,12 +1335,12 @@ int TMonster::aiGlare(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGroan(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1349,12 +1349,12 @@ int TMonster::aiGroan(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGrope(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -1395,12 +1395,12 @@ int TMonster::aiGrope(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiHiccup(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1409,12 +1409,12 @@ int TMonster::aiHiccup(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiLick(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1423,12 +1423,12 @@ int TMonster::aiLick(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiLove(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -1441,7 +1441,7 @@ int TMonster::aiLove(TBeing* doer, TBeing* other, aiTarg cond) {
     case TARGET_MOB:
       if ((doer->getSex() == SEX_NEUTER) || (getSex() == SEX_NEUTER)) {
         doAction("", CMD_BLINK);
-        act("$n lacks the emotional context to understand you.", TRUE, this, 0,
+        act("$n lacks the emotional context to understand you.", true, this, 0,
           doer, TO_VICT);
       } else if (doer->getSex() == getSex()) {
         if (doer->getSex() == SEX_FEMALE) {
@@ -1475,12 +1475,12 @@ int TMonster::aiLove(TBeing* doer, TBeing* other, aiTarg cond) {
       US(1);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiMoan(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1489,12 +1489,12 @@ int TMonster::aiMoan(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiNibble(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -1540,12 +1540,12 @@ int TMonster::aiNibble(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPout(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1554,12 +1554,12 @@ int TMonster::aiPout(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPurr(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1568,12 +1568,12 @@ int TMonster::aiPurr(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiRuffle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1582,12 +1582,12 @@ int TMonster::aiRuffle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiShiver(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1596,12 +1596,12 @@ int TMonster::aiShiver(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiShrug(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1610,12 +1610,12 @@ int TMonster::aiShrug(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSing(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1624,12 +1624,12 @@ int TMonster::aiSing(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSlap(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1638,12 +1638,12 @@ int TMonster::aiSlap(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSmirk(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1652,12 +1652,12 @@ int TMonster::aiSmirk(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSnap(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1666,12 +1666,12 @@ int TMonster::aiSnap(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSneeze(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1680,12 +1680,12 @@ int TMonster::aiSneeze(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSnicker(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1694,12 +1694,12 @@ int TMonster::aiSnicker(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSniff(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1708,12 +1708,12 @@ int TMonster::aiSniff(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSnore(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1722,12 +1722,12 @@ int TMonster::aiSnore(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSpit(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1736,12 +1736,12 @@ int TMonster::aiSpit(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSqueeze(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -1780,12 +1780,12 @@ int TMonster::aiSqueeze(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiStare(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1794,12 +1794,12 @@ int TMonster::aiStare(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiStrut(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1808,12 +1808,12 @@ int TMonster::aiStrut(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiThank(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1822,12 +1822,12 @@ int TMonster::aiThank(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTwiddle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1836,12 +1836,12 @@ int TMonster::aiTwiddle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWave(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1850,12 +1850,12 @@ int TMonster::aiWave(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWhistle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1864,12 +1864,12 @@ int TMonster::aiWhistle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWiggle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1878,12 +1878,12 @@ int TMonster::aiWiggle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWink(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1892,12 +1892,12 @@ int TMonster::aiWink(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiYawn(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1906,12 +1906,12 @@ int TMonster::aiYawn(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSnowball(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1920,7 +1920,7 @@ int TMonster::aiSnowball(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFrench(TBeing* doer, TBeing* other, aiTarg cond) {
@@ -1929,7 +1929,7 @@ int TMonster::aiFrench(TBeing* doer, TBeing* other, aiTarg cond) {
 
 int TMonster::aiComb(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1938,12 +1938,12 @@ int TMonster::aiComb(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiMassage(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond))
-    return FALSE;
+    return false;
 
   switch (cond) {
     case TARGET_NONE:
@@ -1984,12 +1984,12 @@ int TMonster::aiMassage(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTickle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -1998,12 +1998,12 @@ int TMonster::aiTickle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPat(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2012,12 +2012,12 @@ int TMonster::aiPat(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCurse(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2026,12 +2026,12 @@ int TMonster::aiCurse(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBeg(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2040,12 +2040,12 @@ int TMonster::aiBeg(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBleed(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2054,12 +2054,12 @@ int TMonster::aiBleed(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCringe(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2068,12 +2068,12 @@ int TMonster::aiCringe(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiDaydream(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2082,12 +2082,12 @@ int TMonster::aiDaydream(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFume(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2096,12 +2096,12 @@ int TMonster::aiFume(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGrovel(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2110,12 +2110,12 @@ int TMonster::aiGrovel(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiHop(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2124,12 +2124,12 @@ int TMonster::aiHop(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiNudge(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2138,11 +2138,11 @@ int TMonster::aiNudge(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 int TMonster::aiPeer(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2151,12 +2151,12 @@ int TMonster::aiPeer(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPoint(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2165,12 +2165,12 @@ int TMonster::aiPoint(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPonder(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2179,12 +2179,12 @@ int TMonster::aiPonder(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPunch(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2193,12 +2193,12 @@ int TMonster::aiPunch(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSnarl(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2207,12 +2207,12 @@ int TMonster::aiSnarl(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSpank(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2221,12 +2221,12 @@ int TMonster::aiSpank(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSteam(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2235,12 +2235,12 @@ int TMonster::aiSteam(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTackle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2249,12 +2249,12 @@ int TMonster::aiTackle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTaunt(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2263,12 +2263,12 @@ int TMonster::aiTaunt(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWhine(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2277,12 +2277,12 @@ int TMonster::aiWhine(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWorship(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2291,12 +2291,12 @@ int TMonster::aiWorship(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiYodel(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2305,12 +2305,12 @@ int TMonster::aiYodel(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiThink(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2319,12 +2319,12 @@ int TMonster::aiThink(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWhap(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2333,12 +2333,12 @@ int TMonster::aiWhap(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBeam(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2347,12 +2347,12 @@ int TMonster::aiBeam(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiChortle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2361,12 +2361,12 @@ int TMonster::aiChortle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBonk(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2375,12 +2375,12 @@ int TMonster::aiBonk(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiScold(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2389,12 +2389,12 @@ int TMonster::aiScold(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiDrool(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2403,12 +2403,12 @@ int TMonster::aiDrool(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiRip(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2417,12 +2417,12 @@ int TMonster::aiRip(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiStretch(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2431,12 +2431,12 @@ int TMonster::aiStretch(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPimp(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2445,12 +2445,12 @@ int TMonster::aiPimp(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBelittle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2459,12 +2459,12 @@ int TMonster::aiBelittle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPiledrive(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2473,12 +2473,12 @@ int TMonster::aiPiledrive(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTap(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2487,12 +2487,12 @@ int TMonster::aiTap(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFlipoff(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2501,11 +2501,11 @@ int TMonster::aiFlipoff(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 int TMonster::aiMoon(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2514,12 +2514,12 @@ int TMonster::aiMoon(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiPinch(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2528,12 +2528,12 @@ int TMonster::aiPinch(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBite(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2542,13 +2542,13 @@ int TMonster::aiBite(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiKiss(TBeing* doer, TBeing* other, aiTarg cond) {
   if (aiLoveNonHumanoid(doer, cond)) {
     if (cond != TARGET_MOB)
-      return FALSE;
+      return false;
 
     switch (getMaterial(WEAR_HEAD)) {
       case MAT_FUR_DOG:
@@ -2556,14 +2556,14 @@ int TMonster::aiKiss(TBeing* doer, TBeing* other, aiTarg cond) {
       case MAT_FUR_RABBIT:
       case MAT_FUR:
       case MAT_WOOL:
-        act("You spit up some fur and hair.  YUCK!", TRUE, doer, 0, 0, TO_CHAR);
-        act("$n spits out some fur and hair.  Gross!", TRUE, doer, 0, 0,
+        act("You spit up some fur and hair.  YUCK!", true, doer, 0, 0, TO_CHAR);
+        act("$n spits out some fur and hair.  Gross!", true, doer, 0, 0,
           TO_ROOM);
         break;
       default:
         break;
     }
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2604,12 +2604,12 @@ int TMonster::aiKiss(TBeing* doer, TBeing* other, aiTarg cond) {
       US(2);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiCheer(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2618,12 +2618,12 @@ int TMonster::aiCheer(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWoo(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2632,12 +2632,12 @@ int TMonster::aiWoo(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGrumble(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2646,12 +2646,12 @@ int TMonster::aiGrumble(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiApologize(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2660,12 +2660,12 @@ int TMonster::aiApologize(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiAgree(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2674,12 +2674,12 @@ int TMonster::aiAgree(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiDisagree(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2688,7 +2688,7 @@ int TMonster::aiDisagree(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSpam(TBeing* doer, TBeing*, aiTarg cond) {
@@ -2696,7 +2696,7 @@ int TMonster::aiSpam(TBeing* doer, TBeing*, aiTarg cond) {
     doAction("", CMD_SNARL);
     UM(1);
     UA(2);
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2716,13 +2716,13 @@ int TMonster::aiSpam(TBeing* doer, TBeing*, aiTarg cond) {
         aiInsultDoer(doer);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiRaise(TBeing*, TBeing*, aiTarg cond) {
   // do_nothing
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2731,12 +2731,12 @@ int TMonster::aiRaise(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiRoll(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2751,13 +2751,13 @@ int TMonster::aiRoll(TBeing*, TBeing*, aiTarg cond) {
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBlink(TBeing*, TBeing*, aiTarg cond) {
   // gotta assume this is a do_nothing social
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2766,12 +2766,12 @@ int TMonster::aiBlink(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::aiWear(TObj* obj) {
   int num;
-  TThing* tmp = NULL;
+  TThing* tmp = nullptr;
 
   if (!obj) {
     vlogf(LOG_MOB_AI, "AI_wear called with bad declarations.");
@@ -2796,7 +2796,7 @@ void TBeing::aiWear(TObj* obj) {
 
 void TBeing::aiGet(TThing* obj) {
   int num;
-  TThing* tmp = NULL;
+  TThing* tmp = nullptr;
 
   if (!obj) {
     vlogf(LOG_MOB_AI, "AI_wear called with bad declarations.");
@@ -2895,17 +2895,17 @@ void TMonster::aiLook(TBeing* doer) {
       } else if (getSex() == doer->getSex()) {
         if (getSex() == SEX_MALE) {
           if (!::number(0, 15)) {
-            act("$n notices you checking $m out.", TRUE, this, 0, doer,
+            act("$n notices you checking $m out.", true, this, 0, doer,
               TO_VICT);
 #if 0
-            act("You turn away before $e thinks you're queer.",TRUE, this, 0, doer,TO_VICT);
+            act("You turn away before $e thinks you're queer.",true, this, 0, doer,TO_VICT);
 #endif
           } else if (!::number(0, 2))
             doSay("Hi there.");
         } else {
           if (!::number(0, 15)) {
 #if 0
-            act("$n looks back at you.  I think $e's worried you might be queer.",TRUE,this,0,doer,TO_VICT);
+            act("$n looks back at you.  I think $e's worried you might be queer.",true,this,0,doer,TO_VICT);
 #endif
           } else if (::number(0, 1))
             doSay("Hi there.");
@@ -2916,12 +2916,12 @@ void TMonster::aiLook(TBeing* doer) {
       } else {
         if (doer->getSex() == SEX_MALE) {
           if (!::number(0, 5)) {
-            act("$n notices you checking $m out and $e smiles back.", TRUE,
+            act("$n notices you checking $m out and $e smiles back.", true,
               this, 0, doer, TO_VICT);
           }
         } else {
           if (!::number(0, 5)) {
-            act("$n sees you looking at $m and gives you a little wink.", TRUE,
+            act("$n sees you looking at $m and gives you a little wink.", true,
               this, 0, doer, TO_VICT);
           }
         }
@@ -2935,16 +2935,16 @@ void TMonster::aiLook(TBeing* doer) {
 
 int TMonster::aiSay(TBeing* doer, char*) {
   if (!doer->isPc())
-    return FALSE;
+    return false;
   if (isPc())
-    return FALSE;
+    return false;
   if (UtilMobProc(this))
-    return FALSE;
+    return false;
   if (!awake() || !canSee(doer))
-    return FALSE;
+    return false;
   aiTarget(doer);
 
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_THIS, or DELETE_VICT (thief)
@@ -2952,7 +2952,7 @@ int TMonster::aiSteal(TBeing* thief) {
   sstring buf;
 
   if (isPc())
-    return FALSE;
+    return false;
 
   US(25);
   UM(38);
@@ -2971,12 +2971,12 @@ int TMonster::aiSteal(TBeing* thief) {
   } else
     return (takeFirstHit(*thief));
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTug(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2985,11 +2985,11 @@ int TMonster::aiTug(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 int TMonster::aiCross(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -2998,12 +2998,12 @@ int TMonster::aiCross(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSneer(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3012,11 +3012,11 @@ int TMonster::aiSneer(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 int TMonster::aiPet(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3025,12 +3025,12 @@ int TMonster::aiPet(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiDuck(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3039,12 +3039,12 @@ int TMonster::aiDuck(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBeckon(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3053,12 +3053,12 @@ int TMonster::aiBeckon(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSalute(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3067,12 +3067,12 @@ int TMonster::aiSalute(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiMoo(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3081,12 +3081,12 @@ int TMonster::aiMoo(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFaint(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3095,12 +3095,12 @@ int TMonster::aiFaint(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiSnort(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3109,12 +3109,12 @@ int TMonster::aiSnort(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGag(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3123,12 +3123,12 @@ int TMonster::aiGag(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTrip(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3137,12 +3137,12 @@ int TMonster::aiTrip(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBoggle(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3151,12 +3151,12 @@ int TMonster::aiBoggle(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiJump(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3165,12 +3165,12 @@ int TMonster::aiJump(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTango(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3179,12 +3179,12 @@ int TMonster::aiTango(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWince(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3193,12 +3193,12 @@ int TMonster::aiWince(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBrandish(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3207,12 +3207,12 @@ int TMonster::aiBrandish(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiNoogie(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3221,12 +3221,12 @@ int TMonster::aiNoogie(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGrunt(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3235,12 +3235,12 @@ int TMonster::aiGrunt(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiHowl(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3249,12 +3249,12 @@ int TMonster::aiHowl(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGrimace(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3263,12 +3263,12 @@ int TMonster::aiGrimace(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiTip(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3277,12 +3277,12 @@ int TMonster::aiTip(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiAvert(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3291,12 +3291,12 @@ int TMonster::aiAvert(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWedgie(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3305,12 +3305,12 @@ int TMonster::aiWedgie(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiHum(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3319,12 +3319,12 @@ int TMonster::aiHum(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiBop(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3333,12 +3333,12 @@ int TMonster::aiBop(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiWhimper(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3347,12 +3347,12 @@ int TMonster::aiWhimper(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiScuff(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3361,12 +3361,12 @@ int TMonster::aiScuff(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiRoar(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3375,12 +3375,12 @@ int TMonster::aiRoar(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiGreet(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3389,12 +3389,12 @@ int TMonster::aiGreet(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiFlex(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3403,12 +3403,12 @@ int TMonster::aiFlex(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiRazz(TBeing*, TBeing*, aiTarg cond) {
   if (!isHumanoid()) {
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3417,7 +3417,7 @@ int TMonster::aiRazz(TBeing*, TBeing*, aiTarg cond) {
     case TARGET_OTHER:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiToast(TBeing* doer, TBeing* other, aiTarg cond) {
@@ -3430,7 +3430,7 @@ int TMonster::aiToast(TBeing* doer, TBeing* other, aiTarg cond) {
       default:
         break;
     }
-    return FALSE;
+    return false;
   }
   switch (cond) {
     case TARGET_NONE:
@@ -3454,5 +3454,5 @@ int TMonster::aiToast(TBeing* doer, TBeing* other, aiTarg cond) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }

@@ -58,8 +58,8 @@ int TPoison::objectSell(TBeing* ch, TMonster* keeper) {
 
   if (!liquidInfo[getDrinkType()]->poison) {
     keeper->doTell(ch->getName(), "Hey, that's not poison!.");
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

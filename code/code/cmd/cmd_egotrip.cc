@@ -217,7 +217,7 @@ void TBeing::doEgoTrip(const char* arg) {
         "<c>leprosy<1>, <c>gangrene<1>, <c>plague<1> & <c>scurvy<1>\n\r");
       return;
     }
-    TBeing* sufferer = get_char_vis_world(this, target, NULL, EXACT_NO);
+    TBeing* sufferer = get_char_vis_world(this, target, nullptr, EXACT_NO);
     if (!sufferer) {
       sendTo("Could not locate the ersatz sufferer.\n\r");
       sendTo("Syntax:\n\r     egotrip disease <target> <disease>\n\r");
@@ -263,7 +263,7 @@ void TBeing::doEgoTrip(const char* arg) {
           continue;
         if (sufferer->isImmune(IMMUNE_DISEASE, slot))
           continue;
-        found = TRUE;
+        found = true;
         break;
       }
       if (!found) {
@@ -297,11 +297,11 @@ void TBeing::doEgoTrip(const char* arg) {
       aff.duration *= (100 - sufferer->getImmunity(IMMUNE_DISEASE));
       aff.duration /= 100;
     }
-    act("You breathe a fetid cloud into $N's body.", TRUE, this, 0, sufferer,
+    act("You breathe a fetid cloud into $N's body.", true, this, 0, sufferer,
       TO_CHAR);
-    act("Someone around here doesn't like you.", TRUE, this, 0, sufferer,
+    act("Someone around here doesn't like you.", true, this, 0, sufferer,
       TO_VICT);
-    act("Someone around here doesn't like $n.", TRUE, sufferer, 0, this,
+    act("Someone around here doesn't like $n.", true, sufferer, 0, this,
       TO_ROOM);
     sufferer->affectTo(&aff);
     disease_start(sufferer, &aff);
@@ -314,7 +314,7 @@ void TBeing::doEgoTrip(const char* arg) {
       sendTo("Syntax: egotrip teleport <target>\n\r");
       return;
     }
-    TBeing* ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    TBeing* ch = get_char_vis_world(this, target, nullptr, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip teleport <target>\n\r");
@@ -331,7 +331,7 @@ void TBeing::doEgoTrip(const char* arg) {
       sendTo("Syntax: egotrip portal <target>\n\r");
       return;
     }
-    TBeing* ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    TBeing* ch = get_char_vis_world(this, target, nullptr, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip portal <target>\n\r");
@@ -347,10 +347,10 @@ void TBeing::doEgoTrip(const char* arg) {
     *ch->roomp += *next_tmp_obj;
     ch->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
-    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj,
-      NULL, TO_ROOM);
-    act("$p suddenly appears out of a swirling mist.", TRUE, this, tmp_obj,
-      NULL, TO_CHAR);
+    act("$p suddenly appears out of a swirling mist.", true, this, tmp_obj,
+      nullptr, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", true, this, tmp_obj,
+      nullptr, TO_CHAR);
 
     sendToRoom(
       ((sstring)(format("%s suddenly appears out of a swirling mist.") %
@@ -370,10 +370,10 @@ void TBeing::doEgoTrip(const char* arg) {
         continue;
       if (!tmons->spec)
         continue;
-      int rc = tmons->checkSpec(tmons, CMD_MOB_ALIGN_PULSE, "", NULL);
+      int rc = tmons->checkSpec(tmons, CMD_MOB_ALIGN_PULSE, "", nullptr);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
         delete tmons;
-        tmons = NULL;
+        tmons = nullptr;
       }
       if (rc)
         found = true;
@@ -452,7 +452,7 @@ void TBeing::doEgoTrip(const char* arg) {
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
       return;
     }
-    TBeing* ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    TBeing* ch = get_char_vis_world(this, target, nullptr, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip crit <target> <crit>\n\r");
@@ -494,7 +494,7 @@ void TBeing::doEgoTrip(const char* arg) {
       sendTo("Syntax: egotrip blast <target>\n\r");
       return;
     }
-    TBeing* ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    TBeing* ch = get_char_vis_world(this, target, nullptr, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip blast <target>\n\r");
@@ -506,13 +506,13 @@ void TBeing::doEgoTrip(const char* arg) {
       sendTo("Shame Shame, you shouldn't do that.\n\r");
       return;
     }
-    act("You blast $N with a bolt of lightning.", FALSE, this, 0, ch, TO_CHAR);
+    act("You blast $N with a bolt of lightning.", false, this, 0, ch, TO_CHAR);
 
     act("A bolt of lightning streaks down from the heavens right at your feet!",
-      FALSE, ch, 0, 0, TO_CHAR);
-    act("BZZZZZaaaaaappppp!!!!!", FALSE, ch, 0, 0, TO_CHAR);
+      false, ch, 0, 0, TO_CHAR);
+    act("BZZZZZaaaaaappppp!!!!!", false, ch, 0, 0, TO_CHAR);
     act("A bolt of lightning streaks down from the heavens right at $n's feet!",
-      FALSE, ch, 0, 0, TO_ROOM);
+      false, ch, 0, 0, TO_ROOM);
 
     sstring worldBuf =
       "You smell burnt flesh as a bolt of lightning takes the hide off of ";
@@ -526,7 +526,7 @@ void TBeing::doEgoTrip(const char* arg) {
     // this just nails um, but shouldn't actually kill them
     if (ch->reconcileDamage(ch, ch->getHit() / 2, DAMAGE_ELECTRIC) == -1) {
       delete ch;
-      ch = NULL;
+      ch = nullptr;
       return;
     }
     ch->setMove(ch->getMove() / 2);
@@ -544,7 +544,7 @@ void TBeing::doEgoTrip(const char* arg) {
       sendTo("Syntax: egotrip damn <target>\n\r");
       return;
     }
-    TBeing* ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    TBeing* ch = get_char_vis_world(this, target, nullptr, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip damn <target>\n\r");
@@ -579,20 +579,20 @@ void TBeing::doEgoTrip(const char* arg) {
       sendTo("Syntax: egotrip hate <target>\n\r");
       return;
     }
-    TBeing* ch = get_char_vis_world(this, target, NULL, EXACT_NO);
+    TBeing* ch = get_char_vis_world(this, target, nullptr, EXACT_NO);
     if (!ch) {
       sendTo("Could not locate character.\n\r");
       sendTo("Syntax: egotrip hate <target>\n\r");
       return;
     }
 
-    TThing* t = NULL;
+    TThing* t = nullptr;
     for (StuffIter it = roomp->stuff.begin();
          it != roomp->stuff.end() && (t = *it); ++it) {
       TMonster* tmon = dynamic_cast<TMonster*>(t);
       if (!tmon)
         continue;
-      if (tmon->Hates(ch, NULL))
+      if (tmon->Hates(ch, nullptr))
         continue;
       tmon->addHated(ch);
       act("$N now hates $p.", false, this, ch, tmon, TO_CHAR);
@@ -612,7 +612,7 @@ void TBeing::doEgoTrip(const char* arg) {
       int rc = tmon->wanderAround();
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tmon;
-        tmon = NULL;
+        tmon = nullptr;
       }
     }
     return;
@@ -625,15 +625,15 @@ void TBeing::doEgoTrip(const char* arg) {
     vlogf(LOG_MISC, format("%s egotripped cleanse") % getName());
 
     TBeing* tBeing;
-    affectedData *tAff = NULL, *tAffLast;
+    affectedData *tAff = nullptr, *tAffLast;
 
     for (tBeing = character_list; tBeing; tBeing = tBeing->next) {
       if (tBeing->name.empty()) {
-        vlogf(LOG_BUG, "Something with NULL name in world being list.");
+        vlogf(LOG_BUG, "Something with nullptr name in world being list.");
         continue;
       }
 
-      tAffLast = NULL;
+      tAffLast = nullptr;
 
       for (tAff = tBeing->affected; tAff;) {
         if (tAff->type != AFFECT_DISEASE) {
@@ -674,15 +674,15 @@ void TBeing::doEgoTrip(const char* arg) {
     return;
   } else if (is_abbrev(argument, "garble")) {
     sstring target, garble;
-    TBeing* garblePerson = NULL;
+    TBeing* garblePerson = nullptr;
     restarg = one_argument(restarg, target);
     restarg = one_argument(restarg, garble);
 
     if (!target.empty())
-      garblePerson = get_char_vis_world(this, target, NULL, EXACT_NO);
+      garblePerson = get_char_vis_world(this, target, nullptr, EXACT_NO);
 
     // list garbles if target is empty
-    if (garblePerson == NULL) {
+    if (garblePerson == nullptr) {
       sendTo("The list of available garbles to apply:\n\r");
       for (int iGarble = 0; iGarble < Garble::TYPE_MAX; iGarble++)
         sendTo(format(GarbleData[iGarble].automatic ? "  %s : %s (auto)\n\r"
@@ -706,7 +706,7 @@ void TBeing::doEgoTrip(const char* arg) {
     // list the target's garbles
     sstring printout = format("%s has the following set of garbles applied: ") %
                        garblePerson->name;
-    int garbles = garblePerson->getGarbles(NULL);
+    int garbles = garblePerson->getGarbles(nullptr);
     for (int iTargetGarble = 0; iTargetGarble < Garble::TYPE_MAX;
          iTargetGarble++) {
       if (garbles & (1 << iTargetGarble)) {

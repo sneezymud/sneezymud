@@ -89,7 +89,7 @@ static void test_fight_start(bool same_time) {
 
       // fix disciplines too
       delete mob1->discs;
-      mob1->discs = NULL;
+      mob1->discs = nullptr;
       mob1->assignDisciplinesClass();
     }
 
@@ -199,7 +199,7 @@ void test_fight_death(TBeing* ch, TBeing* v, int mod) {
   TThing* t;
   for (StuffIter it = rp2->stuff.begin(); it != rp2->stuff.end();) {
     t = *(it++);
-    t->purgeMe(NULL);
+    t->purgeMe(nullptr);
   }
 
   // ch is dead and had the TEST_FIGHT_MOB affect
@@ -210,7 +210,7 @@ void test_fight_death(TBeing* ch, TBeing* v, int mod) {
   num_fighting--;
 
 #if 0
-  vlogf(LOG_MISC, format("Test fight in room %d: %s beat %s by %.2f%% (%d)") % 
+  vlogf(LOG_MISC, format("Test fight in room %d: %s beat %s by %.2f%% (%d)") %
      ch->in_room % v->getName() % ch->getName() % v->getPercHit() % num_fighting);
 #else
   if (!(num_fighting % 100) ||
@@ -340,7 +340,7 @@ static void fastFight() {
     }
 
     // check out the time
-    gettimeofday(&now, NULL);
+    gettimeofday(&now, nullptr);
     timespent=timediff(&now, &last_time);
     timeout=timediff(&opt_time, &timespent);
     last_time.tv_sec = now.tv_sec + timeout.tv_sec;
@@ -398,7 +398,7 @@ static void fastFight() {
             int nm = tm->mobVnum();
             if (nm != mob1_num && nm != mob2_num) {
               delete tm;
-              tm = NULL;
+              tm = nullptr;
             }
             continue;
           }
@@ -408,7 +408,7 @@ static void fastFight() {
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               temp = tm->next;
               delete tm;
-              tm = NULL;
+              tm = nullptr;
               continue;
             }
           }
@@ -420,7 +420,7 @@ static void fastFight() {
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               temp = tm->next;
               delete tm;
-              tm = NULL;
+              tm = nullptr;
               continue;
             }
           }
@@ -432,7 +432,7 @@ static void fastFight() {
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               temp = tmp_ch->next;
               delete tmp_ch;
-              tmp_ch = NULL;
+              tmp_ch = nullptr;
               continue;
             }
           }
@@ -442,7 +442,7 @@ static void fastFight() {
             // died in update (disease)
             temp = tmp_ch->next;
             delete tmp_ch;
-            tmp_ch = NULL;
+            tmp_ch = nullptr;
             continue;
           }
           // soak up attack if not in combat
@@ -458,7 +458,7 @@ static void fastFight() {
 
             temp = tmp_ch->next;
             delete tmp_ch;
-            tmp_ch = NULL;
+            tmp_ch = nullptr;
             continue;
           }
         }
@@ -471,7 +471,7 @@ static void fastFight() {
               vlogf(LOG_BUG, "forced crash.  How did we get here?");
             }
             delete tmp_ch;
-            tmp_ch = NULL;
+            tmp_ch = nullptr;
             continue;
           }
         }

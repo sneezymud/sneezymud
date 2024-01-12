@@ -17,7 +17,7 @@ static void repHealing(TBeing* caster, TBeing* victim) {
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   if (caster != victim) {
     caster->sendTo(COLOR_SPELLS,
@@ -91,17 +91,17 @@ int healLight(TBeing* caster, TBeing* victim, int level, short bKnown,
         CS(spell);
         hp *= 2;
         colorAct(COLOR_SPELLS,
-          "$n is engulfed by an aura of the <C>deepest cyan.<z>", FALSE, victim,
-          NULL, 0, TO_ROOM);
+          "$n is engulfed by an aura of the <C>deepest cyan.<z>", false, victim,
+          nullptr, 0, TO_ROOM);
         colorAct(COLOR_SPELLS,
-          "You are engulfed by an aura of the <C>deepest cyan<z>.", FALSE,
-          victim, NULL, 0, TO_CHAR);
+          "You are engulfed by an aura of the <C>deepest cyan<z>.", false,
+          victim, nullptr, 0, TO_CHAR);
         break;
       case CRIT_S_NONE:
-        colorAct(COLOR_SPELLS, "$n glows briefly with a <c>cyan hue<z>.", FALSE,
-          victim, NULL, 0, TO_ROOM);
-        colorAct(COLOR_SPELLS, "You glow briefly with a <c>cyan hue<z>.", FALSE,
-          victim, NULL, 0, TO_CHAR);
+        colorAct(COLOR_SPELLS, "$n glows briefly with a <c>cyan hue<z>.", false,
+          victim, nullptr, 0, TO_ROOM);
+        colorAct(COLOR_SPELLS, "You glow briefly with a <c>cyan hue<z>.", false,
+          victim, nullptr, 0, TO_CHAR);
         break;
     }
     if (victim->getHit() < victim->hitLimit()) {
@@ -134,16 +134,16 @@ void healLight(TBeing* caster, TBeing* victim) {
   if (!bPassClericChecks(caster, spell))
     return;
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, NULL, victim,
+  act("$n beseeches $d for divine healing.", false, caster, nullptr, victim,
     TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, NULL, victim,
+  act("You beseech $d for divine healing.", false, caster, nullptr, victim,
     TO_CHAR);
 
   lag_t rounds = caster->isImmortal() ? LAG_0 : discArray[spell]->lag;
   taskDiffT diff = discArray[spell]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, spell, diff, 1, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, spell, diff, 1, "", rounds,
+    caster->in_room, 0, 0, true, 0);
 }
 
 int castHealLight(TBeing* caster, TBeing* victim) {
@@ -151,7 +151,7 @@ int castHealLight(TBeing* caster, TBeing* victim) {
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
   int ret = healLight(caster, victim, caster->getSkillLevel(spell),
@@ -167,7 +167,7 @@ int castHealLight(TBeing* caster, TBeing* victim) {
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
 
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     } else
       repHealing(caster, victim);
@@ -181,7 +181,7 @@ int castHealLight(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
   }
@@ -203,17 +203,17 @@ int healSerious(TBeing* caster, TBeing* victim, int level, short bKnown,
         CS(spell);
         hp *= 2;
         colorAct(COLOR_SPELLS,
-          "$n is engulfed by an aura of the <B>deepest blue<z>.", FALSE, victim,
-          NULL, 0, TO_ROOM);
+          "$n is engulfed by an aura of the <B>deepest blue<z>.", false, victim,
+          nullptr, 0, TO_ROOM);
         colorAct(COLOR_SPELLS,
-          "You are engulfed by an aura of the <B>deepest blue<z>.", FALSE,
-          victim, NULL, 0, TO_CHAR);
+          "You are engulfed by an aura of the <B>deepest blue<z>.", false,
+          victim, nullptr, 0, TO_CHAR);
         break;
       case CRIT_S_NONE:
-        colorAct(COLOR_SPELLS, "$n glows briefly with a <b>blue hue<z>.", FALSE,
-          victim, NULL, 0, TO_ROOM);
-        colorAct(COLOR_SPELLS, "You glow briefly with a <b>blue hue<z>.", FALSE,
-          victim, NULL, 0, TO_CHAR);
+        colorAct(COLOR_SPELLS, "$n glows briefly with a <b>blue hue<z>.", false,
+          victim, nullptr, 0, TO_ROOM);
+        colorAct(COLOR_SPELLS, "You glow briefly with a <b>blue hue<z>.", false,
+          victim, nullptr, 0, TO_CHAR);
         break;
     }
     if (victim->getHit() < victim->hitLimit()) {
@@ -245,22 +245,22 @@ void healSerious(TBeing* caster, TBeing* victim) {
   if (!bPassClericChecks(caster, spell))
     return;
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, NULL, victim,
+  act("$n beseeches $d for divine healing.", false, caster, nullptr, victim,
     TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, NULL, victim,
+  act("You beseech $d for divine healing.", false, caster, nullptr, victim,
     TO_CHAR);
   lag_t rounds = caster->isImmortal() ? LAG_0 : discArray[spell]->lag;
   taskDiffT diff = discArray[spell]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, spell, diff, 1, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, spell, diff, 1, "", rounds,
+    caster->in_room, 0, 0, true, 0);
 }
 int castHealSerious(TBeing* caster, TBeing* victim) {
   char nameBuf[256];
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
   int ret = healSerious(caster, victim, caster->getSkillLevel(spell),
@@ -275,7 +275,7 @@ int castHealSerious(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     } else {
       repHealing(caster, victim);
@@ -290,7 +290,7 @@ int castHealSerious(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
   }
@@ -301,20 +301,20 @@ int castHealSerious(TBeing* caster, TBeing* victim) {
 
 int castHealCritSpray(TBeing* caster, TBeing* victim) {
   if (caster && victim)
-    return FALSE;
-  return FALSE;
+    return false;
+  return false;
 }
 
 int castHealSpray(TBeing* caster, TBeing* victim) {
   if (caster && victim)
-    return FALSE;
-  return FALSE;
+    return false;
+  return false;
 }
 
 int castHealFullSpray(TBeing* caster, TBeing* victim) {
   if (caster && victim)
-    return FALSE;
-  return FALSE;
+    return false;
+  return false;
 }
 
 int healCritical(TBeing* caster, TBeing* victim, int level, short bKnown,
@@ -332,17 +332,17 @@ int healCritical(TBeing* caster, TBeing* victim, int level, short bKnown,
         CS(spell);
         hp *= 2;
         colorAct(COLOR_SPELLS,
-          "$n is engulfed by an aura of the <P>deepest indigo<1>.", FALSE,
-          victim, NULL, 0, TO_ROOM);
+          "$n is engulfed by an aura of the <P>deepest indigo<1>.", false,
+          victim, nullptr, 0, TO_ROOM);
         colorAct(COLOR_SPELLS,
-          "You are engulfed by an aura of the <P>deepest indigo<1>.", FALSE,
-          victim, NULL, 0, TO_CHAR);
+          "You are engulfed by an aura of the <P>deepest indigo<1>.", false,
+          victim, nullptr, 0, TO_CHAR);
         break;
       case CRIT_S_NONE:
         colorAct(COLOR_SPELLS, "$n glows briefly with an <p>indigo hue<1>.",
-          FALSE, victim, NULL, 0, TO_ROOM);
+          false, victim, nullptr, 0, TO_ROOM);
         colorAct(COLOR_SPELLS, "You glow briefly with an <p>indigo hue<1>.",
-          FALSE, victim, NULL, 0, TO_CHAR);
+          false, victim, nullptr, 0, TO_CHAR);
         break;
     }
     if (victim->getHit() < victim->hitLimit()) {
@@ -375,15 +375,15 @@ void healCritical(TBeing* caster, TBeing* victim) {
   if (!bPassClericChecks(caster, spell))
     return;
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, NULL, victim,
+  act("$n beseeches $d for divine healing.", false, caster, nullptr, victim,
     TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, NULL, victim,
+  act("You beseech $d for divine healing.", false, caster, nullptr, victim,
     TO_CHAR);
   lag_t rounds = caster->isImmortal() ? LAG_0 : discArray[spell]->lag;
   taskDiffT diff = discArray[spell]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, spell, diff, 1, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, spell, diff, 1, "", rounds,
+    caster->in_room, 0, 0, true, 0);
 }
 
 int castHealCritical(TBeing* caster, TBeing* victim) {
@@ -391,7 +391,7 @@ int castHealCritical(TBeing* caster, TBeing* victim) {
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
   int ret = healCritical(caster, victim, caster->getSkillLevel(spell),
@@ -406,7 +406,7 @@ int castHealCritical(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     } else {
       repHealing(caster, victim);
@@ -421,7 +421,7 @@ int castHealCritical(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
   }
@@ -443,15 +443,15 @@ int heal(TBeing* caster, TBeing* victim, int level, short bKnown,
         CS(spell);
         hp *= 2;
         act("$n is engulfed by an aura of the <b>deepest ultramarine<1>.",
-          FALSE, victim, NULL, 0, TO_ROOM);
+          false, victim, nullptr, 0, TO_ROOM);
         act("You are engulfed by an aura of the <b>deepest ultramarine<1>.",
-          FALSE, victim, NULL, 0, TO_CHAR);
+          false, victim, nullptr, 0, TO_CHAR);
         break;
       case CRIT_S_NONE:
-        act("$n glows briefly with an <b>ultramarine hue<1>.", FALSE, victim,
-          NULL, 0, TO_ROOM);
-        act("You glow briefly with an <b>ultramarine hue<1>.", FALSE, victim,
-          NULL, 0, TO_CHAR);
+        act("$n glows briefly with an <b>ultramarine hue<1>.", false, victim,
+          nullptr, 0, TO_ROOM);
+        act("You glow briefly with an <b>ultramarine hue<1>.", false, victim,
+          nullptr, 0, TO_CHAR);
         break;
     }
     if (victim->getHit() < victim->hitLimit()) {
@@ -482,15 +482,15 @@ void heal(TBeing* caster, TBeing* victim) {
   if (!bPassClericChecks(caster, spell))
     return;
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, NULL, victim,
+  act("$n beseeches $d for divine healing.", false, caster, nullptr, victim,
     TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, NULL, victim,
+  act("You beseech $d for divine healing.", false, caster, nullptr, victim,
     TO_CHAR);
   lag_t rounds = caster->isImmortal() ? LAG_0 : discArray[spell]->lag;
   taskDiffT diff = discArray[spell]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, spell, diff, 1, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, spell, diff, 1, "", rounds,
+    caster->in_room, 0, 0, true, 0);
 }
 
 int castHeal(TBeing* caster, TBeing* victim) {
@@ -498,7 +498,7 @@ int castHeal(TBeing* caster, TBeing* victim) {
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
   int ret = heal(caster, victim, caster->getSkillLevel(spell),
@@ -514,7 +514,7 @@ int castHeal(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     } else {
       repHealing(caster, victim);
@@ -529,7 +529,7 @@ int castHeal(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer<z>.\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
   }
@@ -551,15 +551,15 @@ int healFull(TBeing* caster, TBeing* victim, int level, short bKnown,
         CS(SPELL_HEAL_FULL);
         hp *= 2;
         act("$n is engulfed by an <B>aura of the deepest cobalt blue<1>.",
-          FALSE, victim, NULL, 0, TO_ROOM);
+          false, victim, nullptr, 0, TO_ROOM);
         act("You are engulfed by an <B>aura of the deepest cobalt blue<1>.",
-          FALSE, victim, NULL, 0, TO_CHAR);
+          false, victim, nullptr, 0, TO_CHAR);
         break;
       case CRIT_S_NONE:
-        act("$n glows briefly with <b>a cobalt blue hue<1>.", FALSE, victim,
-          NULL, 0, TO_ROOM);
-        act("You glow briefly with <b>a cobalt blue hue<1>.", FALSE, victim,
-          NULL, 0, TO_CHAR);
+        act("$n glows briefly with <b>a cobalt blue hue<1>.", false, victim,
+          nullptr, 0, TO_ROOM);
+        act("You glow briefly with <b>a cobalt blue hue<1>.", false, victim,
+          nullptr, 0, TO_CHAR);
         break;
     }
     if (victim->getHit() < victim->hitLimit()) {
@@ -589,16 +589,16 @@ void healFull(TBeing* caster, TBeing* victim) {
   if (!bPassClericChecks(caster, spell))
     return;
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, NULL, victim,
+  act("$n beseeches $d for divine healing.", false, caster, nullptr, victim,
     TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, NULL, victim,
+  act("You beseech $d for divine healing.", false, caster, nullptr, victim,
     TO_CHAR);
 
   lag_t rounds = caster->isImmortal() ? LAG_0 : discArray[spell]->lag;
   taskDiffT diff = discArray[spell]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, spell, diff, 1, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, spell, diff, 1, "", rounds,
+    caster->in_room, 0, 0, true, 0);
 }
 
 int castHealFull(TBeing* caster, TBeing* victim) {
@@ -606,7 +606,7 @@ int castHealFull(TBeing* caster, TBeing* victim) {
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
   int ret = healFull(caster, victim, caster->getSkillLevel(spell),
@@ -621,7 +621,7 @@ int castHealFull(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     } else {
       repHealing(caster, victim);
@@ -636,7 +636,7 @@ int castHealFull(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you stop your prayer.<z>\n\r") %
             nameBuf);
-      act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
   }
@@ -645,11 +645,11 @@ int castHealFull(TBeing* caster, TBeing* victim) {
 
 int healCritSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
   int hp_tmp;
-  //  bool healed_evil = FALSE;
+  //  bool healed_evil = false;
   //  // int decrem;
   int hp =
-    caster->getSkillDam(NULL, SPELL_HEAL_CRITICAL_SPRAY, level, adv_learn);
-  TThing* t = NULL;
+    caster->getSkillDam(nullptr, SPELL_HEAL_CRITICAL_SPRAY, level, adv_learn);
+  TThing* t = nullptr;
   TBeing* targ;
 
   // spray is not tasked, so no need to adjust hp like in other heals
@@ -665,16 +665,16 @@ int healCritSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
         hp *= 2;
         act(
           "A healing fountain of beautiful colors pours forth from $n's hands!",
-          FALSE, caster, NULL, NULL, TO_ROOM);
+          false, caster, nullptr, nullptr, TO_ROOM);
         act(
           "A healing fountain of beautiful colors pours forth from your hands!",
-          FALSE, caster, NULL, NULL, TO_CHAR);
+          false, caster, nullptr, nullptr, TO_CHAR);
         break;
       case CRIT_S_NONE:
         act("A beautiful healing spray of many colors issues from $n's hands!",
-          FALSE, caster, NULL, NULL, TO_ROOM);
+          false, caster, nullptr, nullptr, TO_ROOM);
         act("A beautiful healing spray of many colors issues from your hands!",
-          FALSE, caster, NULL, NULL, TO_CHAR);
+          false, caster, nullptr, nullptr, TO_CHAR);
         break;
     }
 
@@ -691,9 +691,9 @@ int healCritSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
         caster->reconcileHelp(targ,
           discArray[SPELL_HEAL_CRITICAL_SPRAY]->alignMod);
       }
-      act("$n revels in the healing spray!", FALSE, targ, NULL, NULL, TO_ROOM);
-      act("You revel in a healing spray!\n\rYou feel revived!", FALSE, targ,
-        NULL, NULL, TO_CHAR);
+      act("$n revels in the healing spray!", false, targ, nullptr, nullptr, TO_ROOM);
+      act("You revel in a healing spray!\n\rYou feel revived!", false, targ,
+        nullptr, nullptr, TO_CHAR);
 
       hp_tmp = hp;
       //      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
@@ -703,7 +703,7 @@ int healCritSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       if (caster->isOppositeFaction(targ)) {
         decrem = (int) (caster->getMove() / 4);
         caster->addToMove(-decrem);
-        healed_evil = TRUE;
+        healed_evil = true;
       }
 #endif
     }
@@ -712,7 +712,7 @@ int healCritSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       caster->sendTo(format("%s frowns upon the healing of minions of the enemy.\n\r") %
             caster->yourDeity(SPELL_HEAL_CRITICAL_SPRAY, FIRST_PERSON.cap()));
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
-      act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("$n's chest heaves from exhaustion.", false, caster, nullptr, nullptr, TO_ROOM);
       caster->updatePos();
     }
 #endif
@@ -729,8 +729,8 @@ void healCritSpray(TBeing* caster) {
 
   int level = caster->getSkillLevel(SPELL_HEAL_CRITICAL_SPRAY);
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, 0, 0, TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, 0, 0, TO_CHAR);
+  act("$n beseeches $d for divine healing.", false, caster, 0, 0, TO_ROOM);
+  act("You beseech $d for divine healing.", false, caster, 0, 0, TO_CHAR);
 
   int ret = healCritSpray(caster, level,
     caster->getSkillValue(SPELL_HEAL_CRITICAL_SPRAY),
@@ -750,12 +750,12 @@ void healCritSpray(TBeing* caster, TMagicItem* obj) {
 }
 
 int healSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
-  int hp = caster->getSkillDam(NULL, SPELL_HEAL_SPRAY, level, adv_learn);
+  int hp = caster->getSkillDam(nullptr, SPELL_HEAL_SPRAY, level, adv_learn);
   int hp_tmp;
-  // bool healed_evil= FALSE;
+  // bool healed_evil= false;
   // int decrem;
-  TThing* t = NULL;
-  TBeing* targ = NULL;
+  TThing* t = nullptr;
+  TBeing* targ = nullptr;
 
   // spray is not tasked, so no need to adjust hp like in other heals
 
@@ -771,17 +771,17 @@ int healSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
         act(
           "A magnificent fountain of twinkling colors gushs out in front of "
           "you!",
-          FALSE, caster, NULL, 0, TO_CHAR);
+          false, caster, nullptr, 0, TO_CHAR);
         act(
           "A magnificent fountain of twinkling colors gushs out in front of "
           "$n!\n\rYou feel revived!",
-          FALSE, caster, NULL, 0, TO_ROOM);
+          false, caster, nullptr, 0, TO_ROOM);
         break;
       case CRIT_S_NONE:
         act("A magnificent spray of twinkling colors fans out in front of you!",
-          FALSE, caster, NULL, 0, TO_CHAR);
+          false, caster, nullptr, 0, TO_CHAR);
         act("A magnificent spray of twinkling colors fans out in front of $n!",
-          FALSE, caster, NULL, 0, TO_ROOM);
+          false, caster, nullptr, 0, TO_ROOM);
         break;
     }
 
@@ -799,9 +799,9 @@ int healSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       if (targ->getHit() < targ->hitLimit())
         caster->reconcileHelp(targ, discArray[SPELL_HEAL_SPRAY]->alignMod);
 
-      act("$n revels in the healing bath!", FALSE, targ, NULL, NULL, TO_ROOM);
-      act("You revel in the healing bath!\n\rYou feel revived!", FALSE, targ,
-        NULL, NULL, TO_CHAR);
+      act("$n revels in the healing bath!", false, targ, nullptr, nullptr, TO_ROOM);
+      act("You revel in the healing bath!\n\rYou feel revived!", false, targ,
+        nullptr, nullptr, TO_CHAR);
 
       hp_tmp = hp;
       //      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
@@ -811,7 +811,7 @@ int healSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       if (caster->isOppositeFaction(targ)) {
         decrem = (int) (caster->getMove() / 4);
         caster->addToMove(-decrem);
-        healed_evil = TRUE;
+        healed_evil = true;
       }
 #endif
     }
@@ -820,7 +820,7 @@ int healSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       caster->sendTo(format("%s frowns upon the healing of minions of the enemy.\n\r") %
           caster->yourDeity(SPELL_HEAL_SPRAY, FIRST_PERSON.cap()));
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
-      act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("$n's chest heaves from exhaustion.", false, caster, nullptr, nullptr, TO_ROOM);
       caster->updatePos();
     }
 #endif
@@ -837,8 +837,8 @@ void healSpray(TBeing* caster) {
 
   int level = caster->getSkillLevel(SPELL_HEAL_SPRAY);
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, 0, 0, TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, 0, 0, TO_CHAR);
+  act("$n beseeches $d for divine healing.", false, caster, 0, 0, TO_ROOM);
+  act("You beseech $d for divine healing.", false, caster, 0, 0, TO_CHAR);
 
   int ret = healSpray(caster, level, caster->getSkillValue(SPELL_HEAL_SPRAY),
     caster->getAdvLearning(SPELL_HEAL_SPRAY));
@@ -857,12 +857,12 @@ void healSpray(TBeing* caster, TMagicItem* obj) {
 }
 
 int healFullSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
-  int hp = caster->getSkillDam(NULL, SPELL_HEAL_FULL_SPRAY, level, adv_learn);
+  int hp = caster->getSkillDam(nullptr, SPELL_HEAL_FULL_SPRAY, level, adv_learn);
   int hp_tmp;
-  // bool healed_evil = FALSE;
+  // bool healed_evil = false;
   // int decrem;
-  TBeing* targ = NULL;
-  TThing* t = NULL;
+  TBeing* targ = nullptr;
+  TThing* t = nullptr;
 
   // spray is not tasked, so no need to adjust hp like in other heals
 
@@ -877,16 +877,16 @@ int healFullSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
         hp *= 2;
         act(
           "A magnificent rainbow of bright colors streams out in front of you!",
-          FALSE, caster, NULL, 0, TO_CHAR);
+          false, caster, nullptr, 0, TO_CHAR);
         act(
           "A magnificent rainbow of bright colors streams out in front of $n!",
-          FALSE, caster, NULL, 0, TO_ROOM);
+          false, caster, nullptr, 0, TO_ROOM);
         break;
       case CRIT_S_NONE:
         act("A beautiful prism of brilliant colors fans out in front of $n!",
-          FALSE, caster, NULL, 0, TO_ROOM);
+          false, caster, nullptr, 0, TO_ROOM);
         act("A beautiful prism of brilliant colors fans out in front of you!",
-          FALSE, caster, NULL, 0, TO_CHAR);
+          false, caster, nullptr, 0, TO_CHAR);
         break;
     }
 
@@ -902,9 +902,9 @@ int healFullSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       if (targ->getHit() < targ->hitLimit()) {
         caster->reconcileHelp(targ, discArray[SPELL_HEAL_FULL_SPRAY]->alignMod);
       }
-      act("$n revels in the healing colors!", FALSE, targ, NULL, NULL, TO_ROOM);
-      act("You revel in the healing colors!\n\rYou feel revived!", FALSE, targ,
-        NULL, NULL, TO_CHAR);
+      act("$n revels in the healing colors!", false, targ, nullptr, nullptr, TO_ROOM);
+      act("You revel in the healing colors!\n\rYou feel revived!", false, targ,
+        nullptr, nullptr, TO_CHAR);
       hp_tmp = hp;
       //      hp_tmp /= (caster->isSameFaction(targ) ? 1 : 2);
       targ->addToHit(hp_tmp);
@@ -913,7 +913,7 @@ int healFullSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       if (caster->isOppositeFaction(targ)) {
         decrem = (int) (caster->getMove() / 4);
         caster->addToMove(-decrem);
-        healed_evil = TRUE;
+        healed_evil = true;
       }
 #endif
     }
@@ -922,7 +922,7 @@ int healFullSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       caster->sendTo(format("%s frowns upon the healing of minions of the enemy.\n\r") %
             caster->yourDeity(SPELL_HEAL_FULL_SPRAY, FIRST_PERSON.cap()));
       caster->sendTo("You are exhausted from the effort of doing so.\n\r");
-      act("$n's chest heaves from exhaustion.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("$n's chest heaves from exhaustion.", false, caster, nullptr, nullptr, TO_ROOM);
       caster->updatePos();
     }
 #endif
@@ -939,8 +939,8 @@ void healFullSpray(TBeing* caster) {
 
   int level = caster->getSkillLevel(SPELL_HEAL_FULL_SPRAY);
 
-  act("$n beseeches $d for divine healing.", FALSE, caster, 0, 0, TO_ROOM);
-  act("You beseech $d for divine healing.", FALSE, caster, 0, 0, TO_CHAR);
+  act("$n beseeches $d for divine healing.", false, caster, 0, 0, TO_ROOM);
+  act("You beseech $d for divine healing.", false, caster, 0, 0, TO_CHAR);
 
   int ret =
     healFullSpray(caster, level, caster->getSkillValue(SPELL_HEAL_FULL_SPRAY),
@@ -965,18 +965,18 @@ int knitBone(TBeing* caster, TBeing* victim, int, short bKnown) {
   wearSlotT slot;
 
   if (!victim) {
-    act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 
-  slot = victim->getRandomPart(PART_BROKEN, FALSE, TRUE);
+  slot = victim->getRandomPart(PART_BROKEN, false, true);
   if (slot == WEAR_NOWHERE) {
     if (caster == victim)
       caster->sendTo("You have no broken bones to knit!\n\r");
     else
-      act("$N has no broken bones!", FALSE, caster, NULL, victim, TO_CHAR);
+      act("$N has no broken bones!", false, caster, nullptr, victim, TO_CHAR);
 
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -987,10 +987,10 @@ int knitBone(TBeing* caster, TBeing* victim, int, short bKnown) {
     victim->remLimbFlags(slot, PART_BROKEN);
     sprintf(buf, "The broken bones in your %s miraculously knit together!",
       limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+    act(buf, false, victim, nullptr, nullptr, TO_CHAR);
     sprintf(buf, "The broken bones in $n's %s miraculously knit together!",
       limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+    act(buf, false, victim, nullptr, nullptr, TO_ROOM);
     caster->reconcileHelp(victim, discArray[SPELL_KNIT_BONE]->alignMod);
     checkFactionHelp(caster, victim);
     return SPELL_SUCCESS;
@@ -1022,7 +1022,7 @@ int clot(TBeing* caster, TBeing* victim, int, short bKnown, spellNumT spell) {
   wearSlotT slot;
 
   // find a bleeding slot
-  slot = victim->getRandomPart(PART_BLEEDING, FALSE, TRUE);
+  slot = victim->getRandomPart(PART_BLEEDING, false, true);
   if (slot == WEAR_NOWHERE && spell == SKILL_WOHLIN)
     return SPELL_FAIL;
 
@@ -1042,9 +1042,9 @@ int clot(TBeing* caster, TBeing* victim, int, short bKnown, spellNumT spell) {
     victim->diseaseFrom(DISEASE_HEMORRHAGE);
     act(
       "Your internal bleeding halts and you feel you can breath a bit easier!",
-      FALSE, victim, NULL, NULL, TO_CHAR);
+      false, victim, nullptr, nullptr, TO_CHAR);
     act("$n's seems to breath easier as their internal bleeding is cured!",
-      FALSE, victim, NULL, NULL, TO_ROOM);
+      false, victim, nullptr, nullptr, TO_ROOM);
     caster->reconcileHelp(victim, discArray[spell]->alignMod);
     checkFactionHelp(caster, victim);
 
@@ -1054,7 +1054,7 @@ int clot(TBeing* caster, TBeing* victim, int, short bKnown, spellNumT spell) {
 
   if (slot == WEAR_NOWHERE) {
     caster->sendTo("Uhm, are they bleeding???\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -1065,11 +1065,11 @@ int clot(TBeing* caster, TBeing* victim, int, short bKnown, spellNumT spell) {
     sprintf(buf,
       "The gash on your %s slowly stops bleeding and the flesh closes up!",
       limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+    act(buf, false, victim, nullptr, nullptr, TO_CHAR);
     sprintf(buf,
       "The gash on $n's %s slowly stops bleeding and the flesh closes up!",
       limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+    act(buf, false, victim, nullptr, nullptr, TO_ROOM);
     caster->reconcileHelp(victim, discArray[spell]->alignMod);
     checkFactionHelp(caster, victim);
 
@@ -1104,16 +1104,16 @@ int restoreLimb(TBeing* caster, TBeing* victim, int, short bKnown) {
   wearSlotT slot, num;
   wearSlotT j;
 
-  slot = victim->getRandomPart(PART_USELESS | PART_PARALYZED, FALSE, TRUE);
+  slot = victim->getRandomPart(PART_USELESS | PART_PARALYZED, false, true);
 
   if (slot == WEAR_NOWHERE) {
     if (caster == victim)
       caster->sendTo("You don't have any limbs that need restoring!\n\r");
     else
-      act("$N doesn't have any limbs that need restoring.", FALSE, caster, 0,
+      act("$N doesn't have any limbs that need restoring.", false, caster, 0,
         victim, TO_CHAR);
 
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -1126,9 +1126,9 @@ int restoreLimb(TBeing* caster, TBeing* victim, int, short bKnown) {
     victim->setCurLimbHealth(slot, victim->getMaxLimbHealth(slot));
 
     sprintf(buf, "You regain use of your %s!", limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+    act(buf, false, victim, nullptr, nullptr, TO_CHAR);
     sprintf(buf, "$n regains use of $s %s!", limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+    act(buf, false, victim, nullptr, nullptr, TO_ROOM);
 
     caster->reconcileHelp(victim, discArray[SPELL_RESTORE_LIMB]->alignMod);
     checkFactionHelp(caster, victim);
@@ -1141,10 +1141,10 @@ int restoreLimb(TBeing* caster, TBeing* victim, int, short bKnown) {
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_RESTORE_LIMB);
-        act("Oops! You have a terrible feeling something went wrong...", FALSE,
-          caster, NULL, NULL, TO_CHAR);
-        act("Something goes terribly wrong!", FALSE, caster, 0, 0, TO_CHAR);
-        act("Something goes terribly wrong!", FALSE, caster, 0, 0, TO_ROOM);
+        act("Oops! You have a terrible feeling something went wrong...", false,
+          caster, nullptr, nullptr, TO_CHAR);
+        act("Something goes terribly wrong!", false, caster, 0, 0, TO_CHAR);
+        act("Something goes terribly wrong!", false, caster, 0, 0, TO_ROOM);
 
         if (victim->isPc()) {
           do {
@@ -1196,18 +1196,18 @@ int sterilize(TBeing* caster, TBeing* victim, int, short bKnown,
   wearSlotT slot;
 
   // find an infected slot
-  slot = victim->getRandomPart(PART_INFECTED, FALSE, TRUE);
+  slot = victim->getRandomPart(PART_INFECTED, false, true);
 
   if (slot == WEAR_NOWHERE && spell == SKILL_WOHLIN)
     return SPELL_FAIL;
 
   if (slot == WEAR_NOWHERE) {
     if (caster == victim)
-      act("You need no sterilization.", FALSE, caster, NULL, NULL, TO_CHAR);
+      act("You need no sterilization.", false, caster, nullptr, nullptr, TO_CHAR);
     else
-      act("$N needs no sterilization.", FALSE, caster, NULL, victim, TO_CHAR);
+      act("$N needs no sterilization.", false, caster, nullptr, victim, TO_CHAR);
 
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -1216,9 +1216,9 @@ int sterilize(TBeing* caster, TBeing* victim, int, short bKnown,
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     victim->remLimbFlags(slot, PART_INFECTED);
     sprintf(buf, "The infection in your %s has been killed!", limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+    act(buf, false, victim, nullptr, nullptr, TO_CHAR);
     sprintf(buf, "The infection in $n's %s has been killed!", limb);
-    act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+    act(buf, false, victim, nullptr, nullptr, TO_ROOM);
     caster->reconcileHelp(victim, discArray[spell]->alignMod);
     checkFactionHelp(caster, victim);
     return SPELL_SUCCESS;
@@ -1257,7 +1257,7 @@ bool salve_bruise(TBeing* caster, TBeing* victim, byte bKnown,
   spellNumT spell) {
   char buf[256];
 
-  wearSlotT slot = victim->getRandomPart(PART_BRUISED, FALSE, TRUE);
+  wearSlotT slot = victim->getRandomPart(PART_BRUISED, false, true);
   if (slot == WEAR_NOWHERE)
     return false;
 
@@ -1270,10 +1270,10 @@ bool salve_bruise(TBeing* caster, TBeing* victim, byte bKnown,
   victim->remLimbFlags(slot, PART_BRUISED);
   sprintf(buf, "The bruise on your %s has been removed!",
     victim->describeBodySlot(slot).c_str());
-  act(buf, FALSE, victim, NULL, NULL, TO_CHAR);
+  act(buf, false, victim, nullptr, nullptr, TO_CHAR);
   sprintf(buf, "The bruise on $n's %s has been removed!",
     victim->describeBodySlot(slot).c_str());
-  act(buf, FALSE, victim, NULL, NULL, TO_ROOM);
+  act(buf, false, victim, nullptr, nullptr, TO_ROOM);
 
   return true;
 }
@@ -1323,18 +1323,18 @@ int salve(TBeing* caster, TBeing* victim, int level, short bKnown,
     if (caster != victim) {
       if (fixed) {
         sprintf(buf, "You salve %s of $N's wounds.", slot ? "some" : "all");
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf, "$n salves %s of $N's wounds.", slot ? "some" : "all");
-        act(buf, TRUE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, true, caster, nullptr, victim, TO_NOTVICT);
         if (slot == WEAR_NOWHERE)
-          act("All of your wounds have been salved.", FALSE, caster, NULL,
+          act("All of your wounds have been salved.", false, caster, nullptr,
             victim, TO_VICT);
       } else {
-        act("You bestow a gratuitous salve upon $N.", FALSE, caster, NULL,
+        act("You bestow a gratuitous salve upon $N.", false, caster, nullptr,
           victim, TO_CHAR);
-        act("Your wounds don't need salved, but that doesn't stop $n.", FALSE,
-          caster, NULL, victim, TO_VICT);
-        act("$n just graciously salved $N, needlessly.", TRUE, caster, NULL,
+        act("Your wounds don't need salved, but that doesn't stop $n.", false,
+          caster, nullptr, victim, TO_VICT);
+        act("$n just graciously salved $N, needlessly.", true, caster, nullptr,
           victim, TO_NOTVICT);
       }
     } else {
@@ -1343,7 +1343,7 @@ int salve(TBeing* caster, TBeing* victim, int level, short bKnown,
           caster->sendTo("You didn't need any salving, dummy.\n\r");
         else if (slot == WEAR_NOWHERE)
           caster->sendTo("All of your wounds have been salved.\n\r");
-        act("$n salves $s wounds.", TRUE, caster, NULL, victim, TO_ROOM);
+        act("$n salves $s wounds.", true, caster, nullptr, victim, TO_ROOM);
       }
     }
     if (fixed) {
@@ -1353,7 +1353,7 @@ int salve(TBeing* caster, TBeing* victim, int level, short bKnown,
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, spell) == CRIT_F_HITSELF) {
-      slot = victim->getRandomPart(PART_USELESS, TRUE);
+      slot = victim->getRandomPart(PART_USELESS, true);
       if (slot) {
         if (IS_SET(victim->getLimbFlags(slot), PART_BLEEDING) ||
             (!caster->isLucky(levelLuckModifier(victim->GetMaxLevel())) &&
@@ -1366,9 +1366,9 @@ int salve(TBeing* caster, TBeing* victim, int level, short bKnown,
           victim->rawBleed(slot, (level * 3) + 100, SILENT_YES,
             CHECK_IMMUNITY_YES);
         }
-        act("$n screams.  Something went terribly wrong.", FALSE, caster, NULL,
+        act("$n screams.  Something went terribly wrong.", false, caster, nullptr,
           0, TO_ROOM);
-        act("You scream as something goes terribly wrong.", FALSE, caster, NULL,
+        act("You scream as something goes terribly wrong.", false, caster, nullptr,
           0, TO_CHAR);
         return SPELL_CRIT_FAIL;
       }
@@ -1400,7 +1400,7 @@ void salve(TBeing* caster, TBeing* victim, TMagicItem* obj, spellNumT spell) {
 int expel(TBeing* caster, TBeing* victim, int, short bKnown, spellNumT spell) {
   char buf[512], limb[256];
   wearSlotT slot;
-  TThing* o = NULL;
+  TThing* o = nullptr;
   int res;
 
   /* find a slot with something stuck in it */
@@ -1412,9 +1412,9 @@ int expel(TBeing* caster, TBeing* victim, int, short bKnown, spellNumT spell) {
   }
 
   if (slot >= MAX_WEAR) {
-    act("$N's has no objects in $M to expel!", FALSE, caster, NULL, victim,
+    act("$N's has no objects in $M to expel!", false, caster, nullptr, victim,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -1426,20 +1426,20 @@ int expel(TBeing* caster, TBeing* victim, int, short bKnown, spellNumT spell) {
 
     sprintf(limb, "%s", victim->describeBodySlot(slot).c_str());
     sprintf(buf, "$p is expelled from your %s and falls on the $g!", limb);
-    act(buf, FALSE, victim, o, NULL, TO_CHAR);
+    act(buf, false, victim, o, nullptr, TO_CHAR);
     sprintf(buf, "$p is expelled from $n's %s and falls on the $g!", limb);
-    act(buf, FALSE, victim, o, NULL, TO_ROOM);
+    act(buf, false, victim, o, nullptr, TO_ROOM);
     caster->reconcileHelp(victim, discArray[spell]->alignMod);
     checkFactionHelp(caster, victim);
-    *(caster->roomp) += *(victim->pulloutObj(slot, TRUE, &res));
-    int rc = o->checkSpec(caster, CMD_OBJ_EXPELLED, "", NULL);
+    *(caster->roomp) += *(victim->pulloutObj(slot, true, &res));
+    int rc = o->checkSpec(caster, CMD_OBJ_EXPELLED, "", nullptr);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete o;
-      o = NULL;
+      o = nullptr;
     }
     return SPELL_SUCCESS;
   } else {
-    act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 }

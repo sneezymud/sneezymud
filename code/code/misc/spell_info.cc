@@ -84,7 +84,7 @@ spellInfo::spellInfo(skillUseClassT typ, discNumT disc, discNumT assDisc,
   secAmtLearnDo(secAmtLearnDo) {}
 
 void buildSpellArray() {
-  // this memset is done so that unassigned discArrays are set to NULL
+  // this memset is done so that unassigned discArrays are set to nullptr
   memset((char*)discArray, 0, sizeof(discArray));
 
   // MAGE CLASS

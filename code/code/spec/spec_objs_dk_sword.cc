@@ -3,16 +3,16 @@
 #include "being.h"
 
 void doWord(TBeing* ch, TObj* o) {
-  TBeing* vict = NULL;
+  TBeing* vict = nullptr;
 
   if (ch->checkObjUsed(o)) {
-    act("You cannot use $p's powers again this soon.", TRUE, ch, o, NULL,
-      TO_CHAR, NULL);
+    act("You cannot use $p's powers again this soon.", true, ch, o, nullptr,
+      TO_CHAR, nullptr);
     return;
   }
   if (!(vict = ch->fight())) {
-    act("You cannot use $p's powers unless you are fighting.", TRUE, ch, o,
-      NULL, TO_CHAR, NULL);
+    act("You cannot use $p's powers unless you are fighting.", true, ch, o,
+      nullptr, TO_CHAR, nullptr);
     return;
   }
 
@@ -42,20 +42,20 @@ void doWord(TBeing* ch, TObj* o) {
   act(
     "<k>$n's $o glows <z><r>blood red<1><k> as $e chants a <z><r>word of "
     "power<1><k>.<1>",
-    TRUE, ch, o, NULL, TO_ROOM, NULL);
+    true, ch, o, nullptr, TO_ROOM, nullptr);
   act(
     "<k>Your $o glows <z><r>blood red<1><k> as you chant the <z><r>word of "
     "power<1><k>.<1>",
-    TRUE, ch, o, NULL, TO_CHAR, NULL);
+    true, ch, o, nullptr, TO_CHAR, nullptr);
 
   act(
     "<k>A web of shadows erupts from $n's $o<k>, and strikes $N<k> full on!<1>",
-    TRUE, ch, o, vict, TO_NOTVICT, NULL);
+    true, ch, o, vict, TO_NOTVICT, nullptr);
   act("<k>A web of shadows erupts from $n's $o<k>, and strikes you full on!<1>",
-    TRUE, ch, o, vict, TO_VICT, NULL);
+    true, ch, o, vict, TO_VICT, nullptr);
   act(
     "<k>A web of shadows erupts from your $o<k>, and strikes $N<k> full on!<1>",
-    TRUE, ch, o, vict, TO_CHAR, NULL);
+    true, ch, o, vict, TO_CHAR, nullptr);
 
   vict->affectTo(&aff1);
   vict->affectTo(&aff2);
@@ -81,7 +81,7 @@ void doWrath(TBeing* ch, TObj* o) {
       TO_CHAR);
   }
 
-  ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+  ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
 }
 
 int doBleed(TBeing* ch, TBeing* vict, const char* arg, TObj* o) {
@@ -90,7 +90,7 @@ int doBleed(TBeing* ch, TBeing* vict, const char* arg, TObj* o) {
   wearSlotT part_hit = wearSlotT((long int)arg);
 
   if (notBleedSlot(part_hit))
-    return FALSE;
+    return false;
 
   dam = ::number(4, 10);
 
@@ -113,7 +113,7 @@ int doBleed(TBeing* ch, TBeing* vict, const char* arg, TObj* o) {
   rc = ch->reconcileDamage(vict, dam, DAMAGE_NORMAL);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
-  return TRUE;
+  return true;
 }
 
 int doLifeLeach(TBeing* ch, TBeing* vict, TObj* o) {
@@ -130,21 +130,21 @@ int doLifeLeach(TBeing* ch, TBeing* vict, TObj* o) {
   rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
-  return TRUE;
+  return true;
 }
 
 int dkSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBeing* ch;
 
   if (!o)
-    return FALSE;
+    return false;
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-    return FALSE;  // weapon not equipped (carried or on ground)
+    return false;  // weapon not equipped (carried or on ground)
 
   if (cmd == CMD_GENERIC_PULSE) {
     if (!::number(0, 29)) {
       doWrath(ch, o);
-      return TRUE;
+      return true;
     }
   }
 
@@ -163,9 +163,9 @@ int dkSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
     if (buf == "unholy" && buf2 == "word") {
       doWord(ch, o);
-      return TRUE;
+      return true;
     }
   }
 
-  return FALSE;
+  return false;
 }

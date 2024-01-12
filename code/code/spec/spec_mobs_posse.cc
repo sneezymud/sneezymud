@@ -17,14 +17,14 @@
 
 int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
-  return FALSE;  // buffer overflow.
+  return false;  // buffer overflow.
 
   int i, rc, found = 0;
-  TBeing *mob, *vict = NULL;
+  TBeing *mob, *vict = nullptr;
   const int criminals[3] = {180, 134, 131};
-  TThing* t = NULL;
-  TMonster* tmons = NULL;
-  TBeing* tb = NULL;
+  TThing* t = nullptr;
+  TMonster* tmons = nullptr;
+  TBeing* tb = nullptr;
   char buf[256];
   followData *f, *n;
 
@@ -51,41 +51,41 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
         cur_path(0),
         state(STATE_NONE),
         arrest_state(0),
-        criminal(NULL) {}
+        criminal(nullptr) {}
       ~hunt_struct() {}
   } * job;
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   // Not doing anything yet, time to start a posse
   if (!myself->act_ptr) {
     if (::number(0, 25))
-      return FALSE;
+      return false;
 
     if (!(myself->act_ptr = new hunt_struct())) {
       vlogf(LOG_BUG, "failed memory allocation in mob proc grimhavenPosse.");
-      return FALSE;
+      return false;
     }
     job = static_cast<hunt_struct*>(myself->act_ptr);
     job->cur_pos = 0;
     job->state = STATE_NONE;
     job->cur_path = 0;
     job->arrest_state = 0;
-    job->criminal = NULL;
+    job->criminal = nullptr;
 
-    act("$n decides to gather a posse and hunt for fugitives!", TRUE, myself, 0,
+    act("$n decides to gather a posse and hunt for fugitives!", true, myself, 0,
       0, TO_ROOM);
 
     REMOVE_BIT(myself->specials.act, ACT_SENTINEL);
 
-    act("Some cityguards come to his aid.", TRUE, myself, 0, 0, TO_ROOM);
+    act("Some cityguards come to his aid.", true, myself, 0, 0, TO_ROOM);
 
     SET_BIT(myself->specials.affectedBy, AFF_GROUP);
     for (i = 0; i < 3; i++) {
@@ -103,12 +103,12 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_BUG, "grimhavenPosse: error, static_cast");
-    return TRUE;
+    return true;
   }
 
   // allow us to abort it.
   if (myself->inRoom() == Room::HELL)
-    return FALSE;
+    return false;
 
   // Make sure our criminal is still alive and in the same room
   if (job->criminal) {
@@ -119,11 +119,11 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     }
     if (!found) {
       myself->doSay("Bah.  We'll have to find another one.");
-      job->criminal = NULL;
+      job->criminal = nullptr;
       job->arrest_state = STATE_NONE;
       if (job->state == STATE_ARREST_FAST || job->state == STATE_BOOK_UM)
         job->state = STATE_FIND_CRIM;
-      return TRUE;
+      return true;
     }
   }
 
@@ -135,13 +135,13 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     case STATE_FIND_CRIM:      // finding a criminal, go slow
     case STATE_RETURN_OFFICE:  // head back to office
       if (::number(0, 2))
-        return FALSE;
+        return false;
       break;
     case STATE_LEAVE_OFFICE:  // leaving barracks, go fast
     case STATE_BOOK_UM:       // taking criminal in, fast
     case STATE_TO_JAIL:
       if (::number(0, 1))
-        return FALSE;
+        return false;
       break;
   }
 
@@ -161,7 +161,7 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
         switch (job->state) {
           case STATE_LEAVE_OFFICE:
             act("$n looks at the sky and takes a deep breath of fresh air.",
-              TRUE, myself, 0, 0, TO_ROOM);
+              true, myself, 0, 0, TO_ROOM);
             myself->doSay("Alright boys, let's find us some criminals!");
             job->state = STATE_FIND_CRIM;
             job->cur_pos = 9;
@@ -180,7 +180,7 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
               act("$n slinks off into the shadows to serve out his term.", 0,
                 job->criminal, 0, 0, TO_ROOM);
               delete job->criminal;
-              job->criminal = NULL;
+              job->criminal = nullptr;
             }
             job->cur_path = 2;
             job->state = STATE_RETURN_OFFICE;
@@ -194,22 +194,22 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
                 tmons = dynamic_cast<TMonster*>(vict);
                 if (!tmons)
                   continue;
-                act("$N salutes $n briskly and goes back to normal duty.", TRUE,
+                act("$N salutes $n briskly and goes back to normal duty.", true,
                   myself, 0, tmons, TO_ROOM);
                 delete tmons;
               }
             }
 
-            act("$n relaxes after a hard day of criminal hunting.", TRUE,
+            act("$n relaxes after a hard day of criminal hunting.", true,
               myself, 0, 0, TO_ROOM);
             SET_BIT(myself->specials.act, ACT_SENTINEL);
             delete static_cast<hunt_struct*>(myself->act_ptr);
-            myself->act_ptr = NULL;
+            myself->act_ptr = nullptr;
             break;
           default:
             break;
         }
-        return TRUE;
+        return true;
       } else if (head_guard_path[job->cur_path][job->cur_pos].cur_room !=
                  myself->in_room) {
         // not in correct room
@@ -222,7 +222,7 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
             rc = myself->goDirection(dir);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
-            return TRUE;
+            return true;
           }
         }
 
@@ -232,7 +232,7 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
           job->cur_pos += 1;
           if (head_guard_path[job->cur_path][job->cur_pos].cur_room ==
               myself->in_room)
-            return TRUE;
+            return true;
         } while (head_guard_path[job->cur_path][job->cur_pos].cur_room != -1);
 
         // vlogf(LOG_BUG, "grimhavenPosse: head guard got lost");
@@ -246,9 +246,9 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
         thing_to_room(myself, 274);
         SET_BIT(myself->specials.act, ACT_SENTINEL);
         delete static_cast<hunt_struct*>(myself->act_ptr);
-        myself->act_ptr = NULL;
+        myself->act_ptr = nullptr;
         act("$n has arrived.", 0, myself, 0, 0, TO_ROOM);
-        return TRUE;
+        return true;
       } else if (myself->getPosition() < POSITION_STANDING) {
         myself->doStand();
       } else {
@@ -318,7 +318,7 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
             rc = myself->goDirection(dir);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
-            return TRUE;
+            return true;
           }
         }
 
@@ -328,7 +328,7 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
           job->cur_pos += 1;
           if (lamp_path_pos[job->cur_path][job->cur_pos].cur_room ==
               myself->in_room)
-            return TRUE;
+            return true;
         } while (lamp_path_pos[job->cur_path][job->cur_pos].cur_room != -1);
 
         // vlogf(LOG_BUG, "grimhavenPosse: head guard got lost");
@@ -343,9 +343,9 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
         thing_to_room(myself, 274);
         SET_BIT(myself->specials.act, ACT_SENTINEL);
         delete static_cast<hunt_struct*>(myself->act_ptr);
-        myself->act_ptr = NULL;
+        myself->act_ptr = nullptr;
         act("$n has arrived.", 0, myself, 0, 0, TO_ROOM);
-        return TRUE;
+        return true;
       } else if (myself->getPosition() < POSITION_STANDING) {
         myself->doStand();
       } else {
@@ -415,9 +415,9 @@ int grimhavenPosse(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     case STATE_ARREST_FAST:  // arrest the criminal
       if (!job->criminal || job->criminal->roomp != myself->roomp) {
         job->state = STATE_FIND_CRIM;
-        job->criminal = NULL;
+        job->criminal = nullptr;
         job->arrest_state = 0;
-        return TRUE;
+        return true;
       }
 
       switch (job->arrest_state) {

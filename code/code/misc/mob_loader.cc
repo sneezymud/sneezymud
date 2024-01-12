@@ -296,11 +296,11 @@ void TMonster::createWealth(void) {
     bool last_cmd = true;
     bool objload = false;
     bool mobload = true;
-    TObj* obj = NULL;
+    TObj* obj = nullptr;
     TMonster* myself = this;
     TRoom* birthRoom = real_roomp(brtRoom);
 
-    zoneData* zone = birthRoom ? birthRoom->getZone() : NULL;
+    zoneData* zone = birthRoom ? birthRoom->getZone() : nullptr;
 
     for (unsigned int iLoad = 0; zone && iLoad < loadCom.size(); iLoad++)
       if (!loadCom[iLoad].execute(*zone, resetFlagNone, mobload, myself,
@@ -414,12 +414,12 @@ bool isMobComponentSeller(int comp, int mvn) {
 
 void TMonster::mageComponentLoader(void) {
   int wealth = getMoney();
-  TObj *obj, *bag = NULL;
+  TObj *obj, *bag = nullptr;
   int num = -1, iters = 0;
   spellNumT spell;
   int comp = 0;
   int bag_num = 0;
-  bool found = FALSE;
+  bool found = false;
   int inksloaded = 0;
   const int priceAdjust = 13;
 
@@ -570,17 +570,17 @@ void TMonster::mageComponentLoader(void) {
     if (wealth >= price) {
       *bag += *obj;
       wealth -= price;
-      found = TRUE;
+      found = true;
     } else {
       delete obj;
-      obj = NULL;
+      obj = nullptr;
     }
   }
   if (found)
     *this += *bag;
   else {
     delete bag;
-    bag = NULL;
+    bag = nullptr;
   }
 
   setMoney(wealth);
@@ -592,7 +592,7 @@ void TMonster::rangerComponentLoader(void) {
   int num = -1, iters = 0;
   int spell, comp = 0;
   int bag_num = 0;
-  int found = FALSE;
+  int found = false;
 
   if (GetMaxLevel() >= 50 && wealth > 1000) {
     wealth -= 800;
@@ -670,17 +670,17 @@ void TMonster::rangerComponentLoader(void) {
     if (wealth >= price) {
       *bag += *obj;
       wealth -= price;
-      found = TRUE;
+      found = true;
     } else {
       delete obj;
-      obj = NULL;
+      obj = nullptr;
     }
   }
   if (found || !::number(0, 3))
     *this += *bag;
   else {
     delete bag;
-    bag = NULL;
+    bag = nullptr;
   }
 
   setMoney(wealth);
@@ -688,12 +688,12 @@ void TMonster::rangerComponentLoader(void) {
 
 void TMonster::shamanComponentLoader(void) {
   int wealth = getMoney();
-  TObj *obj, *bag = NULL;
+  TObj *obj, *bag = nullptr;
   int num = -1, iters = 0;
   spellNumT spell;
   int comp = 0;
   int bag_num = 0;
-  bool found = FALSE;
+  bool found = false;
   int Brewload = 0;
 
   if (GetMaxLevel() >= 50 && wealth > 1000) {
@@ -818,17 +818,17 @@ void TMonster::shamanComponentLoader(void) {
     if (wealth >= price) {
       *bag += *obj;
       wealth -= price;
-      found = TRUE;
+      found = true;
     } else {
       delete obj;
-      obj = NULL;
+      obj = nullptr;
     }
   }
   if (found || !::number(0, 3))
     *this += *bag;
   else {
     delete bag;
-    bag = NULL;
+    bag = nullptr;
   }
 
   setMoney(wealth);
@@ -870,7 +870,7 @@ void TMonster::clericHolyWaterLoader(void) {
       setMoney(wealth);
     } else {
       delete obj;
-      obj = NULL;
+      obj = nullptr;
     }
   }
 }
@@ -941,7 +941,7 @@ void TMonster::genericMobLoader(TOpenContainer** bag) {
   int wealth = getMoney();
   int amount;
 
-  *bag = NULL;
+  *bag = nullptr;
 
   // sneezy sweeps
 #if 0

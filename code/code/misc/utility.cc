@@ -62,34 +62,34 @@ pid_t vfork(void);
 
 bool TBeing::canSeeWho(const TBeing* o) const {
   if (inRoom() < 0 || o->inRoom() < 0 || !o || !o->roomp)
-    return FALSE;
+    return false;
 
   int illum = o->roomp->getLight();
 
   if (isImmortal()) {
     if (GetMaxLevel() < o->getInvisLevel())
-      return FALSE;
+      return false;
     else
-      return TRUE;
+      return true;
   }
   if ((GetMaxLevel() < o->getInvisLevel()) && (o->isImmortal()))
-    return FALSE;  // invis gods
+    return false;  // invis gods
 
   if (!isImmortal() && (o->getInvisLevel() >= GOD_LEVEL1))
-    return FALSE;  // link deads
+    return false;  // link deads
 
   if (o->isAffected(AFF_INVISIBLE) ||
       (illum < 14 && o->isAffected(AFF_SHADOW_WALK))) {
     if (o->isImmortal())
-      return FALSE;
+      return false;
     if (!isAffected(AFF_DETECT_INVISIBLE))
-      return FALSE;
+      return false;
   }
   if (isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) &&
       !isAffected(AFF_CLARITY))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 bool exit_ok(roomDirData* exit, TRoom** rpp) {
@@ -99,10 +99,10 @@ bool exit_ok(roomDirData* exit, TRoom** rpp) {
     rpp = &rp;
 
   if (!exit) {
-    *rpp = NULL;
-    return FALSE;
+    *rpp = nullptr;
+    return false;
   }
-  return ((*rpp = real_roomp(exit->to_room)) != NULL);
+  return ((*rpp = real_roomp(exit->to_room)) != nullptr);
 }
 
 int TMonster::mobVnum() const {
@@ -146,9 +146,9 @@ bool roll_chance(double fract) {
   fract *= 100.0;
 
   if (fract >= ::number(0, 100)) {
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 // Determine if something with a given percent chance of happening (represented
@@ -186,36 +186,36 @@ time_info_data* TBeing::age() const {
 bool TBeing::inGroup(const TBeing& tbt) const {
   if ((this == &tbt) || (&tbt == dynamic_cast<const TBeing*>(riding)) ||
       (&tbt == dynamic_cast<const TBeing*>(rider)))
-    return TRUE;
+    return true;
 
   if (!isAffected(AFF_GROUP))
-    return FALSE;
+    return false;
 
   TBeing* tbt2 = dynamic_cast<TBeing*>(tbt.rider);
   if (tbt2 && inGroup(*tbt2))
-    return TRUE;
+    return true;
 
   if (!tbt.isAffected(AFF_GROUP))
-    return FALSE;
+    return false;
 
   if (!master && !tbt.master)
-    return FALSE;
+    return false;
 
   if (this == tbt.master)
-    return TRUE;
+    return true;
 
   if (master == &tbt)
-    return TRUE;
+    return true;
 
   if (master == tbt.master) {
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 unsigned int TBeing::numberInGroupInRoom() const {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   unsigned int count = 0;
 
   for (StuffIter it = roomp->stuff.begin();
@@ -235,14 +235,14 @@ bool getall(const char* name, char* newname) {
 
   sscanf(name, "%79s ", otname);
   if (strlen(otname) < 5)
-    return FALSE;
+    return false;
 
   sscanf(otname, "%3s%c%79s", arg, &prd, tmpname);
 
   if (prd != '.')
-    return FALSE;
+    return false;
   if (strcmp(arg, "all"))
-    return FALSE;
+    return false;
 
   while (*name != '.')
     name++;
@@ -251,7 +251,7 @@ bool getall(const char* name, char* newname) {
 
   strcpy(newname, name);
 
-  return TRUE;
+  return true;
 }
 
 int getabunch(const char* name, char* newname) {
@@ -260,9 +260,9 @@ int getabunch(const char* name, char* newname) {
 
   sscanf(name, "%d*%79s", &num, tmpname);
   if (tmpname[0] == '\0')
-    return FALSE;
+    return false;
   if (num < 1)
-    return FALSE;
+    return false;
   if (num > 1000)
     num = 1000;
 
@@ -283,13 +283,13 @@ int TMonster::standUp() {
         !dynamic_cast<TBeing*>(riding))) {
     if (isFourLegged()) {
       if (getHit() > (hitLimit() / 2))
-        act("$n quickly rolls over and leaps to $s feet.", TRUE, this, 0, 0,
+        act("$n quickly rolls over and leaps to $s feet.", true, this, 0, 0,
           TO_ROOM);
       else if (getHit() > (hitLimit() / 6))
-        act("$n slowly rolls over and leaps to $s feet.", TRUE, this, 0, 0,
+        act("$n slowly rolls over and leaps to $s feet.", true, this, 0, 0,
           TO_ROOM);
       else
-        act("$n rolls over and gets to $s feet very slowly.", TRUE, this, 0, 0,
+        act("$n rolls over and gets to $s feet very slowly.", true, this, 0, 0,
           TO_ROOM);
     } else if (riding && !dynamic_cast<TBeing*>(riding)) {
       if (getHit() > (hitLimit() / 2))
@@ -334,9 +334,9 @@ int TMonster::standUp() {
     }
     setPosition(POSITION_STANDING);
     addToWait(combatRound(1));
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 #if 0
@@ -352,15 +352,15 @@ bool TThing::hasObject(int ob_num)
       found += RecCompObjNum(equipment[j], ob_num);
 
   if (found > 0)
-    return TRUE;
+    return true;
 
   for(StuffIter it=stuff.begin();it!=stuff.end() && (t=*it);++it)
     found += RecCompObjNum(t, ob_num);
 
   if (found > 0)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 #endif
 
@@ -382,7 +382,7 @@ int roomOfObject(const TThing* t) {
 // searches recursively and finds character holding the thing
 TThing* TThing::thingHolding() const {
   if (in_room != Room::NOWHERE)
-    return NULL;
+    return nullptr;
   else if (equippedBy)
     return equippedBy;
   else if (stuckIn)
@@ -399,7 +399,7 @@ TThing* TThing::thingHolding() const {
 
 int RecCompObjNum(const TObj* o, int obj_num) {
   int total = 0;
-  TThing* i = NULL;
+  TThing* i = nullptr;
 
   if (obj_index[o->getItemIndex()].virt == obj_num)
     total = 1;
@@ -416,14 +416,14 @@ int RecCompObjNum(const TObj* o, int obj_num) {
 
 bool TBeing::nomagic(const sstring& msg_ch, const sstring& msg_rm) const {
   if (isImmortal())
-    return FALSE;
+    return false;
 
   if (roomp && roomp->isRoomFlag(ROOM_NO_MAGIC)) {
     if (!msg_ch.empty())
-      act(msg_ch, FALSE, this, 0, 0, TO_CHAR);
+      act(msg_ch, false, this, 0, 0, TO_CHAR);
 
     if (!msg_rm.empty())
-      act(msg_rm, FALSE, this, 0, 0, TO_ROOM);
+      act(msg_rm, false, this, 0, 0, TO_ROOM);
 
     return 1;
   }
@@ -830,7 +830,7 @@ void dirwalk_subs_fullname(const char* dir, void (*fcn)(const char*)) {
 }
 
 bool TBeing::canSee(const TThing* t, infraTypeT infra) const {
-  mud_assert(t != NULL, "canSee with NULL t");
+  mud_assert(t != nullptr, "canSee with nullptr t");
 
   return t->canSeeMe(this, infra);
 }
@@ -844,51 +844,51 @@ bool TBeing::canSeeMe(const TBeing* ch, infraTypeT infra) const {
     else {
       vlogf(LOG_BUG,
         format("Thing (%s) has no rp pointer in TBeing::canSeeMe") % name);
-      return FALSE;
+      return false;
     }
   }
 
   // hide imms with invis level set, and linkdeads (L51)
   if (ch->GetMaxLevel() < getInvisLevel())
-    return FALSE;
+    return false;
 
   if (ch->isImmortal())
-    return TRUE;
+    return true;
 
   // I can see myself, even if invisible
   // otherwise, how do I target dispel invisibility  :)
   if (this == ch)
-    return TRUE;
+    return true;
 
   int illum = roomp->getLight();
 
   if (isAffected(AFF_INVISIBLE) ||
       (illum < 14 && isAffected(AFF_SHADOW_WALK))) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
-      return FALSE;
+      return false;
   }
 
   if (ch->isAffected(AFF_TRUE_SIGHT))
-    return TRUE;
+    return true;
 
   if (ch->isAffected(AFF_CLARITY))
-    return TRUE;
+    return true;
 
   if (ch->isAffected(AFF_BLIND))
-    return FALSE;
+    return false;
 
   if (isAffected(AFF_SANCTUARY))
-    return TRUE;
+    return true;
 
   if (getLight() > 0)
-    return TRUE;
+    return true;
 
   // invis gods have been checked above, so this is safe
   if (isImmortal())
-    return TRUE;
+    return true;
 
   if (r->isRoomFlag(ROOM_ALWAYS_LIT))
-    return TRUE;
+    return true;
 
   int vision = ch->eyeSight(r);
   int vision_adj = 0;
@@ -912,25 +912,25 @@ bool TBeing::canSeeMe(const TBeing* ch, infraTypeT infra) const {
         vision_adj -= 1;
     } else {
       // don't reveal cold blooded with infravision
-      return FALSE;
+      return false;
     }
   }
   vision += max(vision_adj, 0);
   if (vision > visibility())
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 bool TObj::canSeeMe(const TBeing* ch, infraTypeT) const {
   TRoom* rp;
 
   if (ch->isImmortal())
-    return TRUE;
+    return true;
 
   if (isObjStat(ITEM_INVISIBLE))
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
-      return FALSE;
+      return false;
 
   int room = roomOfObject(this);
 
@@ -938,22 +938,22 @@ bool TObj::canSeeMe(const TBeing* ch, infraTypeT) const {
     room = ch->in_room;
 
   if (!(rp = real_roomp(room)))
-    return FALSE;
+    return false;
 
   if (ch->isAffected(AFF_TRUE_SIGHT))
-    return TRUE;
+    return true;
 
   if (ch->isAffected(AFF_CLARITY))
-    return TRUE;
+    return true;
 
   if (ch->isAffected(AFF_BLIND))
-    return FALSE;
+    return false;
 
   if (rp->isRoomFlag(ROOM_ALWAYS_LIT))
-    return TRUE;
+    return true;
 
   if (isObjStat(ITEM_GLOW) || isObjStat(ITEM_BURNING))
-    return TRUE;
+    return true;
 
   int s = ch->eyeSight(rp);
   int mod =
@@ -963,36 +963,36 @@ bool TObj::canSeeMe(const TBeing* ch, infraTypeT) const {
               ? -4
               : ((dynamic_cast<const TBeing*>(stuckIn) == ch) ? -7 : 0))));
   if (s >= (canBeSeen + mod))
-    return TRUE;
+    return true;
 
   if (getLight() > 0)
-    return TRUE;
+    return true;
 
   return false;
 }
 
 bool TSeeThru::canSeeMe(const TBeing* ch, infraTypeT infra) const {
   if (givesOutsideLight())
-    return TRUE;
+    return true;
 
   return TObj::canSeeMe(ch, infra);
 }
 
-bool TThing::canSeeMe(const TBeing*, infraTypeT) const { return FALSE; }
+bool TThing::canSeeMe(const TBeing*, infraTypeT) const { return false; }
 
 bool can_see_char_other_room(const TBeing* ch, TBeing* victim, TRoom*) {
   if (!victim || ch->in_room < 0 || victim->in_room < 0)
-    return FALSE;
+    return false;
 
   if (ch->isImmortal()) {
     if (ch->GetMaxLevel() < (victim->getInvisLevel()))
-      return FALSE;
+      return false;
     else
-      return TRUE;
+      return true;
   } else {
     // this is here to keep imm's gone mort from seeing link deads
     if (victim->getInvisLevel() >= GOD_LEVEL1)
-      return FALSE;
+      return false;
   }
 
   int illum = victim->roomp->getLight();
@@ -1000,33 +1000,33 @@ bool can_see_char_other_room(const TBeing* ch, TBeing* victim, TRoom*) {
   if (victim->isAffected(AFF_INVISIBLE) ||
       (illum < 14 && victim->isAffected(AFF_SHADOW_WALK))) {
     if (!ch->isAffected(AFF_DETECT_INVISIBLE))
-      return FALSE;
+      return false;
   }
   if (ch->GetMaxLevel() < victim->getInvisLevel())
-    return FALSE;
+    return false;
 
   if (ch->isAffected(AFF_TRUE_SIGHT))
-    return TRUE;
+    return true;
 
   if (ch->isAffected(AFF_CLARITY))
-    return TRUE;
+    return true;
 
   if (ch->isAffected(AFF_BLIND))
-    return FALSE;
+    return false;
 
   short sight = ch->eyeSight(victim->roomp);
 
   if ((sight >= victim->visibility()) ||
       victim->roomp->isRoomFlag(ROOM_ALWAYS_LIT))
-    return TRUE;
+    return true;
   if (victim->getLight() > 0)
-    return TRUE;
+    return true;
 
   // all the invis gods have been checked for in above checks
   if (victim->isImmortal())
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 // disallow any bogus characters in automated system requests.
@@ -1039,18 +1039,18 @@ bool TBeing::makesNoise() const {
   int n;
 
   if (isImmortal())
-    return FALSE;
+    return false;
 
   n = noise(this);
 
   // The higher the noise, the better chance <= 80 fails. - Russ
   if (n <= 1)
-    return FALSE;
+    return false;
 
   if (::number(1, n) <= 100)
-    return FALSE;
+    return false;
   else
-    return TRUE;
+    return true;
 }
 
 // vsystem - do a system command without duplicating the core image.
@@ -1064,14 +1064,14 @@ int vsystem(const sstring& buf) {
   char tmp[64];
   char *argv[4], buf2[MAX_STRING_LENGTH];
 #ifndef SUN
-  int* status = NULL;
+  int* status = nullptr;
 #else
   union wait status;
 #endif
 
   if (buf.empty()) {
-    vlogf(LOG_BUG, "vsystem called with NULL parameter.");
-    return FALSE;
+    vlogf(LOG_BUG, "vsystem called with nullptr parameter.");
+    return false;
   }
   strcpy(buf2, buf.c_str());
 
@@ -1083,14 +1083,14 @@ int vsystem(const sstring& buf) {
   strcpy(tmp, "-c");
   argv[1] = tmp;
   argv[2] = buf2;
-  argv[3] = NULL;
+  argv[3] = nullptr;
   if (!(pid = vfork())) {
     execve(sh, argv, environ);
     _exit(-1);
   }
   if (pid < 0) {
     vlogf(LOG_BUG, "Error in vsystem.  Fork failed.");
-    return FALSE;
+    return false;
   }
 #ifndef SUN
   while (wait(status) != pid)
@@ -1100,19 +1100,19 @@ int vsystem(const sstring& buf) {
     ;
 #endif
 
-  return TRUE;
+  return true;
 }
 
-bool TThing::shouldntBeShown(wearSlotT pos) const { return FALSE; }
+bool TThing::shouldntBeShown(wearSlotT pos) const { return false; }
 
 bool TObj::shouldntBeShown(wearSlotT pos) const {
   if (!isPaired())
-    return FALSE;
+    return false;
 
   if ((pos == WEAR_LEG_L) || (pos == HOLD_LEFT) || (pos == WEAR_EX_LEG_L))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 void TBeing::fixLevels(int lev) {
@@ -1132,30 +1132,30 @@ bool should_be_logged(const TBeing* ch) {
 // I hate typing > x && < y  -  Russ
 bool in_range(int num, int low, int high) {
   if ((num < low) || (num > high))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 bool thingsInRoomVis(TThing* ch, TRoom* rp) {
-  TThing* o = NULL;
+  TThing* o = nullptr;
 
   if (!ch || !rp) {
-    vlogf(LOG_BUG, "thingsInRoomVis() called with NULL ch, or room!");
-    return FALSE;
+    vlogf(LOG_BUG, "thingsInRoomVis() called with nullptr ch, or room!");
+    return false;
   }
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (o = *it);
        ++it) {
     if (ch->canSee(o))
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 // can_get - Russ Russell c June 1994. last editted June 96
-// can_get returns TRUE if the ch can get the thing
+// can_get returns true if the ch can get the thing
 // passed to it. If the ch can't get it, it sends to
-// the ch why it can't get it, and then returns FALSE.
+// the ch why it can't get it, and then returns false.
 
 bool TBeing::canGet(const TThing* t, silentTypeT silent) const {
   return t->canGetMe(this, silent);
@@ -1169,7 +1169,7 @@ bool TObj::canGetMe(const TBeing* ch, silentTypeT silent) const {
   }
 
   if (!ch->canSee(this))
-    return FALSE;
+    return false;
 
   // This is a safty bit, mostly auto-done by the storage
   // monitoring code.
@@ -1179,20 +1179,20 @@ bool TObj::canGetMe(const TBeing* ch, silentTypeT silent) const {
     ch->sendTo("I'm afraid you are not permitted to touch this.");
     vlogf(LOG_OBJ, format("%s tried to pick up wizard set object %s") %
                      ch->getNameNOC(ch) % getNameNOC(ch));
-    return FALSE;
+    return false;
   }
 
   if (ch->isImmortal() ||
       (canWear(ITEM_WEAR_TAKE) && !isObjStat(ITEM_PROTOTYPE))) {
     // flat out deny
     if (canGetMeDeny(ch, silent))
-      return FALSE;
+      return false;
 
     if (rider) {
       if (!silent)
         ch->sendTo(COLOR_OBJECTS,
           format("%s : Occupied.\n\r") % sstring(shortDescr).cap());
-      return FALSE;
+      return false;
     }
 
     // attached items
@@ -1212,16 +1212,16 @@ bool TObj::canGetMe(const TBeing* ch, silentTypeT silent) const {
           ch->sendTo(COLOR_OBJECTS,
             format("%s : You can't take that.\n\r") % getName());
         }
-        return FALSE;
+        return false;
       }
     }
 
     // weight/vol check
     // items in bags already have been accounted for
     if (!ch->canCarry(this, silent))
-      return FALSE;
+      return false;
 
-    return TRUE;
+    return true;
   } else {
     // attached items
     if (isObjStat(ITEM_ATTACHED)) {
@@ -1232,16 +1232,16 @@ bool TObj::canGetMe(const TBeing* ch, silentTypeT silent) const {
       else
         ch->sendTo(COLOR_OBJECTS,
           format("%s : You can't take that.\n\r") % getName());
-      return FALSE;
+      return false;
     }
 
     if (!silent)
       ch->sendTo(COLOR_OBJECTS,
         format("%s : You can't take that.\n\r") % sstring(shortDescr).cap());
 
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 bool TBeing::canGetMe(const TBeing* ch, silentTypeT) const {
@@ -1249,11 +1249,11 @@ bool TBeing::canGetMe(const TBeing* ch, silentTypeT) const {
   // return ((ch->GetMaxLevel() == MAX_IMMORT) && (ch != this));
 }
 
-bool TThing::canGetMe(const TBeing*, silentTypeT) const { return FALSE; }
+bool TThing::canGetMe(const TBeing*, silentTypeT) const { return false; }
 
 const sstring TBeing::movementType(bool enter) const {
   if (!roomp) {
-    vlogf(LOG_BUG, "NULL roomp in MovementType()!");
+    vlogf(LOG_BUG, "nullptr roomp in MovementType()!");
     return "";
   }
   if (getPosition() == POSITION_CRAWLING)
@@ -1325,12 +1325,12 @@ bool TBeing::tooManyFollowers(const TBeing* pet, newFolTypeT type) const {
   // plotStat(STAT_CURRENT % STAT_CHA % -15 % 15 % 0));
 
   //  if (count > max_count)
-  //  return TRUE;
+  //  return true;
   //  if (tot_num >= 3)  // allow 3 pets max
   if (tot_num >= max_followers)  // nah, make it 1.  pets suck.
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::followTime() const {
@@ -1420,13 +1420,13 @@ int TBeing::eyeSight(TRoom* rp) const {
 
 bool TBeing::willBumpHeadDoor(roomDirData* exitp, int* height) const {
   if (!roomp)
-    return FALSE;
+    return false;
 
   int height1 = (real_roomp(exitp->to_room))->getRoomHeight();
   int height2 = roomp->getRoomHeight();
 
   if (isImmortal())
-    return FALSE;
+    return false;
 
   *height = min(height1, height2);
   if (height1 <= 0)
@@ -1435,7 +1435,7 @@ bool TBeing::willBumpHeadDoor(roomDirData* exitp, int* height) const {
     *height = height1;
 
   if (*height <= 0)
-    return FALSE;
+    return false;
 
   if (exitp->door_type != DOOR_NONE)
     *height = 9 * *height / 10;  //  doors are 90% size of room
@@ -1450,10 +1450,10 @@ int TBeing::bumpHeadDoor(roomDirData* exitp, int* height) {
   int hardness, check;
 
   if (isImmortal())
-    return FALSE;
+    return false;
 
   if (!willBumpHeadDoor(exitp, height))
-    return FALSE;
+    return false;
 
   doorbuf = exitp->getName();
   if (::number(1, 300) > plotStat(STAT_CURRENT, STAT_AGI, 30, 180, 110)) {
@@ -1461,7 +1461,7 @@ int TBeing::bumpHeadDoor(roomDirData* exitp, int* height) {
            doorbuf.uncap());
     buf = format("$n bumps $s head on the %s.  That had to hurt.") %
           doorbuf.uncap();
-    act(buf, TRUE, this, 0, 0, TO_ROOM);
+    act(buf, true, this, 0, 0, TO_ROOM);
     // Lets do some head-gear checks to see if gear can absorb or negate damage
     // Very simple to start - Brutius - 12-31-95
     if ((helm = equipment[WEAR_HEAD])) {
@@ -1481,32 +1481,32 @@ int TBeing::bumpHeadDoor(roomDirData* exitp, int* height) {
     sendTo(
       format("You duck down as you go through the %s.\n\r") % doorbuf.uncap());
 
-  return FALSE;
+  return false;
 }
 
 bool TBeing::willBumpHead(TRoom* rp) const {
   int height = rp->getRoomHeight();
 
   if (isImmortal())
-    return FALSE;
+    return false;
 
   if (height <= 0)
-    return FALSE;
+    return false;
 
   return (willBump(height));
 }
 
 bool TBeing::willBump(int height) const {
   if (height <= 0)
-    return FALSE;
+    return false;
 
   if (isImmortal())
-    return FALSE;
+    return false;
 
   if (getPosHeight() <= height)
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 bool TBeing::isNaked() const {
@@ -1515,9 +1515,9 @@ bool TBeing::isNaked() const {
     if (i == HOLD_RIGHT || i == HOLD_LEFT)
       continue;
     if (equipment[i])
-      return FALSE;
+      return false;
   }
-  return TRUE;
+  return true;
 }
 
 // posistive mod makes them smarter
@@ -1526,9 +1526,9 @@ bool TMonster::isSmartMob(int mod) const {
 
   // a negative mod makes them dumber
   if (::number(0, 100) < (i + mod))
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 void TPerson::addToWait(int orig_amt) {
@@ -1583,7 +1583,7 @@ float TBeing::getTotalWeight(bool pweight) const {
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i])) {
-      calc += t->getTotalWeight(TRUE);
+      calc += t->getTotalWeight(true);
     }
   }
   // add in char's weight if appropriate
@@ -1613,11 +1613,11 @@ bool TBeing::isElemental() const {
 }
 
 // checks a room looking for pcs present
-// returns TRUE if no pc's are around
+// returns true if no pc's are around
 // ignore_imms allows imms to be considered or not
-// eg ignore_imms==TRUE, room with just an immortal will be considered empty
+// eg ignore_imms==true, room with just an immortal will be considered empty
 bool TRoom::roomIsEmpty(bool ignore_imms) const {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* vict;
 
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
@@ -1625,11 +1625,11 @@ bool TRoom::roomIsEmpty(bool ignore_imms) const {
     if (!vict)
       continue;
     if (vict->isPc() && !vict->isImmortal())  // mortals trigger always
-      return FALSE;
+      return false;
     if (vict->isPc() && vict->isImmortal() && !ignore_imms)
-      return FALSE;
+      return false;
   }
-  return TRUE;
+  return true;
 }
 
 void TBeing::giveMoney(TBeing* ch, int money, moneyTypeT type) {
@@ -1678,7 +1678,7 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe) {
 
           gold_statistics[GOLD_TITHE][(lev - 1)] += amount;
           gold_positive[GOLD_TITHE][(lev - 1)] += max(amount, 0);
-          reconcileHelp(NULL, amount * TITHE_FACTOR);
+          reconcileHelp(nullptr, amount * TITHE_FACTOR);
 
           if (amount > 0)
             sendTo(format("You tithe %i talens.\n\r") % amount);
@@ -1690,7 +1690,7 @@ void TBeing::addToMoney(int money, moneyTypeT type, bool allowTithe) {
         // note, this will cause leaders percent to drop if they withdraw.
         // no other good way to do it without letting leaders get huge boost
         // it's helpful, if they GIVE money by tithing (money would be < 0)
-        reconcileHelp(NULL, -money * TITHE_FACTOR);
+        reconcileHelp(nullptr, -money * TITHE_FACTOR);
         break;
       case GOLD_GAMBLE:
         db.query("select 1 from gamblers where getPlayerName(player_id)='%s'",
@@ -1737,7 +1737,7 @@ bool TBeing::isSimilar(const TThing* t) const {
   const TBeing* tb = dynamic_cast<const TBeing*>(t);
 
   if (!tb)
-    return FALSE;
+    return false;
 
   if ((tb->number == number) && (tb->getPosition() == getPosition()) &&
       (tb->specials.affectedBy == specials.affectedBy) &&
@@ -1745,11 +1745,11 @@ bool TBeing::isSimilar(const TThing* t) const {
       !affected && !tb->affected && (tb->fight() == fight())) {
     if (!tb->name.empty() && !name.empty()) {
       if (is_exact_name(tb->name, name)) {
-        return TRUE;
+        return true;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 // same as isSimilar, but uses some more stuff for shops
@@ -1760,7 +1760,7 @@ bool TObj::isShopSimilar(const TThing* t) const {
 
   const TObj* obj = dynamic_cast<const TObj*>(t);
   if (!obj)
-    return FALSE;
+    return false;
 
   if (getStructPoints() != obj->getStructPoints())
     return false;
@@ -1771,7 +1771,7 @@ bool TObj::isShopSimilar(const TThing* t) const {
 bool TObj::isSimilar(const TThing* t) const {
   const TObj* obj = dynamic_cast<const TObj*>(t);
   if (!obj)
-    return FALSE;
+    return false;
 
   if (number != obj->number)
     return false;
@@ -1869,7 +1869,7 @@ int TBeing::getVolume() const {
 
   int vol;
 
-  mud_assert(race != NULL, "No race in getVolume()");
+  mud_assert(race != nullptr, "No race in getVolume()");
 
   vol = (int)((race->corpse_const) * (race->corpse_const) * M_PI * getHeight() *
               getHeight() * getHeight());
@@ -1893,7 +1893,7 @@ bool TBeing::checkBusy(const sstring& buf) const {
   double hitsPerRound = fx + fy;
 
   if (cantHit <= 0)
-    return FALSE;
+    return false;
 
   if (!buf.empty())
     sendTo(COLOR_BASIC, buf);
@@ -1902,7 +1902,7 @@ bool TBeing::checkBusy(const sstring& buf) const {
     sendTo("You are still busy orienting yourself.");
   }
 #if 0
-  int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000); 
+  int tmpnum = (hitsPerRound ? (int) (cantHit/hitsPerRound + 1) : 1000000);
   sendTo(format(" (Roughly %d round%s to go)\n\r") % tmpnum % (tmpnum > 1) ? "s" : "");
 #else
   float tmpnum = (hitsPerRound ? (cantHit / hitsPerRound) : 1000000);
@@ -1911,7 +1911,7 @@ bool TBeing::checkBusy(const sstring& buf) const {
 
   sendTo(format(" (Roughly %.1f seconds to go)\n\r") % tmpnum);
 #endif
-  return TRUE;
+  return true;
 }
 
 float TBeing::lagAdjust(lag_t orig_lag) {

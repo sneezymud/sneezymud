@@ -435,7 +435,7 @@ class TMonster : public TBeing {
     virtual int getWait() const { return wait; }
     virtual void setWait(int amt) { wait = amt; }
     virtual void addToWait(int amt);
-    int readMobFromDB(int, bool, TBeing* = NULL);
+    int readMobFromDB(int, bool, TBeing* = nullptr);
     int getMobIndex() const { return (number < 0 ? 0 : number); }
     bool isUnique() { return (!mob_index[getMobIndex()].getNumber()); }
     virtual void purgeMe(TBeing*);
@@ -456,7 +456,7 @@ class TMonster : public TBeing {
     void genericMobLoader(TOpenContainer**);
     virtual int hitGain();
     virtual int manaGain();
-    virtual int rawKill(spellNumT, TBeing* = NULL, float = 0);
+    virtual int rawKill(spellNumT, TBeing* = nullptr, float = 0);
     virtual int doQuit2();
     virtual void wizFileSave();
     virtual bool isDragonRideable() const;

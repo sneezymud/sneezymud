@@ -128,7 +128,7 @@ void TBaseCup::weightChangeObject(float wgt_amt) {
 
 int TObj::drinkMe(TBeing* ch) {
   ch->sendTo("Drink is generally used for liquids.\n\r");
-  return FALSE;
+  return false;
 }
 
 int TBaseCup::drinkMe(TBeing* ch) {
@@ -141,28 +141,28 @@ int TBaseCup::drinkMe(TBeing* ch) {
       "Uggh, your stomach is queasy and the thought of doing that is "
       "unappetizing.\n\r");
     ch->sendTo("You decide to skip this drink until you feel better.\n\r");
-    return FALSE;
+    return false;
   }
   if (isDrinkConFlag(DRINK_FROZEN)) {
-    act("It's frozen solid, you can't drink from it.", FALSE, ch, 0, 0,
+    act("It's frozen solid, you can't drink from it.", false, ch, 0, 0,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (getDrinkUnits() <= 0) {
-    act("It's empty already.", FALSE, ch, 0, 0, TO_CHAR);
-    return FALSE;
+    act("It's empty already.", false, ch, 0, 0, TO_CHAR);
+    return false;
   }
   if ((ch->getCond(DRUNK) > 15) && (ch->getCond(THIRST) > 0)) {
-    act("You're just sloshed.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n looks really drunk.", TRUE, ch, 0, 0, TO_ROOM);
-    return FALSE;
+    act("You're just sloshed.", false, ch, 0, 0, TO_CHAR);
+    act("$n looks really drunk.", true, ch, 0, 0, TO_ROOM);
+    return false;
   }
   if (ch->getCond(THIRST) > 20) {
-    act("Your stomach can't contain anymore!", FALSE, ch, 0, 0, TO_CHAR);
-    return FALSE;
+    act("Your stomach can't contain anymore!", false, ch, 0, 0, TO_CHAR);
+    return false;
   }
 
-  act(format("$n drinks %s from $p.") % liquidInfo[getDrinkType()]->name, TRUE,
+  act(format("$n drinks %s from $p.") % liquidInfo[getDrinkType()]->name, true,
     ch, this, 0, TO_ROOM);
   ch->sendTo(COLOR_OBJECTS,
     format("You drink the %s.\n\r") % liquidInfo[getDrinkType()]->name);
@@ -227,23 +227,23 @@ int TBaseCup::drinkMe(TBeing* ch) {
   }
 
   if (ch->getCond(DRUNK) > 10)
-    act("You feel drunk.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You feel drunk.", false, ch, 0, 0, TO_CHAR);
 
   if (ch->getCond(THIRST) > 20)
-    act("You do not feel thirsty.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You do not feel thirsty.", false, ch, 0, 0, TO_CHAR);
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (isDrinkConFlag(DRINK_POISON)) {
     if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act(
         "Oops, it tasted rather strange, but you don't think it had any "
         "ill-effect.",
-        FALSE, ch, 0, 0, TO_CHAR);
+        false, ch, 0, 0, TO_CHAR);
     } else {
-      act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
+      act("Oops, it tasted rather strange?!!?", false, ch, 0, 0, TO_CHAR);
+      act("$n chokes and utters some strange sounds.", true, ch, 0, 0, TO_ROOM);
       af.type = SPELL_POISON;
       af.duration = amount * 3 * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = -20;
@@ -257,8 +257,8 @@ int TBaseCup::drinkMe(TBeing* ch) {
       aff2.location = APPLY_NONE;
       aff2.bitvector = AFF_POISON;
 
-      ch->affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_YES);
-      ch->affectJoin(NULL, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+      ch->affectJoin(nullptr, &af, AVG_DUR_NO, AVG_EFF_YES);
+      ch->affectJoin(nullptr, &aff2, AVG_DUR_NO, AVG_EFF_YES);
       disease_start(ch, &aff2);
     }
   }
@@ -268,21 +268,21 @@ int TBaseCup::drinkMe(TBeing* ch) {
       act(
         "Oops, it tasted rather strange, but you don't think it had any "
         "ill-effect.",
-        FALSE, ch, 0, 0, TO_CHAR);
+        false, ch, 0, 0, TO_CHAR);
     } else {
-      act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
+      act("Oops, it tasted rather strange?!!?", false, ch, 0, 0, TO_CHAR);
+      act("$n chokes and utters some strange sounds.", true, ch, 0, 0, TO_ROOM);
       aff2.type = AFFECT_DISEASE;
       aff2.level = 0;
       aff2.duration = af.duration;
       aff2.modifier = DISEASE_SYPHILIS;
       aff2.location = APPLY_NONE;
       aff2.bitvector = AFF_SYPHILIS;
-      ch->affectJoin(NULL, &aff2, AVG_DUR_NO, AVG_EFF_YES);
+      ch->affectJoin(nullptr, &aff2, AVG_DUR_NO, AVG_EFF_YES);
       disease_start(ch, &aff2);
 
-      act("Oops, it tasted rather strange?!!?", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n chokes and utters some strange sounds.", TRUE, ch, 0, 0, TO_ROOM);
+      act("Oops, it tasted rather strange?!!?", false, ch, 0, 0, TO_CHAR);
+      act("$n chokes and utters some strange sounds.", true, ch, 0, 0, TO_ROOM);
     }
   }
 
@@ -311,7 +311,7 @@ int TBaseCup::drinkMe(TBeing* ch) {
       aff3.modifier = DISEASE_DYSENTERY;
       aff3.modifier2 = ch->GetMaxLevel();
       if (aff3.duration > 0) {
-        act("Uh oh! Standing water isn't always the safest to drink...", FALSE,
+        act("Uh oh! Standing water isn't always the safest to drink...", false,
           ch, 0, 0, TO_CHAR);
         ch->affectTo(&aff3);
         disease_start(ch, &aff3);
@@ -320,16 +320,16 @@ int TBaseCup::drinkMe(TBeing* ch) {
   }
   if (getDrinkUnits() <= 0) {
     if (!tPool) {
-      act(format("%s is completely empty.") % drinkName, FALSE, ch, this, 0,
+      act(format("%s is completely empty.") % drinkName, false, ch, this, 0,
         TO_CHAR);
       remDrinkConFlags(DRINK_POISON);
     } else {
-      act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
+      act("You finish licking up $p from the $g.", false, ch, this, 0, TO_CHAR);
       return DELETE_THIS;
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 // DELETE_THIS means this must die
@@ -339,11 +339,11 @@ int TBeing::doDrink(const char* argument) {
 
   if (fight()) {
     sendTo("You are too busy fending off your foes!\n\r");
-    return FALSE;
+    return false;
   }
   if (!argument || !*argument) {
     sendTo("Drink from what?\n\r");
-    return FALSE;
+    return false;
   }
   if (!(temp = get_obj_vis_accessible(this, argument))) {
     if (roomp->isWaterSector()) {
@@ -355,27 +355,27 @@ int TBeing::doDrink(const char* argument) {
         setCond(THIRST, 0);
         setCond(FULL, 0);
       }
-      return TRUE;
+      return true;
     } else if (roomp->isUnderwaterSector()) {
       act(
         "There is so much water around, you'd wind up drowning rather than "
         "drinking.",
-        FALSE, this, 0, 0, TO_CHAR);
-      return FALSE;
+        false, this, 0, 0, TO_CHAR);
+      return false;
     } else {
-      act("You can't find it!", FALSE, this, 0, 0, TO_CHAR);
-      return FALSE;
+      act("You can't find it!", false, this, 0, 0, TO_CHAR);
+      return false;
     }
   }
   rc = temp->drinkMe(this);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete temp;
-    temp = NULL;
+    temp = nullptr;
   }
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 void TThing::eatMe(TBeing* ch) {
@@ -383,8 +383,8 @@ void TThing::eatMe(TBeing* ch) {
     ch->sendTo("That item is impossible to eat!\n\r");
     return;
   }
-  act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
-  act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n eats $p.", true, ch, this, 0, TO_ROOM);
+  act("You eat the $o.", false, ch, this, 0, TO_CHAR);
 
   delete this;
 }
@@ -427,15 +427,15 @@ void TObj::eatMe(TBeing* ch) {
     ch->sendTo("That item is impossible to eat!\n\r");
     return;
   }
-  act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
-  act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n eats $p.", true, ch, this, 0, TO_ROOM);
+  act("You eat the $o.", false, ch, this, 0, TO_CHAR);
 
   if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
     int foodValue =
       max(0, max(int(getStructPoints()), getVolume() / (1728 / 20)));
     ch->gainCondition(FULL, foodValue);
     if (ch->getCond(FULL) > 20)
-      act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+      act("You are full.", false, ch, 0, 0, TO_CHAR);
   }
 
   delete this;
@@ -446,22 +446,22 @@ void TFood::Poisoned(TBeing* ch, int dur) {
 
   if (isFoodFlag(FOOD_POISON) && !ch->isAffected(AFF_POISON)) {
     if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
-      act("Mmm, that had a bit of a kick to it!", FALSE, ch, 0, 0, TO_CHAR);
+      act("Mmm, that had a bit of a kick to it!", false, ch, 0, 0, TO_CHAR);
     } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act(
         "That tasted rather strange, but you don't think it had any "
         "ill-effect!!",
-        FALSE, ch, 0, 0, TO_CHAR);
+        false, ch, 0, 0, TO_CHAR);
     } else {
-      act("That tasted rather strange !!", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n coughs and utters some strange sounds.", FALSE, ch, 0, 0,
+      act("That tasted rather strange !!", false, ch, 0, 0, TO_CHAR);
+      act("$n coughs and utters some strange sounds.", false, ch, 0, 0,
         TO_ROOM);
       af.type = SPELL_POISON;
       af.duration = dur * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_POISON;
-      ch->affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
+      ch->affectJoin(nullptr, &af, AVG_DUR_NO, AVG_EFF_NO);
     }
   }
 }
@@ -503,9 +503,9 @@ void TFood::eatMe(TBeing* ch) {
   }
   if (isFoodFlag(FOOD_SPOILED) &&
       !ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) && ch->isPerceptive()) {
-    act("You notice some spoilage on $p and discard it instead.", TRUE, ch,
+    act("You notice some spoilage on $p and discard it instead.", true, ch,
       this, 0, TO_CHAR);
-    act("$n disposes of some spoiled $o.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n disposes of some spoiled $o.", true, ch, this, 0, TO_ROOM);
 
     ch->playsound(SOUND_FOODPOISON, SOUND_TYPE_NOISE);
 
@@ -513,8 +513,8 @@ void TFood::eatMe(TBeing* ch) {
     return;
   }
 
-  act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
-  act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n eats $p.", true, ch, this, 0, TO_ROOM);
+  act("You eat the $o.", false, ch, this, 0, TO_CHAR);
 
   sstring msg;
   float adjust = 1.0;
@@ -549,7 +549,7 @@ void TFood::eatMe(TBeing* ch) {
     ch->gainCondition(FULL, (int)(getFoodFill() * adjust));
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
     Poisoned(ch, getFoodFill());
@@ -591,36 +591,36 @@ void TBeing::doEat(const char* argument) {
 }
 
 void TObj::pourMeOut(TBeing* ch) {
-  act("You can't pour from that!", FALSE, ch, 0, 0, TO_CHAR);
+  act("You can't pour from that!", false, ch, 0, 0, TO_CHAR);
 }
 
 void TObj::pourMeIntoDrink1(TBeing* ch, TObj*) {
-  act("You can't pour from $p!", FALSE, ch, this, 0, TO_CHAR);
+  act("You can't pour from $p!", false, ch, this, 0, TO_CHAR);
 }
 
 void TObj::pourMeIntoDrink2(TBeing* ch, TBaseCup*) {
-  act("You can't pour anything into $p!", FALSE, ch, this, 0, TO_CHAR);
+  act("You can't pour anything into $p!", false, ch, this, 0, TO_CHAR);
 }
 
 void TBaseCup::pourMeIntoDrink2(TBeing* ch, TBaseCup* from_obj) {
   int temp;
 
   if (from_obj->getDrinkUnits() == 0) {
-    act("$p is empty.", FALSE, ch, from_obj, 0, TO_CHAR);
+    act("$p is empty.", false, ch, from_obj, 0, TO_CHAR);
     return;
   }
 
   if (from_obj->isDrinkConFlag(DRINK_FROZEN)) {
-    act("$p is frozen solid.", FALSE, ch, from_obj, 0, TO_CHAR);
+    act("$p is frozen solid.", false, ch, from_obj, 0, TO_CHAR);
     return;
   }
 
   if ((getDrinkUnits() != 0) && (getDrinkType() != from_obj->getDrinkType())) {
-    act("There is already another liquid in it!", FALSE, ch, 0, 0, TO_CHAR);
+    act("There is already another liquid in it!", false, ch, 0, 0, TO_CHAR);
     return;
   }
   if (getDrinkUnits() >= getMaxDrinkUnits()) {
-    act("There is no room for more.", FALSE, ch, 0, 0, TO_CHAR);
+    act("There is no room for more.", false, ch, 0, 0, TO_CHAR);
     return;
   }
   if (from_obj == this) {
@@ -657,22 +657,22 @@ int TBeing::doPour(const char* argument) {
   argument_interpreter(argument, arg1, cElements(arg1), arg2, cElements(arg2));
 
   if (!*arg1) {
-    act("What do you want to pour from?", FALSE, this, 0, 0, TO_CHAR);
-    return FALSE;
+    act("What do you want to pour from?", false, this, 0, 0, TO_CHAR);
+    return false;
   }
   TThing* t_from_obj = searchLinkedListVis(this, arg1, stuff);
   from_obj = dynamic_cast<TObj*>(t_from_obj);
   if (!from_obj) {
-    act("You can't find it!", FALSE, this, 0, 0, TO_CHAR);
-    return FALSE;
+    act("You can't find it!", false, this, 0, 0, TO_CHAR);
+    return false;
   }
   if (!*arg2) {
-    act("Where do you want it? Out or in what?", FALSE, this, 0, 0, TO_CHAR);
-    return FALSE;
+    act("Where do you want it? Out or in what?", false, this, 0, 0, TO_CHAR);
+    return false;
   }
   if (!strcasecmp(arg2, "out")) {
     from_obj->pourMeOut(this);
-    return FALSE;
+    return false;
   }
 
   TThing* t_to_obj = searchLinkedListVis(this, arg2, stuff);
@@ -683,9 +683,9 @@ int TBeing::doPour(const char* argument) {
     if (rc == -1 && dynamic_cast<TBeing*>(t_to_obj)) {
       dynamic_cast<TBeing*>(t_to_obj)->reformGroup();
       delete t_to_obj;
-      t_to_obj = NULL;
+      t_to_obj = nullptr;
     }
-    return FALSE;
+    return false;
   }
   to_obj = dynamic_cast<TObj*>(t_to_obj);
   if (!to_obj) {
@@ -693,16 +693,16 @@ int TBeing::doPour(const char* argument) {
     to_obj = dynamic_cast<TObj*>(t_to_obj);
   }
   if (!to_obj) {
-    act("You can't find it!", FALSE, this, 0, 0, TO_CHAR);
-    return FALSE;
+    act("You can't find it!", false, this, 0, 0, TO_CHAR);
+    return false;
   }
   from_obj->pourMeIntoDrink1(this, to_obj);
 
-  return FALSE;
+  return false;
 }
 
 void TObj::sipMe(TBeing* ch) {
-  act("You can't sip from that!", FALSE, ch, 0, 0, TO_CHAR);
+  act("You can't sip from that!", false, ch, 0, 0, TO_CHAR);
 }
 
 void TBaseCup::sipMe(TBeing* ch) {
@@ -710,16 +710,16 @@ void TBaseCup::sipMe(TBeing* ch) {
   affectedData af;
 
   if (ch->getCond(DRUNK) > 10) { /* The pig is drunk ! */
-    act("You simply fail to reach your mouth!", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n tries to sip, but fails!", TRUE, ch, 0, 0, TO_ROOM);
+    act("You simply fail to reach your mouth!", false, ch, 0, 0, TO_CHAR);
+    act("$n tries to sip, but fails!", true, ch, 0, 0, TO_ROOM);
     return;
   }
   if (isDrinkConFlag(DRINK_FROZEN)) {
-    act("It's frozen solid, you can't sip it.", FALSE, ch, 0, 0, TO_CHAR);
+    act("It's frozen solid, you can't sip it.", false, ch, 0, 0, TO_CHAR);
     return;
   }
   if (!getDrinkUnits()) {
-    act("But there is nothing in it?", FALSE, ch, 0, 0, TO_CHAR);
+    act("But there is nothing in it?", false, ch, 0, 0, TO_CHAR);
     return;
   }
   if (ch->hasDisease(DISEASE_FOODPOISON)) {
@@ -729,8 +729,8 @@ void TBaseCup::sipMe(TBeing* ch) {
     ch->sendTo("You decide to skip this drink until you feel better.\n\r");
     return;
   }
-  act("You sip from the $o.", FALSE, ch, this, NULL, TO_CHAR);
-  act("$n sips from the $o.", TRUE, ch, this, 0, TO_ROOM);
+  act("You sip from the $o.", false, ch, this, nullptr, TO_CHAR);
+  act("$n sips from the $o.", true, ch, this, 0, TO_ROOM);
   ch->sendTo(COLOR_OBJECTS,
     format("It tastes like %s.\n\r") % liquidInfo[getDrinkType()]->name);
 
@@ -741,8 +741,8 @@ void TBaseCup::sipMe(TBeing* ch) {
   if (ch->isVampire()) {
     ch->sendTo("You drink the mortal food, but it has no affect on you.\n\r");
   } else if (noFood) {
-    act("You drink the $o but it doesn't seem very nourishing.", FALSE, ch,
-      this, NULL, TO_CHAR);
+    act("You drink the $o but it doesn't seem very nourishing.", false, ch,
+      this, nullptr, TO_CHAR);
   } else {
     if (getLiqDrunk()) {
       ch->gainCondition(DRUNK, (getLiqDrunk() / 10));
@@ -766,19 +766,19 @@ void TBaseCup::sipMe(TBeing* ch) {
     weightChangeObject(-SIP_WEIGHT);
 
   if (ch->getCond(DRUNK) > 10)
-    act("You feel drunk.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You feel drunk.", false, ch, 0, 0, TO_CHAR);
 
   if (ch->getCond(THIRST) > 20)
-    act("You do not feel thirsty.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You do not feel thirsty.", false, ch, 0, 0, TO_CHAR);
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (isDrinkConFlag(DRINK_POISON) && !ch->isAffected(AFF_POISON)) {
     if (ch->isImmune(IMMUNE_POISON, WEAR_BODY))
-      act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);
+      act("But it also had a strange aftertaste!", false, ch, 0, 0, TO_CHAR);
     else {
-      act("But it also had a strange aftertaste!", FALSE, ch, 0, 0, TO_CHAR);
+      act("But it also had a strange aftertaste!", false, ch, 0, 0, TO_CHAR);
       af.type = SPELL_POISON;
       af.duration = 3 * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = 0;
@@ -801,11 +801,11 @@ void TBaseCup::sipMe(TBeing* ch) {
     TPool* tPool = dynamic_cast<TPool*>(this);
 
     if (!tPool) {
-      act(format("%s is completely empty.") % drinkName, FALSE, ch, this, 0,
+      act(format("%s is completely empty.") % drinkName, false, ch, this, 0,
         TO_CHAR);
       remDrinkConFlags(DRINK_POISON);
     } else {
-      act("You finish licking up $p from the $g.", FALSE, ch, this, 0, TO_CHAR);
+      act("You finish licking up $p from the $g.", false, ch, this, 0, TO_CHAR);
 
       delete this;
       return;
@@ -824,7 +824,7 @@ void TBeing::doSip(const char* argument) {
     return;
   }
   if (!(temp = get_obj_vis_accessible(this, arg))) {
-    act("You can't find it!", FALSE, this, 0, 0, TO_CHAR);
+    act("You can't find it!", false, this, 0, 0, TO_CHAR);
     return;
   }
   temp->sipMe(this);
@@ -832,11 +832,11 @@ void TBeing::doSip(const char* argument) {
 
 void TObj::tasteMe(TBeing* ch) {
   if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) && isOrganic()) {
-    act("That looks edible, but you'd rather eat it in one big bite.", FALSE,
+    act("That looks edible, but you'd rather eat it in one big bite.", false,
       ch, 0, 0, TO_CHAR);
     return;
   }
-  act("Taste that?!? Your stomach refuses!", FALSE, ch, 0, 0, TO_CHAR);
+  act("Taste that?!? Your stomach refuses!", false, ch, 0, 0, TO_CHAR);
 }
 
 void TFood::tasteMe(TBeing* ch) {
@@ -847,8 +847,8 @@ void TFood::tasteMe(TBeing* ch) {
     ch->sendTo("You decide to skip this meal until you feel better.\n\r");
     return;
   }
-  act("$n tastes the $o.", FALSE, ch, this, 0, TO_ROOM);
-  act("You taste the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n tastes the $o.", false, ch, this, 0, TO_ROOM);
+  act("You taste the $o.", false, ch, this, 0, TO_CHAR);
 
   sstring msg;
   int amt = 1;
@@ -883,7 +883,7 @@ void TFood::tasteMe(TBeing* ch) {
     ch->gainCondition(FULL, amt);
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
     Poisoned(ch, 1);
@@ -902,7 +902,7 @@ void TFood::tasteMe(TBeing* ch) {
     setFoodFill(getFoodFill() - 2);
 
   if (getFoodFill() <= 0) { /* Nothing left */
-    act("There is nothing left now.", FALSE, ch, 0, 0, TO_CHAR);
+    act("There is nothing left now.", false, ch, 0, 0, TO_CHAR);
     delete this;
     return;
   }
@@ -919,7 +919,7 @@ void TBeing::doTaste(const char* argument) {
     return;
   }
   if (!(temp = get_obj_vis_accessible(this, arg))) {
-    act("You can't find it!", FALSE, this, 0, 0, TO_CHAR);
+    act("You can't find it!", false, this, 0, 0, TO_CHAR);
     return;
   }
   temp->tasteMe(this);
@@ -974,7 +974,7 @@ void TBeing::doFill(const char* arg) {
     obj2->pourMeIntoDrink1(this, obj1);
     return;
   } else {
-    TBaseCup* tbc = NULL;
+    TBaseCup* tbc = nullptr;
     for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
       if ((tbc = dynamic_cast<TBaseCup*>(*it)) && tbc->getDrinkUnits() > 0) {
         tbc->pourMeIntoDrink1(this, obj1);
@@ -990,7 +990,7 @@ void TBeing::doFill(const char* arg) {
 }
 
 void TBeing::checkForSpills() const {
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = nullptr, *t2 = nullptr;
   int i;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -1103,7 +1103,7 @@ void TFood::lowCheck() {
   }
 #if 0
   if ((vModified = (int) (getFoodFill() / 12)) != getWeight()) {
-    vlogf(LOG_LOW, format("food (%s) with bad weight.  Should be: %d") % 
+    vlogf(LOG_LOW, format("food (%s) with bad weight.  Should be: %d") %
           getName() % vModified);
     setWeight(vModified);
   }
@@ -1123,24 +1123,24 @@ sstring TFood::statObjInfo() const {
 
 int TFood::objectSell(TBeing* ch, TMonster* keeper) {
   keeper->doTell(ch->getName(), "I'm sorry, I don't purchase food.");
-  return TRUE;
+  return true;
 }
 
 bool TFood::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "you might wanna take that to the diner!");
   }
-  return TRUE;
+  return true;
 }
 
 int TFood::objectDecay() {
   if (isFoodFlag(FOOD_SPOILED)) {
-    return FALSE;
+    return false;
   } else {
     addFoodFlags(FOOD_SPOILED);
     obj_flags.decay_time = getVolume() * 10;
   }
-  return TRUE;
+  return true;
 }
 
 void TFood::assignFourValues(int x1, int, int, int x4) {
@@ -1157,7 +1157,7 @@ void TFood::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
 
 bool TFood::poisonObject() {
   addFoodFlags(FOOD_POISON);
-  return TRUE;
+  return true;
 }
 
 void TFood::nukeFood() { delete this; }
@@ -1182,15 +1182,15 @@ int TFood::chiMe(TBeing* tLunatic) {
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI) || isFoodFlag(FOOD_SPOILED)) {
-    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+    act("You fail to affect $p in any way.", false, tLunatic, this, nullptr,
       TO_CHAR);
     return true;
   }
 
-  act("You focus your chi, causing $p to become a little fresher!", FALSE,
-    tLunatic, this, NULL, TO_CHAR);
-  act("$n stares at $p, causing it to become a little fresher!", TRUE, tLunatic,
-    this, NULL, TO_ROOM);
+  act("You focus your chi, causing $p to become a little fresher!", false,
+    tLunatic, this, nullptr, TO_CHAR);
+  act("$n stares at $p, causing it to become a little fresher!", true, tLunatic,
+    this, nullptr, TO_ROOM);
 
   obj_flags.decay_time += ::number(1, 3);
 

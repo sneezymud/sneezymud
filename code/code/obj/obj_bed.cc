@@ -66,9 +66,9 @@ void TBed::changeObjValue1(TBeing* ch) {
 int TBed::getAllFrom(TBeing* ch, const char* argument) {
   int rc;
 
-  act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
-  act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,
+  act("You start getting items off $p.", true, ch, this, nullptr, TO_CHAR);
+  act("$n starts getting items off $p.", true, ch, this, nullptr, TO_ROOM);
+  start_task(ch, nullptr, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,
     0, 0);
   // this is a kludge, task_get still has a tiny delay on it
   // this dumps around it and goes right to the guts
@@ -77,17 +77,17 @@ int TBed::getAllFrom(TBeing* ch, const char* argument) {
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     return DELETE_VICT;
   }
-  return FALSE;
+  return false;
 }
 
 bool TBed::isSimilar(const TThing* t) const {
   // things on them should make them dissimilar
   if (rider)
-    return FALSE;
+    return false;
 
   const TBed* ttab = dynamic_cast<const TBed*>(t);
   if (ttab && ttab->rider) {
-    return FALSE;
+    return false;
   }
   return TObj::isSimilar(t);
 }
@@ -109,8 +109,8 @@ int TBed::putSomethingInto(TBeing* ch, TThing* tThing) {
   *this->roomp += *tThing;
   tThing->mount(this);
 
-  act("You prop up $p on $N.", TRUE, ch, tThing, this, TO_CHAR);
-  act("$N props up $p on $N.", TRUE, ch, tThing, this, TO_ROOM);
+  act("You prop up $p on $N.", true, ch, tThing, this, TO_CHAR);
+  act("$N props up $p on $N.", true, ch, tThing, this, TO_ROOM);
 
   return 0;
 }
@@ -197,7 +197,7 @@ void TBed::bedRegen(TBeing* ch, int* gain, silentTypeT silent) const {
 
     sprintf(buf, "The $o $q too small and uncomfortable for you.");
     if (!silent)
-      act(buf, FALSE, ch, this, 0, TO_CHAR);
+      act(buf, false, ch, this, 0, TO_CHAR);
 
     // the above act won't be sent (masked) if player !awake()
     // so kludge around this
@@ -218,7 +218,7 @@ void TBed::bedRegen(TBeing* ch, int* gain, silentTypeT silent) const {
       sprintf(buf, "$n says, \"%s $o sucks!\"",
         isPluralItem() ? "These" : "This");
       if (!silent)
-        act(buf, FALSE, ch, this, 0, TO_ROOM);
+        act(buf, false, ch, this, 0, TO_ROOM);
     }
 
     return;
@@ -239,7 +239,7 @@ void TBed::sitMe(TBeing* ch) {
     return;
   }
   if ((getNumRiders(ch) + 1) > getMaxRiders()) {
-    act("There isn't enough room on $p to sit right now.", FALSE, ch, this, 0,
+    act("There isn't enough room on $p to sit right now.", false, ch, this, 0,
       TO_CHAR);
     return;
   }
@@ -249,9 +249,9 @@ void TBed::sitMe(TBeing* ch) {
   }
   switch (ch->getPosition()) {
     case POSITION_CRAWLING:
-      act("You crawl into the $o and sit upon it.", FALSE, ch, this, 0,
+      act("You crawl into the $o and sit upon it.", false, ch, this, 0,
         TO_CHAR);
-      act("$n crawls into the $o and sits upon it.", TRUE, ch, this, 0,
+      act("$n crawls into the $o and sits upon it.", true, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SITTING);
       if (ch->isPc())
@@ -260,11 +260,11 @@ void TBed::sitMe(TBeing* ch) {
       break;
     case POSITION_STANDING:
       if (objVnum() == Obj::BATS_JACUZZI) {
-        act("You climb into $p and sit down.", FALSE, ch, this, 0, TO_CHAR);
-        act("$n climbs into $p and sits down.", TRUE, ch, this, 0, TO_ROOM);
+        act("You climb into $p and sit down.", false, ch, this, 0, TO_CHAR);
+        act("$n climbs into $p and sits down.", true, ch, this, 0, TO_ROOM);
       } else {
-        act("You sit down on the $o.", FALSE, ch, this, 0, TO_CHAR);
-        act("$n sits down on the $o.", TRUE, ch, this, 0, TO_ROOM);
+        act("You sit down on the $o.", false, ch, this, 0, TO_CHAR);
+        act("$n sits down on the $o.", true, ch, this, 0, TO_ROOM);
       }
       ch->setPosition(POSITION_SITTING);
       if (ch->isPc())
@@ -277,13 +277,13 @@ void TBed::sitMe(TBeing* ch) {
       break;
     case POSITION_RESTING:
       if (objVnum() == Obj::BATS_JACUZZI) {
-        act("You sit up, but still find $p comfortable.", FALSE, ch, this, 0,
+        act("You sit up, but still find $p comfortable.", false, ch, this, 0,
           TO_CHAR);
-        act("$n sits up in $p.", TRUE, ch, this, 0, TO_ROOM);
+        act("$n sits up in $p.", true, ch, this, 0, TO_ROOM);
       } else {
-        act("You stop resting, and sit up on the $o.", FALSE, ch, this, 0,
+        act("You stop resting, and sit up on the $o.", false, ch, this, 0,
           TO_CHAR);
-        act("$n stops resting, and sits up on the $o.", TRUE, ch, this, 0,
+        act("$n stops resting, and sits up on the $o.", true, ch, this, 0,
           TO_ROOM);
       }
       ch->setPosition(POSITION_SITTING);
@@ -293,15 +293,15 @@ void TBed::sitMe(TBeing* ch) {
         ch->mount(this);
       break;
     case POSITION_SLEEPING:
-      act("You have to wake up first.", FALSE, ch, 0, 0, TO_CHAR);
+      act("You have to wake up first.", false, ch, 0, 0, TO_CHAR);
       break;
     case POSITION_MOUNTED:
       ch->sendTo("Not while riding you don't!\n\r");
       break;
     default:
-      act("You stop floating around, and sit on the $o.", FALSE, ch, this, 0,
+      act("You stop floating around, and sit on the $o.", false, ch, this, 0,
         TO_CHAR);
-      act("$n stops floating around, and sits down on the $o.", TRUE, ch, this,
+      act("$n stops floating around, and sits down on the $o.", true, ch, this,
         0, TO_ROOM);
       ch->setPosition(POSITION_SITTING);
       if (ch->isPc())
@@ -320,15 +320,15 @@ void TBed::restMe(TBeing* ch) {
     return;
   }
   if ((getNumRiders(ch) + 2) > getMaxRiders()) {
-    act("There isn't enough room on $p to rest right now.", FALSE, ch, this, 0,
+    act("There isn't enough room on $p to rest right now.", false, ch, this, 0,
       TO_CHAR);
     return;
   }
   switch (ch->getPosition()) {
     case POSITION_CRAWLING:
-      act("You crawl into the $o and rest your tired bones.", TRUE, ch, this, 0,
+      act("You crawl into the $o and rest your tired bones.", true, ch, this, 0,
         TO_CHAR);
-      act("$n crawls into the $o and rests $s tired bones.", TRUE, ch, this, 0,
+      act("$n crawls into the $o and rests $s tired bones.", true, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_RESTING);
       if (ch->isPc())
@@ -338,13 +338,13 @@ void TBed::restMe(TBeing* ch) {
       break;
     case POSITION_STANDING:
       if (objVnum() == Obj::BATS_JACUZZI) {
-        act("You climb into $p and allow yourself to relax.", FALSE, ch, this,
+        act("You climb into $p and allow yourself to relax.", false, ch, this,
           0, TO_CHAR);
-        act("$n climbs into $p and relaxes.", TRUE, ch, this, 0, TO_ROOM);
+        act("$n climbs into $p and relaxes.", true, ch, this, 0, TO_ROOM);
       } else {
         act("You sit down in the $o, lean back and rest your tired bones.",
-          FALSE, ch, this, 0, TO_CHAR);
-        act("$n sits down in the $o, leans back and rests.", TRUE, ch, this, 0,
+          false, ch, this, 0, TO_CHAR);
+        act("$n sits down in the $o, leans back and rests.", true, ch, this, 0,
           TO_ROOM);
       }
       ch->setPosition(POSITION_RESTING);
@@ -357,13 +357,13 @@ void TBed::restMe(TBeing* ch) {
       if (ch->checkBlackjack())
         gBj.exitGame(ch);
       if (objVnum() == Obj::BATS_JACUZZI) {
-        act("You sit back and allow yourself to relax.", FALSE, ch, this, 0,
+        act("You sit back and allow yourself to relax.", false, ch, this, 0,
           TO_CHAR);
-        act("$n leans back in $p and relaxes.", TRUE, ch, this, 0, TO_ROOM);
+        act("$n leans back in $p and relaxes.", true, ch, this, 0, TO_ROOM);
       } else {
-        act("You lean back and rest your tired bones on the $o.", FALSE, ch,
+        act("You lean back and rest your tired bones on the $o.", false, ch,
           this, 0, TO_CHAR);
-        act("$n leans back and rests on the $o.", TRUE, ch, this, 0, TO_ROOM);
+        act("$n leans back and rests on the $o.", true, ch, this, 0, TO_ROOM);
       }
 
       ch->setPosition(POSITION_RESTING);
@@ -373,10 +373,10 @@ void TBed::restMe(TBeing* ch) {
         ch->mount(this);
       break;
     case POSITION_RESTING:
-      act("You are already resting.", FALSE, ch, this, 0, TO_CHAR);
+      act("You are already resting.", false, ch, this, 0, TO_CHAR);
       break;
     case POSITION_SLEEPING:
-      act("You have to wake up first.", FALSE, ch, this, 0, TO_CHAR);
+      act("You have to wake up first.", false, ch, this, 0, TO_CHAR);
       break;
     case POSITION_MOUNTED:
       ch->sendTo("Not while riding you don't!\n\r");
@@ -385,8 +385,8 @@ void TBed::restMe(TBeing* ch) {
       act(
         "You stop floating around, and stop to rest your tired bones on the "
         "$o.",
-        FALSE, ch, this, 0, TO_CHAR);
-      act("$n stops floating around, and rests on the $o.", FALSE, ch, this, 0,
+        false, ch, this, 0, TO_CHAR);
+      act("$n stops floating around, and rests on the $o.", false, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_RESTING);
       if (ch->isPc())
@@ -403,7 +403,7 @@ void TBed::sleepMe(TBeing* ch) {
     return;
   }
   if ((getNumRiders(ch) + 3) > getMaxRiders()) {
-    act("There isn't enough room on $p to sleep right now.", FALSE, ch, this, 0,
+    act("There isn't enough room on $p to sleep right now.", false, ch, this, 0,
       TO_CHAR);
     return;
   }
@@ -413,8 +413,8 @@ void TBed::sleepMe(TBeing* ch) {
   }
   switch (ch->getPosition()) {
     case POSITION_CRAWLING:
-      act("You crawl into the $o and go to sleep.", TRUE, ch, this, 0, TO_CHAR);
-      act("$n crawls into the $o and goes to sleep.", TRUE, ch, this, 0,
+      act("You crawl into the $o and go to sleep.", true, ch, this, 0, TO_CHAR);
+      act("$n crawls into the $o and goes to sleep.", true, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SLEEPING);
       if (ch->isPc())
@@ -424,9 +424,9 @@ void TBed::sleepMe(TBeing* ch) {
       break;
     case POSITION_STANDING:
     case POSITION_RESTING:
-      act("You lie down on the $o and go to sleep.", TRUE, ch, this, 0,
+      act("You lie down on the $o and go to sleep.", true, ch, this, 0,
         TO_CHAR);
-      act("$n lies down and falls asleep in the $o.", TRUE, ch, this, 0,
+      act("$n lies down and falls asleep in the $o.", true, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SLEEPING);
       if (ch->isPc())
@@ -435,9 +435,9 @@ void TBed::sleepMe(TBeing* ch) {
         ch->mount(this);
       break;
     case POSITION_SITTING:
-      act("You lean back on the $o and go to sleep.", TRUE, ch, this, 0,
+      act("You lean back on the $o and go to sleep.", true, ch, this, 0,
         TO_CHAR);
-      act("$n leans back and falls asleep in the $o.", TRUE, ch, this, 0,
+      act("$n leans back and falls asleep in the $o.", true, ch, this, 0,
         TO_ROOM);
       ch->setPosition(POSITION_SLEEPING);
       if (ch->isPc())
@@ -454,9 +454,9 @@ void TBed::sleepMe(TBeing* ch) {
       ch->sendTo("Not while riding you don't!\n\r");
       break;
     default:
-      act("You stop floating around, and lie down in the $o.", FALSE, ch, this,
+      act("You stop floating around, and lie down in the $o.", false, ch, this,
         0, TO_CHAR);
-      act("$n stops floating around, and lies down in the $o.", TRUE, ch, this,
+      act("$n stops floating around, and lies down in the $o.", true, ch, this,
         0, TO_CHAR);
       ch->setPosition(POSITION_SLEEPING);
       if (ch->isPc())
@@ -480,7 +480,7 @@ int TBed::mobPulseBed(TMonster* mob, short int occurrence) {
   else
     n = 1;
   if ((getNumRiders(mob) + n) > getMaxRiders()) {
-    return FALSE;
+    return false;
   }
   mob->doWake("");
   mob->doStand();
@@ -491,7 +491,7 @@ int TBed::mobPulseBed(TMonster* mob, short int occurrence) {
   } else if (mob->default_pos == POSITION_SLEEPING || (getMinPosUse() == 0)) {
     mob->doSleep(fullName);
   }
-  return TRUE;
+  return true;
 }
 
 bool TBed::canGetMeDeny(const TBeing* ch, silentTypeT silent) const {
@@ -499,10 +499,10 @@ bool TBed::canGetMeDeny(const TBeing* ch, silentTypeT silent) const {
   if (!ch->isImmortal()) {
     if (!silent)
       ch->sendTo("Sorry, you aren't meant to be a furniture mover.\n\r");
-    return TRUE;
+    return true;
   }
 #endif
-  return FALSE;
+  return false;
 }
 
 int TBed::getMaxRiders() const { return getMaxUsers(); }
@@ -554,7 +554,7 @@ void TBed::lowCheck() {
 
 #if 0
   if (canWear(ITEM_WEAR_TAKE)) {
-    vlogf(LOG_LOW, format("Bed (%s) set to be portable.") % 
+    vlogf(LOG_LOW, format("Bed (%s) set to be portable.") %
                 getName());
   }
 #endif

@@ -8,64 +8,64 @@
 extern void startChargeTask(TBeing*, const char*);
 
 static int charge(TBeing* ch, TBeing* vict) {
-  TThing* c = NULL;
+  TThing* c = nullptr;
   TBeing* tb;
   int rc;
 
   TMonster* mount = dynamic_cast<TMonster*>(ch->riding);
   if (!mount || (ch->getPosition() != POSITION_MOUNTED)) {
     ch->sendTo("You must be mounted to charge!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (mount->getRace() != RACE_HORSE &&
       (!ch->doesKnowSkill(mount->mountSkillType()) ||
         ch->advancedRidingBonus(mount) < 50)) {
     ch->sendTo("You lack the skill to charge with this mount.\n\r");
-    return FALSE;
+    return false;
   }
   if (ch == vict) {
     ch->sendTo("It is impossible to charge yourself!\n\r");
-    return FALSE;
+    return false;
   }
   if (vict == mount) {
     ch->sendTo("You order your mount to charge into itself.\n\r");
-    return FALSE;
+    return false;
   }
   if (vict->riding == mount) {
     // we are both on same horse
-    act("Now how is your $o going to charge someone that is riding it?", FALSE,
-      ch, mount, NULL, TO_CHAR);
-    return FALSE;
+    act("Now how is your $o going to charge someone that is riding it?", false,
+      ch, mount, nullptr, TO_CHAR);
+    return false;
   }
   if (mount->horseMaster() != ch) {
-    act("You are not in control of $p and can't order it to charge.", FALSE, ch,
-      mount, NULL, TO_CHAR);
-    return FALSE;
+    act("You are not in control of $p and can't order it to charge.", false, ch,
+      mount, nullptr, TO_CHAR);
+    return false;
   }
   if (!mount->hasLegs()) {
-    act("You can't charge on a legless $o!", false, ch, mount, NULL, TO_CHAR);
-    return FALSE;
+    act("You can't charge on a legless $o!", false, ch, mount, nullptr, TO_CHAR);
+    return false;
   }
   if (mount->eitherLegHurt()) {
-    act("Your $o's injury prevents you from charging!", false, ch, mount, NULL,
+    act("Your $o's injury prevents you from charging!", false, ch, mount, nullptr,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (!mount->isFlying() && vict->isFlying()) {
     act("That would be hard, considering $N is flying, and your $o is not.",
-      FALSE, ch, mount, vict, TO_CHAR);
-    return FALSE;
+      false, ch, mount, vict, TO_CHAR);
+    return false;
   }
   if (ch->checkPeaceful(
         "This room is too peaceful to contemplate violence in.\n\r"))
-    return FALSE;
+    return false;
 
   // if there are a lot of attackers, just plain deny
   if (vict->attackers > 4) {
-    act("Too many people are fighting $N.  Charging is prohibited.", FALSE, ch,
+    act("Too many people are fighting $N.  Charging is prohibited.", false, ch,
       0, vict, TO_CHAR);
-    return FALSE;
+    return false;
   }
   // otherwise, allow the charge provided all the attackers are working together
   for (StuffIter it = vict->roomp->stuff.begin();
@@ -80,8 +80,8 @@ static int charge(TBeing* ch, TBeing* vict) {
     if (tbt->fight() == vict) {
       if (!tbt->inGroup(*ch)) {
         act("An innocent $o in the vicinity of $N prevents you from charging!",
-          FALSE, ch, tbt, vict, TO_CHAR);
-        return FALSE;
+          false, ch, tbt, vict, TO_CHAR);
+        return false;
       }
     }
   }
@@ -96,7 +96,7 @@ static int charge(TBeing* ch, TBeing* vict) {
                                   "can't get the space needed to charge!\n\r") %
                              vict->getName());
     ch->cantHit += ch->loseRound(1);
-    return FALSE;
+    return false;
   }
 
   if (ch->fight())
@@ -117,15 +117,15 @@ static int charge(TBeing* ch, TBeing* vict) {
   if (vict->awake() &&
       (!successfulHit || successfulSkill == GUARANTEED_FAILURE ||
         successfulSkill == FAILURE)) {
-    act("You charge $N, but $E dodges to the side at the last moment.", TRUE,
+    act("You charge $N, but $E dodges to the side at the last moment.", true,
       ch, 0, vict, TO_CHAR);
     act(
       "$n and $s mount come charging at you.\n\rFortunately you were able to "
       "dodge them.",
-      TRUE, ch, 0, vict, TO_VICT);
+      true, ch, 0, vict, TO_VICT);
     act(
       "$n and $s mount charge down upon $N.\n\rBut $E was able to dodge them.",
-      TRUE, ch, 0, vict, TO_NOTVICT);
+      true, ch, 0, vict, TO_NOTVICT);
 
     for (StuffIter it = vict->roomp->stuff.begin();
          it != vict->roomp->stuff.end() && (c = *it); ++it) {
@@ -140,15 +140,15 @@ static int charge(TBeing* ch, TBeing* vict) {
         continue;
       if ((tb->fight() == vict) && (tb != mount)) {
         // we have already validated that all attackers are in ch's group
-        act("You scatter as $N charges!", FALSE, tb, 0, ch, TO_CHAR);
-        act("$n scatters as you charge!", FALSE, tb, 0, ch, TO_VICT);
-        act("$n scatters as $N charges!", FALSE, tb, 0, ch, TO_NOTVICT);
+        act("You scatter as $N charges!", false, tb, 0, ch, TO_CHAR);
+        act("$n scatters as you charge!", false, tb, 0, ch, TO_VICT);
+        act("$n scatters as $N charges!", false, tb, 0, ch, TO_NOTVICT);
         tb->loseRound(2);
       }
     }
 
     ch->reconcileDamage(vict, 0, SKILL_CHARGE);
-    return TRUE;
+    return true;
   }
 
   // Success case
@@ -159,11 +159,11 @@ static int charge(TBeing* ch, TBeing* vict) {
 
   TThing* prim = ch->heldInPrimHand();
   if (prim && (!(::number(0, 25)) || chOriented)) {
-    act("A split second before the charge you brace your $o to strike.", TRUE,
+    act("A split second before the charge you brace your $o to strike.", true,
       ch, prim, vict, TO_CHAR);
-    act("$n braces $s $o in preparation for the strike.", TRUE, ch, prim, vict,
+    act("$n braces $s $o in preparation for the strike.", true, ch, prim, vict,
       TO_VICT);
-    act("$n braces $s $o in preperation for $s charge at $N.", TRUE, ch, prim,
+    act("$n braces $s $o in preperation for $s charge at $N.", true, ch, prim,
       vict, TO_NOTVICT);
 
     if (chOriented)
@@ -191,17 +191,17 @@ static int charge(TBeing* ch, TBeing* vict) {
              WEIGHT_SCALING_CONSTANT) *
            ridingSkillBonus / 100;
 
-    act("You charge $N, trampling $M with an especially mighty blow!", TRUE, ch,
+    act("You charge $N, trampling $M with an especially mighty blow!", true, ch,
       0, vict, TO_CHAR);
-    act("$n and $s mount trample you with a mighty charge!", TRUE, ch, 0, vict,
+    act("$n and $s mount trample you with a mighty charge!", true, ch, 0, vict,
       TO_VICT);
-    act("$n and $s mount trample $N with a mighty charge!", TRUE, ch, 0, vict,
+    act("$n and $s mount trample $N with a mighty charge!", true, ch, 0, vict,
       TO_NOTVICT);
   } else {
-    act("You charge $N, striking $M with a mighty blow.", TRUE, ch, 0, vict,
+    act("You charge $N, striking $M with a mighty blow.", true, ch, 0, vict,
       TO_CHAR);
-    act("$n and $s mount come charging at you.", TRUE, ch, 0, vict, TO_VICT);
-    act("$n and $s mount charge down upon $N.", TRUE, ch, 0, vict, TO_NOTVICT);
+    act("$n and $s mount come charging at you.", true, ch, 0, vict, TO_VICT);
+    act("$n and $s mount charge down upon $N.", true, ch, 0, vict, TO_NOTVICT);
   }
 
   for (StuffIter it = vict->roomp->stuff.begin();
@@ -214,17 +214,17 @@ static int charge(TBeing* ch, TBeing* vict) {
       continue;
     if ((tb->fight() == vict) && (tb != mount)) {
       // we have already validated that all attackers are in ch's group
-      act("You scatter as $N charges!", FALSE, tb, 0, ch, TO_CHAR);
-      act("$n scatters as you charge!", FALSE, tb, 0, ch, TO_VICT);
-      act("$n scatters as $N charges!", FALSE, tb, 0, ch, TO_NOTVICT);
+      act("You scatter as $N charges!", false, tb, 0, ch, TO_CHAR);
+      act("$n scatters as you charge!", false, tb, 0, ch, TO_VICT);
+      act("$n scatters as $N charges!", false, tb, 0, ch, TO_NOTVICT);
       tb->loseRound(2);
     }
   }
 
   if (vict->riding && dynamic_cast<TBeing*>(vict->riding)) {
-    act("$n is heaved from $s mount and falls to the $g.", TRUE, vict, 0, 0,
+    act("$n is heaved from $s mount and falls to the $g.", true, vict, 0, 0,
       TO_ROOM);
-    act("You are knocked from your mount and dashed to the $g!", TRUE, vict, 0,
+    act("You are knocked from your mount and dashed to the $g!", true, vict, 0,
       0, TO_CHAR);
     rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -232,31 +232,31 @@ static int charge(TBeing* ch, TBeing* vict) {
 
     vict->addToWait(combatRound(1));
   } else if (vict->riding) {
-    act("$n is heaved from $p and falls to the $g.", TRUE, vict, vict->riding,
+    act("$n is heaved from $p and falls to the $g.", true, vict, vict->riding,
       0, TO_ROOM);
-    act("You are knocked from $p and dashed to the $g!", TRUE, vict,
+    act("You are knocked from $p and dashed to the $g!", true, vict,
       vict->riding, 0, TO_CHAR);
     rc = vict->fallOffMount(vict->riding, POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_VICT;
     }
   } else if ((c = vict->rider)) {
-    act("$n is knocked from under you and you fall to the $g.", TRUE, vict, 0,
+    act("$n is knocked from under you and you fall to the $g.", true, vict, 0,
       c, TO_VICT);
-    act("You are battered by the blow and $N falls off you!", TRUE, vict, 0, c,
+    act("You are battered by the blow and $N falls off you!", true, vict, 0, c,
       TO_CHAR);
-    act("$n is stricken by the blow and $N falls off $m!", TRUE, vict, 0, c,
+    act("$n is stricken by the blow and $N falls off $m!", true, vict, 0, c,
       TO_NOTVICT);
     rc = c->fallOffMount(vict, POSITION_SITTING);
     vict->addToWait(combatRound(1));
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete c;
-      c = NULL;
+      c = nullptr;
     }
   } else {
-    act("You are battered by the blow and trampled to the $g!", TRUE, vict, 0,
+    act("You are battered by the blow and trampled to the $g!", true, vict, 0,
       0, TO_CHAR);
-    act("$n is battered by the blow and trampled to the $g!", TRUE, vict, 0, 0,
+    act("$n is battered by the blow and trampled to the $g!", true, vict, 0, 0,
       TO_ROOM);
     vict->setPosition(POSITION_SITTING);
     vict->addToWait(combatRound(1));
@@ -266,7 +266,7 @@ static int charge(TBeing* ch, TBeing* vict) {
   if (ch->reconcileDamage(vict, dam, SKILL_CHARGE) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::doCharge(const char* arg, TBeing* victim) {
@@ -276,11 +276,11 @@ int TBeing::doCharge(const char* arg, TBeing* victim) {
   dirTypeT Direction = DIR_NONE;
 
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
   if (!doesKnowSkill(SKILL_CHARGE)) {
     sendTo("You know nothing about charging.\n\r");
-    return FALSE;
+    return false;
   }
   half_chop(arg, tmp, tString);
   if (!victim) {
@@ -288,23 +288,23 @@ int TBeing::doCharge(const char* arg, TBeing* victim) {
 
     if (Direction > DIR_NONE && Direction < MAX_DIR) {
       startChargeTask(this, arg);
-      return FALSE;
+      return false;
     }
   }
   if (!(vict = victim)) {
     if (!(vict = get_char_room_vis(this, tmp))) {
       if (!(vict = fight())) {
         sendTo("Charge whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
   if (noHarmCheck(vict))
-    return FALSE;
+    return false;
 
   if (!sameRoom(*vict)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
 
   rc = charge(this, vict);
@@ -314,7 +314,7 @@ int TBeing::doCharge(const char* arg, TBeing* victim) {
     if (victim)
       return rc;
     delete vict;
-    vict = NULL;
+    vict = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

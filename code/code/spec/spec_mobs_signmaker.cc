@@ -22,26 +22,26 @@ int signMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     return shopWhisper(ch, me, shop_nr, arg);
 
   if (!o || cmd != CMD_MOB_GIVEN_ITEM)
-    return FALSE;
+    return false;
 
   if (!(dynamic_cast<TNote*>(o))) {
     me->doSay("You need to give me a note with your sign message.");
-    me->doDrop(add_bars(o->name), NULL);
-    return TRUE;
+    me->doDrop(add_bars(o->name), nullptr);
+    return true;
   } else {
     sign_text = sign_text = o->action_description;
-    me->doDrop(add_bars(o->name), NULL);
+    me->doDrop(add_bars(o->name), nullptr);
   }
 
   if (sign_text.length() > SIGN_MAX) {
     me->doSay("I can't make a sign that big.");
-    return TRUE;
+    return true;
   }
 
   if (ch->getMoney() >= SIGN_COST) {
     if (!(sign = read_object(SIGN_VNUM, VIRTUAL))) {
       vlogf(LOG_BUG, "problem loading generic sign in signMaker proc");
-      return TRUE;
+      return true;
     }
 
     ch->giveMoney(me, SIGN_COST, GOLD_SHOP);
@@ -53,7 +53,7 @@ int signMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   } else {
     me->doSay("This isn't a free service.");
     me->doAction(fname(me->name), CMD_PEER);
-    return TRUE;
+    return true;
   }
 
   // add the extra description
@@ -64,14 +64,14 @@ int signMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   new_descr->next = sign->ex_description;
   sign->ex_description = new_descr;
 
-  act("You grab a sign and carve out the message..", TRUE, me, sign, 0,
+  act("You grab a sign and carve out the message..", true, me, sign, 0,
     TO_CHAR);
-  act("$n grabs a sign and carves out a message.", TRUE, me, sign, 0, TO_ROOM);
+  act("$n grabs a sign and carves out a message.", true, me, sign, 0, TO_ROOM);
 
   me->doSay("Well, there you are then.");
   *me += *sign;
   sstring giveBuf = format("%s %s") % add_bars(sign->name) % add_bars(ch->name);
   me->doGive(giveBuf, GIVE_FLAG_IGN_DEX_TEXT);
 
-  return TRUE;
+  return true;
 }

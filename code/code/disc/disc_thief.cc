@@ -28,12 +28,12 @@ int TBeing::doSneak(const char* argument) {
 
   if (!doesKnowSkill(skill)) {
     sendTo("You know nothing about sneaking.\n\r");
-    return FALSE;
+    return false;
   }
   if (!*arg && desc) {
     if (affectedBySpell(skill) || checkForSkillAttempt(skill)) {
       sendTo("You are already trying to be sneaky.\n\r");
-      return FALSE;
+      return false;
     }
   }
 
@@ -44,10 +44,10 @@ int TBeing::doSneak(const char* argument) {
         removeSkillAttempt(skill);
         if (affectedBySpell(skill))
           affectFrom(skill);
-        return FALSE;
+        return false;
       } else {
         sendTo("You were not trying to be sneaky.\n\r");
-        return FALSE;
+        return false;
       }
     } else if (is_abbrev(arg, "retry")) {
       if (affectedBySpell(skill) || checkForSkillAttempt(skill)) {
@@ -70,27 +70,27 @@ int sneak(TBeing* thief, spellNumT skill) {
 
   if (thief->fight()) {
     thief->sendTo("No way!! You simply can NOT sneak while fighting!\n\r");
-    return FALSE;
+    return false;
   }
   if (thief->affectedBySpell(skill)) {
     thief->affectFrom(skill);
     thief->sendTo("You are no longer sneaky.\n\r");
 
-    // this should technically be a return TRUE, but by sending back false
+    // this should technically be a return true, but by sending back false
     // we don't lag them for ending their sneak
-    return FALSE;
+    return false;
   }
   if (thief->riding) {
     thief->sendTo("It is impossible to sneak while mounted.\n\r");
-    return FALSE;
+    return false;
   }
   if (thief->isFlying()) {
     thief->sendTo("It is impossible to sneak while flying.\n\r");
-    return FALSE;
+    return false;
   }
   if (thief->getMove() < SNEAK_COST) {
     thief->sendTo("You don't have the vitality to do that.\n\r");
-    return FALSE;
+    return false;
   }
   thief->addToMove(-SNEAK_COST);
   thief->sendTo("Ok, you'll try to move silently for a while.\n\r");
@@ -107,7 +107,7 @@ int sneak(TBeing* thief, spellNumT skill) {
     af.location = APPLY_CAN_BE_SEEN;
     af.bitvector = AFF_SNEAK;
     thief->affectTo(&af, -1);
-    return TRUE;
+    return true;
   } else {
     af.modifier = 0;
     af.type = AFFECT_SKILL_ATTEMPT;
@@ -116,9 +116,9 @@ int sneak(TBeing* thief, spellNumT skill) {
     af.location = APPLY_NONE;
     af.bitvector = 0;
     thief->affectTo(&af, -1);
-    return TRUE;
+    return true;
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::doHide() {
@@ -126,7 +126,7 @@ int TBeing::doHide() {
 
   if (!doesKnowSkill(skill)) {
     sendTo("You know nothing about hiding.\n\r");
-    return FALSE;
+    return false;
   }
   int rc = hide(this, skill);
   if (rc)
@@ -138,13 +138,13 @@ int TBeing::doHide() {
 int hide(TBeing* thief, spellNumT skill) {
   if (thief->fight()) {
     thief->sendTo("No way!! You simply can NOT hide while fighting!\n\r");
-    return FALSE;
+    return false;
   }
   thief->sendTo("You attempt to hide yourself.\n\r");
 
   if (thief->riding) {
     thief->sendTo("Yeah... right... while mounted\n\r");
-    return FALSE;
+    return false;
   }
   int bKnown = thief->getSkillValue(skill);
   bKnown += thief->plotStat(STAT_CURRENT, STAT_DEX, -40, 15, 0);
@@ -153,7 +153,7 @@ int hide(TBeing* thief, spellNumT skill) {
     SET_BIT(thief->specials.affectedBy, AFF_HIDE);
   } else {
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::doSubterfuge(const char* arg) {
@@ -163,16 +163,16 @@ int TBeing::doSubterfuge(const char* arg) {
 
   if (!doesKnowSkill(SKILL_SUBTERFUGE)) {
     sendTo("You know nothing about the art of subterfuge.\n\r");
-    return FALSE;
+    return false;
   }
   one_argument(arg, name_buf, cElements(name_buf));
   if (!(victim = get_char_room_vis(this, name_buf))) {
     sendTo("No one here by that name.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->isPc()) {
     sendTo("You can't subterfuge a player, sorry.\n\r");
-    return FALSE;
+    return false;
   }
   rc = subterfuge(this, victim);
   if (rc)
@@ -184,16 +184,16 @@ int TBeing::doSubterfuge(const char* arg) {
 int subterfuge(TBeing* thief, TBeing* victim) {
   if (thief->fight()) {
     thief->sendTo("No way!! You simply can NOT concentrate!\n\r");
-    return FALSE;
+    return false;
   }
   if (thief->getMove() < 50) {
     thief->sendTo("You don't have enough mp to make the move.\n\r");
-    return FALSE;
+    return false;
   }
 
   // failure sets fighting
   if (thief->checkPeaceful("You can't subterfuge in a place of refuge.\n\r"))
-    return FALSE;
+    return false;
 
   int level = thief->getSkillLevel(SKILL_SUBTERFUGE);
   int bKnown = thief->getSkillValue(SKILL_SUBTERFUGE);
@@ -203,19 +203,19 @@ int subterfuge(TBeing* thief, TBeing* victim) {
   thief->setMove(max(0, thief->getMove()));
 
   if (thief->isNotPowerful(victim, level, SKILL_SUBTERFUGE, SILENT_YES)) {
-    act("$s mind is too powerful to be confused.", FALSE, thief, NULL, victim,
+    act("$s mind is too powerful to be confused.", false, thief, nullptr, victim,
       TO_CHAR);
     thief->sendTo("You simply fail to confuse your target.\n\r");
-    return TRUE;
+    return true;
   }
   if ((victim->plotStat(STAT_CURRENT, STAT_PER, 3, 18, 12) +
         victim->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12)) >
       (thief->plotStat(STAT_CURRENT, STAT_KAR, 3, 18, 12) +
         thief->plotStat(STAT_CURRENT, STAT_FOC, 3, 18, 12))) {
-    act("$N is too smart to fall for this ploy.", FALSE, thief, NULL, victim,
+    act("$N is too smart to fall for this ploy.", false, thief, nullptr, victim,
       TO_CHAR);
     thief->sendTo("You simply fail to confuse your target.\n\r");
-    return TRUE;
+    return true;
   }
 
   if (thief->bSuccess(bKnown, SKILL_SUBTERFUGE)) {
@@ -223,19 +223,19 @@ int subterfuge(TBeing* thief, TBeing* victim) {
       thief->sendTo("Uhoh! You simply fail to confuse your target!\n\r");
       thief->setCharFighting(victim);
       thief->setVictFighting(victim);
-      return TRUE;
+      return true;
     }
     thief->sendTo("You have totally confused the monster!\n\r");
 
     REMOVE_BIT(victim->specials.act, ACT_HUNTING);
     REMOVE_BIT(victim->specials.act, ACT_HATEFUL);
 
-    return TRUE;
+    return true;
   } else {
     thief->sendTo("Uhoh! Something went wrong!\n\r");
     thief->setCharFighting(victim);
     thief->setVictFighting(victim);
-    return TRUE;
+    return true;
   }
 }
 
@@ -246,18 +246,18 @@ int TBeing::doPick(const char* argument) {
   // Gin Game Command, not Thief skill
   if (gGin.check(this)) {
     gGin.draw(this, argument);
-    return TRUE;
+    return true;
   }
   if (!doesKnowSkill(SKILL_PICK_LOCK)) {
     sendTo("You know nothing about picking locks.\n\r");
-    return FALSE;
+    return false;
   }
   // Thief skill
   argument_interpreter(argument, type, cElements(type), dir, cElements(dir));
 
   if (!*type) {
     sendTo("Pick what?\n\r");
-    return FALSE;
+    return false;
   }
   rc = pickLocks(this, argument, type, dir);
   return rc;
@@ -267,13 +267,13 @@ int TThing::pickWithMe(TBeing* thief, const char*, const char*, const char*) {
   thief->sendTo(
     "You need to hold a lock pick in your primary hand in order to pick "
     "locks.\n\r");
-  return FALSE;
+  return false;
 }
 
 int TTool::pickWithMe(TBeing* thief, const char* argument, const char* type,
   const char* dir) {
   dirTypeT door;
-  roomDirData* exitp = NULL;
+  roomDirData* exitp = nullptr;
   TObj* obj;
   TBeing* victim;
 
@@ -281,7 +281,7 @@ int TTool::pickWithMe(TBeing* thief, const char* argument, const char* type,
     thief->sendTo(
       "You need to hold a lock pick in your primary hand in order to pick "
       "locks.\n\r");
-    return FALSE;
+    return false;
   }
   int bKnown = thief->getSkillValue(SKILL_PICK_LOCK);
 
@@ -300,8 +300,8 @@ int TTool::pickWithMe(TBeing* thief, const char* argument, const char* type,
     else if (!IS_SET(exitp->condition, EXIT_LOCKED))
       thief->sendTo("Oh.. it wasn't locked at all.\n\r");
     else {
-      act("$n begins fiddling with a lock.", FALSE, thief, 0, 0, TO_ROOM);
-      act("You begin fiddling with a lock.", FALSE, thief, 0, 0, TO_CHAR);
+      act("$n begins fiddling with a lock.", false, thief, 0, 0, TO_ROOM);
+      act("You begin fiddling with a lock.", false, thief, 0, 0, TO_CHAR);
       thief->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_PICK_LOCK,
         8);
 
@@ -309,7 +309,7 @@ int TTool::pickWithMe(TBeing* thief, const char* argument, const char* type,
       if (thief->task)
         thief->stopTask();
 
-      start_task(thief, NULL, NULL, TASK_PICKLOCKS, "", 0, thief->in_room, door,
+      start_task(thief, nullptr, nullptr, TASK_PICKLOCKS, "", 0, thief->in_room, door,
         0, 120 - bKnown);
     }
   } else if (generic_find(argument, FIND_OBJ_INV | FIND_OBJ_ROOM, thief,
@@ -318,7 +318,7 @@ int TTool::pickWithMe(TBeing* thief, const char* argument, const char* type,
   } else
     thief->sendTo("You don't see that here.\n\r");
 
-  return TRUE;
+  return true;
 }
 
 int pickLocks(TBeing* thief, const char* argument, const char* type,
@@ -327,29 +327,29 @@ int pickLocks(TBeing* thief, const char* argument, const char* type,
 
   if (!thief->doesKnowSkill(SKILL_PICK_LOCK)) {
     thief->sendTo("You don't know to pick locks!\n\r");
-    return FALSE;
+    return false;
   }
   if (!(pick = thief->heldInPrimHand())) {
     thief->sendTo(
       "You need to hold a lock pick in your primary hand in order to pick "
       "locks.\n\r");
-    return FALSE;
+    return false;
   }
   pick->pickWithMe(thief, argument, type, dir);
-  return TRUE;
+  return true;
 }
 
 int TBeing::SpyCheck() {
   if (bSuccess(SKILL_SPY))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::doSpy() {
   if (!doesKnowSkill(SKILL_SPY)) {
     sendTo("You know nothing about spying.\n\r");
-    return FALSE;
+    return false;
   }
   return spy(this);
 }
@@ -360,12 +360,12 @@ int spy(TBeing* thief) {
   if (thief->affectedBySpell(SKILL_SPY)) {
     thief->sendTo("You cease spying.\n\r");
     thief->affectFrom(SKILL_SPY);
-    return FALSE;
+    return false;
   }
 
   if (thief->isAffected(AFF_SCRYING)) {
     thief->sendTo("You are already doing your best spy imitation.\n\r");
-    return FALSE;
+    return false;
   }
   thief->sendTo("Ok, try your best to spy.\n\r");
 
@@ -382,11 +382,11 @@ int spy(TBeing* thief) {
   if (thief->bSuccess(bKnown, SKILL_SPY)) {
     aff.bitvector = AFF_SCRYING;
     thief->affectTo(&aff, -1);
-    return TRUE;
+    return true;
   }
   aff.bitvector = 0;
   thief->affectTo(&aff, -1);
-  return TRUE;
+  return true;
 }
 
 void TObj::pickMe(TBeing* thief) {
@@ -400,7 +400,7 @@ int TBeing::thiefDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
   // presumes thief is in appropriate position for dodging already
 
   if (!v->doesKnowSkill(SKILL_DODGE_THIEF))
-    return FALSE;
+    return false;
 
   w_type -= TYPE_HIT;
 
@@ -408,7 +408,7 @@ int TBeing::thiefDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
   int amt = 45;
 
   if (::number(0, 999) >= amt)
-    return FALSE;
+    return false;
 
   // check bSuccess after above check, so that we limit how often we
   // call the learnFrom stuff
@@ -425,7 +425,7 @@ int TBeing::thiefDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
         attack_hit_text[w_type].singular,
         v->describeBodySlot(part_hit).c_str());
     }
-    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
+    act(buf, false, this, 0, v, TO_VICT, ANSI_CYAN);
     if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
         attack_hit_text_twink[w_type].singular,
@@ -435,7 +435,7 @@ int TBeing::thiefDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
         attack_hit_text[w_type].singular,
         v->describeBodySlot(part_hit).c_str());
     }
-    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
+    act(buf, false, this, 0, v, TO_CHAR, ANSI_CYAN);
     if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss $n's %s at $S %s.", type,
         attack_hit_text_twink[w_type].singular,
@@ -445,20 +445,20 @@ int TBeing::thiefDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
         attack_hit_text[w_type].singular,
         v->describeBodySlot(part_hit).c_str());
     }
-    act(buf, TRUE, this, 0, v, TO_NOTVICT);
+    act(buf, true, this, 0, v, TO_NOTVICT);
 
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::doTrack(const char* argument) {
-  char namebuf[256], found = FALSE;
+  char namebuf[256], found = false;
   int dist = 0, targrm, worked, skill;
   int code;
   TBeing* scan;
   affectedData aff, *Vaff;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   char buf[256] = "\0\0\0", buf2[512] = "\0\0\0";
 
   strcpy(namebuf, argument);
@@ -492,10 +492,10 @@ void TBeing::doTrack(const char* argument) {
     sendTo("You can't see well enough to track.\n\r");
     return;
   }
-  found = FALSE;
+  found = false;
   for (scan = character_list; scan; scan = scan->next) {
     if (isname(namebuf, scan->name)) {
-      found = TRUE;
+      found = true;
       break;
     }
   }
@@ -667,14 +667,14 @@ void TBeing::doTrack(const char* argument) {
     (-2 -
       ((110 - getSkillValue((isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK)))) / 6)));
 
-  start_task(this, NULL, NULL, TASK_TRACKING, "", 1, in_room, 1, code + 1, 40);
+  start_task(this, nullptr, nullptr, TASK_TRACKING, "", 1, in_room, 1, code + 1, 40);
 }
 
 // used by doLook() to display next direction to go.
-// return FALSE to cease tracking
+// return false to cease tracking
 int TBeing::track(TBeing* vict) {
   int code;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   int targetRm = -1;
   int isSW = affectedBySpell(SKILL_SEEKWATER);
   char buf[256];
@@ -684,12 +684,12 @@ int TBeing::track(TBeing* vict) {
 
   if (!vict && !isSW) {
     vlogf(LOG_BUG, format("Problem in track() %s") % getName());
-    return TRUE;
+    return true;
   }
   if (roomp && !isImmortal() && (roomp->getLight() + visionBonus <= 0) &&
       !roomp->isRoomFlag(ROOM_ALWAYS_LIT) && !isAffected(AFF_TRUE_SIGHT) &&
       !isAffected(AFF_CLARITY)) {
-    return TRUE;
+    return true;
   }
   if (!vict) {
     if (isSW) {
@@ -698,7 +698,7 @@ int TBeing::track(TBeing* vict) {
     } else {
       vlogf(LOG_BUG, "problem in track()");
       stopTask();
-      return FALSE;
+      return false;
     }
   } else {
     if (isImmortal())  // look through doors
@@ -717,14 +717,14 @@ int TBeing::track(TBeing* vict) {
       desc->clientf(format("%d") % CLIENT_TRACKOFF);
     stopTask();
     addToWait(combatRound(1));
-    return FALSE;
+    return false;
   }
   if (task && task->flags > 0 && task->flags != 100) {
     if (task->flags != (code + 1)) {
       sendTo(format("%s###For some reason the path you found is gone.%s\n\r") %
              purple() % norm());
       task->flags = 0;
-      return TRUE;
+      return true;
     } else if (code <= 9) {
       sendTo(format("%s###You track %s %s.%s\n\r") % purple() %
              (isSW ? "some water" : "your target") % dirs_to_blank[code] %
@@ -755,9 +755,9 @@ int TBeing::track(TBeing* vict) {
         }
       }
     }
-    return TRUE;
+    return true;
   }
-  return TRUE;
+  return true;
 }
 
 // this is called exclusively by TMonster::hunt()
@@ -781,13 +781,13 @@ dirTypeT TBeing::dirTrack(TBeing* vict) {
           format("%s##You have lost the trail.%s\n\r") % orange() % norm());
 
         if (aff->be == vict) {
-          act("You have successfully concealed your path from $N.", FALSE, vict,
+          act("You have successfully concealed your path from $N.", false, vict,
             0, this, TO_CHAR, ANSI_GREEN);
           return DIR_NONE;
         } else if (aff->be && vict->sameRoom(*aff->be)) {
-          act("$N has successfully concealed your path from $P.", FALSE, vict,
+          act("$N has successfully concealed your path from $P.", false, vict,
             this, aff->be, TO_CHAR, ANSI_GREEN);
-          act("You have successfully concealed $n's path from $P.", FALSE, vict,
+          act("You have successfully concealed $n's path from $P.", false, vict,
             this, aff->be, TO_VICT, ANSI_GREEN);
           return DIR_NONE;
         }
@@ -815,7 +815,7 @@ dirTypeT TBeing::dirTrack(TBeing* vict) {
     return code;
   } else {
     int count = code - 9, seen = 0;
-    TPortal* tp = NULL;
+    TPortal* tp = nullptr;
     for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end(); ++it) {
       tp = dynamic_cast<TPortal*>(*it);
       if (tp) {

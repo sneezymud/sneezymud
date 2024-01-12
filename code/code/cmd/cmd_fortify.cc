@@ -8,13 +8,13 @@ int TBeing::doFortify() {
   // Check if caster at least knows the skill they're attempting to use
   if (!doesKnowSkill(SKILL_FORTIFY)) {
     sendTo("You know nothing about advanced defensive maneuvers.\n\r");
-    return FALSE;
+    return false;
   }
 
   // Check for lockout
   if (affectedBySpell(SKILL_FORTIFY)) {
     sendTo("You are still recovering from your last shield wall.\n\r");
-    return FALSE;
+    return false;
   }
 
   // Ensure player is using a shield
@@ -23,7 +23,7 @@ int TBeing::doFortify() {
     sendTo(
       "You cannot execute this defensive maneuver without a shield "
       "equipped!\n\r");
-    return FALSE;
+    return false;
   }
 
   int castLevel = getSkillLevel(SKILL_FORTIFY);
@@ -41,18 +41,18 @@ int TBeing::doFortify() {
   if (!successfulSkill) {
     act(
       "You attempt to fortify your defenses but fail to execute the maneuver.",
-      FALSE, this, NULL, NULL, TO_CHAR);
-    act("$n attempts a defensive maneuver but fails.", FALSE, this, NULL, NULL,
+      false, this, nullptr, nullptr, TO_CHAR);
+    act("$n attempts a defensive maneuver but fails.", false, this, nullptr, nullptr,
       TO_ROOM);
 
-    return FALSE;
+    return false;
   }
 
   // Skill success
   act("You sink in behind your shield and defend against incoming attacks!",
-    FALSE, this, NULL, NULL, TO_CHAR);
-  act("$n raises $s shield and strikes a defensive posture!", FALSE, this, NULL,
-    NULL, TO_ROOM);
+    false, this, nullptr, nullptr, TO_CHAR);
+  act("$n raises $s shield and strikes a defensive posture!", false, this, nullptr,
+    nullptr, TO_ROOM);
 
   // Damage resistance
   aff2.type = AFFECT_FORTIFY;
@@ -62,5 +62,5 @@ int TBeing::doFortify() {
   aff2.bitvector = 0;
   affectTo(&aff2, -1);
 
-  return TRUE;
+  return true;
 }

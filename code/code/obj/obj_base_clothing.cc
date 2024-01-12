@@ -414,15 +414,15 @@ int TBaseClothing::suggestedPrice() const {
     lev_mod = max(lev_mod, 3.0);
 
   // monk = hitrate of 90%
-  if (!isObjStat(ITEM_ANTI_MONK) && !monkRestrictedItem(NULL))
+  if (!isObjStat(ITEM_ANTI_MONK) && !monkRestrictedItem(nullptr))
     lev_mod = max(lev_mod, 10.0);
 
   // shaman = hitrate of 90%
-  if (!isObjStat(ITEM_ANTI_SHAMAN) && !shamanRestrictedItem(NULL))
+  if (!isObjStat(ITEM_ANTI_SHAMAN) && !shamanRestrictedItem(nullptr))
     lev_mod = max(lev_mod, 10.0);
 
   // ranger = hitrate of 69%
-  if (!isObjStat(ITEM_ANTI_RANGER) && !rangerRestrictedItem(NULL))
+  if (!isObjStat(ITEM_ANTI_RANGER) && !rangerRestrictedItem(nullptr))
     lev_mod = max(lev_mod, 3.0);
 
   // phase in with level
@@ -554,7 +554,7 @@ int TBaseClothing::scavengeMe(TBeing* ch, TObj** best_o) {
   if (itemAC() < (tobj ? tobj->itemAC() : 0)) {
     *best_o = this;
   }
-  return FALSE;
+  return false;
 }
 
 bool TBaseClothing::sellMeCheck(TBeing* ch, TMonster* keeper, int, int) const {
@@ -568,14 +568,14 @@ void TBaseClothing::describeObjectSpecifics(const TBeing* ch) const {
 
   if (ui == ITEM_WEAR_HOLD) {
     sstring buf = "$p looks like it is meant to be held in your hands.";
-    act(buf, FALSE, ch, this, 0, TO_CHAR);
+    act(buf, false, ch, this, 0, TO_CHAR);
   } else {
     int num = CountBits(ui) - 1;
     if (num >= 0) {
       sstring buf = "$p looks like it is meant to be worn on your ";
       buf += sstring(wear_bits[num]).uncap();
       buf += ".";
-      act(buf, FALSE, ch, this, 0, TO_CHAR);
+      act(buf, false, ch, this, 0, TO_CHAR);
     } else {
       vlogf(LOG_LOW,
         format("Base Clothing (%s:%d) with insufficient wearability.") %
@@ -630,11 +630,11 @@ void TBaseClothing::sellMeMoney(TBeing* ch, TMonster* keeper, int cost,
 
 int TBaseClothing::putMeInto(TBeing* ch, TOpenContainer* container) {
   TObj* o;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   int fingers = 0, legs = 0, feet = 0, arms = 0, wrists = 0, hands = 0;
 
   if (!dynamic_cast<TSuitcase*>(container))
-    return FALSE;
+    return false;
 
   for (StuffIter it = container->stuff.begin();
        it != container->stuff.end() && (t = *it); ++it) {
@@ -665,7 +665,7 @@ int TBaseClothing::putMeInto(TBeing* ch, TOpenContainer* container) {
         format(
           "You already have something that fits that slot in your %s.\n\r") %
         fname(container->name));
-      return TRUE;
+      return true;
     }
   }
 
@@ -678,7 +678,7 @@ int TBaseClothing::putMeInto(TBeing* ch, TOpenContainer* container) {
     ch->sendTo(
       format("You already have two things that fit that slot in your %s.\n\r") %
       fname(container->name));
-    return TRUE;
+    return true;
   }
 
   if (!canWear(ITEM_WEAR_FINGERS) && !canWear(ITEM_WEAR_NECK) &&
@@ -688,8 +688,8 @@ int TBaseClothing::putMeInto(TBeing* ch, TOpenContainer* container) {
       !canWear(ITEM_WEAR_BACK) && !canWear(ITEM_WEAR_WAIST) &&
       !canWear(ITEM_WEAR_WRISTS)) {
     ch->sendTo("You can only put clothing or armor into that.\n\r");
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

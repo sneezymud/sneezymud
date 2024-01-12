@@ -40,7 +40,7 @@ void TBaseCup::lookObj(TBeing* ch, int) const {
         (getMaxDrinkUnits() % 128 == 1 ? "" : "s"));
   }
   if (getDrinkUnits() <= 0 || !getMaxDrinkUnits())
-    act("It is empty.", FALSE, ch, 0, 0, TO_CHAR);
+    act("It is empty.", false, ch, 0, 0, TO_CHAR);
   else {
     temp = ((getDrinkUnits() * 3) / getMaxDrinkUnits());
     ch->sendTo(COLOR_OBJECTS,
@@ -74,14 +74,14 @@ void TBeing::lookDark() {
 
 void TBeing::lookDir(int keyword_no) {
   roomDirData* exitp;
-  const char* tmp_desc = NULL;
+  const char* tmp_desc = nullptr;
   TRoom* rp;
 
   if (keyword_no >= 10)  // adjust cause of our whacky array
     keyword_no -= 4;
 
   sendTo(format("You look %swards.\n\r") % dirs[keyword_no]);
-  act(format("$n looks %swards.") % dirs[keyword_no], TRUE, this, 0, 0,
+  act(format("$n looks %swards.") % dirs[keyword_no], true, this, 0, 0,
     TO_ROOM);
 
   if (!(exitp = exitDir(dirTypeT(keyword_no)))) {
@@ -99,9 +99,9 @@ void TBeing::lookDir(int keyword_no) {
       else {
         if (exitp->to_room && (rp = real_roomp(exitp->to_room))) {
           if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
-            if (hasColorStrings(NULL, rp->getName(), 2)) {
+            if (hasColorStrings(nullptr, rp->getName(), 2)) {
               sendTo(COLOR_ROOM_NAME,
-                format("You see %s<1>.\n\r") % dynColorRoom(rp, 1, TRUE));
+                format("You see %s<1>.\n\r") % dynColorRoom(rp, 1, true));
             } else {
               sendTo(COLOR_ROOM_NAME, format("You see %s%s%s.\n\r") %
                                         addColorRoom(rp, 1) % rp->name %
@@ -141,8 +141,8 @@ void TBeing::lookDir(int keyword_no) {
 
 void TBeing::lookInObj(sstring arg2, TThing* specific, unsigned int bits,
   const sstring& argument, cmdTypeT cmd) {
-  TBeing* tmp_char = NULL;
-  TObj* o = NULL;
+  TBeing* tmp_char = nullptr;
+  TObj* o = nullptr;
 
   if (!(arg2.empty()) || specific) {
     if (specific) {
@@ -171,7 +171,7 @@ void TBeing::lookInObj(sstring arg2, TThing* specific, unsigned int bits,
 
     // handle the look in all.corpse special case
     if (is_abbrev(arg2, "all.corpse") && arg2.length() > 6) {
-      TThing* t = NULL;
+      TThing* t = nullptr;
       for (StuffIter it = roomp->stuff.begin();
            it != roomp->stuff.end() && (t = *it); ++it) {
         TBaseCorpse* tbc = dynamic_cast<TBaseCorpse*>(t);
@@ -238,7 +238,7 @@ void TBeing::lookRoom(bool changedZones) {
           affectFrom(SKILL_TRACK);
         }
       } else if (affectedBySpell(SKILL_SEEKWATER)) {
-        if (!(res = track(NULL))) {
+        if (!(res = track(nullptr))) {
           hunt_dist = 0;
           remPlayerAction(PLR_HUNTING);
           affectFrom(SKILL_SEEKWATER);
@@ -258,7 +258,7 @@ void TBeing::lookRoom(bool changedZones) {
           affectFrom(SKILL_TRACK);
         }
       } else if (affectedBySpell(SKILL_SEEKWATER)) {
-        if (!(res = track(NULL))) {
+        if (!(res = track(nullptr))) {
           hunt_dist = 0;
           REMOVE_BIT(specials.act, ACT_HUNTING);
           affectFrom(SKILL_SEEKWATER);
@@ -298,7 +298,7 @@ void TBeing::lookAtRoom() {
           affectFrom(SKILL_TRACK);
         }
       } else if (affectedBySpell(SKILL_SEEKWATER)) {
-        if (!(res = track(NULL))) {
+        if (!(res = track(nullptr))) {
           hunt_dist = 0;
           remPlayerAction(PLR_HUNTING);
           affectFrom(SKILL_SEEKWATER);
@@ -318,7 +318,7 @@ void TBeing::lookAtRoom() {
           affectFrom(SKILL_TRACK);
         }
       } else if (affectedBySpell(SKILL_SEEKWATER)) {
-        if (!(res = track(NULL))) {
+        if (!(res = track(nullptr))) {
           hunt_dist = 0;
           REMOVE_BIT(specials.act, ACT_HUNTING);
           affectFrom(SKILL_SEEKWATER);
@@ -343,7 +343,7 @@ void TBeing::lookAtBeing(TThing* specific) {
   bool bIsSpying =
     (isAffected(AFF_SCRYING) ? !::number(0, (getSkillValue(SKILL_SPY) * 10))
                              : false);
-  TThing* t = NULL;
+  TThing* t = nullptr;
   sstring arg1;
 
   showTo(tmpBeing, SHOW_MODE_SHORT_PLUS);
@@ -354,8 +354,8 @@ void TBeing::lookAtBeing(TThing* specific) {
 
   if (this != tmpBeing && !affectedBySpell(SKILL_SPY) &&
       !tmpBeing->isImmortal()) {
-    act("$n looks at you.", TRUE, this, 0, tmpBeing, TO_VICT);
-    act("$n looks at $N.", TRUE, this, 0, tmpBeing, TO_NOTVICT);
+    act("$n looks at you.", true, this, 0, tmpBeing, TO_VICT);
+    act("$n looks at $N.", true, this, 0, tmpBeing, TO_NOTVICT);
     if (!tmpBeing->isPc() && !isname("[clone]", tmpBeing->name))
       dynamic_cast<TMonster*>(tmpBeing)->aiLook(this);
   } else if (tmpBeing != this && !tmpBeing->isImmortal()) {
@@ -369,7 +369,7 @@ void TBeing::lookAtBeing(TThing* specific) {
           bOther->GetMaxLevel() >= GetMaxLevel() && bOther != this) {
         arg1 = format("You detect $n looking at %s with spying eyes.") %
                (bOther == tmpBeing ? "you" : tmpBeing->getName());
-        act(arg1, TRUE, this, 0, bOther, TO_VICT);
+        act(arg1, true, this, 0, bOther, TO_VICT);
         if (bOther == tmpBeing && !tmpBeing->isPc() &&
             !isname("[clone]", tmpBeing->name))
           dynamic_cast<TMonster*>(tmpBeing)->aiLook(this);
@@ -378,7 +378,7 @@ void TBeing::lookAtBeing(TThing* specific) {
 }
 
 void TBeing::lookingAtObj(TThing* specific) {
-  char* tmp = NULL;
+  char* tmp = nullptr;
   const char* tmp_desc;
   TObj* tmpObj = dynamic_cast<TObj*>(specific);
 
@@ -416,9 +416,9 @@ void TBeing::doLook(const sstring& argument, cmdTypeT cmd, TThing* specific) {
   sstring arg1, arg2;
   int keyword_no, j, found, totalFound = 0, iNum = 0;
   unsigned int bits = 0;
-  TThing *t = NULL, *t2 = NULL;
-  TObj* o2 = NULL;
-  TBeing* tmp_char = NULL;
+  TThing *t = nullptr, *t2 = nullptr;
+  TObj* o2 = nullptr;
+  TBeing* tmp_char = nullptr;
 
   static const char* keywords[] = {"north",  // 0
     "east", "south", "west", "up",
@@ -482,7 +482,7 @@ void TBeing::doLook(const sstring& argument, cmdTypeT cmd, TThing* specific) {
     keyword_no = 6;
   } else {
     // sendrpf(COLOR_NONE, roomp, "argument=[%s]\n\r", argument.c_str());
-    keyword_no = search_block(stripColorCodes(argument), keywords, FALSE);
+    keyword_no = search_block(stripColorCodes(argument), keywords, false);
 
     // sendrpf(COLOR_NONE, roomp, "keyword_no=[%d]\n\r", keyword_no);
     if (keyword_no == -1) {
@@ -499,8 +499,8 @@ void TBeing::doLook(const sstring& argument, cmdTypeT cmd, TThing* specific) {
   }
 
   // sendrpf(COLOR_NONE, roomp, "arg2=[%s]\n\r", arg2.c_str());
-  found = FALSE;
-  tmp_desc = NULL;
+  found = false;
+  tmp_desc = nullptr;
 
   switch (keyword_no) {
     case 0:
@@ -532,7 +532,7 @@ void TBeing::doLook(const sstring& argument, cmdTypeT cmd, TThing* specific) {
               bits = generic_find(arg2.c_str(), FIND_OBJ_INV | FIND_OBJ_EQUIP,
                 this, &tmp_char, &o2);
             } else if (convertTo<int>(tempArg3)) {
-              TObj* tempObj = NULL;
+              TObj* tempObj = nullptr;
               if ((tempObj = dynamic_cast<TBook*>(heldInPrimHand()))) {
                 o2 = tempObj;
                 bits = FIND_OBJ_EQUIP;
@@ -541,7 +541,7 @@ void TBeing::doLook(const sstring& argument, cmdTypeT cmd, TThing* specific) {
                 bits = FIND_OBJ_EQUIP;
               }
               if (!bits) {
-                TThing* tempThing = NULL;
+                TThing* tempThing = nullptr;
                 for (StuffIter it = stuff.begin();
                      it != stuff.end() && (tempThing = *it); ++it) {
                   if (!dynamic_cast<TBook*>(tempThing)) {
@@ -623,7 +623,7 @@ void TBeing::doLook(const sstring& argument, cmdTypeT cmd, TThing* specific) {
                 if (o2 == t) {
                   // look at XX where XX is the item's name and extradesc
                   desc->page_string(tmp_desc_str.toCRLF());
-                  found = TRUE;
+                  found = true;
                   describeObject(t);
                   o2 = dynamic_cast<TObj*>(t);  // for showTo(o2,6) later on
                 } else {
@@ -670,7 +670,7 @@ void TBeing::doLook(const sstring& argument, cmdTypeT cmd, TThing* specific) {
                   if (o2 == t) {
                     // look at XX where XX is the item's name and extradesc
                     desc->page_string(tmp_desc_str.toCRLF());
-                    found = TRUE;
+                    found = true;
                     describeObject(t);
                     o2 = dynamic_cast<TObj*>(t);  // for showTo(o2,6) later on
                   } else {

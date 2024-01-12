@@ -218,7 +218,7 @@ bool is_floatVal(const char* str) {
 void TBeing::loadSetEquipment(int num, char* arg, int tChance,
   bool findLoadPotential) {
   char tString[1024] = "\0", suitClasses[256];
-  const char* tArg = NULL;
+  const char* tArg = nullptr;
   loadSetTypeT tPiece = LST_ALL;
   sstring StString("");
   int tCount = 0;
@@ -481,8 +481,8 @@ void TBeing::loadSetEquipment(int num, char* arg, int tChance,
               StString += tString;
 
               if (suitSets.suits[suitIndex].equipment[pieceIndex] > -1) {
-                TThing* tThing = NULL;
-                TBaseClothing* tBCloth = NULL;
+                TThing* tThing = nullptr;
+                TBaseClothing* tBCloth = nullptr;
 
                 int rNum =
                   real_object(suitSets.suits[suitIndex].equipment[pieceIndex]);
@@ -503,7 +503,7 @@ void TBeing::loadSetEquipment(int num, char* arg, int tChance,
 
                   StString += tString;
                   delete tThing;
-                  tThing = NULL;
+                  tThing = nullptr;
                 }
               } else
                 StString += "\n\r";
@@ -604,11 +604,11 @@ void TBeing::loadSetEquipment(int num, char* arg, int tChance,
   if (tChance == 101) {
     if (tPiece == LST_ALL) {
       sendTo("You load a set of armor.\n\r");
-      act("$n loads a set of armor.", TRUE, this, 0, 0, TO_ROOM);
+      act("$n loads a set of armor.", true, this, 0, 0, TO_ROOM);
     } else {
       sendTo(format("You load a %s piece from a suit of armor.\n\r") %
              suitPieceNames[tPiece]);
-      act("$n loads a piece of armor.", TRUE, this, 0, 0, TO_ROOM);
+      act("$n loads a piece of armor.", true, this, 0, 0, TO_ROOM);
     }
   }
 }
@@ -782,7 +782,7 @@ void loadSetClass::suitAdd(const char* tName, int tHelm, int tCollar,
       }
 
       delete tObj;
-      tObj = NULL;
+      tObj = nullptr;
     }
   }
 
@@ -814,7 +814,7 @@ loadSetStruct& loadSetStruct::operator=(const loadSetStruct& a) {
 }
 
 loadSetStruct::loadSetStruct() :
-  name(NULL),
+  name(nullptr),
   suitRace(RACE_NORACE),
   suitLevel(0),
   suitClassTotal(0),
@@ -825,7 +825,7 @@ loadSetStruct::loadSetStruct() :
 
 loadSetStruct::~loadSetStruct() {
   delete[] name;
-  name = NULL;
+  name = nullptr;
 }
 
 int weightedRandomizer::add(int v, int w, int p) {

@@ -9,13 +9,13 @@ int leperHunter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TPathFinder* path;
   dirTypeT dir;
   int rc;
-  TMonster* leper = NULL;
+  TMonster* leper = nullptr;
 
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (::number(0, 2))
-    return FALSE;
+    return false;
 
   if (!myself->act_ptr)
     myself->act_ptr = new TPathFinder();
@@ -35,18 +35,18 @@ int leperHunter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       if (leper->spec == SPEC_LEPER || leper->hasDisease(DISEASE_LEPROSY))
         break;
 
-      leper = NULL;
+      leper = nullptr;
     }
 
   } else {
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
 
   if (!leper)
-    return FALSE;
+    return false;
 
   switch (::number(0, 5)) {
     case 0:

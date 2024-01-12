@@ -25,7 +25,7 @@ TBoat& TBoat::operator=(const TBoat& a) {
 
 TBoat::~TBoat() {}
 
-void TBoat::usingBoat(int* n) { *n = TRUE; }
+void TBoat::usingBoat(int* n) { *n = true; }
 
 void TBoat::assignFourValues(int, int, int, int) {}
 
@@ -56,8 +56,8 @@ int TBoat::putSomethingInto(TBeing* ch, TThing* tThing) {
   --(*tThing);
   *this += *tThing;
 
-  act("You attach $p to $N.", TRUE, ch, tThing, this, TO_CHAR);
-  act("$N attaches $p to $N.", TRUE, ch, tThing, this, TO_ROOM);
+  act("You attach $p to $N.", true, ch, tThing, this, TO_CHAR);
+  act("$N attaches $p to $N.", true, ch, tThing, this, TO_ROOM);
 
   if (!tlig->isLit()) {
     int lightAmt = 0;
@@ -77,12 +77,12 @@ int TBoat::putSomethingInto(TBeing* ch, TThing* tThing) {
 int TBoat::getObjFrom(TBeing* ch, const char* tString, const char*) {
   if (stuff.empty()) {
     ch->sendTo("There is nothing in there.\n\r");
-    return TRUE;
+    return true;
   }
 
   if (!tString || !*tString) {
     ch->sendTo("Fine.  But WHAT do you want to get?\n\r");
-    return TRUE;
+    return true;
   }
 
   if (isname(tString, stuff.front()->getName())) {
@@ -90,8 +90,8 @@ int TBoat::getObjFrom(TBeing* ch, const char* tString, const char*) {
     --(*tThing);
     *ch += *tThing;
 
-    act("You unattach and take $p from $N.", TRUE, ch, tThing, this, TO_CHAR);
-    act("$n unattaches and takes $p from $N.", TRUE, ch, tThing, this, TO_ROOM);
+    act("You unattach and take $p from $N.", true, ch, tThing, this, TO_CHAR);
+    act("$n unattaches and takes $p from $N.", true, ch, tThing, this, TO_ROOM);
 
     TLight* tlig = dynamic_cast<TLight*>(tThing);
     if (tlig && tlig->isLit()) {
@@ -105,11 +105,11 @@ int TBoat::getObjFrom(TBeing* ch, const char* tString, const char*) {
       if (ch->roomp)
         ch->roomp->setLight(lightAmt);
     }
-    return TRUE;
+    return true;
   }
 
   ch->sendTo("I'm afraid it isn't in there.\n\r");
-  return TRUE;
+  return true;
 }
 
 int TBoat::getLight() const {

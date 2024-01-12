@@ -46,11 +46,11 @@ void TBaseLight::setCurBurn(int n) { curBurn = n; }
 
 int TBaseLight::getCurBurn() const { return curBurn; }
 
-bool TBaseLight::monkRestrictedItem(const TBeing*) const { return FALSE; }
+bool TBaseLight::monkRestrictedItem(const TBeing*) const { return false; }
 
-bool TBaseLight::shamanRestrictedItem(const TBeing*) const { return FALSE; }
+bool TBaseLight::shamanRestrictedItem(const TBeing*) const { return false; }
 
-bool TBaseLight::rangerRestrictedItem(const TBeing*) const { return FALSE; }
+bool TBaseLight::rangerRestrictedItem(const TBeing*) const { return false; }
 
 void TBaseLight::assignFourValues(int x1, int x2, int x3, int) {
   setLightAmt(x1);

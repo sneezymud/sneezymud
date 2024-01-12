@@ -34,51 +34,51 @@ static bool genericCanSteal(TBeing* thief, TBeing* victim) {
       !is_imp) {
     thief->sendTo(
       "It is impossible to steal with your hand(s) already full!\n\r");
-    return FALSE;
+    return false;
   }
   if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
     thief->sendTo("You can't steal from an immortal.\n\r");
-    return FALSE;
+    return false;
   }
   if (!thief->doesKnowSkill(SKILL_STEAL)) {
     thief->sendTo("You know nothing about stealing.\n\r");
-    return FALSE;
+    return false;
   }
   if (dynamic_cast<TMonster*>(thief) && dynamic_cast<TMonster*>(victim))
-    return FALSE;
+    return false;
 
   if (!is_imp) {
     if (thief->checkPeaceful("What if they caught you?\n\r"))
-      return FALSE;
+      return false;
 
     if (thief->roomp->isRoomFlag(ROOM_NO_STEAL)) {
       thief->sendTo("Such actions are prevented here.\n\r");
-      return FALSE;
+      return false;
     }
   }
 
   if (victim == thief) {
     thief->sendTo("Come on now, that's rather stupid!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (thief->riding) {
     thief->sendTo("Yeah... right... while mounted.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (thief->isFlying()) {
     thief->sendTo(
       "The fact that you are flying makes you a bit too conspicuous to "
       "steal.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->isShopkeeper() && !is_imp) {
     thief->sendTo("Oh, Bad Move.  Bad Move.\n\r");
     vlogf(LOG_CHEAT, format("%s just tried to steal from a shopkeeper! [%s]") %
                        thief->getName() % victim->getName());
-    return FALSE;
+    return false;
   }
 
   return true;
@@ -89,7 +89,7 @@ static bool countersteal(TBeing* thief, TBeing* vict, int known) {
 
   if (thief->isImmortal() || !vict->awake() ||
       !vict->doesKnowSkill(SKILL_COUNTER_STEAL))
-    return FALSE;
+    return false;
 
   bKnown = vict->getSkillValue(SKILL_COUNTER_STEAL);
   bKnown += vict->getSkillValue(SKILL_STEAL) / 2;
@@ -99,15 +99,15 @@ static bool countersteal(TBeing* thief, TBeing* vict, int known) {
     act(
       "Just when you think you've succeeded, $N reaches out and swats your "
       "hand away painfully.",
-      TRUE, thief, NULL, vict, TO_CHAR);
+      true, thief, nullptr, vict, TO_CHAR);
     act(
       "You notice $n attempting to steal from you, so you wait until $e is "
       "almost successful and swat his hand away forcefully.",
-      TRUE, thief, NULL, vict, TO_VICT);
-    return TRUE;
+      true, thief, nullptr, vict, TO_VICT);
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 sstring TMonster::getStealLootNames() const {
@@ -218,7 +218,7 @@ TObj* generateStealLoot(TMonster* mob) {
       return obj;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 int failSteal(TBeing* thief, TBeing* victim, TObj* obj) {
@@ -226,10 +226,10 @@ int failSteal(TBeing* thief, TBeing* victim, TObj* obj) {
   int rc = 0;
 
   if (obj)
-    act("You are caught in the act of stealing the $o!", FALSE, thief, obj, 0,
+    act("You are caught in the act of stealing the $o!", false, thief, obj, 0,
       TO_CHAR);
   else
-    act("Oh ohhh...Busted!", FALSE, thief, 0, 0, TO_CHAR);
+    act("Oh ohhh...Busted!", false, thief, 0, 0, TO_CHAR);
 
   // stop sneaking
   if (thief->affectedBySpell(skill) || thief->checkForSkillAttempt(skill)) {
@@ -240,22 +240,22 @@ int failSteal(TBeing* thief, TBeing* victim, TObj* obj) {
   }
 
   if (obj)
-    act("$n fails to steal $N's $o.", FALSE, thief, obj, victim, TO_NOTVICT);
+    act("$n fails to steal $N's $o.", false, thief, obj, victim, TO_NOTVICT);
   else
-    act("$n tries to steal money from $N.", TRUE, thief, 0, victim, TO_NOTVICT);
+    act("$n tries to steal money from $N.", true, thief, 0, victim, TO_NOTVICT);
 
   // sleeping, you get woken
   if (victim->getPosition() == POSITION_SLEEPING &&
       !victim->isAffected(AFF_SLEEP) &&
       victim->isLucky(thief->spellLuckModifier(SKILL_STEAL))) {
     victim->sendTo("You feel someone touching you and wake with a start.\n\r");
-    act("$n wakes with a start.", TRUE, victim, 0, 0, TO_ROOM);
+    act("$n wakes with a start.", true, victim, 0, 0, TO_ROOM);
     victim->setPosition(POSITION_RESTING);
     victim->doLook("", CMD_LOOK);
   } else if (obj) {
-    act("$n just tried to steal your $o!!", FALSE, thief, obj, victim, TO_VICT);
+    act("$n just tried to steal your $o!!", false, thief, obj, victim, TO_VICT);
   } else {
-    act("You discover that $n has $s hands in your moneypouch.", FALSE, thief,
+    act("You discover that $n has $s hands in your moneypouch.", false, thief,
       0, victim, TO_VICT);
   }
 
@@ -276,7 +276,7 @@ int failSteal(TBeing* thief, TBeing* victim, TObj* obj) {
       return DELETE_THIS;
     else if (rc == DELETE_THIS) {
       delete guard;
-      guard = NULL;
+      guard = nullptr;
       break;
     }
   }
@@ -288,11 +288,11 @@ int failSteal(TBeing* thief, TBeing* victim, TObj* obj) {
   // on a crit fail, mobs get mad
   if (critFail(thief, SKILL_STEAL)) {
     CF(SKILL_STEAL);
-    act("$N reacts in anger to your arrogance!", TRUE, thief, NULL, victim,
+    act("$N reacts in anger to your arrogance!", true, thief, nullptr, victim,
       TO_CHAR);
-    act("$N reacts in anger to $n arrogance!", TRUE, thief, NULL, victim,
+    act("$N reacts in anger to $n arrogance!", true, thief, nullptr, victim,
       TO_NOTVICT);
-    act("You get pissed at $n's arrogance!", TRUE, thief, NULL, victim,
+    act("You get pissed at $n's arrogance!", true, thief, nullptr, victim,
       TO_VICT);
     thief->setCharFighting(victim);
     thief->setVictFighting(victim);
@@ -320,9 +320,9 @@ static int steal(TBeing* thief, TBeing* victim) {
   // Why isnt this check in the calling steal code?
   if (victim->getPartMinHeight(ITEM_WEAR_WAIST) > (thief->getPosHeight() + 5)) {
     // victim riding a tall creature...
-    act("You can't quite reach $N's pockets from here.", FALSE, thief, 0,
+    act("You can't quite reach $N's pockets from here.", false, thief, 0,
       victim, TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   /* high modifier ---> easier to steal */
@@ -340,12 +340,12 @@ static int steal(TBeing* thief, TBeing* victim) {
   modifier = max(min(modifier, 100 - level), -100);
 
   if (victim->getStolenFrom())
-    return failSteal(thief, victim, NULL);
+    return failSteal(thief, victim, nullptr);
 
   // if we fail, just stop now
   if (victim->awake() && (countersteal(thief, victim, level + modifier) ||
                            !thief->bSuccess(level + modifier, SKILL_STEAL))) {
-    return failSteal(thief, victim, NULL);
+    return failSteal(thief, victim, nullptr);
   }
 
   /* Steal some money */
@@ -361,7 +361,7 @@ static int steal(TBeing* thief, TBeing* victim) {
   LogDam(thief, SKILL_STEAL, gold);
   if (gold <= 0) {
     thief->sendTo("You couldn't seem to find any talens...\n\r");
-    return TRUE;
+    return true;
   }
 
   // git da money, dolla-dolla-bill y'all
@@ -387,7 +387,7 @@ static int steal(TBeing* thief, TBeing* victim) {
   if (victim->isPerceptive())
     victim->sendTo("You suddenly feel lighter in your moneypouch...\n\r");
 
-  return TRUE;
+  return true;
 }
 
 // bigger number makes it harder to steal
@@ -404,7 +404,7 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
   if (bKnown < 75) {
     thief->sendTo(
       "You don't have the ability to steal equipment. (yet...)\n\r");
-    return FALSE;
+    return false;
   }
 
   /* high modifier ---> easier to steal */
@@ -431,8 +431,8 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
     }
 
     if (!obj) {
-      act("$E does not have that item.", FALSE, thief, 0, victim, TO_CHAR);
-      return FALSE;
+      act("$E does not have that item.", false, thief, 0, victim, TO_CHAR);
+      return false;
     } else {                               /* It is equipment */
       modifier -= (int)obj->getWeight();   /* Make heavy harder */
       modifier -= obj->getVolume() / 150;  // make equip item harder per size
@@ -442,9 +442,9 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
     // ideally, find the ITEM_WEAR slot for eq-pos, and use it...
     if (victim->getPartMinHeight(ITEM_WEAR_FEET) > thief->getPosHeight()) {
       // victim riding a tall creature...
-      act("You can't quite reach $N's $o from here.", FALSE, thief, obj, victim,
+      act("You can't quite reach $N's $o from here.", false, thief, obj, victim,
         TO_CHAR);
-      return FALSE;
+      return false;
     }
 
   } else {
@@ -462,7 +462,7 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
             eq_pos != WEAR_HEAD)) {
         thief->sendTo(
           "It is not possible to steal that without being noticed.\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
@@ -471,12 +471,12 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
 
   if (!is_imp && obj->isObjStat(ITEM_NODROP)) {
     thief->sendTo("You can't steal it, it must be CURSED!\n\r");
-    return FALSE;
+    return false;
   }
   if (!is_imp && obj->isMonogrammed()) {
     thief->sendTo(
       "That item has been monogrammed making it worthless to steal.\n\r");
-    return FALSE;
+    return false;
   }
 
   // mostly here for spellbags, but applies to other containers too...
@@ -484,7 +484,7 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
   if (!is_imp && dynamic_cast<TOpenContainer*>(obj)) {
     thief->sendTo(
       "You can't seem to distract your victim enough to steal that.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!victim->awake() || is_imp ||
@@ -494,14 +494,14 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
                     thief->carryVolumeLimit())) {
       // obj-weight <= weight limit
       if (is_imp ||
-          (compareWeights(obj->getTotalWeight(TRUE),
+          (compareWeights(obj->getTotalWeight(true),
              thief->carryWeightLimit() - thief->getCarriedWeight()) != -1)) {
         if (eq_pos == WEAR_NOWHERE) {
           --(*obj);
           *thief += *obj;
           thief->sendTo("Got it!\n\r");
         } else {
-          act("You unequip $p and steal it.", FALSE, thief, obj, 0, TO_CHAR);
+          act("You unequip $p and steal it.", false, thief, obj, 0, TO_CHAR);
           *thief += *(victim->unequip(eq_pos));
         }
 
@@ -520,7 +520,7 @@ static int steal(TBeing* thief, TBeing* victim, const sstring& obj_name) {
   } else {
     failSteal(thief, victim, obj);
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::doSteal(const sstring& argument, TBeing* vict) {
@@ -540,7 +540,7 @@ int TBeing::doSteal(const sstring& argument, TBeing* vict) {
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, victim_name))) {
       sendTo("Steal what from whom?\n\r");
-      return FALSE;
+      return false;
     }
   }
   if (!genericCanSteal(this, victim))
@@ -559,7 +559,7 @@ int TBeing::doSteal(const sstring& argument, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
   }
   return rc;
 }

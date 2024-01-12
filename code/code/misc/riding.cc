@@ -79,66 +79,66 @@ bool TMonster::isDragonRideable() const {
 
 bool TMonster::isRideable() const {
   if (spec == SPEC_HORSE)
-    return TRUE;
+    return true;
 
   if (race->isRidable())
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 bool TBeing::canRide(const TBeing* horse) const {
   if (!horse->isRideable())
-    return FALSE;
+    return false;
 
   // horse riding horse.  bad.
   if (isRideable())
-    return FALSE;
+    return false;
 
   // this is checked for in doMount
   if (horse->mobVnum() == Mob::ELEPHANT && hasQuestBit(TOG_MONK_GREEN_STARTED))
-    return TRUE;
+    return true;
   if (horse->getHeight() <= (6 * getHeight() / 10))
-    return FALSE;
+    return false;
   if (horse->getHeight() >= (5 * getHeight() / 2))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 bool TBeing::hasSaddle() const {
   TThing* obj;
 
   if (!isRideable())
-    return FALSE;
+    return false;
   if (!(obj = equipment[WEAR_BACK]))
-    return FALSE;
+    return false;
   TBaseClothing* tbc = dynamic_cast<TBaseClothing*>(obj);
   TBaseContainer* tbc2 = dynamic_cast<TBaseContainer*>(obj);
   if (tbc && tbc->isSaddle())
     return 1;
   if (tbc2 && tbc2->isSaddle())
     return (tbc2->isSaddle());
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS
 int TMonster::lookForHorse() {
   int rc;
   sstring buf;
-  TThing* t = NULL;
-  TBeing* horse = NULL;
+  TThing* t = nullptr;
+  TBeing* horse = nullptr;
 
   if (!isHumanoid() || UtilMobProc(this) || GuildMobProc(this) ||
       IS_SET(specials.act, ACT_SENTINEL) ||
 
       roomp->isRoomFlag(ROOM_PEACEFUL))
-    return FALSE;
+    return false;
 
   if (5 * getHit() < 4 * hitLimit())
-    return FALSE;
+    return false;
 
   if (isShopkeeper())
-    return FALSE;
+    return false;
 
   switch (spec) {
     // utilmobs already accounted for
@@ -152,7 +152,7 @@ int TMonster::lookForHorse() {
     case SPEC_PET_KEEPER:
     case SPEC_ENGRAVER:
     case SPEC_SHOPKEEPER:
-      return FALSE;
+      return false;
     default:
       break;
   }
@@ -165,13 +165,13 @@ int TMonster::lookForHorse() {
       rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     } else if (tbt->getPosition() <= POSITION_SITTING) {
       buf = format("order %s stand") % fname(tbt->name);
       rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     }
 
     /* don't look for another horse, but make mount assist me */
@@ -181,15 +181,15 @@ int TMonster::lookForHorse() {
       rc = addCommandToQue(buf);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     }
-    return TRUE;
+    return true;
   }
   if (rider || fight() || isRideable())
-    return FALSE;
+    return false;
 
   if (getPosition() < POSITION_STANDING)
-    return FALSE;
+    return false;
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
@@ -220,12 +220,12 @@ int TMonster::lookForHorse() {
     // but since we have tendency to hop on wrong horse with just a "name"
     // and we know we are a mob at this point (so will execute auto)
     // let's skip the middle step, and call doMount direct
-    rc = doMount(NULL, CMD_MOUNT, horse);
+    rc = doMount(nullptr, CMD_MOUNT, horse);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 TThing* TThing::dismount(positionTypeT pos) {
@@ -234,7 +234,7 @@ TThing* TThing::dismount(positionTypeT pos) {
   if (!riding) {
     // use this to find out where this is called from
     vlogf(LOG_BUG, format("%s not riding in call to dismount().") % getName());
-    return NULL;
+    return nullptr;
   }
   if (riding->rider == this)
     riding->rider = nextRider;
@@ -244,7 +244,7 @@ TThing* TThing::dismount(positionTypeT pos) {
       ;
     if (!t) {
       vlogf(LOG_BUG, "Illegal rider structure!");
-      return NULL;
+      return nullptr;
     }
     t->nextRider = nextRider;
   }
@@ -270,7 +270,7 @@ TThing* TThing::dismount(positionTypeT pos) {
           (tmons && ch && ch->doesKnowSkill(SKILL_TRAIN_MOUNT) &&
             !ch->bSuccess(ch->getSkillValue(SKILL_TRAIN_MOUNT) / 2,
               SKILL_TRAIN_MOUNT))) {
-        tbt->stopFollower(TRUE);
+        tbt->stopFollower(true);
 
         // locate new master
         t = tbt->horseMaster();
@@ -278,9 +278,9 @@ TThing* TThing::dismount(positionTypeT pos) {
         if (tb3) {
           tb3->addFollower(tbt);
           if (tbt->hasSaddle() == 1) {
-            act("You hop up into the now vacant saddle.", TRUE, tb3, 0, 0,
+            act("You hop up into the now vacant saddle.", true, tb3, 0, 0,
               TO_CHAR);
-            act("$n hops up into the now vacant saddle.", TRUE, tb3, 0, 0,
+            act("$n hops up into the now vacant saddle.", true, tb3, 0, 0,
               TO_ROOM);
           }
         }
@@ -299,8 +299,8 @@ TThing* TThing::dismount(positionTypeT pos) {
     }
   }
 
-  nextRider = NULL;
-  riding = NULL;
+  nextRider = nullptr;
+  riding = nullptr;
   if (ch)
     ch->setPosition(pos);
 
@@ -318,89 +318,89 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
   if (cmd == CMD_RIDE || cmd == CMD_MOUNT) {
     if (!task && riding && (getDirFromChar(arg) != DIR_NONE)) {
       sendTo("You urge your mount forward.\n\r");
-      start_task(this, NULL, NULL, TASK_RIDE, arg, 2, inRoom(), 0, 0, 5);
-      return TRUE;
+      start_task(this, nullptr, nullptr, TASK_RIDE, arg, 2, inRoom(), 0, 0, 5);
+      return true;
     }
     if (!(horse = h)) {
       strcpy(caName, arg);
       if (!(horse =
-              get_char_room_vis(this, caName, NULL, EXACT_NO, INFRA_YES))) {
+              get_char_room_vis(this, caName, nullptr, EXACT_NO, INFRA_YES))) {
         sendTo("Mount what?\n\r");
-        return FALSE;
+        return false;
       }
     }
     if (checkBusy()) {
-      return FALSE;
+      return false;
     }
     if (!isHumanoid()) {
       sendTo("You can't ride things!\n\r");
-      return FALSE;
+      return false;
     }
     if (riding) {
       sendTo("You are already riding.\n\r");
-      return FALSE;
+      return false;
     }
     if (isCombatMode(ATTACK_BERSERK)) {
       sendTo("Your berserker rage scares the mount.\n\r");
-      return FALSE;
+      return false;
     }
     if (horse->hasSaddle()) {
       TBaseContainer* tbc3 =
         dynamic_cast<TBaseContainer*>(horse->equipment[WEAR_BACK]);
       if (tbc3 && tbc3->isSaddle() == 2) {
-        act("You cannot ride $N when it is saddled with a pack.", FALSE, this,
+        act("You cannot ride $N when it is saddled with a pack.", false, this,
           0, horse, TO_CHAR);
-        return FALSE;
+        return false;
       }
     }
     if (!isImmortal() &&
         (horse->isTanking() || (horse->fight() && !hasClass(CLASS_DEIKHAN)))) {
       sendTo(
         "You do not have the skill to mount something that is fighting!\n\r");
-      return FALSE;
+      return false;
     }
     if (horse->isPet(PETTYPE_PET) && horse->master != this) {
-      act("You can't ride someone else's pet.", FALSE, this, 0, 0, TO_CHAR);
-      return FALSE;
+      act("You can't ride someone else's pet.", false, this, 0, 0, TO_CHAR);
+      return false;
     }
     if (!canRide(horse)) {
       sendTo("You can't ride that!\n\r");
-      return FALSE;
+      return false;
     }
     if (horse->getNumRiders(this) >= horse->getMaxRiders()) {
       sendTo(COLOR_MOBS,
         format("The maximum number of riders are already riding %s.\n\r") %
           horse->getName());
-      return FALSE;
+      return false;
     }
 
     if (!isPc() && horse->master) {
       sendTo(
         "They are currently following someone else, my dear, and will not "
         "follow you right now.");
-      return FALSE;
+      return false;
     }
 
     // weight > free horse carry weight
-    if (compareWeights(getTotalWeight(TRUE),
+    if (compareWeights(getTotalWeight(true),
           (horse->carryWeightLimit() - horse->getCarriedWeight())) == -1) {
       act("$N can't carry all your weight.", 0, this, 0, horse, TO_CHAR);
       act(
         "$n starts to hop up onto you, but stops when $e sees you can't carry "
         "$m.",
-        TRUE, this, 0, horse, TO_VICT);
+        true, this, 0, horse, TO_VICT);
       act(
         "$n starts to hop up onto $N, but stops when $e sees $E can't carry "
         "$m.",
-        TRUE, this, 0, horse, TO_NOTVICT);
-      return FALSE;
+        true, this, 0, horse, TO_NOTVICT);
+      return false;
     }
 
     //    if (isPlayerAction(PLR_SOLOQUEST) &&
     // !(hasQuestBit(TOG_MONK_GREEN_STARTED) &&
     //  horse->mobVnum()==Mob::ELEPHANT)){
     //  sendTo("You are on a solo-quest!  No use of mounts allowed!\n\r");
-    //  return FALSE;
+    //  return false;
     // }
 
     // I commented out the above to allow use of mounts on solo quests.
@@ -411,12 +411,12 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
     if (!(horse->mobVnum() == Mob::ELEPHANT &&
           hasQuestBit(TOG_MONK_GREEN_STARTED))) {
       if (horse->getHeight() <= (6 * getHeight() / 10)) {
-        act("$N is too small for you to ride.", FALSE, this, 0, horse, TO_CHAR);
-        return FALSE;
+        act("$N is too small for you to ride.", false, this, 0, horse, TO_CHAR);
+        return false;
       }
       if (horse->getHeight() >= (5 * getHeight() / 2)) {
-        act("$N is too large for you to ride.", FALSE, this, 0, horse, TO_CHAR);
-        return FALSE;
+        act("$N is too large for you to ride.", false, this, 0, horse, TO_CHAR);
+        return false;
       }
     }
     if (roomp && !roomp->isFlyingSector()) {
@@ -424,7 +424,7 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
         // Non-deikhans without flying attempting to mount a flying mount
         if (!hasClass(CLASS_DEIKHAN)) {
           sendTo("You can't mount something that is flying.\n\r");
-          return FALSE;
+          return false;
         }
         // Deikhans without flying attempting to mount a flying mount
         else {
@@ -433,40 +433,40 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
             sendTo(
               "I am afraid you don't know enough about winged creatures to "
               "mount one while it is flying.\n\r");
-            return FALSE;
+            return false;
             // Deikhan is skilled enough to attempt and succeeds
           } else if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
             if (!silent)
-              act("You coax $N to land so you can mount.", TRUE, this, NULL,
+              act("You coax $N to land so you can mount.", true, this, nullptr,
                 horse, TO_CHAR);
             if (!silent)
               act("$n coaxes you into landing, you feel charmed and comply.",
-                TRUE, this, NULL, horse, TO_VICT);
+                true, this, nullptr, horse, TO_VICT);
             if (!silent)
-              act("$n coaxes $N into landing.", TRUE, this, NULL, horse,
+              act("$n coaxes $N into landing.", true, this, nullptr, horse,
                 TO_NOTVICT);
             horse->doLand();
 
             if (horse->getPosition() != POSITION_STANDING) {
               sendTo("Oddly enough you still failed.\n\r");
               horse->sendTo("Oddly enough they still failed.\n\r");
-              act("Oddly enough $n still failed.", TRUE, this, NULL, horse,
+              act("Oddly enough $n still failed.", true, this, nullptr, horse,
                 TO_NOTVICT);
-              return FALSE;
+              return false;
             }
             // Deikhan is skilled enough to attempt but fails
           } else {
             act(format("You attempt to coax $N into landing but %s seems to "
                        "ignore you.") %
                   horse->thirdPerson(POS_SUBJECT),
-              TRUE, this, NULL, horse, TO_CHAR);
-            act("The Nerve!  $n just tried to make you land.", TRUE, this, NULL,
+              true, this, nullptr, horse, TO_CHAR);
+            act("The Nerve!  $n just tried to make you land.", true, this, nullptr,
               horse, TO_VICT);
             act(format("$n attempts to coax $N into landing, who promptly "
                        "ignores %s.") %
                   thirdPerson(POS_OBJECT),
-              TRUE, this, NULL, horse, TO_NOTVICT);
-            return FALSE;
+              true, this, nullptr, horse, TO_NOTVICT);
+            return false;
           }
         }
       }
@@ -504,17 +504,17 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
             sendTo("You find it difficult to mount while fighting.\n\r");
           }
         }
-        act("You try to ride $N, but fail and fall on your butt.", FALSE, this,
+        act("You try to ride $N, but fail and fall on your butt.", false, this,
           0, horse, TO_CHAR);
-        act("$n tries to ride $N, but fails and falls on $s butt.", FALSE, this,
+        act("$n tries to ride $N, but fails and falls on $s butt.", false, this,
           0, horse, TO_NOTVICT);
-        act("$n tries to ride you, but fails and falls on $s butt.", FALSE,
+        act("$n tries to ride you, but fails and falls on $s butt.", false,
           this, 0, horse, TO_VICT);
         setPosition(POSITION_SITTING);
         addToWait(combatRound(2));
         if (!horse->isPc())
           dynamic_cast<TMonster*>(horse)->aiHorse(this);
-        return FALSE;
+        return false;
       }
     }
 
@@ -523,8 +523,8 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
     check = MountEgoCheck(this, horse);
     if ((check > 5 || (horse->GetMaxLevel() > GetMaxLevel())) &&
         (roomp && !roomp->isRoomFlag(ROOM_PEACEFUL))) {
-      act("$N snarls and attacks!", FALSE, this, 0, horse, TO_CHAR);
-      act("As $n tries to mount $N, $N attacks $n!", FALSE, this, 0, horse, TO_NOTVICT);
+      act("$N snarls and attacks!", false, this, 0, horse, TO_CHAR);
+      act("As $n tries to mount $N, $N attacks $n!", false, this, 0, horse, TO_NOTVICT);
       addToWait(combatRound(1));
       rc = horse->hit(this);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -533,24 +533,24 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
         if (h)
           return DELETE_VICT;
         delete horse;
-        horse = NULL;
+        horse = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     } else if ((check > -1) || (horse->GetMaxLevel() > GetMaxLevel())) {
       if ((horse->getPosition() > POSITION_STUNNED) && (horse->getPosition() < POSITION_STANDING)) {
         act("$n quickly stands up.",0, horse, 0, 0, TO_ROOM);
 
         horse->setPosition(POSITION_STANDING);
       }
-      act("$N bucks you off, you fall on your butt.", FALSE, this, 0, horse, TO_CHAR);
-      act("As $n tries to mount $N, $N bucks $m off.", FALSE, this, 0, horse, TO_NOTVICT);
+      act("$N bucks you off, you fall on your butt.", false, this, 0, horse, TO_CHAR);
+      act("As $n tries to mount $N, $N bucks $m off.", false, this, 0, horse, TO_NOTVICT);
       addToWait(combatRound(1));
       setPosition(POSITION_SITTING);
       if (!horse->isPc())
         dynamic_cast<TMonster *>(horse)->aiHorse(this);
-      return TRUE;
+      return true;
     }
 #else
     if (!(horse->mobVnum() == Mob::ELEPHANT &&
@@ -558,28 +558,28 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
         horse->GetMaxLevel() > GetMaxLevel()) {
       switch (::number(0, 3)) {
         case 0:
-          act("$N bucks you off, you fall on your butt.", FALSE, this, 0, horse,
+          act("$N bucks you off, you fall on your butt.", false, this, 0, horse,
             TO_CHAR);
-          act("As $n tries to mount $N, $N bucks $m off.", FALSE, this, 0,
+          act("As $n tries to mount $N, $N bucks $m off.", false, this, 0,
             horse, TO_NOTVICT);
           break;
         case 1:
           act("$N quickly moves and you quickly find yourself on your face.",
-            FALSE, this, 0, horse, TO_CHAR);
+            false, this, 0, horse, TO_CHAR);
           act("$N quickly moves as $n tries to mount it leaving $n on $s face.",
-            FALSE, this, 0, horse, TO_NOTVICT);
+            false, this, 0, horse, TO_NOTVICT);
           break;
         case 2:
           act("You attempt to mount $N but get your foot caught up and fall.",
-            FALSE, this, 0, horse, TO_CHAR);
+            false, this, 0, horse, TO_CHAR);
           act(
             "$n gets $s foot tangled up and falls as they attempt to mount $N.",
-            FALSE, this, 0, horse, TO_NOTVICT);
+            false, this, 0, horse, TO_NOTVICT);
           break;
         default:
-          act("You attempt to mount $N who turns and knocks you down.", FALSE,
+          act("You attempt to mount $N who turns and knocks you down.", false,
             this, 0, horse, TO_CHAR);
-          act("$n attempts to mount $N who turns and knocks $m down.", FALSE,
+          act("$n attempts to mount $N who turns and knocks $m down.", false,
             this, 0, horse, TO_NOTVICT);
           break;
       }
@@ -590,29 +590,29 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
       if (!horse->isPc())
         dynamic_cast<TMonster*>(horse)->aiHorse(this);
 
-      return TRUE;
+      return true;
     }
 #endif
     if (rideCheck(-check)) {
       if (!silent) {
         if (horse->hasSaddle() == 1 && !horse->rider) {
-          act("You hop into the saddle and start riding $N.", FALSE, this, 0,
+          act("You hop into the saddle and start riding $N.", false, this, 0,
             horse, TO_CHAR);
-          act("$n hops into the saddle and starts riding $N.", FALSE, this, 0,
+          act("$n hops into the saddle and starts riding $N.", false, this, 0,
             horse, TO_NOTVICT);
-          act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
+          act("$n hops on your back!", false, this, 0, horse, TO_VICT);
         } else if (!horse->rider) {
-          act("You start riding $N.", FALSE, this, 0, horse, TO_CHAR);
-          act("$n starts riding $N.", FALSE, this, 0, horse, TO_NOTVICT);
-          act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
+          act("You start riding $N.", false, this, 0, horse, TO_CHAR);
+          act("$n starts riding $N.", false, this, 0, horse, TO_NOTVICT);
+          act("$n hops on your back!", false, this, 0, horse, TO_VICT);
         } else {
-          act("You start riding $N's $o.", FALSE, this, horse,
+          act("You start riding $N's $o.", false, this, horse,
             horse->horseMaster(), TO_CHAR);
-          act("$n starts riding $N's $o.", FALSE, this, horse,
+          act("$n starts riding $N's $o.", false, this, horse,
             horse->horseMaster(), TO_NOTVICT);
-          act("$n hops on your $o's back!", FALSE, this, horse,
+          act("$n hops on your $o's back!", false, this, horse,
             horse->horseMaster(), TO_VICT);
-          act("$n hops on your back!", FALSE, this, 0, horse, TO_VICT);
+          act("$n hops on your back!", false, this, 0, horse, TO_VICT);
         }
       }
       loseSneak();
@@ -622,7 +622,7 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
 
       // horse was following someone else when i started riding
       if (horse->master && horse->master != this && !horse->rider)
-        horse->stopFollower(TRUE);
+        horse->stopFollower(true);
 
       // horse should follow someone (in general, this is horse master)
       if (!horse->master)
@@ -630,62 +630,62 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
 
       horse->specials.hunting = 0;
       if (!horse->isPc())
-        dynamic_cast<TMonster*>(horse)->setTarg(NULL);
-      dynamic_cast<TMonster*>(horse)->hates.clist = NULL;
-      dynamic_cast<TMonster*>(horse)->fears.clist = NULL;
+        dynamic_cast<TMonster*>(horse)->setTarg(nullptr);
+      dynamic_cast<TMonster*>(horse)->hates.clist = nullptr;
+      dynamic_cast<TMonster*>(horse)->fears.clist = nullptr;
 
     } else {
-      act("You try to ride $N, but fail and fall on your butt.", FALSE, this, 0,
+      act("You try to ride $N, but fail and fall on your butt.", false, this, 0,
         horse, TO_CHAR);
-      act("$n tries to ride $N, but fails and falls on $s butt.", FALSE, this,
+      act("$n tries to ride $N, but fails and falls on $s butt.", false, this,
         0, horse, TO_NOTVICT);
-      act("$n tries to ride you, but fails and falls on $s butt.", FALSE, this,
+      act("$n tries to ride you, but fails and falls on $s butt.", false, this,
         0, horse, TO_VICT);
       setPosition(POSITION_SITTING);
       addToWait(combatRound(2));
       if (!horse->isPc())
         dynamic_cast<TMonster*>(horse)->aiHorse(this);
     }
-    return TRUE;
+    return true;
   } else if (cmd == CMD_DISMOUNT) {
     if (!riding) {
       sendTo("You don't seem to be riding anything.\n\r");
-      return FALSE;
+      return false;
     }
     if (!dynamic_cast<TBeing*>(riding)) {
       doStand();
-      return FALSE;
+      return false;
     }
     horse = dynamic_cast<TBeing*>(riding);
     if (horse->fight() && !hasClass(CLASS_DEIKHAN)) {
       sendTo("You can't dismount while your mount is fighting!\n\r");
-      return FALSE;
+      return false;
     }
     if (isCombatMode(ATTACK_BERSERK)) {
       sendTo("Your berserker rage prevents you from dismounting.\n\r");
-      return FALSE;
+      return false;
     }
     if (roomp->getMoblim() && !isImmortal() &&
         (MobCountInRoom(roomp->stuff) >= roomp->getMoblim())) {
       // movement treats horse + all riders as 1 "thing" in room
       sendTo("There isn't enough room in here to dismount.\n\r");
-      return FALSE;
+      return false;
     }
 
     if (roomp && roomp->isFlyingSector()) {
       dismount(POSITION_FLYING);
       if (!silent) {
-        act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-        act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-        act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+        act("You dismount from $N.", false, this, 0, horse, TO_CHAR);
+        act("$n dismounts from $N.", false, this, 0, horse, TO_NOTVICT);
+        act("$n dismounts from you.", false, this, 0, horse, TO_VICT);
         sendTo("The magic in the air prevents you from falling.\n\r");
       }
     } else if (roomp->isAirSector() || roomp->isVertSector()) {
       if (canFly()) {
         if (!silent) {
-          act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-          act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-          act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+          act("You dismount from $N.", false, this, 0, horse, TO_CHAR);
+          act("$n dismounts from $N.", false, this, 0, horse, TO_NOTVICT);
+          act("$n dismounts from you.", false, this, 0, horse, TO_VICT);
         }
         dismount(POSITION_STANDING);
         doFly();
@@ -693,50 +693,50 @@ int TBeing::doMount(const char* arg, cmdTypeT cmd, TBeing* h,
         sendTo(
           "It would be a poor idea to leave your flying mount while in "
           "mid-air, without the ability to fly yourself.\n\r");
-        return FALSE;
+        return false;
       }
     } else if (horse->isFlying()) {
       if (canFly()) {
         if (!silent) {
-          act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-          act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-          act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+          act("You dismount from $N.", false, this, 0, horse, TO_CHAR);
+          act("$n dismounts from $N.", false, this, 0, horse, TO_NOTVICT);
+          act("$n dismounts from you.", false, this, 0, horse, TO_VICT);
         }
         dismount(POSITION_STANDING);
         doFly();
       } else if (::number(-10, getSkillValue(SKILL_RIDE_WINGED)) > 0) {
         if (!silent) {
-          act("You coax $N to land so you can dismount.", TRUE, this, NULL,
+          act("You coax $N to land so you can dismount.", true, this, nullptr,
             horse, TO_CHAR);
-          act("$n coaxes you into landing, you feel charmed and comply.", TRUE,
-            this, NULL, horse, TO_VICT);
-          act("$n coaxes $N into landing.", TRUE, this, NULL, horse,
+          act("$n coaxes you into landing, you feel charmed and comply.", true,
+            this, nullptr, horse, TO_VICT);
+          act("$n coaxes $N into landing.", true, this, nullptr, horse,
             TO_NOTVICT);
         }
         horse->doLand();
 
         if (!silent) {
-          act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-          act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-          act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+          act("You dismount from $N.", false, this, 0, horse, TO_CHAR);
+          act("$n dismounts from $N.", false, this, 0, horse, TO_NOTVICT);
+          act("$n dismounts from you.", false, this, 0, horse, TO_VICT);
         }
         dismount(POSITION_STANDING);
       } else {
         sendTo("You must order your mount to land before dismounting.\n\r");
-        return FALSE;
+        return false;
       }
     } else {
       if (!silent) {
-        act("You dismount from $N.", FALSE, this, 0, horse, TO_CHAR);
-        act("$n dismounts from $N.", FALSE, this, 0, horse, TO_NOTVICT);
-        act("$n dismounts from you.", FALSE, this, 0, horse, TO_VICT);
+        act("You dismount from $N.", false, this, 0, horse, TO_CHAR);
+        act("$n dismounts from $N.", false, this, 0, horse, TO_NOTVICT);
+        act("$n dismounts from you.", false, this, 0, horse, TO_VICT);
       }
       dismount(POSITION_STANDING);
     }
-    return TRUE;
+    return true;
   }
   vlogf(LOG_BUG, format("Undefined call to doMount.  cmd = %d") % cmd);
-  return TRUE;
+  return true;
 }
 
 // a positive mod is beneficial to the rider
@@ -744,7 +744,7 @@ int TBeing::rideCheck(int mod) {
   int learn = 0;
 
   if (isImmortal())
-    return TRUE;
+    return true;
 
   TBeing* tbt = dynamic_cast<TBeing*>(riding);
   if (tbt && tbt->hasSaddle() && tbt->horseMaster() == this)
@@ -769,25 +769,25 @@ int TBeing::rideCheck(int mod) {
   // since it is assumed that rideCheck is called (for objs) only during
   // attacks (being shoved, etc), this is thought to be an OK setup.
   if (bSuccess(learn, SKILL_RIDE))
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 int TThing::fallOffMount(TThing*, positionTypeT pos, bool) {
   dismount(pos);
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS
 int TBeing::fallOffMount(TThing* h, positionTypeT pos, bool death) {
-  int rc = FALSE;
+  int rc = false;
 
   if (dynamic_cast<TBeing*>(h)) {
-    act("$n loses control and falls off of $N.", FALSE, this, 0, h, TO_NOTVICT,
+    act("$n loses control and falls off of $N.", false, this, 0, h, TO_NOTVICT,
       ANSI_RED);
-    act("$n loses control and falls off of you.", FALSE, this, 0, h, TO_VICT,
+    act("$n loses control and falls off of you.", false, this, 0, h, TO_VICT,
       ANSI_RED);
-    act("You lose control and fall off of $N.", FALSE, this, 0, h, TO_CHAR,
+    act("You lose control and fall off of $N.", false, this, 0, h, TO_CHAR,
       ANSI_RED);
 
     if (!h->isPc())
@@ -816,37 +816,37 @@ int TBeing::fallOffMount(TThing* h, positionTypeT pos, bool death) {
     }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   } else {
     // a chair or something
     // change the position
     if (death) {
       if (pos == POSITION_DEAD) {
-        act("$n's lifeless body falls off $p onto the $g.", FALSE, this, h, 0,
+        act("$n's lifeless body falls off $p onto the $g.", false, this, h, 0,
           TO_ROOM, ANSI_RED);
       } else if ((pos > POSITION_DEAD) && (pos <= POSITION_STUNNED)) {
-        act("$n's limp body falls off $p onto the $g.", FALSE, this, h, 0,
+        act("$n's limp body falls off $p onto the $g.", false, this, h, 0,
           TO_ROOM, ANSI_RED);
 
       } else {
-        act("$n's falls off $p onto the $g.", FALSE, this, h, 0, TO_ROOM,
+        act("$n's falls off $p onto the $g.", false, this, h, 0, TO_ROOM,
           ANSI_RED);
       }
-      act("You lose your balance and fall off of $p onto the $g.", FALSE, this,
+      act("You lose your balance and fall off of $p onto the $g.", false, this,
         h, 0, TO_CHAR, ANSI_RED);
     } else {
-      act("$n loses $s balance and falls off of $p.", FALSE, this, h, 0,
+      act("$n loses $s balance and falls off of $p.", false, this, h, 0,
         TO_ROOM, ANSI_RED);
-      act("You lose your balance and fall off of $p.", FALSE, this, h, 0,
+      act("You lose your balance and fall off of $p.", false, this, h, 0,
         TO_CHAR, ANSI_RED);
     }
     dismount(pos);
   }
 
   if (spelltask)
-    setDistracted(-1, FALSE);
+    setDistracted(-1, false);
 
-  return FALSE;
+  return false;
 }
 
 // ego is a number representing how "ballsy" the mount is

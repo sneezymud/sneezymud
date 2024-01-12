@@ -36,9 +36,9 @@ void TDrinkCon::waterCreate(const TBeing* caster, int level) {
   if ((getDrinkType() != LIQ_WATER) && getDrinkUnits()) {
     CF(SPELL_CREATE_WATER);
     setDrinkType(LIQ_SLIME);
-    act("A harsh green light surrounds $p!", FALSE, caster, this, NULL,
+    act("A harsh green light surrounds $p!", false, caster, this, nullptr,
       TO_CHAR);
-    act("A harsh green light surrounds $p!", FALSE, caster, this, NULL,
+    act("A harsh green light surrounds $p!", false, caster, this, nullptr,
       TO_ROOM);
   } else {
     water = level;
@@ -63,21 +63,21 @@ void TDrinkCon::waterCreate(const TBeing* caster, int level) {
       weightChangeObject(water * SIP_WEIGHT);
 
       if (getMaxDrinkUnits() == getDrinkUnits()) {
-        act("$p is completely filled with water!", FALSE, caster, this, NULL,
+        act("$p is completely filled with water!", false, caster, this, nullptr,
           TO_CHAR);
-        act("$p is completely filled with water!", FALSE, caster, this, NULL,
+        act("$p is completely filled with water!", false, caster, this, nullptr,
           TO_ROOM);
       } else {
-        act("$p is partially filled with water.", FALSE, caster, this, NULL,
+        act("$p is partially filled with water.", false, caster, this, nullptr,
           TO_CHAR);
-        act("$p is partially filled with water.", FALSE, caster, this, NULL,
+        act("$p is partially filled with water.", false, caster, this, nullptr,
           TO_ROOM);
       }
     } else {
-      act("A vapor of steam appears over $p, but nothing else happens.", FALSE,
-        caster, this, NULL, TO_CHAR);
-      act("A vapor of steam appears over $p, but nothing else happens.", FALSE,
-        caster, this, NULL, TO_ROOM);
+      act("A vapor of steam appears over $p, but nothing else happens.", false,
+        caster, this, nullptr, TO_CHAR);
+      act("A vapor of steam appears over $p, but nothing else happens.", false,
+        caster, this, nullptr, TO_ROOM);
     }
   }
 }

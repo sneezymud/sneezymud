@@ -596,9 +596,9 @@ const sstring sstring::capitalizeSentences() const {
 }
 
 // splits a string into an array of strings, given a delimiter
-// pass NULL for data to get the amount of split strings
+// pass nullptr for data to get the amount of split strings
 // like this:
-//   int c = s.split(';', NULL);
+//   int c = s.split(';', nullptr);
 //   sstring *commands = new sstring[c];
 //   s.split(';', commands);
 //   delete[] commands;

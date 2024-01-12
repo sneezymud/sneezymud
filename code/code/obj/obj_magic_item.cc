@@ -62,10 +62,10 @@ int TMagicItem::objectSell(TBeing* ch, TMonster* keeper) {
   if (getMagicLearnedness() < MAX_SKILL_LEARNEDNESS) {
     keeper->doTell(ch->getName(),
       format("I'm sorry, that %s is of sub-standard quality.") % fname(name));
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 void TMagicItem::setMagicLevel(int num) { magic_level = num; }

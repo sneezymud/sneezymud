@@ -15,9 +15,9 @@ const static char* meats[] = {"rib-eye steak", "chuck-eye steak", "skirt steak",
 
 void stop_butcher(TBeing* ch) {
   if (ch->getPosition() >= POSITION_RESTING) {
-    act("You stop butchering, and look about confused.", FALSE, ch, 0, 0,
+    act("You stop butchering, and look about confused.", false, ch, 0, 0,
       TO_CHAR);
-    act("$n stops butchering, and looks about confused and embarrassed.", FALSE,
+    act("$n stops butchering, and looks about confused and embarrassed.", false,
       ch, 0, 0, TO_ROOM);
   }
   ch->stopTask();
@@ -25,7 +25,7 @@ void stop_butcher(TBeing* ch) {
 
 int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
   TThing* Tobj;
-  TFood* steak = NULL;
+  TFood* steak = nullptr;
   TObj* item;
   TBaseWeapon* tobj;
   int learning = ch->getSkillValue(SKILL_BUTCHER),
@@ -37,7 +37,7 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
   if (ch->isImmortal()) {
     ch->sendTo(
       "You instantly carve the corpse into steaks in a god-like manner.\n\r");
-    act("$n becomes a blur and instantly butchers $p.", FALSE, ch, corpse, 0,
+    act("$n becomes a blur and instantly butchers $p.", false, ch, corpse, 0,
       TO_ROOM);
     ch->task->flags = (int)(maxUnitsP / Ceffect);
     ch->dropPool(100, LIQ_BLOOD);
@@ -48,8 +48,8 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
   if ((Tobj && (Tobj->isPierceWeapon() || Tobj->isSlashWeapon())) &&
       (ch->task->flags < (int)(maxUnitsP / Ceffect)) &&
       ch->task->timeLeft > 0) {
-    act("You continue to butcher $p.", FALSE, ch, corpse, 0, TO_CHAR);
-    act("$n slices the steak from $p very carefully.", FALSE, ch, corpse, NULL,
+    act("You continue to butcher $p.", false, ch, corpse, 0, TO_CHAR);
+    act("$n slices the steak from $p very carefully.", false, ch, corpse, nullptr,
       TO_ROOM);
     ch->task->timeLeft--;
 
@@ -59,21 +59,21 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
       CF(SKILL_BUTCHER);
       if (ch->bSuccess(learning, SKILL_BUTCHER)) {
         act("You gently over extend yourself and slightly dull your weapon.",
-          FALSE, ch, 0, 0, TO_CHAR);
+          false, ch, 0, 0, TO_CHAR);
         if (tobj->getCurSharp() > 2)
           tobj->addToCurSharp(-1);
         ch->task->flags++;
       } else if (!critFail(ch, SKILL_BUTCHER)) {
-        act("You extend yourself a little too far and dull your weapon.", FALSE,
+        act("You extend yourself a little too far and dull your weapon.", false,
           ch, 0, 0, TO_CHAR);
         if (tobj->getCurSharp() > 3)
           tobj->addToCurSharp(-2);
       } else {
-        act("You really slip up and cut yourself and mangle the steak.", FALSE,
+        act("You really slip up and cut yourself and mangle the steak.", false,
           ch, 0, 0, TO_CHAR);
         act(
           "$n really slips up and mangles part of the steak and part of $mself",
-          FALSE, ch, 0, 0, TO_ROOM);
+          false, ch, 0, 0, TO_ROOM);
         if (tobj->getCurSharp() > 4)
           tobj->addToCurSharp(-3);
         ch->dropBloodLimb(
@@ -95,41 +95,41 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
         tobj->addToCurSharp(-1);
       ch->task->flags = max(1, min(ch->task->flags, maxUnitsP / Ceffect));
     }
-    return FALSE;
+    return false;
   } else {
     if (!Tobj || (!Tobj->isPierceWeapon() && !Tobj->isSlashWeapon())) {
-      act("Hey, where'd your weapon go?", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n looks blankly at $s empty hand.", FALSE, ch, 0, NULL, TO_ROOM);
-      act("With the lack of a weapon, you grab the loose flesh and rip.", FALSE,
+      act("Hey, where'd your weapon go?", false, ch, 0, 0, TO_CHAR);
+      act("$n looks blankly at $s empty hand.", false, ch, 0, nullptr, TO_ROOM);
+      act("With the lack of a weapon, you grab the loose flesh and rip.", false,
         ch, 0, 0, TO_CHAR);
-      act("$n grabs the loose steak and rips it off the carcass.", FALSE, ch, 0,
-        NULL, TO_ROOM);
+      act("$n grabs the loose steak and rips it off the carcass.", false, ch, 0,
+        nullptr, TO_ROOM);
       if (ch->task->flags > 0)
         ch->task->flags--;
     } else if (ch->task->timeLeft <= 0 && ch->task->timeLeft != -1) {
-      act("You don't feel as if you could butcher any longer.", FALSE, ch, 0, 0,
+      act("You don't feel as if you could butcher any longer.", false, ch, 0, 0,
         TO_CHAR);
-      act("$n seems as if $e couldn't go on.", FALSE, ch, 0, NULL, TO_ROOM);
+      act("$n seems as if $e couldn't go on.", false, ch, 0, nullptr, TO_ROOM);
     } else if (ch->task->timeLeft != -1) {
       act("You feel confident that you got all the meat off of this one.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n looks up with a sense of pride in $s work.", FALSE, ch, 0, NULL,
+        false, ch, 0, 0, TO_CHAR);
+      act("$n looks up with a sense of pride in $s work.", false, ch, 0, nullptr,
         TO_ROOM);
 
     } else if (ch->task->flags == 0) {
       act(
         "You finish up your butchering and realize you have mangled the "
         "carcass.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n finishes up and has apparently destroyed the carcass.", FALSE, ch,
-        0, NULL, TO_ROOM);
+        false, ch, 0, 0, TO_CHAR);
+      act("$n finishes up and has apparently destroyed the carcass.", false, ch,
+        0, nullptr, TO_ROOM);
       ch->stopTask();
-      return FALSE;
+      return false;
     } else if (ch->task->timeLeft != -1) {
       act("Something happened that wasn't expected, Tell a god what you did.",
-        FALSE, ch, 0, 0, TO_CHAR);
+        false, ch, 0, 0, TO_CHAR);
       ch->stopTask();
-      return FALSE;
+      return false;
     }
   }
 
@@ -144,24 +144,24 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
   if (corpse->isCorpseFlag(CORPSE_PC_BUTCHERING))
     corpse->remCorpseFlag(CORPSE_PC_BUTCHERING);
 
-    //  act(   msg, FALSE, ch, item, corpse, TO_CHAR);
-    //  act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
+    //  act(   msg, false, ch, item, corpse, TO_CHAR);
+    //  act(gl_msg, false, ch, item, corpse, TO_ROOM);
 
 #ifdef WEIGHT
-  if (compareWeights(item->getTotalWeight(TRUE),
+  if (compareWeights(item->getTotalWeight(true),
         (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
-    act("The weight of the meat gets too much for you, so you drop it.", FALSE,
+    act("The weight of the meat gets too much for you, so you drop it.", false,
       ch, 0, 0, TO_CHAR);
-    act("The weight of $s meat gets to be too much for $n to handle.", FALSE,
-      ch, 0, NULL, TO_ROOM);
+    act("The weight of $s meat gets to be too much for $n to handle.", false,
+      ch, 0, nullptr, TO_ROOM);
     //    *corpse->roomp += *item;
   } else if (ch->getCarriedVolume() +
-               (item->getTotalVolume() - item->getReducedVolume(NULL)) >
+               (item->getTotalVolume() - item->getReducedVolume(nullptr)) >
              ch->carryVolumeLimit()) {
     act("You struggle to hold onto the steak but it slips from your grasp.",
-      FALSE, ch, 0, 0, TO_CHAR);
+      false, ch, 0, 0, TO_CHAR);
     act("$n struggles to hold onto the steak but it slips from $s grasp.",
-      FALSE, ch, 0, NULL, TO_ROOM);
+      false, ch, 0, nullptr, TO_ROOM);
     //    *corpse->roomp += *item;
   }  // else *ch += *item;
 #endif
@@ -217,7 +217,7 @@ int TThing::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
 
     *ch += *steak;
   }
-  return FALSE;
+  return false;
 }
 
 int TTool::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
@@ -229,33 +229,33 @@ int TTool::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
   //       gl_msg[256];
 
   if (getToolType() != TOOL_BUTCHER_KNIFE) {
-    act("Hey, where'd your knife go?", FALSE, ch, 0, 0, TO_CHAR);
+    act("Hey, where'd your knife go?", false, ch, 0, 0, TO_CHAR);
     stop_butcher(ch);
-    return FALSE;
+    return false;
   }
 
   if (ch->task->timeLeft > 0) {
-    act("You continue to butcher $p.", FALSE, ch, corpse, 0, TO_CHAR);
-    act("$n slices a steak from $p very carefully.", FALSE, ch, corpse, NULL,
+    act("You continue to butcher $p.", false, ch, corpse, 0, TO_CHAR);
+    act("$n slices a steak from $p very carefully.", false, ch, corpse, nullptr,
       TO_ROOM);
 
     addToToolUses(-1);
     if (getToolUses() <= 0) {
-      act("Your $o breaks due to overuse.", FALSE, ch, this, 0, TO_CHAR);
-      act("$n looks startled as $e breaks $P while butchering.", FALSE, ch, 0,
+      act("Your $o breaks due to overuse.", false, ch, this, 0, TO_CHAR);
+      act("$n looks startled as $e breaks $P while butchering.", false, ch, 0,
         this, TO_ROOM);
       ch->stopTask();
       delete this;
-      return FALSE;
+      return false;
     }
 
     if (!ch->bSuccess(learning, SKILL_BUTCHER)) {
       if (!ch->bSuccess(learning, SKILL_BUTCHER)) {
         // a doubele failure
         CF(SKILL_BUTCHER);  // failure
-        act("You slip up and destroy a part of the carcass.", FALSE, ch, 0, 0,
+        act("You slip up and destroy a part of the carcass.", false, ch, 0, 0,
           TO_CHAR);
-        act("$n really slips up and mangles part of the carcass.", FALSE, ch, 0,
+        act("$n really slips up and mangles part of the carcass.", false, ch, 0,
           0, TO_ROOM);
         corpse->addCorpseFlag(CORPSE_NO_BUTCHER);
         ch->stopTask();
@@ -273,18 +273,18 @@ int TTool::butcherPulse(TBeing* ch, TBaseCorpse* corpse) {
     item->setWeight(amount);
     item->obj_flags.cost *= amount;
 
-    act(msg, FALSE, ch, item, corpse, TO_CHAR);
-    act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
+    act(msg, false, ch, item, corpse, TO_CHAR);
+    act(gl_msg, false, ch, item, corpse, TO_ROOM);
 
     *ch += *item;
 #endif
   }
 
-  return FALSE;
+  return false;
 }
 
 int bareHandsButcherPulse(TBeing* ch, TBaseCorpse* corpse) {
-  TFood* steak = NULL;
+  TFood* steak = nullptr;
   TObj* item;
   TPCorpse* tpc = dynamic_cast<TPCorpse*>(corpse);
 
@@ -295,15 +295,15 @@ int bareHandsButcherPulse(TBeing* ch, TBaseCorpse* corpse) {
   if (ch->isImmortal()) {
     ch->sendTo(
       "You instantly tear the corpse into steaks in a god-like manner.\n\r");
-    act("$n becomes a blur and instantly butchers $p.", FALSE, ch, corpse, 0,
+    act("$n becomes a blur and instantly butchers $p.", false, ch, corpse, 0,
       TO_ROOM);
     ch->task->flags = (int)(maxUnitsP / Ceffect);
     ch->dropPool(100, LIQ_BLOOD);
   }
 
   if (ch->task->timeLeft > 0) {
-    act("You continue to butcher $p.", FALSE, ch, corpse, 0, TO_CHAR);
-    act("$n tears the meat from $p excitedly.", FALSE, ch, corpse, NULL,
+    act("You continue to butcher $p.", false, ch, corpse, 0, TO_CHAR);
+    act("$n tears the meat from $p excitedly.", false, ch, corpse, nullptr,
       TO_ROOM);
     ch->task->timeLeft--;
 
@@ -314,13 +314,13 @@ int bareHandsButcherPulse(TBeing* ch, TBaseCorpse* corpse) {
       if (ch->bSuccess(learning, SKILL_BUTCHER) ||
           !critFail(ch, SKILL_BUTCHER)) {
         act("You get a little too excited and spill some blood on the $g.",
-          FALSE, ch, 0, 0, TO_CHAR);
+          false, ch, 0, 0, TO_CHAR);
         ch->dropPool(2, LIQ_BLOOD);
         ch->task->flags++;
       } else {
-        act("You really slip up and hurt yourself, and ruin your work.", FALSE,
+        act("You really slip up and hurt yourself, and ruin your work.", false,
           ch, 0, 0, TO_CHAR);
-        act("$n really slips up and mangles $mself, ruining $s work.", FALSE,
+        act("$n really slips up and mangles $mself, ruining $s work.", false,
           ch, 0, 0, TO_ROOM);
         ch->dropBloodLimb(
           (ch->isRightHanded() ? WEAR_FINGER_L : WEAR_FINGER_R));
@@ -338,31 +338,31 @@ int bareHandsButcherPulse(TBeing* ch, TBaseCorpse* corpse) {
       corpse->obj_flags.decay_time++;
       ch->task->flags = max(1, min(ch->task->flags, maxUnitsP / Ceffect));
     }
-    return FALSE;
+    return false;
   } else {
     if (ch->task->timeLeft <= 0 && ch->task->timeLeft != -1) {
       act("You don't feel as if you could tear this corpse apart any longer.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n seems as if $e couldn't go on.", FALSE, ch, 0, NULL, TO_ROOM);
+        false, ch, 0, 0, TO_CHAR);
+      act("$n seems as if $e couldn't go on.", false, ch, 0, nullptr, TO_ROOM);
     } else if (ch->task->timeLeft != -1) {
       act("You feel confident that you tore all the meat off of this one.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n grins as $e straightens up from $s work.", FALSE, ch, 0, NULL,
+        false, ch, 0, 0, TO_CHAR);
+      act("$n grins as $e straightens up from $s work.", false, ch, 0, nullptr,
         TO_ROOM);
     } else if (ch->task->flags == 0) {
       act(
         "You finish up your butchering and realize there isnt anything left to "
         "tear off.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n finishes up and has apparently destroyed the carcass.", FALSE, ch,
-        0, NULL, TO_ROOM);
+        false, ch, 0, 0, TO_CHAR);
+      act("$n finishes up and has apparently destroyed the carcass.", false, ch,
+        0, nullptr, TO_ROOM);
       ch->stopTask();
-      return FALSE;
+      return false;
     } else if (ch->task->timeLeft != -1) {
       act("Something happened that wasn't expected, Tell a god what you did.",
-        FALSE, ch, 0, 0, TO_CHAR);
+        false, ch, 0, 0, TO_CHAR);
       ch->stopTask();
-      return FALSE;
+      return false;
     }
   }
 
@@ -422,13 +422,13 @@ int bareHandsButcherPulse(TBeing* ch, TBaseCorpse* corpse) {
 
     *ch += *steak;
   }
-  return FALSE;
+  return false;
 }
 
 int task_butchering(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj* obj) {
   TThing* knife;
-  TBaseCorpse* corpse = NULL;
+  TBaseCorpse* corpse = nullptr;
   int rc;
   bool bareHands = ch->getMyRace()->hasTalent(TALENT_MEATEATER);
 
@@ -436,35 +436,35 @@ int task_butchering(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   if (ch->isLinkdead() || (ch->in_room < 0) ||
       (ch->getPosition() < POSITION_RESTING)) {
     stop_butcher(ch);
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (!obj || !ch->sameRoom(*obj) ||
       !(corpse = dynamic_cast<TBaseCorpse*>(obj))) {
-    act("Hey, where'd that corpse go?", FALSE, ch, 0, 0, TO_CHAR);
+    act("Hey, where'd that corpse go?", false, ch, 0, 0, TO_CHAR);
     stop_butcher(ch);
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You are not able to butcher that.", FALSE, ch, corpse, 0, TO_CHAR);
-    return FALSE;
+    act("$p: You are not able to butcher that.", false, ch, corpse, 0, TO_CHAR);
+    return false;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_BUTCHER)) {
     act("Something unfortunate has happened to $p and it can't be butchered",
-      FALSE, ch, corpse, 0, TO_CHAR);
+      false, ch, corpse, 0, TO_CHAR);
     stop_butcher(ch);
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       if (!(knife = ch->heldInPrimHand()) && !bareHands) {
-        act("Hey, where'd your knife go?", FALSE, ch, 0, 0, TO_CHAR);
+        act("Hey, where'd your knife go?", false, ch, 0, 0, TO_CHAR);
         stop_butcher(ch);
-        return FALSE;  // returning FALSE lets command be interpreted
+        return false;  // returning false lets command be interpreted
       }
       // each pulse is constatnt duration apart
       // the # of pulses was set in start_task as based on skill
@@ -478,18 +478,18 @@ int task_butchering(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     case CMD_ABORT:
     case CMD_STOP:
       if (!(knife = ch->heldInPrimHand()))
-        act("You go to stop butchering, but your knife is gone!", FALSE, ch, 0,
+        act("You go to stop butchering, but your knife is gone!", false, ch, 0,
           0, TO_CHAR);
 
       if (bareHands || !knife) {
         act("You grab the loose steak and tear it the rest of the way off.",
-          FALSE, ch, 0, 0, TO_CHAR);
+          false, ch, 0, 0, TO_CHAR);
         act("$n grabs the loose steak and tears it the rest of the way off.",
-          TRUE, ch, 0, 0, TO_ROOM);
+          true, ch, 0, 0, TO_ROOM);
       } else {
-        act("You make the final slice and stop butchering.", FALSE, ch, 0, 0,
+        act("You make the final slice and stop butchering.", false, ch, 0, 0,
           TO_CHAR);
-        act("$n makes the final slice and stops butchering.", TRUE, ch, 0, 0,
+        act("$n makes the final slice and stops butchering.", true, ch, 0, 0,
           TO_ROOM);
       }
       ch->task->timeLeft = -1;
@@ -508,5 +508,5 @@ int task_butchering(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

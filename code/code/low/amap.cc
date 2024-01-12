@@ -116,7 +116,7 @@ NODE::NODE() {
   for (int i = 0; i < 10; ++i) {
     idirs[i] = -1;
     x = y = z = done = 0;
-    pdirs[i] = NULL;
+    pdirs[i] = nullptr;
   }
 }
 
@@ -140,7 +140,7 @@ S
 
 NODE* find_node(int num) {
   if (num < 0)
-    return NULL;
+    return nullptr;
 
   return (nodes[num]);
 }
@@ -164,17 +164,17 @@ bool isEnabled(int num) {
 
 NODE* read_room(TDatabase* db, TDatabase* dbexits) {
   NODE* tmp = new NODE;
-  tmp->next = NULL;
+  tmp->next = nullptr;
 
   if (!tmp) {
-    fprintf(stderr, "read_room(): unable to allocate new NODE (tmp==NULL)\n");
-    return NULL;
+    fprintf(stderr, "read_room(): unable to allocate new NODE (tmp==nullptr)\n");
+    return nullptr;
   }
 
   do {
     if (!db->fetchRow()) {
       //	fprintf(stderr, "read_room(): couldn't find a room\n");
-      return NULL;
+      return nullptr;
     }
 
     tmp->num = convertTo<int>((*db)["vnum"]);
@@ -207,12 +207,12 @@ NODE* read_room(FILE* tiny) {
 
   if (!tiny) {
     fprintf(stderr, "read_room() called with null file handle\n");
-    return NULL;
+    return nullptr;
   }
 
   if (!tmp) {
-    fprintf(stderr, "read_room(): unable to allocate new NODE (tmp==NULL)\n");
-    return NULL;
+    fprintf(stderr, "read_room(): unable to allocate new NODE (tmp==nullptr)\n");
+    return nullptr;
   }
 
   do {
@@ -222,7 +222,7 @@ NODE* read_room(FILE* tiny) {
         break;
       if (tch == EOF) {
         fprintf(stderr, "read_room(): couldn't find a room\n");
-        return NULL;
+        return nullptr;
       }
     }
 
@@ -798,11 +798,11 @@ void usage() {
 }
 
 int main(int argc, char** argv) {
-  FILE *tiny = NULL, *logf = NULL;
+  FILE *tiny = nullptr, *logf = nullptr;
   FILE* zone;
   DIR* dfd = opendir("/mud/build/lib/zonefiles");
   struct dirent* dp;
-  NODE *last = NULL, *t;
+  NODE *last = nullptr, *t;
   int SCALEBY = 2, rcount, ch, zmax = 20, zmin = -10, tmp;
   std::vector<int> roomrange_t;
   std::map<int, bool> roomrange;
@@ -916,7 +916,7 @@ int main(int argc, char** argv) {
   }
 
   nodes[head->num] = head;
-  head->next = NULL;
+  head->next = nullptr;
 
   for (rcount = 1; (!tiny || !feof(tiny)); ++rcount) {
     if (tiny) {
@@ -938,7 +938,7 @@ int main(int argc, char** argv) {
   }
   t = head;
   head = head->next;
-  nodes[t->num] = NULL;
+  nodes[t->num] = nullptr;
   delete t;
 
   printf("\nRemoving one way exits\n");

@@ -23,7 +23,7 @@ class TBed : public TObj {
     virtual sstring statObjInfo() const;
     virtual itemTypeT itemType() const { return ITEM_BED; }
 
-    virtual bool isRideable() const { return TRUE; }
+    virtual bool isRideable() const { return true; }
     virtual bool canGetMeDeny(const TBeing*, silentTypeT) const;
     virtual void sitMe(TBeing*);
     virtual void restMe(TBeing*);

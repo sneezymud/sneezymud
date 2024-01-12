@@ -34,9 +34,9 @@ void sendrpf(colorTypeT, TRoom*, const char*, ...);
 void sendrpf(TRoom*, const char*, ...);
 void sendToOutdoor(colorTypeT, const sstring&, const sstring&);
 void colorAct(colorTypeT, const sstring&, bool, const TThing*, const TThing*,
-  const TThing*, actToParmT, const char* color = NULL, int = 0);
+  const TThing*, actToParmT, const char* color = nullptr, int = 0);
 void act(const sstring&, bool, const TThing*, const TThing*, const TThing*,
-  actToParmT, const char* color = NULL, int = 0);
+  actToParmT, const char* color = nullptr, int = 0);
 void nukeMobs(int);
 bool isEmpty(int);
 

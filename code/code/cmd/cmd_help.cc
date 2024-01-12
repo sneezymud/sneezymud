@@ -300,7 +300,7 @@ void replaceWikiTable(sstring& data) {
     table.inlineReplaceString("||", "\255");
 
     // remove all data parts from table
-    cData = table.split('\255', NULL);
+    cData = table.split('\255', nullptr);
     if (cData <= 0)
       return;
     rgTableData = new sstring[cData];
@@ -391,7 +391,7 @@ void /*TBeing::*/ displayHelpFile(TBeing* ch, char* helppath, char* namebuf) {
 void TBeing::doHelp(const char* arg) {
   sstring str;
   int j;
-  bool found = FALSE;
+  bool found = false;
   int helpnum = 0;
   unsigned int i;
   char helppath[256], ansipath[512];
@@ -442,12 +442,12 @@ void TBeing::doHelp(const char* arg) {
   if (isImmortal() && hasWizPower(POWER_IMMORTAL_HELP)) {
     for (i = 0; i < immortalIndex.size(); i++) {
       if (!strcasecmp(arg, immortalIndex[i])) {
-        found = TRUE;
+        found = true;
         helpnum = i;
         sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i]);
         break;
       } else if (is_abbrev(arg, immortalIndex[i])) {
-        found = TRUE;
+        found = true;
         helpnum = i;
         sprintf(helppath, "%s/%s", Path::IMMORTAL_HELP, immortalIndex[i]);
       }
@@ -488,12 +488,12 @@ void TBeing::doHelp(const char* arg) {
       if (!strcasecmp(arg, builderIndex[i])) {
         sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i]);
         helpnum = i;
-        found = TRUE;
+        found = true;
         break;
       } else if (is_abbrev(arg, builderIndex[i])) {
         sprintf(helppath, "%s/%s", Path::BUILDER_HELP, builderIndex[i]);
         helpnum = i;
-        found = TRUE;
+        found = true;
       }
     }
     if (found) {
@@ -537,12 +537,12 @@ void TBeing::doHelp(const char* arg) {
     if (sstring(arg).lower() == helpIndex[i].lower()) {
       sprintf(helppath, "%s/%s", Path::HELP, helpIndex[i].c_str());
       helpnum = i;
-      found = TRUE;
+      found = true;
       break;
     } else if (is_abbrev(arg, helpIndex[i], MULTIPLE_YES)) {
       sprintf(helppath, "%s/%s", Path::HELP, helpIndex[i].c_str());
       helpnum = i;
-      found = TRUE;
+      found = true;
     }
   }
   if (found) {
@@ -558,16 +558,16 @@ void TBeing::doHelp(const char* arg) {
     if (!strcasecmp(arg, spellIndex[i])) {
       sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
       helpnum = i;
-      found = TRUE;
+      found = true;
       break;
     } else if (is_abbrev(arg, spellIndex[i], MULTIPLE_YES, EXACT_YES)) {
       sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
       helpnum = i;
-      found = TRUE;
+      found = true;
     } else if (is_abbrev(arg, spellIndex[i])) {
       sprintf(helppath, "%s/%s", Path::SPELL_HELP, spellIndex[i]);
       helpnum = i;
-      found = TRUE;
+      found = true;
     }
   }
   if (found) {
@@ -633,7 +633,7 @@ void TBeing::doHelp(const char* arg) {
       vlogf(LOG_BUG, format("Bogus spell help file: %s") % spellIndex[i]);
       return;
     }
-    disc_num = getDisciplineNumber(skill, FALSE);
+    disc_num = getDisciplineNumber(skill, false);
     if (disc_num != DISC_NONE) {
       str += purple();
       str += "Discipline       : ";
@@ -880,12 +880,12 @@ void TBeing::doHelp(const char* arg) {
     if (!strcasecmp(arg, skillIndex[i])) {
       sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i]);
       helpnum = i;
-      found = TRUE;
+      found = true;
       break;
     } else if (is_abbrev(arg, skillIndex[i], MULTIPLE_YES)) {
       sprintf(helppath, "%s/%s", Path::SKILL_HELP, skillIndex[i]);
       helpnum = i;
-      found = TRUE;
+      found = true;
     }
   }
   if (found) {
@@ -949,7 +949,7 @@ void TBeing::doHelp(const char* arg) {
       vlogf(LOG_BUG, format("Bogus skill help file: %s") % skillIndex[i]);
       return;
     }
-    disc_num = getDisciplineNumber(skill, FALSE);
+    disc_num = getDisciplineNumber(skill, false);
     if (disc_num != DISC_NONE) {
       str += purple();
       str += "Discipline       : ";

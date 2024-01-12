@@ -49,7 +49,7 @@ diseaseTypeT affToDisease(affectedData&);
 // The format for a spec_proc is:
 //  int disease_name(TBeing **victim, int message, affectedData *af);
 //
-// spec procs should (for now) always return FALSE from a message call
+// spec procs should (for now) always return false from a message call
 //
 // note, if message > 0, then it represents a "command triggered" message.
 // This is similar to mobile/object/room special procedures, in that

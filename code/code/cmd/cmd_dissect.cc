@@ -92,22 +92,22 @@ int TBeing::doDissect(sstring argument) {
 
   if (namebuf.empty()) {
     sendTo("What do you want to dissect?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!hasHands() || bothHandsHurt()) {
     sendTo("You must have hands, and at least one must work, to do this.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal.  You don't understand dissection.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (getPosition() == POSITION_MOUNTED) {
     sendTo("You'd need to dismount first.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!(obj = dynamic_cast<TObj*>(
@@ -116,13 +116,13 @@ int TBeing::doDissect(sstring argument) {
             dynamic_cast<TObj*>(searchLinkedListVis(this, namebuf, stuff)))) {
       sendTo(format("There doesn't seem to be any '%s' here to dissect.\n\r") %
              namebuf);
-      return FALSE;
+      return false;
     }
   }
 
   if (!doesKnowSkill(SKILL_DISSECT)) {
     sendTo("You know nothing about dissection.\n\r");
-    return FALSE;
+    return false;
   }
 
   // this is mostly here to stop auto-loot kicking in while 'zerking
@@ -130,7 +130,7 @@ int TBeing::doDissect(sstring argument) {
     sendTo(COLOR_BASIC,
       "<r>You are way too blood crazed at the moment to be dissecting "
       "stuff.<1>\n\r");
-    return FALSE;
+    return false;
   }
 
   rc = dissect(this, obj);
@@ -138,7 +138,7 @@ int TBeing::doDissect(sstring argument) {
     addSkillLag(SKILL_DISSECT, rc);
   if (IS_SET_DELETE(rc, DELETE_ITEM)) {
     delete obj;
-    obj = NULL;
+    obj = nullptr;
     REM_DELETE(rc, DELETE_ITEM);
   }
   return rc;
@@ -147,8 +147,8 @@ int TBeing::doDissect(sstring argument) {
 int dissect(TBeing* caster, TObj* corpse) { return corpse->dissectMe(caster); }
 
 int TObj::dissectMe(TBeing* caster) {
-  act("$p: You can only dissect corpses.", FALSE, caster, this, 0, TO_CHAR);
-  return FALSE;
+  act("$p: You can only dissect corpses.", false, caster, this, 0, TO_CHAR);
+  return false;
 }
 
 void readDissectionFile() {

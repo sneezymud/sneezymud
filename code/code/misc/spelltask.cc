@@ -30,7 +30,7 @@
   text        = if True Show casting text
   flags       = can be used to add specific elements to spells
   next_update = sets when next call to casting switch (inititiated first pass)
-  offensive   = Is the spell offensive/ TRUE is offensive
+  offensive   = Is the spell offensive/ true is offensive
 
 
   nextUpdate:
@@ -95,9 +95,9 @@ void spellTaskData::getNextUpdate(int pulse, int interval) {
 }
 
 void TBeing::stopCast(stopCastT messages) {
-  TThing* target = NULL;
-  TBeing* ch = NULL;
-  TBeing* tmp_ch = NULL;
+  TThing* target = nullptr;
+  TBeing* ch = nullptr;
+  TBeing* tmp_ch = nullptr;
   int which = 0;
 
   if (!spelltask)
@@ -123,9 +123,9 @@ void TBeing::stopCast(stopCastT messages) {
         target->setCaster(next_caster);
 
         if (which == 1)
-          spelltask->victim = NULL;
+          spelltask->victim = nullptr;
         else if (which == 2)
-          spelltask->object = NULL;
+          spelltask->object = nullptr;
       } else {
         for (tmp_ch = ch, ch = ch->next_caster; ch;
              tmp_ch = ch, ch = ch->next_caster) {
@@ -133,9 +133,9 @@ void TBeing::stopCast(stopCastT messages) {
             tmp_ch->next_caster = next_caster;
 
             if (which == 1)
-              spelltask->victim = NULL;
+              spelltask->victim = nullptr;
             else if (which == 2)
-              spelltask->object = NULL;
+              spelltask->object = nullptr;
 
             break;
           }
@@ -151,73 +151,73 @@ void TBeing::stopCast(stopCastT messages) {
       if (caster_type == SPELL_CASTER) {
         colorAct(COLOR_SPELLS,
           "<R>Your change of location distracts you and you stop casting.<z>",
-          FALSE, this, NULL, NULL, TO_CHAR);
+          false, this, nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
-          "<R>$n stops chanting and the magic dissipates.<z>", TRUE, this, NULL,
-          NULL, TO_ROOM);
+          "<R>$n stops chanting and the magic dissipates.<z>", true, this, nullptr,
+          nullptr, TO_ROOM);
       } else if (caster_type == SPELL_DANCER) {
         colorAct(COLOR_SPELLS,
           "<o>Your change of location distracts you and you cease the "
           "ritual.<z>",
-          FALSE, this, NULL, NULL, TO_CHAR);
+          false, this, nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS, "<o>$n stops chanting and stops the ritual.<z>",
-          TRUE, this, NULL, NULL, TO_ROOM);
+          true, this, nullptr, nullptr, TO_ROOM);
       } else if (caster_type == SPELL_PRAYER) {
         colorAct(COLOR_SPELLS,
           "<R>Your change of location distracts you and you stop praying.<z>",
-          FALSE, this, NULL, NULL, TO_CHAR);
+          false, this, nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
-          "<R>$n stops praying as $s holy symbol becomes inert.<z>", TRUE, this,
-          NULL, NULL, TO_ROOM);
+          "<R>$n stops praying as $s holy symbol becomes inert.<z>", true, this,
+          nullptr, nullptr, TO_ROOM);
       }
       break;
     case STOP_CAST_GENERIC:
       if (caster_type == SPELL_CASTER) {
-        colorAct(COLOR_SPELLS, "<R>You stop casting your spell.<z>", FALSE,
-          this, NULL, NULL, TO_CHAR);
+        colorAct(COLOR_SPELLS, "<R>You stop casting your spell.<z>", false,
+          this, nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
-          "<R>$n stops chanting and the magic dissipates.<z>", TRUE, this, NULL,
-          NULL, TO_ROOM);
+          "<R>$n stops chanting and the magic dissipates.<z>", true, this, nullptr,
+          nullptr, TO_ROOM);
       } else if (caster_type == SPELL_PRAYER) {
         colorAct(COLOR_SPELLS,
-          "<R>You stop praying to your deities for help.<z>", FALSE, this, NULL,
-          NULL, TO_CHAR);
+          "<R>You stop praying to your deities for help.<z>", false, this, nullptr,
+          nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
-          "<R>$n stops praying as $s holy symbol becomes inert.<z>", TRUE, this,
-          NULL, NULL, TO_ROOM);
+          "<R>$n stops praying as $s holy symbol becomes inert.<z>", true, this,
+          nullptr, nullptr, TO_ROOM);
       } else if (caster_type == SPELL_DANCER) {
         colorAct(COLOR_SPELLS,
-          "<o>You stop your ritual to your ancestors for help.<z>", FALSE, this,
-          NULL, NULL, TO_CHAR);
+          "<o>You stop your ritual to your ancestors for help.<z>", false, this,
+          nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
-          "<o>$n interrups $s ritual dance to change location.<z>", TRUE, this,
-          NULL, NULL, TO_ROOM);
+          "<o>$n interrups $s ritual dance to change location.<z>", true, this,
+          nullptr, nullptr, TO_ROOM);
       }
       break;
     case STOP_CAST_CUDGEL:
       if (caster_type == SPELL_CASTER) {
         colorAct(COLOR_SPELLS,
-          "<R>Dazed, you stop casting your spell.  Your head hurts!<z>", FALSE,
-          this, NULL, NULL, TO_CHAR);
+          "<R>Dazed, you stop casting your spell.  Your head hurts!<z>", false,
+          this, nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
-          "<R>$n staggers about in a daze as $s magic dissipates.<z>", TRUE,
-          this, NULL, NULL, TO_ROOM);
+          "<R>$n staggers about in a daze as $s magic dissipates.<z>", true,
+          this, nullptr, nullptr, TO_ROOM);
       } else if (caster_type == SPELL_PRAYER) {
         colorAct(COLOR_SPELLS,
           "<R>Dazed, you stop praying to your deities for help.  Your head "
           "hurts!<z>",
-          FALSE, this, NULL, NULL, TO_CHAR);
+          false, this, nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
-          "<R>$n staggers about in a daze and stops praying.<z>", TRUE, this,
-          NULL, NULL, TO_ROOM);
+          "<R>$n staggers about in a daze and stops praying.<z>", true, this,
+          nullptr, nullptr, TO_ROOM);
       } else if (caster_type == SPELL_DANCER) {
         colorAct(COLOR_SPELLS,
           "<o>Dazed, you stop your ritual to your ancestors for help.  Your "
           "head hurts!<z>",
-          FALSE, this, NULL, NULL, TO_CHAR);
+          false, this, nullptr, nullptr, TO_CHAR);
         colorAct(COLOR_SPELLS,
           "<o>$n staggers about in a daze, interrupting $s ritual dance.<z>",
-          TRUE, this, NULL, NULL, TO_ROOM);
+          true, this, nullptr, nullptr, TO_ROOM);
       }
       break;
     case STOP_CAST_DEATH:
@@ -225,16 +225,16 @@ void TBeing::stopCast(stopCastT messages) {
         colorAct(COLOR_SPELLS,
           "<R>You hear the last echo of $n's spell hanging in the air left "
           "there by $s death.<z>",
-          TRUE, this, NULL, NULL, TO_ROOM);
+          true, this, nullptr, nullptr, TO_ROOM);
       } else if (caster_type == SPELL_PRAYER) {
         colorAct(COLOR_SPELLS,
           "<R>A last word $n's prayer hangs in the air left there by $s "
           "death.<z>",
-          TRUE, this, NULL, NULL, TO_ROOM);
+          true, this, nullptr, nullptr, TO_ROOM);
       } else if (caster_type == SPELL_DANCER) {
         colorAct(COLOR_SPELLS,
-          "<r>Phantom spirits appear suddenly and remove $n's soul.<z>", TRUE,
-          this, NULL, NULL, TO_ROOM);
+          "<r>Phantom spirits appear suddenly and remove $n's soul.<z>", true,
+          this, nullptr, nullptr, TO_ROOM);
       }
       break;
     case STOP_CAST_NOT_AROUND:
@@ -243,80 +243,80 @@ void TBeing::stopCast(stopCastT messages) {
           if (IS_SET(discArray[spelltask->spell]->targets, TAR_VIOLENT))
             colorAct(COLOR_SPELLS,
               "<y>You stop casting as your victim is no longer there.<z>",
-              FALSE, this, NULL, NULL, TO_CHAR);
+              false, this, nullptr, nullptr, TO_CHAR);
           else
             colorAct(COLOR_SPELLS,
               "<y>You stop casting as your target is no longer there.<z>",
-              FALSE, this, NULL, NULL, TO_CHAR);
+              false, this, nullptr, nullptr, TO_CHAR);
         } else if (which == 2) {
           colorAct(COLOR_SPELLS,
             "<y>You stop casting as the object no longer seems to be there.<z>",
-            FALSE, this, NULL, NULL, TO_CHAR);
+            false, this, nullptr, nullptr, TO_CHAR);
         } else {
           colorAct(COLOR_SPELLS,
-            "<y>You stop casting as your target is no longer there.<z>", FALSE,
-            this, NULL, NULL, TO_CHAR);
+            "<y>You stop casting as your target is no longer there.<z>", false,
+            this, nullptr, nullptr, TO_CHAR);
         }
         colorAct(COLOR_SPELLS,
-          "<y>$n stops chanting and the magic dissipates.<z>", TRUE, this, NULL,
-          NULL, TO_ROOM);
+          "<y>$n stops chanting and the magic dissipates.<z>", true, this, nullptr,
+          nullptr, TO_ROOM);
       } else if (caster_type == SPELL_PRAYER) {
         if (which == 1) {
           if (IS_SET(discArray[spelltask->spell]->targets, TAR_VIOLENT))
             colorAct(COLOR_SPELLS,
               "<y>You stop praying as your victim is no longer there.<z>",
-              FALSE, this, NULL, NULL, TO_CHAR);
+              false, this, nullptr, nullptr, TO_CHAR);
           else
             colorAct(COLOR_SPELLS,
               "<y>You stop praying as your target is no longer there.<z>",
-              FALSE, this, NULL, NULL, TO_CHAR);
+              false, this, nullptr, nullptr, TO_CHAR);
         } else if (which == 2) {
           colorAct(COLOR_SPELLS,
             "<y>You stop praying as the object no longer seems to be "
             "there.<z>.",
-            FALSE, this, NULL, NULL, TO_CHAR);
+            false, this, nullptr, nullptr, TO_CHAR);
         } else {
           colorAct(COLOR_SPELLS,
             "<y>You stop praying as your target no longer seems to be "
             "there.<z>",
-            FALSE, this, NULL, NULL, TO_CHAR);
+            false, this, nullptr, nullptr, TO_CHAR);
         }
         colorAct(COLOR_SPELLS,
-          "<y>$n stops praying as $s holy symbol becomes inert.<z>", TRUE, this,
-          NULL, NULL, TO_ROOM);
+          "<y>$n stops praying as $s holy symbol becomes inert.<z>", true, this,
+          nullptr, nullptr, TO_ROOM);
       } else if (caster_type == SPELL_DANCER) {
         if (which == 1) {
           if (IS_SET(discArray[spelltask->spell]->targets, TAR_VIOLENT))
             colorAct(COLOR_SPELLS,
               "<y>You cease the ritual as your victim is no longer there.<z>",
-              FALSE, this, NULL, NULL, TO_CHAR);
+              false, this, nullptr, nullptr, TO_CHAR);
           else
             colorAct(COLOR_SPELLS,
               "<y>You cease the ritual as your target is no longer there.<z>",
-              FALSE, this, NULL, NULL, TO_CHAR);
+              false, this, nullptr, nullptr, TO_CHAR);
         } else if (which == 2) {
           colorAct(COLOR_SPELLS,
             "<y>You cease the ritual as the object no longer seems to be "
             "there.<z>.",
-            FALSE, this, NULL, NULL, TO_CHAR);
+            false, this, nullptr, nullptr, TO_CHAR);
         } else {
           colorAct(COLOR_SPELLS,
             "<y>You cease the ritual as your target no longer seems to be "
             "there.<z>",
-            FALSE, this, NULL, NULL, TO_CHAR);
+            false, this, nullptr, nullptr, TO_CHAR);
         }
         colorAct(COLOR_SPELLS,
           "<y>$n<z><y> stops $s ritual dance and the spirits ignore $m.<z>",
-          TRUE, this, NULL, NULL, TO_ROOM);
+          true, this, nullptr, nullptr, TO_ROOM);
       }
       break;
     case STOP_CAST_NONE:
       break;
   }
   delete spelltask;
-  spelltask = NULL;
-  next_caster = NULL;
-  spellstore.storing = FALSE;
+  spelltask = nullptr;
+  next_caster = nullptr;
+  spellstore.storing = false;
   delete spellstore.spelltask;
 }
 
@@ -355,17 +355,17 @@ static bool doComponentUse(spellNumT spell, TBeing* ch) {
   // spell on person
   if (ch->spelltask->target == 1) {
     if (!ch->useComponent(ch->findComponent(spell), ch->spelltask->victim))
-      return FALSE;
+      return false;
     // spell on object
   } else if (ch->spelltask->target == 2) {
     if (!ch->useComponentObj(ch->findComponent(spell), ch->spelltask->object))
-      return FALSE;
+      return false;
   } else {
     vlogf(LOG_BUG,
       format("Bad target in doComponentUse(%s)(%d).") % ch->getName() % spell);
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 int start_cast(TBeing* ch, TBeing* victim, TThing* obj, TRoom* rp,
@@ -379,10 +379,10 @@ int start_cast(TBeing* ch, TBeing* victim, TThing* obj, TRoom* rp,
 
   if (!ch || (ch->spelltask)) {
     if (ch && ch->isImmortal()) {
-      act("Just cause you are immortal, you still can't cast two spells.", TRUE,
-        ch, NULL, NULL, TO_CHAR);
-      act("$n stops casting.", TRUE, ch, NULL, NULL, TO_ROOM);
-      return FALSE;
+      act("Just cause you are immortal, you still can't cast two spells.", true,
+        ch, nullptr, nullptr, TO_CHAR);
+      act("$n stops casting.", true, ch, nullptr, nullptr, TO_ROOM);
+      return false;
     }
     // mob casting 2 spells.  2nd spell is "spell", look at spelltask for
     // first...
@@ -393,12 +393,12 @@ int start_cast(TBeing* ch, TBeing* victim, TThing* obj, TRoom* rp,
     if (ch)
       ch->sendTo("Problem in spelltask.  Bug this please or tell a god.\n\r");
 
-    return FALSE;
+    return false;
   }
   if (!(ch->spelltask = new spellTaskData())) {
     vlogf(LOG_BUG,
       format("Couldn't allocate memory in start_cast for %s") % ch->getName());
-    return FALSE;
+    return false;
   }
   ch->spelltask->orig_arg = mud_str_dup(arg);
   ch->spelltask->victim = victim;
@@ -448,48 +448,48 @@ int start_cast(TBeing* ch, TBeing* victim, TThing* obj, TRoom* rp,
     obj->setCaster(ch);
   }
   if (victim && victim == ch) {
-    act("You concentrate intensely on yourself.", FALSE, ch, NULL, NULL,
+    act("You concentrate intensely on yourself.", false, ch, nullptr, nullptr,
       TO_CHAR);
-    act("$n concentrates hard.", TRUE, ch, NULL, NULL, TO_ROOM);
+    act("$n concentrates hard.", true, ch, nullptr, nullptr, TO_ROOM);
   } else if (victim && victim->isImmortal() &&
              (!ch->isImmortal() || offensive)) {
-    act("You can not cast that on an immortal.", FALSE, ch, NULL, NULL,
+    act("You can not cast that on an immortal.", false, ch, nullptr, nullptr,
       TO_CHAR);
-    act("$n concentrates hard but to no avail.", TRUE, ch, NULL, NULL, TO_ROOM);
+    act("$n concentrates hard but to no avail.", true, ch, nullptr, nullptr, TO_ROOM);
 
-    return FALSE;
+    return false;
   } else if (victim) {
-    act("You concentrate intensely on $N.", FALSE, ch, NULL, victim, TO_CHAR);
+    act("You concentrate intensely on $N.", false, ch, nullptr, victim, TO_CHAR);
     if (ch->sameRoom(*victim)) {
-      act("$n gazes intensely at $N.", TRUE, ch, NULL, victim, TO_NOTVICT);
-      act("$n gazes intensely at you.", TRUE, ch, NULL, victim, TO_VICT);
+      act("$n gazes intensely at $N.", true, ch, nullptr, victim, TO_NOTVICT);
+      act("$n gazes intensely at you.", true, ch, nullptr, victim, TO_VICT);
     } else {
       // casting on victim in another room
-      act("$n concentrates intensely on something.", TRUE, ch, NULL, NULL,
+      act("$n concentrates intensely on something.", true, ch, nullptr, nullptr,
         TO_ROOM);
       if ((::number(0, 400)) <
           (victim->plotStat(STAT_CURRENT, STAT_PER, 25, 60, 40, 1.0))) {
-        act("You sense $N's presence near you.", TRUE, victim, NULL, ch,
+        act("You sense $N's presence near you.", true, victim, nullptr, ch,
           TO_CHAR);
-        act("You sense $N's presence near you.", TRUE, victim, NULL, ch,
+        act("You sense $N's presence near you.", true, victim, nullptr, ch,
           TO_ROOM);
       }
     }
     if (offensive && (victim->getPosition() >= POSITION_RESTING)) {
-      act("$N senses your offensive magic is directed at $M.", FALSE, ch, NULL,
+      act("$N senses your offensive magic is directed at $M.", false, ch, nullptr,
         victim, TO_CHAR);
-      act("You sense offensive magic directed at you.", FALSE, ch, NULL, victim,
+      act("You sense offensive magic directed at you.", false, ch, nullptr, victim,
         TO_VICT);
-      act("$N senses offensive magic directed at $M.", TRUE, ch, NULL, victim,
+      act("$N senses offensive magic directed at $M.", true, ch, nullptr, victim,
         TO_NOTVICT);
     }
   } else if (obj) {
-    act("You concentrate intensely on $p.", FALSE, ch, obj, NULL, TO_CHAR);
-    act("$n gazes intensely at $p.", TRUE, ch, obj, NULL, TO_ROOM);
+    act("You concentrate intensely on $p.", false, ch, obj, nullptr, TO_CHAR);
+    act("$n gazes intensely at $p.", true, ch, obj, nullptr, TO_ROOM);
   } else {
-    act("You concentrate intensely on your task.", FALSE, ch, NULL, NULL,
+    act("You concentrate intensely on your task.", false, ch, nullptr, nullptr,
       TO_CHAR);
-    act("$n concentrates hard on something.", FALSE, ch, NULL, NULL, TO_ROOM);
+    act("$n concentrates hard on something.", false, ch, nullptr, nullptr, TO_ROOM);
   }
   if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL) &&
       IS_SET(discArray[spell]->comp_types, COMP_MATERIAL_INIT)) {
@@ -500,7 +500,7 @@ int start_cast(TBeing* ch, TBeing* victim, TThing* obj, TRoom* rp,
       }
     }
   }
-  return TRUE;
+  return true;
 }
 
 void cast_warn_busy(const TBeing* ch, spellNumT which) {
@@ -530,7 +530,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
   int counter = 6;
   int distract = 0, roll = 0, rounds;
   skillUseTypeT typ;
-  TRoom* room = NULL;
+  TRoom* room = nullptr;
   int rc, ret;
   bool limbs, silence;
   int status;
@@ -550,16 +550,16 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
     act(
       "Something went wrong here in spellcasting. Could you please place a bug "
       "or tell a coder the details",
-      FALSE, ch, NULL, NULL, TO_CHAR);
-    return FALSE;
+      false, ch, nullptr, nullptr, TO_CHAR);
+    return false;
   }
   if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING)) {
     ch->stopCast(STOP_CAST_NONE);
-    return FALSE;
+    return false;
   }
 
   if (ch->castAllowCommand(cmd))
-    return FALSE;
+    return false;
 
   spellNumT spell = ch->spelltask->spell;
 
@@ -569,14 +569,14 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
 
   if (!ch->desc && (ch->spelltask->status == -99)) {
     ch->spelltask->status = 0;
-    return FALSE;
+    return false;
   }
   // COSMO MARKER
   //  NEED a small success check
 
   if (checkBadSpellCondition(ch, spell)) {
     ch->stopCast(STOP_CAST_GENERIC);
-    return FALSE;
+    return false;
   }
 
   // Make sure rounds don't get too small 0 is last round anyhow
@@ -598,7 +598,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
     if (!(room == vict->roomp) ||
         ((ch != vict) && !(ch->canSee(vict) || ch->canSee(vict, INFRA_YES)))) {
       stopCast(STOP_CAST_NOT_AROUND);
-      return FALSE;
+      return false;
     }
   }
 
@@ -606,7 +606,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
   if (ch && ch->spelltask->wasInRoom &&
       (ch->in_room != ch->spelltask->wasInRoom)) {
     stopCast(STOP_CAST_LOCATION);
-    return FALSE;
+    return false;
   }
 
   // need to add a check here to make sure that the an object
@@ -618,20 +618,20 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
     if (discArray[spell]->targets & TAR_OBJ_INV) {
       if (!ch->canSee(obj) || !(obj->thingHolding() == ch)) {
         stopCast(STOP_CAST_NOT_AROUND);
-        return FALSE;
+        return false;
       }
     }
     if (discArray[spell]->targets & TAR_OBJ_ROOM) {
       if (!ch->canSee(obj) ||
           (!(obj->roomp == ch->roomp) && !(obj->thingHolding() == ch))) {
         stopCast(STOP_CAST_NOT_AROUND);
-        return FALSE;
+        return false;
       }
     }
     if (discArray[spell]->targets & TAR_OBJ_WORLD) {
       if (!ch->canSee(obj)) {
         stopCast(STOP_CAST_NOT_AROUND);
-        return FALSE;
+        return false;
       }
     }
   }
@@ -643,14 +643,14 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
     if (vict && (ch != vict) && room && !ch->canSee(vict) &&
         !ch->canSee(vict, INFRA_YES)) {
       stopCast(STOP_CAST_NOT_AROUND);
-      return FALSE;
+      return false;
     }
   }
   // check for caster using his wizardry to cast or doing the full form
-  // if has limbs, limbs = TRUE, if can talk, silence = TRUE
+  // if has limbs, limbs = true, if can talk, silence = true
 
-  limbs = TRUE;
-  silence = TRUE;
+  limbs = true;
+  silence = true;
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -675,16 +675,16 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
       if ((distract = ch->spelltask->distracted)) {
         if (typ == SPELL_CASTER)
           colorAct(COLOR_SPELLS,
-            "You try to center yourself and continue your cast.", FALSE, ch,
-            NULL, NULL, TO_CHAR);
+            "You try to center yourself and continue your cast.", false, ch,
+            nullptr, nullptr, TO_CHAR);
         else if (typ == SPELL_PRAYER)
           colorAct(COLOR_SPELLS,
-            "You try to center yourself and continue your prayer.", FALSE, ch,
-            NULL, NULL, TO_CHAR);
+            "You try to center yourself and continue your prayer.", false, ch,
+            nullptr, nullptr, TO_CHAR);
         else if (typ == SPELL_DANCER)
           colorAct(COLOR_SPELLS,
             "You try to ignore the surroundings and continue the ritual.",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
       }
 #if SPELLTASK_DEBUG
       vlogf(LOG_BUG, format("%s has a distract of %d in round %d on spell %s") %
@@ -698,51 +698,51 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<y>The distraction was too much for you and you lose your "
             "spell.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
           colorAct(COLOR_SPELLS,
-            "<y>$n looks totally dazed and stops casting altogether.<z>", TRUE,
-            ch, NULL, NULL, TO_ROOM);
+            "<y>$n looks totally dazed and stops casting altogether.<z>", true,
+            ch, nullptr, nullptr, TO_ROOM);
         } else if (typ == SPELL_PRAYER) {
           colorAct(COLOR_SPELLS,
             "<y>The distraction was too much for you and you stop praying.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
           colorAct(COLOR_SPELLS,
-            "<y>$n looks totally dazed and stops praying altogether.<z>", TRUE,
-            ch, NULL, NULL, TO_ROOM);
+            "<y>$n looks totally dazed and stops praying altogether.<z>", true,
+            ch, nullptr, nullptr, TO_ROOM);
         } else if (typ == SPELL_DANCER) {
           colorAct(COLOR_SPELLS,
             "<y>The distraction was too great and your ancestors ignore your "
             "needs.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
           colorAct(COLOR_SPELLS,
-            "<y>$n looks pale and stops $s ritual dance.<z>", TRUE, ch, NULL,
-            NULL, TO_ROOM);
+            "<y>$n looks pale and stops $s ritual dance.<z>", true, ch, nullptr,
+            nullptr, TO_ROOM);
         }
         ch->spelltask->distracted = 0;
         //        vlogf(LOG_BUG,format("1. before distracted(%d) distract= %d
         //        rounds = %d") %  ch->spelltask->distracted % distract %
         //        ch->spelltask->rounds);
         ch->stopCast(STOP_CAST_NONE);
-        return FALSE;
+        return false;
       } else if (distract && (distract >= ::number(0, (distract + 1)))) {
         if (typ == SPELL_CASTER) {
           act(
             "Although distracted, you recover your focus and continue to cast.",
-            FALSE, ch, NULL, NULL, TO_CHAR, ANSI_GREEN);
-          act("$n shakes $s distraction off and continues to cast.", TRUE, ch,
-            NULL, NULL, TO_ROOM, ANSI_GREEN);
+            false, ch, nullptr, nullptr, TO_CHAR, ANSI_GREEN);
+          act("$n shakes $s distraction off and continues to cast.", true, ch,
+            nullptr, nullptr, TO_ROOM, ANSI_GREEN);
         } else if (typ == SPELL_PRAYER) {
           act(
             "Although distracted, you recover your focus and continue to pray.",
-            FALSE, ch, NULL, NULL, TO_CHAR, ANSI_GREEN);
-          act("$n shakes $s distraction off and continues to pray.", TRUE, ch,
-            NULL, NULL, TO_ROOM, ANSI_GREEN);
+            false, ch, nullptr, nullptr, TO_CHAR, ANSI_GREEN);
+          act("$n shakes $s distraction off and continues to pray.", true, ch,
+            nullptr, nullptr, TO_ROOM, ANSI_GREEN);
         } else if (typ == SPELL_DANCER) {
-          act("Although distracted, you continue to call the ancestors.", FALSE,
-            ch, NULL, NULL, TO_CHAR, ANSI_PURPLE_BOLD);
+          act("Although distracted, you continue to call the ancestors.", false,
+            ch, nullptr, nullptr, TO_CHAR, ANSI_PURPLE_BOLD);
           act(
             "$n shakes $s distraction and continues to call upon $s ancestors.",
-            TRUE, ch, NULL, NULL, TO_ROOM, ANSI_PURPLE_BOLD);
+            true, ch, nullptr, nullptr, TO_ROOM, ANSI_PURPLE_BOLD);
         }
         ch->spelltask->distracted = 0;
         ch->spelltask->rounds = ch->spelltask->rounds + max(1, distract);
@@ -752,27 +752,27 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<g>You are able to continue casting without feeling "
             "distracted.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
           colorAct(COLOR_SPELLS,
-            "<g>$n shakes $s distraction off and continues to cast.<z>", TRUE,
-            ch, NULL, NULL, TO_ROOM);
+            "<g>$n shakes $s distraction off and continues to cast.<z>", true,
+            ch, nullptr, nullptr, TO_ROOM);
         } else if (typ == SPELL_PRAYER) {
           colorAct(COLOR_SPELLS,
             "<g>You are able to continue casting without feeling "
             "distracted.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
           colorAct(COLOR_SPELLS,
-            "<g>$n shakes $s distraction off and continues to pray.<z>", TRUE,
-            ch, NULL, NULL, TO_ROOM);
+            "<g>$n shakes $s distraction off and continues to pray.<z>", true,
+            ch, nullptr, nullptr, TO_ROOM);
         } else if (typ == SPELL_DANCER) {
           colorAct(COLOR_SPELLS,
             "<P>You are able to continue your ritual without feeling "
             "distracted.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
           colorAct(COLOR_SPELLS,
             "<P>$n shakes $s distraction off and continues to dance $s "
             "ritual.<z>",
-            TRUE, ch, NULL, NULL, TO_ROOM);
+            true, ch, nullptr, nullptr, TO_ROOM);
         }
         ch->spelltask->distracted = 0;
       } else if (roll < (3 * discArray[spell]->task)) {
@@ -781,34 +781,34 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           if (!ch->checkEngagementStatus()) {
             if (typ == SPELL_CASTER) {
               colorAct(COLOR_SPELLS,
-                "<y>You lose your concentration and stop casting.<z>", FALSE,
-                ch, NULL, NULL, TO_CHAR);
+                "<y>You lose your concentration and stop casting.<z>", false,
+                ch, nullptr, nullptr, TO_CHAR);
               colorAct(COLOR_SPELLS,
-                "$n loses $s concentration and stops casting.", FALSE, ch, NULL,
-                NULL, TO_ROOM, ANSI_YELLOW);
+                "$n loses $s concentration and stops casting.", false, ch, nullptr,
+                nullptr, TO_ROOM, ANSI_YELLOW);
 
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             } else if (typ == SPELL_PRAYER) {
               colorAct(COLOR_SPELLS,
-                "<y>You lose your concentration and stop praying.<z>", FALSE,
-                ch, NULL, NULL, TO_CHAR);
+                "<y>You lose your concentration and stop praying.<z>", false,
+                ch, nullptr, nullptr, TO_CHAR);
               colorAct(COLOR_SPELLS,
-                "$n loses $s concentration and stops praying.", FALSE, ch, NULL,
-                NULL, TO_ROOM, ANSI_YELLOW);
+                "$n loses $s concentration and stops praying.", false, ch, nullptr,
+                nullptr, TO_ROOM, ANSI_YELLOW);
 
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             } else if (typ == SPELL_DANCER) {
               colorAct(COLOR_SPELLS,
                 "<R>You lose your concentration and stop your ritual dance.<z>",
-                FALSE, ch, NULL, NULL, TO_CHAR);
+                false, ch, nullptr, nullptr, TO_CHAR);
               colorAct(COLOR_SPELLS,
-                "$n loses $s concentration and stops $s ritual dance.", FALSE,
-                ch, NULL, NULL, TO_ROOM, ANSI_RED_BOLD);
+                "$n loses $s concentration and stops $s ritual dance.", false,
+                ch, nullptr, nullptr, TO_ROOM, ANSI_RED_BOLD);
 
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           }
         }
@@ -817,7 +817,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<c>You almost lose your focus but slowly you manage to continue "
             "your spell.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
 #if SPELLTASK_DEBUG
           vlogf(LOG_BUG,
             format("Distracted(%d) distract= %d add 1 to rounds = %d") %
@@ -829,7 +829,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<c>You almost lose your focus but slowly you manage to continue "
             "your prayer.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
 #if SPELLTASK_DEBUG
           vlogf(LOG_BUG,
             format("Distracted(%d) distract= %d add 1 to rounds = %d") %
@@ -841,7 +841,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<B>You almost lose your focus but slowly you manage to continue "
             "the ritual.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
 #if SPELLTASK_DEBUG
           vlogf(LOG_BUG,
             format("Distracted(%d) distract= %d add 1 to rounds = %d") %
@@ -857,7 +857,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<c>Your concentration is good and your spell forms faster than "
             "usual.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
 #if SPELLTASK_DEBUG
           vlogf(LOG_BUG, format("%s subtract 1 from rounds = %d") %
                            ch->getName() % ch->spelltask->rounds);
@@ -868,7 +868,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<c>Your concentration is good and you feel your prayer will be "
             "answered faster.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
 #if SPELLTASK_DEBUG
           ch->spelltask->rounds--;
 #endif
@@ -877,7 +877,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           colorAct(COLOR_SPELLS,
             "<B>Your concentration is good and you feel your ancestors "
             "pleasure.<z>",
-            FALSE, ch, NULL, NULL, TO_CHAR);
+            false, ch, nullptr, nullptr, TO_CHAR);
 #if SPELLTASK_DEBUG
           ch->spelltask->rounds--;
 #endif
@@ -902,29 +902,29 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
       }
       if (isPc()) {
         if (discArray[spell]->minMana) {
-          if (!reconcileMana(spell, FALSE)) {
+          if (!reconcileMana(spell, false)) {
             act(
               "You have totally run out of mana and are forced to abort your "
               "spell.",
-              FALSE, ch, NULL, NULL, TO_CHAR);
+              false, ch, nullptr, nullptr, TO_CHAR);
             ch->stopCast(STOP_CAST_NONE);
-            return FALSE;
+            return false;
           }
         } else if (discArray[spell]->minLifeforce) {
-          if (!reconcileLifeforce(spell, FALSE)) {
-            act("You have totally run out of lifeforce!.", FALSE, ch, NULL,
-              NULL, TO_CHAR);
+          if (!reconcileLifeforce(spell, false)) {
+            act("You have totally run out of lifeforce!.", false, ch, nullptr,
+              nullptr, TO_CHAR);
             ch->stopCast(STOP_CAST_NONE);
-            return FALSE;
+            return false;
           }
         } else {
-          if (!reconcilePiety(spell, FALSE)) {
+          if (!reconcilePiety(spell, false)) {
             act(
               "You have totally run out of piety and are forced to abort your "
               "prayer.",
-              FALSE, ch, NULL, NULL, TO_CHAR);
+              false, ch, nullptr, nullptr, TO_CHAR);
             ch->stopCast(STOP_CAST_NONE);
-            return FALSE;
+            return false;
           }
         }
       }
@@ -944,30 +944,30 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
       switch (counter) {
         case 2:  // almost last round
           if (typ == SPELL_CASTER) {
-            act("You begin to feel your spell taking form.", FALSE, ch, NULL,
-              NULL, TO_CHAR);
+            act("You begin to feel your spell taking form.", false, ch, nullptr,
+              nullptr, TO_CHAR);
           } else if (typ == SPELL_PRAYER) {
-            act("You begin to feel your prayer being answered.", FALSE, ch,
-              NULL, NULL, TO_CHAR);
+            act("You begin to feel your prayer being answered.", false, ch,
+              nullptr, nullptr, TO_CHAR);
           } else if (typ == SPELL_DANCER) {
-            act("<Y>You feel your rada song is pleasing to the loa.<1>", FALSE,
-              ch, NULL, NULL, TO_CHAR);
+            act("<Y>You feel your rada song is pleasing to the loa.<1>", false,
+              ch, nullptr, nullptr, TO_CHAR);
           }
           ch->sendCastingMessages(limbs, silence, rounds, typ, counter);
           if (typ == SPELL_CASTER) {
             if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           } else if (typ == SPELL_DANCER) {
             if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           } else if (typ == SPELL_PRAYER) {
             if (ch->isPc() && !ch->checkHolySymbol(spell)) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
             if (spelltask &&
                 IS_SET(discArray[spell]->comp_types, SPELL_TASKED_EVERY)) {
@@ -989,17 +989,17 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           if (typ == SPELL_CASTER) {
             if (ch->isPc() && !ch->applyCompCheck(spell, rounds, status)) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           } else if (typ == SPELL_DANCER) {
             if (ch->isPc() && !ch->applyCompCheck(spell, rounds, status)) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           } else if (typ == SPELL_PRAYER) {
             if (ch->isPc() && !ch->checkHolySymbol(spell)) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
             if (spelltask &&
                 IS_SET(discArray[spell]->comp_types, SPELL_TASKED_EVERY)) {
@@ -1021,17 +1021,17 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
           if (typ == SPELL_CASTER) {
             if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           } else if (typ == SPELL_DANCER) {
             if (ch->isPc() && !(ch->applyCompCheck(spell, rounds, status))) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           } else if (typ == SPELL_PRAYER) {
             if (ch->isPc() && !ch->checkHolySymbol(spell)) {
               ch->stopCast(STOP_CAST_NONE);
-              return FALSE;
+              return false;
             }
           }
 #if 0
@@ -1049,17 +1049,17 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
                                   "component, spell:%s (%d)") %
                              ch->getName() % discArray[spell]->name % spell);
             ch->stopCast(STOP_CAST_NONE);
-            return FALSE;
+            return false;
           }
 
           ret = ch->doSpellCast(ch, vict, obj, room, spell, typ);
           if (vict && (IS_SET_DELETE(ret, DELETE_VICT))) {
             delete vict;
-            vict = NULL;
+            vict = nullptr;
           }
           if (obj && IS_SET_DELETE(ret, DELETE_ITEM)) {
             delete obj;
-            obj = NULL;
+            obj = nullptr;
           }
           if (IS_SET_DELETE(ret, DELETE_THIS))
             ADD_DELETE(rc, DELETE_THIS);
@@ -1075,23 +1075,23 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
       // COSMO MARKER
       // PUT A SPEED CHECK IN HERE
       if (ch->getPosition() >= POSITION_STANDING) {
-        act("You are already standing.", FALSE, ch, NULL, NULL, TO_CHAR);
+        act("You are already standing.", false, ch, nullptr, nullptr, TO_CHAR);
         break;
       }
       if (typ == SPELL_CASTER) {
-        act("You interrupt your spell to stand.", FALSE, ch, NULL, NULL,
+        act("You interrupt your spell to stand.", false, ch, nullptr, nullptr,
           TO_CHAR);
       } else if (typ == SPELL_DANCER) {
-        act("<B>You interrupt your ritual to stand.<1>", FALSE, ch, NULL, NULL,
+        act("<B>You interrupt your ritual to stand.<1>", false, ch, nullptr, nullptr,
           TO_CHAR);
       } else if (typ == SPELL_PRAYER) {
-        act("You interupt your prayer to stand.", FALSE, ch, NULL, NULL,
+        act("You interupt your prayer to stand.", false, ch, nullptr, nullptr,
           TO_CHAR);
       }
       if (ch->spelltask) {
         ch->spelltask->rounds++;
       }
-      return FALSE;
+      return false;
       break;
     case CMD_SAY:
     case CMD_TELL:
@@ -1101,61 +1101,61 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
       // PUT A SPEED CHECK
       if (ch->spelltask) {
         if (typ == SPELL_CASTER) {
-          act("You interrupt your spell to communicate.", FALSE, ch, NULL, NULL,
+          act("You interrupt your spell to communicate.", false, ch, nullptr, nullptr,
             TO_CHAR);
         } else if (typ == SPELL_DANCER) {
-          act("<B>You interrupt your ritual dance to communicate.<1>", FALSE,
-            ch, NULL, NULL, TO_CHAR);
+          act("<B>You interrupt your ritual dance to communicate.<1>", false,
+            ch, nullptr, nullptr, TO_CHAR);
         } else if (typ == SPELL_PRAYER) {
-          act("You interupt your prayer to communicate.", FALSE, ch, NULL, NULL,
+          act("You interupt your prayer to communicate.", false, ch, nullptr, nullptr,
             TO_CHAR);
         }
         ch->spelltask->rounds++;
       }
-      return FALSE;
+      return false;
       break;
     case CMD_FLEE:
       if (typ == SPELL_CASTER) {
-        colorAct(COLOR_SPELLS, "<R>You stop casting.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>You stop casting.<z>", false, ch, 0, 0,
           TO_CHAR);
-        colorAct(COLOR_SPELLS, "<R>$n stops casting.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>$n stops casting.<z>", false, ch, 0, 0,
           TO_ROOM);
       } else if (typ == SPELL_DANCER) {
-        colorAct(COLOR_SPELLS, "<R>You stop your ritual.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>You stop your ritual.<z>", false, ch, 0, 0,
           TO_CHAR);
-        colorAct(COLOR_SPELLS, "<R>$n stops $s ritual.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>$n stops $s ritual.<z>", false, ch, 0, 0,
           TO_ROOM);
       } else if (typ == SPELL_PRAYER) {
-        colorAct(COLOR_SPELLS, "<R>You stop praying.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>You stop praying.<z>", false, ch, 0, 0,
           TO_CHAR);
-        colorAct(COLOR_SPELLS, "<R>$n stops praying.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>$n stops praying.<z>", false, ch, 0, 0,
           TO_ROOM);
       }
       ch->stopCast(STOP_CAST_NONE);
-      return FALSE;
+      return false;
     case CMD_ABORT:
     case CMD_STOP:
       if (typ == SPELL_CASTER) {
-        colorAct(COLOR_SPELLS, "<R>You stop casting.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>You stop casting.<z>", false, ch, 0, 0,
           TO_CHAR);
-        colorAct(COLOR_SPELLS, "<R>$n stops casting.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>$n stops casting.<z>", false, ch, 0, 0,
           TO_ROOM);
       } else if (typ == SPELL_DANCER) {
-        colorAct(COLOR_SPELLS, "<R>You stop your ritual.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>You stop your ritual.<z>", false, ch, 0, 0,
           TO_CHAR);
-        colorAct(COLOR_SPELLS, "<R>$n stops dancing.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>$n stops dancing.<z>", false, ch, 0, 0,
           TO_ROOM);
       } else if (typ == SPELL_PRAYER) {
-        colorAct(COLOR_SPELLS, "<R>You stop praying.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>You stop praying.<z>", false, ch, 0, 0,
           TO_CHAR);
-        colorAct(COLOR_SPELLS, "<R>$n stops praying.<z>", FALSE, ch, 0, 0,
+        colorAct(COLOR_SPELLS, "<R>$n stops praying.<z>", false, ch, 0, 0,
           TO_ROOM);
       }
       ch->stopCast(STOP_CAST_NONE);
       break;
     default:
       if (ch->isImmortal())
-        return FALSE;
+        return false;
       if (cmd < MAX_CMD_LIST)
         cast_warn_busy(ch, spell);
       break;  // eat the command
@@ -1164,7 +1164,7 @@ int TBeing::cast_spell(TBeing* ch, cmdTypeT cmd, int pulse) {
     if (ch->spelltask->rounds < 0)
       ch->spelltask->rounds = 0;
   }
-  rc = rc + TRUE;
+  rc = rc + true;
   return rc;
 }
 
@@ -1187,48 +1187,48 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_HEAL_CRITICAL_DEIKHAN:
     case SPELL_HEAL:
     case SPELL_HEAL_FULL:
-      return FALSE;
+      return false;
       // disc_air
     case SPELL_GUST:
-      return FALSE;
+      return false;
     case SPELL_LEVITATE:
       if (victim->getPosition() != POSITION_STANDING) {
         caster->sendTo(
           "You can't induce levitation on someone that is not standing.\n\r");
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
       if (victim->affectedBySpell(SPELL_FLY)) {
-        act("$N is already affected by a spell of flight.", FALSE, this, NULL,
+        act("$N is already affected by a spell of flight.", false, this, nullptr,
           victim, TO_CHAR);
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_IMMOBILIZE:
       if (victim->affectedBySpell(SPELL_IMMOBILIZE)) {
-        act("$N is already immobilized!", FALSE, caster, NULL, victim, TO_CHAR);
-        return TRUE;
+        act("$N is already immobilized!", false, caster, nullptr, victim, TO_CHAR);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_SUFFOCATE:
       if (victim->affectedBySpell(SPELL_SUFFOCATE)) {
-        act("$N is already choking!", FALSE, caster, NULL, victim, TO_CHAR);
-        return TRUE;
+        act("$N is already choking!", false, caster, nullptr, victim, TO_CHAR);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_DUST_STORM:
       if (caster->roomp->isUnderwaterSector()) {
         caster->sendTo("Not much air down here under all this water.\n\r");
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_FLY:
       if (victim->affectedBySpell(SPELL_LEVITATE)) {
-        act("$n is already affected by a spell of levitation .", FALSE, caster,
-          NULL, NULL, TO_ROOM);
-        return TRUE;
+        act("$n is already affected by a spell of levitation .", false, caster,
+          nullptr, nullptr, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_ANTIGRAVITY:
 
       // A) this is causing a crash
@@ -1236,24 +1236,24 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
       // of a success. dash 05/26/01 blah
 #if 0
       if ((caster == victim) || (caster->inGroup(*victim))) {
-        if (victim->isAffected(AFF_FLYING) || 
+        if (victim->isAffected(AFF_FLYING) ||
             victim->isAffected(AFF_LEVITATING)) {
            victim->sendTo("Nothing seems to happen.\n\r");
            caster->sendTo("$n is already effected by an anti gravity spell!\n\r"
 );
-        return TRUE;
+        return true;
         }
       }
 #endif
-      return FALSE;
+      return false;
     case SPELL_FALCON_WINGS:
       if (victim->affectedBySpell(SPELL_LEVITATE) ||
           victim->affectedBySpell(SPELL_FLY)) {
-        act("$n is already affected by a some type of flight spell.", FALSE,
-          caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+        act("$n is already affected by a some type of flight spell.", false,
+          caster, nullptr, nullptr, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_PROTECTION_FROM_AIR:
     case SPELL_CONJURE_AIR:
     case SPELL_ENTHRALL_SPECTRE:  // shaman
@@ -1267,24 +1267,24 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_CREATE_DIAMOND_GOLEM:
     case SPELL_FEATHERY_DESCENT:
     case SPELL_TORNADO:
-      return FALSE;
+      return false;
 
       // disc_earth
     case SPELL_METEOR_SWARM:
       if (!caster->outside()) {
         caster->sendTo("You can only cast this outside!\n\r");
-        act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
-        return TRUE;
+        act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_STONE_SKIN:
       if (victim->affectedBySpell(SPELL_FLAMING_FLESH)) {
-        act("$N's skin is already defended by elementals of fire.", FALSE,
-          caster, NULL, victim, TO_CHAR);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+        act("$N's skin is already defended by elementals of fire.", false,
+          caster, nullptr, victim, TO_CHAR);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_SLING_SHOT:
     case SPELL_GRANITE_FISTS:
     case SPELL_PEBBLE_SPRAY:
@@ -1296,32 +1296,32 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_TRAIL_SEEK:
     case SPELL_CONJURE_EARTH:
     case SPELL_PROTECTION_FROM_EARTH:
-      return FALSE;
+      return false;
 
       // disc_water
 
     case SPELL_ICY_GRIP:
       if (victim->affectedBySpell(SPELL_ICY_GRIP)) {
-        act("Nothing seems to happen.", FALSE, caster, NULL, victim,
+        act("Nothing seems to happen.", false, caster, nullptr, victim,
           TO_NOTVICT);
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_WATERY_GRAVE:
       if (victim->hasDisease(DISEASE_DROWNING)) {
-        act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
-        act("$N is already drowning.", TRUE, caster, 0, victim, TO_CHAR);
-        return TRUE;
+        act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
+        act("$N is already drowning.", true, caster, 0, victim, TO_CHAR);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_BREATH_OF_SARAHAGE:
       if (victim && victim->isAffected(AFF_WATERBREATH)) {
-        act("$N already has the ability to breathe underwater.", FALSE, caster,
-          NULL, victim, TO_CHAR);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+        act("$N already has the ability to breathe underwater.", false, caster,
+          nullptr, victim, TO_CHAR);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_GILLS_OF_FLESH:
     case SPELL_PLASMA_MIRROR:
     case SPELL_THORNFLESH:
@@ -1334,66 +1334,66 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_TSUNAMI:
     case SPELL_CONJURE_WATER:
     case SPELL_GUSHER:
-      return FALSE;
+      return false;
 
       // disc_spirit
     case SPELL_POLYMORPH:
-      return FALSE;
+      return false;
     case SPELL_CLOUD_OF_CONCEALMENT:
-      return FALSE;
+      return false;
     case SPELL_SHAPESHIFT:
-      return FALSE;
+      return false;
     case SPELL_DISPEL_INVISIBLE:
       if (!victim->isAffected(AFF_INVISIBLE)) {
-        act("Do you need glasses or something?  $N is already visible!", FALSE,
-          caster, NULL, victim, TO_CHAR, ANSI_WHITE);
+        act("Do you need glasses or something?  $N is already visible!", false,
+          caster, nullptr, victim, TO_CHAR, ANSI_WHITE);
         act(
           "Humor the pitiful mage and pretend that $N just magically appeared. "
           "Clap or something.",
-          FALSE, caster, NULL, victim, TO_ROOM, ANSI_WHITE);
-        return TRUE;
+          false, caster, nullptr, victim, TO_ROOM, ANSI_WHITE);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_ENSORCER:
       if (victim == caster) {
         sprintf(buf,
           "You tell yourself, \"Gosh darnit! I'm a pretty okay %s!\"",
           (!caster->getSex() ? "eunuch"
                              : (caster->getSex() == 1 ? "guy" : "gal")));
-        act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+        act(buf, false, caster, nullptr, nullptr, TO_CHAR);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        return true;
       }
       if (caster->isAffected(AFF_CHARM)) {
         sprintf(buf,
           "You can't charm $N -- you're busy taking orders yourself!");
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        return TRUE;
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
+        return true;
       }
       if (victim->isAffected(AFF_CHARM)) {
         again = (victim->master == caster);
         sprintf(buf, "You can't charm $N%s -- $E's busy following %s!",
           (again ? " again" : ""), (again ? "you already" : "somebody else"));
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        return TRUE;
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
+        return true;
       }
       if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-        act("$N refuses to enter a group the size of yours!", TRUE, caster,
-          NULL, victim, TO_CHAR, ANSI_WHITE_BOLD);
-        act("$N refuses to enter $ group the size of $n's!", TRUE, caster, NULL,
+        act("$N refuses to enter a group the size of yours!", true, caster,
+          nullptr, victim, TO_CHAR, ANSI_WHITE_BOLD);
+        act("$N refuses to enter $ group the size of $n's!", true, caster, nullptr,
           victim, TO_ROOM, ANSI_WHITE_BOLD);
-        return TRUE;
+        return true;
       }
       if (victim->circleFollow(caster)) {
         caster->sendTo(
           "Umm, you probably don't want to follow each other around in "
           "circles.\n\r");
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_ENLIVEN:
     case SPELL_CLARITY:  // shaman
     case SPELL_SILENCE:
@@ -1415,59 +1415,59 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_INTIMIDATE:  // shaman
     case SPELL_FEAR:
     case SPELL_FUMBLE:
-      return FALSE;
+      return false;
       // disc_alchemy
     case SPELL_EYES_OF_FERTUMAN:
       if (caster->affectedBySpell(SPELL_BLINDNESS)) {
-        act("How do you expect to see while you are blind?", FALSE, caster,
-          NULL, NULL, TO_CHAR);
-        return TRUE;
+        act("How do you expect to see while you are blind?", false, caster,
+          nullptr, nullptr, TO_CHAR);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_FARLOOK:
       if (caster->affectedBySpell(SPELL_BLINDNESS)) {
-        act("How do you expect to see while you are blind.", TRUE, caster, 0, 0,
+        act("How do you expect to see while you are blind.", true, caster, 0, 0,
           TO_CHAR);
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_HYPNOSIS:
       if (victim == caster) {
         sprintf(buf, "You refuse...and for obvious reasons...");
-        act(buf, FALSE, caster, NULL, NULL, TO_CHAR);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+        act(buf, false, caster, nullptr, nullptr, TO_CHAR);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        return true;
       }
       if (caster->isAffected(AFF_CHARM)) {
         sprintf(buf,
           "You can't hypnotize $N while you're under the same affects!");
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        return TRUE;
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
+        return true;
       }
       if (victim->isAffected(AFF_CHARM)) {
         again = (victim->master == caster);
         sprintf(buf, "You can't hypnotize $N%s while $E's busy following %s!",
           (again ? " again" : ""), (again ? "you already" : "somebody else"));
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-        return TRUE;
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
+        return true;
       }
       if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-        act("$N refuses to enter a group the size of yours!", TRUE, caster,
-          NULL, victim, TO_CHAR, ANSI_RED_BOLD);
-        act("$N refuses to enter $ group the size of $n's!", TRUE, caster, NULL,
+        act("$N refuses to enter a group the size of yours!", true, caster,
+          nullptr, victim, TO_CHAR, ANSI_RED_BOLD);
+        act("$N refuses to enter $ group the size of $n's!", true, caster, nullptr,
           victim, TO_ROOM, ANSI_RED_BOLD);
-        return TRUE;
+        return true;
       }
       if (victim->circleFollow(caster)) {
         caster->sendTo(
           "Umm, you probably don't want to follow each other around in "
           "circles.\n\r");
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-        return TRUE;
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_SHADOW_WALK:  // shaman
     case SPELL_CHRISM:       // shaman
     case SPELL_INVISIBILITY:
@@ -1485,7 +1485,7 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_ILLUMINATE:
     case SPELL_IDENTIFY:
     case SPELL_DIVINATION:
-      return FALSE;
+      return false;
       // disc_sorcery
     case SPELL_MYSTIC_DARTS:
     case SPELL_BLAST_OF_FURY:
@@ -1518,35 +1518,35 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_PROTECTION_FROM_ELEMENTS:
     case SPELL_STUNNING_ARROW:
     case SPELL_SOUL_TWIST:  // shaman
-      return FALSE;
+      return false;
 
       // disc_nature
     case SKILL_BARKSKIN:
     case SKILL_TRANSFORM_LIMB:
-      return FALSE;
+      return false;
 
       // disc_fire
     case SPELL_HANDS_OF_FLAME:
       if (!caster->hasHands() || caster->eitherHandHurt()) {
-        act("You cannot continue to cast this spell without hands.", TRUE,
+        act("You cannot continue to cast this spell without hands.", true,
           caster, 0, 0, TO_CHAR);
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_FAERIE_FIRE:
       if (victim->affectedBySpell(SPELL_FAERIE_FIRE)) {
-        act("You sense that $N is already affected by the spell!", FALSE, this,
-          NULL, victim, TO_CHAR);
-        return TRUE;
+        act("You sense that $N is already affected by the spell!", false, this,
+          nullptr, victim, TO_CHAR);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_STUPIDITY:
       if (victim->affectedBySpell(SPELL_STUPIDITY)) {
-        act("You sense that $N is already stupid!", FALSE, this, NULL, victim,
+        act("You sense that $N is already stupid!", false, this, nullptr, victim,
           TO_CHAR);
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_FLAMING_SWORD:
     case SPELL_INFERNO:
     case SPELL_HELLFIRE:
@@ -1554,24 +1554,24 @@ int TBeing::checkBadSpellCondition(TBeing* caster, int which) {
     case SPELL_CONJURE_FIRE:
     case SPELL_FLARE:
     case SPELL_PROTECTION_FROM_FIRE:
-      return FALSE;
+      return false;
     case SPELL_FLAMING_FLESH:
       if (victim->affectedBySpell(SPELL_STONE_SKIN)) {
-        act("$N's skin is already defended by elementals of earth.", FALSE,
-          caster, NULL, victim, TO_CHAR);
-        return TRUE;
+        act("$N's skin is already defended by elementals of earth.", false,
+          caster, nullptr, victim, TO_CHAR);
+        return true;
       }
-      return FALSE;
+      return false;
     case SPELL_INFRAVISION:
       if (victim->isAffected(AFF_BLIND)) {
-        act("Infravision can't work on the blind.", FALSE, caster, 0, victim,
+        act("Infravision can't work on the blind.", false, caster, 0, victim,
           TO_CHAR);
         return SPELL_FALSE;
       }
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS
@@ -1583,9 +1583,9 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
   TThing* t;
   int ok;
   int rc = 0;
-  int retCode = FALSE;
+  int retCode = false;
   if (!caster->spelltask)
-    return FALSE;
+    return false;
 
   orgArg = caster->spelltask->orig_arg;
 
@@ -1593,7 +1593,7 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
     vlogf(LOG_BUG,
       format("doSpellCast called with null discArray[] (%d) (%s)") % which %
         getName());
-    return FALSE;
+    return false;
   }
 
   if (getPosition() < discArray[which]->minPosition) {
@@ -1601,32 +1601,32 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       case POSITION_SLEEPING:
         sendTo("You can't do that while sleeping.\n\r");
         stopCast(STOP_CAST_GENERIC);
-        return FALSE;
+        return false;
       case POSITION_CRAWLING:
         sendTo("You can't do that while crawling.\n\r");
         stopCast(STOP_CAST_GENERIC);
-        return FALSE;
+        return false;
       default:
         break;
     }
   }
 
-  ok = FALSE;
-  //   o = NULL;
+  ok = false;
+  //   o = nullptr;
 
   if (spellstore.storing && spelltask) {
     spellstore.spelltask = spelltask;
-    spelltask = NULL;
+    spelltask = nullptr;
     spellstore.storing = false;
-    act("Your spell has been successfully stored.", TRUE, this, NULL, NULL,
+    act("Your spell has been successfully stored.", true, this, nullptr, nullptr,
       TO_CHAR, ANSI_BLUE);
-    return TRUE;
+    return true;
   }
 
   if ((discArray[which]->targets & TAR_VIOLENT) &&
       checkPeaceful("Violent disciplines are not allowed here!\n\r")) {
     stopCast(STOP_CAST_GENERIC);
-    return FALSE;
+    return false;
   }
 
   if (IS_SET(discArray[which]->targets, TAR_CHAR_ROOM) &&
@@ -1634,51 +1634,51 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
     if (!victim) {
       vlogf(LOG_BUG, "No victim where there should be in doSpellCast");
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     }
     if (victim->isPlayerAction(PLR_SOLOQUEST) && (victim != this) &&
         !isImmortal() && isPc()) {
       if (styp == SPELL_PRAYER) {
-        act("$N is on a quest, you can't invoke prayers on $M!", FALSE, this,
-          NULL, victim, TO_CHAR);
+        act("$N is on a quest, you can't invoke prayers on $M!", false, this,
+          nullptr, victim, TO_CHAR);
       } else if (styp == SPELL_CASTER) {
-        act("$N is on a quest, you can't cast spells on $M!", FALSE, this, NULL,
+        act("$N is on a quest, you can't cast spells on $M!", false, this, nullptr,
           victim, TO_CHAR);
       } else if (styp == SPELL_DANCER) {
-        act("$N is on a quest, you can't invoke on $M!", FALSE, this, NULL,
+        act("$N is on a quest, you can't invoke on $M!", false, this, nullptr,
           victim, TO_CHAR);
       }
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     }
     if (victim->isPlayerAction(PLR_GRPQUEST) && (victim != this) &&
         !isImmortal() && isPc() && !isPlayerAction(PLR_GRPQUEST)) {
       if (styp == SPELL_PRAYER) {
-        act("$N is on a group quest you aren't on!  No prayers allowed!", FALSE,
-          this, NULL, victim, TO_CHAR);
+        act("$N is on a group quest you aren't on!  No prayers allowed!", false,
+          this, nullptr, victim, TO_CHAR);
       } else if (styp == SPELL_CASTER) {
-        act("$N is on a group quest you aren't on! No spells allowed!", FALSE,
-          this, NULL, victim, TO_CHAR);
+        act("$N is on a group quest you aren't on! No spells allowed!", false,
+          this, nullptr, victim, TO_CHAR);
       } else if (styp == SPELL_DANCER) {
         act("$N is on a group quest you aren't on! No invokation allowed!",
-          FALSE, this, NULL, victim, TO_CHAR);
+          false, this, nullptr, victim, TO_CHAR);
       }
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     }
     if ((discArray[which]->targets & TAR_VIOLENT) && noHarmCheck(victim)) {
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     }
 
-    ok = TRUE;
+    ok = true;
   }
   if (!ok && (spelltask->target == 1) &&
       (discArray[which]->targets & TAR_CHAR_WORLD)) {
     if (!victim) {
       vlogf(LOG_BUG, "No victim where there should be in doSpellCast");
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     }
     if (canSee(victim) || canSee(victim, INFRA_YES) || (this == victim) ||
         (GetMaxLevel() > victim->getInvisLevel())) {
@@ -1687,66 +1687,66 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       if (victim && victim->isPlayerAction(PLR_SOLOQUEST) && (victim != this) &&
           !isImmortal() && isPc()) {
         if (styp == SPELL_PRAYER)
-          act("$N is on a quest, you can't invoke prayers on $M!", FALSE, this,
-            NULL, victim, TO_CHAR);
+          act("$N is on a quest, you can't invoke prayers on $M!", false, this,
+            nullptr, victim, TO_CHAR);
         else if (styp == SPELL_CASTER)
-          act("$N is on a quest, you can't cast spells on $M!", FALSE, this,
-            NULL, victim, TO_CHAR);
+          act("$N is on a quest, you can't cast spells on $M!", false, this,
+            nullptr, victim, TO_CHAR);
         else if (styp == SPELL_DANCER)
-          act("$N is on a quest, you can't invoke upon $M!", FALSE, this, NULL,
+          act("$N is on a quest, you can't invoke upon $M!", false, this, nullptr,
             victim, TO_CHAR);
         stopCast(STOP_CAST_GENERIC);
-        return FALSE;
+        return false;
       }
       if ((discArray[which]->targets & TAR_VIOLENT) && victim &&
           noHarmCheck(victim)) {
         stopCast(STOP_CAST_GENERIC);
-        return FALSE;
+        return false;
       }
 
       if (victim && victim->isPlayerAction(PLR_GRPQUEST) && (victim != this) &&
           !isImmortal() && isPc() && !isPlayerAction(PLR_GRPQUEST)) {
         if (styp == SPELL_PRAYER) {
           act("$N is on a group quest you aren't on!  No prayers allowed!",
-            FALSE, this, NULL, victim, TO_CHAR);
+            false, this, nullptr, victim, TO_CHAR);
         } else if (styp == SPELL_CASTER) {
-          act("$N is on a group quest you aren't on! No spells allowed!", FALSE,
-            this, NULL, victim, TO_CHAR);
+          act("$N is on a group quest you aren't on! No spells allowed!", false,
+            this, nullptr, victim, TO_CHAR);
         } else if (styp == SPELL_DANCER) {
           act("$N is on a group quest you aren't on! No invokations allowed!",
-            FALSE, this, NULL, victim, TO_CHAR);
+            false, this, nullptr, victim, TO_CHAR);
         }
         stopCast(STOP_CAST_GENERIC);
-        return FALSE;
+        return false;
       }
-      ok = TRUE;
+      ok = true;
     }
   }
   if (!ok && victim && !(spelltask->flags & CASTFLAG_SEE_VICT))
-    ok = TRUE;
+    ok = true;
 
   if (o) {
     if (!ok && (discArray[which]->targets & TAR_OBJ_INV)) {
       if (canSee(o) && o->thingHolding() == this) {
-        ok = TRUE;
+        ok = true;
       }
     }
 
     if (!ok && (discArray[which]->targets & TAR_OBJ_ROOM)) {
       if (canSee(o) && ((o->roomp == roomp) || (o->thingHolding() == this))) {
-        ok = TRUE;
+        ok = true;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_WORLD)) {
       if (canSee(o))
-        ok = TRUE;
+        ok = true;
     }
 
     if (!ok && (discArray[which]->targets & TAR_OBJ_EQUIP)) {
       for (int i = MIN_WEAR; i < MAX_WEAR && !ok; i++) {
         if ((t = equipment[i]) && t == o) {
           if (canSee(o))
-            ok = TRUE;
+            ok = true;
         }
       }
     }
@@ -1754,10 +1754,10 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
 
   if (!ok && (discArray[which]->targets & TAR_SELF_ONLY)) {
     victim = this;
-    ok = TRUE;
+    ok = true;
   }
   if (!ok && (discArray[which]->targets & TAR_NAME))
-    ok = TRUE;
+    ok = true;
 
   if (victim) {
     if (dynamic_cast<TMonster*>(victim)) {
@@ -1770,31 +1770,31 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
           sendTo("Invoke on an immortal being?!?! Don't be a moron!!\n\r");
         }
         stopCast(STOP_CAST_GENERIC);
-        return FALSE;
+        return false;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_IGNORE))
-      ok = TRUE;
+      ok = true;
   } else {
     if ((discArray[which]->targets & TAR_FIGHT_SELF)) {
       if (fight() && sameRoom(*fight())) {
         victim = this;
-        ok = TRUE;
+        ok = true;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_FIGHT_VICT)) {
       if (fight() && sameRoom(*fight())) {
         victim = fight();
-        ok = TRUE;
+        ok = true;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_SELF_ONLY)) {
       victim = this;
-      ok = TRUE;
+      ok = true;
     }
     if (!ok && (discArray[which]->targets & TAR_IGNORE)) {
       victim = this;
-      ok = TRUE;
+      ok = true;
     }
   }
   if (!ok) {
@@ -1822,7 +1822,7 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       else if (styp == SPELL_DANCER)
         sendTo("You cannot invoke this upon yourself.\n\r");
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     } else if ((victim != this) &&
                (discArray[which]->targets & TAR_SELF_ONLY)) {
       if (styp == SPELL_PRAYER)
@@ -1832,14 +1832,14 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       else if (styp == SPELL_DANCER)
         sendTo("You can only invoke this upon yourself.\n\r");
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     } else if (isAffected(AFF_CHARM) && (master == victim) && !isPc()) {
       sendTo("You are afraid that it could harm your master.\n\r");
       stopCast(STOP_CAST_GENERIC);
-      return FALSE;
+      return false;
     }
     stopCast(STOP_CAST_GENERIC);
-    return FALSE;
+    return false;
   }
   if (isPc() && canSpeak()) {
     if ((discArray[which]->minMana) && (getWizardryLevel() < WIZ_LEV_NO_MANTRA))
@@ -1871,11 +1871,11 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
 // COSMO MARKER: Mana..Piety taken through here ...have to change useMana too
   if (isPc()) {
     if (discArray[which]->minMana)
-      reconcileMana(which, FALSE);
+      reconcileMana(which, false);
     else if (discArray[which]->minLifeforce)
-      reconcileLifeforce(which, FALSE);
+      reconcileLifeforce(which, false);
     else
-      reconcilePiety(which, FALSE);
+      reconcilePiety(which, false);
   }
 #endif
   your_deity_val = which;
@@ -2054,19 +2054,19 @@ int TBeing::doSpellCast(TBeing* caster, TBeing* victim, TObj* o, TRoom* room,
       if (!o) {
         rc = castAquaticBlast(this, victim);
       } else
-        vlogf(LOG_BUG, "SPELL_AQUATIC_BLAST called with NULL obj");
+        vlogf(LOG_BUG, "SPELL_AQUATIC_BLAST called with nullptr obj");
       break;
     case SPELL_STORMY_SKIES:
       if (!o) {
         rc = castStormySkies(this, victim);
       } else
-        vlogf(LOG_BUG, "SPELL_STORMY_SKIES called with NULL obj");
+        vlogf(LOG_BUG, "SPELL_STORMY_SKIES called with nullptr obj");
       break;
     case SPELL_CARDIAC_STRESS:
       if (!o) {
         rc = castCardiacStress(this, victim);
       } else
-        vlogf(LOG_BUG, "SPELL_CARDIAC_STRESS [coronary] called with NULL obj");
+        vlogf(LOG_BUG, "SPELL_CARDIAC_STRESS [coronary] called with nullptr obj");
       break;
     case SPELL_PROTECTION_FROM_EARTH:
       if (!o) {
@@ -2648,7 +2648,7 @@ int TBeing::applyCompCheck(spellNumT spell, int round, int status) {
   int roll = 0;
 
   if (spelltask->component)
-    return TRUE;
+    return true;
 
   // status is not used as of now
   if (status) {}
@@ -2659,7 +2659,7 @@ int TBeing::applyCompCheck(spellNumT spell, int round, int status) {
   if (!IS_SET(discArray[spell]->comp_types, COMP_MATERIAL))
     use = 0;
   else if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL_INIT)) {
-    return TRUE;
+    return true;
   } else if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL_END))
     use = 2;
   else if (IS_SET(discArray[spell]->comp_types, COMP_MATERIAL_ALWAYS))
@@ -2673,10 +2673,10 @@ int TBeing::applyCompCheck(spellNumT spell, int round, int status) {
 
   // No component needed
   if (!use)
-    return TRUE;
+    return true;
 
   if (!useComponent(findComponent(spell), spelltask->victim, CHECK_ONLY_YES))
-    return FALSE;
+    return false;
 
   // see if the spell array wants the component or symbol used each round
   // or this round
@@ -2684,14 +2684,14 @@ int TBeing::applyCompCheck(spellNumT spell, int round, int status) {
   // round, 4 if random internal round, 5 is next to last
   switch (use) {
     case 0:
-      return TRUE;
+      return true;
     case 1:
       //      if (status)
-      //        return TRUE;
+      //        return true;
       //      break;
     case 2:
       if (round)
-        return TRUE;
+        return true;
       break;
     case 3:
       break;
@@ -2699,21 +2699,21 @@ int TBeing::applyCompCheck(spellNumT spell, int round, int status) {
       if ((round = 0))
         break;
       if (roll)
-        return TRUE;
+        return true;
       break;
     case 5:
       if (!(round == 1))
-        return TRUE;
+        return true;
       break;
     default:
       vlogf(LOG_BUG, format("Bad case in applyCompCheck (%s)") % getName());
-      return FALSE;
+      return false;
   }
 
   if (!doComponentUse(spell, this))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::checkHolySymbol(spellNumT spell) {
@@ -2721,11 +2721,11 @@ int TBeing::checkHolySymbol(spellNumT spell) {
   int orig_strength, sym_stress;
 
   if (isImmortal() || !desc)
-    return TRUE;
+    return true;
 
   if (desc && dynamic_cast<TMonster*>(this)) {
     if (desc->original && (desc->original->GetMaxLevel() > MAX_MORT))
-      return FALSE;
+      return false;
   }
 
   // TThing *primary = heldInPrimHand();
@@ -2737,24 +2737,24 @@ int TBeing::checkHolySymbol(spellNumT spell) {
 
 #if 0
   if (!desc) {
-    return TRUE;
+    return true;
   }
 #endif
 
   if (isPc()) {
     holy = findHolySym(SILENT_YES);
     if (!holy)
-      return FALSE;
+      return false;
 
     // int curr_strength = holy->getSymbolCurStrength();
     orig_strength = holy->getSymbolMaxStrength();
     if (sym_stress >= orig_strength)
-      return FALSE;
+      return false;
     else
-      return TRUE;
+      return true;
   }
   // doesn't require holy symbol
-  return TRUE;
+  return true;
 }
 
 void TBeing::sendFinalCastingMessages(bool limbs, bool silence,
@@ -2768,46 +2768,46 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence,
       default:
         if (typ == SPELL_CASTER) {
           act("With a flourish, you draw the final line of the magic pattern.",
-            TRUE, this, NULL, NULL, TO_CHAR, ANSI_CYAN);
-          act("$n makes a final gesture and completes the magic pattern.", TRUE,
-            this, NULL, NULL, TO_ROOM, ANSI_CYAN);
+            true, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
+          act("$n makes a final gesture and completes the magic pattern.", true,
+            this, nullptr, nullptr, TO_ROOM, ANSI_CYAN);
         } else if (typ == SPELL_DANCER) {
           act(
             "You hold your hands up high and call upon your ancestors for "
             "power.",
-            FALSE, this, NULL, NULL, TO_CHAR, ANSI_YELLOW);
+            false, this, nullptr, nullptr, TO_CHAR, ANSI_YELLOW);
           act(
             "$n holds $s hands up high and cries out to $s ancestors for "
             "power.",
-            TRUE, this, NULL, NULL, TO_ROOM, ANSI_YELLOW);
+            true, this, nullptr, nullptr, TO_ROOM, ANSI_YELLOW);
         } else if (typ == SPELL_PRAYER) {
           if (isPc()) {
-            act("You raise your glowing symbol strongly to the heavens.", FALSE,
-              this, NULL, NULL, TO_CHAR, ANSI_GREEN);
+            act("You raise your glowing symbol strongly to the heavens.", false,
+              this, nullptr, nullptr, TO_CHAR, ANSI_GREEN);
             act("$n raises $s glowing symbol strongly towards the heavens.",
-              TRUE, this, NULL, NULL, TO_ROOM, ANSI_GREEN);
+              true, this, nullptr, nullptr, TO_ROOM, ANSI_GREEN);
           } else {
-            act("You look to the heavens for assistance.", FALSE, this, NULL,
-              NULL, TO_CHAR, ANSI_GREEN);
-            act("$n looks to the heavens for assistance.", TRUE, this, NULL,
-              NULL, TO_ROOM, ANSI_GREEN);
+            act("You look to the heavens for assistance.", false, this, nullptr,
+              nullptr, TO_CHAR, ANSI_GREEN);
+            act("$n looks to the heavens for assistance.", true, this, nullptr,
+              nullptr, TO_ROOM, ANSI_GREEN);
           }
         }
         break;
     }
   } else {
     if (typ == SPELL_CASTER) {
-      act("You focus one last time on casting your spell.", FALSE, this, NULL,
-        NULL, TO_CHAR, ANSI_CYAN);
+      act("You focus one last time on casting your spell.", false, this, nullptr,
+        nullptr, TO_CHAR, ANSI_CYAN);
     } else if (typ == SPELL_DANCER) {
-      act("You sing out the last lyric of your rada song.", FALSE, this, NULL,
-        NULL, TO_CHAR, ANSI_YELLOW);
-      act("$n sings out the last lyric of $s rada song.", FALSE, this, NULL,
-        NULL, TO_ROOM, ANSI_YELLOW);
+      act("You sing out the last lyric of your rada song.", false, this, nullptr,
+        nullptr, TO_CHAR, ANSI_YELLOW);
+      act("$n sings out the last lyric of $s rada song.", false, this, nullptr,
+        nullptr, TO_ROOM, ANSI_YELLOW);
     } else if (typ == SPELL_PRAYER) {
-      act("Your symbol glows brightly one last time.", FALSE, this, NULL, NULL,
+      act("Your symbol glows brightly one last time.", false, this, nullptr, nullptr,
         TO_CHAR, ANSI_GREEN);
-      act("$n's symbol glows brightly.", TRUE, this, NULL, NULL, TO_ROOM,
+      act("$n's symbol glows brightly.", true, this, nullptr, nullptr, TO_ROOM,
         ANSI_GREEN);
     }
   }
@@ -2818,45 +2818,45 @@ void TBeing::sendFinalCastingMessages(bool limbs, bool silence,
     switch (roll) {
       default:
         if (typ == SPELL_CASTER) {
-          act("You utter the final words of the incantation.", FALSE, this,
-            NULL, NULL, TO_CHAR, ANSI_CYAN);
-          act("$n's voice cries out as $e utters a last word of power.", TRUE,
-            this, NULL, NULL, TO_ROOM, ANSI_CYAN);
+          act("You utter the final words of the incantation.", false, this,
+            nullptr, nullptr, TO_CHAR, ANSI_CYAN);
+          act("$n's voice cries out as $e utters a last word of power.", true,
+            this, nullptr, nullptr, TO_ROOM, ANSI_CYAN);
         } else if (typ == SPELL_DANCER) {
-          act("$n cries out and is enveloped in a blood red mist.", TRUE, this,
-            NULL, NULL, TO_ROOM, ANSI_YELLOW);
+          act("$n cries out and is enveloped in a blood red mist.", true, this,
+            nullptr, nullptr, TO_ROOM, ANSI_YELLOW);
           act("Crying out, you can feel the power of your ancestors flow.",
-            TRUE, this, NULL, NULL, TO_CHAR, ANSI_YELLOW);
+            true, this, nullptr, nullptr, TO_CHAR, ANSI_YELLOW);
         } else if (typ == SPELL_PRAYER) {
           act("You give thanks as you utter the final word of your prayer.",
-            FALSE, this, NULL, NULL, TO_CHAR, ANSI_GREEN);
-          act("$n utters the final word of $s prayer and then is silent.", TRUE,
-            this, NULL, NULL, TO_ROOM, ANSI_GREEN);
+            false, this, nullptr, nullptr, TO_CHAR, ANSI_GREEN);
+          act("$n utters the final word of $s prayer and then is silent.", true,
+            this, nullptr, nullptr, TO_ROOM, ANSI_GREEN);
         }
         break;
     }
   } else {
     if (typ == SPELL_CASTER) {
-      act("You silently say the final word of power.", TRUE, this, NULL, NULL,
+      act("You silently say the final word of power.", true, this, nullptr, nullptr,
         TO_CHAR, ANSI_CYAN);
     } else if (typ == SPELL_DANCER) {
-      act("You silently chant your rada song.", TRUE, this, NULL, NULL, TO_CHAR,
+      act("You silently chant your rada song.", true, this, nullptr, nullptr, TO_CHAR,
         ANSI_RED);
-      act("$n's eyes roll back into $s head.", TRUE, this, NULL, NULL, TO_ROOM,
+      act("$n's eyes roll back into $s head.", true, this, nullptr, nullptr, TO_ROOM,
         ANSI_RED);
     } else if (typ == SPELL_PRAYER) {
-      act("You dwell silently on the final words of the prayer.", TRUE, this,
-        NULL, NULL, TO_CHAR, ANSI_GREEN);
+      act("You dwell silently on the final words of the prayer.", true, this,
+        nullptr, nullptr, TO_CHAR, ANSI_GREEN);
     }
   }
 }
 
 void TBeing::sendCastingMessages(bool limbs, bool silence, int round,
   skillUseTypeT typ, int counter) {
-  int roll, sendToRoom = TRUE;
+  int roll, sendToRoom = true;
   char buf[255];
   char buf2[255];
-  TThing* temp = NULL;
+  TThing* temp = nullptr;
 
   roll = ::number(0, max(2, 5 - round));
   //  First, do gestures
@@ -2964,11 +2964,11 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round,
       }
     } else {
       if (typ == SPELL_CASTER) {
-        sendToRoom = FALSE;
+        sendToRoom = false;
         sprintf(buf,
           "Your hands are still as you focus on casting your spell.");
       } else if (typ == SPELL_DANCER) {
-        sendToRoom = FALSE;
+        sendToRoom = false;
         sprintf(buf, "Your skin crawls with the power of your rada.");
       } else if (typ == SPELL_PRAYER) {
         sprintf(buf,
@@ -2983,7 +2983,7 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round,
       } else if ((!(::number(0, 1))) &&
                  IS_SET(desc->autobits, AUTO_HALFSPELL)) {
       } else {
-        act(buf, TRUE, this, NULL, NULL, TO_CHAR, ANSI_GREEN);
+        act(buf, true, this, nullptr, nullptr, TO_CHAR, ANSI_GREEN);
       }
     }
     // Then to room
@@ -3002,18 +3002,18 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round,
                    IS_SET(temp->desc->autobits, AUTO_HALFSPELL)) {
           // no text sent
         } else {
-          act(buf2, TRUE, this, NULL, temp, TO_VICT, ANSI_GREEN);
+          act(buf2, true, this, nullptr, temp, TO_VICT, ANSI_GREEN);
         }
       }
     }
-    //      act(buf2, TRUE,this, NULL, NULL, TO_ROOM, ANSI_GREEN);
+    //      act(buf2, true,this, nullptr, nullptr, TO_ROOM, ANSI_GREEN);
   }
 
   roll = ::number(0, max(2, 5 - round));
   //  Next, do verbal
   //  if counter = 2 show all messages, or if roll do verbal time
   if (counter == 2 || roll) {
-    sendToRoom = TRUE;  // reset this to true to make sure to room
+    sendToRoom = true;  // reset this to true to make sure to room
     // determine if the caster will be using verbal or will be relying on wiz
     if (silence) {
       roll = ::number(0, 4);
@@ -3115,7 +3115,7 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round,
           break;
       }
     } else {
-      sendToRoom = FALSE;  // neither of these have a to room
+      sendToRoom = false;  // neither of these have a to room
       if (typ == SPELL_CASTER) {
         sprintf(buf,
           "Your voice is silent as you focus on casting your spell.");
@@ -3132,7 +3132,7 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round,
       } else if ((!(::number(0, 1))) &&
                  IS_SET(desc->autobits, AUTO_HALFSPELL)) {
       } else {
-        act(buf, TRUE, this, NULL, NULL, TO_CHAR, ANSI_GREEN);
+        act(buf, true, this, nullptr, nullptr, TO_CHAR, ANSI_GREEN);
       }
     }
     // Then to room
@@ -3151,11 +3151,11 @@ void TBeing::sendCastingMessages(bool limbs, bool silence, int round,
                    IS_SET(temp->desc->autobits, AUTO_HALFSPELL)) {
           // 50% dont send text
         } else {
-          act(buf2, TRUE, this, NULL, temp, TO_VICT, ANSI_GREEN);
+          act(buf2, true, this, nullptr, temp, TO_VICT, ANSI_GREEN);
         }
       }
     }
-    //      act(buf2, TRUE,this, NULL, NULL, TO_ROOM, ANSI_GREEN);
+    //      act(buf2, true,this, nullptr, nullptr, TO_ROOM, ANSI_GREEN);
   }
 }
 
@@ -3172,9 +3172,9 @@ bool TBeing::castDenyCommand(cmdTypeT cmd) {
     case CMD_SMILE:
     case CMD_SHAKE:
     case CMD_NOD:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -3211,8 +3211,8 @@ bool TBeing::castAllowCommand(cmdTypeT cmd) {
     case CMD_LIST:  // for list faction
     case CMD_ATTACK:
     case CMD_GROUP:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }

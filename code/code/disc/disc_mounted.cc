@@ -31,7 +31,7 @@ int TBeing::advancedRidingBonus(TMonster* mount) {
 
 // Peel
 void TBeing::calmMount(TBeing* m) {
-  TMonster* mount = NULL;
+  TMonster* mount = nullptr;
   int skillTotal = 0, amt;
 
   if (!m || !doesKnowSkill(SKILL_CALM_MOUNT) ||

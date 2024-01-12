@@ -9,8 +9,8 @@
 
 void TBeing::doBrew(const char* arg) {
   sstring buf;
-  TComponent *invalid = NULL, *comp_spell = NULL, *comp_brew = NULL;
-  TPotion* comp_gen = NULL;
+  TComponent *invalid = nullptr, *comp_spell = nullptr, *comp_brew = nullptr;
+  TPotion* comp_gen = nullptr;
   TThing* t;
   spellNumT which_spell = TYPE_UNDEFINED;
   liqTypeT which_liq = LIQ_WATER;
@@ -44,7 +44,7 @@ void TBeing::doBrew(const char* arg) {
       if (!comp_gen) {
         if ((comp_gen = dynamic_cast<TPotion*>(t)) &&
             comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
-          comp_gen = NULL;
+          comp_gen = nullptr;
       }
     }
   }
@@ -54,7 +54,7 @@ void TBeing::doBrew(const char* arg) {
     if (!comp_gen) {
       if ((comp_gen = dynamic_cast<TPotion*>(t)) &&
           comp_gen->getDrinkType() != LIQ_MAGICAL_ELIXIR)
-        comp_gen = NULL;
+        comp_gen = nullptr;
     }
   }
 
@@ -90,43 +90,43 @@ void TBeing::doBrew(const char* arg) {
   int how_many = comp_gen->getDrinkUnits();
 
   if (comp_brew->getComponentCharges() < how_many) {
-    act("You don't have enough charges of $p to brew this potion.", FALSE, this,
+    act("You don't have enough charges of $p to brew this potion.", false, this,
       comp_brew, 0, TO_CHAR);
     return;
   }
   if (comp_spell->getComponentCharges() < how_many) {
-    act("You don't have enough charges of $p to brew this potion.", FALSE, this,
+    act("You don't have enough charges of $p to brew this potion.", false, this,
       comp_spell, 0, TO_CHAR);
     return;
   }
 
   buf = format("You begin to brew %d ounces of %s.") % how_many %
         discArray[which_spell]->name;
-  act(buf, FALSE, this, 0, 0, TO_CHAR);
+  act(buf, false, this, 0, 0, TO_CHAR);
   buf = "$n begins to brew a potion.";
-  act(buf, FALSE, this, 0, 0, TO_ROOM);
+  act(buf, false, this, 0, 0, TO_ROOM);
 
   comp_gen->setDrinkUnits(0);
 
   comp_brew->addToComponentCharges(-how_many);
   if (comp_brew->getComponentCharges() <= 0) {
     buf = "$p is consumed in the process.";
-    act(buf, FALSE, this, comp_brew, 0, TO_CHAR);
+    act(buf, false, this, comp_brew, 0, TO_CHAR);
     delete comp_brew;
-    comp_brew = NULL;
+    comp_brew = nullptr;
   }
 
   buf = format("You use up %i charge%s of $p.") % how_many %
         (how_many > 1 ? "s" : "");
-  act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
+  act(buf, false, this, comp_spell, 0, TO_CHAR);
   comp_spell->addToComponentCharges(-how_many);
   if (comp_spell->getComponentCharges() <= 0) {
     buf = "$p is consumed in the process.";
-    act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
+    act(buf, false, this, comp_spell, 0, TO_CHAR);
     delete comp_spell;
-    comp_spell = NULL;
+    comp_spell = nullptr;
   }
 
-  start_task(this, NULL, NULL, TASK_BREWING, "", 0, in_room, how_many,
+  start_task(this, nullptr, nullptr, TASK_BREWING, "", 0, in_room, how_many,
     which_spell, 0);
 }

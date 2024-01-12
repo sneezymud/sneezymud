@@ -66,7 +66,7 @@ int holdemPlayer(TBeing* ch, cmdTypeT cmd, const char* argument, TMonster* me,
     } else if (arg == "power down") {
       me->doSay("Gambler 2000 powering down!");
       delete static_cast<holdemPlayerInfo*>(me->act_ptr);
-      me->act_ptr = NULL;
+      me->act_ptr = nullptr;
     } else if (arg.find("name ", 0) != sstring::npos) {
       arg = one_argument(arg, buf);
 
@@ -125,8 +125,8 @@ int holdemPlayer(TBeing* ch, cmdTypeT cmd, const char* argument, TMonster* me,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<holdemPlayerInfo*>(me->act_ptr);
-    me->act_ptr = NULL;
-    return FALSE;
+    me->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_QUICK_PULSE || !hpi->enabled)

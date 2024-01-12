@@ -46,7 +46,7 @@ int TBeing::useMana(spellNumT spl) {
   int arrayMana;
   int rounds;
   spl = getSkillNum(spl);
-  discNumT das = getDisciplineNumber(spl, FALSE);
+  discNumT das = getDisciplineNumber(spl, false);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, format("useMana() with bad discipline for spell=%d") % spl);
     return 0;
@@ -72,7 +72,7 @@ int TBeing::useLifeforce(spellNumT spl) {
   int temp;
   int temper;
   spl = getSkillNum(spl);
-  discNumT das = getDisciplineNumber(spl, FALSE);
+  discNumT das = getDisciplineNumber(spl, false);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG,
       format("useLifeforce() with bad discipline for spell=%d") % spl);
@@ -101,7 +101,7 @@ double TBeing::usePiety(spellNumT spl) {
   int rounds;
 
   spl = getSkillNum(spl);
-  discNumT das = getDisciplineNumber(spl, FALSE);
+  discNumT das = getDisciplineNumber(spl, false);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, format("usePiety() with bad discipline for spell=%d") % spl);
     return 0;
@@ -125,9 +125,9 @@ bool TBeing::circleFollow(const TBeing* victim) const {
 
   for (k = victim; k; k = k->master) {
     if (k == this)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::stopFollower(bool remove,
@@ -163,11 +163,11 @@ void TBeing::stopFollower(bool remove,
     REMOVE_BIT(specials.affectedBy, AFF_CHARM | AFF_GROUP);
   }
   if (isAffected(AFF_CHARM)) {
-    act("You realize that $N is a jerk!", FALSE, this, 0, master, TO_CHAR);
+    act("You realize that $N is a jerk!", false, this, 0, master, TO_CHAR);
     if (textLimits == STOP_FOLLOWER_SILENT) {
     } else {
-      act("$n realizes that $N is a jerk!", FALSE, this, 0, master, TO_NOTVICT);
-      act("$n hates your guts!", FALSE, this, 0, master, TO_VICT);
+      act("$n realizes that $N is a jerk!", false, this, 0, master, TO_NOTVICT);
+      act("$n hates your guts!", false, this, 0, master, TO_VICT);
     }
     if (affectedBySpell(SPELL_ENSORCER) && remove)
       affectFrom(SPELL_ENSORCER);
@@ -176,25 +176,25 @@ void TBeing::stopFollower(bool remove,
   } else {
     int levelLimit = (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0);
 
-    act("You stop following $N.", FALSE, this, 0, master, TO_CHAR);
+    act("You stop following $N.", false, this, 0, master, TO_CHAR);
     if (textLimits == STOP_FOLLOWER_SILENT) {
     } else if (textLimits == STOP_FOLLOWER_DEFAULT) {
-      act("$n stops following $N.", FALSE, this, 0, master, TO_NOTVICT, NULL,
+      act("$n stops following $N.", false, this, 0, master, TO_NOTVICT, nullptr,
         levelLimit);
-      act("$n stops following you.", FALSE, this, 0, master, TO_VICT, NULL,
+      act("$n stops following you.", false, this, 0, master, TO_VICT, nullptr,
         levelLimit);
     } else if (textLimits == STOP_FOLLOWER_CHAR_NOTVICT) {
-      act("$n stops following $N.", FALSE, this, 0, master, TO_NOTVICT, NULL,
+      act("$n stops following $N.", false, this, 0, master, TO_NOTVICT, nullptr,
         levelLimit);
     } else if (textLimits == STOP_FOLLOWER_CHAR_VICT) {
-      act("$n stops following you.", FALSE, this, 0, master, TO_VICT, NULL,
+      act("$n stops following you.", false, this, 0, master, TO_VICT, nullptr,
         levelLimit);
     }
   }
   if (!master->followers) {
-    vlogf(LOG_BUG, "master->followers is NULL in stopFollowers");
+    vlogf(LOG_BUG, "master->followers is nullptr in stopFollowers");
     REMOVE_BIT(specials.affectedBy, AFF_CHARM | AFF_GROUP);
-    master = NULL;
+    master = nullptr;
     return;
   }
   if (master->followers->follower == this) {  // Head of follower-list? */
@@ -211,7 +211,7 @@ void TBeing::stopFollower(bool remove,
       delete j;
     }
   }
-  master = NULL;
+  master = nullptr;
   REMOVE_BIT(specials.affectedBy, AFF_CHARM | AFF_GROUP);
 }
 
@@ -220,11 +220,11 @@ void TBeing::dieFollower() {
   followData *j, *k;
 
   if (master)
-    stopFollower(TRUE);
+    stopFollower(true);
 
   for (k = followers; k; k = j) {
     j = k->next;
-    k->follower->stopFollower(TRUE);
+    k->follower->stopFollower(true);
   }
 }
 
@@ -236,7 +236,7 @@ void TBeing::addFollower(TBeing* foll, bool textLimits)  // default argument
     vlogf(LOG_BUG,
       format("add_follower error: this: %s, leader %s, master %s.") %
         foll->getName() % getName() % foll->master->getName());
-    foll->master = NULL;
+    foll->master = nullptr;
   }
   foll->master = this;
 
@@ -254,7 +254,7 @@ void TBeing::addFollower(TBeing* foll, bool textLimits)  // default argument
       k->next = followers;
       followers = k;
     } else {
-      k->next = NULL;
+      k->next = nullptr;
       followIndex->next = k;
     }
   } else {
@@ -264,12 +264,12 @@ void TBeing::addFollower(TBeing* foll, bool textLimits)  // default argument
 
   int levelLimit = (foll->isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0);
 
-  act("You now follow $N.", FALSE, foll, 0, this, TO_CHAR);
+  act("You now follow $N.", false, foll, 0, this, TO_CHAR);
   if (textLimits) {
   } else {
-    act("$n starts following you.", TRUE, foll, 0, this, TO_VICT, NULL,
+    act("$n starts following you.", true, foll, 0, this, TO_VICT, nullptr,
       levelLimit);
-    act("$n now follows $N.", TRUE, foll, 0, this, TO_NOTVICT, NULL,
+    act("$n now follows $N.", true, foll, 0, this, TO_NOTVICT, nullptr,
       levelLimit);
   }
   if (desc && IS_SET(desc->autobits, AUTO_AUTOGROUP)) {
@@ -281,7 +281,7 @@ void TBeing::addFollower(TBeing* foll, bool textLimits)  // default argument
 
 void TBeing::saySpell(spellNumT si) {
   sstring spellWords;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   sstring toLayman;
   sstring toExpert;
 
@@ -364,9 +364,9 @@ void TBeing::saySpell(spellNumT si) {
       continue;
     if (temp_char != this) {
       if (temp_char->doesKnowSkill(si))
-        act(toExpert, FALSE, this, 0, temp_char, TO_VICT);
+        act(toExpert, false, this, 0, temp_char, TO_VICT);
       else
-        act(toLayman, FALSE, this, 0, temp_char, TO_VICT);
+        act(toLayman, false, this, 0, temp_char, TO_VICT);
     }
   }
   updatePos();
@@ -414,7 +414,7 @@ int TBeing::reconcilePiety(spellNumT spl, bool checking) {
   double total;
 
   if (desc && isImmortal())
-    return TRUE;
+    return true;
 
   if (!isImmortal() && !preflight_piety(this, spl)) {
     // this is possible.
@@ -424,10 +424,10 @@ int TBeing::reconcilePiety(spellNumT spl, bool checking) {
     //     consecutive prefligh_piety() tests.") %  getName() %
     //     discArray[spl]->name % spl);
     if (checking)
-      return FALSE;
+      return false;
 
   } else if (checking)
-    return TRUE;
+    return true;
 
   total = usePiety(spl);
 
@@ -444,9 +444,9 @@ int TBeing::reconcilePiety(spellNumT spl, bool checking) {
         "vitality.\n\r");
       addToMove(-moveTotal);
     } else
-      return FALSE;
+      return false;
   }
-  return TRUE;
+  return true;
 }
 
 // if spl == TYPE_UNDEFINED, will use mana
@@ -455,7 +455,7 @@ int TBeing::reconcileMana(spellNumT spl, bool checking, int mana) {
   int mana_to_burn;
 
   if (desc && isImmortal())
-    return TRUE;
+    return true;
 
   if (spl > TYPE_UNDEFINED) {
     if (!isImmortal() && !preflight_mana(this, spl)) {
@@ -466,11 +466,11 @@ int TBeing::reconcileMana(spellNumT spl, bool checking, int mana) {
       //      consecutive preflight_mana() tests.") %  getName() %
       //      discArray[spl]->name % spl);
       if (checking) {
-        return FALSE;
+        return false;
       } else {
       }
     } else if (checking) {
-      return TRUE;
+      return true;
     }
     mana_to_burn = useMana(spl);
   } else {
@@ -490,11 +490,11 @@ int TBeing::reconcileMana(spellNumT spl, bool checking, int mana) {
           "vitality.\n\r");
         addToMove(-mana_to_burn);
       } else {
-        return FALSE;
+        return false;
       }
     }
   }
-  return TRUE;
+  return true;
 }
 
 // LIFEFORCE
@@ -502,16 +502,16 @@ int TBeing::reconcileLifeforce(spellNumT spl, bool checking, int lifeforce) {
   int lifeforce_to_burn;
 
   if (desc && isImmortal())
-    return TRUE;
+    return true;
 
   if (spl > TYPE_UNDEFINED) {
     if (!isImmortal() && !preflight_lifeforce(this, spl)) {
       if (checking) {
-        return FALSE;
+        return false;
       } else {
       }
     } else if (checking) {
-      return TRUE;
+      return true;
     }
     lifeforce_to_burn = useLifeforce(spl);
   } else {
@@ -527,7 +527,7 @@ int TBeing::reconcileLifeforce(spellNumT spl, bool checking, int lifeforce) {
     }
   }
   updatePos();
-  return TRUE;
+  return true;
 }
 // END LIFEFORCE
 
@@ -620,32 +620,32 @@ int TBeing::doPray(const char* argument) {
 
   if (isPc() && GetMaxLevel() > MAX_MORT && !hasWizPower(POWER_NO_LIMITS)) {
     sendTo("You are currently not permitted to cast prayers, sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!hasHands()) {
     sendTo("Sorry, you don't have the right form for that.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!doesKnowSkill(SKILL_DEVOTION) && !hasClass(CLASS_CLERIC) &&
       !hasClass(CLASS_DEIKHAN)) {
     sendTo("You do not have the faith required to pray.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (nomagic("Sorry, your deity refuses to contact you here."))
-    return FALSE;
+    return false;
 
   if (cantHit > 0) {
     sendTo("You're too busy.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (args.empty()) {
     badCastSyntax(this, TYPE_UNDEFINED);
     sendTo("You do NOT need to include ''s around the <prayer name>.\n\r");
-    return FALSE;
+    return false;
   }
 
   auto findSpecialCaseByName = [](const sstring& name) {
@@ -727,7 +727,7 @@ int TBeing::doPray(const char* argument) {
   }
 
   sendTo("No such prayer exists.\n\r");
-  return FALSE;
+  return false;
 }
 
 std::tuple<spellNumT, sstring> TBeing::parseSpellNum(
@@ -789,56 +789,56 @@ std::tuple<spellNumT, sstring> TBeing::parseSpellNum(
 
 int TBeing::preCastCheck() {
   if (!isPc() && !desc)
-    return FALSE;
+    return false;
 
   if (!hasHands()) {
     sendTo("Sorry, you don't have the right form for that.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (isPc() && GetMaxLevel() > MAX_MORT && !hasWizPower(POWER_NO_LIMITS)) {
     sendTo("You are currently not permitted to cast spells, sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!isImmortal() && !hasClass(CLASS_MAGE | CLASS_RANGER | CLASS_SHAMAN)) {
     if (hasClass(CLASS_CLERIC)) {
       sendTo("Clerics can't cast spells, they pray!\n\r");
-      return FALSE;
+      return false;
     } else if (hasClass(CLASS_DEIKHAN)) {
       sendTo("Deikhans can't cast spells, they pray!\n\r");
-      return FALSE;
+      return false;
     } else if (hasClass(CLASS_WARRIOR)) {
       sendTo("Warriors can't cast spells!\n\r");
-      return FALSE;
+      return false;
     } else if (hasClass(CLASS_THIEF)) {
       sendTo("Thieves can't cast spells!\n\r");
-      return FALSE;
+      return false;
     } else if (hasClass(CLASS_MONK)) {
       sendTo("Monks can't cast spells!\n\r");
-      return FALSE;
+      return false;
     }
   }
   if (nomagic("Sorry, you can't do that in this area."))
-    return FALSE;
+    return false;
 
   if (cantHit > 0) {
     sendTo("You're too busy.\n\r");
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_THIS
 int TBeing::doCast(const char* argument) {
   if (!preCastCheck())
-    return FALSE;
+    return false;
 
   auto [spell, target] = parseSpellNum(argument);
   if (spell != TYPE_UNDEFINED)
     return doDiscipline(spell, target);
 
-  return FALSE;
+  return false;
 }
 
 // finds the target indicated in n, for spell which and sets ret to it
@@ -848,9 +848,9 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
   TThing* t;
   bool ok;
 
-  ok = FALSE;
-  ch = NULL;
-  o = NULL;
+  ok = false;
+  ch = nullptr;
+  o = nullptr;
   bool cast = ((getSpellType(discArray[which]->typ) == SPELL_CASTER) ||
                (getSpellType(discArray[which]->typ) == SPELL_DANCER));
 
@@ -865,28 +865,28 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
         if (ch->isPlayerAction(PLR_SOLOQUEST) && (ch != this) &&
             !isImmortal() && isPc()) {
           if (!cast) {
-            act("$N is on a quest, you can't invoke prayers on $M!", FALSE,
-              this, NULL, ch, TO_CHAR);
+            act("$N is on a quest, you can't invoke prayers on $M!", false,
+              this, nullptr, ch, TO_CHAR);
           } else {
-            act("$N is on a quest, you can't cast spells on $M!", FALSE, this,
-              NULL, ch, TO_CHAR);
+            act("$N is on a quest, you can't cast spells on $M!", false, this,
+              nullptr, ch, TO_CHAR);
           }
-          return FALSE;
+          return false;
         }
         if (ch->isPlayerAction(PLR_GRPQUEST) && (ch != this) && !isImmortal() &&
             isPc() && !isPlayerAction(PLR_GRPQUEST)) {
           if (!cast)
             act("$N is on a group quest you aren't on!  No prayers allowed!",
-              FALSE, this, NULL, ch, TO_CHAR);
+              false, this, nullptr, ch, TO_CHAR);
           else
             act("$N is on a group quest you aren't on! No spells allowed!",
-              FALSE, this, NULL, ch, TO_CHAR);
-          return FALSE;
+              false, this, nullptr, ch, TO_CHAR);
+          return false;
         }
         if ((discArray[which]->targets & TAR_VIOLENT) && noHarmCheck(ch))
-          return FALSE;
+          return false;
 
-        ok = TRUE;
+        ok = true;
       }
     }
     if ((!ok && (discArray[which]->targets & TAR_CHAR_VIS_WORLD)) ||
@@ -898,35 +898,35 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
         if (ch->isPlayerAction(PLR_SOLOQUEST) && (ch != this) &&
             !isImmortal() && isPc()) {
           if (!cast)
-            act("$N is on a quest, you can't invoke prayers on $M!", FALSE,
-              this, NULL, ch, TO_CHAR);
+            act("$N is on a quest, you can't invoke prayers on $M!", false,
+              this, nullptr, ch, TO_CHAR);
           else
-            act("$N is on a quest, you can't cast spells on $M!", FALSE, this,
-              NULL, ch, TO_CHAR);
-          return FALSE;
+            act("$N is on a quest, you can't cast spells on $M!", false, this,
+              nullptr, ch, TO_CHAR);
+          return false;
         }
         if ((discArray[which]->targets & TAR_VIOLENT) && noHarmCheck(ch))
-          return FALSE;
+          return false;
 
         if (ch->isPlayerAction(PLR_GRPQUEST) && (ch != this) && !isImmortal() &&
             isPc() && !isPlayerAction(PLR_GRPQUEST)) {
           if (!cast)
             act("$N is on a group quest you aren't on!  No prayers allowed!",
-              FALSE, this, NULL, ch, TO_CHAR);
+              false, this, nullptr, ch, TO_CHAR);
           else
             act("$N is on a group quest you aren't on! No spells allowed!",
-              FALSE, this, NULL, ch, TO_CHAR);
-          return FALSE;
+              false, this, nullptr, ch, TO_CHAR);
+          return false;
         }
-        ok = TRUE;
+        ok = true;
       }
       if (discArray[which]->targets & TAR_CHAR_VIS_WORLD) {
-        if (!ok && (ch = get_char_vis(this, n, NULL))) {
-          ok = TRUE;
+        if (!ok && (ch = get_char_vis(this, n, nullptr))) {
+          ok = true;
         }
       } else {
         if (!ok && (ch = get_char(n, EXACT_NO))) {
-          ok = TRUE;
+          ok = true;
         }
       }
     }
@@ -934,34 +934,34 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
     if (!ok && (discArray[which]->targets & TAR_OBJ_INV)) {
       if ((o = dynamic_cast<TObj*>(
              searchLinkedListVis(this, n, stuff, &dummy, TYPEOBJ)))) {
-        ok = TRUE;
+        ok = true;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_ROOM)) {
       if ((o = dynamic_cast<TObj*>(
              searchLinkedListVis(this, n, roomp->stuff, &dummy, TYPEOBJ))))
-        ok = TRUE;
+        ok = true;
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_WORLD)) {
-      if ((o = get_obj_vis(ch, name.c_str(), NULL, EXACT_NO)))
-        ok = TRUE;
+      if ((o = get_obj_vis(ch, name.c_str(), nullptr, EXACT_NO)))
+        ok = true;
     }
     if (!ok && (discArray[which]->targets & TAR_OBJ_EQUIP)) {
       for (int i = MIN_WEAR; i < MAX_WEAR && !ok; i++) {
         if ((t = equipment[i]) && is_abbrev(n, t->getName()) &&
             (o = dynamic_cast<TObj*>(t))) {
-          ok = TRUE;
+          ok = true;
         }
       }
     }
     if (!ok && (discArray[which]->targets & TAR_SELF_ONLY)) {
       if (boost::iequals(getName(), n)) {
         ch = this;
-        ok = TRUE;
+        ok = true;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_NAME))
-      ok = TRUE;
+      ok = true;
 
     if (ch && dynamic_cast<TMonster*>(ch)) {
       if ((ch->specials.act & ACT_IMMORTAL)) {
@@ -969,11 +969,11 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
           sendTo("Invoke a prayer on an immortal being?!?! Never!!\n\r");
         else
           sendTo("Cast magic on an immortal being?!?! Never!!\n\r");
-        return FALSE;
+        return false;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_IGNORE))
-      ok = TRUE;
+      ok = true;
   } else {
     if ((discArray[which]->targets & TAR_FIGHT_SELF)) {
       // if in a fight, cast this on caster
@@ -981,21 +981,21 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
       // just to be nice, if not in fight (and no args), also cast on caster
       // somewhat silly, because the above is the same as TAR_IGNORE
       ch = this;
-      ok = TRUE;
+      ok = true;
     }
     if (!ok && (discArray[which]->targets & TAR_FIGHT_VICT)) {
       if (fight() && sameRoom(*fight())) {
         ch = fight();
-        ok = TRUE;
+        ok = true;
       }
     }
     if (!ok && (discArray[which]->targets & TAR_SELF_ONLY)) {
       ch = this;
-      ok = TRUE;
+      ok = true;
     }
     if (!ok && (discArray[which]->targets & TAR_IGNORE)) {
       ch = this;
-      ok = TRUE;
+      ok = true;
     }
   }
 
@@ -1019,7 +1019,7 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
     } else {
       badCastSyntax(this, which);
     }
-    return FALSE;
+    return false;
 
   } else {
     if ((ch == this) && (discArray[which]->targets & TAR_SELF_NONO)) {
@@ -1027,17 +1027,17 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
         sendTo("You cannot invoke this prayer upon yourself.\n\r");
       else
         sendTo("You cannot cast this spell upon yourself.\n\r");
-      return FALSE;
+      return false;
     } else if ((ch != this) && (discArray[which]->targets & TAR_SELF_ONLY)) {
       if (!cast)
         sendTo("You can only invoke this prayer upon yourself.\n\r");
       else
         sendTo("You can only cast this spell upon yourself.\n\r");
 
-      return FALSE;
+      return false;
     } else if (isAffected(AFF_CHARM) && (master == ch)) {
       sendTo("You are afraid that it could harm your master.\n\r");
-      return FALSE;
+      return false;
     }
   }
 
@@ -1046,17 +1046,17 @@ int TBeing::parseTarget(spellNumT which, char* n, TThing** ret) {
   else if (o)
     *ret = (TThing*)o;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::preDiscCheck(spellNumT which) {
   if (isCombatMode(ATTACK_BERSERK)) {
     sendTo("You can't do that while berserking!\n\r");
-    return FALSE;
+    return false;
   }
   if ((discArray[which]->minPosition >= POSITION_CRAWLING) && fight()) {
     sendTo("You can't concentrate enough while fighting!\n\r");
-    return FALSE;
+    return false;
   } else if (getPosition() < discArray[which]->minPosition) {
     switch (getPosition()) {
       case POSITION_SLEEPING:
@@ -1075,32 +1075,32 @@ int TBeing::preDiscCheck(spellNumT which) {
         sendTo("You can't do that while unconscious.\n\r");
         break;
     }
-    return FALSE;
+    return false;
   }
 
   if ((discArray[which]->targets & TAR_VIOLENT) &&
       checkPeaceful("Violent disciplines are not allowed here!\n\r"))
-    return FALSE;
+    return false;
 
   if (isPc() && !isImmortal()) {
     if (discArray[which]->minMana) {
       if (!preflight_mana(this, which)) {
         sendTo("You can't summon enough energy to cast the spell.\n\r");
-        return FALSE;
+        return false;
       }
     } else if (discArray[which]->minLifeforce) {
       if (!preflight_lifeforce(this, which)) {
         sendTo("You don't have enough lifeforce to perform the ritual.\n\r");
-        return FALSE;
+        return false;
       }
     } else {
       if (!preflight_piety(this, which)) {
         sendTo("You lack the piety to pray to your deity for that.\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
-  return TRUE;
+  return true;
 }
 
 namespace {
@@ -1726,9 +1726,9 @@ namespace {
 
 // returns DELETE_THIS
 int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
-  TObj* o = NULL;
-  TThing* t = NULL;
-  TBeing* ch = NULL;
+  TObj* o = nullptr;
+  TThing* t = nullptr;
+  TBeing* ch = nullptr;
   int rc = 0;
   char arg[256];
   const char* n = n1.c_str();
@@ -1736,7 +1736,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
   auto it = spellNumToName.find(which);
   if (it == spellNumToName.end()) {
     vlogf(LOG_BUG, format("doDiscipline called with bad spellNumT %d") % which);
-    return FALSE;
+    return false;
   }
 
   if (n1.empty())
@@ -1750,18 +1750,18 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     vlogf(LOG_BUG,
       format("doDiscipline called with null discArray[] (%d) (%s)") % which %
         getName());
-    return FALSE;
+    return false;
   }
   if (which <= TYPE_UNDEFINED)
-    return FALSE;
+    return false;
 
   if (!preDiscCheck(which))
-    return FALSE;
+    return false;
 
   strncpy(arg, n, cElements(arg) - 1);
   arg[cElements(arg) - 1] = '\0';
   if (!parseTarget(which, arg, &t))
-    return FALSE;
+    return false;
 
   ch = dynamic_cast<TBeing*>(t);
   o = dynamic_cast<TObj*>(t);
@@ -1792,18 +1792,18 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
   // COSMO MARKER: Mana..Piety checked here ...have to change useMana too
   if (isPc()) {
     if (discArray[which]->minMana) {
-      if (!reconcileMana(which, TRUE))
-        return FALSE;
+      if (!reconcileMana(which, true))
+        return false;
     } else if (discArray[which]->minLifeforce) {
-      if (!reconcileLifeforce(which, TRUE))
-        return FALSE;
+      if (!reconcileLifeforce(which, true))
+        return false;
     } else {
-      if (!reconcilePiety(which, TRUE))
-        return FALSE;
+      if (!reconcilePiety(which, true))
+        return false;
     }
   }
   your_deity_val = which;
-  inPraying = TRUE;
+  inPraying = true;
 
   switch (which) {
     case SPELL_GUST:
@@ -2490,7 +2490,7 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
 
     default:
       sendTo("Spell or discipline not yet implemented!\n\r");
-      return FALSE;
+      return false;
   }
 
   // COSMO MARKER: Mana..Piety taken through here ...have to change useMana too
@@ -2499,11 +2499,11 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
 
   if (isPc()) {
     if (discArray[which]->minMana) {
-      reconcileMana(which, FALSE);
+      reconcileMana(which, false);
     } else if (discArray[which]->minLifeforce) {
-      reconcileLifeforce(which, FALSE);
+      reconcileLifeforce(which, false);
     } else {
-      reconcilePiety(which, FALSE);
+      reconcilePiety(which, false);
     }
   }
   // COSMO MARKER: Spell lag added here
@@ -2521,11 +2521,11 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
 
   if (IS_SET_DELETE(rc, DELETE_VICT) && ch != this) {
     delete ch;
-    ch = NULL;
+    ch = nullptr;
   }
   if (o && IS_SET_DELETE(rc, DELETE_ITEM)) {
     delete o;
-    o = NULL;
+    o = nullptr;
   }
   if ((IS_SET_DELETE(rc, DELETE_VICT) && ch == this) ||
       IS_SET_DELETE(rc, DELETE_THIS))
@@ -2547,21 +2547,21 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
           reconcileDamage(victim, 0, which);
           if (!found) {
             if (discArray[which]->minMana) {
-              act("Your enemies sense your offensive magic.", FALSE, this, NULL,
-                NULL, TO_CHAR);
-              act("You sense offensive magic emanating from $n.", FALSE, this,
-                NULL, NULL, TO_ROOM);
+              act("Your enemies sense your offensive magic.", false, this, nullptr,
+                nullptr, TO_CHAR);
+              act("You sense offensive magic emanating from $n.", false, this,
+                nullptr, nullptr, TO_ROOM);
             } else if (discArray[which]->minLifeforce) {
               act(
                 "Your enemies sense your harmful invokation is directed toward "
                 "them.",
-                FALSE, this, NULL, NULL, TO_CHAR);
-              act("You sense evil from $n.", FALSE, this, NULL, NULL, TO_ROOM);
+                false, this, nullptr, nullptr, TO_CHAR);
+              act("You sense evil from $n.", false, this, nullptr, nullptr, TO_ROOM);
             } else {
-              act("Your enemies sense your offensive praying.", FALSE, this,
-                NULL, NULL, TO_CHAR);
-              act("You sense offensive praying emanating from $n.", FALSE, this,
-                NULL, NULL, TO_ROOM);
+              act("Your enemies sense your offensive praying.", false, this,
+                nullptr, nullptr, TO_CHAR);
+              act("You sense offensive praying emanating from $n.", false, this,
+                nullptr, nullptr, TO_ROOM);
             }
           }
           found = true;
@@ -2570,10 +2570,10 @@ int TBeing::doDiscipline(spellNumT which, const sstring& n1) {
     }
   }
   updatePos();
-  // this SHOULD return TRUE - in theory
+  // this SHOULD return true - in theory
   // hope I'm not fucking everything up by making it 'correct'
-  return TRUE;
-  //  return FALSE;
+  return true;
+  //  return false;
 }
 
 void buildWeatherDamMap() {

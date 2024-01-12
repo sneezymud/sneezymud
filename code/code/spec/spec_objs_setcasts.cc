@@ -11,12 +11,12 @@ const int neckItem = 36366;
 
 int doFeralEQCast(TBeing* ch, TObj* o) {
   affectedData aff2;
-  TObj* hand1 = NULL;
-  TObj* wrist1 = NULL;
-  TObj* arm1 = NULL;
-  TObj* hand2 = NULL;
-  TObj* wrist2 = NULL;
-  TObj* arm2 = NULL;
+  TObj* hand1 = nullptr;
+  TObj* wrist1 = nullptr;
+  TObj* arm1 = nullptr;
+  TObj* hand2 = nullptr;
+  TObj* wrist2 = nullptr;
+  TObj* arm2 = nullptr;
 
   if (!o || !(ch = dynamic_cast<TBeing*>(o->equippedBy)))
     return false;
@@ -125,11 +125,11 @@ const int legItem = 36374;
 const int footItem = 36372;
 int doFlyingEQCast(TBeing* ch, TObj* o) {
   affectedData aff2;
-  TObj* girth = NULL;
-  TObj* leg1 = NULL;
-  TObj* leg2 = NULL;
-  TObj* foot1 = NULL;
-  TObj* foot2 = NULL;
+  TObj* girth = nullptr;
+  TObj* leg1 = nullptr;
+  TObj* leg2 = nullptr;
+  TObj* foot1 = nullptr;
+  TObj* foot2 = nullptr;
 
   if (!o || !(ch = dynamic_cast<TBeing*>(o->equippedBy)))
     return false;
@@ -220,9 +220,9 @@ const int backItem = 36375;
 const int headItem = 36365;
 int doACEQCast(TBeing* ch, TObj* o) {
   affectedData aff2;
-  TObj* body = NULL;
-  TObj* back = NULL;
-  TObj* head = NULL;
+  TObj* body = nullptr;
+  TObj* back = nullptr;
+  TObj* head = nullptr;
 
   if (!o || !(ch = dynamic_cast<TBeing*>(o->equippedBy)))
     return false;

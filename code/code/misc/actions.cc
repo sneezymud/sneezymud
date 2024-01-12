@@ -46,14 +46,14 @@ class socialMessg {
     socialMessg() :
       hide(false),
       minPos(POSITION_DEAD),
-      char_no_arg(NULL),
-      others_no_arg(NULL),
-      char_found(NULL),
-      others_found(NULL),
-      vict_found(NULL),
-      not_found(NULL),
-      char_auto(NULL),
-      others_auto(NULL) {}
+      char_no_arg(nullptr),
+      others_no_arg(nullptr),
+      char_found(nullptr),
+      others_found(nullptr),
+      vict_found(nullptr),
+      not_found(nullptr),
+      char_auto(nullptr),
+      others_auto(nullptr) {}
     socialMessg(const socialMessg& a) : hide(a.hide), minPos(a.minPos) {
       char_no_arg = mud_str_dup(a.char_no_arg);
       others_no_arg = mud_str_dup(a.others_no_arg);
@@ -73,14 +73,14 @@ class socialMessg {
       delete[] not_found;
       delete[] char_auto;
       delete[] others_auto;
-      char_no_arg = NULL;
-      others_no_arg = NULL;
-      char_found = NULL;
-      others_found = NULL;
-      vict_found = NULL;
-      not_found = NULL;
-      char_auto = NULL;
-      others_auto = NULL;
+      char_no_arg = nullptr;
+      others_no_arg = nullptr;
+      char_found = nullptr;
+      others_found = nullptr;
+      vict_found = nullptr;
+      not_found = nullptr;
+      char_auto = nullptr;
+      others_auto = nullptr;
     }
     socialMessg& operator=(const socialMessg& a) {
       if (this == &a)
@@ -124,7 +124,7 @@ char* fread_action(FILE* fl) {
     }
 
     if (*buf == '#')
-      return NULL;
+      return nullptr;
     else {
       *(buf + strlen(buf) - 1) = '\0';
       return mud_str_dup(buf);
@@ -167,11 +167,11 @@ void bootSocialMessages(void) {
     sm.char_found = fread_action(fl);
 
     if (!sm.char_found) {
-      sm.others_found = NULL;
-      sm.vict_found = NULL;
-      sm.not_found = NULL;
-      sm.char_auto = NULL;
-      sm.others_auto = NULL;
+      sm.others_found = nullptr;
+      sm.vict_found = nullptr;
+      sm.not_found = nullptr;
+      sm.char_auto = nullptr;
+      sm.others_auto = nullptr;
 
       soc_mess_list[tmp] = sm;
       continue;
@@ -192,8 +192,8 @@ void bootSocialMessages(void) {
 int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
   sstring buf;
   TBeing* vict;
-  TMonster* tmp = NULL;
-  TThing *t, *tvict = NULL;
+  TMonster* tmp = nullptr;
+  TThing *t, *tvict = nullptr;
   int rc;
 
   if (fight() || riding) {
@@ -253,7 +253,7 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
 
         if (fight()) {
           sendTo("You cannot perform that action while fighting!\n\r");
-          return FALSE;
+          return false;
         }
         break;
         // allowed while riding or fighting
@@ -341,7 +341,7 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
       default:
         // prevented due to riding/fighting
         sendTo("You currently cannot perform that action!\n\r");
-        return FALSE;
+        return false;
     }
   }
 
@@ -350,7 +350,7 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
 
   if (CT == soc_mess_list.end()) {
     sendTo("That action is not supported.\n\r");
-    return FALSE;
+    return false;
   }
 
   socialMessg action = CT->second;
@@ -401,7 +401,7 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
   }
 
   if (!roomp)
-    return FALSE;
+    return false;
 
   if (buf.empty()) {
     sendTo(action.char_no_arg);
@@ -414,11 +414,11 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
       if (!tmp)
         continue;
 
-      rc = tmp->aiSocialSwitch(this, NULL, cmd, TARGET_NONE);
+      rc = tmp->aiSocialSwitch(this, nullptr, cmd, TARGET_NONE);
 
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tmp;
-        tmp = NULL;
+        tmp = nullptr;
       }
 
       if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -428,22 +428,22 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
     if (cmd == CMD_BLUSH && !::number(0, 1) &&
         getMyRace()->hasTalent(TALENT_MUSK) && getCond(FULL) > 5) {
       act("In your excitement you release some musk scent into the room.",
-        FALSE, this, 0, NULL, TO_CHAR);
-      act("$n releases some musk into the room!", FALSE, this, 0, NULL,
+        false, this, 0, nullptr, TO_CHAR);
+      act("$n releases some musk into the room!", false, this, 0, nullptr,
         TO_ROOM);
       dropGas(::number(1, 3), GAS_MUSK);
       setCond(FULL, getCond(FULL) - 5);
     }
 
-    return FALSE;
+    return false;
   }
 
-  if (!(vict = get_char_room_vis(this, buf, NULL, EXACT_YES))) {
+  if (!(vict = get_char_room_vis(this, buf, nullptr, EXACT_YES))) {
     if (!(vict = get_char_room_vis(this, buf))) {
       if (!(tvict = get_obj_vis_accessible(this, buf))) {
         sendTo(action.not_found);
         sendTo("\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
@@ -460,11 +460,11 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
       if (!tmp)
         continue;
 
-      rc = tmp->aiSocialSwitch(this, NULL, cmd, TARGET_SELF);
+      rc = tmp->aiSocialSwitch(this, nullptr, cmd, TARGET_SELF);
 
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tmp;
-        tmp = NULL;
+        tmp = nullptr;
       }
 
       if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -472,11 +472,11 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
     }
   } else if (vict) {
     if (vict->getPosition() < action.minPos)
-      act("$N is not in a proper position for that.", FALSE, this, 0, vict,
+      act("$N is not in a proper position for that.", false, this, 0, vict,
         TO_CHAR);
     else {
       if (socialLimbBad(vict, cmd))
-        return FALSE;
+        return false;
 
       act(action.char_found, 0, this, 0, vict, TO_CHAR);
       act(action.others_found, action.hide, this, 0, vict, TO_NOTVICT);
@@ -491,13 +491,13 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
           continue;
 
         if (tmp == vict)
-          rc = tmp->aiSocialSwitch(this, NULL, cmd, TARGET_MOB);
+          rc = tmp->aiSocialSwitch(this, nullptr, cmd, TARGET_MOB);
         else
           rc = tmp->aiSocialSwitch(this, vict, cmd, TARGET_OTHER);
 
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tmp;
-          tmp = NULL;
+          tmp = nullptr;
         }
 
         if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -537,7 +537,7 @@ int TBeing::doAction(const sstring& argument, cmdTypeT cmd) {
     applyDrugAffects(this, DRUG_FROGSLIME, false);
   }
 
-  return FALSE;
+  return false;
 }
 
 void TBeing::doInsult(const char* argument) {
@@ -559,31 +559,31 @@ void TBeing::doInsult(const char* argument) {
           case 0:
             if (getSex() == SEX_MALE) {
               if (victim->getSex() == SEX_MALE)
-                act("$n accuses you of fighting like a woman!", FALSE, this, 0,
+                act("$n accuses you of fighting like a woman!", false, this, 0,
                   victim, TO_VICT);
               else
-                act("$n says that women can't fight.", FALSE, this, 0, victim,
+                act("$n says that women can't fight.", false, this, 0, victim,
                   TO_VICT);
             } else {
               if (victim->getSex() == SEX_MALE)
-                act("$n accuses you of having the smallest.... (brain?)", FALSE,
+                act("$n accuses you of having the smallest.... (brain?)", false,
                   this, 0, victim, TO_VICT);
               else
                 act(
                   "$n tells you that you'd lose a beauty contest against a "
                   "troll.",
-                  FALSE, this, 0, victim, TO_VICT);
+                  false, this, 0, victim, TO_VICT);
             }
             break;
           case 1:
-            act("$n calls your mother a bitch!", FALSE, this, 0, victim,
+            act("$n calls your mother a bitch!", false, this, 0, victim,
               TO_VICT);
             break;
           default:
-            act("$n tells you to get lost!", FALSE, this, 0, victim, TO_VICT);
+            act("$n tells you to get lost!", false, this, 0, victim, TO_VICT);
             break;
         }
-        act("$n insults $N.", TRUE, this, 0, victim, TO_NOTVICT);
+        act("$n insults $N.", true, this, 0, victim, TO_NOTVICT);
       } else
         sendTo("You feel insulted.\n\r");
     }
@@ -600,42 +600,42 @@ void TBeing::doScratch(const char* argument) {
   strcpy(arg, argument);
 
   if (!strcasecmp(arg, "leg")) {
-    act("$n vigorously scratches $s leg!", TRUE, this, 0, 0, TO_ROOM);
-    act("You vigorously scratch your leg!", FALSE, this, 0, 0, TO_CHAR);
+    act("$n vigorously scratches $s leg!", true, this, 0, 0, TO_ROOM);
+    act("You vigorously scratch your leg!", false, this, 0, 0, TO_CHAR);
   } else if (!strcasecmp(arg, "ass") || !strcasecmp(arg, "butt")) {
-    act("$n vigorously scratches $s butt!", TRUE, this, 0, 0, TO_ROOM);
-    act("You vigorously scratch your butt!", FALSE, this, 0, 0, TO_CHAR);
+    act("$n vigorously scratches $s butt!", true, this, 0, 0, TO_ROOM);
+    act("You vigorously scratch your butt!", false, this, 0, 0, TO_CHAR);
   } else if (!strcasecmp(arg, "crotch")) {
-    act("$n vigorously scratches $s genital region!", TRUE, this, 0, 0,
+    act("$n vigorously scratches $s genital region!", true, this, 0, 0,
       TO_ROOM);
-    act("You vigorously scratch your genitals!", FALSE, this, 0, 0, TO_CHAR);
+    act("You vigorously scratch your genitals!", false, this, 0, 0, TO_CHAR);
   } else if (!strcasecmp(arg, "head")) {
-    act("$n vigorously scratches $s head!", TRUE, this, 0, 0, TO_ROOM);
-    act("You vigorously scratch your head!", FALSE, this, 0, 0, TO_CHAR);
+    act("$n vigorously scratches $s head!", true, this, 0, 0, TO_ROOM);
+    act("You vigorously scratch your head!", false, this, 0, 0, TO_CHAR);
   } else {
-    act("$n vigorously scratches $mself!", TRUE, this, 0, 0, TO_ROOM);
-    act("You vigorously scratch yourself!", FALSE, this, 0, 0, TO_CHAR);
+    act("$n vigorously scratches $mself!", true, this, 0, 0, TO_ROOM);
+    act("You vigorously scratch yourself!", false, this, 0, 0, TO_CHAR);
   }
 }
 
 void TObj::peeMe(const TBeing*, liqTypeT) {}
 
 void TPool::peeMe(const TBeing* ch, liqTypeT liq) {
-  act("$n smiles happily as $e pisses into $p.", TRUE, ch, this, NULL, TO_ROOM);
-  act("You smile happily as you piss into $p.", TRUE, ch, this, NULL, TO_CHAR);
+  act("$n smiles happily as $e pisses into $p.", true, ch, this, nullptr, TO_ROOM);
+  act("You smile happily as you piss into $p.", true, ch, this, nullptr, TO_CHAR);
 
   if (ch->isImmortal() && getDrinkType() == LIQ_WATER) {
-    act("$e turns water to wine!", TRUE, ch, this, NULL, TO_ROOM);
-    act("You turn water to wine!", TRUE, ch, this, NULL, TO_CHAR);
+    act("$e turns water to wine!", true, ch, this, nullptr, TO_ROOM);
+    act("You turn water to wine!", true, ch, this, nullptr, TO_CHAR);
     setDrinkType(LIQ_RED_WINE);
   } else
     fillMe(ch, liq);
 }
 
 void TPlant::peeOnMe(const TBeing* ch) {
-  act("$n smiles happily as $e pisses all over $p.", TRUE, ch, this, NULL,
+  act("$n smiles happily as $e pisses all over $p.", true, ch, this, nullptr,
     TO_ROOM);
-  act("You smile happily as you piss all over $p.", TRUE, ch, this, NULL,
+  act("You smile happily as you piss all over $p.", true, ch, this, nullptr,
     TO_CHAR);
 
   if (ch->isImmortal())
@@ -647,7 +647,7 @@ void TBeing::doCombine(const sstring& arg) {
 }
 
 void TBeing::doPoop(void) {
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
 
 #if 0
   if(isPc() && !isImmortal()){
@@ -676,10 +676,10 @@ void TBeing::doPoop(void) {
 
   if (hasDisease(DISEASE_SCURVY) || hasDisease(DISEASE_FLU)) {
     // take a beautiful thing and make it ugly
-    act("$n unleashes $s <o>filth<1> upon the $g.", TRUE, this, NULL, NULL,
+    act("$n unleashes $s <o>filth<1> upon the $g.", true, this, nullptr, nullptr,
       TO_ROOM);
     act("You unleash your <o>filth<1> upon the $g<1>.  You don't feel so good.",
-      TRUE, this, NULL, NULL, TO_CHAR);
+      true, this, nullptr, nullptr, TO_CHAR);
     dropPool(min((int)getWeight() / 10, (int)getCond(POOP)), LIQ_POT_FILTH);
     setCond(THIRST, max(0, (int)getCond(THIRST) - ((int)getCond(POOP) / 2)));
     setCond(POOP, 0);
@@ -689,8 +689,8 @@ void TBeing::doPoop(void) {
   if (race->isFeathered()) {
     act(
       "$n fluffs up, ruffles $s tail feathers and squeezes out some droppings.",
-      TRUE, this, NULL, NULL, TO_ROOM);
-    act("Ahh, you feel a little bit lighter.", TRUE, this, NULL, NULL, TO_CHAR);
+      true, this, nullptr, nullptr, TO_ROOM);
+    act("Ahh, you feel a little bit lighter.", true, this, nullptr, nullptr, TO_CHAR);
     dropPool((int)(getCond(POOP) + getCond(PEE)), LIQ_GUANO);
     setCond(PEE, 0);
     setCond(POOP, 0);
@@ -702,8 +702,8 @@ void TBeing::doPoop(void) {
     return;
   }
 
-  act("$n <o>defecates<z> on the $g.", TRUE, this, NULL, NULL, TO_ROOM);
-  act("You <o>defecate<z> on the $g.", TRUE, this, NULL, NULL, TO_CHAR);
+  act("$n <o>defecates<z> on the $g.", true, this, nullptr, nullptr, TO_ROOM);
+  act("You <o>defecate<z> on the $g.", true, this, nullptr, nullptr, TO_CHAR);
 
   if (isPc()) {
     obj->setWeight(getCond(POOP) / 10.0);
@@ -715,15 +715,15 @@ void TBeing::doPoop(void) {
   if (!::number(0, 9)) {
     if (!::number(0, 9)) {
       if (!::number(0, 9)) {
-        act("That really did <r>HURT<1>!", TRUE, this, NULL, NULL, TO_CHAR);
+        act("That really did <r>HURT<1>!", true, this, nullptr, nullptr, TO_CHAR);
         weightmod = 8;
       } else {
-        act("You feel like you really nailed that one.", TRUE, this, NULL, NULL,
+        act("You feel like you really nailed that one.", true, this, nullptr, nullptr,
           TO_CHAR);
         weightmod = 4;
       }
     } else {
-      act("Whoa, that was a big one!", TRUE, this, NULL, NULL, TO_CHAR);
+      act("Whoa, that was a big one!", true, this, nullptr, nullptr, TO_CHAR);
       weightmod = 2;
     }
   }
@@ -797,8 +797,8 @@ void TBeing::doPee(const sstring& argument) {
       t->peeOnMe(this);
     }
   } else {
-    act("$n quietly relieves $mself.  You are not amused.", TRUE, this, NULL,
-      NULL, TO_ROOM);
+    act("$n quietly relieves $mself.  You are not amused.", true, this, nullptr,
+      nullptr, TO_ROOM);
     sendTo("You relieve yourself as stealthfully as possible.\n\r");
     dropPool(amt, liquid);
   }
@@ -812,8 +812,8 @@ void TBeing::doTip(const sstring& arg) {
     equipment[WEAR_HEAD] ? fname(equipment[WEAR_HEAD]->name) : "hat";
 
   if (arg.empty()) {
-    act(format("You tip your %s.") % hat, FALSE, this, NULL, NULL, TO_CHAR);
-    act(format("$n tips $s %s.") % hat, FALSE, this, NULL, NULL, TO_ROOM);
+    act(format("You tip your %s.") % hat, false, this, nullptr, nullptr, TO_CHAR);
+    act(format("$n tips $s %s.") % hat, false, this, nullptr, nullptr, TO_ROOM);
   } else {
     t = searchLinkedList(arg, roomp->stuff, TYPETHING);
     if (!t)
@@ -821,22 +821,22 @@ void TBeing::doTip(const sstring& arg) {
     else if (t == this) {
       act(
         format("You tip your %s to yourself - are you feeling alright?") % hat,
-        FALSE, this, NULL, t, TO_CHAR);
-      act(format("$n tips $s %s to $mself? Don't ask...") % hat, FALSE, this,
-        NULL, t, TO_ROOM);
+        false, this, nullptr, t, TO_CHAR);
+      act(format("$n tips $s %s to $mself? Don't ask...") % hat, false, this,
+        nullptr, t, TO_ROOM);
     } else {
-      act(format("You tip your %s in acknowledgement of $N.") % hat, FALSE,
-        this, NULL, t, TO_CHAR);
-      act(format("$n tips $s %s to $N.") % hat, FALSE, this, NULL, t,
+      act(format("You tip your %s in acknowledgement of $N.") % hat, false,
+        this, nullptr, t, TO_CHAR);
+      act(format("$n tips $s %s to $N.") % hat, false, this, nullptr, t,
         TO_NOTVICT);
-      act(format("$n tips $s %s to you.") % hat, FALSE, this, NULL, t, TO_VICT);
+      act(format("$n tips $s %s to you.") % hat, false, this, nullptr, t, TO_VICT);
     }
   }
 }
 
 void TBeing::doPoke(const sstring& arg) {
-  TThing* t = NULL;
-  TThing* hold = NULL;
+  TThing* t = nullptr;
+  TThing* hold = nullptr;
   TObj* obj;
   TBeing* b;
   sstring holdBuf, buf;
@@ -851,9 +851,9 @@ void TBeing::doPoke(const sstring& arg) {
 
   if (arg.empty()) {
     holdBuf = format("You point your %s around threateningly.") % buf;
-    act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
+    act(holdBuf, false, this, nullptr, this, TO_CHAR);
     holdBuf = format("$n points $s %s around threateningly.") % buf;
-    act(holdBuf, FALSE, this, NULL, this, TO_ROOM);
+    act(holdBuf, false, this, nullptr, this, TO_ROOM);
     return;
   }
   // point at someone
@@ -866,24 +866,24 @@ void TBeing::doPoke(const sstring& arg) {
           format("You carefully prod %s with your %s.\n\r") % obj->getName() %
             buf);
         holdBuf = format("$n carefully prods $N with $s %s.") % buf;
-        act(holdBuf, FALSE, this, NULL, obj, TO_ROOM);
+        act(holdBuf, false, this, nullptr, obj, TO_ROOM);
         return;
       }
       b = dynamic_cast<TBeing*>(t);
       if (b) {
         if (b == this) {
           sendTo("You poke yourself in the ribs, feeling very silly.\n\r");
-          act("$n pokes $mself in the ribs, looking very sheepish.", FALSE,
-            this, NULL, NULL, TO_ROOM);
+          act("$n pokes $mself in the ribs, looking very sheepish.", false,
+            this, nullptr, nullptr, TO_ROOM);
         } else {
           sendTo(COLOR_OBJECTS,
             format("You poke %s in the ribs with your %s.\n\r") % b->getName() %
               buf);
           holdBuf =
             format("$n pokes %s in the ribs with $s %s.") % b->getName() % buf;
-          act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
+          act(holdBuf, false, this, nullptr, b, TO_NOTVICT);
           holdBuf = format("$n pokes you in the ribs with $s %s.") % buf;
-          act(holdBuf, FALSE, this, NULL, b, TO_VICT);
+          act(holdBuf, false, this, nullptr, b, TO_VICT);
         }
         return;
       }
@@ -894,7 +894,7 @@ void TBeing::doPoke(const sstring& arg) {
 }
 
 void TBeing::doPunch(const sstring& arg) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* b;
 
   doAction(arg, CMD_PUNCH);
@@ -934,8 +934,8 @@ void TBeing::doJuggle(const sstring& arg) {
 }
 
 void TBeing::doPoint(const sstring& arg) {
-  TThing* t = NULL;
-  TThing* hold = NULL;
+  TThing* t = nullptr;
+  TThing* hold = nullptr;
   TObj* obj;
   TBeing* b;
   sstring holdBuf, buf;
@@ -950,9 +950,9 @@ void TBeing::doPoint(const sstring& arg) {
 
   if (arg.empty()) {
     holdBuf = format("You point your %s around randomly.") % buf;
-    act(holdBuf, FALSE, this, NULL, this, TO_CHAR);
+    act(holdBuf, false, this, nullptr, this, TO_CHAR);
     holdBuf = format("$n points $s %s around randomly.") % buf;
-    act(holdBuf, FALSE, this, NULL, this, TO_ROOM);
+    act(holdBuf, false, this, nullptr, this, TO_ROOM);
     return;
   }
 
@@ -961,7 +961,7 @@ void TBeing::doPoint(const sstring& arg) {
   if (dir != DIR_NONE) {
     sendTo(format("You point your %s %s.\n\r") % buf % dirs_to_blank[dir]);
     act(format("$n points $s %s %s.") % buf % dirs_to_blank[dir], false, this,
-      NULL, NULL, TO_ROOM);
+      nullptr, nullptr, TO_ROOM);
     return;
   }
 
@@ -974,21 +974,21 @@ void TBeing::doPoint(const sstring& arg) {
         sendTo(COLOR_OBJECTS,
           format("You point your %s at %s.\n\r") % buf % obj->getName());
         holdBuf = format("$n points $s %s at %s.") % buf % obj->getName();
-        act(holdBuf, FALSE, this, obj, NULL, TO_ROOM);
+        act(holdBuf, false, this, obj, nullptr, TO_ROOM);
         return;
       }
       b = dynamic_cast<TBeing*>(t);
       if (b) {
         if (b == this) {
           sendTo("You point at yourself.\n\r");
-          act("$n points at $mself.", FALSE, this, NULL, NULL, TO_ROOM);
+          act("$n points at $mself.", false, this, nullptr, nullptr, TO_ROOM);
         } else {
           sendTo(COLOR_OBJECTS,
             format("You point at %s with your %s.\n\r") % b->getName() % buf);
           holdBuf = format("$n points at %s with $s %s.") % b->getName() % buf;
-          act(holdBuf, FALSE, this, NULL, b, TO_NOTVICT);
+          act(holdBuf, false, this, nullptr, b, TO_NOTVICT);
           holdBuf = format("$n points at you with $s %s.") % buf;
-          act(holdBuf, FALSE, this, NULL, b, TO_VICT);
+          act(holdBuf, false, this, nullptr, b, TO_VICT);
         }
         return;
       }
@@ -1146,7 +1146,7 @@ int TBeing::doBite(const sstring& arg) {
       vict, TO_NOTVICT);
     act("$n tries to bite you, but you fight him off!", false, this, nullptr,
       vict, TO_VICT);
-    return TRUE;
+    return true;
   }
 
   // Now handle emote
@@ -1186,10 +1186,10 @@ int TBeing::doBite(const sstring& arg) {
 }
 
 void TBeing::doToast(const sstring& arg) {
-  TThing* t = NULL;
-  TBeing* vict = NULL;
-  TMonster* ai = NULL;
-  TDrinkCon *dc1, *dc2 = NULL;
+  TThing* t = nullptr;
+  TBeing* vict = nullptr;
+  TMonster* ai = nullptr;
+  TDrinkCon *dc1, *dc2 = nullptr;
   sstring sb;
   sstring clink = "<o>*thunk*<1>";  // the sound the toast makes
   int spill_chance = 0;
@@ -1205,9 +1205,9 @@ void TBeing::doToast(const sstring& arg) {
   }
 
   if (arg.empty()) {
-    act("You lift your $o and nod knowingly.", FALSE, this, dc1, NULL, TO_CHAR);
-    act("$n raises $s $o in a strange and deliberate gesture.", TRUE, this, dc1,
-      NULL, TO_ROOM);
+    act("You lift your $o and nod knowingly.", false, this, dc1, nullptr, TO_CHAR);
+    act("$n raises $s $o in a strange and deliberate gesture.", true, this, dc1,
+      nullptr, TO_ROOM);
     // check for spillage
     spill_chance = 7;
   } else {
@@ -1218,9 +1218,9 @@ void TBeing::doToast(const sstring& arg) {
         vict = dynamic_cast<TBeing*>(t);
         if (vict) {
           if (vict == this) {
-            act("You lift your $o and nod knowingly at it.", FALSE, this, dc1,
-              NULL, TO_CHAR);
-            act("$n raises $p and agrees with it.", TRUE, this, dc1, NULL,
+            act("You lift your $o and nod knowingly at it.", false, this, dc1,
+              nullptr, TO_CHAR);
+            act("$n raises $p and agrees with it.", true, this, dc1, nullptr,
               TO_ROOM);
             spill_chance = 7;
           } else {
@@ -1236,20 +1236,20 @@ void TBeing::doToast(const sstring& arg) {
               sb = fname(dc2->name);
               act(format("You raise your $o and knock it against $N's %s. %s") %
                     sb % clink,
-                FALSE, this, dc1, vict, TO_CHAR);
+                false, this, dc1, vict, TO_CHAR);
               act(format("$n raises $s $o and knocks it against your %s. %s") %
                     sb % clink,
-                FALSE, this, dc1, vict, TO_VICT);
+                false, this, dc1, vict, TO_VICT);
               act(format("$n and $N knock their drinks together. %s") % clink,
-                FALSE, this, dc1, vict, TO_NOTVICT);
+                false, this, dc1, vict, TO_NOTVICT);
               spill_chance = 14;
             } else {
               // vict has no drink
-              act("You raise your $o to $N and nod knowingly.", FALSE, this,
+              act("You raise your $o to $N and nod knowingly.", false, this,
                 dc1, vict, TO_CHAR);
-              act("$n raises $s $o to you and tries to look profound.", TRUE,
+              act("$n raises $s $o to you and tries to look profound.", true,
                 this, dc1, vict, TO_VICT);
-              act("$n raises $s $o to $N and nods knowingly.", TRUE, this, dc1,
+              act("$n raises $s $o to $N and nods knowingly.", true, this, dc1,
                 vict, TO_NOTVICT);
               spill_chance = 7;
             }
@@ -1268,19 +1268,19 @@ void TBeing::doToast(const sstring& arg) {
         // bottomless cup
         act(format("You spill some %s on the $g.") %
               liquidInfo[dc1->getDrinkType()]->name,
-          FALSE, this, dc1, NULL, TO_CHAR);
+          false, this, dc1, nullptr, TO_CHAR);
         act(format("$n spills some %s on the $g.") %
               liquidInfo[dc1->getDrinkType()]->name,
-          TRUE, this, dc1, NULL, TO_ROOM);
+          true, this, dc1, nullptr, TO_ROOM);
         dropPool(dc1->getDrinkUnits(), dc1->getDrinkType());
       } else if (vict && vict->isImmortal()) {
         // toasting with an immortal, guaranteed to spill out everything
         act(format("You spill what's left of your %s on the $g!") %
               liquidInfo[dc1->getDrinkType()]->name,
-          FALSE, this, dc1, NULL, TO_CHAR);
+          false, this, dc1, nullptr, TO_CHAR);
         act(format("$n spills what's left of $s %s on the $g!") %
               liquidInfo[dc1->getDrinkType()]->name,
-          TRUE, this, dc1, NULL, TO_ROOM);
+          true, this, dc1, nullptr, TO_ROOM);
         dropPool(dc1->getDrinkUnits(), dc1->getDrinkType());
         dc1->genericEmpty();
         dc1->updateDesc();
@@ -1293,20 +1293,20 @@ void TBeing::doToast(const sstring& arg) {
           if (roll < dc1->getDrinkUnits()) {
             act(format("You spill some %s on the $g.") %
                   liquidInfo[dc1->getDrinkType()]->name,
-              FALSE, this, dc1, NULL, TO_CHAR);
+              false, this, dc1, nullptr, TO_CHAR);
             act(format("$n spills some %s on the $g.") %
                   liquidInfo[dc1->getDrinkType()]->name,
-              TRUE, this, dc1, NULL, TO_ROOM);
+              true, this, dc1, nullptr, TO_ROOM);
             dc1->addToDrinkUnits(-roll);
             dc1->updateDesc();
             dc1->weightCorrection();
           } else {
             act(format("You spill what's left of your %s on the $g!") %
                   liquidInfo[dc1->getDrinkType()]->name,
-              FALSE, this, dc1, NULL, TO_CHAR);
+              false, this, dc1, nullptr, TO_CHAR);
             act(format("$n spills what's left of $s %s on the $g!") %
                   liquidInfo[dc1->getDrinkType()]->name,
-              TRUE, this, dc1, NULL, TO_ROOM);
+              true, this, dc1, nullptr, TO_ROOM);
             dc1->genericEmpty();
             dc1->updateDesc();
           }
@@ -1319,10 +1319,10 @@ void TBeing::doToast(const sstring& arg) {
           dropPool(roll, dc1->getDrinkType());
           act(format("You spill some %s on the $g.") %
                 liquidInfo[dc1->getDrinkType()]->name,
-            FALSE, this, dc1, NULL, TO_CHAR);
+            false, this, dc1, nullptr, TO_CHAR);
           act(format("$n spills some %s on the $g.") %
                 liquidInfo[dc1->getDrinkType()]->name,
-            TRUE, this, dc1, NULL, TO_ROOM);
+            true, this, dc1, nullptr, TO_ROOM);
         }
       }
     }
@@ -1337,19 +1337,19 @@ void TBeing::doToast(const sstring& arg) {
           // bottomless cup
           act(format("You spill some %s on the $g.") %
                 liquidInfo[dc2->getDrinkType()]->name,
-            FALSE, vict, dc2, NULL, TO_CHAR);
+            false, vict, dc2, nullptr, TO_CHAR);
           act(format("$n spills some %s on the $g.") %
                 liquidInfo[dc2->getDrinkType()]->name,
-            TRUE, vict, dc2, NULL, TO_ROOM);
+            true, vict, dc2, nullptr, TO_ROOM);
           vict->dropPool(dc2->getDrinkUnits(), dc2->getDrinkType());
         } else if (this->isImmortal()) {
           // toasting with an immortal, guaranteed to spill out everything
           act(format("You spill what's left of your %s on the $g!") %
                 liquidInfo[dc2->getDrinkType()]->name,
-            FALSE, vict, dc2, NULL, TO_CHAR);
+            false, vict, dc2, nullptr, TO_CHAR);
           act(format("$n spills what's left of $s %s on the $g!") %
                 liquidInfo[dc2->getDrinkType()]->name,
-            TRUE, vict, dc2, NULL, TO_ROOM);
+            true, vict, dc2, nullptr, TO_ROOM);
           vict->dropPool(dc2->getDrinkUnits(), dc2->getDrinkType());
           dc2->genericEmpty();
           dc2->updateDesc();
@@ -1362,20 +1362,20 @@ void TBeing::doToast(const sstring& arg) {
             if (roll < dc2->getDrinkUnits()) {
               act(format("You spill some %s on the $g.") %
                     liquidInfo[dc2->getDrinkType()]->name,
-                FALSE, vict, dc2, NULL, TO_CHAR);
+                false, vict, dc2, nullptr, TO_CHAR);
               act(format("$n spills some %s on the $g.") %
                     liquidInfo[dc2->getDrinkType()]->name,
-                TRUE, vict, dc2, NULL, TO_ROOM);
+                true, vict, dc2, nullptr, TO_ROOM);
               dc2->addToDrinkUnits(-roll);
               dc2->updateDesc();
               dc2->weightCorrection();
             } else {
               act(format("You spill what's left of your %s on the $g!") %
                     liquidInfo[dc2->getDrinkType()]->name,
-                FALSE, vict, dc2, NULL, TO_CHAR);
+                false, vict, dc2, nullptr, TO_CHAR);
               act(format("$n spills what's left of $s %s on the $g!") %
                     liquidInfo[dc2->getDrinkType()]->name,
-                TRUE, vict, dc2, NULL, TO_ROOM);
+                true, vict, dc2, nullptr, TO_ROOM);
               dc2->genericEmpty();
               dc2->updateDesc();
             }
@@ -1388,10 +1388,10 @@ void TBeing::doToast(const sstring& arg) {
             vict->dropPool(roll, dc2->getDrinkType());
             act(format("You spill some %s on the $g.") %
                   liquidInfo[dc2->getDrinkType()]->name,
-              FALSE, vict, dc2, NULL, TO_CHAR);
+              false, vict, dc2, nullptr, TO_CHAR);
             act(format("$n spills some %s on the $g.") %
                   liquidInfo[dc2->getDrinkType()]->name,
-              TRUE, vict, dc2, NULL, TO_ROOM);
+              true, vict, dc2, nullptr, TO_ROOM);
           }
         }
       }
@@ -1407,7 +1407,7 @@ void TBeing::doToast(const sstring& arg) {
         continue;
 
       if (!vict)
-        ai->aiToast(this, NULL, TARGET_NONE);
+        ai->aiToast(this, nullptr, TARGET_NONE);
       else if (vict == this)
         ai->aiToast(this, this, TARGET_SELF);
       else if (vict == ai)

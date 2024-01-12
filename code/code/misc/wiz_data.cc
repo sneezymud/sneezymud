@@ -19,7 +19,7 @@ extern "C" {
 #include "database.h"
 
 void TBeing::wizFileRead() {
-  Descriptor* d = NULL;
+  Descriptor* d = nullptr;
 
   // don't use isImmortal, save always
   if (!(GetMaxLevel() > MAX_MORT) || !(d = desc))
@@ -62,7 +62,7 @@ void TBeing::wizFileRead() {
 void TMonster::wizFileSave() { return; }
 
 void TPerson::wizFileSave() {
-  Descriptor* d = NULL;
+  Descriptor* d = nullptr;
 
   if (!(d = desc))
     return;

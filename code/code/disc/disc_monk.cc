@@ -20,38 +20,38 @@ int TBeing::doLeap(const sstring& arg) {
   int rc;
 
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
 
   if (arg.empty()) {
     sendTo("Which way do you want to leap?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (fight()) {
     sendTo("You can't leap away while fighting!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!doesKnowSkill(SKILL_CATLEAP)) {
     sendTo("You do not know the secrets of cat-like leaping.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (roomp->isFallSector()) {
     sendTo("There's no ground beneath you to leap off of here!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (getMove() < 15) {
     sendTo("You're too tired to be jumping around.\n\r");
-    return FALSE;
+    return false;
   }
 
   dirTypeT dir = getDirFromChar(arg);
   if (dir == -1 || !exitDir(dir)) {
     sendTo("You can't go that way.\n\r");
-    return FALSE;
+    return false;
   }
 
   bool was_flying = IS_SET(specials.affectedBy, AFF_FLYING);
@@ -60,13 +60,13 @@ int TBeing::doLeap(const sstring& arg) {
   SET_BIT(specials.affectedBy, AFF_FLYING);
   setPosition(POSITION_FLYING);
 
-  act("You leap into the air!", FALSE, this, 0, 0, TO_CHAR);
-  act("$n takes a great leap into the air!", FALSE, this, 0, 0, TO_ROOM);
+  act("You leap into the air!", false, this, 0, 0, TO_CHAR);
+  act("$n takes a great leap into the air!", false, this, 0, 0, TO_ROOM);
   addToMove(-15);
 
   if (!bSuccess(SKILL_CATLEAP)) {
-    act("You don't make it very far.", FALSE, this, 0, 0, TO_CHAR);
-    act("$n doesn't make it very far.", FALSE, this, 0, 0, TO_ROOM);
+    act("You don't make it very far.", false, this, 0, 0, TO_CHAR);
+    act("$n doesn't make it very far.", false, this, 0, 0, TO_ROOM);
     rc = crashLanding(POSITION_SITTING);
   } else {
     rc = doMove(getDirFromChar(arg));
@@ -84,10 +84,10 @@ int task_yoginsa(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   if (!ch->canMeditate()) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -95,7 +95,7 @@ int task_yoginsa(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           ch->getHit() >= ch->hitLimit()) {
         ch->sendTo("Your body feels fully refreshed and restored.\n\r");
         ch->stopTask();
-        return TRUE;
+        return true;
       }
       ch->task->calcNextUpdate(pulse, 4 * Pulse::MOBACT);
       if (!ch->task->status) {
@@ -182,20 +182,20 @@ int task_yoginsa(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         } else {
           ch->sendTo("A magical force in the room stops your meditation\n\r");
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       ch->task->status = 0;
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop meditating.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops meditating.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop meditating.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops meditating.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_STAND:
-      act("You stop meditating and stand up.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops meditating and stands up.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop meditating and stand up.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops meditating and stands up.", false, ch, 0, 0, TO_ROOM);
       ch->setPosition(POSITION_STANDING);
       ch->stopTask();
       break;
@@ -209,16 +209,16 @@ int task_yoginsa(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         ch->sendTo("You break your focus...\n\r");
         ch->stopTask();
       }
-      return FALSE;  // eat the command
+      return false;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 // this function is meant to be called from brawling commands so monks
 // automatically springleap.  They can still force it thru doSpringleap
 int TBeing::trySpringleap(TBeing* vict) {
   if (!doesKnowSkill(SKILL_SPRINGLEAP))
-    return FALSE;
+    return false;
 
   return doSpringleap("", false, vict);
 }
@@ -230,7 +230,7 @@ int TBeing::doSpringleap(sstring argument, bool should_lag, TBeing* vict) {
 
   if (!doesKnowSkill(SKILL_SPRINGLEAP)) {
     sendTo("You don't know how.\n\r");
-    return FALSE;
+    return false;
   }
   one_argument(argument, name_buf);
 
@@ -238,18 +238,18 @@ int TBeing::doSpringleap(sstring argument, bool should_lag, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {
         sendTo("Springleap at whom?\n\r");
-        return FALSE;
+        return false;
       }
 #if 0
     } else if (!fight()) {
       sendTo("You are not able to initiate combat with a springleap.\n\r");
-      return FALSE;
+      return false;
 #endif
     }
   }
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   rc = springleap(this, victim, should_lag);
   if (rc && should_lag)  // auto springleap doesn't lag
@@ -259,7 +259,7 @@ int TBeing::doSpringleap(sstring argument, bool should_lag, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;
@@ -272,76 +272,76 @@ int springleap(TBeing* caster, TBeing* victim, bool should_lag) {
 
   if (caster->checkPeaceful(
         "You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (!caster->doesKnowSkill(iSkill)) {
     caster->sendTo("You don't know how to do that!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (caster->getPosition() > POSITION_SITTING) {
     caster->sendTo("You're not in position for that!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim == caster) {
     caster->sendTo("Aren't we funny today...\n\r");
-    return FALSE;
+    return false;
   }
 
   if (caster->noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   percent = 0;
   int bKnown = caster->getSkillValue(SKILL_SPRINGLEAP);
 
-  act("$n does a really nifty move, and aims a leg towards $N.", FALSE, caster,
+  act("$n does a really nifty move, and aims a leg towards $N.", false, caster,
     0, victim, TO_NOTVICT);
-  act("You leap off the $g at $N.", FALSE, caster, 0, victim, TO_CHAR);
-  act("$n leaps off the $g at you.", FALSE, caster, 0, victim, TO_VICT);
+  act("You leap off the $g at $N.", false, caster, 0, victim, TO_CHAR);
+  act("$n leaps off the $g at you.", false, caster, 0, victim, TO_VICT);
   caster->reconcileHurt(victim, 0.04);
 
   if (caster->bSuccess(bKnown + percent, SKILL_SPRINGLEAP)) {
     if ((i = caster->specialAttack(victim, SKILL_SPRINGLEAP)) ||
         (i == GUARANTEED_SUCCESS)) {
       if (victim->getPosition() > POSITION_DEAD) {
-        if (!(d = caster->getActualDamage(victim, NULL,
+        if (!(d = caster->getActualDamage(victim, nullptr,
                 caster->getSkillLevel(SKILL_SPRINGLEAP) >> 1, SKILL_KICK))) {
           act(
             "You attempt to kick $N but lose your balance and fall face down "
             "in some mud that has suddenly appeared.",
-            FALSE, caster, NULL, victim, TO_CHAR);
+            false, caster, nullptr, victim, TO_CHAR);
           act(
             "When $n tries to kick you, you quickly make $m fall in some mud "
             "you create.",
-            FALSE, caster, NULL, victim, TO_VICT);
-          act("$n falls face down in some mud created by $N.", FALSE, caster,
-            NULL, victim, TO_NOTVICT);
-        } else if (caster->willKill(victim, d, SKILL_KICK, TRUE)) {
-          act("Your kick at $N's face splits $S head open.", FALSE, caster,
-            NULL, victim, TO_CHAR);
+            false, caster, nullptr, victim, TO_VICT);
+          act("$n falls face down in some mud created by $N.", false, caster,
+            nullptr, victim, TO_NOTVICT);
+        } else if (caster->willKill(victim, d, SKILL_KICK, true)) {
+          act("Your kick at $N's face splits $S head open.", false, caster,
+            nullptr, victim, TO_CHAR);
           act("$n aims a kick at your face which splits your head in two.",
-            FALSE, caster, NULL, victim, TO_VICT);
-          act("$n neatly kicks $N's head into pieces.", FALSE, caster, NULL,
+            false, caster, nullptr, victim, TO_VICT);
+          act("$n neatly kicks $N's head into pieces.", false, caster, nullptr,
             victim, TO_NOTVICT);
           iSkill = DAMAGE_KICK_HEAD;
         } else {
-          act("Your kick hits $N in the solar plexus.", FALSE, caster, NULL,
+          act("Your kick hits $N in the solar plexus.", false, caster, nullptr,
             victim, TO_CHAR);
           act("You're hit in the solar plexus, wow, this is breathtaking!",
-            FALSE, caster, NULL, victim, TO_VICT);
+            false, caster, nullptr, victim, TO_VICT);
           act("$n kicks $N in the solar plexus, $N is rendered breathless.",
-            FALSE, caster, NULL, victim, TO_NOTVICT);
+            false, caster, nullptr, victim, TO_NOTVICT);
         }
       }
       if (caster->reconcileDamage(victim, d, iSkill) == -1)
         return DELETE_VICT;
     } else {
-      act("You miss your kick at $N's groin, much to $S relief.", FALSE, caster,
-        NULL, victim, TO_CHAR);
-      act("$n misses a kick at your groin, you breathe lighter now.", FALSE,
-        caster, NULL, victim, TO_VICT);
-      act("$n misses a kick at $N's groin.", FALSE, caster, NULL, victim,
+      act("You miss your kick at $N's groin, much to $S relief.", false, caster,
+        nullptr, victim, TO_CHAR);
+      act("$n misses a kick at your groin, you breathe lighter now.", false,
+        caster, nullptr, victim, TO_VICT);
+      act("$n misses a kick at $N's groin.", false, caster, nullptr, victim,
         TO_NOTVICT);
       caster->reconcileDamage(victim, 0, SKILL_SPRINGLEAP);
     }
@@ -350,15 +350,15 @@ int springleap(TBeing* caster, TBeing* victim, bool should_lag) {
   } else {
     if (victim->getPosition() > POSITION_DEAD) {
       caster->sendTo("You fall on your butt.\n\r");
-      act("$n falls on $s butt.", FALSE, caster, 0, 0, TO_ROOM);
+      act("$n falls on $s butt.", false, caster, 0, 0, TO_ROOM);
       if (caster->reconcileDamage(victim, 0, SKILL_SPRINGLEAP) == -1)
         return DELETE_VICT;
     }
-    return TRUE;
+    return true;
   }
   caster->setPosition(POSITION_STANDING);
   caster->updatePos();
-  return TRUE;
+  return true;
 }
 
 bool TBeing::canCounterMove(int perc) {
@@ -366,10 +366,10 @@ bool TBeing::canCounterMove(int perc) {
   // it is somewhat reduced based on arbitray rating of the skill's difficulty
 
   if (!doesKnowSkill(SKILL_COUNTER_MOVE))
-    return FALSE;
+    return false;
 
   if (!awake() || getPosition() < POSITION_CRAWLING)
-    return FALSE;
+    return false;
 
   int skill = getSkillValue(SKILL_COUNTER_MOVE);
   skill -= perc;
@@ -382,9 +382,9 @@ bool TBeing::canCounterMove(int perc) {
   skill = max(skill, 1);
 
   if (!bSuccess(skill, SKILL_COUNTER_MOVE))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::doDodge() {
@@ -399,7 +399,7 @@ int TBeing::monkDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
   // presumes monk is in appropriate position for dodging already
 
   if (!v->doesKnowSkill(SKILL_JIRIN))
-    return FALSE;
+    return false;
 
   // Balance notes: dodging is in some ways a replacement for Monk's
   // lack of AC
@@ -414,7 +414,7 @@ int TBeing::monkDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
   int amt = 100;
 
   if (::number(0, 999) >= amt)
-    return FALSE;
+    return false;
 
   // check bSuccess after above check, so that we limit how often we
   // call the learnFrom stuff
@@ -442,7 +442,7 @@ int TBeing::monkDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
         attack_hit_text[w_type].singular,
         v->describeBodySlot(part_hit).c_str());
     }
-    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_CYAN);
+    act(buf, false, this, 0, v, TO_VICT, ANSI_CYAN);
     if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss your %s at $S %s.", type,
         attack_hit_text_twink[w_type].singular,
@@ -452,7 +452,7 @@ int TBeing::monkDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
         attack_hit_text[w_type].singular,
         v->describeBodySlot(part_hit).c_str());
     }
-    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_CYAN);
+    act(buf, false, this, 0, v, TO_CHAR, ANSI_CYAN);
     if (toggleInfo[TOG_TWINK]->toggle) {
       sprintf(buf, "$N %ss $n's %s at $S %s.", type,
         attack_hit_text_twink[w_type].singular,
@@ -462,15 +462,15 @@ int TBeing::monkDodge(TBeing* v, TThing* weapon, int* dam, int w_type,
         attack_hit_text[w_type].singular,
         v->describeBodySlot(part_hit).c_str());
     }
-    act(buf, TRUE, this, 0, v, TO_NOTVICT);
+    act(buf, true, this, 0, v, TO_NOTVICT);
 
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 static void chiLag(TBeing* ch, int tRc) {
-  if (tRc == FALSE || IS_SET_DELETE(tRc, RET_STOP_PARSING))
+  if (tRc == false || IS_SET_DELETE(tRc, RET_STOP_PARSING))
     return;
 
   ch->addSkillLag(SKILL_CHI, tRc);
@@ -484,20 +484,20 @@ int TBeing::doChi(const char* tString, TThing* tSucker) {
 
   int tRc = 0;
   char tTarget[256];
-  TObj* tObj = NULL;
-  TBeing* tVictim = NULL;
+  TObj* tObj = nullptr;
+  TBeing* tVictim = nullptr;
 
   if (checkBusy())
-    return FALSE;
+    return false;
 
   if (!doesKnowSkill(SKILL_CHI)) {
     sendTo("You lack the ability to chi.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (getMana() < 0) {
     sendTo("You lack the chi.\n\r");
-    return FALSE;
+    return false;
   }
 
   // Target string specified
@@ -510,7 +510,7 @@ int TBeing::doChi(const char* tString, TThing* tSucker) {
   // No target can be determined
   else {
     sendTo("Chi what or whom?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (is_abbrev(tTarget, getName()))
@@ -529,7 +529,7 @@ int TBeing::doChi(const char* tString, TThing* tSucker) {
       tRc = chiTarget(tVictim);
     else {
       sendTo("Yes, good.  Use chi...on what or whom?\n\r");
-      return FALSE;
+      return false;
     }
   }
 
@@ -544,10 +544,10 @@ int TBeing::doChi(const char* tString, TThing* tSucker) {
 
     if (tVictim) {
       delete tVictim;
-      tVictim = NULL;
+      tVictim = nullptr;
     } else if (tObj) {
       delete tObj;
-      tObj = NULL;
+      tObj = nullptr;
     }
 
     REM_DELETE(tRc, DELETE_VICT);

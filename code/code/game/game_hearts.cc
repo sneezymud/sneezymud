@@ -71,21 +71,21 @@ bool HeartsGame::get_other_players(const TBeing* ch, TBeing** left,
   int which;
 
   if ((which = index(ch)) < 0)
-    return FALSE;
+    return false;
 
   *left = get_char_room(names[LEFT(ch)], Room::HEARTS);
   *across = get_char_room(names[ACROSS(ch)], Room::HEARTS);
   *right = get_char_room(names[RIGHT(ch)], Room::HEARTS);
 
   if (!*left || !*right || !*across)
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 void HeartsGame::deal(TBeing* ch) {
   int i, j = 0, which;
-  TBeing *left = NULL, *across = NULL, *right = NULL;
+  TBeing *left = nullptr, *across = nullptr, *right = nullptr;
 
   if ((which = index(ch)) < 0) {
     vlogf(LOG_BUG,
@@ -98,14 +98,14 @@ void HeartsGame::deal(TBeing* ch) {
     ch->sendTo("Redeal while the game is in progress? Never!!\n\r");
     return;
   }
-  if (get_other_players(ch, &left, &across, &right) == FALSE) {
+  if (get_other_players(ch, &left, &across, &right) == false) {
     ch->sendTo("There aren't 4 players at the table. You can't deal!\n\r");
     return;
   }
   shuffle();
 
   ch->sendTo("You shuffle the cards, and deal them.\n\r");
-  act("$n shuffles the cards and deals them.", FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n shuffles the cards and deals them.", false, ch, nullptr, nullptr, TO_ROOM);
 
   ch->sendTo("You are dealt:\n\r");
   left->sendTo("You are dealt:\n\r");
@@ -118,7 +118,7 @@ void HeartsGame::deal(TBeing* ch) {
     hands[ACROSS(ch)][i] = deck[j++];
     hands[RIGHT(ch)][i] = deck[j++];
   }
-  game = TRUE;
+  game = true;
   passing = (ipass != PASS_NONE);
   done_passing = !passing;
   if (done_passing)
@@ -129,8 +129,8 @@ void HeartsGame::deal(TBeing* ch) {
     for (j = 0; j < 3; j++)
       passes[i][j] = 0;
 
-    canpass[i] = TRUE;
-    cangetpass[i] = TRUE;
+    canpass[i] = true;
+    cangetpass[i] = true;
   }
   iplay = 0;
 
@@ -174,27 +174,27 @@ int HeartsGame::move_card(TBeing* ch, const char* arg) {
 
   if ((which = index(ch)) < 0) {
     ch->sendTo("You aren't at a hearts table to move any cards around!\n\r");
-    return FALSE;
+    return false;
   }
   if (sscanf(arg, "%d %d", &orig, &n) == 2) {
     if ((orig < 1) || (orig > 13) || (n < 1) || (n > 13)) {
       ch->sendTo(
         "Hearts table syntax : put <original card place number>< new place "
         "number>\n\r");
-      return FALSE;
+      return false;
     }
     if (orig == n) {
       ch->sendTo(
         format("The number %d card is already in the number %d slot!\n\r") %
         orig % n);
-      return FALSE;
+      return false;
     }
     orig--;
     n--;
 
     if (!hands[which][orig] || !hands[which][n]) {
       ch->sendTo("You don't have a card in that slot!\n\r");
-      return FALSE;
+      return false;
     }
     tmp = hands[which][orig];
 
@@ -212,16 +212,16 @@ int HeartsGame::move_card(TBeing* ch, const char* arg) {
     ch->sendTo(
       "Hearts table syntax : put <original card place number> <new place "
       "number>\n\r");
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 bool TBeing::checkHearts(bool inGame) const {
   if (in_room == Room::HEARTS && (inGame || (gHearts.index(this) > -1)))
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 int HeartsGame::enter(const TBeing* ch) {
@@ -229,14 +229,14 @@ int HeartsGame::enter(const TBeing* ch) {
 
   if (dynamic_cast<const TMonster*>(ch)) {
     ch->sendTo("Dumb monsters can't play hearts!\n\r");
-    return FALSE;
+    return false;
   }
   if (inuse[0] && inuse[1] && inuse[2] && inuse[3]) {
     ch->sendTo("There are already four players at the hearts table!\n\r");
-    return FALSE;
+    return false;
   } else if (ch->getPosition() == POSITION_SITTING) {
     ch->sendTo("You are already sitting at the hearts table.\n\r");
-    return FALSE;
+    return false;
   } else {
     for (i = 0; i < 4; i++) {
       if (!inuse[i]) {
@@ -246,26 +246,26 @@ int HeartsGame::enter(const TBeing* ch) {
     }
     ch->sendTo("You sit down at the hearts table.\n\r");
     strcpy(names[which], ch->getName().c_str());
-    inuse[which] = TRUE;
+    inuse[which] = true;
     score[which] = 0;
-    game = FALSE;
+    game = false;
     ipass = PASS_LEFT;
-    return TRUE;
+    return true;
   }
 }
 
 int HeartsGame::exitGame(const TBeing* ch) {
   int which;
-  TBeing *left = NULL, *across = NULL, *right = NULL;
+  TBeing *left = nullptr, *across = nullptr, *right = nullptr;
 
   if ((which = index(ch)) < 0) {
     vlogf(LOG_BUG, format("%s left a hearts table %s wasn't at!") %
                      ch->getName() % ch->hssh());
-    return FALSE;
+    return false;
   }
   ch->sendTo("You leave the hearts table.\n\r");
   act("$n stands up and leaves the hearts table, totally mooting the game.",
-    FALSE, ch, NULL, NULL, TO_ROOM);
+    false, ch, nullptr, nullptr, TO_ROOM);
 
   get_other_players(ch, &left, &across, &right);
 
@@ -286,13 +286,13 @@ int HeartsGame::exitGame(const TBeing* ch) {
   *(names[1]) = '\0';
   *(names[2]) = '\0';
   *(names[3]) = '\0';
-  game = FALSE;
-  inuse[0] = FALSE;
-  inuse[1] = FALSE;
-  inuse[2] = FALSE;
-  inuse[3] = FALSE;
+  game = false;
+  inuse[0] = false;
+  inuse[1] = false;
+  inuse[2] = false;
+  inuse[3] = false;
   setup_deck();
-  return TRUE;
+  return true;
 }
 
 int HeartsGame::index(const TBeing* ch) const {
@@ -305,7 +305,7 @@ int HeartsGame::index(const TBeing* ch) const {
   return -1;
 }
 
-int game_over() { return FALSE; }
+int game_over() { return false; }
 
 int HeartsGame::new_deal() {
   int scores[4];
@@ -325,7 +325,7 @@ int HeartsGame::new_deal() {
       vlogf(LOG_BUG,
         format("Bad number in HeartsGame::new_deal for winner of trick! (%d)") %
           tricks[i][4]);
-      return FALSE;
+      return false;
     }
     scores[tricks[i][4]] += countx;
     countx = 0;
@@ -336,12 +336,12 @@ int HeartsGame::new_deal() {
   score[3] += (scores[3] == 26) ? (-26) : scores[3];
 
   if (game_over())
-    return TRUE;
+    return true;
   else {
-    broken = FALSE;
+    broken = false;
     memset((char*)pile, 0, sizeof(pile));
     memset((char*)tricks, 0, sizeof(pile));
-    game = FALSE;
+    game = false;
     led = 0;
     iplay = 0;
 
@@ -353,7 +353,7 @@ int HeartsGame::new_deal() {
     if (!ch1 || !ch2 || !ch3 || !ch4) {
       vlogf(LOG_BUG,
         "HeartsGame::new_deal called without four hearts players!");
-      return FALSE;
+      return false;
     }
     ipass = (ipass == PASS_NONE) ? PASS_LEFT : ipass + 1;
     deal(ch1);
@@ -362,12 +362,12 @@ int HeartsGame::new_deal() {
     ch3->sendTo(format("The score is now %s.\n\r") % hearts_score());
     ch4->sendTo(format("The score is now %s.\n\r") % hearts_score());
     if (ipass == PASS_NONE) {
-      passing = FALSE;
+      passing = false;
       canplay = find_two_of_clubs();
-      firstplay = TRUE;
+      firstplay = true;
     }
   }
-  return TRUE;
+  return true;
 }
 
 int HeartsGame::new_round(TBeing* ch, int* pilex) {
@@ -376,7 +376,7 @@ int HeartsGame::new_round(TBeing* ch, int* pilex) {
 
   if ((which = index(ch)) < 0) {
     vlogf(LOG_BUG, "HeartsGame::new_round called with ch not at hearts table!");
-    return FALSE;
+    return false;
   }
   for (i = 0; i < 4; i++) {
     if (same_suit(pilex[i], led)) {
@@ -405,10 +405,10 @@ int HeartsGame::new_round(TBeing* ch, int* pilex) {
 
   if (!(won = get_char_room(names[winner], Room::HEARTS))) {
     vlogf(LOG_BUG, "Null character for won in HeartsGame::new_round()");
-    return FALSE;
+    return false;
   }
   sendrpf(won->roomp, "%s takes the trick with the %s.\n\r",
-    won->getName().c_str(), pretty_card_printout(NULL, pilex[wincard]).c_str());
+    won->getName().c_str(), pretty_card_printout(nullptr, pilex[wincard]).c_str());
   won->sendTo(format("You take the trick with the %s.\n\r") %
               pretty_card_printout(ch, pilex[wincard]));
 
@@ -425,7 +425,7 @@ int HeartsGame::new_round(TBeing* ch, int* pilex) {
     iplay = 0;
     canplay = winner;
   }
-  return TRUE;
+  return true;
 }
 
 void HeartsGame::play(TBeing* ch, const char* arg) {
@@ -485,7 +485,7 @@ void HeartsGame::play(TBeing* ch, const char* arg) {
     }
     pile[iplay] = hands[which][card];
     broken |= is_heart(pile[iplay]);
-    firstplay = FALSE;
+    firstplay = false;
     take_card_from_hand(hands[which], card, 12);
     ch->sendTo(
       format("You play the %s.\n\r") % pretty_card_printout(ch, pile[iplay]));
@@ -546,10 +546,10 @@ void HeartsGame::pass(TBeing* ch, const char* arg) {
   take_card_from_hand(hands[which], pass1, 12);
   take_card_from_hand(hands[which], pass2, 12);
   take_card_from_hand(hands[which], pass3, 12);
-  act("$n places $s three card pass in front of $m.", FALSE, ch, NULL, NULL,
+  act("$n places $s three card pass in front of $m.", false, ch, nullptr, nullptr,
     TO_ROOM);
   ch->sendTo("You place your pass down in front of you.\n\r");
-  canpass[which] = FALSE;
+  canpass[which] = false;
 }
 
 // returns the index of the owner of the 2 of water
@@ -574,16 +574,16 @@ int HeartsGame::get_pass(TBeing* ch, char* arg) {
     ;
 
   if ((which = index(ch)) < 0)
-    return FALSE;
+    return false;
 
   if (is_abbrev(arg, "pass")) {
     if (hands[which][12]) {
       ch->sendTo("You can't get your pass with all your cards!\n\r");
-      return TRUE;
+      return true;
     }
     if (!passing || !cangetpass[which]) {
       ch->sendTo("You can't do that now, sorry.\n\r");
-      return TRUE;
+      return true;
     }
     switch (ipass) {
       case PASS_LEFT:
@@ -598,7 +598,7 @@ int HeartsGame::get_pass(TBeing* ch, char* arg) {
     }
     if (!passes[passed_from][0]) {
       ch->sendTo("You haven't been passed your cards yet!\n\r");
-      return TRUE;
+      return true;
     }
     hands[which][10] = passes[passed_from][0];
     hands[which][11] = passes[passed_from][1];
@@ -614,19 +614,19 @@ int HeartsGame::get_pass(TBeing* ch, char* arg) {
     ch->sendTo(format("You pick up the pile and get the %s, %s, and %s.\n\r") %
                buf1 % buf2 % buf3);
 
-    cangetpass[which] = FALSE;
+    cangetpass[which] = false;
     if (++done_passing == 4) {
-      passing = FALSE;
+      passing = false;
       canplay = find_two_of_clubs();
-      firstplay = TRUE;
+      firstplay = true;
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int HeartsGame::look(TBeing* ch, const char* arg) {
-  TBeing *left = NULL, *across = NULL, *right = NULL;
+  TBeing *left = nullptr, *across = nullptr, *right = nullptr;
   for (; isspace(*arg); arg++)
     ;
 
@@ -653,9 +653,9 @@ int HeartsGame::look(TBeing* ch, const char* arg) {
       (across ? across->getName() : "no one") %
       (right ? right->getName() : "no one"));
 
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int HeartsGame::count(int which) {

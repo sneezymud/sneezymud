@@ -76,7 +76,7 @@ void GameTime::anotherHour() {
           time_info.year++;
           buf = format("Happy New Year! It is now the Year %d P.S\n\r") %
                 time_info.year;
-          Descriptor::worldSend(buf, NULL);
+          Descriptor::worldSend(buf, nullptr);
         }
       }
 

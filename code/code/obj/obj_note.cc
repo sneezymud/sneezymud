@@ -22,7 +22,7 @@ TNote* createNote(const sstring& msg) {
 
   if (!(obj = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
     vlogf(LOG_BUG, "Unable to load note in createNote");
-    return NULL;
+    return nullptr;
   }
 
   note = dynamic_cast<TNote*>(obj);
@@ -84,7 +84,7 @@ sstring TNote::statObjInfo() const {
 
 int TNote::objectSell(TBeing* ch, TMonster* keeper) {
   keeper->doTell(ch->getName(), "I'm sorry, I don't buy back notes.");
-  return TRUE;
+  return true;
 }
 
 void TNote::junkMe(TBeing* ch) {

@@ -59,7 +59,7 @@ void TBeing::doScore() {
 
     int total = 0, count = 0;
     for (spellNumT tSpell = MIN_SPELL; tSpell < MAX_SKILL; tSpell++) {
-      if (getDisciplineNumber(tSpell, FALSE) != DISC_NONE &&
+      if (getDisciplineNumber(tSpell, false) != DISC_NONE &&
           doesKnowSkill(tSpell)) {
         total += getSkillValue(tSpell);
         ++count;
@@ -182,7 +182,7 @@ void TBeing::doScore() {
     sendTo("You are feeling tipsy.\n\r");
 
   if (fight())
-    act("You are fighting $N.", FALSE, this, NULL, fight(), TO_CHAR);
+    act("You are fighting $N.", false, this, nullptr, fight(), TO_CHAR);
   else if (task) {
     sendTo(format("You are %s.\n\r") % tasks[task->task].name);
   } else {

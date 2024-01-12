@@ -616,7 +616,7 @@ void TPerson::doEdit(const char* arg) {
           ed->next = roomp->ex_description;
           roomp->ex_description = ed;
           ed->keyword = str;
-          ed->description = NULL;
+          ed->description = nullptr;
           desc->str = &ed->description;
           sendTo("New field.\n\r");
           sendTo("Terminate with a '~' on a NEW LINE.\n\r");
@@ -869,7 +869,7 @@ void TPerson::doEdit(const char* arg) {
                 return;
               } else {
                 delete zRoom->dir_option[rev_dir(dir)];
-                zRoom->dir_option[rev_dir(dir)] = NULL;
+                zRoom->dir_option[rev_dir(dir)] = nullptr;
               }
             }
             newrp->dir_option[dir]->door_type = DOOR_NONE;
@@ -879,8 +879,8 @@ void TPerson::doEdit(const char* arg) {
             newrp->dir_option[dir]->key = -1;
             newrp->dir_option[dir]->trap_info = 0;
             newrp->dir_option[dir]->to_room = new_dir;
-            newrp->dir_option[dir]->description = NULL;
-            newrp->dir_option[dir]->keyword = NULL;
+            newrp->dir_option[dir]->description = nullptr;
+            newrp->dir_option[dir]->keyword = nullptr;
 
             // Create exit back.
             dir = rev_dir(dir);
@@ -903,8 +903,8 @@ void TPerson::doEdit(const char* arg) {
             newrpTo->dir_option[dir]->key = -1;
             newrpTo->dir_option[dir]->trap_info = 0;
             newrpTo->dir_option[dir]->to_room = cRoom;
-            newrpTo->dir_option[dir]->description = NULL;
-            newrpTo->dir_option[dir]->keyword = NULL;
+            newrpTo->dir_option[dir]->description = nullptr;
+            newrpTo->dir_option[dir]->keyword = nullptr;
 
             // ... Actual Exit Creation Ending
 
@@ -1092,7 +1092,7 @@ void TPerson::doEdit(const char* arg) {
           }
           if (field == 3 ||
               (field == 8 && roomp->ex_description)) {  // Extra Descriptions
-            extraDescription* teDesc = NULL;
+            extraDescription* teDesc = nullptr;
             // Go through our rooms extra descriptions one at a time.
             for (ed = roomp->ex_description; ed; ed = ed->next) {
               // We also make sure were not adding this to a room that already
@@ -1680,7 +1680,7 @@ void TPerson::doRedit(const char* argument) {
   specials.edit = MAIN_MENU;
   desc->connected = CON_REDITING;
   roomp->setRoomFlagBit(ROOM_BEING_EDITTED);
-  act("$n has begun editing.", TRUE, this, 0, 0, TO_ROOM);
+  act("$n has begun editing.", true, this, 0, 0, TO_ROOM);
   update_room_menu(this);
 }
 
@@ -2533,7 +2533,7 @@ static void ChangeExitType(TRoom* rp, TBeing* ch, const char* arg,
       rp->dir_option[dir]->weight = -1;
       rp->dir_option[dir]->lock_difficulty = -1;
       rp->dir_option[dir]->key = 0;
-      rp->dir_option[dir]->description = NULL;
+      rp->dir_option[dir]->description = nullptr;
       rp->dir_option[dir]->keyword = "";
 
       switch (dir) {
@@ -2880,7 +2880,7 @@ static void DeleteExtraDesc(TRoom* rp, TBeing* ch) {
       nptr = exptr->next;
       delete exptr;
     }
-    rp->ex_description = NULL;
+    rp->ex_description = nullptr;
   }
   update_room_menu(ch);
 }
@@ -2901,7 +2901,7 @@ static void change_room_extra(TRoom* rp, TBeing* ch, const char* arg,
         ed->next = rp->ex_description;
         rp->ex_description = ed;
         ed->keyword = arg;
-        ed->description = NULL;
+        ed->description = nullptr;
         ch->desc->str = &ed->description;
         ch->sendTo(
           "Enter the description. Terminate with a '~' on a NEW LINE.\n\r");
@@ -2969,7 +2969,7 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
 
   for (i = rstart; i <= rend; i++) {
     rp = real_roomp(i);
-    if (rp == NULL)
+    if (rp == nullptr)
       continue;
 
     strcat(dots, ".");
@@ -3052,7 +3052,7 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
 
 void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
   int vnum;
-  bool found = FALSE;
+  bool found = false;
   TRoom *rp, *rp2;
   TThing* t;
   int tmp;
@@ -3089,7 +3089,7 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
 
     if ((vnum >= start) && (vnum <= end)) {
       if (vnum >= end)
-        found = TRUE;
+        found = true;
 
       if (!(rp = real_roomp(vnum))) {  // empty room
         rp2 = new TRoom(vnum);
@@ -3098,7 +3098,7 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
       } else {
         rp2 = new TRoom(vnum);
 
-        sstring tStString(ch->msgVariables(MSG_RLOAD, (TThing*)NULL));
+        sstring tStString(ch->msgVariables(MSG_RLOAD, (TThing*)nullptr));
         tStString += "\n\r";
 
         sendrpf(rp, tStString.c_str());
@@ -3109,7 +3109,7 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
           *rp2 += *t;
         }
         delete rp;
-        rp = NULL;
+        rp = nullptr;
         rp2->putInDb(vnum);
         ch->sendTo("-");
       }
@@ -3153,7 +3153,7 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
       rp2->setLight(0);
       rp2->setHasWindow(0);
 
-      rp2->ex_description = NULL;
+      rp2->ex_description = nullptr;
 
       while (convertTo<int>(db_extras["vnum"]) == rp2->number) {
         new_descr = new extraDescription();
@@ -3184,12 +3184,12 @@ void RoomLoad(TBeing* ch, int start, int end, int useSecond) {
         if (!db_exits["name"].empty())
           rp2->dir_option[dir]->keyword = db_exits["name"];
         else
-          rp2->dir_option[dir]->keyword = NULL;
+          rp2->dir_option[dir]->keyword = nullptr;
 
         if (!db_exits["description"].empty())
           rp2->dir_option[dir]->description = db_exits["description"];
         else
-          rp2->dir_option[dir]->description = NULL;
+          rp2->dir_option[dir]->description = nullptr;
 
         tmp = convertTo<int>(db_exits["type"]);
         if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
@@ -3354,7 +3354,7 @@ void TRoom::loadOne(FILE* fl, bool tinyfile) {
   for (dir = MIN_DIR; dir < MAX_DIR; dir++)
     dir_option[dir] = 0;
 
-  ex_description = NULL;
+  ex_description = nullptr;
 
   while (fscanf(fl, "%s\n", chk) == 1) {
     switch (*chk) {
@@ -3388,8 +3388,8 @@ void TRoom::loadOne(FILE* fl, bool tinyfile) {
 }
 
 void TRoom::initLight() {
-  TThing* ch = NULL;
-  int found = FALSE;
+  TThing* ch = nullptr;
+  int found = false;
 
   if (!IS_SET(roomFlags, ROOM_INDOORS))
     setLight(outdoorLight());
@@ -3400,18 +3400,18 @@ void TRoom::initLight() {
       if (!obj)
         continue;
       if (obj->givesOutsideLight()) {
-        found = TRUE;
+        found = true;
         curr = obj->getLightFromOutside();
         if (curr > best)
           best = curr;
       } else if (obj)
-        found = TRUE;
+        found = true;
     }
     if (!found) {
       vlogf(LOG_EDIT,
         format("Room (%s:%d) missing expected window.  Resetting.") % name %
           number);
-      setHasWindow(FALSE);
+      setHasWindow(false);
     }
     setLight(best);
   } else
@@ -3551,7 +3551,7 @@ void room_edit(TBeing* ch, const char* arg) {
     if (!*arg || *arg == '\n') {
       ch->desc->connected = CON_PLYNG;
       ch->roomp->removeRoomFlagBit(ROOM_BEING_EDITTED);
-      act("$n has returned from editing.", TRUE, ch, 0, 0, TO_ROOM);
+      act("$n has returned from editing.", true, ch, 0, 0, TO_ROOM);
 
       // reset the terminal bars
       if (ch->vt100() || ch->ansi())

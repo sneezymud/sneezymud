@@ -81,16 +81,16 @@ void TSpellBag::findSomeComponent(TComponent** comp_gen,
 void TSpellBag::getObjFromMeText(TBeing* tBeing, TThing* tThing, getTypeT tType,
   bool tFirst) {
 #if 1
-  act("You take $p from $P.", FALSE, tBeing, tThing, this, TO_CHAR);
-  act("$n takes $p from $P.", TRUE, tBeing, tThing, this, TO_ROOM);
+  act("You take $p from $P.", false, tBeing, tThing, this, TO_CHAR);
+  act("$n takes $p from $P.", true, tBeing, tThing, this, TO_ROOM);
 #else
   if (tType == GETNULL || tType == GETALL || tType == GETOBJ ||
       tType == GETOBJOBJ) {
-    act("You take $p from $P.", FALSE, tBeing, tThing, this, TO_CHAR);
-    act("$n takes $p from $P.", TRUE, tBeing, tThing, this, TO_ROOM);
+    act("You take $p from $P.", false, tBeing, tThing, this, TO_CHAR);
+    act("$n takes $p from $P.", true, tBeing, tThing, this, TO_ROOM);
   } else if (tFirst) {
-    act("You begin to take from $p.", FALSE, tBeing, this, NULL, TO_CHAR);
-    act("$n begins to take things from $p.", FALSE, tBeing, this, NULL,
+    act("You begin to take from $p.", false, tBeing, this, nullptr, TO_CHAR);
+    act("$n begins to take things from $p.", false, tBeing, this, nullptr,
       TO_CHAR);
   }
 #endif

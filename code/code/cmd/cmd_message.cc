@@ -74,7 +74,7 @@ const char* messageCommandTypes[] = {"title",  //  1
 
 void TBeing::doMessage(const char* tArg) {
   sstring tStString(tArg), tStCommand("");
-  char tString[256], *tMark = NULL;
+  char tString[256], *tMark = nullptr;
   int tValue = -1;
 
   tStString = one_argument(tStString, tStCommand);
@@ -93,8 +93,8 @@ void TBeing::doMessage(const char* tArg) {
       if (messageCommandSwitches[tValue][2] &&
           hasWizPower(wizPowerT(messageCommandSwitches[tValue][2])))
         sendTo(format("%-15s:  %s\n\r") % messageCommandTypes[tValue - 1] %
-               msgVariables(messageTypeT(tValue), (TThing*)NULL,
-                 (const char*)NULL, false));
+               msgVariables(messageTypeT(tValue), (TThing*)nullptr,
+                 (const char*)nullptr, false));
     }
     return;
   } else {
@@ -113,8 +113,8 @@ void TBeing::doMessage(const char* tArg) {
       if (tStString.empty()) {
         sendTo(COLOR_BASIC, format("Message Type: %s set to:\n\r%s\n\r") %
                               messageCommandTypes[(tValue - 1)] %
-                              msgVariables(messageTypeT(tValue), (TThing*)NULL,
-                                (const char*)NULL, false));
+                              msgVariables(messageTypeT(tValue), (TThing*)nullptr,
+                                (const char*)nullptr, false));
         return;
       }
 
@@ -126,10 +126,10 @@ void TBeing::doMessage(const char* tArg) {
         return;
       }
 
-      bool isNamed = (colorString(this, desc, getName(), NULL, COLOR_NONE, TRUE)
+      bool isNamed = (colorString(this, desc, getName(), nullptr, COLOR_NONE, true)
                         .find(getNameNOC(this)) != sstring::npos);
 
-      if (colorString(this, desc, tStString, NULL, COLOR_NONE, TRUE).length() >
+      if (colorString(this, desc, tStString, nullptr, COLOR_NONE, true).length() >
           messageCommandSwitches[tValue][0]) {
         sendTo(format("String length, for this field, is limited to %d "
                       "characters in total.\n\r") %
@@ -179,8 +179,8 @@ void TBeing::doMessage(const char* tArg) {
 
       sendTo(COLOR_BASIC, format("Message %s set to:\n\r%s\n\r") %
                             messageCommandTypes[(tValue - 1)] %
-                            msgVariables(messageTypeT(tValue), (TThing*)NULL,
-                              (const char*)NULL, false));
+                            msgVariables(messageTypeT(tValue), (TThing*)nullptr,
+                              (const char*)nullptr, false));
       msgVariables.savedown();
 
       if (tStString.find("$") != sstring::npos)
@@ -520,7 +520,7 @@ void TMessages::initialize() {
   }
 
   char tString[256], tBuffer[MAX_STRING_LENGTH], tChar;
-  FILE* tFile = NULL;
+  FILE* tFile = nullptr;
 
   sprintf(tString, "mutable/player/%c/%s.strings", LOWER(tPlayer->name[0]),
     sstring(tPlayer->name).lower().c_str());
@@ -557,7 +557,7 @@ void TMessages::savedown() {
     return;
   }
 
-  FILE* tFile = NULL;
+  FILE* tFile = nullptr;
   char tString[256];
   sstring tStString("");
   bool didWrite = false;

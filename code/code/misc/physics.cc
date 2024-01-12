@@ -14,7 +14,7 @@
 #include "materials.h"
 
 bool TBeing::hasBoat() const {
-  int has_boat = FALSE;
+  int has_boat = false;
 
   for (StuffIter it = stuff.begin(); it != stuff.end(); ++it)
     (*it)->usingBoat(&has_boat);
@@ -26,10 +26,10 @@ bool TBeing::isSwimming() const {
   if (roomp->isUnderwaterSector() ||
       (roomp->isWaterSector() && !isLevitating() && !isFlying())) {
     if (hasBoat())
-      return FALSE;
-    return TRUE;
+      return false;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 /* returns true if climb roll successful. false = fall */
@@ -47,15 +47,15 @@ bool TBeing::canClimb() {
   }
 
   if (isFlying())
-    return TRUE;
+    return true;
   if (riding && riding->isFlying())
-    return TRUE;
+    return true;
 
   if (raceHasNaturalClimb())
-    return TRUE;
+    return true;
   tbt = dynamic_cast<TBeing*>(riding);
   if (tbt && tbt->raceHasNaturalClimb())
-    return TRUE;
+    return true;
 
   if (getDiscipline(DISC_ADVENTURING))
     skill = 5 * getSkillValue(SKILL_CLIMB);
@@ -66,7 +66,7 @@ bool TBeing::canClimb() {
 
   skill += plotStat(STAT_CURRENT, STAT_AGI, 15, 100, 65);
   skill -= 10 * drunkMinus();
-  skill -= (int)(getTotalWeight(FALSE) / 5.0);
+  skill -= (int)(getTotalWeight(false) / 5.0);
   skill -= getCarriedVolume() / 100;
   skill -= (fight() ? 125 : 0);
   skill -= (heldInPrimHand() ? 65 : 0);
@@ -80,16 +80,16 @@ bool TBeing::canClimb() {
   skill += ::number(-(3 * num), (2 * num));
 
   if (skill >= 0)
-    return TRUE;
+    return true;
   else {
     if (!clearpath(in_room, DIR_DOWN)) {
       if (roomp->dir_option[DIR_DOWN] &&
           IS_SET(roomp->dir_option[DIR_DOWN]->condition, EXIT_CLOSED)) {
-        return TRUE;
+        return true;
       } else {
         vlogf(LOG_BUG, format("%s falling from room %d with no down dir.") %
                          getName() % in_room);
-        return TRUE;
+        return true;
       }
     } else if (!riding) {
       sendTo("You lose your grip and begin to plummet earthward!\n\r");
@@ -97,7 +97,7 @@ bool TBeing::canClimb() {
       sendTo("Your cursed mount slips and tumbles earthward!\n\r");
       sendTo("You, however, manage to grab ahold of something.\n\r");
     }
-    return FALSE;
+    return false;
   }
 }
 
@@ -105,24 +105,24 @@ bool TBeing::canClimb() {
 bool TBeing::sectorSafe() {
   TRoom* rp;
   if (!(rp = roomp))
-    return TRUE;
+    return true;
   if (!rp->isFallSector())
-    return TRUE;
+    return true;
 
   if (rp->isAirSector() || rp->isFlyingSector())
-    return FALSE;
+    return false;
 
   if (canClimb())
-    return TRUE;
+    return true;
 
-  return FALSE;  // climb failed and they fall
+  return false;  // climb failed and they fall
 }
 
 bool TBeing::canSwim(dirTypeT dir) {
   TRoom* rp;
 
   if (isImmortal())
-    return TRUE;
+    return true;
 
   if (eitherLegHurt()) {
     sendTo("Your damaged legs makes it impossible to swim.\n\r");
@@ -155,7 +155,7 @@ bool TBeing::canSwim(dirTypeT dir) {
   const int GRAMS_PER_POUND = 454;
   // 1 inch = 2.54 cm
   // density = mass/volume
-  int mass = (int)(getTotalWeight(TRUE) * GRAMS_PER_POUND);
+  int mass = (int)(getTotalWeight(true) * GRAMS_PER_POUND);
   int volume = (int)(getVolume() * 2.54 * 2.54 * 2.54);
 
   // make some adjustments based on skill and difficulty
@@ -225,31 +225,31 @@ bool TObj::willFloat() {
   if ((x == 255) ||
       // weight <= x
       (compareWeights(getWeight(), (float)x) != -1) || isObjStat(ITEM_FLOAT))
-    return TRUE;
+    return true;
 
   // grimhaven sewer pipe - high pressure!
   if (inRoom() == 18982 || inRoom() == 27250)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 int check_sinking_obj(TObj* obj, int room) {
   TRoom* rp;
 
   if (room == Room::NOWHERE)
-    return FALSE;
+    return false;
   if (!(rp = obj->roomp) || !rp->isWaterSector())
-    return FALSE;
+    return false;
 
   if (obj->willFloat()) {
     if (!rp->isUnderwaterSector() || !clearpath(obj->in_room, DIR_UP))
-      return FALSE;
+      return false;
     sendrpf(rp, "%s floats silently upward.\n\r",
       sstring(obj->shortDescr).cap().c_str());
     if (!(rp = real_roomp(obj->roomp->dir_option[DIR_UP]->to_room))) {
       vlogf(LOG_BUG, "Serious bug in floating objects!");
-      return FALSE;
+      return false;
     }
     --(*obj);
     *rp += *obj;
@@ -261,12 +261,12 @@ int check_sinking_obj(TObj* obj, int room) {
         sstring(obj->shortDescr).cap().c_str());
   } else {
     if (!clearpath(obj->in_room, DIR_DOWN))
-      return FALSE;
+      return false;
     sendrpf(rp, "%s sinks downward into the water.\n\r",
       sstring(obj->shortDescr).cap().c_str());
     if (!(rp = real_roomp(obj->roomp->dir_option[DIR_DOWN]->to_room))) {
       vlogf(LOG_BUG, "Serious bug in sinking objects!");
-      return FALSE;
+      return false;
     }
     --(*obj);
     *rp += *obj;
@@ -278,7 +278,7 @@ int check_sinking_obj(TObj* obj, int room) {
       sendrpf(rp, "%s drops with a gush of water from above.\n\r",
         sstring(obj->shortDescr).cap().c_str());
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::checkSinking(int) {
@@ -290,18 +290,18 @@ int TBeing::checkSinking(int) {
       (tbr && (tbr->isAffected(AFF_SWIM) || tbr->isLevitating() ||
                 tbr->isFlying())) ||
       isFlying() || isLevitating())
-    return FALSE;
+    return false;
 
   if (fight())
-    return FALSE;
+    return false;
 
   bool has_boat = hasBoat();
   if (has_boat)
-    return FALSE;
+    return false;
 
   if (canSwim(DIR_NONE) > 0) {
     if (!(::number(0, 20)) || getRace() == RACE_DWARF) {
-      act("$n swims to stay afloat.", FALSE, this, 0, 0, TO_ROOM);
+      act("$n swims to stay afloat.", false, this, 0, 0, TO_ROOM);
       sendTo("You swim hard to stay afloat.\n\r");
       addToMove(-3);
       if (!getMove() || (getRace() == RACE_DWARF &&
@@ -311,20 +311,20 @@ int TBeing::checkSinking(int) {
         else
           sendTo("Your swimming has totally exhausted you.\n\r");
         sendTo("You SINK into the waters!\n\r");
-        act("$n sinks downwards, into the waters.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n sinks downwards, into the waters.", false, this, 0, 0, TO_ROOM);
         --(*this);
         rp = real_roomp(rp->dir_option[DIR_DOWN]->to_room);
         *rp += *this;
         doLook("", CMD_LOOK);
         if (rp->isWaterSector())
-          act("Flailing frantically, $n sinks into the room from above.", FALSE,
+          act("Flailing frantically, $n sinks into the room from above.", false,
             this, 0, 0, TO_ROOM);
         else
-          act("$n falls from a gush of water above.", FALSE, this, 0, 0,
+          act("$n falls from a gush of water above.", false, this, 0, 0,
             TO_ROOM);
       }
     }
-    return FALSE;
+    return false;
   }
 
   if (riding)
@@ -333,24 +333,24 @@ int TBeing::checkSinking(int) {
     rider->dismount(POSITION_STANDING);
 
   sendTo("You SINK into the waters!\n\r");
-  act("$n sinks downwards, into the waters.", FALSE, this, 0, 0, TO_ROOM);
+  act("$n sinks downwards, into the waters.", false, this, 0, 0, TO_ROOM);
   --(*this);
   rp = real_roomp(rp->dir_option[DIR_DOWN]->to_room);
   *rp += *this;
   doLook("", CMD_LOOK);
   if (rp->isWaterSector())
-    act("Flailing frantically, $n sinks into the room from above.", FALSE, this,
+    act("Flailing frantically, $n sinks into the room from above.", false, this,
       0, 0, TO_ROOM);
   else
-    act("$n falls from a gush of water above.", FALSE, this, 0, 0, TO_ROOM);
+    act("$n falls from a gush of water above.", false, this, 0, 0, TO_ROOM);
 
-  return TRUE;
+  return true;
 }
 
 // note, hokey formula is the same as in thrown objects.  This will need tweek
 int obj_hit_mobs(TObj* o, TRoom* rp) {
   int rc;
-  TBeing* c = NULL;
+  TBeing* c = nullptr;
   TThing* t;
 
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end();) {
@@ -358,32 +358,32 @@ int obj_hit_mobs(TObj* o, TRoom* rp) {
     c = dynamic_cast<TBeing*>(t);
     if (!c)
       continue;
-    if (!number(0, 2) && hitInnocent(NULL, o, c)) {
+    if (!number(0, 2) && hitInnocent(nullptr, o, c)) {
       if (number(5, 30) < c->plotStat(STAT_CURRENT, STAT_SPE, 3, 19, 13)) {
-        act("$n dodges out of the way of $p.", FALSE, c, o, NULL, TO_ROOM);
+        act("$n dodges out of the way of $p.", false, c, o, nullptr, TO_ROOM);
         c->sendTo("You dodge out of its way.\n\r");
       } else {
-        act("$n is smacked by $p!", FALSE, c, o, NULL, TO_ROOM);
-        act("You are unable to dodge being hit by $p!", FALSE, c, o, NULL,
+        act("$n is smacked by $p!", false, c, o, nullptr, TO_ROOM);
+        act("You are unable to dodge being hit by $p!", false, c, o, nullptr,
           TO_CHAR);
         rc = c->damageEm(min(max(0, ((int)o->getWeight() - 5)), 30),
           "killed by a falling object!", DAMAGE_FALL);
         if (IS_SET_ONLY(rc, DELETE_THIS)) {
           delete c;
-          c = NULL;
-          return TRUE;
+          c = nullptr;
+          return true;
         }
       }
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 /* another hokey formula twisted from range.c .. this time doing a bit of damage
  */
 int obj_hit_objs(TObj* o, TRoom* rp) {
-  TObj* t = NULL;
+  TObj* t = nullptr;
   int d;
 
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end(); ++it) {
@@ -397,8 +397,8 @@ int obj_hit_objs(TObj* o, TRoom* rp) {
         sendrpf(rp, "%s DESTROYS %s, as it smacks into it!\n\r",
           o->shortDescr.c_str(), t->shortDescr.c_str());
         delete t;
-        t = NULL;
-        return TRUE;
+        t = nullptr;
+        return true;
       }
       if (d)
         sendrpf(rp, "%s damages %s, as it smacks into it!\n\r",
@@ -406,10 +406,10 @@ int obj_hit_objs(TObj* o, TRoom* rp) {
       else
         sendrpf(rp, "%s bounces off %s, spinning wildly!\n\r",
           o->shortDescr.c_str(), t->shortDescr.c_str());
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 // return DELETE_THIS
@@ -419,15 +419,15 @@ int TObj::checkFalling() {
   if (!roomp || !roomp->isFallSector() || !clearpath(in_room, DIR_DOWN) ||
       (compareWeights(getWeight(), 0.0) != -1)) {
     // weight <= 0
-    return FALSE;
+    return false;
   }
 
   if (isObjStat(ITEM_ATTACHED))
-    return FALSE;
+    return false;
 
   count = 0;
 
-  int rc = checkSpec(NULL, CMD_OBJ_START_TO_FALL, "", NULL);
+  int rc = checkSpec(nullptr, CMD_OBJ_START_TO_FALL, "", nullptr);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
@@ -435,18 +435,18 @@ int TObj::checkFalling() {
     sendrpf(roomp, "%s drops downward.\n\r", sstring(shortDescr).cap().c_str());
     if (!roomp) {
       vlogf(LOG_BUG, "Serious bug in falling objects!");
-      return FALSE;
+      return false;
     }
     roomDirData* rdd = roomp->exitDir(DIR_DOWN);
     if (!rdd) {
       vlogf(LOG_BUG, "Serious bug in falling objects!");
-      return FALSE;
+      return false;
     }
     int new_room = rdd->to_room;
     TRoom* rp = real_roomp(new_room);
     if (!rp) {
       vlogf(LOG_BUG, "Serious bug in falling objects!");
-      return FALSE;
+      return false;
     }
     --(*this);
     *rp += *this;
@@ -458,53 +458,53 @@ int TObj::checkFalling() {
     if (!clearpath(in_room, DIR_DOWN) || !roomp->isFallSector()) {
       if ((water = roomp->isWaterSector()))
         count >>= 1; /* water is a bit softer for damage purposes */
-      damaged = FALSE;
+      damaged = false;
       if (obj_flags.struct_points != -1)
         for (i = 0; i < count; i++)
           if (dice(1, 10) <= (material_nums[getMaterial()].fall_susc % 10)) {
-            damaged = TRUE;
+            damaged = true;
             if ((obj_flags.struct_points -=
                   (material_nums[getMaterial()].fall_susc / 10)) <= 0) {
               if (water)
                 act(
                   "With a loud SPLASH, $n strikes the water and is utterly "
                   "destroyed.",
-                  FALSE, this, 0, 0, TO_ROOM);
+                  false, this, 0, 0, TO_ROOM);
               else
                 act(
                   "With a loud CLUNK, $n smacks into the $g and is utterly "
                   "destroyed.",
-                  FALSE, this, 0, 0, TO_ROOM);
+                  false, this, 0, 0, TO_ROOM);
               if (!makeScraps())
                 return DELETE_THIS;
-              return TRUE;
+              return true;
             }
           }
       if (damaged) {
         if (water)
           act("With a loud SPLASH, $n is damaged as it strikes the water.",
-            FALSE, this, 0, 0, TO_ROOM);
+            false, this, 0, 0, TO_ROOM);
         else
-          act("With a loud CLUNK, $n is damaged as it strikes the $g.", FALSE,
+          act("With a loud CLUNK, $n is damaged as it strikes the $g.", false,
             this, 0, 0, TO_ROOM);
       } else {
         if (water)
           act(
             "With a gentle SPLASH, $n plops into the water, unharmed by the "
             "fall.",
-            FALSE, this, 0, 0, TO_ROOM);
+            false, this, 0, 0, TO_ROOM);
         else
           act("With a gentle THUD, $n falls to the $g, unharmed by the fall.",
-            FALSE, this, 0, 0, TO_ROOM);
+            false, this, 0, 0, TO_ROOM);
       }
-      return TRUE;
+      return true;
     }
   }
   if (count >= 100) {
     vlogf(LOG_BUG, format("Air room %d is screwed.  Tell Brutius.") % in_room);
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_THIS
@@ -512,15 +512,15 @@ int TBeing::fallKill() {
   TRoom* rp;
 
   if (!(rp = roomp))
-    return FALSE;
+    return false;
 
   if (rp->isWaterSector())
     act("$n drops into the room, and SMASHES into the water at high speed.",
-      FALSE, this, 0, 0, TO_ROOM);
+      false, this, 0, 0, TO_ROOM);
   else
     act("$n drops into the room, and SMASHES against the $g at high speed.",
-      FALSE, this, 0, 0, TO_ROOM);
-  act("You are drenched with blood and gore.... yuck!", FALSE, this, 0, 0,
+      false, this, 0, 0, TO_ROOM);
+  act("You are drenched with blood and gore.... yuck!", false, this, 0, 0,
     TO_ROOM);
   sendTo("You are SMASHED into tiny pieces!\n\r");
 
@@ -539,28 +539,28 @@ bool TBeing::fallingMobHitMob(TRoom* rp, int count) {
       continue;
     if ((this != k) && ((prod + (2.35 * k->height * k->getWeight())) >
                          (dice(1, 500) * 1000))) {
-      act("$N slams into you!  OUCH!", FALSE, k, 0, this, TO_CHAR);
-      act("$N slams into $n!  OUCH!", FALSE, k, 0, this, TO_NOTVICT);
-      act("You slam into $n!  OUCH!", FALSE, k, 0, this, TO_VICT);
+      act("$N slams into you!  OUCH!", false, k, 0, this, TO_CHAR);
+      act("$N slams into $n!  OUCH!", false, k, 0, this, TO_NOTVICT);
+      act("You slam into $n!  OUCH!", false, k, 0, this, TO_VICT);
       d = (int)(getWeight() * count / 10);
       if (!isImmortal() && !k->isImmortal() &&
           !k->hasQuestBit(TOG_MONK_GREEN_FALLING)) {
         // we don't want this to start fights...
         if (k->reconcileDamage(k, d, DAMAGE_FALL) == -1) {
           delete k;
-          k = NULL;
+          k = nullptr;
         }
       }
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS
 int TBeing::checkFalling() {
-  int rc = FALSE;
-  TRoom* rp = NULL;
+  int rc = false;
+  TRoom* rp = nullptr;
   int count, new_room, num1, num2 = 0;
 
   // this check is just here to make sure flying stops appropriately
@@ -571,9 +571,9 @@ int TBeing::checkFalling() {
 
   if (!(rp = roomp) || sectorSafe() || !clearpath(in_room, DIR_DOWN) ||
       (desc && (desc->connected > 20)))
-    return FALSE;
+    return false;
 
-  rc = triggerSpecialOnPerson(NULL, CMD_OBJ_START_TO_FALL, "");
+  rc = triggerSpecialOnPerson(nullptr, CMD_OBJ_START_TO_FALL, "");
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
@@ -595,7 +595,7 @@ int TBeing::checkFalling() {
     setPosition(POSITION_FLYING);
   }
   if (isFlying() || (riding && riding->isFlying()))
-    return FALSE;
+    return false;
 
   // basically, separate riders and mounts, but insure that the
   // mount always drops first
@@ -621,14 +621,14 @@ int TBeing::checkFalling() {
   num2 = num1 - 2;
 
   while (count < 100) {
-    act("$n plunges downwards, towards oblivion.", FALSE, this, 0, 0, TO_ROOM);
+    act("$n plunges downwards, towards oblivion.", false, this, 0, 0, TO_ROOM);
     --(*this);
 
     if (!(rp = real_roomp(new_room = rp->dir_option[DIR_DOWN]->to_room))) {
       vlogf(LOG_BUG, format("illegal room number for falling - %d") %
                        rp->dir_option[DIR_DOWN]->to_room);
       thing_to_room(this, Room::VOID);
-      return FALSE;
+      return false;
     }
     *rp += *this;
 
@@ -652,31 +652,31 @@ int TBeing::checkFalling() {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    act("$n falls from above.", FALSE, this, 0, 0, TO_ROOM);
+    act("$n falls from above.", false, this, 0, 0, TO_ROOM);
     count++;
     // peg innocents here, hitting them stops further fall
     if (fallingMobHitMob(rp, count))
-      return FALSE;
+      return false;
 
     if (!clearpath(in_room, DIR_DOWN) ||
         (!rp->isFallSector() || rp->isFlyingSector())) {
       if (rp->isFlyingSector() && (getPosition() >= POSITION_RESTING)) {
         act("Your descent is stopped by a magic force before hitting the $g.",
-          FALSE, this, 0, 0, TO_CHAR);
-        act("$n drops into the room, and stops just above the $g.", FALSE, this,
+          false, this, 0, 0, TO_CHAR);
+        act("$n drops into the room, and stops just above the $g.", false, this,
           0, 0, TO_ROOM);
         if (!isFlying())
           setPosition(POSITION_FLYING);
-        return TRUE;
+        return true;
       }
       if (isImmortal()) {
         act("You bounce like rubber upon hitting the $g.  Immortality rocks!",
-          FALSE, this, 0, 0, TO_CHAR);
+          false, this, 0, 0, TO_CHAR);
         act("$n drops into the room, and bounces off the $g like rubber.",
-          FALSE, this, 0, 0, TO_ROOM);
+          false, this, 0, 0, TO_ROOM);
         setPosition(POSITION_STANDING);
         roomp->playsound(SOUND_BOING, SOUND_TYPE_NOISE);
-        return TRUE;
+        return true;
       }
       if (count > num1) {
         fallKill();
@@ -690,9 +690,9 @@ int TBeing::checkFalling() {
           sendTo(format("You are CRUSHED as you impact with the %s.\n\r") %
                  rp->describeGround());
           if (rp->isWaterSector())
-            act("$n plunges into the waters.", FALSE, this, 0, 0, TO_ROOM);
+            act("$n plunges into the waters.", false, this, 0, 0, TO_ROOM);
           else
-            act("$n *SLAMS* into the $g, looking rather pancake-like.", FALSE,
+            act("$n *SLAMS* into the $g, looking rather pancake-like.", false,
               this, 0, 0, TO_ROOM);
 
           if (!isAgile(-count * 2)) {
@@ -701,7 +701,7 @@ int TBeing::checkFalling() {
             sendTo(
               "You feel the bones in your legs splinter into a million "
               "pieces.\n\r");
-            act("$n's legs twist beneath $m as $e screams in pain!.", FALSE,
+            act("$n's legs twist beneath $m as $e screams in pain!.", false,
               this, 0, 0, TO_ROOM);
           }
           int dam = count * ::number(40, 80);
@@ -713,24 +713,24 @@ int TBeing::checkFalling() {
           if (IS_SET_ONLY(rc, DELETE_THIS))
             return DELETE_THIS;
         }
-        return TRUE;
+        return true;
       }
       if (count > 0) {
         if (isAgile(5)) {
           if (rp->isWaterSector()) {
-            act("$n dives gracefully into the waters.", FALSE, this, 0, 0,
+            act("$n dives gracefully into the waters.", false, this, 0, 0,
               TO_ROOM);
             sendTo("You dive gracefully into the waters.\n\r");
           } else {
-            act("$n drops to the $g safely.  What a lucky bastard.", FALSE,
+            act("$n drops to the $g safely.  What a lucky bastard.", false,
               this, 0, 0, TO_ROOM);
             sendTo("You land safely on your feet!\n\r");
           }
-          return TRUE;
+          return true;
         }
         if (rp->isWaterSector()) {
           act("$n belly-flops into the water.  OUCH!  That _had_ to have hurt.",
-            FALSE, this, 0, 0, TO_ROOM);
+            false, this, 0, 0, TO_ROOM);
           sendTo("You scream in pain as you belly-flop into the water.\n\r");
           int dam = count * ::number(5, 30);
           if (affectedBySpell(SPELL_FEATHERY_DESCENT) ||
@@ -741,7 +741,7 @@ int TBeing::checkFalling() {
           if (IS_SET_ONLY(rc, DELETE_THIS))
             return DELETE_THIS;
         } else {
-          act("$n screams as $e tumbles to the $g.", FALSE, this, 0, 0,
+          act("$n screams as $e tumbles to the $g.", false, this, 0, 0,
             TO_ROOM);
           sendTo(format("You scream in pain as you tumble to the %s.\n\r") %
                  roomp->describeGround());
@@ -753,17 +753,17 @@ int TBeing::checkFalling() {
           if (IS_SET_ONLY(rc, DELETE_THIS))
             return DELETE_THIS;
         }
-        return TRUE;
+        return true;
       }
       if (rp->isWaterSector()) {
-        act("$n splashes into the water.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n splashes into the water.", false, this, 0, 0, TO_ROOM);
         sendTo("You fall un-scathed into the refreshing waters.\n\r");
       } else {
-        act("$n drops gracefully onto the $g.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n drops gracefully onto the $g.", false, this, 0, 0, TO_ROOM);
         sendTo(COLOR_ROOMS, format("You drop gracefully to the %s.\n\r") %
                               roomp->describeGround());
       }
-      return TRUE;
+      return true;
     }
   }
   if (count >= 100) {
@@ -772,9 +772,9 @@ int TBeing::checkFalling() {
       fallKill();
       return DELETE_THIS;
     }
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_THIS
@@ -783,20 +783,20 @@ int TBeing::checkDrowning() {
   TRoom* rp;
 
   if (!isPc())
-    return FALSE;
+    return false;
 
   rp = roomp;
   if (!rp)
-    return FALSE;
+    return false;
 
   if (rp->isUnderwaterSector()) {
     if (!isImmortal()) {
       bool rc2 = isAffected(AFF_WATERBREATH);
       if (rc2 == true)
-        return FALSE;
+        return false;
 
       sendTo("PANIC!  You're drowning!!!!!!\n\r");
-      act("$n waves $s hands vigorously, and turns a deep purple color.", FALSE,
+      act("$n waves $s hands vigorously, and turns a deep purple color.", false,
         this, 0, 0, TO_ROOM);
       addToHit(-(::number(1, 10)));
       addToMove(-::number(1, 10));
@@ -813,26 +813,26 @@ int TBeing::checkDrowning() {
         return DELETE_THIS;
     }
   }
-  return FALSE;
+  return false;
 }
 
 bool TBeing::canFly() const {
   if (getPosition() <= POSITION_STUNNED)
-    return FALSE;
+    return false;
 
   // natural fly requires arms/wings be useful
   if (race->isWinged()) {
     if (!eitherArmHurt())
-      return TRUE;
+      return true;
   }
   // a non-natural ability to fly (air elemental, djinni, fly spell, etc)
   if (isAffected(AFF_FLYING))
-    return TRUE;
+    return true;
 
   if (isImmortal())
     return true;
 
-  return FALSE;
+  return false;
 }
 
 // If someone's flying but can't really fly, and the room doesn't
@@ -845,5 +845,5 @@ int TBeing::flightCheck() {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }

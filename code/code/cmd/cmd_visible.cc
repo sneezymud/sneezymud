@@ -45,7 +45,7 @@ void TPerson::doVisible(const char*, bool tSilent) {
   if (!isVampire() && (!doesKnowSkill(SPELL_INVISIBILITY) && ::number(0, 10))) {
     sendTo(
       "You fail to control the magic and lose the power of invisibility.\n\r");
-    act("$n quickly becomes visible.", FALSE, this, NULL, NULL, TO_ROOM);
+    act("$n quickly becomes visible.", false, this, nullptr, nullptr, TO_ROOM);
 
     affectFrom(SPELL_INVISIBILITY);
 
@@ -55,7 +55,7 @@ void TPerson::doVisible(const char*, bool tSilent) {
     return;
   } else if (!tSilent) {
     sendTo("You focus and slowly become visible.\n\r");
-    act("$n slowly becomes visible.", FALSE, this, NULL, NULL, TO_ROOM);
+    act("$n slowly becomes visible.", false, this, nullptr, nullptr, TO_ROOM);
   }
 
   if (IS_SET(specials.affectedBy, AFF_INVISIBLE))
@@ -121,7 +121,7 @@ void TPerson::doInvis(const char*) {
   }
 
   sendTo("You focus and slowly vanish.\n\r");
-  act("$n slowly fades away.", FALSE, this, NULL, NULL, TO_ROOM);
+  act("$n slowly fades away.", false, this, nullptr, nullptr, TO_ROOM);
   SET_BIT(specials.affectedBy, AFF_INVISIBLE);
 
   // The affect of 're-releasing' the magic causes the time left

@@ -9,7 +9,7 @@ class sstring;
 // its destructor when it goes out of scope.  All of the functions are safe
 // to use even on failures, so if you do not do any error checking, the worst
 // than can happen is that you won't get any results.  On error, TDatabase
-// will send LOG_DB vlogf's and return the appropriate value (false or NULL).
+// will send LOG_DB vlogf's and return the appropriate value (false or nullptr).
 //
 // Usage example:
 //
@@ -52,7 +52,7 @@ class sstring;
 // does not expect results (insert, update, delete, etc) then the results are
 // left as is.  You can do a select, then do an insert/update/delete and still
 // access the select's results.
-// Returns: TRUE if query was sent successfully, FALSE if there was an error
+// Returns: true if query was sent successfully, false if there was an error
 // Ex:
 // float weight=5.5;
 // char name[]="blade";
@@ -61,7 +61,7 @@ class sstring;
 // name like '%%%s%%' and vnum>%i", weight, name, vnum);
 //
 // bool fetchRow() - Makes the next row of results available via getColumn.
-// Returns: FALSE if no results or no more rows available.
+// Returns: false if no results or no more rows available.
 // Ex:
 // while(db.fetchRow(){
 //   printf("%s", db["vnum"]);
@@ -75,7 +75,7 @@ class sstring;
 // sstring short_desc = db["short_desc"];
 //
 // bool isResults() - checks if there are results available
-// Returns: TRUE if results are there, FALSE if not
+// Returns: true if results are there, false if not
 //
 // long rowCount() - added to return affected or retrieved row counts
 // This should include affected counts for inserts, updates and deletes

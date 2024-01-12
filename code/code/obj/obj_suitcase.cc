@@ -39,5 +39,5 @@ bool TSuitcase::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "I can't repair suitcases.");
   }
-  return TRUE;
+  return true;
 }

@@ -542,7 +542,7 @@ void TBeing::doPrompt(const char* arg) {
           Descriptor* d;
           char buf[256] = "\0";
 
-          desc->send_client_prompt(TRUE, 16383);
+          desc->send_client_prompt(true, 16383);
 
           for (d = descriptor_list; d; d = d->next) {
             if (d->character) {
@@ -711,7 +711,7 @@ void TPerson::doColor(const char* buf) {
   char arg[160], arg2[160];
   char tempBuf[20];
   unsigned int i;
-  int toggle = TRUE;
+  int toggle = true;
 
   if (!desc) {
     vlogf(LOG_BUG,
@@ -828,8 +828,8 @@ void TPerson::doColor(const char* buf) {
     if (hasWizPower(POWER_COLOR_LOGS))
       SET_BIT(desc->plr_color, PLR_COLOR_LOGS);
 
-    act("Your color has been set to all available color.", FALSE, this, NULL,
-      NULL, TO_CHAR);
+    act("Your color has been set to all available color.", false, this, nullptr,
+      nullptr, TO_CHAR);
   } else if (is_abbrev(arg, "none")) {
     remPlayerAction(PLR_COLOR);
     REMOVE_BIT(desc->prompt_d.type, PROMPT_COLOR);
@@ -843,7 +843,7 @@ void TPerson::doColor(const char* buf) {
     REMOVE_BIT(desc->plr_color, PLR_COLOR_SHOUTS);
     REMOVE_BIT(desc->plr_color, PLR_COLOR_SPELLS);
 
-    act("All color options have been toggled off.", FALSE, this, NULL, NULL,
+    act("All color options have been toggled off.", false, this, nullptr, nullptr,
       TO_CHAR);
   } else if (is_abbrev(arg, "communications")) {
     if (IS_SET(desc->plr_color, PLR_COLOR_COMM)) {
@@ -985,7 +985,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "black");
       if (IS_SET(desc->plr_colorOff, COLOR_BLACK)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BLACK);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BLACK) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -997,7 +997,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "red");
       if (IS_SET(desc->plr_colorOff, COLOR_RED)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_RED);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_RED) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1009,7 +1009,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "green");
       if (IS_SET(desc->plr_colorOff, COLOR_GREEN)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_GREEN);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_GREEN) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1021,7 +1021,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "orange");
       if (IS_SET(desc->plr_colorOff, COLOR_ORANGE)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_ORANGE);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_ORANGE) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1033,7 +1033,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "blue");
       if (IS_SET(desc->plr_colorOff, COLOR_BLUE)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BLUE);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BLUE) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1045,7 +1045,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "purple");
       if (IS_SET(desc->plr_colorOff, COLOR_PURPLE)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_PURPLE);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_PURPLE) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1057,7 +1057,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "cyan");
       if (IS_SET(desc->plr_colorOff, COLOR_CYAN)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_CYAN);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_CYAN) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1069,7 +1069,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "white");
       if (IS_SET(desc->plr_colorOff, COLOR_WHITE)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_WHITE);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_WHITE) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1081,7 +1081,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "yellow");
       if (IS_SET(desc->plr_colorOff, COLOR_YELLOW)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_YELLOW);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_YELLOW) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1093,7 +1093,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "gray");
       if (IS_SET(desc->plr_colorOff, COLOR_GRAY)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_GRAY);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_GRAY) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1105,7 +1105,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "underline");
       if (IS_SET(desc->plr_colorOff, COLOR_UNDER)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_UNDER);
-        toggle = FALSE;
+        toggle = false;
       } else {
         SET_BIT(desc->plr_colorOff, COLOR_UNDER);
       }
@@ -1115,7 +1115,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "bold");
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BOLD);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BOLD) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1128,7 +1128,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "bold red");
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_RED)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BOLD_RED);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BOLD_RED) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1140,7 +1140,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "bold green");
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_GREEN)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BOLD_GREEN);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BOLD_GREEN) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1152,7 +1152,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "bold blue");
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_BLUE)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BOLD_BLUE);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BOLD_BLUE) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1164,7 +1164,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "bold purple");
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_PURPLE)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BOLD_PURPLE);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BOLD_PURPLE) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1176,7 +1176,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "bold cyan");
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_CYAN)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BOLD_CYAN);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BOLD_CYAN) {
           sendTo("You can not replace your color substitute.\n\r");
@@ -1188,7 +1188,7 @@ void TPerson::doColor(const char* buf) {
       sprintf(tempBuf, "%s", "bold white");
       if (IS_SET(desc->plr_colorOff, COLOR_BOLD_WHITE)) {
         REMOVE_BIT(desc->plr_colorOff, COLOR_BOLD_WHITE);
-        toggle = FALSE;
+        toggle = false;
       } else {
         if (desc->plr_colorSub == COLOR_SUB_BOLD_WHITE) {
           sendTo("You can not replace your color substitute.\n\r");

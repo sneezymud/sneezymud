@@ -23,7 +23,7 @@ void TBeing::doSet(const char*) { sendTo("You can't, you're a mob.\n\r"); }
 void TPerson::doSet(const char* argument) {
   char field[20], namebuf[20], parmstr[50];
   char obj_name[128];
-  TBeing* mob = NULL;
+  TBeing* mob = nullptr;
   int i, foundNum = 0, parm = 0, value = 0, parm2 = 0;
   int parm3 = 0, amt = 0, initial = 0;
   float percent;
@@ -41,10 +41,10 @@ void TPerson::doSet(const char* argument) {
   argument = one_argument(argument, namebuf, cElements(namebuf));
   argument = one_argument(argument, parmstr, cElements(parmstr));
 
-  if (!(mob = get_char_room_vis(this, namebuf, NULL, EXACT_YES)) &&
-      !(mob = get_char_room_vis(this, namebuf, NULL, EXACT_NO)) &&
-      !(mob = get_char_vis_world(this, namebuf, NULL, EXACT_YES)) &&
-      !(mob = get_char_vis_world(this, namebuf, NULL, EXACT_NO))) {
+  if (!(mob = get_char_room_vis(this, namebuf, nullptr, EXACT_YES)) &&
+      !(mob = get_char_room_vis(this, namebuf, nullptr, EXACT_NO)) &&
+      !(mob = get_char_vis_world(this, namebuf, nullptr, EXACT_YES)) &&
+      !(mob = get_char_vis_world(this, namebuf, nullptr, EXACT_NO))) {
     sendTo(format("I don't see '%s' here.\n\r") % namebuf);
     return;
   }
@@ -123,7 +123,7 @@ void TPerson::doSet(const char* argument) {
 #endif
     double f_amt = getExpClassLevel(parm) + 0.0001;
     tper->setExp(f_amt);
-    amt = tper->checkDoneBasic(tper, p2ci, FALSE, TRUE);
+    amt = tper->checkDoneBasic(tper, p2ci, false, true);
     for (i = initial; i < parm; i++) {
       if (!tper->player.doneBasic[p2ci]) {
         value = amt + tper->getPracs(p2ci);
@@ -134,9 +134,9 @@ void TPerson::doSet(const char* argument) {
           }
         }
       }
-      tper->fixClientPlayerLists(TRUE);
+      tper->fixClientPlayerLists(true);
       tper->advanceLevel(p2ci);
-      tper->fixClientPlayerLists(FALSE);
+      tper->fixClientPlayerLists(false);
       tper->setTitle(false);
       tper->setSelectToggles(this, p2ci, SILENT_YES);
     }
@@ -161,7 +161,7 @@ void TPerson::doSet(const char* argument) {
     if (mob->isImmortal()) {
       if (mob->discs) {
         delete mob->discs;
-        mob->discs = NULL;
+        mob->discs = nullptr;
         mob->assignDisciplinesClass();
         mob->affectTotal();
         mob->doSave(SILENT_YES);
@@ -185,7 +185,7 @@ void TPerson::doSet(const char* argument) {
     return;
   } else if (is_abbrev(field, "newfaction")) {
     buf = format("%s%s") % parmstr % argument;
-    TGuild* f = NULL;
+    TGuild* f = nullptr;
     f = get_guild(buf.c_str());
     if (!f) {
       sendTo("No such factions\n\r");
@@ -570,13 +570,13 @@ void TPerson::doSet(const char* argument) {
     if ((i = convertTo<int>(parmstr))) {
       snt = spellNumT(i);
     } else {
-      foundNum = FALSE;
+      foundNum = false;
       for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
         if (hideThisSpell(snt))
           continue;
         strcpy(buf2, discArray[snt]->name);
         if (is_exact_name(parmstr, buf2)) {
-          foundNum = TRUE;
+          foundNum = true;
           break;
         }
       }
@@ -1131,7 +1131,7 @@ void TPerson::doSet(const char* argument) {
 
     buf = format("You stick $p into $N's %s.") %
           mob->describeBodySlot(wearSlotT(parm));
-    act(buf, FALSE, this, obj, mob, TO_CHAR);
+    act(buf, false, this, obj, mob, TO_CHAR);
     --(*obj);
     mob->stickIn(obj, wearSlotT(parm));
     return;
@@ -1186,7 +1186,7 @@ void TPerson::doSet(const char* argument) {
     }
     wearSlotT slot = wearSlotT(parm);
     if (!mob->slotChance(slot)) {
-      act("$N has not got that part.", FALSE, this, 0, mob, TO_CHAR);
+      act("$N has not got that part.", false, this, 0, mob, TO_CHAR);
       return;
     }
     mob->setLimbFlags(slot, parm2);

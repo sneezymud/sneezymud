@@ -909,7 +909,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard) {
             "name" % "name" % buf;
   buf =
     format("%s%s") %
-    getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
+    getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), nullptr) %
     db["name"];
   cout << format("<tr><td></td><td bgcolor=black>%s</td></tr>\n") %
             mudColorToHTML(buf);
@@ -923,7 +923,7 @@ void sendShowRoom(int account_id, int vnum, bool wizard) {
             "description" % buf;
   buf =
     format("%s%s") %
-    getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
+    getSectorDescrColor(mapFileToSector(convertTo<int>(db["sector"])), nullptr) %
     db["description"];
   cout << format("<tr><td></td><td width=80 bgcolor=black>%s</td></tr>\n") %
             mudColorToHTML(buf);
@@ -1077,7 +1077,7 @@ void sendRoomlist(int account_id) {
     cout << "','showroom')>" << db["vnum"] << "</a>" << endl;
     buf =
       format("%s%s") %
-      getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), NULL) %
+      getSectorNameColor(mapFileToSector(convertTo<int>(db["sector"])), nullptr) %
       db["name"];
     cout << "</td><td bgcolor=black>" << mudColorToHTML(buf, false);
     cout << "</td>" << endl;

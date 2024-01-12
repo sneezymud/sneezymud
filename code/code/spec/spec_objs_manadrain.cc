@@ -30,38 +30,38 @@ int weaponManaDrainer(TBeing* tVictim, cmdTypeT tCmd, const char*, TObj* tObj,
   bool forceSuccess = false;
 
   if (!(tWeap = dynamic_cast<TBaseWeapon*>(tObj)) || !tVictim)
-    return FALSE;
+    return false;
 
   if (!(ch = dynamic_cast<TBeing*>(tObj->equippedBy)))
-    return FALSE;
+    return false;
 
   if (ch->getName() == "Lapsos" && ch->isImmortal())
     forceSuccess = true;
 
   if (::number(0, 50) && !forceSuccess)
-    return FALSE;
+    return false;
 
   if (tCmd != CMD_OBJ_HITTING)
-    return FALSE;
+    return false;
 
   if ((!tVictim->hasClass(CLASS_MAGE) && !tVictim->hasClass(CLASS_RANGER) &&
         !tVictim->hasClass(CLASS_MONK)) ||
       (!ch->hasClass(CLASS_MAGE) && !ch->hasClass(CLASS_RANGER) &&
         !ch->hasClass(CLASS_MONK)))
-    return FALSE;
+    return false;
 
   if (!::number(0,
         std::max(10, (int)(tWeap->weaponLevel() +
                            (tVictim->GetMaxLevel() - ch->GetMaxLevel())))) ||
       forceSuccess) {
-    act("A field of darkness seeps from $p.", FALSE, ch, tObj, tVictim,
+    act("A field of darkness seeps from $p.", false, ch, tObj, tVictim,
       TO_CHAR);
-    act("$n braces $mself as a field of darkness seeps from $p.", FALSE, ch,
+    act("$n braces $mself as a field of darkness seeps from $p.", false, ch,
       tObj, tVictim, TO_NOTVICT);
     act(
       "You feel your energy sucked out of you as a field of darkness seeps "
       "from $n's $p.",
-      FALSE, ch, tObj, tVictim, TO_VICT);
+      false, ch, tObj, tVictim, TO_VICT);
 
     int manaDrawn = ::number(1,
       std::max(2, std::min(10, (ch->GetMaxLevel() - tVictim->GetMaxLevel()))));
@@ -69,8 +69,8 @@ int weaponManaDrainer(TBeing* tVictim, cmdTypeT tCmd, const char*, TObj* tObj,
     tVictim->addToMana(-manaDrawn);
     ch->addToMana(manaDrawn);
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

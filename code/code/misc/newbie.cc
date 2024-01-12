@@ -137,7 +137,7 @@ void TBeing::doNewbie(const sstring& arg) {
                    desc->orangeBold() % desc->white() % desc->norm();
   const char* title = isNewbie ? "Newbie" : "Expert";
   sendTo(format(header) %
-         colorString(this, desc, message, NULL, COLOR_BASIC, TRUE, TRUE));
+         colorString(this, desc, message, nullptr, COLOR_BASIC, true, true));
 
   for (Descriptor* d = descriptor_list; d; d = d->next) {
     if (d->character == this || d->connected != CON_PLYNG)
@@ -158,7 +158,7 @@ void TBeing::doNewbie(const sstring& arg) {
     if (!newbieHelper && !newbie)
       continue;
 
-    sstring str = colorString(this, d, message, NULL, COLOR_COMM, FALSE);
+    sstring str = colorString(this, d, message, nullptr, COLOR_COMM, false);
     str.convertStringColor("<c>");
     sstring msg = (format("%s%s %s: %s%s%s") % d->orangeBold() % title % name %
                    d->white() % str % d->norm())
@@ -174,7 +174,7 @@ void TBeing::doNewbie(const sstring& arg) {
     if (!d->m_bIsClient && IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT))
       d->clientf(format("%d|%s|%s") % CLIENT_TELEPATHY %
                  colorString(person, d, (format("%s %s") % title % getName()),
-                   NULL, COLOR_NONE, FALSE) %
+                   nullptr, COLOR_NONE, false) %
                  str);
   }
 }

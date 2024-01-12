@@ -71,4 +71,4 @@ void TOtherObj::writeAffects(int i, FILE* fp) const {
   }
 }
 
-int TOtherObj::addApply(TBeing*, applyTypeT) { return FALSE; }
+int TOtherObj::addApply(TBeing*, applyTypeT) { return false; }

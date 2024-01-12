@@ -132,8 +132,8 @@ void SwitchStuff(TBeing* giver, TBeing* taker, bool setStats) {
   TThing* t;
   classIndT cit;  // used as iterator to pass through classes
 
-  mud_assert(giver != NULL, "Something bogus in SwitchStuff()");
-  mud_assert(taker != NULL, "Something bogus in SwitchStuff()");
+  mud_assert(giver != nullptr, "Something bogus in SwitchStuff()");
+  mud_assert(taker != nullptr, "Something bogus in SwitchStuff()");
 
   // transfer toggles - do this first to avoid issues with skill swaps
   for (int tmpnum = 1; tmpnum < MAX_TOG_INDEX; tmpnum++) {
@@ -220,7 +220,7 @@ void SwitchStuff(TBeing* giver, TBeing* taker, bool setStats) {
     }
   }
   if (dynamic_cast<TMonster*>(giver))
-    giver->discs = NULL;
+    giver->discs = nullptr;
 
   taker->setPiety(giver->getPiety());
   taker->setMana(giver->getMana());
@@ -249,8 +249,8 @@ void SwitchStuff(TBeing* giver, TBeing* taker, bool setStats) {
 }
 
 void DisguiseStuff(TBeing* giver, TBeing* taker) {
-  // do the generic polymorph stuff first, with setStats = FALSE
-  SwitchStuff(giver, taker, FALSE);
+  // do the generic polymorph stuff first, with setStats = false
+  SwitchStuff(giver, taker, false);
 
   if (dynamic_cast<TMonster*>(taker)) {
     statTypeT iStat;
@@ -306,14 +306,14 @@ void TBeing::spellWearOffSoon(spellNumT s) {
     sendTo(
       "You begin to shiver and wonder how much longer you can stay outdoors "
       "before catching frostbite.\n\r");
-    act("$n's teeth begin to chatter.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n's teeth begin to chatter.", true, this, 0, 0, TO_ROOM);
   }
 
   if (discArray[s]->fadeAwaySoon)
     sendTo(format("%s\n\r") % discArray[s]->fadeAwaySoon);
 
   if (discArray[s]->fadeAwaySoonRoom)
-    act(discArray[s]->fadeAwaySoonRoom, TRUE, this, 0, 0, TO_ROOM);
+    act(discArray[s]->fadeAwaySoonRoom, true, this, 0, 0, TO_ROOM);
 }
 
 // return DELETE_THIS
@@ -322,7 +322,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe) {
   // looks real dumb on mobs...
   //  if (!isPc() && getPosition() == POSITION_DEAD)
   if (!isPc() && safe)
-    return FALSE;
+    return false;
 
   int rc;
 
@@ -339,7 +339,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe) {
     act(
       "$n lowers $s shield and relaxes his defensive posture, unable to "
       "continue maintaining $s shield wall.",
-      TRUE, this, 0, 0, TO_ROOM);
+      true, this, 0, 0, TO_ROOM);
   }
 
   if (s < MIN_SPELL || s >= MAX_SKILL || !discArray[s])
@@ -348,7 +348,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe) {
   if (s == AFFECT_WAS_INDOORS && toggleInfo[TOG_QUESTCODE4]->toggle) {
     sendTo(
       "You're getting really cold now, and can barely feel your limbs.\n\r");
-    act("$n begins to shiver violently, and looks pale.", TRUE, this, 0, 0,
+    act("$n begins to shiver violently, and looks pale.", true, this, 0, 0,
       TO_ROOM);
   }
 
@@ -356,7 +356,7 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe) {
     sendTo(format("%s\n\r") % discArray[s]->fadeAway);
 
   if (discArray[s]->fadeAwayRoom)
-    act(discArray[s]->fadeAwayRoom, TRUE, this, 0, 0, TO_ROOM);
+    act(discArray[s]->fadeAwayRoom, true, this, 0, 0, TO_ROOM);
 
   if (s == SPELL_ENSORCER || s == SPELL_HYPNOSIS || s == SPELL_CONJURE_AIR ||
       s == SPELL_CONJURE_EARTH || s == SPELL_CONJURE_FIRE ||
@@ -380,23 +380,23 @@ int TBeing::spellWearOff(spellNumT s, safeTypeT safe) {
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS
 int TBeing::checkDecharm(forceTypeT force, safeTypeT safe) {
   int j, rc = 0, mastLevel = 1;
-  bool release = FALSE;
+  bool release = false;
   TBeing* m;
 
   if (!(m = master) && !force) {
-    return FALSE;
+    return false;
   } else if (m) {
     mastLevel = m->GetMaxLevel();
   }
   mastLevel = 0 - mastLevel;
 
-  stopFollower(FALSE);  // stop following the master
+  stopFollower(false);  // stop following the master
 
   if (!isPc()) {
     int mVn = mobVnum();
@@ -405,51 +405,51 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe) {
         mVn == Mob::EARTH_ELEMENTAL || mVn == Mob::AIR_ELEMENTAL);
     TMonster* tMon = dynamic_cast<TMonster*>(this);
     if (force) {
-      release = TRUE;
+      release = true;
     } else if (isElemental && tMon &&
                (::number(mastLevel, tMon->anger()) <= 0)) {
-      release = TRUE;
+      release = true;
     }
     if (stuff.empty()) {
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
         if (equipment[j]) {
-          release = FALSE;
+          release = false;
           break;
         }
       }
     }
     if (!isElemental) {
       if (m) {
-        act("$n looks elated as you release $m into the world.", TRUE, this,
-          NULL, m, TO_VICT);
-        act("$n looks elated as $e is released into the world.", TRUE, this,
-          NULL, m, TO_NOTVICT);
-        act("You feel free as your master releases you into the world.", TRUE,
-          this, NULL, m, TO_CHAR);
+        act("$n looks elated as you release $m into the world.", true, this,
+          nullptr, m, TO_VICT);
+        act("$n looks elated as $e is released into the world.", true, this,
+          nullptr, m, TO_NOTVICT);
+        act("You feel free as your master releases you into the world.", true,
+          this, nullptr, m, TO_CHAR);
       } else {
-        act("$n is released into the world.", TRUE, this, NULL, NULL, TO_ROOM);
-        act("You are released into the world.", TRUE, this, NULL, NULL,
+        act("$n is released into the world.", true, this, nullptr, nullptr, TO_ROOM);
+        act("You are released into the world.", true, this, nullptr, nullptr,
           TO_CHAR);
       }
-      return FALSE;
+      return false;
     }
     if (release && !safe) {
       if (!m || !::number(0, 1)) {
-        act("$n breaks free of the mortal plane and returns home.", TRUE, this,
-          NULL, NULL, TO_ROOM);
-        act("You break free of the mortal plane and return home.", TRUE, this,
-          NULL, NULL, TO_CHAR);
+        act("$n breaks free of the mortal plane and returns home.", true, this,
+          nullptr, nullptr, TO_ROOM);
+        act("You break free of the mortal plane and return home.", true, this,
+          nullptr, nullptr, TO_CHAR);
       } else {
-        act("$n growls at you then slowly fades away.", FALSE, this, NULL, m,
+        act("$n growls at you then slowly fades away.", false, this, nullptr, m,
           TO_VICT);
-        act("$n growls at $N then slowly fades away.", FALSE, this, NULL, m,
+        act("$n growls at $N then slowly fades away.", false, this, nullptr, m,
           TO_NOTVICT);
-        act("You growl at $n then goes back home.", FALSE, this, NULL, m,
+        act("You growl at $n then goes back home.", false, this, nullptr, m,
           TO_CHAR);
       }
 
-      doDrop("all talens", NULL);
-      doDrop("all", NULL);
+      doDrop("all talens", nullptr);
+      doDrop("all", nullptr);
 
       return DELETE_THIS;
     }
@@ -462,7 +462,7 @@ int TBeing::checkDecharm(forceTypeT force, safeTypeT safe) {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 void pick_best_comp(TComponent** best, TThing* item, spellNumT spell) {
@@ -482,7 +482,7 @@ void pick_best_comp(TComponent** best, TThing* item, spellNumT spell) {
 }
 
 TComponent* comp_from_object(TThing* item, spellNumT spell) {
-  TComponent* ret = NULL;
+  TComponent* ret = nullptr;
 
   pick_best_comp(&ret, item, spell);
 
@@ -515,7 +515,7 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
   juju = equipment[WEAR_NECK];
   wristpouchL = equipment[WEAR_WRIST_L];
   wristpouchR = equipment[WEAR_WRIST_R];
-  item = NULL;
+  item = nullptr;
 
   // Let rangers have components anywhere if not fighting
   if (hasClass(CLASS_RANGER)) {
@@ -536,7 +536,7 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
         if (primary)
           return comp_from_object(primary, spell);
         else
-          return NULL;
+          return nullptr;
       }
       if (ritlevel <= RIT_LEV_COMP_EITHER) {
         if (primary || secondary) {
@@ -546,7 +546,7 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
             item = comp_from_object(secondary, spell);
           return item;
         } else
-          return NULL;
+          return nullptr;
       }
       if (ritlevel <= RIT_LEV_NO_MANTRA) {
         if (primary || secondary || !stuff.empty()) {
@@ -564,7 +564,7 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
           }
           return item;
         } else
-          return NULL;
+          return nullptr;
       }
     }
     if (primary || secondary || belt || juju || wristpouchL || wristpouchR ||
@@ -590,14 +590,14 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
       }
       return item;
     } else
-      return NULL;
+      return nullptr;
   } else {
     if (isPc()) {
       if (wizlevel <= WIZ_LEV_COMP_PRIM_OTHER_FREE) {
         if (primary)
           return comp_from_object(primary, spell);
         else
-          return NULL;
+          return nullptr;
       }
       if (wizlevel <= WIZ_LEV_COMP_EITHER) {
         if (primary || secondary) {
@@ -607,7 +607,7 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
             item = comp_from_object(secondary, spell);
           return item;
         } else
-          return NULL;
+          return nullptr;
       }
       if (wizlevel <= WIZ_LEV_NO_MANTRA) {
         if (primary || secondary || !stuff.empty()) {
@@ -625,7 +625,7 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
           }
           return item;
         } else
-          return NULL;
+          return nullptr;
       }
     }
     if (primary || secondary || belt || juju || wristpouchL || wristpouchR ||
@@ -651,7 +651,7 @@ TComponent* TBeing::findComponent(spellNumT spell) const {
       }
       return item;
     } else
-      return NULL;
+      return nullptr;
   }
 }
 
@@ -668,7 +668,7 @@ static void missingComponent(const TBeing* ch) {
   } else {
     ch->sendTo(
       "You seem to lack the proper materials to complete your task.\n\r");
-    act("$n kicks $mself as $e realizes $e just screwed up.", TRUE, ch, 0, 0,
+    act("$n kicks $mself as $e realizes $e just screwed up.", true, ch, 0, 0,
       TO_ROOM);
   }
 }
@@ -677,22 +677,22 @@ int TBeing::useComponent(TComponent* o, TBeing* vict, checkOnlyT checkOnly) {
   unsigned int i;
 
   if (isImmortal() && isPlayerAction(PLR_NOHASSLE))
-    return TRUE;
+    return true;
 
   // Until a better solution, mobs dont need components. - Russ
   if (!isPc())
-    return TRUE;
+    return true;
 
   // has already used component
   if (spelltask && spelltask->component)
-    return TRUE;
+    return true;
 
   if (!o) {
     missingComponent(this);
-    return FALSE;
+    return false;
   }
   if (checkOnly)
-    return TRUE;
+    return true;
 
   for (i = 0; (i < CompInfo.size()) &&
               (o->getComponentSpell() != CompInfo[i].spell_num);
@@ -703,31 +703,31 @@ int TBeing::useComponent(TComponent* o, TBeing* vict, checkOnlyT checkOnly) {
     vlogf(LOG_BUG, format("useComponent had problem finding component for %s") %
                      o->getName());
     sendTo("Uh oh, something bogus happened.\n\r");
-    return FALSE;
+    return false;
   }
   if (o->isPersonalized() && !isname(getName(), o->name)) {
     vlogf(LOG_MISC, format("Mage %s using component %s that was personalized "
                            "but not theirs!!! Reprimand at once.") %
                       getName() % o->name);
     sendTo("You can't use a component that is personalized for someone else!");
-    return FALSE;
+    return false;
   }
   if (vict && vict != this) {
     if (*CompInfo[i].to_caster && *CompInfo[i].to_vict &&
         *CompInfo[i].to_other) {
-      act(CompInfo[i].to_caster, TRUE, this, o, vict, TO_CHAR);
-      act(CompInfo[i].to_vict, TRUE, this, o, vict, TO_VICT);
-      act(CompInfo[i].to_other, TRUE, this, o, vict, TO_NOTVICT);
+      act(CompInfo[i].to_caster, true, this, o, vict, TO_CHAR);
+      act(CompInfo[i].to_vict, true, this, o, vict, TO_VICT);
+      act(CompInfo[i].to_other, true, this, o, vict, TO_NOTVICT);
     } else if (*CompInfo[i].to_self && *CompInfo[i].to_room) {
-      act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
-      act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
+      act(CompInfo[i].to_self, true, this, o, 0, TO_CHAR);
+      act(CompInfo[i].to_room, true, this, o, 0, TO_ROOM);
     } else {
       vlogf(LOG_BUG, format("Bad component sstring.  component %d  (1)") % i);
     }
   } else {
     if (*CompInfo[i].to_self && *CompInfo[i].to_room) {
-      act(CompInfo[i].to_self, TRUE, this, o, 0, TO_CHAR);
-      act(CompInfo[i].to_room, TRUE, this, o, 0, TO_ROOM);
+      act(CompInfo[i].to_self, true, this, o, 0, TO_CHAR);
+      act(CompInfo[i].to_room, true, this, o, 0, TO_ROOM);
     } else {
       vlogf(LOG_BUG, format("Bad component sstring.  component %d  (2)") % i);
     }
@@ -738,14 +738,14 @@ int TBeing::useComponent(TComponent* o, TBeing* vict, checkOnlyT checkOnly) {
     o->addToComponentCharges(-1);
   else {
     // this should destroy it even if it is inside a spellbag
-    act("$p is all used up and you discard it as worthless.", TRUE, this, o, 0,
+    act("$p is all used up and you discard it as worthless.", true, this, o, 0,
       TO_CHAR);
     delete o;
-    o = NULL;
+    o = nullptr;
   }
   // Set it so that for chanting purposes the component has been used
   if (spelltask)
-    spelltask->component = TRUE;
+    spelltask->component = true;
 
   return 1;
 }
@@ -754,23 +754,23 @@ int TBeing::useComponentObj(TComponent* o, TObj* targ, checkOnlyT checkOnly) {
   unsigned int i;
 
   if (isImmortal())
-    return TRUE;
+    return true;
 
   // Until a better solution, mobs dont need components. - Russ
   if (!isPc())
-    return TRUE;
+    return true;
 
   // has already used component
   if (spelltask && spelltask->component) {
-    return TRUE;
+    return true;
   }
 
   if (!o) {
     missingComponent(this);
-    return FALSE;
+    return false;
   }
   if (checkOnly) {
-    return TRUE;
+    return true;
   }
 
   for (i = 0; (i < CompInfo.size()) &&
@@ -782,16 +782,16 @@ int TBeing::useComponentObj(TComponent* o, TObj* targ, checkOnlyT checkOnly) {
     vlogf(LOG_BUG, format("useComponent had problem finding component for %s") %
                      o->shortDescr);
     sendTo("Uh oh, something bogus happened.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (targ) {
     if (*CompInfo[i].to_self_object && *CompInfo[i].to_room_object) {
-      act(CompInfo[i].to_self_object, TRUE, this, o, targ, TO_CHAR);
-      act(CompInfo[i].to_room_object, TRUE, this, o, targ, TO_NOTVICT);
+      act(CompInfo[i].to_self_object, true, this, o, targ, TO_CHAR);
+      act(CompInfo[i].to_room_object, true, this, o, targ, TO_NOTVICT);
     } else if (*CompInfo[i].to_caster && *CompInfo[i].to_other) {
-      act(CompInfo[i].to_caster, TRUE, this, o, targ, TO_CHAR);
-      act(CompInfo[i].to_other, TRUE, this, o, targ, TO_ROOM);
+      act(CompInfo[i].to_caster, true, this, o, targ, TO_CHAR);
+      act(CompInfo[i].to_other, true, this, o, targ, TO_ROOM);
     } else {
       vlogf(LOG_BUG, format("Bad component sstring.  component %d  (3)") % i);
     }
@@ -803,14 +803,14 @@ int TBeing::useComponentObj(TComponent* o, TObj* targ, checkOnlyT checkOnly) {
     o->addToComponentCharges(-1);
   else {
     // this should destroy it even if it is inside a spellbag
-    act("$p is all used up and you discard it as worthless.", TRUE, this, o, 0,
+    act("$p is all used up and you discard it as worthless.", true, this, o, 0,
       TO_CHAR);
     delete o;
-    o = NULL;
+    o = nullptr;
   }
   // Set it so that for chanting purposes the component has been used
   if (spelltask)
-    spelltask->component = TRUE;
+    spelltask->component = true;
 
   return 1;
 }
@@ -966,29 +966,29 @@ const char* what_does_it_open(const TKey* o) {
 // DELETE_THIS  means c got toasted
 // DELETE_VICT  means v got toasted
 int TBeing::rawSummon(TBeing* v) {
-  TBeing* tmp = NULL;
+  TBeing* tmp = nullptr;
   TThing* t;
   int rc;
   wearSlotT j;
 
-  act("You hear a small \"pop\" as $n disappears.", FALSE, v, NULL, NULL,
+  act("You hear a small \"pop\" as $n disappears.", false, v, nullptr, nullptr,
     TO_ROOM);
   --(*v);
   *roomp += *v;
 
-  act("You hear a small \"pop\" as $n appears in the middle of the room.", TRUE,
-    v, NULL, NULL, TO_ROOM);
-  act("$n has summoned you!", FALSE, this, NULL, v, TO_VICT);
+  act("You hear a small \"pop\" as $n appears in the middle of the room.", true,
+    v, nullptr, nullptr, TO_ROOM);
+  act("$n has summoned you!", false, this, nullptr, v, TO_VICT);
   v->doLook("", CMD_LOOK);
 
   if (!v->isPc() && (v->GetMaxLevel() > GetMaxLevel())) {
-    act("$N struggles, and all of $S items are destroyed!", TRUE, this, NULL, v,
+    act("$N struggles, and all of $S items are destroyed!", true, this, nullptr, v,
       TO_CHAR);
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {  // remove objects from victim
       if (v->equipment[j] && !dynamic_cast<TKey*>(v->equipment[j])) {
         TThing* t_o = v->unequip(j);
         delete t_o;
-        t_o = NULL;
+        t_o = nullptr;
       }
     }
     for (StuffIter it = v->stuff.begin(); it != v->stuff.end();) {
@@ -996,7 +996,7 @@ int TBeing::rawSummon(TBeing* v) {
       if (!dynamic_cast<TKey*>(t)) {
         --(*t);
         delete t;
-        t = NULL;
+        t = nullptr;
       }
     }
     v->addHated(this);
@@ -1013,7 +1013,7 @@ int TBeing::rawSummon(TBeing* v) {
     rc = t->fallOffMount(v, POSITION_STANDING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL;
+      t = nullptr;
     }
   }
 
@@ -1024,9 +1024,9 @@ int TBeing::rawSummon(TBeing* v) {
   v->updatePos();
 #endif
 
-  act("You are exhausted from interplanar travel.", FALSE, v, NULL, NULL,
+  act("You are exhausted from interplanar travel.", false, v, nullptr, nullptr,
     TO_CHAR);
-  act("$n is exhausted from interplanar travel.", FALSE, v, NULL, NULL,
+  act("$n is exhausted from interplanar travel.", false, v, nullptr, nullptr,
     TO_ROOM);
 
   // summon newbie to aggro zone far from GH, allow us to check for it
@@ -1037,7 +1037,7 @@ int TBeing::rawSummon(TBeing* v) {
     rc = v->riding->genericMovedIntoRoom(roomp, -1);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete v->riding;
-      v->riding = NULL;
+      v->riding = nullptr;
       REM_DELETE(rc, DELETE_THIS);
     }
   } else {
@@ -1051,8 +1051,8 @@ int TBeing::rawSummon(TBeing* v) {
     if (!(tmp = dynamic_cast<TBeing*>(t)))
       continue;
     if (!tmp->isPc() && ((IS_SET(tmp->specials.act, ACT_AGGRESSIVE)))) {
-      act("$n sneers at you.", 1, tmp, NULL, this, TO_VICT);
-      act("$n sneers at $N. Uh oh...there's gonna be a RUMBLE!", 1, tmp, NULL,
+      act("$n sneers at you.", 1, tmp, nullptr, this, TO_VICT);
+      act("$n sneers at $N. Uh oh...there's gonna be a RUMBLE!", 1, tmp, nullptr,
         this, TO_NOTVICT);
 
       rc = dynamic_cast<TMonster*>(tmp)->takeFirstHit(*this);
@@ -1060,15 +1060,15 @@ int TBeing::rawSummon(TBeing* v) {
         return DELETE_THIS;
       } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tmp;
-        tmp = NULL;
-        return FALSE;
+        tmp = nullptr;
+        return false;
       }
     }
   }
 
   disturbMeditation(v);
 
-  return FALSE;
+  return false;
 }
 
 void TBeing::addAffects(const TObj* o) {
@@ -1077,7 +1077,7 @@ void TBeing::addAffects(const TObj* o) {
   for (i = 0; i < MAX_OBJ_AFFECT; i++)
     if (o->affected[i].location != APPLY_NONE)
       affectModify(o->affected[i].location, (long)o->affected[i].modifier,
-        (long)o->affected[i].modifier2, o->obj_flags.bitvector, TRUE,
+        (long)o->affected[i].modifier2, o->obj_flags.bitvector, true,
         SILENT_YES);
     else
       return;
@@ -1096,7 +1096,7 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe) {
     // and I don't want to fix it properly.
     if (++breakout > 1000000) {  // presumably we won't ever have > 1 mil rooms
       vlogf(LOG_BUG, "genericTeleport got caught in a loop");
-      return FALSE;
+      return false;
     }
 
     // note, all rooms below 100 are ignored
@@ -1110,7 +1110,7 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe) {
     }
     if (!(rp = real_roomp(to_room)))
       continue;
-    if (zone_table[rp->getZoneNum()].enabled == FALSE)
+    if (zone_table[rp->getZoneNum()].enabled == false)
       continue;
 
     if (!unsafe) {
@@ -1128,15 +1128,15 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe) {
   }
 
   if (!silent) {
-    act("$n shimmers out of existence.", FALSE, this, NULL, NULL, TO_ROOM);
-    act("You shimmer out of existence.", FALSE, this, NULL, NULL, TO_CHAR);
+    act("$n shimmers out of existence.", false, this, nullptr, nullptr, TO_ROOM);
+    act("You shimmer out of existence.", false, this, nullptr, nullptr, TO_CHAR);
   }
 
   while ((t = rider)) {
     rc = t->fallOffMount(this, POSITION_STANDING);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL;
+      t = nullptr;
     }
   }
 
@@ -1150,8 +1150,8 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe) {
   *rp += *this;
 
   if (!silent) {
-    act("$n shimmers into existence.", FALSE, this, NULL, NULL, TO_ROOM);
-    act("You shimmer into existence.", FALSE, this, NULL, NULL, TO_CHAR);
+    act("$n shimmers into existence.", false, this, nullptr, nullptr, TO_ROOM);
+    act("You shimmer into existence.", false, this, nullptr, nullptr, TO_CHAR);
 
     TBeing* tbt = dynamic_cast<TBeing*>(this);
     if (tbt) {
@@ -1163,7 +1163,7 @@ int TThing::genericTeleport(silentTypeT silent, bool keepZone, bool unsafe) {
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 void TMonster::elementalFix(TBeing* caster, spellNumT spell, bool flags) {
@@ -1335,9 +1335,9 @@ void TMonster::genericCharmFix() {
   setImmunity(IMMUNE_NONMAGIC, 0);
 
   while (hates.clist)
-    remHated(NULL, hates.clist->name);
+    remHated(nullptr, hates.clist->name);
   while (fears.clist)
-    remFeared(NULL, fears.clist->name);
+    remFeared(nullptr, fears.clist->name);
 
   // adjusts the mob down to be more like a pc
   // its ok cause has no exp
@@ -1364,23 +1364,23 @@ void TBeing::rawBlind(int level, int duration, saveTypeT save) {
   aff.modifier = (save ? -40 : -80);  // Make hitroll worse
   if (knows_bf)                       // reduce modifier for blindfighting skill
     aff.modifier /= bf_mod;
-  affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
   aff.location = APPLY_ARMOR;
   aff.modifier = (save ? 20 : 40);  // Make AC Worse!
   if (knows_bf)                     // reduce modifier for blindfighting skill
     aff.modifier /= bf_mod;
-  affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
   aff.location = APPLY_DEX;
   aff.modifier = (save ? -10 : -30);  // Make Dex Worse!
   if (knows_bf)                       // reduce modifier for blindfighting skill
     aff.modifier /= bf_mod;
-  affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
+  affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES);
 }
 
 int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save) {
-  int rc = FALSE;
+  int rc = false;
 
   affectedData aff;
 
@@ -1402,11 +1402,11 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save) {
   affectTo(&aff);
 
   if (getPosition() > POSITION_SLEEPING) {
-    act("You feel very sleepy...  All you want is a bed...   ZZZZZZ....", FALSE,
-      this, NULL, NULL, TO_CHAR);
-    act("You drift peacefully off to dreamland.", FALSE, this, NULL, NULL,
+    act("You feel very sleepy...  All you want is a bed...   ZZZZZZ....", false,
+      this, nullptr, nullptr, TO_CHAR);
+    act("You drift peacefully off to dreamland.", false, this, nullptr, nullptr,
       TO_CHAR);
-    act("$n falls asleep!", TRUE, this, NULL, NULL, TO_ROOM);
+    act("$n falls asleep!", true, this, nullptr, nullptr, TO_ROOM);
   }
   if (riding) {
     rc = fallOffMount(riding, POSITION_SITTING);
@@ -1419,7 +1419,7 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save) {
   setPosition(POSITION_SLEEPING);
 
   // stop all fighting me too
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
     TBeing* ch = dynamic_cast<TBeing*>(t);
@@ -1429,7 +1429,7 @@ int TBeing::rawSleep(int level, int duration, int crit, saveTypeT save) {
       ch->stopFighting();
   }
 
-  return FALSE;
+  return false;
 }
 
 // take a given limb and determine how much blood to drop, then call dropPool
@@ -1484,7 +1484,7 @@ int TBeing::dropBloodLimb(wearSlotT limb) {
       amt = 1;
       break;
     default:
-      return FALSE;
+      return false;
   }
 
   dropPool(amt, LIQ_BLOOD);
@@ -1492,7 +1492,7 @@ int TBeing::dropBloodLimb(wearSlotT limb) {
   if (desc)
     desc->career.ounces_of_blood += amt;
 
-  return TRUE;
+  return true;
 }
 
 static int rawDisease(
@@ -1637,7 +1637,7 @@ void TBeing::spellMessUp(spellNumT spell) {
     type = 1;
   }
 #if 0
-  switch (getDisciplineNumber(spell, FALSE)) {
+  switch (getDisciplineNumber(spell, false)) {
     case DISC_AIR:
     case DISC_WATER:
     case DISC_FIRE:
@@ -1668,26 +1668,26 @@ void TBeing::spellMessUp(spellNumT spell) {
     case 2:
       if (type == 1)
         act("Your brain is jumbled and confused, and you flub the prayer.",
-          FALSE, this, 0, 0, TO_CHAR);
+          false, this, 0, 0, TO_CHAR);
       else
-        act("Your brain is jumbled and confused.", FALSE, this, 0, 0, TO_CHAR);
-      act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("Your brain is jumbled and confused.", false, this, 0, 0, TO_CHAR);
+      act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
       break;
     case 3:
       if (getWizardryLevel() < WIZ_LEV_NO_GESTURES &&
           IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
         // requires gestures
-        act("Darn it!  You mess up one of the intricate gestures.", FALSE, this,
+        act("Darn it!  You mess up one of the intricate gestures.", false, this,
           0, 0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_GESTURES &&
           IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
         // requires gestures
-        act("Darn it!  You mess up one of the intricate gestures.", FALSE, this,
+        act("Darn it!  You mess up one of the intricate gestures.", false, this,
           0, 0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
     case 4:
@@ -1698,59 +1698,59 @@ void TBeing::spellMessUp(spellNumT spell) {
           act(
             "You clumsily perform the prayer's gestures, and things seem to "
             "have gone wrong.",
-            FALSE, this, 0, 0, TO_CHAR);
+            false, this, 0, 0, TO_CHAR);
         else
           act(
             "You clumsily perform the spell's gestures, and things seem to "
             "have gone wrong.",
-            FALSE, this, 0, 0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+            false, this, 0, 0, TO_CHAR);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_GESTURES &&
           IS_SET(discArray[spell]->comp_types, COMP_GESTURAL)) {
-        act("You pathetic excuse for a houngan....Grrrrrr!!!", FALSE, this, 0,
+        act("You pathetic excuse for a houngan....Grrrrrr!!!", false, this, 0,
           0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
     case 5:
       if (getWizardryLevel() < WIZ_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
-        act("Oops...  You mis-spoke part of the incantation.", FALSE, this, 0,
+        act("Oops...  You mis-spoke part of the incantation.", false, this, 0,
           0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
-        act("Oops...  You messed that one up....", FALSE, this, 0, 0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("Oops...  You messed that one up....", false, this, 0, 0, TO_CHAR);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
     case 6:
       if (getWizardryLevel() < WIZ_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
-        act("You trip over your tongue and mis-speak the incantation.", FALSE,
+        act("You trip over your tongue and mis-speak the incantation.", false,
           this, 0, 0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
       if (getRitualismLevel() < RIT_LEV_NO_MANTRA &&
           IS_SET(discArray[spell]->comp_types, COMP_VERBAL)) {
         // requires incantation
-        act("You trip over your own feet trying to dance for the loa!", FALSE,
+        act("You trip over your own feet trying to dance for the loa!", false,
           this, 0, 0, TO_CHAR);
-        act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
         break;
       }  // otherwise drop through for different text
     default:
       act("You aren't sure what, but something seems to have gone wrong.",
-        FALSE, this, 0, 0, TO_CHAR);
-      act("$n must have done something wrong.", FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_CHAR);
+      act("$n must have done something wrong.", false, this, 0, 0, TO_ROOM);
   }
 }
 
@@ -1760,7 +1760,7 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const {
   if (!silent_caster)
     roomp->playsound(snd, SOUND_TYPE_MAGIC);
   else {
-    TThing* t = NULL;
+    TThing* t = nullptr;
     for (StuffIter it = roomp->stuff.begin();
          it != roomp->stuff.end() && (t = *it); ++it) {
       TBeing* tbt = dynamic_cast<TBeing*>(t);
@@ -1777,42 +1777,42 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const {
       case 0:
         if (!silent_caster)
           sendTo("Nothing seems to happen.\n\r");
-        act("Nothing seems to happen.", TRUE, this, 0, 0, TO_ROOM);
+        act("Nothing seems to happen.", true, this, 0, 0, TO_ROOM);
         break;
       case 1:
         if (!silent_caster)
           sendTo("Nothing happens.\n\r");
-        act("Nothing happens.", TRUE, this, 0, 0, TO_ROOM);
+        act("Nothing happens.", true, this, 0, 0, TO_ROOM);
         break;
       case 2:
         if (!silent_caster)
-          act("Uh oh, maybe you ought to try that again.", FALSE, this, NULL,
-            NULL, TO_CHAR);
-        act("Make like it worked.....shhhhhhhhhhh.", FALSE, this, NULL, NULL,
+          act("Uh oh, maybe you ought to try that again.", false, this, nullptr,
+            nullptr, TO_CHAR);
+        act("Make like it worked.....shhhhhhhhhhh.", false, this, nullptr, nullptr,
           TO_ROOM);
         break;
       case 3:
         if (!silent_caster)
-          act("That didn't work...", FALSE, this, NULL, NULL, TO_CHAR);
-        act("$n's invokation didn't work.", FALSE, this, NULL, NULL, TO_ROOM);
+          act("That didn't work...", false, this, nullptr, nullptr, TO_CHAR);
+        act("$n's invokation didn't work.", false, this, nullptr, nullptr, TO_ROOM);
         break;
       case 4:
         if (!silent_caster)
-          act("Nope, nuh uh, nada, zip.", FALSE, this, NULL, NULL, TO_CHAR);
-        act("Chant, dance, do the bugaloo...whatever, shaman suck.", FALSE,
-          this, NULL, NULL, TO_ROOM);
+          act("Nope, nuh uh, nada, zip.", false, this, nullptr, nullptr, TO_CHAR);
+        act("Chant, dance, do the bugaloo...whatever, shaman suck.", false,
+          this, nullptr, nullptr, TO_ROOM);
         break;
       case 5:
         if (!silent_caster)
-          act("Damn!  Missed again.", FALSE, this, NULL, NULL, TO_CHAR);
-        act("No luck here! Maybe something more simple for a shaman?", FALSE,
-          this, NULL, NULL, TO_ROOM);
+          act("Damn!  Missed again.", false, this, nullptr, nullptr, TO_CHAR);
+        act("No luck here! Maybe something more simple for a shaman?", false,
+          this, nullptr, nullptr, TO_ROOM);
         break;
       case 6:
         if (!silent_caster)
-          act("The power of your ancestors is not there.", FALSE, this, NULL,
-            NULL, TO_CHAR);
-        act("I feel like dancin'....YEAH!", FALSE, this, NULL, NULL, TO_ROOM);
+          act("The power of your ancestors is not there.", false, this, nullptr,
+            nullptr, TO_CHAR);
+        act("I feel like dancin'....YEAH!", false, this, nullptr, nullptr, TO_ROOM);
         break;
     }
   } else {
@@ -1822,122 +1822,122 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const {
       case 0:
         if (!silent_caster)
           sendTo("Nothing seems to happen.\n\r");
-        act("Nothing seems to happen.", TRUE, this, 0, 0, TO_ROOM);
+        act("Nothing seems to happen.", true, this, 0, 0, TO_ROOM);
         break;
       case 1:
         if (!silent_caster)
           sendTo("Nothing happens.\n\r");
-        act("Nothing happens.", TRUE, this, 0, 0, TO_ROOM);
+        act("Nothing happens.", true, this, 0, 0, TO_ROOM);
         break;
       case 2:
         if (!silent_caster)
-          act("Uh oh, maybe you ought to try that again.", FALSE, this, NULL,
-            NULL, TO_CHAR);
-        act("Humor the little mage and pretend the spell worked.", FALSE, this,
-          NULL, NULL, TO_ROOM);
+          act("Uh oh, maybe you ought to try that again.", false, this, nullptr,
+            nullptr, TO_CHAR);
+        act("Humor the little mage and pretend the spell worked.", false, this,
+          nullptr, nullptr, TO_ROOM);
         break;
       case 3:
         if (!silent_caster)
-          act("That didn't work...ONE MORE TIME!", FALSE, this, NULL, NULL,
+          act("That didn't work...ONE MORE TIME!", false, this, nullptr, nullptr,
             TO_CHAR);
-        act("$n's spell didn't work.", FALSE, this, NULL, NULL, TO_ROOM);
+        act("$n's spell didn't work.", false, this, nullptr, nullptr, TO_ROOM);
         break;
       case 4:
         if (!silent_caster)
-          act("Nope, nuh uh, nada, zip, the big mage fizzle.", FALSE, this,
-            NULL, NULL, TO_CHAR);
-        act("Chant, chant, wave hands, wave hands, mages suck.", FALSE, this,
-          NULL, NULL, TO_ROOM);
+          act("Nope, nuh uh, nada, zip, the big mage fizzle.", false, this,
+            nullptr, nullptr, TO_CHAR);
+        act("Chant, chant, wave hands, wave hands, mages suck.", false, this,
+          nullptr, nullptr, TO_ROOM);
         break;
       case 5:
         if (!silent_caster)
-          act("Damn!  Missed again.", FALSE, this, NULL, NULL, TO_CHAR);
-        act("The mage casts and misses!", FALSE, this, NULL, NULL, TO_ROOM);
+          act("Damn!  Missed again.", false, this, nullptr, nullptr, TO_CHAR);
+        act("The mage casts and misses!", false, this, nullptr, nullptr, TO_ROOM);
         break;
       case 6:
         if (!silent_caster)
-          act("The forces of magic fail to come forth.", FALSE, this, NULL,
-            NULL, TO_CHAR);
-        act("The forces of magic fail to come forth.", FALSE, this, NULL, NULL,
+          act("The forces of magic fail to come forth.", false, this, nullptr,
+            nullptr, TO_CHAR);
+        act("The forces of magic fail to come forth.", false, this, nullptr, nullptr,
           TO_ROOM);
         break;
       case 7:
         if (!silent_caster)
-          act("Try as you might, your magic fails you.", FALSE, this, NULL,
-            NULL, TO_CHAR);
-        act("Try as $n might, the magic fails.", FALSE, this, NULL, NULL,
+          act("Try as you might, your magic fails you.", false, this, nullptr,
+            nullptr, TO_CHAR);
+        act("Try as $n might, the magic fails.", false, this, nullptr, nullptr,
           TO_ROOM);
         break;
       case 8:
         if (!silent_caster)
-          act("Your attempt at magic is unsuccessful.", FALSE, this, NULL, NULL,
+          act("Your attempt at magic is unsuccessful.", false, this, nullptr, nullptr,
             TO_CHAR);
-        act("$n's attempt at magic is unsuccessful.", FALSE, this, NULL, NULL,
+        act("$n's attempt at magic is unsuccessful.", false, this, nullptr, nullptr,
           TO_ROOM);
         break;
       case 9:
         if (!silent_caster)
-          act("Your spell dissipates without effect.", FALSE, this, NULL, NULL,
+          act("Your spell dissipates without effect.", false, this, nullptr, nullptr,
             TO_CHAR);
-        act("$n's magic dissipates without any effect.", FALSE, this, NULL,
-          NULL, TO_ROOM);
+        act("$n's magic dissipates without any effect.", false, this, nullptr,
+          nullptr, TO_ROOM);
         break;
       case 10:
         if (!silent_caster)
-          act("Your mind lacks the focus to control the magic.", FALSE, this,
-            NULL, NULL, TO_CHAR);
-        act("$n's magic starts to form, but then collapses.", FALSE, this, NULL,
-          NULL, TO_ROOM);
+          act("Your mind lacks the focus to control the magic.", false, this,
+            nullptr, nullptr, TO_CHAR);
+        act("$n's magic starts to form, but then collapses.", false, this, nullptr,
+          nullptr, TO_ROOM);
         break;
       case 11:
         if (!silent_caster)
-          act("Your thoughts go awry, and the magic fades harmlessly.", FALSE,
-            this, NULL, NULL, TO_CHAR);
-        act("$n looks perplexed and $s magic fades harmlessly.", FALSE, this,
-          NULL, NULL, TO_ROOM);
+          act("Your thoughts go awry, and the magic fades harmlessly.", false,
+            this, nullptr, nullptr, TO_CHAR);
+        act("$n looks perplexed and $s magic fades harmlessly.", false, this,
+          nullptr, nullptr, TO_ROOM);
         break;
       case 12:
         if (!silent_caster)
           act("You're pretty sure that should have worked, but no such luck.",
-            FALSE, this, NULL, NULL, TO_CHAR);
+            false, this, nullptr, nullptr, TO_CHAR);
         act(
           "$n blinks in bewilderment.  Perhaps $e was expecting something to "
           "happen...?",
-          FALSE, this, NULL, NULL, TO_ROOM);
+          false, this, nullptr, nullptr, TO_ROOM);
         break;
       case 13:
         if (!silent_caster)
           act("Dang, you forgot part of the incantation and cease casting.",
-            FALSE, this, NULL, NULL, TO_CHAR);
-        act("$n throws $s hands up in disgust.", FALSE, this, NULL, NULL,
+            false, this, nullptr, nullptr, TO_CHAR);
+        act("$n throws $s hands up in disgust.", false, this, nullptr, nullptr,
           TO_ROOM);
         break;
       case 14:
         if (!silent_caster)
-          act("Something seems amiss, and you give up on your spell.", FALSE,
-            this, NULL, NULL, TO_CHAR);
+          act("Something seems amiss, and you give up on your spell.", false,
+            this, nullptr, nullptr, TO_CHAR);
         act("$n acts like $s spell is finished, but the magic ain't there.",
-          FALSE, this, NULL, NULL, TO_ROOM);
+          false, this, nullptr, nullptr, TO_ROOM);
         break;
       case 15:
         if (!silent_caster)
           act("You slip up and manage to fill the air with goose feathers.",
-            FALSE, this, NULL, NULL, TO_CHAR);
-        act("$n fills the air with goose feathers.  Neat!", FALSE, this, NULL,
-          NULL, TO_ROOM);
+            false, this, nullptr, nullptr, TO_CHAR);
+        act("$n fills the air with goose feathers.  Neat!", false, this, nullptr,
+          nullptr, TO_ROOM);
         break;
       case 16:
         if (!silent_caster)
-          act("You make an error and sparks seem to surround you.", FALSE, this,
-            NULL, NULL, TO_CHAR);
+          act("You make an error and sparks seem to surround you.", false, this,
+            nullptr, nullptr, TO_CHAR);
         act("$n makes a mistake, and becomes surrounded by magical sparks.",
-          FALSE, this, NULL, NULL, TO_ROOM);
+          false, this, nullptr, nullptr, TO_ROOM);
         break;
       case 17:
         if (!silent_caster)
-          act("DAMN! Screwed up again!", FALSE, this, NULL, NULL, TO_CHAR);
-        act("Chant...Chant...Wave hands...Wave hands...Mages suck!", FALSE,
-          this, NULL, NULL, TO_ROOM);
+          act("DAMN! Screwed up again!", false, this, nullptr, nullptr, TO_CHAR);
+        act("Chant...Chant...Wave hands...Wave hands...Mages suck!", false,
+          this, nullptr, nullptr, TO_ROOM);
         break;
     }
   }
@@ -1945,22 +1945,22 @@ void TBeing::nothingHappens(silentTypeT silent_caster) const {
 
 bool TBeing::canDoSummon() const {
   if (roomp->isFlyingSector())
-    return FALSE;
+    return false;
 
   if ((inRoom() >= 9710 && inRoom() <= 9795))
-    return FALSE;
+    return false;
   else
-    return TRUE;
+    return true;
 }
 
 bool TBeing::isSummonable() const {
   if (roomp->isFlyingSector())
-    return FALSE;
+    return false;
 
   if ((inRoom() >= 9710 && inRoom() <= 9795))
-    return FALSE;
+    return false;
   else
-    return TRUE;
+    return true;
 }
 
 bool genericBless(TBeing* c, TBeing* v, int level, bool crit) {
@@ -1990,14 +1990,14 @@ bool genericBless(TBeing* c, TBeing* v, int level, bool crit) {
 
   bool success = false;
   if (v->affectJoin(c, &aff1, AVG_DUR_NO, AVG_EFF_YES))
-    success = TRUE;
+    success = true;
 
   if (success) {
     if (v->affectJoin(c, &aff2, AVG_DUR_NO, AVG_EFF_YES))
-      success = TRUE;
+      success = true;
   } else {
-    if (v->affectJoin(c, &aff2, AVG_DUR_NO, AVG_EFF_YES, FALSE))
-      success = TRUE;
+    if (v->affectJoin(c, &aff2, AVG_DUR_NO, AVG_EFF_YES, false))
+      success = true;
   }
   return success;
 }
@@ -2027,7 +2027,7 @@ bool genericDisease(TBeing* caster, TBeing* vict, int level) {
   if (!vict->hasDisease(DISEASE_COLD))
     diseases.push_back(DISEASE_COLD);
   if (!diseases.size())
-    return FALSE;
+    return false;
 
   // reverse the probability loop depending on level diff
   double level_diff = (double)(vict->GetMaxLevel() - level);
@@ -2077,11 +2077,11 @@ bool genericDisease(TBeing* caster, TBeing* vict, int level) {
         continue;
       if (vict->isImmune(IMMUNE_DISEASE, slot))
         continue;
-      found = TRUE;
+      found = true;
       break;
     }
     if (!found)
-      return FALSE;
+      return false;
     aff.level = slot;
   }
 
@@ -2095,16 +2095,16 @@ bool genericDisease(TBeing* caster, TBeing* vict, int level) {
     aff.duration /= 100;
   }
   if (caster) {
-    act("$d breathes a fetid cloud into $N's body.", FALSE, caster, 0, vict,
+    act("$d breathes a fetid cloud into $N's body.", false, caster, 0, vict,
       TO_CHAR);
-    act("$d breathes a fetid cloud into your body.", FALSE, caster, 0, vict,
+    act("$d breathes a fetid cloud into your body.", false, caster, 0, vict,
       TO_VICT);
-    act("$d breathes a fetid cloud into $N's body.", FALSE, caster, 0, vict,
+    act("$d breathes a fetid cloud into $N's body.", false, caster, 0, vict,
       TO_NOTVICT);
   }
   vict->affectTo(&aff);
   disease_start(vict, &aff);
-  return TRUE;
+  return true;
 }
 
 void genericCurse(TBeing* c, TBeing* v, int level, spellNumT spell) {
@@ -2156,21 +2156,21 @@ int lycanthropeTransform(TBeing* ch) {
 
   if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
       ch->polyed != POLY_TYPE_NONE) {
-    act("You are already transformed into another shape.", TRUE, ch, NULL, NULL,
+    act("You are already transformed into another shape.", true, ch, nullptr, nullptr,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   if (!(mob = read_mobile(23204, VIRTUAL))) {
-    return FALSE;
+    return false;
   }
   thing_to_room(mob, Room::VOID);
   mob->swapToStrung();
 
-  act("The presence of the full moon forces you into transformation!", TRUE, ch,
-    NULL, mob, TO_CHAR);
-  act("The presence of the full moon forces $n to transform into $N!", TRUE, ch,
-    NULL, mob, TO_ROOM);
+  act("The presence of the full moon forces you into transformation!", true, ch,
+    nullptr, mob, TO_CHAR);
+  act("The presence of the full moon forces $n to transform into $N!", true, ch,
+    nullptr, mob, TO_ROOM);
 
   DisguiseStuff(ch, mob);
 
@@ -2181,7 +2181,7 @@ int lycanthropeTransform(TBeing* ch) {
 
   // stop following whoever you are following.
   if (ch->master)
-    ch->stopFollower(TRUE);
+    ch->stopFollower(true);
 
   mob->setQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
 
@@ -2190,7 +2190,7 @@ int lycanthropeTransform(TBeing* ch) {
   ch->desc->original = dynamic_cast<TPerson*>(ch);
 
   mob->desc = ch->desc;
-  ch->desc = NULL;
+  ch->desc = nullptr;
   ch->polyed = POLY_TYPE_DISGUISE;
 
   SET_BIT(mob->specials.act, ACT_DISGUISED);
@@ -2211,5 +2211,5 @@ int lycanthropeTransform(TBeing* ch) {
   mob->roomp->getZone()->sendTo(
     "You hear a chilling wolf howl in the distance.\n\r", mob->in_room);
 
-  return TRUE;
+  return true;
 }

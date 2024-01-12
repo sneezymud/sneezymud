@@ -626,7 +626,7 @@ class TObj : public TThing {
     int itemNoise() const;
     int itemDamroll() const;
     int itemHitroll() const;
-    virtual int detonateGrenade() { return FALSE; }
+    virtual int detonateGrenade() { return false; }
     virtual int getNumRiders(TThing*) const;
     int getItemIndex() const { return (number < 0 ? 0 : number); }
     virtual bool isPluralItem() const;
@@ -638,9 +638,9 @@ class TObj : public TThing {
     virtual bool rangerRestrictedItem(const TBeing* ch) const;
     virtual void assignFourValues(int, int, int, int) = 0;
     virtual void getFourValues(int*, int*, int*, int*) const = 0;
-    virtual int objectSell(TBeing*, TMonster*) { return FALSE; }
-    virtual bool objectRepair(TBeing*, TMonster*, silentTypeT) { return FALSE; }
-    virtual int objectDecay() { return FALSE; }
+    virtual int objectSell(TBeing*, TMonster*) { return false; }
+    virtual bool objectRepair(TBeing*, TMonster*, silentTypeT) { return false; }
+    virtual int objectDecay() { return false; }
     virtual void lowCheck();
     virtual bool lowCheckSlots(silentTypeT);
     virtual sstring statObjInfo() const = 0;
@@ -704,7 +704,7 @@ class TObj : public TThing {
     virtual int changeItemVal3Check(TBeing*, int);
     virtual int changeItemVal4Check(TBeing*, int);
     virtual sstring getNameForShow(bool = true, bool = true,
-      const TBeing* = NULL) const;
+      const TBeing* = nullptr) const;
     virtual int foodItemUsed(TBeing* ch, const char* arg);
     virtual void changeBaseWeaponValue1(TBeing*, const char*,
       editorEnterTypeT) {}

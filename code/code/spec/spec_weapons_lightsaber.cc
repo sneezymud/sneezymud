@@ -40,11 +40,11 @@ void lightsaber_extend(TBeing* ch, TGenWeapon* weapon) {
 
   act(format("A brilliant blade of %s%s<o> light springs forth from your $o.") %
         ccode % cname,
-    false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+    false, ch, weapon, nullptr, TO_CHAR, ANSI_ORANGE);
 
   act(format("A brilliant blade of %s%s<o> light springs forth from $n's $o.") %
         ccode % cname,
-    false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
+    false, ch, weapon, nullptr, TO_ROOM, ANSI_ORANGE);
 
   weapon->shortDescr = format("%s with a brilliant blade of %s%s<1> light") %
                        obj_index[weapon->getItemIndex()].short_desc % ccode %
@@ -69,21 +69,21 @@ void lightsaber_retract(TBeing* ch, TGenWeapon* weapon) {
 
   act(format("A brilliant blade of %s%s<o> light retracts into your $o.") %
         ccode % cname,
-    false, ch, weapon, NULL, TO_CHAR, ANSI_ORANGE);
+    false, ch, weapon, nullptr, TO_CHAR, ANSI_ORANGE);
   act(format("A brilliant blade of %s%s<o> light retracts into $n's $o.") %
         ccode % cname,
-    false, ch, weapon, NULL, TO_ROOM, ANSI_ORANGE);
+    false, ch, weapon, nullptr, TO_ROOM, ANSI_ORANGE);
 }
 
 int lightsaber(TBeing* vict, cmdTypeT cmd, const char*, TObj* obj, TObj*) {
   TGenWeapon* weapon = dynamic_cast<TGenWeapon*>(obj);
   if (!weapon)
-    return FALSE;
+    return false;
 
   TBeing* ch = dynamic_cast<TBeing*>(obj->equippedBy);
   if (!ch) {
-    lightsaber_retract(NULL, weapon);
-    return FALSE;
+    lightsaber_retract(nullptr, weapon);
+    return false;
   }
 
   if (cmd == CMD_OBJ_USED && ch && ch->hasQuestBit(TOG_PSIONICIST)) {
@@ -91,34 +91,34 @@ int lightsaber(TBeing* vict, cmdTypeT cmd, const char*, TObj* obj, TObj*) {
       lightsaber_retract(ch, weapon);
     else
       lightsaber_extend(ch, weapon);
-    return TRUE;
+    return true;
 
   } else if ((cmd == CMD_GENERIC_QUICK_PULSE && !ch) ||
              (cmd == CMD_GENERIC_PULSE && ch &&
                (!ch->hasQuestBit(TOG_PSIONICIST) || !ch->fight()))) {
     lightsaber_retract(ch, weapon);
-    return TRUE;
+    return true;
 
   } else if (cmd == CMD_OBJ_HITTING && ch && ch->hasQuestBit(TOG_PSIONICIST)) {
     lightsaber_extend(ch, weapon);
-    return FALSE;
+    return false;
 
   } else if (cmd != CMD_OBJ_HIT || !ch || !ch->hasQuestBit(TOG_PSIONICIST)) {
-    return FALSE;
+    return false;
   }
 
   if (::number(0, LIGHTSABER_CRITS_INFREQUENCY)) {
     if (!::number(0, LIGHTSABER_NOISE_INFREQUENCY))
       act("$n hums loudly as it swings.", false, obj, nullptr, nullptr,
         TO_ROOM);
-    return FALSE;
+    return false;
   }
 
   act(format("$p %sflashes brightly<1> as it strikes!") %
         LS_COLOR_CODES[which_color(ch)],
     false, obj, nullptr, nullptr, TO_ROOM);
 
-  wearSlotT part = vict->getPartHit(ch, TRUE);
+  wearSlotT part = vict->getPartHit(ch, true);
   int damage = ch->getWeaponDam(vict, weapon, HAND_PRIMARY);
   int crit = LS_CRIT_LIST[::number(0, LS_MAX_CRITS - 1)];
   spellNumT type = ch->getAttackType(weapon, HAND_PRIMARY);
@@ -129,5 +129,5 @@ int lightsaber(TBeing* vict, cmdTypeT cmd, const char*, TObj* obj, TObj*) {
   rc = ch->applyDamage(vict, damage, type);
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
-  return FALSE;
+  return false;
 }

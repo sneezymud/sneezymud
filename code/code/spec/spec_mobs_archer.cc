@@ -10,10 +10,10 @@
 #define MAX_RANGE 3
 
 std::vector<TBow*> TBeing::getBows() {
-  TBow* temp = NULL;
+  TBow* temp = nullptr;
   std::vector<TBow*> bows;
   wearSlotT i;
-  TThing* j = NULL;
+  TThing* j = nullptr;
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     // if you are carrying it you know it's there
     //    if (!canSee(equipment[i]))
@@ -31,9 +31,9 @@ std::vector<TBow*> TBeing::getBows() {
 }
 
 TArrow* TBeing::autoGetAmmoQuiver(TBow* bow, TQuiver* quiver) {
-  TThing* i = NULL;
-  TArrow* temp = NULL;
-  TArrow* ammo = NULL;
+  TThing* i = nullptr;
+  TArrow* temp = nullptr;
+  TArrow* ammo = nullptr;
 
   if (!bow || !quiver || quiver->isClosed())
     return ammo;
@@ -52,11 +52,11 @@ TArrow* TBeing::autoGetAmmoQuiver(TBow* bow, TQuiver* quiver) {
 TArrow* TBeing::autoGetAmmo(TBow* bow) {
   // do search inventory for ammo - might want to check first that the
   // bow isn't already loaded
-  TArrow* temp = NULL;
-  TArrow* ammo = NULL;
-  TQuiver* quiver = NULL;
+  TArrow* temp = nullptr;
+  TArrow* ammo = nullptr;
+  TQuiver* quiver = nullptr;
   wearSlotT i;
-  TThing* j = NULL;
+  TThing* j = nullptr;
 
   if (!bow)
     return ammo;
@@ -91,14 +91,14 @@ TArrow* TBeing::autoGetAmmo(TBow* bow) {
   return ammo;
 }
 
-// returns TRUE for shot or restring, otherwise FALSE
+// returns true for shot or restring, otherwise false
 // DELETE_THIS and DELETE_OBJECT for a couple of calls
 int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   int rm = 0, new_rm = 0;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   const char* directions[][2] = {{"north", "south"}, {"east", "west"},
     {"south", "north"}, {"west", "east"}, {"up", "below"}, {"down", "above"},
     {"northeast", "southwest"}, {"northwest", "southeast"},
@@ -108,13 +108,13 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
   int count = 0, numsimilar, range;
   int which;
   dirTypeT i;
-  TBeing* tbt = NULL;
-  TBeing* tbt2 = NULL;
+  TBeing* tbt = nullptr;
+  TBeing* tbt2 = nullptr;
 
   // ammo check
-  TBow* bow = NULL;
-  TArrow* ammo = NULL;
-  TArrow* tempArr = NULL;
+  TBow* bow = nullptr;
+  TArrow* ammo = nullptr;
+  TArrow* tempArr = nullptr;
   unsigned int j;
   std::vector<TBow*> bows = ch->getBows();
   for (j = 0; j < bows.size(); j++) {
@@ -130,7 +130,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
   }
 
   if (!bow || (!ammo && bow->stuff.empty()))
-    return FALSE;
+    return false;
 
   // if I have ammo, then I don't want to fight straight up
   // if I'm aggro and in the same room as a Pc, or I hate a PC
@@ -140,7 +140,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
        ++it) {
     if ((tbt = dynamic_cast<TBeing*>(*it))) {
       if ((tbt->isPc() && (IS_SET(ch->specials.act, ACT_AGGRESSIVE))) ||
-          ch->Hates(tbt, NULL))
+          ch->Hates(tbt, nullptr))
         ch->doFlee("");
       if (!ch->canSee(bow) || !ch->canSee(ammo))  // fled to darker spot
       {
@@ -157,12 +157,12 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
           }
         }
         if (!bow || (!ammo && bow->stuff.empty()))
-          return FALSE;
+          return false;
       }
     }
   }
 
-  tbt = NULL;
+  tbt = nullptr;
   // find target
   for (i = MIN_DIR; i <= (MAX_DIR - 1); i++) {
     // keep looking to max range
@@ -184,7 +184,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
             continue;
           if (!ch->canSee(tbt))
             continue;
-          if (!ch->Hates(tbt, NULL) &&
+          if (!ch->Hates(tbt, nullptr) &&
               !IS_SET(ch->specials.act, ACT_AGGRESSIVE))
             continue;
           // we have a room with a mob we are after
@@ -203,7 +203,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
           continue;
         if (!ch->canSee(tbt))
           continue;
-        if (!ch->Hates(tbt, NULL) && !IS_SET(ch->specials.act, ACT_AGGRESSIVE))
+        if (!ch->Hates(tbt, nullptr) && !IS_SET(ch->specials.act, ACT_AGGRESSIVE))
           continue;
         count++;
 
@@ -222,7 +222,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
         temp = tbt->getName();
       } else {
         vlogf(LOG_BUG, "spec_mobs_archer.cc: archer: no tbt for some reason");
-        return FALSE;
+        return false;
       }
       numsimilar = 0;
       for (StuffIter it = real_roomp(rm)->stuff.begin();
@@ -232,7 +232,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
           continue;
         if (!ch->canSee(tbt2))
           continue;
-        if (ch->Hates(tbt, NULL))
+        if (ch->Hates(tbt, nullptr))
           count++;
         if (temp.find(tbt2->name) == sstring::npos)
           // this mob has the same name as our target, so count him
@@ -247,22 +247,22 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       // check for bow and ammo combination
 
       if (bow->isBowFlag(BOW_STRING_BROKE)) {
-        act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
-        act("$n quickly restrings $p.", FALSE, ch, bow, 0, TO_ROOM);
+        act("You quickly restring $p.", false, ch, bow, 0, TO_CHAR);
+        act("$n quickly restrings $p.", false, ch, bow, 0, TO_ROOM);
 
         bow->remBowFlags(BOW_STRING_BROKE);
-        return TRUE;
+        return true;
       }
 
       // check for ammo and load into bow if necessary
       // bload handles case of arrow already in bow for us
       int rc;
-      TThing* t = NULL;
+      TThing* t = nullptr;
       t = ch->equipment[HOLD_LEFT];
       rc = ch->doRemove("", t);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
@@ -271,7 +271,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       rc = ch->doRemove("", t);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
@@ -279,7 +279,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       bow->bloadArrowBow(ch, ammo);
       if (!(bow = dynamic_cast<TBow*>(ch->equipment[ch->getPrimaryHold()])) ||
           bow->stuff.empty())
-        return FALSE;  // in case bload fails for some reason
+        return false;  // in case bload fails for some reason
 
       // shoot target and remove bow
 
@@ -294,7 +294,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       // when he's out of arrows
       if (!ch->specials.hunting || ch->specials.hunting != tbt)
         ch->setHunting(tbt);
-      //    if (!ch->Hates(tbt, NULL))
+      //    if (!ch->Hates(tbt, nullptr))
       //      ch->addHated(tbt);
 
       if (!(ch->doShoot(buf.c_str())))
@@ -306,7 +306,7 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       rc = ch->doRemove("", t);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
@@ -315,17 +315,17 @@ int archer(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       rc = ch->doRemove("", t);
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
 
 #if 0
-      vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") % 
-          Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt ? "exists" : "(NULL)"));
+      vlogf(LOG_MAROR, format("archer: %d->%d, temp/name: (%s)/(%s), tbt?: %s") %
+          Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(nullptr)") % (tbt ? "exists" : "(nullptr)"));
 #endif
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }

@@ -12,32 +12,32 @@ static int quiveringPalm(TBeing* c, TBeing* v) {
   affectedData aff;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (c->noHarmCheck(v))
-    return FALSE;
+    return false;
   if (!c->hasHands()) {
     c->sendTo("You need hands to successfully quiver someone!\n\r");
-    return FALSE;
+    return false;
   }
   if (c->bothArmsHurt()) {
     c->sendTo("At least one of your arms needs to work to try to quiver!\n\r");
-    return FALSE;
+    return false;
   }
   //  if (IS_SET(v->specials.act, ACT_IMMORTAL)) {
   if (v->isImmortal()) {
     c->sendTo("You decide not to waste your concentration on an immortal.\n\r");
-    return FALSE;
+    return false;
   }
   if (!v->isHumanoid()) {
     c->sendTo("You can only do this to humanoid opponents.\n\r");
-    return FALSE;
+    return false;
   }
   if (c->affectedBySpell(SKILL_QUIV_PALM) ||
       c->checkForSkillAttempt(SKILL_QUIV_PALM)) {
     c->sendTo(
       "You are not yet centered enough to attempt this maneuver again.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (c->getMana() < 100) {
@@ -69,27 +69,27 @@ static int quiveringPalm(TBeing* c, TBeing* v) {
 
     if (specialAttackValue == PARTIAL_SUCCESS) {
       SV(SKILL_QUIV_PALM);
-      act("$N seems less affected by the vibrations.", FALSE, c, NULL, v,
+      act("$N seems less affected by the vibrations.", false, c, nullptr, v,
         TO_CHAR);
-      act("$n touches you, but you resist the vibrations.", FALSE, c, NULL, v,
+      act("$n touches you, but you resist the vibrations.", false, c, nullptr, v,
         TO_VICT);
-      act("$n touches $N, but $E resists it.", FALSE, c, NULL, v, TO_NOTVICT);
+      act("$n touches $N, but $E resists it.", false, c, nullptr, v, TO_NOTVICT);
 
       dam /= 2;
     }
 
     if (c->willKill(v, dam, SKILL_QUIV_PALM, false)) {
-      act("$N is killed instantly by the dreaded quivering palm.", FALSE, c,
-        NULL, v, TO_CHAR);
+      act("$N is killed instantly by the dreaded quivering palm.", false, c,
+        nullptr, v, TO_CHAR);
       act("As $n touches you, you feel your bones and organs shatter inside.",
-        FALSE, c, NULL, v, TO_VICT);
-      act("$N dies as $n touches $M.", FALSE, c, NULL, v, TO_NOTVICT);
+        false, c, nullptr, v, TO_VICT);
+      act("$N dies as $n touches $M.", false, c, nullptr, v, TO_NOTVICT);
     } else {
-      act("$N is heinously wounded by the dreaded quivering palm.", FALSE, c,
-        NULL, v, TO_CHAR);
+      act("$N is heinously wounded by the dreaded quivering palm.", false, c,
+        nullptr, v, TO_CHAR);
       act("As $n touches you, you feel your bones and organs shatter inside.",
-        FALSE, c, NULL, v, TO_VICT);
-      act("$N is grievously wounded as $n touches $M.", FALSE, c, NULL, v,
+        false, c, nullptr, v, TO_VICT);
+      act("$N is grievously wounded as $n touches $M.", false, c, nullptr, v,
         TO_NOTVICT);
     }
 
@@ -101,7 +101,7 @@ static int quiveringPalm(TBeing* c, TBeing* v) {
     c->affectTo(&aff, -1);
     if (c->reconcileDamage(v, dam, SKILL_QUIV_PALM) == -1)
       return DELETE_VICT;
-    return TRUE;
+    return true;
   } else {
     c->sendTo("The vibrations fade ineffectively.\n\r");
 
@@ -115,7 +115,7 @@ static int quiveringPalm(TBeing* c, TBeing* v) {
     act("$n touches you, but nothing seems to happen.", 0, c, 0, v, TO_VICT);
     act("$n touches $N, but nothing seems to happen.", 0, c, 0, v, TO_NOTVICT);
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::doQuiveringPalm(const char* arg, TBeing* vict) {
@@ -125,7 +125,7 @@ int TBeing::doQuiveringPalm(const char* arg, TBeing* vict) {
 
   if (!doesKnowSkill(SKILL_QUIV_PALM)) {
     sendTo("You don't know the secret of quivering palm.\n\r");
-    return FALSE;
+    return false;
   }
 
   strcpy(v_name, arg);
@@ -134,17 +134,17 @@ int TBeing::doQuiveringPalm(const char* arg, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, v_name))) {
       if (!(victim = fight())) {
         sendTo("Use the fabled quivering palm on whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim == this) {
     sendTo("This is not an approved method for committing ritual suicide.\n\r");
-    return FALSE;
+    return false;
   }
   rc = quiveringPalm(this, victim);
   if (rc)
@@ -153,7 +153,7 @@ int TBeing::doQuiveringPalm(const char* arg, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

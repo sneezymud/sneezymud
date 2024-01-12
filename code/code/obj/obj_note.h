@@ -23,12 +23,12 @@ class TNote : public TObj {
     virtual void showMe(TBeing*) const;
 
     virtual void postMe(TBeing*, const char*, TBoard*);
-    virtual int personalizedCheck(TBeing*) { return FALSE; }
+    virtual int personalizedCheck(TBeing*) { return false; }
     virtual void describeMe(TBeing*) const {}
     virtual void writeMeNote(TBeing*, TPen*);
     virtual int objectSell(TBeing*, TMonster*);
     virtual bool isPersonalized() {
-      return FALSE;
+      return false;
     }  // action_desc is not personalization
     virtual void giveToRepairNote(TMonster*, TBeing* ch, int*);
     virtual void giveToRepair(TMonster*, TBeing* ch, int*);

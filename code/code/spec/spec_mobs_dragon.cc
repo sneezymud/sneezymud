@@ -123,13 +123,13 @@ Dragon& find_dragon(TBeing* mob) {
 // if player has shield, attempt to block breath weapon
 int shield_absorb_damage(TBeing* vict, int dam) {
   TThing *left, *right;
-  TBaseClothing* shield = NULL;
+  TBaseClothing* shield = nullptr;
   wearSlotT slot = WEAR_NOWHERE;
 
   left = vict->equipment[HOLD_LEFT];
   right = vict->equipment[HOLD_RIGHT];
 
-  TBaseClothing* tbc = NULL;
+  TBaseClothing* tbc = nullptr;
   if (left && (tbc = dynamic_cast<TBaseClothing*>(left)) && tbc->isShield()) {
     shield = tbc;
     slot = HOLD_LEFT;
@@ -146,9 +146,9 @@ int shield_absorb_damage(TBeing* vict, int dam) {
     (int)((shield->getMaxStructPoints() / 100.0) * ::number(10, 20));
   dam = max(0, dam - (shielddam * 5));  // each structure point = 5 hp
 
-  act("You hold your $o up to block the blast.", TRUE, vict, shield, 0,
+  act("You hold your $o up to block the blast.", true, vict, shield, 0,
     TO_CHAR);
-  act("$n holds $s $o up to block the blast.", TRUE, vict, shield, 0, TO_ROOM);
+  act("$n holds $s $o up to block the blast.", true, vict, shield, 0, TO_ROOM);
 
   bool destroyed = shielddam >= shield->getStructPoints();
 
@@ -156,15 +156,15 @@ int shield_absorb_damage(TBeing* vict, int dam) {
     format("$p %s blocks the blast %s") % (dam ? "partially" : "completely") %
     (destroyed ? "but is utterly destroyed!" : "and is seriously damaged.");
 
-  act(msg, TRUE, vict, shield, 0, TO_CHAR);
-  act(msg, TRUE, vict, shield, 0, TO_ROOM);
+  act(msg, true, vict, shield, 0, TO_CHAR);
+  act(msg, true, vict, shield, 0, TO_ROOM);
 
   if (!(vict->roomp && vict->roomp->isRoomFlag(ROOM_ARENA))) {
     if (destroyed) {
       vict->unequip(slot);
       if (!shield->makeScraps())
         delete shield;
-      shield = NULL;
+      shield = nullptr;
     } else {
       shield->addToStructPoints(-shielddam);
     }
@@ -184,9 +184,9 @@ int Breath::attack(TBeing* attacker, TBeing* victim, int lag) {
   int random = (int)(0.20 * dam);
   dam += ::number(-random, random);
 
-  act(to_notvict, TRUE, attacker, NULL, victim, TO_NOTVICT);
-  act(to_char, TRUE, attacker, NULL, victim, TO_CHAR);
-  act(to_vict, TRUE, attacker, NULL, victim, TO_VICT);
+  act(to_notvict, true, attacker, nullptr, victim, TO_NOTVICT);
+  act(to_char, true, attacker, nullptr, victim, TO_CHAR);
+  act(to_vict, true, attacker, nullptr, victim, TO_VICT);
 
   if (!(dam = shield_absorb_damage(victim, dam)))
     return 1;
@@ -205,13 +205,13 @@ int Breath::attack(TBeing* attacker, TBeing* victim, int lag) {
 
 int DragonBreath(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   if (!myself || (cmd != CMD_MOB_COMBAT))
-    return FALSE;
+    return false;
   if (!myself->fight() || !myself->fight()->sameRoom(*myself))
-    return FALSE;
+    return false;
   if (!myself->awake())
-    return FALSE;
+    return false;
   if (myself->getWait() > 0)
-    return FALSE;
+    return false;
 
   Dragon& dragon = find_dragon(myself);
 
@@ -225,7 +225,7 @@ int DragonBreath(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     else
       vlogf(LOG_BUG,
         format("Dragon has no defined breath. (%d)") % myself->mobVnum());
-    return FALSE;
+    return false;
   }
 
   if (myself->hasDisease(DISEASE_DROWNING) ||
@@ -235,7 +235,7 @@ int DragonBreath(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       "ACK!!  Your present situation prevents you from breathing.\n\r");
     act("$n rears back...", 1, myself, 0, 0, TO_ROOM);
     act("Thank the deities $e is unable to breathe.", 1, myself, 0, 0, TO_ROOM);
-    return FALSE;
+    return false;
   }
 
   act("$n rears back and inhales...", 1, myself, 0, 0, TO_ROOM);
@@ -268,7 +268,7 @@ int DragonBreath(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   dragon.breath.engulfRoom(myself);
 
-  return TRUE;
+  return true;
 }
 
 void TBeing::doBreath(const char* argument) {
@@ -336,19 +336,19 @@ void TBeing::doBreath(const char* argument) {
     return;
   }
 
-  act("You inhale deeply and turn to face $N...", TRUE, this, 0, vict, TO_CHAR);
-  act("$n inhales deeply and turns in your direction...", TRUE, this, 0, vict,
+  act("You inhale deeply and turn to face $N...", true, this, 0, vict, TO_CHAR);
+  act("$n inhales deeply and turns in your direction...", true, this, 0, vict,
     TO_VICT);
-  act("$n inhales deeply and turns to face $N...", TRUE, this, 0, vict,
+  act("$n inhales deeply and turns to face $N...", true, this, 0, vict,
     TO_NOTVICT);
 
-  act("You exhale forcefully...", TRUE, this, 0, vict, TO_CHAR);
-  act("$e exhales forcefully...", TRUE, this, 0, vict, TO_ROOM);
+  act("You exhale forcefully...", true, this, 0, vict, TO_CHAR);
+  act("$e exhales forcefully...", true, this, 0, vict, TO_ROOM);
 
   int rc = breath.attack(this, vict, 1);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     delete vict;
-    vict = NULL;
+    vict = nullptr;
   }
 
   breath.engulfRoom(this);

@@ -16,16 +16,16 @@ int task_meditate(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   if (!ch->canMeditate()) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (ch->fight() && ch->isAffected(AFF_ENGAGER)) {
     ch->sendTo("You are unable to meditate while engaged in combat.");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -33,7 +33,7 @@ int task_meditate(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       if (ch->getMana() >= ch->manaLimit()) {
         ch->sendTo("Your mind is sharp and your thoughts are clear.\n\r");
         ch->stopTask();
-        return TRUE;
+        return true;
       }
       ch->task->calcNextUpdate(pulse, 4 * Pulse::MOBACT);
       if (!ch->task->status) {
@@ -63,7 +63,7 @@ int task_meditate(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         } else {
           ch->sendTo("A magical force in the room stops your meditation!\n\r");
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       if (ch->desc && ch->ansi()) {
@@ -79,18 +79,18 @@ int task_meditate(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop meditating.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops meditating.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop meditating.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops meditating.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_STAND:
       if (ch->getPosition() == POSITION_MOUNTED) {
-        act("Not while riding you don't!", FALSE, ch, 0, 0, TO_CHAR);
+        act("Not while riding you don't!", false, ch, 0, 0, TO_CHAR);
         ch->stopTask();
         break;
       }
-      act("You stop meditating and stand up.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops meditating and stands up.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop meditating and stand up.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops meditating and stands up.", false, ch, 0, 0, TO_ROOM);
       ch->setPosition(POSITION_STANDING);
       ch->stopTask();
       break;
@@ -104,7 +104,7 @@ int task_meditate(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         ch->sendTo("You break your focus...\n\r");
         ch->stopTask();
       }
-      return FALSE;  // eat the command
+      return false;  // eat the command
   }
-  return TRUE;
+  return true;
 }

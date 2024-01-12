@@ -33,10 +33,10 @@ bool TBeing::hasDisease(diseaseTypeT disease) const {
   for (aff = affected; aff; aff = aff->next) {
     if (aff->type == AFFECT_DISEASE) {
       if (aff->modifier == disease)
-        return TRUE;
+        return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::diseaseFrom(diseaseTypeT disease) {
@@ -60,12 +60,12 @@ int TBeing::diseaseStop(affectedData* af) {
 int disease_null(TBeing* victim, int, affectedData*) {
   vlogf(LOG_BUG, format("WARNING:  %s has a bogus disease #%d affect.") %
                    ((victim) ? victim->getName() : "A null pointer"));
-  return FALSE;
+  return false;
 }
 
 void spread_affect(TBeing* ch, int chance_to_spread, bool race, bool not_race,
   affectedData* af) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   affectedData vaf;
   if (ch->inRoom() == Room::NOCTURNAL_STORAGE)
     return;
@@ -105,10 +105,10 @@ void spread_affect(TBeing* ch, int chance_to_spread, bool race, bool not_race,
     if ((af->type != AFFECT_DISEASE && !v->affectedBySpell(af->type)) ||
         (af->type == AFFECT_DISEASE && !v->hasDisease(affToDisease(*af)))) {
 #if 0
-      vlogf(LOG_MISC, format("%s (%s:%d) spreading from %s to %s at %d") % 
+      vlogf(LOG_MISC, format("%s (%s:%d) spreading from %s to %s at %d") %
              af->type == AFFECT_DISEASE ? "Disease" : "Spell" %
-             af->type == AFFECT_DISEASE ? 
-                 DiseaseInfo[af->modifier].name : 
+             af->type == AFFECT_DISEASE ?
+                 DiseaseInfo[af->modifier].name :
                  discArray[af->type]->name %
              af->type == AFFECT_DISEASE ? af->modifier : af->type %
              ch->getName() % v->getName() % ch->inRoom());
@@ -125,7 +125,7 @@ void spread_affect(TBeing* ch, int chance_to_spread, bool race, bool not_race,
         vaf.duration /= 100;
       }
       if (vaf.duration > 0 || vaf.duration == PERMANENT_DURATION) {
-        v->affectTo(&vaf, TRUE);
+        v->affectTo(&vaf, true);
         if (vaf.type == AFFECT_DISEASE)
           disease_start(v, &vaf);
       }
@@ -140,7 +140,7 @@ int TBeing::dummyFlu() {
   int rc;
 
   if (isPc() && !desc)
-    return FALSE;
+    return false;
 
   switch (::number(1, 150)) {
     case 1:
@@ -159,12 +159,12 @@ int TBeing::dummyFlu() {
     case 4:
     case 5:
     case 6:
-      act("You sweat for no apparent reason.", FALSE, this, 0, 0, TO_CHAR);
+      act("You sweat for no apparent reason.", false, this, 0, 0, TO_CHAR);
       if (isHumanoid()) {
         // i suppose sweating is for humanoids
-        act("$n is sweating and $e looks feverish.", TRUE, this, 0, 0, TO_ROOM);
+        act("$n is sweating and $e looks feverish.", true, this, 0, 0, TO_ROOM);
       } else {
-        act("$n looks feverish.", TRUE, this, 0, 0, TO_ROOM);
+        act("$n looks feverish.", true, this, 0, 0, TO_ROOM);
       }
       break;
     case 7:
@@ -188,15 +188,15 @@ int TBeing::dummyFlu() {
     case 17:
     case 18:
       act("The world starts to spin and the landscape seems to leap upwards.",
-        TRUE, this, 0, 0, TO_CHAR);
+        true, this, 0, 0, TO_CHAR);
       if (riding) {
-        act("$n sways then crumples as $e faints.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n sways then crumples as $e faints.", false, this, 0, 0, TO_ROOM);
         rc = fallOffMount(riding, POSITION_RESTING);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;
         }
       } else
-        act("$n stumbles then crumples as $e faints.", FALSE, this, 0, 0,
+        act("$n stumbles then crumples as $e faints.", false, this, 0, 0,
           TO_ROOM);
       setPosition(POSITION_SLEEPING);
       break;
@@ -210,12 +210,12 @@ int TBeing::dummyFlu() {
     case 24:
     case 25:
       sendTo("You breathe feverishly in short shallow gasps.\n\r");
-      act("$n breathes in short, shallow gasps.", FALSE, this, 0, 0, TO_ROOM);
+      act("$n breathes in short, shallow gasps.", false, this, 0, 0, TO_ROOM);
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_flu(TBeing* victim, int message, affectedData*) {
@@ -223,12 +223,12 @@ int disease_flu(TBeing* victim, int message, affectedData*) {
   affectedData vaf;
   int rc;
   if (message == DISEASE_BEGUN) {
-    act("You begin to feel hot and nauseous.", FALSE, victim, 0, 0, TO_CHAR);
+    act("You begin to feel hot and nauseous.", false, victim, 0, 0, TO_CHAR);
     if (victim->isHumanoid()) {
-      act("$n starts to sweat and $s face looks pale.", TRUE, victim, NULL,
-        NULL, TO_ROOM);
+      act("$n starts to sweat and $s face looks pale.", true, victim, nullptr,
+        nullptr, TO_ROOM);
     } else {
-      act("$n looks lethargic and glassy eyed.", TRUE, victim, NULL, NULL,
+      act("$n looks lethargic and glassy eyed.", true, victim, nullptr, nullptr,
         TO_ROOM);
     }
   } else if (message == DISEASE_PULSE) {
@@ -254,12 +254,12 @@ int disease_flu(TBeing* victim, int message, affectedData*) {
     spread_affect(victim, chance, false, false, &vaf);
   } else if (message == DISEASE_DONE) {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("$n relaxes a bit.", TRUE, victim, NULL, NULL, TO_ROOM);
+      act("$n relaxes a bit.", true, victim, nullptr, nullptr, TO_ROOM);
       victim->sendTo("Your stomach settles down and you feel much better.\n\r");
     }
-    return FALSE;
+    return false;
   }
-  return FALSE;
+  return false;
 }
 
 // since the effects of cold get called by multiple diseases i've set it up
@@ -267,7 +267,7 @@ int disease_flu(TBeing* victim, int message, affectedData*) {
 // may return DELETE_THIS
 int TBeing::dummyCold() {
   if (isPc() && !desc)
-    return FALSE;
+    return false;
 
   switch (::number(1, 100)) {
     case 1:
@@ -286,8 +286,8 @@ int TBeing::dummyCold() {
     case 8:
     case 9:
     case 10:
-      act("Your nose starts to drip and run.", TRUE, this, 0, 0, TO_CHAR);
-      act("$n's nose starts to drip and $e sniffs loudly.", TRUE, this, 0, 0,
+      act("Your nose starts to drip and run.", true, this, 0, 0, TO_CHAR);
+      act("$n's nose starts to drip and $e sniffs loudly.", true, this, 0, 0,
         TO_ROOM);
       break;
     case 11:
@@ -309,7 +309,7 @@ int TBeing::dummyCold() {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_cold(TBeing* victim, int message, affectedData*) {
@@ -328,19 +328,19 @@ int disease_cold(TBeing* victim, int message, affectedData*) {
     vaf.modifier = DISEASE_COLD;
     vaf.location = APPLY_NONE;
     vaf.bitvector = 0;
-    spread_affect(victim, spread_chance, FALSE, FALSE, &vaf);
+    spread_affect(victim, spread_chance, false, false, &vaf);
   } else if (message == DISEASE_BEGUN) {
-    act("$n doesn't look very well.", TRUE, victim, NULL, NULL, TO_ROOM);
+    act("$n doesn't look very well.", true, victim, nullptr, nullptr, TO_ROOM);
     victim->sendTo("You don't feel very well at all.\n\r");
-    return FALSE;
+    return false;
   } else if (message == DISEASE_DONE) {
     if (victim->getPosition() > POSITION_DEAD) {
-      act("Some color has returned to $n.", TRUE, victim, NULL, NULL, TO_ROOM);
+      act("Some color has returned to $n.", true, victim, nullptr, nullptr, TO_ROOM);
       victim->sendTo("You're feeling much better.\n\r");
     }
-    return FALSE;
+    return false;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_numbed(TBeing* victim, int message, affectedData* af) {
@@ -348,7 +348,7 @@ int disease_numbed(TBeing* victim, int message, affectedData* af) {
 
   if (slot < MIN_WEAR || slot >= MAX_WEAR) {
     vlogf(LOG_BUG, format("disease_numbed called with bad slot: %i") % slot);
-    return FALSE;
+    return false;
   }
 
   switch (message) {
@@ -370,7 +370,7 @@ int disease_numbed(TBeing* victim, int message, affectedData* af) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_bruised(TBeing* victim, int message, affectedData* af) {
@@ -526,10 +526,10 @@ int disease_infection(TBeing* victim, int message, affectedData* af) {
 
   if (slot < MIN_WEAR || slot >= MAX_WEAR) {
     vlogf(LOG_BUG, format("disease_infection called with bad slot: %i") % slot);
-    return FALSE;
+    return false;
   }
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   switch (message) {
     case DISEASE_BEGUN:
@@ -557,7 +557,7 @@ int disease_infection(TBeing* victim, int message, affectedData* af) {
         sprintf(buf,
           "$n's %s shakes and twinges as the infection in it festers.",
           victim->describeBodySlot(slot).c_str());
-        act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
+        act(buf, true, victim, nullptr, nullptr, TO_ROOM);
         rc = victim->hurtLimb(1, slot);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
@@ -578,21 +578,21 @@ int disease_infection(TBeing* victim, int message, affectedData* af) {
                        victim->describeBodySlot(slot));
         sprintf(buf, "$n's %s stops twitching and heals!",
           victim->describeBodySlot(slot).c_str());
-        act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
+        act(buf, true, victim, nullptr, nullptr, TO_ROOM);
       }
 
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_syphilis(TBeing* ch, int message, affectedData*) {
   switch (message) {
     case DISEASE_PULSE:
       if (::number(0, 10))
-        return FALSE;
+        return false;
       switch (::number(1, 5)) {
         case 1:
         case 2:
@@ -606,7 +606,7 @@ int disease_syphilis(TBeing* ch, int message, affectedData*) {
         default:
           break;
       }
-      act("$n breaks out in open sores.", TRUE, ch, 0, 0, TO_ROOM);
+      act("$n breaks out in open sores.", true, ch, 0, 0, TO_ROOM);
       if (ch->reconcileDamage(ch, ::number(3, 6), DAMAGE_NORMAL) == -1) {
         return DELETE_THIS;
       }
@@ -622,23 +622,23 @@ int disease_syphilis(TBeing* ch, int message, affectedData*) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_hemorrhaging(TBeing* victim, int message, affectedData*) {
   int dam;
 
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   switch (message) {
     case DISEASE_PULSE:
       if (number(0, 4))
-        return FALSE;
+        return false;
 
       victim->sendTo(
         "An immense pain in your chest causes you to grunt in agony!\n\r");
-      act("$n groans in agony.", FALSE, victim, 0, 0, TO_ROOM);
+      act("$n groans in agony.", false, victim, 0, 0, TO_ROOM);
       dam = ::number(1, 3);
       if (victim->reconcileDamage(victim, dam, DAMAGE_HEMORRHAGE) == -1)
         return DELETE_THIS;
@@ -649,13 +649,13 @@ int disease_hemorrhaging(TBeing* victim, int message, affectedData*) {
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
         victim->sendTo("Your internal hemorrhaging has stopped.\n\r");
-        act("$n seems to get better.", TRUE, victim, 0, 0, TO_ROOM);
+        act("$n seems to get better.", true, victim, 0, 0, TO_ROOM);
       }
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_frostbite(TBeing* victim, int message, affectedData*) {
@@ -665,7 +665,7 @@ int disease_frostbite(TBeing* victim, int message, affectedData*) {
   switch (message) {
     case DISEASE_PULSE:
       if (number(0, 50))
-        return FALSE;
+        return false;
 
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
         if (victim->validEquipSlot(i) && !(victim->equipment[i]) &&
@@ -676,7 +676,7 @@ int disease_frostbite(TBeing* victim, int message, affectedData*) {
           sprintf(buf,
             "$n's %s takes on a gray-blue color as frost-bite sets in.",
             victim->describeBodySlot(i).c_str());
-          act(buf, TRUE, victim, NULL, NULL, TO_ROOM);
+          act(buf, true, victim, nullptr, nullptr, TO_ROOM);
           victim->sendTo(format("Your %s feels numb and takes on a gray-blue "
                                 "color.  Looks like frostbite.\n\r") %
                          victim->describeBodySlot(i));
@@ -688,9 +688,9 @@ int disease_frostbite(TBeing* victim, int message, affectedData*) {
       victim->doAction("", CMD_SHIVER);
       break;
     case DISEASE_BEGUN:
-      act("$n looks very cold and has begun shivering involuntarily.", TRUE,
-        victim, NULL, NULL, TO_ROOM);
-      act("Frostbite will likely set in soon.", FALSE, victim, NULL, NULL,
+      act("$n looks very cold and has begun shivering involuntarily.", true,
+        victim, nullptr, nullptr, TO_ROOM);
+      act("Frostbite will likely set in soon.", false, victim, nullptr, nullptr,
         TO_ROOM);
       victim->sendTo(
         "You are very cold and have begun shivering involuntarily.\n\r");
@@ -698,15 +698,15 @@ int disease_frostbite(TBeing* victim, int message, affectedData*) {
       break;
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
-        act("$n still looks cold, but the shivering has stopped.", TRUE, victim,
-          NULL, NULL, TO_ROOM);
+        act("$n still looks cold, but the shivering has stopped.", true, victim,
+          nullptr, nullptr, TO_ROOM);
         victim->sendTo("You almost feel warm again.\n\r");
       }
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_voicebox(TBeing* victim, int message, affectedData*) {
@@ -718,7 +718,7 @@ int disease_voicebox(TBeing* victim, int message, affectedData*) {
       break;
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
-        act("$n's voicebox heals and $s voice returns to $m.", TRUE, victim, 0,
+        act("$n's voicebox heals and $s voice returns to $m.", true, victim, 0,
           0, TO_ROOM);
         victim->sendTo(
           "You feel your larynx mend and your voice has returned.\n\r");
@@ -727,7 +727,7 @@ int disease_voicebox(TBeing* victim, int message, affectedData*) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_eyeball(TBeing* victim, int message, affectedData*) {
@@ -739,7 +739,7 @@ int disease_eyeball(TBeing* victim, int message, affectedData*) {
       break;
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
-        act("$n's missing eyeballs slowly regenerate.", TRUE, victim, 0, 0,
+        act("$n's missing eyeballs slowly regenerate.", true, victim, 0, 0,
           TO_ROOM);
         victim->sendTo(
           "You feel something growing in your empty eye sockets.\n\r");
@@ -751,17 +751,17 @@ int disease_eyeball(TBeing* victim, int message, affectedData*) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_stomach(TBeing* victim, int message, affectedData*) {
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   switch (message) {
     case DISEASE_PULSE:
       if (number(0, 2))
-        return FALSE;
+        return false;
       if ((victim->getCond(FULL) > 0) && !number(0, 4))
         victim->gainCondition(FULL, -1);
       else if (!victim->getCond(FULL)) {
@@ -784,7 +784,7 @@ int disease_stomach(TBeing* victim, int message, affectedData*) {
       break;
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
-        act("$n's stomach wound slowly closes up and mends.", TRUE, victim, 0,
+        act("$n's stomach wound slowly closes up and mends.", true, victim, 0,
           0, TO_ROOM);
         victim->sendTo(
           "Your stomach wound slowly closes over and mends itself.\n\r");
@@ -793,25 +793,25 @@ int disease_stomach(TBeing* victim, int message, affectedData*) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_lung(TBeing* victim, int message, affectedData*) {
   int dam;
 
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   switch (message) {
     case DISEASE_PULSE:
       if (number(0, 2))
-        return FALSE;
+        return false;
       victim->sendTo(
         "You gasp and wheeze, you can't seem to breathe properly!\n\r");
       act(
         "$n makes gasping and wheezing sounds as the air rushes from $s "
         "punctured lung.",
-        TRUE, victim, 0, 0, TO_ROOM);
+        true, victim, 0, 0, TO_ROOM);
       dam = ::number(1, 3);
       if (victim->reconcileDamage(victim, dam, DAMAGE_SUFFOCATION) == -1)
         return DELETE_THIS;
@@ -824,31 +824,31 @@ int disease_lung(TBeing* victim, int message, affectedData*) {
         victim->sendTo(
           "The hole in your lung seems to close up and your lungs thankfully "
           "fill with air.\n\r");
-        act("The hole in $n's lung heals and $e takes a big gulp of air.", TRUE,
+        act("The hole in $n's lung heals and $e takes a big gulp of air.", true,
           victim, 0, 0, TO_ROOM);
       }
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_suffocate(TBeing* victim, int message, affectedData* af) {
   int dam;
 
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   switch (message) {
     case DISEASE_PULSE:
       if (::number(0, 1))
-        return FALSE;
+        return false;
       dam = ::number(min((int)af->level, 50) / 2 + 1, min((int)af->level, 50));
       // narrowed this from 1-50 (at 50th) to 25-50 or so... the damage was very
       // lame
       victim->sendTo("GASP!  You can't breathe!\n\r");
-      act("$n grabs $s throat and gasps, trying to breathe.", TRUE, victim, 0,
+      act("$n grabs $s throat and gasps, trying to breathe.", true, victim, 0,
         0, TO_ROOM);
       victim->addToMove(-::number(1, 10));
 
@@ -862,20 +862,20 @@ int disease_suffocate(TBeing* victim, int message, affectedData* af) {
       if (victim->getPosition() > POSITION_DEAD) {
         victim->sendTo("The vaccum around you disappates.\n\r");
         victim->sendTo("You can breathe again!\n\r");
-        act("Air returns to $n as $e takes a deep breath of air.", FALSE,
+        act("Air returns to $n as $e takes a deep breath of air.", false,
           victim, 0, 0, TO_ROOM);
       }
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TThing::garottePulse(TBeing*, affectedData* af) {
   // bad news, garotting without it being a garotte
   af->duration = 0;
-  return FALSE;
+  return false;
 }
 
 int TTool::garottePulse(TBeing* victim, affectedData* af) {
@@ -884,13 +884,13 @@ int TTool::garottePulse(TBeing* victim, affectedData* af) {
   if (getToolType() != TOOL_GARROTTE) {
     // garrotte was removed somehow?  possibly due to scrapping
     af->duration = 0;
-    return FALSE;
+    return false;
   }
   if (::number(0, 2))
-    return FALSE;
+    return false;
 
   victim->sendTo("GASP!  You can't breathe!\n\r");
-  act("$n grabs $s throat and gasps, trying to breathe.", TRUE, victim, 0, 0,
+  act("$n grabs $s throat and gasps, trying to breathe.", true, victim, 0, 0,
     TO_ROOM);
   dam = ::number(1, min((int)af->level, 50));
 
@@ -901,13 +901,13 @@ int TTool::garottePulse(TBeing* victim, affectedData* af) {
   // damage garrotte
   addToToolUses(-1);
   if (getToolUses() <= 0) {
-    act("$p snaps.", FALSE, victim, this, 0, TO_CHAR);
-    act("$p snaps.", FALSE, victim, this, 0, TO_ROOM);
+    act("$p snaps.", false, victim, this, 0, TO_CHAR);
+    act("$p snaps.", false, victim, this, 0, TO_ROOM);
     victim->unequip(WEAR_NECK);
     // af is now bogus
     delete this;
   }
-  return FALSE;
+  return false;
 }
 
 // this is essentially suffocate but also finds and damages the garrotte
@@ -916,14 +916,14 @@ int disease_garrotte(TBeing* victim, int message, affectedData* af) {
   int rc;
 
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   switch (message) {
     case DISEASE_PULSE:
       if (!(obj = victim->equipment[WEAR_NECK])) {
         // garrotte was removed somehow?  possibly due to scrapping
         af->duration = 0;
-        return FALSE;
+        return false;
       }
       rc = obj->garottePulse(victim, af);
       if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -936,14 +936,14 @@ int disease_garrotte(TBeing* victim, int message, affectedData* af) {
       if (victim->getPosition() > POSITION_DEAD) {
         victim->sendTo("The vaccum around you disappates.\n\r");
         victim->sendTo("You can breathe again!\n\r");
-        act("Air returns to $n as $e takes a deep breath of air.", TRUE, victim,
+        act("Air returns to $n as $e takes a deep breath of air.", true, victim,
           0, 0, TO_ROOM);
       }
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_food_poison(TBeing* ch, int message, affectedData*) {
@@ -952,7 +952,7 @@ int disease_food_poison(TBeing* ch, int message, affectedData*) {
   switch (message) {
     case DISEASE_PULSE:
       if (::number(0, 10))
-        return FALSE;
+        return false;
       switch (::number(1, 5)) {
         case 1:
         case 2:
@@ -979,7 +979,7 @@ int disease_food_poison(TBeing* ch, int message, affectedData*) {
         default:
           break;
       }
-      act("$n's face is pale and $e doesn't look well at all.", TRUE, ch, 0, 0,
+      act("$n's face is pale and $e doesn't look well at all.", true, ch, 0, 0,
         TO_ROOM);
       if (ch->getCond(FULL) > 0)
         ch->gainCondition(FULL, -ch->getCond(FULL));
@@ -1001,14 +1001,14 @@ int disease_food_poison(TBeing* ch, int message, affectedData*) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_poison(TBeing* ch, int message, affectedData*) {
   switch (message) {
     case DISEASE_PULSE:
       if (::number(0, 10))
-        return FALSE;
+        return false;
       switch (::number(1, 5)) {
         case 1:
         case 2:
@@ -1024,7 +1024,7 @@ int disease_poison(TBeing* ch, int message, affectedData*) {
         default:
           break;
       }
-      act("$n's face is pale and $e doesn't look well at all.", TRUE, ch, 0, 0,
+      act("$n's face is pale and $e doesn't look well at all.", true, ch, 0, 0,
         TO_ROOM);
       if (ch->reconcileDamage(ch, ::number(3, 6), SPELL_POISON) == -1) {
         return DELETE_THIS;
@@ -1041,24 +1041,24 @@ int disease_poison(TBeing* ch, int message, affectedData*) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_drowning(TBeing* victim, int message, affectedData* af) {
   int dam;
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   switch (message) {
     case DISEASE_PULSE:
       if (::number(0, 2))
-        return FALSE;
+        return false;
       if (victim->isAffected(AFF_WATERBREATH))
-        return FALSE;
+        return false;
 
       dam = ::number(1, min((int)af->level, 50));
       victim->sendTo("GASP!  You can't breathe!\n\r");
-      act("$n flails about and gasps, trying to breathe.", FALSE, victim, 0, 0,
+      act("$n flails about and gasps, trying to breathe.", false, victim, 0, 0,
         TO_ROOM);
       victim->addToMove(-::number(1, 10));
       if (victim->reconcileDamage(victim, dam, SPELL_WATERY_GRAVE) == -1)
@@ -1071,18 +1071,18 @@ int disease_drowning(TBeing* victim, int message, affectedData* af) {
       if (victim->getPosition() > POSITION_DEAD) {
         victim->sendTo(
           "The water around you evaporates.  You can breath again!\n\r");
-        act("Oxygen returns to $n as $e takes a deep breath of air.", TRUE,
+        act("Oxygen returns to $n as $e takes a deep breath of air.", true,
           victim, 0, 0, TO_ROOM);
       }
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
-int disease_herpes(TBeing*, int, affectedData*) { return FALSE; }
+int disease_herpes(TBeing*, int, affectedData*) { return false; }
 
-int disease_broken_bone(TBeing*, int, affectedData*) { return FALSE; }
+int disease_broken_bone(TBeing*, int, affectedData*) { return false; }
 
 static bool badSpreadSlot(const TBeing* ch, wearSlotT slot) {
   return (!ch->hasPart(slot) || slot == HOLD_RIGHT || slot == HOLD_LEFT);
@@ -1286,7 +1286,7 @@ void TBeing::dummyLeprosy(wearSlotT part) {
            describeBodySlot(part));
     act(format("The lesions covering $n's %s appear thicker.") %
           describeBodySlot(part),
-      TRUE, this, 0, 0, TO_ROOM);
+      true, this, 0, 0, TO_ROOM);
   }
 }
 
@@ -1296,7 +1296,7 @@ int disease_leprosy(TBeing* victim, int message, affectedData* af) {
 
   if (slot < WEAR_NOWHERE || slot >= MAX_WEAR) {
     vlogf(LOG_BUG, format("disease_leprosy called with bad slot: %i") % slot);
-    return FALSE;
+    return false;
   }
   switch (message) {
     case DISEASE_PULSE:
@@ -1314,7 +1314,7 @@ int disease_leprosy(TBeing* victim, int message, affectedData* af) {
         vaf.modifier = DISEASE_LEPROSY;
         vaf.location = APPLY_NONE;
         vaf.bitvector = 0;
-        spread_affect(victim, 20, FALSE, FALSE, &vaf);
+        spread_affect(victim, 20, false, false, &vaf);
       }
       victim->bodySpread(375, af);
       break;
@@ -1322,9 +1322,9 @@ int disease_leprosy(TBeing* victim, int message, affectedData* af) {
       if (slot) {
         victim->addToLimbFlags(slot, PART_LEPROSED);
       } else {
-        act("Your skin becomes scaly and insensitive to feeling!", FALSE,
+        act("Your skin becomes scaly and insensitive to feeling!", false,
           victim, 0, 0, TO_CHAR);
-        act("$n's skin begins to look scaly!", TRUE, victim, NULL, NULL,
+        act("$n's skin begins to look scaly!", true, victim, nullptr, nullptr,
           TO_ROOM);
       }
       break;
@@ -1335,17 +1335,17 @@ int disease_leprosy(TBeing* victim, int message, affectedData* af) {
           act(format(
                 "The skin of your %s softens a bit and the feeling returns.") %
                 victim->describeBodySlot(slot),
-            FALSE, victim, 0, 0, TO_CHAR);
+            false, victim, 0, 0, TO_CHAR);
         }
       } else if (victim->getPosition() > POSITION_DEAD) {
-        act("The hardened lesions on your skin disappear.", FALSE, victim, 0, 0,
+        act("The hardened lesions on your skin disappear.", false, victim, 0, 0,
           TO_CHAR);
-        act("The lesions covering $n disappear.", TRUE, victim, NULL, NULL,
+        act("The lesions covering $n disappear.", true, victim, nullptr, nullptr,
           TO_ROOM);
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_plague(TBeing* victim, int message, affectedData* af) {
@@ -1355,7 +1355,7 @@ int disease_plague(TBeing* victim, int message, affectedData* af) {
 
   if (slot < WEAR_NOWHERE || slot >= MAX_WEAR) {
     vlogf(LOG_BUG, format("disease_plague called with bad slot: %i") % slot);
-    return FALSE;
+    return false;
   }
 
   switch (message) {
@@ -1396,22 +1396,22 @@ int disease_plague(TBeing* victim, int message, affectedData* af) {
       act(
         "Painful lumps form over your body and <o>dark, weeping sores<1> "
         "appear!",
-        FALSE, victim, 0, 0, TO_CHAR);
-      act("Lumps and <o>dark splotches<1> begin to cover $n's body!", TRUE,
-        victim, NULL, NULL, TO_ROOM);
+        false, victim, 0, 0, TO_CHAR);
+      act("Lumps and <o>dark splotches<1> begin to cover $n's body!", true,
+        victim, nullptr, nullptr, TO_ROOM);
       if (slot != WEAR_NOWHERE)
         victim->addToLimbFlags(slot, PART_LEPROSED);
       break;
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
         act("The festering sores and lumps covering your body disappear!",
-          FALSE, victim, 0, 0, TO_CHAR);
+          false, victim, 0, 0, TO_CHAR);
         act("The festering sores and lumps covering $n's body disappear!!",
-          TRUE, victim, NULL, NULL, TO_ROOM);
+          true, victim, nullptr, nullptr, TO_ROOM);
       }
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_gangrene(TBeing* victim, int message, affectedData* af) {
@@ -1419,14 +1419,14 @@ int disease_gangrene(TBeing* victim, int message, affectedData* af) {
   // when on critical slots
 
   if (victim->isPc() && !victim->desc)
-    return FALSE;
+    return false;
 
   wearSlotT slot = wearSlotT(af->level);  // defines the limb that has gangrene
 
   if (slot < MIN_WEAR || slot >= MAX_WEAR) {
     vlogf(LOG_BUG, format("disease_gangrene called with bad slot: %i on %s") %
                      slot % victim->getName());
-    return FALSE;
+    return false;
   }
 
   switch (message) {
@@ -1434,10 +1434,10 @@ int disease_gangrene(TBeing* victim, int message, affectedData* af) {
       victim->addToLimbFlags(slot, PART_GANGRENOUS);
       act(format("Your %s has become <k>gangrenous<1>!") %
             victim->describeBodySlot(slot),
-        FALSE, victim, 0, 0, TO_CHAR);
+        false, victim, 0, 0, TO_CHAR);
       act(format("$n's %s has become <k>gangrenous<1>!") %
             victim->describeBodySlot(slot),
-        TRUE, victim, NULL, NULL, TO_ROOM);
+        true, victim, nullptr, nullptr, TO_ROOM);
       break;
     case DISEASE_PULSE:
       if (isVitalPart(slot) && victim->getCurLimbHealth(slot) <= 0) {
@@ -1464,14 +1464,14 @@ int disease_gangrene(TBeing* victim, int message, affectedData* af) {
             act(format("Your %s discharges a <o>foul<1> <k>black<1> ichor.  "
                        "The pain!") %
                   victim->describeBodySlot(slot),
-              FALSE, victim, 0, 0, TO_CHAR);
+              false, victim, 0, 0, TO_CHAR);
             break;
           default:
             // should never fall through here
             break;
         }
-        act("The foul stench of dying flesh surrounds $n.", FALSE, victim, NULL,
-          NULL, TO_ROOM);
+        act("The foul stench of dying flesh surrounds $n.", false, victim, nullptr,
+          nullptr, TO_ROOM);
 
         // do some damage if it's a critical body part
         if (isVitalPart(slot))
@@ -1506,29 +1506,29 @@ int disease_gangrene(TBeing* victim, int message, affectedData* af) {
         act(format("You experience profound relief as the <k>gangrene<1> in "
                    "your %s disappears!") %
               victim->describeBodySlot(slot),
-          FALSE, victim, 0, 0, TO_CHAR);
+          false, victim, 0, 0, TO_CHAR);
         act(format("$n's necrotic %s regains some of its health!") %
               victim->describeBodySlot(slot).c_str(),
-          TRUE, victim, NULL, NULL, TO_ROOM);
+          true, victim, nullptr, nullptr, TO_ROOM);
       }
       break;
     default:
       // do nothing
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_scurvy(TBeing* victim, int message, affectedData* af) {
   // spontaneous bleeding and tooth loss, increased chance of bruising in combat
   sstring buf;
-  bool found = FALSE;
+  bool found = false;
   switch (message) {
     case DISEASE_BEGUN:
-      act("Your skin <w>pales<1> and your eyes begin to hurt.", FALSE, victim,
+      act("Your skin <w>pales<1> and your eyes begin to hurt.", false, victim,
         0, 0, TO_CHAR);
-      act("$n pales and $s eyes become hollow and bl<r>oo<1>dsh<r>o<1>t.", TRUE,
-        victim, NULL, NULL, TO_ROOM);
+      act("$n pales and $s eyes become hollow and bl<r>oo<1>dsh<r>o<1>t.", true,
+        victim, nullptr, nullptr, TO_ROOM);
       break;
     case DISEASE_PULSE:
       wearSlotT slot;
@@ -1538,7 +1538,7 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
         case 0:
           // tooth falls out
           if (victim->getMyRace()->hasNoBones())
-            return FALSE;
+            return false;
           corpse = read_object(Obj::GENERIC_TOOTH, VIRTUAL);
           corpse->swapToStrung();
           if ((tooth = dynamic_cast<TCorpse*>(corpse))) {
@@ -1568,9 +1568,9 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
           corpse->obj_flags.cost = 50;
           act(
             "Your gums ache and a <w>tooth<1> comes loose, falling to the $g!",
-            FALSE, victim, 0, 0, TO_CHAR);
-          act("A <k>rotten<1> tooth falls from $n's mouth.", FALSE, victim,
-            corpse, NULL, TO_ROOM);
+            false, victim, 0, 0, TO_CHAR);
+          act("A <k>rotten<1> tooth falls from $n's mouth.", false, victim,
+            corpse, nullptr, TO_ROOM);
           *victim->roomp += *corpse;
           break;
         case 1:
@@ -1578,9 +1578,9 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
         case 3:
         case 4:
           if (victim->isUndead())
-            return FALSE;
+            return false;
           // bruise- 1st, find a limb
-          found = FALSE;
+          found = false;
           for (int i = 0; i < 20; ++i) {
             slot = pickRandomLimb();
             if (notBleedSlot(slot))
@@ -1591,21 +1591,21 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
               continue;
             if (victim->isImmune(IMMUNE_SKIN_COND, slot))
               continue;
-            found = TRUE;
+            found = true;
             break;
           }
           if (!found)
-            return FALSE;
+            return false;
           if (victim->rawBruise(slot, 225, SILENT_YES, CHECK_IMMUNITY_NO)) {
             // note: bruise duration is doubled in rawBruise for all you scurvy
             // coves
             act(format("Your %s feels painfully tender and a <p>mottled<1> "
                        "<P>bruise<1> blooms.") %
                   victim->describeBodySlot(slot),
-              FALSE, victim, 0, 0, TO_CHAR);
+              false, victim, 0, 0, TO_CHAR);
             act(format("A mottled bruise forms on $n's %s.") %
                   victim->describeBodySlot(slot),
-              TRUE, victim, NULL, NULL, TO_ROOM);
+              true, victim, nullptr, nullptr, TO_ROOM);
           }
           break;
         case 5:
@@ -1614,7 +1614,7 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
           if (!victim->isUndead()) {
             // start bleeding
             // find a suitable slot to bleed
-            found = FALSE;
+            found = false;
             for (int i = 0; i < 20; ++i) {
               slot = pickRandomLimb();
               if (notBleedSlot(slot))
@@ -1625,7 +1625,7 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
                 continue;
               if (victim->isImmune(IMMUNE_BLEED, slot))
                 continue;
-              found = TRUE;
+              found = true;
               break;
             }
             if (found) {
@@ -1635,10 +1635,10 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
                 format(
                   "Your %s feels painfully tender and begins to <r>bleed<1>.") %
                   victim->describeBodySlot(slot),
-                FALSE, victim, 0, 0, TO_CHAR);
+                false, victim, 0, 0, TO_CHAR);
               act(format("$n's %s starts to bleed.") %
                     victim->describeBodySlot(slot),
-                TRUE, victim, NULL, NULL, TO_ROOM);
+                true, victim, nullptr, nullptr, TO_ROOM);
             }
           }
           break;
@@ -1648,9 +1648,9 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
       break;
     case DISEASE_DONE:
       if (victim->getPosition() > POSITION_DEAD) {
-        act("Your are <c>relieved<1> of some of your aches and pains!", FALSE,
+        act("Your are <c>relieved<1> of some of your aches and pains!", false,
           victim, 0, 0, TO_CHAR);
-        act("Some <c>life<1> returns to $n's eyes.", TRUE, victim, NULL, NULL,
+        act("Some <c>life<1> returns to $n's eyes.", true, victim, nullptr, nullptr,
           TO_ROOM);
       }
       break;
@@ -1658,7 +1658,7 @@ int disease_scurvy(TBeing* victim, int message, affectedData* af) {
       // do nothing
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_dysentery(TBeing* victim, int message, affectedData* af) {
@@ -1667,12 +1667,12 @@ int disease_dysentery(TBeing* victim, int message, affectedData* af) {
     case DISEASE_BEGUN:
       act(
         "Something rotten in your guts causes you to double over momentarily.",
-        FALSE, victim, 0, 0, TO_CHAR);
+        false, victim, 0, 0, TO_CHAR);
       if (victim->isHumanoid()) {
-        act("$n pales and doubles over momentarily.", TRUE, victim, NULL, NULL,
+        act("$n pales and doubles over momentarily.", true, victim, nullptr, nullptr,
           TO_ROOM);
       } else {
-        act("$n winces and doubles over momentarily.", TRUE, victim, NULL, NULL,
+        act("$n winces and doubles over momentarily.", true, victim, nullptr, nullptr,
           TO_ROOM);
       }
       break;
@@ -1696,22 +1696,22 @@ int disease_dysentery(TBeing* victim, int message, affectedData* af) {
               victim->sendTo(
                 "You experience a hot flash and your bowels clench.\n\r");
               if (victim->isHumanoid()) {
-                act("$n looks pale and sweaty.", TRUE, victim, NULL, NULL,
+                act("$n looks pale and sweaty.", true, victim, nullptr, nullptr,
                   TO_ROOM);
               } else {
-                act("$n looks uncomfortable.", TRUE, victim, NULL, NULL,
+                act("$n looks uncomfortable.", true, victim, nullptr, nullptr,
                   TO_ROOM);
               }
             } else {
               victim->sendTo(
                 "Your stomach is gripped by a dreadful spasm and you cannot "
                 "contain yourself.\n\r");
-              act("You have <o>besmirched<1> yourself!", FALSE, victim, NULL,
-                NULL, TO_CHAR);
+              act("You have <o>besmirched<1> yourself!", false, victim, nullptr,
+                nullptr, TO_CHAR);
               act(
                 "The air around $n is woefully befouled as $e <o>besmirches<1> "
                 "$mself.",
-                FALSE, victim, NULL, NULL, TO_ROOM);
+                false, victim, nullptr, nullptr, TO_ROOM);
               victim->dropPool(
                 min((int)victim->getWeight() / 10, (int)victim->getCond(POOP)),
                 LIQ_POT_FILTH);
@@ -1728,10 +1728,10 @@ int disease_dysentery(TBeing* victim, int message, affectedData* af) {
                 victim->sendTo(
                   "You experience a hot flash and your bowels clench.\n\r");
                 if (victim->isHumanoid()) {
-                  act("$n looks pale and sweaty.", TRUE, victim, NULL, NULL,
+                  act("$n looks pale and sweaty.", true, victim, nullptr, nullptr,
                     TO_ROOM);
                 } else {
-                  act("$n looks uncomfortable.", TRUE, victim, NULL, NULL,
+                  act("$n looks uncomfortable.", true, victim, nullptr, nullptr,
                     TO_ROOM);
                 }
                 break;
@@ -1739,12 +1739,12 @@ int disease_dysentery(TBeing* victim, int message, affectedData* af) {
                 victim->sendTo(
                   "Your stomach is gripped by a dreadful spasm and you cannot "
                   "contain yourself.\n\r");
-                act("You have <o>besmirched<1> yourself!", FALSE, victim, NULL,
-                  NULL, TO_CHAR);
+                act("You have <o>besmirched<1> yourself!", false, victim, nullptr,
+                  nullptr, TO_CHAR);
                 act(
                   "The air around $n is woefully befouled as $e "
                   "<o>besmirches<1> $mself.",
-                  FALSE, victim, NULL, NULL, TO_ROOM);
+                  false, victim, nullptr, nullptr, TO_ROOM);
                 victim->dropPool(::number(2, 6), LIQ_POT_FILTH);
                 break;
               default:
@@ -1752,7 +1752,7 @@ int disease_dysentery(TBeing* victim, int message, affectedData* af) {
                 break;
             }
           }
-          victim->addToDistracted(1, FALSE);
+          victim->addToDistracted(1, false);
           break;
         default:
           break;
@@ -1763,15 +1763,15 @@ int disease_dysentery(TBeing* victim, int message, affectedData* af) {
         victim->sendTo(
           "The gnawing in your stomach ceases and you can walk normally "
           "again!\n\r");
-        act("$n appears as if a weight were lifted from $s back.", TRUE, victim,
-          NULL, NULL, TO_ROOM);
+        act("$n appears as if a weight were lifted from $s back.", true, victim,
+          nullptr, nullptr, TO_ROOM);
       }
       break;
     default:
       // do nothing
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int disease_pneumonia(TBeing* victim, int message, affectedData* af) {
@@ -1781,10 +1781,10 @@ int disease_pneumonia(TBeing* victim, int message, affectedData* af) {
   // -moves, coughing & suffocation damage
   switch (message) {
     case DISEASE_BEGUN:
-      act("Your chest begins to hurt and breathing becomes difficult.", FALSE,
+      act("Your chest begins to hurt and breathing becomes difficult.", false,
         victim, 0, 0, TO_CHAR);
-      act("$n looks <w>pale<1> and $s breathing becomes labored.", TRUE, victim,
-        NULL, NULL, TO_ROOM);
+      act("$n looks <w>pale<1> and $s breathing becomes labored.", true, victim,
+        nullptr, nullptr, TO_ROOM);
       break;
     case DISEASE_PULSE:
       // spread cold, flu, pneumonia
@@ -1808,9 +1808,9 @@ int disease_pneumonia(TBeing* victim, int message, affectedData* af) {
         case 1:
           // heart and breath: -moves
           if (victim->isUndead())
-            return FALSE;
+            return false;
           victim->sendTo("Your heart pounds and you can barely breath.\n\r");
-          act("$n begins to pant in short, sharp breaths.", TRUE, victim, 0, 0,
+          act("$n begins to pant in short, sharp breaths.", true, victim, 0, 0,
             TO_ROOM);
           victim->setMove(max((victim->getMove() - 30), 0));
           break;
@@ -1818,10 +1818,10 @@ int disease_pneumonia(TBeing* victim, int message, affectedData* af) {
         case 3:
           // cough blood: damage
           act("You cough violently, bringing up <G>phelgm<1> and <r>blood<1>.",
-            FALSE, victim, 0, 0, TO_CHAR);
+            false, victim, 0, 0, TO_CHAR);
           act(
             "$n erupts into a hoarse, hacking cough.  It does not sound good.",
-            TRUE, victim, 0, 0, TO_ROOM);
+            true, victim, 0, 0, TO_ROOM);
           if (victim->reconcileDamage(victim, ::number(2, 4), SPELL_DISEASE) ==
               -1)
             return DELETE_THIS;
@@ -1832,10 +1832,10 @@ int disease_pneumonia(TBeing* victim, int message, affectedData* af) {
           dam *= (100 - victim->getImmunity(IMMUNE_SUFFOCATION));
           dam /= 100;
           if (dam <= 0)
-            return FALSE;
+            return false;
           victim->sendTo(
             "Your lungs burn with pain and you cannot breathe!\n\r");
-          act("$n's face <b>darkens<1> as $e struggles to draw a breath.", TRUE,
+          act("$n's face <b>darkens<1> as $e struggles to draw a breath.", true,
             victim, 0, 0, TO_ROOM);
           victim->addToMove(-::number(0,
             (10 * ((100 - victim->getImmunity(IMMUNE_SUFFOCATION)) / 100))));
@@ -1850,14 +1850,14 @@ int disease_pneumonia(TBeing* victim, int message, affectedData* af) {
       if (victim->getPosition() > POSITION_DEAD) {
         victim->sendTo(
           "Your lungs clear and you regain the strength to draw breath!\n\r");
-        act("$n loses some of $s pallor.", TRUE, victim, NULL, NULL, TO_ROOM);
+        act("$n loses some of $s pallor.", true, victim, nullptr, nullptr, TO_ROOM);
       }
       break;
     default:
       // do nothing
       break;
   }
-  return FALSE;
+  return false;
 }
 
 // extreme pain makes use of AFF_STUNNED for its practical effects

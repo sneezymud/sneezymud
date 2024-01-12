@@ -64,11 +64,11 @@ void TFuel::refuelMeFuel(TBeing* ch, TLight* lamp) {
   int use;
 
   if (lamp->getMaxBurn() < 0) {
-    act("$p can't be refueled.", FALSE, ch, lamp, 0, TO_CHAR);
+    act("$p can't be refueled.", false, ch, lamp, 0, TO_CHAR);
     return;
   }
   if (lamp->getCurBurn() == lamp->getMaxBurn()) {
-    act("$p is already full of fuel.", FALSE, ch, lamp, 0, TO_CHAR);
+    act("$p is already full of fuel.", false, ch, lamp, 0, TO_CHAR);
     return;
   }
   if (lamp->isLit()) {
@@ -78,7 +78,7 @@ void TFuel::refuelMeFuel(TBeing* ch, TLight* lamp) {
   use = lamp->getMaxBurn() - lamp->getCurBurn();
   use = min(use, getCurFuel());
 
-  act("$n refuels $s $o.", TRUE, ch, lamp, 0, TO_ROOM);
+  act("$n refuels $s $o.", true, ch, lamp, 0, TO_ROOM);
   ch->sendTo(format("You refuel your %s.\n\r") % fname(lamp->name));
 
   addToCurFuel(-use);
@@ -117,7 +117,7 @@ void TFuel::lowCheck() {
 
 int TFuel::objectSell(TBeing* ch, TMonster* keeper) {
   keeper->doTell(ch->getName(), "I'm sorry, I don't buy back fuel.");
-  return TRUE;
+  return true;
 }
 
 sstring TFuel::statObjInfo() const {
@@ -165,25 +165,25 @@ int TFuel::chiMe(TBeing* tLunatic) {
 
   if (tLunatic->checkPeaceful("Violent things can not be done here and "
                               "something tells you that would be violent!"))
-    return FALSE;
+    return false;
 
   if (!roomp) {
     // added to prevent crashes when item is held, etc.
-    act("You must be more cautious to chi something so volatile.", FALSE,
-      tLunatic, this, NULL, TO_CHAR);
-    return FALSE;
+    act("You must be more cautious to chi something so volatile.", false,
+      tLunatic, this, nullptr, TO_CHAR);
+    return false;
   }
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
-    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+    act("You fail to affect $p in any way.", false, tLunatic, this, nullptr,
       TO_CHAR);
     return true;
   }
 
-  act("You focus upon $p causing it to blow up violently!", FALSE, tLunatic,
-    this, NULL, TO_CHAR);
-  act("$n concentrates upon $p, causing it to blow up violently", TRUE,
-    tLunatic, this, NULL, TO_ROOM);
+  act("You focus upon $p causing it to blow up violently!", false, tLunatic,
+    this, nullptr, TO_CHAR);
+  act("$n concentrates upon $p, causing it to blow up violently", true,
+    tLunatic, this, nullptr, TO_ROOM);
 
   tDamage = max(1, (::number((getCurFuel() / 2), getCurFuel()) / 10));
 
@@ -193,7 +193,7 @@ int TFuel::chiMe(TBeing* tLunatic) {
     if (!(tBeing = dynamic_cast<TBeing*>(tThing)) || tBeing->isImmortal())
       continue;
 
-    act("You are struck by the flames, caused by $n!", FALSE, tLunatic, NULL,
+    act("You are struck by the flames, caused by $n!", false, tLunatic, nullptr,
       tBeing, TO_VICT);
 
     if (tBeing->isPc()) {
@@ -203,14 +203,14 @@ int TFuel::chiMe(TBeing* tLunatic) {
           ADD_DELETE(tRc, (DELETE_THIS | RET_STOP_PARSING));
         else {
           delete tThing;
-          tThing = NULL;
+          tThing = nullptr;
         }
       }
     } else {
       if (tLunatic->reconcileDamage(tBeing, ::number(1, tDamage),
             DAMAGE_FIRE) == -1) {
         delete tThing;
-        tThing = NULL;
+        tThing = nullptr;
       }
     }
   }

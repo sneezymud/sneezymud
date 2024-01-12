@@ -25,18 +25,18 @@ int lightningRodInternalFry(TBaseWeapon*, TBeing*);
 
 int weaponLightningRod(TBeing* tVictim, cmdTypeT tCmd, const char*, TObj* tObj,
   TObj*) {
-  TBaseWeapon* tWeapon = NULL;
-  TBaseClothing* tArmor = NULL;
+  TBaseWeapon* tWeapon = nullptr;
+  TBaseClothing* tArmor = nullptr;
 
   if (!(tWeapon = dynamic_cast<TBaseWeapon*>(tObj)) &&
       !(tArmor = dynamic_cast<TBaseClothing*>(tObj)))
-    return FALSE;
+    return false;
 
   switch (tCmd) {
     case CMD_OBJ_HIT:
       if (!tObj->equippedBy || !dynamic_cast<TBeing*>(tObj->equippedBy) ||
           !tVictim || !tWeapon)
-        return FALSE;
+        return false;
 
       return lightningRodFryPerson(tWeapon,
         dynamic_cast<TBeing*>(tObj->equippedBy), tVictim);
@@ -44,7 +44,7 @@ int weaponLightningRod(TBeing* tVictim, cmdTypeT tCmd, const char*, TObj* tObj,
     case CMD_OBJ_BEEN_HIT:
       if (!tObj->equippedBy || !dynamic_cast<TBeing*>(tObj->equippedBy) ||
           !tVictim)
-        return FALSE;
+        return false;
 
       if (tWeapon)
         return lightningRodGotHit(tWeapon,
@@ -56,13 +56,13 @@ int weaponLightningRod(TBeing* tVictim, cmdTypeT tCmd, const char*, TObj* tObj,
     case CMD_GENERIC_PULSE:
       if (!tObj || tObj->parent || tObj->stuckIn || tObj->equippedBy ||
           !tObj->roomp || !tWeapon)
-        return FALSE;
+        return false;
 
       return lightningRodFryRoom(tWeapon, tObj->roomp);
 
     case CMD_OBJ_STUCK_IN:
       if (!tObj || !tVictim || !tWeapon)
-        return FALSE;
+        return false;
 
       return lightningRodInternalFry(tWeapon, tVictim);
 
@@ -70,13 +70,13 @@ int weaponLightningRod(TBeing* tVictim, cmdTypeT tCmd, const char*, TObj* tObj,
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 // In-Battle swing hit.
 int lightningRodFryPerson(TBaseWeapon* tObj, TBeing* tMaster, TBeing* tSucker) {
   if (::number(0, 10))
-    return FALSE;
+    return false;
 
   sendrpf(COLOR_OBJECTS, tMaster->roomp,
     "%s<W> glows violently as sparks begin to leap from it.<z>\n\r",
@@ -96,13 +96,13 @@ int lightningRodFryPerson(TBaseWeapon* tObj, TBeing* tMaster, TBeing* tSucker) {
   if (tMaster->reconcileDamage(tSucker, tDamage, DAMAGE_ELECTRIC) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 // Object has been hit by something else.
 int lightningRodGotHit(TBaseWeapon* tObj, TBeing* tMaster, TBeing* tSucker) {
   if (::number(0, 10))
-    return FALSE;
+    return false;
 
   sendrpf(COLOR_OBJECTS, tMaster->roomp,
     "%s<W> glows violently in reaction to being struck!<z>\n\r",
@@ -119,13 +119,13 @@ int lightningRodGotHit(TBaseWeapon* tObj, TBeing* tMaster, TBeing* tSucker) {
         DELETE_VICT))
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 // Object has been hit by something else.
 int lightningRodGotHit(TBaseClothing* tObj, TBeing* tMaster, TBeing* tSucker) {
   if (::number(0, 10))
-    return FALSE;
+    return false;
 
   sendrpf(COLOR_OBJECTS, tMaster->roomp,
     "%s<W> glows violently in reaction to being struck!<z>\n\r",
@@ -142,14 +142,14 @@ int lightningRodGotHit(TBaseClothing* tObj, TBeing* tMaster, TBeing* tSucker) {
         DELETE_VICT))
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 // Generic in-room without master fry anything.
 int lightningRodFryRoom(TBaseWeapon* tObj, TRoom* tRoom) {
   if (Weather::getWeather(*tRoom) != Weather::LIGHTNING ||
       tRoom->isRoomFlag(ROOM_INDOORS) || ::number(0, 100))
-    return FALSE;
+    return false;
 
   sendrpf(COLOR_OBJECTS, tRoom,
     "<W>A bolt of lightning streaks down and strikes %s<W>!<z>\n\r",
@@ -177,17 +177,17 @@ int lightningRodFryRoom(TBaseWeapon* tObj, TRoom* tRoom) {
     if (tBeing->reconcileDamage(tBeing, tDamage, DAMAGE_ELECTRIC) == -1) {
       --(*tBeing);
       delete tBeing;
-      tBeing = NULL;
+      tBeing = nullptr;
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 // Stuck in fry our current host.
 int lightningRodInternalFry(TBaseWeapon* tObj, TBeing* tSucker) {
   if (::number(0, 3))
-    return FALSE;
+    return false;
 
   sendrpf(COLOR_OBJECTS, tSucker->roomp,
     "%s<W> suddenly flares up violently!<z>\n\r",
@@ -203,5 +203,5 @@ int lightningRodInternalFry(TBaseWeapon* tObj, TBeing* tSucker) {
   if (tSucker->reconcileDamage(tSucker, tDamage, DAMAGE_ELECTRIC) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }

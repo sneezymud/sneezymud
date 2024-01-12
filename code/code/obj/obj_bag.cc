@@ -42,7 +42,7 @@ bool TBag::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "I can't repair bags.");
   }
-  return TRUE;
+  return true;
 }
 
 int TBag::getMe(TBeing* ch, TThing* sub) {
@@ -62,5 +62,5 @@ int TBag::getMe(TBeing* ch, TThing* sub) {
       ch->addCommandToQue(buf);
     }
   }
-  return FALSE;
+  return false;
 }

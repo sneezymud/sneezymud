@@ -130,7 +130,7 @@ class TThing {
     virtual float carryWeightLimit() const { return 0.0; }
     virtual int carryVolumeLimit() const { return 0; }
     virtual roomDirData* exitDir(dirTypeT) const = 0;
-    virtual int fallOffMount(TThing*, positionTypeT, bool death = FALSE);
+    virtual int fallOffMount(TThing*, positionTypeT, bool death = false);
     virtual void addToCarriedVolume(int num);
     virtual int getReducedVolume(const TThing*) const;
     virtual float getTotalWeight(bool) const;
@@ -138,9 +138,9 @@ class TThing {
     virtual void setVolume(int) {}
     virtual void addToVolume(int) {}
     virtual int getVolume() const { return 0; }
-    virtual bool canDrop() const { return TRUE; }
+    virtual bool canDrop() const { return true; }
     virtual sstring yourDeity(spellNumT, personTypeT,
-      const TBeing* who = NULL) const {
+      const TBeing* who = nullptr) const {
       return "";
     }
     virtual void remCastingList(TThing*);
@@ -223,36 +223,36 @@ class TThing {
     int visibility() const;
     bool outside() const;
     TThing* horseMaster() const;
-    bool isMount() const { return (rider != NULL); }
+    bool isMount() const { return (rider != nullptr); }
     virtual int getNumRiders(TThing*) const { return 0; }
     virtual int getMaxRiders() const { return 0; }
     virtual int getRiderHeight() const { return 0; }
-    virtual int bumpHeadDoor(roomDirData*, int*) { return FALSE; }
+    virtual int bumpHeadDoor(roomDirData*, int*) { return false; }
     TThing* thingHolding() const;
-    virtual bool isRideable() const { return FALSE; }
+    virtual bool isRideable() const { return false; }
     virtual int genericMovedIntoRoom(TRoom*, int,
       checkFallingT = CHECK_FALL_YES) {
-      return FALSE;
+      return false;
     }
-    int genericTeleport(silentTypeT, bool keepZone = FALSE,
+    int genericTeleport(silentTypeT, bool keepZone = false,
       bool unsafe = false);
-    virtual bool isFlying() const { return FALSE; }
-    virtual bool isLevitating() const { return FALSE; }
-    virtual int trapSleep(int) { return FALSE; }
+    virtual bool isFlying() const { return false; }
+    virtual bool isLevitating() const { return false; }
+    virtual int trapSleep(int) { return false; }
     virtual void trapPoison(int) {}
     virtual void trapDisease(int) {}
-    virtual int trapTeleport(int) { return FALSE; }
-    virtual bool canGet(const TThing*, silentTypeT) const { return FALSE; }
+    virtual int trapTeleport(int) { return false; }
+    virtual bool canGet(const TThing*, silentTypeT) const { return false; }
     virtual bool canGetMe(const TBeing*, silentTypeT) const;
-    virtual TThing* heldInPrimHand() const { return NULL; }
-    virtual TThing* heldInSecHand() const { return NULL; }
+    virtual TThing* heldInPrimHand() const { return nullptr; }
+    virtual TThing* heldInSecHand() const { return nullptr; }
     virtual int swungObjectDamage(const TBeing*, const TBeing*) const;
     virtual double baseDamage() const { return 0; }
-    virtual int detonateGrenade() { return FALSE; }
-    virtual int grenadeHit(TTrap*) { return FALSE; }
-    virtual bool hasHands() const { return FALSE; }
+    virtual int detonateGrenade() { return false; }
+    virtual int grenadeHit(TTrap*) { return false; }
+    virtual bool hasHands() const { return false; }
 
-    virtual bool poisonObject() { return FALSE; }
+    virtual bool poisonObject() { return false; }
     virtual void findSomeFood(TFood**, TBaseContainer**, TBaseContainer*) {}
     virtual void findSomeDrink(TDrinkCon**, TBaseContainer**, TBaseContainer*) {
     }
@@ -261,7 +261,7 @@ class TThing {
     virtual void nukeFood();
     virtual void evaporate(TBeing*, silentTypeT) {}
     virtual int quaffMe(TBeing*);
-    virtual bool waterSource() { return FALSE; }
+    virtual bool waterSource() { return false; }
     virtual void spill(const TBeing*) {}
     virtual void adjustLight() {}
     virtual void lampLightStuff(TMonster*) {}
@@ -283,9 +283,9 @@ class TThing {
     virtual void powerstoneMostMana(int*) {}
     virtual void audioCheck(int) const {}
     virtual void usingBoat(int*) {}
-    virtual int scavengeMe(TBeing*, TObj**) { return FALSE; }
-    virtual int moneyMeBeing(TThing*, TThing*) { return FALSE; }
-    virtual int moneyMeMoney(TBeing*, TThing*) { return FALSE; }
+    virtual int scavengeMe(TBeing*, TObj**) { return false; }
+    virtual int moneyMeBeing(TThing*, TThing*) { return false; }
+    virtual int moneyMeMoney(TBeing*, TThing*) { return false; }
     virtual void logMe(const TBeing*, const char*) const;
     virtual int powerstoneMe(TBeing*, int, short);
     virtual int divineMe(TBeing*, int, short);
@@ -302,10 +302,10 @@ class TThing {
 
     virtual void dropMe(TBeing*, showMeT, showRoomT);
     virtual int throwMe(TBeing*, dirTypeT, const char*);
-    virtual int moveTrapCheck(TBeing*, dirTypeT) { return FALSE; }
-    virtual int insideTrapCheck(TBeing*, TThing*) { return FALSE; }
-    virtual int anyTrapCheck(TBeing*) { return FALSE; }
-    virtual int getTrapCheck(TBeing*) { return FALSE; }
+    virtual int moveTrapCheck(TBeing*, dirTypeT) { return false; }
+    virtual int insideTrapCheck(TBeing*, TThing*) { return false; }
+    virtual int anyTrapCheck(TBeing*) { return false; }
+    virtual int getTrapCheck(TBeing*) { return false; }
     virtual int detectMe(TBeing*) const;
     virtual int stealModifier();
     virtual void purgeMe(TBeing*);
@@ -323,7 +323,7 @@ class TThing {
     virtual void sitMe(TBeing*);
     virtual void restMe(TBeing*);
     virtual void sleepMe(TBeing*);
-    virtual int mobPulseBed(TMonster*, short int) { return FALSE; }
+    virtual int mobPulseBed(TMonster*, short int) { return false; }
     virtual void attuneMe(TBeing*, TVial*);
     virtual void sharpenMeStone(TBeing*, TThing*);
     virtual void dullMeFile(TBeing*, TThing*);
@@ -353,7 +353,7 @@ class TThing {
     virtual int useMe(TBeing*, const char*);
     virtual void findVialAttune(TVial**, int*) {}
     virtual void getBestVial(TVial**) {}
-    virtual int damageMe(TBeing*, TBeing*, wearSlotT) { return FALSE; }
+    virtual int damageMe(TBeing*, TBeing*, wearSlotT) { return false; }
     virtual int sharpenerValueMe(const TBeing*, TMonster*) const;
     virtual int sharpenerGiveMe(TBeing*, TMonster*);
     virtual void sharpenMe(TBeing*, TTool*);
@@ -371,7 +371,7 @@ class TThing {
     virtual int poisonWeaponWeapon(TBeing*, TThing*);
     virtual int smiteWithMe(TBeing*, TBeing*);
     virtual int enhanceMe(TBeing*, int, short);
-    virtual bool isRentable() const { return FALSE; }
+    virtual bool isRentable() const { return false; }
     virtual float blowCountSplitter(const TBeing*, bool) const;
     virtual void bloadBowArrow(TBeing*, TThing*);
     virtual void bloadArrowBow(TBeing*, TArrow*);
@@ -392,10 +392,10 @@ class TThing {
 
     virtual spellNumT getWtype(int which = -1) const;
     virtual bool isBluntWeapon() const {
-      return TRUE;
+      return true;
     }  // generic things = blunt?
-    virtual bool isSlashWeapon() const { return FALSE; }
-    virtual bool isPierceWeapon() const { return FALSE; }
+    virtual bool isSlashWeapon() const { return false; }
+    virtual bool isPierceWeapon() const { return false; }
     virtual bool canCarryMe(const TBeing*, silentTypeT) const;
     virtual bool isShield() const;
 };

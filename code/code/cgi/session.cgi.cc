@@ -181,7 +181,7 @@ int TSession::validateSessionID() {
   db.query(
     "select account_id from cgisession where session_id='%s' and "
     "(timeset+duration) > %i",
-    session_id.c_str(), time(NULL));
+    session_id.c_str(), time(nullptr));
 
   if (!db.fetchRow())
     return -1;
@@ -224,7 +224,7 @@ void TSession::createSession(int duration) {
   db.query("delete from cgisession where account_id=%i and name='%s'",
     account_id, cookiename.c_str());
   db.query("insert into cgisession values ('%s', %i, %i, %i, '%s')",
-    session_id.c_str(), account_id, duration, time(NULL), cookiename.c_str());
+    session_id.c_str(), account_id, duration, time(nullptr), cookiename.c_str());
 }
 
 sstring TSession::generateSessionID() {
@@ -232,7 +232,7 @@ sstring TSession::generateSessionID() {
   int length = 16;
   int seed[4];
 
-  seed[0] = time(NULL);
+  seed[0] = time(nullptr);
   seed[1] = random();
   seed[2] = getpid();
   seed[3] = (int)&seed;
@@ -244,7 +244,7 @@ sstring TSession::generateSessionID() {
     }
   }
 
-  sstring md5 = (char*)MD5(data, length, NULL);
+  sstring md5 = (char*)MD5(data, length, nullptr);
   sstring ret = "";
   char buf[16];
 

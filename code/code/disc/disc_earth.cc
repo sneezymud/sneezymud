@@ -25,11 +25,11 @@ int slingShot(TBeing* caster, TBeing* victim, int level, short bKnown,
         victim->awake()) {
       SV(SPELL_SLING_SHOT);
       dam /= 2;
-      act("$N is able to partially deflect your rock.", FALSE, caster, NULL,
+      act("$N is able to partially deflect your rock.", false, caster, nullptr,
         victim, TO_CHAR);
-      act("You are able to partially deflect the rock hurled by $n.", FALSE,
-        caster, NULL, victim, TO_VICT);
-      act("$N partially deflects a rock hurled by $n.", FALSE, caster, NULL,
+      act("You are able to partially deflect the rock hurled by $n.", false,
+        caster, nullptr, victim, TO_VICT);
+      act("$N partially deflects a rock hurled by $n.", false, caster, nullptr,
         victim, TO_NOTVICT);
     } else {
       switch (critSuccess(caster, SPELL_SLING_SHOT)) {
@@ -41,23 +41,23 @@ int slingShot(TBeing* caster, TBeing* victim, int level, short bKnown,
           act(
             "You summon forth a huge rock that beans $N right between the "
             "eyes!",
-            FALSE, caster, NULL, victim, TO_CHAR, ANSI_GREEN);
+            false, caster, nullptr, victim, TO_CHAR, ANSI_GREEN);
           act(
             "$n summons forth a huge rock that smacks you right between your "
             "eyes!",
-            FALSE, caster, NULL, victim, TO_VICT, ANSI_GREEN);
+            false, caster, nullptr, victim, TO_VICT, ANSI_GREEN);
           act(
             "$n summons forth a huge rock that beans $N right between the "
             "eyes!!",
-            FALSE, caster, NULL, victim, TO_NOTVICT);
+            false, caster, nullptr, victim, TO_NOTVICT);
           break;
         default:
-          act("You cause a rock to leap out and hit $N in the noggin!", FALSE,
-            caster, NULL, victim, TO_CHAR);
-          act("$n causes a rock to leap out and hit you in the noggin!", FALSE,
-            caster, NULL, victim, TO_VICT);
-          act("$n causes a rock to leap out and hit $N in the noggin!", FALSE,
-            caster, NULL, victim, TO_NOTVICT);
+          act("You cause a rock to leap out and hit $N in the noggin!", false,
+            caster, nullptr, victim, TO_CHAR);
+          act("$n causes a rock to leap out and hit you in the noggin!", false,
+            caster, nullptr, victim, TO_VICT);
+          act("$n causes a rock to leap out and hit $N in the noggin!", false,
+            caster, nullptr, victim, TO_NOTVICT);
       }
     }
 
@@ -68,13 +68,13 @@ int slingShot(TBeing* caster, TBeing* victim, int level, short bKnown,
   } else {
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
-    act("$n just tried to attack you.", FALSE, caster, 0, victim, TO_VICT);
+    act("$n just tried to attack you.", false, caster, 0, victim, TO_VICT);
     if (critFail(caster, SPELL_SLING_SHOT) == CRIT_F_HITSELF) {
       CF(SPELL_SLING_SHOT);
-      act("You cause a rock to leap out and hit yourself in the noggin!", FALSE,
-        caster, NULL, 0, TO_CHAR, ANSI_GREEN);
-      act("$n causes a rock to leap out and hit $mself in the noggin!", FALSE,
-        caster, NULL, 0, TO_ROOM);
+      act("You cause a rock to leap out and hit yourself in the noggin!", false,
+        caster, nullptr, 0, TO_CHAR, ANSI_GREEN);
+      act("$n causes a rock to leap out and hit $mself in the noggin!", false,
+        caster, nullptr, 0, TO_ROOM);
       if (caster->reconcileDamage(caster, dam, SPELL_SLING_SHOT) == -1)
         return SPELL_CRIT_FAIL + CASTER_DEAD;
       return SPELL_CRIT_FAIL;
@@ -86,15 +86,15 @@ int slingShot(TBeing* caster, TBeing* victim, int level, short bKnown,
 
 int slingShot(TBeing* caster, TBeing* victim) {
   if (!bPassMageChecks(caster, SPELL_SLING_SHOT, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_SLING_SHOT]->lag;
   taskDiffT diff = discArray[SPELL_SLING_SHOT]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_SLING_SHOT, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_SLING_SHOT, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castSlingShot(TBeing* caster, TBeing* victim) {
@@ -126,20 +126,20 @@ int graniteFists(TBeing* caster, TBeing* victim, int level, short bKnown,
       case CRIT_S_TRIPLE:
       case CRIT_S_DOUBLE:
         dam *= 2;
-        act("Your fists turn to granite as you NAIL $N!  CRUNCH!", FALSE,
-          caster, NULL, victim, TO_CHAR);
-        act("$n's fists turn to granite as $e NAILS $N!  CRUNCH!", FALSE,
-          caster, NULL, victim, TO_NOTVICT);
-        act("$n's fists turn to granite as $e NAILS you!  CRUNCH!", FALSE,
-          caster, NULL, victim, TO_VICT);
+        act("Your fists turn to granite as you NAIL $N!  CRUNCH!", false,
+          caster, nullptr, victim, TO_CHAR);
+        act("$n's fists turn to granite as $e NAILS $N!  CRUNCH!", false,
+          caster, nullptr, victim, TO_NOTVICT);
+        act("$n's fists turn to granite as $e NAILS you!  CRUNCH!", false,
+          caster, nullptr, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
-        act("Your fists turn to granite as you punch $N!  Whap!", FALSE, caster,
-          NULL, victim, TO_CHAR);
-        act("$n's fists turn to granite as $e pummels $N!  Kapow!", FALSE,
-          caster, NULL, victim, TO_NOTVICT);
-        act("$n's fists turn to granite as $e pummels you!  Ooof!", FALSE,
-          caster, NULL, victim, TO_VICT);
+        act("Your fists turn to granite as you punch $N!  Whap!", false, caster,
+          nullptr, victim, TO_CHAR);
+        act("$n's fists turn to granite as $e pummels $N!  Kapow!", false,
+          caster, nullptr, victim, TO_NOTVICT);
+        act("$n's fists turn to granite as $e pummels you!  Ooof!", false,
+          caster, nullptr, victim, TO_VICT);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_GRANITE_FISTS))) {
           SV(SPELL_GRANITE_FISTS);
           dam /= 2;
@@ -154,13 +154,13 @@ int graniteFists(TBeing* caster, TBeing* victim, int level, short bKnown,
   } else {
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
-    act("$n just tried to attack you!", FALSE, caster, NULL, victim, TO_VICT);
+    act("$n just tried to attack you!", false, caster, nullptr, victim, TO_VICT);
     if (critFail(caster, SPELL_GRANITE_FISTS) == CRIT_F_HITSELF) {
       CF(SPELL_GRANITE_FISTS);
       act("Whap! Ouch!  Doh! Your fists turn to granite as you punch yourself!",
-        FALSE, caster, NULL, victim, TO_CHAR);
-      act("Doh! $n's fists turn to granite as $e pummels $mself! Idiot!", FALSE,
-        caster, NULL, victim, TO_ROOM);
+        false, caster, nullptr, victim, TO_CHAR);
+      act("Doh! $n's fists turn to granite as $e pummels $mself! Idiot!", false,
+        caster, nullptr, victim, TO_ROOM);
       if (caster->reconcileDamage(caster, dam, SPELL_GRANITE_FISTS) == -1)
         return SPELL_CRIT_FAIL + CASTER_DEAD;
       return SPELL_CRIT_FAIL;
@@ -174,15 +174,15 @@ int graniteFists(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_GRANITE_FISTS, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_GRANITE_FISTS]->lag;
   diff = discArray[SPELL_GRANITE_FISTS]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_GRANITE_FISTS, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_GRANITE_FISTS, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castGraniteFists(TBeing* caster, TBeing* victim) {
@@ -209,13 +209,13 @@ int castGraniteFists(TBeing* caster, TBeing* victim) {
 
 int pebbleSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
   TThing* t;
-  TBeing* vict = NULL;
+  TBeing* vict = nullptr;
 
-  int dam = caster->getSkillDam(NULL, SPELL_PEBBLE_SPRAY, level, adv_learn);
+  int dam = caster->getSkillDam(nullptr, SPELL_PEBBLE_SPRAY, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_PEBBLE_SPRAY)) {
-    act("You whip up a spray of pebbles.", FALSE, caster, NULL, NULL, TO_CHAR);
-    act("$n whips up a spray of pebbles.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("You whip up a spray of pebbles.", false, caster, nullptr, nullptr, TO_CHAR);
+    act("$n whips up a spray of pebbles.", false, caster, nullptr, nullptr, TO_ROOM);
     for (StuffIter it = caster->roomp->stuff.begin();
          it != caster->roomp->stuff.end();) {
       t = *(it++);
@@ -225,24 +225,24 @@ int pebbleSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
 
       if (!caster->inGroup(*vict) && !vict->isImmortal()) {
         caster->reconcileHurt(vict, discArray[SPELL_PEBBLE_SPRAY]->alignMod);
-        act("$n is pelted with pebbles!", FALSE, vict, NULL, NULL, TO_ROOM);
-        act("You are pelted with pebbles!", FALSE, vict, NULL, NULL, TO_CHAR);
+        act("$n is pelted with pebbles!", false, vict, nullptr, nullptr, TO_ROOM);
+        act("You are pelted with pebbles!", false, vict, nullptr, nullptr, TO_CHAR);
         if (caster->reconcileDamage(vict, dam, SPELL_PEBBLE_SPRAY) == -1) {
           delete vict;
-          vict = NULL;
+          vict = nullptr;
         }
       } else {
-        // act("$n dodges the pebbles!", TRUE, vict, NULL, 0 , TO_ROOM);
-        act("You dodge the pebbles!", TRUE, vict, NULL, NULL, TO_CHAR);
+        // act("$n dodges the pebbles!", true, vict, nullptr, 0 , TO_ROOM);
+        act("You dodge the pebbles!", true, vict, nullptr, nullptr, TO_CHAR);
       }
     }
     return SPELL_SUCCESS;
   } else {
     if (critFail(caster, SPELL_PEBBLE_SPRAY)) {
       CF(SPELL_PEBBLE_SPRAY);
-      act("Ohno!  You pelt yourself with the pebbles!", FALSE, caster, NULL,
-        NULL, TO_CHAR);
-      act("$n pelts $mself with the pebbles!  Doh!", FALSE, caster, NULL, NULL,
+      act("Ohno!  You pelt yourself with the pebbles!", false, caster, nullptr,
+        nullptr, TO_CHAR);
+      act("$n pelts $mself with the pebbles!  Doh!", false, caster, nullptr, nullptr,
         TO_ROOM);
       if (caster->reconcileDamage(caster, dam, SPELL_PEBBLE_SPRAY) == -1)
         return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -254,15 +254,15 @@ int pebbleSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
 }
 
 int pebbleSpray(TBeing* caster) {
-  if (!bPassMageChecks(caster, SPELL_PEBBLE_SPRAY, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_PEBBLE_SPRAY, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_PEBBLE_SPRAY]->lag;
   taskDiffT diff = discArray[SPELL_PEBBLE_SPRAY]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_PEBBLE_SPRAY, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_PEBBLE_SPRAY, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castPebbleSpray(TBeing* caster) {
@@ -286,11 +286,11 @@ int castPebbleSpray(TBeing* caster) {
 
 int sandBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
   TThing* t;
-  TBeing* vict = NULL;
+  TBeing* vict = nullptr;
 
   level = min(level, 33);
 
-  int dam = caster->getSkillDam(NULL, SPELL_SAND_BLAST, level, adv_learn);
+  int dam = caster->getSkillDam(nullptr, SPELL_SAND_BLAST, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_SAND_BLAST)) {
     for (StuffIter it = caster->roomp->stuff.begin();
@@ -302,15 +302,15 @@ int sandBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
 
       if (!caster->inGroup(*vict) && !vict->isImmortal()) {
         caster->reconcileHurt(vict, discArray[SPELL_SAND_BLAST]->alignMod);
-        act("$n is BLASTED with sand!", FALSE, vict, NULL, NULL, TO_ROOM);
-        act("You are BLASTED with sand!", FALSE, vict, NULL, NULL, TO_CHAR);
+        act("$n is BLASTED with sand!", false, vict, nullptr, nullptr, TO_ROOM);
+        act("You are BLASTED with sand!", false, vict, nullptr, nullptr, TO_CHAR);
         if (caster->reconcileDamage(vict, dam, SPELL_SAND_BLAST) == -1) {
           delete vict;
-          vict = NULL;
+          vict = nullptr;
         }
       } else {
-        // act("$n dodges the blast of sand!", TRUE, vict, NULL, 0, TO_ROOM);
-        act("You dodge the blast of sand!", TRUE, vict, NULL, NULL, TO_CHAR);
+        // act("$n dodges the blast of sand!", true, vict, nullptr, 0, TO_ROOM);
+        act("You dodge the blast of sand!", true, vict, nullptr, nullptr, TO_CHAR);
       }
     }
     return SPELL_SUCCESS;
@@ -318,7 +318,7 @@ int sandBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
     if (critFail(caster, SPELL_SAND_BLAST)) {
       CF(SPELL_SAND_BLAST);
       caster->sendTo("Uh oh!\n\r");
-      act("Uh oh!  Something didn't go quite right.", FALSE, caster, 0, 0,
+      act("Uh oh!  Something didn't go quite right.", false, caster, 0, 0,
         TO_ROOM);
       for (StuffIter it = caster->roomp->stuff.begin();
            it != caster->roomp->stuff.end();) {
@@ -329,16 +329,16 @@ int sandBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
 
         if (caster->inGroup(*vict) && caster != vict) {
           caster->reconcileHurt(vict, discArray[SPELL_SAND_BLAST]->alignMod);
-          act("$n is BLASTED with sand!", FALSE, vict, NULL, NULL, TO_ROOM);
-          act("You are BLASTED with sand!", FALSE, vict, NULL, NULL, TO_CHAR);
+          act("$n is BLASTED with sand!", false, vict, nullptr, nullptr, TO_ROOM);
+          act("You are BLASTED with sand!", false, vict, nullptr, nullptr, TO_CHAR);
           if (caster->reconcileDamage(vict, dam, SPELL_SAND_BLAST) == -1) {
             delete vict;
-            vict = NULL;
+            vict = nullptr;
           }
         } else {
-          // act("$n dodges the blast of sand!", FALSE, vict, NULL, NULL,
+          // act("$n dodges the blast of sand!", false, vict, nullptr, nullptr,
           // TO_ROOM);
-          act("You dodge the blast of sand!", FALSE, vict, NULL, NULL, TO_CHAR);
+          act("You dodge the blast of sand!", false, vict, nullptr, nullptr, TO_CHAR);
         }
       }
       if (caster->reconcileDamage(caster, dam, SPELL_SAND_BLAST) == -1)
@@ -352,15 +352,15 @@ int sandBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
 }
 
 int sandBlast(TBeing* caster) {
-  if (!bPassMageChecks(caster, SPELL_SAND_BLAST, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_SAND_BLAST, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_SAND_BLAST]->lag;
   taskDiffT diff = discArray[SPELL_SAND_BLAST]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_SAND_BLAST, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_SAND_BLAST, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castSandBlast(TBeing* caster) {
@@ -369,10 +369,10 @@ int castSandBlast(TBeing* caster) {
 
   level = caster->getSkillLevel(SPELL_SAND_BLAST);
 
-  act("You cause a blast of sand to kick up and whip through the area.", FALSE,
-    caster, NULL, NULL, TO_CHAR);
-  act("$n causes a blast of sand to kick up and whip through the area.", FALSE,
-    caster, NULL, NULL, TO_ROOM);
+  act("You cause a blast of sand to kick up and whip through the area.", false,
+    caster, nullptr, nullptr, TO_CHAR);
+  act("$n causes a blast of sand to kick up and whip through the area.", false,
+    caster, nullptr, nullptr, TO_ROOM);
 
   ret = sandBlast(caster, level, caster->getSkillValue(SPELL_SAND_BLAST),
     caster->getAdvLearning(SPELL_SAND_BLAST));
@@ -387,16 +387,16 @@ int castSandBlast(TBeing* caster) {
 
 int lavaStream(TBeing* caster, int level, short bKnown, int adv_learn) {
   TThing* t;
-  TBeing* vict = NULL;
+  TBeing* vict = nullptr;
 
   level = min(level, 60);
 
-  int dam = caster->getSkillDam(NULL, SPELL_LAVA_STREAM, level, adv_learn);
+  int dam = caster->getSkillDam(nullptr, SPELL_LAVA_STREAM, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_LAVA_STREAM)) {
-    act("You call forth molten lava from the earth!", FALSE, caster, NULL, NULL,
+    act("You call forth molten lava from the earth!", false, caster, nullptr, nullptr,
       TO_CHAR);
-    act("$n calls forth molten lava from the earth!", FALSE, caster, NULL, NULL,
+    act("$n calls forth molten lava from the earth!", false, caster, nullptr, nullptr,
       TO_ROOM);
     for (StuffIter it = caster->roomp->stuff.begin();
          it != caster->roomp->stuff.end();) {
@@ -407,13 +407,13 @@ int lavaStream(TBeing* caster, int level, short bKnown, int adv_learn) {
 
       if (!caster->inGroup(*vict) && !vict->isImmortal()) {
         caster->reconcileHurt(vict, discArray[SPELL_LAVA_STREAM]->alignMod);
-        act("$n screams in agony as $e is burned by the lava!", FALSE, vict,
-          NULL, NULL, TO_ROOM);
-        act("You scream in agony as you are burned by the lava!", FALSE, vict,
-          NULL, NULL, TO_CHAR);
+        act("$n screams in agony as $e is burned by the lava!", false, vict,
+          nullptr, nullptr, TO_ROOM);
+        act("You scream in agony as you are burned by the lava!", false, vict,
+          nullptr, nullptr, TO_CHAR);
         if (caster->reconcileDamage(vict, dam, SPELL_LAVA_STREAM) == -1) {
           delete vict;
-          vict = NULL;
+          vict = nullptr;
         }
       }
     }
@@ -422,8 +422,8 @@ int lavaStream(TBeing* caster, int level, short bKnown, int adv_learn) {
     if (critFail(caster, SPELL_LAVA_STREAM)) {
       CF(SPELL_LAVA_STREAM);
       dam /= 2;
-      act("Umm...something didn't seem to go just right.", FALSE, caster, NULL,
-        NULL, TO_CHAR);
+      act("Umm...something didn't seem to go just right.", false, caster, nullptr,
+        nullptr, TO_CHAR);
       for (StuffIter it = caster->roomp->stuff.begin();
            it != caster->roomp->stuff.end();) {
         t = *(it++);
@@ -433,13 +433,13 @@ int lavaStream(TBeing* caster, int level, short bKnown, int adv_learn) {
 
         if (caster->inGroup(*vict) && caster != vict && !vict->isImmortal()) {
           caster->reconcileHurt(vict, discArray[SPELL_LAVA_STREAM]->alignMod);
-          act("$n screams in agony as $e is burned by the lava!", FALSE, vict,
-            NULL, NULL, TO_ROOM);
-          act("You scream in agony as you are burned by the lava!", FALSE, vict,
-            NULL, NULL, TO_CHAR);
+          act("$n screams in agony as $e is burned by the lava!", false, vict,
+            nullptr, nullptr, TO_ROOM);
+          act("You scream in agony as you are burned by the lava!", false, vict,
+            nullptr, nullptr, TO_CHAR);
           if (caster->reconcileDamage(vict, dam, SPELL_LAVA_STREAM) == -1) {
             delete vict;
-            vict = NULL;
+            vict = nullptr;
           }
         }
       }
@@ -455,18 +455,18 @@ int lavaStream(TBeing* caster, int level, short bKnown, int adv_learn) {
 int lavaStream(TBeing* caster) {
   if (caster->roomp->isUnderwaterSector()) {
     caster->sendTo("There are no underwater volcanos nearby!\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!bPassMageChecks(caster, SPELL_LAVA_STREAM, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_LAVA_STREAM, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_LAVA_STREAM]->lag;
   taskDiffT diff = discArray[SPELL_LAVA_STREAM]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_LAVA_STREAM, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_LAVA_STREAM, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castLavaStream(TBeing* caster) {
@@ -532,13 +532,13 @@ int meteorSwarm(TBeing* caster, TBeing* victim, int level, short bKnown,
 
     sprintf(buf, "At $n's call, %d meteors blast $N to smithereens!",
       num_meteors);
-    act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+    act(buf, false, caster, nullptr, victim, TO_NOTVICT);
     sprintf(buf, "You call forth %d meteors and blast $N to smithereens!",
       num_meteors);
-    act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+    act(buf, false, caster, nullptr, victim, TO_CHAR);
     sprintf(buf, "$n calls forth %d meteors that blast you to smithereens!",
       num_meteors);
-    act(buf, FALSE, caster, NULL, victim, TO_VICT);
+    act(buf, false, caster, nullptr, victim, TO_VICT);
     caster->reconcileHurt(victim, discArray[SPELL_METEOR_SWARM]->alignMod);
     if (caster->reconcileDamage(victim, damage, SPELL_METEOR_SWARM) == -1)
       return SPELL_SUCCESS + VICTIM_DEAD;
@@ -549,14 +549,14 @@ int meteorSwarm(TBeing* caster, TBeing* victim, int level, short bKnown,
         CF(SPELL_METEOR_SWARM);
         sprintf(buf, "At $n's call, %d meteors blast $n to smithereens!",
           num_meteors);
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf,
           "You call forth %d meteors and blast yourself to smithereens!",
           num_meteors);
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf, "$n calls forth %d meteors that blast $E to smithereens!",
           num_meteors);
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
 
         damage /= 3;
 
@@ -568,13 +568,13 @@ int meteorSwarm(TBeing* caster, TBeing* victim, int level, short bKnown,
         break;
     }
     sprintf(buf, "At $n's call, %d meteors burn up in space.", num_meteors);
-    act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+    act(buf, false, caster, nullptr, victim, TO_NOTVICT);
     sprintf(buf, "You call forth %d meteors and they burn up in space.",
       num_meteors);
-    act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+    act(buf, false, caster, nullptr, victim, TO_CHAR);
     sprintf(buf, "$n calls forth %d meteors that burn up in space.",
       num_meteors);
-    act(buf, FALSE, caster, NULL, victim, TO_VICT);
+    act(buf, false, caster, nullptr, victim, TO_VICT);
     return SPELL_FAIL;
   }
 }
@@ -602,15 +602,15 @@ int meteorSwarm(TBeing* caster, TBeing* victim) {
   }
 
   if (!bPassMageChecks(caster, SPELL_METEOR_SWARM, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_METEOR_SWARM]->lag;
   diff = discArray[SPELL_METEOR_SWARM]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_METEOR_SWARM, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_METEOR_SWARM, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return FALSE;
+  return false;
 }
 
 int castMeteorSwarm(TBeing* caster, TBeing* victim) {
@@ -639,10 +639,10 @@ int stoneSkin(TBeing* caster, TBeing* victim, int level, short bKnown) {
   affectedData aff1, aff2;
 
   if (victim->affectedBySpell(SPELL_FLAMING_FLESH)) {
-    act("$N's skin is already defended by elementals of fire.", FALSE, caster,
-      NULL, victim, TO_CHAR);
+    act("$N's skin is already defended by elementals of fire.", false, caster,
+      nullptr, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
   if (caster->bSuccess(bKnown, SPELL_STONE_SKIN)) {
     caster->reconcileHelp(caster, discArray[SPELL_STONE_SKIN]->alignMod);
@@ -681,22 +681,22 @@ int stoneSkin(TBeing* caster, TBeing* victim, int level, short bKnown) {
     victim->affectJoin(caster, &aff1, AVG_DUR_NO, AVG_EFF_YES);
     victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES);
 
-    act("$n's skin turns to hard granite.", FALSE, victim, NULL, NULL, TO_ROOM);
-    act("Your skin turns to hard granite.", FALSE, victim, NULL, NULL, TO_CHAR);
+    act("$n's skin turns to hard granite.", false, victim, nullptr, nullptr, TO_ROOM);
+    act("Your skin turns to hard granite.", false, victim, nullptr, nullptr, TO_CHAR);
     return SPELL_SUCCESS;
   } else {
-    act("$n's skin turns to a thin shale then fades back.", FALSE, victim, NULL,
-      NULL, TO_ROOM);
-    act("Your skin turns to a thin shale then fades back.", FALSE, victim, NULL,
-      NULL, TO_CHAR);
+    act("$n's skin turns to a thin shale then fades back.", false, victim, nullptr,
+      nullptr, TO_ROOM);
+    act("Your skin turns to a thin shale then fades back.", false, victim, nullptr,
+      nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
 }
 
 void stoneSkin(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  act("$p calls upon the powers of the elementals of earth.", FALSE, caster,
+  act("$p calls upon the powers of the elementals of earth.", false, caster,
     obj, 0, TO_ROOM);
-  act("$p calls upon the powers of the elementals of earth.", FALSE, caster,
+  act("$p calls upon the powers of the elementals of earth.", false, caster,
     obj, 0, TO_CHAR);
   stoneSkin(caster, victim, obj->getMagicLevel(), obj->getMagicLearnedness());
 }
@@ -705,20 +705,20 @@ int stoneSkin(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (victim->affectedBySpell(SPELL_FLAMING_FLESH)) {
-    act("$N's skin is already defended by elementals of fire.", FALSE, caster,
-      NULL, victim, TO_CHAR);
+    act("$N's skin is already defended by elementals of fire.", false, caster,
+      nullptr, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
   if (!bPassMageChecks(caster, SPELL_STONE_SKIN, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_STONE_SKIN]->lag;
   diff = discArray[SPELL_STONE_SKIN]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_STONE_SKIN, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return FALSE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_STONE_SKIN, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return false;
 }
 
 int castStoneSkin(TBeing* caster, TBeing* victim) {
@@ -726,9 +726,9 @@ int castStoneSkin(TBeing* caster, TBeing* victim) {
 
   level = caster->getSkillLevel(SPELL_STONE_SKIN);
 
-  act("$n calls upon the powers of the elementals of earth.", FALSE, caster, 0,
+  act("$n calls upon the powers of the elementals of earth.", false, caster, 0,
     0, TO_ROOM);
-  act("You call upon the powers of the elementals of earth.", FALSE, caster, 0,
+  act("You call upon the powers of the elementals of earth.", false, caster, 0,
     0, TO_CHAR);
 
   ret =
@@ -737,7 +737,7 @@ int castStoneSkin(TBeing* caster, TBeing* victim) {
   if (ret == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }
 
 int trailSeek(TBeing* caster, TBeing* victim, int level, short bKnown) {
@@ -767,25 +767,25 @@ int trailSeek(TBeing* caster, TBeing* victim, int level, short bKnown) {
     victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
     if (caster != victim) {
-      act("You have successfully granted $N the senses of a bloodhound!", FALSE,
-        caster, NULL, victim, TO_CHAR);
+      act("You have successfully granted $N the senses of a bloodhound!", false,
+        caster, nullptr, victim, TO_CHAR);
       act("You have been successfully granted the senses of a bloodhound!",
-        FALSE, caster, NULL, victim, TO_VICT);
-      act("You become much more attuned to your senses!", FALSE, caster, NULL,
+        false, caster, nullptr, victim, TO_VICT);
+      act("You become much more attuned to your senses!", false, caster, nullptr,
         victim, TO_VICT);
-      act("You whiff the aromas of many whom have passed through here.", FALSE,
-        caster, NULL, victim, TO_VICT);
-      act("$N's eyes glow with a faint blue light for a moment.", FALSE, caster,
-        NULL, victim, TO_NOTVICT);
+      act("You whiff the aromas of many whom have passed through here.", false,
+        caster, nullptr, victim, TO_VICT);
+      act("$N's eyes glow with a faint blue light for a moment.", false, caster,
+        nullptr, victim, TO_NOTVICT);
     } else {
       act("You have successfully given yourself the senses of a bloodhound!",
-        FALSE, caster, NULL, 0, TO_CHAR);
-      act("You become much more attuned to your senses!", FALSE, caster, NULL,
+        false, caster, nullptr, 0, TO_CHAR);
+      act("You become much more attuned to your senses!", false, caster, nullptr,
         0, TO_CHAR);
-      act("You whiff the aromas of many whom have passed through here.", FALSE,
-        caster, NULL, 0, TO_CHAR);
-      act("$n's eyes glow with a faint blue light for a moment.", FALSE, caster,
-        NULL, 0, TO_ROOM);
+      act("You whiff the aromas of many whom have passed through here.", false,
+        caster, nullptr, 0, TO_CHAR);
+      act("$n's eyes glow with a faint blue light for a moment.", false, caster,
+        nullptr, 0, TO_ROOM);
     }
     return SPELL_SUCCESS;
   } else {
@@ -808,14 +808,14 @@ int trailSeek(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_TRAIL_SEEK, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_TRAIL_SEEK]->lag;
   diff = discArray[SPELL_TRAIL_SEEK]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_TRAIL_SEEK, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return FALSE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_TRAIL_SEEK, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return false;
 }
 
 int castTrailSeek(TBeing* caster, TBeing* victim) {
@@ -828,7 +828,7 @@ int castTrailSeek(TBeing* caster, TBeing* victim) {
   if (ret == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }
 
 int conjureElemEarth(TBeing* caster, int level, short bKnown) {
@@ -843,13 +843,13 @@ int conjureElemEarth(TBeing* caster, int level, short bKnown) {
   victim->elementalFix(caster, SPELL_CONJURE_EARTH, 0);
 
   if (caster->bSuccess(bKnown, SPELL_CONJURE_EARTH)) {
-    act("You summon the powers of the natural earthly forces!", TRUE, caster,
-      NULL, NULL, TO_CHAR);
-    act("$n summons the powers of the natural earthly forces!", TRUE, caster,
-      NULL, NULL, TO_ROOM);
+    act("You summon the powers of the natural earthly forces!", true, caster,
+      nullptr, nullptr, TO_CHAR);
+    act("$n summons the powers of the natural earthly forces!", true, caster,
+      nullptr, nullptr, TO_ROOM);
     /* charm them for a while */
     if (victim->master)
-      victim->stopFollower(TRUE);
+      victim->stopFollower(true);
 
     aff.type = SPELL_CONJURE_EARTH;
     aff.level = level;
@@ -877,7 +877,7 @@ int conjureElemEarth(TBeing* caster, int level, short bKnown) {
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_CONJURE_EARTH);
-        act("$N flexes $S overly strong muscles.", TRUE, caster, 0, victim,
+        act("$N flexes $S overly strong muscles.", true, caster, 0, victim,
           TO_ROOM);
         caster->sendTo("You have conjured an unusually strong elemental!\n\r");
         victim->setMaxHit((int)(victim->hitLimit() * 1.5));
@@ -887,11 +887,11 @@ int conjureElemEarth(TBeing* caster, int level, short bKnown) {
         break;
     }
     if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of yours!", true, caster, nullptr,
         victim, TO_CHAR);
-      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of $n's!", true, caster, nullptr,
         victim, TO_ROOM);
-      act("You've created a monster; $N hates you!", FALSE, caster, NULL,
+      act("You've created a monster; $N hates you!", false, caster, nullptr,
         victim, TO_CHAR);
       victim->affectFrom(SPELL_CONJURE_EARTH);
       victim->affectFrom(AFFECT_THRALL);
@@ -901,11 +901,11 @@ int conjureElemEarth(TBeing* caster, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
-    act("Hmmm...that didn't feel quite right.", FALSE, caster, NULL, NULL,
+    act("Hmmm...that didn't feel quite right.", false, caster, nullptr, nullptr,
       TO_CHAR);
-    act("When your eyes recover, you see $N standing before you!", TRUE, caster,
-      NULL, victim, TO_NOTVICT);
-    act("You've created a monster; $N hates you!", FALSE, caster, NULL, victim,
+    act("When your eyes recover, you see $N standing before you!", true, caster,
+      nullptr, victim, TO_NOTVICT);
+    act("You've created a monster; $N hates you!", false, caster, nullptr, victim,
       TO_CHAR);
     victim->developHatred(caster);
     caster->setCharFighting(victim);
@@ -917,26 +917,26 @@ int conjureElemEarth(TBeing* caster, int level, short bKnown) {
 int conjureElemEarth(TBeing* caster) {
   if (real_mobile(Mob::EARTH_ELEMENTAL) < 0) {
     caster->sendTo("There are no elementals of that type available.\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!bPassMageChecks(caster, SPELL_CONJURE_EARTH, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_CONJURE_EARTH, nullptr))
+    return false;
 
   if (caster->roomp->notRangerLandSector() && !caster->roomp->isCitySector() &&
       !caster->roomp->isRoadSector()) {
     caster->sendTo(
       "There doesn't seem to be enough earth here to conjure an earth "
       "elemental.\n\r");
-    return FALSE;
+    return false;
   }
 
   lag_t rounds = discArray[SPELL_CONJURE_EARTH]->lag;
   taskDiffT diff = discArray[SPELL_CONJURE_EARTH]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CONJURE_EARTH, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return FALSE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_CONJURE_EARTH, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return false;
 }
 
 int castConjureElemEarth(TBeing* caster) {
@@ -948,7 +948,7 @@ int castConjureElemEarth(TBeing* caster) {
          caster->getSkillValue(SPELL_CONJURE_EARTH))) == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }
 
 int protectionFromEarth(TBeing* caster, TBeing* victim, int level,
@@ -965,10 +965,10 @@ int protectionFromEarth(TBeing* caster, TBeing* victim, int level,
   aff.bitvector = 0;
 
   if (caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_EARTH)) {
-    act("$n glows with a faint brown aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_ROOM);
-    act("You glow with a faint brown aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_CHAR);
+    act("$n glows with a faint brown aura for a brief moment.", false, victim,
+      nullptr, nullptr, TO_ROOM);
+    act("You glow with a faint brown aura for a brief moment.", false, victim,
+      nullptr, nullptr, TO_CHAR);
     switch (critSuccess(caster, SPELL_PROTECTION_FROM_EARTH)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1003,14 +1003,14 @@ void protectionFromEarth(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
 int protectionFromEarth(TBeing* caster, TBeing* v) {
   if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_EARTH, v))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_PROTECTION_FROM_EARTH]->lag;
   taskDiffT diff = discArray[SPELL_PROTECTION_FROM_EARTH]->task;
 
-  start_cast(caster, v, NULL, caster->roomp, SPELL_PROTECTION_FROM_EARTH, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return FALSE;
+  start_cast(caster, v, nullptr, caster->roomp, SPELL_PROTECTION_FROM_EARTH, diff,
+    1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return false;
 }
 
 int castProtectionFromEarth(TBeing* caster, TBeing* victim) {
@@ -1021,5 +1021,5 @@ int castProtectionFromEarth(TBeing* caster, TBeing* victim) {
   if (ret == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }

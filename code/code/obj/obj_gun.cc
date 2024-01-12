@@ -73,8 +73,8 @@ void TGun::loadMe(TBeing* ch, TAmmo* ammo) {
   --(*ammo);
   setAmmo(ammo);
 
-  act("You load $p into $N.", TRUE, ch, ammo, this, TO_CHAR);
-  act("$n loads $p into $N.", TRUE, ch, ammo, this, TO_ROOM);
+  act("You load $p into $N.", true, ch, ammo, this, TO_CHAR);
+  act("$n loads $p into $N.", true, ch, ammo, this, TO_ROOM);
   ch->addToWait(combatRound(1));
 }
 
@@ -83,14 +83,14 @@ void TGun::unloadMe(TBeing* ch, TAmmo* ammo) {
     --(*ammo);
     *ch->roomp += *ammo;
 
-    act("You unload $N and drop $p.", TRUE, ch, ammo, this, TO_CHAR);
-    act("$n unloads $N and drops $p.", TRUE, ch, ammo, this, TO_ROOM);
+    act("You unload $N and drop $p.", true, ch, ammo, this, TO_CHAR);
+    act("$n unloads $N and drops $p.", true, ch, ammo, this, TO_ROOM);
   } else {
     --(*ammo);
     *ch += *ammo;
 
-    act("You unload $N.", TRUE, ch, ammo, this, TO_CHAR);
-    act("$n unloads $N.", TRUE, ch, ammo, this, TO_ROOM);
+    act("You unload $N.", true, ch, ammo, this, TO_CHAR);
+    act("$n unloads $N.", true, ch, ammo, this, TO_ROOM);
   }
 
   ch->addToWait(combatRound(1));
@@ -102,7 +102,7 @@ void TBeing::doGload(sstring arg) {
   TObj* bow;
   TThing* arrow;
   TGun* gun;
-  TAmmo* ammo = NULL;
+  TAmmo* ammo = nullptr;
   TBeing* tb;
 
   arg1 = arg.word(0);
@@ -343,10 +343,10 @@ int TGun::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
       ch->checkPeacefulVictim(
         "They are in a peaceful room. You can't seem to fire the gun.\n\r",
         targ))
-    return FALSE;
+    return false;
 
   if (targ && ch->noHarmCheck(targ))
-    return FALSE;
+    return false;
 
   sstring capbuf, capbuf2;
 
@@ -355,7 +355,7 @@ int TGun::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
 
   while (rof--) {
     if (!(ammo = dynamic_cast<TAmmo*>(getAmmo())) || ammo->getRounds() <= 0) {
-      act("Click.  $N is out of ammunition.", TRUE, ch, NULL, this, TO_CHAR);
+      act("Click.  $N is out of ammunition.", true, ch, nullptr, this, TO_CHAR);
       // keep looping to simulate trigger pulls - looks cooler
       continue;
     }
@@ -375,8 +375,8 @@ int TGun::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
 
     // send messages
     capbuf =
-      colorString(ch, ch->desc, bullet->getName(), NULL, COLOR_OBJECTS, TRUE);
-    capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
+      colorString(ch, ch->desc, bullet->getName(), nullptr, COLOR_OBJECTS, true);
+    capbuf2 = colorString(ch, ch->desc, getName(), nullptr, COLOR_OBJECTS, true);
 
     if (targ)
       ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
@@ -387,7 +387,7 @@ int TGun::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
                  capbuf2.uncap());
 
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.", dirs[dir]);
-    act(buf, FALSE, ch, this, bullet, TO_ROOM);
+    act(buf, false, ch, this, bullet, TO_ROOM);
 
     // put the bullet in the room and then "throw" it
     *ch->roomp += *bullet;
@@ -402,16 +402,16 @@ int TGun::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
     // delete the bullet afterwards, arbitrary decision
     // since they are arrow type and you usually don't find spent lead anyway
     delete bullet;
-    bullet = NULL;
+    bullet = nullptr;
 
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete targ;
-      targ = NULL;
-      return FALSE;
+      targ = nullptr;
+      return false;
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 void TGun::setRounds(int r) {
@@ -450,7 +450,7 @@ TThing* findFlint(StuffList list) {
       return ret;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 TThing* findPowder(StuffList list, int uses) {
@@ -469,7 +469,7 @@ TThing* findPowder(StuffList list, int uses) {
       return ret;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 TThing* findShot(StuffList list, ammoTypeT ammotype) {
@@ -488,5 +488,5 @@ TThing* findShot(StuffList list, ammoTypeT ammotype) {
       return ret;
   }
 
-  return NULL;
+  return nullptr;
 }

@@ -9,16 +9,16 @@ int tequilaCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
   TBeing* ch;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (::number(0, 19))
-    return FALSE;
+    return false;
 
   if (!(cutlass = dynamic_cast<TBaseWeapon*>(o)))
-    return FALSE;
+    return false;
 
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-    return FALSE;  // weapon not equipped (carried or on ground)
+    return false;  // weapon not equipped (carried or on ground)
 
   cutlass->setPoison(LIQ_TEQUILA);
 
@@ -31,5 +31,5 @@ int tequilaCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
 
   ch->dropPool(1, LIQ_TEQUILA);
 
-  return TRUE;
+  return true;
 }

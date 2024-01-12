@@ -32,12 +32,12 @@ int paladinPatrol(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   // all this fighting really pisses us off
   // but we're servants of the public good, stay friendly!
@@ -82,19 +82,19 @@ int paladinPatrol(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   // Not doing anything yet, time to start a patrol
   if (!myself->act_ptr) {
     if (::number(0, 25))
-      return FALSE;
+      return false;
 
     if (!(myself->act_ptr = new hunt_struct())) {
       vlogf(LOG_BUG, "failed memory allocation in mob proc grimhavenPosse.");
-      return FALSE;
+      return false;
     }
     job = static_cast<hunt_struct*>(myself->act_ptr);
     job->state = STATE_NONE;
 
-    act("$n decides to gather a patrol and hunt for cyclopses!", TRUE, myself,
+    act("$n decides to gather a patrol and hunt for cyclopses!", true, myself,
       0, 0, TO_ROOM);
 
-    act("Some paladin soldiers come to his aid.", TRUE, myself, 0, 0, TO_ROOM);
+    act("Some paladin soldiers come to his aid.", true, myself, 0, 0, TO_ROOM);
 
     SET_BIT(myself->specials.affectedBy, AFF_GROUP);
     for (i = 0; i < 3; i++) {
@@ -111,15 +111,15 @@ int paladinPatrol(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_BUG, "paladinPatrol: error, static_cast");
-    return TRUE;
+    return true;
   }
 
   // allow us to abort it.
   if (myself->inRoom() == Room::HELL)
-    return FALSE;
+    return false;
 
   if (::number(0, 2))
-    return FALSE;
+    return false;
 
   // now the actual actions
   switch (job->state) {
@@ -147,7 +147,7 @@ int paladinPatrol(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
             myself->doSay("Damn, I think I'm lost.");
             if (myself->act_ptr) {
               delete static_cast<hunt_struct*>(myself->act_ptr);
-              myself->act_ptr = NULL;
+              myself->act_ptr = nullptr;
             }
             break;
         }
@@ -177,7 +177,7 @@ int paladinPatrol(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
             myself->doSay("Damn, I think I'm lost.");
             if (myself->act_ptr) {
               delete static_cast<hunt_struct*>(myself->act_ptr);
-              myself->act_ptr = NULL;
+              myself->act_ptr = nullptr;
             }
             break;
         }

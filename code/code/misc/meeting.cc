@@ -209,26 +209,26 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
   if (cmd == CMD_GENERIC_DESTROYED) {
     job = static_cast<organizer_struct*>(myself->act_ptr);
     if (!job)
-      return FALSE;
+      return false;
 
     delete job;
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
   if (cmd == CMD_GENERIC_CREATED) {
     if (!(myself->act_ptr = new organizer_struct())) {
       perror("failed new of organizer.");
       exit(0);
     }
-    return FALSE;
+    return false;
   }
 
   if (!(job = (organizer_struct*)myself->act_ptr))
-    return FALSE;
+    return false;
 
   if (cmd == CMD_GENERIC_PULSE) {
     // make sure no one goes hungry
-    TThing* t = NULL;
+    TThing* t = nullptr;
 
     for (StuffIter it = myself->roomp->stuff.begin();
          it != myself->roomp->stuff.end() && (t = *it); ++it) {
@@ -243,10 +243,10 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
         pers->setCond(FULL, 24);
     }
 
-    TBeing* ch = NULL;
+    TBeing* ch = nullptr;
     for (;;) {
       if (job->speech_list.empty())
-        return FALSE;
+        return false;
 
       sstring nameStr = job->speech_list.front();
       ch = get_char_room(nameStr, myself->in_room);
@@ -269,11 +269,11 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
         announceNextSpeaker(myself, job);
       }
     }
-    return FALSE;
+    return false;
   }
 
   if (!ch->isPc())
-    return FALSE;
+    return false;
 
   if (job->logging &&
       (cmd == CMD_EMOTE || cmd == CMD_EMOTE2 || cmd == CMD_EMOTE3)) {
@@ -281,14 +281,14 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
     // it screws up meeting logs, so deny such activity
 
     myself->doTell(fname(ch->name), "Emotting is disabled at the moment.");
-    return TRUE;
+    return true;
   }
 
   if (ch->isImmortal()) {
     if (checkForSay(ch, myself, cmd, arg, &rc))
       return rc;
 
-    return FALSE;
+    return false;
   }
 
   // if debate is open, bypass
@@ -304,7 +304,7 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
         fclose(fp);
       }
     }
-    return FALSE;
+    return false;
   }
 
   // mortal commands handled here
@@ -323,7 +323,7 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
       cmd == CMD_ATTRIBUTE || cmd == CMD_WHO || cmd == CMD_MOTD ||
       cmd == CMD_CLS || cmd == CMD_SAVE || cmd == CMD_NEWS ||
       cmd == CMD_SCORE || cmd == CMD_HELP)
-    return FALSE;
+    return false;
 
   if (checkForSay(ch, myself, cmd, arg, &rc))
     return rc;
@@ -331,7 +331,7 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
   // allow the speaker to do as they please
   if (!job->speech_list.empty()) {
     if (job->speech_list[0] == ch->name) {
-      return FALSE;
+      return false;
     }
   }
 
@@ -363,5 +363,5 @@ int meeting_organizer(TBeing* ch, cmdTypeT cmd, const char* arg,
       format("To log/unlog the meeting : say %s log") % ORGANIZER_ID);
   }
 
-  return TRUE;
+  return true;
 }

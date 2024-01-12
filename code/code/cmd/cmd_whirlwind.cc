@@ -11,27 +11,27 @@ static int whirlwind(TBeing* caster, TBeing* victim, int castLevel,
   // Success case
   if (!victim->awake() ||
       (successfulHit && successfulHit != GUARANTEED_FAILURE)) {
-    act("$n hits $N with a spinning attack!", FALSE, caster, 0, victim,
+    act("$n hits $N with a spinning attack!", false, caster, 0, victim,
       TO_NOTVICT);
-    act("You hit $N with a spinning attack!", FALSE, caster, 0, victim,
+    act("You hit $N with a spinning attack!", false, caster, 0, victim,
       TO_CHAR);
-    act("$n hits you with a spinning attack!", FALSE, caster, 0, victim,
+    act("$n hits you with a spinning attack!", false, caster, 0, victim,
       TO_VICT);
     dam = caster->getSkillDam(victim, SKILL_WHIRLWIND, castLevel,
       caster->getAdvLearning(SKILL_WHIRLWIND));
   }
   // Failure case
   else {
-    act("$n's spinning attack misses $N.", FALSE, caster, 0, victim,
+    act("$n's spinning attack misses $N.", false, caster, 0, victim,
       TO_NOTVICT);
-    act("Your spinning attack misses $N.", FALSE, caster, 0, victim, TO_CHAR);
-    act("$n's spinning attack misses you.", FALSE, caster, 0, victim, TO_VICT);
+    act("Your spinning attack misses $N.", false, caster, 0, victim, TO_CHAR);
+    act("$n's spinning attack misses you.", false, caster, 0, victim, TO_VICT);
   }
 
   if (caster->reconcileDamage(victim, dam, damageType) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::doWhirlwind() {
@@ -40,27 +40,27 @@ int TBeing::doWhirlwind() {
   affectedData aff1;
 
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
   if (!doesKnowSkill(SKILL_WHIRLWIND)) {
     sendTo("You know nothing about whirlwind attacks.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   // Adding a lockout
   if (affectedBySpell(SKILL_WHIRLWIND)) {
     sendTo(
       "You are still recovering from your last whirlwind attack and cannot use "
       "this ability again at this time.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (getMove() < WHIRLWIND_MOVE) {
     sendTo("You don't have the vitality to make the move!\n\r");
-    return FALSE;
+    return false;
   }
 
   auto* weapon = dynamic_cast<TBaseWeapon*>(heldInPrimHand());
@@ -68,7 +68,7 @@ int TBeing::doWhirlwind() {
     sendTo(
       "You need to hold a weapon in your primary attack to attempt this "
       "maneuver.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!(isImmortal() || IS_SET(specials.act, ACT_IMMORTAL)))
@@ -102,9 +102,9 @@ int TBeing::whirlwindSuccess() {
 
   // Send messages to caster/room
   act("You perform a sweeping attack, striking out at every opponent nearby!",
-    FALSE, this, NULL, NULL, TO_CHAR);
-  act("$n performs a sweeping attack, striking out at everyone nearby!", FALSE,
-    this, NULL, NULL, TO_ROOM);
+    false, this, nullptr, nullptr, TO_CHAR);
+  act("$n performs a sweeping attack, striking out at everyone nearby!", false,
+    this, nullptr, nullptr, TO_ROOM);
 
   // Determine damage type
   spellNumT damageType = DAMAGE_NORMAL;
@@ -153,11 +153,11 @@ int TBeing::whirlwindSuccess() {
 }
 
 int TBeing::whirlwindFail() {
-  act("You attempt to perform a sweeping attack, but fail miserably!", FALSE,
-    this, NULL, NULL, TO_CHAR);
+  act("You attempt to perform a sweeping attack, but fail miserably!", false,
+    this, nullptr, nullptr, TO_CHAR);
   act(
     "$n attempts to perform a sweeping attack, but instead just ends up "
     "looking silly!",
-    FALSE, this, NULL, NULL, TO_ROOM);
-  return FALSE;
+    false, this, nullptr, nullptr, TO_ROOM);
+  return false;
 }

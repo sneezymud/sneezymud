@@ -9,7 +9,7 @@ void TPCorpse::setExpLost(float exp) { exp_lost = exp; }
 
 int TPCorpse::checkOnLists() { return on_lists; }
 
-void TPCorpse::togOnCorpseListsOn() { on_lists = TRUE; }
+void TPCorpse::togOnCorpseListsOn() { on_lists = true; }
 
 void TPCorpse::togOnCorpseListsOff() { on_lists = 0; }
 
@@ -39,19 +39,19 @@ void TPCorpse::clearOwner() { fileName.erase(); }
 
 void TPCorpse::setNext(TPCorpse* n) { nextCorpse = n; }
 
-void TPCorpse::removeNext() { nextCorpse = NULL; }
+void TPCorpse::removeNext() { nextCorpse = nullptr; }
 
 TPCorpse* TPCorpse::getNext() const { return nextCorpse; }
 
 void TPCorpse::setPrevious(TPCorpse* n) { previousCorpse = n; }
 
-void TPCorpse::removePrevious() { previousCorpse = NULL; }
+void TPCorpse::removePrevious() { previousCorpse = nullptr; }
 
 TPCorpse* TPCorpse::getPrevious() const { return previousCorpse; }
 
 void TPCorpse::setNextGlobal(TPCorpse* n) { nextGlobalCorpse = n; }
 
-void TPCorpse::removeGlobalNext() { nextGlobalCorpse = NULL; }
+void TPCorpse::removeGlobalNext() { nextGlobalCorpse = nullptr; }
 
 TPCorpse* TPCorpse::getGlobalNext() const { return nextGlobalCorpse; }
 
@@ -62,9 +62,9 @@ TPCorpse::TPCorpse() :
   num_corpses_in_room(0),
   exp_lost(0),
   fileName(""),
-  nextGlobalCorpse(NULL),
-  nextCorpse(NULL),
-  previousCorpse(NULL) {}
+  nextGlobalCorpse(nullptr),
+  nextCorpse(nullptr),
+  previousCorpse(nullptr) {}
 
 TPCorpse::TPCorpse(const TPCorpse& a) :
   TBaseCorpse(a),
@@ -143,7 +143,7 @@ int TPCorpse::getMe(TBeing* ch, TThing* sub) {
 
   if (ch) {
     removeCorpseFromList();
-    return TRUE;
+    return true;
   }
   if (sub) {
     vlogf(LOG_BUG, format("Problem with a sub in corpse.getMe %s %s") %
@@ -151,7 +151,7 @@ int TPCorpse::getMe(TBeing* ch, TThing* sub) {
     removeCorpseFromList();
     return DELETE_THIS;
   }
-  return TRUE;
+  return true;
 }
 
-int TPCorpse::scavengeMe(TBeing* ch, TObj**) { return FALSE; }
+int TPCorpse::scavengeMe(TBeing* ch, TObj**) { return false; }

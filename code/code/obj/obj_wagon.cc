@@ -38,5 +38,5 @@ bool TWagon::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "Does this look like a mechanics shop to you?");
   }
-  return TRUE;
+  return true;
 }

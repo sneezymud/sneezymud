@@ -24,13 +24,13 @@ int resurrection(TBeing* caster, TObj* obj, int level, short bKnown) {
 
   if (!(corpse = dynamic_cast<TBaseCorpse*>(obj))) {
     caster->sendTo("You can't resurrect something that's not a corpse!\n\r");
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 
   if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
     caster->sendTo("You can't resurrect that - someone is sacrificing it!\n\r");
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -40,14 +40,14 @@ int resurrection(TBeing* caster, TObj* obj, int level, short bKnown) {
       corpse->isCorpseFlag(CORPSE_NO_BUTCHER) ||
       corpse->isCorpseFlag(CORPSE_NO_SKIN)) {
     caster->sendTo("This corpse appears too mutilated to resurrect!\n\r");
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 
   if (caster->getMoney() < 2500) {
     caster->sendTo(
       "You need 2500 talens to make the resurrection sacrifice.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
   caster->addToMoney(-2500, GOLD_HOSPITAL);
@@ -61,7 +61,7 @@ int resurrection(TBeing* caster, TObj* obj, int level, short bKnown) {
       victim->setClass(CLASS_WARRIOR);
       victim->fixLevels(oldLevel);
       delete victim->discs;
-      victim->discs = NULL;
+      victim->discs = nullptr;
       victim->assignDisciplinesClass();
     }
 
@@ -74,7 +74,7 @@ int resurrection(TBeing* caster, TObj* obj, int level, short bKnown) {
     victim->setHit(1);
     victim->setPosition(POSITION_STUNNED);
 
-    act("$N slowly rises from the $g.", FALSE, caster, 0, victim, TO_ROOM);
+    act("$N slowly rises from the $g.", false, caster, 0, victim, TO_ROOM);
     caster->reconcileHelp(victim, discArray[SPELL_RESURRECTION]->alignMod);
 
     if (victim->isImmune(IMMUNE_CHARM, WEAR_BODY, level)) {
@@ -84,9 +84,9 @@ int resurrection(TBeing* caster, TObj* obj, int level, short bKnown) {
       victim->doSay("How could I ever repay you for your deed?!");
       return SPELL_FALSE;
     } else if (caster->tooManyFollowers(victim, FOL_ZOMBIE)) {
-      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of yours!", true, caster, nullptr,
         victim, TO_CHAR);
-      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of $n's!", true, caster, nullptr,
         victim, TO_ROOM);
       delete corpse;
       return SPELL_FALSE;
@@ -119,15 +119,15 @@ int resurrection(TBeing* caster, TObj* obj, int level, short bKnown) {
       --(*t);
       *victim += *t;
     }
-    act("With mystic power, $p is resurrected.", TRUE, caster, corpse, 0,
+    act("With mystic power, $p is resurrected.", true, caster, corpse, 0,
       TO_CHAR);
-    act("With mystic power, $p is resurrected.", TRUE, caster, corpse, 0,
+    act("With mystic power, $p is resurrected.", true, caster, corpse, 0,
       TO_ROOM);
     delete corpse;
     return SPELL_SUCCESS;  // note, this indicates obj should go bye bye
   } else {
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
     delete corpse;
     return SPELL_FAIL;
   }
@@ -138,9 +138,9 @@ void resurrection(TBeing* caster, TObj* obj, TMagicItem* obj_mi) {
 
   level = caster->getSkillLevel(SPELL_VOODOO);
   int bKnown = caster->getSkillValue(SPELL_VOODOO);
-  act("You direct a strange beam of energy at $p.", FALSE, caster, obj_mi, obj,
+  act("You direct a strange beam of energy at $p.", false, caster, obj_mi, obj,
     TO_CHAR);
-  act("$n directs a strange beam of energy at $p.", FALSE, caster, obj_mi, obj,
+  act("$n directs a strange beam of energy at $p.", false, caster, obj_mi, obj,
     TO_ROOM);
   resurrection(caster, obj, level, bKnown);
 }
@@ -150,22 +150,22 @@ int castResurrection(TBeing* caster, TObj* obj) {
   TBaseCorpse* corpse;
 
   if (!(corpse = dynamic_cast<TBaseCorpse*>(obj))) {
-    return FALSE;
+    return false;
   }
   if (dynamic_cast<TPCorpse*>(corpse)) {
     /* corpse is a pc */
     caster->sendTo("Resurrection of players is not currently supported.\n\r");
-    return FALSE;
+    return false;
   }
   if (corpse->getCorpseVnum() == -1) {
     /* corpse is a MEDIT mob */
     caster->sendTo("You can't resurrect that.\n\r");
-    return FALSE;
+    return false;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     /* corpse is a body part, pile of dust, etc */
     caster->sendTo("There isn't enough left to resurrect.\n\r");
-    return FALSE;
+    return false;
   }
   if (corpse->isCorpseFlag(CORPSE_SACRIFICE)) {
     caster->sendTo(
@@ -173,9 +173,9 @@ int castResurrection(TBeing* caster, TObj* obj) {
     return SPELL_FAIL;
   }
 
-  act("You direct a strange beam of energy at $p.", FALSE, caster, obj, 0,
+  act("You direct a strange beam of energy at $p.", false, caster, obj, 0,
     TO_CHAR);
-  act("$n directs a strange beam of energy at $p.", FALSE, caster, obj, 0,
+  act("$n directs a strange beam of energy at $p.", false, caster, obj, 0,
     TO_ROOM);
 
   level = caster->getSkillLevel(SPELL_RESURRECTION);
@@ -184,21 +184,21 @@ int castResurrection(TBeing* caster, TObj* obj) {
   if (ret == SPELL_SUCCESS) {
     return DELETE_ITEM;  // delete corpse
   }
-  return TRUE;
+  return true;
 }
 
 int resurrection(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_RESURRECTION, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_RESURRECTION]->lag;
   diff = discArray[SPELL_RESURRECTION]->task;
 
-  start_cast(caster, NULL, obj, caster->roomp, SPELL_RESURRECTION, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, caster->roomp, SPELL_RESURRECTION, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 // ENTHRALL DEMON
@@ -215,14 +215,14 @@ int enthrallDemon(TBeing* caster, int level, short bKnown) {
   victim->elementalFix(caster, SPELL_ENTHRALL_DEMON, 0);
 
   if (caster->bSuccess(bKnown, SPELL_ENTHRALL_DEMON)) {
-    act("You call upon the powers of your ancestors!", TRUE, caster, NULL, NULL,
+    act("You call upon the powers of your ancestors!", true, caster, nullptr, nullptr,
       TO_CHAR);
-    act("$n summons the powers of $s ancestors!", TRUE, caster, NULL, NULL,
+    act("$n summons the powers of $s ancestors!", true, caster, nullptr, nullptr,
       TO_ROOM);
 
     // charm them for a while
     if (victim->master)
-      victim->stopFollower(TRUE);
+      victim->stopFollower(true);
 
     aff.type = SPELL_ENTHRALL_DEMON;
     aff.level = level;
@@ -250,7 +250,7 @@ int enthrallDemon(TBeing* caster, int level, short bKnown) {
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_ENTHRALL_DEMON);
-        act("$N flexes $S overly strong muscles.", TRUE, caster, 0, victim,
+        act("$N flexes $S overly strong muscles.", true, caster, 0, victim,
           TO_ROOM);
         caster->sendTo("The gods have blessed your wishes greatly!\n\r");
         victim->setMaxHit((int)(victim->hitLimit() * 1.5));
@@ -260,11 +260,11 @@ int enthrallDemon(TBeing* caster, int level, short bKnown) {
         break;
     }
     if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of yours!", true, caster, nullptr,
         victim, TO_CHAR);
-      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of $n's!", true, caster, nullptr,
         victim, TO_ROOM);
-      act("Your loa is displeased! $N hates you!", FALSE, caster, NULL, victim,
+      act("Your loa is displeased! $N hates you!", false, caster, nullptr, victim,
         TO_CHAR);
       victim->affectFrom(SPELL_ENTHRALL_DEMON);
       victim->affectFrom(AFFECT_THRALL);
@@ -277,9 +277,9 @@ int enthrallDemon(TBeing* caster, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
-    act("<R>In a flash of red light you see $N standing before you!<1>", TRUE,
-      caster, NULL, victim, TO_NOTVICT);
-    act("The gods are not pleased! $N hates you!", FALSE, caster, NULL, victim,
+    act("<R>In a flash of red light you see $N standing before you!<1>", true,
+      caster, nullptr, victim, TO_NOTVICT);
+    act("The gods are not pleased! $N hates you!", false, caster, nullptr, victim,
       TO_CHAR);
     victim->developHatred(caster);
     caster->setCharFighting(victim);
@@ -292,40 +292,40 @@ int enthrallDemon(TBeing* caster) {
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
     caster->sendTo(
       "You cannot dance the ritual under these wet conditions!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (real_mobile(Mob::THRALL_DEMON) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!bPassShamanChecks(caster, SPELL_ENTHRALL_DEMON, NULL))
-    return FALSE;
+  if (!bPassShamanChecks(caster, SPELL_ENTHRALL_DEMON, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_ENTHRALL_DEMON]->lag;
   taskDiffT diff = discArray[SPELL_ENTHRALL_DEMON]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_ENTHRALL_DEMON, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_ENTHRALL_DEMON, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castEnthrallDemon(TBeing* caster) {
   int ret, level;
 
   if (!caster)
-    return TRUE;
+    return true;
 
   level = caster->getSkillLevel(SPELL_ENTHRALL_DEMON);
 
   if ((ret = enthrallDemon(caster, level,
          caster->getSkillValue(SPELL_ENTHRALL_DEMON))) == SPELL_SUCCESS) {
   } else {
-    act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL,
+    act("You feel the ancestors are not pleased.", false, caster, nullptr, nullptr,
       TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 // END ENTHRALL DEMON
@@ -343,14 +343,14 @@ int createWoodGolem(TBeing* caster, int level, short bKnown) {
   victim->elementalFix(caster, SPELL_CREATE_WOOD_GOLEM, 0);
 
   if (caster->bSuccess(bKnown, SPELL_CREATE_WOOD_GOLEM)) {
-    act("You call upon the powers of your ancestors!", TRUE, caster, NULL, NULL,
+    act("You call upon the powers of your ancestors!", true, caster, nullptr, nullptr,
       TO_CHAR);
-    act("$n summons the powers of $s ancestors!", TRUE, caster, NULL, NULL,
+    act("$n summons the powers of $s ancestors!", true, caster, nullptr, nullptr,
       TO_ROOM);
 
     // charm them for a while
     if (victim->master)
-      victim->stopFollower(TRUE);
+      victim->stopFollower(true);
 
     aff.type = SPELL_CREATE_WOOD_GOLEM;
     aff.level = level;
@@ -378,7 +378,7 @@ int createWoodGolem(TBeing* caster, int level, short bKnown) {
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_CREATE_WOOD_GOLEM);
-        act("$N flexes $S overly strong muscles.", TRUE, caster, 0, victim,
+        act("$N flexes $S overly strong muscles.", true, caster, 0, victim,
           TO_ROOM);
         caster->sendTo("The gods have blessed your wishes greatly!\n\r");
         victim->setMaxHit((int)(victim->hitLimit() * 1.5));
@@ -388,11 +388,11 @@ int createWoodGolem(TBeing* caster, int level, short bKnown) {
         break;
     }
     if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of yours!", true, caster, nullptr,
         victim, TO_CHAR);
-      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of $n's!", true, caster, nullptr,
         victim, TO_ROOM);
-      act("Your loa is displeased! $N hates you!", FALSE, caster, NULL, victim,
+      act("Your loa is displeased! $N hates you!", false, caster, nullptr, victim,
         TO_CHAR);
       victim->affectFrom(SPELL_CREATE_WOOD_GOLEM);
       victim->affectFrom(AFFECT_THRALL);
@@ -406,9 +406,9 @@ int createWoodGolem(TBeing* caster, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
-    act("<R>In a flash of red light you see $N standing before you!<1>", TRUE,
-      caster, NULL, victim, TO_NOTVICT);
-    act("The gods are not pleased! $N hates you!", FALSE, caster, NULL, victim,
+    act("<R>In a flash of red light you see $N standing before you!<1>", true,
+      caster, nullptr, victim, TO_NOTVICT);
+    act("The gods are not pleased! $N hates you!", false, caster, nullptr, victim,
       TO_CHAR);
     victim->developHatred(caster);
     caster->setCharFighting(victim);
@@ -421,40 +421,40 @@ int createWoodGolem(TBeing* caster) {
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
     caster->sendTo(
       "You cannot dance the ritual under these wet conditions!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (real_mobile(Mob::WOOD_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!bPassShamanChecks(caster, SPELL_CREATE_WOOD_GOLEM, NULL))
-    return FALSE;
+  if (!bPassShamanChecks(caster, SPELL_CREATE_WOOD_GOLEM, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_CREATE_WOOD_GOLEM]->lag;
   taskDiffT diff = discArray[SPELL_CREATE_WOOD_GOLEM]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_WOOD_GOLEM, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_CREATE_WOOD_GOLEM, diff,
+    1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castCreateWoodGolem(TBeing* caster) {
   int ret, level;
 
   if (!caster)
-    return TRUE;
+    return true;
 
   level = caster->getSkillLevel(SPELL_CREATE_WOOD_GOLEM);
 
   if ((ret = createWoodGolem(caster, level,
          caster->getSkillValue(SPELL_CREATE_WOOD_GOLEM))) == SPELL_SUCCESS) {
   } else {
-    act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL,
+    act("You feel the ancestors are not pleased.", false, caster, nullptr, nullptr,
       TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 /////////////////
@@ -471,14 +471,14 @@ int createRockGolem(TBeing* caster, int level, short bKnown) {
   victim->elementalFix(caster, SPELL_CREATE_ROCK_GOLEM, 0);
 
   if (caster->bSuccess(bKnown, SPELL_CREATE_ROCK_GOLEM)) {
-    act("You call upon the powers of your ancestors!", TRUE, caster, NULL, NULL,
+    act("You call upon the powers of your ancestors!", true, caster, nullptr, nullptr,
       TO_CHAR);
-    act("$n summons the powers of $s ancestors!", TRUE, caster, NULL, NULL,
+    act("$n summons the powers of $s ancestors!", true, caster, nullptr, nullptr,
       TO_ROOM);
 
     // charm them for a while
     if (victim->master)
-      victim->stopFollower(TRUE);
+      victim->stopFollower(true);
 
     aff.type = SPELL_CREATE_ROCK_GOLEM;
     aff.level = level;
@@ -506,7 +506,7 @@ int createRockGolem(TBeing* caster, int level, short bKnown) {
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_CREATE_ROCK_GOLEM);
-        act("$N flexes $S overly strong muscles.", TRUE, caster, 0, victim,
+        act("$N flexes $S overly strong muscles.", true, caster, 0, victim,
           TO_ROOM);
         caster->sendTo("The gods have blessed your wishes greatly!\n\r");
         victim->setMaxHit((int)(victim->hitLimit() * 1.5));
@@ -516,11 +516,11 @@ int createRockGolem(TBeing* caster, int level, short bKnown) {
         break;
     }
     if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of yours!", true, caster, nullptr,
         victim, TO_CHAR);
-      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of $n's!", true, caster, nullptr,
         victim, TO_ROOM);
-      act("Your loa is displeased! $N hates you!", FALSE, caster, NULL, victim,
+      act("Your loa is displeased! $N hates you!", false, caster, nullptr, victim,
         TO_CHAR);
       victim->affectFrom(SPELL_CREATE_ROCK_GOLEM);
       victim->affectFrom(AFFECT_THRALL);
@@ -534,9 +534,9 @@ int createRockGolem(TBeing* caster, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
-    act("<R>In a flash of red light you see $N standing before you!<1>", TRUE,
-      caster, NULL, victim, TO_NOTVICT);
-    act("The gods are not pleased! $N hates you!", FALSE, caster, NULL, victim,
+    act("<R>In a flash of red light you see $N standing before you!<1>", true,
+      caster, nullptr, victim, TO_NOTVICT);
+    act("The gods are not pleased! $N hates you!", false, caster, nullptr, victim,
       TO_CHAR);
     victim->developHatred(caster);
     caster->setCharFighting(victim);
@@ -549,40 +549,40 @@ int createRockGolem(TBeing* caster) {
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
     caster->sendTo(
       "You cannot dance the ritual under these wet conditions!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (real_mobile(Mob::ROCK_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!bPassShamanChecks(caster, SPELL_CREATE_ROCK_GOLEM, NULL))
-    return FALSE;
+  if (!bPassShamanChecks(caster, SPELL_CREATE_ROCK_GOLEM, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_CREATE_ROCK_GOLEM]->lag;
   taskDiffT diff = discArray[SPELL_CREATE_ROCK_GOLEM]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_ROCK_GOLEM, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_CREATE_ROCK_GOLEM, diff,
+    1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castCreateRockGolem(TBeing* caster) {
   int ret, level;
 
   if (!caster)
-    return TRUE;
+    return true;
 
   level = caster->getSkillLevel(SPELL_CREATE_ROCK_GOLEM);
 
   if ((ret = createRockGolem(caster, level,
          caster->getSkillValue(SPELL_CREATE_ROCK_GOLEM))) == SPELL_SUCCESS) {
   } else {
-    act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL,
+    act("You feel the ancestors are not pleased.", false, caster, nullptr, nullptr,
       TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 //////////////////
@@ -599,14 +599,14 @@ int createIronGolem(TBeing* caster, int level, short bKnown) {
   victim->elementalFix(caster, SPELL_CREATE_IRON_GOLEM, 0);
 
   if (caster->bSuccess(bKnown, SPELL_CREATE_IRON_GOLEM)) {
-    act("You call upon the powers of your ancestors!", TRUE, caster, NULL, NULL,
+    act("You call upon the powers of your ancestors!", true, caster, nullptr, nullptr,
       TO_CHAR);
-    act("$n summons the powers of $s ancestors!", TRUE, caster, NULL, NULL,
+    act("$n summons the powers of $s ancestors!", true, caster, nullptr, nullptr,
       TO_ROOM);
 
     // charm them for a while
     if (victim->master)
-      victim->stopFollower(TRUE);
+      victim->stopFollower(true);
 
     aff.type = SPELL_CREATE_IRON_GOLEM;
     aff.level = level;
@@ -634,7 +634,7 @@ int createIronGolem(TBeing* caster, int level, short bKnown) {
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_CREATE_IRON_GOLEM);
-        act("$N flexes $S overly strong muscles.", TRUE, caster, 0, victim,
+        act("$N flexes $S overly strong muscles.", true, caster, 0, victim,
           TO_ROOM);
         caster->sendTo("The gods have blessed your wishes greatly!\n\r");
         victim->setMaxHit((int)(victim->hitLimit() * 1.5));
@@ -644,11 +644,11 @@ int createIronGolem(TBeing* caster, int level, short bKnown) {
         break;
     }
     if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of yours!", true, caster, nullptr,
         victim, TO_CHAR);
-      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of $n's!", true, caster, nullptr,
         victim, TO_ROOM);
-      act("Your loa is displeased! $N hates you!", FALSE, caster, NULL, victim,
+      act("Your loa is displeased! $N hates you!", false, caster, nullptr, victim,
         TO_CHAR);
       victim->affectFrom(SPELL_CREATE_IRON_GOLEM);
       victim->affectFrom(AFFECT_THRALL);
@@ -661,9 +661,9 @@ int createIronGolem(TBeing* caster, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
-    act("<R>In a flash of red light you see $N standing before you!<1>", TRUE,
-      caster, NULL, victim, TO_NOTVICT);
-    act("The gods are not pleased! $N hates you!", FALSE, caster, NULL, victim,
+    act("<R>In a flash of red light you see $N standing before you!<1>", true,
+      caster, nullptr, victim, TO_NOTVICT);
+    act("The gods are not pleased! $N hates you!", false, caster, nullptr, victim,
       TO_CHAR);
     victim->developHatred(caster);
     caster->setCharFighting(victim);
@@ -676,40 +676,40 @@ int createIronGolem(TBeing* caster) {
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
     caster->sendTo(
       "You cannot dance the ritual under these wet conditions!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (real_mobile(Mob::IRON_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!bPassShamanChecks(caster, SPELL_CREATE_IRON_GOLEM, NULL))
-    return FALSE;
+  if (!bPassShamanChecks(caster, SPELL_CREATE_IRON_GOLEM, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_CREATE_IRON_GOLEM]->lag;
   taskDiffT diff = discArray[SPELL_CREATE_IRON_GOLEM]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_IRON_GOLEM, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_CREATE_IRON_GOLEM, diff,
+    1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castCreateIronGolem(TBeing* caster) {
   int ret, level;
 
   if (!caster)
-    return TRUE;
+    return true;
 
   level = caster->getSkillLevel(SPELL_CREATE_IRON_GOLEM);
 
   if ((ret = createIronGolem(caster, level,
          caster->getSkillValue(SPELL_CREATE_IRON_GOLEM))) == SPELL_SUCCESS) {
   } else {
-    act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL,
+    act("You feel the ancestors are not pleased.", false, caster, nullptr, nullptr,
       TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 //////////////////
@@ -726,14 +726,14 @@ int createDiamondGolem(TBeing* caster, int level, short bKnown) {
   victim->elementalFix(caster, SPELL_CREATE_DIAMOND_GOLEM, 0);
 
   if (caster->bSuccess(bKnown, SPELL_CREATE_DIAMOND_GOLEM)) {
-    act("You call upon the powers of your ancestors!", TRUE, caster, NULL, NULL,
+    act("You call upon the powers of your ancestors!", true, caster, nullptr, nullptr,
       TO_CHAR);
-    act("$n summons the powers of $s ancestors!", TRUE, caster, NULL, NULL,
+    act("$n summons the powers of $s ancestors!", true, caster, nullptr, nullptr,
       TO_ROOM);
 
     // charm them for a while
     if (victim->master)
-      victim->stopFollower(TRUE);
+      victim->stopFollower(true);
 
     aff.type = SPELL_CREATE_DIAMOND_GOLEM;
     aff.level = level;
@@ -761,7 +761,7 @@ int createDiamondGolem(TBeing* caster, int level, short bKnown) {
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_CREATE_DIAMOND_GOLEM);
-        act("$N flexes $S overly strong muscles.", TRUE, caster, 0, victim,
+        act("$N flexes $S overly strong muscles.", true, caster, 0, victim,
           TO_ROOM);
         caster->sendTo("The gods have blessed your wishes greatly!\n\r");
         victim->setMaxHit((int)(victim->hitLimit() * 1.5));
@@ -771,11 +771,11 @@ int createDiamondGolem(TBeing* caster, int level, short bKnown) {
         break;
     }
     if (caster->tooManyFollowers(victim, FOL_CHARM)) {
-      act("$N refuses to enter a group the size of yours!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of yours!", true, caster, nullptr,
         victim, TO_CHAR);
-      act("$N refuses to enter a group the size of $n's!", TRUE, caster, NULL,
+      act("$N refuses to enter a group the size of $n's!", true, caster, nullptr,
         victim, TO_ROOM);
-      act("Your loa is displeased! $N hates you!", FALSE, caster, NULL, victim,
+      act("Your loa is displeased! $N hates you!", false, caster, nullptr, victim,
         TO_CHAR);
       victim->affectFrom(SPELL_CREATE_DIAMOND_GOLEM);
       victim->affectFrom(AFFECT_THRALL);
@@ -788,9 +788,9 @@ int createDiamondGolem(TBeing* caster, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     *caster->roomp += *victim;
-    act("<R>In a flash of red light you see $N standing before you!<1>", TRUE,
-      caster, NULL, victim, TO_NOTVICT);
-    act("The gods are not pleased! $N hates you!", FALSE, caster, NULL, victim,
+    act("<R>In a flash of red light you see $N standing before you!<1>", true,
+      caster, nullptr, victim, TO_NOTVICT);
+    act("The gods are not pleased! $N hates you!", false, caster, nullptr, victim,
       TO_CHAR);
     victim->developHatred(caster);
     caster->setCharFighting(victim);
@@ -803,38 +803,38 @@ int createDiamondGolem(TBeing* caster) {
   if (caster->roomp && caster->roomp->isUnderwaterSector()) {
     caster->sendTo(
       "You cannot dance the ritual under these wet conditions!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (real_mobile(Mob::DIAMOND_GOLEM) < 0) {
     caster->sendTo("You cannot call upon a being of that type.\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!bPassShamanChecks(caster, SPELL_CREATE_DIAMOND_GOLEM, NULL))
-    return FALSE;
+  if (!bPassShamanChecks(caster, SPELL_CREATE_DIAMOND_GOLEM, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_CREATE_DIAMOND_GOLEM]->lag;
   taskDiffT diff = discArray[SPELL_CREATE_DIAMOND_GOLEM]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_CREATE_DIAMOND_GOLEM,
-    diff, 1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_CREATE_DIAMOND_GOLEM,
+    diff, 1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castCreateDiamondGolem(TBeing* caster) {
   int ret, level;
 
   if (!caster)
-    return TRUE;
+    return true;
 
   level = caster->getSkillLevel(SPELL_CREATE_DIAMOND_GOLEM);
 
   if ((ret = createDiamondGolem(caster, level,
          caster->getSkillValue(SPELL_CREATE_DIAMOND_GOLEM))) == SPELL_SUCCESS) {
   } else {
-    act("You feel the ancestors are not pleased.", FALSE, caster, NULL, NULL,
+    act("You feel the ancestors are not pleased.", false, caster, nullptr, nullptr,
       TO_CHAR);
   }
-  return TRUE;
+  return true;
 }

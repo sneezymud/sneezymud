@@ -32,9 +32,9 @@ void payout(TBeing* ch, int talens, int chip_vnum) {
         chip = read_object(CHIP_100, VIRTUAL);
       } else {
         buf = format("You receive %i talens.") % talens;
-        act(buf, TRUE, ch, 0, 0, TO_CHAR);
+        act(buf, true, ch, 0, 0, TO_CHAR);
         buf = format("$n receives %i talens.") % talens;
-        act(buf, TRUE, ch, 0, 0, TO_ROOM);
+        act(buf, true, ch, 0, 0, TO_ROOM);
         ch->addToMoney(talens, GOLD_GAMBLE);
         break;
       }
@@ -63,14 +63,14 @@ void payout(TBeing* ch, int talens, int chip_vnum) {
   for (iter = chipout.begin(); iter != chipout.end(); ++iter) {
     if ((*iter).second > 1) {
       buf = format("You receive %s. [%i]") % (*iter).first % (*iter).second;
-      act(buf, FALSE, ch, 0, 0, TO_CHAR);
+      act(buf, false, ch, 0, 0, TO_CHAR);
       buf = format("$n receives %s. [%i]") % (*iter).first % (*iter).second;
-      act(buf, FALSE, ch, 0, 0, TO_ROOM);
+      act(buf, false, ch, 0, 0, TO_ROOM);
     } else {
       buf = format("You receive %s.") % (*iter).first;
-      act(buf, FALSE, ch, 0, 0, TO_CHAR);
+      act(buf, false, ch, 0, 0, TO_CHAR);
       buf = format("$n receives %s.") % (*iter).first;
-      act(buf, FALSE, ch, 0, 0, TO_ROOM);
+      act(buf, false, ch, 0, 0, TO_ROOM);
     }
   }
 }
@@ -83,7 +83,7 @@ TObj* find_chip(TBeing* ch, const int& chip) {
         o->objVnum() == chip)
       return o;
 
-  return NULL;
+  return nullptr;
 }
 
 TObj* find_chip(TBeing* ch, const sstring& coin_str) {
@@ -91,7 +91,7 @@ TObj* find_chip(TBeing* ch, const sstring& coin_str) {
 
   if (!(chip = generic_find_obj(coin_str, FIND_OBJ_INV, ch)) ||
       !(dynamic_cast<TCasinoChip*>(chip))) {
-    return NULL;
+    return nullptr;
   }
 
   return chip;

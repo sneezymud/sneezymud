@@ -38,7 +38,7 @@ bool TTrashPile::objectRepair(TBeing* ch, TMonster* repair,
     repair->doTell(fname(ch->name),
       format("I'm not the trash man. Take %s to the dump!") % getName());
 
-  return TRUE;
+  return true;
 }
 
 int TTrashPile::getSizeIndex() {
@@ -96,12 +96,12 @@ void TTrashPile::updateDesc() {
       ex_description = exd->next;
       delete exd;
     }
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
     name = obj_index[getItemIndex()].name;
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   }
 
@@ -111,7 +111,7 @@ void TTrashPile::updateDesc() {
 
 void TTrashPile::overFlow() {
   int index = getSizeIndex();
-  TRoom* rp = NULL;
+  TRoom* rp = nullptr;
   int volume = 0;
   dirTypeT dir;
 

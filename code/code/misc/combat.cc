@@ -47,7 +47,7 @@
 
 extern class TPeelPk peelPk;
 
-TBeing* gCombatList = NULL;  // head of l-list of fighting chars
+TBeing* gCombatList = nullptr;  // head of l-list of fighting chars
 
 // So WTF are we doing here?  glad you asked
 // GCN maintains the next pointer for the perform_violance loop
@@ -57,7 +57,7 @@ TBeing* gCombatList = NULL;  // head of l-list of fighting chars
 // fighters (really bad).  So we maintain this globally, and make some
 // checks for GCN in stopFighting, adjusting as appropriate.
 // If you're still confused, trust me, we need it - Bat 9/1/98
-TBeing* gCombatNext = NULL;
+TBeing* gCombatNext = nullptr;
 
 struct attack_hit_type attack_hit_text[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
   {"pound", "pounds", "pounding"},  // 0
@@ -145,8 +145,8 @@ struct attack_hit_type attack_hit_text_twink[TYPE_MAX_HIT - TYPE_MIN_HIT] = {
 // combat and for that moment when I'm fighting and my victim isn't, I'm still
 // considered the tank.
 bool TBeing::isTanking() {
-  TBeing* victim = NULL;
-  TThing* contents = NULL;
+  TBeing* victim = nullptr;
+  TThing* contents = nullptr;
 
   //  Look through the current room and check each object.  If the object is
   //  fighting and I'm the one it is fighting, then I'm tanking.
@@ -156,20 +156,20 @@ bool TBeing::isTanking() {
     if (tbg) {
       victim = tbg;
       if (this == victim->fight())
-        return TRUE;
+        return true;
     }
   }
 
   //  If I'm fighting but the thing I'm fighting isn't fighting back, then
   //  I'm still tanking.
   if (fight() && !fight()->fight())
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 TBeing* findNextOpponent(TBeing* ch, TBeing* cur) {
-  TBeing* tmp = NULL;
+  TBeing* tmp = nullptr;
 
   for (StuffIter it = ch->roomp->stuff.begin(); it != ch->roomp->stuff.end();
        ++it) {
@@ -204,7 +204,7 @@ TBeing* findNextOpponent(TBeing* ch, TBeing* cur) {
     return tmp;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 // value passed thru cur will NOT be selected for bezerking
@@ -226,12 +226,12 @@ void TBeing::goBerserk(TBeing* cur) {
     return;
   }
 
-  TBeing* tmp = NULL;
+  TBeing* tmp = nullptr;
   if ((tmp = findNextOpponent(this, cur))) {
-    act("You go berserk on $N.", TRUE, this, 0, tmp, TO_CHAR);
-    act("$n's berserker rage is unleashed on you!", TRUE, this, 0, tmp,
+    act("You go berserk on $N.", true, this, 0, tmp, TO_CHAR);
+    act("$n's berserker rage is unleashed on you!", true, this, 0, tmp,
       TO_VICT);
-    act("$n's berserker rage is unleashed on $N.", TRUE, this, 0, tmp, TO_ROOM);
+    act("$n's berserker rage is unleashed on $N.", true, this, 0, tmp, TO_ROOM);
   }
 }
 
@@ -239,7 +239,7 @@ void TBeing::deathCry() {
   int new_room;
   TRoom* newR;
   char buf[256];
-  TThing* i = NULL;
+  TThing* i = nullptr;
   dirTypeT door;
 
   if ((in_room == Room::NOWHERE) || !roomp)
@@ -292,7 +292,7 @@ void TBeing::deathCry() {
 	    }
 #endif
 
-          colorAct(COLOR_MOBS, buf, FALSE, dynamic_cast<TBeing*>(i), NULL, this,
+          colorAct(COLOR_MOBS, buf, false, dynamic_cast<TBeing*>(i), nullptr, this,
             TO_CHAR);
         }
       }
@@ -332,8 +332,8 @@ void TBeing::appear() {
     if (isAffected(AFF_INVISIBLE))
       REMOVE_BIT(specials.affectedBy, AFF_INVISIBLE);
 
-    act("$n slowly fades into existence.", FALSE, this, 0, 0, TO_ROOM);
-    act("You slowly fade into existence.", FALSE, this, 0, 0, TO_CHAR);
+    act("$n slowly fades into existence.", false, this, 0, 0, TO_ROOM);
+    act("You slowly fade into existence.", false, this, 0, 0, TO_CHAR);
   } else {
     if (affectedBySpell(SPELL_INVISIBILITY))
       affectFrom(SPELL_INVISIBILITY);
@@ -341,7 +341,7 @@ void TBeing::appear() {
     if (isAffected(AFF_INVISIBLE))
       REMOVE_BIT(specials.affectedBy, AFF_INVISIBLE);
 
-    act("$n slowly fades into existence.", FALSE, this, 0, 0, TO_ROOM);
+    act("$n slowly fades into existence.", false, this, 0, 0, TO_ROOM);
   }
 }
 
@@ -353,16 +353,16 @@ void TBeing::updatePos() {
 
   else if (getHit() > 0) {
     if (getPosition() == POSITION_STUNNED && !isAffected(AFF_PARALYSIS)) {
-      act("You shake the fuzziness from your head and sit up.", FALSE, this, 0,
+      act("You shake the fuzziness from your head and sit up.", false, this, 0,
         0, TO_CHAR);
-      act("$n shakes the fuzziness from $s head and sits up.", FALSE, this, 0,
+      act("$n shakes the fuzziness from $s head and sits up.", false, this, 0,
         0, TO_ROOM);
       setPosition(POSITION_SITTING);
     } else if (getPosition() != POSITION_STUNNED) {
       // mortaled, and got healed
-      act("It looks like you might survive after all.", FALSE, this, 0, 0,
+      act("It looks like you might survive after all.", false, this, 0, 0,
         TO_CHAR);
-      act("$n looks much better, although $e is still unconscious.", FALSE,
+      act("$n looks much better, although $e is still unconscious.", false,
         this, 0, 0, TO_ROOM);
       setPosition(POSITION_STUNNED);
     }
@@ -389,7 +389,7 @@ void TBeing::updatePos() {
   if (riding && dynamic_cast<TBeing*>(riding))
     fallOffMount(riding, newPos);
   else if (riding)
-    fallOffMount(riding, newPos, TRUE);
+    fallOffMount(riding, newPos, true);
 
 #if 1
   if ((newPos == POSITION_DEAD) || (newPos == POSITION_STUNNED))
@@ -417,14 +417,14 @@ void TBeing::updatePos() {
 }
 
 int TMonster::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
-  TBeing *mob = NULL, *per = NULL;
+  TBeing *mob = nullptr, *per = nullptr;
 
   if (desc || isPc()) {
     if (!desc || !desc->original) {
       vlogf(LOG_COMBAT, "*BUG CODERS BIG TIME* (rawKILL)");
       sendTo(
         "There is a problem. Please contact a god and bug what you did?!\n\r");
-      return FALSE;
+      return false;
     }
 
     sendTo("You return to your original body.\n\r");
@@ -436,7 +436,7 @@ int TMonster::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
       mob = this;
       per = desc->original;
 
-      act("$n turns liquid, and reforms as $N.", TRUE, mob, 0, per, TO_ROOM);
+      act("$n turns liquid, and reforms as $N.", true, mob, 0, per, TO_ROOM);
       --(*per);
       *mob->roomp += *per;
 
@@ -444,14 +444,14 @@ int TMonster::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
     }
     desc->original->polyed = POLY_TYPE_NONE;
     desc->character = desc->original;
-    desc->original = NULL;
+    desc->original = nullptr;
 
     desc->character->desc = desc;
-    desc = NULL;
+    desc = nullptr;
     if ((per->rawKill(dmg_type, tKiller)) == DELETE_THIS) {
       per->reformGroup();
       delete per;
-      per = NULL;
+      per = nullptr;
     }
     return DELETE_THIS;
   }
@@ -472,7 +472,7 @@ void logPermaDeathDied(TBeing* ch, TBeing* killer) {
 }
 
 int TBeing::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
-  TBeing* per = NULL;
+  TBeing* per = nullptr;
 
   // using this to keep an eye on potential problem cropping up. bat - 12/26/99
   /*  Descriptor * tmpdesc = desc;
@@ -495,7 +495,7 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
     if ((per->rawKill(dmg_type, tKiller)) == DELETE_THIS) {
       per->reformGroup();
       delete per;
-      per = NULL;
+      per = nullptr;
     }
     return DELETE_THIS;
   }
@@ -584,18 +584,18 @@ int TBeing::rawKill(spellNumT dmg_type, TBeing* tKiller, float exp_lost) {
 }
 
 // returns DELETE_THIS if this should die
-// otherwise FALSE
+// otherwise false
 int TBeing::die(spellNumT dam_type, TBeing* tKiller) {
   Descriptor* d;
   TRoom* rp;
   int polymorph = 0;
   float exp_lost = 0;
   rp = roomp;
-  TBeing* per = NULL;
+  TBeing* per = nullptr;
   if (dynamic_cast<TMonster*>(this) && (desc || isPc())) {
     if (!(d = desc) || !d->original) {
       vlogf(LOG_COMBAT, "*BUG BRUTIUS BIG TIME* (die)");
-      return FALSE;
+      return false;
     }
     per = desc->original;
     if (per->polyed == POLY_TYPE_SWITCH) {  // switch
@@ -606,11 +606,11 @@ int TBeing::die(spellNumT dam_type, TBeing* tKiller) {
       if (per->die(dam_type, tKiller) == DELETE_THIS) {
         per->reformGroup();
         delete per;
-        per = NULL;
+        per = nullptr;
       }
       return DELETE_THIS;
-    } else if (polymorph == FALSE) {
-      return FALSE;
+    } else if (polymorph == false) {
+      return false;
     }
   }
 
@@ -669,7 +669,7 @@ int TBeing::dieReturn(const char*, spellNumT dam_type, int cmd) {
     vlogf(LOG_COMBAT, "*BUG CODERS BIG TIME* (dieReturn)");
     sendTo(
       "There is a problem. Please contact a god and bug what you did?!\n\r");
-    return FALSE;
+    return false;
   } else {
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
     doReturn("", WEAR_NOWHERE, true, false);
@@ -681,26 +681,26 @@ bool TBeing::checkCut(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
   TThing* weapon, int dam) {
   byte sharp;
   sstring buf, buf3, sbuf;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* temp;
 
-  temp = NULL;
+  temp = nullptr;
   wtype -= TYPE_MIN_HIT;
 
   TThing* tt = equipment[part_hit];
   TObj* item = dynamic_cast<TObj*>(tt);
   if (!item) {
     vlogf(LOG_COMBAT, "Check cut called with no item! BUG BRUTIUS!!!");
-    return FALSE;
+    return false;
   }
 
   if (dam <= Config::ItemDamageRate())
-    return FALSE;
+    return false;
 
   if (inPkZone())
-    return FALSE;
+    return false;
 
-  TBaseWeapon* w2 = NULL;
+  TBaseWeapon* w2 = nullptr;
   if (weapon && (w2 = dynamic_cast<TBaseWeapon*>(weapon)))
     sharp = w2->getCurSharp();
   else
@@ -719,7 +719,7 @@ bool TBeing::checkCut(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
       if (rc) {
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete item;
-          item = NULL;
+          item = nullptr;
         }
       } else {
         if (weapon)
@@ -728,7 +728,7 @@ bool TBeing::checkCut(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
         buf = format("Your %s$o%s $q %scut%s by $N's %s!") % blue() % norm() %
               purple() % norm() %
               (weapon ? buf3.c_str() : ch->getMyRace()->getBodyLimbSlash());
-        act(buf, FALSE, this, item, ch, TO_CHAR);
+        act(buf, false, this, item, ch, TO_CHAR);
 
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
@@ -744,39 +744,39 @@ bool TBeing::checkCut(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
             (weapon ? temp->objn(weapon) : ch->getMyRace()->getBodyLimbSlash());
           buf += "!\n\r";
 
-          act(buf, TRUE, this, item, temp, TO_VICT);
+          act(buf, true, this, item, temp, TO_VICT);
         }
       }
-      return TRUE;
+      return true;
     } else
-      return FALSE;
+      return false;
   } else
-    return FALSE;
+    return false;
 }
 
 bool TBeing::checkSmashed(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
   TThing* weapon, int dam, const char* altPart) {
   int sharp;
   sstring buf, buf3, sbuf;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* temp;
 
-  temp = NULL;
+  temp = nullptr;
   TThing* tt = equipment[part_hit];
   TObj* item = dynamic_cast<TObj*>(tt);
   if (!item) {
     vlogf(LOG_COMBAT, "check_smashed called with no item!");
-    return FALSE;
+    return false;
   }
   if (dam <= Config::ItemDamageRate())
-    return FALSE;
+    return false;
 
   if (inPkZone())
-    return FALSE;
+    return false;
 
   wtype -= TYPE_MIN_HIT;
 
-  TBaseWeapon* w2 = NULL;
+  TBaseWeapon* w2 = nullptr;
   if (weapon && (w2 = dynamic_cast<TBaseWeapon*>(weapon)))
     sharp = w2->getCurSharp();
   else
@@ -795,7 +795,7 @@ bool TBeing::checkSmashed(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
       if (rc) {
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete item;
-          item = NULL;
+          item = nullptr;
         }
       } else {
         if (weapon)
@@ -804,7 +804,7 @@ bool TBeing::checkSmashed(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
               norm() % purple() % norm() %
               (altPart ? altPart
                        : (weapon ? buf3 : ch->getMyRace()->getBodyLimbBlunt()));
-        act(buf, FALSE, this, item, ch, TO_CHAR);
+        act(buf, false, this, item, ch, TO_CHAR);
 
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
@@ -817,48 +817,48 @@ bool TBeing::checkSmashed(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
                  (temp != ch ? "'s" : "");
           buf += sbuf;
           if (altPart) {
-            buf += colorString(temp, temp->desc, altPart, NULL, COLOR_OBJECTS,
-              FALSE);
+            buf += colorString(temp, temp->desc, altPart, nullptr, COLOR_OBJECTS,
+              false);
           } else if (weapon) {
             buf += colorString(temp, temp->desc, temp->objn(weapon).c_str(),
-              NULL, COLOR_OBJECTS, FALSE);
+              nullptr, COLOR_OBJECTS, false);
           } else {
             buf += ch->getMyRace()->getBodyLimbBlunt();
           }
           buf += "!\n\r";
-          act(buf, TRUE, this, item, temp, TO_VICT);
+          act(buf, true, this, item, temp, TO_VICT);
         }
       }
-      return TRUE;
+      return true;
     } else
-      return FALSE;
+      return false;
   } else
-    return FALSE;
+    return false;
 }
 
 bool TBeing::checkPierced(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
   TThing* weapon, int dam) {
   byte sharp;
   sstring buf, buf3, sbuf;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* temp;
 
-  temp = NULL;
+  temp = nullptr;
   wtype -= TYPE_MIN_HIT;
 
   TThing* tt = equipment[part_hit];
   TObj* item = dynamic_cast<TObj*>(tt);
   if (!item) {
     vlogf(LOG_COMBAT, "Check pierced called with no item! BUG BRUTIUS!!!");
-    return FALSE;
+    return false;
   }
   if (dam <= Config::ItemDamageRate())
-    return FALSE;
+    return false;
 
   if (inPkZone())
-    return FALSE;
+    return false;
 
-  TBaseWeapon* w2 = NULL;
+  TBaseWeapon* w2 = nullptr;
   if (weapon && (w2 = dynamic_cast<TBaseWeapon*>(weapon)))
     sharp = w2->getCurSharp();
   else
@@ -877,7 +877,7 @@ bool TBeing::checkPierced(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
       if (rc) {
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete item;
-          item = NULL;
+          item = nullptr;
         }
       } else {
         if (weapon)
@@ -885,7 +885,7 @@ bool TBeing::checkPierced(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
         buf = format("Your %s$o%s $q %spierced%s by $N's %s!") % blue() %
               norm() % purple() % norm() %
               (weapon ? buf3 : ch->getMyRace()->getBodyLimbPierce(ch));
-        act(buf, TRUE, this, item, ch, TO_CHAR);
+        act(buf, true, this, item, ch, TO_CHAR);
 
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
@@ -900,14 +900,14 @@ bool TBeing::checkPierced(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
           buf += (weapon ? temp->objn(weapon)
                          : ch->getMyRace()->getBodyLimbPierce(ch));
           buf += "!\n\r";
-          act(buf, TRUE, this, item, temp, TO_VICT);
+          act(buf, true, this, item, temp, TO_VICT);
         }
       }
-      return TRUE;
+      return true;
     } else
-      return FALSE;
+      return false;
   } else
-    return FALSE;
+    return false;
 }
 
 // Handles the possible removal of one of victim's limbs through violence.
@@ -1285,10 +1285,10 @@ int TBeing::damageHand(TBeing* v, wearSlotT part_hit) {
         sendTo(COLOR_MOBS,
           format("You damage your hand on %s's %s.\n\r") % pers(v) %
             (item ? fname(item->name) : (v->isHumanoid() ? "body" : "hide")));
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 int TObj::damageItem(short amt) {
@@ -1304,19 +1304,19 @@ int TObj::damageItem(short amt) {
     if (!makeScraps()) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 bool scrapMonogrammed(TObj* o) {
-  TThing *x = NULL, *tmp = NULL, *ch = NULL;
+  TThing *x = nullptr, *tmp = nullptr, *ch = nullptr;
 
   if (((ch = o->parent) && o->parent->roomp) || (ch = o->equippedBy) ||
       (ch = o->stuckIn)) {
-    act("$p falls to the $g.", TRUE, ch, o, NULL, TO_ROOM);
-    act("Your $o falls to the $g.", FALSE, ch, o, NULL, TO_CHAR, ANSI_RED);
+    act("$p falls to the $g.", true, ch, o, nullptr, TO_ROOM);
+    act("Your $o falls to the $g.", false, ch, o, nullptr, TO_CHAR, ANSI_RED);
 
     vlogf(LOG_COMBAT, format("%s's (monogrammed) %s just scrapped.") %
                         ch->getName() % o->getName());
@@ -1324,15 +1324,15 @@ bool scrapMonogrammed(TObj* o) {
     if ((o->parent && (tmp = o->parent->equippedBy)) || (tmp = o->parent)) {
       while (tmp) {
         if (tmp->roomp) {
-          act("Your $o falls to the $g.", TRUE, tmp, o, NULL, TO_CHAR,
+          act("Your $o falls to the $g.", true, tmp, o, nullptr, TO_CHAR,
             ANSI_RED);
-          act("$p falls to the $g.", TRUE, tmp, o, NULL, TO_ROOM);
+          act("$p falls to the $g.", true, tmp, o, nullptr, TO_ROOM);
           break;
         }
         tmp = tmp->parent;
       }
     } else if (o->roomp) {
-      act("$n is destroyed.", TRUE, o, NULL, NULL, TO_ROOM);
+      act("$n is destroyed.", true, o, nullptr, nullptr, TO_ROOM);
     } else
       vlogf(LOG_COMBAT,
         format("Something in scrapMonogrammed isn't in a room %s.") %
@@ -1348,7 +1348,7 @@ bool scrapMonogrammed(TObj* o) {
       *ch += *o;
     return true;
   } else if ((chb = o->stuckIn)) {
-    chb->setStuckIn(o->eq_stuck, NULL);
+    chb->setStuckIn(o->eq_stuck, nullptr);
     if (chb->roomp)
       *chb->roomp += *o;
     else
@@ -1357,7 +1357,7 @@ bool scrapMonogrammed(TObj* o) {
   } else if ((ch = o->equippedBy)) {
     TBeing* tbt = dynamic_cast<TBeing*>(ch);
     o->scrapMe(tbt);
-    TThing* o2 = NULL;
+    TThing* o2 = nullptr;
     o2 = tbt->unequip(o->eq_pos);
     // unequip deletes bandages
     if (!o2)
@@ -1382,16 +1382,16 @@ bool scrapMonogrammed(TObj* o) {
 
 // return false to delete object
 bool TObj::makeScraps() {
-  TTrash* o = NULL;
-  TThing *x = NULL, *tmp = NULL, *ch = NULL;
+  TTrash* o = nullptr;
+  TThing *x = nullptr, *tmp = nullptr, *ch = nullptr;
   char buf[256];
   char buf2[256];
   TBaseCup* tbc = dynamic_cast<TBaseCup*>(this);
   TBeing* cht;
-  TBeing* owner = NULL;
+  TBeing* owner = nullptr;
 
   if (isObjStat(ITEM_BURNING))
-    remBurning(NULL);
+    remBurning(nullptr);
 
   // if it's a liquid container, drop the liquid in the room
   if (tbc) {
@@ -1445,8 +1445,8 @@ bool TObj::makeScraps() {
       sprintf(buf, "$p falls to the $g, scrapped.");
       sprintf(buf2, "Your $o falls to the $g, scrapped.");
     }
-    act(buf, TRUE, ch, this, NULL, TO_ROOM);
-    act(buf2, FALSE, ch, this, NULL, TO_CHAR, ANSI_RED);
+    act(buf, true, ch, this, nullptr, TO_ROOM);
+    act(buf2, false, ch, this, nullptr, TO_CHAR, ANSI_RED);
 
     if (owner)
       vlogf(LOG_COMBAT,
@@ -1465,8 +1465,8 @@ bool TObj::makeScraps() {
           format("%s's %s just scrapped.") % owner->getName() % getName());
       while (tmp) {
         if (tmp->roomp) {
-          act(buf2, TRUE, tmp, this, NULL, TO_CHAR, ANSI_RED);
-          act(buf, TRUE, tmp, this, NULL, TO_ROOM);
+          act(buf2, true, tmp, this, nullptr, TO_CHAR, ANSI_RED);
+          act(buf, true, tmp, this, nullptr, TO_ROOM);
           break;
         }
         tmp = tmp->parent;
@@ -1476,7 +1476,7 @@ bool TObj::makeScraps() {
         sprintf(buf, "$n shatters and is destroyed.");
       else
         sprintf(buf, "$n is destroyed.");
-      act(buf, TRUE, this, NULL, NULL, TO_ROOM);
+      act(buf, true, this, nullptr, nullptr, TO_ROOM);
       if (owner)
         vlogf(LOG_COMBAT,
           format("%s's %s just scrapped.") % owner->getName() % getName());
@@ -1512,7 +1512,7 @@ bool TObj::makeScraps() {
       *ch += *o;
     return false;
   } else if ((chb = stuckIn)) {
-    chb->setStuckIn(eq_stuck, NULL);
+    chb->setStuckIn(eq_stuck, nullptr);
     if (chb->roomp)
       *chb->roomp += *o;
     else
@@ -1521,7 +1521,7 @@ bool TObj::makeScraps() {
   } else if ((ch = equippedBy)) {
     TBeing* tbt = dynamic_cast<TBeing*>(ch);
     scrapMe(tbt);
-    TThing* o2 = NULL;
+    TThing* o2 = nullptr;
     o2 = tbt->unequip(eq_pos);
     // unequip deletes bandages
     if (!o2)
@@ -1570,36 +1570,36 @@ int TBeing::damageItem(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
   TObj* item;
 
   if (!dam)
-    return FALSE;
+    return false;
 
   // Don't damage equipment in arena fights.
   if (ch->roomp && ch->roomp->isRoomFlag(ROOM_ARENA))
-    return FALSE;
+    return false;
 
   tt = equipment[part_hit];
   item = dynamic_cast<TObj*>(tt);
   if (!item) {
     vlogf(LOG_COMBAT, "damage_item got started with no item!");
-    return FALSE;
+    return false;
   }
   if (item->getStructPoints() < 0)
-    return FALSE;
+    return false;
 
   if (::number(0, 99) >= 75)
-    return FALSE;
+    return false;
   // this is an arbitrary reduction in equipment damage from combat - dash 2002
 
   if (slashType(wtype)) {
     if (checkCut(ch, part_hit, wtype, weapon, dam))
-      return TRUE;
+      return true;
   } else if (bluntType(wtype)) {
     if (checkSmashed(ch, part_hit, wtype, weapon, dam, altPart))
-      return TRUE;
+      return true;
   } else if (pierceType(wtype)) {
     if (checkPierced(ch, part_hit, wtype, weapon, dam))
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 // damage_weapon must check for two types of damage..... one is
@@ -1610,15 +1610,15 @@ int TBeing::damageItem(TBeing* ch, wearSlotT part_hit, spellNumT wtype,
 // return DELETE_ITEM indicates weapon should be deleted
 int TBeing::damageWeapon(TBeing* v, wearSlotT part_hit, TThing** weapon) {
   if (v->roomp && v->roomp->isRoomFlag(ROOM_ARENA))
-    return FALSE;
+    return false;
 
   if (::number(0, 99) >= 75)
-    return FALSE;
+    return false;
   // this is an arbitrary reduction in equipment damage from combat - dash 2002
 
   if (!*weapon) {
     damageHand(v, part_hit);
-    return FALSE;
+    return false;
   }
 
   return (*weapon)->damageMe(this, v, part_hit);
@@ -1626,7 +1626,7 @@ int TBeing::damageWeapon(TBeing* v, wearSlotT part_hit, TThing** weapon) {
 
 void TBeing::setFighting(TThing* vict, int dam, bool inFight) {
   //  int bitnum = 0;
-  //  bool found = FALSE;
+  //  bool found = false;
   //  char buf[256];
 
   if (this == vict)
@@ -1691,46 +1691,46 @@ void TBeing::setFighting(TThing* vict, int dam, bool inFight) {
 }
 
 void TBeing::checkForQuestTog(TBeing* vict) {
-  bool found = FALSE, found2 = FALSE;
-  int bitnum = FALSE;
+  bool found = false, found2 = false;
+  int bitnum = false;
   affectedData af;
-  affectedData* aff = NULL;
+  affectedData* aff = nullptr;
 
   switch (vict->mobVnum()) {
     case Mob::TROLL_GIANT:
       if (hasQuestBit(bitnum = TOG_AVENGER_HUNTING))
-        found = TRUE;
+        found = true;
       break;
     case Mob::CAPTAIN_RYOKEN:
       if (hasQuestBit(bitnum = TOG_VINDICATOR_HUNTING_1))
-        found = TRUE;
+        found = true;
       break;
     case Mob::TREE_SPIRIT:
       if (hasQuestBit(bitnum = TOG_VINDICATOR_HUNTING_2))
-        found = TRUE;
+        found = true;
       break;
     case Mob::JOHN_RUSTLER:
       if (hasQuestBit(bitnum = TOG_RANGER_FIRST_FARMHAND))
-        found = TRUE;
+        found = true;
       break;
     case Mob::ORC_MAGI:
       if (hasQuestBit(bitnum = TOG_SEEKING_ORC_MAGI) &&
           !hasQuestBit(TOG_FAILED_TO_KILL_MAGI) &&
           !hasQuestBit(TOG_PROVING_SELF))
-        found = TRUE;
+        found = true;
       break;
     case Mob::CLERIC_VOLCANO:
       if (hasQuestBit(bitnum = TOG_STARTED_RANGER_L21) &&
           !hasQuestBit(TOG_FAILED_CLERIC_V) && !hasQuestBit(TOG_PENANCE_R21_1))
-        found = TRUE;
+        found = true;
       break;
     case Mob::CLERIC_ARDEN:
       if (hasQuestBit(bitnum = TOG_SEEKING_CLERIC_A) &&
           !hasQuestBit(TOG_FAILED_CLERIC_A) && !hasQuestBit(TOG_PENANCE_R21_2))
-        found = TRUE;
+        found = true;
       break;
     default:
-      found = FALSE;
+      found = false;
       break;
   }
   if (found) {
@@ -1752,13 +1752,13 @@ void TBeing::checkForQuestTog(TBeing* vict) {
       // we need to set them fighting so that if char stuns and flees
       // it acknowledges as a no good attack.
       if (!vict->fight())
-        vict->setFighting(this, 0, FALSE);
+        vict->setFighting(this, 0, false);
     } else {
       if (vict->affected) {
         for (aff = vict->affected; aff; aff = aff->next) {
           if ((aff->type == AFFECT_COMBAT) &&
               (aff->modifier == COMBAT_SOLO_KILL) && (aff->level == bitnum)) {
-            found2 = TRUE;
+            found2 = true;
             break;
           } else {
             continue;
@@ -1914,10 +1914,10 @@ void TBeing::stopFighting() {
   // store this for later
   tmp = fight();
 
-  checkSpec(fight(), CMD_MOB_COMBAT_STOPPING, NULL, NULL);
+  checkSpec(fight(), CMD_MOB_COMBAT_STOPPING, nullptr, nullptr);
 
-  next_fighting = NULL;
-  specials.fighting = NULL;
+  next_fighting = nullptr;
+  specials.fighting = nullptr;
 
   updatePos();
 
@@ -1929,21 +1929,21 @@ void TBeing::stopFighting() {
 bool TBeing::checkPeaceful(const sstring& msg) const {
   if (roomp && roomp->isRoomFlag(ROOM_PEACEFUL)) {
     sendTo(msg);
-    return TRUE;
+    return true;
   }
   if (affectedBySpell(SPELL_CALM) && !fight()) {
     sendTo("You've got a peaceful easy feeling.\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 bool TBeing::checkPeacefulVictim(const sstring& msg, const TThing* v) const {
   if (v->roomp && v->roomp->isRoomFlag(ROOM_PEACEFUL)) {
     sendTo(msg);
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TBeing::extraDam(const TBeing* vict, const TBaseWeapon* weap) const {
@@ -2291,8 +2291,8 @@ static void checkLearnFromHit(TBeing* ch, int tarLevel, TThing* o,
 // what we basically should do is spread the number of hits over a
 // certain number of pulses (called a round).
 int TBeing::hit(TBeing* target, int pulse) {
-  TThing* o = NULL;
-  TThing* o2 = NULL;
+  TThing* o = nullptr;
+  TThing* o2 = nullptr;
   int rc = 0;
   float fx, fy;
   int i;
@@ -2313,7 +2313,7 @@ int TBeing::hit(TBeing* target, int pulse) {
     if (!(pulse % (len_rnd / 2)))
       sendTo("You need to remove something in order to actually hit.\n\r");
 
-    return FALSE;
+    return false;
   }
 
   // this is once-per round stuff
@@ -2374,7 +2374,7 @@ int TBeing::hit(TBeing* target, int pulse) {
       fy = ((((pulse * 10) + (hit_wait / 2)) % hit_wait) < 10) ? 1.0 : 0.0;
     }
     if (!fx && !fy)
-      return FALSE;
+      return false;
   }
 
   // If I'm engaged, I work off battle lag.
@@ -2387,7 +2387,7 @@ int TBeing::hit(TBeing* target, int pulse) {
           cantHit--;
       }
     }
-    return FALSE;
+    return false;
   }
 
   loseSneak();
@@ -2395,8 +2395,8 @@ int TBeing::hit(TBeing* target, int pulse) {
   // If I'm tasking, tell the task to stop and why.  I lose this round.
   if (task) {
     // notify the task
-    (tasks[task->task].taskf)(this, CMD_TASK_FIGHTING, "", 0, NULL, NULL);
-    return FALSE;
+    (tasks[task->task].taskf)(this, CMD_TASK_FIGHTING, "", 0, nullptr, nullptr);
+    return false;
   }
 
   // check for various conditions where a person can't hit for the round.
@@ -2405,7 +2405,7 @@ int TBeing::hit(TBeing* target, int pulse) {
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (!rc)
-    return FALSE;
+    return false;
 
   // monk stuff
   if (pulse >= 0 && !(pulse % len_rnd) && !heldInPrimHand() &&
@@ -2438,8 +2438,8 @@ int TBeing::hit(TBeing* target, int pulse) {
   if (heldInPrimHand() && !dynamic_cast<TBaseWeapon*>(heldInPrimHand())) {
     if (!isPc()) {
       doSay("Hmm, seems my hands are full!");
-      act("$n quickly removes $p so $e can fight!", TRUE, this,
-        heldInPrimHand(), NULL, TO_ROOM);
+      act("$n quickly removes $p so $e can fight!", true, this,
+        heldInPrimHand(), nullptr, TO_ROOM);
       *this += *unequip(getPrimaryHold());
     }
     // soak up attack their primary hand would have had
@@ -2454,8 +2454,8 @@ int TBeing::hit(TBeing* target, int pulse) {
   if (tobj && !tobj->isPaired() && (!tbc || !tbc->isShield()) && !tbw) {
     if (!isPc()) {
       doSay("Hmm, seems my hands are full!");
-      act("$n quickly removes $p so $e can fight!", TRUE, this, heldInSecHand(),
-        NULL, TO_ROOM);
+      act("$n quickly removes $p so $e can fight!", true, this, heldInSecHand(),
+        nullptr, TO_ROOM);
       *this += *unequip(getSecondaryHold());
     }
     // soak up attack their secondary hand would have had
@@ -2553,7 +2553,7 @@ int TBeing::hit(TBeing* target, int pulse) {
     if ((rc = oneHit(target, HAND_PRIMARY, o, mod, &fx))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o;
-        o = NULL;
+        o = nullptr;
         REM_DELETE(rc, DELETE_ITEM);
         return rc;
       }
@@ -2564,12 +2564,12 @@ int TBeing::hit(TBeing* target, int pulse) {
 
   if (::number(1, 100) <= ((int)(100.0 * fx))) {
     if (o && !dynamic_cast<TBaseWeapon*>(o))
-      return FALSE;  // lose the partial attack
+      return false;  // lose the partial attack
     checkLearnFromHit(this, tarLevel, o, true, w_type);
     if ((rc = oneHit(target, HAND_PRIMARY, o, mod, &fx))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o;
-        o = NULL;
+        o = nullptr;
         REM_DELETE(rc, DELETE_ITEM);
         return rc;
       }
@@ -2584,7 +2584,7 @@ int TBeing::hit(TBeing* target, int pulse) {
     if ((rc = oneHit(target, HAND_SECONDARY, o2, mod, &fy))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o2;
-        o2 = NULL;
+        o2 = nullptr;
         REM_DELETE(rc, DELETE_ITEM);
         return rc;
       }
@@ -2594,31 +2594,31 @@ int TBeing::hit(TBeing* target, int pulse) {
   }
   if (::number(1, 100) <= ((int)(100.0 * fy))) {
     if (o2 && !dynamic_cast<TBaseWeapon*>(o2))
-      return FALSE;  // lose the partial attack
+      return false;  // lose the partial attack
 
     checkLearnFromHit(this, tarLevel, o2, false, w_type);
     if ((rc = oneHit(target, HAND_SECONDARY, o2, mod, &fy))) {
       if (IS_SET_ONLY(rc, DELETE_ITEM)) {
         delete o2;
-        o2 = NULL;
+        o2 = nullptr;
         REM_DELETE(rc, DELETE_ITEM);
         return rc;
       }
       return rc;
     }
   }
-  return FALSE;
+  return false;
 }
 
 int TBeing::tooTired() {
   if (getMove() < 1) {
     sendTo(COLOR_BASIC,
       "<r>PANIC!<z> You are so exhausted, you cannot attack!\n\r");
-    act("$n wheezes and gasps as $e tries to summon the energy to fight!", TRUE,
-      this, NULL, NULL, TO_ROOM);
-    return TRUE;
+    act("$n wheezes and gasps as $e tries to summon the energy to fight!", true,
+      this, nullptr, nullptr, TO_ROOM);
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 // don't do bSuccess inside here, or will learn from being stat'd etc
@@ -3093,7 +3093,7 @@ int TBeing::hits(TBeing* v, int mod) {
     return GUARANTEED_SUCCESS;
 #if 1
   if (v->affectedBySpell(AFFECT_DUMMY)) {
-    affectedData* an = NULL;
+    affectedData* an = nullptr;
 
     for (an = v->affected; an; an = an->next) {
       if (an->type == AFFECT_DUMMY && an->level == 60) {
@@ -3115,9 +3115,9 @@ int TBeing::hits(TBeing* v, int mod) {
     return GUARANTEED_FAILURE;
 
   else if (roll < factor)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 // returns DELETE_THIS
@@ -3125,13 +3125,13 @@ int TBeing::hits(TBeing* v, int mod) {
 // returns DELETE_ITEM = weapon
 int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
   TBeing* other;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   int num, rc;
   char namebuf[MAX_NAME_LENGTH];
   char victbuf[MAX_NAME_LENGTH];
   char buf[160];
 
-  other = NULL;
+  other = nullptr;
   applyDamage(v, 0, wtype);
 
   soundNumT snd = pickRandSound(SOUND_MISS_01, SOUND_MISS_10);
@@ -3143,9 +3143,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
       case 1:
       default:
         if (desc && !IS_SET(desc->autobits, AUTO_NOSPAM))
-          act("You try to bite $N, but miss.", FALSE, this, 0, v, TO_CHAR);
+          act("You try to bite $N, but miss.", false, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act("You are missed by $n as $e tries to bite you.", TRUE, this, 0, v,
+          act("You are missed by $n as $e tries to bite you.", true, this, 0, v,
             TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
@@ -3157,9 +3157,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           if (!other->awake())
             continue;
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
@@ -3171,9 +3171,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
     }
   } else if (wtype == TYPE_SHOOT || wtype == TYPE_CANNON) {
     if (desc && !IS_SET(desc->autobits, AUTO_NOSPAM))
-      act("You shoot at $N, but miss.", FALSE, this, 0, v, TO_CHAR);
+      act("You shoot at $N, but miss.", false, this, 0, v, TO_CHAR);
     if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-      act("You are missed by $n as $e tries to shoot you.", TRUE, this, 0, v,
+      act("You are missed by $n as $e tries to shoot you.", true, this, 0, v,
         TO_VICT);
     for (StuffIter it = roomp->stuff.begin();
          it != roomp->stuff.end() && (t = *it); ++it) {
@@ -3198,9 +3198,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
     switch (num) {
       case 1:
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act("You thrust at $N, but miss.", FALSE, this, 0, v, TO_CHAR);
+          act("You thrust at $N, but miss.", false, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act("You are missed by $n as $e thrusts at you.", TRUE, this, 0, v,
+          act("You are missed by $n as $e thrusts at you.", true, this, 0, v,
             TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
@@ -3214,9 +3214,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS,
@@ -3226,9 +3226,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
         break;
       case 2:
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act("You stab wildly, but miss $N.", FALSE, this, 0, v, TO_CHAR);
+          act("You stab wildly, but miss $N.", false, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act("You are missed by $n as $e stabs wildly.", TRUE, this, 0, v,
+          act("You are missed by $n as $e stabs wildly.", true, this, 0, v,
             TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
@@ -3242,9 +3242,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS,
               format("%s stabs wildly, but misses %s.\n\r") %
@@ -3256,11 +3256,11 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
         sprintf(buf, "You hit $N, but fail to penetrate $S thick %s.",
           (v->isHumanoid() ? "armor" : "hide"));
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act(buf, FALSE, this, 0, v, TO_CHAR);
+          act(buf, false, this, 0, v, TO_CHAR);
         sprintf(buf, "$n hits you, but fails to penetrate your thick %s.",
           (v->isHumanoid() ? "armor" : "hide"));
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act(buf, TRUE, this, 0, v, TO_VICT);
+          act(buf, true, this, 0, v, TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
           other = dynamic_cast<TBeing*>(t);
@@ -3273,9 +3273,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS,
@@ -3302,9 +3302,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
         // fall thru
       default:
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act("You miss $N.", FALSE, this, 0, v, TO_CHAR);
+          act("You miss $N.", false, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act("You are missed by $n.", TRUE, this, 0, v, TO_VICT);
+          act("You are missed by $n.", true, this, 0, v, TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
           other = dynamic_cast<TBeing*>(t);
@@ -3317,9 +3317,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS,
@@ -3334,9 +3334,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
     switch (num) {
       case 1:
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act("You swing wildly, but miss $N.", FALSE, this, 0, v, TO_CHAR);
+          act("You swing wildly, but miss $N.", false, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act("You are missed by $n as $e swings wildly.", TRUE, this, 0, v,
+          act("You are missed by $n as $e swings wildly.", true, this, 0, v,
             TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
@@ -3350,9 +3350,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS,
@@ -3365,11 +3365,11 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
         sprintf(buf, "You hit $N, but fail to penetrate $S thick %s.",
           (v->isHumanoid() ? "armor" : "hide"));
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act(buf, FALSE, this, 0, v, TO_CHAR);
+          act(buf, false, this, 0, v, TO_CHAR);
         sprintf(buf, "$n hits you, but fails to penetrate your thick %s.",
           (v->isHumanoid() ? "armor" : "hide"));
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act(buf, TRUE, this, 0, v, TO_VICT);
+          act(buf, true, this, 0, v, TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
           other = dynamic_cast<TBeing*>(t);
@@ -3382,9 +3382,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS,
@@ -3411,9 +3411,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
 
       default:
         if (desc && !(desc->autobits & AUTO_NOSPAM))
-          act("You miss $N.", FALSE, this, 0, v, TO_CHAR);
+          act("You miss $N.", false, this, 0, v, TO_CHAR);
         if (v->desc && !(v->desc->autobits & AUTO_NOSPAM))
-          act("You are missed by $n.", TRUE, this, 0, v, TO_VICT);
+          act("You are missed by $n.", true, this, 0, v, TO_VICT);
         for (StuffIter it = roomp->stuff.begin();
              it != roomp->stuff.end() && (t = *it); ++it) {
           other = dynamic_cast<TBeing*>(t);
@@ -3426,9 +3426,9 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
           strcpy(namebuf, other->pers(this));
           strcpy(victbuf, other->pers(v));
           //          sprintf(namebuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(this)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(this)), nullptr, COLOR_MOBS, true));
           //          sprintf(victbuf, colorString(((TBeing *) t), ((TBeing *)
-          //          t)->desc, (other->pers(v)), NULL, COLOR_MOBS, TRUE));
+          //          t)->desc, (other->pers(v)), nullptr, COLOR_MOBS, true));
 
           if (other->desc && !(other->desc->autobits & AUTO_NOSPAM))
             other->sendTo(COLOR_MOBS,
@@ -3454,7 +3454,7 @@ int TBeing::missVictim(TBeing* v, TThing* weapon, spellNumT wtype) {
     return retCode;
   }
 
-  return TRUE;
+  return true;
 }
 
 const char* describe_dam(int dam, int dam_capacity, spellNumT wtype) {
@@ -3527,10 +3527,10 @@ static int REALNUM(TBeing* ch, wearSlotT part_hit) {
 void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
   int dam, wearSlotT part_hit) {
   char buf[512];
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* other;
 
-  other = NULL;
+  other = nullptr;
 
   char namebuf[256];
   char victbuf[256];
@@ -3612,7 +3612,7 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
         (weapon) ? " with your " : "", (weapon) ? objn(weapon).c_str() : "");
     }
 
-    act(buf, FALSE, this, 0, v, TO_CHAR);
+    act(buf, false, this, 0, v, TO_CHAR);
     if (snd != MIN_SOUND_NUM)
       playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
   }
@@ -3638,7 +3638,7 @@ void TBeing::normalHitMessage(TBeing* v, TThing* weapon, spellNumT w_type,
         ((weapon) ? " with $s " : ""),
         ((weapon) ? fname(weapon->name).c_str() : ""));
     }
-    act(buf, FALSE, this, 0, v, TO_VICT);
+    act(buf, false, this, 0, v, TO_VICT);
     if (snd != MIN_SOUND_NUM)
       v->playsound(snd, SOUND_TYPE_COMBAT, 100, 20, 1);
   }
@@ -3723,7 +3723,7 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
   spellNumT w_type, int dam) {
   TThing* ts;
   TBaseClothing* shield;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* other;
   char namebuf[256];
   int rc = 0;
@@ -3731,7 +3731,7 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
 
   // part_hit ought to be either HOLD_RIGHT or HOLD_LEFT
 
-  other = NULL;
+  other = nullptr;
   if (!(ts = v->equipment[part_hit]))
     return retCode;
 
@@ -3745,10 +3745,10 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
     return retCode;
 
   if (!v->desc || !(v->desc->autobits & AUTO_NOSPAM))
-    act("You parry $N's blow with $p.", TRUE, v, shield, this, TO_CHAR,
+    act("You parry $N's blow with $p.", true, v, shield, this, TO_CHAR,
       ANSI_CYAN);
   if (!desc || !IS_SET(desc->autobits, AUTO_NOSPAM))
-    act("$n parries your blow with $p.", TRUE, v, shield, this, TO_VICT,
+    act("$n parries your blow with $p.", true, v, shield, this, TO_VICT,
       ANSI_CYAN);
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
@@ -3760,8 +3760,8 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
     if (!other->awake())
       continue;
     sprintf(namebuf, "%s", other->pers(this));
-    sstring equipBuf = colorString(other, other->desc, shield->getName(), NULL,
-      COLOR_OBJECTS, TRUE);
+    sstring equipBuf = colorString(other, other->desc, shield->getName(), nullptr,
+      COLOR_OBJECTS, true);
     if (!other->desc || !(other->desc->autobits & AUTO_NOSPAM))
       other->sendTo(COLOR_MOBS, format("%s parries %s's blow with %s.\n\r") %
                                   sstring(other->pers(v)).cap() % namebuf %
@@ -3771,7 +3771,7 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
   v->checkGuardiansLight();
 
   if (shield->spec) {
-    rc = shield->checkSpec(this, CMD_OBJ_BEEN_HIT, NULL, weapon);
+    rc = shield->checkSpec(this, CMD_OBJ_BEEN_HIT, nullptr, weapon);
     if (IS_SET_ONLY(rc, DELETE_VICT))
       retCode |= DELETE_THIS;
     if (IS_SET_ONLY(rc, DELETE_ITEM))
@@ -3784,7 +3784,7 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
   rc = damageWeapon(v, part_hit, &weapon);
   if (IS_SET_ONLY(rc, DELETE_ITEM))
     return retCode | DELETE_ITEM;
-  return TRUE;
+  return true;
 }
 
 // invalidTarget() checks to see if the thing I'm fighting is a valid target
@@ -3793,13 +3793,13 @@ int TBeing::checkShield(TBeing* v, TThing* weapon, wearSlotT part_hit,
 bool TBeing::invalidTarget(const TBeing* target) const {
   if (target->desc) {
     if (target->desc->connected != CON_PLYNG)
-      return TRUE;
+      return true;
   }
 
   if (!sameRoom(*target))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 // canAttack() checks for "per attack" conditions where the person attacking
@@ -3808,22 +3808,22 @@ bool TBeing::canAttack(primaryTypeT isprimary) {
   // Am I lagged?
   if (checkBusy()) {
     cantHit--;
-    return FALSE;
+    return false;
   }
 
   // Check legs to see if you fall down instead.
   if ((getPosition() >= POSITION_STANDING) &&
       (bothLegsHurt() || (eitherLegHurt() && !::number(0, 1))) && !isFlying()) {
     sendTo("You attempt to attack, but your injury causes you problems.\n\r");
-    act("You fall over.", TRUE, this, 0, 0, TO_CHAR, ANSI_RED);
-    act("$n's injury causes $m to fall over.", TRUE, this, 0, 0, TO_ROOM,
+    act("You fall over.", true, this, 0, 0, TO_CHAR, ANSI_RED);
+    act("$n's injury causes $m to fall over.", true, this, 0, 0, TO_ROOM,
       ANSI_ORANGE);
     cantHit += 1;
     addToWait(combatRound(0.5));
     if (riding)
       dismount(POSITION_SITTING);
     setPosition(POSITION_SITTING);
-    return FALSE;
+    return false;
   }
 
   // Check arms.
@@ -3893,7 +3893,7 @@ bool TBeing::canAttack(primaryTypeT isprimary) {
       }
     }
 
-    return FALSE;
+    return false;
   }
 
   // this needs work - bat 4/29/95
@@ -3905,14 +3905,14 @@ bool TBeing::canAttack(primaryTypeT isprimary) {
       sendTo(
         "Your training helps you fight effectively in the cramped "
         "quarters.\n\r");
-      return TRUE;
+      return true;
     } else {
       sendTo("The cramped quarters make it difficult to fight.\n\r");
-      return FALSE;
+      return false;
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 void TBeing::updateStatistics() {
@@ -3963,7 +3963,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
   int dam = 0, result;
   wearSlotT part_hit;
   int mess_sent = 0;
-  int damaged_limb = FALSE;
+  int damaged_limb = false;
   int rc = 0, retCode = 0;
 
   // Can I even attack the target?
@@ -4032,7 +4032,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
 
   // handle a weapon's spec_proc
   if (weapon && weapon->spec) {
-    rc = weapon->checkSpec(vict, CMD_OBJ_HITTING, NULL, NULL);
+    rc = weapon->checkSpec(vict, CMD_OBJ_HITTING, nullptr, nullptr);
     if (IS_SET_ONLY(rc, DELETE_THIS))
       retCode |= DELETE_ITEM;
     if (IS_SET_ONLY(rc, DELETE_VICT)) {
@@ -4045,7 +4045,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
 
   for (int i = MIN_WEAR; i < MAX_WEAR; i++) {
     if (vict->equipment[i]) {
-      rc = vict->equipment[i]->checkSpec(vict, CMD_OBJ_OWNER_HIT, NULL, NULL);
+      rc = vict->equipment[i]->checkSpec(vict, CMD_OBJ_OWNER_HIT, nullptr, nullptr);
       if (IS_SET_ONLY(rc, DELETE_THIS))
         retCode |= DELETE_ITEM;
       if (IS_SET_ONLY(rc, DELETE_VICT)) {
@@ -4069,7 +4069,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
   //   hit() to save resources
   int myLevel = 0;
   myLevel = GetMaxLevel();
-  bool victimCanAttack = FALSE;
+  bool victimCanAttack = false;
 
   if (vict->isPc() && vict->desc) {
     if ((vict->canAttack(HAND_PRIMARY) || vict->canAttack(HAND_SECONDARY)) &&
@@ -4077,7 +4077,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
            dynamic_cast<TBaseWeapon*>(vict->heldInPrimHand())) ||
           (!vict->heldInSecHand() ||
             dynamic_cast<TBaseWeapon*>(vict->heldInSecHand())))) {
-      victimCanAttack = TRUE;
+      victimCanAttack = true;
     }
 
     if (victimCanAttack) {
@@ -4094,7 +4094,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
   // handle ammunition
   TGun* gun;
   if (dynamic_cast<THandgonne*>(weapon)) {
-    act("You can't fire $N while under attack!", TRUE, this, NULL, weapon,
+    act("You can't fire $N while under attack!", true, this, nullptr, weapon,
       TO_CHAR);
   } else if (weapon && (gun = dynamic_cast<TGun*>(weapon))) {
     if (dynamic_cast<TMonster*>(this) && !master) {
@@ -4113,7 +4113,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
           roomp->getZone()->sendTo("A gunshot echoes in the distance.\n\r",
             in_room);
       } else {
-        act("Click.  $N is out of ammunition.", TRUE, this, NULL, gun, TO_CHAR);
+        act("Click.  $N is out of ammunition.", true, this, nullptr, gun, TO_CHAR);
       }
     }
 
@@ -4141,7 +4141,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
     if (IS_SET_DELETE(mess_sent, DELETE_THIS))
       return retCode | DELETE_THIS;
     else if (IS_SET_DELETE(mess_sent, ONEHIT_MESS_CRIT_S))
-      return retCode ? retCode : TRUE;
+      return retCode ? retCode : true;
 
     rc = missVictim(vict, weapon, w_type);
     if (IS_SET_DELETE(rc, DELETE_ITEM | DELETE_VICT | DELETE_THIS)) {
@@ -4182,7 +4182,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
     if (vict->getHit() <= 0)
       part_hit = vict->getCritPartHit();
     else
-      part_hit = vict->getPartHit(this, TRUE);
+      part_hit = vict->getPartHit(this, true);
 
     if (!vict->hasPart(part_hit))
       part_hit = vict->getCritPartHit();
@@ -4256,11 +4256,11 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
         if (vict->doesKnowSkill(SKILL_RIPOSTE) &&  // must know the skill
             (::number(0, 99) < 50) &&              // only 50% of the time
             vict->bSuccess(SKILL_RIPOSTE)) {
-          act("$N uses $S parry to execute a riposte.", FALSE, this, 0, vict,
+          act("$N uses $S parry to execute a riposte.", false, this, 0, vict,
             TO_CHAR, ANSI_PURPLE);
-          act("You use your parry to execute a riposte.", FALSE, this, 0, vict,
+          act("You use your parry to execute a riposte.", false, this, 0, vict,
             TO_VICT, ANSI_PURPLE);
-          act("$N uses $S parry to execute a riposte.", FALSE, this, 0, vict,
+          act("$N uses $S parry to execute a riposte.", false, this, 0, vict,
             TO_NOTVICT);
           // actual ripose attack is added in hit().  Klugey, but
           // easier than trying to create a seperate attack here.
@@ -4282,9 +4282,9 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
         iskick *= (isprimary ? 0.6 : 0.4);
 
         if (*f <= iskick)
-          normalHitMessage(vict, NULL, TYPE_KICK, dam, part_hit);
+          normalHitMessage(vict, nullptr, TYPE_KICK, dam, part_hit);
         else
-          normalHitMessage(vict, NULL, w_type, dam, part_hit);
+          normalHitMessage(vict, nullptr, w_type, dam, part_hit);
       } else
         normalHitMessage(vict, weapon, w_type, dam, part_hit);
 
@@ -4292,11 +4292,11 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
           getMana() >= 5 && bSuccess(SKILL_CHAIN_ATTACK)) {
         // successfully chain this attack
         act("Lightning fast, you shift your balance and launch another strike.",
-          FALSE, this, 0, vict, TO_CHAR, ANSI_PURPLE);
+          false, this, 0, vict, TO_CHAR, ANSI_PURPLE);
         act("Lightning fast, $n shifts $s balance and launches another strike.",
-          FALSE, this, 0, vict, TO_VICT, ANSI_PURPLE);
+          false, this, 0, vict, TO_VICT, ANSI_PURPLE);
         act("Lightning fast, $n shifts $s balance and launches another strike.",
-          FALSE, this, 0, vict, TO_NOTVICT);
+          false, this, 0, vict, TO_NOTVICT);
 
         *f += 1;  // one extra attack
         reconcileMana(TYPE_UNDEFINED, 0, 5);
@@ -4304,11 +4304,11 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
 
       if (affectedBySpell(SPELL_AURA_VENGEANCE) && hasClass(CLASS_DEIKHAN) &&
           affectedBySpell(SKILL_SMITE) && (::number(0, 99) < 10)) {
-        act("Your vengeance aura flairs as you launch another strike.", FALSE,
+        act("Your vengeance aura flairs as you launch another strike.", false,
           this, 0, vict, TO_CHAR, ANSI_PURPLE);
-        act("$n's vengeance aura flairs as $e launches another strike.", FALSE,
+        act("$n's vengeance aura flairs as $e launches another strike.", false,
           this, 0, vict, TO_VICT, ANSI_PURPLE);
-        act("$n's vengeance aura flairs as $e launches another strike.", FALSE,
+        act("$n's vengeance aura flairs as $e launches another strike.", false,
           this, 0, vict, TO_NOTVICT);
 
         *f += 1;  // one extra attack
@@ -4339,7 +4339,7 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
       }
       // handle proc on the eq being hit
       if (vict->equipment[part_hit] && vict->equipment[part_hit]->spec) {
-        rc = vict->equipment[part_hit]->checkSpec(this, CMD_OBJ_BEEN_HIT, NULL,
+        rc = vict->equipment[part_hit]->checkSpec(this, CMD_OBJ_BEEN_HIT, nullptr,
           weapon);
         if (IS_SET_ONLY(rc, DELETE_VICT))
           retCode |= DELETE_THIS;
@@ -4405,15 +4405,15 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
           act(
             "The swirls of plasma surrounding $n soak up energy, sending it "
             "back toward $N!",
-            FALSE, vict, 0, this, TO_NOTVICT);
+            false, vict, 0, this, TO_NOTVICT);
           act(
             "The swirls of plasma surrounding you soak up energy, sending it "
             "back toward $N!",
-            FALSE, vict, 0, this, TO_CHAR);
+            false, vict, 0, this, TO_CHAR);
           act(
             "The swirls of plasma surrounding $n soak up energy, sending it "
             "back toward you!",
-            FALSE, vict, 0, this, TO_VICT);
+            false, vict, 0, this, TO_VICT);
 
           int rc =
             vict->reconcileDamage(this, dam_blocked, SPELL_PLASMA_MIRROR);
@@ -4425,11 +4425,11 @@ int TBeing::oneHit(TBeing* vict, primaryTypeT isprimary, TThing* weapon,
         dam_blocked = max(dam_blocked, 0);
         dam -= dam_blocked;
         if (dam_blocked) {
-          act("<o>The thorns on $n's body hurt $N!<1>", FALSE, vict, 0, this,
+          act("<o>The thorns on $n's body hurt $N!<1>", false, vict, 0, this,
             TO_NOTVICT);
-          act("<o>The thorns on your body hurt $N as $E hits you!<1>", FALSE,
+          act("<o>The thorns on your body hurt $N as $E hits you!<1>", false,
             vict, 0, this, TO_CHAR);
-          act("<o>The thorns on $n's damage you as you hit $m!<1>", FALSE, vict,
+          act("<o>The thorns on $n's damage you as you hit $m!<1>", false, vict,
             0, this, TO_VICT);
           int rc = vict->reconcileDamage(this, dam_blocked, SPELL_THORNFLESH);
           if (rc == -1)
@@ -4478,9 +4478,9 @@ bool TBeing::isHitableAggr(TBeing* vict) {
       (dynamic_cast<TPerson*>(vict) || (vict->specials.act & ACT_ANNOYING)) &&
       (!isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) ||
         (master != vict)))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::preProcDam(TBeing* vict, spellNumT type, int dam) {
@@ -4602,7 +4602,7 @@ int TBeing::acForPosSkin(wearSlotT pos) const {
 int TBeing::acForPos(wearSlotT pos) const {
   int armor = 0;
   TThing* t;
-  TObj* o = NULL;
+  TObj* o = nullptr;
 
   if (!(t = equipment[pos]) || !(o = dynamic_cast<TObj*>(t)))
     return (acForPosSkin(pos));
@@ -4629,44 +4629,44 @@ bool TBeing::canFight(TBeing* target) {
     vlogf(LOG_COMBAT, format("hit() called in PEACEFUL room.  %s hitting %s") %
                         getName() % target->getName());
     stopFighting();
-    return FALSE;
+    return false;
   }
   if (tooTired())
-    return FALSE;
+    return false;
 
   if (!sameRoom(*target)) {
     vlogf(LOG_COMBAT,
       format("NOT in same room when fighting : %s, %s") % name % target->name);
     if (fight())
       stopFighting();
-    return FALSE;
+    return false;
   }
   if (target->attackers >= MAX_COMBAT_ATTACKERS &&
       (specials.fighting != target)) {
     sendTo("You can't attack them,  no room!\n\r");
-    return FALSE;
+    return false;
   }
   if ((attackers >= MAX_COMBAT_ATTACKERS) && (target->fight() != this) &&
       (specials.fighting != target)) {
     sendTo("There are too many other people in the way.\n\r");
-    return FALSE;
+    return false;
   }
   if (target->getPosition() == POSITION_DEAD)
-    return FALSE;
+    return false;
 
   if (getPosition() <= POSITION_STUNNED)
-    return FALSE;
+    return false;
 
   // See if my arms are transformed.
   if (affectedBySpell(SPELL_FALCON_WINGS)) {
     sendTo("Your feathery wings disappear as you attempt to fight.\n\r");
-    act("$n's feathery wings disappear quickly as $e attempts to fight.", TRUE,
+    act("$n's feathery wings disappear quickly as $e attempts to fight.", true,
       this, 0, 0, TO_ROOM);
     sendTo(
       "In the shock over your transformation, you forget what it was you "
       "wanted to do.\n\r");
     affectFrom(SPELL_FALCON_WINGS);
-    return FALSE;
+    return false;
   }
 
   if (riding) {
@@ -4677,7 +4677,7 @@ bool TBeing::canFight(TBeing* target) {
         rc = fallOffMount(riding, POSITION_SITTING);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
-        return FALSE;
+        return false;
       }
     } else if (dynamic_cast<TMonster*>(this) && !desc) {
       if (fight() && !isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) &&
@@ -4692,9 +4692,9 @@ bool TBeing::canFight(TBeing* target) {
       rc = tb->fallOffMount(this, POSITION_SITTING);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tb;
-        tb = NULL;
+        tb = nullptr;
       }
-      return FALSE;
+      return false;
     }
   }
   // make um fly if appropriate
@@ -4702,7 +4702,7 @@ bool TBeing::canFight(TBeing* target) {
       !target->getWait())
     target->doFly();
 
-  return TRUE;
+  return true;
 }
 
 bool TBeing::damCheckDeny(const TBeing* vict, spellNumT type) const {
@@ -4710,27 +4710,27 @@ bool TBeing::damCheckDeny(const TBeing* vict, spellNumT type) const {
 
 #if 0
   if (IS_DIURNAL(vict))
-    return TRUE;
+    return true;
   if (IS_NOCTURNAL(vict))
-    return TRUE;
+    return true;
 #endif
 
   rp = roomp;
   if (rp && rp->isRoomFlag(ROOM_PEACEFUL) && type != SPELL_POISON &&
       type != SPELL_POISON_DEIKHAN && (this != vict))
-    return TRUE;  // true, they are denied from fighting
+    return true;  // true, they are denied from fighting
 
-  return FALSE;
+  return false;
 }
 
 bool TBeing::damDetailsOk(const TBeing* vict, int dam, bool ranged) const {
   if (dam < 0)
-    return FALSE;
+    return false;
 
   if (!ranged && !sameRoom(*vict))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::setCharFighting(TBeing* vict, int dam) {
@@ -4744,8 +4744,8 @@ int TBeing::setCharFighting(TBeing* vict, int dam) {
   if ((getPosition() > POSITION_STUNNED) && !fight()) {
     if (vict->isImmortal() && vict->isPc() && (vict != this) &&
         (vict->isPlayerAction(PLR_NOHASSLE) || isPc())) {
-      act("You can't attack $M, $E's immortal.", TRUE, this, 0, vict, TO_CHAR);
-      act("$n just tried to attack you.  What a weenie.", TRUE, this, 0, vict,
+      act("You can't attack $M, $E's immortal.", true, this, 0, vict, TO_CHAR);
+      act("$n just tried to attack you.  What a weenie.", true, this, 0, vict,
         TO_VICT);
       return -1;
     }
@@ -4755,7 +4755,7 @@ int TBeing::setCharFighting(TBeing* vict, int dam) {
       tmons->doAction(fname(name), CMD_GROWL);
       return -1;
     }
-    setFighting(vict, dam, FALSE);
+    setFighting(vict, dam, false);
     return 1;
   }
   return 0;
@@ -4763,7 +4763,7 @@ int TBeing::setCharFighting(TBeing* vict, int dam) {
 
 int TBeing::setVictFighting(TBeing* vict, int dam) {
   if (vict == this)
-    return FALSE;
+    return false;
 
   if ((vict->getPosition() > POSITION_STUNNED) && !vict->fight()) {
     if (vict->isImmortal() && vict->isPc() && (vict != this) &&
@@ -4778,11 +4778,11 @@ int TBeing::setVictFighting(TBeing* vict, int dam) {
         !vict->fight())  // aggro mob against a non fighting pc
       vict->setFighting(this, dam, 1);
     else
-      vict->setFighting(this, dam, FALSE);
+      vict->setFighting(this, dam, false);
 
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TBeing::damageTrivia(TBeing* vict, TThing* o, int dam, spellNumT type) {
@@ -4817,43 +4817,43 @@ static int fleeCheck(TBeing* ch) {
     std::queue<sstring> input(ch->desc->input);
     while (!input.empty()) {
       if (input.front() == "flee") {
-        return TRUE;
+        return true;
       }
       input.pop();
     }
   }
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS
 int TBeing::tellStatus(int dam, bool same, bool flying) {
   int new_dam, max_hit;
   int rc;
-  TThing *ch, *i = NULL;
+  TThing *ch, *i = nullptr;
 
   new_dam = points.hit;
 
   if ((new_dam >= -10) && (new_dam <= -6)) {
-    act("$n is mortally wounded, and will die soon, if not aided.", TRUE, this,
+    act("$n is mortally wounded, and will die soon, if not aided.", true, this,
       0, 0, TO_ROOM);
-    act("You are mortally wounded, and will die soon, if not aided.", FALSE,
+    act("You are mortally wounded, and will die soon, if not aided.", false,
       this, 0, 0, TO_CHAR);
   } else if ((new_dam >= -5) && (new_dam <= -3)) {
-    act("$n is incapacitated and will slowly die, if not aided.", TRUE, this, 0,
+    act("$n is incapacitated and will slowly die, if not aided.", true, this, 0,
       0, TO_ROOM);
-    act("You are incapacitated and you will slowly die, if not aided.", FALSE,
+    act("You are incapacitated and you will slowly die, if not aided.", false,
       this, 0, 0, TO_CHAR);
   } else if ((new_dam >= -2) && (new_dam <= 0)) {
-    act("$n is stunned, but will probably regain consciousness.", TRUE, this, 0,
+    act("$n is stunned, but will probably regain consciousness.", true, this, 0,
       0, TO_ROOM);
-    act("You're stunned, but you will probably regain consciousness.", FALSE,
+    act("You're stunned, but you will probably regain consciousness.", false,
       this, 0, 0, TO_CHAR);
   } else if (new_dam < -10) {
     if (spelltask) {
-      act("$n's words stop in mid air and $s limbs go limp.", TRUE, this, NULL,
-        NULL, TO_ROOM);
+      act("$n's words stop in mid air and $s limbs go limp.", true, this, nullptr,
+        nullptr, TO_ROOM);
     }
-    act("$n is dead! R.I.P.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n is dead! R.I.P.", true, this, 0, 0, TO_ROOM);
     sendTo(COLOR_BASIC, "<R>You are dead!  Sorry...<z>\n\r");
 
     soundNumT snd = pickRandSound(SOUND_DEATH_CRY_01, SOUND_DEATH_CRY_11);
@@ -4887,7 +4887,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying) {
           fleeFlush(this);
         }
       }
-      return TRUE;
+      return true;
     }
     if (dam && (getHit() < (hitLimit() / 6)))
       sendTo(
@@ -4905,7 +4905,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying) {
           }
           fleeFlush(this);
         }
-        return TRUE;
+        return true;
       }
     }
     if (dynamic_cast<TPerson*>(this)) {
@@ -4922,11 +4922,11 @@ int TBeing::tellStatus(int dam, bool same, bool flying) {
           fleeFlush(this);
         }
       }
-      return TRUE;
+      return true;
     }
 
     // this whole else case is for hit > 0, so skip remaining checks
-    return TRUE;
+    return true;
   }
   if (getPosition() <= POSITION_INCAP) {
     while ((ch = rider)) {
@@ -4935,7 +4935,7 @@ int TBeing::tellStatus(int dam, bool same, bool flying) {
         rc = tb->fallOffMount(this, POSITION_SITTING);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tb;
-          tb = NULL;
+          tb = nullptr;
         }
       } else {
         ch->dismount(POSITION_DEAD);
@@ -4947,19 +4947,19 @@ int TBeing::tellStatus(int dam, bool same, bool flying) {
         return DELETE_THIS;
       }
     } else if (riding) {
-      rc = fallOffMount(riding, getPosition(), TRUE);
+      rc = fallOffMount(riding, getPosition(), true);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return DELETE_THIS;
       }
     }
   }
   if (flying) {
-    rc = crashLanding(getPosition(), FALSE, 0);
+    rc = crashLanding(getPosition(), false, 0);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
 
-  return TRUE;
+  return true;
 }
 
 void TBeing::catchLostLink(TBeing* vict) {
@@ -4974,7 +4974,7 @@ void TBeing::catchLostLink(TBeing* vict) {
     return;
   }
 
-  act("$n is rescued by divine forces.", TRUE, vict, 0, 0, TO_ROOM);
+  act("$n is rescued by divine forces.", true, vict, 0, 0, TO_ROOM);
   vlogf(LOG_COMBAT, format("%s lost link while fighting %s (%d)") %
                       vict->getName() % getName() % in_room);
   vict->specials.was_in_room = vict->in_room;
@@ -5081,13 +5081,13 @@ void TBeing::catchLostLink(TBeing* vict) {
   // drop bag
   *bag += *note;
   *rp += *bag;
-  bag->parent = NULL;
-  bag->equippedBy = NULL;
-  bag->stuckIn = NULL;
-  bag->parent = NULL;
+  bag->parent = nullptr;
+  bag->equippedBy = nullptr;
+  bag->stuckIn = nullptr;
+  bag->parent = nullptr;
 
   // keep from being aggro'd on return
-  DeleteHatreds(this, NULL);
+  DeleteHatreds(this, nullptr);
   if (attackers && !isPc()) {
     TMonster* tmons = dynamic_cast<TMonster*>(this);
     tmons->setAnger(0);
@@ -5122,7 +5122,7 @@ void TBeing::catchLostLink(TBeing* vict) {
     "your items may be confiscated permanently.\n\r"
     "\n\r\n\r\n\r(This message was automatically generated.)\n\r";
 
-  autoMail(vict, NULL, buf.c_str(), 0, tokenRent);
+  autoMail(vict, nullptr, buf.c_str(), 0, tokenRent);
 }
 
 // return DELETE_THIS if this dies
@@ -5131,16 +5131,16 @@ int TBeing::checkEngagementStatus() {
   // false will mean pc will be hitting, true means will just engage
 
   if (isAffected(AFF_ENGAGER))
-    return TRUE;
+    return true;
 
   if ((!isPc() && !desc) || !desc)
-    return FALSE;
+    return false;
   else if (IS_SET(desc->autobits, AUTO_ENGAGE))
-    return TRUE;
+    return true;
   else if (IS_SET(desc->autobits, AUTO_ENGAGE_ALWAYS))
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 spellNumT TBeing::getAttackType(const TThing* wielded,
@@ -5183,13 +5183,13 @@ int TBeing::skipImmortals(int amnt) const {
 }
 
 TBeing* TBeing::findAnAttacker() const {
-  TThing* tmp = NULL;
+  TThing* tmp = nullptr;
 
   if (specials.fighting)
     return (specials.fighting);
 
   if (in_room < 0)
-    return NULL;
+    return nullptr;
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (tmp = *it); ++it) {
@@ -5203,7 +5203,7 @@ TBeing* TBeing::findAnAttacker() const {
     // The more evil the mob is, the weaker the person it tries to use
   }
 
-  return NULL;
+  return nullptr;
 }
 
 // may return DELETE_THIS
@@ -5256,14 +5256,14 @@ int TBeing::objDam(spellNumT damtype, int amnt, TThing* t) {
     } else {
       if (amnt > 0) {
         sprintf(buf, "$n is %s by $p!", damdesc);
-        act(buf, TRUE, this, t, 0, TO_ROOM);
+        act(buf, true, this, t, 0, TO_ROOM);
         sprintf(buf, "You are %s by $p!", damdesc);
-        act(buf, TRUE, this, t, 0, TO_CHAR);
+        act(buf, true, this, t, 0, TO_CHAR);
       } else {
         sprintf(buf, "$n is almost %s by $p!", damdesc);
-        act(buf, TRUE, this, t, 0, TO_ROOM);
+        act(buf, true, this, t, 0, TO_ROOM);
         sprintf(buf, "You are almost %s by $p!", damdesc);
-        act(buf, TRUE, this, t, 0, TO_CHAR);
+        act(buf, true, this, t, 0, TO_CHAR);
       }
     }
   } else if (damtype == DAMAGE_TRAP_TELEPORT) {
@@ -5277,16 +5277,16 @@ int TBeing::objDam(spellNumT damtype, int amnt, TThing* t) {
   } else if (damtype == DAMAGE_TRAP_DISEASE)
     trapDisease(amnt);
 
-  return FALSE;
+  return false;
 }
 
-// returns DELETE_THIS , or FALSE
+// returns DELETE_THIS , or false
 int TBeing::objDamage(spellNumT damtype, int amnt, TThing* t) {
   int rc;
 
   amnt = skipImmortals(amnt);
   if (amnt == -1)
-    return FALSE;
+    return false;
 
   // check for SANCTUARY
   amnt *= 100 - getProtection();
@@ -5320,12 +5320,12 @@ int TBeing::objDamage(spellNumT damtype, int amnt, TThing* t) {
       if (desc)
         desc->career.deaths++;
     }
-    DeleteHatreds(this, NULL);
+    DeleteHatreds(this, nullptr);
     rc = die(damtype, dynamic_cast<TBeing*>(t));
     if (IS_SET_ONLY(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 void perform_violence(int pulse) {
@@ -5385,12 +5385,12 @@ void perform_violence(int pulse) {
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             vict->reformGroup();
             delete vict;
-            vict = NULL;
+            vict = nullptr;
             continue;
           } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
             ch->reformGroup();
             delete ch;
-            ch = NULL;
+            ch = nullptr;
             break;
           }
         } else {
@@ -5530,7 +5530,7 @@ void TBeing::gainExpPerHit(TBeing* v, double percent, int dam) {
 
   // throw this exp away - it cannot be handed out due to the restrict XP affect
   if (v->affectedBySpell(AFFECT_COMBAT)) {
-    affectedData* combatCheck = NULL;
+    affectedData* combatCheck = nullptr;
     for (affectedData* afScan = v->affected; afScan; afScan = afScan->next)
       if (afScan->type == AFFECT_COMBAT &&
           afScan->modifier == COMBAT_RESTRICT_XP)
@@ -5539,7 +5539,7 @@ void TBeing::gainExpPerHit(TBeing* v, double percent, int dam) {
     if (combatCheck && combatCheck->be) {
       const char* restrictName = (char*)combatCheck->be;
       TBeing* owner = get_pc_room(this, sstring(restrictName), EXACT_YES,
-        INFRA_NO, FALSE, TRUE);
+        INFRA_NO, false, true);
       if (!owner || !inGroup(*owner))
         return;
     }
@@ -5613,7 +5613,7 @@ void TBeing::gainExpPerHit(TBeing* v, double percent, int dam) {
 
 int TBeing::addToDistracted(int amt, int flags) {
   if (!spelltask)
-    return FALSE;
+    return false;
 
   if (!flags) {
     spelltask->distracted += amt;
@@ -5622,12 +5622,12 @@ int TBeing::addToDistracted(int amt, int flags) {
     vlogf(LOG_COMBAT, "Something is using uncoded flags in addToDistract");
     return -1;
   }
-  return FALSE;
+  return false;
 }
 
 int TBeing::remFromDistracted(int amt) {
   if (!spelltask)
-    return FALSE;
+    return false;
 
   spelltask->distracted -= amt;
   spelltask->distracted = max(0, spelltask->distracted);
@@ -5636,7 +5636,7 @@ int TBeing::remFromDistracted(int amt) {
 
 int TBeing::setDistracted(int amt, int flags) {
   if (!spelltask)
-    return FALSE;
+    return false;
   if (amt < 0) {
     vlogf(LOG_COMBAT,
       format("something set a negative number to distract made 0 %s") %
@@ -5650,20 +5650,20 @@ int TBeing::setDistracted(int amt, int flags) {
     vlogf(LOG_COMBAT, "Something is using uncoded flags in setDistract");
     return -1;
   }
-  return FALSE;
+  return false;
 }
 
 int TBeing::clearDistracted() {
   if (!spelltask)
-    return TRUE;
+    return true;
 
   spelltask->distracted = 0;
-  return TRUE;
+  return true;
 }
 
 int TBeing::getDistracted() {
   if (!spelltask)
-    return FALSE;
+    return false;
 
   if (spelltask->distracted < 0)
     spelltask->distracted = 0;
@@ -5671,8 +5671,8 @@ int TBeing::getDistracted() {
 }
 
 void TThing::remCastingList(TThing* obj) {
-  TBeing* ch = NULL;
-  TBeing* tmp_ch = NULL;
+  TBeing* ch = nullptr;
+  TBeing* tmp_ch = nullptr;
 
   if (!obj->getCaster()) {
     return;
@@ -5688,17 +5688,17 @@ void TThing::remCastingList(TThing* obj) {
       continue;
     }
 
-    ch->spelltask->object = NULL;
-    ch->next_caster = NULL;
+    ch->spelltask->object = nullptr;
+    ch->next_caster = nullptr;
     ch->stopCast(STOP_CAST_NOT_AROUND);
-    ch->spelltask = NULL;
+    ch->spelltask = nullptr;
   }
-  obj->setCaster(NULL);
+  obj->setCaster(nullptr);
 }
 
 void TBeing::remCastingList(TThing* v) {
-  TBeing* ch = NULL;
-  TBeing* tmp_ch = NULL;
+  TBeing* ch = nullptr;
+  TBeing* tmp_ch = nullptr;
 
   if (!v->getCaster()) {
     return;
@@ -5717,12 +5717,12 @@ void TBeing::remCastingList(TThing* v) {
                                "who had no casting target.") %
                           v->getName() % ch->getName());
     }
-    ch->spelltask->victim = NULL;
-    ch->next_caster = NULL;
+    ch->spelltask->victim = nullptr;
+    ch->next_caster = nullptr;
     ch->stopCast(STOP_CAST_NOT_AROUND);
-    ch->spelltask = NULL;
+    ch->spelltask = nullptr;
   }
-  v->setCaster(NULL);
+  v->setCaster(nullptr);
 }
 
 void TBeing::damageArm(bool isPrimary, int bit) {
@@ -5732,14 +5732,14 @@ void TBeing::damageArm(bool isPrimary, int bit) {
     //    addToLimbFlags(getPrimaryHold(), bit);
     addToLimbFlags(getPrimaryWrist(), bit);
     addToLimbFlags(getPrimaryFinger(), bit);
-    dropItemFromDamagedHand(TRUE);
+    dropItemFromDamagedHand(true);
   } else {
     addToLimbFlags(getSecondaryArm(), bit);
     addToLimbFlags(getSecondaryHand(), bit);
     //    addToLimbFlags(getSecondaryHold(), bit);
     addToLimbFlags(getSecondaryWrist(), bit);
     addToLimbFlags(getSecondaryFinger(), bit);
-    dropItemFromDamagedHand(FALSE);
+    dropItemFromDamagedHand(false);
   }
 }
 
@@ -5753,8 +5753,8 @@ void TBeing::dropItemFromDamagedHand(bool isPrimary) {
   bit = isLimbFlags(slot_hold, (PART_USELESS | PART_MISSING | PART_BROKEN));
   bit2 = isLimbFlags(slot_hand, (PART_USELESS | PART_MISSING | PART_BROKEN));
   if ((w = equipment[slot_hold]) && (bit || bit2)) {
-    act("$p falls from your hand.", TRUE, this, w, 0, TO_CHAR, ANSI_RED);
-    act("$p falls to the $g.", TRUE, this, w, 0, TO_ROOM);
+    act("$p falls from your hand.", true, this, w, 0, TO_CHAR, ANSI_RED);
+    act("$p falls to the $g.", true, this, w, 0, TO_ROOM);
     *roomp += *unequip(slot_hold);
   }
 }
@@ -5767,12 +5767,12 @@ int TBeing::dislodgeWeapon(TBeing* v, TThing* weapon, wearSlotT part) {
   // Quality of life tweak - there's no sense in weapons getting stuck in
   // opponents that can't even move
   if (v->isAffected(AFF_STUNNED))
-    return FALSE;
+    return false;
 
   mud_assert(v->slotChance(part), "No slotChance in dislodgeWeapon");
 
   if (weapon && !v->getStuckIn(part)) {
-    sstring nameBuf = colorString(this, desc, pers(v), NULL, COLOR_MOBS, TRUE);
+    sstring nameBuf = colorString(this, desc, pers(v), nullptr, COLOR_MOBS, true);
 
     sendTo(COLOR_OBJECTS,
       format(
@@ -5785,12 +5785,12 @@ int TBeing::dislodgeWeapon(TBeing* v, TThing* weapon, wearSlotT part) {
 
     sprintf(buf, "$n leaves $s $o stuck in $N's %s",
       v->describeBodySlot(part).c_str());
-    act(buf, TRUE, this, weapon, v, TO_NOTVICT);
+    act(buf, true, this, weapon, v, TO_NOTVICT);
     rc = v->stickIn(unequip(weapon->eq_pos), part, SILENT_YES);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing* opp) {
@@ -5810,8 +5810,8 @@ void TBeing::makePartMissing(wearSlotT slot, bool diseased, TBeing* opp) {
   auditBodyParts();
 
   // check for damage to both hands
-  dropItemFromDamagedHand(TRUE);
-  dropItemFromDamagedHand(FALSE);
+  dropItemFromDamagedHand(true);
+  dropItemFromDamagedHand(false);
   stunIfLimbsUseless();
 }
 
@@ -5835,14 +5835,14 @@ bool bluntType(spellNumT wtype) {
     case TYPE_WHIP:
     case TYPE_MAUL:
     case TYPE_CANNON:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }
 
-bool TObj::isBluntWeapon() const { return FALSE; }
+bool TObj::isBluntWeapon() const { return false; }
 
 bool slashType(spellNumT wtype) {
   switch (wtype) {
@@ -5852,11 +5852,11 @@ bool slashType(spellNumT wtype) {
     case TYPE_SLICE:
     case TYPE_BEAR_CLAW:
     case TYPE_SHRED:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }
 
 bool pierceType(spellNumT wtype) {
@@ -5869,11 +5869,11 @@ bool pierceType(spellNumT wtype) {
     case TYPE_SPEAR:
     case TYPE_BEAK:
     case TYPE_SHOOT:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }
 
 spellNumT TBeing::monkDamType(spellNumT orig) const {
@@ -5927,8 +5927,8 @@ spellNumT TBeing::monkDamType(spellNumT orig) const {
 
 void TBeing::reformGroup() {
   followData *tmp, *tmp2;
-  TBeing *new_master = NULL, *survivor = NULL;
-  bool found = FALSE;
+  TBeing *new_master = nullptr, *survivor = nullptr;
+  bool found = false;
 
   if (!followers || master)
     return;
@@ -5940,20 +5940,20 @@ void TBeing::reformGroup() {
     // (but if the original leader was a mob, it's a mob group - Peel)
     if ((!tmp->follower->isPc() && isPc()) &&
         tmp->follower->polyed == POLY_TYPE_NONE) {
-      tmp->follower->stopFollower(TRUE);
+      tmp->follower->stopFollower(true);
       continue;
     }
 
     if (!inGroup(*tmp->follower)) {
-      tmp->follower->stopFollower(TRUE);
+      tmp->follower->stopFollower(true);
       continue;
     }
 
     if (!found) {
       new_master = tmp->follower;
-      new_master->stopFollower(TRUE, STOP_FOLLOWER_CHAR_VICT);
-      found = TRUE;
-      new_master->master = NULL;
+      new_master->stopFollower(true, STOP_FOLLOWER_CHAR_VICT);
+      found = true;
+      new_master->master = nullptr;
 
       if (!new_master->isAffected(AFF_GROUP))
         SET_BIT(new_master->specials.affectedBy, AFF_GROUP);
@@ -5965,7 +5965,7 @@ void TBeing::reformGroup() {
       continue;
     }
     survivor = tmp->follower;
-    survivor->stopFollower(TRUE, STOP_FOLLOWER_CHAR_VICT);
+    survivor->stopFollower(true, STOP_FOLLOWER_CHAR_VICT);
     new_master->addFollower(survivor, 1);
 
     if (!survivor->isAffected(AFF_GROUP))
@@ -5983,14 +5983,14 @@ void TBeing::reformGroup() {
     return;
   }
 
-  survivor = NULL;
+  survivor = nullptr;
   for (tmp = followers; tmp; tmp = tmp2) {
     tmp2 = tmp->next;
 
     if (!new_master) {
       new_master = tmp->follower;
-      new_master->stopFollower(TRUE, STOP_FOLLOWER_CHAR_VICT);
-      new_master->master = NULL;
+      new_master->stopFollower(true, STOP_FOLLOWER_CHAR_VICT);
+      new_master->master = nullptr;
       if (!new_master->isAffected(AFF_GROUP))
         SET_BIT(new_master->specials.affectedBy, AFF_GROUP);
       new_master->sendTo(COLOR_BASIC,
@@ -6001,7 +6001,7 @@ void TBeing::reformGroup() {
     }
 
     survivor = tmp->follower;
-    survivor->stopFollower(TRUE, STOP_FOLLOWER_CHAR_VICT);
+    survivor->stopFollower(true, STOP_FOLLOWER_CHAR_VICT);
     new_master->addFollower(survivor, 1);
 
     if (!survivor->isAffected(AFF_GROUP))
@@ -6014,14 +6014,14 @@ void TBeing::reformGroup() {
 
 void TBeing::genericKillFix(void) {
   reformGroup();
-  DeleteHatreds(this, NULL);
-  DeleteFears(this, NULL);
+  DeleteHatreds(this, nullptr);
+  DeleteFears(this, nullptr);
 
   // we are basically already dead when this gets called.
   // But, because of the spellWearOff, we could die "again"
   // one example would be slay a charm mob.
-  int rc = generic_dispel_magic(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
-  int rc2 = genericChaseSpirits(NULL, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
+  int rc = generic_dispel_magic(nullptr, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
+  int rc2 = genericChaseSpirits(nullptr, this, MAX_IMMORT, IMMORTAL_YES, SAFE_YES);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     vlogf(LOG_BUG, format("Multiple deaths (%s in room %d) occurred!") %
                      getName() % inRoom());
@@ -6043,7 +6043,7 @@ void TBeing::genericKillFix(void) {
       for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++) {
         setCurLimbHealth(i, getMaxLimbHealth(i));
         setLimbFlags(i, 0);
-        setStuckIn(i, NULL);
+        setStuckIn(i, nullptr);
       }
     }
   }
@@ -6095,7 +6095,7 @@ double TBeing::deathSkillLoss() {
   double loss = 0, count = 0;
 
   if (isImmortal() || dynamic_cast<TMonster*>(this) || !desc) {
-    return FALSE;
+    return false;
   }
 
   spellNumT i;
@@ -6129,7 +6129,7 @@ double TBeing::deathSkillLoss() {
 
 bool TBeing::willKill(TBeing* v, int dam, spellNumT dmg_type, bool reduced) {
   if (!reduced) {
-    dam = getActualDamage(v, NULL, dam, dmg_type);
+    dam = getActualDamage(v, nullptr, dam, dmg_type);
   }
 
   // account for protection

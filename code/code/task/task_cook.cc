@@ -8,7 +8,7 @@
 
 bool check_ingredients(TCookware* pot, int recipe) {
   int nfound = 0;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TPool* pool;
   TCorpse* corpse;
   TObj* obj;
@@ -65,8 +65,8 @@ bool check_ingredients(TCookware* pot, int recipe) {
 }
 
 TCookware* find_pot(TBeing* ch, const sstring& cookware) {
-  TThing* tpot = NULL;
-  TCookware* pot = NULL;
+  TThing* tpot = nullptr;
+  TCookware* pot = nullptr;
   int count = 0;
 
   if ((tpot = searchLinkedListVis(ch, cookware, ch->stuff, &count))) {
@@ -90,7 +90,7 @@ int find_recipe(sstring recipearg) {
 
 void TBeing::doCook(sstring arg) {
   int recipe = -1;
-  TCookware* pot = NULL;
+  TCookware* pot = nullptr;
   sstring cookware, recipearg, tmparg = arg;
 
   tmparg = one_argument(tmparg, cookware);
@@ -131,33 +131,33 @@ void TBeing::doCook(sstring arg) {
 
   sendTo(COLOR_BASIC,
     format("You begin to cook %s.\n\r") % recipes[recipe].name);
-  start_task(this, pot, NULL, TASK_COOK, "", 2, inRoom(), 0, 0, 5);
+  start_task(this, pot, nullptr, TASK_COOK, "", 2, inRoom(), 0, 0, 5);
 }
 
 int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj* pot) {
   // basic tasky safechecking
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) || !pot) {
-    act("You stop cooking.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops cooking.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You stop cooking.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops cooking.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
 
     if (pot)
       delete pot->stuff.front();
 
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd)) {
-    return FALSE;
+    return false;
   }
 
   if (ch->task->timeLeft < 0) {
-    act("You finish cooking.", FALSE, ch, pot, 0, TO_CHAR);
-    act("$n finishes cooking.", TRUE, ch, pot, 0, TO_ROOM);
+    act("You finish cooking.", false, ch, pot, 0, TO_CHAR);
+    act("$n finishes cooking.", true, ch, pot, 0, TO_ROOM);
     ch->stopTask();
 
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -166,28 +166,28 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
       switch (ch->task->timeLeft) {
         case 2:
-          act("You prepare the ingredients in $p.", FALSE, ch, pot, 0, TO_CHAR);
-          act("$n prepares $s ingredients.", TRUE, ch, pot, 0, TO_ROOM);
+          act("You prepare the ingredients in $p.", false, ch, pot, 0, TO_CHAR);
+          act("$n prepares $s ingredients.", true, ch, pot, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
         case 1:
-          act("You cook the ingredients in $p.", FALSE, ch, pot, 0, TO_CHAR);
-          act("$n cooks the ingredients in $p.", TRUE, ch, pot, 0, TO_ROOM);
+          act("You cook the ingredients in $p.", false, ch, pot, 0, TO_CHAR);
+          act("$n cooks the ingredients in $p.", true, ch, pot, 0, TO_ROOM);
           ch->task->timeLeft--;
 
           break;
         case 0:
-          act("You continue cooking the ingredients in $p.", FALSE, ch, pot, 0,
+          act("You continue cooking the ingredients in $p.", false, ch, pot, 0,
             TO_CHAR);
-          act("$n continues cooking.", TRUE, ch, pot, 0, TO_ROOM);
+          act("$n continues cooking.", true, ch, pot, 0, TO_ROOM);
           ch->task->timeLeft--;
           break;
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop cooking.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops cooking.", TRUE, ch, 0, 0, TO_ROOM);
+      act("You stop cooking.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops cooking.", true, ch, 0, 0, TO_ROOM);
       ch->stopTask();
 
       delete pot->stuff.front();
@@ -204,5 +204,5 @@ int task_cook(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       delete pot->stuff.front();
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

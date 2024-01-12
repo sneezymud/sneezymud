@@ -222,7 +222,7 @@ bool shopData::ensureCache() {
   if (db.fetchRow()) {
     hasCentralBank = true;
     centralbank = convertTo<int>(db["centralbank"]);
-    float reserve = shop_index[centralbank].getProfitBuy(NULL, NULL);
+    float reserve = shop_index[centralbank].getProfitBuy(nullptr, nullptr);
 
     // so we want the total of deposits * the reserver
     db.query(
@@ -390,38 +390,38 @@ bool shopData::willTradeWith(TMonster* keeper, TBeing* ch) {
 
   if (shop_index[shop_nr].open1 > hmt) {
     keeper->doSay("Come back later!");
-    return FALSE;
+    return false;
   } else if (shop_index[shop_nr].close1 < hmt) {
     if (shop_index[shop_nr].open2 > hmt) {
       keeper->doSay("Sorry, we have closed, but come back later.");
-      return FALSE;
+      return false;
     } else if (shop_index[shop_nr].close2 < hmt) {
       keeper->doSay("Sorry, come back tomorrow.");
-      return FALSE;
+      return false;
     }
   }
 
   if (!keeper->canSee(ch) && !ch->isImmortal()) {
     keeper->doSay("I don't trade with someone I can't see!");
-    return FALSE;
+    return false;
   }
 
   if (dynamic_cast<TMonster*>(ch) && (ch != keeper)) {
     keeper->doSay("Hey, no animals in my shop!");
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 bool shopData::willBuy(const TObj* item) {
   int counter, max_trade;
-  bool mat_ok = FALSE;
-  bool is_commod = dynamic_cast<const TCommodity*>(item) != NULL;
+  bool mat_ok = false;
+  bool is_commod = dynamic_cast<const TCommodity*>(item) != nullptr;
 
   if ((!is_commod && item->getValue() < 1) || item->isObjStat(ITEM_NEWBIE) ||
       item->isObjStat(ITEM_PROTOTYPE))
-    return FALSE;
+    return false;
 
   // check if there is a material type restriction
   if (IS_SET(shop_index[shop_nr].flags, SHOP_FLAG_MAT_RESTRICTED)) {
@@ -431,39 +431,39 @@ bool shopData::willBuy(const TObj* item) {
 
     for (counter = 0; counter < max_mat_trade; counter++) {
       if (shop_index[shop_nr].mat_type[counter] == item->getMaterial()) {
-        mat_ok = TRUE;
+        mat_ok = true;
         break;
       }
     }
-    if (mat_ok == FALSE)
-      return FALSE;
+    if (mat_ok == false)
+      return false;
   }
 
   // check normal shop types
   max_trade = shop_index[shop_nr].type.size();
   for (counter = 0; counter < max_trade; counter++) {
     if ((int)shop_index[shop_nr].type[counter] == item->itemType())
-      return TRUE;
+      return true;
   }
 
   // obviously we will trade in anything we produce
   if (shop_index[shop_nr].isProducing(item))
-    return TRUE;
+    return true;
 
   // if no produced/traded items are specified, but we do have a material
   // type, assume we take all items of that material type
-  if (mat_ok == TRUE && (shop_index[shop_nr].producing[0] == -1) &&
+  if (mat_ok == true && (shop_index[shop_nr].producing[0] == -1) &&
       (shop_index[shop_nr].type[0] == MAX_OBJ_TYPES))
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 bool shopData::isProducing(const TObj* item) {
   int counter, max_prod = 0;
 
   if (item->number < 0)
-    return FALSE;
+    return false;
 
   max_prod = producing.size();
 
@@ -473,15 +473,15 @@ bool shopData::isProducing(const TObj* item) {
 
     if (producing[counter] == item->number) {
       if (obj_index[producing[counter]].name == item->name) {
-        return TRUE;
+        return true;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 static int number_objects_in_list(const TObj* item, const StuffList list) {
-  const TObj* i = NULL;
+  const TObj* i = nullptr;
   int count = 0;
 
   for (StuffIter it = list.begin(); it != list.end(); ++it) {
@@ -499,7 +499,7 @@ void shopping_buy(const char* arg, TBeing* ch, TMonster* keeper, int shop_nr) {
   char newarg[MAX_INPUT_LENGTH];
   sstring argm;
   int num = 1, rent_id;
-  TObj* temp1 = NULL;
+  TObj* temp1 = nullptr;
   TDatabase db(DB_SNEEZY);
 
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)))
@@ -565,13 +565,13 @@ void shopping_buy(const char* arg, TBeing* ch, TMonster* keeper, int shop_nr) {
   if (temp1->getValue() <= 0) {
     keeper->doTell(ch->name, shop_index[shop_nr].no_such_item1);
     delete temp1;
-    temp1 = NULL;
+    temp1 = nullptr;
     return;
   }
   if (temp1->isObjStat(ITEM_PROTOTYPE | ITEM_NEWBIE)) {
     keeper->doSay("Where did this piece of junk come from???");
     delete temp1;
-    temp1 = NULL;
+    temp1 = nullptr;
     return;
   }
 
@@ -610,7 +610,7 @@ int TObj::buyMe(TBeing* ch, TMonster* keeper, int num, int shop_nr) {
       return -1;
     }
     // obj-weight > free ch limit
-    if (compareWeights(getTotalWeight(TRUE),
+    if (compareWeights(getTotalWeight(true),
           ((ch->carryWeightLimit() - ch->getCarriedWeight()) / num)) == -1) {
       ch->sendTo(
         format("%s: You can't carry that much weight.\n\r") % fname(name));
@@ -682,10 +682,10 @@ int TObj::buyMe(TBeing* ch, TMonster* keeper, int num, int shop_nr) {
   ch->sendTo(COLOR_OBJECTS,
     format("You now have %s (*%d).\n\r") % sstring(getName()).uncap() % count);
   if (count == 1)
-    act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
+    act("$n buys $p.", false, ch, this, nullptr, TO_ROOM);
   else {
     buf = format("$n buys %s [%d].") % fname(name) % count;
-    act(buf, FALSE, ch, this, 0, TO_ROOM);
+    act(buf, false, ch, this, 0, TO_ROOM);
   }
   ch->doQueueSave();
   return cost;
@@ -699,55 +699,55 @@ bool will_not_buy(TBeing* ch, TMonster* keeper, TObj* temp1, int shop_nr) {
       keeper->doTell(ch->getName(),
         "Since you're immortal, I'll make an exception.");
     else
-      return TRUE;
+      return true;
   }
   if (Config::NoDamagedItemsShop()) {
     if (temp1->getStructPoints() != temp1->getMaxStructPoints()) {
       keeper->doTell(ch->getName(), "I don't buy damaged goods.");
-      return TRUE;
+      return true;
     }
   }
 
   if (!temp1->stuff.empty()) {
     keeper->doTell(ch->getName(),
       "Sorry, I don't buy items that contain other items.");
-    return TRUE;
+    return true;
   }
   // Notes have been denied by objectSell() above
   if (!temp1->action_description.empty()) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy monogrammed goods.");
-    return TRUE;
+    return true;
   }
   if (temp1->isObjStat(ITEM_BURNING) || temp1->isObjStat(ITEM_CHARRED)) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy fire damaged goods.");
-    return TRUE;
+    return true;
   }
   if (temp1->isObjStat(ITEM_RUSTY)) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy rusty goods.");
-    return TRUE;
+    return true;
   }
 
   if (shop_index[shop_nr].isOwned() && temp1->isObjStat(ITEM_NORENT)) {
     keeper->doTell(ch->getName(),
       "This shop is privately owned and we don't purchase non-rentable items.");
-    return TRUE;
+    return true;
   }
 
   if (dynamic_cast<TCommodity*>(temp1))
-    return FALSE;
+    return false;
 
   if (temp1->sellPrice(1, shop_nr, -1, ch) < 0) {
     keeper->doTell(ch->getName(), "You'd have to pay me to buy that!");
-    return TRUE;
+    return true;
   }
 
   if (shop_index[shop_nr].getInventoryCount() >= (int)MAX_SHOP_INVENTORY) {
     keeper->doTell(ch->getName(),
       "My inventory is full, I can't buy anything!");
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 bool TObj::sellMeCheck(TBeing* ch, TMonster* keeper, int,
@@ -765,7 +765,7 @@ bool TObj::sellMeCheck(TBeing* ch, TMonster* keeper, int,
     vlogf(LOG_BUG,
       format("Warning... shop # for mobile %d (real nr) not found.") %
         mob_index[keeper->number].virt);
-    return FALSE;
+    return false;
   }
 
   TShopOwned tso(shop_nr, keeper, ch);
@@ -773,17 +773,17 @@ bool TObj::sellMeCheck(TBeing* ch, TMonster* keeper, int,
 
   if (max_num == 0) {
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
-    return TRUE;
+    return true;
   }
 
   total = tso.getInventoryCount(this);
 
   if (total >= max_num && !shop_index[shop_nr].isProducing(this)) {
     keeper->doTell(ch->name, "I already have plenty of those.");
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 void generic_num_sell(TBeing* ch, TMonster* keeper, TObj* obj, int shop_nr,
@@ -891,7 +891,7 @@ int TObj::sellMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
     keeper->doTell(ch->name, "Wow!  This is one of those limited items.");
     keeper->doTell(ch->name, "You should really think about auctioning it.");
   }
-  act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
+  act("$n sells $p.", false, ch, this, 0, TO_ROOM);
 
   keeper->doTell(ch->getName(),
     format(shop_index[shop_nr].message_sell) % cost);
@@ -916,14 +916,14 @@ int TObj::sellMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
 }
 
 int TThing::componentSell(TBeing* ch, TMonster* keeper, int shop_nr, TThing*) {
-  return FALSE;
+  return false;
 }
 
 int TThing::componentValue(TBeing* ch, TMonster* keeper, int shop_nr, TThing*) {
-  return FALSE;
+  return false;
 }
 
-int TThing::sellHidenSkin(TBeing*, TMonster*, int, TThing*) { return FALSE; }
+int TThing::sellHidenSkin(TBeing*, TMonster*, int, TThing*) { return false; }
 
 // returns DELETE_THIS, VICT (ch), ITEM(sub)
 int TSpellBag::componentValue(TBeing* ch, TMonster* keeper, int shop_nr,
@@ -932,14 +932,14 @@ int TSpellBag::componentValue(TBeing* ch, TMonster* keeper, int shop_nr,
   int rc;
 
   if (isClosed())
-    return TRUE;
+    return true;
 
   for (StuffIter it = stuff.begin(); it != stuff.end();) {
     t = *(it++);
     rc = t->componentValue(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL;
+      t = nullptr;
     }
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
@@ -947,7 +947,7 @@ int TSpellBag::componentValue(TBeing* ch, TMonster* keeper, int shop_nr,
     if (IS_SET_DELETE(rc, DELETE_ITEM))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS, VICT (ch), ITEM(sub)
@@ -958,14 +958,14 @@ int TSpellBag::componentSell(TBeing* ch, TMonster* keeper, int shop_nr,
 
   if (isClosed()) {
     // ignore closed spellbags
-    return TRUE;
+    return true;
   }
   for (StuffIter it = stuff.begin(); it != stuff.end();) {
     t = *(it++);
     rc = t->componentSell(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL;
+      t = nullptr;
     }
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
@@ -973,11 +973,11 @@ int TSpellBag::componentSell(TBeing* ch, TMonster* keeper, int shop_nr,
     if (IS_SET_DELETE(rc, DELETE_ITEM))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 int TThing::sellCommod(TBeing* ch, TMonster* keeper, int shop_nr, TThing*) {
-  return FALSE;
+  return false;
 }
 
 tObjectManipT ObjectManipType(sstring tStString, sstring& tStBuffer,
@@ -1075,19 +1075,19 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
   int shop_nr) {
   char argm[MAX_INPUT_LENGTH], newarg[MAX_INPUT_LENGTH];
   sstring buf;
-  TObj* temp1 = NULL;
+  TObj* temp1 = nullptr;
   TThing* t;
   int rc = 0, i;
   int num = 1;
 
   if (!(shop_index[shop_nr].willTradeWith(tKeeper, ch)))
-    return FALSE;
+    return false;
 
   strcpy(argm, tString);
 
   if (!*argm) {
     tKeeper->doTell(ch->getName(), "What do you want to sell??");
-    return FALSE;
+    return false;
   }
 
   if ((num = getabunch(argm, newarg)))
@@ -1136,10 +1136,10 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
         generic_sell(ch, tKeeper, tObj, tShop);
 
       if (tObjectManip == OBJMAN_NONE && tCount >= 1)
-        return FALSE;
+        return false;
     }
 
-    return FALSE;
+    return false;
   } else {
     if (is_abbrev(argm, "all.commodity")) {
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -1152,10 +1152,10 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
         if (!ch->awake())
           break;
 
-        rc = t->sellCommod(ch, tKeeper, shop_nr, NULL);
+        rc = t->sellCommod(ch, tKeeper, shop_nr, nullptr);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           return DELETE_THIS;
@@ -1168,17 +1168,17 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
         // check for sleep pouches
         if (!ch->awake())
           break;
-        rc = t->sellCommod(ch, tKeeper, shop_nr, NULL);
+        rc = t->sellCommod(ch, tKeeper, shop_nr, nullptr);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           return DELETE_THIS;
         }
       }
       ch->doQueueSave();
-      return FALSE;
+      return false;
     } else if (is_abbrev(argm, "all.components")) {
       std::set<int> soldComps;  // hold vnums of sold comps
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -1193,19 +1193,19 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
         TComponent* temp2 = dynamic_cast<TComponent*>(t);
         if (temp2) {
           if (num > 1) {
-            rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
+            rc = temp2->componentNumSell(ch, tKeeper, shop_nr, nullptr, num);
           } else {
             if (soldComps.find(temp2->objVnum()) == soldComps.end()) {
               // haven't sold this type of comp yet
               soldComps.insert(temp2->objVnum());
-              rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL,
+              rc = temp2->componentNumSell(ch, tKeeper, shop_nr, nullptr,
                 temp2->getComponentCharges());
             }
           }
         }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
@@ -1221,25 +1221,25 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
         TComponent* temp2 = dynamic_cast<TComponent*>(t);
         if (temp2) {
           if (num > 1) {
-            rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
+            rc = temp2->componentNumSell(ch, tKeeper, shop_nr, nullptr, num);
           } else {
             if (soldComps.find(temp2->objVnum()) == soldComps.end()) {
               // haven't sold this type of comp yet
               soldComps.insert(temp2->objVnum());
-              rc = temp2->componentNumSell(ch, tKeeper, shop_nr, NULL,
+              rc = temp2->componentNumSell(ch, tKeeper, shop_nr, nullptr,
                 temp2->getComponentCharges());
             }
           }
         }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
       ch->doQueueSave();
-      return FALSE;
+      return false;
     } else if (is_abbrev(argm, "all.hide") || is_abbrev(argm, "all.skin")) {
       for (i = MIN_WEAR; i < MAX_WEAR; i++) {
         if (!(t = ch->equipment[i]))
@@ -1250,10 +1250,10 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
         if (!ch->awake())
           break;
 
-        rc = t->sellHidenSkin(ch, tKeeper, shop_nr, NULL);
+        rc = t->sellHidenSkin(ch, tKeeper, shop_nr, nullptr);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
@@ -1266,15 +1266,15 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
         if (!ch->awake())
           break;
 
-        rc = t->sellHidenSkin(ch, tKeeper, shop_nr, NULL);
+        rc = t->sellHidenSkin(ch, tKeeper, shop_nr, nullptr);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       }
-      return FALSE;
+      return false;
     }
   }
   TThing* t_temp1 = searchLinkedListVis(ch, argm, ch->stuff);
@@ -1283,15 +1283,15 @@ int shopping_sell(const char* tString, TBeing* ch, TMonster* tKeeper,
 
   if (!temp1) {
     tKeeper->doTell(ch->getName(), shop_index[shop_nr].no_such_item2);
-    return FALSE;
+    return false;
   }
   if (temp2) {
-    temp2->componentNumSell(ch, tKeeper, shop_nr, NULL, num);
+    temp2->componentNumSell(ch, tKeeper, shop_nr, nullptr, num);
   } else {
     generic_sell(ch, tKeeper, temp1, shop_nr);
   }
 
-  return FALSE;
+  return false;
 }
 
 void shopping_value(const char* arg, TBeing* ch, TMonster* keeper,
@@ -1327,9 +1327,9 @@ void shopping_value(const char* arg, TBeing* ch, TMonster* keeper,
       TComponent* temp2 = dynamic_cast<TComponent*>(t);
       if (temp2) {
         if (num > 1) {
-          temp2->componentNumValue(ch, keeper, shop_nr, NULL, num);
+          temp2->componentNumValue(ch, keeper, shop_nr, nullptr, num);
         } else {
-          temp2->componentValue(ch, keeper, shop_nr, NULL);
+          temp2->componentValue(ch, keeper, shop_nr, nullptr);
         }
       }
     }
@@ -1339,9 +1339,9 @@ void shopping_value(const char* arg, TBeing* ch, TMonster* keeper,
       TComponent* temp2 = dynamic_cast<TComponent*>(t);
       if (temp2) {
         if (num > 1) {
-          temp2->componentNumValue(ch, keeper, shop_nr, NULL, num);
+          temp2->componentNumValue(ch, keeper, shop_nr, nullptr, num);
         } else {
-          temp2->componentValue(ch, keeper, shop_nr, NULL);
+          temp2->componentValue(ch, keeper, shop_nr, nullptr);
         }
       }
     }
@@ -1423,7 +1423,7 @@ void TObj::valueMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
 
 const sstring TObj::shopList(const TBeing* ch, const sstring& arg, int iMin,
   int iMax, int num, int shop_nr, int k, unsigned long int FitT) const {
-  int cost, found = FALSE;
+  int cost, found = false;
   char buf[1024];
   char buf3[256];
   char buf4[256];
@@ -1549,7 +1549,7 @@ const sstring TObj::shopList(const TBeing* ch, const sstring& arg, int iMin,
   } else {
     sprintf(buf4, "[%s]", atbuf);
   }
-  found = FALSE;
+  found = false;
   char equipCond[256];
   char equipColor[80];
   int max_trade;
@@ -1589,7 +1589,7 @@ const sstring TObj::shopList(const TBeing* ch, const sstring& arg, int iMin,
       sprintf(buf, "%s[%2d] %-29s %s%-12s %-6d %-5s %s%s\n\r", wcolor, k + 1,
         sstring(capbuf).cap().c_str(), equipColor, equipCond, cost, buf4, buf3,
         ch->norm());
-      found = TRUE;
+      found = true;
       strcpy(wcolor, ch->norm());
       break;
     }
@@ -2022,8 +2022,8 @@ void TMonster::autoCreateShop(int shop_nr) {
   }
 }
 
-// if we process the command, return TRUE.
-// if they are looking at something else (shopkeeper, etc) return FALSE
+// if we process the command, return true.
+// if they are looking at something else (shopkeeper, etc) return false
 static bool shopping_look(const char* arg, TBeing* ch, TMonster* keeper,
   int shop_nr) {
   const char* tmp_desc;
@@ -2033,10 +2033,10 @@ static bool shopping_look(const char* arg, TBeing* ch, TMonster* keeper,
   char buf[256];
 
   if (!*arg)
-    return FALSE;  // generic: look
+    return false;  // generic: look
 
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)) || !ch->desc)
-    return FALSE;
+    return false;
 
   if (!(rent_id = convertTo<int>(arg))) {
     sstring query =
@@ -2065,7 +2065,7 @@ static bool shopping_look(const char* arg, TBeing* ch, TMonster* keeper,
   temp1 = keeper->loadItem(shop_nr, rent_id);
 
   if (!temp1)
-    return FALSE;
+    return false;
 
   sstring str = "You examine ";
   str += temp1->getName();
@@ -2073,9 +2073,9 @@ static bool shopping_look(const char* arg, TBeing* ch, TMonster* keeper,
 
   str += temp1->shopList(ch, "", 0, 999999, 0, shop_nr, rent_id - 1, 0);
 
-  act(str, FALSE, ch, temp1, keeper, TO_CHAR);
+  act(str, false, ch, temp1, keeper, TO_CHAR);
 
-  tmp_desc = NULL;
+  tmp_desc = nullptr;
   if (temp1 && temp1->ex_description &&
       (tmp_desc =
           temp1->ex_description->findExtraDesc(fname(temp1->name).c_str()))) {
@@ -2087,11 +2087,11 @@ static bool shopping_look(const char* arg, TBeing* ch, TMonster* keeper,
   ch->showTo(temp1, SHOW_MODE_PLUS);  // tack on glowing, humming, etc
 
   delete temp1;
-  return TRUE;
+  return true;
 }
 
-// if we process the command, return TRUE.
-// if they are looking at something else (shopkeeper, etc) return FALSE
+// if we process the command, return true.
+// if they are looking at something else (shopkeeper, etc) return false
 static bool shopping_evaluate(const char* arg, TBeing* ch, TMonster* keeper,
   int shop_nr) {
   char newarg[100];
@@ -2102,10 +2102,10 @@ static bool shopping_evaluate(const char* arg, TBeing* ch, TMonster* keeper,
   TDatabase db(DB_SNEEZY);
 
   if (!*arg)
-    return FALSE;  // generic: look
+    return false;  // generic: look
 
   if (!(shop_index[shop_nr].willTradeWith(keeper, ch)) || !ch->desc)
-    return FALSE;
+    return false;
 
   if (!(num = getabunch(arg, newarg)))
     strcpy(newarg, arg);
@@ -2140,14 +2140,14 @@ static bool shopping_evaluate(const char* arg, TBeing* ch, TMonster* keeper,
   temp1 = keeper->loadItem(shop_nr, rent_id);
 
   if (!temp1)
-    return FALSE;
+    return false;
 
-  act("You evaluate $p sold by $N.", FALSE, ch, temp1, keeper, TO_CHAR);
+  act("You evaluate $p sold by $N.", false, ch, temp1, keeper, TO_CHAR);
 
   ch->genericEvaluateItem(temp1);
 
   delete temp1;
-  return TRUE;
+  return true;
 }
 
 void shopping_kill(const char*, TBeing* ch, TBeing* keeper, int shop_nr) {
@@ -2170,38 +2170,38 @@ void shopping_kill(const char*, TBeing* ch, TBeing* keeper, int shop_nr) {
 // preserve functionality
 int kickFromShop(TMonster* keeper, TBeing* vagrant) {
   for (dirTypeT dir = MIN_DIR; dir < MAX_DIR; dir++) {
-    if (exit_ok(keeper->exitDir(dir), NULL)) {
+    if (exit_ok(keeper->exitDir(dir), nullptr)) {
       // at least one valid dir exists
       // select the true direction at random
       do {
         dir = dirTypeT(::number(MIN_DIR, MAX_DIR - 1));
-      } while (!exit_ok(keeper->exitDir(dir), NULL));
+      } while (!exit_ok(keeper->exitDir(dir), nullptr));
 
-      act("$n throws you from $s shop.", FALSE, keeper, 0, vagrant, TO_VICT);
-      act("$n throws $N from $s shop.", FALSE, keeper, 0, vagrant, TO_NOTVICT);
+      act("$n throws you from $s shop.", false, keeper, 0, vagrant, TO_VICT);
+      act("$n throws $N from $s shop.", false, keeper, 0, vagrant, TO_NOTVICT);
 
-      keeper->throwChar(vagrant, dir, FALSE, SILENT_NO, true);
-      return TRUE;
+      keeper->throwChar(vagrant, dir, false, SILENT_NO, true);
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 // produce items for this shop
 int shopping_produce(TMonster* keeper) {
   unsigned int shop_nr = find_shop_nr(keeper->number);
-  TMonster* sbaKeeper = NULL;
+  TMonster* sbaKeeper = nullptr;
   std::vector<int>::iterator iter;
   TDatabase db(DB_SNEEZY);
 
   if (!keeper)
-    return FALSE;
+    return false;
   if (!shop_index[shop_nr].producing.size())
-    return FALSE;
+    return false;
 
   sbaKeeper = shop_index[SBA_SHOP_NR].getKeeper();
   if (!sbaKeeper)
-    return FALSE;
+    return false;
 
   db.query("begin");
   // RunOnReturn r([&](){db.query("commit");});
@@ -2219,7 +2219,7 @@ int shopping_produce(TMonster* keeper) {
       vlogf(LOG_BUG,
         format("Shopkeeper %d couldn't load produced item.") % shop_nr);
       db.query("commit");
-      return FALSE;
+      return false;
     }
 
     db.query(
@@ -2229,7 +2229,7 @@ int shopping_produce(TMonster* keeper) {
     db.fetchRow();
     int count = convertTo<int>(db["count"]);
 
-    if (count >= tso.getMaxNum(NULL, o, 10)) {
+    if (count >= tso.getMaxNum(nullptr, o, 10)) {
       delete o;
       continue;
     }
@@ -2260,7 +2260,7 @@ int shopping_produce(TMonster* keeper) {
   }
 
   db.query("commit");
-  return FALSE;
+  return false;
 }
 
 int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
@@ -2272,12 +2272,12 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   if (cmd == CMD_GENERIC_DESTROYED) {
     shop_nr = find_shop_nr(myself->number);
     shop_index[shop_nr].clearKeeper();
-    return FALSE;
+    return false;
   }
 
   // Toss out idlers
   if (cmd == CMD_GENERIC_PULSE) {
-    TThing* t = NULL;
+    TThing* t = nullptr;
     TBeing* tbt;
 
     for (StuffIter it = myself->roomp->stuff.begin();
@@ -2289,10 +2289,10 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         }
         myself->doSay("Hey, no loitering!  Make room for the other customers.");
         kickFromShop(myself, tbt);
-        return TRUE;  // only kick one per pulse to avoid StuffIter issues
+        return true;  // only kick one per pulse to avoid StuffIter issues
       }
     }
-    return TRUE;
+    return true;
   }
 
   // sanity check - shop mobs are unique
@@ -2301,9 +2301,9 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       vlogf(LOG_BUG,
         format("Warning!  %s attempted to be loaded, when not unique.") %
           myself->getName());
-      return TRUE;
+      return true;
     }
-    return FALSE;
+    return false;
   }
 
   // kick fighting mobs out of the shop
@@ -2313,15 +2313,15 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     // o is really a being, so downcast, and then bring it back up
     TThing* ttt = o;
     if (!ttt)
-      return FALSE;
+      return false;
     TBeing* tbt = dynamic_cast<TBeing*>(ttt);
     if (!tbt)
-      return FALSE;
+      return false;
 
     kickFromShop(myself, ch);
     kickFromShop(myself, tbt);
 
-    return TRUE;
+    return true;
   }
 
   // keep mobs out of our room
@@ -2329,14 +2329,14 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     shop_nr = find_shop_nr(myself->number);
     if (myself->in_room == shop_index[shop_nr].in_room)
       return kick_mobs_from_shop(myself, ch, (long int)o);
-    return FALSE;
+    return false;
   }
 
   // produce stuff I'm supposed to have
   if (cmd == CMD_MOB_ALIGN_PULSE) {
     // called on a long period....
     if (::number(0, 10))
-      return FALSE;
+      return false;
 
     // produce new items
     return shopping_produce(myself);
@@ -2344,33 +2344,33 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
   // from here we begin the processing main set of shop commands
   if (cmd >= MAX_CMD_LIST)
-    return FALSE;
+    return false;
 
   // init shop_nr here
   shop_nr = find_shop_nr(myself->number);
 
   if ((cmd == CMD_BUY) && (ch->in_room == shop_index[shop_nr].in_room)) {
     if (!safe_to_save_shop_stuff(myself))
-      return TRUE;
+      return true;
 
     shopping_buy(arg, ch, myself, shop_nr);
-    return TRUE;
+    return true;
   }
   if ((cmd == CMD_SELL) && (ch->in_room == shop_index[shop_nr].in_room)) {
     if (!safe_to_save_shop_stuff(myself))
-      return TRUE;
+      return true;
     rc = shopping_sell(arg, ch, myself, shop_nr);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_VICT;  // nuke ch
-    return TRUE;
+    return true;
   }
   if ((cmd == CMD_VALUE) && (ch->in_room == shop_index[shop_nr].in_room)) {
     shopping_value(arg, (ch), (myself), shop_nr);
-    return TRUE;
+    return true;
   }
   if ((cmd == CMD_LIST) && (ch->in_room == shop_index[shop_nr].in_room)) {
     shopping_list(arg, (ch), (myself), shop_nr);
-    return TRUE;
+    return true;
   }
   if ((cmd == CMD_KILL) || (cmd == CMD_HIT)) {
     char argm[MAX_INPUT_LENGTH];
@@ -2378,9 +2378,9 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
     if ((myself) == get_char_room(argm, ch->in_room)) {
       shopping_kill(arg, (ch), myself, shop_nr);
-      return TRUE;
+      return true;
     }
-    return FALSE;
+    return false;
   }
   if ((cmd == CMD_CAST) || (cmd == CMD_RECITE) || (cmd == CMD_USE) ||
       (cmd == CMD_PRAY)) {
@@ -2388,8 +2388,8 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       myself->doTell(ch->getNameNOC(ch), "<r>No magic here - kid!<z>");
     } else
       act("I may not be able to see you kid, but there is no magic in here.",
-        FALSE, ch, 0, myself, TO_CHAR);
-    return TRUE;
+        false, ch, 0, myself, TO_CHAR);
+    return true;
   }
   if (cmd == CMD_LOOK || cmd == CMD_EXAMINE) {
     return shopping_look(arg, ch, myself, shop_nr);
@@ -2405,22 +2405,22 @@ int shop_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
   if ((cmd == CMD_DROP) && (ch->in_room == shop_index[shop_nr].in_room)) {
     // possible alternative would be to move dropped stuff to Room::DONATION
-    act("$N tells you, 'HEY!  Don't clutter up my shop'.", FALSE, ch, 0, myself,
+    act("$N tells you, 'HEY!  Don't clutter up my shop'.", false, ch, 0, myself,
       TO_CHAR);
-    return TRUE;
+    return true;
   }
 
   if (cmd == CMD_WHISPER) {
     return shopWhisper(ch, myself, shop_nr, arg);
   }
 
-  return FALSE;
+  return false;
 }
 
 void shoplog(int shop_nr, TBeing* ch, TMonster* keeper, const sstring& name,
   int cost, const sstring& action) {
   int value = 0, count = 0;
-  TThing* tt = NULL;
+  TThing* tt = nullptr;
   TObj* o;
 
   for (StuffIter it = keeper->stuff.begin();
@@ -2605,7 +2605,7 @@ bool safe_to_save_shop_stuff(TMonster* ch) {
                      mob_index[ch->getMobIndex()].virt);
     ch->doSay(
       "I'm not functioning properly.  Tell a god to check the logs, case 1.");
-    return FALSE;
+    return false;
   }
   if (mob_index[ch->getMobIndex()].getNumber() > 1) {
     vlogf(LOG_BUG,
@@ -2614,9 +2614,9 @@ bool safe_to_save_shop_stuff(TMonster* ch) {
         mob_index[ch->getMobIndex()].virt);
     ch->doSay(
       "I'm not functioning properly.  Tell a god to check the logs, case 2.");
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 /*void processShopFile(const char *cFname)
@@ -2626,7 +2626,7 @@ bool safe_to_save_shop_stuff(TMonster* ch) {
   unsigned char ucVersion;
 
   if (!cFname) {
-    vlogf(LOG_BUG, "  processShopFile called with NULL filename!");
+    vlogf(LOG_BUG, "  processShopFile called with nullptr filename!");
     return;
   }
   sprintf(fileName, "%s/%s", SHOPFILE_PATH, cFname);
@@ -2640,7 +2640,7 @@ cFname); return;
     return;
   }
 
-  if (!noteLimitedItems(fp, fileName, ucVersion, FALSE))
+  if (!noteLimitedItems(fp, fileName, ucVersion, false))
     vlogf(LOG_BUG, format("  Unable to count limited items in file  %s") %
 fileName); fclose(fp);
 }
@@ -2666,13 +2666,13 @@ shopData::shopData() :
   owned(false),
   profit_buy(1.0),
   profit_sell(1.0),
-  no_such_item1(NULL),
-  no_such_item2(NULL),
-  missing_cash1(NULL),
-  missing_cash2(NULL),
-  do_not_buy(NULL),
-  message_buy(NULL),
-  message_sell(NULL),
+  no_such_item1(nullptr),
+  no_such_item2(nullptr),
+  missing_cash1(nullptr),
+  missing_cash2(nullptr),
+  do_not_buy(nullptr),
+  message_buy(nullptr),
+  message_sell(nullptr),
   temper1(0),
   temper2(0),
   keeper(0),
@@ -2682,7 +2682,7 @@ shopData::shopData() :
   open2(0),
   close1(0),
   close2(0),
-  mkeeper(NULL),
+  mkeeper(nullptr),
   isCached(false) {}
 
 shopData::~shopData() {
@@ -2713,7 +2713,7 @@ shopData::shopData(const shopData& t) :
   open2(t.open2),
   close1(t.close1),
   close2(t.close2),
-  mkeeper(NULL),
+  mkeeper(nullptr),
   isCached(false) {
   unsigned int i;
   unsigned int max_prod = t.producing.size();
@@ -2796,7 +2796,7 @@ TMonster* shopData::getKeeper() {
 
   TRoom* r = real_roomp(in_room);
   if (!r)
-    return NULL;
+    return nullptr;
 
   // uncached: find the shopkeeper
   for (StuffIter it = r->stuff.begin(); it != r->stuff.end(); ++it) {
@@ -2808,7 +2808,7 @@ TMonster* shopData::getKeeper() {
       continue;
     if (mkeeper->number == keeper)
       break;
-    mkeeper = NULL;
+    mkeeper = nullptr;
   }
 
   return mkeeper;
@@ -2865,7 +2865,7 @@ void factoryProduction(int shop_nr) {
       continue;
     }
 
-    if (count >= tso.getMaxNum(NULL, obj, 10)) {
+    if (count >= tso.getMaxNum(nullptr, obj, 10)) {
       delete obj;
       continue;
     }

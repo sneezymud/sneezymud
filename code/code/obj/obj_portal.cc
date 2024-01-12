@@ -72,7 +72,7 @@ TPortal& TPortal::operator=(const TPortal& a) {
 }
 
 TPortal::~TPortal() {
-  act("Silently, $n fades from view.", TRUE, this, 0, 0, TO_ROOM);
+  act("Silently, $n fades from view.", true, this, 0, 0, TO_ROOM);
 }
 
 void TPortal::assignFourValues(int x1, int x2, int x3, int x4) {
@@ -196,8 +196,8 @@ void TPortal::closeMe(TBeing* ch) {
     if (isPortalFlag(EXIT_CLOSED))
       ch->sendTo("It's already closed!\n\r");
     else {
-      act("$n closes $p.", TRUE, ch, this, NULL, TO_ROOM);
-      act("You close $p.", TRUE, ch, this, NULL, TO_CHAR);
+      act("$n closes $p.", true, ch, this, nullptr, TO_ROOM);
+      act("You close $p.", true, ch, this, nullptr, TO_CHAR);
       portal_flag_change(this, EXIT_CLOSED,
         "%s is closed from the other side.\n\r", SET_TYPE);
     }
@@ -215,7 +215,7 @@ void TPortal::lockMe(TBeing* ch) {
     else if (isPortalFlag(EXIT_LOCKED))
       ch->sendTo("It's already locked!\n\r");
     else {
-      act("$n locks $p.", TRUE, ch, this, NULL, TO_ROOM);
+      act("$n locks $p.", true, ch, this, nullptr, TO_ROOM);
       portal_flag_change(this, EXIT_LOCKED,
         "%s is locked from the other side.\n\r", SET_TYPE);
       ch->sendTo("*Click*\n\r");
@@ -234,7 +234,7 @@ void TPortal::unlockMe(TBeing* ch) {
     else if (!isPortalFlag(EXIT_LOCKED))
       ch->sendTo("That's funny... it wasn't even locked!\n\r");
     else {
-      act("$n unlocks $p.", TRUE, ch, this, NULL, TO_ROOM);
+      act("$n unlocks $p.", true, ch, this, nullptr, TO_ROOM);
       portal_flag_change(this, EXIT_LOCKED,
         "%s is unlocked from the other side.\n\r", REMOVE_TYPE);
       ch->sendTo("*Click*\n\r");
@@ -266,16 +266,16 @@ int TPortal::enterMe(TBeing* ch) {
 
   if (isPortalFlag(EXIT_CLOSED)) {
     ch->sendTo("You can't enter that!  It's closed!\n\r");
-    return FALSE;
+    return false;
   }
   if (isPortalFlag(EXIT_NOENTER)) {
     ch->sendTo("You can't seem to find a way to enter that.\n\r");
-    return FALSE;
+    return false;
   }
   if (ch->isCombatMode(ATTACK_BERSERK) && ch->fight()) {
     ch->sendTo(
       "You are too overwhelmed with rage to leave the battle now!\n\r");
-    return FALSE;
+    return false;
   }
   if (!(rp = real_roomp(getTarget(&isRandom)))) {
     ch->sendTo(
@@ -283,15 +283,15 @@ int TPortal::enterMe(TBeing* ch) {
     ch->sendTo(
       "The sheer terror of that chaos prevents you from actually going "
       "through.\n\r");
-    return FALSE;
+    return false;
   }
   if (rp->getMoblim() && (MobCountInRoom(rp->stuff) >= rp->getMoblim()) &&
       !ch->isImmortal()) {
     act(
       "You attempt to enter $p, but it's like an invisible wall bars your "
       "entry.",
-      FALSE, ch, this, NULL, TO_CHAR);
-    return FALSE;
+      false, ch, this, nullptr, TO_CHAR);
+    return false;
   }
 
   if (isRandom == -1)
@@ -308,11 +308,11 @@ int TPortal::enterMe(TBeing* ch) {
 
     // if it blew up, go no further
     if (IS_SET_DELETE(rc, DELETE_ITEM))
-      return FALSE;
+      return false;
 
     // if we got teleported, go no further
     if (!sameRoom(*ch))
-      return FALSE;
+      return false;
   }
   int orig_room = ch->inRoom();
   if (ch->roomp->isFlyingSector() && !rp->isFlyingSector()) {
@@ -356,11 +356,11 @@ int TPortal::enterMe(TBeing* ch) {
     if (k->follower->inRoom() == orig_room &&
         k->follower->getPosition() >= POSITION_CRAWLING &&
         ch->riding == k->follower) {
-      act("You follow $N.", FALSE, k->follower, 0, ch, TO_CHAR);
-      rc = k->follower->doEnter(NULL, this);
+      act("You follow $N.", false, k->follower, 0, ch, TO_CHAR);
+      rc = k->follower->doEnter(nullptr, this);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete k->follower;
-        k->follower = NULL;
+        k->follower = nullptr;
       }
     }
   }
@@ -390,11 +390,11 @@ int TPortal::enterMe(TBeing* ch) {
     n = k->next;
     if (k->follower->inRoom() == orig_room &&
         k->follower->getPosition() >= POSITION_CRAWLING) {
-      act("You follow $N.", FALSE, k->follower, 0, ch, TO_CHAR);
-      rc = k->follower->doEnter(NULL, this);
+      act("You follow $N.", false, k->follower, 0, ch, TO_CHAR);
+      rc = k->follower->doEnter(nullptr, this);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete k->follower;
-        k->follower = NULL;
+        k->follower = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         return DELETE_THIS;
@@ -402,21 +402,21 @@ int TPortal::enterMe(TBeing* ch) {
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 TPortal* TPortal::findMatchingPortal() const {
   TRoom* rp;
 
   if (!(rp = real_roomp(getTarget()))) {
-    vlogf(LOG_BUG, format("Bad portal (%s) with destination to NULL room! %d") %
+    vlogf(LOG_BUG, format("Bad portal (%s) with destination to nullptr room! %d") %
                      getName() % getTarget());
-    return NULL;
+    return nullptr;
   }
   if (inRoom() < 0)
-    return NULL;
+    return nullptr;
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     TPortal* tp = dynamic_cast<TPortal*>(t);
@@ -425,7 +425,7 @@ TPortal* TPortal::findMatchingPortal() const {
     if ((tp->getTarget() == inRoom()) && tp != this)
       return tp;
   }
-  return NULL;
+  return nullptr;
 }
 
 int TPortal::chiMe(TBeing* tLunatic) {
@@ -438,15 +438,15 @@ int TPortal::chiMe(TBeing* tLunatic) {
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI) || obj_flags.decay_time <= 0) {
-    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+    act("You fail to affect $p in any way.", false, tLunatic, this, nullptr,
       TO_CHAR);
     return true;
   }
 
-  act("You focus upon $p causing it to shimmer out of existance!", FALSE,
-    tLunatic, this, NULL, TO_CHAR);
-  act("$n concentrates upon $p, causing it to vanish!", TRUE, tLunatic, this,
-    NULL, TO_ROOM);
+  act("You focus upon $p causing it to shimmer out of existance!", false,
+    tLunatic, this, nullptr, TO_CHAR);
+  act("$n concentrates upon $p, causing it to vanish!", true, tLunatic, this,
+    nullptr, TO_ROOM);
 
   return DELETE_VICT;
 }

@@ -39,5 +39,5 @@ bool TKeyring::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "I can't repair keyrings.");
   }
-  return TRUE;
+  return true;
 }

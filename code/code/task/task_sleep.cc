@@ -12,10 +12,10 @@ int task_sleep(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
   TObj*) {
   if (ch->isLinkdead() || (ch->getPosition() != POSITION_SLEEPING)) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   int regentime = ch->regenTime();
   switch (cmd) {
@@ -78,8 +78,8 @@ int task_sleep(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
       break;
     default:
       if (cmd < MAX_CMD_LIST)
-        return FALSE;  // process command
+        return false;  // process command
       break;           // eat the command
   }
-  return TRUE;
+  return true;
 }

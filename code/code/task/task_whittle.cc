@@ -135,22 +135,22 @@ void stop_whittling(TBeing* ch) {
   if (ch->task->obj) {
     if (whittleItems[ch->task->flags].affectValue) {
       ch->sendTo("Even if partly finished this item is still good.\n\r");
-      act("$n stores $s unfinished object.", FALSE, ch, NULL, NULL, TO_ROOM);
+      act("$n stores $s unfinished object.", false, ch, nullptr, nullptr, TO_ROOM);
       *ch += *ch->task->obj;
-      ch->task->obj = NULL;
+      ch->task->obj = nullptr;
     } else {
       ch->sendTo(
         "Unfortunatly this object is useless if not finished, so you trash "
         "it.\n\r");
-      act("$n throws $s unfinished object away.", FALSE, ch, NULL, NULL,
+      act("$n throws $s unfinished object away.", false, ch, nullptr, nullptr,
         TO_ROOM);
       delete ch->task->obj;
-      ch->task->obj = NULL;
+      ch->task->obj = nullptr;
     }
   }
 
   ch->sendTo("You stop what you are doing and look around.\n\r");
-  act("$n stops what $e is doing and looks around.", FALSE, ch, NULL, NULL,
+  act("$n stops what $e is doing and looks around.", false, ch, nullptr, nullptr,
     TO_ROOM);
   ch->stopTask();
 }
@@ -281,8 +281,8 @@ const char* tailMessages[] = {"has been left on the $g here.",
 //   <R>An oak arrow sits upon the $g here.<z>
 void task_whittleSetupObject(TBeing* ch, TObj* tObj, TOrganic* tWood,
   int tIndex) {
-  TArrow* tArrow = NULL;
-  TBow* tBow = NULL;
+  TArrow* tArrow = nullptr;
+  TBow* tBow = nullptr;
   sstring tStPost, tStWood, tStObject, tStString, tString;
 
   if ((tArrow = dynamic_cast<TArrow*>(tObj)) ||
@@ -321,7 +321,7 @@ void task_whittleSetupObject(TBeing* ch, TObj* tObj, TOrganic* tWood,
 }
 
 bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
-  TOrganic *tWood = NULL, *tOldWood = NULL;
+  TOrganic *tWood = nullptr, *tOldWood = nullptr;
   bool realCreate = (ch->task ? true : false), deleteOld = false;
   double totalWood[2] = {0, 0};
 
@@ -330,7 +330,7 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
       if (isname((*it)->name, tStWood)) {
         if ((tWood = dynamic_cast<TOrganic*>(*it))) {
           if (tWood->getOType() != ORGANIC_WOOD) {
-            tWood = NULL;
+            tWood = nullptr;
             continue;
           }
 
@@ -364,7 +364,7 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
         if (!tOldWood)
           tOldWood = tWood;
 
-        act("You use $p for your object.", FALSE, ch, tWood, NULL, TO_CHAR);
+        act("You use $p for your object.", false, ch, tWood, nullptr, TO_CHAR);
 
         if (newWeight > 0)
           newWeight -= tWood->getWeight();
@@ -373,8 +373,8 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
           newVolume -= tWood->getVolume();
 
         if (newWeight > -1 || newVolume > -1) {
-          act("$p is pretty much used up so you scrap what's left.", FALSE, ch,
-            tWood, NULL, TO_CHAR);
+          act("$p is pretty much used up so you scrap what's left.", false, ch,
+            tWood, nullptr, TO_CHAR);
 
           --(*tWood);
 
@@ -385,8 +385,8 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
         } else {
           tWood->setWeight(-(newWeight));
           tWood->setVolume((int)(-newVolume));
-          act("You cut a chunk of wood off of $p to create the object.", FALSE,
-            ch, tWood, NULL, TO_CHAR);
+          act("You cut a chunk of wood off of $p to create the object.", false,
+            ch, tWood, nullptr, TO_CHAR);
 
           break;
         }
@@ -406,7 +406,7 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
 
     if (tOldWood && deleteOld) {
       delete tOldWood;
-      tOldWood = NULL;
+      tOldWood = nullptr;
     }
 
     return true;
@@ -417,15 +417,15 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
 
 int checkForSlipup(TBeing* ch) {
   int tCheck = min(100, max(0, (ch->getSkillValue(SKILL_WHITTLE) - 10)));
-  TThing* tWeapon = NULL;
-  TGenWeapon* tWeap = NULL;
+  TThing* tWeapon = nullptr;
+  TGenWeapon* tWeap = nullptr;
 
   tWeap = dynamic_cast<TGenWeapon*>((tWeapon = ch->heldInPrimHand()));
 
   if (tCheck < ::number(-50, 100) && !ch->isImmortal()) {
-    act("You slip up and cut yourself on $p.", FALSE, ch, tWeapon, NULL,
+    act("You slip up and cut yourself on $p.", false, ch, tWeapon, nullptr,
       TO_CHAR);
-    act("$n slips up and cuts $mself on $p", FALSE, ch, tWeapon, NULL, TO_ROOM);
+    act("$n slips up and cuts $mself on $p", false, ch, tWeapon, nullptr, TO_ROOM);
 
     if (tWeap->getCurSharp() > 4)
       tWeap->addToCurSharp(-3);
@@ -436,7 +436,7 @@ int checkForSlipup(TBeing* ch) {
           SKILL_WHITTLE) == -1) {
       if (ch->task->obj) {
         delete ch->task->obj;
-        ch->task->obj = NULL;
+        ch->task->obj = nullptr;
       }
 
       ch->stopTask();
@@ -444,26 +444,26 @@ int checkForSlipup(TBeing* ch) {
       return DELETE_THIS;
     }
 
-    return TRUE;
+    return true;
   }
 
   if (tWeap->getCurSharp() && tCheck < ::number(0, 100) && !ch->isImmortal())
     if (tWeap->getCurSharp() > 4)
       tWeap->addToCurSharp(-3);
 
-  return FALSE;
+  return false;
 }
 
 // This process is supposed to take a TON of time.  Please keep it that way.
 int task_whittleObject(TBeing* ch, sstring tStWood) {
-  int nRc = TRUE;
+  int nRc = true;
   // dRc;
   TArrow* tArrow = dynamic_cast<TArrow*>(ch->task->obj);
   TBow* tBow = dynamic_cast<TBow*>(ch->task->obj);
 
   //  Dash requested damage from whittle be removed
   //
-  //  if ((dRc = checkForSlipup(ch)) != FALSE)
+  //  if ((dRc = checkForSlipup(ch)) != false)
   //  return dRc;
 
   ch->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_WHITTLE, 1);
@@ -474,7 +474,7 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
   double process = ((++ch->task->timeLeft) / objSize);
 
   if (process >= 0.00 && process <= 0.40) {
-    act("You gently carve a part of $p.", FALSE, ch, ch->task->obj, NULL,
+    act("You gently carve a part of $p.", false, ch, ch->task->obj, nullptr,
       TO_CHAR);
   }
 
@@ -488,8 +488,8 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_CARVED);
     }
 
-    act("You gently scrape the nodes off of $p.", FALSE, ch, ch->task->obj,
-      NULL, TO_CHAR);
+    act("You gently scrape the nodes off of $p.", false, ch, ch->task->obj,
+      nullptr, TO_CHAR);
   }
 
   if (process >= 0.81 && process <= 0.99) {
@@ -502,7 +502,7 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_SCRAPED);
     }
 
-    act("You gently smooth $p.", FALSE, ch, ch->task->obj, NULL, TO_CHAR);
+    act("You gently smooth $p.", false, ch, ch->task->obj, nullptr, TO_CHAR);
   }
 
   if (process >= 1.00) {
@@ -515,24 +515,24 @@ int task_whittleObject(TBeing* ch, sstring tStWood) {
       task_whittlePulse(ch, tBow, WHITTLE_PULSE_SMOOTHED);
     }
 
-    act("You are done with $p.", FALSE, ch, ch->task->obj, NULL, TO_CHAR);
-    act("$n finishes whittling $p.", FALSE, ch, ch->task->obj, NULL, TO_ROOM);
+    act("You are done with $p.", false, ch, ch->task->obj, nullptr, TO_CHAR);
+    act("$n finishes whittling $p.", false, ch, ch->task->obj, nullptr, TO_ROOM);
     TThing* tThing;
     tThing = ch->task->obj;
     *ch += *tThing;
-    ch->task->obj = NULL;
+    ch->task->obj = nullptr;
 
     if (tArrow) {
       if (tStWood.empty()) {
         ch->sendTo("You finish your modifications and stop.\n\r");
-        act("$n finishes $s work and stops.", FALSE, ch, NULL, NULL, TO_ROOM);
+        act("$n finishes $s work and stops.", false, ch, nullptr, nullptr, TO_ROOM);
         ch->stopTask();
       } else if (!task_whittleCreateNew(ch, tStWood, ch->task->flags)) {
         ch->sendTo("You don't have enough wood to make another arrow.\n\r");
         ch->stopTask();
       } else {
         ch->sendTo("You begin making another arrow.\n\r");
-        act("$n starts on a new arrow.", FALSE, ch, NULL, NULL, TO_ROOM);
+        act("$n starts on a new arrow.", false, ch, nullptr, nullptr, TO_ROOM);
       }
     } else
       ch->stopTask();
@@ -691,7 +691,7 @@ void TBeing::doWhittle(const char* tArg) {
       return;
     }
 
-    start_task(this, NULL, roomp, TASK_WHITTLE, tStWood.c_str(), 0, in_room, 1,
+    start_task(this, nullptr, roomp, TASK_WHITTLE, tStWood.c_str(), 0, in_room, 1,
       tIndex, 40);
 
     if (!task_whittleCreateNew(this, tStWood, tIndex)) {
@@ -704,26 +704,26 @@ void TBeing::doWhittle(const char* tArg) {
 
 int task_whittle(TBeing* ch, cmdTypeT cmd, const char* tArg, int pulse, TRoom*,
   TObj* tObj) {
-  int nRc = TRUE;
+  int nRc = true;
   sstring tStWood(tArg);
   TGenWeapon* tWeapon;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
       ch->task->flags < 1 || ch->task->flags >= (signed)whittleItems.size()) {
     stop_whittling(ch);
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd) ||
       cmd == CMD_EAT || cmd == CMD_DRINK)
-    return FALSE;
+    return false;
 
   if (!tObj) {
     ch->sendTo(
       "Somehow the object you were making has vanished, how odd...\n\r");
-    act("$n looks around really confused.", FALSE, ch, NULL, NULL, TO_ROOM);
+    act("$n looks around really confused.", false, ch, nullptr, nullptr, TO_ROOM);
     ch->stopTask();
-    return TRUE;
+    return true;
   }
 
   if (!(tWeapon = dynamic_cast<TGenWeapon*>(ch->heldInPrimHand())) ||
@@ -731,9 +731,9 @@ int task_whittle(TBeing* ch, cmdTypeT cmd, const char* tArg, int pulse, TRoom*,
     ch->sendTo(
       "Hrm.  Your no longer using an appropriate weapon, so you are forced to "
       "stop.\n\r");
-    act("$n looks around really confused.", FALSE, ch, NULL, NULL, TO_ROOM);
+    act("$n looks around really confused.", false, ch, nullptr, nullptr, TO_ROOM);
     stop_whittling(ch);
-    return TRUE;
+    return true;
   }
 
   switch (cmd) {
@@ -786,7 +786,7 @@ sstring taskWhittleEntry::getName(bool showSecond) {
 void taskWhittleEntry::operator()(sstring tString, int newtClass,
   int newWhittleReq, int newItemVnum, bool newAffectValue,
   whittleTypeT newItemType = WHITTLE_ERROR) {
-  TObj* tObj = NULL;
+  TObj* tObj = nullptr;
   int tRealNum = -1;
 
   name = tString;
@@ -816,7 +816,7 @@ void taskWhittleEntry::operator()(sstring tString, int newtClass,
 
     valid = true;
     delete tObj;
-    tObj = NULL;
+    tObj = nullptr;
   }
 }
 

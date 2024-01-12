@@ -24,10 +24,10 @@ int THandgonne::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
       ch->checkPeacefulVictim(
         "They are in a peaceful room. You can't seem to fire the gun.\n\r",
         targ))
-    return FALSE;
+    return false;
 
   if (targ && ch->noHarmCheck(targ))
-    return FALSE;
+    return false;
 
   // find flint
   TTool* flint;
@@ -46,32 +46,32 @@ int THandgonne::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
 
   if (!flint) {
     ch->sendTo("You need to have some flint and steel to light it.\n\r");
-    return FALSE;
+    return false;
   }
 
   flint->addToToolUses(-1);
   if (flint->getToolUses() <= 0) {
-    act("You use the last of your flint and steel.", FALSE, ch, NULL, 0,
+    act("You use the last of your flint and steel.", false, ch, nullptr, 0,
       TO_CHAR);
     delete flint;
   }
 
-  act("You light a fuse and bring it to the touchhole of $N!", TRUE, ch, NULL,
+  act("You light a fuse and bring it to the touchhole of $N!", true, ch, nullptr,
     this, TO_CHAR);
-  act("$n lights a fuse and brings it to the touchhole of $N!", TRUE, ch, NULL,
+  act("$n lights a fuse and brings it to the touchhole of $N!", true, ch, nullptr,
     this, TO_ROOM);
 
   if (!ammo) {
-    act("Nothing happens.  $N is not loaded.", TRUE, ch, NULL, this, TO_CHAR);
-    return FALSE;
+    act("Nothing happens.  $N is not loaded.", true, ch, nullptr, this, TO_CHAR);
+    return false;
   }
 
   // 1% backfire rate
   if (!::number(0, 99)) {
-    act("<r>Something goes wrong and <1>$N<r> explodes in your face!<1>", TRUE,
-      ch, NULL, this, TO_CHAR);
-    act("<r>Something goes wrong and <1>$N<r> expodes in $n's face!<1>", TRUE,
-      ch, NULL, this, TO_ROOM);
+    act("<r>Something goes wrong and <1>$N<r> explodes in your face!<1>", true,
+      ch, nullptr, this, TO_CHAR);
+    act("<r>Something goes wrong and <1>$N<r> expodes in $n's face!<1>", true,
+      ch, nullptr, this, TO_ROOM);
 
     addToFlags(GUN_FLAG_FOULED);
 
@@ -79,7 +79,7 @@ int THandgonne::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    return FALSE;
+    return false;
   }
 
   // 10% failure rate
@@ -87,15 +87,15 @@ int THandgonne::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
     addToFlags(GUN_FLAG_FOULED);
 
   if (isFouled()) {
-    act("Nothing happens, $N has been fouled and won't fire!", TRUE, ch, NULL,
+    act("Nothing happens, $N has been fouled and won't fire!", true, ch, nullptr,
       this, TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   if ((!ch->roomp->isIndoorSector() &&
         Weather::getSky() == Weather::SKY_RAINING) ||
       ch->roomp->isUnderwaterSector()) {
-    act("Nothing happens, $N has been fouled by wet weather!", TRUE, ch, NULL,
+    act("Nothing happens, $N has been fouled by wet weather!", true, ch, nullptr,
       this, TO_CHAR);
 
     addToFlags(GUN_FLAG_FOULED);
@@ -115,10 +115,10 @@ int THandgonne::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
 
   // send messages
   sstring lc_bullet =
-    colorString(ch, ch->desc, bullet->getName(), NULL, COLOR_OBJECTS, TRUE)
+    colorString(ch, ch->desc, bullet->getName(), nullptr, COLOR_OBJECTS, true)
       .uncap();
   sstring lc_gun =
-    colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE).uncap();
+    colorString(ch, ch->desc, getName(), nullptr, COLOR_OBJECTS, true).uncap();
 
   if (targ) {
     ch->sendTo(COLOR_BASIC,
@@ -133,10 +133,10 @@ int THandgonne::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
     ch->sendTo(format("You shoot %s out of %s.\n\r") % lc_bullet % lc_gun);
   }
 
-  act("<Y>BANG!<1>  A loud blast sounds as $n ignites $p.", FALSE, ch, this,
+  act("<Y>BANG!<1>  A loud blast sounds as $n ignites $p.", false, ch, this,
     bullet, TO_ROOM);
   act(format("$n points $p %swards, and shoots $N out of it.") % dirs[dir],
-    FALSE, ch, this, bullet, TO_ROOM);
+    false, ch, this, bullet, TO_ROOM);
 
   ch->dropGas(::number(1, 5), GAS_SMOKE);
 
@@ -152,17 +152,17 @@ int THandgonne::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
   // delete the bullet afterwards, arbitrary decision
   // since they are arrow type and you usually don't find spent lead anyway
   delete bullet;
-  bullet = NULL;
+  bullet = nullptr;
 
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     delete targ;
-    targ = NULL;
-    return FALSE;
+    targ = nullptr;
+    return false;
   }
 
   ch->addToWait(combatRound(1));
 
-  return FALSE;
+  return false;
 }
 
 int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
@@ -173,14 +173,14 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
   TThing* t;
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // basic tasky safechecking
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom)) {
-    act("You cease loading.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops loading.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You cease loading.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops loading.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   // find powder
@@ -197,7 +197,7 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
   if (!powder) {
     ch->sendTo("You need to have some black powder.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   // find shot
@@ -214,13 +214,13 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
   if (!shot) {
     ch->sendTo("You need to have some shot.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->task && ch->task->timeLeft < 0) {
     ch->sendTo("You stop loading.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -232,14 +232,14 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
           // powder
           handgonne->addToFlags(GUN_FLAG_FOULED);
 
-          act("You pack some powder from $p into %N.", FALSE, ch, powder, 0,
+          act("You pack some powder from $p into %N.", false, ch, powder, 0,
             TO_CHAR);
-          act("$n packs some powder from $p into %N.", TRUE, ch, powder, 0,
+          act("$n packs some powder from $p into %N.", true, ch, powder, 0,
             TO_ROOM);
 
           powder->addToToolUses(-1);
           if (powder->getToolUses() <= 0) {
-            act("You use the last of your powder.", FALSE, ch, NULL, 0,
+            act("You use the last of your powder.", false, ch, nullptr, 0,
               TO_CHAR);
             delete powder;
           }
@@ -248,9 +248,9 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
           break;
         case 2:
           // plug
-          act("You push a <o>wooden plug<1> down the barrel of $N.", TRUE, ch,
+          act("You push a <o>wooden plug<1> down the barrel of $N.", true, ch,
             shot, handgonne, TO_CHAR);
-          act("$n pushes a <o>wooden plug<1> down the barrel of $N.", TRUE, ch,
+          act("$n pushes a <o>wooden plug<1> down the barrel of $N.", true, ch,
             shot, handgonne, TO_ROOM);
           ch->task->timeLeft--;
           break;
@@ -259,16 +259,16 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
           --(*shot);
           handgonne->setAmmo(shot);
 
-          act("You load $p into $N.", TRUE, ch, shot, handgonne, TO_CHAR);
-          act("$n loads $p into $N.", TRUE, ch, shot, handgonne, TO_ROOM);
+          act("You load $p into $N.", true, ch, shot, handgonne, TO_CHAR);
+          act("$n loads $p into $N.", true, ch, shot, handgonne, TO_ROOM);
 
           ch->task->timeLeft--;
           break;
         case 0:
           // primer
-          act("You pour priming powder into the touchhole of $N.", TRUE, ch,
+          act("You pour priming powder into the touchhole of $N.", true, ch,
             shot, handgonne, TO_CHAR);
-          act("$n pours priming powder into the touchhole of $N.", TRUE, ch,
+          act("$n pours priming powder into the touchhole of $N.", true, ch,
             shot, handgonne, TO_ROOM);
 
           ch->sendTo(COLOR_BASIC, format("You have finished loading %s.\n\r") %
@@ -280,8 +280,8 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You cease loading.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops loading.", TRUE, ch, 0, 0, TO_ROOM);
+      act("You cease loading.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops loading.", true, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -293,7 +293,7 @@ int task_handgonne_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 void THandgonne::loadMe(TBeing* ch, TAmmo* ammo) {
@@ -319,12 +319,12 @@ void THandgonne::unloadMe(TBeing* ch, TAmmo* ammo) {
     --(*arrow);
     *ch += *arrow;
 
-    act("You unload $N.", TRUE, ch, ammo, this, TO_CHAR);
-    act("$n unloads $N.", TRUE, ch, ammo, this, TO_ROOM);
+    act("You unload $N.", true, ch, ammo, this, TO_CHAR);
+    act("$n unloads $N.", true, ch, ammo, this, TO_ROOM);
   }
 
-  act("You clear out $N.", TRUE, ch, ammo, this, TO_CHAR);
-  act("$n clears out $N.", TRUE, ch, ammo, this, TO_ROOM);
+  act("You clear out $N.", true, ch, ammo, this, TO_CHAR);
+  act("$n clears out $N.", true, ch, ammo, this, TO_ROOM);
 
   remFromFlags(GUN_FLAG_FOULED);
 

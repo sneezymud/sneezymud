@@ -195,7 +195,7 @@ void TBeing::doSave(silentTypeT silent, const char* tArg) {
     }
 
     // the original char should not know about the desc (by default)
-    tPerson->desc = NULL;
+    tPerson->desc = nullptr;
 
     return;
   } else {

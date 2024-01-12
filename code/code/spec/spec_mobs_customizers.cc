@@ -66,7 +66,7 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
   dirTypeT dir = DIR_NONE;
   roomDirData* exitp;
   int rc;
-  TBeing* tbt = NULL;
+  TBeing* tbt = nullptr;
   TThing* ttt;
 
   class reg_struct {
@@ -75,12 +75,12 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
       int cost;
       char* char_name;
       char* obj_name;
-      reg_struct() : wait(0), cost(0), char_name(NULL), obj_name(NULL) {}
+      reg_struct() : wait(0), cost(0), char_name(nullptr), obj_name(nullptr) {}
       ~reg_struct() {
         delete[] char_name;
-        char_name = NULL;
+        char_name = nullptr;
         delete[] obj_name;
-        obj_name = NULL;
+        obj_name = nullptr;
       }
   };
   static reg_struct* job;
@@ -90,14 +90,14 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
       return shopWhisper(ch, me, find_shop_nr(me->number), arg);
     case CMD_GENERIC_DESTROYED:
       delete (reg_struct*)me->act_ptr;
-      me->act_ptr = NULL;
-      return FALSE;
+      me->act_ptr = nullptr;
+      return false;
     case CMD_GENERIC_CREATED:
       if (!(me->act_ptr = new reg_struct())) {
         perror("failed new of customizer.");
         exit(0);
       }
-      return FALSE;
+      return false;
     case CMD_MOB_MOVED_INTO_ROOM:
 
       return kick_mobs_from_shop(me, ch, (long int)o);
@@ -107,39 +107,39 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
       tbt = dynamic_cast<TBeing*>(ttt);
       me->doSay("Hey!  Take it outside.");
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        if (exit_ok(exitp = me->exitDir(dir), NULL)) {
-          act("$n throws you from $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, me, 0, ch, TO_NOTVICT);
-          me->throwChar(ch, dir, FALSE, SILENT_NO, true);
-          act("$n throws you from $s shop.", FALSE, me, 0, tbt, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, me, 0, tbt, TO_NOTVICT);
-          me->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-          return TRUE;
+        if (exit_ok(exitp = me->exitDir(dir), nullptr)) {
+          act("$n throws you from $s shop.", false, me, 0, ch, TO_VICT);
+          act("$n throws $N from $s shop.", false, me, 0, ch, TO_NOTVICT);
+          me->throwChar(ch, dir, false, SILENT_NO, true);
+          act("$n throws you from $s shop.", false, me, 0, tbt, TO_VICT);
+          act("$n throws $N from $s shop.", false, me, 0, tbt, TO_NOTVICT);
+          me->throwChar(tbt, dir, false, SILENT_NO, true);
+          return true;
         }
       }
-      return TRUE;
+      return true;
     case CMD_GENERIC_PULSE:
       if (!(job = (reg_struct*)me->act_ptr)) {
         vlogf(LOG_PROC, "CUSTOMIZER PROC ERROR: terminating (hopefully)");
-        return FALSE;
+        return false;
       }
       if (!job->char_name || !job->obj_name)
-        return FALSE;
+        return false;
 
       if (job->wait > 0) {
         job->wait--;
         if (!job->wait) {
           buf = format("That should do it %s!") % job->char_name;
           me->doSay(buf);
-          TThing* ts = NULL;
-          TObj* final = NULL;
+          TThing* ts = nullptr;
+          TObj* final = nullptr;
           if (!(ts = searchLinkedList(job->obj_name, me->stuff)) ||
               !(final = dynamic_cast<TObj*>(ts))) {
             me->doSay(
               "Ack, I lost the item somehow! Tell a god immediately!  ");
             vlogf(LOG_PROC, format("customizer lost customizing item (%s)") %
                               (final ? final->name : ""));
-            return FALSE;
+            return false;
           }
 
           if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
@@ -147,10 +147,10 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
               "Hmm, I seem to have lost the person I was customizing for.");
             me->doSay("Well I can't customize this now.");
             me->doSay("Hopefully they come back for this.");
-            rc = me->doDrop(job->obj_name, NULL);
+            rc = me->doDrop(job->obj_name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
-            return FALSE;
+            return false;
           }
 
           final->swapToStrung();
@@ -175,47 +175,47 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
           if ((final_pers->getCarriedVolume() + final->getTotalVolume()) >
               final_pers->carryVolumeLimit()) {
             me->doSay("You can't carry it! I'll just drop it here for you!");
-            rc = me->doDrop(job->obj_name, NULL);
+            rc = me->doDrop(job->obj_name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
             delete[] job->char_name;
-            job->char_name = NULL;
+            job->char_name = nullptr;
             delete[] job->obj_name;
-            job->obj_name = NULL;
+            job->obj_name = nullptr;
             job->cost = 0;
-            return FALSE;
+            return false;
           }
           // final-weight > free final carry weight
-          if (compareWeights(final->getTotalWeight(TRUE),
+          if (compareWeights(final->getTotalWeight(true),
                 (final_pers->carryWeightLimit() -
                   final_pers->getCarriedWeight())) == -1) {
             me->doSay("You can't carry it! I'll just drop it here for you!");
-            rc = me->doDrop(job->obj_name, NULL);
+            rc = me->doDrop(job->obj_name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
             delete[] job->char_name;
-            job->char_name = NULL;
+            job->char_name = nullptr;
             delete[] job->obj_name;
-            job->obj_name = NULL;
+            job->obj_name = nullptr;
 
             job->cost = 0;
-            return FALSE;
+            return false;
           }
           buf = format("%s %s") % job->obj_name % job->char_name;
           if (me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT) == DELETE_THIS)
             return DELETE_THIS;
           delete[] job->char_name;
-          job->char_name = NULL;
+          job->char_name = nullptr;
           delete[] job->obj_name;
-          job->obj_name = NULL;
+          job->obj_name = nullptr;
 
           job->cost = 0;
-          return FALSE;
+          return false;
         } else {
           buf = format("$n works furiously to customize %s's %s.") %
                 job->char_name % job->obj_name;
-          act(buf, FALSE, me, NULL, ch, TO_ROOM);
-          return FALSE;
+          act(buf, false, me, nullptr, ch, TO_ROOM);
+          return false;
         }
       }
       break;
@@ -230,61 +230,61 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
     case CMD_SE:
     case CMD_NW:
       if (!(job = (reg_struct*)me->act_ptr)) {
-        return FALSE;
+        return false;
       }
       if (!job->char_name) {
-        return FALSE;
+        return false;
       }
       if (job->char_name == ch->getName()) {
         buf = format("%s! Don't leave until I finish with this %s!") %
               ch->getName().c_str() % job->obj_name;
         me->doSay(buf);
-        return TRUE;
+        return true;
       } else
-        return FALSE;
+        return false;
       break;
     case CMD_VALUE: {
       for (; *arg && isspace(*arg); arg++)
         ;
-      TThing* ts = NULL;
-      TObj* valued = NULL;
+      TThing* ts = nullptr;
+      TObj* valued = nullptr;
       if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
           !(valued = dynamic_cast<TObj*>(ts))) {
         me->doTell(ch->getName(), "You don't have that item.");
-        return TRUE;
+        return true;
       }
 
       if (custtype == TYPE_TAILOR && valued->itemType() != ITEM_WORN) {
         me->doTell(ch->getName(), "I only customize clothing.");
-        return TRUE;
+        return true;
       }
 
       if (custtype == TYPE_BLACKSMITH && valued->itemType() != ITEM_ARMOR) {
         me->doTell(ch->getName(), "I only customize armor.");
-        return TRUE;
+        return true;
       }
 
       if (valued->engraveMe(ch, me, false))
-        return TRUE;
+        return true;
 
       if (valued->obj_flags.cost <= 500) {
         me->doTell(ch->getName(), "This item is too cheap to be customized.");
-        return TRUE;
+        return true;
       }
       if (!valued->action_description.empty()) {
         me->doTell(ch->getName(), "This item has already been customized!");
-        return TRUE;
+        return true;
       }
       if (obj_index[valued->getItemIndex()].max_exist <= 10) {
         me->doTell(ch->getName(),
           "I refuse to customize such an artifact of beauty!");
-        return TRUE;
+        return true;
       }
       if (valued->obj_flags.decay_time >= 0) {
         me->doTell(ch->getName(),
           "Sorry, but this item won't last long enough to bother with an "
           "customizing!");
-        return TRUE;
+        return true;
       }
 
       cost = engraveCost(valued, ch, find_shop_nr(me->number));
@@ -294,17 +294,17 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
       me->doTell(ch->getName(),
         format("It will cost %d talens to customize your %s.") % cost %
           fname(valued->name));
-      return TRUE;
+      return true;
     }
     case CMD_MOB_GIVEN_ITEM:
       // prohibit polys and charms from engraving
       if (dynamic_cast<TMonster*>(ch)) {
         me->doTell(fname(ch->name), "I don't work for beasts.");
-        return TRUE;
+        return true;
       }
       if (!(item = o)) {
         me->doTell(ch->getName(), "You don't have that item!");
-        return TRUE;
+        return true;
       }
       me->logItem(item, CMD_EAST);  // log the receipt of the item
 
@@ -312,45 +312,45 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
         me->doTell(ch->getName(), "I only customize clothing.");
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
 
       if (custtype == TYPE_BLACKSMITH && item->itemType() != ITEM_ARMOR) {
         me->doTell(ch->getName(), "I only customize armor.");
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
 
       if (item->engraveMe(ch, me, true))
-        return TRUE;
+        return true;
 
       if (item->obj_flags.cost <= 500) {
         me->doTell(ch->getName(), "That can't be customized!");
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       if (!item->action_description.empty()) {
         me->doTell(ch->getName(),
           "Sorry, but this item has already been customized!");
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       if (obj_index[item->getItemIndex()].max_exist <= 10) {
         me->doTell(ch->getName(),
           "This artifact is too powerful to be customized!");
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       if (item->obj_flags.decay_time >= 0) {
         me->doTell(ch->getName(),
           "This won't be around long enough to bother customizing it!");
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
 
       cost = engraveCost(item, ch, find_shop_nr(me->number));
@@ -363,7 +363,7 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
           "the work!");
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       job = (reg_struct*)me->act_ptr;
       if (!job->wait || !job->char_name) {
@@ -389,7 +389,7 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
         me->saveChar(Room::AUTO_RENT);
         ch->saveChar(Room::AUTO_RENT);
 
-        return TRUE;
+        return true;
       } else {
         buf =
           format(
@@ -398,11 +398,11 @@ int customizer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o,
         me->doSay(buf);
         buf = format("%s %s") % add_bars(item->name) % fname(ch->name);
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }

@@ -68,7 +68,7 @@ void TBeing::initDescStuff(charFile* st) {
     return;
   }
   if (st->plr_act & PLR_STEALTH)
-    d->clientf(format("%d|%d") % CLIENT_STEALTH % TRUE);
+    d->clientf(format("%d|%d") % CLIENT_STEALTH % true);
 
   wizFileRead();
 }
@@ -80,7 +80,7 @@ void TPerson::resetChar() {
   sstring recipient;
   affectedData* af;
 
-  roomp = NULL;
+  roomp = nullptr;
 
   if (isPlayerAction(PLR_MAILING))
     remPlayerAction(PLR_MAILING);
@@ -186,13 +186,13 @@ void TPerson::resetChar() {
   setHitroll(0);
   setDamroll(0);
 
-  next_fighting = NULL;
-  specials.fighting = NULL;
+  next_fighting = nullptr;
+  specials.fighting = nullptr;
   setPosition(POSITION_STANDING);
 
   if (isAffected(AFF_SLEEP) && (getPosition() > POSITION_SLEEPING)) {
     sendTo("You grow sleepy and can remain awake no longer.\n\r");
-    act("$n collapses as $e falls asleep.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n collapses as $e falls asleep.", true, this, 0, 0, TO_ROOM);
     setPosition(POSITION_SLEEPING);
   }
 
@@ -282,7 +282,7 @@ void TPerson::resetChar() {
   // certain affects which are then put on here.
   for (af = affected; af; af = af->next) {
     affectModify(af->location, (unsigned)af->modifier, (unsigned)af->modifier2,
-      af->bitvector, TRUE, SILENT_YES);
+      af->bitvector, true, SILENT_YES);
   }
 
   if (doesKnowSkill(SKILL_TELE_SIGHT))
@@ -312,11 +312,11 @@ bool raw_save_char(const char* name, charFile* char_element) {
     sstring(name).lower().c_str());
 
   if (!(fl = fopen(buf, "w")))
-    return FALSE;
+    return false;
 
   if (!(fwrite(char_element, sizeof(charFile), 1, fl))) {
     fclose(fl);
-    return FALSE;
+    return false;
   }
   fclose(fl);
 
@@ -326,10 +326,10 @@ bool raw_save_char(const char* name, charFile* char_element) {
     "where lower(p.name)=lower('%s') and a.name='%s'",
     char_element->money, name, char_element->aname);
 
-  return TRUE;
+  return true;
 }
 
-// Load a char, TRUE if loaded, FALSE if not
+// Load a char, true if loaded, false if not
 bool load_char(const sstring& name, charFile* char_element,
   std::unique_ptr<IDatabase> dbase) {
   FILE* fl;
@@ -338,7 +338,7 @@ bool load_char(const sstring& name, charFile* char_element,
   sprintf(buf, "mutable/player/%c/%s", LOWER(name[0]), name.lower().c_str());
 
   if (!(fl = fopen(buf, "r")))
-    return FALSE;
+    return false;
 
   int rc = fread(char_element, sizeof(charFile), 1, fl);
   fclose(fl);
@@ -358,8 +358,8 @@ bool load_char(const sstring& name, charFile* char_element,
   }
 
   if (rc == 1)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 // copy vital data from a players char-structure to the file structure
@@ -389,7 +389,7 @@ void TPerson::storeToSt(charFile* st) {
     if (equipment[ij])
       char_eq[ij] = unequip_char_for_save(this, ij);
     else
-      char_eq[ij] = NULL;
+      char_eq[ij] = nullptr;
   }
 
   int j;
@@ -405,7 +405,7 @@ void TPerson::storeToSt(charFile* st) {
         applyTypeShouldBeSpellnum(att)
           ? mapFileToSpellnum(st->affected[j].modifier)
           : st->affected[j].modifier,
-        st->affected[j].modifier2, st->affected[j].bitvector, FALSE,
+        st->affected[j].modifier2, st->affected[j].bitvector, false,
         SILENT_YES);
       af = af->next;
     } else {
@@ -575,7 +575,7 @@ void TPerson::storeToSt(charFile* st) {
         applyTypeShouldBeSpellnum(att)
           ? mapFileToSpellnum(st->affected[i].modifier)
           : st->affected[i].modifier,
-        st->affected[i].modifier2, st->affected[i].bitvector, TRUE, SILENT_YES);
+        st->affected[i].modifier2, st->affected[i].bitvector, true, SILENT_YES);
       af = af->next;
     }
   }
@@ -633,19 +633,19 @@ void TPerson::loadFromSt(charFile* st) {
 
   setCombatMode(st->attack_type);
 
-  shortDescr = NULL;
-  player.longDescr = NULL;
+  shortDescr = nullptr;
+  player.longDescr = nullptr;
 #if 0
   if (*st->title) {
     title = st->title;
   } else
-    title = NULL;
+    title = nullptr;
 #endif
 
   if (*st->description) {
     setDescr(st->description);
   } else
-    setDescr(NULL);
+    setDescr(nullptr);
 
   // Need toggles loaded before skills
   loadToggles();
@@ -780,9 +780,9 @@ void TPerson::loadFromSt(charFile* st) {
 
   desc->autobits = st->autobits;
 
-  setCaptive(NULL);
-  setNextCaptive(NULL);
-  setCaptiveOf(NULL);
+  setCaptive(nullptr);
+  setNextCaptive(nullptr);
+  setCaptiveOf(nullptr);
 
   // fatigue = st->fatigue;
   setHeroNum(st->hero_num);
@@ -944,7 +944,7 @@ void TBeing::saveChar(int load_room) {
 
   if (!desc->account->name[0]) {
     vlogf(LOG_BUG,
-      format("Character %s has a NULL account name! Save aborted.") %
+      format("Character %s has a nullptr account name! Save aborted.") %
         getName());
     return;
   }
@@ -1069,7 +1069,7 @@ void TBeing::wipeChar(int) {
   removeRent();
   removeFollowers();
 
-  DeleteHatreds(this, NULL);
+  DeleteHatreds(this, nullptr);
 
   AccountStats::player_count--;
 }
@@ -1093,7 +1093,7 @@ void do_the_player_stuff(const char* name) {
   char* tmp;
   int i, tLevel = -1;
   bool isGagged = false;
-  FILE* fp = NULL;
+  FILE* fp = nullptr;
   bool tPowers[MAX_POWER_INDEX];
 
   memset(&tPowers, 0, sizeof(tPowers));
@@ -1317,7 +1317,7 @@ void do_the_player_stuff(const char* name) {
               "stasis.\n\r\n\rOn a final note, welcome back!\n\r",
               MUD_NAME);
 
-            autoMail(NULL, name, longbuf);
+            autoMail(nullptr, name, longbuf);
           }
         }
         // rent_only deletion should fall through here
@@ -1430,7 +1430,7 @@ void fixup_players(void) {
     return;
   }
   delete wiz;
-  wiz = NULL;
+  wiz = nullptr;
   bootPulse(".", false);
 
   for (const auto& letter : alphabet) {
@@ -1438,7 +1438,7 @@ void fixup_players(void) {
     bootPulse(".", false);
   }
 
-  bootPulse(NULL, true);
+  bootPulse(nullptr, true);
 
   vlogf(LOG_FILE,
     format("7-Day:  There are %d active players in %d active accounts.") %
@@ -1457,21 +1457,21 @@ void TBeing::checkForStr(silentTypeT silent) {
 
     TObj* obj = dynamic_cast<TObj*>(heldInPrimHand());
     if (obj && obj->isPaired()) {
-      if (checkWeaponWeight(obj, HAND_TYPE_BOTH, FALSE)) {
+      if (checkWeaponWeight(obj, HAND_TYPE_BOTH, false)) {
       } else {
-        act("You lack the strength to continue to hold $p.", FALSE, this, obj,
+        act("You lack the strength to continue to hold $p.", false, this, obj,
           0, TO_CHAR);
-        act("$n lacks the strength to continue to hold $p.", FALSE, this, obj,
+        act("$n lacks the strength to continue to hold $p.", false, this, obj,
           0, TO_ROOM);
         *this += *unequip(getPrimaryHold());
       }
     }
     if (obj && !obj->isPaired()) {
-      if (checkWeaponWeight(obj, HAND_TYPE_PRIM, FALSE)) {
+      if (checkWeaponWeight(obj, HAND_TYPE_PRIM, false)) {
       } else {
-        act("You lack the strength to continue to hold $p.", FALSE, this, obj,
+        act("You lack the strength to continue to hold $p.", false, this, obj,
           0, TO_CHAR);
-        act("$n lacks the strength to continue to hold $p.", FALSE, this, obj,
+        act("$n lacks the strength to continue to hold $p.", false, this, obj,
           0, TO_ROOM);
         *this += *unequip(getPrimaryHold());
       }
@@ -1479,20 +1479,20 @@ void TBeing::checkForStr(silentTypeT silent) {
     obj = dynamic_cast<TObj*>(heldInSecHand());
     if (obj && !obj->isPaired()) {
       if (isAmbidextrous()) {
-        if (checkWeaponWeight(obj, HAND_TYPE_PRIM, FALSE)) {
+        if (checkWeaponWeight(obj, HAND_TYPE_PRIM, false)) {
         } else {
-          act("You lack the strength to continue to hold $p.", FALSE, this, obj,
+          act("You lack the strength to continue to hold $p.", false, this, obj,
             0, TO_CHAR);
-          act("$n lacks the strength to continue to hold $p.", FALSE, this, obj,
+          act("$n lacks the strength to continue to hold $p.", false, this, obj,
             0, TO_ROOM);
           *this += *unequip(getSecondaryHold());
         }
       } else {
-        if (checkWeaponWeight(obj, HAND_TYPE_SEC, FALSE)) {
+        if (checkWeaponWeight(obj, HAND_TYPE_SEC, false)) {
         } else {
-          act("You lack the strength to continue to hold $p.", FALSE, this, obj,
+          act("You lack the strength to continue to hold $p.", false, this, obj,
             0, TO_CHAR);
-          act("$n lacks the strength to continue to hold $p.", FALSE, this, obj,
+          act("$n lacks the strength to continue to hold $p.", false, this, obj,
             0, TO_ROOM);
           *this += *unequip(getSecondaryHold());
         }
@@ -1592,12 +1592,12 @@ void TBeing::doReset(sstring arg) {
   }
 
   if (is_abbrev(buf, "practices")) {
-    TBeing* player = NULL;
+    TBeing* player = nullptr;
 
     // get player name
     arg = one_argument(arg, buf);
     if (buf.empty() ||
-        !(player = get_char_vis_world(this, buf, NULL, EXACT_NO))) {
+        !(player = get_char_vis_world(this, buf, nullptr, EXACT_NO))) {
       sendTo(format("Could not find %s.\n\r") % buf);
       sendTo("Syntax:\n\r     reset practices <target>\n\r");
       return;
@@ -1655,7 +1655,7 @@ void TBeing::doReset(sstring arg) {
     unsigned int i;
     if (is_abbrev(buf, "all")) {
       for (i = 0; i < zone_table.size(); i++) {
-        zone_table[i].resetZone(FALSE);
+        zone_table[i].resetZone(false);
       }
       sendTo(format("Zone 0-%d reset.\n\r") % (i - 1));
       return;
@@ -1666,7 +1666,7 @@ void TBeing::doReset(sstring arg) {
              (zone_table.size() - 1));
       return;
     }
-    zone_table[zone].resetZone(FALSE);
+    zone_table[zone].resetZone(false);
     sendTo(format("Zone %d reset.\n\r") % zone);
     return;
   } else if (is_abbrev(buf, "levels") && isImmortal()) {
@@ -1887,7 +1887,7 @@ void TBeing::saveCareerStats() {
 }
 
 void TBeing::loadCareerStats() {
-  FILE* fp = NULL;
+  FILE* fp = nullptr;
   char buf[160];
   int current_version;
   unsigned int num1, num2, num3, num4, num5;
@@ -2246,10 +2246,10 @@ int numFifties(race_t race, bool perma, sstring account_name) {
       continue;
     }
 
-    char_is_perma = FALSE;
+    char_is_perma = false;
     while (fscanf(fp, "%d ", &num) == 1) {
       if (num == TOG_PERMA_DEATH_CHAR) {
-        char_is_perma = TRUE;
+        char_is_perma = true;
         break;
       }
     }

@@ -159,12 +159,12 @@ extern int handleMobileResponse(TBeing*, cmdTypeT, const sstring&);
 
 // returns DELETE_THIS if this should be nuked
 // returns DELETE_VICT if vict should be nuked
-// otherwise returns FALSE
+// otherwise returns false
 int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
   bool typedIn) {
   int rc = 0;
   TBeing* ch;
-  bool isPoly = FALSE;
+  bool isPoly = false;
   sstring newarg = "";
   sstring tStNewArg = "";
   sstring buf, bufname;
@@ -245,23 +245,23 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
   }
 
   if (typedIn && desc && dynamic_cast<TMonster*>(this))
-    isPoly = TRUE;
+    isPoly = true;
 
   if (GetMaxLevel() < commandArray[cmd]->minLevel &&
       ((cmd != CMD_WIZNET) || !desc || !desc->original ||
         desc->original->GetMaxLevel() < commandArray[cmd]->minLevel)) {
     incorrectCommand();
-    return FALSE;
+    return false;
   }
   if (isAffected(AFF_PARALYSIS) &&
       commandArray[cmd]->minPosition > POSITION_STUNNED) {
     sendTo("You are paralyzed, you can't do much of anything!\n\r");
-    return FALSE;
+    return false;
   }
   if (isAffected(AFF_STUNNED) &&
       commandArray[cmd]->minPosition > POSITION_STUNNED) {
     sendTo("You are stunned, you can't do much of anything!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (hasClass(CLASS_SHAMAN)) {
@@ -280,7 +280,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
 
   if ((commandArray[cmd]->minPosition >= POSITION_CRAWLING) && fight()) {
     sendTo("You can't concentrate enough while fighting!\n\r");
-    return FALSE;
+    return false;
   } else if (getPosition() < commandArray[cmd]->minPosition) {
     switch (getPosition()) {
       case POSITION_DEAD:
@@ -356,11 +356,11 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
     if (IS_SET(specials.affectedBy, AFF_HIDE) && willBreakHide(cmd, true))
       REMOVE_BIT(specials.affectedBy, AFF_HIDE);
 
-    rc = triggerSpecial(NULL, cmd, newarg.c_str());
+    rc = triggerSpecial(nullptr, cmd, newarg.c_str());
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     else if (rc)
-      return FALSE;
+      return false;
 
     auto ret = doPersonCommand(cmd, argument, vict, typedIn);
     rc = ret.second;
@@ -1556,7 +1556,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           doLow(newarg);
           break;
         case CMD_ENTER:
-          rc = doEnter(newarg.c_str(), NULL);
+          rc = doEnter(newarg.c_str(), nullptr);
           addToLifeforce(1);
           break;
         case CMD_RESIZE:
@@ -1773,7 +1773,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
           addToLifeforce(1);
           break;
         case CMD_PTELL:
-          doPTell(argument.c_str(), TRUE);
+          doPTell(argument.c_str(), true);
           break;
         case CMD_PSAY:
           doPSay(argument.c_str());
@@ -1926,7 +1926,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
         case CMD_BEING_BEEN_HIT:
           sendTo(format("doCommand:incorrectCommand: [%d]\n\r") % cmd);
           incorrectCommand();
-          return FALSE;
+          return false;
       }
     }
   }
@@ -1946,7 +1946,7 @@ int TBeing::doCommand(cmdTypeT cmd, const sstring& argument, TThing* vict,
     return rc;
   }
 
-  return FALSE;
+  return false;
 }
 
 // call this if command should be executed right now (no lag)
@@ -1967,7 +1967,7 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
   }
 
   if (arg1.empty())
-    return FALSE;
+    return false;
 
   if (riding) {
     if (!sameRoom(*riding))
@@ -1996,7 +1996,7 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
           prependCommandToQue(send.top());
           send.pop();
         }
-        return FALSE;
+        return false;
       }
 
       bool found = false;
@@ -2056,7 +2056,7 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
     // sendrpf(COLOR_NONE, roomp, "parseCommand:incorrectCommand=[%s]\n\r",
     // arg1.c_str());
     incorrectCommand();
-    return FALSE;
+    return false;
   }
 
   if (IS_SET(specials.affectedBy, AFF_HIDE) && cmd != CMD_BACKSTAB)
@@ -2071,7 +2071,7 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
       getCaptiveOf()->remCaptive(this);
     } else if (!utilityTaskCommand(cmd) && !nobrainerTaskCommand(cmd)) {
       sendTo("You are unable to do that while a captive.\n\r");
-      return FALSE;
+      return false;
     }
   }
   // LIFEFORCE DRAIN ON EVERY DAMN TICK
@@ -2093,7 +2093,7 @@ int TBeing::parseCommand(const sstring& orig_arg, bool typedIn, bool doAlias) {
   if (argument.find_first_not_of(whitespace) != sstring::npos)
     argument = argument.substr(argument.find_first_not_of(whitespace));
 
-  return (doCommand(cmd, argument, NULL, typedIn));
+  return (doCommand(cmd, argument, nullptr, typedIn));
 }
 
 // I tried it this way, but had a memory leak reported by insure from it
@@ -2103,7 +2103,7 @@ static bool fill_word(const char* argument) {
   const char* filler_word[] = {"in", "from", "with", "the", "on", "at", "to",
     "\n"};
 
-  return (search_block(argument, filler_word, TRUE) >= 0);
+  return (search_block(argument, filler_word, true) >= 0);
 }
 
 void argument_interpreter(const char* argument, char* first_arg,
@@ -2152,16 +2152,16 @@ const char* one_argument(const char* argument, char* first_arg,
 
     // we should return a pointer into argument equivalent to s.c_str
     if (s.empty())
-      return &argument[strlen(argument)];  // return pointer to the NULL
+      return &argument[strlen(argument)];  // return pointer to the nullptr
     else {
       return strstr(argument + strlen(first_arg), s.c_str());
     }
   } catch (...) {
     mud_assert(0, "Bat's expirimental code don't work - exception caught");
-    return NULL;
+    return nullptr;
   }
   // COSMO STRING FIX
-  return NULL;
+  return nullptr;
 }
 
 sstring one_argument(sstring argument, sstring& first_arg) {
@@ -2206,8 +2206,8 @@ bool is_abbrev(const char* arg1, const char* arg2, multipleTypeT multiple,
 }
 
 // determine if a given sstring is an abbreviation of another
-// multiple word functionality FALSE by c++ default - Russ
-// Must be explicitly passed TRUE otherwise defaults to FALSE
+// multiple word functionality false by c++ default - Russ
+// Must be explicitly passed true otherwise defaults to false
 
 bool is_abbrev(const sstring& arg1, const sstring& arg2, multipleTypeT multiple,
   exactTypeT exact) {
@@ -2319,7 +2319,7 @@ sstring add_bars(const sstring& s) {
   return stmp;
 }
 
-// returns DELETE_THIS, DELETE_VICT, TRUE or FALSE
+// returns DELETE_THIS, DELETE_VICT, true or false
 int TBeing::triggerSpecialOnPerson(TThing* ch, cmdTypeT cmd, const char* arg) {
   wearSlotT j;
   int rc;
@@ -2331,28 +2331,28 @@ int TBeing::triggerSpecialOnPerson(TThing* ch, cmdTypeT cmd, const char* arg) {
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;
       if (IS_SET_DELETE(rc, DELETE_ITEM))
         return DELETE_VICT;
       else if (rc)
-        return TRUE;
+        return true;
     }
     // special on imbedded item
     if ((t = getStuckIn(j))) {
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_VICT))
         return DELETE_THIS;
       if (IS_SET_DELETE(rc, DELETE_ITEM))
         return DELETE_VICT;
       else if (rc)
-        return TRUE;
+        return true;
     }
   }
   // special in inventory?
@@ -2362,17 +2362,17 @@ int TBeing::triggerSpecialOnPerson(TThing* ch, cmdTypeT cmd, const char* arg) {
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_ONLY(rc, DELETE_VICT))
         return DELETE_THIS;
       if (IS_SET_ONLY(rc, DELETE_ITEM))
         return DELETE_VICT;
       else if (rc)
-        return TRUE;
+        return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 // this function is a generic trigger for any/all special procs that
@@ -2389,15 +2389,15 @@ int TBeing::triggerSpecial(TThing* ch, cmdTypeT cmd, const char* arg) {
   if (task && task->task >= TASK_BOGUS && task->task < NUM_TASKS &&
       tasks[task->task].taskf &&
       ((*(tasks[task->task].taskf))(this, cmd, arg, 0, roomp, task->obj)))
-    return TRUE;
+    return true;
 
   // is the player busy doing something else?
   if (spelltask && cast_spell(this, cmd, 0))
-    return TRUE;
+    return true;
 
   // special in room?
   if (roomp) {
-    rc = roomp->checkSpec(this, cmd, arg, NULL);
+    rc = roomp->checkSpec(this, cmd, arg, nullptr);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       // delete room?
       vlogf(LOG_BUG, format("checkSpec indicated delete room (%d)") % in_room);
@@ -2405,7 +2405,7 @@ int TBeing::triggerSpecial(TThing* ch, cmdTypeT cmd, const char* arg) {
     if (IS_SET_ONLY(rc, DELETE_VICT))
       return DELETE_THIS;
     if (rc)
-      return TRUE;
+      return true;
   }
 
   rc = triggerSpecialOnPerson(ch, cmd, arg);
@@ -2414,7 +2414,7 @@ int TBeing::triggerSpecial(TThing* ch, cmdTypeT cmd, const char* arg) {
   if (IS_SET_ONLY(rc, DELETE_VICT))
     return DELETE_VICT;
   else if (rc)
-    return TRUE;
+    return true;
 
   if (roomp) {
     // special in mobile/object present?
@@ -2438,17 +2438,17 @@ int TBeing::triggerSpecial(TThing* ch, cmdTypeT cmd, const char* arg) {
       rc = t->checkSpec(this, cmd, arg, ch);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete t;
-        t = NULL;
+        t = nullptr;
       }
       if (IS_SET_ONLY(rc, DELETE_VICT))
         return DELETE_THIS;
       if (IS_SET_ONLY(rc, DELETE_ITEM))
         return DELETE_VICT;
       if (rc)
-        return TRUE;
+        return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 void buildCommandArray(void) {
@@ -3131,42 +3131,42 @@ bool _parse_name_safe(const char* arg, char* name, unsigned int nameLen) {
     ;
 
   if (strlen(arg) < 3)
-    return TRUE;
+    return true;
 
   for (i = 0; *illegalnames[i] != '\n'; i++) {
     if (*illegalnames[i] == '*') {
       if (strstr(sstring(arg).lower().c_str(), illegalnames[i] + 1))
-        return TRUE;
+        return true;
     } else {
       if (!strcasecmp(illegalnames[i], arg))
-        return TRUE;
+        return true;
     }
   }
   if (!toggleInfo[TOG_MOBNAMES]->toggle) {
     for (i = 0; i < mob_index.size(); i++) {
       snprintf(buf, cElements(buf), "%s", fname(mob_index[i].name).c_str());
       if (!strcasecmp(buf, arg))
-        return TRUE;
+        return true;
     }
   }
 #if 0
   for (i= 0; i < obj_index.size(); i++) {
     sprintf(buf, fname(obj_index[i].name));
     if (!strcasecmp(buf, arg))
-      return TRUE;
+      return true;
   }
 #endif
   for (i = 0; i < nameLen && (*name = *arg); arg++, i++, name++)
     if ((*arg < 0) || !isalpha(*arg) || i > 15)
-      return TRUE;
+      return true;
 
   if (!i)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
-// return TRUE if this is an illegal name
+// return true if this is an illegal name
 bool is_illegal_name(const char* check) {
   sstring lower = sstring(check);
   for (int i = 0; *illegalnames[i] != '\n'; i++) {
@@ -3184,21 +3184,21 @@ bool is_illegal_name(const char* check) {
   return false;
 }
 
-// return TRUE if no name was found (error)
+// return true if no name was found (error)
 bool parse_name_sstring(const sstring arg, sstring& name) {
   name = arg.trim().word(0);
 
   if (name.length() < 3 || name.length() > 15)
-    return TRUE;
+    return true;
 
   if (is_illegal_name(name.c_str()))
-    return TRUE;
+    return true;
 
   for (unsigned int i = 0; i < name.length(); i++)
     if (!isalpha(name[i]))
-      return TRUE;
+      return true;
 
-  return FALSE;
+  return false;
 }
 
 #if 0
@@ -3339,11 +3339,11 @@ int TBeing::prependCommandToQue(const sstring& msg) {
       desc->input.swap(tmp);
     }
   } else {
-    rc = parseCommand(msg, TRUE);
+    rc = parseCommand(msg, true);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 // This will put a command into player's command que.
@@ -3356,11 +3356,11 @@ int TBeing::addCommandToQue(const sstring& msg) {
     if (!isPlayerAction(PLR_MAILING) && desc->connected != CON_WRITING)
       desc->input.push(msg);
   } else {
-    rc = parseCommand(msg, TRUE);
+    rc = parseCommand(msg, true);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 sstring sprintbit(unsigned long vektor, const char* const names[]) {
@@ -3441,11 +3441,11 @@ char* fold(char* line) {
 
   if (strlen(line) > FOLDAT)
     for (i = FOLDAT; i < (int)strlen(line); i += FOLDAT) {
-      folded = FALSE;
+      folded = false;
       for (j = i; !folded; j--)
         if (line[j] == ' ') {
           line[j] = '\n';
-          folded = TRUE;
+          folded = true;
           i = j;
         }
     }
@@ -3512,13 +3512,13 @@ sstring nextToken(char delim, unsigned int maxSize, char* str) {
 
 char* mud_str_dup(const char* buf) {
   if (!buf)
-    return NULL;
+    return nullptr;
 
   return mud_str_dup((sstring)buf);
 }
 
 char* mud_str_dup(const sstring& buf) {
-  char* tmp = NULL;
+  char* tmp = nullptr;
   unsigned int len = buf.length() + 1;
 
   try {

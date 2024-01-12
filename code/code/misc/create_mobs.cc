@@ -45,9 +45,9 @@ static bool isBadForActFlags(int update) {
     case ACT_DEADLY:
     case ACT_POLYSELF:
     case ACT_GUARDIAN:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -65,9 +65,9 @@ static bool isBadForAffectFlags(uint64_t update) {
     case AFF_SCRYING:
     case AFF_WEB:
     case AFF_CHARM:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -210,7 +210,7 @@ static void TBeingLoad(TBeing* ch, int vnum) {
   mob->next = character_list;
   character_list = mob;
 
-  rc = mob->readMobFromDB(vnum, TRUE, ch);
+  rc = mob->readMobFromDB(vnum, true, ch);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     ch->sendTo("Mob deleted by initializer.\n\r");
     delete mob;
@@ -224,7 +224,7 @@ static void TBeingLoad(TBeing* ch, int vnum) {
   // mod for imm
   mob->loadResponses(vnum, ch->name);
 
-  act(ch->msgVariables(MSG_MEDIT, mob), TRUE, ch, 0, 0, TO_ROOM);
+  act(ch->msgVariables(MSG_MEDIT, mob), true, ch, 0, 0, TO_ROOM);
 
   if ((mob->getRace() == RACE_HORSE) || (mob->getRace() == RACE_DRAGON)) {
     mob->setMaxMove(mob->getMaxMove() + 150);
@@ -238,11 +238,11 @@ static void TBeingLoad(TBeing* ch, int vnum) {
   for (ij = MIN_WEAR; ij < MAX_WEAR; ij++) {  // Initializing
     mob->setLimbFlags(ij, 0);
     mob->setCurLimbHealth(ij, mob->getMaxLimbHealth(ij));
-    mob->setStuckIn(ij, NULL);
+    mob->setStuckIn(ij, nullptr);
   }
 
   mob->desc = 0;
-  mob->riding = NULL;
+  mob->riding = nullptr;
 
   mobCount++;
 
@@ -255,9 +255,9 @@ static void TBeingLoad(TBeing* ch, int vnum) {
 
   TBeing* bufferbeing;
   if ((bufferbeing = dynamic_cast<TBeing*>(mob))) {
-    act("$n pulls $N from $s immortal oven.", TRUE, ch, 0, bufferbeing,
+    act("$n pulls $N from $s immortal oven.", true, ch, 0, bufferbeing,
       TO_ROOM);
-    act("You pull $N from your immortal oven.", TRUE, ch, 0, bufferbeing,
+    act("You pull $N from your immortal oven.", true, ch, 0, bufferbeing,
       TO_CHAR);
   }
 }
@@ -363,7 +363,7 @@ static void msave(TBeing* ch, char* argument) {
     ch->sendTo("Syntax :msave <mobile name> <vnum>\n\r");
     return;
   }
-  mob = get_char_vis(ch, buf, NULL);
+  mob = get_char_vis(ch, buf, nullptr);
 
   if (mob && vnum) {
     stripSpellAffects(mob);
@@ -407,7 +407,7 @@ static void medit(TBeing* ch, char* arg) {
   if (!ch->desc)
     return;
 
-  if (!(mob = get_char_vis(ch, arg, NULL))) {
+  if (!(mob = get_char_vis(ch, arg, nullptr))) {
     ch->sendTo("No such mobile.\n\r");
     return;
   }
@@ -424,7 +424,7 @@ static void medit(TBeing* ch, char* arg) {
   TMonster* mons = dynamic_cast<TMonster*>(mob);
   ch->specials.edit = MAIN_MENU;
   ch->desc->connected = CON_MEDITING;
-  act("$n is sucked into a swirling vortex.", FALSE, mons, 0, 0, TO_ROOM);
+  act("$n is sucked into a swirling vortex.", false, mons, 0, 0, TO_ROOM);
 
   mons->swapToStrung();
   stripSpellAffects(mob);
@@ -476,7 +476,7 @@ static void medit(TBeing* ch, char* arg) {
     mob->saveChar(Room::NOWHERE);
   }
   ch->desc->mob = dynamic_cast<TMonster*>(mob);
-  act("$n just went into mobile edit mode.", FALSE, ch, 0, 0, TO_ROOM);
+  act("$n just went into mobile edit mode.", false, ch, 0, 0, TO_ROOM);
   update_mob_menu(ch, ch->desc->mob);
 }
 
@@ -2039,10 +2039,10 @@ void TBeing::doMedit(const char*) { sendTo("Mobs may not edit.\n\r"); }
 
 // This is the main function that controls all the mobile stuff - Russ
 void TPerson::doMedit(const char* argument) {
-  const char* tString = NULL;
+  const char* tString = nullptr;
   int vnum, field, /* zGot,*/ oValue, Diff = 0;
   float oFValue;
-  TMonster* cMob = NULL;
+  TMonster* cMob = nullptr;
   sstring tStr, tStString(""), tStBuffer(""), tStArg("");
   char sstring[256], mobile[80], Buf[1024],
     tTextLns[3][256] = {"\0", "\0", "\0"};
@@ -2605,7 +2605,7 @@ static void change_mob_sstring_values(TBeing* ch, TMonster* tMob,
       "%s5%s) movein [message when mobile enters a room]\n\r%s<z>\n\r\n\r",
       "%s6%s) moveout [message when mobile leaves a room]\n\r%s<z>\n\r\n\r"};
 
-    const char* exd = NULL;
+    const char* exd = nullptr;
     if (tHas && tMob->ex_description) {
       exd = tMob->ex_description->findExtraDesc(tMobStringShorts[iter]);
     }
@@ -2623,7 +2623,7 @@ static void change_mob_sstring_enter(TBeing* ch, TMonster* tMob,
   if (tType < 0 || tType > 5 || !*tString || *tString == '\n')
     return;
 
-  extraDescription *tExDesc, *tExLast = NULL;
+  extraDescription *tExDesc, *tExLast = nullptr;
 
   sstring tStString(tString);
 
@@ -2646,7 +2646,7 @@ static void change_mob_sstring_enter(TBeing* ch, TMonster* tMob,
           tMob->ex_description = tExDesc->next;
 
         delete tExDesc;
-        tExDesc = NULL;
+        tExDesc = nullptr;
         break;
       } else {
         tExDesc->description = tStString;
@@ -2670,13 +2670,13 @@ void mob_edit(TBeing* ch, const char* arg) {
   if (ch->specials.edit == MAIN_MENU) {
     if (!*arg || *arg == '\n') {
       ch->desc->connected = CON_PLYNG;
-      act("$n has returned from mobile editing.", TRUE, ch, 0, 0, TO_ROOM);
+      act("$n has returned from mobile editing.", true, ch, 0, 0, TO_ROOM);
 
       if (ch->desc->mob) {
         ch->desc->mob->next = character_list;
         character_list = ch->desc->mob;
         *ch->roomp += *ch->desc->mob;
-        ch->desc->mob = NULL;
+        ch->desc->mob = nullptr;
       }
 
       // reset the terminal bars

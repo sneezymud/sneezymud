@@ -58,7 +58,7 @@ TObj* findShopObjForCompare(TBeing* ch, sstring StObject) {
       return (dynamic_cast<TObj*>(tObj));
   }
 
-  return NULL;
+  return nullptr;
 }
 
 TObj* findForCompare(TBeing* ch, sstring StObject) {
@@ -67,17 +67,17 @@ TObj* findForCompare(TBeing* ch, sstring StObject) {
   TThing* tObj;
 
   if (!(tObj = get_thing_in_equip(ch, StObject.c_str(), ch->equipment, &tSlot,
-          TRUE, &tCount)))
+          true, &tCount)))
     if (!(tObj = searchLinkedListVis(ch, StObject, ch->stuff, &tCount)))
       if (!(tObj = findShopObjForCompare(ch, StObject)))
-        return NULL;
+        return nullptr;
 
   return (dynamic_cast<TObj*>(tObj));
 }
 
 void TBeing::doMortalCompare(const char* tArg) {
   sstring StObject1(""), StObject2(""), StString(tArg);
-  TObj *tObj1 = NULL, *tObj2 = NULL;
+  TObj *tObj1 = nullptr, *tObj2 = nullptr;
 
   if (!roomp || !desc)
     return;
@@ -196,7 +196,7 @@ sstring TBaseWeapon::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " does a lot less damage compared to ",
     " does a whole lot less damage compared to "};
 
-  TBaseWeapon* tWeapon = NULL;
+  TBaseWeapon* tWeapon = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -254,7 +254,7 @@ sstring TBaseClothing::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " protects you far less than ",
     " offers no where near the protection compared to "};
 
-  TBaseClothing* tClothing = NULL;
+  TBaseClothing* tClothing = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -292,8 +292,8 @@ sstring TBow::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " can not shoot nearly as far as ",
     " can not shoot no where near as far as "};
 
-  TBow* tBow = NULL;
-  TArrow* tArrow = NULL;
+  TBow* tBow = nullptr;
+  TArrow* tArrow = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -339,8 +339,8 @@ sstring TArrow::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " does a lot less damage compared to ",
     " does a whole lot less damage compared to "};
 
-  TArrow* tArrow = NULL;
-  TBow* tBow = NULL;
+  TArrow* tArrow = nullptr;
+  TBow* tBow = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -403,7 +403,7 @@ sstring TFood::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " will fill you the same amount as ", " will fill you a little less than ",
     " will fill you less than ", " will fill you a lot less than "};
 
-  TFood* tFood = NULL;
+  TFood* tFood = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -447,7 +447,7 @@ sstring TSymbol::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " requires a great deal less holywater than ",
   };
 
-  TSymbol* tSymbol = NULL;
+  TSymbol* tSymbol = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -490,7 +490,7 @@ sstring TBaseLight::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " lets off as much light as ", " is a little dimmer than ",
     " is a small bit dimmer than ", " is a lot dimmer than "};
 
-  TBaseLight* tLight = NULL;
+  TBaseLight* tLight = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -521,7 +521,7 @@ sstring TOpal::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " has a lot less strength than ",
     " has a great less strength comapred to "};
 
-  TOpal* tOpal = NULL;
+  TOpal* tOpal = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";

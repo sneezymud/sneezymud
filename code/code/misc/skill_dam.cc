@@ -73,7 +73,7 @@ enum trimTypeT {
   TRIM_YES = true
 };
 
-// victim = NULL for area effects
+// victim = nullptr for area effects
 // class_amt is dam appropriate for the class on a per level, per round
 // reduce indicates if a check on hit() has been done
 //    physical attacks are probably !reduce, spells are reduce
@@ -187,7 +187,7 @@ static int genericDam(const TBeing* victim, const TBeing* caster,
   return dam;
 }
 
-// area effect will send victim as NULL
+// area effect will send victim as nullptr
 int TBeing::getSkillDam(const TBeing* victim, spellNumT skill, int level,
   int adv_learn) const {
   // this is a centralized repository of damage formulas.

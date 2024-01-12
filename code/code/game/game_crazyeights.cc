@@ -82,7 +82,7 @@ bool CrazyEightsGame::getPlayers(const TBeing* ch, TBeing** ch2, TBeing** ch3,
 }
 
 void CrazyEightsGame::deal(TBeing* ch) {
-  TBeing *ch2 = NULL, *ch3 = NULL, *ch4 = NULL;
+  TBeing *ch2 = nullptr, *ch3 = nullptr, *ch4 = nullptr;
   int pointCard = 0, dealerNum = 0;
   char tString[256];
 
@@ -107,7 +107,7 @@ void CrazyEightsGame::deal(TBeing* ch) {
   shuffle();
 
   ch->sendTo("You shuffle the cards, and deal them.\n\r");
-  act("$n shuffles the cards and deals them.", FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n shuffles the cards and deals them.", false, ch, nullptr, nullptr, TO_ROOM);
 
   ch->sendTo("You are dealt:\n\r");
   ch2->sendTo("You are dealt:\n\r");
@@ -185,14 +185,14 @@ int CrazyEightsGame::move_card(TBeing* ch, const char* tArg) {
 
   if (!game) {
     ch->sendTo("The game is not in progress, you have no cards to move.\n\r");
-    return FALSE;
+    return false;
   }
 
   if ((playerNum = index(ch)) < 0) {
     ch->sendTo(
       "You are not at the Crazy Eights table, you have no cards to move "
       "around.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (sscanf(tArg, "%d %d", &origSlot, &moveSlot) == 2) {
@@ -200,12 +200,12 @@ int CrazyEightsGame::move_card(TBeing* ch, const char* tArg) {
         (moveSlot > 32)) {
       ch->sendTo(
         "Crazy Eights Syntax: put <old card slot> <new card slot>\n\r");
-      return FALSE;
+      return false;
     }
 
     if (origSlot == moveSlot) {
       ch->sendTo("You're funny,  You know that?\n\r");
-      return FALSE;
+      return false;
     }
 
     origSlot--;
@@ -213,7 +213,7 @@ int CrazyEightsGame::move_card(TBeing* ch, const char* tArg) {
 
     if (!hands[playerNum][origSlot] || !hands[playerNum][moveSlot]) {
       ch->sendTo("There is no card in that slot.\n\r");
-      return FALSE;
+      return false;
     }
 
     tempCard = hands[playerNum][origSlot];
@@ -231,10 +231,10 @@ int CrazyEightsGame::move_card(TBeing* ch, const char* tArg) {
                (moveSlot + 1));
   } else {
     ch->sendTo("Crazy Eights Syntax: put <old card slot> <new card slot>\n\r");
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 bool TBeing::checkCrazyEights(bool inGame) const {
@@ -249,7 +249,7 @@ int CrazyEightsGame::enter(const TBeing* ch) {
 
   if (dynamic_cast<const TMonster*>(ch)) {
     ch->sendTo("Silly monster, Crazy Eights are for mortals!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (inuse[0] && inuse[1] && inuse[2] && inuse[3])
@@ -269,24 +269,24 @@ int CrazyEightsGame::enter(const TBeing* ch) {
     scores[playerNum] = 0;
     game = false;
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int CrazyEightsGame::exitGame(const TBeing* ch) {
   int playerNum;
-  TBeing *ch2 = NULL, *ch3 = NULL, *ch4 = NULL;
+  TBeing *ch2 = nullptr, *ch3 = nullptr, *ch4 = nullptr;
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, format("%s left a crazy eights table %s wasn't at!") %
                      ch->getName() % ch->hssh());
-    return FALSE;
+    return false;
   }
 
   ch->sendTo("You leave the crazy eights table.\n\r");
-  act("$n leaves the table, killing the game.", FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n leaves the table, killing the game.", false, ch, nullptr, nullptr, TO_ROOM);
 
   getPlayers(ch, &ch2, &ch3, &ch4);
 
@@ -316,7 +316,7 @@ int CrazyEightsGame::exitGame(const TBeing* ch) {
   inuse[3] = false;
   setup_deck();
 
-  return TRUE;
+  return true;
 }
 
 int CrazyEightsGame::index(const TBeing* ch) const {
@@ -355,7 +355,7 @@ int CrazyEightsGame::new_deal() {
   if (playerNum == -1) {
     vlogf(LOG_BUG,
       "CrazyEights::new_deal() called when people still had cards.");
-    return FALSE;
+    return false;
   }
 
   tScore += scores[playerNum];
@@ -370,7 +370,7 @@ int CrazyEightsGame::new_deal() {
 
   if (!ch1 || !ch2 || !ch3 || !ch4) {
     vlogf(LOG_BUG, "CrazyEights::new_deal called with less than 4 players!");
-    return FALSE;
+    return false;
   }
 
   if (tScore >= 100) {
@@ -394,14 +394,14 @@ int CrazyEightsGame::new_deal() {
   ch3->sendTo(format("The score is now %s.\n\r") % score());
   ch4->sendTo(format("The score is now %s.\n\r") % score());
 
-  return TRUE;
+  return true;
 }
 
 void CrazyEightsGame::pass(const TBeing* ch) {
   int cardIndex, playerNum, curCard;
   bool hasMatch = false, canDraw = false;
   char tString[256];
-  TBeing *ch2 = NULL, *ch3 = NULL, *ch4 = NULL;
+  TBeing *ch2 = nullptr, *ch3 = nullptr, *ch4 = nullptr;
 
   if (!game) {
     ch->sendTo("No game in progress.\n\r");
@@ -601,7 +601,7 @@ void CrazyEightsGame::play(const TBeing* ch, const char* tArg) {
 
 int CrazyEightsGame::get(const TBeing* ch, const char* tArg) {
   if (!*tArg || !is_abbrev(tArg, "pile"))
-    return FALSE;
+    return false;
 
   int playerNum;
   TBeing *ch2, *ch3, *ch4;
@@ -609,27 +609,27 @@ int CrazyEightsGame::get(const TBeing* ch, const char* tArg) {
 
   if (!game) {
     ch->sendTo("No game in progress, thus no pile to draw from.\n\r");
-    return TRUE;
+    return true;
   }
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, "CrazyEights::get called by player not in game!");
-    return FALSE;
+    return false;
   }
 
   if (!getPlayers(ch, &ch2, &ch3, &ch4)) {
     ch->sendTo("There isn't 4 players in the game, thus you cannot draw.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (playerNum != nextPlayer) {
     ch->sendTo("It isn't your turn, so you can not draw yet.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (nextCard == 51) {
     ch->sendTo("The deck is gone.  You must either play or pass.\n\r");
-    return FALSE;
+    return false;
   }
 
   for (int cardIndex = 0; cardIndex < 32; cardIndex++) {
@@ -645,7 +645,7 @@ int CrazyEightsGame::get(const TBeing* ch, const char* tArg) {
     ch2->sendTo(tString);
     ch3->sendTo(tString);
     ch4->sendTo(tString);
-    return TRUE;
+    return true;
   }
 
   ch->sendTo(
@@ -654,7 +654,7 @@ int CrazyEightsGame::get(const TBeing* ch, const char* tArg) {
     "CrazyEights::get called while player had 0 free slots and some deck "
     "left.");
 
-  return TRUE;
+  return true;
 }
 
 int CrazyEightsGame::look(const TBeing* ch, const char* tArg) {
@@ -664,7 +664,7 @@ int CrazyEightsGame::look(const TBeing* ch, const char* tArg) {
   for (; isspace(*tArg); tArg++)
     ;
   if (!*tArg)
-    return FALSE;
+    return false;
 
   playerNum = index(ch);
 
@@ -707,9 +707,9 @@ int CrazyEightsGame::look(const TBeing* ch, const char* tArg) {
       ch->sendTo(format("The score is currently %s.\n\r") % score());
     }
   } else
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 CrazyEightsGame::CrazyEightsGame() :

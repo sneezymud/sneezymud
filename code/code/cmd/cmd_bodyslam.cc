@@ -15,89 +15,89 @@
 
 bool TBeing::canBodyslam(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
-    return FALSE;
+    return false;
 
   if (!doesKnowSkill(SKILL_BODYSLAM)) {
     if (!silent)
       sendTo("You know nothing about bodyslamming.\n\r");
-    return FALSE;
+    return false;
   }
   if (!hasHands()) {
     if (!silent)
       sendTo("You need hands to bodyslam.\n\r");
-    return FALSE;
+    return false;
   }
   if (eitherArmHurt()) {
     if (!silent)
       sendTo("You can't bodyslam with an injured arm.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (getCombatMode() == ATTACK_BERSERK) {
     if (!silent)
       sendTo(
         "You are berserking! You can't focus enough to bodyslam anyone!\n\r ");
-    return FALSE;
+    return false;
   }
 
   if (victim->isFlying() && (victim->fight() != this)) {
     if (!silent)
       sendTo("You can only bodyslam fliers that are fighting you.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim == this) {
     if (!silent)
       sendTo("You lack the agility to bodyslam yourself!\n\r");
-    return FALSE;
+    return false;
   }
   if (noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   if (riding) {
     if (!silent)
       sendTo("You can't bodyslam while mounted!\n\r");
-    return FALSE;
+    return false;
   }
   if (!canUseArm(HAND_PRIMARY) || !canUseArm(HAND_SECONDARY)) {
     if (!silent)
       sendTo("You need two working arms to bodyslam someone.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
     if (!silent)
       sendTo("You can't successfully bodyslam an immortal.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->getPosition() < POSITION_STANDING) {
     if (!silent)
-      act("$N is already on the $g.  You can't bodyslam $M.", FALSE, this, 0,
+      act("$N is already on the $g.  You can't bodyslam $M.", false, this, 0,
         victim, TO_CHAR);
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
   int rc;
 
   if (type == TYPE_DEX) {
-    act("$N deftly avoids your bodyslam attempt.", FALSE, this, 0, victim,
+    act("$N deftly avoids your bodyslam attempt.", false, this, 0, victim,
       TO_CHAR);
-    act("You deftly avoid $n's bodyslam attempt.", FALSE, this, 0, victim,
+    act("You deftly avoid $n's bodyslam attempt.", false, this, 0, victim,
       TO_VICT);
-    act("$N deftly avoids $n's bodyslam attempt.", FALSE, this, 0, victim,
+    act("$N deftly avoids $n's bodyslam attempt.", false, this, 0, victim,
       TO_NOTVICT);
   } else if (type == TYPE_MONK) {
-    act("$N deftly counters your attempt, throwing you to the $g.", FALSE, this,
+    act("$N deftly counters your attempt, throwing you to the $g.", false, this,
       0, victim, TO_CHAR, ANSI_RED);
     act("You deftly counter $n's bodyslam attempt, and throw $m to the $g.",
-      FALSE, this, 0, victim, TO_VICT);
+      false, this, 0, victim, TO_VICT);
     act("$N deftly counters $n's bodyslam attempt, and heaves $m to the $g.",
-      FALSE, this, 0, victim, TO_NOTVICT);
+      false, this, 0, victim, TO_NOTVICT);
 
     rc = crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -107,12 +107,12 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else if (type == TYPE_STR) {
-    act("$n collapses as $e fails to pick $N up.", FALSE, this, 0, victim,
+    act("$n collapses as $e fails to pick $N up.", false, this, 0, victim,
       TO_NOTVICT);
     act("Your strength gives out as you try to pick $N up for bodyslamming.",
-      FALSE, this, 0, victim, TO_CHAR);
+      false, this, 0, victim, TO_CHAR);
     act("$n's strength gives out as $e tries to pick you up for bodyslamming.",
-      FALSE, this, 0, victim, TO_VICT);
+      false, this, 0, victim, TO_VICT);
 
     rc = crashLanding(POSITION_SITTING);
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -125,11 +125,11 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   } else {
-    act("$n tries to bodyslam $N, but ends up falling down.", FALSE, this, 0,
+    act("$n tries to bodyslam $N, but ends up falling down.", false, this, 0,
       victim, TO_NOTVICT);
-    act("You try to bodyslam $N, but end up falling on your face.", FALSE, this,
+    act("You try to bodyslam $N, but end up falling on your face.", false, this,
       0, victim, TO_CHAR);
-    act("$n fails to bodyslam you, and tumbles to the $g.", FALSE, this, 0,
+    act("$n fails to bodyslam you, and tumbles to the $g.", false, this, 0,
       victim, TO_VICT);
 
     rc = crashLanding(POSITION_SITTING);
@@ -144,29 +144,29 @@ int TBeing::bodyslamMiss(TBeing* victim, skillMissT type) {
   if (reconcileDamage(victim, 0, SKILL_BODYSLAM) == -1)
     return DELETE_VICT;
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::bodyslamHit(TBeing* victim) {
   int rc;
 
   if (!victim->riding) {
-    act("$n lifts $N over $s head and slams $M to the $g.", FALSE, this, 0,
+    act("$n lifts $N over $s head and slams $M to the $g.", false, this, 0,
       victim, TO_NOTVICT);
-    act("You lift $N over your head and slam $M to the $g.", FALSE, this, 0,
+    act("You lift $N over your head and slam $M to the $g.", false, this, 0,
       victim, TO_CHAR);
-    act("You get a great view as $n lifts you over $s head.", FALSE, this, 0,
+    act("You get a great view as $n lifts you over $s head.", false, this, 0,
       victim, TO_VICT);
-    act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
+    act("Suddenly, the $g rushes upward and knocks the wind out of you!", false,
       this, 0, victim, TO_VICT, ANSI_RED);
   } else {
-    act("$n lifts $N off $S $o and slams $M to the $g.", FALSE, this,
+    act("$n lifts $N off $S $o and slams $M to the $g.", false, this,
       victim->riding, victim, TO_NOTVICT);
-    act("You lift $N off $S $o and slam $M to the $g.", FALSE, this,
+    act("You lift $N off $S $o and slam $M to the $g.", false, this,
       victim->riding, victim, TO_CHAR);
-    act("You get a great view as $n lifts you off your $o over $s head.", FALSE,
+    act("You get a great view as $n lifts you off your $o over $s head.", false,
       this, victim->riding, victim, TO_VICT);
-    act("Suddenly, the $g rushes upward and knocks the wind out of you!", FALSE,
+    act("Suddenly, the $g rushes upward and knocks the wind out of you!", false,
       this, victim->riding, victim, TO_VICT, ANSI_RED);
     victim->dismount(POSITION_RESTING);
   }
@@ -208,7 +208,7 @@ int TBeing::bodyslamHit(TBeing* victim) {
   if (reconcileDamage(victim, dam, SKILL_BODYSLAM) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::bodyslam(TBeing* victim) {
@@ -216,11 +216,11 @@ int TBeing::bodyslam(TBeing* victim) {
   const int BODYSLAM_COST = 10;  // movement cost to slam
 
   if (!canBodyslam(victim, SILENT_NO))
-    return FALSE;
+    return false;
 
   if (getMove() < BODYSLAM_COST) {
     sendTo("You don't have the vitality to bodyslam anyone!\n\r");
-    return FALSE;
+    return false;
   }
   addToMove(-BODYSLAM_COST);
 
@@ -238,7 +238,7 @@ int TBeing::bodyslam(TBeing* victim) {
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
         return rc;
       // Ensure
-    } else if (compareWeights(victim->getTotalWeight(TRUE),
+    } else if (compareWeights(victim->getTotalWeight(true),
                  carryWeightLimit() * 3) == -1) {
       CF(SKILL_BODYSLAM);
       rc = bodyslamMiss(victim, TYPE_STR);
@@ -252,7 +252,7 @@ int TBeing::bodyslam(TBeing* victim) {
       return rc;
   }
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::doBodyslam(const char* argument, TBeing* vict) {
@@ -266,13 +266,13 @@ int TBeing::doBodyslam(const char* argument, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {
         sendTo("Bodyslam whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   if (desc) {
     if ((learning = getAdvLearning(SKILL_BODYSLAM)) <= 40) {
@@ -280,14 +280,14 @@ int TBeing::doBodyslam(const char* argument, TBeing* vict) {
         sendTo(
           "You are not skilled enough to bodyslam with something in your "
           "hands!\n\r");
-        return FALSE;
+        return false;
       }
     } else if (learning <= 75) {
       if (heldInPrimHand()) {
         sendTo(
           "You are not skilled enough to bodyslam with something in your "
           "primary hand!\n\r");
-        return FALSE;
+        return false;
       }
     } else {
       // no restrictions
@@ -300,7 +300,7 @@ int TBeing::doBodyslam(const char* argument, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

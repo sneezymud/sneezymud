@@ -35,7 +35,7 @@ recipeTypeT recipes[] = {{0, "steak marinated", "marinated steak", 405},
   {9, "beggar stew", "beggar stew", 34704},
   {10, "berry friendship bread", "berry friendship bread", 34705},
   {11, "pancake", "pancake", 34708},
-  {12, "berry pancake", "berry pancake", 34709}, {-1, NULL, NULL, -1}};
+  {12, "berry pancake", "berry pancake", 34709}, {-1, nullptr, nullptr, -1}};
 
 // recipe number, amount of item, type of item, item vnum
 ingredientTypeT ingredients[] = {

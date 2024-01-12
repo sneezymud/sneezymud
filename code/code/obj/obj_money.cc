@@ -165,7 +165,7 @@ TMoney* create_money(int amount, currencyTypeT currency) {
 
   obj = read_object(Obj::GENERIC_TALEN, VIRTUAL);
   money = dynamic_cast<TMoney*>(obj);
-  mud_assert(money != NULL,
+  mud_assert(money != nullptr,
     "Obj::GENERIC_TALEN is not TMoney type.  obj was: %s",
     obj ? obj->getName().c_str() : "NO OBJECT");
 
@@ -233,7 +233,7 @@ TMoney* create_money(int amount, currencyTypeT currency) {
       new_descr->description =
         format("There are a LOT of %ss.\n\r") % money->getCurrencyName();
   }
-  new_descr->next = NULL;
+  new_descr->next = nullptr;
   money->ex_description = new_descr;
 
   money->obj_flags.wear_flags = ITEM_WEAR_TAKE;
@@ -258,7 +258,7 @@ int TMoney::getMe(TBeing* ch, TThing* sub) {
     // returning DELETE_THIS would cause "get all" to stop
     delete this;
   }
-  return TRUE;
+  return true;
 }
 
 int TMoney::getMoney() const { return money; }
@@ -273,7 +273,7 @@ void TMoney::setCurrency(currencyTypeT c) { type = c; }
 
 int TMoney::moneyMeMoney(TBeing* ch, TThing* sub) {
   int amount;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   char buf[256];
   bool isMyCorpse = false;
 

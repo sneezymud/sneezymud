@@ -253,7 +253,7 @@ void update_exits(TVehicle* vehicle) {
 }
 
 void TVehicle::vehiclePulse(int pulse) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* tb;
   TRoom* troom = roomp;
   sstring buf;

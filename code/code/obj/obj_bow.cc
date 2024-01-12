@@ -194,8 +194,8 @@ void TBow::bloadArrowBow(TBeing* ch, TArrow* the_arrow) {
 
   --(*the_arrow);
   *this += *the_arrow;
-  act("You load $p into $N and hold it.", TRUE, ch, the_arrow, this, TO_CHAR);
-  act("$n loads $p into $N and holds it.", TRUE, ch, the_arrow, this, TO_ROOM);
+  act("You load $p into $N and hold it.", true, ch, the_arrow, this, TO_CHAR);
+  act("$n loads $p into $N and holds it.", true, ch, the_arrow, this, TO_ROOM);
 
   --(*this);
   ch->equipChar(this, ch->getPrimaryHold());
@@ -211,7 +211,7 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
   char buf[256];
 
   if (stuff.empty() || !dynamic_cast<TArrow*>(stuff.front())) {
-    act("$p isn't loaded with an arrow!", FALSE, ch, this, 0, TO_CHAR);
+    act("$p isn't loaded with an arrow!", false, ch, this, 0, TO_CHAR);
 
     if (!stuff.empty() && !dynamic_cast<TArrow*>(stuff.front())) {
       vlogf(LOG_BUG,
@@ -219,9 +219,9 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
       TThing* tThing = stuff.front();
       --(*tThing);
       delete tThing;
-      tThing = NULL;
+      tThing = nullptr;
     }
-    return FALSE;
+    return false;
   }
   // use the bow's value for the furthest we will go
   max_distance = getMaxRange();
@@ -231,24 +231,24 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
     ch->sendTo(
       format("You couldn't possibly shoot it further than %d rooms.\n\r") %
       max_distance);
-    return FALSE;
+    return false;
   }
 
   if (targ &&
       ch->checkPeacefulVictim(
         "They are in a peaceful room. You can't seem to fire the bow.\n\r",
         targ))
-    return FALSE;
+    return false;
 
   if (targ && ch->noHarmCheck(targ))
-    return FALSE;
+    return false;
 
   // treat fliers as being 1 room further away
   if (targ && targ->isFlying() && !ch->isFlying() &&
       ((count + 1) > max_distance)) {
     act("Unfortunately, $N is flying and you can't quite reach that far.",
-      FALSE, ch, 0, targ, TO_CHAR);
-    return FALSE;
+      false, ch, 0, targ, TO_CHAR);
+    return false;
   }
 
   the_arrow = dynamic_cast<TObj*>(stuff.front());
@@ -261,50 +261,50 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
     ch->sendTo(
       "You realize you don't know much about shooting...get more "
       "training.\n\r");
-    act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_CHAR);
-    act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_ROOM);
+    act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr, TO_CHAR);
+    act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr, TO_ROOM);
     --(*the_arrow);
     *ch->roomp += *the_arrow;
-    return FALSE;
+    return false;
   } else if (ch->getSkillValue(SKILL_RANGED_PROF) < (::number(0, 30))) {
     ch->sendTo(
       "You have a hard time getting the arrow out of the bow properly!\n\r");
     ch->sendTo(
       "You realize you should get more training and practice more.\n\r");
-    act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_CHAR);
-    act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL, TO_ROOM);
+    act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr, TO_CHAR);
+    act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr, TO_ROOM);
     --(*the_arrow);
     *ch->roomp += *the_arrow;
-    return FALSE;
+    return false;
   }
   if (!(str_test = ::number(0, getStructPoints()))) {
     if (!::number(0, getStructPoints()) && ch->roomp &&
         !ch->roomp->isRoomFlag(ROOM_ARENA)) {
       ch->sendTo("As you try to shoot, your bow is shattered!\n\r");
-      act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL,
+      act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr,
         TO_CHAR);
-      act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL,
+      act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr,
         TO_ROOM);
       --(*the_arrow);
       *ch->roomp += *the_arrow;
       if (!makeScraps())
         return DELETE_THIS;
-      return FALSE;
+      return false;
     } else {
       ch->sendTo(
         "Your bowstring snaps! It will need repair before further use!\n\r");
       addToStructPoints(-1);
       addBowFlags(BOW_STRING_BROKE);
 
-      act("You hear a loud pop as $n's bowsstring snaps!", FALSE, ch, NULL,
-        NULL, TO_ROOM);
-      act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL,
+      act("You hear a loud pop as $n's bowsstring snaps!", false, ch, nullptr,
+        nullptr, TO_ROOM);
+      act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr,
         TO_CHAR);
-      act("$p falls to the $g harmlessly.", FALSE, ch, the_arrow, NULL,
+      act("$p falls to the $g harmlessly.", false, ch, the_arrow, nullptr,
         TO_ROOM);
       --(*the_arrow);
       *ch->roomp += *the_arrow;
-      return FALSE;
+      return false;
     }
   }
 
@@ -326,10 +326,10 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
       --nattacks;
 
     --(*the_arrow);
-    sstring capbuf = colorString(ch, ch->desc, the_arrow->getName(), NULL,
-      COLOR_OBJECTS, TRUE);
+    sstring capbuf = colorString(ch, ch->desc, the_arrow->getName(), nullptr,
+      COLOR_OBJECTS, true);
     sstring capbuf2 =
-      colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
+      colorString(ch, ch->desc, getName(), nullptr, COLOR_OBJECTS, true);
 
     if (targ)
       ch->sendTo(COLOR_MOBS, format("You shoot %s out of %s at %s.\n\r") %
@@ -340,7 +340,7 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
                  capbuf2.uncap());
 
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.", dirs[dir]);
-    act(buf, FALSE, ch, this, the_arrow, TO_ROOM);
+    act(buf, false, ch, this, the_arrow, TO_ROOM);
 
     *ch->roomp += *the_arrow;
 
@@ -353,11 +353,11 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
       max_distance, ch);
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
       delete the_arrow;
-      the_arrow = NULL;
+      the_arrow = nullptr;
     }
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete targ;
-      targ = NULL;
+      targ = nullptr;
     }
 
     rc = ch->doRemove("", this);
@@ -385,7 +385,7 @@ int TBow::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count, dirTypeT dir,
   // to just set it appropriately
   ch->setWait(combatRound(4));
 
-  return FALSE;
+  return false;
 }
 
 sstring TBow::showModifier(showModeT mode, const TBeing* ch) const {

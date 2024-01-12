@@ -4,7 +4,7 @@
 //
 // $Log: cmd_dissect.h,v $
 // Revision 5.2  2003/03/13 22:40:52  peel
-// added sstring class, same as string but takes NULL as an empty string
+// added sstring class, same as string but takes nullptr as an empty string
 // replaced all uses of string to sstring
 //
 // Revision 5.1.1.1  1999/10/16 04:32:20  batopr
@@ -39,7 +39,7 @@ class dissectInfo {
       count(0),
       message_to_self(),
       message_to_others(),
-      tNext(NULL) {}
+      tNext(nullptr) {}
 };
 
 extern std::map<unsigned short int, dissectInfo> dissect_array;

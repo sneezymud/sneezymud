@@ -63,7 +63,7 @@ spellNumT doStabMsg(TBeing* tThief, TBeing* tSucker, TGenWeapon* tWeapon,
   // Basically damage is varied based on the limb here.
   tDamage = (int)((float)tDamage * tDamageValues[tLimb]);
 
-  bool tKill = tThief->willKill(tSucker, tDamage, tDamageType, FALSE);
+  bool tKill = tThief->willKill(tSucker, tDamage, tDamageType, false);
 
   sstring tStLimb(tSucker->describeBodySlot(tLimb));
   sstring tStringChar, tStringVict, tStringOthr, tStringMess;
@@ -111,9 +111,9 @@ spellNumT doStabMsg(TBeing* tThief, TBeing* tSucker, TGenWeapon* tWeapon,
         break;
     }
 
-  act(tStringChar, FALSE, tThief, tWeapon, tSucker, TO_CHAR);
-  act(tStringVict, FALSE, tThief, tWeapon, tSucker, TO_VICT);
-  act(tStringOthr, FALSE, tThief, tWeapon, tSucker, TO_NOTVICT);
+  act(tStringChar, false, tThief, tWeapon, tSucker, TO_CHAR);
+  act(tStringVict, false, tThief, tWeapon, tSucker, TO_VICT);
+  act(tStringOthr, false, tThief, tWeapon, tSucker, TO_NOTVICT);
 
   if (tKill) {
     switch (tLimb) {
@@ -201,13 +201,13 @@ spellNumT doStabMsg(TBeing* tThief, TBeing* tSucker, TGenWeapon* tWeapon,
         break;
     }
 
-    act(tStringChar, FALSE, tThief, tWeapon, tSucker, TO_CHAR);
-    act(tStringVict, FALSE, tThief, tWeapon, tSucker, TO_VICT);
-    act(tStringOthr, FALSE, tThief, tWeapon, tSucker, TO_NOTVICT);
+    act(tStringChar, false, tThief, tWeapon, tSucker, TO_CHAR);
+    act(tStringVict, false, tThief, tWeapon, tSucker, TO_VICT);
+    act(tStringOthr, false, tThief, tWeapon, tSucker, TO_NOTVICT);
 
     if (!tStringMess.empty()) {
-      act(tStringMess, FALSE, tThief, tWeapon, tSucker, TO_CHAR);
-      act(tStringMess, FALSE, tThief, tWeapon, tSucker, TO_ROOM);
+      act(tStringMess, false, tThief, tWeapon, tSucker, TO_CHAR);
+      act(tStringMess, false, tThief, tWeapon, tSucker, TO_ROOM);
     }
 
     if (tLimb == WEAR_NECK) {
@@ -258,15 +258,15 @@ spellNumT doStabMsg(TBeing* tThief, TBeing* tSucker, TGenWeapon* tWeapon,
             if (!tSucker->isImmune(IMMUNE_POISON, tLimb) && !::number(0, 9)) {
               tWeapon->applyPoison(tSucker);
 
-              act("You poison $N with your stab!", FALSE, tThief, NULL, tSucker,
+              act("You poison $N with your stab!", false, tThief, nullptr, tSucker,
                 TO_CHAR);
               act(
                 "You begin to feel strange, that bastard $n just poisoned you!",
-                FALSE, tThief, NULL, tSucker, TO_VICT);
+                false, tThief, nullptr, tSucker, TO_VICT);
               act(
                 "$N gets a strange look on their face, apparently they are now "
                 "poisoned!",
-                FALSE, tThief, NULL, tSucker, TO_NOTVICT);
+                false, tThief, nullptr, tSucker, TO_NOTVICT);
             }
           } else if (!tSucker->isLimbFlags(tLimb, PART_INFECTED))
             if (!::number(0, 9) && tSucker->rawInfect(tLimb, tDuration,
@@ -278,9 +278,9 @@ spellNumT doStabMsg(TBeing* tThief, TBeing* tSucker, TGenWeapon* tWeapon,
               tStringOthr =
                 format("$N's %s gets infected from $n's stab!") % tStLimb;
 
-              act(tStringChar, FALSE, tThief, NULL, tSucker, TO_CHAR);
-              act(tStringVict, FALSE, tThief, NULL, tSucker, TO_VICT);
-              act(tStringOthr, FALSE, tThief, NULL, tSucker, TO_NOTVICT);
+              act(tStringChar, false, tThief, nullptr, tSucker, TO_CHAR);
+              act(tStringVict, false, tThief, nullptr, tSucker, TO_VICT);
+              act(tStringOthr, false, tThief, nullptr, tSucker, TO_NOTVICT);
             }
         }
       }
@@ -312,9 +312,9 @@ spellNumT doStabMsg(TBeing* tThief, TBeing* tSucker, TGenWeapon* tWeapon,
 
         tSucker->makePartMissing(tLimb, false, tThief);
 
-        act(tStringChar, FALSE, tThief, NULL, tSucker, TO_CHAR);
-        act(tStringVict, FALSE, tThief, NULL, tSucker, TO_VICT);
-        act(tStringOthr, FALSE, tThief, NULL, tSucker, TO_NOTVICT);
+        act(tStringChar, false, tThief, nullptr, tSucker, TO_CHAR);
+        act(tStringVict, false, tThief, nullptr, tSucker, TO_VICT);
+        act(tStringOthr, false, tThief, nullptr, tSucker, TO_NOTVICT);
       }
 #endif
     }
@@ -330,44 +330,44 @@ static int stab(TBeing* thief, TBeing* victim) {
 
   if (thief == victim) {
     thief->sendTo("Hey now, let's not be stupid.\n\r");
-    return FALSE;
+    return false;
   }
   if (thief->checkPeaceful("Naughty, naughty.  None of that here.\n\r"))
-    return FALSE;
+    return false;
 
   TGenWeapon* obj = dynamic_cast<TGenWeapon*>(thief->heldInPrimHand());
   if (!obj) {
     thief->sendTo("You need to wield a weapon, to make it a success.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (thief->riding) {
     thief->sendTo("Not while mounted!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (dynamic_cast<TBeing*>(victim->riding)) {
     thief->sendTo("Not while that person is mounted!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (thief->noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   if (!obj->canStab()) {
-    act("You can't use $o to stab.", false, thief, obj, NULL, TO_CHAR);
-    return FALSE;
+    act("You can't use $o to stab.", false, thief, obj, nullptr, TO_CHAR);
+    return false;
   }
 
   if (thief->getMove() < STAB_MOVE) {
     thief->sendTo("You are too tired to stab.\n\r");
-    return FALSE;
+    return false;
   }
   /*
   if (IS_SET(victim->specials.act, ACT_GHOST)) {
     // mostly because kill is "you slit the throat", etc.
     thief->sendTo("Ghosts can not be stabbed!\n\r");
-    return FALSE;
+    return false;
   }
   */
 
@@ -387,7 +387,7 @@ static int stab(TBeing* thief, TBeing* victim) {
 #ifdef USE_NEW_STAB
   // Start of test stab-limb code.
 
-  wearSlotT tLimb = victim->getPartHit(thief, FALSE);
+  wearSlotT tLimb = victim->getPartHit(thief, false);
   int tSever = 0;
 
   if (!victim->hasPart(tLimb))
@@ -426,16 +426,16 @@ static int stab(TBeing* thief, TBeing* victim) {
           thief) == DELETE_VICT)
       return DELETE_VICT;
 
-    return TRUE;
+    return true;
   } else {
     switch (critFail(thief, SKILL_STABBING)) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
-        act("You over thrust and fall flat on your face!", FALSE, thief, obj,
+        act("You over thrust and fall flat on your face!", false, thief, obj,
           victim, TO_CHAR);
-        act("$n misses $s thrust into $N and falls flat on their face!", FALSE,
+        act("$n misses $s thrust into $N and falls flat on their face!", false,
           thief, obj, victim, TO_NOTVICT);
-        act("$n misses $s thrust into you and falls flat on their face!", FALSE,
+        act("$n misses $s thrust into you and falls flat on their face!", false,
           thief, obj, victim, TO_VICT);
         rc = thief->crashLanding(POSITION_SITTING);
 
@@ -445,11 +445,11 @@ static int stab(TBeing* thief, TBeing* victim) {
         break;
       case CRIT_F_NONE:
       default:
-        act("You miss your thrust into $N.", FALSE, thief, obj, victim,
+        act("You miss your thrust into $N.", false, thief, obj, victim,
           TO_CHAR);
-        act("$n misses $s thrust into $N.", FALSE, thief, obj, victim,
+        act("$n misses $s thrust into $N.", false, thief, obj, victim,
           TO_NOTVICT);
-        act("$n misses $s thrust into you.", FALSE, thief, obj, victim,
+        act("$n misses $s thrust into you.", false, thief, obj, victim,
           TO_VICT);
         break;
     }
@@ -457,7 +457,7 @@ static int stab(TBeing* thief, TBeing* victim) {
     thief->reconcileDamage(victim, 0, SKILL_STABBING);
   }
 
-  return TRUE;
+  return true;
 
   // End of test stab-limb code.
 #else
@@ -469,19 +469,19 @@ static int stab(TBeing* thief, TBeing* victim) {
       case CRIT_S_KILL:
         if (!victim->getStuckIn(WEAR_BODY)) {
           CS(SKILL_STABBING);
-          act("You thrust $p ***REALLY DEEP*** into $N and twist.", FALSE,
+          act("You thrust $p ***REALLY DEEP*** into $N and twist.", false,
             thief, obj, victim, TO_CHAR);
-          act("$n thrusts $p ***REALLY DEEP*** into $N and twists.", FALSE,
+          act("$n thrusts $p ***REALLY DEEP*** into $N and twists.", false,
             thief, obj, victim, TO_NOTVICT);
-          act("$n thrusts $p ***REALLY DEEP*** into you and twists it.", FALSE,
+          act("$n thrusts $p ***REALLY DEEP*** into you and twists it.", false,
             thief, obj, victim, TO_VICT);
 
           dam *= 4;
-          act("You hit exceptionally well but lost your grasp on $p.", FALSE,
+          act("You hit exceptionally well but lost your grasp on $p.", false,
             thief, obj, victim, TO_CHAR, ANSI_RED);
-          act("$n left $s $o stuck in you.", FALSE, thief, obj, victim, TO_VICT,
+          act("$n left $s $o stuck in you.", false, thief, obj, victim, TO_VICT,
             ANSI_ORANGE);
-          act("$n loses $s grasp on $p.", TRUE, thief, obj, victim, TO_NOTVICT);
+          act("$n loses $s grasp on $p.", true, thief, obj, victim, TO_NOTVICT);
 
           rc =
             victim->stickIn(thief->unequip(thief->getPrimaryHold()), WEAR_BODY);
@@ -492,11 +492,11 @@ static int stab(TBeing* thief, TBeing* victim) {
         }  // if already stuckIn, drop through to next
       case CRIT_S_TRIPLE:
         CS(SKILL_STABBING);
-        act("You thrust $p REALLY DEEP into $N and twist.", FALSE, thief, obj,
+        act("You thrust $p REALLY DEEP into $N and twist.", false, thief, obj,
           victim, TO_CHAR);
-        act("$n thrusts $p REALLY DEEP into $N and twists.", FALSE, thief, obj,
+        act("$n thrusts $p REALLY DEEP into $N and twists.", false, thief, obj,
           victim, TO_NOTVICT);
-        act("$n thrusts $p REALLY DEEP into you and twists it.", FALSE, thief,
+        act("$n thrusts $p REALLY DEEP into you and twists it.", false, thief,
           obj, victim, TO_VICT);
 
         dam *= 3;
@@ -504,31 +504,31 @@ static int stab(TBeing* thief, TBeing* victim) {
       case CRIT_S_DOUBLE:
         CS(SKILL_STABBING);
         dam *= 2;
-        act("You thrust $p DEEP into $N and twist.", FALSE, thief, obj, victim,
+        act("You thrust $p DEEP into $N and twist.", false, thief, obj, victim,
           TO_CHAR);
-        act("$n thrusts $p DEEP into $N and twists.", FALSE, thief, obj, victim,
+        act("$n thrusts $p DEEP into $N and twists.", false, thief, obj, victim,
           TO_NOTVICT);
-        act("$n thrusts $p DEEP into you and twists it.", FALSE, thief, obj,
+        act("$n thrusts $p DEEP into you and twists it.", false, thief, obj,
           victim, TO_VICT);
 
         break;
       case CRIT_S_NONE:
-        act("You thrust $p into $N and twist.", FALSE, thief, obj, victim,
+        act("You thrust $p into $N and twist.", false, thief, obj, victim,
           TO_CHAR);
-        act("$n thrusts $p into $N and twists.", FALSE, thief, obj, victim,
+        act("$n thrusts $p into $N and twists.", false, thief, obj, victim,
           TO_NOTVICT);
-        act("$n thrusts $p into you and twists it.", FALSE, thief, obj, victim,
+        act("$n thrusts $p into you and twists it.", false, thief, obj, victim,
           TO_VICT);
 
         break;
     }
-    if (thief->willKill(victim, dam, SKILL_STABBING, FALSE)) {
-      act("Your hand is coated in ichor as you slit $N's guts!", FALSE, thief,
+    if (thief->willKill(victim, dam, SKILL_STABBING, false)) {
+      act("Your hand is coated in ichor as you slit $N's guts!", false, thief,
         obj, victim, TO_CHAR, ANSI_RED);
       act(
         "Ichor spews from the gaping stab wound $n leaves in $N's lifeless "
         "body!",
-        TRUE, thief, obj, victim, TO_NOTVICT);
+        true, thief, obj, victim, TO_NOTVICT);
     }
 
     if (thief->reconcileDamage(victim, dam, SKILL_STABBING) == -1)
@@ -538,21 +538,21 @@ static int stab(TBeing* thief, TBeing* victim) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SKILL_STABBING);
-        act("You miss your thrust into $N and stab yourself.", FALSE, thief,
+        act("You miss your thrust into $N and stab yourself.", false, thief,
           obj, victim, TO_CHAR);
-        act("$n misses $s thrust into $N and stabs $mself.", FALSE, thief, obj,
+        act("$n misses $s thrust into $N and stabs $mself.", false, thief, obj,
           victim, TO_NOTVICT);
-        act("$n misses $s thrust into you and stabs $mself.", FALSE, thief, obj,
+        act("$n misses $s thrust into you and stabs $mself.", false, thief, obj,
           victim, TO_VICT);
         if (thief->reconcileDamage(thief, dam / 3, SKILL_STABBING) == -1)
           return DELETE_THIS;
         break;
       case CRIT_F_NONE:
-        act("You miss your thrust into $N.", FALSE, thief, obj, victim,
+        act("You miss your thrust into $N.", false, thief, obj, victim,
           TO_CHAR);
-        act("$n misses $s thrust into $N.", FALSE, thief, obj, victim,
+        act("$n misses $s thrust into $N.", false, thief, obj, victim,
           TO_NOTVICT);
-        act("$n misses $s thrust into you.", FALSE, thief, obj, victim,
+        act("$n misses $s thrust into you.", false, thief, obj, victim,
           TO_VICT);
         thief->reconcileDamage(victim, 0, SKILL_STABBING);
     }
@@ -561,7 +561,7 @@ static int stab(TBeing* thief, TBeing* victim) {
   // End of old stab code
 #endif
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::doStab(const char* argument, TBeing* vict) {
@@ -571,10 +571,10 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
 
   if (!doesKnowSkill(SKILL_STABBING)) {
     sendTo("You haven't learned how to stab yet.\n\r");
-    return FALSE;
+    return false;
   }
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
   strcpy(namebuf, argument);
 
@@ -582,17 +582,17 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, namebuf))) {
       if (!(victim = fight())) {
         sendTo("Stab whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   if (IS_SET(victim->specials.act, ACT_IMMORTAL) || victim->isImmortal()) {
     sendTo("Your stab attempt has no effect on your immortal target.\n\r");
-    return FALSE;
+    return false;
   }
   rc = stab(this, victim);
   if (rc)
@@ -601,7 +601,7 @@ int TBeing::doStab(const char* argument, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

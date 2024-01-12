@@ -9,13 +9,13 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
   char v_name[MAX_INPUT_LENGTH];
 
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
 
   // Ensure player even knows the skill before continuing
   if (!doesKnowSkill(SKILL_DEATHSTROKE)) {
     sendTo("You know nothing about deathblows.\n\r");
-    return FALSE;
+    return false;
   }
 
   strcpy(v_name, argument);
@@ -24,63 +24,63 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, v_name))) {
       if (!(victim = fight())) {
         sendTo("Deathstroke whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
     sendTo("You cannot attack an immortal..\n\r");
-    return FALSE;
+    return false;
   }
 
-  bool wasSuccess = FALSE;
+  bool wasSuccess = false;
   const int DEATHSTROKE_MOVE = 8;
   TBaseWeapon* tw;
   affectedData aff1, aff2;
 
   // Ensure this isn't a peaceful room
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   // Check for lockout from recently using this skill
   if (affectedBySpell(SKILL_DEATHSTROKE)) {
     sendTo(
       "You are still recovering from your last deathstroke and cannot use this "
       "ability again at this time.\n\r");
-    return FALSE;
+    return false;
   }
 
   // Make sure the player has enough vitality to use the skill
   if (getMove() < DEATHSTROKE_MOVE) {
     sendTo("You don't have the vitality to make the move!\n\r");
-    return FALSE;
+    return false;
   }
 
   // Prevent players from attacking themselves
   if (victim == this) {
     sendTo("Do you REALLY want to kill yourself?...\n\r");
-    return FALSE;
+    return false;
   }
 
   if (getCombatMode() == ATTACK_BERSERK) {
     sendTo(
       "You are berserking! You can't focus enough to deathstroke anyone!\n\r ");
-    return FALSE;
+    return false;
   }
 
   // Avoid players attacking un-harmable victims
   if (noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   // Limit players from using this while mounted
   if (riding) {
     sendTo("You can't deathstroke while mounted!\n\r");
-    return FALSE;
+    return false;
   }
 
   // Ensure the player has a weapon equipped
@@ -89,7 +89,7 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
     sendTo(
       "You need to hold a weapon in your primary hand to make this a "
       "success.\n\r");
-    return FALSE;
+    return false;
   }
 
   // Only consume vitality for mortals
@@ -113,7 +113,7 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
   if (!victim->awake() || (successfulHit && successfulSkill &&
                             successfulHit != GUARANTEED_FAILURE)) {
     rc = deathstrokeSuccess(victim);
-    wasSuccess = TRUE;
+    wasSuccess = true;
 
     // You successfully landed your deathstroke - assessing a bonus
     aff2.type = SKILL_DEATHSTROKE;
@@ -126,8 +126,8 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
   }
   // Applying the debuff and, on success, the buff
   if (wasSuccess) {
-    affectJoin(this, &aff1, AVG_DUR_YES, AVG_EFF_YES, FALSE);
-    affectJoin(this, &aff2, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+    affectJoin(this, &aff1, AVG_DUR_YES, AVG_EFF_YES, false);
+    affectJoin(this, &aff2, AVG_DUR_YES, AVG_EFF_YES, false);
   } else {
     affectTo(&aff1, -1);
   }
@@ -139,7 +139,7 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   } else {
     // Allow victim a chance to counterattack
@@ -150,7 +150,7 @@ int TBeing::doDeathstroke(const char* argument, TBeing* vict) {
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::deathstrokeSuccess(TBeing* victim) {
@@ -161,17 +161,17 @@ int TBeing::deathstrokeSuccess(TBeing* victim) {
 
   // Handling the use-case where dam is 0
   if (!dam) {
-    act("$n's attempt at $N's vital area is ineffective.", FALSE, this, 0,
+    act("$n's attempt at $N's vital area is ineffective.", false, this, 0,
       victim, TO_NOTVICT);
-    act("You hit to $N's vital area is ineffective.", FALSE, this, 0, victim,
+    act("You hit to $N's vital area is ineffective.", false, this, 0, victim,
       TO_CHAR);
     act("$n attempts to hit your vital area, but the blow is ineffective.",
-      FALSE, this, 0, victim, TO_VICT);
+      false, this, 0, victim, TO_VICT);
 
   } else {
-    act("$n hits $N in $S vital organs!", FALSE, this, 0, victim, TO_NOTVICT);
-    act("You hit $N in $S vital organs!", FALSE, this, 0, victim, TO_CHAR);
-    act("$n hits you in your vital organs!", FALSE, this, 0, victim, TO_VICT);
+    act("$n hits $N in $S vital organs!", false, this, 0, victim, TO_NOTVICT);
+    act("You hit $N in $S vital organs!", false, this, 0, victim, TO_CHAR);
+    act("$n hits you in your vital organs!", false, this, 0, victim, TO_VICT);
   }
 
   ob = heldInPrimHand();
@@ -180,22 +180,22 @@ int TBeing::deathstrokeSuccess(TBeing* victim) {
   if (reconcileDamage(victim, dam, sktype) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::deathstrokeFail(TBeing* victim) {
   if (victim->getPosition() > POSITION_DEAD) {
-    act("$n's attempt at $N's vital area falls far short of hitting.", FALSE,
+    act("$n's attempt at $N's vital area falls far short of hitting.", false,
       this, 0, victim, TO_NOTVICT);
-    act("You fail to hit $N's vital area.", FALSE, this, 0, victim, TO_CHAR);
-    act("$n attempts to hit your vital area, but fails miserably.", FALSE, this,
+    act("You fail to hit $N's vital area.", false, this, 0, victim, TO_CHAR);
+    act("$n attempts to hit your vital area, but fails miserably.", false, this,
       0, victim, TO_VICT);
   }
 
   if (reconcileDamage(victim, 0, SKILL_DEATHSTROKE) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::deathstrokeCounterattack(TBeing* victim) {
@@ -217,15 +217,15 @@ int TBeing::deathstrokeCounterattack(TBeing* victim) {
       dam = victim->GetMaxLevel() * 2;
       dam += victim->plotStat(STAT_CURRENT, STAT_STR, 0, 6, 3);
       dam = ::number(victim->GetMaxLevel() / 3, dam);
-      dam = victim->getActualDamage(victim, NULL, dam, SKILL_DEATHSTROKE);
+      dam = victim->getActualDamage(victim, nullptr, dam, SKILL_DEATHSTROKE);
       dam /= 3;
 
       act("$N exploits $n's vulnerable state with a quick hit to the heart.",
-        FALSE, this, 0, victim, TO_NOTVICT);
+        false, this, 0, victim, TO_NOTVICT);
       act(
         "While you are vulnerable, $N strikes you in the center of your torso.",
-        FALSE, this, 0, victim, TO_CHAR);
-      act("You take advantage of $n's vulnerability for a cheap shot!", FALSE,
+        false, this, 0, victim, TO_CHAR);
+      act("You take advantage of $n's vulnerability for a cheap shot!", false,
         this, 0, victim, TO_VICT);
 
       TThing* ob = victim->heldInPrimHand();
@@ -236,5 +236,5 @@ int TBeing::deathstrokeCounterattack(TBeing* victim) {
     }
   }
 
-  return TRUE;
+  return true;
 }

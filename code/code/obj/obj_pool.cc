@@ -17,7 +17,7 @@
 
 void TPool::overFlow() {
   int index = getDrinkIndex(), total = 0, amt = 0;
-  TRoom* rp = NULL;
+  TRoom* rp = nullptr;
   TPool* pool;
   bool valid;
 
@@ -203,11 +203,11 @@ void TPool::updateDesc() {
       ex_description = exd->next;
       delete exd;
     }
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   }
 
@@ -243,19 +243,19 @@ void TPool::updateDesc() {
 bool TPool::isPluralItem() const {
   // a few drops of blood
   if (getDrinkIndex() == 0)
-    return TRUE;
+    return true;
 
   // otherwise, make recursive
   return TBaseCup::isPluralItem();
 }
 
 int TRoom::dropPool(int amt, liqTypeT liq) {
-  TPool* pool = NULL;
-  TThing* t = NULL;
+  TPool* pool = nullptr;
+  TThing* t = nullptr;
   TObj* obj;
 
   if (amt == 0)
-    return FALSE;
+    return false;
 
   /* look for preexisting pool */
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
@@ -292,16 +292,16 @@ int TRoom::dropPool(int amt, liqTypeT liq) {
     pool->fillMeAmount(amt, liq);
   }
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::dropPool(int amt, liqTypeT liq) {
-  TPool* pool = NULL;
-  TThing* t = NULL;
+  TPool* pool = nullptr;
+  TThing* t = nullptr;
   TObj* obj;
 
   if (amt == 0)
-    return FALSE;
+    return false;
 
   /* look for preexisting pool */
   for (StuffIter it = roomp->stuff.begin();
@@ -339,7 +339,7 @@ int TBeing::dropPool(int amt, liqTypeT liq) {
     pool->fillMeAmount(amt, liq);
   }
 
-  return TRUE;
+  return true;
 }
 
 void TPool::decayMe() {

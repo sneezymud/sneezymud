@@ -25,7 +25,7 @@ class TSeeThru : public TObj {
     bool givesOutsideLight() const;
     int getLightFromOutside() const;
 
-    int getTarget(int* = NULL) const;
+    int getTarget(int* = nullptr) const;
     void setTarget(int);
 
   protected:

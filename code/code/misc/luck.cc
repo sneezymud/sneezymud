@@ -16,10 +16,10 @@ bool TBeing::isLucky(int mod) const {
   // the higher mod is, the higher the effect they are saving against
 
   if (isImmortal())
-    return TRUE;
+    return true;
 
   if (getPosition() <= POSITION_STUNNED)
-    return FALSE;
+    return false;
 
   int lev = GetMaxLevel() * 20;
 

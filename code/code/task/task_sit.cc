@@ -13,10 +13,10 @@ int task_sit(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
   TObj*) {
   if (ch->isLinkdead() || (ch->getPosition() != POSITION_SITTING)) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       // v3.1 : this was 4*regenTime
@@ -84,8 +84,8 @@ int task_sit(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
       break;
     default:
       if (cmd < MAX_CMD_LIST)
-        return FALSE;  // process command
+        return false;  // process command
       break;           // eat the command
   }
-  return TRUE;
+  return true;
 }

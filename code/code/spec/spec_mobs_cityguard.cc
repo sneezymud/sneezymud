@@ -374,33 +374,33 @@ sstring guardShout(TBeing* ch) {
 }
 
 int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
-  TBeing* tch = NULL;
-  TThing* t1 = NULL;
+  TBeing* tch = nullptr;
+  TThing* t1 = nullptr;
   TTrap* trap;
   int rc = 0, num = 0, num2 = 0;
 
   if (cmd == CMD_GENERIC_DESTROYED)
-    ch->act_ptr = NULL;
+    ch->act_ptr = nullptr;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake())
-    return FALSE;
+    return false;
 
   ch->aiMaintainCalm();
 
   if (ch->task || ch->spelltask)
-    return FALSE;
+    return false;
 
   if (ch->fight() && ch->fight()->isPc() && ch->canSpeak()) {
     if (::number(0, 99) < 65)
-      return FALSE;  // have them shout a bit less
+      return false;  // have them shout a bit less
 
     sstring shout = guardShout(ch).cap();
     if (!number(0, 20))
       ch->doShout(shout);
     else /*if (::number(0,2))*/ {
-      act(format("$n rears back %s head and shouts loudly.") % ch->hshr(), TRUE,
+      act(format("$n rears back %s head and shouts loudly.") % ch->hshr(), true,
         ch, 0, 0, TO_ROOM);
-      act(format("$n shouts, \"%s\"") % shout.c_str(), TRUE, ch, 0, 0, TO_ROOM);
+      act(format("$n shouts, \"%s\"") % shout.c_str(), true, ch, 0, 0, TO_ROOM);
     }
 
     if (ch->fight() && ch->roomp) {
@@ -441,16 +441,16 @@ int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
           tbt->doSay("I will come to your assistance!");
         if (tbt->getPosition() < POSITION_STANDING)
           tbt->doStand();
-        rc = tbt->doAssist("", ch, TRUE);
+        rc = tbt->doAssist("", ch, true);
         num -= 1;
       }
       if (ch->fight() && (num > 0) && (num2 < 4))
         CallForGuard(ch, ch->fight(), num);
     }
-    return TRUE;
+    return true;
   }
   if (ch->checkPeaceful("") || ch->fight())
-    return FALSE;
+    return false;
 
   ///////////////////////////////////////////////////////////////
   // not fighting stuff
@@ -462,7 +462,7 @@ int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
 
     if ((trap = dynamic_cast<TTrap*>(t1)) && trap->getTrapCharges() > 0) {
       ch->doSay("Whoa, this looks dangerous!");
-      act("$n disarms $p.", FALSE, ch, trap, 0, TO_ROOM);
+      act("$n disarms $p.", false, ch, trap, 0, TO_ROOM);
       trap->setTrapCharges(0);
     }
 
@@ -477,30 +477,30 @@ int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
 
     // to prevent certain aggresive behaviors when outside of ch's birthzone (or
     // guard station) we don't want people using guards as free tanks
-    TRoom *rp1 = NULL, *rp2 = NULL;
-    bool hasWandered = FALSE, targetHasWandered = FALSE;
+    TRoom *rp1 = nullptr, *rp2 = nullptr;
+    bool hasWandered = false, targetHasWandered = false;
     if ((rp1 = ch->roomp) && (rp2 = real_roomp(ch->brtRoom))) {
       if (IS_SET(ch->specials.act, ACT_STAY_ZONE) &&
           rp1->getZoneNum() != rp2->getZoneNum())
-        hasWandered = TRUE;
+        hasWandered = true;
       if (IS_SET(ch->specials.act, ACT_SENTINEL) && rp1 != rp2)
-        hasWandered = TRUE;
+        hasWandered = true;
       if (IS_SET(ch->specials.act, ACT_HUNTING))
-        hasWandered = TRUE;
+        hasWandered = true;
     }
     if (TMonster* m = dynamic_cast<TMonster*>(tch)) {
       if ((rp1 = m->roomp) && (rp2 = real_roomp(m->brtRoom))) {
         if (rp1->getZoneNum() != rp2->getZoneNum())
-          targetHasWandered = TRUE;
+          targetHasWandered = true;
         if (IS_SET(m->specials.act, ACT_SENTINEL) && rp1 != rp2)
-          targetHasWandered = TRUE;
+          targetHasWandered = true;
         if (IS_SET(m->specials.act, ACT_HUNTING))
-          targetHasWandered = TRUE;
+          targetHasWandered = true;
       }
     }
 
     if (!ch->isUndead() && !ch->isDiabolic()) {
-      // TObj *amulet = NULL; // something special for my amulet - dash
+      // TObj *amulet = nullptr; // something special for my amulet - dash
       //       if (tch->isUndead() &&
       //	  (amulet = dynamic_cast<TObj *>(ch->equipment[WEAR_NECK])) &&
       //	  obj_index[amulet->getItemIndex()].virt != 9597)
@@ -513,39 +513,39 @@ int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
             act(
               "$n screams 'Get thee back to the underworld that spawned "
               "you!!!!'",
-              FALSE, ch, 0, 0, TO_ROOM);
+              false, ch, 0, 0, TO_ROOM);
 
           rc = ch->takeFirstHit(*tch);
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             delete tch;
-            tch = NULL;
+            tch = nullptr;
           } else if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
         } else if (!::number(0, 9)) {
           // far from home reaction...
           ch->doAction(fname(tch->name), CMD_GLARE);
         }
-        return TRUE;
+        return true;
 
       } else if ((tch->hasDisease(DISEASE_LEPROSY) ||
                    tch->spec == SPEC_LEPER) &&
                  !tch->isPc()) {
         if (!hasWandered && !targetHasWandered) {
           if (!ch->checkSoundproof())
-            act("$n screams 'There is no mercy for your kind, leper!'", FALSE,
+            act("$n screams 'There is no mercy for your kind, leper!'", false,
               ch, 0, 0, TO_ROOM);
 
           rc = ch->takeFirstHit(*tch);
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             delete tch;
-            tch = NULL;
+            tch = nullptr;
           } else if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
         } else if (!::number(0, 9)) {
           // far from home reaction...
           ch->doAction(fname(tch->name), CMD_GLARE);
         }
-        return TRUE;
+        return true;
       }
 
     } else {
@@ -553,19 +553,19 @@ int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       if (!tch->isUndead() && !tch->isDiabolic()) {
         if (!hasWandered && !targetHasWandered) {
           if (!ch->checkSoundproof())
-            act("$n screams 'This place belongs to the UnLiving!!!!'", FALSE,
+            act("$n screams 'This place belongs to the UnLiving!!!!'", false,
               ch, 0, 0, TO_ROOM);
 
           if ((rc = ch->takeFirstHit(*tch)) == DELETE_VICT) {
             delete tch;
-            tch = NULL;
+            tch = nullptr;
           } else if (rc == DELETE_THIS)
             return DELETE_THIS;
         } else if (!::number(0, 9)) {
           // far from home reaction...
           ch->doAction(fname(tch->name), CMD_GLARE);
         }
-        return TRUE;
+        return true;
       }
     }
 
@@ -574,19 +574,19 @@ int cityguard(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
         !(tch->specials.act & ACT_WIMPY) && ch->canSee(tch)) {
       if (!hasWandered && !targetHasWandered) {
         if (!ch->checkSoundproof())
-          act("$n screams 'Protect the innocent!!!'", FALSE, ch, 0, 0, TO_ROOM);
+          act("$n screams 'Protect the innocent!!!'", false, ch, 0, 0, TO_ROOM);
 
         if ((rc = ch->takeFirstHit(*tch)) == DELETE_VICT) {
           delete tch;
-          tch = NULL;
+          tch = nullptr;
         } else if (rc == DELETE_THIS)
           return DELETE_THIS;
       } else if (!::number(0, 9)) {
         // far from home reaction...
         ch->doAction(fname(tch->name), CMD_GLARE);
       }
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }

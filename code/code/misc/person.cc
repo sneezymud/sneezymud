@@ -21,8 +21,8 @@ TThing::TThingKind TPerson::getKind() const {
 TPerson::TPerson(Descriptor* thedesc) :
   TBeing(),
   base_age(0),
-  tLogFile(NULL),
-  title(NULL),
+  tLogFile(nullptr),
+  title(nullptr),
   timer(0) {
   d = new TPersonPimpl();
   *lastHost = '\0';
@@ -94,7 +94,7 @@ TPerson::~TPerson() {
   }
 
   setInvisLevel(MAX_IMMORT + 1);
-  fixClientPlayerLists(TRUE);
+  fixClientPlayerLists(true);
 
   // We use to let this be a handler for quit
   // however, if we accidentally delete a player (bad return code?)
@@ -106,12 +106,12 @@ TPerson::~TPerson() {
   AccountStats::player_num--;
 
   delete[] title;
-  title = NULL;
+  title = nullptr;
 
   if (tLogFile) {
     logf("Logging out...");
     fclose(tLogFile);
-    tLogFile = NULL;
+    tLogFile = nullptr;
   }
   delete d;
   d = nullptr;

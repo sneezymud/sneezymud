@@ -77,7 +77,7 @@ void TBeing::doConceal(sstring argument) {
     addSkillLag(SKILL_CONCEALMENT, rc);
 }
 
-// return FALSE to cease tracking
+// return false to cease tracking
 int conceal(TBeing* caster, TBeing* vict) {
   affectedData aff;
   int level = caster->getSkillLevel(SKILL_CONCEALMENT);
@@ -85,46 +85,46 @@ int conceal(TBeing* caster, TBeing* vict) {
 
   if (caster->getPosition() != POSITION_STANDING) {
     caster->sendTo("You need to be standing in order to conceal trails.\n\r");
-    return FALSE;
+    return false;
   }
   if (caster->fight()) {
     caster->sendTo(
       "The ensuing battle makes it difficult to conceal a trail.\n\r");
-    return FALSE;
+    return false;
   }
   if (vict->fight()) {
-    act("You can't conceal $N's path while $E is fighting.", FALSE, caster, 0,
+    act("You can't conceal $N's path while $E is fighting.", false, caster, 0,
       vict, TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (vict->affectedBySpell(SKILL_CONCEALMENT)) {
     if (vict == caster)
-      act("Your path is already being concealed.", FALSE, caster, 0, 0,
+      act("Your path is already being concealed.", false, caster, 0, 0,
         TO_CHAR);
     else
-      act("$N's path is already being concealed.", FALSE, caster, 0, vict,
+      act("$N's path is already being concealed.", false, caster, 0, vict,
         TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (vict != caster) {
     if (lnd <= 50) {
       act(
         "You lack the training to conceal other people's path with any degree "
         "of success.",
-        FALSE, caster, 0, 0, TO_CHAR);
-      return FALSE;
+        false, caster, 0, 0, TO_CHAR);
+      return false;
     }
     // even if they can, reduce the chance of success
     lnd /= 2;
   }
 
   if (caster == vict) {
-    act("You attempt to conceal your path.", FALSE, caster, 0, 0, TO_CHAR);
-    act("$n attempts to conceal $s path.", FALSE, caster, 0, 0, TO_ROOM);
+    act("You attempt to conceal your path.", false, caster, 0, 0, TO_CHAR);
+    act("$n attempts to conceal $s path.", false, caster, 0, 0, TO_ROOM);
   } else {
-    act("You attempt to conceal $N's path.", FALSE, caster, 0, vict, TO_CHAR);
-    act("$n attempts to conceal your path.", FALSE, caster, 0, vict, TO_VICT);
-    act("$n attempts to conceal $N's path.", FALSE, caster, 0, vict,
+    act("You attempt to conceal $N's path.", false, caster, 0, vict, TO_CHAR);
+    act("$n attempts to conceal your path.", false, caster, 0, vict, TO_VICT);
+    act("$n attempts to conceal $N's path.", false, caster, 0, vict,
       TO_NOTVICT);
   }
 
@@ -144,7 +144,7 @@ int conceal(TBeing* caster, TBeing* vict) {
     vict->affectTo(&aff);
   }
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::doDisguise(const char* arg) {
@@ -153,11 +153,11 @@ int TBeing::doDisguise(const char* arg) {
 
   if (!doesKnowSkill(SKILL_DISGUISE)) {
     sendTo("You know nothing about disguising yourself.\n\r");
-    return FALSE;
+    return false;
   }
   if (isCombatMode(ATTACK_BERSERK)) {
     sendTo("You can't disguise yourself while going berserk.\n\r");
-    return FALSE;
+    return false;
   }
   one_argument(arg, name_buf, cElements(name_buf));
 
@@ -261,27 +261,27 @@ int disguise(TBeing* caster, char* buffer) {
 
   if (!*buffer) {
     caster->sendTo("\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!caster->isImmortal() && caster->checkForSkillAttempt(SKILL_DISGUISE)) {
     act("You are not prepared to try to disguise yourself again so soon.",
-      FALSE, caster, NULL, NULL, TO_CHAR);
+      false, caster, nullptr, nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
 
   if (i >= LAST_DISGUISE_MOB) {
     caster->sendTo("You haven't a clue where to start on that one.\n\r");
-    return FALSE;
+    return false;
   }
 
   int level = caster->getSkillLevel(SKILL_DISGUISE);
   int bKnown = caster->getSkillValue(SKILL_DISGUISE);
 
-  discNumT das = getDisciplineNumber(SKILL_DISGUISE, FALSE);
+  discNumT das = getDisciplineNumber(SKILL_DISGUISE, false);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, "bad disc for SKILL_DISGUISE");
-    return FALSE;
+    return false;
   }
   if ((caster->getDiscipline(das)->getLearnedness() <
         DisguiseList[i].learning) &&
@@ -289,11 +289,11 @@ int disguise(TBeing* caster, char* buffer) {
     caster->sendTo(
       "You don't seem to have the ability to disguise yourself as that "
       "(yet).\n\r");
-    return FALSE;
+    return false;
   }
   if (!(mob = read_mobile(DisguiseList[i].number, VIRTUAL))) {
     caster->sendTo("You couldn't envision an image of that creature.\n\r");
-    return FALSE;
+    return false;
   }
   thing_to_room(mob, Room::VOID);
   mob->swapToStrung();
@@ -302,15 +302,15 @@ int disguise(TBeing* caster, char* buffer) {
   if (!caster->desc || caster->desc->snoop.snooping) {
     caster->sendTo("Nothing seems to happen.\n\r");
     delete mob;
-    mob = NULL;
-    return FALSE;
+    mob = nullptr;
+    return false;
   }
   if (caster->desc->original) {
     // implies they are switched, while already switched (as x disguise)
     caster->sendTo("You already seem to be switched.\n\r");
     delete mob;
-    mob = NULL;
-    return FALSE;
+    mob = nullptr;
+    return false;
   }
 
   aff.type = AFFECT_SKILL_ATTEMPT;
@@ -322,9 +322,9 @@ int disguise(TBeing* caster, char* buffer) {
   if (!caster->bSuccess(bKnown, SKILL_DISGUISE)) {
     caster->sendTo("You seem to have screwed something up.\n\r");
     delete mob;
-    mob = NULL;
+    mob = nullptr;
     caster->affectTo(&aff, -1);
-    return TRUE;
+    return true;
   }
 
   switch (critSuccess(caster, SKILL_DISGUISE)) {
@@ -348,9 +348,9 @@ int disguise(TBeing* caster, char* buffer) {
       duration = 10 * Pulse::UPDATES_PER_MUDHOUR;
       break;
   }
-  act("You apply your skills and make yourself look like $N.", TRUE, caster,
-    NULL, mob, TO_CHAR);
-  act("$n applies $s skills and makes $mself look like $N.", TRUE, caster, NULL,
+  act("You apply your skills and make yourself look like $N.", true, caster,
+    nullptr, mob, TO_CHAR);
+  act("$n applies $s skills and makes $mself look like $N.", true, caster, nullptr,
     mob, TO_ROOM);
 
   // first add the attempt -- used to regulate attempts
@@ -381,14 +381,14 @@ int disguise(TBeing* caster, char* buffer) {
 
   // stop following whoever you are following.
   if (caster->master)
-    caster->stopFollower(TRUE);
+    caster->stopFollower(true);
 
   // switch caster into mobile
   caster->desc->character = mob;
   caster->desc->original = dynamic_cast<TPerson*>(caster);
 
   mob->desc = caster->desc;
-  caster->desc = NULL;
+  caster->desc = nullptr;
   caster->polyed = POLY_TYPE_DISGUISE;
 
   SET_BIT(mob->specials.act, ACT_DISGUISED);
@@ -410,5 +410,5 @@ int disguise(TBeing* caster, char* buffer) {
   mob->setHeight(caster->getHeight());
   mob->setWeight(caster->getWeight());
 
-  return TRUE;
+  return true;
 }

@@ -16,10 +16,10 @@
   exceptions:  when cmd >= 0, a command is triggering the spec_proc, and
   when cmd == -1, the spec_proc is being triggered by a PULSE.
 
-  A return value of zero (FALSE) indicates that nothing exceptional
-  happened.  A non-zero return value (TRUE) indicates that some action
+  A return value of zero (false) indicates that nothing exceptional
+  happened.  A non-zero return value (true) indicates that some action
   needs to be taken (such as ignoring the players command).  When in doubt,
-  return FALSE.
+  return false.
 
 *************************************************************************/
 
@@ -302,8 +302,8 @@ class attune_struct {
       cost(0),
       faction(FACT_UNDEFINED),
       hasJob(false),
-      pc(NULL),
-      sym(NULL) {}
+      pc(nullptr),
+      sym(nullptr) {}
     ~attune_struct() {}
     void clearAttuneData();
 };
@@ -345,9 +345,9 @@ class sharp_struct {
     sharp_struct() :
       wait(0),
       cost(0),
-      char_name(NULL),
-      obj_name(NULL),
-      isBlunt(FALSE) {}
+      char_name(nullptr),
+      obj_name(nullptr),
+      isBlunt(false) {}
     ~sharp_struct() {
       delete[] char_name;
       delete[] obj_name;

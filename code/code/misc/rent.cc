@@ -159,7 +159,7 @@ void wipePlayerFile(const char* name) {
 
 void wipeCorpseFile(const char* name) {
   char buf[200];
-  TPCorpse *corpse = NULL, *tmp = NULL;
+  TPCorpse *corpse = nullptr, *tmp = nullptr;
 
   if (!name || !*name) {
     vlogf(LOG_BUG, "error in wipeCorpseFile - no name (0)");
@@ -176,7 +176,7 @@ void wipeCorpseFile(const char* name) {
     }
     tmp = corpse;
     corpse = corpse->getGlobalNext();
-    tmp->removeCorpseFromList(FALSE);
+    tmp->removeCorpseFromList(false);
   }
   sprintf(buf, "mutable/corpses/%s", sstring(name).lower().c_str());
   unlink(buf);
@@ -244,18 +244,18 @@ void TBeing::removeRent() {
 
 static char* raw_read_sstring(FILE* fp) {
   char buf[MAX_STRING_LENGTH] = "\0";
-  char* s = NULL;
+  char* s = nullptr;
   unsigned int i;
 
   for (i = 0; (fread(&(buf[i]), 1, 1, fp) == 1) && buf[i]; i++) {
     if (i >= MAX_STRING_LENGTH - 1)
-      return NULL;
+      return nullptr;
   }
   if (!strlen(buf))
-    return NULL;
+    return nullptr;
 
   if (!(s = new char[strlen(buf) + 1]))
-    return NULL;
+    return nullptr;
 
   strcpy(s, buf);
 
@@ -265,21 +265,21 @@ static char* raw_read_sstring(FILE* fp) {
 static bool raw_read_rentObject(FILE* fp, rentObject* item, char** name,
   char** sd, char** d, char** ad, unsigned char /* version */) {
   if (fread(item, sizeof(rentObject), 1, fp) != 1)
-    return FALSE;
+    return false;
 
   if (item->extra_flags & ITEM_STRUNG) {
     if (!(*name = raw_read_sstring(fp)))
-      return FALSE;
+      return false;
 
     if (!(*sd = raw_read_sstring(fp)))
-      return FALSE;
+      return false;
 
     if (!(*d = raw_read_sstring(fp)))
-      return FALSE;
+      return false;
 
     *ad = raw_read_sstring(fp);
   }
-  return TRUE;
+  return true;
 }
 
 void ItemSave::writeFooter() {
@@ -303,12 +303,12 @@ bool ItemSave::writeVersion() {
   return (fwrite(&st.version, sizeof(st.version), 1, fp) == 1);
 }
 
-ItemLoad::ItemLoad() { fp = NULL; }
+ItemLoad::ItemLoad() { fp = nullptr; }
 
 ItemLoad::~ItemLoad() {
   if (fp)
     fclose(fp);
-  fp = NULL;
+  fp = nullptr;
 }
 
 ItemLoadDB::ItemLoadDB(sstring ot, int o) : owner_type(ot), owner(o) {}
@@ -323,13 +323,13 @@ bool ItemLoad::readVersion() {
 
 ItemSave::ItemSave() {
   st.version = CURRENT_RENT_VERSION;
-  fp = NULL;
+  fp = nullptr;
 }
 
 ItemSave::~ItemSave() {
   if (fp)
     fclose(fp);
-  fp = NULL;
+  fp = nullptr;
 }
 
 ItemSaveDB::ItemSaveDB(sstring ot, int o) : owner_type(ot), owner(o) {}
@@ -408,27 +408,27 @@ bool ItemSave::raw_write_item(TObj* o) {
 
   if (fwrite(&item, sizeof(rentObject), 1, fp) != 1) {
     vlogf(LOG_BUG, "Error writing object to rent.");
-    return FALSE;
+    return false;
   }
   if (IS_SET(item.extra_flags, ITEM_STRUNG)) {
     if (!o->name.empty()) {
       if (fwrite(o->name.c_str(), o->name.length() + 1, 1, fp) != 1) {
         vlogf(LOG_BUG, "Error writing object name to rent.");
-        return FALSE;
+        return false;
       }
     } else
       vlogf(LOG_BUG, format("Object %d has no name!") % o->objVnum());
 
     if (fwrite(o->shortDescr.c_str(), o->shortDescr.length() + 1, 1, fp) != 1) {
       vlogf(LOG_BUG, "Error writing object short description to rent.");
-      return FALSE;
+      return false;
     }
 
     if (!o->getDescr().empty()) {
       if (fwrite(o->getDescr().c_str(), o->getDescr().length() + 1, 1, fp) !=
           1) {
         vlogf(LOG_BUG, "Error writing object description to rent.");
-        return FALSE;
+        return false;
       }
     } else {
       vlogf(LOG_BUG, format("object %d has no descr") % o->objVnum());
@@ -437,17 +437,17 @@ bool ItemSave::raw_write_item(TObj* o) {
       if (fwrite(o->action_description.c_str(),
             o->action_description.length() + 1, 1, fp) != 1) {
         vlogf(LOG_BUG, "Error writing object's action description to rent.");
-        return FALSE;
+        return false;
       }
     } else {
       if (fwrite("", strlen("") + 1, 1, fp) != 1) {
         vlogf(LOG_BUG,
-          "Error writing NULL object's action description to rent.");
-        return FALSE;
+          "Error writing nullptr object's action description to rent.");
+        return false;
       }
     }
   }
-  return TRUE;
+  return true;
 }
 
 int ItemSaveDB::raw_write_item(TObj* o, int slot, int container, int rent_id) {
@@ -523,13 +523,13 @@ TObj* ItemLoad::raw_read_item() {
   rentObject item;
   int j, tmpcost;
   TObj* o;
-  char *name = NULL, *shortDescr = NULL, *description = NULL,
-       *action_description = NULL;
+  char *name = nullptr, *shortDescr = nullptr, *description = nullptr,
+       *action_description = nullptr;
 
   if (!raw_read_rentObject(fp, &item, &name, &shortDescr, &description,
         &action_description, version)) {
     vlogf(LOG_BUG, "Error reading object from rent.");
-    return NULL;
+    return nullptr;
   }
 
   // this is here to catch "bad" items, or items that we otherwise want to
@@ -542,7 +542,7 @@ TObj* ItemLoad::raw_read_item() {
     // soul of lost pet, component for defunct comp, Bat 7/13/99
     (item.item_number == 1413)) {
     // these items are to be retired
-    // its bad to return NULL here, so instead we will have it load a
+    // its bad to return nullptr here, so instead we will have it load a
     // hairball (vnum=0), that decays immediately
     const unsigned int OBJ_HAIRBALL = 1;
     item.item_number = OBJ_HAIRBALL;
@@ -552,7 +552,7 @@ TObj* ItemLoad::raw_read_item() {
   if (!(o = read_object(item.item_number, VIRTUAL))) {
     vlogf(LOG_BUG,
       format("Unable to load object Vnum = %d from rent.") % item.item_number);
-    return NULL;
+    return nullptr;
   }
 
   // old items should reflect current tiny file
@@ -646,13 +646,13 @@ TObj* ItemLoad::raw_read_item() {
     else if (obj_index[o->getItemIndex()].description)
       o->action_description = obj_index[o->getItemIndex()].description;
     else
-      o->action_description = NULL;
+      o->action_description = nullptr;
 
     if (obj_index[o->getItemIndex()].ex_description)
       o->ex_description =
         new extraDescription(*obj_index[o->getItemIndex()].ex_description);
     else
-      o->ex_description = NULL;
+      o->ex_description = nullptr;
 
     // strung objects keep everything
     if (version < 9 && dynamic_cast<TOpenContainer*>(o)) {
@@ -741,14 +741,14 @@ TObj* ItemLoadDB::raw_read_item(int rent_id, int& slot) {
   if (!db.fetchRow()) {
     vlogf(LOG_DB, format("rent object %i not found! Owner %i (%s)") % rent_id %
                     owner % owner_type);
-    return NULL;
+    return nullptr;
   }
 
   if (!(o = read_object(convertTo<int>(db["vnum"]), VIRTUAL))) {
     vlogf(LOG_BUG,
       format("read_object failed on rent object %s. Owner %i (5s)") %
         db["vnum"] % owner % owner_type);
-    return NULL;
+    return nullptr;
   }
 
   o->setObjStat(convertTo<int>(db["extra_flags"]));
@@ -791,12 +791,12 @@ TObj* ItemLoadDB::raw_read_item(int rent_id, int& slot) {
     o->affected[j].bitvector = convertTo<int>(db["bitvector"]);
   }
 
-  // NULL it all out
-  o->name = NULL;
-  o->shortDescr = NULL;
-  o->setDescr(NULL);
-  o->action_description = NULL;
-  o->ex_description = NULL;
+  // nullptr it all out
+  o->name = nullptr;
+  o->shortDescr = nullptr;
+  o->setDescr(nullptr);
+  o->action_description = nullptr;
+  o->ex_description = nullptr;
 
   // override defaults from table
   if (o->isObjStat(ITEM_STRUNG)) {
@@ -867,19 +867,19 @@ static bool immortalityNukeCheck(TBeing* ch, TObj* new_obj, bool corpse) {
 
   bool immortal =
     ((ch && ch->desc) ? IS_SET(ch->desc->account->flags, TAccount::IMMORTAL)
-                      : FALSE);
+                      : false);
 
   if (!corpse && immortal && shouldRecycle(new_obj->getItemIndex())) {
     char buf[1200];
     sprintf(buf,
       "Item (%s) was automatically recycled due to your immortal status.\n\r",
       new_obj->getName().c_str());
-    autoMail(ch, NULL, buf);
+    autoMail(ch, nullptr, buf);
     vlogf(LOG_SILENT, format("%s's %s being recycled due to immortality.") %
                         ch->getName() % new_obj->getName());
 
     delete new_obj;
-    new_obj = NULL;
+    new_obj = nullptr;
     return true;
   }
   return false;
@@ -1161,7 +1161,7 @@ void ItemLoad::setVersion(unsigned char v) { version = v; }
 // d = delete the item after saving (for renting)
 // corpse = indicate if pcorpse saving items
 void ItemSave::objToStore(signed char slot, TObj* o, TBeing* ch, bool d,
-  bool corpse = FALSE) {
+  bool corpse = false) {
   if (!o)
     return;
 
@@ -1209,13 +1209,13 @@ void ItemSave::objToStore(signed char slot, TObj* o, TBeing* ch, bool d,
       obj_index[o->number].addToNumber(1);
 
     delete o;
-    o = NULL;
+    o = nullptr;
   }
 }
 
 void ItemSave::objsToStore(signed char slot, StuffList list, TBeing* ch, bool d,
-  bool corpse = FALSE) {
-  TObj* o = NULL;
+  bool corpse = false) {
+  TObj* o = nullptr;
 
   for (StuffIter it = list.begin(); it != list.end();) {
     if (!(o = dynamic_cast<TObj*>(*(it++))))
@@ -1226,7 +1226,7 @@ void ItemSave::objsToStore(signed char slot, StuffList list, TBeing* ch, bool d,
 }
 
 void ItemSaveDB::objToStore(signed char slot, TObj* o, TBeing* ch, bool d,
-  bool corpse = FALSE, int container = 0) {
+  bool corpse = false, int container = 0) {
   if (!o)
     return;
 
@@ -1254,13 +1254,13 @@ void ItemSaveDB::objToStore(signed char slot, TObj* o, TBeing* ch, bool d,
       obj_index[o->number].addToNumber(1);
 
     delete o;
-    o = NULL;
+    o = nullptr;
   }
 }
 
 void ItemSaveDB::objsToStore(signed char slot, StuffList list, TBeing* ch,
-  bool d, bool corpse = FALSE, int container = 0) {
-  TObj* o = NULL;
+  bool d, bool corpse = false, int container = 0) {
+  TObj* o = nullptr;
 
   for (StuffIter it = list.begin(); it != list.end(); ++it) {
     if (!(o = dynamic_cast<TObj*>(*it)))
@@ -1334,12 +1334,12 @@ void TMonster::saveItems(int shop_nr) {
     if (!(((ij == WEAR_LEG_L) && obj->isPaired()) ||
           ((ij == WEAR_EX_LEG_L) && obj->isPaired()) ||
           ((ij == HOLD_LEFT) && obj->isPaired()))) {
-      is.objToStore(mapSlotToFile(ij), obj, this, FALSE);
+      is.objToStore(mapSlotToFile(ij), obj, this, false);
     }
   }
 
   // store inventory objects
-  is.objsToStore(NORMAL_SLOT, stuff, this, FALSE);*/
+  is.objsToStore(NORMAL_SLOT, stuff, this, false);*/
 
   // shopkeeper specific stuff - save gold
   if (isShopkeeper()) {
@@ -1366,7 +1366,7 @@ void TRoom::saveItems(const sstring&) {
   }
   is.writeVersion();
 
-  is.objsToStore(NORMAL_SLOT, stuff, NULL, FALSE);
+  is.objsToStore(NORMAL_SLOT, stuff, nullptr, false);
   is.writeFooter();
 }
 
@@ -1419,7 +1419,7 @@ void TRoom::loadItems() {
     return;
   }
 
-  il.objsFromStore(NULL, &num_read, NULL, this, false);
+  il.objsFromStore(nullptr, &num_read, nullptr, this, false);
   if (reset)
     setRoomFlagBit(ROOM_SAVE_ROOM);
 
@@ -1434,7 +1434,7 @@ void TRoom::loadItems() {
     /*vlogf(LOG_LOW, "Storage: Booting Storage Room");
 
     TThing * tThing,
-      * tCont=NULL;
+      * tCont=nullptr;
     TObj   * tBag = read_object(Obj::GENERIC_L_BAG, VIRTUAL);
     TBag   * tContainer;
     char     tString[256];
@@ -1653,7 +1653,7 @@ void updateSavedRoom(const char* tfname) {
   unsigned char version;
 
   if (!tfname) {
-    vlogf(LOG_BUG, "  updateSavedRoom called with NULL filename!");
+    vlogf(LOG_BUG, "  updateSavedRoom called with nullptr filename!");
     return;
   }
   sprintf(fileName, "%s/%s", ROOM_SAVE_PATH, tfname);
@@ -1669,7 +1669,7 @@ void updateSavedRoom(const char* tfname) {
     return;
   }
 
-  if (!noteLimitedItems(fp, fileName, version, FALSE))
+  if (!noteLimitedItems(fp, fileName, version, false))
     vlogf(LOG_BUG,
       format("  Unable to count limited items in file  %s") % fileName);
   fclose(fp);
@@ -1678,9 +1678,9 @@ void updateSavedRoom(const char* tfname) {
 void updateSavedRoomItems(void) { dirwalk(ROOM_SAVE_PATH, updateSavedRoom); }
 
 void TPCorpse::removeCorpseFromList(bool updateFile) {
-  TPCorpse* tmpCorpse = NULL;
-  bool found = FALSE;
-  TPCorpse* otherCorpse = NULL;
+  TPCorpse* tmpCorpse = nullptr;
+  bool found = false;
+  TPCorpse* otherCorpse = nullptr;
 
   if (name.empty() || (name == "corpse player dummy") ||
       !isObjStat(ITEM_STRUNG))
@@ -1691,13 +1691,13 @@ void TPCorpse::removeCorpseFromList(bool updateFile) {
       vlogf(LOG_BUG,
         "Error in removeCorpseList-- nextGlobalCorpse and no pc_corpse_list at "
         "all");
-    found = TRUE;
+    found = true;
   } else if ((this == pc_corpse_list)) {
     if (nextGlobalCorpse)
       pc_corpse_list = nextGlobalCorpse;
     else
-      pc_corpse_list = NULL;
-    found = TRUE;
+      pc_corpse_list = nullptr;
+    found = true;
   } else {
     for (tmpCorpse = pc_corpse_list; tmpCorpse;
          tmpCorpse = tmpCorpse->nextGlobalCorpse) {
@@ -1709,8 +1709,8 @@ void TPCorpse::removeCorpseFromList(bool updateFile) {
         if (nextGlobalCorpse)
           tmpCorpse->nextGlobalCorpse = nextGlobalCorpse;
         else
-          tmpCorpse->nextGlobalCorpse = NULL;
-        found = TRUE;
+          tmpCorpse->nextGlobalCorpse = nullptr;
+        found = true;
         break;
       }
     }
@@ -1725,7 +1725,7 @@ void TPCorpse::removeCorpseFromList(bool updateFile) {
     if (nextCorpse)
       previousCorpse->nextCorpse = nextCorpse;
     else
-      previousCorpse->nextCorpse = NULL;
+      previousCorpse->nextCorpse = nullptr;
   }
   if (nextCorpse) {
     if (!otherCorpse)
@@ -1733,7 +1733,7 @@ void TPCorpse::removeCorpseFromList(bool updateFile) {
     if (previousCorpse)
       nextCorpse->previousCorpse = previousCorpse;
     else
-      nextCorpse->previousCorpse = NULL;
+      nextCorpse->previousCorpse = nullptr;
     nextCorpse->previousCorpse = previousCorpse;
   }
   if (!otherCorpse && !fileName.empty() && pc_corpse_list) {
@@ -1749,9 +1749,9 @@ void TPCorpse::removeCorpseFromList(bool updateFile) {
         break;
     }
   }
-  nextCorpse = NULL;
-  previousCorpse = NULL;
-  nextGlobalCorpse = NULL;
+  nextCorpse = nullptr;
+  previousCorpse = nullptr;
+  nextGlobalCorpse = nullptr;
   setRoomNum(0);
   setNumInRoom(0);
   togOnCorpseListsOff();
@@ -1765,9 +1765,9 @@ void TPCorpse::removeCorpseFromList(bool updateFile) {
 }
 
 void TPCorpse::addCorpseToLists() {
-  TPCorpse* tmpCorpse = NULL;
+  TPCorpse* tmpCorpse = nullptr;
   int numCorpsesInRoom = 1;
-  bool found = FALSE;
+  bool found = false;
   if (stuff.empty())
     return;
 
@@ -1777,13 +1777,13 @@ void TPCorpse::addCorpseToLists() {
         getName());
   if (!pc_corpse_list) {
     pc_corpse_list = this;
-    nextGlobalCorpse = NULL;
+    nextGlobalCorpse = nullptr;
   } else {
     nextGlobalCorpse = pc_corpse_list;
     pc_corpse_list = this;
   }
-  previousCorpse = NULL;
-  nextCorpse = NULL;
+  previousCorpse = nullptr;
+  nextCorpse = nullptr;
   for (tmpCorpse = pc_corpse_list; tmpCorpse;
        tmpCorpse = tmpCorpse->nextGlobalCorpse) {
     if (tmpCorpse == this)
@@ -1792,7 +1792,7 @@ void TPCorpse::addCorpseToLists() {
       if (tmpCorpse->previousCorpse) {
         previousCorpse = tmpCorpse->previousCorpse;
         tmpCorpse->previousCorpse->nextCorpse = this;
-        found = TRUE;
+        found = true;
       }
       tmpCorpse->previousCorpse = this;
       nextCorpse = tmpCorpse;
@@ -1816,16 +1816,16 @@ void TPCorpse::addCorpseToLists() {
 }
 
 void TBeing::assignCorpsesToRooms() {
-  TRoom *rp = NULL, *rp2 = NULL;
+  TRoom *rp = nullptr, *rp2 = nullptr;
   TThing* tmp;
-  TPCorpse* corpse = NULL;
+  TPCorpse* corpse = nullptr;
   char buf[256];
   //  char *buf2;
   // char *buf3;
   //  char buf2[80];
   //  char buf3[80];
   int num_read = 0;
-  bool reset = FALSE;
+  bool reset = false;
   FILE* playerFile;
   memset(buf, '\0', sizeof(buf));
   ItemLoad il;
@@ -1870,7 +1870,7 @@ void TBeing::assignCorpsesToRooms() {
   if (reset)
     rp->removeRoomFlagBit(ROOM_SAVE_ROOM);
 
-  if (il.objsFromStore(NULL, &num_read, NULL, rp, TRUE)) {
+  if (il.objsFromStore(nullptr, &num_read, nullptr, rp, true)) {
     vlogf(LOG_BUG,
       format("Error while reading %s's corpse file. Prepare for reimb!") %
         getName());
@@ -1935,8 +1935,8 @@ void TBeing::assignCorpsesToRooms() {
 
 void TPCorpse::saveCorpseToFile() {
   char buf[256];
-  TPCorpse* firstCorpse = NULL;
-  TPCorpse* tmpCorpse = NULL;
+  TPCorpse* firstCorpse = nullptr;
+  TPCorpse* tmpCorpse = nullptr;
   int numCorpses = 0;
   ItemSave is;
 
@@ -1979,7 +1979,7 @@ void TPCorpse::saveCorpseToFile() {
   }
 
   tmpCorpse = firstCorpse;
-  is.objToStore(NORMAL_SLOT, (TObj*)tmpCorpse, NULL, FALSE, TRUE);
+  is.objToStore(NORMAL_SLOT, (TObj*)tmpCorpse, nullptr, false, true);
   is.writeFooter();
 }
 
@@ -2001,7 +2001,7 @@ int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/) {
   if (!is.openFile(buf)) {
     vlogf(LOG_BUG,
       format("Error opening file for saving %s's objects") % getName());
-    return FALSE;
+    return false;
   }
   strcpy(is.st.owner, getName().c_str());
   is.st.first_update = is.st.last_update = (long)time(0);
@@ -2009,7 +2009,7 @@ int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/) {
 
   if (!is.writeHeader()) {
     vlogf(LOG_BUG, format("Error writing rent header for %s.") % getName());
-    return FALSE;
+    return false;
   }
 
   for (wearSlotT ij = MIN_WEAR; ij < MAX_WEAR; ij++) {
@@ -2048,11 +2048,11 @@ int TPerson::saveRent(bool d /*=false*/, int msgStatus /*=0*/) {
     short save_room = in_room;
     saveChar(save_room);
     in_room = save_room;
-    preKillCheck(TRUE);
+    preKillCheck(true);
     return DELETE_VICT;
   }
 
-  return TRUE;
+  return true;
 }
 
 // Somewhere in here, we need to call race->makeBody().
@@ -2097,7 +2097,7 @@ void TPerson::loadRent() {
       format("Error while reading %s's rent file header.") % getName());
     return;
   }
-  if (il.objsFromStore(NULL, &num_read, this, NULL, false)) {
+  if (il.objsFromStore(nullptr, &num_read, this, nullptr, false)) {
     vlogf(LOG_BUG,
       format("Error while reading %s's objects. Prepare for reimb!") %
         getName());
@@ -2197,7 +2197,7 @@ bool check_stuff_norent(TBeing* owner, TBeing* recep) {
 // than 1/5th of a L50's. Instead, use level^3 as it has a most pleasing
 // curve: 0.12 @ l25, 0.5 @ l40 vs 1.0 @ l50, and scale to 2000 tax @ L50.
 void charge_rent_tax(TBeing* ch, TMonster* recep, int shop_nr) {
-  const float rate = shop_index[shop_nr].getProfitBuy(NULL, ch);
+  const float rate = shop_index[shop_nr].getProfitBuy(nullptr, ch);
   // 100.0 is because rosemary's profit_buy is currently 20
   const float base = pow(ch->GetMaxLevel(), 3) * 100.0 / pow(MAX_MORT, 3);
 
@@ -2229,7 +2229,7 @@ int receptionist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* recep,
     return shopWhisper(ch, recep, shop_nr, arg);
 
   if (cmd == CMD_GENERIC_PULSE) {
-    TThing* t = NULL;
+    TThing* t = nullptr;
     TBeing* tbt;
 
     // Toss out idlers
@@ -2246,74 +2246,74 @@ int receptionist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* recep,
           recep->doSay(
             "Hey, no loitering!  Make room for the other customers.");
           for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-            if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-              act("$n throws you from the inn.", FALSE, recep, 0, tbt, TO_VICT);
-              act("$n throws $N from the inn.", FALSE, recep, 0, tbt,
+            if (exit_ok(exitp = recep->exitDir(dir), nullptr)) {
+              act("$n throws you from the inn.", false, recep, 0, tbt, TO_VICT);
+              act("$n throws $N from the inn.", false, recep, 0, tbt,
                 TO_NOTVICT);
-              recep->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-              return TRUE;
+              recep->throwChar(tbt, dir, false, SILENT_NO, true);
+              return true;
             }
           }
         }
       }
     }
-    return TRUE;
+    return true;
   } else if (cmd == CMD_MOB_VIOLENCE_PEACEFUL) {
     TThing* ttt = o;
     TBeing* tbt = dynamic_cast<TBeing*>(ttt);
 
     recep->doSay("Hey!  Take it outside.");
     for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-      if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-        act("$n throws you from the inn.", FALSE, recep, 0, ch, TO_VICT);
-        act("$n throws $N from the inn.", FALSE, recep, 0, ch, TO_NOTVICT);
-        recep->throwChar(ch, dir, FALSE, SILENT_NO, true);
-        act("$n throws you from the inn.", FALSE, recep, 0, tbt, TO_VICT);
-        act("$n throws $N from the inn.", FALSE, recep, 0, tbt, TO_NOTVICT);
-        recep->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-        return TRUE;
+      if (exit_ok(exitp = recep->exitDir(dir), nullptr)) {
+        act("$n throws you from the inn.", false, recep, 0, ch, TO_VICT);
+        act("$n throws $N from the inn.", false, recep, 0, ch, TO_NOTVICT);
+        recep->throwChar(ch, dir, false, SILENT_NO, true);
+        act("$n throws you from the inn.", false, recep, 0, tbt, TO_VICT);
+        act("$n throws $N from the inn.", false, recep, 0, tbt, TO_NOTVICT);
+        recep->throwChar(tbt, dir, false, SILENT_NO, true);
+        return true;
       }
     }
-    return TRUE;
+    return true;
   }
 
   if (cmd != CMD_RENT)
-    return FALSE;
+    return false;
 
   // force poly's to return
   if (dynamic_cast<TMonster*>(ch)) {
-    act("$e looks at you and says, 'Sleep in the street!'", FALSE, recep, 0, ch,
+    act("$e looks at you and says, 'Sleep in the street!'", false, recep, 0, ch,
       TO_VICT);
-    act("$e looks at $N and says, 'Sleep in the street!'", FALSE, recep, 0, ch,
+    act("$e looks at $N and says, 'Sleep in the street!'", false, recep, 0, ch,
       TO_NOTVICT);
-    return TRUE;
+    return true;
   }
 
   if (!recep->awake()) {
-    act("$e isn't able to talk to you...", FALSE, recep, 0, ch, TO_VICT);
-    return TRUE;
+    act("$e isn't able to talk to you...", false, recep, 0, ch, TO_VICT);
+    return true;
   }
 
   if (!recep->canSee(ch) && !ch->isImmortal()) {
-    act("$n says, 'I don't deal with people I can't see!'", FALSE, recep, 0, 0,
+    act("$n says, 'I don't deal with people I can't see!'", false, recep, 0, 0,
       TO_ROOM);
-    return TRUE;
+    return true;
   }
 
   if (ch->affectedBySpell(AFFECT_PLAYERKILL) && !ch->isImmortal()) {
     act("$n looks at you and says, 'Murderers are not allowed to stay here!'",
-      FALSE, recep, 0, ch, TO_VICT);
+      false, recep, 0, ch, TO_VICT);
     act("$n looks at $N and says, 'Murderers are not allowed to stay here!'",
-      FALSE, recep, 0, ch, TO_NOTVICT);
-    return TRUE;
+      false, recep, 0, ch, TO_NOTVICT);
+    return true;
   }
 
   if (ch->affectedBySpell(AFFECT_PLAYERLOOT) && !ch->isImmortal()) {
     act(
       "$n motions at you then whispers, 'Someone is after you for the moment "
       "and I cannot allow you to stay here...Sorry.'",
-      FALSE, recep, NULL, ch, TO_VICT);
-    return TRUE;
+      false, recep, nullptr, ch, TO_VICT);
+    return true;
   }
 
   bool autoHates = false, hatesMe[2] = {false, false};
@@ -2348,23 +2348,23 @@ int receptionist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* recep,
       recep->doTell(ch->getNameNOC(ch), tStString);
 
     for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-      if (exit_ok(exitp = recep->exitDir(dir), NULL)) {
-        act("$n throws you from the inn.", FALSE, recep, 0, ch, TO_VICT);
-        act("$n throws $N from the inn.", FALSE, recep, 0, ch, TO_NOTVICT);
-        recep->throwChar(ch, dir, FALSE, SILENT_NO, true);
+      if (exit_ok(exitp = recep->exitDir(dir), nullptr)) {
+        act("$n throws you from the inn.", false, recep, 0, ch, TO_VICT);
+        act("$n throws $N from the inn.", false, recep, 0, ch, TO_NOTVICT);
+        recep->throwChar(ch, dir, false, SILENT_NO, true);
 
-        return TRUE;
+        return true;
       }
     }
 
-    return TRUE;
+    return true;
   }
 
   if (!ch->desc)
-    return TRUE;
+    return true;
 
   if (check_stuff_norent(ch, recep))
-    return TRUE;
+    return true;
 
   if (ch->desc->m_bIsClient)
     ch->desc->clientf(format("%d") % CLIENT_RENT);
@@ -2385,20 +2385,20 @@ int receptionist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* recep,
   if (Config::RentTax() && ch->GetMaxLevel() > 5)
     charge_rent_tax(ch, recep, shop_nr);
 
-  act("$n tells you, 'Have a nice stay!'", FALSE, recep, 0, ch, TO_VICT);
-  act("$n stores your stuff in the safe, and shows you to your room.", FALSE,
+  act("$n tells you, 'Have a nice stay!'", false, recep, 0, ch, TO_VICT);
+  act("$n stores your stuff in the safe, and shows you to your room.", false,
     recep, 0, ch, TO_VICT);
-  act("$n shows $N to $S room.", FALSE, recep, 0, ch, TO_NOTVICT);
+  act("$n shows $N to $S room.", false, recep, 0, ch, TO_NOTVICT);
 
   if (ch->desc->m_bIsClient) {
     ch->desc->clientf(format("%d") % CLIENT_RENT_END);
-    return TRUE;
+    return true;
   }
 
   ch->cls();
   ch->desc->outputProcessing();
 
-  return dynamic_cast<TPerson*>(ch)->saveRent(TRUE, 2);
+  return dynamic_cast<TPerson*>(ch)->saveRent(true, 2);
 }
 
 bool noteLimitedItems(FILE* fp, const char* tag, unsigned char version,
@@ -2411,7 +2411,7 @@ bool noteLimitedItems(FILE* fp, const char* tag, unsigned char version,
   while (1) {
     if (fread(&slot, sizeof(signed char), 1, fp) != 1) {
       vlogf(LOG_BUG, "noteLimitedItem: Failed reading slot");
-      return FALSE;
+      return false;
     }
     if (slot == CONTENTS_END) {
       if (depth--)
@@ -2423,30 +2423,30 @@ bool noteLimitedItems(FILE* fp, const char* tag, unsigned char version,
 
     if (version <= 1) {
       vlogf(LOG_BUG, "old rent object read in note limited item");
-      return FALSE;
+      return false;
     } else {
       if (fread(&item, sizeof(rentObject), 1, fp) != 1) {
         vlogf(LOG_BUG, "noteLimitedItem: Failed reading rentObject");
-        return FALSE;
+        return false;
       }
     }
-    n = s = d = ad = NULL;
+    n = s = d = ad = nullptr;
 
     if (IS_SET(item.extra_flags, ITEM_STRUNG)) {
       // we only care about the action_description
       if (!(n = raw_read_sstring(fp))) {
         vlogf(LOG_BUG, "Serious flaw (1) in noteLimitedItem");
-        return FALSE;
+        return false;
       }
       delete[] n;
       if (!(s = raw_read_sstring(fp))) {
         vlogf(LOG_BUG, "Serious flaw (2) in noteLimitedItem");
-        return FALSE;
+        return false;
       }
       if (!(d = raw_read_sstring(fp))) {
         vlogf(LOG_BUG, "Serious flaw (3) in noteLimitedItem");
         delete[] s;
-        return FALSE;
+        return false;
       }
       delete[] d;
       ad = raw_read_sstring(fp);
@@ -2469,10 +2469,10 @@ bool noteLimitedItems(FILE* fp, const char* tag, unsigned char version,
   // make sure we can't possibly read anymore... i.e., at eof
   if (fread(&c, 1, 1, fp)) {
     vlogf(LOG_BUG, "notelimitedItem: unexpected excess.");
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 void printLimitedInRent(void) {
@@ -2489,8 +2489,8 @@ void printLimitedInRent(void) {
           obj_index[i].name, obj_index[i].virt, obj_index[i].max_exist,
           obj_index[i].getNumber());
         // these have to be lower case
-        // autoMail(NULL, "jesus", buf);
-        // autoMail(NULL, "damescena", buf);
+        // autoMail(nullptr, "jesus", buf);
+        // autoMail(nullptr, "damescena", buf);
       }
     }
   }
@@ -2512,7 +2512,7 @@ void countAccounts(const char* arg) {
   bool accountActive7 = false;
   bool accountActive30 = false;
 
-  while ((dp = readdir(dfd)) != NULL) {
+  while ((dp = readdir(dfd)) != nullptr) {
     if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") ||
         !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
@@ -2595,7 +2595,7 @@ static bool parseFollowerRentEntry(FILE* fp, TBeing* ch, const char* arg,
   ItemLoad il;
 
   bool fp2_open = false;
-  FILE* fp2 = NULL;
+  FILE* fp2 = nullptr;
 
   try {
     if (!(mob = read_mobile(num, VIRTUAL))) {
@@ -2847,7 +2847,7 @@ static bool parseFollowerRentEntry(FILE* fp, TBeing* ch, const char* arg,
           delete new_obj;
         }
       }
-      mob->setStuckIn(mapped_slot, NULL);
+      mob->setStuckIn(mapped_slot, nullptr);
     }
 
     if (fscanf(fp, " %d ", &tmp) != 1)
@@ -2893,15 +2893,15 @@ static bool parseFollowerRentEntry(FILE* fp, TBeing* ch, const char* arg,
       mob->shortDescr = fread_string(fp);
       mob->player.longDescr = fread_string(fp);
       mob->setDescr(fread_string(fp));
-      mob->ex_description = NULL;
+      mob->ex_description = nullptr;
     }
 
     if (ch) {
       // we are actually retrieving
       *ch->roomp += *mob;
 
-      act("You retrieve $N from $S storage area.", FALSE, ch, 0, mob, TO_CHAR);
-      act("$n retrieves $N from $S storage area.", FALSE, ch, 0, mob,
+      act("You retrieve $N from $S storage area.", false, ch, 0, mob, TO_CHAR);
+      act("$n retrieves $N from $S storage area.", false, ch, 0, mob,
         TO_NOTVICT);
       vlogf(LOG_SILENT, format("%s mobile-rent retrieving %s") % ch->getName() %
                           mob->getName());
@@ -2968,7 +2968,7 @@ void updateRentFile(const char* who) {
   TAccount account;
   bool immortal;
 
-  mud_assert(who != NULL, "updateRentFile called with NULL player name!");
+  mud_assert(who != nullptr, "updateRentFile called with nullptr player name!");
 
   sprintf(fileName, "mutable/rent/%c/%s", who[0], who);
 
@@ -3045,7 +3045,7 @@ void updateRentFile(const char* who) {
 
   sprintf(fileName, "mutable/rent/%c/%s.fol", who[0], who);
   if ((fp = fopen(fileName, "r"))) {
-    parseFollowerRent(fp, NULL, who);
+    parseFollowerRent(fp, nullptr, who);
     fclose(fp);
   }
 }
@@ -3058,7 +3058,7 @@ void updateRentFiles(void) {
     dirwalk(format("mutable/rent/%s") % letter, updateRentFile);
   }
 
-  bootPulse(NULL, true);
+  bootPulse(nullptr, true);
 }
 
 void TBeing::removeFollowers() {
@@ -3085,24 +3085,24 @@ bool TBeing::isSaveMob(const TBeing*) const {
 
   // don't save pc followers
   if (isPc())
-    return FALSE;
+    return false;
 
   if (!(mob = dynamic_cast<const TMonster*>(this)))
-    return FALSE;
+    return false;
 
   // don't save oed mobs
   if (mob->number < 0)
-    return FALSE;
+    return false;
 
   // DUH.... making a bounty rent out is kinda dumb
   if (mob->spec == SPEC_BOUNTY_HUNTER)
-    return FALSE;
+    return false;
 
   // no renting of hero faeries
   if (mob->spec == SPEC_HERO_FAERIE)
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 bool TBeing::saveFollowers(bool rent_time) {
@@ -3114,7 +3114,7 @@ bool TBeing::saveFollowers(bool rent_time) {
   FILE* fp;
   int i;
   TPerson* tmp;
-  bool found = FALSE;
+  bool found = false;
   unsigned char version;
   TObj* obj;
   ItemSave is;
@@ -3129,15 +3129,15 @@ bool TBeing::saveFollowers(bool rent_time) {
 
   if (!followers) {
     wipeFollowersFile(tmp->name.c_str());
-    return FALSE;
+    return false;
   }
   if (!(fp = fopen(buf, "w"))) {
     vlogf(LOG_FILE, format("Can't open follower file for %s!") % tmp->name);
-    return FALSE;
+    return false;
   }
 
   bool fp2_open = false;
-  FILE* fp2 = NULL;
+  FILE* fp2 = nullptr;
   for (f = followers; f; f = f2) {
     f2 = f->next;
     ch = f->follower;
@@ -3155,7 +3155,7 @@ bool TBeing::saveFollowers(bool rent_time) {
     // we need to strip the affects off while we save stats
     // otherwise a -10 AC struct would get doubled on rent out/rent in
     // make a copy of it for now
-    affectedData* a_list = NULL;
+    affectedData* a_list = nullptr;
     if (mob->affected)
       a_list = new affectedData(*mob->affected);
     // now strip the affects off, and we'll put them back on at the end...
@@ -3169,10 +3169,10 @@ bool TBeing::saveFollowers(bool rent_time) {
       if (mob->equipment[ij])
         char_eq[ij] = unequip_char_for_save(mob, ij);
       else
-        char_eq[ij] = NULL;
+        char_eq[ij] = nullptr;
     }
 
-    found = TRUE;
+    found = true;
     fprintf(fp, "#%d\n", mob->mobVnum());
     fprintf(fp, "%ld %" PRIu64 " %d %.1f %.1f\n", mob->specials.act,
       mob->specials.affectedBy, mob->getFaction(), (double)mob->getPerc(),
@@ -3270,7 +3270,7 @@ bool TBeing::saveFollowers(bool rent_time) {
                               mob->getName() % obj->getName() % obj->objVnum());
 
           delete obj;
-          char_eq[mapped_slot] = NULL;
+          char_eq[mapped_slot] = nullptr;
         } else {
           mob->equipChar(obj, mapped_slot, SILENT_YES);
         }
@@ -3318,7 +3318,7 @@ bool TBeing::saveFollowers(bool rent_time) {
     // throw the affects back onto the mob
     while (a_list) {
       // due to the way affectTo copies stuff, apply affects from end of list
-      affectedData *aff, *prev = NULL;
+      affectedData *aff, *prev = nullptr;
       for (aff = a_list; aff->next; prev = aff, aff = aff->next)
         ;
 
@@ -3326,36 +3326,36 @@ bool TBeing::saveFollowers(bool rent_time) {
 
       delete aff;
       if (prev)
-        prev->next = NULL;
+        prev->next = nullptr;
       else
-        a_list = NULL;
+        a_list = nullptr;
     }
 
     if (rent_time) {
-      act("$n is led off to a storage area.", FALSE, mob, 0, 0, TO_ROOM);
+      act("$n is led off to a storage area.", false, mob, 0, 0, TO_ROOM);
       vlogf(LOG_SILENT,
         format("%s mobile-renting %s") % getName() % mob->getName());
 
       // do this here so we don't show it in delete
       // also, we suppress the "realizes is a jerk" text this way
-      mob->stopFollower(TRUE, STOP_FOLLOWER_SILENT);
+      mob->stopFollower(true, STOP_FOLLOWER_SILENT);
 
       // Since mob is heading into rent, artificially raise number so the
       // number is kept up with properly
       mob_index[mob->getMobIndex()].addToNumber(1);
 
       delete mob;
-      mob = NULL;
+      mob = nullptr;
     }
   }
   fclose(fp);
 
   if (!found) {
     wipeFollowersFile(tmp->name.c_str());
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 bool TBeing::loadFollowers() {
@@ -3371,12 +3371,12 @@ bool TBeing::loadFollowers() {
   sprintf(buf, "mutable/rent/%c/%s.fol", LOWER(tmpPer->name[0]),
     sstring(tmpPer->name).lower().c_str());
   if (!(fp = fopen(buf, "r")))
-    return FALSE;
+    return false;
 
   parseFollowerRent(fp, this, tmpPer->name.c_str());
 
   fclose(fp);
-  return TRUE;
+  return true;
 }
 
 void TBeing::reconnectEquipmentHandler(void) {
@@ -3401,7 +3401,7 @@ void TBeing::reconnectEquipmentHandler(void) {
     if (equipment[i]) {
       obj_array[i] = unequip(i);
     } else
-      obj_array[i] = NULL;
+      obj_array[i] = nullptr;
   }
 
   // put all resets here
@@ -3457,7 +3457,7 @@ void TPerson::saveToggles() {
 
 int TBeing::doRent(const sstring& argument) {
   sendTo("You're a mob.  You can't rent!\n\r");
-  return FALSE;
+  return false;
 }
 
 int TPerson::doRent(const sstring& argument) {
@@ -3469,15 +3469,15 @@ int TPerson::doRent(const sstring& argument) {
 
   if (!inCamp()) {
     doNotHere();
-    return FALSE;
+    return false;
   }
   sendTo("You opt to rough it for awhile.\n\r");
-  act("$n decides to rough it for awhile.", TRUE, this, 0, 0, TO_ROOM);
+  act("$n decides to rough it for awhile.", true, this, 0, 0, TO_ROOM);
 
   cls();
   desc->outputProcessing();
 
-  int rc = saveRent(TRUE, 2);
+  int rc = saveRent(true, 2);
   if (IS_SET_ONLY(rc, DELETE_VICT))
     return DELETE_THIS;
   return rc;
@@ -3485,8 +3485,8 @@ int TPerson::doRent(const sstring& argument) {
 
 bool TObj::isRentable() const {
   if (isObjStat(ITEM_NORENT) || (number < 0))
-    return FALSE;
-  return TRUE;
+    return false;
+  return true;
 }
 
 rentObject::rentObject() :
@@ -3524,7 +3524,7 @@ void processCorpseFile(const char* cfName) {
   rentHeader h;
 
   if (!cfName) {
-    vlogf(LOG_BUG, "  processCorpseFile called with NULL filename!");
+    vlogf(LOG_BUG, "  processCorpseFile called with nullptr filename!");
     return;
   }
   sprintf(fileName, "mutable/corpses/%s", cfName);
@@ -3539,7 +3539,7 @@ void processCorpseFile(const char* cfName) {
     return;
   }
 
-  if (!noteLimitedItems(fp, fileName, h.version, FALSE))
+  if (!noteLimitedItems(fp, fileName, h.version, false))
     vlogf(LOG_BUG,
       format("  Unable to count limited items in file  %s") % fileName);
 
@@ -3630,7 +3630,7 @@ void TBeing::doClone(const sstring& arg) {
                      ch_name);
     return;
   }
-  if (il.objsFromStore(NULL, &num_read, mob, NULL, false)) {
+  if (il.objsFromStore(nullptr, &num_read, mob, nullptr, false)) {
     vlogf(LOG_BUG, format("Error while reading %s's objects in doClone.  Your "
                           "clone stands naked before you.") %
                      ch_name);
@@ -3679,7 +3679,7 @@ void TBeing::doClone(const sstring& arg) {
     }
   }
 
-  // this bit makes the mob TRUE for isPc, and prevents the look responses, etc
+  // this bit makes the mob true for isPc, and prevents the look responses, etc
 
   sendTo("Your clone appears before you.\n\r");
 }

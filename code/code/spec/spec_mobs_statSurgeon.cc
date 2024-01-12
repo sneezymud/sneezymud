@@ -9,7 +9,7 @@ const int COST = 1000000;
 int statSurgeon(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* surg,
   TObj*) {
   if (cmd != CMD_BUY) {
-    return FALSE;
+    return false;
   }
 
   sstring sarg = arg;
@@ -30,7 +30,7 @@ int statSurgeon(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* surg,
       stats.push_back(STAT_CON);
     else {
       surg->doSay("Hm, I don't quite follow you there.");
-      return TRUE;
+      return true;
     }
   }
   // catch both same or changeBy 0
@@ -40,7 +40,7 @@ int statSurgeon(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* surg,
       "I doubt you really want to pay for me to do something that will have no "
       "effect.");
     surg->doSay("Don't waste my time.");
-    return TRUE;
+    return true;
   }
 
   std::vector<int> group1;
@@ -65,7 +65,7 @@ int statSurgeon(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* surg,
   if (ct1 < 2 && ct2 < 2) {
     surg->doSay("I just don't think that I'm up to that challenge.");
     surg->doSay("Just THINK of how much I could CHARGE for that!");
-    return TRUE;
+    return true;
   }
 
   int st1 = ch->getStat(STAT_CHOSEN, stats[0]);
@@ -74,7 +74,7 @@ int statSurgeon(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* surg,
       (st2 - changeBy) > 25 || (st2 - changeBy) < -25) {
     surg->doSay("I just don't think that I'm up to that challenge.");
     surg->doSay("Just THINK of how much I could CHARGE for that!");
-    return TRUE;
+    return true;
   }
 
   if (ch->getMoney() >= COST) {
@@ -83,19 +83,19 @@ int statSurgeon(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* surg,
   } else {
     surg->doSay(
       "So sorry!  Is seems that you can't afford my services after all.");
-    return TRUE;
+    return true;
   }
 
-  act("You touch $P on the forehead.", TRUE, surg, NULL, ch, TO_CHAR);
-  act("$P touches you on the forehead.", TRUE, ch, NULL, surg, TO_CHAR);
+  act("You touch $P on the forehead.", true, surg, nullptr, ch, TO_CHAR);
+  act("$P touches you on the forehead.", true, ch, nullptr, surg, TO_CHAR);
   ch->doSleep("");
-  act("$n mumbles something and touches $P on the forehead.", TRUE, surg, NULL,
+  act("$n mumbles something and touches $P on the forehead.", true, surg, nullptr,
     ch, TO_ROOM);
-  act("You operate on $P.", TRUE, surg, NULL, ch, TO_CHAR);
+  act("You operate on $P.", true, surg, nullptr, ch, TO_CHAR);
   act(
     "$n pulls out a long thin blade and recites words in a strange language as "
     "he repeatedly cuts and miraculously heals $P.",
-    TRUE, surg, 0, ch, TO_ROOM);
+    true, surg, 0, ch, TO_ROOM);
 
   ch->setStat(STAT_CHOSEN, stats[0], st1 + changeBy);
   ch->setStat(STAT_CHOSEN, stats[1], st2 - changeBy);
@@ -103,5 +103,5 @@ int statSurgeon(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* surg,
   surg->doSay("That's that then.");
   surg->doSay("Hope I didn't forget anything.");
   ch->doSave(SILENT_NO);
-  return TRUE;
+  return true;
 }

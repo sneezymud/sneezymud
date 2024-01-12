@@ -97,7 +97,7 @@ dirTypeT TBeing::findDoor(const char* type, const char* direct,
       return DIR_NONE;
     }
   } else { /* try to locate the keyword */
-    bool found = FALSE;
+    bool found = false;
     for (door = MIN_DIR; door < MAX_DIR; door++) {
       if ((exitp = exitDir(door)) && exitp->keyword != "_unique_door_") {
         // secret doors can't be abbreviated
@@ -105,7 +105,7 @@ dirTypeT TBeing::findDoor(const char* type, const char* direct,
               isname(type, exitp->keyword)) ||
             (IS_SET(exitp->condition, EXIT_SECRET) &&
               is_exact_name(type, exitp->keyword))) {
-          found = TRUE;
+          found = true;
           if ((mode == DOOR_INTENT_OPEN &&
                 IS_SET(exitp->condition, EXIT_CLOSED)) ||
               (mode == DOOR_INTENT_CLOSE &&
@@ -146,13 +146,13 @@ dirTypeT TBeing::findDoor(const char* type, const char* direct,
 
 // make sure traps have been looked for prior to calling
 void TBeing::rawOpenDoor(dirTypeT dir) {
-  roomDirData *exitp, *back = NULL;
+  roomDirData *exitp, *back = nullptr;
   TRoom *rp, *rp2;
   char buf[256];
   soundNumT snd = SOUND_OFF;
 
   if (!(rp = roomp))
-    vlogf(LOG_BUG, format("NULL rp in rawOpenDoor() for %s.") % getName());
+    vlogf(LOG_BUG, format("nullptr rp in rawOpenDoor() for %s.") % getName());
 
   exitp = rp->dir_option[dir];
   if (exitp->condition & EXIT_DESTROYED) {
@@ -179,15 +179,15 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
     REMOVE_BIT(exitp->condition, EXIT_TRAPPED);
 
   if (IS_SET(exitp->condition, EXIT_SECRET)) {
-    act("$n reveals a hidden passage!", TRUE, this, 0, 0, TO_ROOM);
-    act("You reveal a hidden passage!", TRUE, this, 0, 0, TO_CHAR);
+    act("$n reveals a hidden passage!", true, this, 0, 0, TO_ROOM);
+    act("You reveal a hidden passage!", true, this, 0, 0, TO_CHAR);
     addToWait(combatRound(1));
   }
   switch (exitp->door_type) {
     case DOOR_DRAWBRIDGE:
       sprintf(buf, "$n causes the %s %s to lower.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You cause the %s %s to lower.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
@@ -195,14 +195,14 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
     case DOOR_SCREEN:
       sprintf(buf, "$n slides the %s %s to one side and opens the way.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You slide the %s %s to one side and open the way.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_RUBBLE:
       sprintf(buf, "$n pushes the %s %s aside and clears the way.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You push the %s %s aside and clear the way.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
@@ -210,13 +210,13 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
       if (riding) {
         sprintf(buf, "$n leans over and lifts the %s %s open.",
           exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You lean over and lift the %s %s open.\n\r") %
                exitp->getName().uncap() % dirs_to_blank[dir]);
       } else {
         sprintf(buf, "$n squats down and lifts the %s %s open.",
           exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You squat down and lift the %s %s open.\n\r") %
                exitp->getName().uncap() % dirs_to_blank[dir]);
       }
@@ -225,19 +225,19 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
       if (dir == DIR_UP) {
         sprintf(buf, "$n reaches up and pushes the %s open.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach up and push the %s open.\n\r") %
                exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and lifts the %s open.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach down and lift the %s open.\n\r") %
                exitp->getName().uncap());
       } else {
         sprintf(buf, "$n opens the %s %s.", exitp->getName().uncap().c_str(),
           dirs_to_blank[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You open the %s %s.\n\r") % exitp->getName().uncap() %
                dirs_to_blank[dir]);
       }
@@ -245,7 +245,7 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
     case DOOR_GATE:
       sprintf(buf, "$n unlatches the %s %s and swings it open.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You unlatch the %s %s and swing it open.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
@@ -253,20 +253,20 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
       if (dir == DIR_UP) {
         sprintf(buf, "$n unlatches the %s in the ceiling and pulls it open.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(
           format("You unlatch the %s in the ceiling and pull it open.\n\r") %
           exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n unlatches the %s in the $g and pushes it open.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You unlatch the %s in the %s and push it open.\n\r") %
                exitp->getName().uncap() % roomp->describeGround());
       } else {
         sprintf(buf, "$n opens the %s %s.", exitp->getName().uncap().c_str(),
           dirs_to_blank[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You open the %s %s.\n\r") % exitp->getName().uncap() %
                dirs_to_blank[dir]);
       }
@@ -275,19 +275,19 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
       if (dir == DIR_UP) {
         sprintf(buf, "$n reachs up and opens the %s in the ceiling.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach up and open the %s in the ceiling.\n\r") %
                exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and opens the %s in the $g.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach down and open the %s in the %s.\n\r") %
                exitp->getName().uncap() % roomp->describeGround());
       } else {
         sprintf(buf, "$n opens the %s in the %s wall.",
           exitp->getName().uncap().c_str(), dirs[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You open the %s in the %s wall.\n\r") %
                exitp->getName().uncap() % dirs[dir]);
       }
@@ -299,7 +299,7 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
 
       sprintf(buf, "$n opens the %s %s.", exitp->getName().uncap().c_str(),
         dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You open the %s %s.\n\r") % exitp->getName().uncap() %
              dirs_to_blank[dir]);
   }
@@ -378,7 +378,7 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
           back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         rp2->playsound(snd, SOUND_TYPE_NOISE);
     }
-    TThing* t = NULL;
+    TThing* t = nullptr;
     for (StuffIter it = roomp->stuff.begin();
          it != roomp->stuff.end() && (t = *it); ++it) {
       if (t->desc)
@@ -393,13 +393,13 @@ void TBeing::rawOpenDoor(dirTypeT dir) {
 }
 
 void TBeing::rawCloseDoor(dirTypeT dir) {
-  roomDirData *exitp, *back = NULL;
+  roomDirData *exitp, *back = nullptr;
   TRoom *rp, *rp2;
   char buf[256];
   soundNumT snd = SOUND_OFF;
 
   if (!(rp = roomp))
-    vlogf(LOG_BUG, format("NULL rp in rawCloseDoor() for %s.") % getName());
+    vlogf(LOG_BUG, format("nullptr rp in rawCloseDoor() for %s.") % getName());
 
   exitp = rp->dir_option[dir];
   if (IS_SET(exitp->condition, EXIT_DESTROYED)) {
@@ -417,7 +417,7 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
     case DOOR_DRAWBRIDGE:
       sprintf(buf, "$n raises the %s %s.", exitp->getName().uncap().c_str(),
         dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You raise the %s %s.\n\r") % exitp->getName().uncap() %
              dirs_to_blank[dir]);
       break;
@@ -425,21 +425,21 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
     case DOOR_SCREEN:
       sprintf(buf, "$n slides the %s %s closed.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You slide the %s %s closed.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_RUBBLE:
       sprintf(buf, "$n pushes the %s %s into the path and blocks the way.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You push the %s %s into the path and block the way.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
     case DOOR_PORTCULLIS:
       sprintf(buf, "$n reaches up and lowers the %s %s.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You reach up and lower the %s %s.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
@@ -447,19 +447,19 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
       if (dir == DIR_UP) {
         sprintf(buf, "$n reaches up and pushes the %s closed.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach up and push the %s close.\n\r") %
                exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach down and close the %s.\n\r") %
                exitp->getName().uncap());
       } else {
         sprintf(buf, "$n closes the %s %s.", exitp->getName().uncap().c_str(),
           dirs_to_blank[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You close the %s %s.\n\r") % exitp->getName().uncap() %
                dirs_to_blank[dir]);
       }
@@ -467,7 +467,7 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
     case DOOR_GATE:
       sprintf(buf, "$n swings the %s %s closed and latches it.",
         exitp->getName().uncap().c_str(), dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You swing the %s %s closed and latch it.\n\r") %
              exitp->getName().uncap() % dirs_to_blank[dir]);
       break;
@@ -475,20 +475,20 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
       if (dir == DIR_UP) {
         sprintf(buf, "$n pushes the %s in the ceiling closed and latch it.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(
           format("You push the %s in the ceiling closed and latch it.\n\r") %
           exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n pull the %s in the $g closed and latch it.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You close the %s in the %s and latch it.\n\r") %
                exitp->getName().uncap() % roomp->describeGround());
       } else {
         sprintf(buf, "$n closes the %s %s.", exitp->getName().uncap().c_str(),
           dirs_to_blank[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You close the %s %s.\n\r") % exitp->getName().uncap() %
                dirs_to_blank[dir]);
       }
@@ -497,19 +497,19 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
       if (dir == DIR_UP) {
         sprintf(buf, "$n reaches up and pushes the %s closed.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach up and push the %s closed.\n\r") %
                exitp->getName().uncap());
       } else if (dir == DIR_DOWN) {
         sprintf(buf, "$n reaches down and closes the %s.",
           exitp->getName().uncap().c_str());
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You reach down and close the %s.\n\r") %
                exitp->getName().uncap());
       } else {
         sprintf(buf, "$n closes the %s %s.", exitp->getName().uncap().c_str(),
           dirs_to_blank[dir]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
+        act(buf, true, this, 0, 0, TO_ROOM);
         sendTo(format("You close the %s %s.\n\r") % exitp->getName().uncap() %
                dirs_to_blank[dir]);
       }
@@ -518,7 +518,7 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
     default:
       sprintf(buf, "$n closes the %s %s.", exitp->getName().uncap().c_str(),
         dirs_to_blank[dir]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
+      act(buf, true, this, 0, 0, TO_ROOM);
       sendTo(format("You close the %s %s.\n\r") % exitp->getName().uncap() %
              dirs_to_blank[dir]);
 
@@ -526,8 +526,8 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
       roomp->playsound(snd, SOUND_TYPE_NOISE);
   }
   if (IS_SET(exitp->condition, EXIT_SECRET)) {
-    act("$n conceals a hidden passage!", TRUE, this, 0, 0, TO_ROOM);
-    act("You conceal a hidden passage!", TRUE, this, 0, 0, TO_CHAR);
+    act("$n conceals a hidden passage!", true, this, 0, 0, TO_ROOM);
+    act("You conceal a hidden passage!", true, this, 0, 0, TO_CHAR);
     addToWait(combatRound(1));
   }
 
@@ -613,7 +613,7 @@ void TBeing::rawCloseDoor(dirTypeT dir) {
           back->getName().uncap().c_str(), dirs_to_blank[rev_dir(dir)]);
         rp2->playsound(snd, SOUND_TYPE_NOISE);
     }
-    TThing* t = NULL;
+    TThing* t = nullptr;
     for (StuffIter it = roomp->stuff.begin();
          it != roomp->stuff.end() && (t = *it); ++it) {
       if (t->desc)
@@ -654,7 +654,7 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
   const char* was_closed, const char* was_open, const char* open_char,
   const char* open_room, const char* open_far, const char* close_char,
   const char* close_room, const char* close_far) {
-  roomDirData *exitp, *back = NULL;
+  roomDirData *exitp, *back = nullptr;
   TRoom* rp;
 
   enum successResT {
@@ -666,7 +666,7 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
   successResT open = SUCCESS_OPEN;
 
   if (!(rp = roomp)) {
-    vlogf(LOG_BUG, format("NULL rp in openUniqueDoor() for %s.") % getName());
+    vlogf(LOG_BUG, format("nullptr rp in openUniqueDoor() for %s.") % getName());
     return;
   }
 
@@ -730,18 +730,18 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
 
   if (open == SUCCESS_WAS_CLOSE) {
     // Already closed
-    act(was_closed, TRUE, this, 0, 0, TO_CHAR);
+    act(was_closed, true, this, 0, 0, TO_CHAR);
     return;
   } else if (open == SUCCESS_WAS_OPEN) {
     // Already open
-    act(was_open, TRUE, this, 0, 0, TO_CHAR);
+    act(was_open, true, this, 0, 0, TO_CHAR);
     return;
   } else if (open == SUCCESS_OPEN) {
-    act(open_char, TRUE, this, 0, 0, TO_CHAR);
-    act(open_room, TRUE, this, 0, 0, TO_ROOM);
+    act(open_char, true, this, 0, 0, TO_CHAR);
+    act(open_room, true, this, 0, 0, TO_ROOM);
   } else if (open == SUCCESS_CLOSE) {
-    act(close_char, TRUE, this, 0, 0, TO_CHAR);
-    act(close_room, TRUE, this, 0, 0, TO_ROOM);
+    act(close_char, true, this, 0, 0, TO_CHAR);
+    act(close_room, true, this, 0, 0, TO_ROOM);
   }
   /* now for opening the OTHER side of the door! */
   if (exit_ok(exitp, &rp) && (back = rp->dir_option[rev_dir(dir)]) &&
@@ -765,26 +765,26 @@ void TBeing::openUniqueDoor(dirTypeT dir, doorUniqueT intent,
 
 bool canSeeThruDoor(const roomDirData* exitp) {
   if (IS_SET(exitp->condition, EXIT_CAVED_IN))
-    return FALSE;
+    return false;
 
   if (IS_SET(exitp->condition, EXIT_DESTROYED))
-    return TRUE;
+    return true;
   else if (!IS_SET(exitp->condition, EXIT_CLOSED))
-    return TRUE;
+    return true;
 
   switch (exitp->door_type) {
     case DOOR_NONE:
     case DOOR_PORTCULLIS:
     case DOOR_GRATE:
     case DOOR_SCREEN:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
 void roomDirData::destroyDoor(dirTypeT dir, int room) {
-  roomDirData* back = NULL;
+  roomDirData* back = nullptr;
   TRoom* rp;
 
   if (door_type == DOOR_NONE)
@@ -802,7 +802,7 @@ void roomDirData::destroyDoor(dirTypeT dir, int room) {
 }
 
 void roomDirData::caveinDoor(dirTypeT dir, int room) {
-  roomDirData* back = NULL;
+  roomDirData* back = nullptr;
   TRoom* rp;
 
   // this should destroy any door, closing the way
@@ -822,7 +822,7 @@ void roomDirData::caveinDoor(dirTypeT dir, int room) {
 }
 
 void roomDirData::wardDoor(dirTypeT dir, int room) {
-  roomDirData* back = NULL;
+  roomDirData* back = nullptr;
   TRoom* rp;
 
   // this should pop a ward onto the exit
@@ -843,22 +843,22 @@ void roomDirData::wardDoor(dirTypeT dir, int room) {
 // this is a room-special proc
 int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
   if (!rp) {
-    mud_assert(rp != NULL, "No room in SecretDoors");
-    return FALSE;
+    mud_assert(rp != nullptr, "No room in SecretDoors");
+    return false;
   }
 
   if (!ch) {
     // some triggers (pulse) will pass in !ch, just ignore them
-    return FALSE;
+    return false;
   }
 
   if (cmd >= MAX_CMD_LIST)
-    return FALSE;
+    return false;
 
   if (rp->number != ch->in_room) {
     vlogf(LOG_BUG,
       format("char %s not in proper room (SecretDoors)") % ch->getName());
-    return FALSE;
+    return false;
   }
 
   char buf[255];
@@ -867,7 +867,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
   switch (rp->number) {
     case 450:
       if ((cmd != CMD_CLOSE) && (cmd != CMD_PUSH))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "nail")) {
           ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -878,7 +878,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "*click*.",
             "The painting on the north wall suddenly opens with a *click*.", "",
             "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (isname(buf, "panel door")) {
@@ -888,13 +888,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n closes the panel in the south wall which latches with a "
             "*click*.",
             "The painting to the north closes with a *click*.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 451:
       if ((cmd != CMD_CLOSE) && (cmd != CMD_PUSH))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (isname(buf, "gem ruby")) {
           ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -904,7 +904,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "*click*.",
             "The panel to the south suddenly pops open with a *click*.", "", "",
             "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "painting")) {
@@ -914,13 +914,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n closes the painting on the north wall which latches with a "
             "*click*.",
             "The panel to the south closes with a *click*.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 774:
       if (cmd != CMD_TWIST)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "lid")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "",
           "As you twist the lid, a panel of the ceiling slowly opens.",
@@ -931,12 +931,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n twists the barrel lid causing the trapdoor overhead to slowly "
           "close.",
           "The trapdoor below you slowly slides closed.");
-        return TRUE;
+        return true;
       }
       break;
     case 6156:
       if ((cmd != CMD_RAISE) && (cmd != CMD_LOWER) && (cmd != CMD_LIFT))
-        return FALSE;
+        return false;
       if ((cmd == CMD_RAISE) || (cmd == CMD_LIFT)) {
         if (!strcasecmp(buf, "lever")) {
           ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -950,7 +950,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You hear a grinding sound as a section of the north wall slides "
             "open revealing a passage.",
             "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "lever")) {
@@ -966,13 +966,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "the way through.",
             "You hear a grinding sound as a section of the south wall slides "
             "closed concealing the exit.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 6158:
       if ((cmd != CMD_RAISE) && (cmd != CMD_LOWER) && (cmd != CMD_LIFT))
-        return FALSE;
+        return false;
       if ((cmd == CMD_RAISE) || (cmd == CMD_LIFT)) {
         if (!strcasecmp(buf, "lever")) {
           ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -988,7 +988,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You hear a grinding sound from the mechanism to your north as a "
             "section of the south wall slides open revealing a passage.",
             "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "lever")) {
@@ -1004,13 +1004,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "back into place concealing all traces of the exit.",
             "You hear a grinding sound from the mechanism to your north as a "
             "section of the south wall slides back into place.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 7005:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "trigger")) {
         ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
           "As you push the trigger, the ladder lowers into the pit.",
@@ -1019,12 +1019,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "As you push the trigger, the ladder rises out of the pit.",
           "As $n pushes the trigger, the ladder rises out of the pit.",
           "The ladder raises out of the pit.");
-        return TRUE;
+        return true;
       }
       break;
     case 7015:
       if (cmd != CMD_TWIST)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "lamp")) {
         ch->openUniqueDoor(DIR_NORTHEAST, DOOR_UNIQUE_DEF, "", "",
           "You twist the lamp, the wall slides back revealing a passage.",
@@ -1033,12 +1033,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You twist the lamp, the wall slides forward concealing a passage.",
           "$n twists the lamp, the wall slides forward concealing a passage.",
           "A passage is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 7016:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "trigger")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "",
           "As you push the trigger, the ladder lowers into the pit.",
@@ -1047,12 +1047,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "As you push the trigger, the ladder rises out of the pit.",
           "As $n pushes the trigger, the ladder rises out of the pit.",
           "The ladder raises out of the pit.");
-        return TRUE;
+        return true;
       }
       break;
     case 7023:
       if ((cmd != CMD_PULL) && (cmd != CMD_SHOVE))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "lever")) {
         ch->openUniqueDoor(DIR_SOUTHWEST, DOOR_UNIQUE_DEF, "", "",
           "You pull the lever and a wall opens up, revealing a passage.",
@@ -1061,12 +1061,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You pull the lever and a wall opens down, concealing a passage.",
           "$n pulls the lever and a wall opens down, concealing a passage.",
           "The wall slides down, concealing a passage.");
-        return TRUE;
+        return true;
       }
       break;
     case 9050:
       if ((cmd != CMD_TWIST) && (cmd != CMD_TURN))
-        return FALSE;
+        return false;
       if (cmd == CMD_TWIST) {
         if (!strcasecmp(buf, "lid")) {
           ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
@@ -1080,7 +1080,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n twists the barrel lid causing the trapdoor in the floor to "
             "slowly close.",
             "The trapdoor overhead slowly slides closed.");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "bracket")) {
@@ -1093,13 +1093,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "concealed!",
             "$n fiddles with something.  The passage to the west is concealed!",
             "The passage to the east is concealed.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 9064:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_EAST, DOOR_UNIQUE_DEF, "", "",
           "You reach out and turn the bracket.  A passage to the east is "
@@ -1110,36 +1110,36 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "concealed!",
           "$n fiddles with something.  The passage to the east is concealed!",
           "The passage to the west is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 9390:
       if ((cmd != CMD_PULL) && (cmd != CMD_PUSH) && (cmd != CMD_SHOVE))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "brush")) {
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
           "You move the brush aside.", "$n moves some brush aside.",
           "Some brush has been moved aside, revealing a new path.",
           "You move the brush.", "$n moves some brush.",
           "Some brush has been moved, concealing a path.");
-        return TRUE;
+        return true;
       }
       break;
     case 9391:
       if ((cmd != CMD_PULL) && (cmd != CMD_PUSH) && (cmd != CMD_SHOVE))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "brush")) {
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
           "You move the brush aside.", "$n moves some brush aside.",
           "Some brush has been moved aside, revealing a new path.",
           "You move the brush.", "$n moves some brush.",
           "Some brush has been moved, concealing a path.");
-        return TRUE;
+        return true;
       }
       break;
     case 9581:
       if ((cmd != CMD_PULL) && (cmd != CMD_PRESS))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "tape")) {
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
           "You peel the tape back, opening a rip in the back of the tent.",
@@ -1148,12 +1148,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You press the tape back over the rip, closing the breach.",
           "$n fiddles with something, sealing the rip in the back of the tent.",
           "A rip in the back of the tent has been closed.");
-        return TRUE;
+        return true;
       }
       break;
     case 9582:
       if ((cmd != CMD_PULL) && (cmd != CMD_PRESS))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "tape")) {
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
           "You peel the tape back, opening a rip in the back of the tent.",
@@ -1162,12 +1162,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You press the tape back over the rip, closing the breach.",
           "$n fiddles with something, sealing the rip in the back of the tent.",
           "A rip in the back of the tent has been closed.");
-        return TRUE;
+        return true;
       }
       break;
     case 13111:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "kelp")) {
         ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
           "You push aside the kelp and try to clear a path.",
@@ -1176,12 +1176,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push the kelp strands back into place.",
           "$n pushes some kelp strands back into place.",
           "A path through the help has been closed.");
-        return TRUE;
+        return true;
       }
       break;
     case 9626:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "kelp")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "",
           "You push aside the kelp and try to clear a path.",
@@ -1190,12 +1190,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push the kelp strands back into place.",
           "$n pushes some kelp strands back into place.",
           "A path through the help has been closed.");
-        return TRUE;
+        return true;
       }
       break;
     case 9625:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "kelp")) {
         ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
           "You push aside the kelp and try to clear a path.",
@@ -1206,15 +1206,15 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "A path through the help has been closed.");
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "", "", "", "", "", "",
           "");
-        return TRUE;
+        return true;
       }
       break;
     case 10111:
       if ((cmd != CMD_PULL) && (cmd != CMD_PRESS) && (cmd != CMD_PUSH))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "branch")) {
-        act("You press on the branch.", TRUE, ch, 0, 0, TO_CHAR);
-        act("$n fiddles with something.", TRUE, ch, 0, 0, TO_ROOM);
+        act("You press on the branch.", true, ch, 0, 0, TO_CHAR);
+        act("$n fiddles with something.", true, ch, 0, 0, TO_ROOM);
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "",
           "A strange rumbling is heard and a stairway descends from the "
           "foliage.",
@@ -1225,15 +1225,15 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "foliage.",
           "$n's action causes a stairway to ascend back up into the foliage.",
           "The concealed stairway ascends into the foliage nearby.");
-        return TRUE;
+        return true;
       }
       break;
     case 10144:
       if ((cmd != CMD_PULL) && (cmd != CMD_PRESS) && (cmd != CMD_PUSH))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "branch")) {
-        act("You press on the branch.", TRUE, ch, 0, 0, TO_CHAR);
-        act("$n fiddles with something.", TRUE, ch, 0, 0, TO_ROOM);
+        act("You press on the branch.", true, ch, 0, 0, TO_CHAR);
+        act("$n fiddles with something.", true, ch, 0, 0, TO_ROOM);
         ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
           "A strange rumbling is heard and a stairway descends toward the "
           "forest below.",
@@ -1247,12 +1247,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "nearby.",
           "A rumbling noise is heard and the stairway disappears into the "
           "dense foliage overhead for unknown reasons.");
-        return TRUE;
+        return true;
       }
       break;
     case 10721:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
           "You turn the bracket.  A passage to the south is revealed!",
@@ -1261,12 +1261,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You turn the bracket.  The passage to the south is concealed!",
           "$n fiddles with something.  The passage to the south is concealed!",
           "The passage to the north is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10722:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
           "You turn the bracket.  A passage to the south is revealed!",
@@ -1275,12 +1275,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You turn the bracket.  The passage to the south is concealed!",
           "$n fiddles with something.  The passage to the south is concealed!",
           "The passage to the north is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10727:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "lever")) {
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
           "You push the lever.  A passage to the north has been revealed!",
@@ -1291,12 +1291,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n fiddles with something.  The passage to the north has been "
           "concealed.",
           "The passage to the south has been concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10730:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "lever")) {
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
           "You push the lever.  A passage to the north has been revealed!",
@@ -1307,12 +1307,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n fiddles with something.  The passage to the north has been "
           "concealed.",
           "The passage to the south has been concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10752:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_SOUTHEAST, DOOR_UNIQUE_DEF, "", "",
           "You turn the bracket.  A passage to the southeast is revealed!",
@@ -1322,12 +1322,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n fiddles with something.  The passage to the southeast is "
           "concealed!",
           "The passage to the northwest is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10753:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_SOUTHWEST, DOOR_UNIQUE_DEF, "", "",
           "You turn the bracket.  A passage to the southwest is revealed!",
@@ -1337,12 +1337,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n fiddles with something.  The passage to the southwest is "
           "concealed!",
           "The passage to the northeast is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10759:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "footrest")) {
         ch->openUniqueDoor(DIR_NORTHWEST, DOOR_UNIQUE_DEF, "", "",
           "You push on the footrest.  A passage to the northwest is revealed.",
@@ -1353,12 +1353,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n pushes on the footrest.  The passage to the northwest is "
           "concealed.",
           "The passage to the southeast is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10760:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "footrest")) {
         ch->openUniqueDoor(DIR_NORTHEAST, DOOR_UNIQUE_DEF, "", "",
           "You push on the footrest.  A passage to the northeast is revealed.",
@@ -1369,12 +1369,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n pushes on the footrest.  The passage to the northeast is "
           "concealed.",
           "The passage to the southwest is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10764:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "stone")) {
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
           "You push on the loose stone.  A passage to the south is revealed.",
@@ -1384,12 +1384,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "concealed.",
           "$n fiddles with something.  The passage to the south is concealed.",
           "The passage to the north is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10772:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "stone")) {
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
           "You push on the loose stone.  A passage to the north is revealed.",
@@ -1399,12 +1399,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "concealed.",
           "$n fiddles with something.  The passage to the north is concealed.",
           "The passage to the south is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10782:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
           "You reach out and turn the bracket.  A passage to the south is "
@@ -1415,12 +1415,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "concealed!",
           "$n fiddles with something.  The passage to the south is concealed!",
           "The passage to the north is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10785:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
           "You reach out and turn the bracket.  A passage to the north is "
@@ -1431,12 +1431,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "concealed!",
           "$n fiddles with something.  The passage to the north is concealed!",
           "The passage to the south is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10790:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "stone")) {
         ch->openUniqueDoor(DIR_EAST, DOOR_UNIQUE_DEF, "", "",
           "You push on the loose stone.  A passage to the east is revealed.",
@@ -1445,12 +1445,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push on the loose stone.  The passage to the east is concealed.",
           "$n fiddles with something.  The passage to the east is concealed.",
           "The passage to the west is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10791:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "lever")) {
           ch->openUniqueDoor(DIR_WEST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1459,7 +1459,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n fiddles with something.  A passage to the west has been "
             "revealed!",
             "A passage to the east has been revealed!", "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "lever")) {
@@ -1471,13 +1471,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n fiddles with something.  The passage to the west has been "
             "concealed.",
             "The passage to the east has been concealed.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 10814:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "stone")) {
         ch->openUniqueDoor(DIR_EAST, DOOR_UNIQUE_DEF, "", "",
           "You push on the loose stone.  A passage to the east is revealed.",
@@ -1486,12 +1486,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push on the loose stone.  The passage to the east is concealed.",
           "$n fiddles with something.  The passage to the east is concealed.",
           "The passage to the west is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10815:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "stone")) {
         ch->openUniqueDoor(DIR_WEST, DOOR_UNIQUE_DEF, "", "",
           "You push on the loose stone.  A passage to the west is revealed.",
@@ -1500,12 +1500,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push on the loose stone.  The passage to the west is concealed.",
           "$n fiddles with something.  The passage to the west is concealed.",
           "The passage to the east is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 10820:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "lever")) {
           ch->openUniqueDoor(DIR_EAST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1514,7 +1514,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n fiddles with something.  A passage to the east has been "
             "revealed!",
             "A passage to the west has been revealed!", "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "lever")) {
@@ -1526,13 +1526,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n fiddles with something.  The passage to the east has been "
             "concealed.",
             "The passage to the west has been concealed.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 10821:
       if (cmd != CMD_TURN)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "bracket")) {
         ch->openUniqueDoor(DIR_WEST, DOOR_UNIQUE_DEF, "", "",
           "You reach out and turn the bracket.  A passage to the west is "
@@ -1543,12 +1543,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "concealed!",
           "$n fiddles with something.  The passage to the west is concealed!",
           "The passage to the east is concealed.");
-        return TRUE;
+        return true;
       }
       break;
     case 14152:
       if (cmd != CMD_SAY && cmd != CMD_SAY2)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "time")) {
         ch->doSay(arg);
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
@@ -1562,12 +1562,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "A strange rumbling is heard.  $n's words cause a large boulder to "
           "conceal a path.",
           "A boulder rolls forward blocking the way south.");
-        return TRUE;
+        return true;
       }
       break;
     case 14153:
       if (cmd != CMD_SAY && cmd != CMD_SAY2)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "time")) {
         ch->doSay(arg);
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
@@ -1581,12 +1581,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "A strange rumbling is heard.  $n's words cause a large boulder to "
           "conceal a path.",
           "A boulder rolls forward blocking the way north.");
-        return TRUE;
+        return true;
       }
       break;
     case 14296:
       if (cmd != CMD_SAY && cmd != CMD_SAY2)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "knowledge")) {
         ch->doSay(arg);
         ch->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
@@ -1596,11 +1596,11 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "Your words cause the stone to the north to slide closed.",
           "$n's words cause the stone to the north to slide closed.",
           "A stone panel in the south wall slides closed with a rumble.");
-        return TRUE;
+        return true;
       }
     case 14299:
       if (cmd != CMD_SAY && cmd != CMD_SAY2)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "knowledge")) {
         ch->doSay(arg);
         ch->openUniqueDoor(DIR_SOUTH, DOOR_UNIQUE_DEF, "", "",
@@ -1610,11 +1610,11 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "Your words cause the stone to the south to slide closed.",
           "$n's words cause the stone to the south to slide closed.",
           "A stone panel in the north wall slides closed with a rumble.");
-        return TRUE;
+        return true;
       }
     case 14302:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "stone")) {
           ch->openUniqueDoor(DIR_EAST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1623,7 +1623,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pushes a stone aside.  A passage to the east is revealed.",
             "A stone to the west is pushed aside revealing a passage.", "", "",
             "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "stone")) {
@@ -1632,13 +1632,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You pull the stone back in place concealing the way east.",
             "$n pulls a stone upright concealing the way east.",
             "A large stone is pulled into place blocking the way west.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 14319:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "stone")) {
           ch->openUniqueDoor(DIR_WEST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1647,7 +1647,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pushes a stone aside.  A passage to the west is revealed.",
             "A stone to the east is pushed aside revealing a passage.", "", "",
             "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "stone")) {
@@ -1656,13 +1656,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You pull the stone back in place concealing the way west.",
             "$n pulls a stone upright concealing the way west.",
             "A large stone is pulled into place blocking the way east.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 15257:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "shrub")) {
           ch->openUniqueDoor(DIR_WEST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1672,7 +1672,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pulls the shrub aside revealing a passage to the river.",
             "Some shrubs are moved aside revealing a forest trail.", "", "",
             "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "shrub")) {
@@ -1683,13 +1683,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pulls the shrub back into place, concealing a path to the "
             "river.",
             "Some shrubs are moved, concealing a path.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 15293:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "shrub")) {
           ch->openUniqueDoor(DIR_EAST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1700,7 +1700,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "trail.",
             "Some shrubs are moved aside revealing a path to the river.", "",
             "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "shrub")) {
@@ -1711,13 +1711,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pulls the shrub back into place, concealing a path to the "
             "small, forest trail.",
             "Some shrubs are moved, concealing a path to the river.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 15986:
       if (cmd != CMD_PRESS)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "button")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "",
           "You push a button and a staircase folds out of the wall.",
@@ -1726,12 +1726,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push a button and a staircase folds into the wall.",
           "$n pushes a button and a staircase folds into the wall.",
           "A staircase folds into the wall.");
-        return TRUE;
+        return true;
       }
       break;
     case 15996:
       if (cmd != CMD_PRESS)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "button")) {
         ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
           "You push a button and a staircase folds out of the wall.",
@@ -1740,12 +1740,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push a button and a staircase folds into the wall.",
           "$n pushes a button and a staircase folds into the wall.",
           "A staircase folds into the wall.");
-        return TRUE;
+        return true;
       }
       break;
     case 15984:
       if (cmd != CMD_PRESS)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "button")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "",
           "You push a button and a staircase folds out of the wall.",
@@ -1754,12 +1754,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push a button and a staircase folds into the wall.",
           "$n pushes a button and a staircase folds into the wall.",
           "A staircase folds into the wall.");
-        return TRUE;
+        return true;
       }
       break;
     case 15992:
       if (cmd != CMD_PRESS)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "button")) {
         ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
           "You push a button and a staircase folds out of the wall.",
@@ -1768,13 +1768,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "You push a button and a staircase folds into the wall.",
           "$n pushes a button and a staircase folds into the wall.",
           "A staircase folds into the wall.");
-        return TRUE;
+        return true;
       }
       break;
 
     case 16238:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "anatomy")) {
           ch->openUniqueDoor(DIR_EAST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1786,7 +1786,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You hear a rumbling as a bookshelf slides open revealing a "
             "passage.",
             "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "anatomy")) {
@@ -1798,13 +1798,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pulls a book back into line.  A bookshelf slides shut "
             "concealing a hidden passage.",
             "You hear a rumbling as a bookshelf slides shut hiding a passage.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 16249:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "anatomy")) {
           ch->openUniqueDoor(DIR_WEST, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1816,7 +1816,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You hear a rumbling as a bookshelf slides open revealing a "
             "passage.",
             "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "anatomy")) {
@@ -1828,28 +1828,28 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pulls a book back into line.  A bookshelf slides shut "
             "concealing a hidden passage.",
             "You hear a rumbling as a bookshelf slides shut hiding a passage.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 20541:
       if ((cmd != CMD_USE) && (cmd != CMD_TURN) && (cmd != CMD_OPERATE))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "winch")) {
-        act("You operate the winch.", TRUE, ch, 0, 0, TO_CHAR);
-        act("$n operates the winch.", TRUE, ch, 0, 0, TO_ROOM);
+        act("You operate the winch.", true, ch, 0, 0, TO_CHAR);
+        act("$n operates the winch.", true, ch, 0, 0, TO_ROOM);
         ch->openUniqueDoor(DIR_NORTHWEST, DOOR_UNIQUE_DEF, "", "",
           "The mighty portcullis rises up!", "The mighty portcullis rises up!",
           "With a rumble, the mighty portcullis rises up!",
           "The mighty portcullis lowers, barring the way!",
           "The mighty portcullis lowers, barring the way!",
           "The mighty portcullis slowly lowers, barring the way.");
-        return TRUE;
+        return true;
       }
       break;
     case 20582:
       if (cmd != CMD_CHIP)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "ice")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_OPEN_ONLY, "",
           "All the loose ice has been chipped away already.",
@@ -1858,7 +1858,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "Chipping the ice away, $n finds toe and hand holds in the rock "
           "below.",
           "A large amount of ice crumbles away beneath you!", "", "", "");
-        return TRUE;
+        return true;
       }
       break;
     case 27103:
@@ -1875,7 +1875,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
     case 27128:
     case 27129:
       if ((cmd != CMD_DIG) && (cmd != CMD_COVER) && (cmd != CMD_FILL))
-        return FALSE;
+        return false;
       if (cmd == CMD_DIG) {
         if (!strcasecmp(buf, "grave")) {
           ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1883,7 +1883,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "Digging at the earth below you find a shallow grave.",
             "$n reveals a shallow grave as they dig at the earth.",
             "The earth above is slowly removed to reveal the sky.", "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "grave")) {
@@ -1892,7 +1892,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You cover the shallow grave with loose earth.",
             "$n covers the shallow grave with loose earth.",
             "Loose earth cascades from above slowly sealing the grave.");
-          return TRUE;
+          return true;
         }
       }
       break;
@@ -1910,7 +1910,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
     case 27145:
     case 27146:
       if (cmd != CMD_DIG)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "earth")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_OPEN_ONLY, "",
           "The earth overhead is already removed.",
@@ -1919,12 +1919,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "The ground below you suddenly collapses in on itself and a hole "
           "appears.",
           "", "", "");
-        return TRUE;
+        return true;
       }
       break;
     case 27305:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "crate")) {
           ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1934,7 +1934,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "Something is moved about above you revealing a hold leading "
             "upward.",
             "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "crate")) {
@@ -1944,13 +1944,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pulls the crate back over the hole.",
             "Something very large is pulled over the hole above you, blocking "
             "the way.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 27306:
       if ((cmd != CMD_PUSH) && (cmd != CMD_PULL))
-        return FALSE;
+        return false;
       if (cmd == CMD_PUSH) {
         if (!strcasecmp(buf, "crate")) {
           ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_OPEN_ONLY, "",
@@ -1958,7 +1958,7 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "You push the crate aside and reveal a dark hole.",
             "$n pushes the crate aside revealing a dark hole.",
             "Something below you is moved, revealing a hole.", "", "", "");
-          return TRUE;
+          return true;
         }
       } else {
         if (!strcasecmp(buf, "crate")) {
@@ -1968,13 +1968,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
             "$n pulls the crate back over the dark hole.",
             "Something below you is moved, and you are no longer able to fit "
             "through the hole.");
-          return TRUE;
+          return true;
         }
       }
       break;
     case 27828:
       if (cmd != CMD_PUSH)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "button")) {
         ch->openUniqueDoor(DIR_UP, DOOR_UNIQUE_DEF, "", "",
           "A rumbling noise fills the air and a set of handholds emerge from "
@@ -1987,12 +1987,12 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "As $n pushes the button, the handholds on the wall retract into the "
           "stone.",
           "You hear a grating sound below you.");
-        return TRUE;
+        return true;
       }
       break;
     case 27890:
       if (cmd != CMD_PULL)
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "lever")) {
         ch->openUniqueDoor(DIR_DOWN, DOOR_UNIQUE_DEF, "", "",
           "A rumbling noise fills the air and a set of handholds emerge from "
@@ -2007,15 +2007,15 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "into the stone.",
           "You hear a grating and the handholds retract into the wall "
           "suddenly.");
-        return TRUE;
+        return true;
       }
       break;
     case 33679:
       if ((cmd != CMD_PULL) && (cmd != CMD_PUSH))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "brambles")) {
-        act("You pull on the brambles.", TRUE, ch, 0, 0, TO_CHAR);
-        act("$n pulls on some brambles.", TRUE, ch, 0, 0, TO_ROOM);
+        act("You pull on the brambles.", true, ch, 0, 0, TO_CHAR);
+        act("$n pulls on some brambles.", true, ch, 0, 0, TO_ROOM);
         ch->openUniqueDoor(DIR_SOUTHWEST, DOOR_UNIQUE_DEF, "", "",
           "You reveal a side trail to the southwest.",
           "$n's action reveals a side trail to the southwest.",
@@ -2025,15 +2025,15 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n's action causes the side trail to the southwest to be concealed.",
           "Something causes an opening in the brambles to the southwest to "
           "close, concealing a side trail.");
-        return TRUE;
+        return true;
       }
       break;
     case 33690:
       if ((cmd != CMD_PULL) && (cmd != CMD_PUSH))
-        return FALSE;
+        return false;
       if (!strcasecmp(buf, "brambles")) {
-        act("You pull on the brambles.", TRUE, ch, 0, 0, TO_CHAR);
-        act("$n pulls on some brambles.", TRUE, ch, 0, 0, TO_ROOM);
+        act("You pull on the brambles.", true, ch, 0, 0, TO_CHAR);
+        act("$n pulls on some brambles.", true, ch, 0, 0, TO_ROOM);
         ch->openUniqueDoor(DIR_NORTHEAST, DOOR_UNIQUE_DEF, "", "",
           "You reveal an opening to the northeast.",
           "$n's action reveals an opening to the northeast.",
@@ -2043,13 +2043,13 @@ int SecretDoors(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           "$n's action causes the opening to the northeast to be concealed.",
           "Something pulls some brambles to the northeast closed, concealing "
           "an opening.");
-        return TRUE;
+        return true;
       }
       break;
     default:
       vlogf(LOG_LOW,
         format("Unsupported room (%d) in secretDoors") % rp->number);
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }

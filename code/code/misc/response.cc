@@ -9,14 +9,14 @@
 #include "structs.h"
 #include "being.h"
 
-command::command() : cmd(MAX_CMD_LIST), args(NULL), next(NULL) {}
+command::command() : cmd(MAX_CMD_LIST), args(nullptr), next(nullptr) {}
 
 command::command(const command& a) : cmd(a.cmd) {
   args = mud_str_dup(a.args);
   if (a.next)
     next = new command(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 }
 
 command& command::operator=(const command& a) {
@@ -34,31 +34,31 @@ command& command::operator=(const command& a) {
   if (a.next)
     next = new command(*a.next);
   else
-    next = NULL;
+    next = nullptr;
   return *this;
 }
 
-command::command(cmdTypeT c, char* d) : cmd(c), next(NULL) {
+command::command(cmdTypeT c, char* d) : cmd(c), next(nullptr) {
   args = mud_str_dup(d);
 }
 
 command::~command() {
   delete[] args;
-  args = NULL;
+  args = nullptr;
 }
 
-resp::resp() : cmd(MAX_CMD_LIST), args(NULL), cmds(NULL), next(NULL) {}
+resp::resp() : cmd(MAX_CMD_LIST), args(nullptr), cmds(nullptr), next(nullptr) {}
 
 resp::resp(const resp& a) : cmd(a.cmd) {
   args = mud_str_dup(a.args);
   if (a.cmds)
     cmds = new command(*a.cmds);
   else
-    cmds = NULL;
+    cmds = nullptr;
   if (a.next)
     next = new resp(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 }
 
 resp& resp::operator=(const resp& a) {
@@ -78,22 +78,22 @@ resp& resp::operator=(const resp& a) {
   if (a.cmds)
     cmds = new command(*a.cmds);
   else
-    cmds = NULL;
+    cmds = nullptr;
 
   if (a.next)
     next = new resp(*a.next);
   else
-    next = NULL;
+    next = nullptr;
   return *this;
 }
 
-resp::resp(cmdTypeT c, char* d) : cmd(c), cmds(NULL), next(NULL) {
+resp::resp(cmdTypeT c, char* d) : cmd(c), cmds(nullptr), next(nullptr) {
   args = mud_str_dup(d);
 }
 
 resp::~resp() {
   delete[] args;
-  args = NULL;
+  args = nullptr;
 
   command* c = cmds;
   while (c) {
@@ -104,23 +104,23 @@ resp::~resp() {
 }
 
 RespMemory::RespMemory() :
-  name(NULL),
-  args(NULL),
+  name(nullptr),
+  args(nullptr),
   cmd(MAX_CMD_LIST),
-  next(NULL) {}
+  next(nullptr) {}
 
 RespMemory::RespMemory(cmdTypeT newCmd, TBeing* tBeing, const sstring& tArg) {
   if (tBeing && !tBeing->getNameNOC(tBeing).empty()) {
     name = mud_str_dup(tBeing->getNameNOC(tBeing));
   } else {
-    name = NULL;
+    name = nullptr;
   }
 
   if (!tArg.empty())
     args = mud_str_dup(tArg);
 
   cmd = newCmd;
-  next = NULL;
+  next = nullptr;
 }
 
 RespMemory::RespMemory(const RespMemory& a) : cmd(a.cmd) {
@@ -129,7 +129,7 @@ RespMemory::RespMemory(const RespMemory& a) : cmd(a.cmd) {
 
   if (args) {
     delete[] args;
-    args = NULL;
+    args = nullptr;
   }
 
   if (a.args)
@@ -144,7 +144,7 @@ RespMemory& RespMemory::operator=(const RespMemory& a) {
 
   if (name) {
     delete[] name;
-    name = NULL;
+    name = nullptr;
   }
 
   if (a.name)
@@ -152,7 +152,7 @@ RespMemory& RespMemory::operator=(const RespMemory& a) {
 
   if (args) {
     delete[] args;
-    args = NULL;
+    args = nullptr;
   }
 
   if (a.args)
@@ -165,24 +165,24 @@ RespMemory& RespMemory::operator=(const RespMemory& a) {
 
 RespMemory::~RespMemory() {
   delete[] name;
-  name = NULL;
+  name = nullptr;
   delete[] args;
-  args = NULL;
-  next = NULL;
+  args = nullptr;
+  next = nullptr;
 }
 
-Responses::Responses() : respList(NULL), respCount(0), respMemory(NULL) {}
+Responses::Responses() : respList(nullptr), respCount(0), respMemory(nullptr) {}
 
 Responses::Responses(const Responses& a) : respCount(a.respCount) {
   if (a.respList)
     respList = new resp(*a.respList);
   else
-    respList = NULL;
+    respList = nullptr;
 
   if (a.respMemory)
     respMemory = new RespMemory(*a.respMemory);
   else
-    respMemory = NULL;
+    respMemory = nullptr;
 }
 
 Responses& Responses::operator=(const Responses& a) {
@@ -194,14 +194,14 @@ Responses& Responses::operator=(const Responses& a) {
   if (a.respList)
     respList = new resp(*a.respList);
   else
-    respList = NULL;
+    respList = nullptr;
 
   respCount = a.respCount;
 
   if (a.respMemory)
     respMemory = new RespMemory(*a.respMemory);
   else
-    respMemory = NULL;
+    respMemory = nullptr;
 
   return *this;
 }
@@ -220,6 +220,6 @@ Responses::~Responses() {
     delete m;
   }
 
-  respList = NULL;
-  respMemory = NULL;
+  respList = nullptr;
+  respMemory = nullptr;
 }

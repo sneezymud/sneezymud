@@ -36,15 +36,15 @@ int TVial::objectSell(TBeing* ch, TMonster* keeper) {
 
   if (getDrinkType() != LIQ_HOLYWATER) {
     keeper->doTell(ch->getName(), "Hey, that's not holy water!");
-    return TRUE;
+    return true;
   }
 
   if (getDrinkUnits() != getMaxDrinkUnits()) {
     keeper->doTell(ch->getName(), "I only purchase full vials.");
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 bool TVial::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
@@ -52,7 +52,7 @@ bool TVial::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "You might wanna take that somewhere else!");
 
-  return TRUE;
+  return true;
 }
 
 int TVial::suggestedPrice() const {

@@ -19,7 +19,7 @@ int personalize_object(TBeing* deity, TBeing* ch, int virt, int decay) {
 
   if (!(obj = read_object(virt, VIRTUAL))) {
     vlogf(LOG_LOW, "Error loading obj for personalize_object()");
-    return FALSE;
+    return false;
   }
   obj->obj_flags.decay_time = decay;
   buf = format("This is the personalized object of %s") % ch->getName();
@@ -51,7 +51,7 @@ int personalize_object(TBeing* deity, TBeing* ch, int virt, int decay) {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS if deity went boom
@@ -62,7 +62,7 @@ int resize_personalize_object(TBeing* deity, TBeing* ch, int virt, int decay) {
 
   if (!(obj = read_object(virt, VIRTUAL))) {
     vlogf(LOG_LOW, "Error loading obj for resize_personalize_object()");
-    return FALSE;
+    return false;
   }
   obj->obj_flags.decay_time = decay;
   buf = format("This is the personalized object of %s") % ch->getName();
@@ -100,14 +100,14 @@ int resize_personalize_object(TBeing* deity, TBeing* ch, int virt, int decay) {
       return DELETE_THIS;
   }
 
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS if deity goes boom
 // returns DELETE_VICT if ch dies
 static int reward_or_punish(TBeing* deity, TBeing* ch) {
-  mud_assert(deity != NULL, "reward_or_punish(): no deity");
-  mud_assert(ch != NULL, "reward_or_punish(): no ch");
+  mud_assert(deity != nullptr, "reward_or_punish(): no deity");
+  mud_assert(ch != nullptr, "reward_or_punish(): no ch");
 
 #if FACTIONS_IN_USE
   int percent;
@@ -242,8 +242,8 @@ static int reward_or_punish(TBeing* deity, TBeing* ch) {
         // default sucks, but not as bad as the 10 lowest ones.
       case 0:
         deity->doSay("You have gone extraordinarily astray from your beliefs.");
-        act("$n waves $s arms and utters the words 'jhakki phranc'", FALSE,
-          deity, NULL, NULL, TO_ROOM);
+        act("$n waves $s arms and utters the words 'jhakki phranc'", false,
+          deity, nullptr, nullptr, TO_ROOM);
         if (!deity->doesKnowSkill(SPELL_DISPEL_MAGIC))
           deity->setSkillValue(SPELL_DISPEL_MAGIC, 120);
 
@@ -257,8 +257,8 @@ static int reward_or_punish(TBeing* deity, TBeing* ch) {
         if (!deity->doesKnowSkill(SPELL_POISON))
           deity->setSkillValue(SPELL_POISON, 120);
         poison(deity, ch);
-        act("$N seems totally weakened.", FALSE, deity, NULL, ch, TO_NOTVICT);
-        act("You feel totally weakened.", FALSE, deity, NULL, ch, TO_VICT);
+        act("$N seems totally weakened.", false, deity, nullptr, ch, TO_NOTVICT);
+        act("You feel totally weakened.", false, deity, nullptr, ch, TO_VICT);
         ch->setHit(1);
         ch->setMana(1);
         ch->setLifeforce(1);
@@ -279,19 +279,19 @@ static int reward_or_punish(TBeing* deity, TBeing* ch) {
         curse(deity, ch);
         if (!deity->doesKnowSkill(SPELL_POISON))
           deity->setSkillValue(SPELL_POISON, 120);
-        act("$n waves $s arms and utters the words 'jhakki phranc'", FALSE,
-          deity, NULL, NULL, TO_ROOM);
+        act("$n waves $s arms and utters the words 'jhakki phranc'", false,
+          deity, nullptr, nullptr, TO_ROOM);
         poison(deity, ch);
-        act("$N seems weakened.", FALSE, deity, NULL, ch, TO_NOTVICT);
-        act("You feel weakened.", FALSE, deity, NULL, ch, TO_VICT);
+        act("$N seems weakened.", false, deity, nullptr, ch, TO_NOTVICT);
+        act("You feel weakened.", false, deity, nullptr, ch, TO_VICT);
         ch->setHit(1);
         ch->setMove(1);
         deity->doSay("Let this be a lesson to you.");
         break;
       case 2:
         deity->doSay("You have gone extraordinarily astray from your beliefs.");
-        act("$n waves $s arms and utters the words 'jhakki phranc'", FALSE,
-          deity, NULL, NULL, TO_ROOM);
+        act("$n waves $s arms and utters the words 'jhakki phranc'", false,
+          deity, nullptr, nullptr, TO_ROOM);
         if (!deity->doesKnowSkill(SPELL_DISPEL_MAGIC))
           deity->setSkillValue(SPELL_DISPEL_MAGIC, 120);
 
@@ -302,8 +302,8 @@ static int reward_or_punish(TBeing* deity, TBeing* ch) {
         if (!deity->doesKnowSkill(SPELL_CURSE))
           deity->setSkillValue(SPELL_CURSE, 120);
         curse(deity, ch);
-        act("$N seems weakened.", FALSE, deity, NULL, ch, TO_NOTVICT);
-        act("You feel weakened.", FALSE, deity, NULL, ch, TO_VICT);
+        act("$N seems weakened.", false, deity, nullptr, ch, TO_NOTVICT);
+        act("You feel weakened.", false, deity, nullptr, ch, TO_VICT);
         ch->setHit(1);
         deity->doSay("Let this be a lesson to you.");
         break;
@@ -312,15 +312,15 @@ static int reward_or_punish(TBeing* deity, TBeing* ch) {
         deity->doSay("You have gone extraordinarily astray from your beliefs.");
         if (!deity->doesKnowSkill(SPELL_DISPEL_MAGIC))
           deity->setSkillValue(SPELL_DISPEL_MAGIC, 120);
-        act("$n waves $s arms and utters the words 'jhakki phranc'", FALSE,
-          deity, NULL, NULL, TO_ROOM);
+        act("$n waves $s arms and utters the words 'jhakki phranc'", false,
+          deity, nullptr, nullptr, TO_ROOM);
 
         rc = dispelMagic(deity, ch);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
 
-        act("$N seems weakened.", FALSE, deity, NULL, ch, TO_NOTVICT);
-        act("You feel weakened.", FALSE, deity, NULL, ch, TO_VICT);
+        act("$N seems weakened.", false, deity, nullptr, ch, TO_NOTVICT);
+        act("You feel weakened.", false, deity, nullptr, ch, TO_VICT);
         ch->setHit(1);
         deity->doSay("Let this be a lesson to you.");
         break;
@@ -407,18 +407,18 @@ static int reward_or_punish(TBeing* deity, TBeing* ch) {
     deity->doAction(ch->getName(), CMD_FART);
   }
 #endif
-  return TRUE;
+  return true;
 }
 
 static void simple_deity_poof(TMonster* deity, short targ_rm) {
   if (deity->inRoom() == targ_rm)
     return;
 
-  act("$n disappears in a cloud of mushrooms.", TRUE, deity, NULL, NULL,
+  act("$n disappears in a cloud of mushrooms.", true, deity, nullptr, nullptr,
     TO_ROOM);
   --(*deity);
   thing_to_room(deity, targ_rm);
-  act("$n appears with an explosion of rose-petals.", TRUE, deity, 0, NULL,
+  act("$n appears with an explosion of rose-petals.", true, deity, 0, nullptr,
     TO_ROOM);
 }
 
@@ -430,7 +430,7 @@ int alignment_deity(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int room;
 
   if (cmd != CMD_MOB_ALIGN_PULSE)
-    return FALSE;
+    return false;
 
   switch (cmd) {
     case CMD_MOB_ALIGN_PULSE:
@@ -447,7 +447,7 @@ int alignment_deity(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
             int rc = reward_or_punish(me, tmp_ch);
             if (IS_SET_DELETE(rc, DELETE_VICT)) {
               delete tmp_ch;
-              tmp_ch = NULL;
+              tmp_ch = nullptr;
             }
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               vlogf(LOG_BUG, "Bad news in alignment_deity(). BUG BRUTIUS");
@@ -462,5 +462,5 @@ int alignment_deity(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     default:
       break;
   }
-  return TRUE;
+  return true;
 }

@@ -72,11 +72,11 @@ void TDrug::refuelMeDrug(TBeing* ch, TDrugContainer* lamp) {
   char buf[256];
 
   if (lamp->getMaxBurn() < 0) {
-    act("$p can't be refueled.", FALSE, ch, lamp, 0, TO_CHAR);
+    act("$p can't be refueled.", false, ch, lamp, 0, TO_CHAR);
     return;
   }
   if (lamp->getCurBurn() == lamp->getMaxBurn()) {
-    act("$p is already full of fuel.", FALSE, ch, lamp, 0, TO_CHAR);
+    act("$p is already full of fuel.", false, ch, lamp, 0, TO_CHAR);
     return;
   }
   if (((lamp->getDrugType() != getDrugType()) && lamp->getCurBurn() > 0) ||
@@ -89,7 +89,7 @@ void TDrug::refuelMeDrug(TBeing* ch, TDrugContainer* lamp) {
   use = min(use, getCurFuel());
 
   sprintf(buf, "$n packs some %s into $s $o", drugTypes[getDrugType()].name);
-  act(buf, TRUE, ch, lamp, 0, TO_ROOM);
+  act(buf, true, ch, lamp, 0, TO_ROOM);
   ch->sendTo(format("You pack some %s into the %s.\n\r") %
              drugTypes[getDrugType()].name % fname(lamp->name));
 
@@ -136,7 +136,7 @@ int TDrug::objectSell(TBeing* ch, TMonster* keeper) {
   return false;
 
   //  keeper->doTell(ch->getName(), "I'm sorry, I don't buy back drugs.");
-  //  return TRUE;
+  //  return true;
 }
 
 sstring TDrug::statObjInfo() const {
@@ -202,7 +202,7 @@ affectedData* findDrugAffect(TBeing* ch, int drug, int type) {
         hjp->location == type)
       return hjp;
   }
-  return NULL;
+  return nullptr;
 }
 
 void reapplyDrugAffect(TBeing* ch, affectedData* affptr, int modifier,
@@ -210,13 +210,13 @@ void reapplyDrugAffect(TBeing* ch, affectedData* affptr, int modifier,
   int origamt = ch->specials.affectedBy;
 
   ch->affectModify(affptr->location, affptr->modifier, affptr->modifier2,
-    affptr->bitvector, FALSE, SILENT_NO);
+    affptr->bitvector, false, SILENT_NO);
 
   affptr->modifier = modifier;
   affptr->duration = duration;
 
   ch->affectModify(affptr->location, affptr->modifier, affptr->modifier2,
-    affptr->bitvector, TRUE, SILENT_NO);
+    affptr->bitvector, true, SILENT_NO);
   ch->affectTotal();
   ch->affectChange(origamt, SILENT_NO);
 }
@@ -250,20 +250,20 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
           act(
             "Ugh, you're not used to smoking this stuff, it makes you "
             "nauseous.",
-            TRUE, ch, 0, 0, TO_CHAR);
+            true, ch, 0, 0, TO_CHAR);
           ch->doAction("", CMD_PUKE);
           ch->dropPool(10, LIQ_VOMIT);
         }
 
         if (current_consumed > (potency * 3)) {
-          act("You overdose on pipeweed and pass out.", TRUE, ch, 0, 0,
+          act("You overdose on pipeweed and pass out.", true, ch, 0, 0,
             TO_CHAR);
           if (ch->riding) {
-            act("$n sways then crumples as $e passes out.", TRUE, ch, 0, 0,
+            act("$n sways then crumples as $e passes out.", true, ch, 0, 0,
               TO_ROOM);
             ch->fallOffMount(ch->riding, POSITION_RESTING);
           } else
-            act("$n stumbles then crumples as $e passes out.", TRUE, ch, 0, 0,
+            act("$n stumbles then crumples as $e passes out.", true, ch, 0, 0,
               TO_ROOM);
           ch->setPosition(POSITION_SLEEPING);
           ch->setMove(0);
@@ -273,20 +273,20 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
         switch (consumed) {
           case 0:
           case 1:
-            act("You feel a little light-headed.", TRUE, ch, 0, 0, TO_CHAR);
+            act("You feel a little light-headed.", true, ch, 0, 0, TO_CHAR);
             break;
           case 4:
-            act("You can feel the pipeweed taking effect.", TRUE, ch, 0, 0,
+            act("You can feel the pipeweed taking effect.", true, ch, 0, 0,
               TO_CHAR);
             break;
           case 7:
-            act("You feel pretty buzzed.", TRUE, ch, 0, 0, TO_CHAR);
+            act("You feel pretty buzzed.", true, ch, 0, 0, TO_CHAR);
             break;
           default:
             act(
               "You're really buzzed now.  Smoking any more might be a bad "
               "idea.",
-              TRUE, ch, 0, 0, TO_CHAR);
+              true, ch, 0, 0, TO_CHAR);
             break;
           case 2:
           case 3:
@@ -344,20 +344,20 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
         if (total_consumed == 1) {
           // first REAL smoke :)
           act("Ugh, you're not used to smoking this stuff, but it is tasty.",
-            TRUE, ch, 0, 0, TO_CHAR);
+            true, ch, 0, 0, TO_CHAR);
           ch->doAction("", CMD_PUKE);
           ch->dropPool(10, LIQ_VOMIT);
         }
 
         if (current_consumed > (potency * 3)) {
-          act("You smoked a bit too much pot and decide to crash.", TRUE, ch, 0,
+          act("You smoked a bit too much pot and decide to crash.", true, ch, 0,
             0, TO_CHAR);
           if (ch->riding) {
-            act("$n coughs and the momentum knmocks $m off $s mount.", TRUE, ch,
+            act("$n coughs and the momentum knmocks $m off $s mount.", true, ch,
               0, 0, TO_ROOM);
             ch->fallOffMount(ch->riding, POSITION_RESTING);
           } else
-            act("$n ignores you and decides to crash.", TRUE, ch, 0, 0,
+            act("$n ignores you and decides to crash.", true, ch, 0, 0,
               TO_ROOM);
           ch->setPosition(POSITION_SLEEPING);
           ch->setMove(0);
@@ -367,18 +367,18 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
         switch (consumed) {
           case 0:
           case 1:
-            act("You feel a little less stressed and begin to relax.", TRUE, ch,
+            act("You feel a little less stressed and begin to relax.", true, ch,
               0, 0, TO_CHAR);
             break;
           case 4:
-            act("You feel very loose and carefree.", TRUE, ch, 0, 0, TO_CHAR);
+            act("You feel very loose and carefree.", true, ch, 0, 0, TO_CHAR);
             break;
           case 7:
-            act("You feel pretty buzzed.", TRUE, ch, 0, 0, TO_CHAR);
+            act("You feel pretty buzzed.", true, ch, 0, 0, TO_CHAR);
             break;
           default:
             act("You're really buzzed now.  Better save the rest for later.",
-              TRUE, ch, 0, 0, TO_CHAR);
+              true, ch, 0, 0, TO_CHAR);
             break;
           case 2:
           case 3:
@@ -434,20 +434,20 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
     case DRUG_OPIUM:
       if (!istick) {
         if (current_consumed > (potency * 3)) {
-          act("You feel like you are smoking too much opium.", TRUE, ch, 0, 0,
+          act("You feel like you are smoking too much opium.", true, ch, 0, 0,
             TO_CHAR);
         }
 
         switch (consumed) {
           case 0:
           case 1:
-            act("You feel relaxed.", TRUE, ch, 0, 0, TO_CHAR);
+            act("You feel relaxed.", true, ch, 0, 0, TO_CHAR);
             break;
           case 4:
-            act("You feel really great.", TRUE, ch, 0, 0, TO_CHAR);
+            act("You feel really great.", true, ch, 0, 0, TO_CHAR);
             break;
           default:
-            act("You feel euphoric.", TRUE, ch, 0, 0, TO_CHAR);
+            act("You feel euphoric.", true, ch, 0, 0, TO_CHAR);
             break;
           case 2:
           case 3:
@@ -543,7 +543,7 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
           act(
             "Your vision turns all sorts of colors and then everything goes "
             "white!",
-            TRUE, ch, 0, 0, TO_CHAR);
+            true, ch, 0, 0, TO_CHAR);
           ch->affectTo(&sleep);
 
           // keep the sick affect
@@ -557,7 +557,7 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
           location = APPLY_GARBLE;
           modifier = Garble::TYPE_CRAZYFROG;
           bitvector = 0;
-          act("Woah!  You feel a bit sick.", TRUE, ch, 0, 0, TO_CHAR);
+          act("Woah!  You feel a bit sick.", true, ch, 0, 0, TO_CHAR);
         }
 
         // remove all previous similar drug affect
@@ -575,7 +575,7 @@ void applyDrugAffects(TBeing* ch, drugTypeT drug, bool istick) {
         ch->affectTo(&aff);
       }
 
-      act(buzzes[consumed], TRUE, ch, 0, 0, TO_CHAR);
+      act(buzzes[consumed], true, ch, 0, 0, TO_CHAR);
     } break;
     case DRUG_NONE:
     case MAX_DRUG:
@@ -690,7 +690,7 @@ void applyAddictionAffects(TBeing* ch, drugTypeT drug, int severity) {
         "You have the sudden impulse to lick something.\n\r",
         "You begin salivating for no apparent reason.\n\r",
       };
-      TThing* target = NULL;
+      TThing* target = nullptr;
       if (current_consumed > (unsigned)(severity / 2))
         break;
 
@@ -728,33 +728,33 @@ int TBeing::doSmoke(const char* argument) {
   affectedData aff;
 
   //  sendTo("Smoking is bad for your health.\n\r");
-  //  return FALSE;
+  //  return false;
 
   strcpy(arg, argument);
 
-  if (!*arg || !(t = get_thing_char_using(this, arg, 0, FALSE, FALSE))) {
+  if (!*arg || !(t = get_thing_char_using(this, arg, 0, false, false))) {
     sendTo("Smoke what?\n\r");
-    return FALSE;
+    return false;
   }
   if (!(tdc = dynamic_cast<TDrugContainer*>(t))) {
     sendTo("You can't smoke that.\n\r");
-    return FALSE;
+    return false;
   }
   if (!tdc->getLit()) {
     sendTo("How could you smoke it, when it isn't even lit!\n\r");
-    return FALSE;
+    return false;
   }
   if (tdc->getCurBurn() < 1) {
     sendTo("You can't smoke that, it's empty.\n\r");
-    return FALSE;
+    return false;
   }
 
   sprintf(buf, "Ok, you smoke the %s from %s.",
     drugTypes[tdc->getDrugType()].name, tdc->getName().c_str());
-  act(buf, TRUE, this, 0, 0, TO_CHAR);
+  act(buf, true, this, 0, 0, TO_CHAR);
   sprintf(buf, "$n smokes %s from %s.", drugTypes[tdc->getDrugType()].name,
     tdc->getName().c_str());
-  act(buf, TRUE, this, 0, 0, TO_ROOM);
+  act(buf, true, this, 0, 0, TO_ROOM);
 
   dropGas(::number(1, 5), GAS_SMOKE);
 
@@ -786,7 +786,7 @@ int TBeing::doSmoke(const char* argument) {
 
   applyDrugAffects(this, tdc->getDrugType(), false);
 
-  return TRUE;
+  return true;
 }
 
 TDrugInfo::TDrugInfo(const char* n, int p, int d) :
@@ -794,7 +794,7 @@ TDrugInfo::TDrugInfo(const char* n, int p, int d) :
   potency(p),
   duration(d) {}
 
-TDrugInfo::TDrugInfo() : name(NULL), potency(0), duration(0) {}
+TDrugInfo::TDrugInfo() : name(nullptr), potency(0), duration(0) {}
 
 TDrugInfo::TDrugInfo(const TDrugInfo& a) :
   name(a.name),

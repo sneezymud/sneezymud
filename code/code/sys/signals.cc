@@ -62,7 +62,7 @@ void shutdownAndPurgeRequest(int num) {
 void purgeRequest(int) {
   vlogf(LOG_MISC, "Received USR1 or USR2 signal - request to purge linkdeads");
 
-  genericPurgeLdead(NULL);
+  genericPurgeLdead(nullptr);
 }
 
 void shutdownRequest(int) {
@@ -83,7 +83,7 @@ void shutdownRequest(int) {
     "<r>******* SYSTEM MESSAGE ******<z>\n\r<c>%s in %ld minute%s.<z>\n\r",
     shutdown_or_reboot().c_str(), ((timeTill - time(0)) / 60),
     (((timeTill - time(0)) / 60) == 1) ? "" : "s");
-  Descriptor::worldSend(buf, NULL);
+  Descriptor::worldSend(buf, nullptr);
 }
 
 void hupsig(int) {

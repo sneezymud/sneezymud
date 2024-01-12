@@ -24,7 +24,7 @@ bool okForJanitor(TMonster* myself, TObj* obj) {
     return false;
 
   // don't let them pick up 3000 pound wagons because that's retarded
-  if (compareWeights(obj->getTotalWeight(TRUE),
+  if (compareWeights(obj->getTotalWeight(true),
         (myself->carryWeightLimit() - myself->getCarriedWeight())) == -1)
     return false;
 
@@ -99,7 +99,7 @@ static int findSomeClutter(TMonster* myself) {
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
   // no clutter found
 #if 0
@@ -107,9 +107,9 @@ static int findSomeClutter(TMonster* myself) {
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 #else
   // lots of them piling up with nothing to do
   return DELETE_THIS;
@@ -133,16 +133,16 @@ static int findSomeClutterPrison(TMonster* myself) {
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
   // no clutter found
   rc = myself->wanderAround();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 static int findSomeClutterAmber(TMonster* myself) {
@@ -162,16 +162,16 @@ static int findSomeClutterAmber(TMonster* myself) {
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
   // no clutter found
   rc = myself->wanderAround();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 static int findSomeClutterBrightmoon(TMonster* myself) {
@@ -191,36 +191,36 @@ static int findSomeClutterBrightmoon(TMonster* myself) {
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
   // no clutter found
   rc = myself->wanderAround();
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 int janitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int rc;
   char buf[256];
   bool trashpile = false;
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<TPathFinder*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   if (::number(0, 3))
-    return FALSE;
+    return false;
 
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end();) {
@@ -241,16 +241,16 @@ int janitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
     if (trashpile) {
       sprintf(buf, "$n empties out $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       myself->doGet("all trash-pile");
       trashpile = false;
     } else if (dynamic_cast<TPool*>(obj)) {
       sprintf(buf, "$n mops up $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       delete obj;
     } else if (dynamic_cast<TBaseCorpse*>(obj)) {
       sprintf(buf, "$n disposes of $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
 
       myself->roomp->playsound(SOUND_BRING_DEAD, SOUND_TYPE_NOISE);
 
@@ -262,13 +262,13 @@ int janitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       }
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
+      act("$n picks up $p.", false, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj;
       if (obj->objVnum() == Obj::PILE_OFFAL)
         delete obj;
     }
-    return TRUE;
+    return true;
   }
 
   // we only get here if there is nothing in my room worth picking up
@@ -280,23 +280,23 @@ int janitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return DELETE_THIS;
       }
-      return TRUE;
+      return true;
     } else {
       rc = findSomeClutter(myself);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         return DELETE_THIS;
       }
-      return TRUE;
+      return true;
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 int prisonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int rc;
   char buf[256];
   int DUMP = 31905;
@@ -304,15 +304,15 @@ int prisonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<TPathFinder*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   if (::number(0, 3))
-    return FALSE;
+    return false;
 
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end();) {
@@ -336,21 +336,21 @@ int prisonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
     if (trashpile) {
       sprintf(buf, "$n empties out $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       myself->doGet("all trash-pile");
       trashpile = false;
     } else if (dynamic_cast<TPool*>(obj)) {
       sprintf(buf, "$n mops up $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
+      act("$n picks up $p.", false, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj;
       if (obj->objVnum() == Obj::PILE_OFFAL)
         delete obj;
     }
-    return TRUE;
+    return true;
   }
 
   // we only get here if there is nothing in my room worth picking up
@@ -360,22 +360,22 @@ int prisonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   } else {
     rc = findSomeClutterPrison(myself);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int amberJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int rc;
   char buf[256];
   int DUMP = 33281;
@@ -383,15 +383,15 @@ int amberJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<TPathFinder*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   if (::number(0, 3))
-    return FALSE;
+    return false;
 
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end();) {
@@ -412,21 +412,21 @@ int amberJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
     if (trashpile) {
       sprintf(buf, "$n empties out $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       myself->doGet("all trash-pile");
       trashpile = false;
     } else if (dynamic_cast<TPool*>(obj)) {
       sprintf(buf, "$n mops up $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
+      act("$n picks up $p.", false, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj;
       if (obj->objVnum() == Obj::PILE_OFFAL)
         delete obj;
     }
-    return TRUE;
+    return true;
   }
 
   // we only get here if there is nothing in my room worth picking up
@@ -436,22 +436,22 @@ int amberJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   } else {
     rc = findSomeClutterAmber(myself);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int brightmoonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int rc;
   char buf[256];
   int DUMP = 1385;
@@ -460,15 +460,15 @@ int brightmoonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<TPathFinder*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   if (::number(0, 3))
-    return FALSE;
+    return false;
 
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end();) {
@@ -492,26 +492,26 @@ int brightmoonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
     if (trashpile) {
       sprintf(buf, "$n empties out $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       myself->doGet("all trash-pile");
       trashpile = false;
     } else if (trashcan) {
       sprintf(buf, "$n empties out $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       myself->doGet("all trashcan");
       trashcan = false;
     } else if (dynamic_cast<TPool*>(obj)) {
       sprintf(buf, "$n mops up $p.");
-      act(buf, FALSE, myself, obj, 0, TO_ROOM);
+      act(buf, false, myself, obj, 0, TO_ROOM);
       delete obj;
     } else if (!obj->isObjStat(ITEM_PROTOTYPE) && !obj->getNumRiders(obj)) {
-      act("$n picks up $p.", FALSE, myself, obj, 0, TO_ROOM);
+      act("$n picks up $p.", false, myself, obj, 0, TO_ROOM);
       --(*obj);
       *myself += *obj;
       if (obj->objVnum() == Obj::PILE_OFFAL)
         delete obj;
     }
-    return TRUE;
+    return true;
   }
 
   // we only get here if there is nothing in my room worth picking up
@@ -521,16 +521,16 @@ int brightmoonJanitor(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   } else {
     rc = findSomeClutterBrightmoon(myself);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 // for use by janitors to drop stuff in donation
@@ -550,14 +550,14 @@ int TBeing::doDonate(int room) {
         thing_to_room(this, room);
         act("$n comes back to work.", 0, this, 0, 0, TO_ROOM);
       }
-      return FALSE;
+      return false;
     }
     rc = goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   } else {
-    rc = doDrop("all", NULL);
+    rc = doDrop("all", nullptr);
 
     // Deal with cursed items, since they can not be dropped.
     if (real_roomp(in_room))
@@ -568,7 +568,7 @@ int TBeing::doDonate(int room) {
         (*real_roomp(in_room)) += *tThing;
       }
 
-    return TRUE;
+    return true;
   }
 }
 
@@ -590,7 +590,7 @@ const int CART_VNUM = 33270;
 void dropAllCart(TMonster* myself, TObj* cart) {
   for (int i = 0; i < 10 && !cart->stuff.empty(); ++i) {
     myself->doGet("all cart");
-    myself->doDrop("all", NULL);
+    myself->doDrop("all", nullptr);
   }
 }
 
@@ -607,8 +607,8 @@ void moveCart(TMonster* mob, TObj* cart) {
 }
 
 TObj* findCart(TMonster* mob) {
-  TThing* t = NULL;
-  TObj* cart = NULL;
+  TThing* t = nullptr;
+  TObj* cart = nullptr;
 
   for (StuffIter it = mob->roomp->stuff.begin();
        it != mob->roomp->stuff.end() && (t = *it); ++it) {
@@ -621,7 +621,7 @@ TObj* findCart(TMonster* mob) {
   if (!cart || obj_index[cart->getItemIndex()].virt != CART_VNUM) {
     if (!(cart = read_object(CART_VNUM, VIRTUAL))) {
       vlogf(LOG_LOW, "Error loading cart in spec_mobs_garbage_convoy.cc");
-      return NULL;
+      return nullptr;
     }
     *mob->roomp += *cart;
   }
@@ -630,7 +630,7 @@ TObj* findCart(TMonster* mob) {
 
 int garbageConvoy(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   int rc;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TObj *o, *cart;
   roomDirData* exitp;
   const int DEBUG = 0;
@@ -673,24 +673,24 @@ int garbageConvoy(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if ((cmd != CMD_GENERIC_PULSE && cmd != CMD_GENERIC_QUICK_PULSE) ||
       !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   cart = findCart(myself);
 
   // Not doing anything yet, time to start the convoy
   if (!myself->act_ptr) {
     //    if(::number(0,99))
-    //      return FALSE;
+    //      return false;
 
     if (!(myself->act_ptr = new hunt_struct())) {
       vlogf(LOG_BUG, "failed memory allocation in mob proc garbageconvoy.");
-      return FALSE;
+      return false;
     }
 
     // load cart?
@@ -698,16 +698,16 @@ int garbageConvoy(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_BUG, "garbageconvoy: error, static_cast");
-    return TRUE;
+    return true;
   }
 
   // allow us to abort it.
   if (myself->inRoom() == Room::HELL)
-    return FALSE;
+    return false;
 
   // speed
   if (!DEBUG && ::number(0, 2))
-    return FALSE;
+    return false;
 
   if (DEBUG)
     myself->doSay(format("I am %s.") % hunt_text_stateT[job->state]);
@@ -831,7 +831,7 @@ int garbageConvoy(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         for (StuffIter it = myself->roomp->stuff.begin();
              it != myself->roomp->stuff.end() && (t = *it); ++it) {
           if ((o = dynamic_cast<TObj*>(t)) && o->objVnum() == 15344) {
-            myself->doEnter("trolley", NULL);
+            myself->doEnter("trolley", nullptr);
             break;
           }
         }
@@ -876,7 +876,7 @@ int garbageConvoy(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         for (StuffIter it = myself->roomp->stuff.begin();
              it != myself->roomp->stuff.end() && (t = *it); ++it) {
           if ((o = dynamic_cast<TObj*>(t)) && o->objVnum() == 15344) {
-            myself->doEnter("trolley", NULL);
+            myself->doEnter("trolley", nullptr);
             break;
           }
         }
@@ -902,27 +902,27 @@ int garbageConvoy(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 int fruitScavenger(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
   if ((cmd != CMD_GENERIC_PULSE) || !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (::number(0, 25))
-    return FALSE;
+    return false;
 
   int seek_tree = 13;      // candy heart tree type
   int seek_fruit = 29405;  // candy heart seed
 
   TPlant* tree;
   TObj* fruit;
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = nullptr, *t2 = nullptr;
 
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end() && (t = *it); ++it) {
     fruit = dynamic_cast<TObj*>(t);
     if (fruit && fruit->objVnum() == seek_fruit) {
       // eat it and return
-      act("$n eats $p.", TRUE, myself, fruit, 0, TO_ROOM);
-      act("You eat $p.", FALSE, myself, fruit, 0, TO_CHAR);
+      act("$n eats $p.", true, myself, fruit, 0, TO_ROOM);
+      act("You eat $p.", false, myself, fruit, 0, TO_CHAR);
       delete fruit;
-      return TRUE;
+      return true;
     }
 
     tree = dynamic_cast<TPlant*>(t);
@@ -932,13 +932,13 @@ int fruitScavenger(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
            it != tree->stuff.end() && (t2 = *it); ++it) {
         fruit = dynamic_cast<TObj*>(t2);
         if (fruit && fruit->objVnum() == seek_fruit) {
-          act(format("$n eats %s from $p.") % fruit->getName(), TRUE, myself,
+          act(format("$n eats %s from $p.") % fruit->getName(), true, myself,
             tree, 0, TO_ROOM);
-          act(format("You eat %s from a $p.") % fruit->getName(), FALSE, myself,
+          act(format("You eat %s from a $p.") % fruit->getName(), false, myself,
             tree, 0, TO_CHAR);
           tree->setVerminated(tree->getVerminated() + 1);
           delete fruit;
-          return TRUE;
+          return true;
         }
       }
     }
@@ -971,11 +971,11 @@ int fruitScavenger(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   }
 
   if (!possible_exits.size()) {
-    act("$n lifts its nose and sniffs.", TRUE, myself, 0, 0, TO_ROOM);
-    act("You lift your nose and sniff, but can't smell any candy.", FALSE,
+    act("$n lifts its nose and sniffs.", true, myself, 0, 0, TO_ROOM);
+    act("You lift your nose and sniff, but can't smell any candy.", false,
       myself, 0, 0, TO_CHAR);
-    return TRUE;
+    return true;
   }
   myself->doMove(possible_exits[::number(0, possible_exits.size() - 1)]);
-  return TRUE;
+  return true;
 }

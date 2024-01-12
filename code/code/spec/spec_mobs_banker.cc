@@ -78,7 +78,7 @@ void procBankInterest::run(const TPulse&) const {
       "truncate(earned_interest,0) where shop_nr=%i",
       shop_nr);
 
-    TShopOwned tso(shop_nr, NULL, NULL);
+    TShopOwned tso(shop_nr, nullptr, nullptr);
 
     // log player gains
     in.query(
@@ -130,7 +130,7 @@ int bankWithdraw(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
 
   if (!ch->isPc() || dynamic_cast<TMonster*>(ch)) {
     teller->doTell(ch->getName(), "Stupid monster can't bank here!");
-    return TRUE;
+    return true;
   }
 
   db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i",
@@ -140,21 +140,21 @@ int bankWithdraw(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
     teller->doTell(ch->getName(), "You don't have an account here.");
     teller->doTell(ch->getName(), "To open an account, type 'buy account'.");
     teller->doTell(ch->getName(), "The new account fee is 100 talens.");
-    return FALSE;
+    return false;
   } else
     bankmoney = convertTo<int>(db["talens"]);
 
   if (money > bankmoney) {
     teller->doTell(ch->getName(),
       "You don't have enough in the bank for that!");
-    return TRUE;
+    return true;
   } else if (myself->getMoney() < money) {
     teller->doTell(ch->getName(),
       "The bank doesn't have your funds available right now!");
-    return TRUE;
+    return true;
   } else if (money <= 0) {
     teller->doTell(ch->getName(), "Go away, you bother me.");
-    return TRUE;
+    return true;
   }
 
   teller->doTell(ch->getName(), "Thank you.");
@@ -167,7 +167,7 @@ int bankWithdraw(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
     "shop_nr=%i",
     money, ch->getPlayerID(), shop_nr);
 
-  return TRUE;
+  return true;
 }
 
 int bankDeposit(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
@@ -177,7 +177,7 @@ int bankDeposit(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
 
   if (!ch->isPc() || dynamic_cast<TMonster*>(ch)) {
     teller->doTell(ch->getName(), "Stupid monster can't bank here!");
-    return TRUE;
+    return true;
   }
 
   db.query("select talens from shopownedbank where shop_nr=%i and player_id=%i",
@@ -187,15 +187,15 @@ int bankDeposit(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
     teller->doTell(ch->getName(), "You don't have an account here.");
     teller->doTell(ch->getName(), "To open an account, type 'buy account'.");
     teller->doTell(ch->getName(), "The new account fee is 100 talens.");
-    return TRUE;
+    return true;
   }
 
   if (money <= 0) {
     teller->doTell(ch->getName(), "Go away, you bother me.");
-    return TRUE;
+    return true;
   } else if (money > ch->getMoney()) {
     teller->doTell(ch->getName(), "You don't have enough for that!");
-    return TRUE;
+    return true;
   }
 
   teller->doTell(ch->getName(), "Thank you.");
@@ -219,14 +219,14 @@ int bankDeposit(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
         "Banking error, was unable to retrieve balance after a deposit: %s") %
         ch->getName());
 
-    return TRUE;
+    return true;
   } else
     bankmoney = convertTo<int>(db["talens"]);
 
   teller->doTell(ch->getName(),
     format("...Your new balance is %i") % bankmoney);
 
-  return TRUE;
+  return true;
 }
 
 int bankBalance(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr) {
@@ -240,13 +240,13 @@ int bankBalance(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr) {
     teller->doTell(ch->getName(), "You don't have an account here.");
     teller->doTell(ch->getName(), "To open an account, type 'buy account'.");
     teller->doTell(ch->getName(), "The new account fee is 100 talens.");
-    return TRUE;
+    return true;
   } else
     bankmoney = convertTo<int>(db["talens"]);
 
   teller->doTell(ch->getName(), format("Your balance is %i.") % bankmoney);
 
-  return TRUE;
+  return true;
 }
 
 int bankBuyAccount(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
@@ -256,7 +256,7 @@ int bankBuyAccount(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
   if (ch->getMoney() < 100) {
     teller->doTell(ch->getName(),
       "You don't have enough money to open an account.");
-    return TRUE;
+    return true;
   }
 
   db.query("select talens from shopownedbank where player_id=%i and shop_nr=%i",
@@ -264,7 +264,7 @@ int bankBuyAccount(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
 
   if (db.fetchRow()) {
     teller->doTell(ch->getName(), "You already have an account.");
-    return TRUE;
+    return true;
   }
 
   db.query(
@@ -276,7 +276,7 @@ int bankBuyAccount(TBeing* ch, TMonster* myself, TMonster* teller, int shop_nr,
 
   teller->doTell(ch->getName(), "Your account is now open and ready for use.");
 
-  return TRUE;
+  return true;
 }
 
 int centralBanker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
@@ -287,10 +287,10 @@ int centralBanker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   sstring buf;
 
   if ((cmd != CMD_WHISPER && cmd != CMD_LIST) || !ch || !myself)
-    return FALSE;
+    return false;
 
   if (!(shop_nr = find_shop_nr(myself->number)))
-    return FALSE;
+    return false;
 
   if (cmd == CMD_WHISPER)
     return shopWhisper(ch, myself, shop_nr, arg);
@@ -315,10 +315,10 @@ int centralBanker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       }
     }
     ch->desc->page_string(buf);
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int banker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself, TObj*) {
@@ -328,10 +328,10 @@ int banker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself, TObj*) {
   if ((cmd != CMD_WITHDRAW && cmd != CMD_DEPOSIT && cmd != CMD_BUY &&
         cmd != CMD_LIST && cmd != CMD_BALANCE && cmd != CMD_WHISPER) ||
       !ch || !myself)
-    return FALSE;
+    return false;
 
   if (!(shop_nr = find_shop_nr(myself->number)))
-    return FALSE;
+    return false;
 
   if (cmd == CMD_WHISPER)
     return shopWhisper(ch, myself, shop_nr, arg);
@@ -341,7 +341,7 @@ int banker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself, TObj*) {
 
     if (!tso.hasAccess(SHOPACCESS_LOGS)) {
       myself->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-      return FALSE;
+      return false;
     }
 
     db.query(
@@ -376,7 +376,7 @@ int banker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself, TObj*) {
 
     ch->desc->page_string(buf);
 
-    return TRUE;
+    return true;
   }
 
   if (cmd == CMD_BUY && sstring(arg).lower() == "account") {
@@ -399,7 +399,7 @@ int banker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself, TObj*) {
     return bankDeposit(ch, myself, myself, shop_nr, money);
   }
 
-  return TRUE;
+  return true;
 }
 
 int bankRoom(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
@@ -410,7 +410,7 @@ int bankRoom(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
   // tellers/branches can only do these commands
   if (cmd != CMD_WITHDRAW && cmd != CMD_DEPOSIT && cmd != CMD_BALANCE &&
       cmd != CMD_BUY)
-    return FALSE;
+    return false;
 
   // find out which teller for this room
 
@@ -438,7 +438,7 @@ int bankRoom(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
   }
 
   if (!t || !(teller = dynamic_cast<TMonster*>(t)))
-    return FALSE;
+    return false;
 
   // find out which banker for this room
   switch (rp->number) {
@@ -465,10 +465,10 @@ int bankRoom(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
   }
 
   if (!t || !(banker = dynamic_cast<TMonster*>(t)))
-    return FALSE;
+    return false;
 
   if (!(shop_nr = find_shop_nr(banker->number)))
-    return FALSE;
+    return false;
 
   if (cmd == CMD_BUY && sstring(arg).lower() == "account") {
     money = convertTo<int>(arg);
@@ -489,5 +489,5 @@ int bankRoom(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
     return bankDeposit(ch, banker, teller, shop_nr, money);
   }
 
-  return FALSE;
+  return false;
 }

@@ -130,7 +130,7 @@ void corpSummary(TBeing* ch, TMonster* me, int corp_id) {
   TDatabase db(DB_SNEEZY);
   int value = 0, gold = 0, banktalens = 0, bank = 4, bankowner = 0;
   sstring buf;
-  TRoom* tr = NULL;
+  TRoom* tr = nullptr;
 
   if (!corp_id) {
     me->doTell(ch->getName(),
@@ -435,7 +435,7 @@ void corpBalance(TBeing* ch, TMonster* me, sstring arg) {
 int corporateAssistant(TBeing* ch, cmdTypeT cmd, const char* argument,
   TMonster* me, TObj*) {
   if (!ch || !me)
-    return FALSE;
+    return false;
 
   TDatabase db(DB_SNEEZY);
   int tmp = 0;

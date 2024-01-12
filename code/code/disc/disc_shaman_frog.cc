@@ -29,21 +29,21 @@ int vampireTransform(TBeing* ch) {
 
   if (!ch->isPc() || IS_SET(ch->specials.act, ACT_POLYSELF) ||
       ch->polyed != POLY_TYPE_NONE) {
-    act("You are already transformed into another shape.", TRUE, ch, NULL, NULL,
+    act("You are already transformed into another shape.", true, ch, nullptr, nullptr,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   if (!(mob = read_mobile(13749, VIRTUAL))) {
     ch->sendTo("It didn't seem to work.\n\r");
-    return FALSE;
+    return false;
   }
   thing_to_room(mob, Room::VOID);
   mob->swapToStrung();
 
-  act("You use your dark powers to transform into $N.", TRUE, ch, NULL, mob,
+  act("You use your dark powers to transform into $N.", true, ch, nullptr, mob,
     TO_CHAR);
-  act("$n transforms into $N.", TRUE, ch, NULL, mob, TO_ROOM);
+  act("$n transforms into $N.", true, ch, nullptr, mob, TO_ROOM);
 
   SwitchStuff(ch, mob);
   setCombatStats(ch, mob, bat, SPELL_POLYMORPH);
@@ -55,14 +55,14 @@ int vampireTransform(TBeing* ch) {
 
   // stop following whoever you are following.
   if (ch->master)
-    ch->stopFollower(TRUE);
+    ch->stopFollower(true);
 
   // switch ch into mobile
   ch->desc->character = mob;
   ch->desc->original = dynamic_cast<TPerson*>(ch);
 
   mob->desc = ch->desc;
-  ch->desc = NULL;
+  ch->desc = nullptr;
   ch->polyed = POLY_TYPE_POLYMORPH;
 
   SET_BIT(mob->specials.act, ACT_DISGUISED);
@@ -79,7 +79,7 @@ int vampireTransform(TBeing* ch) {
   mob->setHeight(ch->getHeight() / 5);
   mob->setWeight(ch->getWeight() / 10);
 
-  return TRUE;
+  return true;
 }
 
 struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB] = {
@@ -97,11 +97,11 @@ struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB] = {
 
 int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
   int ret;
-  bool multi = TRUE;
+  bool multi = true;
   wearSlotT limb = WEAR_NOWHERE;
   affectedData aff;
   affectedData aff2;
-  bool two_affects = FALSE;
+  bool two_affects = false;
   int i;
   char newl[20];
   char old[20];
@@ -109,17 +109,17 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
 
   if (caster->affectedBySpell(SPELL_POLYMORPH)) {
     caster->sendTo("You can't transform while polymorphed.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return FALSE;
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
   // failure = scrapped item.  no item damage allowed in arena
   // this is to block problem in doTransformDrop()
 
   if (caster->roomp && caster->roomp->isRoomFlag(ROOM_ARENA)) {
-    act("A magic power prevents anything from happening here.", FALSE, caster,
+    act("A magic power prevents anything from happening here.", false, caster,
       0, 0, TO_CHAR);
-    act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
     return SPELL_FALSE;
   }
 
@@ -141,21 +141,21 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
 
   if (i >= LAST_TRANSFORM_LIMB) {
     caster->sendTo("Couldn't find any such limb to transform.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return FALSE;
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
   if (limb == MAX_WEAR) {
     caster->sendTo("You can't transform all of your limbs.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return FALSE;
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
-  if (!caster->isTransformableLimb(limb, TRUE)) {
-    act("Something prevents your limb from being transformed.", FALSE, caster,
-      NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return FALSE;
+  if (!caster->isTransformableLimb(limb, true)) {
+    act("Something prevents your limb from being transformed.", false, caster,
+      nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
   aff.type = SKILL_TRANSFORM_LIMB;
@@ -174,12 +174,12 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
     case WEAR_NECK:
       aff.type = AFFECT_TRANSFORMED_NECK;
       aff.bitvector = AFF_WATERBREATH | AFF_SILENT;
-      multi = FALSE;
+      multi = false;
       break;
     case WEAR_HEAD:
       aff.type = AFFECT_TRANSFORMED_HEAD;
       aff.bitvector = AFF_SILENT | AFF_CLARITY;
-      multi = FALSE;
+      multi = false;
       break;
     case WEAR_HAND_R:
       aff.type = AFFECT_TRANSFORMED_HANDS;
@@ -197,7 +197,7 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
       aff2.location = APPLY_SPELL;
       aff2.modifier = SKILL_CLIMB;
       aff2.modifier2 = 50;
-      two_affects = TRUE;
+      two_affects = true;
       break;
     case WEAR_ARM_R:
       aff.type = AFFECT_TRANSFORMED_ARMS;
@@ -212,7 +212,7 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
     default:
       vlogf(LOG_BUG, "Bad limb case in TRANSFORM_LIMB");
       caster->sendTo("Bug in your limbs, tell a god and put in bug file.\n\r");
-      return FALSE;
+      return false;
   }
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_TRANSFORM_LIMB)) {
@@ -230,14 +230,14 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
           sprintf(buf, "Your %s glow as they transform into %s!", old, newl);
         else
           sprintf(buf, "Your %s glows as it transforms into %s!", old, newl);
-        act(buf, FALSE, caster, 0, 0, TO_CHAR);
+        act(buf, false, caster, 0, 0, TO_CHAR);
         if (multi)
           sprintf(buf, "$n's %s liquify and then transform into %s!", old,
             newl);
         else
           sprintf(buf, "$n's %s liquifies and then transforms into %s!", old,
             newl);
-        act(buf, FALSE, caster, 0, 0, TO_ROOM);
+        act(buf, false, caster, 0, 0, TO_ROOM);
         break;
       default:
         sprintf(newl, "%s", TransformLimbList[i].newName);
@@ -246,14 +246,14 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
           sprintf(buf, "Your %s tingle as they transform into %s!", old, newl);
         else
           sprintf(buf, "Your %s tingles as it transforms into %s!", old, newl);
-        act(buf, FALSE, caster, 0, 0, TO_CHAR);
+        act(buf, false, caster, 0, 0, TO_CHAR);
         if (multi)
           sprintf(buf, "$n's %s liquify and then transform into %s!", old,
             newl);
         else
           sprintf(buf, "$n's %s liquifies and then transforms into %s!", old,
             newl);
-        act(buf, FALSE, caster, 0, 0, TO_ROOM);
+        act(buf, false, caster, 0, 0, TO_ROOM);
         ret = SPELL_SUCCESS;
         break;
     }
@@ -261,7 +261,7 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
     if (two_affects)
       caster->affectTo(&aff2);
 
-    caster->makeLimbTransformed(caster, limb, TRUE);
+    caster->makeLimbTransformed(caster, limb, true);
     return ret;
   } else {
     switch (critFail(caster, SKILL_TRANSFORM_LIMB)) {
@@ -273,7 +273,7 @@ int transformLimb(TBeing* caster, const char* buffer, int level, short bKnown) {
       default:
         return SPELL_FAIL;
         // caster->sendTo("Nothing seems to happen.\n\r"); // why after return?
-        // act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+        // act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
         // // why after return?
     }
   }
@@ -316,15 +316,15 @@ int stormySkies(TBeing* caster, TBeing* victim, int level, short bKnown) {
       act(
         "$n summons a lightning bolt from the stormy skies and causes it to "
         "hit $N!",
-        FALSE, caster, NULL, victim, TO_NOTVICT);
+        false, caster, nullptr, victim, TO_NOTVICT);
       act(
         "You summon a lightning bolt from the stormy skies and cause it to hit "
         "$N!",
-        FALSE, caster, NULL, victim, TO_CHAR);
+        false, caster, nullptr, victim, TO_CHAR);
       act(
         "$n summons a lightning bolt from the stormy skies and causes it to "
         "hit you!",
-        FALSE, caster, NULL, victim, TO_VICT);
+        false, caster, nullptr, victim, TO_VICT);
       if (caster->reconcileDamage(victim, dam, SPELL_STORMY_SKIES) == -1)
         return SPELL_SUCCESS + VICTIM_DEAD;
       rc = victim->lightningEngulfed();
@@ -338,12 +338,12 @@ int stormySkies(TBeing* caster, TBeing* victim, int level, short bKnown) {
           act(
             "$n summons lightning from the stormy skies, bringing down a bolt "
             "upon $mself!",
-            FALSE, caster, NULL, NULL, TO_ROOM);
+            false, caster, nullptr, nullptr, TO_ROOM);
           act(
             "You summon lightning from the stormy skies, bringing down a bolt "
             "upon yourself!",
-            FALSE, caster, NULL, NULL, TO_CHAR);
-          act("That lightning bolt was intended for you!", FALSE, caster, NULL,
+            false, caster, nullptr, nullptr, TO_CHAR);
+          act("That lightning bolt was intended for you!", false, caster, nullptr,
             victim, TO_VICT);
           if (caster->reconcileDamage(caster, dam, SPELL_STORMY_SKIES) == -1)
             return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -366,11 +366,11 @@ int stormySkies(TBeing* caster, TBeing* victim, int level, short bKnown) {
         dam *= 2;
       }
       act("$n summons hail from the snowy sky and guides it down upon $N!",
-        FALSE, caster, NULL, victim, TO_NOTVICT);
+        false, caster, nullptr, victim, TO_NOTVICT);
       act("You summon hail from the snowy sky and guide it down upon $N!",
-        FALSE, caster, NULL, victim, TO_CHAR);
+        false, caster, nullptr, victim, TO_CHAR);
       act("$n summons hail from the snowy sky and guides it down upon you!",
-        FALSE, caster, NULL, victim, TO_VICT);
+        false, caster, nullptr, victim, TO_VICT);
       if (caster->reconcileDamage(victim, dam, SPELL_STORMY_SKIES) == -1)
         return SPELL_SUCCESS + VICTIM_DEAD;
       return SPELL_SUCCESS;
@@ -380,12 +380,12 @@ int stormySkies(TBeing* caster, TBeing* victim, int level, short bKnown) {
           CF(SPELL_STORMY_SKIES);
           act(
             "$n summons hail from the snowy sky and guids it down upon $mself!",
-            FALSE, caster, NULL, NULL, TO_NOTVICT);
+            false, caster, nullptr, nullptr, TO_NOTVICT);
           act(
             "You summon hail from the snowy sky and guid it down upon "
             "yourself!",
-            FALSE, caster, NULL, NULL, TO_CHAR);
-          act("That hail storm was intended for you!", FALSE, caster, NULL,
+            false, caster, nullptr, nullptr, TO_CHAR);
+          act("That hail storm was intended for you!", false, caster, nullptr,
             victim, TO_VICT);
           if (caster->reconcileDamage(caster, dam, SPELL_STORMY_SKIES) == -1)
             return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -408,15 +408,15 @@ int stormySkies(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_STORMY_SKIES, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_STORMY_SKIES]->lag;
   diff = discArray[SPELL_STORMY_SKIES]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_STORMY_SKIES, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_STORMY_SKIES, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castStormySkies(TBeing* caster, TBeing* victim) {
@@ -459,10 +459,10 @@ int aquaticBlast(TBeing* caster, TBeing* victim, int level, short bKnown,
   int dam = caster->getSkillDam(victim, SPELL_AQUATIC_BLAST, level, adv_learn);
 
   if (victim->getImmunity(IMMUNE_WATER) >= 100) {
-    act("$N is immune to water damage!", FALSE, caster, NULL, victim, TO_CHAR);
-    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim,
+    act("$N is immune to water damage!", false, caster, nullptr, victim, TO_CHAR);
+    act("$N ignores $n's weak ritual!", false, caster, nullptr, victim,
       TO_NOTVICT);
-    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL,
+    act("$n's ritual fails because of your immunity!", false, caster, nullptr,
       victim, TO_VICT);
     return SPELL_FAIL;
   }
@@ -477,13 +477,13 @@ int aquaticBlast(TBeing* caster, TBeing* victim, int level, short bKnown,
           SILENT_YES)) {
       CS(SPELL_AQUATIC_BLAST);
       dam *= 2;
-      act("A HUGE BLAST of water smacks into $N knocking $M over!", FALSE,
-        caster, NULL, victim, TO_CHAR, ANSI_BLUE);
-      act("$n directs a HUGE BLAST of water at you, knocking you down!", FALSE,
-        caster, NULL, victim, TO_VICT, ANSI_BLUE);
+      act("A HUGE BLAST of water smacks into $N knocking $M over!", false,
+        caster, nullptr, victim, TO_CHAR, ANSI_BLUE);
+      act("$n directs a HUGE BLAST of water at you, knocking you down!", false,
+        caster, nullptr, victim, TO_VICT, ANSI_BLUE);
       act(
         "$n directs a HUGE BLAST of water in $N's direction, knocking $M over!",
-        FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
+        false, caster, nullptr, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(50, LIQ_WATER);
 
       if (victim->riding)
@@ -493,7 +493,7 @@ int aquaticBlast(TBeing* caster, TBeing* victim, int level, short bKnown,
         rc = t->fallOffMount(victim, POSITION_STANDING);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
       }
 
@@ -501,25 +501,25 @@ int aquaticBlast(TBeing* caster, TBeing* victim, int level, short bKnown,
       victim->addToWait(combatRound(1));
     } else if (victim->isLucky(
                  caster->spellLuckModifier(SPELL_AQUATIC_BLAST))) {
-      act("A stream of water smacks into $N. Must have been a dud.", FALSE,
-        caster, NULL, victim, TO_CHAR, ANSI_BLUE);
+      act("A stream of water smacks into $N. Must have been a dud.", false,
+        caster, nullptr, victim, TO_CHAR, ANSI_BLUE);
       act(
         "$n directs a stream of water in your direction. Must have been a dud.",
-        FALSE, caster, NULL, victim, TO_VICT, ANSI_BLUE);
+        false, caster, nullptr, victim, TO_VICT, ANSI_BLUE);
       act(
         "$n directs a stream of water in $N's direction. Must have been a dud.",
-        FALSE, caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
+        false, caster, nullptr, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(10, LIQ_WATER);
 
       SV(SPELL_AQUATIC_BLAST);
       dam /= 2;
     } else {
-      act("A forceful blast of water smacks into $N!", FALSE, caster, NULL,
+      act("A forceful blast of water smacks into $N!", false, caster, nullptr,
         victim, TO_CHAR, ANSI_BLUE);
-      act("$n directs a forceful blast of water in your direction!", FALSE,
-        caster, NULL, victim, TO_VICT, ANSI_BLUE);
-      act("$n directs a forceful blast of water in $N's direction!", FALSE,
-        caster, NULL, victim, TO_NOTVICT, ANSI_BLUE);
+      act("$n directs a forceful blast of water in your direction!", false,
+        caster, nullptr, victim, TO_VICT, ANSI_BLUE);
+      act("$n directs a forceful blast of water in $N's direction!", false,
+        caster, nullptr, victim, TO_NOTVICT, ANSI_BLUE);
       victim->dropPool(25, LIQ_WATER);
     }
     if (caster->reconcileDamage(victim, dam, SPELL_AQUATIC_BLAST) == -1)
@@ -528,13 +528,13 @@ int aquaticBlast(TBeing* caster, TBeing* victim, int level, short bKnown,
   } else {
     caster->setCharFighting(victim);
     caster->setVictFighting(victim);
-    act("$n just tried to attack you.", FALSE, caster, 0, victim, TO_VICT,
+    act("$n just tried to attack you.", false, caster, 0, victim, TO_VICT,
       ANSI_BLUE);
     if (critFail(caster, SPELL_AQUATIC_BLAST) == CRIT_F_HITSELF) {
       CF(SPELL_AQUATIC_BLAST);
       act("You summon the powers of the frog, but it leaves you all wet!",
-        FALSE, caster, NULL, 0, TO_CHAR, ANSI_BLUE);
-      act("$n does something stupid makes $mself all wet!", FALSE, caster, NULL,
+        false, caster, nullptr, 0, TO_CHAR, ANSI_BLUE);
+      act("$n does something stupid makes $mself all wet!", false, caster, nullptr,
         0, TO_ROOM, ANSI_BLUE);
       caster->dropPool(10, LIQ_WATER);
       if (caster->reconcileDamage(caster, dam, SPELL_AQUATIC_BLAST) == -1)
@@ -550,15 +550,15 @@ int aquaticBlast(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_AQUATIC_BLAST, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_AQUATIC_BLAST]->lag;
   diff = discArray[SPELL_AQUATIC_BLAST]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_AQUATIC_BLAST, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_AQUATIC_BLAST, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castAquaticBlast(TBeing* caster, TBeing* victim) {
@@ -610,8 +610,8 @@ struct PolyType ShapeShiftList[LAST_SHAPED_MOB] =
 
 int shapeShift(TBeing* caster, int level, short bKnown) {
   int i;
-  //  bool nameFound = FALSE;
-  bool found = FALSE;
+  //  bool nameFound = false;
+  bool found = false;
   TMonster* mob;
   const char* buffer;
   affectedData aff;
@@ -619,7 +619,7 @@ int shapeShift(TBeing* caster, int level, short bKnown) {
 
   buffer = caster->spelltask->orig_arg;
 
-  discNumT das = getDisciplineNumber(SPELL_SHAPESHIFT, FALSE);
+  discNumT das = getDisciplineNumber(SPELL_SHAPESHIFT, false);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, "Bad disc for SPELL_SHAPESHIFT");
     return SPELL_FAIL;
@@ -686,23 +686,23 @@ int shapeShift(TBeing* caster, int level, short bKnown) {
     SwitchStuff(caster, mob);
     setCombatStats(caster, mob, ShapeShiftList[i], SPELL_SHAPESHIFT);
 
-    act("$n's flesh melts and flows into the shape of $N.", TRUE, caster, NULL,
+    act("$n's flesh melts and flows into the shape of $N.", true, caster, nullptr,
       mob, TO_NOTVICT);
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
       if (caster->equipment[i]) {
-        found = TRUE;
+        found = true;
         break;
       }
     }
     if (found) {
       act("Your equipment falls from your body as your flesh turns liquid.",
-        TRUE, caster, NULL, mob, TO_CHAR);
-      act("Slowly you take on the shape of $N.", TRUE, caster, NULL, mob,
+        true, caster, nullptr, mob, TO_CHAR);
+      act("Slowly you take on the shape of $N.", true, caster, nullptr, mob,
         TO_CHAR);
     } else {
-      act("Your flesh turns liquid.", TRUE, caster, NULL, mob, TO_CHAR);
-      act("Slowly your flesh melts and you take on the shape of $N.", TRUE,
-        caster, NULL, mob, TO_CHAR);
+      act("Your flesh turns liquid.", true, caster, nullptr, mob, TO_CHAR);
+      act("Slowly your flesh melts and you take on the shape of $N.", true,
+        caster, nullptr, mob, TO_CHAR);
     }
 
     --(*caster);
@@ -710,7 +710,7 @@ int shapeShift(TBeing* caster, int level, short bKnown) {
 
     // stop following whoever you are following..
     if (caster->master)
-      caster->stopFollower(TRUE);
+      caster->stopFollower(true);
 
     // switch caster into mobile
     caster->desc->character = mob;
@@ -727,7 +727,7 @@ int shapeShift(TBeing* caster, int level, short bKnown) {
 #endif
 
     mob->desc = caster->desc;
-    caster->desc = NULL;
+    caster->desc = nullptr;
     caster->polyed = POLY_TYPE_SHAPESHIFT;
 
     // transfer spells - some bugs
@@ -757,8 +757,8 @@ int shapeShift(TBeing* caster, const char* buffer) {
 
   if (!caster->isImmortal() && caster->checkForSkillAttempt(SPELL_SHAPESHIFT)) {
     act("You are not prepared to try to shapeshift yourself again so soon.",
-      FALSE, caster, NULL, NULL, TO_CHAR);
-    return FALSE;
+      false, caster, nullptr, nullptr, TO_CHAR);
+    return false;
   }
 
   if (caster->roomp && caster->roomp->isIndoorSector() &&
@@ -767,8 +767,8 @@ int shapeShift(TBeing* caster, const char* buffer) {
     act(
       "Only the outdoors affords the connection to nature required to shift "
       "your shape.",
-      FALSE, caster, NULL, NULL, TO_CHAR);
-    return FALSE;
+      false, caster, nullptr, nullptr, TO_CHAR);
+    return false;
   }
 
   // Check to make sure that there is no snooping going on.
@@ -788,14 +788,14 @@ int shapeShift(TBeing* caster, const char* buffer) {
       caster->desc->snoop.snoop_by->getName().c_str());
 
   if (!bPassShamanChecks(caster, SPELL_SHAPESHIFT, caster))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_SHAPESHIFT]->lag;
   diff = discArray[SPELL_SHAPESHIFT]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_SHAPESHIFT, diff, 1,
-    buffer, rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_SHAPESHIFT, diff, 1,
+    buffer, rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castShapeShift(TBeing* caster) {
@@ -807,7 +807,7 @@ int castShapeShift(TBeing* caster) {
   if ((ret = shapeShift(caster, level, bKnown)) == SPELL_SUCCESS) {
   } else
     caster->nothingHappens();
-  return TRUE;
+  return true;
 }
 
 int TBeing::doTransform(const char* argument) {
@@ -818,14 +818,14 @@ int TBeing::doTransform(const char* argument) {
   char buffer[256];
 
   //  sendTo("This is disabled due to a bug right now.\n\r");
-  //  return FALSE;
+  //  return false;
 
   if (!doesKnowSkill(SKILL_TRANSFORM_LIMB)) {
     if (isVampire())
       return vampireTransform(this);
 
     sendTo("You know nothing about transforming your limbs.\n\r");
-    return FALSE;
+    return false;
   }
 
   strcpy(buffer, argument);
@@ -835,13 +835,13 @@ int TBeing::doTransform(const char* argument) {
       limb = TransformLimbList[i].limb;
       if (TransformLimbList[i].level > getSkillLevel(SKILL_TRANSFORM_LIMB)) {
         sendTo("You can not transform that limb yet.");
-        return FALSE;
+        return false;
       }
       // NOTE: this is DISC learning, not skill (intentional)
       if (TransformLimbList[i].learning >
           getDiscipline((TransformLimbList[i].discipline))->getLearnedness()) {
         sendTo("You can not transform that limb yet.");
-        return FALSE;
+        return false;
       }
       break;
     }
@@ -851,18 +851,18 @@ int TBeing::doTransform(const char* argument) {
       return vampireTransform(this);
 
     sendTo("Couldn't find any such limb to transform.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (limb == MAX_WEAR) {
     sendTo("You can't transform all of your limbs.\n\r");
-    return FALSE;
+    return false;
   }
 
-  if (!isTransformableLimb(limb, TRUE)) {
-    act("Something prevents your limb from being transformed.", FALSE, this,
-      NULL, NULL, TO_CHAR);
-    return FALSE;
+  if (!isTransformableLimb(limb, true)) {
+    act("Something prevents your limb from being transformed.", false, this,
+      nullptr, nullptr, TO_CHAR);
+    return false;
   }
 
   level = getSkillLevel(SKILL_TRANSFORM_LIMB);
@@ -872,22 +872,22 @@ int TBeing::doTransform(const char* argument) {
   if (ret == SPELL_SUCCESS) {
   } else if (ret == SPELL_CRIT_SUCCESS) {
   } else if (ret == SPELL_CRIT_FAIL) {
-    act("Something went wrong with the magic.", FALSE, this, 0, NULL, TO_CHAR);
-    act("You feel your own limb open and your blood start to drain!", FALSE,
-      this, 0, NULL, TO_CHAR);
-    act("Something went wrong with $n's magic.", FALSE, this, 0, NULL, TO_ROOM);
-    act("$n seems to have caused $s limbs to start bleeding!", FALSE, this, 0,
-      NULL, TO_ROOM);
+    act("Something went wrong with the magic.", false, this, 0, nullptr, TO_CHAR);
+    act("You feel your own limb open and your blood start to drain!", false,
+      this, 0, nullptr, TO_CHAR);
+    act("Something went wrong with $n's magic.", false, this, 0, nullptr, TO_ROOM);
+    act("$n seems to have caused $s limbs to start bleeding!", false, this, 0,
+      nullptr, TO_ROOM);
   } else if (ret == SPELL_SAVE) {
-    act("You are not powerful enough to transform that limb.", FALSE, this,
-      NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
+    act("You are not powerful enough to transform that limb.", false, this,
+      nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, this, nullptr, nullptr, TO_ROOM);
   } else if (ret == SPELL_FAIL) {
-    act("You fail to transform your limbs.", FALSE, this, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
+    act("You fail to transform your limbs.", false, this, nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, this, nullptr, nullptr, TO_ROOM);
   } else {
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, this, nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, this, nullptr, nullptr, TO_ROOM);
   }
   if (IS_SET(ret, CASTER_DEAD))
     ADD_DELETE(rc, DELETE_THIS);
@@ -905,46 +905,46 @@ int transformLimb(TBeing* caster, const char* buffer) {
       if (TransformLimbList[i].level >
           caster->getSkillLevel(SKILL_TRANSFORM_LIMB)) {
         caster->sendTo("You can not transform that limb yet.");
-        return FALSE;
+        return false;
       }
       // NOTE: this is DISC learning, not skill (intentional)
       if (TransformLimbList[i].learning >
           caster->getDiscipline((TransformLimbList[i].discipline))
             ->getLearnedness()) {
         caster->sendTo("You can not transform that limb yet.");
-        return FALSE;
+        return false;
       }
       break;
     }
   }
   if (i >= LAST_TRANSFORM_LIMB) {
     caster->sendTo("Couldn't find any such limb to transform.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return FALSE;
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
   if (limb == MAX_WEAR) {
     caster->sendTo("You can't transform all of your limbs.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return FALSE;
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
-  if (!caster->isTransformableLimb(limb, TRUE)) {
-    act("Something prevents your limb from being transformed.", FALSE, caster,
-      NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    return FALSE;
+  if (!caster->isTransformableLimb(limb, true)) {
+    act("Something prevents your limb from being transformed.", false, caster,
+      nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    return false;
   }
 
   if (!bPassMageChecks(caster, SKILL_TRANSFORM_LIMB, caster))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SKILL_TRANSFORM_LIMB]->lag;
   diff = discArray[SKILL_TRANSFORM_LIMB]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SKILL_TRANSFORM_LIMB, diff, 1,
-    buffer, rounds, caster->in_room, 0, 0, TRUE, 0);
-  return FALSE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SKILL_TRANSFORM_LIMB, diff, 1,
+    buffer, rounds, caster->in_room, 0, 0, true, 0);
+  return false;
 }
 
 int castTransformLimb(TBeing* caster) {
@@ -958,25 +958,25 @@ int castTransformLimb(TBeing* caster) {
   if (ret == SPELL_SUCCESS) {
   } else if (ret == SPELL_CRIT_SUCCESS) {
   } else if (ret == SPELL_CRIT_FAIL) {
-    act("Something went wrong with your spell.", FALSE, caster, 0, NULL,
+    act("Something went wrong with your spell.", false, caster, 0, nullptr,
       TO_CHAR);
-    act("You feel your own limb open and your blood start to drain!", FALSE,
-      caster, 0, NULL, TO_CHAR);
-    act("Something went wrong with $n's spell.", FALSE, caster, 0, NULL,
+    act("You feel your own limb open and your blood start to drain!", false,
+      caster, 0, nullptr, TO_CHAR);
+    act("Something went wrong with $n's spell.", false, caster, 0, nullptr,
       TO_ROOM);
-    act("$n seems to have caused $s limbs to start bleeding!", FALSE, caster, 0,
-      NULL, TO_ROOM);
+    act("$n seems to have caused $s limbs to start bleeding!", false, caster, 0,
+      nullptr, TO_ROOM);
   } else if (ret == SPELL_SAVE) {
-    act("You are not powerful enough to transform that limb.", FALSE, caster,
-      NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("You are not powerful enough to transform that limb.", false, caster,
+      nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
   } else if (ret == SPELL_FAIL) {
-    act("You fail to transform your limbs.", FALSE, caster, NULL, NULL,
+    act("You fail to transform your limbs.", false, caster, nullptr, nullptr,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
   } else {
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
   }
 
   if (IS_SET(ret, CASTER_DEAD))
@@ -996,11 +996,11 @@ int deathWave(TBeing* caster, TBeing* victim, int level, short bKnown,
   beams = max(beams, 1);
 
   if (victim->getImmunity(IMMUNE_ENERGY) >= 100) {
-    act("$N is immune to energy and thaumaturgy!", FALSE, caster, NULL, victim,
+    act("$N is immune to energy and thaumaturgy!", false, caster, nullptr, victim,
       TO_CHAR);
-    act("$N ignores $n's weak ritual!", FALSE, caster, NULL, victim,
+    act("$N ignores $n's weak ritual!", false, caster, nullptr, victim,
       TO_NOTVICT);
-    act("$n's ritual fails because of your immunity!", FALSE, caster, NULL,
+    act("$n's ritual fails because of your immunity!", false, caster, nullptr,
       victim, TO_VICT);
     return SPELL_FAIL;
   }
@@ -1022,13 +1022,13 @@ int deathWave(TBeing* caster, TBeing* victim, int level, short bKnown,
           bBuf += " expels";
 
         sprintf(buf, "%s from $n's hands and enter $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your hands and enter $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf,
           "%s from $n's hands and enter your body distorting your soul!",
           bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         break;
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
@@ -1045,13 +1045,13 @@ int deathWave(TBeing* caster, TBeing* victim, int level, short bKnown,
           bBuf += " expels";
 
         sprintf(buf, "%s from $n's hands and enter $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your hands and enter $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf,
           "%s from $n's hands and enter your body distorting your soul!",
           bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
         sprintf(buf, "%d", beams);
@@ -1063,13 +1063,13 @@ int deathWave(TBeing* caster, TBeing* victim, int level, short bKnown,
           bBuf += " expels";
 
         sprintf(buf, "%s from $n's hands and enter $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your hands and enter $N's body!", bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf,
           "%s from $n's hands and enter your body distorting your soul!",
           bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_DEATHWAVE))) {
           SV(SPELL_DEATHWAVE);
           dam /= 2;
@@ -1093,13 +1093,13 @@ int deathWave(TBeing* caster, TBeing* victim, int level, short bKnown,
 
         sprintf(buf, "%s from $n's hands and blow up in $n's face!",
           bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your hands and blow up in your face!",
           bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf, "%s from $n's hands and blow up in $n's face!",
           bBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         if (caster->reconcileDamage(caster, dam, SPELL_DEATHWAVE) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
 
@@ -1132,15 +1132,15 @@ int deathWave(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_DEATHWAVE, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_DEATHWAVE]->lag;
   diff = discArray[SPELL_DEATHWAVE]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_DEATHWAVE, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_DEATHWAVE, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castDeathWave(TBeing* caster, TBeing* victim) {

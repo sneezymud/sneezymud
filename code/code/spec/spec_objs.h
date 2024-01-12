@@ -10,10 +10,10 @@
   exceptions:  when cmd >= 0, a command is triggering the spec_proc, and
   when cmd == -1, the spec_proc is being triggered by a PULSE.
 
-  A return value of zero (FALSE) indicates that nothing exceptional
-  happened.  A non-zero return value (TRUE) indicates that some action
+  A return value of zero (false) indicates that nothing exceptional
+  happened.  A non-zero return value (true) indicates that some action
   needs to be taken (such as ignoring the players command).  When in doubt,
-  return FALSE.  A -1 indicates something died as a result.
+  return false.  A -1 indicates something died as a result.
 
 *************************************************************************/
 

@@ -69,7 +69,7 @@ unsigned int CountBits(unsigned int Class) {
     return (22);
 
   vlogf(LOG_BUG, format("Bad call to CountBits (%d)") % Class);
-  return FALSE;
+  return false;
 }
 
 int TBeing::getClassLevel(int Class) const {
@@ -85,9 +85,9 @@ int TBeing::onlyClass(int Class) const {
   for (i = 1; i <= (1 << (MAX_CLASSES - 1)); i *= 2) {
     if (getClassLevel(i) != 0)
       if (i != Class)
-        return FALSE;
+        return false;
   }
-  return TRUE;
+  return true;
 }
 
 bool TBeing::isSingleClass() const {
@@ -95,9 +95,9 @@ bool TBeing::isSingleClass() const {
 
   for (i = 1; i <= (1 << (MAX_CLASSES - 1)); i *= 2) {
     if (onlyClass(i))
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 bool TBeing::isDoubleClass() const { return NumClasses(getClass()) == 2; }
@@ -116,7 +116,7 @@ int TBeing::getClassNum(const char* arg, exactTypeT exact) const {
     }
 
     if (!which)
-      return FALSE;
+      return false;
   } else {
     for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
       if (is_abbrev(arg, classInfo[i].name)) {
@@ -126,7 +126,7 @@ int TBeing::getClassNum(const char* arg, exactTypeT exact) const {
     }
 
     if (!which)
-      return FALSE;
+      return false;
   }
   return which;
 }
@@ -161,7 +161,7 @@ bool TBeing::hasClass(const char* arg, exactTypeT exact) const {
     }
 
     if (!which)
-      return FALSE;
+      return false;
   } else {
     for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
       if (is_abbrev(arg, classInfo[i].name)) {
@@ -171,13 +171,13 @@ bool TBeing::hasClass(const char* arg, exactTypeT exact) const {
     }
 
     if (!which)
-      return FALSE;
+      return false;
   }
 
   if (getClass() & which)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 bool TBeing::hasClass(unsigned short bit, exactTypeT exact) const {

@@ -67,7 +67,7 @@ void TBeing::windowLook(const TWindow* w) {
   TRoom* target;
   int isRandom;
 
-  act("$n peers through $p.", FALSE, this, w, NULL, TO_ROOM);
+  act("$n peers through $p.", false, this, w, nullptr, TO_ROOM);
   if (!(target = real_roomp(w->getTarget(&isRandom)))) {
     sendTo("You see only an empty void.\n\r");
     vlogf(LOG_BUG, format("%s [%d] points to non existant room %d") %
@@ -77,9 +77,9 @@ void TBeing::windowLook(const TWindow* w) {
   }
   if (isRandom == -1)
     act("You peer through $p to a fuzzy picture which clears then shows...",
-      FALSE, this, w, NULL, TO_CHAR);
+      false, this, w, nullptr, TO_CHAR);
   else
-    act("You peer through $p...", FALSE, this, w, NULL, TO_CHAR);
+    act("You peer through $p...", false, this, w, nullptr, TO_CHAR);
   sendRoomName(target);
   sendRoomDesc(target);
 

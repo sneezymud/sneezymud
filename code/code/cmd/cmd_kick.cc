@@ -13,36 +13,36 @@
 
 bool TBeing::canKick(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
-    return FALSE;
+    return false;
 
   if (affectedBySpell(AFFECT_TRANSFORMED_LEGS)) {
     if (!silent)
       sendTo("How do you expect to kick with your legs transformed.\n\r");
-    return FALSE;
+    return false;
   }
   if (getPosition() == POSITION_CRAWLING) {
     if (!silent)
       sendTo("You can't kick while crawling.\n\r");
-    return FALSE;
+    return false;
   }
 
   spellNumT skill = getSkillNum(SKILL_KICK);
   if (!doesKnowSkill(skill)) {
     if (!silent)
       sendTo("You know nothing about kicking.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (doesKnowSkill(SKILL_ADVANCED_KICKING)) {
     if (!silent)
       sendTo("You are kicking constantly in melee, already.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!hasLegs()) {
     if (!silent)
       sendTo("You need legs to kick.\n\r");
-    return FALSE;
+    return false;
   }
 
   switch (getRace()) {
@@ -57,52 +57,52 @@ bool TBeing::canKick(TBeing* victim, silentTypeT silent) {
   }
 
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (eitherLegHurt()) {
     if (!silent)
       sendTo("It's very hard to kick without the use of your legs!\n\r");
-    return FALSE;
+    return false;
   }
   if (victim == this) {
     if (!silent)
       sendTo("You cannot kick yourself!\n\r");
-    return FALSE;
+    return false;
   }
   if (noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
     if (!silent)
       sendTo("You can't successfully kick an immortal.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) &&
       (master == victim)) {
-    act("$N is just such a good friend, you simply can't hit $M.", FALSE, this,
+    act("$N is just such a good friend, you simply can't hit $M.", false, this,
       0, victim, TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (riding) {
     if (!silent)
       sendTo("You can't kick while mounted!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (roomp && roomp->isUnderwaterSector()) {
     if (!silent)
       sendTo("The water around you totally impedes your kick!\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->isFlying()) {
     if (!silent)
-      act("How can you kick $N when $E is flying?", FALSE, this, 0, victim,
+      act("How can you kick $N when $E is flying?", false, this, 0, victim,
         TO_CHAR);
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 enum kickSlotT {
@@ -117,45 +117,45 @@ static int kickMiss(TBeing* caster, TBeing* victim, kickSlotT slot,
   spellNumT skill) {
   switch (slot) {
     case KICK_BODY:  // body
-      act("$n misses a kick at $N's solar plexus.", FALSE, caster, 0, victim,
+      act("$n misses a kick at $N's solar plexus.", false, caster, 0, victim,
         TO_NOTVICT);
-      act("You miss your kick at $N's solar plexus.", FALSE, caster, 0, victim,
+      act("You miss your kick at $N's solar plexus.", false, caster, 0, victim,
         TO_CHAR);
-      act("Leaping backwards, you dodge $n's kick at your chest!", FALSE,
+      act("Leaping backwards, you dodge $n's kick at your chest!", false,
         caster, 0, victim, TO_VICT);
       break;
     case KICK_WAIST:  // waist/crotch
-      act("$n misses a kick at $N's groin.", FALSE, caster, 0, victim,
+      act("$n misses a kick at $N's groin.", false, caster, 0, victim,
         TO_NOTVICT);
-      act("You miss your kick at $N's groin.", FALSE, caster, 0, victim,
+      act("You miss your kick at $N's groin.", false, caster, 0, victim,
         TO_CHAR);
-      act("Jumping out of the way, you avoid $n's kick at your crotch!", FALSE,
+      act("Jumping out of the way, you avoid $n's kick at your crotch!", false,
         caster, 0, victim, TO_VICT);
       break;
     case KICK_HEAD:  // head
-      act("$n misses a kick at $N's head.", FALSE, caster, 0, victim,
+      act("$n misses a kick at $N's head.", false, caster, 0, victim,
         TO_NOTVICT);
-      act("You miss your kick at $N's head.", FALSE, caster, 0, victim,
+      act("You miss your kick at $N's head.", false, caster, 0, victim,
         TO_CHAR);
-      act("Ducking quickly, you avoid $n's kick at your head!", FALSE, caster,
+      act("Ducking quickly, you avoid $n's kick at your head!", false, caster,
         0, victim, TO_VICT);
       break;
     case KICK_LEG:   // leg
     case KICK_NONE:  // leg
-      act("$n misses a kick at $N.", FALSE, caster, 0, victim, TO_NOTVICT);
-      act("You miss your kick at $N.", FALSE, caster, 0, victim, TO_CHAR);
+      act("$n misses a kick at $N.", false, caster, 0, victim, TO_NOTVICT);
+      act("You miss your kick at $N.", false, caster, 0, victim, TO_CHAR);
       if (!victim->riding)
-        act("Rolling aside, you avoid $n's kick!", FALSE, caster, 0, victim,
+        act("Rolling aside, you avoid $n's kick!", false, caster, 0, victim,
           TO_VICT);
       else
-        act("You avoid $n's kick!", FALSE, caster, 0, victim, TO_VICT);
+        act("You avoid $n's kick!", false, caster, 0, victim, TO_VICT);
       break;
   }
 
   if (caster->reconcileDamage(victim, 0, skill) == -1)
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
@@ -186,15 +186,15 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
   // find possible corrosponding values on v
   // legs are 0-40%, waist 41-60, chest 61-95, head 95+
   if (tmp < victim->getPartMinHeight(ITEM_WEAR_FEET)) {
-    act("You strain to kick $N's feet, but are unable to reach $M.", FALSE,
+    act("You strain to kick $N's feet, but are unable to reach $M.", false,
       caster, 0, victim, TO_CHAR);
-    act("$n misses a kick at your feet.", FALSE, caster, 0, victim, TO_VICT);
-    act("$n misses a kick at $N's feet.", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("$n misses a kick at your feet.", false, caster, 0, victim, TO_VICT);
+    act("$n misses a kick at $N's feet.", false, caster, 0, victim, TO_NOTVICT);
 
     if (caster->reconcileDamage(victim, 0, skill) == -1)
       return DELETE_VICT;
 
-    return TRUE;
+    return true;
   } else if (tmp < victim->getPartMinHeight(ITEM_WEAR_WAIST))
     slot_i = KICK_LEG;  // shins
   else if (tmp < victim->getPartMinHeight(ITEM_WEAR_BODY))
@@ -214,11 +214,11 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
   switch (slot_i) {
     case KICK_WAIST:
       limb_dam = (level / 5) + 1;
-      act("$n kicks $N in the crotch, yowch!.", FALSE, caster, 0, victim,
+      act("$n kicks $N in the crotch, yowch!.", false, caster, 0, victim,
         TO_NOTVICT);
-      act("You're kicked in the crotch by $n.", FALSE, caster, 0, victim,
+      act("You're kicked in the crotch by $n.", false, caster, 0, victim,
         TO_VICT);
-      act("Your kick hits $N in the crotch.", FALSE, caster, 0, victim,
+      act("Your kick hits $N in the crotch.", false, caster, 0, victim,
         TO_CHAR);
       if (victim->getSex() == SEX_MALE) {
         if (!victim->equipment[WEAR_WAIST] ||
@@ -233,32 +233,32 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
       }
       item = dynamic_cast<TObj*>(victim->equipment[WEAR_WAIST]);
       if (!item) {
-        rc = caster->damageLimb(victim, WEAR_WAIST, NULL, &limb_dam);
+        rc = caster->damageLimb(victim, WEAR_WAIST, nullptr, &limb_dam);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
       } else if (caster->dentItem(victim, item, 1, caster->getPrimaryFoot()) ==
                  DELETE_ITEM) {
         delete item;
-        item = NULL;
+        item = nullptr;
       }
       break;
     case KICK_BODY:
-      act("$n kicks $N in the solar plexus.", FALSE, caster, 0, victim,
+      act("$n kicks $N in the solar plexus.", false, caster, 0, victim,
         TO_NOTVICT);
       act(
         "You're kicked in the solar plexus by $n.  Wow, this is breathtaking!",
-        FALSE, caster, 0, victim, TO_VICT);
-      act("Your kick hits $N in the solar plexus.", FALSE, caster, 0, victim,
+        false, caster, 0, victim, TO_VICT);
+      act("Your kick hits $N in the solar plexus.", false, caster, 0, victim,
         TO_CHAR);
       dam += 1;
       dam_type = DAMAGE_KICK_SOLAR;
       break;
     case KICK_HEAD:
-      act("$n gives $N a boot to the head!", FALSE, caster, 0, victim,
+      act("$n gives $N a boot to the head!", false, caster, 0, victim,
         TO_NOTVICT);
-      act("You're kicked in the head by $n!", FALSE, caster, 0, victim,
+      act("You're kicked in the head by $n!", false, caster, 0, victim,
         TO_VICT);
-      act("You boot $N in the head.", FALSE, caster, 0, victim, TO_CHAR);
+      act("You boot $N in the head.", false, caster, 0, victim, TO_CHAR);
       dam += 2;
       victim->sendTo("Who?  What?!?  Where am I?\n\r");
       victim->cantHit += victim->loseRound(0.5);
@@ -267,28 +267,28 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
       break;
     case KICK_LEG:
       limb_dam = (level / 5) + 1;
-      act("$n kicks $N in the shin.", FALSE, caster, 0, victim, TO_NOTVICT);
-      act("You're kicked in the shin by $n.   Ouch!", FALSE, caster, 0, victim,
+      act("$n kicks $N in the shin.", false, caster, 0, victim, TO_NOTVICT);
+      act("You're kicked in the shin by $n.   Ouch!", false, caster, 0, victim,
         TO_VICT);
-      act("Your kick hits $N in the shin.", FALSE, caster, 0, victim, TO_CHAR);
+      act("Your kick hits $N in the shin.", false, caster, 0, victim, TO_CHAR);
       slot = wearSlotT(::number(WEAR_LEG_R, WEAR_LEG_L));
       item = dynamic_cast<TObj*>(victim->equipment[slot]);
       if (!item) {
-        rc = caster->damageLimb(victim, slot, NULL, &limb_dam);
+        rc = caster->damageLimb(victim, slot, nullptr, &limb_dam);
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_VICT;
       } else if (caster->dentItem(victim, item, 1, caster->getPrimaryFoot()) ==
                  DELETE_ITEM) {
         delete item;
-        item = NULL;
+        item = nullptr;
       }
       dam_type = DAMAGE_KICK_SHIN;
       break;
     case KICK_NONE:
-      act("$n kicks $N in the side.", FALSE, caster, 0, victim, TO_NOTVICT);
-      act("You're kicked in the side by $n.   Ouch!", FALSE, caster, 0, victim,
+      act("$n kicks $N in the side.", false, caster, 0, victim, TO_NOTVICT);
+      act("You're kicked in the side by $n.   Ouch!", false, caster, 0, victim,
         TO_VICT);
-      act("Your kick hits $N in the side.", FALSE, caster, 0, victim, TO_CHAR);
+      act("Your kick hits $N in the side.", false, caster, 0, victim, TO_CHAR);
       dam_type = DAMAGE_KICK_SIDE;
       break;
   }
@@ -296,11 +296,11 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
   item = dynamic_cast<TObj*>(caster->equipment[caster->getPrimaryFoot()]);
   if (item)
     if (item->isSpiked() || item->isObjStat(ITEM_SPIKED)) {
-      act("The spikes on your $o sink into $N.", FALSE, caster, item, victim,
+      act("The spikes on your $o sink into $N.", false, caster, item, victim,
         TO_CHAR);
-      act("The spikes on $n's $o sink into $N.", FALSE, caster, item, victim,
+      act("The spikes on $n's $o sink into $N.", false, caster, item, victim,
         TO_NOTVICT);
-      act("The spikes on $n's $o sink into you.", FALSE, caster, item, victim,
+      act("The spikes on $n's $o sink into you.", false, caster, item, victim,
         TO_VICT);
 
       if (caster->reconcileDamage(victim, (int)(dam * 0.15), TYPE_STAB) == -1)
@@ -315,14 +315,14 @@ static int kickHit(TBeing* caster, TBeing* victim, int score, int level,
         caster->isLucky(levelLuckModifier(victim->GetMaxLevel()))) {
       if (victim->getPosition() < POSITION_STANDING) {
         if (!::number(0, 2))
-          victim->addToDistracted(2, FALSE);
+          victim->addToDistracted(2, false);
         else
-          victim->addToDistracted(1, FALSE);
+          victim->addToDistracted(1, false);
       } else
-        victim->addToDistracted(1, FALSE);
+        victim->addToDistracted(1, false);
     }
   }
-  return TRUE;
+  return true;
 }
 
 static int kick(TBeing* ch, TBeing* victim, spellNumT skill) {
@@ -332,7 +332,7 @@ static int kick(TBeing* ch, TBeing* victim, spellNumT skill) {
   int rc = 0;
 
   if (!ch->canKick(victim, SILENT_NO))
-    return FALSE;
+    return false;
 
   percent = -((10 - (victim->getArmor() / 100)));
   level = ch->getSkillLevel(skill);
@@ -340,7 +340,7 @@ static int kick(TBeing* ch, TBeing* victim, spellNumT skill) {
 
   if (ch->getMove() < 10) {
     ch->sendTo("You don't have the energy to make the kick!\n\r");
-    return FALSE;
+    return false;
   }
   if (!ch->isImmortal())
     ch->addToMove(-kick_move);
@@ -350,10 +350,10 @@ static int kick(TBeing* ch, TBeing* victim, spellNumT skill) {
   if (i && (i != GUARANTEED_FAILURE) && ch->bSuccess(bKnown, skill)) {
     if (victim->canCounterMove(bKnown / 2)) {
       SV(skill);
-      act("$N blocks your kick.", TRUE, ch, 0, victim, TO_CHAR, ANSI_RED);
-      act("You block $n's kick.", TRUE, ch, 0, victim, TO_VICT, ANSI_ORANGE);
-      act("$N blocks $n's kick.", TRUE, ch, 0, victim, TO_NOTVICT);
-      return TRUE;
+      act("$N blocks your kick.", true, ch, 0, victim, TO_CHAR, ANSI_RED);
+      act("You block $n's kick.", true, ch, 0, victim, TO_VICT, ANSI_ORANGE);
+      act("$N blocks $n's kick.", true, ch, 0, victim, TO_NOTVICT);
+      return true;
     }
     rc = kickHit(ch, victim, bKnown + percent, level, skill);
     if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -367,7 +367,7 @@ static int kick(TBeing* ch, TBeing* victim, spellNumT skill) {
       kickMiss(ch, victim, KICK_LEG, skill);
     }
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::doKick(const char* argument, TBeing* vict) {
@@ -380,14 +380,14 @@ int TBeing::doKick(const char* argument, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, namebuf))) {
       if (!(victim = fight())) {
         sendTo("Kick whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
 
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   spellNumT skill = getSkillNum(SKILL_KICK);
   rc = kick(this, victim, skill);
@@ -397,7 +397,7 @@ int TBeing::doKick(const char* argument, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

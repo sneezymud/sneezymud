@@ -13,7 +13,7 @@ void TBeing::assignSkillsClass() {
   CDiscipline* cd;
   std::vector<discNumT> favorites;
 
-  mud_assert(discs != NULL,
+  mud_assert(discs != nullptr,
     "Somehow got to assignSkillsClass without a discs %s", getName().c_str());
 
   if ((cd = getDiscipline(DISC_ADVENTURING))) {
@@ -148,7 +148,7 @@ void TBeing::assignSkillsClass() {
 
 void TBeing::assignSkills(classIndT Class, discNumT primDisc,
   std::vector<discNumT> favorites) {
-  CDiscipline *cd, *prim, *combat, *favored = NULL;
+  CDiscipline *cd, *prim, *combat, *favored = nullptr;
   discNumT favoredNum = DISC_NONE, discnum;
 
   if (!(prim = getDiscipline(primDisc))) {

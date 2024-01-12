@@ -12,38 +12,38 @@
 #include "obj_tool.h"
 
 void TThing::sstringMeBow(TBeing* ch, TThing*) {
-  act("$p isn't a bow.", FALSE, ch, this, 0, TO_CHAR);
+  act("$p isn't a bow.", false, ch, this, 0, TO_CHAR);
 }
 
 void TThing::sstringMeString(TBeing* ch, TBow*) {
-  act("$p isn't bowsstring.", FALSE, ch, this, 0, TO_CHAR);
+  act("$p isn't bowsstring.", false, ch, this, 0, TO_CHAR);
 }
 
 void TTool::sstringMeString(TBeing* ch, TBow* bow) {
   if (getToolType() != TOOL_BOWSTRING) {
-    act("$p isn't bowsstring.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p isn't bowsstring.", false, ch, this, 0, TO_CHAR);
     return;
   }
   if (!bow->isBowFlag(BOW_STRING_BROKE)) {
-    act("$p doesn't need any restringing.", FALSE, ch, bow, 0, TO_CHAR);
+    act("$p doesn't need any restringing.", false, ch, bow, 0, TO_CHAR);
     return;
   }
 
   bow->remBowFlags(BOW_STRING_BROKE);
-  act("You restring $p with $P.", FALSE, ch, bow, this, TO_CHAR);
-  act("$n restrings $s $o with $P.", FALSE, ch, bow, this, TO_ROOM);
+  act("You restring $p with $P.", false, ch, bow, this, TO_CHAR);
+  act("$n restrings $s $o with $P.", false, ch, bow, this, TO_ROOM);
 
   addToToolUses(-1);
   if (getToolUses() <= 0) {
-    act("$p is all used up.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p is all used up.", false, ch, this, 0, TO_CHAR);
     delete this;
     return;
   }
 }
 
 void TBeing::doRestring(const sstring& argument) {
-  TThing* bow = NULL;
-  TThing* bstr = NULL;
+  TThing* bow = nullptr;
+  TThing* bstr = nullptr;
   char arg1[256], arg2[256];
 
   if (sscanf(argument.c_str(), "%s %s", arg1, arg2) != 2) {
@@ -51,17 +51,17 @@ void TBeing::doRestring(const sstring& argument) {
     return;
   }
 #if 1
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
     if (!bow) {
       bow = dynamic_cast<TBow*>(t);
       if (bow && !isname(arg1, bow->name))
-        bow = NULL;
+        bow = nullptr;
     }
     if (!bstr) {
       bstr = dynamic_cast<TTool*>(t);
       if (bstr && !isname(arg2, bstr->name))
-        bstr = NULL;
+        bstr = nullptr;
     }
   }
   if (!bow) {

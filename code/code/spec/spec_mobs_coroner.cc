@@ -25,22 +25,22 @@ int goToMorgue(TBeing* myself) {
         thing_to_room(myself, room);
         act("$n comes back to work.", 0, myself, 0, 0, TO_ROOM);
       }
-      return FALSE;
+      return false;
     }
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   } else {
-    rc = myself->doDrop("all.corpse", NULL);
+    rc = myself->doDrop("all.corpse", nullptr);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    rc = myself->doDrop("all.lost-limb", NULL);
+    rc = myself->doDrop("all.lost-limb", nullptr);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    return TRUE;
+    return true;
   }
 }
 
@@ -58,22 +58,22 @@ static int findACorpse(TMonster* myself) {
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int coroner(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int rc;
   char buf[256];
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   if (::number(0, 3))
-    return FALSE;
+    return false;
 
   int found = 0;
 
@@ -99,7 +99,7 @@ int coroner(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
       if (dynamic_cast<TBaseCorpse*>(obj)) {
         sprintf(buf, "$n gets $p and prepares it for delivery to the morgue.");
-        act(buf, FALSE, myself, obj, 0, TO_ROOM);
+        act(buf, false, myself, obj, 0, TO_ROOM);
         TThing* tt;
         for (StuffIter itt = obj->stuff.begin(); itt != obj->stuff.end();) {
           tt = *(it++);
@@ -108,7 +108,7 @@ int coroner(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         }
         (*obj)--;
         *myself += *obj;
-        return TRUE;
+        return true;
       }
     }
   }
@@ -121,14 +121,14 @@ int coroner(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       return DELETE_THIS;
     }
 
-    return TRUE;
+    return true;
   } else {  // otherwise, look for a corpse
     rc = findACorpse(myself);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

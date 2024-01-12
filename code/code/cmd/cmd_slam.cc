@@ -144,20 +144,20 @@ int TBeing::slamSuccess(TBeing* victim) {
     act(
       "$n slams $N with $s weapon in a <R>berserk fury<z>, inflicting "
       "considerable damage!",
-      FALSE, this, 0, victim, TO_NOTVICT);
+      false, this, 0, victim, TO_NOTVICT);
     act(
       "You slam your weapon into $N in a <R>berserk fury<z>, inflicting "
       "considerable damage!",
-      FALSE, this, 0, victim, TO_CHAR);
-    act("$n slams $s weapon into you with a <r>berserker's <z>zeal!", FALSE,
+      false, this, 0, victim, TO_CHAR);
+    act("$n slams $s weapon into you with a <r>berserker's <z>zeal!", false,
       this, 0, victim, TO_VICT);
 
   } else {
-    act("$n slams $N with $s weapon, inflicting considerable damage!", FALSE,
+    act("$n slams $N with $s weapon, inflicting considerable damage!", false,
       this, 0, victim, TO_NOTVICT);
-    act("You slam your weapon into $N, inflicting considerable damage!", FALSE,
+    act("You slam your weapon into $N, inflicting considerable damage!", false,
       this, 0, victim, TO_CHAR);
-    act("$n slams $s weapon into you!", FALSE, this, 0, victim, TO_VICT);
+    act("$n slams $s weapon into you!", false, this, 0, victim, TO_VICT);
   }
 
   // Special use-case for blunt weapons
@@ -181,10 +181,10 @@ int TBeing::slamFail(TBeing* victim) {
   if (victim->getPosition() > POSITION_DEAD) {
     act(
       "$n's attempt at slamming $N's with $s his weapon fails to make contact.",
-      FALSE, this, 0, victim, TO_NOTVICT);
+      false, this, 0, victim, TO_NOTVICT);
     act("Your attempt at slamming $N with your weapon fails to make contact.",
-      FALSE, this, 0, victim, TO_CHAR);
-    act("$n attempts to slam you with $s weapon but comes up short.", FALSE,
+      false, this, 0, victim, TO_CHAR);
+    act("$n attempts to slam you with $s weapon but comes up short.", false,
       this, 0, victim, TO_VICT);
   }
 

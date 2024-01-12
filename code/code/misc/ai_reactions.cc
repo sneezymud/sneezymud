@@ -27,16 +27,16 @@ int TMonster::aiGrinnedAt(TBeing* doer) {
   switch (::number(1, 4)) {
     case 1:
       doSay("You're evil!");
-      return TRUE;
+      return true;
       break;
     case 2:
       doAction(fname(doer->name), CMD_CRINGE);
-      return TRUE;
+      return true;
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiAccuseAvoid(TBeing* doer) {
@@ -45,21 +45,21 @@ int TMonster::aiAccuseAvoid(TBeing* doer) {
   switch (::number(1, 4)) {
     case 1:
       doSay("I didn't do it, nobody saw me, you can't prove anything!");
-      return TRUE;
+      return true;
       break;
     case 2:
       doSay("I'm innocent I tell ya, I'm innocent!");
-      return TRUE;
+      return true;
       break;
     case 3:
       doSay("It wasn't me, you liar!  It was you!!");
       doAction(fname(doer->name), CMD_POINT);
-      return TRUE;
+      return true;
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiLoveSelf(TBeing* doer) {
@@ -70,16 +70,16 @@ int TMonster::aiLoveSelf(TBeing* doer) {
       break;
     case 2:
       doSay("A wee bit narcissistic, wouldn't you say?");
-      return TRUE;
+      return true;
       break;
     case 3:
       doSay("Stop playing with yourself.");
-      return TRUE;
+      return true;
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiShutUp(TBeing* doer) {
@@ -87,11 +87,11 @@ int TMonster::aiShutUp(TBeing* doer) {
   switch (::number(1, 8)) {
     case 1:
       doSay("Oh shut up, fool");
-      return TRUE;
+      return true;
       break;
     case 2:
       doSay("Look who's talking!");
-      return TRUE;
+      return true;
       break;
     case 3:
       return aiUpset(doer);
@@ -99,37 +99,37 @@ int TMonster::aiShutUp(TBeing* doer) {
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::aiOtherInsulted(TBeing*, TBeing* other) {
   switch (::number(1, 5)) {
     case 1:
       doSay("Hehehehe heh");
-      return TRUE;
+      return true;
       break;
     case 2:
       if (canSpeak())
-        act("$n says, \"Yep, $N sure is stupid.\"", TRUE, this, 0, other,
+        act("$n says, \"Yep, $N sure is stupid.\"", true, this, 0, other,
           TO_ROOM);
-      return TRUE;
+      return true;
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }
 
 // proc referenced by social calls if homosexual act occurs
 // SneezyMUD != politically correct  :)
-// self = TRUE if ch was homo with mob
-// self = FALSE if mob saw ch homo with other
+// self = true if ch was homo with mob
+// self = false if mob saw ch homo with other
 int TMonster::aiFag(TBeing* homo, int self) {
   char buf[160];
   char sex[10], sex2[10];
 
   if ((!self && (GetMaxLevel() < 10)) || ::number(0, 4))
-    return FALSE;
+    return false;
 
   if (homo->getSex() == SEX_MALE)
     strcpy(sex, "men");
@@ -147,7 +147,7 @@ int TMonster::aiFag(TBeing* homo, int self) {
 
   switch (value) {
     case 20:
-      act("$n averts $s eyes so $e doesn't have to watch this.", FALSE, this, 0,
+      act("$n averts $s eyes so $e doesn't have to watch this.", false, this, 0,
         0, TO_ROOM);
       break;
     case 5:
@@ -183,8 +183,8 @@ int TMonster::aiFag(TBeing* homo, int self) {
       doSay(buf);
       break;
     case 4:
-      act("$n pushes you away quickly.", FALSE, this, 0, homo, TO_VICT);
-      act("$n pushes $N away quickly.", FALSE, this, 0, homo, TO_NOTVICT);
+      act("$n pushes you away quickly.", false, this, 0, homo, TO_VICT);
+      act("$n pushes $N away quickly.", false, this, 0, homo, TO_NOTVICT);
       break;
     case 8:
       doSay("Hey now, let's not get carried away.");
@@ -210,10 +210,10 @@ int TMonster::aiFag(TBeing* homo, int self) {
           "phaze me.");
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 sstring TBeing::getInsult(TBeing* vict) {
@@ -517,18 +517,18 @@ int TMonster::aiInsultDoer(TBeing* vict) {
   sstring buf, buf2;
 
   if (!isAngry() && !(::number(0, 1)))
-    return FALSE;
+    return false;
 
   if (canSpeak()) {
     buf = getInsult(vict);
 
     buf2 = format("$n looks at you and says, \"%s\"") % buf;
-    act(buf2, TRUE, this, 0, vict, TO_VICT);
+    act(buf2, true, this, 0, vict, TO_VICT);
     buf2 = format("$n looks at $N and says, \"%s\"") % buf;
-    act(buf2, TRUE, this, 0, vict, TO_NOTVICT);
+    act(buf2, true, this, 0, vict, TO_NOTVICT);
   }
 
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiRudeNoise(TBeing* ch) {
@@ -536,24 +536,24 @@ int TMonster::aiRudeNoise(TBeing* ch) {
 
   switch (::number(1, 9)) {
     case 1:
-      act("$n is startled by your sudden outburst.", TRUE, this, 0, ch,
+      act("$n is startled by your sudden outburst.", true, this, 0, ch,
         TO_VICT);
-      act("$n is startled by the noise.", TRUE, this, 0, ch, TO_NOTVICT);
+      act("$n is startled by the noise.", true, this, 0, ch, TO_NOTVICT);
       UA(1);
       break;
     case 2:
-      act("$n jumps slightly in surprise.", TRUE, this, 0, ch, TO_VICT);
-      act("$n jumps slightly in surprise.", TRUE, this, 0, ch, TO_NOTVICT);
+      act("$n jumps slightly in surprise.", true, this, 0, ch, TO_VICT);
+      act("$n jumps slightly in surprise.", true, this, 0, ch, TO_NOTVICT);
       break;
     case 3:
-      act("$n thinks you are strange.", TRUE, this, 0, ch, TO_VICT);
-      act("$n looks at $N strangely.", TRUE, this, 0, ch, TO_NOTVICT);
+      act("$n thinks you are strange.", true, this, 0, ch, TO_VICT);
+      act("$n looks at $N strangely.", true, this, 0, ch, TO_NOTVICT);
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiBadManners(TBeing* ch) {
@@ -573,23 +573,23 @@ int TMonster::aiBadManners(TBeing* ch) {
       break;
     case 5:
       if (canSpeak()) {
-        act("$n looks at you and says, \"Well EXCUSE YOU.\"", TRUE, this, 0, ch,
+        act("$n looks at you and says, \"Well EXCUSE YOU.\"", true, this, 0, ch,
           TO_VICT);
-        act("$n looks at $N and says, \"Well EXCUSE YOU.\"", TRUE, this, 0, ch,
+        act("$n looks at $N and says, \"Well EXCUSE YOU.\"", true, this, 0, ch,
           TO_NOTVICT);
       }
       break;
     case 6:
-      act("$n grimaces.", TRUE, this, 0, 0, TO_ROOM);
+      act("$n grimaces.", true, this, 0, 0, TO_ROOM);
       break;
     case 7:
       doSay("Stop that crap will ya?!?");
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiUpset(TBeing* ch) {
@@ -597,7 +597,7 @@ int TMonster::aiUpset(TBeing* ch) {
   UA(5);
   US(2);
   if (::number(0, 2))
-    return FALSE;
+    return false;
   switch (::number(1, 10)) {
     case 1:
       doAction(fname(ch->name), CMD_FUME);
@@ -618,7 +618,7 @@ int TMonster::aiUpset(TBeing* ch) {
       }  // fall thru for no speak
     case 6:
       if (canSpeak()) {
-        act("$n says, \"Bite me, $N!\"", TRUE, this, 0, ch, TO_ROOM);
+        act("$n says, \"Bite me, $N!\"", true, this, 0, ch, TO_ROOM);
         break;
       }  // fall thru for no speak
     case 7:
@@ -633,15 +633,15 @@ int TMonster::aiUpset(TBeing* ch) {
       return aiInsultDoer(ch);
       break;
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiStrangeThings(TBeing* strange_target) {
   US(1);
   switch (::number(1, 20)) {
     case 1:
-      act("$n thinks you are strange.", TRUE, this, 0, strange_target, TO_VICT);
-      act("$n looks at $N strangely.", TRUE, this, 0, strange_target,
+      act("$n thinks you are strange.", true, this, 0, strange_target, TO_VICT);
+      act("$n looks at $N strangely.", true, this, 0, strange_target,
         TO_NOTVICT);
       break;
     case 2:
@@ -651,8 +651,8 @@ int TMonster::aiStrangeThings(TBeing* strange_target) {
       doSay("weirdo.");
       break;
     case 4:
-      act("$n thinks you're weird.", TRUE, this, 0, strange_target, TO_VICT);
-      act("$n looks at $N oddly.", TRUE, this, 0, strange_target, TO_NOTVICT);
+      act("$n thinks you're weird.", true, this, 0, strange_target, TO_VICT);
+      act("$n looks at $N oddly.", true, this, 0, strange_target, TO_NOTVICT);
       break;
     case 5:
       doSay("bizarre");
@@ -661,8 +661,8 @@ int TMonster::aiStrangeThings(TBeing* strange_target) {
       doSay("Uh oh, looks like another inmate escaped the looney bin.");
       break;
     case 7:
-      act("$n questions your sanity.", TRUE, this, 0, strange_target, TO_VICT);
-      act("$n looks at $N strangely.", TRUE, this, 0, strange_target,
+      act("$n questions your sanity.", true, this, 0, strange_target, TO_VICT);
+      act("$n looks at $N strangely.", true, this, 0, strange_target,
         TO_NOTVICT);
       break;
     case 8:
@@ -672,10 +672,10 @@ int TMonster::aiStrangeThings(TBeing* strange_target) {
       doSay("Have you ever considered professional help?");
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 // reaction for non humanoids that are shocked
@@ -692,47 +692,47 @@ int TMonster::aiMobShock(TBeing* doer) {
           0, this, 0, 0, TO_ROOM);
         break;
       default:
-        return FALSE;
+        return false;
         break;
     }
   } else if (getRace() == RACE_FELINE || getRace() == RACE_WYVELIN) {
     switch (::number(1, 5)) {
       case 1:
-        act("The hair on $n's back raises and $e hisses loudly.", TRUE, this, 0,
+        act("The hair on $n's back raises and $e hisses loudly.", true, this, 0,
           0, TO_ROOM);
 
         doer->roomp->playsound(SOUND_CATHISS, SOUND_TYPE_NOISE);
         break;
       case 2:
-        act("$n arches $s back and snarls in $N's direction.", TRUE, this, 0,
+        act("$n arches $s back and snarls in $N's direction.", true, this, 0,
           doer, TO_NOTVICT);
-        act("$n arches $s back and snarls in your direction.", TRUE, this, 0,
+        act("$n arches $s back and snarls in your direction.", true, this, 0,
           doer, TO_VICT);
 
         doer->roomp->playsound(SOUND_CATHISS, SOUND_TYPE_NOISE);
         break;
       default:
-        return FALSE;
+        return false;
         break;
     }
   } else {
     switch (::number(1, 5)) {
       case 1:
-        act("The hair on $n's back raises and $e hisses loudly.", TRUE, this, 0,
+        act("The hair on $n's back raises and $e hisses loudly.", true, this, 0,
           0, TO_ROOM);
         break;
       case 2:
-        act("$n jumps slightly in shock as $N does that.", TRUE, this, 0, doer,
+        act("$n jumps slightly in shock as $N does that.", true, this, 0, doer,
           TO_NOTVICT);
-        act("$n jumps slightly in shock as you do that.", TRUE, this, 0, doer,
+        act("$n jumps slightly in shock as you do that.", true, this, 0, doer,
           TO_VICT);
         break;
       default:
-        return FALSE;
+        return false;
         break;
     }
   }
-  return TRUE;
+  return true;
 }
 
 // non humanoids made happy by something
@@ -745,11 +745,11 @@ int TMonster::aiMobHappy(TBeing* doer) {
     switch (::number(1, 3)) {
       case 1:
         doAction(fname(doer->name), CMD_LICK);
-        act("$n yips happily.", TRUE, this, 0, 0, TO_ROOM);
+        act("$n yips happily.", true, this, 0, 0, TO_ROOM);
 
         break;
       default:
-        return FALSE;
+        return false;
         break;
     }
   } else if (getRace() == RACE_FELINE || getRace() == RACE_WYVELIN) {
@@ -759,28 +759,28 @@ int TMonster::aiMobHappy(TBeing* doer) {
 
         break;
       case 2:
-        act("$n makes contented noises and rubs up against your leg.", TRUE,
+        act("$n makes contented noises and rubs up against your leg.", true,
           this, 0, doer, TO_VICT);
-        act("$n makes contented noises and rubs up against $N's leg.", TRUE,
+        act("$n makes contented noises and rubs up against $N's leg.", true,
           this, 0, doer, TO_NOTVICT);
 
         break;
       default:
-        return FALSE;
+        return false;
         break;
     }
   } else {
     switch (::number(1, 3)) {
       case 1:
-        act("$n makes contented noises and seems to smile.", TRUE, this, 0, 0,
+        act("$n makes contented noises and seems to smile.", true, this, 0, 0,
           TO_ROOM);
         break;
       default:
-        return FALSE;
+        return false;
         break;
     }
   }
-  return TRUE;
+  return true;
 }
 
 // assumes opposite genders involved and no eunichs
@@ -844,10 +844,10 @@ int TMonster::aiMudSex(TBeing* doer) {
       doWhisper(buf);
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 // assumes doer and other are both opposite sexes and nobody's a eunich
@@ -872,10 +872,10 @@ int TMonster::aiMudSexOther(TBeing* doer, TBeing*) {
       doSay("If you two keep this up, we're bound to lose our PG-13 rating.");
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiMudSexRepulsed(TBeing* doer) {
@@ -887,9 +887,9 @@ int TMonster::aiMudSexRepulsed(TBeing* doer) {
       break;
     case 2:
       if (canSpeak()) {
-        act("$n pushes you away and laughs, \"Yeah right.\"", TRUE, this, 0,
+        act("$n pushes you away and laughs, \"Yeah right.\"", true, this, 0,
           doer, TO_VICT);
-        act("$n pushes $N away and laughs, \"Yeah right.\"", TRUE, this, 0,
+        act("$n pushes $N away and laughs, \"Yeah right.\"", true, this, 0,
           doer, TO_NOTVICT);
         doSay("As if someone like me would be attracted to you.");
       }
@@ -899,21 +899,21 @@ int TMonster::aiMudSexRepulsed(TBeing* doer) {
       doSay("Yeah right, like someone like me would find you attractive!");
       break;
     case 4:
-      act("$n is totally repulsed by your looks and pushes you away!", TRUE,
+      act("$n is totally repulsed by your looks and pushes you away!", true,
         this, 0, doer, TO_VICT);
-      act("$n is repulsed by $N's ugliness and pushes $M away.", TRUE, this, 0,
+      act("$n is repulsed by $N's ugliness and pushes $M away.", true, this, 0,
         doer, TO_NOTVICT);
       break;
     case 5:
-      act("$n pushes you away!", TRUE, this, 0, doer, TO_VICT);
-      act("$n pushes $M away.", TRUE, this, 0, doer, TO_NOTVICT);
+      act("$n pushes you away!", true, this, 0, doer, TO_VICT);
+      act("$n pushes $M away.", true, this, 0, doer, TO_NOTVICT);
       doSay("I think not!");
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiClapReact(TBeing*, TBeing*) {
@@ -931,10 +931,10 @@ int TMonster::aiClapReact(TBeing*, TBeing*) {
       doAction("", CMD_SMILE);
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiWimpCheck(TBeing* vict) {
@@ -943,12 +943,12 @@ int TMonster::aiWimpCheck(TBeing* vict) {
       doLook(fname(vict->name), CMD_LOOK);
       break;
     case 2:
-      act("$n glances at you.", FALSE, this, 0, vict, TO_VICT);
-      act("$n glances at $N.", FALSE, this, 0, vict, TO_NOTVICT);
+      act("$n glances at you.", false, this, 0, vict, TO_VICT);
+      act("$n glances at $N.", false, this, 0, vict, TO_NOTVICT);
       break;
     case 3:
-      act("$n contemplates kicking your butt.", FALSE, this, 0, vict, TO_VICT);
-      act("$n contemplates kicking $N's butt.", FALSE, this, 0, vict,
+      act("$n contemplates kicking your butt.", false, this, 0, vict, TO_VICT);
+      act("$n contemplates kicking $N's butt.", false, this, 0, vict,
         TO_NOTVICT);
       doAction(fname(vict->name), CMD_THINK);
       if (isHumanoid())
@@ -959,24 +959,24 @@ int TMonster::aiWimpCheck(TBeing* vict) {
       doAction("", CMD_PONDER);
       break;
     case 5:
-      act("$n glances at you.", FALSE, this, 0, vict, TO_VICT);
-      act("$n glances at $N.", FALSE, this, 0, vict, TO_NOTVICT);
+      act("$n glances at you.", false, this, 0, vict, TO_VICT);
+      act("$n glances at $N.", false, this, 0, vict, TO_NOTVICT);
       doAction("", CMD_GRIN);
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::aiWimpSwitch(TBeing* vict) {
-  TBeing* tank = NULL;
+  TBeing* tank = nullptr;
   int tSkill = 0,  // Tank Rescue-Switch Skill Average
     mSkill = 0,    // Monster Rescue-Switch Skill Average
     cLevel = 0;
   tank = fight();
-  affectedData* hjp = NULL;
+  affectedData* hjp = nullptr;
 
   // Lets see if the current tank is in a position, and if so would
   // Want to, to prevent the switch.  The mobs current target MUST be
@@ -1055,17 +1055,17 @@ int TMonster::aiWimpSwitch(TBeing* vict) {
 
       oMessage = format("%s attempts to switch to %s, but you block it.") %
                  sstring(getName()).cap() % vict->getName();
-      act(oMessage, TRUE, tank, 0, vict, TO_CHAR);
+      act(oMessage, true, tank, 0, vict, TO_CHAR);
 
       oMessage = format("%s attempts to switch to %s, but %s blocks it.") %
                  sstring(getName()).cap() % vict->getName() % tank->getName();
-      act(oMessage, TRUE, tank, 0, vict, TO_NOTVICT);
+      act(oMessage, true, tank, 0, vict, TO_NOTVICT);
 
       oMessage = format("%s attempts to switch to you, but %s blocks it.") %
                  sstring(getName()).cap() % tank->getName();
-      act(oMessage, TRUE, tank, 0, vict, TO_VICT);
+      act(oMessage, true, tank, 0, vict, TO_VICT);
 
-      return FALSE;
+      return false;
     }
 
     // If they got here, they failed the block so the monster switched.
@@ -1076,9 +1076,9 @@ int TMonster::aiWimpSwitch(TBeing* vict) {
 
   switch (::number(1, 7)) {
     case 1:
-      act("$n senses that $N is a weaker opponent.", TRUE, this, 0, vict,
+      act("$n senses that $N is a weaker opponent.", true, this, 0, vict,
         TO_NOTVICT, ANSI_RED);
-      act("$n senses that you are a weaker opponent.", TRUE, this, 0, vict,
+      act("$n senses that you are a weaker opponent.", true, this, 0, vict,
         TO_VICT, ANSI_RED);
       break;
     case 2:
@@ -1086,29 +1086,29 @@ int TMonster::aiWimpSwitch(TBeing* vict) {
       if (!isDumbAnimal())
         doSay("Time to die, feeble one!");
 
-      act("$n <R>switches to $N<Z>.", TRUE, this, 0, vict, TO_NOTVICT);
-      act("$n <R>switches to you<Z>.", TRUE, this, 0, vict, TO_VICT);
+      act("$n <R>switches to $N<Z>.", true, this, 0, vict, TO_NOTVICT);
+      act("$n <R>switches to you<Z>.", true, this, 0, vict, TO_VICT);
       break;
     case 3:
     case 5:
       if (!isDumbAnimal())
         doSay("I think I'll just take care of you first!");
 
-      act("$n <R>switches to $N<Z>.", TRUE, this, 0, vict, TO_NOTVICT);
-      act("$n <R>switches to you<Z>.", TRUE, this, 0, vict, TO_VICT);
+      act("$n <R>switches to $N<Z>.", true, this, 0, vict, TO_NOTVICT);
+      act("$n <R>switches to you<Z>.", true, this, 0, vict, TO_VICT);
       break;
     case 6:
     case 7:
       if (!isDumbAnimal())
         doSay("You're all mine!");
 
-      act("$n <R>switches to $N<Z>.", TRUE, this, 0, vict, TO_NOTVICT);
-      act("$n <R>switches to you<Z>.", TRUE, this, 0, vict, TO_VICT);
+      act("$n <R>switches to $N<Z>.", true, this, 0, vict, TO_NOTVICT);
+      act("$n <R>switches to you<Z>.", true, this, 0, vict, TO_VICT);
       break;
   }
 
   addToWait(2);
-  return TRUE;
+  return true;
 }
 
 // shove has already occurred, this and vict may not be in same room
@@ -1121,9 +1121,9 @@ int TMonster::aiShoveReact(TBeing* doer, bool worked, dirTypeT dir) {
 
   if (canSpeak() && !::number(0, 2)) {
     if (worked && !sameRoom(*doer)) {
-      act("You shake your head and say, \"Jeez, $N sure is pushy.\"", FALSE,
+      act("You shake your head and say, \"Jeez, $N sure is pushy.\"", false,
         this, 0, doer, TO_CHAR);
-      act("$n shakes $s head and says, \"Jeez, $N sure is pushy.\"", FALSE,
+      act("$n shakes $s head and says, \"Jeez, $N sure is pushy.\"", false,
         this, 0, doer, TO_ROOM);
     } else if (!worked) {
       return aiInsultDoer(doer);
@@ -1140,20 +1140,20 @@ int TMonster::aiShoveReact(TBeing* doer, bool worked, dirTypeT dir) {
   }
   if (sameRoom(*doer) && worked) {
     if (hasHands() && !bothArmsHurt()) {
-      act("$n shoves $N.", TRUE, this, 0, doer, TO_NOTVICT);
-      act("$n shoves you.", TRUE, this, 0, doer, TO_VICT);
-      act("You shove $N.", TRUE, this, 0, doer, TO_CHAR);
+      act("$n shoves $N.", true, this, 0, doer, TO_NOTVICT);
+      act("$n shoves you.", true, this, 0, doer, TO_VICT);
+      act("You shove $N.", true, this, 0, doer, TO_CHAR);
     } else {
-      act("$n nudges $N.", TRUE, this, 0, doer, TO_NOTVICT);
-      act("$n nudges you.", TRUE, this, 0, doer, TO_VICT);
-      act("You nudge $N.", TRUE, this, 0, doer, TO_CHAR);
+      act("$n nudges $N.", true, this, 0, doer, TO_NOTVICT);
+      act("$n nudges you.", true, this, 0, doer, TO_VICT);
+      act("You nudge $N.", true, this, 0, doer, TO_CHAR);
     }
     if (isAngry())
       return takeFirstHit(*doer);
     else
       aiUpset(doer);
   }
-  return FALSE;
+  return false;
 }
 
 // handles a variety of animal sounds
@@ -1164,11 +1164,11 @@ void TMonster::aiGrowl(const TBeing* tar) const {
       int tmp = ::number(0, 1);
       switch (tmp) {
         case 0:
-          act("$n hisses impatiently at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n hisses impatiently at $N.", true, this, 0, tar, TO_ROOM);
           roomp->playsound(SOUND_CATHISS, SOUND_TYPE_NOISE);
           return;
         case 1:
-          act("$n hisses angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n hisses angrily at $N.", true, this, 0, tar, TO_ROOM);
           roomp->playsound(SOUND_CATHISS, SOUND_TYPE_NOISE);
           return;
       }
@@ -1176,11 +1176,11 @@ void TMonster::aiGrowl(const TBeing* tar) const {
       int tmp = ::number(0, 1);
       switch (tmp) {
         case 0:
-          act("$n hisses impatiently.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n hisses impatiently.", true, this, 0, 0, TO_ROOM);
           roomp->playsound(SOUND_CATHISS, SOUND_TYPE_NOISE);
           return;
         case 1:
-          act("$n hisses angrily.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n hisses angrily.", true, this, 0, 0, TO_ROOM);
           roomp->playsound(SOUND_CATHISS, SOUND_TYPE_NOISE);
           return;
       }
@@ -1193,20 +1193,20 @@ void TMonster::aiGrowl(const TBeing* tar) const {
       int tmp = ::number(0, 1);
       switch (tmp) {
         case 0:
-          act("$n barks impatiently at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n barks impatiently at $N.", true, this, 0, tar, TO_ROOM);
           return;
         case 1:
-          act("$n barks angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n barks angrily at $N.", true, this, 0, tar, TO_ROOM);
           return;
       }
     } else {
       int tmp = ::number(0, 1);
       switch (tmp) {
         case 0:
-          act("$n barks impatiently.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n barks impatiently.", true, this, 0, 0, TO_ROOM);
           return;
         case 1:
-          act("$n barks angrily.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n barks angrily.", true, this, 0, 0, TO_ROOM);
           return;
       }
     }
@@ -1216,20 +1216,20 @@ void TMonster::aiGrowl(const TBeing* tar) const {
       int tmp = ::number(0, 1);
       switch (tmp) {
         case 0:
-          act("$n screeches impatiently at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n screeches impatiently at $N.", true, this, 0, tar, TO_ROOM);
           return;
         case 1:
-          act("$n screeches angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n screeches angrily at $N.", true, this, 0, tar, TO_ROOM);
           return;
       }
     } else {
       int tmp = ::number(0, 1);
       switch (tmp) {
         case 0:
-          act("$n screeches impatiently.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n screeches impatiently.", true, this, 0, 0, TO_ROOM);
           return;
         case 1:
-          act("$n screeches angrily.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n screeches angrily.", true, this, 0, 0, TO_ROOM);
           return;
       }
     }
@@ -1239,47 +1239,47 @@ void TMonster::aiGrowl(const TBeing* tar) const {
       int tmp = ::number(0, 5);
       switch (tmp) {
         case 0:
-          act("$n squawks noisily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n squawks noisily at $N.", true, this, 0, tar, TO_ROOM);
           return;
         case 1:
-          act("$n squawks angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n squawks angrily at $N.", true, this, 0, tar, TO_ROOM);
           return;
         case 2:
-          act("$n chirps noisily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n chirps noisily at $N.", true, this, 0, tar, TO_ROOM);
           return;
         case 3:
-          act("$n chirps angrily at $N, and flaps $s wings menacingly.", TRUE,
+          act("$n chirps angrily at $N, and flaps $s wings menacingly.", true,
             this, 0, tar, TO_ROOM);
           return;
         case 4:
-          act("$n chirps noisily at $N, and flaps $s wings menacingly.", TRUE,
+          act("$n chirps noisily at $N, and flaps $s wings menacingly.", true,
             this, 0, tar, TO_ROOM);
           return;
         case 5:
-          act("$n chirps angrily at $N.", TRUE, this, 0, tar, TO_ROOM);
+          act("$n chirps angrily at $N.", true, this, 0, tar, TO_ROOM);
           return;
       }
     } else {
       int tmp = ::number(0, 5);
       switch (tmp) {
         case 0:
-          act("$n squawks noisily.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n squawks noisily.", true, this, 0, 0, TO_ROOM);
           return;
         case 1:
-          act("$n squawks angrily.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n squawks angrily.", true, this, 0, 0, TO_ROOM);
           return;
         case 2:
-          act("$n chirps noisily.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n chirps noisily.", true, this, 0, 0, TO_ROOM);
           return;
         case 3:
-          act("$n chirps angrily.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n chirps angrily.", true, this, 0, 0, TO_ROOM);
           return;
         case 4:
-          act("$n chirps noisily, and flaps $s wings meanicingly.", TRUE, this,
+          act("$n chirps noisily, and flaps $s wings meanicingly.", true, this,
             0, 0, TO_ROOM);
           return;
         case 5:
-          act("$n chirps angrily, and flaps $s wings meanicingly.", TRUE, this,
+          act("$n chirps angrily, and flaps $s wings meanicingly.", true, this,
             0, 0, TO_ROOM);
           return;
       }
@@ -1288,15 +1288,15 @@ void TMonster::aiGrowl(const TBeing* tar) const {
   } else {
     // generic case
     if (tar) {
-      act("$n growls at $N.", TRUE, this, 0, tar, TO_ROOM);
+      act("$n growls at $N.", true, this, 0, tar, TO_ROOM);
     } else {
       int tmp = ::number(0, 1);
       switch (tmp) {
         case 0:
-          act("$n growls angrily!", FALSE, this, 0, 0, TO_ROOM);
+          act("$n growls angrily!", false, this, 0, 0, TO_ROOM);
           return;
         case 1:
-          act("$n growls impatiently!", FALSE, this, 0, 0, TO_ROOM);
+          act("$n growls impatiently!", false, this, 0, 0, TO_ROOM);
           return;
       }
     }
@@ -1323,7 +1323,7 @@ int TMonster::aiToastedAt(TBeing* doer) {
   switch (::number(0, 4)) {
     case 0:
       doSay("You are really too kind!");
-      return TRUE;
+      return true;
       break;
     case 1:
     case 2:
@@ -1344,10 +1344,10 @@ int TMonster::aiToastedAt(TBeing* doer) {
       }
       doSay(format("%s  Did you see me %s that %s?") % bs % RandomVerb() %
             RandomWord());
-      return TRUE;
+      return true;
       break;
     default:
       break;
   }
-  return FALSE;
+  return false;
 }

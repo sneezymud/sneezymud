@@ -17,11 +17,11 @@
 #include "spec_mobs.h"
 
 charList::charList() :
-  name(NULL),
+  name(nullptr),
   iHateStrength(0),
   account_id(0),
   player_id(0),
-  next(NULL) {}
+  next(nullptr) {}
 
 charList::charList(const charList& a) {
   name = mud_str_dup(a.name);
@@ -32,7 +32,7 @@ charList::charList(const charList& a) {
   if (a.next)
     next = new charList(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 }
 
 charList& charList::operator=(const charList& a) {
@@ -52,17 +52,17 @@ charList& charList::operator=(const charList& a) {
   if (a.next)
     next = new charList(*a.next);
   else
-    next = NULL;
+    next = nullptr;
   return *this;
 }
 
 charList::~charList() {
   delete[] name;
-  name = NULL;
+  name = nullptr;
 }
 
 opinionData::opinionData() :
-  clist(NULL),
+  clist(nullptr),
   sex(SEX_NEUTER),
   race(RACE_NORACE),
   Class(0),
@@ -76,7 +76,7 @@ opinionData::opinionData(const opinionData& a) :
   if (a.clist)
     clist = new charList(*a.clist);
   else
-    clist = NULL;
+    clist = nullptr;
 }
 
 opinionData& opinionData::operator=(const opinionData& a) {
@@ -90,14 +90,14 @@ opinionData& opinionData::operator=(const opinionData& a) {
   if (a.clist)
     clist = new charList(*a.clist);
   else
-    clist = NULL;
+    clist = nullptr;
   return *this;
 }
 
 // warning: you must remember to manually delete opinionData::next in a loop
 opinionData::~opinionData() {
   delete clist;
-  clist = NULL;
+  clist = nullptr;
 }
 
 Mobile_Attitude::Mobile_Attitude() :
@@ -109,8 +109,8 @@ Mobile_Attitude::Mobile_Attitude() :
   def_greed(0),
   def_malice(0),
   def_anger(0),
-  target(NULL),
-  random(NULL),
+  target(nullptr),
+  random(nullptr),
   last_cmd(-1) {}
 
 Mobile_Attitude::Mobile_Attitude(const Mobile_Attitude& a) :
@@ -147,7 +147,7 @@ Mobile_Attitude::~Mobile_Attitude() {}
 
 TMonster::TMonster() :
   TBeing(),
-  resps(NULL),
+  resps(nullptr),
   opinion(),
   hates(),
   fears(),
@@ -157,8 +157,8 @@ TMonster::TMonster() :
   hatefield(0),
   fearfield(0),
   moneyConst(0),
-  sounds(NULL),
-  distantSnds(NULL),
+  sounds(nullptr),
+  distantSnds(nullptr),
   hpLevel(0.0),
   damLevel(0.0),
   damPrecision(0),
@@ -186,7 +186,7 @@ TMonster::TMonster(const TMonster& a) :
   if (a.resps)
     resps = new Responses(*a.resps);
   else
-    resps = NULL;
+    resps = nullptr;
 
   sounds = a.sounds;
   distantSnds = a.distantSnds;
@@ -204,7 +204,7 @@ TMonster& TMonster::operator=(const TMonster& a) {
   if (a.resps)
     resps = new Responses(*a.resps);
   else
-    resps = NULL;
+    resps = nullptr;
 
   opinion = a.opinion;
   hates = a.hates;
@@ -229,7 +229,7 @@ TMonster& TMonster::operator=(const TMonster& a) {
 }
 
 TMonster::~TMonster() {
-  charList *k2 = NULL, *n2 = NULL;
+  charList *k2 = nullptr, *n2 = nullptr;
 
   if (number >= 0) {
     if (GetMaxLevel() <= 5)
@@ -259,25 +259,25 @@ TMonster::~TMonster() {
   }
 
   if (spec)
-    checkSpec(this, CMD_GENERIC_DESTROYED, "", NULL);
+    checkSpec(this, CMD_GENERIC_DESTROYED, "", nullptr);
 
   // responses
   if (resps) {
     delete resps;
-    resps = NULL;
+    resps = nullptr;
   }
   // hates and fears.
   for (k2 = hates.clist; k2; k2 = n2) {
     n2 = k2->next;
     delete k2;
   }
-  hates.clist = NULL;
+  hates.clist = nullptr;
 
   for (k2 = fears.clist; k2; k2 = n2) {
     n2 = k2->next;
     delete k2;
   }
-  fears.clist = NULL;
+  fears.clist = nullptr;
 
   if (number > -1)
     mob_index[getMobIndex()].addToNumber(-1);
@@ -293,7 +293,7 @@ TMonster::~TMonster() {
     if (ex_description)
       ex_description = new extraDescription(*ex_description);
     else
-      ex_description = NULL;
+      ex_description = nullptr;
   }
   mobCount--;
 
@@ -337,7 +337,7 @@ double TMonster::getLoadMoney() const {
 
   // adjust for global gold modifier...
   int CENTRAL_BANK = 123;
-  the_gold *= shop_index[CENTRAL_BANK].getProfitSell(NULL, NULL);
+  the_gold *= shop_index[CENTRAL_BANK].getProfitSell(nullptr, nullptr);
   //  the_gold *= gold_modifier[GOLD_INCOME].getVal();
   return the_gold;
 }
@@ -358,7 +358,7 @@ int TMonster::calculateGoldFromConstant() {
       vlogf(LOG_BUG,
         format("Warning... shop # for mobile %d (real nr) not found.") %
           mob_index[this->number].virt);
-      return FALSE;
+      return false;
     }
 
     TDatabase db(DB_SNEEZY);
@@ -379,7 +379,7 @@ int TMonster::calculateGoldFromConstant() {
   }
 
   setMoney((int)the_gold);
-  return FALSE;
+  return false;
 }
 
 bool TMonster::isTestmob() const {

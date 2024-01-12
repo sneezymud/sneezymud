@@ -20,26 +20,26 @@
 int TBeing::doEarthmaw(const char* argument) {
   if (!doesKnowSkill(SPELL_EARTHMAW)) {
     sendTo("You do no know the secrets of the earthmaw spell.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (this->roomp->notRangerLandSector()) {
     sendTo(
       "You must be in a wilderness landscape for the earthmaw spell to be "
       "effective!\n\r");
-    return FALSE;
+    return false;
   }
   char tTarget[256];
-  TObj* tObj = NULL;
-  TBeing* victim = NULL;
-  TBeing* horsie = NULL;
+  TObj* tObj = nullptr;
+  TBeing* victim = nullptr;
+  TBeing* horsie = nullptr;
 
   if (checkBusy())
-    return FALSE;
+    return false;
 
   if (getMana() < 0) {
     sendTo("You lack the mana to split the earth.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (argument && *argument) {
@@ -48,20 +48,20 @@ int TBeing::doEarthmaw(const char* argument) {
   } else {
     if (!fight()) {
       sendTo("Who do you want to call the earthmaw upon?\n\r");
-      return FALSE;
+      return false;
     } else
       victim = fight();
   }
 
-  if (victim == NULL) {
+  if (victim == nullptr) {
     sendTo("There is no one by that name here.\n\r");
-    return FALSE;
+    return false;
   } else if (victim == this) {
     this->sendTo("Do you really want to call the earthmaw upon yourself??\n\r");
-    return FALSE;
+    return false;
   } else if (victim->isFlying()) {
     sendTo("You cannot call the earthmaw upon someone in the air.");
-    return FALSE;
+    return false;
   }
 
   int lev = getSkillLevel(SPELL_EARTHMAW);
@@ -71,7 +71,7 @@ int TBeing::doEarthmaw(const char* argument) {
     getSkillDam(victim, SPELL_EARTHMAW, lev, getAdvLearning(SPELL_EARTHMAW));
 
   if (!useComponent(findComponent(SPELL_EARTHMAW), this, CHECK_ONLY_NO))
-    return FALSE;
+    return false;
 
   addToWait((int)combatRound(discArray[SPELL_EARTHMAW]->lag));
   reconcileHurt(victim, discArray[SPELL_EARTHMAW]->alignMod);
@@ -81,47 +81,47 @@ int TBeing::doEarthmaw(const char* argument) {
       CS(SPELL_EARTHMAW);
       dam *= 2;
       act("<Y>An incredibly large fissure opens up in the ground below you!<1>",
-        FALSE, this, NULL, victim, TO_VICT);
+        false, this, nullptr, victim, TO_VICT);
       act(
         "<Y>An incredibly large fissure opens up in the ground below "
         "$N<Y><o>!<1>",
-        FALSE, this, NULL, victim, TO_NOTVICT);
+        false, this, nullptr, victim, TO_NOTVICT);
       act(
         "<Y>An incredibly large fissure opens up in the ground below "
         "$N<Y><o>!<1>",
-        FALSE, this, NULL, victim, TO_CHAR);
+        false, this, nullptr, victim, TO_CHAR);
     } else {
-      act("<o>A large fissure opens up in the ground below you!<1>", FALSE,
-        this, NULL, victim, TO_VICT);
-      act("<o>A large fissure opens up in the ground below $N<1><o>!<1>", FALSE,
-        this, NULL, victim, TO_NOTVICT);
-      act("<o>A large fissure opens up in the ground below $N<1><o>!<1>", FALSE,
-        this, NULL, victim, TO_CHAR);
+      act("<o>A large fissure opens up in the ground below you!<1>", false,
+        this, nullptr, victim, TO_VICT);
+      act("<o>A large fissure opens up in the ground below $N<1><o>!<1>", false,
+        this, nullptr, victim, TO_NOTVICT);
+      act("<o>A large fissure opens up in the ground below $N<1><o>!<1>", false,
+        this, nullptr, victim, TO_CHAR);
     }
 
     if ((horsie = dynamic_cast<TBeing*>(victim->riding))) {
-      act("$N collapses beneath $n as the $g gives way!", TRUE, victim, 0,
+      act("$N collapses beneath $n as the $g gives way!", true, victim, 0,
         horsie, TO_ROOM);
-      act("$N collapses beneath you as the $g gives way!", TRUE, victim, 0,
+      act("$N collapses beneath you as the $g gives way!", true, victim, 0,
         horsie, TO_CHAR);
       victim->fallOffMount(victim->riding, POSITION_SITTING);
 
-      act("<o>$N<1><o> tumbles into the fissure!<1>", FALSE, this, NULL, horsie,
+      act("<o>$N<1><o> tumbles into the fissure!<1>", false, this, nullptr, horsie,
         TO_CHAR);
-      act("<o>$N<1><o> tumbles into the fissure!<1>", FALSE, this, NULL, horsie,
+      act("<o>$N<1><o> tumbles into the fissure!<1>", false, this, nullptr, horsie,
         TO_NOTVICT);
-      act("<o>You tumble into the fissure!<1>", FALSE, this, NULL, horsie,
+      act("<o>You tumble into the fissure!<1>", false, this, nullptr, horsie,
         TO_VICT);
     }
 
     act(
       "<o>$N<1><o> tumbles into the fissure, which collapses on top of $m!<1>",
-      FALSE, this, NULL, victim, TO_CHAR);
+      false, this, nullptr, victim, TO_CHAR);
     act(
       "<o>$N<1><o> tumbles into the fissure, which collapses on top of $m!<1>",
-      FALSE, this, NULL, victim, TO_NOTVICT);
+      false, this, nullptr, victim, TO_NOTVICT);
     act("<o>You tumble into the fissure, which collapses on top of you!<1>",
-      FALSE, this, NULL, victim, TO_VICT);
+      false, this, nullptr, victim, TO_VICT);
 
     if (horsie && this->reconcileDamage(horsie, dam, SPELL_EARTHMAW) == -1) {
       delete horsie;
@@ -133,8 +133,8 @@ int TBeing::doEarthmaw(const char* argument) {
     return SPELL_SUCCESS;
 
   } else {
-    act("You fail to call the earthmaw.", FALSE, this, NULL, victim, TO_CHAR);
-    act("$n fails to call the earthmaw.", FALSE, this, NULL, victim, TO_ROOM);
+    act("You fail to call the earthmaw.", false, this, nullptr, victim, TO_CHAR);
+    act("$n fails to call the earthmaw.", false, this, nullptr, victim, TO_ROOM);
 
     return SPELL_FAIL;
   }
@@ -149,25 +149,25 @@ int thornflesh(TBeing* caster) {
     caster->nothingHappens();
     return SPELL_FAIL;
   }
-  if (!bPassShamanChecks(caster, SPELL_THORNFLESH, NULL))
-    return FALSE;
+  if (!bPassShamanChecks(caster, SPELL_THORNFLESH, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_THORNFLESH]->lag;
   taskDiffT diff = discArray[SPELL_THORNFLESH]->task;
 
-  start_cast(caster, caster, NULL, caster->roomp, SPELL_THORNFLESH, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, caster, nullptr, caster->roomp, SPELL_THORNFLESH, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castThornflesh(TBeing* caster) {
   int ret, level;
 
   if (caster && caster->affectedBySpell(SPELL_THORNFLESH)) {
-    act("You flesh is armored well enough.", FALSE, caster, NULL, 0, TO_CHAR);
+    act("You flesh is armored well enough.", false, caster, nullptr, 0, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
 
   level = caster->getSkillLevel(SPELL_THORNFLESH);
@@ -201,15 +201,15 @@ int thornflesh(TBeing* caster, int level, short bKnown) {
       case CRIT_S_TRIPLE:
         CS(SPELL_THORNFLESH);
         aff.duration *= 2;
-        act("LARGE thorns emerge from your body!", FALSE, caster, 0, 0, TO_CHAR,
+        act("LARGE thorns emerge from your body!", false, caster, 0, 0, TO_CHAR,
           ANSI_ORANGE);
-        act("LARGE thorns emerge from $n's body!", FALSE, caster, 0, 0, TO_ROOM,
+        act("LARGE thorns emerge from $n's body!", false, caster, 0, 0, TO_ROOM,
           ANSI_ORANGE);
         break;
       default:
-        act("Thorns emerge from your body!", FALSE, caster, 0, 0, TO_CHAR,
+        act("Thorns emerge from your body!", false, caster, 0, 0, TO_CHAR,
           ANSI_ORANGE);
-        act("Thorns emerge from $n's body!", FALSE, caster, 0, 0, TO_ROOM,
+        act("Thorns emerge from $n's body!", false, caster, 0, 0, TO_ROOM,
           ANSI_ORANGE);
         break;
     }
@@ -230,11 +230,11 @@ static bool canBeLunged(TBeing* caster, TBeing* victim) {
         !(victim->affectedBySpell(SPELL_AQUALUNG) ||
           victim->affectedBySpell(SPELL_BREATH_OF_SARAHAGE)))) {
     if (caster != victim)
-      act("$N already has the ability to breathe underwater.", FALSE, caster,
-        NULL, victim, TO_CHAR);
+      act("$N already has the ability to breathe underwater.", false, caster,
+        nullptr, victim, TO_CHAR);
     else
-      act("You already have the ability to breathe underwater.", FALSE, caster,
-        NULL, victim, TO_CHAR);
+      act("You already have the ability to breathe underwater.", false, caster,
+        nullptr, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return true;
   }
@@ -245,7 +245,7 @@ int aqualung(TBeing* caster, TBeing* victim, int level, short bKnown) {
   affectedData aff;
 
   if (canBeLunged(caster, victim))
-    return FALSE;
+    return false;
 
   if (caster->bSuccess(bKnown, SPELL_AQUALUNG)) {
     caster->reconcileHelp(victim, discArray[SPELL_AQUALUNG]->alignMod);
@@ -274,13 +274,13 @@ int aqualung(TBeing* caster, TBeing* victim, int level, short bKnown) {
       return SPELL_FALSE;
     }
 
-    act("A transparent globe surrounds your head!", TRUE, victim, NULL, NULL,
+    act("A transparent globe surrounds your head!", true, victim, nullptr, nullptr,
       TO_CHAR, ANSI_BLUE);
-    act("A transparent globe surrounds $N's head!", TRUE, caster, NULL, victim,
+    act("A transparent globe surrounds $N's head!", true, caster, nullptr, victim,
       TO_NOTVICT, ANSI_BLUE);
     if (victim != caster)
-      act("You bestow upon $N the ability to breathe water!", TRUE, caster,
-        NULL, victim, TO_CHAR, ANSI_BLUE);
+      act("You bestow upon $N the ability to breathe water!", true, caster,
+        nullptr, victim, TO_CHAR, ANSI_BLUE);
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();
@@ -296,17 +296,17 @@ int aqualung(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (canBeLunged(caster, victim))
-    return FALSE;
+    return false;
 
   if (!bPassShamanChecks(caster, SPELL_AQUALUNG, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_AQUALUNG]->lag;
   diff = discArray[SPELL_AQUALUNG]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_AQUALUNG, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_AQUALUNG, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castAqualung(TBeing* caster, TBeing* victim) {
@@ -318,7 +318,7 @@ int castAqualung(TBeing* caster, TBeing* victim) {
   if ((ret = aqualung(caster, victim, level, bKnown)) == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }
 
 // END AQUALUNG
@@ -329,7 +329,7 @@ int shadowWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
 #if 0
   if (victim->affectedBySpell(SPELL_SHADOW_WALK)) {
     char buf[256];
-    act("You already walk among the shadows.", FALSE, caster, NULL, victim, 
+    act("You already walk among the shadows.", false, caster, nullptr, victim,
 TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -380,9 +380,9 @@ void shadowWalk(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
   if (ret == SPELL_SUCCESS) {
 #if 0
-    act("$n becomes darker and walks a little swifter!", FALSE, victim, NULL, NULL,
+    act("$n becomes darker and walks a little swifter!", false, victim, nullptr, nullptr,
                  TO_ROOM, ANSI_GREEN);
-    act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR,
+    act("You now walk among the shadows!", false, victim, nullptr, nullptr, TO_CHAR,
                  ANSI_GREEN);
 #endif
   } else {
@@ -394,23 +394,23 @@ int shadowWalk(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_SHADOW_WALK, victim))
-    return FALSE;
+    return false;
 
 #if 0
   if (victim->affectedBySpell(SPELL_SHADOW_WALK)) {
     char buf[256];
-    act("You already are walking among the shadows.", FALSE, caster, NULL, victim, 
+    act("You already are walking among the shadows.", false, caster, nullptr, victim,
 TO_CHAR);
-    return FALSE;
+    return false;
   }
 #endif
 
   lag_t rounds = discArray[SPELL_SHADOW_WALK]->lag;
   diff = discArray[SPELL_SHADOW_WALK]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_SHADOW_WALK, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_SHADOW_WALK, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castShadowWalk(TBeing* caster, TBeing* victim) {
@@ -420,15 +420,15 @@ int castShadowWalk(TBeing* caster, TBeing* victim) {
   int ret = shadowWalk(caster, victim, level, bKnown);
   if (ret == SPELL_SUCCESS) {
 #if 0
-    act("$n becomes dark and walks a little swifter!", FALSE, victim, NULL, NULL, 
+    act("$n becomes dark and walks a little swifter!", false, victim, nullptr, nullptr,
 TO_ROOM, ANSI_GREEN);
-    act("You now walk among the shadows!", FALSE, victim, NULL, NULL, TO_CHAR, 
+    act("You now walk among the shadows!", false, victim, nullptr, nullptr, TO_CHAR,
 ANSI_GREEN);
 #endif
   } else {
     caster->nothingHappens();
   }
-  return TRUE;
+  return true;
 }
 
 // END SHADOW WALK
@@ -460,13 +460,13 @@ int celerite(TBeing* caster, TBeing* victim, int level, short bKnown) {
       return SPELL_FALSE;
     }
 
-    act("$N moves more easily.", FALSE, caster, NULL, victim, TO_NOTVICT,
+    act("$N moves more easily.", false, caster, nullptr, victim, TO_NOTVICT,
       ANSI_YELLOW_BOLD);
-    act("The power of the loa takes dominion inside of you!", FALSE, victim,
-      NULL, NULL, TO_CHAR, ANSI_YELLOW_BOLD);
+    act("The power of the loa takes dominion inside of you!", false, victim,
+      nullptr, nullptr, TO_CHAR, ANSI_YELLOW_BOLD);
     return SPELL_SUCCESS;
   } else {
-    act("The loa ignore your unfaithful request!", FALSE, caster, NULL, victim,
+    act("The loa ignore your unfaithful request!", false, caster, nullptr, victim,
       TO_CHAR, ANSI_YELLOW);
     caster->addToLifeforce(-10);
     caster->nothingHappens(SILENT_YES);
@@ -478,14 +478,14 @@ int celerite(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassShamanChecks(caster, SPELL_CELERITE, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_CELERITE]->lag;
   diff = discArray[SPELL_CELERITE]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_CELERITE, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_CELERITE, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 void celerite(TBeing* caster, TBeing* victim, TMagicItem* obj) {
@@ -501,5 +501,5 @@ int castCelerite(TBeing* caster, TBeing* victim) {
   if ((ret = celerite(caster, victim, level, bKnown)) == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }

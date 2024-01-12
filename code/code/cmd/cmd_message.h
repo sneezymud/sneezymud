@@ -4,7 +4,7 @@
 //
 // $Log: cmd_message.h,v $
 // Revision 5.2  2003/03/13 22:40:52  peel
-// added sstring class, same as string but takes NULL as an empty string
+// added sstring class, same as string but takes nullptr as an empty string
 // replaced all uses of string to sstring
 //
 // Revision 5.1.1.3  2001/02/08 08:02:19  cosmo
@@ -93,7 +93,7 @@ class TMessages {
     // Set message type to message
     void operator()(messageTypeT, sstring);
     // Sets the fields in message  [Call this to actually Get the messages]
-    sstring operator()(messageTypeT, TThing* = NULL, const char* = NULL,
+    sstring operator()(messageTypeT, TThing* = nullptr, const char* = nullptr,
       bool = true) const;
     // Used by  : Get message from type
     const sstring& operator[](messageTypeT) const;

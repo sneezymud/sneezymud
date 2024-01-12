@@ -114,14 +114,14 @@ int identify(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_IDENTIFY, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_IDENTIFY]->lag;
   diff = discArray[SPELL_IDENTIFY]->task;
 
-  start_cast(caster, NULL, obj, NULL, SPELL_IDENTIFY, diff, 2, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, nullptr, SPELL_IDENTIFY, diff, 2, "", rounds,
+    caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castIdentify(TBeing* caster, TObj* obj) {
@@ -129,9 +129,9 @@ int castIdentify(TBeing* caster, TObj* obj) {
 
   level = caster->getSkillLevel(SPELL_IDENTIFY);
 
-  act("$n studies $p intently.", FALSE, caster, obj, NULL, TO_ROOM);
+  act("$n studies $p intently.", false, caster, obj, nullptr, TO_ROOM);
   identify(caster, obj, level, caster->getSkillValue(SPELL_IDENTIFY));
-  return TRUE;
+  return true;
 }
 
 static sstring identifyBeingStuff(const TBeing* caster, TBeing* victim,
@@ -215,14 +215,14 @@ int identify(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_IDENTIFY, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_IDENTIFY]->lag;
   diff = discArray[SPELL_IDENTIFY]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_IDENTIFY, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_IDENTIFY, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castIdentify(TBeing* caster, TBeing* victim) {
@@ -241,7 +241,7 @@ void TObj::divinateMe(TBeing* caster) const {
 
 int divinationObj(TBeing* caster, const TObj* obj, int, short bKnown) {
   sstring buf;
-  int i, found = FALSE;
+  int i, found = false;
 
   if (caster->bSuccess(bKnown, SPELL_DIVINATION)) {
     buf = obj->shortDescr;
@@ -257,13 +257,13 @@ int divinationObj(TBeing* caster, const TObj* obj, int, short bKnown) {
     // buf=sprintbit(obj->obj_flags.bitvector, affected_bits);
     // buf+="\n\r";
     // caster->sendTo(buf);
-    found = FALSE;
+    found = false;
     for (i = 0; i < MAX_OBJ_AFFECT; i++) {
       if ((obj->affected[i].location != APPLY_NONE) &&
           (obj->affected[i].modifier || obj->affected[i].modifier2)) {
         if (!found) {
           caster->sendTo("It can affect you with:\n\r");
-          found = TRUE;
+          found = true;
         }
         if (obj->affected[i].location == APPLY_SPELL) {
           if (discArray[obj->affected[i].modifier])
@@ -336,14 +336,14 @@ int divinationObj(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_DIVINATION, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_DIVINATION]->lag;
   diff = discArray[SPELL_DIVINATION]->task;
 
-  start_cast(caster, NULL, obj, caster->roomp, SPELL_DIVINATION, diff, 2, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, caster->roomp, SPELL_DIVINATION, diff, 2, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castDivinationObj(TBeing* caster, const TObj* obj) {
@@ -351,7 +351,7 @@ int castDivinationObj(TBeing* caster, const TObj* obj) {
     caster->sendTo("Shame, Shame.  You shouldn't do this...\n\r");
     vlogf(LOG_CHEAT, format("%s used Divination Object on: %s") %
                        caster->getName() % obj->getName());
-    return FALSE;
+    return false;
   }
 
   int ret = 0, level;
@@ -407,14 +407,14 @@ int divinationBeing(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_DIVINATION, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_DIVINATION]->lag;
   diff = discArray[SPELL_DIVINATION]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_DIVINATION, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_DIVINATION, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castDivinationBeing(TBeing* caster, TBeing* victim) {
@@ -422,7 +422,7 @@ int castDivinationBeing(TBeing* caster, TBeing* victim) {
     caster->sendTo("Shame, Shame.  You shouldn't do this...\n\r");
     vlogf(LOG_CHEAT, format("%s used Divination Being on: %s") %
                        caster->getName() % victim->getName());
-    return FALSE;
+    return false;
   }
 
   int ret = 0, level;
@@ -470,7 +470,7 @@ int eyesOfFertuman(TBeing* caster, TBeing* victim, int level, short bKnown) {
   int range = 0, bonus = 0;
   int searches = 1;
 
-  person = victim ? dynamic_cast<TPerson*>(victim) : NULL;
+  person = victim ? dynamic_cast<TPerson*>(victim) : nullptr;
 
   if (!person) {
     caster->sendTo("Whose item should the eyes search for?\n\r");
@@ -523,19 +523,19 @@ int eyesOfFertuman(TBeing* caster, TBeing* victim, int level, short bKnown) {
   }
 
   // send out the eyes!
-  act("You send a multitude of eyes to search for $N's belongings.", TRUE,
-    caster, NULL, person, TO_CHAR);
+  act("You send a multitude of eyes to search for $N's belongings.", true,
+    caster, nullptr, person, TO_CHAR);
   act("A mutitude of tiny swirling eyeballs stream forth from $n's hands!",
-    TRUE, caster, NULL, NULL, TO_ROOM);
+    true, caster, nullptr, nullptr, TO_ROOM);
 
   // send message about where they went
   act(format("The eyes of Fertuman swirl around $N's body, and then zoom off "
              "to the %s!") %
         exitNames,
-    TRUE, caster, NULL, person, TO_CHAR);
+    true, caster, nullptr, person, TO_CHAR);
   act(format("The eyeballs swirl around $N, and then zoom off to the %s!") %
         exitNames,
-    TRUE, caster, NULL, person, TO_ROOM);
+    true, caster, nullptr, person, TO_ROOM);
 
   // track our target, build up result strings
   findEquipment eqFinder(person);
@@ -551,7 +551,7 @@ int eyesOfFertuman(TBeing* caster, TBeing* victim, int level, short bKnown) {
     eqScan.setNoMob(false);
 
     dirTypeT dir = eqScan.findPath(caster->in_room, eqFinder);
-    if (dir == DIR_BOGUS || NULL == eqFinder.getFound(iSearch))
+    if (dir == DIR_BOGUS || nullptr == eqFinder.getFound(iSearch))
       break;  // stop if we didnt find anything, continue if we found something
 
     // found something, save this path
@@ -560,10 +560,10 @@ int eyesOfFertuman(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
   // send empty result to char
   if (eqFinder.getCount() <= 0) {
-    act("You are unable to detect anything with $N's signature.", TRUE, caster,
-      NULL, person, TO_CHAR);
-    act("$n finishs chanting and a frown appears on $s face.", TRUE, caster,
-      NULL, person, TO_ROOM);
+    act("You are unable to detect anything with $N's signature.", true, caster,
+      nullptr, person, TO_CHAR);
+    act("$n finishs chanting and a frown appears on $s face.", true, caster,
+      nullptr, person, TO_ROOM);
     return SPELL_SUCCESS;
   }
 
@@ -574,12 +574,12 @@ int eyesOfFertuman(TBeing* caster, TBeing* victim, int level, short bKnown) {
   // print out items, paths
   for (int iObj = 0; iObj < eqFinder.getCount(); iObj++) {
     TThing* t = eqFinder.getFound(iObj);
-    mud_assert(t != NULL, "Bad object found in Eyes of Fertuman");
+    mud_assert(t != nullptr, "Bad object found in Eyes of Fertuman");
     if (t->getName().empty())
       continue;
     caster->sendTo(t->getName());
     TThing* p = t->parent;
-    TBeing* b = p ? dynamic_cast<TBeing*>(p) : NULL;
+    TBeing* b = p ? dynamic_cast<TBeing*>(p) : nullptr;
     TThing* r = t->riding;
     TThing* e = t->equippedBy;
     TBeing* k = t->stuckIn;
@@ -600,7 +600,7 @@ int eyesOfFertuman(TBeing* caster, TBeing* victim, int level, short bKnown) {
   }
 
   // send result to room
-  act("$n finishes chanting and smiles to $mself.", TRUE, caster, NULL, NULL,
+  act("$n finishes chanting and smiles to $mself.", true, caster, nullptr, nullptr,
     TO_ROOM);
 
   return SPELL_SUCCESS;
@@ -611,7 +611,7 @@ int eyesOfFertuman(TBeing* caster, const char* tofind, int level, byte bKnown) {
   TObj* obj;
   TBeing* ch;
   int j = 0;
-  bool found = FALSE;
+  bool found = false;
   char capbuf[256], buf[256];
   char* chr;
   sstring mod_to_find;
@@ -680,43 +680,43 @@ int eyesOfFertuman(TBeing* caster, const char* tofind, int level, byte bKnown) {
         if (dynamic_cast<TBeing*>(obj->parent)) {
           if (strlen(caster->pers(obj->parent)) > 0) {
             strcpy(capbuf, obj->getName());
-            act("$p carried by $N.", TRUE, caster, obj, obj->parent, TO_CHAR);
-            found = TRUE;
+            act("$p carried by $N.", true, caster, obj, obj->parent, TO_CHAR);
+            found = true;
           }
         } else if (obj->equippedBy) {
           if (strlen(caster->pers(obj->equippedBy)) > 0) {
             strcpy(capbuf, obj->getName());
-            act("$p equipped by $N.", TRUE, caster, obj, obj->equippedBy,
+            act("$p equipped by $N.", true, caster, obj, obj->equippedBy,
               TO_CHAR);
-            found = TRUE;
+            found = true;
           }
         } else if (obj->parent) {
           strcpy(capbuf, obj->getName());
           strcpy(buf, obj->parent->getName());
-          act("$p in $N.", TRUE, caster, obj, obj->parent, TO_CHAR);
+          act("$p in $N.", true, caster, obj, obj->parent, TO_CHAR);
 
           if (obj->parent->parent &&
               dynamic_cast<TMonster*>(obj->parent->parent))
-            act("...carried by $N.", TRUE, caster, NULL, obj->parent->parent,
+            act("...carried by $N.", true, caster, nullptr, obj->parent->parent,
               TO_CHAR);
 
-          found = TRUE;
+          found = true;
         } else {
           strcpy(capbuf, obj->getName());
           sprintf(capbuf,
-            colorString(caster, caster->desc, capbuf, NULL, COLOR_OBJECTS, TRUE)
+            colorString(caster, caster->desc, capbuf, nullptr, COLOR_OBJECTS, true)
               .c_str());
           if (obj->in_room == Room::NOWHERE || !caster->canSee(obj)) {
-            act("$p is in use but you can't tell the location.", TRUE, caster,
-              obj, NULL, TO_CHAR);
+            act("$p is in use but you can't tell the location.", true, caster,
+              obj, nullptr, TO_CHAR);
           } else if (obj->inImperia() && !caster->isImmortal()) {
             continue;
           } else {
             if (IS_SET(caster->desc->plr_color, PLR_COLOR_ROOM_NAME)) {
-              if (hasColorStrings(NULL, obj->roomp->getName(), 2)) {
+              if (hasColorStrings(nullptr, obj->roomp->getName(), 2)) {
                 caster->sendTo(COLOR_ROOM_NAME,
                   format("%s is in %s.\n\r") % capbuf %
-                    caster->dynColorRoom(obj->roomp, 1, TRUE));
+                    caster->dynColorRoom(obj->roomp, 1, true));
               } else {
                 caster->sendTo(COLOR_ROOM_NAME,
                   format("%s is in %s%s%s.\n\r") % capbuf %
@@ -726,11 +726,11 @@ int eyesOfFertuman(TBeing* caster, const char* tofind, int level, byte bKnown) {
             } else {
               caster->sendTo(COLOR_BASIC,
                 format("%s is in %s%s%s.\n\r") % capbuf % caster->purple() %
-                  colorString(caster, caster->desc, obj->roomp->getName(), NULL,
-                    COLOR_NONE, TRUE) %
+                  colorString(caster, caster->desc, obj->roomp->getName(), nullptr,
+                    COLOR_NONE, true) %
                   caster->norm());
             }
-            found = TRUE;
+            found = true;
           }
         }
         j--;
@@ -745,19 +745,19 @@ int eyesOfFertuman(TBeing* caster, const char* tofind, int level, byte bKnown) {
 #if 1
         strcpy(capbuf, ch->getName());
         sprintf(capbuf,
-          colorString(caster, caster->desc, capbuf, NULL, COLOR_MOBS, TRUE)
+          colorString(caster, caster->desc, capbuf, nullptr, COLOR_MOBS, true)
             .c_str());
         if (ch->in_room == Room::NOWHERE || !caster->canSee(ch)) {
-          act("$N is somewhere but you can't tell the location.", TRUE, caster,
-            NULL, ch, TO_CHAR);
+          act("$N is somewhere but you can't tell the location.", true, caster,
+            nullptr, ch, TO_CHAR);
         } else if (ch->inImperia() && !caster->isImmortal()) {
           continue;
         } else {
           if (IS_SET(caster->desc->plr_color, PLR_COLOR_ROOM_NAME)) {
-            if (hasColorStrings(NULL, ch->roomp->getName(), 2)) {
+            if (hasColorStrings(nullptr, ch->roomp->getName(), 2)) {
               caster->sendTo(COLOR_ROOM_NAME,
                 format("%s is in %s.\n\r") % capbuf %
-                  caster->dynColorRoom(ch->roomp, 1, TRUE));
+                  caster->dynColorRoom(ch->roomp, 1, true));
             } else {
               caster->sendTo(COLOR_ROOM_NAME,
                 format("%s is in %s%s%s.\n\r") % capbuf %
@@ -767,11 +767,11 @@ int eyesOfFertuman(TBeing* caster, const char* tofind, int level, byte bKnown) {
           } else {
             caster->sendTo(COLOR_BASIC,
               format("%s is in %s%s%s.\n\r") % capbuf % caster->purple() %
-                colorString(caster, caster->desc, ch->roomp->getName(), NULL,
-                  COLOR_NONE, TRUE) %
+                colorString(caster, caster->desc, ch->roomp->getName(), nullptr,
+                  COLOR_NONE, true) %
                 caster->norm());
           }
-          found = TRUE;
+          found = true;
         }
 #else
         // old
@@ -784,12 +784,12 @@ int eyesOfFertuman(TBeing* caster, const char* tofind, int level, byte bKnown) {
       }
     }
     if (found) {
-      act("$n finishes chanting and smiles to $mself.", TRUE, caster, NULL,
-        NULL, TO_ROOM);
+      act("$n finishes chanting and smiles to $mself.", true, caster, nullptr,
+        nullptr, TO_ROOM);
     } else {
       caster->sendTo("You are unable to detect anything like that.\n\r");
-      act("$n finishs chanting and a frown appears on $s face.", TRUE, caster,
-        NULL, NULL, TO_ROOM);
+      act("$n finishs chanting and a frown appears on $s face.", true, caster,
+        nullptr, nullptr, TO_ROOM);
     }
     return SPELL_SUCCESS;
   } else {
@@ -803,15 +803,15 @@ int eyesOfFertuman(TBeing* caster, TBeing* v) {
   taskDiffT diff;
 
   if (!v)
-    return FALSE;
+    return false;
 
   //  if (caster->affectedBySpell(SPELL_BLINDNESS)) {
   if (caster->isAffected(AFF_BLIND) && !caster->isAffected(AFF_TRUE_SIGHT) &&
       !caster->isAffected(AFF_CLARITY)) {
-    act("How do you expect to see while you are blind?", FALSE, caster, NULL,
-      NULL, TO_CHAR);
+    act("How do you expect to see while you are blind?", false, caster, nullptr,
+      nullptr, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
 
   if (caster->GetMaxLevel() > MAX_MORT &&
@@ -820,18 +820,18 @@ int eyesOfFertuman(TBeing* caster, TBeing* v) {
     vlogf(LOG_CHEAT, format("%s using %s to locate %s's gear") %
                        caster->getName() %
                        discArray[SPELL_EYES_OF_FERTUMAN]->name % v->name);
-    return FALSE;
+    return false;
   }
 
-  if (!bPassMageChecks(caster, SPELL_EYES_OF_FERTUMAN, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_EYES_OF_FERTUMAN, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_EYES_OF_FERTUMAN]->lag;
   diff = discArray[SPELL_EYES_OF_FERTUMAN]->task;
 
-  start_cast(caster, v, NULL, caster->roomp, SPELL_EYES_OF_FERTUMAN, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, v, nullptr, caster->roomp, SPELL_EYES_OF_FERTUMAN, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castEyesOfFertuman(TBeing* caster, TBeing* v) {
@@ -839,7 +839,7 @@ int castEyesOfFertuman(TBeing* caster, TBeing* v) {
 
   if (!v) {
     vlogf(LOG_BUG, "Somehow someone lost the argument in eyes of fert");
-    return FALSE;
+    return false;
   }
 
   level = caster->getSkillLevel(SPELL_EYES_OF_FERTUMAN);
@@ -851,7 +851,7 @@ int castEyesOfFertuman(TBeing* caster, TBeing* v) {
 
 int TThing::powerstoneMe(TBeing* caster, int, short) {
   act("It is too late before you realize your blunder -- that's no opal!",
-    FALSE, caster, NULL, NULL, TO_CHAR);
+    false, caster, nullptr, nullptr, TO_CHAR);
   caster->nothingHappens(SILENT_YES);
   return SPELL_FAIL;
 }
@@ -861,8 +861,8 @@ int TOpal::powerstoneMe(TBeing* caster, int, short bKnown) {
 
   if ((psGetStrength() == psGetCarats()) || (psGetConsecFails() >= 2)) {
     // But the thing was already maxed out
-    act("You sense that this powerstone is at full possible strength.", FALSE,
-      caster, NULL, NULL, TO_CHAR);
+    act("You sense that this powerstone is at full possible strength.", false,
+      caster, nullptr, nullptr, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
   }
@@ -889,18 +889,18 @@ int TOpal::powerstoneMe(TBeing* caster, int, short bKnown) {
 
     if (psGetStrength() > 1) {
       act("The glow surrounding the powerstone intensifies for a brief moment!",
-        FALSE, caster, NULL, NULL, TO_CHAR);
+        false, caster, nullptr, nullptr, TO_CHAR);
       act(
         "The glow surrounding $n's powerstone intensifies for a brief moment!",
-        FALSE, caster, NULL, NULL, TO_ROOM);
+        false, caster, nullptr, nullptr, TO_ROOM);
       act("You have succeeded in increasing the strength of the powerstone!",
-        FALSE, caster, NULL, NULL, TO_CHAR);
+        false, caster, nullptr, nullptr, TO_CHAR);
     } else {
       // ch has turned the opal into a powerstone
-      act("You have created a powerstone -- $p begins to glow softly!", FALSE,
-        caster, this, NULL, TO_CHAR);
+      act("You have created a powerstone -- $p begins to glow softly!", false,
+        caster, this, nullptr, TO_CHAR);
       act("$n seems to have somehow enchanted $p! It begins to glow softly!",
-        FALSE, caster, this, NULL, TO_ROOM);
+        false, caster, this, nullptr, TO_ROOM);
       // init the four values
       psSetConsecFails(0);
       buf = name;
@@ -928,9 +928,9 @@ int TOpal::powerstoneMe(TBeing* caster, int, short bKnown) {
         psAddConsecFails(1);
 
         if (psGetConsecFails() >= 2) {
-          act("Oops. You failed twice in a row on this powerstone.", FALSE,
-            caster, NULL, NULL, TO_CHAR);
-          act("It can no longer grow in strength.", FALSE, caster, NULL, NULL,
+          act("Oops. You failed twice in a row on this powerstone.", false,
+            caster, nullptr, nullptr, TO_CHAR);
+          act("It can no longer grow in strength.", false, caster, nullptr, nullptr,
             TO_CHAR);
         }
         return SPELL_CRIT_FAIL;
@@ -949,14 +949,14 @@ int powerstone(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_POWERSTONE, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_POWERSTONE]->lag;
   diff = discArray[SPELL_POWERSTONE]->task;
 
-  start_cast(caster, NULL, obj, NULL, SPELL_POWERSTONE, diff, 2, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, nullptr, SPELL_POWERSTONE, diff, 2, "", rounds,
+    caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castPowerstone(TBeing* caster, TObj* obj) {
@@ -969,7 +969,7 @@ int castPowerstone(TBeing* caster, TObj* obj) {
 }
 
 int shatter(TBeing* caster, TBeing* victim, int level, short bKnown) {
-  bool scrap_it = FALSE;
+  bool scrap_it = false;
   wearSlotT hand;
 
   if (caster->isNotPowerful(victim, level, SPELL_SHATTER, SILENT_NO)) {
@@ -978,7 +978,7 @@ int shatter(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
   // success = scrapped item.  no item damage allowed in arena
   if (caster->roomp && caster->roomp->isRoomFlag(ROOM_ARENA)) {
-    act("A magic power prevents anything from happening here.", FALSE, caster,
+    act("A magic power prevents anything from happening here.", false, caster,
       0, 0, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;
@@ -992,7 +992,7 @@ int shatter(TBeing* caster, TBeing* victim, int level, short bKnown) {
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
         CS(SPELL_SHATTER);
-        scrap_it = TRUE;
+        scrap_it = true;
         break;
       case CRIT_S_NONE:
         break;
@@ -1006,7 +1006,7 @@ int shatter(TBeing* caster, TBeing* victim, int level, short bKnown) {
         ;
       victim->shatterWeapon(hand, scrap_it);
     } else
-      act("But $N isn't holding anything!", FALSE, caster, NULL, victim,
+      act("But $N isn't holding anything!", false, caster, nullptr, victim,
         TO_CHAR);
 
     return SPELL_SUCCESS;
@@ -1015,10 +1015,10 @@ int shatter(TBeing* caster, TBeing* victim, int level, short bKnown) {
       case CRIT_F_HITSELF:
         CF(SPELL_SHATTER);
         act("Oops! You have a terrible feeling something went horribly wrong!",
-          FALSE, caster, NULL, NULL, TO_CHAR);
-        act("You've cast your 'shatter' on yourself!", FALSE, caster, NULL,
-          NULL, TO_CHAR);
-        act("$n's spell backfires on $m!", FALSE, caster, NULL, NULL, TO_ROOM);
+          false, caster, nullptr, nullptr, TO_CHAR);
+        act("You've cast your 'shatter' on yourself!", false, caster, nullptr,
+          nullptr, TO_CHAR);
+        act("$n's spell backfires on $m!", false, caster, nullptr, nullptr, TO_ROOM);
         shatter(caster, caster, 100, 100);
         return SPELL_CRIT_FAIL;
         break;
@@ -1034,14 +1034,14 @@ int shatter(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_SHATTER, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_SHATTER]->lag;
   diff = discArray[SPELL_SHATTER]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_SHATTER, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_SHATTER, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castShatter(TBeing* caster, TBeing* victim) {
@@ -1058,7 +1058,7 @@ int farlook(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
   int target;
   char buf1[128];
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* ch;
 
   if (caster->isNotPowerful(victim, level, SPELL_FARLOOK, SILENT_NO))
@@ -1131,11 +1131,11 @@ int farlook(TBeing* caster, TBeing* victim, int level, short bKnown) {
     act(
       "You conjure up a large cloud which shimmers slightly before "
       "revealing...",
-      FALSE, caster, 0, 0, TO_CHAR);
+      false, caster, 0, 0, TO_CHAR);
     act(
       "$n conjures up a large cloud which shimmers slightly before "
       "revealing...",
-      FALSE, caster, 0, 0, TO_ROOM);
+      false, caster, 0, 0, TO_ROOM);
 
     for (StuffIter it = caster->roomp->stuff.begin();
          it != caster->roomp->stuff.end() && (t = *it); ++it)
@@ -1149,7 +1149,7 @@ int farlook(TBeing* caster, TBeing* victim, int level, short bKnown) {
     sprintf(buf1, "%d look", target);
     for (unsigned int tBeingIndex = 0; tBeingIndex < tBeing.size();
          tBeingIndex++) {
-      int tBrief = FALSE;
+      int tBrief = false;
 
       if ((tBrief = tBeing[tBeingIndex]->isPlayerAction(PLR_BRIEF)))
         tBeing[tBeingIndex]->remPlayerAction(PLR_BRIEF);
@@ -1168,11 +1168,11 @@ int farlook(TBeing* caster, TBeing* victim, int level, short bKnown) {
         act(
           "You conjure up a large cloud which shimmers slightly before "
           "revealing...",
-          FALSE, caster, 0, 0, TO_CHAR);
+          false, caster, 0, 0, TO_CHAR);
         act(
           "$n conjures up a large cloud which shimmers slightly before "
           "revealing...",
-          FALSE, caster, 0, 0, TO_ROOM);
+          false, caster, 0, 0, TO_ROOM);
         strcpy(buf1, "70 look");
         caster->doAt(buf1, true);
         return SPELL_CRIT_FAIL;
@@ -1192,19 +1192,19 @@ int farlook(TBeing* caster, TBeing* victim) {
 
   if (caster->affectedBySpell(SPELL_BLINDNESS)) {
     caster->nothingHappens();
-    return TRUE;
+    return true;
   }
 
   if (!bPassMageChecks(caster, SPELL_FARLOOK, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_FARLOOK]->lag;
   diff = discArray[SPELL_FARLOOK]->task;
 
-  start_cast(caster, victim, NULL, NULL, SPELL_FARLOOK, diff, 1, "", rounds,
-    caster->in_room, 0, CASTFLAG_MAYBE_SENSE_CAST, TRUE, 0);
+  start_cast(caster, victim, nullptr, nullptr, SPELL_FARLOOK, diff, 1, "", rounds,
+    caster->in_room, 0, CASTFLAG_MAYBE_SENSE_CAST, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castFarlook(TBeing* caster, TBeing* victim) {
@@ -1270,7 +1270,7 @@ int TObj::illuminateMe(TBeing* caster, int level, short bKnown) {
         act(
           "The item's energy begins to seep out of the item as it starts to "
           "glow.",
-          FALSE, caster, 0, 0, TO_ROOM);
+          false, caster, 0, 0, TO_ROOM);
         return SPELL_SUCCESS;
       }
     }
@@ -1293,14 +1293,14 @@ int illuminate(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_ILLUMINATE, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_ILLUMINATE]->lag;
   diff = discArray[SPELL_ILLUMINATE]->task;
 
-  start_cast(caster, NULL, obj, caster->roomp, SPELL_ILLUMINATE, diff, 2, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, caster->roomp, SPELL_ILLUMINATE, diff, 2, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castIlluminate(TBeing* caster, TObj* obj) {
@@ -1340,7 +1340,7 @@ int detectMagic(TBeing* caster, TBeing* victim, int level, short bKnown) {
     }
 
     victim->sendTo("Your eyes tingle.\n\r");
-    act("$n's eyes twinkle for a brief moment.", FALSE, victim, NULL, NULL,
+    act("$n's eyes twinkle for a brief moment.", false, victim, nullptr, nullptr,
       TO_ROOM);
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
@@ -1364,14 +1364,14 @@ int detectMagic(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_DETECT_MAGIC, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_DETECT_MAGIC]->lag;
   diff = discArray[SPELL_DETECT_MAGIC]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_DETECT_MAGIC, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_DETECT_MAGIC, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castDetectMagic(TBeing* caster, TBeing* victim) {
@@ -1414,8 +1414,8 @@ void dispelMagic(TBeing* caster, TObj* tar_obj, TMagicItem* obj) {
 
   ret = dispelMagic(caster, tar_obj, level, obj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$p dispels the magical forces affecting $n...", FALSE, tar_obj, obj,
-      NULL, TO_ROOM);
+    act("$p dispels the magical forces affecting $n...", false, tar_obj, obj,
+      nullptr, TO_ROOM);
   }
 }
 
@@ -1423,14 +1423,14 @@ int dispelMagic(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_DISPEL_MAGIC, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_DISPEL_MAGIC]->lag;
   diff = discArray[SPELL_DISPEL_MAGIC]->task;
 
-  start_cast(caster, NULL, obj, caster->roomp, SPELL_DISPEL_MAGIC, diff, 2, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, caster->roomp, SPELL_DISPEL_MAGIC, diff, 2, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castDispelMagic(TBeing* caster, TObj* obj) {
@@ -1442,9 +1442,9 @@ int castDispelMagic(TBeing* caster, TObj* obj) {
     dispelMagic(caster, obj, level, caster->getSkillValue(SPELL_DISPEL_MAGIC));
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("You dispel the magical forces affecting $N...", FALSE, caster, NULL,
+    act("You dispel the magical forces affecting $N...", false, caster, nullptr,
       obj, TO_CHAR);
-    act("$n dispels the magical forces affecting $N...", FALSE, caster, NULL,
+    act("$n dispels the magical forces affecting $N...", false, caster, nullptr,
       obj, TO_ROOM);
   }
   return ret;
@@ -1462,17 +1462,17 @@ int dispelMagic(TBeing* caster, TBeing* victim, int, short bKnown) {
 }
 
 int dispelMagic(TBeing* caster, TBeing* victim, TMagicItem* obj) {
-  mud_assert(caster != NULL, "dispelMagic(): no caster");
-  mud_assert(victim != NULL, "dispelMagic(): no victim");
+  mud_assert(caster != nullptr, "dispelMagic(): no caster");
+  mud_assert(victim != nullptr, "dispelMagic(): no victim");
 
   int level = obj->getMagicLevel();
 
   int ret = dispelMagic(caster, victim, level, obj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$p dispels the magical forces affecting you...", FALSE, victim, obj,
-      NULL, TO_CHAR);
-    act("$p dispels the magical forces affecting $n...", FALSE, victim, obj,
-      NULL, TO_ROOM);
+    act("$p dispels the magical forces affecting you...", false, victim, obj,
+      nullptr, TO_CHAR);
+    act("$p dispels the magical forces affecting $n...", false, victim, obj,
+      nullptr, TO_ROOM);
     int rc = generic_dispel_magic(caster, victim, level, caster->isImmortal());
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
@@ -1482,19 +1482,19 @@ int dispelMagic(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
 int dispelMagic(TBeing* caster, TBeing* victim) {
   if (!bPassMageChecks(caster, SPELL_DISPEL_MAGIC, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_DISPEL_MAGIC]->lag;
   taskDiffT diff = discArray[SPELL_DISPEL_MAGIC]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_DISPEL_MAGIC, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_DISPEL_MAGIC, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castDispelMagic(TBeing* caster, TBeing* victim) {
-  mud_assert(caster != NULL, "castDispelMagic(): no caster");
-  mud_assert(victim != NULL, "castDispelMagic(): no victim");
+  mud_assert(caster != nullptr, "castDispelMagic(): no caster");
+  mud_assert(victim != nullptr, "castDispelMagic(): no victim");
 
   int level = caster->getSkillLevel(SPELL_DISPEL_MAGIC);
   if (caster->isNotPowerful(victim, level, SPELL_DISPEL_MAGIC, SILENT_NO)) {
@@ -1506,33 +1506,33 @@ int castDispelMagic(TBeing* caster, TBeing* victim) {
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
     if (caster != victim) {
-      act("You dispel the magical forces affecting $N...", FALSE, caster, NULL,
+      act("You dispel the magical forces affecting $N...", false, caster, nullptr,
         victim, TO_CHAR);
-      act("$n dispels the magical forces affecting you...", FALSE, caster, NULL,
+      act("$n dispels the magical forces affecting you...", false, caster, nullptr,
         victim, TO_VICT);
-      act("$n dispels the magical forces affecting $N...", FALSE, caster, NULL,
+      act("$n dispels the magical forces affecting $N...", false, caster, nullptr,
         victim, TO_NOTVICT);
     } else {
-      act("You dispel the magical forces affecting you...", FALSE, caster, NULL,
+      act("You dispel the magical forces affecting you...", false, caster, nullptr,
         0, TO_CHAR);
-      act("$n dispels the magical forces affecting $m...", FALSE, caster, NULL,
+      act("$n dispels the magical forces affecting $m...", false, caster, nullptr,
         0, TO_ROOM);
     }
     int rc = generic_dispel_magic(caster, victim, level, caster->isImmortal());
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_VICT;
   }
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_VICT (vict)
 int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
   immortalTypeT immortal, safeTypeT safe) {
-  // caster might be NULL (death-time), however, in such cases immortal is
+  // caster might be nullptr (death-time), however, in such cases immortal is
   // generally true.  Some of the logic that follows doesn't check for !caster,
   // but uses immortal==true instead.
 
-  mud_assert(victim != NULL, "generic_dispel_magic(): no victim");
+  mud_assert(victim != nullptr, "generic_dispel_magic(): no victim");
 
   TMonster* tvm = dynamic_cast<TMonster*>(victim);
   spellNumT spell;
@@ -1693,7 +1693,7 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
       REMOVE_BIT(victim->specials.affectedBy, AFF_SANCTUARY);
       victim->sendTo(
         "You feel more vulnerable as your white aura slowly fades.\n\r");
-      act("The white glow around $n's body fades.", FALSE, victim, NULL, NULL,
+      act("The white glow around $n's body fades.", false, victim, nullptr, nullptr,
         TO_ROOM);
     }
     // aggressive Act
@@ -1702,7 +1702,7 @@ int generic_dispel_magic(TBeing* caster, TBeing* victim, int,
       caster->setVictFighting(victim);
     }
   }
-  return FALSE;
+  return false;
 }
 
 int enhanceWeapon(TBeing* caster, TObj* obj, int level, short bKnown) {
@@ -1722,58 +1722,58 @@ int enhanceWeapon(TBeing* caster, TMagicItem* usedobj, TObj* toenhance) {
   ret = enhanceWeapon(caster, toenhance, usedobj->getMagicLevel(),
     usedobj->getMagicLearnedness());
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$p pulses with powerful magical energy.", FALSE, caster, toenhance,
-      NULL, TO_CHAR);
-    act("$p pulses with powerful magical energy.", FALSE, caster, toenhance,
-      NULL, TO_ROOM);
+    act("$p pulses with powerful magical energy.", false, caster, toenhance,
+      nullptr, TO_CHAR);
+    act("$p pulses with powerful magical energy.", false, caster, toenhance,
+      nullptr, TO_ROOM);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-    act("A nasty odor eminates from $p, looks like a malfunction!", FALSE,
-      caster, usedobj, NULL, TO_CHAR);
-    act("A nasty odor eminates from $p, looks like a malfunction!", FALSE,
-      caster, usedobj, NULL, TO_CHAR);
+    act("A nasty odor eminates from $p, looks like a malfunction!", false,
+      caster, usedobj, nullptr, TO_CHAR);
+    act("A nasty odor eminates from $p, looks like a malfunction!", false,
+      caster, usedobj, nullptr, TO_CHAR);
     act(
       "$p flickers with a red light for a second, which then slowly fades "
       "away.",
-      FALSE, caster, toenhance, NULL, TO_CHAR);
+      false, caster, toenhance, nullptr, TO_CHAR);
     act(
       "$p flickers with a red light for a second, which then slowly fades "
       "away.",
-      FALSE, caster, toenhance, NULL, TO_ROOM);
+      false, caster, toenhance, nullptr, TO_ROOM);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL_2)) {
-    act("A nasty odor eminates from $p, looks like a malfunction!", FALSE,
-      caster, usedobj, NULL, TO_CHAR);
-    act("A nasty odor eminates from $p, looks like a malfunction!", FALSE,
-      caster, usedobj, NULL, TO_CHAR);
-    act("$p flares up in an explosion of white light!", FALSE, caster,
-      toenhance, NULL, TO_CHAR);
-    act("$p flares up in an explosion of white light!", FALSE, caster,
-      toenhance, NULL, TO_ROOM);
+    act("A nasty odor eminates from $p, looks like a malfunction!", false,
+      caster, usedobj, nullptr, TO_CHAR);
+    act("A nasty odor eminates from $p, looks like a malfunction!", false,
+      caster, usedobj, nullptr, TO_CHAR);
+    act("$p flares up in an explosion of white light!", false, caster,
+      toenhance, nullptr, TO_CHAR);
+    act("$p flares up in an explosion of white light!", false, caster,
+      toenhance, nullptr, TO_ROOM);
     return DELETE_ITEM;
   }
-  return FALSE;
+  return false;
 }
 
 int enhanceWeapon(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_ENHANCE_WEAPON, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_ENHANCE_WEAPON]->lag;
   diff = discArray[SPELL_ENHANCE_WEAPON]->task;
 
-  start_cast(caster, NULL, obj, caster->roomp, SPELL_ENHANCE_WEAPON, diff, 2,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, caster->roomp, SPELL_ENHANCE_WEAPON, diff, 2,
+    "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castEnhanceWeapon(TBeing* caster, TObj* obj) {
   int ret = 0, level;
 
   if (MAX_OBJ_AFFECT < 2)
-    return FALSE;
+    return false;
 
   level = caster->getSkillLevel(SPELL_ENHANCE_WEAPON);
 
@@ -1782,12 +1782,12 @@ int castEnhanceWeapon(TBeing* caster, TObj* obj) {
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
     act("$n draws some elemental magic from the ether and guides it into $p.",
-      FALSE, caster, obj, NULL, TO_ROOM);
+      false, caster, obj, nullptr, TO_ROOM);
     act("You draw some elemental magic from the ether and guide it into $p.",
-      FALSE, caster, obj, NULL, TO_CHAR);
-    act("$p begins to glow with a soft yellow light.", FALSE, caster, obj, NULL,
+      false, caster, obj, nullptr, TO_CHAR);
+    act("$p begins to glow with a soft yellow light.", false, caster, obj, nullptr,
       TO_CHAR);
-    act("$p begins to glow with a soft yellow light.", FALSE, caster, obj, NULL,
+    act("$p begins to glow with a soft yellow light.", false, caster, obj, nullptr,
       TO_ROOM);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {
@@ -1795,21 +1795,21 @@ int castEnhanceWeapon(TBeing* caster, TObj* obj) {
     act(
       "$p flickers with a red light for a second, which then slowly fades "
       "away.",
-      FALSE, caster, obj, NULL, TO_CHAR);
+      false, caster, obj, nullptr, TO_CHAR);
     act(
       "$p flickers with a red light for a second, which then slowly fades "
       "away.",
-      FALSE, caster, obj, NULL, TO_ROOM);
+      false, caster, obj, nullptr, TO_ROOM);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL_2)) {
     caster->spellMessUp(SPELL_ENHANCE_WEAPON);
-    act("$p flares up in an explosion of white light!", FALSE, caster, obj,
-      NULL, TO_CHAR);
-    act("$p flares up in an explosion of white light!", FALSE, caster, obj,
-      NULL, TO_ROOM);
+    act("$p flares up in an explosion of white light!", false, caster, obj,
+      nullptr, TO_CHAR);
+    act("$p flares up in an explosion of white light!", false, caster, obj,
+      nullptr, TO_ROOM);
     return DELETE_ITEM;
   }
-  return FALSE;
+  return false;
 }
 
 bool alchemy_create_deny(int numberx) {
@@ -1828,7 +1828,7 @@ bool alchemy_create_deny(int numberx) {
   for (zone = 0; zone < zone_table.size(); zone++) {
     if (zone_table[zone].top > oid.virt) {
       // the obj belongs to this zone
-      if (zone_table[zone].enabled == FALSE)
+      if (zone_table[zone].enabled == false)
         return true;
 
       break;
@@ -1913,7 +1913,7 @@ int materialize(TBeing* caster, TObj** obj, int, const char* name,
 
   caster->sendTo(
     "You throw the talens into the air and they wink out of existence.\n\r");
-  act("$n tosses some money into the air and it magically disappears.", TRUE,
+  act("$n tosses some money into the air and it magically disappears.", true,
     caster, 0, 0, TO_ROOM, ANSI_YELLOW);
   caster->addToMoney(-MATERIALIZE_PRICE, GOLD_HOSPITAL);
 
@@ -1958,11 +1958,11 @@ int materialize(TBeing* caster, TObj** obj, int, const char* name,
       }
     }
 
-    act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_ROOM);
-    act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_CHAR);
+    act("In a flash of light, $p appears.", true, caster, *obj, nullptr, TO_ROOM);
+    act("In a flash of light, $p appears.", true, caster, *obj, nullptr, TO_CHAR);
 
     if (grabbed)
-      act("You grab $p right out of the air.", TRUE, caster, *obj, NULL,
+      act("You grab $p right out of the air.", true, caster, *obj, nullptr,
         TO_CHAR);
 
     return SPELL_SUCCESS;
@@ -1973,41 +1973,41 @@ int materialize(TBeing* caster, TObj** obj, int, const char* name,
 }
 
 int materialize(TBeing* caster, const char* name) {
-  if (!bPassMageChecks(caster, SPELL_MATERIALIZE, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_MATERIALIZE, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_MATERIALIZE]->lag;
   taskDiffT diff = discArray[SPELL_MATERIALIZE]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_MATERIALIZE, diff, 2,
-    name, rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_MATERIALIZE, diff, 2,
+    name, rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castMaterialize(TBeing* caster, const char* name) {
   if (caster->getMoney() < MATERIALIZE_PRICE) {
     caster->sendTo("You don't have the money for that!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!name || !*name) {
     caster->sendTo("You need to specify an item.\n\r");
-    return FALSE;
+    return false;
   }
   if (strlen(name) < 3) {
     caster->sendTo("You must specify something more specific.\n\r");
-    return FALSE;
+    return false;
   }
 
   int level = caster->getSkillLevel(SPELL_MATERIALIZE);
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
 
-  act("$n claps $s hands together.", TRUE, caster, NULL, NULL, TO_ROOM);
-  act("You clap your hands together.", TRUE, caster, NULL, NULL, TO_CHAR);
+  act("$n claps $s hands together.", true, caster, nullptr, nullptr, TO_ROOM);
+  act("You clap your hands together.", true, caster, nullptr, nullptr, TO_CHAR);
 
   materialize(caster, &obj, level, name,
     caster->getSkillValue(SPELL_MATERIALIZE));
-  return TRUE;
+  return true;
 }
 
 int spontaneousGeneration(TBeing* caster, TObj** obj, const char* name, int,
@@ -2016,7 +2016,7 @@ int spontaneousGeneration(TBeing* caster, TObj** obj, const char* name, int,
 
   caster->sendTo(
     "You throw the talens into the air and they wink out of existence.\n\r");
-  act("$n tosses some money into the air and it magically disappears.", TRUE,
+  act("$n tosses some money into the air and it magically disappears.", true,
     caster, 0, 0, TO_ROOM, ANSI_YELLOW);
   caster->addToMoney(-SPONT_PRICE, GOLD_HOSPITAL);
 
@@ -2058,12 +2058,12 @@ int spontaneousGeneration(TBeing* caster, TObj** obj, const char* name, int,
       }
     }
 
-    act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_ROOM);
-    act("In a flash of light, $p appears.", TRUE, caster, *obj, NULL, TO_CHAR);
+    act("In a flash of light, $p appears.", true, caster, *obj, nullptr, TO_ROOM);
+    act("In a flash of light, $p appears.", true, caster, *obj, nullptr, TO_CHAR);
 
     TObj* obj2 = dynamic_cast<TObj*>(caster->heldInPrimHand());
     if (obj2 && obj2->objVnum() == (*obj)->objVnum()) {
-      act("You grab $p right out of the air.", TRUE, caster, *obj, NULL,
+      act("You grab $p right out of the air.", true, caster, *obj, nullptr,
         TO_CHAR);
     }
 
@@ -2075,14 +2075,14 @@ int spontaneousGeneration(TBeing* caster, TObj** obj, const char* name, int,
 }
 
 void spontaneousGeneration(TBeing* caster, const char* name) {
-  if (!bPassMageChecks(caster, SPELL_SPONTANEOUS_GENERATION, NULL))
+  if (!bPassMageChecks(caster, SPELL_SPONTANEOUS_GENERATION, nullptr))
     return;
 
   lag_t rounds = discArray[SPELL_SPONTANEOUS_GENERATION]->lag;
   taskDiffT diff = discArray[SPELL_SPONTANEOUS_GENERATION]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_SPONTANEOUS_GENERATION,
-    diff, 2, name, rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_SPONTANEOUS_GENERATION,
+    diff, 2, name, rounds, caster->in_room, 0, 0, true, 0);
 }
 
 int castSpontaneousGeneration(TBeing* caster, const char* name) {
@@ -2092,32 +2092,32 @@ int castSpontaneousGeneration(TBeing* caster, const char* name) {
   if (caster->getMoney() < SPONT_PRICE) {
     caster->sendTo("You don't have the money for that!\n\r");
     caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
   if (!name || !*name) {
     caster->sendTo("You need to specify an item.\n\r");
     caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
   if (strlen(name) < 3) {
     caster->sendTo("You must specify something more specific.\n\r");
     caster->nothingHappens(SILENT_YES);
-    return FALSE;
+    return false;
   }
 
-  if (!bPassMageChecks(caster, SPELL_SPONTANEOUS_GENERATION, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_SPONTANEOUS_GENERATION, nullptr))
+    return false;
 
   level = caster->getSkillLevel(SPELL_SPONTANEOUS_GENERATION);
 
-  obj = NULL;
+  obj = nullptr;
 
-  act("$n claps $s hands together.", TRUE, caster, NULL, NULL, TO_ROOM);
-  act("You clap your hands together.", TRUE, caster, NULL, NULL, TO_CHAR);
+  act("$n claps $s hands together.", true, caster, nullptr, nullptr, TO_ROOM);
+  act("You clap your hands together.", true, caster, nullptr, nullptr, TO_CHAR);
 
   spontaneousGeneration(caster, &obj, name, level,
     caster->getSkillValue(SPELL_SPONTANEOUS_GENERATION));
-  return TRUE;
+  return true;
 }
 
 int TObj::copyMe(TBeing* caster, short) {
@@ -2168,9 +2168,9 @@ void copy(TBeing* caster, TMagicItem* usedobj, TObj* tocopy) {
     usedobj->getMagicLearnedness());
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("In a flash of light, $p appears.", TRUE, caster, tocopy, NULL,
+    act("In a flash of light, $p appears.", true, caster, tocopy, nullptr,
       TO_ROOM);
-    act("In a flash of light, $p appears.", TRUE, caster, tocopy, NULL,
+    act("In a flash of light, $p appears.", true, caster, tocopy, nullptr,
       TO_CHAR);
   }
 }
@@ -2179,14 +2179,14 @@ int copy(TBeing* caster, TObj* obj) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_COPY, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_COPY]->lag;
   diff = discArray[SPELL_COPY]->task;
 
-  start_cast(caster, NULL, obj, NULL, SPELL_COPY, diff, 2, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, nullptr, SPELL_COPY, diff, 2, "", rounds,
+    caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castCopy(TBeing* caster, TObj* obj) {
@@ -2196,10 +2196,10 @@ int castCopy(TBeing* caster, TObj* obj) {
 
   ret = copy(caster, obj, level, caster->getSkillValue(SPELL_COPY));
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("In a flash of light, $p appears.", TRUE, caster, obj, NULL, TO_ROOM);
-    act("In a flash of light, $p appears.", TRUE, caster, obj, NULL, TO_CHAR);
+    act("In a flash of light, $p appears.", true, caster, obj, nullptr, TO_ROOM);
+    act("In a flash of light, $p appears.", true, caster, obj, nullptr, TO_CHAR);
   }
-  return TRUE;
+  return true;
 }
 
 int galvanize(TBeing* caster, TObj* obj, int, short bKnown) {
@@ -2209,14 +2209,14 @@ int galvanize(TBeing* caster, TObj* obj, int, short bKnown) {
 // returns DELETE_ITEM if obj is toasted
 int galvanize(TBeing* caster, TObj* obj) {
   if (!bPassMageChecks(caster, SPELL_GALVANIZE, obj))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_GALVANIZE]->lag;
   taskDiffT diff = discArray[SPELL_GALVANIZE]->task;
 
-  start_cast(caster, NULL, obj, NULL, SPELL_GALVANIZE, diff, 2, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, obj, nullptr, SPELL_GALVANIZE, diff, 2, "", rounds,
+    caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castGalvanize(TBeing* caster, TObj* obj) {
@@ -2224,44 +2224,44 @@ int castGalvanize(TBeing* caster, TObj* obj) {
 
   // failure = scrapped item.  no item damage allowed in arena
   if (caster->roomp && caster->roomp->isRoomFlag(ROOM_ARENA)) {
-    act("A magic power prevents anything from happening here.", FALSE, caster,
+    act("A magic power prevents anything from happening here.", false, caster,
       0, 0, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;
   }
   level = caster->getSkillLevel(SPELL_GALVANIZE);
 
-  act("$n concentrates on $p, laying $s hands on it.", TRUE, caster, obj, NULL,
+  act("$n concentrates on $p, laying $s hands on it.", true, caster, obj, nullptr,
     TO_ROOM);
-  act("You concentrate on $p, laying your hands on it.", TRUE, caster, obj,
-    NULL, TO_CHAR);
+  act("You concentrate on $p, laying your hands on it.", true, caster, obj,
+    nullptr, TO_CHAR);
   ret = galvanize(caster, obj, level, caster->getSkillValue(SPELL_GALVANIZE));
 
   if (IS_SET(ret, SPELL_SUCCESS)) {
-    act("$p throbs with an aquamarine glow briefly.", FALSE, caster, obj, 0,
+    act("$p throbs with an aquamarine glow briefly.", false, caster, obj, 0,
       TO_CHAR);
-    act("$p throbs with an aquamarine glow briefly.", FALSE, caster, obj, 0,
+    act("$p throbs with an aquamarine glow briefly.", false, caster, obj, 0,
       TO_ROOM);
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL_2)) {
-    act("Brown goo seeps from $p.  Ooops, that didn't go quite right.", FALSE,
+    act("Brown goo seeps from $p.  Ooops, that didn't go quite right.", false,
       caster, obj, 0, TO_CHAR);
-    act("Brown goo seeps from $p.", FALSE, caster, obj, 0, TO_ROOM);
+    act("Brown goo seeps from $p.", false, caster, obj, 0, TO_ROOM);
     if (!obj->makeScraps())
       return DELETE_ITEM;
-    return FALSE;
+    return false;
   }
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {
-    act("Brown goo seeps from $p.  Ooops, that didn't go quite right.", FALSE,
+    act("Brown goo seeps from $p.  Ooops, that didn't go quite right.", false,
       caster, obj, 0, TO_CHAR);
-    act("Brown goo seeps from $p.", FALSE, caster, obj, 0, TO_ROOM);
+    act("Brown goo seeps from $p.", false, caster, obj, 0, TO_ROOM);
     if (obj->getStructPoints() <= 0 && obj->getMaxStructPoints() >= 0) {
       if (!obj->makeScraps())
         return DELETE_ITEM;
-      return FALSE;
+      return false;
     }
   }
-  return FALSE;
+  return false;
 }
 
 int etherealGate(TBeing* caster, const char* portalroom, int, short bKnown) {
@@ -2293,7 +2293,7 @@ int etherealGate(TBeing* caster, const char* portalroom, int, short bKnown) {
 
   if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL) && !caster->isImmortal()) {
     caster->sendTo("You can't seem to escape the defenses of this area.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -2333,31 +2333,31 @@ int etherealGate(TBeing* caster, const char* portalroom, int, short bKnown) {
     caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
     rp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
-    act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj,
-      NULL, TO_ROOM);
-    act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj,
-      NULL, TO_CHAR);
+    act("$p suddenly appears out of a swirling mist.", true, caster, tmp_obj,
+      nullptr, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", true, caster, tmp_obj,
+      nullptr, TO_CHAR);
 
     rp->sendTo(format("%s suddenly appears out of a swirling mist.\n\r") %
                next_tmp_obj->shortDescr.cap());
 
     return SPELL_SUCCESS;
   }
-  act("Nothing seems to happen!", FALSE, caster, NULL, NULL, TO_ROOM);
-  act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
+  act("Nothing seems to happen!", false, caster, nullptr, nullptr, TO_ROOM);
+  act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_CHAR);
   return SPELL_FAIL;
 }
 
 int etherealGate(TBeing* caster, const char* portalroom) {
-  if (!bPassMageChecks(caster, SPELL_ETHER_GATE, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_ETHER_GATE, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_ETHER_GATE]->lag;
   taskDiffT diff = discArray[SPELL_ETHER_GATE]->task;
 
-  start_cast(caster, NULL, NULL, NULL, SPELL_ETHER_GATE, diff, 2, portalroom,
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, nullptr, SPELL_ETHER_GATE, diff, 2, portalroom,
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castEtherealGate(TBeing* caster, const char* portalroom) {
@@ -2368,7 +2368,7 @@ int castEtherealGate(TBeing* caster, const char* portalroom) {
 
   if (IS_SET(ret, SPELL_SUCCESS)) {}
   if (IS_SET(ret, SPELL_CRIT_FAIL)) {}
-  return FALSE;
+  return false;
 }
 
 void TBeing::doScribe(const char* arg) {
@@ -2408,11 +2408,11 @@ void TBeing::doScribe(const char* arg) {
 
   // find the 3 necessary pieces
   // generic component (spell == -1, type = scribe)
-  comp_gen = NULL;
+  comp_gen = nullptr;
   // spell comp (spell = which, type = spell)
-  comp_spell = NULL;
+  comp_spell = nullptr;
   // brew comp (spell = which, type = scribe)
-  comp_scribe = NULL;
+  comp_scribe = nullptr;
 
   for (i = MIN_WEAR; i < MAX_WEAR; i++) {
     if ((t = equipment[i])) {
@@ -2463,53 +2463,53 @@ void TBeing::doScribe(const char* arg) {
     how_many = want_num;
     buf = format("You begin to scribe %d scroll%s of %s.") % how_many %
           (how_many == 1 ? "" : "s") % discArray[which]->name;
-    act(buf, FALSE, this, 0, 0, TO_CHAR);
+    act(buf, false, this, 0, 0, TO_CHAR);
   } else {
     buf = format("You only have enough to begin to scribe %d scroll%s of %s.") %
           how_many % (how_many == 1 ? "" : "s") % discArray[which]->name;
-    act(buf, FALSE, this, 0, 0, TO_CHAR);
+    act(buf, false, this, 0, 0, TO_CHAR);
   }
   if (how_many > 1) {
     buf = format("$n begins to scribe some scrolls.");
-    act(buf, FALSE, this, 0, 0, TO_ROOM);
+    act(buf, false, this, 0, 0, TO_ROOM);
   } else {
     buf = format("$n begins to scribe a scroll.");
-    act(buf, FALSE, this, 0, 0, TO_ROOM);
+    act(buf, false, this, 0, 0, TO_ROOM);
   }
 
   // use up charges for mortals
   if (!isImmortal()) {
     buf = format("You use up %d charge%s of $p.") % how_many %
           (how_many == 1 ? "" : "s");
-    act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
+    act(buf, false, this, comp_gen, 0, TO_CHAR);
     comp_gen->addToComponentCharges(-how_many);
     if (comp_gen->getComponentCharges() <= 0) {
       buf = format("$p is consumed in the process.");
-      act(buf, FALSE, this, comp_gen, 0, TO_CHAR);
+      act(buf, false, this, comp_gen, 0, TO_CHAR);
       delete comp_gen;
-      comp_gen = NULL;
+      comp_gen = nullptr;
     }
 
     buf = format("You use up %d charge%s of $p.") % how_many %
           (how_many == 1 ? "" : "s");
-    act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
+    act(buf, false, this, comp_scribe, 0, TO_CHAR);
     comp_scribe->addToComponentCharges(-how_many);
     if (comp_scribe->getComponentCharges() <= 0) {
       buf = format("$p is consumed in the process.");
-      act(buf, FALSE, this, comp_scribe, 0, TO_CHAR);
+      act(buf, false, this, comp_scribe, 0, TO_CHAR);
       delete comp_scribe;
-      comp_scribe = NULL;
+      comp_scribe = nullptr;
     }
 
     buf = format("You use up %d charge%s of $p.") % how_many %
           (how_many == 1 ? "" : "s");
-    act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
+    act(buf, false, this, comp_spell, 0, TO_CHAR);
     comp_spell->addToComponentCharges(-how_many);
     if (comp_spell->getComponentCharges() <= 0) {
       buf = format("$p is consumed in the process.");
-      act(buf, FALSE, this, comp_spell, 0, TO_CHAR);
+      act(buf, false, this, comp_spell, 0, TO_CHAR);
       delete comp_spell;
-      comp_spell = NULL;
+      comp_spell = nullptr;
     }
   }
 
@@ -2517,6 +2517,6 @@ void TBeing::doScribe(const char* arg) {
     stopTask();
   }
 
-  start_task(this, NULL, NULL, TASK_SCRIBING, "", 0, in_room, how_many, which,
+  start_task(this, nullptr, nullptr, TASK_SCRIBING, "", 0, in_room, how_many, which,
     0);
 }

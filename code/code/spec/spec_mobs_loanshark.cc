@@ -96,7 +96,7 @@ int calcInterest(int amt, time_t granted, int term, float rate,
   float def_charge) {
   time_info_data due;
 
-  GameTime::mudTimePassed(time(NULL), granted, &due);
+  GameTime::mudTimePassed(time(nullptr), granted, &due);
   due.year++;
 
   if (due.year > term)  // overdue!
@@ -283,7 +283,7 @@ int loanShark(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       }
 
       db.query("insert into shopownedloans values (%i, %i, %i, %i, %i, %f, %f)",
-        shop_nr, ch->getPlayerID(), amt, time(NULL), term,
+        shop_nr, ch->getPlayerID(), amt, time(nullptr), term,
         getRate(shop_nr, ch->getName()), getPenalty(shop_nr, ch->getName()));
 
       me->giveMoney(ch, amt, GOLD_SHOP);

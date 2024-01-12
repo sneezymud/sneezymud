@@ -15,7 +15,7 @@
 
 // anything_getable(TBeing *, Obj *, char *) - Russ Russell c. June 1994
 // anything_getable() looks to see if there is anything getable (gee)
-// If sub != NULL it looks inside sub, otherwise it looks in the room
+// If sub != nullptr it looks inside sub, otherwise it looks in the room
 // If name exists it looks for item with name in the name, otherwise
 // it looks for all items in the room or in the objects sub
 
@@ -30,7 +30,7 @@ bool TBeing::anythingGetable(const TObj* sub, const char* name) const {
 
       if (canGet(o, SILENT_YES)) {
         if (!*name || isname(name, o->name))
-          return TRUE;
+          return true;
       }
     }
   } else {
@@ -41,18 +41,18 @@ bool TBeing::anythingGetable(const TObj* sub, const char* name) const {
           continue;
         if (canGet(o, SILENT_YES))
           if (!*name || isname(name, o->name))
-            return TRUE;
+            return true;
       }
     } else {  // tables
       for (o = sub->rider; o; o = n) {
         n = o->nextRider;
         if (canGet(o, SILENT_YES))
           if (!*name || isname(name, o->name))
-            return TRUE;
+            return true;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 // task_get - Russ Russell c. June 1994
@@ -78,19 +78,19 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
   TObj* o;
   sstring buf1, buf2;
   int rc;
-  TObj* sub = NULL;
+  TObj* sub = nullptr;
 
   if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING) || !ch->task) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (ch->in_room != ch->task->wasInRoom) {
     ch->sendTo("How can you expect to get things while moving around?\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -101,12 +101,12 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
         if (!thingsInRoomVis(ch, rp)) {
           ch->sendTo("You don't see anything else!\n\r");
           ch->stopTask();
-          return FALSE;
+          return false;
         }
-        if (!ch->anythingGetable(NULL, "")) {
+        if (!ch->anythingGetable(nullptr, "")) {
           ch->sendTo("You can get nothing more!\n\r");
           ch->stopTask();
-          return FALSE;
+          return false;
         }
         if (!*ch->task->orig_arg && !ch->task->flags) {
           //    get all
@@ -161,16 +161,16 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
             } else if (rc) {
               ch->stopTask();
               ch->doQueueSave();
-              return FALSE;
+              return false;
             }
             if (!ch->canGet(o, SILENT_NO))
               continue;
             else {
               ch->task->calcNextUpdate(pulse, 1);
-              rc = get(ch, t, NULL, GETNULL, true);
+              rc = get(ch, t, nullptr, GETNULL, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
-                t = NULL;
+                t = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
@@ -180,7 +180,7 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               if (IS_SET_DELETE(rc, DELETE_ITEM) || !rc) {
                 ch->stopTask();
                 ch->doQueueSave();
-                return FALSE;  // stop further checks
+                return false;  // stop further checks
               }
             }
           }
@@ -188,10 +188,10 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
           // This is something like get all.sword
           while ((
             t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->stuff))) {
-            rc = get(ch, t, NULL, GETNULL, true);
+            rc = get(ch, t, nullptr, GETNULL, true);
             if (IS_SET_DELETE(rc, DELETE_ITEM)) {
               delete t;
-              t = NULL;
+              t = nullptr;
             }
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               ch->stopTask();
@@ -201,21 +201,21 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
             if (IS_SET_DELETE(rc, DELETE_ITEM) || !rc) {
               ch->stopTask();
               ch->doQueueSave();
-              return FALSE;  // stop further checks
+              return false;  // stop further checks
             }
           }
           ch->stopTask();
           ch->doQueueSave();
-          return FALSE;
+          return false;
         } else {
           // get 6*item   ?
           while ((
             t = get_thing_in_list_getable(ch, ch->task->orig_arg, rp->stuff))) {
             if (--(ch->task->flags) > 0) {
-              rc = get(ch, t, NULL, GETNULL, true);
+              rc = get(ch, t, nullptr, GETNULL, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
-                t = NULL;
+                t = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
@@ -225,25 +225,25 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               if (IS_SET_DELETE(rc, DELETE_ITEM) || !rc) {
                 ch->stopTask();
                 ch->doQueueSave();
-                return FALSE;  // stop further checks
+                return false;  // stop further checks
               }
             } else {
               ch->sendTo("You've picked up the specified number of items.\n\r");
               ch->stopTask();
               ch->doQueueSave();
-              return FALSE;
+              return false;
             }
           }
           ch->stopTask();
           ch->doQueueSave();
-          return FALSE;
+          return false;
         }
         // If we got here we couldn't pick anything up.
         // Or either there was nothing left to get
         ch->sendTo("There is nothing more to get here!\n\r");
         ch->stopTask();
         ch->doQueueSave();
-        return TRUE;
+        return true;
       } else {
         // get all bag
         sub = get_obj_vis_accessible(ch, buf2.c_str());
@@ -264,16 +264,16 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
           ch->sendTo(format("The %s is no longer accessible.\n\r") % buf2);
           ch->stopTask();
           ch->doQueueSave();
-          return FALSE;
+          return false;
         }
 
         if (ch->task->flags) {
           if (!ch->anythingGetable(sub, buf1.c_str())) {
-            act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);
+            act("You can get no more from $p", true, ch, sub, nullptr, TO_CHAR);
             ch->stopTask();
             getTaskStop(sub);
             ch->doQueueSave();
-            return FALSE;
+            return false;
           }
           while (
             (t = get_thing_in_list_getable(ch, buf1.c_str(), sub->stuff))) {
@@ -281,11 +281,11 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
-                t = NULL;
+                t = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_VICT)) {
                 delete sub;
-                sub = NULL;
+                sub = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
@@ -298,14 +298,14 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                 ch->stopTask();
                 getTaskStop(sub);
                 ch->doQueueSave();
-                return FALSE;  // stop further checks
+                return false;  // stop further checks
               }
             } else {
               ch->sendTo("You've gotten the specified number of items.\n\r");
               ch->stopTask();
               getTaskStop(sub);
               ch->doQueueSave();
-              return FALSE;
+              return false;
             }
           }
           while (
@@ -314,11 +314,11 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
-                t = NULL;
+                t = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_VICT)) {
                 delete sub;
-                sub = NULL;
+                sub = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
@@ -329,22 +329,22 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                   IS_SET_DELETE(rc, DELETE_VICT) || !rc) {
                 ch->stopTask();
                 ch->doQueueSave();
-                return FALSE;  // stop further checks
+                return false;  // stop further checks
               }
             } else {
               ch->sendTo("You've gotten the specified number of items.\n\r");
               ch->stopTask();
               ch->doQueueSave();
-              return FALSE;
+              return false;
             }
           }
 
           if (!ch->anythingGetable(sub, buf1.c_str())) {
-            act("You can get no more from $p", TRUE, ch, sub, NULL, TO_CHAR);
+            act("You can get no more from $p", true, ch, sub, nullptr, TO_CHAR);
             ch->stopTask();
             getTaskStop(sub);
             ch->doQueueSave();
-            return FALSE;
+            return false;
           }
         } else {
           if (ch->task->status) {
@@ -353,11 +353,11 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
-                t = NULL;
+                t = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_VICT)) {
                 delete sub;
-                sub = NULL;
+                sub = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
@@ -370,7 +370,7 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                 ch->stopTask();
                 getTaskStop(sub);
                 ch->doQueueSave();
-                return FALSE;  // stop further checks
+                return false;  // stop further checks
               }
             }
 
@@ -379,11 +379,11 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               rc = get(ch, t, sub, GETOBJOBJ, true);
               if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                 delete t;
-                t = NULL;
+                t = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_VICT)) {
                 delete sub;
-                sub = NULL;
+                sub = nullptr;
               }
               if (IS_SET_DELETE(rc, DELETE_THIS)) {
                 ch->stopTask();
@@ -394,21 +394,21 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                   IS_SET_DELETE(rc, DELETE_VICT) || !rc) {
                 ch->stopTask();
                 ch->doQueueSave();
-                return FALSE;  // stop further checks
+                return false;  // stop further checks
               }
             }
             ch->stopTask();
             getTaskStop(sub);
             ch->doQueueSave();
-            return FALSE;
+            return false;
           } else {
             if (!ch->anythingGetable(sub, "")) {
-              act("You can get nothing more from $p!", TRUE, ch, sub, NULL,
+              act("You can get nothing more from $p!", true, ch, sub, nullptr,
                 TO_CHAR);
               ch->stopTask();
               getTaskStop(sub);
               ch->doQueueSave();
-              return FALSE;
+              return false;
             }
             for (StuffIter it = sub->stuff.begin(); it != sub->stuff.end();) {
               t = *(it++);
@@ -422,22 +422,22 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                 ch->stopTask();
                 getTaskStop(sub);
                 ch->doQueueSave();
-                return FALSE;
+                return false;
               }
               if (!ch->canGet(t, SILENT_NO))
                 continue;
               else {
                 if (!ch->task)  // how does this happen????
-                  return FALSE;
+                  return false;
                 ch->task->calcNextUpdate(pulse, 1);
                 rc = get(ch, t, sub, GETOBJOBJ, true);
                 if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                   delete t;
-                  t = NULL;
+                  t = nullptr;
                 }
                 if (IS_SET_DELETE(rc, DELETE_VICT)) {
                   delete sub;
-                  sub = NULL;
+                  sub = nullptr;
                 }
                 if (IS_SET_DELETE(rc, DELETE_THIS)) {
                   ch->stopTask();
@@ -450,7 +450,7 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                   ch->stopTask();
                   getTaskStop(sub);
                   ch->doQueueSave();
-                  return FALSE;  // stop further checks
+                  return false;  // stop further checks
                 }
               }
             }
@@ -464,7 +464,7 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
               } else if (rc) {
                 ch->stopTask();
                 ch->doQueueSave();
-                return FALSE;
+                return false;
               }
               if (!ch->canGet(t, SILENT_NO))
                 continue;
@@ -473,11 +473,11 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                 rc = get(ch, t, sub, GETOBJOBJ, true);
                 if (IS_SET_DELETE(rc, DELETE_ITEM)) {
                   delete t;
-                  t = NULL;
+                  t = nullptr;
                 }
                 if (IS_SET_DELETE(rc, DELETE_VICT)) {
                   delete sub;
-                  sub = NULL;
+                  sub = nullptr;
                 }
                 if (IS_SET_DELETE(rc, DELETE_THIS)) {
                   ch->stopTask();
@@ -488,17 +488,17 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
                     IS_SET_DELETE(rc, DELETE_VICT) || !rc) {
                   ch->stopTask();
                   ch->doQueueSave();
-                  return FALSE;  // stop further checks
+                  return false;  // stop further checks
                 }
               }
             }
             if (!ch->anythingGetable(sub, "")) {
-              act("You can get nothing more from $p!", TRUE, ch, sub, NULL,
+              act("You can get nothing more from $p!", true, ch, sub, nullptr,
                 TO_CHAR);
               ch->stopTask();
               getTaskStop(sub);
               ch->doQueueSave();
-              return FALSE;
+              return false;
             }
           }
         }
@@ -506,8 +506,8 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop getting items!", FALSE, ch, NULL, NULL, TO_CHAR);
-      act("$n stops getting items!", TRUE, ch, NULL, NULL, TO_ROOM);
+      act("You stop getting items!", false, ch, nullptr, nullptr, TO_CHAR);
+      act("$n stops getting items!", true, ch, nullptr, nullptr, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -522,5 +522,5 @@ int task_get(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
   }
   getTaskStop(sub);
   ch->doQueueSave();
-  return TRUE;
+  return true;
 }

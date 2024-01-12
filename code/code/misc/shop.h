@@ -111,7 +111,7 @@ class shopData {
       inventory_count += add;
     }
     TMonster* getKeeper();
-    void clearKeeper() { mkeeper = NULL; }
+    void clearKeeper() { mkeeper = nullptr; }
 
     shopData();
     ~shopData();

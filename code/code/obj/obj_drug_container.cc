@@ -63,18 +63,18 @@ void TDrugContainer::setDrugType(drugTypeT n) { drugType = n; }
 
 drugTypeT TDrugContainer::getDrugType() const { return drugType; }
 
-bool TDrugContainer::monkRestrictedItem(const TBeing*) const { return FALSE; }
+bool TDrugContainer::monkRestrictedItem(const TBeing*) const { return false; }
 
-bool TDrugContainer::shamanRestrictedItem(const TBeing*) const { return FALSE; }
+bool TDrugContainer::shamanRestrictedItem(const TBeing*) const { return false; }
 
-bool TDrugContainer::rangerRestrictedItem(const TBeing*) const { return FALSE; }
+bool TDrugContainer::rangerRestrictedItem(const TBeing*) const { return false; }
 
-void TDrugContainer::putLightOut() { setLit(FALSE); }
+void TDrugContainer::putLightOut() { setLit(false); }
 
 void TDrugContainer::extinguishWater(TBeing* ch) {
   if (getLit()) {
-    act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_CHAR);
-    act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_ROOM);
+    act("$p is put out by the room's water.", true, ch, this, 0, TO_CHAR);
+    act("$p is put out by the room's water.", true, ch, this, 0, TO_ROOM);
 
     putLightOut();
   }
@@ -82,7 +82,7 @@ void TDrugContainer::extinguishWater(TBeing* ch) {
 
 void TDrugContainer::extinguishWater() {
   if (getLit()) {
-    act("$p is put out by the room's water.", TRUE, 0, this, 0, TO_ROOM);
+    act("$p is put out by the room's water.", true, 0, this, 0, TO_ROOM);
     putLightOut();
   }
 }
@@ -96,13 +96,13 @@ void TDrugContainer::lightDecay() {
       setDrugType(DRUG_NONE);
 
       if (roomp && !roomp->stuff.empty()) {
-        act("With a puff of smoke, $p burns out.", FALSE, roomp->stuff.front(),
+        act("With a puff of smoke, $p burns out.", false, roomp->stuff.front(),
           this, 0, TO_CHAR);
       } else if (parent) {
-        act("With a puff of smoke, $p burns out.", FALSE, parent, this, 0,
+        act("With a puff of smoke, $p burns out.", false, parent, this, 0,
           TO_CHAR);
       } else if (equippedBy) {
-        act("With a puff of smoke, $p burns out.", FALSE, equippedBy, this, 0,
+        act("With a puff of smoke, $p burns out.", false, equippedBy, this, 0,
           TO_CHAR);
       }
     }
@@ -116,9 +116,9 @@ void TDrugContainer::extinguishMe(TBeing* ch) {
   }
   putLightOut();
 
-  act("You extinguish $p, and it smolders slightly before going out.", FALSE,
+  act("You extinguish $p, and it smolders slightly before going out.", false,
     ch, this, 0, TO_CHAR);
-  act("$n extinguishes $p, and it smolders slightly before going out.", FALSE,
+  act("$n extinguishes $p, and it smolders slightly before going out.", false,
     ch, this, 0, TO_ROOM);
 }
 
@@ -168,12 +168,12 @@ sstring TDrugContainer::statObjInfo() const {
 
 int TDrugContainer::objectDecay() {
   if (roomp) {
-    act("$p flickers then fades into insignificance.", TRUE,
+    act("$p flickers then fades into insignificance.", true,
       roomp->stuff.front(), this, 0, TO_CHAR);
-    act("$p flickers then fades into insignificance.", TRUE,
+    act("$p flickers then fades into insignificance.", true,
       roomp->stuff.front(), this, 0, TO_ROOM);
   } else {
-    TThing* t = NULL;
+    TThing* t = nullptr;
     if (parent)
       t = parent;
     else if (equippedBy)
@@ -182,9 +182,9 @@ int TDrugContainer::objectDecay() {
       t = stuckIn;
 
     if (t) {
-      act("Your $o flickers then fades into insignificance.", TRUE, t, this, 0,
+      act("Your $o flickers then fades into insignificance.", true, t, this, 0,
         TO_CHAR);
-      act("$n's $o flickers then fades into insignificance.", TRUE, t, this, 0,
+      act("$n's $o flickers then fades into insignificance.", true, t, this, 0,
         TO_ROOM);
     }
   }
@@ -207,12 +207,12 @@ void TDrugContainer::describeObjectSpecifics(const TBeing* ch) const {
   double diff;
 
   if (!getLit())
-    act("$p is not lit.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p is not lit.", false, ch, this, 0, TO_CHAR);
   else
-    act("$p is lit.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p is lit.", false, ch, this, 0, TO_CHAR);
 
   if (getMaxBurn() < 0)
-    act("$p doesn't seem to be reusable.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p doesn't seem to be reusable.", false, ch, this, 0, TO_CHAR);
   else
     ch->sendTo(COLOR_OBJECTS,
       format("%s is reusable.\n\r") % sstring(getName()).cap());
@@ -259,18 +259,18 @@ void TDrugContainer::peeOnMe(const TBeing* ch) {
     act(
       "$p sputters, sparks then finally relents to $n's downpour of <y>pee<1> "
       "and goes out.",
-      TRUE, ch, this, NULL, TO_ROOM);
+      true, ch, this, nullptr, TO_ROOM);
     act(
       "$p sputters, sparks then finally relents to your downpour of <y>pee<1> "
       "and goes out.",
-      TRUE, ch, this, NULL, TO_CHAR);
+      true, ch, this, nullptr, TO_CHAR);
 
     putLightOut();
   } else
     act(
       "You try to light $p by peeing on it, but sadly it does not appear to be "
       "working.",
-      TRUE, ch, this, NULL, TO_CHAR);
+      true, ch, this, nullptr, TO_CHAR);
 }
 
 void TDrugContainer::lightMe(TBeing* ch, silentTypeT silent) {
@@ -278,7 +278,7 @@ void TDrugContainer::lightMe(TBeing* ch, silentTypeT silent) {
 
   if (getLit()) {
     if (!silent)
-      act("$p is already lit!", FALSE, ch, this, 0, TO_CHAR);
+      act("$p is already lit!", false, ch, this, 0, TO_CHAR);
     return;
   }
   if (ch->roomp->isUnderwaterSector()) {
@@ -288,16 +288,16 @@ void TDrugContainer::lightMe(TBeing* ch, silentTypeT silent) {
   }
   if (getCurBurn() <= 0) {
     if (!silent)
-      act("$p is empty!", FALSE, ch, this, 0, TO_CHAR);
+      act("$p is empty!", false, ch, this, 0, TO_CHAR);
     return;
   }
-  setLit(TRUE);
+  setLit(true);
   if (!silent) {
     sprintf(buf, "You light $p, and the %s begins to burn.",
       drugTypes[getDrugType()].name);
-    act(buf, FALSE, ch, this, 0, TO_CHAR);
+    act(buf, false, ch, this, 0, TO_CHAR);
     sprintf(buf, "$n light $p, and the %s begins to burn.",
       drugTypes[getDrugType()].name);
-    act(buf, TRUE, ch, this, 0, TO_ROOM);
+    act(buf, true, ch, this, 0, TO_ROOM);
   }
 }

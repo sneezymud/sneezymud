@@ -27,14 +27,14 @@ TPotion::~TPotion() {}
 
 bool TPotion::potIsEmpty() const {
   if (getDrinkUnits() <= 0)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 bool TPotion::isSimilar(const TThing* t) const {
   const TPotion* pot = dynamic_cast<const TPotion*>(t);
   if (!pot)
-    return FALSE;
+    return false;
 
   if (getDescr().empty() || pot->getDescr().empty() ||
       getDescr() != pot->getDescr()) {
@@ -73,10 +73,10 @@ int TPotion::objectSell(TBeing* ch, TMonster* keeper) {
 
   if (!liquidInfo[getDrinkType()]->potion) {
     keeper->doTell(ch->getName(), "Hey, that's not a potion!.");
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TPotion::sellPrice(int, int shop_nr, float chr, const TBeing* ch) {

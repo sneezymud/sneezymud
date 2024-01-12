@@ -314,7 +314,7 @@ class resetQElement {
     unsigned int zone_to_reset;
     resetQElement* next;
 
-    resetQElement() : zone_to_reset(0), next(NULL) {}
+    resetQElement() : zone_to_reset(0), next(nullptr) {}
 };
 
 extern std::queue<sstring> queryqueue;

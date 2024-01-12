@@ -16,8 +16,8 @@
 void stop_tracking(TBeing* ch) {
   if (!ch->isLinkdead() && (ch->in_room > 0) &&
       (ch->getPosition() >= POSITION_RESTING)) {
-    act("You stop and look about blankly.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops and looks about blankly.", FALSE, ch, 0, 0, TO_ROOM);
+    act("You stop and look about blankly.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops and looks about blankly.", false, ch, 0, 0, TO_ROOM);
   }
   ch->stopTask();
   ch->remPlayerAction(PLR_HUNTING);
@@ -25,7 +25,7 @@ void stop_tracking(TBeing* ch) {
     ch->affectFrom(SKILL_TRACK);
   if (ch->affectedBySpell(SKILL_SEEKWATER))
     ch->affectFrom(SKILL_SEEKWATER);
-  ch->specials.hunting = NULL;
+  ch->specials.hunting = nullptr;
   ch->hunt_dist = 0;
 }
 
@@ -34,10 +34,10 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
   // Do a hard return now if they have already been given their message.
   if ((!ch || !ch->task || (ch->task->flags > 0 && ch->task->flags != 100)) &&
       cmd == CMD_TASK_CONTINUE)
-    return FALSE;
+    return false;
 
   affectedData* aff;
-  roomDirData* Eroom = NULL;
+  roomDirData* Eroom = nullptr;
   int code = -1;
   int skill;
   int targetRm = -1;
@@ -50,17 +50,17 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
   if (ch->isLinkdead() || (ch->in_room < 0) ||
       (ch->getPosition() < POSITION_RESTING)) {
     stop_tracking(ch);
-    return FALSE;  // return FALSE lets the command be interpreted
+    return false;  // return false lets the command be interpreted
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (!ch->specials.hunting && !isSW) {
-    act("For some reason your quarry can no longer be found.", FALSE, ch, 0, 0,
+    act("For some reason your quarry can no longer be found.", false, ch, 0, 0,
       TO_CHAR);
     stop_tracking(ch);
-    return FALSE;
+    return false;
   }
 
   skill = 0;
@@ -84,7 +84,7 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
     // however, say a mob hates a creature so has specials.hunting.
     // a god switches into the mob, and does a look.
     // look logic kicks in and we get here.
-    return TRUE;
+    return true;
   }
 
   switch (cmd) {
@@ -96,22 +96,22 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
         stop_tracking(ch);
         ch->addToWait(combatRound(1));
         if (*argument)
-          return FALSE;
+          return false;
         else
-          return TRUE;
+          return true;
       }
       warn_busy(ch);
-      return TRUE;
+      return true;
     case CMD_SEEKWATER:
       if (isSW) {
         ch->sendTo("Your already seeking water.\n\r");
-        return TRUE;
+        return true;
       }
       ch->sendTo(
         "You give up tracking your quarry and choose to seek some water.\n\r");
       stop_tracking(ch);
       ch->addToWait(combatRound(1));
-      return FALSE;
+      return false;
     case CMD_NORTH:
     case CMD_EAST:
     case CMD_SOUTH:
@@ -132,31 +132,31 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
       // We also eat some moves should the exit exist.
       if (ch->task->flags > -5)
         ch->task->flags = min(-1, ch->task->flags - 1);
-      if (exit_ok(Eroom, NULL))
+      if (exit_ok(Eroom, nullptr))
         ch->addToMove(
           -(int)(110 - ch->getSkillValue(
                          (isSW ? SKILL_SEEKWATER
                                : (isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK)))) /
           20);
-      return FALSE;
+      return false;
     case CMD_TELL:
     case CMD_WHISPER:
       if (ch->task->flags > -5 && ch->task->flags < 1)
         ch->task->flags--;
-      return FALSE;
+      return false;
     case CMD_SCAN:
       if (ch->task->flags > -4 && ch->task->flags < 1)
         ch->task->flags -= 2;
-      return FALSE;
+      return false;
     case CMD_TASK_CONTINUE:
       // Are we supposed to eat this continue?  If less than 0, you betcha.
       // Add 1 to flags to mark the eat then return back.
       if (ch->task->flags < 0) {
         ch->task->flags++;
-        return TRUE;
+        return true;
       }
       if (ch->task->flags > 0)
-        return TRUE;
+        return true;
       // Guess this one wasn't to be ate.  So we check to see if we've found
       // our target yet (0==no, >=1 == yes).  If not, then we try again.
       // 100 means it was to dark last time, so lets give it another shot.
@@ -173,7 +173,7 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
             ch->sendTo(format("You can't see well enough to %s.\n\r") %
                        (isSW ? "seek water" : "track"));
           }
-          return TRUE;
+          return true;
         }
         // Must be able to see now.  So if we couldn't last time, lets ditch
         // the 100 value and go back to no-target-found 0.
@@ -182,7 +182,7 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
         if (!ch->specials.hunting && !isSW) {
           vlogf(LOG_BUG, "problem in task_track()");
           stop_tracking(ch);
-          return TRUE;
+          return true;
         }
         // Are we seeking water?  Must be if we don't have a hunt target.
         if (!ch->specials.hunting) {
@@ -194,7 +194,7 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
           } else {
             vlogf(LOG_BUG, "problem in task_track()");
             stop_tracking(ch);
-            return TRUE;
+            return true;
           }
         } else {
           // Guess we have a hunt target, lets find them.
@@ -226,15 +226,15 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
             ch->affectFrom(SKILL_TRACK);
           if (ch->affectedBySpell(SKILL_SEEKWATER))
             ch->affectFrom(SKILL_SEEKWATER);
-          ch->specials.hunting = NULL;
+          ch->specials.hunting = nullptr;
           ch->addToWait(combatRound(1));
-          return TRUE;
+          return true;
         }
         // This should never happen, but just in case.
         if (code < 0) {
           ch->sendTo("Your target has vanished, how odd.\n\r");
           stop_tracking(ch);
-          return TRUE;
+          return true;
         }
         // Success
         if (worked) {
@@ -257,7 +257,7 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
           } else if (code > 9) {
             // It's above 9, so it's a special exit.  Portal or something.
             int count = code - 9, seen = 0;
-            TPortal* tp = NULL;
+            TPortal* tp = nullptr;
             for (StuffIter it = ch->roomp->stuff.begin();
                  it != ch->roomp->stuff.end(); ++it) {
               tp = dynamic_cast<TPortal*>(*it);
@@ -278,7 +278,7 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
               ch->sendTo("Error finding path target!  Tell a god.\n\r");
               vlogf(LOG_BUG, "Error finding path (task_tracking).");
               stop_tracking(ch);
-              return TRUE;
+              return true;
             }
             // Client check.
             if (ch->desc && ch->desc->m_bIsClient)
@@ -291,7 +291,7 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
               ch->addCommandToQue(buf2);
             }
           }
-          return TRUE;
+          return true;
         } else {
           // Failure.
           ch->sendTo(COLOR_MOBS,
@@ -305,9 +305,9 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
                                   : (isTR ? SKILL_TRACK : SPELL_TRAIL_SEEK)))) /
                     6))));
           if (ch->getMove() <= 0) {
-            act("You just don't feel like you could go on right now.", FALSE,
+            act("You just don't feel like you could go on right now.", false,
               ch, 0, 0, TO_CHAR);
-            act("$n looks incredibly tired.", FALSE, ch, 0, 0, TO_ROOM);
+            act("$n looks incredibly tired.", false, ch, 0, 0, TO_ROOM);
             stop_tracking(ch);
           }
         }
@@ -331,5 +331,5 @@ int task_tracking(TBeing* ch, cmdTypeT cmd, const char* argument, int pulse,
         warn_busy(ch);
       break;
   }
-  return TRUE;
+  return true;
 }

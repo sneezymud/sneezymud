@@ -19,10 +19,10 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
     vlogf(LOG_BUG,
       format("%s got to limitPowerCheck() without desc, very bad.") %
         getName());
-    return TRUE;  // if we return FALSE here it could cause a crash
+    return true;  // if we return false here it could cause a crash
   }
   if (hasWizPower(POWER_NO_LIMITS))
-    return TRUE;
+    return true;
   int as, ae, bs, be, o;
   as = desc->blockastart;
   ae = desc->blockaend;
@@ -39,38 +39,38 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
     case CMD_OUTFIT:
     case CMD_STEAL:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be))
-        return TRUE;
+        return true;
       break;
     case CMD_GOTO:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
           vnum == o || (vnum >= 0 && vnum <= 100))
-        return TRUE;
+        return true;
       break;
     case CMD_EDIT:
     case CMD_REDIT:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) || vnum == o)
-        return TRUE;
+        return true;
       break;
     case CMD_STAT:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
           vnum == o || isGenericMob(vnum) || isGenericObj(vnum))
-        return TRUE;
+        return true;
       break;
     case CMD_LOAD:
     case CMD_SHOW:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
           isGenericMob(vnum) || isGenericObj(vnum))
-        return TRUE;
+        return true;
       break;
     case CMD_OEDIT:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
           isGenericObj(vnum))
-        return TRUE;
+        return true;
       break;
     case CMD_MEDIT:
       if ((vnum >= as && vnum <= ae) || (vnum >= bs && vnum <= be) ||
           isGenericMob(vnum))
-        return TRUE;
+        return true;
       break;
     default:
       vlogf(LOG_DASH,
@@ -78,7 +78,7 @@ bool TBeing::limitPowerCheck(cmdTypeT cmd, int vnum) {
           getName() % (int)cmd);
       break;
   }
-  return FALSE;
+  return false;
 }
 
 bool TBeing::isGenericObj(int vnum) {
@@ -91,15 +91,15 @@ bool TBeing::isGenericObj(int vnum) {
       || (vnum >= 420 && vnum <= 443)  // generic drink
       || (vnum < 0)                    // oed loaded object
     )                                  // add other generics here
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 bool TBeing::isGenericMob(int vnum) {
   if ((vnum >= 1701 && vnum <= 1750)  // testmobs
       || (vnum <= 0))                 // add other generics here
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 void setWizPowers(const TBeing* doer, TBeing* ch, const sstring& arg) {
@@ -337,7 +337,7 @@ void TBeing::remWizPower(wizPowerT) {}
 bool TPerson::hasWizPower(wizPowerT value) const {
   if (value >= MAX_POWER_INDEX) {
     vlogf(LOG_BUG, format("Bad check of hasWizPower(%d)") % value);
-    return FALSE;
+    return false;
   }
 
   if (wizPowers[POWER_IDLED] && !wizPowers[POWER_WIZARD])

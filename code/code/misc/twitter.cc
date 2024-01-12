@@ -17,9 +17,9 @@ bool twitterShout(sstring from, sstring msg) {
   if (gamePort != Config::Port::PROD)
     return false;
 
-  struct curl_httppost* formpost = NULL;
-  struct curl_httppost* lastptr = NULL;
-  struct curl_slist* headerlist = NULL;
+  struct curl_httppost* formpost = nullptr;
+  struct curl_httppost* lastptr = nullptr;
+  struct curl_slist* headerlist = nullptr;
   static const char buf[] = "Expect:";
 
   from = stripColorCodes(from).cap();

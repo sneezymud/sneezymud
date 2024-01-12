@@ -25,21 +25,21 @@
 #include "twitter.h"
 
 void TBeing::disturbMeditation(TBeing* vict) const {
-  mud_assert(vict != NULL, "No vict in disturbMeditation");
+  mud_assert(vict != nullptr, "No vict in disturbMeditation");
 
   if (vict->task && !isImmortal()) {
     if (vict->task->task == TASK_PENANCE) {
-      act("$n disturbs your penance!", FALSE, this, NULL, vict, TO_VICT);
+      act("$n disturbs your penance!", false, this, nullptr, vict, TO_VICT);
 
       if (sameRoom(*vict))
-        act("You disturb $S penance!", TRUE, this, NULL, vict, TO_CHAR);
+        act("You disturb $S penance!", true, this, nullptr, vict, TO_CHAR);
 
       vict->stopTask();
     } else if (vict->task->task == TASK_MEDITATE) {
-      act("$n disturbs your meditation!", FALSE, this, NULL, vict, TO_VICT);
+      act("$n disturbs your meditation!", false, this, nullptr, vict, TO_VICT);
 
       if (sameRoom(*vict))
-        act("You disturb $S meditation!", TRUE, this, NULL, vict, TO_CHAR);
+        act("You disturb $S meditation!", true, this, nullptr, vict, TO_CHAR);
 
       vict->stopTask();
     }
@@ -63,7 +63,7 @@ int TBeing::doSay(const char* fmt, ...) {
 int TBeing::doSay(const sstring& arg) {
   sstring capbuf, tmpbuf, nameBuf, garbedBuf, garbleRoom;
   TThing* tmp;
-  TBeing* mob = NULL;
+  TBeing* mob = nullptr;
   int rc;
   Descriptor* d;
   sstring gmcp_template = isPc() ? "comm.channel { \"chan\": \"say\", \"msg\": "
@@ -75,35 +75,35 @@ int TBeing::doSay(const sstring& arg) {
     desc->talkCount = time(0);
 
   if (applySoundproof())
-    return FALSE;
+    return false;
 
   if (hasQuestBit(TOG_IS_MUTE)) {
     sendTo("You're mute, you can't talk.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (isDumbAnimal()) {
     sendTo("You are a dumb animal; you can't talk!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+    act("$n waves $s hands and points silently toward $s mouth.", true, this, 0,
       0, TO_ROOM);
-    return FALSE;
+    return false;
   }
 
   if (arg.empty()) {
     sendTo("Yes, but WHAT do you want to say?\n\r");
-    return FALSE;
+    return false;
   }
 
-  garbleRoom = garble(NULL, arg, Garble::SPEECH_SAY, Garble::SCOPE_EVERYONE);
+  garbleRoom = garble(nullptr, arg, Garble::SPEECH_SAY, Garble::SCOPE_EVERYONE);
 
   sendTo(COLOR_COMM,
     format("<g>You say, <z>\"%s%s\"\n\r") %
-      colorString(this, desc, garbleRoom, NULL, COLOR_BASIC, FALSE) % norm());
+      colorString(this, desc, garbleRoom, nullptr, COLOR_BASIC, false) % norm());
 
   // show everyone in room the say.
 
@@ -119,7 +119,7 @@ int TBeing::doSay(const sstring& arg) {
 
     capbuf = sstring(mob->pers(this)).cap();
     tmpbuf = format("%s") %
-             colorString(mob, mob->desc, capbuf, NULL, COLOR_NONE, FALSE);
+             colorString(mob, mob->desc, capbuf, nullptr, COLOR_NONE, false);
 
     if (mob->isPc()) {
       if (mob->desc && mob->desc->ignored.isIgnored(desc))
@@ -129,10 +129,10 @@ int TBeing::doSay(const sstring& arg) {
       sstring garbleTo =
         garble(mob, garbleRoom, Garble::SPEECH_SAY, Garble::SCOPE_INDIVIDUAL);
 
-      if (hasColorStrings(NULL, capbuf, 2)) {
+      if (hasColorStrings(nullptr, capbuf, 2)) {
         if (IS_SET(mob->desc->plr_color, PLR_COLOR_MOBS)) {
           tmpbuf = format("%s") %
-                   colorString(mob, mob->desc, capbuf, NULL, COLOR_MOBS, FALSE);
+                   colorString(mob, mob->desc, capbuf, nullptr, COLOR_MOBS, false);
           sstring msg =
             format("%s says, \"%s%s\"\n\r") % tmpbuf % garbleTo % mob->norm();
           sstring gmcp = format(gmcp_template) % msg.trim().escapeJson() %
@@ -142,7 +142,7 @@ int TBeing::doSay(const sstring& arg) {
           if (d->m_bIsClient ||
               IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
             garbedBuf = format("%s") % colorString(this, mob->desc, garbleTo,
-                                         NULL, COLOR_NONE, FALSE);
+                                         nullptr, COLOR_NONE, false);
             d->clientf(format("%d|%s|%s") % CLIENT_SAY % tmpbuf % garbedBuf);
           }
         } else {
@@ -155,10 +155,10 @@ int TBeing::doSay(const sstring& arg) {
               IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
             nameBuf = format("<c>%s<z>") % tmpbuf;
             garbedBuf = format("%s") % colorString(this, mob->desc, garbleTo,
-                                         NULL, COLOR_NONE, FALSE);
+                                         nullptr, COLOR_NONE, false);
             d->clientf(
               format("%d|%s|%s") % CLIENT_SAY %
-              colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+              colorString(this, mob->desc, nameBuf, nullptr, COLOR_NONE, false) %
               garbedBuf);
           }
         }
@@ -172,17 +172,17 @@ int TBeing::doSay(const sstring& arg) {
         if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
           nameBuf = format("<c>%s<z>") % tmpbuf;
           garbedBuf = format("%s") % colorString(this, mob->desc, garbleTo,
-                                       NULL, COLOR_NONE, FALSE);
+                                       nullptr, COLOR_NONE, false);
           d->clientf(
             format("%d|%s|%s") % CLIENT_SAY %
-            colorString(this, mob->desc, nameBuf, NULL, COLOR_NONE, FALSE) %
+            colorString(this, mob->desc, nameBuf, nullptr, COLOR_NONE, false) %
             garbedBuf);
         }
       }
     } else {  // mob is not PC
       sstring msg =
         format("%s says, \"%s\"\n\r") % sstring(getName()).cap() %
-        colorString(this, mob->desc, garbleRoom, NULL, COLOR_COMM, FALSE);
+        colorString(this, mob->desc, garbleRoom, nullptr, COLOR_COMM, false);
       sstring gmcp = format(gmcp_template) % msg.trim().escapeJson() %
                      tmpbuf.trim().escapeJson();
       mob->desc->sendGmcp(gmcp, false);
@@ -191,7 +191,7 @@ int TBeing::doSay(const sstring& arg) {
       if (d->m_bIsClient || IS_SET(d->prompt_d.type, PROMPT_CLIENT_PROMPT)) {
         d->clientf(
           format("%d|%s|%s") % CLIENT_SAY % sstring(getName()).cap() %
-          colorString(this, mob->desc, garbleRoom, NULL, COLOR_NONE, FALSE));
+          colorString(this, mob->desc, garbleRoom, nullptr, COLOR_NONE, false));
       }
     }  // is mob PC
   }    // for
@@ -222,7 +222,7 @@ int TBeing::doSay(const sstring& arg) {
     for (std::list<TMonster*>::const_iterator it = mobs.begin();
          it != mobs.end();) {
       TMonster* tmons = *(it++);
-      tmons->aiSay(this, NULL);
+      tmons->aiSay(this, nullptr);
       rc = tmons->checkResponses(this, 0, garbleRoom, CMD_SAY);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         delete tmons;
@@ -231,13 +231,13 @@ int TBeing::doSay(const sstring& arg) {
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 void Descriptor::sendShout(TBeing* ch, const sstring& arg) {
   Descriptor* i;
   const char* action = "shouts";
-  int garbleFlags = ch->getGarbles(NULL);
+  int garbleFlags = ch->getGarbles(nullptr);
   if (garbleFlags & Garble::TYPE_FLAG_BLAHBLAH)
     action = "whines";
   else if (garbleFlags & Garble::TYPE_FLAG_WAHWAH)
@@ -293,12 +293,12 @@ void Descriptor::sendShout(TBeing* ch, const sstring& arg) {
       argbuf =
         ch->garble(b, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_INDIVIDUAL);
 
-      namebufc = colorString(b, i, shouter.cap(), NULL, COLOR_NONE, FALSE);
-      if (hasColorStrings(NULL, shouter, 2)) {
+      namebufc = colorString(b, i, shouter.cap(), nullptr, COLOR_NONE, false);
+      if (hasColorStrings(nullptr, shouter, 2)) {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
-          namebuf = colorString(b, i, shouter.cap(), NULL, COLOR_MOBS, FALSE);
+          namebuf = colorString(b, i, shouter.cap(), nullptr, COLOR_MOBS, false);
         } else {
-          namebuf = colorString(b, i, shouter.cap(), NULL, COLOR_NONE, FALSE);
+          namebuf = colorString(b, i, shouter.cap(), nullptr, COLOR_NONE, false);
         }
       } else {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_MOBS)) {
@@ -308,14 +308,14 @@ void Descriptor::sendShout(TBeing* ch, const sstring& arg) {
         }
       }
 
-      if (hasColorStrings(NULL, argbuf, 2)) {
+      if (hasColorStrings(nullptr, argbuf, 2)) {
         if (IS_SET(b->desc->plr_color, PLR_COLOR_SHOUTS)) {
-          messagebuf = colorString(b, i, argbuf, NULL, COLOR_BASIC, FALSE);
+          messagebuf = colorString(b, i, argbuf, nullptr, COLOR_BASIC, false);
         } else {
-          messagebuf = colorString(b, i, argbuf, NULL, COLOR_NONE, FALSE);
+          messagebuf = colorString(b, i, argbuf, nullptr, COLOR_NONE, false);
         }
       } else {
-        messagebuf = colorString(b, i, argbuf, NULL, COLOR_NONE, FALSE);
+        messagebuf = colorString(b, i, argbuf, nullptr, COLOR_NONE, false);
       }
 
       if (i->m_bIsClient || IS_SET(i->prompt_d.type, PROMPT_CLIENT_PROMPT))
@@ -344,7 +344,7 @@ void TBeing::doShout(const sstring& arg) {
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+    act("$n waves $s hands and points silently toward $s mouth.", true, this, 0,
       0, TO_ROOM);
     return;
   }
@@ -399,12 +399,12 @@ void TBeing::doShout(const sstring& arg) {
   }
 
   sstring garbled =
-    garble(NULL, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
+    garble(nullptr, arg, Garble::SPEECH_SHOUT, Garble::SCOPE_EVERYONE);
 
   sendTo(COLOR_COMM,
     format("<g>You shout<Z>, \"%s%s\"\n\r") %
-      colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
-  act("$n rears back $s head and shouts loudly.", FALSE, this, 0, 0, TO_ROOM);
+      colorString(this, desc, garbled, nullptr, COLOR_BASIC, false) % norm());
+  act("$n rears back $s head and shouts loudly.", false, this, 0, 0, TO_ROOM);
 
   loseSneak();
 
@@ -439,7 +439,7 @@ void TBeing::doGrouptell(const sstring& arg) {
   }
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+    act("$n waves $s hands and points silently toward $s mouth.", true, this, 0,
       0, TO_ROOM);
     return;
   }
@@ -458,12 +458,12 @@ void TBeing::doGrouptell(const sstring& arg) {
     return;
   } else {
     garbled =
-      garble(NULL, arg, Garble::SPEECH_GROUPTELL, Garble::SCOPE_EVERYONE);
+      garble(nullptr, arg, Garble::SPEECH_GROUPTELL, Garble::SCOPE_EVERYONE);
 
     garbled.convertStringColor("<r>");
 
     sendTo(format("You tell your group: %s%s%s\n\r") % red() %
-           colorString(this, desc, garbled, NULL, COLOR_BASIC, FALSE) % norm());
+           colorString(this, desc, garbled, nullptr, COLOR_BASIC, false) % norm());
   }
   if (k->isAffected(AFF_GROUP) && !k->checkSoundproof()) {
     if (k->desc && !k->desc->ignored.isIgnored(desc) &&
@@ -472,8 +472,8 @@ void TBeing::doGrouptell(const sstring& arg) {
         (k != this)) {
       k->desc->clientf(
         format("%d|%s|%s") % CLIENT_GROUPTELL %
-        colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) %
-        colorString(this, k->desc, garbled, NULL, COLOR_NONE, FALSE));
+        colorString(this, k->desc, getName(), nullptr, COLOR_NONE, false) %
+        colorString(this, k->desc, garbled, nullptr, COLOR_NONE, false));
     }
     // a crash bug lies here....cut and paste from windows notepad
     // plays with the next few lines for some reason
@@ -481,7 +481,7 @@ void TBeing::doGrouptell(const sstring& arg) {
       garbledTo =
         garble(k, garbled, Garble::SPEECH_GROUPTELL, Garble::SCOPE_INDIVIDUAL);
       buf = format("%s: %s%s%s") % getName() % k->red() %
-            colorString(this, k->desc, garbledTo, NULL, COLOR_COMM, FALSE) %
+            colorString(this, k->desc, garbledTo, nullptr, COLOR_COMM, false) %
             k->norm();
       sstring gmcp = format(
                        "comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", "
@@ -507,20 +507,20 @@ void TBeing::doGrouptell(const sstring& arg) {
             IS_SET(f->follower->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))) {
         f->follower->desc->clientf(
           format("%d|%s|%s") % CLIENT_GROUPTELL %
-          colorString(this, k->desc, getName(), NULL, COLOR_NONE, FALSE) %
-          colorString(this, f->follower->desc, garbledTo, NULL, COLOR_NONE,
-            FALSE));
+          colorString(this, k->desc, getName(), nullptr, COLOR_NONE, false) %
+          colorString(this, f->follower->desc, garbledTo, nullptr, COLOR_NONE,
+            false));
       }
       buf = format("%s: %s%s%s") % getName() % f->follower->red() %
-            colorString(this, f->follower->desc, garbledTo, NULL, COLOR_COMM,
-              FALSE) %
+            colorString(this, f->follower->desc, garbledTo, nullptr, COLOR_COMM,
+              false) %
             f->follower->norm();
       sstring gmcp = format(
                        "comm.channel { \"chan\": \"gtell\", \"msg\": \"%s\", "
                        "\"player\": \"%s\" }") %
                      buf.trim().escapeJson() %
                      sstring(getName()).trim().escapeJson();
-      if (f->follower->desc != NULL)
+      if (f->follower->desc != nullptr)
         f->follower->desc->sendGmcp(gmcp, false);
 
       act(buf, 0, this, 0, f->follower, TO_VICT);
@@ -566,7 +566,7 @@ void TBeing::doCommune(const sstring& arg) {
 
   if (!levnum) {
     sendTo(format("%sYou tell the gods:%s %s") % purple() % cyan() %
-           colorString(this, desc, arg, NULL, COLOR_BASIC, TRUE, TRUE));
+           colorString(this, desc, arg, nullptr, COLOR_BASIC, true, true));
   } else {
     if (levnum <= MAX_MORT) {
       sendTo(format("Hey dummy, all the gods are at least level %d.\n\r") %
@@ -579,8 +579,8 @@ void TBeing::doCommune(const sstring& arg) {
 
     sendTo(format("You tell level %d+ gods: %s") % levnum %
            colorString(this, desc,
-             arg.substr(arg.find_first_of(" ") + 1, arg.length() - 1), NULL,
-             COLOR_BASIC, TRUE, TRUE));
+             arg.substr(arg.find_first_of(" ") + 1, arg.length() - 1), nullptr,
+             COLOR_BASIC, true, true));
   }
 
   for (i = descriptor_list; i; i = i->next) {
@@ -593,7 +593,7 @@ void TBeing::doCommune(const sstring& arg) {
       sstring str;
 
       if (!levnum) {
-        str = colorString(this, i, arg, NULL, COLOR_COMM, FALSE);
+        str = colorString(this, i, arg, nullptr, COLOR_COMM, false);
         str.convertStringColor("<c>");
         if (critter->GetMaxLevel() >= GOD_LEVEL1 &&
             toggleInfo[TOG_WIZBUILD]->toggle) {
@@ -627,8 +627,8 @@ void TBeing::doCommune(const sstring& arg) {
         }
       } else {
         str = colorString(this, i,
-          arg.substr(arg.find_first_of(" "), arg.length() - 1), NULL,
-          COLOR_COMM, FALSE);
+          arg.substr(arg.find_first_of(" "), arg.length() - 1), nullptr,
+          COLOR_COMM, false);
         str.convertStringColor("<c>");
 
         if (critter->GetMaxLevel() >= GOD_LEVEL1 &&
@@ -676,31 +676,31 @@ int TBeing::doSign(const sstring& arg) {
 
   if (arg.empty()) {
     sendTo("Yes, but WHAT do you want to sign?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!roomp)
-    return FALSE;
+    return false;
 
   if (!hasHands() || affectedBySpell(AFFECT_TRANSFORMED_ARMS) ||
       affectedBySpell(AFFECT_TRANSFORMED_HANDS)) {
     sendTo("Yeah right...WHAT HANDS?!?!?!?!\n\r");
-    return FALSE;
+    return false;
   }
   if (eitherArmHurt()) {
     sendTo("You REALLY need working arms to communicate like this...\n\r");
-    return FALSE;
+    return false;
   }
   if (heldInPrimHand() || heldInSecHand()) {
     sendTo("You can't sign while holding things.\n\r");
-    return FALSE;
+    return false;
   }
   if (fight()) {
     sendTo("You can't sign while fighting.\n\r");
-    return FALSE;
+    return false;
   }
 
-  buf = garble(NULL, arg, Garble::SPEECH_SIGN, Garble::SCOPE_EVERYONE);
+  buf = garble(nullptr, arg, Garble::SPEECH_SIGN, Garble::SCOPE_EVERYONE);
 
   sendTo(format("You sign, \"%s\"\n\r") % arg);
   if (buf != arg)
@@ -722,33 +722,33 @@ int TBeing::doSign(const sstring& arg) {
       if (bSuccess(SKILL_SIGN)) {
         sstring bufToVict =
           garble(ch, buf, Garble::SPEECH_SIGN, Garble::SCOPE_INDIVIDUAL);
-        act(bufToVict, TRUE, this, 0, ch, TO_VICT);
+        act(bufToVict, true, this, 0, ch, TO_VICT);
       }
       if (isPc() && !ch->isPc()) {
         TMonster* tmons = dynamic_cast<TMonster*>(ch);
-        tmons->aiSay(this, NULL);
+        tmons->aiSay(this, nullptr);
         rc = tmons->checkResponses(this, 0, buf, CMD_SIGN);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tmons;
-          tmons = NULL;
+          tmons = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_VICT))
           return DELETE_THIS;
       } else {
         // thieves are sneaky, others wouldn't see them trying to sign
         if (!hasClass(CLASS_THIEF))
-          act("$n makes funny motions with $s hands.", TRUE, this, 0, ch,
+          act("$n makes funny motions with $s hands.", true, this, 0, ch,
             TO_VICT);
       }
     } else {
       // thieves are sneaky, others wouldn't see them trying to sign
       if (!hasClass(CLASS_THIEF))
-        act("$n makes funny motions with $s hands.", TRUE, this, 0, ch,
+        act("$n makes funny motions with $s hands.", true, this, 0, ch,
           TO_VICT);
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 sstring TellFromComm::getText() {
@@ -765,8 +765,8 @@ TBeing* findTellTarget(TBeing* me, const sstring& name, bool visible,
 
   if (!(vict = get_pc_world(me, name, EXACT_YES, INFRA_NO, visible)))
     if (!(vict = get_pc_world(me, name, EXACT_NO, INFRA_NO, visible)) && mobs)
-      if (!(vict = get_char_vis_world(me, name, NULL, EXACT_YES)))
-        vict = get_char_vis_world(me, name, NULL, EXACT_NO);
+      if (!(vict = get_char_vis_world(me, name, nullptr, EXACT_YES)))
+        vict = get_char_vis_world(me, name, nullptr, EXACT_NO);
 
   return vict;
 }
@@ -780,31 +780,31 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
 
   if (isAffected(AFF_SILENT)) {
     sendTo(CommPtr(new CmdMsgComm("tell", "You can't make a sound!\n\r")));
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+    act("$n waves $s hands and points silently toward $s mouth.", true, this, 0,
       0, TO_ROOM);
-    return FALSE;
+    return false;
   }
   if (!isImmortal() && applySoundproof())
-    return FALSE;
+    return false;
 
   if (isDumbAnimal()) {
     if (desc)
       desc->output.push(CommPtr(
         new CmdMsgComm("tell", "You are a dumb animal; you can't talk!\n\r")));
-    return FALSE;
+    return false;
   }
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         "What a dumb master you have, charmed mobiles can't tell.\n\r")));
-    return FALSE;
+    return false;
   }
 
   if (name.empty() || message.empty()) {
     if (desc)
       desc->output.push(
         CommPtr(new CmdMsgComm("tell", "Whom do you wish to tell what??\n\r")));
-    return FALSE;
+    return false;
   } else {
     if (!(vict = findTellTarget(this, name, visible, true))) {
       if (isImmortal()) {
@@ -825,7 +825,7 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
       sendTo(CommPtr(
         new CmdMsgComm("tell", format("You fail to tell to '%s'\n\r") % name)));
 
-      // if vict isn't NULL here, it means we found another player logged in
+      // if vict isn't nullptr here, it means we found another player logged in
       // under the same account
       if (vict) {
         sendTo(CommPtr(new CmdMsgComm("tell",
@@ -833,7 +833,7 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
             vict->getName())));
       }
 
-      return FALSE;
+      return false;
     }
   }
 
@@ -841,12 +841,12 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         "You have been sanctioned by the gods and can't tell to them!!\n\r")));
-    return FALSE;
+    return false;
   }
   if (this == vict) {
     sendTo(CommPtr(
       new CmdMsgComm("tell", "You try to tell yourself something.\n\r")));
-    return FALSE;
+    return false;
   }
 
   // if a player doesnt want tells, only allow the person they last
@@ -857,14 +857,14 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         "That person is not receiving tells. Try again later.\n\r")));
-    return FALSE;
+    return false;
   }
 
   if (hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())) {
     if (desc)
       desc->output.push(
         CommPtr(new CmdMsgComm("tell", "You're mute, you can't talk.\n\r")));
-    return FALSE;
+    return false;
   }
 
   if ((vict->getPosition() == POSITION_SLEEPING) && !isImmortal()) {
@@ -872,52 +872,52 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         format("%s is asleep, shhh.") %
           ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
-    return FALSE;
+    return false;
   }
   if (vict->getPosition() <= POSITION_STUNNED) {  // Russ 01/06/95
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         format("%s is stunned or wounded badly and can't hear your tells!.") %
           ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
-    return FALSE;
+    return false;
   }
   if (dynamic_cast<TMonster*>(vict) && !(vict->desc)) {
     if (desc)
       desc->output.push(
         CommPtr(new CmdMsgComm("tell", "No-one by that name here.\n\r")));
-    return FALSE;
+    return false;
   }
   if (!vict->desc) {
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         format("%s can't hear you.") %
           ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
-    return FALSE;
+    return false;
   }
   if (vict->desc->connected) {
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         format("%s is editing or writing. Try again later.") %
           ((sstring)(canSee(vict) ? vict->hssh() : "it")).cap())));
-    return FALSE;
+    return false;
   }
   if (!vict->desc->connected && vict->isPlayerAction(PLR_MAILING)) {
     if (desc)
       desc->output.push(CommPtr(
         new CmdMsgComm("tell", "They are mailing. Try again later.\n\r")));
-    return FALSE;
+    return false;
   }
   if (!vict->desc->connected && vict->isPlayerAction(PLR_BUGGING)) {
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         "They are critiquing the mud.  Try again later.\n\r")));
-    return FALSE;
+    return false;
   }
   if (vict->checkSoundproof() && !isImmortal()) {
     if (desc)
       desc->output.push(CommPtr(new CmdMsgComm("tell",
         "Your words don't reach them; must be in a silent zone.\n\r")));
-    return FALSE;
+    return false;
   }
 
   int drunkNum = getCond(DRUNK);
@@ -931,14 +931,14 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
     vict->triggerSpecialOnPerson(this, CMD_OBJ_TOLD_TO_PLAYER, garbed.c_str());
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete vict;
-    vict = NULL;
+    vict = nullptr;
   }
 
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_THIS;
 
   if (rc)
-    return FALSE;
+    return false;
 
   capbuf = vict->pers(this);
 
@@ -950,7 +950,7 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
 
   // if the person is ignoring, just break off the tell now - they won't know
   if (d && d->ignored.isIgnored(desc))
-    return FALSE;
+    return false;
 
   // we only color the sstring to the victim, so leave this AFTER
   // the stuff we send to the teller.
@@ -985,8 +985,8 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
     garbedBuf = format("<c>%s<z>") % garbed;
     d->clientf(
       format("%d|%s|%s") % CLIENT_TELL %
-      colorString(vict, vict->desc, capbuf, NULL, COLOR_NONE, FALSE) %
-      colorString(vict, vict->desc, garbedBuf, NULL, COLOR_NONE, FALSE));
+      colorString(vict, vict->desc, capbuf, nullptr, COLOR_NONE, false) %
+      colorString(vict, vict->desc, garbedBuf, nullptr, COLOR_NONE, false));
   }
 
   // set up last teller for reply's use
@@ -1006,75 +1006,75 @@ int TBeing::doTell(const sstring& name, const sstring& message, bool visible) {
   if (vict->desc &&
       (vict->isPlayerAction(PLR_AFK) ||
         (IS_SET(vict->desc->autobits, AUTO_AFK) && (vict->getTimer() >= 5))))
-    act("$N appears to be away from $S terminal at the moment.", TRUE, this, 0,
+    act("$N appears to be away from $S terminal at the moment.", true, this, 0,
       vict, TO_CHAR);
 
   //  disturbMeditation(vict);
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS if this should be toasted
 int TBeing::doWhisper(const sstring& arg) {
-  TBeing *vict, *bOther = NULL;
-  TThing* bThing = NULL;
+  TBeing *vict, *bOther = nullptr;
+  TThing* bThing = nullptr;
   sstring name, message, buf;
   int rc;
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+    act("$n waves $s hands and points silently toward $s mouth.", true, this, 0,
       0, TO_ROOM);
-    return FALSE;
+    return false;
   }
   if (applySoundproof())
-    return FALSE;
+    return false;
 
   if (isDumbAnimal()) {
     sendTo("Beasts don't talk.\n\r");
-    return FALSE;
+    return false;
   }
   message = arg;
   message = one_argument(message, name);
 
   if (name.empty() || message.empty()) {
     sendTo("Whom do you want to whisper to.. and what??\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!(vict = get_char_room_vis(this, name))) {
     sendTo("No-one by that name here..\n\r");
-    return FALSE;
+    return false;
   }
   if (hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())) {
     sendTo("You're mute, you can't talk.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (vict == this) {
-    act("$n whispers quietly to $mself.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n whispers quietly to $mself.", true, this, 0, 0, TO_ROOM);
     sendTo("You can't seem to get your mouth close enough to your ear...\n\r");
-    return FALSE;
+    return false;
   }
 
   sstring garbed;
   garbed = garble(vict, message, Garble::SPEECH_WHISPER);
 
   buf = format("$n whispers to you, \"%s\"") %
-        colorString(this, vict->desc, garbed, NULL, COLOR_COMM, TRUE);
+        colorString(this, vict->desc, garbed, nullptr, COLOR_COMM, true);
 
   if (vict->desc && !vict->desc->m_bIsClient &&
       IS_SET(vict->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
     vict->desc->clientf(
       format("%d|%s|%s") % CLIENT_WHISPER %
-      colorString(this, vict->desc, getName(), NULL, COLOR_NONE, FALSE) %
-      colorString(this, vict->desc, garbed, NULL, COLOR_NONE, FALSE));
+      colorString(this, vict->desc, getName(), nullptr, COLOR_NONE, false) %
+      colorString(this, vict->desc, garbed, nullptr, COLOR_NONE, false));
 
   if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
-    act(buf, TRUE, this, 0, vict, TO_VICT);
+    act(buf, true, this, 0, vict, TO_VICT);
   sendTo(COLOR_MOBS,
     format("You whisper to %s, \"%s\"\n\r") % vict->getName() %
-      colorString(this, desc, garbed, NULL, COLOR_BASIC, FALSE));
-  act("$n whispers something to $N.", TRUE, this, 0, vict, TO_NOTVICT);
+      colorString(this, desc, garbed, nullptr, COLOR_BASIC, false));
+  act("$n whispers something to $N.", true, this, 0, vict, TO_NOTVICT);
 
   // Lets check the room for any thives we might have using spy.
   // If it's a pc with spy, then they must be equal/greater than the speaker
@@ -1088,8 +1088,8 @@ int TBeing::doWhisper(const sstring& arg) {
         bOther != vict && !bOther->isImmortal() && !isImmortal() &&
         !vict->isImmortal()) {
       buf = format("$n whispers to %s, \"%s\"") % vict->getName() %
-            colorString(this, bOther->desc, garbed, NULL, COLOR_COMM, TRUE);
-      act(buf, TRUE, this, 0, bOther, TO_VICT);
+            colorString(this, bOther->desc, garbed, nullptr, COLOR_COMM, true);
+      act(buf, true, this, 0, bOther, TO_VICT);
     }
   }
 
@@ -1097,16 +1097,16 @@ int TBeing::doWhisper(const sstring& arg) {
     disturbMeditation(vict);
 
   if (!vict->isPc()) {
-    rc = dynamic_cast<TMonster*>(vict)->checkResponses(this, NULL, garbed,
+    rc = dynamic_cast<TMonster*>(vict)->checkResponses(this, nullptr, garbed,
       CMD_WHISPER);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete vict;
-      vict = NULL;
+      vict = nullptr;
     } else if (IS_SET_DELETE(rc, DELETE_VICT)) {
       return DELETE_THIS;
     }
   }
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS is this should go poof
@@ -1117,15 +1117,15 @@ int TBeing::doAsk(const sstring& arg) {
 
   if (isAffected(AFF_SILENT)) {
     sendTo("You can't make a sound!\n\r");
-    act("$n waves $s hands and points silently toward $s mouth.", TRUE, this, 0,
+    act("$n waves $s hands and points silently toward $s mouth.", true, this, 0,
       0, TO_ROOM);
-    return FALSE;
+    return false;
   }
   if (applySoundproof())
-    return FALSE;
+    return false;
   if (isDumbAnimal()) {
     sendTo("Beasts don't talk.\n\r");
-    return FALSE;
+    return false;
   }
 
   message = arg;
@@ -1138,18 +1138,18 @@ int TBeing::doAsk(const sstring& arg) {
 
   else if (hasQuestBit(TOG_IS_MUTE) && (!vict->isImmortal() || !vict->isPc())) {
     sendTo("You're mute, you can't talk.\n\r");
-    return FALSE;
+    return false;
   }
 
   else if (vict == this) {
-    act("$n quietly asks $mself a question.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n quietly asks $mself a question.", true, this, 0, 0, TO_ROOM);
     sendTo("You think about it for a while...\n\r");
   } else {
     garbled = garble(vict, message, Garble::SPEECH_ASK);
 
     buf = format("$n asks you, \"%s\"") % garbled;
     if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
-      act(buf, TRUE, this, 0, vict, TO_VICT);
+      act(buf, true, this, 0, vict, TO_VICT);
     sendTo(COLOR_MOBS,
       format("You ask %s, \"%s\"\n\r") % vict->getName() % garbled);
 
@@ -1157,32 +1157,32 @@ int TBeing::doAsk(const sstring& arg) {
         IS_SET(vict->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
       vict->desc->clientf(
         format("%d|%s|%s") % CLIENT_ASK %
-        colorString(this, vict->desc, getName(), NULL, COLOR_NONE, FALSE) %
-        colorString(this, vict->desc, garbled, NULL, COLOR_NONE, FALSE));
+        colorString(this, vict->desc, getName(), nullptr, COLOR_NONE, false) %
+        colorString(this, vict->desc, garbled, nullptr, COLOR_NONE, false));
 
-    act("$n asks $N a question.", TRUE, this, 0, vict, TO_NOTVICT);
+    act("$n asks $N a question.", true, this, 0, vict, TO_NOTVICT);
     if (!vict->desc || !vict->desc->ignored.isIgnored(desc))
       disturbMeditation(vict);
     if (!vict->isPc()) {
-      rc = dynamic_cast<TMonster*>(vict)->checkResponses(this, NULL, garbled,
+      rc = dynamic_cast<TMonster*>(vict)->checkResponses(this, nullptr, garbled,
         CMD_ASK);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
-        vict = NULL;
+        vict = nullptr;
       } else if (IS_SET_DELETE(rc, DELETE_VICT)) {
         return DELETE_THIS;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TThing::writeMePen(TBeing* ch, TThing*) {
-  act("You can not write with $p.", FALSE, ch, this, 0, TO_CHAR);
+  act("You can not write with $p.", false, ch, this, 0, TO_CHAR);
 }
 
 void TThing::writeMeNote(TBeing* ch, TPen*) {
-  act("You can't write on $p.", FALSE, ch, this, 0, TO_CHAR);
+  act("You can't write on $p.", false, ch, this, 0, TO_CHAR);
 }
 
 void TNote::writeMeNote(TBeing* ch, TPen*) {
@@ -1200,7 +1200,7 @@ void TNote::writeMeNote(TBeing* ch, TPen*) {
     if (objVnum() >= 0) {
       swapToStrung();
     }
-    act("$n begins to jot down a note.", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n begins to jot down a note.", true, ch, 0, 0, TO_ROOM);
 #if 0
     if (ch->desc->m_bIsClient)
       ch->desc->clientf(format("%d|%d") % CLIENT_STARTEDIT % MAX_NOTE_LENGTH);
@@ -1213,7 +1213,7 @@ void TNote::writeMeNote(TBeing* ch, TPen*) {
 }
 
 void TBeing::doWrite(const char* arg) {
-  TThing *paper = NULL, *pen = NULL;
+  TThing *paper = nullptr, *pen = nullptr;
   char papername[256], penname[256];
 
   argument_interpreter(arg, papername, cElements(papername), penname,
@@ -1261,33 +1261,33 @@ void TBeing::doReply(const sstring& arg) {
     return;
   }
 
-  doTell(add_bars(desc->last_teller), arg, FALSE);
+  doTell(add_bars(desc->last_teller), arg, false);
 }
 
 bool TBeing::canSpeak() {
   affectedData* aff;
 
   if (isAffected(AFF_SILENT))
-    return FALSE;
+    return false;
   if (checkSoundproof())
-    return FALSE;
+    return false;
   if (isDumbAnimal())
-    return FALSE;
+    return false;
   if (hasQuestBit(TOG_IS_MUTE))
-    return FALSE;
+    return false;
 
   // this is modified from hasDisease().
   // slightly more efficient to do it like this
   for (aff = affected; aff; aff = aff->next) {
     if (aff->type == AFFECT_DISEASE) {
       if (aff->modifier == DISEASE_GARROTTE)
-        return FALSE;
+        return false;
       if (aff->modifier == DISEASE_SUFFOCATE)
-        return FALSE;
+        return false;
       if (aff->modifier == DISEASE_DROWNING)
-        return FALSE;
+        return false;
     }
   }
 
-  return TRUE;
+  return true;
 }

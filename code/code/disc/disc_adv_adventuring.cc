@@ -32,7 +32,7 @@ static const int FORAGE_DESERT_BEGIN = 37137, FORAGE_DESERT_END = 37140;
 static const int FORAGE_INSECT_FOOD = 4;
 
 int forage(TBeing* caster, short bKnown) {
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int forageItem;
   affectedData aff;
 
@@ -86,12 +86,12 @@ int forage(TBeing* caster, short bKnown) {
   if (caster->checkForSkillAttempt(SKILL_FORAGE)) {
     act(
       "You tried foraging recently and are not prepared to try again so soon.",
-      FALSE, caster, NULL, NULL, TO_CHAR);
+      false, caster, nullptr, nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
 
   if (caster->affectedBySpell(SKILL_FORAGE)) {
-    act("You must wait before foraging again.", FALSE, caster, NULL, NULL,
+    act("You must wait before foraging again.", false, caster, nullptr, nullptr,
       TO_CHAR);
     return SPELL_FAIL;
   }
@@ -119,12 +119,12 @@ int forage(TBeing* caster, short bKnown) {
       if (!obj) {
         caster->sendTo("Something went wrong, bug Cosmo.\n\r");
         vlogf(LOG_BUG,
-          format("Forage tried to load a NULL object (%d)") % forageItem);
+          format("Forage tried to load a nullptr object (%d)") % forageItem);
         return SPELL_FAIL;
       }
 
-      act("You rustle up $p.", FALSE, caster, obj, NULL, TO_CHAR);
-      act("$n rustles up $p.", TRUE, caster, obj, NULL, TO_ROOM);
+      act("You rustle up $p.", false, caster, obj, nullptr, TO_CHAR);
+      act("$n rustles up $p.", true, caster, obj, nullptr, TO_ROOM);
       *caster->roomp += *obj;
       foodpile /= 3;
     }
@@ -144,7 +144,7 @@ int forage(TBeing* caster, short bKnown) {
 
     caster->affectTo(&aff, -1);
 
-    act("You don't seem to find anything.", FALSE, caster, obj, NULL, TO_CHAR);
+    act("You don't seem to find anything.", false, caster, obj, nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
 }
@@ -226,8 +226,8 @@ int forage_insect(TBeing* caster) {
   sstring bug;
 
   if (caster->getCond(FULL) <= -1 || caster->getCond(FULL) > 20) {
-    act("You are too full to consider eating right now.", FALSE, caster, NULL,
-      NULL, TO_CHAR);
+    act("You are too full to consider eating right now.", false, caster, nullptr,
+      nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
   if (!caster->roomp) {
@@ -239,7 +239,7 @@ int forage_insect(TBeing* caster) {
     act(
       "You tried foraging insects recently and are not prepared to try again "
       "so soon.",
-      FALSE, caster, NULL, NULL, TO_CHAR);
+      false, caster, nullptr, nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
 
@@ -280,8 +280,8 @@ int forage_insect(TBeing* caster) {
   caster->affectTo(&aff, -1);
 
   if (int(food) <= 0) {
-    act("You can't seem to find any insects to eat here.", FALSE, caster, NULL,
-      NULL, TO_CHAR);
+    act("You can't seem to find any insects to eat here.", false, caster, nullptr,
+      nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
 
@@ -300,15 +300,15 @@ int forage_insect(TBeing* caster) {
   action = format(action) % bugname;
 
   act(format("You flick your tongue out and snag a %s!") % bugname, false,
-    caster, NULL, NULL, TO_CHAR);
+    caster, nullptr, nullptr, TO_CHAR);
   act(format("$n flicks $s tongue out and snags a %s!") % bugname, false,
-    caster, NULL, NULL, TO_ROOM);
-  act(format("You eat a %s.") % bugname, false, caster, NULL, NULL, TO_CHAR);
-  act(format("$n %s!") % action, false, caster, NULL, NULL, TO_ROOM);
+    caster, nullptr, nullptr, TO_ROOM);
+  act(format("You eat a %s.") % bugname, false, caster, nullptr, nullptr, TO_CHAR);
+  act(format("$n %s!") % action, false, caster, nullptr, nullptr, TO_ROOM);
 
   caster->gainCondition(FULL, int(food));
   if (caster->getCond(FULL) > 20)
-    act("You are full.", FALSE, caster, 0, 0, TO_CHAR);
+    act("You are full.", false, caster, 0, 0, TO_CHAR);
 
   return SPELL_SUCCESS;
 }
@@ -654,7 +654,7 @@ int determineSkinningItem(TBaseCorpse* corpse, int* amount, char* msg,
       case RACE_DINOSAUR:
       case RACE_FISH:
       case RACE_BIRD:
-      case RACE_SNAKE: 
+      case RACE_SNAKE:
       case RACE_PRIMATE:
       case RACE_RODENT:
       case RACE_FISHMAN:
@@ -700,11 +700,11 @@ void TThing::skinMe(TBeing* ch, const char* arg) {
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You aren't able to skin that.", FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: You aren't able to skin that.", false, ch, corpse, 0, TO_CHAR);
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_SKIN)) {
-    act("$p: It can't be skinned further.", FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: It can't be skinned further.", false, ch, corpse, 0, TO_CHAR);
     return;
   }
 
@@ -717,24 +717,24 @@ void TThing::skinMe(TBeing* ch, const char* arg) {
   }
 
   if (corpse->isCorpseFlag(CORPSE_PC_SKINNING)) {
-    act("$p: Someone else is already skinning this.", FALSE, ch, corpse, 0,
+    act("$p: Someone else is already skinning this.", false, ch, corpse, 0,
       TO_CHAR);
     return;
   }
   num = determineSkinningItem(corpse, &amount, msg, gl_msg);
   if (num == -1 || !(rnum = real_object(num))) {
     // no item
-    act("$p can not be skinned.", FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p can not be skinned.", false, ch, corpse, 0, TO_CHAR);
     return;
   }
   corpse->addCorpseFlag(CORPSE_PC_SKINNING);
   if (corpse->isCorpseFlag(CORPSE_HALF_SKIN)) {
-    act("$p: This has been partly skinned, only half the hide remains.", FALSE,
+    act("$p: This has been partly skinned, only half the hide remains.", false,
       ch, corpse, 0, TO_CHAR);
   }
 
   ch->sendTo("You start skinning the corpse.\n\r");
-  act("$n begins skinning the corpse.", FALSE, ch, NULL, 0, TO_ROOM);
+  act("$n begins skinning the corpse.", false, ch, nullptr, 0, TO_ROOM);
 
   // What we do here is find out how many 'pulses' it will take to skin the
   // chosen corpse.  We then add to that the PC's (Skill-70)/10 to either grant
@@ -751,7 +751,7 @@ void TThing::skinMe(TBeing* ch, const char* arg) {
     5 +
     min(max((int)(lev * 2) + ((ch->getSkillValue(SKILL_SKIN) - 70) / 10), 4),
       (int)(((((corpse->getWeight() * .10) / 2) / skin_pulses) + 1) / num));
-  start_task(ch, corpse, NULL, TASK_SKINNING, "", skin_pulses, ch->in_room, 1,
+  start_task(ch, corpse, nullptr, TASK_SKINNING, "", skin_pulses, ch->in_room, 1,
     0, 40);
 }
 
@@ -781,28 +781,28 @@ void TTool::skinMe(TBeing* ch, const char* arg) {
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You aren't able to skin that.", FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: You aren't able to skin that.", false, ch, corpse, 0, TO_CHAR);
     return;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_SKIN)) {
-    act("$p: It can't be skinned further.", FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p: It can't be skinned further.", false, ch, corpse, 0, TO_CHAR);
     return;
   }
   num = determineSkinningItem(corpse, &amount, msg, gl_msg);
   if (num == -1 || !(rnum = real_object(num))) {
     // no item
-    act("$p can not be skinned.", FALSE, ch, corpse, 0, TO_CHAR);
+    act("$p can not be skinned.", false, ch, corpse, 0, TO_CHAR);
     return;
   }
 
   ch->sendTo("You start skinning the corpse.\n\r");
-  act("$n begins skinning the corpse.", FALSE, ch, NULL, 0, TO_ROOM);
+  act("$n begins skinning the corpse.", false, ch, nullptr, 0, TO_ROOM);
 
   // Start skinning task, all skill checks etc are done inside the task
   skin_pulses =
     20 + ((100 - max(0, (int)ch->getSkillValue(SKILL_SKIN))) * 4 / 3);
 
-  start_task(ch, corpse, NULL, TASK_SKINNING, "", skin_pulses, ch->in_room, 1,
+  start_task(ch, corpse, nullptr, TASK_SKINNING, "", skin_pulses, ch->in_room, 1,
     0, 40);
 }
 
@@ -834,7 +834,7 @@ void TBeing::doSkin(const char* arg) {
 void TBeing::doSeekwater() {
   int dist = 0, code, skill, worked;
   int targrm;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   affectedData aff;
   char buf[256], buf2[512];
 
@@ -880,7 +880,7 @@ void TBeing::doSeekwater() {
     dist = MAX_ROOMS;
 
   hunt_dist = dist;
-  specials.hunting = NULL;
+  specials.hunting = nullptr;
   TPathFinder path(dist);
 
   // note: -dist will look THRU doors.
@@ -961,14 +961,14 @@ void TBeing::doSeekwater() {
   addToWait(combatRound(1));
   addToMove((int)min(10, (-2 - ((110 - getSkillValue(SKILL_SEEKWATER)) / 6))));
 
-  start_task(this, NULL, NULL, TASK_TRACKING, "", 1, in_room, 1, code + 1, 40);
+  start_task(this, nullptr, nullptr, TASK_TRACKING, "", 1, in_room, 1, code + 1, 40);
 }
 
 // we are going to return 0 if they are not in a camp
 // otherwise, return the level of the campers skill
 // for groupmates of camper, return fraction of the level.
 int TBeing::inCamp() const {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* ch;
   affectedData* aff;
 
@@ -979,7 +979,7 @@ int TBeing::inCamp() const {
 
   // this just simplifies the loop below
   if (!isAffected(AFF_GROUP))
-    return FALSE;
+    return false;
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
@@ -994,7 +994,7 @@ int TBeing::inCamp() const {
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 int TBeing::doEncamp() {
@@ -1002,7 +1002,7 @@ int TBeing::doEncamp() {
 
   if (!doesKnowSkill(SKILL_ENCAMP)) {
     sendTo("You know nothing about camping.\n\r");
-    return FALSE;
+    return false;
   }
 
   rc = encamp(this);
@@ -1014,7 +1014,7 @@ int TBeing::doEncamp() {
 int encamp(TBeing* caster) {
   if (!caster || !caster->isPc()) {
     vlogf(LOG_BUG, format("Non-PC in encamp() call.  %s") % caster->getName());
-    return FALSE;
+    return false;
   }
 
   affectedData aff;
@@ -1023,7 +1023,7 @@ int encamp(TBeing* caster) {
 
   if (caster->affectedBySpell(SKILL_ENCAMP)) {
     caster->sendTo("You already have a camp set up here.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (caster->roomp->isRoomFlag(ROOM_ON_FIRE)) {
@@ -1082,17 +1082,17 @@ int encamp(TBeing* caster) {
 
   if (caster->bSuccess(bKnown, SKILL_ENCAMP)) {
     caster->sendTo("You stop and set up camp.\n\r");
-    act("$n stops and begins to camp.", FALSE, caster, 0, 0, TO_ROOM);
+    act("$n stops and begins to camp.", false, caster, 0, 0, TO_ROOM);
 
     caster->affectTo(&aff);
   } else {
     caster->sendTo("You stop and set up a poorly made camp.\n\r");
-    act("$n stops and begins to camp.", FALSE, caster, 0, 0, TO_ROOM);
+    act("$n stops and begins to camp.", false, caster, 0, 0, TO_ROOM);
     aff.level /= 2;
 
     caster->affectTo(&aff);
   }
-  return TRUE;
+  return true;
 }
 
 void divine(TBeing* caster, TThing* obj) {
@@ -1105,7 +1105,7 @@ int divine(TBeing* caster, int x, short y, TThing* obj) {
 }
 
 int TThing::divineMe(TBeing* caster, int, short) {
-  act("$p is not a drink container.", FALSE, caster, this, 0, TO_CHAR);
+  act("$p is not a drink container.", false, caster, this, 0, TO_CHAR);
   return SPELL_FALSE;
 }
 
@@ -1140,7 +1140,7 @@ int TDrinkCon::divineMe(TBeing* caster, int, short bKnown) {
   }
 
   if (caster->affectedBySpell(SKILL_DIVINATION)) {
-    act("You are not ready to divine again so soon.", FALSE, caster, NULL, NULL,
+    act("You are not ready to divine again so soon.", false, caster, nullptr, nullptr,
       TO_CHAR);
     return SPELL_FAIL;
   }
@@ -1153,34 +1153,34 @@ int TDrinkCon::divineMe(TBeing* caster, int, short bKnown) {
 
   caster->affectTo(&aff, -1);
 
-  act("You divine for water.", FALSE, caster, this, 0, TO_CHAR);
+  act("You divine for water.", false, caster, this, 0, TO_CHAR);
 
   if (caster->bSuccess(bKnown, SKILL_DIVINATION)) {
     units = 10 + caster->getSkillLevel(SKILL_DIVINATION) / 10;
     units = min(units, (getMaxDrinkUnits() - getDrinkUnits()));
 
-    act("$n divines for water, which $e adds to $p.", FALSE, caster, this, 0,
+    act("$n divines for water, which $e adds to $p.", false, caster, this, 0,
       TO_ROOM);
 
     if ((getDrinkType() != LIQ_WATER) && (getDrinkUnits() != 0)) {
       setDrinkType(LIQ_SLIME);
       act("$p is partially filled (but you won't like what it's filled with!)",
-        FALSE, caster, this, 0, TO_CHAR);
+        false, caster, this, 0, TO_CHAR);
     } else if (units > 0) {
       setDrinkType(LIQ_WATER);
       addToDrinkUnits(units);
       weightChangeObject(units * SIP_WEIGHT);
       caster->sendTo(format("You divine %d ounces of water.\n\r") % units);
       if (getDrinkUnits() == getMaxDrinkUnits())
-        act("$p is filled.", FALSE, caster, this, 0, TO_CHAR);
+        act("$p is filled.", false, caster, this, 0, TO_CHAR);
       else
-        act("$p is partially filled.", FALSE, caster, this, 0, TO_CHAR);
+        act("$p is partially filled.", false, caster, this, 0, TO_CHAR);
     } else {
       caster->sendTo("That is already completely full!\n\r");
     }
     return SPELL_SUCCESS;
   } else {
-    act("You don't seem to find anything.", FALSE, caster, NULL, NULL, TO_CHAR);
+    act("You don't seem to find anything.", false, caster, nullptr, nullptr, TO_CHAR);
     return SPELL_FAIL;
   }
 }
@@ -1199,7 +1199,7 @@ void TBeing::doDivine(const char* arg) {
   }
 
   one_argument(arg, arg2, cElements(arg2));
-  if (!(obj = get_thing_char_using(this, arg2, 0, FALSE, FALSE))) {
+  if (!(obj = get_thing_char_using(this, arg2, 0, false, false))) {
     sendTo("You don't have that drink container in your inventory!\n\r");
     sendTo("Syntax: divine <drink container>\n\r");
     return;

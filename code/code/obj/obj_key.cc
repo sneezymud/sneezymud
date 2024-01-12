@@ -56,7 +56,7 @@ bool TKey::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "Does this look like a locksmithery to you?");
   }
-  return TRUE;
+  return true;
 }
 
 int TKey::stealModifier() {
@@ -65,7 +65,7 @@ int TKey::stealModifier() {
 
 int TKey::putMeInto(TBeing* ch, TOpenContainer* container) {
   TObj* o;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   char buf[256];
 
   for (StuffIter it = container->stuff.begin();
@@ -80,8 +80,8 @@ int TKey::putMeInto(TBeing* ch, TOpenContainer* container) {
       sprintf(buf, "You already have one of those keys in your %s.\n\r",
         fname(container->name).c_str());
       ch->sendTo(buf);
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }

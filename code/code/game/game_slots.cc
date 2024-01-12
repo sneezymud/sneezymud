@@ -94,14 +94,14 @@ static const char* ChooseThirdFruit() {
 
 bool TBeing::checkSlots() const {
   if (in_room == 2365)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 bool TBeing::checkSlotPlayer() const {
-  const TBeing* better = NULL;
-  TThing* t = NULL;
+  const TBeing* better = nullptr;
+  TThing* t = nullptr;
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
@@ -111,15 +111,15 @@ bool TBeing::checkSlotPlayer() const {
     if (better == this)
       continue;
     if (better->getPosition() == POSITION_SITTING)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::doPlay(const char* arg) {
   char game[256], options[256];
   Descriptor* d;
-  TObj* chip = NULL;
+  TObj* chip = nullptr;
 
   if (!(d = desc))
     return;
@@ -342,7 +342,7 @@ void spin_slot(TBeing* ch) {
   }
   ch->sendTo(format("%-10s %-10s %-10s\n\r") % fruit1 % fruit2 % fruit3);
   sprintf(buf, "$n spins a [%-10s %-10s %-10s]", fruit1, fruit2, fruit3);
-  act(buf, FALSE, ch, 0, 0, TO_ROOM);
+  act(buf, false, ch, 0, 0, TO_ROOM);
 
   bits = generic_find("slot", FIND_OBJ_ROOM, ch, &tmp_char, &slot);
 

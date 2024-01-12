@@ -28,8 +28,8 @@ bool TBeing::checkBlackjack(bool inGame) const {
 }
 
 void BjGame::bj_shuffle(int, const TBeing* ch) {
-  act("The ghostly dealer shuffles the deck.", FALSE, ch, 0, 0, TO_CHAR);
-  act("The ghostly dealer shuffles the deck.", FALSE, ch, 0, 0, TO_ROOM);
+  act("The ghostly dealer shuffles the deck.", false, ch, 0, 0, TO_CHAR);
+  act("The ghostly dealer shuffles the deck.", false, ch, 0, 0, TO_ROOM);
 
   shuffle();
   deck_inx = 0;
@@ -50,14 +50,14 @@ bool BjGame::enter(const TBeing* ch) {
     ch->sendTo("The table seems to be full.\n\r");
     if (ch->isImmortal())
       ch->sendTo(format("%s is at the table.\n\r") % name);
-    return FALSE;
+    return false;
   }
   ch->sendTo("You move up to the blackjack table.\n\r");
-  inuse = TRUE;
+  inuse = true;
   strcpy(name, ch->name.c_str());
   bj_shuffle(inx, ch);
   bet = 0;
-  return TRUE;
+  return true;
 }
 
 int BjGame::exitGame(const TBeing* ch) {
@@ -65,10 +65,10 @@ int BjGame::exitGame(const TBeing* ch) {
 
   if ((inx = index(ch)) < 0) {
     vlogf(LOG_BUG, format("%s left a table he was not at!") % ch->name);
-    return FALSE;
+    return false;
   }
   *name = '\0';
-  inuse = FALSE;
+  inuse = false;
   deck_inx = 0;
   bet = 0;
   np = 0;
@@ -82,7 +82,7 @@ int BjGame::exitGame(const TBeing* ch) {
   }
   setup_deck();
   ch->sendTo("You leave the blackjack table.\n\r");
-  return TRUE;
+  return true;
 }
 
 void BjGame::Bet(TBeing* ch, const char* arg) {
@@ -117,9 +117,9 @@ void BjGame::Bet(TBeing* ch, const char* arg) {
 
     sstring buf;
     buf = format("$n bets %s.") % chip->getName();
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, true, ch, 0, 0, TO_ROOM);
     buf = format("You bet %s.") % chip->getName();
-    act(buf, TRUE, ch, 0, 0, TO_CHAR);
+    act(buf, true, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
     delete chip;
@@ -151,12 +151,12 @@ void BjGame::Bet(TBeing* ch, const char* arg) {
       pretty_card_printout(ch, hand[1]).c_str());
     sprintf(log_msg + strlen(log_msg), "The dealer is showing:\n\r%s",
       pretty_card_printout(ch, dealer[1]).c_str());
-    act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+    act(log_msg, true, ch, 0, 0, TO_ROOM);
 
     if (((CARD_NUM(hand[0]) == 1) && (CARD_NUM(hand[1]) >= 10)) ||
         ((CARD_NUM(hand[1]) == 1) && (CARD_NUM(hand[0]) >= 10))) {
       ch->sendTo("You get a blackjack!\n\r");
-      act("$n gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
+      act("$n gets a blackjack!", true, ch, 0, 0, TO_ROOM);
       payout(ch, (int)(bet * 2.5));
       bet = 0;
       observerReaction(ch, GAMBLER_WON);
@@ -164,7 +164,7 @@ void BjGame::Bet(TBeing* ch, const char* arg) {
     if (((CARD_NUM(dealer[0]) == 1) && (CARD_NUM(dealer[1]) >= 10)) ||
         ((CARD_NUM(dealer[1]) == 1) && (CARD_NUM(dealer[0]) >= 10))) {
       ch->sendTo("The dealer gets a blackjack!\n\r");
-      act("The dealer gets a blackjack!", TRUE, ch, 0, 0, TO_ROOM);
+      act("The dealer gets a blackjack!", true, ch, 0, 0, TO_ROOM);
       bet = 0;
       observerReaction(ch, GAMBLER_LOST);
     }
@@ -231,7 +231,7 @@ void BjGame::stay(TBeing* ch) {
   sprintf(log_msg, "The dealer flips up his down card:\n\r%s\n\r",
     pretty_card_printout(ch, dealer[0]).c_str());
   ch->sendTo(COLOR_BASIC, log_msg);
-  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+  act(log_msg, true, ch, 0, 0, TO_ROOM);
 
   player = best_dealer();
   while (player < 17) {
@@ -246,13 +246,13 @@ void BjGame::stay(TBeing* ch) {
     strcat(log_msg, ".\n\r");
 
     ch->sendTo(COLOR_BASIC, log_msg);
-    act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+    act(log_msg, true, ch, 0, 0, TO_ROOM);
 
     player = best_dealer();
     if (player > 21) {
       ch->sendTo(format("The dealer busts with %d.\n\r") % player);
       sprintf(log_msg, "The dealer busts with %d.", player);
-      act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+      act(log_msg, true, ch, 0, 0, TO_ROOM);
       break;
     }
   }
@@ -282,23 +282,23 @@ void BjGame::stay(TBeing* ch) {
     add_suit(ch, log_msg, dealer[player]);
     strcat(log_msg, "\r\n");
   }
-  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+  act(log_msg, true, ch, 0, 0, TO_ROOM);
 
   pbest = best_score();
   dbest = best_dealer();
 
   if (pbest > dbest || dbest > 21) {
     ch->sendTo("You win.\n\r");
-    act("$n wins.", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n wins.", true, ch, 0, 0, TO_ROOM);
     payout(ch, (int)(bet * 2));
     observerReaction(ch, GAMBLER_WON);
   } else if (pbest == dbest) {
     ch->sendTo("You push. You retain your original bid.\n\r");
-    act("$n pushes.", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n pushes.", true, ch, 0, 0, TO_ROOM);
     payout(ch, (int)(bet));
   } else {
     ch->sendTo("You lose.\n\r");
-    act("$n loses.", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n loses.", true, ch, 0, 0, TO_ROOM);
     observerReaction(ch, GAMBLER_LOST);
   }
 
@@ -362,11 +362,11 @@ void BjGame::Hit(const TBeing* ch) {
   strcat(log_msg, card_names[hand[np - 1] & 0x0f]);
   add_suit(ch, log_msg, hand[np - 1]);
   strcat(log_msg, ".");
-  act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+  act(log_msg, true, ch, 0, 0, TO_ROOM);
 
   if (min_score() > 21) {
     ch->sendTo("You have busted!\n\r");
-    act("$n has busted!", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n has busted!", true, ch, 0, 0, TO_ROOM);
     bet = 0;
   }
 }

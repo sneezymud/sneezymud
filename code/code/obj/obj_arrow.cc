@@ -166,7 +166,7 @@ sstring TArrow::statObjInfo() const {
   return a;
 }
 
-int TArrow::putMeInto(TBeing*, TOpenContainer*) { return FALSE; }
+int TArrow::putMeInto(TBeing*, TOpenContainer*) { return false; }
 
 bool TArrow::engraveMe(TBeing* ch, TMonster* me, bool give) {
   char buf[256];
@@ -180,12 +180,12 @@ bool TArrow::engraveMe(TBeing* ch, TMonster* me, bool give) {
     me->doGive(buf);
   }
 
-  return TRUE;
+  return true;
 }
 
 int TArrow::throwMe(TBeing* ch, dirTypeT, const char*) {
-  act("$p isn't designed to be thrown.", FALSE, ch, this, 0, TO_CHAR);
-  return FALSE;
+  act("$p isn't designed to be thrown.", false, ch, this, 0, TO_CHAR);
+  return false;
 }
 
 spellNumT TArrow::getWtype(int which) const {

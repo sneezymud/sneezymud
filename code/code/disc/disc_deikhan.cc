@@ -20,7 +20,7 @@ void divineRescue(TBeing* caster, TBeing* victim) {
     return;
 
   if (victim->affectedBySpell(SKILL_DIVINE_RESCUE)) {
-    act("Your deities refuse to bless $N again so soon.", FALSE, caster, 0,
+    act("Your deities refuse to bless $N again so soon.", false, caster, 0,
       victim, TO_CHAR);
     return;
   }
@@ -34,20 +34,20 @@ void divineRescue(TBeing* caster, TBeing* victim) {
   int hp = casterlevel + (adv_learn / 2);
 
   // lets make this similar to the avenger to continue the Deikhan flavor
-  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", FALSE, caster, 0,
+  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", false, caster, 0,
     victim, TO_NOTVICT);
-  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", FALSE, caster, 0,
+  act("$N glows with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", false, caster, 0,
     victim, TO_CHAR);
-  act("You glow with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", FALSE, caster, 0,
+  act("You glow with a gentle <r>w<R>a<Y>rm<R>t<1><r>h.<1>", false, caster, 0,
     victim, TO_VICT);
 
   // caster->sendTo("You fail the rescue.\n\r");
-  act("You are blessed as $n rescues you.", FALSE, caster, 0, victim, TO_VICT);
+  act("You are blessed as $n rescues you.", false, caster, 0, victim, TO_VICT);
 
-  act("$N is blessed as $n intercedes on $S behalf.", FALSE, caster, 0, victim,
+  act("$N is blessed as $n intercedes on $S behalf.", false, caster, 0, victim,
     TO_NOTVICT);
   // TO_CHAR TO_ROOM
-  act("$N is blessed as you intercede on $S behalf.", FALSE, caster, 0, victim,
+  act("$N is blessed as you intercede on $S behalf.", false, caster, 0, victim,
     TO_CHAR);
 
   if (victim->getHit() < victim->hitLimit()) {
@@ -74,24 +74,24 @@ int synostodweomer(TBeing* caster, TBeing* v, int level, short bKnown) {
 
   if (!caster->isImmortal() &&
       caster->checkForSkillAttempt(SPELL_SYNOSTODWEOMER)) {
-    act("You are not prepared to try to Snyostodweomer again so soon.", FALSE,
-      caster, NULL, NULL, TO_CHAR);
-    return FALSE;
+    act("You are not prepared to try to Snyostodweomer again so soon.", false,
+      caster, nullptr, nullptr, TO_CHAR);
+    return false;
   }
 
   if (v->affectedBySpell(SPELL_SYNOSTODWEOMER)) {
     caster->sendTo(COLOR_MOBS,
       format("%s is already affected by Snyostodweomer.\n\r") % v->getName());
-    return FALSE;
+    return false;
   }
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SPELL_SYNOSTODWEOMER)) {
-    act("Power rushes through your fingers as you bless $N.", FALSE, caster,
-      NULL, v, TO_CHAR);
-    act("Power rushes through $n's fingers as $e blesses $N.", TRUE, caster,
-      NULL, v, TO_NOTVICT);
-    act("Power surges through $n's fingers as $e blesses you.", TRUE, caster,
-      NULL, v, TO_VICT);
+    act("Power rushes through your fingers as you bless $N.", false, caster,
+      nullptr, v, TO_CHAR);
+    act("Power rushes through $n's fingers as $e blesses $N.", true, caster,
+      nullptr, v, TO_NOTVICT);
+    act("Power surges through $n's fingers as $e blesses you.", true, caster,
+      nullptr, v, TO_VICT);
 
     if (!caster->isImmortal()) {
       aff.type = AFFECT_SKILL_ATTEMPT;
@@ -129,7 +129,7 @@ int synostodweomer(TBeing* caster, TBeing* v, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     caster->sendTo("Nothing seems to happen.\n\r");
-    act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 }
@@ -139,19 +139,19 @@ int synostodweomer(TBeing* caster, TBeing* v) {
   int rc = 0;
 
   if (!bPassClericChecks(caster, SPELL_SYNOSTODWEOMER))
-    return FALSE;
+    return false;
 
   if (!caster->isImmortal() &&
       caster->checkForSkillAttempt(SPELL_SYNOSTODWEOMER)) {
-    act("You are not prepared to try to Snyostodweomer again so soon.", FALSE,
-      caster, NULL, NULL, TO_CHAR);
-    return FALSE;
+    act("You are not prepared to try to Snyostodweomer again so soon.", false,
+      caster, nullptr, nullptr, TO_CHAR);
+    return false;
   }
 
   if (v->affectedBySpell(SPELL_SYNOSTODWEOMER)) {
     caster->sendTo(COLOR_MOBS,
       format("%s is already affected by Snyostodweomer.\n\r") % v->getName());
-    return FALSE;
+    return false;
   }
 
   level = caster->getSkillLevel(SPELL_SYNOSTODWEOMER);
@@ -174,21 +174,21 @@ int TBeing::doLayHands(const char* arg) {
 
   if (!doesKnowSkill(SKILL_LAY_HANDS)) {
     sendTo("You know nothing about laying on of hands.\n\r");
-    return FALSE;
+    return false;
   }
   if (checkForSkillAttempt(SKILL_LAY_HANDS)) {
     sendTo("You are unprepared to attempt to lay hands again.\n\r");
-    return FALSE;
+    return false;
   }
   if (affectedBySpell(SKILL_LAY_HANDS)) {
     sendTo("You are unable to lay hands again at this time.\n\r");
-    return FALSE;
+    return false;
   }
   one_argument(arg, name_buf, cElements(name_buf));
 
   if (!(vict = get_char_room_vis(this, name_buf))) {
     sendTo("No one here by that name.\n\r");
-    return FALSE;
+    return false;
   }
 
   // Prevent back-to-back attempts
@@ -201,11 +201,11 @@ int TBeing::doLayHands(const char* arg) {
 
   if (vict == this) {
     sendTo("You attempt to lay hands on yourself.\n\r");
-    act("$n tries to lay hands on $mself.", FALSE, this, NULL, NULL, TO_ROOM);
+    act("$n tries to lay hands on $mself.", false, this, nullptr, nullptr, TO_ROOM);
   } else {
-    act("You attempt to lay hands on $N.", FALSE, this, NULL, vict, TO_CHAR);
-    act("$n attempts to lay hands on you.", FALSE, this, NULL, vict, TO_VICT);
-    act("$n attempts to lay hands on $N.", FALSE, this, NULL, vict, TO_NOTVICT);
+    act("You attempt to lay hands on $N.", false, this, nullptr, vict, TO_CHAR);
+    act("$n attempts to lay hands on you.", false, this, nullptr, vict, TO_VICT);
+    act("$n attempts to lay hands on $N.", false, this, nullptr, vict, TO_NOTVICT);
   }
   amt = ::number(20, 200) + (5 * getClassLevel(CLASS_DEIKHAN));
 
@@ -213,17 +213,17 @@ int TBeing::doLayHands(const char* arg) {
     LogDam(this, SKILL_LAY_HANDS, amt);
 
     if (this != vict) {
-      act("A soft yellow light surrounds your hands as you touch $N.", FALSE,
+      act("A soft yellow light surrounds your hands as you touch $N.", false,
         this, 0, vict, TO_CHAR);
-      act("A soft yellow light surrounds $n's hands as $e touches you.", FALSE,
+      act("A soft yellow light surrounds $n's hands as $e touches you.", false,
         this, 0, vict, TO_VICT);
-      act("A soft yellow light surrounds $n's hands as $e touches $N.", FALSE,
+      act("A soft yellow light surrounds $n's hands as $e touches $N.", false,
         this, 0, vict, TO_NOTVICT);
     } else {
       act("A soft yellow light surrounds your hands as you touch yourself.",
-        FALSE, this, 0, vict, TO_CHAR);
+        false, this, 0, vict, TO_CHAR);
       act("A soft yellow light surrounds $n's hands as $e touches $mself.",
-        FALSE, this, 0, vict, TO_ROOM);
+        false, this, 0, vict, TO_ROOM);
     }
     vict->addToHit(amt);
     vict->setHit(std::min(vict->getHit(), (int)vict->hitLimit()));
@@ -237,7 +237,7 @@ int TBeing::doLayHands(const char* arg) {
     affectTo(&aff, -1);
   }
   reconcileHelp(vict, discArray[SKILL_LAY_HANDS]->alignMod);
-  return TRUE;
+  return true;
 }
 
 int TBeing::doSmite(const char* arg, TBeing* victim) {
@@ -246,28 +246,28 @@ int TBeing::doSmite(const char* arg, TBeing* victim) {
   int rc;
 
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
   if (!doesKnowSkill(SKILL_SMITE)) {
     sendTo("You know nothing about smiting.\n\r");
-    return FALSE;
+    return false;
   }
   strcpy(tmp, arg);
   if (!(vict = victim)) {
     if (!(vict = get_char_room_vis(this, tmp))) {
       if (!(vict = fight())) {
         sendTo("Smite whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
 
   if (!sameRoom(*vict)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   if (noHarmCheck(vict))
-    return FALSE;
+    return false;
   rc = smite(this, vict);
   if (rc)
     addSkillLag(SKILL_SMITE, rc);
@@ -275,7 +275,7 @@ int TBeing::doSmite(const char* arg, TBeing* victim) {
     if (victim)
       return rc;
     delete vict;
-    vict = NULL;
+    vict = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;
@@ -287,26 +287,26 @@ int smite(TBeing* ch, TBeing* v) {
   if (ch->getPosition() < POSITION_STANDING) {
     ch->sendTo(
       "It is undignified to smite someone while not on your own two feet.\n\r");
-    return FALSE;
+    return false;
   }
   if (ch == v) {
     ch->sendTo(
       "You contemplate smiting yourself.\n\rYou realize there are better ways "
       "to punish yourself.\n\r");
-    return FALSE;
+    return false;
   }
   if (ch->checkPeaceful(
         "This room is too peaceful to contemplate violence in.\n\r"))
-    return FALSE;
+    return false;
 
   if (!(weap = ch->heldInPrimHand())) {
     ch->sendTo("Perhaps you'd like to smite with something next time...?\n\r");
-    return FALSE;
+    return false;
   }
   return weap->smiteWithMe(ch, v);
 }
 
 int TThing::smiteWithMe(TBeing* ch, TBeing*) {
   ch->sendTo("Perhaps you'd like to smite with a weapon next time...?\n\r");
-  return FALSE;
+  return false;
 }

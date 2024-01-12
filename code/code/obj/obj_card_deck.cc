@@ -13,7 +13,7 @@
 #include "handler.h"
 
 void TBeing::doShuffle(const sstring& arg) {
-  TObj* deck = NULL;
+  TObj* deck = nullptr;
 
   if (arg.empty() || !(deck = generic_find_obj(arg, FIND_OBJ_INV, this))) {
     sendTo("Shuffle what?\n\r");
@@ -41,8 +41,8 @@ void TBeing::doShuffle(const sstring& arg) {
     *deck += *cards[i];
   }
 
-  act("$n shuffles $p.", TRUE, this, deck, NULL, TO_ROOM, NULL);
-  act("You shuffle $p.", TRUE, this, deck, NULL, TO_CHAR, NULL);
+  act("$n shuffles $p.", true, this, deck, nullptr, TO_ROOM, nullptr);
+  act("You shuffle $p.", true, this, deck, nullptr, TO_CHAR, nullptr);
 }
 
 void TCardDeck::getObjFromMeText(TBeing* ch, TThing* obj, getTypeT, bool) {
@@ -99,5 +99,5 @@ bool TCardDeck::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "I can't repair that.");
   }
-  return TRUE;
+  return true;
 }

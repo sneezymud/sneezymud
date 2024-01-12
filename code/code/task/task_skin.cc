@@ -19,9 +19,9 @@
 
 void stop_skin(TBeing* ch) {
   if (ch->getPosition() >= POSITION_RESTING) {
-    act("You stop skinning, and look about confused.", FALSE, ch, 0, 0,
+    act("You stop skinning, and look about confused.", false, ch, 0, 0,
       TO_CHAR);
-    act("$n stops skinning, and looks about confused and embarrassed.", FALSE,
+    act("$n stops skinning, and looks about confused and embarrassed.", false,
       ch, 0, 0, TO_ROOM);
   }
   ch->stopTask();
@@ -40,7 +40,7 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
     ch->sendTo(
       "You pull a superman and clean the corpse in an instant, immortality "
       "rocks!\n\r");
-    act("$n becomes a blur and instantly skins $p.", FALSE, ch, corpse, 0,
+    act("$n becomes a blur and instantly skins $p.", false, ch, corpse, 0,
       TO_ROOM);
     ch->task->flags = (int)(maxUnitsP / Ceffect);
   }
@@ -54,8 +54,8 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
   if ((Tobj && (Tobj->isPierceWeapon() || Tobj->isSlashWeapon())) &&
       (ch->task->flags < (int)(maxUnitsP / Ceffect)) &&
       ch->task->timeLeft > 0) {
-    act("You continue to skin $p.", FALSE, ch, corpse, 0, TO_CHAR);
-    act("$n slices the skin from $p very carefully.", FALSE, ch, corpse, NULL,
+    act("You continue to skin $p.", false, ch, corpse, 0, TO_CHAR);
+    act("$n slices the skin from $p very carefully.", false, ch, corpse, nullptr,
       TO_ROOM);
     ch->task->timeLeft--;
 
@@ -74,21 +74,21 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
       CF(SKILL_SKIN);
       if (ch->bSuccess(learning, SKILL_SKIN)) {
         act("You gently over extend yourself and slightly dull your weapon.",
-          FALSE, ch, 0, 0, TO_CHAR);
+          false, ch, 0, 0, TO_CHAR);
         if (tobj->getCurSharp() > 2)
           tobj->addToCurSharp(-1);
         ch->task->flags++;
       } else if (!critFail(ch, SKILL_SKIN)) {
-        act("You extend yourself a little too far and dull your weapon.", FALSE,
+        act("You extend yourself a little too far and dull your weapon.", false,
           ch, 0, 0, TO_CHAR);
         if (tobj->getCurSharp() > 3)
           tobj->addToCurSharp(-2);
       } else {
         act("You really slip up and cut yourself and a part of the hide.",
-          FALSE, ch, 0, 0, TO_CHAR);
+          false, ch, 0, 0, TO_CHAR);
         act(
           "$n really slips up and mangles part of the hide and part of $mself",
-          FALSE, ch, 0, 0, TO_ROOM);
+          false, ch, 0, 0, TO_ROOM);
         if (tobj->getCurSharp() > 4)
           tobj->addToCurSharp(-3);
         ch->dropBloodLimb(
@@ -114,38 +114,38 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
         tobj->addToCurSharp(-1);
       ch->task->flags = max(1, min(ch->task->flags, maxUnitsP));
     }
-    return FALSE;
+    return false;
   } else {
     if (!Tobj || (!Tobj->isPierceWeapon() && !Tobj->isSlashWeapon())) {
-      act("Hey, where'd your weapon go?", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n looks blankly at $s empty hand.", FALSE, ch, 0, NULL, TO_ROOM);
-      act("With the lack of a weapon, you grab the loose flesh and rip.", FALSE,
+      act("Hey, where'd your weapon go?", false, ch, 0, 0, TO_CHAR);
+      act("$n looks blankly at $s empty hand.", false, ch, 0, nullptr, TO_ROOM);
+      act("With the lack of a weapon, you grab the loose flesh and rip.", false,
         ch, 0, 0, TO_CHAR);
-      act("$n grabs the loose hide and rips it the rest of the way off.", FALSE,
-        ch, 0, NULL, TO_ROOM);
+      act("$n grabs the loose hide and rips it the rest of the way off.", false,
+        ch, 0, nullptr, TO_ROOM);
       if (ch->task->flags > 0)
         ch->task->flags--;
     } else if (ch->task->timeLeft <= 0 && ch->task->timeLeft != -1) {
       act("You don't feel as if you could skin another slice at this time.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n seems as if $e couldn't go on.", FALSE, ch, 0, NULL, TO_ROOM);
+        false, ch, 0, 0, TO_CHAR);
+      act("$n seems as if $e couldn't go on.", false, ch, 0, nullptr, TO_ROOM);
     } else if (ch->task->timeLeft != -1) {
       act("You feel confident that you got all the hide off of this one.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n looks up with a sense of pride in $s work.", FALSE, ch, 0, NULL,
+        false, ch, 0, 0, TO_CHAR);
+      act("$n looks up with a sense of pride in $s work.", false, ch, 0, nullptr,
         TO_ROOM);
     } else if (ch->task->flags == 0) {
       act("You finish up your skinning and realize you destroyed all the hide.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n finishes up and has apparently destroyed all the hide.", FALSE,
-        ch, 0, NULL, TO_ROOM);
+        false, ch, 0, 0, TO_CHAR);
+      act("$n finishes up and has apparently destroyed all the hide.", false,
+        ch, 0, nullptr, TO_ROOM);
       ch->stopTask();
-      return FALSE;
+      return false;
     } else if (ch->task->timeLeft != -1) {
       act("Something happened that wasn't expected, Tell a god what you did.",
-        FALSE, ch, 0, 0, TO_CHAR);
+        false, ch, 0, 0, TO_CHAR);
       ch->stopTask();
-      return FALSE;
+      return false;
     }
   }
 
@@ -169,7 +169,7 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
     // no item, this should not happen (checked previously)
     ch->sendTo("Problem.  tell a god.\n\r");
     vlogf(LOG_BUG, format("Problem in skinning (%s)") % ch->getName());
-    return FALSE;
+    return false;
   }
 
   // adjust quantity:
@@ -210,29 +210,29 @@ int TThing::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
   }
 
   // Tell the people we got the hide.
-  act(msg, FALSE, ch, item, corpse, TO_CHAR);
-  act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
+  act(msg, false, ch, item, corpse, TO_CHAR);
+  act(gl_msg, false, ch, item, corpse, TO_ROOM);
 
   // Lets make sure the skinner isn't too weak/encumbered to grab this item.
-  if (compareWeights(item->getTotalWeight(TRUE),
+  if (compareWeights(item->getTotalWeight(true),
         (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
-    act("The weight of the hide gets too much for you, so you drop it.", FALSE,
+    act("The weight of the hide gets too much for you, so you drop it.", false,
       ch, 0, 0, TO_CHAR);
-    act("The weight of the hide gets too much for $n, so $e drops it.", FALSE,
-      ch, 0, NULL, TO_ROOM);
+    act("The weight of the hide gets too much for $n, so $e drops it.", false,
+      ch, 0, nullptr, TO_ROOM);
     *corpse->roomp += *item;
   } else if (ch->getCarriedVolume() +
-               (item->getTotalVolume() - item->getReducedVolume(NULL)) >
+               (item->getTotalVolume() - item->getReducedVolume(nullptr)) >
              ch->carryVolumeLimit()) {
     act("You struggle to hold onto the hide but it slips from your grasp.",
-      FALSE, ch, 0, 0, TO_CHAR);
-    act("$n struggles to hold onto the hide but it slips from $s grasp.", FALSE,
-      ch, 0, NULL, TO_ROOM);
+      false, ch, 0, 0, TO_CHAR);
+    act("$n struggles to hold onto the hide but it slips from $s grasp.", false,
+      ch, 0, nullptr, TO_ROOM);
     *corpse->roomp += *item;
   } else
     *ch += *item;
 
-  return FALSE;
+  return false;
 }
 
 int TTool::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
@@ -241,33 +241,33 @@ int TTool::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
   char msg[256], gl_msg[256];
 
   if (getToolType() != TOOL_SKIN_KNIFE) {
-    act("Hey, where'd your skinning knife go?", FALSE, ch, 0, 0, TO_CHAR);
+    act("Hey, where'd your skinning knife go?", false, ch, 0, 0, TO_CHAR);
     stop_skin(ch);
-    return FALSE;
+    return false;
   }
 
   if (ch->task->timeLeft > 0) {
-    act("You continue to skin $p.", FALSE, ch, corpse, 0, TO_CHAR);
-    act("$n slices the skin from $p very carefully.", FALSE, ch, corpse, NULL,
+    act("You continue to skin $p.", false, ch, corpse, 0, TO_CHAR);
+    act("$n slices the skin from $p very carefully.", false, ch, corpse, nullptr,
       TO_ROOM);
 
     addToToolUses(-1);
     if (getToolUses() <= 0) {
-      act("Your $o breaks due to overuse.", FALSE, ch, this, 0, TO_CHAR);
-      act("$n looks startled as $e breaks $P while skinning.", FALSE, ch, 0,
+      act("Your $o breaks due to overuse.", false, ch, this, 0, TO_CHAR);
+      act("$n looks startled as $e breaks $P while skinning.", false, ch, 0,
         this, TO_ROOM);
       ch->stopTask();
       delete this;
-      return FALSE;
+      return false;
     }
 
     if (!ch->bSuccess(learning, SKILL_SKIN)) {
       if (!ch->bSuccess(learning, SKILL_SKIN)) {
         // a doubele failure
         CF(SKILL_SKIN);  // failure on that skin
-        act("You slip up and destory a part of the hide.", FALSE, ch, 0, 0,
+        act("You slip up and destory a part of the hide.", false, ch, 0, 0,
           TO_CHAR);
-        act("$n really slips up and mangles part of the hide.", FALSE, ch, 0, 0,
+        act("$n really slips up and mangles part of the hide.", false, ch, 0, 0,
           TO_ROOM);
         corpse->addCorpseFlag(CORPSE_NO_SKIN);
         ch->stopTask();
@@ -285,7 +285,7 @@ int TTool::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
       // no item, this should not happen (checked previously)
       ch->sendTo("Problem.  tell a god.\n\r");
       vlogf(LOG_BUG, format("Problem in skinning (%s)") % ch->getName());
-      return FALSE;
+      return false;
     }
 
     // adjust quantity
@@ -294,54 +294,54 @@ int TTool::skinPulse(TBeing* ch, TBaseCorpse* corpse) {
     item->setWeight(amount);
     item->obj_flags.cost *= amount;
 
-    act(msg, FALSE, ch, item, corpse, TO_CHAR);
-    act(gl_msg, FALSE, ch, item, corpse, TO_ROOM);
+    act(msg, false, ch, item, corpse, TO_CHAR);
+    act(gl_msg, false, ch, item, corpse, TO_ROOM);
 
     *ch += *item;
   }
 
-  return FALSE;
+  return false;
 }
 
 int task_skinning(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj* obj) {
   TThing* knife;
-  TBaseCorpse* corpse = NULL;
+  TBaseCorpse* corpse = nullptr;
   int rc;
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room < 0) ||
       (ch->getPosition() < POSITION_RESTING)) {
     stop_skin(ch);
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (!obj || !ch->sameRoom(*obj) ||
       !(corpse = dynamic_cast<TBaseCorpse*>(obj))) {
-    act("Hey, where'd that corpse go?", FALSE, ch, 0, 0, TO_CHAR);
+    act("Hey, where'd that corpse go?", false, ch, 0, 0, TO_CHAR);
     stop_skin(ch);
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
   if (corpse->isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You are not able to skin that.", FALSE, ch, corpse, 0, TO_CHAR);
-    return FALSE;
+    act("$p: You are not able to skin that.", false, ch, corpse, 0, TO_CHAR);
+    return false;
   }
   if (corpse->isCorpseFlag(CORPSE_NO_SKIN)) {
     act("Something unfortunate has happened to $p and it can't be skinned",
-      FALSE, ch, corpse, 0, TO_CHAR);
+      false, ch, corpse, 0, TO_CHAR);
     stop_skin(ch);
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       if (!(knife = ch->heldInPrimHand())) {
-        act("Hey, where'd your skinning knife go?", FALSE, ch, 0, 0, TO_CHAR);
+        act("Hey, where'd your skinning knife go?", false, ch, 0, 0, TO_CHAR);
         stop_skin(ch);
-        return FALSE;  // returning FALSE lets command be interpreted
+        return false;  // returning false lets command be interpreted
       }
       // each pulse is constatnt duration apart
       // the # of pulses was set in start_task as based on skill
@@ -352,16 +352,16 @@ int task_skinning(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     case CMD_ABORT:
     case CMD_STOP:
       if (!(knife = ch->heldInPrimHand())) {
-        act("You go to stop skinning, but your knife is gone!", FALSE, ch, 0, 0,
+        act("You go to stop skinning, but your knife is gone!", false, ch, 0, 0,
           TO_CHAR);
-        act("You grab the loose skin and tear it away from the rest.", FALSE,
+        act("You grab the loose skin and tear it away from the rest.", false,
           ch, 0, 0, TO_CHAR);
-        act("$n grabs the loose skin and tears it away from the rest.", TRUE,
+        act("$n grabs the loose skin and tears it away from the rest.", true,
           ch, 0, 0, TO_ROOM);
       } else {
-        act("You make the final slice and stop skinning.", FALSE, ch, 0, 0,
+        act("You make the final slice and stop skinning.", false, ch, 0, 0,
           TO_CHAR);
-        act("$n makes the final slice and stops skinning.", TRUE, ch, 0, 0,
+        act("$n makes the final slice and stops skinning.", true, ch, 0, 0,
           TO_ROOM);
       }
       ch->task->timeLeft = -1;
@@ -376,5 +376,5 @@ int task_skinning(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

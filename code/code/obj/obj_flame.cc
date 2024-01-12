@@ -109,8 +109,8 @@ sstring TFFlame::statObjInfo() const {
 // if return == false then doPour continues execution
 // if return == true then doPour will stop execution
 int TFFlame::pourWaterOnMe(TBeing* ch, TObj* sObj) {
-  TDrinkCon* dContainer = NULL;
-  TFuel* fContainer = NULL;
+  TDrinkCon* dContainer = nullptr;
+  TFuel* fContainer = nullptr;
   char Buf[2][512];
   int drunk = 0;
   liqTypeT type = LIQ_WATER;
@@ -162,7 +162,7 @@ int TFFlame::pourWaterOnMe(TBeing* ch, TObj* sObj) {
     }
 
     ch->sendTo(COLOR_OBJECTS, Buf[0]);
-    act(Buf[1], TRUE, ch, NULL, NULL, TO_ROOM);
+    act(Buf[1], true, ch, nullptr, nullptr, TO_ROOM);
     // Hit decay.  Updates the messages in a clean fashion.
     decayMe();
   } else {
@@ -182,7 +182,7 @@ int TFFlame::pourWaterOnMe(TBeing* ch, TObj* sObj) {
       sprintf(Buf[0], "%s dies down a little as $n pours %s over it.",
         sstring(shortDescr).cap().c_str(),
         liquidInfo[dContainer->getDrinkType()]->name);
-      act(Buf[0], TRUE, ch, NULL, NULL, TO_ROOM);
+      act(Buf[0], true, ch, nullptr, nullptr, TO_ROOM);
       decayMe();
     } else {
       // The liquid killed the fire, lets decay it and drop some ash.
@@ -204,11 +204,11 @@ int TFFlame::getMe(TBeing* ch, TThing*) {
     ch->doDrop("", this, true);
     if (ch->reconcileDamage(ch, ::number(1, 2), DAMAGE_FIRE) == -1)
       return DELETE_VICT;  // This means we killed the player.
-    return TRUE;
+    return true;
   }
 
   putLightOut();
-  return FALSE;
+  return false;
 }
 
 bool TFFlame::isLit() const { return true; }
@@ -248,7 +248,7 @@ void TFFlame::describeObjectSpecifics(const TBeing* ch) const {
 // This is called when decay_time <= 0, thus the item is lost.
 int TFFlame::objectDecay() {
   if (!roomp || hasMagBV(TFFLAME_IMMORTAL))
-    return FALSE;
+    return false;
 
   sendrpf(COLOR_OBJECTS, roomp,
     "You hear a final crack and pop as the %s dies down.\n\r",
@@ -452,7 +452,7 @@ int TFFlame::igniteMessage(TBeing* ch) const {
   // Either wasn't a mage/cleric/deikhan or didn't have an appropriate skill,
   // so we revert to the old Flint&Steel tool...But not for immortals.
   if (!sFound) {
-    TTool* cTool = NULL;
+    TTool* cTool = nullptr;
     for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end(); ++it) {
       if ((cTool = dynamic_cast<TTool*>(*it)) &&
           (cTool->getToolType() != TOOL_FLINTSTEEL))
@@ -479,7 +479,7 @@ int TFFlame::igniteMessage(TBeing* ch) const {
   }
 
   ch->sendTo(Buf[0]);
-  act(Buf[1], TRUE, ch, NULL, NULL, TO_ROOM);
+  act(Buf[1], true, ch, nullptr, nullptr, TO_ROOM);
   return ePower;
 }
 
@@ -577,7 +577,7 @@ void TFFlame::addFlameToMe(TBeing* ch, const char* argument, TThing* fObj,
 
 // Non-Class Specific functions
 void TBeing::igniteObject(const char* argument, TThing* fObj) {
-  TFFlame* newFlame = NULL;
+  TFFlame* newFlame = nullptr;
 
   if (!roomp)
     return;
@@ -644,25 +644,25 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
     // unconscious person, let's pour it in their mouth instead
     sprintf(Buf, "You carefully pour %s into $N's mouth!",
       liquidInfo[type]->name);
-    act(Buf, TRUE, ch, 0, this, TO_CHAR);
+    act(Buf, true, ch, 0, this, TO_CHAR);
     sprintf(Buf, "$n just poured %s into your mouth.", liquidInfo[type]->name);
-    act(Buf, TRUE, ch, 0, this, TO_VICT);
+    act(Buf, true, ch, 0, this, TO_VICT);
     sprintf(Buf, "$n just poured %s into $N's mouth.", liquidInfo[type]->name);
-    act(Buf, TRUE, ch, 0, this, TO_NOTVICT);
+    act(Buf, true, ch, 0, this, TO_NOTVICT);
 
-    setQuaffUse(TRUE);
+    setQuaffUse(true);
     dContainer->sipMe(this);
-    setQuaffUse(FALSE);
+    setQuaffUse(false);
 
     return true;
   }
 
   sprintf(Buf, "You pour %s all over $N!", liquidInfo[type]->name);
-  act(Buf, TRUE, ch, 0, this, TO_CHAR);
+  act(Buf, true, ch, 0, this, TO_CHAR);
   sprintf(Buf, "$n just poured %s all over you!", liquidInfo[type]->name);
-  act(Buf, TRUE, ch, 0, this, TO_VICT);
+  act(Buf, true, ch, 0, this, TO_VICT);
   sprintf(Buf, "$n just poured %s all over $N!", liquidInfo[type]->name);
-  act(Buf, TRUE, ch, 0, this, TO_NOTVICT);
+  act(Buf, true, ch, 0, this, TO_NOTVICT);
 
   // prevent people from using this at real low level to gain xp then suicide or
   // something.
@@ -678,21 +678,21 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
   if (getMaterial(WEAR_BODY) == MAT_FIRE) {
     int drunk;
     if ((drunk = liquidInfo[type]->drunk) > 0) {
-      act("$N suddenly flares up, but $E doesn't really look happy now.", TRUE,
+      act("$N suddenly flares up, but $E doesn't really look happy now.", true,
         ch, 0, this, TO_CHAR);
-      act("Yow!  You suddenly flare up, but that wasn't nice of them...", TRUE,
+      act("Yow!  You suddenly flare up, but that wasn't nice of them...", true,
         ch, 0, this, TO_VICT);
       act("$N suddenly flares up, but $E doesn't really look all that happy...",
-        TRUE, ch, 0, this, TO_NOTVICT);
+        true, ch, 0, this, TO_NOTVICT);
 
       rc = reconcileDamage(this, -(::number(5, max(6, min(25, 15 + drunk)))),
         DAMAGE_FIRE);
       size = 0;
     } else {
-      act("$N dies down a little, $E does Not look happy!", TRUE, ch, 0, this,
+      act("$N dies down a little, $E does Not look happy!", true, ch, 0, this,
         TO_CHAR);
-      act("That HURT!", TRUE, ch, 0, this, TO_VICT);
-      act("$N dies down a little and begins fuming at $n.", TRUE, ch, 0, this,
+      act("That HURT!", true, ch, 0, this, TO_VICT);
+      act("$N dies down a little and begins fuming at $n.", true, ch, 0, this,
         TO_NOTVICT);
 
       rc = reconcileDamage(this, ::number(5, max(2, min(5, (int)(size / 20)))),
@@ -700,22 +700,22 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
     }
   } else if (type == LIQ_HOLYWATER &&
              (isDiabolic() || isUndead() || isLycanthrope())) {
-    act("$N looks like $E is in pain!  And they seem pretty mad at YOU!", TRUE,
+    act("$N looks like $E is in pain!  And they seem pretty mad at YOU!", true,
       ch, 0, this, TO_CHAR);
-    act("That was <b>HOLYWATER<z>!!!  That <r>HURTS<z>!!!", TRUE, ch, 0, this,
+    act("That was <b>HOLYWATER<z>!!!  That <r>HURTS<z>!!!", true, ch, 0, this,
       TO_VICT);
-    act("$N looks like $E is in pain!  And they seem pretty mad at $n.", TRUE,
+    act("$N looks like $E is in pain!  And they seem pretty mad at $n.", true,
       ch, 0, this, TO_NOTVICT);
 
     rc = reconcileDamage(this, ::number(5, max(6, min(15, (int)(size / 20)))),
       DAMAGE_DISRUPTION);
   } else if (roomp && roomp->isArcticSector() && type != LIQ_WARM_MEAD &&
              getMaterial(WEAR_BODY) != MAT_ICE) {
-    act("$N looks very cold now, I think your going to have a bad day...", TRUE,
+    act("$N looks very cold now, I think your going to have a bad day...", true,
       ch, 0, this, TO_CHAR);
-    act("BRRRRR!  That doesn't help much, now your REALLY cold!", TRUE, ch, 0,
+    act("BRRRRR!  That doesn't help much, now your REALLY cold!", true, ch, 0,
       this, TO_VICT);
-    act("$N looks very cold now.  $n is probably in a lot of trouble.", TRUE,
+    act("$N looks very cold now.  $n is probably in a lot of trouble.", true,
       ch, 0, this, TO_NOTVICT);
 
     rc = reconcileDamage(this, ::number(5, max(2, min(5, (int)(size / 20)))),
@@ -723,7 +723,7 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
   } else if ((type != LIQ_WHISKY) && (type != LIQ_FIREBRT) &&
              (type != LIQ_VODKA) && (type != LIQ_RUM) && (type != LIQ_BRANDY)) {
     TThing* t;
-    TObj* obj = NULL;
+    TObj* obj = nullptr;
     int i;
 
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
@@ -731,8 +731,8 @@ int TBeing::pourWaterOnMe(TBeing* ch, TObj* sObj) {
           !obj->isObjStat(ITEM_BURNING) || ::number(0, 3))
         continue;
       obj->remBurning(ch);
-      act("Your $p is extinguished.", FALSE, this, obj, 0, TO_CHAR);
-      act("$n's $p is extinguished.", FALSE, this, obj, 0, TO_ROOM);
+      act("Your $p is extinguished.", false, this, obj, 0, TO_CHAR);
+      act("$n's $p is extinguished.", false, this, obj, 0, TO_ROOM);
     }
   }
 
@@ -770,15 +770,15 @@ int TFFlame::chiMe(TBeing* tLunatic) {
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI)) {
-    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+    act("You fail to affect $p in any way.", false, tLunatic, this, nullptr,
       TO_CHAR);
     return true;
   }
 
-  act("You focus your chi, causing $p to burst momentarily!", FALSE, tLunatic,
-    this, NULL, TO_CHAR);
-  act("$n stares at $p, causing it to burst momentarily", TRUE, tLunatic, this,
-    NULL, TO_ROOM);
+  act("You focus your chi, causing $p to burst momentarily!", false, tLunatic,
+    this, nullptr, TO_CHAR);
+  act("$n stares at $p, causing it to burst momentarily", true, tLunatic, this,
+    nullptr, TO_ROOM);
 
   obj_flags.decay_time += 10;
 

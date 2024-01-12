@@ -19,15 +19,15 @@ int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   if (!ch->canMeditate()) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (ch->fight() && ch->isAffected(AFF_ENGAGER)) {
     ch->sendTo("You are unable to repent while engaged in combat.");
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -37,7 +37,7 @@ int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           "You repent your sins and you feel your soul completely "
           "cleansed.\n\r");
         ch->stopTask();
-        return TRUE;
+        return true;
       }
       ch->task->calcNextUpdate(pulse, 5 * Pulse::MOBACT);
       ch->task->timeLeft++;
@@ -58,7 +58,7 @@ int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
             your_deity_val = SKILL_PENANCE;
             if (amt > 0.0) {
-              act("Your repentance has been accepted by $d.", FALSE, ch, 0, 0,
+              act("Your repentance has been accepted by $d.", false, ch, 0, 0,
                 TO_CHAR, ANSI_GREEN);
               ch->addToPiety(amt);
               if (ch->ansi())
@@ -66,10 +66,10 @@ int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
               else if (ch->vt100())
                 ch->desc->updateScreenVt100(CHANGED_PIETY);
             } else if (FactionInfo[ch->getFaction()].faction_power) {
-              act("$d ignores you.  More penance is needed.", FALSE, ch, 0, 0,
+              act("$d ignores you.  More penance is needed.", false, ch, 0, 0,
                 TO_CHAR, ANSI_RED);
             } else {
-              act("$d are powerless to help you at this time.", FALSE, ch, 0, 0,
+              act("$d are powerless to help you at this time.", false, ch, 0, 0,
                 TO_CHAR, ANSI_RED);
             }
           } else {
@@ -79,7 +79,7 @@ int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             amt = (::number(6, 8));
             amt /= 10;
             your_deity_val = SKILL_PENANCE;
-            act("Your repentance has been partially accepted by $d.", FALSE, ch,
+            act("Your repentance has been partially accepted by $d.", false, ch,
               0, 0, TO_CHAR, ANSI_GREEN);
             ch->addToPiety(amt);
             if (ch->ansi())
@@ -92,25 +92,25 @@ int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             format("%sAn earthly force in the room stops your penance!%s\n\r") %
             ch->red() % ch->norm());
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       ch->task->status = 0;
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop repenting.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops repenting.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop repenting.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops repenting.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_STAND:
       if (ch->getPosition() == POSITION_MOUNTED) {
-        act("Not while riding you don't!", FALSE, ch, 0, 0, TO_CHAR);
+        act("Not while riding you don't!", false, ch, 0, 0, TO_CHAR);
         ch->stopTask();
         break;
       }
-      act("You stop repenting and stand up.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops repenting and stands up.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop repenting and stand up.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops repenting and stands up.", false, ch, 0, 0, TO_ROOM);
       ch->setPosition(POSITION_STANDING);
       ch->stopTask();
       break;
@@ -124,7 +124,7 @@ int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         ch->sendTo("You break your focus...\n\r");
         ch->stopTask();
       }
-      return FALSE;  // eat the command
+      return false;  // eat the command
   }
-  return TRUE;
+  return true;
 }

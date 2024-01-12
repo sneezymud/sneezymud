@@ -56,9 +56,9 @@ int TStaff::changeItemVal4Check(TBeing* ch, int the_update) {
                                    !discArray[the_update]->minLifeforce &&
                                    !discArray[the_update]->minPiety))) {
     ch->sendTo("Invalid value or value is not a spell.\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TStaff::divinateMe(TBeing* caster) const {
@@ -105,7 +105,7 @@ int TStaff::objectSell(TBeing* ch, TMonster* keeper) {
   if (getCurCharges() != getMaxCharges()) {
     keeper->doTell(ch->getName(),
       "I'm sorry, I don't buy back expended staves.");
-    return TRUE;
+    return true;
   }
 
   return TMagicItem::objectSell(ch, keeper);
@@ -119,7 +119,7 @@ void TStaff::lowCheck() {
                                     !discArray[curspell]->minMana &&
                                     !discArray[curspell]->minLifeforce &&
                                     !discArray[curspell]->minPiety)) ||
-          (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
+          (getDisciplineNumber(curspell, false) == DISC_NONE)))) {
     vlogf(LOG_LOW, format("staff (%s:%d) has messed up spell(%d)") % getName() %
                      objVnum() % curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
@@ -157,7 +157,7 @@ bool TStaff::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "You might wanna take that to the magic shop!");
   }
-  return TRUE;
+  return true;
 }
 
 int TStaff::suggestedPrice() const {
@@ -187,47 +187,47 @@ int TStaff::useMe(TBeing* ch, const char* argument) {
   TBeing* tmp_char;
   TThing* t;
   int rc = 0;
-  bool isViolent = FALSE;
+  bool isViolent = false;
   spellNumT the_spell = getSpell();
-  bool sleepTag = FALSE;
+  bool sleepTag = false;
   if (objVnum() == Obj::SLEEPTAG_STAFF) {
     if (!ch->hasWizPower(POWER_GOD) && !ch->inLethargica()) {
       ch->sendTo("You can only use that staff in Lethargica.\n\r");
-      return FALSE;
+      return false;
     }
-    sleepTag = TRUE;
+    sleepTag = true;
   }
   if (!discArray[the_spell]) {
     vlogf(LOG_BUG,
       format(
         "doUse (%s) called spell (%d) that does not exist! - Don't do that!") %
         getName() % the_spell);
-    return FALSE;
+    return false;
   }
-  act("$n taps $p three times on the $g.", TRUE, ch, this, 0, TO_ROOM);
-  act("You tap $p three times on the $g.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n taps $p three times on the $g.", true, ch, this, 0, TO_ROOM);
+  act("You tap $p three times on the $g.", false, ch, this, 0, TO_CHAR);
 
   if (getCurCharges() > 0) {  // Is there any charges left?
     addToCurCharges(-1);
     if (!ch->isLucky(200 + ch->spellLuckModifier(the_spell)) &&
         (objVnum() != Obj::SLEEPTAG_STAFF)) {
-      act("The $o blows sparks out one end, something went wrong!", TRUE, ch,
+      act("The $o blows sparks out one end, something went wrong!", true, ch,
         this, 0, TO_CHAR);
-      act("$n's $o blows sparks out one end, something went wrong!", TRUE, ch,
+      act("$n's $o blows sparks out one end, something went wrong!", true, ch,
         this, 0, TO_ROOM);
       act(
         "You should gain more experience before using such powerful items of "
         "magic.",
-        TRUE, ch, this, 0, TO_CHAR);
+        true, ch, this, 0, TO_CHAR);
     } else {
       ch->addToWait(combatRound(1));
       if (IS_SET(discArray[the_spell]->targets, TAR_AREA)) {
-        rc = doObjSpell(ch, NULL, this, NULL, argument, the_spell);
+        rc = doObjSpell(ch, nullptr, this, nullptr, argument, the_spell);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_VICT;
       } else {
         if ((discArray[the_spell]->targets & TAR_VIOLENT))
-          isViolent = TRUE;
+          isViolent = true;
 
         for (StuffIter it = ch->roomp->stuff.begin();
              it != ch->roomp->stuff.end();) {
@@ -239,10 +239,10 @@ int TStaff::useMe(TBeing* ch, const char* argument) {
             continue;
           if (!sleepTag && isViolent && tmp_char->inGroup(*ch))
             continue;
-          rc = doObjSpell(ch, tmp_char, this, NULL, argument, the_spell);
+          rc = doObjSpell(ch, tmp_char, this, nullptr, argument, the_spell);
           if (IS_SET_DELETE(rc, DELETE_VICT) && ch != tmp_char) {
             delete tmp_char;
-            tmp_char = NULL;
+            tmp_char = nullptr;
           }
           if ((IS_SET_DELETE(rc, DELETE_VICT) && ch == tmp_char) ||
               IS_SET_DELETE(rc, DELETE_THIS))
@@ -251,7 +251,7 @@ int TStaff::useMe(TBeing* ch, const char* argument) {
       }
     }
   } else
-    act("$p seems powerless.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p seems powerless.", false, ch, this, 0, TO_CHAR);
 
-  return FALSE;
+  return false;
 }

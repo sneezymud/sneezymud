@@ -64,8 +64,8 @@ static void showStatsTo(const Descriptor* d, const TBeing* ch,
   int i;
   if (hidden_stuff) {
     snprintf(buffer, sizeof(buffer),
-      "Offense: %d      Defense: %d    mode: %s\n\r", victim->attackRound(NULL),
-      victim->defendRound(NULL), attack_modes[victim->getCombatMode()]);
+      "Offense: %d      Defense: %d    mode: %s\n\r", victim->attackRound(nullptr),
+      victim->defendRound(nullptr), attack_modes[victim->getCombatMode()]);
     str += buffer;
     snprintf(buffer, sizeof(buffer),
       "Combat   :            hits swings   rnds   hit%%  ComDam SklDam  Mod  "
@@ -905,7 +905,7 @@ void TBeing::doAttribute(const char* arg) {
       sendTo("You are feeling tipsy.\n\r");
 
     if (fight())
-      act("You are fighting $N.", FALSE, this, NULL, fight(), TO_CHAR);
+      act("You are fighting $N.", false, this, nullptr, fight(), TO_CHAR);
     else if (task) {
       buf = format("You are %s.\n\r") % tasks[task->task].name;
       sendTo(buf);

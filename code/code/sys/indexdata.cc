@@ -21,10 +21,10 @@ indexData::indexData() :
   virt(0),
   pos(0),
   number(0),
-  name(NULL),
-  short_desc(NULL),
-  long_desc(NULL),
-  description(NULL),
+  name(nullptr),
+  short_desc(nullptr),
+  long_desc(nullptr),
+  description(nullptr),
   max_exist(-99),
   spec(0),
   weight(0) {}
@@ -108,7 +108,7 @@ mobIndexData::mobIndexData(const mobIndexData& a) :
 mobIndexData::~mobIndexData() {}
 
 objIndexData::objIndexData() :
-  ex_description(NULL),
+  ex_description(nullptr),
   max_struct(-99),
   armor(-99),
   where_worn(0),
@@ -125,7 +125,7 @@ objIndexData& objIndexData::operator=(const objIndexData& a) {
   if (a.ex_description)
     ex_description = new extraDescription(*a.ex_description);
   else
-    ex_description = NULL;
+    ex_description = nullptr;
 
   max_struct = a.max_struct;
   armor = a.armor;
@@ -152,7 +152,7 @@ objIndexData::objIndexData(const objIndexData& a) :
   if (a.ex_description)
     ex_description = new extraDescription(*a.ex_description);
   else
-    ex_description = NULL;
+    ex_description = nullptr;
 
   int i;
   for (i = 0; i < MAX_OBJ_AFFECT; ++i) {
@@ -170,7 +170,7 @@ objIndexData::~objIndexData() {
 
 // generate index table for object
 void generate_obj_index() {
-  objIndexData* tmpi = NULL;
+  objIndexData* tmpi = nullptr;
   extraDescription* new_descr;
   int i = 0;
 
@@ -225,7 +225,7 @@ void generate_obj_index() {
     if (!db["action_desc"].empty())
       tmpi->description = mud_str_dup(db["action_desc"]);
     else
-      tmpi->description = NULL;
+      tmpi->description = nullptr;
 
     while (!extra_db["vnum"].empty() &&
            convertTo<int>(extra_db["vnum"]) < tmpi->virt) {
@@ -276,7 +276,7 @@ void generate_obj_index() {
 
 // generate index table for monster file
 void generate_mob_index() {
-  mobIndexData* tmpi = NULL;
+  mobIndexData* tmpi = nullptr;
   TDatabase db(DB_SNEEZY);
 
   // to prevent constant resizing (slows boot), declare an appropriate initial

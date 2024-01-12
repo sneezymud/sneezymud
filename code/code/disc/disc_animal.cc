@@ -27,19 +27,19 @@ int beastSoother(TBeing* caster, TBeing* victim, int tWand, short bKnown) {
   if (!tWand)
     if (!caster->useComponent(caster->findComponent(SKILL_BEAST_SOOTHER),
           victim, CHECK_ONLY_NO))
-      return FALSE;
+      return false;
 
   TMonster* tmons = dynamic_cast<TMonster*>(victim);
 
   if (victim->fight() || !victim->isDumbAnimal() || !tmons || tmons->isPc()) {
-    act("$N seems indifferent.", TRUE, caster, NULL, victim, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("$N seems indifferent.", true, caster, nullptr, victim, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
   if (!victim->awake()) {
-    act("$N looks sound asleep.  Oops!", TRUE, caster, NULL, victim, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("$N looks sound asleep.  Oops!", true, caster, nullptr, victim, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -64,30 +64,30 @@ int beastSoother(TBeing* caster, TBeing* victim, int tWand, short bKnown) {
       if (IS_SET(tmons->specials.act, ACT_HATEFUL))
         REMOVE_BIT(tmons->specials.act, ACT_HATEFUL);
 
-      act("$N seems to relax quite a bit.", FALSE, caster, NULL, tmons,
+      act("$N seems to relax quite a bit.", false, caster, nullptr, tmons,
         TO_NOTVICT);
-      act("$N seems to relax quite a bit.  Good job!", FALSE, caster, NULL,
+      act("$N seems to relax quite a bit.  Good job!", false, caster, nullptr,
         tmons, TO_CHAR);
-      act("You feel very relaxed, and much less hostile.", FALSE, caster, NULL,
+      act("You feel very relaxed, and much less hostile.", false, caster, nullptr,
         tmons, TO_VICT);
       return SPELL_CRIT_SUCCESS;
     } else {
-      act("$N seems to be more relaxed.", FALSE, caster, NULL, tmons,
+      act("$N seems to be more relaxed.", false, caster, nullptr, tmons,
         TO_NOTVICT);
-      act("$N seems to relax a bit.", FALSE, caster, NULL, tmons, TO_CHAR);
-      act("You feel relaxed, and less hostile.", FALSE, caster, NULL, tmons,
+      act("$N seems to relax a bit.", false, caster, nullptr, tmons, TO_CHAR);
+      act("You feel relaxed, and less hostile.", false, caster, nullptr, tmons,
         TO_VICT);
       return SPELL_SUCCESS;
     }
   } else {
     if (critFail(caster, SKILL_BEAST_SOOTHER)) {
       CF(SKILL_BEAST_SOOTHER);
-      act("$N turns towards $n, infuriated!", FALSE, caster, NULL, victim,
+      act("$N turns towards $n, infuriated!", false, caster, nullptr, victim,
         TO_NOTVICT);
-      act("$N turns towards you, infuriated!", FALSE, caster, NULL, victim,
+      act("$N turns towards you, infuriated!", false, caster, nullptr, victim,
         TO_CHAR);
-      act("For some reason, you feel a deep hostility towards $n.", FALSE,
-        caster, NULL, victim, TO_VICT);
+      act("For some reason, you feel a deep hostility towards $n.", false,
+        caster, nullptr, victim, TO_VICT);
       if (!caster->checkPeaceful("") && !victim->isPc()) {
         if ((rc = victim->hit(caster)) == DELETE_VICT)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -98,7 +98,7 @@ int beastSoother(TBeing* caster, TBeing* victim, int tWand, short bKnown) {
       }
     } else {
       caster->sendTo("Nothing seems to happen.\n\r");
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
       return SPELL_FAIL;
     }
   }
@@ -108,23 +108,23 @@ int beastSoother(TBeing* caster, TBeing* victim, int tWand, short bKnown) {
 int TBeing::doSoothBeast(const char* argument) {
   int ret = 0;
   int rc = 0;
-  TBeing* victim = NULL;
+  TBeing* victim = nullptr;
   char namebuf[256];
 
   if (!doesKnowSkill(SKILL_BEAST_SOOTHER)) {
     sendTo("You know nothing about soothing beasts.");
-    return FALSE;
+    return false;
   }
 
   strcpy(namebuf, argument);
   if (!(victim = get_char_room_vis(this, namebuf))) {
     sendTo("Sooth what?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
 
   ret = beastSoother(this, victim, 0, getSkillValue(SKILL_BEAST_SOOTHER));
@@ -151,23 +151,23 @@ int beastSoother(TBeing* caster, TBeing* victim) {
 int TBeing::doBefriendBeast(const char* argument) {
   if (!doesKnowSkill(SKILL_BEFRIEND_BEAST)) {
     sendTo("You know nothing about befriending beasts.");
-    return FALSE;
+    return false;
   }
   sendTo("This skill is not implemented yet.");
-  return FALSE;
+  return false;
 #if 0
-  TBeing *victim = NULL;
+  TBeing *victim = nullptr;
   char namebuf[256];
 
   strcpy(namebuf, argument);
   if (!(victim = get_char_room_vis(this, namebuf))) {
     sendTo("Befriend what?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   int level = getSkillLevel(SKILL_BEFRIEND_BEAST);
   int ret=befriendBeast(this,victim,level,caster->getSkillValue(SKILL_BEAST_SOOTHER));
@@ -183,26 +183,26 @@ int TBeing::doBefriendBeast(const char* argument) {
 int TBeing::doSkySpirit(const char* argument) {
   if (!doesKnowSkill(SPELL_SKY_SPIRIT)) {
     sendTo("You do not know how to summon the spirits of the sky.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (this->roomp->isIndoorSector()) {
     sendTo(
       "You cannot summon the spirits of the sky unless you are outdoors!\n\r");
-    return FALSE;
+    return false;
   }
 
   char tTarget[256];
-  TObj* tObj = NULL;
-  TBeing* victim = NULL;
+  TObj* tObj = nullptr;
+  TBeing* victim = nullptr;
   sstring spirit;
 
   if (checkBusy())
-    return FALSE;
+    return false;
 
   if (getMana() < 0) {
     sendTo("You lack mana to summon the spirits of the sky.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (argument && *argument) {
@@ -211,22 +211,22 @@ int TBeing::doSkySpirit(const char* argument) {
   } else {
     if (!fight()) {
       sendTo("Upon whom do you wish to unleash the spirit of the sky?\n\r");
-      return FALSE;
+      return false;
     } else
       victim = fight();
   }
 
-  if (victim == NULL) {
+  if (victim == nullptr) {
     sendTo("There is no one by that name here.\n\r");
-    return FALSE;
+    return false;
   } else if (victim == this) {
     this->sendTo(
       "Do you really want to summon the spirits of the sky to attack you?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   int lev = getSkillLevel(SPELL_SKY_SPIRIT);
   int bKnown = getSkillValue(SPELL_SKY_SPIRIT);
@@ -274,7 +274,7 @@ int TBeing::doSkySpirit(const char* argument) {
     getAdvLearning(SPELL_SKY_SPIRIT));
 
   if (!useComponent(findComponent(SPELL_SKY_SPIRIT), this, CHECK_ONLY_NO))
-    return FALSE;
+    return false;
 
   addToWait((int)combatRound(discArray[SPELL_SKY_SPIRIT]->lag));
   reconcileHurt(victim, discArray[SPELL_SKY_SPIRIT]->alignMod);
@@ -285,22 +285,22 @@ int TBeing::doSkySpirit(const char* argument) {
       spirit += " of incredible size";
     }
 
-    act("You summon a spirit of the sky!", FALSE, this, NULL, victim, TO_CHAR);
-    act("$n summons a spirit of the sky!", FALSE, this, NULL, victim, TO_ROOM);
+    act("You summon a spirit of the sky!", false, this, nullptr, victim, TO_CHAR);
+    act("$n summons a spirit of the sky!", false, this, nullptr, victim, TO_ROOM);
     char buf[256];
 
     sprintf(buf,
       "<c>A phantasmal %s<1><c> swoops down from above and strikes $N!<1>",
       spirit.c_str());
 
-    act(buf, FALSE, this, NULL, victim, TO_CHAR);
-    act(buf, FALSE, this, NULL, victim, TO_NOTVICT);
+    act(buf, false, this, nullptr, victim, TO_CHAR);
+    act(buf, false, this, nullptr, victim, TO_NOTVICT);
 
     sprintf(buf,
       "<C>A phantasmal %s<1><c> swoops down from above and strikes you!<1>",
       spirit.c_str());
 
-    act(buf, FALSE, this, NULL, victim, TO_VICT);
+    act(buf, false, this, nullptr, victim, TO_VICT);
 
     if (this->reconcileDamage(victim, dam, SPELL_SKY_SPIRIT) == -1) {
       delete victim;
@@ -309,9 +309,9 @@ int TBeing::doSkySpirit(const char* argument) {
     return SPELL_SUCCESS;
 
   } else {
-    act("You fail to summon a spirit of the sky.", FALSE, this, NULL, victim,
+    act("You fail to summon a spirit of the sky.", false, this, nullptr, victim,
       TO_CHAR);
-    act("$n fails to summon a spirit of the sky.", FALSE, this, NULL, victim,
+    act("$n fails to summon a spirit of the sky.", false, this, nullptr, victim,
       TO_ROOM);
 
     return SPELL_FAIL;
@@ -323,12 +323,12 @@ int TBeing::doSkySpirit(const char* argument) {
 int TBeing::doFeralWrath(const char* argument) {
   if (!doesKnowSkill(SPELL_FERAL_WRATH)) {
     sendTo("You do not know the secrets of feral wrath.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (affectedBySpell(SPELL_FERAL_WRATH)) {
     sendTo("You are already affected by feral wrath.\n\r");
-    return FALSE;
+    return false;
   }
 
   int level = getSkillLevel(SPELL_FERAL_WRATH);
@@ -336,7 +336,7 @@ int TBeing::doFeralWrath(const char* argument) {
 
   // not technically a spell, but needs a component anyway
   if (!useComponent(findComponent(SPELL_FERAL_WRATH), this, CHECK_ONLY_NO))
-    return FALSE;
+    return false;
 
   int which = ::number(1, 3);
 
@@ -391,28 +391,28 @@ int TBeing::doFeralWrath(const char* argument) {
     if (aff2.location == APPLY_STR) {
       act(
         "The misty shape of a large bear settles on you.\n\rYou feel stronger.",
-        FALSE, this, NULL, NULL, TO_CHAR);
-      act("A light mist in the shape of a large bear settles on $n.", FALSE,
-        this, NULL, NULL, TO_ROOM);
+        false, this, nullptr, nullptr, TO_CHAR);
+      act("A light mist in the shape of a large bear settles on $n.", false,
+        this, nullptr, nullptr, TO_ROOM);
     } else if (aff2.location == APPLY_DEX) {
       act(
         "The misty shape of a great cat settles on you.\n\rYou feel your "
         "reflexes quicken.",
-        FALSE, this, NULL, NULL, TO_CHAR);
-      act("A light mist in the shape of a great cat settles on $n.", FALSE,
-        this, NULL, NULL, TO_ROOM);
+        false, this, nullptr, nullptr, TO_CHAR);
+      act("A light mist in the shape of a great cat settles on $n.", false,
+        this, nullptr, nullptr, TO_ROOM);
     } else if (aff2.location == APPLY_SPE) {
       act(
         "The misty shape of a snake settles on you.\n\rYou feel you can strike "
         "with great speed.",
-        FALSE, this, NULL, NULL, TO_CHAR);
-      act("A light mist in the shape of a snake settles on $n.", FALSE, this,
-        NULL, NULL, TO_ROOM);
+        false, this, nullptr, nullptr, TO_CHAR);
+      act("A light mist in the shape of a snake settles on $n.", false, this,
+        nullptr, nullptr, TO_ROOM);
     }
 
-    act("Your blood boils with feral rage!", FALSE, this, NULL, NULL, TO_CHAR);
+    act("Your blood boils with feral rage!", false, this, nullptr, nullptr, TO_CHAR);
     act("$n's eyes narrow with anger as $e takes on an aura of feral rage.",
-      TRUE, this, NULL, NULL, TO_ROOM);
+      true, this, nullptr, nullptr, TO_ROOM);
 
     return SPELL_SUCCESS;
   } else {
@@ -421,14 +421,14 @@ int TBeing::doFeralWrath(const char* argument) {
       act(
         "You feel the rage build inside you, and then suddenly you get a "
         "peaceful, easy feeling...",
-        FALSE, this, NULL, NULL, TO_CHAR);
+        false, this, nullptr, nullptr, TO_CHAR);
       act(
         "$n looks angry for a moment, then suddenly becomes extremely relaxed.",
-        TRUE, this, NULL, NULL, TO_ROOM);
+        true, this, nullptr, nullptr, TO_ROOM);
       this->affectTo(&aff);
     } else {
       this->sendTo("Nothing seems to happen.\n\r");
-      act("Nothing seems to happen.", FALSE, this, NULL, NULL, TO_ROOM);
+      act("Nothing seems to happen.", false, this, nullptr, nullptr, TO_ROOM);
     }
     return SPELL_FAIL;
   }
@@ -437,25 +437,25 @@ int TBeing::doFeralWrath(const char* argument) {
 int TBeing::doCharmBeast(const char* argument) {
   if (!doesKnowSkill(SKILL_BEAST_CHARM)) {
     sendTo("You know nothing about charming beasts.");
-    return FALSE;
+    return false;
   }
   sendTo("This skill is not implemented yet.");
-  return FALSE;
+  return false;
 #if 0
   int level, ret = 0;
   int rc = 0;
-  TBeing *victim = NULL;
+  TBeing *victim = nullptr;
   char namebuf[256];
 
   strcpy(namebuf, argument);
   if (!(victim = get_char_room_vis(this, namebuf))) {
     sendTo("Charm what?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   level = getSkillLevel(SKILL_BEAST_CHARM);
 
@@ -474,21 +474,21 @@ int beastSummon(TBeing* caster, const char* arg, int level, short bKnown) {
   TBeing* v;
 
   if (!caster || !arg)
-    return FALSE;
+    return false;
 #if 0
-  if (!bPassMageChecks(caster,SKILL_BEAST_SUMMON, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster,SKILL_BEAST_SUMMON, nullptr))
+    return false;
 #else
-  if (!caster->useComponent(caster->findComponent(SKILL_BEAST_SUMMON), NULL,
+  if (!caster->useComponent(caster->findComponent(SKILL_BEAST_SUMMON), nullptr,
         CHECK_ONLY_NO))
-    return FALSE;
+    return false;
 #endif
 
   if (sscanf(arg, "%s", targ_name) != 1) {
     caster->sendTo(
       "It suddenly strikes you that you might want to summon something "
       "specific.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (caster->bSuccess(bKnown, caster->getPerc(), SKILL_BEAST_SUMMON)) {
@@ -517,7 +517,7 @@ int beastSummon(TBeing* caster, const char* arg, int level, short bKnown) {
     if (!num_sum) {
       caster->sendTo(
         "You can't seem to make contact with a creature of that type.\n\r");
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     } else if (num_sum == 1)
       caster->sendTo("You succeed in summoning only a single creature.\n\r");
     else
@@ -525,7 +525,7 @@ int beastSummon(TBeing* caster, const char* arg, int level, short bKnown) {
     return SPELL_SUCCESS;
   } else {
     caster->sendTo("Nothing seems to happen.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 }
@@ -536,7 +536,7 @@ int TBeing::doSummonBeast(const char* argument) {
 
   if (!doesKnowSkill(SKILL_BEAST_SUMMON)) {
     sendTo("You know nothing about summoning beasts.\n\r");
-    return FALSE;
+    return false;
   }
 
   level = getSkillLevel(SKILL_BEAST_SUMMON);

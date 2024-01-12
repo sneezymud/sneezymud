@@ -385,7 +385,7 @@ void Race::initRace(const char* whichRace) {
     sprintf(aFilename, "races/RACE_HUMAN");
     raceFile = fopen(aFilename, "r");
   }
-  mud_assert(raceFile != NULL, "No default race file");
+  mud_assert(raceFile != nullptr, "No default race file");
 
   // Basically we just start looking for keywords and then assign values
   // into the appropriate data member.
@@ -801,7 +801,7 @@ void Race::showTo(TBeing* caller) {
   str += sstring("Move Out: ") + moveMessageOut + sstring("\n\r");
 
   str += sstring("Limb for: slash: ") + getBodyLimbSlash();
-  str += sstring(", pierce: ") + getBodyLimbPierce(NULL);
+  str += sstring(", pierce: ") + getBodyLimbPierce(nullptr);
   str += sstring(", blunt: ") + getBodyLimbBlunt() + sstring("\n\r");
 
   if (isDumbAnimal())
@@ -904,15 +904,15 @@ TPCorpse* Race::makePCorpse() const {
   if (corpse) {
 #if 0
     corpse->setCorpseRace(getRace());
-    corpse->setNextGlobal(NULL);
-    corpse->setNext(NULL);
-    corpse->setPrevious(NULL);
+    corpse->setNextGlobal(nullptr);
+    corpse->setNext(nullptr);
+    corpse->setPrevious(nullptr);
     corpse->setOwner("");
     corpse->setRoomNum(0);
     corpse->setNumInRoom(0);
 #endif
   } else {
-    corpse = NULL;
+    corpse = nullptr;
     vlogf(LOG_BUG, "Problem in making corpses in makePCorpse");
   }
   return corpse;
@@ -929,7 +929,7 @@ race_t TBeing::getRaceIndex(const char* ccName) const {
 }
 
 race_t TBeing::getRace() const {
-  //  if (is_disguised == TRUE && disguise_race)
+  //  if (is_disguised == true && disguise_race)
   //  return disguise_race->getRace();
   return race->getRace();
 }

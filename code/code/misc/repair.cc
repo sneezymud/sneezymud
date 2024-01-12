@@ -49,7 +49,7 @@ int TObj::maxFix(const TBeing* keeper, depreciationTypeT dep_done) const {
       vlogf(LOG_BUG,
         format("Warning... shop # for mobile %d (real nr) not found.") %
           mob_index[keeper->number].virt);
-      return FALSE;
+      return false;
     }
 
     if (shop_index[shop_nr].isOwned()) {
@@ -196,7 +196,7 @@ int TObj::repairPrice(TBeing* repair, TBeing* buyer, depreciationTypeT dep_done,
 #endif
 
   // check for shop setting
-  float profit_buy = shop_index[shop_nr].getProfitBuy(NULL, buyer);
+  float profit_buy = shop_index[shop_nr].getProfitBuy(nullptr, buyer);
 
   // raw materials aren't modified by profit rates
   price = (int)((double)price * profit_buy);
@@ -229,7 +229,7 @@ static int repair_time(TBeing* keeper, const TObj* o) {
     vlogf(LOG_BUG,
       format("Warning... shop # for mobile %d (real nr) not found.") %
         mob_index[keeper->number].virt);
-    return FALSE;
+    return false;
   }
 
   if (shop_index[shop_nr].isOwned()) {
@@ -288,7 +288,7 @@ static void save_repairman_file(TBeing* repair, TBeing* buyer, TObj* o,
 
   // check for valid args
   if (!repair || !buyer) {
-    vlogf(LOG_BUG, "save_repairman_file() called with NULL ch!");
+    vlogf(LOG_BUG, "save_repairman_file() called with nullptr ch!");
     return;
   }
   if (!buyer->isPc()) {
@@ -331,7 +331,7 @@ static void save_repairman_file(TBeing* repair, TBeing* buyer, TObj* o,
     return;
   }
 
-  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES, true, NULL);
+  cost = o->repairPrice(repair, buyer, DEPRECIATION_YES, true, nullptr);
   if (fwrite(&cost, sizeof(cost), 1, fp) != 1) {
     vlogf(LOG_BUG, "Error writing cost for repairman_file!");
     fclose(fp);
@@ -351,7 +351,7 @@ static void save_repairman_file(TBeing* repair, TBeing* buyer, TObj* o,
   // Save the repair number so we can keep up with it.
   save_game_stats();
   fclose(fp);
-  is.setFile(NULL);
+  is.setFile(nullptr);
 }
 
 TObj* loadRepairItem(TBeing* repair, int ticket, long& time, int& cost,
@@ -366,7 +366,7 @@ TObj* loadRepairItem(TBeing* repair, int ticket, long& time, int& cost,
   if (!(fp = fopen(filename.c_str(), "r"))) {
     repair->doSay(
       format("I don't seem to have an item for ticket number %d") % ticket);
-    return NULL;
+    return nullptr;
   }
 
   // read the repair data
@@ -375,21 +375,21 @@ TObj* loadRepairItem(TBeing* repair, int ticket, long& time, int& cost,
                      ticket % repair->getName());
     repair->doSay("Something is majorly wrong(Timer). Talk to a god");
     fclose(fp);
-    return NULL;
+    return nullptr;
   }
   if (fread(&cost, sizeof(cost), 1, fp) != 1) {
     vlogf(LOG_BUG, format("No cost on item number %d for repairman %s") %
                      ticket % repair->getName());
     repair->doSay("Something is majorly wrong(Cost). Talk to a god");
     fclose(fp);
-    return NULL;
+    return nullptr;
   }
   if (fread(&version, sizeof(version), 1, fp) != 1) {
     vlogf(LOG_BUG, format("No version on item number %d for repairman %s") %
                      ticket % repair->getName());
     repair->doSay("Something is majorly wrong(version). Talk to a god");
     fclose(fp);
-    return NULL;
+    return nullptr;
   }
 
   // read the object data
@@ -411,8 +411,8 @@ static int getRepairItem(TBeing* repair, TBeing* buyer, int ticket,
 
   // check for valid args
   if (!repair || !buyer) {
-    vlogf(LOG_BUG, "check_time called with NULL character! BUG BRUTIUS!");
-    return FALSE;
+    vlogf(LOG_BUG, "check_time called with nullptr character! BUG BRUTIUS!");
+    return false;
   }
 
   // load the item
@@ -423,7 +423,7 @@ static int getRepairItem(TBeing* repair, TBeing* buyer, int ticket,
     vlogf(LOG_FILE,
       format("Player (%s) tried to load deleted/expired repair object: %i") %
         buyer->name % ticket);
-    return TRUE;
+    return true;
   }
 
   cur_time = time(0) + 3600 * obj->getTimeAdj();
@@ -440,12 +440,12 @@ static int getRepairItem(TBeing* repair, TBeing* buyer, int ticket,
       format("It will be ready in %d hours, %d minutes and %d seconds.") %
         hours % minutes % seconds);
     delete fixed_obj;
-    return FALSE;
+    return false;
   }
 
   if (repair->getMoney() <= 0) {
     repair->doSay("I'm sorry, but I'm on strike until my salary gets paid.");
-    return FALSE;
+    return false;
   }
 
   // check if the player has enough money to pay for it
@@ -456,7 +456,7 @@ static int getRepairItem(TBeing* repair, TBeing* buyer, int ticket,
     sprintf(buf, "Remember the price is %d.", tmp_cost);
     repair->doSay(buf);
     delete fixed_obj;
-    return FALSE;
+    return false;
   }
 
   unlink(
@@ -486,35 +486,35 @@ static int getRepairItem(TBeing* repair, TBeing* buyer, int ticket,
 
   fixed_obj->addToDepreciation(1);
 
-  return TRUE;
+  return true;
 }
 
 static bool will_not_repair(TBeing* ch, TMonster* repair, TObj* obj,
   silentTypeT silent) {
   if (obj->objectRepair(ch, repair, silent))
-    return TRUE;
+    return true;
 
   if (!obj->isRentable()) {
     if (!silent) {
       repair->doTell(fname(ch->name),
         "I'm sorry, but that item is unrepairable.");
     }
-    return TRUE;
+    return true;
   }
   if (obj->getStructPoints() == obj->getMaxStructPoints()) {
     if (!silent) {
       repair->doTell(fname(ch->name),
         "It doesn't look like that item needs any repairing.");
     }
-    return TRUE;
+    return true;
   }
-  if (obj->getStructPoints() >= obj->maxFix(NULL, DEPRECIATION_NO)) {
+  if (obj->getStructPoints() >= obj->maxFix(nullptr, DEPRECIATION_NO)) {
     // check depreciation alone
     if (!silent) {
       repair->doTell(fname(ch->name),
         "That item's damage isn't something that can be repaired.");
     }
-    return TRUE;
+    return true;
   }
   if (obj->getStructPoints() >= obj->maxFix(repair, DEPRECIATION_NO)) {
     // check repairman's skill
@@ -523,7 +523,7 @@ static bool will_not_repair(TBeing* ch, TMonster* repair, TObj* obj,
         "I hate to admit it, but I don't think I have the skill to fix that "
         "further.");
     }
-    return TRUE;
+    return true;
   }
   if (!repair_time(repair, obj)) {
     // probably superfluous
@@ -531,20 +531,20 @@ static bool will_not_repair(TBeing* ch, TMonster* repair, TObj* obj,
       repair->doTell(fname(ch->name),
         format("%s looks fine to me.") % obj->getName());
     }
-    return TRUE;
+    return true;
   }
   if (obj->objVnum() == -1) {
     if (!silent) {
       repair->doTell(fname(ch->name),
         format("I can't take temporary items like %s.") % obj->getName());
     }
-    return TRUE;
+    return true;
   }
   if (obj->isObjStat(ITEM_NODROP)) {
     if (!silent) {
       repair->doTell(fname(ch->name), "I can't take cursed items.");
     }
-    return TRUE;
+    return true;
   }
   if (obj->isObjStat(ITEM_BURNING)) {
     if (!silent) {
@@ -552,7 +552,7 @@ static bool will_not_repair(TBeing* ch, TMonster* repair, TObj* obj,
         "HOLY CRAP GET THAT THING OUT OF HERE BEFORE YOU BURN THE WHOLE PLACE "
         "DOWN!.");
     }
-    return TRUE;
+    return true;
   }
   if (obj->isObjStat(ITEM_CHARRED)) {
     if (!silent) {
@@ -576,7 +576,7 @@ static bool will_not_repair(TBeing* ch, TMonster* repair, TObj* obj,
         "dangerous for me to take it.");
     }
 
-    return TRUE;
+    return true;
   }
 
   if (!obj->stuff.empty()) {
@@ -585,9 +585,9 @@ static bool will_not_repair(TBeing* ch, TMonster* repair, TObj* obj,
       repair->doTell(fname(ch->name),
         "Sorry, you'll have to empty it out before I can do any work on it.");
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 void repairman_value(const char* arg, TMonster* repair, TBeing* buyer) {
@@ -700,7 +700,7 @@ int repairman_give(const char* arg, TMonster* repair, TBeing* buyer) {
 
   if (!*obj_name || !*rep_name) {
     buyer->sendTo("Give WHAT to WHOM?!?\n\r");
-    return FALSE;
+    return false;
   }
   if ((get_char_room_vis(buyer, rep_name) != repair)) {
     if (*obj_amt)
@@ -710,7 +710,7 @@ int repairman_give(const char* arg, TMonster* repair, TBeing* buyer) {
 
     if (buyer->doGive(buf) == DELETE_THIS)
       return DELETE_THIS;
-    return FALSE;
+    return false;
   }
   if (is_abbrev(obj_name, "all.damaged")) {
     int total = 0;
@@ -725,11 +725,11 @@ int repairman_give(const char* arg, TMonster* repair, TBeing* buyer) {
         int rc5;
         tobj->giveToRepair(repair, buyer, &rc5);
         if (IS_SET_DELETE(rc5, DELETE_THIS)) {
-          found = TRUE;
+          found = true;
           total +=
-            tobj->repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL);
+            tobj->repairPrice(repair, buyer, DEPRECIATION_YES, false, nullptr);
           delete tobj;
-          tobj = NULL;
+          tobj = nullptr;
           buyer->doSave(SILENT_YES);
         }
       }
@@ -741,7 +741,7 @@ int repairman_give(const char* arg, TMonster* repair, TBeing* buyer) {
         format("You gave a total of %d talens in damaged equipment.\n\r") %
         total);
 
-    return FALSE;
+    return false;
   }
   if (is_abbrev(obj_name, "all.ticket")) {
     bool found = false;
@@ -752,31 +752,31 @@ int repairman_give(const char* arg, TMonster* repair, TBeing* buyer) {
       int rc5;
       t->giveToRepairNote(repair, buyer, &rc5);
       if (IS_SET_DELETE(rc5, DELETE_THIS)) {
-        found = TRUE;
+        found = true;
         delete t;
-        t = NULL;
+        t = nullptr;
       }
     }
     if (!found)
       buyer->sendTo("Your inventory contains no tickets!\n\r");
 
-    return FALSE;
+    return false;
   }
   t = searchLinkedListVis(buyer, obj_name, buyer->stuff);
   TObj* tobj = dynamic_cast<TObj*>(t);
   if (!tobj) {
     repair->doTell(fname(buyer->name), "You don't have that item.");
-    return FALSE;
+    return false;
   }
   int rc5;
   tobj->giveToRepair(repair, buyer, &rc5);
   if (IS_SET_DELETE(rc5, DELETE_THIS)) {
     delete tobj;
-    tobj = NULL;
+    tobj = nullptr;
     buyer->doSave(SILENT_YES);
   }
 
-  return FALSE;
+  return false;
 }
 
 static TObj* make_ticket(TMonster* repair, TBeing* buyer, TObj* repaired,
@@ -784,22 +784,22 @@ static TObj* make_ticket(TMonster* repair, TBeing* buyer, TObj* repaired,
   TObj* tmp_obj;
   if (!(tmp_obj = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
     vlogf(LOG_BUG, "Couldn't read in note for make_ticket. BUG BRUTIUS!!!");
-    return NULL;
+    return nullptr;
   }
   tmp_obj->noteMe(repair, buyer, repaired, when_ready, tick_num);
   tmp_obj->max_exist = repaired->max_exist;
   return tmp_obj;
 }
 
-// returns TRUE if item given, otherwise false
-// note TRUE = o should be deleted
+// returns true if item given, otherwise false
+// note true = o should be deleted
 void TObj::giveToRepair(TMonster* repair, TBeing* buyer, int* found) {
   extern int repair_number;
   time_t when_ready, ct;
   char* ready;
   TObj* ticket;
 
-  *found = FALSE;
+  *found = false;
 
   if (buyer->desc && buyer->desc->account)
     ct = time(0) + 3600 * buyer->desc->account->time_adjust;
@@ -811,7 +811,7 @@ void TObj::giveToRepair(TMonster* repair, TBeing* buyer, int* found) {
 
   repair->doTell(fname(buyer->name),
     format("It'll cost you %d talens to repair %s to a status of %s.") %
-      (repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL)) % getName() %
+      (repairPrice(repair, buyer, DEPRECIATION_YES, false, nullptr)) % getName() %
       equip_condition(maxFix(repair, DEPRECIATION_YES)));
 
   when_ready = ct + repair_time(repair, this);
@@ -875,7 +875,7 @@ void TNote::giveToRepairNote(TMonster* repair, TBeing* buyer, int* found) {
   int iNumber;
 
   // found indicates a ticket was found for give all.ticket
-  *found = TRUE;
+  *found = true;
 
   if (action_description.empty()) {
     repair->doTell(fname(buyer->name), "That ticket is blank!");
@@ -958,8 +958,8 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
   switch (cmd) {
     case CMD_GENERIC_DESTROYED:
       delete (job_struct*)repair->act_ptr;
-      repair->act_ptr = NULL;
-      return FALSE;
+      repair->act_ptr = nullptr;
+      return false;
     case CMD_GENERIC_CREATED:
       if (!repair->act_ptr) {
         if (!(repair->act_ptr = new job_struct())) {
@@ -975,7 +975,7 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
       work = (job_struct*)repair->act_ptr;
       work->number_being_worked_on = counter_work;
       work->number_finished = counter_done;
-      return FALSE;
+      return false;
     case CMD_MOB_MOVED_INTO_ROOM:
 
       return kick_mobs_from_shop(repair, buyer, (long int)o);
@@ -983,27 +983,27 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
     case CMD_MOB_VIOLENCE_PEACEFUL:
       repair->doSay("Hey!  Take it outside.");
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        if (exit_ok(exitp = repair->exitDir(dir), NULL)) {
+        if (exit_ok(exitp = repair->exitDir(dir), nullptr)) {
           // since "o" is really a being, cast up, and back down
           TThing* ttt = o;
           TBeing* tbt = dynamic_cast<TBeing*>(ttt);
-          act("$n throws you from $s shop.", FALSE, repair, 0, buyer, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, repair, 0, buyer,
+          act("$n throws you from $s shop.", false, repair, 0, buyer, TO_VICT);
+          act("$n throws $N from $s shop.", false, repair, 0, buyer,
             TO_NOTVICT);
-          repair->throwChar(buyer, dir, FALSE, SILENT_NO, true);
-          act("$n throws you from $s shop.", FALSE, repair, 0, tbt, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, repair, 0, tbt, TO_NOTVICT);
-          repair->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-          return TRUE;
+          repair->throwChar(buyer, dir, false, SILENT_NO, true);
+          act("$n throws you from $s shop.", false, repair, 0, tbt, TO_VICT);
+          act("$n throws $N from $s shop.", false, repair, 0, tbt, TO_NOTVICT);
+          repair->throwChar(tbt, dir, false, SILENT_NO, true);
+          return true;
         }
       }
-      return TRUE;
+      return true;
     case CMD_VALUE:
       repair->sendTo("You ask the repairman for an estimate.\n\r");
-      act("$n asks $N for an estimate on an item.", FALSE, buyer, NULL, repair,
+      act("$n asks $N for an estimate on an item.", false, buyer, nullptr, repair,
         TO_ROOM);
       repairman_value(arg, repair, buyer);
-      return TRUE;
+      return true;
     case CMD_GIVE:
       if (repairman_give(arg, repair, buyer) == DELETE_THIS) {
         return DELETE_THIS;  // buyer is poof
@@ -1012,7 +1012,7 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
       repair->saveChar(Room::AUTO_RENT);
       buyer->saveChar(Room::AUTO_RENT);
 
-      return TRUE;
+      return true;
     case CMD_REMOVE:
       one_argument(arg, buf, cElements(buf));
       if (is_abbrev(buf, "all.damaged")) {
@@ -1028,7 +1028,7 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
                 rc = t->removeMe(buyer, j);
                 if (IS_SET_DELETE(rc, DELETE_THIS)) {
                   delete t;
-                  t = NULL;
+                  t = nullptr;
                 }
                 if (IS_SET_DELETE(rc, DELETE_THIS))
                   return DELETE_THIS;
@@ -1039,19 +1039,19 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
             }
           }
         }
-        act("$n stops using $s damaged equipment.", TRUE, buyer, o, 0, TO_ROOM);
-        return TRUE;
+        act("$n stops using $s damaged equipment.", true, buyer, o, 0, TO_ROOM);
+        return true;
       }
-      return FALSE;
+      return false;
     case CMD_LIST:
       if (buyer->isImmortal()) {
         if (buyer->desc)
           buyer->desc->page_string(repairList(repair));
         else
           buyer->sendTo(COLOR_BASIC, repairList(repair));
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     case CMD_WHISPER:
       for (shop_nr = 0; (shop_nr < shop_index.size()) &&
                         (shop_index[shop_nr].keeper != repair->number);
@@ -1062,12 +1062,12 @@ int repairman(TBeing* buyer, cmdTypeT cmd, const char* arg, TMonster* repair,
         vlogf(LOG_BUG,
           format("Warning... shop # for mobile %d (real nr) not found.") %
             mob_index[repair->number].virt);
-        return FALSE;
+        return false;
       }
 
       return shopWhisper(buyer, repair, shop_nr, arg);
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -1090,7 +1090,7 @@ void TNote::noteMe(TMonster* repair, TBeing* buyer, TObj* repaired,
         repair->getName();
   buf += format("Item being repaired : %s\n\r") % repaired->shortDescr;
   buf += format("Estimated cost : %d talens.\n\r") %
-         repaired->repairPrice(repair, buyer, DEPRECIATION_YES, false, NULL);
+         repaired->repairPrice(repair, buyer, DEPRECIATION_YES, false, nullptr);
   buf += format("Condition after repair : %s.\n\r") %
          repaired->equip_condition(repaired->maxFix(repair, DEPRECIATION_YES))
            .c_str();
@@ -1206,12 +1206,12 @@ void processRepairFiles(void) {
 int repairMetal(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_BLACKSMITHING)) {
     ch->sendTo("You really don't know enough about repairing metal items.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_BLACKSMITHING, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_BLACKSMITHING, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1220,12 +1220,12 @@ int repairDead(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_REPAIR_SHAMAN)) {
     ch->sendTo(
       "You really don't know enough about mending bodily materials.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_DEAD, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_REPAIR_DEAD, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1234,12 +1234,12 @@ int repairOrganic(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo(
       "You really don't know enough about repairing organic materials.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_ORGANIC, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_REPAIR_ORGANIC, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1247,12 +1247,12 @@ int repairOrganic(TBeing* ch, TObj* o) {
 int repairWood(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo("You really don't know enough about repairing wood.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_WOOD, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_REPAIR_WOOD, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1261,12 +1261,12 @@ int repairMagical(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_REPAIR_MAGE)) {
     ch->sendTo(
       "You really don't know enough about repairing magical materials.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_MAGICAL, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_REPAIR_MAGICAL, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1275,12 +1275,12 @@ int repairRock(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_REPAIR_MAGE) &&
       !ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo("You really don't know enough about repairing rocks.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_ROCK, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_REPAIR_ROCK, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1291,12 +1291,12 @@ int repairCrystal(TBeing* ch, TObj* o) {
     ch->sendTo(
       "You really don't know enough about repairing crystalline "
       "materials.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_BLACKSMITHING_ADVANCED, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_BLACKSMITHING_ADVANCED, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1304,12 +1304,12 @@ int repairCrystal(TBeing* ch, TObj* o) {
 int repairHide(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_REPAIR_MONK)) {
     ch->sendTo("You really don't know enough about mending hides.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_MEND_HIDE, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_MEND_HIDE, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1317,12 +1317,12 @@ int repairHide(TBeing* ch, TObj* o) {
 int repairGeneric(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_MEND)) {
     ch->sendTo("You really don't know enough about basic mending.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_MEND, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_MEND, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }
@@ -1331,12 +1331,12 @@ int repairSpiritual(TBeing* ch, TObj* o) {
   if (!ch->doesKnowSkill(SKILL_REPAIR_CLERIC) &&
       !ch->doesKnowSkill(SKILL_REPAIR_DEIKHAN)) {
     ch->sendTo("You really don't know enough about repairing holy items.\n\r");
-    return FALSE;
+    return false;
   }
-  act("You begin to prepare to fix $p.", FALSE, ch, o, 0, TO_CHAR);
-  act("$n begins to prepare to fix $p.", FALSE, ch, o, 0, TO_ROOM);
+  act("You begin to prepare to fix $p.", false, ch, o, 0, TO_CHAR);
+  act("$n begins to prepare to fix $p.", false, ch, o, 0, TO_ROOM);
 
-  start_task(ch, NULL, NULL, TASK_REPAIR_SPIRITUAL, o->name.c_str(), 999,
+  start_task(ch, nullptr, nullptr, TASK_REPAIR_SPIRITUAL, o->name.c_str(), 999,
     (ushort)ch->in_room, 0, 0, 0);
   return 0;
 }

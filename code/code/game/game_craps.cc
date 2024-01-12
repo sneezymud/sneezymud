@@ -19,7 +19,7 @@
 #include "game_drawpoker.h"
 #include "connect.h"
 
-Craps::Craps() : m_ch(NULL) {}
+Craps::Craps() : m_ch(nullptr) {}
 
 Craps::Craps(TBeing* ch) : m_ch(ch) {}
 
@@ -101,31 +101,31 @@ bool TBeing::checkForDiceHeld() const {
   obj = dynamic_cast<TObj*>(t);
   if (obj) {
     if (obj->objVnum() == Obj::CRAPS_DICE)
-      return TRUE;
+      return true;
     for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end() && (t = *it);
          ++it) {
       obj = dynamic_cast<TObj*>(t);
       if (obj && obj->objVnum() == Obj::CRAPS_DICE)
-        return TRUE;
+        return true;
     }
   }
   t = heldInSecHand();
   obj = dynamic_cast<TObj*>(t);
   if (obj) {
     if (obj->objVnum() == Obj::CRAPS_DICE)
-      return TRUE;
+      return true;
     for (StuffIter it = obj->stuff.begin(); it != obj->stuff.end() && (t = *it);
          ++it) {
       obj = dynamic_cast<TObj*>(t);
       if (obj && obj->objVnum() == Obj::CRAPS_DICE)
-        return TRUE;
+        return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 TObj* TBeing::checkForDiceInInv() const {
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = nullptr, *t2 = nullptr;
   TObj *obj, *obj2;
 
   for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
@@ -142,19 +142,19 @@ TObj* TBeing::checkForDiceInInv() const {
     }
   }
 
-  return NULL;
+  return nullptr;
 }
 
 int TRoom::checkPointroll()
 
 {
-  TThing* c = NULL;
+  TThing* c = nullptr;
 
   for (StuffIter it = stuff.begin(); it != stuff.end() && (c = *it); ++it) {
     if (c->desc && c->desc->point_roll)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::doBet(const char* arg) {
@@ -415,30 +415,30 @@ int can_bet_craps(TBeing* ch) {
   TMonster* crap_man;
 
   if (!(crap_man = FindMobInRoomWithProcNum(ch->in_room, SPEC_CRAPSGUY)))
-    return FALSE;
+    return false;
 
   if (!crap_man->act_ptr)
     crap_man->act_ptr = new Ccraps();
 
   Ccraps* cr = (Ccraps*)crap_man->act_ptr;
   if (!cr->pos)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 int Craps::checkCraps(int diceroll) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   Descriptor* d;
-  int newRoll = FALSE;
+  int newRoll = false;
 
   if (!m_ch->roomp) {
-    vlogf(LOG_BUG, "checkCraps() called with NULL roomp!");
-    return FALSE;
+    vlogf(LOG_BUG, "checkCraps() called with nullptr roomp!");
+    return false;
   }
 
   if (m_ch->desc->point_roll)
-    return FALSE;
+    return false;
 
   for (StuffIter it = m_ch->roomp->stuff.begin();
        it != m_ch->roomp->stuff.end() && (t = *it); ++it) {
@@ -459,7 +459,7 @@ int Craps::checkCraps(int diceroll) {
       d->bet.come = 0;
       if (t == m_ch) {
         loseDice();
-        newRoll = TRUE;
+        newRoll = true;
       }
       observerReaction(dynamic_cast<TBeing*>(t), GAMBLER_LOST);
     }
@@ -473,22 +473,22 @@ int Craps::checkCraps(int diceroll) {
       if (t == m_ch) {
         if (!newRoll)
           loseDice();
-        newRoll = TRUE;
+        newRoll = true;
       }
     }
   }
   if (newRoll)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 int Craps::checkSeven(int diceroll) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   Descriptor* d;
-  int pointRoll = FALSE, newRoll = FALSE;
+  int pointRoll = false, newRoll = false;
 
   if (diceroll != 7)
-    return FALSE;
+    return false;
 
   if (m_ch->desc) {
     pointRoll = m_ch->desc->point_roll;
@@ -525,7 +525,7 @@ int Craps::checkSeven(int diceroll) {
 // unless we want them to start with a crapout and get the dice
 	if (tbt == m_ch) {
 	  loseDice();
-          newRoll = TRUE;
+          newRoll = true;
         }
 #endif
       }
@@ -538,7 +538,7 @@ int Craps::checkSeven(int diceroll) {
         d->bet.come = 0;
         if (tbt == m_ch) {
           loseDice();
-          newRoll = TRUE;
+          newRoll = true;
         }
       }
       if (IS_SET(d->bet_opt.crapsOptions, CRAP_OUT)) {
@@ -552,24 +552,24 @@ int Craps::checkSeven(int diceroll) {
         if (tbt == m_ch) {
           if (!newRoll)
             loseDice();
-          newRoll = TRUE;
+          newRoll = true;
         }
       }
     }
   }
 
   if (newRoll)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 int Craps::checkEleven(int diceroll) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   Descriptor* d;
-  //  int newRoll = FALSE;
+  //  int newRoll = false;
 
   if ((diceroll != 11) || m_ch->desc->point_roll)
-    return FALSE;
+    return false;
 
   for (StuffIter it = m_ch->roomp->stuff.begin();
        it != m_ch->roomp->stuff.end() && (t = *it); ++it) {
@@ -594,7 +594,7 @@ int Craps::checkEleven(int diceroll) {
       d->bet.crap = 0;
     }
   }
-  return FALSE;
+  return false;
 }
 
 void Craps::setPoint(int diceroll) {
@@ -874,7 +874,7 @@ void Craps::checkOnerolls(int diceroll) {
 }
 
 void WinLoseCraps(TBeing* ch, int diceroll) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   Descriptor* d;
 
   for (StuffIter it = ch->roomp->stuff.begin();
@@ -913,22 +913,22 @@ int Craps::rollDice() {
   TMonster* table_man;
 
   if (!m_ch || !m_ch->desc)
-    return TRUE;
+    return true;
 
   if (!m_ch->checkForDiceHeld()) {
     m_ch->sendTo("You need to hold the dice.\n\r");
-    return FALSE;
+    return false;
   }
 
   if ((table_man = FindMobInRoomWithProcNum(m_ch->in_room, SPEC_CRAPSGUY))) {
     if (!can_bet_craps(m_ch)) {
       table_man->doTell(m_ch->getName(), "You can't roll until I say so!");
-      return FALSE;
+      return false;
     }
     if (!m_ch->desc->bet.come) {
       table_man->doTell(m_ch->getName(),
         "Sorry to keep the table, you need to place a come bet.");
-      return FALSE;
+      return false;
     }
   }
   die_one = dice(1, 6);
@@ -973,18 +973,18 @@ int Craps::rollDice() {
     buf2 = format("%s rolled a %d and a %d. Total = %d\n\r") % m_ch->getName() %
            die_one % die_two % dice_roll;
   }
-  act(buf, TRUE, m_ch, NULL, NULL, TO_CHAR);
-  act(buf2, TRUE, m_ch, NULL, NULL, TO_ROOM);
+  act(buf, true, m_ch, nullptr, nullptr, TO_CHAR);
+  act(buf2, true, m_ch, nullptr, nullptr, TO_ROOM);
   //  sendToRoom(buf, m_ch->in_room);
 
   if (checkCraps(dice_roll)) {
-    return TRUE;
+    return true;
   }
   if (checkSeven(dice_roll)) {
-    return TRUE;
+    return true;
   }
   if (checkEleven(dice_roll)) {
-    return TRUE;
+    return true;
   }
   checkOnerolls(dice_roll);
 
@@ -993,7 +993,7 @@ int Craps::rollDice() {
   } else if (m_ch->desc->point_roll == dice_roll) {
     WinLoseCraps(m_ch, dice_roll);
   }
-  return FALSE;
+  return false;
 }
 
 int craps_table_man(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
@@ -1003,24 +1003,24 @@ int craps_table_man(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<Ccraps*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE) {
     if ((cmd == CMD_GIVE) || (cmd == CMD_JUNK) || (cmd == CMD_DONATE) ||
         (cmd == CMD_DROP)) {
       if (!*arg)
-        return FALSE;
+        return false;
       one_argument(arg, dice_buf, cElements(dice_buf));
       if (is_abbrev(dice_buf, "dice")) {
         ch->sendTo("Doing that to the dice is not permitted!\n\r");
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     } else if (cmd == CMD_BET) {
       if (!*arg)
-        return FALSE;
+        return false;
       half_chop(arg, options, amount);
       if (ch->roomp->checkPointroll()) {
         if (is_abbrev(options, "come")) {
@@ -1028,39 +1028,39 @@ int craps_table_man(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
             ch->getName().c_str());
           myself->doSay(buf);
           myself->doSay("or no-pass after a pointroll has been called.");
-          return TRUE;
+          return true;
         } else
-          return FALSE;
+          return false;
       } else
-        return FALSE;
+        return false;
     } else if (cmd == CMD_THROW || cmd == CMD_ROLL) {
       if (!*arg)
-        return FALSE;
+        return false;
       one_argument(arg, dice_buf, cElements(dice_buf));
       if (is_abbrev(dice_buf, "dice")) {
         if (ch->m_craps) {
           if (ch->m_craps->rollDice()) {
             delete ch->m_craps;
-            ch->m_craps = NULL;
+            ch->m_craps = nullptr;
           }
-          return TRUE;
+          return true;
         }
         ch->sendTo(
           "You need to be shooting in the game to throw the dice!\n\r");
-        return TRUE;
+        return true;
       }
-      return FALSE;
+      return false;
     } else if ((cmd == CMD_NORTH) || (cmd == CMD_SOUTH) || (cmd == CMD_EAST) ||
                (cmd == CMD_WEST) || (cmd == CMD_UP) || (cmd == CMD_DOWN) ||
                (cmd == CMD_NE) || (cmd == CMD_NW) || (cmd == CMD_SE) ||
                (cmd == CMD_FLEE) || (cmd == CMD_SW)) {
       if (ch->checkForDiceHeld()) {
         ch->sendTo("You can't leave the table with the dice!\n\r");
-        return TRUE;
+        return true;
       }
       if (ch->checkForDiceInInv()) {
         ch->sendTo("You can't leave the table with the dice!\n\r");
-        return TRUE;
+        return true;
       }
       Descriptor* d;
       if ((d = ch->desc)) {
@@ -1084,14 +1084,14 @@ int craps_table_man(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         d->bet.seven = 0;
         d->bet.one_craps = 0;
       }
-      return FALSE;
+      return false;
     }
 
-    return FALSE;
+    return false;
   } else if (myself->checkForDiceInInv()) {
     if (!number(0, 8)) {
       myself->doSay("Who wants to roll the dice next?");
-      return TRUE;
+      return true;
     }
   } else {
     if (!myself->act_ptr) {
@@ -1103,21 +1103,21 @@ int craps_table_man(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       case 4:
         myself->doSay("Place all bets now!");
         cr->pos--;
-        return TRUE;
+        return true;
       case 3:
         cr->pos--;
-        return TRUE;
+        return true;
       case 2:
         myself->doSay("Last call for bets!");
         cr->pos--;
-        return TRUE;
+        return true;
       case 1:
         myself->doSay("Ok roller, roll at your will");
         cr->pos--;
-        return TRUE;
+        return true;
       default:
-        return FALSE;
+        return false;
     }
   }
-  return FALSE;
+  return false;
 }

@@ -10,26 +10,26 @@ int task_ride(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
 
   if ((ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd)) &&
       cmd != CMD_MOUNT && cmd != CMD_RIDE && cmd != CMD_MOVE)
-    return FALSE;
+    return false;
 
   // basic tasky safechecking
   if (ch->isLinkdead()) {
-    act("You cease riding.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops riding.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You cease riding.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops riding.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (!ch->riding) {
     ch->sendTo("You aren't riding anything.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->task->wasInRoom == ch->in_room) {
     if ((newdir = getDirFromChar(ch->task->orig_arg)) == DIR_NONE) {
       ch->sendTo("That isn't a direction.\n\r");
-      return FALSE;
+      return false;
     }
   }
 
@@ -77,11 +77,11 @@ int task_ride(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
     case CMD_MOUNT:
     case CMD_RIDE:
       ch->stopTask();
-      return FALSE;
+      return false;
     case CMD_ABORT:
     case CMD_STOP:
-      act("Your mount stops.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n's mount stops.", TRUE, ch, 0, 0, TO_ROOM);
+      act("Your mount stops.", false, ch, 0, 0, TO_CHAR);
+      act("$n's mount stops.", true, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -93,5 +93,5 @@ int task_ride(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

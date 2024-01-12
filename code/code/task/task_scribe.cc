@@ -13,7 +13,7 @@
 
 int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {
-  TScroll *scroll_obj = NULL, *s2;
+  TScroll *scroll_obj = nullptr, *s2;
   TObj* obj;
   int w2;
   spellNumT which;
@@ -27,15 +27,15 @@ int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
   if (ch->isLinkdead()) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->task->wasInRoom != ch->in_room) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   switch (cmd) {
     case CMD_TASK_CONTINUE: {
@@ -58,7 +58,7 @@ int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           if (!scroll_obj) {
             vlogf(LOG_BUG, "Error creating generic scroll for scribe skill.");
             ch->sendTo("Serious error, tell a god what you did.\n\r");
-            return FALSE;
+            return false;
           }
           scroll_obj->swapToStrung();
 
@@ -95,7 +95,7 @@ int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           sprintf(buf, "You now have %d scroll%s of %s.\n\r", how_many,
             (how_many == 1 ? "" : "s"), discArray[which]->name);
           ch->sendTo(buf);
-          act("$n finishes scribing.", FALSE, ch, 0, 0, TO_ROOM);
+          act("$n finishes scribing.", false, ch, 0, 0, TO_ROOM);
 
           while ((--how_many) > 0) {
             obj = read_object(scroll_obj->number, REAL);
@@ -118,7 +118,7 @@ int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             *ch += *s2;
           }
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       ch->task->timeLeft++;
@@ -128,7 +128,7 @@ int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     case CMD_STOP:
       ch->stopTask();
       ch->sendTo("You stop scribing.\n\r");
-      act("$n stops scribing.", FALSE, ch, 0, 0, TO_ROOM);
+      act("$n stops scribing.", false, ch, 0, 0, TO_ROOM);
       break;
     case CMD_TASK_FIGHTING:
       ch->sendTo("You are unable to continue scribing while under attack!\n\r");
@@ -140,5 +140,5 @@ int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

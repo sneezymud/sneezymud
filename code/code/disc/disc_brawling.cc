@@ -69,12 +69,12 @@ int TBeing::doTaunt(const sstring& arg) {
   if (!(victim = get_char_room_vis(this, name_buf))) {
     if (!(victim = fight())) {
       sendTo("Taunt whom?\n\r");
-      return FALSE;
+      return false;
     }
   }
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!doesKnowSkill(SKILL_TAUNT) ||
@@ -86,11 +86,11 @@ int TBeing::doTaunt(const sstring& arg) {
   }
 
   if (bSuccess(SKILL_TAUNT)) {
-    act("You taunt $N ruthlessly, drawing their ire.", FALSE, this, 0, victim,
+    act("You taunt $N ruthlessly, drawing their ire.", false, this, 0, victim,
       TO_CHAR);
-    act("$n taunts you ruthlessly, drawing your ire.", FALSE, this, 0, victim,
+    act("$n taunts you ruthlessly, drawing your ire.", false, this, 0, victim,
       TO_VICT);
-    act("$n taunts $N ruthlessly, drawing their ire.", FALSE, this, 0, victim,
+    act("$n taunts $N ruthlessly, drawing their ire.", false, this, 0, victim,
       TO_NOTVICT);
 
     affectedData af;
@@ -106,13 +106,13 @@ int TBeing::doTaunt(const sstring& arg) {
     victim->affectTo(&af, -1);
 
   } else {
-    act("You taunt yourself ruthlessly, confusing yourself.", FALSE, this, 0,
+    act("You taunt yourself ruthlessly, confusing yourself.", false, this, 0,
       this, TO_CHAR);
-    act("$n taunts $mself ruthlessly, confusing $mself.", FALSE, this, 0, this,
+    act("$n taunts $mself ruthlessly, confusing $mself.", false, this, 0, this,
       TO_NOTVICT);
   }
 
-  return TRUE;
+  return true;
 }
 
 namespace {

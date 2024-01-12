@@ -38,15 +38,15 @@ bool TChest::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "Does this look like a locksmithery to you?");
   }
-  return TRUE;
+  return true;
 }
 
 void TChest::lowCheck() {
 #if 0
   // this is retarded
   if (canWear(ITEM_WEAR_TAKE)) {
-    vlogf(LOG_LOW, format("Chest (%s:%d) set takeable.  Removing take flag.") % 
-           getName() % objVnum());                             
+    vlogf(LOG_LOW, format("Chest (%s:%d) set takeable.  Removing take flag.") %
+           getName() % objVnum());
     remObjStat(ITEM_WEAR_TAKE);
   }
 #endif

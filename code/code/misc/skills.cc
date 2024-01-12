@@ -93,17 +93,17 @@
 
 static bool doesKnow(byte know) {
   if (know <= 0)
-    return FALSE;
+    return false;
   else
-    return TRUE;
+    return true;
 }
 
 CSkill* TBeing::getSkill(spellNumT skill) const {
-  discNumT which = getDisciplineNumber(skill, FALSE);
+  discNumT which = getDisciplineNumber(skill, false);
   if (which == DISC_NONE) {
     // silly core-generator, but helps to track down the item that is bad
     vlogf(LOG_BUG, format("Bad discipline for skill %d in getSkill()") % skill);
-    return NULL;
+    return nullptr;
   }
 
   mud_assert(skill > TYPE_UNDEFINED && skill < MAX_SKILL,
@@ -111,7 +111,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
 
   CDiscipline* cd = getDiscipline(which);
   if (!cd)
-    return NULL;
+    return nullptr;
 
   switch (skill) {
 #if 0
@@ -1421,20 +1421,20 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
       break;
   }
 
-  if (discArray[skill] == NULL) {
+  if (discArray[skill] == nullptr) {
     vlogf(LOG_BUG, format("Bad skill number: %d in getSkill (NADA)") % skill);
   } else if (*discArray[skill]->name) {
     if (strcmp(discArray[skill]->name, "\n"))
       vlogf(LOG_BUG, format("Bad skill number: %d in getSkill (%s)") % skill %
                        discArray[skill]->name);
   }
-  return (NULL);
+  return (nullptr);
 }
 
 bool TBeing::doesKnowSkill(spellNumT skill) const {
-  CSkill* sk = NULL;
+  CSkill* sk = nullptr;
   if (!(sk = getSkill(skill)))
-    return FALSE;
+    return false;
 
   return doesKnow(getMaxSkillValue(skill));
 }
@@ -1465,7 +1465,7 @@ short TBeing::getSkillValue(spellNumT skill) const {
   value = min(value, iMax);
 #if 1
   int applyAmt = 0;
-  skillApplyData* temp = NULL;
+  skillApplyData* temp = nullptr;
 
   for (temp = skillApplys; temp; temp = temp->nextApply) {
     if (temp->skillNum == skill) {
@@ -1510,7 +1510,7 @@ short TBeing::getRawNatSkillValue(spellNumT skill) const {
 int TBeing::getAdvDoLearning(spellNumT skill) const {
   CSkill* sk;
   int ret = -1;
-  CDiscipline* assDisc = NULL;
+  CDiscipline* assDisc = nullptr;
 
   skill = getSkillNum(skill);
 
@@ -1533,7 +1533,7 @@ int TBeing::getAdvDoLearning(spellNumT skill) const {
 
 int TBeing::getAdvLearning(spellNumT skill) const {
   CSkill* sk;
-  CDiscipline* assDisc = NULL;
+  CDiscipline* assDisc = nullptr;
   int ret = -1;
 
   skill = getSkillNum(skill);

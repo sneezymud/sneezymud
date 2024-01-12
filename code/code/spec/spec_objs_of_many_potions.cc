@@ -9,16 +9,16 @@ int ofManyPotions(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBeing* ch;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (::number(0, 19))
-    return FALSE;
+    return false;
 
   if (!(weapon = dynamic_cast<TBaseWeapon*>(o)))
-    return FALSE;
+    return false;
 
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-    return FALSE;  // weapon not equipped (carried or on ground)
+    return false;  // weapon not equipped (carried or on ground)
 
   int which = ::number(0, 99);
   liqTypeT liq = LIQ_CHAMPAGNE;  // default in case of accidental fall through
@@ -82,5 +82,5 @@ int ofManyPotions(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
   ch->dropPool(1, liq);
 
-  return TRUE;
+  return true;
 }

@@ -28,18 +28,18 @@ int TObj::boardHandler(TBeing*, cmdTypeT cmd, const char*) {
     // this msg comes in ~TObj() so we will never be a TBoard when we get it.
     // vlogf(LOG_PROC, format("Um, deleted a board?"));
   }
-  return FALSE;
+  return false;
 }
 
 int TBoard::boardHandler(TBeing* ch, cmdTypeT cmd, const char* arg) {
   if (cmd == CMD_GENERIC_CREATED)
-    return FALSE;
+    return false;
 
   if (!ch || (cmd >= MAX_CMD_LIST))
-    return FALSE;
+    return false;
 
   if (!ch->desc)
-    return FALSE;
+    return false;
 
   switch (cmd) {
     case CMD_LOOK:
@@ -51,7 +51,7 @@ int TBoard::boardHandler(TBeing* ch, cmdTypeT cmd, const char* arg) {
     case CMD_GET:
       return removeFromBoard(ch, arg);
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -62,47 +62,47 @@ int TBoard::readPost(TBeing* ch, const char* arg) {
 
   if (ch->isAffected(AFF_BLIND)) {
     ch->sendTo("You are blind! This board does not support braille.\n\r");
-    return TRUE;
+    return true;
   }
 
   one_argument(arg, numb, cElements(numb));
 
   // "read" or "read mail"
   if (!*numb || !isdigit(*numb))
-    return FALSE;
+    return false;
 
   // "read 2.mail"
   if (strchr(numb, '.'))
-    return FALSE;
+    return false;
 
   // "read 0"
   if (!(post_num = convertTo<int>(numb)))
-    return FALSE;
+    return false;
 
   if (!ch->isImmortal()) {
     if (objVnum() == FACT_BOARD_BROTHER &&
         ch->getFaction() != FACT_BROTHERHOOD) {
       ch->sendTo("This board is for the Brotherhood of Galek only.\n\r");
-      return TRUE;
+      return true;
     }
     if (objVnum() == FACT_BOARD_SERPENT && ch->getFaction() != FACT_SNAKE) {
       ch->sendTo("This board is for the Order of Serpents only.\n\r");
-      return TRUE;
+      return true;
     }
     if (objVnum() == FACT_BOARD_LOGRUS && ch->getFaction() != FACT_CULT) {
       ch->sendTo("This board is for the Cult of Logrus only.\n\r");
-      return TRUE;
+      return true;
     }
   }
 
   if (getBoardLevel() > ch->GetMaxLevel()) {
-    act("You are too lowly to look at $p.", TRUE, ch, this, 0, TO_CHAR, NULL);
-    return TRUE;
+    act("You are too lowly to look at $p.", true, ch, this, 0, TO_CHAR, nullptr);
+    return true;
   }
 
   if (post_num < 1) {
     ch->sendTo("That message exists only in your imagination...\n\r");
-    return TRUE;
+    return true;
   }
 
   TDatabase db(DB_SNEEZY);
@@ -133,13 +133,13 @@ int TBoard::readPost(TBeing* ch, const char* arg) {
           db["post"] % ch->norm() % post_num;
         ch->desc->page_string(sb);
       }
-      return TRUE;
+      return true;
     }
   } else {
     ch->sendTo("That message exists only in your imagination...\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TBoard::lookBoard(TBeing* ch, const char* arg) {
@@ -150,7 +150,7 @@ int TBoard::lookBoard(TBeing* ch, const char* arg) {
   arg = one_argument(arg, boardname, cElements(boardname));
 
   if (!*boardname || !isname(boardname, this->name))
-    return FALSE;
+    return false;
 
   one_argument(arg, flagsbuf, cElements(flagsbuf));
 
@@ -161,22 +161,22 @@ int TBoard::lookBoard(TBeing* ch, const char* arg) {
     if (this->objVnum() == FACT_BOARD_BROTHER &&
         ch->getFaction() != FACT_BROTHERHOOD) {
       ch->sendTo("This board is for the Brotherhood of Galek only.\n\r");
-      return TRUE;
+      return true;
     }
     if (this->objVnum() == FACT_BOARD_SERPENT &&
         ch->getFaction() != FACT_SNAKE) {
       ch->sendTo("This board is for the Order of Serpents only.\n\r");
-      return TRUE;
+      return true;
     }
     if (this->objVnum() == FACT_BOARD_LOGRUS && ch->getFaction() != FACT_CULT) {
       ch->sendTo("This board is for the Cult of Logrus only.\n\r");
-      return TRUE;
+      return true;
     }
   }
 
   if (getBoardLevel() > ch->GetMaxLevel()) {
-    act("You are too lowly to look at $p.", TRUE, ch, this, 0, TO_CHAR, NULL);
-    return TRUE;
+    act("You are too lowly to look at $p.", true, ch, this, 0, TO_CHAR, nullptr);
+    return true;
   }
 
   TDatabase db(DB_SNEEZY);
@@ -185,7 +185,7 @@ int TBoard::lookBoard(TBeing* ch, const char* arg) {
     "date_posted, subject, author from board_message where board_vnum = %i and "
     "date_removed is null order by post_num %s",
     this->objVnum(), reverse ? "desc" : "asc");
-  act("$n studies $p.", TRUE, ch, this, 0, TO_ROOM);
+  act("$n studies $p.", true, ch, this, 0, TO_ROOM);
   sbuf1 = format(
             "This is a bulletin board. You can %sPOST%s, %sREAD <#>%s or %sGET "
             "<#>%s.\n\r") %
@@ -209,17 +209,17 @@ int TBoard::lookBoard(TBeing* ch, const char* arg) {
   }
 
   if (num == 0) {
-    act("$p is empty.", TRUE, ch, this, 0, TO_CHAR);
+    act("$p is empty.", true, ch, this, 0, TO_CHAR);
   } else if (num == 1) {
-    act("There is 1 message on $p.\n\r", TRUE, ch, this, 0, TO_CHAR);
+    act("There is 1 message on $p.\n\r", true, ch, this, 0, TO_CHAR);
     ch->desc->page_string(sbuf1);
   } else {
     sbuf2 = format("There are %i messages on $p.\n\r") % num;
-    act(sbuf2, TRUE, ch, this, 0, TO_CHAR);
+    act(sbuf2, true, ch, this, 0, TO_CHAR);
     ch->desc->page_string(sbuf1);
   }
 
-  return TRUE;
+  return true;
 }
 
 void TThing::postMe(TBeing* ch, const char*, TBoard*) {
@@ -239,8 +239,8 @@ void TNote::postMe(TBeing* ch, const char* arg2, TBoard* b) {
     "%i and date_removed is null",
     b->objVnum(), arg2, ch->getName().c_str(), action_description.c_str(),
     b->objVnum());
-  act("You post your note on $p.", TRUE, ch, b, 0, TO_CHAR, NULL);
-  act("$n posts a note on $p.", TRUE, ch, b, 0, TO_ROOM);
+  act("You post your note on $p.", true, ch, b, 0, TO_CHAR, nullptr);
+  act("$n posts a note on $p.", true, ch, b, 0, TO_ROOM);
   delete this;
 }
 
@@ -265,51 +265,51 @@ int TBoard::postToBoard(TBeing* ch, const sstring& argument) {
 
   if (arg2.empty() || arg1.empty()) {
     ch->sendTo("Syntax : post <note> <subject>\n\r");
-    return TRUE;
+    return true;
   }
 
   if (arg2.word(0) == "board") {
     ch->sendTo(
       "You may not post with the subject of 'board'.  Please use another "
       "subject.\n\r");
-    return TRUE;
+    return true;
   }
 
   if (!(note = searchLinkedListVis(ch, arg1, ch->stuff))) {
     ch->sendTo("You don't have a note to post!\n\r");
-    return TRUE;
+    return true;
   }
 
   // uncomment to put the cap on the amount of notes one board can hold
   /*if (postCount() >= MAX_MSGS) {
     ch->sendTo("There is no room on the board for a new note.\n\r");
-    return TRUE;
+    return true;
   }*/
 
   if (!ch->isImmortal()) {
     if (this->objVnum() == FACT_BOARD_BROTHER &&
         ch->getFaction() != FACT_BROTHERHOOD) {
       ch->sendTo("This board is for the Brotherhood of Galek only.\n\r");
-      return TRUE;
+      return true;
     }
     if (this->objVnum() == FACT_BOARD_SERPENT &&
         ch->getFaction() != FACT_SNAKE) {
       ch->sendTo("This board is for the Order of Serpents only.\n\r");
-      return TRUE;
+      return true;
     }
     if (this->objVnum() == FACT_BOARD_LOGRUS && ch->getFaction() != FACT_CULT) {
       ch->sendTo("This board is for the Cult of Logrus only.\n\r");
-      return TRUE;
+      return true;
     }
   }
 
   if (getBoardLevel() > ch->GetMaxLevel()) {
-    act("You are too lowly to use $p.", TRUE, ch, this, 0, TO_CHAR, NULL);
-    return TRUE;
+    act("You are too lowly to use $p.", true, ch, this, 0, TO_CHAR, nullptr);
+    return true;
   }
 
   note->postMe(ch, arg2.c_str(), this);
-  return TRUE;
+  return true;
 }
 
 int TBoard::removeFromBoard(TBeing* ch, const char* arg) {
@@ -319,44 +319,44 @@ int TBoard::removeFromBoard(TBeing* ch, const char* arg) {
   one_argument(arg, numb, cElements(numb));
 
   if (!*numb || !isdigit(*numb))
-    return FALSE;
+    return false;
 
   if (strchr(numb, '.'))
-    return FALSE;
+    return false;
 
   if (!(post_num = convertTo<int>(numb)))
-    return FALSE;
+    return false;
 
   if (!ch->isImmortal() && !ch->hasWizPower(POWER_BOARD_POLICE)) {
     if (this->objVnum() == FACT_BOARD_BROTHER &&
         ch->getFaction() != FACT_BROTHERHOOD) {
       ch->sendTo("This board is for the Brotherhood of Galek only.\n\r");
-      return TRUE;
+      return true;
     }
     if (this->objVnum() == FACT_BOARD_SERPENT &&
         ch->getFaction() != FACT_SNAKE) {
       ch->sendTo("This board is for the Order of Serpents only.\n\r");
-      return TRUE;
+      return true;
     }
     if (this->objVnum() == FACT_BOARD_LOGRUS && ch->getFaction() != FACT_CULT) {
       ch->sendTo("This board is for the Cult of Logrus only.\n\r");
-      return TRUE;
+      return true;
     }
   }
 
   if (getBoardLevel() > ch->GetMaxLevel()) {
-    act("You are too lowly to use $p.", TRUE, ch, this, 0, TO_CHAR, NULL);
-    return TRUE;
+    act("You are too lowly to use $p.", true, ch, this, 0, TO_CHAR, nullptr);
+    return true;
   }
 
   if (post_num < 1) {
     ch->sendTo("That message doesn't exist!\n\r");
-    return TRUE;
+    return true;
   }
 
   if (!postCount()) {
-    act("$p is empty!", TRUE, ch, this, 0, TO_CHAR, NULL);
-    return TRUE;
+    act("$p is empty!", true, ch, this, 0, TO_CHAR, nullptr);
+    return true;
   }
 
   TDatabase db(DB_SNEEZY);
@@ -375,13 +375,13 @@ int TBoard::removeFromBoard(TBeing* ch, const char* arg) {
         !(objVnum() == FACT_BOARD_LOGRUS &&
           ch->getFactionAuthority(FACT_CULT, 0))) {
       ch->sendTo("You didn't write that note!\n\r");
-      return TRUE;
+      return true;
     } else {
       // create the note and give to ch
       TNote* note = createNote(db["post"]);
       *ch += *note;
       ch->sendTo("You get the note.\n\r");
-      act("$n pulls a note off $p.", FALSE, ch, this, 0, TO_ROOM);
+      act("$n pulls a note off $p.", false, ch, this, 0, TO_ROOM);
 
       // update board_message - remove message and adjust remaining post_nums
       TDatabase db(DB_SNEEZY);
@@ -393,13 +393,13 @@ int TBoard::removeFromBoard(TBeing* ch, const char* arg) {
         "update board_message set post_num = post_num - 1 where board_vnum = "
         "%i and post_num > %i and date_removed is null",
         objVnum(), post_num);
-      return TRUE;
+      return true;
     }
   } else {
     ch->sendTo("That message doesn't exist!\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBoard::purgeMe(TBeing*) {

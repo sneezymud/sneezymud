@@ -78,7 +78,7 @@ void gather_posse(TMonster* myself) {
 
 int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   int rc;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TObj* o;
   roomDirData* exitp;
   followData *f, *n;
@@ -121,27 +121,27 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   // Not doing anything yet, time to start a posse
   if (!myself->act_ptr) {
     if (::number(0, 99))
-      return FALSE;
+      return false;
 
     if (!(myself->act_ptr = new hunt_struct())) {
       vlogf(LOG_BUG, "failed memory allocation in mob proc moneyTrain.");
-      return FALSE;
+      return false;
     }
 
-    act("$n prepares to make the money train delivery.", TRUE, myself, 0, 0,
+    act("$n prepares to make the money train delivery.", true, myself, 0, 0,
       TO_ROOM);
 
-    act("A group of <Y>money train<1> guards join him.", TRUE, myself, 0, 0,
+    act("A group of <Y>money train<1> guards join him.", true, myself, 0, 0,
       TO_ROOM);
 
     gather_posse(myself);
@@ -149,12 +149,12 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_BUG, "moneyTrain: error, static_cast");
-    return TRUE;
+    return true;
   }
 
   // allow us to abort it.
   if (myself->inRoom() == Room::HELL)
-    return FALSE;
+    return false;
 
   // if we hate someone, the other guards hate them too
 
@@ -163,7 +163,7 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     vict = dynamic_cast<TBeing*>(*it);
     if (!vict)
       continue;
-    if (myself->Hates(vict, NULL)) {
+    if (myself->Hates(vict, nullptr)) {
       for (f = myself->followers; f; f = f->next) {
         f->follower->addHated(vict);
       }
@@ -180,7 +180,7 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   // speed
   if (::number(0, 2))
-    return FALSE;
+    return false;
 
   // now the actual actions
   switch (job->state) {
@@ -210,7 +210,7 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       if (!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)) {
         phat_lewt(myself);
 
-        act("$n receives several bags of valuables for delivery.", TRUE, myself,
+        act("$n receives several bags of valuables for delivery.", true, myself,
           0, 0, TO_ROOM);
 
         job->cur_path = 7;
@@ -229,7 +229,7 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       if (!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)) {
         phat_lewt(myself);
 
-        act("$n receives several bags of valuables for delivery.", TRUE, myself,
+        act("$n receives several bags of valuables for delivery.", true, myself,
           0, 0, TO_ROOM);
 
         job->cur_path = 5;
@@ -263,7 +263,7 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         for (StuffIter it = myself->roomp->stuff.begin();
              it != myself->roomp->stuff.end() && (t = *it); ++it) {
           if ((o = dynamic_cast<TObj*>(t)) && o->objVnum() == 15344) {
-            myself->doEnter("trolley", NULL);
+            myself->doEnter("trolley", nullptr);
             break;
           }
         }
@@ -273,7 +273,7 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       if (!myself->walk_path(money_train_path[job->cur_path], job->cur_pos)) {
         phat_lewt(myself);
 
-        act("$n receives several bags of valuables for delivery.", TRUE, myself,
+        act("$n receives several bags of valuables for delivery.", true, myself,
           0, 0, TO_ROOM);
 
         job->cur_path = 2;
@@ -307,7 +307,7 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         for (StuffIter it = myself->roomp->stuff.begin();
              it != myself->roomp->stuff.end() && (t = *it); ++it) {
           if ((o = dynamic_cast<TObj*>(t)) && o->objVnum() == 15344) {
-            myself->doEnter("trolley", NULL);
+            myself->doEnter("trolley", nullptr);
             break;
           }
         }
@@ -326,9 +326,9 @@ int moneyTrain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
           }
         }
         delete static_cast<hunt_struct*>(myself->act_ptr);
-        myself->act_ptr = NULL;
+        myself->act_ptr = nullptr;
 
-        act("$n hands off his delivery and dismisses his guards.", TRUE, myself,
+        act("$n hands off his delivery and dismisses his guards.", true, myself,
           0, 0, TO_ROOM);
 
         for (StuffIter it = myself->stuff.begin(); it != myself->stuff.end();) {

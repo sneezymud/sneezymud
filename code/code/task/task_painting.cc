@@ -33,15 +33,15 @@ bool find_paint_supplies(TBeing* ch, TTable** easel, TObj** palette,
 }
 
 void TBeing::doPaint(sstring arg) {
-  TRoom* rp = NULL;
-  TObj* obj = NULL;
-  TBeing* tb = NULL;
+  TRoom* rp = nullptr;
+  TObj* obj = nullptr;
+  TBeing* tb = nullptr;
 
   sendTo("Not yet implemented.\n\r");
   return;
 
   // make sure they are all setup to paint
-  if (!find_paint_supplies(this, NULL, NULL, NULL, NULL, NULL)) {
+  if (!find_paint_supplies(this, nullptr, nullptr, nullptr, nullptr, nullptr)) {
     sendTo("You don't seem to have everything setup to make a painting.\n\r");
     return;
   }
@@ -63,26 +63,26 @@ void TBeing::doPaint(sstring arg) {
                                                   : tb  ? tb->getName()
                                                         : "nothing"));
 
-  start_task(this, NULL, NULL, TASK_PAINT, arg.c_str(), 2, inRoom(), 0, 0, 5);
+  start_task(this, nullptr, nullptr, TASK_PAINT, arg.c_str(), 2, inRoom(), 0, 0, 5);
 }
 
 int task_painting(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
   TObj*) {
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // basic tasky safechecking
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom)) {
-    act("You cease painting.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops painting.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You cease painting.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops painting.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->task && ch->task->timeLeft < 0) {
     ch->sendTo("You pack up and stop painting.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -91,8 +91,8 @@ int task_painting(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You cease painting.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops painting.", TRUE, ch, 0, 0, TO_ROOM);
+      act("You cease painting.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops painting.", true, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -106,5 +106,5 @@ int task_painting(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
       break;  // eat the command
   }
 
-  return TRUE;
+  return true;
 }

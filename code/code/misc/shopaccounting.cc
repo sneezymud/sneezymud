@@ -115,7 +115,7 @@ void TShopJournal::closeTheBooks() {
     return;
   }
 
-  TShopOwned tso(shop_nr, NULL, NULL);
+  TShopOwned tso(shop_nr, nullptr, nullptr);
 
   //// assets
   // carryover entry for cash
@@ -159,14 +159,14 @@ void TShopOwned::journalize_debit(int post_ref, const sstring& customer,
   //    db.query("insert into shoplogjournal (shop_nr, journal_id,
   //    customer_name, obj_name, sneezy_year, logtime, post_ref, debit, credit)
   //    values (%i, %s, '%s', '%s', %i, now(), %i, %i, 0)", shop_nr,
-  //    (new_id?"NULL":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(),
+  //    (new_id?"nullptr":"LAST_INSERT_ID()"), customer.c_str(), name.c_str(),
   //    GameTime::getYear(), post_ref, amt);
 
   queryqueue.push(
     format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
            "obj_name, sneezy_year, logtime, post_ref, debit, credit) values "
            "(%i, %s, '%s', '%s', %i, now(), %i, %i, 0)") %
-    shop_nr % ((sstring)(new_id ? "NULL" : "LAST_INSERT_ID()")).escape() %
+    shop_nr % ((sstring)(new_id ? "nullptr" : "LAST_INSERT_ID()")).escape() %
     customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
 }
 
@@ -178,7 +178,7 @@ void TShopOwned::journalize_credit(int post_ref, const sstring& customer,
     format("insert into shoplogjournal (shop_nr, journal_id, customer_name, "
            "obj_name, sneezy_year, logtime, post_ref, debit, credit)values "
            "(%i, %s, '%s', '%s', %i, now(), %i, 0, %i)") %
-    shop_nr % ((sstring)(new_id ? "NULL" : "LAST_INSERT_ID()")).escape() %
+    shop_nr % ((sstring)(new_id ? "nullptr" : "LAST_INSERT_ID()")).escape() %
     customer.escape() % name.escape() % GameTime::getYear() % post_ref % amt);
 }
 

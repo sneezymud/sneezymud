@@ -41,11 +41,11 @@ sstring TTree::statObjInfo() const {
 int TTree::treeMe(TBeing* caster, const char* tmp, int number, int* count) {
   if (isname(tmp, name)) {
     if (number == *count) {
-      act("You locate $N, and form a magical anchor between $M and you.", FALSE,
+      act("You locate $N, and form a magical anchor between $M and you.", false,
         caster, 0, this, TO_CHAR);
-      return TRUE;
+      return true;
     }
     (*count)++;
   }
-  return FALSE;
+  return false;
 }

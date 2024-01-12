@@ -500,8 +500,8 @@ class Descriptor {
     void flushInput();
     int sendLogin(const sstring& arg);
     bool checkForMultiplay();
-    bool checkForAccount(char*, bool silent = FALSE);
-    bool checkForCharacter(const sstring, bool silent = FALSE);
+    bool checkForAccount(char*, bool silent = false);
+    bool checkForCharacter(const sstring, bool silent = false);
     bool hasCharacterInAccount(const sstring name) const;
     int doAccountStuff(char*);
     int clientCreateAccount(char*);

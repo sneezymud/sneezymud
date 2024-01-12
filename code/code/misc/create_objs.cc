@@ -221,9 +221,9 @@ void ObjLoad(TBeing* ch, int vnum) {
   if (!db["action_desc"].empty())
     o->action_description = db["action_desc"];
   else
-    o->action_description = NULL;
+    o->action_description = nullptr;
 
-  o->ex_description = NULL;
+  o->ex_description = nullptr;
 
   db.query(
     "select name, description from objextra where vnum=%i and owner='%s'", vnum,
@@ -282,8 +282,8 @@ void ObjLoad(TBeing* ch, int vnum) {
       o->obj_flags.cost = tbc->suggestedPrice();
     }
   }
-  act("You just loaded $p.", TRUE, ch, o, 0, TO_CHAR);
-  act(ch->msgVariables(MSG_OEDIT, o), TRUE, ch, 0, 0, TO_ROOM);
+  act("You just loaded $p.", true, ch, o, 0, TO_CHAR);
+  act(ch->msgVariables(MSG_OEDIT, o), true, ch, 0, 0, TO_ROOM);
 
   *ch += *o;
 }
@@ -451,7 +451,7 @@ static void ocreate(TBeing* ch) {
 
   *ch += *tmp_obj;
 
-  act("$n makes a dummy object.", TRUE, ch, tmp_obj, 0, TO_ROOM);
+  act("$n makes a dummy object.", true, ch, tmp_obj, 0, TO_ROOM);
   ch->sendTo("You make a dummy object.\n\r");
 }
 
@@ -490,7 +490,7 @@ static void oedit(TBeing* ch, const char* arg) {
   --(*o);
   ch->desc->obj = o;
 
-  act("$n just went into object edit mode.", FALSE, ch, 0, 0, TO_ROOM);
+  act("$n just went into object edit mode.", false, ch, 0, 0, TO_ROOM);
   update_obj_menu(ch, ch->desc->obj);
 }
 
@@ -519,10 +519,10 @@ void oremove(TBeing* ch, int vnum) {
 
 // This is the main function that controls all the object stuff - Russ
 void TPerson::doOEdit(const char* argument) {
-  const char* tString = NULL;
+  const char* tString = nullptr;
   int vnum, field, zGot, oValue /*, ac_orig, str_orig, price_orig*/;
   float oFValue;
-  TObj* cObj = NULL;
+  TObj* cObj = nullptr;
   sstring tStr;
   sstring tStString(""), tStBuffer(""), tStArg("");
   char sstring[256], object[80], Buf[1024],
@@ -587,7 +587,7 @@ void TPerson::doOEdit(const char* argument) {
 #if 1
             --(*cObj);
             delete cObj;
-            cObj = NULL;
+            cObj = nullptr;
 #else
             doJunk(tStString.c_str(), cObj);
 #endif
@@ -623,7 +623,7 @@ void TPerson::doOEdit(const char* argument) {
 #if 1
         --(*cObj);
         delete cObj;
-        cObj = NULL;
+        cObj = nullptr;
 #else
         doJunk(object, cObj);
 #endif
@@ -830,7 +830,7 @@ void TPerson::doOEdit(const char* argument) {
         "Enter extra description.  Terminate with a '~' on a NEW line.\n\r");
       if (desc->m_bIsClient)
         desc->clientf(format("%d") % CLIENT_STARTEDIT % 4000);
-      *desc->str = NULL;
+      *desc->str = nullptr;
       desc->max_str = MAX_INPUT_LENGTH;
       return;
       break;
@@ -1396,7 +1396,7 @@ static void change_obj_max_exist(TBeing* ch, TObj* obj, const char* arg,
 static void change_obj_applys(TBeing* ch, TObj* o, const char* arg,
   editorEnterTypeT type) {
   int row, apply, num, number1 = 0, number2 = 0;
-  int done = FALSE;
+  int done = false;
   char buf[256];
 
   if (type != ENTER_CHECK) {
@@ -1498,19 +1498,19 @@ static void change_obj_applys(TBeing* ch, TObj* o, const char* arg,
           o->affected[i].location = APPLY_NONE;
           o->affected[i].modifier = 0;
           o->affected[i].modifier2 = 0;
-          done = TRUE;
+          done = true;
           // re-use armor slot
         } else if (att == APPLY_ARMOR &&
                    o->affected[i].location == APPLY_ARMOR) {
           o->affected[i].modifier = number1;
           o->affected[i].modifier2 = number2;
-          done = TRUE;
+          done = true;
           // add affect
         } else if (o->affected[i].location == APPLY_NONE) {
           o->affected[i].location = att;
           o->affected[i].modifier = number1;
           o->affected[i].modifier2 = number2;
-          done = TRUE;
+          done = true;
         }
       }
       if (!done) {
@@ -1936,7 +1936,7 @@ static void change_obj_extra(TBeing* ch, TObj* o, const char* arg,
         ed->next = o->ex_description;
         o->ex_description = ed;
         ed->keyword = arg;
-        ed->description = NULL;
+        ed->description = nullptr;
         ch->desc->str = &ed->description;
         ch->sendTo(
           "Enter the description. Terminate with a '~' on a NEW line.\n\r");
@@ -2004,7 +2004,7 @@ void delete_obj_extra_desc(TBeing* ch, TObj* o, const char*, editorEnterTypeT) {
       nptr = exptr->next;
       delete exptr;
     }
-    o->ex_description = NULL;
+    o->ex_description = nullptr;
   }
   update_obj_menu(ch, o);
 }
@@ -2727,10 +2727,10 @@ void obj_edit(TBeing* ch, const char* arg) {
   if (ch->specials.edit == MAIN_MENU) {
     if (!*arg || *arg == '\n') {
       ch->desc->connected = CON_PLYNG;
-      act("$n has returned from editing objects.", TRUE, ch, 0, 0, TO_ROOM);
+      act("$n has returned from editing objects.", true, ch, 0, 0, TO_ROOM);
       if (ch->desc->obj) {
         *ch += *(ch->desc->obj);
-        ch->desc->obj = NULL;
+        ch->desc->obj = nullptr;
       }
       // reset the terminal bars
       if (ch->vt100() || ch->ansi())
@@ -3052,11 +3052,11 @@ void TObj::changeObjValue4(TBeing* ch) {
   ch->sendTo("Enter new value.\n\r--> ");
 }
 
-int TObj::changeItemVal2Check(TBeing*, int) { return FALSE; }
+int TObj::changeItemVal2Check(TBeing*, int) { return false; }
 
-int TObj::changeItemVal3Check(TBeing*, int) { return FALSE; }
+int TObj::changeItemVal3Check(TBeing*, int) { return false; }
 
-int TObj::changeItemVal4Check(TBeing*, int) { return FALSE; }
+int TObj::changeItemVal4Check(TBeing*, int) { return false; }
 
 sstring TObj::displayFourValues() {
   char tString[256];
@@ -3147,9 +3147,9 @@ int TObj::addApply(TBeing* ch, applyTypeT apply) {
     ch->sendTo(
       "If you want light on a takeable object, please do so by setting "
       "GLOW.\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TMagicItem::changeMagicItemValue1(TBeing* ch, const char* arg,
@@ -3309,7 +3309,7 @@ void TTrap::changeTrapValue3(TBeing* ch, const char* arg,
 
 int TThing::editAverageMe(TBeing* tBeing, const char*) {
   tBeing->sendTo("Can not average this.  Sorry.\n\r");
-  return FALSE;
+  return false;
 }
 
 int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
@@ -3317,7 +3317,7 @@ int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
 
   if (!tString || !*tString) {
     tBeing->sendTo("Syntax: med average <level[1.0-60.0]> <class>\n\r");
-    return FALSE;
+    return false;
   }
 
   tStString = tStArg.word(0);
@@ -3329,14 +3329,14 @@ int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
 
   if (tLevel <= 0 || tLevel > 60) {
     tBeing->sendTo("Level must be between 1 and 60.\n\r");
-    return FALSE;
+    return false;
   }
 
   TMonster* tMonster;
 
   if (!(tMonster = dynamic_cast<TMonster*>(this))) {
     tBeing->sendTo("Target is not a monster.  Cannot do this, sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (tStBuffer.empty()) {
@@ -3349,7 +3349,7 @@ int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
 
     if (tClass == MAX_CLASSES || !hasClass((1 << tClass))) {
       tBeing->sendTo("Something went wrong, tell a coder!\n\r");
-      return FALSE;
+      return false;
     }
 
     tStr = getStat(STAT_CHOSEN, STAT_STR);
@@ -3526,7 +3526,7 @@ int TBeing::editAverageMe(TBeing* tBeing, const char* tString) {
   // tMonster->setHitroll(10.0 * tLevel);
   tMonster->setHitroll(0);  // hitroll is a bonus ABOVE your level
 
-  return FALSE;
+  return false;
 }
 
 int TBaseWeapon::editAverageMe(TBeing* tBeing, const char* tString) {
@@ -3534,19 +3534,19 @@ int TBaseWeapon::editAverageMe(TBeing* tBeing, const char* tString) {
     tBeing->sendTo(
       "You don't have the power to modify weapons, thus you can not use "
       "this.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!tString || !*tString) {
     tBeing->sendTo("Syntax: oed average <level[1.0-60.0]>\n\r");
-    return FALSE;
+    return false;
   }
 
   double tLevel = convertTo<float>(tString);
 
   if (tLevel <= 0.0 || tLevel > 60.0) {
     tBeing->sendTo("Level must be between 1 and 60.\n\r");
-    return FALSE;
+    return false;
   }
 
   double tNewStr = ((tLevel * 3.0) / 2.0) + 10;
@@ -3569,32 +3569,32 @@ int TBaseWeapon::editAverageMe(TBeing* tBeing, const char* tString) {
   setMaxStructPoints((int)tNewStr);
   obj_flags.cost = suggestedPrice();
 
-  return FALSE;
+  return false;
 }
 
 int TBaseClothing::editAverageMe(TBeing* tBeing, const char* tString) {
   if (!tBeing->hasWizPower(POWER_OEDIT_APPLYS)) {
     tBeing->sendTo(
       "You can not set applies, AC is based off this.  Sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!tString || !*tString) {
     tBeing->sendTo("Syntax: oed average <level[1.0-60.0]>\n\r");
-    return FALSE;
+    return false;
   }
 
   double tLevel = convertTo<float>(tString);
 
   if (tLevel <= 0.0 || tLevel > 60.0) {
     tBeing->sendTo("Level must be between 1 and 60.\n\r");
-    return FALSE;
+    return false;
   }
 
   setDefArmorLevel(tLevel);
   obj_flags.cost = suggestedPrice();
 
-  return FALSE;
+  return false;
 }
 
 void TGun::changeBaseWeaponValue1(TBeing* ch, const char* arg,

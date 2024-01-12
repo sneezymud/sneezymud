@@ -87,8 +87,8 @@ bool TCommodity::splitMe(TBeing* ch, const sstring& tString) {
   tCommod->updateDesc();
   updateDesc();
 
-  act("You split $N into two pieces.", FALSE, ch, this, this, TO_CHAR);
-  act("$n splits $N into two pieces.", FALSE, ch, this, this, TO_ROOM);
+  act("You split $N into two pieces.", false, ch, this, this, TO_CHAR);
+  act("$n splits $N into two pieces.", false, ch, this, this, TO_ROOM);
 
   return true;
 }
@@ -202,7 +202,7 @@ int TCommodity::sellPrice(int num, int shop_nr,
   price = (pricePerUnit() * shop_index[shop_nr].getProfitSell(this, ch));
 
   if (total_units < 0) {
-    TShopOwned tso(shop_nr, NULL);
+    TShopOwned tso(shop_nr, nullptr);
     total_units = tso.getInventoryCount(this);
   }
 
@@ -220,7 +220,7 @@ float TCommodity::shopPriceFloat(int num, int shop_nr, float,
 
   price = (pricePerUnit() * shop_index[shop_nr].getProfitBuy(this, ch));
 
-  TShopOwned tso(shop_nr, NULL);
+  TShopOwned tso(shop_nr, nullptr);
 
   int total_units = tso.getInventoryCount(this);
 
@@ -303,7 +303,7 @@ int TCommodity::buyMe(TBeing* ch, TMonster* keeper, int num, int shop_nr) {
     keeper->doTell(ch->getName(),
       format("That'll be %i.  Here's %d units of %s.") % price % num %
         material_nums[getMaterial()].mat_name);
-    act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
+    act("$n buys $p.", true, ch, obj2, keeper, TO_NOTVICT);
 
     TShopOwned tso(shop_nr, keeper, ch);
     tso.doBuyTransaction(price, getName(), TX_BUYING, obj2);
@@ -333,7 +333,7 @@ bool TCommodity::sellMeCheck(TBeing* ch, TMonster* keeper, int num,
 
   if (max_num == 0) {
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
-    return TRUE;
+    return true;
   }
 
   if (total_inventory < 0)
@@ -342,13 +342,13 @@ bool TCommodity::sellMeCheck(TBeing* ch, TMonster* keeper, int num,
   if (total_inventory >= max_num) {
     keeper->doTell(ch->getName(),
       format("I already have plenty of %s.") % getName());
-    return TRUE;
+    return true;
   } else if (total_inventory + num > max_num) {
     keeper->doTell(ch->getName(),
       format("I'll buy no more than %d unit%s of %s.") %
         (max_num - total_inventory) %
         (max_num - total_inventory > 1 ? "s" : "") % getName());
-    return TRUE;
+    return true;
   }
 
   return false;
@@ -404,7 +404,7 @@ int TCommodity::sellMe(TBeing* ch, TMonster* keeper, int shop_nr, int) {
 
     keeper->doTell(ch->getName(),
       format("Thanks, here's your %d talens.") % price);
-    act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n sells $p.", true, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
         IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
         (ch->master || ch->followers)) {
@@ -451,7 +451,7 @@ int TCommodity::sellCommod(TBeing* ch, TMonster* keeper, int shop_nr,
     }
     if (!dynamic_cast<TBeing*>(parent)) {
       // could fail on volume or sumthing
-      return FALSE;
+      return false;
     }
   }
 
@@ -459,7 +459,7 @@ int TCommodity::sellCommod(TBeing* ch, TMonster* keeper, int shop_nr,
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
-  return FALSE;
+  return false;
 }
 
 void TCommodity::valueMe(TBeing* ch, TMonster* keeper, int shop_nr, int) {
@@ -577,11 +577,11 @@ void TCommodity::updateDesc() {
       ex_description = exd->next;
       delete exd;
     }
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   }
 

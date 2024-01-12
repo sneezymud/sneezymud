@@ -364,7 +364,7 @@ void TBeing::doZones(sstring tStString) {
       ++s;
     } else {
       s = buf;
-      n = NULL;
+      n = nullptr;
     }
 
     // buf is now the builder name, s is the zone name

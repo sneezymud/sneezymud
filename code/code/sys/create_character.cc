@@ -281,7 +281,7 @@ int Descriptor::getTerritoryStat(statTypeT stat) const {
 // allows a user to choose a character name
 connectStateT nannyName_input(Descriptor* desc, sstring& output,
   const sstring input) {
-  mud_assert(desc->character != NULL, "Character NULL where it shouldn't be");
+  mud_assert(desc->character != nullptr, "Character nullptr where it shouldn't be");
 
   sstring name = input.word(0);
   sstring display;
@@ -320,7 +320,7 @@ void nannyDisclaimer_output(Descriptor* desc) {
           disclaimers[whichDis];
 
   // swap color sstrings
-  str = colorString(desc->character, desc, str, NULL, COLOR_BASIC, false);
+  str = colorString(desc->character, desc, str, nullptr, COLOR_BASIC, false);
   desc->writeToQ(str);
 }
 
@@ -902,7 +902,7 @@ void nannyTraits_output(Descriptor* desc) {
 // adds/removes traits
 connectStateT nannyTraits_input(Descriptor* desc, sstring& output,
   const sstring input) {
-  mud_assert(desc->character != NULL, "Character NULL where it shouldn't be");
+  mud_assert(desc->character != nullptr, "Character nullptr where it shouldn't be");
   int num50race = numFifties(desc->character->getRace(),
     desc->character->hasQuestBit(TOG_PERMA_DEATH_CHAR), desc->account->name);
   int num50any = numFifties(RACE_NORACE, false, desc->account->name);
@@ -1146,7 +1146,7 @@ void nannyDone_output(Descriptor* desc) {
 // the last stage we go to motd to login
 connectStateT nannyDone_input(Descriptor* desc, sstring& output,
   const sstring input) {
-  output = desc->assembleMotd(FALSE);
+  output = desc->assembleMotd(false);
 
   return CON_RMOTD;
 }
@@ -1166,10 +1166,10 @@ connectStateT nannyCode_input(Descriptor* desc, sstring& output,
   const sstring input) {
   if (input.length() == 24) {
     sstring buf = "";
-    unsigned long stats3 = strtoul(input.substr(0, 6).c_str(), NULL, 36);
-    unsigned long stats2 = strtoul(input.substr(6, 6).c_str(), NULL, 36);
-    unsigned long stats1 = strtoul(input.substr(12, 6).c_str(), NULL, 36);
-    unsigned long other = strtoul(input.substr(18, 6).c_str(), NULL, 36);
+    unsigned long stats3 = strtoul(input.substr(0, 6).c_str(), nullptr, 36);
+    unsigned long stats2 = strtoul(input.substr(6, 6).c_str(), nullptr, 36);
+    unsigned long stats1 = strtoul(input.substr(12, 6).c_str(), nullptr, 36);
+    unsigned long other = strtoul(input.substr(18, 6).c_str(), nullptr, 36);
 
     nannyRace_input(desc, buf, format("%i") % GET_BITS_CORRECT(other, 3, 4));
     output += buf + "\n\r";
@@ -1278,9 +1278,9 @@ TNannyState creationNannyData[CON_CREATION_MAX - CON_CREATION_START] = {
 
   // beginning junk - 4 pages of legal garbage and name choosing
   {CON_CREATION_NAME, NANNY_MENU_BASE, nannyName_input, nannyName_output, ""},
-  {CON_CREATION_DISCLAIM1, NANNY_MENU_NONE, NULL, nannyDisclaimer_output, ""},
-  {CON_CREATION_DISCLAIM2, NANNY_MENU_NONE, NULL, nannyDisclaimer_output, ""},
-  {CON_CREATION_DISCLAIM3, NANNY_MENU_NONE, NULL, nannyDisclaimer_output, ""},
+  {CON_CREATION_DISCLAIM1, NANNY_MENU_NONE, nullptr, nannyDisclaimer_output, ""},
+  {CON_CREATION_DISCLAIM2, NANNY_MENU_NONE, nullptr, nannyDisclaimer_output, ""},
+  {CON_CREATION_DISCLAIM3, NANNY_MENU_NONE, nullptr, nannyDisclaimer_output, ""},
   {CON_CREATION_MULTIWARN, NANNY_MENU_PROM, nannyMultiplaywarn_input,
     nannyMultiplaywarn_output, ""},
   {CON_CREATION_RESET, NANNY_MENU_NONE, nannyReset_input, nannyReset_output,
@@ -1321,7 +1321,7 @@ TNannyState creationNannyData[CON_CREATION_MAX - CON_CREATION_START] = {
     nannyTraits_output, "help/traits overview"},
 
   // customize stats
-  {CON_CREATION_CUSTOMIZE_START, NANNY_MENU_NONE, NULL, nannyStatRules_output,
+  {CON_CREATION_CUSTOMIZE_START, NANNY_MENU_NONE, nullptr, nannyStatRules_output,
     ""},
   {CON_CREATION_CUSTOMIZE_COMBAT, NANNY_MENU_BASE_HNOS, nannyStats_input,
     nannyStats_output, "help/characteristics overview"},
@@ -1377,11 +1377,11 @@ int Descriptor::creation_nanny(sstring arg) {
           phelpFile = &(nannyRaces[iRace].terrHelp);
 
     file_to_sstring(phelpFile->c_str(), output);
-    output = colorString(character, this, output, NULL, COLOR_BASIC, false);
+    output = colorString(character, this, output, nullptr, COLOR_BASIC, false);
     character->cls();
     page_string(output, SHOWNOW_YES);
     return 0;
-  } else if (nannyState->nannyInputFunction == NULL)
+  } else if (nannyState->nannyInputFunction == nullptr)
     connected = (connectStateT)(connected + 1);
   else
     connected = nannyState->nannyInputFunction(this, output, arg.trim());

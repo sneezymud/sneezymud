@@ -34,13 +34,13 @@ bool sameAccount(sstring buf, int shop_nr) {
 
     if (!strcmp(stthis.aname, st.aname)) {
       if (buf.lower() == sstring(db["name"]).lower())
-        return FALSE;
+        return false;
       else
-        return TRUE;
+        return true;
     }
   }
 
-  return FALSE;
+  return false;
 }
 
 sstring transactionToString(transactionTypeT action) {
@@ -211,7 +211,7 @@ int getShopAccess(int shop_nr, TBeing* ch) {
   if (db.fetchRow())
     access = convertTo<int>(db["access"]);
 
-#if 0  
+#if 0
   if(sameAccount(ch->getName(), shop_nr) && !ch->isImmortal() && access){
     ch->sendTo("Another character in your account has permissions at this shop, so this character can not use the ownership functions.\n\r");
     access=0;
@@ -665,7 +665,7 @@ void TShopOwned::showInfo() {
         shop_index[shop_nr].profit_buy % shop_index[shop_nr].profit_sell);
     keeper->doTell(ch->getName(),
       format("My maximum inventory per item is %i.") %
-        getMaxNum(NULL, NULL, 9));
+        getMaxNum(nullptr, nullptr, 9));
   }
 
   if (shop_index[shop_nr].type.size() <= 1) {
@@ -689,7 +689,7 @@ int TShopOwned::setRates(sstring arg) {
 
   if (!hasAccess(SHOPACCESS_RATES)) {
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-    return FALSE;
+    return false;
   }
 
   shop_index[shop_nr].clearCache();
@@ -708,7 +708,7 @@ int TShopOwned::setRates(sstring arg) {
       keeper->doTell(ch->getName(),
         "Ok, I cleared all of the individual profit ratios.");
       shoplog(shop_nr, ch, keeper, "all", 0, "clear setrates");
-      return TRUE;
+      return true;
     } else if (buf == "player") {
       arg = one_argument(arg, buf);
 
@@ -717,7 +717,7 @@ int TShopOwned::setRates(sstring arg) {
 
       keeper->doTell(ch->getName(), "Done.");
       shoplog(shop_nr, ch, keeper, buf, 0, "clear setrates");
-      return TRUE;
+      return true;
     } else if (buf == "match") {
       arg = one_argument(arg, buf);
 
@@ -728,7 +728,7 @@ int TShopOwned::setRates(sstring arg) {
       shoplog(shop_nr, ch, keeper, format("match %s") % buf, 0,
         "clear setrates");
 
-      return TRUE;
+      return true;
     } else {
       // find item in inventory matching keywords in arg
       // get vnum, then store in db
@@ -736,7 +736,7 @@ int TShopOwned::setRates(sstring arg) {
 
       if (!tt) {
         keeper->doTell(ch->getName(), "I don't have that item.");
-        return FALSE;
+        return false;
       }
 
       TObj* o = dynamic_cast<TObj*>(tt);
@@ -748,7 +748,7 @@ int TShopOwned::setRates(sstring arg) {
       shoplog(shop_nr, ch, keeper, format("item %s") % o->getName(), 0,
         "clear setrates");
 
-      return TRUE;
+      return true;
     }
   }
 
@@ -773,14 +773,14 @@ int TShopOwned::setRates(sstring arg) {
       keeper->doTell(ch->getName(),
         "Due to fraud regulations, I cannot set my profit_sell or profit_buy "
         "to more than 5 or less than 0.");
-      return FALSE;
+      return false;
     }
 
     if (profit_buy < profit_sell) {
       keeper->doTell(ch->getName(),
         "You can't set your buy profit lower than your sell profit, you'd lose "
         "all your money!");
-      return FALSE;
+      return false;
     }
   }
 
@@ -821,10 +821,10 @@ int TShopOwned::setRates(sstring arg) {
           db["player"]);
     }
 
-    return TRUE;
+    return true;
   } else if (argc < 4) {
     keeper->doTell(ch->getName(), "I don't understand.");
-    return FALSE;
+    return false;
   }
 
   if (buf == "default") {  ///////////////////////////////////////////////////
@@ -943,7 +943,7 @@ int TShopOwned::setRates(sstring arg) {
 
     if (!tt) {
       keeper->doTell(ch->getName(), "I don't have that item.");
-      return FALSE;
+      return false;
     }
 
     TObj* o = dynamic_cast<TObj*>(tt);
@@ -972,20 +972,20 @@ int TShopOwned::setRates(sstring arg) {
       0, "set setrates");
   }
 
-  return TRUE;
+  return true;
 }
 
 int TShopOwned::buyShop(sstring arg) {
   int value = 0;
   TDatabase db(DB_SNEEZY);
   sstring buf;
-  TThing* tt = NULL;
+  TThing* tt = nullptr;
   TObj* o;
   int corp_id = 0;
 
   if (isOwned()) {
     keeper->doTell(ch->getName(), "Sorry, this shop isn't for sale.");
-    return TRUE;
+    return true;
   }
 
   for (StuffIter it = keeper->stuff.begin();
@@ -1006,14 +1006,14 @@ int TShopOwned::buyShop(sstring arg) {
       keeper->doTell(ch->getName(),
         "You must specify the ID of the corporation you wish to buy this shop "
         "for.");
-      return TRUE;
+      return true;
     }
   } else {
     if (convertTo<int>(arg) == 0) {
       keeper->doTell(ch->getName(),
         "You must specify the ID of the corporation you wish to buy this shop "
         "for.");
-      return TRUE;
+      return true;
     }
 
     while (db.fetchRow()) {
@@ -1028,13 +1028,13 @@ int TShopOwned::buyShop(sstring arg) {
     keeper->doTell(ch->getName(),
       "You must specify the ID of the corporation you wish to buy this shop "
       "for.");
-    return TRUE;
+    return true;
   }
 
   if (ch->getMoney() < value) {
     keeper->doTell(ch->getName(),
       format("Sorry, you can't afford this shop.  The price is %i.") % value);
-    return TRUE;
+    return true;
   }
   ch->setMoney(ch->getMoney() - value);
 
@@ -1051,7 +1051,7 @@ int TShopOwned::buyShop(sstring arg) {
 
   shoplog(shop_nr, ch, keeper, format("%i") % value, 0, "bought shop");
 
-  return TRUE;
+  return true;
 }
 
 int TShopOwned::setString(sstring arg) {
@@ -1061,7 +1061,7 @@ int TShopOwned::setString(sstring arg) {
 
   if (!hasAccess(SHOPACCESS_OWNER)) {
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-    return FALSE;
+    return false;
   }
 
   if (which.empty() && s.empty()) {
@@ -1079,7 +1079,7 @@ int TShopOwned::setString(sstring arg) {
       format("message_buy: %s") % shop_index[shop_nr].message_buy);
     keeper->doTell(ch->getName(),
       format("message_sell: %s") % shop_index[shop_nr].message_sell);
-    return TRUE;
+    return true;
   }
 
   if (which == "no_such_item1") {
@@ -1105,7 +1105,7 @@ int TShopOwned::setString(sstring arg) {
     shop_index[shop_nr].message_sell = mud_str_dup(s);
   } else {
     keeper->doTell(ch->getName(), "You need to specify a string to change.");
-    return FALSE;
+    return false;
   }
 
   TDatabase db(DB_SNEEZY);
@@ -1117,7 +1117,7 @@ int TShopOwned::setString(sstring arg) {
 
   shoplog(shop_nr, ch, keeper, which, 0, "set sstring");
 
-  return TRUE;
+  return true;
 }
 
 int TShopOwned::sellShop() {
@@ -1132,7 +1132,7 @@ int TShopOwned::sellShop() {
     keeper->doTell(ch->getName(),
       "I'll just give you the money I have on me, but nothing for the "
       "inventory.");
-    return FALSE;
+    return false;
   }
 
   db.query("delete from shopowned where shop_nr=%i", shop_nr);
@@ -1156,7 +1156,7 @@ int TShopOwned::sellShop() {
 
   shop_index[shop_nr].clearCache();
 
-  return TRUE;
+  return true;
 }
 
 int TShopOwned::giveMoney(sstring arg) {
@@ -1165,7 +1165,7 @@ int TShopOwned::giveMoney(sstring arg) {
 
   if (!hasAccess(SHOPACCESS_GIVE)) {
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-    return FALSE;
+    return false;
   }
 
   arg = one_argument(arg, buf);
@@ -1174,7 +1174,7 @@ int TShopOwned::giveMoney(sstring arg) {
   if (amount <= 0) {
     keeper->doAction(ch->getName(), CMD_SLAP);
     keeper->doTell(ch->getName(), "Don't be an idiot.");
-    return FALSE;
+    return false;
   }
 
   db.query("select centralbank from shopownedcentralbank where bank=%i",
@@ -1185,7 +1185,7 @@ int TShopOwned::giveMoney(sstring arg) {
       keeper->doTell(ch->getName(),
         "I wouldn't have enough cash to cover the central bank reserve "
         "requirement.");
-      return FALSE;
+      return false;
     }
   }
 
@@ -1201,7 +1201,7 @@ int TShopOwned::giveMoney(sstring arg) {
 
     buf =
       format("$n gives you %d talen%s.") % amount % ((amount == 1) ? "" : "s");
-    act(buf, TRUE, keeper, NULL, ch, TO_VICT);
+    act(buf, true, keeper, nullptr, ch, TO_VICT);
     act("$n gives some money to $N.", 1, keeper, 0, ch, TO_NOTVICT);
   } else {
     keeper->doTell(ch->getName(), "I don't have that many talens.");
@@ -1209,7 +1209,7 @@ int TShopOwned::giveMoney(sstring arg) {
       format("I have %i talens.") % keeper->getMoney());
   }
 
-  return TRUE;
+  return true;
 }
 
 int TShopOwned::setAccess(sstring arg) {
@@ -1219,7 +1219,7 @@ int TShopOwned::setAccess(sstring arg) {
 
   if (!hasAccess(SHOPACCESS_ACCESS)) {
     keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-    return FALSE;
+    return false;
   }
 
   buf = arg.word(0);
@@ -1291,7 +1291,7 @@ int TShopOwned::setAccess(sstring arg) {
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 int TShopOwned::doLogs(sstring arg) {
@@ -1303,7 +1303,7 @@ int TShopOwned::doLogs(sstring arg) {
       arg = ch->name;
     } else {
       keeper->doTell(ch->getName(), "Sorry, you don't have access to do that.");
-      return FALSE;
+      return false;
     }
   }
   sstring sb;
@@ -1453,7 +1453,7 @@ int TShopOwned::doLogs(sstring arg) {
     if (ch->desc)
       ch->desc->page_string(sb, SHOWNOW_NO, ALLOWREP_YES);
   }
-  return TRUE;
+  return true;
 }
 
 int TShopOwned::getMaxNum(const TBeing* ch, const TObj* o, int defaultMax) {

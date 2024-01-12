@@ -26,49 +26,49 @@ static void moveLoss(TBeing& ch) {
 int astralWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
   int rc;
   int ret, location;
-  TRoom* room = NULL;
+  TRoom* room = nullptr;
   TMonster* tmon;
 
   location = victim->in_room;
   room = real_roomp(location);
 
   if (!room) {
-    vlogf(LOG_BUG, "Attempt to astral to a NULL room.");
+    vlogf(LOG_BUG, "Attempt to astral to a nullptr room.");
     return SPELL_FAIL;
   }
 
   if (room->isFlyingSector() || caster->roomp->isFlyingSector()) {
-    act("$d refuses to let you astral walk through the magic", FALSE, caster, 0,
+    act("$d refuses to let you astral walk through the magic", false, caster, 0,
       0, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
   if (caster->roomp->isRoomFlag(ROOM_NO_ESCAPE) && !caster->isImmortal()) {
-    act("$d refuses to let you astral walk from here.", FALSE, caster, 0, 0,
+    act("$d refuses to let you astral walk from here.", false, caster, 0, 0,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
   if (victim->GetMaxLevel() > MAX_MORT || room->isRoomFlag(ROOM_PRIVATE) ||
       room->isRoomFlag(ROOM_HAVE_TO_WALK) ||
-      (zone_table[room->getZoneNum()].enabled == FALSE) ||
+      (zone_table[room->getZoneNum()].enabled == false) ||
       (toggleInfo[TOG_QUESTCODE2]->toggle && room->number >= 5700 &&
         room->number < 5900) ||
       room->isRoomFlag(ROOM_NO_MAGIC)) {
-    act("$d refuses to let you astral walk there.", FALSE, caster, 0, 0,
+    act("$d refuses to let you astral walk there.", false, caster, 0, 0,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
   if ((tmon = dynamic_cast<TMonster*>(victim)) &&
       ((tmon->mobVnum() == Mob::TIGER_SHARK) ||
         (tmon->mobVnum() == Mob::ELEPHANT))) {
-    act("$d refuses to let you astral walk there.", FALSE, caster, 0, 0,
+    act("$d refuses to let you astral walk there.", false, caster, 0, 0,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -77,16 +77,16 @@ int astralWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
     switch (::number(1, 2)) {
       case 1:
-        act("$d opens a door to another dimension and you step through.", FALSE,
-          caster, NULL, NULL, TO_CHAR);
-        act("$d opens a door to another dimension and $n steps through!", FALSE,
-          caster, NULL, NULL, TO_ROOM);
+        act("$d opens a door to another dimension and you step through.", false,
+          caster, nullptr, nullptr, TO_CHAR);
+        act("$d opens a door to another dimension and $n steps through!", false,
+          caster, nullptr, nullptr, TO_ROOM);
         break;
       case 2:
         act("$d opens a door to another dimension and guides you through.",
-          FALSE, caster, NULL, NULL, TO_CHAR);
+          false, caster, nullptr, nullptr, TO_CHAR);
         act("$d opens a door to another dimension and guides $n through!",
-          FALSE, caster, NULL, NULL, TO_ROOM);
+          false, caster, nullptr, nullptr, TO_ROOM);
         break;
     }
 
@@ -96,14 +96,14 @@ int astralWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
     switch (critFail(caster, SPELL_ASTRAL_WALK)) {
       case CRIT_F_HITOTHER:
 
-        act("$d opens a door to another dimension and $n steps through!", FALSE,
-          caster, NULL, NULL, TO_ROOM);
-        act("$d opens a door to another dimension and you step through.", FALSE,
-          caster, NULL, NULL, TO_CHAR);
+        act("$d opens a door to another dimension and $n steps through!", false,
+          caster, nullptr, nullptr, TO_ROOM);
+        act("$d opens a door to another dimension and you step through.", false,
+          caster, nullptr, nullptr, TO_CHAR);
         act(
           "Uh oh. You have a funny feeling that door didn't lead where you "
           "wanted it to.",
-          FALSE, caster, NULL, NULL, TO_CHAR);
+          false, caster, nullptr, nullptr, TO_CHAR);
 
         caster->genericTeleport(SILENT_YES);
         room = caster->roomp;
@@ -114,17 +114,17 @@ int astralWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
           act(
             "$d opens a path to another dimension but $n is unable to step "
             "through it!",
-            FALSE, caster, NULL, NULL, TO_ROOM);
+            false, caster, nullptr, nullptr, TO_ROOM);
           act(
             "$d opens a path to another dimension but you are unable to step "
             "through.",
-            FALSE, caster, NULL, NULL, TO_CHAR);
+            false, caster, nullptr, nullptr, TO_CHAR);
           act(
             "Uh oh. You have a funny feeling that door doesn't do what you "
             "intended.",
-            FALSE, caster, NULL, victim, TO_CHAR);
-          act("You feel $N being summoned by $d to your presence!", FALSE,
-            caster, NULL, victim, TO_CHAR);
+            false, caster, nullptr, victim, TO_CHAR);
+          act("You feel $N being summoned by $d to your presence!", false,
+            caster, nullptr, victim, TO_CHAR);
           rc = caster->rawSummon(victim);
           if (IS_SET_DELETE(rc, DELETE_VICT) && IS_SET_DELETE(rc, DELETE_THIS))
             return SPELL_CRIT_FAIL | VICTIM_DEAD | CASTER_DEAD;
@@ -137,8 +137,8 @@ int astralWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
           // pass through
         }
       default:
-        act("Nothing seems to happen!", FALSE, caster, NULL, NULL, TO_ROOM);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_CHAR);
+        act("Nothing seems to happen!", false, caster, nullptr, nullptr, TO_ROOM);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_CHAR);
         ret = SPELL_FAIL;
         return ret;
     }
@@ -148,14 +148,14 @@ int astralWalk(TBeing* caster, TBeing* victim, int level, short bKnown) {
   *room += *caster;
   caster->doLook("", CMD_LOOK);
 
-  act("You are blinded for a moment as $n appears in a flash of light!", FALSE,
-    caster, NULL, NULL, TO_ROOM);
+  act("You are blinded for a moment as $n appears in a flash of light!", false,
+    caster, nullptr, nullptr, TO_ROOM);
 
   if (caster->riding) {
     rc = caster->riding->genericMovedIntoRoom(room, -1);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete caster->riding;
-      caster->riding = NULL;
+      caster->riding = nullptr;
     }
   } else {
     rc = caster->genericMovedIntoRoom(room, -1);
@@ -170,7 +170,7 @@ int astralWalk(TBeing* caster, TBeing* victim) {
   int rc = 0;
 
   if (!bPassClericChecks(caster, SPELL_ASTRAL_WALK))
-    return FALSE;
+    return false;
 
   level = caster->getSkillLevel(SPELL_ASTRAL_WALK);
 
@@ -223,9 +223,9 @@ int createFood(TBeing* c, int level, short bKnown, spellNumT spell) {
     *c->roomp += *o;
 
     o->number = -1;
-    act("$p poofs into existence from out of the ether.", 1, c, o, NULL,
+    act("$p poofs into existence from out of the ether.", 1, c, o, nullptr,
       TO_ROOM);
-    act("$p poofs into existence from out of the ether.", 1, c, o, NULL,
+    act("$p poofs into existence from out of the ether.", 1, c, o, nullptr,
       TO_CHAR);
     return SPELL_SUCCESS;
   } else
@@ -246,8 +246,8 @@ void createFood(TBeing* caster) {
   int ret = createFood(caster, level, caster->getSkillValue(spell), spell);
   if (ret == SPELL_SUCCESS) {
   } else {
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
   }
 }
 
@@ -264,7 +264,7 @@ int castCreateWater(TBeing* caster, TObj* obj) {
           format(
             "<p>Your %s is completely full so you stop your prayer.<z>\n\r") %
             fname(drink->name));
-        act("$n stops praying.", TRUE, caster, NULL, NULL, TO_ROOM);
+        act("$n stops praying.", true, caster, nullptr, nullptr, TO_ROOM);
         caster->stopCast(STOP_CAST_NONE);
       }
     }
@@ -278,8 +278,8 @@ int createWater(TBeing* caster, TObj* obj, int level, short bKnown,
     obj->waterCreate(caster, level);
     return SPELL_SUCCESS;
   } else {
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_CHAR);
-    act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_CHAR);
+    act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 }
@@ -292,16 +292,16 @@ void createWater(TBeing* caster, TObj* obj) {
 
   // int level = caster->getSkillLevel(spell);
 
-  act("$n beseeches $d for thirst restoration.", FALSE, caster, NULL, NULL,
+  act("$n beseeches $d for thirst restoration.", false, caster, nullptr, nullptr,
     TO_ROOM);
-  act("You beseech $d for thirst restoration.", FALSE, caster, NULL, NULL,
+  act("You beseech $d for thirst restoration.", false, caster, nullptr, nullptr,
     TO_CHAR);
 
   lag_t rounds = caster->isImmortal() ? LAG_0 : discArray[spell]->lag;
   taskDiffT diff = discArray[spell]->task;
 
-  start_cast(caster, NULL, obj, caster->roomp, spell, diff, 2, "", rounds,
-    caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, nullptr, obj, caster->roomp, spell, diff, 2, "", rounds,
+    caster->in_room, 0, 0, true, 0);
 
 #if 0
   spell = caster->getSkillNum(SPELL_CREATE_WATER);
@@ -342,15 +342,15 @@ int wordOfRecall(TBeing* caster, TBeing* victim, int, short bKnown) {
   if (victim->roomp->isRoomFlag(ROOM_ARENA) ||
       victim->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
     caster->sendTo("You can't recall from here!\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
   if (caster->affectedBySpell(AFFECT_PLAYERKILL) ||
       victim->affectedBySpell(AFFECT_PLAYERKILL)) {
-    act("$d will not provide refuge to a murderer.", TRUE, caster, NULL, NULL,
+    act("$d will not provide refuge to a murderer.", true, caster, nullptr, nullptr,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -358,7 +358,7 @@ int wordOfRecall(TBeing* caster, TBeing* victim, int, short bKnown) {
     caster->sendTo("I don't think that is a good idea...\n\r");
     victim->sendTo(format("%s just tried to recall you, how pathetic...\n\r") %
                    caster->getNameNOC(victim));
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -377,9 +377,9 @@ int wordOfRecall(TBeing* caster, TBeing* victim, int, short bKnown) {
     ret = SPELL_SUCCESS;
   } else if (!victim->desc) {
     ret = SPELL_FAIL;
-    act("$d refuses to come to your aid.", TRUE, caster, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", TRUE, caster, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("$d refuses to come to your aid.", true, caster, nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", true, caster, nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return ret;
   } else {
     switch (critFail(caster, SPELL_WORD_OF_RECALL)) {
@@ -390,37 +390,37 @@ int wordOfRecall(TBeing* caster, TBeing* victim, int, short bKnown) {
         if (!caster->percLess(10.0)) {  // if > 10.0
 #endif
           act("$d is not entirely pleased with how well you are serving him!",
-            FALSE, caster, NULL, NULL, TO_CHAR);
+            false, caster, nullptr, nullptr, TO_CHAR);
           sprintf(buf, "He throws %s mortal body to the winds!",
             (caster == victim) ? "your" : "$N's");
-          act(buf, FALSE, caster, NULL, victim, TO_CHAR);
-          for (room = NULL; !room;
+          act(buf, false, caster, nullptr, victim, TO_CHAR);
+          for (room = nullptr; !room;
                location = number(0, top_of_world), room = real_roomp(location))
             room = (!room) ? 0 : (room->isRoomFlag(ROOM_PRIVATE) ? 0 : room);
 #if FACTIONS_IN_USE
         } else {
           location = Room::HELL;
-          act("$d is upset with your unwillingness to properly serve!", FALSE,
-            caster, NULL, NULL, TO_CHAR);
+          act("$d is upset with your unwillingness to properly serve!", false,
+            caster, nullptr, nullptr, TO_CHAR);
           sprintf(buf, "He sends %s to Hell!",
             (caster == victim) ? "you" : "$N");
-          act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+          act(buf, false, caster, nullptr, victim, TO_CHAR);
         }
 #endif
         break;
       default:
         ret = SPELL_FAIL;
-        act("$d refuses to come to your aid.", TRUE, caster, NULL, NULL,
+        act("$d refuses to come to your aid.", true, caster, nullptr, nullptr,
           TO_CHAR);
-        act("Nothing seems to happen.", TRUE, caster, NULL, NULL, TO_CHAR);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+        act("Nothing seems to happen.", true, caster, nullptr, nullptr, TO_CHAR);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
         return ret;
     }
   }
   if (!(room = real_roomp(location)))
     victim->sendTo("You are completely lost.\n\r");
   else {
-    act("You hear a small \"pop\" as $n disappears.", TRUE, victim, NULL, NULL,
+    act("You hear a small \"pop\" as $n disappears.", true, victim, nullptr, nullptr,
       TO_ROOM);
     victim->roomp->playsound(SOUND_SPELL_WORD_OF_RECALL, SOUND_TYPE_MAGIC);
 
@@ -432,15 +432,15 @@ int wordOfRecall(TBeing* caster, TBeing* victim, int, short bKnown) {
     --(*victim);
     *room += *victim;
     act("You hear a small \"pop\" as $n appears in the middle of the room.",
-      TRUE, victim, NULL, NULL, TO_ROOM);
+      true, victim, nullptr, nullptr, TO_ROOM);
     victim->doLook("", CMD_LOOK);
 
     moveLoss(*victim);
 
     victim->updatePos();
-    act("You are exhausted from interplanar travel.", FALSE, victim, NULL, NULL,
+    act("You are exhausted from interplanar travel.", false, victim, nullptr, nullptr,
       TO_CHAR);
-    act("$n is exhausted from interplanar travel.", FALSE, victim, NULL, NULL,
+    act("$n is exhausted from interplanar travel.", false, victim, nullptr, nullptr,
       TO_ROOM);
   }
   return ret;
@@ -453,16 +453,16 @@ void wordOfRecall(TBeing* caster, TBeing* victim) {
     return;
 
   if (caster == victim) {
-    act("You call to $d to ask for refuge from this situation!", FALSE, caster,
-      NULL, NULL, TO_CHAR);
-    act("$n calls to $d to ask for refuge from this situation!", FALSE, caster,
-      NULL, NULL, TO_ROOM);
+    act("You call to $d to ask for refuge from this situation!", false, caster,
+      nullptr, nullptr, TO_CHAR);
+    act("$n calls to $d to ask for refuge from this situation!", false, caster,
+      nullptr, nullptr, TO_ROOM);
   } else {
-    act("You call to $d to ask for refuge for $N!", FALSE, caster, NULL, victim,
+    act("You call to $d to ask for refuge for $N!", false, caster, nullptr, victim,
       TO_CHAR);
-    act("$n calls to $d to ask for refuge for you!", FALSE, caster, NULL,
+    act("$n calls to $d to ask for refuge for you!", false, caster, nullptr,
       victim, TO_VICT);
-    act("$n calls to $d to ask for refuge for $N!", FALSE, caster, NULL, victim,
+    act("$n calls to $d to ask for refuge for $N!", false, caster, nullptr, victim,
       TO_NOTVICT);
   }
 
@@ -470,7 +470,7 @@ void wordOfRecall(TBeing* caster, TBeing* victim) {
   ret = wordOfRecall(caster, victim, level,
     caster->getSkillValue(SPELL_WORD_OF_RECALL));
   if (ret == SPELL_SUCCESS) {
-    act("$d awards you for being a loyal follower!", FALSE, caster, NULL, NULL,
+    act("$d awards you for being a loyal follower!", false, caster, nullptr, nullptr,
       TO_CHAR);
   } else {
     if (ret == SPELL_CRIT_FAIL) {
@@ -483,7 +483,7 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
   int rc = 0;
   TThing* t;
   int location = 0;
-  TRoom* room = NULL;
+  TRoom* room = nullptr;
 
   int immun = victim->getImmunity(IMMUNE_SUMMON);
   TMonster* tmon = dynamic_cast<TMonster*>(victim);
@@ -493,8 +493,8 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
   if (((immun > 0) && ::number(0, 100) <= immun) ||
       (tmon && ((tmon->mobVnum() == Mob::TIGER_SHARK) ||
                  (tmon->mobVnum() == Mob::ELEPHANT)))) {
-    act("You feel unable to summon $N.", FALSE, caster, NULL, victim, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("You feel unable to summon $N.", false, caster, nullptr, victim, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -520,7 +520,7 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
       if ((tDiff > 0) && ::number(0, tDiff)) {
         caster->sendTo("Your prayer meets opposition and fails!\n\r");
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
         return SPELL_FAIL;
       }
     }
@@ -528,28 +528,28 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
     if (caster->inGrimhaven() &&
         (tmon->anger() >= 20 || IS_SET(tmon->specials.act, ACT_AGGRESSIVE))) {
       caster->sendTo("Your deity prohibits this mob being summoned here!\n\r");
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
       return SPELL_FAIL;
     }
   }
 
   if (caster == victim) {
     caster->sendTo("Yeah whatever. Good one.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
   if (victim->inRoom() == Room::NOWHERE) {
-    act("$N cannot be summoned at the moment!", FALSE, caster, NULL, victim,
+    act("$N cannot be summoned at the moment!", false, caster, nullptr, victim,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
   // pseudo special-proc for Gold's zone
   if (!caster->canDoSummon()) {
-    act("Your summoning magic gets blocked somewhere near you.", FALSE, caster,
-      NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Your summoning magic gets blocked somewhere near you.", false, caster,
+      nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -557,12 +557,12 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
   if (!victim->isSummonable()) {
     act(
       "Your summoning magic gets blocked somewhere near your intended victim.",
-      FALSE, caster, NULL, victim, TO_CHAR);
+      false, caster, nullptr, victim, TO_CHAR);
     act(
       "You feel a tugging at your soul and feel like you are in another place "
       "for a second.",
-      FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("Nothing seems to happen.", FALSE, caster, NULL, victim, TO_NOTVICT);
+      false, caster, nullptr, victim, TO_NOTVICT);
+    act("Nothing seems to happen.", false, caster, nullptr, victim, TO_NOTVICT);
     return SPELL_FAIL;
   }
 
@@ -570,15 +570,15 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
     caster->sendTo(
       "That's a pretty big fish for you, small fry.  It might work if you try "
       "again.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
-#if 0 
+#if 0
   if (immun) {
     if (isImmune(IMMUNE_SUMMON), WEAR_BODY) {
-      act("You feel great difficulty in summoning $N this time.", FALSE, caster, NULL, victim, TO_CHAR);
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("You feel great difficulty in summoning $N this time.", false, caster, nullptr, victim, TO_CHAR);
+      act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
       return SPELL_FAIL;
     }
   }
@@ -586,37 +586,37 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
   if (!caster->isImmortal()) {
     if (victim->roomp->isRoomFlag(ROOM_NO_ESCAPE)) {
       caster->sendTo("You cannot penetrate the defenses of that area.\n\r");
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
       return SPELL_FAIL;
     }
 
     if (victim->roomp->isRoomFlag(ROOM_ARENA)) {
-      act("$N cannot be summoned at the moment!", FALSE, caster, NULL, victim,
+      act("$N cannot be summoned at the moment!", false, caster, nullptr, victim,
         TO_CHAR);
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
       return SPELL_FAIL;
     }
 
     if (caster->roomp->isRoomFlag(ROOM_HAVE_TO_WALK)) {
-      act("You can not summon to this location.", FALSE, caster, 0, 0, TO_CHAR);
-      act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      act("You can not summon to this location.", false, caster, 0, 0, TO_CHAR);
+      act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
       return SPELL_FAIL;
     }
   }
 
   if (victim->isImmortal()) {
-    act("Summoning the gods can be hazardous to your health...", FALSE, caster,
-      NULL, victim, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
-    act("$n just tried to summon you.", FALSE, caster, NULL, victim, TO_VICT);
+    act("Summoning the gods can be hazardous to your health...", false, caster,
+      nullptr, victim, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
+    act("$n just tried to summon you.", false, caster, nullptr, victim, TO_VICT);
     return SPELL_FAIL;
   }
 
   if (caster->roomp && caster->roomp->isFallSector()) {
     // prevent cheap attempt to make them fall to their death
     act("$d requires you to be in contact with The World when you summon.",
-      FALSE, caster, NULL, NULL, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+      false, caster, nullptr, nullptr, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -643,7 +643,7 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
         rc = tb->fallOffMount(caster, POSITION_STANDING);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tb;
-          tb = NULL;
+          tb = nullptr;
         }
       } else {
         t->dismount(POSITION_DEAD);
@@ -654,13 +654,13 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
         if (level < 20) {
           // pass through to next case
         } else {
-          act("Your body flails helplessly through the cosmos!", FALSE, caster,
-            NULL, NULL, TO_CHAR);
+          act("Your body flails helplessly through the cosmos!", false, caster,
+            nullptr, nullptr, TO_CHAR);
 
-          act("You vanish in a flash of irridescent midnight blue..", FALSE,
-            caster, NULL, NULL, TO_CHAR);
-          act("$n vanishes in a flash of irridescent midnight blue..", FALSE,
-            caster, NULL, NULL, TO_ROOM);
+          act("You vanish in a flash of irridescent midnight blue..", false,
+            caster, nullptr, nullptr, TO_CHAR);
+          act("$n vanishes in a flash of irridescent midnight blue..", false,
+            caster, nullptr, nullptr, TO_ROOM);
 
           rc = caster->genericTeleport(SILENT_YES);
 
@@ -672,9 +672,9 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
           caster->updatePos();
           act(
             "You hear a small \"pop\" as $n appears in the middle of the room.",
-            TRUE, caster, NULL, NULL, TO_ROOM);
-          act("$n is exhausted from interplanar travel.", FALSE, caster, NULL,
-            NULL, TO_ROOM);
+            true, caster, nullptr, nullptr, TO_ROOM);
+          act("$n is exhausted from interplanar travel.", false, caster, nullptr,
+            nullptr, TO_ROOM);
 
           // genericTeleport, make sure they get to look first
           if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -686,26 +686,26 @@ int summon(TBeing* caster, TBeing* victim, int level, short bKnown) {
           return SPELL_CRIT_FAIL;
         }
       case CRIT_F_HITSELF:
-        act("Your body flails helplessly through the cosmos!", FALSE, caster,
-          NULL, NULL, TO_CHAR);
-        act("You vanish in a flash of fiery red flames..", FALSE, caster, NULL,
-          NULL, TO_CHAR);
-        act("$n vanishes in a flash of fiery red flames..", FALSE, caster, NULL,
-          NULL, TO_ROOM);
+        act("Your body flails helplessly through the cosmos!", false, caster,
+          nullptr, nullptr, TO_CHAR);
+        act("You vanish in a flash of fiery red flames..", false, caster, nullptr,
+          nullptr, TO_CHAR);
+        act("$n vanishes in a flash of fiery red flames..", false, caster, nullptr,
+          nullptr, TO_ROOM);
         location = victim->in_room;
         room = real_roomp(location);
         --(*caster);
         *room += *caster;
         caster->doLook("", CMD_LOOK);
         act("You are blinded for a moment as $n appears in a flash of light!",
-          FALSE, caster, NULL, NULL, TO_ROOM);
+          false, caster, nullptr, nullptr, TO_ROOM);
         rc = caster->genericMovedIntoRoom(caster->roomp, -1);
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_THIS;
         return SPELL_CRIT_FAIL;
       default:
-        act("Nothing seems to happen.", TRUE, caster, NULL, NULL, TO_CHAR);
-        act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+        act("Nothing seems to happen.", true, caster, nullptr, nullptr, TO_CHAR);
+        act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     }
     return SPELL_FAIL;
   }
@@ -716,16 +716,16 @@ int summon(TBeing* caster, TBeing* victim) {
   int rc = 0;
 
   if (!bPassClericChecks(caster, SPELL_SUMMON))
-    return FALSE;
+    return false;
 
   level = caster->getSkillLevel(SPELL_SUMMON);
 
-  act("$d attempts to transfer $N to you through the cosmic ether!", FALSE,
-    caster, NULL, victim, TO_CHAR);
+  act("$d attempts to transfer $N to you through the cosmic ether!", false,
+    caster, nullptr, victim, TO_CHAR);
   act(
     "You feel a tug as $n attempts to transfer you through the cosmic ether "
     "with the help of $d!",
-    FALSE, caster, NULL, victim, TO_VICT);
+    false, caster, nullptr, victim, TO_VICT);
 
   if (!caster->isPc())
     victim->playsound(SOUND_COMEBACK, SOUND_TYPE_NOISE);
@@ -742,8 +742,8 @@ int summon(TBeing* caster, TBeing* victim) {
 }
 
 int heroesFeast(TBeing* caster, int, short bKnown, spellNumT spell) {
-  TBeing* tch = NULL;
-  TThing* t = NULL;
+  TBeing* tch = nullptr;
+  TThing* t = nullptr;
   sstring name = caster->getName();
   int gain = 16, hitgain = 1;
   sstring message = "You partake of a magnificent feast!";
@@ -880,8 +880,8 @@ void heroesFeast(TBeing* caster) {
   } else if (ret == SPELL_CRIT_FAIL) {
     caster->sendTo("Something terrible seems to have happened.\n\r");
   } else {
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
   }
 }
 
@@ -921,7 +921,7 @@ int portal(TBeing* caster, const char* portalroom, int level, short bKnown) {
 
   if (caster->roomp->isRoomFlag(ROOM_NO_PORTAL) && !caster->isImmortal()) {
     caster->sendTo("You can't seem to escape the defenses of this area.\n\r");
-    act("Nothing seems to happen.", FALSE, caster, NULL, NULL, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, nullptr, nullptr, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -948,10 +948,10 @@ int portal(TBeing* caster, const char* portalroom, int level, short bKnown) {
     caster->roomp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
     rp->playsound(SOUND_SPELL_PORTAL, SOUND_TYPE_MAGIC);
 
-    act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj,
-      NULL, TO_ROOM);
-    act("$p suddenly appears out of a swirling mist.", TRUE, caster, tmp_obj,
-      NULL, TO_CHAR);
+    act("$p suddenly appears out of a swirling mist.", true, caster, tmp_obj,
+      nullptr, TO_ROOM);
+    act("$p suddenly appears out of a swirling mist.", true, caster, tmp_obj,
+      nullptr, TO_CHAR);
 
     sprintf(buf, "%s suddenly appears out of a swirling mist.\n\r",
       (sstring(next_tmp_obj->shortDescr).cap()).c_str());

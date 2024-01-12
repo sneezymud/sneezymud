@@ -24,7 +24,7 @@ int TBeing::slamIntoWall(roomDirData* exitp) {
   sendTo(format("You slam against the %s with no effect.\n\r") % doorname);
   sendTo("OUCH!  That REALLY Hurt!\n\r");
   sprintf(buf, "$n crashes against the %s with no effect.\n\r", doorname);
-  act(buf, FALSE, this, 0, 0, TO_ROOM);
+  act(buf, false, this, 0, 0, TO_ROOM);
   if (reconcileDamage(this, (::number(1, 10) * 2), DAMAGE_COLLISION) == -1)
     return DELETE_THIS;
 
@@ -46,7 +46,7 @@ int TBeing::slamIntoWall(roomDirData* exitp) {
     return DELETE_THIS;
 #endif
 
-  return TRUE;
+  return true;
 }
 
 static int doorbash(TBeing* caster, dirTypeT dir) {
@@ -60,16 +60,16 @@ static int doorbash(TBeing* caster, dirTypeT dir) {
 
   if (caster->getMove() < 10) {
     caster->sendTo("You're too tired to do that.\n\r");
-    return FALSE;
+    return false;
   }
   if (caster->riding) {
     caster->sendTo("Yeah... right... while mounted.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!(exitp = caster->exitDir(dir))) {
     vlogf(LOG_BUG, "bad exit in doorbash (2)");
-    return FALSE;
+    return false;
   }
 
   rp = real_roomp(exitp->to_room);
@@ -77,11 +77,11 @@ static int doorbash(TBeing* caster, dirTypeT dir) {
   if (dir == DIR_UP) {
     if (rp->isAirSector() && !caster->isFlying()) {
       caster->sendTo("You would need to be flying to go there!\n\r");
-      return FALSE;
+      return false;
     }
   }
   sprintf(buf, "$n charges %swards.", dirs[dir]);
-  act(buf, FALSE, caster, 0, 0, TO_ROOM);
+  act(buf, false, caster, 0, 0, TO_ROOM);
   caster->sendTo(format("You charge %swards.\n\r") % dirs[dir]);
 
   if (caster->willBumpHeadDoor(exitp, &height)) {
@@ -91,7 +91,7 @@ static int doorbash(TBeing* caster, dirTypeT dir) {
     rc = caster->slamIntoWall(exitp);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return FALSE;
+    return false;
   }
 
   if ((IS_SET(exitp->condition, EXIT_DESTROYED)) ||
@@ -106,14 +106,14 @@ static int doorbash(TBeing* caster, dirTypeT dir) {
       return DELETE_THIS;
     if (!caster->isImmortal())
       caster->addToMove(-10);
-    return TRUE;
+    return true;
   }
   if (!caster->isImmortal())
     caster->addToMove(-10);
 
   int bKnown = caster->getSkillValue(SKILL_DOORBASH);
 
-  if ((2 * exitp->weight > caster->maxWieldWeight(NULL, HAND_TYPE_PRIM)) ||
+  if ((2 * exitp->weight > caster->maxWieldWeight(nullptr, HAND_TYPE_PRIM)) ||
       (2 * exitp->lock_difficulty > bKnown) ||
       (exitp->door_type == DOOR_PORTCULLIS) ||
       (exitp->door_type == DOOR_DRAWBRIDGE) ||
@@ -123,7 +123,7 @@ static int doorbash(TBeing* caster, dirTypeT dir) {
     rc = caster->slamIntoWall(exitp);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
   dam = dice(exitp->weight, ::number(4, 10));
 
@@ -145,12 +145,12 @@ static int doorbash(TBeing* caster, dirTypeT dir) {
       rc = caster->slamIntoWall(exitp);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_THIS;
-      return TRUE;
+      return true;
     }
 
     sprintf(buf, "$n slams into the %s, and it bursts open!",
       fname(exitp->keyword).c_str());
-    act(buf, FALSE, caster, 0, 0, TO_ROOM);
+    act(buf, false, caster, 0, 0, TO_ROOM);
     caster->sendTo(format("You slam into the %s, and it bursts open!\n\r") %
                    fname(exitp->keyword));
     int room = caster->in_room;
@@ -177,20 +177,20 @@ static int doorbash(TBeing* caster, dirTypeT dir) {
         return DELETE_THIS;
       if (!caster->isImmortal())
         caster->addToMove(-10);
-      return TRUE;
+      return true;
     } else {
       if (!caster->isImmortal())
         caster->addToMove(-5);
-      return TRUE;
+      return true;
     }
   } else {
     caster->sendTo("You just don't know the nuances of door-bashing.\n\r");
     rc = caster->slamIntoWall(exitp);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
-  return TRUE;
+  return true;
 }
 
 /* skill to allow fighters to break down doors */
@@ -202,28 +202,28 @@ int TBeing::doDoorbash(const sstring& argument) {
 
   if (!doesKnowSkill(SKILL_DOORBASH)) {
     sendTo("You know nothing about door bashing.\n\r");
-    return FALSE;
+    return false;
   }
   sstring type = argument.word(0);
   sstring direction = argument.word(1);
 
   if (type.empty()) {
     sendTo("You must specify a direction.\n\r");
-    return FALSE;
+    return false;
   }
 
   if ((dir = findDoor(type.c_str(), direction.c_str(), DOOR_INTENT_OPEN,
          SILENT_YES)) >= MIN_DIR)
-    ok = TRUE;
+    ok = true;
   else {
-    act("$n looks around, bewildered.", FALSE, this, 0, 0, TO_ROOM);
-    act("You can't seem to find what you are looking for.", FALSE, this, 0, 0,
+    act("$n looks around, bewildered.", false, this, 0, 0, TO_ROOM);
+    act("You can't seem to find what you are looking for.", false, this, 0, 0,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (!ok || !(exitp = exitDir(dir))) {
     vlogf(LOG_BUG, "Bad exit in doorbash!");
-    return FALSE;
+    return false;
   }
   rc = doorbash(this, dir);
   if (IS_SET_DELETE(rc, DELETE_THIS))

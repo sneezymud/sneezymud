@@ -59,7 +59,7 @@ void Descriptor::clientf(const sstring& msg) {
 }
 
 void TRoom::clientf(const sstring& msg) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (!msg.empty()) {
     for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
@@ -75,7 +75,7 @@ void Descriptor::send_client_motd() {}
 
 void Descriptor::send_client_inventory() {
   TBeing* ch;
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (!(ch = character))
     return;
@@ -91,7 +91,7 @@ void Descriptor::send_client_inventory() {
 }
 
 void Descriptor::send_client_room_people() {
-  TThing* folx = NULL;
+  TThing* folx = nullptr;
   TBeing* ch;
 
   if (!(ch = character))
@@ -104,7 +104,7 @@ void Descriptor::send_client_room_people() {
 
 void Descriptor::send_client_room_objects() {
   TBeing* ch;
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (!(ch = character))
     return;
@@ -281,17 +281,17 @@ int Descriptor::read_client(char* str2) {
   strcpy(buf, nextToken('|', 255, str2).c_str());
   if (sscanf(buf, "%d", &type) != 1) {
     vlogf(LOG_CLIENT, format("Incorrect type (%s) in read_client") % buf);
-    return FALSE;
+    return false;
   }
   switch (type) {
     case CLIENT_INIT:
-      m_bIsClient = TRUE;
+      m_bIsClient = true;
 
       if (!toggleInfo[TOG_CLIENTS]->toggle) {
         clientf(format("%d|Clients not allowed at this time. Try later!|%d") %
                 CLIENT_ERROR % ERR_NOT_ALLOWED);
         outputProcessing();
-        return FALSE;
+        return false;
       }
       if (WizLock) {
         // this may need better handling to let wizs in, but, oh well
@@ -300,7 +300,7 @@ int Descriptor::read_client(char* str2) {
         if (!lockmess.empty())
           clientf(lockmess);
         outputProcessing();
-        return FALSE;
+        return false;
       }
       strcpy(buf, nextToken('|', 255, str2).c_str());
       vers = convertTo<int>(buf);
@@ -310,7 +310,7 @@ int Descriptor::read_client(char* str2) {
                        "http://sneezy.saw.net/client/client.html.|%d") %
                 CLIENT_ERROR % CURRENT_VERSION % ERR_BAD_VERSION);
         outputProcessing();
-        return FALSE;
+        return false;
       } else if (vers < CURRENT_VERSION) {
         clientf(format("%d|You client is an old version. You can continue "
                        "playing with the current version, but upgrade is "
@@ -519,7 +519,7 @@ int Descriptor::read_client(char* str2) {
       store_mail(name, character->getName().c_str(), buffer, amount, rent_id);
 
       // clear amount, object, name
-      obj = NULL;
+      obj = nullptr;
       *(name) = '\0';
       amount = 0;
 
@@ -550,7 +550,7 @@ int Descriptor::read_client(char* str2) {
       }
       break;
     case CLIENT_CANCELEDIT:
-      str = NULL;
+      str = nullptr;
       max_str = 0;
       connected = CON_PLYNG;
       if (character->isPlayerAction(PLR_MAILING))
@@ -565,18 +565,18 @@ int Descriptor::read_client(char* str2) {
       break;
     case CLIENT_RENT: {
       // if disguised or transformed, we mimic the TMonster::doRent return
-      if (character && dynamic_cast<TPerson*>(character) == NULL) {
+      if (character && dynamic_cast<TPerson*>(character) == nullptr) {
         character->sendTo("You're a mob.  You can't rent!\n\r");
         return 0;
       }
 
       sprintf(buf, "$n just rented with the %s client.", MUD_NAME_VERS);
-      act(buf, FALSE, character, NULL, NULL, TO_ROOM);
-      return dynamic_cast<TPerson*>(character)->saveRent(TRUE, 2);
+      act(buf, false, character, nullptr, nullptr, TO_ROOM);
+      return dynamic_cast<TPerson*>(character)->saveRent(true, 2);
       break;
     }
     case CLIENT_DISCONNECT:
-      character->desc = NULL;
+      character->desc = nullptr;
       return DELETE_THIS;
       break;
     case CLIENT_CONNECTED:
@@ -588,7 +588,7 @@ int Descriptor::read_client(char* str2) {
           writeToQ("Name -> ");
 
           // copied from above
-          character->desc = NULL;
+          character->desc = nullptr;
           character->next = character_list;
           character_list = character;
 
@@ -596,7 +596,7 @@ int Descriptor::read_client(char* str2) {
 
           delete character;
           character = new TPerson(this);
-          return FALSE;
+          return false;
         }
       }
 
@@ -609,18 +609,18 @@ int Descriptor::read_client(char* str2) {
           if (k->original) {
             if (boost::iequals(k->original->getName(), character->getName())) {
               delete k;
-              k = NULL;
+              k = nullptr;
             }
           } else {
             if (boost::iequals(k->character->getName(), character->getName())) {
               if (k->character) {
                 // disassociate the char from old descriptor before
                 // we delete the old descriptor
-                k->character->desc = NULL;
-                k->character = NULL;
+                k->character->desc = nullptr;
+                k->character = nullptr;
               }
               delete k;
-              k = NULL;
+              k = nullptr;
             }
           }
         }
@@ -642,7 +642,7 @@ int Descriptor::read_client(char* str2) {
           // into character_list removal logic inside ~TBeing.  Since we're
           // not actually in the char_list yet, it crashes.  Just insert myself
           // temporarily to bypass this.
-          character->desc = NULL;
+          character->desc = nullptr;
           character->next = character_list;
           character_list = character;
 
@@ -661,8 +661,8 @@ int Descriptor::read_client(char* str2) {
           connected = CON_PLYNG;
           flush();
           writeToQ("Reconnecting character...\n\r");
-          send_client_prompt(TRUE, 16383);
-          clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
+          send_client_prompt(true, 16383);
+          clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % true);
 
           // setombatMode sends necessary client info about attack mode
           ch->setCombatMode(ch->getCombatMode());
@@ -682,9 +682,9 @@ int Descriptor::read_client(char* str2) {
                 format("%s[%s] has reconnected (client)  (account: %s).") %
                   ch->getName() % host % account->name);
 
-            dynamic_cast<TPerson*>(ch)->saveRent(FALSE, 1);
+            dynamic_cast<TPerson*>(ch)->saveRent(false, 1);
           }
-          act("$n has reconnected.", TRUE, ch, 0, 0, TO_ROOM);
+          act("$n has reconnected.", true, ch, 0, 0, TO_ROOM);
           ch->loadCareerStats();
           ch->loadDrugStats();
           ch->loadGuildStats();
@@ -697,19 +697,19 @@ int Descriptor::read_client(char* str2) {
             if (rc) {
               // disconnect, but don't cause character to be deleted
               // do this by disassociating character from descriptor
-              character = NULL;
+              character = nullptr;
 
               return DELETE_THIS;
             }
           }
 
-          ch->fixClientPlayerLists(FALSE);
-          return FALSE;
+          ch->fixClientPlayerLists(false);
+          return false;
         }
       }
       break;
     case CLIENT_PROMPT:
-      send_client_prompt(FALSE, 16383);
+      send_client_prompt(false, 16383);
       break;
     case CLIENT_EXITS:
       send_client_exits();
@@ -786,7 +786,7 @@ int Descriptor::read_client(char* str2) {
 
         if (db.fetchRow()) {
           writeToQ("Account already exists, enter another name.\n\r");
-          return TRUE;
+          return true;
         }
       } else {
         account = new TAccount();
@@ -794,7 +794,7 @@ int Descriptor::read_client(char* str2) {
         strcpy(apassword, nextToken('|', 255, str2).c_str());
         if (bogusAccountName(aname)) {
           delete account;
-          account = NULL;
+          account = nullptr;
           clientf(
             format("%d|0|%d") % CLIENT_CHECKACCOUNTNAME % ERR_BADACCOUNT_NAME);
           break;
@@ -803,7 +803,7 @@ int Descriptor::read_client(char* str2) {
           account->term = TERM_NONE;
           plr_act = PLR_COLOR;
           account->login = time(0);
-          account->status = FALSE;
+          account->status = false;
           account->desc = this;
           strcpy(pwd, account->passwd.c_str());
         } else
@@ -811,14 +811,14 @@ int Descriptor::read_client(char* str2) {
 
         if (!*pwd) {
           delete account;
-          account = NULL;
+          account = nullptr;
           clientf(format("%d|0|%d") % CLIENT_CHECKACCOUNTNAME %
                   ERR_BADACCOUNT_PASSWORD);
         }
         crypted = (char*)crypt(apassword, pwd);
         if (strncmp(crypted, pwd, 10)) {
           delete account;
-          account = NULL;
+          account = nullptr;
           clientf(format("%d|0|%d") % CLIENT_CHECKACCOUNTNAME %
                   ERR_BADACCOUNT_PASSWORD);
         }
@@ -871,7 +871,7 @@ int Descriptor::read_client(char* str2) {
           return DELETE_THIS;
         }
 
-        account->status = TRUE;
+        account->status = true;
         if (!IS_SET(account->flags, TAccount::BOSS)) {}
         clientf(format("%d|1") % CLIENT_CHECKACCOUNTNAME);
       }
@@ -893,21 +893,21 @@ int Descriptor::read_client(char* str2) {
 
       account = new TAccount;
       // Does account exist or is it a bogus name? This function will return
-      // TRUE is so
-      if (checkForAccount(aname, TRUE)) {
+      // true is so
+      if (checkForAccount(aname, true)) {
         clientf(format("%d|Account name already exists! Please try another.") %
                 CLIENT_ERROR);
         delete account;
-        account = NULL;
-        return FALSE;
+        account = nullptr;
+        return false;
       }
       if (strlen(aname) >= 10) {
         clientf(format("%d|Account name must be less than 10 characters! Try "
                        "another name please.") %
                 CLIENT_ERROR);
         delete account;
-        account = NULL;
-        return FALSE;
+        account = nullptr;
+        return false;
       }
       account->name = aname;
 
@@ -915,21 +915,21 @@ int Descriptor::read_client(char* str2) {
         clientf(format("%d|Password must be longer than 5 characters.") %
                 CLIENT_ERROR);
         delete account;
-        account = NULL;
-        return FALSE;
+        account = nullptr;
+        return false;
       } else if (strlen(apassword) > 10) {
         clientf(format("%d|Password must be shorter than 10 characters.") %
                 CLIENT_ERROR);
         delete account;
-        account = NULL;
-        return FALSE;
+        account = nullptr;
+        return false;
       }
       if (!sstring(apassword).hasDigit()) {
         clientf(format("%d|Password must contain at least 1 numerical digit.") %
                 CLIENT_ERROR);
         delete account;
-        account = NULL;
-        return FALSE;
+        account = nullptr;
+        return false;
       }
       crypted = (char*)crypt(apassword, account->name.c_str());
       account->passwd = sstring(crypted).substr(0, 10);
@@ -939,8 +939,8 @@ int Descriptor::read_client(char* str2) {
                        "tests, please try another one.") %
                 CLIENT_ERROR);
         delete account;
-        account = NULL;
-        return FALSE;
+        account = nullptr;
+        return false;
       }
       account->email = email;
 
@@ -951,8 +951,8 @@ int Descriptor::read_client(char* str2) {
             "%d|Invalid timezone please enter a number between 23 and -23!") %
           CLIENT_ERROR);
         delete account;
-        account = NULL;
-        return FALSE;
+        account = nullptr;
+        return false;
       }
       account->time_adjust = convertTo<int>(timezone);
 
@@ -978,7 +978,7 @@ int Descriptor::read_client(char* str2) {
       vlogf(LOG_CLIENT, format("Bad type in read_client (%d)") % type);
       break;
   }
-  return TRUE;
+  return true;
 }
 
 void stripFrontBytes(char* s, int num) {
@@ -990,14 +990,14 @@ void stripFrontBytes(char* s, int num) {
 
 bool is_client_sstring(char* str) {
   if (!str || !*str)
-    return FALSE;
+    return false;
 
   if (((ubyte)*str) != ((ubyte)CLIENT_CODE_CHAR))
-    return FALSE;
+    return false;
 
   stripFrontBytes(str, 1);
 
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_THIS
@@ -1032,17 +1032,17 @@ int Descriptor::client_nanny(char* arg) {
                    "create a new account.|%d") %
             CLIENT_ERROR % account->name % ERR_BAD_NAME);
     delete account;
-    account = NULL;
-    return FALSE;
+    account = nullptr;
+    return false;
   }
   crypted = (char*)crypt(passwd, pwd);
   if (strncmp(crypted, pwd, 10)) {
     clientf(format("%d|Incorrect password.|%d") % CLIENT_ERROR % ERR_BAD_NAME);
     delete account;
-    account = NULL;
-    return FALSE;
+    account = nullptr;
+    return false;
   }
-  account->status = TRUE;
+  account->status = true;
 
 #if 1
   // the non-client side presumes that character is ALWAYS newed and then
@@ -1066,7 +1066,7 @@ int Descriptor::client_nanny(char* arg) {
     // but this means character_list assumes presence
     // temporarily shove them into the char_list, and delete will
     // remove them
-    character->desc = NULL;
+    character->desc = nullptr;
     character->next = character_list;
     character_list = character;
 
@@ -1080,11 +1080,11 @@ int Descriptor::client_nanny(char* arg) {
     rp = real_roomp(Room::VOID);
     *rp += *character;
     delete character;
-    character = NULL;
+    character = nullptr;
     delete account;
-    account = NULL;
+    account = nullptr;
     outputProcessing();
-    return FALSE;
+    return false;
   }
   if (load_char(tmp_name, &st)) {
     dynamic_cast<TPerson*>(character)->loadFromDb(tmp_name);
@@ -1099,7 +1099,7 @@ int Descriptor::client_nanny(char* arg) {
     // but this means character_list assumes presence
     // temporarily shove them into the char_list, and delete will
     // remove them
-    character->desc = NULL;
+    character->desc = nullptr;
     character->next = character_list;
     character_list = character;
 
@@ -1113,10 +1113,10 @@ int Descriptor::client_nanny(char* arg) {
     rp = real_roomp(Room::VOID);
     *rp += *character;
     delete character;
-    character = NULL;
+    character = nullptr;
     delete account;
-    account = NULL;
-    return FALSE;
+    account = nullptr;
+    return false;
   }
   if (account->name != st.aname) {
     clientf(format("%d|That character isn't in the listed account.|%d") %
@@ -1130,7 +1130,7 @@ int Descriptor::client_nanny(char* arg) {
     // but this means character_list assumes presence
     // temporarily shove them into the char_list, and delete will
     // remove them
-    character->desc = NULL;
+    character->desc = nullptr;
     character->next = character_list;
     character_list = character;
 
@@ -1144,10 +1144,10 @@ int Descriptor::client_nanny(char* arg) {
     rp = real_roomp(Room::VOID);
     *rp += *character;
     delete character;
-    character = NULL;
+    character = nullptr;
     delete account;
-    account = NULL;
-    return FALSE;
+    account = nullptr;
+    return false;
   }
   if (WizLock) {
     // this may need better handling to let wizs in, but, oh well
@@ -1167,7 +1167,7 @@ int Descriptor::client_nanny(char* arg) {
       writeToQ("Name -> ");
 
       // copied from above
-      character->desc = NULL;
+      character->desc = nullptr;
       character->next = character_list;
       character_list = character;
 
@@ -1175,7 +1175,7 @@ int Descriptor::client_nanny(char* arg) {
 
       delete character;
       character = new TPerson(this);
-      return FALSE;
+      return false;
     }
   }
   character->loadAliases();
@@ -1186,12 +1186,12 @@ int Descriptor::client_nanny(char* arg) {
       if (k->original) {
         if (boost::iequals(k->original->getName(), character->getName())) {
           clientf(format("%d") % CLIENT_CONNECTED);
-          return FALSE;
+          return false;
         }
       } else {
         if (boost::iequals(k->character->getName(), character->getName())) {
           clientf(format("%d") % CLIENT_CONNECTED);
-          return FALSE;
+          return false;
         }
       }
     }
@@ -1214,7 +1214,7 @@ int Descriptor::client_nanny(char* arg) {
       // into character_list removal logic inside ~TBeing.  Since we're
       // not actually in the char_list yet, it crashes.  Just insert myself
       // temporarily to bypass this.
-      character->desc = NULL;
+      character->desc = nullptr;
       character->next = character_list;
       character_list = character;
 
@@ -1236,8 +1236,8 @@ int Descriptor::client_nanny(char* arg) {
       flush();
 
       writeToQ("Reconnecting character...\n\r");
-      send_client_prompt(TRUE, 16383);
-      clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
+      send_client_prompt(true, 16383);
+      clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % true);
       if (tmp_ch->getCombatMode() == ATTACK_NORMAL)
         clientf(format("%d") % CLIENT_NORMAL);
       if (tmp_ch->getCombatMode() == ATTACK_OFFENSE)
@@ -1258,9 +1258,9 @@ int Descriptor::client_nanny(char* arg) {
             format("%s[%s] has reconnected (client 2)  (account: %s).") %
               character->getName() % host % account->name);
         }
-        dynamic_cast<TPerson*>(character)->saveRent(FALSE, 1);
+        dynamic_cast<TPerson*>(character)->saveRent(false, 1);
       }
-      act("$n has reconnected.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+      act("$n has reconnected.", true, tmp_ch, 0, 0, TO_ROOM);
       tmp_ch->loadCareerStats();
       tmp_ch->loadDrugStats();
       tmp_ch->loadGuildStats();
@@ -1273,7 +1273,7 @@ int Descriptor::client_nanny(char* arg) {
         if (rc) {
           // disconnect, but don't cause character to be deleted
           // do this by disassociating character from descriptor
-          character = NULL;
+          character = nullptr;
 
           return DELETE_THIS;
         }
@@ -1282,8 +1282,8 @@ int Descriptor::client_nanny(char* arg) {
       if (tmp_ch->hasClass(CLASS_CLERIC) || tmp_ch->hasClass(CLASS_DEIKHAN))
         clientf(format("%d") % CLIENT_PIETY);
 
-      tmp_ch->fixClientPlayerLists(FALSE);
-      return FALSE;
+      tmp_ch->fixClientPlayerLists(false);
+      return false;
     }
   }
   if (should_be_logged(character)) {
@@ -1300,7 +1300,7 @@ int Descriptor::client_nanny(char* arg) {
   if (character->hasClass(CLASS_CLERIC) || character->hasClass(CLASS_DEIKHAN))
     clientf(format("%d") % CLIENT_PIETY);
 
-  clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % TRUE);
+  clientf(format("%d|%d") % CLIENT_ENABLEWINDOW % true);
   if (character->getCombatMode() == ATTACK_NORMAL)
     clientf(format("%d") % CLIENT_NORMAL);
   if (character->getCombatMode() == ATTACK_OFFENSE)
@@ -1314,9 +1314,9 @@ int Descriptor::client_nanny(char* arg) {
 
   character->doLook("", CMD_LOOK);
   prompt_mode = 1;
-  character->fixClientPlayerLists(FALSE);
+  character->fixClientPlayerLists(false);
   dynamic_cast<TPerson*>(character)->fixPracs();
-  return TRUE;
+  return true;
 }
 
 sstring WhoListComm::getText() { return ""; }
@@ -1390,12 +1390,12 @@ void processStringForClient(sstring& sb) {
 
 int TBeing::doClientMessage(const char* arg) {
   if (!desc)
-    return FALSE;
+    return false;
 
 #if 0
   if (!desc->m_bIsClient) {
     sendTo("This command is only available for users of the SneezyMUD client (http://sneezy.saw.net/client).\n\r");
-    return FALSE;
+    return false;
   }
 #endif
   Descriptor* i;
@@ -1407,7 +1407,7 @@ int TBeing::doClientMessage(const char* arg) {
         format("<p>CLIENT<1> (%s): %s\n\r") % getName() % arg);
   }
   sendTo(COLOR_COMM, format("<p>CLIENT<1>: %s\n\r") % arg);
-  return TRUE;
+  return true;
 }
 
 int Descriptor::clientCreateAccount(char* arg) {
@@ -1440,7 +1440,7 @@ int Descriptor::clientCreateAccount(char* arg) {
   if (!account->write(account->name)) {
     vlogf(LOG_CLIENT,
       format("Big problems in saveAccount (s)") % account->name.lower());
-    return FALSE;
+    return false;
   }
 
   AccountStats::account_number++;
@@ -1448,7 +1448,7 @@ int Descriptor::clientCreateAccount(char* arg) {
   vlogf(LOG_MISC, format("New Client Account: '%s' with email '%s'") %
                     account->name % account->email);
 
-  return TRUE;
+  return true;
 }
 
 int Descriptor::clientCreateChar(char* arg) {
@@ -1460,32 +1460,32 @@ int Descriptor::clientCreateChar(char* arg) {
   strcpy(dummy, nextToken('|', 20, arg).c_str());
   // Create the actual TPerson
   ch = new TPerson(this);
-  mud_assert(ch != NULL, "Mem alloc problem");
+  mud_assert(ch != nullptr, "Mem alloc problem");
 
   // Name
   if (_parse_name(dummy, tmp_name)) {
     clientf(format("%d|Name contains illegal characters!|%d") % CLIENT_ERROR %
             ERR_BAD_NAME);
-    ch->desc = NULL;
+    ch->desc = nullptr;
     ch->next = character_list;
     character_list = ch;
 
     TRoom* rp = real_roomp(Room::VOID);
     *rp += *ch;
     delete ch;
-    return FALSE;
+    return false;
   }
   if (checkForCharacter(tmp_name)) {
     clientf(format("%d|Character already exists with name provided|%d") %
             CLIENT_ERROR % ERR_BAD_NAME);
-    ch->desc = NULL;
+    ch->desc = nullptr;
     ch->next = character_list;
     character_list = ch;
 
     TRoom* rp = real_roomp(Room::VOID);
     *rp += *ch;
     delete ch;
-    return FALSE;
+    return false;
   }
 
   ch->name = sstring(tmp_name).cap();
@@ -1618,7 +1618,7 @@ int Descriptor::clientCreateChar(char* arg) {
       // Send Client error message
       break;
   }
-  character = NULL;
+  character = nullptr;
 
   // Stats
 
@@ -1646,14 +1646,14 @@ int Descriptor::clientCreateChar(char* arg) {
     clientf(format("%d|Stats do not add up to 0. Email being sent to Brutius "
                    "to alert of possible client hack.|%d") %
             CLIENT_ERROR % ERR_BAD_STAT);
-    ch->desc = NULL;
+    ch->desc = nullptr;
     ch->next = character_list;
     character_list = ch;
 
     TRoom* rp = real_roomp(Room::VOID);
     *rp += *ch;
     delete ch;
-    return FALSE;
+    return false;
   }
 
   // Things done on ENTER_DONE
@@ -1673,7 +1673,7 @@ int Descriptor::clientCreateChar(char* arg) {
   connected = oldconnected;
   dynamic_cast<TPerson*>(ch)->dropItemsToRoom(SAFE_YES, NUKE_ITEMS);
 
-  ch->desc = NULL;
+  ch->desc = nullptr;
   ch->next = character_list;
   character_list = ch;
 
@@ -1681,6 +1681,6 @@ int Descriptor::clientCreateChar(char* arg) {
   *rp += *ch;
   delete ch;
   delete account;
-  account = NULL;
-  return TRUE;
+  account = nullptr;
+  return true;
 }

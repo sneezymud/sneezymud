@@ -6,12 +6,12 @@
 int TBeing::doRally() {
   if (!doesKnowSkill(SKILL_RALLY)) {
     sendTo("You know nothing about motivational speaking.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (affectedBySpell(SKILL_RALLY)) {
     sendTo("You are still recovering from your last rallying cry.\n\r");
-    return FALSE;
+    return false;
   }
 
   int castLevel = getSkillLevel(SKILL_RALLY);
@@ -21,10 +21,10 @@ int TBeing::doRally() {
 
   // Skill failure
   if (!successfulSkill) {
-    act("Your half-hearted battlecry fails to motivate your allies.", FALSE,
-      this, NULL, NULL, TO_CHAR);
-    act("$n attempts a rally battlecry but fails to motivate anyone.", FALSE,
-      this, NULL, NULL, TO_ROOM);
+    act("Your half-hearted battlecry fails to motivate your allies.", false,
+      this, nullptr, nullptr, TO_CHAR);
+    act("$n attempts a rally battlecry but fails to motivate anyone.", false,
+      this, nullptr, nullptr, TO_ROOM);
 
     // Apply a lockout buff on the caster
     affectedData aff1;
@@ -34,16 +34,16 @@ int TBeing::doRally() {
     aff1.bitvector = 0;
     affectTo(&aff1, -1);
 
-    return FALSE;
+    return false;
   }
 
   // Skill success
   act("You bellow a warcry, encouraging your allies to continue the battle!",
-    FALSE, this, NULL, NULL, TO_CHAR);
+    false, this, nullptr, nullptr, TO_CHAR);
   act(
     "$n bellows a motivational warcry, encouraging $s allies to continue the "
     "battle!",
-    FALSE, this, NULL, NULL, TO_ROOM);
+    false, this, nullptr, nullptr, TO_ROOM);
 
   // Max HP
   affectedData aff1;
@@ -77,5 +77,5 @@ int TBeing::doRally() {
   }
   // end loop
 
-  return TRUE;
+  return true;
 }

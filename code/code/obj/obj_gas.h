@@ -52,8 +52,8 @@ class TGas : public TMergeable {
       return creator.find(s) != sstring::npos;
     }
     TBeing* getCreatedBy() const {
-      return get_pc_world(NULL, creator.substr(0, creator.find(",")), EXACT_YES,
-        INFRA_NO, FALSE);
+      return get_pc_world(nullptr, creator.substr(0, creator.find(",")), EXACT_YES,
+        INFRA_NO, false);
     }
 
   protected:

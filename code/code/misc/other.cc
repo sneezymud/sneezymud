@@ -80,26 +80,26 @@ void TBeing::doGuard(const sstring& argument) {
 
   if (argument.empty()) {
     if (IS_SET(specials.act, ACT_GUARDIAN)) {
-      act("$n relaxes.", FALSE, this, 0, 0, TO_ROOM);
+      act("$n relaxes.", false, this, 0, 0, TO_ROOM);
       sendTo("You relax.\n\r");
       REMOVE_BIT(specials.act, ACT_GUARDIAN);
     } else {
       SET_BIT(specials.act, ACT_GUARDIAN);
-      act("$n alertly watches you.", FALSE, this, 0, master, TO_VICT);
-      act("$n alertly watches $N.", FALSE, this, 0, master, TO_NOTVICT);
+      act("$n alertly watches you.", false, this, 0, master, TO_VICT);
+      act("$n alertly watches $N.", false, this, 0, master, TO_NOTVICT);
       sendTo("You snap to attention.\n\r");
     }
   } else {
     if (argument.lower() == "on") {
       if (!IS_SET(specials.act, ACT_GUARDIAN)) {
         SET_BIT(specials.act, ACT_GUARDIAN);
-        act("$n alertly watches you.", FALSE, this, 0, master, TO_VICT);
-        act("$n alertly watches $N.", FALSE, this, 0, master, TO_NOTVICT);
+        act("$n alertly watches you.", false, this, 0, master, TO_VICT);
+        act("$n alertly watches $N.", false, this, 0, master, TO_NOTVICT);
         sendTo("You snap to attention.\n\r");
       }
     } else if (argument.lower() == "off") {
       if (IS_SET(specials.act, ACT_GUARDIAN)) {
-        act("$n relaxes.", FALSE, this, 0, 0, TO_ROOM);
+        act("$n relaxes.", false, this, 0, 0, TO_ROOM);
         sendTo("You relax.\n\r");
         REMOVE_BIT(specials.act, ACT_GUARDIAN);
       }
@@ -119,9 +119,9 @@ static void junkBeing(TBeing* ch, TThing* o, race_t ract) {
     case RACE_TROLL:
     case RACE_GOLEM:
     case RACE_MINOTAUR:
-      act("You rip $p limb by limb and thrash the pieces.", TRUE, ch, o, NULL,
+      act("You rip $p limb by limb and thrash the pieces.", true, ch, o, nullptr,
         TO_CHAR);
-      act("$n rips $p limb by limb and thrashes the pieces.", TRUE, ch, o, NULL,
+      act("$n rips $p limb by limb and thrashes the pieces.", true, ch, o, nullptr,
         TO_ROOM);
       ch->dropPool(10, LIQ_BLOOD);
       break;
@@ -132,28 +132,28 @@ static void junkBeing(TBeing* ch, TThing* o, race_t ract) {
     case RACE_BEAR:
     case RACE_TIGER:
     case RACE_COUGAR:
-      act("Not wanting to waste good meat you devour $p.", TRUE, ch, o, NULL,
+      act("Not wanting to waste good meat you devour $p.", true, ch, o, nullptr,
         TO_CHAR);
-      act("$n devours $p without looking twice.", TRUE, ch, o, NULL, TO_ROOM);
+      act("$n devours $p without looking twice.", true, ch, o, nullptr, TO_ROOM);
       ch->dropPool(14, LIQ_BLOOD);
       break;
     case RACE_TYTAN:
-      act("You crumple up $p and cast it over your shoulder.", TRUE, ch, o,
-        NULL, TO_CHAR);
-      act("$n crumples up $p and throws it over $s shoulder.", TRUE, ch, o,
-        NULL, TO_ROOM);
+      act("You crumple up $p and cast it over your shoulder.", true, ch, o,
+        nullptr, TO_CHAR);
+      act("$n crumples up $p and throws it over $s shoulder.", true, ch, o,
+        nullptr, TO_ROOM);
       ch->dropPool(5, LIQ_BLOOD);
       break;
     default:
       if (ch->isImmortal()) {
-        act("You throw $p into the air and disintegrate it.", TRUE, ch, o, NULL,
+        act("You throw $p into the air and disintegrate it.", true, ch, o, nullptr,
           TO_CHAR);
-        act("$n throws $p into the air and disintegrates it.", TRUE, ch, o,
-          NULL, TO_ROOM);
+        act("$n throws $p into the air and disintegrates it.", true, ch, o,
+          nullptr, TO_ROOM);
       } else {
-        act("You trash $p, getting rid of any evidence.", TRUE, ch, o, NULL,
+        act("You trash $p, getting rid of any evidence.", true, ch, o, nullptr,
           TO_CHAR);
-        act("$n trashes $p, getting rid of any evidence.", TRUE, ch, o, NULL,
+        act("$n trashes $p, getting rid of any evidence.", true, ch, o, nullptr,
           TO_ROOM);
       }
       break;
@@ -168,7 +168,7 @@ int TBeing::doNoJunk(const char* argument, TObj* obj) {
   strcpy(arg, argument);
   if (!*arg && !obj) {
     sendTo("Set the nojunk flag on what?\n\r");
-    return FALSE;
+    return false;
   }
   if (!obj) {
     if (getall(arg, newarg)) {
@@ -185,7 +185,7 @@ int TBeing::doNoJunk(const char* argument, TObj* obj) {
   count = 0;
   while (num != 0) {
     o = obj;
-    TThing* t_o = NULL;
+    TThing* t_o = nullptr;
     if (!o) {
       t_o = searchLinkedListVis(this, arg, stuff);
       o = dynamic_cast<TObj*>(t_o);
@@ -193,11 +193,11 @@ int TBeing::doNoJunk(const char* argument, TObj* obj) {
     if (o) {
       if (o->isObjStat(ITEM_NOJUNK_PLAYER)) {
         o->remObjStat(ITEM_NOJUNK_PLAYER);
-        act("You remove the no-junk flag from $p.", TRUE, this, o, NULL,
+        act("You remove the no-junk flag from $p.", true, this, o, nullptr,
           TO_CHAR);
       } else {
         o->addObjStat(ITEM_NOJUNK_PLAYER);
-        act("You set the no-junk flag on $p.", TRUE, this, o, NULL, TO_CHAR);
+        act("You set the no-junk flag on $p.", true, this, o, nullptr, TO_CHAR);
       }
       count++;
       if (num > 0)
@@ -209,22 +209,22 @@ int TBeing::doNoJunk(const char* argument, TObj* obj) {
       break;
   }
   if (count)
-    return TRUE;
+    return true;
 
   sendTo("No-Junk what?\n\r");
-  return FALSE;
+  return false;
 }
 
 int TBeing::doJunk(const char* argument, TObj* obj) {
   char arg[100], newarg[100];
   TObj* o;
   int num, p, count;
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   strcpy(arg, argument);
   if (!*arg && !obj) {
     sendTo("Junk what?\n\r");
-    return FALSE;
+    return false;
   }
   if (!obj) {
     if (getall(arg, newarg)) {
@@ -241,7 +241,7 @@ int TBeing::doJunk(const char* argument, TObj* obj) {
   count = 0;
   while (num != 0) {
     o = obj;
-    TThing* t_o = NULL;
+    TThing* t_o = nullptr;
     if (!o) {
       t_o = searchLinkedListVis(this, arg, stuff);
       o = dynamic_cast<TObj*>(t_o);
@@ -251,19 +251,19 @@ int TBeing::doJunk(const char* argument, TObj* obj) {
         sendTo(
           "You can't junk that, someone has set a no-junk flag on it!  HELP "
           "NOJUNK\n\r");
-        return FALSE;
+        return false;
       }
       if (o->isObjStat(ITEM_NODROP)) {
         sendTo("You can't let go of it, it must be CURSED!\n\r");
-        return FALSE;
+        return false;
       }
       if (o->isPersonalized()) {
         sendTo("Monogrammed items can't be junked.\n\r");
-        return FALSE;
+        return false;
       }
       if (!o->stuff.empty() && desc && (desc->autobits & AUTO_POUCH)) {
         sendTo("There is still stuff in there, you choose not to junk it.\n\r");
-        return FALSE;
+        return false;
       }
       for (StuffIter it = o->stuff.begin(); it != o->stuff.end() && (t = *it);
            ++it) {
@@ -273,12 +273,12 @@ int TBeing::doJunk(const char* argument, TObj* obj) {
         if (tobj->isObjStat(ITEM_NODROP)) {
           sendTo(
             "You can't let go of it, something inside it must be CURSED!\n\r");
-          return FALSE;
+          return false;
         }
         if (tobj->isPersonalized()) {
           sendTo(
             "There is a monogrammed item inside it which can't be junked.\n\r");
-          return FALSE;
+          return false;
         }
       }
       o->junkMe(this);
@@ -306,53 +306,53 @@ int TBeing::doJunk(const char* argument, TObj* obj) {
           case MAT_GHOSTLY:
           case MAT_DWARF_LEATHER:
           case MAT_SOFT_LEATHER:
-            act("You tear up $p then junk the strips.", TRUE, this, o, NULL,
+            act("You tear up $p then junk the strips.", true, this, o, nullptr,
               TO_CHAR);
-            act("$n tears up $p then junks the strips.", TRUE, this, o, NULL,
+            act("$n tears up $p then junks the strips.", true, this, o, nullptr,
               TO_ROOM);
             break;
           case MAT_PAPER:
-            act("You crumple up $p then cast it over your shoulder.", TRUE,
-              this, o, NULL, TO_CHAR);
-            act("$n crumples up $p then throws it over $s shoulder.", TRUE,
-              this, o, NULL, TO_ROOM);
+            act("You crumple up $p then cast it over your shoulder.", true,
+              this, o, nullptr, TO_CHAR);
+            act("$n crumples up $p then throws it over $s shoulder.", true,
+              this, o, nullptr, TO_ROOM);
             break;
           case MAT_GLASS:
           case MAT_CORAL:
           case MAT_ICE:
 
             if (this->roomp->isAirSector()) {
-              act("You thrown $p down to it's doom below.", TRUE, this, o, NULL,
+              act("You thrown $p down to it's doom below.", true, this, o, nullptr,
                 TO_CHAR);
-              act("$n throws $p to it's doom below.", TRUE, this, o, NULL,
+              act("$n throws $p to it's doom below.", true, this, o, nullptr,
                 TO_ROOM);
             } else if (this->roomp->isVertSector()) {
-              act("You smash $p against the wall.", TRUE, this, o, NULL,
+              act("You smash $p against the wall.", true, this, o, nullptr,
                 TO_CHAR);
-              act("$n smashes $p against the wall.", TRUE, this, o, NULL,
+              act("$n smashes $p against the wall.", true, this, o, nullptr,
                 TO_ROOM);
             } else {
-              act("You throw $p to the ground, shattering it.", TRUE, this, o,
-                NULL, TO_CHAR);
-              act("$n throws $p to the ground, shattering it.", TRUE, this, o,
-                NULL, TO_ROOM);
+              act("You throw $p to the ground, shattering it.", true, this, o,
+                nullptr, TO_CHAR);
+              act("$n throws $p to the ground, shattering it.", true, this, o,
+                nullptr, TO_ROOM);
             }
             break;
           case MAT_POWDER:
-            act("You cast $p to the wind, scattering it in the breeze.", TRUE,
-              this, o, NULL, TO_CHAR);
-            act("$n casts $p to the wind, scattering it in the breeze.", TRUE,
-              this, o, NULL, TO_ROOM);
+            act("You cast $p to the wind, scattering it in the breeze.", true,
+              this, o, nullptr, TO_CHAR);
+            act("$n casts $p to the wind, scattering it in the breeze.", true,
+              this, o, nullptr, TO_ROOM);
             break;
           default:
-            act("You junk $p.", TRUE, this, o, NULL, TO_CHAR);
-            act("$n junks $p.", TRUE, this, o, NULL, TO_ROOM);
+            act("You junk $p.", true, this, o, nullptr, TO_CHAR);
+            act("$n junks $p.", true, this, o, nullptr, TO_ROOM);
         }
       }
       count++;
       if (!obj) {
         delete o;
-        o = NULL;
+        o = nullptr;
       }
     } else if (t_o) {
       // a non obj, probably a being
@@ -361,8 +361,8 @@ int TBeing::doJunk(const char* argument, TObj* obj) {
       if (tb) {
         junkBeing(this, t_o, getRace());
       } else {
-        act("You junk $p.", TRUE, this, t_o, NULL, TO_CHAR);
-        act("$n junks $p.", TRUE, this, t_o, NULL, TO_ROOM);
+        act("You junk $p.", true, this, t_o, nullptr, TO_CHAR);
+        act("$n junks $p.", true, this, t_o, nullptr, TO_ROOM);
       }
 
       if (num > 0)
@@ -370,7 +370,7 @@ int TBeing::doJunk(const char* argument, TObj* obj) {
       count++;
 
       delete t_o;
-      t_o = NULL;
+      t_o = nullptr;
     } else
       break;
   }
@@ -378,7 +378,7 @@ int TBeing::doJunk(const char* argument, TObj* obj) {
     return DELETE_ITEM;
   else {
     sendTo("You don't have anything like that.\n\r");
-    return FALSE;
+    return false;
   }
 }
 
@@ -577,7 +577,7 @@ void TBeing::doReport(const char* argument) {
 
   TThing* t;
   int found = 0;
-  TBeing* targ = NULL;
+  TBeing* targ = nullptr;
 
   if (!roomp) {
     vlogf(LOG_BUG, format("Person %s in bad room in doReport!") % getName());
@@ -615,7 +615,7 @@ void TBeing::doReport(const char* argument) {
       continue;
     if (!found && tb->desc) {
       if (is_abbrev(target, tb->getName())) {
-        found = TRUE;
+        found = true;
         targ = tb;
       }
     }
@@ -632,11 +632,11 @@ void TBeing::doReport(const char* argument) {
 
     final = format("<G>$n directly reports to you '%s%s%s'<1>") % red() % Buf %
             norm();
-    colorAct(COLOR_COMM, final, FALSE, this, 0, targ, TO_VICT);
+    colorAct(COLOR_COMM, final, false, this, 0, targ, TO_VICT);
     disturbMeditation(targ);
   } else {
     final = format("$n reports '%s%s%s'") % red() % Buf % norm();
-    act(final, FALSE, this, 0, 0, TO_ROOM);
+    act(final, false, this, 0, 0, TO_ROOM);
     sendTo("You report your status to the room.\n\r");
   }
 }
@@ -659,7 +659,7 @@ void TPerson::doTitle(const char* argument) {
 
     // Basic name sake checks
     if (str.find("<n>") == sstring::npos &&
-        colorString(this, desc, argument, NULL, COLOR_NONE, TRUE)
+        colorString(this, desc, argument, nullptr, COLOR_NONE, true)
             .find(getNameNOC(this).c_str()) == sstring::npos) {
       sendTo(format("Your %s or <n> Must appear somewhere in here.\n\r") %
              getNameNOC(this));
@@ -677,7 +677,7 @@ void TPerson::doTitle(const char* argument) {
     }
 
     sstring stmp =
-      nameColorString(this, desc, str.c_str(), NULL, COLOR_BASIC, FALSE);
+      nameColorString(this, desc, str.c_str(), nullptr, COLOR_BASIC, false);
     stmp = stripColorCodes(stmp);
 
     if (stmp.length() > 79) {
@@ -707,7 +707,7 @@ void TBeing::doQuit() {
          blue() % norm());
 }
 
-int TMonster::doQuit2() { return FALSE; }
+int TMonster::doQuit2() { return false; }
 
 int TPerson::doQuit2() {
   int rc;
@@ -716,11 +716,11 @@ int TPerson::doQuit2() {
   doSave(SILENT_YES);
 
   if (!desc || isAffected(AFF_CHARM))
-    return FALSE;
+    return false;
 
   if (fight()) {
     sendTo("No way! You are fighting.\n\r");
-    return FALSE;
+    return false;
   }
   if (getPosition() < POSITION_STUNNED) {
     sendTo("You die before your time!\n\r");
@@ -733,8 +733,8 @@ int TPerson::doQuit2() {
   }
   cls();
 
-  act("Goodbye, friend.. Come back soon!", FALSE, this, 0, 0, TO_CHAR);
-  act("$n has left the game.", TRUE, this, 0, 0, TO_ROOM);
+  act("Goodbye, friend.. Come back soon!", false, this, 0, 0, TO_CHAR);
+  act("$n has left the game.", true, this, 0, 0, TO_ROOM);
   vlogf(LOG_PIO, format("%s quit the game at %s (%d).") % getName() %
                    roomp->name % inRoom());
   if (!isImmortal() && getMoney()) {
@@ -771,7 +771,7 @@ void TBeing::verifyWeightVolume() {
       if (dynamic_cast<TComponent *>(t2) &&
           dynamic_cast<TSpellBag *>(t))
         continue;
-      bw += t2->getTotalWeight(TRUE);
+      bw += t2->getTotalWeight(true);
       bv += t2->getTotalVolume();
     }
     if (compareWeights(bw, t->getCarriedWeight()) != 0) {
@@ -779,7 +779,7 @@ void TBeing::verifyWeightVolume() {
       // skip volume check since expansion can be screwy
       t->setCarriedWeight(bw);
     }
-    rw += t->getTotalWeight(TRUE);
+    rw += t->getTotalWeight(true);
     rv += t->getTotalVolume();
   }
   if ((compareWeights(rw, getCarriedWeight()) != 0) ||
@@ -982,21 +982,21 @@ void TBeing::doPractice(const char* argument) {
     }
     return;
   }
-  bool found = FALSE;
-  bool match = FALSE;
-  classNum = FALSE;
+  bool found = false;
+  bool match = false;
+  classNum = false;
 
   discNumT dnt = DISC_NONE;
   for (i = MIN_DISC; i < MAX_DISCS; i++) {
     strcpy(skillbuf, discNames[i].name);
     classNum = discNames[i].class_num;
     if (is_abbrev(arg, skillbuf, MULTIPLE_YES)) {
-      match = TRUE;
+      match = true;
       if (classNum && !hasClass(classNum))
         continue;
       else {
         dnt = discNames[i].disc_num;
-        found = TRUE;
+        found = true;
         break;
       }
     }
@@ -1065,7 +1065,7 @@ void TBeing::sendSkillsList(discNumT which) {
   unsigned int j;
   for (j = 0; j < sortDiscVec.size(); j++) {
     i = sortDiscVec[j].theSkill;
-    das = getDisciplineNumber(i, FALSE);
+    das = getDisciplineNumber(i, false);
     if (das == DISC_NONE) {
       vlogf(LOG_BUG, format("Bad disc for skill %d in doPractice") % i);
       continue;
@@ -1266,7 +1266,7 @@ void TBeing::sendSkillsList(discNumT which) {
         sprintf(buf,
           "%s%-22.22s%s Disc:[%3d] SkNum:[%3d] Learn:[%3d/%2d/%2d] Diff:%s\n\r",
           cyan(), discArray[i]->name, norm(),
-          mapDiscToFile(discNumT(getDisciplineNumber(i, FALSE))), i,
+          mapDiscToFile(discNumT(getDisciplineNumber(i, false))), i,
           discArray[i]->learn, discArray[i]->startLearnDo,
           discArray[i]->amtLearnDo, displayDifficulty(i).c_str());
       else
@@ -1286,10 +1286,10 @@ void TBeing::sendSkillsList(discNumT which) {
 void TBeing::doPracSkill(const char* argument, spellNumT skNum) {
   spellNumT skill = TYPE_UNDEFINED;
   int found = 0;
-  int wiz = FALSE;
+  int wiz = false;
   char buf[256];
   char how_long[256];
-  int tmp_var = FALSE;
+  int tmp_var = false;
   CDiscipline* cd;
   discNumT das;
 
@@ -1373,7 +1373,7 @@ void TBeing::doPracSkill(const char* argument, spellNumT skNum) {
     return;
   }
 
-  das = getDisciplineNumber(skNum, FALSE);
+  das = getDisciplineNumber(skNum, false);
   if (das == DISC_NONE) {
     vlogf(LOG_BUG, format("Bad disc for skill %d in doPracSkill") % skNum);
     return;
@@ -1588,8 +1588,8 @@ void TBeing::doGroup(const char* argument, bool silent) {
   char buf[256];
   TBeing *victim, *k;
   followData* f;
-  int found = FALSE;
-  TThing* t = NULL;
+  int found = false;
+  TThing* t = nullptr;
   int tmp_share;
 
   argument = one_argument(argument, namebuf, cElements(namebuf));
@@ -1887,31 +1887,31 @@ void TBeing::doGroup(const char* argument, bool silent) {
       }
       if (isPlayerAction(PLR_GRPQUEST)) {
         if (!victim->isPlayerAction(PLR_GRPQUEST)) {
-          act("$N isn't on your quest, you can't group with $M.", TRUE, this, 0,
+          act("$N isn't on your quest, you can't group with $M.", true, this, 0,
             victim, TO_CHAR);
           continue;
         }
       }
       if (victim == this) {
         sendTo("You group yourself.\n\r");
-        act("$n groups $mself.", TRUE, this, 0, 0, TO_ROOM);
+        act("$n groups $mself.", true, this, 0, 0, TO_ROOM);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
         int mana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
         if (desc && (desc->m_bIsClient ||
                       IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
           desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-                        colorString(desc->character, desc, getName(), NULL,
-                          COLOR_NONE, FALSE) %
+                        colorString(desc->character, desc, getName(), nullptr,
+                          COLOR_NONE, false) %
                         getHit() % mana % attack_modes[getCombatMode()]);
         if (victim->desc)
           victim->desc->session.group_share = 1;
 
-        found = TRUE;
+        found = true;
         continue;
       } else if (victim->master == this) {
         sendTo(COLOR_MOBS,
           format("You add %s to your group.\n\r") % victim->getName());
-        act("$n adds $N to $s group.", TRUE, this, 0, victim, TO_NOTVICT);
+        act("$n adds $N to $s group.", true, this, 0, victim, TO_NOTVICT);
         victim->sendTo(COLOR_MOBS,
           format("You are now a member of %s's group.\n\r") % getName());
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
@@ -1920,7 +1920,7 @@ void TBeing::doGroup(const char* argument, bool silent) {
                       IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
           desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                         colorString(desc->character, desc, victim->getName(),
-                          NULL, COLOR_NONE, FALSE) %
+                          nullptr, COLOR_NONE, false) %
                         victim->getHit() % mana %
                         attack_modes[victim->getCombatMode()]);
 
@@ -1931,20 +1931,20 @@ void TBeing::doGroup(const char* argument, bool silent) {
             int folMana = hasClass(CLASS_SHAMAN) ? victim->getLifeforce()
                                                  : victim->getMana();
             b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
-                             colorString(b, b->desc, victim->getName(), NULL,
-                               COLOR_NONE, FALSE) %
+                             colorString(b, b->desc, victim->getName(), nullptr,
+                               COLOR_NONE, false) %
                              victim->getHit() % folMana %
                              attack_modes[victim->getCombatMode()]);
           }
         }
-        found = TRUE;
+        found = true;
         if (victim->desc) {
           int victMana = hasClass(CLASS_SHAMAN) ? getLifeforce() : getMana();
           if (victim->desc->m_bIsClient ||
               IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT))
             victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                                   colorString(victim, victim->desc, getName(),
-                                    NULL, COLOR_NONE, FALSE) %
+                                    nullptr, COLOR_NONE, false) %
                                   getHit() % victMana %
                                   attack_modes[getCombatMode()]);
           victim->desc->session.group_share = 1;
@@ -2000,14 +2000,14 @@ void TBeing::doGroup(const char* argument, bool silent) {
         sendTo("You must first group yourself to group others.\n\r");
       return;
     }
-    found = FALSE;
+    found = false;
 
     if (victim == this)
-      found = TRUE;
+      found = true;
     else {
       for (f = followers; f; f = f->next) {
         if (f->follower == victim) {
-          found = TRUE;
+          found = true;
           break;
         }
       }
@@ -2017,7 +2017,7 @@ void TBeing::doGroup(const char* argument, bool silent) {
         if (victim == this) {
           if (followers) {
             act("$n ungroups $mself, causing the whole group to be disbanded.",
-              FALSE, this, 0, NULL, TO_ROOM);
+              false, this, 0, nullptr, TO_ROOM);
             sendTo(
               "You ungroup yourself causing the rest of the group to be "
               "ungrouped.\n\r");
@@ -2054,13 +2054,13 @@ void TBeing::doGroup(const char* argument, bool silent) {
           }
         } else {
           if (victim->fight()) {
-            act("You can't ungroup $N while $E is fighting.", FALSE, this, 0,
+            act("You can't ungroup $N while $E is fighting.", false, this, 0,
               victim, TO_CHAR);
             return;
           }
-          act("$n has been kicked out of $N's group!", FALSE, victim, 0, this,
+          act("$n has been kicked out of $N's group!", false, victim, 0, this,
             TO_ROOM);
-          act("You are no longer a member of $N's group!", FALSE, victim, 0,
+          act("You are no longer a member of $N's group!", false, victim, 0,
             this, TO_CHAR);
           REMOVE_BIT(victim->specials.affectedBy, AFF_GROUP);
           if (victim->desc) {
@@ -2078,30 +2078,30 @@ void TBeing::doGroup(const char* argument, bool silent) {
                 f->follower->desc->clientf(
                   format("%d|%s") % CLIENT_GROUPDELETE %
                   colorString(f->follower, f->follower->desc, victim->getName(),
-                    NULL, COLOR_NONE, FALSE));
+                    nullptr, COLOR_NONE, false));
             }
           }
           if (desc && (desc->m_bIsClient ||
                         IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
             desc->clientf(format("%d|%s") % CLIENT_GROUPDELETE %
-                          colorString(this, desc, victim->getName(), NULL,
-                            COLOR_NONE, FALSE));
+                          colorString(this, desc, victim->getName(), nullptr,
+                            COLOR_NONE, false));
         }
       } else {
         if (fight()) {
           if (!silent)
-            act("Not while fighting.", FALSE, this, 0, victim, TO_CHAR);
+            act("Not while fighting.", false, this, 0, victim, TO_CHAR);
           return;
         }
         if (victim->fight()) {
           if (!silent)
-            act("You can't group $N while $E is fighting.", FALSE, this, 0,
+            act("You can't group $N while $E is fighting.", false, this, 0,
               victim, TO_CHAR);
           return;
         }
-        act("$n is now a member of $N's group.", FALSE, victim, 0, this,
+        act("$n is now a member of $N's group.", false, victim, 0, this,
           TO_ROOM);
-        act("You are now a member of $N's group.", FALSE, victim, 0, this,
+        act("You are now a member of $N's group.", false, victim, 0, this,
           TO_CHAR);
         SET_BIT(victim->specials.affectedBy, AFF_GROUP);
         if (hasClass(CLASS_SHAMAN)) {
@@ -2109,7 +2109,7 @@ void TBeing::doGroup(const char* argument, bool silent) {
                         IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
             desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                           colorString(desc->character, desc, victim->getName(),
-                            NULL, COLOR_NONE, FALSE) %
+                            nullptr, COLOR_NONE, false) %
                           victim->getHit() % victim->getLifeforce() %
                           attack_modes[victim->getCombatMode()]);
         } else {
@@ -2117,7 +2117,7 @@ void TBeing::doGroup(const char* argument, bool silent) {
                         IS_SET(desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
             desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                           colorString(desc->character, desc, victim->getName(),
-                            NULL, COLOR_NONE, FALSE) %
+                            nullptr, COLOR_NONE, false) %
                           victim->getHit() % victim->getMana() %
                           attack_modes[victim->getCombatMode()]);
         }
@@ -2131,14 +2131,14 @@ void TBeing::doGroup(const char* argument, bool silent) {
                 victim->desc->clientf(format("%d|%s|%d|%d|%s") %
                                       CLIENT_GROUPADD %
                                       colorString(victim, victim->desc,
-                                        b->getName(), NULL, COLOR_NONE, FALSE) %
+                                        b->getName(), nullptr, COLOR_NONE, false) %
                                       b->getHit() % b->getLifeforce() %
                                       attack_modes[b->getCombatMode()]);
               } else {
                 victim->desc->clientf(format("%d|%s|%d|%d|%s") %
                                       CLIENT_GROUPADD %
                                       colorString(victim, victim->desc,
-                                        b->getName(), NULL, COLOR_NONE, FALSE) %
+                                        b->getName(), nullptr, COLOR_NONE, false) %
                                       b->getHit() % b->getMana() %
                                       attack_modes[b->getCombatMode()]);
               }
@@ -2149,13 +2149,13 @@ void TBeing::doGroup(const char* argument, bool silent) {
               if (hasClass(CLASS_SHAMAN)) {
                 b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                                  colorString(b, b->desc, victim->getName(),
-                                   NULL, COLOR_NONE, FALSE) %
+                                   nullptr, COLOR_NONE, false) %
                                  victim->getHit() % victim->getLifeforce() %
                                  attack_modes[victim->getCombatMode()]);
               } else {
                 b->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                                  colorString(b, b->desc, victim->getName(),
-                                   NULL, COLOR_NONE, FALSE) %
+                                   nullptr, COLOR_NONE, false) %
                                  victim->getHit() % victim->getMana() %
                                  attack_modes[victim->getCombatMode()]);
               }
@@ -2169,7 +2169,7 @@ void TBeing::doGroup(const char* argument, bool silent) {
                   IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
               victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                                     colorString(victim, victim->desc, getName(),
-                                      NULL, COLOR_NONE, FALSE) %
+                                      nullptr, COLOR_NONE, false) %
                                     getHit() % getLifeforce() %
                                     attack_modes[getCombatMode()]);
             victim->desc->session.group_share = 1;
@@ -2179,7 +2179,7 @@ void TBeing::doGroup(const char* argument, bool silent) {
                   IS_SET(victim->desc->prompt_d.type, PROMPT_CLIENT_PROMPT)))
               victim->desc->clientf(format("%d|%s|%d|%d|%s") % CLIENT_GROUPADD %
                                     colorString(victim, victim->desc, getName(),
-                                      NULL, COLOR_NONE, FALSE) %
+                                      nullptr, COLOR_NONE, false) %
                                     getHit() % getMana() %
                                     attack_modes[getCombatMode()]);
             victim->desc->session.group_share = 1;
@@ -2187,14 +2187,14 @@ void TBeing::doGroup(const char* argument, bool silent) {
         }
       }
     } else
-      act("$N must follow you to enter the group", FALSE, this, 0, victim,
+      act("$N must follow you to enter the group", false, this, 0, victim,
         TO_CHAR);
   }
 }
 
 int TThing::quaffMe(TBeing* ch) {
   ch->sendTo("Quaff is generally used for liquids.\n\r");
-  return FALSE;
+  return false;
 }
 
 // return DELETE_THIS
@@ -2208,16 +2208,16 @@ int TBeing::doQuaff(sstring argument) {
   if (!(t = searchLinkedListVis(this, buf, stuff))) {
     t = equipment[HOLD_RIGHT];
     if (!t || !isname(buf, t->name)) {
-      act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
-      return FALSE;
+      act("You do not have that item.", false, this, 0, 0, TO_CHAR);
+      return false;
     }
   }
-  setQuaffUse(TRUE);
+  setQuaffUse(true);
   rc = t->quaffMe(this);
-  setQuaffUse(FALSE);
+  setQuaffUse(false);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete t;
-    t = NULL;
+    t = nullptr;
   }
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_THIS;
@@ -2225,7 +2225,7 @@ int TBeing::doQuaff(sstring argument) {
   // add some lag.  Prevents multiple quaffs per round
   addToWait(combatRound(1));
 
-  return FALSE;
+  return false;
 }
 
 // this function handles any special affect that drinking a liquid has
@@ -2267,28 +2267,28 @@ int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
       aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = 3;
       aff.location = APPLY_SPE;
-      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+      vict->affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
 
       aff.type = AFFECT_DRUG;
       aff.level = level;
       aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = 3;
       aff.location = APPLY_FOC;
-      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+      vict->affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
 
       aff.type = AFFECT_DRUG;
       aff.level = level;
       aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = -5;
       aff.location = APPLY_CHA;
-      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+      vict->affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
 
       aff.type = AFFECT_DRUG;
       aff.level = level;
       aff.duration = Pulse::UPDATES_PER_MUDHOUR;
       aff.modifier = -3;
       aff.location = APPLY_DEX;
-      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+      vict->affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
 
       break;
     case LIQ_POT_CURE_POISON:
@@ -2322,7 +2322,7 @@ int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
 
       rc = fly(ch, vict, level, &aff, learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
-        act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
+        act("$n seems lighter on $s feet!", false, vict, nullptr, 0, TO_ROOM);
       } else {
         vict->nothingHappens();
       }
@@ -2337,31 +2337,31 @@ int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
       rc = armor(ch, vict, level, learn, SPELL_ARMOR);
       if (IS_SET(rc, SPELL_SUCCESS)) {
         if (ch != vict) {
-          act("$N is now defended by $d!", FALSE, ch, NULL, vict, TO_CHAR);
-          act("$N is now defended by $d!", FALSE, ch, NULL, vict, TO_NOTVICT);
-          act("You are now defended by $d!", FALSE, ch, NULL, vict, TO_VICT);
+          act("$N is now defended by $d!", false, ch, nullptr, vict, TO_CHAR);
+          act("$N is now defended by $d!", false, ch, nullptr, vict, TO_NOTVICT);
+          act("You are now defended by $d!", false, ch, nullptr, vict, TO_VICT);
         } else {
-          act("$n is now defended by $d!", FALSE, ch, NULL, 0, TO_ROOM);
-          act("You are now defended by $d!", FALSE, ch, NULL, 0, TO_CHAR);
+          act("$n is now defended by $d!", false, ch, nullptr, 0, TO_ROOM);
+          act("You are now defended by $d!", false, ch, nullptr, 0, TO_CHAR);
         }
       } else if (IS_SET(rc, SPELL_CRIT_SUCCESS)) {
         if (ch != vict) {
-          act("$N is now strongly defended by $d!", FALSE, ch, NULL, vict,
+          act("$N is now strongly defended by $d!", false, ch, nullptr, vict,
             TO_CHAR);
-          act("$N is now strongly defended by $d!", FALSE, ch, NULL, vict,
+          act("$N is now strongly defended by $d!", false, ch, nullptr, vict,
             TO_NOTVICT);
-          act("You are now strongly defended by $d!", FALSE, ch, NULL, vict,
+          act("You are now strongly defended by $d!", false, ch, nullptr, vict,
             TO_VICT);
         } else {
-          act("$n is now strongly defended by $d!", FALSE, ch, NULL, 0,
+          act("$n is now strongly defended by $d!", false, ch, nullptr, 0,
             TO_ROOM);
-          act("You are now strongly defended by $d!", FALSE, ch, NULL, 0,
+          act("You are now strongly defended by $d!", false, ch, nullptr, 0,
             TO_CHAR);
         }
       } else if (IS_SET(rc, SPELL_FAIL)) {
         vict->sendTo("Your potion fails to bring forth any protection.\n\r");
-        act("$n's potion fails to bring forth any protection.", FALSE, ch, NULL,
-          NULL, TO_ROOM);
+        act("$n's potion fails to bring forth any protection.", false, ch, nullptr,
+          nullptr, TO_ROOM);
         ch->deityIgnore(SILENT_YES);
       }
       break;
@@ -2495,7 +2495,7 @@ int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
       aff.duration = Pulse::UPDATES_PER_MUDHOUR * 10;
       aff.modifier = 50;
       aff.location = APPLY_SPE;
-      vict->affectJoin(NULL, &aff, AVG_DUR_NO, AVG_EFF_YES);
+      vict->affectJoin(nullptr, &aff, AVG_DUR_NO, AVG_EFF_YES);
 
       break;
     case LIQ_POT_CLARITY:
@@ -2543,7 +2543,7 @@ int doLiqSpell(TBeing* ch, TBeing* vict, liqTypeT liq, int amt) {
 
       rc = fly(ch, vict, level, &aff, learn);
       if (IS_SET(rc, SPELL_SUCCESS)) {
-        act("$n seems lighter on $s feet!", FALSE, vict, NULL, 0, TO_ROOM);
+        act("$n seems lighter on $s feet!", false, vict, nullptr, 0, TO_ROOM);
       } else {
         vict->nothingHappens();
       }
@@ -3339,8 +3339,8 @@ int doObjSpell(TBeing* caster, TBeing* victim, TMagicItem* obj, TObj* target,
 }
 
 int TThing::reciteMe(TBeing* ch, const char*) {
-  act("Recite is normally used for scrolls.", FALSE, ch, 0, 0, TO_CHAR);
-  return FALSE;
+  act("Recite is normally used for scrolls.", false, ch, 0, 0, TO_CHAR);
+  return false;
 }
 
 int TBeing::doRecite(const char* argument) {
@@ -3356,14 +3356,14 @@ int TBeing::doRecite(const char* argument) {
       if (isAffected(AFF_BLIND)) {
         sendTo("How do you expect to read something when you are blind???\n\r");
       } else {
-        act("You do not have that item.", FALSE, this, 0, 0, TO_CHAR);
+        act("You do not have that item.", false, this, 0, 0, TO_CHAR);
       }
-      return FALSE;
+      return false;
     }
   }
 
   if (nomagic("Sorry, you can't recite that here.")) {
-    return FALSE;
+    return false;
   }
 
   setQuaffUse(true);
@@ -3372,23 +3372,23 @@ int TBeing::doRecite(const char* argument) {
 
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete t;
-    t = NULL;
+    t = nullptr;
   }
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_THIS;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TScroll::reciteMe(TBeing* ch, const char* argument) {
-  TObj* obj = NULL;
-  TBeing* victim = NULL;
+  TObj* obj = nullptr;
+  TBeing* victim = nullptr;
   int i, bits, rc;
 
   if (ch->isAffected(AFF_SILENT)) {
     ch->sendTo("You can't recite a scroll, you are silenced!\n\r");
-    return FALSE;
+    return false;
   }
 
   bits = generic_find(argument,
@@ -3398,15 +3398,15 @@ int TScroll::reciteMe(TBeing* ch, const char* argument) {
   if (!bits) {
     if (!ch->fight() || !ch->sameRoom(*ch->fight())) {
       ch->sendTo("No such thing around to recite the scroll on.\n\r");
-      return FALSE;
+      return false;
     }
     victim = ch->fight();
     bits = FIND_CHAR_ROOM;
   }
 
-  act("$n recites $p which is consumed by the powers it unleashes.", TRUE, ch,
+  act("$n recites $p which is consumed by the powers it unleashes.", true, ch,
     this, 0, TO_ROOM);
-  act("You recite $p which is consumed by the powers it unleashes.", FALSE, ch,
+  act("You recite $p which is consumed by the powers it unleashes.", false, ch,
     this, 0, TO_CHAR);
 
   int skill = ch->getSkillValue(SKILL_READ_MAGIC);
@@ -3442,7 +3442,7 @@ int TScroll::reciteMe(TBeing* ch, const char* argument) {
       setLocked(false);
       if (IS_SET_DELETE(rc, DELETE_VICT) && victim != ch) {
         delete victim;
-        victim = NULL;
+        victim = nullptr;
         break;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS) ||
@@ -3454,7 +3454,7 @@ int TScroll::reciteMe(TBeing* ch, const char* argument) {
       }
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete obj;
-        obj = NULL;
+        obj = nullptr;
         break;
       }
     }
@@ -3474,20 +3474,20 @@ int TBeing::doUse(sstring argument) {
 
   argument = one_argument(argument, buf);
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   if (!t) {
     t = heldInPrimHand();
     if (t && !isname(buf, t->name))
-      t = NULL;
+      t = nullptr;
   }
   if (!t) {
     t = heldInSecHand();
     if (t && !isname(buf, t->name))
-      t = NULL;
+      t = nullptr;
   }
   if (!t) {
     wearSlotT wst;
-    for (wst = MIN_WEAR; wst < MAX_WEAR; t = NULL, wst++) {
+    for (wst = MIN_WEAR; wst < MAX_WEAR; t = nullptr, wst++) {
       t = equipment[wst];
       if (!t)
         continue;
@@ -3501,18 +3501,18 @@ int TBeing::doUse(sstring argument) {
   }
   if (!t) {
     sendTo("You aren't holding anything like that!\n\r");
-    return FALSE;
+    return false;
   }
   if (rider) {
     sendTo("Mounts can't use stuff...\n\r");
-    return FALSE;
+    return false;
   }
-  setQuaffUse(TRUE);  // just tells bSuccess its a staff
+  setQuaffUse(true);  // just tells bSuccess its a staff
   rc = t->useMe(this, argument.c_str());
-  setQuaffUse(FALSE);
+  setQuaffUse(false);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete t;
-    t = NULL;
+    t = nullptr;
   }
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     return DELETE_THIS;
@@ -3521,11 +3521,11 @@ int TBeing::doUse(sstring argument) {
   // add some lag.  Prevents multiple uses per round
   addToWait(combatRound(1));
 
-  return FALSE;
+  return false;
 }
 
 void TBeing::doLight(const sstring& argument) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   char tmpname[256], *tmp;
   bool roomOnly, heldOnly;
   int num;
@@ -3579,7 +3579,7 @@ void TBeing::doLight(const sstring& argument) {
           if (dynamic_cast<TLight*>(t) || dynamic_cast<TDrugContainer*>(t)) {
             t->lightMe(this, SILENT_NO);
           } else {
-            act("You cannot light $p while equipped.", FALSE, this, t, 0,
+            act("You cannot light $p while equipped.", false, this, t, 0,
               TO_CHAR);
           }
           return;
@@ -3618,20 +3618,20 @@ void TThing::extinguishMe(TBeing* ch) {
 
   if (!(o = dynamic_cast<TObj*>(this)) || !o->isObjStat(ITEM_BURNING)) {
     ch->sendTo("You begin to extinguish yourself.\n\r");
-    act("You stop, drop, and roll on the ground.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops, drops, and rolls on the ground.", FALSE, ch, 0, 0, TO_ROOM);
+    act("You stop, drop, and roll on the ground.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops, drops, and rolls on the ground.", false, ch, 0, 0, TO_ROOM);
     start_task(ch, 0, 0, TASK_EXTINGUISH_MY_ASS, "", 2, ch->inRoom(), 0, 0, 5);
   } else {
     o->remBurning(ch);
-    act("You extinguish $p, and it smolders slightly before going out.", FALSE,
+    act("You extinguish $p, and it smolders slightly before going out.", false,
       ch, o, 0, TO_CHAR);
-    act("$n extinguishes $p, and it smolders slightly before going out.", FALSE,
+    act("$n extinguishes $p, and it smolders slightly before going out.", false,
       ch, o, 0, TO_ROOM);
   }
 }
 
 void TBeing::doExtinguish(const sstring& argument) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   char tmpname[256], *tmp;
   int num;
   sstring arg1, arg2;
@@ -3695,14 +3695,14 @@ void TThing::refuelMeLight(TBeing* ch, TThing*) {
 }
 
 void TThing::refuelMeFuel(TBeing* ch, TLight*) {
-  act("$p isn't a fuel!", FALSE, ch, this, NULL, TO_CHAR);
+  act("$p isn't a fuel!", false, ch, this, nullptr, TO_CHAR);
 }
 
 void TThing::refuelMeDrug(TBeing* ch, TDrugContainer* tdc) {
   char buf[256];
   sprintf(buf, "$p isn't a drug and shouldn't be put into %s.",
     tdc->getName().c_str());
-  act(buf, FALSE, ch, this, NULL, TO_CHAR);
+  act(buf, false, ch, this, nullptr, TO_CHAR);
 }
 
 void TBeing::doRefuel(const sstring& argument) {
@@ -3725,7 +3725,7 @@ void TBeing::doRefuel(const sstring& argument) {
     sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
     return;
   }
-  if (!(fuel = get_thing_char_using(this, arg2.c_str(), 0, FALSE, FALSE))) {
+  if (!(fuel = get_thing_char_using(this, arg2.c_str(), 0, false, false))) {
     sendTo("You don't have that fuel in your inventory!\n\r");
     sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
     return;
@@ -3734,7 +3734,7 @@ void TBeing::doRefuel(const sstring& argument) {
   heldOnly = is_abbrev(arg3, "held");
 
   if (roomOnly ||
-      !(t = get_thing_char_using(this, arg.c_str(), 0, FALSE, FALSE))) {
+      !(t = get_thing_char_using(this, arg.c_str(), 0, false, false))) {
     if (heldOnly || !(t = searchLinkedListVis(this, arg, roomp->stuff))) {
       sendTo("You can only refuel an object in the room, or held.\n\r");
       sendTo("Syntax: refuel <light> <fuel> {\"room\" | \"held\"}\n\r");
@@ -3780,7 +3780,7 @@ void TBeing::doStop(const sstring& tStArg) {
     return;
   }
 
-  act("$n orders you to stop...You are forced to comply.", TRUE, this, NULL,
+  act("$n orders you to stop...You are forced to comply.", true, this, nullptr,
     tBeing, TO_VICT);
 
   // This just goes through the normal setup to verify that future
@@ -3801,17 +3801,17 @@ void TBeing::doContinue(const char* argument) {
   argument = one_argument(argument, arg, cElements(arg));
 
   if (spellType == SPELL_PRAYER) {
-    if (!reconcilePiety(spelltask->spell, TRUE)) {
+    if (!reconcilePiety(spelltask->spell, true)) {
       sendTo("You can not continue a prayer when you are low on piety.\n\r");
       return;
     }
   } else if (spellType == SPELL_CASTER) {
-    if (!reconcileMana(spelltask->spell, TRUE)) {
+    if (!reconcileMana(spelltask->spell, true)) {
       sendTo("You can not continue a spell when you are low on mana.\n\r");
       return;
     }
   } else if (spellType == SPELL_DANCER) {
-    if (!reconcileLifeforce(spelltask->spell, TRUE)) {
+    if (!reconcileLifeforce(spelltask->spell, true)) {
       // will need to change to lifeforce
       sendTo("You can not continue a invokation without enough lifeforce.\n\r");
       return;
@@ -3928,7 +3928,7 @@ void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
     return;
   }
   if (v->riding) {
-    act("You can't drag them off the $o.", TRUE, this, v->riding, 0, TO_CHAR);
+    act("You can't drag them off the $o.", true, this, v->riding, 0, TO_CHAR);
     return;
   }
   if (v->rider) {
@@ -3937,25 +3937,25 @@ void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
   }
 
   // v-weight > 5 * free carry weight
-  if (compareWeights(v->getTotalWeight(TRUE),
+  if (compareWeights(v->getTotalWeight(true),
         (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to drag $N out of the room but fail.",
-      TRUE, this, NULL, v, TO_CHAR);
+      true, this, nullptr, v, TO_CHAR);
     act("$n strains with all $s might to drag $N out of the room but fails.",
-      TRUE, this, NULL, v, TO_ROOM);
+      true, this, nullptr, v, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if (rc == TRUE)  // not allowed to move
+  if (rc == true)  // not allowed to move
     return;
 
   // We can drag now. Do necessary checks and make it so. - Brutius
   sprintf(buf, "You drag $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, v, TO_CHAR);
+  act(buf, true, this, nullptr, v, TO_CHAR);
   sprintf(buf, "$n drags $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, v, TO_ROOM);
+  act(buf, true, this, nullptr, v, TO_ROOM);
   oldroom = v->in_room;
   oldr = v->roomp->dir_option[tdir]->to_room;
   rp = real_roomp(oldr);
@@ -3963,7 +3963,7 @@ void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
   --(*this);
   *rp += *this;
   *rp += *v;
-  act("$n enters the room dragging $N!", TRUE, this, NULL, v, TO_ROOM);
+  act("$n enters the room dragging $N!", true, this, nullptr, v, TO_ROOM);
 
   if (v->followers) {
     heap_top = 0;
@@ -3972,19 +3972,19 @@ void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E is dragged out of the room.");
-        act(buf, FALSE, k->follower, NULL, v, TO_CHAR);
+        act(buf, false, k->follower, nullptr, v, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete k->follower;
-            k->follower = NULL;
+            k->follower = nullptr;
             continue;
           }
         } else {
           if ((result = k->follower->rawMove(tdir))) {
             if (IS_SET_DELETE(result, DELETE_THIS)) {
               delete k->follower;
-              k->follower = NULL;
+              k->follower = nullptr;
               continue;
             }
             AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
@@ -3999,7 +3999,7 @@ void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
         rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete heap_ptr[i];
-        heap_ptr[i] = NULL;
+        heap_ptr[i] = nullptr;
       }
     }
   }
@@ -4010,19 +4010,19 @@ void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E drags $p out of the room.");
-        act(buf, FALSE, k->follower, v, this, TO_CHAR);
+        act(buf, false, k->follower, v, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete k->follower;
-            k->follower = NULL;
+            k->follower = nullptr;
             continue;
           }
         } else {
           if ((result = k->follower->rawMove(tdir))) {
             if (IS_SET_DELETE(result, DELETE_THIS)) {
               delete k->follower;
-              k->follower = NULL;
+              k->follower = nullptr;
               continue;
             }
             AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
@@ -4037,7 +4037,7 @@ void TBeing::doDrag(TBeing* v, dirTypeT tdir) {
         rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete heap_ptr[i];
-        heap_ptr[i] = NULL;
+        heap_ptr[i] = nullptr;
       }
     }
   }
@@ -4060,38 +4060,38 @@ void TBeing::doDrag(TObj* o, dirTypeT tdir) {
     return;
   if (!isImmortal()) {
     if (!o->canWear(ITEM_WEAR_TAKE)) {
-      act("$N : You can't drag that.\n\r", TRUE, this, NULL, o, TO_CHAR);
+      act("$N : You can't drag that.\n\r", true, this, nullptr, o, TO_CHAR);
       return;
     }
     if (dynamic_cast<TTrap*>(o)) {
       // drag grenade into room with shopkeeper
-      act("$N : Yeah right.\n\r", TRUE, this, NULL, o, TO_CHAR);
+      act("$N : Yeah right.\n\r", true, this, nullptr, o, TO_CHAR);
       return;
     }
   }
   if (o->rider) {
-    act("$N : Occupied.\n\r", TRUE, this, NULL, o, TO_CHAR);
+    act("$N : Occupied.\n\r", true, this, nullptr, o, TO_CHAR);
     return;
   }
 
-  if (compareWeights(o->getTotalWeight(TRUE),
+  if (compareWeights(o->getTotalWeight(true),
         (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to drag $N out of the room but fail.",
-      TRUE, this, NULL, o, TO_CHAR);
+      true, this, nullptr, o, TO_CHAR);
     act("$n strains with all $s might to drag $N out of the room but fails.",
-      TRUE, this, NULL, o, TO_ROOM);
+      true, this, nullptr, o, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if (rc == TRUE)  // not allowed to move
+  if (rc == true)  // not allowed to move
     return;
 
   sprintf(buf, "You drag $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, o, TO_CHAR);
+  act(buf, true, this, nullptr, o, TO_CHAR);
   sprintf(buf, "$n drags $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, o, TO_ROOM);
+  act(buf, true, this, nullptr, o, TO_ROOM);
   oldroom = o->in_room;
   oldr = o->roomp->dir_option[tdir]->to_room;
   rp = real_roomp(oldr);
@@ -4099,7 +4099,7 @@ void TBeing::doDrag(TObj* o, dirTypeT tdir) {
   --(*this);
   *rp += *this;
   *rp += *o;
-  act("$n enters the room dragging $N!", TRUE, this, NULL, o, TO_ROOM);
+  act("$n enters the room dragging $N!", true, this, nullptr, o, TO_ROOM);
   TPCorpse* tmpcorpse = dynamic_cast<TPCorpse*>(o);
   if (tmpcorpse) {
     tmpcorpse->setRoomNum(oldr);
@@ -4112,19 +4112,19 @@ void TBeing::doDrag(TObj* o, dirTypeT tdir) {
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E drags $p out of the room.");
-        act(buf, FALSE, k->follower, o, this, TO_CHAR);
+        act(buf, false, k->follower, o, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete k->follower;
-            k->follower = NULL;
+            k->follower = nullptr;
             continue;
           }
         } else {
           if ((result = k->follower->rawMove(tdir))) {
             if (IS_SET_DELETE(result, DELETE_THIS)) {
               delete k->follower;
-              k->follower = NULL;
+              k->follower = nullptr;
               continue;
             }
             AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
@@ -4139,7 +4139,7 @@ void TBeing::doDrag(TObj* o, dirTypeT tdir) {
         rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete heap_ptr[i];
-        heap_ptr[i] = NULL;
+        heap_ptr[i] = nullptr;
       }
     }
   }
@@ -4200,7 +4200,7 @@ void TBeing::doDrag(const sstring& arg) {
 
   exitp = exitDir(tdir);
 
-  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EXIT_CLOSED)) {
+  if (!exit_ok(exitp, nullptr) || IS_SET(exitp->condition, EXIT_CLOSED)) {
     sendTo(format("You are blocked from dragging %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;
@@ -4399,7 +4399,7 @@ void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
     return;
   }
   if (v->riding) {
-    act("You can't roll them off the $o.", TRUE, this, v->riding, 0, TO_CHAR);
+    act("You can't roll them off the $o.", true, this, v->riding, 0, TO_CHAR);
     return;
   }
   if (v->rider) {
@@ -4408,25 +4408,25 @@ void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
   }
 
   // v-weight > 5 * free carry weight
-  if (compareWeights(v->getTotalWeight(TRUE),
+  if (compareWeights(v->getTotalWeight(true),
         (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to roll $N out of the room but fail.",
-      TRUE, this, NULL, v, TO_CHAR);
+      true, this, nullptr, v, TO_CHAR);
     act("$n strains with all $s might to roll $N out of the room but fails.",
-      TRUE, this, NULL, v, TO_ROOM);
+      true, this, nullptr, v, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if (rc == TRUE)  // not allowed to move
+  if (rc == true)  // not allowed to move
     return;
 
   // We can drag now. Do necessary checks and make it so. - Brutius
   sprintf(buf, "You roll $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, v, TO_CHAR);
+  act(buf, true, this, nullptr, v, TO_CHAR);
   sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, v, TO_ROOM);
+  act(buf, true, this, nullptr, v, TO_ROOM);
   oldroom = v->in_room;
   oldr = v->roomp->dir_option[tdir]->to_room;
   rp = real_roomp(oldr);
@@ -4434,7 +4434,7 @@ void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
   --(*this);
   *rp += *this;
   *rp += *v;
-  act("$n enters the room rolling $N!", TRUE, this, NULL, v, TO_ROOM);
+  act("$n enters the room rolling $N!", true, this, nullptr, v, TO_ROOM);
 
   if (v->followers) {
     heap_top = 0;
@@ -4443,19 +4443,19 @@ void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E is rolled out of the room.");
-        act(buf, FALSE, k->follower, NULL, v, TO_CHAR);
+        act(buf, false, k->follower, nullptr, v, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete k->follower;
-            k->follower = NULL;
+            k->follower = nullptr;
             continue;
           }
         } else {
           if ((result = k->follower->rawMove(tdir))) {
             if (IS_SET_DELETE(result, DELETE_THIS)) {
               delete k->follower;
-              k->follower = NULL;
+              k->follower = nullptr;
               continue;
             }
             AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
@@ -4470,7 +4470,7 @@ void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
         rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete heap_ptr[i];
-        heap_ptr[i] = NULL;
+        heap_ptr[i] = nullptr;
       }
     }
   }
@@ -4481,19 +4481,19 @@ void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E rolls $p out of the room.");
-        act(buf, FALSE, k->follower, v, this, TO_CHAR);
+        act(buf, false, k->follower, v, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete k->follower;
-            k->follower = NULL;
+            k->follower = nullptr;
             continue;
           }
         } else {
           if ((result = k->follower->rawMove(tdir))) {
             if (IS_SET_DELETE(result, DELETE_THIS)) {
               delete k->follower;
-              k->follower = NULL;
+              k->follower = nullptr;
               continue;
             }
             AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
@@ -4508,7 +4508,7 @@ void TBeing::doRoll(TBeing* v, dirTypeT tdir) {
         rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete heap_ptr[i];
-        heap_ptr[i] = NULL;
+        heap_ptr[i] = nullptr;
       }
     }
   }
@@ -4530,37 +4530,37 @@ void TBeing::doRoll(TObj* o, dirTypeT tdir) {
     return;
   if (!isImmortal()) {
     if (!o->canWear(ITEM_WEAR_TAKE)) {
-      act("$N : You can't roll that.\n\r", TRUE, this, NULL, o, TO_CHAR);
+      act("$N : You can't roll that.\n\r", true, this, nullptr, o, TO_CHAR);
       return;
     }
     if (dynamic_cast<TTrap*>(o)) {
-      act("$N : Yeah right.\n\r", TRUE, this, NULL, o, TO_CHAR);
+      act("$N : Yeah right.\n\r", true, this, nullptr, o, TO_CHAR);
       return;
     }
   }
   if (o->rider) {
-    act("$N : Occupied.\n\r", TRUE, this, NULL, o, TO_CHAR);
+    act("$N : Occupied.\n\r", true, this, nullptr, o, TO_CHAR);
     return;
   }
 
-  if (compareWeights(o->getTotalWeight(TRUE),
+  if (compareWeights(o->getTotalWeight(true),
         (5.0 * (carryWeightLimit() - getCarriedWeight()))) == -1) {
     act("You strain with all your might to roll $N out of the room but fail.",
-      TRUE, this, NULL, o, TO_CHAR);
+      true, this, nullptr, o, TO_CHAR);
     act("$n strains with all $s might to roll $N out of the room but fails.",
-      TRUE, this, NULL, o, TO_ROOM);
+      true, this, nullptr, o, TO_ROOM);
     return;
   }
 
   sprintf(buf, "%i", tdir);
   rc = roomp->checkSpec(this, CMD_ROOM_ATTEMPTED_EXIT, buf, roomp);
-  if (rc == TRUE)  // not allowed to move
+  if (rc == true)  // not allowed to move
     return;
 
   sprintf(buf, "You roll $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, o, TO_CHAR);
+  act(buf, true, this, nullptr, o, TO_CHAR);
   sprintf(buf, "$n rolls $N %s.", dirs[tdir]);
-  act(buf, TRUE, this, NULL, o, TO_ROOM);
+  act(buf, true, this, nullptr, o, TO_ROOM);
   oldroom = o->in_room;
   oldr = o->roomp->dir_option[tdir]->to_room;
   rp = real_roomp(oldr);
@@ -4568,7 +4568,7 @@ void TBeing::doRoll(TObj* o, dirTypeT tdir) {
   --(*this);
   *rp += *this;
   *rp += *o;
-  act("$n enters the room rolling $N!", TRUE, this, NULL, o, TO_ROOM);
+  act("$n enters the room rolling $N!", true, this, nullptr, o, TO_ROOM);
   TPCorpse* tmpcorpse = dynamic_cast<TPCorpse*>(o);
   if (tmpcorpse) {
     tmpcorpse->setRoomNum(oldr);
@@ -4581,19 +4581,19 @@ void TBeing::doRoll(TObj* o, dirTypeT tdir) {
       if ((oldroom == k->follower->in_room) && !k->follower->fight() &&
           (k->follower->getPosition() >= POSITION_CRAWLING)) {
         sprintf(buf, "You follow $N as $E rolls $p out of the room.");
-        act(buf, FALSE, k->follower, o, this, TO_CHAR);
+        act(buf, false, k->follower, o, this, TO_CHAR);
         if (k->follower->followers) {
           rc = k->follower->moveGroup(tdir);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete k->follower;
-            k->follower = NULL;
+            k->follower = nullptr;
             continue;
           }
         } else {
           if ((result = k->follower->rawMove(tdir))) {
             if (IS_SET_DELETE(result, DELETE_THIS)) {
               delete k->follower;
-              k->follower = NULL;
+              k->follower = nullptr;
               continue;
             }
             AddToCharHeap(heap_ptr, &heap_top, heap_tot, k->follower);
@@ -4608,7 +4608,7 @@ void TBeing::doRoll(TObj* o, dirTypeT tdir) {
         rc = heap_ptr[i]->displayOneMove(tdir, oldroom);
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete heap_ptr[i];
-        heap_ptr[i] = NULL;
+        heap_ptr[i] = nullptr;
       }
     }
   }
@@ -4669,7 +4669,7 @@ void TBeing::doRoll(const sstring& arg) {
 
   exitp = exitDir(tdir);
 
-  if (!exit_ok(exitp, NULL) || IS_SET(exitp->condition, EXIT_CLOSED)) {
+  if (!exit_ok(exitp, nullptr) || IS_SET(exitp->condition, EXIT_CLOSED)) {
     sendTo(format("You are blocked from rolling %s.\n\r") % dirs[tdir]);
     sendTo(syntax);
     return;
@@ -4697,7 +4697,7 @@ void TBeing::addToRandomStat(int extra_points) {
   statTypeT whichStat;
   int amt;
   unsigned i = 0;
-  bool firstPass = TRUE;
+  bool firstPass = true;
   std::vector<statTypeT> stats;
   for (whichStat = MIN_STAT; whichStat < MAX_STATS_USED; whichStat++) {
     stats.push_back(whichStat);
@@ -4706,7 +4706,7 @@ void TBeing::addToRandomStat(int extra_points) {
   while (extra_points != 0) {
     if (i >= stats.size()) {
       i = 0;
-      firstPass = FALSE;
+      firstPass = false;
     }
     whichStat = stats[i++];
     if (firstPass) {
@@ -4726,7 +4726,7 @@ ignoreList::ignoreList(Descriptor* desc) :
   m_initialized(false),
   m_useStatic(false),
   m_desc(desc),
-  m_ignored(NULL),
+  m_ignored(nullptr),
   m_count(0) {}
 
 ignoreList::~ignoreList() {

@@ -57,32 +57,32 @@ void TSymbol::attuneMe(TBeing* caster, TVial* obj) {
     return;
 
   if (caster->getMove() < 10) {
-    act("You are much too tired to attune $p.", FALSE, caster, this, NULL,
+    act("You are much too tired to attune $p.", false, caster, this, nullptr,
       TO_CHAR);
     return;
   }
 
-  act("You place $p carefully on your lap.", FALSE, caster, this, NULL,
+  act("You place $p carefully on your lap.", false, caster, this, nullptr,
     TO_CHAR);
-  act("$n places $p carefully on $s lap.", FALSE, caster, this, NULL, TO_ROOM);
+  act("$n places $p carefully on $s lap.", false, caster, this, nullptr, TO_ROOM);
   act(
     "You say a small prayer as you sprinkle some drops from $P on $p and begin "
     "attuning it.",
-    FALSE, caster, this, obj, TO_CHAR);
-  act("$n sprinkles some drops from $P on $p and begins to pray.", FALSE,
+    false, caster, this, obj, TO_CHAR);
+  act("$n sprinkles some drops from $P on $p and begins to pray.", false,
     caster, this, obj, TO_ROOM);
   // terminate sitting tasks
   if ((caster->task) && caster->getPosition() <= POSITION_SITTING)
     caster->stopTask();
 
   ubyte rounds = (ubyte)(getSymbolLevel() / 2 + 1);
-  start_task(caster, (TObj*)this, NULL, TASK_ATTUNE, NULL, 0,
+  start_task(caster, (TObj*)this, nullptr, TASK_ATTUNE, nullptr, 0,
     (ushort)caster->in_room, rounds, 0, 0);
 }
 
 void attune(TBeing* caster, TThing* sym) {
-  TVial* best = NULL;
-  TThing* obj = NULL;
+  TVial* best = nullptr;
+  TThing* obj = nullptr;
 
   if (caster->fight()) {
     caster->sendTo("Not while fighting..\n\r");

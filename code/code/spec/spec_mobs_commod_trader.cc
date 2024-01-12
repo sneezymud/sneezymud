@@ -11,7 +11,7 @@
 // shop rooms 558,8734,1393,3709
 
 TObj* findCart(TBeing* myself) {
-  TObj* cart = NULL;
+  TObj* cart = nullptr;
   int cartnum = 33296;
 
   for (StuffIter it = myself->roomp->stuff.begin();
@@ -28,7 +28,7 @@ TObj* findCart(TBeing* myself) {
         *myself->roomp += *cart;
         break;
       }
-      cart = NULL;
+      cart = nullptr;
     }
 
     if (!cart) {
@@ -40,7 +40,7 @@ TObj* findCart(TBeing* myself) {
 
   if (!cart) {
     vlogf(LOG_BUG, "commodity trader couldn't find or make a cart");
-    return NULL;
+    return nullptr;
   }
 
   TOpenContainer* toc;
@@ -55,44 +55,44 @@ TObj* findCart(TBeing* myself) {
 int commodTrader(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   int commod_shops[4] = {558, 8734, 1393, 3709};
   int commod_shop_nr[4] = {15, 56, 57, 58};
-  int* target_shop_idx = NULL;
+  int* target_shop_idx = nullptr;
   TPathFinder path;
   TCommodity* commod;
   int price = 0;
-  TObj* cart = NULL;
+  TObj* cart = nullptr;
   TShopOwned homebase(250, myself);
   TDatabase db(DB_SNEEZY);
 
-  return FALSE;
+  return false;
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<int*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
   if (cmd != CMD_GENERIC_PULSE || !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new int)) {
       vlogf(LOG_BUG, "failed memory allocation in mob proc commodTrader.");
-      return FALSE;
+      return false;
     }
     if (!(target_shop_idx = static_cast<int*>(myself->act_ptr))) {
       vlogf(LOG_BUG, "commodTrader: error, static_cast");
-      return TRUE;
+      return true;
     }
     *target_shop_idx = 0;
   }
   if (!(target_shop_idx = static_cast<int*>(myself->act_ptr))) {
     vlogf(LOG_BUG, "commodTrader: error, static_cast");
-    return TRUE;
+    return true;
   }
 
   // find our cart
   cart = findCart(myself);
   if (!cart)
-    return TRUE;
+    return true;
 
   if (myself->in_room == commod_shops[*target_shop_idx]) {
     TShopOwned tso(commod_shop_nr[*target_shop_idx], myself);
@@ -172,7 +172,7 @@ order by diff desc limit 1",
         vlogf(LOG_BUG, format("commod trader tried to load non-commod: %i %i") %
                          rent_id % temp1->objVnum());
         delete temp1;
-        return FALSE;
+        return false;
       }
 
       // make obj2 the amount we want to buy, then adjust an re-save commod
@@ -230,7 +230,7 @@ order by diff desc limit 1",
           *cart += *ttt;
         }
       }
-      return TRUE;
+      return true;
     }
 
     // didn't find any deals
@@ -238,7 +238,7 @@ order by diff desc limit 1",
   } else {
     // speed
     //    if(::number(0,2))
-    //      return FALSE;
+    //      return false;
 
     for (int i = 0; i < 4; ++i) {
       path.setNoMob(false);

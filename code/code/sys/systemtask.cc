@@ -206,7 +206,7 @@ sstring SystemTask::Tasks(TBeing* ch, const char* args) {
 //
 void SystemTask::remove(_task* tsk) {
   if (!tsk) {
-    vlogf(LOG_BUG, "WARNING: SystemTask::remove(): trying to remove NULL task");
+    vlogf(LOG_BUG, "WARNING: SystemTask::remove(): trying to remove nullptr task");
     return;
   }
   if (tsk == top)
@@ -255,11 +255,11 @@ int SystemTask::forktask(_task* tsk) {
   char cmd[32], *argv[4];
 
   if (!tsk) {
-    vlogf(LOG_BUG, "SystemTask::forktask tsk is NULL!");
+    vlogf(LOG_BUG, "SystemTask::forktask tsk is nullptr!");
     return (1);
   }
   if (!tsk->cmd) {
-    vlogf(LOG_BUG, "SystemTask::forktask tsk->cmd is NULL!");
+    vlogf(LOG_BUG, "SystemTask::forktask tsk->cmd is nullptr!");
     remove(tsk);
     return (1);
   }
@@ -272,7 +272,7 @@ int SystemTask::forktask(_task* tsk) {
   argv[0] = cmd;
   argv[1] = tmp;
   argv[2] = tsk->cmd;
-  argv[3] = NULL;
+  argv[3] = nullptr;
 
   if (!(tsk->pid = vfork())) {
     execve("/bin/sh", argv, environ);

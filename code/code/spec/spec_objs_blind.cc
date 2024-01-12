@@ -31,45 +31,45 @@ int weaponBlinder(TBeing* tVictim, cmdTypeT tCmd, const char*, TObj* tObj,
   bool forceSuccess = false;
 
   if (!(tWeap = dynamic_cast<TBaseWeapon*>(tObj)) || !tVictim)
-    return FALSE;
+    return false;
 
   if (!(ch = dynamic_cast<TBeing*>(tObj->equippedBy)))
-    return FALSE;
+    return false;
 
   if (ch->getName() == "Lapsos" && ch->isImmortal())
     forceSuccess = true;
 
   if (::number(0, 100) && !forceSuccess)
-    return FALSE;
+    return false;
 
   if (tCmd != CMD_OBJ_HITTING)
-    return FALSE;
+    return false;
 
   if (tVictim->affectedBySpell(SPELL_BLINDNESS) ||
       tVictim->isAffected(AFF_TRUE_SIGHT) || tVictim->isAffected(AFF_CLARITY) ||
       ch->isNotPowerful(tVictim, (int)tWeap->weaponLevel(), SPELL_BLINDNESS,
         SILENT_YES))
-    return FALSE;
+    return false;
 
   if (!::number(0,
         std::max(10, (int)(tWeap->weaponLevel() +
                            (tVictim->GetMaxLevel() - ch->GetMaxLevel())))) ||
       forceSuccess) {
-    act("A Seering light shines from $p, blinding $N.", FALSE, ch, tObj,
+    act("A Seering light shines from $p, blinding $N.", false, ch, tObj,
       tVictim, TO_CHAR);
     act("$n shields $s eyes as a seering light shines from $p, blinding $N.",
-      FALSE, ch, tObj, tVictim, TO_NOTVICT);
+      false, ch, tObj, tVictim, TO_NOTVICT);
     act(
       "The world goes white then black as a seering light shines from $n's $p.",
-      FALSE, ch, tObj, tVictim, TO_VICT);
+      false, ch, tObj, tVictim, TO_VICT);
 
     int tDuration = (int)(tWeap->weaponLevel() * Pulse::UPDATES_PER_MUDHOUR);
     saveTypeT tSave = SAVE_NO;
 
     tVictim->rawBlind((int)tWeap->weaponLevel(), tDuration, tSave);
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

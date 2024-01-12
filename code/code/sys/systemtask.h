@@ -23,7 +23,7 @@ class SystemTask {
     _task* bot;
 
   public:
-    SystemTask() : taskstatus(true), top(NULL), bot(NULL) {}
+    SystemTask() : taskstatus(true), top(nullptr), bot(nullptr) {}
     void AddTask(TBeing*, char, const char*);
     void CheckTask();
     sstring Tasks(TBeing*, const char*);

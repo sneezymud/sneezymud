@@ -22,9 +22,9 @@ const int GIN_TABLE = 8416;
 
 bool GinGame::check(const TBeing* ch) const {
   if (ch->inRoom() == GIN_TABLE)
-    return TRUE;
+    return true;
   else
-    return FALSE;
+    return false;
 }
 
 void GinGame::deal(TBeing* ch) {
@@ -51,7 +51,7 @@ void GinGame::deal(TBeing* ch) {
   shuffle();
 
   ch2->sendTo("You shuffle the cards, and deal them.\n\r");
-  act("$n shuffles the cards and deals them.", FALSE, ch2, NULL, NULL, TO_ROOM);
+  act("$n shuffles the cards and deals them.", false, ch2, nullptr, nullptr, TO_ROOM);
 
   ch1->sendTo("You are dealt:\n\r");
   ch2->sendTo("You are dealt:\n\r");
@@ -67,10 +67,10 @@ void GinGame::deal(TBeing* ch) {
 
   deck_index = 21;
   pile_index = -1;
-  loser[0] = FALSE;
-  loser[1] = FALSE;
+  loser[0] = false;
+  loser[1] = false;
   can_draw = !which;
-  game = TRUE;
+  game = true;
 
   peek(ch1);
   peek(ch2);
@@ -103,27 +103,27 @@ int GinGame::move_card(TBeing* ch, const char* arg) {
 
   if ((which = index(ch)) < 0) {
     ch->sendTo("You aren't at a gin table to move any cards around!\n\r");
-    return FALSE;
+    return false;
   }
   if (sscanf(arg, "%d %d", &orig, &n) == 2) {
     if (!in_range(orig, 1, 11) || !in_range(n, 1, 11)) {
       ch->sendTo(
         "Gin table syntax : put <original card place number> <new place "
         "number>\n\r");
-      return FALSE;
+      return false;
     }
     if (orig == n) {
       ch->sendTo(
         format("The number %d card is already in the number %d slot!\n\r") %
         orig % n);
-      return FALSE;
+      return false;
     }
     orig--;
     n--;
 
     if (!hands[which][orig] || !hands[which][n]) {
       ch->sendTo("You don't have a card in that slot!\n\r");
-      return FALSE;
+      return false;
     }
     tmp = hands[which][orig];
 
@@ -137,12 +137,12 @@ int GinGame::move_card(TBeing* ch, const char* arg) {
     hands[which][n] = tmp;
     ch->sendTo(
       format("You move card number %d to slot %d.\n\r") % (orig + 1) % (n + 1));
-    return TRUE;
+    return true;
   }
   ch->sendTo(
     "Gin table syntax : put <original card place number> <new place "
     "number>\n\r");
-  return FALSE;
+  return false;
 }
 
 int GinGame::enter(const TBeing* ch) {
@@ -150,28 +150,28 @@ int GinGame::enter(const TBeing* ch) {
 
   if (dynamic_cast<const TMonster*>(ch)) {
     ch->sendTo("Dumb monsters can't play gin!\n\r");
-    return FALSE;
+    return false;
   }
   if (inuse[0] && inuse[1]) {
     ch->sendTo("There are already two players at the gin table!\n\r");
-    return FALSE;
+    return false;
   } else if (ch->getPosition() == POSITION_SITTING) {
     ch->sendTo("You are already sitting at the gin table.\n\r");
-    return FALSE;
+    return false;
   } else {
     if (!inuse[0])
       which = 0;
     else {
-      game = FALSE;
+      game = false;
       which = 1;
     }
     ch->sendTo(format("You sit down at the gin table. %s sits across from you "
                       "at the table.\n\r") %
                (inuse[!which] ? names[!which] : "No one"));
     strcpy(names[which], ch->getName().c_str());
-    inuse[which] = TRUE;
-    loser[which] = TRUE;
-    return TRUE;
+    inuse[which] = true;
+    loser[which] = true;
+    return true;
   }
 }
 
@@ -181,13 +181,13 @@ int GinGame::exitGame(const TBeing* ch) {
 
   if ((which = index(ch)) < 0) {
     vlogf(LOG_BUG, format("%s left a gin table he wasn't at!") % ch->getName());
-    return FALSE;
+    return false;
   }
   other = get_char_room(names[!which], GIN_TABLE);
 
   ch->sendTo("You leave the gin table.\n\r");
-  act("$n stands up and leaves the gin table, totally mooting the game.", FALSE,
-    ch, NULL, NULL, TO_ROOM);
+  act("$n stands up and leaves the gin table, totally mooting the game.", false,
+    ch, nullptr, nullptr, TO_ROOM);
   if (other) {
     other->sendTo("You stand up and leave the table as well.\n\r");
     other->setPosition(POSITION_STANDING);
@@ -198,12 +198,12 @@ int GinGame::exitGame(const TBeing* ch) {
   topcard = 0;
   deck_index = 0;
   pile_index = -1;
-  game = FALSE;
+  game = false;
   can_draw = 0;
-  inuse[0] = FALSE;
-  inuse[1] = FALSE;
-  loser[0] = FALSE;
-  loser[1] = FALSE;
+  inuse[0] = false;
+  inuse[1] = false;
+  loser[0] = false;
+  loser[1] = false;
   score[0] = 0;
   score[1] = 0;
 
@@ -217,7 +217,7 @@ int GinGame::exitGame(const TBeing* ch) {
     }
   }
   setup_deck();
-  return TRUE;
+  return true;
 }
 
 int GinGame::index(const TBeing* ch) const {
@@ -237,28 +237,28 @@ int GinGame::draw(TBeing* ch, const char* arg) {
 
   if ((which = index(ch)) < 0) {
     ch->sendTo("You aren't playing a gin game to draw cards from!\n\r");
-    return FALSE;
+    return false;
   }
   if (can_draw != which) {
     ch->sendTo("You can't draw at the current time.\n\r");
-    return FALSE;
+    return false;
   }
   if (is_abbrev(arg, "deck")) {
     hands[which][10] = deck[deck_index++];
     ch->sendTo(format("You draw the %s.\n\r") %
                pretty_card_printout(ch, hands[which][10]));
-    act("$n draws a card from the deck.", FALSE, ch, NULL, NULL, TO_ROOM);
-    return TRUE;
+    act("$n draws a card from the deck.", false, ch, nullptr, nullptr, TO_ROOM);
+    return true;
   } else if (is_abbrev(arg, "pile")) {
     hands[which][10] = pile[pile_index];
     pile[pile_index--] = 0;
     ch->sendTo(format("You draw the %s off of the pile top.\n\r") %
                pretty_card_printout(ch, hands[which][10]));
-    act("$n takes the top card from the pile.", FALSE, ch, NULL, NULL, TO_ROOM);
-    return TRUE;
+    act("$n takes the top card from the pile.", false, ch, nullptr, nullptr, TO_ROOM);
+    return true;
   } else {
     ch->sendTo("Gin table syntax : pick <deck | pile>\n\r");
-    return FALSE;
+    return false;
   }
 }
 
@@ -276,7 +276,7 @@ void GinGame::clear() {
   }
   deck_index = 0;
   pile_index = -1;
-  game = FALSE;
+  game = false;
   score[0] = 0;
   score[1] = 0;
   bet = 0;
@@ -297,7 +297,7 @@ void GinGame::clear_hand() {
   }
   deck_index = 0;
   pile_index = -1;
-  game = FALSE;
+  game = false;
   setup_deck();
 }
 
@@ -318,10 +318,10 @@ void GinGame::win(TBeing* ch) {
   }
   ch->sendTo(format("You win the game! The score is : %s.\n\r") % gin_score());
   sprintf(buf, "$n wins the game! The score is : %s", gin_score().c_str());
-  act(buf, TRUE, ch, 0, 0, TO_ROOM);
+  act(buf, true, ch, 0, 0, TO_ROOM);
 
-  loser[which] = FALSE;
-  loser[!which] = TRUE;
+  loser[which] = false;
+  loser[!which] = true;
 
   clear();
 }
@@ -343,10 +343,10 @@ void GinGame::win_hand(TBeing* ch) {
   }
   ch->sendTo(format("You win the hand! The score is : %s.\n\r") % gin_score());
   sprintf(buf, "$n wins the hand! The score is : %s", gin_score().c_str());
-  act(buf, TRUE, ch, 0, 0, TO_ROOM);
+  act(buf, true, ch, 0, 0, TO_ROOM);
 
-  loser[which] = FALSE;
-  loser[!which] = TRUE;
+  loser[which] = false;
+  loser[!which] = true;
 
   clear_hand();
 }
@@ -369,12 +369,12 @@ void GinGame::gin(TBeing* ch) {
     return;
 
   ch->sendTo("You call a gin hand!\n\r");
-  act("$n calls a gin hand!", TRUE, ch, NULL, NULL, TO_ROOM);
+  act("$n calls a gin hand!", true, ch, nullptr, nullptr, TO_ROOM);
   ch->sendTo(COLOR_MOBS, format("%s had %d points in %s hand!\n\r") %
                            other->getName() % low % other->hshr());
   other->sendTo(format("You have %d points in your hand!\n\r") % low);
   sprintf(buf, "$n gins, and $N had %d points in $S hand.", low);
-  act(buf, FALSE, ch, NULL, other, TO_NOTVICT);
+  act(buf, false, ch, nullptr, other, TO_NOTVICT);
   other->sendTo("Here is your opponents winning hand.\n\r");
   ch->sendTo("Here is your opponents losing hand.\n\r");
   for (int i = 0; i < 11; i++) {
@@ -415,7 +415,7 @@ void GinGame::knock(TBeing* ch, int low) {
     format("You knock with %d point%s!\n\r") % low % (low == 1 ? "" : "s"));
   sprintf(buf, "$n calls a knock hand with %d point%s!", low,
     low == 1 ? "" : "s");
-  act(buf, TRUE, ch, NULL, NULL, TO_ROOM);
+  act(buf, true, ch, nullptr, nullptr, TO_ROOM);
   ch->sendTo(COLOR_MOBS, format("%s had %d points in %s hand!\n\r") %
                            other->getName() % other_low % other->hshr());
   other->sendTo(format("You have %d points in your hand!\n\r") % other_low);
@@ -539,7 +539,7 @@ void GinGame::play(TBeing* ch, const char* arg) {
                pretty_card_printout(ch, pile[pile_index]));
     sprintf(buf, "$n places the %s on the card pile.",
       pretty_card_printout(ch, pile[pile_index]).c_str());
-    act(buf, FALSE, ch, NULL, NULL, TO_ROOM);
+    act(buf, false, ch, nullptr, nullptr, TO_ROOM);
     return;
   } else {
     ch->sendTo("You don't have a card in that slot to play!\n\r");
@@ -613,10 +613,10 @@ int GinGame::total_not_in_book(int* hand, Hand* hs) {
 
     if (!book_needed &&
         (!mid_run_needed || !up_run_needed || !down_run_needed)) {
-      hs->both[i] = TRUE;
+      hs->both[i] = true;
       hs->num++;
     } else {
-      hs->both[i] = FALSE;
+      hs->both[i] = false;
       if (book_needed && mid_run_needed && up_run_needed && down_run_needed)
         total += min((unsigned char)10, CARD_NUM(hand[i]));
     }
@@ -664,7 +664,7 @@ int* GinGame::find_book(int num, int* hand, int* left) {
 
 int* GinGame::find_run(int num, int* hand, int* left) {
   int card, i, j, l = -1, inc = 1, tmp[10], same[10];
-  bool updone = FALSE, downdone = FALSE;
+  bool updone = false, downdone = false;
   bool upfound, downfound;
 
   memset((char*)tmp, 1, sizeof(tmp));
@@ -681,25 +681,25 @@ int* GinGame::find_run(int num, int* hand, int* left) {
       left[++l] = hand[i];
   }
   while (!updone || !downdone) {
-    upfound = downfound = FALSE;
+    upfound = downfound = false;
     for (i = 0; i <= j; i++) {
       if (!updone) {
         if (CARD_NUM(card) == (CARD_NUM(same[i]) - inc)) {
           tmp[i] = 0;
-          upfound = TRUE;
+          upfound = true;
         }
       }
       if (!downdone) {
         if (CARD_NUM(card) == (CARD_NUM(same[i]) + inc)) {
           tmp[i] = 0;
-          downfound = TRUE;
+          downfound = true;
         }
       }
     }
     if (!upfound)
-      updone = TRUE;
+      updone = true;
     if (!downfound)
-      downdone = TRUE;
+      downdone = true;
     inc++;
   }
   for (i = 0; i <= j; i++) {
@@ -710,7 +710,7 @@ int* GinGame::find_run(int num, int* hand, int* left) {
 }
 
 int GinGame::recursive_gin_search(TBeing* ch, Hand* hs, int* hand) {
-  bool run = FALSE;
+  bool run = false;
   int i, *left, *tmp_left, total = 100;
   int tmp_total;
   Hand new_hs;
@@ -783,11 +783,11 @@ int GinGame::look(TBeing* ch, const char* arg) {
   if (is_abbrev(arg, "pile")) {
     if (pile_index == -1) {
       ch->sendTo("The pile has no cards in it currently.\n\r");
-      return TRUE;
+      return true;
     }
     ch->sendTo(format("The top card on the pile is the %s.\n\r") %
                pretty_card_printout(ch, pile[pile_index]));
-    return TRUE;
+    return true;
   }
   if (is_abbrev(arg, "table")) {
     look(ch, "pile");
@@ -796,9 +796,9 @@ int GinGame::look(TBeing* ch, const char* arg) {
                         "of the table :\n\r\t%s\n\r") %
                  gin_score());
 
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int GinGame::count(int which) {
@@ -819,8 +819,8 @@ GinGame::GinGame() :
   int i;
   for (i = 0; i < 2; i++) {
     *(names[i]) = '\0';
-    inuse[i] = FALSE;
-    loser[i] = FALSE;
+    inuse[i] = false;
+    loser[i] = false;
     score[i] = 0;
 
     int j;

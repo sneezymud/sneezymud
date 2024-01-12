@@ -9,7 +9,7 @@
 #include "being.h"
 
 int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
-  TPotion* potion_obj = NULL;
+  TPotion* potion_obj = nullptr;
   int w2, i;
   spellNumT which;
   int how_many;
@@ -21,15 +21,15 @@ int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
 
   if (ch->isLinkdead()) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->task->wasInRoom != ch->in_room) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -52,7 +52,7 @@ int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
               if (!potion_obj) {
                 if ((potion_obj = dynamic_cast<TPotion*>(t)) &&
                     potion_obj->getDrinkType() != LIQ_MAGICAL_ELIXIR)
-                  potion_obj = NULL;
+                  potion_obj = nullptr;
               }
             }
           }
@@ -61,14 +61,14 @@ int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
             if (!potion_obj) {
               if ((potion_obj = dynamic_cast<TPotion*>(t)) &&
                   potion_obj->getDrinkType() != LIQ_MAGICAL_ELIXIR)
-                potion_obj = NULL;
+                potion_obj = nullptr;
             }
           }
 
           if (!potion_obj) {
             ch->sendTo("You can't brew without a flask of magical elixir!\n\r");
             ch->stopTask();
-            return FALSE;
+            return false;
           }
 
           if (ch->bSuccess(knowledge, SKILL_BREW)) {
@@ -92,10 +92,10 @@ int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
             potion_obj->setDrinkType(LIQ_LEMONADE);
           }
 
-          act("$n finishes brewing.", FALSE, ch, 0, 0, TO_ROOM);
+          act("$n finishes brewing.", false, ch, 0, 0, TO_ROOM);
 
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       ch->task->timeLeft++;
@@ -104,7 +104,7 @@ int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
     case CMD_STOP:
       ch->stopTask();
       ch->sendTo("You stop brewing.\n\r");
-      act("$n stops brewing.", FALSE, ch, 0, 0, TO_ROOM);
+      act("$n stops brewing.", false, ch, 0, 0, TO_ROOM);
       break;
     case CMD_TASK_FIGHTING:
       ch->sendTo("You are unable to continue brewing while under attack!\n\r");
@@ -116,5 +116,5 @@ int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

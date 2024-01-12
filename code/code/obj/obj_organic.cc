@@ -139,8 +139,8 @@ int TOrganic::shopPrice(int num, int shop_nr, float, const TBeing* ch) const {
 int TOrganic::buyMe(TBeing* ch, TMonster* keeper, int num, int shop_nr) {
   char Buf[2][256];
   int price, vnum, nCost, nVolume, nWeight;
-  TObj* obj2 = NULL;
-  TOrganic* nOrg = NULL;
+  TObj* obj2 = nullptr;
+  TOrganic* nOrg = nullptr;
   sstring nocName("");
   nVolume = (int)getVolume();
   nWeight = (int)getWeight();
@@ -216,13 +216,13 @@ int TOrganic::buyMe(TBeing* ch, TMonster* keeper, int num, int shop_nr) {
       keeper->doTell(ch->getName(),
         format("Here ya go.  That's %d unit%s of %s for %d talen%s.") % num %
           (num > 1 ? "s" : "") % nocName % price % (price > 1 ? "s" : ""));
-      act("$n buys $p.", TRUE, ch, obj2, keeper, TO_NOTVICT);
+      act("$n buys $p.", true, ch, obj2, keeper, TO_NOTVICT);
     } else {
       // Must not have been a unit item, just give them the item in question.
       *ch += *this;
       keeper->doTell(ch->getName(),
         "Here ya go.  Thanks for shopping with us.");
-      act("$n buys $p.", TRUE, ch, this, keeper, TO_NOTVICT);
+      act("$n buys $p.", true, ch, this, keeper, TO_NOTVICT);
     }
 
     ch->giveMoney(keeper, price, GOLD_COMM);
@@ -262,7 +262,7 @@ int TOrganic::sellHidenSkin(TBeing* ch, TMonster* keeper, int shop_nr,
   } else
     generic_sell(ch, keeper, this, shop_nr);
 
-  return FALSE;
+  return false;
 }
 
 static void sellReducePrice(const TBeing* ch, TBeing* keeper,
@@ -281,8 +281,8 @@ static void sellReducePrice(const TBeing* ch, TBeing* keeper,
 
 // This function deals with the selling of TOrganic stuff.
 int TOrganic::sellMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
-  TThing* t = NULL;
-  TOrganic* obj2 = NULL;
+  TThing* t = nullptr;
+  TOrganic* obj2 = nullptr;
   int price, found = 0;
   char Buf[256];
 
@@ -379,7 +379,7 @@ int TOrganic::sellMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
 
     keeper->doTell(ch->getName(), format("Thanks, here's your %d talen%s.") %
                                     price % (price > 1 ? "s" : ""));
-    act("$n sells $p.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n sells $p.", true, ch, this, 0, TO_ROOM);
     if (ch->isAffected(AFF_GROUP) && ch->desc &&
         IS_SET(ch->desc->autobits, AUTO_SPLIT) &&
         (ch->master || ch->followers)) {
@@ -403,8 +403,8 @@ int TOrganic::sellMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
 // Used by the value command
 void TOrganic::valueMe(TBeing* ch, TMonster* keeper, int shop_nr, int num = 1) {
   int price;
-  TThing* t = NULL;
-  TOrganic* obj2 = NULL;
+  TThing* t = nullptr;
+  TOrganic* obj2 = nullptr;
 
   if (getUnits() > 0)
     price = min(shopPrice(max(1, getUnits()), shop_nr, -1, ch),
@@ -485,7 +485,7 @@ int TOrganic::objectSell(TBeing* ch,
   TMonster*
     keeper) {    /*
                   char Buf[256];
-   
+
                   // We just don't do this, wood items should be hunted down when
                   there
                   // needed or held for later use, no ranger worth his salt is
@@ -497,18 +497,18 @@ int TOrganic::objectSell(TBeing* ch,
                       // Eventually I will allow mortals to sell logs with
                   'special' affects on them.    sprintf(Buf, "%s I don't normally
                   buy    wood items, but I'll make an exception...",
-                  ch->getName());    keeper->doTell(Buf);    return FALSE;    }
+                  ch->getName());    keeper->doTell(Buf);    return false;    }
                   else {    sprintf(Buf, "%s I'm afraid I don't buy wood items...",
-                  ch->getName());    keeper->doTell(Buf);    return TRUE;
+                  ch->getName());    keeper->doTell(Buf);    return true;
                     }
                   }
                   // This is here until I get the code for non-unit organics in.
                   if (getUnits() <= 0 && !ch->isImmortal()) {
                     sprintf(Buf, "%s I'm afraid I don't deal in these items at the
-                  moment.", ch->getName());    keeper->doTell(Buf);    return TRUE;
+                  moment.", ch->getName());    keeper->doTell(Buf);    return true;
                   }
                  */
-  return FALSE;  // If we hit here, we Must be doing a unitary item, so allow
+  return false;  // If we hit here, we Must be doing a unitary item, so allow
                  // it.
 }
 
@@ -545,7 +545,7 @@ bool TOrganic::splitMe(TBeing* ch, const sstring& argument) {
   ch->sendTo(COLOR_OBJECTS,
     format("You split %s into %d pieces.\n\r") % shortDescr % num);
   Buf = format("$n splits %s into %d pieces.") % shortDescr % num;
-  act(Buf, TRUE, ch, 0, 0, TO_ROOM);
+  act(Buf, true, ch, 0, 0, TO_ROOM);
 
   // Lets get the users Weight&Volume so we can decide if the new hide goes on
   // the floor or in there inventory.
@@ -553,7 +553,7 @@ bool TOrganic::splitMe(TBeing* ch, const sstring& argument) {
   uWeiVol[1] = ch->carryVolumeLimit() - ch->getCarriedVolume();
 
   for (int run = 1; run < num; run++) {
-    TOrganic* obj2 = NULL;
+    TOrganic* obj2 = nullptr;
 
     if (objVnum() == -1 ||
         !(obj2 = dynamic_cast<TOrganic*>(read_object(objVnum(), VIRTUAL)))) {
@@ -568,16 +568,16 @@ bool TOrganic::splitMe(TBeing* ch, const sstring& argument) {
     obj2->setAEffect(getAEffect());
 
     if (canHold &&
-        (obj2->getTotalVolume() - obj2->getReducedVolume(NULL)) > uWeiVol[1]) {
+        (obj2->getTotalVolume() - obj2->getReducedVolume(nullptr)) > uWeiVol[1]) {
       ch->sendTo(
         "Unfortunatly the sheer amount of hide gets too much for you.\n\r");
-      act("You leave the rest of the hide on the $g.", TRUE, ch, 0, 0, TO_CHAR);
+      act("You leave the rest of the hide on the $g.", true, ch, 0, 0, TO_CHAR);
       canHold = false;
     }
-    if (canHold && !compareWeights(obj2->getTotalWeight(TRUE), uWeiVol[0])) {
+    if (canHold && !compareWeights(obj2->getTotalWeight(true), uWeiVol[0])) {
       ch->sendTo(
         "Unfortunatly the sheer weight of hide gets too much for you.\n\r");
-      act("You leave the rest of the hide on the $g.", TRUE, ch, 0, 0, TO_CHAR);
+      act("You leave the rest of the hide on the $g.", true, ch, 0, 0, TO_CHAR);
       canHold = false;
     }
     if (canHold)
@@ -625,14 +625,14 @@ int TOrganic::chiMe(TBeing* tLunatic) {
 
   if (!bSuccess(tLunatic, bKnown, SKILL_CHI) || !getOType() == ORGANIC_WOOD) {
     act("You fail to affect $p in any way.",
-        FALSE, tLunatic, this, NULL, TO_CHAR);
+        false, tLunatic, this, nullptr, TO_CHAR);
     return true;
   }
 
   act("You focus upon $p, causing it to burst into flames!",
-      FALSE, tLunatic, this, NULL, TO_CHAR);
+      false, tLunatic, this, nullptr, TO_CHAR);
   act("$n concentrates upon $p, causing it to burst into flames!",
-      TRUE, tLunatic, this, NULL, TO_ROOM);
+      true, tLunatic, this, nullptr, TO_ROOM);
   lightMe(tLunatic, SILENT_YES);
 
   return DELETE_VICT;

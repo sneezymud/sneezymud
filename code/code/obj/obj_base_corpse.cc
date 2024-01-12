@@ -26,7 +26,7 @@ TBaseCorpse::TBaseCorpse() :
   corpse_race(RACE_NORACE),
   corpse_level(0),
   corpse_vnum(-1),
-  tDissections(NULL) {}
+  tDissections(nullptr) {}
 
 TBaseCorpse::TBaseCorpse(const TBaseCorpse& a) :
   TBaseContainer(a),
@@ -84,7 +84,7 @@ TBaseCorpse::~TBaseCorpse() {
       sendrpf(this->roomp, "The %s explodes in a flash of white light!\n\r",
         fname(o->name).c_str());
       delete o;
-      o = NULL;
+      o = nullptr;
       continue;
     }
 
@@ -121,15 +121,15 @@ TBaseCorpse::~TBaseCorpse() {
     for (; tNextDissect; tNextDissect = tDissections) {
       tDissections = tNextDissect->tNext;
       delete tNextDissect;
-      tNextDissect = NULL;
+      tNextDissect = nullptr;
     }
-    tDissections = NULL;
+    tDissections = nullptr;
   }
 }
 
 int TBaseCorpse::putMeInto(TBeing* ch, TOpenContainer* container) {
   TObj* o;
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   for (StuffIter it = container->stuff.begin();
        it != container->stuff.end() && (t = *it); ++it) {
@@ -143,10 +143,10 @@ int TBaseCorpse::putMeInto(TBeing* ch, TOpenContainer* container) {
         getCorpseVnum() == dynamic_cast<TBaseCorpse*>(o)->getCorpseVnum()) {
       ch->sendTo(format("You already have one of those teeth in your %s.\n\r") %
                  fname(container->name).c_str());
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TBaseCorpse::assignFourValues(int x1, int x2, int x3, int x4) {
@@ -188,9 +188,9 @@ void TBaseCorpse::setCorpseVnum(int r) { corpse_vnum = r; }
 int TBaseCorpse::getCorpseVnum() const { return corpse_vnum; }
 
 void TBaseCorpse::peeOnMe(const TBeing* ch) {
-  act("With a scream of victory, $n pisses on $p.", TRUE, ch, this, NULL,
+  act("With a scream of victory, $n pisses on $p.", true, ch, this, nullptr,
     TO_ROOM);
-  act("You scream victoriously as you piss on $p.", TRUE, ch, this, NULL,
+  act("You scream victoriously as you piss on $p.", true, ch, this, nullptr,
     TO_CHAR);
 }
 
@@ -202,55 +202,55 @@ int TBaseCorpse::dissectMe(TBeing* caster) {
 
   if (isCorpseFlag(CORPSE_NO_REGEN)) {
     // a body part or something
-    act("$p: You aren't able to dissect that.", FALSE, caster, this, 0,
+    act("$p: You aren't able to dissect that.", false, caster, this, 0,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (isCorpseFlag(CORPSE_NO_DISSECT)) {
     // dissection already occurred
-    act("Nothing more of any use can be taken from $p.", FALSE, caster, this, 0,
+    act("Nothing more of any use can be taken from $p.", false, caster, this, 0,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
   num = determineDissectionItem(this, &amount, msg, gl_msg, caster);
   if (num == -1 || !(rnum = real_object(num))) {
     // no item
-    act("You aren't aware of any useful dissections that come from $p.", FALSE,
+    act("You aren't aware of any useful dissections that come from $p.", false,
       caster, this, 0, TO_CHAR);
-    return TRUE;
+    return true;
   }
 
-  act("You dissect $p.", FALSE, caster, this, 0, TO_CHAR);
-  act("$n dissects $p.", FALSE, caster, this, 0, TO_ROOM);
+  act("You dissect $p.", false, caster, this, 0, TO_CHAR);
+  act("$n dissects $p.", false, caster, this, 0, TO_ROOM);
   addCorpseFlag(CORPSE_NO_DISSECT);
 
   if (obj_index[rnum].getNumber() >= obj_index[rnum].max_exist) {
     // item at max
-    act("You find nothing useful in $p.", FALSE, caster, this, 0, TO_CHAR);
-    return TRUE;
+    act("You find nothing useful in $p.", false, caster, this, 0, TO_CHAR);
+    return true;
   }
   if (!(obj = read_object(num, VIRTUAL))) {
     caster->sendTo("Serious problem in dissect.\n\r");
     vlogf(LOG_OBJ, format("Bad call to read_object in dissect, num %d") % num);
-    return FALSE;
+    return false;
   }
   int bKnown = caster->getSkillValue(SKILL_DISSECT);
 
   if (!caster->bSuccess(bKnown, SKILL_DISSECT) &&
       !caster->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
     // dissection failed
-    act("You find nothing useful in $p.", FALSE, caster, this, 0, TO_CHAR);
+    act("You find nothing useful in $p.", false, caster, this, 0, TO_CHAR);
     delete obj;
-    obj = NULL;
-    return TRUE;
+    obj = nullptr;
+    return true;
   } else {
     if (::number(0, 99) >= amount) {
       // failed to pass amount
       CF(SKILL_DISSECT);
-      act("You find nothing useful in $p.", FALSE, caster, this, 0, TO_CHAR);
+      act("You find nothing useful in $p.", false, caster, this, 0, TO_CHAR);
       delete obj;
-      obj = NULL;
-      return TRUE;
+      obj = nullptr;
+      return true;
     }
 
     if (caster->hasQuestBit(TOG_STARTED_MONK_BLUE)) {
@@ -258,13 +258,13 @@ int TBaseCorpse::dissectMe(TBeing* caster) {
     }
 
     *caster += *obj;
-    act(msg, FALSE, caster, obj, this, TO_CHAR);
-    act(gl_msg, FALSE, caster, obj, this, TO_ROOM);
+    act(msg, false, caster, obj, this, TO_CHAR);
+    act(gl_msg, false, caster, obj, this, TO_ROOM);
     log_object(obj);
-    return TRUE;
+    return true;
   }
 
-  return TRUE;
+  return true;
 }
 
 void TBaseCorpse::update(int use) {
@@ -273,19 +273,19 @@ void TBaseCorpse::update(int use) {
 }
 
 void TBaseCorpse::lookObj(TBeing* ch, int) const {
-  act("$p contains:", TRUE, ch, this, 0, TO_CHAR);
+  act("$p contains:", true, ch, this, 0, TO_CHAR);
   list_in_heap(stuff, ch, 0, 100);
 }
 
 int TBaseCorpse::putSomethingInto(TBeing* ch, TThing*) {
   // technically, would be OK since is a container, but prevent them anyhow
-  act("Unfortunately, you can't put things into $p.", FALSE, ch, this, 0,
+  act("Unfortunately, you can't put things into $p.", false, ch, this, 0,
     TO_CHAR);
   return 2;
 }
 
 int TBaseCorpse::scavengeMe(TBeing* ch, TObj**) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TObj* obj;
   wearSlotT sl;
   char buf[1024], buf2[256], buf3[256];
@@ -306,13 +306,13 @@ int TBaseCorpse::scavengeMe(TBeing* ch, TObj**) {
             rc = ch->doGet(buf);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_VICT;
-            return TRUE;
+            return true;
           }
         }
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TBaseCorpse::decayMe() {
@@ -325,7 +325,7 @@ void TBaseCorpse::decayMe() {
 
 int TBaseCorpse::objectDecay() {
   if (parent)
-    act("$p disintegrates in your hands.", FALSE, parent, this, 0, TO_CHAR);
+    act("$p disintegrates in your hands.", false, parent, this, 0, TO_CHAR);
 
   else if (roomp && !roomp->stuff.empty()) {
     if (getMaterial() == MAT_POWDER) {
@@ -336,7 +336,7 @@ int TBaseCorpse::objectDecay() {
       // decaying getCorpseVnum() returns -1 for severed body parts
       if (!::number(0, 4) && getCorpseVnum() >= 0 &&
           Races[getCorpseRace()]->isHumanoid()) {
-        act("$n sits up and emits a ghastly moan!", TRUE, this, 0, 0, TO_ROOM);
+        act("$n sits up and emits a ghastly moan!", true, this, 0, 0, TO_ROOM);
       }
       sendrpf(COLOR_OBJECTS, roomp, "Flesh-eaters dissolve %s.\n\r",
         getName().c_str());
@@ -363,8 +363,8 @@ int TBaseCorpse::chiMe(TBeing* tLunatic) {
 
   if (dynamic_cast<TPCorpse*>(this) || !tLunatic->bSuccess(bKnown, SKILL_CHI) ||
       getCorpseLevel() > tLunatic->GetMaxLevel()) {
-    act("You attempt to nuke $p, but fail to control the chi.", FALSE, tLunatic,
-      this, NULL, TO_CHAR);
+    act("You attempt to nuke $p, but fail to control the chi.", false, tLunatic,
+      this, nullptr, TO_CHAR);
     return true;
   }
 
@@ -372,14 +372,14 @@ int TBaseCorpse::chiMe(TBeing* tLunatic) {
     act(
       "You focus your chi and cause $p to flair up violently, if only for a "
       "second.",
-      FALSE, tLunatic, this, NULL, TO_CHAR);
-    act("$n stares at $p causing it to flair up violently!", TRUE, tLunatic,
-      this, NULL, TO_ROOM);
+      false, tLunatic, this, nullptr, TO_CHAR);
+    act("$n stares at $p causing it to flair up violently!", true, tLunatic,
+      this, nullptr, TO_ROOM);
   } else {
-    act("You focus your chi and set $p ablaze!", FALSE, tLunatic, this, NULL,
+    act("You focus your chi and set $p ablaze!", false, tLunatic, this, nullptr,
       TO_CHAR);
-    act("$n stares at $p which suddenly bursts into flames!", TRUE, tLunatic,
-      this, NULL, TO_ROOM);
+    act("$n stares at $p which suddenly bursts into flames!", true, tLunatic,
+      this, nullptr, TO_ROOM);
   }
 
   if (material_nums[getMaterial()].flammability) {
@@ -397,12 +397,12 @@ void TBaseCorpse::getObjFromMeText(TBeing* tBeing, TThing* tThing,
       ((sstring)tBeing->getName()).lower() == tCorpse->getOwner()) {
     // allow loot
   } else if (isCorpseFlag(CORPSE_DENY_LOOT) && !tBeing->isImmortal()) {
-    act("Looting $p isn't allowed.", TRUE, tBeing, this, NULL, TO_CHAR);
+    act("Looting $p isn't allowed.", true, tBeing, this, nullptr, TO_CHAR);
     return;
   }
 
-  act("You take $p from $P.", FALSE, tBeing, tThing, this, TO_CHAR);
-  act("$n takes $p from $P.", TRUE, tBeing, tThing, this, TO_ROOM);
+  act("You take $p from $P.", false, tBeing, tThing, this, TO_CHAR);
+  act("$n takes $p from $P.", true, tBeing, tThing, this, TO_ROOM);
 
   --(*tThing);
   *tBeing += *tThing;

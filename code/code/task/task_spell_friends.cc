@@ -12,14 +12,14 @@ int task_spell_friends(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {
   if (ch->isLinkdead() || (ch->getPosition() < POSITION_RESTING)) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->utilityTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (ch->task->timeLeft < 0) {
-    act("You finish casting.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n finish casting.", FALSE, ch, 0, 0, TO_ROOM);
+    act("You finish casting.", false, ch, 0, 0, TO_CHAR);
+    act("$n finish casting.", false, ch, 0, 0, TO_ROOM);
     ch->stopTask();
   }
   switch (cmd) {
@@ -62,16 +62,16 @@ int task_spell_friends(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           break;
         case 0:
           //          ch->sendCastingMessage(buf2, CASTING_ROUND_DONE, 4);
-          act("You finish casting.", FALSE, ch, 0, 0, TO_CHAR);
-          act("$n finishes casting.", FALSE, ch, 0, 0, TO_ROOM);
+          act("You finish casting.", false, ch, 0, 0, TO_CHAR);
+          act("$n finishes casting.", false, ch, 0, 0, TO_ROOM);
           ch->stopTask();
           break;
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop casting.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops casting.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop casting.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops casting.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -84,5 +84,5 @@ int task_spell_friends(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

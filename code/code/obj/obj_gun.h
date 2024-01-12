@@ -84,7 +84,7 @@ class TGun : public TGenWeapon {
     int getAmmoType() const { return ammotype; }
     void setAmmo(TAmmo* a) { *this += *a; }
     TAmmo* getAmmo() const {
-      return stuff.empty() ? NULL : dynamic_cast<TAmmo*>(stuff.front());
+      return stuff.empty() ? nullptr : dynamic_cast<TAmmo*>(stuff.front());
     }
     void setRounds(int);
     int getRounds() const;

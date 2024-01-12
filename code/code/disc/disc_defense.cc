@@ -34,10 +34,10 @@ CDDefense::~CDDefense() {}
 // The larger perc is passed in the harder it is to avoid
 bool TBeing::canFocusedAvoidance(int perc) {
   if (!doesKnowSkill(SKILL_FOCUSED_AVOIDANCE))
-    return FALSE;
+    return false;
 
   if (!awake() || getPosition() < POSITION_CRAWLING)
-    return FALSE;
+    return false;
 
   int skill = getSkillValue(SKILL_FOCUSED_AVOIDANCE);
 
@@ -51,7 +51,7 @@ bool TBeing::canFocusedAvoidance(int perc) {
 
   // bSuccess is modified by focus
   if (!bSuccess(skill, SKILL_FOCUSED_AVOIDANCE))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }

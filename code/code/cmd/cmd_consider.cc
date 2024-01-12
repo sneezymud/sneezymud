@@ -29,8 +29,8 @@ void TBeing::doConsider(const char* argument) {
     if (!isImmortal() || !hasWizPower(POWER_IMM_EVAL)) {
       sendTo("Consider killing whom?\n\r");
       return;
-    } else if (!(victim = get_char_vis_world(this, namebuf, NULL, EXACT_YES)) &&
-               !(victim = get_char_vis_world(this, namebuf, NULL, EXACT_NO))) {
+    } else if (!(victim = get_char_vis_world(this, namebuf, nullptr, EXACT_YES)) &&
+               !(victim = get_char_vis_world(this, namebuf, nullptr, EXACT_NO))) {
       sendTo("I'm afraid I was unable to find them.\n\r");
       return;
     } else if (!dynamic_cast<TPerson*>(victim)) {
@@ -126,7 +126,7 @@ void TBeing::doConsider(const char* argument) {
   }
   if (victim->isPc() && victim->isImmortal()) {
     sendTo("You must sure have a big ego to contemplate fighting gods.\n\r");
-    act("$N just considered fighting you.", TRUE, victim, 0, this, TO_CHAR);
+    act("$N just considered fighting you.", true, victim, 0, this, TO_CHAR);
     return;
   } else if (dynamic_cast<TPerson*>(victim) ||
              isname("[clone]", victim->name)) {
@@ -149,8 +149,8 @@ void TBeing::doConsider(const char* argument) {
   // everything should be a monster by this point
   TMonster* tmon = dynamic_cast<TMonster*>(victim);
 
-  act("$n looks $N over.", TRUE, this, 0, tmon, TO_NOTVICT);
-  act("$n looks you over.", TRUE, this, 0, tmon, TO_VICT);
+  act("$n looks $N over.", true, this, 0, tmon, TO_NOTVICT);
+  act("$n looks you over.", true, this, 0, tmon, TO_VICT);
 
 #if 0
   diff = tmon->GetMaxLevel() - GetMaxLevel();
@@ -173,7 +173,7 @@ void TBeing::doConsider(const char* argument) {
   else if (!diff)
     sendTo("A fair fight.\n\r");
   else if (diff <= 1)
-    act("$E doesn't look that tough...", TRUE, this, 0, tmon, TO_CHAR);
+    act("$E doesn't look that tough...", true, this, 0, tmon, TO_CHAR);
   else if (diff <= 2)
     sendTo("Cross your fingers.\n\r");
   else if (diff <= 3)
@@ -185,7 +185,7 @@ void TBeing::doConsider(const char* argument) {
   else if (diff <= 15)
     sendTo("You and what army??\n\r");
   else if (diff <= 30)
-    act("You'll win if $E never hits you.", TRUE, this, 0, tmon, TO_CHAR);
+    act("You'll win if $E never hits you.", true, this, 0, tmon, TO_CHAR);
   else
     sendTo("There are better ways to suicide.\n\r");
 

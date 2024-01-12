@@ -275,22 +275,22 @@ void TBeing::statZoneMobs(sstring zoneNumber) {
     // grab the class data, do funny stuff to display possible multi-classes
     // with abbreviations
     sstring classy;
-    bool got_class = FALSE;
-    bool reset = FALSE;
+    bool got_class = false;
+    bool reset = false;
     for (classIndT cl = MIN_CLASS_IND; cl < MAX_CLASSES; cl++) {
       if (IS_SET((int)mob_index[iter->first].Class, 1 << cl)) {
         if (got_class && !reset) {
           // mob is multi-classed, erase and start over with abbreviations
           cl = MIN_CLASS_IND;
           classy.clear();
-          reset = TRUE;
+          reset = true;
         }
         if (got_class) {
           classy.append(classInfo[cl].abbr);
         } else {
           classy = classInfo[cl].name;
         }
-        got_class = TRUE;
+        got_class = true;
       }
     }
     if (classy.size() == 0) {
@@ -386,7 +386,7 @@ void TBeing::statRoom(TRoom* rmp) {
   sstring tmp_str;
   sstring buf2, buf3, buf4;
   extraDescription* e;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   int counter = 0, volume;
 
   if (!limitPowerCheck(CMD_EDIT, rmp->number)) {
@@ -588,7 +588,7 @@ void TBeing::statRoom(TRoom* rmp) {
 
 void TBeing::statObj(const TObj* j) {
   extraDescription* e;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   int i;
   sstring str;
 
@@ -761,7 +761,7 @@ void TBeing::statObj(const TObj* j) {
 }
 
 void TBeing::statObjForDivman(const TObj* j) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   sstring str = "\n\r";
   sstring sitem = j->shortDescr;
 
@@ -880,7 +880,7 @@ void TBeing::statObjForDivman(const TObj* j) {
 void TBeing::statBeing(TBeing* k) {
   sstring str = "";
   sstring buf2, buf3;
-  TGuild* f = NULL;
+  TGuild* f = nullptr;
   const TMonster* km = dynamic_cast<const TMonster*>(k);
   resp* respy;
   followData* fol;
@@ -1024,7 +1024,7 @@ void TBeing::statBeing(TBeing* k) {
   str +=
     format(
       "%sDef Rnd:%s [%5d]   %sExp      :%s %-16s %sMax Exp :%s %-13s\n\r") %
-    cyan() % norm() % k->defendRound(NULL) % cyan() % norm() % buf3 % cyan() %
+    cyan() % norm() % k->defendRound(nullptr) % cyan() % norm() % buf3 % cyan() %
     norm() % buf2;
 
   buf2 = format("[%5d]") % k->getMoney();
@@ -1040,7 +1040,7 @@ void TBeing::statBeing(TBeing* k) {
   str +=
     format(
       "%sAtt Rnd:%s [%5d]   %sHitroll  :%s %-16s %sDamroll :%s %-13s\n\r") %
-    cyan() % norm() % k->attackRound(NULL) % cyan() % norm() % buf2 % cyan() %
+    cyan() % norm() % k->attackRound(nullptr) % cyan() % norm() % buf2 % cyan() %
     norm() % buf3;
 
   str += format("%sPiety  :%s [%5.1f]   %sLifeForce:%s [%5d]\n\r") % cyan() %
@@ -2517,10 +2517,10 @@ void TBeing::doStat(const sstring&) { return; }
 void TPerson::doStat(const sstring& argument) {
   sstring arg1, arg2, arg3;
   sstring tmp_arg;
-  TBeing* k = NULL;
-  TObj* j = NULL;
+  TBeing* k = nullptr;
+  TObj* j = nullptr;
   int count, parm = 0;
-  int foundNum = FALSE;
+  int foundNum = false;
 
   if (!isImmortal()) {
     incorrectCommand();
@@ -2576,7 +2576,7 @@ void TPerson::doStat(const sstring& argument) {
         if ((tMonster = read_mobile(rnum, REAL))) {
           statBeing(tMonster);
           delete tMonster;
-          tMonster = NULL;
+          tMonster = nullptr;
           return;
         } else {
           sendTo("No mobile found with that vnum.\n\r");
@@ -2614,7 +2614,7 @@ void TPerson::doStat(const sstring& argument) {
         if ((tObj = read_object(rnum, REAL))) {
           statObj(tObj);
           delete tObj;
-          tObj = NULL;
+          tObj = nullptr;
           return;
         } else {
           sendTo("No object found with that vnum.\n\r");
@@ -2724,11 +2724,11 @@ void TPerson::doStat(const sstring& argument) {
         }
       } else {
         // search by name
-        foundNum = FALSE;
+        foundNum = false;
         // search for exact name
         for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
           if (is_exact_name(arg3, discNames[dnt].name)) {
-            foundNum = TRUE;
+            foundNum = true;
             break;
           }
         }
@@ -2737,7 +2737,7 @@ void TPerson::doStat(const sstring& argument) {
         if (!foundNum) {
           for (dnt = MIN_DISC; dnt < MAX_DISCS; dnt++) {
             if (isname(arg3, discNames[dnt].name)) {
-              foundNum = TRUE;
+              foundNum = true;
               break;
             }
           }
@@ -2789,13 +2789,13 @@ void TPerson::doStat(const sstring& argument) {
         snt = spellNumT(parm);
       } else {
         // search by name
-        foundNum = FALSE;
+        foundNum = false;
         for (snt = MIN_SPELL; snt < MAX_SKILL; snt++) {
           if (hideThisSpell(snt)) {
             continue;
           }
           if (is_exact_name(arg3, discArray[snt]->name)) {
-            foundNum = TRUE;
+            foundNum = true;
             break;
           }
         }
@@ -2819,7 +2819,7 @@ void TPerson::doStat(const sstring& argument) {
               continue;
             }
             if (isname(arg3, discArray[snt]->name)) {
-              foundNum = TRUE;
+              foundNum = true;
               break;
             }
           }

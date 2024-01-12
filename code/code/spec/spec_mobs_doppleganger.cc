@@ -66,8 +66,8 @@ TBeing* dopplegangerFindBetter(TBeing* tSucker, TBeing* tPatsy) {
 }
 
 TBeing* dopplegangerFindTarget(TRoom* tRoom) {
-  TBeing *tSucker, *tBestSucker = NULL;
-  TThing* tObj = NULL;
+  TBeing *tSucker, *tBestSucker = nullptr;
+  TThing* tObj = nullptr;
   TRoom* tNewRoom;
 
   for (StuffIter it = tRoom->stuff.begin();
@@ -88,12 +88,12 @@ TBeing* dopplegangerFindTarget(TRoom* tRoom) {
 
 int doppleganger(TBeing* ch, cmdTypeT cmd, const char* tArg, TMonster* tMyself,
   TObj* tObj) {
-  mimicStructure* tJob = NULL;
+  mimicStructure* tJob = nullptr;
   TBeing *tSucker, *tPatsy;
   followData *tFollowerA, *tFollowerB;
 
   if (!tMyself)
-    return FALSE;
+    return false;
 
   if (tMyself->act_ptr)
     tJob = static_cast<mimicStructure*>(tMyself->act_ptr);
@@ -104,12 +104,12 @@ int doppleganger(TBeing* ch, cmdTypeT cmd, const char* tArg, TMonster* tMyself,
         vlogf(LOG_PROC,
           format("%s created with action pointer already existing.\n\r") %
             tMyself->getName());
-        return FALSE;
+        return false;
       }
 
       if (!(tMyself->act_ptr = new mimicStructure())) {
         vlogf(LOG_PROC, "Failed allocation of new Mimic proc.");
-        return FALSE;
+        return false;
       }
 
       vlogf(LOG_LAPSOS, "Mimic: Created");
@@ -125,7 +125,7 @@ int doppleganger(TBeing* ch, cmdTypeT cmd, const char* tArg, TMonster* tMyself,
     case CMD_GENERIC_DESTROYED:
       if (tMyself->act_ptr) {
         delete static_cast<mimicStructure*>(tMyself->act_ptr);
-        tMyself->act_ptr = NULL;
+        tMyself->act_ptr = nullptr;
       }
 
       vlogf(LOG_LAPSOS, "Mimic: Deleted");
@@ -134,12 +134,12 @@ int doppleganger(TBeing* ch, cmdTypeT cmd, const char* tArg, TMonster* tMyself,
     case CMD_MOB_MOVED_INTO_ROOM:
       if (tMyself->act_ptr && !tJob->tAssumed.empty() &&
           (tSucker =
-              get_char_room_vis(tMyself, tJob->tAssumed, NULL, EXACT_YES)) &&
+              get_char_room_vis(tMyself, tJob->tAssumed, nullptr, EXACT_YES)) &&
           tSucker->isPc() && !tSucker->isImmortal()) {
         if (tSucker->master && tSucker->master->isPc() &&
             !tSucker->isAffected(AFF_CHARM)) {
           tSucker->sendTo("Looking upon yourself you lose your focus...\n\r");
-          tSucker->stopFollower(TRUE);
+          tSucker->stopFollower(true);
 
           tSucker->stopTask();
         } else if (tSucker->followers) {
@@ -152,8 +152,8 @@ int doppleganger(TBeing* ch, cmdTypeT cmd, const char* tArg, TMonster* tMyself,
               act(
                 "You stop following $n seeing that there is now a pair of "
                 "them.",
-                TRUE, tSucker, NULL, tPatsy, TO_VICT);
-              tPatsy->stopFollower(TRUE);
+                true, tSucker, nullptr, tPatsy, TO_VICT);
+              tPatsy->stopFollower(true);
             }
           }
         }
@@ -206,5 +206,5 @@ int doppleganger(TBeing* ch, cmdTypeT cmd, const char* tArg, TMonster* tMyself,
       break;
   }
 
-  return FALSE;
+  return false;
 }

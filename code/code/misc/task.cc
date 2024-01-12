@@ -10,14 +10,14 @@
   to start a task, do:
   start_task(this, obj, rp, TASK_MEDITATE, arg, 0, in_room, 1, 0, 40);
 
-  obj and rp can be NULL
+  obj and rp can be nullptr
   arg is probably ""
-   
+
   timeLeft: (the first 0)
     - generally used as a counter of the number of interations of
       CMD_TASK_CONTINUE that have been encountered.
-    - can be any (int) value desired 
- 
+    - can be any (int) value desired
+
   in_room: (sets ch->task->was_in_room)
     - task should check current room vs this.
       reason: start the task and let my group leader move me around mud.
@@ -38,7 +38,7 @@
     - an int, use depends on the task.
 
   nextUpdate:
-    - NOT WHAT IT SEEMS:  
+    - NOT WHAT IT SEEMS:
       start_task() says ch->task->nextUpdate = nextUpdate.
     - calls to CMD_TASK_CONTINUE occur if pulse > ch->task->nextUpdate
     - notice that because pulse is typically big, calls to TASK CONTINUE are
@@ -57,12 +57,12 @@ taskData::taskData() :
   task(TASK_BOGUS),
   nextUpdate(0),
   timeLeft(0),
-  orig_arg(NULL),
+  orig_arg(nullptr),
   wasInRoom(0),
   status(0),
   flags(0),
-  obj(NULL),
-  room(NULL) {}
+  obj(nullptr),
+  room(nullptr) {}
 
 taskData::taskData(const taskData& a) :
   task(a.task),
@@ -94,7 +94,7 @@ taskData& taskData::operator=(const taskData& a) {
 
 taskData::~taskData() {
   delete[] orig_arg;
-  orig_arg = NULL;
+  orig_arg = nullptr;
 
   if (obj)
     obj->setIsTaskObj(false);
@@ -110,13 +110,13 @@ void TBeing::stopTask() {
     return;
 
   delete[] task->orig_arg;
-  task->orig_arg = NULL;
+  task->orig_arg = nullptr;
 
   if (task->obj)
     task->obj->setIsTaskObj(false);
 
   delete task;
-  task = NULL;
+  task = nullptr;
 }
 
 int start_task(TBeing* ch, TThing* t, TRoom* rp, taskTypeT task,
@@ -129,12 +129,12 @@ int start_task(TBeing* ch, TThing* t, TRoom* rp, taskTypeT task,
         (ch ? ch->getName() : "Unknown") % task);
     if (ch)
       ch->sendTo("Problem in task.  Bug Brutius.\n\r");
-    return FALSE;
+    return false;
   }
   if (!(ch->task = new taskData)) {
     vlogf(LOG_BUG,
       format("Couldn't allocate memory in start_task for %s") % ch->getName());
-    return FALSE;
+    return false;
   }
 
   ch->task->orig_arg = mud_str_dup(arg);
@@ -152,7 +152,7 @@ int start_task(TBeing* ch, TThing* t, TRoom* rp, taskTypeT task,
   if (task != TASK_GET_ALL && ch->task->obj)
     ch->task->obj->setIsTaskObj(true);
 
-  return TRUE;
+  return true;
 }
 
 void warn_busy(TBeing* ch) {
@@ -174,7 +174,7 @@ int task_bogus(TBeing* ch, cmdTypeT, const char*, int, TRoom*, TObj*) {
     format("%s was busy doing a buggy task!  Yikes!") % ch->getName());
   ch->stopTask();
 
-  return FALSE;
+  return false;
 }
 
 // first argument, the task name, should be a verb for the "look" commands
@@ -277,9 +277,9 @@ bool TBeing::nobrainerTaskCommand(cmdTypeT cmd) {
     case CMD_GT:
     case CMD_WIZNET:
     case CMD_REPLY:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -325,8 +325,8 @@ bool TBeing::utilityTaskCommand(cmdTypeT cmd) {
     case CMD_AFK:
     case CMD_WEATHER:
     case CMD_TOGGLE:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }

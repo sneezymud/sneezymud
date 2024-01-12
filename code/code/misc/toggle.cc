@@ -668,21 +668,21 @@ void TBeing::doToggle(const char* arg2) {
       sendTo("STEALTH mode OFF.\n\r");
       remPlayerAction(PLR_STEALTH);
       if (desc && desc->m_bIsClient)
-        desc->clientf(format("%d|%d") % CLIENT_STEALTH % FALSE);
+        desc->clientf(format("%d|%d") % CLIENT_STEALTH % false);
     } else {
       sendTo("STEALTH mode ON.\n\r");
       addPlayerAction(PLR_STEALTH);
       if (desc && desc->m_bIsClient)
-        desc->clientf(format("%d|%d") % CLIENT_STEALTH % TRUE);
+        desc->clientf(format("%d|%d") % CLIENT_STEALTH % true);
     }
   } else if (is_abbrev(arg, "newbiehelper") || is_abbrev(arg, "helper")) {
     if (isPlayerAction(PLR_NEWBIEHELP)) {
       remPlayerAction(PLR_NEWBIEHELP);
-      act("You just removed your newbie-helper flag", FALSE, this, 0, 0,
+      act("You just removed your newbie-helper flag", false, this, 0, 0,
         TO_CHAR);
     } else {
       addPlayerAction(PLR_NEWBIEHELP);
-      act("You just set your newbie-helper flag.", FALSE, this, 0, 0, TO_CHAR);
+      act("You just set your newbie-helper flag.", false, this, 0, 0, TO_CHAR);
     }
   } else if (is_abbrev(arg, "anonymous")) {
     if (GetMaxLevel() < 5) {
@@ -691,10 +691,10 @@ void TBeing::doToggle(const char* arg2) {
     }
     if (isPlayerAction(PLR_ANONYMOUS)) {
       remPlayerAction(PLR_ANONYMOUS);
-      act("You are no longer anonymous.", FALSE, this, 0, 0, TO_CHAR);
+      act("You are no longer anonymous.", false, this, 0, 0, TO_CHAR);
     } else {
       addPlayerAction(PLR_ANONYMOUS);
-      act("You are now anonymous.", FALSE, this, 0, 0, TO_CHAR);
+      act("You are now anonymous.", false, this, 0, 0, TO_CHAR);
     }
   } else if (is_abbrev(arg, "invisibility") && isImmortal()) {
     int level;
@@ -713,16 +713,16 @@ void TBeing::doToggle(const char* arg2) {
         level = GetMaxLevel();
       setInvisLevel(level);
       sendTo(format("Invis level set to %d.\n\r") % level);
-      fixClientPlayerLists(TRUE);
+      fixClientPlayerLists(true);
     } else {
       if (getInvisLevel() > 0) {
         setInvisLevel(0);
         sendTo("You are now totally visible.\n\r");
-        fixClientPlayerLists(FALSE);
+        fixClientPlayerLists(false);
       } else {
         setInvisLevel(GOD_LEVEL1);
         sendTo("You are now invisible to all but gods.\n\r");
-        fixClientPlayerLists(TRUE);
+        fixClientPlayerLists(true);
       }
     }
   } else if (is_abbrev(arg, "wimpy")) {

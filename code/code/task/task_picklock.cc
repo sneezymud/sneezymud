@@ -92,23 +92,23 @@ int task_picklock(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {
   if (ch->isLinkdead() || (ch->getPosition() <= POSITION_SITTING)) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (ch->in_room != ch->task->wasInRoom) {
     ch->sendTo("Hey, where'd the lock go?!?\n\r");
-    act("$n looks about, confused and bewildered.", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n looks about, confused and bewildered.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (!ch->doesKnowSkill(SKILL_PICK_LOCK)) {
     ch->sendTo("I bet you wish you knew how to pick locks.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -117,16 +117,16 @@ int task_picklock(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       if (!pick) {
         ch->sendTo("Hey, where'd your lockpick go?!?\n\r");
         ch->stopTask();
-        return FALSE;
+        return false;
       }
       ch->task->calcNextUpdate(pulse, Pulse::MOBACT);
       pick_pulse(ch, pick);
-      return FALSE;
+      return false;
     }
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop trying to pick the lock.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops fiddling with something.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop trying to pick the lock.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops fiddling with something.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -139,5 +139,5 @@ int task_picklock(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

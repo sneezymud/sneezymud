@@ -82,7 +82,7 @@ TObj* createletter(sstring from) {
 
   if (!(note = read_object(Obj::GENERIC_NOTE, VIRTUAL))) {
     vlogf(LOG_BUG, "Couldn't make a note for mail!");
-    return NULL;
+    return nullptr;
   }
 
   note->swapToStrung();
@@ -94,7 +94,7 @@ TObj* createletter(sstring from) {
 
   if (!(envelope = read_object(124, VIRTUAL))) {
     vlogf(LOG_BUG, "Couldn't load object 124!");
-    return NULL;
+    return nullptr;
   }
 
   *envelope += *note;
@@ -103,7 +103,7 @@ TObj* createletter(sstring from) {
 }
 
 int postman(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
-  TObj* bag = NULL;
+  TObj* bag = nullptr;
   TObj* obj;
 
   if (cmd != CMD_GENERIC_PULSE || !me)
@@ -128,14 +128,14 @@ int postman(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     if ((bag = dynamic_cast<TObj*>(*it)) && bag->objVnum() == 2375)
       break;
     else
-      bag = NULL;
+      bag = nullptr;
   }
 
   if (!bag)
     return false;
 
   // find random mob
-  TMonster* tm = NULL;
+  TMonster* tm = nullptr;
   std::vector<TMonster*> mobs;
 
   for (StuffIter it = me->roomp->stuff.begin(); it != me->roomp->stuff.end();
@@ -160,7 +160,7 @@ int postman(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     for (StuffIter it = bag->stuff.begin(); it != bag->stuff.end(); ++it) {
       if ((obj = dynamic_cast<TObj*>(*it)) && obj->objVnum() == 124) {
         --(*obj);
-        act("$n delivers $p to $N.", FALSE, me, obj, tm, TO_ROOM);
+        act("$n delivers $p to $N.", false, me, obj, tm, TO_ROOM);
         delete obj;
         if (!::number(0, 800)) {
           TObj* o2;
@@ -180,7 +180,7 @@ int postman(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
 
     *bag += *obj;
 
-    act("$n receives $p for delivery from $N.", FALSE, me, obj, tm, TO_ROOM);
+    act("$n receives $p for delivery from $N.", false, me, obj, tm, TO_ROOM);
   }
 
   return true;

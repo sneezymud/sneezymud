@@ -321,7 +321,7 @@ int TBeing::pracsBetween(discNumT which, int target) const {
 void TBeing::raiseDiscOnce(discNumT which) {
   CDiscipline* d;
   d = getDiscipline(which);
-  mud_assert(d != NULL, "Bad discipline in raiseDiscOnce");
+  mud_assert(d != nullptr, "Bad discipline in raiseDiscOnce");
 
   int amount = d->getNatLearnedness();
 
@@ -332,7 +332,7 @@ void TBeing::raiseDiscOnce(discNumT which) {
       affectTotal();
   }
   max(amount, 0);
-  amount += calcRaiseDisc(which, FALSE);
+  amount += calcRaiseDisc(which, false);
   d->setNatLearnedness(min((int)MAX_DISC_LEARNEDNESS, amount));
   d->setLearnedness(min((int)MAX_DISC_LEARNEDNESS, amount));
   if (isPc() || desc)
@@ -380,10 +380,10 @@ const char* how_good(int percent) {
 
 void give_avenger(TBeing* gm, TBeing* ch) {
   if (ch->hasClass(CLASS_DEIKHAN)) {
-    act("$n says, \"$N, it takes true bravery to reach level 20!\"", FALSE, gm,
+    act("$n says, \"$N, it takes true bravery to reach level 20!\"", false, gm,
       0, ch, TO_ROOM);
     act("$n says, \"You have shown yourself worthy of your Holy Avenger.\"",
-      FALSE, gm, 0, ch, TO_ROOM);
+      false, gm, 0, ch, TO_ROOM);
     personalize_object(gm, ch, 319, -1);
   }
 }
@@ -1043,11 +1043,11 @@ void TPerson::raiseLevel(classIndT Class) {
   advanceSelectDisciplines(Class, 1, SILENT_NO);
 
   // The fix statement below set the client who window with correct level
-  fixClientPlayerLists(TRUE);
+  fixClientPlayerLists(true);
 
   advanceLevel(Class);
 
-  fixClientPlayerLists(FALSE);
+  fixClientPlayerLists(false);
   setTitle(false);
 
   if (hasQuestBit(TOG_PERMA_DEATH_CHAR)) {
@@ -1107,7 +1107,7 @@ void TPerson::doLevelSkillsLearn(discNumT discipline, int initial, int final) {
       affectTotal();
 
       sprintf(buf, "You have just learned %s!", discArray[i]->name);
-      act(buf, FALSE, this, 0, NULL, TO_CHAR);
+      act(buf, false, this, 0, nullptr, TO_CHAR);
     } else if ((*discArray[i]->name) && (initial >= discArray[i]->start) &&
                !(discArray[i]->toggle && !hasQuestBit(discArray[i]->toggle))) {
       if (discArray[i]->startLearnDo == -1) {  // doesnt use learn by doing
@@ -1144,30 +1144,30 @@ void TPerson::doLevelSkillsLearn(discNumT discipline, int initial, int final) {
 int generic_trainer_stuff(TBeing* me, const TBeing* ch) {
   if (ch->checkSoundproof()) {
     act("$n waves $s hands near $s mouth, trying to say something to $N.",
-      FALSE, me, 0, ch, TO_NOTVICT);
+      false, me, 0, ch, TO_NOTVICT);
     act("$n waves $s hands near $s mouth, trying to say something to you.",
-      FALSE, me, 0, ch, TO_VICT);
-    return TRUE;
+      false, me, 0, ch, TO_VICT);
+    return true;
   }
   if (ch->getPosition() <= POSITION_SITTING) {
     me->doSay("How can I train you if you don't stand up?");
-    return TRUE;
+    return true;
   }
   if (!ch->isPc() || !ch->desc) {
     if (ch != me) {
-      act("$n laughs at $N.", FALSE, me, 0, ch, TO_NOTVICT);
-      act("$n laughs at you.", FALSE, me, 0, ch, TO_VICT);
+      act("$n laughs at $N.", false, me, 0, ch, TO_NOTVICT);
+      act("$n laughs at you.", false, me, 0, ch, TO_VICT);
       me->doSay("You're just a silly mob.");
     }
-    return TRUE;
+    return true;
   }
 
   if (ch->desc->original) {
     // should prevent poly type things
     me->doSay("I can not train you in that form.");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 struct TRAININFO {
@@ -1323,7 +1323,7 @@ int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   TObj*) {
   int offset = 0;
   int pracs = 0, practices = 0;
-  bool doneBas = FALSE;
+  bool doneBas = false;
   char buf[160];
   char pracbuf[128];
   char classbuf[128];
@@ -1346,7 +1346,7 @@ int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     dynamic_cast<TMonster*>(ch)->aiMaintainCalm();
 
   if (cmd != CMD_PRACTICE)
-    return FALSE;
+    return false;
 
   for (offset = 0;; offset++) {
     if (me->spec == TrainerInfo[offset].spec) {
@@ -1357,7 +1357,7 @@ int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       vlogf(LOG_BUG,
         format("TrainerMob lacked setup in TrainerInfo array (%s)") %
           me->getName());
-      return FALSE;
+      return false;
     }
   }
 
@@ -1368,32 +1368,32 @@ int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     sprintf(buf, "Type \"practice %s <number>\" to learn this discipline.",
       TrainerInfo[offset].abbrev);
     me->doSay(buf);
-    return FALSE;
+    return false;
   }
   arg = one_argument(arg, pracbuf, cElements(pracbuf));
   if (!*pracbuf || !(pracs = convertTo<int>(pracbuf))) {
     sprintf(buf, "Type \"practice %s <number>\" to learn this discipline.",
       TrainerInfo[offset].abbrev);
     me->doSay(buf);
-    return FALSE;
+    return false;
   }
   if (generic_trainer_stuff(me, ch))
-    return TRUE;
+    return true;
 
   if (pracs <= 0) {
     act(
       "$n growls, \"Don't tick me off, $N.  You won't like me when I'm mad.\"",
-      TRUE, me, 0, ch, TO_ROOM);
-    return TRUE;
+      true, me, 0, ch, TO_ROOM);
+    return true;
   }
   arg = one_argument(arg, classbuf, cElements(classbuf));
 
   if (!IS_SET(TrainerInfo[offset].accclass, ch->getClass())) {
     /* none of my classes match up */
-    act("$n growls, \"Go away, $N.\"", FALSE, me, 0, ch, TO_ROOM);
+    act("$n growls, \"Go away, $N.\"", false, me, 0, ch, TO_ROOM);
     act("$n growls, \"I will not teach you the secrets of our masters!\"",
-      FALSE, me, 0, ch, TO_ROOM);
-    return TRUE;
+      false, me, 0, ch, TO_ROOM);
+    return true;
   }
   /* next, see if I only have one of the appropriate classes */
   var = (ch->getClass() & TrainerInfo[offset].accclass);
@@ -1420,7 +1420,7 @@ int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     sprintf(buf, "Type \"practice %s <number>\" to learn this discipline.",
       TrainerInfo[offset].abbrev);
     me->doSay(buf);
-    return TRUE;
+    return true;
   } else {
     for (int i = 0; i < MAX_CLASSES; ++i) {
       if (is_abbrev(classbuf, classInfo[i].name) &&
@@ -1431,34 +1431,34 @@ int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     }
 
     if ((int)accclass == -1) {
-      act("$n growls, \"Get real, $N. I'm not an idiot!\"", FALSE, me, 0, ch,
+      act("$n growls, \"Get real, $N. I'm not an idiot!\"", false, me, 0, ch,
         TO_ROOM);
-      return TRUE;
+      return true;
     }
   }
   if (!((1 << accclass) & TrainerInfo[offset].accclass)) {
-    act("$n growls, \"Go away, $N.\"", FALSE, me, 0, ch, TO_ROOM);
+    act("$n growls, \"Go away, $N.\"", false, me, 0, ch, TO_ROOM);
     act("$n growls, \"I will not teach you the secrets of our masters!\"",
-      FALSE, me, 0, ch, TO_ROOM);
-    return TRUE;
+      false, me, 0, ch, TO_ROOM);
+    return true;
   }
 
   // First set doneBasic and check for it
-  doneBas = ch->checkDoneBasic(ch, accclass, FALSE, FALSE);
+  doneBas = ch->checkDoneBasic(ch, accclass, false, false);
 
   // Get how many practices the trainer himself will allow
   practices = ch->getTrainerPracs(ch, me, accclass, discipline, pracs);
 
   // Make sure Im not maxxed, other small checks
   if (ch->checkTrainDeny(ch, me, discipline, min(practices, pracs)))
-    return TRUE;
+    return true;
 
   if (ch->checkForPreReqs(ch, me, discipline, accclass, doneBas)) {
     if (practices <= 0) {
       me->doTell(fname(ch->name),
         "I also would not be able to train you further in this discipline.");
     }
-    return TRUE;
+    return true;
   }
 
   if (practices <= 0) {
@@ -1466,23 +1466,23 @@ int CDGenericTrainer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       "You have come far.  I can train you no farther in this discipline.");
     me->doTell(fname(ch->name),
       "You must find another master who can further your training.");
-    return TRUE;
+    return true;
   }
 
   // set the number they actually have as another limiting factor
   practices = min((int)ch->getPracs(accclass), practices);
   if (practices <= 0) {
     me->doTell(fname(ch->name), "You have no more practices you can use here.");
-    return TRUE;
+    return true;
   } else if (practices < pracs) {
     me->doTell(fname(ch->name),
       format("I will only be able to use %d of your requested practices.") %
         practices);
   }
   if (ch->doTraining(ch, me, accclass, offset, min(practices, pracs)))
-    return TRUE;
+    return true;
 
-  return TRUE;
+  return true;
 }
 
 int TBeing::getCombatPrereqNumber(classIndT accclass) const {
@@ -1546,7 +1546,7 @@ int TBeing::checkDoneBasic(TBeing* ch, classIndT accclass, int guild,
             min(bas, (int)MAX_DISC_LEARNEDNESS));
   }
   if (ch->player.doneBasic[accclass]) {
-    return FALSE;
+    return false;
   }
   if ((combat >= getCombatPrereqNumber(accclass)) &&
       (bas >= MAX_DISC_LEARNEDNESS)) {
@@ -1555,7 +1555,7 @@ int TBeing::checkDoneBasic(TBeing* ch, classIndT accclass, int guild,
       if (guild)
         return 4;
     }
-    return FALSE;
+    return false;
   } else if (bas >= MAX_DISC_LEARNEDNESS) {
     return 1;
   } else if (combat >= getCombatPrereqNumber(accclass)) {
@@ -1604,14 +1604,14 @@ int TBeing::checkTrainDeny(const TBeing* ch, TMonster* me, discNumT discipline,
       MAX_DISC_LEARNEDNESS) {
     me->doTell(fname(ch->name),
       "You are already fully learned in this discipline.");
-    return TRUE;
+    return true;
   }
   if ((ch->getDiscipline(discipline))->getNatLearnedness() + pracs >
       MAX_DISC_LEARNEDNESS) {
     ch->sendTo("You cannot practice that many times!\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TBeing::checkForPreReqs(const TBeing* ch, TMonster* me, discNumT discipline,
@@ -1620,63 +1620,63 @@ int TBeing::checkForPreReqs(const TBeing* ch, TMonster* me, discNumT discipline,
   sstring tmp_buf;
   int found = 0;
   int combat = 0;
-  bool combatLearn = FALSE;
+  bool combatLearn = false;
   int WEAPON_GAIN_LEARNEDNESS = 92;
 
   if (discipline == DISC_BAREHAND) {
     if (ch->getRawNatSkillValue(SKILL_BAREHAND_PROF) <
         WEAPON_GAIN_LEARNEDNESS) {
       me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
+      return true;
     }
   }
   if (discipline == DISC_SLASH) {
     if (ch->getRawNatSkillValue(SKILL_SLASH_PROF) < WEAPON_GAIN_LEARNEDNESS) {
       me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
+      return true;
     }
   }
   if (discipline == DISC_PIERCE) {
     if (ch->getRawNatSkillValue(SKILL_PIERCE_PROF) < WEAPON_GAIN_LEARNEDNESS) {
       me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
+      return true;
     }
   }
   if (discipline == DISC_BLUNT) {
     if (ch->getRawNatSkillValue(SKILL_BLUNT_PROF) < WEAPON_GAIN_LEARNEDNESS) {
       me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
+      return true;
     }
   }
   if (discipline == DISC_RANGED) {
     if (ch->getRawNatSkillValue(SKILL_RANGED_PROF) < WEAPON_GAIN_LEARNEDNESS) {
       me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
+      return true;
     }
   }
   if (discipline == DISC_DEFENSE) {
     if (ch->getRawNatSkillValue(SKILL_DEFENSE) < WEAPON_GAIN_LEARNEDNESS) {
       me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
+      return true;
     }
   }
   if (discipline == DISC_ADVANCED_ADVENTURING) {
     if (ch->getDiscipline(DISC_ADVENTURING)->getNatLearnedness() <
         WEAPON_GAIN_LEARNEDNESS) {
       me->doTell(fname(ch->name), "You aren't proficient enough yet.");
-      return TRUE;
+      return true;
     }
   }
   if (discipline == DISC_PSIONICS) {
     if (!ch->hasQuestBit(TOG_PSIONICIST)) {
       me->doTell(fname(ch->name),
         "You do not have the ability to learn psionics.");
-      return TRUE;
+      return true;
     }
   }
 
   if (!prereqs)
-    return FALSE;
+    return false;
 
   // all classes uses combat as a base requirement
   combat = ch->getDiscipline(DISC_COMBAT)->getNatLearnedness();
@@ -1690,7 +1690,7 @@ int TBeing::checkForPreReqs(const TBeing* ch, TMonster* me, discNumT discipline,
 
   if ((combat >= 100) || (ch->getLevel(accclass) < 3) ||
       (combat >= (((35 * ch->getLevel(accclass)) / 10) - 4))) {
-    combatLearn = TRUE;
+    combatLearn = true;
   }
 
   if (discipline == DISC_COMBAT || discipline == DISC_LORE ||
@@ -1703,13 +1703,13 @@ int TBeing::checkForPreReqs(const TBeing* ch, TMonster* me, discNumT discipline,
       discipline == DISC_ADVENTURING ||
       discipline == DISC_ADVANCED_ADVENTURING) {
     // No restrictions on these disciplines if prof maxxed see first checks
-    return FALSE;
+    return false;
   } else {  // needs basic skills for class
     for (classIndT i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
       if (accclass == i) {
         if (discipline == classInfo[i].base_disc) {
           if (combatLearn)
-            return FALSE;
+            return false;
           else
             found = 1;
         } else {
@@ -1722,7 +1722,7 @@ int TBeing::checkForPreReqs(const TBeing* ch, TMonster* me, discNumT discipline,
       vlogf(LOG_BUG, format("Bad case in gaining pre requisites (%d) (%s)") %
                        accclass % ch->getName());
       ch->sendTo("Bug that you got this at the gain trainer.");
-      return TRUE;
+      return true;
     }
   }
 
@@ -1750,16 +1750,16 @@ int TBeing::checkForPreReqs(const TBeing* ch, TMonster* me, discNumT discipline,
           "trainers.");
       }
       me->doTell(fname(ch->name), buf);
-      return TRUE;
+      return true;
     case 1:
       me->doTell(fname(ch->name),
         "Tsk! Tsk! You have not kept up with your general training and you "
         "expect me to teach you more.");
       me->doTell(fname(ch->name),
         format("Go learn more about %s before you come back to me.") % tmp_buf);
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 extern struct PolyType DisguiseList[];
@@ -1776,22 +1776,22 @@ int TBeing::doTraining(TBeing* ch, TMonster* me, classIndT accclass, int offset,
   discNumT discipline = DISC_NONE;
   int final, initial;
   int value;
-  int tOldSL = ch->getDiscipline(getDisciplineNumber(SKILL_DISGUISE, FALSE))
+  int tOldSL = ch->getDiscipline(getDisciplineNumber(SKILL_DISGUISE, false))
                  ->getLearnedness();
-  int tOldSL2 = ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))
+  int tOldSL2 = ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, false))
                   ->getLearnedness();
 
   if (pracs <= 0) {
     vlogf(LOG_BUG,
       format("Bogus pracs used %s (%d)") % ch->getName() % ch->in_room);
-    return TRUE;
+    return true;
   }
 
   discipline = TrainerInfo[offset].disc;
 
-  act("$n places both $s hands on your head for a second.", FALSE, me, 0, ch,
+  act("$n places both $s hands on your head for a second.", false, me, 0, ch,
     TO_VICT);
-  act("$n places both $s hands on $N's head for a second.", FALSE, me, 0, ch,
+  act("$n places both $s hands on $N's head for a second.", false, me, 0, ch,
     TO_NOTVICT);
 
   for (j = 0; j < pracs; j++) {
@@ -1815,11 +1815,11 @@ int TBeing::doTraining(TBeing* ch, TMonster* me, classIndT accclass, int offset,
     }
 
     if (ch->getPracs(accclass) <= 0) {
-      act("$n says, \"$N, now is not the time for training.\"", FALSE, me, 0,
+      act("$n says, \"$N, now is not the time for training.\"", false, me, 0,
         ch, TO_ROOM);
-      act("$n says, \"Now is the time for action!\"", FALSE, me, 0, ch,
+      act("$n says, \"Now is the time for action!\"", false, me, 0, ch,
         TO_ROOM);
-      return TRUE;
+      return true;
     } else {
       ch->addPracs(-1, accclass);
       ch->sendTo(format("You have %d %s practices left.\n\r") %
@@ -1861,8 +1861,8 @@ int TBeing::doTraining(TBeing* ch, TMonster* me, classIndT accclass, int offset,
           ch->affectTotal();
         }
         sprintf(buf, "You have just learned %s!", discArray[i]->name);
-        act(buf, FALSE, me, 0, ch, TO_VICT);
-        act("$N's head glows for a brief second.", FALSE, me, 0, ch,
+        act(buf, false, me, 0, ch, TO_VICT);
+        act("$N's head glows for a brief second.", false, me, 0, ch,
           TO_NOTVICT);
 
         unsigned int comp;
@@ -1872,7 +1872,7 @@ int TBeing::doTraining(TBeing* ch, TMonster* me, classIndT accclass, int offset,
           ;
 
         if (comp != CompInfo.size() && CompInfo[comp].comp_num >= 0) {
-          TObj* obj = NULL;
+          TObj* obj = nullptr;
           obj = read_object(CompInfo[comp].comp_num, VIRTUAL);
           sprintf(buf, "%s personalized %s", obj->name.c_str(),
             ch->getName().c_str());
@@ -2003,7 +2003,7 @@ int TBeing::doTraining(TBeing* ch, TMonster* me, classIndT accclass, int offset,
   }
   if (TrainerInfo[offset].disc == DISC_STEALTH) {
     if (ch->doesKnowSkill(SKILL_DISGUISE)) {
-      int tNewSL = ch->getDiscipline(getDisciplineNumber(SKILL_DISGUISE, FALSE))
+      int tNewSL = ch->getDiscipline(getDisciplineNumber(SKILL_DISGUISE, false))
                      ->getLearnedness();
 
       for (int tType = 0; tType < MaxDisguiseType; tType++) {
@@ -2043,7 +2043,7 @@ int TBeing::doTraining(TBeing* ch, TMonster* me, classIndT accclass, int offset,
   if (TrainerInfo[offset].disc == DISC_SHAMAN_FROG) {
     if (ch->doesKnowSkill(SPELL_SHAPESHIFT)) {
       int tNewSL2 =
-        ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, FALSE))
+        ch->getDiscipline(getDisciplineNumber(SPELL_SHAPESHIFT, false))
           ->getLearnedness();
 
       for (int tType = 0; tType < MaxShapeShiftType; tType++) {
@@ -2073,12 +2073,12 @@ int TBeing::doTraining(TBeing* ch, TMonster* me, classIndT accclass, int offset,
       }
     }
   }
-  act("$n smiles as $e removes $s hands from your head.", FALSE, me, 0, ch,
+  act("$n smiles as $e removes $s hands from your head.", false, me, 0, ch,
     TO_VICT);
-  act("$n removes $s hands from $N's head and smiles.", FALSE, me, 0, ch,
+  act("$n removes $s hands from $N's head and smiles.", false, me, 0, ch,
     TO_NOTVICT);
   ch->doSave(SILENT_YES);
-  return TRUE;
+  return true;
 }
 
 int TBeing::initiateSkillsLearning(discNumT discipline, int initial,
@@ -2157,7 +2157,7 @@ int TBeing::initiateSkillsLearning(discNumT discipline, int initial,
   }
   affectTotal();
   doSave(SILENT_YES);
-  return TRUE;
+  return true;
 }
 
 int GenericGuildMaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
@@ -2181,16 +2181,16 @@ int GenericGuildMaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
 
     buf = format("$n growls, \"Go away, $N.  You're no %s!\"") %
           classInfo[cit].name;
-    act(buf, FALSE, me, 0, ch, TO_ROOM);
+    act(buf, false, me, 0, ch, TO_ROOM);
 
-    return TRUE;
+    return true;
   }
 
   if (ch->isImmortal() || !me)
-    return FALSE;
+    return false;
 
   if (generic_trainer_stuff(me, ch))
-    return TRUE;
+    return true;
 
   if (ch->getLevel(cit) < (me->GetMaxLevel() / 2) ||
       (MAX_MORT == ch->getLevel(cit) && MAX_MORT <= me->GetMaxLevel() / 2)) {
@@ -2227,15 +2227,15 @@ int GenericGuildMaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       } else
         me->doSay("I cannot reset any of your practices at this time.");
 
-      return TRUE;
+      return true;
     }
 
     if ((tp = dynamic_cast<TPerson*>(ch)))
       tp->setSelectToggles(me, cit, SILENT_NO);
 
     if (MAX_MORT == ch->getLevel(cit)) {
-      act("$n beams, \"No one can teach you anymore in this, $N\"", FALSE, me,
-        NULL, ch, TO_ROOM);
+      act("$n beams, \"No one can teach you anymore in this, $N\"", false, me,
+        nullptr, ch, TO_ROOM);
     } else {
       me->doSay("Let me give you a little advice...");
       ch->pracPath(me, cit);
@@ -2259,16 +2259,16 @@ int GenericGuildMaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     act(
       "$n sighs, \"I cannot teach you, $N.  You MUST find your next "
       "guildmaster.\"",
-      FALSE, me, 0, ch, TO_ROOM);
+      false, me, 0, ch, TO_ROOM);
   }
-  return TRUE;
+  return true;
 }
 
 TMonster* FindMobInRoomWithProcNum(int room, int num) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (room < 0)
-    return NULL;
+    return nullptr;
 
   for (StuffIter it = real_roomp(room)->stuff.begin();
        it != real_roomp(room)->stuff.end() && (t = *it); ++it) {
@@ -2276,7 +2276,7 @@ TMonster* FindMobInRoomWithProcNum(int room, int num) {
     if (tmons && (tmons->spec == num))
       return tmons;
   }
-  return NULL;
+  return nullptr;
 }
 
 wizardryLevelT TBeing::getWizardryLevel() const {
@@ -2360,10 +2360,10 @@ void TBeing::pracPath(TMonster* gm, classIndT Class) {
   char buf[256];
   sstring tmp_buf, tmp_buf2;
   int combat = 0, basic = 0;
-  bool basicLearn = FALSE, combatLearn = FALSE;
+  bool basicLearn = false, combatLearn = false;
   int combatMax = 0;
 
-  if (!checkDoneBasic(this, Class, FALSE, FALSE)) {
+  if (!checkDoneBasic(this, Class, false, false)) {
     sprintf(buf,
       "Hmmm, looks like you are free to use your practices at any advanced %s "
       "trainer.",
@@ -2387,18 +2387,18 @@ void TBeing::pracPath(TMonster* gm, classIndT Class) {
   basic = getDiscipline(classInfo[Class].base_disc)->getNatLearnedness();
 
   if (basic >= MAX_DISC_LEARNEDNESS) {
-    basicLearn = TRUE;
+    basicLearn = true;
   }
   if (combat >= getCombatPrereqNumber(Class)) {
-    combatLearn = TRUE;
+    combatLearn = true;
     combatMax = 1;
   }
   if (combat == MAX_DISC_LEARNEDNESS) {
     combatMax = 2;
-    combatLearn = TRUE;
+    combatLearn = true;
   }
   if (combat >= combatReq) {
-    combatLearn = TRUE;
+    combatLearn = true;
   }
 
   if (combatMax && basicLearn) {

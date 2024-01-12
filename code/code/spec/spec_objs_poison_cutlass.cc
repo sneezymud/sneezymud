@@ -8,16 +8,16 @@ int poisonCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBeing* ch;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (::number(0, 19))
-    return FALSE;
+    return false;
 
   if (!(cutlass = dynamic_cast<TBaseWeapon*>(o)))
-    return FALSE;
+    return false;
 
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-    return FALSE;  // weapon not equipped (carried or on ground)
+    return false;  // weapon not equipped (carried or on ground)
 
   cutlass->setPoison(LIQ_POISON_STANDARD);
 
@@ -28,5 +28,5 @@ int poisonCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     "drips to the $g.<1>",
     0, ch, o, 0, TO_CHAR);
 
-  return TRUE;
+  return true;
 }

@@ -113,18 +113,18 @@ void TBaseCup::fillMe(const TBeing* ch, liqTypeT liq) {
     mesg = format("$p is filled with %s, but quickly dilutes.") %
            liquidInfo[liq]->name;
 
-    act(mesg, FALSE, ch, this, 0, TO_ROOM);
-    act(mesg, FALSE, ch, this, 0, TO_CHAR);
+    act(mesg, false, ch, this, 0, TO_ROOM);
+    act(mesg, false, ch, this, 0, TO_CHAR);
   } else if ((getDrinkType() != liq) && (getDrinkUnits() != 0)) {
     setDrinkType(LIQ_SLIME);
-    act("$p is filled (but you won't like what it's filled with!)", FALSE, ch,
+    act("$p is filled (but you won't like what it's filled with!)", false, ch,
       this, 0, TO_CHAR);
   } else {
     if ((water = (getMaxDrinkUnits() - getDrinkUnits())) > 0) {
       setDrinkType(liq);
       addToDrinkUnits(water);
       weightChangeObject(water * SIP_WEIGHT);
-      act("$p is filled.", FALSE, ch, this, 0, TO_CHAR);
+      act("$p is filled.", false, ch, this, 0, TO_CHAR);
     } else {
       ch->sendTo("That is already completely full!\n\r");
     }
@@ -142,17 +142,17 @@ void TBaseCup::genericEmpty() {
 
 void TBaseCup::pourMeOut(TBeing* ch) {
   if (!getDrinkUnits()) {
-    act("$p is empty.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p is empty.", false, ch, this, 0, TO_CHAR);
     return;
   }
   if (isDrinkConFlag(DRINK_FROZEN)) {
-    act("$p is frozen solid, you can't get it out.", FALSE, ch, this, 0,
+    act("$p is frozen solid, you can't get it out.", false, ch, this, 0,
       TO_CHAR);
     return;
   }
 
-  act("$n empties $p.", TRUE, ch, this, 0, TO_ROOM);
-  act("You empty $p.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n empties $p.", true, ch, this, 0, TO_ROOM);
+  act("You empty $p.", false, ch, this, 0, TO_CHAR);
 
   ch->dropPool(getDrinkUnits(), getDrinkType());
   genericEmpty();
@@ -173,7 +173,7 @@ bool TBaseCup::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "you might wanna take that to the diner!");
   }
-  return TRUE;
+  return true;
 }
 
 void TBaseCup::assignFourValues(int x1, int x2, int x3, int x4) {
@@ -199,7 +199,7 @@ void TBaseCup::getFourValues(int* x1, int* x2, int* x3, int* x4) const {
 int TBaseCup::objectSell(TBeing* ch, TMonster* keeper) {
   keeper->doTell(ch->getName(),
     "I'm sorry, I don't purchase drink containers.");
-  return TRUE;
+  return true;
 }
 
 void TBaseCup::weightCorrection() {
@@ -226,15 +226,15 @@ sstring TBaseCup::statObjInfo() const {
 }
 
 void TBaseCup::peeMe(const TBeing* ch, liqTypeT liq) {
-  act("$n smiles happily as $e pisses into $p.", TRUE, ch, this, NULL, TO_ROOM);
-  act("You smile happily as you piss into $p.", TRUE, ch, this, NULL, TO_CHAR);
+  act("$n smiles happily as $e pisses into $p.", true, ch, this, nullptr, TO_ROOM);
+  act("You smile happily as you piss into $p.", true, ch, this, nullptr, TO_CHAR);
 
   fillMe(ch, liq);
 }
 
 bool TBaseCup::poisonObject() {
   addDrinkConFlags(DRINK_POISON);
-  return TRUE;
+  return true;
 }
 
 void TBaseCup::setEmpty() {
@@ -245,8 +245,8 @@ void TBaseCup::setEmpty() {
 
 bool TBaseCup::waterSource() {
   if (isDrinkConFlag(DRINK_PERM))
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 void TBaseCup::nukeFood() {
@@ -286,7 +286,7 @@ void TBaseCup::spill(const TBeing* ch) {
   num /= 10;
 
   if (cur != num) {
-    act("Your $o spills.", FALSE, ch, this, 0, TO_CHAR);
+    act("Your $o spills.", false, ch, this, 0, TO_CHAR);
     setDrinkUnits(num);
   }
 }
@@ -308,24 +308,24 @@ int TBaseCup::chiMe(TBeing* tLunatic) {
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI) || getDrinkUnits() <= 0 ||
       isDrinkConFlag(DRINK_PERM)) {
-    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+    act("You fail to affect $p in any way.", false, tLunatic, this, nullptr,
       TO_CHAR);
     return true;
   }
 
   if (isDrinkConFlag(DRINK_FROZEN)) {
-    act("You focus your chi, causing $p to melt!", FALSE, tLunatic, this, NULL,
+    act("You focus your chi, causing $p to melt!", false, tLunatic, this, nullptr,
       TO_CHAR);
-    act("$n stares at $p, causing it to melt.", TRUE, tLunatic, this, NULL,
+    act("$n stares at $p, causing it to melt.", true, tLunatic, this, nullptr,
       TO_ROOM);
     remDrinkConFlags(DRINK_FROZEN);
     return true;
   }
 
-  act("You focus your chi, causing $p to become lighter!", FALSE, tLunatic,
-    this, NULL, TO_CHAR);
-  act("$n stares at $p, causing it to become lighter.", TRUE, tLunatic, this,
-    NULL, TO_ROOM);
+  act("You focus your chi, causing $p to become lighter!", false, tLunatic,
+    this, nullptr, TO_CHAR);
+  act("$n stares at $p, causing it to become lighter.", true, tLunatic, this,
+    nullptr, TO_ROOM);
 
   evaporate(tLunatic, SILENT_YES);
 
@@ -454,12 +454,12 @@ void TBaseCup::updateDesc() {
         ex_description = exd->next;
         delete exd;
       }
-      ex_description = NULL;
+      ex_description = nullptr;
       action_description = "";
       ;
     } else {
       addObjStat(ITEM_STRUNG);
-      ex_description = NULL;
+      ex_description = nullptr;
       action_description = "";
     }
 

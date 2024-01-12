@@ -12,7 +12,7 @@
 #include "extern.h"
 int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {
-  roomDirData* fdd = NULL;
+  roomDirData* fdd = nullptr;
   int moveCost = 3,  // 10 exits *3 = 30, old cost.
     bKnown = ch->getSkillValue(SKILL_SEARCH),
       tsSuccess = ch->bSuccess(bKnown, SKILL_SEARCH),
@@ -22,20 +22,20 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   if (ch->isLinkdead() || (ch->in_room < 0) ||
       (ch->getPosition() < POSITION_RESTING)) {
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // Make sure our leader didn't move us out of the room.
   if (ch->task->wasInRoom != ch->in_room) {
     ch->sendTo("You stop your searching due to your sudden move.\n\r");
-    act("$n stops searching and glares about.", FALSE, ch, 0, 0, TO_ROOM);
+    act("$n stops searching and glares about.", false, ch, 0, 0, TO_ROOM);
   }
   if (ch->getMove() < moveCost) {
     ch->sendTo("You are too tired to continue searching.\n\r");
     ch->stopTask();
-    return TRUE;
+    return true;
   }
   if (ch->task->flags >= 100)
     eDirection -= 100;
@@ -45,7 +45,7 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     ch->sendTo(
       "Something went wrong in your searching, tell a god what you did.\n\r");
     ch->stopTask();
-    return TRUE;
+    return true;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -55,13 +55,13 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         act(
           "$n looks up and decides to skip the ceiling, seeing that there "
           "isn't one.",
-          FALSE, ch, 0, 0, TO_ROOM);
+          false, ch, 0, 0, TO_ROOM);
         ch->task->flags++;
         if (ch->task->flags >= 100) {
           ch->stopTask();
-          return TRUE;
+          return true;
         } else
-          return task_search(ch, cmd, "", pulse, NULL, NULL);
+          return task_search(ch, cmd, "", pulse, nullptr, nullptr);
       } else if (eDirection == DIR_DOWN &&
                  (fdd = ch->roomp->dir_option[eDirection]) &&
                  ((IS_SET(fdd->condition, EXIT_SECRET) &&
@@ -70,13 +70,13 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         act(
           "You decide to not search the $g.  Seeing there is an exit "
           "there.\n\r",
-          TRUE, ch, 0, NULL, TO_CHAR);
+          true, ch, 0, nullptr, TO_CHAR);
         ch->task->flags++;
         if (ch->task->flags >= 100) {
           ch->stopTask();
-          return TRUE;
+          return true;
         } else
-          return task_search(ch, cmd, "", pulse, NULL, NULL);
+          return task_search(ch, cmd, "", pulse, nullptr, nullptr);
       } else if ((fdd = ch->roomp->dir_option[eDirection]) &&
                  ((IS_SET(fdd->condition, EXIT_SECRET) &&
                     !IS_SET(fdd->condition, EXIT_CLOSED)) ||
@@ -86,15 +86,15 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
                    dirs_to_blank[eDirection]);
         if (++ch->task->flags == 10) {
           ch->sendTo("You finish your searching and stop.\n\r");
-          act("$n finishes searching and stops.", FALSE, ch, 0, 0, TO_ROOM);
+          act("$n finishes searching and stops.", false, ch, 0, 0, TO_ROOM);
           ch->stopTask();
-          return TRUE;
+          return true;
         }
         if (ch->task->flags >= 100) {
           ch->stopTask();
-          return TRUE;
+          return true;
         } else
-          return task_search(ch, cmd, "", pulse, NULL, NULL);
+          return task_search(ch, cmd, "", pulse, nullptr, nullptr);
       }
       // If we've searched 3, 6, or 9 directions lets attempt a gain.  This
       // means Search will gain 3 times like this but will take some more work
@@ -105,18 +105,18 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       // Basic messages to the thief and others in the room to let them know we
       // are searching for exits.
       if (eDirection == DIR_UP) {
-        act("$n searches the ceiling for secret doors.", FALSE, ch, 0, 0,
+        act("$n searches the ceiling for secret doors.", false, ch, 0, 0,
           TO_ROOM);
         ch->sendTo("You search the ceiling for secret doors.\n\r");
         ch->task->timeLeft++;
       } else if (eDirection == DIR_DOWN) {
-        act("$n searches the $g for secret doors.", FALSE, ch, 0, 0, TO_ROOM);
-        act("You search the $g for secret doors.", FALSE, ch, 0, 0, TO_CHAR);
+        act("$n searches the $g for secret doors.", false, ch, 0, 0, TO_ROOM);
+        act("You search the $g for secret doors.", false, ch, 0, 0, TO_CHAR);
         ch->task->timeLeft++;
       } else {
         sprintf(buf, "$n searches %s for secret doors.",
           dirs_to_blank[eDirection]);
-        act(buf, FALSE, ch, 0, 0, TO_ROOM);
+        act(buf, false, ch, 0, 0, TO_ROOM);
         ch->sendTo(format("You search %s for secret doors.\n\r") %
                    dirs_to_blank[eDirection]);
         ch->task->timeLeft++;
@@ -148,7 +148,7 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         sprintf(buf, foundPrint, doorName.c_str(), dirs[eDirection]);
         ch->sendTo(buf);
         sprintf(buf, toRoomPrint, doorName.c_str(), dirs[eDirection]);
-        act(buf, FALSE, ch, 0, 0, TO_ROOM);
+        act(buf, false, ch, 0, 0, TO_ROOM);
       }
       // We remove the moves here, just in case we checked the last direction.
       ch->setMove(max(0, (ch->getMove() - moveCost)));
@@ -156,20 +156,20 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       // searched every possible direction in this room.
       if (++ch->task->flags == 10) {
         ch->sendTo("You finish your searching and stop.\n\r");
-        act("$n finishes searching and stops.", FALSE, ch, 0, 0, TO_ROOM);
+        act("$n finishes searching and stops.", false, ch, 0, 0, TO_ROOM);
         ch->stopTask();
-        return TRUE;
+        return true;
       }
       if (ch->task->flags >= 100) {
         ch->stopTask();
-        return TRUE;
+        return true;
       }
       break;
     case CMD_STOP:
     case CMD_ABORT:
       ch->stopTask();
       ch->sendTo("You stop searching for secret exits.\n\r");
-      act("$n stops searching.", FALSE, ch, 0, 0, TO_ROOM);
+      act("$n stops searching.", false, ch, 0, 0, TO_ROOM);
       break;
     case CMD_TASK_FIGHTING:
       ch->sendTo(
@@ -180,5 +180,5 @@ int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       if (cmd < MAX_CMD_LIST)
         warn_busy(ch);
   }
-  return TRUE;
+  return true;
 }

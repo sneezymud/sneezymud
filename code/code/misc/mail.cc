@@ -23,9 +23,9 @@ static const char* const SNEEZY_ADMIN = "SneezyMUD Administration";
 int mail_ok(TBeing* ch) {
   if (Config::NoMail()) {
     ch->sendTo("Sorry, the mail system is having technical difficulties.\n\r");
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 bool TObj::canBeMailed(sstring name) const {
@@ -55,9 +55,9 @@ bool has_mail(const sstring recipient) {
     gamePort, recipient.c_str());
 
   if (db.fetchRow() && convertTo<int>(db["count"]) != 0)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 void store_mail(const char* to, const char* from, const char* message_pointer,
@@ -120,7 +120,7 @@ sstring read_delete(const sstring recipient, const char* recipient_formatted,
 void postmasterValue(TBeing* ch, TBeing* postmaster, const char* arg) {
   sstring args = arg, item, talen;
   int shop_nr = find_shop_nr(postmaster->number);
-  float profit_buy = shop_index[shop_nr].getProfitBuy(NULL, ch);
+  float profit_buy = shop_index[shop_nr].getProfitBuy(nullptr, ch);
 
   if (!mail_ok(ch))
     return;
@@ -146,8 +146,8 @@ void postmasterValue(TBeing* ch, TBeing* postmaster, const char* arg) {
 
   if (item.length() > 0) {
     TThing* thing = get_thing_on_list_vis(ch, item.c_str(), ch->stuff.front());
-    TObj* obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
-    if (obj == NULL) {
+    TObj* obj = thing ? dynamic_cast<TObj*>(thing) : nullptr;
+    if (obj == nullptr) {
       postmaster->doTell(fname(ch->name), "I don't see that item on you.");
       return;
     }
@@ -252,7 +252,7 @@ int postmasterGiven(TBeing* ch, TMonster* me, TObj* o) {
       return 0;
     fullToken.inlineReplaceString(dueDate, "bag");
     vlogf(LOG_BUG, "Looking for " + fullToken);
-    TObj* linkbag = NULL;
+    TObj* linkbag = nullptr;
     for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && *it; it++) {
       TObj* stored = dynamic_cast<TObj*>(*it);
       if (!stored)
@@ -292,27 +292,27 @@ int postmasterGiven(TBeing* ch, TMonster* me, TObj* o) {
 int postmaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TObj* o) {
   if (!ch->desc)
-    return FALSE; /* so mobs don't get caught here */
+    return false; /* so mobs don't get caught here */
 
   switch (cmd) {
     case CMD_WHISPER:
       return shopWhisper(ch, myself, find_shop_nr(myself->number), arg);
     case CMD_MAIL:
       ch->postmasterSendMail(arg, myself);
-      return TRUE;
+      return true;
     case CMD_CHECK:
       ch->postmasterCheckMail(myself);
-      return TRUE;
+      return true;
     case CMD_RECEIVE:
       ch->postmasterReceiveMail(myself);
-      return TRUE;
+      return true;
     case CMD_VALUE:
       postmasterValue(ch, myself, arg);
-      return TRUE;
+      return true;
     case CMD_MOB_GIVEN_ITEM:
       return postmasterGiven(ch, myself, o);
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -320,7 +320,7 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
   sstring args = arg, item, recipient, talen;
   charFile st;
   bool sendFaction;
-  int i, imm = FALSE, amt, shop_nr = find_shop_nr(me->number);
+  int i, imm = false, amt, shop_nr = find_shop_nr(me->number);
   float profit_buy = 0;
 
   // added this check - bat
@@ -351,7 +351,7 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
 
   for (i = 0; !imm && i < 8; i++)
     if (st.level[i] > MAX_MORT)
-      imm = TRUE;
+      imm = true;
 
   // let anybody mail to immortals
   if (GetMaxLevel() < MIN_MAIL_LEVEL && !imm) {
@@ -360,7 +360,7 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
     return;
   }
 
-  profit_buy = shop_index[shop_nr].getProfitBuy(NULL, this);
+  profit_buy = shop_index[shop_nr].getProfitBuy(nullptr, this);
 
   if (sendFaction) {
     if (getFaction() == FACT_NONE) {
@@ -396,9 +396,9 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
     // sending item
   } else if (item.length() > 0) {
     TThing* thing =
-      searchLinkedListVis(this, item.c_str(), stuff, NULL, TYPEOBJ);
-    TObj* obj = thing ? dynamic_cast<TObj*>(thing) : NULL;
-    if (obj == NULL) {
+      searchLinkedListVis(this, item.c_str(), stuff, nullptr, TYPEOBJ);
+    TObj* obj = thing ? dynamic_cast<TObj*>(thing) : nullptr;
+    if (obj == nullptr) {
       me->doTell(fname(name), "I don't see that item on you.");
       return;
     }
@@ -436,7 +436,7 @@ void TBeing::postmasterSendMail(const char* arg, TMonster* me) {
     }
   }
 
-  act("$n starts to write some mail.", TRUE, this, 0, 0, TO_ROOM);
+  act("$n starts to write some mail.", true, this, 0, 0, TO_ROOM);
   if (!imm) {
     me->doTell(fname(name), format("I'll take %d talens for the stamp.") % amt);
     TShopOwned tso(shop_nr, me, this);
@@ -551,7 +551,7 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
     }
 
     if (rent_id > 0) {
-      TObj* obj = NULL;
+      TObj* obj = nullptr;
       int slot = -1;
       ItemLoadDB il("mail", GH_MAIL_SHOP);
       TDatabase db(DB_SNEEZY);
@@ -575,9 +575,9 @@ void TBeing::postmasterReceiveMail(TMonster* me) {
 
     *this += *envelope;
 
-    act(format("$n gives you $p from %s.") % from, FALSE, me, envelope, this,
+    act(format("$n gives you $p from %s.") % from, false, me, envelope, this,
       TO_VICT);
-    act("$N gives $n $p.", FALSE, this, envelope, me, TO_ROOM);
+    act("$N gives $n $p.", false, this, envelope, me, TO_ROOM);
   }
 }
 

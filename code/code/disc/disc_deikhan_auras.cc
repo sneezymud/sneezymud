@@ -111,8 +111,8 @@ int TBeing::checkAura(cmdTypeT cmd, TBeing* t) {
 // procAuraOfMight is the proc on CMD_GENERIC_PULSE that actually buffs
 // the deikhan and party members if the deikhan is projecting this aura
 int procAuraOfMight(TBeing* caster) {
-  TBeing* tch = NULL;
-  TThing* t = NULL;
+  TBeing* tch = nullptr;
+  TThing* t = nullptr;
   short bKnown;
   bKnown = caster->getSkillValue(SKILL_AURA_MIGHT);
   affectedData aff, aff2;
@@ -137,12 +137,12 @@ int procAuraOfMight(TBeing* caster) {
     if (!tch)
       continue;
     if (tch->inGroup(*caster)) {
-      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
-      tch->affectJoin(tch, &aff2, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, false);
+      tch->affectJoin(tch, &aff2, AVG_DUR_YES, AVG_EFF_YES, false);
       // caster->reconcileHelp(tch, discArray[spell]->alignMod);
     }
   }
-  return TRUE;
+  return true;
 }
 
 // auraOfMightOnHit processes the onhit proc of group members affected
@@ -150,9 +150,9 @@ int procAuraOfMight(TBeing* caster) {
 int auraOfMightOnHit(TBeing* caster, TBeing* vict) {
   int rc, dam;
   if (!caster || !vict)
-    return FALSE;
+    return false;
   if (::number(0, 9))
-    return FALSE;
+    return false;
 
   act(
     "Your <r>Aura of Might<z><b> flares and sears $N with <W>Holy Fire<z><b> "
@@ -170,7 +170,7 @@ int auraOfMightOnHit(TBeing* caster, TBeing* vict) {
   if (IS_SET_DELETE(rc, DELETE_VICT))
     return DELETE_VICT;
 
-  return TRUE;
+  return true;
 }
 
 //
@@ -180,8 +180,8 @@ int auraOfMightOnHit(TBeing* caster, TBeing* vict) {
 // procAuraOfRegeneration is the proc on CMD_GENERIC_PULSE to buff
 // deikhan and party members
 int procAuraOfRegeneration(TBeing* caster) {
-  TBeing* tch = NULL;
-  TThing* t = NULL;
+  TBeing* tch = nullptr;
+  TThing* t = nullptr;
   short bKnown;
   bKnown = caster->getSkillValue(SKILL_AURA_REGENERATION);
   affectedData aff;
@@ -199,11 +199,11 @@ int procAuraOfRegeneration(TBeing* caster) {
     if (!tch)
       continue;
     if (tch->inGroup(*caster)) {
-      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, false);
       // caster->reconcileHelp(tch, discArray[spell]->alignMod);
     }
   }
-  return TRUE;
+  return true;
 }
 
 // regenAuraPulse is handled on pulse to regen those buffed
@@ -213,7 +213,7 @@ int regenAuraPulse(TBeing* caster) {
     min(caster->getMove() + caster->moveGain() / 8, (int)caster->moveLimit()));
   caster->gainCondition(THIRST, 1);
   caster->gainCondition(FULL, 1);
-  return TRUE;
+  return true;
 }
 
 //
@@ -223,8 +223,8 @@ int regenAuraPulse(TBeing* caster) {
 // procAuraGuardian is the proc on CMD_GENERIC_PULSE that actually buffs
 // the deikhan and party members if the deikhan is projecting this aura
 int procAuraGuardian(TBeing* caster) {
-  TBeing* tch = NULL;
-  TThing* t = NULL;
+  TBeing* tch = nullptr;
+  TThing* t = nullptr;
   short bKnown;
   bKnown = caster->getSkillValue(SKILL_AURA_GUARDIAN);
   affectedData aff, aff2;
@@ -254,12 +254,12 @@ int procAuraGuardian(TBeing* caster) {
       if (tch->hasClass(CLASS_DEIKHAN))
         aff2.modifier += 5;
 
-      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
-      tch->affectJoin(tch, &aff2, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, false);
+      tch->affectJoin(tch, &aff2, AVG_DUR_YES, AVG_EFF_YES, false);
       // caster->reconcileHelp(tch, discArray[spell]->alignMod);
     }
   }
-  return TRUE;
+  return true;
 }
 
 //
@@ -269,8 +269,8 @@ int procAuraGuardian(TBeing* caster) {
 // procAuraOfVengeance is the proc on CMD_GENERIC_PULSE that actually buffs
 // the deikhan and party members if the deikhan is projecting this aura
 int procAuraOfVengeance(TBeing* caster) {
-  TBeing* tch = NULL;
-  TThing* t = NULL;
+  TBeing* tch = nullptr;
+  TThing* t = nullptr;
   short bKnown;
   bKnown = caster->getSkillValue(SKILL_AURA_VENGEANCE);
   affectedData aff;
@@ -290,11 +290,11 @@ int procAuraOfVengeance(TBeing* caster) {
     if (!tch)
       continue;
     if (tch->inGroup(*caster)) {
-      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, false);
       // caster->reconcileHelp(tch, discArray[spell]->alignMod);
     }
   }
-  return TRUE;
+  return true;
 }
 
 //
@@ -304,8 +304,8 @@ int procAuraOfVengeance(TBeing* caster) {
 // procAuraOfAbsolution is the proc on CMD_GENERIC_PULSE that actually buffs
 // the deikhan and party members if the deikhan is projecting this aura
 int procAuraOfAbsolution(TBeing* caster) {
-  TBeing* tch = NULL;
-  TThing* t = NULL;
+  TBeing* tch = nullptr;
+  TThing* t = nullptr;
   short bKnown;
   bKnown = caster->getSkillValue(SKILL_AURA_ABSOLUTION);
   affectedData aff;
@@ -327,7 +327,7 @@ int procAuraOfAbsolution(TBeing* caster) {
     if (tch->inGroup(*caster)) {
       // First we apply the aura buff even though it doesn't do anything yet
       // The experience is consistent with other auras
-      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, FALSE);
+      tch->affectJoin(tch, &aff, AVG_DUR_YES, AVG_EFF_YES, false);
     }
   }
 
@@ -348,7 +348,7 @@ int procAuraOfAbsolution(TBeing* caster) {
     doWarmth(caster);
   }
 
-  return TRUE;
+  return true;
 }
 
 // moving this to it's own function
@@ -374,10 +374,10 @@ void doAbsolutionAuraAffects(TBeing* caster, TBeing* target,
       done_warmth = true;
     }
     // Vindicator level heals
-    colorAct(COLOR_SPELLS, "$n glows briefly with an <p>indigo hue<1>.", FALSE,
-      target, NULL, 0, TO_ROOM);
-    colorAct(COLOR_SPELLS, "You glow briefly with an <p>indigo hue<1>.", FALSE,
-      target, NULL, 0, TO_CHAR);
+    colorAct(COLOR_SPELLS, "$n glows briefly with an <p>indigo hue<1>.", false,
+      target, nullptr, 0, TO_ROOM);
+    colorAct(COLOR_SPELLS, "You glow briefly with an <p>indigo hue<1>.", false,
+      target, nullptr, 0, TO_CHAR);
 
     int hp = caster->getSkillDam(caster, SPELL_HEAL_CRITICAL, 50, 100);
     target->addToHit(hp);
@@ -397,7 +397,7 @@ void doAbsolutionAuraAffects(TBeing* caster, TBeing* target,
   }
 
   // Do Clot
-  slot = target->getRandomPart(PART_BLEEDING, FALSE, TRUE);
+  slot = target->getRandomPart(PART_BLEEDING, false, true);
   if (slot != WEAR_NOWHERE) {
     if (!done_warmth) {
       doWarmth(caster);
@@ -421,11 +421,11 @@ void doAbsolutionAuraAffects(TBeing* caster, TBeing* target,
     act(
       "You suddenly start sweating profusely as the poison is extracted from "
       "your body.",
-      FALSE, caster, NULL, target, TO_VICT);
+      false, caster, nullptr, target, TO_VICT);
     act(
       "$N suddenly starts sweating profusely as the poison is extracted from "
       "$S body.",
-      FALSE, caster, NULL, target, TO_ROOM);
+      false, caster, nullptr, target, TO_ROOM);
 
     target->affectFrom(SPELL_POISON_DEIKHAN);
     target->affectFrom(SPELL_POISON);
@@ -487,7 +487,7 @@ void projectAura(TBeing* caster, spellNumT aura) {
   aff.duration = PROJECTION_DURATION;
   aff.location = APPLY_NONE;
 
-  caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+  caster->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
   caster->addSkillLag(aura, 0);
 }
 

@@ -31,7 +31,7 @@ static const sstring ClassTitles(const TBeing *ch)
   for (i = MIN_CLASS_IND; i < MAX_CLASSES; i++) {
     if (ch->getLevel(i)) {
       if ((++count) > 1)
-        sprintf(buf + strlen(buf), "/Level %d %s", 
+        sprintf(buf + strlen(buf), "/Level %d %s",
             ch->getLevel(i), classInfo[i].name.cap().c_str());
       else
         sprintf(buf, "Level %d %s",
@@ -704,7 +704,7 @@ void TBeing::dropLevel(classIndT Class) {
 
   add_hp = hpGainForLevel(Class);
 
-  addPracs(-calcNewPracs(Class, FALSE), Class);
+  addPracs(-calcNewPracs(Class, false), Class);
   while (getPracs(Class) < 0) {
     addPracs(1, Class);
     discNumT dnt;
@@ -712,7 +712,7 @@ void TBeing::dropLevel(classIndT Class) {
       CDiscipline* cd = getDiscipline(dnt);
       if (cd && (cd->getLearnedness() > 0)) {
         cd->setNatLearnedness(
-          cd->getNatLearnedness() - calcRaiseDisc(dnt, TRUE));
+          cd->getNatLearnedness() - calcRaiseDisc(dnt, true));
         break; /* for loop */
       }
     }
@@ -996,7 +996,7 @@ void gain_exp(TBeing* ch, double gain, int dam) {
                    (gainmod * (double)(ch->howManyClasses() * 10000)) +
                  2.0 &&
         dam > 0) {
-      been_here = TRUE;  // don't show multiple logs for multiclasses
+      been_here = true;  // don't show multiple logs for multiclasses
 
       // the 100 turns dam into a %
       newgain = ((double)(dam) * (peak - curr)) /
@@ -1213,7 +1213,7 @@ void gain_exp(TBeing* ch, double gain, int dam) {
                 .str());
 
         if (tPerson)
-          tPerson->setSelectToggles(NULL, Class, SILENT_YES);
+          tPerson->setSelectToggles(nullptr, Class, SILENT_YES);
 
         if (ch->hasClass(CLASS_MONK))
           ch->remQuestBit(TOG_MONK_PAID_TABUDA);
@@ -1239,7 +1239,7 @@ void TFood::findSomeFood(TFood** last_good, TBaseContainer** last_cont,
 void TBeing::gainCondition(condTypeT condition, int value) {
   int intoxicated, i = 0, loopchk = 0;
   char buf[160], tmpbuf[40], buf2[256];
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (getCond(condition) == -1)  // No change
     return;
@@ -1336,19 +1336,19 @@ void TBeing::gainCondition(condTypeT condition, int value) {
     // Check to see if they are in center square to use statue Russ 01/06/95
     if ((in_room == Room::CS) && (GetMaxLevel() <= 3)) {
       // execute instantly, makes no sense to que this
-      parseCommand("pray statue", FALSE);
+      parseCommand("pray statue", false);
       return;
     }
-    TFood* last_good = NULL;
-    TBaseContainer* last_cont = NULL;
+    TFood* last_good = nullptr;
+    TBaseContainer* last_cont = nullptr;
     for (i = MIN_WEAR; i < MAX_WEAR; i++) {
       if (!(t = equipment[i]))
         continue;
 
-      t->findSomeFood(&last_good, &last_cont, NULL);
+      t->findSomeFood(&last_good, &last_cont, nullptr);
     }
     for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it)
-      t->findSomeFood(&last_good, &last_cont, NULL);
+      t->findSomeFood(&last_good, &last_cont, nullptr);
 
     if (last_good && !last_cont) {
       sprintf(buf, "%s", fname(last_good->name).c_str());
@@ -1379,16 +1379,16 @@ void TBeing::gainCondition(condTypeT condition, int value) {
       if (dynamic_cast<TObj*>(t) && (t->spec == SPEC_FOUNTAIN)) {
         char drinkbuf[256];
         sprintf(drinkbuf, "drink %s", t->name.c_str());
-        parseCommand(drinkbuf, FALSE);
+        parseCommand(drinkbuf, false);
         return;
       }
     }
-    TDrinkCon* last_good = NULL;
-    TBaseContainer* last_cont = NULL;
-    for (i = MIN_WEAR, last_good = NULL; i < MAX_WEAR; i++) {
+    TDrinkCon* last_good = nullptr;
+    TBaseContainer* last_cont = nullptr;
+    for (i = MIN_WEAR, last_good = nullptr; i < MAX_WEAR; i++) {
       if (!(t = equipment[i]))
         continue;
-      t->findSomeDrink(&last_good, &last_cont, NULL);
+      t->findSomeDrink(&last_good, &last_cont, nullptr);
 
       if (last_good)
         break;
@@ -1396,7 +1396,7 @@ void TBeing::gainCondition(condTypeT condition, int value) {
 
     if (!last_good)
       for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
-        t->findSomeDrink(&last_good, &last_cont, NULL);
+        t->findSomeDrink(&last_good, &last_cont, nullptr);
 
         if (last_good)
           break;
@@ -1440,10 +1440,10 @@ void TBeing::gainCondition(condTypeT condition, int value) {
 // returns DELETE_THIS
 int TBeing::checkIdling() {
   if (desc && desc->connected >= CON_REDITING)
-    return FALSE;
+    return false;
 
   if (isImmortal() || inRoom() == Room::STORAGE)
-    return FALSE;
+    return false;
 
   if (getTimer() == 10) {
     if (specials.was_in_room == Room::NOWHERE && inRoom() != Room::NOWHERE &&
@@ -1454,7 +1454,7 @@ int TBeing::checkIdling() {
           fight()->stopFighting();
         stopFighting();
       }
-      act("$n disappears into the void.", TRUE, this, 0, 0, TO_ROOM);
+      act("$n disappears into the void.", true, this, 0, 0, TO_ROOM);
       sendTo("You have been idle, and are pulled into a void.\n\r");
       --(*this);
       thing_to_room(this, Room::VOID);
@@ -1476,30 +1476,30 @@ int TBeing::checkIdling() {
         tper->dropItemsToRoom(SAFE_YES, NUKE_ITEMS);
 
       delete desc;
-      desc = NULL;
+      desc = nullptr;
       return DELETE_THIS;
     }
-#if 0 
+#if 0
   }
 #else
   } else if (desc && desc->original && (desc->original->getTimer() >= 20)) {
-    TBeing* mob = NULL;
-    TBeing* per = NULL;
+    TBeing* mob = nullptr;
+    TBeing* per = nullptr;
 
     if ((specials.act & ACT_POLYSELF)) {
       mob = this;
       per = desc->original;
-      act("$n turns liquid, and reforms as $N.", TRUE, mob, 0, per, TO_ROOM);
+      act("$n turns liquid, and reforms as $N.", true, mob, 0, per, TO_ROOM);
       --(*per);
       *mob->roomp += *per;
       SwitchStuff(mob, per);
       per->polyed = POLY_TYPE_NONE;
     }
     desc->character = desc->original;
-    desc->original = NULL;
+    desc->original = nullptr;
 
     desc->character->desc = desc;
-    desc = NULL;
+    desc = nullptr;
     per->setTimer(10);
     per->checkIdling();
     if (IS_SET(specials.act, ACT_POLYSELF)) {
@@ -1516,14 +1516,14 @@ int TBeing::checkIdling() {
     }
   }
 #endif
-    return FALSE;
+    return false;
   }
 
   int TBeing::moneyMeBeing(TThing * mon, TThing * sub) {
     int rc = mon->moneyMeMoney(this, sub);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_ITEM;
-    return FALSE;
+    return false;
   }
 
   void TBeing::classSpecificStuff() {

@@ -40,7 +40,7 @@ bool TSaddlebag::objectRepair(TBeing* ch, TMonster* repair,
   if (!silent) {
     repair->doTell(fname(ch->name), "I can't repair saddlebags.");
   }
-  return TRUE;
+  return true;
 }
 
 int TSaddlebag::getMe(TBeing* ch, TThing* sub) {
@@ -49,5 +49,5 @@ int TSaddlebag::getMe(TBeing* ch, TThing* sub) {
   if (rc)
     return rc;
 
-  return FALSE;
+  return false;
 }

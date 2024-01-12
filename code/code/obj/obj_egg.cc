@@ -41,22 +41,22 @@ void eggPoisoned(TEgg* egg, TBeing* ch, int dur) {
 
   if (egg->isFoodFlag(FOOD_POISON) && !ch->isAffected(AFF_POISON)) {
     if (ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER)) {
-      act("Mmm, that had a bit of a kick to it!", FALSE, ch, 0, 0, TO_CHAR);
+      act("Mmm, that had a bit of a kick to it!", false, ch, 0, 0, TO_CHAR);
     } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act(
         "That tasted rather strange, but you don't think it had any "
         "ill-effect!",
-        FALSE, ch, 0, 0, TO_CHAR);
+        false, ch, 0, 0, TO_CHAR);
     } else {
-      act("That tasted rather strange!", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n coughs and utters some strange sounds.", FALSE, ch, 0, 0,
+      act("That tasted rather strange!", false, ch, 0, 0, TO_CHAR);
+      act("$n coughs and utters some strange sounds.", false, ch, 0, 0,
         TO_ROOM);
       af.type = SPELL_POISON;
       af.duration = dur * Pulse::UPDATES_PER_MUDHOUR;
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_POISON;
-      ch->affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
+      ch->affectJoin(nullptr, &af, AVG_DUR_NO, AVG_EFF_NO);
     }
   }
 }
@@ -71,11 +71,11 @@ void eggSpoiled(TEgg* egg, TBeing* ch, int dur) {
     } else if (ch->isImmune(IMMUNE_POISON, WEAR_BODY)) {
       act(
         "Blarg!  That $o was rotten!  Hopefully it won't have any ill-effects.",
-        FALSE, ch, egg, 0, TO_CHAR);
+        false, ch, egg, 0, TO_CHAR);
     } else {
-      act("Blarg!  That $o was rotten!  Your stomach begins to churn.", FALSE,
+      act("Blarg!  That $o was rotten!  Your stomach begins to churn.", false,
         ch, egg, 0, TO_CHAR);
-      act("$n begins to look glassy eyed and pale.", FALSE, ch, 0, 0, TO_ROOM);
+      act("$n begins to look glassy eyed and pale.", false, ch, 0, 0, TO_ROOM);
       af.type = AFFECT_DISEASE;
       af.level = 0;
       // Added /4 because of player complaints of food poisoning - Russ 04/28/96
@@ -92,13 +92,13 @@ void eggSpoiled(TEgg* egg, TBeing* ch, int dur) {
 void TEgg::eatMe(TBeing* ch) {
   if ((ch->getCond(FULL) > 20) && !ch->isImmortal()) {
     act("You try to stuff another $o into your mouth, but alas, you are full!",
-      FALSE, ch, this, 0, TO_CHAR);
+      false, ch, this, 0, TO_CHAR);
     return;
   }
   if (isFoodFlag(FOOD_SPOILED) && ch->isPerceptive()) {
-    act("You gag at the smell of $p and discard it instead.", TRUE, ch, this, 0,
+    act("You gag at the smell of $p and discard it instead.", true, ch, this, 0,
       TO_CHAR);
-    act("$n gags at the smell of $p and throws it out.", TRUE, ch, this, 0,
+    act("$n gags at the smell of $p and throws it out.", true, ch, this, 0,
       TO_ROOM);
 
     ch->playsound(SOUND_FOODPOISON, SOUND_TYPE_NOISE);
@@ -107,8 +107,8 @@ void TEgg::eatMe(TBeing* ch) {
     return;
   }
 
-  act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
-  act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n eats $p.", true, ch, this, 0, TO_ROOM);
+  act("You eat the $o.", false, ch, this, 0, TO_CHAR);
 
   if (ch->isVampire()) {
     ch->sendTo("You eat the mortal food, but it has no affect on you.\n\r");
@@ -118,7 +118,7 @@ void TEgg::eatMe(TBeing* ch) {
   }
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
     eggPoisoned(this, ch, getFoodFill());
@@ -135,8 +135,8 @@ void TEgg::tasteMe(TBeing* ch) {
     ch->sendTo("You decide to skip this meal until you feel better.\n\r");
     return;
   }
-  act("$n tastes the $o.", FALSE, ch, this, 0, TO_ROOM);
-  act("You taste the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n tastes the $o.", false, ch, this, 0, TO_ROOM);
+  act("You taste the $o.", false, ch, this, 0, TO_CHAR);
 
   sstring msg;
   int amt = 1;
@@ -171,13 +171,13 @@ void TEgg::tasteMe(TBeing* ch) {
     ch->gainCondition(FULL, amt);
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
     eggPoisoned(this, ch, 1);
   }
   if (isFoodFlag(FOOD_SPOILED)) {
-    act("Blarg!  That $o is spoiled!", FALSE, ch, this, 0, TO_CHAR);
+    act("Blarg!  That $o is spoiled!", false, ch, this, 0, TO_CHAR);
     ch->sendTo("No point in keeping it around now...\n\r");
     delete this;
     return;
@@ -189,7 +189,7 @@ void TEgg::tasteMe(TBeing* ch) {
   setFoodFill(getFoodFill() - 2);
 
   if (getFoodFill() <= 0) { /* Nothing left */
-    act("There is nothing left now.", FALSE, ch, 0, 0, TO_CHAR);
+    act("There is nothing left now.", false, ch, 0, 0, TO_CHAR);
     delete this;
     return;
   }
@@ -272,17 +272,17 @@ int TEgg::chiMe(TBeing* tLunatic) {
     tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI) || isFoodFlag(FOOD_SPOILED)) {
-    act("You fail to affect $p in any way.", FALSE, tLunatic, this, NULL,
+    act("You fail to affect $p in any way.", false, tLunatic, this, nullptr,
       TO_CHAR);
     return true;
   }
 
-  act("You focus your chi, causing $p to get warmer!", FALSE, tLunatic, this,
-    NULL, TO_CHAR);
-  act("$n stares at $p, causing it to get warmer!", TRUE, tLunatic, this, NULL,
+  act("You focus your chi, causing $p to get warmer!", false, tLunatic, this,
+    nullptr, TO_CHAR);
+  act("$n stares at $p, causing it to get warmer!", true, tLunatic, this, nullptr,
     TO_ROOM);
-  act("$p begins to wiggle a bit.", TRUE, tLunatic, this, NULL, TO_CHAR);
-  act("$p begins to wiggle a bit.", TRUE, tLunatic, this, NULL, TO_ROOM);
+  act("$p begins to wiggle a bit.", true, tLunatic, this, nullptr, TO_CHAR);
+  act("$p begins to wiggle a bit.", true, tLunatic, this, nullptr, TO_ROOM);
 
   obj_flags.decay_time += ::number(1, 3);
   incubationTimer = 1;
@@ -296,9 +296,9 @@ int TEgg::getMe(TBeing* ch, TThing* sub) {
   if (rc)
     return rc;
 
-  touched = TRUE;
+  touched = true;
 
-  return TRUE;
+  return true;
 }
 
 void TEgg::hatch(TRoom* rp) {
@@ -313,9 +313,9 @@ void TEgg::hatch(TRoom* rp) {
 
   *rp += *mob;
   mob->oldRoom = inRoom();
-  act("Suddenly, $p begins to move violently from within!", TRUE, mob, this,
-    NULL, TO_ROOM);
-  act("With a final push, $n emerges from $p!", TRUE, mob, this, NULL, TO_ROOM);
+  act("Suddenly, $p begins to move violently from within!", true, mob, this,
+    nullptr, TO_ROOM);
+  act("With a final push, $n emerges from $p!", true, mob, this, nullptr, TO_ROOM);
 
   if (((parent && (ch = dynamic_cast<TBeing*>(parent))) ||
         (equippedBy && (ch = dynamic_cast<TBeing*>(equippedBy)))) &&

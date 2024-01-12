@@ -20,7 +20,7 @@ static void repHealing2(TBeing* caster, TBeing* victim) {
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   if (caster != victim) {
     caster->sendTo(COLOR_SPELLS,
@@ -67,18 +67,18 @@ int healingGrasp(TBeing* caster, TBeing* victim, int level, short bKnown,
       case CRIT_S_DOUBLE:
         CS(SPELL_HEALING_GRASP);
         hp *= 2;
-        colorAct(COLOR_SPELLS, "$n's eyes glow <G>bright green<z>.", FALSE,
-          victim, NULL, 0, TO_ROOM);
-        colorAct(COLOR_SPELLS, "Your eyes glow <G>bright green<z>.", FALSE,
-          victim, NULL, 0, TO_CHAR);
+        colorAct(COLOR_SPELLS, "$n's eyes glow <G>bright green<z>.", false,
+          victim, nullptr, 0, TO_ROOM);
+        colorAct(COLOR_SPELLS, "Your eyes glow <G>bright green<z>.", false,
+          victim, nullptr, 0, TO_CHAR);
         break;
       case CRIT_S_NONE:
         colorAct(COLOR_SPELLS,
-          "$n's eyes glow briefly with a <g>green tint<z>.", FALSE, victim,
-          NULL, 0, TO_ROOM);
+          "$n's eyes glow briefly with a <g>green tint<z>.", false, victim,
+          nullptr, 0, TO_ROOM);
         colorAct(COLOR_SPELLS,
-          "Your eyes glow briefly with a <c>green tint<z>.", FALSE, victim,
-          NULL, 0, TO_CHAR);
+          "Your eyes glow briefly with a <c>green tint<z>.", false, victim,
+          nullptr, 0, TO_CHAR);
         break;
     }
     if (victim->getHit() < victim->hitLimit()) {
@@ -114,8 +114,8 @@ void healingGrasp(TBeing* caster, TBeing* victim) {
     caster->isImmortal() ? LAG_0 : discArray[SPELL_HEALING_GRASP]->lag;
   taskDiffT diff = discArray[spell]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_HEALING_GRASP, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_HEALING_GRASP, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 }
 
 int castHealingGrasp(TBeing* caster, TBeing* victim) {
@@ -123,7 +123,7 @@ int castHealingGrasp(TBeing* caster, TBeing* victim) {
 
   strcpy(nameBuf, sstring(victim->getName()).cap().c_str());
   sprintf(nameBuf, "%s",
-    colorString(caster, caster->desc, nameBuf, NULL, COLOR_MOBS, TRUE).c_str());
+    colorString(caster, caster->desc, nameBuf, nullptr, COLOR_MOBS, true).c_str());
 
   spellNumT spell = caster->getSkillNum(caster->spelltask->spell);
   int ret = healingGrasp(caster, victim, caster->getSkillLevel(spell),
@@ -139,7 +139,7 @@ int castHealingGrasp(TBeing* caster, TBeing* victim) {
             "<p>%s <z><p>is fully healed so you cease the ritual.<z>\n\r") %
             nameBuf);
 
-      act("$n stops $s healing ritual.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops $s healing ritual.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     } else
       repHealing2(caster, victim);
@@ -153,7 +153,7 @@ int castHealingGrasp(TBeing* caster, TBeing* victim) {
           format(
             "<p>%s <z><p>is fully healed so you cease the ritual.<z>\n\r") %
             nameBuf);
-      act("$n stops $s healing ritual.", TRUE, caster, NULL, NULL, TO_ROOM);
+      act("$n stops $s healing ritual.", true, caster, nullptr, nullptr, TO_ROOM);
       caster->stopCast(STOP_CAST_NONE);
     }
   }
@@ -188,10 +188,10 @@ int enliven(TBeing* caster, TBeing* victim, int level, short bKnown) {
       return SPELL_FALSE;
     }
 
-    act("$N has become enlivened!", FALSE, caster, NULL, victim, TO_NOTVICT);
-    act("You have become enlivened!", FALSE, victim, NULL, NULL, TO_CHAR);
+    act("$N has become enlivened!", false, caster, nullptr, victim, TO_NOTVICT);
+    act("You have become enlivened!", false, victim, nullptr, nullptr, TO_CHAR);
     if (caster != victim)
-      act("$N has been enlivened!", FALSE, caster, NULL, victim, TO_CHAR);
+      act("$N has been enlivened!", false, caster, nullptr, victim, TO_CHAR);
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();
@@ -205,14 +205,14 @@ void enliven(TBeing* caster, TBeing* victim, TMagicItem* obj) {
 
 int enliven(TBeing* caster, TBeing* victim) {
   if (!bPassShamanChecks(caster, SPELL_ENLIVEN, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_ENLIVEN]->lag;
   taskDiffT diff = discArray[SPELL_ENLIVEN]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_ENLIVEN, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_ENLIVEN, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castEnliven(TBeing* caster, TBeing* victim) {
@@ -223,5 +223,5 @@ int castEnliven(TBeing* caster, TBeing* victim) {
   if (ret == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }

@@ -81,16 +81,16 @@ int TSymbol::objectSell(TBeing* ch, TMonster* keeper) {
 
   if ((getSymbolCurStrength() != getSymbolMaxStrength())) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy back used symbols.");
-    return TRUE;
+    return true;
   }
 
   if ((getSymbolFaction() != FACT_UNDEFINED) && attuneCode) {
     keeper->doTell(ch->getName(),
       "I'm sorry, I don't buy back attuned symbols.");
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int TSymbol::getSymbolCurStrength() const { return strength; }
@@ -140,7 +140,7 @@ bool TSymbol::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
   if (!silent) {
     repair->doTell(fname(ch->name), "Hey, I don't get involved with religion!");
   }
-  return TRUE;
+  return true;
 }
 
 bool TSymbol::lowCheckSlots(silentTypeT silent) {
@@ -246,23 +246,23 @@ int TSymbol::chiMe(TBeing* tLunatic) {
 
   if (!tLunatic->bSuccess(bKnown, SKILL_CHI) ||
       (getSymbolCurStrength() >= getSymbolMaxStrength())) {
-    act("You focus upon $p, but faulter and gently harm it!", FALSE, tLunatic,
-      this, NULL, TO_CHAR);
-    act("$n focuses on $p, but it cracks gently in response!", TRUE, tLunatic,
-      this, NULL, TO_ROOM);
+    act("You focus upon $p, but faulter and gently harm it!", false, tLunatic,
+      this, nullptr, TO_CHAR);
+    act("$n focuses on $p, but it cracks gently in response!", true, tLunatic,
+      this, nullptr, TO_ROOM);
 
     addToSymbolCurStrength(-::number(1, 4));
 
     if (getSymbolCurStrength() <= 0) {
-      act("$p reacts violently and shatters!", FALSE, tLunatic, this, NULL,
+      act("$p reacts violently and shatters!", false, tLunatic, this, nullptr,
         TO_ROOM);
       return DELETE_VICT;
     }
   } else {
-    act("You focus upon $p causing it to mend ever so slightly!", FALSE,
-      tLunatic, this, NULL, TO_CHAR);
-    act("$n concentrates upon $p, causing it to mend ever so slightly!", TRUE,
-      tLunatic, this, NULL, TO_ROOM);
+    act("You focus upon $p causing it to mend ever so slightly!", false,
+      tLunatic, this, nullptr, TO_CHAR);
+    act("$n concentrates upon $p, causing it to mend ever so slightly!", true,
+      tLunatic, this, nullptr, TO_ROOM);
 
     setSymbolCurStrength(
       min(getSymbolMaxStrength(), (getSymbolCurStrength() + ::number(1, 4))));

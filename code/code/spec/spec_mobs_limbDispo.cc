@@ -12,13 +12,13 @@ const int FEE = 1;
 
 int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
   if (!(cmd == CMD_PUT || cmd == CMD_GIVE || cmd == CMD_GENERIC_PULSE)) {
-    return FALSE;
+    return false;
   }
   sstring sarg = arg;
 
-  TThing* t = NULL;
-  TObj* cart = NULL;
-  TObj* contents = NULL;
+  TThing* t = nullptr;
+  TObj* cart = nullptr;
+  TObj* contents = nullptr;
   for (StuffIter it = mob->roomp->stuff.begin();
        it != mob->roomp->stuff.end() && (t = *it); ++it) {
     if (!(cart = dynamic_cast<TObj*>(t))) {
@@ -29,66 +29,66 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
   }
   if (!cart || obj_index[cart->getItemIndex()].virt != CART_VNUM) {
     mob->doSay("Hm, wonder where that dratted cart went.");
-    act("You clap yours hands twice and a cart appears.", TRUE, mob, NULL, 0,
+    act("You clap yours hands twice and a cart appears.", true, mob, nullptr, 0,
       TO_CHAR);
-    act("$n claps his hands twice and a cart appears.", TRUE, mob, NULL, 0,
+    act("$n claps his hands twice and a cart appears.", true, mob, nullptr, 0,
       TO_ROOM);
     cart = read_object(CART_VNUM, VIRTUAL);
     contents = read_object(CONTENTS_VNUM, VIRTUAL);
     if (!cart || !contents) {
       vlogf(LOG_LOW, "Error loading objects in spec_mobs_limbDispo.cc");
-      return TRUE;
+      return true;
     }
     *mob->roomp += *cart;
     *cart += *contents;
   }
 
   if (cmd == CMD_GENERIC_PULSE && ::number(0, 200)) {
-    return FALSE;
+    return false;
   }
 
   if (cmd == CMD_GIVE) {
     if (!isname(sarg.word(1), mob->name)) {
-      return FALSE;
+      return false;
     } else {
       mob->doSay("Put it in the cart yourself, you lazy ass.");
-      return TRUE;
+      return true;
     }
   } else if (cmd == CMD_GENERIC_PULSE) {
     TRoom* rp = mob->roomp;
     int rc;
-    act("You grin a toothless smile.", TRUE, mob, NULL, 0, TO_CHAR);
-    act("$n grins a toothless smile.", TRUE, mob, NULL, 0, TO_ROOM);
+    act("You grin a toothless smile.", true, mob, nullptr, 0, TO_CHAR);
+    act("$n grins a toothless smile.", true, mob, nullptr, 0, TO_ROOM);
     mob->doSay("All out of bodyparts then, are we?");
-    act("You lift your cart and give it a push.", TRUE, mob, NULL, 0, TO_CHAR);
-    act("$n lifts the cart and gives it a push.", TRUE, mob, NULL, 0, TO_ROOM);
+    act("You lift your cart and give it a push.", true, mob, nullptr, 0, TO_CHAR);
+    act("$n lifts the cart and gives it a push.", true, mob, nullptr, 0, TO_ROOM);
     rc = mob->wanderAround();
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     if (rp == mob->roomp) {
-      act("You lose your grip and the cart comes to an abrupt stop.", TRUE, mob,
-        NULL, 0, TO_CHAR);
-      act("$n's loses his grip and the cart comes to an abrupt stop.", TRUE,
-        mob, NULL, 0, TO_ROOM);
+      act("You lose your grip and the cart comes to an abrupt stop.", true, mob,
+        nullptr, 0, TO_CHAR);
+      act("$n's loses his grip and the cart comes to an abrupt stop.", true,
+        mob, nullptr, 0, TO_ROOM);
       mob->doAction("", CMD_GRUNT);
       mob->doSay("Damn this thing is heavy!");
     } else {
       --(*cart);
       *mob->roomp += *cart;
     }
-    return TRUE;
+    return true;
   }
 
   if (!is_abbrev(sarg.word(1), "cart") &&
       !(is_abbrev(sarg.word(1), "in") && is_abbrev(sarg.word(2), "cart"))) {
-    return FALSE;
+    return false;
   }
 
-  t = NULL;
-  TCorpse* limb = NULL;
-  TTrash* tooth = NULL;
-  TDrinkCon* heart = NULL;
-  TObj* bodypart = NULL;
+  t = nullptr;
+  TCorpse* limb = nullptr;
+  TTrash* tooth = nullptr;
+  TDrinkCon* heart = nullptr;
+  TObj* bodypart = nullptr;
   int foundsomething = 0;
   for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (t = *it);
        ++it) {
@@ -118,16 +118,16 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
   if (!foundsomething) {
     mob->doSay(
       "Trying to give me stuff you don't have can only lead to trouble.");
-    return TRUE;
+    return true;
   }
   if (!bodypart) {
-    act("$n quickly covers over the cart.", TRUE, mob, NULL, 0, TO_ROOM);
+    act("$n quickly covers over the cart.", true, mob, nullptr, 0, TO_ROOM);
     mob->doSay("Whoa, now!  I'll have none of those dodgy goods!");
-    return TRUE;
+    return true;
   }
 
-  act("You put $N into $p's cart.", TRUE, ch, mob, bodypart, TO_CHAR);
-  act("$n puts $N into $p's cart.", TRUE, ch, mob, bodypart, TO_ROOM);
+  act("You put $N into $p's cart.", true, ch, mob, bodypart, TO_CHAR);
+  act("$n puts $N into $p's cart.", true, ch, mob, bodypart, TO_ROOM);
   sstring stmp = format(
                    "There's your %d talen, compliments of our most generous "
                    "and sanitary King.") %
@@ -145,7 +145,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
     // record stuff for limb questing
     std::vector<sstring> partinfo;
     split_string(partname, " []\n\r\t", partinfo);
-    bool record_part = TRUE;
+    bool record_part = true;
 
     // we're expecting the end of the partname to be [bodypart] [slot #] [mob
     // vnum] [player that chopped it] parsing from the end to the beginning
@@ -158,7 +158,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
     }
     if (chopper.isNumber()) {
       chopper = "UNKNOWN";
-      record_part = FALSE;
+      record_part = false;
     }
 
     // mob vnum
@@ -171,7 +171,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
     if (is_number(mob_vnum))
       m_vnum = convertTo<int>(mob_vnum);
     else
-      record_part = FALSE;
+      record_part = false;
 
     // slot # (expect 0 for hearts, eyes, genitals)
     // a tooth should be 0 or -1 if it was collected from before the limb quest
@@ -186,7 +186,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
     if (is_number(slot_num))
       slot = convertTo<int>(slot_num);
     else
-      record_part = FALSE;
+      record_part = false;
 
     // part name
     sstring mob_part = "";
@@ -197,14 +197,14 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
     mob_part = mob_part.replaceString("-", " ");
 
     if (chopper.length() > 80 || mob_part.length() > 80) {
-      record_part = FALSE;
+      record_part = false;
     }
 
     if (record_part) {
       TDatabase db(DB_SNEEZY);
       // get team affiliation for cutesy message below
       sstring team;
-      bool samaritan = FALSE;
+      bool samaritan = false;
       db.query(
         "select (select team from quest_limbs_team where player = '%s') as "
         "chopper_team, (select team from quest_limbs_team where player = '%s') "
@@ -214,7 +214,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
         team = db["chopper_team"];
         if (chopper.compare(ch->name)) {
           // turning in someone else's limb
-          samaritan = TRUE;
+          samaritan = true;
         }
       } else
         team = "";
@@ -243,8 +243,8 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
                          ch->name % team);
         }
         delete bodypart;
-        bodypart = NULL;
-        return TRUE;
+        bodypart = nullptr;
+        return true;
       }
     } else {
       vlogf(LOG_MAROR, format("Chop shop not recorded in db: %s") % partname);
@@ -252,7 +252,7 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
   }
 
   delete bodypart;
-  bodypart = NULL;
+  bodypart = nullptr;
 
   sstring resp;
   switch (::number(1, 11)) {
@@ -287,5 +287,5 @@ int limbDispo(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mob, TObj*) {
   }
   mob->doWhisper(format("%s %s") % ch->name % resp);
 
-  return TRUE;
+  return true;
 }

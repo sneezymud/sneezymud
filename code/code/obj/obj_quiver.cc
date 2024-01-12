@@ -51,8 +51,8 @@ void TQuiver::closeMe(TBeing* ch) {
     ch->sendTo("I'm afraid it cannot be closed.\n\r");
   else {
     addContainerFlag(CONT_CLOSED);
-    act("You close and strap $p.", TRUE, ch, this, 0, TO_CHAR);
-    act("$n closes and straps $p.", TRUE, ch, this, 0, TO_ROOM);
+    act("You close and strap $p.", true, ch, this, 0, TO_CHAR);
+    act("$n closes and straps $p.", true, ch, this, 0, TO_ROOM);
   }
 }
 
@@ -61,23 +61,23 @@ int TQuiver::openMe(TBeing* ch) {
 
   if (!isClosed()) {
     ch->sendTo("But it's already open!\n\r");
-    return FALSE;
+    return false;
   } else if (!isCloseable()) {
     ch->sendTo("You can't do that.\n\r");
-    return FALSE;
+    return false;
   } else if (isContainerFlag(CONT_TRAPPED)) {
     if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
       if (detectTrapObj(ch, this)) {
         sprintf(buf,
           "You start to open $p, but then notice an insidious %s trap...",
           sstring(trap_types[getContainerTrapType()]).uncap().c_str());
-        act(buf, TRUE, ch, this, NULL, TO_CHAR);
-        return FALSE;
+        act(buf, true, ch, this, nullptr, TO_CHAR);
+        return false;
       }
     }
-    act("You release the strap on $p and open it.", TRUE, ch, this, NULL,
+    act("You release the strap on $p and open it.", true, ch, this, nullptr,
       TO_CHAR);
-    act("$n releases the strap on $p and opens it.", TRUE, ch, this, 0,
+    act("$n releases the strap on $p and opens it.", true, ch, this, 0,
       TO_ROOM);
     remContainerFlag(CONT_CLOSED);
 
@@ -92,11 +92,11 @@ int TQuiver::openMe(TBeing* ch) {
     return res;
   } else {
     remContainerFlag(CONT_CLOSED);
-    act("You release the strap on $p and open it.", TRUE, ch, this, NULL,
+    act("You release the strap on $p and open it.", true, ch, this, nullptr,
       TO_CHAR);
-    act("$n releases the strap on $p and opens it.", TRUE, ch, this, 0,
+    act("$n releases the strap on $p and opens it.", true, ch, this, 0,
       TO_ROOM);
-    return TRUE;
+    return true;
   }
 }
 

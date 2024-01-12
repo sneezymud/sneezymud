@@ -20,14 +20,14 @@ int lotteryTicket(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   sstring buf;
 
   if (cmd != CMD_SCRATCH || !ch || !o)
-    return FALSE;
+    return false;
 
   if (!isname(arg, o->name))
-    return FALSE;
+    return false;
 
   if (o->isObjStat(ITEM_STRUNG)) {
     ch->sendTo("That ticket has already been scratched.\n\r");
-    return TRUE;
+    return true;
   }
 
   o->swapToStrung();
@@ -56,13 +56,13 @@ int lotteryTicket(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
           obj_index[real_object(prizes[which].vnum)].short_desc;
   }
 
-  act("$n scratches off $p.", TRUE, ch, o, 0, TO_ROOM);
-  act("You scratch off $p.", TRUE, ch, o, 0, TO_CHAR);
+  act("$n scratches off $p.", true, ch, o, 0, TO_ROOM);
+  act("You scratch off $p.", true, ch, o, 0, TO_CHAR);
 
   ch->sendTo(COLOR_BASIC, buf.c_str());
 
   buf = format("%s\n\r%s") % o->ex_description->description % buf;
   o->ex_description->description = buf;
 
-  return TRUE;
+  return true;
 }

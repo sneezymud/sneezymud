@@ -32,7 +32,7 @@ bool hasColorStrings(const TBeing* mob, const sstring& arg, int field) {
   sstring s;
 
   if (arg.empty())
-    return FALSE;
+    return false;
 
   mud_assert(field >= 1 && field <= 2, "Bad args");
 
@@ -105,7 +105,7 @@ bool hasColorStrings(const TBeing* mob, const sstring& arg, int field) {
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 // takes the sstring given by arg, replaces any <m> or <M> in it with
@@ -117,7 +117,7 @@ sstring addNameToBuf(const TBeing* me, const Descriptor* ch, const TThing* ting,
   unsigned int len;
   sstring buf;
   char tmp[80];
-  bool y = FALSE;
+  bool y = false;
   int x = 0;
 
   if (!ch)
@@ -141,7 +141,7 @@ sstring addNameToBuf(const TBeing* me, const Descriptor* ch, const TThing* ting,
             strcpy(tmp, sstring(tmp).cap().c_str());
           }
           if (lev != COLOR_NONE)
-            buf += colorString(me, ch, tmp, NULL, lev, FALSE);
+            buf += colorString(me, ch, tmp, nullptr, lev, false);
           else
             buf += tmp;
 
@@ -201,7 +201,7 @@ sstring addNameToBuf(const TBeing* me, const Descriptor* ch, const TThing* ting,
         case 'h':
         case 'H':
           // if there is a color sstring, it will pick it up after <m>
-          y = TRUE;
+          y = true;
           x = s;
         // pass through
         default:
@@ -240,7 +240,7 @@ sstring nameColorString(TBeing* me, Descriptor* ch, const sstring& arg,
               buf += " (PK)";
 
             if (flag)
-              *flag = TRUE;
+              *flag = true;
             s += 2;
           } else
             buf += arg[s];
@@ -274,8 +274,8 @@ const sstring colorString(const TBeing* me, const Descriptor* ch,
   //  to no so if you dont pass anything, it will not return -Cos
   int len, s;
   sstring buf;
-  bool colorize = TRUE;
-  bool addNorm = FALSE;
+  bool colorize = true;
+  bool addNorm = false;
 
   if (arg.empty())
     return ("");
@@ -289,73 +289,73 @@ const sstring colorString(const TBeing* me, const Descriptor* ch,
   switch (lev) {
     case COLOR_ALWAYS:
     case COLOR_BASIC:  // allows for basic ansi
-      colorize = TRUE;
+      colorize = true;
       break;
     case COLOR_NONE:
     case COLOR_NEVER:
-      colorize = FALSE;
+      colorize = false;
       break;
     case COLOR_COMM:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_COMM)))
-        colorize = FALSE;
+        colorize = false;
       else
-        colorize = TRUE;
+        colorize = true;
 
       break;
     case COLOR_OBJECTS:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_OBJECTS)))
-        colorize = FALSE;
+        colorize = false;
       else
-        colorize = TRUE;
+        colorize = true;
 
       break;
     case COLOR_MOBS:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_MOBS)))
-        colorize = FALSE;
+        colorize = false;
       else
-        colorize = TRUE;
+        colorize = true;
 
       break;
     case COLOR_ROOMS:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_ROOMS)))
-        colorize = FALSE;
+        colorize = false;
       else {
-        addNorm = TRUE;
-        colorize = TRUE;
+        addNorm = true;
+        colorize = true;
       }
       break;
     case COLOR_ROOM_NAME:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_ROOM_NAME)))
-        colorize = FALSE;
+        colorize = false;
       else {
-        addNorm = TRUE;
-        colorize = TRUE;
+        addNorm = true;
+        colorize = true;
       }
       break;
     case COLOR_SHOUTS:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_SHOUTS)))
-        colorize = FALSE;
+        colorize = false;
       else
-        colorize = TRUE;
+        colorize = true;
 
       break;
     case COLOR_SPELLS:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_SPELLS)))
-        colorize = FALSE;
+        colorize = false;
       else
-        colorize = TRUE;
+        colorize = true;
 
       break;
     case COLOR_LOGS:
       if (!(IS_SET(ch->plr_color, PLR_COLOR_LOGS)))
-        colorize = FALSE;
+        colorize = false;
       else
-        colorize = TRUE;
+        colorize = true;
 
       break;
     default:
       vlogf(LOG_BUG, "Colorsstring with a default COLOR setting");
-      colorize = TRUE;
+      colorize = true;
       break;
   }
   len = arg.length();
@@ -606,7 +606,7 @@ const sstring colorString(const TBeing* me, const Descriptor* ch,
             if (me) {
               buf += sstring(me->getName()).cap();
               if (flag)
-                *flag = TRUE;
+                *flag = true;
               s += 2;
             } else
               buf += arg[s];

@@ -184,12 +184,12 @@ void TOpenContainer::putMoneyInto(TBeing* ch, int amount) {
   TMoney* money;
 
   if (isClosed()) {
-    act("$p is closed.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p is closed.", false, ch, this, 0, TO_CHAR);
     return;
   }
   ch->sendTo("OK.\n\r");
 
-  act("$n puts some money into $p.", FALSE, ch, this, 0, TO_ROOM);
+  act("$n puts some money into $p.", false, ch, this, 0, TO_ROOM);
   money = create_money(amount);
   *this += *money;
 
@@ -204,13 +204,13 @@ int TOpenContainer::openMe(TBeing* ch) {
 
   if (!isClosed()) {
     ch->sendTo("But it's already open!\n\r");
-    return FALSE;
+    return false;
   } else if (!isCloseable() && !isClosed()) {
     ch->sendTo("You can't do that.\n\r");
-    return FALSE;
+    return false;
   } else if (isContainerFlag(CONT_LOCKED)) {
     ch->sendTo("It seems to be locked.\n\r");
-    return FALSE;
+    return false;
   } else if (isContainerFlag(CONT_TRAPPED) ||
              !isContainerFlag(CONT_EMPTYTRAP) ||
              isContainerFlag(CONT_GHOSTTRAP)) {
@@ -219,9 +219,9 @@ int TOpenContainer::openMe(TBeing* ch) {
         sprintf(buf,
           "You start to open $p, but then notice an insidious %s trap...",
           sstring(trap_types[getContainerTrapType()]).uncap().c_str());
-        act(buf, TRUE, ch, this, NULL, TO_CHAR);
+        act(buf, true, ch, this, nullptr, TO_CHAR);
 
-        return FALSE;
+        return false;
       } else if (!isContainerFlag(CONT_TRAPPED) &&
                  !ch->bSuccess(SKILL_DETECT_TRAP)) {
         setContainerTrapType(
@@ -232,9 +232,9 @@ int TOpenContainer::openMe(TBeing* ch) {
         sprintf(buf,
           "You start to open $p, but then notice an insidious %s trap...",
           sstring(trap_types[getContainerTrapType()]).uncap().c_str());
-        act(buf, TRUE, ch, this, NULL, TO_CHAR);
+        act(buf, true, ch, this, nullptr, TO_CHAR);
 
-        return FALSE;
+        return false;
       }
     }
 
@@ -244,7 +244,7 @@ int TOpenContainer::openMe(TBeing* ch) {
 
     if (spec) {
       int res = 0;
-      int rc = checkSpec(ch, CMD_OBJ_OPENED, NULL, NULL);
+      int rc = checkSpec(ch, CMD_OBJ_OPENED, nullptr, nullptr);
       if (IS_SET_ONLY(rc, DELETE_THIS))
         res |= DELETE_ITEM;
       if (IS_SET_ONLY(rc, DELETE_VICT)) {
@@ -255,8 +255,8 @@ int TOpenContainer::openMe(TBeing* ch) {
         return res;
     }
 
-    act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
+    act("You open $p.", true, ch, this, nullptr, TO_CHAR);
+    act("$n opens $p.", true, ch, this, 0, TO_ROOM);
 
     if (isContainerFlag(CONT_TRAPPED)) {
       int rc = ch->triggerContTrap(this);
@@ -270,7 +270,7 @@ int TOpenContainer::openMe(TBeing* ch) {
       return res;
     }
 
-    return TRUE;
+    return true;
   } else {
     remContainerFlag(CONT_CLOSED);
     remContainerFlag(CONT_GHOSTTRAP);
@@ -278,7 +278,7 @@ int TOpenContainer::openMe(TBeing* ch) {
 
     if (spec) {
       int res = 0;
-      int rc = checkSpec(ch, CMD_OBJ_OPENED, NULL, NULL);
+      int rc = checkSpec(ch, CMD_OBJ_OPENED, nullptr, nullptr);
       if (IS_SET_ONLY(rc, DELETE_THIS))
         res |= DELETE_ITEM;
       if (IS_SET_ONLY(rc, DELETE_VICT)) {
@@ -289,10 +289,10 @@ int TOpenContainer::openMe(TBeing* ch) {
         return res;
     }
 
-    act("You open $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n opens $p.", TRUE, ch, this, 0, TO_ROOM);
+    act("You open $p.", true, ch, this, nullptr, TO_CHAR);
+    act("$n opens $p.", true, ch, this, 0, TO_ROOM);
 
-    return TRUE;
+    return true;
   }
 }
 
@@ -313,9 +313,9 @@ int TOpenContainer::putSomethingInto(TBeing* ch, TThing* obj) {
 bool TOpenContainer::getObjFromMeCheck(TBeing* ch) {
   if (isClosed()) {
     act("$P must be opened first.", 1, ch, 0, this, TO_CHAR);
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 sstring TOpenContainer::compareMeAgainst(TBeing* ch, TObj* tObj) {
@@ -335,7 +335,7 @@ sstring TOpenContainer::compareMeAgainst(TBeing* ch, TObj* tObj) {
     " can hold a great amount less weight compared to ",
   };
 
-  TOpenContainer* tOpenContainer = NULL;
+  TOpenContainer* tOpenContainer = nullptr;
 
   if (!tObj)
     return "Could not find other item to compare.\n\r";
@@ -409,13 +409,13 @@ int TOpenContainer::trapMe(TBeing* ch, const char* trap_type) {
   char buf[256];
 
   if (!isCloseable()) {
-    act("$p must be closeable to be trapped.", FALSE, ch, this, 0, TO_CHAR);
-    return FALSE;
+    act("$p must be closeable to be trapped.", false, ch, this, 0, TO_CHAR);
+    return false;
   }
   if (!isClosed()) {
-    act("$p must be closed before you may trap it.", FALSE, ch, this, 0,
+    act("$p must be closed before you may trap it.", false, ch, this, 0,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
   if (isContainerFlag(CONT_TRAPPED)) {
     if (ch->doesKnowSkill(SKILL_DETECT_TRAP)) {
@@ -424,8 +424,8 @@ int TOpenContainer::trapMe(TBeing* ch, const char* trap_type) {
           "You start to trap $p, but then notice an insidious %s trap already "
           "present.",
           sstring(trap_types[getContainerTrapType()]).uncap().c_str());
-        act(buf, TRUE, ch, this, NULL, TO_CHAR);
-        return FALSE;
+        act(buf, true, ch, this, nullptr, TO_CHAR);
+        return false;
       }
     }
     int rc = ch->triggerContTrap(this);
@@ -467,22 +467,22 @@ int TOpenContainer::trapMe(TBeing* ch, const char* trap_type) {
   } else {
     ch->sendTo("No such container trap-type.\n\r");
     ch->sendTo("Syntax: trap container <item> <trap-type>\n\r");
-    return FALSE;
+    return false;
   }
   if (!ch->hasTrapComps(trap_type, TRAP_TARG_CONT, 0)) {
     ch->sendTo("You need more items to make that trap.\n\r");
-    return FALSE;
+    return false;
   }
   if (ch->getContainerTrapLearn(type) <= 0) {
     ch->sendTo("You need more training before setting a container trap.\n\r");
-    return FALSE;
+    return false;
   }
 
   ch->sendTo("You start working on your trap.\n\r");
-  act("$n starts fiddling with $p.", TRUE, ch, this, 0, TO_ROOM);
-  start_task(ch, this, NULL, TASK_TRAP_CONT, trap_type, 3, ch->inRoom(), type,
+  act("$n starts fiddling with $p.", true, ch, this, 0, TO_ROOM);
+  start_task(ch, this, nullptr, TASK_TRAP_CONT, trap_type, 3, ch->inRoom(), type,
     0, 5);
-  return FALSE;
+  return false;
 }
 
 int TOpenContainer::disarmMe(TBeing* thief) {
@@ -492,17 +492,17 @@ int TOpenContainer::disarmMe(TBeing* thief) {
   int bKnown = thief->getSkillValue(SKILL_DISARM_TRAP);
 
   if (isContainerFlag(CONT_GHOSTTRAP)) {
-    act("$p isn't trapped after all, must have made a mistake...", FALSE, thief,
+    act("$p isn't trapped after all, must have made a mistake...", false, thief,
       this, 0, TO_CHAR);
     remContainerFlag(CONT_GHOSTTRAP);
     addContainerFlag(CONT_EMPTYTRAP);
 
-    return TRUE;
+    return true;
   }
 
   if (!isContainerFlag(CONT_TRAPPED)) {
-    act("$p is not trapped.", FALSE, thief, this, 0, TO_CHAR);
-    return TRUE;
+    act("$p is not trapped.", false, thief, this, 0, TO_CHAR);
+    return true;
   }
 
   strcpy(trap_type_buf, trap_types[getContainerTrapType()].c_str());
@@ -511,19 +511,19 @@ int TOpenContainer::disarmMe(TBeing* thief) {
 
   if (thief->bSuccess(learnedness, SKILL_DISARM_TRAP)) {
     sprintf(buf, "Click.  You disarm the %s trap in the $o.", trap_type_buf);
-    act(buf, FALSE, thief, this, 0, TO_CHAR);
-    act("$n disarms $p.", FALSE, thief, this, 0, TO_ROOM);
+    act(buf, false, thief, this, 0, TO_CHAR);
+    act("$n disarms $p.", false, thief, this, 0, TO_ROOM);
     remContainerFlag(CONT_TRAPPED);
 
-    return TRUE;
+    return true;
   } else {
     thief->sendTo("Click. (whoops)\n\r");
-    act("$n tries to disarm $p.", FALSE, thief, this, 0, TO_ROOM);
+    act("$n tries to disarm $p.", false, thief, this, 0, TO_ROOM);
     rc = thief->triggerContTrap(this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_VICT;
     }
-    return TRUE;
+    return true;
   }
 }
 
@@ -531,15 +531,15 @@ int TOpenContainer::detectMe(TBeing* thief) const {
   int bKnown = thief->getSkillValue(SKILL_DETECT_TRAP);
 
   if (!isContainerFlag(CONT_TRAPPED))
-    return FALSE;
+    return false;
 
   // opening a trapped item
   if (thief->bSuccess(bKnown, SKILL_DETECT_TRAP)) {
     CS(SKILL_DETECT_TRAP);
-    return TRUE;
+    return true;
   } else {
     CF(SKILL_DETECT_TRAP);
-    return FALSE;
+    return false;
   }
 }
 
@@ -566,10 +566,10 @@ void TOpenContainer::pickMe(TBeing* thief) {
   if (thief->bSuccess(bKnown, SKILL_PICK_LOCK)) {
     remContainerFlag(CONT_LOCKED);
     thief->sendTo("*Click*\n\r");
-    act("$n fiddles with $p.", FALSE, thief, this, 0, TO_ROOM);
+    act("$n fiddles with $p.", false, thief, this, 0, TO_ROOM);
   } else {
     if (critFail(thief, SKILL_PICK_LOCK)) {
-      act("Uhoh.  $n seems to have jammed the lock!", TRUE, thief, 0, 0,
+      act("Uhoh.  $n seems to have jammed the lock!", true, thief, 0, 0,
         TO_ROOM);
       thief->sendTo("Uhoh.  You seemed to have jammed the lock!\n\r");
       addContainerFlag(CONT_JAMMED);
@@ -596,14 +596,14 @@ int TOpenContainer::sellCommod(TBeing* ch, TMonster* keeper, int shop_nr,
   }
   if (isClosed()) {
     // if its still closed, we errored, or it was locked or something
-    return FALSE;
+    return false;
   }
   for (StuffIter it = stuff.begin(); it != stuff.end();) {
     t = *(it++);
     rc = t->sellCommod(ch, keeper, shop_nr, this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL;
+      t = nullptr;
       continue;
     }
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
@@ -617,7 +617,7 @@ int TOpenContainer::sellCommod(TBeing* ch, TMonster* keeper, int shop_nr,
   if (wasClosed)
     closeMe(ch);
 
-  return FALSE;
+  return false;
 }
 
 void TOpenContainer::closeMe(TBeing* ch) {
@@ -627,8 +627,8 @@ void TOpenContainer::closeMe(TBeing* ch) {
     ch->sendTo("That's impossible.\n\r");
   else {
     addContainerFlag(CONT_CLOSED);
-    act("You close $p.", TRUE, ch, this, 0, TO_CHAR);
-    act("$n closes $p.", TRUE, ch, this, 0, TO_ROOM);
+    act("You close $p.", true, ch, this, 0, TO_CHAR);
+    act("$n closes $p.", true, ch, this, 0, TO_ROOM);
   }
 }
 
@@ -645,7 +645,7 @@ void TOpenContainer::lockMe(TBeing* ch) {
   else {
     addContainerFlag(CONT_LOCKED);
     ch->sendTo("*Click*\n\r");
-    act("$n locks $p with a *click*.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n locks $p with a *click*.", true, ch, this, 0, TO_ROOM);
   }
 }
 
@@ -659,6 +659,6 @@ void TOpenContainer::unlockMe(TBeing* ch) {
   else {
     remContainerFlag(CONT_LOCKED);
     ch->sendTo("*Click*\n\r");
-    act("$n unlocks $p.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n unlocks $p.", true, ch, this, 0, TO_ROOM);
   }
 }

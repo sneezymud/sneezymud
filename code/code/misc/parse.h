@@ -714,13 +714,13 @@ T convertTo(const sstring& s) {
   T x;
 
   if (typeid(x) == typeid(int)) {
-    return (T)strtol(s.c_str(), NULL, 10);
+    return (T)strtol(s.c_str(), nullptr, 10);
   } else if (typeid(x) == typeid(float)) {
-    return (T)strtof(s.c_str(), NULL);
+    return (T)strtof(s.c_str(), nullptr);
   } else if (typeid(x) == typeid(double)) {
-    return (T)strtof(s.c_str(), NULL);
+    return (T)strtof(s.c_str(), nullptr);
   } else if (typeid(x) == typeid(unsigned int)) {
-    return (T)strtoll(s.c_str(), NULL, 10);
+    return (T)strtoll(s.c_str(), nullptr, 10);
   } else {
     std::istringstream is(s);
     if (!(is >> x))  // let failure convert to 0 with no warning.  we relied on

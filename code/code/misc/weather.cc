@@ -373,7 +373,7 @@ void Weather::sendWeatherMessage(weatherMessT num) {
             break;
         }
 
-        sstring buf = colorString(ch, i, text, NULL, COLOR_BASIC, FALSE);
+        sstring buf = colorString(ch, i, text, nullptr, COLOR_BASIC, false);
         i->output.push(CommPtr(new UncategorizedComm(buf)));
       }
     }
@@ -582,7 +582,7 @@ void Weather::GetMonth(int month) {
   sstring buf;
   buf = format("It is now the %s of %s.\n\r") %
         numberAsString(GameTime::getDay() + 1) % month_name[month];
-  Descriptor::worldSend(buf, NULL);
+  Descriptor::worldSend(buf, nullptr);
 }
 
 int TRoom::outdoorLight(void) {
@@ -682,7 +682,7 @@ void Weather::sunriseAndSunset(void) {
   int i;
 
   for (i = 0; i < WORLD_SIZE; i++)
-    if ((rp = real_roomp(i)) != NULL)
+    if ((rp = real_roomp(i)) != nullptr)
       rp->initLight();
 }
 
@@ -729,8 +729,8 @@ bool Weather::moonIsUp() {
   // moon might set before it rises
   if (((mr < ms) && hmt >= mr && hmt < ms) ||
       ((mr > ms) && (hmt < ms || hmt >= mr)))
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 bool Weather::sunIsUp() {
@@ -740,9 +740,9 @@ bool Weather::sunIsUp() {
 
   // assumption that sr is always < ss
   if (hmt >= sr && hmt < ss)
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 void Weather::weatherChange() {
@@ -952,12 +952,12 @@ int getRoomWetness(TBeing* ch, TRoom* room, sstring& better, sstring& worse) {
 // returns wetness for a room
 int getRoomWetness(TRoom* room) {
   sstring a, b;
-  return getRoomWetness(NULL, room, a, b);
+  return getRoomWetness(nullptr, room, a, b);
 }
 
 // returns how wet you are
 int getWetness(const TBeing* ch) {
-  affectedData* wetAffect = NULL;
+  affectedData* wetAffect = nullptr;
   for (wetAffect = ch->affected; wetAffect; wetAffect = wetAffect->next)
     if (wetAffect->type == AFFECT_WET)
       return max(0L, min(wetAffect->modifier, long(Weather::WET_MAXIMUM)));
@@ -1020,7 +1020,7 @@ void Weather::getWet(TBeing* ch, TRoom* room) {
       wetShow += worse;
     }
     wetShow += ".\n\r";
-    act(wetShow, false, ch, NULL, NULL, TO_CHAR);
+    act(wetShow, false, ch, nullptr, nullptr, TO_CHAR);
   }
 }
 
@@ -1054,7 +1054,7 @@ const sstring Weather::describeWet(int wetness) {
 
 // adds (or removes) wetness from the character
 int Weather::addWetness(TBeing* ch, int diffWet) {
-  affectedData* wetAffect = NULL;
+  affectedData* wetAffect = nullptr;
 
   for (wetAffect = ch->affected; wetAffect; wetAffect = wetAffect->next)
     if (wetAffect->type == AFFECT_WET)
@@ -1065,7 +1065,7 @@ int Weather::addWetness(TBeing* ch, int diffWet) {
     aff.type = AFFECT_WET;
     aff.modifier = diffWet;
     aff.duration = PERMANENT_DURATION;
-    ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+    ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
     return diffWet;
   } else if (wetAffect) {
     diffWet = wetAffect->modifier =

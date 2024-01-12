@@ -27,14 +27,14 @@ sstring TBeing::parseTitle(Descriptor*) { return getName(); }
 
 sstring TPerson::parseTitle(Descriptor* user) {
   sstring buf;
-  int flag = FALSE;
+  int flag = false;
 
   if (!title) {
     return getName();
   }
 
-  buf = nameColorString(this, user, title, &flag, COLOR_BASIC, FALSE);
-  if (!flag && colorString(this, user, title, NULL, COLOR_NONE, TRUE)
+  buf = nameColorString(this, user, title, &flag, COLOR_BASIC, false);
+  if (!flag && colorString(this, user, title, nullptr, COLOR_NONE, true)
                    .find(getNameNOC(this)) == sstring::npos)
     buf = getName();  // did not specify a <n>
 
@@ -56,7 +56,7 @@ void Descriptor::menuWho() {
           (person->getInvisLevel() < GOD_LEVEL1)) {
         buf = person->parseTitle(this);
         buf2 = format("%s\n\r") %
-               colorString(person, this, buf, NULL, COLOR_BASIC, FALSE);
+               colorString(person, this, buf, nullptr, COLOR_BASIC, false);
         send += buf2;
       }
     }
@@ -119,7 +119,7 @@ static const sstring getWhoLevel(const TBeing* ch, TBeing* p) {
       tmpstring += " ";
 
     tempbuf = format("Level:[%s] ") % tmpstring;
-    TGuild* f = NULL;
+    TGuild* f = nullptr;
     if ((f = p->newguild()) && toggleInfo[TOG_TESTCODE5]->toggle) {
       if (f->ID &&
           (IS_SET(f->flags, GUILD_ACTIVE) || ch->newguild() == p->newguild() ||
@@ -274,7 +274,7 @@ void TBeing::doWho(const char* argument) {
 
       bool level, statsx, iPoints, quest, idle, align, group;
       for (p = character_list; p; p = p->next) {
-        align = level = statsx = idle = iPoints = quest = group = FALSE;
+        align = level = statsx = idle = iPoints = quest = group = false;
         if (dynamic_cast<TPerson*>(p) && canSeeWho(p)) {
           count++;
           if (p->isLinkdead())
@@ -374,7 +374,7 @@ void TBeing::doWho(const char* argument) {
                     if (isImmortal())
                       buf = format("%sIdle:[%-3d] ") % buf % p->getTimer();
                   }
-                  idle = TRUE;
+                  idle = true;
                   break;
                 case 'l':
                 case 'y':
@@ -390,7 +390,7 @@ void TBeing::doWho(const char* argument) {
                     if (!p->msgVariables(MSG_NOTE).empty())
                       buf += format("   (%s)") % p->msgVariables(MSG_NOTE);
                   }
-                  level = TRUE;
+                  level = true;
                   break;
                 case 'g':
                 case 'b':
@@ -424,14 +424,14 @@ void TBeing::doWho(const char* argument) {
                               p->getMoney() % p->getBank();
                     }
                   }
-                  iPoints = TRUE;
+                  iPoints = true;
                   break;
                 case 'f':
                   if (!align) {
                     // show factions of everyone to immorts
                     // mortal version will show non-imms that are in same fact
                     if (toggleInfo[TOG_TESTCODE5]->toggle) {
-                      TGuild* f = NULL;
+                      TGuild* f = nullptr;
                       if ((f = p->newguild()) &&
                           toggleInfo[TOG_TESTCODE5]->toggle) {
                         if (f->ID &&
@@ -468,7 +468,7 @@ void TBeing::doWho(const char* argument) {
                       }
                     }
                   }
-                  align = TRUE;
+                  align = true;
                   break;
                 case 's':
                   if (!statsx) {
@@ -486,7 +486,7 @@ void TBeing::doWho(const char* argument) {
                         p->curStats.get(STAT_CHA) % p->curStats.get(STAT_KAR) %
                         p->curStats.get(STAT_SPE);
                   }
-                  statsx = TRUE;
+                  statsx = true;
                   break;
                 case 'q':
                   if (!quest) {
@@ -498,7 +498,7 @@ void TBeing::doWho(const char* argument) {
                       buf =
                         format("%s (%sGROUP QUEST%s)") % buf % blue() % norm();
                   }
-                  quest = TRUE;
+                  quest = true;
                   break;
                 case 'a':
                   if (isImmortal() && hasWizPower(POWER_WIZARD)) {
@@ -589,9 +589,9 @@ void TBeing::doWho(const char* argument) {
 
 void TBeing::doWhozone() {
   Descriptor* d;
-  TRoom* rp = NULL;
+  TRoom* rp = nullptr;
   sstring sbuf, buf;
-  TBeing* person = NULL;
+  TBeing* person = nullptr;
   int count = 0;
 
   sendTo("Players:\n\r--------\n\r");

@@ -8,7 +8,7 @@
 bool TBeing::hasQuestBit(int value) const {
   if (value < 0 || value >= MAX_TOG_INDEX) {
     vlogf(LOG_BUG, format("Bad check of hasQuestBit(%d)") % value);
-    return FALSE;
+    return false;
   }
 
   return (toggles[value]);
@@ -35,7 +35,7 @@ void TBeing::remQuestBit(int value) {
 bool TPerson::hasQuestBit(int value) const {
   if (value < 0 || value >= MAX_TOG_INDEX) {
     vlogf(LOG_BUG, format("Bad check of hasQuestBit(%d)") % value);
-    return FALSE;
+    return false;
   }
 
   return (toggles[value]);

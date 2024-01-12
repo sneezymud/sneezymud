@@ -22,10 +22,10 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
       ch->checkPeacefulVictim(
         "They are in a peaceful room. You can't seem to fire the gun.\n\r",
         targ))
-    return FALSE;
+    return false;
 
   if (targ && ch->noHarmCheck(targ))
-    return FALSE;
+    return false;
 
   sstring capbuf, capbuf2;
 
@@ -47,26 +47,26 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
 
   if (!flint) {
     ch->sendTo("You need to have some flint and steel to light it.\n\r");
-    return FALSE;
+    return false;
   }
   flint->addToToolUses(-1);
   if (flint->getToolUses() <= 0) {
-    act("You use the last of your flint and steel.", FALSE, ch, NULL, 0,
+    act("You use the last of your flint and steel.", false, ch, nullptr, 0,
       TO_CHAR);
     delete flint;
   }
 
-  act("You light a fuse and bring it to the touchhole of $N!", TRUE, ch, NULL,
+  act("You light a fuse and bring it to the touchhole of $N!", true, ch, nullptr,
     this, TO_CHAR);
-  act("$n lights a fuse and brings it to the touchhole of $N!", TRUE, ch, NULL,
+  act("$n lights a fuse and brings it to the touchhole of $N!", true, ch, nullptr,
     this, TO_ROOM);
 
   // 1% backfire rate
   if (!::number(0, 99)) {
-    act("<r>Something goes wrong and <1>$N<r> explodes in your face!<1>", TRUE,
-      ch, NULL, this, TO_CHAR);
-    act("<r>Something goes wrong and <1>$N<r> expodes in $n's face!<1>", TRUE,
-      ch, NULL, this, TO_ROOM);
+    act("<r>Something goes wrong and <1>$N<r> explodes in your face!<1>", true,
+      ch, nullptr, this, TO_CHAR);
+    act("<r>Something goes wrong and <1>$N<r> expodes in $n's face!<1>", true,
+      ch, nullptr, this, TO_ROOM);
 
     addToFlags(GUN_FLAG_FOULED);
 
@@ -81,7 +81,7 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    return FALSE;
+    return false;
   }
 
   // 10% failure rate
@@ -89,15 +89,15 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
     addToFlags(GUN_FLAG_FOULED);
 
   if (isFouled()) {
-    act("Nothing happens, $N has been fouled and won't fire!", TRUE, ch, NULL,
+    act("Nothing happens, $N has been fouled and won't fire!", true, ch, nullptr,
       this, TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   if ((!ch->roomp->isIndoorSector() &&
         Weather::getSky() == Weather::SKY_RAINING && !::number(0, 3)) ||
       ch->roomp->isUnderwaterSector()) {
-    act("Nothing happens, $N has been fouled by wet weather!", TRUE, ch, NULL,
+    act("Nothing happens, $N has been fouled by wet weather!", true, ch, nullptr,
       this, TO_CHAR);
 
     addToFlags(GUN_FLAG_FOULED);
@@ -106,7 +106,7 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
 
   while (rof--) {
     if (!(ammo = dynamic_cast<TAmmo*>(getAmmo())) || ammo->getRounds() <= 0) {
-      act("Nothing happens.  $N is not loaded.", TRUE, ch, NULL, this, TO_CHAR);
+      act("Nothing happens.  $N is not loaded.", true, ch, nullptr, this, TO_CHAR);
       break;
     }
 
@@ -125,8 +125,8 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
 
     // send messages
     capbuf =
-      colorString(ch, ch->desc, bullet->getName(), NULL, COLOR_OBJECTS, TRUE);
-    capbuf2 = colorString(ch, ch->desc, getName(), NULL, COLOR_OBJECTS, TRUE);
+      colorString(ch, ch->desc, bullet->getName(), nullptr, COLOR_OBJECTS, true);
+    capbuf2 = colorString(ch, ch->desc, getName(), nullptr, COLOR_OBJECTS, true);
 
     if (targ) {
       ch->sendTo(COLOR_BASIC,
@@ -143,10 +143,10 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
                  capbuf2.uncap());
     }
 
-    act("<Y>BANG!<1>  A deafening blast sounds as $n ignites $p.", FALSE, ch,
+    act("<Y>BANG!<1>  A deafening blast sounds as $n ignites $p.", false, ch,
       this, bullet, TO_ROOM);
     sprintf(buf, "$n points $p %swards, and shoots $N out of it.", dirs[dir]);
-    act(buf, FALSE, ch, this, bullet, TO_ROOM);
+    act(buf, false, ch, this, bullet, TO_ROOM);
 
     ch->dropGas(::number(5, 15), GAS_SMOKE);
 
@@ -162,18 +162,18 @@ int TCannon::shootMeBow(TBeing* ch, TBeing* targ, unsigned int count,
     // delete the bullet afterwards, arbitrary decision
     // since they are arrow type and you usually don't find spent lead anyway
     delete bullet;
-    bullet = NULL;
+    bullet = nullptr;
 
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete targ;
-      targ = NULL;
-      return FALSE;
+      targ = nullptr;
+      return false;
     }
   }
 
   ch->addToWait(combatRound(1));
 
-  return FALSE;
+  return false;
 }
 
 int task_cannon_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
@@ -186,20 +186,20 @@ int task_cannon_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
   int m;
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // basic tasky safechecking
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom)) {
-    act("You cease loading.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops loading.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You cease loading.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops loading.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->task && ch->task->timeLeft < 0) {
     ch->sendTo("You stop loading.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -209,9 +209,9 @@ int task_cannon_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
       switch (ch->task->timeLeft) {
         case 5:
           buf = format("You clear out the barrel of %s.") % cannon->shortDescr;
-          act(buf, FALSE, ch, NULL, cannon, TO_CHAR);
+          act(buf, false, ch, nullptr, cannon, TO_CHAR);
           buf = format("$n clears out the barrel of %s.") % cannon->shortDescr;
-          act(buf, FALSE, ch, NULL, cannon, TO_ROOM);
+          act(buf, false, ch, nullptr, cannon, TO_ROOM);
 
           ch->task->timeLeft--;
           break;
@@ -233,39 +233,39 @@ int task_cannon_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
           if (!powder) {
             ch->sendTo("You need to have a full flask of black powder.\n\r");
             ch->stopTask();
-            return FALSE;
+            return false;
           }
 
           buf = format("You pour some powder from $p into %s.") %
                 cannon->shortDescr;
-          act(buf, FALSE, ch, powder, 0, TO_CHAR);
+          act(buf, false, ch, powder, 0, TO_CHAR);
 
           buf = format("$n pours some powder from $p into %s.") %
                 cannon->shortDescr;
-          act(buf, FALSE, ch, powder, 0, TO_ROOM);
+          act(buf, false, ch, powder, 0, TO_ROOM);
           ch->task->timeLeft--;
 
           powder->addToToolUses(-12);
           if (powder->getToolUses() <= 0) {
-            act("You use the last of your powder.", FALSE, ch, NULL, 0,
+            act("You use the last of your powder.", false, ch, nullptr, 0,
               TO_CHAR);
             delete powder;
           }
 
           break;
         case 3:
-          act("You pack down the charge in $N with a <o>ramrod<1>.", FALSE, ch,
-            NULL, cannon, TO_CHAR);
-          act("$n packs down the charge in $N with a <o>ramrod<1>.", FALSE, ch,
-            NULL, cannon, TO_ROOM);
+          act("You pack down the charge in $N with a <o>ramrod<1>.", false, ch,
+            nullptr, cannon, TO_CHAR);
+          act("$n packs down the charge in $N with a <o>ramrod<1>.", false, ch,
+            nullptr, cannon, TO_ROOM);
           ch->task->timeLeft--;
           break;
         case 2:
           // plug
-          act("You shove a <W>ball of wadding<1> down the barrel of $N.", FALSE,
-            ch, NULL, cannon, TO_CHAR);
-          act("$n shoves a <W>ball of wadding<1> down the barrel of $N.", FALSE,
-            ch, NULL, cannon, TO_ROOM);
+          act("You shove a <W>ball of wadding<1> down the barrel of $N.", false,
+            ch, nullptr, cannon, TO_CHAR);
+          act("$n shoves a <W>ball of wadding<1> down the barrel of $N.", false,
+            ch, nullptr, cannon, TO_ROOM);
           ch->task->timeLeft--;
           break;
         case 1:
@@ -285,23 +285,23 @@ int task_cannon_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
           if (!shot && !cannon->getAmmo()) {
             ch->sendTo("You need to have a cannon ball.\n\r");
             ch->stopTask();
-            return FALSE;
+            return false;
           }
 
           --(*shot);
           cannon->setAmmo(shot);
 
-          act("You load $p into $N.", FALSE, ch, shot, cannon, TO_CHAR);
-          act("$n loads $p into $N.", FALSE, ch, shot, cannon, TO_ROOM);
+          act("You load $p into $N.", false, ch, shot, cannon, TO_CHAR);
+          act("$n loads $p into $N.", false, ch, shot, cannon, TO_ROOM);
 
           ch->task->timeLeft--;
           break;
         case 0:
           // primer
-          act("You pour priming powder into the touchhole of $N.", FALSE, ch,
-            NULL, cannon, TO_CHAR);
-          act("$n pours priming powder into the touchhole of $N.", FALSE, ch,
-            NULL, cannon, TO_ROOM);
+          act("You pour priming powder into the touchhole of $N.", false, ch,
+            nullptr, cannon, TO_CHAR);
+          act("$n pours priming powder into the touchhole of $N.", false, ch,
+            nullptr, cannon, TO_ROOM);
 
           ch->sendTo(COLOR_BASIC,
             format("You have finished loading %s.\n\r") % cannon->shortDescr);
@@ -312,8 +312,8 @@ int task_cannon_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You cease loading.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops loading.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You cease loading.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops loading.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -325,7 +325,7 @@ int task_cannon_load(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 void TCannon::loadMe(TBeing* ch, TAmmo* ammo) {
@@ -345,12 +345,12 @@ void TCannon::unloadMe(TBeing* ch, TAmmo* ammo) {
     --(*arrow);
     *ch += *arrow;
 
-    act("You unload $N.", TRUE, ch, ammo, this, TO_CHAR);
-    act("$n unloads $N.", TRUE, ch, ammo, this, TO_ROOM);
+    act("You unload $N.", true, ch, ammo, this, TO_CHAR);
+    act("$n unloads $N.", true, ch, ammo, this, TO_ROOM);
   }
 
-  act("You clear out $N.", TRUE, ch, ammo, this, TO_CHAR);
-  act("$n clears out $N.", TRUE, ch, ammo, this, TO_ROOM);
+  act("You clear out $N.", true, ch, ammo, this, TO_CHAR);
+  act("$n clears out $N.", true, ch, ammo, this, TO_ROOM);
 
   remFromFlags(GUN_FLAG_FOULED);
 

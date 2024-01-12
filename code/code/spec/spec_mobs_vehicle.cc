@@ -16,13 +16,13 @@ int trolleyBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
   const int trolleynum = 15344;
   static int timer;
-  TObj* trolley = NULL;
-  int* job = NULL;
+  TObj* trolley = nullptr;
+  int* job = nullptr;
   int i;
-  TVehicle* vehicle = NULL;
+  TVehicle* vehicle = nullptr;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   // find the trolley
   for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter) {
@@ -32,23 +32,23 @@ int trolleyBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
     }
   }
   if (!trolley) {
-    return FALSE;
+    return false;
   }
 
   if (!(vehicle = dynamic_cast<TVehicle*>(trolley))) {
     vlogf(LOG_BUG, "couldn't cast trolley to vehicle!");
-    return FALSE;
+    return false;
   }
 
   if (!has_key(myself, vehicle->getPortalKey())) {
-    return FALSE;
+    return false;
   }
 
   vehicle->unlockMe(myself);
   vehicle->openMe(myself);
 
   if ((--timer) > 0)
-    return FALSE;
+    return false;
 
   // ok, let's sail
 
@@ -82,14 +82,14 @@ int trolleyBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
     }
     timer = 100;
 
-    return TRUE;
+    return true;
   }
 
   int j;
   for (j = 0; trolley_path[j].cur_room != trolley->in_room; ++j) {
     if (trolley_path[j].cur_room == -1) {
       vlogf(LOG_BUG, "fishing trolley jumped the tracks!");
-      return FALSE;
+      return false;
     }
   }
 
@@ -126,7 +126,7 @@ int trolleyBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
 
   myself->doDrive("fast");
 
-  return TRUE;
+  return true;
 }
 
 int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
@@ -134,10 +134,10 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   const int cockpit = 15349;
   const int boatnum = 15345;
   static int timer;
-  TObj* boat = NULL;
+  TObj* boat = nullptr;
   TRoom* boatroom = real_roomp(cockpit);
   int i;
-  TVehicle* vehicle = NULL;
+  TVehicle* vehicle = nullptr;
 
   struct fishingData {
       int target;
@@ -145,7 +145,7 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   } * job;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   // find the boat
   for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter) {
@@ -155,15 +155,15 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
     }
   }
   if (!boat)
-    return FALSE;
+    return false;
 
   if (!(vehicle = dynamic_cast<TVehicle*>(boat))) {
     vlogf(LOG_BUG, "couldn't cast boat to vehicle!");
-    return FALSE;
+    return false;
   }
 
   if (!has_key(myself, vehicle->getPortalKey())) {
-    return FALSE;
+    return false;
   }
 
   vehicle->unlockMe(myself);
@@ -171,7 +171,7 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
 
   // wait until we have passengers before we leave the docks
   if (boat->in_room == 15150 && timer <= 0 && vehicle->getSpeed() == 0) {
-    TThing* tt = NULL;
+    TThing* tt = nullptr;
 
     for (StuffIter it = boatroom->stuff.begin(); it != boatroom->stuff.end();
          ++it) {
@@ -180,7 +180,7 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
         break;
     }
     if (!tt)
-      return FALSE;
+      return false;
     else
       timer = 50;
   }
@@ -199,7 +199,7 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   }
 
   if ((--timer) > 0)
-    return FALSE;
+    return false;
 
   // ok, let's sail
 
@@ -226,14 +226,14 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
       timer = 50;
       job->target = 15150;
     }
-    return TRUE;
+    return true;
   }
 
   i = job->path->findPath(boat->in_room, findRoom(job->target));
 
   if (i == DIR_NONE) {
     vlogf(LOG_BUG, "fishing boat lost");
-    return FALSE;
+    return false;
   }
 
   switch (::number(0, 99)) {
@@ -261,29 +261,29 @@ int fishingBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
 
   myself->doDrive("20");
 
-  return TRUE;
+  return true;
 }
 
 int casinoElevatorOperator(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
   const int elevatornum = 2360;
   static int timer;
-  TObj* elevator = NULL;
-  int* job = NULL;
+  TObj* elevator = nullptr;
+  int* job = nullptr;
   int i;
-  TVehicle* vehicle = NULL;
+  TVehicle* vehicle = nullptr;
   TPathFinder path;
   path.setUsePortals(false);
   path.setThruDoors(false);
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<int*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   // find the elevator
   for (TObjIter iter = object_list.begin(); iter != object_list.end(); ++iter) {
@@ -293,22 +293,22 @@ int casinoElevatorOperator(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
     }
   }
   if (!elevator)
-    return FALSE;
+    return false;
 
   if (!(vehicle = dynamic_cast<TVehicle*>(elevator))) {
     vlogf(LOG_BUG, "couldn't cast elevator to vehicle!");
-    return FALSE;
+    return false;
   }
 
   if (!has_key(myself, vehicle->getPortalKey())) {
-    return FALSE;
+    return false;
   }
 
   vehicle->unlockMe(myself);
   vehicle->openMe(myself);
 
   if ((--timer) > 0)
-    return FALSE;
+    return false;
 
   // first, get out action pointer, which tells us which way to go
   if (!myself->act_ptr) {
@@ -332,7 +332,7 @@ int casinoElevatorOperator(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
       timer = 10;
       *job = 2352;
     }
-    return TRUE;
+    return true;
   }
 
   i = path.findPath(elevator->in_room, findRoom(*job));
@@ -344,7 +344,7 @@ int casinoElevatorOperator(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
       i = DIR_DOWN;
     else {
       vlogf(LOG_BUG, "fishing elevator lost");
-      return FALSE;
+      return false;
     }
   }
 
@@ -353,7 +353,7 @@ int casinoElevatorOperator(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
 
   myself->doDrive("fast");
 
-  return TRUE;
+  return true;
 }
 
 int casinoElevatorGuard(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
@@ -406,7 +406,7 @@ class ship_masters {
     }
     int may_control(TMonster* captain, TBeing* ersatz_master) {
       if (!ersatz_master)
-        return FALSE;
+        return false;
       TDatabase db(DB_SNEEZY);
       db.query(
         "select case when account_id = %i then 2 when player_id = %i then 1 "
@@ -427,9 +427,9 @@ ship_masters captains_and_masters;  // singleton instance
 
 int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TObj*) {
-  TObj* boat = NULL;
+  TObj* boat = nullptr;
   int i;
-  TVehicle* vehicle = NULL;
+  TVehicle* vehicle = nullptr;
   TPathFinder path;
   path.setUsePortals(false);
   path.setThruDoors(false);
@@ -442,16 +442,16 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   std::map<int, int>::iterator ship;
   ship = captains_and_masters.captains.find(myself->mobVnum());
   if (ship == captains_and_masters.captains.end())
-    return FALSE;
+    return false;
 
   if (cmd != CMD_GENERIC_PULSE) {
     if ((cmd == CMD_SAY || cmd == CMD_SAY2) &&
         argument.word(0).lower() == "captain,") {
       privileges = captains_and_masters.may_control(myself, ch);
       if (privileges == 0)
-        return FALSE;
+        return false;
     } else {
-      return FALSE;
+      return false;
     }
   }
 
@@ -463,11 +463,11 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     }
   }
   if (!boat)
-    return FALSE;
+    return false;
 
   if (!(vehicle = dynamic_cast<TVehicle*>(boat))) {
     vlogf(LOG_BUG, "couldn't cast boat to vehicle!");
-    return FALSE;
+    return false;
   }
 
   struct sail_data {
@@ -498,7 +498,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     if (!has_key(myself, vehicle->getPortalKey())) {
       myself->doSay(
         "If I were 'captain' I'd have control of the ship, wouldn't I?");
-      return TRUE;
+      return true;
     }
     if (argument.word(1) == "destination") {
       if (argument.word(2).empty()) {
@@ -509,7 +509,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
           myself->mobVnum());
         if (!db.fetchRow()) {
           myself->doSay("We've no known destinations!");
-          return TRUE;
+          return true;
         }
         do {
           myself->doSay(format("I know the way to <W>%s<1> - a/k/a %s.") %
@@ -545,7 +545,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         // what is our current destination?
         if (!job || job->cur == -1) {
           myself->doSay("We 'ave no destination!");
-          return TRUE;
+          return true;
         }
         db.query(
           "select d1.name, r1.name as aka from ship_destinations d1 left join "
@@ -558,7 +558,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         while (db.fetchRow()) {
           myself->doSay(format("We arr on %s course for <W>%s<1> - a/k/a %s.") %
                         buf % db["name"] % db["aka"]);
-          return TRUE;
+          return true;
         }
       } else {
         myself->doSay(
@@ -582,7 +582,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
             myself->mobVnum(), buf.c_str());
           if (!db.fetchRow()) {
             myself->doSay("What the...?!  I've never 'eard of that!");
-            return TRUE;
+            return true;
           }
           // first clear out existing route
           for (int i = 0; i < 10; ++i)
@@ -626,7 +626,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     } else if (argument.word(1) == "go") {
       if (!job || job->cur == -1) {
         myself->doSay("Where to?");
-        return TRUE;
+        return true;
       }
       if (argument.word(2) == "slow") {
         myself->doSay("If ye say slow...");
@@ -644,13 +644,13 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       // delegate command to specific player (limited command set)
       // use player_id column in ship_master
       // if no second arg, show list of delegates
-      TBeing* delegate = NULL;
+      TBeing* delegate = nullptr;
       if (!argument.word(2).empty()) {
         if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_YES))) {
           if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_NO))) {
             myself->doSay("I 'aven't the foggiest as to who that be.");
             myself->doSay("Per'aps ye can point 'em out to me some time...");
-            return TRUE;
+            return true;
           }
         }
         if (delegate->desc) {
@@ -677,7 +677,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         if (!db.fetchRow()) {
           myself->doSay(
             "Ye've wisely shown me no pretenders to your authority!");
-          return TRUE;
+          return true;
         }
         do {
           myself->doSay(
@@ -689,12 +689,12 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     } else if (argument.word(1) == "ignore" && privileges == 2) {
       // remove a player's command (added via "obey")
       // use player_id column in ship_master
-      TBeing* delegate = NULL;
+      TBeing* delegate = nullptr;
       if (!argument.word(2).empty()) {
         if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_YES))) {
           if (!(delegate = get_pc_world(myself, argument.word(2), EXACT_NO))) {
             myself->doSay("Never 'eard of 'em!");
-            return TRUE;
+            return true;
           }
         }
         if (delegate->desc) {
@@ -711,13 +711,13 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     } else {
       myself->doSay("Arr what are ye talkin' about?");
     }
-    return TRUE;
+    return true;
   }
 
   //// sailing
 
   if (!has_key(myself, vehicle->getPortalKey())) {
-    return FALSE;
+    return false;
   }
 
   vehicle->unlockMe(myself);
@@ -727,7 +727,7 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
   // no destination
   if (!job || job->cur == -1)
-    return FALSE;
+    return false;
 
   if (boat->in_room == job->room[job->cur]) {
     // destination acheived
@@ -748,14 +748,14 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       ++job->cur;
     }
 
-    return TRUE;
+    return true;
   }
 
   i = path.findPath(boat->in_room, findRoom(job->room[job->cur]));
 
   if (i == DIR_NONE) {
     //    vlogf(LOG_BUG, "ship lost");
-    return FALSE;
+    return false;
   }
 
   switch (::number(0, 200)) {
@@ -794,5 +794,5 @@ int shipCaptain(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
   myself->doDrive(job->speed);
 
-  return TRUE;
+  return true;
 }

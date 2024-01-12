@@ -8,9 +8,9 @@
 #include "extern.h"
 #include "being.h"
 
-bool TObj::isPluralItem() const { return FALSE; }
+bool TObj::isPluralItem() const { return false; }
 
-bool TObj::engraveMe(TBeing*, TMonster*, bool) { return FALSE; }
+bool TObj::engraveMe(TBeing*, TMonster*, bool) { return false; }
 
 bool TObj::isUnique() const { return (!obj_index[getItemIndex()].getNumber()); }
 
@@ -75,17 +75,17 @@ void TObj::swapToStrung() {
   if (obj_index[getItemIndex()].long_desc)
     setDescr(obj_index[getItemIndex()].long_desc);
   else
-    setDescr(NULL);
+    setDescr(nullptr);
   if (obj_index[getItemIndex()].description)
     action_description = obj_index[getItemIndex()].description;
   else
-    action_description = NULL;
+    action_description = nullptr;
 
   if (obj_index[getItemIndex()].ex_description)
     ex_description =
       new extraDescription(*obj_index[getItemIndex()].ex_description);
   else
-    ex_description = NULL;
+    ex_description = nullptr;
 }
 
 sstring TObj::getNameForShow(bool useColor, bool useName,
@@ -494,8 +494,8 @@ void TObj::sellMeMoney(TBeing* ch, TMonster* keeper, int cost, int shop_nr) {
 }
 
 void TObj::peeOnMe(const TBeing* ch) {
-  act("With no apparent shame, $n happily relieves $mself on $p.", TRUE, ch,
-    this, NULL, TO_ROOM);
+  act("With no apparent shame, $n happily relieves $mself on $p.", true, ch,
+    this, nullptr, TO_ROOM);
   ch->sendTo("Ok, but have you no pride?\n\r");
 }
 
@@ -503,15 +503,15 @@ void TObj::extinguishWater(TBeing* ch) {
   if (isObjStat(ITEM_BURNING)) {
     remBurning(ch);
 
-    act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_CHAR);
-    act("$p is put out by the room's water.", TRUE, ch, this, 0, TO_ROOM);
+    act("$p is put out by the room's water.", true, ch, this, 0, TO_CHAR);
+    act("$p is put out by the room's water.", true, ch, this, 0, TO_ROOM);
   }
 }
 
 void TObj::extinguishWater() {
   if (isObjStat(ITEM_BURNING)) {
-    remBurning(NULL);
-    act("$p is put out by the room's water.", TRUE, 0, this, 0, TO_ROOM);
+    remBurning(nullptr);
+    act("$p is put out by the room's water.", true, 0, this, 0, TO_ROOM);
   }
 }
 
@@ -572,7 +572,7 @@ bool TObj::deMonogram(bool erase_imm_monogram) {
    * obj name */
   if (isMonogrammed()) {
     if (isImmMonogrammed() && !erase_imm_monogram) {
-      return FALSE;
+      return false;
     }
 
     // remove it and return!
@@ -598,17 +598,17 @@ bool TObj::deMonogram(bool erase_imm_monogram) {
 
     action_description = "";
 
-    return TRUE;
+    return true;
   }
-  return FALSE;  // or we could return true to indicate that it's clean.
+  return false;  // or we could return true to indicate that it's clean.
                  // whatever.
 }
 
 sstring TObj::wear_flags_to_sentence() const {
   // i know, this is ridiculous but we get a complete sentence out of it...
   sstring msg_wear_flag = "";
-  bool worn = FALSE;
-  bool ok_or = FALSE;
+  bool worn = false;
+  bool ok_or = false;
   int wf = obj_flags.wear_flags;
   if (IS_SET(wf, 1 << 0)) {
     // take flag
@@ -616,12 +616,12 @@ sstring TObj::wear_flags_to_sentence() const {
     if (IS_SET(wf, 1 << 14)) {
       // hold
       msg_wear_flag += " and held";
-      ok_or = TRUE;
+      ok_or = true;
     }
     if (IS_SET(wf, 1 << 15)) {
       // throwable
       msg_wear_flag += " and thrown";
-      ok_or = TRUE;
+      ok_or = true;
     }
     for (int x = 1; x < 14; ++x) {
       if (IS_SET(wf, 1 << x) && *wear_bits[x]) {
@@ -631,7 +631,7 @@ sstring TObj::wear_flags_to_sentence() const {
           } else {
             msg_wear_flag += " and worn on the";
           }
-          worn = TRUE;
+          worn = true;
         } else {
           msg_wear_flag += " and";
         }
@@ -649,7 +649,7 @@ sstring TObj::wear_flags_to_sentence() const {
       if (IS_SET(wf, 1 << x) && *wear_bits[x - 1]) {
         if (!worn) {
           msg_wear_flag += " or worn on the";
-          worn = TRUE;
+          worn = true;
         } else {
           msg_wear_flag += " and";
         }
@@ -663,7 +663,7 @@ sstring TObj::wear_flags_to_sentence() const {
       if (IS_SET(wf, 1 << x) && *wear_bits[x - 1]) {
         if (!worn) {
           msg_wear_flag += " or worn on the";
-          worn = TRUE;
+          worn = true;
         } else {
           msg_wear_flag += " and";
         }
@@ -676,7 +676,7 @@ sstring TObj::wear_flags_to_sentence() const {
       if (IS_SET(wf, 1 << x) && *wear_bits[x]) {
         if (!worn) {
           msg_wear_flag = "It may be worn on the";
-          worn = TRUE;
+          worn = true;
         } else {
           msg_wear_flag += " and";
         }

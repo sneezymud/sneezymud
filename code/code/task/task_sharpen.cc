@@ -11,9 +11,9 @@
 
 void stop_sharpen(TBeing* ch) {
   if (ch->getPosition() >= POSITION_RESTING) {
-    act("You stop sharpening, and look about confused.", FALSE, ch, 0, 0,
+    act("You stop sharpening, and look about confused.", false, ch, 0, 0,
       TO_CHAR);
-    act("$n stops sharpening, and looks about confused.", FALSE, ch, 0, 0,
+    act("$n stops sharpening, and looks about confused.", false, ch, 0, 0,
       TO_ROOM);
   }
   ch->stopTask();
@@ -31,39 +31,39 @@ void TTool::sharpenPulse(TBeing* ch, TThing* o) {
 }
 
 void TThing::sharpenMe(TBeing* ch, TTool*) {
-  act("You can't figure out how to sharpen $p.", FALSE, ch, this, NULL,
+  act("You can't figure out how to sharpen $p.", false, ch, this, nullptr,
     TO_CHAR);
-  act("$n stops sharpening.", FALSE, ch, this, NULL, TO_ROOM);
+  act("$n stops sharpening.", false, ch, this, nullptr, TO_ROOM);
   ch->stopTask();
 }
 
 int task_sharpening(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {
-  TThing *w = NULL, *o = NULL;
+  TThing *w = nullptr, *o = nullptr;
 
   // sanity check
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
       (ch->getPosition() < POSITION_RESTING) || !(o = ch->heldInPrimHand()) ||
       !isname(ch->task->orig_arg, o->name)) {
     stop_sharpen(ch);
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
   switch (cmd) {
     case CMD_TASK_CONTINUE:
-      if (!(w = get_thing_char_using(ch, "whetstone", 0, FALSE, FALSE))) {
+      if (!(w = get_thing_char_using(ch, "whetstone", 0, false, false))) {
         stop_sharpen(ch);
-        return FALSE;  // returning FALSE lets command be interpreted
+        return false;  // returning false lets command be interpreted
       }
       ch->task->calcNextUpdate(pulse, 2 * Pulse::MOBACT);
       w->sharpenPulse(ch, o);
-      return FALSE;
+      return false;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop trying to sharpen $p.  Maybe you could find a shop?", FALSE,
+      act("You stop trying to sharpen $p.  Maybe you could find a shop?", false,
         ch, o, 0, TO_CHAR);
-      act("$n stops sharpening $p.", FALSE, ch, o, 0, TO_ROOM);
+      act("$n stops sharpening $p.", false, ch, o, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -76,5 +76,5 @@ int task_sharpening(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

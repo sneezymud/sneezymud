@@ -37,7 +37,7 @@ static bool genericDamCheck(int susc, int sharp) {
   // suck up the slack to make economy come out right
   // the min(30, sharp) case is to keep PC v NPC from shredding equipment
   if (sharp && susc && ((min(30, sharp) + susc) > ::number(20, 120)))
-    return TRUE;
+    return true;
 
   return false;
 }
@@ -65,7 +65,7 @@ int TBeing::dentItem(TBeing* victim, TObj* item, int amt, int slot) {
 
   // Don't damage equipment in arena fights.
   if (victim->roomp && victim->roomp->isRoomFlag(ROOM_ARENA))
-    return FALSE;
+    return false;
 
   // use hardness of eq on slot, or use skintype for hardness
   hardness = equipment[slot]
@@ -75,35 +75,35 @@ int TBeing::dentItem(TBeing* victim, TObj* item, int amt, int slot) {
   if (item->willDent(hardness)) {
     if (item->isMineral()) {
       if (item->thingHolding() == this) {
-        act("You chip your $o.", TRUE, this, item, 0, TO_CHAR);
+        act("You chip your $o.", true, this, item, 0, TO_CHAR);
         sprintf(buf, "$n's $o %s chipped.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, 0, TO_ROOM);
+        act(buf, true, this, item, 0, TO_ROOM);
       } else {
-        act("You chip $S $o.", TRUE, this, item, victim, TO_CHAR);
+        act("You chip $S $o.", true, this, item, victim, TO_CHAR);
         sprintf(buf, "Your $o %s chipped.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
+        act(buf, true, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s chipped.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_NOTVICT);
+        act(buf, true, this, item, victim, TO_NOTVICT);
       }
     } else {
       if (item->thingHolding() == this) {
-        act("You dent your $o.", TRUE, this, item, 0, TO_CHAR);
+        act("You dent your $o.", true, this, item, 0, TO_CHAR);
         sprintf(buf, "$n's $o %s dented.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, 0, TO_ROOM);
+        act(buf, true, this, item, 0, TO_ROOM);
       } else {
-        act("You dent $S $o.", TRUE, this, item, victim, TO_CHAR);
+        act("You dent $S $o.", true, this, item, victim, TO_CHAR);
 
         sprintf(buf, "Your $o %s dented.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
+        act(buf, true, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s dented.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_NOTVICT);
+        act(buf, true, this, item, victim, TO_NOTVICT);
       }
     }
     if (IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 // item should be the item being dented (victim's)
@@ -114,7 +114,7 @@ int TBeing::tearItem(TBeing* victim, TObj* item, int amt, int slot) {
 
   // Don't damage equipment in arena fights.
   if (victim->roomp && victim->roomp->isRoomFlag(ROOM_ARENA))
-    return FALSE;
+    return false;
 
   // use hardness of eq on slot, or use skintype for hardness
   sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon*>(equipment[slot]))
@@ -124,36 +124,36 @@ int TBeing::tearItem(TBeing* victim, TObj* item, int amt, int slot) {
   if (item->willTear(sharp)) {
     if (item->isMineral()) {
       if (item->thingHolding() == this) {
-        act("You scratch your $o.", TRUE, this, item, 0, TO_CHAR);
+        act("You scratch your $o.", true, this, item, 0, TO_CHAR);
         sprintf(buf, "$n's $o %s scratched.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, 0, TO_ROOM);
+        act(buf, true, this, item, 0, TO_ROOM);
       } else {
-        act("You scratch $S $o.", TRUE, this, item, victim, TO_CHAR);
+        act("You scratch $S $o.", true, this, item, victim, TO_CHAR);
 
         sprintf(buf, "Your $o %s scratched.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
+        act(buf, true, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s scratched.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_NOTVICT);
+        act(buf, true, this, item, victim, TO_NOTVICT);
       }
     } else {
       if (item->thingHolding() == this) {
-        act("You tear your $o.", TRUE, this, item, 0, TO_CHAR);
+        act("You tear your $o.", true, this, item, 0, TO_CHAR);
         sprintf(buf, "$n's $o %s torn.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, 0, TO_ROOM);
+        act(buf, true, this, item, 0, TO_ROOM);
       } else {
-        act("You tear $S $o.", TRUE, this, item, victim, TO_CHAR);
+        act("You tear $S $o.", true, this, item, victim, TO_CHAR);
 
         sprintf(buf, "Your $o %s torn.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
+        act(buf, true, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s torn.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_NOTVICT);
+        act(buf, true, this, item, victim, TO_NOTVICT);
       }
     }
     if (IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 // item should be the item being dented (victim's)
@@ -164,7 +164,7 @@ int TBeing::pierceItem(TBeing* victim, TObj* item, int amt, int slot) {
 
   // Don't damage equipment in arena fights.
   if (victim->roomp && victim->roomp->isRoomFlag(ROOM_ARENA))
-    return FALSE;
+    return false;
 
   // use hardness of eq on slot, or use skintype for hardness
   sharp = (equipment[slot] && !dynamic_cast<TBaseWeapon*>(equipment[slot]))
@@ -174,36 +174,36 @@ int TBeing::pierceItem(TBeing* victim, TObj* item, int amt, int slot) {
   if (item->willPuncture(sharp)) {
     if (item->isMineral()) {
       if (item->thingHolding() == this) {
-        act("You crack your $o.", TRUE, this, item, 0, TO_CHAR);
+        act("You crack your $o.", true, this, item, 0, TO_CHAR);
         sprintf(buf, "$n's $o %s cracked.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, 0, TO_ROOM);
+        act(buf, true, this, item, 0, TO_ROOM);
       } else {
-        act("You crack $S $o.", TRUE, this, item, victim, TO_CHAR);
+        act("You crack $S $o.", true, this, item, victim, TO_CHAR);
 
         sprintf(buf, "Your $o %s cracked.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
+        act(buf, true, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s cracked.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_NOTVICT);
+        act(buf, true, this, item, victim, TO_NOTVICT);
       }
     } else {
       if (item->thingHolding() == this) {
-        act("You puncture your $o.", TRUE, this, item, 0, TO_CHAR);
+        act("You puncture your $o.", true, this, item, 0, TO_CHAR);
         sprintf(buf, "$n's $o %s punctured.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, 0, TO_ROOM);
+        act(buf, true, this, item, 0, TO_ROOM);
       } else {
-        act("You puncture $S $o.", TRUE, this, item, victim, TO_CHAR);
+        act("You puncture $S $o.", true, this, item, victim, TO_CHAR);
 
         sprintf(buf, "Your $o %s punctured.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_VICT, ANSI_RED);
+        act(buf, true, this, item, victim, TO_VICT, ANSI_RED);
         sprintf(buf, "$N's $o %s punctured.", item->isPaired() ? "are" : "is");
-        act(buf, TRUE, this, item, victim, TO_NOTVICT);
+        act(buf, true, this, item, victim, TO_NOTVICT);
       }
     }
     if (IS_SET_DELETE(item->damageItem(amt), DELETE_THIS))
       return DELETE_ITEM;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 bool TThing::isMetal() const {
@@ -225,9 +225,9 @@ bool TThing::isMetal() const {
     case MAT_ATHANOR:
     case MAT_TIN:
     case MAT_TERBIUM:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -261,9 +261,9 @@ bool TThing::isMineral() const {
     case MAT_MALACHITE:
     case MAT_GRANITE:
     case MAT_ADAMANTITE:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -306,9 +306,9 @@ bool TThing::isOrganic() const {
     case MAT_BONE:
     case MAT_IVORY:
     case MAT_DRAGONBONE:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -316,19 +316,19 @@ bool TObj::canRust() {
   ubyte mat = convertV9MaterialToV10(getMaterial());
 
   if (material_nums[mat].acid_susc <= 0)
-    return FALSE;
+    return false;
   if (!isMetal())
-    return FALSE;
+    return false;
 
   switch (mat) {
     case MAT_IRON:
     case MAT_STEEL:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 
-  return FALSE;
+  return false;
 }
 
 ubyte convertV9MaterialToV10(ubyte oldMat) {

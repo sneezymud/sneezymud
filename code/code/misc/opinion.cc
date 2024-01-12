@@ -38,33 +38,33 @@ int TMonster::remHated(const TBeing* hatee, const char* n) {
   if (!hatefield) {
     REMOVE_BIT(specials.act, ACT_HATEFUL);
   }
-  return ((hatee) ? TRUE : FALSE);
+  return ((hatee) ? true : false);
 }
 
 bool TBeing::addHated(TBeing*) { return false; }
 
 bool TMonster::addHated(TBeing* hatee) {
   if (this == hatee)
-    return FALSE;
+    return false;
 
   // insure NPC hate PC ONLY!
   if (isPc() || !hatee->isPc())
-    return FALSE;
+    return false;
 
   // We need to make sure an immortal mobile will not gain a player hatred,
   // period.
   if (IS_SET(specials.act, ACT_IMMORTAL))
-    return FALSE;
+    return false;
 
   if (hatee) {
-    if (Hates(hatee, NULL)) /* hate someone only once - SG */
-      return FALSE;
+    if (Hates(hatee, nullptr)) /* hate someone only once - SG */
+      return false;
     // so it won't add someone to the hate list if they have other reasons
     // (racial, etc) to hate
 
-    bool silent_multi_hate = TRUE;
+    bool silent_multi_hate = true;
     if (this->in_room == hatee->in_room)
-      silent_multi_hate = FALSE;
+      silent_multi_hate = false;
 
     if (multiHates(hatee, silent_multi_hate)) {
       // mob is hating a new player from the same account as an existing hatee
@@ -78,7 +78,7 @@ bool TMonster::addHated(TBeing* hatee) {
     }
 
     if (!awake()) /* don't add to the list if mob is !awake */
-      return FALSE;
+      return false;
 
     charList* list = new charList();
     list->name = mud_str_dup(hatee->name);
@@ -103,7 +103,7 @@ bool TMonster::addHated(TBeing* hatee) {
       hatee->sendTo(COLOR_MOBS,
         format("--- %s hates you.\n\r") % sstring(getName()).cap());
   }
-  return ((hatee) ? TRUE : FALSE);
+  return ((hatee) ? true : false);
 }
 
 int TMonster::addHatred(zoneHateT parm_type, int parm) {
@@ -154,12 +154,12 @@ int TMonster::addHatred(zoneHateT parm_type, int parm) {
     case OP_CHAR:
     case MAX_HATE:
       vlogf(LOG_LOW, format("Bad use of Hate flags on %s") % getName());
-      return TRUE;
+      return true;
   }
   if (!IS_SET(specials.act, ACT_HATEFUL)) {
     SET_BIT(specials.act, ACT_HATEFUL);
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::remHatred(unsigned short bitv) {
@@ -168,26 +168,26 @@ int TMonster::remHatred(unsigned short bitv) {
     if (!isPc())
       REMOVE_BIT(specials.act, ACT_HATEFUL);
 
-  return TRUE;
+  return true;
 }
 
 bool TMonster::multiHates(const TBeing* v, bool silent) {
   // Disabled.
-  return FALSE;
+  return false;
 
   if (!hatefield)
-    return FALSE;
+    return false;
 
   if (isPc() || !v->isPc())
-    return FALSE;
+    return false;
 
   if (this == v)
-    return FALSE;
+    return false;
 
   if (!v->player.account_id || !v->player.player_id)
-    return FALSE;
+    return false;
 
-  bool multi = FALSE;
+  bool multi = false;
   // loop over the hated list, looking for matching account id
   if (IS_SET(hatefield, HATE_CHAR)) {
     if (hates.clist) {
@@ -207,7 +207,7 @@ bool TMonster::multiHates(const TBeing* v, bool silent) {
           vlogf(LOG_CHEAT,
             format("MULTIPLAY: Players %s and %s are both hated by %s.") %
               v->getName() % i->name % getName());
-          multi = TRUE;
+          multi = true;
         }
       }
     }
@@ -217,7 +217,7 @@ bool TMonster::multiHates(const TBeing* v, bool silent) {
 
 bool TMonster::Hates(const TBeing* v, const char* n) const {
   if (!hatefield)
-    return FALSE;
+    return false;
 
   sstring namebuf;
 
@@ -232,10 +232,10 @@ bool TMonster::Hates(const TBeing* v, const char* n) const {
   }
 
   if (namebuf.empty())
-    return FALSE;
+    return false;
 
   if (this == v)
-    return FALSE;
+    return false;
 
   if (IS_SET(hatefield, HATE_CHAR)) {
     if (hates.clist) {
@@ -243,7 +243,7 @@ bool TMonster::Hates(const TBeing* v, const char* n) const {
       for (i = hates.clist; i; i = i->next) {
         sstring tmpname = i->name;
         if (namebuf == tmpname) {
-          return TRUE;
+          return true;
         }
       }
     }
@@ -251,34 +251,34 @@ bool TMonster::Hates(const TBeing* v, const char* n) const {
   if (IS_SET(hatefield, HATE_RACE) && v)
     if ((int)hates.race != -1)
       if (hates.race == v->getRace())
-        return TRUE;
+        return true;
 
   if (IS_SET(hatefield, HATE_SEX) && v)
     if (hates.sex == v->getSex())
-      return TRUE;
+      return true;
 
 // this needs to be set for factions, not align
 #if 0
   if (IS_SET(hatefield, HATE_GOOD) && v)
     if (v->isGood())
-      return TRUE;
+      return true;
 
   if (IS_SET(hatefield, HATE_EVIL) && v)
     if (v->isEvil())
-      return TRUE;
+      return true;
 #endif
 
   if (IS_SET(hatefield, HATE_CLASS) && v)
     if (v->hasClass(hates.Class))
-      return TRUE;
+      return true;
 
   if (IS_SET(hatefield, HATE_VNUM) && v) {
     const TMonster* mv = dynamic_cast<const TMonster*>(v);
     if (mv && (hates.vnum == mob_index[mv->getMobIndex()].virt))
-      return TRUE;
+      return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 bool TMonster::Fears(const TBeing* v, const char* s) const {
@@ -289,10 +289,10 @@ bool TMonster::Fears(const TBeing* v, const char* s) const {
   const char* buf;
 
   if (!awake())
-    return FALSE;
+    return false;
 
   if (!IS_SET(specials.act, ACT_AFRAID))
-    return FALSE;
+    return false;
 
   if (!v)
     buf = s;
@@ -300,43 +300,43 @@ bool TMonster::Fears(const TBeing* v, const char* s) const {
     buf = v->getName().c_str();
 
   if (!buf)
-    return FALSE;
+    return false;
 
   if (IS_SET(fearfield, FEAR_CHAR)) {
     for (i = fears.clist; i; i = i->next) {
       if (i->name)
         if (!strcmp(i->name, buf))
-          return TRUE;
+          return true;
     }
   }
   if (IS_SET(fearfield, FEAR_RACE))
     if ((int)fears.race != -1)
       if (fears.race == v->getRace())
-        return TRUE;
+        return true;
 
   if (IS_SET(fearfield, FEAR_SEX))
     if (fears.sex == v->getSex())
-      return TRUE;
+      return true;
 
 #if 0
   if (IS_SET(fearfield, FEAR_GOOD))
-    return TRUE;
+    return true;
 
   if (IS_SET(fearfield, FEAR_EVIL))
-    return TRUE;
+    return true;
 #endif
 
   if (IS_SET(fearfield, FEAR_CLASS))
     if (v->hasClass(fears.Class))
-      return TRUE;
+      return true;
 
   if (IS_SET(fearfield, FEAR_VNUM)) {
     sendTo(format("You fear %i \n\r") % fears.vnum);
     const TMonster* mv = dynamic_cast<const TMonster*>(v);
     if (mv && (fears.vnum == mv->mobVnum()))
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TMonster::remFeared(const TBeing* hatee, const char* n) {
@@ -349,7 +349,7 @@ int TMonster::remFeared(const TBeing* hatee, const char* n) {
     strcpy(buf, n);
 
   if (!IS_SET(specials.act, ACT_AFRAID))
-    return FALSE;
+    return false;
 
   for (list = fears.clist; list; list = tmp) {
     tmp = list->next;
@@ -371,7 +371,7 @@ int TMonster::remFeared(const TBeing* hatee, const char* n) {
   if (!fearfield)
     REMOVE_BIT(specials.act, ACT_AFRAID);
 
-  return ((hatee) ? TRUE : FALSE);
+  return ((hatee) ? true : false);
 }
 
 int TMonster::addFeared(TBeing* hatee) {
@@ -381,8 +381,8 @@ int TMonster::addFeared(TBeing* hatee) {
     hunt_dist = 0;
   }
   if (hatee) {
-    if (Fears(hatee, NULL))  // fear only once
-      return FALSE;
+    if (Fears(hatee, nullptr))  // fear only once
+      return false;
 
     charList* list = new charList();
     list->name = mud_str_dup(hatee->getName());
@@ -397,7 +397,7 @@ int TMonster::addFeared(TBeing* hatee) {
         format("--- %s fears you.  (as well they should)\n\r") %
           sstring(getName()).cap());
   }
-  return ((hatee) ? TRUE : FALSE);
+  return ((hatee) ? true : false);
 }
 
 int TMonster::addFears(zoneHateT parm_type, int parm) {
@@ -449,49 +449,49 @@ int TMonster::addFears(zoneHateT parm_type, int parm) {
     case OP_CHAR:
     case MAX_HATE:
       vlogf(LOG_LOW, format("Bad use of Fear flags on %s") % getName());
-      return TRUE;
+      return true;
   }
   SET_BIT(specials.act, ACT_AFRAID);
 
-  return TRUE;
+  return true;
 }
 
 TBeing* TMonster::findAHatee(void) {
-  TBeing* tmp_ch = NULL;
-  TThing* t = NULL;
+  TBeing* tmp_ch = nullptr;
+  TThing* t = nullptr;
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
     tmp_ch = dynamic_cast<TBeing*>(t);
     if (!tmp_ch)
       continue;
-    if (Hates(tmp_ch, NULL) && canSee(tmp_ch) && (this != tmp_ch) &&
+    if (Hates(tmp_ch, nullptr) && canSee(tmp_ch) && (this != tmp_ch) &&
         !(tmp_ch->isImmortal() && tmp_ch->isPlayerAction(PLR_NOHASSLE))) {
       return (tmp_ch);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 TBeing* TMonster::findAFearee(void) {
-  TBeing* tmp_ch = NULL;
-  TThing* t = NULL;
+  TBeing* tmp_ch = nullptr;
+  TThing* t = nullptr;
 
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
     tmp_ch = dynamic_cast<TBeing*>(t);
     if (!tmp_ch)
       continue;
-    if (Fears(tmp_ch, NULL) && canSee(tmp_ch) && (this != tmp_ch) &&
+    if (Fears(tmp_ch, nullptr) && canSee(tmp_ch) && (this != tmp_ch) &&
         !(tmp_ch->isImmortal() && tmp_ch->isPlayerAction(PLR_NOHASSLE))) {
       return (tmp_ch);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 // these two are to make the monsters completely forget about them.
-// Either ch is NULL and s is used or vice versa. char *s is used when
+// Either ch is nullptr and s is used or vice versa. char *s is used when
 // characters delete themselves and dont have associated TBEing pointers,
 // just name of old character is used in this case - Brutius
 void DeleteHatreds(const TBeing* ch, const char* s) {
@@ -506,7 +506,7 @@ void DeleteHatreds(const TBeing* ch, const char* s) {
       tmp->remHated(ch, s);
 
     if (ch && (tmp->targ() == ch)) {
-      tmp->setTarg(NULL);
+      tmp->setTarg(nullptr);
       tmp->setAnger((tmp->anger() + tmp->defanger()) / 2);
       tmp->DMal(11);
       tmp->DS(5);
@@ -533,7 +533,7 @@ void TMonster::developHatred(TBeing* v) {
   if (this == v)
     return;
 
-  if (Hates(v, NULL))
+  if (Hates(v, nullptr))
     return;
 
   // rule is that patience+randomizer < diff ==> hatred
@@ -570,7 +570,7 @@ void TMonster::setHunting(TBeing* tch) {
 
   dist = 50 + GetMaxLevel();
 
-  if (Hates(tch, NULL))
+  if (Hates(tch, nullptr))
     dist *= 2;
 
   SET_BIT(specials.act, ACT_HUNTING);

@@ -79,9 +79,9 @@ sstring TTool::statObjInfo() const {
 int TTool::objectSell(TBeing* ch, TMonster* keeper) {
   if ((getToolUses() != getToolMaxUses())) {
     keeper->doTell(ch->getName(), "I'm sorry, I don't buy back used tools.");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 bool TTool::isPluralItem() const { return (fname(this->name).back() == 's'); }

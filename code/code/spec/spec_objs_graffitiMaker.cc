@@ -32,28 +32,28 @@ int graffitiMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
     buf = o->descr;
     o->descr = format("%s%s<1>") % ccodes[c] % buf;
-    return FALSE;
+    return false;
   }
 
   if (cmd != CMD_WRITE)
-    return FALSE;
+    return false;
 
   sstring buf;
   //  buf = sstring(arg).word(0);
   buf = sstring(stripColorCodes(arg));
 
   if (!o || !ch)
-    return FALSE;
+    return false;
 
   TTool* tool = dynamic_cast<TTool*>(o);
 
   if (!tool)
-    return FALSE;
+    return false;
 
   TBeing* cho = dynamic_cast<TBeing*>(o->equippedBy);
 
   if (!cho) {
-    return FALSE;
+    return false;
   }
 
   //  buf = buf.upper();
@@ -61,7 +61,7 @@ int graffitiMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   //  if (!buf.isWord() || buf.length() > GRAFFITI_MAX) {
   if (buf.length() > GRAFFITI_MAX) {
     ch->sendTo("You can't write that - try something shorter.\n\r");
-    return TRUE;
+    return true;
   }
 
   TObj* gfti = read_object(GRAFFITI_OBJ, VIRTUAL);
@@ -70,7 +70,7 @@ int graffitiMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     ch->sendTo("Problem making graffiti object, bug a coder.\n\r");
     vlogf(LOG_BUG,
       format("Couldn't load object (%d) in graffitiMaker.") % GRAFFITI_OBJ);
-    return TRUE;
+    return true;
   }
 
   for (int i = 0; i < ncolors; ++i) {
@@ -89,13 +89,13 @@ int graffitiMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   gfti->shortDescr = newShort;
   gfti->setDescr(newLong);
 
-  act("$n scrawls some graffiti with $s $p.", TRUE, ch, o, NULL, TO_ROOM);
-  act("You make your mark.", TRUE, ch, o, NULL, TO_CHAR);
+  act("$n scrawls some graffiti with $s $p.", true, ch, o, nullptr, TO_ROOM);
+  act("You make your mark.", true, ch, o, nullptr, TO_CHAR);
 
   // this clunky block of code moves the message directly beneath
   // any existing message
   /*
-  TThing *last=NULL, *first=NULL;
+  TThing *last=nullptr, *first=nullptr;
   TObj *obj;
   for(StuffIter it=ch->roomp->stuff.begin();it!=ch->roomp->stuff.end();++it){
     if((obj=dynamic_cast<TObj *>(*it)) && obj->objVnum()==GRAFFITI_OBJ) {
@@ -110,12 +110,12 @@ int graffitiMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
   tool->addToToolUses(-1);
   if (tool->getToolUses() <= 0) {
-    act("Your $p is all used up.", FALSE, ch, o, NULL, TO_CHAR);
-    act("$n uses up the last of $s $p.", FALSE, ch, o, NULL, TO_ROOM);
+    act("Your $p is all used up.", false, ch, o, nullptr, TO_CHAR);
+    act("$n uses up the last of $s $p.", false, ch, o, nullptr, TO_ROOM);
     if (!tool->makeScraps()) {
       delete tool;
-      tool = NULL;
+      tool = nullptr;
     }
   }
-  return TRUE;
+  return true;
 }

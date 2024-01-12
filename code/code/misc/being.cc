@@ -27,7 +27,7 @@
 extern bool affectShouldApply(const TObj* obj, wearSlotT pos);
 
 playerData::playerData() :
-  longDescr(NULL),
+  longDescr(nullptr),
   sex(SEX_NEUTER),
   max_level(0),
   Class(0),
@@ -49,7 +49,7 @@ playerData::playerData() :
 }
 
 playerData::playerData(const playerData& a) :
-  longDescr(NULL),
+  longDescr(nullptr),
   sex(a.sex),
   max_level(a.max_level),
   Class(a.Class),
@@ -197,10 +197,10 @@ immunityData::~immunityData() {}
 
 factionData::factionData() :
   percent(0.0),
-  captive(NULL),
-  next_captive(NULL),
-  captiveOf(NULL),
-  target(NULL),
+  captive(nullptr),
+  next_captive(nullptr),
+  captiveOf(nullptr),
+  target(nullptr),
   type(FACT_UNDEFINED),
   actions(0),
   align_ge(0),
@@ -270,7 +270,7 @@ pracData& pracData::operator=(const pracData& a) {
 
 pracData::~pracData() {}
 
-bodyPartsDamage::bodyPartsDamage() : flags(0), stuckIn(NULL), health(0) {}
+bodyPartsDamage::bodyPartsDamage() : flags(0), stuckIn(nullptr), health(0) {}
 
 bodyPartsDamage::bodyPartsDamage(const bodyPartsDamage& a) :
   flags(a.flags),
@@ -292,7 +292,7 @@ skillApplyData::skillApplyData() :
   skillNum(0),
   amount(0),
   numApplys(0),
-  nextApply(NULL) {}
+  nextApply(nullptr) {}
 
 skillApplyData::skillApplyData(const skillApplyData& a) :
   skillNum(a.skillNum),
@@ -302,7 +302,7 @@ skillApplyData::skillApplyData(const skillApplyData& a) :
   if (a.nextApply)
     nextApply = new skillApplyData(*a.nextApply);
   else
-    nextApply = NULL;
+    nextApply = nullptr;
 }
 
 skillApplyData& skillApplyData::operator=(const skillApplyData& a) {
@@ -317,13 +317,13 @@ skillApplyData& skillApplyData::operator=(const skillApplyData& a) {
 
 skillApplyData::~skillApplyData() {}
 
-followData::followData() : follower(NULL), next(NULL) {}
+followData::followData() : follower(nullptr), next(nullptr) {}
 
 followData::followData(const followData& a) : follower(a.follower) {
   if (a.next)
     next = new followData(*a.next);
   else
-    next = NULL;
+    next = nullptr;
 }
 
 followData& followData::operator=(const followData& a) {
@@ -340,7 +340,7 @@ followData& followData::operator=(const followData& a) {
   if (a.next)
     next = new followData(*a.next);
   else
-    next = NULL;
+    next = nullptr;
   return *this;
 }
 
@@ -355,14 +355,14 @@ spellTaskData::spellTaskData() :
   component(0),
   nextUpdate(0),
   rounds(0),
-  orig_arg(NULL),
+  orig_arg(nullptr),
   wasInRoom(0),
   status(0),
   text(0),
   flags(0),
-  victim(NULL),
-  object(NULL),
-  room(NULL) {}
+  victim(nullptr),
+  object(nullptr),
+  room(nullptr) {}
 
 spellTaskData::spellTaskData(const spellTaskData& a) :
   spell(a.spell),
@@ -408,10 +408,10 @@ spellTaskData& spellTaskData::operator=(const spellTaskData& a) {
 
 spellTaskData::~spellTaskData() {
   delete[] orig_arg;
-  orig_arg = NULL;
+  orig_arg = nullptr;
 }
 
-spellStoreData::spellStoreData() : spelltask(NULL), storing(FALSE) {}
+spellStoreData::spellStoreData() : spelltask(nullptr), storing(false) {}
 
 spellStoreData::spellStoreData(const spellStoreData& a) :
   spelltask(a.spelltask),
@@ -430,7 +430,7 @@ spellStoreData::~spellStoreData() {}
 equipmentData::equipmentData() {
   wearSlotT i;
   for (i = MIN_WEAR; i < MAX_WEAR; i++)
-    equipment[i] = NULL;
+    equipment[i] = nullptr;
 }
 
 equipmentData::equipmentData(const equipmentData& a) {
@@ -832,7 +832,7 @@ bool TBeing::awake() const {
 
 bool TBeing::isFlying() const { return ((getPosition() == POSITION_FLYING)); }
 
-bool TBeing::isGuildmaster() const { return FALSE; }
+bool TBeing::isGuildmaster() const { return false; }
 
 bool TBeing::isLevitating() const { return isAffected(AFF_LEVITATING); }
 
@@ -1058,10 +1058,10 @@ short TBeing::getInvisLevel() const { return invisLevel; }
 void TBeing::setInvisLevel(short num) {
   if (desc && desc->m_bIsClient) {
     if ((invisLevel > 50) && (num < 50))
-      desc->clientf(format("%d|%d") % CLIENT_INVIS % FALSE);
+      desc->clientf(format("%d|%d") % CLIENT_INVIS % false);
 
     if (num > 50)
-      desc->clientf(format("%d|%d") % CLIENT_INVIS % TRUE);
+      desc->clientf(format("%d|%d") % CLIENT_INVIS % true);
   }
 
   invisLevel = num;
@@ -1281,9 +1281,9 @@ short TBeing::suggestArmor() const {
 }
 
 void TBeing::peeOnMe(const TBeing* ch) {
-  act("$n has just pissed on your foot!  Yuck!", TRUE, ch, 0, this, TO_VICT);
-  act("$n cackles as $e pees on $N's foot!", TRUE, ch, 0, this, TO_NOTVICT);
-  act("You relieve yourself on $N's foot.", TRUE, ch, 0, this, TO_CHAR);
+  act("$n has just pissed on your foot!  Yuck!", true, ch, 0, this, TO_VICT);
+  act("$n cackles as $e pees on $N's foot!", true, ch, 0, this, TO_NOTVICT);
+  act("You relieve yourself on $N's foot.", true, ch, 0, this, TO_CHAR);
 }
 
 sstring TBeing::getLongDesc() const {
@@ -1304,7 +1304,7 @@ int TBeing::chiSelf() {
 
   if (affectedBySpell(SKILL_CHI)) {
     sendTo("You have not yet recovered from your last chi projection.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (bSuccess(bKnown, SKILL_CHI)) {
@@ -1314,11 +1314,11 @@ int TBeing::chiSelf() {
     act(
       "You close your eyes and concentrate for a moment, then begin radiating "
       "an intense <R>heat<1> from your body.",
-      TRUE, this, NULL, NULL, TO_CHAR);
+      true, this, nullptr, nullptr, TO_CHAR);
     act(
       "$n closes $s eyes in concentration, then begins radiating an intense "
       "<R>heat<1> from $s body.",
-      TRUE, this, NULL, NULL, TO_ROOM);
+      true, this, nullptr, nullptr, TO_ROOM);
 
     if (affectedBySpell(AFFECT_WET)) {
       if (0 == Weather::addWetness(this, -15))
@@ -1348,7 +1348,7 @@ int TBeing::chiSelf() {
     affectTo(&aff, -1);
 
     sendTo("You fail to project your chi upon yourself.\n\r");
-    return FALSE;
+    return false;
   }
 }
 
@@ -1356,7 +1356,7 @@ int TBeing::chiTarget(TBeing* target) {
   int bKnown = getSkillValue(SKILL_CHI), tDamage, tMana;
 
   if (target->isImmortal() || noHarmCheck(target))
-    return FALSE;
+    return false;
 
   if (checkPeaceful("You feel too peaceful to contemplate violence here.\n\r"))
     return RET_STOP_PARSING;
@@ -1375,11 +1375,11 @@ int TBeing::chiTarget(TBeing* target) {
 
     return doChiTarget(target, tDamage);
   } else {
-    act("You fail to harm $N with your <r>blast of chi<z>!", FALSE, this, NULL,
+    act("You fail to harm $N with your <r>blast of chi<z>!", false, this, nullptr,
       target, TO_CHAR);
-    act("You escape $n's attempt to chi you!", TRUE, this, NULL, target,
+    act("You escape $n's attempt to chi you!", true, this, nullptr, target,
       TO_VICT);
-    act("$N avoids $n's attempt to chi them!", TRUE, this, NULL, target,
+    act("$N avoids $n's attempt to chi them!", true, this, nullptr, target,
       TO_NOTVICT);
 
     return true;
@@ -1387,30 +1387,30 @@ int TBeing::chiTarget(TBeing* target) {
 }
 
 int TBeing::doChiTarget(TBeing* target, int damage) {
-  act("You unleash your chi upon $N!", FALSE, target, NULL, this, TO_CHAR);
+  act("You unleash your chi upon $N!", false, target, nullptr, this, TO_CHAR);
 
   if (target->affectedBySpell(SKILL_CHI)) {
     act(
       "A bright <W>aura<1> flares up around $N, deflecting your attack and "
       "then striking back!\n\rYour vision goes <r>red<1> as the pain "
       "overwhelms you!",
-      TRUE, this, NULL, target, TO_CHAR);
+      true, this, nullptr, target, TO_CHAR);
     act(
       "A bright <W>aura<1> flares up around $N, deflecting $n's chi attack and "
       "then striking back!",
-      TRUE, this, NULL, target, TO_NOTVICT);
+      true, this, nullptr, target, TO_NOTVICT);
     act(
       "A bright <W>aura<1> flares up around you, deflecting $n's chi attack "
       "and then striking back!",
-      TRUE, this, NULL, target, TO_VICT);
+      true, this, nullptr, target, TO_VICT);
 
     if (reconcileDamage(this, ::number((damage / 2), damage), SKILL_CHI) == -1)
       return (DELETE_THIS | RET_STOP_PARSING);
   } else {
-    act("...$N screws up $S face in agony.", TRUE, this, NULL, target, TO_CHAR);
-    act("$n exerts $s <r>chi force<1> on you, causing extreme pain.", TRUE,
-      this, NULL, target, TO_VICT);
-    act("$N screws up $S face in agony.", TRUE, this, NULL, target, TO_NOTVICT);
+    act("...$N screws up $S face in agony.", true, this, nullptr, target, TO_CHAR);
+    act("$n exerts $s <r>chi force<1> on you, causing extreme pain.", true,
+      this, nullptr, target, TO_VICT);
+    act("$N screws up $S face in agony.", true, this, nullptr, target, TO_NOTVICT);
 
     if (reconcileDamage(target, damage, SKILL_CHI) == -1)
       return DELETE_VICT;
@@ -1432,18 +1432,18 @@ int TBeing::chiRoom() {
 
   if (affectedBySpell(SKILL_CHI)) {
     sendTo("You have not yet recovered from your last chi projection.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (bSuccess(bKnown, SKILL_CHI)) {
     act(
       "A bright <W>aura<1> flares up around you, as you unleash your chi in a "
       "violent explosion!\n\r",
-      TRUE, this, NULL, NULL, TO_CHAR);
+      true, this, nullptr, nullptr, TO_CHAR);
     act(
       "A bright <W>aura<1> flares up around $n as unleashed chi energy blasts "
       "the room!\n\r",
-      TRUE, this, NULL, NULL, TO_NOTVICT);
+      true, this, nullptr, nullptr, TO_NOTVICT);
 
     // Loop for each person in room
     std::vector<TBeing*> toDelete{};
@@ -1494,7 +1494,7 @@ int TBeing::chiObject(TObj* target) {
     reconcileMana(TYPE_UNDEFINED, 0, tMana);
 
   if (!bSuccess(bKnown, SKILL_CHI)) {
-    act("You fail to affect $p in any way.", FALSE, this, target, NULL,
+    act("You fail to affect $p in any way.", false, this, target, nullptr,
       TO_CHAR);
     return true;
   } else {
@@ -1516,15 +1516,15 @@ bool TBeing::checkObjUsed(TObj* obj) {
   affectedData* hjp;
 
   if (!affected)
-    return FALSE;
+    return false;
 
   for (hjp = affected; hjp; hjp = hjp->next) {
     if (hjp->type == AFFECT_OBJECT_USED) {
       if (hjp->modifier == obj->number)
-        return TRUE;
+        return true;
     }
   }
-  return FALSE;
+  return false;
 }
 
 sstring TBeing::thirdPerson(const int pos) {
@@ -1565,7 +1565,7 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring& tat,
   silentTypeT silent) {
   /* add or remove a tattoo to a being */
   if (!hasPart(slot) || notBleedSlot(slot))
-    return FALSE;
+    return false;
 
   TDatabase db(DB_SNEEZY);
   if (tat.length() == 0) {
@@ -1573,27 +1573,27 @@ bool TBeing::applyTattoo(wearSlotT slot, const sstring& tat,
     db.query("delete from tattoos where name = '%s' and location = %i",
       getName().c_str(), int(slot));
     if (db.rowCount() > 0)
-      return TRUE;
+      return true;
   } else if (tat.length() <= 128) {
     // new tat
     db.query("insert tattoos (name, tattoo, location) select '%s', '%s', %i",
       getName().c_str(), tat.c_str(), int(slot));
     if (db.rowCount() > 0)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 bool TBeing::canMeditate() {
   if (isLinkdead() || (getPosition() < POSITION_RESTING))
-    return FALSE;
+    return false;
 
   if (getPosition() > POSITION_STANDING &&
       !(getPosition() == POSITION_MOUNTED &&
         (getSkillValue(SKILL_ADVANCED_RIDING) >= 50))) {
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 // Helper to quickly get a being's current % HP remaining as a decimal

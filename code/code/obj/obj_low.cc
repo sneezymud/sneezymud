@@ -432,14 +432,14 @@ Tier ArmorEvaluator::getTier() {
   unsigned int objStat = m_clothing->getObjStat() & heavyFlags;
 
   // some classes impose even more restrictions than simple obj flags
-  if (m_clothing->monkRestrictedItem(NULL))
+  if (m_clothing->monkRestrictedItem(nullptr))
     objStat |= ITEM_ANTI_MONK;
-  if (m_clothing->shamanRestrictedItem(NULL))
+  if (m_clothing->shamanRestrictedItem(nullptr))
     objStat |= ITEM_ANTI_SHAMAN;
-  if (m_clothing->rangerRestrictedItem(NULL))
+  if (m_clothing->rangerRestrictedItem(nullptr))
     objStat |= ITEM_ANTI_RANGER;
 
-  if (NULL != dynamic_cast<const TJewelry*>(m_clothing))
+  if (nullptr != dynamic_cast<const TJewelry*>(m_clothing))
     return Tier_Jewelry;
   else if ((objStat & heavyFlags) == heavyFlags)
     return Tier_Heavy;

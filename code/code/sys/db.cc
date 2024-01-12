@@ -118,8 +118,8 @@ int commod_index[200];
 
 TBeing* character_list = 0;  // global l-list of chars
 TCharacterList CharacterList;
-TMonster* pawnman = NULL;
-TPCorpse* pc_corpse_list = NULL;
+TMonster* pawnman = nullptr;
+TPCorpse* pc_corpse_list = nullptr;
 // table of reset data
 std::vector<zoneData> zone_table(0);
 
@@ -306,7 +306,7 @@ void bootPulse(const char* str, bool end_str) {
 
   for (d = descriptor_list; d; d = d->next) {
     d->output.push(CommPtr(new UncategorizedComm(
-      colorString(NULL, d, sc, NULL, COLOR_BASIC, TRUE))));
+      colorString(nullptr, d, sc, nullptr, COLOR_BASIC, true))));
     d->outputProcessing();
   }
 
@@ -480,7 +480,7 @@ void bootDb(void) {
   unsigned int i;
   bootPulse("Loading rooms:", false);
   bootWorld();
-  bootPulse(NULL, true);
+  bootPulse(nullptr, true);
 
   vlogf(LOG_MISC,
     format("Boot timing: rooms: %.2f seconds") % (t.getElapsedReset()));
@@ -555,7 +555,7 @@ void bootDb(void) {
     if (i % 10 == 0)
       bootPulse(".", false);
   }
-  bootPulse(NULL, true);
+  bootPulse(nullptr, true);
 
   vlogf(LOG_MISC, format("Boot timing: load potentials: %.2f seconds") %
                     (t.getElapsedReset()));
@@ -569,14 +569,14 @@ void bootDb(void) {
       // all shopkeepers should load in zone 0
       bootPulse("Loading shops.", false);
     } else if (i == 1) {
-      bootPulse(NULL, true);
+      bootPulse(nullptr, true);
       bootPulse("Resetting zones:", false);
       update_commod_index();
     }
 
     vlogf(LOG_MISC, format("Performing boot-time reset of %s (rooms %d-%d).") %
                       zone_table[i].name % d % e);
-    zone_table[i].resetZone(TRUE);
+    zone_table[i].resetZone(true);
 
     // stagger reset times
     zone_table[i].age = ::number(0, zone_table[i].lifespan);
@@ -584,7 +584,7 @@ void bootDb(void) {
     if (i % 10 == 0)
       bootPulse(".", false);
   }
-  bootPulse(NULL, true);
+  bootPulse(nullptr, true);
 
   vlogf(LOG_MISC, format("Boot timing: zones and shop rent: %.2f seconds") %
                     (t.getElapsedReset()));
@@ -656,12 +656,12 @@ void procUpdateTime::run(const TPulse&) const {
 
 void bootWorld(void) {
   int virtual_nr, num = 0, tmp;
-  TRoom* rp = NULL;
+  TRoom* rp = nullptr;
   TDatabase db(DB_SNEEZY), db_extras(DB_SNEEZY), db_exits(DB_SNEEZY);
   extraDescription* new_descr;
 
   memset((char*)room_db, 0, sizeof(TRoom*) * WORLD_SIZE);
-  character_list = NULL;
+  character_list = nullptr;
 
   db.query("select * from room order by vnum asc");
   db_exits.query(
@@ -720,7 +720,7 @@ void bootWorld(void) {
     rp->setLight(0);
     rp->setHasWindow(0);
 
-    rp->ex_description = NULL;
+    rp->ex_description = nullptr;
 
     // in case there are extras with no associated room, we need this
     while (hasExtras && convertTo<int>(db_extras["vnum"]) < rp->number)
@@ -758,12 +758,12 @@ void bootWorld(void) {
       if (!db_exits[2].empty())
         rp->dir_option[dir]->keyword = db_exits[2];
       else
-        rp->dir_option[dir]->keyword = NULL;
+        rp->dir_option[dir]->keyword = nullptr;
 
       if (!db_exits[3].empty())
         rp->dir_option[dir]->description = db_exits[3];
       else
-        rp->dir_option[dir]->description = NULL;
+        rp->dir_option[dir]->description = nullptr;
 
       tmp = convertTo<int>(db_exits[4]);
       if (tmp < 0 || tmp >= MAX_DOOR_TYPES) {
@@ -1666,7 +1666,7 @@ void bootZones(void) {
 
 TMonster* read_mobile(int nr, readFileTypeT type) {
   int i, rc, virt = nr;
-  TMonster* mob = NULL;
+  TMonster* mob = nullptr;
 
   i = nr;
 
@@ -1678,14 +1678,14 @@ TMonster* read_mobile(int nr, readFileTypeT type) {
 
   if (nr < 0) {
     vlogf(LOG_FILE, format("Mobile (V) %d does not exist in database.") % i);
-    return NULL;
+    return nullptr;
   }
 
   try {
     mob = new TMonster();
   } catch (...) {
     vlogf(LOG_BUG, "caught an exception in read_mobile");
-    return NULL;
+    return nullptr;
   }
   mob->number = nr;
 
@@ -1694,15 +1694,15 @@ TMonster* read_mobile(int nr, readFileTypeT type) {
   mob->next = character_list;
   character_list = mob;
 
-  rc = mob->readMobFromDB(virt, FALSE);
+  rc = mob->readMobFromDB(virt, false);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     vlogf(LOG_BUG, format("Mobile %d returned DELETE_THIS on init.") % virt);
     delete mob;
-    return NULL;
+    return nullptr;
   } else if (!rc) {
     vlogf(LOG_BUG, format("Mobile %d failed to load from database.") % virt);
     delete mob;
-    return NULL;
+    return nullptr;
   }
 
   mob->loadResponses(mob_index[nr].virt);
@@ -1726,7 +1726,7 @@ TMonster* read_mobile(int nr, readFileTypeT type) {
   for (j = MIN_WEAR; j < MAX_WEAR; j++) {
     mob->setLimbFlags(j, 0);
     mob->setCurLimbHealth(j, mob->getMaxLimbHealth(j));
-    mob->setStuckIn(j, NULL);
+    mob->setStuckIn(j, nullptr);
   }
   mob_index[nr].addToNumber(1);
 
@@ -1766,15 +1766,15 @@ TMonster* read_mobile(int nr, readFileTypeT type) {
   else
     stats.act_101_127++;
 
-  rc = mob->checkSpec(mob, CMD_GENERIC_CREATED, "", NULL);
+  rc = mob->checkSpec(mob, CMD_GENERIC_CREATED, "", nullptr);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete mob;
-    return NULL;
+    return nullptr;
   }
   rc = mob->checkResponses(mob, 0, "", CMD_GENERIC_CREATED);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete mob;
-    return NULL;
+    return nullptr;
   }
 
   return (mob);
@@ -1788,7 +1788,7 @@ cached_object* TObjectCache::operator[](int nr) {
   if (tIter != cache.end()) {
     ret = tIter->second;
   } else {
-    ret = NULL;
+    ret = nullptr;
   }
   return ret;
 }
@@ -1801,7 +1801,7 @@ cached_object* TMobileCache::operator[](int nr) {
   if (tIter != cache.end()) {
     ret = tIter->second;
   } else {
-    ret = NULL;
+    ret = nullptr;
   }
   return ret;
 }
@@ -1979,8 +1979,8 @@ TObj* read_object_buy_build(TBeing* buyer, int nr, readFileTypeT type) {
 
   int price = 0, shop_nr = 0, rent_id = 0;
   int commod_price = 0, commod_shop_nr = 0, commod_rent_id = 0;
-  TObj* o = NULL;
-  TObj* commod = NULL;
+  TObj* o = nullptr;
+  TObj* commod = nullptr;
 
   TDatabase db(DB_SNEEZY);
 
@@ -2018,7 +2018,7 @@ TObj* read_object_buy_build(TBeing* buyer, int nr, readFileTypeT type) {
     commod_shop_nr = convertTo<int>(db["shop_nr"]);
     commod_rent_id = convertTo<int>(db["rent_id"]);
     TShopOwned tso(commod_shop_nr, buyer);
-    TObj* obj = NULL;
+    TObj* obj = nullptr;
 
     if (tso.getKeeper())
       obj = tso.getKeeper()->loadItem(commod_shop_nr,
@@ -2084,7 +2084,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
 
   int nr = real_mobile(virt);
 
-  if (!(ch && should_alloc) && mob_cache[nr] != NULL) {
+  if (!(ch && should_alloc) && mob_cache[nr] != nullptr) {
     name = mob_index[number].name;
     shortDescr = mob_index[number].short_desc;
     player.longDescr = mob_index[number].long_desc;
@@ -2205,7 +2205,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
       max_exist = convertTo<int>(mob_cache[nr]->s["max_exist"]);
 
       if (!should_alloc) {
-        rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+        rc = checkSpec(this, CMD_GENERIC_INIT, "", nullptr);
         if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
           return DELETE_THIS;
         }
@@ -2243,7 +2243,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
         vlogf(LOG_LOW,
           format("Failure to load mob vnum %d from database.") % virt);
       }
-      return FALSE;
+      return false;
     }
 
     if (should_alloc) {
@@ -2373,7 +2373,7 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
       max_exist = convertTo<int>(db["max_exist"]);
 
       if (!should_alloc) {
-        rc = checkSpec(this, CMD_GENERIC_INIT, "", NULL);
+        rc = checkSpec(this, CMD_GENERIC_INIT, "", nullptr);
         if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
           return DELETE_THIS;
         }
@@ -2421,11 +2421,11 @@ int TMonster::readMobFromDB(int virt, bool should_alloc, TBeing* ch) {
   // skills are needed by almost everything
   assignDisciplinesClass();
 
-  return TRUE;
+  return true;
 }
 
 TObj* read_object(int nr, readFileTypeT type) {
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int i, rc, tmpcost;
   TDatabase db(DB_SNEEZY);
 
@@ -2435,10 +2435,10 @@ TObj* read_object(int nr, readFileTypeT type) {
 
   if ((nr < 0) || (nr >= (signed int)obj_index.size())) {
     vlogf(LOG_BUG, format("read_object: bad nr %d (i = %d)") % nr % i);
-    return NULL;
+    return nullptr;
   }
 
-  if (/*bootTime &&*/ obj_cache[nr] != NULL) {
+  if (/*bootTime &&*/ obj_cache[nr] != nullptr) {
     obj =
       makeNewObj(mapFileToItemType(convertTo<int>(obj_cache[nr]->s["type"])));
     if (!obj) {
@@ -2481,7 +2481,7 @@ TObj* read_object(int nr, readFileTypeT type) {
       obj_index[nr].virt);
 
     if (!db.fetchRow())
-      return NULL;
+      return nullptr;
 
     obj = makeNewObj(mapFileToItemType(convertTo<int>(db["type"])));
     obj->number = nr;
@@ -2527,11 +2527,11 @@ TObj* read_object(int nr, readFileTypeT type) {
   obj->weightCorrection();
   obj->updateDesc();
 
-  rc = obj->checkSpec(NULL, CMD_GENERIC_CREATED, "", NULL);
+  rc = obj->checkSpec(nullptr, CMD_GENERIC_CREATED, "", nullptr);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete obj;
-    obj = NULL;
-    return NULL;
+    obj = nullptr;
+    return nullptr;
   }
 
   // use suggested price if available, otherwise use the set price
@@ -2541,7 +2541,7 @@ TObj* read_object(int nr, readFileTypeT type) {
 
   obj->checkObjStats();
 
-  if (/*bootTime &&*/ obj_cache[nr] == NULL) {
+  if (/*bootTime &&*/ obj_cache[nr] == nullptr) {
     //    vlogf(LOG_PEEL, format("caching object - %s") %  obj->shortDescr);
     cached_object* c = new cached_object;
 
@@ -2572,7 +2572,7 @@ TObj* read_object(int nr, readFileTypeT type) {
 
 void zoneData::closeDoors() {
   int bottom, i, x;
-  roomDirData* ep = NULL;
+  roomDirData* ep = nullptr;
   TRoom* rp;
 
   bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
@@ -2631,7 +2631,7 @@ void procZoneUpdate::run(const TPulse&) const {
 
     if (z->reset_mode == 2 || z->isEmpty()) {
       z->closeDoors();
-      z->resetZone(FALSE);
+      z->resetZone(false);
       // dequeue
 
       if (update_u == r_q.head)
@@ -2654,8 +2654,8 @@ void procZoneUpdate::run(const TPulse&) const {
 // of equipment on, and converts it to a WEAR_SLOT
 // this routine is also used to map slots to their old values in some arrays
 // notably slot_chance and ac_percent_pos
-// load == TRUE, num is the slot as it is in the physical file
-// load == FALSE, num is the slot as it is in the mud
+// load == true, num is the slot as it is in the physical file
+// load == false, num is the slot as it is in the mud
 wearSlotT mapFileToSlot(int num) {
   switch (num) {
     case 1:
@@ -2784,7 +2784,7 @@ static void mobRepop(TMonster* mob, int zone, int tRPNum = 0) {
     ((mob->ex_description && mob->ex_description->findExtraDesc("repop"))
         ? mob->ex_description->findExtraDesc("repop")
         : "$n appears suddenly in the room."),
-    TRUE, mob, 0, 0, TO_ROOM);
+    true, mob, 0, 0, TO_ROOM);
 
   if (mob->spec && zone && UtilProcs(mob->spec))
     vlogf(LOG_LOW,
@@ -2965,7 +2965,7 @@ void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
 
 void runResetCmdM(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
-  mob = NULL;
+  mob = nullptr;
   last_cmd = mobload = false;
 
   // check if zone is disabled or if mob exceeds absolute max
@@ -3051,7 +3051,7 @@ void runResetCmdC(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   if (!mob)
     return;
 
-  TMonster* charmie = NULL;
+  TMonster* charmie = nullptr;
   runResetCmdM(zone, rs, flags, mobload, charmie, objload, obj, last_cmd);
   if (!charmie)
     return;
@@ -3078,7 +3078,7 @@ void runResetCmdK(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   if (!mob)
     return;
 
-  TMonster* grouper = NULL;
+  TMonster* grouper = nullptr;
   runResetCmdM(zone, rs, flags, mobload, grouper, objload, obj, last_cmd);
   if (!grouper)
     return;
@@ -3106,7 +3106,7 @@ void runResetCmdR(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   if (!mob)
     return;
 
-  TMonster* rider = NULL;
+  TMonster* rider = nullptr;
   runResetCmdM(zone, rs, flags, mobload, rider, objload, obj, last_cmd);
   if (!rider)
     return;
@@ -3118,7 +3118,7 @@ void runResetCmdR(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   if (mob->getHeight() >= (5 * rider->getHeight() / 2))
     vlogf(LOG_LOW, format("Mob mounting mount that is too big.  [%s] [%s]") %
                      rider->getName() % mob->getName());
-  if (compareWeights(rider->getTotalWeight(TRUE),
+  if (compareWeights(rider->getTotalWeight(true),
         (mob->carryWeightLimit() - mob->getCarriedWeight())) == -1)
     vlogf(LOG_LOW, format("Mob mounting mount that is too weak.  [%s] [%s]") %
                      rider->getName() % mob->getName());
@@ -3132,7 +3132,7 @@ void runResetCmdR(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   rider->mount(mob);
   rider->setPosition(POSITION_MOUNTED);
   if (mob->master && mob->master != rider && !mob->rider)
-    mob->stopFollower(TRUE);
+    mob->stopFollower(true);
   if (!mob->master)
     rider->addFollower(mob);
 
@@ -3212,7 +3212,7 @@ void runResetCmdB(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
 
   // count all of the objects
   int count = 0;
-  TObj* found = NULL;
+  TObj* found = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end(); ++it) {
     TObj* objScan = dynamic_cast<TObj*>(*it);
     if (objScan && objScan->objVnum() == obj_index[rs.arg1].virt) {
@@ -3231,7 +3231,7 @@ void runResetCmdB(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   // if we are at world max, use last one (if exists)
   if (obj_index[rs.arg1].getNumber() >= obj_index[rs.arg1].max_exist) {
     obj = found;
-    last_cmd = objload = (obj != NULL);
+    last_cmd = objload = (obj != nullptr);
     return;
   }
 
@@ -3243,14 +3243,14 @@ void runResetCmdB(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
       format("Strange error attempting to load %i of object %i in room %i.") %
         rs.arg2 % rs.arg1 % rs.arg3);
     obj = found;
-    last_cmd = objload = (obj != NULL);
+    last_cmd = objload = (obj != nullptr);
     return;
   }
 
   // load the objects
   for (; count < load; ++count) {
     obj = read_object(rs.arg1, REAL);
-    if (obj == NULL) {
+    if (obj == nullptr) {
       vlogf(LOG_LOW,
         format("No obj (%d) in O command (room=%d).  cmd=%d, zone=%d") %
           rs.arg1 % rs.arg3 % rs.cmd_no % zone.zone_nr);
@@ -3572,11 +3572,11 @@ void zoneData::resetZone(bool bootTime, bool findLoadPotential) {
   bool mobload = false;
   bool objload = false;
   bool lastStuck = false;
-  TMonster* mob = NULL;
-  TObj* obj = NULL;
+  TMonster* mob = nullptr;
+  TObj* obj = nullptr;
   resetFlag flags = resetFlagNone;
 
-  if (this->enabled == FALSE && gamePort == Config::Port::PROD) {
+  if (this->enabled == false && gamePort == Config::Port::PROD) {
     if (bootTime)
       vlogf(LOG_MISC, "*** Zone was disabled.");
     return;
@@ -3644,7 +3644,7 @@ bool zoneData::doGenericReset(void) {
 
   if (zone_nr < 0 || zone_nr >= (signed int)zone_table.size()) {
     vlogf(LOG_BUG, format("Bad zone number in doGenericReset (%d)") % zone_nr);
-    return FALSE;
+    return false;
   }
   bottom = zone_nr ? (zone_table[zone_nr - 1].top + 1) : 0;
   top = zone_table[zone_nr].top;
@@ -3655,10 +3655,10 @@ bool zoneData::doGenericReset(void) {
     o = *iter;
     if (o->objVnum() >= bottom && o->objVnum() <= top) {
       if (o->spec) {
-        rc = o->checkSpec(NULL, CMD_GENERIC_RESET, "", NULL);
+        rc = o->checkSpec(nullptr, CMD_GENERIC_RESET, "", nullptr);
         if (IS_SET_DELETE(rc, DELETE_ITEM)) {
           delete o;
-          o = NULL;
+          o = nullptr;
           continue;
         }
       }
@@ -3668,7 +3668,7 @@ bool zoneData::doGenericReset(void) {
       //        pile->attractVermin();
     }
   }
-  return TRUE;
+  return true;
 }
 
 // echos a sstring to every room in the zone except exclude_room
@@ -3685,7 +3685,7 @@ void zoneData::sendTo(sstring s, int exclude_room) {
   }
 }
 
-// for use in resetZone; return TRUE if zone 'nr' is free of PC's
+// for use in resetZone; return true if zone 'nr' is free of PC's
 bool zoneData::isEmpty(void) {
   Descriptor* i;
 
@@ -3699,7 +3699,7 @@ bool zoneData::isEmpty(void) {
 
 // read and allocate space for a '~'-terminated sstring from a given file
 sstring fread_string(FILE* fp) {
-  char buf[MAX_STRING_LENGTH], *ptr, *marker = NULL;
+  char buf[MAX_STRING_LENGTH], *ptr, *marker = nullptr;
 
   *buf = 0;
   ptr = buf;
@@ -3729,10 +3729,10 @@ sstring fread_string(FILE* fp) {
     *marker = 0;  // Nuke the ~
   // if ((int) (ptr - buf) == 0) {
   // vlogf(LOG_MISC, "(int) (ptr - buf) == 0");
-  // return NULL;
+  // return nullptr;
   //    }
   if (*buf == 0)
-    return NULL;
+    return nullptr;
   return buf;
 }
 
@@ -3970,7 +3970,7 @@ TObj* makeNewObj(itemTypeT tmp) {
     case MAX_OBJ_TYPES:
       vlogf(LOG_BUG, format("Unknown item type (%d)") % tmp);
   }
-  return NULL;
+  return nullptr;
 }
 
 resetCom::exec_fn* resetCom::executeMethods[resetCom::cmd_Max];
@@ -3986,7 +3986,7 @@ resetCom::resetCom() :
   static bool v_isInitialized = false;
   if (!v_isInitialized) {
     memset(executeMethods, 0, sizeof(executeMethods));
-    executeMethods[cmd_Stop] = NULL;
+    executeMethods[cmd_Stop] = nullptr;
     executeMethods[cmd_LoadMob] = runResetCmdM;
     executeMethods[cmd_LoadMobGrouped] = runResetCmdK;
     executeMethods[cmd_LoadMobCharmed] = runResetCmdC;
@@ -4161,7 +4161,7 @@ bool resetCom::execute(zoneData& zone, resetFlag flags, bool& mobload,
 }
 
 zoneData::zoneData() :
-  name(NULL),
+  name(nullptr),
   zone_nr(0),
   lifespan(0),
   age(0),

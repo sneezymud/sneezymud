@@ -44,7 +44,7 @@ bool TComponent::willMerge(TMergeable* tm) {
 }
 
 void TComponent::doMerge(TMergeable* tm) {
-  TRoom* rp = NULL;
+  TRoom* rp = nullptr;
   TComponent* tComp;
 
   if (!(tComp = dynamic_cast<TComponent*>(tm)))
@@ -469,109 +469,109 @@ void assign_component_placement() {
 // mob load doesn't work well, so maybe should be dissect...
 
 // Some eyes from a blind man [sense life] //
-  component_placement.push_back(compPlace(1, 99, 7800, 
+  component_placement.push_back(compPlace(1, 99, 7800,
      COMP_BLIND_EYE,
      CACT_PLACE, 40, 70,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A golden carrot [true sight] //
-  component_placement.push_back(compPlace(10117, 10128, 10108, 
+  component_placement.push_back(compPlace(10117, 10128, 10108,
      COMP_GOLDEN_CARROT,
      CACT_PLACE, 40, 15,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A bag of pixie dust [slumber] //
-  component_placement.push_back(compPlace(10258, 10299, 7817, 
+  component_placement.push_back(compPlace(10258, 10299, 7817,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(2700, 2740, 7805, 
+  component_placement.push_back(compPlace(2700, 2740, 7805,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(2700, 2740, 7805, 
+  component_placement.push_back(compPlace(2700, 2740, 7805,
      COMP_PIXIE_DUST,
      CACT_PLACE, 40, 80,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A pixie torch [faerie fire] //
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_TORCH,
      CACT_PLACE, 40, 85,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_TORCH,
      CACT_PLACE, 40, 85,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(10258, 10299, 7805, 
+  component_placement.push_back(compPlace(10258, 10299, 7805,
      COMP_PIXIE_TORCH,
      CACT_PLACE, 40, 85,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
 // A dropper of pixie tears [faerie fog] //
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
 
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
      "", ""));
-  component_placement.push_back(compPlace(199, 245, 7805, 
+  component_placement.push_back(compPlace(199, 245, 7805,
      COMP_PIXIE_TEAR,
      CACT_PLACE, 40, 50,
      -1, -1, -1, -1, -1, -1, -1,
@@ -583,10 +583,10 @@ void assign_component_placement() {
 void do_components(int situ) {
   unsigned int i;
   int j;
-  TRoom* rp = NULL;
-  TThing *m = NULL, *o = NULL;
+  TRoom* rp = nullptr;
+  TThing *m = nullptr, *o = nullptr;
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int value;
   int l_room, t_room;
   int found;
@@ -614,7 +614,7 @@ void do_components(int situ) {
         format("Trying to place object %d") % component_placement[i].number);
     }
 
-    bool placed = FALSE;
+    bool placed = false;
 
     // check hour info
     start = component_placement[i].hour1;
@@ -708,10 +708,10 @@ void do_components(int situ) {
           for (t_room = component_placement[i].room1;
                t_room <= component_placement[i].room2; t_room++) {
             if ((rp = real_roomp(t_room)) && !rp->stuff.empty()) {
-              act(component_placement[i].glo_msg, TRUE, rp->stuff.front(), NULL,
-                NULL, TO_CHAR);
-              act(component_placement[i].glo_msg, TRUE, rp->stuff.front(), NULL,
-                NULL, TO_ROOM);
+              act(component_placement[i].glo_msg, true, rp->stuff.front(), nullptr,
+                nullptr, TO_CHAR);
+              act(component_placement[i].glo_msg, true, rp->stuff.front(), nullptr,
+                nullptr, TO_ROOM);
             }
           }
           rp = real_roomp(l_room);  // reset rp pointer
@@ -725,7 +725,7 @@ void do_components(int situ) {
               component_placement[i].max_number)) {
           // uniqueness check
           if (IS_SET(component_placement[i].place_act, CACT_UNIQUE)) {
-            found = FALSE;
+            found = false;
             if (component_placement[i].mob) {
               // limit to 1 on any 1 mob in room
               for (StuffIter it = rp->stuff.begin();
@@ -741,7 +741,7 @@ void do_components(int situ) {
                     if (!tobj)
                       continue;
                     if (tobj->objVnum() == component_placement[i].number) {
-                      found = TRUE;
+                      found = true;
                       break;
                     }
                   }
@@ -757,7 +757,7 @@ void do_components(int situ) {
                 if (!tobj)
                   continue;
                 if (tobj->objVnum() == component_placement[i].number) {
-                  found = TRUE;
+                  found = true;
                   break;
                 }
               }
@@ -768,7 +768,7 @@ void do_components(int situ) {
 
           if (!(obj = read_object(component_placement[i].number, VIRTUAL)))
             continue;
-          placed = FALSE;
+          placed = false;
           // if mob ALSO specified, place it on mob in room
           if (component_placement[i].mob) {
             for (StuffIter it = rp->stuff.begin();
@@ -780,7 +780,7 @@ void do_components(int situ) {
               if (!tmon->isPc() &&
                   (tmon->mobVnum() == component_placement[i].mob)) {
                 *tmon += *obj;
-                placed = TRUE;
+                placed = true;
                 vlogf(LOG_SILENT, format("Placing object %d on mob (room %d)") %
                                     component_placement[i].number % l_room);
                 break;
@@ -788,20 +788,20 @@ void do_components(int situ) {
             }
             if (!placed) {
               delete obj;
-              obj = NULL;
+              obj = nullptr;
             }
           } else {
-            m = NULL;
+            m = nullptr;
             *rp += *obj;
-            placed = TRUE;
+            placed = true;
             vlogf(LOG_SILENT, format("Placing object %d on ground (room %d)") %
                                 component_placement[i].number % l_room);
           }
         }
         if (placed && *component_placement[i].message && !rp->stuff.empty()) {
-          act(component_placement[i].message, TRUE, rp->stuff.front(), obj, m,
+          act(component_placement[i].message, true, rp->stuff.front(), obj, m,
             TO_CHAR);
-          act(component_placement[i].message, TRUE, rp->stuff.front(), obj, m,
+          act(component_placement[i].message, true, rp->stuff.front(), obj, m,
             TO_ROOM);
 
           if (component_placement[i].sound != SOUND_OFF)
@@ -821,7 +821,7 @@ void do_components(int situ) {
              (found < component_placement[i].max_number ||
                component_placement[i].max_number < 0);
              t_room++) {
-          placed = FALSE;
+          placed = false;
           if ((rp = real_roomp(t_room))) {
             if (component_placement[i].mob) {
               for (StuffIter it = rp->stuff.begin();
@@ -840,12 +840,12 @@ void do_components(int situ) {
                     if (tobj->objVnum() == component_placement[i].number) {
                       if (!placed && *component_placement[i].message &&
                           !rp->stuff.empty()) {
-                        act(component_placement[i].message, TRUE,
+                        act(component_placement[i].message, true,
                           rp->stuff.front(), tobj, tmon, TO_CHAR);
-                        act(component_placement[i].message, TRUE,
+                        act(component_placement[i].message, true,
                           rp->stuff.front(), tobj, tmon, TO_ROOM);
                       }
-                      placed = TRUE;
+                      placed = true;
                       found++;
                       delete tobj;
                       vlogf(LOG_SILENT,
@@ -864,13 +864,13 @@ void do_components(int situ) {
                   if (to->objVnum() == component_placement[i].number) {
                     if (!placed && *component_placement[i].message &&
                         !rp->stuff.empty()) {
-                      act(component_placement[i].message, TRUE,
-                        rp->stuff.front(), to, NULL, TO_CHAR);
-                      act(component_placement[i].message, TRUE,
-                        rp->stuff.front(), to, NULL, TO_ROOM);
+                      act(component_placement[i].message, true,
+                        rp->stuff.front(), to, nullptr, TO_CHAR);
+                      act(component_placement[i].message, true,
+                        rp->stuff.front(), to, nullptr, TO_ROOM);
                     }
                     delete to;
-                    placed = TRUE;
+                    placed = true;
                     found++;
                     vlogf(LOG_SILENT,
                       format("Removing object %d from ground (room %d)") %
@@ -1133,7 +1133,7 @@ void buildComponentArray() {
     "$n crumbles $p and tosses it at $mself.", "", ""));
 #if 0
   CompInfo.push_back(compInfo(SPELL_FIND_FAMILIAR,
-    "",                       
+    "",
     "",
     "",
     "You clutch $p and stare off into space.",
@@ -1506,7 +1506,7 @@ bool TComponent::sellMeCheck(TBeing* ch, TMonster* keeper, int num,
     vlogf(LOG_BUG,
       format("Warning... shop # for mobile %d (real nr) not found.") %
         mob_index[keeper->number].virt);
-    return FALSE;
+    return false;
   }
 
   TShopOwned tso(shop_nr, keeper, ch);
@@ -1514,7 +1514,7 @@ bool TComponent::sellMeCheck(TBeing* ch, TMonster* keeper, int num,
 
   if (max_num == 0) {
     keeper->doTell(ch->name, "I don't wish to buy any of those right now.");
-    return TRUE;
+    return true;
   }
 
   TDatabase db(DB_SNEEZY);
@@ -1532,15 +1532,15 @@ bool TComponent::sellMeCheck(TBeing* ch, TMonster* keeper, int num,
   if (total >= max_num) {
     keeper->doTell(ch->getName(),
       format("I already have plenty of %s.") % getName());
-    return TRUE;
+    return true;
   } else if (total + num > max_num) {
     keeper->doTell(ch->getName(),
       format("I'll buy no more than %d charge%s of %s.") % (max_num - total) %
         (max_num - total > 1 ? "s" : "") % getName());
-    return FALSE;
+    return false;
   }
 
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS, VICT (ch), ITEM(sub)
@@ -1569,7 +1569,7 @@ int TComponent::componentNumSell(TBeing* ch, TMonster* keeper, int shop_nr,
   } else
     generic_num_sell(ch, keeper, this, shop_nr, num);
 
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS, VICT (ch), ITEM(sub)
@@ -1598,7 +1598,7 @@ int TComponent::componentSell(TBeing* ch, TMonster* keeper, int shop_nr,
   } else
     generic_sell(ch, keeper, this, shop_nr);
 
-  return FALSE;
+  return false;
 }
 
 int TComponent::componentNumValue(TBeing* ch, TMonster* keeper, int shop_nr,
@@ -1624,7 +1624,7 @@ int TComponent::componentNumValue(TBeing* ch, TMonster* keeper, int shop_nr,
   } else
     valueMe(ch, keeper, shop_nr, num);
 
-  return FALSE;
+  return false;
 }
 
 int TComponent::componentValue(TBeing* ch, TMonster* keeper, int shop_nr,
@@ -1650,7 +1650,7 @@ int TComponent::componentValue(TBeing* ch, TMonster* keeper, int shop_nr,
   } else
     valueMe(ch, keeper, shop_nr);
 
-  return FALSE;
+  return false;
 }
 
 void TComponent::changeComponentValue4(TBeing* ch, const char* arg,
@@ -1803,7 +1803,7 @@ bool TComponent::objectRepair(TBeing* ch, TMonster* repair,
     repair->doTell(fname(ch->getName()),
       "You might wanna take that to the magic shop!");
   }
-  return TRUE;
+  return true;
 }
 
 void TComponent::lowCheck() {
@@ -1827,7 +1827,7 @@ void TComponent::lowCheck() {
 
 int TComponent::putMeInto(TBeing*, TOpenContainer*) {
   // components can only be put into spellbags
-  return FALSE;
+  return false;
 }
 
 void TComponent::describeObjectSpecifics(const TBeing* ch) const {
@@ -1906,16 +1906,16 @@ bool TComponent::fitInShop(const char*, const TBeing* ch) const {
     spellNumT skill = getComponentSpell();
     if (skill <= TYPE_UNDEFINED)
       // a "generic" comp, this should probably "fit"
-      return TRUE;
+      return true;
 
     // if bogus spell, skip
-    discNumT which = getDisciplineNumber(skill, FALSE);
+    discNumT which = getDisciplineNumber(skill, false);
     if (which == DISC_NONE)
       return false;
 
     return (ch->getSkillValue(skill));
   }
-  return FALSE;
+  return false;
 }
 
 bool TComponent::splitMe(TBeing* ch, const sstring& tString) {
@@ -1953,8 +1953,8 @@ bool TComponent::splitMe(TBeing* ch, const sstring& tString) {
     return true;
   }
 
-  act("You split $N into two pieces.", FALSE, ch, this, tComponent, TO_CHAR);
-  act("$n splits $N into two pieces.", FALSE, ch, this, tComponent, TO_ROOM);
+  act("You split $N into two pieces.", false, ch, this, tComponent, TO_CHAR);
+  act("$n splits $N into two pieces.", false, ch, this, tComponent, TO_ROOM);
   tCost =
     ((double)(getComponentCharges() - tCount) / (double)getComponentCharges());
 
@@ -1972,7 +1972,7 @@ bool TComponent::splitMe(TBeing* ch, const sstring& tString) {
 
 int TComponent::putSomethingIntoContainer(TBeing* ch, TOpenContainer* cont) {
   int rc = TObj::putSomethingIntoContainer(ch, cont);
-  if (rc != TRUE)
+  if (rc != true)
     return rc;
 
   // put succeeded
@@ -1994,7 +1994,7 @@ int TComponent::putSomethingIntoContainer(TBeing* ch, TOpenContainer* cont) {
         continue;
 
       // they just threw the same component into the bag, merge them...
-      act("$p glows brightly and merges with $N.", FALSE, ch, this, tComp,
+      act("$p glows brightly and merges with $N.", false, ch, this, tComp,
         TO_CHAR);
       addToComponentCharges(tComp->getComponentCharges());
       obj_flags.cost += tComp->obj_flags.cost;
@@ -2184,7 +2184,7 @@ int TComponent::buyMe(TBeing* ch, TMonster* tKeeper, int tNum, int tShop) {
     return -1;
   }
 
-  if (compareWeights(getTotalWeight(TRUE),
+  if (compareWeights(getTotalWeight(true),
         (ch->carryWeightLimit() - ch->getCarriedWeight())) == -1) {
     ch->sendTo(
       format("%s: You can not carry that much weight.\n\r") % fname(name));
@@ -2256,7 +2256,7 @@ int TComponent::buyMe(TBeing* ch, TMonster* tKeeper, int tNum, int tShop) {
 
   ch->sendTo(COLOR_OBJECTS, format("You now have %s (*%d charges).\n\r") %
                               sstring(getName()).uncap() % tNum);
-  act("$n buys $p.", FALSE, ch, this, NULL, TO_ROOM);
+  act("$n buys $p.", false, ch, this, nullptr, TO_ROOM);
 
   *ch += *tObj;
   ch->logItem(tObj, CMD_BUY);
@@ -2280,7 +2280,7 @@ int TComponent::sellMe(TBeing* ch, TMonster* tKeeper, int tShop, int num) {
   float tChr;
   int tCost;
   int rent_id = 0, charges = 0, totalInv = 0;
-  TObj* remove = NULL;
+  TObj* remove = nullptr;
   TDatabase db(DB_SNEEZY);
   TShopOwned tso(tShop, tKeeper, ch);
 
@@ -2354,7 +2354,7 @@ int TComponent::sellMe(TBeing* ch, TMonster* tKeeper, int tShop, int num) {
       "You should really think about auctioning it.");
   }
 
-  act("$n sells $p.", FALSE, ch, this, 0, TO_ROOM);
+  act("$n sells $p.", false, ch, this, 0, TO_ROOM);
   tKeeper->doTell(ch->getName(),
     format(shop_index[tShop].message_sell) % tCost);
   ch->sendTo(COLOR_OBJECTS,

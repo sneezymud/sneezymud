@@ -12,33 +12,33 @@
 
 static int feignDeath(TBeing* caster) {
   TRoom* rp;
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (!caster->fight()) {
     caster->sendTo("But you are not fighting anything...\n\r");
-    return FALSE;
+    return false;
   }
   if (!caster->doesKnowSkill(SKILL_FEIGN_DEATH) && !caster->isImmortal()) {
     caster->sendTo("You don't know how to do that!\n\r");
-    return FALSE;
+    return false;
   }
   if (caster->riding) {
     caster->sendTo("Yeah... right... while mounted.\n\r");
-    return FALSE;
+    return false;
   }
   if (caster->isFlying()) {
     caster->sendTo("Yeah... right... while flying.\n\r");
-    return FALSE;
+    return false;
   }
   if (!(rp = caster->roomp))
-    return FALSE;
+    return false;
 
   caster->sendTo("You try to fake your own demise.\n\r");
 
   int bKnown = caster->getSkillValue(SKILL_FEIGN_DEATH);
   if (caster->bSuccess(bKnown, SKILL_FEIGN_DEATH)) {
     caster->deathCry();
-    act("$n is dead! R.I.P.", FALSE, caster, 0, 0, TO_ROOM);
+    act("$n is dead! R.I.P.", false, caster, 0, 0, TO_ROOM);
 
     caster->stopFighting();
     caster->setPosition(POSITION_SLEEPING);
@@ -53,15 +53,15 @@ static int feignDeath(TBeing* caster) {
         if (::number(1, 101) < bKnown / 2) {
           if (!tc->isPc()) {
             TMonster* tmons = dynamic_cast<TMonster*>(tc);
-            if (tmons->Hates(caster, NULL))
-              tmons->remHated(caster, NULL);
+            if (tmons->Hates(caster, nullptr))
+              tmons->remHated(caster, nullptr);
           }
         }
       }
     }
   } else {
     caster->deathCry();
-    act("$n makes a lousy attempt at playing possum.", FALSE, caster, 0, 0,
+    act("$n makes a lousy attempt at playing possum.", false, caster, 0, 0,
       TO_ROOM);
 
     switch (critFail(caster, SKILL_FEIGN_DEATH)) {
@@ -76,7 +76,7 @@ static int feignDeath(TBeing* caster) {
         caster->setPosition(POSITION_SLEEPING);
     }
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::doFeignDeath() {
@@ -84,7 +84,7 @@ int TBeing::doFeignDeath() {
 
   if (!doesKnowSkill(SKILL_FEIGN_DEATH)) {
     sendTo("You aren't a very good actor.\n\r");
-    return FALSE;
+    return false;
   }
 
   rc = feignDeath(this);

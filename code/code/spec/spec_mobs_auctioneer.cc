@@ -205,8 +205,8 @@ void auctionSell(TBeing* ch, TMonster* myself, sstring arg) {
     myself->doTell(ch->getName(),
       format("There is a listing fee of %i talens per mud day, as well as a "
              "fee of %f percent of the final sale price, if the item sells.") %
-        (int)shop_index[shop_nr].getProfitBuy(NULL, ch) %
-        (shop_index[shop_nr].getProfitSell(NULL, ch) * 100));
+        (int)shop_index[shop_nr].getProfitBuy(nullptr, ch) %
+        (shop_index[shop_nr].getProfitSell(nullptr, ch) * 100));
     myself->doTell(ch->getName(),
       "The proceeds will be automatically deposited to your bank account when "
       "the buyer pays for the item.");
@@ -296,7 +296,7 @@ void auctionBuy(TBeing* ch, TMonster* myself, sstring arg) {
   days = convertTo<int>(db["days"]);
   bidder = convertTo<int>(db["bidder"]);
   bid = convertTo<int>(db["current_bid"]);
-  fee = (int)((float)bid * shop_index[shop_nr].getProfitSell(NULL, ch));
+  fee = (int)((float)bid * shop_index[shop_nr].getProfitSell(nullptr, ch));
 
   if (days > 0) {
     myself->doTell(ch->getName(), "That auction isn't over yet.");
@@ -410,7 +410,7 @@ int auctioneer(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TDatabase db(DB_SNEEZY);
   int shop_nr;
 
-  if(cmd!=CMD_WHISPER && cmd!=CMD_BUY && cmd!=CMD_LIST && 
+  if(cmd!=CMD_WHISPER && cmd!=CMD_BUY && cmd!=CMD_LIST &&
      cmd!=CMD_SELL && cmd!=CMD_BID)
     return false;
 

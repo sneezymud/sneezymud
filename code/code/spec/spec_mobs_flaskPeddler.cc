@@ -9,7 +9,7 @@ const unsigned int LABEL_MAX = 20;
 int flaskPeddler(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* peddler,
   TObj*) {
   if (cmd != CMD_BUY) {
-    return FALSE;
+    return false;
   }
   TObj* flask;
   sstring sarg = arg;
@@ -21,7 +21,7 @@ int flaskPeddler(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* peddler,
     cost_mult = 4;
   } else {
     peddler->doSay("What the hell are you talking about?");
-    return TRUE;
+    return true;
   }
 
   sstring inscrip = sarg.word(1).upper();
@@ -29,7 +29,7 @@ int flaskPeddler(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* peddler,
   if (!inscrip.isWord() || inscrip.length() > LABEL_MAX) {
     peddler->doSay("Are you daft?");
     peddler->doSay("I can't write that on here!");
-    return TRUE;
+    return true;
   }
 
   if (ch->getMoney() >= (FLASK_COST * cost_mult)) {
@@ -38,14 +38,14 @@ int flaskPeddler(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* peddler,
     else if (cost_mult == 4)
       flask = read_object(FLASK_LARGE_VNUM, VIRTUAL);
     else
-      return TRUE;
+      return true;
     if (!flask)
-      return TRUE;
+      return true;
     ch->addToMoney((-FLASK_COST * cost_mult), GOLD_SHOP_RESPONSES);
   } else {
     peddler->doSay("I don't deal with paupers!");
     peddler->doAction("", CMD_SNICKER);
-    return TRUE;
+    return true;
   }
 
   sstring newName, newShort;
@@ -61,14 +61,14 @@ int flaskPeddler(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* peddler,
   flask->name = newName;
   flask->shortDescr = newShort;
 
-  act("You work your magic on the flask.", TRUE, peddler, flask, 0, TO_CHAR);
-  act("$n mumbles something and touches the flask.", TRUE, peddler, flask, 0,
+  act("You work your magic on the flask.", true, peddler, flask, 0, TO_CHAR);
+  act("$n mumbles something and touches the flask.", true, peddler, flask, 0,
     TO_ROOM);
 
   sstring buf =
     format("The letters <W>%s<z> appears on the flask's label.") % inscrip;
-  act(buf, TRUE, peddler, NULL, 0, TO_CHAR);
-  act(buf, TRUE, peddler, NULL, 0, TO_ROOM);
+  act(buf, true, peddler, nullptr, 0, TO_CHAR);
+  act(buf, true, peddler, nullptr, 0, TO_ROOM);
 
   peddler->doSay("Well, there you are then.");
   *peddler += *flask;
@@ -77,5 +77,5 @@ int flaskPeddler(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* peddler,
   peddler->doGive(giveBuf, GIVE_FLAG_IGN_DEX_TEXT);
 
   peddler->doSay("Please come again!");
-  return TRUE;
+  return true;
 }

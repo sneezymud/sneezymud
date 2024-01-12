@@ -41,7 +41,7 @@ TTable::~TTable() {
       vlogf(LOG_BUG,
         format("Table Delete %s: Not in room not in parent") % getName());
       delete t;
-      t = NULL;
+      t = nullptr;
       continue;
     }
     // table it was on got toasted, item should take some damage too
@@ -50,7 +50,7 @@ TTable::~TTable() {
       tobj->addToStructPoints(-tobj->getStructPoints() / 2);
       if (tobj->getStructPoints() <= 0) {
         delete tobj;
-        tobj = NULL;
+        tobj = nullptr;
       }
     }
   }
@@ -126,9 +126,9 @@ bool TTable::canGetMeDeny(const TBeing* ch, silentTypeT silent) const {
 int TTable::getAllFrom(TBeing* ch, const char* argument) {
   int rc;
 
-  act("You start getting items off $p.", TRUE, ch, this, NULL, TO_CHAR);
-  act("$n starts getting items off $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,
+  act("You start getting items off $p.", true, ch, this, nullptr, TO_CHAR);
+  act("$n starts getting items off $p.", true, ch, this, nullptr, TO_ROOM);
+  start_task(ch, nullptr, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,
     0, 0);
   // this is a kludge, task_get still has a tiny delay on it
   // this dumps around it and goes right to the guts
@@ -137,19 +137,19 @@ int TTable::getAllFrom(TBeing* ch, const char* argument) {
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     return DELETE_VICT;
   }
-  return FALSE;
+  return false;
 }
 
 bool TTable::isSimilar(const TThing* t) const {
   // table's can have things on them
   // things on them should make them dissimilar
   if (rider)
-    return FALSE;
+    return false;
 
   const TTable* ttab = dynamic_cast<const TTable*>(t);
   if (ttab && ttab->rider) {
     // i have no objs, but other table does
-    return FALSE;
+    return false;
   }
   return TObj::isSimilar(t);
 }
@@ -159,7 +159,7 @@ void TTable::putMoneyInto(TBeing* ch, int amount) {
 
   ch->sendTo("OK.\n\r");
 
-  act("$n puts some money onto $p.", FALSE, ch, this, 0, TO_ROOM);
+  act("$n puts some money onto $p.", false, ch, this, 0, TO_ROOM);
   money = create_money(amount);
   money->mount(this);
   //  *this += *money;

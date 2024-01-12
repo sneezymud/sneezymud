@@ -29,10 +29,10 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
   TThing* o;
   TRoom* rp;
   char buf[MAX_INPUT_LENGTH], tmpbuf[MAX_NAME_LENGTH], namebuf[MAX_NAME_LENGTH];
-  bool specialCorpse = FALSE;
+  bool specialCorpse = false;
   int j;
-  TCorpse* corpse = NULL;
-  TPCorpse* pcorpse = NULL;
+  TCorpse* corpse = nullptr;
+  TPCorpse* pcorpse = nullptr;
   TBaseCorpse* gen_corpse;
 
   if (specials.was_in_room != Room::NOWHERE) {
@@ -86,8 +86,8 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
   gen_corpse->setCorpseLevel(GetMaxLevel());
   gen_corpse->addObjStat(ITEM_STRUNG);
 
-  gen_corpse->ex_description = NULL;
-  gen_corpse->action_description = NULL;
+  gen_corpse->ex_description = nullptr;
+  gen_corpse->action_description = nullptr;
 
   // Lets make some customized "corpses" for elementals - Brutius 07/26/1999
   if (getMyRace()->getBodyType() == BODY_ELEMENTAL) {
@@ -127,7 +127,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
       gen_corpse->shortDescr = "the corpse of an elemental";
       gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
     }
-    specialCorpse = TRUE;
+    specialCorpse = true;
   } else if (dmg_type == SPELL_RAZE) {
     sprintf(buf, "green powder pile strange %s", name.c_str());
     gen_corpse->name = buf;
@@ -135,7 +135,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
     gen_corpse->shortDescr = "a pile of strange green powder";
     gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
     gen_corpse->setMaterial(MAT_POWDER);
-    specialCorpse = TRUE;
+    specialCorpse = true;
   } else if (isUndead() || (dmg_type == SKILL_TURN)) {
     sprintf(buf, "dust pile %s", name.c_str());
     gen_corpse->name = buf;
@@ -143,7 +143,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
     gen_corpse->shortDescr = "a pile of dust";
     gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
     gen_corpse->setMaterial(MAT_POWDER);
-    specialCorpse = TRUE;
+    specialCorpse = true;
   } else if (dmg_type == SPELL_ATOMIZE) {
     sprintf(buf, "ash pile %s", name.c_str());
     gen_corpse->name = buf;
@@ -151,7 +151,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
     gen_corpse->shortDescr = "a pile of ash";
     gen_corpse->addCorpseFlag(CORPSE_NO_REGEN);
     gen_corpse->setMaterial(MAT_POWDER);
-    specialCorpse = TRUE;
+    specialCorpse = true;
   } else {
     sprintf(buf, "corpse %s%s", name.c_str(), pcorpse ? " pcorpse" : "");
     gen_corpse->name = buf;
@@ -743,7 +743,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
       logItem(obo, CMD_SOUTH);  // log fact putting into corpse;
     }
     if (getStuckIn(i)) {
-      obo = pulloutObj(i, TRUE, &j);
+      obo = pulloutObj(i, true, &j);
       *gen_corpse += *obo;
       logItem(obo, CMD_SOUTH);
     }
@@ -782,7 +782,7 @@ TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
     //    *roomp += *gen_corpse;
     rp = roomp;
   } else {
-    vlogf(LOG_BUG, format("%s had NULL roomp pointer, moved to room %d.") %
+    vlogf(LOG_BUG, format("%s had nullptr roomp pointer, moved to room %d.") %
                      getName() % Room::STORAGE);
 
     rp = real_roomp(Room::STORAGE);
@@ -852,7 +852,7 @@ void TBaseCorpse::setupDissectionObjects() {
       Races[getCorpseRace()]->tDissectItem[tPossible].message_to_self;
     tDissections->message_to_others =
       Races[getCorpseRace()]->tDissectItem[tPossible].message_to_others;
-    tDissections->tNext = NULL;
+    tDissections->tNext = nullptr;
   }
 
   std::map<unsigned short int, dissectInfo>::const_iterator tMarker;
@@ -870,6 +870,6 @@ void TBaseCorpse::setupDissectionObjects() {
     tDissect->count = tMarker->second.count;
     tDissect->message_to_self = tMarker->second.message_to_self;
     tDissect->message_to_others = tMarker->second.message_to_others;
-    tDissect->tNext = NULL;
+    tDissect->tNext = nullptr;
   }
 }

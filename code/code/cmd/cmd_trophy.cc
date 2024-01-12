@@ -192,7 +192,7 @@ void TBeing::doTrophy(const sstring& arg) {
     return;
   }
 
-  TBeing* per = NULL;
+  TBeing* per = nullptr;
   if (specials.act & ACT_POLYSELF)
     per = desc->original;
   else

@@ -137,7 +137,7 @@ class findEquipment : public TPathTarget {
     int getCount() const { return (int)foundlist.size(); }
     TThing* getFound(int i) const {
       if ((int)foundlist.size() <= i)
-        return NULL;
+        return nullptr;
       return foundlist[i];
     }
 };

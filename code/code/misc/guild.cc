@@ -64,7 +64,7 @@ int TBeing::getGuildRank() const {
 // open recruitment guilds in the office are taken care of by the registrar
 void TBeing::doJoin(const char* args) {
   char buf[256];
-  TGuild* f = NULL;
+  TGuild* f = nullptr;
 
   if (!toggleInfo[TOG_TESTCODE5]->toggle) {
     sendTo(
@@ -205,13 +205,13 @@ bool TBeing::hasOffer(TGuild* f) {
 
   for (hjp = affected; hjp; hjp = hjp->next) {
     if (hjp->type == AFFECT_OFFER && hjp->modifier == f->ID)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::removeOffers() {
-  affectedData *hjp = NULL, *next_aff = NULL;
+  affectedData *hjp = nullptr, *next_aff = nullptr;
 
   for (hjp = affected; hjp; hjp = next_aff) {
     next_aff = hjp->next;
@@ -237,9 +237,9 @@ bool TBeing::recentlyDefected() {
 
   for (hjp = affected; hjp; hjp = hjp->next) {
     if (hjp->type == AFFECT_DEFECTED)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::setDefected() {
@@ -334,14 +334,14 @@ void TBeing::add_guild(const char* args) {
 bool TBeing::canCreateGuild(bool silent = false) {
   char buf[256];
   if (isImmortal())
-    return TRUE;
+    return true;
   if (inRoom() != Room::GUILD_BUREAU) {
     if (!silent) {
       sendTo(
         "You must be in the Grimhaven Bureau of Guilds to create a new "
         "guild\n\r");
     }
-    return FALSE;
+    return false;
   }
   if (getGuildID() >= 0) {
     if (!silent) {
@@ -352,14 +352,14 @@ bool TBeing::canCreateGuild(bool silent = false) {
         "You must first disband from that guild before you may create "
         "another.\n\r");
     }
-    return FALSE;
+    return false;
   }
   if (!hasQuestBit(TOG_HAS_PAID_GUILD_FEE)) {
     if (!silent) {
       sendTo("You have not yet paid the fee to register a new guild.\n\r");
       sendTo("Until that time, you may not create a guild.\n\r");
     }
-    return FALSE;
+    return false;
   }
   if (hasQuestBit(TOG_HAS_CREATED_GUILD)) {
     if (!silent) {
@@ -367,9 +367,9 @@ bool TBeing::canCreateGuild(bool silent = false) {
       sendTo(
         "The King forbids me to let players create more than one guild.\n\r");
     }
-    return FALSE;
+    return false;
   }
-  return TRUE;
+  return true;
 }
 
 // spec_mob proc for Miya in the bureau
@@ -383,18 +383,18 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   strcpy(values, "");
 
   if (!ch || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   if (cmd == CMD_FEDIT) {
     int count = sscanf(arg, "%s %[0-9a-z-A-Z '<>]", field, values);
     if (!is_abbrev(field, "create")) {
-      return FALSE;
+      return false;
     }
     if (count == 1) {
       myself->doTell(fname(ch->name),
         "If you want me to help you, you have to use the right syntax.");
       myself->doTell(fname(ch->name), "Try 'fedit create <keywords>'");
-      return TRUE;
+      return true;
     }
     myself->doTell(fname(ch->name), "Ah, so you wish to found a new guild?");
     myself->doTell(fname(ch->name),
@@ -415,7 +415,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         --(*myself);
         *real_roomp(Room::GUILD_BUREAU) += *myself;
         act("$n hurries into the office.", 0, myself, 0, 0, TO_ROOM);
-        return TRUE;
+        return true;
       }
       act("$n gets a folder from a filing cabinet in the corner.", 0, myself, 0,
         0, TO_ROOM);
@@ -428,7 +428,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         myself->doAction(fname(ch->name), CMD_COMFORT);
         myself->doSay(
           "You can come back later when you've become more powerful.");
-        return TRUE;
+        return true;
       }
       if (ch->getGuildID() >= 0) {
         sprintf(buf,
@@ -446,7 +446,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         sprintf(buf, "After that, you may come back and create a guild.");
         myself->doAction(fname(ch->name), CMD_SMILE);
 
-        return TRUE;
+        return true;
       }
       if (ch->recentlyDefected()) {
         myself->doAction("", CMD_FROWN);
@@ -457,7 +457,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         sprintf(buf, "Well, at least until the waiting period is over.");
         myself->doSay(buf);
         //	myself->doActiom("", CMD_SHRUG);
-        return TRUE;
+        return true;
       }
       if (!ch->hasQuestBit(TOG_HAS_PAID_GUILD_FEE)) {
         myself->doAction("", CMD_FROWN);
@@ -467,7 +467,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         sprintf(buf, "The fee is 100000 talens, payable to me.");
         myself->doSay(buf);
 
-        return TRUE;
+        return true;
       }
       if (ch->hasQuestBit(TOG_HAS_CREATED_GUILD)) {
         myself->doAction("", CMD_ARCH);
@@ -478,7 +478,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
           "guild.");
         myself->doSay(buf);
 
-        return TRUE;
+        return true;
       }
     }
     sprintf(buf, "Well, it appears you check out.");
@@ -486,7 +486,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     myself->doAction("", CMD_SMILE);
     sprintf(buf, "Lets get started on the forms.");
     myself->doSay(buf);
-    act("$n gets a sheet of paper and a pen from the desk.", FALSE, myself, 0,
+    act("$n gets a sheet of paper and a pen from the desk.", false, myself, 0,
       0, TO_ROOM);
     sprintf(buf,
       "The only thing I need from you are the keywords for your new guild.");
@@ -501,7 +501,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     ch->removeOffers();
     sprintf(buf, "Excellent.");
     myself->doSay(buf);
-    act("$n jots down a few notes on $s paper.", FALSE, myself, 0, 0, TO_ROOM);
+    act("$n jots down a few notes on $s paper.", false, myself, 0, 0, TO_ROOM);
     ch->add_guild(values);
     sprintf(buf,
       "Ok, I've created your guild with those keywords, and added you to the "
@@ -512,7 +512,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     act(
       "$n carefully places the paper into a folder, and files it away in one "
       "of the cabinets.",
-      FALSE, myself, 0, 0, TO_ROOM);
+      false, myself, 0, 0, TO_ROOM);
     sprintf(buf,
       "The rest is up to you.  I suggest you read up on HELP FEDIT and HELP "
       "GUILDS.");
@@ -521,17 +521,17 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     sprintf(buf, "Good luck with your new guild.");
     myself->doSay(buf);
     ch->saveGuildStats();
-    return TRUE;
+    return true;
 
   } else if (cmd == CMD_JOIN) {
     if (!toggleInfo[TOG_TESTCODE5]->toggle) {
       ch->sendTo(
         "The new guild system is currently disabled.  You may not join a guild "
         "now.");
-      return TRUE;
+      return true;
     }
 
-    TGuild* f = NULL;
+    TGuild* f = nullptr;
     sprintf(buf, "You wish to join a guild?  Lets see....");
     myself->doSay(buf);
     act("$n gets a folder from a filing cabinet along the wall.", 0, myself, 0,
@@ -549,7 +549,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         "I'm sorry, it appears that guild does not show up in any of my "
         "records.");
 
-      return TRUE;
+      return true;
     }
     if (ch->getGuildID() >= 0) {
       myself->doTell(fname(ch->name),
@@ -559,13 +559,13 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         "There is also a twenty four hour wait period before you may join "
         "another guild.");
 
-      return TRUE;
+      return true;
     }
     if (ch->recentlyDefected()) {
       myself->doTell(fname(ch->name),
         "You recently defected from your guild, you'll have to wait to join "
         "another.");
-      return TRUE;
+      return true;
     }
 
     if (!ch->hasOffer(f)) {
@@ -573,7 +573,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         format("%s has not extended a recruitment offer to you.") %
           f->getName());
       if (!IS_SET(f->flags, GUILD_OPEN_RECRUITMENT)) {
-        return TRUE;
+        return true;
       } else {
         myself->doTell(fname(ch->name),
           "However, they offer open recruitment, so I can sign you up anyway.");
@@ -585,7 +585,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     act(
       "$n carefully places the paper into a folder, and files it away in one "
       "of the cabinets.",
-      FALSE, myself, 0, 0, TO_ROOM);
+      false, myself, 0, 0, TO_ROOM);
     sprintf(buf, "Congratulations, your new title is %s of the %s.",
       f->rank[f->ranks - 1], f->getName());
     if (IS_SET(f->flags, GUILD_HIDDEN)) {
@@ -598,7 +598,7 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     ch->setGuildRank(f->ranks - 1);
     myself->doAction(fname(ch->name), CMD_SHAKE);
     ch->saveGuildStats();
-    return TRUE;
+    return true;
   }
   if (cmd == CMD_LIST) {
     myself->doTell(fname(ch->name),
@@ -606,19 +606,19 @@ int guildRegistrar(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     act(
       "$n gets a sheet of paper from $s desk and holds it out to you.\n\rIt "
       "reads as follows:\n\r",
-      FALSE, myself, 0, ch, TO_VICT);
+      false, myself, 0, ch, TO_VICT);
     act(
       "$n says something to $N.\n\r$n gets a sheet of paper from $s desk and "
       "holds it out to $N.\n\r",
-      FALSE, myself, 0, ch, TO_NOTVICT);
+      false, myself, 0, ch, TO_NOTVICT);
 
     ch->show_guild("showallguilds");
     ch->sendTo("\n\r");
     myself->doTell(fname(ch->name),
       "I've marked the guilds that have open recruitment with an [<R>X<1>].");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 // fedit command
@@ -632,7 +632,7 @@ void TBeing::edit_guild(const char* args) {
   char fact[80];
   char field[80];
   char values[80];
-  TGuild* f = NULL;
+  TGuild* f = nullptr;
   TDatabase db(DB_SNEEZY);
 
   // ok 'args' is going to be of the format:
@@ -641,7 +641,7 @@ void TBeing::edit_guild(const char* args) {
     strcpy(SYNTAX, "fedit <guild>");
     int count = sscanf(args, "%s %s %[0-9a-zA-Z '<>]", fact, field, values);
     if (!(*args)) {
-      show_guild(NULL);
+      show_guild(nullptr);
       return;
     } else if (count == 1) {
       if (is_abbrev(fact, "save")) {
@@ -983,7 +983,7 @@ void TBeing::show_guild(const char* args) {
 #endif
   char buf[4096];
   if (args && strcmp(args, "showallguilds")) {
-    TGuild* f = NULL;
+    TGuild* f = nullptr;
     f = get_guild(args);
     if (!f) {
       sendTo("Unable to find guild by that name or ID.\n\r");
@@ -1032,7 +1032,7 @@ void TBeing::show_guild(const char* args) {
     int relationcount = 0;
     sendTo(COLOR_BASIC, "<1><c>Relations:<1>\n\r");
     std::vector<TGuild*>::iterator i;
-    TGuild* f2 = NULL;
+    TGuild* f2 = nullptr;
     for (i = guilds.guild_table.begin(); i != guilds.guild_table.end(); ++i) {
       f2 = (*i);
       if (f->getRelation(f2->ID) == RELATION_NONE &&
@@ -1224,7 +1224,7 @@ TGuild* get_guild(const char* args) {
     return get_guild_by_ID(num);
   else
     return get_guild_by_keywords(args);
-  return NULL;
+  return nullptr;
 }
 
 TGuild* get_guild_by_ID(int idnum) {
@@ -1234,7 +1234,7 @@ TGuild* get_guild_by_ID(int idnum) {
       return (*i);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 TGuild* get_guild_by_keywords(const char* args) {
@@ -1244,7 +1244,7 @@ TGuild* get_guild_by_keywords(const char* args) {
       return (*i);
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 // this function takes an unsigned int and converts it to a char sstring
@@ -1289,12 +1289,12 @@ char* display_guild_flags(unsigned int flags) {
 // then it returns -1
 int get_unused_ID() {
   int i, j;
-  bool found = FALSE;
+  bool found = false;
   for (i = 0; i <= MAX_GUILD_ID; i++) {
     for (j = 0; (int)j < (int)guilds.guild_table.size(); j++) {
-      found = FALSE;
+      found = false;
       if (guilds.guild_table[j]->ID == i) {
-        found = TRUE;
+        found = true;
         break;
       }
     }
@@ -1349,7 +1349,7 @@ void TBeing::saveGuildStats() {
 
 // this loads the guild data for the PLAYER
 void TBeing::loadGuildStats() {
-  FILE* fp = NULL;
+  FILE* fp = nullptr;
   char buf[160];
   int current_version;
   int num1, num2, num3, num4;
@@ -1415,18 +1415,18 @@ int load_guilds() {
 
   if (!(fp = fopen(GUILD_FILE, "r"))) {
     vlogf(LOG_FILE, "Couldn't open guildlist file in function load_guilds()!");
-    return FALSE;
+    return false;
   }
 
   guilds.deallocate();
 
   while (fp) {
     TGuild* f = new TGuild;
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
     line++;
     if (strchr(buf, '$'))  // eof
@@ -1436,12 +1436,12 @@ int load_guilds() {
     }
     sscanf(buf, "#%d\n\r", &i1);
     f->ID = i1;
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
@@ -1449,46 +1449,46 @@ int load_guilds() {
     strcpy(c1, "");  // just to make sure
     sscanf(buf, "keywords: %[a-zA-Z '<>]\n\r", c1);
     f->keywords = mud_str_dup(c1);
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
     strcpy(c1, "");  // just to make sure
     sscanf(buf, "name: %[a-zA-Z '<>]\n\r", c1);
     f->proper_name = mud_str_dup(c1);
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
     line++;
 
     strcpy(c1, "");  // just to make sure
     sscanf(buf, "shortname: %[a-zA-Z '<>]\n\r", c1);
     f->slang_name = mud_str_dup(c1);
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
     strcpy(c1, "");  // just to make sure
     sscanf(buf, "password: %s\n\r", c1);
     f->password = mud_str_dup(c1);
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
@@ -1496,12 +1496,12 @@ int load_guilds() {
     f->ranks = i2;
     f->flags = (unsigned int)(i3);
     f->power = f1;
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
@@ -1511,12 +1511,12 @@ int load_guilds() {
     f->actx = i3;
     f->acty = i4;
 
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
@@ -1525,24 +1525,24 @@ int load_guilds() {
     f->colors[1] = i2;
     f->colors[2] = i3;
 
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
     sscanf(buf, "%d\n\r", &i1);
     f->patron = deityTypeT(i1);
 
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
@@ -1551,12 +1551,12 @@ int load_guilds() {
     f->corp_id = i2;
 
     for (int j = 0; j < NUM_MAX_RANK; j++) {
-      if (fgets(buf, 256, fp) == NULL) {
+      if (fgets(buf, 256, fp) == nullptr) {
         vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
         fclose(fp);
         delete f;
-        return FALSE;
+        return false;
       }
 
       line++;
@@ -1566,12 +1566,12 @@ int load_guilds() {
       f->permissions[j] = (unsigned int)(i2);
     }
     TRelation* r;
-    if (fgets(buf, 256, fp) == NULL) {
+    if (fgets(buf, 256, fp) == nullptr) {
       vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
       fclose(fp);
       delete f;
-      return FALSE;
+      return false;
     }
 
     line++;
@@ -1582,12 +1582,12 @@ int load_guilds() {
       r->targ_fact = i1;
       r->relation = i2;
       f->relations.push_back(r);
-      if (fgets(buf, 256, fp) == NULL) {
+      if (fgets(buf, 256, fp) == nullptr) {
         vlogf(LOG_FILE, format("ERROR: bogus line in GUILD_FILE: %d") % line);
 
         fclose(fp);
         delete f;
-        return FALSE;
+        return false;
       }
 
       line++;
@@ -1599,7 +1599,7 @@ int load_guilds() {
   sprintf(buf, "cp %s %s", GUILD_FILE, GUILD_BAK);
   vsystem(buf);
 
-  return TRUE;
+  return true;
 }
 
 void save_guilds() {
@@ -1610,7 +1610,7 @@ void save_guilds() {
     return;
   }
   std::vector<TGuild*>::iterator i;
-  TGuild* f = NULL;
+  TGuild* f = nullptr;
   for (i = guilds.guild_table.begin(); i != guilds.guild_table.end(); ++i) {
     f = (*i);
     fprintf(fp, "#%d\n", f->ID);

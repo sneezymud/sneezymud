@@ -10,7 +10,7 @@ TVehicle* findVehicle(TBeing* ch) {
       return v;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 // drive speed <fast|medium|slow|stop>

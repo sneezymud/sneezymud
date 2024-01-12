@@ -56,12 +56,12 @@ class Act : public CxxTest::TestSuite {
     void testSimple() {
       CommPtr c;
 
-      act("You start riding $N.", FALSE, testPerson, 0, testHorse, TO_CHAR,
-        NULL, -1);
-      act("$n starts riding $N.", FALSE, testPerson, 0, testHorse, TO_NOTVICT,
-        NULL, -1);
-      act("$n hops on your back!", FALSE, testPerson, 0, testHorse, TO_VICT,
-        NULL, -1);
+      act("You start riding $N.", false, testPerson, 0, testHorse, TO_CHAR,
+        nullptr, -1);
+      act("$n starts riding $N.", false, testPerson, 0, testHorse, TO_NOTVICT,
+        nullptr, -1);
+      act("$n hops on your back!", false, testPerson, 0, testHorse, TO_VICT,
+        nullptr, -1);
 
       TS_ASSERT(!testPerson->desc->output.empty());
       TS_ASSERT_EQUALS(testPerson->desc->output.front()->getComm(),

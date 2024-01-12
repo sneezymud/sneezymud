@@ -37,15 +37,15 @@ void TArmor::lowCheck() { TBaseClothing::lowCheck(); }
 
 int TArmor::galvanizeMe(TBeing* local_caster, short bKnown) {
   if (getMaxStructPoints() < 2) {
-    act("$p is as solid as it is possible.", FALSE, local_caster, this, 0,
+    act("$p is as solid as it is possible.", false, local_caster, this, 0,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, local_caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, local_caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
   if (getStructPoints() < 2) {
-    act("$p can't be galvanized when its this damaged.", FALSE, local_caster,
+    act("$p can't be galvanized when its this damaged.", false, local_caster,
       this, 0, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, local_caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, local_caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 

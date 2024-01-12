@@ -31,7 +31,7 @@ class TPCorpse : public TBaseCorpse {
     virtual void dropMe(TBeing*, showMeT, showRoomT);
     virtual itemTypeT itemType() const { return ITEM_PCORPSE; }
     virtual int scavengeMe(TBeing* ch, TObj**);
-    void removeCorpseFromList(bool updateFile = TRUE);
+    void removeCorpseFromList(bool updateFile = true);
     void addCorpseToLists();
     void saveCorpseToFile();
     //    void assignCorpsesToRooms();

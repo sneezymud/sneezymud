@@ -31,10 +31,10 @@ void TBeing::dropWeapon(wearSlotT slot) {
       *roomp += *t_dropped;
       sprintf(buf, "$p slips from your %s and falls to the $g!",
         describeBodySlot(hand).c_str());
-      act(buf, FALSE, this, t_dropped, NULL, TO_CHAR);
+      act(buf, false, this, t_dropped, nullptr, TO_CHAR);
       sprintf(buf, "$p slips from $n's %s and falls to the $g!",
         describeBodySlot(hand).c_str());
-      act(buf, FALSE, this, t_dropped, NULL, TO_ROOM);
+      act(buf, false, this, t_dropped, nullptr, TO_ROOM);
     }
   }
 }
@@ -60,29 +60,29 @@ void TBeing::shatterWeapon(wearSlotT slot, int scrap_it) {
         "A miniature lightning bolt appears above you and zaps $p in your %s! "
         "You struggle to even keep a grip on it!",
         describeBodySlot(hand).c_str());
-      act(buf, FALSE, this, shattered, NULL, TO_CHAR);
+      act(buf, false, this, shattered, nullptr, TO_CHAR);
       sprintf(buf,
         "A miniature lightning bolt appears above $n and zaps $p in $s %s -- "
         "$e struggles to keep a grip on it!",
         describeBodySlot(hand).c_str());
-      act(buf, FALSE, this, shattered, NULL, TO_ROOM);
+      act(buf, false, this, shattered, nullptr, TO_ROOM);
 
       if (scrap_it) {
         if (!shattered->makeScraps()) {
           delete shattered;
-          shattered = NULL;
+          shattered = nullptr;
         }
       } else {
         shattered->addToStructPoints(-dice(3, 10));
         if (shattered->getStructPoints() < 0) {
           if (!shattered->makeScraps()) {
             delete shattered;
-            shattered = NULL;
+            shattered = nullptr;
           }
         } else
           act(
             "$p seems to be okay, though you can tell it took a lot of damage.",
-            FALSE, this, shattered, NULL, TO_CHAR);
+            false, this, shattered, nullptr, TO_CHAR);
       }
     }
   }

@@ -80,8 +80,8 @@ bool TThing::inLethargica() const {
 
 bool TThing::isSpiked() const {
   if (isname("spiked", name))
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 int TThing::swungObjectDamage(const TBeing*, const TBeing*) const {
@@ -95,11 +95,11 @@ int TThing::swungObjectDamage(const TBeing*, const TBeing*) const {
 int TThing::useMe(TBeing* ch, const char*) {
   TObj* o = dynamic_cast<TObj*>(this);
 
-  if (o && o->spec && o->checkSpec(ch, CMD_OBJ_USED, "", NULL))
-    return TRUE;
+  if (o && o->spec && o->checkSpec(ch, CMD_OBJ_USED, "", nullptr))
+    return true;
 
   ch->sendTo("Use is normally only for wands and magic staves.\n\r");
-  return FALSE;
+  return false;
 }
 
 // Weight of all things that I am carrying, or that I contain
@@ -188,8 +188,8 @@ const material_type_numbers* TThing::getMaterialTypeNumbers() const {
 
 int TThing::getReducedVolume(const TThing* o) const {
   // we use o if we want to do a check BEFORE the volume changes.
-  // otherwise, (o == NULL) we fall into the parent case (normally done in += )
-  // note: item might be in a bag and also have o == NULL
+  // otherwise, (o == nullptr) we fall into the parent case (normally done in += )
+  // note: item might be in a bag and also have o == nullptr
   // also: if item is in a bag, reduce volume by 5%
 
   int num = getTotalVolume();
@@ -231,25 +231,25 @@ void TThing::lightMe(TBeing* ch, silentTypeT) {
   TObj* tObj;
 
   if (!material_nums[getMaterial()].flammability) {
-    act("You can't light $p, it's not flammable!", FALSE, ch, this, 0, TO_CHAR);
+    act("You can't light $p, it's not flammable!", false, ch, this, 0, TO_CHAR);
     return;
   } else if ((tObj = dynamic_cast<TObj*>(this)) &&
              tObj->isObjStat(ITEM_MAGIC)) {
-    act("$p resists your attempt at burning it...", FALSE, ch, this, NULL,
+    act("$p resists your attempt at burning it...", false, ch, this, nullptr,
       TO_CHAR);
     return;
   } else {
     TThing* t;
     TTool* flintsteel;
 
-    if (!(t = get_thing_char_using(ch, "flintsteel", 0, FALSE, FALSE)) ||
+    if (!(t = get_thing_char_using(ch, "flintsteel", 0, false, false)) ||
         !(flintsteel = dynamic_cast<TTool*>(t))) {
       ch->sendTo("You need to own some flint and steel to light that.\n\r");
       return;
     }
 
     ch->sendTo("You begin to start a fire.\n\r");
-    start_task(ch, this, NULL, TASK_LIGHTFIRE, "", 2, ch->inRoom(), 0, 0, 5);
+    start_task(ch, this, nullptr, TASK_LIGHTFIRE, "", 2, ch->inRoom(), 0, 0, 5);
   }
 }
 
@@ -261,7 +261,7 @@ int TThing::chiMe(TBeing* tLunatic) {
     return RET_STOP_PARSING;
   }
 
-  act("$p resists your attempts to chi it!", FALSE, tLunatic, this, NULL,
+  act("$p resists your attempts to chi it!", false, tLunatic, this, nullptr,
     TO_CHAR);
   tLunatic->reconcileMana(TYPE_UNDEFINED, 0, tMana);
 

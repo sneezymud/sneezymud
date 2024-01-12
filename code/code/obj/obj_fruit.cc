@@ -77,8 +77,8 @@ void TFruit::createSeeds() {
     seed->obj_flags.decay_time = 50;
 
     seed->addObjStat(ITEM_STRUNG);
-    seed->ex_description = NULL;
-    seed->action_description = NULL;
+    seed->ex_description = nullptr;
+    seed->action_description = nullptr;
 
     // apple -> seeds handful apple
     seed->name = format("seeds handful %s") % name;
@@ -112,9 +112,9 @@ void TFruit::eatMe(TBeing* ch) {
   }
   if (isFoodFlag(FOOD_SPOILED) &&
       !ch->getMyRace()->hasTalent(TALENT_GARBAGEEATER) && ch->isPerceptive()) {
-    act("You notice some spoilage on $p and discard it instead.", TRUE, ch,
+    act("You notice some spoilage on $p and discard it instead.", true, ch,
       this, 0, TO_CHAR);
-    act("$n disposes of some spoiled $o.", TRUE, ch, this, 0, TO_ROOM);
+    act("$n disposes of some spoiled $o.", true, ch, this, 0, TO_ROOM);
 
     ch->playsound(SOUND_FOODPOISON, SOUND_TYPE_NOISE);
 
@@ -123,8 +123,8 @@ void TFruit::eatMe(TBeing* ch) {
     return;
   }
 
-  act("$n eats $p.", TRUE, ch, this, 0, TO_ROOM);
-  act("You eat the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n eats $p.", true, ch, this, 0, TO_ROOM);
+  act("You eat the $o.", false, ch, this, 0, TO_CHAR);
 
   sstring msg;
   float adjust = 1.0;
@@ -159,7 +159,7 @@ void TFruit::eatMe(TBeing* ch) {
     ch->gainCondition(FULL, (int)(getFoodFill() * adjust));
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
     Poisoned(ch, getFoodFill());
@@ -177,8 +177,8 @@ void TFruit::tasteMe(TBeing* ch) {
     ch->sendTo("You decide to skip this meal until you feel better.\n\r");
     return;
   }
-  act("$n tastes the $o.", FALSE, ch, this, 0, TO_ROOM);
-  act("You taste the $o.", FALSE, ch, this, 0, TO_CHAR);
+  act("$n tastes the $o.", false, ch, this, 0, TO_ROOM);
+  act("You taste the $o.", false, ch, this, 0, TO_CHAR);
 
   sstring msg;
   int amt = 1;
@@ -213,7 +213,7 @@ void TFruit::tasteMe(TBeing* ch) {
     ch->gainCondition(FULL, amt);
 
   if (ch->getCond(FULL) > 20)
-    act("You are full.", FALSE, ch, 0, 0, TO_CHAR);
+    act("You are full.", false, ch, 0, 0, TO_CHAR);
 
   if (!ch->isImmortal()) {
     Poisoned(ch, 1);
@@ -233,7 +233,7 @@ void TFruit::tasteMe(TBeing* ch) {
     setFoodFill(getFoodFill() - 2);
 
   if (getFoodFill() <= 0) { /* Nothing left */
-    act("There is nothing left now.", FALSE, ch, 0, 0, TO_CHAR);
+    act("There is nothing left now.", false, ch, 0, 0, TO_CHAR);
     createSeeds();
     delete this;
     return;
@@ -243,10 +243,10 @@ void TFruit::tasteMe(TBeing* ch) {
 int TFruit::objectDecay() {
   if (isFoodFlag(FOOD_SPOILED)) {
     createSeeds();
-    return FALSE;
+    return false;
   } else {
     addFoodFlags(FOOD_SPOILED);
     obj_flags.decay_time = getVolume() * 10;
   }
-  return TRUE;
+  return true;
 }

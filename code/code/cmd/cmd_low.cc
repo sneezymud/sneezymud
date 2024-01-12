@@ -574,9 +574,9 @@ bool UtilProcs(int spec) {
     case SPEC_HORSE_PESTILENCE:
     case SPEC_FACTION_FAERY:
     case SPEC_HERO_FAERIE:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -653,25 +653,25 @@ bool GuildProcs(int spec) {
     case SPEC_TRAINER_DEFENSE:
     case SPEC_TRAINER_OFFENSE:
     case SPEC_TRAINER_SHAMAN_HEALING:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
 bool UtilMobProc(TBeing* ch) {
   if (ch->isPc() || !ch->spec)
-    return FALSE;
+    return false;
   if (ch->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
-    return TRUE;
+    return true;
   if (ch->rider)
-    return TRUE;
+    return true;
   if (ch->isShopkeeper())
-    return TRUE;
+    return true;
   if (ch->spec == SPEC_BUTLER)
-    return TRUE;
+    return true;
   if (IS_SET(ch->specials.act, ACT_IMMORTAL)) {
-    return TRUE;
+    return true;
   }
   /*
   switch (ch->mobVnum()) {
@@ -683,7 +683,7 @@ bool UtilMobProc(TBeing* ch) {
     case Mob::GUY_LAZY:
     case Mob::WIFE_FARMER:
     case Mob::DRUNK_TRADER_RICH:
-      return TRUE;
+      return true;
     default:
       break;
   }
@@ -693,11 +693,11 @@ bool UtilMobProc(TBeing* ch) {
 
 bool GuildMobProc(TBeing* ch) {
   if (ch->isPc() || !ch->spec)
-    return FALSE;
+    return false;
   if (ch->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
-    return TRUE;
+    return true;
   if (ch->rider)
-    return TRUE;
+    return true;
 
   return GuildProcs(ch->spec);
 }
@@ -1042,7 +1042,7 @@ static void compare2Mobs(TBeing* ch, TBeing* mob1, TBeing* mob2) {
   unsigned int i;
   for (i = 0; i < tot_hits; i++) {
     int ret = mob1->hits(mob2, mod);
-    if (ret == TRUE || ret == GUARANTEED_SUCCESS)
+    if (ret == true || ret == GUARANTEED_SUCCESS)
       num_hits++;
   }
   float hitRate = (float)num_hits / (float)tot_hits;
@@ -1073,11 +1073,11 @@ void TBeing::doCompare(const char* arg) {
   arg = one_argument(arg, mArg1, cElements(mArg1));
   one_argument(arg, mArg2, cElements(mArg2));
 
-  TBeing *mob1, *mob2 = NULL;
+  TBeing *mob1, *mob2 = nullptr;
   if (*mArg1) {
-    mob1 = get_char_vis_world(this, mArg1, NULL, EXACT_YES);
+    mob1 = get_char_vis_world(this, mArg1, nullptr, EXACT_YES);
     if (!mob1) {
-      mob1 = get_char_vis_world(this, mArg1, NULL, EXACT_NO);
+      mob1 = get_char_vis_world(this, mArg1, nullptr, EXACT_NO);
       if (!mob1) {
         sendTo(format("Can't locate '%s' here.\n\r") % mArg1);
         return;
@@ -1089,9 +1089,9 @@ void TBeing::doCompare(const char* arg) {
   }
 
   if (*mArg2) {
-    mob2 = get_char_vis_world(this, mArg2, NULL, EXACT_YES);
+    mob2 = get_char_vis_world(this, mArg2, nullptr, EXACT_YES);
     if (!mob2) {
-      mob2 = get_char_vis_world(this, mArg2, NULL, EXACT_NO);
+      mob2 = get_char_vis_world(this, mArg2, nullptr, EXACT_NO);
       if (!mob2) {
         sendTo(format("Can't locate '%s' here.\n\r") % mArg2);
         return;
@@ -1706,10 +1706,10 @@ void TBeing::lowRace(const char* arg) {
   for (mobnum = 0; mobnum < mob_index.size(); mobnum++) {
     if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)) {
       // not inited, load to init
-      if ((mob = read_mobile(mobnum, REAL)) != NULL) {
+      if ((mob = read_mobile(mobnum, REAL)) != nullptr) {
         thing_to_room(mob, Room::VOID);  // prevents extracting from "nowhere"
         delete mob;
-        mob = NULL;
+        mob = nullptr;
       } else
         vlogf(LOG_BUG, format("BOGUS LOAD of mob %d") % mobnum);
     }
@@ -1723,7 +1723,7 @@ void TBeing::lowRace(const char* arg) {
     }
     strcpy(namebuf2, mob->getName().c_str());
     sstring namebuf =
-      colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
+      colorString(this, desc, namebuf2, nullptr, COLOR_NONE, false);
     if (show_stat)
       sprintf(buf2, "%-17.17s: %60s", namebuf.c_str(),
         mob->chosenStats.printRawStats(this).c_str());
@@ -1735,7 +1735,7 @@ void TBeing::lowRace(const char* arg) {
 
     thing_to_room(mob, Room::VOID);
     delete mob;
-    mob = NULL;
+    mob = nullptr;
   }
 
   str += "\n\r";
@@ -1926,10 +1926,10 @@ void TBeing::lowMobs(const char* arg) {
   for (mobnum = 0; mobnum < mob_index.size(); mobnum++) {
     if ((mob_index[mobnum].level == -99) || (mob_index[mobnum].spec == -99)) {
       // not inited, load to init
-      if ((mob = read_mobile(mobnum, REAL)) != NULL) {
+      if ((mob = read_mobile(mobnum, REAL)) != nullptr) {
         thing_to_room(mob, Room::VOID);  // prevents extracting from "nowhere"
         delete mob;
-        mob = NULL;
+        mob = nullptr;
       } else
         vlogf(LOG_BUG, format("BOGUS LOAD of mob %d") % mobnum);
     }
@@ -1944,7 +1944,7 @@ void TBeing::lowMobs(const char* arg) {
 
     strcpy(namebuf2, mob->getName().c_str());
     sstring namebuf =
-      colorString(this, desc, namebuf2, NULL, COLOR_NONE, FALSE);
+      colorString(this, desc, namebuf2, nullptr, COLOR_NONE, false);
 
     sprintf(buf2,
       "%5d %-27.27s : %6d %5.2f %5d  %2d    %.1f %5.2f+%d%% %2d\n\r",
@@ -1955,7 +1955,7 @@ void TBeing::lowMobs(const char* arg) {
     str += buf2;
     thing_to_room(mob, Room::VOID);
     delete mob;
-    mob = NULL;
+    mob = nullptr;
   }
   str += "\n\r";
   desc->page_string(str);
@@ -2009,7 +2009,7 @@ void TBeing::lowObjs(const char* arg) {
   int i;
   wearSlotT slot = WEAR_HEAD;
   unsigned int worn;
-  bool val_sort = FALSE;
+  bool val_sort = false;
   int sort_race = 0;
   int sort_race_low = 0;
   int sort_race_high = 0;
@@ -2063,7 +2063,7 @@ void TBeing::lowObjs(const char* arg) {
   }
   arg = one_argument(arg, buf2, cElements(buf2));
   if (is_abbrev(buf2, "value"))
-    val_sort = TRUE;
+    val_sort = true;
   if (is_abbrev(buf2, "race")) {
     one_argument(arg, buf2, cElements(buf2));
     sort_race = convertTo<int>(buf2);
@@ -2206,7 +2206,7 @@ void TBeing::lowObjs(const char* arg) {
 
     str += "\n\r";
     delete tbc;
-    tbc = NULL;
+    tbc = nullptr;
   }
   desc->page_string(str);
 }
@@ -2221,7 +2221,7 @@ bool lowWeapSort::operator()(const int& x, const int& y) const {
   // if armor is same, sort in descending struct order
 
   TObj* obj;
-  TBaseWeapon *x_obj = NULL, *y_obj = NULL;
+  TBaseWeapon *x_obj = nullptr, *y_obj = nullptr;
 
   if ((obj = read_object(x, REAL)))
     x_obj = dynamic_cast<TBaseWeapon*>(obj);
@@ -2251,7 +2251,7 @@ bool lowWeapSort::operator()(const int& x, const int& y) const {
 
 void TBeing::lowWeaps(const char* arg) {
   char buf2[255];
-  bool blunt = FALSE, pierce = FALSE, slash = FALSE, arrow = false;
+  bool blunt = false, pierce = false, slash = false, arrow = false;
   int i;
   std::vector<int> objList(0);
   bool sort_val = false;
@@ -2262,20 +2262,20 @@ void TBeing::lowWeaps(const char* arg) {
     sendTo("Syntax: low weapons <slash | blunt | pierce | arrow>\n\r");
     return;
   } else if (is_abbrev(buf2, "pierce")) {
-    pierce = TRUE;
+    pierce = true;
   } else if (is_abbrev(buf2, "slash")) {
-    slash = TRUE;
+    slash = true;
   } else if (is_abbrev(buf2, "blunt")) {
-    blunt = TRUE;
+    blunt = true;
   } else if (is_abbrev(buf2, "arrow")) {
-    arrow = TRUE;
+    arrow = true;
   } else {
     sendTo("Syntax: low weapons <slash | blunt | pierce | arrow>\n\r");
     return;
   }
   one_argument(arg, buf2, cElements(buf2));
   if (is_abbrev(buf2, "value"))
-    sort_val = TRUE;
+    sort_val = true;
 
   // this scrolls thru all objs in dbase and creates
   // objbug, an unsorted list of objs rnums that are weapons of appropriate type
@@ -2295,7 +2295,7 @@ void TBeing::lowWeaps(const char* arg) {
 
     if (!tbw || (arrow && !arr)) {
       delete obj;
-      obj = NULL;
+      obj = nullptr;
       continue;
     }
 
@@ -2307,7 +2307,7 @@ void TBeing::lowWeaps(const char* arg) {
     }
 
     delete tbw;
-    tbw = NULL;
+    tbw = nullptr;
   }
 
   // now lets do some sorting
@@ -2379,7 +2379,7 @@ void TBeing::lowWeaps(const char* arg) {
     }
     str += "\n\r";
     delete weap;
-    weap = NULL;
+    weap = nullptr;
   }
   desc->page_string(str);
 }

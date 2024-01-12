@@ -17,18 +17,18 @@ bool TRoom::isCitySector() const {
     case SECT_TROPICAL_CITY:
     case SECT_TEMPERATE_CITY:
     case SECT_ARCTIC_CITY:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
 bool TRoom::isFlyingSector() const {
   switch (getSectorType()) {
     case SECT_MAKE_FLY:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -42,9 +42,9 @@ bool TRoom::isRoadSector() const
     case SECT_ARCTIC_FOREST_ROAD:
     case SECT_TEMPERATE_FOREST_ROAD:
     case SECT_RAINFOREST_ROAD:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -53,9 +53,9 @@ bool TRoom::isVertSector() const {
     case SECT_TROPICAL_CLIMBING:
     case SECT_TEMPERATE_CLIMBING:
     case SECT_ARCTIC_CLIMBING:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -63,9 +63,9 @@ bool TRoom::isUnderwaterSector() const {
   switch (getSectorType()) {
     case SECT_TROPICAL_UNDERWATER:
     case SECT_TEMPERATE_UNDERWATER:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -84,9 +84,9 @@ bool TRoom::isNatureSector() const {
     case SECT_ARCTIC_FOREST_ROAD:
     case SECT_RAINFOREST_ROAD:
     case SECT_DESERT:  // adding desert
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -95,9 +95,9 @@ bool TRoom::isSwampSector() const {
     case SECT_ARCTIC_MARSH:
     case SECT_TEMPERATE_SWAMP:
     case SECT_TROPICAL_SWAMP:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -106,9 +106,9 @@ bool TRoom::isBeachSector() const {
     case SECT_COLD_BEACH:
     case SECT_TEMPERATE_BEACH:
     case SECT_TROPICAL_BEACH:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -117,9 +117,9 @@ bool TRoom::isHillSector() const {
     case SECT_ARCTIC_WASTE:
     case SECT_TEMPERATE_HILLS:
     case SECT_TROPICAL_HILLS:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -129,9 +129,9 @@ bool TRoom::isMountainSector() const {
     case SECT_TEMPERATE_MOUNTAINS:
     case SECT_TROPICAL_MOUNTAINS:
     case SECT_VOLCANO_LAVA:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -145,9 +145,9 @@ bool TRoom::isForestSector() const {
     case SECT_TEMPERATE_FOREST_ROAD:
     case SECT_RAINFOREST_ROAD:
     case SECT_DEAD_WOODS:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -157,9 +157,9 @@ bool TRoom::isAirSector() const {
     case SECT_TEMPERATE_ATMOSPHERE:
     case SECT_ARCTIC_ATMOSPHERE:
     case SECT_FIRE_ATMOSPHERE:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -168,9 +168,9 @@ bool TRoom::isOceanSector() const {
     case SECT_TROPICAL_OCEAN:
     case SECT_TEMPERATE_OCEAN:
     case SECT_ICEFLOW:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -179,9 +179,9 @@ bool TRoom::isRiverSector() const {
     case SECT_TROPICAL_RIVER_SURFACE:
     case SECT_TEMPERATE_RIVER_SURFACE:
     case SECT_ARCTIC_RIVER_SURFACE:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -193,9 +193,9 @@ bool TRoom::isIndoorSector() const {
     case SECT_TROPICAL_CAVE:
     case SECT_ARCTIC_BUILDING:
     case SECT_ARCTIC_CAVE:
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
 }
 
@@ -236,17 +236,17 @@ bool TRoom::notRangerLandSector() const {
 roomDirData* TRoom::exitDir(dirTypeT door) const {
   // door>=MAX_DIR would mean a portal, sometimes we pass this by accident
   if (door >= MAX_DIR || door < 0)
-    return NULL;
+    return nullptr;
 
   return (dir_option[door]);
 }
 
 roomDirData* TBeing::exitDir(dirTypeT door) const {
-  return (roomp ? roomp->exitDir(door) : NULL);
+  return (roomp ? roomp->exitDir(door) : nullptr);
 }
 
 roomDirData* TObj::exitDir(dirTypeT door) const {
-  return (roomp ? roomp->exitDir(door) : NULL);
+  return (roomp ? roomp->exitDir(door) : nullptr);
 }
 
 void room_iterate(TRoom*[],
@@ -350,10 +350,10 @@ const sstring& TRoom::getDescr() { return descr; }
 
 bool TRoom::putInDb(int vnum) {
   if (real_roomp(vnum))
-    return FALSE;
+    return false;
 
   room_db[vnum] = this;
-  return TRUE;
+  return true;
 }
 
 int TRoom::chiMe(TBeing* tLunatic) {
@@ -364,19 +364,19 @@ int TRoom::chiMe(TBeing* tLunatic) {
   if (tLunatic->getSkillValue(SKILL_CHI) < 100 ||
       tLunatic->getDiscipline(DISC_MEDITATION_MONK)->getLearnedness() < 25) {
     tLunatic->sendTo("I'm afraid you don't have the training to do this.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (tLunatic->checkPeaceful(
         "You feel too peaceful to contemplate violence here.\n\r"))
-    return FALSE;
+    return false;
 
   act(
     "You focus your <c>mind<z> and unleash a <r>blast of chi<z> upon your "
     "foes!",
-    FALSE, tLunatic, NULL, NULL, TO_CHAR);
+    false, tLunatic, nullptr, nullptr, TO_CHAR);
   act("$n suddenly <r>radiates with power<z> and brings harm to $s enemies!",
-    TRUE, tLunatic, NULL, NULL, TO_ROOM);
+    true, tLunatic, nullptr, nullptr, TO_ROOM);
 
   for (StuffIter it = stuff.begin(); it != stuff.end();) {
     tThing = *(it++);
@@ -396,7 +396,7 @@ int TRoom::chiMe(TBeing* tLunatic) {
 
     if (IS_SET_DELETE(tRc, DELETE_VICT)) {
       delete tThing;
-      tThing = NULL;
+      tThing = nullptr;
     }
   }
 
@@ -411,7 +411,7 @@ void TRoom::operator<<(TThing& tThing) {
 
   if (!tBornInsideMe) {
     tBornInsideMe = &tThing;
-    tThing.nextBorn = NULL;
+    tThing.nextBorn = nullptr;
     return;
   }
 
@@ -428,7 +428,7 @@ void TRoom::operator<<(TThing& tThing) {
   }
 
   tList->nextBorn = &tThing;
-  tThing.nextBorn = NULL;
+  tThing.nextBorn = nullptr;
 }
 
 bool TRoom::operator|=(const TThing& tThing) {
@@ -442,7 +442,7 @@ bool TRoom::operator|=(const TThing& tThing) {
 }
 
 void TRoom::operator>>(const TThing& tThing) {
-  TThing *tList, *tLast = NULL;
+  TThing *tList, *tLast = nullptr;
 
   for (tList = tBornInsideMe; tList; tList = tList->nextBorn) {
     if (&tThing == tList) {
@@ -451,7 +451,7 @@ void TRoom::operator>>(const TThing& tThing) {
       else
         tBornInsideMe = tList->nextBorn;
 
-      tList->nextBorn = NULL;
+      tList->nextBorn = nullptr;
 
       return;
     }

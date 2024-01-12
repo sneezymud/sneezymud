@@ -38,11 +38,11 @@ class Croom_q {
     int room_nr;
     Croom_q* next_q;
 
-    Croom_q() : room_nr(0), next_q(NULL) {}
+    Croom_q() : room_nr(0), next_q(nullptr) {}
     ~Croom_q() {
       // don't delete, it gets done by creater function
       //      delete next_q;
-      //      next_q = NULL;
+      //      next_q = nullptr;
     }
 };
 

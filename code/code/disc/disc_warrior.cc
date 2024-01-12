@@ -19,26 +19,26 @@ int TBeing::doBerserk() {
 
   if (!doesKnowSkill(SKILL_BERSERK)) {
     sendTo("You lack the bloodlust.\n\r");
-    return FALSE;
+    return false;
   }
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
   if (affectedBySpell(SKILL_BERSERK)) {
     sendTo("You are unable to work up the bloodlust at this time.\n\r");
-    return FALSE;
+    return false;
   }
   if (affectedBySpell(SKILL_DISGUISE)) {
     sendTo(
       "You can't work up the bloodlust while pretending to be someone "
       "else.\n\r");
-    return FALSE;
+    return false;
   }
 
   rc = berserk(this);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
-  return FALSE;
+  return false;
 }
 
 int berserk(TBeing* caster) {
@@ -46,26 +46,26 @@ int berserk(TBeing* caster) {
   affectedData af;
 
   if (caster->riding) {
-    act("Not while riding.", TRUE, caster, 0, 0, TO_CHAR);
-    return FALSE;
+    act("Not while riding.", true, caster, 0, 0, TO_CHAR);
+    return false;
   }
   if (caster->getCombatMode() == ATTACK_BERSERK) {
-    act("You are already berserking!", TRUE, caster, 0, 0, TO_CHAR);
-    return FALSE;
+    act("You are already berserking!", true, caster, 0, 0, TO_CHAR);
+    return false;
   }
 
   if (caster->checkPeaceful("This room is too tranquil to go berserk in.\n\r"))
-    return FALSE;
+    return false;
 
   if (!caster->isPc())
-    return FALSE;
+    return false;
 
   level = caster->getSkillLevel(SKILL_BERSERK);
   int bKnown = caster->getSkillValue(SKILL_BERSERK);
   if (caster->bSuccess(bKnown, SKILL_BERSERK)) {
     caster->setCombatMode(ATTACK_BERSERK);
-    act("You go berserk!", TRUE, caster, 0, 0, TO_CHAR);
-    act("$n goes berserk!", TRUE, caster, 0, 0, TO_ROOM);
+    act("You go berserk!", true, caster, 0, 0, TO_CHAR);
+    act("$n goes berserk!", true, caster, 0, 0, TO_ROOM);
 
     if (caster->getHit() > (caster->hitLimit() / 2)) {
       af.type = SKILL_BERSERK;
@@ -86,11 +86,11 @@ int berserk(TBeing* caster) {
     }
 
     if (!caster->fight())
-      caster->goBerserk(NULL);
+      caster->goBerserk(nullptr);
   } else {
-    act("You try to go berserk and bite yourself in the tongue!", TRUE, caster,
+    act("You try to go berserk and bite yourself in the tongue!", true, caster,
       0, 0, TO_CHAR);
-    act("$n bites $mself in the tongue while trying to go berserk!", TRUE,
+    act("$n bites $mself in the tongue while trying to go berserk!", true,
       caster, 0, 0, TO_ROOM);
     if (caster->reconcileDamage(caster, 1, SKILL_BERSERK) == -1)
       return DELETE_THIS;
@@ -104,12 +104,12 @@ int berserk(TBeing* caster) {
     caster->affectTo(&af, -1);
   }
 
-  return TRUE;
+  return true;
 }
 
 void TBeing::doRepair(const char* arg) {
   char v_name[MAX_INPUT_LENGTH];
-  TThing* obj = NULL;
+  TThing* obj = nullptr;
 
   strcpy(v_name, arg);
 
@@ -152,13 +152,13 @@ void TBeing::doRepair(const char* arg) {
 
 void TThing::repairMeHammer(TBeing* caster, TObj* obj) {
   act("You need to hold a hammer in your primary hand in order to repair $p",
-    TRUE, caster, obj, NULL, TO_CHAR);
+    true, caster, obj, nullptr, TO_CHAR);
 }
 
 void TTool::repairMeHammer(TBeing* caster, TObj* obj) {
   if (getToolType() != TOOL_HAMMER) {
     act("You need to hold a hammer in your primary hand in order to repair $p",
-      TRUE, caster, obj, NULL, TO_CHAR);
+      true, caster, obj, nullptr, TO_CHAR);
     return;
   }
 
@@ -184,7 +184,7 @@ void repair(TBeing* caster, TObj* obj) {
 
   if (!(hammer = caster->heldInPrimHand())) {
     act("You need to hold a hammer in your primary hand in order to repair $p",
-      TRUE, caster, obj, NULL, TO_CHAR);
+      true, caster, obj, nullptr, TO_CHAR);
     return;
   }
   hammer->repairMeHammer(caster, obj);

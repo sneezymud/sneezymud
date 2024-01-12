@@ -78,33 +78,33 @@ static const char* getUser(dbTypeT type) {
   if (db_users[type] != "")
     return db_users[type].c_str();
   else
-    return NULL;
+    return nullptr;
 }
 
 static const char* getPass(dbTypeT type) {
   if (db_passwords[type] != "")
     return db_passwords[type].c_str();
   else
-    return NULL;
+    return nullptr;
 }
 
 MYSQL* TDatabaseConnection::getDB(dbTypeT type) {
   if (type < 0 || type > DB_MAX)
-    return NULL;
+    return nullptr;
 
   if (!databases[type] || mysql_ping(databases[type])) {
     vlogf(LOG_DB,
       format("Initializing database '%s'.") % getConnectParam(type));
     if (!databases[type])
-      databases[type] = mysql_init(NULL);
+      databases[type] = mysql_init(nullptr);
 
     vlogf(LOG_DB, "Connecting to database.");
     if (!mysql_real_connect(databases[type], db_hosts[type].c_str(),
-          getUser(type), getPass(type), getConnectParam(type), 0, NULL, 0)) {
+          getUser(type), getPass(type), getConnectParam(type), 0, nullptr, 0)) {
       vlogf(LOG_DB,
         format("Could not connect to database '%s'.") % getConnectParam(type));
       vlogf(LOG_DB, format("%s") % mysql_error(databases[type]));
-      return NULL;
+      return nullptr;
     }
   }
   return databases[type];
@@ -131,12 +131,12 @@ long TDatabase::lastInsertId() {
 // we do a query, then fetchRow increments it each time.
 bool TDatabase::fetchRow() {
   if (!pimpl.res)
-    return FALSE;
+    return false;
 
   if (!(pimpl.row = mysql_fetch_row(pimpl.res)))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 unsigned long TDatabase::escape_string(char* to, const char* from,
@@ -161,7 +161,7 @@ const sstring TDatabase::operator[](unsigned int i) const {
 
 const sstring TDatabase::operator[](const sstring& s) const {
   if (!pimpl.res || !pimpl.row)
-    return NULL;
+    return nullptr;
 
   std::map<const char*, int, ltstr>::const_iterator cur =
     pimpl.column_names.find(s.lower().c_str());
@@ -180,7 +180,7 @@ bool TDatabase::query(const char* query, ...) {
   sstring buf;
   int fromlen = 0, tolen = (32768 * 2) + 1;
   const char* qsave = query;
-  char *from = NULL, to[tolen];
+  char *from = nullptr, to[tolen];
   MYSQL_RES* restmp;
   TTiming t;
 
@@ -209,7 +209,7 @@ bool TDatabase::query(const char* query, ...) {
           if (!from) {
             vlogf(LOG_DB, "null argument for format specifier 's'");
             vlogf(LOG_DB, format("%s") % qsave);
-            return FALSE;
+            return false;
           }
 
           fromlen = strlen(from);
@@ -219,7 +219,7 @@ bool TDatabase::query(const char* query, ...) {
           if (((fromlen * 2) + 1) > tolen) {
             vlogf(LOG_DB, format("query - buffer overrun on %s") % from);
             vlogf(LOG_DB, format("%s") % qsave);
-            return FALSE;
+            return false;
           }
 
           escape_string(to, from, strlen(from));
@@ -237,7 +237,7 @@ bool TDatabase::query(const char* query, ...) {
         default:
           vlogf(LOG_DB, format("query - bad format specifier - %c") % *query);
           vlogf(LOG_DB, format("%s") % qsave);
-          return FALSE;
+          return false;
       }
     } else {
       buf += *query;
@@ -252,7 +252,7 @@ bool TDatabase::query(const char* query, ...) {
   if (mysql_query(pimpl.db, buf.c_str())) {
     vlogf(LOG_DB, format("query failed: %s") % mysql_error(pimpl.db));
     vlogf(LOG_DB, format("%s") % buf);
-    return FALSE;
+    return false;
   }
   restmp = mysql_store_result(pimpl.db);
 
@@ -310,14 +310,14 @@ bool TDatabase::query(const char* query, ...) {
   //  if(res)
   //    vlogf(LOG_DB, "New query results stored.");
 
-  return TRUE;
+  return true;
 }
 
 bool TDatabase::isResults() {
   if (pimpl.res && mysql_num_rows(pimpl.res))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 long TDatabase::rowCount() {

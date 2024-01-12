@@ -90,55 +90,55 @@ static void show_room_zone(int rnum, TRoom* rp, sstring&,
     srzs->sb += buf;
     srzs->blank = 0;
   }
-  print_room(rnum, rp, srzs->sb, NULL);
+  print_room(rnum, rp, srzs->sb, nullptr);
 }
 
 static void print_lit_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_ALWAYS_LIT))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 static void print_save_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_SAVE_ROOM))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 static void print_death_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_DEATH))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 static void print_hospital_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_HOSPITAL))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 static void print_noheal_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_NO_HEAL))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 static void print_arena_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_ARENA))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 static void print_noflee_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_NO_FLEE))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 static void print_private_room(int rnum, TRoom* rp, sstring& sb,
   struct show_room_zone_struct*) {
   if (rp && rp->isRoomFlag(ROOM_PRIVATE))
-    print_room(rnum, rp, sb, NULL);
+    print_room(rnum, rp, sb, nullptr);
 }
 
 unsigned long int showFreeMobObj(int shFrZoneNumber, sstring* sb,
@@ -321,7 +321,7 @@ void TPerson::doShow(const sstring& argument) {
   sstring buf, zonenum, buf2;
   int bottom = 0, top = 0;
   sstring sb;
-  TBeing *ch = NULL, *b;
+  TBeing *ch = nullptr, *b;
   TMonster* k;
   TObj* obj;
 
@@ -467,7 +467,7 @@ void TPerson::doShow(const sstring& argument) {
          ++iter) {
       TOpenContainer* tc = dynamic_cast<TOpenContainer*>(*iter);
       if (tc && tc->isContainerFlag(CONT_TRAPPED)) {
-        do_where_thing(this, tc, FALSE, sb);
+        do_where_thing(this, tc, false, sb);
       }
     }
   } else if (is_abbrev(buf, "zones")) {
@@ -672,7 +672,7 @@ void TPerson::doShow(const sstring& argument) {
           TMonster* tmons = dynamic_cast<TMonster*>(b);
           sb += format("%-20.20s (room: %5d)    %-20.20s (room: %5d) %7s\n\r") %
                 tmons->getName() % tmons->inRoom() % ch->getName() %
-                ch->inRoom() % (tmons->Hates(ch, NULL) ? "(HATED)" : "");
+                ch->inRoom() % (tmons->Hates(ch, nullptr) ? "(HATED)" : "");
           sb += format("       persist: %d, range: %d, origin: %d\n\r") %
                 tmons->persist % tmons->hunt_dist % tmons->oldRoom;
         }
@@ -858,21 +858,21 @@ void TPerson::doShow(const sstring& argument) {
 
     sb += "VNUM  rnum type         name [BITS]\n\r";
     if (is_abbrev(zonenum, "death"))
-      room_iterate(room_db, print_death_room, sb, NULL);
+      room_iterate(room_db, print_death_room, sb, nullptr);
     else if (is_abbrev(zonenum, "lit"))
-      room_iterate(room_db, print_lit_room, sb, NULL);
+      room_iterate(room_db, print_lit_room, sb, nullptr);
     else if (is_abbrev(zonenum, "saverooms"))
-      room_iterate(room_db, print_save_room, sb, NULL);
+      room_iterate(room_db, print_save_room, sb, nullptr);
     else if (is_abbrev(zonenum, "hospital"))
-      room_iterate(room_db, print_hospital_room, sb, NULL);
+      room_iterate(room_db, print_hospital_room, sb, nullptr);
     else if (is_abbrev(zonenum, "noheal"))
-      room_iterate(room_db, print_noheal_room, sb, NULL);
+      room_iterate(room_db, print_noheal_room, sb, nullptr);
     else if (is_abbrev(zonenum, "private"))
-      room_iterate(room_db, print_private_room, sb, NULL);
+      room_iterate(room_db, print_private_room, sb, nullptr);
     else if (is_abbrev(zonenum, "noflee"))
-      room_iterate(room_db, print_noflee_room, sb, NULL);
+      room_iterate(room_db, print_noflee_room, sb, nullptr);
     else if (is_abbrev(zonenum, "arena"))
-      room_iterate(room_db, print_arena_room, sb, NULL);
+      room_iterate(room_db, print_arena_room, sb, nullptr);
     else if (zonenum.length() > 0 && isalpha(zonenum[0])) {
       int i;
       for (i = 0; i < WORLD_SIZE; i++) {
@@ -881,7 +881,7 @@ void TPerson::doShow(const sstring& argument) {
           sstring my_name = temp->name;
 
           if (my_name.find(zonenum) != sstring::npos) {
-            print_room(i, temp, sb, NULL);
+            print_room(i, temp, sb, nullptr);
           }
         }
       }
@@ -1073,7 +1073,7 @@ void TPerson::doShow(const sstring& argument) {
                 ItemInfo[obj_index[tObjectIndex].itemtype]->name))) {
           strcpy(tBuffer, obj_index[tObjectIndex].short_desc);
 
-          if (colorString(this, desc, tBuffer, NULL, COLOR_NONE, TRUE)
+          if (colorString(this, desc, tBuffer, nullptr, COLOR_NONE, true)
                 .length() > 40) {
             tBuffer[38] = '\0';
             strcat(tBuffer, "...<z>");
@@ -1083,7 +1083,7 @@ void TPerson::doShow(const sstring& argument) {
           int factualSpace =
             strlen(tBuffer) -
             strlen(
-              colorString(this, desc, tBuffer, NULL, COLOR_NONE, TRUE).c_str());
+              colorString(this, desc, tBuffer, nullptr, COLOR_NONE, true).c_str());
 
           sprintf(tBuf, "[%%5d] [%%4d] %%-%ds (%%s)\n\r", (40 + factualSpace));
 
@@ -1102,7 +1102,7 @@ void TPerson::doShow(const sstring& argument) {
       sb = tStArgument;
     }
   } else if (is_abbrev(buf, "components")) {
-    TComponent* tComponent = NULL;
+    TComponent* tComponent = nullptr;
     int tValue = -1;
     sstring tString, tBuffer;
 
@@ -1166,7 +1166,7 @@ void TPerson::doShow(const sstring& argument) {
           }
 
           delete tComponent;
-          tComponent = NULL;
+          tComponent = nullptr;
         }
   } else if (is_abbrev(buf, "newfactions")) {
     show_guild(my_arg.c_str());

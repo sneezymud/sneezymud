@@ -49,7 +49,7 @@ void TBeing::doFish(sstring direction) {
     *room += *this;
   }
 
-  start_task(this, NULL, rp, TASK_FISHING, "", 2, inRoom(), 0, 0, 5);
+  start_task(this, nullptr, rp, TASK_FISHING, "", 2, inRoom(), 0, 0, 5);
 }
 
 std::vector<int> freshfishes() {
@@ -144,7 +144,7 @@ std::vector<int> fishworldfishes() {
 }
 
 TObj* catch_a_fish(TRoom* rp) {
-  TObj* fish = NULL;
+  TObj* fish = nullptr;
   unsigned int num = 0;
   std::vector<int> freshfish = freshfishes();
   std::vector<int> marinefish = marinefishes();
@@ -249,15 +249,15 @@ TTool* findBait(StuffList list) {
       return bait;
   }
 
-  return NULL;
+  return nullptr;
 }
 
 int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
   TObj*) {
-  TTool* bait = NULL;
-  TThing* tpole = NULL;
+  TTool* bait = nullptr;
+  TThing* tpole = nullptr;
   sstring buf;
-  TObj *fish = NULL, *pole = NULL;
+  TObj *fish = nullptr, *pole = nullptr;
   int baitmax = 1000, baitchance = 0;
   int polemax = 5000, polechance = 0;
   int catchchance = 0;
@@ -265,14 +265,14 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
   wearSlotT fishHand = ch->getPrimaryHold();
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // basic tasky safechecking
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom)) {
-    act("You cease fishing.", FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops fishing.", TRUE, ch, 0, 0, TO_ROOM);
+    act("You cease fishing.", false, ch, 0, 0, TO_CHAR);
+    act("$n stops fishing.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   // find our bait here
@@ -285,7 +285,7 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
   if (!bait && !awesomeFisher) {
     ch->sendTo("You need to have some bait to fish.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   // find our pole here
@@ -294,29 +294,29 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
         !isname("fishingpole", tpole->name))) {
     ch->sendTo("You need to hold a fishing pole to fish!\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   if (!awesomeFisher && !(pole = dynamic_cast<TObj*>(tpole))) {
     vlogf(LOG_BUG, "Hmm got a fishing pole that isn't a TObj");
     ch->sendTo("You need to hold a fishing pole to fish!\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
-  if (awesomeFisher && NULL == pole && !ch->canUseHand(true) &&
+  if (awesomeFisher && nullptr == pole && !ch->canUseHand(true) &&
       (!ch->isAmbidextrous() || ch->bothHandsHurt())) {
     ch->sendTo(format("Fish with what?  Your %s is too damaged.\n\r") %
                ch->describeBodySlot(ch->getPrimaryHand()));
     ch->stopTask();
-    return FALSE;
+    return false;
   }
-  if (awesomeFisher && NULL == pole) {
+  if (awesomeFisher && nullptr == pole) {
     if (ch->equipment[ch->getPrimaryHold()] && ch->isAmbidextrous())
       fishHand = ch->getSecondaryHold();
 
     if (ch->equipment[fishHand]) {
       ch->sendTo("Your primary hand must be free to fish!\n\r");
       ch->stopTask();
-      return FALSE;
+      return false;
     }
   }
 
@@ -328,12 +328,12 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
     if (!awesomeFisher) {
       ch->sendTo("You can't fish underwater!\n\r");
       ch->stopTask();
-      return FALSE;
+      return false;
     }
   } else if (rp && !rp->isWaterSector()) {
     ch->sendTo("You can't fish on land!\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->task && ch->task->timeLeft < 0) {
@@ -342,7 +342,7 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
     else
       ch->sendTo("You pack up and stop fishing.\n\r");
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -355,12 +355,12 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
           if (!awesomeFisher) {
             bait->addToToolUses(-1);
             if (bait->getToolUses() <= 0) {
-              act("Oops, you're out of bait.", FALSE, ch, NULL, 0, TO_CHAR);
+              act("Oops, you're out of bait.", false, ch, nullptr, 0, TO_CHAR);
               act("$n looks startled as $e realizes that $e is out of bait.",
-                FALSE, ch, NULL, 0, TO_ROOM);
+                false, ch, nullptr, 0, TO_ROOM);
               ch->stopTask();
               delete bait;
-              return FALSE;
+              return false;
             }
           }
 
@@ -388,8 +388,8 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
             toRoom = format("$n baits %s with $p.") % pole->shortDescr;
           }
 
-          act(toChar, FALSE, ch, bait, 0, TO_CHAR);
-          act(toRoom, TRUE, ch, bait, 0, TO_ROOM);
+          act(toChar, false, ch, bait, 0, TO_CHAR);
+          act(toRoom, true, ch, bait, 0, TO_ROOM);
           break;
         }
         case 1: {
@@ -420,8 +420,8 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
             toRoom = "$n casts $s line out.";
           }
 
-          act(toChar, FALSE, ch, NULL, 0, TO_CHAR);
-          act(toRoom, TRUE, ch, NULL, 0, TO_ROOM);
+          act(toChar, false, ch, nullptr, 0, TO_CHAR);
+          act(toRoom, true, ch, nullptr, 0, TO_ROOM);
           break;
         }
         case 0:
@@ -466,23 +466,23 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
             ch->doSave(SILENT_YES);
 
             if (awesomeFisher) {
-              act("You snatch up $p!", FALSE, ch, fish, 0, TO_CHAR);
-              act("$n snatches $p!", TRUE, ch, fish, 0, TO_ROOM);
+              act("You snatch up $p!", false, ch, fish, 0, TO_CHAR);
+              act("$n snatches $p!", true, ch, fish, 0, TO_ROOM);
             } else {
-              act("You reel in $p!", FALSE, ch, fish, 0, TO_CHAR);
-              act("$n reels in $p!", TRUE, ch, fish, 0, TO_ROOM);
+              act("You reel in $p!", false, ch, fish, 0, TO_CHAR);
+              act("$n reels in $p!", true, ch, fish, 0, TO_ROOM);
             }
 
           } else {
             if (fish)
               delete fish;
 
-            act("You didn't catch anything.", FALSE, ch, NULL, 0, TO_CHAR);
-            act("$n doesn't catch anything.", TRUE, ch, NULL, 0, TO_ROOM);
+            act("You didn't catch anything.", false, ch, nullptr, 0, TO_CHAR);
+            act("$n doesn't catch anything.", true, ch, nullptr, 0, TO_ROOM);
 
             if (rp->getFished() > 10 && ch->bSuccess(SKILL_FISHLORE) &&
                 ::number(0, 99) < 20) {
-              act("<c>This place seems all fished out.<1>", FALSE, ch, NULL, 0,
+              act("<c>This place seems all fished out.<1>", false, ch, nullptr, 0,
                 TO_CHAR);
             }
           }
@@ -492,8 +492,8 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You cease fishing.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops fishing.", TRUE, ch, 0, 0, TO_ROOM);
+      act("You cease fishing.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops fishing.", true, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -512,7 +512,7 @@ int task_fishing(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom* rp,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 void initialize_fish_records() {

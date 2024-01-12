@@ -27,12 +27,12 @@
 // This function should be used if you want to see if the mob is "pissed"
 int TMonster::pissed(void) {
   if (UtilMobProc(this))
-    return FALSE;
+    return false;
 
   if (isAngry() && isMalice())
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 // This function should be used if you want to see if ch is REALLY pissed
@@ -40,69 +40,69 @@ int TMonster::pissed(void) {
 // the 4*anger+5*malice thing allows for "love/hate" fights
 int TMonster::aggro(void) {
   if (UtilMobProc(this))
-    return FALSE;
+    return false;
 
   if (GuildProcs(spec))
-    return FALSE;
+    return false;
 
   if (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL))
-    return FALSE;
+    return false;
 
   if (isAngry() && isMalice()) {
     if ((4 * anger() + 5 * malice()) >= 450)
-      return TRUE;
+      return true;
   }
 
   if (IS_SET(specials.act, ACT_AGGRESSIVE))
-    return TRUE;
+    return true;
 
-  return FALSE;
+  return false;
 }
 
 // function designed for use in conjunction with aggro
-// it returns TRUE if the char is real ugly and the mob is sufficient
+// it returns true if the char is real ugly and the mob is sufficient
 // low level as to be little challenge for the char.  A pissed roll also
 // has to be passed.
 int TMonster::aiUglyMug(TBeing* tmp_ch) {
   int lmob = GetMaxLevel(), ltmp = tmp_ch->GetMaxLevel();
 
   if (lmob < 7)
-    return FALSE;
+    return false;
   if (ltmp < 10)
-    return FALSE;
+    return false;
   if (isAffected(AFF_CHARM))
-    return FALSE;
+    return false;
   if (!tmp_ch->isRealUgly())
-    return FALSE;
+    return false;
   if ((lmob * (tmp_ch->getStat(STAT_CURRENT, STAT_CHA) - 1) / 10) > ltmp)
-    return FALSE;
+    return false;
   if (!pissed() || ::number(0, 4))
-    return FALSE;
+    return false;
   if (tmp_ch->getHit() < 11)
-    return FALSE;
+    return false;
   if (UtilMobProc(this))
-    return FALSE;
+    return false;
   if (!isHumanoid())
-    return FALSE;
+    return false;
 
   switch (::number(1, 3)) {
     case 1:
-      act("$N finds you repulsive!", TRUE, tmp_ch, 0, this, TO_CHAR);
-      act("$N finds $n utterly repulsive.", TRUE, tmp_ch, 0, this, TO_ROOM);
+      act("$N finds you repulsive!", true, tmp_ch, 0, this, TO_CHAR);
+      act("$N finds $n utterly repulsive.", true, tmp_ch, 0, this, TO_ROOM);
       break;
     case 2:
-      act("$N doesn't like your attitude!", TRUE, tmp_ch, 0, this, TO_CHAR);
-      act("$N finds $n's attitude offensive.", TRUE, tmp_ch, 0, this, TO_ROOM);
+      act("$N doesn't like your attitude!", true, tmp_ch, 0, this, TO_CHAR);
+      act("$N finds $n's attitude offensive.", true, tmp_ch, 0, this, TO_ROOM);
       break;
     case 3:
     default:
-      act("$N can't stand to be around you any longer!", TRUE, tmp_ch, 0, this,
+      act("$N can't stand to be around you any longer!", true, tmp_ch, 0, this,
         TO_CHAR);
-      act("$N can't stand the likes of $n any longer.", TRUE, tmp_ch, 0, this,
+      act("$N can't stand the likes of $n any longer.", true, tmp_ch, 0, this,
         TO_ROOM);
       break;
   }
-  return TRUE;
+  return true;
 }
 
 void TMonster::aiTarget(TBeing* vict) {
@@ -115,7 +115,7 @@ void TMonster::aiTarget(TBeing* vict) {
     if (vict->master && vict->master->isPc())
       setTarg(vict->master);
     else  // mob acting on its own
-      setTarg(NULL);
+      setTarg(nullptr);
   }
   TBeing* targy = targ();
   if (!targy)
@@ -123,13 +123,13 @@ void TMonster::aiTarget(TBeing* vict) {
 
   if (!targy->isPc()) {
     vlogf(LOG_MOB_AI, "Bug in aiTarget()");
-    setTarg(NULL);
+    setTarg(nullptr);
   }
 }
 
 // this functon checks conditions of limbs and disallows some socials
-// it should return FALSE if you want the standard text that social will show
-// and TRUE otherwise (which returns out of the doAction loop
+// it should return false if you want the standard text that social will show
+// and true otherwise (which returns out of the doAction loop
 int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
   if (!hasHands() || bothHandsHurt()) {  // polymorphed into something handless?
     switch (cmd) {
@@ -140,8 +140,8 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
       case CMD_FONDLE:
       case CMD_GROPE:
       case CMD_MASSAGE:
-        act("Gee, hands would be nice...", TRUE, this, 0, mob, TO_CHAR);
-        return TRUE;
+        act("Gee, hands would be nice...", true, this, 0, mob, TO_CHAR);
+        return true;
         break;
       default:
         break;
@@ -158,9 +158,9 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
       case CMD_MASSAGE:
       case CMD_SQUEEZE:
       case CMD_CUDDLE:
-        act("Generally, you need working arms to do that...", TRUE, this, 0,
+        act("Generally, you need working arms to do that...", true, this, 0,
           mob, TO_CHAR);
-        return TRUE;
+        return true;
         break;
       default:
         break;
@@ -169,13 +169,13 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
   if (riding) {
     switch (cmd) {
       case CMD_HOP:
-        act("You bounce up and down on $N, how thrilling.", FALSE, this, 0,
+        act("You bounce up and down on $N, how thrilling.", false, this, 0,
           riding, TO_CHAR);
-        act("$n bounces up and down on you, ouch, your back hurts.", FALSE,
+        act("$n bounces up and down on you, ouch, your back hurts.", false,
           this, 0, riding, TO_VICT);
-        act("$n bounces up and down on $N, $e must be excited.", FALSE, this, 0,
+        act("$n bounces up and down on $N, $e must be excited.", false, this, 0,
           riding, TO_NOTVICT);
-        return TRUE;
+        return true;
       default:
         break;
     }
@@ -183,9 +183,9 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
   if (bothLegsHurt()) {
     switch (cmd) {
       case CMD_HOP:
-        act("Your busted legs makes that rather impossible I'm afraid.", TRUE,
+        act("Your busted legs makes that rather impossible I'm afraid.", true,
           this, 0, mob, TO_CHAR);
-        return TRUE;
+        return true;
       default:
         break;
     }
@@ -193,13 +193,13 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
   if (eitherLegHurt()) {
     switch (cmd) {
       case CMD_DANCE:
-        act("Your busted legs makes that rather impossible I'm afraid.", TRUE,
+        act("Your busted legs makes that rather impossible I'm afraid.", true,
           this, 0, mob, TO_CHAR);
-        return TRUE;
+        return true;
       case CMD_HOP:
-        act("Seeing you have a busted leg, that's about all you CAN do.", TRUE,
+        act("Seeing you have a busted leg, that's about all you CAN do.", true,
           this, 0, mob, TO_CHAR);
-        return TRUE;
+        return true;
       default:
         break;
     }
@@ -209,7 +209,7 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
     switch (cmd) {
       case -1:
         act("$N doesn't have any hands so you can't do that to
-  $M.",TRUE,this,0,mob,TO_CHAR); return TRUE; break; default: break;
+  $M.",true,this,0,mob,TO_CHAR); return true; break; default: break;
     }
   }
   */
@@ -218,9 +218,9 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
     switch (cmd) {
       case CMD_DANCE:
       case CMD_SHAKE:
-        act("$N has a busted arm, so you can't do that to $M.", TRUE, this, 0,
+        act("$N has a busted arm, so you can't do that to $M.", true, this, 0,
           mob, TO_CHAR);
-        return TRUE;
+        return true;
         break;
       default:
         break;
@@ -229,9 +229,9 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
   if (mob->eitherLegHurt()) {
     switch (cmd) {
       case CMD_DANCE:
-        act("$E has a problem with $S legs so you can't do that to them.", TRUE,
+        act("$E has a problem with $S legs so you can't do that to them.", true,
           this, 0, mob, TO_CHAR);
-        return TRUE;
+        return true;
       default:
         break;
     }
@@ -240,18 +240,18 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
     switch (cmd) {
       case CMD_FONDLE:
       case CMD_GROPE:
-        act("$N lacks the genetalia for that to be practical.", TRUE, this, 0,
+        act("$N lacks the genetalia for that to be practical.", true, this, 0,
           mob, TO_CHAR);
-        return TRUE;
+        return true;
       default:
         break;
     }
   } else if (mob->getSex() == SEX_FEMALE) {
     switch (cmd) {
       case CMD_RIP:
-        act("$N lacks the genetalia for that to be practical.", TRUE, this, 0,
+        act("$N lacks the genetalia for that to be practical.", true, this, 0,
           mob, TO_CHAR);
-        return TRUE;
+        return true;
       default:
         break;
     }
@@ -261,9 +261,9 @@ int TBeing::socialLimbBad(TBeing* mob, cmdTypeT cmd) {
   // lets add some (redundant) code to verify proper position.
   if (getPosition() < commandArray[cmd]->minPosition) {
     sendTo("You aren't in the proper position to do that.\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 // called when ch falls off horse
@@ -275,7 +275,7 @@ void TMonster::aiHorse(TBeing* ch) {
 }
 
 void TMonster::mobAI() {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   int aggro_state_1 = aggro();
   int aggro_state_2;
 
@@ -396,7 +396,7 @@ void TMonster::mobAI() {
     if (!targ()->isPc()) {
       vlogf(LOG_MOB_AI, format("Ooops, target for %s got set to a mob: %s.") %
                           getName() % targ()->getName());
-      setTarg(NULL);
+      setTarg(nullptr);
     }
 
   // Let's set target for a couple of things.
@@ -407,7 +407,7 @@ void TMonster::mobAI() {
     else if (fight()->master)
       aiTarget(fight()->master);
     else
-      setTarg(NULL);
+      setTarg(nullptr);
 
     // fighting don't make me happy
     if (::number(0, 1))
@@ -427,17 +427,17 @@ void TMonster::mobAI() {
 
   if (!aggro_state_1 && aggro_state_2) {
     // flipped down
-    act("$n goes mad with rage!", TRUE, this, 0, 0, TO_ROOM, ANSI_RED);
-    act("You go mad with rage!", TRUE, this, 0, 0, TO_CHAR, ANSI_RED);
+    act("$n goes mad with rage!", true, this, 0, 0, TO_ROOM, ANSI_RED);
+    act("You go mad with rage!", true, this, 0, 0, TO_CHAR, ANSI_RED);
 
     // force it a little higher so that it is well over limit
     UA(7);
     UM(3);
   } else if (aggro_state_1 && !aggro_state_2) {
     // calmed down
-    act("$n seems more in control of $s anger!", TRUE, this, 0, 0, TO_ROOM,
+    act("$n seems more in control of $s anger!", true, this, 0, 0, TO_ROOM,
       ANSI_GREEN);
-    act("You seem more in control of your anger!", TRUE, this, 0, 0, TO_CHAR,
+    act("You seem more in control of your anger!", true, this, 0, 0, TO_CHAR,
       ANSI_GREEN);
 
     // force it a little lower so that it is well under limit
@@ -470,63 +470,63 @@ int TMonster::aiSocialSwitch(TBeing* doer, TBeing* other, cmdTypeT cmd,
 
   // added pc check so that poly and switched into mobs dont ai -Cos
   if (isPc() || desc || isname("[clone]", name))
-    return FALSE;
+    return false;
 
   if (!canSee(doer))
-    return FALSE;
+    return false;
   if (fight())
-    return FALSE;
+    return false;
   if (!awake())
-    return FALSE;
+    return false;
   if (doer == this)
-    return FALSE;
+    return false;
 
   // one of these checkResponses will activate
   switch (cond) {
     case TARGET_NONE:
-      rc = checkResponses(doer, NULL, NULL, cmd);
+      rc = checkResponses(doer, nullptr, nullptr, cmd);
       break;
     case TARGET_SELF:
-      rc = checkResponses(doer, doer, NULL, cmd);
+      rc = checkResponses(doer, doer, nullptr, cmd);
       break;
     case TARGET_MOB:
-      rc = checkResponses(doer, this, NULL, cmd);
+      rc = checkResponses(doer, this, nullptr, cmd);
       break;
     case TARGET_OTHER:
-      rc = checkResponses(doer, other, NULL, cmd);
+      rc = checkResponses(doer, other, nullptr, cmd);
       break;
   }
   if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
     return rc;
   else if (rc)  // if response triggered, skip ai
-    return FALSE;
+    return false;
 
   rc = 0;
 
   if ((cond != TARGET_MOB) && ::number(0, 2))
-    return FALSE;
+    return false;
   if ((cond == TARGET_MOB) && !::number(0, 7))
-    return FALSE;
+    return false;
 
   // mobs reacting to mobs is bad idea.
   // also allows you to get mount to tank by ordering puke or whatever
   if (!doer->isPc())
-    return FALSE;
+    return false;
 
   aiTarget(doer);
   if (!awake())
-    return FALSE;
+    return false;
   if (!canSee(doer))
-    return FALSE;
+    return false;
   if (UtilMobProc(this))
-    return FALSE;
+    return false;
   // if (GetMaxLevel() <= 5)    // lessen grimhaven spam
-  // return FALSE;
+  // return false;
 
   // have it skip if someone is spamming with same command over and over
   if (cmd == opinion.last_cmd) {
     US(1);
-    return FALSE;
+    return false;
   }
   opinion.last_cmd = cmd;
 
@@ -1025,7 +1025,7 @@ void TMonster::aiMobCreation() {
   if (specials.act & ACT_SCAVENGER)
     setDefGreed(defgreed() + min(25, 100 - defgreed()));
 
-  setTarg(NULL);
+  setTarg(nullptr);
 
   setSusp(defsusp());
   setMalice(defmalice());

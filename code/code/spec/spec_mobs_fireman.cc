@@ -24,14 +24,14 @@ int goToFirehouse(TBeing* myself) {
         thing_to_room(myself, room);
         act("$n comes back to work.", 0, myself, 0, 0, TO_ROOM);
       }
-      return FALSE;
+      return false;
     }
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 static int findAFire(TMonster* myself) {
@@ -40,7 +40,7 @@ static int findAFire(TMonster* myself) {
   TPathFinder path;
 
   if (!fireInGrimhaven)
-    return FALSE;
+    return false;
 
   // findFire only works in grimhaven, so really we only need a limited range
   // if no fire is found, they'll just head back to the fire station in GH
@@ -52,7 +52,7 @@ static int findAFire(TMonster* myself) {
     rc = myself->goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   } else {
     TRoom* rp;
     for (unsigned int zone = 0; zone < zone_table.size(); zone++) {
@@ -67,7 +67,7 @@ static int findAFire(TMonster* myself) {
 
     fireInGrimhaven = false;
   }
-  return FALSE;
+  return false;
 }
 
 void firemanSay(TBeing* myself) {
@@ -93,12 +93,12 @@ void firemanSay(TBeing* myself) {
 
 int fireman(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int rc;
   int firehouse = 4673;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   if (myself->inRoom() != firehouse) {
     for (StuffIter it = myself->roomp->stuff.begin();
@@ -113,7 +113,7 @@ int fireman(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         // room, it looks dumb to have them extinguish 10 fires at the
         // same time.
         if (::number(0, 4))
-          return FALSE;
+          return false;
 
         if (myself->getRace() == RACE_CANINE) {
           act("$n barks excitedly at the fire and runs around in circles.", 0,
@@ -122,7 +122,7 @@ int fireman(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
           t->extinguishMe(myself);
           firemanSay(myself);
         }
-        return TRUE;
+        return true;
       }
     }
 
@@ -142,13 +142,13 @@ int fireman(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       return DELETE_THIS;
     }
 
-    return TRUE;
+    return true;
   } else {
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

@@ -33,7 +33,7 @@ static int trapGuardCheck(TBeing* ch) {
       return DELETE_THIS;
     else if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete guard;
-      guard = NULL;
+      guard = nullptr;
     }
 
     // force the trap to be disrupted.
@@ -49,7 +49,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   char buf1[256], buf2[256];
   int learning;
   TRoom* rp2;
-  roomDirData *back = NULL, *exitp = NULL;
+  roomDirData *back = nullptr, *exitp = nullptr;
   int rc;
 
   half_chop(ch->task->orig_arg, buf1, buf2);
@@ -61,24 +61,24 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       !ch->getDiscipline(DISC_LOOTING) ||
       !IS_SET(exitp->condition, EXIT_CLOSED)) {
     if (ch->getPosition() >= POSITION_RESTING) {
-      act("You suddenly stop trapping the door for some reason.", FALSE, ch, 0,
+      act("You suddenly stop trapping the door for some reason.", false, ch, 0,
         0, TO_CHAR);
-      act("$n stops trapping and looks about confused and embarrassed.", TRUE,
+      act("$n stops trapping and looks about confused and embarrassed.", true,
         ch, 0, 0, TO_ROOM);
     }
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // check for guards that prevent
   rc = trapGuardCheck(ch);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return FALSE;
+    return false;
 
   if (ch->task->timeLeft < 0) {
     // Made it to end, set trap
@@ -101,7 +101,7 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     ch->sendTo("The trap has been successfully set!\n\r");
     ch->hasTrapComps(buf2, TRAP_TARG_DOOR, -1);  // delete the components
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -139,14 +139,14 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop trying to trap.", FALSE, ch, NULL, 0, TO_CHAR);
-      act("$n stops tinkering with the door.", FALSE, ch, NULL, 0, TO_ROOM);
+      act("You stop trying to trap.", false, ch, nullptr, 0, TO_CHAR);
+      act("$n stops tinkering with the door.", false, ch, nullptr, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -159,14 +159,14 @@ int task_trap_door(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
   TRoom*, TObj* obj) {
   int learning;
   int rc;
-  TOpenContainer* cont = NULL;
+  TOpenContainer* cont = nullptr;
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
       !ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, 0) || !obj ||
@@ -174,24 +174,24 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
       (ch->getPosition() <= POSITION_SITTING) ||
       !ch->getDiscipline(DISC_LOOTING)) {
     if (ch->getPosition() >= POSITION_RESTING) {
-      act("You suddenly stop trapping the container for some reason.", FALSE,
+      act("You suddenly stop trapping the container for some reason.", false,
         ch, 0, 0, TO_CHAR);
-      act("$n stops trapping and looks about confused and embarrassed.", TRUE,
+      act("$n stops trapping and looks about confused and embarrassed.", true,
         ch, 0, 0, TO_ROOM);
     }
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // check for guards that prevent
   rc = trapGuardCheck(ch);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return FALSE;
+    return false;
 
   if (ch->task->timeLeft < 0) {
     // Made it to end, set trap
@@ -205,7 +205,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
     ch->sendTo("The trap has been successfully set!\n\r");
     ch->hasTrapComps(ch->task->orig_arg, TRAP_TARG_CONT, -1);
     ch->stopTask();
-    return FALSE;
+    return false;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -241,20 +241,20 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
           ch->sendTo("Your attempt to set the trap has failed.\n\r");
           if (IS_SET_DELETE(rc, DELETE_ITEM)) {
             delete cont;
-            cont = NULL;
+            cont = nullptr;
           }
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
 
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop trying to trap $p.", FALSE, ch, cont, 0, TO_CHAR);
-      act("$n stops tinkering with $p.", FALSE, ch, cont, 0, TO_ROOM);
+      act("You stop trying to trap $p.", false, ch, cont, 0, TO_CHAR);
+      act("$n stops tinkering with $p.", false, ch, cont, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -267,7 +267,7 @@ int task_trap_container(TBeing* ch, cmdTypeT cmd, const char*, int pulse,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 void TTrap::makeTrapLand(TBeing* ch, doorTrapT status, const char* args) {
@@ -311,23 +311,23 @@ int task_trap_mine(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       !ch->getDiscipline(DISC_LOOTING)) {
     if (ch->getPosition() >= POSITION_RESTING) {
       act("You suddenly stop construction of your land mine for some reason.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops trapping and looks about confused and embarrassed.", TRUE,
+        false, ch, 0, 0, TO_CHAR);
+      act("$n stops trapping and looks about confused and embarrassed.", true,
         ch, 0, 0, TO_ROOM);
     }
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // check for guards that prevent
   rc = trapGuardCheck(ch);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return FALSE;
+    return false;
 
   if (ch->task->timeLeft < 0) {
     // Made it to end, set trap
@@ -335,11 +335,11 @@ int task_trap_mine(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       vlogf(LOG_BUG, "Unable to load mine for mine creation");
       ch->sendTo("Serious problem, contact a god.\n\r");
       ch->stopTask();
-      return FALSE;
+      return false;
     }
 
     obj->makeTrapLand(ch, doorTrapT(ch->task->status), ch->task->orig_arg);
-    return FALSE;
+    return false;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -377,14 +377,14 @@ int task_trap_mine(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             return DELETE_THIS;
 
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop trying to build a land mine.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops tinkering with $s land mine.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop trying to build a land mine.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops tinkering with $s land mine.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -397,7 +397,7 @@ int task_trap_mine(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
@@ -411,25 +411,25 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       (ch->getPosition() <= POSITION_SITTING) ||
       !ch->getDiscipline(DISC_LOOTING)) {
     if (ch->getPosition() >= POSITION_RESTING) {
-      act("You suddenly stop trapping your arrow for some reason.", FALSE, ch,
+      act("You suddenly stop trapping your arrow for some reason.", false, ch,
         0, 0, TO_CHAR);
-      act("$n stops trapping and looks about confused and embarrassed.", TRUE,
+      act("$n stops trapping and looks about confused and embarrassed.", true,
         ch, 0, 0, TO_ROOM);
     }
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   if (!(arrow = dynamic_cast<TArrow*>(obj))) {
-    act("You can't put an arrow trap on a non-arrow.", FALSE, ch, 0, 0,
+    act("You can't put an arrow trap on a non-arrow.", false, ch, 0, 0,
       TO_CHAR);
-    act("$n stops trapping and looks about confused and embarrassed.", TRUE, ch,
+    act("$n stops trapping and looks about confused and embarrassed.", true, ch,
       0, 0, TO_ROOM);
     ch->stopTask();
-    return FALSE;
+    return false;
   }
 
   if (ch->task->timeLeft < 0) {
@@ -446,7 +446,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
 
     ch->stopTask();
 
-    return FALSE;
+    return false;
   }
 
   switch (cmd) {
@@ -485,14 +485,14 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             return DELETE_THIS;
 
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop trying to trap an arrow.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops tinkering with $s arrow.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop trying to trap an arrow.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops tinkering with $s arrow.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -505,7 +505,7 @@ int task_trap_arrow(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }
 
 void TTrap::makeTrapGrenade(TBeing* ch, doorTrapT status, const char* args) {
@@ -543,23 +543,23 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       !ch->getDiscipline(DISC_LOOTING)) {
     if (ch->getPosition() >= POSITION_RESTING) {
       act("You suddenly stop construction of your grenade for some reason.",
-        FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops trapping and looks about confused and embarrassed.", TRUE,
+        false, ch, 0, 0, TO_CHAR);
+      act("$n stops trapping and looks about confused and embarrassed.", true,
         ch, 0, 0, TO_ROOM);
     }
     ch->stopTask();
-    return FALSE;  // returning FALSE lets command be interpreted
+    return false;  // returning false lets command be interpreted
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd))
-    return FALSE;
+    return false;
 
   // check for guards that prevent
   rc = trapGuardCheck(ch);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
   else if (rc)
-    return FALSE;
+    return false;
 
   if (ch->task->timeLeft < 0) {
     // Made it to end, set trap
@@ -567,12 +567,12 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       vlogf(LOG_BUG, "Unable to load grenade for grenade creation");
       ch->sendTo("Serious problem, contact a god.\n\r");
       ch->stopTask();
-      return FALSE;
+      return false;
     }
 
     obj->makeTrapGrenade(ch, doorTrapT(ch->task->status), ch->task->orig_arg);
 
-    return FALSE;
+    return false;
   }
   switch (cmd) {
     case CMD_TASK_CONTINUE:
@@ -610,14 +610,14 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             return DELETE_THIS;
 
           ch->stopTask();
-          return FALSE;
+          return false;
         }
       }
       break;
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop trying to build a grenade.", FALSE, ch, 0, 0, TO_CHAR);
-      act("$n stops tinkering with $s grenade.", FALSE, ch, 0, 0, TO_ROOM);
+      act("You stop trying to build a grenade.", false, ch, 0, 0, TO_CHAR);
+      act("$n stops tinkering with $s grenade.", false, ch, 0, 0, TO_ROOM);
       ch->stopTask();
       break;
     case CMD_TASK_FIGHTING:
@@ -630,5 +630,5 @@ int task_trap_grenade(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
         warn_busy(ch);
       break;  // eat the command
   }
-  return TRUE;
+  return true;
 }

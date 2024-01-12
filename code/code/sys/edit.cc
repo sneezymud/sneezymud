@@ -26,11 +26,11 @@ int Descriptor::move(int hor, int vert) {
     edit.x = (edit.x < 1) ? 1 : edit.x;
     edit.y = (edit.y < 1) ? 1 : edit.y;
     beep();
-    return FALSE;
+    return false;
   }
   sprintf(buf, VT_CURSPOS, vert, hor);
   writeToQ(buf);
-  return TRUE;
+  return true;
 }
 
 bool Descriptor::isEditing() { return (connected == CON_EDITTING); }

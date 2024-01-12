@@ -17,42 +17,42 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
   int bKnown;
   int grapple_move = 25 + ::number(1, 10);
 
-  TThing* obj = NULL;
-  TBaseClothing* tbc = NULL;
+  TThing* obj = nullptr;
+  TBaseClothing* tbc = nullptr;
   int suitDam = 0;
 
   if (c->checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (c->getCombatMode() == ATTACK_BERSERK) {
     c->sendTo(
       "You are berserking! You can't focus enough to grapple anyone!\n\r");
-    return FALSE;
+    return false;
   }
   if (victim == c) {
     c->sendTo("Aren't we funny today?\n\r");
-    return FALSE;
+    return false;
   }
   if (c->noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   if (victim->isImmortal() || IS_SET(victim->specials.act, ACT_IMMORTAL)) {
     c->sendTo("You can't grapple an immortal.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (c->riding) {
     c->sendTo("Grappling while mounted is impossible!\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->isFlying()) {
     c->sendTo("You can't grapple someone that is flying.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (c->getMove() < grapple_move) {
     c->sendTo("You lack the vitality to grapple.\n\r");
-    return FALSE;
+    return false;
   }
   c->addToMove(-grapple_move);
 
@@ -77,11 +77,11 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       !victim->awake()) {
     if (victim->canCounterMove(bKnown / 2)) {
       SV(skill);
-      act("$N blocks your grapple attempt and knocks you to the $g.", TRUE, c,
+      act("$N blocks your grapple attempt and knocks you to the $g.", true, c,
         0, victim, TO_CHAR, ANSI_RED);
-      act("$N blocks $n's attempt to grapple, and knocks $m to the $g.", TRUE,
+      act("$N blocks $n's attempt to grapple, and knocks $m to the $g.", true,
         c, 0, victim, TO_NOTVICT);
-      act("You evade $n's attempt to grapple, and knock $m to the $g.", TRUE, c,
+      act("You evade $n's attempt to grapple, and knock $m to the $g.", true, c,
         0, victim, TO_VICT);
       c->cantHit += c->loseRound(5 - (min(50, level) / 12));
 
@@ -94,22 +94,22 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
         return rc;
     } else if (victim->canFocusedAvoidance(bKnown / 2)) {
       SV(skill);
-      act("$N avoids your grapple attempt.", TRUE, c, 0, victim, TO_CHAR,
+      act("$N avoids your grapple attempt.", true, c, 0, victim, TO_CHAR,
         ANSI_RED);
-      act("$N avoids $n's attempt to grapple.", TRUE, c, 0, victim, TO_NOTVICT);
-      act("You evade $n's attempt to grapple.", TRUE, c, 0, victim, TO_VICT);
+      act("$N avoids $n's attempt to grapple.", true, c, 0, victim, TO_NOTVICT);
+      act("You evade $n's attempt to grapple.", true, c, 0, victim, TO_VICT);
     } else {
       if (victim->riding) {
-        act("You pull $N off $p.", FALSE, c, victim->riding, victim, TO_CHAR);
-        act("$n pulls $N off $p.", FALSE, c, victim->riding, victim,
+        act("You pull $N off $p.", false, c, victim->riding, victim, TO_CHAR);
+        act("$n pulls $N off $p.", false, c, victim->riding, victim,
           TO_NOTVICT);
-        act("$n pulls you off $p.", FALSE, c, victim->riding, victim, TO_VICT);
+        act("$n pulls you off $p.", false, c, victim->riding, victim, TO_VICT);
         victim->dismount(POSITION_STANDING);
       }
       c->sendTo("You tie your opponent up, with an excellent maneuver.\n\r");
-      act("$n wrestles $N to the $g with an excellent maneuver.", TRUE, c, 0,
+      act("$n wrestles $N to the $g with an excellent maneuver.", true, c, 0,
         victim, TO_NOTVICT);
-      act("$n wrestles you to the $g.", TRUE, c, 0, victim, TO_VICT);
+      act("$n wrestles you to the $g.", true, c, 0, victim, TO_VICT);
 
       // if eqipment worn on body is spiked, add a little extra 10-20-00, -dash
       if (((obj = c->equipment[WEAR_BODY]) &&
@@ -117,11 +117,11 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
             (tbc->isSpiked() || tbc->isObjStat(ITEM_SPIKED)))) {
         suitDam = (int)((tbc->getWeight() / 10) + 1);
 
-        act("The spikes on your $o sink into $N.", FALSE, c, tbc, victim,
+        act("The spikes on your $o sink into $N.", false, c, tbc, victim,
           TO_CHAR);
-        act("The spikes on $n's $o sink into $N.", FALSE, c, tbc, victim,
+        act("The spikes on $n's $o sink into $N.", false, c, tbc, victim,
           TO_NOTVICT);
-        act("The spikes on $n's $o sink into you.", FALSE, c, tbc, victim,
+        act("The spikes on $n's $o sink into you.", false, c, tbc, victim,
           TO_VICT);
 
         if (c->reconcileDamage(victim, suitDam, TYPE_STAB) == -1)
@@ -151,11 +151,11 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       if (!victim->fight()) {
         if (c->fight()) {
           if (c->fight() != victim) {
-            act("You now turn your attention to $N!", TRUE, c, 0, victim,
+            act("You now turn your attention to $N!", true, c, 0, victim,
               TO_CHAR);
-            act("$n now turns $s attention to $N!", TRUE, c, 0, victim,
+            act("$n now turns $s attention to $N!", true, c, 0, victim,
               TO_NOTVICT);
-            act("$n has turned $s attention to you!", TRUE, c, 0, victim,
+            act("$n has turned $s attention to you!", true, c, 0, victim,
               TO_VICT);
           }
           c->stopFighting();
@@ -166,18 +166,18 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
         c->setVictFighting(victim);
       } else if (::number(1, 5) < 4) {
         if (c->fight() && (c->fight() != victim)) {
-          act("You now turn your attention to $N!", TRUE, c, 0, victim,
+          act("You now turn your attention to $N!", true, c, 0, victim,
             TO_CHAR);
-          act("$n now turns $s attention to $N!", TRUE, c, 0, victim,
+          act("$n now turns $s attention to $N!", true, c, 0, victim,
             TO_NOTVICT);
-          act("$n has turned $s attention to you!", TRUE, c, 0, victim,
+          act("$n has turned $s attention to you!", true, c, 0, victim,
             TO_VICT);
         }
         if (victim->fight() && (victim->fight() != c)) {
-          act("$N now turns $S attention to you!", TRUE, c, 0, victim, TO_CHAR);
-          act("$N now turns $S attention to $n!", TRUE, c, 0, victim,
+          act("$N now turns $S attention to you!", true, c, 0, victim, TO_CHAR);
+          act("$N now turns $S attention to $n!", true, c, 0, victim,
             TO_NOTVICT);
-          act("You now turn your attention to $n!", TRUE, c, 0, victim,
+          act("You now turn your attention to $n!", true, c, 0, victim,
             TO_VICT);
         }
         if (c->fight())
@@ -192,7 +192,7 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       victim->cantHit += victim->loseRound(4);
 
       if (victim->spelltask) {
-        victim->addToDistracted(1, FALSE);
+        victim->addToDistracted(1, false);
       }
       victim->addToWait(combatRound(5));
     }
@@ -209,18 +209,18 @@ static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
       return rc;
 
     act("You try to wrestle $N to the $g, but end up falling on your butt.",
-      TRUE, c, 0, victim, TO_CHAR);
-    act("$n makes a nice wrestling move, but falls on $s butt.", TRUE, c, 0, 0,
+      true, c, 0, victim, TO_CHAR);
+    act("$n makes a nice wrestling move, but falls on $s butt.", true, c, 0, 0,
       TO_ROOM);
 
     if (!victim->fight()) {
-      act("$N turns $S attention to $n", TRUE, c, 0, victim, TO_NOTVICT);
+      act("$N turns $S attention to $n", true, c, 0, victim, TO_NOTVICT);
       c->setCharFighting(victim);
       c->setVictFighting(victim);
     }
   }
   c->reconcileHurt(victim, 0.01);
-  return TRUE;
+  return true;
 }
 
 int TBeing::doGrapple(const char* argument, TBeing* vict) {
@@ -231,26 +231,26 @@ int TBeing::doGrapple(const char* argument, TBeing* vict) {
   spellNumT skill = getSkillNum(SKILL_GRAPPLE);
 
   if (checkBusy()) {
-    return FALSE;
+    return false;
   }
   strcpy(name_buf, argument);
   if (!(victim = vict)) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {
         sendTo("Grapple whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
 
   if (!doesKnowSkill(skill)) {
     sendTo("You know nothing about grappling.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   rc = grapple(this, victim, skill);
   if (rc)
@@ -259,7 +259,7 @@ int TBeing::doGrapple(const char* argument, TBeing* vict) {
     if (vict)
       return rc;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

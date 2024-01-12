@@ -20,12 +20,12 @@
 
 int poison_price(TBeing* ch, affectedData*, int shop_nr) {
   // get more exotic later
-  return (int)(500.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  return (int)(500.0 * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 }
 
 int syphilis_price(TBeing* ch, affectedData*, int shop_nr) {
   // get more exotic later
-  return (int)(10000.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  return (int)(10000.0 * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 }
 
 int limb_heal_price(TBeing* ch, wearSlotT pos, int shop_nr) {
@@ -37,7 +37,7 @@ int limb_heal_price(TBeing* ch, wearSlotT pos, int shop_nr) {
   if (ch->GetMaxLevel() < 6)
     basenum = 1;
 
-  basenum = (int)((float)basenum * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  basenum = (int)((float)basenum * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 
   basenum = max(1, basenum);
 
@@ -89,7 +89,7 @@ int limb_expel_price(TBeing* ch, wearSlotT pos, int shop_nr) {
     return (-1);
   }
   return (int)((float)stuck->expelPrice(ch, pos) *
-               shop_index[shop_nr].getProfitBuy(NULL, ch));
+               shop_index[shop_nr].getProfitBuy(nullptr, ch));
 }
 
 int TThing::expelPrice(const TBeing* ch, int pos) const {
@@ -127,7 +127,7 @@ int limb_wound_price(TBeing* ch, wearSlotT pos, unsigned short int wound,
   if (ch->GetMaxLevel() < 6)
     price /= 4;
 
-  price = (int)((float)price * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  price = (int)((float)price * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 
   switch (pos) {
     case WEAR_FINGER_R:
@@ -162,7 +162,7 @@ int limb_wound_price(TBeing* ch, wearSlotT pos, unsigned short int wound,
       break;
   }
   vlogf(LOG_BUG, format("Bad pos (%d) in limb_wound_price!") % pos);
-  return (int)(1000000.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  return (int)(1000000.0 * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 }
 
 int spell_regen_price(TBeing* ch, spellNumT spell, int shop_nr) {
@@ -172,13 +172,13 @@ int spell_regen_price(TBeing* ch, spellNumT spell, int shop_nr) {
     price = ch->GetMaxLevel() * max((int)ch->GetMaxLevel(), 20) * 1;
   }
 
-  return (int)((float)price * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  return (int)((float)price * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 }
 
 int limb_regen_price(TBeing* ch, wearSlotT pos, int shop_nr) {
   int price = ch->GetMaxLevel() * max(20, (int)ch->GetMaxLevel()) * 3;
 
-  price = (int)((float)price * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  price = (int)((float)price * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 
   switch (pos) {
     case WEAR_FINGER_R:
@@ -213,7 +213,7 @@ int limb_regen_price(TBeing* ch, wearSlotT pos, int shop_nr) {
       break;
   }
   vlogf(LOG_BUG, format("Bad pos (%d) in limb_regen_price!") % pos);
-  return (int)(1000000.0 * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  return (int)(1000000.0 * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 }
 
 int doctorCost(int shop_nr, TBeing* ch, diseaseTypeT disease) {
@@ -232,7 +232,7 @@ int doctorCost(int shop_nr, TBeing* ch, diseaseTypeT disease) {
     cost = DiseaseInfo[disease].cure_cost;
   }
 
-  cost = (int)((float)cost * shop_index[shop_nr].getProfitBuy(NULL, ch));
+  cost = (int)((float)cost * shop_index[shop_nr].getProfitBuy(nullptr, ch));
 
   return cost;
 }
@@ -251,7 +251,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
   }
 
   if (!ch->isPc())
-    return FALSE;
+    return false;
 
   if (cmd != CMD_LIST && cmd != CMD_BUY && cmd != CMD_WHISPER)
     return false;
@@ -328,7 +328,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
     if (!count) {
       me->doTell(ch->getName(), "I see nothing at all wrong with you!");
     }
-    return TRUE;
+    return true;
     /* Allow them to buy cures for their ailments. */
   } else if (cmd == CMD_BUY) {
     for (; isspace(*arg); arg++)
@@ -337,7 +337,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
     if (!*arg || !arg) {
       me->doTell(ch->getName(),
         "What do you want to buy? Try listing to see what ails you!");
-      return TRUE;
+      return true;
     }
 
     // doctor exists in a room that you can fight in
@@ -345,18 +345,18 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
     // would create a *NICE* situation for the player
     if (ch->fight()) {
       me->doTell(ch->getName(), "Come back when you aren't fighting.");
-      return TRUE;
+      return true;
     }
     if (me->master == ch) {
       me->doTell(ch->getName(), "Your money is no good here.");
-      return TRUE;
+      return true;
     }
 
     if (!sstring(arg).isNumber()) {
       me->doTell(ch->getName(),
         "To buy a cure, type \"buy <number>\". Try listing to see what ails "
         "you!");
-      return TRUE;
+      return true;
     }
     bought = convertTo<int>(arg);
 
@@ -371,21 +371,21 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
             me->doTell(ch->getName(),
               format("You don't have enough money to regenerate your %s!") %
                 ch->describeBodySlot(i));
-            return TRUE;
+            return true;
           } else {
             if (!ch->isBodyPartAttached(i)) {
               me->doTell(ch->getName(),
                 format("You can't regenerate your %s until something else is "
                        "regenerated first.") %
                   ch->describeBodySlot(i));
-              return TRUE;
+              return true;
             }
             int cashCost = min(ch->getMoney(), cost);
 
             if (me->getMoney() < cashCost) {
               me->doTell(ch->getName(),
                 "I don't have enough money to cover my operating expenses!");
-              return TRUE;
+              return true;
             }
 
             TShopOwned tso(shop_nr, me, ch);
@@ -397,12 +397,12 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
                     "$n waves $s hands, utters many magic phrases and "
                     "regenerates $N's %s!") %
                   ch->describeBodySlot(i);
-            act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
+            act(buf, true, me, nullptr, ch, TO_NOTVICT);
             buf = format(
                     "$n waves $s hands, utters many magic phrases and "
                     "regenerates your %s!") %
                   ch->describeBodySlot(i);
-            act(buf, TRUE, me, NULL, ch, TO_VICT);
+            act(buf, true, me, nullptr, ch, TO_VICT);
             ch->setLimbFlags(i, 0);
             ch->setCurLimbHealth(i, ch->getMaxLimbHealth(i));
             if (i == WEAR_HAND_R) {
@@ -414,7 +414,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
               ch->setCurLimbHealth(HOLD_LEFT, ch->getMaxLimbHealth(HOLD_LEFT));
             }
             ch->doSave(SILENT_YES);
-            return TRUE;
+            return true;
           }
         }
       } else {
@@ -428,7 +428,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
                   (cost = limb_wound_price(ch, i, 1 << j, shop_nr))) {
                 me->doTell(ch->getName(),
                   "You don't have enough money to do that!");
-                return TRUE;
+                return true;
               } else {
                 int cashCost = min(ch->getMoney(), cost);
 
@@ -436,7 +436,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
                   me->doTell(ch->getName(),
                     "I don't have enough money to cover my operating "
                     "expenses!");
-                  return TRUE;
+                  return true;
                 }
 
                 TShopOwned tso(shop_nr, me, ch);
@@ -448,12 +448,12 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
                         "$n waves $s hands, utters many magic phrases and "
                         "touches $N's %s!") %
                       ch->describeBodySlot(i);
-                act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
+                act(buf, true, me, nullptr, ch, TO_NOTVICT);
                 buf = format(
                         "$n waves $s hands, utters many magic phrases and "
                         "touches your %s!") %
                       ch->describeBodySlot(i);
-                act(buf, TRUE, me, NULL, ch, TO_VICT);
+                act(buf, true, me, nullptr, ch, TO_VICT);
                 ch->sendTo(
                   format("Your %s is healed!\n\r") % ch->describeBodySlot(i));
                 ch->remLimbFlags(i, 1 << j);
@@ -467,7 +467,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
                     ch->getMaxLimbHealth(HOLD_LEFT));
                 }
                 ch->doSave(SILENT_YES);
-                return TRUE;
+                return true;
               }
             }
           }
@@ -479,14 +479,14 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
             me->doTell(ch->getName(),
               format("You don't have enough money to heal your %s!") %
                 ch->describeBodySlot(i));
-            return TRUE;
+            return true;
           } else {
             int cashCost = min(ch->getMoney(), cost);
 
             if (me->getMoney() < cashCost) {
               me->doTell(ch->getName(),
                 "I don't have enough money to cover my operating expenses!");
-              return TRUE;
+              return true;
             }
 
             TShopOwned tso(shop_nr, me, ch);
@@ -498,12 +498,12 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
                     "$n waves $s hands, utters many magic phrases and touches "
                     "$N's %s!") %
                   ch->describeBodySlot(i);
-            act(buf, TRUE, me, NULL, ch, TO_NOTVICT);
+            act(buf, true, me, nullptr, ch, TO_NOTVICT);
             buf = format(
                     "$n waves $s hands, utters many magic phrases and touches "
                     "your %s!") %
                   ch->describeBodySlot(i);
-            act(buf, TRUE, me, NULL, ch, TO_VICT);
+            act(buf, true, me, nullptr, ch, TO_VICT);
             ch->sendTo(
               format("Your %s feels better!\n\r") % ch->describeBodySlot(i));
             ch->setCurLimbHealth(i, ch->getMaxLimbHealth(i));
@@ -514,7 +514,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
               ch->setCurLimbHealth(HOLD_LEFT, ch->getMaxLimbHealth(HOLD_LEFT));
             }
             ch->doSave(SILENT_YES);
-            return TRUE;
+            return true;
           }
         }
       }
@@ -524,14 +524,14 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
             me->doTell(ch->getName(),
               format("You don't have enough money to expel %s from your %s!") %
                 stuck->shortDescr % ch->describeBodySlot(i));
-            return TRUE;
+            return true;
           } else {
             int cashCost = min(ch->getMoney(), cost);
 
             if (me->getMoney() < cashCost) {
               me->doTell(ch->getName(),
                 "I don't have enough money to cover my operating expenses!");
-              return TRUE;
+              return true;
             }
 
             TShopOwned tso(shop_nr, me, ch);
@@ -541,26 +541,26 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
 
             buf = format("$n skillfully removes $p from $N's %s!") %
                   ch->describeBodySlot(i);
-            act(buf, TRUE, me, stuck, ch, TO_NOTVICT);
+            act(buf, true, me, stuck, ch, TO_NOTVICT);
             buf = format("$n skillfully removes $p from your %s!") %
                   ch->describeBodySlot(i);
-            act(buf, TRUE, me, stuck, ch, TO_VICT);
-            *ch += *(ch->pulloutObj(i, TRUE, &res));
+            act(buf, true, me, stuck, ch, TO_VICT);
+            *ch += *(ch->pulloutObj(i, true, &res));
 
-            int rc = stuck->checkSpec(ch, CMD_OBJ_EXPELLED, "", NULL);
+            int rc = stuck->checkSpec(ch, CMD_OBJ_EXPELLED, "", nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               delete stuck;
-              stuck = NULL;
+              stuck = nullptr;
             }
             ch->doSave(SILENT_YES);
-            return TRUE;
+            return true;
           }
         }
       }
     } /* body part for loop */
     if (ch->affected) {
-      affectedData* aff = NULL;
-      affectedData* aff2 = NULL;
+      affectedData* aff = nullptr;
+      affectedData* aff2 = nullptr;
       for (aff = ch->affected; aff; aff = aff2) {
         aff2 = aff->next;
         if (aff->type == AFFECT_DISEASE) {
@@ -571,14 +571,14 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
               me->doTell(fname(ch->name),
                 format("You don't have enough money to cure %s!") %
                   DiseaseInfo[affToDisease(*aff)].name);
-              return TRUE;
+              return true;
             } else {
               int cashCost = min(ch->getMoney(), cost);
 
               if (me->getMoney() < cashCost) {
                 me->doTell(ch->getName(),
                   "I don't have enough money to cover my operating expenses!");
-                return TRUE;
+                return true;
               }
 
               TShopOwned tso(shop_nr, me, ch);
@@ -589,10 +589,10 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
 
               act(
                 "$n waves $s hands, utters many magic phrases and touches $N!",
-                TRUE, me, NULL, ch, TO_NOTVICT);
+                true, me, nullptr, ch, TO_NOTVICT);
               act(
                 "$n waves $s hands, utters many magic phrases and touches you!",
-                TRUE, me, NULL, ch, TO_VICT);
+                true, me, nullptr, ch, TO_VICT);
               if (aff->modifier == DISEASE_POISON) {
                 ch->affectFrom(SPELL_POISON);
                 ch->affectFrom(SPELL_POISON_DEIKHAN);
@@ -603,7 +603,7 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
               ch->diseaseStop(aff);
               ch->affectRemove(aff);
               ch->doSave(SILENT_YES);
-              return TRUE;
+              return true;
             }
           }
         } else if (aff->type == SPELL_BLINDNESS) {
@@ -614,14 +614,14 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
               me->doTell(fname(ch->name),
                 format("You don't have enough money to cure %s!") %
                   discArray[aff->type]->name);
-              return TRUE;
+              return true;
             } else {
               int cashCost = min(ch->getMoney(), cost);
 
               if (me->getMoney() < cashCost) {
                 me->doTell(ch->getName(),
                   "I don't have enough money to cover my operating expenses!");
-                return TRUE;
+                return true;
               }
 
               TShopOwned tso(shop_nr, me, ch);
@@ -631,15 +631,15 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
 
               act(
                 "$n waves $s hands, utters many magic phrases and touches $N!",
-                TRUE, me, NULL, ch, TO_NOTVICT);
+                true, me, nullptr, ch, TO_NOTVICT);
               act(
                 "$n waves $s hands, utters many magic phrases and touches you!",
-                TRUE, me, NULL, ch, TO_VICT);
+                true, me, nullptr, ch, TO_VICT);
 
               ch->affectFrom(aff->type);
 
               ch->doSave(SILENT_YES);
-              return TRUE;
+              return true;
             }
           }
         }
@@ -649,9 +649,9 @@ int doctor(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
       me->doTell(ch->getName(), " I see nothing at all wrong with you!");
     }
     ch->doSave(SILENT_YES);
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 TMonster* getDoctor(int hospital_room, int& shop_nr) {
@@ -678,31 +678,31 @@ TMonster* getDoctor(int hospital_room, int& shop_nr) {
       doctor_room = 16200;
       break;
     default:
-      return NULL;
+      return nullptr;
   }
 
   TRoom* oproom = real_roomp(doctor_room);
   if (!oproom)
-    return NULL;
+    return nullptr;
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = oproom->stuff.begin();
        it != oproom->stuff.end() && (t = *it); ++it) {
     TMonster* doctor = dynamic_cast<TMonster*>(t);
     if (doctor && doctor->number == shop_index[shop_nr].keeper)
       return doctor;
   }
-  return NULL;
+  return nullptr;
 }
 
 int healing_room(TBeing*, cmdTypeT cmd, const char*, TRoom* rp) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TPerson* healed;
-  TMonster* doctor = NULL;
+  TMonster* doctor = nullptr;
   int num, cost, shop_nr = -1;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
@@ -739,13 +739,13 @@ int healing_room(TBeing*, cmdTypeT cmd, const char*, TRoom* rp) {
       if (gamePort != Config::Port::GAMMA)
         vlogf(LOG_BUG,
           format("Couldn't find doctor for shop_nr=%i!") % shop_nr);
-      return FALSE;
+      return false;
     }
 
     if (doctor->getMoney() < cost) {
       doctor->doTell(healed->getName(),
         "I don't have enough money to cover my operating expenses!");
-      return TRUE;
+      return true;
     }
 
     TShopOwned tso(shop_nr, doctor, healed);
@@ -757,7 +757,7 @@ int healing_room(TBeing*, cmdTypeT cmd, const char*, TRoom* rp) {
       format("The charge for the healing is %d talens.\n\r") % cost);
 
   }  // end for
-  return FALSE;
+  return false;
 }
 
 int emergency_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
@@ -767,10 +767,10 @@ int emergency_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
   TBeing* doctor;
 
   if (cmd != CMD_BUY && cmd != CMD_LIST)
-    return FALSE;
+    return false;
 
   if (!ch || dynamic_cast<TMonster*>(ch))
-    return FALSE;
+    return false;
 
   cost = 150 * ch->GetMaxLevel();
   if (cmd == CMD_LIST) {
@@ -778,7 +778,7 @@ int emergency_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
     ch->sendTo("2 - Healing of the Mind (Mana Restore)\n\r");
     ch->sendTo("3 - Healing of the Spirit (Lifeforce Restore)\n\r");
     ch->sendTo(format("Any of these for %d talens.\n\r") % cost);
-    return TRUE;
+    return true;
   } else if (cmd == CMD_BUY) { /* Buy */
     // find the doctor
     doctor = getDoctor(rp->in_room, shop_nr);
@@ -786,25 +786,25 @@ int emergency_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
     if (!doctor) {
       vlogf(LOG_BUG, format("couldn't find doctor for shop_nr=%i!") % shop_nr);
       ch->sendTo("Couldn't find the doctor, tell a god!");
-      return FALSE;
+      return false;
     }
     TShopOwned tso(shop_nr, dynamic_cast<TMonster*>(doctor), ch);
     arg = one_argument(arg, buf, cElements(buf));
     opt = convertTo<int>(buf);
     if (cost > ch->getMoney()) {
       ch->sendTo("Sorry, no medicare, medicaid or insurance allowed.\n\r");
-      return TRUE;
+      return true;
     }
 
     if (doctor->getMoney() < cost) {
       doctor->doTell(ch->getName(),
         "I don't have enough money to cover my operating expenses!");
-      return TRUE;
+      return true;
     }
 
     if (ch->fight()) {
       ch->sendTo("The doctors can't work on you if you are fighting.\n\r");
-      return TRUE;
+      return true;
     }
     if ((opt >= 1) && (opt <= 3)) {
       switch (opt) {
@@ -844,10 +844,10 @@ int emergency_room(TBeing* ch, cmdTypeT cmd, const char* arg, TRoom* rp) {
           break;
         default:
           ch->sendTo("That's not available at THIS hospital!\n\r");
-          return TRUE;
+          return true;
       }
-      return TRUE;
+      return true;
     }
   }
-  return FALSE;
+  return false;
 }

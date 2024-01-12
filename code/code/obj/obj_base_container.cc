@@ -49,7 +49,7 @@ bool TBaseContainer::engraveMe(TBeing* ch, TMonster* me, bool give) {
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
   }
-  return TRUE;
+  return true;
 }
 
 int TBaseContainer::stealModifier() {
@@ -109,7 +109,7 @@ void TBaseContainer::purchaseMe(TBeing* ch, TMonster* tKeeper, int tCost,
 }
 
 void TBaseContainer::examineObj(TBeing* ch) const {
-  int bits = FALSE;
+  int bits = false;
 
   if (parent && (ch == parent)) {
     bits = FIND_OBJ_INV;
@@ -126,7 +126,7 @@ void TBaseContainer::examineObj(TBeing* ch) const {
 void TBaseContainer::logMe(const TBeing* ch, const char* cmdbuf) const {
   TObj::logMe(ch, cmdbuf);
 
-  const char* last = NULL;
+  const char* last = nullptr;
   if (!stuff.empty())
     last = stuff.front()->getName().c_str();
   int runcount = 1;
@@ -162,13 +162,13 @@ int TBaseContainer::getAllFrom(TBeing* ch, const char* argument) {
     // allow loot
   } else if ((corpse = dynamic_cast<TBaseCorpse*>(this)) &&
              corpse->isCorpseFlag(CORPSE_DENY_LOOT) && !ch->isImmortal()) {
-    act("Looting $p isn't allowed.", TRUE, ch, this, NULL, TO_CHAR);
-    return TRUE;
+    act("Looting $p isn't allowed.", true, ch, this, nullptr, TO_CHAR);
+    return true;
   }
 
-  act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
-  act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-  start_task(ch, NULL, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,
+  act("You start getting items from $p.", true, ch, this, nullptr, TO_CHAR);
+  act("$n starts getting items from $p.", true, ch, this, nullptr, TO_ROOM);
+  start_task(ch, nullptr, ch->roomp, TASK_GET_ALL, argument, 350, ch->in_room, 0,
     0, 0);
 
   /*
@@ -190,7 +190,7 @@ int TBaseContainer::getAllFrom(TBeing* ch, const char* argument) {
     (*(tasks[TASK_GET_ALL].taskf))(ch, CMD_TASK_CONTINUE, "", 0, ch->roomp, 0);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_VICT;
-  return FALSE;
+  return false;
 }
 
 int TBaseContainer::getObjFrom(TBeing* ch, const char* arg1, const char* arg2) {
@@ -205,23 +205,23 @@ int TBaseContainer::getObjFrom(TBeing* ch, const char* arg1, const char* arg2) {
       ch->sendTo(COLOR_OBJECTS,
         format("There are no \"%s\"'s visible in %s.\n\r") % newarg %
           getName());
-      return TRUE;
+      return true;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
       ch->sendTo("You need to be standing to do that.\n\r");
       if (!ch->awake())
-        return TRUE;  // sleeping
+        return true;  // sleeping
       ch->doStand();
 
       if (ch->fight())
-        return TRUE;  // don't fall through
+        return true;  // don't fall through
     }
     if (dynamic_cast<TBeing*>(ch->riding) &&
         (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) &&
         (in_room != Room::NOWHERE)) {
-      act("You can't get things from $p while mounted!", FALSE, ch, this, 0,
+      act("You can't get things from $p while mounted!", false, ch, this, 0,
         TO_CHAR);
-      return TRUE;
+      return true;
     }
 
     if ((tCorpse = dynamic_cast<TPCorpse*>(this)) &&
@@ -229,13 +229,13 @@ int TBaseContainer::getObjFrom(TBeing* ch, const char* arg1, const char* arg2) {
       // allow loot
     } else if ((corpse = dynamic_cast<TBaseCorpse*>(this)) &&
                corpse->isCorpseFlag(CORPSE_DENY_LOOT) && !ch->isImmortal()) {
-      act("Looting $p isn't allowed.", TRUE, ch, this, NULL, TO_CHAR);
-      return TRUE;
+      act("Looting $p isn't allowed.", true, ch, this, nullptr, TO_CHAR);
+      return true;
     }
 
     sprintf(capbuf, "%s %s", newarg, arg2);
-    act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
+    act("You start getting items from $p.", true, ch, this, nullptr, TO_CHAR);
+    act("$n starts getting items from $p.", true, ch, this, nullptr, TO_ROOM);
 
     /*
     if ((tCorpse = dynamic_cast<TPCorpse *>(this)) &&
@@ -250,7 +250,7 @@ int TBaseContainer::getObjFrom(TBeing* ch, const char* arg1, const char* arg2) {
     }
     */
 
-    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 1,
+    start_task(ch, nullptr, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 1,
       0, 0);
     // this is a kludge, task_get still has a tiny delay on it
     // this dumps around it and goes right to the guts
@@ -259,43 +259,43 @@ int TBaseContainer::getObjFrom(TBeing* ch, const char* arg1, const char* arg2) {
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_VICT;
     }
-    return TRUE;
+    return true;
   } else if ((p = getabunch(arg1, newarg))) {
     if (!searchLinkedListVis(ch, newarg, stuff)) {
       ch->sendTo(COLOR_OBJECTS,
         format("There are no \"%s\"'s visible in %s.\n\r") % newarg %
           getName());
-      return TRUE;
+      return true;
     }
     if (ch->getPosition() <= POSITION_SITTING) {
       ch->sendTo("You need to be standing to do that.\n\r");
       if (!ch->awake())
-        return TRUE;  // sleeping
+        return true;  // sleeping
       ch->doStand();
 
       if (ch->fight())
-        return TRUE;  // don't fall through
+        return true;  // don't fall through
     }
     if (dynamic_cast<TBeing*>(ch->riding) &&
         (ch->getSkillValue(SKILL_ADVANCED_RIDING) < 50) &&
         (ch->in_room != Room::NOWHERE)) {
-      act("You can't get things from $p while mounted!", FALSE, ch, this, 0,
+      act("You can't get things from $p while mounted!", false, ch, this, 0,
         TO_CHAR);
-      return TRUE;
+      return true;
     }
     if ((tCorpse = dynamic_cast<TPCorpse*>(this)) &&
         ((sstring)ch->getName()).lower() == tCorpse->getOwner()) {
       // allow loot
     } else if ((corpse = dynamic_cast<TBaseCorpse*>(this)) &&
                corpse->isCorpseFlag(CORPSE_DENY_LOOT) && !ch->isImmortal()) {
-      act("Looting $p isn't allowed.", TRUE, ch, this, NULL, TO_CHAR);
-      return TRUE;
+      act("Looting $p isn't allowed.", true, ch, this, nullptr, TO_CHAR);
+      return true;
     }
 
     sprintf(capbuf, "%s %s", newarg, arg2);
-    act("You start getting items from $p.", TRUE, ch, this, NULL, TO_CHAR);
-    act("$n starts getting items from $p.", TRUE, ch, this, NULL, TO_ROOM);
-    start_task(ch, NULL, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 0,
+    act("You start getting items from $p.", true, ch, this, nullptr, TO_CHAR);
+    act("$n starts getting items from $p.", true, ch, this, nullptr, TO_ROOM);
+    start_task(ch, nullptr, ch->roomp, TASK_GET_ALL, capbuf, 350, ch->in_room, 0,
       p + 1, 0);
 
     /*
@@ -318,17 +318,17 @@ int TBaseContainer::getObjFrom(TBeing* ch, const char* arg1, const char* arg2) {
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_VICT;
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TBaseContainer::putSomethingIntoContainer(TBeing* ch,
   TOpenContainer* cont) {
   if (!stuff.empty()) {
-    act("Containers can't hold other containers unless they're empty.", FALSE,
+    act("Containers can't hold other containers unless they're empty.", false,
       ch, cont, this, TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   return TThing::putSomethingIntoContainer(ch, cont);
@@ -412,5 +412,5 @@ int TBaseContainer::isSaddle() const {
     else
       return 2;
   }
-  return FALSE;
+  return false;
 }

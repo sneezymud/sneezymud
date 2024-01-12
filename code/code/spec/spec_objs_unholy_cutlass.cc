@@ -14,7 +14,7 @@ int doHurt(TBeing* ch, TBeing* vict, TObj* o) {
   rc = ch->reconcileDamage(vict, ::number(6, 10), DAMAGE_DRAIN);
   if (rc == -1)
     return DELETE_VICT;
-  return TRUE;
+  return true;
 }
 
 void doCurse(TBeing* ch, TBeing* vict, TObj* o) {
@@ -44,7 +44,7 @@ int unholyCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   if (cmd == CMD_GENERIC_PULSE) {
     if (!::number(0, 29)) {
       if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
-        return FALSE;  // weapon not equipped (carried or on ground)
+        return false;  // weapon not equipped (carried or on ground)
 
       act("<r>Blood oozes from $n's $o and drips to the $g.<1>", 0, ch, o, 0,
         TO_ROOM);
@@ -57,11 +57,11 @@ int unholyCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   }
 
   if (!(ch = genericWeaponProcCheck(vict, cmd, o, 5)))
-    return FALSE;
+    return false;
 
   if (!::number(0, 3)) {
     doCurse(ch, vict, o);
-    return TRUE;
+    return true;
   }
 
   return doHurt(ch, vict, o);

@@ -138,7 +138,7 @@ class TPerson : public TBeing {
     virtual void doChange(const char*);
     virtual void doStat(const sstring& argument);
     virtual void doShow(const sstring& argument);
-    virtual bool isPc() const { return TRUE; }
+    virtual bool isPc() const { return true; }
     virtual void logf(const char*, ...);
     virtual int manaGain();
     virtual int hitGain();

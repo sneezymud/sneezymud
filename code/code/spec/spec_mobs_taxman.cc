@@ -20,8 +20,8 @@ int taxman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
         format("%-3s| <r>%s<1>") % db["shop_nr"] % db["name"]);
     }
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

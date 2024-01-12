@@ -41,21 +41,21 @@ TObj* get_obj_vis_accessible(TBeing* ch, const sstring& name);
 
 /* ******* characters ********* */
 
-TBeing* get_char_room(const sstring& name, int room, int* count = NULL);
+TBeing* get_char_room(const sstring& name, int room, int* count = nullptr);
 TBeing* get_char_num(int nr);
 TBeing* get_char(const char* name, exactTypeT exact);
 
 /* find if character can see */
 TBeing* get_char_room_vis(const TBeing* ch, const sstring& name,
-  int* count = NULL, exactTypeT exact = EXACT_NO, infraTypeT = INFRA_NO);
+  int* count = nullptr, exactTypeT exact = EXACT_NO, infraTypeT = INFRA_NO);
 TBeing* get_char_vis_world(const TBeing* ch, const sstring& name, int* count,
   exactTypeT exact, infraTypeT = INFRA_NO);
 TBeing* get_char_vis(const TBeing* ch, const sstring& name, int* count,
   infraTypeT = INFRA_NO);
 TBeing* get_pc_world(const TBeing* ch, const sstring& name, exactTypeT exact,
-  infraTypeT = INFRA_NO, bool visible = TRUE, bool checkPoly = FALSE);
+  infraTypeT = INFRA_NO, bool visible = true, bool checkPoly = false);
 TBeing* get_pc_room(const TBeing* ch, const sstring& name, exactTypeT exact,
-  infraTypeT = INFRA_NO, bool visible = TRUE, bool checkPoly = FALSE);
+  infraTypeT = INFRA_NO, bool visible = true, bool checkPoly = false);
 TBeing* get_best_char_room(const TBeing*, const char*,
   visibleTypeT vis = VISIBLE_YES, infraTypeT inf = INFRA_NO);
 
@@ -74,7 +74,7 @@ const unsigned int FIND_ROOM_EXTRA = (1 << 7);
 const unsigned int FIND_OBJ_HELD = (1 << 8);
 
 extern TThing* searchLinkedListVis(const TBeing* ch, sstring name,
-  StuffList list, int* num = NULL, thingTypeT x = TYPETHING);
+  StuffList list, int* num = nullptr, thingTypeT x = TYPETHING);
 
 extern TThing* searchLinkedList(const char* name, StuffList list,
   thingTypeT x = TYPETHING);

@@ -92,8 +92,8 @@ TScheduler::TScheduler() {
   pulse.init(0);
   placeholder = read_object(42, VIRTUAL);
   // don't think we can recover from this
-  mud_assert(placeholder != NULL, "couldn't load placeholder object");
-  mud_assert(real_roomp(0) != NULL, "couldn't load room 0");
+  mud_assert(placeholder != nullptr, "couldn't load placeholder object");
+  mud_assert(real_roomp(0) != nullptr, "couldn't load room 0");
   *(real_roomp(0)) += *placeholder;
   objIter = find(object_list.begin(), object_list.end(), placeholder);
 }
@@ -155,7 +155,7 @@ void TScheduler::runChar(int pulseNum) {
         continue;
       procIdx++;
 
-      if (tmp_ch->roomp == NULL || tmp_ch->getName().empty() ||
+      if (tmp_ch->roomp == nullptr || tmp_ch->getName().empty() ||
           (tmp_ch->desc && tmp_ch->desc->character != tmp_ch)) {
         vlogf(LOG_BUG,
           format(
@@ -173,7 +173,7 @@ void TScheduler::runChar(int pulseNum) {
         break;
 
       if (tmp_ch->getPosition() == POSITION_DEAD) {
-        // even if shortDescr is NULL.
+        // even if shortDescr is nullptr.
         vlogf(LOG_BUG,
           format(
             "Error: dead creature (%s at %d) in character_list, removing.") %

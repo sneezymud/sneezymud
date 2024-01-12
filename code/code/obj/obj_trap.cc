@@ -18,18 +18,18 @@ int TTrap::anyTrapCheck(TBeing* ch) {
 
   if ((getTrapCharges() > 0)) {
     if (ch->springTrap(this)) {
-      act("You hear a strange noise...", TRUE, ch, 0, 0, TO_ROOM);
-      act("You hear a strange noise...", TRUE, ch, 0, 0, TO_CHAR);
+      act("You hear a strange noise...", true, ch, 0, 0, TO_ROOM);
+      act("You hear a strange noise...", true, ch, 0, 0, TO_CHAR);
 
       rc = ch->triggerTrap(this);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
       if (rc)
-        return TRUE;
-      return FALSE;
+        return true;
+      return false;
     }
   }
-  return FALSE;
+  return false;
 }
 
 int TTrap::getTrapCheck(TBeing* ch) {
@@ -37,20 +37,20 @@ int TTrap::getTrapCheck(TBeing* ch) {
 
   if ((isTrapEffectType(TRAP_EFF_OBJECT)) && (getTrapCharges() > 0)) {
     if (ch->springTrap(this)) {
-      act("As you start to get $p, you hear a strange noise...", FALSE, ch,
+      act("As you start to get $p, you hear a strange noise...", false, ch,
         this, 0, TO_CHAR);
-      act("As $n starts to get $p, you hear a strange noise...", FALSE, ch,
+      act("As $n starts to get $p, you hear a strange noise...", false, ch,
         this, 0, TO_ROOM);
 
       rc = ch->triggerTrap(this);
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
       if (rc)
-        return TRUE;
-      return FALSE;
+        return true;
+      return false;
     }
   }
-  return FALSE;
+  return false;
 }
 
 int TTrap::getTrapDamAmount() const { return dice(getTrapLevel(), 8); }
@@ -66,13 +66,13 @@ int TTrap::detonateGrenade() {
   if (isTrapEffectType(TRAP_EFF_ARMED3)) {
     remTrapEffectType(TRAP_EFF_ARMED3);
     addTrapEffectType(TRAP_EFF_ARMED2);
-    return FALSE;
+    return false;
   } else if (isTrapEffectType(TRAP_EFF_ARMED2)) {
     remTrapEffectType(TRAP_EFF_ARMED2);
     addTrapEffectType(TRAP_EFF_ARMED1);
-    return FALSE;
+    return false;
   } else if (!isTrapEffectType(TRAP_EFF_ARMED1)) {
-    return FALSE;
+    return false;
   }
 
   // grenade detonates
@@ -84,14 +84,14 @@ int TTrap::detonateGrenade() {
     rp = real_roomp(roomOfObject(this));
     if (!rp) {
       // I think the only way this would happen is if you OEdit the grenade
-      return FALSE;
+      return false;
     }
 
     if (equippedBy) {
       dynamic_cast<TBeing*>(equippedBy)->unequip(eq_pos);
     } else if (stuckIn) {
       int res;
-      stuckIn->pulloutObj(eq_stuck, TRUE, &res);
+      stuckIn->pulloutObj(eq_stuck, true, &res);
     } else if (riding) {
       positionTypeT new_pos = POSITION_STANDING;
       TBeing* tbt = dynamic_cast<TBeing*>(this);
@@ -109,7 +109,7 @@ int TTrap::detonateGrenade() {
     act(
       "A muffled explosion is heard as $n begins to detonate, but is "
       "suppressed by a magical field.",
-      FALSE, this, 0, 0, TO_ROOM);
+      false, this, 0, 0, TO_ROOM);
     return DELETE_THIS;
   }
 
@@ -126,78 +126,78 @@ int TTrap::detonateGrenade() {
 
   switch (getTrapDamType()) {
     case DOOR_TRAP_POISON:
-      act("A small canister pops out of $n and detonates.", FALSE, this, 0, 0,
+      act("A small canister pops out of $n and detonates.", false, this, 0, 0,
         TO_ROOM);
       break;
     case DOOR_TRAP_SLEEP:
-      act("A vaporous fog steams from $n.", FALSE, this, 0, 0, TO_ROOM);
+      act("A vaporous fog steams from $n.", false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_FIRE:
       act("A tiny spark comes out of $n, just before it erupts in flame.",
-        FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_TELEPORT:
-      act("A whirling vortex suddenly surrounds $n.", FALSE, this, 0, 0,
+      act("A whirling vortex suddenly surrounds $n.", false, this, 0, 0,
         TO_ROOM);
       break;
     case DOOR_TRAP_DISEASE:
-      act("A cloud of spores puffs from $n.", FALSE, this, 0, 0, TO_ROOM);
+      act("A cloud of spores puffs from $n.", false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_BOLT:
       act(
         "A canister pops out of $n and detonates, scattering hundreds of "
         "sharp, tiny bolts.",
-        FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_PEBBLE:
       act(
         "A canister pops out of $n and detonates, spraying pebbles everywhere.",
-        FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_DISK:
       act(
         "A canister pops out of $n and detonates, throwing razor-disks in all "
         "directions.",
-        FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_TNT:
       act(
         "A canister pops out of $n and detonates spraying white hot shrapnel "
         "and bomb fragments everywhere.",
-        FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_FROST:
-      act("An icy cloud pours out of $n.", FALSE, this, 0, 0, TO_ROOM);
+      act("An icy cloud pours out of $n.", false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_ENERGY:
       act("$n glows with magic, before streams of plasma streak out of it.",
-        FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_ROOM);
       break;
     case DOOR_TRAP_ACID:
-      act("A yellow-green cloud billows out of $n.", FALSE, this, 0, 0,
+      act("A yellow-green cloud billows out of $n.", false, this, 0, 0,
         TO_ROOM);
       break;
     default:
-      act("$n explodes!", FALSE, this, 0, 0, TO_ROOM);
+      act("$n explodes!", false, this, 0, 0, TO_ROOM);
       break;
   }
 
   TObj* tobj = dynamic_cast<TObj*>(old_parent);
   if (tobj) {
     // grenade was in a bag or something
-    TThing* ttt = NULL;
+    TThing* ttt = nullptr;
     if ((ttt = tobj->parent) || (ttt = tobj->equippedBy)) {
-      act("Your $o is utterly torn apart by the concussion of $N.", FALSE, ttt,
+      act("Your $o is utterly torn apart by the concussion of $N.", false, ttt,
         tobj, this, TO_CHAR, ANSI_RED);
-      act("$n's $o is utterly torn apart by the concussion of $N.", FALSE, ttt,
+      act("$n's $o is utterly torn apart by the concussion of $N.", false, ttt,
         tobj, this, TO_ROOM, ANSI_RED);
     } else if ((ttt = tobj->roomp)) {
-      act("$n is utterly torn apart by the concussion of $p.", FALSE, tobj,
+      act("$n is utterly torn apart by the concussion of $p.", false, tobj,
         this, 0, TO_ROOM, ANSI_RED);
     }
     if (!tobj->makeScraps()) {
       delete tobj;
-      tobj = NULL;
+      tobj = nullptr;
     }
   }
 
@@ -208,7 +208,7 @@ int TTrap::detonateGrenade() {
     rc = t->grenadeHit(this);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete t;
-      t = NULL;
+      t = nullptr;
     }
   }
   return DELETE_THIS;
@@ -343,7 +343,7 @@ void TTrap::armGrenade(TBeing* ch) {
   ch->addToWait(combatRound(1));
 
   // run for it!
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TMonster* tm;
 
   std::queue<TMonster*> toFlee;
@@ -365,10 +365,10 @@ void TTrap::armGrenade(TBeing* ch) {
 int TTrap::throwMe(TBeing* ch, dirTypeT dir, const char*) {
   // grenade handler
   if (!isTrapEffectType(TRAP_EFF_THROW)) {
-    act("You can't throw $p.  It isn't a grenade.", FALSE, ch, this, 0,
+    act("You can't throw $p.  It isn't a grenade.", false, ch, this, 0,
       TO_CHAR);
   } else {
     ch->throwGrenade(this, dir);
   }
-  return FALSE;
+  return false;
 }

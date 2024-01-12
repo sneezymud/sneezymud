@@ -31,10 +31,10 @@ int TBeing::reconcileDamage(TBeing* v, int dam, spellNumT how) {
   spellNumT how2;
 
   // trigger specials for starting a fight
-  if (fight() != v && (rc = checkSpec(v, CMD_MOB_COMBAT_ONATTACK, NULL, NULL)))
+  if (fight() != v && (rc = checkSpec(v, CMD_MOB_COMBAT_ONATTACK, nullptr, nullptr)))
     return rc;
   if (fight() != v &&
-      (rc = v->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, NULL, NULL)))
+      (rc = v->checkSpec(this, CMD_MOB_COMBAT_ONATTACKED, nullptr, nullptr)))
     return rc;
 
   if (desc && !fight()) {
@@ -43,7 +43,7 @@ int TBeing::reconcileDamage(TBeing* v, int dam, spellNumT how) {
       SET_BIT(specials.affectedBy, AFF_ENGAGER);
   }
 
-  dam = getActualDamage(v, NULL, dam, how);
+  dam = getActualDamage(v, nullptr, dam, how);
 
   // make um fly if appropriate
   if (!v->isPc() && v->canFly() && !v->isFlying()) {
@@ -136,7 +136,7 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
   int learn = 0;
   int rc = 0;
   int questmob;
-  bool found = FALSE;
+  bool found = false;
 
   // ranged damage comes through here via reconcileDamage
   // lets not set them fighting unless we need to
@@ -158,12 +158,12 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
         format("Uh Oh, %s had %d hp and wasn't dead.  Was fighting %s") %
           v->getName() % v->getHit() % getName());
       stopFighting();
-      act("Something bogus about this fight.  Tell a god!", TRUE, this, 0, v,
+      act("Something bogus about this fight.  Tell a god!", true, this, 0, v,
         TO_CHAR);
       return 0;
     }
     if (dam <= 0)
-      return FALSE;
+      return false;
 
     // special code for quest mobs
     questmob = v->mobVnum();
@@ -175,10 +175,10 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
       case Mob::ORC_MAGI:
       case Mob::CLERIC_VOLCANO:
       case Mob::CLERIC_ARDEN:
-        found = TRUE;
+        found = true;
         break;
       default:
-        found = FALSE;
+        found = false;
         break;
     }
 
@@ -246,7 +246,7 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
       }
     }
 
-    if (willKill(v, dam, dmg_type, TRUE))
+    if (willKill(v, dam, dmg_type, true))
       dam = 11 + v->getHit();
 
     // kludge to make sure newbie pc's will kill mobs after they get them down
@@ -302,7 +302,7 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
   } else {
     // this == v
 
-    if (willKill(v, dam, dmg_type, TRUE)) {
+    if (willKill(v, dam, dmg_type, true)) {
       // Mages can no longer kill themselves with crit failures...Russ 09/28/98
       if (hasClass(CLASS_MAGE) && (dmg_type >= 0) && (dmg_type <= 125))
         dam = v->getHit() - ::number(1, 10);
@@ -403,22 +403,22 @@ int TBeing::applyDamage(TBeing* v, int dam, spellNumT dmg_type) {
     return DELETE_VICT;
 
   // we use to return dam here - bat 12/22/97
-  return TRUE;
+  return true;
 }
 
-// DELETE_VICT or FALSE
+// DELETE_VICT or false
 int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
   char buf[512], buf2[256];
   sstring taunt_buf;
   int rc = 0, questmob;
-  TBeing* k = NULL;
+  TBeing* k = nullptr;
   followData* f;
   TThing *t, *t2;
   affectedData *af, *af2;
-  TPerson* tp = NULL;
+  TPerson* tp = nullptr;
 
   if ((v->master == this) && dynamic_cast<TMonster*>(v))
-    v->stopFollower(TRUE);
+    v->stopFollower(true);
 
   if (v->affected) {
     for (af = v->affected; af; af = af2) {
@@ -453,7 +453,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
       tb->addToWait(combatRound(2));
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete tb;
-        tb = NULL;
+        tb = nullptr;
       }
     }
   }
@@ -466,9 +466,9 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
       dynamic_cast<TMonster*>(v)->checkResponses(this, 0, "", CMD_RESP_KILLED);
     if (Config::LoadOnDeath()) {
       // Don't create wealth unless one of the attackers is a player
-      TBeing* attacker = NULL;
-      TThing* t = NULL;
-      bool found_pc = FALSE, found_mob = FALSE;
+      TBeing* attacker = nullptr;
+      TThing* t = nullptr;
+      bool found_pc = false, found_mob = false;
 
       for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
         t = *(it++);
@@ -481,7 +481,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
           // We found someone attacking us
           if (attacker->isPc()) {
             // ... it was a player, so stop looking!
-            found_pc = TRUE;
+            found_pc = true;
             break;
           } else {
             // Check what type of mob did the hitting
@@ -490,11 +490,11 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
                 tmons->isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL)) {
               // ... it was a player's pet, treat like a player and stop
               // looking!
-              found_pc = TRUE;
+              found_pc = true;
               break;
             } else {
               // If it's not a player or a pet, it must be a mob...
-              found_mob = TRUE;
+              found_mob = true;
             }
           }
         }
@@ -517,16 +517,16 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     if (this != v && !v->affectedBySpell(AFFECT_PLAYERKILL) &&
         !v->affectedBySpell(AFFECT_PLAYERLOOT)) {
       catchLostLink(v);
-      return FALSE;
+      return false;
     }
     if (v->getPosition() != POSITION_DEAD)
-      return FALSE;
+      return false;
   }
   if (isPc() && !desc && !v->affectedBySpell(AFFECT_PLAYERKILL) &&
       !v->affectedBySpell(AFFECT_PLAYERLOOT)) {
     if (this != v) {
       v->catchLostLink(this);
-      return FALSE;
+      return false;
     }
   }
 
@@ -601,7 +601,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
       "vampire.<1>\n\r");
     v->sendTo(COLOR_BASIC, "<k>You thirst... for <1><r>blood<1>.\n\r");
 
-    act("$n rises from the dead!", FALSE, v, NULL, NULL, TO_ROOM);
+    act("$n rises from the dead!", false, v, nullptr, nullptr, TO_ROOM);
 
     if (v->fight())
       v->stopFighting();
@@ -616,7 +616,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 
   // special code for quest mobs
   questmob = v->mobVnum();
-  af2 = NULL;
+  af2 = nullptr;
   for (af = v->affected; af; af = af2) {
     af2 = af->next;
     if (af->type == AFFECT_COMBAT && af->modifier == COMBAT_SOLO_KILL) {
@@ -1135,10 +1135,10 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     }
 
     if (rc)
-      return FALSE;
+      return false;
     rc = v->die(dmg_type, this);
     if (!IS_SET_DELETE(rc, DELETE_THIS))
-      return FALSE;
+      return false;
 
     for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
       t = *(it++);
@@ -1149,7 +1149,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
         rc = tbt->checkSpec(this, CMD_MOB_KILLED_NEARBY, "", v);
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tbt;
-          tbt = NULL;
+          tbt = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_ITEM)) {
           // of course v is dead, duh!
@@ -1212,7 +1212,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 
       // make mob-killed corpses un-dissectable
       if (!isPc() && !isAffected(AFF_CHARM)) {
-        TBaseCorpse* corpse = NULL;
+        TBaseCorpse* corpse = nullptr;
         sprintf(buf, "%s-corpse", buf2);
         if ((t2 = searchLinkedList(
                ((sstring)(format("%s-corpse") % buf2)).c_str(),
@@ -1225,7 +1225,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
                  (desc->autobits & AUTO_DISSECT)) {
         char msg[256], gl[256];
         int comp, amt;
-        TBaseCorpse* corpse = NULL;
+        TBaseCorpse* corpse = nullptr;
 
         sprintf(buf, "%s-corpse", buf2);
 
@@ -1257,7 +1257,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 #else
               obj = read_object(comp, VIRTUAL);
 #endif
-              act("You should be able to skin $p from $N.", FALSE, this, obj,
+              act("You should be able to skin $p from $N.", false, this, obj,
                 corpse, TO_CHAR);
               delete obj;
             }
@@ -1267,7 +1267,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     }
     return DELETE_VICT;
   } else
-    return FALSE;
+    return false;
 }
 
 void TBeing::doDamage(int dam, spellNumT dmg_type) {
@@ -1298,9 +1298,9 @@ int TBeing::getActualDamage(TBeing* v, TThing* o, int dam,
     return 0;
 
   // insures both in same room
-  bool rc = damDetailsOk(v, dam, FALSE);
+  bool rc = damDetailsOk(v, dam, false);
   if (!rc)
-    return FALSE;
+    return false;
 
   dam = damageTrivia(v, o, dam, attacktype);
   return dam;
@@ -1310,13 +1310,13 @@ int TBeing::damageEm(int dam, sstring log, spellNumT dmg_type) {
   int rc;
 
   if (isImmortal())
-    return FALSE;
+    return false;
 
   // doDamage erases flight, needed later to do crash landings by tellStatus
   bool flying = isFlying();
   doDamage(dam, dmg_type);
 
-  rc = tellStatus(dam, TRUE, flying);
+  rc = tellStatus(dam, true, flying);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
@@ -1327,5 +1327,5 @@ int TBeing::damageEm(int dam, sstring log, spellNumT dmg_type) {
       stopFighting();
     return die(dmg_type);
   }
-  return FALSE;
+  return false;
 }

@@ -92,9 +92,6 @@ class lag_data {
 };
 extern lag_data lag_info;
 
-const bool TRUE = true;
-const bool FALSE = false;
-
 const int BIT_POOF_IN = 1;
 const int BIT_POOF_OUT = 2;
 

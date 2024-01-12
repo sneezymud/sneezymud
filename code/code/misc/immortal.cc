@@ -119,7 +119,7 @@ wearSlotT getChangePos(TObj* o) {
   static int arms = 0, legs = 0, fingers = 0, wrists = 0, hands = 0, feet = 0;
   wearSlotT pos;
 
-  // klugey - pass NULL to reinit the paired counts
+  // klugey - pass nullptr to reinit the paired counts
   if (!o) {
     arms = legs = fingers = wrists = hands = feet = 0;
     return WEAR_NOWHERE;
@@ -209,8 +209,8 @@ void TBeing::doChangeOutfit(const char* argument) {
   sstring buf = argument;
 
   // find suitcase object identified by buf
-  TObj* o = NULL;
-  TSuitcase* suitcase = NULL;
+  TObj* o = nullptr;
+  TSuitcase* suitcase = nullptr;
   if (!(o = generic_find_obj(buf, FIND_OBJ_INV | FIND_OBJ_ROOM, this)) ||
       !(suitcase = dynamic_cast<TSuitcase*>(o))) {
     sendTo("You can't seem to find that suitcase or wardrobe.\n\r");
@@ -218,10 +218,10 @@ void TBeing::doChangeOutfit(const char* argument) {
   }
 
   // kluge - resets slot counters
-  getChangePos(NULL);
+  getChangePos(nullptr);
 
   // swap clothes
-  TThing *removed, *first = NULL, *t;
+  TThing *removed, *first = nullptr, *t;
   wearSlotT pos;
   for (StuffIter it = suitcase->stuff.begin(); it != suitcase->stuff.end();) {
     t = *(it++);
@@ -238,7 +238,7 @@ void TBeing::doChangeOutfit(const char* argument) {
       continue;
     }
 
-    removed = NULL;
+    removed = nullptr;
     if (equipment[pos]) {
       removed = unequip(pos);
       *suitcase += *removed;
@@ -395,9 +395,9 @@ void TBeing::doHighfive(const sstring& argument) {
         }
         Descriptor::worldSend(mess, this);
       } else {
-        act("$n gives you a high five.", TRUE, this, 0, tch, TO_VICT);
-        act("You give a hearty high five to $N.", TRUE, this, 0, tch, TO_CHAR);
-        act("$n and $N do a high five.", TRUE, this, 0, tch, TO_NOTVICT);
+        act("$n gives you a high five.", true, this, 0, tch, TO_VICT);
+        act("You give a hearty high five to $N.", true, this, 0, tch, TO_CHAR);
+        act("$n and $N do a high five.", true, this, 0, tch, TO_NOTVICT);
       }
     } else
       sendTo("I don't see anyone here like that.\n\r");
@@ -433,7 +433,7 @@ void TBeing::doWizlock(const char* argument) {
     else {
       sendTo("WizLock is now on.\n\r");
       vlogf(LOG_MISC, format("WizLock was turned on by %s.") % getName());
-      WizLock = TRUE;
+      WizLock = true;
     }
   } else if (!strcmp(buf, "off")) {
     if (!WizLock)
@@ -441,7 +441,7 @@ void TBeing::doWizlock(const char* argument) {
     else {
       sendTo("WizLock is now off.\n\r");
       vlogf(LOG_MISC, format("WizLock was turned off by %s.") % getName());
-      WizLock = FALSE;
+      WizLock = false;
     }
   } else if (!strcmp(buf, "add")) {
     argument = one_argument(argument, buf, cElements(buf));
@@ -541,33 +541,33 @@ int TBeing::doEmote(const sstring& argument) {
   TThing* t;
 
   if (checkSoundproof())
-    return FALSE;
+    return false;
 
   if (!awake() && !isPc())
-    return FALSE;
+    return false;
 
   if (isPlayerAction(PLR_GODNOSHOUT)) {
     sendTo("You have been sanctioned by the gods and can't emote!!\n\r");
-    return FALSE;
+    return false;
   }
   if (hasQuestBit(TOG_IS_MUTE)) {
     sendTo("You're mute.  You can't emote.\n\r");
-    return FALSE;
+    return false;
   }
   if (getCond(DRUNK) > plotStat(STAT_CURRENT, STAT_CON, 0, 9, 6)) {
-    act("You're way too drunk to attempt that.", FALSE, this, 0, 0, TO_CHAR);
-    return FALSE;
+    act("You're way too drunk to attempt that.", false, this, 0, 0, TO_CHAR);
+    return false;
   }
 
   if (argument.empty())
     sendTo("Yes.. But what?\n\r");
   else {
     sstring garbled =
-      garble(NULL, argument, Garble::SPEECH_EMOTE, Garble::SCOPE_EVERYONE);
+      garble(nullptr, argument, Garble::SPEECH_EMOTE, Garble::SCOPE_EVERYONE);
     buf = format("$n %s<z>") % garbled;
     tmpbuf =
-      format("%s") % nameColorString(this, desc, buf, NULL, COLOR_BASIC, FALSE);
-    act(tmpbuf, TRUE, this, 0, 0, TO_CHAR);
+      format("%s") % nameColorString(this, desc, buf, nullptr, COLOR_BASIC, false);
+    act(tmpbuf, true, this, 0, 0, TO_CHAR);
 
     for (StuffIter it = roomp->stuff.begin(); it != roomp->stuff.end();) {
       t = *(it++);
@@ -583,8 +583,8 @@ int TBeing::doEmote(const sstring& argument) {
           garble(ch, garbled, Garble::SPEECH_EMOTE, Garble::SCOPE_INDIVIDUAL);
         garbledTo = format("$n %s<z>") % garbledTo;
         garbledTo = format("%s") % nameColorString(ch, ch->desc, garbledTo,
-                                     NULL, COLOR_COMM, FALSE);
-        act(garbledTo, TRUE, this, 0, ch, TO_VICT);
+                                     nullptr, COLOR_COMM, false);
+        act(garbledTo, true, this, 0, ch, TO_VICT);
       }
 #if 0
 // Commented out..cosmo..we dont break it for say we shouldnt for emote
@@ -600,9 +600,9 @@ int TBeing::doEmote(const sstring& argument) {
           continue;
         if (!::number(0, tmons->plotStat(STAT_CURRENT, STAT_PER, 18, 2, 8))) {
           if (::number(0,1)) {
-            act("$n realizes $N is not a mob.",TRUE, tmons,0,this,TO_NOTVICT);
+            act("$n realizes $N is not a mob.",true, tmons,0,this,TO_NOTVICT);
             act("$n realizes you are not a mob.  You are forced to return.",
-                TRUE,tmons,0,this,TO_VICT);
+                true,tmons,0,this,TO_VICT);
             doReturn("", WEAR_NOWHERE, 1);
             break;
           }
@@ -612,7 +612,7 @@ int TBeing::doEmote(const sstring& argument) {
 #endif
     }
   }
-  return TRUE;
+  return true;
 }
 
 void TBeing::doFlag(const char* argument) {
@@ -642,33 +642,33 @@ void TBeing::doFlag(const char* argument) {
   } else if (is_abbrev(buf2, "newbiehelper") || is_abbrev(buf2, "helper")) {
     if (victim->isPlayerAction(PLR_NEWBIEHELP)) {
       victim->remPlayerAction(PLR_NEWBIEHELP);
-      act("You just removed $N's newbie-helper flag", FALSE, this, 0, victim,
+      act("You just removed $N's newbie-helper flag", false, this, 0, victim,
         TO_CHAR);
     } else {
       victim->addPlayerAction(PLR_NEWBIEHELP);
-      act("You just set $N's newbie-helper flag.", FALSE, this, 0, victim,
+      act("You just set $N's newbie-helper flag.", false, this, 0, victim,
         TO_CHAR);
     }
   } else if (is_abbrev(buf2, "killable")) {
     if (!victim->isPlayerAction(PLR_KILLABLE)) {
       victim->addPlayerAction(PLR_KILLABLE);
-      act("$N is now killable even though a newbie.", FALSE, this, 0, victim,
+      act("$N is now killable even though a newbie.", false, this, 0, victim,
         TO_CHAR);
     } else {
       victim->remPlayerAction(PLR_KILLABLE);
-      act("$N is no longer killable.", FALSE, this, 0, victim, TO_CHAR);
+      act("$N is no longer killable.", false, this, 0, victim, TO_CHAR);
     }
   } else if (is_abbrev(buf2, "banished")) {
     if (victim->isPlayerAction(PLR_BANISHED)) {
       victim->remPlayerAction(PLR_BANISHED);
-      act("You just removed $N's banished flag", FALSE, this, 0, victim,
+      act("You just removed $N's banished flag", false, this, 0, victim,
         TO_CHAR);
       victim->sendTo("Your banishment flag has been removed.\n\r");
       vlogf(LOG_MISC,
         format("%s removed %s's banish flag.") % getName() % victim->getName());
     } else {
       victim->addPlayerAction(PLR_BANISHED);
-      act("You just set $N's banished flag.", FALSE, this, 0, victim, TO_CHAR);
+      act("You just set $N's banished flag.", false, this, 0, victim, TO_CHAR);
       vlogf(LOG_MISC,
         format("%s banished %s.") % getName() % victim->getName());
       victim->sendTo("Your banishment flag has just been activated!\n\r");
@@ -709,28 +709,28 @@ void TBeing::doFlag(const char* argument) {
 #endif
     } else if (victim->isPlayerAction(PLR_SOLOQUEST)) {
       victim->remPlayerAction(PLR_SOLOQUEST);
-      act("You just removed $N's solo quest flag.", FALSE, this, 0, victim,
+      act("You just removed $N's solo quest flag.", false, this, 0, victim,
         TO_CHAR);
-      act("$n just removed your solo quest flag.", FALSE, this, NULL, victim,
+      act("$n just removed your solo quest flag.", false, this, nullptr, victim,
         TO_VICT);
     } else {
       victim->addPlayerAction(PLR_SOLOQUEST);
-      act("You just set $N's solo quest flag.", FALSE, this, 0, victim,
+      act("You just set $N's solo quest flag.", false, this, 0, victim,
         TO_CHAR);
-      act("$n just set your solo quest flag.", FALSE, this, 0, victim, TO_VICT);
+      act("$n just set your solo quest flag.", false, this, 0, victim, TO_VICT);
     }
   } else if (is_abbrev(buf2, "group")) {
     if (victim->isPlayerAction(PLR_GRPQUEST)) {
       victim->remPlayerAction(PLR_GRPQUEST);
-      act("You just removed $N's group quest flag", FALSE, this, 0, victim,
+      act("You just removed $N's group quest flag", false, this, 0, victim,
         TO_CHAR);
-      act("$n just removed your group quest flag.", FALSE, this, NULL, victim,
+      act("$n just removed your group quest flag.", false, this, nullptr, victim,
         TO_VICT);
     } else {
       victim->addPlayerAction(PLR_GRPQUEST);
-      act("You just set $N's group quest flag.", FALSE, this, 0, victim,
+      act("You just set $N's group quest flag.", false, this, 0, victim,
         TO_CHAR);
-      act("$n just set your group quest flag.", FALSE, this, 0, victim,
+      act("$n just set your group quest flag.", false, this, 0, victim,
         TO_VICT);
       victim->dieFollower();
     }
@@ -740,10 +740,10 @@ void TBeing::doFlag(const char* argument) {
 
     if (victim->isPlayerAction(PLR_NOSNOOP)) {
       victim->remPlayerAction(PLR_NOSNOOP);
-      act("$N is now set snoopable.", FALSE, this, 0, victim, TO_CHAR);
+      act("$N is now set snoopable.", false, this, 0, victim, TO_CHAR);
     } else {
       victim->addPlayerAction(PLR_NOSNOOP);
-      act("$N can no longer be snooped.", FALSE, this, 0, victim, TO_CHAR);
+      act("$N can no longer be snooped.", false, this, 0, victim, TO_CHAR);
     }
   } else if (is_abbrev(buf2, "faction")) {
     if (powerCheck(POWER_FLAG_IMP_POWER))
@@ -756,20 +756,20 @@ void TBeing::doFlag(const char* argument) {
     if (victim->hasQuestBit(TOG_FACTIONS_ELIGIBLE)) {
       if (victim->isUnaff()) {
         victim->remQuestBit(TOG_FACTIONS_ELIGIBLE);
-        act("$N can no longer join a faction.", FALSE, this, 0, victim,
+        act("$N can no longer join a faction.", false, this, 0, victim,
           TO_CHAR);
       } else
         act(
           "$N is already of a faction, you cannot pull there faction ability.",
-          FALSE, this, 0, victim, TO_CHAR);
+          false, this, 0, victim, TO_CHAR);
     } else {
       if (victim->isUnaff()) {
         victim->setQuestBit(TOG_FACTIONS_ELIGIBLE);
-        act("You grant $N the ability to join factions.", FALSE, this, 0,
+        act("You grant $N the ability to join factions.", false, this, 0,
           victim, TO_CHAR);
       } else
         act("$N is already of a faction, you cannot let them join another.",
-          FALSE, this, 0, victim, TO_CHAR);
+          false, this, 0, victim, TO_CHAR);
     }
   } else if (is_abbrev(buf2, "immortal")) {
     if (powerCheck(POWER_FLAG_IMP_POWER))
@@ -852,9 +852,9 @@ const char* getSockOptString(int s, int opt) {
       return "Test Failed";
     }
     switch (ld.l_onoff) {
-      case TRUE:
+      case true:
         return "On";
-      case FALSE:
+      case false:
         return "Off";
       default:
         return "Bad result";
@@ -930,8 +930,8 @@ void TPerson::doTrans(const char* argument) {
   else if (strcmp("all", buf)) {
     if (!(victim = get_pc_world(this, buf, EXACT_YES)) &&
         !(victim = get_pc_world(this, buf, EXACT_NO)) &&
-        !(victim = get_char_vis_world(this, buf, NULL, EXACT_YES)) &&
-        !(victim = get_char_vis_world(this, buf, NULL, EXACT_NO))) {
+        !(victim = get_char_vis_world(this, buf, nullptr, EXACT_YES)) &&
+        !(victim = get_char_vis_world(this, buf, nullptr, EXACT_NO))) {
       sendTo("No-one by that name around.\n\r");
     } else {
       if (victim->desc && (victim->desc->connected >= MAX_CON_STATUS)) {
@@ -961,7 +961,7 @@ void TPerson::doTrans(const char* argument) {
                           getName() % victim->getName() % victim->inRoom() %
                           inRoom());
 
-      act("$n disappears in a cloud of smoke.", FALSE, victim, 0, 0, TO_ROOM);
+      act("$n disappears in a cloud of smoke.", false, victim, 0, 0, TO_ROOM);
       --(*victim);
       if (victim->riding) {
         --(*(victim->riding));
@@ -972,8 +972,8 @@ void TPerson::doTrans(const char* argument) {
         *rp += *t;
       }
       *rp += *victim;
-      act("$n arrives from a puff of smoke.", FALSE, victim, 0, 0, TO_ROOM);
-      act("$n has transferred you!", FALSE, this, 0, victim, TO_VICT);
+      act("$n arrives from a puff of smoke.", false, victim, 0, 0, TO_ROOM);
+      act("$n has transferred you!", false, this, 0, victim, TO_VICT);
       victim->doLook("", CMD_LOOK);
       sendTo("Ok.\n\r");
     }
@@ -981,11 +981,11 @@ void TPerson::doTrans(const char* argument) {
     for (i = descriptor_list; i; i = i->next) {
       if (i->character != this && !i->connected) {
         victim = i->character;
-        act("$n disappears in a cloud of smoke.", FALSE, victim, 0, 0, TO_ROOM);
+        act("$n disappears in a cloud of smoke.", false, victim, 0, 0, TO_ROOM);
         --(*victim);
         *rp += *victim;
-        act("$n arrives from a puff of smoke.", FALSE, victim, 0, 0, TO_ROOM);
-        act("$n has transferred you!", FALSE, this, 0, victim, TO_VICT);
+        act("$n arrives from a puff of smoke.", false, victim, 0, 0, TO_ROOM);
+        act("$n has transferred you!", false, this, 0, victim, TO_VICT);
         victim->doLook("", CMD_LOOK);
       }
     }
@@ -998,10 +998,10 @@ void TPerson::doTrans(const char* argument) {
 static bool isSpammyRoom(int tRoom) {
   switch (tRoom) {
     case Room::NOCTURNAL_STORAGE:
-      return TRUE;
+      return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 bool isInt(const sstring& s) {
@@ -1027,37 +1027,37 @@ int TBeing::doAt(const char* argument, bool isFarlook) {
   int rc;
 
   if (!isFarlook && powerCheck(POWER_AT))
-    return FALSE;
+    return false;
 
   half_chop(argument, loc, com_buf);
   if (!*loc) {
     sendTo("You must supply a room number or a name.\n\r");
-    return FALSE;
+    return false;
   }
   if ((isInt(loc) && !strchr(loc, '.')) || *loc == '0') {
     // this latter case is for "at 0 look"
     loc_nr = convertTo<int>(loc);
     if (!real_roomp(loc_nr)) {
       sendTo("No room exists with that number.\n\r");
-      return FALSE;
+      return false;
     }
     location = loc_nr;
   } else if ((mob = get_pc_world(this, loc, EXACT_YES)) ||
              (mob = get_pc_world(this, loc, EXACT_NO)) ||
-             (mob = get_char_vis_world(this, loc, NULL, EXACT_YES)) ||
-             (mob = get_char_vis_world(this, loc, NULL, EXACT_NO))) {
+             (mob = get_char_vis_world(this, loc, nullptr, EXACT_YES)) ||
+             (mob = get_char_vis_world(this, loc, nullptr, EXACT_NO))) {
     location = mob->in_room;
-  } else if ((obj = get_obj_vis_world(this, loc, NULL, EXACT_YES)) ||
-             (obj = get_obj_vis_world(this, loc, NULL, EXACT_NO))) {
+  } else if ((obj = get_obj_vis_world(this, loc, nullptr, EXACT_YES)) ||
+             (obj = get_obj_vis_world(this, loc, nullptr, EXACT_NO))) {
     if (obj->in_room != Room::NOWHERE)
       location = obj->in_room;
     else {
       sendTo("The object is not available.\n\r");
-      return FALSE;
+      return false;
     }
   } else {
     sendTo("No such creature or object around.\n\r");
-    return FALSE;
+    return false;
   }
 
   // if they are in a casino now, prevent
@@ -1067,7 +1067,7 @@ int TBeing::doAt(const char* argument, bool isFarlook) {
       (checkDrawPoker() && gDrawPoker.index(this) >= 0) ||
       (checkHearts(true) && gHearts.index(this) >= 0)) {
     sendTo("You can't do that while in a casino game.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (isSpammyRoom(location)) {
@@ -1082,7 +1082,7 @@ int TBeing::doAt(const char* argument, bool isFarlook) {
         "room.\n\r");
       sendTo(format("To do this, do this: at %s yes %s %s %s\n\r") % loc %
              tStString % tStBuffer % tStArgument);
-      return FALSE;
+      return false;
     }
 
     strcpy(com_buf, tStBuffer.c_str());
@@ -1091,13 +1091,13 @@ int TBeing::doAt(const char* argument, bool isFarlook) {
 
   if (location == Room::STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
     sendTo("You are forbidden to do this.  Sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (hasWizPower(POWER_IDLED) && real_roomp(location) &&
       !real_roomp(location)->inImperia()) {
     sendTo("I'm afraid you can not do this right now.\n\r");
-    return FALSE;
+    return false;
   }
 
   original_loc = in_room;
@@ -1107,7 +1107,7 @@ int TBeing::doAt(const char* argument, bool isFarlook) {
     thing_to_room(riding, location);
   }
   thing_to_room(this, location);
-  rc = parseCommand(com_buf, FALSE);
+  rc = parseCommand(com_buf, false);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
@@ -1120,29 +1120,29 @@ int TBeing::doAt(const char* argument, bool isFarlook) {
     thing_to_room(riding, original_loc);
   }
   thing_to_room(this, original_loc);
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS if died
 int TBeing::doGoto(const sstring& argument) {
   followData *k, *n;
   int loc_nr, was_in = inRoom(), location, i;
-  TBeing* target_mob;  //, *v = NULL;
-  TThing* t = NULL;
+  TBeing* target_mob;  //, *v = nullptr;
+  TThing* t = nullptr;
   TObj* target_obj;
   TRoom* rp2;
   int rc;
 
   if (!roomp) {
     vlogf(LOG_MISC, "Character in invalid room in doGoto!");
-    return FALSE;
+    return false;
   }
 
   if (!isImmortal())
     return doMortalGoto(argument);
 
   if (powerCheck(POWER_GOTO))
-    return FALSE;
+    return false;
 
   sstring buf, tStString;
 
@@ -1180,69 +1180,69 @@ int TBeing::doGoto(const sstring& argument) {
     sendTo("             81: Conference Room\n\r");
     sendTo("            557: Roaring Lion Inn\n\r");
 
-    return FALSE;
+    return false;
   }
 
   if (isdigit(*buf.c_str()) && buf.find('.') == sstring::npos) {
     loc_nr = convertTo<int>(buf);
-    if (NULL == real_roomp(loc_nr)) {
+    if (nullptr == real_roomp(loc_nr)) {
       if (loc_nr < 0) {
         sendTo("No room exists with that number.\n\r");
-        return FALSE;
+        return false;
       } else {
         if (!limitPowerCheck(CMD_GOTO, loc_nr)) {
           sendTo("You are currently forbidden from going there.\n\r");
-          return FALSE;
+          return false;
         } else if (loc_nr < WORLD_SIZE) {
           sendTo("You form order out of chaos.\n\r");
           CreateOneRoom(loc_nr);
         } else {
           sendTo("Sorry, that room # is too large.\n\r");
-          return FALSE;
+          return false;
         }
       }
     }
     location = loc_nr;
-  } else if ((target_mob = get_pc_world(this, buf, EXACT_NO)) != NULL) {
+  } else if ((target_mob = get_pc_world(this, buf, EXACT_NO)) != nullptr) {
     location = target_mob->in_room;
-  } else if ((target_mob = get_char_vis_world(this, buf, NULL, EXACT_NO)))
+  } else if ((target_mob = get_char_vis_world(this, buf, nullptr, EXACT_NO)))
     location = target_mob->in_room;
   else if ((target_obj =
-               get_obj_vis_world(this, buf.c_str(), NULL, EXACT_YES)) ||
+               get_obj_vis_world(this, buf.c_str(), nullptr, EXACT_YES)) ||
            (target_obj =
-               get_obj_vis_world(this, buf.c_str(), NULL, EXACT_NO))) {
+               get_obj_vis_world(this, buf.c_str(), nullptr, EXACT_NO))) {
     if (target_obj->in_room != Room::NOWHERE)
       location = target_obj->in_room;
     else {
       sendTo("The object is not available.\n\r");
       sendTo("Try where #.object to nail its room number.\n\r");
-      return FALSE;
+      return false;
     }
   } else {
     sendTo("No such creature or object around.\n\r");
-    return FALSE;
+    return false;
   }
   // a location has been found.
   if (!limitPowerCheck(CMD_GOTO, location)) {
     sendTo("You are currently forbidden from going there.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (isSpammyRoom(location) && !is_abbrev(tStString, "yes")) {
     sendTo(
       format("To enter this particular room you must do: goto %d yes\n\r") %
       location);
-    return FALSE;
+    return false;
   }
 
   if (location == Room::STORAGE && !hasWizPower(POWER_GOTO_IMP_POWER)) {
     sendTo("You are forbidden to do this.  Sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!(rp2 = real_roomp(location))) {
     vlogf(LOG_MISC, "Invalid room in doGoto!");
-    return FALSE;
+    return false;
   }
   if (!hasWizPower(POWER_GOTO_IMP_POWER) &&
       real_roomp(location)->isRoomFlag(ROOM_PRIVATE)) {
@@ -1254,7 +1254,7 @@ int TBeing::doGoto(const sstring& argument) {
 
     if (i > 1) {
       sendTo("There's a private conversation going on in that room.\n\r");
-      return FALSE;
+      return false;
     }
   }
 
@@ -1268,31 +1268,31 @@ int TBeing::doGoto(const sstring& argument) {
       if (tbt && this != tbt &&
           (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
         sstring s = nameColorString(this, tbt->desc,
-          msgVariables(MSG_BAMFOUT, (TThing*)NULL, (const char*)NULL, false)
+          msgVariables(MSG_BAMFOUT, (TThing*)nullptr, (const char*)nullptr, false)
             .c_str(),
-          NULL, COLOR_BASIC, false);
-        act(s, TRUE, this, 0, tbt, TO_VICT);
+          nullptr, COLOR_BASIC, false);
+        act(s, true, this, 0, tbt, TO_VICT);
       }
     }
   } else if ((rc = parseCommand((msgVariables(MSG_BAMFOUT).c_str()) + 1,
-                FALSE)) == DELETE_THIS)
+                false)) == DELETE_THIS)
     return DELETE_THIS;
 
 #if 0
   if (!desc || !desc->poof.poofout)
     act("$n disappears in a cloud of mushrooms.",
-        TRUE, this, NULL, NULL, TO_ROOM, NULL,  (hasStealth ? MAX_MORT : 0));
+        true, this, nullptr, nullptr, TO_ROOM, nullptr,  (hasStealth ? MAX_MORT : 0));
   else if (*desc->poof.poofout != '!') {
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
-        sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofout, NULL, COLOR_BASIC, TRUE);
-        act(s, TRUE, this, 0, tbt, TO_VICT);
+        sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofout, nullptr, COLOR_BASIC, true);
+        act(s, true, this, 0, tbt, TO_VICT);
       }
     }
   } else {
-    if ((rc = parseCommand((desc->poof.poofout + 1), FALSE)) == DELETE_THIS)
+    if ((rc = parseCommand((desc->poof.poofout + 1), false)) == DELETE_THIS)
       return DELETE_THIS;
   }
 #endif
@@ -1324,32 +1324,32 @@ int TBeing::doGoto(const sstring& argument) {
       if (tbt && this != tbt &&
           (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
         sstring s = nameColorString(this, tbt->desc,
-          msgVariables(MSG_BAMFIN, (TThing*)NULL, (const char*)NULL, false)
+          msgVariables(MSG_BAMFIN, (TThing*)nullptr, (const char*)nullptr, false)
             .c_str(),
-          NULL, COLOR_BASIC, false);
-        act(s, TRUE, this, 0, tbt, TO_VICT);
+          nullptr, COLOR_BASIC, false);
+        act(s, true, this, 0, tbt, TO_VICT);
       }
     }
   } else if ((rc = parseCommand((msgVariables(MSG_BAMFIN).c_str()) + 1,
-                FALSE)) == DELETE_THIS)
+                false)) == DELETE_THIS)
     return DELETE_THIS;
 
 #if 0
   if (!desc || !desc->poof.poofin) {
     act("$n appears with an explosion of rose-petals.",
-        TRUE, this, 0, v, TO_ROOM, NULL, (hasStealth ? MAX_MORT : 0));
+        true, this, 0, v, TO_ROOM, nullptr, (hasStealth ? MAX_MORT : 0));
     *roomp += *read_object(Obj::ROSEPETAL, VIRTUAL);
   } else if (*desc->poof.poofin != '!') {
     for(StuffIter it=roomp->stuff.begin();it!=roomp->stuff.end() && (t=*it);++it) {
       TBeing *tbt = dynamic_cast<TBeing *>(t);
 
       if (tbt && this != tbt && (!hasStealth || tbt->GetMaxLevel() > MAX_MORT)) {
-        sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofin, NULL, COLOR_BASIC, TRUE);
-        act(s, TRUE, this, 0, tbt, TO_VICT);
+        sstring s = nameColorString(tbt, tbt->desc, desc->poof.poofin, nullptr, COLOR_BASIC, true);
+        act(s, true, this, 0, tbt, TO_VICT);
       }
     }
   } else {
-    if ((rc = parseCommand((desc->poof.poofin + 1), FALSE)) == DELETE_THIS)
+    if ((rc = parseCommand((desc->poof.poofin + 1), false)) == DELETE_THIS)
       return DELETE_THIS;
   }
 #endif
@@ -1359,7 +1359,7 @@ int TBeing::doGoto(const sstring& argument) {
     rc = riding->genericMovedIntoRoom(rp2, was_in);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete riding;
-      riding = NULL;
+      riding = nullptr;
     }
   } else {
     rc = genericMovedIntoRoom(rp2, was_in);
@@ -1370,15 +1370,15 @@ int TBeing::doGoto(const sstring& argument) {
   for (k = followers; k; k = n) {
     n = k->next;
     if (k->follower->isImmortal() && k->follower->inRoom() == was_in) {
-      act("You follow $N.", FALSE, k->follower, 0, this, TO_CHAR);
+      act("You follow $N.", false, k->follower, 0, this, TO_CHAR);
       rc = k->follower->doGoto(fname(name));
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete k->follower;
-        k->follower = NULL;
+        k->follower = nullptr;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::doShutdow() { sendTo("Mobs shouldn't be shutting down.\n\r"); }
@@ -1487,8 +1487,8 @@ void TPerson::doSnoop(const char* argument) {
   // we use get_char here rather than get_pc so we can snoop switched imm's
   if (!(victim = get_pc_world(this, arg, EXACT_YES)) &&
       !(victim = get_pc_world(this, arg, EXACT_NO)) &&
-      !(victim = get_char_vis_world(this, arg, NULL, EXACT_YES)) &&
-      !(victim = get_char_vis_world(this, arg, NULL, EXACT_NO))) {
+      !(victim = get_char_vis_world(this, arg, nullptr, EXACT_YES)) &&
+      !(victim = get_char_vis_world(this, arg, nullptr, EXACT_NO))) {
     sendTo("No such person around.\n\r");
     return;
   }
@@ -1642,7 +1642,7 @@ void TPerson::doSwitch(const char* argument) {
   }
 
   if (doLoadCmd)
-    act(msgVariables(MSG_SWITCH_TARG, tBeing), FALSE, this, NULL, NULL,
+    act(msgVariables(MSG_SWITCH_TARG, tBeing), false, this, nullptr, nullptr,
       TO_ROOM);
 
   sendTo("Ok.\n\r");
@@ -1653,7 +1653,7 @@ void TPerson::doSwitch(const char* argument) {
   desc->original = this;
 
   tBeing->desc = desc;
-  desc = NULL;
+  desc = nullptr;
 }
 
 // This function will set all limbs to affect and call an equipment drop functin
@@ -1777,7 +1777,7 @@ void TBeing::makeLimbTransformed(TBeing* victim, wearSlotT limb, bool paired) {
 
 void TBeing::doTransformDrop(wearSlotT slot) {
   int dam;
-  TObj* tmp = NULL;
+  TObj* tmp = nullptr;
 
   if (equipment[slot]) {
     tmp = dynamic_cast<TObj*>(equipment[slot]);
@@ -1788,47 +1788,47 @@ void TBeing::doTransformDrop(wearSlotT slot) {
       act(
         "You hear a small grinding sound coming from your new limb as "
         "something drops to the $g.",
-        TRUE, this, 0, 0, TO_CHAR);
+        true, this, 0, 0, TO_CHAR);
       act(
         "You hear a grinding sound coming from $n and something drops to the "
         "$g.",
-        TRUE, this, 0, 0, TO_ROOM);
+        true, this, 0, 0, TO_ROOM);
       unequip(slot);
       *roomp += *tmp;
       return;
     } else {
       switch (::number(1, 10)) {
         case 1:
-          act("You hear a loud wrenching sound coming from your limbs.", TRUE,
+          act("You hear a loud wrenching sound coming from your limbs.", true,
             this, 0, 0, TO_CHAR);
-          act("You hear a loud wrending sound coming from $n's limbs.", TRUE,
+          act("You hear a loud wrending sound coming from $n's limbs.", true,
             this, 0, 0, TO_ROOM);
           if (!tmp->makeScraps()) {
             delete tmp;
-            tmp = NULL;
+            tmp = nullptr;
           }
           return;
         default:
           dam = ::number(1, 4);
           (tmp)->obj_flags.struct_points -= dam;
           if (tmp->obj_flags.struct_points <= 0) {
-            act("You hear a loud wrenching sound coming from your limbs.", TRUE,
+            act("You hear a loud wrenching sound coming from your limbs.", true,
               this, 0, 0, TO_CHAR);
-            act("You hear a loud wrending sound coming from $n's limbs.", TRUE,
+            act("You hear a loud wrending sound coming from $n's limbs.", true,
               this, 0, 0, TO_ROOM);
             if (!tmp->makeScraps()) {
               delete tmp;
-              tmp = NULL;
+              tmp = nullptr;
             }
           } else {
             act(
               "You hear a small grinding sound coming from your new limb as "
               "something drops to the $g.",
-              TRUE, this, 0, 0, TO_CHAR);
+              true, this, 0, 0, TO_CHAR);
             act(
               "You hear a grinding sound coming from $n and something drops to "
               "the $g.",
-              TRUE, this, 0, 0, TO_ROOM);
+              true, this, 0, 0, TO_ROOM);
             unequip(slot);
             *roomp += *tmp;
           }
@@ -1841,7 +1841,7 @@ void TBeing::doTransformDrop(wearSlotT slot) {
 }
 
 void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
-  bool found = FALSE;
+  bool found = false;
   int X = LAST_TRANSFORM_LIMB;
   spellNumT spell = TYPE_UNDEFINED;
   wearSlotT slot;
@@ -1855,7 +1855,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
       if (is_abbrev(argument, TransformLimbList[X].name)) {
         limb = TransformLimbList[X].limb;
         spell = TransformLimbList[X].spell;
-        found = TRUE;
+        found = true;
         break;
       } else {
         X--;
@@ -1933,7 +1933,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
       if (isLimbFlags(slot, PART_TRANSFORMED))
         remLimbFlags(slot, PART_TRANSFORMED);
       if (affectedBySpell(AFFECT_TRANSFORMED_HANDS)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_HANDS);
       }
       break;
@@ -1969,7 +1969,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
       if (isLimbFlags(slot, PART_TRANSFORMED))
         remLimbFlags(slot, PART_TRANSFORMED);
       if (affectedBySpell(AFFECT_TRANSFORMED_ARMS)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_ARMS);
       }
       break;
@@ -1987,7 +1987,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
       if (isLimbFlags(slot, PART_TRANSFORMED))
         remLimbFlags(slot, PART_TRANSFORMED);
       if (affectedBySpell(AFFECT_TRANSFORMED_LEGS)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_LEGS);
       }
       break;
@@ -2001,7 +2001,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
       if (isLimbFlags(slot, PART_TRANSFORMED))
         remLimbFlags(slot, PART_TRANSFORMED);
       if (affectedBySpell(AFFECT_TRANSFORMED_NECK)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_NECK);
       }
       break;
@@ -2013,7 +2013,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
       if (isLimbFlags(slot, PART_TRANSFORMED))
         remLimbFlags(slot, PART_TRANSFORMED);
       if (affectedBySpell(AFFECT_TRANSFORMED_HEAD)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_HEAD);
       }
       break;
@@ -2022,7 +2022,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
         if (!slotChance(slot))
           continue;
         if (isLimbFlags(slot, PART_TRANSFORMED)) {
-          found = TRUE;
+          found = true;
           if (isLimbFlags(slot, PART_MISSING))
             vlogf(LOG_MISC,
               format("%s has both a missing and a transformed limb") %
@@ -2031,31 +2031,31 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
         }
       }
       if (affectedBySpell(AFFECT_TRANSFORMED_HEAD)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_HEAD);
         if (affectedBySpell(AFFECT_TRANSFORMED_HEAD))
           affectFrom(AFFECT_TRANSFORMED_HEAD);
       }
       if (affectedBySpell(AFFECT_TRANSFORMED_NECK)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_NECK);
         if (affectedBySpell(AFFECT_TRANSFORMED_NECK))
           affectFrom(AFFECT_TRANSFORMED_NECK);
       }
       if (affectedBySpell(AFFECT_TRANSFORMED_ARMS)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_ARMS);
         if (affectedBySpell(AFFECT_TRANSFORMED_ARMS))
           affectFrom(AFFECT_TRANSFORMED_ARMS);
       }
       if (affectedBySpell(AFFECT_TRANSFORMED_HANDS)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_HANDS);
         if (affectedBySpell(AFFECT_TRANSFORMED_HANDS))
           affectFrom(AFFECT_TRANSFORMED_HANDS);
       }
       if (affectedBySpell(AFFECT_TRANSFORMED_LEGS)) {
-        found = TRUE;
+        found = true;
         affectFrom(AFFECT_TRANSFORMED_LEGS);
         if (affectedBySpell(AFFECT_TRANSFORMED_LEGS))
           affectFrom(AFFECT_TRANSFORMED_LEGS);
@@ -2068,7 +2068,7 @@ void TBeing::transformLimbsBack(const char* buffer, wearSlotT limb, bool cmd) {
   }
   if (found) {
     sendTo("Your magic limbs transform back into their true form!\n\r");
-    act("$n's magic limbs transform back into their true form.", TRUE, this, 0,
+    act("$n's magic limbs transform back into their true form.", true, this, 0,
       0, TO_ROOM);
   }
 }
@@ -2178,7 +2178,7 @@ void TPerson::doForce(const char* argument) {
     else {
       if (vict->canSee(this))
         vict->sendTo(COLOR_MOBS,
-          format("%s\n\r") % msgVariables(MSG_FORCE, (TThing*)NULL, to_force));
+          format("%s\n\r") % msgVariables(MSG_FORCE, (TThing*)nullptr, to_force));
       else
         vict->sendTo(COLOR_MOBS, format("%s has forced you to '%s'.\n\r") %
                                    vict->pers(this) % to_force);
@@ -2186,9 +2186,9 @@ void TPerson::doForce(const char* argument) {
       sendTo(COLOR_MOBS,
         format("You force %s to '%s'.\n\r") % vict->getName() % to_force);
 
-      if ((rc = vict->parseCommand(to_force, FALSE)) == DELETE_THIS) {
+      if ((rc = vict->parseCommand(to_force, false)) == DELETE_THIS) {
         delete vict;
-        vict = NULL;
+        vict = nullptr;
       }
     }
   } else if (!strcmp("all", name_buf)) {
@@ -2202,10 +2202,10 @@ void TPerson::doForce(const char* argument) {
           continue;
         else {
           sprintf(buf, "$n has forced you to '%s'.\n\r", to_force);
-          act(buf, FALSE, this, 0, vict, TO_VICT);
-          if ((rc = vict->parseCommand(to_force, FALSE)) == DELETE_THIS) {
+          act(buf, false, this, 0, vict, TO_VICT);
+          if ((rc = vict->parseCommand(to_force, false)) == DELETE_THIS) {
             delete vict;
-            vict = NULL;
+            vict = nullptr;
           }
         }
       }
@@ -2221,11 +2221,11 @@ void TPerson::doForce(const char* argument) {
           continue;
         else {
           sprintf(buf, "$n has forced you to '%s'.\n\r", to_force);
-          act(buf, FALSE, this, 0, tbt, TO_VICT);
+          act(buf, false, this, 0, tbt, TO_VICT);
 
-          if ((rc = tbt->parseCommand(to_force, FALSE)) == DELETE_THIS) {
+          if ((rc = tbt->parseCommand(to_force, false)) == DELETE_THIS) {
             delete tbt;
-            tbt = NULL;
+            tbt = nullptr;
           }
         }
       }
@@ -2237,11 +2237,11 @@ void TPerson::doForce(const char* argument) {
       TMonster* tbt = dynamic_cast<TMonster*>(t);
       if (tbt) {
         sprintf(buf, "$n has forced you to '%s'.\n\r", to_force);
-        act(buf, FALSE, this, 0, tbt, TO_VICT);
+        act(buf, false, this, 0, tbt, TO_VICT);
 
-        if ((rc = tbt->parseCommand(to_force, FALSE)) == DELETE_THIS) {
+        if ((rc = tbt->parseCommand(to_force, false)) == DELETE_THIS) {
           delete tbt;
-          tbt = NULL;
+          tbt = nullptr;
         }
       }
     }
@@ -2367,10 +2367,10 @@ void TPerson::doLoad(const char* argument) {
       if (mob->isShopkeeper())
         mob->calculateGoldFromConstant();
 
-      act("$n makes a quaint, magical gesture with one hand.", TRUE, this, 0, 0,
+      act("$n makes a quaint, magical gesture with one hand.", true, this, 0, 0,
         TO_ROOM);
-      act(msgVariables(MSG_LOAD_MOB, mob), TRUE, this, 0, mob, TO_ROOM);
-      act("You bring forth $N from the cosmic ether.", TRUE, this, 0, mob,
+      act(msgVariables(MSG_LOAD_MOB, mob), true, this, 0, mob, TO_ROOM);
+      act("You bring forth $N from the cosmic ether.", true, this, 0, mob,
         TO_CHAR);
     }
   } else if (is_abbrev(type, "object")) {
@@ -2431,9 +2431,9 @@ void TPerson::doLoad(const char* argument) {
           "WARNING!  This item is in excess of the defined max_exist.\n\r");
         sendTo("Please don't let this item fall into mortal hands.\n\r");
       }
-      act("$n makes a strange magical gesture.", TRUE, this, 0, 0, TO_ROOM);
-      act(msgVariables(MSG_LOAD_OBJ, obj), TRUE, this, obj, 0, TO_ROOM);
-      act("You now have $p.", TRUE, this, obj, 0, TO_CHAR);
+      act("$n makes a strange magical gesture.", true, this, 0, 0, TO_ROOM);
+      act(msgVariables(MSG_LOAD_OBJ, obj), true, this, obj, 0, TO_ROOM);
+      act("You now have $p.", true, this, obj, 0, TO_CHAR);
       *this += *obj;
       logItem(obj, CMD_LOAD);
 
@@ -2520,13 +2520,13 @@ void TPerson::doCutlink(const char* argument) {
       return;
     }
     if (d->character->roomp)  // necessary check due to canSeeMe
-      act("You cut $S link.", TRUE, this, 0, d->character, TO_CHAR);
+      act("You cut $S link.", true, this, 0, d->character, TO_CHAR);
     else
-      act("You cut someone's link.", TRUE, this, 0, 0, TO_CHAR);
+      act("You cut someone's link.", true, this, 0, 0, TO_CHAR);
 
     TPerson* p = dynamic_cast<TPerson*>(d->character);
     if (p)
-      p->fixClientPlayerLists(TRUE);
+      p->fixClientPlayerLists(true);
     delete d;
     return;
   }
@@ -2595,7 +2595,7 @@ void nukeLdead(TBeing* vict) {
         obj_index[obj->getItemIndex()].addToNumber(1);
 
       delete obj;
-      obj = NULL;
+      obj = nullptr;
     }
   }
   for (StuffIter it = vict->stuff.begin(); it != vict->stuff.end();) {
@@ -2627,7 +2627,7 @@ void nukeLdead(TBeing* vict) {
       obj_index[obj->getItemIndex()].addToNumber(1);
 
     delete obj;
-    obj = NULL;
+    obj = nullptr;
   }
 }
 
@@ -2641,7 +2641,7 @@ void genericPurgeLdead(TBeing* ch) {
         ch->sendTo(COLOR_MOBS, format("Purging %s.\n\r") % vict->getName());
       nukeLdead(vict);
       delete vict;
-      vict = NULL;
+      vict = nullptr;
     }
   }
 
@@ -2756,10 +2756,10 @@ void TPerson::doPurge(const char* argument) {
         vict->doReturn("", WEAR_NOWHERE, true);
         return;
         // delete vict;
-        // vict = NULL;
+        // vict = nullptr;
       }
-      act(msgVariables(MSG_PURGE_TARG, vict), TRUE, this, 0, vict, TO_NOTVICT);
-      act("You disintegrate $N.", TRUE, this, 0, vict, TO_CHAR);
+      act(msgVariables(MSG_PURGE_TARG, vict), true, this, 0, vict, TO_NOTVICT);
+      act("You disintegrate $N.", true, this, 0, vict, TO_CHAR);
       if (vict->isLinkdead()) {
         // linkdead PC will have eq stored from last save.
         // without this, eq would be dropped on ground (duplicated)
@@ -2777,7 +2777,7 @@ void TPerson::doPurge(const char* argument) {
               obj_index[obj->getItemIndex()].addToNumber(1);
 
             delete obj;
-            obj = NULL;
+            obj = nullptr;
           }
         }
         TThing* t;
@@ -2793,20 +2793,20 @@ void TPerson::doPurge(const char* argument) {
             obj_index[obj->getItemIndex()].addToNumber(1);
 
           delete obj;
-          obj = NULL;
+          obj = nullptr;
         }
       }
 
       if (vict->desc) {
         delete vict->desc;
-        vict->desc = NULL;
+        vict->desc = nullptr;
       }
       delete vict;
-      vict = NULL;
+      vict = nullptr;
     } else if ((t_obj = searchLinkedListVis(this, name_buf, roomp->stuff))) {
       // since we already did a get_char loop above, this is really just doing
       // objs, despite the fact that it is a TThing
-      act("$n destroys $p.", TRUE, this, t_obj, 0, TO_ROOM);
+      act("$n destroys $p.", true, this, t_obj, 0, TO_ROOM);
       TPerson* vict = dynamic_cast<TPerson*>(t_obj);
       if (vict && vict->isLinkdead()) {
         // linkdead PC will have eq stored from last save.
@@ -2825,7 +2825,7 @@ void TPerson::doPurge(const char* argument) {
               obj_index[obj->getItemIndex()].addToNumber(1);
 
             delete obj;
-            obj = NULL;
+            obj = nullptr;
           }
         }
         TThing* t;
@@ -2841,13 +2841,13 @@ void TPerson::doPurge(const char* argument) {
             obj_index[obj->getItemIndex()].addToNumber(1);
 
           delete obj;
-          obj = NULL;
+          obj = nullptr;
         }
       } else if (vict)
         vict->dropItemsToRoom(SAFE_YES, DROP_IN_ROOM);
 
       delete t_obj;
-      t_obj = NULL;
+      t_obj = nullptr;
     } else {
       if (!strcmp("room", name_buf)) {
         int range[2];
@@ -2887,7 +2887,7 @@ void TPerson::doPurge(const char* argument) {
     }
     sendTo("Ok.\n\r");
   } else {  // no argument. clean out the room
-    act(msgVariables(MSG_PURGE, (TThing*)NULL), TRUE, this, 0, 0, TO_ROOM);
+    act(msgVariables(MSG_PURGE, (TThing*)nullptr), true, this, 0, 0, TO_ROOM);
     sendToRoom("The World seems a little cleaner.\n\r", in_room);
 
     TThing* t;
@@ -2912,7 +2912,7 @@ static void welcomeNewPlayer(const TPerson* ch) {
   if (!(dfd = opendir(buf))) {
     return;
   }
-  while ((dp = readdir(dfd)) != NULL) {
+  while ((dp = readdir(dfd)) != nullptr) {
     if (!strcmp(dp->d_name, "account") || !strcmp(dp->d_name, "comment") ||
         !strcmp(dp->d_name, ".") || !strcmp(dp->d_name, ".."))
       continue;
@@ -3116,18 +3116,18 @@ void TPerson::doStart() {
   doNewbieEqLoad(RACE_NORACE, 0, true);
 
   if (hasClass(CLASS_CLERIC))
-    personalize_object(NULL, this, 500, -1);
+    personalize_object(nullptr, this, 500, -1);
 
   if (hasClass(CLASS_MAGE))
-    personalize_object(NULL, this, 321, -1);
+    personalize_object(nullptr, this, 321, -1);
 
   if (hasClass(CLASS_SHAMAN)) {
-    personalize_object(NULL, this, 31317, -1);
-    personalize_object(NULL, this, 31395, -1);
+    personalize_object(nullptr, this, 31317, -1);
+    personalize_object(nullptr, this, 31395, -1);
   }
 
   if (hasClass(CLASS_DEIKHAN))
-    personalize_object(NULL, this, 500, -1);
+    personalize_object(nullptr, this, 500, -1);
 
   if ((r_num = real_object(1458)) >= 0) {
     obj = read_object(r_num, REAL);
@@ -3337,7 +3337,7 @@ void TBeing::doRestore(const char* argument) {
   restoreTypeT partial = RESTORE_FULL;
   statTypeT statx;
   int rc;
-  bool found = FALSE;
+  bool found = false;
 
   if (powerCheck(POWER_RESTORE))
     return;
@@ -3383,7 +3383,7 @@ void TBeing::doRestore(const char* argument) {
       vlogf(LOG_FILE, "Couldn't open reimbursement list for restore pracs.");
       return;
     }
-    if (fgets(buf, 60, fp) == NULL && !strcmp("START\n", buf)) {
+    if (fgets(buf, 60, fp) == nullptr && !strcmp("START\n", buf)) {
       vlogf(LOG_FILE, "ERROR: bad format of reimbursement list");
       fclose(fp);
       fclose(fp2);
@@ -3392,7 +3392,7 @@ void TBeing::doRestore(const char* argument) {
     fprintf(fp2, "%s", buf);
 
     while (strcmp(buf, "END")) {
-      if (fgets(buf, 60, fp) == NULL) {
+      if (fgets(buf, 60, fp) == nullptr) {
         vlogf(LOG_FILE, "ERROR: bad format of reimbursement list");
         fclose(fp);
         fclose(fp2);
@@ -3407,7 +3407,7 @@ void TBeing::doRestore(const char* argument) {
         return;
       }
       if (name == victim->getName()) {
-        found = TRUE;
+        found = true;
         strncpy(name2, name, sizeof(name2));
         pracs2 = pracs;
       } else {
@@ -3445,7 +3445,7 @@ void TBeing::doRestore(const char* argument) {
   rc = victim->genericRestore(partial);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     return;
   }
 
@@ -3453,7 +3453,7 @@ void TBeing::doRestore(const char* argument) {
     rc = generic_dispel_magic(this, victim, GetMaxLevel(), isImmortal());
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete victim;
-      victim = NULL;
+      victim = nullptr;
       return;
     }
   }
@@ -3461,7 +3461,7 @@ void TBeing::doRestore(const char* argument) {
     rc = genericChaseSpirits(this, victim, GetMaxLevel(), isImmortal());
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete victim;
-      victim = NULL;
+      victim = nullptr;
       return;
     }
   }
@@ -3495,11 +3495,11 @@ void TBeing::doRestore(const char* argument) {
     "Done.\n\rIf Shaman lifeforce needs to be changed please do so with "
     "\"@set\".\n\r");
   if (partial == RESTORE_PARTIAL)
-    act("You have been partially healed by $N!", FALSE, victim, 0, this,
+    act("You have been partially healed by $N!", false, victim, 0, this,
       TO_CHAR);
   else {
     sprintf(buf, "You have been %sFULLY%s healed by $N!", cyan(), norm());
-    act(buf, FALSE, victim, 0, this, TO_CHAR);
+    act(buf, false, victim, 0, this, TO_CHAR);
   }
   victim->doSave(SILENT_NO);
 }
@@ -3574,11 +3574,11 @@ void TBeing::doDeathcheck(const sstring& arg) {
 
 // returns DELETE_THIS
 int TBeing::doExits(const char* argument, cmdTypeT cmd) {
-  bool found = FALSE;
+  bool found = false;
   dirTypeT door;
   char buf[1024];
   roomDirData* exitdata;
-  int darkhere = FALSE;
+  int darkhere = false;
   TRoom* rp;
   char nameBuf[256];
 
@@ -3591,7 +3591,7 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     if (rc)
-      return TRUE;
+      return true;
   }
   *buf = '\0';
 
@@ -3600,24 +3600,24 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
     if (!isImmortal() && isAffected(AFF_BLIND) && !isAffected(AFF_TRUE_SIGHT) &&
         !isAffected(AFF_CLARITY)) {
       sendTo("Blindness makes it impossible to tell.\n\r");
-      return FALSE;
+      return false;
     }
     if (!isImmortal() && roomp->pitchBlackDark() &&
         !roomp->isRoomFlag(ROOM_ALWAYS_LIT) && (visionBonus <= 0) &&
         !isAffected(AFF_INFRAVISION) &&
         !isAffected(AFF_SCRYING) &&  // room name shows on look x, duplicate
         !isAffected(AFF_TRUE_SIGHT) && !isAffected(AFF_CLARITY)) {
-      darkhere = TRUE;
+      darkhere = true;
     }
   }
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     sstring slopedData = "";
-    if ((exitdata = exitDir(door)) != NULL) {
+    if ((exitdata = exitDir(door)) != nullptr) {
       if (!(rp = real_roomp(exitdata->to_room))) {
         if (isImmortal()) {
           sendTo(format("%s - swirling chaos of #%d\n\r") % exits[door] %
                  exitdata->to_room);
-          found = TRUE;
+          found = true;
         }
       } else if (exitdata->to_room != Room::NOWHERE &&
                  (canSeeThruDoor(exitdata) || isImmortal())) {
@@ -3626,7 +3626,7 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
             !isAffected(AFF_CLARITY)) {
           if (!darkhere) {
             sendTo(format("%s - Too dark to tell\n\r") % exits[door]);
-            found = TRUE;
+            found = true;
           }
         } else {
           if (door != DIR_UP && door != DIR_DOWN) {
@@ -3642,18 +3642,18 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
             slopedData += " (outside)";
 
           if (IS_SET(desc->plr_color, PLR_COLOR_ROOM_NAME)) {
-            if (hasColorStrings(NULL, rp->getName(), 2)) {
+            if (hasColorStrings(nullptr, rp->getName(), 2)) {
               if (isImmortal()) {
                 sendTo(COLOR_ROOM_NAME, format("%s - %s%s (%d)%s\n\r") %
                                           exits[door] %
-                                          dynColorRoom(rp, 1, TRUE) % norm() %
+                                          dynColorRoom(rp, 1, true) % norm() %
                                           rp->number % slopedData);
-                found = TRUE;
+                found = true;
               } else {
                 sendTo(COLOR_ROOM_NAME,
                   format("%s - %s%s%s\n\r") % exits[door] %
-                    dynColorRoom(rp, 1, TRUE) % norm() % slopedData);
-                found = TRUE;
+                    dynColorRoom(rp, 1, true) % norm() % slopedData);
+                found = true;
               }
             } else {
               if (isImmortal()) {
@@ -3661,12 +3661,12 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
                                           exits[door] % addColorRoom(rp, 1) %
                                           rp->name % norm() % rp->number %
                                           slopedData);
-                found = TRUE;
+                found = true;
               } else {
                 sendTo(COLOR_ROOM_NAME, format("%s - %s%s%s%s\n\r") %
                                           exits[door] % addColorRoom(rp, 1) %
                                           rp->name % norm() % slopedData);
-                found = TRUE;
+                found = true;
               }
             }
           } else {
@@ -3679,7 +3679,7 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
                                     purple() % rp->getNameNOC(this) % norm() %
                                     slopedData);
             }
-            found = TRUE;
+            found = true;
           }
         }
       } else if (exitdata->to_room != Room::NOWHERE &&
@@ -3688,7 +3688,7 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
         } else {
           sendTo(COLOR_ROOMS, format("%s - A closed '<b>%s<1>'\n\r") %
                                 exits[door] % fname(exitdata->keyword));
-          found = TRUE;
+          found = true;
         }
       }
     }
@@ -3710,16 +3710,16 @@ int TBeing::doExits(const char* argument, cmdTypeT cmd) {
       continue;
     if (tp->isPortalFlag(EXIT_CLOSED | EXIT_NOENTER))
       continue;
-    act("There is $p you can enter here.", FALSE, this, tp, 0, TO_CHAR);
+    act("There is $p you can enter here.", false, this, tp, 0, TO_CHAR);
     continue;
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::doWipe(const char* argument) {
   char namebuf[20], passwd[20], buf[1024];
   TBeing* victim;
-  Descriptor* d = NULL;
+  Descriptor* d = nullptr;
   charFile st;
   TDatabase db(DB_SNEEZY);
 
@@ -3736,7 +3736,7 @@ void TBeing::doWipe(const char* argument) {
     sendTo("Wrong wipe password.\n\r");
     return;
   }
-  victim = get_char_vis_world(this, namebuf, NULL, EXACT_YES);
+  victim = get_char_vis_world(this, namebuf, nullptr, EXACT_YES);
   if (victim) {
     if (!victim->isPc() || victim->GetMaxLevel() > MAX_IMMORT ||
         (victim->GetMaxLevel() >= GetMaxLevel()) || !(d = victim->desc)) {
@@ -3759,12 +3759,12 @@ void TBeing::doWipe(const char* argument) {
     if (tper)
       tper->dropItemsToRoom(SAFE_YES, DROP_IN_ROOM);
 
-    victim->wipeChar(FALSE);
+    victim->wipeChar(false);
     d->outputProcessing();  // tell them why they suck
     delete d;
-    d = NULL;
+    d = nullptr;
     delete victim;
-    victim = NULL;
+    victim = nullptr;
   } else
     sendTo("Player not online.  Hope you know what you are doing...\n\r");
 
@@ -4027,7 +4027,7 @@ void TBeing::doReplace(const sstring& argument) {
   sstring arg1, arg2, arg3;
   FILE* fp;
   charFile st;
-  bool dontMove = FALSE;
+  bool dontMove = false;
 
   if (!hasWizPower(POWER_REPLACE)) {
     sendTo("You don't have that power.\n\r");
@@ -4066,7 +4066,7 @@ void TBeing::doReplace(const sstring& argument) {
       return;
 
     strcpy(dir2, "mutable/player");
-    dontMove = TRUE;
+    dontMove = true;
   } else if (is_abbrev(arg2, "account"))
     strcpy(dir2, "mutable/account");
   else if (is_abbrev(arg2, "rent"))
@@ -4310,7 +4310,7 @@ void TBeing::doInfo(const char* arg) {
       while (db.fetchRow()) {
         unsigned int shop_nr = convertTo<int>(db["shop_nr"]);
         TShopOwned tso(shop_nr, this);
-        TCommodity* commod = NULL;
+        TCommodity* commod = nullptr;
         TDatabase db2(DB_SNEEZY);
 
         db2.query(
@@ -5482,7 +5482,7 @@ void TBeing::doLog(const char* argument) {
   TBeing* vict;
   char name_buf[100];
   Descriptor* d;
-  int found = FALSE;
+  int found = false;
 
   if (powerCheck(POWER_LOG))
     return;
@@ -5502,7 +5502,7 @@ void TBeing::doLog(const char* argument) {
         if (!d->connected && d->character) {
           if (d->character->isPlayerAction(PLR_LOGGED)) {
             sendTo(COLOR_MOBS, format("%s\n\r") % d->character->getName());
-            found = TRUE;
+            found = true;
           }
         }
       }
@@ -5513,7 +5513,7 @@ void TBeing::doLog(const char* argument) {
 
     return;
   }
-  if (!(vict = get_char_vis_world(this, name_buf, NULL, EXACT_YES))) {
+  if (!(vict = get_char_vis_world(this, name_buf, nullptr, EXACT_YES))) {
     sendTo("No one here by that name.\n\r");
     return;
   } else if (vict->GetMaxLevel() > GetMaxLevel() ||
@@ -5716,7 +5716,7 @@ void TBeing::doSysLoglist() {
   if (!isImmortal())
     return;
 
-  systask->AddTask(this, SYSTEM_LOGLIST, NULL);
+  systask->AddTask(this, SYSTEM_LOGLIST, nullptr);
 }
 
 void TBeing::doSysChecklog(const sstring& arg) {
@@ -5805,32 +5805,32 @@ void TBeing::doSysViewoutput() {
 // dead this: DELETE_THIS
 int TBeing::doExec() {
   TObj* script;
-  const char* lptr = NULL;
+  const char* lptr = nullptr;
   char lbuf[4096];
   const char* invalidcmds[] = {"exec", "oedit", "medit", "redit", "bug", "idea",
     "typo", "description", "comment", 0};
-  int i, broken = FALSE, rc;
+  int i, broken = false, rc;
 
   if (!isImmortal())
-    return FALSE;
+    return false;
 
   TThing* t_script = searchLinkedListVis(this, "exec script", stuff);
   script = dynamic_cast<TObj*>(t_script);
   if (!script) {
     sendTo("You don't have an executable script.\n\r");
-    return FALSE;
+    return false;
   }
   //  Make sure there are commands to execute.
   if (script->action_description.empty()) {
     sendTo("The script is empty.\n\r");
-    return FALSE;
+    return false;
   }
   //  Loop through the commands and execute them.
   lptr = script->action_description.c_str();
   while (lptr) {
     //  Scan the command from the command buffer.
     if (sscanf(lptr, "%[^\n]", lbuf) != 1)
-      return FALSE;
+      return false;
 
     char argument[256];
     strcpy(argument, lbuf);
@@ -5842,7 +5842,7 @@ int TBeing::doExec() {
         if (lptr)
           ++lptr;
 
-        broken = TRUE;
+        broken = true;
         break;
       }
     }
@@ -5851,13 +5851,13 @@ int TBeing::doExec() {
       continue;
     }
     if (*argument) {
-      if ((rc = parseCommand(argument, FALSE)) == DELETE_THIS)
+      if ((rc = parseCommand(argument, false)) == DELETE_THIS)
         return DELETE_THIS;
 
       // remove multi page reports to avoid problems
       if (desc && desc->showstr_head) {
         delete[] desc->showstr_head;
-        desc->showstr_head = NULL;
+        desc->showstr_head = nullptr;
         desc->tot_pages = desc->cur_page = 0;
       }
     }
@@ -5870,8 +5870,8 @@ int TBeing::doExec() {
 }
 
 void TBeing::doResize(const char* arg) {
-  TBeing* targ = NULL;
-  TObj* obj = NULL;
+  TBeing* targ = nullptr;
+  TObj* obj = nullptr;
   char arg_obj[80], arg_type[80], arg_type_val[80];
   sstring buf, feedback;
   int race = 0;
@@ -5998,18 +5998,18 @@ void TBeing::doResize(const char* arg) {
     // personalize it
     buf = format("This is the personalized object of %s") % targ->getName();
     obj->action_description = buf;
-    act("You have resized $p for $N.", FALSE, this, obj, targ, TO_CHAR);
+    act("You have resized $p for $N.", false, this, obj, targ, TO_CHAR);
   } else if (race) {
     // resized for a specific race
     buf = format("You have resized $p for %s.") % RaceNames[race];
-    act(buf, FALSE, this, obj, 0, TO_CHAR);
+    act(buf, false, this, obj, 0, TO_CHAR);
   } else if (height) {
     // resized for a specific height
-    act("You have resized $p to center on a specific height.", FALSE, this, obj,
+    act("You have resized $p to center on a specific height.", false, this, obj,
       0, TO_CHAR);
   }
   // tack on the target height and new volume feedback message
-  act(feedback, FALSE, this, obj, 0, TO_CHAR);
+  act(feedback, false, this, obj, 0, TO_CHAR);
   return;
 }
 
@@ -6304,7 +6304,7 @@ void TBeing::doClients() {
 }
 
 // returns DELETE_THIS if this should be toasted.
-// returns TRUE if tbeing given by arg has already been toasted
+// returns true if tbeing given by arg has already been toasted
 int TBeing::doCrit(sstring arg) {
   TThing* weap;
   int dam, rc, mod;
@@ -6319,20 +6319,20 @@ int TBeing::doCrit(sstring arg) {
   if (isPc() && !isImmortal()) {
     // in general, prevent mortals from critting
     incorrectCommand();
-    return FALSE;
+    return false;
   }
   if ((isPc() || commandArray[CMD_CRIT]->minLevel >= GOD_LEVEL1) &&
       powerCheck(POWER_CRIT)) {
     // deny god without the power
     // deny mob's UNLESS we've lowered the level intentionally
-    return FALSE;
+    return false;
   }
 
   arg = one_argument(arg, name_buf);
   if (!(vict = get_char_room_vis(this, name_buf))) {
     if (!(vict = fight())) {
       sendTo("Syntax: crit {victim} <crit #>\n\r");
-      return FALSE;
+      return false;
     }
     mod = convertTo<int>(name_buf);
   } else
@@ -6341,15 +6341,15 @@ int TBeing::doCrit(sstring arg) {
   if (vict->isImmortal() && (vict->GetMaxLevel() >= GetMaxLevel()) &&
       vict != this) {
     sendTo("You may not crit gods of equal or greater level!\n\r");
-    return FALSE;
+    return false;
   }
   if (mod < 1 || mod > 100) {
     sendTo("Syntax: crit {victim} <crit #>\n\r");
     sendTo("<crit #> in range 1-100.\n\r");
-    return FALSE;
+    return false;
   }
   weap = heldInPrimHand();
-  part = vict->getPartHit(this, TRUE);
+  part = vict->getPartHit(this, true);
   dam = getWeaponDam(vict, weap, HAND_PRIMARY);
 
   if (weap)
@@ -6360,19 +6360,19 @@ int TBeing::doCrit(sstring arg) {
   rc = critSuccessChance(vict, weap, &part, wtype, &dam, mod);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     delete vict;
-    vict = NULL;
-    return TRUE;
+    vict = nullptr;
+    return true;
   } else if (!rc) {
-    sendTo("critSuccess returned FALSE for some reason.\n\r");
-    return FALSE;
+    sendTo("critSuccess returned false for some reason.\n\r");
+    return false;
   }
   rc = applyDamage(vict, dam, wtype);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     delete vict;
-    vict = NULL;
-    return TRUE;
+    vict = nullptr;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 static bool isSanctionedCommand(cmdTypeT tCmd) {
@@ -6430,7 +6430,7 @@ static bool verifyName(const sstring tStString) {
  */
 int TBeing::doAsOther(const sstring& tStString) {
   sstring tStNewName(""), tStCommand(""), tStArguments(""), tStOriginalName("");
-  int tRc = FALSE;
+  int tRc = false;
   cmdTypeT tCmd;
   sstring tStTmp = tStString;
 
@@ -6442,22 +6442,22 @@ int TBeing::doAsOther(const sstring& tStString) {
 
   if (!isSanctionedCommand(tCmd)) {
     sendTo("You can not do this.  Sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (getName().empty()) {
     sendTo("O.k.  You have no name, go get one then come back.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (getName().lower() == tStNewName.lower()) {
     sendTo("If you want to do it that bad, just do it man!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!verifyName(tStNewName)) {
     sendTo("They are either not a god or are also a creator, sorry.\n\r");
-    return FALSE;
+    return false;
   }
 
   tStOriginalName = getName();
@@ -6485,7 +6485,7 @@ int TBeing::doAs(const char* arg) {
     } else
       incorrectCommand();
 
-    return FALSE;
+    return false;
   }
 
   // we are guaranteed to be a switched critter here
@@ -6494,12 +6494,12 @@ int TBeing::doAs(const char* arg) {
   // theoretically, we could insure that they are As'ing as right char
   // but lets just ignore that
 
-  // for a switched, desc->original->desc == NULL
+  // for a switched, desc->original->desc == nullptr
   // output will be hosed unless we change this
   desc->original->desc = desc;
 
   // do command, handle output
-  rc = desc->original->parseCommand(arg, FALSE);
+  rc = desc->original->parseCommand(arg, false);
 
   // at this point, "this" might be screwy due to it dying
   // as XX purge with both in same room, etc
@@ -6520,13 +6520,13 @@ int TBeing::doAs(const char* arg) {
       "destroyed.\n\r");
     remQuestBit(TOG_TRANSFORMED_LYCANTHROPE);
     doReturn("", WEAR_NOWHERE, true);
-    return FALSE;
+    return false;
   }
 
   desc->outputProcessing();
 
   // fix original's desc
-  desc->original->desc = NULL;
+  desc->original->desc = nullptr;
 
   return rc;
 }
@@ -6640,8 +6640,8 @@ void TPerson::doBestow(const sstring& argument) {
     return;
   }
 
-  TBeing* ch = NULL;
-  TObj* obj = NULL;
+  TBeing* ch = nullptr;
+  TObj* obj = nullptr;
 
   // find target when a person is needed
   if (!(is_abbrev(arg1, "demonogram") || arg1 == "deimm")) {
@@ -6667,7 +6667,7 @@ void TPerson::doBestow(const sstring& argument) {
   int number_tried = 0;
   int number_done = 0;
   int coin_uid = 0;
-  TTreasure* coin = NULL;
+  TTreasure* coin = nullptr;
   TDatabase db(DB_SNEEZY);
 
   if (is_abbrev(arg1, "coins")) {
@@ -6710,9 +6710,9 @@ void TPerson::doBestow(const sstring& argument) {
 
         coin->setSerialNumber(coin_uid);
 
-        act("$n mints $p.", TRUE, this, coin, NULL, TO_ROOM);
+        act("$n mints $p.", true, this, coin, nullptr, TO_ROOM);
         act(format("You mint $p, serial number %i.") % coin->getSerialNumber(),
-          TRUE, this, coin, NULL, TO_CHAR);
+          true, this, coin, nullptr, TO_CHAR);
         *this += *coin;
         logItem(coin, CMD_LOAD);
         number_done++;
@@ -6725,11 +6725,11 @@ void TPerson::doBestow(const sstring& argument) {
       act(format("<c>You successfully minted<1> <W>%i<1> <c>coin%s for<1> "
                  "<W>%s<1><c>.<1>") %
             number_done % (number_done == 1 ? "" : "s") % ch->getName(),
-        TRUE, this, coin, NULL, TO_CHAR);
+        true, this, coin, nullptr, TO_CHAR);
     } else {
       act(format("You minted <R>%i<1> coin%s for %s!") % number_done %
             (number_done == 1 ? "" : "s") % ch->getName(),
-        TRUE, this, coin, NULL, TO_CHAR);
+        true, this, coin, nullptr, TO_CHAR);
     }
     if (number_done)
       doSave(SILENT_NO);
@@ -6745,7 +6745,7 @@ void TPerson::doBestow(const sstring& argument) {
     }
 
     TThing* t;
-    bool redeem = TRUE;
+    bool redeem = true;
     /* iterate over inventory to find coins */
     for (StuffIter it = stuff.begin(); it != stuff.end();) {
       t = *(it++);
@@ -6753,10 +6753,10 @@ void TPerson::doBestow(const sstring& argument) {
       if (coin && coin->objVnum() == Obj::IMMORTAL_EXCHANGE_COIN) {
         /* validity check then redeem the coin */
         number_tried++;
-        redeem = TRUE;
+        redeem = true;
         if (!coin->getSerialNumber()) {
           sendTo("Unstamped coin!  Destroying!!\n\r");
-          redeem = FALSE;
+          redeem = false;
         } else {
           db.query(
             "select date_redeemed from immortal_exchange_coin where k_coin = "
@@ -6768,7 +6768,7 @@ void TPerson::doBestow(const sstring& argument) {
               sendTo(format("Coin #%i already redeemed!  Counterfeit!!  "
                             "Destroying!!!\n\r") %
                      coin->getSerialNumber());
-              redeem = FALSE;
+              redeem = false;
             }
           } else {
             // no record in the db?! that's pretty bad, since it got a serial
@@ -6777,7 +6777,7 @@ void TPerson::doBestow(const sstring& argument) {
               format(
                 "Coin with an unknown serial number: %i!  Destroying!!\n\r") %
               coin->getSerialNumber());
-            redeem = FALSE;
+            redeem = false;
           }
         }
 
@@ -6794,7 +6794,7 @@ void TPerson::doBestow(const sstring& argument) {
 
         // no matter what happened, we're getting rid of the coin
         delete coin;
-        coin = NULL;
+        coin = nullptr;
 
         if (number_tried == number_needed)
           break;
@@ -6806,12 +6806,12 @@ void TPerson::doBestow(const sstring& argument) {
     } else if (number_done < number_needed) {
       act(format("You redeemed <R>%d<1> coin%s for $N.") % number_done %
             (number_done == 1 ? "" : "s"),
-        TRUE, this, coin, ch, TO_CHAR);
+        true, this, coin, ch, TO_CHAR);
     } else {
       act(
         format("<c>You redeemed<1> <W>%d<1> <c>coin%s for<1> <W>$N<1><c>.<1>") %
           number_done % (number_done == 1 ? "" : "s"),
-        TRUE, this, coin, ch, TO_CHAR);
+        true, this, coin, ch, TO_CHAR);
     }
     if (number_tried)
       doSave(SILENT_NO);
@@ -6821,27 +6821,27 @@ void TPerson::doBestow(const sstring& argument) {
     /*** remove object monogramming/engraving/personalization ***/
     if (obj->isMonogrammed()) {
       if (obj->isImmMonogrammed() && arg1 != "deimm") {
-        act("$p is has an <c>immortal<1> monogram.", TRUE, this, obj, NULL,
+        act("$p is has an <c>immortal<1> monogram.", true, this, obj, nullptr,
           TO_CHAR);
         act("Use <c>bestow deimm <item><1> if you still want to remove it.",
-          TRUE, this, obj, NULL, TO_CHAR);
+          true, this, obj, nullptr, TO_CHAR);
         return;
       } else if (obj->isImmMonogrammed() && arg1 == "deimm") {
-        act("$p has an <w>immortal<1> monogram.", TRUE, this, obj, NULL,
+        act("$p has an <w>immortal<1> monogram.", true, this, obj, nullptr,
           TO_CHAR);
       } else {
-        act("$p has a <w>normal<1> monogram.", TRUE, this, obj, NULL, TO_CHAR);
+        act("$p has a <w>normal<1> monogram.", true, this, obj, nullptr, TO_CHAR);
       }
     } else {
-      act("$p was not monogrammed, so you leave it as you found it.", TRUE,
-        this, obj, NULL, TO_CHAR);
+      act("$p was not monogrammed, so you leave it as you found it.", true,
+        this, obj, nullptr, TO_CHAR);
       return;
     }
 
-    if (obj->deMonogram(TRUE)) {
-      act("You remove the monogram from $p.", TRUE, this, obj, NULL, TO_CHAR);
+    if (obj->deMonogram(true)) {
+      act("You remove the monogram from $p.", true, this, obj, nullptr, TO_CHAR);
     } else {
-      act("You fail to remove the monogram from $p.", TRUE, this, obj, NULL,
+      act("You fail to remove the monogram from $p.", true, this, obj, nullptr,
         TO_CHAR);
     }
     return;
@@ -6855,7 +6855,7 @@ void TPerson::doBestow(const sstring& argument) {
     }
 
     // figure out what body part we're dealing with
-    int tmp_slot = search_block(arg3, bodyParts, FALSE);
+    int tmp_slot = search_block(arg3, bodyParts, false);
     if (tmp_slot < 1) {
       sendTo("Bad body part!\n\r");
       return;
@@ -6882,24 +6882,24 @@ void TPerson::doBestow(const sstring& argument) {
         // adding
         act(format("<r>You tattoo %s %s with:<1> %s<1>") % name_buffer %
               ch->describeBodySlot(slot) % arg4,
-          TRUE, this, NULL, ch, TO_CHAR);
+          true, this, nullptr, ch, TO_CHAR);
         act(format("You feel a <r>piercing<1> sensation on your %s.") %
               ch->describeBodySlot(slot),
-          FALSE, ch, NULL, NULL, TO_CHAR);
+          false, ch, nullptr, nullptr, TO_CHAR);
       } else {
         // removing
         act(format("You remove the tattoo from %s %s.") % name_buffer %
               ch->describeBodySlot(slot),
-          TRUE, this, NULL, ch, TO_CHAR);
+          true, this, nullptr, ch, TO_CHAR);
         act(format("Your %s feels <r>raw<1>.") % ch->describeBodySlot(slot),
-          FALSE, ch, NULL, NULL, TO_CHAR);
+          false, ch, nullptr, nullptr, TO_CHAR);
       }
       // bruising, for kicks
       ch->rawBruise(slot, 225, SILENT_YES, CHECK_IMMUNITY_YES);
     } else if (arg4.length() == 0) {
       act(format("Are you sure %s %s was tattooed?") % name_buffer %
             ch->describeBodySlot(slot),
-        TRUE, this, NULL, ch, TO_CHAR);
+        true, this, nullptr, ch, TO_CHAR);
     } else {
       sendTo("Well, that didn't work...\n\r");
     }

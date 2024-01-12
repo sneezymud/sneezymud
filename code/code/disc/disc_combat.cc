@@ -64,7 +64,7 @@ void sharpen(TBeing* caster, TThing* obj) {
     return;
   }
 
-  if (!(stone = get_thing_char_using(caster, "whetstone", 0, FALSE, FALSE))) {
+  if (!(stone = get_thing_char_using(caster, "whetstone", 0, false, false))) {
     caster->sendTo("You need to own a whetstone.\n\r");
     return;
   }
@@ -117,7 +117,7 @@ void TThing::dullMeFileWeap(TBeing* caster, TTool*) {
 void dull(TBeing* caster, TThing* obj) {
   TThing* file;
 
-  if (!(file = get_thing_char_using(caster, "file", 0, FALSE, FALSE))) {
+  if (!(file = get_thing_char_using(caster, "file", 0, false, false))) {
     caster->sendTo("You need to own a file.\n\r");
     return;
   }

@@ -15,19 +15,19 @@
 
 bool TBeing::canBash(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
-    return FALSE;
+    return false;
 
   spellNumT skill = getSkillNum(SKILL_BASH);
   if (!doesKnowSkill(skill)) {
     if (!silent)
       sendTo("You know nothing about bashing.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!sameRoom(*victim)) {
     if (!silent)
       sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
 
   switch (race->getBodyType()) {
@@ -58,46 +58,46 @@ bool TBeing::canBash(TBeing* victim, silentTypeT silent) {
     case BODY_WYVELIN:
       if (!silent)
         sendTo("You have the wrong form to bash.\n\r");
-      return FALSE;
+      return false;
     default:
       break;
   }
 
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (eitherLegHurt() && !isFlying()) {
     if (!silent)
       sendTo("It's very hard to bash without the use of your legs!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->riding && !dynamic_cast<TBeing*>(victim->riding)) {
     if (!silent)
       sendTo(COLOR_MOBS, format("You are unable to bash %s off of %s!\n\r") %
                            victim->getName() % victim->riding->getName());
-    return FALSE;
+    return false;
   }
 
   if (victim == this) {
     if (!silent)
       sendTo("Aren't we funny today...\n\r");
-    return FALSE;
+    return false;
   }
 
   if (noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   if (victim->isFlying() && !isFlying()) {
     if (!silent)
       sendTo("You can't bash someone that is flying unless you are also.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (riding) {
     if (!silent)
       sendTo("You can't bash while mounted!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->isImmortal()) {
@@ -105,35 +105,35 @@ bool TBeing::canBash(TBeing* victim, silentTypeT silent) {
       sendTo(
         "You slam into them but seeing how they are immortal it does no "
         "good.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->getPosition() <= POSITION_SITTING) {
     if (!silent)
       sendTo(format("How can you bash someone already on the %s?!?\n\r") %
              roomp->describeGround());
-    return FALSE;
+    return false;
   }
 
   if (getMove() < 5) {
     if (!silent)
       sendTo("You don't have the vitality to bash anyone!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!victim->hasLegs()) {
     if (!silent)
       sendTo("You can't knock them over, they have no legs.\n\r");
-    return FALSE;
+    return false;
   }
 
   if ((isSwimming() || victim->isSwimming())) {
     if (!silent)
       sendTo("Bashing while swimming doesn't work very well.\n\r");
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 static int bash(TBeing* attacker, TBeing* victim, spellNumT skill) {
@@ -157,7 +157,7 @@ static int bash(TBeing* attacker, TBeing* victim, spellNumT skill) {
     if (advLearnedness <= 10 && !isHoldingShield) {
       attacker->sendTo(
         "You're not skilled enough to bash without a shield!\n\r");
-      return FALSE;
+      return false;
     }
 
     /*
@@ -169,7 +169,7 @@ static int bash(TBeing* attacker, TBeing* victim, spellNumT skill) {
         (weaponInPrimaryHand || weaponInSecondaryHand)) {
       attacker->sendTo(
         "You're not skilled enough to bash with one-handed weapons!\n\r");
-      return FALSE;
+      return false;
     }
 
     /*
@@ -179,7 +179,7 @@ static int bash(TBeing* attacker, TBeing* victim, spellNumT skill) {
     if (advLearnedness < 90 && isBarehanded && !isHoldingShield) {
       attacker->sendTo(
         "You're not skilled enough to bash without a weapon!\n\r");
-      return FALSE;
+      return false;
     }
   }
 
@@ -192,7 +192,7 @@ static int bash(TBeing* attacker, TBeing* victim, spellNumT skill) {
     attacker->sendTo(
       "You try to line up a bash but can't find a good angle!\n\r");
     // Still add skill lag, as with deikhan charge
-    return TRUE;
+    return true;
   }
 
   /*
@@ -267,13 +267,13 @@ static int bash(TBeing* attacker, TBeing* victim, spellNumT skill) {
       itemInSecondaryHand);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
-    return TRUE;
+    return true;
   } else {
     int rc = attacker->bashFail(victim, skill, wasSkillExecutionSuccessful,
       attackResult, wasAttackCountered);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
-    return TRUE;
+    return true;
   }
 }
 
@@ -287,10 +287,10 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
   // Message if attacker's skill check failed - need to hone bash more
   if (!wasSkillExecutionSuccessful) {
     act("$n makes a sloppy effort to bash $N, who easily avoids the attack.",
-      FALSE, this, 0, victim, TO_NOTVICT);
-    act("Your form is sloppy and $N easily avoids your bash.", FALSE, this, 0,
+      false, this, 0, victim, TO_NOTVICT);
+    act("Your form is sloppy and $N easily avoids your bash.", false, this, 0,
       victim, TO_CHAR);
-    act("You easily avoid $n's sloppy attempt to bash into you.", FALSE, this,
+    act("You easily avoid $n's sloppy attempt to bash into you.", false, this,
       0, victim, TO_VICT);
   }
   // Message if specialAttack check failed - victim's defense was too strong
@@ -298,25 +298,25 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
     act(
       "$n almost connects with an impressive bash but $N manages to dodges the "
       "attack.",
-      FALSE, this, 0, victim, TO_NOTVICT);
+      false, this, 0, victim, TO_NOTVICT);
     act(
       "You almost connect with an impressive bash but $N manages dodges the "
       "attack.",
-      FALSE, this, 0, victim, TO_CHAR);
+      false, this, 0, victim, TO_CHAR);
     act(
       "$n almost catches you with a bash, but you manage to dodge out of the "
       "way!",
-      FALSE, this, 0, victim, TO_VICT);
+      false, this, 0, victim, TO_VICT);
   }
   // Message if victim countered bash via countermove or focused avoidance
   else if (wasAttackCountered) {
     act(
       "$N skillfully counters $n's bash, stepping aside at just the right "
       "moment.",
-      FALSE, this, 0, victim, TO_NOTVICT);
-    act("You attempt to bash $N but $e skillfully counters your attack.", FALSE,
+      false, this, 0, victim, TO_NOTVICT);
+    act("You attempt to bash $N but $e skillfully counters your attack.", false,
       this, 0, victim, TO_CHAR);
-    act("You predict $n's bash and easily counter the attack.", FALSE, this, 0,
+    act("You predict $n's bash and easily counter the attack.", false, this, 0,
       victim, TO_VICT);
   }
 
@@ -326,7 +326,7 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
       return DELETE_THIS;
 
     sendTo(format("%sYou fall over.%s\n\r") % red() % norm());
-    act("$n falls over.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n falls over.", true, this, 0, 0, TO_ROOM);
 
     rc = trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
@@ -334,21 +334,21 @@ int TBeing::bashFail(TBeing* victim, spellNumT skill,
   }
 
   reconcileDamage(victim, 0, skill);
-  return FALSE;
+  return false;
 }
 
 int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   TObj* itemInSecondaryHand) {
   if (victim->riding) {
-    act("You knock $N off $p.", FALSE, this, victim->riding, victim, TO_CHAR);
-    act("$n knocks $N off $p.", FALSE, this, victim->riding, victim,
+    act("You knock $N off $p.", false, this, victim->riding, victim, TO_CHAR);
+    act("$n knocks $N off $p.", false, this, victim->riding, victim,
       TO_NOTVICT);
-    act("$n knocks you off $p.", FALSE, this, victim->riding, victim, TO_VICT);
+    act("$n knocks you off $p.", false, this, victim->riding, victim, TO_VICT);
     victim->dismount(POSITION_SITTING);
   } else {
-    act("$n knocks $N on $S butt!", FALSE, this, 0, victim, TO_NOTVICT);
-    act("You send $N sprawling.", FALSE, this, 0, victim, TO_CHAR);
-    act("You tumble as $n knocks you over", FALSE, this, 0, victim, TO_VICT,
+    act("$n knocks $N on $S butt!", false, this, 0, victim, TO_NOTVICT);
+    act("You send $N sprawling.", false, this, 0, victim, TO_CHAR);
+    act("You tumble as $n knocks you over", false, this, 0, victim, TO_VICT,
       ANSI_BLUE);
   }
 
@@ -361,11 +361,11 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
 
     if (itemInSecondaryHand->isSpiked() ||
         itemInSecondaryHand->isObjStat(ITEM_SPIKED)) {
-      act("The spikes on your $o sink into $N.", FALSE, this,
+      act("The spikes on your $o sink into $N.", false, this,
         itemInSecondaryHand, victim, TO_CHAR);
-      act("The spikes on $n's $o sink into $N.", FALSE, this,
+      act("The spikes on $n's $o sink into $N.", false, this,
         itemInSecondaryHand, victim, TO_NOTVICT);
-      act("The spikes on $n's $o sink into you.", FALSE, this,
+      act("The spikes on $n's $o sink into you.", false, this,
         itemInSecondaryHand, victim, TO_VICT);
       shieldDam += 2;
     }
@@ -410,11 +410,11 @@ int TBeing::bashSuccess(TBeing* victim, spellNumT skill, bool isHoldingShield,
   victim->addToWait((int)waitTimeMod);
 
   if (victim->spelltask)
-    victim->addToDistracted(distractionBonus, FALSE);
+    victim->addToDistracted(distractionBonus, false);
 
   reconcileHurt(victim, 0.01);
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::doBash(const char* argument, TBeing* vict) {
@@ -430,7 +430,7 @@ int TBeing::doBash(const char* argument, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {
         sendTo("Bash whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
@@ -440,7 +440,7 @@ int TBeing::doBash(const char* argument, TBeing* vict) {
     to be the intention based on how most other skills are coded.
   */
   if (!canBash(victim, SILENT_NO))
-    return FALSE;
+    return false;
 
   if ((rc = bash(this, victim, skill)))
     addSkillLag(skill, rc);
@@ -450,7 +450,7 @@ int TBeing::doBash(const char* argument, TBeing* vict) {
       return rc;
 
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

@@ -20,7 +20,7 @@ bool findFairFight::isTarget(int room) const {
   if (rp->isRoomFlag(ROOM_PEACEFUL))
     return false;
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     TMonster* tmon = dynamic_cast<TMonster*>(t);
@@ -57,7 +57,7 @@ bool findClutter::isTarget(int room) const {
   if (!rp->inGrimhaven())
     return false;
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     TObj* obj = dynamic_cast<TObj*>(t);
@@ -80,7 +80,7 @@ bool findClutterPrison::isTarget(int room) const {
 
   TRoom* rp = real_roomp(room);
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     TObj* obj = dynamic_cast<TObj*>(t);
@@ -107,7 +107,7 @@ bool findClutterAmber::isTarget(int room) const {
 
   TRoom* rp = real_roomp(room);
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     TObj* obj = dynamic_cast<TObj*>(t);
@@ -130,7 +130,7 @@ bool findClutterBrightmoon::isTarget(int room) const {
 
   TRoom* rp = real_roomp(room);
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     TObj* obj = dynamic_cast<TObj*>(t);
@@ -151,7 +151,7 @@ findPolice::findPolice() {}
 
 bool findPolice::isTarget(int room) const {
   TRoom* rp;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   rp = real_roomp(room);
 
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
@@ -176,9 +176,9 @@ bool findOutdoors::isTarget(int room) const {
   TRoom* rp = real_roomp(room);
 
   if (rp->isRoomFlag(ROOM_INDOORS))
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 ///////////////
@@ -189,22 +189,22 @@ findCorpse::findCorpse() {}
 bool findCorpse::isTarget(int room) const {
   // don't track corpses in the morgue
   if (room == Room::MORGUE)
-    return FALSE;
+    return false;
 
   TRoom* rp = real_roomp(room);
 
   // don't leave gh
   if (!rp->inGrimhaven())
-    return FALSE;
+    return false;
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     if (!dynamic_cast<TBaseCorpse*>(t) || !t->stuff.empty())
       continue;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 ///////////////
 
@@ -217,18 +217,18 @@ bool findFire::isTarget(int room) const {
 
   // don't leave gh
   if (!rp->inGrimhaven())
-    return FALSE;
+    return false;
 
   if (rp->isRoomFlag(ROOM_ON_FIRE))
-    return TRUE;
+    return true;
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     if ((o = dynamic_cast<TObj*>(t)) && o->isObjStat(ITEM_BURNING))
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 /////////////
 
@@ -237,7 +237,7 @@ bool findFire::isTarget(int room) const {
 findBeing::findBeing(sstring n) { name = n; }
 
 bool findBeing::isTarget(int room) const {
-  return (searchLinkedList(name, real_roomp(room)->stuff, TYPEBEING) != NULL);
+  return (searchLinkedList(name, real_roomp(room)->stuff, TYPEBEING) != nullptr);
 }
 
 //////////
@@ -248,20 +248,20 @@ findWater::findWater() {}
 
 bool findWater::isTarget(int room) const {
   TRoom* rp;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   rp = real_roomp(room);
 
   if (rp->isRiverSector())
-    return TRUE;
+    return true;
 
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
        ++it) {
     if (t->spec == SPEC_FOUNTAIN)
-      return TRUE;
+      return true;
     if (t->waterSource())
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 
 //////////
@@ -272,7 +272,7 @@ findLeper::findLeper() {}
 
 bool findLeper::isTarget(int room) const {
   TRoom* rp;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   rp = real_roomp(room);
 
   for (StuffIter it = rp->stuff.begin(); it != rp->stuff.end() && (t = *it);
@@ -477,7 +477,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget& pt) {
 
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
         roomDirData* exitp = rp->dir_option[dir];
-        TRoom* hp = NULL;
+        TRoom* hp = nullptr;
         if (exitp && (hp = real_roomp(exitp->to_room)) &&
             (!no_mob || !(hp->isRoomFlag(ROOM_NO_MOB))) &&
             (thru_doors ? go_ok_smarter(exitp) : go_ok(exitp))) {
@@ -529,7 +529,7 @@ dirTypeT TPathFinder::findPath(int here, const TPathTarget& pt) {
       // 0-9 are obviously real exits (see above)
       if (use_portals) {
         dir = dirTypeT(MAX_DIR - 1);
-        TThing* t = NULL;
+        TThing* t = nullptr;
         for (StuffIter it = rp->stuff.begin();
              it != rp->stuff.end() && (t = *it); ++it) {
           TPortal* tp = dynamic_cast<TPortal*>(t);

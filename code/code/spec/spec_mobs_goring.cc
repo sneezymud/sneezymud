@@ -18,14 +18,14 @@ int tuskGoring(TBeing* ch, cmdTypeT tCmd, const char* tArg, TMonster* tMyself,
       tVictim->getPosition() > POSITION_STANDING ||
       !tMyself->sameRoom(*tVictim) || ::number(0, 7) ||
       tMyself->getPosition() < POSITION_STANDING)
-    return FALSE;
+    return false;
 
   if (!tVictim->isAgile(0) && ::number(0, 4)) {
-    act("$n charges into $N, impaling him fiercly!", TRUE, tMyself, NULL,
+    act("$n charges into $N, impaling him fiercly!", true, tMyself, nullptr,
       tVictim, TO_NOTVICT);
-    act("$n barrels down on you, impaling you painfully!", TRUE, tMyself, NULL,
+    act("$n barrels down on you, impaling you painfully!", true, tMyself, nullptr,
       tVictim, TO_VICT);
-    act("You charge down upon $N, impaling them!", TRUE, tMyself, NULL, tVictim,
+    act("You charge down upon $N, impaling them!", true, tMyself, nullptr, tVictim,
       TO_CHAR);
 
     int tDamage =
@@ -33,25 +33,25 @@ int tuskGoring(TBeing* ch, cmdTypeT tCmd, const char* tArg, TMonster* tMyself,
 
     if (tMyself->reconcileDamage(tVictim, tDamage, DAMAGE_RAMMED) == -1) {
       delete tVictim;
-      tVictim = NULL;
-      return TRUE;
+      tVictim = nullptr;
+      return true;
     }
 
     tMyself->cantHit += tMyself->loseRound(1);
     tVictim->cantHit += tVictim->loseRound(2);
     tVictim->setPosition(POSITION_SITTING);
 
-    return TRUE;
+    return true;
   } else {
-    act("$n charges towards $N, but they easily dodges them.", TRUE, tMyself,
-      NULL, tVictim, TO_NOTVICT);
-    act("$n barrels down on you, but you easily dodge them.", TRUE, tMyself,
-      NULL, tVictim, TO_VICT);
+    act("$n charges towards $N, but they easily dodges them.", true, tMyself,
+      nullptr, tVictim, TO_NOTVICT);
+    act("$n barrels down on you, but you easily dodge them.", true, tMyself,
+      nullptr, tVictim, TO_VICT);
     act(
       "You charge down upon $N, but they easily dodge you making you look the "
       "ass!",
-      TRUE, tMyself, NULL, tVictim, TO_CHAR);
+      true, tMyself, nullptr, tVictim, TO_CHAR);
   }
 
-  return TRUE;
+  return true;
 }

@@ -94,23 +94,23 @@ void TBeing::doNameChange(const char* argument) {
       return;
     }
     if (IS_SET(mons->specials.act, ACT_STRINGS_CHANGED)) {
-      act("$N already has a name.", FALSE, this, 0, mons, TO_CHAR);
+      act("$N already has a name.", false, this, 0, mons, TO_CHAR);
       return;
     }
     if (!isImmortal()) {
       if (!mons->isPet(PETTYPE_PET | PETTYPE_THRALL) || mons->master != this) {
-        act("$N is not your pet.", FALSE, this, 0, mons, TO_CHAR);
+        act("$N is not your pet.", false, this, 0, mons, TO_CHAR);
         return;
       }
     }
     charFile st;
     if (load_char(new_name, &st)) {
-      act("You can't name $N that.", FALSE, this, 0, mons, TO_CHAR);
+      act("You can't name $N that.", false, this, 0, mons, TO_CHAR);
       return;
     }
     char tmpname[20];
     if (_parse_name(new_name, tmpname)) {
-      act("You can't name $N that.", FALSE, this, 0, mons, TO_CHAR);
+      act("You can't name $N that.", false, this, 0, mons, TO_CHAR);
       return;
     }
 
@@ -136,9 +136,9 @@ void TBeing::doNameChange(const char* argument) {
     tmpbuf += " is here.\n\r";
     mons->player.longDescr = tmpbuf;
 
-    act("You grant $N a new name.", FALSE, this, 0, mons, TO_CHAR);
-    act("$n grants $N a new name.", FALSE, this, 0, mons, TO_NOTVICT);
-    act("$n grants you a new name.", FALSE, this, 0, mons, TO_VICT);
+    act("You grant $N a new name.", false, this, 0, mons, TO_CHAR);
+    act("$n grants $N a new name.", false, this, 0, mons, TO_NOTVICT);
+    act("$n grants you a new name.", false, this, 0, mons, TO_VICT);
     return;
   }
 
@@ -195,7 +195,7 @@ void TBeing::doNameChange(const char* argument) {
   tmpbuf = format("The World shall now know %s as %s.") %
            sstring(orig_name).cap() % vict->getName();
   doSystem(tmpbuf);
-  vict->fixClientPlayerLists(FALSE);
+  vict->fixClientPlayerLists(false);
 
   // OK, now for some fun
   // what if they had personalized items, gotta change the damn names...

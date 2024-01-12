@@ -13,19 +13,19 @@
 
 bool TBeing::canTrip(TBeing* victim, silentTypeT silent) {
   if (checkBusy())
-    return FALSE;
+    return false;
 
   spellNumT skill = getSkillNum(SKILL_TRIP);
   if (!doesKnowSkill(skill)) {
     if (!silent)
       sendTo("You know nothing about tripping.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!sameRoom(*victim)) {
     if (!silent)
       sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
   switch (race->getBodyType()) {
     case BODY_MOSS:
@@ -55,74 +55,74 @@ bool TBeing::canTrip(TBeing* victim, silentTypeT silent) {
     case BODY_WYVELIN:
       if (!silent)
         sendTo("You have the wrong form to trip.\n\r");
-      return FALSE;
+      return false;
     default:
       break;
   }
   if (isFlying()) {
     if (!silent)
       sendTo("You can't trip while flying.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->isFlying()) {
     if (!silent)
       sendTo("You can't trip them while they are flying.\n\r");
-    return FALSE;
+    return false;
   }
   if (checkPeaceful("You feel too peaceful to contemplate violence.\n\r"))
-    return FALSE;
+    return false;
 
   if (eitherLegHurt()) {
     if (!silent)
       sendTo("It's very hard to trip without the use of your legs!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->riding) {
     if (!silent)
       sendTo(COLOR_MOBS, format("You are unable to trip %s off of %s!\n\r") %
                            victim->getName() % victim->riding->getName());
-    return FALSE;
+    return false;
   }
   if (isSwimming()) {
     if (!silent)
       sendTo("It's near impossible to trip someone while in water.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim == this) {
     if (!silent)
       sendTo("Aren't we funny today...\n\r");
-    return FALSE;
+    return false;
   }
   if (noHarmCheck(victim))
-    return FALSE;
+    return false;
 
   if (riding) {
     if (!silent)
       sendTo("You can't trip someone while mounted!\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->isImmortal()) {
     if (!silent)
       sendTo("You can't trip an immortal.\n\r");
-    return FALSE;
+    return false;
   }
   if (victim->getPosition() <= POSITION_SITTING) {
     if (!silent)
 
       sendTo(format("How can you trip someone already on the %s?!?\n\r") %
              roomp->describeGround());
-    return FALSE;
+    return false;
   }
   if (getMove() < 5) {
     if (!silent)
       sendTo("You don't have the vitality to trip anyone!\n\r");
-    return FALSE;
+    return false;
   }
   if (!victim->hasLegs()) {
     if (!silent)
       sendTo("You can't trip someone who has no legs.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->getHeight() < 12) {
@@ -130,7 +130,7 @@ bool TBeing::canTrip(TBeing* victim, silentTypeT silent) {
       sendTo(
         "That creature has less ground clearance than the height of your "
         "foot.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (3 * getHeight() < victim->getHeight()) {
@@ -138,30 +138,30 @@ bool TBeing::canTrip(TBeing* victim, silentTypeT silent) {
       sendTo(
         "Rule of thumb:  you can't trip someone when their kneecaps are higher "
         "than your eye level.\n\r");
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 static int trip(TBeing* c, TBeing* victim, spellNumT skill) {
   int percent = 0, i = 0, rc = 0;
 
   if (!c->canTrip(victim, SILENT_NO))
-    return FALSE;
+    return false;
 
 #if 0
   if (::number(0,99) < victim->GetMaxLevel()) {
     act("You rush at $N, but $E steps backward avoiding your trip.",
-       FALSE, c, 0, victim, TO_CHAR);
+       false, c, 0, victim, TO_CHAR);
     act("$n rushes at you, but you step backward avoiding $s trip.",
-       FALSE, c, 0, victim, TO_VICT);
+       false, c, 0, victim, TO_VICT);
     act("$n rushes at $N, but $E steps backward avoiding $s trip.",
-       FALSE, c, 0, victim, TO_NOTVICT);
+       false, c, 0, victim, TO_NOTVICT);
     // don't allow this to prevent a fight
     c->reconcileDamage(victim, 0, skill);
     // return true so the lag and stuff
-    return TRUE;
+    return true;
   }
 #endif
 
@@ -189,23 +189,23 @@ static int trip(TBeing* c, TBeing* victim, spellNumT skill) {
     rc = c->tripSuccess(victim, skill);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
-    return TRUE;
+    return true;
   } else {
     rc = c->tripFail(victim, skill);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
-    return TRUE;
+    return true;
   }
 }
 
 int TBeing::tripFail(TBeing* victim, spellNumT skill) {
   int rc;
 
-  act("$n attempts to trip $N but $E quickly hops over $n's leg.", FALSE, this,
+  act("$n attempts to trip $N but $E quickly hops over $n's leg.", false, this,
     0, victim, TO_NOTVICT);
-  act("You attempt to trip $N but $E quickly hops over your leg.", FALSE, this,
+  act("You attempt to trip $N but $E quickly hops over your leg.", false, this,
     0, victim, TO_CHAR);
-  act("$n tries to trip you but you quickly hop over $s leg.", FALSE, this, 0,
+  act("$n tries to trip you but you quickly hop over $s leg.", false, this, 0,
     victim, TO_VICT);
 
   if (hasLegs()) {
@@ -215,27 +215,27 @@ int TBeing::tripFail(TBeing* victim, spellNumT skill) {
 
     sendTo(
       format("%sYou lose your balance and fall over.%s\n\r") % red() % norm());
-    act("<r>$n loses $s balance and falls over.<1>", TRUE, this, 0, 0, TO_ROOM);
+    act("<r>$n loses $s balance and falls over.<1>", true, this, 0, 0, TO_ROOM);
 
     rc = trySpringleap(victim);
     if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT))
       return rc;
   }
   reconcileDamage(victim, 0, skill);
-  return FALSE;
+  return false;
 }
 
 int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
   int rc = 0;
   int distNum = 0;
 
-  act("$n sticks a leg out and trips $N to the ground!", FALSE, this, 0, victim,
+  act("$n sticks a leg out and trips $N to the ground!", false, this, 0, victim,
     TO_NOTVICT);
-  act("You quickly stick your leg out and trip $N to the ground!", FALSE, this,
+  act("You quickly stick your leg out and trip $N to the ground!", false, this,
     0, victim, TO_CHAR);
-  act("$n sticks a leg out and trips you!", FALSE, this, 0, victim, TO_VICT,
+  act("$n sticks a leg out and trips you!", false, this, 0, victim, TO_VICT,
     ANSI_BLUE);
-  act("You fall flat on your face!", FALSE, this, 0, victim, TO_VICT,
+  act("You fall flat on your face!", false, this, 0, victim, TO_VICT,
     ANSI_BLUE);
 
   distNum = 1;
@@ -262,14 +262,14 @@ int TBeing::tripSuccess(TBeing* victim, spellNumT skill) {
   victim->addToWait((int)wait);
 
   if (victim->spelltask)
-    victim->addToDistracted(distNum, FALSE);
+    victim->addToDistracted(distNum, false);
 
   reconcileHurt(victim, 0.01);
 
   if (reconcileDamage(victim, 0, skill) == -1)
     return DELETE_VICT;
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::doTrip(const char* argument, TBeing* vict) {
@@ -285,7 +285,7 @@ int TBeing::doTrip(const char* argument, TBeing* vict) {
     if (!(victim = get_char_room_vis(this, name_buf))) {
       if (!(victim = fight())) {
         sendTo("Trip whom?\n\r");
-        return FALSE;
+        return false;
       }
     }
   }
@@ -298,7 +298,7 @@ int TBeing::doTrip(const char* argument, TBeing* vict) {
       return rc;
 
     delete victim;
-    victim = NULL;
+    victim = nullptr;
     REM_DELETE(rc, DELETE_VICT);
   }
   return rc;

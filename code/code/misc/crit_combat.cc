@@ -79,10 +79,10 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
   char buf[256];
   int rc;
   int num, num2;
-  TBeing* tbt = NULL;
+  TBeing* tbt = nullptr;
 
   if (isAffected(AFF_ENGAGER))
-    return FALSE;
+    return false;
 
   TObj* weapon = dynamic_cast<TObj*>(weap);
 
@@ -90,7 +90,7 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
   if (::number(1, 300) <=
       (plotStat(STAT_CURRENT, STAT_KAR, 50, 3, 10) + 10 * drunkMinus())) {
     if (isLucky(levelLuckModifier(v->GetMaxLevel())))
-      return FALSE;
+      return false;
 
     stats.combat_crit_fail_pass++;
     if (desc)
@@ -117,12 +117,12 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
         // Slip, dex check or fall and be stunned for a few rounds.
         if (::number(0, plotStat(STAT_NATURAL, STAT_AGI, -30, 60, 0)) <
             (30 + getCond(DRUNK))) {
-          act("In your attempt to swing at $N, you trip and fall!", FALSE, this,
-            NULL, v, TO_CHAR);
-          act("In an attempt to swing at $N, $n trips and falls!", TRUE, this,
-            NULL, v, TO_NOTVICT);
-          act("In an attempt to swing at you, $n trips and falls!", TRUE, this,
-            NULL, v, TO_VICT);
+          act("In your attempt to swing at $N, you trip and fall!", false, this,
+            nullptr, v, TO_CHAR);
+          act("In an attempt to swing at $N, $n trips and falls!", true, this,
+            nullptr, v, TO_NOTVICT);
+          act("In an attempt to swing at you, $n trips and falls!", true, this,
+            nullptr, v, TO_VICT);
           addToWait(combatRound(1));
           cantHit += loseRound(::number(1, 2));
           setPosition(POSITION_SITTING);
@@ -130,9 +130,9 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             dismount(POSITION_SITTING);
         } else {
           act("You start to stumble, but catch yourself before you fall!",
-            FALSE, this, NULL, NULL, TO_CHAR);
-          act("$n starts to stumble but catches $mself before $e falls!", TRUE,
-            this, NULL, NULL, TO_ROOM);
+            false, this, nullptr, nullptr, TO_CHAR);
+          act("$n starts to stumble but catches $mself before $e falls!", true,
+            this, nullptr, nullptr, TO_ROOM);
         }
         return (ONEHIT_MESS_CRIT_S);
       case 2:
@@ -140,12 +140,12 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
         // Speef changed to Agility but probably use Speed for reaction mod.
         if (::number(0, plotStat(STAT_NATURAL, STAT_AGI, -30, 60, 0)) <
             (30 + getCond(DRUNK))) {
-          act("In your attempt to swing at $N, you trip and fall!", FALSE, this,
-            NULL, v, TO_CHAR);
-          act("In an attempt to swing at $N, $n trips and falls!", TRUE, this,
-            NULL, v, TO_NOTVICT);
-          act("In an attempt to swing at you, $n trips and falls!", TRUE, this,
-            NULL, v, TO_VICT);
+          act("In your attempt to swing at $N, you trip and fall!", false, this,
+            nullptr, v, TO_CHAR);
+          act("In an attempt to swing at $N, $n trips and falls!", true, this,
+            nullptr, v, TO_NOTVICT);
+          act("In an attempt to swing at you, $n trips and falls!", true, this,
+            nullptr, v, TO_VICT);
           addToWait(combatRound(1));
           cantHit += loseRound(::number(1, 3));
           setPosition(POSITION_SITTING);
@@ -153,19 +153,19 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             dismount(POSITION_SITTING);
         } else {
           act("You start to stumble, but catch yourself before you fall!",
-            FALSE, this, NULL, NULL, TO_CHAR);
-          act("$n starts to stumble but catches $mself before $e falls!", TRUE,
-            this, NULL, NULL, TO_ROOM);
+            false, this, nullptr, nullptr, TO_CHAR);
+          act("$n starts to stumble but catches $mself before $e falls!", true,
+            this, nullptr, nullptr, TO_ROOM);
         }
         return (ONEHIT_MESS_CRIT_S);
       case 3:
         // Trip and fall. No dex check. Stunned for many rounds.
-        act("In your attempt to swing at $N, you trip and fall!", TRUE, this,
-          NULL, v, TO_CHAR);
-        act("In an attempt to swing at $N, $n trips and falls!", TRUE, this,
-          NULL, v, TO_NOTVICT);
-        act("In an attempt to swing at you, $n trips and falls!", TRUE, this,
-          NULL, v, TO_VICT);
+        act("In your attempt to swing at $N, you trip and fall!", true, this,
+          nullptr, v, TO_CHAR);
+        act("In an attempt to swing at $N, $n trips and falls!", true, this,
+          nullptr, v, TO_NOTVICT);
+        act("In an attempt to swing at you, $n trips and falls!", true, this,
+          nullptr, v, TO_VICT);
         addToWait(combatRound(1));
         cantHit += loseRound(::number(1, 4));
         setPosition(POSITION_SITTING);
@@ -183,26 +183,26 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             act(
               "Your grasp on $p loosens, but you shift position for a firmer "
               "grip.",
-              FALSE, this, weapon, NULL, TO_CHAR);
+              false, this, weapon, nullptr, TO_CHAR);
           } else if ((::number(0, agi) < (30 + getCond(DRUNK))) &&
                      weapon->canDrop()) {
             sprintf(buf,
               "You %slose%s your grip on $p and it %sfalls out of your "
               "grasp%s!",
               red(), norm(), red(), norm());
-            act(buf, FALSE, this, weapon, NULL, TO_CHAR);
+            act(buf, false, this, weapon, nullptr, TO_CHAR);
             act("$n seems to lose $s grip on $p and it falls out of $s grasp!",
-              TRUE, this, weapon, NULL, TO_ROOM);
+              true, this, weapon, nullptr, TO_ROOM);
             *roomp += *unequip(weapon->eq_pos);
           } else {
             act(
               "You start to fumble $p, but miraculously retrieve it before you "
               "drop it.",
-              FALSE, this, weapon, NULL, TO_CHAR);
+              false, this, weapon, nullptr, TO_CHAR);
             act(
               "$n starts to fumble $p, but miraculously retrieves it before $e "
               "drops it.",
-              TRUE, this, weapon, NULL, TO_ROOM);
+              true, this, weapon, nullptr, TO_ROOM);
           }
           return (ONEHIT_MESS_CRIT_S);
         }
@@ -214,15 +214,15 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             act(
               "Your grasp on $p loosens, but you shift position for a firmer "
               "grip.",
-              FALSE, this, weapon, NULL, TO_CHAR);
+              false, this, weapon, nullptr, TO_CHAR);
           } else {
             sprintf(buf,
               "You %slose%s your grip on $p and it %sfalls out of your "
               "grasp%s!",
               red(), norm(), red(), norm());
-            act(buf, FALSE, this, weapon, NULL, TO_CHAR);
+            act(buf, false, this, weapon, nullptr, TO_CHAR);
             act("$n seems to lose $s grip on $p and it falls out of $s grasp!",
-              TRUE, this, weapon, NULL, TO_ROOM);
+              true, this, weapon, nullptr, TO_ROOM);
             *roomp += *unequip(weapon->eq_pos);
           }
 
@@ -232,9 +232,9 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
       case 7:
         // Hit self (half damage)
         if (weapon) {
-          act("$n gets clumsy, and nails $mself with $p.", TRUE, this, weapon,
+          act("$n gets clumsy, and nails $mself with $p.", true, this, weapon,
             v, TO_ROOM);
-          act("You become careless, and nail yourself with $p.", FALSE, this,
+          act("You become careless, and nail yourself with $p.", false, this,
             weapon, v, TO_CHAR, ANSI_ORANGE);
           int dam = getWeaponDam(this, weapon,
             (weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
@@ -244,12 +244,12 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           if (IS_SET_DELETE(rc, DELETE_VICT))
             return DELETE_THIS;
         } else {
-          act("With stunning grace, $n has just struck $mself.", TRUE, this,
-            NULL, v, TO_ROOM);
-          act("You strike yourself in your carelessness.", FALSE, this, NULL, v,
+          act("With stunning grace, $n has just struck $mself.", true, this,
+            nullptr, v, TO_ROOM);
+          act("You strike yourself in your carelessness.", false, this, nullptr, v,
             TO_CHAR, ANSI_ORANGE);
-          int dam = getWeaponDam(this, NULL, HAND_SECONDARY);
-          dam = getActualDamage(this, NULL, dam, w_type);
+          int dam = getWeaponDam(this, nullptr, HAND_SECONDARY);
+          dam = getActualDamage(this, nullptr, dam, w_type);
           dam /= 4;
           rc = applyDamage(this, dam, w_type);
           if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -259,9 +259,9 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
       case 8:
         // Hit self (full damage)
         if (weapon) {
-          act("$n slips, and smacks $mself with $p.", TRUE, this, weapon, v,
+          act("$n slips, and smacks $mself with $p.", true, this, weapon, v,
             TO_ROOM);
-          act("You become careless, and smack yourself with your $o.", FALSE,
+          act("You become careless, and smack yourself with your $o.", false,
             this, weapon, v, TO_CHAR, ANSI_ORANGE);
           int dam = getWeaponDam(this, weapon,
             (weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
@@ -271,12 +271,12 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           if (IS_SET_DELETE(rc, DELETE_VICT))
             return DELETE_THIS;
         } else {
-          act("With stunning grace, $n has just struck $mself.", TRUE, this,
-            NULL, v, TO_ROOM);
-          act("You strike yourself in your carelessness.", FALSE, this, NULL, v,
+          act("With stunning grace, $n has just struck $mself.", true, this,
+            nullptr, v, TO_ROOM);
+          act("You strike yourself in your carelessness.", false, this, nullptr, v,
             TO_CHAR, ANSI_ORANGE);
-          int dam = getWeaponDam(this, NULL, HAND_SECONDARY);
-          dam = getActualDamage(this, NULL, dam, w_type);
+          int dam = getWeaponDam(this, nullptr, HAND_SECONDARY);
+          dam = getActualDamage(this, nullptr, dam, w_type);
           dam /= 2;
           rc = applyDamage(this, dam, w_type);
           if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -300,16 +300,16 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
 
         if (weapon) {
           if (tbt != this) {
-            act("$n slips, and smacks $N with $p.", TRUE, this, weapon, tbt,
+            act("$n slips, and smacks $N with $p.", true, this, weapon, tbt,
               TO_NOTVICT);
-            act("You become careless, and smack $N with your $o.", FALSE, this,
+            act("You become careless, and smack $N with your $o.", false, this,
               weapon, tbt, TO_CHAR, ANSI_ORANGE);
-            act("$n carelessly smacks you with $p.", TRUE, this, weapon, tbt,
+            act("$n carelessly smacks you with $p.", true, this, weapon, tbt,
               TO_VICT, ANSI_ORANGE);
           } else {
-            act("$n slips, and smacks $mself with $p.", TRUE, this, weapon,
+            act("$n slips, and smacks $mself with $p.", true, this, weapon,
               this, TO_ROOM);
-            act("You become careless, and smack yourself with your $o.", FALSE,
+            act("You become careless, and smack yourself with your $o.", false,
               this, weapon, this, TO_CHAR, ANSI_ORANGE);
           }
           int dam = getWeaponDam(tbt, weapon,
@@ -320,11 +320,11 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           if (tbt != this) {
             // this check added since otherwise a fight between "friends"
             // could break out.
-            act("In the confusion, you and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, you and $N stop fighting.", false, this, 0,
               tbt, TO_CHAR);
-            act("In the confusion, $n and you stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and you stop fighting.", false, this, 0,
               tbt, TO_VICT);
-            act("In the confusion, $n and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and $N stop fighting.", false, this, 0,
               tbt, TO_NOTVICT);
             stopFighting();
             tbt->stopFighting();
@@ -332,33 +332,33 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             if (tbt != this) {
               delete tbt;
-              tbt = NULL;
+              tbt = nullptr;
             } else
               return DELETE_THIS;
           }
         } else {
           if (tbt != this) {
-            act("$n slips, and smacks $N.", TRUE, this, NULL, tbt, TO_NOTVICT);
-            act("You become careless, and smack $N.", FALSE, this, NULL, tbt,
+            act("$n slips, and smacks $N.", true, this, nullptr, tbt, TO_NOTVICT);
+            act("You become careless, and smack $N.", false, this, nullptr, tbt,
               TO_CHAR, ANSI_ORANGE);
-            act("$n carelessly smacks you.", TRUE, this, NULL, tbt, TO_VICT,
+            act("$n carelessly smacks you.", true, this, nullptr, tbt, TO_VICT,
               ANSI_ORANGE);
           } else {
-            act("$n slips, and smacks $mself.", TRUE, this, NULL, this,
+            act("$n slips, and smacks $mself.", true, this, nullptr, this,
               TO_ROOM);
-            act("You become careless, and smack yourself.", FALSE, this, NULL,
+            act("You become careless, and smack yourself.", false, this, nullptr,
               this, TO_CHAR, ANSI_ORANGE);
           }
-          int dam = getWeaponDam(tbt, NULL, HAND_SECONDARY);
-          dam = getActualDamage(tbt, NULL, dam, w_type);
+          int dam = getWeaponDam(tbt, nullptr, HAND_SECONDARY);
+          dam = getActualDamage(tbt, nullptr, dam, w_type);
           dam /= 4;
           rc = applyDamage(tbt, dam, w_type);
           if (tbt != this) {
-            act("In the confusion, you and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, you and $N stop fighting.", false, this, 0,
               tbt, TO_CHAR);
-            act("In the confusion, $n and you stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and you stop fighting.", false, this, 0,
               tbt, TO_VICT);
-            act("In the confusion, $n and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and $N stop fighting.", false, this, 0,
               tbt, TO_NOTVICT);
             stopFighting();
             tbt->stopFighting();
@@ -366,7 +366,7 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             if (tbt != this) {
               delete tbt;
-              tbt = NULL;
+              tbt = nullptr;
             } else
               return DELETE_THIS;
           }
@@ -386,16 +386,16 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           tbt = this;
         if (weapon) {
           if (tbt != this) {
-            act("$n slips, and smacks $N with $p.", TRUE, this, weapon, tbt,
+            act("$n slips, and smacks $N with $p.", true, this, weapon, tbt,
               TO_NOTVICT);
-            act("You become careless, and smack $N with your $o.", FALSE, this,
+            act("You become careless, and smack $N with your $o.", false, this,
               weapon, tbt, TO_CHAR, ANSI_ORANGE);
-            act("$n carelessly smacks you with $p.", TRUE, this, weapon, tbt,
+            act("$n carelessly smacks you with $p.", true, this, weapon, tbt,
               TO_VICT, ANSI_ORANGE);
           } else {
-            act("$n slips, and smacks $mself with $p.", TRUE, this, weapon,
+            act("$n slips, and smacks $mself with $p.", true, this, weapon,
               this, TO_ROOM);
-            act("You become careless, and smack yourself with your $o.", FALSE,
+            act("You become careless, and smack yourself with your $o.", false,
               this, weapon, this, TO_CHAR, ANSI_ORANGE);
           }
           int dam = getWeaponDam(tbt, weapon,
@@ -404,11 +404,11 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           dam /= 2;
           rc = applyDamage(tbt, dam, w_type);
           if (tbt != this) {
-            act("In the confusion, you and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, you and $N stop fighting.", false, this, 0,
               tbt, TO_CHAR);
-            act("In the confusion, $n and you stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and you stop fighting.", false, this, 0,
               tbt, TO_VICT);
-            act("In the confusion, $n and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and $N stop fighting.", false, this, 0,
               tbt, TO_NOTVICT);
             stopFighting();
             tbt->stopFighting();
@@ -416,42 +416,42 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             if (tbt != this) {
               delete tbt;
-              tbt = NULL;
+              tbt = nullptr;
             } else
               return DELETE_THIS;
           }
         } else {
           if (tbt != this) {
-            act("$n slips, and smacks $N.", TRUE, this, NULL, tbt, TO_NOTVICT);
-            act("You become careless, and smack $N.", FALSE, this, NULL, tbt,
+            act("$n slips, and smacks $N.", true, this, nullptr, tbt, TO_NOTVICT);
+            act("You become careless, and smack $N.", false, this, nullptr, tbt,
               TO_CHAR, ANSI_ORANGE);
-            act("$n carelessly smacks you.", TRUE, this, NULL, tbt, TO_VICT,
+            act("$n carelessly smacks you.", true, this, nullptr, tbt, TO_VICT,
               ANSI_ORANGE);
           } else {
-            act("$n slips, and smacks $mself.", TRUE, this, NULL, this,
+            act("$n slips, and smacks $mself.", true, this, nullptr, this,
               TO_ROOM);
-            act("You become careless, and smack yourself.", FALSE, this, NULL,
+            act("You become careless, and smack yourself.", false, this, nullptr,
               this, TO_CHAR, ANSI_ORANGE);
           }
-          int dam = getWeaponDam(tbt, NULL, HAND_SECONDARY);
-          dam = getActualDamage(tbt, NULL, dam, w_type);
+          int dam = getWeaponDam(tbt, nullptr, HAND_SECONDARY);
+          dam = getActualDamage(tbt, nullptr, dam, w_type);
           dam /= 2;
           rc = applyDamage(tbt, dam, w_type);
           if (IS_SET_DELETE(rc, DELETE_VICT)) {
             if (tbt != this) {
               delete tbt;
-              tbt = NULL;
+              tbt = nullptr;
             } else
               return DELETE_THIS;
           }
 
           // if nobody died from the hit, stop the fight
           if (tbt && tbt != this) {
-            act("In the confusion, you and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, you and $N stop fighting.", false, this, 0,
               tbt, TO_CHAR);
-            act("In the confusion, $n and you stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and you stop fighting.", false, this, 0,
               tbt, TO_VICT);
-            act("In the confusion, $n and $N stop fighting.", FALSE, this, 0,
+            act("In the confusion, $n and $N stop fighting.", false, this, 0,
               tbt, TO_NOTVICT);
             stopFighting();
             if (tbt->fight())
@@ -470,12 +470,12 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
             !getStuckIn(WEAR_FOOT_R)) {
           sprintf(buf, "You miserably miss $N, %sand stick $p in your foot%s!",
             red(), norm());
-          act(buf, FALSE, this, weapon, v, TO_CHAR);
+          act(buf, false, this, weapon, v, TO_CHAR);
           sprintf(buf, "$n miserably misses $N, and sticks $p in $s foot!");
-          act(buf, TRUE, this, weapon, v, TO_NOTVICT);
+          act(buf, true, this, weapon, v, TO_NOTVICT);
           sprintf(buf, "$n miserably misses you, %sand sticks $p in $s foot%s!",
             v->cyan(), v->norm());
-          act(buf, TRUE, this, weapon, v, TO_VICT);
+          act(buf, true, this, weapon, v, TO_VICT);
           num2 = getWeaponDam(this, weapon,
             (weapon == heldInPrimHand() ? HAND_PRIMARY : HAND_SECONDARY));
           num2 /= 8;
@@ -500,12 +500,12 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
           return 0;
 
         // Fall and twist ankle, affect with new affect that halfs max moves
-        act("You stumble and twist your ankle as you swing at $N!", FALSE, this,
+        act("You stumble and twist your ankle as you swing at $N!", false, this,
           0, v, TO_CHAR);
-        act("$n stumbles and twists $s ankle as $e tries to swing at $N!", TRUE,
+        act("$n stumbles and twists $s ankle as $e tries to swing at $N!", true,
           this, 0, v, TO_NOTVICT);
         act("$n stumbles and twists $s ankle as $e tries to swing at you!",
-          TRUE, this, 0, v, TO_VICT);
+          true, this, 0, v, TO_VICT);
         setMove(getMove() / 2);
 
         return (ONEHIT_MESS_CRIT_S);
@@ -517,33 +517,33 @@ int TBeing::critFailureChance(TBeing* v, TThing* weap, spellNumT w_type) {
       case 19:
         break;
       default:
-        act("$n stumbles as $e tries pathetically to attack $N.", TRUE, this, 0,
+        act("$n stumbles as $e tries pathetically to attack $N.", true, this, 0,
           v, TO_NOTVICT);
-        act("You stumble pathetically as you try to attack $N.", FALSE, this, 0,
+        act("You stumble pathetically as you try to attack $N.", false, this, 0,
           v, TO_CHAR);
-        act("$n stumbles as $e tries pathetically to attack you.", TRUE, this,
+        act("$n stumbles as $e tries pathetically to attack you.", true, this,
           0, v, TO_VICT);
         return (ONEHIT_MESS_CRIT_S);
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::critHitEqDamage(TBeing* v, TThing* obj, int eqdam) {
   TObj* damaged_item = dynamic_cast<TObj*>(obj);
 
-  act("$N's $p is greatly damaged by the force of your hit.", FALSE, this, obj,
+  act("$N's $p is greatly damaged by the force of your hit.", false, this, obj,
     v, TO_CHAR, ANSI_ORANGE);
 
-  act("Your $p suffers massive damage from $n's mighty hit.", FALSE, this, obj,
+  act("Your $p suffers massive damage from $n's mighty hit.", false, this, obj,
     v, TO_VICT, ANSI_RED);
 
-  act("$N's $p suffers massive damage from $n's powerful hit.", FALSE, this,
+  act("$N's $p suffers massive damage from $n's powerful hit.", false, this,
     obj, v, TO_NOTVICT, ANSI_BLUE);
 
   if (IS_SET_DELETE(damaged_item->damageItem(-eqdam), DELETE_THIS)) {
     delete damaged_item;
-    damaged_item = NULL;
+    damaged_item = nullptr;
   }
 }
 
@@ -658,7 +658,7 @@ int TBeing::critSuccessChance(TBeing* victim, TThing* weapon,
       sendTo(COLOR_BASIC,
         "<Y>You execute a focused attack, striking your opponent with "
         "precision!<z>\n\r");
-      act("<y>$n executes a focused attack!<z>", TRUE, this, NULL, NULL,
+      act("<y>$n executes a focused attack!<z>", true, this, nullptr, nullptr,
         TO_ROOM);
       REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
     }
@@ -779,7 +779,7 @@ total:
 int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
   spellNumT wtype, int* dam, int crit_num) {
   sstring buf, limbStr;
-  TThing* obj = NULL;
+  TThing* obj = nullptr;
   int rc, i;
   affectedData af;
   wearSlotT new_slot;
@@ -808,17 +808,17 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
     buf = format("You strike $N exceptionally well, %s $S %s with your %s!") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+    act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
     buf = format("$n strikes you exceptionally well, %s your %s with $s %s.") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+    act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
 
     buf = format("$n strikes $N exceptionally well, %s $S %s with $s %s.") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, true, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else if (crit_num <= 66) {
@@ -828,17 +828,17 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
     buf = format("You critically strike $N, %s $S %s with your %s!") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+    act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
     buf = format("$n critically strikes you, %s your %s with $s %s.") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, TRUE, this, 0, v, TO_VICT, ANSI_RED);
+    act(buf, true, this, 0, v, TO_VICT, ANSI_RED);
 
     buf = format("$n critically strikes $N, %s $S %s with $s %s.") %
           attack_hit_text[new_wtype].hitting % v->describeBodySlot(*part_hit) %
           limbStr;
-    act(buf, TRUE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, true, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else {
@@ -857,13 +857,13 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("With your %s, you crush $N's %s!") % limbStr %
               v->describeBodySlot(WEAR_FINGER_R);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s crushes your %s!") % limbStr %
               v->describeBodySlot(WEAR_FINGER_R);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s crushes $N's %s!") % limbStr %
               v->describeBodySlot(WEAR_FINGER_R);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->addToLimbFlags(WEAR_FINGER_R, PART_BROKEN);
         if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
             (obj = v->equipment[WEAR_FINGER_R]))
@@ -891,13 +891,13 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("With your %s, you shatter the bones in $N's %s!") %
               limbStr % v->describeBodySlot(WEAR_HAND_R);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s shatters the bones in your %s!") % limbStr %
               v->describeBodySlot(WEAR_HAND_R);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s shatters the bones in $N's %s!") % limbStr %
               v->describeBodySlot(WEAR_HAND_R);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->addToLimbFlags(WEAR_HAND_R, PART_BROKEN);
         for (i = 1; i < 5; i++)
           if (v->equipment[WEAR_HAND_R])
@@ -926,13 +926,13 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         *part_hit = WEAR_HAND_L;
         buf = format("With your %s, you shatter the bones in $N's %s!") %
               limbStr % v->describeBodySlot(WEAR_HAND_L);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s shatters the bones in your %s!") % limbStr %
               v->describeBodySlot(WEAR_HAND_L);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s shatters the bones in $N's %s!") % limbStr %
               v->describeBodySlot(WEAR_HAND_L);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->addToLimbFlags(WEAR_HAND_L, PART_BROKEN);
         v->dropItemFromDamagedHand(!v->isRightHanded());
         for (i = 1; i < 5; i++)
@@ -961,11 +961,11 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         *part_hit = v->getPrimaryArm();
         buf = format("You shatter the bones in $N's forearm with your %s!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s shatters the bones in your forearm!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s shatters the bones in $N's forearm!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->addToLimbFlags(v->getPrimaryArm(), PART_BROKEN);
         for (i = 1; i < 5; i++)
           if (v->equipment[v->getPrimaryArm()])
@@ -995,12 +995,12 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
 
         buf = format("With your %s, you crush the nerves in $N's shoulder!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s crushes the nerves in your shoulder!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s crushes the nerves in $N's shoulder!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        v->damageArm(TRUE, PART_USELESS);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        v->damageArm(true, PART_USELESS);
         *part_hit = new_slot;
         if (desc)
           desc->career.crit_crushed_nerve++;
@@ -1021,11 +1021,11 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
 
         *part_hit = WEAR_LEG_L;
         buf = format("You shatter $N's femur with your %s!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s shatters your femur!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s shatters $N's femur!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         *part_hit = WEAR_LEG_L;
         v->addToLimbFlags(WEAR_LEG_L, PART_BROKEN);
         for (i = 1; i < 5; i++)
@@ -1055,11 +1055,11 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         *part_hit = WEAR_LEG_L;
         buf =
           format("With your %s, you crush the muscles in $N's leg!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s crushes the muscles in your leg!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s crushes the muscles in $N's leg!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         *part_hit = WEAR_LEG_L;
         v->addToLimbFlags(WEAR_LEG_L, PART_USELESS);
         v->addToLimbFlags(WEAR_FOOT_L, PART_USELESS);
@@ -1091,15 +1091,15 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         *part_hit = WEAR_HEAD;
         buf = format("You slam $N's head massively with your %s!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format(
             "$n's %s slams into your head and .. What?  who?  Where am I????") %
           limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s slams into $N's head, stunning $M completely!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->cantHit += v->loseRound(5);
         *part_hit = WEAR_HEAD;
         for (i = 1; i < 5; i++) {
@@ -1126,12 +1126,12 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         *part_hit = WEAR_BODY;
         buf = format("With your %s, you slam $N's chest, breaking a rib!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s crushes your chest and shatters a rib!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s shatters one of $N's ribs!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
         if (desc)
           desc->career.crit_broken_bones++;
@@ -1158,14 +1158,14 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                 "With your %s, you slam $N's chest, breaking a rib and causing "
                 "internal damage!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format(
                 "$n's %s crushes your chest, shatters a rib and causes "
                 "internal bleeding!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s shatters one of $N's ribs!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->addToLimbFlags(WEAR_BODY, PART_BROKEN);
         for (i = 1; i < 9; i++)
           if (v->equipment[WEAR_BODY])
@@ -1189,7 +1189,7 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
       case 93:
       case 94:
       case 95:
-        return FALSE;
+        return false;
       case 96:
       case 97:
         if (v->race->hasNoBones())
@@ -1199,15 +1199,15 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           format(
             "You swing your %s right into $N's face, sending a tooth flying.") %
           limbStr;
-        act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, obj, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s connects with your face, sending a tooth flying.") %
           limbStr;
-        act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
+        act(buf, false, this, obj, v, TO_VICT, ANSI_ORANGE);
         buf =
           format("$n's %s connects with $N's face, sending a tooth flying.") %
           limbStr;
-        act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
         TObj* corpse;
         TCorpse* tooth;
@@ -1261,7 +1261,7 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         act(
           "$p goes flying through the air and bounces once before it rolls to "
           "a stop.",
-          TRUE, v, corpse, 0, TO_ROOM, ANSI_RED);
+          true, v, corpse, 0, TO_ROOM, ANSI_RED);
         *v->roomp += *corpse;
 
         if (desc)
@@ -1285,34 +1285,34 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                     "With your %s, you reach into $N's chest and rip out what "
                     "you think is $S heart!") %
                   limbStr;
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
-            act("You hold the ghostly organ above your head in triumph!", FALSE,
+            act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
+            act("You hold the ghostly organ above your head in triumph!", false,
               this, 0, v, TO_CHAR, ANSI_RED);
-            act("$n reaches into your chest and rips out your heart!", FALSE,
+            act("$n reaches into your chest and rips out your heart!", false,
               this, 0, v, TO_VICT, ANSI_RED);
             act(
               "$n reaches into $N's chest and rips out what appears to be $S "
               "heart!",
-              FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+              false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
           } else {
             buf = format(
                     "With your %s, you reach into $N's chest and rip out $S "
                     "heart!") %
                   limbStr;
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+            act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
             act(
               "You hold the still beating heart above your head in triumph, as "
               "blood runs down your arm!",
-              FALSE, this, 0, v, TO_CHAR, ANSI_RED);
-            act("$n reaches into your chest and rips out your heart!", FALSE,
+              false, this, 0, v, TO_CHAR, ANSI_RED);
+            act("$n reaches into your chest and rips out your heart!", false,
               this, 0, v, TO_VICT, ANSI_RED);
-            act("$n reaches into $N's chest and rips out $S heart!", FALSE,
+            act("$n reaches into $N's chest and rips out $S heart!", false,
               this, 0, v, TO_NOTVICT, ANSI_BLUE);
           }
 
           if (IS_SET(v->specials.act, ACT_GHOST))
             act("The ghostly heart of $N fades as quickly as you removed it.",
-              FALSE, this, 0, v, TO_CHAR, ANSI_RED);
+              false, this, 0, v, TO_CHAR, ANSI_RED);
           else {
             TDrinkCon* corpse;
             corpse = new TDrinkCon();
@@ -1386,17 +1386,17 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                     "With a mighty blow, you crush $N's head with your %s. "
                     "Unfortunately, $S $o saves $M.") %
                   limbStr;
-            act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+            act(buf, false, this, obj, v, TO_CHAR, ANSI_ORANGE);
             buf = format(
                     "$n's %s strikes a mighty blow to your head crushing your "
                     "$o!") %
                   limbStr;
-            act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+            act(buf, false, this, obj, v, TO_VICT, ANSI_RED);
             buf =
               format(
                 "$n's %s strikes a mighty blow to $N's head, crushing $S $o!") %
               limbStr;
-            act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+            act(buf, false, this, obj, v, TO_NOTVICT, ANSI_BLUE);
             if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA))
               critHitEqDamage(v, obj, (::number(-55, -40)));
 
@@ -1413,16 +1413,16 @@ int TBeing::critBlunt(TBeing* v, TThing* weapon, wearSlotT* part_hit,
               format(
                 "With your %s, you crush $N's skull, and $S brains ooze out!") %
               limbStr;
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+            act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
             buf =
               format("$n's %s crushes your skull and The World goes dark!") %
               limbStr;
-            act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+            act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
             buf = format(
                     "$n's %s crushes $N's skull.  Brains ooze out as $E "
                     "crumples!") %
                   limbStr;
-            act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+            act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
             if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
                 (obj = v->equipment[WEAR_HEAD]))
               critHitEqDamage(v, obj, (::number(-55, -40)));
@@ -1482,7 +1482,7 @@ total:
 int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
   spellNumT wtype, int* dam, int crit_num) {
   sstring buf, limbStr;
-  TThing* obj = NULL;
+  TThing* obj = nullptr;
   int rc, i, v_vnum;
   affectedData af;
   TMonster* vmob;
@@ -1508,19 +1508,19 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
             "You strike $N's %s exceptionally well, sinking your %s deep into "
             "$S flesh!") %
           v->describeBodySlot(*part_hit) % limbStr;
-    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+    act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
     buf = format(
             "$n strikes your %s exceptionally well, sinking $s %s deep into "
             "your flesh!") %
           v->describeBodySlot(*part_hit) % limbStr;
-    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+    act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
 
     buf = format(
             "$n strikes $N's %s exceptionally well, sinking $s %s deep into "
             "$N's flesh!") %
           v->describeBodySlot(*part_hit) % limbStr;
-    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else if (crit_num <= 66) {
@@ -1531,19 +1531,19 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
       format(
         "You critically strike $N's %s, sinking your %s deep into $S flesh!") %
       v->describeBodySlot(*part_hit) % limbStr;
-    act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+    act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
     buf =
       format(
         "$n critically strikes your %s, sinking $s %s deep into your flesh!") %
       v->describeBodySlot(*part_hit) % limbStr;
-    act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+    act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
 
     buf =
       format(
         "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") %
       v->describeBodySlot(*part_hit) % limbStr;
-    act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else {
@@ -1559,18 +1559,18 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
 
         buf = format("Your %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_FINGER_R);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
 
         buf =
           format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
           limbStr % v->describeBodySlot(WEAR_FINGER_R);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
 
         buf = format("$n's %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_FINGER_R);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
-        v->makePartMissing(WEAR_FINGER_R, FALSE, this);
+        v->makePartMissing(WEAR_FINGER_R, false, this);
         v->rawBleed(WEAR_HAND_R, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
 
@@ -1589,15 +1589,15 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("Your %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_FINGER_L);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
           limbStr % v->describeBodySlot(WEAR_FINGER_L);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_FINGER_L);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        v->makePartMissing(WEAR_FINGER_L, FALSE, this);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        v->makePartMissing(WEAR_FINGER_L, false, this);
         v->rawBleed(WEAR_HAND_L, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
         *part_hit = WEAR_FINGER_L;
@@ -1630,15 +1630,15 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("Your %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_HAND_R);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
           limbStr % v->describeBodySlot(WEAR_HAND_R);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_HAND_R);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        v->makePartMissing(WEAR_HAND_R, FALSE, this);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        v->makePartMissing(WEAR_HAND_R, false, this);
         v->rawBleed(WEAR_WRIST_R, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
         v->dropItemFromDamagedHand(v->isRightHanded());
@@ -1672,15 +1672,15 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("Your %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_HAND_L);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
           limbStr % v->describeBodySlot(WEAR_HAND_L);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_HAND_L);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        v->makePartMissing(WEAR_HAND_L, FALSE, this);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        v->makePartMissing(WEAR_HAND_L, false, this);
         v->rawBleed(WEAR_WRIST_L, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
         v->dropItemFromDamagedHand(!v->isRightHanded());
@@ -1699,15 +1699,15 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("Your %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_ARM_R);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
           limbStr % v->describeBodySlot(WEAR_ARM_R);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_ARM_R);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        v->makePartMissing(WEAR_ARM_R, FALSE, this);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        v->makePartMissing(WEAR_ARM_R, false, this);
         v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
         v->dropItemFromDamagedHand(v->isRightHanded());
@@ -1726,15 +1726,15 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("Your %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_ARM_L);
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s severs your %s and sends it flying!!  OH THE PAIN!") %
           limbStr % v->describeBodySlot(WEAR_ARM_L);
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s severs $N's %s and sends it flying!") % limbStr %
               v->describeBodySlot(WEAR_ARM_L);
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        v->makePartMissing(WEAR_ARM_L, FALSE, this);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        v->makePartMissing(WEAR_ARM_L, false, this);
         v->rawBleed(WEAR_BODY, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
         v->dropItemFromDamagedHand(!v->isRightHanded());
@@ -1752,14 +1752,14 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
             return 0;
           buf = format("Your %s severs $N's %s and sends it flying!") %
                 limbStr % v->describeBodySlot(WEAR_FOOT_R);
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
           buf = format("$n's %s severs your %s!!  OH THE PAIN!") % limbStr %
                 v->describeBodySlot(WEAR_FOOT_R);
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
           buf = format("$n's %s severs $N's %s and sends it flying!") %
                 limbStr % v->describeBodySlot(WEAR_FOOT_R);
-          act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          v->makePartMissing(WEAR_FOOT_R, FALSE, this);
+          act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+          v->makePartMissing(WEAR_FOOT_R, false, this);
           v->addToLimbFlags(WEAR_LEG_R, PART_USELESS);
           if ((obj = v->equipment[WEAR_LEG_R]))
             critHitEqDamage(v, obj, (::number(-35, -22)));
@@ -1780,14 +1780,14 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
             v->hasPart(WEAR_FOOT_L)) {
           buf = format("Your %s severs $N's %s and sends it flying!") %
                 limbStr % v->describeBodySlot(WEAR_FOOT_L);
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
           buf = format("$n's %s severs your %s!!  OH THE PAIN!") % limbStr %
                 v->describeBodySlot(WEAR_FOOT_L);
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
           buf = format("$n's %s severs $N's %s and sends it flying!") %
                 limbStr % v->describeBodySlot(WEAR_FOOT_L);
-          act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-          v->makePartMissing(WEAR_FOOT_L, FALSE, this);
+          act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+          v->makePartMissing(WEAR_FOOT_L, false, this);
           v->addToLimbFlags(WEAR_LEG_L, PART_USELESS);
           if ((obj = v->equipment[WEAR_LEG_L]))
             critHitEqDamage(v, obj, (::number(-35, -22)));
@@ -1808,13 +1808,13 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf =
           format("You stick your %s through $N's body, impaling $M!") % limbStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s is thrust through your torso, impaling you!!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n thrusts $s %s deep into $N's torso, impaling $M!") %
               limbStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         if (desc)
           desc->career.crit_impale++;
         if (v->desc)
@@ -1836,17 +1836,17 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                   "You attempt to cleave $N in two with your %s, but $p saves "
                   "$M from a hideous fate.") %
                 limbStr;
-          act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, obj, v, TO_CHAR, ANSI_ORANGE);
           buf = format(
                   "$n tries to cleave you in two with $s %s, but $p saves you "
                   "thankfully!") %
                 limbStr;
-          act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, obj, v, TO_VICT, ANSI_RED);
           buf = format(
                   "$n attempts to cleave $N in two with $s %s! Thankfully $p "
                   "saves $M!") %
                 limbStr;
-          act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+          act(buf, false, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
           critHitEqDamage(v, obj, (::number(-55, -40)));
 
@@ -1867,17 +1867,17 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                     "With a mighy warcry, you almost cleave $N in two with "
                     "your %s.") %
                   limbStr;
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+            act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
             buf = format(
                     "$n unleashes a mighty warcry and slashes you HARD down "
                     "the center with $s %s!") %
                   limbStr;
-            act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+            act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
             buf = format(
                     "$n gives a mighty warcry and slashes $N down the center "
                     "with $s %s!") %
                   limbStr;
-            act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+            act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
             if ((obj = v->equipment[WEAR_WAIST]))
               critHitEqDamage(v, obj, (::number(-45, -30)));
 
@@ -1892,17 +1892,17 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
               format(
                 "With a mighty warcry, you cleave $N in two with your %s.") %
               limbStr;
-            act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+            act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
             buf = format(
                     "$n unleashes a mighty warcry before cleaving you in two "
                     "with $s %s!") %
                   limbStr;
-            act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+            act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
             buf =
               format(
                 "$n gives a mighty warcry and cleaves $N in two with $s %s!") %
               limbStr;
-            act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+            act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
             if ((obj = v->equipment[WEAR_WAIST]))
               critHitEqDamage(v, obj, (::number(-45, -30)));
 
@@ -1924,17 +1924,17 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                   "With your %s, you slice $N from gullet to groin "
                   "disembowling $M!") %
                 limbStr;
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
           buf =
             format(
               "$n's %s slices you from gullet to groin, disembowling you!") %
             limbStr;
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
           buf =
             format(
               "$n's %s slices into $N from gullet to groin, disembowling $M!") %
             limbStr;
-          act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+          act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
           if ((obj = v->equipment[WEAR_BODY]))
             critHitEqDamage(v, obj, (::number(-105, -80)));
 
@@ -1955,10 +1955,10 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           buf =
             format("With a deft swing of your %s, you sever $N's genitals.") %
             limbStr;
-          act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, obj, v, TO_CHAR, ANSI_ORANGE);
           buf = format("$n deftly severs your genitals with $s %s!  OWWWWW!") %
                 limbStr;
-          act(buf, FALSE, this, obj, v, TO_VICT, ANSI_ORANGE);
+          act(buf, false, this, obj, v, TO_VICT, ANSI_ORANGE);
 
           if (obj)
             critHitEqDamage(v, obj, (::number(-45, -30)));
@@ -2009,7 +2009,7 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           act(
             "$p goes flying through the air and bounces once before it rolls "
             "to a stop.",
-            TRUE, v, corpse, 0, TO_ROOM, ANSI_RED);
+            true, v, corpse, 0, TO_ROOM, ANSI_RED);
           *v->roomp += *corpse;
 
           v->setSex(SEX_NEUTER);
@@ -2030,7 +2030,7 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
       case 95:
       case 96:
       case 97:
-        return FALSE;
+        return false;
         break;
       case 98:
       case 99:
@@ -2042,16 +2042,16 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                   "You attempt to decapitate $N with your %s, but $p saves $M "
                   "from a hideous fate.") %
                 limbStr;
-          act(buf, FALSE, this, obj, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, obj, v, TO_CHAR, ANSI_ORANGE);
           buf =
             format("$n tries to decapitate you with $s %s, but $p saves you!") %
             limbStr;
-          act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, obj, v, TO_VICT, ANSI_RED);
           buf = format(
                   "$n attempts to decapitate $N with $s %s!  Luckily, $p saves "
                   "$M!") %
                 limbStr;
-          act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+          act(buf, false, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
           critHitEqDamage(v, obj, (::number(-40, -25)));
           *part_hit = WEAR_NECK;
@@ -2062,11 +2062,11 @@ int TBeing::critSlash(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         } else {  // no collar
           // if no collar, its going into next critSuccess...
           // POW! He was deCAPITATED!
-          act("$n strikes a fatal blow and cuts off $N's head!", FALSE, this, 0,
+          act("$n strikes a fatal blow and cuts off $N's head!", false, this, 0,
             v, TO_NOTVICT, ANSI_CYAN);
-          act("You strike a fatal blow and completely behead $N!", FALSE, this,
+          act("You strike a fatal blow and completely behead $N!", false, this,
             0, v, TO_CHAR, ANSI_RED);
-          act("$n strikes a fatal blow and completely beheads you!", FALSE,
+          act("$n strikes a fatal blow and completely beheads you!", false,
             this, 0, v, TO_VICT, ANSI_RED);
           if (v->roomp && !v->roomp->isRoomFlag(ROOM_ARENA) &&
               (obj = v->equipment[WEAR_NECK]))
@@ -2124,7 +2124,7 @@ total:
 int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
   spellNumT wtype, int* dam, int crit_num) {
   sstring buf, weaponStr;
-  TThing* obj = NULL;
+  TThing* obj = nullptr;
   int rc, i;
   affectedData af;
   wearSlotT new_slot;
@@ -2146,19 +2146,19 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
             "You strike $N's %s exceptionally well, sinking your %s deep into "
             "$S flesh!") %
           v->describeBodySlot(*part_hit) % weaponStr;
-    act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
+    act(buf, false, this, weapon, v, TO_CHAR, ANSI_ORANGE);
 
     buf = format(
             "$n strikes your %s exceptionally well, sinking $s %s deep into "
             "your flesh!") %
           v->describeBodySlot(*part_hit) % weaponStr;
-    act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
+    act(buf, false, this, weapon, v, TO_VICT, ANSI_RED);
 
     buf = format(
             "$n strikes $N's %s exceptionally well, sinking $s %s deep into "
             "$N's flesh!") %
           v->describeBodySlot(*part_hit) % weaponStr;
-    act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, false, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else if (crit_num <= 66) {
@@ -2169,19 +2169,19 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
       format(
         "You critically strike $N's %s, sinking your %s deep into $S flesh!") %
       v->describeBodySlot(*part_hit) % weaponStr;
-    act(buf, FALSE, this, weapon, v, TO_CHAR, ANSI_ORANGE);
+    act(buf, false, this, weapon, v, TO_CHAR, ANSI_ORANGE);
 
     buf =
       format(
         "$n critically strikes your %s, sinking $s %s deep into your flesh!") %
       v->describeBodySlot(*part_hit) % weaponStr;
-    act(buf, FALSE, this, weapon, v, TO_VICT, ANSI_RED);
+    act(buf, false, this, weapon, v, TO_VICT, ANSI_RED);
 
     buf =
       format(
         "$n critically strikes $N's %s, sinking $s %s deep into $N's flesh!") %
       v->describeBodySlot(*part_hit) % weaponStr;
-    act(buf, FALSE, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
+    act(buf, false, this, weapon, v, TO_NOTVICT, ANSI_BLUE);
 
     return (ONEHIT_MESS_CRIT_S);
   } else {
@@ -2223,15 +2223,15 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         buf =
           format("You pop your %s into $N's throat, puncturing $S voice box!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n pops $s %s into your throat, puncturing your voice box!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf =
           format("$n pops $s %s into $N's throat, puncturing $S voice box!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
         // triple damage
         *dam *= 3;
@@ -2270,17 +2270,17 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                 "You pop your %s into $N's eyes, gouging them out and blinding "
                 "$M!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n pops $s %s into your eyes and The World goes DARK!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf =
           format(
             "$n pops $s %s into $N's eyes, gouging them out and blinding $M!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        act("$n's eyeballs fall from $s sockets!", TRUE, v, 0, 0, TO_ROOM);
-        v->makeOtherPart(NULL, "eyeballs", this);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act("$n's eyeballs fall from $s sockets!", true, v, 0, 0, TO_ROOM);
+        v->makeOtherPart(nullptr, "eyeballs", this);
 
         af.type = AFFECT_DISEASE;
         af.level = 0;  // has to be 0 for doctor to treat
@@ -2340,14 +2340,14 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
 
         buf = format("Your %s rips through $N's tendon on $S lower leg!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s rips through the tendon in your lower leg.") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf =
           format("$n's %s rips into $N, tearing the tendon in $S lower leg.") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->setMove(v->getMove() / 4);
         for (i = 1; i < 5; i++) {
           if (v->equipment[WEAR_LEG_R])
@@ -2366,20 +2366,20 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         if (!v->hasPart(new_slot))
           return 0;
         if (!v->isHumanoid())
-          return FALSE;
+          return false;
         buf = format(
                 "$N blocks your %s with $S arm.  However the force shatters $S "
                 "elbow!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format(
                 "$n's %s is blocked by your arm.  Unfortunately your elbow is "
                 "shattered!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s shatters $N's elbow!") % weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
-        v->damageArm(FALSE, PART_BROKEN);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        v->damageArm(false, PART_BROKEN);
         if (desc)
           desc->career.crit_broken_bones++;
         if (v->desc)
@@ -2403,9 +2403,9 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         *dam *= 3;
 
         if ((obj = v->equipment[v->getPrimaryWrist()])) {
-          act("Your $o just saved you from losing your hand!", TRUE, v, obj, 0,
+          act("Your $o just saved you from losing your hand!", true, v, obj, 0,
             TO_CHAR, ANSI_PURPLE);
-          act("You nearly sever $N's hand, but $S $o saved $M!", TRUE, this,
+          act("You nearly sever $N's hand, but $S $o saved $M!", true, this,
             obj, v, TO_CHAR);
           *part_hit = v->getPrimaryWrist();
           return ONEHIT_MESS_CRIT_S;
@@ -2418,19 +2418,19 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         if (!v->isHumanoid())
           return 0;
         buf = format("Your %s severs $N's hand at $S wrist!") % weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format("$n's %s severs your arm below the wrist!") % weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s severs $N's hand at the wrist!") % weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
         // triple damage
         *dam *= 3;
 
-        v->makePartMissing(v->getPrimaryHand(), FALSE, this);
+        v->makePartMissing(v->getPrimaryHand(), false, this);
         v->rawBleed(v->getPrimaryWrist(), PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
-        v->dropItemFromDamagedHand(TRUE);
+        v->dropItemFromDamagedHand(true);
         *part_hit = v->getPrimaryHand();
         if (desc)
           desc->career.crit_sev_limbs++;
@@ -2467,16 +2467,16 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("Your %s plunges into $N's chest puncturing a lung!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format("$n's %s plunges into your chest and punctures a lung!!!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format(
                 "$n's %s plunges into $N's chest.\n\rA hiss of air escapes $S "
                 "punctured lung!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
         af.type = AFFECT_DISEASE;
         af.level = 0;  // has to be 0 for doctor to treat
@@ -2533,14 +2533,14 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           format(
             "You puncture $N's kidney with your %s and cause an infection!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format(
                 "$n's %s tears into your kidney; the pain is AGONIZING and an "
                 "infection has started!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s punctures $N's kidney!") % weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
         if (desc)
           desc->career.crit_kidney++;
@@ -2571,15 +2571,15 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
         buf = format(
                 "You plunge your %s into $N's stomach, opening up $S gullet!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf =
           format(
             "$n's %s tears into your stomach and exposes your intestines!!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n's %s tears into $N's stomach exposing intestines!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
         v->rawInfect(WEAR_BODY, PERMANENT_DURATION, SILENT_NO,
           CHECK_IMMUNITY_YES);
         if (v->hasPart(WEAR_WAIST))
@@ -2625,15 +2625,15 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           return 0;
         buf = format("You plunge your %s deep into $N's side, stunning $M!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format(
                 "$n plunges $s %s deep into your side.  The agony makes you "
                 "forget about the fight.") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format("$n plunges $s %s deep into $N's side, stunning $M.") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+        act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
         // triple damage
         *dam *= 3;
@@ -2656,19 +2656,19 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           buf =
             format("You try to thrust your %s into the back of $N's head.") %
             weaponStr;
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
           buf = "Unfortunately, $p saves $M from a hideous death!";
-          act(buf, FALSE, this, obj, v, TO_CHAR);
+          act(buf, false, this, obj, v, TO_CHAR);
           buf = format("$n tries to thrust $s %s into the back of your head.") %
                 weaponStr;
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
           buf = "But $p saves you from a hideous death!";
-          act(buf, FALSE, this, obj, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, obj, v, TO_VICT, ANSI_RED);
           buf = format(
                   "$n tries plunging $s %s into the back of $N's head, but $p "
                   "saves $M.") %
                 weaponStr;
-          act(buf, FALSE, this, obj, v, TO_NOTVICT, ANSI_BLUE);
+          act(buf, false, this, obj, v, TO_NOTVICT, ANSI_BLUE);
 
           // triple damage
           *dam *= 3;
@@ -2690,18 +2690,18 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
                   "You thrust your %s into the back of $N's head causing an "
                   "immediate death.") %
                 weaponStr;
-          act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+          act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
           buf =
             format("$n's %s tears into the back of your unprotected head.") %
             weaponStr;
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+          act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
           buf = format("The world goes black and dark...");
-          act(buf, FALSE, this, 0, v, TO_VICT, ANSI_BLACK);
+          act(buf, false, this, 0, v, TO_VICT, ANSI_BLACK);
           buf = format(
                   "$n thrusts $s %s deep into the back of $N's unprotected "
                   "head, causing an immediate death.") %
                 weaponStr;
-          act(buf, FALSE, this, 0, v, TO_NOTVICT, ANSI_BLUE);
+          act(buf, false, this, 0, v, TO_NOTVICT, ANSI_BLUE);
 
           rc = damageLimb(v, WEAR_HEAD, weapon, dam);
           if (IS_SET_DELETE(rc, DELETE_VICT))
@@ -2714,7 +2714,7 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
             v->desc->career.crit_cranial_pierce_suff++;
           return DELETE_VICT;
         }
-        return FALSE;  // not possible, but just in case
+        return false;  // not possible, but just in case
       case 100:
         if (IS_SET(v->specials.act, ACT_SKELETON) ||
             IS_SET(v->specials.act, ACT_GHOST))
@@ -2723,17 +2723,17 @@ int TBeing::critPierce(TBeing* v, TThing* weapon, wearSlotT* part_hit,
           format(
             "You sink your %s between $N's eyes, causing an immediate death!") %
           weaponStr;
-        act(buf, FALSE, this, 0, v, TO_CHAR, ANSI_ORANGE);
+        act(buf, false, this, 0, v, TO_CHAR, ANSI_ORANGE);
         buf = format(
                 "$n sinks $s %s right between your eyes, causing an immediate "
                 "death!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_VICT, ANSI_RED);
+        act(buf, false, this, 0, v, TO_VICT, ANSI_RED);
         buf = format(
                 "$n sinks $s %s smack between $N's eyes, causing an immediate "
                 "death!") %
               weaponStr;
-        act(buf, FALSE, this, 0, v, TO_ROOM);
+        act(buf, false, this, 0, v, TO_ROOM);
         applyDamage(v, (20 * v->hitLimit()), wtype);
         *part_hit = WEAR_HEAD;
         if (desc)

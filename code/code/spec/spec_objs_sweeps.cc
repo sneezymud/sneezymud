@@ -6,35 +6,35 @@
 
 int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   if (cmd != CMD_SHAKE)
-    return FALSE;
+    return false;
 
   sstring buf;
   buf = sstring(arg).word(0);
 
   if (!isname(buf, o->name) || !is_abbrev(buf, "tile"))
-    return FALSE;
+    return false;
 
   if (!o || !ch)
-    return FALSE;
+    return false;
 
   TBeing* cho;
   cho = ch;
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy))) {
     cho->sendTo("Maybe you should hold an unused tile in your hand.\n\r");
-    return TRUE;
+    return true;
   }
 
-  TObj* tile = NULL;
+  TObj* tile = nullptr;
 
   if (!(tile = dynamic_cast<TObj*>(ch->equipment[HOLD_RIGHT])) &&
       !(tile = dynamic_cast<TObj*>(ch->equipment[HOLD_LEFT]))) {
-    act("You must hold the tile before trying to shake it.", TRUE, ch, NULL,
-      NULL, TO_CHAR, NULL);
-    return TRUE;
+    act("You must hold the tile before trying to shake it.", true, ch, nullptr,
+      nullptr, TO_CHAR, nullptr);
+    return true;
   }
 
-  act("$n shakes a tile vigorously.", TRUE, ch, NULL, NULL, TO_ROOM, NULL);
-  act("You shake the tile vigorously.", TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+  act("$n shakes a tile vigorously.", true, ch, nullptr, nullptr, TO_ROOM, nullptr);
+  act("You shake the tile vigorously.", true, ch, nullptr, nullptr, TO_CHAR, nullptr);
 
   int roll = ::number(1, 100);
   sstring buf3, buf4;
@@ -66,7 +66,7 @@ int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
   // delete tile, load tile with join proc
   // need to know what hand to hold it in tile->eq_pos
-  TObj* newtile = NULL;
+  TObj* newtile = nullptr;
   if (!(newtile = read_object(TILEVNUM_SHAKEN, VIRTUAL))) {
     vlogf(LOG_LOW,
       format("could not read obj %d in spec_objs_sweeps.cc") % TILEVNUM_SHAKEN);
@@ -79,10 +79,10 @@ int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     newtile->swapToStrung();
     newtile->name = buf5;
     newtile->shortDescr = buf6;
-    act(buf4, TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+    act(buf4, true, ch, nullptr, nullptr, TO_CHAR, nullptr);
     newtile->obj_flags.decay_time = o->obj_flags.decay_time;
     delete o;
-    o = NULL;
+    o = nullptr;
 
     ch->equipChar(newtile, pos, SILENT_YES);
   } else {
@@ -90,30 +90,30 @@ int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     vlogf(LOG_LOW, "Error in tile shake - no new tile.\n\r");
   }
 
-  return TRUE;
+  return true;
 }
 
 int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   if (cmd != CMD_COMBINE && cmd != CMD_SPLIT)
-    return FALSE;
+    return false;
 
   sstring buf, buf4, buf5, buf6;
   buf = sstring(arg).word(0);
 
   if (!is_abbrev(buf, "tiles"))
-    return FALSE;
+    return false;
 
   if (!o || !ch)
-    return FALSE;
+    return false;
   TBeing* cho;
   cho = ch;
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy))) {
     cho->sendTo("Maybe you should hold the tile in your hand.\n\r");
-    return TRUE;
+    return true;
   }
 
-  TObj* tile1 = NULL;
-  TObj* tile2 = NULL;
+  TObj* tile1 = nullptr;
+  TObj* tile2 = nullptr;
 
   if (cmd == CMD_COMBINE) {
     if (!(tile1 = dynamic_cast<TObj*>(ch->equipment[HOLD_RIGHT])) ||
@@ -121,35 +121,35 @@ int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
         !(tile1->spec == SPEC_SPLIT_JOIN) ||
         !(tile2->spec == SPEC_SPLIT_JOIN)) {
       act("You must hold two tiles, on in each hand, in order to combine them.",
-        TRUE, ch, NULL, NULL, TO_CHAR, NULL);
-      return TRUE;
+        true, ch, nullptr, nullptr, TO_CHAR, nullptr);
+      return true;
     }
 
     // return quietly if the proc is firing from both hands
     if (o == ch->equipment[HOLD_LEFT])
-      return TRUE;
+      return true;
 
-    act("$n fiddles with some tiles.", TRUE, ch, NULL, NULL, TO_ROOM, NULL);
-    act("You fiddle with some tiles.", TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+    act("$n fiddles with some tiles.", true, ch, nullptr, nullptr, TO_ROOM, nullptr);
+    act("You fiddle with some tiles.", true, ch, nullptr, nullptr, TO_CHAR, nullptr);
 
     sstring name1 = sstring(tile1->name).word(1);
     sstring name2 = sstring(tile2->name).word(1);
 
     if (name1 == "" || name2 == "") {
-      act("Nothing happens.", TRUE, ch, NULL, NULL, TO_ROOM, NULL);
-      act("One of both of your tiles is faulty.  Nothing happens.", TRUE, ch,
-        NULL, NULL, TO_CHAR, NULL);
-      return TRUE;
+      act("Nothing happens.", true, ch, nullptr, nullptr, TO_ROOM, nullptr);
+      act("One of both of your tiles is faulty.  Nothing happens.", true, ch,
+        nullptr, nullptr, TO_CHAR, nullptr);
+      return true;
     }
 
     act(
       "<R>*SNAP*<z>\n\r$n lays one tile on top of another and they merge into "
       "one.",
-      TRUE, ch, NULL, NULL, TO_ROOM, NULL);
+      true, ch, nullptr, nullptr, TO_ROOM, nullptr);
     act(
       "<R>*SNAP*<z>\n\rYou lay one tile on top of the other and they merge "
       "into one.",
-      TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+      true, ch, nullptr, nullptr, TO_CHAR, nullptr);
 
     delete tile2;
 
@@ -161,11 +161,11 @@ int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     tile1->swapToStrung();
     tile1->name = buf5;
     tile1->shortDescr = buf6;
-    act(buf4, TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+    act(buf4, true, ch, nullptr, nullptr, TO_CHAR, nullptr);
 
     if (newname == "POP") {
-      act("The tile vanishes.", TRUE, ch, NULL, NULL, TO_CHAR, NULL);
-      act("The tile vanishes.", TRUE, ch, NULL, NULL, TO_ROOM, NULL);
+      act("The tile vanishes.", true, ch, nullptr, nullptr, TO_CHAR, nullptr);
+      act("The tile vanishes.", true, ch, nullptr, nullptr, TO_ROOM, nullptr);
       delete tile1;
       vlogf(LOG_LOW,
         format("%s has just been teleported by the sneezy sweeps") %
@@ -188,17 +188,17 @@ int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       }
 
       if (newobjn > 0) {
-        TObj* newobj = NULL;
+        TObj* newobj = nullptr;
         if (!(newobj = read_object(newobjn, VIRTUAL))) {
           vlogf(LOG_LOW,
             format("could not read obj %d in spec_objs_sweeps.cc") % newobjn);
         }
         if (newobj) {  // delete tile and load item
           delete tile1;
-          act("The tile vanishes, and $p appears in your hand.", TRUE, ch,
-            newobj, NULL, TO_CHAR, NULL);
-          act("The tile vanishes, and $p appears in $n's hand.", TRUE, ch,
-            newobj, NULL, TO_ROOM, NULL);
+          act("The tile vanishes, and $p appears in your hand.", true, ch,
+            newobj, nullptr, TO_CHAR, nullptr);
+          act("The tile vanishes, and $p appears in $n's hand.", true, ch,
+            newobj, nullptr, TO_ROOM, nullptr);
           ch->equipChar(newobj, HOLD_RIGHT, SILENT_YES);
           vlogf(LOG_LOW, format("%s has just won %s in the sneezy sweeps") %
                            ch->getName() % newobj->getName());
@@ -207,7 +207,7 @@ int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     }
 
   } else if (cmd == CMD_SPLIT) {
-    TThing *left = NULL, *right = NULL;
+    TThing *left = nullptr, *right = nullptr;
     tile1 = dynamic_cast<TObj*>(ch->equipment[HOLD_RIGHT]);
     if (!tile1)
       tile1 = dynamic_cast<TObj*>(ch->equipment[HOLD_LEFT]);
@@ -217,35 +217,35 @@ int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
       act(
         "You must be holding a tile, with the other hand empty, to split the "
         "tile.",
-        TRUE, ch, NULL, NULL, TO_CHAR, NULL);
-      return TRUE;
+        true, ch, nullptr, nullptr, TO_CHAR, nullptr);
+      return true;
     }
     if (!(tile2 = read_object(TILEVNUM_SHAKEN, VIRTUAL))) {
       vlogf(LOG_BUG, format("spec_objs_sweeps.cc, problem loading object %d") %
                        TILEVNUM_SHAKEN);
-      act("Nothing happens.", TRUE, ch, NULL, NULL, TO_ROOM, NULL);
-      act("Nothing happens.", TRUE, ch, NULL, NULL, TO_CHAR, NULL);
-      return TRUE;
+      act("Nothing happens.", true, ch, nullptr, nullptr, TO_ROOM, nullptr);
+      act("Nothing happens.", true, ch, nullptr, nullptr, TO_CHAR, nullptr);
+      return true;
     }
 
-    act("$n fiddles with a tile.", TRUE, ch, NULL, NULL, TO_ROOM, NULL);
-    act("You fiddle with a tile.", TRUE, ch, NULL, NULL, TO_CHAR, NULL);
+    act("$n fiddles with a tile.", true, ch, nullptr, nullptr, TO_ROOM, nullptr);
+    act("You fiddle with a tile.", true, ch, nullptr, nullptr, TO_CHAR, nullptr);
 
     sstring name1 = sstring(tile1->name).word(1);
     sstring name2 = name1.substr(name1.length() - 1, name1.length());
     name1 = name1.substr(0, (name1.length()) - 1);
 
     if (name1 == "" || name2 == "") {
-      act("Nothing happens.", TRUE, ch, NULL, NULL, TO_ROOM, NULL);
-      act("You can't split a tile with only one letter on it.", TRUE, ch, NULL,
-        NULL, TO_CHAR, NULL);
-      return TRUE;
+      act("Nothing happens.", true, ch, nullptr, nullptr, TO_ROOM, nullptr);
+      act("You can't split a tile with only one letter on it.", true, ch, nullptr,
+        nullptr, TO_CHAR, nullptr);
+      return true;
     }
 
-    act("<R>*SNAP*<z>\n\r$n tugs at a tile and it separates into two.", TRUE,
-      ch, NULL, NULL, TO_ROOM, NULL);
-    act("<R>*SNAP*<z>\n\rYou tug at a tile and it separates into two.", TRUE,
-      ch, NULL, NULL, TO_CHAR, NULL);
+    act("<R>*SNAP*<z>\n\r$n tugs at a tile and it separates into two.", true,
+      ch, nullptr, nullptr, TO_ROOM, nullptr);
+    act("<R>*SNAP*<z>\n\rYou tug at a tile and it separates into two.", true,
+      ch, nullptr, nullptr, TO_CHAR, nullptr);
 
     // deal with tile1
     buf5 = format("tile %s") % name1;
@@ -274,5 +274,5 @@ int sweepsSplitJoin(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     }
   }
 
-  return TRUE;
+  return true;
 }

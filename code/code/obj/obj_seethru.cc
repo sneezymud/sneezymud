@@ -135,5 +135,5 @@ void TSeeThru::purgeMe(TBeing*) {
 
 int TSeeThru::riverFlow(int) {
   // don't have these objects float around
-  return FALSE;
+  return false;
 }

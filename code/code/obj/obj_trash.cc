@@ -41,5 +41,5 @@ bool TTrash::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       format("I'm not the trash man. Take %s to the dump!") % getName());
 
-  return TRUE;
+  return true;
 }

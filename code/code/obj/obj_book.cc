@@ -46,7 +46,7 @@ void TBook::lookAtObj(TBeing* ch, const char* arg, showModeT) const {
   sprintf(buf + strlen(buf), "%s...\n\r", sstring(getName()).cap().c_str());
 
   // spam reduction
-  //  act("$n begins reading $p...", TRUE, ch, this, 0, TO_ROOM);
+  //  act("$n begins reading $p...", true, ch, this, 0, TO_ROOM);
 
   vnum = obj_index[getItemIndex()].virt;
   // in next sscanf, buf eats 'words' like 'sect', 'section', 'chapter'

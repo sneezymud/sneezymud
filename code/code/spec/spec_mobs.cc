@@ -10,10 +10,10 @@
     CMD_GENERIC_PULSE, CMD_MOB_ALIGN_PULSE, CMD_MOB_COMBAT:
       two formal TBeings are identical
       if it dies, do not delete and just return DELETE_THIS
-      if you kill mob->fight() in CMD_MOB_COMBAT, remember to return TRUE
+      if you kill mob->fight() in CMD_MOB_COMBAT, remember to return true
 
     CMD_MOB_MOVED_INTO_ROOM:
-      returns TRUE and mob is kicked out of room
+      returns true and mob is kicked out of room
       ch = mover, myself = mob with proc, obj = old room cast to TObj *
 
     CMD_MOB_VIOLENCE_PEACEFUL:
@@ -92,12 +92,12 @@ int TMonster::checkSpec(TBeing* t, cmdTypeT cmd, const char* arg, TThing* t2) {
   //    CMD_GENERIC_PULSE (checkSpec)") %  spec % getName());
 
   if (inRoom() == Room::NOCTURNAL_STORAGE)
-    return FALSE;
+    return false;
   // if we move them to hell, it's probably cause there is a problem with
   // the proc, so skip it.  Realize, this may let them leak memory since
   // the destroy message is not called...
   if (inRoom() == Room::HELL && spec != SPEC_TORMENTOR)
-    return FALSE;
+    return false;
 
   // we will use a static cast on t2 as we don't always pass a true
   // TThing as the extra pointer.  e.g.
@@ -107,7 +107,7 @@ int TMonster::checkSpec(TBeing* t, cmdTypeT cmd, const char* arg, TThing* t2) {
       static_cast<TObj*>(t2));
     return rc;
   }
-  return FALSE;
+  return false;
 }
 
 walkPathT TMonster::walk_path(const path_struct* p, int& pos) {
@@ -154,33 +154,33 @@ bool TMonster::isPolice() const {
 
 int TMonster::npcSteal(TPerson* victim) {
   sstring buf;
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   int tmp = getLevel(THIEF_LEVEL_IND);
 
   if ((spec == SPEC_TRAINER_THIEF) || (spec == SPEC_GM_THIEF))
-    return FALSE;
+    return false;
 
   if (victim->inGrimhaven() && victim->GetMaxLevel() <= 5)
-    return FALSE;
+    return false;
 
   if (victim->isImmortal() || fight() || victim->fight() ||
       !victim->getMoney() || !canSee(victim))
-    return FALSE;
+    return false;
 
   // check if a guard is around
   for (StuffIter it = roomp->stuff.begin();
        it != roomp->stuff.end() && (t = *it); ++it) {
     TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (tbt && tbt->isPolice())
-      return FALSE;
+      return false;
   }
 
   // see if victim is cagey
   // this use to be a check for urban hometerrain, but urban is +per
   double factor = victim->plotStat(STAT_CURRENT, STAT_PER, -3.0, 3.0, 0.0);
   if (victim->isLucky(levelLuckModifier(victim->GetMaxLevel() + factor)))
-    return FALSE;
+    return false;
 
   if (doesKnowSkill(SKILL_STEAL))
     if (getSkillValue(SKILL_STEAL) < tmp)
@@ -197,31 +197,31 @@ int factionFaery(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   char buf[160];
 
   if (!myself->awake())
-    return FALSE;
+    return false;
 
   mas = myself->master;
 
   if (cmd == CMD_GENERIC_PULSE) {
     if (!mas)
       return DELETE_THIS;
-    return FALSE;
+    return false;
   }
 
   if (!mas)
-    return FALSE;
+    return false;
 
   if (cmd == CMD_MOB_KILLED_NEARBY) {
     // cast down, and then back up since o is really a being
     TThing* ttt = o;
     vict = dynamic_cast<TBeing*>(ttt);
     if (!vict)
-      return FALSE;
+      return false;
 
     // only talk if my master was one killing
     if (ch != mas)
-      return FALSE;
+      return false;
     if (vict->isPc())
-      return FALSE;
+      return false;
 
     if (ch->isSameFaction(vict)) {
       sprintf(buf, "%s You shouldn't kill %s; %s is the same faction as you.",
@@ -237,16 +237,16 @@ int factionFaery(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       }
 #endif
     }
-    return FALSE;
+    return false;
 
   } else if (cmd == CMD_SAY || cmd == CMD_SAY2) {
     one_argument(arg, buf, cElements(buf));
 
     if (strcmp(buf, "help"))
-      return FALSE;
+      return false;
   }
 
-  return FALSE;
+  return false;
 }
 
 int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
@@ -258,22 +258,22 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (cmd != CMD_GENERIC_PULSE && cmd != CMD_BUY && cmd != CMD_LIST &&
       cmd != CMD_MOB_GIVEN_COINS)
-    return FALSE;
+    return false;
 
   // make it manageble
   if (cmd == CMD_GENERIC_PULSE && ::number(0, 5))
-    return FALSE;
+    return false;
 
   // skip med mobs
   if (myself->mobVnum() <= 0)
-    return FALSE;
+    return false;
   if (!myself->awake())
-    return FALSE;
+    return false;
 
   sprintf(caFilebuf, "mobdata/rumors/%d", myself->mobVnum());
-  if ((fp = fopen(caFilebuf, "r")) == NULL) {
+  if ((fp = fopen(caFilebuf, "r")) == nullptr) {
     vlogf(LOG_LOW, format("Missing rumor file (%s) (%d)") % caFilebuf % errno);
-    return FALSE;
+    return false;
   }
 
   do {
@@ -284,23 +284,23 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   if (sscanf(buf, "%d %d\n", &type, &room) != 2) {
     vlogf(LOG_LOW, format("Bad rumor format line 1 (%s) %s") % caFilebuf);
     fclose(fp);
-    return FALSE;
+    return false;
   }
 
   if (!type) {
     vlogf(LOG_LOW, format("Bad rumor type (%s) %s") % caFilebuf % buf);
     fclose(fp);
-    return FALSE;
+    return false;
   }
 
   if (type == -1) {
     if (cmd != CMD_GENERIC_PULSE) {
       fclose(fp);
-      return FALSE;
+      return false;
     }
     if (room != -1 && room != myself->inRoom()) {
       fclose(fp);
-      return FALSE;
+      return false;
     }
     // count all rumors
     numrumors = 0;
@@ -312,7 +312,7 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     if (!numrumors) {
       vlogf(LOG_LOW, format("No rumors (%s)") % caFilebuf);
       fclose(fp);
-      return FALSE;
+      return false;
     }
 
     // select random rumor
@@ -339,11 +339,11 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
     myself->doSay(buf);
     fclose(fp);
-    return TRUE;
+    return true;
   } else if (type > 0) {
     if (room != -1 && room != myself->inRoom()) {
       fclose(fp);
-      return FALSE;
+      return false;
     }
     if (cmd == CMD_BUY) {
       if (ch->getMoney() >= type) {
@@ -351,13 +351,13 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
       } else {
         ch->sendTo("You don't have that much money.\n\r");
         fclose(fp);
-        return TRUE;
+        return true;
       }
     } else if (cmd == CMD_MOB_GIVEN_COINS) {
       if ((amt = (long int)o) < type) {
         myself->doSay("Those that are GENEROUS are often rewarded.");
         fclose(fp);
-        return TRUE;
+        return true;
       }
     } else if (cmd == CMD_LIST) {
       // the next (2nd) line contains the sstring we should say
@@ -365,7 +365,7 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
         if (!fgets(buf, 255, fp)) {
           vlogf(LOG_LOW, format("Missing sstring for list (%s)") % caFilebuf);
           fclose(fp);
-          return TRUE;
+          return true;
         }
       } while (*buf == '#');
       if (strlen(buf) >= 1)
@@ -373,7 +373,7 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
       myself->doTell(fname(ch->name), buf);
       fclose(fp);
-      return TRUE;
+      return true;
     }
 
     // don't count the "list" line
@@ -381,7 +381,7 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
       if (!fgets(buf, 255, fp)) {
         vlogf(LOG_LOW, format("Missing sstring for list (%s)") % caFilebuf);
         fclose(fp);
-        return TRUE;
+        return true;
       }
     } while (*buf == '#');
 
@@ -395,7 +395,7 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     if (!numrumors) {
       vlogf(LOG_LOW, format("No rumors (%s)") % caFilebuf);
       fclose(fp);
-      return FALSE;
+      return false;
     }
 
     // select random rumor
@@ -427,46 +427,46 @@ int rumorMonger(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
     myself->doTell(fname(ch->name), buf);
     fclose(fp);
-    return TRUE;
+    return true;
   }
   fclose(fp);
-  return FALSE;
+  return false;
 }
 
 int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   TObj*) {
   int request = 0, duration = 0, r_num = 0, found = 0;
   char buf[256];
-  TSymbol* best = NULL;
-  //  TObj *best = NULL; //
-  TObj* obj = NULL;
-  TThing* i = NULL;
-  TThing* j = NULL;
+  TSymbol* best = nullptr;
+  //  TObj *best = nullptr; //
+  TObj* obj = nullptr;
+  TThing* i = nullptr;
+  TThing* j = nullptr;
   int books = 0;
   affectedData af;
 
   if (me->mobVnum() <= 0)
-    return FALSE;
+    return false;
 
   if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_WHISPER && cmd != CMD_ASK)
-    return FALSE;
+    return false;
 
   if (!ch->canSpeak())
-    return FALSE;
+    return false;
 
   if (!ch->desc)
-    return FALSE;
+    return false;
 
   if (ch->polyed)
-    return FALSE;
+    return false;
 
   if (ch->isImmortal()) {
     me->doSay("I'm for newbie's use, not you dumb god's enjoyment!");
-    return FALSE;
+    return false;
   }
 
   if (!me->awake())
-    return FALSE;
+    return false;
 
   one_argument(arg, buf, cElements(buf));
 
@@ -492,25 +492,25 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
         *ch += *obj;  // newbie book
       } else {
         vlogf(LOG_BUG, "Problem in NewbieEquipper, newbie");
-        return TRUE;
+        return true;
       }
-      act("$n smiles and hands $p to $N.", TRUE, me, obj, ch, TO_NOTVICT);
-      act("$n smiles and hands $p to you.", TRUE, me, obj, ch, TO_VICT);
-      return TRUE;
+      act("$n smiles and hands $p to $N.", true, me, obj, ch, TO_NOTVICT);
+      act("$n smiles and hands $p to you.", true, me, obj, ch, TO_VICT);
+      return true;
     } else if (books == 2) {
       if ((r_num = real_object(1459)) >= 0) {
         obj = read_object(r_num, REAL);
         *ch += *obj;  // conversion book
       } else {
         vlogf(LOG_BUG, "Problem in NewbieEquipper, guide");
-        return TRUE;
+        return true;
       }
-      act("$n smiles and hands $p to $N.", TRUE, me, obj, ch, TO_NOTVICT);
-      act("$n smiles and hands $p to you.", TRUE, me, obj, ch, TO_VICT);
-      return TRUE;
+      act("$n smiles and hands $p to $N.", true, me, obj, ch, TO_NOTVICT);
+      act("$n smiles and hands $p to you.", true, me, obj, ch, TO_VICT);
+      return true;
     }
     vlogf(LOG_BUG, "Something wierd in newbieEquipper, books funcition");
-    return TRUE;
+    return true;
   }
 
   if (!strcmp(buf, "equipment")) {
@@ -525,7 +525,7 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
         ch->doAsk(arg);
       me->doTell(ch->getName(),
         "You are not a cleric or deikhan. I am not that charitable.");
-      return TRUE;
+      return true;
     } else {
       request = 2;
     }
@@ -538,22 +538,22 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       if (cmd == CMD_SAY)
         ch->doSay(arg);
       else if (cmd == CMD_WHISPER)
-        ch->doWhisper(arg); 
+        ch->doWhisper(arg);
       else
         ch->doAsk(arg);
       sprintf(tmp_buf, "%s You are not a mage or ranger.  I am not that charitable.", ch->getName());
       me->doTell(tmp_buf);
-      return TRUE;
-    } else 
+      return true;
+    } else
       request = 4;
 #endif
 
   if (!request)
-    return FALSE;
+    return false;
 
   if (ch->GetMaxLevel() >= 10) {
     me->doTell(ch->getName(), "I can no longer help you!");
-    return TRUE;
+    return true;
   }
 
   if (cmd == CMD_SAY2)
@@ -572,17 +572,17 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       if (ch->getStuff()) {
         sprintf(tmp_buf, "%s You have some equipment already. I only equip the totally destitute.", ch->getName());
         me->doTell(tmp_buf);
-        return TRUE;
+        return true;
       }
 #endif
       if (ch->affectedBySpell(AFFECT_NEWBIE)) {
         found = 1;
       } else {
-        act("$n rummages through a few bins and selects some items.", TRUE, me,
-          NULL, NULL, TO_ROOM);
-        act("$n smiles and hands $N some equipment.", TRUE, me, NULL, ch,
+        act("$n rummages through a few bins and selects some items.", true, me,
+          nullptr, nullptr, TO_ROOM);
+        act("$n smiles and hands $N some equipment.", true, me, nullptr, ch,
           TO_NOTVICT);
-        act("$n smiles and hands you some equipment.", TRUE, me, NULL, ch,
+        act("$n smiles and hands you some equipment.", true, me, nullptr, ch,
           TO_VICT);
         ch->doNewbieEqLoad(RACE_NORACE, 0, true);
         me->doTell(ch->getName(),
@@ -595,13 +595,13 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
         me->doTell(ch->getName(),
           "You are not a cleric or deikhan. I only give symbols to those who "
           "will use them.");
-        return TRUE;
+        return true;
       }
       if (ch->affectedBySpell(AFFECT_NEWBIE)) {
         found = 1;
         break;
       } else {
-        best = NULL;
+        best = nullptr;
         for (StuffIter it = ch->stuff.begin();
              it != ch->stuff.end() && (i = *it); ++it) {
           i->findSym(&best);
@@ -615,23 +615,23 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
           me->doTell(ch->getName(),
             "You already have a symbol.  I only help the the totally "
             "destitute.");
-          return TRUE;
+          return true;
         }
-        act("$n rummages through a bin and selects an item.", TRUE, me, NULL,
-          NULL, TO_ROOM);
+        act("$n rummages through a bin and selects an item.", true, me, nullptr,
+          nullptr, TO_ROOM);
         if ((r_num = real_object(500)) >= 0) {
           obj = read_object(r_num, REAL);
-          act("$n smiles and hands $p to $N.", TRUE, me, obj, ch, TO_NOTVICT);
-          act("$n smiles and hands $p to you.", TRUE, me, obj, ch, TO_VICT);
+          act("$n smiles and hands $p to $N.", true, me, obj, ch, TO_NOTVICT);
+          act("$n smiles and hands $p to you.", true, me, obj, ch, TO_VICT);
           delete obj;
-          obj = NULL;
+          obj = nullptr;
         } else {
-          act("$n smiles and hands a holy symbol to $N.", TRUE, me, NULL, ch,
+          act("$n smiles and hands a holy symbol to $N.", true, me, nullptr, ch,
             TO_NOTVICT);
-          act("$n smiles and hands a holy symbol to you.", TRUE, me, NULL, ch,
+          act("$n smiles and hands a holy symbol to you.", true, me, nullptr, ch,
             TO_VICT);
         }
-        personalize_object(NULL, ch, 500, -1);
+        personalize_object(nullptr, ch, 500, -1);
         me->doTell(ch->getName(),
           "May it serve you well. Be more careful next time!");
         found = 2;
@@ -644,7 +644,7 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       if (ch->hasClass(CLASS_MONK)) {
         me->doTell(ch->getName(),
           "You are a monk.  I only help those who directly need the help.");
-        return TRUE;
+        return true;
       }
       for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end() && (i = *it);
            ++it) {
@@ -652,21 +652,21 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
           me->doTell(ch->getName(),
             "You already have a weapon.  I only help the the totally "
             "destitute.");
-          return TRUE;
+          return true;
         }
       }
       if (ch->affectedBySpell(AFFECT_NEWBIE)) {
         found = 1;
       } else {
-        act("$n rummages through a bin and selects an item.", TRUE, me, NULL,
-          NULL, TO_ROOM);
+        act("$n rummages through a bin and selects an item.", true, me, nullptr,
+          nullptr, TO_ROOM);
         if (ch->hasClass(CLASS_CLERIC)) {
           if ((r_num = real_object(324)) >= 0) {
             obj = read_object(r_num, REAL);
             *ch += *obj;  //  newbie staff
           } else {
             vlogf(LOG_BUG, "Problem in NewbieEquipper, staff");
-            return TRUE;
+            return true;
           }
         } else {
           if ((r_num = real_object(Obj::WEAPON_T_DAGGER)) >= 0) {
@@ -674,11 +674,11 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
             *ch += *obj;  // newbie dagger
           } else {
             vlogf(LOG_BUG, "Problem in NewbieEquipper, dagger");
-            return TRUE;
+            return true;
           }
         }
-        act("$n smiles and hands $p to $N.", TRUE, me, obj, ch, TO_NOTVICT);
-        act("$n smiles and hands $p to you.", TRUE, me, obj, ch, TO_VICT);
+        act("$n smiles and hands $p to $N.", true, me, obj, ch, TO_NOTVICT);
+        act("$n smiles and hands $p to you.", true, me, obj, ch, TO_VICT);
         me->doTell(ch->getName(),
           "May it serve you well. Be more careful next time!");
         found = 2;
@@ -687,7 +687,7 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       }
       break;
     default:
-      return TRUE;
+      return true;
       break;
   }
   if (found == 2) {
@@ -711,13 +711,13 @@ int newbieEquipper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     me->doTell(ch->getName(),
       "You just used my service.  Come back later and only if you haven't "
       "gotten other help.");
-    return TRUE;
+    return true;
   } else {
     vlogf(LOG_BUG,
       format("Somehow something got through equipNewbie %s by %s") %
         ch->getName() % me->getName());
   }
-  return TRUE;
+  return true;
 }
 
 // really, this should be using doMove or moveOne
@@ -745,9 +745,9 @@ int kick_mobs_from_shop(TMonster* myself, TBeing* ch, int from_room) {
     myself->doSay(buf);
 
     if (!dynamic_cast<TMonster*>(ch)) {
-      act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
-      act("$n throws you out of $s shop.", FALSE, myself, 0, ch, TO_VICT);
-      act("$n throws $N out of $s shop.", FALSE, myself, 0, ch, TO_NOTVICT);
+      act("You throw $N out.", false, myself, 0, ch, TO_CHAR);
+      act("$n throws you out of $s shop.", false, myself, 0, ch, TO_VICT);
+      act("$n throws $N out of $s shop.", false, myself, 0, ch, TO_NOTVICT);
 
       move_thing_forshop(ch->riding, from_room);
       move_thing_forshop(ch, from_room);
@@ -756,17 +756,17 @@ int kick_mobs_from_shop(TMonster* myself, TBeing* ch, int from_room) {
       // Just kick out the mount, not the mobile. -Lapsos
       TThing* tMount = ch->riding;
 
-      act("You throw $N out.", FALSE, myself, 0, ch, TO_CHAR);
-      act("$n throws your mount out of $s shop.", FALSE, myself, 0, ch,
+      act("You throw $N out.", false, myself, 0, ch, TO_CHAR);
+      act("$n throws your mount out of $s shop.", false, myself, 0, ch,
         TO_VICT);
-      act("$n throws $N out of $s shop.", FALSE, myself, 0, ch->riding,
+      act("$n throws $N out of $s shop.", false, myself, 0, ch->riding,
         TO_NOTVICT);
 
       ch->dismount(POSITION_STANDING);
       move_thing_forshop(tMount, from_room);
     }
 
-    return TRUE;
+    return true;
   } else if (dynamic_cast<TBeing*>(ch->rider)) {
     if (!dynamic_cast<TMonster*>(ch->rider)) {
       move_thing_forshop(ch, from_room);
@@ -777,10 +777,10 @@ int kick_mobs_from_shop(TMonster* myself, TBeing* ch, int from_room) {
       move_thing_forshop(ch, from_room);
     }
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int librarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
@@ -788,22 +788,22 @@ int librarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   affectedData aff;
 
   if (!ch->isPc()) {
-    return FALSE;
+    return false;
   }
 
   if (cmd != CMD_SAY && cmd != CMD_SHOUT)
-    return FALSE;
+    return false;
   if (!myself->awake())
-    return FALSE;
+    return false;
   if (!myself->canSee(ch))
-    return FALSE;
+    return false;
 
   if (cmd == CMD_SAY || cmd == CMD_SHOUT) {
     if (!ch->canSpeak())
-      return FALSE;
+      return false;
     if (!ch->isImmortal()) {
-      act("$n starts to say something!", TRUE, ch, 0, 0, TO_ROOM);
-      act("$N interrupts you before you can say anything!", TRUE, ch, 0, myself,
+      act("$n starts to say something!", true, ch, 0, 0, TO_ROOM);
+      act("$N interrupts you before you can say anything!", true, ch, 0, myself,
         TO_CHAR);
     } else {
       if (cmd == CMD_SAY)
@@ -812,27 +812,27 @@ int librarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         ch->doShout(arg);
     }
     myself->doSay("None of *that* in my library!");
-    act("$n glares at $N and starts to whisper a mantra in a low voice!", FALSE,
+    act("$n glares at $N and starts to whisper a mantra in a low voice!", false,
       myself, 0, ch, TO_NOTVICT);
     act("$n glares at you and starts to whisper a mantra in a low voice!",
-      FALSE, myself, 0, ch, TO_VICT);
+      false, myself, 0, ch, TO_VICT);
     act(
       "An orange beam of light streaks from $n's hands encasing $N's vocal "
       "cords.",
-      TRUE, myself, 0, ch, TO_NOTVICT, ANSI_ORANGE);
+      true, myself, 0, ch, TO_NOTVICT, ANSI_ORANGE);
     act(
       "An orange beam of light streaks from $n's hands encasing your vocal "
       "cords.",
-      TRUE, myself, 0, ch, TO_VICT, ANSI_ORANGE);
+      true, myself, 0, ch, TO_VICT, ANSI_ORANGE);
 
     if (ch->isImmortal()) {
-      act("The foolish mortal actually tried to silence $N!", FALSE, myself, 0,
+      act("The foolish mortal actually tried to silence $N!", false, myself, 0,
         ch, TO_NOTVICT);
-      act("The foolish mortal actually tried to silence you!", FALSE, myself, 0,
+      act("The foolish mortal actually tried to silence you!", false, myself, 0,
         ch, TO_VICT);
     } else {
-      act("$n smiles with satisfaction!", FALSE, myself, 0, ch, TO_NOTVICT);
-      act("$n smiles with satisfaction!", TRUE, myself, 0, ch, TO_VICT);
+      act("$n smiles with satisfaction!", false, myself, 0, ch, TO_NOTVICT);
+      act("$n smiles with satisfaction!", true, myself, 0, ch, TO_VICT);
       aff.type = SPELL_SILENCE;
       aff.level = 0;
       aff.duration = 12 * Pulse::UPDATES_PER_MUDHOUR;
@@ -841,9 +841,9 @@ int librarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       aff.bitvector = AFF_SILENT;
       ch->affectTo(&aff);
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 static int moveHorseman(TMonster* myself) {
@@ -852,18 +852,18 @@ static int moveHorseman(TMonster* myself) {
   // and randomly teleport too in case we are just in totally bad spot
   // to begin with
 
-  myself->opinion.random = NULL;
+  myself->opinion.random = nullptr;
   TThing* t = myself->riding;
   if (t) {
     // trash the horse, it causes problems
     myself->dismount(POSITION_STANDING);
     delete t;
-    t = NULL;
+    t = nullptr;
   }
 
   myself->genericTeleport(SILENT_NO);  // bounce to new locale
 
-  return FALSE;
+  return false;
 }
 
 // this function will cause a mob to attempt to hunt down a given critter
@@ -884,7 +884,7 @@ int TMonster::randomHunt() {
         break;
       }
     }
-    return FALSE;
+    return false;
   } else {
     int room = hunted->in_room;
     dirTypeT dir;
@@ -900,9 +900,9 @@ int TMonster::randomHunt() {
             spec == SPEC_HORSE_DEATH || spec == SPEC_HORSE_PESTILENCE)
           moveHorseman(this);
         else
-          opinion.random = NULL;
+          opinion.random = nullptr;
 
-        return FALSE;
+        return false;
       }
       // This if statement prevents mounted from being stuck
       if (dir < MAX_DIR &&
@@ -918,10 +918,10 @@ int TMonster::randomHunt() {
     } else {
       // we've found our wander target
       doAction(fname(hunted->name), CMD_GRIN);
-      opinion.random = NULL;
+      opinion.random = nullptr;
     }
   }
-  return TRUE;
+  return true;
 }
 
 int TMonster::findMyHorse() {
@@ -934,7 +934,7 @@ int TMonster::findMyHorse() {
   // this is here to prevent the endless horse create/fall to death scenario
 
   if (roomp && roomp->isFallSector())
-    return FALSE;
+    return false;
 
   switch (spec) {
     case SPEC_HORSE_PESTILENCE:
@@ -950,7 +950,7 @@ int TMonster::findMyHorse() {
       horse_num = Mob::Mob::APOC_DEATHHORSE;
       break;
     default:
-      return FALSE;
+      return false;
   }
   for (horse = character_list; horse; horse = horse_temp) {
     horse_temp = horse->next;
@@ -959,11 +959,11 @@ int TMonster::findMyHorse() {
   }
   if (!horse) {
     doSay("Hey, time to get a new horse.");
-    act("$n makes a strange, backwards gesture.", FALSE, this, 0, 0, TO_ROOM);
+    act("$n makes a strange, backwards gesture.", false, this, 0, 0, TO_ROOM);
     horse = read_mobile(horse_num, VIRTUAL);
     *roomp += *horse;
-    act("$n pops into being.", FALSE, horse, 0, 0, TO_ROOM);
-    return TRUE;
+    act("$n pops into being.", false, horse, 0, 0, TO_ROOM);
+    return true;
   }
   if (!sameRoom(*horse)) {
     if ((dir = path.findPath(in_room, findRoom(horse->in_room))) < 0) {
@@ -976,31 +976,31 @@ int TMonster::findMyHorse() {
         act("$n steps out of the ether.", 0, this, 0, 0, TO_ROOM);
         doAction(fname(horse->name), CMD_SCOLD);
       }
-      return TRUE;
+      return true;
     }
     rc = goDirection(dir);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   } else {
     rc = doMount("", CMD_MOUNT, horse);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete horse;
-      horse = NULL;
+      horse = nullptr;
     }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
-    return TRUE;
+    return true;
   }
 }
 
 int insulter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
-  TBeing* vict = NULL;
-  TThing* t = NULL;
+  TBeing* vict = nullptr;
+  TThing* t = nullptr;
   if ((cmd != CMD_GENERIC_PULSE) || !myself->awake())
-    return FALSE;
+    return false;
   if (::number(0, 3))
-    return FALSE;
+    return false;
 
   if (myself->fight())
     vict = myself->fight();
@@ -1018,27 +1018,27 @@ int insulter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   }
 
   if (!vict)
-    return FALSE;
+    return false;
   myself->setAnger(70);
   myself->setMalice(0);
   myself->aiInsultDoer(vict);
 
-  return TRUE;
+  return true;
 }
 
 int siren(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   int rc;
-  TBeing* vict = NULL;
+  TBeing* vict = nullptr;
   roomDirData *exitp, *back;
   dirTypeT door;
   TRoom *rp, *rp2;
-  TThing* t = NULL;
+  TThing* t = nullptr;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (!(rp = myself->roomp))
-    return FALSE;
+    return false;
   for (door = MIN_DIR; door < MAX_DIR; door++) {
     if (!(exitp = rp->dir_option[door]))
       continue;
@@ -1076,7 +1076,7 @@ int siren(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       rc = vict->moveOne(rev_dir(door));
       if (IS_SET_DELETE(rc, DELETE_THIS)) {
         delete vict;
-        vict = NULL;
+        vict = nullptr;
       }
     }
   }
@@ -1091,7 +1091,7 @@ int siren(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     if (isname("siren", vict->name))
       continue;
     if (vict->isImmortal()) {
-      act("The silly siren tried to charm you.", FALSE, vict, 0, myself,
+      act("The silly siren tried to charm you.", false, vict, 0, myself,
         TO_CHAR);
       continue;
     }
@@ -1103,7 +1103,7 @@ int siren(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       if (vict->master == myself) {
         continue;
       } else {
-        act("$N tried to charm you even though you are already charmed.", FALSE,
+        act("$N tried to charm you even though you are already charmed.", false,
           vict, 0, myself, TO_CHAR);
         continue;
       }
@@ -1111,16 +1111,16 @@ int siren(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     if (vict->isImmune(IMMUNE_CHARM, WEAR_BODY) ||
         (vict->getSex() != SEX_MALE)) {
       act("You are just barely able to resist being charmed by $N's song.",
-        FALSE, vict, 0, myself, TO_CHAR);
+        false, vict, 0, myself, TO_CHAR);
       continue;
     }
-    act("$N charms you with $S beautiful voice.", FALSE, vict, 0, myself,
+    act("$N charms you with $S beautiful voice.", false, vict, 0, myself,
       TO_CHAR);
-    act("$N charms $n with $S beautiful voice.", FALSE, vict, 0, myself,
+    act("$N charms $n with $S beautiful voice.", false, vict, 0, myself,
       TO_ROOM);
 
     if (vict->master)
-      vict->stopFollower(TRUE);
+      vict->stopFollower(true);
     myself->addFollower(vict);
 
     affectedData aff;
@@ -1135,7 +1135,7 @@ int siren(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
     vict->affectTo(&aff);
   }
-  return TRUE;
+  return true;
 }
 
 static int rob_blind(TBeing* ch, TBeing* vict) {
@@ -1144,7 +1144,7 @@ static int rob_blind(TBeing* ch, TBeing* vict) {
   sstring name, buf;
 
   if (ch->fight() || vict->fight())
-    return FALSE;
+    return false;
   if ((ch->getRace() == RACE_HOBBIT) && (ch->getSkillValue(SKILL_STEAL) < 80))
     ch->setSkillValue(SKILL_STEAL, 80);
 
@@ -1159,25 +1159,25 @@ static int rob_blind(TBeing* ch, TBeing* vict) {
     buf = format("%s %s") % name % fname(vict->name);
     if (ch->getRace() == RACE_HOBBIT)
       act("$n says, \"Hey $N, I'm just going to borrow your $o for a bit.\"",
-        TRUE, ch, t, vict, TO_ROOM);
+        true, ch, t, vict, TO_ROOM);
 
     return ch->doSteal(buf, vict);
   }
-  return FALSE;
+  return false;
 }
 
 int thief(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
-  TBeing* cons = NULL;
+  TBeing* cons = nullptr;
   int rc;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake())
-    return FALSE;
+    return false;
 
   if (ch->getPosition() != POSITION_STANDING)
-    return FALSE;
+    return false;
 
   if (ch->fight())
-    return FALSE;
+    return false;
 
   TThing* t1;
   for (StuffIter it = ch->roomp->stuff.begin(); it != ch->roomp->stuff.end();) {
@@ -1192,13 +1192,13 @@ int thief(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
     rc = rob_blind(ch, cons);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete cons;
-      cons = NULL;
+      cons = nullptr;
     }
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return rc;
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int Summoner(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
@@ -1208,13 +1208,13 @@ int Summoner(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
   int rc = 0;
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake())
-    return FALSE;
+    return false;
 
   if (ch->checkSoundproof())
-    return FALSE;
+    return false;
 
   if (ch->fight())
-    return FALSE;
+    return false;
 
   if (ch->getHit() > ((ch->hitLimit() * 3) / 4)) {
     if (ch->hatefield & HATE_CHAR) {
@@ -1239,49 +1239,49 @@ int Summoner(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
         rc = ch->hit(targ);
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           delete targ;
-          targ = NULL;
+          targ = nullptr;
         } else if (IS_SET_DELETE(rc, DELETE_THIS)) {
           return DELETE_THIS;  // delete ch
         }
       }
-      return FALSE;
+      return false;
     } else
-      return FALSE;
+      return false;
   } else
-    return FALSE;
+    return false;
 }
 
 int replicant(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
   TBeing* mob;
 
   if ((cmd != CMD_GENERIC_PULSE))
-    return FALSE;
+    return false;
 
   if (ch->getHit() < ch->hitLimit()) {
-    act("Drops of $n's blood hit the $g, and spring up into another one!", TRUE,
+    act("Drops of $n's blood hit the $g, and spring up into another one!", true,
       ch, 0, 0, TO_ROOM);
     if (ch->number >= 0) {
       mob = read_mobile(ch->number, REAL);
       *ch->roomp += *mob;
-      act("Two undamaged opponents face you now.", TRUE, ch, 0, 0, TO_ROOM);
+      act("Two undamaged opponents face you now.", true, ch, 0, 0, TO_ROOM);
       ch->setHit(ch->hitLimit());
     } else
       vlogf(LOG_PROC, "spec_mobs: replicant created from MEDit mob failed.");
   }
-  return FALSE;
+  return false;
 }
 
 int tormentor(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
   if (cmd == CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (!ch->isPc())
-    return FALSE;
+    return false;
 
   if (ch->isImmortal())
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 int StatTeller(TBeing* pch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
@@ -1296,7 +1296,7 @@ int StatTeller(TBeing* pch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
     if (cmd == CMD_BUY) {
       if (ch->getMoney() < STAT_PRICE) {
         ch->sendTo("You do not have the money to pay me.\n\r");
-        return (TRUE);
+        return (true);
       } else {
         ch->addToMoney(-STAT_PRICE, GOLD_HOSPITAL);
       }
@@ -1326,14 +1326,14 @@ int StatTeller(TBeing* pch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
           break;
         default:
           ch->sendTo("We are experiencing Technical difficulties\n\r");
-          return TRUE;
+          return true;
       }
 
     } else {
-      return FALSE;
+      return false;
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TBeing::throwChar(TBeing* v, dirTypeT dir, bool also, silentTypeT silent,
@@ -1382,7 +1382,7 @@ void TBeing::throwChar(TBeing* v, dirTypeT dir, bool also, silentTypeT silent,
       v->sendTo(COLOR_MOBS, format("%s pushes you %s out of the room.\n\r") %
                               sstring(getName()).cap() % dirs[dir]);
       sprintf(buf, "$N is pushed %s out of the room by $n.", dirs[dir]);
-      act(buf, TRUE, this, 0, v, TO_NOTVICT);
+      act(buf, true, this, 0, v, TO_NOTVICT);
     }
     oldr = v->in_room;
     --(*v);
@@ -1393,7 +1393,7 @@ void TBeing::throwChar(TBeing* v, dirTypeT dir, bool also, silentTypeT silent,
     thing_to_room(v, real_roomp(oldr)->dir_option[dir]->to_room);
 
     if (!silent) {
-      act("$n is pushed into the room.", TRUE, v, 0, 0, TO_ROOM);
+      act("$n is pushed into the room.", true, v, 0, 0, TO_ROOM);
     }
     v->doLook("", CMD_LOOK);
     if (also)
@@ -1401,9 +1401,9 @@ void TBeing::throwChar(TBeing* v, dirTypeT dir, bool also, silentTypeT silent,
     v->addToWait(combatRound(1));
   } else {
     if (!silent) {
-      act("You slam $N into the wall!", FALSE, this, 0, v, TO_CHAR);
-      act("$n slams you into the wall!", FALSE, this, 0, v, TO_VICT);
-      act("$N is slammed into the wall by $n!", TRUE, this, 0, v, TO_NOTVICT);
+      act("You slam $N into the wall!", false, this, 0, v, TO_CHAR);
+      act("$n slams you into the wall!", false, this, 0, v, TO_VICT);
+      act("$N is slammed into the wall by $n!", true, this, 0, v, TO_NOTVICT);
     }
   }
 }
@@ -1451,7 +1451,7 @@ void TBeing::throwChar(TBeing* v, int to_room, bool also, silentTypeT silent,
       v->sendTo(COLOR_MOBS, format("%s pushes you out of the room.\n\r") %
                               sstring(getName()).cap());
       sprintf(buf, "$N is pushed out of the room by $n.");
-      act(buf, TRUE, this, 0, v, TO_NOTVICT);
+      act(buf, true, this, 0, v, TO_NOTVICT);
     }
     --(*v);
     if (also) {
@@ -1461,7 +1461,7 @@ void TBeing::throwChar(TBeing* v, int to_room, bool also, silentTypeT silent,
     thing_to_room(v, to_room);
 
     if (!silent) {
-      act("$n is pushed into the room.", TRUE, v, 0, 0, TO_ROOM);
+      act("$n is pushed into the room.", true, v, 0, 0, TO_ROOM);
     }
     v->doLook("", CMD_LOOK);
     if (also)
@@ -1469,9 +1469,9 @@ void TBeing::throwChar(TBeing* v, int to_room, bool also, silentTypeT silent,
     v->addToWait(combatRound(1));
   } else {
     if (!silent) {
-      act("You slam $N into the wall!", FALSE, this, 0, v, TO_CHAR);
-      act("$n slams you into the wall!", FALSE, this, 0, v, TO_VICT);
-      act("$N is slammed into the wall by $n!", TRUE, this, 0, v, TO_NOTVICT);
+      act("You slam $N into the wall!", false, this, 0, v, TO_CHAR);
+      act("$n slams you into the wall!", false, this, 0, v, TO_VICT);
+      act("$N is slammed into the wall by $n!", true, this, 0, v, TO_NOTVICT);
     }
   }
 }
@@ -1485,29 +1485,29 @@ int payToll(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       cmd != CMD_WEST && cmd != CMD_UP && cmd != CMD_DOWN && cmd != CMD_NE &&
       cmd != CMD_NW && cmd != CMD_SE && cmd != CMD_SW && cmd != CMD_FLEE &&
       cmd != CMD_DRAG && cmd != CMD_OPEN)
-    return FALSE;
+    return false;
 
   if (cmd >= CMD_NORTH && cmd <= CMD_SW) {
     dir = getDirFromCmd(cmd);
   } else if (cmd == CMD_FLEE) {
     if (myself == ch)
-      return FALSE;
+      return false;
     act("$n blocks $N from fleeing!", false, myself, 0, ch, TO_NOTVICT);
     act("$n blocks you from fleeing!", false, myself, 0, ch, TO_VICT);
     myself->doSay("You can't escape that easily!");
 
     myself->roomp->playsound(SOUND_NONE_PASS, SOUND_TYPE_NOISE);
 
-    return TRUE;
+    return true;
   } else if (cmd == CMD_DRAG) {
     // well, we aren't checking room, but oh well
     if (!myself->canSee(ch) || myself == ch || ch->isAnimal() ||
         !myself->awake()) {
-      return FALSE;
+      return false;
     }
 
     myself->doSay("HEY!  This is a no dragging zone!");
-    return TRUE;
+    return true;
   } else
     dir = dirTypeT(convertTo<int>(arg));
 
@@ -1515,56 +1515,56 @@ int payToll(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     case 1024:
       if (!myself->canSee(ch) || myself == ch || ch->isAnimal() ||
           !myself->awake() || myself->fight() || (cmd == CMD_OPEN)) {
-        return FALSE;
+        return false;
       } else if (rev_dir(dir) == ch->specials.last_direction) {
-        act("$n growls but lets you return the way you came.", FALSE, myself, 0,
+        act("$n growls but lets you return the way you came.", false, myself, 0,
           ch, TO_VICT);
-        act("$n growls but lets $N return the way $e came.", FALSE, myself, 0,
+        act("$n growls but lets $N return the way $e came.", false, myself, 0,
           ch, TO_NOTVICT);
         ch->remQuestBit(TOG_PAID_TOLL);
-        return FALSE;
+        return false;
       } else if (ch->hasQuestBit(TOG_PAID_TOLL) ||
                  dynamic_cast<TMonster*>(ch)) {
-        act("$n smiles happily and lets you pass.", FALSE, myself, 0, ch,
+        act("$n smiles happily and lets you pass.", false, myself, 0, ch,
           TO_VICT);
-        act("$n smiles happily and lets $N pass.", FALSE, myself, 0, ch,
+        act("$n smiles happily and lets $N pass.", false, myself, 0, ch,
           TO_NOTVICT);
         ch->remQuestBit(TOG_PAID_TOLL);
-        return FALSE;
+        return false;
       } else {
-        act("$n pushes you back roughly and demands the toll!", FALSE, myself,
+        act("$n pushes you back roughly and demands the toll!", false, myself,
           0, ch, TO_VICT);
-        act("$n pushes $N back roughly and demands the toll!", FALSE, myself, 0,
+        act("$n pushes $N back roughly and demands the toll!", false, myself, 0,
           ch, TO_NOTVICT);
         myself->roomp->playsound(SOUND_NONE_PASS, SOUND_TYPE_NOISE);
-        return TRUE;
+        return true;
       }
       break;
     case 36060:
       if (!myself->canSee(ch) || (myself == ch) || ch->isAnimal() ||
           !myself->awake() || myself->fight()) {
-        return FALSE;
+        return false;
       } else if (((cmd == CMD_OPEN) && arg && is_abbrev(arg, "gate")) ||
                  (cmd == CMD_NORTH)) {
         TRoom* tRoom = real_roomp(36060);
-        TObj* tObj = NULL;
+        TObj* tObj = nullptr;
 
         for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end(); ++it)
           if ((tObj = dynamic_cast<TObj*>(*it)) && (tObj->objVnum() == 36060))
-            return FALSE;
+            return false;
 
         if (ch->master && ch->sameRoom(*(ch->master)))
           for (StuffIter it = ch->master->stuff.begin();
                it != ch->master->stuff.end(); ++it)
             if ((tObj = dynamic_cast<TObj*>(*it)) && (tObj->objVnum() == 36060))
-              return FALSE;
+              return false;
 
         if (ch->isPc())
           myself->doTell(ch->getName(), "Hey! Your not authorized to be here!");
 
-        act("$n shoves you south out of the room!", FALSE, myself, 0, ch,
+        act("$n shoves you south out of the room!", false, myself, 0, ch,
           TO_VICT);
-        act("$n shoves $N south out of the room!", FALSE, myself, 0, ch,
+        act("$n shoves $N south out of the room!", false, myself, 0, ch,
           TO_NOTVICT);
 
         if (tRoom) {
@@ -1578,27 +1578,27 @@ int payToll(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
             "Error loading room 36060 for forced creature movement.  (toll "
             "taker proc)");
 
-        return TRUE;
+        return true;
       } else
-        return FALSE;
+        return false;
       break;
     case 22713:
       if ((rev_dir(dir) == ch->specials.last_direction) || (cmd == CMD_OPEN)) {
-        return FALSE;
+        return false;
       } else if (ch->hasQuestBit(TOG_PAID_TOLL) ||
                  dynamic_cast<TMonster*>(ch)) {
-        act("$n disperses the forcefield and lets you through..", FALSE, myself,
+        act("$n disperses the forcefield and lets you through..", false, myself,
           0, ch, TO_VICT);
-        act("$n disperses the forcefield and lets $N through...", FALSE, myself,
+        act("$n disperses the forcefield and lets $N through...", false, myself,
           0, ch, TO_NOTVICT);
         ch->remQuestBit(TOG_LOGRUS_INITIATION);
-        return FALSE;
+        return false;
       } else {
-        act("A mysterious force prevents you from going through.", FALSE,
+        act("A mysterious force prevents you from going through.", false,
           myself, 0, ch, TO_VICT);
-        act("A mysterious force prevents $N from going through.", FALSE, myself,
+        act("A mysterious force prevents $N from going through.", false, myself,
           0, ch, TO_NOTVICT);
-        return TRUE;
+        return true;
       }
       break;
     case 22724:
@@ -1608,61 +1608,61 @@ int payToll(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     case 22748:
       if (((!myself->canSee(ch) || myself == ch)) || ch->isAnimal() ||
           myself->fight() || (cmd == CMD_OPEN)) {
-        return FALSE;
+        return false;
       } else if (rev_dir(dir) == ch->specials.last_direction) {
-        return FALSE;
+        return false;
       } else if ((ch->hasQuestBit(TOG_PAID_TOLL) ||
                    dynamic_cast<TMonster*>(ch))) {
         switch (myself->mobVnum()) {
           case 22737:
-            act("$n turns away from you as you pass.", FALSE, myself, 0, ch,
+            act("$n turns away from you as you pass.", false, myself, 0, ch,
               TO_VICT);
-            act("$n turns away as $N passes", FALSE, myself, 0, ch, TO_NOTVICT);
+            act("$n turns away as $N passes", false, myself, 0, ch, TO_NOTVICT);
             break;
           case 22721:
-            act("$n blesses you as you pass by.", FALSE, myself, 0, ch,
+            act("$n blesses you as you pass by.", false, myself, 0, ch,
               TO_VICT);
-            act("$n blesses $N as $E passes by.", FALSE, myself, 0, ch,
+            act("$n blesses $N as $E passes by.", false, myself, 0, ch,
               TO_NOTVICT);
             break;
         }
         ch->remQuestBit(TOG_PAID_TOLL);
-        return FALSE;
+        return false;
       } else {
         switch (myself->mobVnum()) {
           case 22724:
-            act("$n pulls you back into the fray.", FALSE, myself, 0, ch,
+            act("$n pulls you back into the fray.", false, myself, 0, ch,
               TO_VICT);
-            act("$n pulls $N back into the fray.", FALSE, myself, 0, ch,
+            act("$n pulls $N back into the fray.", false, myself, 0, ch,
               TO_NOTVICT);
             break;
           case 22728:
-            act("$n drags you back.", FALSE, myself, 0, ch, TO_VICT);
-            act("$n drags $N back.", FALSE, myself, 0, ch, TO_NOTVICT);
+            act("$n drags you back.", false, myself, 0, ch, TO_VICT);
+            act("$n drags $N back.", false, myself, 0, ch, TO_NOTVICT);
             break;
           case 22736:
-            act("$n shoves you back with a snarl.", FALSE, myself, 0, ch,
+            act("$n shoves you back with a snarl.", false, myself, 0, ch,
               TO_VICT);
-            act("$n shoves $N back with a snarl.", FALSE, myself, 0, ch,
+            act("$n shoves $N back with a snarl.", false, myself, 0, ch,
               TO_NOTVICT);
             break;
           case 22737:
-            act("$n pulls you back with one of his tentacles.", FALSE, myself,
+            act("$n pulls you back with one of his tentacles.", false, myself,
               0, ch, TO_VICT);
-            act("$n pulls $N back with one of his tentacles.", FALSE, myself, 0,
+            act("$n pulls $N back with one of his tentacles.", false, myself, 0,
               ch, TO_NOTVICT);
             break;
           case 22721:
-            act("$n bars your way past.", FALSE, myself, 0, ch, TO_VICT);
-            act("$n bars $N's way past.", FALSE, myself, 0, ch, TO_NOTVICT);
+            act("$n bars your way past.", false, myself, 0, ch, TO_VICT);
+            act("$n bars $N's way past.", false, myself, 0, ch, TO_NOTVICT);
             break;
         }
-        return TRUE;
+        return true;
       }
 
       break;
   }
-  return FALSE;
+  return false;
 }
 
 int ThrowerMob(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
@@ -1673,12 +1673,12 @@ int ThrowerMob(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       vict = myself->fight();
       switch (myself->in_room) {
         case 13912:
-          myself->throwChar(vict, DIR_EAST, FALSE, SILENT_NO,
+          myself->throwChar(vict, DIR_EAST, false, SILENT_NO,
             false);  // throw chars to the east
-          return (FALSE);
+          return (false);
           break;
         default:
-          return (FALSE);
+          return (false);
       }
     }
   } else {
@@ -1686,15 +1686,15 @@ int ThrowerMob(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       case 13912: {
         if (cmd == CMD_NORTH) {
           myself->sendTo("The Troll blocks your way.\n\r");
-          return (TRUE);
+          return (true);
         }
         break;
       }
       default:
-        return (FALSE);
+        return (false);
     }
   }
-  return (FALSE);
+  return (false);
 }
 
 // Swallower special
@@ -1704,38 +1704,38 @@ int Tyrannosaurus_swallower(TBeing* ch, cmdTypeT cmd, const char*,
   TBeing* targ;
 
   if ((cmd != CMD_GENERIC_PULSE) && cmd != CMD_STEAL)
-    return (FALSE);
+    return (false);
 
   if (cmd == CMD_STEAL) {
     ch->sendTo("You're much too afraid to steal anything!\n\r");
-    return (TRUE);
+    return (true);
   }
   if (::number(0, 5))
-    return FALSE;
+    return false;
 
   if (ch->getWait() > 0)
-    return FALSE;
+    return false;
   if (ch->getPosition() < POSITION_STANDING)
-    return FALSE;
+    return false;
 
   if (ch->awake()) {
     if ((targ = ch->findAnAttacker()) && !targ->isImmortal()) {
-      act("$n opens $s gaping mouth.", TRUE, ch, 0, 0, TO_ROOM);
+      act("$n opens $s gaping mouth.", true, ch, 0, 0, TO_ROOM);
 
       ch->addToWait(combatRound(5));
 
       if (targ->isLucky(levelLuckModifier(myself->GetMaxLevel()))) {
         act(
           "Thank the deities!  You are able to leap aside at the last moment.",
-          TRUE, targ, 0, 0, TO_CHAR);
-        act("Fate has saved you from a nasty death.", TRUE, targ, 0, 0,
+          true, targ, 0, 0, TO_CHAR);
+        act("Fate has saved you from a nasty death.", true, targ, 0, 0,
           TO_CHAR);
-        act("$n leaps away from $N's maw.", TRUE, targ, 0, ch, TO_ROOM);
-        return TRUE;
+        act("$n leaps away from $N's maw.", true, targ, 0, ch, TO_ROOM);
+        return true;
       }
       if (targ->getHeight() <= (ch->getHeight() * 3)) {
         if (!::number(0, 20)) {
-          act("In a single gulp, $N is swallowed whole!", TRUE, ch, 0, targ,
+          act("In a single gulp, $N is swallowed whole!", true, ch, 0, targ,
             TO_ROOM);
           targ->sendTo("In a single gulp, you are swallowed whole!\n\r");
           targ->sendTo("The horror!  The horror!\n\r");
@@ -1745,17 +1745,17 @@ int Tyrannosaurus_swallower(TBeing* ch, cmdTypeT cmd, const char*,
 
           if (targ->getMyRace()->hasTalent(TALENT_FROGSLIME_SKIN) &&
               ::number(0, 1)) {
-            act("Your skin-poison defenses activate in the panic!", TRUE, targ,
+            act("Your skin-poison defenses activate in the panic!", true, targ,
               0, ch, TO_CHAR);
-            act("$N starts to choke on you and spits you out!", TRUE, targ, 0,
+            act("$N starts to choke on you and spits you out!", true, targ, 0,
               ch, TO_CHAR);
-            act("Oh wait!  That creature's skin tastes horrible!", TRUE, targ,
+            act("Oh wait!  That creature's skin tastes horrible!", true, targ,
               0, ch, TO_VICT);
-            act("You spit out the little blighter.", TRUE, targ, 0, ch,
+            act("You spit out the little blighter.", true, targ, 0, ch,
               TO_VICT);
-            act("$N looks sick.", TRUE, targ, 0, ch, TO_ROOM);
-            act("$N spits out $n in disgust.", TRUE, targ, 0, ch, TO_ROOM);
-            return TRUE;
+            act("$N looks sick.", true, targ, 0, ch, TO_ROOM);
+            act("$N spits out $n in disgust.", true, targ, 0, ch, TO_ROOM);
+            return true;
           }
 
           vlogf(LOG_PROC, format("%s killed by being swallowed at %s (%d)") %
@@ -1764,14 +1764,14 @@ int Tyrannosaurus_swallower(TBeing* ch, cmdTypeT cmd, const char*,
           rc = targ->die(DAMAGE_EATTEN);
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete targ;
-            targ = NULL;
+            targ = nullptr;
           }
           // there is no defense from this rawKill, so we should be able to
           // assume that first item in room is this player's corpse.
           // ie, corpse == rp->getStuff()
 
           // just a bit of a safety check
-          TBaseCorpse* co = NULL;
+          TBaseCorpse* co = nullptr;
           if ((co = dynamic_cast<TBaseCorpse*>(ch->roomp->stuff.front()))) {
             TThing* t;
             for (StuffIter it = co->stuff.begin(); it != co->stuff.end();) {
@@ -1780,10 +1780,10 @@ int Tyrannosaurus_swallower(TBeing* ch, cmdTypeT cmd, const char*,
               *ch += *t;
             }
             delete co;  // remove the corpse
-            co = NULL;
+            co = nullptr;
           }
         } else {  // if here we just mangle them REAL bad.
-          act("$n brings $s maw down hard upon $N", TRUE, ch, 0, targ, TO_ROOM);
+          act("$n brings $s maw down hard upon $N", true, ch, 0, targ, TO_ROOM);
           rc =
             ch->reconcileDamage(targ, (ch->GetMaxLevel() * 3), DAMAGE_EATTEN);
 
@@ -1793,33 +1793,33 @@ int Tyrannosaurus_swallower(TBeing* ch, cmdTypeT cmd, const char*,
             ch->sendTo("Perhaps you can dine on them later.\n\r");
 
             delete targ;
-            targ = NULL;
+            targ = nullptr;
           } else {
             targ->sendTo("You are really messed up after that one.\n\r");
             ch->sendTo("You almost got them that time!\n\r");
           }
         }
 
-        return TRUE;
+        return true;
       } else {
-        act("$n tries to swallow $N, but $N is a little too big.", TRUE, ch, 0,
+        act("$n tries to swallow $N, but $N is a little too big.", true, ch, 0,
           targ, TO_ROOM);
-        act("You try to swallow $N, but $N is a little too big.", TRUE, ch, 0,
+        act("You try to swallow $N, but $N is a little too big.", true, ch, 0,
           targ, TO_CHAR);
-        act("$n tries to swallow you, but you're a little too big.", TRUE, ch,
+        act("$n tries to swallow you, but you're a little too big.", true, ch,
           0, targ, TO_VICT);
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 static int frost_giant_stuff(TMonster* ch) {
   TThing* t;
-  TBeing *vict = NULL, *v2;
+  TBeing *vict = nullptr, *v2;
   int rc;
   followData *f, *n;
-  bool shouted = FALSE;
+  bool shouted = false;
 
   if ((v2 = ch->fight())) {
     for (f = ch->followers; f; f = n) {
@@ -1829,18 +1829,18 @@ static int frost_giant_stuff(TMonster* ch) {
         if (!tmons)
           continue;
         if (!shouted) {
-          act("$n screams, \"Destroy these puny scum!\"", FALSE, ch, 0, 0,
+          act("$n screams, \"Destroy these puny scum!\"", false, ch, 0, 0,
             TO_ROOM);
-          shouted = TRUE;
+          shouted = true;
         }
         rc = tmons->takeFirstHit(*v2);
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           delete v2;
-          v2 = NULL;
+          v2 = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_THIS)) {
           delete tmons;
-          tmons = NULL;
+          tmons = nullptr;
         }
       }
     }
@@ -1861,14 +1861,14 @@ static int frost_giant_stuff(TMonster* ch) {
     rc = ch->takeFirstHit(*vict);
     if (IS_SET_DELETE(rc, DELETE_VICT)) {
       delete vict;
-      vict = NULL;
+      vict = nullptr;
     }
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
@@ -1887,18 +1887,18 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (::number(0, 2))
-    return FALSE;
+    return false;
 
   if (!myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new hunt_struct())) {
@@ -1909,7 +1909,7 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     job->cur_pos = 0;
     job->completed = false;
 
-    act("$n climbs down out of the mountains, roaring a challenge.", TRUE,
+    act("$n climbs down out of the mountains, roaring a challenge.", true,
       myself, 0, 0, TO_ROOM);
 
     // make sure he can get through the gate
@@ -1918,7 +1918,7 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     myself->setSkillValue(SKILL_DOORBASH, 95);
     res = ::number(2, 5);
 
-    act("A band of ice goblins comes to the aid of this mighty giant.", TRUE,
+    act("A band of ice goblins comes to the aid of this mighty giant.", true,
       myself, 0, 0, TO_ROOM);
 
     SET_BIT(myself->specials.affectedBy, AFF_GROUP);
@@ -1934,7 +1934,7 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   }
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_PROC, "Unable to allocate memory for frostGiant!  This is bad!");
-    return TRUE;
+    return true;
   }
 
   if (myself->fight()) {
@@ -1942,7 +1942,7 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
     else if (rc)
-      return TRUE;
+      return true;
   }
 
   if (job->completed) {
@@ -1958,12 +1958,12 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
           return DELETE_THIS;
         }
       }
-      return TRUE;
+      return true;
     }
   } else if (frosty_path_pos[(job->cur_pos + 1)].direction == -1) {
     // end of path
     job->completed = true;
-    return TRUE;
+    return true;
   } else if (frosty_path_pos[job->cur_pos].cur_room != myself->in_room) {
     // not in correct room
     // check surrounding rooms, I probably fled
@@ -1981,7 +1981,7 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
             }
           }
 
-          return TRUE;
+          return true;
         }
       }
     }
@@ -1991,7 +1991,7 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     do {
       job->cur_pos += 1;
       if (frosty_path_pos[job->cur_pos].cur_room == myself->in_room)
-        return TRUE;
+        return true;
     } while (frosty_path_pos[job->cur_pos].cur_room != -1);
 
     if (myself->riding)
@@ -2002,7 +2002,7 @@ int frostGiant(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 #else
     // if lost, just go into completed routine
     job->completed = true;
-    return FALSE;
+    return false;
 #endif
 
   } else if (myself->getPosition() < POSITION_STANDING) {
@@ -2046,18 +2046,18 @@ int lamp_lighter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (::number(0, 2))
-    return FALSE;
+    return false;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (!myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new hunt_struct())) {
@@ -2102,7 +2102,7 @@ int lamp_lighter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_PROC,
       "Unable to allocate memory for lamp_lighter!  This is bad!");
-    return TRUE;
+    return true;
   }
   if (lamp_path_pos[job->cur_path][(job->cur_pos + 1)].direction == -1) {
     // end of path
@@ -2138,7 +2138,7 @@ int lamp_lighter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       job->cur_path = ::number(MIN_KEEP_PATH_4, MAX_KEEP_PATH_4);
     }
 
-    return TRUE;
+    return true;
   } else if (lamp_path_pos[job->cur_path][job->cur_pos].cur_room !=
              myself->in_room) {
     // not in correct room
@@ -2152,7 +2152,7 @@ int lamp_lighter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
 
-          return TRUE;
+          return true;
         }
       }
     }
@@ -2166,7 +2166,7 @@ int lamp_lighter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       job->cur_pos += 1;
       if (lamp_path_pos[job->cur_path][job->cur_pos].cur_room ==
           myself->in_room)
-        return TRUE;
+        return true;
     } while (lamp_path_pos[job->cur_path][job->cur_pos].cur_room != -1);
 
     act("$n seems to have gotten a little bit lost.", 0, myself, 0, 0, TO_ROOM);
@@ -2179,7 +2179,7 @@ int lamp_lighter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     thing_to_room(myself, lamp_path_pos[job->cur_path][0].cur_room);
     act("$n has arrived.", 0, myself, 0, 0, TO_ROOM);
     lamp_stuff(myself);
-    return TRUE;
+    return true;
   } else if (myself->getPosition() < POSITION_STANDING) {
     myself->doStand();
   } else {
@@ -2209,7 +2209,7 @@ class caravan_struct {
       cur_path(0),
       dest_fact(FACT_UNDEFINED),
       wealth(0),
-      caravan(NULL) {}
+      caravan(nullptr) {}
     ~caravan_struct() {}
 };
 
@@ -2248,7 +2248,7 @@ static int caravan_stuff(TBeing* car, caravan_struct* job, dirTypeT) {
     chance = chance * wealth_max / (cost_best * 5);
 
   if (::number(0, 999) >= chance)
-    return FALSE;
+    return false;
 
   int wealth_used = 0;
   bool loaded = false;
@@ -2285,12 +2285,12 @@ static int caravan_stuff(TBeing* car, caravan_struct* job, dirTypeT) {
     int rc = mon->takeFirstHit(*car);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete mon;
-      mon = NULL;
+      mon = nullptr;
     }
     if (IS_SET_DELETE(rc, DELETE_VICT))
       return DELETE_THIS;
   }
-  return FALSE;
+  return false;
 }
 
 int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
@@ -2305,26 +2305,26 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     if (!(job = (caravan_struct*)myself->act_ptr))
-      return FALSE;
+      return false;
     obj = job->caravan;
 
     if (obj)
-      obj->checkSpec(NULL, CMD_OBJ_WAGON_UNINIT, "", NULL);
+      obj->checkSpec(nullptr, CMD_OBJ_WAGON_UNINIT, "", nullptr);
 
     delete (caravan_struct*)myself->act_ptr;
-    myself->act_ptr = NULL;
+    myself->act_ptr = nullptr;
 
-    return FALSE;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (::number(0, 2) && !timeTill)
-    return FALSE;
+    return false;
 
   if (!myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new caravan_struct())) {
@@ -2333,7 +2333,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     }
     job = (caravan_struct*)myself->act_ptr;
     job->cur_pos = 0;
-    ok = FALSE;
+    ok = false;
     if (myself->in_room == CAR_GH_HOME) {
       myself->setFaction(FACT_NONE);
       faction = myself->getFaction();
@@ -2347,7 +2347,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
               SET_BIT(FactionInfo[faction].caravan_flags, CARAVAN_CUR_DEST_BM);
               job->cur_path = CAR_GH_BM;
               job->dest_fact = FACT_BROTHERHOOD;
-              ok = TRUE;
+              ok = true;
             }
             break;
           case 2:
@@ -2355,7 +2355,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
               SET_BIT(FactionInfo[faction].caravan_flags, CARAVAN_CUR_DEST_LOG);
               job->cur_path = CAR_GH_LOG;
               job->dest_fact = FACT_CULT;
-              ok = TRUE;
+              ok = true;
             }
             break;
           case 3:
@@ -2365,7 +2365,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
                 CARAVAN_CUR_DEST_AMBER);
               job->cur_path = CAR_GH_AMB;
               job->dest_fact = FACT_SNAKE;
-              ok = TRUE;
+              ok = true;
             }
             break;
           default:
@@ -2387,7 +2387,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
               SET_BIT(FactionInfo[faction].caravan_flags, CARAVAN_CUR_DEST_GH);
               job->cur_path = CAR_BM_GH;
               job->dest_fact = FACT_NONE;
-              ok = TRUE;
+              ok = true;
             }
             break;
           case 2:
@@ -2397,7 +2397,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
                 CARAVAN_CUR_DEST_AMBER);
               job->cur_path = CAR_BM_AMB;
               job->dest_fact = FACT_SNAKE;
-              ok = TRUE;
+              ok = true;
             }
             break;
           default:
@@ -2419,7 +2419,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
               SET_BIT(FactionInfo[faction].caravan_flags, CARAVAN_CUR_DEST_GH);
               job->cur_path = CAR_LOG_GH;
               job->dest_fact = FACT_NONE;
-              ok = TRUE;
+              ok = true;
             }
             break;
           case 2:
@@ -2429,7 +2429,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
                 CARAVAN_CUR_DEST_AMBER);
               job->cur_path = CAR_LOG_AMB;
               job->dest_fact = FACT_SNAKE;
-              ok = TRUE;
+              ok = true;
             }
             break;
 
@@ -2452,7 +2452,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
               SET_BIT(FactionInfo[faction].caravan_flags, CARAVAN_CUR_DEST_GH);
               job->cur_path = CAR_AMB_GH;
               job->dest_fact = FACT_NONE;
-              ok = TRUE;
+              ok = true;
             }
             break;
           case 2:
@@ -2460,7 +2460,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
               SET_BIT(FactionInfo[faction].caravan_flags, CARAVAN_CUR_DEST_BM);
               job->cur_path = CAR_AMB_BM;
               job->dest_fact = FACT_BROTHERHOOD;
-              ok = TRUE;
+              ok = true;
             }
             break;
           case 3:
@@ -2468,7 +2468,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
               SET_BIT(FactionInfo[faction].caravan_flags, CARAVAN_CUR_DEST_LOG);
               job->cur_path = CAR_AMB_LOG;
               job->dest_fact = FACT_CULT;
-              ok = TRUE;
+              ok = true;
             }
             break;
           default:
@@ -2492,11 +2492,11 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     // construct caravan
     if (!(obj = read_object(Obj::CARAVAN, VIRTUAL))) {
       vlogf(LOG_PROC, "Problem with caravan load (1)");
-      return TRUE;
+      return true;
     }
     *myself->roomp += *obj;
 
-    obj->checkSpec(myself, CMD_OBJ_WAGON_INIT, "", NULL);
+    obj->checkSpec(myself, CMD_OBJ_WAGON_INIT, "", nullptr);
 
     job->caravan = obj;
 
@@ -2511,7 +2511,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   }
   if (!(job = (caravan_struct*)myself->act_ptr)) {
     vlogf(LOG_PROC, "Unable to allocate memory for caravan!  This is bad!");
-    return TRUE;
+    return true;
   }
 
   faction = myself->getFaction();
@@ -2532,7 +2532,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
     // make caravan go bye-bye
     delete job->caravan;
-    job->caravan = NULL;
+    job->caravan = nullptr;
 
     return DELETE_THIS;
   } else if (caravan_path_pos[job->cur_path][job->cur_pos].cur_room !=
@@ -2548,7 +2548,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_THIS;
 
-          return TRUE;
+          return true;
         }
       }
     }
@@ -2565,7 +2565,7 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       job->cur_pos += 1;
       if (caravan_path_pos[job->cur_path][job->cur_pos].cur_room ==
           myself->in_room)
-        return TRUE;
+        return true;
     } while (caravan_path_pos[job->cur_path][job->cur_pos].cur_room != -1);
 
     act("$n seems to have gotten a little bit lost.", 0, myself, 0, 0, TO_ROOM);
@@ -2583,11 +2583,11 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return DELETE_THIS;
 
-    return TRUE;
+    return true;
 
   } else if (myself->getPosition() < POSITION_STANDING) {
     myself->doStand();
-    return TRUE;
+    return true;
   } else {
     rc = myself->goDirection(
       caravan_path_pos[job->cur_path][job->cur_pos + 1].direction);
@@ -2603,19 +2603,19 @@ int caravan(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
 
       if (timeTill && (job->cur_pos % 5)) {
         // if we are in shutdown mode, move 5 steps at a time
-        return caravan(NULL, cmd, NULL, myself, NULL);
+        return caravan(nullptr, cmd, nullptr, myself, nullptr);
       }
     }
     // if go_dir == 0, then it either can't go that way or is opening a door
-    return TRUE;
+    return true;
   }
   return 0;
 }
 
 // ch calls a guard to come after vict
 void CallForGuard(TBeing* ch, TBeing* vict, int lev) {
-  TBeing* m = NULL;
-  TMonster* tmons = NULL;
+  TBeing* m = nullptr;
+  TMonster* tmons = nullptr;
   int i = 0;
 
   if (!vict) {
@@ -2657,16 +2657,16 @@ int dagger_thrower(TBeing* pch, cmdTypeT cmd, const char*, TMonster* me,
   sstring buf;
 
   if ((cmd != CMD_GENERIC_PULSE) || !pch->awake())
-    return (FALSE);
+    return (false);
 
   for (tmp_ch = character_list; tmp_ch; tmp_ch = temp) {
     temp = tmp_ch->next;
     can_see_linear(me, tmp_ch, &range, &dir);
     if (dir != DIR_NONE) {
       if (tmp_ch->isPc()) {
-        act("$n screams 'All intruders must die!!!'", FALSE, me, 0, tmp_ch,
+        act("$n screams 'All intruders must die!!!'", false, me, 0, tmp_ch,
           TO_ROOM);
-        act("$n utters the words 'ssa skcik siht'", FALSE, me, 0, 0, TO_ROOM);
+        act("$n utters the words 'ssa skcik siht'", false, me, 0, 0, TO_ROOM);
 
 #if 1
         // builder port uses stripped down database which was causing problems
@@ -2676,12 +2676,12 @@ int dagger_thrower(TBeing* pch, cmdTypeT cmd, const char*, TMonster* me,
           vlogf(LOG_BUG,
             format("dagger_thrower(): No object (%d) in database!") %
               Obj::GENERIC_DAGGER);
-          return FALSE;
+          return false;
         }
 
         if (!(dagger = read_object(robj, REAL))) {
           vlogf(LOG_BUG, "Couldn't make a dagger for dagger_thrower()!");
-          return FALSE;
+          return false;
         }
 #else
         dagger = read_object(Obj::GENERIC_DAGGER, VIRTUAL);
@@ -2694,16 +2694,16 @@ int dagger_thrower(TBeing* pch, cmdTypeT cmd, const char*, TMonster* me,
             format("Dagger_thrower problem: equipped right hand.  %s at %d") %
               me->getName() % me->inRoom());
           delete dagger;
-          return FALSE;
+          return false;
         }
 
         buf = format("%s %s %d") % fname(dagger->name) % tmp_ch->name % 5;
         me->doThrow(buf);
-        return TRUE;
+        return true;
       }
     }
   }
-  return TRUE;
+  return true;
 }
 
 int horse(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -2718,10 +2718,10 @@ int horse(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   }
 
   if ((cmd != CMD_MOB_COMBAT) || !me->awake())
-    return FALSE;
+    return false;
 
   if (!(vict = me->fight()))
-    return FALSE;
+    return false;
 
   spellNumT skill = me->getSkillNum(SKILL_KICK);
   if (!me->doesKnowSkill(skill)) {
@@ -2730,10 +2730,10 @@ int horse(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   rc = me->doKick("", vict);
   if (IS_SET_DELETE(rc, DELETE_VICT)) {
     delete vict;
-    vict = NULL;
+    vict = nullptr;
   }
 
-  return TRUE;
+  return true;
 }
 
 int beggar(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj* o) {
@@ -2749,24 +2749,24 @@ int beggar(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj* o) {
       me->doSay("Good... money for booze.");
     else if (n < 1000) {
       me->doSay("Wow.  Thanks.");
-      act("$n thanks you.", TRUE, me, NULL, ch, TO_VICT);
-      act("$n thanks $N.", TRUE, me, NULL, ch, TO_ROOM);
+      act("$n thanks you.", true, me, nullptr, ch, TO_VICT);
+      act("$n thanks $N.", true, me, nullptr, ch, TO_ROOM);
     } else if (n < 10000) {
-      act("$n staggers a bit, utterly amazed.", TRUE, me, NULL, NULL, TO_ROOM);
+      act("$n staggers a bit, utterly amazed.", true, me, nullptr, nullptr, TO_ROOM);
       me->doSay("I can buy a year's supply of ale now!  Thank you!");
     } else if (n < 100000) {
-      act("$n shakes uncontrollably.", TRUE, me, NULL, NULL, TO_ROOM);
-      act("$n tries to say something, but is speechless.", TRUE, me, NULL, NULL,
+      act("$n shakes uncontrollably.", true, me, nullptr, nullptr, TO_ROOM);
+      act("$n tries to say something, but is speechless.", true, me, nullptr, nullptr,
         TO_ROOM);
     } else {
       act(
         "$n passes out in amazement, $s body hitting the $g with a loud "
         "*thud*!",
-        TRUE, me, NULL, NULL, TO_ROOM);
+        true, me, nullptr, nullptr, TO_ROOM);
       me->setPosition(POSITION_SLEEPING);
     }
   }
-  return FALSE;
+  return false;
 }
 
 int petPriceL(int level) {
@@ -2800,15 +2800,15 @@ int TMonster::petPrice() const {
 }
 
 static TWindow* getFirstWindowInRoom(TMonster* myself) {
-  TThing* t = NULL;
-  TWindow* tw = NULL;
+  TThing* t = nullptr;
+  TWindow* tw = nullptr;
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end() && (t = *it); ++it) {
     tw = dynamic_cast<TWindow*>(t);
     if (tw)
       return tw;
   }
-  return NULL;
+  return nullptr;
 }
 
 int petVeterinarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
@@ -2821,7 +2821,7 @@ int petVeterinarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   sstring tmpbuf;
 
   if (cmd != CMD_LIST && cmd != CMD_BUY)
-    return FALSE;
+    return false;
 
   db.query(
     "select vnum, name, exp, level from pet where player_id=%i order by name",
@@ -2855,7 +2855,7 @@ int petVeterinarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       }
     }
 
-    return TRUE;
+    return true;
   } else if (cmd == CMD_BUY) {
     num = convertTo<int>(arg);
 
@@ -2866,8 +2866,8 @@ int petVeterinarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
 
     vnum = convertTo<int>(db["vnum"]);
     int level = convertTo<int>(db["level"]);
-    affectedData *aff = NULL, *an = NULL;
-    char* owner = NULL;
+    affectedData *aff = nullptr, *an = nullptr;
+    char* owner = nullptr;
 
     // search the world for the pet
     for (TBeing* t = character_list; t; t = t->next) {
@@ -2897,7 +2897,7 @@ int petVeterinarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
               me->doTell(ch->getName(),
                 "Hmm my mistake, I thought that guy wandered in here but looks "
                 "like it wandered out again...");
-              return TRUE;
+              return true;
             }
           }
         }
@@ -2908,13 +2908,13 @@ int petVeterinarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
 
     if (ch->getMoney() < price) {
       me->doTell(ch->getName(), "You can't afford it!");
-      return TRUE;
+      return true;
     }
 
     TMonster* pet;
     if (!(pet = read_mobile(vnum, VIRTUAL))) {
       vlogf(LOG_PROC, "Whoa!  No pet in pet_keeper");
-      return TRUE;
+      return true;
     }
 
     if (!db["name"].empty()) {
@@ -2981,7 +2981,7 @@ int petVeterinarian(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     pet->affectTo(&aff2, -1);
   }
 
-  return FALSE;
+  return false;
 }
 
 int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
@@ -2991,7 +2991,7 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
   affectedData aff;
 
   if (cmd >= MAX_CMD_LIST)
-    return FALSE;
+    return false;
 
   switch (me->mobVnum()) {
     case Mob::PETGUY_GH:
@@ -3008,11 +3008,11 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
       break;
     default:
       vlogf(LOG_PROC, "Bogus mob in petguy proc");
-      return FALSE;
+      return false;
   }
   if (!rp) {
     vlogf(LOG_PROC, "Pet keeper spec_proc called with no pet room!");
-    return FALSE;
+    return false;
   }
   if (cmd == CMD_WHISPER) {
     return shopWhisper(ch, me, shop_nr, arg);
@@ -3027,7 +3027,7 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
     me->doTell(ch->getName(),
       "If you see something you'd like, VALUE <mob> and I'll tell you the "
       "price.");
-    return TRUE;
+    return true;
   } else if (cmd == CMD_BUY) {
     arg = one_argument(arg, buf, cElements(buf));
     price = 0;
@@ -3042,13 +3042,13 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
       tellBuf += " again, there is no such pet!";
       me->doTell(fname(ch->name), tellBuf);
 
-      return TRUE;
+      return true;
     }
 
     if (pet->desc || pet->isPc() || pet->number < 0) {
       me->doTell(fname(ch->name),
         format("%s is not for sale.") % pet->getName());
-      return TRUE;
+      return true;
     }
     int petLevel = pet->GetMaxLevel();
     int pcLevel = ch->GetMaxLevel();
@@ -3058,32 +3058,32 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
       if ((4 * petLevel) > (3 * pcLevel)) {
         me->doTell(fname(ch->name),
           "I think I would be negligent if I sold you so powerful a pet.");
-        return TRUE;
+        return true;
       }
     } else {
       if (petLevel > pcLevel) {
         me->doTell(fname(ch->name),
           "I think I would be negligent if I sold you so powerful a pet.");
-        return TRUE;
+        return true;
       }
     }
     if (ch->tooManyFollowers(pet, FOL_PET)) {
       me->doTell(fname(ch->name),
         "With your charisma, it would be animal abuse for me to sell you this "
         "pet.");
-      return TRUE;
+      return true;
     }
 
     price = (int)((float)pet->petPrice() *
-                  shop_index[shop_nr].getProfitBuy(NULL, ch));
+                  shop_index[shop_nr].getProfitBuy(nullptr, ch));
 
     if (ch->isPc() && ((ch->getMoney()) < price) && !ch->isImmortal()) {
       me->doTell(ch->name, "You don't have enough money for that pet!");
-      return TRUE;
+      return true;
     }
     if (!(pet = read_mobile(pet->number, REAL))) {
       vlogf(LOG_PROC, "Whoa!  No pet in pet_keeper");
-      return TRUE;
+      return true;
     }
     if (!ch->isImmortal()) {
       ch->giveMoney(me, price, GOLD_SHOP_PET);
@@ -3124,7 +3124,7 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
     aff.be = reinterpret_cast<TThing*>(tmp);
 
     pet->affectTo(&aff, -1);
-    return TRUE;
+    return true;
   } else if (cmd == CMD_VALUE) {
     arg = one_argument(arg, buf, cElements(buf));
     price = 0;
@@ -3138,13 +3138,13 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
       tellBuf += tw ? fname(tw->name) : "window";
       tellBuf += " again, there is no such pet!";
       me->doTell(fname(ch->name), tellBuf);
-      return TRUE;
+      return true;
     }
     int petLevel = pet->GetMaxLevel();
     int pcLevel = ch->GetMaxLevel();
 
     price = (int)((float)pet->petPrice() *
-                  shop_index[shop_nr].getProfitBuy(NULL, ch));
+                  shop_index[shop_nr].getProfitBuy(nullptr, ch));
 
     me->doTell(ch->name,
       format("A pet %s will cost %d to purchase.") % fname(pet->name) % price);
@@ -3167,14 +3167,14 @@ int pet_keeper(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
         "With your charisma, it would be animal abuse for me to sell you this "
         "pet.");
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int stable_man(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   if (cmd >= MAX_CMD_LIST)
-    return FALSE;
+    return false;
 
   if (cmd == CMD_LIST) {
     TWindow* tw = getFirstWindowInRoom(me);
@@ -3184,9 +3184,9 @@ int stable_man(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     tellBuf += " to see the mounts!";
     me->doTell(fname(ch->name), tellBuf);
 
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 static int attunePrice(const TSymbol* obj, TBeing* ch, unsigned int shop_nr) {
@@ -3206,8 +3206,8 @@ static int attunePrice(const TSymbol* obj, TBeing* ch, unsigned int shop_nr) {
 }
 
 void attune_struct::clearAttuneData() {
-  pc = NULL;
-  sym = NULL;
+  pc = nullptr;
+  sym = nullptr;
   hasJob = false;
   faction = FACT_UNDEFINED;
   cost = 0;
@@ -3327,7 +3327,7 @@ void TSymbol::attunerGiven(TBeing* ch, TMonster* me) {
     ch->saveChar(Room::AUTO_RENT);
 
     job->cost = cost;
-    job->hasJob = TRUE;
+    job->hasJob = true;
     job->pc = ch;
     job->sym = this;
     vlogf(LOG_SILENT,
@@ -3338,9 +3338,9 @@ void TSymbol::attunerGiven(TBeing* ch, TMonster* me) {
     job->sym->setSymbolFaction(ch->getFaction());
     me->doRest("");
     act("$n puts a drop of holy water on $p then raises it towards the sky.",
-      TRUE, me, this, NULL, TO_ROOM);
-    act("$n carefully places $p on $s lap and begins to pray over it.", TRUE,
-      me, this, NULL, TO_ROOM);
+      true, me, this, nullptr, TO_ROOM);
+    act("$n carefully places $p on $s lap and begins to pray over it.", true,
+      me, this, nullptr, TO_ROOM);
     return;
   } else {
     if (ch == job->pc)
@@ -3362,13 +3362,13 @@ void TSymbol::attunerGiven(TBeing* ch, TMonster* me) {
 }
 int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
   char buf[256];
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TBeing* final_pers;
   TThing* ttt;
-  TBeing* tbt = NULL;
+  TBeing* tbt = nullptr;
   dirTypeT dir = DIR_NONE;
   roomDirData* exitp;
-  int rc, found = FALSE;
+  int rc, found = false;
 
   attune_struct* job;
 
@@ -3376,10 +3376,10 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
     return shopWhisper(ch, me, find_shop_nr(me->number), arg);
   } else if (cmd == CMD_GENERIC_DESTROYED) {
     delete (attune_struct*)me->act_ptr;
-    me->act_ptr = NULL;
-    return FALSE;
+    me->act_ptr = nullptr;
+    return false;
   } else if (cmd == CMD_GENERIC_INIT) {
-    return FALSE;
+    return false;
   } else if (cmd == CMD_GENERIC_CREATED) {
     if (!me->hasClass(CLASS_CLERIC) && !me->hasClass(CLASS_DEIKHAN)) {
       vlogf(LOG_LOW,
@@ -3389,14 +3389,14 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
       perror("failed new of attuner.");
       exit(0);
     }
-    return FALSE;
+    return false;
   }
 
   if (!(job = (attune_struct*)me->act_ptr)) {
     vlogf(LOG_PROC,
       format("ATTUNER PROC ERROR/MobPulse: terminating (hopefully) cmd=%d") %
         cmd);
-    return FALSE;
+    return false;
   }
 
   // sanity check
@@ -3415,7 +3415,7 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
           format("Attuner (%s) seems to have a bad job structure (case 1A).") %
             me->getName());
       job->clearAttuneData();
-      return TRUE;
+      return true;
     }
   }
   if (job->hasJob &&
@@ -3433,14 +3433,14 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
     }
     job->clearAttuneData();
     me->doStand();
-    return FALSE;
+    return false;
   }
 
   if (!(cmd == CMD_MOB_GIVEN_ITEM) && !(cmd == CMD_VALUE)) {
     if (!job->hasJob) {
       if (!me->fight())
         me->doStand();
-      return FALSE;
+      return false;
     }
   }
 
@@ -3448,8 +3448,8 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
     case CMD_MOB_VIOLENCE_PEACEFUL:
       if ((me->getPosition() == POSITION_STANDING) ||
           (me->getPosition() == POSITION_SITTING)) {
-        act("$n gets to $s feet and turns towards the hostile parties.", TRUE,
-          me, NULL, NULL, TO_ROOM);
+        act("$n gets to $s feet and turns towards the hostile parties.", true,
+          me, nullptr, nullptr, TO_ROOM);
       }
       // cast o down to tthing, and back up to make it a being.
       ttt = o;
@@ -3458,27 +3458,27 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
         "I am sorry, this is a peaceful spot. You will have to take it "
         "elsewhere.");
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        if (exit_ok(exitp = me->exitDir(dir), NULL)) {
-          act("$n escorts you out of the vicinity.", FALSE, me, 0, ch, TO_VICT);
-          act("$n escorts $N from $s presence.", FALSE, me, 0, ch, TO_NOTVICT);
-          me->throwChar(ch, dir, FALSE, SILENT_NO, true);
-          act("$n escorts you from $s presence.", FALSE, me, 0, tbt, TO_VICT);
-          act("$n escorts $N from $s presence.", FALSE, me, 0, tbt, TO_NOTVICT);
-          me->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-          return TRUE;
+        if (exit_ok(exitp = me->exitDir(dir), nullptr)) {
+          act("$n escorts you out of the vicinity.", false, me, 0, ch, TO_VICT);
+          act("$n escorts $N from $s presence.", false, me, 0, ch, TO_NOTVICT);
+          me->throwChar(ch, dir, false, SILENT_NO, true);
+          act("$n escorts you from $s presence.", false, me, 0, tbt, TO_VICT);
+          act("$n escorts $N from $s presence.", false, me, 0, tbt, TO_NOTVICT);
+          me->throwChar(tbt, dir, false, SILENT_NO, true);
+          return true;
         }
       }
       me->doRest("");
-      act("$n breathes deeply then continues $e attuning.", TRUE, me, NULL,
-        NULL, TO_ROOM);
-      return TRUE;
+      act("$n breathes deeply then continues $e attuning.", true, me, nullptr,
+        nullptr, TO_ROOM);
+      return true;
     case CMD_GENERIC_PULSE:
       for (StuffIter it = me->stuff.begin(); it != me->stuff.end() && (t = *it);
            ++it) {
         if (t != job->sym)
           continue;
         else {
-          found = TRUE;
+          found = true;
           break;
         }
       }
@@ -3490,7 +3490,7 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
                           job->sym->getName());
         job->clearAttuneData();
         me->doStand();
-        return FALSE;
+        return false;
       }
       if ((me->getPosition() > POSITION_SITTING) && !me->fight()) {
         me->doRest("");
@@ -3505,7 +3505,7 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
           if (!job->pc->desc || !(me->roomp == job->pc->roomp)) {
             me->doSay(
               "Hmm, I seem to have lost the person I was attuning for.");
-            rc = me->doDrop(t->name, NULL);
+            rc = me->doDrop(t->name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               job->clearAttuneData();
               me->doStand();
@@ -3513,7 +3513,7 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
             }
             job->clearAttuneData();
             me->doStand();
-            return FALSE;
+            return false;
           }
           final_pers = job->pc;
           if ((final_pers->getCarriedVolume() + t->getTotalVolume()) >
@@ -3521,7 +3521,7 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
             me->doSay(
               "You can't carry this symbol! I'll leave it on the ground for "
               "you!");
-            rc = me->doDrop(t->name, NULL);
+            rc = me->doDrop(t->name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               job->clearAttuneData();
               me->doStand();
@@ -3529,16 +3529,16 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
             }
             job->clearAttuneData();
             me->doStand();
-            return FALSE;
+            return false;
           }
           // final-weight > free final carry weight
-          if (compareWeights(t->getTotalWeight(TRUE),
+          if (compareWeights(t->getTotalWeight(true),
                 (final_pers->carryWeightLimit() -
                   final_pers->getCarriedWeight())) == -1) {
             me->doSay(
               "You can't carry this symbol! I'll leave it on the ground for "
               "you!");
-            rc = me->doDrop(t->name, NULL);
+            rc = me->doDrop(t->name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS)) {
               job->clearAttuneData();
               me->doStand();
@@ -3546,7 +3546,7 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
             }
             job->clearAttuneData();
             me->doStand();
-            return FALSE;
+            return false;
           }
           strcpy(buf, job->sym->name.c_str());
           strcpy(buf, add_bars(buf).c_str());
@@ -3558,19 +3558,19 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
           }
           job->clearAttuneData();
           me->doStand();
-          return FALSE;
+          return false;
         } else {
           if (!::number(0, 2)) {
             act(
               "You can feel $n's prayer in your soul as you watch $m sanctify "
               "$p",
-              TRUE, me, t, job->pc, TO_VICT);
-            act("You utter a prayer from your soul as you sanctify $p", TRUE,
+              true, me, t, job->pc, TO_VICT);
+            act("You utter a prayer from your soul as you sanctify $p", true,
               me, t, job->pc, TO_CHAR);
-            act("$n sits with $s head bowed concentrating on $p", TRUE, me, t,
+            act("$n sits with $s head bowed concentrating on $p", true, me, t,
               job->pc, TO_NOTVICT);
           }
-          return FALSE;
+          return false;
         }
       }
       break;
@@ -3588,7 +3588,7 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
         sprintf(buf, "%s! Don't leave until I finish attuning %s!",
           ch->getName().c_str(), job->sym->getName().c_str());
         me->doSay(buf);
-        return TRUE;
+        return true;
       } else if (job->pc->master) {
         if ((ch == job->pc->master) && (me->roomp == job->pc->roomp) &&
             job->pc->desc && (me->roomp == ch->roomp)) {
@@ -3596,70 +3596,70 @@ int attuner(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
             ch->getName().c_str(), job->pc->getName().c_str(),
             job->sym->getName().c_str());
           me->doSay(buf);
-          return TRUE;
+          return true;
         }
-        return FALSE;
+        return false;
       }
       break;
     case CMD_VALUE:
       if (!ch->hasClass(CLASS_CLERIC) && !ch->hasClass(CLASS_DEIKHAN)) {
         me->doTell(ch->getName(),
           "You are not a cleric or Deikhan.  I can not help you.");
-        return TRUE;
+        return true;
       }
       for (; *arg && isspace(*arg); arg++)
         ;
 
       if (!(t = searchLinkedListVis(ch, arg, ch->stuff))) {
         me->doTell(ch->getName(), "You don't have that symbol.");
-        return TRUE;
+        return true;
       }
       t->attunerValue(ch, me);
-      return TRUE;
+      return true;
     case CMD_MOB_GIVEN_ITEM:
       if (!(t = o)) {
         me->doTell(ch->getName(), "You don't have that item!");
-        return TRUE;
+        return true;
       }
       if (!ch->hasClass(CLASS_CLERIC) && !ch->hasClass(CLASS_DEIKHAN)) {
-        act("You do not accept $N's offer to give you $p.", TRUE, me, t, ch,
+        act("You do not accept $N's offer to give you $p.", true, me, t, ch,
           TO_CHAR);
-        act("$n rejects your attempt to give $s $p.", TRUE, me, t, ch, TO_VICT);
-        act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT);
+        act("$n rejects your attempt to give $s $p.", true, me, t, ch, TO_VICT);
+        act("$n refuses to accept $p from $N.", true, me, t, ch, TO_NOTVICT);
         me->doTell(ch->getName(),
           "You are not a cleric or Deikhan.  I can not help you.");
         strcpy(buf, t->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       if ((ch != me) && (ch->getPosition() != POSITION_RESTING) &&
           (ch->getPosition() != POSITION_SITTING)) {
-        act("You do not accept $N's offer to give you $p.", TRUE, me, t, ch,
+        act("You do not accept $N's offer to give you $p.", true, me, t, ch,
           TO_CHAR);
-        act("$n rejects your attempt to give $s $p.", TRUE, me, t, ch, TO_VICT);
-        act("$n refuses to accept $p from $N.", TRUE, me, t, ch, TO_NOTVICT);
+        act("$n rejects your attempt to give $s $p.", true, me, t, ch, TO_VICT);
+        act("$n refuses to accept $p from $N.", true, me, t, ch, TO_NOTVICT);
         me->doTell(ch->getName(),
           "I can not help you unless you take a position of rest.");
         strcpy(buf, t->name.c_str());
         strcpy(buf, add_bars(buf).c_str());
         sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
         me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       me->logItem(t, CMD_EAST);  // log the receipt of the item
       t->attunerGiven(ch, me);
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }
 
 int TThing::sharpenerValueMe(const TBeing* ch, TMonster* me) const {
   me->doTell(ch->getName(), "I can only value weapons.");
-  return TRUE;
+  return true;
 }
 
 int TThing::sharpenerGiveMe(TBeing* ch, TMonster* me) {
@@ -3670,7 +3670,7 @@ int TThing::sharpenerGiveMe(TBeing* ch, TMonster* me) {
   strcpy(buf, add_bars(buf).c_str());
   sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
   me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-  return TRUE;
+  return true;
 }
 
 int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
@@ -3693,14 +3693,14 @@ int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       return shopWhisper(ch, me, find_shop_nr(me->number), arg);
     case CMD_GENERIC_DESTROYED:
       delete (sharp_struct*)me->act_ptr;
-      me->act_ptr = NULL;
-      return FALSE;
+      me->act_ptr = nullptr;
+      return false;
     case CMD_GENERIC_CREATED:
       if (!(me->act_ptr = new sharp_struct())) {
         perror("failed new of sharpener.");
         exit(0);
       }
-      return FALSE;
+      return false;
     case CMD_MOB_MOVED_INTO_ROOM:
 
       return kick_mobs_from_shop(me, ch, (long int)o);
@@ -3710,25 +3710,25 @@ int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       tbt = dynamic_cast<TBeing*>(ttt);
       me->doSay("Hey!  Take it outside.");
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        if (exit_ok(exitp = me->exitDir(dir), NULL)) {
-          act("$n throws you from $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, me, 0, ch, TO_NOTVICT);
-          me->throwChar(ch, dir, FALSE, SILENT_NO, true);
-          act("$n throws you from $s shop.", FALSE, me, 0, tbt, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, me, 0, tbt, TO_NOTVICT);
-          me->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-          return TRUE;
+        if (exit_ok(exitp = me->exitDir(dir), nullptr)) {
+          act("$n throws you from $s shop.", false, me, 0, ch, TO_VICT);
+          act("$n throws $N from $s shop.", false, me, 0, ch, TO_NOTVICT);
+          me->throwChar(ch, dir, false, SILENT_NO, true);
+          act("$n throws you from $s shop.", false, me, 0, tbt, TO_VICT);
+          act("$n throws $N from $s shop.", false, me, 0, tbt, TO_NOTVICT);
+          me->throwChar(tbt, dir, false, SILENT_NO, true);
+          return true;
         }
       }
-      return TRUE;
+      return true;
     case CMD_GENERIC_PULSE:
       job = static_cast<sharp_struct*>(me->act_ptr);
       if (!job) {
         vlogf(LOG_PROC, "SHARPENER PROC ERROR: terminating (hopefully)");
-        return FALSE;
+        return false;
       }
       if (!job->char_name || !job->obj_name)
-        return FALSE;
+        return false;
 
       if (job->wait > 0) {
         job->wait--;
@@ -3739,39 +3739,39 @@ int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
           if (!(final = searchLinkedList(job->obj_name, me->stuff))) {
             me->doSay(
               "Ack, I lost the weapon somehow! Tell a god immediately!");
-            return FALSE;
+            return false;
           }
           if (!(final_pers = get_char_room(job->char_name, me->in_room))) {
             me->doSay(
               "Hmm, I seem to have lost the person I was sharpening for.");
-            rc = me->doDrop(job->obj_name, NULL);
+            rc = me->doDrop(job->obj_name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
-            return FALSE;
+            return false;
           }
           if (!final_pers->desc) {
             me->doSay(
               "Hmm, I seem to have lost the person I was sharpening for.");
-            rc = me->doDrop(job->obj_name, NULL);
+            rc = me->doDrop(job->obj_name, nullptr);
             if (IS_SET_DELETE(rc, DELETE_THIS))
               return DELETE_THIS;
-            return FALSE;
+            return false;
           }
           sprintf(buf, "%s %s", job->obj_name, job->char_name);
           if (me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT) == DELETE_THIS)
             return DELETE_THIS;
           delete[] job->char_name;
-          job->char_name = NULL;
+          job->char_name = nullptr;
           delete[] job->obj_name;
-          job->obj_name = NULL;
+          job->obj_name = nullptr;
           job->wait = 0;
           job->cost = 0;
-          return FALSE;
+          return false;
         } else {
           if (!(final = searchLinkedList(job->obj_name, me->stuff))) {
             me->doSay(
               "Ack, I lost the weapon somehow! Tell a god immediately!");
-            return FALSE;
+            return false;
           }
 
           if (!job->isBlunt)
@@ -3779,8 +3779,8 @@ int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
           else
             sprintf(buf, "$n smoothes $p.");
 
-          act(buf, FALSE, me, final, NULL, TO_ROOM);
-          return FALSE;
+          act(buf, false, me, final, nullptr, TO_ROOM);
+          return false;
         }
       }
       break;
@@ -3795,16 +3795,16 @@ int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     case CMD_SE:
     case CMD_NW:
       if (!(job = (sharp_struct*)me->act_ptr)) {
-        return FALSE;
+        return false;
       }
       if (!job->char_name) {
-        return FALSE;
+        return false;
       }
       if (job->char_name == ch->getName()) {
         sprintf(buf, "%s! Don't leave until I finish with this %s!",
           ch->getName().c_str(), job->obj_name);
         me->doSay(buf);
-        return TRUE;
+        return true;
       } else {
         followData *f, *n;
         TBeing* vict;
@@ -3816,11 +3816,11 @@ int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
               sprintf(buf, "%s! You can't leave! %s has a %s being sharpened!",
                 ch->getName().c_str(), vict->getName().c_str(), job->obj_name);
               me->doSay(buf);
-              return TRUE;
+              return true;
             }
           }
         }
-        return FALSE;
+        return false;
       }
       break;
     case CMD_VALUE:
@@ -3829,29 +3829,29 @@ int sharpener(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
 
       if (!(valued = searchLinkedListVis(ch, arg, ch->stuff))) {
         me->doTell(ch->getName(), "You don't have that item.");
-        return TRUE;
+        return true;
       }
       return valued->sharpenerValueMe(ch, me);
     case CMD_MOB_GIVEN_ITEM:
       if (!(weap = o)) {
         me->doTell(ch->getName(), "You don't have that item!");
-        return TRUE;
+        return true;
       }
       me->logItem(weap, CMD_EAST);  // log the receipt of the item
       return weap->sharpenerGiveMe(ch, me);
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }
 
 int cold_giver(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   affectedData af;
 
   if ((cmd != CMD_GENERIC_PULSE) || number(0, 50))
-    return FALSE;
+    return false;
 
-  act("$n coughs uncontrollably.", FALSE, me, NULL, NULL, TO_ROOM);
+  act("$n coughs uncontrollably.", false, me, nullptr, nullptr, TO_ROOM);
   me->sendTo("You cough uncontrollably.\n\r");
   af.type = AFFECT_DISEASE;
   af.level = 0;
@@ -3861,17 +3861,17 @@ int cold_giver(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   af.bitvector = 0;
   spread_affect(me, 250, 0, 0, &af);
 
-  return FALSE;
+  return false;
 }
 
 int frostbiter(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   affectedData af;
 
   if ((cmd != CMD_GENERIC_PULSE) || number(0, 50))
-    return FALSE;
+    return false;
 
-  act("A frigid breeze blows past, chilling you to the bone.", FALSE, me, NULL,
-    NULL, TO_ROOM);
+  act("A frigid breeze blows past, chilling you to the bone.", false, me, nullptr,
+    nullptr, TO_ROOM);
   af.type = AFFECT_DISEASE;
   af.level = 0;
   af.duration = 200;
@@ -3880,14 +3880,14 @@ int frostbiter(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   af.bitvector = 0;
   spread_affect(me, 500, 0, 0, &af);
 
-  return FALSE;
+  return false;
 }
 
 int leper(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   affectedData af;
 
   if ((cmd != CMD_GENERIC_PULSE) || number(0, 50))
-    return FALSE;
+    return false;
 
   af.type = AFFECT_DISEASE;
   af.level = 0;
@@ -3897,16 +3897,16 @@ int leper(TBeing* ch, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   af.bitvector = 0;
   spread_affect(me, 50, 0, 0, &af);
 
-  return FALSE;
+  return false;
 }
 
 int flu_giver(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   affectedData af;
 
   if ((cmd != CMD_GENERIC_PULSE) || number(0, 50))
-    return FALSE;
+    return false;
 
-  act("$n pukes in multiple colors.", FALSE, me, NULL, NULL, TO_ROOM);
+  act("$n pukes in multiple colors.", false, me, nullptr, nullptr, TO_ROOM);
   me->sendTo("You puke.\n\r");
   me->dropPool(10, LIQ_VOMIT);
   af.type = AFFECT_DISEASE;
@@ -3917,7 +3917,7 @@ int flu_giver(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   af.bitvector = 0;
   spread_affect(me, 100, 0, 0, &af);
 
-  return FALSE;
+  return false;
 }
 
 int bogus_mob_proc(TBeing*, cmdTypeT, const char*, TMonster* me, TObj*) {
@@ -3927,19 +3927,19 @@ int bogus_mob_proc(TBeing*, cmdTypeT, const char*, TMonster* me, TObj*) {
         me->name % me->spec);
   else
     vlogf(LOG_PROC, "WARNING: indeterminate mob has bogus spec_proc");
-  return FALSE;
+  return false;
 }
 
 int specificDisc(TBeing*, cmdTypeT, const char*, TMonster*, TObj*) {
   // this proc sets discipline learnedness, nothing else
-  return FALSE;
+  return false;
 }
 
 int death(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int rc;
 
   if ((cmd != CMD_GENERIC_PULSE) || !me)
-    return FALSE;
+    return false;
   if (!me->riding) {
     rc = me->findMyHorse();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -3970,29 +3970,29 @@ int death(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     // protect newbies
     if (t->GetMaxLevel() < 8 && me->inGrimhaven())
       continue;
-    act("$n's skeletal gaze falls upon $N.", TRUE, me, 0, t, TO_NOTVICT);
+    act("$n's skeletal gaze falls upon $N.", true, me, 0, t, TO_NOTVICT);
     if (!t->isPc() || !::number(0, 5)) {
-      act("$N is dead!  R.I.P.", TRUE, me, 0, t, TO_NOTVICT);
-      act("$n's skeletal gaze falls upon you!", TRUE, me, 0, t, TO_VICT);
+      act("$N is dead!  R.I.P.", true, me, 0, t, TO_NOTVICT);
+      act("$n's skeletal gaze falls upon you!", true, me, 0, t, TO_VICT);
       t->rawKill(DAMAGE_NORMAL, me);
       delete t;
-      t = NULL;
+      t = nullptr;
     } else {
       // let PCs save since "death" causes some complaints
       t->setHit(t->getHit() / 2);
     }
     break;
   }
-  return FALSE;
+  return false;
 }
 
 int war(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
-  TBeing *t = NULL, *next_tar = NULL;
+  TBeing *t = nullptr, *next_tar = nullptr;
   TBeing* vict;
   int rc;
 
   if ((cmd != CMD_GENERIC_PULSE) || !me)
-    return FALSE;
+    return false;
   if (!me->riding) {
     rc = me->findMyHorse();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4017,14 +4017,14 @@ int war(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
             me->addFollower(t);
           if (t->reconcileDamage(vict, 0, DAMAGE_NORMAL) == -1) {
             delete vict;
-            vict = NULL;
+            vict = nullptr;
           }
-          return FALSE;
+          return false;
         }
       }
     }
     if (mob_index[real_mobile(Mob::Mob::APOC_WARRIOR)].getNumber() > 5)
-      return FALSE;
+      return false;
 
     act("$n calls forth a great warrior to bring war upon The World!", 0, me, 0,
       0, TO_ROOM, ANSI_RED);
@@ -4036,8 +4036,8 @@ int war(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   // start people in the room fighting each other, randomly
   // keep War and his horse out of it though
   if (me->checkPeaceful(""))
-    return FALSE;
-  TThing *t1, *t2 = NULL, *t3 = NULL;
+    return false;
+  TThing *t1, *t2 = nullptr, *t3 = nullptr;
   for (StuffIter it = me->roomp->stuff.begin(); it != me->roomp->stuff.end();) {
     t1 = *(it++);
     t = dynamic_cast<TBeing*>(t1);
@@ -4056,7 +4056,7 @@ int war(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     // protect newbies
     if (t->GetMaxLevel() < 8 && me->inGrimhaven())
       continue;
-    for (next_tar = NULL; t2; t2 = t3, next_tar = NULL) {
+    for (next_tar = nullptr; t2; t2 = t3, next_tar = nullptr) {
       t2 = *(it++);
       next_tar = dynamic_cast<TBeing*>(t2);
       if (!next_tar)
@@ -4084,7 +4084,7 @@ int war(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     t->reconcileDamage(next_tar, 0, DAMAGE_NORMAL);
   }
 
-  return FALSE;
+  return false;
 }
 
 void TBeing::findFood() {
@@ -4111,7 +4111,7 @@ int famine(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   affectedData aff;
 
   if ((cmd != CMD_GENERIC_PULSE) || !me)
-    return FALSE;
+    return false;
   if (!me->riding) {
     rc = me->findMyHorse();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4124,14 +4124,14 @@ int famine(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
 
   if ((t = me->fight())) {
     // drain movement from victim
-    act("$n grins as $e drains energy from $N to feed $s own.", TRUE, me, 0, t,
+    act("$n grins as $e drains energy from $N to feed $s own.", true, me, 0, t,
       TO_NOTVICT);
-    act("$n grins as $e drains your energy to feed $s own!", TRUE, me, 0, t,
+    act("$n grins as $e drains your energy to feed $s own!", true, me, 0, t,
       TO_VICT);
     int num = min(t->getMove(), dice(3, 5));
     t->addToMove(-num);
     t->addToHit(2 * num);
-    return TRUE;
+    return true;
   }
 
   for (StuffIter it = me->roomp->stuff.begin(); it != me->roomp->stuff.end();) {
@@ -4165,9 +4165,9 @@ int famine(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
           aff.duration *= (100 - t->getImmunity(IMMUNE_DISEASE));
           aff.duration /= 100;
           if (aff.modifier && aff.duration > 0) {
-            act("$N's presence drains your body of something essential.", TRUE,
+            act("$N's presence drains your body of something essential.", true,
               me, 0, t, TO_VICT);
-            act("You sap the good parts from $n's blood!", TRUE, me, 0, t,
+            act("You sap the good parts from $n's blood!", true, me, 0, t,
               TO_CHAR);
             t->affectTo(&aff);
             disease_start(t, &aff);
@@ -4175,15 +4175,15 @@ int famine(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
           }
         }
       case 1:
-        act("Your throat tightens as $N causes a great thirst!", TRUE, t, 0, me,
+        act("Your throat tightens as $N causes a great thirst!", true, t, 0, me,
           TO_CHAR);
-        act("$N causes you to slowly starve!!!!", TRUE, t, 0, me, TO_CHAR);
+        act("$N causes you to slowly starve!!!!", true, t, 0, me, TO_CHAR);
         t->setCond(THIRST, 0);
         t->setCond(FULL, 0);
         t->findFood();
         if (t->reconcileDamage(t, number(5, 8), DAMAGE_STARVATION) == -1) {
           delete t;
-          t = NULL;
+          t = nullptr;
         }
         break;
       default:
@@ -4191,7 +4191,7 @@ int famine(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
         break;
     }
   }
-  return FALSE;
+  return false;
 }
 
 int pestilence(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
@@ -4201,7 +4201,7 @@ int pestilence(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
   int rc;
 
   if ((cmd != CMD_GENERIC_PULSE) || !me)
-    return FALSE;
+    return false;
   if (!me->riding) {
     rc = me->findMyHorse();
     if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -4288,34 +4288,34 @@ int pestilence(TBeing*, cmdTypeT cmd, const char*, TMonster* me, TObj*) {
     aff.duration *= (100 - t->getImmunity(IMMUNE_DISEASE));
     aff.duration /= 100;
     if (aff.modifier && aff.duration > 0) {
-      act("$N gazes upon you with lidless white eyes.", TRUE, me, 0, t,
+      act("$N gazes upon you with lidless white eyes.", true, me, 0, t,
         TO_VICT);
-      act("You gaze upon $n.", TRUE, me, 0, t, TO_CHAR);
-      act("$n gasps and exhales a plume of dank vapors.", TRUE, me, 0, 0,
+      act("You gaze upon $n.", true, me, 0, t, TO_CHAR);
+      act("$n gasps and exhales a plume of dank vapors.", true, me, 0, 0,
         TO_ROOM);
       t->affectTo(&aff);
       disease_start(t, &aff);
     }
   }
-  return FALSE;
+  return false;
 }
 
 int fireMaster(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
   char buf[256];
 
   if (cmd != CMD_ENTER)
-    return FALSE;
+    return false;
 
   one_argument(arg, buf, cElements(buf));
   if (!isname(buf, obj_index[real_object(Obj::FLAMING_PORTAL)].name))
-    return FALSE;
+    return false;
 
   if (ch != me) {
     me->doSay("Oh no you don't!");
     me->doSay("You're not going anywhere until you get past me!");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 int TicketGuy(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
@@ -4323,46 +4323,46 @@ int TicketGuy(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
   const int TICKET_PRICE = 1000;
 
   if (!ch || !me) {
-    vlogf(LOG_PROC, "NULL ch's in TicketGuy");
-    return FALSE;
+    vlogf(LOG_PROC, "nullptr ch's in TicketGuy");
+    return false;
   }
   if (cmd != CMD_BUY)
-    return FALSE;
+    return false;
 
   if (ch->getPosition() > POSITION_STANDING) {
     me->doTell(fname(ch->name),
       "I won't sell you a ticket unless you stand on your own feet.");
-    return TRUE;
+    return true;
   }
 
   arg = one_argument(arg, obj_name, cElements(obj_name));
 
   if (!*obj_name || strcmp(obj_name, "ticket")) {
     me->doTell(fname(ch->name), "Buy what?!?");
-    return TRUE;
+    return true;
   }
   // prohibit polys and charms from engraving
   if (dynamic_cast<TMonster*>(ch)) {
     me->doTell(fname(ch->name), "I don't sell tickets to beasts.");
-    return TRUE;
+    return true;
   }
   if (ch->getMoney() < TICKET_PRICE) {
     me->doTell(fname(ch->name),
       format("Tickets cost %d talens.") % TICKET_PRICE);
-    return TRUE;
+    return true;
   }
   ch->addToMoney(-TICKET_PRICE, GOLD_HOSPITAL);
   ch->sendTo("You buy a ticket.\n\r");
   ch->sendTo("The mage makes a strange gesture before you.\n\r");
   ch->sendTo("      *BLICK*\n\r");
   ch->sendTo("Suddenly you find yourself in another plane of existence.\n\r");
-  act("$n purchases a ticket and $N transports $m into another plane.", FALSE,
+  act("$n purchases a ticket and $N transports $m into another plane.", false,
     ch, 0, me, TO_ROOM);
   --(*ch);
   thing_to_room(ch, Room::TICKET_DESTINATION);
   ch->doLook("", CMD_LOOK);
-  act("$n blicks into the room.", TRUE, ch, 0, 0, TO_ROOM);
-  return TRUE;
+  act("$n blicks into the room.", true, ch, 0, 0, TO_ROOM);
+  return true;
 }
 
 int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
@@ -4373,7 +4373,7 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
       int cur_path;
       char* hunted_victim;
 
-      hunt_struct() { hunted_victim = NULL; }
+      hunt_struct() { hunted_victim = nullptr; }
       ~hunt_struct() { delete[] hunted_victim; }
   };
   hunt_struct* job;
@@ -4382,18 +4382,18 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (::number(0, 2))
-    return FALSE;
+    return false;
 
   if (!myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (!myself->act_ptr) {
     if (!(myself->act_ptr = new hunt_struct())) {
@@ -4401,7 +4401,7 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
       exit(0);
     }
     job = static_cast<hunt_struct*>(myself->act_ptr);
-    job->hunted_victim = NULL;
+    job->hunted_victim = nullptr;
     job->cur_pos = 0;
     job->cur_path = 0;
   }
@@ -4409,10 +4409,10 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_PROC,
       "Unable to allocate memory for hobbit emissary!  This is bad!");
-    return TRUE;
+    return true;
   }
 
-  if (job->hunted_victim == NULL) {
+  if (job->hunted_victim == nullptr) {
     delete[] job->hunted_victim;
     job->hunted_victim = mud_str_dup("ambassador hobbit Grimhaven");
   }
@@ -4454,9 +4454,9 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
         format("Error: hobbit emissary hunted undefined target. (%s)") %
           job->hunted_victim);
       delete[] job->hunted_victim;
-      job->hunted_victim = NULL;
+      job->hunted_victim = nullptr;
     }
-    return TRUE;
+    return true;
   }
 
   switch (myself->walk_path(hobbit_path_pos[job->cur_path], job->cur_pos)) {
@@ -4472,7 +4472,7 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
         delete[] job->hunted_victim;
         job->hunted_victim = mud_str_dup("king Grimhaven");
       }
-      return TRUE;
+      return true;
       break;
     case WALK_PATH_LOST:
       act("$n seems to have gotten a little bit lost.", 0, myself, 0, 0,
@@ -4483,7 +4483,7 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
       --(*myself);
       thing_to_room(myself, hobbit_path_pos[job->cur_path][0].cur_room);
       act("$n has arrived.", 0, myself, 0, 0, TO_ROOM);
-      return TRUE;
+      return true;
       break;
     case WALK_PATH_MOVED:
       break;
@@ -4494,15 +4494,15 @@ int hobbitEmissary(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
 
 int banshee(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   if (::number(0, 4))
-    return FALSE;
+    return false;
 
-  act("You unleash a hideous screech.", FALSE, myself, 0, 0, TO_CHAR);
-  act("$n unleashes a hideous screech.", FALSE, myself, 0, 0, TO_ROOM);
+  act("You unleash a hideous screech.", false, myself, 0, 0, TO_CHAR);
+  act("$n unleashes a hideous screech.", false, myself, 0, 0, TO_ROOM);
 
-  TThing* t = NULL;
+  TThing* t = nullptr;
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end() && (t = *it); ++it) {
     TBeing* tbt = dynamic_cast<TBeing*>(t);
@@ -4516,18 +4516,18 @@ int banshee(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
     if (muff && muff->objVnum() == Obj::EARMUFF)
       continue;
 
-    act("The scream rocks you to your core and you feel more aged.", FALSE, tbt,
+    act("The scream rocks you to your core and you feel more aged.", false, tbt,
       0, 0, TO_CHAR);
     tbt->age_mod += 1;
   }
 
-  return FALSE;
+  return false;
 }
 
 int corpseMuncher(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {
   TThing* t;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   int found = 0, msg;
   const char* munch[] = {
     "$n stops eating, looks up at you and burps loudly, then resumes feasting "
@@ -4537,7 +4537,7 @@ int corpseMuncher(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     "$n stops to spit out a piece of <W>bone<1>, then resumes eating $p."};
 
   if ((cmd != CMD_GENERIC_PULSE) || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end();) {
@@ -4549,14 +4549,14 @@ int corpseMuncher(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     found = 1;
 
     if (!myself->isAffected(AFF_MUNCHING_CORPSE)) {
-      act("$n kneels down and begins munching on $p.", TRUE, myself, obj, 0,
+      act("$n kneels down and begins munching on $p.", true, myself, obj, 0,
         TO_ROOM);
       myself->dropPool(9, LIQ_BLOOD);
       SET_BIT(myself->specials.affectedBy, AFF_MUNCHING_CORPSE);
       SET_BIT(myself->specials.act, ACT_SENTINEL);
     } else {
       if ((msg = ::number(0, 10)) < 4) {
-        act(munch[msg], TRUE, myself, obj, 0, TO_ROOM);
+        act(munch[msg], true, myself, obj, 0, TO_ROOM);
         myself->dropPool(3, LIQ_BLOOD);
 
         // don't decay player corpses
@@ -4573,12 +4573,12 @@ int corpseMuncher(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     act(
       "$n swallows down the last few pieces of flesh and looks around for "
       "another corpse to eat.",
-      TRUE, myself, 0, 0, TO_ROOM);
+      true, myself, 0, 0, TO_ROOM);
     REMOVE_BIT(myself->specials.affectedBy, AFF_MUNCHING_CORPSE);
     REMOVE_BIT(myself->specials.act, ACT_SENTINEL);
   }
 
-  return FALSE;
+  return false;
 }
 
 int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
@@ -4588,12 +4588,12 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
   TDatabase db(DB_SNEEZY);
 
   if (!ch || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   switch (cmd) {
     case CMD_MOB_GIVEN_ITEM:
       if (!o || !isname("caughtfish", o->name)) {
-        return FALSE;
+        return false;
       }
 
       // update total weight caught for player
@@ -4652,7 +4652,7 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
       arg = one_argument(arg, buf);
 
       if (!isname(buf, myself->name))
-        return FALSE;
+        return false;
 
       arg = one_argument(arg, buf);
 
@@ -4728,10 +4728,10 @@ int fishTracker(TBeing* ch, cmdTypeT cmd, const char* argument,
 
       break;
     default:
-      return FALSE;
+      return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
@@ -4739,8 +4739,8 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   int found = 0;
   dirTypeT dir = DIR_NONE;
   const int nhomes = 4, homes[nhomes] = {340, 339, 338, 337};
-  TThing* t = NULL;
-  TMonster* tmons = NULL;
+  TThing* t = nullptr;
+  TMonster* tmons = nullptr;
   sstring hookername, johnname, tmp;
   TPathFinder path;
 
@@ -4767,15 +4767,15 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   if (cmd == CMD_GENERIC_DESTROYED) {
     if (myself->act_ptr) {
       delete static_cast<hunt_struct*>(myself->act_ptr);
-      myself->act_ptr = NULL;
+      myself->act_ptr = nullptr;
     }
-    return FALSE;
+    return false;
   } else if ((cmd != CMD_GENERIC_PULSE) || !myself->awake() || myself->fight())
-    return FALSE;
+    return false;
 
   if (!myself->act_ptr) {
     if (::number(0, 10))
-      return FALSE;
+      return false;
 
     // find a john
     for (StuffIter it = myself->roomp->stuff.begin();
@@ -4793,11 +4793,11 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
 
     // didn't find one
     if (!found)
-      return FALSE;
+      return false;
 
     if (!(myself->act_ptr = new hunt_struct())) {
       vlogf(LOG_PROC, "failed memory allocation in mob proc grimhavenHooker.");
-      return FALSE;
+      return false;
     }
     job = static_cast<hunt_struct*>(myself->act_ptr);
     job->cur_pos = 0;
@@ -4806,19 +4806,19 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     job->state = STATE_OFFER;
   } else {
     if (::number(0, 4))
-      return FALSE;
+      return false;
   }
 
   if (!(job = static_cast<hunt_struct*>(myself->act_ptr))) {
     vlogf(LOG_PROC, "grimhavenHooker: error, static_cast");
-    return FALSE;
+    return false;
   }
 
   if (job->state == STATE_NONE) {
     //    vlogf(LOG_PROC, "STATE_NONE, deleting act_ptr");
     delete static_cast<hunt_struct*>(myself->act_ptr);
-    myself->act_ptr = NULL;
-    return FALSE;
+    myself->act_ptr = nullptr;
+    return false;
   }
 
   // Make sure our john is still alive and in the same room
@@ -4833,13 +4833,13 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
     }
     if (!mobStillExists || !myself->sameRoom(*job->john)) {
       myself->doAction("", CMD_FROWN);
-      job->john = NULL;
+      job->john = nullptr;
       job->state = STATE_NONE;
-      return TRUE;
+      return true;
     }
   } else {
     job->state = STATE_NONE;
-    return FALSE;
+    return false;
   }
 
   hookername = myself->name;
@@ -4909,7 +4909,7 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
           job->john->doFlee("");
           break;
       }
-      job->john = NULL;
+      job->john = nullptr;
       job->state = STATE_NONE;
       break;
     case STATE_ASKPRICE:
@@ -5010,7 +5010,7 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
           job->john->doFlee("");
           break;
       }
-      job->john = NULL;
+      job->john = nullptr;
       job->state = STATE_NONE;
       break;
     case STATE_ACCEPT:
@@ -5061,7 +5061,7 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
             job->john = nullptr;
             if (myself->act_ptr) {
               delete static_cast<hunt_struct*>(myself->act_ptr);
-              myself->act_ptr = NULL;
+              myself->act_ptr = nullptr;
             }
             break;
         }
@@ -5098,14 +5098,14 @@ int grimhavenHooker(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
         job->john = nullptr;
         if (myself->act_ptr) {
           delete static_cast<hunt_struct*>(myself->act_ptr);
-          myself->act_ptr = NULL;
+          myself->act_ptr = nullptr;
           return DELETE_THIS;
         }
       }
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 // this proc is kind of ugly, but it works
@@ -5120,7 +5120,7 @@ int bankGuard(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
   // only on pulse and only if we're not already hunting someone
   if (cmd != CMD_GENERIC_PULSE || IS_SET(myself->specials.act, ACT_HUNTING))
-    return FALSE;
+    return false;
 
   for (i = descriptor_list; i && v <= 9; i = i->next) {
     if (!i->connected && i->character && i->character->roomp &&
@@ -5151,7 +5151,7 @@ int bankGuard(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   }
 
   if (!v)
-    return FALSE;
+    return false;
 
   vict = victims[::number(0, v - 1)];
   vlogf(LOG_PEEL, format("bank guard hunting %s") % vict->getName());
@@ -5165,18 +5165,18 @@ int bankGuard(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 // for the jungle canyon zone - dash 7/25/01
 int scaredKid(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TObj* o) {
-  TThing* t = NULL;
-  TBeing* tb = NULL;
+  TThing* t = nullptr;
+  TBeing* tb = nullptr;
   bool found = false;
 
   if (cmd != CMD_GENERIC_QUICK_PULSE || myself->fight())
-    return FALSE;
+    return false;
 
   // look for people to run from
   for (StuffIter it = myself->roomp->stuff.begin();
@@ -5188,7 +5188,7 @@ int scaredKid(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       found = true;
   }
   if (!found)
-    return FALSE;
+    return false;
 
   // ok, its a pulse, i'm not fighting, and there's a big scary PC that i can
   // see RUN HOME!!!
@@ -5196,63 +5196,63 @@ int scaredKid(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   int r = myself->inRoom();
   switch (r) {
     case 27472:
-      act("$n begins to cry as $e flees through the jungle.", FALSE, myself, 0,
+      act("$n begins to cry as $e flees through the jungle.", false, myself, 0,
         0, TO_ROOM);
       myself->doMove(CMD_EAST);
       break;
     case 27473:
-      act("$n sobs softly as $e flees through the jungle.", FALSE, myself, 0, 0,
+      act("$n sobs softly as $e flees through the jungle.", false, myself, 0, 0,
         TO_ROOM);
       myself->doMove(CMD_EAST);
       break;
     case 27474:
-      act("$n sobs softly as $e fiddles with one of the trees.", FALSE, myself,
+      act("$n sobs softly as $e fiddles with one of the trees.", false, myself,
         0, 0, TO_ROOM);
       myself->doOpen("canopy");
-      act("$n grabs a vine and leaps up through the hole in the canopy.", FALSE,
+      act("$n grabs a vine and leaps up through the hole in the canopy.", false,
         myself, 0, 0, TO_ROOM);
       myself->doMove(CMD_UP);
       myself->doClose("canopy");
       break;
     case 27476:
       act("$n charges through the undergrowth, glancing over $s shoulder.",
-        FALSE, myself, 0, 0, TO_ROOM);
+        false, myself, 0, 0, TO_ROOM);
       myself->doMove(CMD_NW);
       break;
     case 27477:
       act("$n charges through the undergrowth, glancing over $s shoulder.",
-        FALSE, myself, 0, 0, TO_ROOM);
+        false, myself, 0, 0, TO_ROOM);
       myself->doMove(CMD_WEST);
       break;
     case 27480:
-      act("$n runs toward the small wooden bridge to the northwest.", FALSE,
+      act("$n runs toward the small wooden bridge to the northwest.", false,
         myself, 0, 0, TO_ROOM);
       myself->doMove(CMD_NW);
       break;
     case 27481:
       act("$n charges through the undergrowth, glancing over $s shoulder.",
-        FALSE, myself, 0, 0, TO_ROOM);
+        false, myself, 0, 0, TO_ROOM);
       myself->doMove(CMD_WEST);
       break;
     case 27483:
-      act("$n squeaks with fright!", FALSE, myself, 0, 0, TO_ROOM);
-      act("$n jumps to $s feet and dives into the undergrowth.", FALSE, myself,
+      act("$n squeaks with fright!", false, myself, 0, 0, TO_ROOM);
+      act("$n jumps to $s feet and dives into the undergrowth.", false, myself,
         0, 0, TO_ROOM);
       myself->doMove(CMD_NORTH);
       break;
     case 27488:
-      act("$n screams with rage!", FALSE, myself, 0, tb, TO_ROOM);
+      act("$n screams with rage!", false, myself, 0, tb, TO_ROOM);
       myself->doMove(CMD_EAST);
       myself->doMove(CMD_SOUTH);
       myself->doMove(CMD_SOUTH);
       myself->doMove(CMD_EAST);
       break;
     default:
-      return FALSE;
+      return false;
       break;
   }
 
-  return TRUE;
+  return true;
 }
 
 static int divCost(TObj* obj, TBeing* ch, unsigned int shop_nr) {
@@ -5277,7 +5277,7 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
   int cost;
   dirTypeT dir = DIR_NONE;
   roomDirData* exitp;
-  TBeing* tbt = NULL;
+  TBeing* tbt = nullptr;
   TThing* ttt;
   sstring str;
   TShopOwned* tso;
@@ -5288,12 +5288,12 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
       int cost;
       char* char_name;
       char* obj_name;
-      div_struct() : wait(0), cost(0), char_name(NULL), obj_name(NULL) {}
+      div_struct() : wait(0), cost(0), char_name(nullptr), obj_name(nullptr) {}
       ~div_struct() {
         delete[] char_name;
-        char_name = NULL;
+        char_name = nullptr;
         delete[] obj_name;
-        obj_name = NULL;
+        obj_name = nullptr;
       }
   };
   static div_struct* job;
@@ -5303,14 +5303,14 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
       return shopWhisper(ch, me, find_shop_nr(me->number), arg);
     case CMD_GENERIC_DESTROYED:
       delete (div_struct*)me->act_ptr;
-      me->act_ptr = NULL;
-      return FALSE;
+      me->act_ptr = nullptr;
+      return false;
     case CMD_GENERIC_CREATED:
       if (!(me->act_ptr = new div_struct())) {
         perror("failed new of engraver.");
         exit(0);
       }
-      return FALSE;
+      return false;
     case CMD_MOB_MOVED_INTO_ROOM:
 
       return kick_mobs_from_shop(me, ch, (long int)o);
@@ -5320,17 +5320,17 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
       tbt = dynamic_cast<TBeing*>(ttt);
       me->doSay("Hey!  Take it outside.");
       for (dir = MIN_DIR; dir < MAX_DIR; dir++) {
-        if (exit_ok(exitp = me->exitDir(dir), NULL)) {
-          act("$n throws you from $s shop.", FALSE, me, 0, ch, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, me, 0, ch, TO_NOTVICT);
-          me->throwChar(ch, dir, FALSE, SILENT_NO, true);
-          act("$n throws you from $s shop.", FALSE, me, 0, tbt, TO_VICT);
-          act("$n throws $N from $s shop.", FALSE, me, 0, tbt, TO_NOTVICT);
-          me->throwChar(tbt, dir, FALSE, SILENT_NO, true);
-          return TRUE;
+        if (exit_ok(exitp = me->exitDir(dir), nullptr)) {
+          act("$n throws you from $s shop.", false, me, 0, ch, TO_VICT);
+          act("$n throws $N from $s shop.", false, me, 0, ch, TO_NOTVICT);
+          me->throwChar(ch, dir, false, SILENT_NO, true);
+          act("$n throws you from $s shop.", false, me, 0, tbt, TO_VICT);
+          act("$n throws $N from $s shop.", false, me, 0, tbt, TO_NOTVICT);
+          me->throwChar(tbt, dir, false, SILENT_NO, true);
+          return true;
         }
       }
-      return TRUE;
+      return true;
     case CMD_GENERIC_PULSE:
       break;
     case CMD_NORTH:
@@ -5344,34 +5344,34 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
     case CMD_SE:
     case CMD_NW:
       if (!(job = (div_struct*)me->act_ptr)) {
-        return FALSE;
+        return false;
       }
       if (!job->char_name) {
-        return FALSE;
+        return false;
       }
       if (job->char_name == ch->getName()) {
         sprintf(buf, "%s! Don't leave until I finish with this %s!",
           ch->getName().c_str(), job->obj_name);
         me->doSay(buf);
-        return TRUE;
+        return true;
       } else
-        return FALSE;
+        return false;
       break;
     case CMD_VALUE: {
       for (; *arg && isspace(*arg); arg++)
         ;
-      TThing* ts = NULL;
-      TObj* valued = NULL;
+      TThing* ts = nullptr;
+      TObj* valued = nullptr;
       if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
           !(valued = dynamic_cast<TObj*>(ts))) {
         me->doTell(ch->getName(), "You don't have that item.");
-        return TRUE;
+        return true;
       }
       if (valued->obj_flags.decay_time >= 0) {
         me->doTell(ch->getName(),
           "Sorry, but this item won't last long and isn't worth the money "
           "spent.");
-        return TRUE;
+        return true;
       }
 
       cost = divCost(valued, ch, find_shop_nr(me->number));
@@ -5385,18 +5385,18 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
       me->doTell(ch->getName(),
         format("It will cost %d talens to identify your %s.") % cost %
           fname(valued->name));
-      return TRUE;
+      return true;
     }
     case CMD_MOB_GIVEN_ITEM:
       if (!(item = o)) {
         me->doTell(ch->getName(), "You don't have that item!");
-        return TRUE;
+        return true;
       }
       // prohibit polys and charms from engraving
       if (dynamic_cast<TMonster*>(ch)) {
         me->doTell(fname(ch->name), "I don't identify for beasts.");
         me->doGive(ch, item, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       me->logItem(item, CMD_EAST);  // log the receipt of the item
       cost = divCost(item, ch, find_shop_nr(me->number));
@@ -5405,7 +5405,7 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
           "I have to make a living! If you don't have the money, I don't do "
           "the work!");
         me->doGive(ch, item, GIVE_FLAG_IGN_DEX_TEXT);
-        return TRUE;
+        return true;
       }
       sprintf(buf,
         "Thanks for your business, I'll take your %d talens payment in "
@@ -5432,37 +5432,37 @@ int divman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj* o) {
       me->saveChar(Room::AUTO_RENT);
       ch->saveChar(Room::AUTO_RENT);
 
-      return TRUE;
+      return true;
     default:
-      return FALSE;
+      return false;
   }
-  return FALSE;
+  return false;
 }
 int gardener(TBeing*, cmdTypeT cmd, const char*, TMonster* mob, TObj*) {
-  TTool* tool = NULL;
+  TTool* tool = nullptr;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   // if they're already planting or something, don't do anything
   // and if we're not planting, remove the sentinel bit that we set
   if (mob->task)
-    return FALSE;
+    return false;
   else
     REMOVE_BIT(mob->specials.act, ACT_SENTINEL);
 
   if (::number(0, 100))
-    return FALSE;
+    return false;
 
   for (StuffIter it = mob->stuff.begin(); it != mob->stuff.end(); ++it) {
     if ((tool = dynamic_cast<TTool*>(*it)) &&
         tool->getToolType() == TOOL_SEED) {
       break;
     }
-    tool = NULL;
+    tool = nullptr;
   }
   if (!tool)
-    return FALSE;
+    return false;
   int count = 0;
   for (StuffIter it = mob->roomp->stuff.begin(); it != mob->roomp->stuff.end();
        ++it) {
@@ -5472,7 +5472,7 @@ int gardener(TBeing*, cmdTypeT cmd, const char*, TMonster* mob, TObj*) {
   if (count >= 8) {
     REMOVE_BIT(mob->specials.act, ACT_SENTINEL);
     mob->doAction("", CMD_GRUMBLE);
-    return FALSE;
+    return false;
   }
 
   // don't wander around while planting
@@ -5480,12 +5480,12 @@ int gardener(TBeing*, cmdTypeT cmd, const char*, TMonster* mob, TObj*) {
 
   mob->doAction("", CMD_WHISTLE);
   mob->doPlant(add_bars(tool->name));
-  return TRUE;
+  return true;
 }
 
 int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
   if (cmd != CMD_GENERIC_QUICK_PULSE || ::number(0, 3))
-    return FALSE;
+    return false;
 
   int arrownum = 0, bownum = 0;
 
@@ -5500,11 +5500,11 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       break;
   }
 
-  TBow* bow = NULL;
-  TObj* arrow = NULL;
-  bool nobow = FALSE;
+  TBow* bow = nullptr;
+  TObj* arrow = nullptr;
+  bool nobow = false;
   int rm = 0, new_rm = 0;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   char temp[256];
   const char* directions[][2] = {{"north", "south"}, {"east", "west"},
     {"south", "north"}, {"west", "east"}, {"up", "below"}, {"down", "above"},
@@ -5512,10 +5512,10 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
     {"southeast", "northwest"}, {"southwest", "northeast"}};
 
   if (!(bow = dynamic_cast<TBow*>(ch->equipment[HOLD_RIGHT])))
-    nobow = TRUE;
+    nobow = true;
   else if (obj_index[bow->getItemIndex()].virt != bownum) {
     delete bow;
-    nobow = TRUE;
+    nobow = true;
   }
 
   if (nobow) {
@@ -5523,15 +5523,15 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
     if (!(bow = dynamic_cast<TBow*>(read_object(bownum, VIRTUAL)))) {
       vlogf(LOG_PROC,
         format("Archer couldn't load his bow %d.  DASH!!!") % bownum);
-      return TRUE;
+      return true;
     }
     strcpy(temp, bow->name.c_str());
     strcpy(temp, add_bars(temp).c_str());
-    ch->doJunk(temp, NULL);  // just in case its loaded, no point making tons
-    act("You quickly unpack $p.", FALSE, ch, bow, 0, TO_CHAR);
-    act("$n quickly unpacks $p.", FALSE, ch, bow, 0, TO_ROOM);
+    ch->doJunk(temp, nullptr);  // just in case its loaded, no point making tons
+    act("You quickly unpack $p.", false, ch, bow, 0, TO_CHAR);
+    act("$n quickly unpacks $p.", false, ch, bow, 0, TO_ROOM);
     ch->equipChar(bow, ch->getPrimaryHold(), SILENT_YES);
-    return TRUE;
+    return true;
   }
 
   if (bow->stuff.empty()) {
@@ -5540,22 +5540,22 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
     if (!(arrow = read_object(arrownum, VIRTUAL))) {
       vlogf(LOG_PROC,
         format("Archer couldn't load his arrow %d.  DASH!!!") % arrownum);
-      return TRUE;
+      return true;
     }
     *bow += *arrow;
-    act("You quickly load $N into $p.", FALSE, ch, bow, arrow, TO_CHAR);
-    act("$n quickly loads $N into $p.", FALSE, ch, bow, arrow, TO_ROOM);
-    return TRUE;
+    act("You quickly load $N into $p.", false, ch, bow, arrow, TO_CHAR);
+    act("$n quickly loads $N into $p.", false, ch, bow, arrow, TO_ROOM);
+    return true;
   }
 
   if (bow->isBowFlag(BOW_STRING_BROKE)) {
     //    vlogf(LOG_DASH, "archer fixing a bowsstring");
 
-    act("You quickly restring $p.", FALSE, ch, bow, 0, TO_CHAR);
-    act("$n quickly restrings $p.", FALSE, ch, bow, 0, TO_ROOM);
+    act("You quickly restring $p.", false, ch, bow, 0, TO_CHAR);
+    act("$n quickly restrings $p.", false, ch, bow, 0, TO_ROOM);
 
     bow->remBowFlags(BOW_STRING_BROKE);
-    return TRUE;
+    return true;
   }
 
   char buf[512], buf2[256];
@@ -5563,8 +5563,8 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
   int which;
   int Hi = 0, Hf = 0;  // hp initial, hp final
   dirTypeT i;
-  TBeing* tbt = NULL;
-  TBeing* tbt2 = NULL;
+  TBeing* tbt = nullptr;
+  TBeing* tbt2 = nullptr;
 
   for (i = MIN_DIR; i <= (MAX_DIR - 1); i++) {
     rm = ch->in_room;
@@ -5592,7 +5592,7 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       }
 
       if (count == 0)
-        return TRUE;
+        return true;
 
       which = ::number(1, count);  // which target to pick on the next pass
       count = 0;
@@ -5646,26 +5646,26 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
 
       if (ch->in_room == Room::TROLLEY) {
         sprintf(buf, "From inside the trolley, $N aims a $o at you.");
-        act(buf, FALSE, tbt, bow, ch, TO_CHAR);
+        act(buf, false, tbt, bow, ch, TO_CHAR);
         sprintf(buf, "From inside the trolley, $N aims a $o at $n.");
-        act(buf, FALSE, tbt, bow, ch, TO_ROOM);
+        act(buf, false, tbt, bow, ch, TO_ROOM);
         sprintf(buf, "You aim a $o out the trolley at $N.");
-        act(buf, FALSE, ch, bow, tbt, TO_CHAR);
+        act(buf, false, ch, bow, tbt, TO_CHAR);
         sprintf(buf, "$n aims a $o out the trolley at $N.");
-        act(buf, FALSE, ch, bow, tbt, TO_ROOM);
+        act(buf, false, ch, bow, tbt, TO_ROOM);
       } else {
         sprintf(buf, "From up on the %s tower, $N aims a $o down at you.",
           directions[i][1]);
-        act(buf, FALSE, tbt, bow, ch, TO_CHAR);
+        act(buf, false, tbt, bow, ch, TO_CHAR);
         sprintf(buf, "From up on the %s tower, $N aims a $o down at $n.",
           directions[i][1]);
-        act(buf, FALSE, tbt, bow, ch, TO_ROOM);
+        act(buf, false, tbt, bow, ch, TO_ROOM);
         sprintf(buf, "You aim a $o down through the %s arrow slit at $N.",
           directions[i][0]);
-        act(buf, FALSE, ch, bow, tbt, TO_CHAR);
+        act(buf, false, ch, bow, tbt, TO_CHAR);
         sprintf(buf, "$n aims a $o down through the %s arrow slit at $N.",
           directions[i][0]);
-        act(buf, FALSE, ch, bow, tbt, TO_ROOM);
+        act(buf, false, ch, bow, tbt, TO_ROOM);
       }
 
       sprintf(buf, "%s %d.%s 1", directions[i][0], numsimilar, temp);
@@ -5681,8 +5681,8 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
 #if 1
       //      vlogf(LOG_DASH, format("archer debug: %d->%d, temp/name:
       //      (%s)/(%s), tbt?: %s") %
-      //    Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(NULL)") % (tbt
-      //    ? "exists" : "(NULL)"));
+      //    Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(nullptr)") % (tbt
+      //    ? "exists" : "(nullptr)"));
 #endif
       if (tbt->getName().empty()) {
         switch (::number(1, 7)) {
@@ -5720,7 +5720,7 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
             ch->doShout(buf);
             break;
         }
-        return TRUE;
+        return true;
       } else if (Hi > Hf) {
         // we hit them, so lets shout some catcalls down
         switch (::number(1, 9)) {
@@ -5759,18 +5759,18 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
         }
 
         sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
-        act(buf, FALSE, tbt, bow, ch, TO_CHAR);
+        act(buf, false, tbt, bow, ch, TO_CHAR);
         sprintf(buf, "<c>$N yells,<1> \"%s\"", buf2);
-        act(buf, FALSE, tbt, bow, ch, TO_ROOM);
+        act(buf, false, tbt, bow, ch, TO_ROOM);
         sprintf(buf, "<c>You yell,<1> \"%s\"", buf2);
-        act(buf, FALSE, ch, bow, tbt, TO_CHAR);
+        act(buf, false, ch, bow, tbt, TO_CHAR);
         sprintf(buf, "<c>$n yells,<1> \"%s\"", buf2);
-        act(buf, FALSE, ch, bow, tbt, TO_ROOM);
+        act(buf, false, ch, bow, tbt, TO_ROOM);
       }
-      return TRUE;
+      return true;
     }
   }
-  return TRUE;
+  return true;
 }
 
 // this uses some hardcoded values, so don't reuse without tweaking
@@ -5778,7 +5778,7 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
 int aggroFollower(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TObj*) {
   bool fighting = false;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TMonster* tmons;
   int rc;
   sstring argument = arg;
@@ -5792,7 +5792,7 @@ int aggroFollower(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
           ch->desc->account->name == "scout" ||
           ch->desc->account->name == "laren" ||
           ch->desc->account->name == "ekeron")))
-    return FALSE;
+    return false;
 
   if (cmd == CMD_GENERIC_PULSE) {
     // if fighting return false
@@ -5808,7 +5808,7 @@ int aggroFollower(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     }
 
     if (fighting)
-      return FALSE;
+      return false;
 
     // if mob in room that isn't in my group
     //   if within my level range (my level + 10 or lower?)
@@ -5825,13 +5825,13 @@ int aggroFollower(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         rc = myself->takeFirstHit(*tmons);
         if (IS_SET_DELETE(rc, DELETE_VICT)) {
           delete tmons;
-          tmons = NULL;
+          tmons = nullptr;
         }
         if (IS_SET_DELETE(rc, DELETE_THIS))
           return DELETE_VICT;
       }
     }
-    return TRUE;
+    return true;
   } else {
     if (cmd == CMD_SAY || cmd == CMD_SAY2) {
       if (argument.word(1) == "follow") {
@@ -5842,20 +5842,20 @@ int aggroFollower(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
         myself->doFollow("self");
       }
     }
-    return FALSE;
+    return false;
   }
 
-  return FALSE;
+  return false;
 }
 
 int adventurer(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   bool fighting = false;
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TMonster* tmons;
   int rc;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   // if fighting return false
   if (myself->fight()) {
@@ -5870,7 +5870,7 @@ int adventurer(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   }
 
   if (fighting)
-    return FALSE;
+    return false;
 
   // if mob in room that isn't in my group
   //   if within my level range (my level + 10 or lower?)
@@ -5881,7 +5881,7 @@ int adventurer(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
       rc = myself->takeFirstHit(*tmons);
       if (IS_SET_DELETE(rc, DELETE_VICT)) {
         delete tmons;
-        tmons = NULL;
+        tmons = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
@@ -5892,38 +5892,38 @@ int adventurer(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   //   wander randomly
   myself->wanderAround();
 
-  return TRUE;
+  return true;
 }
 
 int barmaid(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
-  TThing *t = NULL, *t2 = NULL;
+  TThing *t = nullptr, *t2 = nullptr;
   TBaseCup* glass;
   TTable* table;
 
   if (cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   // if fighting return false
   if (myself->fight() || myself->getWait())
-    return FALSE;
+    return false;
 
   if ((myself->getCarriedWeight() / myself->carryWeightLimit()) * 100.0 > 25 ||
       (myself->getCarriedVolume() / myself->carryVolumeLimit()) * 100.0 > 25) {
     act("$n carries the empty glasses behind the counter and washes them.",
-      FALSE, myself, 0, 0, TO_ROOM);
+      false, myself, 0, 0, TO_ROOM);
 
     for (StuffIter it = myself->stuff.begin(); it != myself->stuff.end();) {
       t = *(it++);
       if ((glass = dynamic_cast<TBaseCup*>(t))) {
         --(*glass);
         delete glass;
-        glass = NULL;
+        glass = nullptr;
         myself->addToWait(2);
       }
     }
 
     myself->addToWait(50);
-    return TRUE;
+    return true;
   }
 
   for (StuffIter it = myself->roomp->stuff.begin();
@@ -5940,14 +5940,14 @@ int barmaid(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
             glass->dismount(POSITION_DEAD);
             //	    --(*glass);
             *myself += *glass;
-            act("$n gets $p from $P.", FALSE, myself, glass, table, TO_ROOM);
-            act("$n carefully balances the empty glass on $s tray.", FALSE,
+            act("$n gets $p from $P.", false, myself, glass, table, TO_ROOM);
+            act("$n carefully balances the empty glass on $s tray.", false,
               myself, glass, 0, TO_ROOM);
-            act("You get $p from $P.", FALSE, myself, glass, table, TO_CHAR);
-            act("You carefully balance the empty glass on your tray.", FALSE,
+            act("You get $p from $P.", false, myself, glass, table, TO_CHAR);
+            act("You carefully balance the empty glass on your tray.", false,
               myself, glass, 0, TO_CHAR);
             myself->addToWait(20);
-            return TRUE;
+            return true;
           }
         }
       }
@@ -5959,26 +5959,26 @@ int barmaid(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
         // glass->getName());
         --(*glass);
         *myself += *glass;
-        act("$n gets $p.", FALSE, myself, glass, 0, TO_ROOM);
-        act("$n carefully balances the empty glass on $s tray.", FALSE, myself,
+        act("$n gets $p.", false, myself, glass, 0, TO_ROOM);
+        act("$n carefully balances the empty glass on $s tray.", false, myself,
           glass, 0, TO_ROOM);
-        act("You get $p.", FALSE, myself, glass, 0, TO_CHAR);
-        act("You carefully balance the empty glass on your tray.", FALSE,
+        act("You get $p.", false, myself, glass, 0, TO_CHAR);
+        act("You carefully balance the empty glass on your tray.", false,
           myself, glass, 0, TO_CHAR);
 
         myself->addToWait(20);
-        return TRUE;
+        return true;
       }
     }
   }
 
   if (!::number(0, 19)) {
-    act("$n flirts with some of the patrons.", FALSE, myself, myself, myself,
+    act("$n flirts with some of the patrons.", false, myself, myself, myself,
       TO_ROOM);
     myself->addToWait(20);
   }
 
-  return TRUE;
+  return true;
 }
 
 bool okForCommodMaker(TObj* o, sstring& ret) {
@@ -6095,9 +6095,9 @@ int commodMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   TObj* o) {
   float value;
   sstring buf;
-  TObj* commod = NULL;
+  TObj* commod = nullptr;
   int shop_nr = find_shop_nr(me->number);
-  TThing* ts = NULL;
+  TThing* ts = nullptr;
   std::map<ubyte, int> mat_list;
   std::map<ubyte, int>::iterator iter;
 
@@ -6105,18 +6105,18 @@ int commodMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     return shopWhisper(ch, me, shop_nr, arg);
 
   if (cmd != CMD_VALUE && cmd != CMD_MOB_GIVEN_ITEM)
-    return FALSE;
+    return false;
 
   if (cmd == CMD_VALUE) {
     if (!(ts = searchLinkedListVis(ch, arg, ch->stuff)) ||
         !(o = dynamic_cast<TObj*>(ts))) {
       me->doTell(ch->getName(), "You don't have that item.");
-      return TRUE;
+      return true;
     }
 
     if (!okForCommodMaker(o, buf)) {
       me->doTell(ch->getName(), buf);
-      return TRUE;
+      return true;
     }
 
     mat_list = commodMakerValue(o, value);
@@ -6130,20 +6130,20 @@ int commodMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
       format("My fee for this is %i talens.") %
         (int)(shop_index[shop_nr].getProfitBuy(o, ch) * value));
 
-    return TRUE;
+    return true;
   } else if (cmd == CMD_MOB_GIVEN_ITEM) {
     if (o->isObjStat(ITEM_NEWBIE) ||
         material_nums[o->getMaterial()].price <= 0) {
       me->doTell(ch->getName(),
         "That isn't a valuable commodity - I can't convert that.");
       me->doGive(ch, o, GIVE_FLAG_DROP_ON_FAIL);
-      return TRUE;
+      return true;
     }
 
     if (!okForCommodMaker(o, buf)) {
       me->doTell(ch->getName(), buf);
       me->doGive(ch, o, GIVE_FLAG_DROP_ON_FAIL);
-      return TRUE;
+      return true;
     }
 
     mat_list = commodMakerValue(o, value);
@@ -6152,7 +6152,7 @@ int commodMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     if (ch->getMoney() < (int)value) {
       me->doTell(ch->getName(), "You can't afford it!");
       me->doGive(ch, o, GIVE_FLAG_DROP_ON_FAIL);
-      return TRUE;
+      return true;
     }
 
     for (iter = mat_list.begin(); iter != mat_list.end(); ++iter) {
@@ -6176,7 +6176,7 @@ int commodMaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     return DELETE_ITEM;
   }
 
-  return FALSE;
+  return false;
 }
 
 int konastisGuard(TBeing* ch, cmdTypeT cmd, const char* argument, TMonster* me,
@@ -6317,29 +6317,29 @@ int konastisGuard(TBeing* ch, cmdTypeT cmd, const char* argument, TMonster* me,
 int riddlingTree(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* tree,
   TObj*) {
   if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_TELL && cmd != CMD_OPEN)
-    return FALSE;
+    return false;
 
   sstring sarg = arg;
   if ((cmd == CMD_TELL && sarg.find(" ") > 0 &&
         !isname(sarg.substr(0, (int)sarg.find(" ")), tree->name)) ||
       ((cmd == CMD_SAY || cmd == CMD_SAY2) &&
         sarg.lower().find("clue") == sstring::npos)) {
-    return FALSE;
+    return false;
   }
 
   // make him unresponsive if somehow he's in the wrong room
   if (tree->inRoom() != 24700)
-    return FALSE;
+    return false;
 
   if (cmd == CMD_OPEN && sarg.lower().find("vine") != sstring::npos) {
-    act("$n blocks your way.", TRUE, tree, NULL, ch, TO_VICT);
-    act("$N moves towards some vines, but $n blocks the way.", TRUE, tree, NULL,
+    act("$n blocks your way.", true, tree, nullptr, ch, TO_VICT);
+    act("$N moves towards some vines, but $n blocks the way.", true, tree, nullptr,
       ch, TO_NOTVICT);
-    act("<c>$n says,<z> \"Just where do you think you're going?!?\"", TRUE,
-      tree, NULL, ch, TO_ROOM);
-    return TRUE;
+    act("<c>$n says,<z> \"Just where do you think you're going?!?\"", true,
+      tree, nullptr, ch, TO_ROOM);
+    return true;
   } else if (cmd == CMD_OPEN)
-    return FALSE;
+    return false;
 
   int whichRiddle;
   std::vector<sstring> riddles;
@@ -6428,8 +6428,8 @@ int riddlingTree(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* tree,
     act(
       "<c>$n says,<z> \"Oh, thank you - you have brought a ray of sunshine "
       "into an old tree's day.\"",
-      TRUE, tree, NULL, ch, TO_ROOM);
-    act("$n hums a little tune.", TRUE, tree, NULL, ch, TO_ROOM);
+      true, tree, nullptr, ch, TO_ROOM);
+    act("$n hums a little tune.", true, tree, nullptr, ch, TO_ROOM);
     tree->openUniqueDoor(DIR_NORTH, DOOR_UNIQUE_DEF, "", "",
       "The tree reaches out gnarled hands and pushes some vines to the north "
       "aside and away.",
@@ -6442,16 +6442,16 @@ int riddlingTree(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* tree,
     act(
       "<c>$n says,<z> \"A clue, hmm, a clue... ah, hmm, yes, if you answer "
       "this I'll know that my friend you have found:\"",
-      TRUE, tree, NULL, ch, TO_ROOM);
+      true, tree, nullptr, ch, TO_ROOM);
     sstring sayRiddle;
     sayRiddle = format("<c>$n says,<z> \"%s\"") % riddles[whichRiddle];
-    act(sayRiddle, TRUE, tree, NULL, ch, TO_ROOM);
+    act(sayRiddle, true, tree, nullptr, ch, TO_ROOM);
     sstring askForClue;
     askForClue = format(
                    "<c>$n says,<z> \"You'll have to <g>tell<z> me the answer "
                    "if you hope to pass.  I'll give you %d %s to guess.\"") %
                  chancesLeft % ((chancesLeft != 1) ? "chances" : "chance");
-    act(askForClue, TRUE, tree, NULL, ch, TO_ROOM);
+    act(askForClue, true, tree, nullptr, ch, TO_ROOM);
   }
   // control response to other tells to the tree
   else
@@ -6461,12 +6461,12 @@ int riddlingTree(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* tree,
     if (chancesLeft == 3)
       firstGuessTime = time(0);
     chancesLeft--;
-    act("$n shrugs helplessly.", TRUE, tree, NULL, ch, TO_ROOM);
+    act("$n shrugs helplessly.", true, tree, nullptr, ch, TO_ROOM);
     if (chancesLeft > 0) {
       act(
         "<c>$n says<z>, \"A shame, a shame... I do hope you're wrong due to "
         "ignorance, and not because my friend no longer stands.\"",
-        TRUE, tree, NULL, ch, TO_ROOM);
+        true, tree, nullptr, ch, TO_ROOM);
       tree->doAction("", CMD_SNICKER);
       sstring stateChancesLeft;
       stateChancesLeft =
@@ -6474,16 +6474,16 @@ int riddlingTree(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* tree,
           "<c>$n says,<z> \"There's a good chance of that, at least.  You have "
           "%d %s left, so you'd best stop fooling around.\"") %
         chancesLeft % ((chancesLeft != 1) ? "chances" : "chance");
-      act(stateChancesLeft, TRUE, tree, NULL, ch, TO_ROOM);
+      act(stateChancesLeft, true, tree, nullptr, ch, TO_ROOM);
     } else {
       act(
         "<c>$n says,<z> \"I gave plenty of chances.  I still am not sure "
         "whether to mourn my friend or pity your kind its ignorance, but I'm "
         "certainly not letting anyone in.\"",
-        TRUE, tree, NULL, ch, TO_ROOM);
+        true, tree, nullptr, ch, TO_ROOM);
     }
   }
-  return TRUE;
+  return true;
 }
 
 int shopWhisper(TBeing* ch, TMonster* myself, int shop_nr, const char* arg) {
@@ -6491,7 +6491,7 @@ int shopWhisper(TBeing* ch, TMonster* myself, int shop_nr, const char* arg) {
 
   arg = one_argument(arg, buf, cElements(buf));
   if (!isname(buf, myself->name))
-    return FALSE;
+    return false;
 
   arg = one_argument(arg, buf, cElements(buf));
 
@@ -6523,26 +6523,26 @@ int shopWhisper(TBeing* ch, TMonster* myself, int shop_nr, const char* arg) {
     myself->doTell(ch->getName(), "Read 'help shop owner' for assistance.");
   }
 
-  return TRUE;
+  return true;
 }
 
 int mimic(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mimic, TObj*) {
   if (cmd != CMD_SAY && cmd != CMD_SAY2 && cmd != CMD_SHOUT &&
       cmd != CMD_WHISPER)
-    return FALSE;
+    return false;
 
   sstring sarg = arg;
   sstring target, buf;
   one_argument(sarg, target);
 
   if (isname(target, mimic->name) || isname(ch->name, mimic->name)) {
-    return FALSE;
+    return false;
   }
 
-  bool snicker = FALSE;
+  bool snicker = false;
   if (sarg.lower().find("i'm") != sstring::npos ||
       sarg.lower().find("i am") != sstring::npos) {
-    snicker = TRUE;
+    snicker = true;
   }
 
   if (cmd == CMD_WHISPER) {
@@ -6552,7 +6552,7 @@ int mimic(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mimic, TObj*) {
       mimic->doAction("", CMD_SNICKER);
     } else
       mimic->doWhisper(buf.c_str());
-    return TRUE;
+    return true;
   }
 
   if (cmd == CMD_SAY || cmd == CMD_SAY2) {
@@ -6561,7 +6561,7 @@ int mimic(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mimic, TObj*) {
       mimic->doAction("", CMD_SNICKER);
     } else
       mimic->doSay(arg);
-    return TRUE;
+    return true;
   }
 
   if (cmd == CMD_SHOUT) {
@@ -6570,31 +6570,31 @@ int mimic(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* mimic, TObj*) {
       mimic->doAction("", CMD_SNICKER);
     } else
       mimic->doShout(arg);
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int chicken(TBeing*, cmdTypeT cmd, const char*, TMonster* chicken, TObj*) {
   if (cmd != CMD_GENERIC_PULSE || !chicken || !chicken->roomp)
-    return FALSE;
+    return false;
 
   if (::number(0, 4999))
-    return FALSE;
+    return false;
 
   TObj* egg = read_object(2376, VIRTUAL);
 
   if (!egg) {
     vlogf(LOG_BUG, "problem loading chicken egg in chicken spec proc");
-    return FALSE;
+    return false;
   }
 
   *chicken->roomp += *egg;
 
-  act("$n lays an egg.", TRUE, chicken, NULL, NULL, TO_ROOM);
+  act("$n lays an egg.", true, chicken, nullptr, nullptr, TO_ROOM);
 
-  return FALSE;
+  return false;
 }
 
 int shippingOfficial(TBeing* ch, cmdTypeT cmd, const char* arg,
@@ -6603,13 +6603,13 @@ int shippingOfficial(TBeing* ch, cmdTypeT cmd, const char* arg,
   TObj* o;
 
   if (cmd != CMD_SAY && cmd != CMD_SAY2)
-    return FALSE;
+    return false;
 
   if (argument != "I need a receipt")
-    return FALSE;
+    return false;
 
   if (!ch || !myself)
-    return FALSE;
+    return false;
 
   for (StuffIter it = myself->roomp->stuff.begin();
        it != myself->roomp->stuff.end(); ++it) {
@@ -6627,7 +6627,7 @@ int shippingOfficial(TBeing* ch, cmdTypeT cmd, const char* arg,
         if (!o) {
           vlogf(LOG_BUG, "couldn't load receipt in shippingOfficial()");
           myself->doSay("Hmm, I seem to be out of receipts, sorry.");
-          return TRUE;
+          return true;
         }
 
         *myself += *o;
@@ -6636,11 +6636,11 @@ int shippingOfficial(TBeing* ch, cmdTypeT cmd, const char* arg,
           format("%s %s") % add_bars(o->name) % add_bars(ch->name);
         myself->doGive(giveBuf, GIVE_FLAG_IGN_DEX_TEXT);
 
-        return TRUE;
+        return true;
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
@@ -6653,12 +6653,12 @@ int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
 
   if (!me || !me->roomp || (me->getPosition() <= POSITION_SLEEPING) ||
       (cmd != CMD_GENERIC_PULSE && cmd != CMD_PET))
-    return FALSE;
+    return false;
 
   if (cmd == CMD_PET) {
     for (StuffIter it = ch->roomp->stuff.begin(); it != ch->roomp->stuff.end();
          ++it) {
-      if (((tb = get_char_room_vis(ch, arg, NULL, EXACT_YES)) ||
+      if (((tb = get_char_room_vis(ch, arg, nullptr, EXACT_YES)) ||
             (tb = get_char_room_vis(ch, arg))) &&
           tb == me) {
         ch->doAction(arg, CMD_PET);
@@ -6679,16 +6679,16 @@ int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
             me->doAction(add_bars(ch->name), CMD_NUZZLE);
             break;
         }
-        return TRUE;
+        return true;
       }
     }
 
-    return FALSE;
+    return false;
   }
 
   if (cmd == CMD_GENERIC_PULSE) {
     if (::number(0, 49))
-      return FALSE;
+      return false;
 
     // LOOK FOR MICE
     for (StuffIter it = me->roomp->stuff.begin(); it != me->roomp->stuff.end();
@@ -6704,17 +6704,17 @@ int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
     switch (::number(0, 10)) {
       case 0:
         // clean
-        act("$n begins cleaning $mself.", TRUE, me, NULL, NULL, TO_ROOM);
+        act("$n begins cleaning $mself.", true, me, nullptr, nullptr, TO_ROOM);
         break;
       case 1:
         // stare at something
         if ((me->roomp->isIndoorSector() ||
               me->roomp->isRoomFlag(ROOM_INDOORS))) {
-          act("$n stares intently at a spot on the $g.", TRUE, me, NULL, NULL,
+          act("$n stares intently at a spot on the $g.", true, me, nullptr, nullptr,
             TO_ROOM);
         } else {
-          act("$n stares intently as a bird flies overhead.", TRUE, me, NULL,
-            NULL, TO_ROOM);
+          act("$n stares intently as a bird flies overhead.", true, me, nullptr,
+            nullptr, TO_ROOM);
         }
         break;
       case 2:
@@ -6732,8 +6732,8 @@ int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
 
         if (roompeople.size() > 0) {
           tb = roompeople[::number(0, roompeople.size() - 1)];
-          act("$n rubs against $N's leg.", TRUE, me, NULL, tb, TO_NOTVICT);
-          act("$n rubs against your leg.", TRUE, me, NULL, tb, TO_VICT);
+          act("$n rubs against $N's leg.", true, me, nullptr, tb, TO_NOTVICT);
+          act("$n rubs against your leg.", true, me, nullptr, tb, TO_VICT);
         }
         break;
       case 4:
@@ -6744,7 +6744,7 @@ int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
         af.modifier = 0;
         af.location = APPLY_NONE;
         af.bitvector = AFF_SLEEP;
-        me->affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
+        me->affectJoin(nullptr, &af, AVG_DUR_NO, AVG_EFF_NO);
         me->doSleep("");
         break;
       case 5:
@@ -6760,7 +6760,7 @@ int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
 
         if (roomobj.size() > 0) {
           o = roomobj[::number(0, roomobj.size() - 1)];
-          act("$n sharpens $s claws on $p.", TRUE, me, o, NULL, TO_ROOM);
+          act("$n sharpens $s claws on $p.", true, me, o, nullptr, TO_ROOM);
         }
 
         break;
@@ -6799,31 +6799,31 @@ int cat(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 int beeDeath(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   if ((cmd != CMD_MOB_COMBAT) || !myself->awake())
-    return FALSE;
+    return false;
 
   if (!ch->fight())
-    return FALSE;
+    return false;
 
   TBeing* vict;
   vict = ch->fight();
 
   if (!vict->isAffected(AFF_ENGAGER) && number(0, 10) > 7) {
-    act("$n darts directly toward your head!", TRUE, ch, NULL, vict, TO_VICT,
-      NULL);
-    act("$n misses and smacks into the ground.", TRUE, ch, NULL, vict, TO_VICT,
-      NULL);
+    act("$n darts directly toward your head!", true, ch, nullptr, vict, TO_VICT,
+      nullptr);
+    act("$n misses and smacks into the ground.", true, ch, nullptr, vict, TO_VICT,
+      nullptr);
     act("$n flies directly at $N's head, misses, and smacks into the ground.",
-      TRUE, ch, NULL, vict, TO_NOTVICT, NULL);
-    act("A bee is dead! R.I.P.", TRUE, ch, NULL, vict, TO_ROOM, NULL);
-    act("A bee is dead! R.I.P.", TRUE, ch, NULL, vict, TO_CHAR, NULL);
+      true, ch, nullptr, vict, TO_NOTVICT, nullptr);
+    act("A bee is dead! R.I.P.", true, ch, nullptr, vict, TO_ROOM, nullptr);
+    act("A bee is dead! R.I.P.", true, ch, nullptr, vict, TO_CHAR, nullptr);
     myself->makeCorpse(DAMAGE_NORMAL);  // generic type for phony corpse
   }
-  return TRUE;
+  return true;
 }
 
 int brickCollector(TBeing* ch, cmdTypeT cmd, const char* argument,
@@ -6832,12 +6832,12 @@ int brickCollector(TBeing* ch, cmdTypeT cmd, const char* argument,
   TDatabase db(DB_SNEEZY);
 
   if (!ch || !ch->awake() || ch->fight())
-    return FALSE;
+    return false;
 
   switch (cmd) {
     case CMD_MOB_GIVEN_ITEM:
       if (!o || !isname("foundbrick", o->name)) {
-        return FALSE;
+        return false;
       }
 
       db.query("select 1 from brickquest where name='%s'", ch->name.c_str());
@@ -6864,10 +6864,10 @@ int brickCollector(TBeing* ch, cmdTypeT cmd, const char* argument,
       return DELETE_ITEM;
       break;
     default:
-      return FALSE;
+      return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 int caretaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
@@ -6876,7 +6876,7 @@ int caretaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
   bool found = false;
 
   if (cmd != CMD_GENERIC_PULSE || !me || !me->roomp)
-    return FALSE;
+    return false;
 
   // pick stuff up
   for (StuffIter it = me->roomp->stuff.begin(); it != me->roomp->stuff.end();
@@ -6908,7 +6908,7 @@ int caretaker(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
   if (found)
     me->wanderAround();
 
-  return TRUE;
+  return true;
 }
 
 int cannonLoader(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
@@ -6918,16 +6918,16 @@ int cannonLoader(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
           ch->desc->account->name == "scout" ||
           ch->desc->account->name == "laren" ||
           ch->desc->account->name == "ekeron")))
-    return FALSE;
+    return false;
 
   sstring argument = arg;
 
   if (argument.lower() != "load the cannons!")
-    return FALSE;
+    return false;
 
   me->doGload("cannon-iron-dragon");
 
-  return FALSE;
+  return false;
 }
 
 int idCardProvider(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
@@ -6935,14 +6935,14 @@ int idCardProvider(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   int amt;
 
   if (cmd != CMD_MOB_GIVEN_COINS)
-    return FALSE;
+    return false;
 
   amt = (long int)o;
 
   if (amt < 50) {
     me->doSay(
       "Uh... thanks for the tip.  If you want an ID card it'll be 50 talens.");
-    return FALSE;
+    return false;
   }
 
   time_info_data birth_data;
@@ -6979,7 +6979,7 @@ int idCardProvider(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   me->doSay("Alright, here you are!");
   me->doGive(format("%s %s") % add_bars(card->name) % add_bars(ch->name),
     GIVE_FLAG_IGN_DEX_TEXT);
-  return FALSE;
+  return false;
 }
 
 int rationFactory(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
@@ -6997,7 +6997,7 @@ int rationFactory(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
   float base_price = 2.175;
 
   if (cmd != CMD_MOB_GIVEN_ITEM)
-    return FALSE;
+    return false;
 
   db.query(
     "select supplyamt from factorysupplies where shop_nr=%i and "
@@ -7006,20 +7006,20 @@ int rationFactory(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
 
   if (!db.fetchRow()) {
     vlogf(LOG_BUG, "ration factory missing db entry");
-    return FALSE;
+    return false;
   }
 
   if (convertTo<int>(db["supplyamt"]) >= maxsupply) {
     me->doSay("I have enough meat right now.");
     me->doDrop("", o);
-    return FALSE;
+    return false;
   }
 
   if (!o || !(o->objVnum() == Obj::GENERIC_STEAK) ||
       !(food = dynamic_cast<TFood*>(o))) {
     me->doSay("What the hell is this?!  That's not going into a ration.");
     me->doDrop("", o);
-    return FALSE;
+    return false;
   }
 
   float price = base_price * shop_index[factory_shop].getProfitSell(o, ch);
@@ -7035,7 +7035,7 @@ int rationFactory(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me,
     "supplyname='meat'",
     food->getFoodFill(), factory_shop);
 
-  return TRUE;
+  return true;
 }
 
 int lagomorph(TBeing* victim, cmdTypeT cmd, const char*, TMonster* monster,
@@ -7052,7 +7052,7 @@ int lagomorph(TBeing* victim, cmdTypeT cmd, const char*, TMonster* monster,
     case CMD_GENERIC_DESTROYED:
       break;
     default:
-      return FALSE;
+      return false;
   }
 
   assert(victim);
@@ -7060,18 +7060,18 @@ int lagomorph(TBeing* victim, cmdTypeT cmd, const char*, TMonster* monster,
 
   if (cmd == CMD_GENERIC_DESTROYED) {
     howHard.erase(monster);
-    return FALSE;
+    return false;
   }
 
   if (cmd == CMD_MOB_COMBAT_STOPPING) {
     victim = monster->fight();
     assert(victim);
     victim->setWait(1);
-    act("$n mercifully releases $N from the deathly lag.", TRUE, monster,
+    act("$n mercifully releases $N from the deathly lag.", true, monster,
       nullptr, victim, TO_NOTVICT);
-    act("$n mercifully releases you from the deathly lag.", TRUE, monster,
+    act("$n mercifully releases you from the deathly lag.", true, monster,
       nullptr, victim, TO_VICT);
-    return FALSE;
+    return false;
   }
 
   if (howHard.find(monster) == howHard.end())
@@ -7081,8 +7081,8 @@ int lagomorph(TBeing* victim, cmdTypeT cmd, const char*, TMonster* monster,
     victim = monster->fight();
 
   if (victim->isPc()) {
-    act("$n lags $N to death.", TRUE, monster, nullptr, victim, TO_NOTVICT);
-    act("$n lags you to death.", TRUE, monster, nullptr, victim, TO_VICT);
+    act("$n lags $N to death.", true, monster, nullptr, victim, TO_NOTVICT);
+    act("$n lags you to death.", true, monster, nullptr, victim, TO_VICT);
     int player_id = victim->player.player_id;
     if (howHard[monster].find(player_id) == howHard[monster].end())
       howHard[monster][player_id] = 0;
@@ -7092,7 +7092,7 @@ int lagomorph(TBeing* victim, cmdTypeT cmd, const char*, TMonster* monster,
     howHard[monster][player_id]++;
   }
 
-  return FALSE;
+  return false;
 }
 
 // janitors and trash collectors etc, in spec_mobs_janitors.cc
@@ -7171,184 +7171,184 @@ extern int GenericGuildMaster(TBeing* ch, cmdTypeT cmd, const char* arg,
 
 // Fields: display_under_medit, name_of_special, name_of_function_to_call
 TMobSpecs mob_specials[NUM_MOB_SPECIALS + 1] = {
-  {TRUE, "BOGUS", bogus_mob_proc},  // 0
-  {TRUE, "energy drainer", vampire}, {TRUE, "arch vampire", arch_vampire},
-  {FALSE, "dragon breath", DragonBreath}, {TRUE, "thief", thief},
-  {TRUE, "janitor", janitor},  // 5
-  {FALSE, "tormentor", tormentor}, {FALSE, "Trainer: air", CDGenericTrainer},
-  {TRUE, "chicken", chicken}, {TRUE, "thrower mob", ThrowerMob},
-  {TRUE, "swallower", Tyrannosaurus_swallower},  // 10
-  {TRUE, "bounty hunter", bounty_hunter},
-  {FALSE, "alignment god", alignment_deity}, {TRUE, "engraver", engraver},
-  {FALSE, "cityguard", cityguard},
-  {FALSE, "dagger thrower", dagger_thrower},  // 15
-  {TRUE, "mount", horse}, {TRUE, "beggar", beggar},
-  {FALSE, "pet keeper", pet_keeper}, {FALSE, "stable man", stable_man},
-  {FALSE, "famine", famine},  // 20
-  {FALSE, "war", war}, {TRUE, "cold giver", cold_giver},
-  {TRUE, "flu giver", flu_giver}, {FALSE, "craps man", craps_table_man},
-  {FALSE, "shop keeper", shop_keeper},  // 25
-  {TRUE, "postmaster", postmaster}, {TRUE, "receptionist", receptionist},
-  {FALSE, "rock worm", rock_worm},
-  {FALSE, "mage guildmaster", GenericGuildMaster},
-  {FALSE, "deikhan guildmaster", GenericGuildMaster},  // 30
-  {FALSE, "monk guildmaster", GenericGuildMaster},
-  {FALSE, "warrior guildmaster", GenericGuildMaster},
-  {FALSE, "thief guildmaster", GenericGuildMaster},
-  {FALSE, "cleric guildmaster", GenericGuildMaster},
-  {FALSE, "ranger guildmaster", GenericGuildMaster},  // 35
-  {FALSE, "hobbit emissary", hobbitEmissary},
-  {FALSE, "Trainer: alchemy", CDGenericTrainer},
-  {FALSE, "Trainer: earth", CDGenericTrainer}, {TRUE, "repairman", repairman},
-  {TRUE, "sharpener", sharpener},  // 40
-  {TRUE, "rust monster", rust_monster}, {TRUE, "paralyze bite", paralyzeBite},
-  {FALSE, "caravan leader", caravan}, {FALSE, "death", death},
-  {FALSE, "pestilence", pestilence},  // 45
-  {FALSE, "firemaster", fireMaster}, {TRUE, "paralyze breath", paralyzeBreath},
-  {FALSE, "doctor", doctor}, {FALSE, "Trainer: fire", CDGenericTrainer},
-  {TRUE, "frostbiter", frostbiter},  // 50
-  {FALSE, "ticket-guy", TicketGuy}, {FALSE, "fireballer", Fireballer},
-  {FALSE, "teleporter", Teleporter}, {FALSE, "meteorswarm", MSwarmer},
-  {FALSE, "icestormer", IceStormer},  // 55
-  {FALSE, "energy drainer2", Edrain}, {FALSE, "lightning bolter", LBolter},
-  {FALSE, "disintigrater", Disser}, {FALSE, "witherer", Witherer},
-  {FALSE, "paralyzer2", Paralyzer},  // 60
-  {FALSE, "acid blaster", AcidBlaster}, {FALSE, "king Urik", kingUrik},
-  {FALSE, "Trainer: sorcery", CDGenericTrainer},
-  {FALSE, "Trainer: spirit", CDGenericTrainer},
-  {FALSE, "Trainer: water", CDGenericTrainer},  // 65
-  {FALSE, "Trainer: wrath", CDGenericTrainer},
-  {FALSE, "Trainer: afflictions", CDGenericTrainer},
-  {FALSE, "Trainer: cures", CDGenericTrainer},
-  {FALSE, "Trainer: hand of god", CDGenericTrainer},
-  {FALSE, "Trainer: ranger", CDGenericTrainer},  // 70
-  {FALSE, "replicant", replicant},
-  {FALSE, "Trainer: looting", CDGenericTrainer},
-  {FALSE, "Trainer: murder", CDGenericTrainer},
-  {FALSE, "Trainer: hand-to-hand", CDGenericTrainer},
-  {FALSE, "Trainer: adventuring", CDGenericTrainer},  // 75
-  {FALSE, "Trainer: warrior", CDGenericTrainer}, {TRUE, "Banshee", banshee},
-  {FALSE, "Meeting Organizer", meeting_organizer},
-  {FALSE, "toll taker", payToll},
-  {FALSE, "Trainer: wizardry", CDGenericTrainer},  // 80
-  {FALSE, "Trainer: faith", CDGenericTrainer},
-  {FALSE, "Trainer: slash", CDGenericTrainer},
-  {FALSE, "Trainer: blunt", CDGenericTrainer},
-  {FALSE, "Trainer: pierce", CDGenericTrainer},
-  {FALSE, "Trainer: ranged", CDGenericTrainer},  // 85
-  {TRUE, "Tunneler/Earthquake", tunnelerEarthquake},
-  {FALSE, "Trainer: deikhan", CDGenericTrainer}, {TRUE, "Ram", ram},
-  {TRUE, "Insulter", insulter}, {TRUE, "Kraken", kraken},  // 90
-  {FALSE, "ascallion", ascallion}, {FALSE, "electric eel", electricEel},
-  {FALSE, "poison hit", poisonHit}, {FALSE, "Belimus", belimus},
-  {FALSE, "Siren", siren},  // 95
-  {TRUE, "Lamp-Lighter", lamp_lighter}, {TRUE, "Leper", leper},
-  {TRUE, "Air Magi", specificDisc}, {TRUE, "Water Magi", specificDisc},
-  {TRUE, "Earth Magi", specificDisc},  // 100
-  {TRUE, "Fire Magi", specificDisc}, {TRUE, "Sorcerer", specificDisc},
-  {FALSE, "Faction-Faery", factionFaery},
-  {FALSE, "Trainer: brawling", CDGenericTrainer},
-  {FALSE, "Trainer: mage/thief", CDGenericTrainer},  // 105
-  {FALSE, "Trainer: meditation (monk)", CDGenericTrainer},
-  {FALSE, "Trainer: survival", CDGenericTrainer},
-  {FALSE, "Trainer: armadillo", CDGenericTrainer},
-  {FALSE, "Trainer: animal", CDGenericTrainer},
-  {FALSE, "Trainer: aegis", CDGenericTrainer},  // 110
-  {FALSE, "Trainer: shaman rites", CDGenericTrainer},
-  {FALSE, "frost giant warrior", frostGiant}, {FALSE, "librarian", librarian},
-  {FALSE, "rumormonger", rumorMonger},
-  {FALSE, "Trainer: mage", CDGenericTrainer},  // 115
-  {FALSE, "Trainer: monk", CDGenericTrainer},
-  {FALSE, "Trainer: cleric", CDGenericTrainer},
-  {FALSE, "Trainer: thief", CDGenericTrainer},
-  {FALSE, "Trainer: plants", CDGenericTrainer},
-  {FALSE, "Trainer: soldiering", CDGenericTrainer},  // 120
-  {FALSE, "Trainer: blacksmithing", CDGenericTrainer},
-  {FALSE, "Trainer: deikhan fight", CDGenericTrainer},
-  {FALSE, "Trainer: mounted", CDGenericTrainer},
-  {FALSE, "Trainer: deikhan guardian", CDGenericTrainer},
-  {FALSE, "Trainer: deikhan cures", CDGenericTrainer},  // 125
-  {FALSE, "Trainer: deikhan wrath", CDGenericTrainer},
-  {FALSE, "Trainer: leverage", CDGenericTrainer},
-  {FALSE, "Trainer: mindbody", CDGenericTrainer},
-  {FALSE, "grimhaven posse", grimhavenPosse},
-  {FALSE, "grimhaven hooker", grimhavenHooker},  // 130
-  {FALSE, "Trainer: focused attacks", CDGenericTrainer},
-  {TRUE, "Corpse Muncher", corpseMuncher},
-  {FALSE, "Trainer: barehand", CDGenericTrainer},
-  {FALSE, "Trainer: thief fight", CDGenericTrainer},
-  {FALSE, "Trainer: poisons", CDGenericTrainer},  // 135
-  {FALSE, "Trainer: frog", CDGenericTrainer},
-  {FALSE, "Trainer: shaman alchemy", CDGenericTrainer},
-  {FALSE, "Trainer: skunk", CDGenericTrainer},
-  {FALSE, "Trainer: spider", CDGenericTrainer},
-  {FALSE, "Trainer: control", CDGenericTrainer},  // 140
-  {FALSE, "Trainer: ritualism", CDGenericTrainer},
-  {FALSE, "paladin patrol", paladinPatrol},
-  {FALSE, "shaman guildmaster", GenericGuildMaster},
-  {FALSE, "Trainer: combat", CDGenericTrainer},
-  {FALSE, "Trainer: stealth", CDGenericTrainer},  // 145
-  {FALSE, "Trainer: traps", CDGenericTrainer},
-  {FALSE, "Newbie Equipper", newbieEquipper},
-  {FALSE, "Trainer: lore", CDGenericTrainer},
-  {FALSE, "Trainer: theology", CDGenericTrainer},
-  {FALSE, "attuner", attuner},  // 150
-  {TRUE, "paralyze gaze", paralyzeGaze},
-  {TRUE, "Doppleganger/Mimic", doppleganger},
-  {TRUE, "Tusker/Goring", tuskGoring}, {FALSE, "Fish Tracker", fishTracker},
-  {FALSE, "Bank Guard", bankGuard},  // 155
-  {FALSE, "Fishing Boat Captain", fishingBoatCaptain},
-  {FALSE, "Coroner", coroner}, {FALSE, "Guild Registrar", guildRegistrar},
-  {FALSE, "Trainer: defense", CDGenericTrainer},
-  {FALSE, "Scared Kid", scaredKid},  // 160
-  {TRUE, "Corporate Asistant", corporateAssistant},
-  {FALSE, "Trainer: psionics", CDGenericTrainer},
-  {TRUE, "Divination Man", divman},
-  {FALSE, "Trainer: healing abilities", CDGenericTrainer},
-  {FALSE, "Gardener", gardener},  // 165
-  {FALSE, "Brightmoon Archer", bmarcher}, {FALSE, "Money Train", moneyTrain},
-  {FALSE, "Adventurer", adventurer},
-  {FALSE, "Trainer: iron body", CDGenericTrainer},
-  {FALSE, "Tudy", tudy},  // 170
-  {TRUE, "Barmaid", barmaid}, {FALSE, "tattoo artist", tattooArtist},
-  {FALSE, "casino elevator operator", casinoElevatorOperator},
-  {FALSE, "casino elevator guard", casinoElevatorGuard},
-  {FALSE, "commodity maker", commodMaker},  // 175
-  {FALSE, "lottery redeemer", lotteryRedeemer},
-  {FALSE, "konastis's guard", konastisGuard},
-  {FALSE, "hold'em player", holdemPlayer}, {FALSE, "postman", postman},
-  {TRUE, "poison bite", poisonBite},  // 180
-  {FALSE, "riddling tree", riddlingTree}, {FALSE, "fireman", fireman},
-  {TRUE, "mimic", mimic}, {TRUE, "archer", archer},
-  {FALSE, "peddler", flaskPeddler},  // 185
-  {FALSE, "limb disposer", limbDispo}, {FALSE, "stat surgeon", statSurgeon},
-  {FALSE, "shipping official", shippingOfficial},
-  {FALSE, "loan shark", loanShark},
-  {FALSE, "trolley driver", trolleyBoatCaptain},  // 190
-  {FALSE, "property clerk", propertyClerk}, {FALSE, "banker", banker},
-  {FALSE, "prison janitor", prisonJanitor}, {TRUE, "cat", cat},
-  {FALSE, "taxman", taxman},  // 195
-  {FALSE, "Trainer: advanced adventuring", CDGenericTrainer},
-  {FALSE, "amber janitor", amberJanitor},
-  {FALSE, "brightmoon janitor", brightmoonJanitor},
-  {FALSE, "garbage convoy", garbageConvoy},
-  {FALSE, "signmaker", signMaker},  // 200
-  {TRUE, "butler", receptionist}, {FALSE, "leper hunter", leperHunter},
-  {FALSE, "auctioneer", auctioneer}, {FALSE, "loan manager", loanManager},
-  {TRUE, "bee death", beeDeath},  // 205
-  {FALSE, "hero faerie", heroFaerie},
-  {FALSE, "Brick Collector", brickCollector}, {FALSE, "caretaker", caretaker},
-  {FALSE, "ship captain", shipCaptain},
-  {FALSE, "aggro follower", aggroFollower},  // 210
-  {FALSE, "central banker", centralBanker},
-  {FALSE, "cannon loader", cannonLoader},
-  {FALSE, "id card provider", idCardProvider},
-  {TRUE, "Target dummy", targetDummy},
-  {TRUE, "fruit scavenger", fruitScavenger},  // 215
-  {FALSE, "commodity trader", commodTrader},
-  {FALSE, "ration factory", rationFactory},
-  {FALSE, "pet veterinarian", petVeterinarian}, {TRUE, "lagomorph", lagomorph},
-  {TRUE, "Trainer: Offense", CDGenericTrainer}, {TRUE, "Tailor", tailor},
-  {TRUE, "Blacksmith", blacksmith},
+  {true, "BOGUS", bogus_mob_proc},  // 0
+  {true, "energy drainer", vampire}, {true, "arch vampire", arch_vampire},
+  {false, "dragon breath", DragonBreath}, {true, "thief", thief},
+  {true, "janitor", janitor},  // 5
+  {false, "tormentor", tormentor}, {false, "Trainer: air", CDGenericTrainer},
+  {true, "chicken", chicken}, {true, "thrower mob", ThrowerMob},
+  {true, "swallower", Tyrannosaurus_swallower},  // 10
+  {true, "bounty hunter", bounty_hunter},
+  {false, "alignment god", alignment_deity}, {true, "engraver", engraver},
+  {false, "cityguard", cityguard},
+  {false, "dagger thrower", dagger_thrower},  // 15
+  {true, "mount", horse}, {true, "beggar", beggar},
+  {false, "pet keeper", pet_keeper}, {false, "stable man", stable_man},
+  {false, "famine", famine},  // 20
+  {false, "war", war}, {true, "cold giver", cold_giver},
+  {true, "flu giver", flu_giver}, {false, "craps man", craps_table_man},
+  {false, "shop keeper", shop_keeper},  // 25
+  {true, "postmaster", postmaster}, {true, "receptionist", receptionist},
+  {false, "rock worm", rock_worm},
+  {false, "mage guildmaster", GenericGuildMaster},
+  {false, "deikhan guildmaster", GenericGuildMaster},  // 30
+  {false, "monk guildmaster", GenericGuildMaster},
+  {false, "warrior guildmaster", GenericGuildMaster},
+  {false, "thief guildmaster", GenericGuildMaster},
+  {false, "cleric guildmaster", GenericGuildMaster},
+  {false, "ranger guildmaster", GenericGuildMaster},  // 35
+  {false, "hobbit emissary", hobbitEmissary},
+  {false, "Trainer: alchemy", CDGenericTrainer},
+  {false, "Trainer: earth", CDGenericTrainer}, {true, "repairman", repairman},
+  {true, "sharpener", sharpener},  // 40
+  {true, "rust monster", rust_monster}, {true, "paralyze bite", paralyzeBite},
+  {false, "caravan leader", caravan}, {false, "death", death},
+  {false, "pestilence", pestilence},  // 45
+  {false, "firemaster", fireMaster}, {true, "paralyze breath", paralyzeBreath},
+  {false, "doctor", doctor}, {false, "Trainer: fire", CDGenericTrainer},
+  {true, "frostbiter", frostbiter},  // 50
+  {false, "ticket-guy", TicketGuy}, {false, "fireballer", Fireballer},
+  {false, "teleporter", Teleporter}, {false, "meteorswarm", MSwarmer},
+  {false, "icestormer", IceStormer},  // 55
+  {false, "energy drainer2", Edrain}, {false, "lightning bolter", LBolter},
+  {false, "disintigrater", Disser}, {false, "witherer", Witherer},
+  {false, "paralyzer2", Paralyzer},  // 60
+  {false, "acid blaster", AcidBlaster}, {false, "king Urik", kingUrik},
+  {false, "Trainer: sorcery", CDGenericTrainer},
+  {false, "Trainer: spirit", CDGenericTrainer},
+  {false, "Trainer: water", CDGenericTrainer},  // 65
+  {false, "Trainer: wrath", CDGenericTrainer},
+  {false, "Trainer: afflictions", CDGenericTrainer},
+  {false, "Trainer: cures", CDGenericTrainer},
+  {false, "Trainer: hand of god", CDGenericTrainer},
+  {false, "Trainer: ranger", CDGenericTrainer},  // 70
+  {false, "replicant", replicant},
+  {false, "Trainer: looting", CDGenericTrainer},
+  {false, "Trainer: murder", CDGenericTrainer},
+  {false, "Trainer: hand-to-hand", CDGenericTrainer},
+  {false, "Trainer: adventuring", CDGenericTrainer},  // 75
+  {false, "Trainer: warrior", CDGenericTrainer}, {true, "Banshee", banshee},
+  {false, "Meeting Organizer", meeting_organizer},
+  {false, "toll taker", payToll},
+  {false, "Trainer: wizardry", CDGenericTrainer},  // 80
+  {false, "Trainer: faith", CDGenericTrainer},
+  {false, "Trainer: slash", CDGenericTrainer},
+  {false, "Trainer: blunt", CDGenericTrainer},
+  {false, "Trainer: pierce", CDGenericTrainer},
+  {false, "Trainer: ranged", CDGenericTrainer},  // 85
+  {true, "Tunneler/Earthquake", tunnelerEarthquake},
+  {false, "Trainer: deikhan", CDGenericTrainer}, {true, "Ram", ram},
+  {true, "Insulter", insulter}, {true, "Kraken", kraken},  // 90
+  {false, "ascallion", ascallion}, {false, "electric eel", electricEel},
+  {false, "poison hit", poisonHit}, {false, "Belimus", belimus},
+  {false, "Siren", siren},  // 95
+  {true, "Lamp-Lighter", lamp_lighter}, {true, "Leper", leper},
+  {true, "Air Magi", specificDisc}, {true, "Water Magi", specificDisc},
+  {true, "Earth Magi", specificDisc},  // 100
+  {true, "Fire Magi", specificDisc}, {true, "Sorcerer", specificDisc},
+  {false, "Faction-Faery", factionFaery},
+  {false, "Trainer: brawling", CDGenericTrainer},
+  {false, "Trainer: mage/thief", CDGenericTrainer},  // 105
+  {false, "Trainer: meditation (monk)", CDGenericTrainer},
+  {false, "Trainer: survival", CDGenericTrainer},
+  {false, "Trainer: armadillo", CDGenericTrainer},
+  {false, "Trainer: animal", CDGenericTrainer},
+  {false, "Trainer: aegis", CDGenericTrainer},  // 110
+  {false, "Trainer: shaman rites", CDGenericTrainer},
+  {false, "frost giant warrior", frostGiant}, {false, "librarian", librarian},
+  {false, "rumormonger", rumorMonger},
+  {false, "Trainer: mage", CDGenericTrainer},  // 115
+  {false, "Trainer: monk", CDGenericTrainer},
+  {false, "Trainer: cleric", CDGenericTrainer},
+  {false, "Trainer: thief", CDGenericTrainer},
+  {false, "Trainer: plants", CDGenericTrainer},
+  {false, "Trainer: soldiering", CDGenericTrainer},  // 120
+  {false, "Trainer: blacksmithing", CDGenericTrainer},
+  {false, "Trainer: deikhan fight", CDGenericTrainer},
+  {false, "Trainer: mounted", CDGenericTrainer},
+  {false, "Trainer: deikhan guardian", CDGenericTrainer},
+  {false, "Trainer: deikhan cures", CDGenericTrainer},  // 125
+  {false, "Trainer: deikhan wrath", CDGenericTrainer},
+  {false, "Trainer: leverage", CDGenericTrainer},
+  {false, "Trainer: mindbody", CDGenericTrainer},
+  {false, "grimhaven posse", grimhavenPosse},
+  {false, "grimhaven hooker", grimhavenHooker},  // 130
+  {false, "Trainer: focused attacks", CDGenericTrainer},
+  {true, "Corpse Muncher", corpseMuncher},
+  {false, "Trainer: barehand", CDGenericTrainer},
+  {false, "Trainer: thief fight", CDGenericTrainer},
+  {false, "Trainer: poisons", CDGenericTrainer},  // 135
+  {false, "Trainer: frog", CDGenericTrainer},
+  {false, "Trainer: shaman alchemy", CDGenericTrainer},
+  {false, "Trainer: skunk", CDGenericTrainer},
+  {false, "Trainer: spider", CDGenericTrainer},
+  {false, "Trainer: control", CDGenericTrainer},  // 140
+  {false, "Trainer: ritualism", CDGenericTrainer},
+  {false, "paladin patrol", paladinPatrol},
+  {false, "shaman guildmaster", GenericGuildMaster},
+  {false, "Trainer: combat", CDGenericTrainer},
+  {false, "Trainer: stealth", CDGenericTrainer},  // 145
+  {false, "Trainer: traps", CDGenericTrainer},
+  {false, "Newbie Equipper", newbieEquipper},
+  {false, "Trainer: lore", CDGenericTrainer},
+  {false, "Trainer: theology", CDGenericTrainer},
+  {false, "attuner", attuner},  // 150
+  {true, "paralyze gaze", paralyzeGaze},
+  {true, "Doppleganger/Mimic", doppleganger},
+  {true, "Tusker/Goring", tuskGoring}, {false, "Fish Tracker", fishTracker},
+  {false, "Bank Guard", bankGuard},  // 155
+  {false, "Fishing Boat Captain", fishingBoatCaptain},
+  {false, "Coroner", coroner}, {false, "Guild Registrar", guildRegistrar},
+  {false, "Trainer: defense", CDGenericTrainer},
+  {false, "Scared Kid", scaredKid},  // 160
+  {true, "Corporate Asistant", corporateAssistant},
+  {false, "Trainer: psionics", CDGenericTrainer},
+  {true, "Divination Man", divman},
+  {false, "Trainer: healing abilities", CDGenericTrainer},
+  {false, "Gardener", gardener},  // 165
+  {false, "Brightmoon Archer", bmarcher}, {false, "Money Train", moneyTrain},
+  {false, "Adventurer", adventurer},
+  {false, "Trainer: iron body", CDGenericTrainer},
+  {false, "Tudy", tudy},  // 170
+  {true, "Barmaid", barmaid}, {false, "tattoo artist", tattooArtist},
+  {false, "casino elevator operator", casinoElevatorOperator},
+  {false, "casino elevator guard", casinoElevatorGuard},
+  {false, "commodity maker", commodMaker},  // 175
+  {false, "lottery redeemer", lotteryRedeemer},
+  {false, "konastis's guard", konastisGuard},
+  {false, "hold'em player", holdemPlayer}, {false, "postman", postman},
+  {true, "poison bite", poisonBite},  // 180
+  {false, "riddling tree", riddlingTree}, {false, "fireman", fireman},
+  {true, "mimic", mimic}, {true, "archer", archer},
+  {false, "peddler", flaskPeddler},  // 185
+  {false, "limb disposer", limbDispo}, {false, "stat surgeon", statSurgeon},
+  {false, "shipping official", shippingOfficial},
+  {false, "loan shark", loanShark},
+  {false, "trolley driver", trolleyBoatCaptain},  // 190
+  {false, "property clerk", propertyClerk}, {false, "banker", banker},
+  {false, "prison janitor", prisonJanitor}, {true, "cat", cat},
+  {false, "taxman", taxman},  // 195
+  {false, "Trainer: advanced adventuring", CDGenericTrainer},
+  {false, "amber janitor", amberJanitor},
+  {false, "brightmoon janitor", brightmoonJanitor},
+  {false, "garbage convoy", garbageConvoy},
+  {false, "signmaker", signMaker},  // 200
+  {true, "butler", receptionist}, {false, "leper hunter", leperHunter},
+  {false, "auctioneer", auctioneer}, {false, "loan manager", loanManager},
+  {true, "bee death", beeDeath},  // 205
+  {false, "hero faerie", heroFaerie},
+  {false, "Brick Collector", brickCollector}, {false, "caretaker", caretaker},
+  {false, "ship captain", shipCaptain},
+  {false, "aggro follower", aggroFollower},  // 210
+  {false, "central banker", centralBanker},
+  {false, "cannon loader", cannonLoader},
+  {false, "id card provider", idCardProvider},
+  {true, "Target dummy", targetDummy},
+  {true, "fruit scavenger", fruitScavenger},  // 215
+  {false, "commodity trader", commodTrader},
+  {false, "ration factory", rationFactory},
+  {false, "pet veterinarian", petVeterinarian}, {true, "lagomorph", lagomorph},
+  {true, "Trainer: Offense", CDGenericTrainer}, {true, "Tailor", tailor},
+  {true, "Blacksmith", blacksmith},
   // replace non-zero, bogus_mob_procs above before adding
 };

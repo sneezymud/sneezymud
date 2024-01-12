@@ -19,7 +19,7 @@ int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     "A tattoo of the word '<k>sinner<1>'.",
     "A tattoo of the word '<k>free<1>'.", "A tattoo of a <g>ring of thorns<1>.",
     "A tattoo of a <Y>lightning bolt<1>.",
-    "A tattoo of the words '<k>untouched by man<1>'.", NULL};
+    "A tattoo of the words '<k>untouched by man<1>'.", nullptr};
   int ntattoos = 20;
   int i;
   char buf[256];
@@ -31,14 +31,14 @@ int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
     for (i = 0; i < ntattoos; ++i)
       myself->doTell(ch->getName(), format("%i) %s") % (i + 1) % tattoos[i]);
 
-    return TRUE;
+    return true;
   } else if (cmd == CMD_BUY) {
     arg = one_argument(arg, buf, cElements(buf));
 
     if (!(i = convertTo<int>(buf)) || i > ntattoos) {
       myself->doTell(ch->getName(),
         "I don't understand, which tattoo do you want?");
-      return FALSE;
+      return false;
     }
 
     one_argument(arg, buf, cElements(buf));
@@ -49,11 +49,11 @@ int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       slot = wearSlotT(--slot_i);
       if (!ch->slotChance(slot)) {
         myself->doTell(ch->getName(), "Where do you want the tattoo?");
-        return FALSE;
+        return false;
       }
     } else {
       myself->doTell(ch->getName(), "Where do you want the tattoo?");
-      return FALSE;
+      return false;
     }
     if (slot == WEAR_LEG_R || slot == WEAR_LEG_L) {
       myself->doTell(ch->getName(),
@@ -61,7 +61,7 @@ int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
       myself->doTell(ch->getName(),
         "It's not like you're gonna run around pantless to show it off "
         "anyway!");
-      return FALSE;
+      return false;
     }
 
     TDatabase db(DB_SNEEZY);
@@ -70,13 +70,13 @@ int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
     if (db.fetchRow()) {
       myself->doTell(ch->getName(), "You already have a tattoo there.");
-      return FALSE;
+      return false;
     }
 
     if (ch->getMoney() < 10000) {
       myself->doTell(ch->getName(),
         "Hey buddy, you don't even have the money!  Get out of here!");
-      return FALSE;
+      return false;
     }
 
     ch->setMoney(ch->getMoney() - 10000);
@@ -89,8 +89,8 @@ int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
 
     myself->doSay("There you go, all set.");
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }

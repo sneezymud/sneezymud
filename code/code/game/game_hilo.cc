@@ -35,7 +35,7 @@ void HiLoGame::BetHi(TBeing* ch, const Card* new_card) {
                (int)((float)bet * (1.0 + win_perc)));
     buf = format("$n wins!  $n's winnings are now at %i talens.") %
           (int)((float)bet * (1.0 + win_perc));
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, true, ch, 0, 0, TO_ROOM);
     observerReaction(ch, GAMBLER_HILO_BET);
 
     if (win_perc > 25) {
@@ -45,7 +45,7 @@ void HiLoGame::BetHi(TBeing* ch, const Card* new_card) {
 
   } else {
     ch->sendTo("You lose!\n\r");
-    act("$n loses!", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n loses!", true, ch, 0, 0, TO_ROOM);
     observerReaction(ch, GAMBLER_LOST);
     bet = 0;
     card = 0;
@@ -61,7 +61,7 @@ void HiLoGame::BetLo(TBeing* ch, const Card* new_card) {
                (int)((float)bet * (1.0 + win_perc)));
     buf = format("$n wins!  $n's winnings are now at %i talens.") %
           (int)((float)bet * (1.0 + win_perc));
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, true, ch, 0, 0, TO_ROOM);
     observerReaction(ch, GAMBLER_HILO_BET);
 
     if (win_perc > 25) {
@@ -71,7 +71,7 @@ void HiLoGame::BetLo(TBeing* ch, const Card* new_card) {
 
   } else {
     ch->sendTo("You lose!\n\r");
-    act("$n loses!", TRUE, ch, 0, 0, TO_ROOM);
+    act("$n loses!", true, ch, 0, 0, TO_ROOM);
     observerReaction(ch, GAMBLER_LOST);
     bet = 0;
     card = 0;
@@ -85,7 +85,7 @@ void HiLoGame::stay(TBeing* ch) {
   }
 
   ch->sendTo("You give up and cash out your winnings.\n\r");
-  act("$n gives up and cashes out $s winnings.", TRUE, ch, 0, 0, TO_ROOM);
+  act("$n gives up and cashes out $s winnings.", true, ch, 0, 0, TO_ROOM);
 
   const Card* next_card = deck.draw();
   //  vlogf(LOG_PEEL, format("drew %s") %  next_card->getName());
@@ -95,7 +95,7 @@ void HiLoGame::stay(TBeing* ch) {
     format("The next card was the %s.\n\r") % next_card->getName());
 
   buf = format("The next card was the %s.") % next_card->getName();
-  act(buf, TRUE, ch, 0, 0, TO_ROOM);
+  act(buf, true, ch, 0, 0, TO_ROOM);
 
   payout(ch, (int)((double)bet * (1.0 + win_perc)));
   bet = 0;
@@ -121,13 +121,13 @@ void HiLoGame::Bet(TBeing* ch, const sstring& arg) {
         //	vlogf(LOG_PEEL, format("drew %s") %  new_card->getName());
 
         buf = format("$n bets %s.") % arg;
-        act(buf, TRUE, ch, 0, 0, TO_ROOM);
+        act(buf, true, ch, 0, 0, TO_ROOM);
 
         ch->sendTo(COLOR_BASIC,
           format("You are dealt:\n\r%s\n\r") % new_card->getName());
 
         log_msg = format("$n is dealt:\n\r%s") % new_card->getName();
-        act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+        act(log_msg, true, ch, 0, 0, TO_ROOM);
 
         if (arg == "hi") {
           BetHi(ch, new_card);
@@ -159,19 +159,19 @@ void HiLoGame::Bet(TBeing* ch, const sstring& arg) {
 
     sstring buf;
     buf = format("$n bets %s.") % chip->getName();
-    act(buf, TRUE, ch, 0, 0, TO_ROOM);
+    act(buf, true, ch, 0, 0, TO_ROOM);
     buf = format("You bet %s.") % chip->getName();
-    act(buf, TRUE, ch, 0, 0, TO_CHAR);
+    act(buf, true, ch, 0, 0, TO_CHAR);
 
     (*chip)--;
     delete chip;
 
     win_perc = WIN_INIT;
-    card = NULL;
+    card = nullptr;
 
     deck.shuffle();
-    act("The dealer shuffles the deck.", FALSE, ch, 0, 0, TO_CHAR);
-    act("The dealer shuffles the deck.", FALSE, ch, 0, 0, TO_ROOM);
+    act("The dealer shuffles the deck.", false, ch, 0, 0, TO_CHAR);
+    act("The dealer shuffles the deck.", false, ch, 0, 0, TO_ROOM);
 
     card = deck.draw();
     //    vlogf(LOG_PEEL, format("drew %s") %  card->getName());
@@ -180,7 +180,7 @@ void HiLoGame::Bet(TBeing* ch, const sstring& arg) {
       format("You are dealt:\n\r%s\n\r") % card->getName());
 
     log_msg = format("$n is dealt:\n\r%s\n\r") % card->getName();
-    act(log_msg, TRUE, ch, 0, 0, TO_ROOM);
+    act(log_msg, true, ch, 0, 0, TO_ROOM);
 
     observerReaction(ch, GAMBLER_HILO_BET);
   }
@@ -206,16 +206,16 @@ int HiLoGame::exitGame(const TBeing* ch) {
 
   if ((inx = index(ch)) < 0) {
     vlogf(LOG_BUG, format("%s left a table he was not at!") % ch->name);
-    return FALSE;
+    return false;
   }
-  inuse = FALSE;
+  inuse = false;
   name = "";
   bet = 0;
   card = 0;
   win_perc = 0;
   setup_deck();
   ch->sendTo("You leave the hi-lo table.\n\r");
-  return TRUE;
+  return true;
 }
 
 int HiLoGame::index(const TBeing* ch) const {

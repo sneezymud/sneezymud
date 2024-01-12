@@ -55,9 +55,9 @@ int TWand::changeItemVal4Check(TBeing* ch, int the_update) {
                                    !discArray[the_update]->minLifeforce &&
                                    !discArray[the_update]->minPiety))) {
     ch->sendTo("Invalid value or value is not a spell.\n\r");
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TWand::divinateMe(TBeing* caster) const {
@@ -104,7 +104,7 @@ int TWand::objectSell(TBeing* ch, TMonster* keeper) {
   if (getCurCharges() != getMaxCharges()) {
     keeper->doTell(ch->getName(),
       "I'm sorry, I don't buy back expended wands.");
-    return TRUE;
+    return true;
   }
 
   return TMagicItem::objectSell(ch, keeper);
@@ -118,7 +118,7 @@ void TWand::lowCheck() {
                                     !discArray[curspell]->minMana &&
                                     !discArray[curspell]->minLifeforce &&
                                     !discArray[curspell]->minPiety)) ||
-          (getDisciplineNumber(curspell, FALSE) == DISC_NONE)))) {
+          (getDisciplineNumber(curspell, false) == DISC_NONE)))) {
     vlogf(LOG_LOW, format("wand (%s:%d) has messed up spell(%d)") % getName() %
                      objVnum() % curspell);
     if ((curspell < TYPE_UNDEFINED) || (curspell >= MAX_SKILL))
@@ -146,7 +146,7 @@ bool TWand::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "You might wanna take that to the magic shop!");
 
-  return TRUE;
+  return true;
 }
 
 int TWand::suggestedPrice() const {
@@ -186,7 +186,7 @@ int TWand::useMe(TBeing* ch, const char* argument) {
       format(
         "doUse (%s) called spell (%d) that does not exist! - Don't do that!") %
         getName() % getSpell());
-    return FALSE;
+    return false;
   }
 
   int bv = 0;
@@ -203,9 +203,9 @@ int TWand::useMe(TBeing* ch, const char* argument) {
     // wands are for targetable spells
     // if we ain't a targetted spell (i.e. get here)
     // then we ought to use some other magic-item (probably scroll)
-    act("Sparks and smoke come forth from $p.", FALSE, ch, this, 0, TO_CHAR);
-    act("Sparks and smoke come forth from $p.", FALSE, ch, this, 0, TO_ROOM);
-    return FALSE;
+    act("Sparks and smoke come forth from $p.", false, ch, this, 0, TO_CHAR);
+    act("Sparks and smoke come forth from $p.", false, ch, this, 0, TO_ROOM);
+    return false;
   }
 
   bits = generic_find(argument, bv, ch, &tmp_char, &o);
@@ -214,7 +214,7 @@ int TWand::useMe(TBeing* ch, const char* argument) {
 
     if (IS_SET(discArray[the_spell]->targets, TAR_VIOLENT) &&
         ch->checkPeaceful("Impolite magic is banned here.\n\r"))
-      return FALSE;
+      return false;
 
     if (getCurCharges() > 0) {  // Is there any charges left?
       addToCurCharges(-1);
@@ -222,32 +222,32 @@ int TWand::useMe(TBeing* ch, const char* argument) {
       rc = doObjSpell(ch, tmp_char, this, o, argument, the_spell);
       if (IS_SET_DELETE(rc, DELETE_VICT) && ch != tmp_char) {
         delete tmp_char;
-        tmp_char = NULL;
+        tmp_char = nullptr;
       }
       if (IS_SET_DELETE(rc, DELETE_ITEM)) {
         delete o;
-        o = NULL;
+        o = nullptr;
       }
       if ((IS_SET_DELETE(rc, DELETE_VICT) && ch == tmp_char) ||
           IS_SET_DELETE(rc, DELETE_THIS))
         return DELETE_VICT;
     } else
-      act("$p seems powerless.", FALSE, ch, this, 0, TO_CHAR);
+      act("$p seems powerless.", false, ch, this, 0, TO_CHAR);
   } else
-    act("What should $p be pointed at?", FALSE, ch, this, 0, TO_CHAR);
+    act("What should $p be pointed at?", false, ch, this, 0, TO_CHAR);
 
-  return FALSE;
+  return false;
 }
 
 void TWand::generalUseMessage(const TBeing* ch, unsigned int bits,
   const TBeing* tmp_char, const TObj* o) const {
   if (bits == FIND_CHAR_ROOM) {
-    act("$n points $p at you.", TRUE, ch, this, tmp_char, TO_VICT);
-    act("$n points $p at $N.", TRUE, ch, this, tmp_char, TO_NOTVICT);
-    act("You point $p at $N.", FALSE, ch, this, tmp_char, TO_CHAR);
+    act("$n points $p at you.", true, ch, this, tmp_char, TO_VICT);
+    act("$n points $p at $N.", true, ch, this, tmp_char, TO_NOTVICT);
+    act("You point $p at $N.", false, ch, this, tmp_char, TO_CHAR);
   } else {
-    act("$n points $p at $P.", TRUE, ch, this, o, TO_ROOM);
-    act("You point $p at $P.", FALSE, ch, this, o, TO_CHAR);
+    act("$n points $p at $P.", true, ch, this, o, TO_ROOM);
+    act("You point $p at $P.", false, ch, this, o, TO_CHAR);
   }
 }
 

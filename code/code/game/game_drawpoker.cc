@@ -144,11 +144,11 @@ bool DrawPokerGame::getPlayers(const TBeing* ch, TBeing** ch2, TBeing** ch3,
   if ((playerNum = index(ch)) < 0)
     return false;
 
-  tChar[0] = &(*ch2 = NULL);
-  tChar[1] = &(*ch3 = NULL);
-  tChar[2] = &(*ch4 = NULL);
-  tChar[3] = &(*ch5 = NULL);
-  tChar[4] = &(*ch6 = NULL);
+  tChar[0] = &(*ch2 = nullptr);
+  tChar[1] = &(*ch3 = nullptr);
+  tChar[2] = &(*ch4 = nullptr);
+  tChar[3] = &(*ch5 = nullptr);
+  tChar[4] = &(*ch6 = nullptr);
 
   for (int playerIndex = (playerNum + 1); playerIndex < 6; playerIndex++)
     if ((*tChar[playerCount] =
@@ -167,7 +167,7 @@ bool DrawPokerGame::getPlayers(const TBeing* ch, TBeing** ch2, TBeing** ch3,
 }
 
 void DrawPokerGame::deal(TBeing* ch, const char* tArg) {
-  TBeing* tChar[6] = {NULL, NULL, NULL, NULL, NULL, NULL};
+  TBeing* tChar[6] = {nullptr, nullptr, nullptr, nullptr, nullptr, nullptr};
   int pointCard = 0, dealerNum = 0, anteCost = 0, averageLevel;
   char tString[256], tBuffer[256];
   bool anteSet = false;
@@ -253,7 +253,7 @@ void DrawPokerGame::deal(TBeing* ch, const char* tArg) {
   shuffle();
 
   ch->sendTo("You shuffle the cards, and deal them.\n\r");
-  act("$n shuffles the cards and deals them.", FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n shuffles the cards and deals them.", false, ch, nullptr, nullptr, TO_ROOM);
 
   ch->sendTo("You are dealt:\n\r");
 
@@ -273,8 +273,8 @@ void DrawPokerGame::deal(TBeing* ch, const char* tArg) {
           ch->sendTo(format("You can not cover the ante of %d talens, your "
                             "forced to sit out.\n\r") %
                      anteCost);
-          act("$n is forced to sit out this round due to low talens.", FALSE,
-            ch, NULL, NULL, TO_ROOM);
+          act("$n is forced to sit out this round due to low talens.", false,
+            ch, nullptr, nullptr, TO_ROOM);
         } else {
           hands[playerIndex][cardIndex] = deck[pointCard++];
 
@@ -371,32 +371,32 @@ int DrawPokerGame::move_card(TBeing* ch, const char* tArg) {
 
   if (!game) {
     ch->sendTo("The game is not in progress, you have no cards to move.\n\r");
-    return FALSE;
+    return false;
   }
 
   if ((playerNum = index(ch)) < 0) {
     ch->sendTo(
       "You are not at the Poker table, you have no cards to move around.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (!hands[playerNum][0]) {
     ch->sendTo(
       "Your not in this round, wait until your actually In the game "
       "first.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (sscanf(tArg, "%d %d", &origSlot, &moveSlot) == 2) {
     if ((origSlot < 1) || (origSlot > 32) || (moveSlot < 1) ||
         (moveSlot > 32)) {
       ch->sendTo("Poker Syntax: put <old card slot> <new card slot>\n\r");
-      return FALSE;
+      return false;
     }
 
     if (origSlot == moveSlot) {
       ch->sendTo("You're funny.  You know that?\n\r");
-      return FALSE;
+      return false;
     }
 
     origSlot--;
@@ -404,7 +404,7 @@ int DrawPokerGame::move_card(TBeing* ch, const char* tArg) {
 
     if (!hands[playerNum][origSlot] || !hands[playerNum][moveSlot]) {
       ch->sendTo("There is no card in that slot.\n\r");
-      return FALSE;
+      return false;
     }
 
     tempCard = hands[playerNum][origSlot];
@@ -422,10 +422,10 @@ int DrawPokerGame::move_card(TBeing* ch, const char* tArg) {
                (moveSlot + 1));
   } else {
     ch->sendTo("Poker Syntax: put <old card slot> <new card slot>\n\r");
-    return FALSE;
+    return false;
   }
 
-  return TRUE;
+  return true;
 }
 
 bool TBeing::checkDrawPoker(bool inGame) const {
@@ -440,7 +440,7 @@ int DrawPokerGame::enter(const TBeing* ch) {
 
   if (dynamic_cast<const TMonster*>(ch)) {
     ch->sendTo("Silly monster, Poker is for mortals!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (inuse[0] && inuse[1] && inuse[2] && inuse[3] && inuse[4] && inuse[5])
@@ -468,24 +468,24 @@ int DrawPokerGame::enter(const TBeing* ch) {
     for (int cardIndex = 0; cardIndex < 5; cardIndex++)
       hands[playerNum][cardIndex] = 0;
 
-    return TRUE;
+    return true;
   }
 
-  return FALSE;
+  return false;
 }
 
 int DrawPokerGame::exitGame(const TBeing* ch) {
   int playerNum;
-  TBeing *ch2 = NULL, *ch3 = NULL, *ch4 = NULL, *ch5 = NULL, *ch6 = NULL;
+  TBeing *ch2 = nullptr, *ch3 = nullptr, *ch4 = nullptr, *ch5 = nullptr, *ch6 = nullptr;
 
   if ((playerNum = index(ch)) < 0) {
     vlogf(LOG_BUG, format("%s left a poker table %s wasn't at!") %
                      ch->getName() % ch->hssh());
-    return FALSE;
+    return false;
   }
 
   ch->sendTo("You leave the poker table.\n\r");
-  act("$n leaves the table.", FALSE, ch, NULL, NULL, TO_ROOM);
+  act("$n leaves the table.", false, ch, nullptr, nullptr, TO_ROOM);
 
   getPlayers(ch, &ch2, &ch3, &ch4, &ch5, &ch6);
 
@@ -507,7 +507,7 @@ int DrawPokerGame::exitGame(const TBeing* ch) {
     }
   }
 
-  return TRUE;
+  return true;
 }
 
 int DrawPokerGame::index(const TBeing* ch) const {
@@ -576,7 +576,7 @@ int DrawPokerGame::new_deal() {
   if (!getPlayers(tChar[0], &tChar[1], &tChar[2], &tChar[3], &tChar[4],
         &tChar[5])) {
     vlogf(LOG_BUG, "DrawPoker::new_deal called with less than 2 players!");
-    return FALSE;
+    return false;
   }
 
   tChar[6] = get_char_room(names[initialPlayer], ROOM_DRAWPOKER);
@@ -597,7 +597,7 @@ int DrawPokerGame::new_deal() {
     playerante[playerIndex] = 0;
   }
 
-  return TRUE;
+  return true;
 }
 
 void DrawPokerGame::pass(const TBeing* ch) {
@@ -636,10 +636,10 @@ void DrawPokerGame::pass(const TBeing* ch) {
              (iplay == 1 ? "discarding" : "betting"));
 
   if (iplay == 1)
-    act("$n skips $s turn at discarding this time.", FALSE, ch, NULL, NULL,
+    act("$n skips $s turn at discarding this time.", false, ch, nullptr, nullptr,
       TO_ROOM);
   else
-    act("$n skips $s turn at bidding this time.", FALSE, ch, NULL, NULL,
+    act("$n skips $s turn at bidding this time.", false, ch, nullptr, nullptr,
       TO_ROOM);
 
   nextPlayer = getNextPlayer(ch);
@@ -722,14 +722,14 @@ void DrawPokerGame::bet(const TBeing* ch, const char* tArg) {
 
   playerante[playerNum] += newBet;
   sprintf(tBuffer, "$n bets %d\n\r", newBet);
-  act(tBuffer, FALSE, ch, NULL, NULL, TO_ROOM);
+  act(tBuffer, false, ch, nullptr, nullptr, TO_ROOM);
 
   if (!isBettingClosed()) {
     nextPlayer = getNextPlayer(ch);
     isbidding = true;
   } else {
     ch->sendTo("Betting is closed.\n\r");
-    act("Betting is closed.", FALSE, ch, NULL, NULL, TO_ROOM);
+    act("Betting is closed.", false, ch, nullptr, nullptr, TO_ROOM);
     iplay++;
   }
 
@@ -784,7 +784,7 @@ void DrawPokerGame::stop(const TBeing* ch) {
 
   strcpy(tString, sstring(ch->getName()).cap().c_str());
   ch->sendTo("You put down, and leave this hand to the others.\n\r");
-  act("$n puts down, deciding not to play this hand.", FALSE, ch, NULL, NULL,
+  act("$n puts down, deciding not to play this hand.", false, ch, nullptr, nullptr,
     TO_ROOM);
 
   if (!silentBets)
@@ -817,7 +817,7 @@ int DrawPokerGame::look(const TBeing* ch, const char* tArg) {
   for (; isspace(*tArg); tArg++)
     ;
   if (!*tArg)
-    return FALSE;
+    return false;
 
   if (is_abbrev(tArg, "table")) {
     if (!game)
@@ -832,9 +832,9 @@ int DrawPokerGame::look(const TBeing* ch, const char* tArg) {
       }
     }
   } else
-    return FALSE;
+    return false;
 
-  return TRUE;
+  return true;
 }
 
 void DrawPokerGame::discard(const TBeing* ch, const char* tArg) {
@@ -911,7 +911,7 @@ void DrawPokerGame::discard(const TBeing* ch, const char* tArg) {
 
   ch->sendTo(format("You discard %d cards.\n\r") % discardIndex);
   sprintf(tString, "$n discards %d cards.", discardIndex);
-  act(tString, FALSE, ch, NULL, NULL, TO_ROOM);
+  act(tString, false, ch, nullptr, nullptr, TO_ROOM);
 
   ch->doPeek();
 
@@ -930,7 +930,7 @@ void DrawPokerGame::discard(const TBeing* ch, const char* tArg) {
 
   iplay++;
   ch->sendTo("Bidding begins again.\n\r");
-  act("Bidding begins again.", FALSE, ch, NULL, NULL, TO_ROOM);
+  act("Bidding begins again.", false, ch, nullptr, nullptr, TO_ROOM);
 
   if (usenewbie) {
     TBeing* cNewC;

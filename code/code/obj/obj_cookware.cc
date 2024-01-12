@@ -41,15 +41,15 @@ bool TCookware::objectRepair(TBeing* ch, TMonster* repair, silentTypeT silent) {
     repair->doTell(fname(ch->name),
       "Does this look like a cookware repair shop to you?");
   }
-  return TRUE;
+  return true;
 }
 
 void TCookware::pourMeOut(TBeing* ch) {
-  act("You can't pour from that!", FALSE, ch, 0, 0, TO_CHAR);
+  act("You can't pour from that!", false, ch, 0, 0, TO_CHAR);
 }
 
 void TCookware::pourMeIntoDrink1(TBeing* ch, TObj*) {
-  act("You can't pour from $p!", FALSE, ch, this, 0, TO_CHAR);
+  act("You can't pour from $p!", false, ch, this, 0, TO_CHAR);
 }
 
 void TCookware::pourMeIntoDrink2(TBeing* ch, TBaseCup* from) {
@@ -57,7 +57,7 @@ void TCookware::pourMeIntoDrink2(TBeing* ch, TBaseCup* from) {
   TObj* obj;
 
   if (from->getDrinkUnits() <= 0) {
-    act("$p is empty.", FALSE, ch, from, 0, TO_CHAR);
+    act("$p is empty.", false, ch, from, 0, TO_CHAR);
     return;
   }
 
@@ -80,11 +80,11 @@ void TCookware::pourMeIntoDrink2(TBeing* ch, TBaseCup* from) {
   sstring buf;
   buf = format("You pour %s into %s.\n\r") %
         liquidInfo[from->getDrinkType()]->name % ch->objs(this);
-  act(buf, FALSE, ch, 0, 0, TO_CHAR);
+  act(buf, false, ch, 0, 0, TO_CHAR);
 
   buf = format("$n pours %s into %s.\n\r") %
         liquidInfo[from->getDrinkType()]->name % ch->objs(this);
-  act(buf, TRUE, ch, 0, 0, TO_ROOM);
+  act(buf, true, ch, 0, 0, TO_ROOM);
 
   // init the pool
   pool->initPool(from->getDrinkUnits(), from->getDrinkType());

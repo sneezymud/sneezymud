@@ -77,7 +77,7 @@ int TBeing::doJump(const sstring& tArg) {
   // Ignore invalid or errored locations.
 
   if (!roomp || !roomp->number)
-    return FALSE;
+    return false;
 
   if (!tArg.empty())
     for (unsigned int tJumpIndex = 0;
@@ -87,26 +87,26 @@ int TBeing::doJump(const sstring& tArg) {
           is_abbrev(tArg, tJumpData[tJumpIndex].tTrigger)) {
         if (isImmortal()) {
           sendTo(tJumpData[tJumpIndex].tImmortalJumpChar);
-          act(tJumpData[tJumpIndex].tImmortalJumpRoom, TRUE, this, NULL, NULL,
+          act(tJumpData[tJumpIndex].tImmortalJumpRoom, true, this, nullptr, nullptr,
             TO_ROOM);
           --(*this);
           thing_to_room(this, tJumpData[tJumpIndex].tToRoom);
           doLook("", CMD_LOOK);
           sendTo(tJumpData[tJumpIndex].tImmortalLandChar);
-          act(tJumpData[tJumpIndex].tImmortalLandRoom, TRUE, this, NULL, NULL,
+          act(tJumpData[tJumpIndex].tImmortalLandRoom, true, this, nullptr, nullptr,
             TO_ROOM);
         } else if (isFlying()) {
           sendTo(tJumpData[tJumpIndex].tFlyJumpChar);
-          act(tJumpData[tJumpIndex].tFlyJumpRoom, TRUE, this, NULL, NULL,
+          act(tJumpData[tJumpIndex].tFlyJumpRoom, true, this, nullptr, nullptr,
             TO_ROOM);
           --(*this);
           thing_to_room(this, tJumpData[tJumpIndex].tToRoom);
           doLook("", CMD_LOOK);
           sendTo(tJumpData[tJumpIndex].tFlyChar);
-          act(tJumpData[tJumpIndex].tFlyRoom, TRUE, this, NULL, NULL, TO_ROOM);
+          act(tJumpData[tJumpIndex].tFlyRoom, true, this, nullptr, nullptr, TO_ROOM);
         } else {
           sendTo(tJumpData[tJumpIndex].tJumpChar);
-          act(tJumpData[tJumpIndex].tJumpRoom, TRUE, this, NULL, NULL, TO_ROOM);
+          act(tJumpData[tJumpIndex].tJumpRoom, true, this, nullptr, nullptr, TO_ROOM);
           --(*this);
           thing_to_room(this, tJumpData[tJumpIndex].tToRoom);
           doLook("", CMD_LOOK);
@@ -115,19 +115,19 @@ int TBeing::doJump(const sstring& tArg) {
 
           if (::number(0, 3) || isAgile(0)) {
             sendTo(tJumpData[tJumpIndex].tLightChar);
-            act(tJumpData[tJumpIndex].tLightRoom, TRUE, this, NULL, NULL,
+            act(tJumpData[tJumpIndex].tLightRoom, true, this, nullptr, nullptr,
               TO_ROOM);
             tDamage = ::number(tJumpData[tJumpIndex].tDamageLight[0],
               tJumpData[tJumpIndex].tDamageLight[1]);
           } else if (::number(0, 20) || isAgile(0)) {
             sendTo(tJumpData[tJumpIndex].tMediumChar);
-            act(tJumpData[tJumpIndex].tMediumRoom, TRUE, this, NULL, NULL,
+            act(tJumpData[tJumpIndex].tMediumRoom, true, this, nullptr, nullptr,
               TO_ROOM);
             tDamage = ::number(tJumpData[tJumpIndex].tDamageMedium[0],
               tJumpData[tJumpIndex].tDamageMedium[1]);
           } else {
             sendTo(tJumpData[tJumpIndex].tHeavyChar);
-            act(tJumpData[tJumpIndex].tHeavyRoom, TRUE, this, NULL, NULL,
+            act(tJumpData[tJumpIndex].tHeavyRoom, true, this, nullptr, nullptr,
               TO_ROOM);
             tDamage = ::number(tJumpData[tJumpIndex].tDamageHeavy[0],
               tJumpData[tJumpIndex].tDamageHeavy[1]);
@@ -137,11 +137,11 @@ int TBeing::doJump(const sstring& tArg) {
             return DELETE_VICT;
         }
 
-        return FALSE;
+        return false;
       }
 
   sendTo("You jump up and down for joy.\n\r");
-  act("$n jumps up and down for joy.", TRUE, this, NULL, NULL, TO_ROOM);
+  act("$n jumps up and down for joy.", true, this, nullptr, nullptr, TO_ROOM);
 
-  return FALSE;
+  return false;
 }

@@ -13,36 +13,36 @@
 #include "disc_deikhan.h"
 
 static int rescue(TBeing* caster, TBeing* victim, spellNumT skill) {
-  TBeing* tmp_ch = NULL;
+  TBeing* tmp_ch = nullptr;
   int percent = 0;
 
   if (caster->getCombatMode() == ATTACK_BERSERK) {
     caster->sendTo(
       "You are berserking! You can't focus enough to rescue anyone!\n\r");
-    return FALSE;
+    return false;
   }
 
   if (caster->checkPeaceful("No one should need rescuing here.\n\r"))
-    return FALSE;
+    return false;
 
   if (victim == caster) {
     caster->sendTo("What about fleeing instead?\n\r");
-    return FALSE;
+    return false;
   }
 
   if (victim->riding) {
     caster->sendTo(COLOR_MOBS, format("You can't rescue %s off of %s!\n\r") %
                                  victim->getName() % victim->riding->getName());
-    return FALSE;
+    return false;
   }
 
   if (caster->fight() == victim) {
     caster->sendTo("How can you rescue someone you are trying to kill?\n\r");
-    return FALSE;
+    return false;
   }
 
   for (StuffIter it = victim->roomp->stuff.begin();
-       it != victim->roomp->stuff.end(); ++it, tmp_ch = NULL) {
+       it != victim->roomp->stuff.end(); ++it, tmp_ch = nullptr) {
     tmp_ch = dynamic_cast<TBeing*>(*it);
     if (!tmp_ch)
       continue;
@@ -51,14 +51,14 @@ static int rescue(TBeing* caster, TBeing* victim, spellNumT skill) {
   }
 
   if (!tmp_ch) {
-    act("But nobody is fighting $M?", FALSE, caster, 0, victim, TO_CHAR);
-    return FALSE;
+    act("But nobody is fighting $M?", false, caster, 0, victim, TO_CHAR);
+    return false;
   }
 
   if (caster->noHarmCheck(tmp_ch)) {
-    act("You cannot rescue someone who is fighting that target?", FALSE, caster,
+    act("You cannot rescue someone who is fighting that target?", false, caster,
       0, victim, TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   // int level = caster->getSkillLevel(skill);
@@ -66,9 +66,9 @@ static int rescue(TBeing* caster, TBeing* victim, spellNumT skill) {
 
   if (caster->bSuccess(bKnown + percent, skill)) {
     caster->sendTo("Banzai! To the rescue...\n\r");
-    act("You are rescued by $N, you are confused!", FALSE, victim, 0, caster,
+    act("You are rescued by $N, you are confused!", false, victim, 0, caster,
       TO_CHAR);
-    act("$n heroically rescues $N.", FALSE, caster, 0, victim, TO_NOTVICT);
+    act("$n heroically rescues $N.", false, caster, 0, victim, TO_NOTVICT);
 
     if (victim->fight() == tmp_ch)
       victim->stopFighting();
@@ -98,34 +98,34 @@ static int rescue(TBeing* caster, TBeing* victim, spellNumT skill) {
         caster->reconcileHelp(victim, discArray[skill]->alignMod / 4.0);
       }
     }
-    return TRUE;
+    return true;
   } else {
     caster->sendTo("You fail the rescue.\n\r");
-    act("$n attempts to rescue you, but fails miserably.", FALSE, caster, 0,
+    act("$n attempts to rescue you, but fails miserably.", false, caster, 0,
       victim, TO_VICT);
-    act("$n attempts to rescue $N, but fails miserably.", FALSE, caster, 0,
+    act("$n attempts to rescue $N, but fails miserably.", false, caster, 0,
       victim, TO_NOTVICT);
 
     // start them fighting at least
     if (!caster->fight())
       caster->setCharFighting(tmp_ch);
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::doRescue(const char* argument) {
   int rc;
-  TBeing* victim = NULL;
+  TBeing* victim = nullptr;
   char name_buf[240];
 
   spellNumT skill = getSkillNum(SKILL_RESCUE);
 
   if (checkBusy())
-    return FALSE;
+    return false;
 
   if (!doesKnowSkill(skill)) {
     sendTo("You know nothing about rescuing.\n\r");
-    return FALSE;
+    return false;
   }
 
   // Default to the first PC group member who is currently tanking, or the first
@@ -133,7 +133,7 @@ int TBeing::doRescue(const char* argument) {
   if (isAffected(AFF_GROUP) && (!argument || !*argument) &&
       (followers || (master && master->followers))) {
     followData* tFData = (master ? master->followers : followers);
-    TBeing *tRescueMe = NULL, *tMaybeMe = NULL;
+    TBeing *tRescueMe = nullptr, *tMaybeMe = nullptr;
 
     if (master && master->isAffected(AFF_GROUP) && sameRoom(*master) &&
         canSee(master) && master->fight() &&
@@ -155,7 +155,7 @@ int TBeing::doRescue(const char* argument) {
     if (!tRescueMe && tMaybeMe)
       tRescueMe = tMaybeMe;
 
-    victim = tRescueMe;  // Since this is NULL'ed above we are safe doing this
+    victim = tRescueMe;  // Since this is nullptr'ed above we are safe doing this
                          // without a check.
   } else
     strcpy(name_buf, argument);
@@ -163,12 +163,12 @@ int TBeing::doRescue(const char* argument) {
   if (!victim)
     if (!(victim = get_char_room_vis(this, name_buf))) {
       sendTo("Whom do you want to rescue?\n\r");
-      return FALSE;
+      return false;
     }
 
   if (!sameRoom(*victim)) {
     sendTo("That person isn't around.\n\r");
-    return FALSE;
+    return false;
   }
 
   rc = rescue(this, victim, skill);

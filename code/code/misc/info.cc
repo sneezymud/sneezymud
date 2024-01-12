@@ -387,7 +387,7 @@ void list_char_in_room(StuffList list, TBeing* ch) {
   TThing *i, *cond_ptr[50];
   int k, cond_top;
   unsigned int cond_tot[50];
-  bool found = FALSE;
+  bool found = false;
 
   cond_top = 0;
 
@@ -397,13 +397,13 @@ void list_char_in_room(StuffList list, TBeing* ch) {
         (ch->isAffected(AFF_SENSE_LIFE) || ch->isAffected(AFF_INFRAVISION) ||
           (ch->canSee(i)))) {
       if ((cond_top < 50) && !i->riding) {
-        found = FALSE;
+        found = false;
         if (dynamic_cast<TMonster*>(i)) {
           for (k = 0; (k < cond_top && !found); k++) {
             if (cond_top > 0) {
               if (i->isSimilar(cond_ptr[k])) {
                 cond_tot[k] += 1;
-                found = TRUE;
+                found = true;
               }
             }
           }
@@ -455,7 +455,7 @@ sstring TBeing::autoFormatDesc(const sstring& regStr, bool indent) {
   if (isImmortal()) {
     garbled = regStr;
   } else {
-    garbled = garble(NULL, regStr, Garble::SPEECH_ROOMDESC, Garble::SCOPE_SELF);
+    garbled = garble(nullptr, regStr, Garble::SPEECH_ROOMDESC, Garble::SCOPE_SELF);
   }
 
   if ((garbled.find("   ")) != sstring::npos) {
@@ -1052,7 +1052,7 @@ void TBeing::doRead(const char* argument) {
 }
 
 void TBaseCup::examineObj(TBeing* ch) const {
-  int bits = FALSE;
+  int bits = false;
 
   if (parent && (ch == parent)) {
     bits = FIND_OBJ_INV;
@@ -1070,8 +1070,8 @@ void TBeing::doExamine(const char* argument, TThing* specific) {
   sstring buf;
   char caName[100];
   int bits;
-  TBeing* tmp = NULL;
-  TObj* o = NULL;
+  TBeing* tmp = nullptr;
+  TObj* o = nullptr;
 
   if (specific) {
     doLook("", CMD_LOOK, specific);
@@ -1730,7 +1730,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
         break;
       case AFFECT_OFFER:
         if (ch == this) {
-          TGuild* f = NULL;
+          TGuild* f = nullptr;
           f = get_guild_by_ID(aff->modifier);
           if (!f)
             break;
@@ -2185,14 +2185,14 @@ void TBeing::describeLimbDamage(const TBeing* ch) const {
       if (!str.empty()) {
         act(format("<y>%s %s %s %s<1>") % buf2.cap() % ch->describeBodySlot(j) %
               ch->slotPlurality(j) % str,
-          FALSE, this, NULL, NULL, TO_CHAR);
+          false, this, nullptr, nullptr, TO_CHAR);
       }
     }
     if ((t = ch->getStuckIn(j))) {
       if (canSee(t)) {
         buf = format("<y>$p is sticking out of %s %s!<1>") % buf2.uncap() %
               ch->describeBodySlot(j);
-        act(buf, FALSE, this, t, NULL, TO_CHAR);
+        act(buf, false, this, t, nullptr, TO_CHAR);
       }
     }
   }
@@ -2414,7 +2414,7 @@ void TPerson::doUsers(const sstring& argument) {
   sstring line, buf2, buf3, buf4, buf5, sb, arg1, arg2;
   Descriptor* d;
   int count = 0;
-  TBeing* k = NULL;
+  TBeing* k = nullptr;
 
   if (powerCheck(POWER_USERS))
     return;
@@ -2568,11 +2568,11 @@ void TBeing::doInventory(const char* argument) {
     // immortal inventory check
 
     // find the target first
-    if (!(victim = get_char_vis_world(this, arg1.c_str(), NULL, EXACT_YES))) {
-      victim = get_char_vis_world(this, arg1.c_str(), NULL, EXACT_NO);
+    if (!(victim = get_char_vis_world(this, arg1.c_str(), nullptr, EXACT_YES))) {
+      victim = get_char_vis_world(this, arg1.c_str(), nullptr, EXACT_NO);
     }
     if (victim) {
-      act("$N is carrying:", FALSE, this, NULL, victim, TO_CHAR);
+      act("$N is carrying:", false, this, nullptr, victim, TO_CHAR);
       if (!arg2.empty()) {
         list_in_heap_filtered(victim->stuff, this, arg2, 1);
       } else {
@@ -2617,7 +2617,7 @@ void TBeing::doEquipment(const sstring& arg) {
   one_argument(argument, buf);
   if (is_abbrev(buf, "damaged") || is_abbrev(buf, "all.damaged")) {
     sendTo("The following equipment is damaged:\n\r");
-    found = FALSE;
+    found = false;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
       TThing* tt = equipment[j];
       TObj* tobj = dynamic_cast<TObj*>(tt);
@@ -2627,10 +2627,10 @@ void TBeing::doEquipment(const sstring& arg) {
           sendTo(format("%s%-25s%s") % cyan() % buf % norm());
           if (canSee(tobj)) {
             showTo(tobj, SHOW_MODE_SHORT_PLUS);
-            found = TRUE;
+            found = true;
           } else {
             sendTo("Something.\n\r");
-            found = TRUE;
+            found = true;
           }
         }
       }
@@ -2648,17 +2648,17 @@ void TBeing::doEquipment(const sstring& arg) {
 
     sendTo(format("You are using %i pounds of equipment:\n\r") %
            (int)equipment.getWeight());
-    found = FALSE;
+    found = false;
     for (j = MIN_WEAR; j < MAX_WEAR; j++) {
       if (equipment[j] && !equipment[j]->shouldntBeShown(j)) {
         buf = format("<%s>") % describeEquipmentSlot(j);
         sendTo(format("%s%-26s%s") % cyan() % buf % norm());
         if (canSee(equipment[j])) {
           showTo(equipment[j], SHOW_MODE_SHORT_PLUS);
-          found = TRUE;
+          found = true;
         } else {
           sendTo("Something.\n\r");
-          found = TRUE;
+          found = true;
         }
       } else if (tattoos[j] != "") {
         sstring slot = describeEquipmentSlot(j);
@@ -2682,9 +2682,9 @@ void TBeing::doEquipment(const sstring& arg) {
     sstring tattoos[MAX_WEAR];
 
     // allow immortals to get eq of players
-    TBeing* victim = get_char_vis_world(this, argument, NULL, EXACT_YES);
+    TBeing* victim = get_char_vis_world(this, argument, nullptr, EXACT_YES);
     if (!victim)
-      victim = get_char_vis_world(this, argument, NULL, EXACT_NO);
+      victim = get_char_vis_world(this, argument, nullptr, EXACT_NO);
 
     if (victim) {
       db.query(
@@ -2695,7 +2695,7 @@ void TBeing::doEquipment(const sstring& arg) {
         tattoos[convertTo<int>(db["location"])] = db["tattoo"];
       }
 
-      act("$N is using.", FALSE, this, 0, victim, TO_CHAR);
+      act("$N is using.", false, this, 0, victim, TO_CHAR);
       for (j = MIN_WEAR; j < MAX_WEAR; j++) {
         if (victim->equipment[j] && !victim->equipment[j]->shouldntBeShown(j)) {
           buf = format("<%s>") % victim->describeEquipmentSlot(j);
@@ -2940,15 +2940,15 @@ void do_where_thing(const TBeing* ch, const TThing* obj, bool recurse,
     if (obj->in_room != Room::NOWHERE)
       return;
     else if (dynamic_cast<TBeing*>(obj->parent))
-      do_where_thing(ch, obj->parent, TRUE, sb);
+      do_where_thing(ch, obj->parent, true, sb);
     else if (obj->equippedBy)
-      do_where_thing(ch, obj->equippedBy, TRUE, sb);
+      do_where_thing(ch, obj->equippedBy, true, sb);
     else if (obj->stuckIn)
-      do_where_thing(ch, obj->stuckIn, TRUE, sb);
+      do_where_thing(ch, obj->stuckIn, true, sb);
     else if (obj->parent)
-      do_where_thing(ch, obj->parent, TRUE, sb);
+      do_where_thing(ch, obj->parent, true, sb);
     else if (obj->riding)
-      do_where_thing(ch, obj->riding, TRUE, sb);
+      do_where_thing(ch, obj->riding, true, sb);
   }
 }
 
@@ -2960,7 +2960,7 @@ void TBeing::doWhere(const char* argument) {
   Descriptor* d;
   int iNum, count, tcount = 0;
   sstring sb, tmp_sb, last_sb = "";
-  bool dash = FALSE, gods = FALSE, found = false;
+  bool dash = false, gods = false, found = false;
   unsigned int tot_found = 0;
   sstring tStString(argument), tStName(""), tStArg("");
   std::map<int, bool> vnums_notmatch;
@@ -3050,7 +3050,7 @@ void TBeing::doWhere(const char* argument) {
           sendTo("Syntax : where -g\n\r");
           return;
         }
-        gods = TRUE;
+        gods = true;
       }
       sb += "Players:\n\r--------\n\r";
 
@@ -3103,7 +3103,7 @@ void TBeing::doWhere(const char* argument) {
             break;
           }
 
-          do_where_thing(this, i, TRUE, sb);
+          do_where_thing(this, i, true, sb);
           *buf = 1;
           if (iNum != 0)
             break;
@@ -3891,7 +3891,7 @@ void TBeing::doLimbs(const sstring& argument) {
   sstring who;
   affectedData* aff;
   TThing* t;
-  TBeing* v = NULL;
+  TBeing* v = nullptr;
 
   if (!argument.empty()) {
     if (!(v = get_char_room_vis(this, argument))) {
@@ -3929,67 +3929,67 @@ void TBeing::doLimbs(const sstring& argument) {
       sendTo(COLOR_BASIC, format("<R>%s %s%s%s %s missing!<Z>\n\r") % who %
                             red() % v->describeBodySlot(i) % norm() %
                             v->slotPlurality(i));
-      found = TRUE;
+      found = true;
       continue;
     }
     if (perc < 1.00) {
       sendTo(COLOR_BASIC, format("%s %s %s %s.\n\r") % who %
                             v->describeBodySlot(i) % v->slotPlurality(i) %
                             LimbHealth(perc));
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_USELESS)) {
       sendTo(COLOR_BASIC, format("%s %s%s%s %s <O>useless<Z>!\n\r") % who %
                             red() % v->describeBodySlot(i) % norm() %
                             v->slotPlurality(i));
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_PARALYZED)) {
       sendTo(COLOR_BASIC, format("%s %s%s%s %s <O>paralyzed<Z>!\n\r") % who %
                             red() % v->describeBodySlot(i) % norm() %
                             v->slotPlurality(i));
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_BRUISED)) {
       sendTo(COLOR_BASIC, format("%s %s%s%s %s <p>bruised<Z>!\n\r") % who %
                             red() % v->describeBodySlot(i) % norm() %
                             v->slotPlurality(i));
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_BLEEDING)) {
       sendTo(COLOR_BASIC, format("%s %s%s%s %s <R>bleeding profusely<Z>!\n\r") %
                             who % red() % v->describeBodySlot(i) % norm() %
                             v->slotPlurality(i));
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_INFECTED)) {
       sendTo(COLOR_BASIC,
         format("%s %s%s%s %s infected with many <o>germs<1>!\n\r") % who %
           red() % v->describeBodySlot(i) % norm() % v->slotPlurality(i));
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_BROKEN)) {
       sendTo(COLOR_BASIC, format("%s %s%s%s %s broken!\n\r") % who % red() %
                             v->describeBodySlot(i) % norm() %
                             v->slotPlurality(i));
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_LEPROSED)) {
       sendTo(COLOR_BASIC, format("Leprosy has set into %s %s%s%s!\n\r") %
                             who.uncap() % red() % v->describeBodySlot(i) %
                             norm());
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_GANGRENOUS)) {
       sendTo(COLOR_BASIC, format("<k>Gangrene<1> has set into %s %s%s%s!\n\r") %
                             who.uncap() % red() % v->describeBodySlot(i) %
                             norm());
-      found = TRUE;
+      found = true;
     }
     if (v->isLimbFlags(i, PART_TRANSFORMED)) {
       sendTo(COLOR_BASIC, format("%s %s%s%s has been transformed!\n\r") % who %
                             red() % v->describeBodySlot2(i) % norm());
-      found = TRUE;
+      found = true;
     }
     if ((t = v->getStuckIn(i))) {
       if (canSee(t)) {
@@ -4013,7 +4013,7 @@ void TBeing::doLimbs(const sstring& argument) {
           sendTo(format("%s %s %s.\n\r") % who %
                  ((v == this) ? "have" : "has") %
                  DiseaseInfo[affToDisease(*aff)].name);
-          found = TRUE;
+          found = true;
         }
       }
     }
@@ -4234,7 +4234,7 @@ void TBeing::doEvaluate(const char* argument) {
     // should probably make a more modular isGreatOutdoorsSector() check or
     // something...
     if (doesKnowSkill(SKILL_ENCAMP)) {
-      bool can_do = TRUE;
+      bool can_do = true;
       if (roomp->isCitySector() ||
           !(roomp->isForestSector() || roomp->isBeachSector() ||
             roomp->isHillSector() || roomp->isMountainSector() ||
@@ -4243,11 +4243,11 @@ void TBeing::doEvaluate(const char* argument) {
             roomp->getSectorType() == SECT_TEMPERATE_CAVE ||
             roomp->getSectorType() == SECT_TROPICAL_CAVE ||
             roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
-        can_do = FALSE;
+        can_do = false;
       } else if (roomp->isFlyingSector() || roomp->isVertSector() ||
                  roomp->isUnderwaterSector() || roomp->isAirSector() ||
                  roomp->isOceanSector() || roomp->isRiverSector()) {
-        can_do = FALSE;
+        can_do = false;
       } else if (roomp->getSectorType() == SECT_TEMPERATE_BUILDING ||
                  roomp->getSectorType() == SECT_TROPICAL_BUILDING ||
                  roomp->getSectorType() == SECT_ARCTIC_BUILDING ||
@@ -4257,19 +4257,19 @@ void TBeing::doEvaluate(const char* argument) {
                      roomp->getSectorType() == SECT_ARCTIC_CAVE)) ||
                  roomp->isRoomFlag(ROOM_FLOODED) ||
                  roomp->isRoomFlag(ROOM_ON_FIRE)) {
-        can_do = FALSE;
+        can_do = false;
       } else if (roomp->isRoomFlag(ROOM_NO_FLEE) ||
                  roomp->isRoomFlag(ROOM_NO_ESCAPE) ||
                  roomp->isRoomFlag(ROOM_NO_HEAL) ||
                  roomp->isRoomFlag(ROOM_HAVE_TO_WALK)) {
-        can_do = FALSE;
+        can_do = false;
       }
       if (can_do)
         sendTo("You may camp here.\n\r");
     }
 
     if (doesKnowSkill(SKILL_FORAGE)) {
-      bool can_do = TRUE;
+      bool can_do = true;
       if (roomp->isCitySector() ||
           !(roomp->isForestSector() || roomp->isBeachSector() ||
             roomp->isHillSector() || roomp->isMountainSector() ||
@@ -4278,11 +4278,11 @@ void TBeing::doEvaluate(const char* argument) {
             roomp->getSectorType() == SECT_TEMPERATE_CAVE ||
             roomp->getSectorType() == SECT_TROPICAL_CAVE ||
             roomp->getSectorType() == SECT_ARCTIC_CAVE)) {
-        can_do = FALSE;
+        can_do = false;
       } else if (roomp->isFlyingSector() || roomp->isVertSector() ||
                  roomp->isUnderwaterSector() || roomp->isAirSector() ||
                  roomp->isOceanSector() || roomp->isRiverSector()) {
-        can_do = FALSE;
+        can_do = false;
       } else if (roomp->getSectorType() == SECT_TEMPERATE_BUILDING ||
                  roomp->getSectorType() == SECT_TROPICAL_BUILDING ||
                  roomp->getSectorType() == SECT_ARCTIC_BUILDING ||
@@ -4292,24 +4292,24 @@ void TBeing::doEvaluate(const char* argument) {
                      roomp->getSectorType() == SECT_ARCTIC_CAVE)) ||
                  roomp->isRoomFlag(ROOM_FLOODED) ||
                  roomp->isRoomFlag(ROOM_ON_FIRE)) {
-        can_do = FALSE;
+        can_do = false;
       }
       if (can_do)
         sendTo("You may forage here.\n\r");
     }
 
     if (doesKnowSkill(SKILL_DIVINATION)) {
-      bool can_do = TRUE;
+      bool can_do = true;
       if (!(roomp->isForestSector() || roomp->isBeachSector() ||
             roomp->isHillSector() || roomp->isMountainSector() ||
             roomp->isNatureSector() || roomp->isRoadSector() ||
             roomp->isSwampSector())) {
-        can_do = FALSE;
+        can_do = false;
       } else if (roomp->isIndoorSector() || roomp->isArcticSector() ||
                  roomp->isRoomFlag(ROOM_INDOORS) ||
                  roomp->isRoomFlag(ROOM_FLOODED) ||
                  roomp->isRoomFlag(ROOM_ON_FIRE)) {
-        can_do = FALSE;
+        can_do = false;
       }
       if (can_do)
         sendTo("You may divine for water here.\n\r");
@@ -4348,7 +4348,7 @@ void TBeing::doEvaluate(const char* argument) {
     }
   } else {
     wearSlotT j;
-    if (!(obj = get_thing_in_equip(this, arg, equipment, &j, TRUE, &count))) {
+    if (!(obj = get_thing_in_equip(this, arg, equipment, &j, true, &count))) {
       if (!(obj = searchLinkedListVis(this, arg, stuff, &count))) {
         sendTo(format("You do not seem to have the '%s'.\n\r") % arg);
         return;
@@ -4390,23 +4390,23 @@ void TFood::describeCondition(const TBeing* ch) const {
 
 void TFood::describeObjectSpecifics(const TBeing* ch) const {
   if (isFoodFlag(FOOD_SPOILED))
-    act("$p looks a bit spoiled.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p looks a bit spoiled.", false, ch, this, 0, TO_CHAR);
 }
 
 void TCorpse::describeObjectSpecifics(const TBeing* ch) const {
   if (isCorpseFlag(CORPSE_NO_SKIN))
-    act("$p doesn't appear to have any skin left on it.", FALSE, ch, this, 0,
+    act("$p doesn't appear to have any skin left on it.", false, ch, this, 0,
       TO_CHAR);
   else if (isCorpseFlag(CORPSE_HALF_SKIN))
-    act("$p appears to have been half skinned.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p appears to have been half skinned.", false, ch, this, 0, TO_CHAR);
   if (isCorpseFlag(CORPSE_NO_DISSECT))
-    act("$p appears to have been dissected already.", FALSE, ch, this, 0,
+    act("$p appears to have been dissected already.", false, ch, this, 0,
       TO_CHAR);
   if (isCorpseFlag(CORPSE_NO_BUTCHER))
-    act("$p doesn't appear to have any meat left on it.", FALSE, ch, this, 0,
+    act("$p doesn't appear to have any meat left on it.", false, ch, this, 0,
       TO_CHAR);
   else if (isCorpseFlag(CORPSE_HALF_BUTCHERED))
-    act("$p appears to have been half butchered.", FALSE, ch, this, 0, TO_CHAR);
+    act("$p appears to have been half butchered.", false, ch, this, 0, TO_CHAR);
 }
 
 void TSymbol::describeObjectSpecifics(const TBeing* ch) const {
@@ -4507,7 +4507,7 @@ void TObj::describeMe(TBeing* ch) const {
 
   if (ch->isImmortal() || canWear(ITEM_WEAR_TAKE)) {
     // weight >= 1.0
-    float wgt = getTotalWeight(TRUE);
+    float wgt = getTotalWeight(true);
 
     sstring volumeBuf = volumeDisplay(getVolume());
 
@@ -4518,27 +4518,27 @@ void TObj::describeMe(TBeing* ch) const {
     else
       ch->sendTo(
         format("It weighs about %d drechel%s and occupies roughly %s.\n\r") %
-        getDrechels(TRUE) % ((getDrechels(TRUE) == 1) ? "" : "s") % volumeBuf);
+        getDrechels(true) % ((getDrechels(true) == 1) ? "" : "s") % volumeBuf);
   }
   describeCondition(ch);
   if (isObjStat(ITEM_GLOW))
-    act("It is <o>glowing<1>.", FALSE, ch, 0, 0, TO_CHAR);
+    act("It is <o>glowing<1>.", false, ch, 0, 0, TO_CHAR);
   if (isObjStat(ITEM_BURNING))
-    act("It is <r>burning<1>.", FALSE, ch, 0, 0, TO_CHAR);
+    act("It is <r>burning<1>.", false, ch, 0, 0, TO_CHAR);
   if (isObjStat(ITEM_CHARRED))
-    act("It is <k>charred<1>.", FALSE, ch, 0, 0, TO_CHAR);
+    act("It is <k>charred<1>.", false, ch, 0, 0, TO_CHAR);
   if (isObjStat(ITEM_RUSTY))
-    act("It is <o>rusty<1>.", FALSE, ch, 0, 0, TO_CHAR);
+    act("It is <o>rusty<1>.", false, ch, 0, 0, TO_CHAR);
   describeContains(ch);
 
   if (dynamic_cast<TBeing*>(rider)) {
-    act("$p is being used by $N.", FALSE, ch, this, horseMaster(), TO_CHAR);
+    act("$p is being used by $N.", false, ch, this, horseMaster(), TO_CHAR);
     for (t2 = rider->nextRider; t2; t2 = t2->nextRider) {
       if (t2 == horseMaster())
         continue;
       if (!dynamic_cast<TBeing*>(t2))
         continue;
-      act("$p is also being used by $N.", FALSE, ch, this, t2, TO_CHAR);
+      act("$p is also being used by $N.", false, ch, this, t2, TO_CHAR);
     }
   }
   if (!action_description.empty()) {
@@ -4577,7 +4577,7 @@ sstring TBeing::describePointiness(const TBaseWeapon* obj) const {
     diff = (double)((double)sharp / (double)maxsharp);
   //  strcpy(capbuf, objs(obj));
   sstring capbuf =
-    colorString(this, desc, objs(obj), NULL, COLOR_OBJECTS, TRUE);
+    colorString(this, desc, objs(obj), nullptr, COLOR_OBJECTS, true);
 
   if (diff <= .02)
     strcpy(sharpbuf, "is totally blunt");
@@ -4612,7 +4612,7 @@ sstring TBeing::describeBluntness(const TBaseWeapon* obj) const {
     diff = (double)((double)sharp / (double)maxsharp);
   //  strcpy(capbuf, objs(obj));
   sstring capbuf =
-    colorString(this, desc, objs(obj), NULL, COLOR_OBJECTS, TRUE);
+    colorString(this, desc, objs(obj), nullptr, COLOR_OBJECTS, true);
 
   if (diff <= .02)
     strcpy(sharpbuf, "is totally jagged");
@@ -5275,7 +5275,7 @@ void TWand::descMagicSpells(TBeing* ch) const {
   strncpy(capbuf, ch->objs(this), cElements(capbuf) - 1);
 
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
-      ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
+      ((das = getDisciplineNumber(iSpell, false)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
       ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") %
                                   sstring(capbuf).cap() %
@@ -5294,7 +5294,7 @@ void TStaff::descMagicSpells(TBeing* ch) const {
   strncpy(capbuf, ch->objs(this), cElements(capbuf) - 1);
 
   if ((iSpell = getSpell()) >= MIN_SPELL && discArray[iSpell] &&
-      ((das = getDisciplineNumber(iSpell, FALSE)) != DISC_NONE)) {
+      ((das = getDisciplineNumber(iSpell, false)) != DISC_NONE)) {
     if (ch->doesKnowSkill(iSpell))
       ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") %
                                   sstring(capbuf).cap() %
@@ -5314,7 +5314,7 @@ void TScroll::descMagicSpells(TBeing* ch) const {
 
   spell = getSpell(0);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
-      ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
+      ((das = getDisciplineNumber(spell, false)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
       ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") %
                                   sstring(capbuf).cap() %
@@ -5327,7 +5327,7 @@ void TScroll::descMagicSpells(TBeing* ch) const {
 
   spell = getSpell(1);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
-      ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
+      ((das = getDisciplineNumber(spell, false)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
       ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") %
                                   sstring(capbuf).cap() %
@@ -5340,7 +5340,7 @@ void TScroll::descMagicSpells(TBeing* ch) const {
 
   spell = getSpell(2);
   if (spell > TYPE_UNDEFINED && discArray[spell] &&
-      ((das = getDisciplineNumber(spell, FALSE)) != DISC_NONE)) {
+      ((das = getDisciplineNumber(spell, false)) != DISC_NONE)) {
     if (ch->doesKnowSkill(spell))
       ch->sendTo(COLOR_OBJECTS, format("%s produces: %s.\n\r") %
                                   sstring(capbuf).cap() %
@@ -5526,7 +5526,7 @@ void TBeing::sendRoomName(TRoom* rp) const {
     if (hasColorStrings(this, rp->getName(), 2)) {
       sendTo(COLOR_ROOM_NAME,
         format("%s%s%s%s%s%s\n\r") % (d->m_bIsClient ? clientBuf : "") %
-          dynColorRoom(rp, 1, TRUE) % norm() % red() % rFlagStr % norm());
+          dynColorRoom(rp, 1, true) % norm() % red() % rFlagStr % norm());
     } else {
       sendTo(COLOR_ROOM_NAME, format("%s%s%s%s%s%s%s\n\r") %
                                 (d->m_bIsClient ? clientBuf : "") %
@@ -5538,7 +5538,7 @@ void TBeing::sendRoomName(TRoom* rp) const {
       sendTo(COLOR_BASIC,
         format("%s%s%s%s%s%s\n\r") % (d->m_bIsClient ? clientBuf : "") %
           purple() %
-          colorString(this, desc, rp->getName(), NULL, COLOR_NONE, FALSE) %
+          colorString(this, desc, rp->getName(), nullptr, COLOR_NONE, false) %
           red() % rFlagStr % norm());
     } else {
       sendTo(COLOR_BASIC, format("%s%s%s%s%s%s\n\r") %
@@ -5579,10 +5579,10 @@ void TBeing::sendRoomDesc(TRoom* rp) {
   if (hasColorStrings(this, tmp, 2)) {
     if (rp->isRoomFlag(ROOM_NO_AUTOFORMAT)) {
       sendTo(COLOR_ROOMS,
-        format("%s%s") % dynColorRoom(rp, 2, TRUE).toCRLF() % norm());
+        format("%s%s") % dynColorRoom(rp, 2, true).toCRLF() % norm());
     } else {
       sendTo(COLOR_ROOMS, format("%s%s") %
-                            autoFormatDesc(dynColorRoom(rp, 2, TRUE), true) %
+                            autoFormatDesc(dynColorRoom(rp, 2, true), true) %
                             norm());
     }
   } else {

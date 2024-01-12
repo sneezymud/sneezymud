@@ -49,7 +49,7 @@ class sstring : public std::string {
     const sstring ansiToAard() const;
     const size_t lengthNoColor() const;
 
-    // call this function with NULL data to get alloc size, then agian with
+    // call this function with nullptr data to get alloc size, then agian with
     // alloc'd array
     int split(const char delimit, sstring* data) const;
     size_t findBetween(const sstring start, const sstring toFind,

@@ -169,7 +169,7 @@ void procGlobalRoomStuff::run(const TPulse&) const {
     // weather noise
     if (Weather::getWeather(*rp) == Weather::LIGHTNING) {
       if (!::number(0, 9)) {
-        TThing* in_room = NULL;
+        TThing* in_room = nullptr;
 
         soundNumT snd = pickRandSound(SOUND_THUNDER_1, SOUND_THUNDER_4);
         for (StuffIter it = rp->stuff.begin();
@@ -178,7 +178,7 @@ void procGlobalRoomStuff::run(const TPulse&) const {
           if (!ch || !ch->desc)
             continue;
 
-          act("A flash of lightning illuminates the land.", FALSE, ch, 0, 0,
+          act("A flash of lightning illuminates the land.", false, ch, 0, 0,
             TO_CHAR, ANSI_YELLOW);
           ch->playsound(snd, SOUND_TYPE_NOISE);
         }
@@ -208,29 +208,29 @@ void procDeityCheck::run(const TPulse&) const {
 
   if (num_d <= 0) {
     if (num_t <= 0) {
-      // no tokens, no deitys in game.  chance put in game 
+      // no tokens, no deitys in game.  chance put in game
       if (!number(0,300)) {
         deity = read_mobile(Mob::DEITY_JUDGMENT, VIRTUAL);
         thing_to_room(deity,Room::IMPERIA);
       }
       return;
     }
-    // token in game, do not load 
+    // token in game, do not load
   } else {
-    // there's already a deity somewhere 
-    // chance of getting rid of extra deity 
+    // there's already a deity somewhere
+    // chance of getting rid of extra deity
     if (!number(0,200)) {
       for (deity = character_list; deity; deity = deity->next) {
         if (deity->mobVnum() == Mob::DEITY_JUDGMENT)
           break;
       }
-      if (!deity) {   
+      if (!deity) {
         vlogf(LOG_BUG,"Big 'Ol bug in deityCheck()");
         return;
       }
       vlogf(LOG_BUG,format("Purging the deity in room #%d") % deity->in_room);
       delete deity;
-      deity = NULL;
+      deity = nullptr;
     }
   }
   return;
@@ -268,7 +268,7 @@ void procApocCheck::run(const TPulse&) const {
   rc = mob->genericTeleport(SILENT_NO);
   if (IS_SET_DELETE(rc, DELETE_THIS)) {
     delete mob;
-    mob = NULL;
+    mob = nullptr;
     return;
   }
   // vlogf(LOG_MISC,"Loading a horseman into the game.");
@@ -288,7 +288,7 @@ void procCallRoomSpec::run(const TPulse&) const {
   for (i = 0; i < roomspec_db.size(); i++) {
     TRoom* rp = roomspec_db[i];
     if (rp) {
-      rp->checkSpec(NULL, CMD_GENERIC_PULSE, NULL, rp);
+      rp->checkSpec(nullptr, CMD_GENERIC_PULSE, nullptr, rp);
     }
   }
 }
@@ -352,7 +352,7 @@ void procDoRoomSaves::run(const TPulse&) const {
   // this is not a very good implementation of this idea, but I don't have time
   // to work on it - this is an emergency patch for a dupe bug
   unsigned int i;
-  TRoom* rp = NULL;
+  TRoom* rp = nullptr;
 
   for (i = 0; i < roomsave_db.size(); i++) {
     // usually, you'll get several saves queued up in a row,
@@ -378,61 +378,61 @@ int TBeing::riverFlow(int) {
   TThing *t, *t2;
 
   if (!roomp)
-    return FALSE;
+    return false;
 
   // I won't float unless my mount does
   if (riding)
-    return FALSE;
+    return false;
 
   // lets skip floating for generic mobs
   if (!isPc() && (!rider || !rider->isPc()))
-    return FALSE;
+    return false;
 
   // no water = no float
   if (!roomp->isUnderwaterSector() && !roomp->isWaterSector())
-    return FALSE;
+    return false;
 
   // still water
   if (roomp->getRiverSpeed() <= 0)
-    return FALSE;
+    return false;
 
   if (::number(0, roomp->getRiverSpeed()) &&
       ::number(0, roomp->getRiverSpeed())) {
-    return FALSE;
+    return false;
   }
 
   dirTypeT rd = roomp->getRiverDir();
   if ((rd < MIN_DIR) || (rd >= MAX_DIR)) {
     vlogf(LOG_BUG,
       format("Illegal river direction (%d) in room %d") % rd % inRoom());
-    return FALSE;
+    return false;
   }
 
   if (!isSwimming())
-    return FALSE;
+    return false;
 
   if (isImmortal()) {
-    act("The waters swirl and eddy about you.", FALSE, this, NULL, NULL,
+    act("The waters swirl and eddy about you.", false, this, nullptr, nullptr,
       TO_CHAR);
-    return FALSE;
+    return false;
   }
 
   if (!exitDir(rd) || (exitDir(rd)->to_room == Room::NOWHERE) ||
       IS_SET(exitDir(rd)->condition, EXIT_CLOSED))
-    return FALSE;
+    return false;
 
   if ((rc = canSwim(rd)) > 0) {
     sendTo(format("You swim %s against the current.\n\r") %
            (isAffected(AFF_SWIM) ? "effortlessly" : "valiantly"));
-    return FALSE;
+    return false;
   }
 
   if (!(to_room = real_roomp(exitDir(rd)->to_room)))
-    return FALSE;
+    return false;
 
   // skip flow, just confuses things
   if (fight())
-    return FALSE;
+    return false;
 
   // all checks done, now cause things to start flowing
   for (t = rider; t; t = t2) {
@@ -452,7 +452,7 @@ int TBeing::riverFlow(int) {
     else
       sprintf(buf, "$n also drifts in from the %s riding $N.",
         dirs[rev_dir(rd)]);
-    act(buf, FALSE, t, 0, this, TO_NOTVICT);
+    act(buf, false, t, 0, this, TO_NOTVICT);
   }
 
   sendTo(format("You drift %s...\n\r") % dirs[rd]);
@@ -462,7 +462,7 @@ int TBeing::riverFlow(int) {
 
   if (!rider) {
     sprintf(buf, "$n drifts in from the %s.", dirs[rev_dir(rd)]);
-    act(buf, FALSE, this, 0, 0, TO_ROOM);
+    act(buf, false, this, 0, 0, TO_ROOM);
   }
 
   // all drifting is done, and text has been shown
@@ -471,7 +471,7 @@ int TBeing::riverFlow(int) {
     rc = riding->genericMovedIntoRoom(to_room, was_in);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete riding;
-      riding = NULL;
+      riding = nullptr;
       REM_DELETE(rc, DELETE_THIS);
     }
   } else {
@@ -496,7 +496,7 @@ bool TObj::isTrash() {
 }
 
 bool TObj::joinTrash() {
-  TTrashPile* pile = NULL;
+  TTrashPile* pile = nullptr;
 
   // check if this item is eligible to be trash
   if (!isTrash())
@@ -532,79 +532,79 @@ int TObj::riverFlow(int) {
   TThing *t, *t2;
 
   if (!roomp)  // this covers carried && equipped
-    return FALSE;
+    return false;
 
   // attached objects don't float away
   if (isObjStat(ITEM_ATTACHED))
-    return FALSE;
+    return false;
 
   if (!roomp->isUnderwaterSector() && !roomp->isWaterSector())
-    return FALSE;
+    return false;
 
   if (roomp->getRiverSpeed() <= 0)
-    return FALSE;
+    return false;
 
   if (this->objVnum() == Obj::GENERIC_FLARE)
-    return FALSE;
+    return false;
 
   if (::number(0, roomp->getRiverSpeed()) &&
       ::number(0, roomp->getRiverSpeed()))
-    return FALSE;
+    return false;
 
   dirTypeT rd = roomp->getRiverDir();
 
   if ((rd < MIN_DIR) || (rd >= MAX_DIR))
-    return FALSE;
+    return false;
 
   if (rd == DIR_UP) {
     if (!willFloat())
-      return FALSE;
+      return false;
   }
 
   if (isLevitating() && (!roomp->isUnderwaterSector()))
-    return FALSE;
+    return false;
 
   if (!exitDir(rd) || !exitDir(rd)->to_room ||
       (exitDir(rd)->to_room == Room::NOWHERE) ||
       IS_SET(exitDir(rd)->condition, EXIT_CLOSED))
-    return FALSE;
+    return false;
 
   tmprp = roomp;
   if (!(to_room = real_roomp(tmprp->dir_option[rd]->to_room)))
-    return FALSE;
+    return false;
 
   for (t = rider; t; t = t2) {
     t2 = t->nextRider;
 
     t->sendTo(format("Your %s drifts %s...\n\r") % objn(this) % dirs[rd]);
     sprintf(buf, "$n drifts %s in $p.", dirs[rd]);
-    act(buf, TRUE, t, this, 0, TO_ROOM);
+    act(buf, true, t, this, 0, TO_ROOM);
 
     --(*t);
     *to_room += *t;
 
     sprintf(buf, "$n drifts in from the %s on $p.", dirs[rev_dir(rd)]);
-    act(buf, TRUE, t, this, 0, TO_ROOM);
+    act(buf, true, t, this, 0, TO_ROOM);
     TBeing* tbt = dynamic_cast<TBeing*>(t);
     if (tbt)
       tbt->doLook("", CMD_LOOK);
   }
   if (!rider) {
     sprintf(buf, "$n drifts %s...", dirs[rd]);
-    act(buf, TRUE, this, 0, 0, TO_ROOM);
+    act(buf, true, this, 0, 0, TO_ROOM);
   }
   --(*this);
   *to_room += *this;
 
   if (!rider) {
     sprintf(buf, "$n drifts in from the %s...", dirs[rev_dir(rd)]);
-    act(buf, TRUE, this, 0, 0, TO_ROOM);
+    act(buf, true, this, 0, 0, TO_ROOM);
   }
   if (riding) {
     rc = riding->genericMovedIntoRoom(to_room, was_in);
     if (IS_SET_DELETE(rc, DELETE_THIS)) {
       delete riding;
-      riding = NULL;
+      riding = nullptr;
       REM_DELETE(rc, DELETE_THIS);
     }
   } else {
@@ -613,43 +613,43 @@ int TObj::riverFlow(int) {
       return DELETE_THIS;
   }
 
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_THIS
 int TBeing::teleportRoomFlow(int pulse) {
   TRoom *dest, *tmprp;
-  const char* tmp_desc = NULL;
+  const char* tmp_desc = nullptr;
   int rc;
 
   if (!roomp || roomp->getTeleTarg() <= 0 || roomp->getTeleTime() <= 0)
-    return FALSE;
+    return false;
 
   // pulse will be a multiple of Pulse::TELEPORT
   if (pulse % roomp->getTeleTime())
-    return FALSE;
+    return false;
 
   if (isImmortal()) {
     if (roomp && roomp->ex_description &&
         (tmp_desc = roomp->ex_description->findExtraDesc("_tele_")) &&
         inRoom() == roomp->getTeleTarg()) {
-      act(tmp_desc, TRUE, this, NULL, NULL, TO_CHAR);
+      act(tmp_desc, true, this, nullptr, nullptr, TO_CHAR);
     } else {
       // Change this to use act so it didnt send while in redit - Russ 011397
       act("Your immortal status allows you to avoid a teleporter in this room.",
-        TRUE, this, NULL, NULL, TO_CHAR);
+        true, this, nullptr, nullptr, TO_CHAR);
       // sendTo("Your immortal status allows you to avoid a teleporter in this
       // room.\n\r");
     }
-    return FALSE;
+    return false;
   }
 
   if (!(dest = real_roomp(roomp->getTeleTarg()))) {
     vlogf(LOG_BUG, format("Invalid teleTarg room (%d) to room (%d)") %
                      inRoom() % roomp->getTeleTarg());
-    return FALSE;
+    return false;
   }
-  tmprp = roomp;  // char_from_room will set roomp to NULL
+  tmprp = roomp;  // char_from_room will set roomp to nullptr
   --(*this);
   thing_to_room(this, tmprp->getTeleTarg());
   if (tmprp && tmprp->ex_description &&
@@ -665,7 +665,7 @@ int TBeing::teleportRoomFlow(int pulse) {
     return DELETE_THIS;
   }
 
-  return TRUE;
+  return true;
 }
 
 // returns DELETE_THIS
@@ -674,26 +674,26 @@ int TObj::teleportRoomFlow(int pulse) {
   int rc;
 
   if (!roomp || roomp->getTeleTarg() <= 0 || roomp->getTeleTime() <= 0)
-    return FALSE;
+    return false;
 
   // it's room echo type teleport, so don't move objects
   if (roomp->number == roomp->getTeleTarg())
-    return FALSE;
+    return false;
 
   // pulse will be a multiple of Pulse::TELEPORT
   if (pulse % roomp->getTeleTime())
-    return FALSE;
+    return false;
 
   if (isTasked || isLocked)
-    return FALSE;
+    return false;
 
   if (isObjStat(ITEM_NOPURGE) || isObjStat(ITEM_ATTACHED))
-    return FALSE;
+    return false;
 
   if (!(dest = real_roomp(roomp->getTeleTarg()))) {
     vlogf(LOG_BUG, format("Invalid teleTarg room (%d) to room (%d)") %
                      inRoom() % roomp->getTeleTarg());
-    return FALSE;
+    return false;
   }
 
   act("$n disappears from the room.", false, this, 0, 0, TO_ROOM);
@@ -733,14 +733,14 @@ void TMonster::makeNoise() {
 // return DELETE_THIS if this should die
 int TBeing::updateAffects() {
   static affectedData *af, *next_af_dude;
-  bool shouldReturn = FALSE;
+  bool shouldReturn = false;
   int rc;
 
   if (isPc() && !desc)
-    return FALSE;
+    return false;
 
   if (!affected)
-    return FALSE;
+    return false;
 
   for (af = affected; af; af = next_af_dude) {
     next_af_dude = af->next;
@@ -828,32 +828,32 @@ int TBeing::updateAffects() {
 
         if ((af->type == SPELL_POLYMORPH) || (af->type == SKILL_DISGUISE) ||
             (af->type == SPELL_SHAPESHIFT)) {
-          shouldReturn = TRUE;
+          shouldReturn = true;
         } else if (af->type == AFFECT_TRANSFORMED_ARMS) {
           if (!af->shouldGenerateText()) {
             next_af_dude = af->next->next;
           }
-          transformLimbsBack("", WEAR_ARM_R, FALSE);
+          transformLimbsBack("", WEAR_ARM_R, false);
         } else if (af->type == AFFECT_TRANSFORMED_HANDS) {
           if (!af->shouldGenerateText()) {
             next_af_dude = af->next->next;
           }
-          transformLimbsBack("", WEAR_HAND_R, FALSE);
+          transformLimbsBack("", WEAR_HAND_R, false);
         } else if (af->type == AFFECT_TRANSFORMED_LEGS) {
           if (!af->shouldGenerateText()) {
             next_af_dude = af->next->next;
           }
-          transformLimbsBack("", WEAR_LEG_R, FALSE);
+          transformLimbsBack("", WEAR_LEG_R, false);
         } else if (af->type == AFFECT_TRANSFORMED_HEAD) {
           if (!af->shouldGenerateText()) {
             next_af_dude = af->next->next;
           }
-          transformLimbsBack("", WEAR_HEAD, FALSE);
+          transformLimbsBack("", WEAR_HEAD, false);
         } else if (af->type == AFFECT_TRANSFORMED_NECK) {
           if (!af->shouldGenerateText()) {
             next_af_dude = af->next->next;
           }
-          transformLimbsBack("", WEAR_NECK, FALSE);
+          transformLimbsBack("", WEAR_NECK, false);
         } else {
           affectRemove(af);
         }
@@ -951,7 +951,7 @@ int TBeing::updateTickStuff() {
       af.modifier = 0;
       af.location = APPLY_NONE;
       af.bitvector = AFF_SLEEP;
-      affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
+      affectJoin(nullptr, &af, AVG_DUR_NO, AVG_EFF_NO);
 
       if (getPosition() > POSITION_SLEEPING) {
         if (riding) {
@@ -984,9 +984,9 @@ int TBeing::updateTickStuff() {
         act(format(
               "Your %s itches slighty.  It seems to finally be growing back!") %
               describeBodySlot(slot),
-          FALSE, this, 0, 0, TO_CHAR);
+          false, this, 0, 0, TO_CHAR);
         act(format("$n's %s begins to grow back!") % describeBodySlot(slot),
-          FALSE, this, 0, 0, TO_ROOM);
+          false, this, 0, 0, TO_ROOM);
         setLimbFlags(slot, 0);
         if (slot == WEAR_HAND_R || slot == WEAR_HAND_L)
           setLimbFlags(wearSlotT(slot + 9), 0);
@@ -999,17 +999,17 @@ int TBeing::updateTickStuff() {
       act(
         "You feel your stomach rumbling.  Perhaps a snack will make you feel "
         "better.",
-        FALSE, this, 0, 0, TO_CHAR);
-      act("$n's stomach emits a loud rumble.", FALSE, this, 0, 0, TO_ROOM);
+        false, this, 0, 0, TO_CHAR);
+      act("$n's stomach emits a loud rumble.", false, this, 0, 0, TO_ROOM);
       if (getCond(FULL) > 0)
         setCond(FULL,
           max(sbyte(0), sbyte(getCond(FULL) - sbyte(::number(1, 5)))));
       else if (getMove() > 0) {
-        act("Your hunger makes you feel tired and listless.", FALSE, this, 0, 0,
+        act("Your hunger makes you feel tired and listless.", false, this, 0, 0,
           TO_CHAR);
         addToMove(-::number(4, 8));
       } else {
-        act("Your hunger makes you feel weak.", FALSE, this, 0, 0, TO_CHAR);
+        act("Your hunger makes you feel weak.", false, this, 0, 0, TO_CHAR);
         addToHit(-1);
       }
     }
@@ -1053,7 +1053,7 @@ int TBeing::updateTickStuff() {
 #if 1
     bool isAnElemental = isElemental();
     bool hasExp = getExp();
-    bool shouldGo = TRUE;
+    bool shouldGo = true;
     bool isAnOrphanPet = affectedBySpell(AFFECT_ORPHAN_PET);
     bool isAnOldPet = (affectedBySpell(AFFECT_PET) && !isAnOrphanPet);
     int j;
@@ -1063,12 +1063,12 @@ int TBeing::updateTickStuff() {
       if (specials.hunting || act_ptr || getSnum() >= 0 ||
           (dynamic_cast<TMonster*>(this) &&
             dynamic_cast<TMonster*>(this)->hates.clist)) {
-        shouldGo = FALSE;
+        shouldGo = false;
       }
       if (shouldGo && stuff.empty()) {
         for (j = MIN_WEAR; j < MAX_WEAR; j++) {
           if (equipment[j]) {
-            shouldGo = FALSE;
+            shouldGo = false;
             break;
           }
         }
@@ -1082,7 +1082,7 @@ int TBeing::updateTickStuff() {
             }
             return 0;
           } else {
-            act("$n passes away from natural causes.", TRUE, this, NULL, NULL,
+            act("$n passes away from natural causes.", true, this, nullptr, nullptr,
               TO_ROOM);
             j = die(DAMAGE_NORMAL);
             if (IS_SET_DELETE(j, DELETE_THIS)) {
@@ -1149,7 +1149,7 @@ int TBeing::updateBodyParts() {
         if (getCurLimbHealth(i) <= 0) {
           sendTo(format("The gangrene in your %s causes it to fall off!!\n\r") %
                  describeBodySlot(i));
-          makePartMissing(i, TRUE);
+          makePartMissing(i, true);
         }
       }
       if (isLimbFlags(i, PART_MISSING)) {
@@ -1194,8 +1194,8 @@ int TBeing::updateBodyParts() {
                               describeBodySlot(i) % getName());
           act(format("The <k>gangrene<1> in your %s causes it to fall off!") %
                 describeBodySlot(i),
-            FALSE, this, 0, 0, TO_CHAR);
-          makePartMissing(i, TRUE);
+            false, this, 0, 0, TO_CHAR);
+          makePartMissing(i, true);
         }
       }
     }
@@ -1232,20 +1232,20 @@ int TBeing::updateBodyParts() {
         ((flags & PART_BANDAGED) ? 1 + conLimbBonus : conLimbBonus));
     }
   }
-  return TRUE;
+  return true;
 }
 
 // this is called once per tick (about 36 real seconds)
 // DELETE_THIS implies this should be deleted
 int TBeing::updateHalfTickStuff() {
-  int foodReject = FALSE;
-  int rc = FALSE;
-  TRoom* room = NULL;
+  int foodReject = false;
+  int rc = false;
+  TRoom* room = nullptr;
   int loadRoom = 0;
   int vnum = mobVnum();
   affectedData* af;
   bool berserk_noheal = 0;
-  TBeing* trider = NULL;
+  TBeing* trider = nullptr;
   unsigned int i, hours_first, hours_last, severity;
 
   updatePos();
@@ -1291,7 +1291,7 @@ int TBeing::updateHalfTickStuff() {
 
   if (isAffected(AFF_SLEEP) && (getPosition() > POSITION_SLEEPING)) {
     sendTo("You grow sleepy and can remain awake no longer.\n\r");
-    act("$n collapses as $e falls asleep.", TRUE, this, 0, 0, TO_ROOM);
+    act("$n collapses as $e falls asleep.", true, this, 0, 0, TO_ROOM);
     setPosition(POSITION_SLEEPING);
   }
 
@@ -1315,8 +1315,8 @@ int TBeing::updateHalfTickStuff() {
   // player is scared of flame (exempt or lessen for mobs?)
   if (hasQuestBit(TOG_HAS_PYROPHOBIA) && (getPosition() > POSITION_SLEEPING) &&
       !::number(0, 1) && (::number(0, 100) - GetMaxLevel() * 2 > 0)) {
-    TThing* fleeing = NULL;
-    TBeing* tBeing = NULL;
+    TThing* fleeing = nullptr;
+    TBeing* tBeing = nullptr;
     bool flee = roomp->getSectorType() == SECT_VOLCANO_LAVA ||
                 roomp->getSectorType() == SECT_FIRE ||
                 roomp->getSectorType() == SECT_FIRE_ATMOSPHERE;
@@ -1355,10 +1355,10 @@ int TBeing::updateHalfTickStuff() {
           this, fleeing, tBeing, TO_CHAR);
       else if (fleeing)
         act("You lose your cool at the sight of $N and freak out!", false, this,
-          NULL, fleeing, TO_CHAR);
+          nullptr, fleeing, TO_CHAR);
       else
         act("You lose your cool in this fiery place and freak out!", false,
-          this, NULL, NULL, TO_CHAR);
+          this, nullptr, nullptr, TO_CHAR);
       doFlee("");
       addCommandToQue("flee");
       addCommandToQue("flee");
@@ -1383,11 +1383,11 @@ int TBeing::updateHalfTickStuff() {
 
         buf = getInsult(tb);
         buf2 = format("$n looks at you and says, \"%s\"") % buf;
-        act(buf2, TRUE, this, 0, tb, TO_VICT);
+        act(buf2, true, this, 0, tb, TO_VICT);
         buf2 = format("$n looks at $N and says, \"%s\"") % buf;
-        act(buf2, TRUE, this, 0, tb, TO_NOTVICT);
+        act(buf2, true, this, 0, tb, TO_NOTVICT);
         buf2 = format("You look at $N and say, \"%s\"") % buf;
-        act(buf2, TRUE, this, 0, tb, TO_CHAR);
+        act(buf2, true, this, 0, tb, TO_CHAR);
 
         if ((tm = dynamic_cast<TMonster*>(*it)))
           tm->aiUpset(this);
@@ -1445,7 +1445,7 @@ int TBeing::updateHalfTickStuff() {
         format("Somehow %s was not flying in flying sector") % getName());
     }
   }
-  if (roomp && (zone_table[roomp->getZoneNum()].enabled == TRUE) &&
+  if (roomp && (zone_table[roomp->getZoneNum()].enabled == true) &&
       (!inImperia() || (in_room == Room::NOCTURNAL_STORAGE)) &&
       ((specials.act & ACT_DIURNAL) || (specials.act & ACT_NOCTURNAL)) &&
       !fight() && (getPosition() > POSITION_STUNNED) && (!::number(0, 2)) &&
@@ -1483,40 +1483,40 @@ int TBeing::updateHalfTickStuff() {
           --(*this);
           *room += *this;
           if (vnum == Mob::FREEZING_MIST) {
-            act("$n forms in the surrounding air.", TRUE, this, 0, 0, TO_ROOM);
+            act("$n forms in the surrounding air.", true, this, 0, 0, TO_ROOM);
 #if 1
           } else if (ex_description &&
                      ex_description->findExtraDesc("bamfin")) {
-            act(ex_description->findExtraDesc("bamfin"), TRUE, this, 0, 0,
+            act(ex_description->findExtraDesc("bamfin"), true, this, 0, 0,
               TO_ROOM);
 #endif
           } else if (IS_SET(specials.act, ACT_GHOST)) {
-            act("$n shimmers into existence.", TRUE, this, 0, 0, TO_ROOM);
+            act("$n shimmers into existence.", true, this, 0, 0, TO_ROOM);
           } else if (isAnimal()) {
-            act("$n awakens from $s slumber.", TRUE, this, 0, 0, TO_ROOM);
+            act("$n awakens from $s slumber.", true, this, 0, 0, TO_ROOM);
           } else {
             char tString[256];
 
             sprintf(tString, "$n %s to begin work.", race->moveIn());
-            act(tString, TRUE, this, 0, 0, TO_ROOM);
+            act(tString, true, this, 0, 0, TO_ROOM);
           }
         }
       } else if (!GameTime::is_daytime() &&
                  ((vnum == Mob::FREEZING_MIST) || !specials.hunting)) {
         if (vnum == Mob::FREEZING_MIST) {
-          act("$n is dispersed by the coming of morning.", TRUE, this, 0, 0,
+          act("$n is dispersed by the coming of morning.", true, this, 0, 0,
             TO_ROOM);
 #if 1
         } else if (ex_description && ex_description->findExtraDesc("bamfout")) {
-          act(ex_description->findExtraDesc("bamfout"), TRUE, this, 0, 0,
+          act(ex_description->findExtraDesc("bamfout"), true, this, 0, 0,
             TO_ROOM);
 #endif
         } else if (IS_SET(specials.act, ACT_GHOST)) {
-          act("$n shimmers out of existence.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n shimmers out of existence.", true, this, 0, 0, TO_ROOM);
         } else if (isAnimal()) {
-          act("$n wanders off to find $s den.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n wanders off to find $s den.", true, this, 0, 0, TO_ROOM);
         } else {
-          act("$n notices the time, and hurries on $s way.", TRUE, this, 0, 0,
+          act("$n notices the time, and hurries on $s way.", true, this, 0, 0,
             TO_ROOM);
         }
         if (!(room = real_roomp(Room::NOCTURNAL_STORAGE))) {
@@ -1565,40 +1565,40 @@ int TBeing::updateHalfTickStuff() {
           --(*this);
           *room += *this;
           if (vnum == Mob::FREEZING_MIST) {
-            act("$n forms in the surrounding air.", TRUE, this, 0, 0, TO_ROOM);
+            act("$n forms in the surrounding air.", true, this, 0, 0, TO_ROOM);
 #if 1
           } else if (ex_description &&
                      ex_description->findExtraDesc("bamfin")) {
-            act(ex_description->findExtraDesc("bamfin"), TRUE, this, 0, 0,
+            act(ex_description->findExtraDesc("bamfin"), true, this, 0, 0,
               TO_ROOM);
 #endif
           } else if (IS_SET(specials.act, ACT_GHOST)) {
-            act("$n shimmers into existence.", TRUE, this, 0, 0, TO_ROOM);
+            act("$n shimmers into existence.", true, this, 0, 0, TO_ROOM);
           } else if (isAnimal()) {
-            act("$n awakens from $s slumber.", TRUE, this, 0, 0, TO_ROOM);
+            act("$n awakens from $s slumber.", true, this, 0, 0, TO_ROOM);
           } else {
             char tString[256];
 
             sprintf(tString, "$n %s to begin work.", race->moveIn());
-            act(tString, TRUE, this, 0, 0, TO_ROOM);
+            act(tString, true, this, 0, 0, TO_ROOM);
           }
         }
       } else if (!GameTime::is_nighttime() &&
                  ((vnum == Mob::FREEZING_MIST) || !specials.hunting)) {
         if (vnum == Mob::FREEZING_MIST) {
-          act("$n is dispersed by the coming of morning.", TRUE, this, 0, 0,
+          act("$n is dispersed by the coming of morning.", true, this, 0, 0,
             TO_ROOM);
 #if 1
         } else if (ex_description && ex_description->findExtraDesc("bamfout")) {
-          act(ex_description->findExtraDesc("bamfout"), TRUE, this, 0, 0,
+          act(ex_description->findExtraDesc("bamfout"), true, this, 0, 0,
             TO_ROOM);
 #endif
         } else if (IS_SET(specials.act, ACT_GHOST)) {
-          act("$n shimmers out of existence.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n shimmers out of existence.", true, this, 0, 0, TO_ROOM);
         } else if (isAnimal()) {
-          act("$n wanders off to find $s den.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n wanders off to find $s den.", true, this, 0, 0, TO_ROOM);
         } else {
-          act("$n notices the time, and hurries on $s way.", TRUE, this, 0, 0,
+          act("$n notices the time, and hurries on $s way.", true, this, 0, 0,
             TO_ROOM);
         }
         if (!(room = real_roomp(Room::NOCTURNAL_STORAGE))) {
@@ -1623,7 +1623,7 @@ int TBeing::updateHalfTickStuff() {
   if (!roomp) {
     vlogf(LOG_BUG,
       format("%s has no roomp in updateHalf tick. Try to find") % getName());
-    return FALSE;
+    return false;
   }
 
   if (!isPc() || desc) {
@@ -1634,7 +1634,7 @@ int TBeing::updateHalfTickStuff() {
 
   if (!fight()) {
     if (isCombatMode(ATTACK_BERSERK))
-      goBerserk(NULL);
+      goBerserk(nullptr);
   }
   rc = terrainSpecial();
   if (IS_SET_DELETE(rc, DELETE_THIS))
@@ -1644,10 +1644,10 @@ int TBeing::updateHalfTickStuff() {
     if (isCombatMode(ATTACK_BERSERK) || isAffected(SKILL_BERSERK)) {
       if (isCombatMode(ATTACK_BERSERK)) {
         setCombatMode(ATTACK_OFFENSE);
-        act("You finally calm down and stop berserking.", TRUE, this, 0, 0,
+        act("You finally calm down and stop berserking.", true, this, 0, 0,
           TO_CHAR);
         sendTo("--> Attack mode set to: offense.\n\r");
-        act("$n calms down and stops berserking.", TRUE, this, 0, 0, TO_ROOM);
+        act("$n calms down and stops berserking.", true, this, 0, 0, TO_ROOM);
       }
 
       for (af = affected; af; af = af->next) {
@@ -1668,7 +1668,7 @@ int TBeing::updateHalfTickStuff() {
     if (roomp && roomp->isIndoorSector() &&
         !(roomp->isWaterSector() || roomp->isUnderwaterSector())) {
       if (hasTransformedLimb())
-        transformLimbsBack("", MAX_WEAR, FALSE);
+        transformLimbsBack("", MAX_WEAR, false);
 
       if (desc && desc->original && desc->original->polyed &&
           !desc->original->isImmortal() &&
@@ -1758,7 +1758,7 @@ int TBeing::updateHalfTickStuff() {
           if (!old_drink)
             sendTo(COLOR_BASIC, "<R>You are parched.<1>\n\r");
 
-          foodReject = TRUE;
+          foodReject = true;
           updatePos();
           if (points.hit < -10) {
             vlogf(LOG_MISC,
@@ -1828,20 +1828,20 @@ int TBeing::updateHalfTickStuff() {
       doSave(SILENT_YES);
     }
   }
-  return FALSE;
+  return false;
 }
 
 void TPCorpse::decayMe() {
 #if 0
-  int found = FALSE;
-  TThing *tmp = NULL;
+  int found = false;
+  TThing *tmp = nullptr;
 
   for(StuffIter it=stuff.begin();it!=stuff.end() && (tmp=*it);++it) {
     TObj *obj = dynamic_cast<TObj *>(tmp);
     if (!obj)
       continue;
     if (!obj->isObjStat(ITEM_NORENT)) {
-      found = TRUE;
+      found = true;
       break;
     }
   }
@@ -1870,14 +1870,14 @@ void TObj::decayMe() {
 
 // returns DELETE_THIS if this has been destroyed (for whatever reason),
 int TObj::objectTickUpdate(int pulse) {
-  TBeing* ch = NULL;
+  TBeing* ch = nullptr;
   TThing* t;
   TEgg* egg;
   int rc;
 
   if (name.empty()) {
     vlogf(LOG_BUG,
-      format("Object with NULL name in objectTickUpdate() : %d") % objVnum());
+      format("Object with nullptr name in objectTickUpdate() : %d") % objVnum());
     return DELETE_THIS;
   }
 
@@ -1893,15 +1893,15 @@ int TObj::objectTickUpdate(int pulse) {
             // thing is held or in inventory
             switch (affected[j].type) {
               case SPELL_BLESS:
-                act("The blessing surrounding your $o fades.", FALSE, ch, this,
+                act("The blessing surrounding your $o fades.", false, ch, this,
                   0, TO_CHAR);
-                act("The blessing surrounding $n's $o fades.", FALSE, ch, this,
+                act("The blessing surrounding $n's $o fades.", false, ch, this,
                   0, TO_ROOM);
                 break;
               case SPELL_BLESS_DEIKHAN:
-                act("The blessing surrounding your $o fades.", FALSE, ch, this,
+                act("The blessing surrounding your $o fades.", false, ch, this,
                   0, TO_CHAR);
-                act("The blessing surrounding $n's $o fades.", FALSE, ch, this,
+                act("The blessing surrounding $n's $o fades.", false, ch, this,
                   0, TO_ROOM);
                 break;
               default:
@@ -1911,11 +1911,11 @@ int TObj::objectTickUpdate(int pulse) {
             // thing is lying in the room
             switch (affected[j].type) {
               case SPELL_BLESS:
-                act("The blessing surrounding $n fades.", FALSE, this, 0, 0,
+                act("The blessing surrounding $n fades.", false, this, 0, 0,
                   TO_ROOM);
                 break;
               case SPELL_BLESS_DEIKHAN:
-                act("The blessing surrounding $n fades.", FALSE, this, 0, 0,
+                act("The blessing surrounding $n fades.", false, this, 0, 0,
                   TO_ROOM);
                 break;
               default:
@@ -1950,14 +1950,14 @@ int TObj::objectTickUpdate(int pulse) {
       } else {
         if (equippedBy) {
           // Worn in equipment
-          act("$p decay$Q into nothing.", FALSE, equippedBy, this, 0, TO_CHAR);
+          act("$p decay$Q into nothing.", false, equippedBy, this, 0, TO_CHAR);
           for (StuffIter it = stuff.begin(); it != stuff.end();) {
             t = *(it++);
             (*t)--;
             *equippedBy += *t;
           }
         } else if (parent) {
-          act("$p disintegrate$Q in your hands.", FALSE, parent, this, 0,
+          act("$p disintegrate$Q in your hands.", false, parent, this, 0,
             TO_CHAR);
           for (StuffIter it = stuff.begin(); it != stuff.end();) {
             t = *(it++);
@@ -1965,7 +1965,7 @@ int TObj::objectTickUpdate(int pulse) {
             *parent += *t;
           }
         } else if (roomp) {  // in room
-          act("$n fade$R into insignificance.", TRUE, this, 0, 0, TO_ROOM);
+          act("$n fade$R into insignificance.", true, this, 0, 0, TO_ROOM);
           for (StuffIter it = stuff.begin(); it != stuff.end();) {
             t = *(it++);
             (*t)--;
@@ -2002,9 +2002,9 @@ int TObj::objectTickUpdate(int pulse) {
       }
       if (ch->reconcileDamage(ch, (int)baseDamage(), SPELL_INFECT) == -1) {
         delete ch;
-        ch = NULL;
+        ch = nullptr;
       }
-      return FALSE;
+      return false;
     }
   }
   // Sound objects
@@ -2034,7 +2034,7 @@ int TObj::objectTickUpdate(int pulse) {
 
   if (roomp && roomp->isRoomFlag(ROOM_ON_FIRE) &&
       !dynamic_cast<TSeeThru*>(this)) {
-    int rc = burnObject(NULL, 30);
+    int rc = burnObject(nullptr, 30);
     if (IS_SET_ONLY(rc, DELETE_THIS)) {
       return DELETE_THIS;
     }
@@ -2073,11 +2073,11 @@ int TObj::objectTickUpdate(int pulse) {
   // this relies on fact that:
   // weatherAndTime() and objectTickUpdate both trigger off of !tick_update
   // from socket.cc.  weatherAndTime has already been called
-  rc = checkSpec(NULL, CMD_OBJ_WEATHER_TIME, "", NULL);
+  rc = checkSpec(nullptr, CMD_OBJ_WEATHER_TIME, "", nullptr);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return DELETE_THIS;
 
-  return FALSE;
+  return false;
 }
 
 int TObj::updateBurning(void) {
@@ -2124,48 +2124,48 @@ int TObj::updateBurning(void) {
     if ((t = equippedBy) || (t = parent) || (t = stuckIn)) {
       ch = dynamic_cast<TBeing*>(t);
     } else
-      ch = NULL;
+      ch = nullptr;
 
     dropGas(::number(1, 5), GAS_SMOKE);
 
     switch (::number(0, 5)) {
       case 0:
         if (ch) {
-          act("Your $o crackles merrily as it <r>burns<1> down.", FALSE, ch,
+          act("Your $o crackles merrily as it <r>burns<1> down.", false, ch,
             this, 0, TO_CHAR);
-          act("$n's $o crackles merrily as it <r>burns<1> down.", FALSE, ch,
+          act("$n's $o crackles merrily as it <r>burns<1> down.", false, ch,
             this, 0, TO_ROOM);
         } else
-          act("$n crackles merrily as it <r>burns<1> down.", FALSE, this, 0, 0,
+          act("$n crackles merrily as it <r>burns<1> down.", false, this, 0, 0,
             TO_ROOM);
         break;
       case 1:
         if (ch) {
-          act("Your $o <r>burns<1> away steadily.", FALSE, ch, this, 0,
+          act("Your $o <r>burns<1> away steadily.", false, ch, this, 0,
             TO_CHAR);
-          act("$n's $o <r>burns<1> away steadily.", FALSE, ch, this, 0,
+          act("$n's $o <r>burns<1> away steadily.", false, ch, this, 0,
             TO_ROOM);
         } else
-          act("$n <r>burns<1> away steadily.", FALSE, this, 0, 0, TO_ROOM);
+          act("$n <r>burns<1> away steadily.", false, this, 0, 0, TO_ROOM);
         break;
       case 2:
         if (ch) {
-          act("<k>Smoke<1> billows forth from $o as it <r>burns<1>.", FALSE, ch,
+          act("<k>Smoke<1> billows forth from $o as it <r>burns<1>.", false, ch,
             this, 0, TO_CHAR);
           act("<k>Smoke<1> billows forth from $n's $o as it <r>burns<1>.",
-            FALSE, ch, this, 0, TO_ROOM);
+            false, ch, this, 0, TO_ROOM);
         } else
-          act("<k>Smoke<1> billows forth from $n as it <r>burns<1>.", FALSE,
+          act("<k>Smoke<1> billows forth from $n as it <r>burns<1>.", false,
             this, 0, 0, TO_ROOM);
         break;
       case 3:
         if (ch) {
-          act("Your $o <Y>flares<1> up momentarily as it <r>burns<1>.", FALSE,
+          act("Your $o <Y>flares<1> up momentarily as it <r>burns<1>.", false,
             ch, this, 0, TO_CHAR);
-          act("$n's $o <Y>flares<1> up momentarily as it <r>burns<1>.", FALSE,
+          act("$n's $o <Y>flares<1> up momentarily as it <r>burns<1>.", false,
             ch, this, 0, TO_ROOM);
         } else
-          act("$n <Y>flares<1> up momentarily as it <r>burns<1>.", FALSE, this,
+          act("$n <Y>flares<1> up momentarily as it <r>burns<1>.", false, this,
             0, 0, TO_ROOM);
         break;
       default:
@@ -2174,7 +2174,7 @@ int TObj::updateBurning(void) {
     }
 
     if ((equippedBy || stuckIn) && ch) {
-      act("Your $o burns you!", FALSE, ch, this, 0, TO_CHAR);
+      act("Your $o burns you!", false, ch, this, 0, TO_CHAR);
       ch->reconcileDamage(ch, ::number(1, 7), DAMAGE_FIRE);
     }
 
@@ -2201,8 +2201,8 @@ int TObj::updateBurning(void) {
             material_nums[this->getMaterial()].flammability > 0 &&
             (::number(0, 100) < chance)) {
           act("The <Y>fire<1> spreads to $n and it begins to <r>burn<1>!",
-            FALSE, to, 0, 0, TO_ROOM);
-          to->setBurning(NULL);
+            false, to, 0, 0, TO_ROOM);
+          to->setBurning(nullptr);
 
           // now count up burning volume
           if (to && to->isObjStat(ITEM_BURNING))
@@ -2215,7 +2215,7 @@ int TObj::updateBurning(void) {
       tr->setRoomFlagBit(ROOM_ON_FIRE);
   }
 
-  return FALSE;
+  return false;
 }
 
 // returns DELETE_THIS
@@ -2225,18 +2225,18 @@ int TBeing::terrainSpecial() {
   TThing* t;
 
   if (!roomp)
-    return FALSE;
+    return false;
 
   switch (roomp->getSectorType()) {
     case SECT_FIRE:
     case SECT_FIRE_ATMOSPHERE:
       if (!desc && isPc())
-        return FALSE;
+        return false;
       dam = ::number(2, 6);
       if (roomp->isRoomFlag(ROOM_PEACEFUL))
         dam = 0;
       sendTo("Flames lick about you, scorching your skin.\n\r");
-      act("Flames lick about $n and scorch $s skin.", TRUE, this, 0, 0,
+      act("Flames lick about $n and scorch $s skin.", true, this, 0, 0,
         TO_ROOM);
       return reconcileDamage(this, dam, SPELL_FIREBALL);
     case SECT_DESERT:
@@ -2244,7 +2244,7 @@ int TBeing::terrainSpecial() {
       for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
         evaporate(this, SILENT_NO);
       }
-      return FALSE;
+      return false;
     case SECT_SUBARCTIC:
     case SECT_ARCTIC_WASTE:
     case SECT_TUNDRA:
@@ -2274,12 +2274,12 @@ int TBeing::terrainSpecial() {
         break;
       if (::number(0, num))
         break;
-      act("A cold wind blows through, chilling you to the bone.", TRUE, this, 0,
+      act("A cold wind blows through, chilling you to the bone.", true, this, 0,
         0, TO_CHAR);
 #if 0
-      if (affectedBySpell(AFFECT_WAS_INDOORS) || 
+      if (affectedBySpell(AFFECT_WAS_INDOORS) ||
 	  hasDisease(DISEASE_FROSTBITE))
-	return FALSE;  // make it only hit em if they sit outside for a while
+	return false;  // make it only hit em if they sit outside for a while
       if (isImmune(IMMUNE_COLD, WEAR_BODY))
         break;
       if (dynamic_cast<TMonster *>(this))
@@ -2305,22 +2305,22 @@ int TBeing::terrainSpecial() {
     aff.type = AFFECT_WAS_INDOORS;
     aff.level = 50;
     aff.duration = Pulse::UPDATES_PER_MUDHOUR * 12;
-    affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
+    affectJoin(this, &aff, AVG_DUR_NO, AVG_EFF_YES, false);
   }
 
   if (toggleInfo[TOG_QUESTCODE4]->toggle) {
     if (affectedBySpell(AFFECT_WAS_INDOORS) || hasDisease(DISEASE_FROSTBITE))
-      return FALSE;  // make it only hit em if they sit outside for a while
+      return false;  // make it only hit em if they sit outside for a while
     if (Weather::getSky() != Weather::SKY_RAINING &&
         Weather::getSky() != Weather::SKY_CLOUDY &&
         Weather::getSky() != Weather::SKY_LIGHTNING)
-      return FALSE;
+      return false;
     if (isImmune(IMMUNE_COLD, WEAR_BODY))
-      return FALSE;
+      return false;
     if (dynamic_cast<TMonster*>(this))
-      return FALSE;
+      return false;
     if (isPc() && isImmortal())
-      return FALSE;
+      return false;
 
     af.type = AFFECT_DISEASE;
     af.level = 0;
@@ -2334,7 +2334,7 @@ int TBeing::terrainSpecial() {
 
   Weather::getWet(this, roomp);
 
-  return FALSE;
+  return false;
 }
 
 int TBeing::passOut() {
@@ -2347,7 +2347,7 @@ int TBeing::passOut() {
   // Old Code for passout Check : {
   // int drunk = max(1,plotStat(STAT_CURRENT,STAT_CON,13,28,23)-getCond(DRUNK))
   // if (::number(0,drunk))
-  // return FALSE;
+  // return false;
   // } end of Old Code
   //
   // Modified the chance of passing out from being drunk.
@@ -2360,14 +2360,14 @@ int TBeing::passOut() {
   double conEffect = 1.0 - plotStat(STAT_CURRENT, STAT_CON, 0.25, 0.75, 0.50);
   chancePassOut = (int)((double)chancePassOut * 2.0 * conEffect);
   if (::number(1, 100) > chancePassOut)
-    return FALSE;
+    return false;
   af.type = AFFECT_DRUNK;
   af.level = max(1, (int)getCond(DRUNK));
   af.duration = max(1, getCond(DRUNK) - 15);
   af.modifier = 0;
   af.location = APPLY_NONE;
   af.bitvector = AFF_SLEEP;
-  affectJoin(NULL, &af, AVG_DUR_NO, AVG_EFF_NO);
+  affectJoin(nullptr, &af, AVG_DUR_NO, AVG_EFF_NO);
 
   if (awake())
     sendTo("You pass out from too much drink.\n\r");
@@ -2379,18 +2379,18 @@ int TBeing::passOut() {
         return DELETE_THIS;
     }
     if (awake()) {
-      act("$n passes out!", TRUE, this, NULL, NULL, TO_ROOM);
+      act("$n passes out!", true, this, nullptr, nullptr, TO_ROOM);
       setPosition(POSITION_SLEEPING);
     }
   }
-  return TRUE;
+  return true;
 }
 
 int TBeing::bumpHead(int* iHeight) {
   *iHeight = roomp->getRoomHeight();
 
   if (!willBumpHead(roomp))
-    return FALSE;
+    return false;
 
   if (!isPc() && !inImperia() && master && isAffected(AFF_CHARM))
     vlogf(LOG_LOW,
@@ -2400,11 +2400,11 @@ int TBeing::bumpHead(int* iHeight) {
   int num = max(0, (getPosHeight() - *iHeight));
   if (::number(0, num) && (!isPc() || desc)) {
     sendTo("You bump your head on the ceiling.  OUCH!\n\r");
-    act("$n bumps $s head on the ceiling.  That had to hurt.", TRUE, this, 0, 0,
+    act("$n bumps $s head on the ceiling.  That had to hurt.", true, this, 0, 0,
       TO_ROOM);
     reconcileDamage(this, ::number(1, 3), DAMAGE_NORMAL);
   }
-  return TRUE;
+  return true;
 }
 
 void TBeing::checkCharmMana() {
@@ -2429,7 +2429,7 @@ void TBeing::checkCharmMana() {
       continue;
 
     if (!sameRoom(*ch)) {
-      ch->stopFollower(TRUE);
+      ch->stopFollower(true);
       continue;
     }
     int mana = 0;
@@ -2450,24 +2450,24 @@ void TBeing::checkCharmMana() {
           format(
             "You lack the mental concentration to control %s any longer.\n\r") %
             ch->getName());
-        ch->stopFollower(TRUE);
+        ch->stopFollower(true);
         if (ch->fight()) {
           rc = ch->doFlee("");
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete ch;
-            ch = NULL;
+            ch = nullptr;
           }
         }
         setMana(0);
       } else {
         if (isthrall)
-          act("The effort of keeping $N enthralled weakens you.", FALSE, this,
+          act("The effort of keeping $N enthralled weakens you.", false, this,
             0, ch, TO_CHAR);
         else
-          act("The effort of keeping $N charmed weakens you.", FALSE, this, 0,
+          act("The effort of keeping $N charmed weakens you.", false, this, 0,
             ch, TO_CHAR);
 
-        reconcileMana(TYPE_UNDEFINED, FALSE, mana);
+        reconcileMana(TYPE_UNDEFINED, false, mana);
       }
     } else {
       // clerics and deikhans
@@ -2477,21 +2477,21 @@ void TBeing::checkCharmMana() {
         sendTo(COLOR_MOBS,
           format("You lack the concentration to control %s any longer.\n\r") %
             ch->getName());
-        ch->stopFollower(TRUE);
+        ch->stopFollower(true);
         if (ch->fight()) {
           rc = ch->doFlee("");
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
             delete ch;
-            ch = NULL;
+            ch = nullptr;
           }
         }
         setPiety(0.0);
       } else {
         if (isthrall)
-          act("The effort of keeping $N enthralled weakens you.", FALSE, this,
+          act("The effort of keeping $N enthralled weakens you.", false, this,
             0, ch, TO_CHAR);
         else
-          act("The effort of keeping $N charmed weakens you.", FALSE, this, 0,
+          act("The effort of keeping $N charmed weakens you.", false, this, 0,
             ch, TO_CHAR);
 
         addToPiety(-piety);

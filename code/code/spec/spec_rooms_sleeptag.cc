@@ -56,10 +56,10 @@ void sleepTagEndGame(SSTControl*);
 int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
   TRoom* tRoom) {
   if (gamePort == Config::Port::PROD || !ACTIVE)
-    return FALSE;
+    return false;
 
-  SSTControl* tJob = NULL;
-  SPEntry* tEntry = NULL;
+  SSTControl* tJob = nullptr;
+  SPEntry* tEntry = nullptr;
   TThing *tThing, *tIThing, *tCThing, *tEThing;
   sstring tStOrig(tArg), tStString(""), tStBuffer("");
 
@@ -72,18 +72,18 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
       tStBuffer = tStOrig.word(1);
 
       if (tStString.lower() != "sleeptag")
-        return FALSE;
+        return false;
 
       if (tStBuffer.lower() == "start") {
         if (!(tRoom->act_ptr = new SSTControl())) {
           vlogf(LOG_PROC, "Unable to allocate new SSTControl structure");
-          return FALSE;
+          return false;
         }
 
         tJob = static_cast<SSTControl*>(tRoom->act_ptr);
 
         tJob->isActive = true;
-        tJob->tPlayer = NULL;
+        tJob->tPlayer = nullptr;
 
         for (StuffIter it = tRoom->stuff.begin();
              it != tRoom->stuff.end() && (tThing = *it); ++it) {
@@ -110,7 +110,7 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
               vlogf(LOG_PROC,
                 format("Serious problems in Sleeptag.  [0: %d/%d]") % !tNRoom %
                   !tStaff);
-              return FALSE;
+              return false;
             }
 
             *tThing += *tStaff;
@@ -123,10 +123,10 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
 
           sleepTagEndGame(tJob);
           delete static_cast<SSTControl*>(tRoom->act_ptr);
-          tRoom->act_ptr = NULL;
+          tRoom->act_ptr = nullptr;
         }
 
-        return TRUE;
+        return true;
       }
 
       if (tStBuffer.lower() == "help") {
@@ -135,7 +135,7 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
         tBeing->sendTo(
           "Be warned that everyone in the room will be put into play.\n\r");
 
-        return TRUE;
+        return true;
       }
       break;
     case CMD_GENERIC_PULSE:
@@ -147,7 +147,7 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
           // If they are active an in the game, then just return;
           if (tEntry->tPlayer->roomp &&
               tEntry->tPlayer->roomp->getZoneNum() == tRoom->getZoneNum())
-            return FALSE;
+            return false;
 
           tEntry->isActive = false;
         }
@@ -155,7 +155,7 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
         // We have 0 active players and the game is still active.  End it now.
         sleepTagEndGame(tJob);
         delete static_cast<SSTControl*>(tRoom->act_ptr);
-        tRoom->act_ptr = NULL;
+        tRoom->act_ptr = nullptr;
       }
 
       break;
@@ -169,7 +169,7 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
         if (tObj && tObj->objVnum() == SLEEPTAG_STAFF) {
           --(*tThing);
           delete tThing;
-          tThing = NULL;
+          tThing = nullptr;
         } else if (!tThing->stuff.empty())
           for (StuffIter itt = tThing->stuff.begin();
                itt != tThing->stuff.end();) {
@@ -179,7 +179,7 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
             if (tCObj && tCObj->objVnum() == SLEEPTAG_STAFF) {
               --(*tCThing);
               delete tCThing;
-              tCThing = NULL;
+              tCThing = nullptr;
             }
 
             tCThing = tEThing;
@@ -187,7 +187,7 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
 
         tThing = tIThing;
       }
-      return FALSE;
+      return false;
       break;
     case CMD_EAST:
     case CMD_WEST:
@@ -199,13 +199,13 @@ int sleepTagControl(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
     case CMD_SE:
     case CMD_SW:
       tBeing->sendTo("Please don't enter the field in this way...\n\r");
-      return TRUE;
+      return true;
       break;
     default:
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 void sleepTagEndGame(SSTControl* tJob) {
@@ -217,19 +217,19 @@ void sleepTagEndGame(SSTControl* tJob) {
     tEntry = tNextEntry;
   }
 
-  tJob->tPlayer = NULL;
+  tJob->tPlayer = nullptr;
 }
 
 int sleepTagRoom(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
   TRoom* tRoom) {
   if (gamePort == Config::Port::PROD || !ACTIVE)
-    return FALSE;
+    return false;
 
   TThing* tThing;
   TBeing* tPerson;
   TRoom* tRP;
-  TStaff* tStaff = NULL;
-  TWand* tWand = NULL;
+  TStaff* tStaff = nullptr;
+  TWand* tWand = nullptr;
 
   switch (tCmd) {
     case CMD_GENERIC_PULSE:
@@ -260,14 +260,14 @@ int sleepTagRoom(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
             if (tPerson->isAffected(AFF_SLEEP)) {
               --(*tPerson);
               delete tPerson;
-              tPerson = NULL;
+              tPerson = nullptr;
             } else
               ;
             // tPerson->sleepTagMonsterSearch();
           }
         }
 
-      return TRUE;
+      return true;
       break;
     case CMD_SHOUT:
       if (!tArg || !*tArg)
@@ -276,12 +276,12 @@ int sleepTagRoom(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
         sleepTagReport(tRoom->getZoneNum(), "<g>%s<z> shouts, \"%s<1>\"\n\r",
           tBeing->getName().c_str(), tArg);
 
-      return TRUE;
+      return true;
       break;
     case CMD_TRANSFER:
       if (!tBeing->hasWizPower(POWER_WIZARD)) {
         tBeing->sendTo("I'm afraid you can not do that here.\n\r");
-        return TRUE;
+        return true;
       }
 
       break;
@@ -315,15 +315,15 @@ int sleepTagRoom(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
             tWand->setCurCharges(1);
 
           int tRc =
-            (tStaff ? tStaff->useMe(tBeing, NULL) : tWand->useMe(tBeing, NULL));
+            (tStaff ? tStaff->useMe(tBeing, nullptr) : tWand->useMe(tBeing, nullptr));
 
           if (IS_SET_DELETE(tRc, DELETE_THIS)) {
             if (tStaff) {
               delete tStaff;
-              tStaff = NULL;
+              tStaff = nullptr;
             } else {
               delete tWand;
-              tWand = NULL;
+              tWand = nullptr;
             }
           }
 
@@ -403,20 +403,20 @@ int sleepTagRoom(TBeing* tBeing, cmdTypeT tCmd, const char* tArg,
     case CMD_RETRAIN:
       tBeing->sendTo(
         "This command has been sanctioned as not-usable.  Sorry...\n\r");
-      return TRUE;
+      return true;
       break;
     case CMD_IDEA:
     case CMD_TYPO:
     case CMD_BUG:
     case CMD_WRITE:
       tBeing->sendTo("Wait til you leave this place first partner!\n\r");
-      return TRUE;
+      return true;
       break;
     default:
       break;
   }
 
-  return FALSE;
+  return false;
 }
 
 void sleepTagReport(int tZone, const char* tString, ...) {
@@ -436,5 +436,5 @@ void sleepTagReport(int tZone, const char* tString, ...) {
       tBeing->sendTo(COLOR_COMM, tBuffer);
 
   delete[] tBuffer;
-  tBuffer = NULL;
+  tBuffer = nullptr;
 }

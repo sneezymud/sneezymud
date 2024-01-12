@@ -15,7 +15,7 @@
 Every mob that follows a PC should be classified as one of the following:
 
 A Mount: obvious.  Handled elsewhere and distinguished by having
-  non-NULL "this->rider"
+  non-nullptr "this->rider"
 
 A Thrall: Basically, a mob that owes its life force to the master.  Will
   do the masters bidding without question or hesitation.  Has no sense
@@ -45,7 +45,7 @@ a pet.  That is, if I charm a pet, its a charm (not a pet).
 
 void TBeing::petSave() {
   TDatabase db(DB_SNEEZY);
-  affectedData *aff = NULL, *an = NULL;
+  affectedData *aff = nullptr, *an = nullptr;
   char* owner;
   int owner_id;
 
@@ -127,43 +127,43 @@ bool TBeing::isPet(const unsigned int bv) const {
 
   if (mobVnum() < 0) {
     vlogf(LOG_BUG, format("Attempt to reload a prototype in ReloadNPCAsNew.  Trying to reload %s.") % getName ());
-    return FALSE;
+    return false;
   }
 
 
   if (rc <= 0 || ((numx = real_mobile(rc)) <= 0)) {
     vlogf(LOG_BUG, format("Problem in ReloadNPCAsNew (ERR 1).  Trying to reload %s.") % getName ());
-    return FALSE;
+    return false;
   }
 
   if (numx < 0 || numx >= (signed int) mob_index.size()) {
     vlogf(LOG_BUG, format("Problem in ReloadNPCAsNew (ERR 2).  Trying to reload %s.") % getName ());
-    return FALSE;
+    return false;
   }
 
   if (!(newMob = read_mobile(rc, REAL))) {
     vlogf(LOG_BUG, format("Problem in ReloadNPCAsNew (ERR 3).  Trying to reload %s.") % getName ());
-    return FALSE;
+    return false;
   }
   if (newMob->isShopkeeper()){
     vlogf(LOG_BUG, format("Problem in ReloadNPCAsNew (ERR 4).  Trying to reload shopkeepere-%s.") % getName ());
     delete newMob;
-    return FALSE;
+    return false;
   }
   if (mob_index[rc].spec == SPEC_NEWBIE_EQUIPPER) {
     vlogf(LOG_BUG, format("Problem in ReloadNPCAsNew (ERR 5).  Trying to reload newbieHelper -%s.") % getName ());
     delete newMob;
-    return FALSE;
+    return false;
   }
 
   *roomp += *newMob;
   newMob->oldRoom = inRoom();
   newMob->createWealth();
-  return TRUE;
+  return true;
 }
 #endif
 int TBeing::getAffectedDataFromType(spellNumT whichAff, double whichField) {
-  affectedData *an = NULL, *aff = NULL;
+  affectedData *an = nullptr, *aff = nullptr;
   int numAffs = 0;
 
   for (an = affected; an; an = an->next) {
@@ -203,7 +203,7 @@ int TBeing::getPetOrderLevel() {
   // Returns both true/false if not even a valid concept
   // returns an updated reference as well
   /* **Commented out so code could be compiled**
-  affectedData *an = NULL, *aff = NULL;
+  affectedData *an = nullptr, *aff = nullptr;
   */
 
   // **Added so code could be compiled**
@@ -215,7 +215,7 @@ int TBeing::getPetAge() {
   // returns an updated reference as well
 
   /* **Commented out so code could be compiled**
-  affectedData *an = NULL, *aff = NULL;
+  affectedData *an = nullptr, *aff = nullptr;
   */
 
   // **Added so code could be compiled**
@@ -229,97 +229,97 @@ bool TMonster::isRetrainable() {
     if (aff->type != AFFECT_ORPHAN_PET)
       continue;
     if (aff->level == 0)
-      return TRUE;
+      return true;
   }
-  return FALSE;
+  return false;
 }
 #endif
 bool TBeing::doRetrainPet(const char* argument, TBeing* vict) {
-  TRoom* rp = NULL;
-  TBeing* mob = NULL;
-  TMonster* v = NULL;
+  TRoom* rp = nullptr;
+  TBeing* mob = nullptr;
+  TMonster* v = nullptr;
 
   // no room
   if (!(rp = roomp)) {
     vlogf(LOG_BUG,
       format("%s was in doRetrainPet without a roomp") % getName());
-    return FALSE;
+    return false;
   }
 
   // find target in room - visibility important
 
   if (!(mob = vict)) {
     if (!(mob = get_char_room_vis(this, argument))) {
-      act("The one you want to retrain isnt here.", FALSE, this, NULL, NULL,
+      act("The one you want to retrain isnt here.", false, this, nullptr, nullptr,
         TO_CHAR);
-      return FALSE;
+      return false;
     }
   }
   // various checks
 
   if (!(v = dynamic_cast<TMonster*>(mob))) {
-    act("You cant retrain $N.", FALSE, this, NULL, mob, TO_CHAR);
-    return FALSE;
+    act("You cant retrain $N.", false, this, nullptr, mob, TO_CHAR);
+    return false;
   }
 
   if (v->master) {
-    act("$N already has a master.", FALSE, this, NULL, v, TO_CHAR);
-    return FALSE;
+    act("$N already has a master.", false, this, nullptr, v, TO_CHAR);
+    return false;
   }
 
 #if 1
   if (!v->isRetrainable()) {
-    act("$N is not trainable.  Perhaps you have made a mistake.", FALSE, this,
-      NULL, v, TO_CHAR);
-    return FALSE;
+    act("$N is not trainable.  Perhaps you have made a mistake.", false, this,
+      nullptr, v, TO_CHAR);
+    return false;
   }
 #else
   if (!v->affectedBySpell(AFFECT_ORPHAN_PET)) {
-    act("$N is not trainable.  Perhaps you have made a mistake.", FALSE, this,
-      NULL, v, TO_CHAR);
-    return FALSE;
+    act("$N is not trainable.  Perhaps you have made a mistake.", false, this,
+      nullptr, v, TO_CHAR);
+    return false;
   }
 
 #endif
   if (v->fight() || !v->awake()) {
     act("$N is busy now. Perhaps you should wait till the fight is over.",
-      FALSE, this, NULL, v, TO_CHAR);
-    return FALSE;
+      false, this, nullptr, v, TO_CHAR);
+    return false;
   }
 
   if (v->isAffected(AFF_BLIND)) {
-    act("$N is blind and not trainable.", FALSE, this, NULL, v, TO_CHAR);
-    return FALSE;
+    act("$N is blind and not trainable.", false, this, nullptr, v, TO_CHAR);
+    return false;
   }
 
   if (hasClass(CLASS_RANGER) && v->isAnimal()) {
     if (GetMaxLevel() >= v->GetMaxLevel()) {
       if (v->restorePetToPc(this)) {
-        return TRUE;
+        return true;
       } else {
-        return FALSE;
+        return false;
       }
     } else {
-      act("$N is too powerful for you to retrain for its old master.", FALSE,
-        this, NULL, v, TO_CHAR);
-      return FALSE;
+      act("$N is too powerful for you to retrain for its old master.", false,
+        this, nullptr, v, TO_CHAR);
+      return false;
     }
   }
 
   // 20% chance of rejection
 
   if (!::number(0, 4)) {
-    act("$N rejects your retraining and remains wild.", FALSE, this, NULL, v,
+    act("$N rejects your retraining and remains wild.", false, this, nullptr, v,
       TO_CHAR);
     v->affectFrom(AFFECT_ORPHAN_PET);
-    return FALSE;
+    return false;
   }
   if (v->restorePetToPc(this)) {
-    return TRUE;
+    return true;
 
   } else {
     // taking affect orphan done in retore Pet
-    return FALSE;
+    return false;
   }
 }
 
@@ -331,14 +331,14 @@ bool TBeing::restorePetToPc(TBeing* ch) {
 }
 
 bool TMonster::restorePetToPc(TBeing* ch) {
-  affectedData *aff = NULL, *an = NULL;
-  char* affName = NULL;
-  TThing* t = NULL;
-  TBeing* pc = NULL;
-  bool found = FALSE;
+  affectedData *aff = nullptr, *an = nullptr;
+  char* affName = nullptr;
+  TThing* t = nullptr;
+  TBeing* pc = nullptr;
+  bool found = false;
 
   if (fight() || !awake()) {
-    return FALSE;
+    return false;
   }
   for (an = affected; an; an = an->next) {
     if (an->type == AFFECT_PET) {
@@ -349,14 +349,14 @@ bool TMonster::restorePetToPc(TBeing* ch) {
 
   // **aff.be changed to aff->be**
   if (!aff || !aff->be) {
-    act("$N has never been a pet and can not be retrained.", FALSE, ch, NULL,
+    act("$N has never been a pet and can not be retrained.", false, ch, nullptr,
       this, TO_CHAR);
     if (affectedBySpell(AFFECT_ORPHAN_PET)) {
       affectFrom(AFFECT_ORPHAN_PET);
       vlogf(LOG_BUG,
         format("A non pet with AFFECT_ORPHAN_PET (%s).") % getName());
     }
-    return FALSE;
+    return false;
   }
   // **semicolon added to end of line**
   // **aff.be changed to aff->be**
@@ -367,50 +367,50 @@ bool TMonster::restorePetToPc(TBeing* ch) {
     if (!(pc = dynamic_cast<TBeing*>(t)))
       continue;
     if (is_exact_name(affName, pc->getName())) {
-      found = TRUE;
+      found = true;
       break;
     }
   }
 
   if (!pc) {
-    act("$N's owner is not in this room.", FALSE, ch, NULL, this, TO_CHAR);
-    return FALSE;
+    act("$N's owner is not in this room.", false, ch, nullptr, this, TO_CHAR);
+    return false;
   }
 
   if (!found) {
-    act("$N's owner is not in this room.", FALSE, ch, NULL, this, TO_CHAR);
-    return FALSE;
+    act("$N's owner is not in this room.", false, ch, nullptr, this, TO_CHAR);
+    return false;
   }
 
   if ((ch != pc) && !ch->hasClass(CLASS_RANGER) && !ch->isImmortal()) {
     act("Only rangers can retrain a pet for someone other than themselves.",
-      FALSE, ch, NULL, this, TO_CHAR);
-    return FALSE;
+      false, ch, nullptr, this, TO_CHAR);
+    return false;
   }
 
   if (pc->tooManyFollowers(this, FOL_PET)) {
     if (ch == pc) {
-      act("Your charmisma won't support the retraining of this $N.", FALSE, ch,
-        NULL, this, TO_CHAR);
+      act("Your charmisma won't support the retraining of this $N.", false, ch,
+        nullptr, this, TO_CHAR);
     } else {
-      act("$p's charmisma won't support the retraining of this $N.", FALSE, ch,
+      act("$p's charmisma won't support the retraining of this $N.", false, ch,
         pc, this, TO_CHAR);
     }
-    return FALSE;
+    return false;
   }
 
   SET_BIT(specials.affectedBy, AFF_CHARM);
   pc->addFollower(this);
   affectFrom(AFFECT_ORPHAN_PET);
   if (pc == ch) {
-    act("$N has been restored to your side.", FALSE, pc, NULL, this, TO_CHAR);
-    act("$N has been restored to $s place at $n's side.", FALSE, pc, NULL, this,
+    act("$N has been restored to your side.", false, pc, nullptr, this, TO_CHAR);
+    act("$N has been restored to $s place at $n's side.", false, pc, nullptr, this,
       TO_ROOM);
   } else {
-    act("$N has been restored to your side.", FALSE, pc, NULL, this, TO_CHAR);
-    act("You have restored $N to $E owner.", FALSE, ch, NULL, this, TO_VICT);
-    act("$N has been restored to $S place at $n's side.", FALSE, pc, NULL, this,
+    act("$N has been restored to your side.", false, pc, nullptr, this, TO_CHAR);
+    act("You have restored $N to $E owner.", false, ch, nullptr, this, TO_VICT);
+    act("$N has been restored to $S place at $n's side.", false, pc, nullptr, this,
       TO_ROOM);
   }
-  return TRUE;
+  return true;
 }

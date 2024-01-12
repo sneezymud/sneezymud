@@ -18,33 +18,33 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   if (!ch || !ch->task) {
     vlogf(LOG_BUG,
       format("No %s in task_sacrifice!") % (ch ? "character" : "task"));
-    return FALSE;
+    return false;
   }
 
   if (ch->utilityTaskCommand(cmd) || ch->nobrainerTaskCommand(cmd)) {
-    return FALSE;
+    return false;
   }
 
   if (!corpse) {
     act("You can't find the object of the ritual! Wasn't there a corpse here?",
-      FALSE, ch, 0, 0, TO_CHAR);
-    act("$n stops singing and looks confused.", TRUE, ch, 0, 0, TO_ROOM);
+      false, ch, 0, 0, TO_CHAR);
+    act("$n stops singing and looks confused.", true, ch, 0, 0, TO_ROOM);
     ch->stopTask();
     vlogf(LOG_BUG,
       format(
         "task_sacrifice.cc: sacrifice task entered by %s without a corpse!") %
         ch->getName());
-    return TRUE;
+    return true;
   }
 
   if (ch->isLinkdead() || (ch->in_room != ch->task->wasInRoom) ||
       (ch->getPosition() < POSITION_RESTING)) {
-    act("You cease the ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
-    act("$n stops trying to sacrifice $p.", TRUE, ch, corpse, 0, TO_ROOM);
+    act("You cease the ritual sacrifice of $p.", false, ch, corpse, 0, TO_CHAR);
+    act("$n stops trying to sacrifice $p.", true, ch, corpse, 0, TO_ROOM);
     ch->stopTask();
     if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
-    return TRUE;
+    return true;
   }
 
   auto mask = ch->getWornShamanMask();
@@ -54,7 +54,7 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
     ch->stopTask();
     if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
-    return TRUE;
+    return true;
   }
 
   for (StuffIter it = ch->roomp->stuff.begin(); it != ch->roomp->stuff.end();) {
@@ -83,47 +83,47 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           "off!!");
         break;
     }
-    act("You cease the ritual sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
-    act("$n stops chanting over the corpse of $p.", TRUE, ch, corpse, 0,
+    act("You cease the ritual sacrifice of $p.", false, ch, corpse, 0, TO_CHAR);
+    act("$n stops chanting over the corpse of $p.", true, ch, corpse, 0,
       TO_ROOM);
     ch->stopTask();
     if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
       corpse->remCorpseFlag(CORPSE_SACRIFICE);
-    return TRUE;
+    return true;
   }
 
   if (ch->task->timeLeft < 0) {
-    act("You have completed the sacrifice of $p.", FALSE, ch, corpse, 0,
+    act("You have completed the sacrifice of $p.", false, ch, corpse, 0,
       TO_CHAR);
-    act("$n has completed $s ritual sacrifice of $p.", TRUE, ch, corpse, 0,
+    act("$n has completed $s ritual sacrifice of $p.", true, ch, corpse, 0,
       TO_ROOM);
-    act("Some <r>blood<z> from $p has been left behind.", FALSE, ch, corpse, 0,
+    act("Some <r>blood<z> from $p has been left behind.", false, ch, corpse, 0,
       TO_ROOM);
-    act("Some <r>blood<z> from $p has been left behind for the dogs!", TRUE, ch,
+    act("Some <r>blood<z> from $p has been left behind for the dogs!", true, ch,
       corpse, 0, TO_CHAR);
     ch->dropPool(1, LIQ_BLOOD);
     ch->stopTask();
     delete corpse;
-    corpse = NULL;
-    return TRUE;
+    corpse = nullptr;
+    return true;
   }
 
   switch (cmd) {
     case CMD_TASK_CONTINUE:
       if (ch->bSuccess(learning, SKILL_SACRIFICE)) {
-        act("Your sacrifice is being accepted by the loa.", FALSE, ch, 0, 0,
+        act("Your sacrifice is being accepted by the loa.", false, ch, 0, 0,
           TO_CHAR);
         ch->addToLifeforce(factor);
       } else {
         ch->addToLifeforce(-factor2);
-        act("Your sacrificial attempts aren't pleasing the loa.", FALSE, ch, 0,
+        act("Your sacrificial attempts aren't pleasing the loa.", false, ch, 0,
           0, TO_CHAR);
         if (0 >= ch->getLifeforce()) {
           ch->setLifeforce(0);
           act(
             "The loa demands that you cease this vain sacrifice, and you "
             "comply.",
-            FALSE, ch, 0, 0, TO_CHAR);
+            false, ch, 0, 0, TO_CHAR);
           ch->addToHit(-2);
           // let's not allow this to stun them, cuz it deletes the task and
           // crashes the damn mud
@@ -141,14 +141,14 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           act(
             "Your $o has been confiscated by the loa! It must have been too "
             "weak.",
-            FALSE, ch, totem, 0, TO_CHAR);
-          act("$n looks pale as $s $o shatters.", TRUE, ch, totem, 0, TO_ROOM);
+            false, ch, totem, 0, TO_CHAR);
+          act("$n looks pale as $s $o shatters.", true, ch, totem, 0, TO_ROOM);
           ch->stopTask();
           delete totem;
-          totem = NULL;
+          totem = nullptr;
           if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
             corpse->remCorpseFlag(CORPSE_SACRIFICE);
-          return TRUE;
+          return true;
         }
       }
 
@@ -160,26 +160,26 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
           act(
             "You continue the rada song to the loa in hopes they will accept "
             "your sacrifice.",
-            FALSE, ch, 0, 0, TO_CHAR);
-          act("$n sings in an unfamiliar tongue over $p.", TRUE, ch, corpse, 0,
+            false, ch, 0, 0, TO_CHAR);
+          act("$n sings in an unfamiliar tongue over $p.", true, ch, corpse, 0,
             TO_ROOM);
           if (ch->bSuccess(learning, SKILL_SACRIFICE))
             ch->task->timeLeft--;
           break;
         case 1:
-          act("Your $o's eyes glow <r>blood red<1>.", FALSE, ch,
+          act("Your $o's eyes glow <r>blood red<1>.", false, ch,
             mask ? mask : totem, 0, TO_CHAR);
-          act("The eyes on $n's $o begin to glow a <r>blood red<1>.", TRUE, ch,
+          act("The eyes on $n's $o begin to glow a <r>blood red<1>.", true, ch,
             mask ? mask : totem, 0, TO_ROOM);
           if (ch->bSuccess(learning, SKILL_SACRIFICE))
             ch->task->timeLeft--;
           break;
         case 0:
-          act("You continue to sing the rada song over $p.", FALSE, ch, corpse,
+          act("You continue to sing the rada song over $p.", false, ch, corpse,
             0, TO_CHAR);
           act(
             "$n's ritual sacrifice causes $p's face to glow <G>pale green<1>.",
-            TRUE, ch, corpse, 0, TO_ROOM);
+            true, ch, corpse, 0, TO_ROOM);
           if (ch->bSuccess(learning, SKILL_SACRIFICE))
             ch->task->timeLeft--;
           break;
@@ -188,7 +188,7 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
             "You feel the loa ignoring your vain attempt and feel compelled to "
             "stop.",
             false, ch, 0, 0, TO_CHAR);
-          act("$n has stopped $s ritual sacrifice of $p.", TRUE, ch, corpse, 0,
+          act("$n has stopped $s ritual sacrifice of $p.", true, ch, corpse, 0,
             TO_ROOM);
           ch->stopTask();
           if (corpse->isCorpseFlag(CORPSE_SACRIFICE))
@@ -212,17 +212,17 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       // don't put a break in here
     case CMD_ABORT:
     case CMD_STOP:
-      act("You stop your sacrifice of $p.", FALSE, ch, corpse, 0, TO_CHAR);
-      act("$n has stopped $s ritual sacrifice of $p.", TRUE, ch, corpse, 0,
+      act("You stop your sacrifice of $p.", false, ch, corpse, 0, TO_CHAR);
+      act("$n has stopped $s ritual sacrifice of $p.", true, ch, corpse, 0,
         TO_ROOM);
-      act("Some <r>blood<z> from $p has been left behind.", FALSE, ch, corpse,
+      act("Some <r>blood<z> from $p has been left behind.", false, ch, corpse,
         0, TO_ROOM);
-      act("Some <r>blood<z> from $p has been left behind for the dogs!", TRUE,
+      act("Some <r>blood<z> from $p has been left behind for the dogs!", true,
         ch, corpse, 0, TO_CHAR);
       ch->dropPool(1, LIQ_BLOOD);
       ch->stopTask();
       delete corpse;
-      corpse = NULL;
+      corpse = nullptr;
       break;
     default:
       if (cmd < MAX_CMD_LIST) {
@@ -235,5 +235,5 @@ int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
       warn_busy(ch);
       break;
   }
-  return TRUE;
+  return true;
 }

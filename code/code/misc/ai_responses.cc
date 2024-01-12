@@ -19,7 +19,7 @@ static char responseFile[32];
 static int specificCode(TMonster*, TBeing*, int, const resp*);
 
 void TMonster::loadResponses(int virt, const sstring& immortal) {
-  resp* tmp = NULL;
+  resp* tmp = nullptr;
 
   std::string response;
 
@@ -38,11 +38,11 @@ void TMonster::loadResponses(int virt, const sstring& immortal) {
     response = db["response"];
   }
 
-  mud_assert(resps == NULL, "Mob (%s) already had Responses.",
+  mud_assert(resps == nullptr, "Mob (%s) already had Responses.",
     getName().c_str());
 
   resps = new Responses();
-  mud_assert(resps != NULL, "Mob (%s) failed initing Responses.",
+  mud_assert(resps != nullptr, "Mob (%s) failed initing Responses.",
     getName().c_str());
 
   //
@@ -62,7 +62,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
   const resp* respo) {
   int rc = 0;
   int value;
-  TObj* obj = NULL;
+  TObj* obj = nullptr;
   TMonster* tMonster;
   sstring arg2, buf;
   cmdTypeT cmd_val;
@@ -74,30 +74,30 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
   TThing* tThing;
 
   if (!awake())
-    return TRUE;
+    return true;
 
   // handle a few special cases
   switch (cmd) {
     case CMD_RESP_TOROOM:
-      act(arg, FALSE, this, 0, 0, TO_ROOM);
-      return TRUE;
+      act(arg, false, this, 0, 0, TO_ROOM);
+      return true;
     case CMD_RESP_TONOTVICT:
-      act(arg, FALSE, this, 0, mob, TO_NOTVICT);
-      return TRUE;
+      act(arg, false, this, 0, mob, TO_NOTVICT);
+      return true;
     case CMD_RESP_TOVICT:
-      act(arg, FALSE, this, 0, mob, TO_VICT);
-      return TRUE;
+      act(arg, false, this, 0, mob, TO_VICT);
+      return true;
     case CMD_RESP_UNFLAG:
       if (mob->isPlayerAction(PLR_SOLOQUEST)) {
         mob->remPlayerAction(PLR_SOLOQUEST);
-        act("$n just removed your solo quest flag.", FALSE, this, 0, mob,
+        act("$n just removed your solo quest flag.", false, this, 0, mob,
           TO_VICT);
       }
-      return TRUE;
+      return true;
     case CMD_FLAG:
       if (!mob->isPlayerAction(PLR_SOLOQUEST)) {
         mob->addPlayerAction(PLR_SOLOQUEST);
-        act("$n just set your solo quest flag.", FALSE, this, 0, mob, TO_VICT);
+        act("$n just set your solo quest flag.", false, this, 0, mob, TO_VICT);
         mob->dieFollower();
         if (dynamic_cast<TBeing*>(mob->riding)) {
           rc = mob->fallOffMount(mob->riding, POSITION_STANDING);
@@ -105,33 +105,33 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
             return DELETE_VICT;
         }
       }
-      return TRUE;
+      return true;
     case CMD_LOAD:
     case CMD_RESP_CHECKLOAD:
       if (mobVnum() < 0) {
         doTell(mob->getNameNOC(this),
           "I would load it, but i'm a prototype.  Sorry.");
-        return FALSE;  // continue the script, even tho this is a 'dummy'
+        return false;  // continue the script, even tho this is a 'dummy'
                        // trigger.
       }
       value = convertTo<int>(arg);
 
       if (value < 0) {
         setMoney(getMoney() + (-value));
-        return TRUE;
+        return true;
       }
 
       if (value <= 0 || ((rc = real_object(value)) <= 0)) {
         vlogf(LOG_MOB_RS,
           format("Problem in script (1).  Trying to load %d on %s") % value %
             getName());
-        return FALSE;
+        return false;
       }
       if (!(obj = read_object(rc, REAL))) {
         vlogf(LOG_MOB_RS,
           format("Problem in script (2).  Trying to load %d on %s") % value %
             getName());
-        return FALSE;
+        return false;
       }
       if (obj_index[rc].getNumber() > obj_index[rc].max_exist) {
         vlogf(LOG_MOB_RS,
@@ -140,7 +140,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
             getName() % mobVnum() % obj->getName() % obj->objVnum());
       }
       TThing* t;
-      t = NULL;
+      t = nullptr;
       for (StuffIter it = stuff.begin(); it != stuff.end() && (t = *it); ++it) {
         TObj* tob = dynamic_cast<TObj*>(t);
         if (!tob)
@@ -164,18 +164,18 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
           } else if (cmd == CMD_RESP_CHECKLOAD) {
             // I have the item, don't bother loading and just bypass this step
             delete obj;
-            return FALSE;  // continue on
+            return false;  // continue on
           }
         }
       }
       log_object(obj);
       *this += *obj;
-      return FALSE;
+      return false;
     case CMD_RESP_LOADMOB: {
       if (mobVnum() < 0) {
         doTell(mob->getNameNOC(this),
           "I would load it, but i'm a prototype.  Sorry.");
-        return FALSE;  // continue the script, even tho this is a 'dummy'
+        return false;  // continue the script, even tho this is a 'dummy'
                        // trigger.
       }
 
@@ -188,20 +188,20 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
       TRoom* room = roomp;
       if (rnum > 0)
         room = real_roomp(rnum);
-      if (room == NULL)
+      if (room == nullptr)
         room = roomp;
 
       if (value <= 0 || ((rc = real_mobile(value)) <= 0)) {
         vlogf(LOG_MOB_RS,
           format("Problem in script (3).  Trying to load %d on %s") % value %
             getName());
-        return FALSE;
+        return false;
       }
       if (!(tMonster = read_mobile(rc, REAL))) {
         vlogf(LOG_MOB_RS,
           format("Problem in script (4).  Trying to load %d on %s") % value %
             getName());
-        return FALSE;
+        return false;
       }
       if (mob_index[rc].getNumber() > mob_index[rc].max_exist) {
         vlogf(LOG_MOB_RS,
@@ -214,19 +214,19 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
             "Problem in script.  %s trying to load %d which is a shopkeeper.") %
             getName() % value);
         delete tMonster;
-        return FALSE;
+        return false;
       }
       if (mob_index[rc].spec == SPEC_NEWBIE_EQUIPPER) {
         vlogf(LOG_MOB_RS, format("Problem in script.  %s trying to load %d "
                                  "which is a newbie helper.") %
                             getName() % value);
         delete tMonster;
-        return FALSE;
+        return false;
       }
 
       if (room && tMonster)
         *room += *tMonster;
-      return FALSE;
+      return false;
     }
     case CMD_RESP_PERSONALIZE:
       value = convertTo<int>(arg);
@@ -235,11 +235,11 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
         vlogf(LOG_MOB_RS,
           format("Problem in script (5).  Trying to load %d on %s") % value %
             getName());
-        return FALSE;
+        return false;
       }
 
       personalize_object(this, mob, value, -1);
-      return FALSE;
+      return false;
     case CMD_RESP_RESIZE:
       value = convertTo<int>(arg);
 
@@ -247,36 +247,36 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
         vlogf(LOG_MOB_RS,
           format("Problem in script (6).  Trying to load %d on %s") % value %
             getName());
-        return FALSE;
+        return false;
       }
 
       resize_personalize_object(this, mob, value, -1);
-      return FALSE;
+      return false;
     case CMD_RESP_TOGGLE:
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS,
           format("Bad argument to response (%s) command %d.  (%s)") % name %
             cmd % arg);
-        return FALSE;
+        return false;
       }
       if (TogIndex[value].togmob != Mob::ANY &&
           TogIndex[value].togmob != mobVnum()) {
         vlogf(LOG_MOB_RS, format("Wrong mob (%s:%d) toggling toggle %d.") %
                             getName() % mobVnum() % value);
         mob->sendTo("Something bad happened, tell a god.\n\r");
-        return FALSE;
+        return false;
       }
       mob->setQuestBit(value);
 
-      return FALSE;
+      return false;
     case CMD_RESP_UNTOGGLE:
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS,
           format("Bad argument to response (%s) special command %d.  (%s)") %
             name % cmd % arg);
-        return FALSE;
+        return false;
       }
       if (!mob->hasQuestBit(value)) {
         vlogf(LOG_MOB_RS,
@@ -284,43 +284,43 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
             value % mob->getName() % getName() % respo->args);
       }
       mob->remQuestBit(value);
-      return FALSE;
+      return false;
     case CMD_RESP_CHECKTOG:
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS,
           format("Bad argument to response (%s) special command %d.  (%s)") %
             name % cmd % arg);
-        return FALSE;
+        return false;
       }
       if (!mob->hasQuestBit(value))
         return RET_STOP_PARSING;
 
-      return FALSE;
+      return false;
     case CMD_RESP_CHECKUNTOG:
       value = convertTo<int>(arg);
       if (value <= 0 || value >= MAX_TOG_INDEX) {
         vlogf(LOG_MOB_RS,
           format("Bad argument to response (%s) special command %d.  (%s)") %
             name % cmd % arg);
-        return FALSE;
+        return false;
       }
       if (mob->hasQuestBit(value))
         return RET_STOP_PARSING;
 
-      return FALSE;
+      return false;
     case CMD_RESP_CHECKMAX:
       value = real_object(convertTo<int>(arg));
       if (value <= 0 || value >= (signed)obj_index.size()) {
         vlogf(LOG_MOB_RS,
           format("Bad argument to response (%s) special command %s.  (%s)") %
             name % cmd % arg);
-        return FALSE;
+        return false;
       }
       if (obj_index[value].getNumber() >= obj_index[value].max_exist)
         return RET_STOP_PARSING;
 
-      return FALSE;
+      return false;
     case CMD_RESP_LINK:
       // link this to an existing command
       // known problem: link nod me due to how "me" gets parsed in social
@@ -349,7 +349,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
           return RET_STOP_PARSING;
         }
       }
-      rc = checkResponses(mob, NULL, arg2, cmd_val);
+      rc = checkResponses(mob, nullptr, arg2, cmd_val);
       if (IS_SET_DELETE(rc, DELETE_THIS) || IS_SET_DELETE(rc, DELETE_VICT)) {
         return rc;
       }
@@ -365,7 +365,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
         return rc;
       break;
     case CMD_JUNK:
-      // rc = doCommand(cmd, arg, NULL, FALSE);
+      // rc = doCommand(cmd, arg, nullptr, false);
       tStObj = tStArgument.word(0);
       tStSucker = tStArgument.word(1);
 
@@ -385,7 +385,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
       //    Force the mob to drop if the give fails
       rc = doGive(arg, GIVE_FLAG_DROP_ON_FAIL);
       // the force drop shit is lame, so another safety check here. give SHOULD
-      // return FALSE if it failed, soooo... i'm gonna throw in a little hack
+      // return false if it failed, soooo... i'm gonna throw in a little hack
       // -dash
       tStObj = tStArgument.word(0);
       tStSucker = tStArgument.word(1);
@@ -397,8 +397,8 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
           --(*tThing);
           *roomp += *tThing;
 
-          act("You drop $p", FALSE, this, tThing, NULL, TO_CHAR);
-          act("$n drops $p.", FALSE, this, tThing, NULL, TO_ROOM);
+          act("You drop $p", false, this, tThing, nullptr, TO_CHAR);
+          act("$n drops $p.", false, this, tThing, nullptr, TO_ROOM);
         }
       }
       break;
@@ -493,31 +493,31 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
 
       // add the new destination
       tMem = resps->respMemory;
-      resps->respMemory = new RespMemory(CMD_RESP_DESTINATION, NULL, arg);
+      resps->respMemory = new RespMemory(CMD_RESP_DESTINATION, nullptr, arg);
       resps->respMemory->next = tMem;
 
       break;
     case CMD_RESP_CHECKPERSON:
       TThing* tt;
-      tt = NULL;
+      tt = nullptr;
       TBeing* tb;
       for (StuffIter it = roomp->stuff.begin();
            it != roomp->stuff.end() && (tt = *it); ++it) {
         if ((tb = dynamic_cast<TBeing*>(tt)) && isname(tb->getName(), arg))
-          return FALSE;
+          return false;
       }
       return RET_STOP_PARSING;
       break;
     case CMD_RESP_CHECKCLASS: {
       if (!mob->hasClass(arg.c_str(), EXACT_YES))
         return RET_STOP_PARSING;
-      return FALSE;
+      return false;
       break;
     }
     case CMD_RESP_CHECKNOTCLASS: {
       if (mob->hasClass(arg.c_str(), EXACT_YES))
         return RET_STOP_PARSING;
-      return FALSE;
+      return false;
       break;
     }
     case CMD_RESP_SETMODE: {
@@ -547,7 +547,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
         mob->affectTo(&newAffect, -1);
 
         if (!mob->fight())
-          mob->setFighting(this, 0, FALSE);
+          mob->setFighting(this, 0, false);
       }
       break;
     }
@@ -557,7 +557,7 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
         TMonster* m = dynamic_cast<TMonster*>(t);
         if (!m || t->isPc() || t->polyed != POLY_TYPE_NONE)
           continue;
-        rc = m->checkResponses(mob, NULL, arg, CMD_RESP_TRIGGER);
+        rc = m->checkResponses(mob, nullptr, arg, CMD_RESP_TRIGGER);
         if (IS_SET(rc, DELETE_THIS | DELETE_VICT))
           break;
       }
@@ -567,13 +567,13 @@ int TMonster::modifiedDoCommand(cmdTypeT cmd, const sstring& arg, TBeing* mob,
     case CMD_RESP_DONERAND:
     case CMD_RESP_RANDOM:
     case CMD_RESP_RANDOPTION:
-      return FALSE;
+      return false;
       break;
     default:
       mud_assert(cmd >= 0,
         "Unhandled special command in modifiedDoCommand array %d", cmd);
-      //      rc = doCommand(cmd, arg, (TThing *) mob, FALSE);
-      rc = doCommand(cmd, arg, NULL, FALSE);
+      //      rc = doCommand(cmd, arg, (TThing *) mob, false);
+      rc = doCommand(cmd, arg, nullptr, false);
       break;
   }
 
@@ -627,9 +627,9 @@ bool TMonster::checkResponsesPossible(cmdTypeT tCmd, const sstring& tSaid,
 int handleMobileResponse(TBeing* tBeing, cmdTypeT tCmd,
   const sstring& tString) {
   if (!tBeing->roomp || tCmd <= 0 || tCmd >= MAX_CMD_LIST)
-    return FALSE;
+    return false;
 
-  TThing* tThing = NULL;
+  TThing* tThing = nullptr;
   TMonster* tMonster;
   int nRc;
 
@@ -637,12 +637,12 @@ int handleMobileResponse(TBeing* tBeing, cmdTypeT tCmd,
        it != tBeing->roomp->stuff.end() && (tThing = *it); ++it)
     if ((tMonster = dynamic_cast<TMonster*>(tThing)) && !tMonster->isPc() &&
         !tMonster->orig) {
-      nRc = tMonster->checkResponses(tBeing, NULL, tString, tCmd);
+      nRc = tMonster->checkResponses(tBeing, nullptr, tString, tCmd);
 
       if (nRc) {
         if (IS_SET_DELETE(nRc, DELETE_THIS)) {
           delete tMonster;
-          tMonster = NULL;
+          tMonster = nullptr;
           REM_DELETE(nRc, DELETE_THIS);
         }
 
@@ -653,46 +653,46 @@ int handleMobileResponse(TBeing* tBeing, cmdTypeT tCmd,
       }
     }
 
-  return FALSE;
+  return false;
 }
 
 int TMonster::checkResponses(TBeing* tBeing, TThing* tThing,
   const sstring& tSaid, cmdTypeT tCmd) {
   if (!checkResponsesPossible(tCmd, tSaid, tBeing))
-    return FALSE;
+    return false;
 
   int nRc;
-  taskData* tTask = NULL;
-  spellTaskData* tSpell = NULL;
+  taskData* tTask = nullptr;
+  spellTaskData* tSpell = nullptr;
 
   if ((tTask = task)) {
-    act("You interrupt your task to deal with $N", FALSE, this, NULL, tBeing,
+    act("You interrupt your task to deal with $N", false, this, nullptr, tBeing,
       TO_CHAR);
-    act("$n interrupts $s task for a moment.", FALSE, this, NULL, tBeing,
+    act("$n interrupts $s task for a moment.", false, this, nullptr, tBeing,
       TO_ROOM);
 
-    task = NULL;
+    task = nullptr;
   }
 
   if ((tSpell = spelltask)) {
-    act("You interrupt your spell to deal with $N", FALSE, this, NULL, tBeing,
+    act("You interrupt your spell to deal with $N", false, this, nullptr, tBeing,
       TO_CHAR);
-    act("$n interrupts $s task for a moment.", FALSE, this, NULL, tBeing,
+    act("$n interrupts $s task for a moment.", false, this, nullptr, tBeing,
       TO_ROOM);
 
-    spelltask = NULL;
+    spelltask = nullptr;
   }
 
   nRc = checkResponsesReal(tBeing, tThing, tSaid, tCmd);
 
   if (tTask) {
-    act("You resume your task.", FALSE, this, NULL, tThing, TO_CHAR);
+    act("You resume your task.", false, this, nullptr, tThing, TO_CHAR);
 
     task = tTask;
   }
 
   if (tSpell) {
-    act("You resume your spell.", FALSE, this, NULL, tThing, TO_CHAR);
+    act("You resume your spell.", false, this, nullptr, tThing, TO_CHAR);
 
     spelltask = tSpell;
   }
@@ -757,7 +757,7 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
   const sstring& said, cmdTypeT trig_cmd) {
   sstring parsedArgs;
   resp* respo;
-  int found = FALSE;
+  int found = false;
   int rc;
   int value;
   command* cmd;
@@ -771,17 +771,17 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
     0;  // command lines within brackets will be skipped if this is non-zero
 
   if (desc)
-    return FALSE;
+    return false;
 
   if (!resps || !resps->respList)
-    return FALSE;
+    return false;
 
   // speaker->isPc() is already checked in CheckResponsesPossible
   // fight() is already checked in CheckResponsesPossible
 
   // trying to drop something while casting is problematic
   if (spelltask)
-    return FALSE;
+    return false;
 
   if (trig_cmd == CMD_WHISPER || trig_cmd == CMD_ASK || trig_cmd == CMD_SIGN)
     trig_cmd = CMD_SAY;
@@ -796,14 +796,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
               skip = doRandCmd(cmd->cmd, skip, parsedArgs);
               if (skip != 0)
                 continue;
-              found = TRUE;
+              found = true;
               rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
                 // either mob or speaker has been whacked
                 return rc;
               } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                found = FALSE;
+                found = false;
                 break;
               }
             }
@@ -824,14 +824,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
             skip = doRandCmd(cmd->cmd, skip, parsedArgs);
             if (skip != 0)
               continue;
-            found = TRUE;
+            found = true;
             rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
                 IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
               return rc;
             } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-              found = FALSE;
+              found = false;
               break;
             }
           }
@@ -852,14 +852,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
             skip = doRandCmd(cmd->cmd, skip, parsedArgs);
             if (skip != 0)
               continue;
-            found = TRUE;
+            found = true;
             rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
                 IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
               return rc;
             } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-              found = FALSE;
+              found = false;
               break;
             }
           }
@@ -871,7 +871,7 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
             break;
           }
           if (value > 0) {
-            TObj* to = NULL;
+            TObj* to = nullptr;
             if (resp_targ && (to = dynamic_cast<TObj*>(resp_targ)) &&
                 to->objVnum() == value) {
               for (cmd = respo->cmds; cmd != 0; cmd = cmd->next) {
@@ -879,14 +879,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
                 skip = doRandCmd(cmd->cmd, skip, parsedArgs);
                 if (skip != 0)
                   continue;
-                found = TRUE;
+                found = true;
                 rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
                     IS_SET_DELETE(rc, DELETE_VICT)) {
                   // either mob or speaker has been whacked
                   return rc | DELETE_ITEM;
                 } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                  found = FALSE;
+                  found = false;
                   break;
                 }
               }
@@ -936,14 +936,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
                 skip = doRandCmd(cmd->cmd, skip, parsedArgs);
                 if (skip != 0)
                   continue;
-                found = TRUE;
+                found = true;
                 rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
                     IS_SET_DELETE(rc, DELETE_VICT)) {
                   // either mob or speaker has been whacked
                   return rc;
                 } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                  found = FALSE;
+                  found = false;
                   break;
                 }
               }
@@ -973,14 +973,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
               skip = doRandCmd(cmd->cmd, skip, parsedArgs);
               if (skip != 0)
                 continue;
-              found = TRUE;
+              found = true;
               rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
                 // either mob or speaker has been whacked
                 return rc;
               } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                found = FALSE;
+                found = false;
                 break;
               }
             }
@@ -1001,14 +1001,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
             skip = doRandCmd(cmd->cmd, skip, parsedArgs);
             if (skip != 0)
               continue;
-            found = TRUE;
+            found = true;
             rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
             if (IS_SET_DELETE(rc, DELETE_THIS) ||
                 IS_SET_DELETE(rc, DELETE_VICT)) {
               // either mob or speaker has been whacked
               return rc;
             } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-              found = FALSE;
+              found = false;
               break;
             }
           }
@@ -1031,7 +1031,7 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
               doTell(speaker->getNameNOC(this),
                 "I'm afraid you don't have enough for that.");
 
-              return TRUE;
+              return true;
             } else {
               speaker->addToMoney(-value, GOLD_SHOP);
               responseTransaction(speaker, this, -value);
@@ -1041,14 +1041,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
                 skip = doRandCmd(cmd->cmd, skip, parsedArgs);
                 if (skip != 0)
                   continue;
-                found = TRUE;
+                found = true;
                 rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
                 if (IS_SET_DELETE(rc, DELETE_THIS) ||
                     IS_SET_DELETE(rc, DELETE_VICT)) {
                   // either mob or speaker has been whacked
                   return rc;
                 } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                  found = FALSE;
+                  found = false;
                   break;
                 }
               }
@@ -1210,7 +1210,7 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
         case CMD_SALUTE:
         case CMD_PET:
         case CMD_GRIMACE:
-          if ((isname("none", respo->args) && (resp_targ == NULL)) ||
+          if ((isname("none", respo->args) && (resp_targ == nullptr)) ||
               (isname("self", respo->args) && (resp_targ == speaker)) ||
               (isname("me", respo->args) && (resp_targ == this)) ||
               (isname("other", respo->args) && (resp_targ != this) &&
@@ -1220,14 +1220,14 @@ int TMonster::checkResponsesReal(TBeing* speaker, TThing* resp_targ,
               skip = doRandCmd(cmd->cmd, skip, parsedArgs);
               if (skip != 0)
                 continue;
-              found = TRUE;
+              found = true;
               rc = modifiedDoCommand(cmd->cmd, parsedArgs, speaker, respo);
               if (IS_SET_DELETE(rc, DELETE_THIS) ||
                   IS_SET_DELETE(rc, DELETE_VICT)) {
                 // either mob or speaker has been whacked
                 return rc;
               } else if (IS_SET_ONLY(rc, RET_STOP_PARSING)) {
-                found = FALSE;
+                found = false;
                 break;
               }
             }
@@ -1376,7 +1376,7 @@ static void sstringTranslate(char* buf) {
 
     int price;
     if (obj_index[robj].itemtype == ITEM_POTION) {
-      TObj* obj = NULL;
+      TObj* obj = nullptr;
       obj = read_object(robj, REAL);
       TPotion* pot = dynamic_cast<TPotion*>(obj);
       if (obj) {
@@ -1389,14 +1389,14 @@ static void sstringTranslate(char* buf) {
               "Error casting object as potion in response script: %s(%d)") %
               obj->getName() % robj);
         }
-        pot = NULL;
+        pot = nullptr;
       } else {
         price = 0;
         vlogf(LOG_LOW,
           format("Error loading potion object in response script: %d") % robj);
       }
       delete obj;
-      obj = NULL;
+      obj = nullptr;
     } else {
       price = obj_index[robj].value;
     }
@@ -1415,7 +1415,7 @@ static void sstringTranslate(char* buf) {
 resp* TMonster::readCommand(std::istringstream& is) {
   char *args, cmdStr[32], buf[1024];
   int c, i;
-  command *newCmd = 0, *prev = NULL;
+  command *newCmd = 0, *prev = nullptr;
   resp* newResp = 0;
 
   cleanInputBuffer(is);
@@ -1498,10 +1498,10 @@ resp* TMonster::readCommand(std::istringstream& is) {
   //
   //  Ok, time to grab the commands.
   //
-  prev = NULL;
+  prev = nullptr;
   if (!readToChar(is, buf, ';')) {
     delete newResp;
-    newResp = NULL;
+    newResp = nullptr;
     return 0;
   }
   while (*buf != 0) {
@@ -1509,7 +1509,7 @@ resp* TMonster::readCommand(std::istringstream& is) {
       // skip and proceed
       if (!readToChar(is, buf, ';')) {
         delete newResp;
-        newResp = NULL;
+        newResp = nullptr;
         return 0;
       }
       continue;
@@ -1559,7 +1559,7 @@ resp* TMonster::readCommand(std::istringstream& is) {
           format("Found '$N' on toroom command inside response file for %s") %
             responseFile);
         delete newResp;
-        newResp = NULL;
+        newResp = nullptr;
         return 0;
       }
       newCmd = new command(CMD_RESP_TOROOM, args);
@@ -1614,7 +1614,7 @@ resp* TMonster::readCommand(std::istringstream& is) {
     prev = newCmd;
     if (!readToChar(is, buf, ';')) {
       delete newResp;
-      newResp = NULL;
+      newResp = nullptr;
       return 0;
     }
   }
@@ -1639,31 +1639,31 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
       act(
         "A swirling mist envelops you, as you bury your head between $N's "
         "legs.",
-        FALSE, ch, 0, mob, TO_CHAR);
+        false, ch, 0, mob, TO_CHAR);
       act(
         "A swirling mist envelops $n, as $e buries $s head between your legs.",
-        FALSE, ch, 0, mob, TO_VICT);
+        false, ch, 0, mob, TO_VICT);
       act(
         "A swirling mist envelops $n, as $e buries $s head between $N's legs.",
-        FALSE, ch, 0, mob, TO_NOTVICT);
+        false, ch, 0, mob, TO_NOTVICT);
       act("$S thighs tighten around your neck, squeezing the life out of you.",
-        FALSE, ch, 0, mob, TO_CHAR);
+        false, ch, 0, mob, TO_CHAR);
       act("Your thighs tighten around $s neck, squeezing the life out of $m.",
-        FALSE, ch, 0, mob, TO_VICT);
+        false, ch, 0, mob, TO_VICT);
       act("$S thighs tighten around $s neck, squeezing the life out of $m.",
-        FALSE, ch, 0, mob, TO_NOTVICT);
+        false, ch, 0, mob, TO_NOTVICT);
       act(
         "You struggle frantically, but $N's powerful muscles sever your head "
         "from your shoulders!",
-        FALSE, ch, 0, mob, TO_CHAR);
+        false, ch, 0, mob, TO_CHAR);
       act(
         "$n struggles frantically, but your powerful muscles sever $s head "
         "from $s shoulders!",
-        FALSE, ch, 0, mob, TO_VICT);
+        false, ch, 0, mob, TO_VICT);
       act(
         "$n struggles frantically, but $N's powerful muscles sever $s head "
         "from $s shoulders!",
-        FALSE, ch, 0, mob, TO_NOTVICT);
+        false, ch, 0, mob, TO_NOTVICT);
       ch->die(DAMAGE_BEHEADED);
       return DELETE_VICT;
     case 2:
@@ -1679,7 +1679,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
             "belong to another faction already.");
         else
           mob->doSay("You are already in the Brotherhood.");
-        return FALSE;
+        return false;
       }
       ch->remQuestBit(TOG_FACTIONS_ELIGIBLE);
       ch->setFaction(FACT_BROTHERHOOD);
@@ -1689,7 +1689,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
       tmpstr += "!";
       mob->doSay(tmpstr);
 
-      return FALSE;
+      return false;
     case 3:
       if (mob->mobVnum() != 3704) {
         vlogf(LOG_LOW, format("Bad mob (%s:%d) calling specificCode(%d)") %
@@ -1703,7 +1703,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
             "another faction already.");
         else
           mob->doSay("You are already in the Sect.");
-        return FALSE;
+        return false;
       }
       ch->remQuestBit(TOG_FACTIONS_ELIGIBLE);
       ch->setFaction(FACT_CULT);
@@ -1713,7 +1713,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
       tmpstr += "!";
       mob->doSay(tmpstr);
 
-      return FALSE;
+      return false;
     case 4:
       if (mob->mobVnum() != 8835) {
         vlogf(LOG_LOW, format("Bad mob (%s:%d) calling specificCode(%d)") %
@@ -1727,7 +1727,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
             "another faction already.");
         else
           mob->doSay("You are already in the Order.");
-        return FALSE;
+        return false;
       }
       ch->remQuestBit(TOG_FACTIONS_ELIGIBLE);
       ch->setFaction(FACT_SNAKE);
@@ -1737,7 +1737,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
       tmpstr += "!";
       mob->doSay(tmpstr);
 
-      return FALSE;
+      return false;
     case 5:
       if (mob->mobVnum() != 27105) {
         vlogf(LOG_LOW, format("Bad mob (%s:%d) calling specificCode(%d)") %
@@ -1749,24 +1749,24 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
         act(
           "$n looks befuddled and says, \"I'm sorry...I can not seem to find a "
           "symbol for you.\"",
-          TRUE, mob, 0, ch, TO_ROOM);
+          true, mob, 0, ch, TO_ROOM);
         vlogf(LOG_MOB_RS, "Was unable to load object 504.");
       } else {
         tSymbol->setSymbolFaction(ch->getFaction());
         act("$n reaches into his grey smock and pulls a symbol from beneath.",
-          TRUE, mob, 0, ch, TO_ROOM);
+          true, mob, 0, ch, TO_ROOM);
         act(
           "$n utters something barely audible and passes his hand above the "
           "symbol.",
-          TRUE, mob, 0, ch, TO_ROOM);
-        act("$n grins with delight as the symbol shines with power.", TRUE, mob,
+          true, mob, 0, ch, TO_ROOM);
+        act("$n grins with delight as the symbol shines with power.", true, mob,
           0, ch, TO_ROOM);
 
         *mob += *tSymbol;
         mob->doGive(ch, tSymbol, GIVE_FLAG_DROP_ON_FAIL);
       }
 
-      return FALSE;
+      return false;
     case 6:
       if (mob->mobVnum() != 10604) {
         vlogf(LOG_LOW, format("Bad mob (%s:%d) calling specificCode(%d)") %
@@ -1779,15 +1779,15 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
 
       FDt = (ch->master ? ch->master->followers : ch->followers);
 
-      act("$n murmurs over a mermaids scale.", FALSE, mob, NULL, NULL, TO_ROOM);
-      act("$n draws upon the primordial force of the mermaid.", FALSE, mob,
-        NULL, NULL, TO_ROOM);
-      act("A mermaids scale begins to spark and flash.", FALSE, mob, NULL, NULL,
+      act("$n murmurs over a mermaids scale.", false, mob, nullptr, nullptr, TO_ROOM);
+      act("$n draws upon the primordial force of the mermaid.", false, mob,
+        nullptr, nullptr, TO_ROOM);
+      act("A mermaids scale begins to spark and flash.", false, mob, nullptr, nullptr,
         TO_ROOM);
       act("A giant mass of balled lightning forms above the mermaids scale.",
-        FALSE, mob, NULL, NULL, TO_ROOM);
-      act("A giant ball of blue-white lightning erupts from $n's hands!", FALSE,
-        mob, NULL, NULL, TO_ROOM);
+        false, mob, nullptr, nullptr, TO_ROOM);
+      act("A giant ball of blue-white lightning erupts from $n's hands!", false,
+        mob, nullptr, nullptr, TO_ROOM);
 
       tAff.type = SPELL_LIGHTNING_BREATH;
       tAff.level = mob->GetMaxLevel();
@@ -1807,10 +1807,10 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
         if (!FDt->follower->isAffected(AFF_GROUP))
           continue;
 
-        act("You are enveloped by a ball of pure blue-white light!", FALSE,
-          FDt->follower, NULL, NULL, TO_CHAR);
-        act("A blue-white ball of lightning surrounds $n!", TRUE, FDt->follower,
-          NULL, NULL, TO_ROOM);
+        act("You are enveloped by a ball of pure blue-white light!", false,
+          FDt->follower, nullptr, nullptr, TO_CHAR);
+        act("A blue-white ball of lightning surrounds $n!", true, FDt->follower,
+          nullptr, nullptr, TO_ROOM);
 
         tAff.duration = ((Pulse::ONE_SECOND * 60) * 60) * ::number(12, 24);
         tAff.modifier2 = ::number(25, 75);
@@ -1818,25 +1818,25 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
           AVG_EFF_YES);
       }
 
-      act("You are enveloped by a ball of pure blue-white light!", FALSE, ch,
-        NULL, NULL, TO_CHAR);
-      act("A blue-white ball of lightning surrounds $n!", TRUE, ch, NULL, NULL,
+      act("You are enveloped by a ball of pure blue-white light!", false, ch,
+        nullptr, nullptr, TO_CHAR);
+      act("A blue-white ball of lightning surrounds $n!", true, ch, nullptr, nullptr,
         TO_ROOM);
       tAff.duration = ((Pulse::ONE_SECOND * 60) * 60) * ::number(12, 24);
       tAff.modifier2 = ::number(25, 75);
       ch->affectJoin(ch, &tAff, AVG_DUR_NO, AVG_EFF_YES);
 
       if (ch->master) {
-        act("You are enveloped by a ball of pure blue-white light!", FALSE,
-          ch->master, NULL, NULL, TO_CHAR);
-        act("A blue-white ball of lightning surrounds $n!", TRUE, ch->master,
-          NULL, NULL, TO_ROOM);
+        act("You are enveloped by a ball of pure blue-white light!", false,
+          ch->master, nullptr, nullptr, TO_CHAR);
+        act("A blue-white ball of lightning surrounds $n!", true, ch->master,
+          nullptr, nullptr, TO_ROOM);
         tAff.duration = ((Pulse::ONE_SECOND * 60) * 60) * ::number(12, 24);
         tAff.modifier2 = ::number(25, 75);
         ch->master->affectJoin(ch->master, &tAff, AVG_DUR_NO, AVG_EFF_YES);
       }
 
-      return FALSE;
+      return false;
     case 7:
       if (mob->mobVnum() != 5131) {
         vlogf(LOG_LOW, format("Bad mob (%s:%d) calling specificCode(%d)") %
@@ -1862,7 +1862,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
         *rp += *t;
       }
       *rp += *ch;
-      act("$n arrives from a puff of smoke.", FALSE, ch, 0, 0, TO_ROOM);
+      act("$n arrives from a puff of smoke.", false, ch, 0, 0, TO_ROOM);
       ch->doLook("", CMD_LOOK);
       break;
     case 8:
@@ -1882,7 +1882,7 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
       act(
         "$n waves $s hands, utters many magic phrases and re-attaches your "
         "rod.",
-        TRUE, mob, NULL, ch, TO_VICT);
+        true, mob, nullptr, ch, TO_VICT);
 
       ch->setSex(SEX_MALE);
 
@@ -1892,5 +1892,5 @@ int specificCode(TMonster* mob, TBeing* ch, int which, const resp* respo) {
       break;
   }
 
-  return FALSE;
+  return false;
 }

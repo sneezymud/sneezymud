@@ -99,7 +99,7 @@ int init_game_stats(void) {
 
   if (!(fp = fopen(Path::MUTABLE_STATS_FILE, "r"))) {
     vlogf(LOG_BUG, "Unable to open txt/stat file");
-    return FALSE;
+    return false;
   } else {
     if (fscanf(fp, "%ld\n", &stats.logins) != 1) {
       vlogf(LOG_BUG, "bad stats.logins");
@@ -198,7 +198,7 @@ int init_game_stats(void) {
 
     sprintf(buf, "cp %s %s", Path::MUTABLE_STATS_FILE, Path::MUTABLE_STATS_BAK);
     vsystem(buf);
-    return TRUE;
+    return true;
   }
 }
 
@@ -206,7 +206,7 @@ void save_game_stats(void) {
   FILE* fp;
   int i, j;
 
-  if ((fp = fopen(Path::MUTABLE_STATS_FILE, "w+")) != NULL) {
+  if ((fp = fopen(Path::MUTABLE_STATS_FILE, "w+")) != nullptr) {
     fprintf(fp, "%ld\n", stats.logins);
 
     fprintf(fp, "%d %d\n", repair_number, total_help_number);

@@ -47,11 +47,11 @@ int mysticDarts(TBeing* caster, TBeing* victim, int level, short bKnown,
           misBuf += " streams";
 
         sprintf(buf, "%s from $n's fingertips, blasting $N!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your fingertips, blasting $N!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf, "%s from $n's fingertips, blasting you!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         break;
       case CRIT_S_TRIPLE:
       case CRIT_S_KILL:
@@ -68,11 +68,11 @@ int mysticDarts(TBeing* caster, TBeing* victim, int level, short bKnown,
           misBuf += " streams";
 
         sprintf(buf, "%s from $n's fingertips, blasting $N!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your fingertips, blasting $N!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf, "%s from $n's fingertips, blasting you!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         break;
       case CRIT_S_NONE:
         sprintf(buf, "%d", missiles);
@@ -84,11 +84,11 @@ int mysticDarts(TBeing* caster, TBeing* victim, int level, short bKnown,
           misBuf += " streams";
 
         sprintf(buf, "%s from $n's fingertips, blasting $N!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your fingertips, blasting $N!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf, "%s from $n's fingertips, blasting you!", misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_MYSTIC_DARTS))) {
           SV(SPELL_MYSTIC_DARTS);
           dam /= 2;
@@ -116,13 +116,13 @@ int mysticDarts(TBeing* caster, TBeing* victim, int level, short bKnown,
 
         sprintf(buf, "%s from $n's fingertips and blow up in $n's face!",
           misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_NOTVICT);
+        act(buf, false, caster, nullptr, victim, TO_NOTVICT);
         sprintf(buf, "%s from your fingertips and blow up in your face!",
           misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_CHAR);
+        act(buf, false, caster, nullptr, victim, TO_CHAR);
         sprintf(buf, "%s from $n's fingertips and blow up in $n's face!",
           misBuf.c_str());
-        act(buf, FALSE, caster, NULL, victim, TO_VICT);
+        act(buf, false, caster, nullptr, victim, TO_VICT);
         if (caster->reconcileDamage(caster, dam, SPELL_MYSTIC_DARTS) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
 
@@ -155,15 +155,15 @@ int mysticDarts(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_MYSTIC_DARTS, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_MYSTIC_DARTS]->lag;
   diff = discArray[SPELL_MYSTIC_DARTS]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_MYSTIC_DARTS, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_MYSTIC_DARTS, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castMysticDarts(TBeing* caster, TBeing* victim) {
@@ -188,7 +188,7 @@ int castMysticDarts(TBeing* caster, TBeing* victim) {
 int stunningArrow(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
   if (victim->isImmortal()) {
-    act("You can't arrow $N -- $E's a god!", FALSE, caster, NULL, victim,
+    act("You can't arrow $N -- $E's a god!", false, caster, nullptr, victim,
       TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -205,28 +205,28 @@ int stunningArrow(TBeing* caster, TBeing* victim, int level, short bKnown,
         act(
           "A **HUGE** <k>silver<1>-<o>orange<1> bolt leaps from your arms "
           "aimed at $N.",
-          FALSE, caster, 0, victim, TO_CHAR);
+          false, caster, 0, victim, TO_CHAR);
         act(
           "A **HUGE** <k>silver<1>-<o>orange<1> bolt leaps from $n's arms "
           "aimed at you!",
-          FALSE, caster, 0, victim, TO_VICT);
+          false, caster, 0, victim, TO_VICT);
         act(
           "A **HUGE** <k>silver<1>-<o>orange<1> bolt leaps from $n's arms "
           "aimed at $N.",
-          FALSE, caster, 0, victim, TO_NOTVICT);
+          false, caster, 0, victim, TO_NOTVICT);
         CS(SPELL_STUNNING_ARROW);
         dam <<= 1;
         break;
       case CRIT_S_NONE:
         act(
           "A <k>silver<1>-<o>orange<1> bolt leaps from your arms aimed at $N.",
-          FALSE, caster, 0, victim, TO_CHAR);
+          false, caster, 0, victim, TO_CHAR);
         act(
           "A <k>silver<1>-<o>orange<1> bolt leaps from $n's arms aimed at you!",
-          FALSE, caster, 0, victim, TO_VICT);
+          false, caster, 0, victim, TO_VICT);
         act(
           "A <k>silver<1>-<o>orange<1> bolt leaps from $n's arms aimed at $N.",
-          FALSE, caster, 0, victim, TO_NOTVICT);
+          false, caster, 0, victim, TO_NOTVICT);
         if (victim->isLucky(caster->spellLuckModifier(SPELL_STUNNING_ARROW))) {
           SV(SPELL_STUNNING_ARROW);
           dam /= 2;
@@ -244,9 +244,9 @@ int stunningArrow(TBeing* caster, TBeing* victim, int level, short bKnown,
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_STUNNING_ARROW);
-        act("$n stiffens as an electric bolt backfires at $mself!", FALSE,
-          caster, NULL, 0, TO_ROOM);
-        act("You stiffen as an electric bolt backfires!", FALSE, caster, NULL,
+        act("$n stiffens as an electric bolt backfires at $mself!", false,
+          caster, nullptr, 0, TO_ROOM);
+        act("You stiffen as an electric bolt backfires!", false, caster, nullptr,
           victim, TO_CHAR);
         if (caster->reconcileDamage(caster, dam, SPELL_STUNNING_ARROW) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -277,15 +277,15 @@ int stunningArrow(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_STUNNING_ARROW, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_STUNNING_ARROW]->lag;
   diff = discArray[SPELL_STUNNING_ARROW]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_STUNNING_ARROW, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_STUNNING_ARROW, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castStunningArrow(TBeing* caster, TBeing* victim) {
@@ -326,7 +326,7 @@ int blastOfFury(TBeing* caster, TBeing* victim, TMagicItem* tObj) {
 int blastOfFury(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
   if (victim->isImmortal()) {
-    act("You can't blast $N -- $E's a god! ", FALSE, caster, NULL, victim,
+    act("You can't blast $N -- $E's a god! ", false, caster, nullptr, victim,
       TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -348,38 +348,38 @@ int blastOfFury(TBeing* caster, TBeing* victim, int level, short bKnown,
           act(
             "$n unleashes all $s LATENT HOMOSEXUAL ANGER AND FRUSTRATION on "
             "$N!",
-            FALSE, caster, NULL, victim, TO_NOTVICT);
+            false, caster, nullptr, victim, TO_NOTVICT);
           act("You unleash all your PENT UP ANGER AND FRUSTRATION on $N!",
-            FALSE, caster, NULL, victim, TO_CHAR);
+            false, caster, nullptr, victim, TO_CHAR);
           act(
             "$n unleashes all $s LATENT HOMOSEXUAL ANGER AND FRUSTRATION on "
             "you!",
-            FALSE, caster, NULL, victim, TO_VICT);
+            false, caster, nullptr, victim, TO_VICT);
         } else {
-          act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on $N!", FALSE,
-            caster, NULL, victim, TO_NOTVICT);
+          act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on $N!", false,
+            caster, nullptr, victim, TO_NOTVICT);
           act("You unleash all your PENT UP ANGER AND FRUSTRATION on $N!",
-            FALSE, caster, NULL, victim, TO_CHAR);
+            false, caster, nullptr, victim, TO_CHAR);
           act("$n unleashes all $s PENT UP ANGER AND FRUSTRATION on you!",
-            FALSE, caster, NULL, victim, TO_VICT);
+            false, caster, nullptr, victim, TO_VICT);
         }
         break;
       case CRIT_S_NONE:
         if (victim->isLucky(caster->spellLuckModifier(SPELL_BLAST_OF_FURY))) {
           SV(SPELL_BLAST_OF_FURY);
           dam /= 2;
-          act("$n unleashes a small portion of $s pent up anger on $N!", FALSE,
-            caster, NULL, victim, TO_NOTVICT);
-          act("You unleash a small portion of your pent up anger on $N!", FALSE,
-            caster, NULL, victim, TO_CHAR);
-          act("$n unleashes a small portion of $s pent up anger on you!", FALSE,
-            caster, NULL, victim, TO_VICT);
+          act("$n unleashes a small portion of $s pent up anger on $N!", false,
+            caster, nullptr, victim, TO_NOTVICT);
+          act("You unleash a small portion of your pent up anger on $N!", false,
+            caster, nullptr, victim, TO_CHAR);
+          act("$n unleashes a small portion of $s pent up anger on you!", false,
+            caster, nullptr, victim, TO_VICT);
         } else {
-          act("$n unleashes all $s pent up anger on $N!", FALSE, caster, NULL,
+          act("$n unleashes all $s pent up anger on $N!", false, caster, nullptr,
             victim, TO_NOTVICT);
-          act("You unleash all your pent up anger on $N!", FALSE, caster, NULL,
+          act("You unleash all your pent up anger on $N!", false, caster, nullptr,
             victim, TO_CHAR);
-          act("$n unleashes all $s pent up anger on you!", FALSE, caster, NULL,
+          act("$n unleashes all $s pent up anger on you!", false, caster, nullptr,
             victim, TO_VICT);
         }
         break;
@@ -395,9 +395,9 @@ int blastOfFury(TBeing* caster, TBeing* victim, int level, short bKnown,
         caster->setCharFighting(victim);
         caster->setVictFighting(victim);
         act("$n get's really pissed at $mself for screwing up this spell!",
-          FALSE, caster, NULL, victim, TO_NOTVICT);
-        act("You get mad at yourself!", FALSE, caster, NULL, victim, TO_CHAR);
-        act("$n just tried to get pissed at you!", FALSE, caster, NULL, victim,
+          false, caster, nullptr, victim, TO_NOTVICT);
+        act("You get mad at yourself!", false, caster, nullptr, victim, TO_CHAR);
+        act("$n just tried to get pissed at you!", false, caster, nullptr, victim,
           TO_VICT);
         if (caster->reconcileDamage(caster, dam, SPELL_BLAST_OF_FURY) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
@@ -414,15 +414,15 @@ int blastOfFury(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_BLAST_OF_FURY, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_BLAST_OF_FURY]->lag;
   diff = discArray[SPELL_BLAST_OF_FURY]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_BLAST_OF_FURY, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_BLAST_OF_FURY, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castBlastOfFury(TBeing* caster, TBeing* victim) {
@@ -449,10 +449,10 @@ int castBlastOfFury(TBeing* caster, TBeing* victim) {
 }
 
 int colorSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
-  TBeing* tmp_victim = NULL;
+  TBeing* tmp_victim = nullptr;
   TThing* t;
 
-  int orig_dam = caster->getSkillDam(NULL, SPELL_COLOR_SPRAY, level, adv_learn);
+  int orig_dam = caster->getSkillDam(nullptr, SPELL_COLOR_SPRAY, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_COLOR_SPRAY)) {
     switch (critSuccess(caster, SPELL_COLOR_SPRAY)) {
@@ -479,11 +479,11 @@ int colorSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
           int dam = orig_dam;
 
           act("$n sprays a huge blazing fan of bright clashing colors at $N!",
-            FALSE, caster, NULL, tmp_victim, TO_NOTVICT);
+            false, caster, nullptr, tmp_victim, TO_NOTVICT);
           act("You spray a huge blazing fan of bright clashing colors at $N!",
-            FALSE, caster, NULL, tmp_victim, TO_CHAR);
+            false, caster, nullptr, tmp_victim, TO_CHAR);
           act("$n sprays a huge blazing fan of bright clashing colors at you!",
-            FALSE, caster, NULL, tmp_victim, TO_VICT);
+            false, caster, nullptr, tmp_victim, TO_VICT);
 
           if (tmp_victim->isLucky(caster->spellLuckModifier(SPELL_COLOR_SPRAY)))
             dam /= 2;
@@ -491,12 +491,12 @@ int colorSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
           if (caster->reconcileDamage(tmp_victim, dam, SPELL_COLOR_SPRAY) ==
               -1) {
             delete tmp_victim;
-            tmp_victim = NULL;
+            tmp_victim = nullptr;
           }
         } else {
-          act("You are able to dodge the wave of colors!", FALSE, tmp_victim, 0,
+          act("You are able to dodge the wave of colors!", false, tmp_victim, 0,
             0, TO_CHAR);
-          // act("$n is able to dodge the wave of colors!", FALSE, tmp_victim,
+          // act("$n is able to dodge the wave of colors!", false, tmp_victim,
           // 0, 0, TO_ROOM);
         }
       }
@@ -507,10 +507,10 @@ int colorSpray(TBeing* caster, int level, short bKnown, int adv_learn) {
       case CRIT_F_HITOTHER:
       case CRIT_F_HITSELF:
         CF(SPELL_COLOR_SPRAY);
-        act("A bright splash of clashing color explodes in $n's face!", FALSE,
-          caster, NULL, NULL, TO_ROOM);
-        act("A bright splash of clashing color explodes in your face!", FALSE,
-          caster, NULL, NULL, TO_CHAR);
+        act("A bright splash of clashing color explodes in $n's face!", false,
+          caster, nullptr, nullptr, TO_ROOM);
+        act("A bright splash of clashing color explodes in your face!", false,
+          caster, nullptr, nullptr, TO_CHAR);
         if (caster->reconcileDamage(caster, orig_dam, SPELL_COLOR_SPRAY) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
         return SPELL_CRIT_FAIL;
@@ -527,9 +527,9 @@ int colorSpray(TBeing* caster, TMagicItem* obj) {
   int ret = 0;
   int rc = 0;
 
-  act("Prismatic ribbons of light leap from $p and circle the room.", TRUE,
+  act("Prismatic ribbons of light leap from $p and circle the room.", true,
     caster, obj, 0, TO_CHAR);
-  act("Prismatic ribbons of light leap from $p and circle the room.", TRUE,
+  act("Prismatic ribbons of light leap from $p and circle the room.", true,
     caster, obj, 0, TO_ROOM);
 
   ret = colorSpray(caster, obj->getMagicLevel(), obj->getMagicLearnedness(), 0);
@@ -540,17 +540,17 @@ int colorSpray(TBeing* caster, TMagicItem* obj) {
 
 int colorSpray(TBeing* caster) {
   TThing* t;
-  TBeing *victim, *vict = NULL;
+  TBeing *victim, *vict = nullptr;
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_COLOR_SPRAY, vict))
-    return TRUE;
+    return true;
 
   lag_t rounds = discArray[SPELL_COLOR_SPRAY]->lag;
   diff = discArray[SPELL_COLOR_SPRAY]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_COLOR_SPRAY, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_COLOR_SPRAY, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
   for (StuffIter it = caster->roomp->stuff.begin();
        it != caster->roomp->stuff.end();) {
@@ -560,7 +560,7 @@ int colorSpray(TBeing* caster) {
       continue;
     if (!caster->inGroup(*victim) && !victim->isImmortal()) {}
   }
-  return TRUE;
+  return true;
 }
 
 int castColorSpray(TBeing* caster) {
@@ -570,9 +570,9 @@ int castColorSpray(TBeing* caster) {
   level = caster->getSkillLevel(SPELL_COLOR_SPRAY);
   int bKnown = caster->getSkillValue(SPELL_COLOR_SPRAY);
 
-  act("Your hands become prismatic as you wave them around the room.", TRUE,
+  act("Your hands become prismatic as you wave them around the room.", true,
     caster, 0, 0, TO_CHAR);
-  act("$n's hands become prismatic as $e waves them around the room.", TRUE,
+  act("$n's hands become prismatic as $e waves them around the room.", true,
     caster, 0, 0, TO_ROOM);
 
   ret = colorSpray(caster, level, bKnown,
@@ -591,7 +591,7 @@ int castColorSpray(TBeing* caster) {
 int energyDrain(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
   if (victim->isImmortal()) {
-    act("You can't drain $N's energy -- $E's a god!", FALSE, caster, NULL,
+    act("You can't drain $N's energy -- $E's a god!", false, caster, nullptr,
       victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -603,18 +603,18 @@ int energyDrain(TBeing* caster, TBeing* victim, int level, short bKnown,
   int vit = dice(number(1, level), 4);
 
   if (victim->getImmunity(IMMUNE_DRAIN) >= 100) {
-    act("$N appears to be immune!", FALSE, caster, 0, victim, TO_CHAR);
+    act("$N appears to be immune!", false, caster, 0, victim, TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FALSE;
   }
 
   if (caster->bSuccess(bKnown, SPELL_ENERGY_DRAIN)) {
-    act("$N screams in agony as energy pours from $S body!", FALSE, caster,
-      NULL, victim, TO_NOTVICT);
-    act("$N screams in agony as energy pours from $S body!", FALSE, caster,
-      NULL, victim, TO_CHAR);
-    act("You scream in agony as energy pours from your body!", FALSE, caster,
-      NULL, victim, TO_VICT);
+    act("$N screams in agony as energy pours from $S body!", false, caster,
+      nullptr, victim, TO_NOTVICT);
+    act("$N screams in agony as energy pours from $S body!", false, caster,
+      nullptr, victim, TO_CHAR);
+    act("You scream in agony as energy pours from your body!", false, caster,
+      nullptr, victim, TO_VICT);
     TPerson* pers;
     switch (critSuccess(caster, SPELL_ENERGY_DRAIN)) {
       case CRIT_S_DOUBLE:
@@ -653,10 +653,10 @@ int energyDrain(TBeing* caster, TBeing* victim, int level, short bKnown,
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_ENERGY_DRAIN);
-        act("$n moans in agony as energy drains from $s body!", FALSE, caster,
-          NULL, NULL, TO_ROOM);
+        act("$n moans in agony as energy drains from $s body!", false, caster,
+          nullptr, nullptr, TO_ROOM);
         act("You moan in agony and feel your own energy drain from your body!",
-          FALSE, caster, NULL, NULL, TO_CHAR);
+          false, caster, nullptr, nullptr, TO_CHAR);
         caster->addToMove(-vit);
         dam /= 3;
         if (caster->reconcileDamage(caster, dam, SPELL_ENERGY_DRAIN) == -1)
@@ -672,15 +672,15 @@ int energyDrain(TBeing* caster, TBeing* victim, int level, short bKnown,
 
 int energyDrain(TBeing* caster, TBeing* victim) {
   if (!bPassMageChecks(caster, SPELL_ENERGY_DRAIN, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_ENERGY_DRAIN]->lag;
   taskDiffT diff = discArray[SPELL_ENERGY_DRAIN]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_ENERGY_DRAIN, diff, 1,
-    "", rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_ENERGY_DRAIN, diff, 1,
+    "", rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castEnergyDrain(TBeing* caster, TBeing* victim) {
@@ -706,7 +706,7 @@ int castEnergyDrain(TBeing* caster, TBeing* victim) {
 }
 
 int energyDrain(TBeing* tMaster, TBeing* tSucker, TMagicItem* tMagItem) {
-  int tRc = FALSE, tReturn;
+  int tRc = false, tReturn;
 
   tReturn = energyDrain(tMaster, tSucker, tMagItem->getMagicLevel(),
     tMagItem->getMagicLearnedness(), 0);
@@ -722,9 +722,9 @@ int energyDrain(TBeing* tMaster, TBeing* tSucker, TMagicItem* tMagItem) {
 
 int acidBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
   TThing* t;
-  TBeing* b = NULL;
+  TBeing* b = nullptr;
 
-  int orig_dam = caster->getSkillDam(NULL, SPELL_ACID_BLAST, level, adv_learn);
+  int orig_dam = caster->getSkillDam(nullptr, SPELL_ACID_BLAST, level, adv_learn);
 
   if (caster->bSuccess(bKnown, SPELL_ACID_BLAST)) {
     switch (critSuccess(caster, SPELL_ACID_BLAST)) {
@@ -746,24 +746,24 @@ int acidBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
           caster->reconcileHurt(tbt, discArray[SPELL_ACID_BLAST]->alignMod);
           int dam = orig_dam;
 
-          act("A large shower of acid sprays over $N!", FALSE, caster, NULL,
+          act("A large shower of acid sprays over $N!", false, caster, nullptr,
             tbt, TO_NOTVICT);
-          act("You shower $N in an acid spray!", FALSE, caster, NULL, tbt,
+          act("You shower $N in an acid spray!", false, caster, nullptr, tbt,
             TO_CHAR);
-          act("$n showers you in acid!", FALSE, caster, NULL, tbt, TO_VICT);
+          act("$n showers you in acid!", false, caster, nullptr, tbt, TO_VICT);
           if (tbt->isLucky(caster->spellLuckModifier(SPELL_ACID_BLAST)))
             dam /= 2;
 
           if (caster->reconcileDamage(tbt, dam, SPELL_ACID_BLAST) == -1) {
             delete tbt;
-            tbt = NULL;
+            tbt = nullptr;
             continue;
           }
         }
       } else if (tbt) {
-        act("$n is able to avoid the blast of acid!", FALSE, tbt, 0, 0,
+        act("$n is able to avoid the blast of acid!", false, tbt, 0, 0,
           TO_ROOM);
-        act("You are able to avoid the blast of acid!", FALSE, tbt, 0, 0,
+        act("You are able to avoid the blast of acid!", false, tbt, 0, 0,
           TO_CHAR);
       }
     }
@@ -783,18 +783,18 @@ int acidBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
               caster->reconcileHurt(b, discArray[SPELL_ACID_BLAST]->alignMod);
               int dam = orig_dam;
 
-              act("A large shower of acid sprays over $n!", FALSE, caster, NULL,
-                NULL, TO_ROOM);
-              act("Something went wrong! Acid sprays all over you!", FALSE,
-                caster, NULL, t, TO_CHAR);
-              act("Hey, that acid was intended for you!", FALSE, caster, NULL,
+              act("A large shower of acid sprays over $n!", false, caster, nullptr,
+                nullptr, TO_ROOM);
+              act("Something went wrong! Acid sprays all over you!", false,
+                caster, nullptr, t, TO_CHAR);
+              act("Hey, that acid was intended for you!", false, caster, nullptr,
                 t, TO_VICT);
               if (b->isLucky(caster->spellLuckModifier(SPELL_ACID_BLAST)))
                 dam /= 2;
 
               if (caster->reconcileDamage(b, dam, SPELL_ACID_BLAST) == -1) {
                 delete b;
-                b = NULL;
+                b = nullptr;
               }
             }
           }
@@ -811,16 +811,16 @@ int acidBlast(TBeing* caster, int level, short bKnown, int adv_learn) {
 }
 
 int acidBlast(TBeing* caster) {
-  if (!bPassMageChecks(caster, SPELL_ACID_BLAST, NULL))
-    return TRUE;
+  if (!bPassMageChecks(caster, SPELL_ACID_BLAST, nullptr))
+    return true;
 
   lag_t rounds = discArray[SPELL_ACID_BLAST]->lag;
   taskDiffT diff = discArray[SPELL_ACID_BLAST]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_ACID_BLAST, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_ACID_BLAST, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castAcidBlast(TBeing* caster) {
@@ -845,7 +845,7 @@ int castAcidBlast(TBeing* caster) {
 int atomize(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {
   if (victim->isImmortal()) {
-    act("You can't atomize $N -- $E's a god!", FALSE, caster, NULL, victim,
+    act("You can't atomize $N -- $E's a god!", false, caster, nullptr, victim,
       TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -856,11 +856,11 @@ int atomize(TBeing* caster, TBeing* victim, int level, short bKnown,
   caster->reconcileHurt(victim, discArray[SPELL_ATOMIZE]->alignMod);
 
   if (caster->bSuccess(bKnown, SPELL_ATOMIZE)) {
-    act("Whoah! $n disperses the atoms from $N's body!", FALSE, caster, NULL,
+    act("Whoah! $n disperses the atoms from $N's body!", false, caster, nullptr,
       victim, TO_NOTVICT);
-    act("Whoah! You disperse the atoms from $N's body!", FALSE, caster, NULL,
+    act("Whoah! You disperse the atoms from $N's body!", false, caster, nullptr,
       victim, TO_CHAR);
-    act("Whoah! $n disperses the atoms from your body!", FALSE, caster, NULL,
+    act("Whoah! $n disperses the atoms from your body!", false, caster, nullptr,
       victim, TO_VICT);
     switch (critSuccess(caster, SPELL_ATOMIZE)) {
       case CRIT_S_DOUBLE:
@@ -882,12 +882,12 @@ int atomize(TBeing* caster, TBeing* victim, int level, short bKnown,
     switch (critFail(caster, SPELL_BIND)) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
-        act("$n nearly pulls $mself apart with $s spell!", FALSE, caster, NULL,
-          NULL, TO_ROOM);
+        act("$n nearly pulls $mself apart with $s spell!", false, caster, nullptr,
+          nullptr, TO_ROOM);
         caster->sendTo(
           "ACK!  Something has gone horrendously wrong and you lose control of "
           "the spell!\n\r");
-        act("Hey, $n was trying to cast that on you!", FALSE, caster, NULL,
+        act("Hey, $n was trying to cast that on you!", false, caster, nullptr,
           victim, TO_VICT);
         if (caster->isLucky(caster->spellLuckModifier(SPELL_ATOMIZE))) {
           SV(SPELL_ATOMIZE);
@@ -895,8 +895,8 @@ int atomize(TBeing* caster, TBeing* victim, int level, short bKnown,
         }
         if (caster->reconcileDamage(caster, dam / 3, SPELL_ATOMIZE) == -1)
           return SPELL_CRIT_FAIL + CASTER_DEAD;
-        act("Oops! You nearly disintegrated yourself on that one!", FALSE,
-          caster, NULL, victim, TO_CHAR);
+        act("Oops! You nearly disintegrated yourself on that one!", false,
+          caster, nullptr, victim, TO_CHAR);
         return SPELL_CRIT_FAIL;
       case CRIT_F_NONE:
         break;
@@ -908,15 +908,15 @@ int atomize(TBeing* caster, TBeing* victim, int level, short bKnown,
 
 int atomize(TBeing* caster, TBeing* victim) {
   if (!bPassMageChecks(caster, SPELL_ATOMIZE, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_ATOMIZE]->lag;
   taskDiffT diff = discArray[SPELL_ATOMIZE]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_ATOMIZE, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_ATOMIZE, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castAtomize(TBeing* caster, TBeing* victim) {
@@ -938,7 +938,7 @@ int castAtomize(TBeing* caster, TBeing* victim) {
 }
 
 int atomize(TBeing* tMaster, TBeing* tSucker, TMagicItem* tMagItem) {
-  int tRc = FALSE, tReturn;
+  int tRc = false, tReturn;
 
   tReturn = atomize(tMaster, tSucker, tMagItem->getMagicLevel(),
     tMagItem->getMagicLearnedness(), 0);
@@ -955,19 +955,19 @@ int atomize(TBeing* tMaster, TBeing* tSucker, TMagicItem* tMagItem) {
 int animate(TBeing* caster, int level, short bKnown) {
   int count = 0, armor;
   TMonster* gol;
-  TObj *helm = NULL, *jacket = NULL, *l_legging = NULL, *r_legging = NULL,
-       *l_sleeve = NULL, *r_sleeve = NULL, *l_glove = NULL, *r_glove = NULL,
-       *l_boot = NULL, *r_boot = NULL, *o;
-  bool paired_leg = FALSE;
+  TObj *helm = nullptr, *jacket = nullptr, *l_legging = nullptr, *r_legging = nullptr,
+       *l_sleeve = nullptr, *r_sleeve = nullptr, *l_glove = nullptr, *r_glove = nullptr,
+       *l_boot = nullptr, *r_boot = nullptr, *o;
+  bool paired_leg = false;
 
-  act("$n waves $s hand over the pile of armor on the $g...", FALSE, caster,
-    NULL, NULL, TO_ROOM);
-  act("You wave your hands over the pile of armor on the $g...", FALSE, caster,
-    NULL, NULL, TO_CHAR);
+  act("$n waves $s hand over the pile of armor on the $g...", false, caster,
+    nullptr, nullptr, TO_ROOM);
+  act("You wave your hands over the pile of armor on the $g...", false, caster,
+    nullptr, nullptr, TO_CHAR);
   if (caster->bSuccess(bKnown, SPELL_ANIMATE)) {
     // you need:  helm, jacket, 2 leggings, 2 sleeves, 2 gloves, 2 boots
 
-    TThing* obj = NULL;
+    TThing* obj = nullptr;
     for (StuffIter it = caster->roomp->stuff.begin();
          it != caster->roomp->stuff.end() && (obj = *it); ++it) {
       o = dynamic_cast<TObj*>(obj);
@@ -978,10 +978,10 @@ int animate(TBeing* caster, int level, short bKnown) {
           if (!helm) {
             count++;
             helm = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue; /* next item */
           }
         }
@@ -989,18 +989,18 @@ int animate(TBeing* caster, int level, short bKnown) {
           if (!l_boot) {
             count++;
             l_boot = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue; /* next item */
           } else if (!r_boot) {
             count++;
             r_boot = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue;
           }
         }
@@ -1008,10 +1008,10 @@ int animate(TBeing* caster, int level, short bKnown) {
           if (!jacket) {
             count++;
             jacket = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue; /* next item */
           }
         }
@@ -1023,28 +1023,28 @@ int animate(TBeing* caster, int level, short bKnown) {
             else
               count += 1;
 
-            paired_leg = TRUE;
+            paired_leg = true;
             l_legging = o;
-            r_legging = NULL;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            r_legging = nullptr;
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
           } else if (!l_legging) {
             count++;
             l_legging = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue; /* next item */
           } else if (!r_legging) {
             count++;
             r_legging = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue;
           }
         }
@@ -1052,18 +1052,18 @@ int animate(TBeing* caster, int level, short bKnown) {
           if (!l_sleeve) {
             count++;
             l_sleeve = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue; /* next item */
           } else if (!r_sleeve) {
             count++;
             r_sleeve = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue;
           }
         }
@@ -1071,18 +1071,18 @@ int animate(TBeing* caster, int level, short bKnown) {
           if (!l_glove) {
             count++;
             l_glove = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue; /* next item */
           } else if (!r_glove) {
             count++;
             r_glove = o;
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_CHAR);
-            act("$p begins to make a strange crackling sound...", FALSE, caster,
-              o, NULL, TO_ROOM);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_CHAR);
+            act("$p begins to make a strange crackling sound...", false, caster,
+              o, nullptr, TO_ROOM);
             continue;
           }
         }
@@ -1090,13 +1090,13 @@ int animate(TBeing* caster, int level, short bKnown) {
     }
 
     if (count < 10) {
-      act("Hmm...you must be missing an item.", FALSE, caster, NULL, NULL,
+      act("Hmm...you must be missing an item.", false, caster, nullptr, nullptr,
         TO_CHAR);
       caster->nothingHappens(SILENT_YES);
       return SPELL_FAIL;
     }
     if (count > 10) {
-      act("Smells like an error to me!", FALSE, caster, NULL, NULL, TO_CHAR);
+      act("Smells like an error to me!", false, caster, nullptr, nullptr, TO_CHAR);
       caster->nothingHappens(SILENT_YES);
       vlogf(LOG_BUG,
         "greater than 10 eq pieces counted for monster creation!!");
@@ -1121,13 +1121,13 @@ int animate(TBeing* caster, int level, short bKnown) {
 
     gol->genericCharmFix();
 
-    act("The crackling armor jumps together to form an armored figure!", FALSE,
-      caster, NULL, NULL, TO_CHAR);
-    act("The crackling armor jumps together to form an armored figure!", FALSE,
-      caster, NULL, NULL, TO_ROOM);
-    act("You have created an armored monster!", FALSE, caster, NULL, NULL,
+    act("The crackling armor jumps together to form an armored figure!", false,
+      caster, nullptr, nullptr, TO_CHAR);
+    act("The crackling armor jumps together to form an armored figure!", false,
+      caster, nullptr, nullptr, TO_ROOM);
+    act("You have created an armored monster!", false, caster, nullptr, nullptr,
       TO_CHAR);
-    act("$n has created an armored monster!", FALSE, caster, NULL, NULL,
+    act("$n has created an armored monster!", false, caster, nullptr, nullptr,
       TO_ROOM);
     *caster->roomp += *gol;
 
@@ -1198,12 +1198,12 @@ int animate(TBeing* caster, int level, short bKnown) {
     delete r_sleeve;
     delete jacket;
 
-    helm = l_boot = r_boot = l_glove = r_glove = NULL;
-    l_legging = r_legging = l_sleeve = r_sleeve = jacket = NULL;
+    helm = l_boot = r_boot = l_glove = r_glove = nullptr;
+    l_legging = r_legging = l_sleeve = r_sleeve = jacket = nullptr;
 
     SET_BIT(gol->specials.affectedBy, AFF_CHARM);
     caster->addFollower(gol);
-    act("$n is assembled from the pieces!", FALSE, gol, NULL, NULL, TO_ROOM);
+    act("$n is assembled from the pieces!", false, gol, nullptr, nullptr, TO_ROOM);
     return SPELL_SUCCESS;
   } else {
     caster->nothingHappens();
@@ -1214,22 +1214,22 @@ int animate(TBeing* caster, int level, short bKnown) {
 int animate(TBeing* caster) {
   taskDiffT diff;
 
-  if (!bPassMageChecks(caster, SPELL_ANIMATE, NULL))
-    return FALSE;
+  if (!bPassMageChecks(caster, SPELL_ANIMATE, nullptr))
+    return false;
 
   lag_t rounds = discArray[SPELL_ANIMATE]->lag;
   diff = discArray[SPELL_ANIMATE]->task;
 
-  start_cast(caster, NULL, NULL, caster->roomp, SPELL_ANIMATE, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, nullptr, nullptr, caster->roomp, SPELL_ANIMATE, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castAnimate(TBeing* caster) {
   int ret, level;
 
   if (!caster)
-    return TRUE;
+    return true;
 
   level = caster->getSkillLevel(SPELL_ANIMATE);
   int bKnown = caster->getSkillValue(SPELL_ANIMATE);
@@ -1237,7 +1237,7 @@ int castAnimate(TBeing* caster) {
   if ((ret = animate(caster, level, bKnown)) == SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }
 
 int sorcerersGlobe(TBeing* caster, TBeing* victim, int level, short bKnown) {
@@ -1269,20 +1269,20 @@ int sorcerersGlobe(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
     // I changed this to use affectJoin, it was just adding
     // new affs every cast - Russ 12/18/97
-    // Second argument FALSE causes it to add new duration to old
-    // Third argument TRUE causes it to average the old and newmodifier
+    // Second argument false causes it to add new duration to old
+    // Third argument true causes it to average the old and newmodifier
 
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
-      return FALSE;
+      return false;
     }
 
     victim->roomp->playsound(SOUND_SPELL_SORCERERS_GLOBE, SOUND_TYPE_MAGIC);
 
-    act("$n is instantly surrounded by a hardened wall of air!", FALSE, victim,
-      NULL, NULL, TO_ROOM);
-    act("You are instantly surrounded by a hardened wall of air!", FALSE,
-      victim, NULL, NULL, TO_CHAR);
+    act("$n is instantly surrounded by a hardened wall of air!", false, victim,
+      nullptr, nullptr, TO_ROOM);
+    act("You are instantly surrounded by a hardened wall of air!", false,
+      victim, nullptr, nullptr, TO_CHAR);
 
     caster->reconcileHelp(victim, discArray[SPELL_SORCERERS_GLOBE]->alignMod);
     return SPELL_SUCCESS;
@@ -1301,14 +1301,14 @@ int sorcerersGlobe(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_SORCERERS_GLOBE, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_SORCERERS_GLOBE]->lag;
   diff = discArray[SPELL_SORCERERS_GLOBE]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_SORCERERS_GLOBE, diff,
-    1, "", rounds, caster->in_room, 0, 0, TRUE, 0);
-  return TRUE;
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_SORCERERS_GLOBE, diff,
+    1, "", rounds, caster->in_room, 0, 0, true, 0);
+  return true;
 }
 
 int castSorcerersGlobe(TBeing* caster, TBeing* victim) {
@@ -1318,7 +1318,7 @@ int castSorcerersGlobe(TBeing* caster, TBeing* victim) {
   int bKnown = caster->getSkillValue(SPELL_SORCERERS_GLOBE);
 
   if ((ret = sorcerersGlobe(caster, victim, level, bKnown)) == SPELL_SUCCESS) {}
-  return TRUE;
+  return true;
 }
 
 int bind(TBeing* caster, TBeing* victim, int level, short bKnown) {
@@ -1346,12 +1346,12 @@ int bind(TBeing* caster, TBeing* victim, int level, short bKnown) {
   if (caster->bSuccess(bKnown, SPELL_BIND)) {
     caster->reconcileHurt(victim, discArray[SPELL_BIND]->alignMod);
 
-    act("$n traps $N in a mass of sticky, web-like substance!", FALSE, caster,
-      NULL, victim, TO_NOTVICT);
-    act("You trap $N in a mass of sticky, web-like substance!", FALSE, caster,
-      NULL, victim, TO_CHAR);
-    act("$n traps you in a mass of sticky, web-like substance!", FALSE, caster,
-      NULL, victim, TO_VICT);
+    act("$n traps $N in a mass of sticky, web-like substance!", false, caster,
+      nullptr, victim, TO_NOTVICT);
+    act("You trap $N in a mass of sticky, web-like substance!", false, caster,
+      nullptr, victim, TO_CHAR);
+    act("$n traps you in a mass of sticky, web-like substance!", false, caster,
+      nullptr, victim, TO_VICT);
     switch (critSuccess(caster, SPELL_BIND)) {
       case CRIT_S_KILL:
       case CRIT_S_TRIPLE:
@@ -1370,11 +1370,11 @@ int bind(TBeing* caster, TBeing* victim, int level, short bKnown) {
 
     if (!victim->affectJoin(caster, &aff1, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
-      return FALSE;
+      return false;
     }
     if (!victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
-      return FALSE;
+      return false;
     }
 
     return SPELL_SUCCESS;
@@ -1383,12 +1383,12 @@ int bind(TBeing* caster, TBeing* victim, int level, short bKnown) {
       case CRIT_F_HITSELF:
       case CRIT_F_HITOTHER:
         CF(SPELL_BIND);
-        act("$n traps $mself in a sticky, web-like substance!", FALSE, caster,
-          NULL, NULL, TO_ROOM);
-        act("Oops! You trap yourself in a sticky, web-like substance!", FALSE,
-          caster, NULL, victim, TO_CHAR);
-        act("Hey, $n was trying to trap you in that stuff!", FALSE, caster,
-          NULL, victim, TO_VICT);
+        act("$n traps $mself in a sticky, web-like substance!", false, caster,
+          nullptr, nullptr, TO_ROOM);
+        act("Oops! You trap yourself in a sticky, web-like substance!", false,
+          caster, nullptr, victim, TO_CHAR);
+        act("Hey, $n was trying to trap you in that stuff!", false, caster,
+          nullptr, victim, TO_VICT);
         caster->affectTo(&aff1);
         caster->affectTo(&aff2);
         return SPELL_CRIT_FAIL;
@@ -1409,15 +1409,15 @@ int bind(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_BIND, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_BIND]->lag;
   diff = discArray[SPELL_BIND]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_BIND, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_BIND, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castBind(TBeing* caster, TBeing* victim) {
@@ -1432,7 +1432,7 @@ int castBind(TBeing* caster, TBeing* victim) {
     } else {
     }
   }
-  return TRUE;
+  return true;
 }
 
 int teleport(TBeing* caster, TBeing* victim, int, short bKnown) {
@@ -1440,7 +1440,7 @@ int teleport(TBeing* caster, TBeing* victim, int, short bKnown) {
   TMonster* tmons = dynamic_cast<TMonster*>(victim);
 
   if ((caster != victim) && victim->isImmortal()) {
-    act("You can't do that to $N -- $E's a god!", FALSE, caster, NULL, victim,
+    act("You can't do that to $N -- $E's a god!", false, caster, nullptr, victim,
       TO_CHAR);
     caster->nothingHappens(SILENT_YES);
     return SPELL_FAIL;
@@ -1506,15 +1506,15 @@ int teleport(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_TELEPORT, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_TELEPORT]->lag;
   diff = discArray[SPELL_TELEPORT]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp, SPELL_TELEPORT, diff, 1, "",
-    rounds, caster->in_room, 0, 0, TRUE, 0);
+  start_cast(caster, victim, nullptr, caster->roomp, SPELL_TELEPORT, diff, 1, "",
+    rounds, caster->in_room, 0, 0, true, 0);
 
-  return TRUE;
+  return true;
 }
 
 int castTeleport(TBeing* caster, TBeing* victim) {
@@ -1554,10 +1554,10 @@ int protectionFromElements(TBeing* caster, TBeing* victim, int level,
   aff2.bitvector = 0;
 
   if (caster->bSuccess(bKnown, SPELL_PROTECTION_FROM_ELEMENTS)) {
-    act("$n glows with a faint orange aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_ROOM);
-    act("You glow with a faint orange aura for a brief moment.", FALSE, victim,
-      NULL, NULL, TO_CHAR);
+    act("$n glows with a faint orange aura for a brief moment.", false, victim,
+      nullptr, nullptr, TO_ROOM);
+    act("You glow with a faint orange aura for a brief moment.", false, victim,
+      nullptr, nullptr, TO_CHAR);
     switch (critSuccess(caster, SPELL_PROTECTION_FROM_ELEMENTS)) {
       case CRIT_S_DOUBLE:
       case CRIT_S_TRIPLE:
@@ -1578,11 +1578,11 @@ int protectionFromElements(TBeing* caster, TBeing* victim, int level,
     }
     if (!victim->affectJoin(caster, &aff, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
-      return FALSE;
+      return false;
     }
     if (!victim->affectJoin(caster, &aff2, AVG_DUR_NO, AVG_EFF_YES)) {
       caster->nothingHappens();
-      return FALSE;
+      return false;
     }
     caster->reconcileHelp(victim,
       discArray[SPELL_PROTECTION_FROM_ELEMENTS]->alignMod);
@@ -1601,15 +1601,15 @@ int protectionFromElements(TBeing* caster, TBeing* victim) {
   taskDiffT diff;
 
   if (!bPassMageChecks(caster, SPELL_PROTECTION_FROM_ELEMENTS, victim))
-    return FALSE;
+    return false;
 
   lag_t rounds = discArray[SPELL_PROTECTION_FROM_ELEMENTS]->lag;
   diff = discArray[SPELL_PROTECTION_FROM_ELEMENTS]->task;
 
-  start_cast(caster, victim, NULL, caster->roomp,
+  start_cast(caster, victim, nullptr, caster->roomp,
     SPELL_PROTECTION_FROM_ELEMENTS, diff, 1, "", rounds, caster->in_room, 0, 0,
-    TRUE, 0);
-  return TRUE;
+    true, 0);
+  return true;
 }
 
 int castProtectionFromElements(TBeing* caster, TBeing* victim) {
@@ -1622,5 +1622,5 @@ int castProtectionFromElements(TBeing* caster, TBeing* victim) {
       SPELL_SUCCESS) {
   } else {
   }
-  return TRUE;
+  return true;
 }

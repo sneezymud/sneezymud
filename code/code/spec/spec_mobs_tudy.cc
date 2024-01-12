@@ -12,14 +12,14 @@ const int MOB_DEMI_ANGEL_TUDY = 9637;
 // 3) switch to demi-angel tudy when both keys given
 // when anything given check inventory for both keys
 int tudy(TBeing*, cmdTypeT cmd, const char*, TMonster* tudy, TObj*) {
-  TThing* t = NULL;
+  TThing* t = nullptr;
   TObj* o;
   bool haskey1 = false, haskey2 = false;
   TMonster* newtudy;
   TPerson* ch;
 
   if (cmd != CMD_GIVE && cmd != CMD_GENERIC_PULSE)
-    return FALSE;
+    return false;
 
   // loop through inventory
   for (StuffIter it = tudy->stuff.begin(); it != tudy->stuff.end() && (t = *it);
@@ -60,5 +60,5 @@ int tudy(TBeing*, cmdTypeT cmd, const char*, TMonster* tudy, TObj*) {
     return DELETE_THIS;
   }
 
-  return FALSE;
+  return false;
 }

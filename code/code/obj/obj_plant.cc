@@ -55,7 +55,7 @@ TPlant::~TPlant() {
 
 int TPlant::putSomethingInto(TBeing* ch, TThing*) {
   // technically, would be OK since is a container, but prevent them anyhow
-  act("Unfortunately, you can't put things into $p.", FALSE, ch, this, 0,
+  act("Unfortunately, you can't put things into $p.", false, ch, this, 0,
     TO_CHAR);
   return 2;
 }
@@ -171,12 +171,12 @@ void TPlant::updateDesc() {
       ex_description = exd->next;
       delete exd;
     }
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   } else {
     addObjStat(ITEM_STRUNG);
     name = obj_index[getItemIndex()].name;
-    ex_description = NULL;
+    ex_description = nullptr;
     action_description = "";
   }
 
@@ -278,7 +278,7 @@ void TPlant::updateDesc() {
                 ((mob->ex_description &&
   mob->ex_description->findExtraDesc("repop")) ?
                 mob->ex_description->findExtraDesc("repop") :
-                "$n appears suddenly in the room."), TRUE, mob, 0, 0, TO_ROOM);
+                "$n appears suddenly in the room."), true, mob, 0, 0, TO_ROOM);
       }
     }
   }

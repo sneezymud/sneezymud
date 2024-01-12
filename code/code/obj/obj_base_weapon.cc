@@ -116,14 +116,14 @@ sstring TBaseWeapon::displayFourValues() {
 
 int TBaseWeapon::galvanizeMe(TBeing* caster, short bKnown) {
   if (getMaxStructPoints() < 2) {
-    act("$p is as solid as it is possible.", FALSE, caster, this, 0, TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("$p is as solid as it is possible.", false, caster, this, 0, TO_CHAR);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
   if (getStructPoints() < 2) {
-    act("$p can't be galvanized when its this damaged.", FALSE, caster, this, 0,
+    act("$p can't be galvanized when its this damaged.", false, caster, this, 0,
       TO_CHAR);
-    act("Nothing seems to happen.", FALSE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", false, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -157,18 +157,18 @@ void TBaseWeapon::sharpenMe(TBeing* ch, TTool* tool) {
 
   ch->addToMove(-sharp_move);
   if (ch->getMove() < 10) {
-    act("You are much too tired to continue to sharpen $p.", FALSE, ch, this,
+    act("You are much too tired to continue to sharpen $p.", false, ch, this,
       tool, TO_CHAR);
-    act("$n stops sharpening, and wipes $s brow.", FALSE, ch, this, tool,
+    act("$n stops sharpening, and wipes $s brow.", false, ch, this, tool,
       TO_ROOM);
     ch->stopTask();
     return;
   }
-  act("You continue to sharpen $p with $P.", FALSE, ch, this, tool, TO_CHAR);
+  act("You continue to sharpen $p with $P.", false, ch, this, tool, TO_CHAR);
   tool->addToToolUses(-1);
   if (tool->getToolUses() <= 0) {
-    act("Your $o breaks due to overuse.", FALSE, ch, tool, 0, TO_CHAR);
-    act("$n looks startled as $e breaks $P while sharpening.", FALSE, ch, this,
+    act("Your $o breaks due to overuse.", false, ch, tool, 0, TO_CHAR);
+    act("$n looks startled as $e breaks $P while sharpening.", false, ch, this,
       tool, TO_ROOM);
     ch->stopTask();
     delete tool;
@@ -176,7 +176,7 @@ void TBaseWeapon::sharpenMe(TBeing* ch, TTool* tool) {
   }
   if (getMaxSharp() <= getCurSharp()) {
     ch->sendTo("It doesn't seem to be getting any sharper.\n\r");
-    act("$n stops sharpening $p.", FALSE, ch, this, 0, TO_ROOM);
+    act("$n stops sharpening $p.", false, ch, this, 0, TO_ROOM);
     ch->stopTask();
     return;
   }
@@ -192,18 +192,18 @@ void TBaseWeapon::dullMe(TBeing* ch, TTool* tool) {
 
   ch->addToMove(-blunt_move);
   if (ch->getMove() < 10) {
-    act("You are much too tired to continue to blunt $p.", FALSE, ch, this,
+    act("You are much too tired to continue to blunt $p.", false, ch, this,
       tool, TO_CHAR);
-    act("$n stops blunting $p, and wipes $s brow.", FALSE, ch, this, tool,
+    act("$n stops blunting $p, and wipes $s brow.", false, ch, this, tool,
       TO_ROOM);
     ch->stopTask();
     return;
   }
-  act("You continue to blunt $p with $P.", FALSE, ch, this, tool, TO_CHAR);
+  act("You continue to blunt $p with $P.", false, ch, this, tool, TO_CHAR);
   tool->addToToolUses(-1);
   if (tool->getToolUses() <= 0) {
     act("Your $o breaks due to overuse.", false, ch, tool, 0, TO_CHAR);
-    act("$n looks startled as $e breaks $P while smoothing.", FALSE, ch, this,
+    act("$n looks startled as $e breaks $P while smoothing.", false, ch, this,
       tool, TO_ROOM);
     ch->stopTask();
     delete tool;
@@ -211,7 +211,7 @@ void TBaseWeapon::dullMe(TBeing* ch, TTool* tool) {
   }
   if (getMaxSharp() <= getCurSharp()) {
     ch->sendTo("It doesn't seem to be getting any smoother.\n\r");
-    act("$n stops blunting $p.", FALSE, ch, this, 0, TO_ROOM);
+    act("$n stops blunting $p.", false, ch, this, 0, TO_ROOM);
     ch->stopTask();
     return;
   }
@@ -243,14 +243,14 @@ int TBaseWeapon::sharpenerValueMe(const TBeing* ch, TMonster* me) const {
 
   if (getCurSharp() == getMaxSharp()) {
     me->doTell(ch->getName(), "This weapon is perfectly ok!");
-    return TRUE;
+    return true;
   }
   cost = sharpenPrice();
 
   me->doTell(ch->getName(),
     format("It will cost %d talens to totally %s your %s.") % cost %
       (isBluntWeapon() ? "dull" : "sharpen") % fname(name));
-  return TRUE;
+  return true;
 }
 
 int TBaseWeapon::sharpenerGiveMe(TBeing* ch, TMonster* me) {
@@ -264,7 +264,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing* ch, TMonster* me) {
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf, GIVE_FLAG_IGN_DEX_TEXT);
-    return TRUE;
+    return true;
   }
   cost = sharpenPrice();
 
@@ -276,14 +276,14 @@ int TBaseWeapon::sharpenerGiveMe(TBeing* ch, TMonster* me) {
     strcpy(buf, add_bars(buf).c_str());
     sprintf(buf + strlen(buf), " %s", fname(ch->name).c_str());
     me->doGive(buf);
-    return TRUE;
+    return true;
   }
   // Now we have a weapon that can be sharpened
   job = static_cast<sharp_struct*>(me->act_ptr);
   if (!job->wait) {
 #if 0
-    act("You give $p to $N to be re-edged.", FALSE, ch, this, me, TO_CHAR);
-    act("$n gives $p to $N to be re-edged.", FALSE, ch, this, me, TO_ROOM);
+    act("You give $p to $N to be re-edged.", false, ch, this, me, TO_CHAR);
+    act("$n gives $p to $N to be re-edged.", false, ch, this, me, TO_ROOM);
 #endif
     job->wait = max((int)(getMaxSharp() - getCurSharp()),
       (int)(getCurSharp() - getMaxSharp()));
@@ -304,7 +304,7 @@ int TBaseWeapon::sharpenerGiveMe(TBeing* ch, TMonster* me) {
     *me += *this;
     job->isBlunt = isBluntWeapon();
     setCurSharp(getMaxSharp());
-    return TRUE;
+    return true;
   } else {
     if (!job->char_name)
       vlogf(LOG_PROC,
@@ -322,9 +322,9 @@ int TBaseWeapon::sharpenerGiveMe(TBeing* ch, TMonster* me) {
       // give back failed
       me->doDrop("", this);
     }
-    return TRUE;
+    return true;
   }
-  return FALSE;
+  return false;
 }
 
 void TBaseWeapon::objMenu(const TBeing* ch) const {
@@ -447,7 +447,7 @@ int TBaseWeapon::damageMe(TBeing* ch, TBeing* v, wearSlotT part_hit) {
           fname(name).c_str(), ch->norm(), ch->green(), ch->norm(),
           (item ? "$p on " : ""), v->describeBodySlot(part_hit).c_str());
       }
-      act(buf, TRUE, v, item, ch, TO_VICT);
+      act(buf, true, v, item, ch, TO_VICT);
       ch->sendTo(COLOR_OBJECTS,
         format("It is in %s condition.\n\r") % equip_condition(-1));
       addToCurSharp(-1);
@@ -463,12 +463,12 @@ int TBaseWeapon::damageMe(TBeing* ch, TBeing* v, wearSlotT part_hit) {
         if (rc) {
           if (IS_SET_DELETE(rc, DELETE_THIS))
             return DELETE_ITEM;
-          return FALSE;
+          return false;
         } else {
           sprintf(buf, "%s%s%s is %sdamaged%s by %s$N's %s.", ch->purple(),
             sstring(getName()).cap().c_str(), ch->norm(), ch->red(), ch->norm(),
             (item ? "$p on " : ""), v->describeBodySlot(part_hit).c_str());
-          act(buf, FALSE, ch, item, v, TO_CHAR);
+          act(buf, false, ch, item, v, TO_CHAR);
           ch->sendTo(COLOR_OBJECTS,
             format("<R>It is in<1> %s <R>condition.<1>\n\r") %
               equip_condition(-1));
@@ -476,7 +476,7 @@ int TBaseWeapon::damageMe(TBeing* ch, TBeing* v, wearSlotT part_hit) {
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 int TBaseWeapon::swungObjectDamage(const TBeing* ch, const TBeing* v) const {
@@ -657,7 +657,7 @@ int TBaseWeapon::enhanceMe(TBeing* caster, int level, short bKnown) {
   if (isObjStat(ITEM_MAGIC)) {
     caster->sendTo(
       "You can't enhance weapons that are already enchanted...\n\r");
-    act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+    act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
     return SPELL_FAIL;
   }
 
@@ -665,7 +665,7 @@ int TBaseWeapon::enhanceMe(TBeing* caster, int level, short bKnown) {
     if (affected[i].location != APPLY_NONE) {
       caster->sendTo(
         "That item is too powerful for this spell to work on it.\n\r");
-      act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+      act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
       return SPELL_FAIL;
     }
   }
@@ -730,7 +730,7 @@ int TBaseWeapon::enhanceMe(TBeing* caster, int level, short bKnown) {
         return SPELL_CRIT_FAIL_2;  // delete the obj
       default:
         caster->sendTo("Nothing seems to happen.\n\r");
-        act("Nothing seems to happen.", TRUE, caster, 0, 0, TO_ROOM);
+        act("Nothing seems to happen.", true, caster, 0, 0, TO_ROOM);
         break;
     }
     return SPELL_FAIL;
@@ -754,19 +754,19 @@ void TBaseWeapon::sharpenMeStoneWeap(TBeing* caster, TTool* tool) {
   }
 
   if (caster->getMove() < 10) {
-    act("You are much too tired to sharpen $p.", FALSE, caster, this, tool,
+    act("You are much too tired to sharpen $p.", false, caster, this, tool,
       TO_CHAR);
     return;
   }
   caster->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_SHARPEN, 4);
-  act("You start to sharpen $p with $P.", FALSE, caster, this, tool, TO_CHAR);
-  act("$n begins sharpening $p with $P.", FALSE, caster, this, tool, TO_ROOM);
+  act("You start to sharpen $p with $P.", false, caster, this, tool, TO_CHAR);
+  act("$n begins sharpening $p with $P.", false, caster, this, tool, TO_ROOM);
 
   // terminate sitting tasks
   if ((caster->task) && caster->getPosition() <= POSITION_SITTING)
     caster->stopTask();
 
-  start_task(caster, NULL, NULL, TASK_SHARPEN, name.c_str(), 350,
+  start_task(caster, nullptr, nullptr, TASK_SHARPEN, name.c_str(), 350,
     (ushort)caster->in_room, 0, 0, 0);
 }
 
@@ -786,20 +786,20 @@ void TBaseWeapon::dullMeFileWeap(TBeing* caster, TTool* tool) {
     return;
   }
   if (caster->getMove() < 10) {
-    act("You are much too tired to dull $p.", FALSE, caster, this, tool,
+    act("You are much too tired to dull $p.", false, caster, this, tool,
       TO_CHAR);
     return;
   }
 
   caster->learnFromDoingUnusual(LEARN_UNUSUAL_NORM_LEARN, SKILL_DULL, 4);
-  act("You start to blunt $p with $P.", FALSE, caster, this, tool, TO_CHAR);
-  act("$n begins blunting $p with $P.", FALSE, caster, this, tool, TO_ROOM);
+  act("You start to blunt $p with $P.", false, caster, this, tool, TO_CHAR);
+  act("$n begins blunting $p with $P.", false, caster, this, tool, TO_ROOM);
 
   // terminate sitting tasks
   if ((caster->task) && caster->getPosition() <= POSITION_SITTING)
     caster->stopTask();
 
-  start_task(caster, NULL, NULL, TASK_DULL, name.c_str(), 350,
+  start_task(caster, nullptr, nullptr, TASK_DULL, name.c_str(), 350,
     (ushort)caster->in_room, 0, 0, 0);
 }
 
@@ -909,13 +909,13 @@ int TGenWeapon::smiteWithMe(TBeing* ch, TBeing* v) {
 
   if (ch->checkForSkillAttempt(SKILL_SMITE)) {
     ch->sendTo("You are not yet prepared to smite.\n\r");
-    return FALSE;
+    return false;
   }
 
   if (ch->affectedBySpell(SKILL_SMITE)) {
     ch->sendTo(
       "Your recent smite prevents you from smiting again at this time.\n\r");
-    return FALSE;
+    return false;
   }
   int dam = ch->getSkillDam(v, SKILL_SMITE, ch->getSkillLevel(SKILL_SMITE),
     ch->getAdvLearning(SKILL_SMITE));
@@ -942,11 +942,11 @@ int TGenWeapon::smiteWithMe(TBeing* ch, TBeing* v) {
     aff.duration = 1 * Pulse::UPDATES_PER_MUDHOUR;
     ch->affectTo(&aff, -1);
 
-    act("You call upon $d to smite $N, but $d does not heed your plea!", FALSE,
+    act("You call upon $d to smite $N, but $d does not heed your plea!", false,
       ch, 0, v, TO_CHAR);
-    act("$n calls upon $d to smite $N, but $d does not heed $m.", FALSE, ch, 0,
+    act("$n calls upon $d to smite $N, but $d does not heed $m.", false, ch, 0,
       v, TO_NOTVICT);
-    act("$n calls upon $d to smite you, but $d does not heed $m!", FALSE, ch, 0,
+    act("$n calls upon $d to smite you, but $d does not heed $m!", false, ch, 0,
       v, TO_VICT);
 
     // man, this would REALLY piss me off
@@ -956,7 +956,7 @@ int TGenWeapon::smiteWithMe(TBeing* ch, TBeing* v) {
 
     ch->reconcileDamage(v, 0, SKILL_SMITE);
 
-    return TRUE;
+    return true;
   }
   // Apply the skill attempt
   ch->affectTo(&aff, -1);
@@ -982,16 +982,16 @@ int TGenWeapon::smiteWithMe(TBeing* ch, TBeing* v) {
   ch->affectTo(&aff, -1);
   ch->affectTo(&aff2, -1);
 
-  act("You call upon $d to smite $N!", FALSE, ch, 0, v, TO_CHAR);
-  act("$n calls upon $d to smite $N!", FALSE, ch, 0, v, TO_NOTVICT);
-  act("$n calls upon $d to smite you!", FALSE, ch, 0, v, TO_VICT);
-  act("A bolt of fierce blue-white energy courses from $p into $M!", FALSE, ch,
+  act("You call upon $d to smite $N!", false, ch, 0, v, TO_CHAR);
+  act("$n calls upon $d to smite $N!", false, ch, 0, v, TO_NOTVICT);
+  act("$n calls upon $d to smite you!", false, ch, 0, v, TO_VICT);
+  act("A bolt of fierce blue-white energy courses from $p into $M!", false, ch,
     this, v, TO_CHAR);
-  act("A bolt of fierce blue-white energy courses from $p into $M!", FALSE, ch,
+  act("A bolt of fierce blue-white energy courses from $p into $M!", false, ch,
     this, v, TO_NOTVICT);
-  act("A bolt of fierce blue-white energy courses from $p into you!!!", FALSE,
+  act("A bolt of fierce blue-white energy courses from $p into you!!!", false,
     ch, this, v, TO_VICT);
-  act("Your skin tingles as some of the energy remains in your body.", FALSE,
+  act("Your skin tingles as some of the energy remains in your body.", false,
     ch, this, v, TO_CHAR);
 
   if (ch->reconcileDamage(v, dam, SKILL_SMITE) == -1)
@@ -1002,7 +1002,7 @@ int TGenWeapon::smiteWithMe(TBeing* ch, TBeing* v) {
   if (tmon)
     tmon->developHatred(ch);
 
-  return TRUE;
+  return true;
 }
 
 int TBaseWeapon::poisonWeaponWeapon(TBeing* ch, TThing* poison) {
@@ -1010,11 +1010,11 @@ int TBaseWeapon::poisonWeaponWeapon(TBeing* ch, TThing* poison) {
 
   if (isBluntWeapon()) {
     ch->sendTo("Blunt weapons can't be poisoned effectively.\n\r");
-    return FALSE;
+    return false;
   }
   if (isPoisoned()) {
     ch->sendTo("That is already poisoned!\n\r");
-    return FALSE;
+    return false;
   }
 
   rc = poison->poisonMePoison(ch, this);
@@ -1038,7 +1038,7 @@ int TBaseWeapon::wieldMe(TBeing* ch, char* arg2) {
       canSingleWieldPrim = canSingleWieldSecd = false;
 
 #if 0
-    vlogf(LOG_LAPSOS, format("Dynamic Paired Code Active: %s %d %d") % 
+    vlogf(LOG_LAPSOS, format("Dynamic Paired Code Active: %s %d %d") %
           arg2 % canSingleWieldPrim % canSingleWieldSecd);
 #endif
 
@@ -1077,14 +1077,14 @@ int TBaseWeapon::wieldMe(TBeing* ch, char* arg2) {
         nRc = ch->wear(this, WEAR_KEY_HOLD, ch);
       } else {
         ch->sendTo("Syntax: Wield <object> <\"right\"/\"left\"/\"both\">");
-        return FALSE;
+        return false;
       }
 
       if (IS_SET_DELETE(nRc, DELETE_ITEM))
         return DELETE_THIS;
     }
 
-    return FALSE;
+    return false;
   }
 
   if (!*arg2) {
@@ -1303,7 +1303,7 @@ sstring TBaseWeapon::describeMySharp(const TBeing* ch) const {
     diff = (double)0;
   else
     diff = (double)((double)sharp / (double)maxsharp);
-  capbuf = colorString(ch, ch->desc, ch->objs(this), NULL, COLOR_OBJECTS, TRUE);
+  capbuf = colorString(ch, ch->desc, ch->objs(this), nullptr, COLOR_OBJECTS, true);
   if (diff <= .02)
     strcpy(sharpbuf, "is totally notched and dull");
   else if (diff < .10)
@@ -1427,24 +1427,24 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
           (!(i = ch->specialAttack(tb, SKILL_RANGED_PROF)) ||
             i == GUARANTEED_FAILURE)) {
         if (::number(0, 1)) {
-          act("$n dodges out of the way of $p.", FALSE, tb, this, NULL,
+          act("$n dodges out of the way of $p.", false, tb, this, nullptr,
             TO_ROOM);
           tb->sendTo("You dodge out of its way.\n\r");
           if (!ch->sameRoom(*tb))
-            act("In the distance, $N dodges out of the way of $p.", TRUE, ch,
+            act("In the distance, $N dodges out of the way of $p.", true, ch,
               this, tb, TO_CHAR);
         } else {
-          act("$n dives behind some cover, avoiding $p.", FALSE, tb, this, NULL,
+          act("$n dives behind some cover, avoiding $p.", false, tb, this, nullptr,
             TO_ROOM);
           tb->sendTo("You dive behind some cover avoiding it.\n\r");
           if (!ch->sameRoom(*tb))
             act("In the distance, $N dives behind some cover, avoiding $p.",
-              TRUE, ch, this, tb, TO_CHAR);
+              true, ch, this, tb, TO_CHAR);
         }
 
         if (spec)
-          checkSpec(tb, CMD_ARROW_DODGED, "", NULL);
-        resCode = FALSE;
+          checkSpec(tb, CMD_ARROW_DODGED, "", nullptr);
+        resCode = false;
         if (!tb->isPc())
           pissOff(dynamic_cast<TMonster*>(tb), ch);
         if (cdist == 0)
@@ -1452,30 +1452,30 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
         return resCode;
       } else {
         if (true_targ)
-          act("$n is smacked by $p!", FALSE, tb, this, NULL, TO_ROOM);
+          act("$n is smacked by $p!", false, tb, this, nullptr, TO_ROOM);
         else
-          act("$n is accidentally smacked by $p!", FALSE, tb, this, NULL,
+          act("$n is accidentally smacked by $p!", false, tb, this, nullptr,
             TO_ROOM);
-        act("You are unable to dodge being hit by $p!", FALSE, tb, this, NULL,
+        act("You are unable to dodge being hit by $p!", false, tb, this, nullptr,
           TO_CHAR);
-        resCode = TRUE;
-        phit = tb->getPartHit(NULL, FALSE);
+        resCode = true;
+        phit = tb->getPartHit(nullptr, false);
         if (!isBluntWeapon() && !tb->getStuckIn(phit) &&
             ::number(1, 100) < getCurSharp()) {
           --(*this);
           rc = tb->stickIn(this, phit);
           if (rc) {
             if (!ch->sameRoom(*tb))
-              act("In the distance, $p embeds itself in $N.", TRUE, ch, this,
+              act("In the distance, $p embeds itself in $N.", true, ch, this,
                 tb, TO_CHAR);
             if (spec)
-              checkSpec(ch, CMD_ARROW_EMBED, "", NULL);
+              checkSpec(ch, CMD_ARROW_EMBED, "", nullptr);
           } else {
             if (!ch->sameRoom(*tb))
-              act("In the distance, $N is hit by $p.", TRUE, ch, this, tb,
+              act("In the distance, $N is hit by $p.", true, ch, this, tb,
                 TO_CHAR);
             if (spec) {
-              checkSpec(tb, CMD_ARROW_GLANCE, "", NULL);
+              checkSpec(tb, CMD_ARROW_GLANCE, "", nullptr);
             }
           }
           if (IS_SET_DELETE(rc, DELETE_THIS)) {
@@ -1483,7 +1483,7 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
               ADD_DELETE(resCode, DELETE_VICT);
             else {
               delete tb;
-              tb = NULL;
+              tb = nullptr;
               return resCode;
             }
           }
@@ -1491,7 +1491,7 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
           --(*this);
           *(tb->roomp) += *this;
           if (!ch->sameRoom(*c))
-            act("In the distance, $N is hit by $p.", TRUE, ch, this, tb,
+            act("In the distance, $N is hit by $p.", true, ch, this, tb,
               TO_CHAR);
         }
 
@@ -1521,7 +1521,7 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
           if (::number(1, d) <= getStructPoints()) {
             if (IS_SET_DELETE(damageItem(1), DELETE_THIS)) {
               if (!ch->sameRoom(*tb))
-                act("In the distance, $p is destroyed.", TRUE, ch, this, 0,
+                act("In the distance, $p is destroyed.", true, ch, this, 0,
                   TO_CHAR);
               ADD_DELETE(resCode, DELETE_ITEM);
             }
@@ -1539,7 +1539,7 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
             return resCode;
           }
           delete tb;
-          tb = NULL;
+          tb = nullptr;
           return resCode;
         }
         if (c && !c->isPc())
@@ -1552,7 +1552,7 @@ int TBaseWeapon::catchSmack(TBeing* ch, TBeing** targ, TRoom* rp, int cdist,
       }
     }
   }
-  return FALSE;
+  return false;
 }
 
 sstring TBaseWeapon::showModifier(showModeT mode, const TBeing* ch) const {
@@ -1661,11 +1661,11 @@ void TBaseWeapon::applyPoison(TBeing* vict) {
     return;
 
   if ((ch = dynamic_cast<TBeing*>(equippedBy))) {
-    act("There was something nasty on that $o!", FALSE, ch, this, vict, TO_VICT,
+    act("There was something nasty on that $o!", false, ch, this, vict, TO_VICT,
       ANSI_RED);
-    act("You inflict something nasty on $N!", FALSE, ch, this, vict, TO_CHAR,
+    act("You inflict something nasty on $N!", false, ch, this, vict, TO_CHAR,
       ANSI_RED);
-    act("There was something nasty on that $o!", FALSE, ch, this, vict,
+    act("There was something nasty on that $o!", false, ch, this, vict,
       TO_NOTVICT, ANSI_RED);
     doLiqSpell(ch, vict, poison, 1);
   } else {

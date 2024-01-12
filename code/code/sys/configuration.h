@@ -42,7 +42,7 @@ class Config {
     static bool REPO_MOBS;
 
     // items that are over max-exist get hunted by a buffed up version of the
-    // hunter.  Requires REPO_MOBS be TRUE.
+    // hunter.  Requires REPO_MOBS be true.
     // VERY unpopular
     static bool SUPER_REPO_MOBS;
 

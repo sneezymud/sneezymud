@@ -80,5 +80,5 @@ bool TMoneypouch::objectRepair(TBeing* ch, TMonster* repair,
   if (!silent) {
     repair->doTell(fname(ch->name), "I can't repair moneypouches.");
   }
-  return TRUE;
+  return true;
 }

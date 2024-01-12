@@ -70,7 +70,7 @@ int tics = 0;
 TMainSocket* gSocket;
 long timeTill = 0;
 TDescriptorList DescriptorList;
-Descriptor *descriptor_list = NULL, *next_to_process;
+Descriptor *descriptor_list = nullptr, *next_to_process;
 
 struct timeval timediff(struct timeval* a, struct timeval* b) {
   struct timeval tmp, rslt;
@@ -130,7 +130,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString) {
     FD_SET(point->socket->m_sock, &output_set);
   }
 
-  sigprocmask(SIG_SETMASK, &mask, NULL);
+  sigprocmask(SIG_SETMASK, &mask, nullptr);
 
 #if defined(__linux__)
   // linux uses a nonstandard style of "timedout" (the last parm of select)
@@ -143,7 +143,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString) {
     return;
   }
 
-  sigprocmask(SIG_UNBLOCK, &mask, NULL);
+  sigprocmask(SIG_UNBLOCK, &mask, nullptr);
 
   // establish any new connections
   if (FD_ISSET(m_mainSockFD, &input_set)) {
@@ -170,7 +170,7 @@ void TMainSocket::addNewDescriptorsDuringBoot(sstring tStString) {
     if (FD_ISSET(point->socket->m_sock, &input_set)) {
       if (point->inputProcessing() < 0) {
         delete point;
-        point = NULL;
+        point = nullptr;
       }
     }
   }
@@ -330,7 +330,7 @@ bool TMainSocket::handleShutdown() {
   if (timeTill && (timeTill <= time(0))) {
     if (descriptor_list) {
       buf = format("%s time has arrived!\n\r") % shutdown_or_reboot();
-      Descriptor::worldSend(buf, NULL);
+      Descriptor::worldSend(buf, nullptr);
       descriptor_list->outputProcessing();
     }
     return true;
@@ -340,7 +340,7 @@ bool TMainSocket::handleShutdown() {
       buf = "<r>******* SYSTEM MESSAGE ******<z>\n\r";
       buf += format("<c>%s in %ld minute%s.<z>\n\r") % shutdown_or_reboot() %
              minutes % ((minutes == 1) ? "" : "s");
-      Descriptor::worldSend(buf, NULL);
+      Descriptor::worldSend(buf, nullptr);
     }
     sent = true;
   } else if (timeTill && ((timeTill - time(0)) <= 5)) {
@@ -349,7 +349,7 @@ bool TMainSocket::handleShutdown() {
       buf = "<r>******* SYSTEM MESSAGE ******<z>\n\r";
       buf += format("<c>%s in %ld second%s.<z>\n\r") % shutdown_or_reboot() %
              secs % ((secs == 1) ? "" : "s");
-      Descriptor::worldSend(buf, NULL);
+      Descriptor::worldSend(buf, nullptr);
       sent = true;
     }
   } else
@@ -405,7 +405,7 @@ struct timeval TMainSocket::handleTimeAndSockets() {
   // do some time related stuff
   ////////////////////////////////////////////
   // check out the time
-  gettimeofday(&now, NULL);
+  gettimeofday(&now, nullptr);
   timespent = timediff(&now, &last_time);
   timeout = timediff(&opt_time, &timespent);
 
@@ -416,7 +416,7 @@ struct timeval TMainSocket::handleTimeAndSockets() {
     last_time.tv_sec++;
   }
 
-  sigprocmask(SIG_SETMASK, &mask, NULL);
+  sigprocmask(SIG_SETMASK, &mask, nullptr);
 
   // this gets our list of socket connections that are ready for handling
   if (select(maxdesc + 1, &input_set, &output_set, &exc_set, &null_time) < 0) {
@@ -432,7 +432,7 @@ struct timeval TMainSocket::handleTimeAndSockets() {
   //    perror("Error in select (sleep)");
   //  }
 
-  sigprocmask(SIG_UNBLOCK, &mask, NULL);
+  sigprocmask(SIG_UNBLOCK, &mask, nullptr);
 
   ////////////////////////////////////////////
   // establish any new connections
@@ -471,7 +471,7 @@ struct timeval TMainSocket::handleTimeAndSockets() {
     if (FD_ISSET(point->socket->m_sock, &input_set)) {
       if (point->inputProcessing() < 0) {
         delete point;
-        point = NULL;
+        point = nullptr;
       }
     }
   }
@@ -502,7 +502,7 @@ procMobHate::procMobHate(const int& p) {
 }
 
 void procMobHate::run(const TPulse&) const {
-  TBeing* b = NULL;
+  TBeing* b = nullptr;
 
   for (b = character_list; b; b = b->next) {
     TMonster* tmons = dynamic_cast<TMonster*>(b);
@@ -517,7 +517,7 @@ void procMobHate::run(const TPulse&) const {
             vlogf(LOG_LAPSOS,
               format("%s no longer hates %s") % tmons->getName() % list->name);
 
-            tmons->remHated(NULL, list->name);
+            tmons->remHated(nullptr, list->name);
           }
         }
       }
@@ -775,7 +775,7 @@ procObjSpecProcsQuick::procObjSpecProcsQuick(const int& p) {
 
 bool procObjSpecProcsQuick::run(const TPulse& pl, TObj* obj) const {
   if (obj->spec) {
-    int rc = obj->checkSpec(NULL, CMD_GENERIC_QUICK_PULSE, "", NULL);
+    int rc = obj->checkSpec(nullptr, CMD_GENERIC_QUICK_PULSE, "", nullptr);
     if (IS_SET_DELETE(rc, DELETE_ITEM))
       return true;
   }
@@ -802,7 +802,7 @@ procObjRust::procObjRust(const int& p) {
 bool procObjRust::run(const TPulse& pl, TObj* obj) const {
   // rust
   if (!::number(0, 99) && obj->canRust()) {
-    TRoom* rp = NULL;
+    TRoom* rp = nullptr;
 
     if (obj->equippedBy)
       rp = obj->equippedBy->roomp;
@@ -835,9 +835,9 @@ bool procObjFreezing::run(const TPulse& pl, TObj* obj) const {
   // thawing is done with thawEngulfed() in characterPulse
   TBaseCup* cup = dynamic_cast<TBaseCup*>(obj);
   if (cup) {
-    TRoom* r = NULL;
+    TRoom* r = nullptr;
     TThing* t;
-    TBeing* ch = NULL;
+    TBeing* ch = nullptr;
 
     if ((t = cup->equippedBy) || (t = cup->parent)) {
       ch = dynamic_cast<TBeing*>(t);
@@ -983,7 +983,7 @@ procObjSpecProcs::procObjSpecProcs(const int& p) {
 bool procObjSpecProcs::run(const TPulse& pl, TObj* obj) const {
   // procs
   if (obj->spec) {
-    int rc = obj->checkSpec(NULL, CMD_GENERIC_PULSE, "", NULL);
+    int rc = obj->checkSpec(nullptr, CMD_GENERIC_PULSE, "", nullptr);
     if (IS_SET_DELETE(rc, DELETE_ITEM))
       return true;
   }
@@ -1009,7 +1009,7 @@ procPaladinAura::procPaladinAura(const int& p) {
 }
 
 bool procPaladinAura::run(const TPulse& pl, TBeing* tmp_ch) const {
-  int rc = tmp_ch->checkAura(CMD_GENERIC_PULSE, NULL);
+  int rc = tmp_ch->checkAura(CMD_GENERIC_PULSE, nullptr);
   if (IS_SET_DELETE(rc, DELETE_THIS))
     return true;
   return false;
@@ -1022,7 +1022,7 @@ procCharSpecProcs::procCharSpecProcs(const int& p) {
 
 bool procCharSpecProcs::run(const TPulse& pl, TBeing* tmp_ch) const {
   if (tmp_ch->spec) {
-    int rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", NULL);
+    int rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_PULSE, "", nullptr);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return true;
   }
@@ -1052,7 +1052,7 @@ bool procCharResponses::run(const TPulse& pl, TBeing* tmp_ch) const {
     tmon->checkResponses(
       (tmon->opinion.random ? tmon->opinion.random
                             : (tmon->targ() ? tmon->targ() : tmon)),
-      NULL, NULL, CMD_RESP_PULSE);
+      nullptr, nullptr, CMD_RESP_PULSE);
   }
   return false;
 }
@@ -1105,7 +1105,7 @@ procCharTasks::procCharTasks(const int& p) {
 
 bool procCharTasks::run(const TPulse& pl, TBeing* tmp_ch) const {
   if (tmp_ch->task && (pl.pulse >= tmp_ch->task->nextUpdate)) {
-    TObj* tmper_obj = NULL;
+    TObj* tmper_obj = nullptr;
     if (tmp_ch->task->obj) {
       tmper_obj = tmp_ch->task->obj;
     }
@@ -1114,7 +1114,7 @@ bool procCharTasks::run(const TPulse& pl, TBeing* tmp_ch) const {
     if (IS_SET_DELETE(rc, DELETE_ITEM)) {
       if (tmper_obj) {
         delete tmper_obj;
-        tmper_obj = NULL;
+        tmper_obj = nullptr;
       } else {
         vlogf(LOG_BUG, "bad item delete in gameloop -- task calling");
       }
@@ -1139,7 +1139,7 @@ bool procCharImmLeash::run(const TPulse& pl, TBeing* tmp_ch) const {
     strcpy(tmpbuf, "");
     tmp_ch->sendTo(
       "An incredibly powerful force pulls you back into Imperia.\n\r");
-    act("$n is pulled back whence $e came.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+    act("$n is pulled back whence $e came.", true, tmp_ch, 0, 0, TO_ROOM);
     vlogf(LOG_BUG, format("%s was wandering around the mortal world (R:%d) so "
                           "moving to office.") %
                      tmp_ch->getName() % tmp_ch->roomp->number);
@@ -1151,7 +1151,7 @@ bool procCharImmLeash::run(const TPulse& pl, TBeing* tmp_ch) const {
     } else {
       tmp_ch->doGoto(tmpbuf);
     }
-    act("$n appears in the room with a sheepish look on $s face.", TRUE, tmp_ch,
+    act("$n appears in the room with a sheepish look on $s face.", true, tmp_ch,
       0, 0, TO_ROOM);
   }
   return false;
@@ -1200,8 +1200,8 @@ bool procCharRegen::run(const TPulse& pl, TBeing* tmp_ch) const {
     // mostly for trolls
     int addAmt = (int)(tmp_ch->hitGain() / 10.0);
     if (addAmt > 0) {
-      act("You regenerate slightly.", TRUE, tmp_ch, 0, 0, TO_CHAR);
-      act("$n regenerates slightly.", TRUE, tmp_ch, 0, 0, TO_ROOM);
+      act("You regenerate slightly.", true, tmp_ch, 0, 0, TO_CHAR);
+      act("$n regenerates slightly.", true, tmp_ch, 0, 0, TO_ROOM);
       tmp_ch->addToHit(addAmt);
     }
   }
@@ -1298,7 +1298,7 @@ procCharLightning::procCharLightning(const int& p) {
 
 bool procCharLightning::run(const TPulse& pl, TBeing* tmp_ch) const {
   // lightning strikes
-  if (tmp_ch->roomp == NULL) {
+  if (tmp_ch->roomp == nullptr) {
     vlogf(LOG_MISC, "BUG! Lightning proc processing a nonexistent being");
     return false;
   }
@@ -1306,7 +1306,7 @@ bool procCharLightning::run(const TPulse& pl, TBeing* tmp_ch) const {
   if (!tmp_ch->roomp->isIndoorSector() &&
       !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
       Weather::getWeather(*tmp_ch->roomp) == Weather::LIGHTNING) {
-    TThing* eq = NULL;
+    TThing* eq = nullptr;
 
     if (tmp_ch->equipment[WEAR_HEAD] &&
         tmp_ch->equipment[WEAR_HEAD]->isMetal()) {
@@ -1325,12 +1325,12 @@ bool procCharLightning::run(const TPulse& pl, TBeing* tmp_ch) const {
       act(format("A bolt of lightning streaks down from the heavens and hits "
                  "your %s!") %
             fname(eq->name),
-        FALSE, tmp_ch, 0, 0, TO_CHAR);
-      act("BZZZZZaaaaaappppp!!!!!", FALSE, tmp_ch, 0, 0, TO_CHAR);
+        false, tmp_ch, 0, 0, TO_CHAR);
+      act("BZZZZZaaaaaappppp!!!!!", false, tmp_ch, 0, 0, TO_CHAR);
       act(format("A bolt of lightning streaks down from the heavens and hits "
                  "$n's %s!") %
             fname(eq->name),
-        FALSE, tmp_ch, 0, 0, TO_ROOM);
+        false, tmp_ch, 0, 0, TO_ROOM);
 
       // stolen from ego blast
       if (tmp_ch->reconcileDamage(tmp_ch, tmp_ch->getHit() / 2,
@@ -1416,7 +1416,7 @@ procCharSpecProcsQuick::procCharSpecProcsQuick(const int& p) {
 
 bool procCharSpecProcsQuick::run(const TPulse& pl, TBeing* tmp_ch) const {
   if (tmp_ch->spec) {
-    int rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", NULL);
+    int rc = tmp_ch->checkSpec(tmp_ch, CMD_GENERIC_QUICK_PULSE, "", nullptr);
     if (IS_SET_DELETE(rc, DELETE_THIS))
       return true;
   }
@@ -1457,18 +1457,18 @@ bool procCharVampireBurn::run(const TPulse& pl, TBeing* tmp_ch) const {
       !tmp_ch->roomp->isRoomFlag(ROOM_INDOORS) &&
       (tmp_ch->inRoom() != Room::VOID) && Weather::sunIsUp()) {
     if (tmp_ch->hasQuestBit(TOG_VAMPIRE)) {
-      act("<r>Exposure to sunlight causes your skin to ignite!<1>", FALSE,
-        tmp_ch, NULL, NULL, TO_CHAR);
+      act("<r>Exposure to sunlight causes your skin to ignite!<1>", false,
+        tmp_ch, nullptr, nullptr, TO_CHAR);
       act("<r>$n's skin ignites in flames as the sunlight shines on $m!<1>",
-        FALSE, tmp_ch, NULL, NULL, TO_ROOM);
+        false, tmp_ch, nullptr, nullptr, TO_ROOM);
 
       int rc = tmp_ch->reconcileDamage(tmp_ch, ::number(20, 200), SPELL_RAZE);
 
       if (IS_SET_DELETE(rc, DELETE_THIS))
         return true;
     } else if (tmp_ch->hasQuestBit(TOG_BITTEN_BY_VAMPIRE) && !::number(0, 40)) {
-      act("Exposure to sunlight makes your skin itch.", FALSE, tmp_ch, NULL,
-        NULL, TO_CHAR);
+      act("Exposure to sunlight makes your skin itch.", false, tmp_ch, nullptr,
+        nullptr, TO_CHAR);
     }
   }
 
@@ -1731,12 +1731,12 @@ TSocket* TMainSocket::newConnection(int v6_sock) {
   i = sizeof(v6_isa);
   if (getsockname(v6_sock, (struct sockaddr*)&v6_isa, &i)) {
     perror("getsockname");
-    return NULL;
+    return nullptr;
   }
   s = new TSocket();
   if ((s->m_sock = accept(v6_sock, (struct sockaddr*)(&v6_isa), &i)) < 0) {
     perror("Accept");
-    return NULL;
+    return nullptr;
   }
   s->setKeepalive(true);
   s->nonBlock();
@@ -1759,7 +1759,7 @@ int TMainSocket::newDescriptor(int v6_sock) {
   socklen_t size;
   Descriptor* newd;
   struct sockaddr_in6 v6_saiSock;
-  TSocket* s = NULL;
+  TSocket* s = nullptr;
 
   if (!(s = newConnection(v6_sock)))
     return 0;
@@ -1791,7 +1791,7 @@ int TMainSocket::newDescriptor(int v6_sock) {
 
   if (newd->inputProcessing() < 0) {
     delete newd;
-    newd = NULL;
+    newd = nullptr;
     return 0;
   }
 

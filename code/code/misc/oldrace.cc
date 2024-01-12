@@ -254,117 +254,117 @@ void TBeing::setRacialStuff() {
 bool TBeing::isAnimal() const {
   // prevent undead from flagging true
   if (IS_SET(specials.act, ACT_SKELETON))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_ZOMBIE))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_GHOST))
-    return FALSE;
+    return false;
 
-  return getMyRace()->isAnimal() ? TRUE : FALSE;
+  return getMyRace()->isAnimal() ? true : false;
 }
 
 bool TBeing::isVampire() const {
   if (hasQuestBit(TOG_VAMPIRE))
-    return TRUE;
+    return true;
   if (getRace() == RACE_VAMPIRE || getRace() == RACE_VAMPIREBAT)
-    return TRUE;
-  return FALSE;
+    return true;
+  return false;
 }
 
 bool TBeing::isUndead() const {
   if (hasQuestBit(TOG_VAMPIRE))
-    return TRUE;
+    return true;
   if (IS_SET(specials.act, ACT_SKELETON))
-    return TRUE;
+    return true;
   if (IS_SET(specials.act, ACT_ZOMBIE))
-    return TRUE;
+    return true;
   if (IS_SET(specials.act, ACT_GHOST))
-    return TRUE;
-  return getMyRace()->isUndead() ? TRUE : FALSE;
+    return true;
+  return getMyRace()->isUndead() ? true : false;
 }
 
 bool TBeing::isVeggie() const {
   // prevent undead from flagging true
   if (IS_SET(specials.act, ACT_SKELETON))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_ZOMBIE))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_GHOST))
-    return FALSE;
+    return false;
 
-  return getMyRace()->isVeggie() ? TRUE : FALSE;
+  return getMyRace()->isVeggie() ? true : false;
 }
 
 bool TBeing::isOther() const {
   // prevent undead from flagging true
   if (IS_SET(specials.act, ACT_SKELETON))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_ZOMBIE))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_GHOST))
-    return FALSE;
+    return false;
 
-  return getMyRace()->isOther() ? TRUE : FALSE;
+  return getMyRace()->isOther() ? true : false;
 }
 
 bool TBeing::isGiantish() const {
   // prevent undead from flagging true
   if (IS_SET(specials.act, ACT_SKELETON))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_ZOMBIE))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_GHOST))
-    return FALSE;
+    return false;
 
-  return getMyRace()->isGiantish() ? TRUE : FALSE;
+  return getMyRace()->isGiantish() ? true : false;
 }
 
 bool TBeing::isLycanthrope() const {
   if (hasQuestBit(TOG_LYCANTHROPE))
-    return TRUE;
+    return true;
 
-  return getMyRace()->isLycanthrope() ? TRUE : FALSE;
+  return getMyRace()->isLycanthrope() ? true : false;
 }
 
 bool TBeing::isDiabolic() const {
   // prevent undead from flagging true
   if (IS_SET(specials.act, ACT_SKELETON))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_ZOMBIE))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_GHOST))
-    return FALSE;
+    return false;
 
-  return getMyRace()->isDiabolic() ? TRUE : FALSE;
+  return getMyRace()->isDiabolic() ? true : false;
 }
 
 bool TBeing::isReptile() const {
   // prevent undead from flagging true
   if (IS_SET(specials.act, ACT_SKELETON))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_ZOMBIE))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_GHOST))
-    return FALSE;
+    return false;
 
-  return getMyRace()->isReptile() ? TRUE : FALSE;
+  return getMyRace()->isReptile() ? true : false;
 }
 
 // this is for knows
 bool TBeing::isPeople() const {
   // prevent undead from flagging true
   if (IS_SET(specials.act, ACT_SKELETON))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_ZOMBIE))
-    return FALSE;
+    return false;
   else if (IS_SET(specials.act, ACT_GHOST))
-    return FALSE;
+    return false;
 
-  return getMyRace()->isPeople() ? TRUE : FALSE;
+  return getMyRace()->isPeople() ? true : false;
 }
 
 bool TBeing::isExtraPlanar() const {
-  return getMyRace()->isExtraPlanar() ? TRUE : FALSE;
+  return getMyRace()->isExtraPlanar() ? true : false;
 }
 
 TBeing* TBeing::findDiffZoneSameRace() {
@@ -379,7 +379,7 @@ TBeing* TBeing::findDiffZoneSameRace() {
         return t;
     }
   }
-  return NULL;
+  return nullptr;
 }
 
 // this should be places char can actually wear equipment
@@ -387,7 +387,7 @@ TBeing* TBeing::findDiffZoneSameRace() {
 // default case is all slots except secondary limbs
 int TBeing::validEquipSlot(wearSlotT i) {
   if (isLimbFlags(i, PART_TRANSFORMED))
-    return FALSE;
+    return false;
 
   switch (getMyRace()->getBodyType()) {
     case BODY_INSECTOID:
@@ -493,7 +493,7 @@ int TBeing::validEquipSlot(wearSlotT i) {
     case BODY_NONE:
     case BODY_MIMIC:
     case BODY_GOLEM:  // automatons and golems : makes their AC too good
-      return FALSE;   // can't wear anywhere
+      return false;   // can't wear anywhere
     case BODY_HUMANOID:
     case BODY_OWLBEAR:
     case BODY_MINOTAUR:
@@ -548,7 +548,7 @@ int TBeing::validEquipSlot(wearSlotT i) {
   }
   vlogf(LOG_BUG, format("Bogus body type (%d) in validEquipSlot") %
                    getMyRace()->getBodyType());
-  return FALSE;
+  return false;
 }
 
 const sstring TBeing::bogus_slot_worn(wearSlotT i) const {
@@ -3984,7 +3984,7 @@ bool TBeing::isWinged() const { return getMyRace()->isWinged(); }
 
 bool TBeing::isColdBlooded() const {
   if (isUndead())
-    return TRUE;
+    return true;
 
   return getMyRace()->isColdBlooded();
 }

@@ -34,7 +34,7 @@ class TShopOwned {
     int getCorpID();
 
     void doBuyTransaction(int, const sstring&, transactionTypeT,
-      TObj* obj = NULL);
+      TObj* obj = nullptr);
     void doSellTransaction(int, const sstring&, transactionTypeT, int num = 1);
 
     double getExpenseRatio();
