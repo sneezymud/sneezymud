@@ -1,3 +1,4 @@
+#pragma once
 
 #include "sstring.h"
 
@@ -13,5 +14,6 @@ class Discord {
         static int ACHIEVEMENT_THRESHOLD;
 
         static bool doConfig();
-        static bool sendMessage(sstring channel, sstring msg);
+        static bool sendMessageAsync(sstring channel, sstring msg);
+        static void sendMessage(sstring channel, sstring msg, bool detach = true);
 };

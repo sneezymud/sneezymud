@@ -666,7 +666,7 @@ void TPerson::advanceLevel(classIndT Class) {
       // discord webhook announcement
       if (GetMaxLevel() == 50) {
         sstring discord_msg;
-        discord_msg = format(":tada: %s has achieved level 50 as a %s!") % getName() % getProfName();
+        discord_msg = format(":tada: **%s** has achieved level 50 as a **%s**!") % getName() % getProfName();
         Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, discord_msg);
       }
     }

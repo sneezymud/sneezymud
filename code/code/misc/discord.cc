@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <filesystem>
+#include <thread>
 
 #include "discord.h"
 
@@ -59,15 +60,8 @@ bool Discord::doConfig() {
 
 // send a message to a discord webhook
 // we use the curl library for this and keep it simple
-bool Discord::sendMessage(sstring channel, sstring msg)
+bool Discord::sendMessageAsync(sstring channel, sstring msg)
 {
-
-    if (channel == "") {
-        // no channel configuration, so bail
-        return false;
-    }
-
-    vlogf(LOG_MISC, format("Discord webhooks: '%s', '%s'") % channel % msg);
 
     CURL* curl = curl_easy_init();
     if (!curl) {
@@ -76,7 +70,7 @@ bool Discord::sendMessage(sstring channel, sstring msg)
     }
 
     // sanitize and format the message
-    msg = format("{\"content\": \"%s\"}") % stripColorCodes(msg.cap()).escapeJson();
+    msg = format("{\"content\": \"%s\"}") % stripColorCodes(msg).escapeJson();
 
     const char* webhookURL = channel.c_str();
     const char* content = msg.c_str();
@@ -96,4 +90,27 @@ bool Discord::sendMessage(sstring channel, sstring msg)
     curl_slist_free_all(headers);
     curl_easy_cleanup(curl);
     return true;
+}
+
+void Discord::sendMessage(sstring channel, sstring msg, bool detach) 
+{
+    if (channel == "") {
+        // no channel configuration, so bail
+        return;
+    }
+
+    vlogf(LOG_MISC, format("Discord webhooks: '%s'")  % msg);
+
+    // we want to do this asynchronously so POST lag doesn't hang the mud
+    std::thread thread(
+        [](sstring channel, sstring msg) {
+            sendMessageAsync(channel, msg);
+        },
+        channel, msg
+    );
+    if (!detach) {
+        thread.join();
+    } else {
+        thread.detach();
+    }
 }
