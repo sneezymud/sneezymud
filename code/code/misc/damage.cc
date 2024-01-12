@@ -993,7 +993,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
           }
           doShout(taunt_buf);
-          discord_taunt_msg = format("%s shouts, \"%s\"") % getName().cap() % taunt_buf;
+          discord_taunt_msg = format(":skull: %s shouts, \"%s\"") % getName().cap() % taunt_buf;
           Discord::sendMessage(Discord::CHANNEL_DEATHS, discord_taunt_msg);
         } else {
 #if 1
@@ -1100,6 +1100,9 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 
     // Mark a groupKill for all in the group
 
+
+    sstring killer = getName();
+    sstring grouplist = "";
     if (isAffected(AFF_GROUP) && (master || followers)) {
       if (master)
         k = master;
@@ -1111,6 +1114,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
           if (k->desc) {
             k->desc->session.groupKills++;
             k->desc->career.group_kills++;
+            grouplist = k->getName();
           }
         }
       }
@@ -1120,10 +1124,32 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             if (f->follower->desc) {
               f->follower->desc->session.groupKills++;
               f->follower->desc->career.group_kills++;
+              grouplist = format("%s, %s") % grouplist % f->follower->getName();
             }
           }
         }
       }
+    }
+
+    // send an achievement message to the discord webhook
+    sstring achievement_msg;
+    if(isPc() && !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
+      // player killed an notable mob, send message to our discord webhook
+      // ideally we'd like to list all the group members...
+      if(grouplist == "") {
+        // if no grouplist, just use the killer's name
+        grouplist = format("%s has") % killer;
+      } else {
+        // otherwise, replace the last comma with 'and'
+        unsigned int pos = grouplist.rfind(',', grouplist.size());
+        if (pos > 0 && pos < grouplist.size()) {
+          grouplist = format("%s and %s have") % grouplist.substr(0, pos) % grouplist.substr(pos+2, grouplist.size());
+        }
+      }
+      // we could potentially randomize this message
+      achievement_msg = format(":crossed_swords: %s taken down %s!") % grouplist % v->getName();
+      Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
+
     }
 
     strcpy(buf2, v->name.c_str());

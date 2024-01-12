@@ -660,8 +660,16 @@ void TPerson::advanceLevel(classIndT Class) {
   if (desc && GetMaxLevel() >= 40 && desc->career.hit_level40 == 0)
     desc->career.hit_level40 = time(0);
   if (desc && GetMaxLevel() >= 50) {
-    if (desc->career.hit_level50 == 0)
+    if (desc->career.hit_level50 == 0) {
       desc->career.hit_level50 = time(0);
+      
+      // discord webhook announcement
+      if (GetMaxLevel() == 50) {
+        sstring discord_msg;
+        discord_msg = format(":tada: %s has achieved level 50 as a %s!") % getName() % getProfName();
+        Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, discord_msg);
+      }
+    }
     if (isSingleClass()) {
       SET_BIT(desc->account->flags, TAccount::ALLOW_DOUBLECLASS);
       sendTo(COLOR_BASIC,
@@ -675,12 +683,6 @@ void TPerson::advanceLevel(classIndT Class) {
         "<r>Congratulations on obtaining L50!<z>\n\rYou may now create "
         "<y>triple-class characters<z>!\n\r");
       desc->saveAccount();
-    }
-    // discord webhook announcement
-    if (GetMaxLevel() == 50) {
-      sstring discord_msg;
-      discord_msg = format("%s has achieved level 50 as a %s!") % getName() % getProfName();
-      Discord::sendMessage(Discord::CHANNEL_LEVELUP, discord_msg);
     }
   }
 
