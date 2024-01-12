@@ -1,11 +1,26 @@
-#include "room.h"
-#include "monster.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
+#include "connect.h"
 #include "database.h"
-#include "shop.h"
+#include "enum.h"
 #include "extern.h"
-#include "shopowned.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
 #include "process.h"
+#include "room.h"
+#include "shop.h"
+#include "shopowned.h"
 #include "spec_mobs.h"
+#include "sstring.h"
+
+class TObj;
 
 // procBankInterest
 procBankInterest::procBankInterest(const int& p) {

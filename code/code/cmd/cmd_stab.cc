@@ -1,9 +1,29 @@
-#include "handler.h"
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <string.h>
+#include <algorithm>
+#include <memory>
+
 #include "being.h"
 #include "combat.h"
-#include "obj_general_weapon.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
 #include "materials.h"
+#include "obj.h"
+#include "obj_general_weapon.h"
+#include "parse.h"
 #include "skills.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 //#define ALLOW_STAB_SEVER
 #define USE_NEW_STAB

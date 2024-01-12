@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include "sstring.h"
+
 const unsigned int TRAP_EFF_MOVE = (1 << 0);     // 1  trigger on movement
 const unsigned int TRAP_EFF_OBJECT = (1 << 1);   // 2  trigger on get or put
 const unsigned int TRAP_EFF_ROOM = (1 << 2);     // 4  affect all in room

@@ -1,10 +1,28 @@
-#include "handler.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "enum.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "obj_tool.h"
+#include "obj.h"
 #include "obj_plant.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "task.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 int TBeing::doPlant(sstring arg) {
   sstring obj_arg, vict_arg, orig = arg;

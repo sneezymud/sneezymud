@@ -1,9 +1,16 @@
+#include <boost/format.hpp>
 #include <cstdio>
+#include <memory>
 
-#include "extern.h"
 #include "being.h"
+#include "connect.h"
+#include "defs.h"
+#include "extern.h"
+#include "log.h"
+#include "parse.h"
 #include "person.h"
-#include "race.h"
+#include "sstring.h"
+#include "toggle.h"
 
 bool TBeing::hasQuestBit(int value) const {
   if (value < 0 || value >= MAX_TOG_INDEX) {

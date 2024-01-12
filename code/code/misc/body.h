@@ -82,3 +82,4 @@ enum body_t {
 };
 
 extern const char* bodyNames[MAX_BODY_TYPES];
+extern const unsigned char slot_chance[MAX_BODY_TYPES][MAX_WEAR];

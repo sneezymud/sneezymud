@@ -6,9 +6,17 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "colorstring.h"
+#include <string.h>
+
 #include "being.h"
+#include "colorstring.h"
+#include "connect.h"
+#include "db.h"
+#include "extern.h"
+#include "log.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 sstring stripColorCodes(const sstring& s) {
   sstring buf = "";

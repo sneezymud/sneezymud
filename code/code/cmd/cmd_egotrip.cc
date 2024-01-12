@@ -6,21 +6,41 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <map>
+#include <string>
+#include <utility>
+
+#include "ansi.h"
 #include "being.h"
-#include "disc_shaman.h"
-#include "disc_shaman_healing.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
 #include "disc_fire.h"
+#include "disc_shaman.h"
 #include "disc_wrath.h"
-#include "disc_aegis.h"
-#include "disc_spirit.h"
 #include "disease.h"
-#include "obj_portal.h"
+#include "enum.h"
+#include "extern.h"
 #include "garble.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
 #include "monster.h"
+#include "obj_portal.h"
+#include "parse.h"
 #include "person.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 class ego_imm_blessing {
   public:

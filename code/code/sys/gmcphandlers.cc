@@ -1,10 +1,22 @@
 #include "gmcphandlers.h"
+
+#include <assert.h>
+#include <boost/format.hpp>
+#include <stddef.h>
+#include <functional>
+#include <map>
+#include <stdexcept>
+#include <string>
+#include <utility>
+
 #include "being.h"
 #include "connect.h"
-#include "room.h"
-#include "person.h"
-
+#include "db.h"
+#include "enum.h"
 #include "json.hpp"
+#include "log.h"
+#include "person.h"
+#include "room.h"
 
 namespace {
   unsigned char GMCP = 201;

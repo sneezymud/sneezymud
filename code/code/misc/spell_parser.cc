@@ -7,40 +7,62 @@
 //
 /////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
+#include <list>
+#include <map>
+#include <string>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+#include <vector>
+
 #include "being.h"
-#include "low.h"
-#include "monster.h"
-#include "disc_shaman_armadillo.h"
-#include "disc_shaman_healing.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "disc_aegis.h"
+#include "disc_afflictions.h"
 #include "disc_air.h"
 #include "disc_alchemy.h"
+#include "disc_cures.h"
+#include "disc_deikhan.h"
 #include "disc_earth.h"
 #include "disc_fire.h"
+#include "disc_hand_of_god.h"
+#include "disc_nature.h"
+#include "disc_shaman.h"
+#include "disc_shaman_armadillo.h"
+#include "disc_shaman_control.h"
+#include "disc_shaman_frog.h"
+#include "disc_shaman_healing.h"
+#include "disc_shaman_skunk.h"
+#include "disc_shaman_spider.h"
 #include "disc_sorcery.h"
 #include "disc_spirit.h"
 #include "disc_water.h"
-#include "disc_aegis.h"
 #include "disc_wrath.h"
-#include "disc_shaman.h"
-#include "disc_afflictions.h"
-#include "disc_cures.h"
-#include "disc_hand_of_god.h"
-#include "disc_deikhan.h"
-#include "disc_animal.h"
-#include "disc_nature.h"
-#include "disc_ranged.h"
-#include "disc_adventuring.h"
-#include "disc_shaman_frog.h"
-#include "disc_shaman_spider.h"
-#include "disc_shaman_skunk.h"
-#include "disc_shaman_control.h"
-#include "obj_opal.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 #include "weather.h"
-
-#include <boost/algorithm/string.hpp>
+#include "wiz_powers.h"
 
 int TBeing::useMana(spellNumT spl) {
   int arrayMana;

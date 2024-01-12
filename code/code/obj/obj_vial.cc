@@ -1,8 +1,16 @@
 // vial.cc
 
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
+#include "liquids.h"
+#include "log.h"
+#include "materials.h"
 #include "monster.h"
 #include "obj_vial.h"
-#include "materials.h"
+#include "sstring.h"
+#include "thing.h"
 
 TVial::TVial() : TBaseCup() {}
 

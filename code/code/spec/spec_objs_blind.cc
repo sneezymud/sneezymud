@@ -5,9 +5,19 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "comm.h"
-#include "obj_base_weapon.h"
+#include <algorithm>
+#include <string>
+
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "obj.h"
+#include "obj_base_weapon.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "thing.h"
 
 /*
   Name: Blinder

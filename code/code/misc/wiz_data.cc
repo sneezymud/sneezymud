@@ -5,18 +5,21 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-extern "C" {
+#include <boost/format.hpp>
 #include <cstdio>
-
-#include <unistd.h>
-#include <sys/stat.h>
-}
+#include <string>
 
 #include "being.h"
-#include "extern.h"
-#include "monster.h"
-#include "person.h"
+#include "connect.h"
 #include "database.h"
+#include "defs.h"
+#include "extern.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
+#include "person.h"
+#include "sstring.h"
+#include "wiz_powers.h"
 
 void TBeing::wizFileRead() {
   Descriptor* d = nullptr;

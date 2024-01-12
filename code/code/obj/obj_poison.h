@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_base_cup.h"
+
+class TBeing;
+class TMonster;
 
 class TPoison : public TBaseCup {
   public:

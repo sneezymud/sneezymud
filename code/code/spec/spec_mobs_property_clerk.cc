@@ -1,5 +1,15 @@
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
 #include "database.h"
+#include "db.h"
+#include "enum.h"
 #include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "sstring.h"
 
 int propertyClerk(TBeing* ch, cmdTypeT cmd, const char* argument, TMonster* me,
   TObj*) {

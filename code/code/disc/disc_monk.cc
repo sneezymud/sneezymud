@@ -4,17 +4,36 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <stdint.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
 #include "combat.h"
-#include "disc_monk.h"
-#include "disc_cures.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
 #include "disc_aegis.h"
-#include "obj_light.h"
+#include "disc_cures.h"
+#include "disc_monk.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "obj.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "toggle.h"
+
+class TThing;
 
 int TBeing::doLeap(const sstring& arg) {
   int rc;

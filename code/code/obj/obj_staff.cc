@@ -1,14 +1,26 @@
 // staff.cc
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <list>
+#include <memory>
 
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
 #include "extern.h"
-#include "room.h"
+#include "log.h"
 #include "low.h"
-#include "monster.h"
 #include "materials.h"
+#include "monster.h"
 #include "obj_magic_item.h"
 #include "obj_staff.h"
+#include "room.h"
+#include "spell2.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 TStaff::TStaff() :
   TMagicItem(),

@@ -6,15 +6,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <memory>
 
-#include <cmath>
-
-#include "monster.h"
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "disease.h"
+#include "enum.h"
+#include "log.h"
 #include "obj_food.h"
 #include "obj_fruit.h"
 #include "obj_tool.h"
+#include "race.h"
 #include "room.h"
+#include "sound.h"
+#include "thing.h"
 
 TFruit::TFruit() : TFood(), seedVNum(0) {}
 

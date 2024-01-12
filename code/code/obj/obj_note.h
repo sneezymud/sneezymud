@@ -7,7 +7,15 @@
 
 #pragma once
 
+#include <time.h>
+
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
+class TBoard;
+class TMonster;
+class TPen;
 
 class TNote : public TObj {
   private:

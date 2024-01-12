@@ -4,9 +4,18 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
+#include <string.h>
+
 #include "being.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "handler.h"
+#include "spells.h"
+#include "stats.h"
+#include "structs.h"
 
 static int quiveringPalm(TBeing* c, TBeing* v) {
   affectedData aff;

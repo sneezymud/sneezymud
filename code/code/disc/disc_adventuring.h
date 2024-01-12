@@ -44,6 +44,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TObj;
+
 class CDAdventuring : public CDiscipline {
   public:
     CSkill skFishing;

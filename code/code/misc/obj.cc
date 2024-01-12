@@ -1,12 +1,23 @@
-#include <cstdio>
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <algorithm>
+#include <cstdint>
+#include <iterator>
+#include <memory>
+#include <string>
 
-#include "shop.h"
-#include "shopowned.h"
-#include "corporation.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "discipline.h"
+#include "extern.h"
+#include "log.h"
 #include "materials.h"
 #include "obj.h"
-#include "extern.h"
-#include "being.h"
+#include "shopowned.h"
+
+class TMonster;
 
 bool TObj::isPluralItem() const { return false; }
 

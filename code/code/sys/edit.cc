@@ -6,18 +6,15 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <arpa/telnet.h>
+#include <ctype.h>
+#include <unistd.h>
 #include <cstdio>
 
-#include "socket.h"
+#include "ansi.h"
 #include "connect.h"
-
-#include <unistd.h>
-#include <arpa/telnet.h>
-#include <sys/syscall.h>
-#include <netdb.h>
-#include <sys/param.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
+#include "log.h"
+#include "socket.h"
 
 int Descriptor::move(int hor, int vert) {
   char buf[256];

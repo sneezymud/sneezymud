@@ -9,11 +9,15 @@
 
 #pragma once
 
-#include "structs.h"
-#include "sstring.h"
-
 #include <map>
 #include <queue>
+#include <vector>
+
+#include "sstring.h"
+#include "structs.h"
+
+class TMonster;
+class TObj;
 
 // Strings for the mud name
 // also: WELC_MESSG needs to be updated if these change
@@ -86,21 +90,15 @@ const int ZONE_ROOM_RANDOM = -99;
 
 void bootDb(void);
 class TDatabase;
+
 void bootOneZone(TDatabase&, int, int&);
 int create_entry(char* name);
 void zone_update(void);
 int real_object(int);
 int real_mobile(int);
 
-// forward class decl
-class resetCom;
-class armorSetLoad;
-class zoneData;
 class extraDescription;
-class indexData;
-class objIndexData;
-class mobIndexData;
-class resetQElement;
+class zoneData;
 
 enum readFileTypeT {
   REAL,

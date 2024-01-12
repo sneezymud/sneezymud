@@ -7,7 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_base_weapon.h"
+#include "spells.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
 
 class TGenWeapon : public TBaseWeapon {
   private:

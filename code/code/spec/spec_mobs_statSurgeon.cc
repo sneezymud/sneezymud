@@ -1,4 +1,15 @@
+#include <algorithm>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
+#include "enum.h"
 #include "monster.h"
+#include "parse.h"
+#include "sstring.h"
+#include "stats.h"
+
+class TObj;
 
 const int COST = 1000000;
 

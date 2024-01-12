@@ -4,8 +4,24 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string>
+
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
+#include "faction.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "obj_drug.h"
 #include "obj_money.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "wiz_powers.h"
 
 int mapApplyToFile(applyTypeT att) {
   switch (att) {

@@ -6,22 +6,42 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <list>
+#include <map>
+#include <utility>
 
-#include "room.h"
 #include "being.h"
-#include "handler.h"
-#include "low.h"
-#include "extern.h"
-#include "monster.h"
-#include "configuration.h"
+#include "body.h"
+#include "cmd_dissect.h"
 #include "combat.h"
-#include "obj_component.h"
+#include "configuration.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
-#include "obj_player_corpse.h"
+#include "obj_component.h"
 #include "obj_corpse.h"
 #include "obj_money.h"
-#include "materials.h"
+#include "obj_player_corpse.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 TThing* TBeing::makeCorpse(spellNumT dmg_type, TBeing* tKiller,
   float exp_lost) {

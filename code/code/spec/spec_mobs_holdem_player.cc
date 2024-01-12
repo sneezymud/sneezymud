@@ -1,6 +1,20 @@
-#include "monster.h"
-#include "obj_casino_chip.h"
+#include <ext/alloc_traits.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
+#include "db.h"
 #include "games.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_casino_chip.h"
+#include "parse.h"
+#include "sstring.h"
+#include "thing.h"
 
 void deleteChips(TMonster* me) {
   std::vector<TThing*> chipl;

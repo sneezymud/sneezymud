@@ -7,13 +7,20 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <algorithm>
 #include <cstdio>
 
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "limbs.h"
 #include "materials.h"
+#include "obj.h"
+#include "obj_base_weapon.h"
 #include "room.h"
 #include "statistics.h"
-#include "obj_base_weapon.h"
+#include "thing.h"
 
 static bool genericDamCheck(int susc, int sharp) {
 #if 0

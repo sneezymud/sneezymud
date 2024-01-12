@@ -7,7 +7,15 @@
 
 #pragma once
 
+#include <time.h>
+
+#include "enum.h"
+#include "faction.h"
+#include "spells.h"
 #include "structs.h"
+
+class TBeing;
+class TThing;
 
 const int SKILL_MIN = -99;
 

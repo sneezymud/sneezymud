@@ -4,10 +4,20 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
+#include <string.h>
+
+#include "ansi.h"
 #include "being.h"
-#include "enum.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "handler.h"
+#include "limbs.h"
+#include "obj.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 bool TBeing::canStomp(TBeing* victim, silentTypeT silent) {
   if (checkBusy())

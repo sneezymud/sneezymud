@@ -1,12 +1,35 @@
-#include "comm.h"
-#include "low.h"
-#include "obj_base_corpse.h"
-#include "obj_tool.h"
-#include "obj_food.h"
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
+#include <vector>
+
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "low.h"
+#include "obj.h"
+#include "obj_base_corpse.h"
 #include "obj_base_weapon.h"
+#include "obj_food.h"
 #include "obj_player_corpse.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "race.h"
 #include "skills.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
+
+class TRoom;
 
 const static char* meats[] = {"rib-eye steak", "chuck-eye steak", "skirt steak",
   "flank steak", "t-bone steak", "porterhouse steak", "tenderloin steak",

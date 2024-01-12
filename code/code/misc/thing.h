@@ -6,13 +6,42 @@
 
 #pragma once
 
-#include <cstring>
 #include <list>
 
-#include "limbs.h"
-#include "faction.h"
 #include "ansi.h"
+#include "enum.h"
+#include "faction.h"
+#include "limbs.h"
+#include "parse.h"
 #include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+
+class Descriptor;
+class TArrow;
+class TBaseContainer;
+class TBaseCorpse;
+class TBaseWeapon;
+class TBeing;
+class TBoard;
+class TBow;
+class TComponent;
+class TDrinkCon;
+class TDrugContainer;
+class TFood;
+class TLight;
+class TMonster;
+class TObj;
+class TOpal;
+class TOpenContainer;
+class TPen;
+class TRoom;
+class TSymbol;
+class TTable;
+class TThing;
+class TTool;
+class TTrap;
+class TVial;
 
 enum thingTypeT {
   TYPETHING,  // = 0;

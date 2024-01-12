@@ -1,12 +1,19 @@
-#include <cstdio>
-
+#include <boost/format.hpp>
 #include <errno.h>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <cstdio>
+#include <memory>
+#include <vector>
 
+#include "being.h"
+#include "db.h"
+#include "extern.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "unistd.h"
 #include "obj_note.h"
-#include "extern.h"
+#include "unistd.h"
 
 TNote::TNote() : TObj(), repairman(0), time_adjust(0), obj_v(0) {}
 

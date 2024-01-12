@@ -7,14 +7,24 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
+#include <vector>
 
-#include "comm.h"
-#include "room.h"
-#include "obj_drug.h"
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "extern.h"
+#include "log.h"
+#include "obj_drug.h"
 #include "obj_drug_container.h"
+#include "room.h"
+#include "structs.h"
+#include "thing.h"
 
 TDrugContainer::TDrugContainer() :
   TObj(),

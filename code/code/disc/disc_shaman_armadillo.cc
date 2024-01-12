@@ -7,15 +7,27 @@
  *                                                                 *
  *******************************************************************/
 
+#include <string.h>
+#include <algorithm>
+
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "disc_shaman_armadillo.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "room.h"
-#include "being.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
-#include "disc_shaman_armadillo.h"
+#include "immunity.h"
 #include "obj_magic_item.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "structs.h"
+#include "thing.h"
+
+class TObj;
 
 int TBeing::doEarthmaw(const char* argument) {
   if (!doesKnowSkill(SPELL_EARTHMAW)) {

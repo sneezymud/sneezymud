@@ -1,12 +1,21 @@
 #include <cstdio>
+#include <list>
 
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "handler.h"
 #include "low.h"
 #include "monster.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
+#include "parse.h"
 #include "pathfinder.h"
 #include "room.h"
-#include "handler.h"
 #include "spec_mobs.h"
+#include "structs.h"
+#include "thing.h"
 
 // returns DELETE_THIS
 int goToMorgue(TBeing* myself) {

@@ -27,6 +27,11 @@
 
 #pragma once
 
+#include "sstring.h"
+
+class TBeing;
+class TThing;
+
 #define NEWBIE_PURGATORY_LENGTH 7257600
 
 enum messageTypeT {

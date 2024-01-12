@@ -9,16 +9,37 @@
 
  *****************************************************************************/
 
+#include <boost/filesystem.hpp>
+#include <boost/format.hpp>
+#include <boost/iterator/iterator_facade.hpp>
+#include <algorithm>
 #include <cstdio>
 #include <fstream>
-#include <boost/filesystem.hpp>
+#include <ios>
+#include <iosfwd>
+#include <list>
+#include <memory>
+#include <ostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
-#include "extern.h"
-#include "room.h"
 #include "being.h"
-#include "monster.h"
-#include "db.h"
+#include "connect.h"
 #include "database.h"
+#include "db.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 // #define MAIL_ZONEFILE
 

@@ -1,9 +1,16 @@
 // other_obj.cc
 
-#include <cstdio>
+#include <boost/format.hpp>
+#include <memory>
 
-#include "obj_other_obj.h"
+#include "db.h"
 #include "extern.h"
+#include "log.h"
+#include "obj_other_obj.h"
+#include "spells.h"
+#include "structs.h"
+
+class TBeing;
 
 TOtherObj::TOtherObj() : TObj() {}
 

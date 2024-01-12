@@ -7,8 +7,12 @@
 
 #pragma once
 
+#include "liquids.h"
+#include "obj.h"
 #include "obj_base_cup.h"
 #include "obj_mergeable.h"
+
+class TBeing;
 
 class TPool : public TBaseCup, public TMergeable {
   public:

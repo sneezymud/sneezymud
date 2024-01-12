@@ -27,6 +27,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TThing;
+
 class CDTheology : public CDiscipline {
   public:
     CSkill skPenance;

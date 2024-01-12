@@ -6,9 +6,23 @@
 
 #pragma once
 
+#include <stdio.h>
+#include <string>
+#include <utility>
+
 #include "being.h"
-#include "wiz_powers.h"
 #include "connect.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "thing.h"
+#include "wiz_powers.h"
+
+class charFile;
+class saveAffectedData;
 
 extern Descriptor* descriptor_list;
 extern Descriptor* next_to_process;

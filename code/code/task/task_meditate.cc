@@ -5,10 +5,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
-#include "obj.h"
-#include "room.h"
+#include "comm.h"
 #include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+
+class TObj;
 
 int task_meditate(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {

@@ -14,8 +14,13 @@
 
 #include "body.h"
 #include "cmd_dissect.h"
+#include "enum.h"
 #include "immunity.h"
+#include "sstring.h"
 #include "stats.h"
+
+class TBeing;
+class TPCorpse;
 
 // forward declarations
 class TCorpse;

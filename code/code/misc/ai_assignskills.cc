@@ -1,6 +1,14 @@
-#include "extern.h"
-#include "being.h"
+#include <boost/format.hpp>
 #include <algorithm>
+#include <vector>
+
+#include "being.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "sstring.h"
 
 std::vector<discNumT> disclist;
 

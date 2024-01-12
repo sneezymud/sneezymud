@@ -5,15 +5,30 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "room.h"
+#include <algorithm>
+#include <list>
+
+#include "ansi.h"
+#include "being.h"
+#include "combat.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_fire.h"
+#include "enum.h"
+#include "immunity.h"
 #include "low.h"
 #include "monster.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
-#include "disc_fire.h"
+#include "obj.h"
 #include "obj_light.h"
 #include "obj_magic_item.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "structs.h"
+#include "thing.h"
 
 int handsOfFlame(TBeing* caster, TBeing* victim, int level, short bKnown,
   int* damage, int adv_learn) {

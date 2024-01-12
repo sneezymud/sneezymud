@@ -1,7 +1,18 @@
-#include "handler.h"
+#include <algorithm>
+#include <map>
+#include <utility>
+
 #include "being.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
 #include "obj_base_weapon.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 int TBeing::doSlam(const char* argument, TBeing* vict) {
   int rc;

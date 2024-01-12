@@ -1,5 +1,9 @@
 #pragma once
 
+#include <vector>
+
+#include "faction.h"
+
 const int GUILD_CREATE_LEVEL = 25;
 
 const int NUM_MAX_RANK = 10;  // 0-9, ranks

@@ -5,9 +5,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <time.h>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 #include "weather.h"
 
 void TBeing::doScore() {

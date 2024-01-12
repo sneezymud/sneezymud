@@ -1,13 +1,19 @@
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <memory>
 
-#include "monster.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "create.h"
 #include "extern.h"
-#include "obj_open_container.h"
+#include "materials.h"
+#include "monster.h"
 #include "obj_arrow.h"
 #include "obj_base_weapon.h"
-#include "shop.h"
-#include "shopowned.h"
-#include "materials.h"
+#include "structs.h"
+#include "thing.h"
 
 TArrow::TArrow() :
   TBaseWeapon(),

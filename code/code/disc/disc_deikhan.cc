@@ -4,11 +4,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
-#include "disease.h"
-#include "combat.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_deikhan.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "parse.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 extern void startChargeTask(TBeing*, const char*);
 

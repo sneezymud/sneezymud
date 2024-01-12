@@ -1,7 +1,13 @@
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_expandable_container.h"
 #include "obj_mergeable.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
 
 class TTrashPile : public TExpandableContainer, public TMergeable {
   private:

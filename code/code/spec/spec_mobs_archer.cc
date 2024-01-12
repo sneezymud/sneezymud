@@ -1,11 +1,26 @@
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <string>
+#include <vector>
+
 #include "being.h"
-#include "obj_bow.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
-#include "obj_arrow.h"
-#include "obj_quiver.h"
-#include "being.h"
-#include "room.h"
+#include "limbs.h"
+#include "log.h"
 #include "monster.h"
+#include "obj.h"
+#include "obj_arrow.h"
+#include "obj_bow.h"
+#include "obj_quiver.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 #define MAX_RANGE 3
 

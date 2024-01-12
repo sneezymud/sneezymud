@@ -1,11 +1,28 @@
-#include "room.h"
-#include "low.h"
-#include "person.h"
-#include "monster.h"
-#include "db.h"
-#include "handler.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
 #include "database.h"
+#include "defs.h"
+#include "enum.h"
+#include "handler.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
 #include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+
+class TObj;
 
 #define UNIQUE_TROPHY_FAERIE 33313
 #define PERMA_DEATH_FAERIE 33314

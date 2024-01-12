@@ -25,6 +25,10 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TMagicItem;
+class TObj;
+
 class CDSpirit : public CDiscipline {
   public:
     CSkill skSilence;

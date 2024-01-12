@@ -8,10 +8,11 @@
 
 #include <cstdio>
 
-#include "low.h"
-#include "extern.h"
-#include "obj_audio.h"
 #include "being.h"  // for number()... groan
+#include "extern.h"
+#include "low.h"
+#include "obj_audio.h"
+#include "thing.h"
 
 int TAudio::getFreq() const { return freq; }
 

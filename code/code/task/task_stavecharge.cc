@@ -15,15 +15,26 @@
 
  ******************************************************************************/
 
+#include <algorithm>
 #include <cstdio>
 
-#include "room.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "obj.h"
 #include "obj_component.h"
 #include "obj_staff.h"
-#include "extern.h"
-#include "connect.h"
+#include "parse.h"
+#include "room.h"
 #include "skills.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
 
 // How many charges per 'charge' does it cost.
 static const int STAVECHARGE_COMPMULTIPLIER = 5;

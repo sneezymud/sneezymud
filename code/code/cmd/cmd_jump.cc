@@ -69,9 +69,14 @@ struct tJumpCmdInformation {
     "Luckily you regain control at the last moment...\n\r",
     "$n falls from above but stops meer inches from the water!"}};
 
-#include "handler.h"
-#include "room.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "handler.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
 
 int TBeing::doJump(const sstring& tArg) {
   // Ignore invalid or errored locations.

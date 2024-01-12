@@ -7,9 +7,21 @@
 // room.cc
 
 #include "room.h"
-#include "extern.h"
+
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
+#include "extern.h"
+#include "log.h"
 #include "monster.h"
+#include "obj.h"
+#include "spells.h"
+#include "structs.h"
 #include "weather.h"
 
 bool TRoom::isCitySector() const {

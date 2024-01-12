@@ -1,6 +1,10 @@
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_gun.h"
+
+class TBeing;
 
 class TCannon : public TGun {
   public:

@@ -6,10 +6,10 @@
 
 #pragma once
 
-#include "comm.h"
+#include <sys/time.h>
+
+#include "sstring.h"
 #include "structs.h"
-#include "obj.h"
-#include "process.h"
 
 class TSocket;
 

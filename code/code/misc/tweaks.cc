@@ -1,7 +1,15 @@
+#include <assert.h>
+#include <boost/format.hpp>
 #include <cmath>
-#include "tweaks.h"
-#include "database.h"
+#include <string>
+
+#include "ansi.h"
 #include "being.h"
+#include "database.h"
+#include "extern.h"
+#include "log.h"
+#include "parse.h"
+#include "tweaks.h"
 
 tweakEntry::tweakEntry() {}
 

@@ -4,12 +4,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
 #include "being.h"
-#include "monster.h"
-#include "room.h"
-#include "extern.h"
+#include "comm.h"
 #include "database.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 /* **********************************************************************
 Every mob that follows a PC should be classified as one of the following:

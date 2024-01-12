@@ -1,11 +1,23 @@
-#include <iostream>
+#include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/program_options/errors.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/positional_options.hpp>
+#include <boost/program_options/value_semantic.hpp>
+#include <boost/program_options/variables_map.hpp>
 #include <fstream>
+#include <iosfwd>
+#include <iostream>
+#include <ostream>
+#include <string>
+#include <vector>
 
 #include "configuration.h"
-#include "extern.h"
 #include "database.h"
+#include "db.h"
+#include "extern.h"
 
-#include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
 // static data member defs

@@ -32,6 +32,12 @@
 #pragma once
 
 #include "spell2.h"
+#include "spells.h"
+#include "structs.h"
+
+class TBeing;
+class TRoom;
+class TThing;
 
 // CASTER HAS TO BE ABLE TO SEE THE VICTIM
 const unsigned int CASTFLAG_SEE_VICT = (1 << 0);

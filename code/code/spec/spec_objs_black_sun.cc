@@ -1,6 +1,12 @@
+#include "ansi.h"
 #include "being.h"
-#include "parse.h"
+#include "comm.h"
+#include "enum.h"
 #include "obj.h"
+#include "parse.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 int blackSun(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   affectedData aff;

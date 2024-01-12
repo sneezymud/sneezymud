@@ -6,21 +6,37 @@
 
 // flame.cc
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "materials.h"
+#include "obj_base_cup.h"
+#include "obj_drinkcon.h"
+#include "obj_flame.h"
 #include "obj_fuel.h"
 #include "obj_organic.h"
-#include "obj_trash.h"
 #include "obj_tool.h"
-#include "obj_flame.h"
-#include "obj_light.h"
-#include "obj_drinkcon.h"
-#include "liquids.h"
-#include "materials.h"
+#include "obj_trash.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 #include "weather.h"
 
 TFFlame::TFFlame() : TBaseLight(), magBV(0) {}

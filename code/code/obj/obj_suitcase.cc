@@ -7,8 +7,10 @@
 // suitcase.cc
 // Peel
 
+#include "being.h"
 #include "monster.h"
 #include "obj_suitcase.h"
+#include "thing.h"
 
 TSuitcase::TSuitcase() : TExpandableContainer() {}
 

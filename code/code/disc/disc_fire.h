@@ -22,6 +22,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TMagicItem;
+
 class CDFire : public CDiscipline {
   public:
     CSkill skInferno;   // NEW  12th level area affect

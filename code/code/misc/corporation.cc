@@ -1,7 +1,12 @@
-#include "room.h"
-#include "database.h"
+#include <boost/format.hpp>
+#include <algorithm>
+
+#include "being.h"
 #include "corporation.h"
+#include "database.h"
+#include "log.h"
 #include "monster.h"
+#include "parse.h"
 
 sstring TCorporation::getName() {
   TDatabase db(DB_SNEEZY);

@@ -11,13 +11,28 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "comm.h"
-#include "room.h"
-#include "extern.h"
-#include "obj_tool.h"
-#include "obj_commodity.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+
 #include "being.h"
+#include "comm.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
 #include "materials.h"
+#include "obj.h"
+#include "obj_commodity.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 // used to plug messages and behavior to common repair functions
 class BaseRepair {

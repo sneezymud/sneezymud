@@ -5,12 +5,19 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "monster.h"
-#include "obj_base_container.h"
-#include "obj_potion.h"
-#include "shop.h"
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
 #include "extern.h"
 #include "liquids.h"
+#include "monster.h"
+#include "obj_potion.h"
+#include "shop.h"
+#include "sstring.h"
+#include "thing.h"
 
 TPotion::TPotion() : TBaseCup() {}
 

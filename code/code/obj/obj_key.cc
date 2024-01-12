@@ -1,12 +1,21 @@
 // key.cc
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "monster.h"
-#include "obj_open_container.h"
-#include "obj_keyring.h"
-#include "obj_key.h"
+#include "being.h"
 #include "database.h"
+#include "discipline.h"
+#include "log.h"
+#include "monster.h"
+#include "obj_key.h"
+#include "obj_keyring.h"
+#include "obj_open_container.h"
+#include "thing.h"
 
 TKey::TKey() : TObj() {}
 

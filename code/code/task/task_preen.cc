@@ -1,8 +1,20 @@
-#include "handler.h"
-#include "room.h"
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "handler.h"
+#include "log.h"
 #include "low.h"
-#include "process.h"
+#include "obj.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 // simple function to do the non-bird social
 void preen_social(TBeing* ch, TThing* target) {

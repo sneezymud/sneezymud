@@ -6,19 +6,39 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
 
+#include "ansi.h"
+#include "being.h"
+#include "cmd_dissect.h"
 #include "comm.h"
-#include "room.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "materials.h"
-#include "being.h"
-#include "obj_base_corpse.h"
-#include "obj_player_corpse.h"
-#include "obj_base_corpse.h"
+#include "obj.h"
 #include "obj_base_clothing.h"
-#include "obj_tooth_necklace.h"
+#include "obj_base_corpse.h"
+#include "obj_open_container.h"
+#include "obj_player_corpse.h"
 #include "obj_table.h"
+#include "obj_tooth_necklace.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 TBaseCorpse::TBaseCorpse() :
   TBaseContainer(),

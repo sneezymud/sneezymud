@@ -6,10 +6,22 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
 #include "combat.h"
-#include "disc_monk.h"
+#include "comm.h"
+#include "defs.h"
+#include "handler.h"
+#include "limbs.h"
+#include "obj.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 static int chopMiss(TBeing* c, TBeing* v) {
   act("$n swings wildly as $e tries to chop $N.", false, c, 0, v, TO_NOTVICT);

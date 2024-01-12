@@ -7,7 +7,13 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
+#include "sstring.h"
+
+class TBeing;
+class TThing;
 
 // corpses for PCs
 class TPCorpse : public TBaseCorpse {

@@ -9,17 +9,33 @@
 
 ******************************************************************************/
 
-#include <cstdio>
-
+#include <boost/format.hpp>
 #include <stdarg.h>
-#include <cmath>
+#include <time.h>
+#include <cstdio>
+#include <list>
+#include <string>
 
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
+#include "being.h"
 #include "configuration.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "obj.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
+#include "parse.h"
 #include "person.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 const int SLEEPTAG_CONTROL_ROOM = 23599;
 const int SLEEPTAG_STAFF = 23500;

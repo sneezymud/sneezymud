@@ -8,16 +8,30 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "game_drawpoker.h"
+#include "games.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "games.h"
+#include "obj.h"
+#include "parse.h"
+#include "room.h"
 #include "spec_mobs.h"
-#include "game_drawpoker.h"
-#include "connect.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 Craps::Craps() : m_ch(nullptr) {}
 

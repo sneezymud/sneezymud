@@ -6,16 +6,32 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "comm.h"
-#include "obj_base_corpse.h"
-#include "extern.h"
-#include "obj_organic.h"
-#include "obj_component.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <memory>
+
 #include "being.h"
-#include "obj_tool.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "obj.h"
+#include "obj_base_corpse.h"
 #include "obj_base_weapon.h"
-#include "connect.h"
+#include "obj_component.h"
+#include "obj_organic.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "room.h"
 #include "skills.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
 
 void stop_skin(TBeing* ch) {
   if (ch->getPosition() >= POSITION_RESTING) {

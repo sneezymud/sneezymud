@@ -4,19 +4,32 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <map>
+#include <string>
+#include <utility>
 
+#include "being.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
 #include "extern.h"
-#include "room.h"
+#include "faction.h"
+#include "handler.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "handler.h"
-#include "statistics.h"
-#include "obj_player_corpse.h"
 #include "obj_money.h"
+#include "obj_player_corpse.h"
+#include "room.h"
 #include "spec_mobs.h"
-
-#include <map>
+#include "statistics.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 class currencyInfoTPimpl {
   public:

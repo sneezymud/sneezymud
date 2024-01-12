@@ -5,12 +5,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <queue>
+
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
 #include "extern.h"
-#include "room.h"
 #include "monster.h"
-#include "disc_looting.h"
-#include "disease.h"
 #include "obj_trap.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 #include "trap.h"
 
 int TTrap::anyTrapCheck(TBeing* ch) {

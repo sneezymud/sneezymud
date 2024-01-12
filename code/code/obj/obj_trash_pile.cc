@@ -1,8 +1,23 @@
-#include "room.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "extern.h"
+#include "log.h"
 #include "monster.h"
 #include "obj_trash_pile.h"
-#include "extern.h"
 #include "pathfinder.h"
+#include "room.h"
+#include "structs.h"
+#include "thing.h"
 
 const int MAX_TRASH_PILE_VOL = 46656;
 

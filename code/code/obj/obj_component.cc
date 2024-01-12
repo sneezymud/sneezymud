@@ -6,22 +6,42 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <string>
 
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
 #include "extern.h"
-#include "room.h"
+#include "gametime.h"
+#include "log.h"
 #include "low.h"
 #include "materials.h"
-#include "shop.h"
-#include "database.h"
-#include "obj_spellbag.h"
-#include "obj_open_container.h"
-#include "obj_component.h"
-#include "shopowned.h"
-#include "corporation.h"
-#include "obj_mergeable.h"
 #include "monster.h"
+#include "obj_component.h"
+#include "obj_mergeable.h"
+#include "obj_open_container.h"
+#include "obj_spellbag.h"
+#include "parse.h"
+#include "room.h"
+#include "shop.h"
+#include "shopowned.h"
+#include "spell2.h"
+#include "structs.h"
+#include "toggle.h"
 #include "weather.h"
+#include "wiz_powers.h"
 
 std::vector<compPlace> component_placement(0);
 std::vector<compInfo> CompInfo(0);

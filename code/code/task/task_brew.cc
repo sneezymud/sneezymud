@@ -5,8 +5,24 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "obj_potion.h"
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
 #include "being.h"
+#include "comm.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "obj_potion.h"
+#include "parse.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
+
+class TObj;
+class TRoom;
 
 int task_brew(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*, TObj*) {
   TPotion* potion_obj = nullptr;

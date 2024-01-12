@@ -6,10 +6,12 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <string.h>
 #include <cstdio>
 
-#include "obj_corpse.h"
 #include "obj_base_corpse.h"
+#include "obj_corpse.h"
+#include "race.h"
 
 TCorpse::TCorpse() : TBaseCorpse() {}
 

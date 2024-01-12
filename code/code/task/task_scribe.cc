@@ -5,11 +5,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <memory>
 
-#include "low.h"
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "log.h"
+#include "low.h"
+#include "obj.h"
 #include "obj_scroll.h"
+#include "parse.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+
+class TRoom;
 
 int task_scribe(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {

@@ -1,6 +1,12 @@
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "limbs.h"
 #include "obj.h"
 #include "parse.h"
+#include "sstring.h"
+#include "thing.h"
 
 int graffitiObject(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   if (cmd != CMD_PEE)

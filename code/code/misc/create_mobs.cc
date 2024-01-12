@@ -6,26 +6,47 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-extern "C" {
+#include <boost/format.hpp>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
 #include <cstdio>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include <unistd.h>
-#include <sys/stat.h>
-}
-
-#include "handler.h"
-#include "room.h"
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
-#include "monster.h"
-#include "mail.h"
-#include "materials.h"
+#include "cmd_message.h"
 #include "combat.h"
-#include "person.h"
-#include "statistics.h"
-#include "spec_mobs.h"
+#include "comm.h"
+#include "connect.h"
+#include "create.h"
 #include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "spec_mobs.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 static void stripSpellAffects(TBeing* mob) {
   // strip off any magic effects, don't want spells screwing up stats
@@ -753,7 +774,7 @@ static void change_mob_affect_flags(TBeing* ch, TMonster* mob, const char* arg,
       row++;
     ch->sendTo(buf);
     ch->sendTo(format("%2d [%s] %s") % (i + 1) %
-               ((mob->specials.affectedBy & uint64_t(1 << i)) ? "X" : " ") %
+               ((mob->specials.affectedBy & uint64_t(1U << i)) ? "X" : " ") %
                affected_bits[i]);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);

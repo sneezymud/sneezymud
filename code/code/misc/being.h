@@ -1,36 +1,66 @@
 #pragma once
 
-#include "db.h"
-#include "thing.h"
-#include "comm.h"
-#include "response.h"
-#include "race.h"
-#include "immunity.h"
-#include "garble.h"
-#include "sound.h"
-#include "wiz_powers.h"
+#include <algorithm>
+#include <cstdint>
+#include <iterator>
+#include <tuple>
+#include <utility>
+#include <vector>
+
+#include "ansi.h"
 #include "cmd_message.h"
-#include "task.h"
-#include "toggle.h"
-#include "tweaks.h"
-#include "spell2.h"
-#include "disease.h"
-#include "trap.h"
-#include "stats.h"
-#include "obj.h"
+#include "comm.h"
+#include "create.h"
+#include "db.h"
 #include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "garble.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "obj.h"
+#include "parse.h"
+#include "race.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
+#include "trap.h"
+#include "wiz_powers.h"
 
 class CSkill;
+class Descriptor;
+class TArrow;
+class TBaseClothing;
+class TBaseWeapon;
+class TBeing;
+class TBow;
+class TComponent;
+class TGenWeapon;
 class TGuild;
+class TMagicItem;
+class TMonster;
+class TOpenContainer;
+class TPerson;
+class TPortal;
+class TQuiver;
+class TRoom;
+class TSymbol;
+class TTool;
+class TTrap;
 class TTrophy;
 class TWindow;
-class TGenWeapon;
-class TBaseClothing;
-class TQuiver;
-class TCommodity;
-class TRoom;
-struct time_data;
 class time_info_data;
+struct time_data;
 
 extern TBeing* character_list;
 extern long mobCount;
@@ -1483,7 +1513,7 @@ class TBeing : public TThing {
     int extraDam(const TBeing*, const TBaseWeapon*) const;
     TThing* makeCorpse(spellNumT, TBeing* = nullptr, float = 0);
     int die(spellNumT, TBeing* = nullptr);
-    int slotChance(wearSlotT num) const;
+    int slotChance(wearSlotT) const;
     void makeBodyPart(wearSlotT, TBeing* = nullptr);
     void makeDiseasedPart(wearSlotT);
     void makeOtherPart(const char*, const char*, TBeing* = nullptr);

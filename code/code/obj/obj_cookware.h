@@ -7,7 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_open_container.h"
+#include "sstring.h"
+
+class TBaseCup;
+class TBeing;
+class TMonster;
 
 // The actual item
 class TCookware : public TOpenContainer {

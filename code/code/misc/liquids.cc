@@ -1,6 +1,11 @@
 #include "liquids.h"
 
+#include <boost/format.hpp>
 #include <map>
+#include <utility>
+
+#include "log.h"
+#include "sstring.h"
 
 class liqInfoT_pimpl {
   public:

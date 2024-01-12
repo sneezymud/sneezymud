@@ -1,13 +1,23 @@
 // wand.cc
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <memory>
 
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
 #include "extern.h"
-#include "monster.h"
 #include "handler.h"
+#include "log.h"
+#include "materials.h"
+#include "monster.h"
 #include "obj_magic_item.h"
 #include "obj_wand.h"
-#include "materials.h"
+#include "spell2.h"
+#include "structs.h"
+#include "thing.h"
 
 TWand::TWand() :
   TMagicItem(),

@@ -1,10 +1,17 @@
-#include <cassert>
-#include <stdarg.h>
+#include <boost/format.hpp>
 #include <mariadb/mysql.h>
+#include <stdarg.h>
+#include <string.h>
+#include <cassert>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "configuration.h"
-#include "extern.h"
 #include "database.h"
+#include "log.h"
+#include "sstring.h"
 #include "timing.h"
 #include "toggle.h"
 

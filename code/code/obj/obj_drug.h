@@ -7,8 +7,15 @@
 
 #pragma once
 
-#include "obj.h"
+#include <vector>
+
 #include "gametime.h"
+#include "obj.h"
+#include "sstring.h"
+
+class TBeing;
+class TDrugContainer;
+class TMonster;
 
 enum drugTypeT {
   DRUG_NONE,

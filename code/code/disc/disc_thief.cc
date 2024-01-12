@@ -4,20 +4,40 @@
 //
 //
 //////////////////////////////////////////////////////////////////////////
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
 #include "client.h"
-#include "games.h"
-#include "disease.h"
-#include "combat.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
 #include "disc_thief.h"
-#include "obj_tool.h"
-#include "pathfinder.h"
+#include "enum.h"
+#include "extern.h"
+#include "games.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "obj.h"
 #include "obj_portal.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "pathfinder.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 
 int TBeing::doSneak(const char* argument) {
   int rc = 0;

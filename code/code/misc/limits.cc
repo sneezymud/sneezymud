@@ -1,25 +1,47 @@
-extern "C" {
-#include <cstdio>
-
-#include <unistd.h>
-}
+#include <boost/format.hpp>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <list>
+#include <string>
 
 #include "account.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
-#include "low.h"
+#include "faction.h"
+#include "gametime.h"
 #include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "monster.h"
-#include "statistics.h"
-#include "games.h"
+#include "obj.h"
 #include "obj_base_container.h"
-#include "person.h"
-#include "obj_food.h"
 #include "obj_bed.h"
 #include "obj_drinkcon.h"
+#include "obj_food.h"
 #include "obj_opal.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "spec_objs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 
 #if 0
 static const sstring ClassTitles(const TBeing *ch)

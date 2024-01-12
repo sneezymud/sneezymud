@@ -6,59 +6,63 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
-
-#include "log.h"
-#include "extern.h"
-#include "room.h"
-#include "being.h"
-#include "low.h"
-#include "monster.h"
-#include "materials.h"
-#include "person.h"
-#include "client.h"
-#include "skills.h"
-#include "game_crazyeights.h"
-#include "game_drawpoker.h"
-#include "weather.h"
-
-#include <csignal>
-#include <cstdarg>
-#include <cmath>
-
-extern "C" {
-#include <unistd.h>
-#include <sys/socket.h>
-#include <sys/wait.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <arpa/telnet.h>
-#include <sys/resource.h>
-#include <sys/syscall.h>
-#include <sys/param.h>
+#include <boost/format.hpp>
 #include <dirent.h>
+#include <execinfo.h>
+#include <ext/alloc_traits.h>
+#include <features.h>
+#include <math.h>
+#include <stdlib.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <time.h>
+#include <unistd.h>
+#include <algorithm>
+#include <cstdarg>
+#include <cstdio>
+#include <list>
+#include <memory>
+#include <queue>
+#include <string>
+#include <vector>
 
-#ifdef __GLIBC__
-#include <execinfo.h>
-#endif
-
-pid_t vfork(void);
-}
-
-#include "disease.h"
-#include "shop.h"
-#include "combat.h"
-#include "account.h"
-#include "statistics.h"
-#include "socket.h"
-#include "games.h"
-#include "mail.h"
-#include "database.h"
-#include "obj_seethru.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
 #include "corporation.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "game_crazyeights.h"
+#include "game_drawpoker.h"
+#include "games.h"
+#include "gametime.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_seethru.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "weather.h"
+#include "wiz_powers.h"
 
 bool TBeing::canSeeWho(const TBeing* o) const {
   if (inRoom() < 0 || o->inRoom() < 0 || !o || !o->roomp)

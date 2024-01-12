@@ -1,5 +1,10 @@
 #pragma once
 
+#include "parse.h"
+
+class TBeing;
+class TRoom;
+
 struct TRoomSpecs {
     bool assignable;
     const char* name;

@@ -16,13 +16,28 @@
 //   a mob could piss off another mob, and the pissed off mob "think"
 //   it was some random PC that did nothing. */
 
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
-#include "room.h"
-#include "low.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "monster.h"
-#include "combat.h"
+#include "parse.h"
+#include "room.h"
 #include "spec_mobs.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
 
 // This function should be used if you want to see if the mob is "pissed"
 int TMonster::pissed(void) {

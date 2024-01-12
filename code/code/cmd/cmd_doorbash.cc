@@ -1,11 +1,23 @@
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <string>
 
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
+#include "log.h"
+#include "parse.h"
 #include "room.h"
-#include "being.h"
-#include "combat.h"
-#include "disc_warrior.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
 
 // returns DELETE_THIS
 int TBeing::slamIntoWall(roomDirData* exitp) {

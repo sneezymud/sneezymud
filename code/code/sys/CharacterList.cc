@@ -1,6 +1,6 @@
 #include "CharacterList.h"
+
 #include "being.h"
-#include "connect.h"
 
 extern TBeing* character_list;
 

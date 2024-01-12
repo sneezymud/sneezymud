@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TBaseLight : public TObj {
   protected:

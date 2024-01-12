@@ -4,17 +4,33 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <algorithm>
+#include <list>
+
+#include "ansi.h"
+#include "being.h"
+#include "combat.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_water.h"
+#include "disease.h"
+#include "enum.h"
 #include "extern.h"
-#include "room.h"
+#include "immunity.h"
+#include "liquids.h"
 #include "low.h"
 #include "monster.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
-#include "disc_water.h"
-#include "obj_pool.h"
+#include "obj_base_cup.h"
 #include "obj_magic_item.h"
-#include "combat.h"
+#include "obj_pool.h"
+#include "room.h"
+#include "spec_objs.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "structs.h"
+#include "thing.h"
 #include "weather.h"
 
 int faerieFog(TBeing* caster, int, short bKnown) {

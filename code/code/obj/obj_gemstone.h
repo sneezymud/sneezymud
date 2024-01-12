@@ -8,6 +8,7 @@
 #pragma once
 
 #include "obj.h"
+#include "sstring.h"
 
 class TGemstone : public TObj {
   private:

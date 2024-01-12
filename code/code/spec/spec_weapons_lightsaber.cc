@@ -1,5 +1,23 @@
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "limbs.h"
+#include "obj.h"
 #include "obj_general_weapon.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 // quest weapon for psionicists
 //

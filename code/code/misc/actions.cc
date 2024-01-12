@@ -6,21 +6,50 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
 #include "colorstring.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "handler.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "obj_pool.h"
-#include "obj_plant.h"
-#include "disc_sorcery.h"
-#include "liquids.h"
+#include "obj.h"
 #include "obj_drinkcon.h"
 #include "obj_drug.h"
+#include "obj_plant.h"
+#include "obj_pool.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 class socialMessg {
   public:

@@ -4,7 +4,19 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "log.h"
+#include "obj.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "thing.h"
 
 #if 0
 

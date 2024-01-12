@@ -7,8 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj.h"
+//#include "obj.h"
 #include "obj_mergeable.h"
+#include "sstring.h"
+
+class TBeing;
+class TThing;
 
 enum currencyTypeT {
   MIN_CURRENCY = 0,
@@ -73,6 +79,7 @@ class currencyEntry {
 };
 
 class currencyInfoTPimpl;
+
 class currencyInfoT {
     currencyInfoTPimpl* pimpl;
 
@@ -84,3 +91,4 @@ class currencyInfoT {
 };
 
 extern currencyTypeT& operator++(currencyTypeT& c, int);
+extern currencyInfoT currencyInfo;

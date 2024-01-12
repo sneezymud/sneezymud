@@ -1,8 +1,12 @@
-#include "process.h"
+#include <list>
+
 #include "being.h"
-#include "thing.h"
-#include "obj.h"
 #include "extern.h"
+#include "limbs.h"
+#include "obj.h"
+#include "process.h"
+#include "sstring.h"
+#include "thing.h"
 
 // procCheckForRepo
 procCheckForRepo::procCheckForRepo(const int& p) {

@@ -7,9 +7,15 @@
 
 #pragma once
 
+#include <string>
+
+#include "enum.h"
+#include "handler.h"
 #include "obj.h"
 #include "obj_mergeable.h"
-#include "handler.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TPathFinder;
 

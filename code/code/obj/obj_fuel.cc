@@ -7,12 +7,24 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "log.h"
 #include "monster.h"
 #include "obj_fuel.h"
-#include "room.h"
 #include "obj_light.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 TFuel::TFuel() : TObj(), curFuel(0), maxFuel(0) {}
 

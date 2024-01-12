@@ -1,16 +1,31 @@
+#include <boost/format.hpp>
+#include <stdlib.h>
 #include <cstdio>
+#include <list>
+#include <map>
+#include <string>
+#include <utility>
 
-#include "room.h"
-#include "extern.h"
-#include "handler.h"
-#include "monster.h"
 #include "account.h"
-#include "obj_vehicle.h"
-#include "pathfinder.h"
-#include "obj_casino_chip.h"
-#include "games.h"
+#include "being.h"
+#include "connect.h"
 #include "database.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "games.h"
+#include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_vehicle.h"
+#include "parse.h"
+#include "pathfinder.h"
+#include "paths.h"
 #include "person.h"
+#include "room.h"
+#include "sstring.h"
+#include "thing.h"
 
 int trolleyBoatCaptain(TBeing*, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {

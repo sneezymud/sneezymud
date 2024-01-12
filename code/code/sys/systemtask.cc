@@ -6,18 +6,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-extern "C" {
-#include <cstdio>
-
-#include <sys/wait.h>
+#include <boost/format.hpp>
 #include <sys/stat.h>
+#include <sys/wait.h>
 #include <unistd.h>
-}
+#include <cstdio>
+#include <cstring>
+#include <memory>
 
-#include "systemtask.h"
 #include "being.h"
-#include "obj_note.h"
 #include "extern.h"
+#include "log.h"
+#include "obj_note.h"
+#include "parse.h"
+#include "sstring.h"
+#include "structs.h"
+#include "systemtask.h"
+#include "wiz_powers.h"
 
 #if !defined(__linux__)
 extern pid_t vfork(void);

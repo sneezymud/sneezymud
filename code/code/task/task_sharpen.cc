@@ -4,10 +4,17 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "comm.h"
-#include "obj_tool.h"
 #include "being.h"
+#include "comm.h"
+#include "enum.h"
 #include "handler.h"
+#include "obj.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "task.h"
+#include "thing.h"
+
+class TRoom;
 
 void stop_sharpen(TBeing* ch) {
   if (ch->getPosition() >= POSITION_RESTING) {

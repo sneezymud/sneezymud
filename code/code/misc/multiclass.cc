@@ -4,12 +4,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
+#include <assert.h>
+#include <boost/format.hpp>
+#include <string.h>
+#include <string>
+
 #include "being.h"
 #include "database.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "parse.h"
 #include "person.h"
-
-#include <unordered_map>
+#include "sstring.h"
+#include "structs.h"
+#include "wiz_powers.h"
 
 int NumClasses(int Class) {
   int tot = 0;

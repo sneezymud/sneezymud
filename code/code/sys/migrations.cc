@@ -1,13 +1,20 @@
+#include <boost/format.hpp>
+#include <stdio.h>
+#include <cassert>
+#include <functional>
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "charfile.h"
 #include "database.h"
 #include "log.h"
 #include "migrations.h"
-
-#include "charfile.h"
+#include "parse.h"
 #include "player_data.h"
-
-#include <cassert>
-#include <boost/format.hpp>
-#include <map>
+#include "sstring.h"
+#include "structs.h"
 
 namespace {
   int getVersion(TDatabase& sneezy) {

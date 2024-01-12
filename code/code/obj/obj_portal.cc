@@ -7,14 +7,27 @@
 // portal.cc
 //
 
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "configuration.h"
+#include "being.h"
+#include "comm.h"
+#include "create.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
+#include "log.h"
 #include "obj_portal.h"
-#include "person.h"
+#include "parse.h"
 #include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "trap.h"
 
 TPortal::TPortal(const TRoom* rp) :
   TSeeThru(),

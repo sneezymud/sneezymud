@@ -6,42 +6,71 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
-
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
+#include <array>
 #include <cmath>
+#include <cstdio>
+#include <list>
+#include <memory>
+#include <queue>
+#include <string>
+#include <vector>
 
-#include "discipline.h"
-#include "handler.h"
-#include "extern.h"
-#include "immunity.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
 #include "client.h"
-#include "low.h"
+#include "cmd_trophy.h"
 #include "colorstring.h"
-#include "monster.h"
-#include "configuration.h"
-#include "materials.h"
-#include "range.h"
 #include "combat.h"
-#include "statistics.h"
-#include "person.h"
-#include "disease.h"
-#include "mail.h"
-#include "shop.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
 #include "database.h"
-#include "obj_money.h"
-#include "obj_trash.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "mail.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
 #include "obj_arrow.h"
-#include "obj_general_weapon.h"
+#include "obj_base_clothing.h"
+#include "obj_base_cup.h"
 #include "obj_base_weapon.h"
+#include "obj_general_weapon.h"
 #include "obj_gun.h"
 #include "obj_handgonne.h"
-#include "obj_base_clothing.h"
-#include "cmd_trophy.h"
-#include "obj_base_cup.h"
+#include "obj_money.h"
+#include "obj_trash.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
 #include "rent.h"
+#include "room.h"
+#include "shop.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
 #include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 
 #define DAMAGE_DEBUG 0
 

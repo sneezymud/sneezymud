@@ -6,6 +6,11 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBaseCorpse;
+class TBeing;
+class TMagicItem;
+class TObj;
+
 class CDShaman : public CDiscipline {
   public:
     CSkill skSacrifice;

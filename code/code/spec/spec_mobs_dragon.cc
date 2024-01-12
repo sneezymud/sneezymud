@@ -1,10 +1,28 @@
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <queue>
+
 #include "being.h"
-#include "monster.h"
+#include "comm.h"
+#include "defs.h"
 #include "disease.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "monster.h"
 #include "obj_base_clothing.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
+
+class TObj;
 
 struct Breath {
     spellNumT dam_type;

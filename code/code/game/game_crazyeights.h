@@ -5,6 +5,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "games.h"
+#include "sstring.h"
+
+class TBeing;
 
 class CrazyEightsGame : public CardGame {
   private:

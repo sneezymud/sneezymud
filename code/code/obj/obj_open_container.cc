@@ -1,11 +1,31 @@
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "extern.h"
-#include "disc_looting.h"
-#include "obj_open_container.h"
-#include "obj_money.h"
-#include "handler.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "create.h"
+#include "defs.h"
+#include "disc_looting.h"
+#include "discipline.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
+#include "obj.h"
+#include "obj_money.h"
+#include "obj_open_container.h"
+#include "parse.h"
+#include "skills.h"
+#include "spells.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+
+class TMonster;
 
 TOpenContainer::TOpenContainer() :
   TBaseContainer(),

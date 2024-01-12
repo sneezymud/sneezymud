@@ -5,6 +5,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TMagicItem;
+
 class CDShamanArmadillo : public CDiscipline {
   public:
     CSkill skAqualung;

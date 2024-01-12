@@ -17,6 +17,14 @@
 
 #pragma once
 
+#include <map>
+#include <memory>
+#include <vector>
+
+#include "race.h"
+
+class TBeing;
+
 enum loadSetTypeT {
   LST_ALL = -1,
   LST_HELM = 0,

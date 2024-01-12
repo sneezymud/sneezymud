@@ -4,9 +4,19 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "obj_base_weapon.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "enum.h"
+#include "extern.h"
+#include "parse.h"
+#include "spells.h"
+#include "stats.h"
+#include "task.h"
+
+class TObj;
+class TRoom;
+class TThing;
 
 void stop_trance_of_blades(TBeing* ch) {
   if (ch->getPosition() >= POSITION_RESTING) {

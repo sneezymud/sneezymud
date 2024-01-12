@@ -7,9 +7,16 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj_base_container.h"
-#include "extern.h"
 #include "race.h"
+#include "sstring.h"
+
+class TBeing;
+class TObj;
+class TOpenContainer;
+class TThing;
+class dissectInfo;
 
 // an abstract corpse
 class TBaseCorpse : public TBaseContainer {

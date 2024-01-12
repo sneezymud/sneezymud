@@ -1,7 +1,10 @@
-#include "handler.h"
 #include "being.h"
-#include "combat.h"
-#include "obj_base_weapon.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "handler.h"
+#include "spells.h"
+#include "structs.h"
 
 int TBeing::doFocusAttack(const char* argument, TBeing* vict) {
   const int FOCUS_ATTACK_MOVE = 2;

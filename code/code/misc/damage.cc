@@ -6,20 +6,42 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <vector>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "cmd_trophy.h"
+#include "combat.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "handler.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "combat.h"
-#include "statistics.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
+#include "parse.h"
 #include "person.h"
-#include "cmd_trophy.h"
-#include "configuration.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 // there is another one of these defines in combat.cc
 #define DAMAGE_DEFINE 0

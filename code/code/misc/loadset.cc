@@ -6,19 +6,36 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
-
-#include <cmath>
+#include <stdexcept>
 
 #include "being.h"
+#include "comm.h"
 #include "configuration.h"
-#include "monster.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
-#include "materials.h"
+#include "limbs.h"
 #include "loadset.h"
+#include "log.h"
+#include "materials.h"
+#include "obj.h"
 #include "obj_armor.h"
 #include "obj_base_clothing.h"
+#include "parse.h"
+#include "sstring.h"
 #include "statistics.h"
+#include "structs.h"
+#include "thing.h"
+#include "tweaks.h"
+#include "wiz_powers.h"
 
 extern int GetItemClassRestrictions(const TObj*);
 extern bool IsRestricted(unsigned short int, unsigned short int);

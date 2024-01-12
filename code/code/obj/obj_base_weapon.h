@@ -8,7 +8,18 @@
 
 #pragma once
 
+#include "create.h"
+#include "enum.h"
+#include "limbs.h"
+#include "liquids.h"
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
+class TRoom;
+class TThing;
+class TTool;
 
 class TBaseWeapon : public TObj {
   private:

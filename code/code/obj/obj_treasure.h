@@ -8,6 +8,9 @@
 #pragma once
 
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TTreasure : public TObj {
   private:

@@ -1,8 +1,17 @@
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <string>
 
-#include "obj_player_corpse.h"
-#include "obj_base_corpse.h"
 #include "being.h"
+#include "defs.h"
+#include "log.h"
+#include "obj_base_corpse.h"
+#include "obj_player_corpse.h"
+#include "race.h"
+#include "structs.h"
+
+class TThing;
 
 float TPCorpse::getExpLost() const { return exp_lost; }
 void TPCorpse::setExpLost(float exp) { exp_lost = exp; }

@@ -7,18 +7,31 @@
 // container.cc
 //
 
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <list>
+#include <string>
 
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "extern.h"
 #include "handler.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
 #include "obj_base_container.h"
-#include "obj_player_corpse.h"
+#include "obj_base_corpse.h"
 #include "obj_open_container.h"
-#include "obj_food.h"
-#include "obj_opal.h"
+#include "obj_player_corpse.h"
 #include "obj_saddlebag.h"
-#include "obj_component.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "task.h"
 
 TBaseContainer::TBaseContainer() : TObj() {}
 

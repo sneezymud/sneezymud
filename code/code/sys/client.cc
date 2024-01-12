@@ -8,35 +8,53 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/format.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
 #include <cstdio>
-
-#include <cstdarg>
+#include <list>
+#include <queue>
+#include <string>
 
 #if defined(__linux__)
-#include <sys/stat.h>
 #include <unistd.h>
 #endif
 
-#include <boost/algorithm/string.hpp>
-
-#include "extern.h"
-#include "room.h"
-#include "being.h"
-#include "client.h"
-#include "low.h"
-#include "person.h"
-#include "monster.h"
-#include "configuration.h"
 #include "account.h"
+#include "ansi.h"
+#include "being.h"
 #include "charfile.h"
-#include "person.h"
-#include "statistics.h"
-#include "combat.h"
+#include "client.h"
+#include "cmd_message.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
 #include "database.h"
-#include "rent.h"
-#include "shop.h"
-#include "weather.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "person.h"
 #include "player_data.h"
+#include "race.h"
+#include "rent.h"
+#include "room.h"
+#include "shop.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 const int CURRENT_VERSION = 19990615;
 const int BAD_VERSION = 19990614;

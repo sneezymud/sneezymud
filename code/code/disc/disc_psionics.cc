@@ -4,20 +4,43 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
 #include "client.h"
-#include "combat.h"
-#include "person.h"
-#include "low.h"
 #include "colorstring.h"
-#include "obj_portal.h"
-#include "monster.h"
+#include "combat.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
 #include "disc_psionics.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_portal.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 CDPsionics::CDPsionics() :
   CDiscipline(),

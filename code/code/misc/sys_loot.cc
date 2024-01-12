@@ -1,17 +1,34 @@
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
 #include <cstdio>
+#include <memory>
+#include <vector>
 
 #include "being.h"
-#include "statistics.h"
-#include "handler.h"
-#include "room.h"
-#include "sys_loot.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "enum.h"
 #include "extern.h"
-#include "obj_money.h"
+#include "handler.h"
+#include "log.h"
 #include "obj_magic_item.h"
+#include "obj_money.h"
 #include "obj_potion.h"
 #include "obj_scroll.h"
 #include "obj_staff.h"
 #include "obj_wand.h"
+#include "parse.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "sys_loot.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 TLootStructure* tLoot;
 

@@ -4,14 +4,15 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
+#include <string.h>
+
 #include "being.h"
-#include "disease.h"
-#include "combat.h"
-#include "obj_component.h"
 #include "disc_combat.h"
+#include "handler.h"
+#include "obj.h"
 #include "obj_tool.h"
+#include "spells.h"
+#include "thing.h"
 
 void TBeing::doSharpen(const char* argument) {
   char name_buf[256];

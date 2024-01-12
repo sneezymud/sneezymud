@@ -1,8 +1,20 @@
-#include "person.h"
-#include "database.h"
-#include "low.h"
-
+#include <assert.h>
+#include <boost/format.hpp>
+#include <algorithm>
+#include <map>
+#include <queue>
 #include <set>
+#include <string>
+#include <tuple>
+#include <utility>
+
+#include "database.h"
+#include "enum.h"
+#include "extern.h"
+#include "low.h"
+#include "person.h"
+#include "room.h"
+#include "structs.h"
 
 namespace {
   struct Candidate {

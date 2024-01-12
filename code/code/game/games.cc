@@ -1,8 +1,22 @@
-#include "room.h"
-#include "monster.h"
+#include <boost/format.hpp>
+#include <list>
+#include <map>
+#include <string>
+#include <utility>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "enum.h"
 #include "games.h"
-#include "obj_casino_chip.h"
 #include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_casino_chip.h"
+#include "parse.h"
+#include "room.h"
+#include "thing.h"
 
 void payout(TBeing* ch, int talens, int chip_vnum) {
   TObj* chip;

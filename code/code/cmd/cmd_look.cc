@@ -6,22 +6,40 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <list>
+#include <string>
+
+#include "ansi.h"
 #include "being.h"
-#include "games.h"
-#include "obj_base_corpse.h"
-#include "obj_table.h"
-#include "obj_book.h"
-#include "obj_base_cup.h"
-#include "obj_drinkcon.h"
-#include "liquids.h"
 #include "colorstring.h"
-#include "person.h"
-#include "monster.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
+#include "games.h"
+#include "handler.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_base_corpse.h"
+#include "obj_base_cup.h"
+#include "obj_book.h"
+#include "obj_table.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 void TBaseCup::lookObj(TBeing* ch, int) const {
   int temp;

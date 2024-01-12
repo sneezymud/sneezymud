@@ -6,13 +6,23 @@
 
 // this code sucks and should be rewritten from scratch at some point
 
-#include "comm.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "handler.h"
-#include "room.h"
-#include "obj_vehicle.h"
 #include "comm.h"
+#include "create.h"
 #include "extern.h"
+#include "handler.h"
+#include "obj_vehicle.h"
+#include "room.h"
+#include "structs.h"
+#include "thing.h"
 
 TVehicle::TVehicle() : TPortal(), dir(DIR_NONE), speed(0), whole_zone(false) {}
 

@@ -8,16 +8,29 @@
 
 *************************************************************************/
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
 #include <cstdio>
+#include <list>
+#include <memory>
 
 #include "being.h"
-#include "games.h"
-#include "obj_money.h"
-#include "room.h"
-#include "handler.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "enum.h"
 #include "game_crazyeights.h"
 #include "game_drawpoker.h"
-#include "connect.h"
+#include "games.h"
+#include "handler.h"
+#include "log.h"
+#include "obj.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 void spin_slot(TBeing* ch);
 

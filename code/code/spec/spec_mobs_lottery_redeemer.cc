@@ -1,5 +1,12 @@
+#include "being.h"
+#include "comm.h"
+#include "db.h"
 #include "monster.h"
+#include "obj.h"
+#include "parse.h"
 #include "spec_objs_lottery_ticket.h"
+#include "sstring.h"
+#include "thing.h"
 
 int lotteryRedeemer(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TObj* o) {

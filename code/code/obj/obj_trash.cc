@@ -6,8 +6,13 @@
 
 // trash.cc
 
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
 #include "monster.h"
 #include "obj_trash.h"
+#include "thing.h"
 
 TTrash::TTrash() : TObj() {}
 

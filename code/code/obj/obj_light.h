@@ -1,6 +1,13 @@
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_base_light.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
+class TThing;
 
 class TLight : public TBaseLight {
   protected:

@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "limbs.h"
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TBandage : public TObj {
   public:

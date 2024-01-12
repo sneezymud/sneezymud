@@ -4,15 +4,32 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <list>
+#include <string>
 
-#include "room.h"
-#include "being.h"
-#include "low.h"
 #include "account.h"
-#include "extern.h"
+#include "ansi.h"
+#include "being.h"
 #include "colorstring.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "monster.h"
+#include "obj.h"
+#include "race.h"
+#include "room.h"
+#include "sound.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 int RecGetObjRoom(const TThing* obj) {
   if (obj->in_room != Room::NOWHERE)

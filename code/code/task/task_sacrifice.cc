@@ -1,8 +1,22 @@
-#include "handler.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
+#include "enum.h"
+#include "liquids.h"
+#include "log.h"
 #include "monster.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
 
 int task_sacrifice(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj* obj) {

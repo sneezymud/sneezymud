@@ -11,6 +11,8 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+
 class CDBrawling : public CDiscipline {
   public:
     CSkill skGrapple;

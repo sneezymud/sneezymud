@@ -1,9 +1,14 @@
 // tool.cc
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <memory>
 
+#include "being.h"
+#include "log.h"
 #include "monster.h"
 #include "obj_tool.h"
+#include "thing.h"
 
 TTool::TTool() :
   TObj(),

@@ -5,16 +5,30 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "room.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <algorithm>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "being.h"
 #include "cmd_trophy.h"
-#include "database.h"
-#include "process.h"
-#include "person.h"
 #include "connect.h"
-
-#include <map>
-#include <set>
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "log.h"
+#include "parse.h"
+#include "person.h"
+#include "process.h"
+#include "room.h"
+#include "sstring.h"
+#include "thing.h"
 
 class TTrophyPimpl {
   public:

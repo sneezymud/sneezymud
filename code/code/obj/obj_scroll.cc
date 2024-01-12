@@ -1,12 +1,19 @@
 // scroll.cc
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <memory>
 
+#include "being.h"
+#include "discipline.h"
 #include "extern.h"
-#include "monster.h"
+#include "log.h"
 #include "materials.h"
+#include "monster.h"
 #include "obj_magic_item.h"
 #include "obj_scroll.h"
+#include "spell2.h"
+#include "thing.h"
 
 TScroll::TScroll() : TMagicItem() {
   int i;

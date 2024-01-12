@@ -6,8 +6,28 @@
 
 #pragma once
 
+#include <ext/alloc_traits.h>
+#include <algorithm>
+#include <iosfwd>
+#include <memory>
+#include <vector>
+
 #include "being.h"
-#include "paths.h"
+#include "db.h"
+#include "enum.h"
+#include "parse.h"
+#include "race.h"
+#include "spells.h"
+#include "sstring.h"
+#include "thing.h"
+
+class Responses;
+class TObj;
+class TOpenContainer;
+class TPerson;
+class TTrap;
+class resp;
+struct path_struct;
 
 using std::max;
 using std::min;

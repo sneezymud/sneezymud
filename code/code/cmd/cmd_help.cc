@@ -1,21 +1,38 @@
-#include <cstdio>
-
-#include "extern.h"
-#include "being.h"
-#include "stats.h"
-
-extern "C" {
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/socket.h>
+#include <boost/format.hpp>
+#include <ctype.h>
 #include <dirent.h>
-}
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <algorithm>
+#include <cstdio>
+#include <memory>
+#include <string>
+#include <vector>
 
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
 #include "help.h"
+#include "log.h"
+#include "obj.h"
 #include "obj_component.h"
+#include "parse.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
 #include "statistics.h"
-#include "systemtask.h"
-#include "database.h"
+#include "stats.h"
+#include "structs.h"
+#include "wiz_powers.h"
 
 #define ARTICLE_LIST_WIDTH 80
 

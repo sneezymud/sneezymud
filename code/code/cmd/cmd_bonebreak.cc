@@ -1,12 +1,21 @@
 #include <cstdio>
 
-#include "handler.h"
 #include "being.h"
 #include "combat.h"
-#include "disc_monk.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
 #include "disc_leverage.h"
-#include "spells.h"
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "skills.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
 
 int TBeing::doBoneBreak(const char* argument, TBeing* vict) {
   int rc;

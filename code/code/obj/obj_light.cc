@@ -6,14 +6,27 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
 
-#include "room.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
 #include "extern.h"
+#include "gametime.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
 #include "obj_light.h"
-#include "weather.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 TLight::TLight() : TBaseLight(), lit(0) {}
 

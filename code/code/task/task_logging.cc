@@ -1,9 +1,27 @@
-#include "room.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <map>
+#include <utility>
+#include <vector>
+
 #include "being.h"
-#include "process.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "obj.h"
 #include "obj_base_weapon.h"
+#include "parse.h"
+#include "process.h"
+#include "room.h"
 #include "skills.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
 
 #define LAST_WOOD_TYPE 0
 #define LOGS_PER_ROOM 5

@@ -1,8 +1,20 @@
-#include "extern.h"
-#include "comm.h"
-#include "room.h"
-#include "obj_tool.h"
+#include <boost/format.hpp>
+#include <memory>
+
 #include "being.h"
+#include "comm.h"
+#include "enum.h"
+#include "extern.h"
+#include "obj.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 static void pick_pulse(TBeing* ch, TThing* pick) {
   TTool* tool = dynamic_cast<TTool*>(pick);

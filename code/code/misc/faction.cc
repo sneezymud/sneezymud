@@ -6,26 +6,44 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-extern "C" {
-#include <cstdio>
-
-#include <unistd.h>
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
 #include <sys/stat.h>
-}
-#include <cmath>
+#include <time.h>
+#include <algorithm>
+#include <cstdio>
+#include <string>
 
-#include "handler.h"
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
+#include "charfile.h"
 #include "client.h"
+#include "comm.h"
+#include "connect.h"
+#include "corporation.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "garble.h"
+#include "handler.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "charfile.h"
+#include "parse.h"
 #include "person.h"
-#include "database.h"
-#include "corporation.h"
-#include "process.h"
 #include "player_data.h"
+#include "process.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 TFactionInfo FactionInfo[MAX_FACTIONS];
 

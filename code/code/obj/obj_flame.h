@@ -7,7 +7,13 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_base_light.h"
+#include "sstring.h"
+
+class TBeing;
+class TThing;
 
 const unsigned int TFFLAME_INVHEAT = (1 << 0);   //  1
 const unsigned int TFFLAME_INVLIGHT = (1 << 1);  //  2

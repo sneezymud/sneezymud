@@ -6,6 +6,10 @@
 
 #pragma once
 
+#include "sstring.h"
+
+class TBeing;
+
 const int MIN_MAIL_LEVEL = 2;
 const int STAMP_PRICE = 50;
 const int FACTION_STAMP_PRICE = 5000;

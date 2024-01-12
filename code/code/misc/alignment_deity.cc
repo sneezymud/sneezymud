@@ -5,11 +5,27 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
 #include "extern.h"
-#include "person.h"
+#include "faction.h"
 #include "handler.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "person.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 // returns DELETE_THIS if deity went boom
 int personalize_object(TBeing* deity, TBeing* ch, int virt, int decay) {

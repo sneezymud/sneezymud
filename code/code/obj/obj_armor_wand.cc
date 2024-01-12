@@ -11,13 +11,13 @@
 //
 
 #include <cstdio>
+#include <string>
 
+#include "being.h"
 #include "comm.h"
 #include "handler.h"
 #include "materials.h"
 #include "obj_armor_wand.h"
-#include "thing.h"
-#include "being.h"
 #include "spell2.h"
 
 TArmorWand::TArmorWand() : TArmor(), TWand() {}

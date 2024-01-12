@@ -6,10 +6,20 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "being.h"
-#include "statistics.h"
 #include <fstream>
+#include <iosfwd>
+#include <istream>
+#include <string>
+
+#include "being.h"
+#include "connect.h"
+#include "db.h"
+#include "enum.h"
+#include "extern.h"
+#include "parse.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
 
 void TBeing::doNews(const char* argument) {
   if (!desc)

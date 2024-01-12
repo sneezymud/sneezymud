@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_gun.h"
+
+class TBeing;
 
 class THandgonne : public TGun {
   public:

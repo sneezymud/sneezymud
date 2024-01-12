@@ -7,7 +7,12 @@
 #include <cstdio>
 
 #include "being.h"
+#include "comm.h"
+#include "limbs.h"
+#include "obj.h"
 #include "room.h"
+#include "sstring.h"
+#include "thing.h"
 
 void TBeing::dropWeapon(wearSlotT slot) {
   char buf[256];

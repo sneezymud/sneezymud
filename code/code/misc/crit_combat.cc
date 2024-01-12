@@ -5,25 +5,49 @@
 //      "crit_combat.cc" - All functions and routines related to combat
 //
 //////////////////////////////////////////////////////////////////////////
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdint.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <utility>
+#include <vector>
 
-#include <cmath>
-
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
-#include "monster.h"
-#include "disease.h"
 #include "combat.h"
-#include "statistics.h"
-#include "obj_corpse.h"
-#include "obj_gun.h"
-#include "obj_trash.h"
-#include "obj_drinkcon.h"
+#include "comm.h"
+#include "connect.h"
 #include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_corpse.h"
+#include "obj_drinkcon.h"
+#include "obj_gun.h"
 #include "person.h"
+#include "race.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
 
 // adjust the crit table for fighting barehand.  All crit types are not equal,
 // but for barehand we want them to appear so.  This means nerfing slash

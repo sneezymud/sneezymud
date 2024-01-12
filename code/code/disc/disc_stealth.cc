@@ -1,15 +1,29 @@
+#include <boost/format.hpp>
+#include <memory>
+
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_stealth.h"
+#include "disc_thief.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "being.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "games.h"
-#include "disease.h"
-#include "combat.h"
+#include "parse.h"
 #include "person.h"
-#include "disc_thief.h"
-#include "obj_tool.h"
-#include "disc_stealth.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 void TBeing::doConceal(sstring argument) {
   sstring name_buf;

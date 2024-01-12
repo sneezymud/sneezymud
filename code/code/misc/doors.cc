@@ -5,11 +5,26 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <strings.h>
 #include <cstdio>
+#include <list>
+#include <string>
 
-#include "extern.h"
-#include "room.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "parse.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 void TBeing::rawUnlockDoor(roomDirData* exitp, dirTypeT door) {
   TRoom* rp;

@@ -7,8 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_expandable_container.h"
 #include "obj_money.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
 
 class TMoneypouch : public TExpandableContainer {
   private:

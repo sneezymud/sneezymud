@@ -6,26 +6,45 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-extern "C" {
-#include <cstdio>
-
-#include <unistd.h>
-#include <arpa/telnet.h>
-}
-
-#include <stack>
+#include <boost/format.hpp>
 #include <boost/regex.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <ctype.h>
+#include <ext/alloc_traits.h>
+#include <stdint.h>
+#include <string.h>
+#include <strings.h>
+#include <algorithm>
+#include <list>
+#include <map>
+#include <memory>
+#include <queue>
+#include <stack>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "extern.h"
-#include "room.h"
 #include "being.h"
-#include "colorstring.h"
-#include "person.h"
-#include "configuration.h"
-#include "socket.h"
-#include "mail.h"
-#include "monster.h"
 #include "client.h"
+#include "colorstring.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 sstring lockmess;
 commandInfo* commandArray[MAX_CMD_LIST];

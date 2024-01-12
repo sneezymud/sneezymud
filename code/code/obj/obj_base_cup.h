@@ -7,7 +7,15 @@
 
 #pragma once
 
+#include "enum.h"
+#include "liquids.h"
 #include "obj.h"
+#include "sstring.h"
+
+class TBaseWeapon;
+class TBeing;
+class TMonster;
+class TThing;
 
 class TBaseCup : public virtual TObj {
   private:

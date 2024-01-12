@@ -1,13 +1,24 @@
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <string>
 
-#include "extern.h"
-#include "range.h"
-#include "colorstring.h"
-#include "obj_bow.h"
-#include "obj_arrow.h"
-#include "shop.h"
-#include "shopowned.h"
+#include "ansi.h"
 #include "being.h"
+#include "colorstring.h"
+#include "comm.h"
+#include "defs.h"
+#include "extern.h"
+#include "log.h"
+#include "obj_arrow.h"
+#include "obj_bow.h"
+#include "range.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 TBow::TBow() : TObj(), arrowType(0), flags(0), max_range(0) {}
 

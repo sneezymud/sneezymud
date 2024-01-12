@@ -22,6 +22,10 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TMagicItem;
+class TObj;
+
 class CDEarth : public CDiscipline {
   public:
     CSkill skMeteorSwarm;  //      40th level individual

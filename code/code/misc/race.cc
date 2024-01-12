@@ -6,14 +6,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <strings.h>
 #include <cstdio>
+#include <string>
 
-#include "extern.h"
 #include "being.h"
-#include "race.h"
-#include "obj_player_corpse.h"
-#include "obj_corpse.h"
+#include "connect.h"
+#include "db.h"
+#include "extern.h"
 #include "garble.h"
+#include "log.h"
+#include "obj.h"
+#include "obj_corpse.h"
+#include "obj_player_corpse.h"
+#include "parse.h"
+#include "race.h"
+#include "structs.h"
+#include "toggle.h"
 
 const char* RaceNames[MAX_RACIAL_TYPES] = {
   "RACE_NORACE",

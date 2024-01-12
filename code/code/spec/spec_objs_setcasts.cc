@@ -1,6 +1,14 @@
-#include "comm.h"
-#include "obj_base_clothing.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "limbs.h"
+#include "log.h"
+#include "obj.h"
+#include "parse.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 // constants that define the combo items
 // combo 1

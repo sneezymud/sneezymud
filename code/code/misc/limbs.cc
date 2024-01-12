@@ -4,14 +4,35 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "extern.h"
-#include "monster.h"
+#include "body.h"
 #include "combat.h"
-#include "obj_corpse.h"
+#include "comm.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
 #include "limbs.h"
+#include "log.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_corpse.h"
+#include "race.h"
+#include "room.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 void TBeing::setCurLimbHealth(wearSlotT slot, unsigned short num) {
   body_parts[slot].setHealth(num);

@@ -1,18 +1,46 @@
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <strings.h>
+#include <algorithm>
 #include <cstdio>
+#include <iosfwd>
+#include <list>
+#include <memory>
+#include <sstream>
+#include <string>
+#include <vector>
 
+#include "being.h"
+#include "combat.h"
+#include "comm.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
+#include "faction.h"
 #include "handler.h"
-#include "room.h"
+#include "immunity.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "combat.h"
-#include "obj_symbol.h"
+#include "obj.h"
 #include "obj_potion.h"
+#include "obj_symbol.h"
+#include "parse.h"
 #include "pathfinder.h"
+#include "response.h"
+#include "room.h"
 #include "shop.h"
-#include "database.h"
-#include "spec_mobs.h"
 #include "shopowned.h"
+#include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 static char responseFile[32];
 

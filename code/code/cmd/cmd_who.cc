@@ -6,22 +6,38 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
 #include <cstdio>
-
-#include "extern.h"
-#include "room.h"
-#include "being.h"
-#include "colorstring.h"
-#include "statistics.h"
-#include "games.h"
-#include "database.h"
-#include "cmd_message.h"
-#include "account.h"
-#include "person.h"
-#include "monster.h"
-#include "guild.h"
-
 #include <set>
+#include <string>
+
+#include "account.h"
+#include "ansi.h"
+#include "being.h"
+#include "cmd_message.h"
+#include "colorstring.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "guild.h"
+#include "monster.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 sstring TBeing::parseTitle(Descriptor*) { return getName(); }
 

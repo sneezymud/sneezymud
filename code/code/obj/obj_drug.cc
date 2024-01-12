@@ -5,14 +5,39 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <stdint.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "garble.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
 #include "monster.h"
+#include "obj.h"
+#include "obj_drug.h"
 #include "obj_drug_container.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 TDrug::TDrug() : TObj(), curFuel(0), maxFuel(0), drugType(DRUG_NONE) {}
 

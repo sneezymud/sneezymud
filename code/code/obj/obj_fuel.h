@@ -8,6 +8,11 @@
 #pragma once
 
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
+class TLight;
+class TMonster;
 
 class TFuel : public TObj {
   private:

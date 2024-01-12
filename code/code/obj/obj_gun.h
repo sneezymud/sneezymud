@@ -7,7 +7,15 @@
 
 #pragma once
 
+#include "create.h"
+#include "enum.h"
+#include "obj.h"
 #include "obj_general_weapon.h"
+#include "sstring.h"
+#include "thing.h"
+
+class TBeing;
+class TRoom;
 
 const unsigned int GUN_FLAG_SILENCED = (1 << 0);
 const unsigned int GUN_FLAG_CASELESS = (1 << 1);

@@ -20,6 +20,14 @@
 
 #pragma once
 
+#include "parse.h"
+#include "structs.h"
+
+class TBeing;
+class TObj;
+class TRoom;
+class TThing;
+
 extern int task_bogus(TBeing*, cmdTypeT, const char*, int, TRoom*, TObj*);
 extern int task_sharpening(TBeing*, cmdTypeT, const char*, int, TRoom*, TObj*);
 extern int task_blacksmithing(TBeing*, cmdTypeT, const char*, int, TRoom*,

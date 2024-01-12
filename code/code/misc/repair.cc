@@ -1,25 +1,50 @@
-#include <cstdio>
-
-#include <unistd.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <boost/format.hpp>
 #include <dirent.h>
+#include <errno.h>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <time.h>
+#include <unistd.h>
+#include <algorithm>
+#include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "handler.h"
-#include "low.h"
-#include "extern.h"
-#include "monster.h"
-#include "configuration.h"
-#include "statistics.h"
 #include "account.h"
-#include "obj_note.h"
-#include "shop.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
 #include "database.h"
-#include "shopowned.h"
-#include "rent.h"
-#include "obj_commodity.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_commodity.h"
+#include "obj_note.h"
+#include "parse.h"
+#include "rent.h"
+#include "shop.h"
+#include "shopowned.h"
 #include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 extern int kick_mobs_from_shop(TMonster* myself, TBeing* ch, int from_room);
 

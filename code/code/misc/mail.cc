@@ -1,21 +1,43 @@
-#include "handler.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+
 #include "being.h"
-#include "client.h"
-#include "low.h"
 #include "charfile.h"
-#include "extern.h"
-#include "mail.h"
-#include "database.h"
-#include "shop.h"
-#include "monster.h"
-#include "shopowned.h"
-#include "rent.h"
-#include "obj_trap.h"
-#include "obj_open_container.h"
-#include "spec_mobs.h"
+#include "client.h"
 #include "combat.h"
+#include "comm.h"
 #include "configuration.h"
+#include "connect.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "extern.h"
+#include "faction.h"
+#include "handler.h"
+#include "log.h"
+#include "low.h"
+#include "mail.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_money.h"
+#include "obj_open_container.h"
+#include "obj_trap.h"
+#include "parse.h"
 #include "player_data.h"
+#include "rent.h"
+#include "room.h"
+#include "shop.h"
+#include "shopowned.h"
+#include "spec_mobs.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 // may not exceed NAME_SIZE (15) chars
 static const char* const SNEEZY_ADMIN = "SneezyMUD Administration";

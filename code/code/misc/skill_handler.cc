@@ -1,8 +1,14 @@
 #include "skill_handler.h"
 
+#include <algorithm>
+
 #include "being.h"
-#include "obj.h"
+#include "comm.h"
+#include "defs.h"
+#include "race.h"
 #include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 using namespace SkillHandler;
 
@@ -84,7 +90,9 @@ TestWithAct SkillHandler::ch_not_mounted(const sstring& message) {
 // Message should end in '\n\r'
 TestWithAct SkillHandler::not_peaceful_room(const sstring& message) {
   return make_test([message](const Config& config) {
-    return !config.ch->checkPeaceful(message);
+    return !config.ch->checkPeaceful(
+      message.empty() ? "You feel too peaceful to contemplate violence.\n\r"
+                      : message);
   });
 }
 

@@ -5,23 +5,34 @@
     All rights reserved.
 ******************************************************************** */
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_adventuring.h"
 #include "extern.h"
 #include "handler.h"
-#include "being.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
-#include "disease.h"
-#include "combat.h"
-#include "disc_adventuring.h"
-#include "disease.h"
-#include "combat.h"
-#include "obj_component.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
 #include "obj_tool.h"
-#include "obj_portal.h"
-#include "obj_drinkcon.h"
-#include "pathfinder.h"
+#include "parse.h"
+#include "race.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
 
 void TThing::findBandage(int*) {}
 

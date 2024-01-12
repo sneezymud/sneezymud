@@ -1,9 +1,22 @@
+#include <list>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "log.h"
 #include "low.h"
-#include "room.h"
 #include "monster.h"
-#include "paths.h"
-#include "pathfinder.h"
 #include "obj_commodity.h"
+#include "parse.h"
+#include "pathfinder.h"
+#include "race.h"
+#include "room.h"
+#include "structs.h"
+#include "thing.h"
+
+class TObj;
 
 int paladinPatrol(TBeing* ch, cmdTypeT cmd, const char*, TMonster* myself,
   TObj*) {

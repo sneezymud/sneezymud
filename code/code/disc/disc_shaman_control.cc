@@ -4,17 +4,30 @@
 //
 ///////////////////////////////////////////////////////////////////
 
-#include "room.h"
+#include <list>
+
+#include "being.h"
+#include "combat.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "immunity.h"
+#include "limbs.h"
 #include "low.h"
 #include "monster.h"
-#include "disease.h"
-#include "combat.h"
-#include "disc_shaman.h"
-#include "spelltask.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
-#include "obj_player_corpse.h"
 #include "obj_magic_item.h"
-#include "combat.h"
+#include "obj_player_corpse.h"
+#include "room.h"
+#include "skills.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "structs.h"
+#include "thing.h"
 
 int resurrection(TBeing* caster, TObj* obj, int level, short bKnown) {
   affectedData aff;

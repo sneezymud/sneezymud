@@ -1,17 +1,33 @@
-#include "handler.h"
-#include "low.h"
-#include "extern.h"
-#include "monster.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
 #include "charfile.h"
-#include "shopowned.h"
-#include "database.h"
-#include "shop.h"
+#include "comm.h"
+#include "connect.h"
 #include "corporation.h"
-#include "obj_note.h"
-#include "shopaccounting.h"
+#include "database.h"
+#include "db.h"
+#include "enum.h"
+#include "handler.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
 #include "obj_commodity.h"
-#include "spec_mobs.h"
+#include "parse.h"
 #include "player_data.h"
+#include "shop.h"
+#include "shopowned.h"
+#include "spec_mobs.h"
+#include "sstring.h"
+#include "structs.h"
 
 #define GRIMHAVEN_TAX_OFFICE 14
 

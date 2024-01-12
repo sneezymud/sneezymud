@@ -1,12 +1,24 @@
+#include <boost/format.hpp>
+#include <time.h>
 #include <cmath>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "monster.h"
+#include "being.h"
 #include "database.h"
+#include "enum.h"
 #include "extern.h"
+#include "gametime.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "spec_mobs.h"
-#include "weather.h"
+#include "sstring.h"
+
+class TObj;
 
 // 1 loan per account
 

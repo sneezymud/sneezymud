@@ -1,13 +1,22 @@
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
 
-#include "colorstring.h"
-#include "disease.h"
-#include "combat.h"
-#include "disc_shaman_healing.h"
-#include "spelltask.h"
-#include "statistics.h"
-#include "obj_magic_item.h"
+#include "ansi.h"
 #include "being.h"
+#include "colorstring.h"
+#include "comm.h"
+#include "disc_shaman_healing.h"
+#include "enum.h"
+#include "log.h"
+#include "obj_magic_item.h"
+#include "spell2.h"
+#include "spelltask.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
 
 ////////////////////////////////////////////////////////////////
 //   The following are copies of repHealing and adjustHealHp

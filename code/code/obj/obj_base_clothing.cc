@@ -1,21 +1,34 @@
 // base_clothing.cc
 
-#include <cstdio>
-
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <list>
+#include <memory>
 
-#include "comm.h"
-#include "shop.h"
-#include "materials.h"
-#include "extern.h"
-#include "obj_base_clothing.h"
-#include "shopowned.h"
-#include "corporation.h"
+#include "ansi.h"
 #include "being.h"
-#include "obj_suitcase.h"
-#include "obj_saddle.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "materials.h"
+#include "obj_base_clothing.h"
 #include "obj_harness.h"
 #include "obj_low.h"
+#include "obj_open_container.h"
+#include "obj_saddle.h"
+#include "obj_suitcase.h"
+#include "shopowned.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 TBaseClothing::TBaseClothing() : TObj() {}
 

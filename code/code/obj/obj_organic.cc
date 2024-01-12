@@ -6,13 +6,30 @@
 
 // organic.cc
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "monster.h"
-#include "shop.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
 #include "extern.h"
+#include "log.h"
+#include "monster.h"
 #include "obj_organic.h"
-#include "obj_flame.h"
+#include "parse.h"
+#include "room.h"
+#include "shop.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 TOrganic::TOrganic() :
   TObj(),

@@ -4,19 +4,37 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <assert.h>
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <algorithm>
+#include <ios>
+#include <iosfwd>
+#include <istream>
 #include <sstream>
-#include "extern.h"
-#include "low.h"
+#include <string>
+
 #include "account.h"
-#include "statistics.h"
-#include "socket.h"
-#include "mail.h"
-#include "games.h"
-#include "cmd_trophy.h"
-#include "database.h"
-#include "colorstring.h"
-#include "toggle.h"
+#include "ansi.h"
 #include "being.h"
+#include "colorstring.h"
+#include "connect.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "log.h"
+#include "low.h"
+#include "parse.h"
+#include "race.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "toggle.h"
 
 // General arrays used for character creation
 

@@ -1,6 +1,13 @@
-#include "extern.h"
+#include <list>
+#include <string>
+
 #include "being.h"
+#include "enum.h"
+#include "extern.h"
+#include "obj.h"
 #include "obj_vehicle.h"
+#include "parse.h"
+#include "sstring.h"
 
 TVehicle* findVehicle(TBeing* ch) {
   TVehicle* v;

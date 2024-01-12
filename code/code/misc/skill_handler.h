@@ -1,6 +1,5 @@
 #pragma once
 
-#include <cstdio>
 #include <functional>
 #include <vector>
 
@@ -86,9 +85,7 @@ namespace SkillHandler {
   TestWithAct ch_not_busy();
   TestWithAct ch_not_flying(const sstring& message);
   TestWithAct ch_not_mounted(const sstring& message);
-  TestWithAct not_peaceful_room(
-    const sstring& message =
-      "You feel too peaceful to contemplate violence.\n\r");
+  TestWithAct not_peaceful_room(const sstring& message);
   TestWithAct target_not_flying(const sstring& message);
   TestWithAct target_not_immortal(const sstring& message);
   TestWithAct target_not_mounted(const sstring& message);

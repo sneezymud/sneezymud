@@ -5,9 +5,17 @@
 //////////////////////////////////////////////////////////////////////////
 // Peel
 
-#include "extern.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "being.h"
 #include "monster.h"
 #include "obj_tooth_necklace.h"
+#include "room.h"
+#include "thing.h"
 
 TToothNecklace::TToothNecklace() : TExpandableContainer() {}
 

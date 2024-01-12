@@ -6,9 +6,17 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
 #include "connect.h"
 #include "log.h"
+#include "sstring.h"
+#include "structs.h"
+#include "toggle.h"
 
 void TBeing::setColor(setColorFieldT num, setColorKolorT col) {
   if (!desc)

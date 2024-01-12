@@ -1,9 +1,17 @@
-#include <cstdio>
+#include <stdint.h>
 
 #include "being.h"
 #include "comm.h"
-#include "extern.h"
+#include "defs.h"
+#include "enum.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "obj.h"
 #include "obj_base_weapon.h"
+#include "parse.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 int thiefQuestWeapon(TBeing* victim, cmdTypeT command, const char* arg,
   TObj* object, TObj* thief) {

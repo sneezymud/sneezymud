@@ -7,7 +7,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "obj_expandable_container.h"
+
+#include "obj.h"
 #include "obj_open_container.h"
+#include "thing.h"
 
 TExpandableContainer::TExpandableContainer() : TOpenContainer() {}
 

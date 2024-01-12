@@ -4,11 +4,26 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
 #include "disc_theology.h"
-#include "obj_vial.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "obj.h"
 #include "obj_symbol.h"
+#include "obj_vial.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 void TBeing::doAttune(const char* argument) {
   char name_buf[256];

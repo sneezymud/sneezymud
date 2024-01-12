@@ -1,9 +1,25 @@
-#include "handler.h"
-#include "extern.h"
+#include <boost/format.hpp>
+#include <initializer_list>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
-#include "monster.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "monster.h"
+#include "parse.h"
+#include "race.h"
 #include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 extern void startChargeTask(TBeing*, const char*);
 

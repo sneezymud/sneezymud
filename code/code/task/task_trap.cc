@@ -6,13 +6,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "room.h"
-#include "low.h"
+#include <list>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
+#include "log.h"
+#include "low.h"
 #include "monster.h"
+#include "obj.h"
+#include "obj_arrow.h"
 #include "obj_open_container.h"
 #include "obj_trap.h"
-#include "obj_arrow.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "trap.h"
 
 // returns DELETE_THIS for ch
 // returns true if guard disrupts trap pulse

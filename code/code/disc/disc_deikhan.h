@@ -30,6 +30,8 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+
 class CDDeikhan : public CDiscipline {
   public:
     // Level 1

@@ -1,7 +1,25 @@
-#include "low.h"
-#include "room.h"
-#include "monster.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "enum.h"
 #include "extern.h"
+#include "garble.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "thing.h"
 
 sstring randommessage(sstring from) {
   sstring msg, buf, sbuf;

@@ -1,8 +1,14 @@
-#include "person.h"
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
 #include "configuration.h"
-#include "extern.h"
-#include "process.h"
+#include "connect.h"
 #include "mail.h"
+#include "parse.h"
+#include "person.h"
+#include "process.h"
+#include "sstring.h"
 
 // procCheckMail
 procCheckMail::procCheckMail(const int& p) {

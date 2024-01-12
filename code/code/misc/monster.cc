@@ -6,15 +6,21 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+
 #include "being.h"
-#include "low.h"
-#include "extern.h"
-#include "monster.h"
-#include "room.h"
-#include "statistics.h"
-#include "shop.h"
 #include "database.h"
+#include "defs.h"
+#include "extern.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "response.h"
+#include "room.h"
+#include "shop.h"
 #include "spec_mobs.h"
+#include "statistics.h"
+#include "structs.h"
 
 charList::charList() :
   name(nullptr),

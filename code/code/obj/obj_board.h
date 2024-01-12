@@ -8,6 +8,10 @@
 #pragma once
 
 #include "obj.h"
+#include "parse.h"
+#include "sstring.h"
+
+class TBeing;
 
 const int MAX_MSGS = 100; /* max number of messages per board */
 

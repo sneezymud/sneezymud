@@ -1,18 +1,26 @@
 #if defined(__linux__)
-// Linux systems will reset the signal after it gets raised
-// According to the man page, we can get around this by using different include
-#include <cstdio>
-
 // #include <bsd/signal.h>    doesn't seem to compile though
 //#include <bsd/signal.h>
 #include <csignal>
+// Linux systems will reset the signal after it gets raised
+// According to the man page, we can get around this by using different include
+#include <cstdio>
 #else
 #include <csignal>
 #endif
 
+#include <stdlib.h>
 #include <sys/time.h>
+#include <time.h>
+
+#include "comm.h"
+#include "connect.h"
 #include "extern.h"
-#include "person.h"
+#include "log.h"
+#include "sstring.h"
+#include "structs.h"
+
+class TBeing;
 
 void checkpointing(int);
 void shutdownRequest(int);

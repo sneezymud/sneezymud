@@ -7,7 +7,12 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_seethru.h"
+#include "sstring.h"
+
+class TBeing;
+class TRoom;
 
 class TPortal : public TSeeThru {
   private:

@@ -1,11 +1,16 @@
 // see_thru.cc
 
-#include "room.h"
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
+#include "being.h"  // for number()
+#include "log.h"
 #include "low.h"
 #include "obj_seethru.h"
-#include "extern.h"
 #include "obj_window.h"
-#include "being.h"  // for number()
+#include "room.h"
+#include "structs.h"
 
 TSeeThru::TSeeThru() : TObj(), target_room(0) {}
 

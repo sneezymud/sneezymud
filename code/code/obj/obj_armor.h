@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_base_clothing.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TArmor : public virtual TBaseClothing {
   private:

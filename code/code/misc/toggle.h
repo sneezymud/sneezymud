@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include <map>
+#include <vector>
 
 #include "sstring.h"
 
@@ -80,7 +80,7 @@ const unsigned long PLR_SAVE_QUEUED = (1 << 27);
 const unsigned long PLR_KILLABLE = (1 << 28);  // switch off newbie pro
 const unsigned long PLR_ANONYMOUS = (1 << 29);
 const unsigned long PLR_SHOW_SAVES = (1 << 30);
-const unsigned long PLR_DENY_LOOT = (unsigned)(1 << 31);
+const unsigned long PLR_DENY_LOOT = (1U << 31);
 
 extern const char* const auto_name[MAX_AUTO];
 

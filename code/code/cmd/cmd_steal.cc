@@ -4,17 +4,38 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
+#include "configuration.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "room.h"
-#include "being.h"
-#include "disc_looting.h"
-#include "obj_open_container.h"
-#include "obj_component.h"
+#include "limbs.h"
 #include "loadset.h"
-#include "person.h"
+#include "log.h"
 #include "monster.h"
-#include "configuration.h"
+#include "obj.h"
+#include "obj_component.h"
+#include "obj_open_container.h"
+#include "parse.h"
+#include "room.h"
+#include "skills.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 // We sometimes use steal as a mechanism to reposess items from mortals
 // invisibly.  Not a great thing to do, but necessary and has a valid

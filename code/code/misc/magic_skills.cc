@@ -7,11 +7,19 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <string.h>
+
 #include "being.h"
-#include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "obj.h"
+#include "room.h"
+#include "spells.h"
+#include "task.h"
+#include "thing.h"
 
 int TBeing::doTurn(const char* argument, TBeing* vict) {
   TBeing* victim;

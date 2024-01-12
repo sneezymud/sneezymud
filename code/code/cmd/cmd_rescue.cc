@@ -6,11 +6,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_deikhan.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 static int rescue(TBeing* caster, TBeing* victim, spellNumT skill) {
   TBeing* tmp_ch = nullptr;

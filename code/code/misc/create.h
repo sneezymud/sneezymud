@@ -10,6 +10,8 @@ class TArrow;
 class TPortal;
 class TOpenContainer;
 class TEgg;
+class TBeing;
+class TObj;
 
 enum editorEnterTypeT {
   ENTER_REENTRANT,

@@ -7,7 +7,12 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_portal.h"
+#include "sstring.h"
+
+class TBeing;
 
 const int VEHICLE_NONE = 0;
 const int VEHICLE_BOAT = 1;

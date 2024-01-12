@@ -1,7 +1,10 @@
-#include "comm.h"
-#include "obj_base_weapon.h"
-#include "extern.h"
 #include "being.h"
+#include "comm.h"
+#include "liquids.h"
+#include "obj.h"
+#include "obj_base_weapon.h"
+#include "parse.h"
+#include "thing.h"
 
 int poisonCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBaseWeapon* cutlass;

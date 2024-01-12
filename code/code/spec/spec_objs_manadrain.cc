@@ -4,9 +4,17 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "comm.h"
+#include <algorithm>
+#include <string>
+
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "obj.h"
 #include "obj_base_weapon.h"
+#include "parse.h"
+#include "sstring.h"
+#include "thing.h"
 
 /*
   Name: Mana Drainer

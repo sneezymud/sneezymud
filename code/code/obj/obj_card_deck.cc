@@ -5,12 +5,18 @@
 //////////////////////////////////////////////////////////////////////////
 // Peel
 
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <vector>
+
 #include "being.h"
-#include "obj_tooth_necklace.h"
+#include "comm.h"
 #include "extern.h"
+#include "handler.h"
 #include "monster.h"
 #include "obj_card_deck.h"
-#include "handler.h"
+#include "thing.h"
 
 void TBeing::doShuffle(const sstring& arg) {
   TObj* deck = nullptr;

@@ -8,15 +8,20 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <deque>
 
 #include "being.h"
-#include "games.h"
 #include "extern.h"
-#include "game_drawpoker.h"
 #include "game_crazyeights.h"
-
-#include <deque>
+#include "game_drawpoker.h"
+#include "games.h"
+#include "parse.h"
+#include "sstring.h"
 
 cardSuitT& operator++(cardSuitT& c, int) {
   return c = (c == MAX_SUIT) ? MIN_SUIT : cardSuitT(c + 1);

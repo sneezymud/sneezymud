@@ -1,7 +1,6 @@
 #include "being.h"
-#include "statistics.h"
-#include "obj_symbol.h"
-#include "obj_base_clothing.h"
+#include "comm.h"
+#include "wiz_powers.h"
 
 void TBeing::doTestCode(const char* arg) {
   if (!hasWizPower(POWER_WIZARD)) {

@@ -6,26 +6,54 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <vector>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
-#include "monster.h"
-#include "games.h"
+#include "cmd_message.h"
 #include "combat.h"
-#include "obj_spellbag.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "games.h"
+#include "garble.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
-#include "obj_open_container.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_bag.h"
+#include "obj_base_container.h"
+#include "obj_base_cup.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
-#include "obj_base_cup.h"
+#include "obj_open_container.h"
 #include "obj_pool.h"
-#include "obj_bag.h"
-#include "liquids.h"
+#include "obj_spellbag.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "tweaks.h"
 #include "weather.h"
+#include "wiz_powers.h"
 
 // DELETE_THIS implies this needs to be deleted
 int TBeing::doHit(const sstring& argument, TBeing* vict) {

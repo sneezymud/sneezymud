@@ -1,19 +1,38 @@
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "room.h"
-#include "low.h"
-#include "monster.h"
-#include "disease.h"
-#include "spelltask.h"
-#include "combat.h"
-#include "disc_hand_of_god.h"
+#include "ansi.h"
 #include "being.h"
-#include "obj_food.h"
-#include "obj_portal.h"
-#include "obj_drinkcon.h"
-#include "person.h"
-#include "obj_magic_item.h"
+#include "comm.h"
+#include "defs.h"
+#include "disc_hand_of_god.h"
+#include "enum.h"
+#include "faction.h"
+#include "immunity.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_drinkcon.h"
+#include "obj_food.h"
+#include "obj_magic_item.h"
+#include "obj_portal.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spelltask.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 static void moveLoss(TBeing& ch) {
   // used by recall and summon

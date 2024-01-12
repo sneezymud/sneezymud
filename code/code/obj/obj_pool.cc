@@ -4,16 +4,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
 #include "colorstring.h"
-#include "low.h"
+#include "comm.h"
+#include "db.h"
+#include "enum.h"
 #include "extern.h"
-#include "obj_pool.h"
 #include "liquids.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "obj_pool.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 void TPool::overFlow() {
   int index = getDrinkIndex(), total = 0, amt = 0;

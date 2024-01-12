@@ -1,14 +1,24 @@
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
 #include "being.h"
-#include "monster.h"
-#include "disease.h"
-#include "combat.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_animal.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "monster.h"
 #include "obj_magic_item.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+
+class TObj;
 
 int beastSoother(TBeing* caster, TBeing* victim, TMagicItem* tObj) {
   int tKnown = tObj->getMagicLearnedness(), tReturn = 0;

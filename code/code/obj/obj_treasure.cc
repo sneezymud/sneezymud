@@ -6,12 +6,17 @@
 
 // treasure.cc
 
-#include "room.h"
-#include "low.h"
-#include "obj_treasure.h"
-#include "database.h"
-#include "obj_base_container.h"
+#include <boost/format.hpp>
+#include <memory>
+
 #include "being.h"
+#include "database.h"
+#include "log.h"
+#include "low.h"
+#include "obj_base_container.h"
+#include "obj_treasure.h"
+#include "room.h"
+#include "thing.h"
 
 TTreasure::TTreasure() : TObj() { setSerialNumber(0); }
 

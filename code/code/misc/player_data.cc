@@ -7,34 +7,64 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-extern "C" {
-#include <cstdio>
-
-#include <unistd.h>
+#include <assert.h>
+#include <boost/format.hpp>
 #include <dirent.h>
-}
-
 #include <errno.h>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <time.h>
+#include <unistd.h>
+#include <algorithm>
+#include <cstdio>
+#include <list>
+#include <map>
+#include <string>
+#include <string_view>
+#include <utility>
+#include <vector>
 
-#include "extern.h"
-#include "room.h"
-#include "being.h"
-#include "client.h"
-#include "low.h"
-#include "handler.h"
-#include "monster.h"
-#include "configuration.h"
 #include "account.h"
-#include "person.h"
+#include "being.h"
 #include "charfile.h"
+#include "client.h"
+#include "cmd_message.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "gametime.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "mail.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_drug.h"
+#include "parse.h"
+#include "person.h"
+#include "player_data.h"
+#include "race.h"
+#include "room.h"
 #include "shop.h"
 #include "skills.h"
-#include "mail.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
 #include "statistics.h"
-#include "combat.h"
-#include "database.h"
-#include "materials.h"
-#include "player_data.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 wizListInfo* wiz;
 

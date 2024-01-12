@@ -7,8 +7,10 @@
 // saddlebag.cc
 //
 
+#include "being.h"
 #include "monster.h"
 #include "obj_saddlebag.h"
+#include "thing.h"
 
 TSaddlebag::TSaddlebag() : TExpandableContainer() {}
 

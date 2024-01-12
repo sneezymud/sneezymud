@@ -1,6 +1,9 @@
 #pragma once
 
 #include <boost/format.hpp>
+#include <stddef.h>
+#include <string>
+#include <vector>
 
 extern boost::format format(const std::string&);
 

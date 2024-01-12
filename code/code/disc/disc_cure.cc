@@ -1,16 +1,35 @@
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "extern.h"
-#include "colorstring.h"
-#include "disease.h"
-#include "combat.h"
-#include "disc_cures.h"
-#include "spelltask.h"
-#include "statistics.h"
-#include "obj_magic_item.h"
+#include "ansi.h"
 #include "being.h"
-#include "room.h"
+#include "colorstring.h"
+#include "comm.h"
+#include "defs.h"
+#include "disc_cures.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
 #include "monster.h"
+#include "obj_magic_item.h"
+#include "parse.h"
+#include "room.h"
+#include "skills.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
 
 static void repHealing(TBeing* caster, TBeing* victim) {
   char nameBuf[256];

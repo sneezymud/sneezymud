@@ -25,6 +25,8 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+
 class CDStealth : public CDiscipline {
   public:
     CSkill skConcealment;

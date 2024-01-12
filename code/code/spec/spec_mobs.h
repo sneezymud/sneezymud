@@ -25,15 +25,15 @@
 
 #pragma once
 
+#include "faction.h"
+#include "parse.h"
+#include "sstring.h"
+#include "structs.h"
+
 class TBeing;
 class TMonster;
 class TObj;
 class TSymbol;
-
-#include "parse.h"
-#include "faction.h"
-#include "spells.h"
-#include "structs.h"
 
 const int SPEC_JANITOR = 5;
 const int SPEC_TORMENTOR = 6;

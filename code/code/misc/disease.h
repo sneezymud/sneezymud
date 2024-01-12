@@ -1,15 +1,6 @@
 #pragma once
 
-// tech note:  Mob_Affect fields for diseases are defined as follows ...
-// short type;         <-- should always be AFFECT_DISEASE
-// sbyte level;        <-- state data for the disease
-// short duration;    <-- updates until disease wears off
-// sbyte modifier;     <-- type of disease (note this is signed, but only
-//                         use 0 -> 127.  I think 127 diseases is plenty.)
-// byte location;      <-- this should be APPLY_NONE
-// long bitvector;     <-- this should be 0
-#include "structs.h"
-
+class TBeing;
 class affectedData;
 
 enum diseaseTypeT {

@@ -1,12 +1,18 @@
 #include "obj_general_weapon.h"
+
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
+#include "extern.h"
+#include "liquids.h"
+#include "log.h"
 #include "obj_base_weapon.h"
 #include "obj_gun.h"
-#include "shop.h"
-#include "shopowned.h"
-#include "liquids.h"
+#include "spell2.h"
+#include "structs.h"
+#include "thing.h"
 #include "toggle.h"
-#include "extern.h"
-#include "being.h"
 
 TGenWeapon::TGenWeapon() : TBaseWeapon() {
   for (int i = 0; i < 3; ++i) {

@@ -5,11 +5,16 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "obj_base_container.h"
-#include "obj_poison.h"
-#include "monster.h"
-#include "shop.h"
+#include <algorithm>
+#include <memory>
+#include <vector>
+
+#include "being.h"
 #include "liquids.h"
+#include "monster.h"
+#include "obj_poison.h"
+#include "shop.h"
+#include "sstring.h"
 
 TPoison::TPoison() : TBaseCup() {}
 

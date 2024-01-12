@@ -7,45 +7,66 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
-extern "C" {
-#include <cstdio>
-
-#include <unistd.h>
-#include <sys/stat.h>
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/format.hpp>
 #include <dirent.h>
-}
-
+#include <ext/alloc_traits.h>
+#include <string.h>
 #include <algorithm>
-#include <boost/algorithm/string.hpp>
+#include <cstdio>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "extern.h"
-#include "handler.h"
+#include "ansi.h"
 #include "being.h"
-#include "room.h"
 #include "client.h"
-#include "monster.h"
-#include "obj_component.h"
-#include "dirsort.h"
-#include "materials.h"
-#include "statistics.h"
+#include "cmd_message.h"
+#include "comm.h"
+#include "connect.h"
+#include "create.h"
 #include "database.h"
-#include "person.h"
-#include "obj_open_container.h"
-#include "obj_trash.h"
-#include "obj_book.h"
-#include "obj_trap.h"
-#include "obj_portal.h"
+#include "db.h"
+#include "defs.h"
+#include "dirsort.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "garble.h"
+#include "handler.h"
+#include "immunity.h"
+#include "log.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
 #include "obj_arrow.h"
-#include "obj_base_weapon.h"
-#include "obj_gun.h"
 #include "obj_base_clothing.h"
+#include "obj_base_weapon.h"
+#include "obj_book.h"
+#include "obj_egg.h"
+#include "obj_gun.h"
 #include "obj_magic_item.h"
+#include "obj_open_container.h"
+#include "obj_portal.h"
 #include "obj_potion.h"
 #include "obj_scroll.h"
 #include "obj_staff.h"
+#include "obj_trap.h"
+#include "obj_trash.h"
 #include "obj_wand.h"
-#include "obj_egg.h"
-#include "garble.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "spec_objs.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "trap.h"
+#include "wiz_powers.h"
 
 static void update_obj_menu(const TBeing* ch, const TObj* obj) {
   const char* obj_edit_menu_basic =
@@ -1275,7 +1296,7 @@ static void change_obj_extra_flags(TBeing* ch, TObj* o, const char* arg,
     ch->sendTo(buf);
 
     ch->sendTo(format("%2d [%s] %s") % (j + 1) %
-               ((o->isObjStat(1 << j)) ? "X" : " ") % extra_bits[j]);
+               ((o->isObjStat(1U << j)) ? "X" : " ") % extra_bits[j]);
   }
   ch->sendTo(format(VT_CURSPOS) % 21 % 1);
   ch->sendTo(

@@ -1,8 +1,20 @@
-#include "room.h"
-#include "extern.h"
+#include <boost/format.hpp>
+#include <memory>
+
 #include "being.h"
+#include "comm.h"
+#include "extern.h"
 #include "handler.h"
-#include "obj_tool.h"
+#include "obj.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+
+class TNote;
+class TTable;
+class TTool;
 
 bool find_paint_target(TBeing* ch, sstring arg, TBeing** tb, TObj** obj,
   TRoom** rp) {

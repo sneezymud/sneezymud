@@ -6,17 +6,43 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <strings.h>
+#include <algorithm>
 #include <cstdio>
+#include <string>
 
-#include "extern.h"
-#include "handler.h"
+#include "ansi.h"
 #include "being.h"
 #include "charfile.h"
-#include "statistics.h"
-#include "person.h"
-#include "monster.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "gametime.h"
 #include "guild.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "person.h"
 #include "player_data.h"
+#include "race.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 void TBeing::doSet(const char*) { sendTo("You can't, you're a mob.\n\r"); }
 

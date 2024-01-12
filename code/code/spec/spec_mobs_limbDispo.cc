@@ -1,10 +1,28 @@
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
 #include "monster.h"
-#include "room.h"
+#include "obj.h"
 #include "obj_corpse.h"
 #include "obj_drinkcon.h"
 #include "obj_trash.h"
-#include "mail.h"
-#include "database.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 const int CART_VNUM = 33313;
 const int CONTENTS_VNUM = 33314;

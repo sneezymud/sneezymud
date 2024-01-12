@@ -5,7 +5,13 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "obj_casino_chip.h"
+
+#include <memory>
+#include <vector>
+
 #include "shop.h"
+
+class TBeing;
 
 TCasinoChip::TCasinoChip() : TObj() {}
 

@@ -4,12 +4,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <time.h>
+#include <algorithm>
 #include <cstdio>
+#include <deque>
+#include <list>
+#include <string>
 
-#include "room.h"
+#include "being.h"
+#include "defs.h"
+#include "enum.h"
 #include "handler.h"
 #include "monster.h"
-#include <deque>
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "thing.h"
+
+class TObj;
 
 class organizer_struct {
   public:

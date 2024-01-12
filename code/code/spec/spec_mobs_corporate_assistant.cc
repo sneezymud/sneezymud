@@ -1,10 +1,27 @@
-#include "room.h"
-#include "monster.h"
-#include "extern.h"
-#include "database.h"
+#include <boost/format.hpp>
+#include <functional>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
+#include "ansi.h"
+#include "being.h"
+#include "connect.h"
 #include "corporation.h"
+#include "database.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
+#include "room.h"
 #include "shop.h"
 #include "shopowned.h"
+#include "sstring.h"
+
+class TObj;
 
 void corpListing(TBeing* ch, TMonster* me) {
   TDatabase db(DB_SNEEZY);

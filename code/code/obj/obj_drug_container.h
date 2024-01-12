@@ -7,7 +7,13 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj.h"
+#include "obj_drug.h"
+#include "sstring.h"
+
+class TBeing;
+class TThing;
 
 class TDrugContainer : public TObj {
   protected:

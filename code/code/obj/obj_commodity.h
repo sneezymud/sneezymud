@@ -7,7 +7,13 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_mergeable.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
+class TThing;
 
 class TCommodity : public TMergeable {
   private:

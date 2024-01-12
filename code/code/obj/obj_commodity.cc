@@ -6,18 +6,33 @@
 
 // commodity.cc
 
-#include <cstdio>
-
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <memory>
+#include <vector>
 
-#include "extern.h"
-#include "low.h"
-#include "monster.h"
-#include "materials.h"
-#include "shop.h"
-#include "obj_commodity.h"
-#include "shopowned.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
 #include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj_commodity.h"
+#include "parse.h"
+#include "shop.h"
+#include "shopowned.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 // maximum number of units shop will hold. price=0 at this quantity
 const int shop_capacity = 100000;

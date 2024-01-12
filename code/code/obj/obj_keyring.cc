@@ -7,9 +7,11 @@
 // keyring.cc
 // Peel
 
+#include "being.h"
 #include "monster.h"
 #include "obj_keyring.h"
-#include "obj_key.h"
+#include "thing.h"
+
 TKeyring::TKeyring() : TExpandableContainer() {}
 
 TKeyring::TKeyring(const TKeyring& a) : TExpandableContainer(a) {}

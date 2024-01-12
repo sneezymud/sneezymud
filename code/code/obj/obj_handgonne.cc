@@ -1,15 +1,26 @@
-#include <cstdio>
+#include <boost/format.hpp>
+#include <memory>
 
-#include "extern.h"
-#include "obj_handgonne.h"
-#include "obj_general_weapon.h"
-#include "obj_base_weapon.h"
-#include "obj_gun.h"
-#include "colorstring.h"
-#include "range.h"
-#include "obj_arrow.h"
-#include "obj_tool.h"
+#include "ansi.h"
 #include "being.h"
+#include "colorstring.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "extern.h"
+#include "limbs.h"
+#include "obj_arrow.h"
+#include "obj_gun.h"
+#include "obj_handgonne.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "range.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 #include "weather.h"
 
 // this is a hand held single-shot cannon-lock firearm

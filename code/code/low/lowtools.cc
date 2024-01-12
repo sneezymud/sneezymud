@@ -1,8 +1,14 @@
-#include <map>
+#include <ctype.h>
+#include <stdio.h>
 #include <fstream>
+#include <iosfwd>
+#include <istream>
+#include <map>
+#include <string>
+#include <vector>
 
-#include "sstring.h"
 #include "parse.h"
+#include "sstring.h"
 
 // parses args like "13700-13780 13791 13798"
 bool parse_num_args(int argc, char** argv, std::vector<int>& vnums) {

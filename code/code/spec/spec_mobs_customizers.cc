@@ -1,32 +1,32 @@
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <ext/alloc_traits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <algorithm>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "being.h"
-#include "room.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "person.h"
-#include "materials.h"
-#include "obj_symbol.h"
-#include "obj_window.h"
-#include "obj_general_weapon.h"
-#include "obj_base_clothing.h"
-#include "obj_bow.h"
-#include "obj_trap.h"
-#include "obj_table.h"
-#include "obj_drinkcon.h"
-#include "corporation.h"
-#include "shopowned.h"
-#include "pathfinder.h"
+#include "obj.h"
+#include "parse.h"
 #include "shop.h"
-#include "obj_base_corpse.h"
-#include "obj_player_corpse.h"
-#include "obj_tool.h"
-#include "obj_plant.h"
-#include "obj_note.h"
-#include "obj_commodity.h"
-#include "obj_component.h"
-#include "obj_food.h"
+#include "shopowned.h"
 #include "spec_mobs.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 extern int kick_mobs_from_shop(TMonster* myself, TBeing* ch, int from_room);
 

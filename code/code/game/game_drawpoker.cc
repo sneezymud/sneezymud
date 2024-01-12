@@ -9,14 +9,26 @@
 
 ******************************************************************************/
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <string>
 
+#include "ansi.h"
 #include "being.h"
-#include "monster.h"
-#include "games.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
-#include "handler.h"
 #include "game_drawpoker.h"
+#include "games.h"
+#include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
 
 DrawPokerGame gDrawPoker;
 

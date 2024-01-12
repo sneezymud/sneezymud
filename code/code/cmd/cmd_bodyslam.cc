@@ -4,14 +4,24 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
 #include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "room.h"
+#include "spell2.h"
 #include "spells.h"
-#include "being.h"
+#include "sstring.h"
+#include "structs.h"
 
 bool TBeing::canBodyslam(TBeing* victim, silentTypeT silent) {
   if (checkBusy())

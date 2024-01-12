@@ -1,6 +1,10 @@
 #pragma once
 
+#include "liquids.h"
 #include "low.h"
+#include "obj.h"
+#include "race.h"
+#include "sstring.h"
 
 const int TYPE_VNUM = 0;
 const int TYPE_LIQUID = 1;

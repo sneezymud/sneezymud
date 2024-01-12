@@ -7,12 +7,24 @@
 // base_cup.cc
 // An abstract class to model drink containers, pools, vials, etc upon
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <memory>
+#include <string>
+#include <vector>
 
+#include "ansi.h"
+#include "being.h"
 #include "colorstring.h"
+#include "comm.h"
+#include "defs.h"
+#include "liquids.h"
+#include "log.h"
 #include "monster.h"
 #include "obj_base_cup.h"
-#include "liquids.h"
+#include "spells.h"
+#include "thing.h"
 
 TBaseCup::TBaseCup() :
   TObj(),

@@ -1,7 +1,19 @@
-#include "handler.h"
+#include <algorithm>
+#include <list>
+#include <vector>
+
 #include "being.h"
 #include "combat.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
 #include "obj_base_weapon.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 static int whirlwind(TBeing* caster, TBeing* victim, int castLevel,
   spellNumT damageType) {

@@ -9,6 +9,11 @@
 
 #include "obj.h"
 #include "obj_food.h"
+#include "sstring.h"
+
+class TBeing;
+class TRoom;
+class TThing;
 
 class TEgg : public TFood {
   private:

@@ -9,6 +9,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TThing;
+
 class CDAdvAdventuring : public CDiscipline {
   public:
     CSkill skHiking;

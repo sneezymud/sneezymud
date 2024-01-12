@@ -1,8 +1,21 @@
-#include "monster.h"
-#include "obj_base_corpse.h"
-#include "pathfinder.h"
-#include "room.h"
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "handler.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "pathfinder.h"
+#include "race.h"
+#include "room.h"
+#include "structs.h"
+#include "thing.h"
 
 // yuck, global variable, seems to be the only way to do it
 bool fireInGrimhaven = false;

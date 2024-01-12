@@ -1,13 +1,30 @@
-#include "comm.h"
-#include "room.h"
-#include "low.h"
-#include "extern.h"
-#include "obj_gas.h"
-#include "pathfinder.h"
-#include "obj_portal.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "obj_plant.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "obj_gas.h"
+#include "obj_plant.h"
+#include "obj_portal.h"
+#include "parse.h"
+#include "pathfinder.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 // TGas uses function pointers to get a virtual-class like affect,
 // without having to have multiple objects and object types for each

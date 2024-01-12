@@ -1,6 +1,8 @@
 #include "DescriptorList.h"
+
 #include "being.h"
 #include "connect.h"
+#include "sstring.h"
 
 extern Descriptor* descriptor_list;
 

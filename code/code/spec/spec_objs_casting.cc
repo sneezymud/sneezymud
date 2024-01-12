@@ -1,10 +1,29 @@
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
-#include "room.h"
+#include "log.h"
 #include "low.h"
+#include "obj.h"
 #include "obj_money.h"
-#include "person.h"
-#include "obj_table.h"
 #include "obj_portal.h"
+#include "obj_table.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 int objCastFaerieFire(TObj* o, TBeing* targ) {
   affectedData aff;

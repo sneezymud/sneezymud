@@ -39,9 +39,10 @@
 // On retrospect, it'd probably be better to move getCount and AddToCount
 // into TBeing, and leave TTrophy as a generic trophy count manipulation class
 
-class TDatabase;
-
+class TBeing;
 class TTrophyPimpl;
+class sstring;
+
 class TTrophy {
   private:
     TTrophyPimpl* pimpl;

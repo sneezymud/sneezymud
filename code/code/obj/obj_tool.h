@@ -1,6 +1,14 @@
 #pragma once
 
 #include "obj.h"
+#include "sstring.h"
+
+class TBaseCorpse;
+class TBeing;
+class TBow;
+class TMonster;
+class TThing;
+class affectedData;
 
 class TTool : public TObj {
   private:

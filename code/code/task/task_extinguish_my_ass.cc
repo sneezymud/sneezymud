@@ -1,6 +1,13 @@
 #include "being.h"
-#include "room.h"
+#include "comm.h"
+#include "enum.h"
+#include "limbs.h"
 #include "obj.h"
+#include "parse.h"
+#include "task.h"
+#include "thing.h"
+
+class TRoom;
 
 int task_extinguish_my_ass(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse,
   TRoom*, TObj*) {

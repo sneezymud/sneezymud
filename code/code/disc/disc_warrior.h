@@ -36,6 +36,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TObj;
+
 class CDWarrior : public CDiscipline {
   public:
     // Level 2

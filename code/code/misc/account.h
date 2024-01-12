@@ -6,8 +6,10 @@
 
 #pragma once
 
-#include "sstring.h"
+#include <time.h>
+
 #include "connect.h"  // termTypeT
+#include "sstring.h"
 
 class AccountStats {
   public:

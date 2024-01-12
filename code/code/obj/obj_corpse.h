@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_base_corpse.h"
+#include "sstring.h"
+
+class TBeing;
 
 // corpses for non-PCs
 class TCorpse : public TBaseCorpse {

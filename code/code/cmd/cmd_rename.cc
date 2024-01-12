@@ -5,18 +5,34 @@
 
 *************************************************************************/
 
-#include <unistd.h>
+#include <boost/format.hpp>
 #include <errno.h>
+#include <string.h>
+#include <unistd.h>
 #include <cstdio>
+#include <list>
+#include <memory>
 
+#include "account.h"
+#include "being.h"
+#include "charfile.h"
+#include "comm.h"
+#include "connect.h"
+#include "database.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "being.h"
-#include "database.h"
-#include "charfile.h"
-#include "account.h"
+#include "limbs.h"
+#include "log.h"
 #include "monster.h"
+#include "obj.h"
+#include "parse.h"
 #include "player_data.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 static void renamePersonalizeFix(TThing* t, const char* orig_name,
   const char* new_name) {

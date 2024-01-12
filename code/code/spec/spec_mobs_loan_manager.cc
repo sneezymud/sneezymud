@@ -1,10 +1,19 @@
-#include "room.h"
-#include "monster.h"
+#include <boost/format.hpp>
+#include <memory>
+#include <vector>
+
+#include "being.h"
+#include "corporation.h"
 #include "database.h"
+#include "monster.h"
+#include "parse.h"
+#include "room.h"
 #include "shop.h"
 #include "shopowned.h"
-#include "corporation.h"
 #include "spec_mobs.h"
+#include "sstring.h"
+
+class TObj;
 
 // need a periodic function to create the loans
 

@@ -1,15 +1,30 @@
-#include <cstdio>
-
-#include "being.h"
+#include <boost/format.hpp>
 #include <errno.h>
-#include "low.h"
-#include "monster.h"
-#include "database.h"
+#include <string.h>
+#include <cstdio>
+#include <string>
+
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
 #include "corporation.h"
+#include "database.h"
+#include "enum.h"
+#include "extern.h"
 #include "guild.h"
 #include "handler.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "parse.h"
 #include "room.h"
-#include "extern.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+
+class TObj;
 
 // start new guild stuff
 namespace {

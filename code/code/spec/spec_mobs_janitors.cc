@@ -1,17 +1,34 @@
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "room.h"
 #include "being.h"
+#include "combat.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "paths.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
-#include "handler.h"
+#include "obj_plant.h"
 #include "obj_player_corpse.h"
 #include "obj_pool.h"
-#include "combat.h"
+#include "parse.h"
 #include "pathfinder.h"
-#include "obj_plant.h"
+#include "paths.h"
+#include "room.h"
+#include "sound.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 bool okForJanitor(TMonster* myself, TObj* obj) {
   // only things that can be taken, and that are not pools

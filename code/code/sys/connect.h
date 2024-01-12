@@ -1,10 +1,22 @@
 #pragma once
 
-#include <deque>
+#include <time.h>
+#include <map>
+#include <queue>
+#include <string>
 
-#include "obj_drug.h"
-#include "stats.h"
+#include "ansi.h"
 #include "comm.h"
+#include "enum.h"
+#include "obj_drug.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+
+class Descriptor;
+class TBeing;
+class TMonster;
+class TObj;
 
 const unsigned int PROMPT_HIT = (1 << 0);
 const unsigned int PROMPT_MANA = (1 << 1);

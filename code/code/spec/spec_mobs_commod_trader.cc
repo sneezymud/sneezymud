@@ -1,12 +1,27 @@
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+
+#include "being.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "log.h"
+#include "materials.h"
 #include "monster.h"
-#include "pathfinder.h"
+#include "obj.h"
 #include "obj_commodity.h"
+#include "obj_open_container.h"
+#include "parse.h"
+#include "pathfinder.h"
+#include "room.h"
 #include "shop.h"
 #include "shopowned.h"
-#include "obj_open_container.h"
-#include "room.h"
-#include "database.h"
-#include "materials.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 // shop rooms 558,8734,1393,3709
 

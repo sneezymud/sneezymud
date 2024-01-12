@@ -1,14 +1,35 @@
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
+#include <initializer_list>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "combat.h"
+#include "obj_base_clothing.h"
 #include "obj_base_container.h"
 #include "obj_table.h"
-#include "obj_base_clothing.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
 #include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 
 // Peel
 spellNumT TBeing::mountSkillType() const {

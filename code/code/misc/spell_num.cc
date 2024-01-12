@@ -7,7 +7,14 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <memory>
+
+#include "enum.h"
 #include "extern.h"
+#include "log.h"
+#include "spells.h"
+#include "sstring.h"
 
 #if 0
     case SPELL_FIND_FAMILIAR:

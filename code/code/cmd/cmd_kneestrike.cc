@@ -4,13 +4,26 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <memory>
+
 #include "being.h"
-#include "enum.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "obj.h"
+#include "room.h"
 #include "skills.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 bool TBeing::canKneestrike(TBeing* victim, silentTypeT silent) {
   if (checkBusy()) {

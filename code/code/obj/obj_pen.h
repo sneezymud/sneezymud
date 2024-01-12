@@ -8,6 +8,10 @@
 #pragma once
 
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
+class TThing;
 
 class TPen : public TObj {
   private:

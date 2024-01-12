@@ -6,10 +6,12 @@
 
 // statue.cc
 
-#include <cstdio>
-
-#include "obj_statue.h"
 #include "extern.h"
+#include "obj_statue.h"
+#include "spells.h"
+#include "structs.h"
+
+class TBeing;
 
 TStatue::TStatue() : TObj() {}
 

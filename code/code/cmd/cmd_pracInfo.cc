@@ -1,5 +1,11 @@
-#include "handler.h"
+#include <boost/format.hpp>
+#include <memory>
+
 #include "being.h"
+#include "enum.h"
+#include "handler.h"
+#include "sstring.h"
+#include "wiz_powers.h"
 
 void TBeing::doPracInfo(sstring arg) {
   TBeing* ch;

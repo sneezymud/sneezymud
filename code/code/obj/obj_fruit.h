@@ -9,6 +9,9 @@
 
 #include "obj.h"
 #include "obj_food.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TFruit : public TFood {
   private:

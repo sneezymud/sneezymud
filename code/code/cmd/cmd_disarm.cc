@@ -4,13 +4,28 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
+#include "body.h"
 #include "combat.h"
-#include "obj_base_clothing.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "handler.h"
+#include "limbs.h"
 #include "monster.h"
+#include "obj.h"
+#include "obj_base_clothing.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
 #include "skills.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 bool TBeing::canDisarm(TBeing* victim, silentTypeT silent) {
   switch (race->getBodyType()) {

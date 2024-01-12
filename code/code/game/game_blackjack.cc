@@ -9,12 +9,22 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <string>
 
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
-#include "games.h"
+#include "comm.h"
+#include "enum.h"
 #include "extern.h"
+#include "games.h"
+#include "log.h"
+#include "low.h"
+#include "obj.h"
+#include "sstring.h"
+#include "thing.h"
 
 const unsigned short MAX_BLACKJACK = 1;
 

@@ -49,7 +49,19 @@
     - SO BASICALLY, THIS VALUE IS WORTHLESS
 #endif
 
+#include <boost/format.hpp>
+#include <memory>
+
 #include "being.h"
+#include "log.h"
+#include "obj.h"
+#include "parse.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+
+class TRoom;
 
 // FYI: CMD_TASK_CONTINUE is checked once per Pulse::MOBACT
 

@@ -1,15 +1,28 @@
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_leverage.h"
-#include "range.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "low.h"
+#include "obj.h"
 #include "obj_window.h"
+#include "parse.h"
 #include "pathfinder.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 int TBeing::doHurl(const char* argument, TBeing* vict) {
   int rc;

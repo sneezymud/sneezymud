@@ -5,36 +5,67 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cmath>
+#include <boost/format.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <ctype.h>
+#include <ext/alloc_traits.h>
+#include <string.h>
 #include <algorithm>
+#include <cmath>
+#include <cstdint>
 #include <cstdio>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "extern.h"
-#include "handler.h"
+#include "ansi.h"
 #include "being.h"
 #include "colorstring.h"
-#include "statistics.h"
 #include "combat.h"
+#include "configuration.h"
+#include "connect.h"
 #include "database.h"
-#include "obj_player_corpse.h"
-#include "obj_gas.h"
-#include "obj_arrow.h"
-#include "obj_base_weapon.h"
-#include "obj_pool.h"
-#include "obj_base_clothing.h"
-#include "obj_worn.h"
-#include "pathfinder.h"
-#include "obj_commodity.h"
-#include "obj_plant.h"
-#include "obj_tooth_necklace.h"
-#include "obj_trash_pile.h"
-#include "obj_jewelry.h"
-#include "spec_mobs.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
 #include "monster.h"
+#include "obj.h"
+#include "obj_arrow.h"
+#include "obj_base_clothing.h"
+#include "obj_base_cup.h"
+#include "obj_base_weapon.h"
+#include "obj_commodity.h"
+#include "obj_gas.h"
+#include "obj_plant.h"
+#include "obj_player_corpse.h"
+#include "obj_pool.h"
+#include "obj_tooth_necklace.h"
+#include "obj_trash_pile.h"
+#include "obj_worn.h"
+#include "parse.h"
+#include "pathfinder.h"
 #include "person.h"
-#include "low.h"
-#include "configuration.h"
+#include "race.h"
+#include "spec_mobs.h"
+#include "spec_objs.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 double balanceCorrectionForLevel(double level) {
   // from balance notes

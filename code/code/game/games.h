@@ -8,8 +8,6 @@
 
 #pragma once
 
-#include <algorithm>
-
 #include "sstring.h"
 
 class TBeing;
@@ -130,6 +128,7 @@ class Card {
 };
 
 class CardDeckPimpl;
+
 class CardDeck {
   private:
     CardDeckPimpl* pimpl;

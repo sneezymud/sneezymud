@@ -4,9 +4,20 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <memory>
+
 #include "being.h"
+#include "discipline.h"
+#include "extern.h"
+#include "log.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
 #include "statistics.h"
+#include "stats.h"
+#include "structs.h"
 
 #define SKILL_DAMAGE_DEBUG 0
 

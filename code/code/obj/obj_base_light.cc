@@ -8,6 +8,11 @@
 
 #include "obj_base_light.h"
 
+#include "db.h"
+#include "structs.h"
+
+class TBeing;
+
 TBaseLight::TBaseLight() : TObj(), amtLight(0), maxBurn(0), curBurn(0) {}
 
 TBaseLight::TBaseLight(const TBaseLight& a) :

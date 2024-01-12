@@ -4,59 +4,70 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
-
-#include <csignal>
-#include <cstdarg>
-#include <errno.h>
-#include <cassert>
-
-#include <boost/algorithm/string.hpp>
-
-extern "C" {
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/format.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <ctype.h>
 #include <dirent.h>
+#include <errno.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
+#include <sys/select.h>
+#include <sys/stat.h>
+#include <time.h>
 #include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/wait.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <sys/resource.h>
-#include <sys/syscall.h>
-#include <sys/param.h>
-#include <arpa/telnet.h>
-#include <arpa/inet.h>
-#include <sys/stat.h>
+#include <algorithm>
+#include <cstdio>
+#include <deque>
+#include <list>
+#include <memory>
+#include <queue>
+#include <string>
+#include <vector>
 
-#if defined(__linux__)
-#include <sys/stat.h>
-#endif
-}
-
-#include "extern.h"
-#include "being.h"
-#include "client.h"
-#include "gmcphandlers.h"
-#include "handler.h"
-#include "low.h"
-#include "person.h"
-#include "monster.h"
-#include "configuration.h"
-#include "charfile.h"
+#include "../version.h"
 #include "account.h"
-#include "statistics.h"
-#include "socket.h"
-#include "mail.h"
-#include "games.h"
-#include "person.h"
+#include "ansi.h"
+#include "being.h"
+#include "charfile.h"
+#include "client.h"
 #include "cmd_trophy.h"
 #include "colorstring.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
 #include "database.h"
-#include "rent.h"
-#include "shop.h"
-#include "weather.h"
-#include "../version.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "games.h"
+#include "gametime.h"
+#include "gmcphandlers.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "mail.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "person.h"
 #include "player_data.h"
+#include "rent.h"
+#include "room.h"
+#include "shop.h"
+#include "socket.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;

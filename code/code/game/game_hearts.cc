@@ -9,15 +9,27 @@
 
 *************************************************************************/
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
 #include <cstdio>
+#include <list>
+#include <string>
 
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "enum.h"
+#include "extern.h"
+#include "games.h"
+#include "handler.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "games.h"
-#include "extern.h"
-#include "handler.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "thing.h"
 
 HeartsGame gHearts;
 

@@ -6,28 +6,55 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
 #include <dirent.h>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "cmd_dissect.h"
 #include "colorstring.h"
+#include "combat.h"
 #include "configuration.h"
-#include "disc_looting.h"
+#include "connect.h"
+#include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_alchemy.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "liquids.h"
+#include "log.h"
 #include "materials.h"
 #include "monster.h"
-#include "combat.h"
-#include "obj_component.h"
-#include "cmd_dissect.h"
-#include "disc_alchemy.h"
-#include "obj_open_container.h"
-#include "obj_component.h"
-#include "liquids.h"
-#include "database.h"
+#include "obj.h"
 #include "obj_commodity.h"
-#include "spec_mobs.h"
+#include "obj_component.h"
+#include "obj_open_container.h"
+#include "parse.h"
 #include "person.h"
+#include "race.h"
+#include "response.h"
+#include "room.h"
+#include "spec_mobs.h"
+#include "spec_objs.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 extern int getObjLoadPotential(const int obj_num);
 

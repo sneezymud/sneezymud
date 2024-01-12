@@ -13,20 +13,38 @@
 //  cmd = normal
 //      return DELETE_VICT to kill ch
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "gametime.h"
 #include "handler.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "configuration.h"
-#include "obj_food.h"
-#include "obj_note.h"
+#include "obj.h"
 #include "obj_portal.h"
-#include "spec_rooms.h"
 #include "person.h"
-#include "rent.h"
+#include "race.h"
+#include "room.h"
+#include "spec_rooms.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 int oft_frequented_room(TBeing*, cmdTypeT cmd, const char*, TRoom* rp) {
   TBeing* mob;

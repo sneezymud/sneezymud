@@ -6,15 +6,27 @@
 
 // thing.h
 
+#include <string.h>
+#include <algorithm>
+#include <iterator>
+#include <list>
+
+#include "being.h"
 #include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "handler.h"
 #include "materials.h"
+#include "obj.h"
 #include "obj_base_clothing.h"
-#include "obj_base_container.h"
-#include "obj_open_container.h"
 #include "obj_component.h"
+#include "obj_open_container.h"
 #include "obj_tool.h"
-#include "being.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
 
 const char* TThing::objs(const TThing* t) const {
   return (canSee(t) ? t->getName().c_str() : "something");

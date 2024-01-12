@@ -4,17 +4,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "socket.h"
-#include "configuration.h"
-#include "extern.h"
-#include "enum.h"
-#include "version.h"
-
-#include <cstdio>
-
-extern "C" {
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 #include <unistd.h>
-}
+#include <cstdio>
+#include <memory>
+#include <random>
+
+#include "configuration.h"
+#include "db.h"
+#include "extern.h"
+#include "log.h"
+#include "socket.h"
+#include "sstring.h"
+#include "structs.h"
+#include "version.h"
 
 extern int run_the_game();
 

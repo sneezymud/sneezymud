@@ -6,9 +6,11 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include "being.h"
 #include "monster.h"
-#include "obj_wagon.h"
 #include "obj_open_container.h"
+#include "obj_wagon.h"
+#include "thing.h"
 
 TWagon::TWagon() : TOpenContainer() {}
 

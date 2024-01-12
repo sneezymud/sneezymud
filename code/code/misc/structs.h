@@ -1,65 +1,21 @@
 #pragma once
 
-#include <ctime>
-#include <cstring>
 #include <cstdint>
+#include <cstring>
+#include <ctime>
+#include <functional>
+#include <utility>
 
-#include "parse.h"
-#include "spells.h"
+#include "enum.h"
 #include "log.h"
+#include "spells.h"
+#include "sstring.h"
 
-class sstring;
-
+class TBeing;
 // forward declarations
 class TObj;
-class TBeing;
-class TMonster;
-class TPerson;
-
-class TRoom;
 class TThing;
-class Craps;
-class Descriptor;
-class TAccount;
-class affectedData;
 class saveAffectedData;
-class roomDirData;
-class TFuel;
-class TLight;
-class TBaseLight;
-class TDrug;
-class TDrugContainer;
-class TFood;
-class TEgg;
-class TPen;
-class TOpal;
-class TPortal;
-class TOrganic;
-class TFFlame;
-class TGas;
-class TASubstance;
-class TTrap;
-class TKey;
-class TTool;
-class TComponent;
-class TSymbol;
-class TVial;
-class TPCorpse;
-class TMagicItem;
-class TDrinkCon;
-class TBaseCup;
-class TBaseWeapon;
-class TArrow;
-class TBow;
-class TBaseCorpse;
-class TTable;
-class TBaseContainer;
-class TOpenContainer;
-class TSuitcase;
-class TBoard;
-class liqInfoT;
-class currencyInfoT;
-class ignoreList;
 
 const int MAX_BUF_LENGTH = 240;
 

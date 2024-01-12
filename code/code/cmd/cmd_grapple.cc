@@ -4,11 +4,24 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
+#include <string.h>
+#include <algorithm>
+
+#include "ansi.h"
 #include "being.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "obj.h"
 #include "obj_base_clothing.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 static int grapple(TBeing* c, TBeing* victim, spellNumT skill) {
   int percent;

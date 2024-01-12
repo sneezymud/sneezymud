@@ -7,22 +7,37 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
+#include <string.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "shop.h"
-#include "spec_mobs.h"
-#include "obj_bow.h"
-#include "obj_symbol.h"
-#include "obj_food.h"
-#include "obj_opal.h"
-#include "obj_arrow.h"
-#include "obj_base_weapon.h"
-#include "obj_base_light.h"
-#include "obj_base_clothing.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "handler.h"
+#include "limbs.h"
 #include "materials.h"
 #include "monster.h"
+#include "obj.h"
+#include "obj_arrow.h"
+#include "obj_base_clothing.h"
+#include "obj_base_light.h"
+#include "obj_base_weapon.h"
+#include "obj_bow.h"
+#include "obj_food.h"
+#include "obj_opal.h"
+#include "obj_symbol.h"
+#include "parse.h"
+#include "room.h"
+#include "shop.h"
+#include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "thing.h"
 
 TObj* findShopObjForCompare(TBeing* ch, sstring StObject) {
   TThing* tThing;

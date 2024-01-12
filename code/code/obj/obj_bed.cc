@@ -1,12 +1,26 @@
 // bed.cc
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
 
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "games.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "games.h"
-#include "obj_bed.h"
 #include "obj_base_corpse.h"
+#include "obj_bed.h"
+#include "parse.h"
+#include "room.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 TBed::TBed() :
   TObj(),

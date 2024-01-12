@@ -9,16 +9,31 @@
 
 ******************************************************************************/
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "handler.h"
-#include "room.h"
-#include "being.h"
-#include "monster.h"
 #include "account.h"
-#include "person.h"
-#include "low.h"
+#include "being.h"
 #include "cmd_trophy.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 void doSaveMOEdit(TBeing* ch, const char* tArg) {
   sstring tStThing(""), tStValue(""), tStArg(tArg);

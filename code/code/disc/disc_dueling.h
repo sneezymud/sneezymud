@@ -10,6 +10,9 @@
 
 #include "discipline.h"
 #include "skills.h"
+#include "spells.h"
+
+class TBeing;
 
 class CDDueling : public CDiscipline {
   public:

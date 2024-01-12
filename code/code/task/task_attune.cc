@@ -5,11 +5,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "comm.h"
-#include "extern.h"
-#include "obj_symbol.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "liquids.h"
+#include "log.h"
+#include "obj.h"
+#include "obj_symbol.h"
 #include "obj_vial.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
+
+class TRoom;
 
 static void stop_attune(TBeing* ch, silentTypeT silent_char,
   silentTypeT silent_room) {

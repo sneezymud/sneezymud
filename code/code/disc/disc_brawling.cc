@@ -4,13 +4,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "obj_base_weapon.h"
-#include "room.h"
+#include <string.h>
+#include <functional>
+#include <vector>
+
 #include "being.h"
+#include "comm.h"
 #include "disc_brawling.h"
-#include "obj_base_clothing.h"
+#include "enum.h"
+#include "handler.h"
+#include "obj.h"
+#include "obj_base_weapon.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 CDBrawling::CDBrawling() :
   CDiscipline(),

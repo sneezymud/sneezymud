@@ -6,13 +6,25 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <memory>
 
 #include "being.h"
-#include "statistics.h"
-#include "systemtask.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "discipline.h"
 #include "extern.h"
+#include "log.h"
+#include "parse.h"
 #include "process.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "tweaks.h"
+#include "wiz_powers.h"
 
 GameStats stats;
 // statistics for info command

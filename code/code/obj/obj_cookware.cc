@@ -6,12 +6,21 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "liquids.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
+#include "obj_base_cup.h"
 #include "obj_cookware.h"
 #include "obj_open_container.h"
 #include "obj_pool.h"
-#include "liquids.h"
+#include "thing.h"
 
 TCookware::TCookware() : TOpenContainer() {}
 

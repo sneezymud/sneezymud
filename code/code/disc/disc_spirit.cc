@@ -4,22 +4,47 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <stdint.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
+#include "being.h"
 #include "client.h"
-#include "low.h"
-#include "handler.h"
 #include "colorstring.h"
-#include "monster.h"
-#include "disease.h"
 #include "combat.h"
-#include "spelltask.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
 #include "disc_spirit.h"
+#include "enum.h"
+#include "extern.h"
+#include "garble.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
 #include "obj_magic_item.h"
-#include "combat.h"
+#include "parse.h"
 #include "person.h"
+#include "race.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 int knot(TBeing* caster, TBeing* victim) {
   taskDiffT diff;

@@ -6,23 +6,47 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
-
+#include <boost/format.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
 #include <stdarg.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
+#include <cstdio>
+#include <list>
+#include <queue>
+#include <string>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
 #include "client.h"
 #include "colorstring.h"
-#include "monster.h"
-#include "person.h"
-#include "disease.h"
-#include "obj_pen.h"
-#include "obj_note.h"
+#include "comm.h"
+#include "connect.h"
 #include "database.h"
+#include "db.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "garble.h"
+#include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "obj_note.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 #include "twitter.h"
+#include "wiz_powers.h"
+
+class TPen;
 
 void TBeing::disturbMeditation(TBeing* vict) const {
   mud_assert(vict != nullptr, "No vict in disturbMeditation");

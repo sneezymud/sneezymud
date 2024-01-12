@@ -1,9 +1,11 @@
-#include "comm.h"
-#include "obj_base_container.h"
-#include "obj_drinkcon.h"
+#include <algorithm>
+
 #include "being.h"
-#include "thing.h"
-#include "room.h"
+#include "comm.h"
+#include "discipline.h"
+#include "liquids.h"
+#include "obj_drinkcon.h"
+#include "spells.h"
 #include "weather.h"
 
 TDrinkCon::TDrinkCon() : TBaseCup() {}

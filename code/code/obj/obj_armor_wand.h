@@ -7,8 +7,12 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_armor.h"
 #include "obj_wand.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TArmorWand : public virtual TArmor, public virtual TWand {
   public:

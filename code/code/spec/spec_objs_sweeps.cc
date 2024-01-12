@@ -1,8 +1,19 @@
-#include "comm.h"
-#include "low.h"
-#include "spec_objs_sweeps.h"
-#include "disc_sorcery.h"
+#include <boost/format.hpp>
+#include <string>
+
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "disc_sorcery.h"
+#include "enum.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "obj.h"
+#include "parse.h"
+#include "spec_objs_sweeps.h"
+#include "sstring.h"
+#include "thing.h"
 
 int sweepsScratch(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   if (cmd != CMD_SHAKE)

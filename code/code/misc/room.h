@@ -6,14 +6,22 @@
 
 #pragma once
 
-#include "sound.h"
-#include "ansi.h"
-#include "structs.h"
-#include "db.h"
-#include "thing.h"
-#include "obj.h"
+#include <stdio.h>
+#include <functional>
+#include <vector>
 
+#include "ansi.h"
+#include "db.h"
+#include "enum.h"
+#include "liquids.h"
+#include "parse.h"
+#include "sound.h"
+#include "sstring.h"
+#include "thing.h"
+
+class TBeing;
 class TRoom;
+class roomDirData;
 
 // cubic inches of burning material where room itself burns
 const int ROOM_FIRE_THRESHOLD = 20000;

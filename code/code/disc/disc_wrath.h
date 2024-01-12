@@ -21,6 +21,11 @@
 
 #include "discipline.h"
 #include "skills.h"
+#include "spells.h"
+
+class TBeing;
+class TMagicItem;
+class TObj;
 
 class CDWrath : public CDiscipline {
   public:

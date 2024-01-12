@@ -8,9 +8,16 @@
 
 #include <cstdio>
 
-#include "monster.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_looting.h"
+#include "monster.h"
 #include "obj_quiver.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "trap.h"
 
 TQuiver::TQuiver() : TExpandableContainer() {}
 

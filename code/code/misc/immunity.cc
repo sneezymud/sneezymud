@@ -2,9 +2,19 @@
 //
 // Class for Immunity Data.
 
+#include <boost/format.hpp>
+#include <algorithm>
+#include <memory>
+
 #include "being.h"
-#include "immunity.h"
 #include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "toggle.h"
 
 using std::max;
 using std::min;

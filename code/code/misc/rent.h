@@ -6,6 +6,17 @@
 
 #pragma once
 
+#include <stdio.h>
+
+#include "db.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+
+class TBeing;
+class TObj;
+class TRoom;
+
 const int CURRENT_RENT_VERSION = 10;
 // 0        3.x - initial version
 // 1        4.1 rev 61  - changed weight from int to float

@@ -8,10 +8,15 @@
 
 #pragma once
 
-#include <list>
-
+#include "enum.h"
+#include "faction.h"
+#include "limbs.h"
 #include "obj_money.h"
+#include "sstring.h"
+#include "thing.h"
 
+class TBeing;
+class TObj;
 class equipmentData;
 
 TMoney* create_money(int amount, currencyTypeT = CURRENCY_GRIMHAVEN);

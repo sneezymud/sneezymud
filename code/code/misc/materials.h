@@ -6,7 +6,12 @@
 
 #pragma once
 
+#include "sstring.h"
 #include "structs.h"
+
+class TBeing;
+class TObj;
+class TThing;
 
 const int MAT_UNDEFINED = 0;
 const int MAT_PAPER = 1;

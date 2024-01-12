@@ -6,24 +6,45 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <string>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "obj_base_container.h"
-#include "obj_bandage.h"
-#include "person.h"
-#include "obj_base_weapon.h"
+#include "obj.h"
 #include "obj_armor.h"
+#include "obj_bandage.h"
 #include "obj_base_clothing.h"
-#include "obj_jewelry.h"
+#include "obj_base_container.h"
+#include "obj_base_weapon.h"
 #include "obj_harness.h"
+#include "obj_jewelry.h"
 #include "obj_saddle.h"
 #include "obj_saddlebag.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 int GetItemClassRestrictions(const TObj* obj) {
   int total = 0;

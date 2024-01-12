@@ -1,10 +1,19 @@
-#include <unistd.h>
+#include <boost/format.hpp>
+#include <string.h>
+#include <string>
 
 #include "being.h"
+#include "connect.h"
 #include "database.h"
-#include "person.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
+#include "log.h"
+#include "parse.h"
+#include "person.h"
+#include "sstring.h"
+#include "wiz_powers.h"
 
 bool TBeing::powerCheck(wizPowerT wpt) const {
   if (!hasWizPower(wpt)) {

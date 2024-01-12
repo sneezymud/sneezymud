@@ -29,7 +29,12 @@
 // This is the MURDER discipline.
 
 #include "discipline.h"
+#include "liquids.h"
 #include "skills.h"
+
+class TBeing;
+class TThing;
+class affectedData;
 
 class CDMurder : public CDiscipline {
   public:

@@ -7,41 +7,50 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/algorithm/string/replace.hpp>
+#include <boost/format.hpp>
+#include <boost/iterator/iterator_traits.hpp>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
+#include <cstdarg>
 #include <cstdio>
-#include "being.h"
-#include "person.h"
-#include "extern.h"
-#include "low.h"
-#include "monster.h"
-#include "room.h"
+#include <deque>
+#include <functional>
+#include <list>
+#include <queue>
+#include <set>
+#include <string>
+
 #include "account.h"
-#include "configuration.h"
+#include "ansi.h"
+#include "being.h"
 #include "colorstring.h"
-#include "systemtask.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "gametime.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "migrations.h"
+#include "monster.h"
+#include "obj.h"
+#include "person.h"
+#include "room.h"
 #include "socket.h"
 #include "spec_mobs.h"
-#include "weather.h"
-#include "migrations.h"
-
-#include <boost/algorithm/string/replace.hpp>
-
-#include <csignal>
-#include <cstdarg>
-#include <set>
-
-extern "C" {
-#include <unistd.h>
-#include <sys/socket.h>
-#include <sys/select.h>
-#include <netinet/in.h>
-#include <sys/wait.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <sys/resource.h>
-#include <sys/syscall.h>
-#include <sys/param.h>
-#include <arpa/inet.h>
-}
+#include "sstring.h"
+#include "structs.h"
+#include "systemtask.h"
+#include "thing.h"
+#include "toggle.h"
 
 const int PROMPT_DONT_SEND = -1;
 

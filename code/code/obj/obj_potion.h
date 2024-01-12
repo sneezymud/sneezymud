@@ -7,7 +7,14 @@
 
 #pragma once
 
+#include "liquids.h"
+#include "obj.h"
 #include "obj_base_cup.h"
+#include "spells.h"
+
+class TBeing;
+class TMonster;
+class TThing;
 
 class TPotion : public TBaseCup {
   public:

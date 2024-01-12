@@ -1,6 +1,11 @@
 #include "being.h"
+#include "comm.h"
+#include "enum.h"
 #include "extern.h"
+#include "parse.h"
 #include "room.h"
+#include "structs.h"
+#include "task.h"
 
 class TObj;
 

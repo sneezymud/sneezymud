@@ -4,35 +4,55 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <ext/alloc_traits.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdarg>
-#include <cmath>
 #include <cstdio>
-#include <cassert>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
 
-extern "C" {
-#include <unistd.h>
-}
-
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
-#include "skills.h"
+#include "ansi.h"
 #include "being.h"
+#include "colorstring.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "extern.h"
+#include "garble.h"
+#include "handler.h"
+#include "immunity.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "combat.h"
-#include "disease.h"
-#include "range.h"
-#include "connect.h"
-#include "shop.h"
-#include "person.h"
-#include "colorstring.h"
-#include "obj_spellbag.h"
+#include "obj.h"
 #include "obj_bag.h"
+#include "obj_base_clothing.h"
+#include "obj_base_weapon.h"
+#include "obj_spellbag.h"
 #include "obj_table.h"
 #include "obj_tool.h"
-#include "obj_base_weapon.h"
-#include "obj_base_clothing.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "range.h"
+#include "room.h"
+#include "shop.h"
+#include "skills.h"
+#include "spell2.h"
+#include "spells.h"
+#include "stats.h"
+#include "structs.h"
+#include "toggle.h"
 
 // fname will look for the first non-alpha character
 // I added - and ' as valid fname chars since this allows us to do better things

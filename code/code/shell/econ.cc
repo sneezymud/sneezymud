@@ -1,14 +1,24 @@
-#include <cstdio>
+#include <boost/format.hpp>
+#include <boost/lexical_cast.hpp>
+#include <boost/program_options/errors.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/parsers.hpp>
+#include <boost/program_options/value_semantic.hpp>
+#include <boost/program_options/variables_map.hpp>
+#include <iosfwd>
 #include <iostream>
 #include <map>
+#include <ostream>
 #include <string>
+#include <utility>
 
-#include "database.h"
 #include "configuration.h"
+#include "database.h"
 #include "extern.h"
+#include "parse.h"
 #include "shopaccounting.h"
+#include "sstring.h"
 
-#include <boost/program_options.hpp>
 namespace po = boost::program_options;
 
 using namespace std;

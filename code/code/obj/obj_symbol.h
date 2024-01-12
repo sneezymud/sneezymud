@@ -7,7 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
+#include "faction.h"
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
+class TVial;
 
 class TSymbol : public TObj {
   private:

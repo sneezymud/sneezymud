@@ -6,17 +6,37 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <algorithm>
 #include <cmath>
+#include <list>
+#include <memory>
+#include <queue>
 
-#include "room.h"
-#include "weather.h"
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
-#include "person.h"
 #include "colorstring.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "log.h"
 #include "monster.h"
-#include "obj_trash_pile.h"
+#include "obj.h"
+#include "person.h"
 #include "process.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "weather.h"
 
 // static data defs
 int Weather::pressure;

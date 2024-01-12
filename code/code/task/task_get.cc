@@ -5,13 +5,28 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "being.h"
-#include "obj_player_corpse.h"
-#include "room.h"
+#include "limbs.h"
+#include "obj.h"
 #include "obj_base_container.h"
+#include "obj_player_corpse.h"
 #include "obj_table.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 // anything_getable(TBeing *, Obj *, char *) - Russ Russell c. June 1994
 // anything_getable() looks to see if there is anything getable (gee)

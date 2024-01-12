@@ -5,10 +5,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
-#include "room.h"
-#include "obj.h"
+#include "comm.h"
 #include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "faction.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+
+class TObj;
 
 int task_penance(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {

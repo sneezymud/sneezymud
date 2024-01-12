@@ -4,9 +4,17 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include "ansi.h"
 #include "being.h"
-#include "room.h"
 #include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "task.h"
+
+class TObj;
 
 int task_sleep(TBeing* ch, cmdTypeT cmd, const char* arg, int pulse, TRoom*,
   TObj*) {

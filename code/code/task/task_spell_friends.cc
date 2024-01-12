@@ -5,8 +5,13 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "being.h"
-#include "obj.h"
-#include "room.h"
+#include "comm.h"
+#include "enum.h"
+#include "parse.h"
+#include "task.h"
+
+class TObj;
+class TRoom;
 
 int task_spell_friends(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {

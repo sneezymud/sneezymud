@@ -1,18 +1,41 @@
+#include <boost/format.hpp>
+#include <time.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include <cmath>
-
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
-#include "monster.h"
-#include "statistics.h"
-#include "obj_component.h"
-#include "person.h"
+#include "comm.h"
+#include "connect.h"
 #include "database.h"
-#include "spec_mobs.h"
-#include "materials.h"
-#include "skills.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_component.h"
 #include "obj_note.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "skills.h"
+#include "spec_mobs.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 #define REPRAC_COST_PER_PRAC 1000
 

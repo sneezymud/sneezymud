@@ -6,14 +6,30 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cmath>
+#include <memory>
 
-#include "handler.h"
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
 #include "cmd_trophy.h"
-#include "person.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
 #include "monster.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 void TBeing::doConsider(const char* argument) {
   TBeing* victim;

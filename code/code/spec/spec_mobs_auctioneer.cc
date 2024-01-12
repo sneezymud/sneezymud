@@ -1,13 +1,25 @@
-#include "handler.h"
-#include "monster.h"
+#include <boost/format.hpp>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
+#include "being.h"
+#include "corporation.h"
 #include "database.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "process.h"
+#include "rent.h"
+#include "room.h"
 #include "shop.h"
 #include "shopowned.h"
-#include "rent.h"
-#include "extern.h"
-#include "corporation.h"
-#include "room.h"
-#include "process.h"
+#include "sstring.h"
+#include "thing.h"
 
 sstring getPlayerName(int id) {
   TDatabase db(DB_SNEEZY);

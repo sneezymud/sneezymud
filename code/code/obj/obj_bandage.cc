@@ -5,7 +5,9 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "obj_bandage.h"
+
 #include "being.h"
+#include "defs.h"
 
 TBandage::TBandage() : TObj() {}
 

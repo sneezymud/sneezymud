@@ -6,18 +6,38 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <strings.h>
+#include <list>
+#include <string>
+
+#include "ansi.h"
 #include "being.h"
-#include "games.h"
-#include "obj_player_corpse.h"
-#include "obj_base_corpse.h"
-#include "obj_base_container.h"
-#include "obj_trap.h"
-#include "obj_base_weapon.h"
-#include "low.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
 #include "game_crazyeights.h"
+#include "games.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "obj.h"
+#include "obj_base_container.h"
+#include "obj_base_corpse.h"
+#include "obj_base_weapon.h"
+#include "obj_player_corpse.h"
+#include "obj_trap.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "trap.h"
 
 void TThing::getMeFrom(TBeing* ch, TThing* t) {}
 

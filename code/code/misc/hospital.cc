@@ -6,17 +6,36 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "room.h"
-#include "monster.h"
-#include "handler.h"
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+#include <vector>
+
+#include "being.h"
+#include "comm.h"
 #include "configuration.h"
-#include "combat.h"
+#include "defs.h"
 #include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
 #include "shop.h"
 #include "shopowned.h"
 #include "spec_mobs.h"
-#include "person.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+
+class TObj;
 
 int poison_price(TBeing* ch, affectedData*, int shop_nr) {
   // get more exotic later

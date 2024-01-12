@@ -5,17 +5,24 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cmath>
+#include <boost/format.hpp>
 #include <algorithm>
+#include <cmath>
+#include <memory>
 
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
 #include "immunity.h"
-#include "statistics.h"
-#include "combat.h"
-#include "obj_base_weapon.h"
+#include "log.h"
+#include "obj.h"
 #include "obj_base_clothing.h"
-#include "obj_worn.h"
+#include "obj_base_weapon.h"
 #include "obj_jewelry.h"
 #include "obj_low.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
 
 /*-------------------------------------------------------------------
   New LOW classification rules for gear

@@ -7,7 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_expandable_container.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
+class TThing;
 
 // The actual item
 class TSaddlebag : public TExpandableContainer {

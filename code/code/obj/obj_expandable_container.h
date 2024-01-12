@@ -8,6 +8,9 @@
 #pragma once
 
 #include "obj_open_container.h"
+#include "sstring.h"
+
+class TThing;
 
 // an openable container that changes in volume based on contents
 class TExpandableContainer : public TOpenContainer {

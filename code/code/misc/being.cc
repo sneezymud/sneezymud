@@ -4,25 +4,28 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
+#include <boost/format.hpp>
 #include <limits.h>
+#include <string.h>
+#include <time.h>
+#include <cstdio>
+#include <list>
+#include <string>
 
-#include "room.h"
-#include "being.h"
-#include "extern.h"
-#include "client.h"
-#include "low.h"
-#include "charfile.h"
-#include "being.h"
-#include "database.h"
-#include "obj_opal.h"
 #include "account.h"
-#include "person.h"
+#include "being.h"
+#include "charfile.h"
+#include "client.h"
+#include "connect.h"
+#include "database.h"
+#include "extern.h"
+#include "gametime.h"
+#include "log.h"
+#include "low.h"
 #include "monster.h"
+#include "person.h"
+#include "room.h"
 #include "weather.h"
-
-#include <sys/types.h>
-#include <sys/stat.h>
 
 extern bool affectShouldApply(const TObj* obj, wearSlotT pos);
 

@@ -8,60 +8,70 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <csignal>
-#include <cstdarg>
-#include <cmath>
-#include <errno.h>
-#include <cstdio>
-
-extern "C" {
-#include <unistd.h>
+#include <arpa/inet.h>
+#include <boost/format.hpp>
+#include <fcntl.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
-#include <sys/types.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/select.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <sys/wait.h>
 #include <sys/time.h>
-#include <netdb.h>
-#include <fcntl.h>
-#include <sys/resource.h>
-#include <sys/syscall.h>
-#include <sys/param.h>
-
-int select(int, fd_set*, fd_set*, fd_set*, struct timeval*);
-}
+#include <time.h>
+#include <unistd.h>
+#include <algorithm>
+#include <cerrno>
+#include <csignal>
+#include <cstdio>
+#include <list>
+#include <map>
+#include <memory>
+#include <queue>
+#include <string>
+#include <vector>
 
 #include "DescriptorList.h"
-#include "room.h"
-#include "monster.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
 #include "configuration.h"
-#include "extern.h"
-#include "statistics.h"
+#include "connect.h"
 #include "database.h"
-#include "spelltask.h"
-#include "systemtask.h"
-#include "socket.h"
-#include "person.h"
-#include "weather.h"
-#include "colorstring.h"
-#include "obj_gas.h"
-#include "obj_vehicle.h"
-#include "obj_trash_pile.h"
-#include "obj_base_cup.h"
-#include "pathfinder.h"
-#include "timing.h"
-#include "process.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "limbs.h"
 #include "liquids.h"
-#include "obj_pool.h"
-#include "shop.h"
-#include "shopaccounting.h"
-#include "shopowned.h"
-#include "obj_commodity.h"
+#include "log.h"
 #include "low.h"
-#include "obj_tool.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_base_cup.h"
+#include "obj_gas.h"
 #include "obj_plant.h"
+#include "obj_pool.h"
+#include "obj_tool.h"
+#include "obj_trash_pile.h"
+#include "obj_vehicle.h"
+#include "parse.h"
+#include "person.h"
+#include "process.h"
+#include "race.h"
+#include "room.h"
+#include "shopaccounting.h"
+#include "socket.h"
+#include "spells.h"
+#include "statistics.h"
+#include "systemtask.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
+#include "tweaks.h"
+#include "weather.h"
+#include "wiz_powers.h"
 
 int maxdesc, avail_descs;
 bool Shutdown = 0;  // clean shutdown

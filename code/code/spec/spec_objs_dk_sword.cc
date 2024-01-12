@@ -1,6 +1,20 @@
-#include "comm.h"
-#include "obj_base_weapon.h"
+#include <stdio.h>
+#include <algorithm>
+#include <string>
+
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "obj.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 void doWord(TBeing* ch, TObj* o) {
   TBeing* vict = nullptr;

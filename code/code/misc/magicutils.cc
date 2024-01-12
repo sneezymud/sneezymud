@@ -1,22 +1,48 @@
 // magicutils.cc
 
-#include <cstdio>
-
-#include <cmath>
+#include <boost/format.hpp>
+#include <stdint.h>
+#include <stdlib.h>
 #include <algorithm>
+#include <functional>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "gametime.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "disease.h"
-#include "obj_open_container.h"
-#include "obj_opal.h"
+#include "obj.h"
 #include "obj_component.h"
-#include "person.h"
 #include "obj_key.h"
+#include "obj_open_container.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 void TMonster::balanceMakeNPCLikePC() {
   float scalingValue = ::number(65, 85) / 100.0;

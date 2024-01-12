@@ -6,23 +6,62 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
-#include "being.h"
-#include "low.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
+
 #include "account.h"
-#include "materials.h"
-#include "disease.h"
-#include "spec_rooms.h"
-#include "monster.h"
+#include "ansi.h"
+#include "being.h"
 #include "combat.h"
-#include "spec_mobs.h"
-#include "person.h"
-#include "guild.h"
-#include "skills.h"
-#include "shop.h"
 #include "configuration.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "gametime.h"
+#include "guild.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_drug.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "response.h"
+#include "room.h"
+#include "shop.h"
+#include "skills.h"
+#include "spec_mobs.h"
+#include "spec_objs.h"
+#include "spec_rooms.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
+#include "trap.h"
+#include "wiz_powers.h"
 
 extern int eqHpBonus(const TPerson*);
 extern int baseHp();

@@ -7,15 +7,29 @@
  *                                                                 *
  *******************************************************************/
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "room.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_shaman_skunk.h"
+#include "disease.h"
+#include "enum.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
 #include "obj_magic_item.h"
 #include "person.h"
+#include "room.h"
+#include "spell2.h"
+#include "spelltask.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 int deathMist(TBeing* caster, int level, short bKnown) {
   TBeing* tmp_victim;

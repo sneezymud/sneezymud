@@ -4,12 +4,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <string>
+
+#include "ansi.h"
 #include "being.h"
-#include "disease.h"
-#include "combat.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
 #include "disc_cures.h"
 #include "disc_deikhan.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "parse.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 // DEIKHAN AURAS
 //

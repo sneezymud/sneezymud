@@ -5,21 +5,43 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <strings.h>
 #include <cstdio>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include <boost/algorithm/string.hpp>
-
-#include "handler.h"
-#include "room.h"
-#include "extern.h"
-#include "low.h"
-#include "person.h"
-#include "monster.h"
+#include "being.h"
+#include "comm.h"
 #include "configuration.h"
-#include "shop.h"
-#include "statistics.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
 #include "pathfinder.h"
+#include "person.h"
+#include "room.h"
+#include "shop.h"
 #include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 static TBeing* char_with_name(char* name) {
   Descriptor* d;

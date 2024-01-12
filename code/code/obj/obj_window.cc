@@ -1,13 +1,18 @@
 // window.cc
 //
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <memory>
+#include <vector>
 
-#include "extern.h"
-#include "handler.h"
-#include "room.h"
 #include "being.h"
+#include "comm.h"
+#include "extern.h"
+#include "log.h"
 #include "obj_window.h"
+#include "room.h"
 
 TWindow::TWindow() : TSeeThru() {}
 

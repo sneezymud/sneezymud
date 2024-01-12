@@ -5,7 +5,11 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "disc_defense.h"
+
 #include "being.h"
+#include "enum.h"
+#include "spells.h"
+#include "stats.h"
 
 CDDefense::CDDefense() :
   CDiscipline(),

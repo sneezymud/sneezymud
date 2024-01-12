@@ -1,7 +1,24 @@
-#include "room.h"
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
 #include "monster.h"
 #include "obj_trap.h"
+#include "parse.h"
+#include "room.h"
 #include "spec_mobs.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+
+class TObj;
 
 sstring guardShout(TBeing* ch) {
   sstring s;

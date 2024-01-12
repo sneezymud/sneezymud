@@ -1,9 +1,21 @@
-#include "monster.h"
-#include "shop.h"
-#include "obj_note.h"
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "enum.h"
 #include "extern.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_note.h"
+#include "parse.h"
+#include "shop.h"
 #include "shopowned.h"
 #include "spec_mobs.h"
+#include "sstring.h"
+#include "thing.h"
 
 const int SIGN_COST = 100000;
 const int SIGN_VNUM = 33271;

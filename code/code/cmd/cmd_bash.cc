@@ -4,14 +4,30 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "body.h"
 #include "combat.h"
-#include "obj_base_clothing.h"
-#include "obj_base_weapon.h"
-#include "being.h"
-#include "room.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
+#include "obj.h"
+#include "obj_base_clothing.h"
+#include "obj_base_weapon.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 bool TBeing::canBash(TBeing* victim, silentTypeT silent) {
   if (checkBusy())

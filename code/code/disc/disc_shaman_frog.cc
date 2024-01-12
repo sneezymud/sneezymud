@@ -7,20 +7,36 @@
  *                                                                 *
  *******************************************************************/
 
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_shaman_frog.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "immunity.h"
+#include "liquids.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
-#include "disc_shaman_frog.h"
 #include "obj_magic_item.h"
+#include "parse.h"
 #include "person.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 #include "weather.h"
 
 int vampireTransform(TBeing* ch) {

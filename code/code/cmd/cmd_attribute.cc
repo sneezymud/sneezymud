@@ -6,17 +6,40 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
 #include <cstdio>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "being.h"
 #include "account.h"
 #include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
-#include "handler.h"
-#include "guild.h"
-#include "configuration.h"
-#include "weather.h"
+#include "faction.h"
 #include "gametime.h"
+#include "guild.h"
+#include "handler.h"
+#include "log.h"
+#include "obj_drug.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 
 static void showStatsTo(const Descriptor* d, const TBeing* ch,
   bool hidden_stuff) {

@@ -6,34 +6,60 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <algorithm>
 #include <cmath>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "configuration.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "room.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "range.h"
-#include "disease.h"
-#include "statistics.h"
-#include "shop.h"
-#include "person.h"
-#include "being.h"
-#include "spec_mobs.h"
-#include "obj_spellbag.h"
-#include "obj_base_corpse.h"
-#include "obj_player_corpse.h"
-#include "obj_bow.h"
-#include "obj_money.h"
-#include "obj_treasure.h"
-#include "obj_component.h"
+#include "obj.h"
 #include "obj_arrow.h"
-#include "obj_general_weapon.h"
-#include "obj_base_weapon.h"
 #include "obj_base_clothing.h"
+#include "obj_base_corpse.h"
+#include "obj_base_weapon.h"
+#include "obj_bow.h"
+#include "obj_component.h"
 #include "obj_gas.h"
+#include "obj_general_weapon.h"
+#include "obj_money.h"
+#include "obj_player_corpse.h"
+#include "obj_treasure.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "shop.h"
+#include "spec_mobs.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 #include "weather.h"
-#include "configuration.h"
 
 // returns DELETE_THIS if this has to be deleted
 int TMonster::mobileGuardian() {

@@ -5,20 +5,41 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "handler.h"
-#include "room.h"
-#include "extern.h"
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "disc_looting.h"
-#include "disease.h"
-#include "obj_trap.h"
-#include "obj_portal.h"
-#include "obj_open_container.h"
+#include "obj.h"
 #include "obj_arrow.h"
+#include "obj_open_container.h"
+#include "obj_portal.h"
+#include "obj_trap.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 #include "trap.h"
 
 extern const char* const GRENADE_EX_DESC = "__grenade_puller";

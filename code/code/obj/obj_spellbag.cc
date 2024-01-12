@@ -7,11 +7,16 @@
 // spellbag.cc
 //
 
-#include "comm.h"
-#include "obj_spellbag.h"
-#include "obj_component.h"
-#include "thing.h"
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
 #include "being.h"
+#include "comm.h"
+#include "log.h"
+#include "obj_spellbag.h"
+#include "structs.h"
+#include "thing.h"
 
 TSpellBag::TSpellBag() : TExpandableContainer() {}
 

@@ -1,5 +1,10 @@
 #pragma once
 
+#include "obj.h"
+
+class TBeing;
+class resetCom;
+
 struct TLootStructure {
     int tLevel,  // Object Level;
       tRNum;     // Object RealNumber;

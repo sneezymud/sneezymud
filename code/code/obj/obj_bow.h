@@ -7,7 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj.h"
+#include "sstring.h"
+
+class TArrow;
+class TBeing;
+class TMonster;
+class TThing;
 
 class TBow : public TObj {
   private:

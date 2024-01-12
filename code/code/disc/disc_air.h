@@ -28,6 +28,10 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TMagicItem;
+class affectedData;
+
 class CDAir : public CDiscipline {
   public:
     CSkill skImmobilize;  // NEW  30th level individual

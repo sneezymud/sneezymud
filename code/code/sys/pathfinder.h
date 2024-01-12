@@ -1,7 +1,23 @@
 #pragma once
 
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <algorithm>
 #include <deque>
-#include <boost/shared_ptr.hpp>
+#include <string>
+#include <vector>
+
+#include "enum.h"
+#include "sstring.h"
+#include "thing.h"
+
+class TBeing;
+class TObj;
+class TPerson;
+class roomDirData;
+
+namespace boost {
+template <class T> class optional;
+}  // namespace boost
 
 class TPathTarget {
   public:

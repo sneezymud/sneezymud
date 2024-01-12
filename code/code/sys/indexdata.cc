@@ -4,12 +4,22 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <stdlib.h>
+#include <algorithm>
 #include <cstdio>
+#include <vector>
 
-#include "extern.h"
-#include "configuration.h"
-#include "statistics.h"
 #include "database.h"
+#include "db.h"
+#include "enum.h"
+#include "extern.h"
+#include "obj.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "statistics.h"
+#include "structs.h"
+#include "thing.h"
 
 extern FILE* obj_f;
 extern FILE* mob_f;

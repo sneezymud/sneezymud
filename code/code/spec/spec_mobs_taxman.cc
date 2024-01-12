@@ -1,7 +1,15 @@
-#include "shop.h"
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
 #include "database.h"
-#include "spec_mobs.h"
 #include "monster.h"
+#include "parse.h"
+#include "shop.h"
+#include "spec_mobs.h"
+#include "sstring.h"
+
+class TObj;
 
 int taxman(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* me, TObj*) {
   TDatabase db(DB_SNEEZY);

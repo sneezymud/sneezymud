@@ -4,11 +4,20 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
+#include <string.h>
+
+#include "ansi.h"
 #include "being.h"
-#include "enum.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "spell2.h"
+#include "spells.h"
+#include "structs.h"
 
 bool TBeing::canSpin(TBeing* victim, silentTypeT silent) {
   if (checkBusy())

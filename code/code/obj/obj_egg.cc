@@ -6,14 +6,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <string.h>
 #include <cstdio>
 
-#include <cmath>
-
+#include "being.h"
+#include "comm.h"
+#include "create.h"
+#include "db.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
 #include "monster.h"
-#include "obj_food.h"
 #include "obj_egg.h"
+#include "obj_food.h"
+#include "parse.h"
+#include "race.h"
 #include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 TEgg::TEgg() : TFood(), touched(0), incubationTimer(0), mobVNum(0) {}
 

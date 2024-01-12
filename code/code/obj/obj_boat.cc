@@ -6,11 +6,13 @@
 
 // boat.cc
 
+#include "being.h"
 #include "comm.h"
+#include "enum.h"
 #include "obj_boat.h"
 #include "obj_light.h"
-#include "being.h"
 #include "room.h"
+#include "thing.h"
 
 TBoat::TBoat() : TObj() {}
 

@@ -7,12 +7,20 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "monster.h"
+#include "ansi.h"
+#include "being.h"
 #include "extern.h"
+#include "limbs.h"
+#include "log.h"
 #include "materials.h"
+#include "monster.h"
 #include "obj_opal.h"
+#include "thing.h"
 
 TOpal::TOpal() : TObj(), psSize(0), psStrength(0), psMana(0), psFails(0) {}
 

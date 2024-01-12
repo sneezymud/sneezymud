@@ -9,12 +9,24 @@
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <string>
 
-#include "monster.h"
-#include "games.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "enum.h"
 #include "extern.h"
+#include "games.h"
 #include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
+#include "sstring.h"
 
 GinGame gGin;
 

@@ -11,6 +11,13 @@
   See obj_low.cc for description
  ------------------------------------------------------------------*/
 
+#include "enum.h"
+
+class TBaseClothing;
+class TBaseWeapon;
+class TObj;
+class sstring;
+
 enum Tier {
   // equipment
   Tier_Clothing = 0,

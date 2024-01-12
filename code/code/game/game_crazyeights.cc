@@ -9,14 +9,23 @@
 
 ******************************************************************************/
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
 #include <cstdio>
+#include <string>
 
 #include "being.h"
-#include "monster.h"
-#include "games.h"
+#include "comm.h"
+#include "connect.h"
+#include "enum.h"
 #include "extern.h"
-#include "handler.h"
 #include "game_crazyeights.h"
+#include "games.h"
+#include "handler.h"
+#include "log.h"
+#include "monster.h"
+#include "parse.h"
 
 CrazyEightsGame gEights;
 

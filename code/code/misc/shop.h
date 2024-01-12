@@ -7,9 +7,11 @@
 
 #pragma once
 
+#include <ctime>
 #include <map>
 #include <vector>
-#include <ctime>
+
+#include "sstring.h"
 
 const unsigned int SHOPACCESS_OWNER = (1 << 0);
 const unsigned int SHOPACCESS_INFO = (1 << 1);
@@ -44,12 +46,11 @@ struct shop_pricing {
 };
 const int SHOP_FILE_VERSION = 1;
 
+class TBeing;
+class TMonster;
+class TObj;
 // forward declaration
 class shopData;
-class TObj;
-class TMonster;
-class sstring;
-class TBeing;
 
 #if SHOP_PRICES_FLUXUATE
 extern std::vector<shop_pricing> ShopPriceIndex;

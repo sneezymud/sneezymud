@@ -4,6 +4,12 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include "enum.h"
+
+class TBeing;
+class TRoom;
+class TThing;
+
 extern int throwThing(TThing*, dirTypeT, int, TBeing**, int, int, TBeing*);
 extern TBeing* get_char_linear(const TBeing*, char*, int*, dirTypeT*);
 extern TBeing* get_char_vis_direction(const TBeing*, char*, dirTypeT,

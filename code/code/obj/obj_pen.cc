@@ -6,10 +6,8 @@
 
 // pen.cc
 
-#include "comm.h"
 #include "obj_pen.h"
 #include "thing.h"
-#include "being.h"
 
 TPen::TPen() : TObj() {}
 

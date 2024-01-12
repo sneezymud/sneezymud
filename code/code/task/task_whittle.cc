@@ -9,14 +9,34 @@
 
 ******************************************************************************/
 
-#include "handler.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <map>
+#include <vector>
+
 #include "being.h"
-#include "task_whittle.h"
-#include "obj_bow.h"
-#include "obj_organic.h"
-#include "obj_arrow.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
+#include "obj.h"
+#include "obj_arrow.h"
+#include "obj_bow.h"
 #include "obj_general_weapon.h"
+#include "obj_organic.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "task_whittle.h"
+#include "thing.h"
+
+class TRoom;
 
 using std::max;
 using std::min;

@@ -4,11 +4,19 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "monster.h"
-#include "room.h"
-#include "obj_tool.h"
-#include "materials.h"
+#include <list>
+
+#include "being.h"
+#include "comm.h"
 #include "handler.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "room.h"
+#include "task.h"
+#include "thing.h"
 
 int task_lightfire(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj* obj) {

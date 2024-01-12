@@ -4,9 +4,15 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <list>
+#include <string>
+
+#include "being.h"
 #include "monster.h"
-#include "obj_moneypouch.h"
 #include "obj_money.h"
+#include "obj_moneypouch.h"
+#include "thing.h"
 
 int TMoneypouch::getMoney(currencyTypeT c) const {
   TMoney* money;

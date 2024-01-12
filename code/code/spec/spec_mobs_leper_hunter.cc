@@ -1,9 +1,18 @@
+#include <list>
+
+#include "being.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
 #include "monster.h"
-#include "paths.h"
+#include "parse.h"
 #include "pathfinder.h"
 #include "room.h"
-#include "obj_commodity.h"
 #include "spec_mobs.h"
+#include "structs.h"
+#include "thing.h"
+
+class TObj;
 
 int leperHunter(TBeing*, cmdTypeT cmd, const char*, TMonster* myself, TObj*) {
   TPathFinder* path;

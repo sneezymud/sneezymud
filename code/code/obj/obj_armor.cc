@@ -1,10 +1,12 @@
 // armor.cc
 
+#include "being.h"
 #include "comm.h"
+#include "discipline.h"
 #include "obj_armor.h"
 #include "obj_base_clothing.h"
-#include "being.h"
 #include "skills.h"
+#include "spells.h"
 
 TArmor::TArmor() : TBaseClothing() {}
 

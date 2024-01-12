@@ -32,6 +32,10 @@
 
 #include "discipline.h"
 #include "skills.h"
+#include "spells.h"
+
+class TBeing;
+class TMagicItem;
 
 class CDShamanHealing : public CDiscipline {
   public:

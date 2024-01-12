@@ -14,13 +14,32 @@
 
 //  return values are unimportant.  if char(s) are lost, return a -1
 
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <memory>
 
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
+#include "faction.h"
+#include "garble.h"
+#include "log.h"
 #include "monster.h"
-#include "combat.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 int TMonster::aiGrinnedAt(TBeing* doer) {
   US(3);

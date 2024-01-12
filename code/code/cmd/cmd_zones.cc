@@ -6,14 +6,27 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
 #include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "extern.h"
 #include "being.h"
-#include "database.h"
 #include "cmd_trophy.h"
+#include "connect.h"
+#include "database.h"
+#include "db.h"
+#include "extern.h"
+#include "log.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
 
 class zoneSorter {
   public:

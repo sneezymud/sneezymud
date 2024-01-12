@@ -1,10 +1,32 @@
-#include "room.h"
+#include <boost/format.hpp>
+#include <list>
+#include <map>
+#include <utility>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "obj_tool.h"
-#include "process.h"
-#include "extern.h"
+#include "comm.h"
 #include "database.h"
+#include "db.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "log.h"
+#include "obj.h"
 #include "obj_food.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "process.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 
 std::map<int, bool> mRoomsFished;
 

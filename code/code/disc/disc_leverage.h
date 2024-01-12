@@ -8,6 +8,9 @@
 
 #include "discipline.h"
 #include "skills.h"
+#include "sstring.h"
+
+class TBeing;
 
 class CDLeverage : public CDiscipline {
   public:

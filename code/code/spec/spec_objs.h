@@ -19,12 +19,11 @@
 
 #pragma once
 
-#include "enum.h"
 #include "parse.h"
 
-class TThing;
 class TBeing;
 class TObj;
+class TThing;
 
 const int SPEC_FOUNTAIN = 1;  // spec number for a fountain
 const int SPEC_BOARD = 2;     // spec number for a bulletin board

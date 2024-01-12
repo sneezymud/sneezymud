@@ -4,14 +4,32 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "room.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "being.h"
+#include "log.h"
 #include "monster.h"
+#include "parse.h"
+#include "room.h"
 #include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+
+class TObj;
 
 extern void warn_busy(TBeing*);
 

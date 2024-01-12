@@ -4,11 +4,17 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "room.h"
+#include <list>
+
 #include "being.h"
-#include "combat.h"
-#include "disc_mindbody.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "monster.h"
+#include "room.h"
+#include "skills.h"
+#include "spells.h"
+#include "thing.h"
 
 static int feignDeath(TBeing* caster) {
   TRoom* rp;

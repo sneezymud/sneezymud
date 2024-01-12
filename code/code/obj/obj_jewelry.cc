@@ -1,8 +1,15 @@
 // jewelry.cc
 //
 
+#include <boost/format.hpp>
+#include <memory>
+
+#include "db.h"
+#include "enum.h"
+#include "log.h"
 #include "obj_base_clothing.h"
 #include "obj_jewelry.h"
+#include "structs.h"
 
 TJewelry::TJewelry() : TBaseClothing() {}
 

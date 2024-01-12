@@ -1,11 +1,19 @@
 // book.cc
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
 #include <cstdio>
+#include <memory>
+#include <vector>
 
-#include "client.h"
 #include "being.h"
-#include "obj_book.h"
+#include "client.h"
+#include "connect.h"
 #include "extern.h"
+#include "log.h"
+#include "obj_book.h"
+#include "structs.h"
 
 TBook::TBook() : TObj() {}
 

@@ -2,6 +2,8 @@
 
 #include <map>
 
+#include "sstring.h"
+
 class TShopJournal {
     std::map<sstring, int> values;
     int shop_nr;

@@ -4,6 +4,10 @@
 
 #include "discipline.h"
 #include "skills.h"
+#include "spells.h"
+
+class TBeing;
+class TMagicItem;
 
 class CDShamanSkunk : public CDiscipline {
   public:

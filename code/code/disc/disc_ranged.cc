@@ -4,12 +4,19 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <list>
+#include <memory>
 
 #include "being.h"
+#include "comm.h"
 #include "disc_ranged.h"
+#include "obj.h"
 #include "obj_bow.h"
 #include "obj_tool.h"
+#include "sstring.h"
+#include "thing.h"
 
 void TThing::sstringMeBow(TBeing* ch, TThing*) {
   act("$p isn't a bow.", false, ch, this, 0, TO_CHAR);

@@ -5,13 +5,36 @@
 
 *************************************************************************/
 
-#include "room.h"
-#include "extern.h"
+#include <boost/format.hpp>
+#include <stdint.h>
+#include <algorithm>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
 #include "handler.h"
-#include "combat.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "obj.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 bool TBeing::hasBoat() const {
   int has_boat = false;

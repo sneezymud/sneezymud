@@ -8,6 +8,7 @@
 #pragma once
 
 #include "parse.h"
+#include "sstring.h"
 
 class TBeing;
 

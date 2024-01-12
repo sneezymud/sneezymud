@@ -9,11 +9,18 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <ext/alloc_traits.h>
 #include <cstdio>
+#include <memory>
+#include <vector>
 
-#include "obj_base_weapon.h"
+#include "db.h"
+#include "enum.h"
 #include "extern.h"
+#include "obj.h"
 #include "obj_base_cup.h"
+#include "sstring.h"
+#include "structs.h"
 
 void rewrite_obj_file() {
   unsigned int iter;

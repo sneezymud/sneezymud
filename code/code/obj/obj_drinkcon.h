@@ -7,7 +7,11 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_base_cup.h"
+
+class TBaseContainer;
+class TBeing;
 
 class TDrinkCon : public TBaseCup {
   public:

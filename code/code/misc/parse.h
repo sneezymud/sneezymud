@@ -8,9 +8,14 @@
 
 #pragma once
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <iosfwd>
 #include <sstream>
-#include "sstring.h"
+#include <typeinfo>
+
 #include "enum.h"
+#include "sstring.h"
 
 int search_block(const sstring& arg, const char* const*, bool);
 int old_search_block(const char*, int, int, const char* const*, bool);
@@ -711,7 +716,7 @@ extern void trimString(sstring&);
 
 template <class T>
 T convertTo(const sstring& s) {
-  T x;
+  T x{};
 
   if (typeid(x) == typeid(int)) {
     return (T)strtol(s.c_str(), nullptr, 10);

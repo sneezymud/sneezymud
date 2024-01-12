@@ -7,27 +7,44 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
-
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <strings.h>
+#include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "handler.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
-#include "monster.h"
-#include "materials.h"
+#include "comm.h"
+#include "defs.h"
 #include "disease.h"
-#include "shop.h"
-#include "obj_food.h"
-#include "obj_base_cup.h"
-#include "obj_pool.h"
-#include "disc_aegis.h"
-#include "disc_shaman_armadillo.h"
-#include "shopowned.h"
-#include "corporation.h"
+#include "extern.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
 #include "liquids.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj_base_cup.h"
+#include "obj_food.h"
 #include "obj_player_corpse.h"
+#include "obj_pool.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "shopowned.h"
+#include "sound.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 #define DRINK_DEBUG 0
 

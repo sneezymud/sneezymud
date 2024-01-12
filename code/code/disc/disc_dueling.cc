@@ -5,17 +5,30 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
 
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "disc_dueling.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "being.h"
+#include "limbs.h"
 #include "monster.h"
-#include "range.h"
-#include "disease.h"
-#include "combat.h"
-#include "disc_dueling.h"
+#include "obj.h"
 #include "obj_base_weapon.h"
+#include "parse.h"
+#include "spell2.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 
 int TBeing::doShove(const char* argument, TBeing* vict) {
   int rc;

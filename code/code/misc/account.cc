@@ -1,5 +1,9 @@
 #include "account.h"
+
+#include <assert.h>
+
 #include "database.h"
+#include "parse.h"
 
 // static defs
 unsigned int AccountStats::account_number = 0;

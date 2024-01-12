@@ -7,8 +7,16 @@
 //
 ///////////////////////////////////
 
+#include <stdint.h>
+
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "person.h"
+#include "spells.h"
+#include "structs.h"
+#include "toggle.h"
 
 void TBeing::doVisible(const char*, bool) {
   sendTo("Silly monster.  Why do you need to go visible??\n\r");

@@ -1,6 +1,18 @@
-#include "person.h"
-
+#include <stdlib.h>
+#include <algorithm>
+#include <memory>
+#include <queue>
 #include <set>
+#include <string>
+#include <vector>
+
+#include "connect.h"
+#include "enum.h"
+#include "extern.h"
+#include "person.h"
+#include "room.h"
+#include "structs.h"
+#include "toggle.h"
 
 namespace {
   bool canPathThroughDoor(roomDirData* ex) {

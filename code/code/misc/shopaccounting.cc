@@ -1,12 +1,25 @@
-#include "shopowned.h"
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <algorithm>
+#include <memory>
+#include <queue>
+#include <string>
+#include <vector>
+
+#include "being.h"
 #include "database.h"
-#include "shop.h"
+#include "db.h"
+#include "enum.h"
 #include "extern.h"
-#include "corporation.h"
-#include "obj_note.h"
-#include "shopaccounting.h"
+#include "gametime.h"
+#include "log.h"
 #include "monster.h"
+#include "obj_note.h"
+#include "parse.h"
 #include "room.h"
+#include "shop.h"
+#include "shopaccounting.h"
+#include "shopowned.h"
 
 // pull data from archive
 TShopJournal::TShopJournal(int shop, int y) {

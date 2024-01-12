@@ -8,9 +8,12 @@
 #pragma once
 
 #include "discipline.h"
+#include "parse.h"
 #include "skills.h"
 
-#include "discipline.h"
+class TBeing;
+class TObj;
+class TRoom;
 
 class CDMonk : public CDiscipline {
   public:

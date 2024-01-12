@@ -9,9 +9,13 @@
 
 #include <cstdio>
 
+#include "being.h"
+#include "connect.h"
 #include "monster.h"
 #include "obj_bag.h"
-#include "connect.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 TBag::TBag() : TExpandableContainer() {}
 

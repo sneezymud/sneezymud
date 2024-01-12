@@ -6,19 +6,35 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "room.h"
-#include "low.h"
-#include "handler.h"
-#include "extern.h"
-#include "monster.h"
-#include "obj_open_container.h"
-#include "materials.h"
-#include "obj_component.h"
-#include "obj_potion.h"
-#include "obj_commodity.h"
-#include "loadset.h"
-#include "spec_mobs.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <memory>
+#include <vector>
+
+#include "being.h"
 #include "configuration.h"
+#include "db.h"
+#include "defs.h"
+#include "extern.h"
+#include "handler.h"
+#include "loadset.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_commodity.h"
+#include "obj_component.h"
+#include "obj_money.h"
+#include "obj_open_container.h"
+#include "obj_potion.h"
+#include "parse.h"
+#include "room.h"
+#include "spec_mobs.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "trap.h"
 
 static void treasureCreate(int num, int mat, int& wealth, TObj* bag,
   TMonster* ch) {

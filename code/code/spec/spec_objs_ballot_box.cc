@@ -1,6 +1,14 @@
-#include "being.h"
-#include "database.h"
+#include <boost/format.hpp>
+#include <string>
+
 #include "account.h"
+#include "ansi.h"
+#include "being.h"
+#include "connect.h"
+#include "database.h"
+#include "obj.h"
+#include "parse.h"
+#include "sstring.h"
 
 // create table poll (poll_id int primary key, descr varchar(127), status
 // varchar(8)); create table poll_option (option_id int, poll_id int, descr

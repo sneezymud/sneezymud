@@ -58,38 +58,66 @@
 //    if item1 goes poof, return DELETE_THIS
 //
 
-#include <cstdio>
-
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
 #include <cmath>
+#include <cstdio>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
-#include "low.h"
-#include "monster.h"
-#include "disease.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
 #include "database.h"
-#include "shop.h"
-#include "obj_base_corpse.h"
-#include "obj_open_container.h"
-#include "obj_base_clothing.h"
-#include "person.h"
-#include "obj_trap.h"
-#include "obj_portal.h"
-#include "obj_symbol.h"
-#include "obj_general_weapon.h"
-#include "obj_base_weapon.h"
-#include "obj_drinkcon.h"
-#include "obj_potion.h"
-#include "obj_staff.h"
-#include "obj_wand.h"
-#include "disc_fire.h"
-#include "obj_note.h"
-#include "pathfinder.h"
+#include "db.h"
+#include "defs.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
 #include "liquids.h"
-#include "obj_chest.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_base_clothing.h"
+#include "obj_base_container.h"
+#include "obj_base_corpse.h"
+#include "obj_chest.h"
+#include "obj_drinkcon.h"
+#include "obj_general_weapon.h"
+#include "obj_note.h"
+#include "obj_open_container.h"
+#include "obj_portal.h"
+#include "obj_staff.h"
+#include "obj_symbol.h"
+#include "obj_wand.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "shop.h"
+#include "spec_objs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 #include "weather.h"
+#include "wiz_powers.h"
 
 // CMD_OBJ_GOTTEN returns DELETE_THIS if this goes bye bye
 // returns DELETE_VICT if t goes bye bye

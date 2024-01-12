@@ -1,14 +1,37 @@
-#include "room.h"
-#include "low.h"
-#include "handler.h"
-#include "monster.h"
-#include "obj_component.h"
-#include "extern.h"
-#include "disc_sorcery.h"
-#include "disc_earth.h"
-#include "disc_water.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <map>
+#include <string>
+
+#include "being.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
 #include "disc_afflictions.h"
+#include "disc_earth.h"
+#include "disc_sorcery.h"
+#include "disc_water.h"
+#include "discipline.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_component.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 int vampire(TBeing* ch, cmdTypeT cmd, const char*, TMonster*, TObj*) {
   TBeing* victim = ch->fight();

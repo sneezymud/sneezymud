@@ -7,7 +7,17 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj.h"
+#include "sstring.h"
+#include "thing.h"
+
+class TBeing;
+class TDrinkCon;
+class TFood;
+class TMonster;
+class TOpal;
+class TOpenContainer;
 
 // Things can be in a base container (but people can't put things into it)
 class TBaseContainer : public virtual TObj {

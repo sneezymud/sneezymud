@@ -6,14 +6,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <time.h>
+#include <memory>
+
+#include "account.h"
+#include "ansi.h"
 #include "being.h"
 #include "client.h"
-#include "person.h"
-#include "colorstring.h"
-#include "monster.h"
-#include "account.h"
 #include "cmd_message.h"
+#include "colorstring.h"
+#include "comm.h"
+#include "connect.h"
+#include "db.h"
+#include "enum.h"
+#include "log.h"
+#include "monster.h"
+#include "obj.h"
+#include "person.h"
+#include "race.h"
 #include "spec_mobs.h"
+#include "sstring.h"
+#include "structs.h"
+#include "toggle.h"
 
 void TBeing::doNewbieEqLoad(race_t num, unsigned short num2, bool initNum) {
   race_t raceNum;

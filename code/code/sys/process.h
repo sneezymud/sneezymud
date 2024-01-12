@@ -1,9 +1,12 @@
 #pragma once
 
-#include "sstring.h"
+#include <vector>
+
 #include "comm.h"
 #include "obj.h"
-#include "timing.h"
+#include "sstring.h"
+
+class TBeing;
 
 class TPulse {
   public:

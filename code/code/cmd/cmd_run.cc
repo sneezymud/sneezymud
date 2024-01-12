@@ -1,10 +1,17 @@
 #include "cmd_run.h"
 
 #include <boost/algorithm/string/replace.hpp>
+#include <boost/iterator/iterator_traits.hpp>
+#include <ctype.h>
+#include <iosfwd>
+#include <memory>
 
-#include "sstring.h"
 #include "being.h"
+#include "connect.h"
 #include "extern.h"
+#include "sstring.h"
+#include "structs.h"
+#include "toggle.h"
 
 using namespace std;
 

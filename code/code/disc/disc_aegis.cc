@@ -1,14 +1,27 @@
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <string>
 
-#include "extern.h"
-#include "room.h"
 #include "being.h"
-#include "low.h"
-#include "disease.h"
-#include "combat.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_aegis.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "low.h"
+#include "obj.h"
 #include "obj_magic_item.h"
 #include "obj_player_corpse.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 void crusade(TBeing* ch) {
   affectedData aff1, aff2, aff3, aff4, aff5, aff6;

@@ -6,18 +6,32 @@
 
 #pragma once
 
-#include <vector>
+#include <stdint.h>
+#include <stdio.h>
+#include <time.h>
 #include <list>
+#include <utility>
+#include <vector>
 
-#include "spec_objs.h"
-#include "trap.h"
 #include "create.h"
-#include "spells.h"
 #include "db.h"
-#include "thing.h"
+#include "enum.h"
 #include "limbs.h"
+#include "parse.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "trap.h"
+#include "liquids.h"
 
-class objIndexData;
+class TBaseCup;
+class TBeing;
+class TMonster;
+class TObj;
+class TOpenContainer;
+class TPerson;
+class TTrap;
 
 extern std::vector<objIndexData> obj_index;
 
@@ -31,9 +45,6 @@ extern int commod_index[200];
 extern TObj* read_object_buy_build(TBeing*, int nr, readFileTypeT type);
 extern TObj* read_object(int nr, readFileTypeT type);
 extern void log_object(TObj* obj);
-
-extern liqInfoT liquidInfo;
-extern currencyInfoT currencyInfo;
 
 // weight of 1 sip/unit of drink
 // 128 fl.oz = 1 gallon = 8.337 lb. (for water)
@@ -248,152 +259,6 @@ const unsigned int ITEM_WEAR_THROW = (1 << 15);    // 32768
 
 const unsigned int MAX_ITEM_WEARS = 16;
 
-/* Some different kind of liquids */
-enum liqTypeT {
-  LIQ_NONE = -1,
-  LIQ_WATER,  // 0
-  LIQ_BEER,
-  LIQ_WINE,
-  LIQ_ALE,
-  LIQ_DARKALE,
-  LIQ_WHISKY,  // 5
-  LIQ_LEMONADE,
-  LIQ_FIREBRT,
-  LIQ_LOCALSPC,
-  LIQ_SLIME,
-  LIQ_MILK,  // 10
-  LIQ_TEA,
-  LIQ_COFFEE,
-  LIQ_BLOOD,
-  LIQ_SALTWATER,
-  LIQ_MEAD,  // 15
-  LIQ_VODKA,
-  LIQ_RUM,
-  LIQ_BRANDY,
-  LIQ_RED_WINE,
-  LIQ_WARM_MEAD,  // 20
-  LIQ_CHAMPAGNE,
-  LIQ_HOLYWATER,
-  LIQ_PORT,
-  LIQ_MUSHROOM_ALE,
-  LIQ_VOMIT,  // 25
-  LIQ_COLA,
-  LIQ_STRAWBERRY_MARGARITA,
-  LIQ_BLUE_MARGARITA,
-  LIQ_GOLD_MARGARITA,
-  LIQ_STRAWBERRY_DAIQUIRI,  // 30
-  LIQ_BANANA_DAIQUIRI,
-  LIQ_PINA_COLADA,
-  LIQ_TEQUILA_SUNRISE,
-  LIQ_ISLA_VERDE,
-  LIQ_POT_CURE_POISON,  // 35
-  LIQ_POT_HEAL_LIGHT,
-  LIQ_POT_HEAL_CRIT,
-  LIQ_POT_HEAL,
-  LIQ_POT_SANCTUARY,
-  LIQ_POT_FLIGHT,  // 40
-  LIQ_POT_BIND,
-  LIQ_POT_BLINDNESS,
-  LIQ_POT_ARMOR,
-  LIQ_POT_REFRESH,
-  LIQ_POT_SECOND_WIND,  // 45
-  LIQ_POT_CURSE,
-  LIQ_POT_DETECT_INVIS,
-  LIQ_POT_BLESS,
-  LIQ_POT_INVIS,
-  LIQ_POT_HEAL_FULL,  // 50
-  LIQ_POT_SUFFOCATE,
-  LIQ_POT_FEATHERY_DESCENT,
-  LIQ_POT_DETECT_MAGIC,
-  LIQ_POT_DISPEL_MAGIC,
-  LIQ_POT_STONE_SKIN,  // 55
-  LIQ_POT_TRAIL_SEEK,
-  LIQ_POT_FAERIE_FIRE,
-  LIQ_POT_FLAMING_FLESH,
-  LIQ_POT_CONJURE_ELE_EARTH,
-  LIQ_POT_SENSE_LIFE,  // 60
-  LIQ_POT_STEALTH,
-  LIQ_POT_TRUE_SIGHT,
-  LIQ_POT_ACCELERATE,
-  LIQ_POT_INFRAVISION,
-  LIQ_POT_SORC_GLOBE,  // 65
-  LIQ_POT_POISON,
-  LIQ_POT_BONE_BREAKER,
-  LIQ_POT_AQUALUNG,
-  LIQ_POT_HASTE,
-  LIQ_POT_TELEPORT,  // 70
-  LIQ_POT_GILLS_OF_FLESH,
-  LIQ_POT_CURE_BLINDNESS,
-  LIQ_POT_CURE_DISEASE,
-  LIQ_POT_SHIELD_OF_MISTS,
-  LIQ_POT_SENSE_PRESENCE,  // 75
-  LIQ_POT_CHEVAL,
-  LIQ_POT_DJALLAS_PROTECTION,
-  LIQ_POT_LEGBAS_GUIDANCE,
-  LIQ_POT_DETECT_SHADOW,
-  LIQ_POT_CELERITE,  // 80
-  LIQ_POT_CLARITY,
-  LIQ_POT_BOILING_BLOOD,
-  LIQ_POT_STUPIDITY,
-  LIQ_POT_SLUMBER,
-  LIQ_POT_HEAL2,  // 85
-  LIQ_POT_FEATHERY_DESCENT2,
-  LIQ_POT_SANCTUARY2,
-  LIQ_POT_STONE_SKIN2,
-  LIQ_POT_INFRAVISION2,
-  LIQ_POT_HEAL_LIGHT2,  // 90
-  LIQ_POT_GILLS_OF_FLESH2,
-  LIQ_POT_CELERITE2,
-  LIQ_POT_CELERITE3,
-  LIQ_POT_TELEPORT2,
-  LIQ_POT_BLESS2,  // 95
-  LIQ_POT_SECOND_WIND2,
-  LIQ_POT_MULTI1,
-  LIQ_POT_MULTI2,
-  LIQ_POT_MULTI3,
-  LIQ_POT_MULTI4,  // 100
-  LIQ_POT_MULTI5,
-  LIQ_POT_MULTI6,
-  LIQ_POT_MULTI7,
-  LIQ_POT_MULTI8,
-  LIQ_POT_MULTI9,  // 105
-  LIQ_POT_MULTI10,
-  LIQ_POT_MULTI11,
-  LIQ_POT_YOUTH,
-  LIQ_POT_STAT,
-  LIQ_POT_LEARNING,  // 110
-  LIQ_POISON_STANDARD,
-  LIQ_POISON_CAMAS,
-  LIQ_POISON_ANGEL,
-  LIQ_POISON_JIMSON,
-  LIQ_POISON_HEMLOCK,  // 115
-  LIQ_POISON_MONKSHOOD,
-  LIQ_POISON_GLOW_FISH,
-  LIQ_POISON_SCORPION,
-  LIQ_POISON_VIOLET_FUNGUS,
-  LIQ_POISON_DEVIL_ICE,  // 120
-  LIQ_POISON_FIREDRAKE,
-  LIQ_POISON_INFANT,
-  LIQ_POISON_PEA_SEED,
-  LIQ_POISON_ACACIA,
-  LIQ_LUBRICATION,  // 125
-  LIQ_MAGICAL_ELIXIR,
-  LIQ_URINE,
-  LIQ_POT_HEALING_GRASP,
-  LIQ_POT_CLEANSE,
-  LIQ_POT_QUICKSILVER,  // 130
-  LIQ_POT_MYSTERY,
-  LIQ_MUD,
-  LIQ_TEQUILA,
-  LIQ_POT_ENLIVEN,
-  LIQ_POT_PLASMA_MIRROR,  // 135
-  LIQ_POT_FILTH,
-  LIQ_GUANO,
-  MAX_DRINK_TYPES  // move and change
-};
-extern liqTypeT& operator++(liqTypeT&, int);
-const liqTypeT MIN_DRINK_TYPES = liqTypeT(0);
-
 /* special addition for drinks */
 const unsigned int DRINK_POISON = (1 << 0);
 const unsigned int DRINK_PERM = (1 << 1);
@@ -486,7 +351,7 @@ const unsigned int ITEM_NOT_USED3 =
 const unsigned int ITEM_ATTACHED = (1 << 28);            // 268435456
 const unsigned int ITEM_BURNING = (1 << 29);             // 536870912
 const unsigned int ITEM_CHARRED = (1 << 30);             // 1073741824
-const unsigned int ITEM_NOLOCATE = (unsigned)(1 << 31);  // returns negitive int
+const unsigned int ITEM_NOLOCATE = (1U << 31);  // returns negitive int
 
 const int MAX_OBJ_STAT = 32;  // move and change
 
@@ -513,8 +378,6 @@ class objFlagData {
     objFlagData& operator=(const objFlagData& a);
     ~objFlagData();
 };
-
-class affectedData;
 
 class TObj : public TThing {
   public:

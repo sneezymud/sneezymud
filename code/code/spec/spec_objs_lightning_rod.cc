@@ -9,10 +9,25 @@
 
 ******************************************************************************/
 
-#include "room.h"
-#include "obj_base_weapon.h"
+#include <boost/format.hpp>
+#include <algorithm>
+#include <list>
+#include <memory>
+
+#include "ansi.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "obj.h"
 #include "obj_base_clothing.h"
+#include "obj_base_weapon.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 #include "weather.h"
 
 using std::max;

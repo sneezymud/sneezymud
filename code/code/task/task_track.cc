@@ -5,13 +5,34 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "extern.h"
-#include "client.h"
-#include "obj_portal.h"
-#include "pathfinder.h"
+#include "ansi.h"
 #include "being.h"
+#include "client.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "obj_portal.h"
+#include "parse.h"
+#include "pathfinder.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
+
+class TObj;
 
 void stop_tracking(TBeing* ch) {
   if (!ch->isLinkdead() && (ch->in_room > 0) &&

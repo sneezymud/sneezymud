@@ -1,7 +1,15 @@
+#include <boost/format.hpp>
+#include <memory>
+
+#include "ansi.h"
+#include "being.h"
 #include "comm.h"
+#include "connect.h"
 #include "gametime.h"
+#include "log.h"
+#include "sstring.h"
+#include "structs.h"
 #include "weather.h"
-#include "person.h"
 
 // static defs
 time_info_data GameTime::time_info;

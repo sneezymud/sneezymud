@@ -1,11 +1,21 @@
-#include "extern.h"
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <list>
+#include <memory>
+
 #include "being.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
-#include "disc_alchemy.h"
+#include "comm.h"
+#include "enum.h"
+#include "extern.h"
+#include "limbs.h"
+#include "liquids.h"
 #include "obj_component.h"
 #include "obj_potion.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "task.h"
+#include "thing.h"
 
 void TBeing::doBrew(const char* arg) {
   sstring buf;

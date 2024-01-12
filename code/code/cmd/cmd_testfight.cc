@@ -1,15 +1,30 @@
+#include <boost/format.hpp>
 #include <cstdio>
+#include <list>
+#include <memory>
 
+#include "being.h"
+#include "combat.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
 #include "handler.h"
-#include "room.h"
-#include "being.h"
+#include "log.h"
 #include "low.h"
-#include "configuration.h"
-#include "combat.h"
-#include "spelltask.h"
 #include "monster.h"
+#include "parse.h"
 #include "person.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 static unsigned int num_fighting = 0;
 static unsigned long left1 = 0;

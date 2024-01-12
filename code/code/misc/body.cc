@@ -2,10 +2,8 @@
 //
 //  Lets see if I can make some magic.
 
-#include <fstream>
-#include "extern.h"
 #include "body.h"
-#include "race.h"
+#include "limbs.h"
 
 const char* bodyNames[MAX_BODY_TYPES] = {"BODY_NONE", "HUMANOID", "INSECTOID",
   "PIERCER", "MOSS", "ELEMENTAL", "KUOTOA", "CRUSTACEAN", "DJINN", "MERMAID",
@@ -19,7 +17,7 @@ const char* bodyNames[MAX_BODY_TYPES] = {"BODY_NONE", "HUMANOID", "INSECTOID",
 
 // all references to this need to go through the mapping function
 // since the slot order has changed.  -- bat 06-27-97
-const ubyte slot_chance[MAX_BODY_TYPES][MAX_WEAR] = {
+const unsigned char slot_chance[MAX_BODY_TYPES][MAX_WEAR] = {
   // unused, fing, fing, neck, body, head, leg, leg, foot, foot, hand, hand, arm
   // arm, back, waist, wrist, wrist, hold, hold, leg, leg, foot, foot
 

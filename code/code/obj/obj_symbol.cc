@@ -4,18 +4,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
+#include <cmath>
 // symbol.cc
 #include <cstdio>
+#include <memory>
 
-#include <cmath>
-
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
 #include "extern.h"
-#include "monster.h"
+#include "log.h"
 #include "materials.h"
-#include "shop.h"
+#include "monster.h"
 #include "obj_symbol.h"
 #include "shopowned.h"
-#include "corporation.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 TSymbol::TSymbol() :
   TObj(),

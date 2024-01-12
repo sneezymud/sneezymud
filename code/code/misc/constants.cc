@@ -6,12 +6,33 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
+#include "connect.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
+#include "faction.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "materials.h"
+#include "obj.h"
 #include "obj_drug.h"
 #include "obj_gun.h"
-#include "materials.h"
-#include "being.h"
+#include "obj_money.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "toggle.h"
+#include "trap.h"
 
 const sstring whitespace = " \f\n\r\t\v";  // from isspace() man page
 

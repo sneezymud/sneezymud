@@ -1,11 +1,22 @@
 // stats.cc
 
-#include "extern.h"
-#include "being.h"
-#include "stats.h"
-
-#include <cmath>
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <iterator>
+#include <memory>
+
+#include "being.h"
+#include "defs.h"
+#include "extern.h"
+#include "gametime.h"
+#include "log.h"
+#include "race.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "toggle.h"
 
 Stats Stats::operator+(const Stats& operand) {
   Stats sum;

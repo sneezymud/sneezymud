@@ -9,10 +9,21 @@
 //
 /////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <stdint.h>
+#include <string.h>
+#include <iterator>
+#include <memory>
+
+#include "discipline.h"
+#include "enum.h"
 #include "extern.h"
+#include "log.h"
 #include "spell2.h"
-#include "toggle.h"
+#include "spells.h"
+#include "sstring.h"
 #include "stats.h"
+#include "toggle.h"
 
 spellInfo* discArray[MAX_SKILL + 1];
 
@@ -1792,9 +1803,6 @@ void buildSpellArray() {
 #endif
 
   // disc_plants
-
-#if 1
-#endif
 
   discArray[SKILL_APPLY_HERBS] =
     new spellInfo(SKILL_RANGER, DISC_PLANTS, DISC_PLANTS, STAT_EXT,

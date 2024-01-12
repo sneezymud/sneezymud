@@ -9,8 +9,20 @@
 
 ******************************************************************************/
 
-#include "room.h"
+#include <algorithm>
+#include <list>
+
+#include "being.h"
+#include "comm.h"
+#include "enum.h"
+#include "log.h"
 #include "monster.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "thing.h"
+
+class TObj;
 
 int tunnelerEarthquake(TBeing* ch, cmdTypeT tCmd, const char* tArg,
   TMonster* tMyself, TObj* tObj) {

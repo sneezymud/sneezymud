@@ -10,20 +10,41 @@
  **                                                                         **
  *****************************************************************************/
 
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <stdlib.h>
+#include <string.h>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
 
-#include <boost/algorithm/string.hpp>
-
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
-#include "extern.h"
+#include "cmd_message.h"
 #include "colorstring.h"
-#include "low.h"
-#include "obj_table.h"
-#include "obj_seethru.h"
+#include "comm.h"
+#include "connect.h"
+#include "create.h"
 #include "database.h"
+#include "db.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "low.h"
+#include "obj_seethru.h"
+#include "obj_table.h"
+#include "parse.h"
 #include "person.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 #include "weather.h"
+#include "wiz_powers.h"
 
 const char* room_fields[] = {"description",  //  1
   "exdscr",                                  //  2

@@ -1,12 +1,23 @@
 // table.cc
 //
 
-#include <cstdio>
+#include <boost/format.hpp>
+#include <memory>
 
-#include "extern.h"
-#include "obj_table.h"
-#include "handler.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
+#include "obj_money.h"
+#include "obj_table.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
 
 TTable::TTable() : TObj() {}
 

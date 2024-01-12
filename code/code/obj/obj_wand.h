@@ -7,7 +7,14 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_magic_item.h"
+#include "spells.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
 
 class TWand : public virtual TMagicItem {
   private:

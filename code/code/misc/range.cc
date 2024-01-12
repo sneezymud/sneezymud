@@ -7,25 +7,44 @@
 //
 /////////////////////////////////////////////////////////////////////////
 
-#include <cstdio>
-
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cmath>
-#include <map>
+#include <cstdio>
+#include <list>
+#include <string>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
+#include "combat.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "handler.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "range.h"
-#include "combat.h"
-#include "obj_quiver.h"
-#include "obj_bow.h"
-#include "obj_portal.h"
+#include "obj.h"
 #include "obj_arrow.h"
+#include "obj_bow.h"
 #include "obj_gun.h"
+#include "obj_quiver.h"
+#include "parse.h"
 #include "pathfinder.h"
+#include "race.h"
+#include "range.h"
+#include "room.h"
+#include "spec_objs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 #include "weather.h"
 
 #define RANGE_DEBUG 0

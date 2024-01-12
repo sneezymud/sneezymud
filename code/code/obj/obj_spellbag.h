@@ -7,7 +7,16 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_expandable_container.h"
+#include "spells.h"
+#include "sstring.h"
+
+class TBeing;
+class TComponent;
+class TMonster;
+class TThing;
 
 // The actual item
 class TSpellBag : public TExpandableContainer {

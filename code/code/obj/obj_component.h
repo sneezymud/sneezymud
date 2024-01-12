@@ -10,9 +10,20 @@
 
 #pragma once
 
-#include "obj_mergeable.h"
+#include <vector>
+
+#include "create.h"
 #include "enum.h"
+#include "obj.h"
+#include "obj_mergeable.h"
 #include "sound.h"
+#include "spells.h"
+#include "sstring.h"
+#include "thing.h"
+
+class TBeing;
+class TMonster;
+class TOpenContainer;
 
 const unsigned int COMP_DECAY = (1 << 0);
 const unsigned int COMP_SPELL = (1 << 1);

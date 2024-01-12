@@ -1,9 +1,18 @@
 // magic_item.cc
 
+#include <boost/format.hpp>
+#include <string.h>
 #include <cstdio>
+#include <memory>
 
+#include "ansi.h"
+#include "being.h"
+#include "discipline.h"
+#include "log.h"
 #include "monster.h"
 #include "obj_magic_item.h"
+#include "structs.h"
+#include "thing.h"
 
 TMagicItem::TMagicItem() : TObj(), magic_level(0), magic_learnedness(0) {}
 

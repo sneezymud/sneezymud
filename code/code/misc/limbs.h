@@ -1,8 +1,9 @@
 #pragma once
 
 #include "discipline.h"
-#include "sstring.h"
 #include "spells.h"
+
+class TBeing;
 
 enum wearSlotT {
   WEAR_NOWHERE,

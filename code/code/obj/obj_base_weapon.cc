@@ -5,27 +5,44 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "extern.h"
-#include "room.h"
-#include "low.h"
-#include "monster.h"
-#include "handler.h"
+#include "ansi.h"
+#include "being.h"
 #include "colorstring.h"
-#include "configuration.h"
 #include "combat.h"
-#include "statistics.h"
-#include "shop.h"
-#include "skills.h"
-#include "obj_tool.h"
-#include "obj_arrow.h"
-#include "obj_general_weapon.h"
-#include "obj_base_weapon.h"
-#include "shopowned.h"
-#include "corporation.h"
+#include "comm.h"
+#include "configuration.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "extern.h"
+#include "log.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj_arrow.h"
+#include "obj_base_weapon.h"
+#include "obj_general_weapon.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "room.h"
+#include "shop.h"
+#include "shopowned.h"
+#include "skills.h"
 #include "spec_mobs.h"
+#include "spells.h"
+#include "statistics.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
+#include "trap.h"
+#include "wiz_powers.h"
 
 TBaseWeapon::TBaseWeapon() :
   TObj(),

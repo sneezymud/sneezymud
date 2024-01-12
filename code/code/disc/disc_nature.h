@@ -7,6 +7,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TMagicItem;
+
 class CDNature : public CDiscipline {
   public:
     CSkill skTreeWalk;

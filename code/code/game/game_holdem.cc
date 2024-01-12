@@ -1,7 +1,22 @@
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
+#include "comm.h"
+#include "db.h"
+#include "enum.h"
 #include "games.h"
 #include "handler.h"
+#include "low.h"
+#include "obj.h"
+#include "parse.h"
+#include "sstring.h"
+#include "thing.h"
 
 // this is a good example of how not to write code
 // no need to thank me - peel

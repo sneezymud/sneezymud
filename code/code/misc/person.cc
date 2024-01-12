@@ -1,13 +1,20 @@
 #include "person.h"
-#include "database.h"
-#include "account.h"
-#include "pathfinder.h"
-#include "low.h"
 
-#include <unordered_map>
-#include <queue>
-#include <set>
+#include <assert.h>
+#include <boost/format.hpp>
+#include <boost/optional/optional.hpp>
+#include <string.h>
+#include <algorithm>
 #include <string>
+#include <unordered_map>
+
+#include "account.h"
+#include "database.h"
+#include "extern.h"
+#include "limbs.h"
+#include "pathfinder.h"
+#include "structs.h"
+#include "toggle.h"
 
 class TPersonPimpl {
   public:

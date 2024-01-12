@@ -20,11 +20,11 @@
 
 #pragma once
 
-#include <map>
+#include <vector>
 
-#include "extern.h"
 #include "sstring.h"
-#include "being.h"
+
+class TBeing;
 
 enum tweakTypeT {
   TWEAK_LOADRATE = 0,

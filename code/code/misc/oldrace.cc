@@ -6,12 +6,27 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <functional>
+#include <memory>
 
-#include "extern.h"
-#include "room.h"
 #include "being.h"
+#include "body.h"
+#include "defs.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
 #include "materials.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 /* remove these races
     case RACE_UNCERT:

@@ -4,12 +4,25 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <string>
 
 #include "being.h"
-#include "room.h"
-#include "obj.h"
+#include "comm.h"
+#include "enum.h"
 #include "extern.h"
+#include "parse.h"
+#include "room.h"
+#include "spells.h"
+#include "sstring.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+
+class TObj;
+
 int task_search(TBeing* ch, cmdTypeT cmd, const char*, int pulse, TRoom*,
   TObj*) {
   roomDirData* fdd = nullptr;

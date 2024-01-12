@@ -4,7 +4,11 @@ const int LAST_TRANSFORM_LIMB = 6;
 extern struct TransformLimbType TransformLimbList[LAST_TRANSFORM_LIMB];
 
 #include "discipline.h"
+#include "limbs.h"
 #include "skills.h"
+
+class TBeing;
+class TMagicItem;
 
 class CDShamanFrog : public CDiscipline {
   public:

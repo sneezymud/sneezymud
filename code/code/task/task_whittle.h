@@ -21,6 +21,8 @@
 
 #pragma once
 
+#include "sstring.h"
+
 enum whittleTypeT {
   WHITTLE_ERROR,
   WHITTLE_GENERAL,

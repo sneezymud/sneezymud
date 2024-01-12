@@ -1,12 +1,34 @@
+#include <boost/format.hpp>
+#include <boost/optional/optional.hpp>
+#include <ext/alloc_traits.h>
+#include <stddef.h>
+#include <list>
+#include <map>
+#include <utility>
+
+#include "ansi.h"
+#include "being.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
 #include "handler.h"
-#include "room.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "pathfinder.h"
-#include "obj_portal.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
-#include "spec_mobs.h"
+#include "obj_portal.h"
+#include "parse.h"
+#include "pathfinder.h"
 #include "person.h"
+#include "room.h"
+#include "spec_mobs.h"
+#include "spec_objs.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 using std::vector;
 

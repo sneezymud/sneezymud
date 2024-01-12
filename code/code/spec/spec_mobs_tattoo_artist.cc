@@ -1,6 +1,16 @@
-#include "monster.h"
+#include <boost/format.hpp>
+#include <string.h>
+#include <memory>
+
+#include "being.h"
 #include "database.h"
 #include "extern.h"
+#include "limbs.h"
+#include "monster.h"
+#include "parse.h"
+#include "sstring.h"
+
+class TObj;
 
 int tattooArtist(TBeing* ch, cmdTypeT cmd, const char* arg, TMonster* myself,
   TObj*) {

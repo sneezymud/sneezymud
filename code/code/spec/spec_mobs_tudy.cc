@@ -1,6 +1,15 @@
-#include "room.h"
+#include <list>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
 #include "monster.h"
+#include "obj.h"
+#include "parse.h"
 #include "person.h"
+#include "room.h"
+#include "thing.h"
 
 const int OBJ_TUDY_BILGE = 9635;
 const int OBJ_TUDY_SHACKLE_KEY1 = 9636;

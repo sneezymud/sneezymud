@@ -11,6 +11,9 @@
 #include "discipline.h"
 #include "skills.h"
 
+class TBeing;
+class TMagicItem;
+
 class CDSorcery : public CDiscipline {
   public:
     CSkill skEnergyDrain;

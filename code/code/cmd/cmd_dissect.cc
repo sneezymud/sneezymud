@@ -9,16 +9,32 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
 #include <cstdio>
+#include <string>
+#include <utility>
 
-#include "handler.h"
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
-#include "obj_component.h"
-#include "disc_adventuring.h"
 #include "cmd_dissect.h"
-#include "obj_base_corpse.h"
+#include "comm.h"
+#include "defs.h"
+#include "disc_adventuring.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "log.h"
 #include "low.h"
+#include "obj.h"
+#include "obj_base_corpse.h"
+#include "obj_component.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 std::map<unsigned short int, dissectInfo> dissect_array;
 

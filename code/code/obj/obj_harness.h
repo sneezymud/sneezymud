@@ -7,7 +7,9 @@
 
 #pragma once
 
+#include "obj.h"
 #include "obj_base_clothing.h"
+#include "sstring.h"
 
 class THarness : public TBaseClothing {
   private:

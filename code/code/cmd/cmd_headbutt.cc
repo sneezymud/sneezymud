@@ -6,13 +6,23 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <string.h>
+#include <functional>
+
 #include "being.h"
+#include "body.h"
 #include "combat.h"
+#include "comm.h"
+#include "defs.h"
 #include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "obj.h"
 #include "skill_handler.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 bool TBeing::canHeadbutt(TBeing* victim, const silentTypeT silent) const {
   // Define static vector of tests that need to pass before headbutt can
@@ -34,7 +44,7 @@ bool TBeing::canHeadbutt(TBeing* victim, const silentTypeT silent) const {
       ch_has_valid_body_type(
         {BODY_HUMANOID, BODY_OWLBEAR, BODY_MINOTAUR, BODY_ORB},
         "You lack the proper body form to headbutt."),
-      not_peaceful_room(),
+      not_peaceful_room(""),
       target_not_on_furniture("You can't headbutt $N while $E is on $p!"),
       target_not_self("Aren't we funny today..."),
       ch_not_mounted("You can't butt heads while mounted!"),

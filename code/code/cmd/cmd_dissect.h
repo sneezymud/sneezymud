@@ -23,6 +23,8 @@
 
 #include <map>
 
+#include "sstring.h"
+
 class dissectInfo {
   public:
     unsigned int loadItem;

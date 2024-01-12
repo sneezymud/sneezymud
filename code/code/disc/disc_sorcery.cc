@@ -4,21 +4,35 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <string>
 
-#include <cmath>
-
-#include "room.h"
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_sorcery.h"
+#include "enum.h"
+#include "immunity.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
-#include "disc_sorcery.h"
+#include "obj.h"
 #include "obj_armor.h"
 #include "obj_magic_item.h"
 #include "obj_worn.h"
 #include "person.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 int mysticDarts(TBeing* caster, TBeing* victim, int level, short bKnown,
   int adv_learn) {

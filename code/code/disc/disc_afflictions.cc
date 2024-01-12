@@ -1,12 +1,22 @@
+#include <algorithm>
 #include <cstdio>
 
 #include "being.h"
-#include "extern.h"
-#include "monster.h"
-#include "disease.h"
-#include "combat.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_afflictions.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "monster.h"
+#include "obj.h"
 #include "obj_magic_item.h"
+#include "spell2.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
 
 // returns DELETE_VICT
 static int injureLimbs(TBeing* ch, TBeing* victim, spellNumT skill, int level,

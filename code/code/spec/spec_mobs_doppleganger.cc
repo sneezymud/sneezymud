@@ -9,9 +9,24 @@
 
 ******************************************************************************/
 
+#include <boost/format.hpp>
+#include <list>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "enum.h"
 #include "handler.h"
-#include "room.h"
+#include "log.h"
 #include "monster.h"
+#include "parse.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+
+class TObj;
 
 class mimicStructure {
   public:

@@ -1,5 +1,15 @@
-#include "monster.h"
+#include <boost/format.hpp>
+#include <memory>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "enum.h"
 #include "extern.h"
+#include "monster.h"
+#include "obj.h"
+#include "parse.h"
+#include "sstring.h"
 
 const int FLASK_COST = 50000;
 const int FLASK_SMALL_VNUM = 33307;

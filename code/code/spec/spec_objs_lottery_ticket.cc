@@ -1,7 +1,17 @@
 #include "spec_objs_lottery_ticket.h"
+
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <memory>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "parse.h"
+#include "comm.h"
+#include "db.h"
 #include "obj.h"
+#include "parse.h"
+#include "thing.h"
 
 LotteryPrizes prizes[NUM_LOTTERY_PRIZES] = {
   {"lotteryprize0", 10030, 750},  // offal

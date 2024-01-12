@@ -1,6 +1,18 @@
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <string>
+
+#include "ansi.h"
 #include "being.h"
-#include "low.h"
+#include "comm.h"
+#include "enum.h"
 #include "games.h"
+#include "log.h"
+#include "low.h"
+#include "obj.h"
+#include "parse.h"
+#include "sstring.h"
+#include "thing.h"
 
 PokerGame gPoker;
 

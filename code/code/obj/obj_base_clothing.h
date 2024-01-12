@@ -7,7 +7,13 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
+class TOpenContainer;
 
 class TBaseClothing : public virtual TObj {
   private:

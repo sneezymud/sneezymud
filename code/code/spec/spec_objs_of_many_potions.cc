@@ -1,8 +1,14 @@
-#include "comm.h"
-#include "obj_base_weapon.h"
-#include "extern.h"
+#include <boost/format.hpp>
+#include <memory>
+
 #include "being.h"
+#include "comm.h"
 #include "liquids.h"
+#include "obj.h"
+#include "obj_base_weapon.h"
+#include "parse.h"
+#include "sstring.h"
+#include "thing.h"
 
 int ofManyPotions(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBaseWeapon* weapon;

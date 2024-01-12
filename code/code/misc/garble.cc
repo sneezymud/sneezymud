@@ -6,10 +6,28 @@
 // Code for changing how players talk
 //////////////////////////////////////////////////////////////////////////
 
-#include "extern.h"
-#include "room.h"
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <stddef.h>
+#include <algorithm>
+#include <string>
+
 #include "being.h"
+#include "connect.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
 #include "garble.h"
+#include "immunity.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spells.h"
+#include "stats.h"
+#include "structs.h"
+#include "toggle.h"
 
 // combined to designate multiple types of speech (say to detemine which are
 // valid to a garble)

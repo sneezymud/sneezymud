@@ -7,15 +7,31 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <algorithm>
+#include <list>
+#include <string>
+
+#include "account.h"
+#include "ansi.h"
 #include "being.h"
 #include "client.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
 #include "handler.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "configuration.h"
-#include "person.h"
-#include "account.h"
+#include "obj.h"
 #include "obj_player_corpse.h"
+#include "parse.h"
+#include "person.h"
+#include "sstring.h"
+#include "structs.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"", Mob::NONE},  // 0           Leave Blank

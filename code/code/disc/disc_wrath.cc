@@ -1,16 +1,30 @@
 // DISC_WRATH.cc
 // Part of SneezyMUD
 
+#include <algorithm>
 #include <cstdio>
 
-#include "room.h"
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "disc_wrath.h"
+#include "enum.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
-#include "disease.h"
-#include "extern.h"
-#include "combat.h"
-#include "disc_wrath.h"
+#include "obj.h"
 #include "obj_magic_item.h"
+#include "room.h"
+#include "sound.h"
+#include "spell2.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
 #include "weather.h"
 
 int plagueOfLocusts(TBeing* caster, TBeing* victim, int level, short bKnown) {

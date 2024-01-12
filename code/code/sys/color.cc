@@ -6,14 +6,31 @@
 //
 ///////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <string.h>
+#include <strings.h>
+#include <time.h>
 #include <cstdio>
+#include <memory>
 
-#include "room.h"
-#include "being.h"
-#include "extern.h"
-#include "client.h"
-#include "person.h"
 #include "account.h"
+#include "ansi.h"
+#include "being.h"
+#include "client.h"
+#include "comm.h"
+#include "connect.h"
+#include "defs.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "log.h"
+#include "parse.h"
+#include "person.h"
+#include "room.h"
+#include "sstring.h"
+#include "structs.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 void TBeing::doPrompt(const char* arg) {
   sstring tStString("");

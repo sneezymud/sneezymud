@@ -7,7 +7,13 @@
 
 #pragma once
 
+#include "enum.h"
+#include "obj.h"
 #include "obj_open_container.h"
+#include "sstring.h"
+
+class TBeing;
+class TMonster;
 
 // The actual item
 class TWagon : public TOpenContainer {

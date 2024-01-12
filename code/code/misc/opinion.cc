@@ -4,11 +4,30 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "room.h"
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <string.h>
+#include <list>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include "ansi.h"
 #include "being.h"
-#include "configuration.h"
+#include "defs.h"
+#include "enum.h"
 #include "extern.h"
+#include "log.h"
 #include "monster.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
+#include "wiz_powers.h"
 
 int TMonster::remHated(const TBeing* hatee, const char* n) {
   charList *list, *t, *t2;

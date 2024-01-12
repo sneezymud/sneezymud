@@ -1,15 +1,22 @@
-#include <iostream>
-#include <stdexcept>
+#include <boost/algorithm/string/join.hpp>
 #include <boost/regex.hpp>
-#include "sstring.h"
-#include "db.h"
-#include "extern.h"
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
+#include <iosfwd>
+#include <memory>
+#include <ostream>
+#include <sstream>
+#include <stdexcept>
+
 #include "ansi.h"
-#include "parse.h"
 #include "configuration.h"
 #include "database.h"
-
-#include <boost/algorithm/string.hpp>
+#include "db.h"
+#include "log.h"
+#include "parse.h"
+#include "sstring.h"
+#include "structs.h"
 
 namespace {
   const char whitespace[] = " \f\n\r\t\v";

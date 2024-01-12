@@ -7,12 +7,26 @@
 //
 /////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
 #include <unistd.h>
 #include <cstdio>
+#include <string>
 
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
+#include "cmd_message.h"
 #include "colorstring.h"
+#include "connect.h"
+#include "enum.h"
+#include "extern.h"
+#include "log.h"
+#include "parse.h"
+#include "sstring.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 messageTypeT mapMessageFromFile(const char tString);
 sstring mapMessageToFile(TMessages* tMsgStore, messageTypeT tType);

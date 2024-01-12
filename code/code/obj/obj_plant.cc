@@ -4,13 +4,21 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ext/alloc_traits.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
+#include <vector>
 
-#include "comm.h"
-#include "room.h"
-#include "obj_plant.h"
-#include "thing.h"
 #include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "log.h"
+#include "obj_plant.h"
+#include "room.h"
+#include "thing.h"
 
 TPlant::TPlant() : TExpandableContainer() {
   setType(0);

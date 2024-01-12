@@ -1,7 +1,14 @@
-#include "comm.h"
-#include "obj_base_weapon.h"
-#include "extern.h"
 #include "being.h"
+#include "comm.h"
+#include "defs.h"
+#include "extern.h"
+#include "liquids.h"
+#include "obj.h"
+#include "obj_base_weapon.h"
+#include "parse.h"
+#include "spec_objs.h"
+#include "spells.h"
+#include "thing.h"
 
 int doHurt(TBeing* ch, TBeing* vict, TObj* o) {
   int rc = 0;

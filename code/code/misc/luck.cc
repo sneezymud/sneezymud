@@ -5,7 +5,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "being.h"
+#include "enum.h"
 #include "extern.h"
+#include "spells.h"
+#include "stats.h"
 
 // assumption is that mod/20 is "level" of the effect being defended against
 bool TBeing::isLucky(int mod) const {

@@ -1,14 +1,36 @@
+#include <boost/format.hpp>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <memory>
 
-#include "room.h"
+#include "ansi.h"
 #include "being.h"
-#include "monster.h"
-#include "low.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
 #include "disease.h"
-#include "obj_tool.h"
-#include "obj_corpse.h"
-#include "spec_mobs.h"
+#include "enum.h"
+#include "extern.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "low.h"
 #include "materials.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_corpse.h"
+#include "obj_tool.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spec_mobs.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "thing.h"
 
 // hard to dodge blows while you're writhing in pain
 #define EXTREME_PAIN_AGI_PENALTY 20

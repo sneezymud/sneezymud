@@ -4,16 +4,28 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
 #include <cstdio>
+#include <string>
 
-#include "comm.h"
-#include "handler.h"
-#include "extern.h"
-#include "client.h"
-#include "obj_board.h"
+#include "ansi.h"
 #include "being.h"
-#include "obj_note.h"
+#include "client.h"
+#include "comm.h"
+#include "connect.h"
 #include "database.h"
+#include "defs.h"
+#include "extern.h"
+#include "faction.h"
+#include "handler.h"
+#include "log.h"
+#include "obj_board.h"
+#include "obj_note.h"
+#include "structs.h"
+#include "thing.h"
+#include "wiz_powers.h"
 
 int board(TBeing* ch, cmdTypeT cmd, const char* arg, TObj* me, TObj*) {
   // spec object just launches this handler

@@ -1,12 +1,14 @@
+#include <stdlib.h>
 #include <cstdio>
+#include <vector>
 
-#include "toggle.h"
-#include "sstring.h"
 #include "configuration.h"
 #include "database.h"
+#include "defs.h"
 #include "lowtools.h"
 #include "parse.h"
-#include "defs.h"
+#include "sstring.h"
+#include "toggle.h"
 
 int main(int argc, char** argv) {
   Config::doConfiguration();

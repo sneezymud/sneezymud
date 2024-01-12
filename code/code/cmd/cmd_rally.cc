@@ -1,7 +1,12 @@
-#include "handler.h"
+#include <list>
+
 #include "being.h"
-#include "combat.h"
-#include "obj_base_weapon.h"
+#include "comm.h"
+#include "enum.h"
+#include "room.h"
+#include "spells.h"
+#include "structs.h"
+#include "thing.h"
 
 int TBeing::doRally() {
   if (!doesKnowSkill(SKILL_RALLY)) {

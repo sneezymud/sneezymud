@@ -1,7 +1,19 @@
-#include "room.h"
+#include <list>
+
+#include "being.h"
+#include "comm.h"
+#include "db.h"
+#include "defs.h"
+#include "enum.h"
+#include "log.h"
 #include "low.h"
 #include "monster.h"
+#include "obj.h"
+#include "parse.h"
 #include "paths.h"
+#include "room.h"
+#include "structs.h"
+#include "thing.h"
 
 const unsigned int MT_GUARD = 31762;
 const unsigned int MT_CLERIC = 31763;

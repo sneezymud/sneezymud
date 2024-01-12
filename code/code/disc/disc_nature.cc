@@ -4,15 +4,29 @@
 //
 //////////////////////////////////////////////////////////////////////////
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
+#include <list>
+
 #include "being.h"
-#include "disease.h"
-#include "combat.h"
-#include "spelltask.h"
+#include "comm.h"
+#include "defs.h"
 #include "disc_nature.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "obj.h"
 #include "obj_magic_item.h"
+#include "parse.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "spelltask.h"
+#include "structs.h"
+#include "thing.h"
+#include "toggle.h"
 
 int barkskin(TBeing* caster, TBeing* victim, int level, short bKnown) {
   affectedData aff;

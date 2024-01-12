@@ -6,36 +6,54 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include <boost/format.hpp>
+#include <ctype.h>
+#include <string.h>
+#include <algorithm>
 #include <cstdio>
+#include <list>
+#include <string>
+#include <vector>
 
-#include <dirent.h>
-
-#include "handler.h"
-#include "room.h"
-#include "extern.h"
+#include "ansi.h"
 #include "being.h"
 #include "client.h"
-#include "low.h"
 #include "colorstring.h"
-#include "monster.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
+#include "database.h"
+#include "defs.h"
 #include "disc_looting.h"
-#include "combat.h"
-#include "person.h"
-#include "obj_component.h"
-#include "cmd_dissect.h"
-#include "disc_alchemy.h"
-#include "obj_table.h"
+#include "enum.h"
+#include "extern.h"
+#include "handler.h"
+#include "limbs.h"
+#include "low.h"
+#include "monster.h"
+#include "obj.h"
+#include "obj_base_container.h"
 #include "obj_note.h"
-#include "obj_trap.h"
-#include "obj_window.h"
-#include "obj_potion.h"
+#include "obj_open_container.h"
 #include "obj_scroll.h"
 #include "obj_staff.h"
-#include "database.h"
-#include "obj_base_container.h"
-#include "obj_open_container.h"
-#include "configuration.h"
+#include "obj_table.h"
+#include "obj_trap.h"
+#include "obj_window.h"
+#include "parse.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "spell2.h"
+#include "spells.h"
+#include "sstring.h"
+#include "stats.h"
+#include "structs.h"
+#include "task.h"
+#include "thing.h"
+#include "toggle.h"
 #include "weather.h"
+#include "wiz_powers.h"
 
 void TThing::showMe(TBeing* ch) const {
   ch->sendTo("You see nothing special.\n\r");

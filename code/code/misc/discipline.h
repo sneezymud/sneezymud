@@ -1,8 +1,12 @@
 #pragma once
 
-#include "sstring.h"
+#include "enum.h"
 #include "spells.h"
+#include "sstring.h"
 #include "structs.h"
+
+class TBeing;
+class TKey;
 
 // technically, these should be unsigned.
 // I got lazy and didn't want to change all the return types and vars

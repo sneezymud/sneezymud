@@ -1,21 +1,24 @@
-#include "database.h"
-#include "session.cgi.h"
-#include "configuration.h"
-#include "toggle.h"
-#include "parse.h"
-#include "extern.h"
-
-#include <map>
-#include "sstring.h"
+#include <cgicc/CgiUtils.h>
+#include <cgicc/FormEntry.h>
+#include <cgicc/HTTPHeader.h>
+#include <cgicc/HTTPRedirectHeader.h>
+#include <cgicc/MStreamable.h>
+#include <iosfwd>
+#include <iostream>
+#include <ostream>
+#include <string>
+#include <vector>
 
 #include "cgicc/Cgicc.h"
-#include "cgicc/HTTPHTMLHeader.h"
 #include "cgicc/HTMLClasses.h"
-#include <cgicc/HTTPCookie.h>
-#include <cgicc/CgiEnvironment.h>
-#include <cgicc/HTTPRedirectHeader.h>
-
-#include <sys/types.h>
+#include "cgicc/HTTPHTMLHeader.h"
+#include "configuration.h"
+#include "database.h"
+#include "extern.h"
+#include "parse.h"
+#include "session.cgi.h"
+#include "sstring.h"
+#include "toggle.h"
 
 using namespace cgicc;
 using namespace std;

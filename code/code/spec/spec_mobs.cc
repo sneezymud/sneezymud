@@ -33,49 +33,74 @@
       return DELETE_THIS if second TBeing gone
 #endif
 
-#include <cstdio>
-
+#include <assert.h>
+#include <boost/format.hpp>
+#include <ctype.h>
 #include <errno.h>
+#include <ext/alloc_traits.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
+#include <algorithm>
+#include <cstdio>
+#include <list>
+#include <map>
+#include <memory>
+#include <string>
+#include <utility>
+#include <vector>
 
-#include "handler.h"
-#include "extern.h"
-#include "room.h"
-#include "being.h"
-#include "low.h"
-#include "monster.h"
-#include "configuration.h"
 #include "account.h"
-#include "combat.h"
-#include "disease.h"
-#include "person.h"
-#include "disc_aegis.h"
-#include "materials.h"
-#include "disc_wrath.h"
-#include "disc_alchemy.h"
-#include "paths.h"
+#include "ansi.h"
+#include "being.h"
+#include "comm.h"
+#include "configuration.h"
+#include "connect.h"
 #include "database.h"
-#include "obj_symbol.h"
-#include "obj_window.h"
-#include "obj_general_weapon.h"
-#include "obj_base_clothing.h"
-#include "obj_bow.h"
-#include "obj_trap.h"
-#include "obj_table.h"
-#include "obj_drinkcon.h"
-#include "corporation.h"
-#include "shopowned.h"
-#include "pathfinder.h"
-#include "shop.h"
+#include "db.h"
+#include "defs.h"
+#include "discipline.h"
+#include "disease.h"
+#include "enum.h"
+#include "extern.h"
+#include "gametime.h"
+#include "handler.h"
+#include "immunity.h"
+#include "limbs.h"
+#include "liquids.h"
+#include "log.h"
+#include "low.h"
+#include "materials.h"
+#include "monster.h"
+#include "obj.h"
 #include "obj_base_corpse.h"
-#include "obj_player_corpse.h"
-#include "obj_tool.h"
-#include "obj_plant.h"
-#include "obj_note.h"
+#include "obj_base_cup.h"
+#include "obj_bow.h"
 #include "obj_commodity.h"
 #include "obj_component.h"
+#include "obj_drinkcon.h"
 #include "obj_food.h"
+#include "obj_general_weapon.h"
+#include "obj_note.h"
+#include "obj_plant.h"
+#include "obj_player_corpse.h"
+#include "obj_symbol.h"
+#include "obj_table.h"
+#include "obj_tool.h"
+#include "obj_window.h"
+#include "pathfinder.h"
+#include "paths.h"
+#include "person.h"
+#include "race.h"
+#include "room.h"
+#include "shop.h"
+#include "shopowned.h"
+#include "sound.h"
 #include "spec_mobs.h"
-#include "weather.h"
+#include "spells.h"
+#include "stats.h"
+#include "thing.h"
+#include "toggle.h"
 
 const int GET_MOB_SPE_INDEX(int d) {
   return (((d > NUM_MOB_SPECIALS) || (d < 0)) ? 0 : d);
@@ -5677,13 +5702,6 @@ int bmarcher(TBeing*, cmdTypeT cmd, const char*, TMonster* ch, TObj*) {
       ch->doShoot(buf);
       //      vlogf(LOG_DASH, "archer shooting at a target");
       Hf = tbt->getHit();
-
-#if 1
-      //      vlogf(LOG_DASH, format("archer debug: %d->%d, temp/name:
-      //      (%s)/(%s), tbt?: %s") %
-      //    Hi % Hf % temp % (tbt->getName() ? tbt->getName() : "(nullptr)") % (tbt
-      //    ? "exists" : "(nullptr)"));
-#endif
       if (tbt->getName().empty()) {
         switch (::number(1, 7)) {
           case 1:

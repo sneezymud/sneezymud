@@ -7,7 +7,16 @@
 
 ******************************************************************************/
 
+#include <algorithm>
+
+#include "being.h"
+#include "comm.h"
+#include "enum.h"
 #include "monster.h"
+#include "parse.h"
+#include "spells.h"
+
+class TObj;
 
 int tuskGoring(TBeing* ch, cmdTypeT tCmd, const char* tArg, TMonster* tMyself,
   TObj* tObj) {

@@ -24,7 +24,12 @@
 // This is the LOOTING discipline.
 
 #include "discipline.h"
+#include "enum.h"
 #include "skills.h"
+
+class TBeing;
+class TObj;
+class TThing;
 
 class CDLooting : public CDiscipline {
   public:

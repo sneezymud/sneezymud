@@ -1,16 +1,24 @@
 #include "process.h"
-#include "timing.h"
-#include "database.h"
-#include "shop.h"
-#include "parse.h"
-#include "faction.h"
-#include "extern.h"
-#include "toggle.h"
-#include "guild.h"
-#include "being.h"
+
+#include <boost/format.hpp>
+#include <stdlib.h>
+#include <time.h>
+#include <algorithm>
+#include <list>
+
 #include "CharacterList.h"
-#include <sys/shm.h>
-#include <sys/ipc.h>
+#include "being.h"
+#include "connect.h"
+#include "database.h"
+#include "db.h"
+#include "enum.h"
+#include "extern.h"
+#include "faction.h"
+#include "guild.h"
+#include "log.h"
+#include "parse.h"
+#include "room.h"
+#include "shop.h"
 
 ///////////
 

@@ -7,7 +7,15 @@
 
 #pragma once
 
+#include "enum.h"
 #include "obj_base_container.h"
+#include "sstring.h"
+#include "trap.h"
+
+class TBeing;
+class TMonster;
+class TObj;
+class TThing;
 
 // a base-container that can be opened and closed
 // permits things to be put into it by players

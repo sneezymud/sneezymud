@@ -1,17 +1,17 @@
 #pragma once
 
-#include <boost/shared_ptr.hpp>
+#include <boost/smart_ptr/shared_ptr.hpp>
+#include <time.h>
 
 #include "ansi.h"
-#include "sstring.h"
 #include "enum.h"
 #include "log.h"
+#include "sstring.h"
 
-class TThing;
 class TBeing;
-class TRoom;
 class TObj;
-class sstring;
+class TRoom;
+class TThing;
 
 enum actToParmT {
   TO_ROOM,
