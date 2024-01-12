@@ -36,4 +36,3 @@ discord.cfg
 *.pyc
 *.pyo
 /lib/core
-lib/txt/wizlist
