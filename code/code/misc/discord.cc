@@ -18,7 +18,10 @@ namespace po = boost::program_options;
 // new channels must be added in that file, here, in discord.h, and in po::options_descriptions below
 sstring Discord::CHANNEL_DEATHS;
 sstring Discord::CHANNEL_SYS;
-sstring Discord::CHANNEL_LEVELUP;
+sstring Discord::CHANNEL_ACHIEVEMENT;
+
+// threshold level for discord mob kill notifications
+int Discord::ACHIEVEMENT_THRESHOLD;
 
 // read the configuration
 bool Discord::doConfig() {
@@ -31,7 +34,8 @@ bool Discord::doConfig() {
     configOnly.add_options()
         ("deaths_webhook",po::value<string>(&CHANNEL_DEATHS)->default_value(empty_string),"see discord.h")
         ("sys_webhook",po::value<string>(&CHANNEL_SYS)->default_value(empty_string),"see discord.h")
-        ("levelup_webhook",po::value<string>(&CHANNEL_LEVELUP)->default_value(empty_string),"see discord.h");
+        ("achieve_webhook",po::value<string>(&CHANNEL_ACHIEVEMENT)->default_value(empty_string),"see discord.h")
+        ("achieve_threshold",po::value<int>(&ACHIEVEMENT_THRESHOLD)->default_value(80),"see discord.h");
 
     po::options_description config_options;
     config_options.add(configOnly);

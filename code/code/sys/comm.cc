@@ -22,6 +22,7 @@
 #include "spec_mobs.h"
 #include "weather.h"
 #include "migrations.h"
+#include "discord.h"
 
 #include <boost/algorithm/string/replace.hpp>
 
@@ -77,12 +78,14 @@ int run_the_game() {
   bootDb();
 
   vlogf(LOG_MISC, "Entering game loop.");
+  Discord::sendMessage(Discord::CHANNEL_SYS,":arrow_up: Boot process completed, game is up!");
 
   systask = new SystemTask();
   int ret = gSocket->gameLoop();
   gSocket->closeAllSockets();
 
   vlogf(LOG_MISC, "Normal termination of game.");
+  Discord::sendMessage(Discord::CHANNEL_SYS,":arrow_down: Game has shut down normally.");
   delete gSocket;
 
   return ret;

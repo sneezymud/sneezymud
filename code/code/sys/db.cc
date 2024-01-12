@@ -616,7 +616,6 @@ void bootDb(void) {
 
   db.query("commit");
   bootPulse("Boot -- DONE.");
-  Discord::sendMessage(Discord::CHANNEL_SYS,"Boot process completed, game is up!");
   bootTime = false;
 }
 
