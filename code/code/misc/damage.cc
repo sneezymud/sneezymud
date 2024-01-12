@@ -7,6 +7,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <stdio.h>
+#include <sstream>
 
 #include "handler.h"
 #include "extern.h"
@@ -1099,10 +1100,11 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
     }
 
     // Mark a groupKill for all in the group
+    // ... also aggregate group data for discord message here
+    int group_members = 0;
+    std::stringstream grouplist;
+    sstring lastname = "";
 
-
-    sstring killer = getName();
-    sstring grouplist = "";
     if (isAffected(AFF_GROUP) && (master || followers)) {
       if (master)
         k = master;
@@ -1114,7 +1116,11 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
           if (k->desc) {
             k->desc->session.groupKills++;
             k->desc->career.group_kills++;
-            grouplist = k->getName();
+          }
+          // discord group naming
+          if (k->getName() != getName()) {
+            lastname = k->getName();
+            group_members++;
           }
         }
       }
@@ -1124,7 +1130,17 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             if (f->follower->desc) {
               f->follower->desc->session.groupKills++;
               f->follower->desc->career.group_kills++;
-              grouplist = format("%s, %s") % grouplist % f->follower->getName();
+            }
+              
+            // discord group naming
+            if (f->follower->getName() != getName()) {
+              if (group_members < 2) {
+                grouplist << lastname;
+              } else {
+                grouplist << "**,** " << lastname;
+              }
+              lastname = f->follower->getName();
+              group_members++;
             }
           }
         }
@@ -1133,21 +1149,22 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 
     // send an achievement message to the discord webhook
     sstring achievement_msg;
-    if(isPc() && !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
+    if((isPc() || (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && (master && master->isPc()))) && !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
       // player killed an notable mob, send message to our discord webhook
       // ideally we'd like to list all the group members...
-      if(grouplist == "") {
-        // if no grouplist, just use the killer's name
-        grouplist = format("%s has") % killer;
+      if (group_members == 0) {
+        // killer is solo
+        achievement_msg = format(":crossed_swords: **%s** has taken down **%s**!") % getName() % v->getName();
       } else {
-        // otherwise, replace the last comma with 'and'
-        unsigned int pos = grouplist.rfind(',', grouplist.size());
-        if (pos > 0 && pos < grouplist.size()) {
-          grouplist = format("%s and %s have") % grouplist.substr(0, pos) % grouplist.substr(pos+2, grouplist.size());
+        if (group_members == 1) {
+          // killer + one other name
+          achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s**!") % getName() % v->getName() % lastname;
+        } else {
+          // killer + a group of 2+ others
+          achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s** and **%s**!") % getName() % v->getName() % grouplist.str() % lastname;
         }
       }
-      // we could potentially randomize this message
-      achievement_msg = format(":crossed_swords: %s taken down %s!") % grouplist % v->getName();
+
       Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
 
     }

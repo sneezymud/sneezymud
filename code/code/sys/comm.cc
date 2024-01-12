@@ -85,7 +85,8 @@ int run_the_game() {
   gSocket->closeAllSockets();
 
   vlogf(LOG_MISC, "Normal termination of game.");
-  Discord::sendMessage(Discord::CHANNEL_SYS,":arrow_down: Game has shut down normally.");
+  // detatch = false for this discord message so the program doesn't exit before this thread finished gracefully
+  Discord::sendMessage(Discord::CHANNEL_SYS,":arrow_down: Game has shut down normally.", false);
   delete gSocket;
 
   return ret;

@@ -237,7 +237,6 @@ if flag_shared:
 ## twitter: use curl to post shouts
 if flag_twitter:
     env.Append(CXXFLAGS='-DTWITTER')
-    #env.Append(extra_libs=['curl'])
 
 ## discord: use curl for discord webhooks as well, so always include
 env.Append(extra_libs=['curl'])
