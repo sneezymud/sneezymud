@@ -83,7 +83,7 @@ const unsigned int EXIT_SLOPED_UP = (1 << 8);    // 256
 const unsigned int EXIT_SLOPED_DOWN = (1 << 9);  // 512
 const unsigned int EXIT_JAMMED = (1 << 10);      // 1024
 
-const int MAX_DOOR_CONDITIONS = 10;  // move and change
+const int MAX_DOOR_CONDITIONS = 11;  // move and change
 
 class TTerrainInfo {
   public:

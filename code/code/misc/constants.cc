@@ -567,7 +567,7 @@ const char* const room_bits[MAX_ROOM_BITS] = {"ALWAYS-LIT", "DEATH", "NO-MOB",
 
 const char* const exit_bits[MAX_DOOR_CONDITIONS] = {"Closed", "Locked",
   "Secret", "Destroyed", "No-enter", "Trapped", "Caved-In", "Magically Warded",
-  "Sloped up", "Sloped down"};
+  "Sloped up", "Sloped down", "Jammed"};
 
 const char* const chest_bits[] = {
   "Closeable",
