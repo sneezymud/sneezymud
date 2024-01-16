@@ -23,7 +23,7 @@ FROM ubuntu:focal AS run
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends libboost-program-options1.71.0 libboost-regex1.71.0 libboost-filesystem1.71.0 libboost-system1.71.0 libmariadb3 libcurl4 libasan5 gdb && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends libboost-program-options1.71.0 libboost-regex1.71.0 libboost-filesystem1.71.0 libboost-system1.71.0 libmariadb3 libcurl4 libasan5 gdb ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ARG UID=1000
 
