@@ -1,16 +1,10 @@
 name: Build and Test
 on:
   pull_request:
-    paths:
-      # Only run on changes to files that are actually included in the build or this file itself
-      - "code/code/**.cpp"
-      - "code/code/**.cc"
-      - "code/code/**.h"
-      - ".github/workflows/test.yml"
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Build and Test
     steps:
       - name: Checkout this commit
@@ -18,8 +12,63 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: sudo apt-get update
-      - run: sudo apt-get install software-properties-common
-      - run: sudo apt-get update
-      - run: sudo apt-get install --yes --no-install-recommends build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadbclient-dev scons libcurl4-openssl-dev
-      - run: scons -C code -j`nproc` -Q pretty=0 debug=1 sanitize=1 olevel=2 sneezy
+      - name: Install dependencies
+        run: |
+          set -e
+          sudo apt-get update
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get install --yes --no-install-recommends g++-9 build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadb-dev scons libcurl4-openssl-dev ca-certificates mariadb-server
+
+      - name: Verify, configure, and seed a test database
+        run: |
+          set -e
+          sudo systemctl is-active --quiet mariadb || sudo systemctl start mariadb
+          sudo mariadb -e "create database sneezy; create database immortal;"
+          sudo mariadb -e "create user 'runner'@'localhost'; grant all on sneezy.* to 'runner'@'localhost'; grant all on immortal.* to 'runner'@'localhost';"
+          for db in immortal sneezy ; do
+            for phase in tables views data ; do
+              [ -d "_Setup-data/sql_$phase/$db" ] || continue
+              for sql in _Setup-data/sql_$phase/$db/*.sql ; do
+                echo "loading '$sql'"
+                mysql $db < $sql
+              done
+            done
+          done
+
+      - name: Restore cached build objects from master branch
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            code/.sconsign.dblite
+            code/objs/libsneezy.a
+            code/objs/main.o
+            code/objs/cmd
+            code/objs/disc
+            code/objs/game
+            code/objs/misc
+            code/objs/obj
+            code/objs/spec
+            code/objs/sys
+            code/objs/task
+          key: ${{ runner.os }}-scons-master-${{ hashFiles('code/code/**.cc', 'code/code/**.h') }}
+          restore-keys: |
+            ${{ runner.os }}-scons-master-
+
+      - name: Compile code. Will utilize cached build output from last update to master to perform incremental compilation, if available.
+        run: |
+          scons -C code -j`nproc` CXX=g++-9 pretty=1 debug=1 sanitize=1 olevel=2 sneezy
+
+      - name: Verify the game boots up successfully
+        run: |
+          set -e
+          ./code/sneezy 2>&1 | tee output.log &
+          SNEEZY_PID=$!
+          while kill -0 $SNEEZY_PID ; do
+            if tail -n 100 output.log | grep -q "Entering game loop." ; then
+              echo "Sneezy started successfully"
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "Sneezy process crashed"
+          exit 1

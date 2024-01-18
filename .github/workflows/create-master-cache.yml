@@ -1,0 +1,66 @@
+# Caches created via actions/cache are not shared between PRs. However, a cache created on a parent branch is accessible by a child branch, including PRs that are attempting to merge to the parent branch. Therefore, if we create a cache of the build files every time changes are pushed to master, new PRs should be able to utilize those during their compilation to enable incremental compilation via scons's .sconsign.dblite file.
+name: Create Master Branch Compilation Cache
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build_and_cache:
+    runs-on: ubuntu-latest
+    name: Build and Cache
+    steps:
+      - name: Checkout this commit
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: |
+          set -e
+          sudo apt-get update
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get install --yes --no-install-recommends g++-9 build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadb-dev scons libcurl4-openssl-dev ca-certificates
+
+      # Used cached build objects from previous version of master, if available, to avoid a full recompilation if no source files changes.
+      - name: Restore cached build objects
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            code/.sconsign.dblite
+            code/objs/libsneezy.a
+            code/objs/main.o
+            code/objs/cmd
+            code/objs/disc
+            code/objs/game
+            code/objs/misc
+            code/objs/obj
+            code/objs/spec
+            code/objs/sys
+            code/objs/task
+          key: ${{ runner.os }}-scons-master-${{ hashFiles('code/code/**.cc', 'code/code/**.h') }}
+          restore-keys: |
+            ${{ runner.os }}-scons-master-
+
+      - name: Compile code
+        run: |
+          scons -C code -j`nproc` CXX=g++-9 pretty=1 debug=1 sanitize=1 olevel=2 sneezy
+
+      - name: Cache compilation results
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            code/.sconsign.dblite
+            code/objs/libsneezy.a
+            code/objs/main.o
+            code/objs/cmd
+            code/objs/disc
+            code/objs/game
+            code/objs/misc
+            code/objs/obj
+            code/objs/spec
+            code/objs/sys
+            code/objs/task
+          # Use a unique key for each cache based on a hash of the source files, as GitHub Actions caches are immutable once created and a new cache won't overwrite the old one if the key is the same. Using restore-keys in the test.yml workflow will still allow the PR to find the most recent cache starting with ${{ runner.os }}-scons-master-.
+          key: ${{ runner.os }}-scons-master-${{ hashFiles('code/code/**.cc', 'code/code/**.h') }}
