@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_and_cache:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: Build and Cache
     steps:
       - name: Checkout this commit
@@ -45,7 +45,7 @@ jobs:
 
       - name: Compile code
         run: |
-          scons -C code -j`nproc` CXX=g++-9 pretty=1 debug=1 sanitize=1 olevel=2 sneezy
+          scons -C code -j`nproc` CXX=g++-9 pretty=0 debug=1 sanitize=1 olevel=2 sneezy
 
       - name: Cache compilation results
         uses: actions/cache/save@v4
