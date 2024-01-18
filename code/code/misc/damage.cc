@@ -994,8 +994,9 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
           }
           doShout(taunt_buf);
-          discord_taunt_msg = format(":skull: %s shouts, \"%s\"") % getName().cap() % taunt_buf;
-          Discord::sendMessage(Discord::CHANNEL_DEATHS, discord_taunt_msg);
+          discord_taunt_msg =
+            format(":skull: %s shouts, \"%s\"") % getName().cap() % taunt_buf;
+          Discord::sendMessageAsync(Discord::CHANNEL_DEATHS, discord_taunt_msg);
         } else {
 #if 1
           if (v == this && isPc())
@@ -1131,7 +1132,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
               f->follower->desc->session.groupKills++;
               f->follower->desc->career.group_kills++;
             }
-              
+
             // discord group naming
             if (f->follower->getName() != getName()) {
               if (group_members < 2) {
@@ -1149,19 +1150,29 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 
     // send an achievement message to the discord webhook
     sstring achievement_msg;
-    if((isPc() || (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && (master && master->isPc()))) && !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
+    if ((isPc() || (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) &&
+                     (master && master->isPc()))) &&
+        !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
       // player killed an notable mob, send message to our discord webhook
       if (group_members == 0) {
         // killer is solo
-        achievement_msg = format(":crossed_swords: **%s** has taken down **%s**!") % getName() % v->getName();
+        achievement_msg =
+          format(":crossed_swords: **%s** has taken down **%s**!") % getName() %
+          v->getName();
       } else if (group_members == 1) {
         // killer + one other group member
-        achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s**!") % getName() % v->getName() % lastname;
+        achievement_msg = format(
+                            ":crossed_swords: **%s** has taken down **%s** "
+                            "with assistance from **%s**!") %
+                          getName() % v->getName() % lastname;
       } else {
         // killer + a group of 2+ others
-        achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s** and **%s**!") % getName() % v->getName() % grouplist.str() % lastname;
+        achievement_msg = format(
+                            ":crossed_swords: **%s** has taken down **%s** "
+                            "with assistance from **%s** and **%s**!") %
+                          getName() % v->getName() % grouplist.str() % lastname;
       }
-      
+
       Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
     }
 

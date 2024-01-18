@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <filesystem>
 #include <fstream>
-#include <iterator>
+#include <curl/curl.h>
 
 extern "C" {
 #include <unistd.h>
@@ -84,7 +84,12 @@ int main(int argc, char* argv[]) {
     perror("chdir");
     exit(0);
   }
-  vlogf(LOG_MISC, format("Using %s as data directory.") % Config::DataDir());
+  vlogf(LOG_FILE,
+    format("Using %s as data directory.") % std::filesystem::current_path());
+
+  curl_global_init(CURL_GLOBAL_DEFAULT);
+
+  Discord::maybePostNewestCrashLog();
 
   srand(time(0));
   std::random_device rd;
@@ -103,6 +108,7 @@ int main(int argc, char* argv[]) {
   int ret = run_the_game();
 
   generic_cleanup();
+  curl_global_cleanup();
 
   return ret;
 }

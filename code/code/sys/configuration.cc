@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -172,7 +173,9 @@ bool Config::doConfiguration(int argc, char* argv[]) {
   std::ifstream ifs(configFile.c_str());
 
   if (!ifs.is_open()) {
-    std::cout << format("Failed to open config file '%s'\n") % configFile;
+    vlogf(LOG_FILE,
+      format("Failed to open config file at %s. Using default values.") %
+        (std::filesystem::current_path() / configFile));
   }
 
   po::store(parse_config_file(ifs, config_options), vm);

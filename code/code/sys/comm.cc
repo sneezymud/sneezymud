@@ -78,15 +78,19 @@ int run_the_game() {
   bootDb();
 
   vlogf(LOG_MISC, "Entering game loop.");
-  Discord::sendMessage(Discord::CHANNEL_SYS,":arrow_up: Boot process completed, game is up!");
+  Discord::sendMessageAsync(Discord::CHANNEL_SYS,
+    ":arrow_up: Boot process completed, game is up!");
 
   systask = new SystemTask();
   int ret = gSocket->gameLoop();
   gSocket->closeAllSockets();
 
   vlogf(LOG_MISC, "Normal termination of game.");
-  // detatch = false for this discord message so the program doesn't exit before this thread finished gracefully
-  Discord::sendMessage(Discord::CHANNEL_SYS,":arrow_down: Game has shut down normally.", false);
+  // Send this Discord message synchronously as we want to ensure the message
+  // successfully sends before we exit
+  Discord::sendMessage(Discord::CHANNEL_SYS,
+    ":arrow_down: Game has shut down normally.");
+
   delete gSocket;
 
   return ret;
