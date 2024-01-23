@@ -54,21 +54,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-scons-master-
 
-      - name: Compile code. Will utilize cached build output from last update to master to perform incremental compilation, if available.
+      - name: Compile code
         run: |
           scons -C code -j`nproc` CXX=g++-9 pretty=0 debug=1 sanitize=1 olevel=2 sneezy
 
       - name: Verify the game boots up successfully
-        run: |
-          set -e
-          ./code/sneezy 2>&1 | tee output.log &
-          SNEEZY_PID=$!
-          while kill -0 $SNEEZY_PID ; do
-            if tail -n 100 output.log | grep -q "Entering game loop." ; then
-              echo "Sneezy started successfully"
-              exit 0
-            fi
-            sleep 1
-          done
-          echo "Sneezy process crashed"
-          exit 1
+        run: ./verify_boot.sh
