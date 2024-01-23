@@ -55,17 +55,12 @@ extern "C" {
 #include "rent.h"
 #include "shop.h"
 #include "weather.h"
-#include "../version.h"
 #include "player_data.h"
 
 const int DONT_SEND = -1;
 const int FORCE_LOW_INVSTE = 1;
 
 static const char* const WIZLOCK_PASSWORD = "motelvi";
-const char* const MUD_NAME = "SneezyMUD";
-const char* const MUD_NAME_VERS = "SneezyMUD v5.4 " VERSION;
-static const char* const WELC_MESSG =
-  "\n\rWelcome to SneezyMUD 5.4! May your journeys be bloody!\n\r\n\r";
 
 Descriptor::Descriptor() : ignored(this) {
   // this guy is private to prevent being called
@@ -1385,7 +1380,12 @@ int TPerson::genericLoadPC() {
       assignCorpsesToRooms();
   }
   saveChar(Room::AUTO_RENT);
-  sendTo(WELC_MESSG);
+
+  static const sstring WELCOME_MESSAGE =
+    format("\n\rWelcome to %s! May your journeys be bloody!\n\r\n\r") %
+    MUD_NAME;
+  sendTo(WELCOME_MESSAGE);
+
   next = character_list;
   character_list = this;
 
@@ -1775,8 +1775,8 @@ void Descriptor::show_string(const char* the_input, showNowT showNow,
           chk += 2;
           break;
         case 'H':
-          strcpy(buffer + i, MUD_NAME_VERS);
-          i += strlen(MUD_NAME);
+          strcpy(buffer + i, MUD_NAME_VERS.c_str());
+          i += MUD_NAME_VERS.length();
           chk += 2;
           break;
         case 'R':
@@ -2866,9 +2866,7 @@ sstring LoginComm::getText() { return text; }
 
 // return DELETE_THIS
 int Descriptor::sendLogin(const sstring& arg) {
-  char buf[160], buf2[4096] = "\0\0\0";
   sstring my_arg = arg.substr(0, 20);
-  sstring outputBuf;
 
   if (arg.length() > 20) {
     vlogf(LOG_MISC, format("Buffer overflow attempt from [%s]") % host);
@@ -2881,77 +2879,65 @@ int Descriptor::sendLogin(const sstring& arg) {
   if (my_arg.empty())
     return DELETE_THIS;
   else if (my_arg == "?") {
-    writeToQ(
+    constexpr std::array messages = {
       "Accounts are used to store all characters belonging to a given "
-      "person.\n\r");
-    writeToQ(
-      "One account can hold multiple characters.  Creating more than one "
-      "account\n\r");
-    sprintf(buf,
-      "for yourself is a violation of %s multiplay rules and will lead to\n\r",
-      MUD_NAME);
-    writeToQ(buf);
-    writeToQ(
-      "strict sanctions.  Your account holds information that is applied to "
-      "all\n\r");
-    writeToQ(
+      "person.\n\r",
+      "One account can hold multiple characters. Creating more than one "
+      "account\n\r",
+      "for yourself is a violation of ",
+      MUD_NAME,
+      " multiplay rules and will lead to\n\r",
+      "strict sanctions. Your account holds information that is applied to "
+      "all\n\r",
       "characters that you own (including: generic terminal type, time "
-      "zone\n\r");
-    writeToQ(
-      "you play from, etc.).  You are required to enter a valid and "
-      "unique\n\r");
-    writeToQ(
-      "E-mail address which will be kept secret and used by the "
-      "game-maintainers\n\r");
-    writeToQ(
-      "to inform you if a serious problem occurs with your account.\n\r\n\r");
-    writeToQ(
-      "Note that the only password protection is at the account level.  Do "
-      "not\n\r");
-    writeToQ(
+      "zone\n\r",
+      "you play from, etc.). You may provide a valid and unique\n\r",
+      "e-mail address which will be kept secret and used by the "
+      "game maintainers\n\r",
+      "to inform you if a serious problem occurs with your account.\n\r\n\r",
+      "Note that the only password protection is at the account level. Do "
+      "not\n\r",
       "reveal your password to others or they have access to ALL of your "
-      "characters.\n\r\n\r");
+      "characters.\n\r\n\r",
+    };
+
+    for (const auto& message : messages) {
+      writeToQ(message);
+    }
 
     output.push(CommPtr(
       new LoginComm("user", "Type NEW to generate a new account.\n\rLogin: ")));
     return FALSE;
   } else if (my_arg == "1") {
-    FILE* fp = fopen("txt/version", "r");
-    if (!fp) {
-      vlogf(LOG_FILE, "No version file found");
-    } else {
-      if (!fgets(buf, 79, fp))
-        vlogf(LOG_FILE, "Unexpected read error in txt/version");
-      // strip off the terminating newline char
-      buf[strlen(buf) - 1] = '\0';
+    static const int years_of_service = []() {
+      tm current_date;
+      time_t conv_time;
+      conv_time = time(&conv_time);
+      localtime_r(&conv_time, &current_date);
+      int years_of_service = current_date.tm_year;
+      if ((current_date.tm_mon < 4) ||
+          (current_date.tm_mon == 4 && current_date.tm_mday <= 5)) {
+        years_of_service -= 93;
+      } else {
+        years_of_service -= 92;
+      }
+      return years_of_service;
+    }();
 
-      sprintf(buf2 + strlen(buf2), "\n\r\n\rWelcome to %s\n\r%s:\n\r",
-        MUD_NAME_VERS, buf);
-      fclose(fp);
-    }
+    static const sstring welcomeMessage =
+      format(
+        "\n\r\n\rWelcome to %s\n\rCelebrating %d years of "
+        "quality mudding (est. 1 "
+        "May 1992)\n\r\n\r") %
+      MUD_NAME_VERS % years_of_service;
 
-    tm current_date;
-    time_t conv_time;
-    conv_time = time(&conv_time);
-    localtime_r(&conv_time, &current_date);
-    int years_of_service = current_date.tm_year;
-    if ((current_date.tm_mon < 4) ||
-        (current_date.tm_mon == 4 && current_date.tm_mday <= 5)) {
-      years_of_service -= 93;
-    } else {
-      years_of_service -= 92;
-    }
-    sprintf(buf2 + strlen(buf2),
-      "Celebrating %d years of quality mudding (est. 1 May 1992)\n\r\n\r",
-      years_of_service);
-    output.push(CommPtr(new UncategorizedComm(buf2)));
+    output.push(CommPtr(new UncategorizedComm(welcomeMessage)));
 
-    outputBuf =
-      "Please type NEW (case sensitive) for a new account, or ? for help.\n\r";
-    outputBuf +=
-      "If you need assistance, join our Discord @ "
-      "https://discord.gg/TMz8gMBDXA\n\r\n\r";
-    outputBuf += "\n\rLogin: ";
+    static const sstring outputBuf =
+      "Please type NEW (case sensitive) for a new account, or ? for "
+      "help.\n\rIf you need assistance, join our Discord @ "
+      "https://discord.gg/TMz8gMBDXA\n\r\n\r\n\rLogin: ";
+
     output.push(CommPtr(new LoginComm("user", outputBuf)));
     return FALSE;
   } else if (my_arg == "NEW") {
@@ -3972,59 +3958,45 @@ int Descriptor::inputProcessing() {
 }
 
 sstring Descriptor::assembleMotd(int wiz) {
-  char wizmotd[MAX_STRING_LENGTH] = {0};
-  char motd[MAX_STRING_LENGTH] = {0};
-  sstring version;
-  struct stat timestat;
+  static const sstring header =
+    format("\n\r\n\r     Welcome to %s\n\r\n\r") % MUD_NAME_VERS;
 
-  file_to_sstring("txt/version", version);
-  // file_to_str adds \n\r, strip both off
-  size_t iter = version.find_last_not_of(" \n\r");
-  if (iter != sstring::npos)
-    version.erase(iter + 1);
+  auto buildMotd = [](int wiz) {
+    struct stat timestat;
+    const char* const motdPath = wiz ? File::WIZMOTD : File::MOTD;
+    const char* const newsFilePath = wiz ? File::WIZNEWS : File::NEWS;
 
-  sprintf(motd + strlen(motd), "\n\r\n\r     Welcome to %s\n\r     %s\n\r\n\r",
-    MUD_NAME_VERS, version.c_str());
+    sstring motd;
+    file_to_sstring(motdPath, motd, CONCAT_YES);
 
-  file_to_sstring(File::MOTD, version);
-  // swap color sstrings
-  version = colorString(character, this, version, NULL, COLOR_BASIC, false);
-  strcat(motd, version.c_str());
+    char* lastUpdated = nullptr;
 
-  if (stat(File::NEWS, &timestat)) {
-    vlogf(LOG_BUG, "bad call to news file");
-    return {};
-  }
-
-  sprintf(motd + strlen(motd), "\n\rREAD the NEWS LAST UPDATED       : %s\n\r",
-    ctime(&(timestat.st_mtime)));
-  if (wiz) {
-    file_to_sstring(File::WIZMOTD, version);
-    // swap color sstrings
-    version = colorString(character, this, version, NULL, COLOR_BASIC, false);
-    strcat(motd, version.c_str());
-    if (stat(File::WIZNEWS, &timestat)) {
-      vlogf(LOG_BUG, "bad call to wiznews file");
-      return {};
+    if (stat(newsFilePath, &timestat)) {
+      vlogf(LOG_FILE,
+        format("Descriptor::sendMotd::buildMotd - Could not stat %snews file") %
+          (wiz ? "wiz" : ""));
+    } else {
+      lastUpdated = ctime(&(timestat.st_mtime));
     }
-    sprintf(wizmotd + strlen(wizmotd),
-      "\n\rREAD the WIZNEWS LAST UPDATED    : %s\n\r",
-      ctime(&(timestat.st_mtime)));
-  }
+
+    motd += format("\n\rREAD the %sNEWS LAST UPDATED       : %s\n\r") %
+            (wiz ? "WIZ" : "") % (lastUpdated ? lastUpdated : "Unknown");
+
+    return motd;
+  };
+
+  static const sstring normalMotd = header + buildMotd(0);
+  static const sstring wizMotd = normalMotd + buildMotd(1);
+
+  // swap color sstrings
+  sstring motd = colorString(character, this, (wiz ? wizMotd : normalMotd),
+    nullptr, COLOR_BASIC, false);
 
   if (!m_bIsClient) {
-    if (wiz)
-      return sstring(motd) + wizmotd;
     return motd;
   } else {
-    sstring sb;
-    if (!wiz) {
-      sb = motd;
-    } else {
-      sb = wizmotd;
-    }
-    processStringForClient(sb);
-    clientf(format("%d|%s") % CLIENT_MOTD % sb);
+    processStringForClient(motd);
+    clientf(format("%d|%s") % CLIENT_MOTD % motd);
     return {};
   }
 }

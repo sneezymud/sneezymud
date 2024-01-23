@@ -5,6 +5,7 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include <sstream>
+#include "configuration.h"
 #include "extern.h"
 #include "low.h"
 #include "account.h"

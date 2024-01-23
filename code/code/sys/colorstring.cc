@@ -6,6 +6,7 @@
 //                                                                      //
 //////////////////////////////////////////////////////////////////////////
 
+#include "configuration.h"
 #include "extern.h"
 #include "colorstring.h"
 #include "being.h"

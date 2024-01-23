@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <iomanip>
 
+#include "configuration.h"
 #include "handler.h"
 #include "extern.h"
 #include "being.h"
