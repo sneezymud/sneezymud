@@ -1,4 +1,4 @@
-                             SneezyMUD v5.4
+                             SneezyMUD
                           Founded: May 1, 1992
 
 -------------------------------------------------------------------------------
@@ -17,17 +17,19 @@ Grimhaven 5.1:    May 8th, 1999
 SneezyMUD 5.2:    March 13th, 2001
 SneezyMUD 5.3:    June 6th, 2014
 SneezyMUD 5.4:    August 3rd, 2017
+SneezyMUD    :    ca. 2021 - Ongoing, versionless, open-source development
+                  https://github.com/sneezymud/sneezymud
 ------------------------------------------------------------------------------
-SneezyMUD v5.4:
+Active SneezyMUD Contributors:
 
-Elmo Todurov  (Imm)        : Coder, GitHub Code Support
-Jeff Wolak  (Warluk)       : Sysadmin, Coder
-            (Onslaught)    : OPS manager, VPS hosting
-            (Sidartha)     : Senior LOW
-            (Vasco)        : Senior builder
-            (Bozwell)      : Coder
-            (Cirius)       : Coder
-            (Wry)          : Sysadmin support
+Elmo Todurov (Cizra)       : Coder, GitHub Code Support
+Jeff Wolak   (Warluk)      : Sysadmin, Coder
+             (Onslaught)   : OPS manager, VPS hosting
+             (Sidartha)    : Senior LOW
+             (Vasco)       : Senior builder
+             (Bozwell)     : Coder
+             (Cirius)      : Coder
+             (Dash)        : Coder
 
 Past members of the MUD Admin:
 
@@ -36,7 +38,9 @@ Jeff Bennett (Batopr)      : Coder, Partner
 Ben Sarnoff  (Cosmo)       : Coder, Partner
 Travis Nelson (Peel)       : Coder, Partner
 
-Elmo Todurov  (Imm)        : Sysadmin, Coder, Site Provider
+(Wry)                      : Sysadmin support
+Elmo Todurov  (Cizra)      : Sysadmin, Coder, Site Provider
+Ryan Smith-Roberts         : Coder
 Aaron Nebeker (Aion)       : MUDAdmin, LOW, Master of Coin
 JD Fenech    (Juno)        : Sysadmin, Coder
 Andrew Evans (Erasmus)     : 5.3 Sysadmin, Coder, Site Provider
