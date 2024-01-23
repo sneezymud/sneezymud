@@ -9,8 +9,12 @@
 #include "extern.h"
 #include "enum.h"
 #include "discord.h"
+#include "sstring.h"
 
 #include <stdio.h>
+#include <filesystem>
+#include <fstream>
+#include <iterator>
 
 extern "C" {
 #include <unistd.h>
@@ -22,6 +26,38 @@ extern int run_the_game();
 
 std::mt19937 rng;
 sstring MUD_NAME_VERS;
+
+namespace {
+  // Expects to be called only *after* Config::doConfiguration() has executed.
+  // lib/version.txt is created by the build system, as defined in the
+  // SConstruct file, and should consist of two lines - the first being the
+  // commit hash, and the second being the date of the commit.
+  sstring readVersionFromFile() {
+    const std::filesystem::path versionPath = std::filesystem::current_path() /
+                                              Config::DataDir().c_str() /
+                                              "version.txt";
+
+    std::ifstream file(versionPath);
+
+    if (!file.is_open()) {
+      vlogf(LOG_FILE, format("Couldn't read commit hash/date from %s.") %
+                        versionPath.string());
+      return {"(build ?, ?)"};
+    }
+
+    std::istringstream fileContents(
+      {(std::istreambuf_iterator<char>(file)), {}});
+
+    sstring hash;
+    std::getline(fileContents, hash);
+
+    sstring date;
+    std::getline(fileContents, date);
+
+    return {"(build " + hash + ", " + date + ")"};
+  }
+
+}  // namespace
 
 int main(int argc, char* argv[]) {
   int a;
