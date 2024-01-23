@@ -8,7 +8,6 @@
 #include "configuration.h"
 #include "extern.h"
 #include "enum.h"
-#include "version.h"
 #include "discord.h"
 
 #include <stdio.h>
@@ -22,17 +21,22 @@ extern int run_the_game();
 #ifndef LOWTOOLS
 
 std::mt19937 rng;
+sstring MUD_NAME_VERS;
 
 int main(int argc, char* argv[]) {
-  vlogf(LOG_MISC, "Sneezy version " VERSION);
   int a;
 
   if (!Config::doConfiguration(argc, argv))
     return 0;
 
-  if (!Discord::doConfig()) 
+  // Do this after loading configuration, as version.txt is written to the lib
+  // directory, the location of which is defined in the config file.
+  MUD_NAME_VERS = format("%s %s") % MUD_NAME % readVersionFromFile();
+  vlogf(LOG_MISC, MUD_NAME_VERS);
+
+  if (!Discord::doConfig())
     vlogf(LOG_MISC, "Discord configuration failed.");
-  
+
   if (Config::NoSpecials())
     vlogf(LOG_MISC, "Suppressing assignment of special routines.");
 

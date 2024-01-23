@@ -91,7 +91,7 @@ opt_cxx =            get_option('CXX',         'g++')
 
 
 ## ensure submodules are ready to go
-try: 
+try:
     submodules = subprocess.check_output(['git', 'submodule', 'status']).decode('utf-8').split()
     if any(sub.startswith('-') for sub in submodules):
         info('Initializing submodule dependencies, please wait...')
@@ -281,20 +281,30 @@ if flag_pretty:
              interval=5)
 
 try:
-    git_hash = subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
+    git_hash = subprocess.check_output(
+        ['git', 'rev-parse', 'HEAD']).decode('utf-8').strip()
 except Exception:
     warning("git_hash could not be read.")
     git_hash = "?"
 
 try:
-    git_dirty = "+" if subprocess.check_output(['git', 'status', '--short']).decode('uft-8') else ""
+    git_dirty = "+" if subprocess.check_output(
+        ['git', 'status', '--short']).decode('utf-8') else ""
 except Exception:
-    # Nobody ever figured out why it fails on some systems  
     warning("git status could not be read.")
     git_dirty = "?"
 
-with open('code/version.h', 'w') as f:
-    f.write('#pragma once\n#define VERSION "{}"\n'.format(git_hash + git_dirty))
+try:
+    git_date = subprocess.check_output(
+        ['git', 'show', '-s', '--format=%cd', '--date=format:%Y-%m-%d', git_hash]).decode('utf-8').strip()
+except Exception:
+    warning("git date could not be read.")
+    git_date = "?"
+
+with open('../lib/version.txt', 'w') as f:
+    f.write(format(git_hash + git_dirty))
+    f.write("\n")
+    f.write(git_date)
 
 ## pull in C++ targets
 env.SConscript(

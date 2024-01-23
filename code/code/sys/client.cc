@@ -570,10 +570,9 @@ int Descriptor::read_client(char* str2) {
         return 0;
       }
 
-      sprintf(buf, "$n just rented with the %s client.", MUD_NAME_VERS);
-      act(buf, FALSE, character, NULL, NULL, TO_ROOM);
+      act(format("$n just rented with the %s client.") % MUD_NAME, false,
+        character, nullptr, nullptr, TO_ROOM);
       return dynamic_cast<TPerson*>(character)->saveRent(TRUE, 2);
-      break;
     }
     case CLIENT_DISCONNECT:
       character->desc = NULL;

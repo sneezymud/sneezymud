@@ -17,8 +17,8 @@
 #include "configuration.h"
 #include "player_data.h"
 
-// may not exceed NAME_SIZE (15) chars
-static const char* const SNEEZY_ADMIN = "SneezyMUD Administration";
+static const sstring sneezyAdmin = format("%s Administration") % MUD_NAME;
+static const char* const SNEEZY_ADMIN = sneezyAdmin.c_str();
 
 int mail_ok(TBeing* ch) {
   if (Config::NoMail()) {

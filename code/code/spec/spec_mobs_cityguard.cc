@@ -1,3 +1,4 @@
+#include "configuration.h"
 #include "room.h"
 #include "monster.h"
 #include "obj_trap.h"

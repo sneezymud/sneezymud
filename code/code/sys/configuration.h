@@ -1,6 +1,14 @@
 #pragma once
 
+#include <string>
+#include <string_view>
 #include "sstring.h"
+
+inline constexpr const char* MUD_NAME = "SneezyMUD";
+extern sstring MUD_NAME_VERS;
+
+std::string readFileContents(std::string_view);
+std::string readVersionFromFile();
 
 class Config {
   private:
