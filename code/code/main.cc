@@ -36,27 +36,22 @@ namespace {
     const std::filesystem::path versionPath = std::filesystem::current_path() /
                                               Config::DataDir().c_str() /
                                               "version.txt";
-
     std::ifstream file(versionPath);
 
-    if (!file.is_open()) {
+    if (!file) {
       vlogf(LOG_FILE, format("Couldn't read commit hash/date from %s.") %
                         versionPath.string());
-      return {"(build ?, ?)"};
+      return "(build ?, ?)";
     }
 
-    std::istringstream fileContents(
-      {(std::istreambuf_iterator<char>(file)), {}});
-
     sstring hash;
-    std::getline(fileContents, hash);
+    std::getline(file, hash);
 
     sstring date;
-    std::getline(fileContents, date);
+    std::getline(file, date);
 
-    return {"(build " + hash + ", " + date + ")"};
+    return "(build " + hash + ", " + date + ")";
   }
-
 }  // namespace
 
 int main(int argc, char* argv[]) {
