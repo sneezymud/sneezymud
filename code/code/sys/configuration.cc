@@ -1,8 +1,6 @@
-#include <filesystem>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <iterator>
 
 #include "configuration.h"
 #include "extern.h"
@@ -185,31 +183,4 @@ bool Config::doConfiguration(int argc, char* argv[]) {
     return false;
   }
   return true;
-}
-
-std::string readFileContents(const std::string& path) {
-  std::ifstream file(path);
-
-  if (!file.is_open()) {
-    vlogf(LOG_FILE,
-      format("Failed to open %s.") % (std::filesystem::current_path() / path));
-    return {};
-  }
-
-  return {(std::istreambuf_iterator<char>(file)), {}};
-}
-
-std::string readVersionFromFile() {
-  const std::filesystem::path versionPath =
-    std::filesystem::current_path() / Config::DataDir().c_str() / "version.txt";
-
-  std::istringstream fileContents(readFileContents(versionPath.string()));
-
-  std::string hash;
-  std::getline(fileContents, hash);
-
-  std::string date;
-  std::getline(fileContents, date);
-
-  return {"(build " + hash + ", " + date + ")"};
 }
