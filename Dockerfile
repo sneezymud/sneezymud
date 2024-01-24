@@ -5,7 +5,7 @@ LABEL maintainer Elmo Todurov <elmo.todurov@eesti.ee>
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Removing cache after install reduces image size
-RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadbclient-dev scons libcurl4-openssl-dev git ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadbclient-dev scons libcurl4-openssl-dev git ca-certificates pkgconf && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 ARG UID=1000
 ARG BRANCH="master"
