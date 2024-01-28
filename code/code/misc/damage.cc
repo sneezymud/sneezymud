@@ -882,7 +882,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
           // added for information to other players that haven't died but
           // didn't want to write an information channel etc
           // should be fun to come up with new shouts
-          int chance = ::number(1, 26);
+          int chance = ::number(1, 35);
           if (chance == 1) {
             taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
           } else if (chance == 2) {
@@ -990,11 +990,51 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
           } else if (chance == 26) {
             taunt_buf =
               format("Ouch! Does someone have a relive for %s?") % v->getName();
+          } else if (chance == 27) {
+            taunt_buf = format(
+                          "Let %s's defeat be a cautionary tale for aspiring "
+                          "adventurers everywhere.") %
+                        v->getName();
+          } else if (chance == 28) {
+            taunt_buf =
+              format(
+                "You should have stayed in the safety of the tavern, %s!") %
+              v->getName();
+          } else if (chance == 29) {
+            taunt_buf =
+              format("%s's skills are as rusty as their armor!") % v->getName();
+          } else if (chance == 30) {
+            taunt_buf = format("Back to the inn with you, %s!") % v->getName();
+          } else if (chance == 31) {
+            taunt_buf =
+              format("Is %s the best SneezMUD has to offer?  Pathetic!") %
+              v->getName();
+          } else if (chance == 32) {
+            taunt_buf = format(
+                          "Looks like %s needs to spend more time grinding and "
+                          "less time dreaming of glory!") %
+                        v->getName();
+          } else if (chance == 33) {
+            taunt_buf = format(
+                          "Back to training, %s.  Maybe one day you'll pose a "
+                          "challenge.") %
+                        v->getName();
+          } else if (chance == 34) {
+            taunt_buf =
+              format("%s wasn't the hero SneezyMUD needed - or deserved.") %
+              v->getName();
+          } else if (chance == 35) {
+            taunt_buf =
+              format(
+                "%s apparently thought the skill system on SneezyMUD was "
+                "called learn by *dying*.  Who wants to tell em?") %
+              v->getName();
           } else {
             taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
           }
           doShout(taunt_buf);
-          discord_taunt_msg = format(":skull: %s shouts, \"%s\"") % getName().cap() % taunt_buf;
+          discord_taunt_msg =
+            format(":skull: %s shouts, \"%s\"") % getName().cap() % taunt_buf;
           Discord::sendMessage(Discord::CHANNEL_DEATHS, discord_taunt_msg);
         } else {
 #if 1
@@ -1131,7 +1171,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
               f->follower->desc->session.groupKills++;
               f->follower->desc->career.group_kills++;
             }
-              
+
             // discord group naming
             if (f->follower->getName() != getName()) {
               if (group_members < 2) {
@@ -1149,19 +1189,29 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
 
     // send an achievement message to the discord webhook
     sstring achievement_msg;
-    if((isPc() || (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) && (master && master->isPc()))) && !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
+    if ((isPc() || (isPet(PETTYPE_PET | PETTYPE_CHARM | PETTYPE_THRALL) &&
+                     (master && master->isPc()))) &&
+        !v->isPc() && v->GetMaxLevel() >= Discord::ACHIEVEMENT_THRESHOLD) {
       // player killed an notable mob, send message to our discord webhook
       if (group_members == 0) {
         // killer is solo
-        achievement_msg = format(":crossed_swords: **%s** has taken down **%s**!") % getName() % v->getName();
+        achievement_msg =
+          format(":crossed_swords: **%s** has taken down **%s**!") % getName() %
+          v->getName();
       } else if (group_members == 1) {
         // killer + one other group member
-        achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s**!") % getName() % v->getName() % lastname;
+        achievement_msg = format(
+                            ":crossed_swords: **%s** has taken down **%s** "
+                            "with assistance from **%s**!") %
+                          getName() % v->getName() % lastname;
       } else {
         // killer + a group of 2+ others
-        achievement_msg = format(":crossed_swords: **%s** has taken down **%s** with assistance from **%s** and **%s**!") % getName() % v->getName() % grouplist.str() % lastname;
+        achievement_msg = format(
+                            ":crossed_swords: **%s** has taken down **%s** "
+                            "with assistance from **%s** and **%s**!") %
+                          getName() % v->getName() % grouplist.str() % lastname;
       }
-      
+
       Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
     }
 
