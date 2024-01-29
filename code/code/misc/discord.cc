@@ -5,6 +5,7 @@
 #include <thread>
 #include <mutex>
 #include <utility>
+#include <chrono>
 
 #include "discord.h"
 
@@ -29,7 +30,7 @@ sstring Discord::CHANNEL_ACHIEVEMENT;
 int Discord::ACHIEVEMENT_THRESHOLD;
 
 // for thread management
-bool Discord::stop_thread;
+bool Discord::stop_thread = false;
 std::thread Discord::messenger_thread;
 std::queue<std::pair<sstring, sstring>> Discord::message_queue;
 std::mutex Discord::queue_mutex;
@@ -37,24 +38,19 @@ std::mutex Discord::queue_mutex;
 // read the configuration
 bool Discord::doConfig() {
   using std::string;
-  // worker thread setup
-  stop_thread = false;
-  messenger_thread = std::thread(Discord::messenger);
 
   string configFile = "discord.cfg";
 
   std::string empty_string = "";
 
   po::options_description configOnly("Configuration File Only");
-  configOnly.add_options()("deaths_webhook",
-    po::value<string>(&CHANNEL_DEATHS)->default_value(empty_string),
-    "see discord.h")("sys_webhook",
-    po::value<string>(&CHANNEL_SYS)->default_value(empty_string),
-    "see discord.h")("achieve_webhook",
-    po::value<string>(&CHANNEL_ACHIEVEMENT)->default_value(empty_string),
-    "see discord.h")("achieve_threshold",
-    po::value<int>(&ACHIEVEMENT_THRESHOLD)->default_value(80), "see discord.h");
-
+  // clang-format off
+  configOnly.add_options()
+    ("deaths_webhook",po::value<string>(&CHANNEL_DEATHS)->default_value(empty_string),"see discord.h")
+    ("sys_webhook",po::value<string>(&CHANNEL_SYS)->default_value(empty_string),"see discord.h")
+    ("achieve_webhook",po::value<string>(&CHANNEL_ACHIEVEMENT)->default_value(empty_string),"see discord.h")
+    ("achieve_threshold",po::value<int>(&ACHIEVEMENT_THRESHOLD)->default_value(80), "see discord.h");
+  // clang-format on
   po::options_description config_options;
   config_options.add(configOnly);
 
@@ -73,6 +69,9 @@ bool Discord::doConfig() {
 
   po::store(parse_config_file(ifs, config_options), vm);
   po::notify(vm);
+
+  // worker thread setup
+  messenger_thread = std::thread(Discord::messenger);
 
   return true;
 }
@@ -125,8 +124,8 @@ void Discord::sendMessage(sstring channel, sstring msg) {
 
 void Discord::messenger() {
   while (true) {
-    std::lock_guard<std::mutex> lock(queue_mutex);
     if (message_queue.empty() && !stop_thread) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // sleep
       continue;
     }
 
@@ -134,6 +133,7 @@ void Discord::messenger() {
       break;
     }
 
+    std::lock_guard<std::mutex> lock(queue_mutex);
     std::pair<sstring, sstring> message = message_queue.front();
     message_queue.pop();
 

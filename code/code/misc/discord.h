@@ -8,7 +8,6 @@
 
 class Discord {
   private:
-    Discord();
     static bool sendMessageAsync(sstring channel, sstring msg);
     static void messenger();
     static std::thread messenger_thread;
@@ -17,6 +16,8 @@ class Discord {
     static std::queue<std::pair<sstring, sstring>> message_queue;
 
   public:
+    Discord() = delete;
+    
     static sstring CHANNEL_DEATHS;
     static sstring CHANNEL_SYS;
     static sstring CHANNEL_ACHIEVEMENT;

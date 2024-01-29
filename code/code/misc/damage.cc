@@ -1007,7 +1007,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             taunt_buf = format("Back to the inn with you, %s!") % v->getName();
           } else if (chance == 31) {
             taunt_buf =
-              format("Is %s the best SneezMUD has to offer?  Pathetic!") %
+              format("Is %s the best SneezyMUD has to offer?  Pathetic!") %
               v->getName();
           } else if (chance == 32) {
             taunt_buf = format(
