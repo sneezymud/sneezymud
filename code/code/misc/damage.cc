@@ -1035,7 +1035,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
           doShout(taunt_buf);
           discord_taunt_msg =
             format(":skull: %s shouts, \"%s\"") % getName().cap() % taunt_buf;
-          Discord::sendMessage(Discord::CHANNEL_DEATHS, discord_taunt_msg);
+          Discord::sendMessageAsync(Discord::CHANNEL_DEATHS, discord_taunt_msg);
         } else {
 #if 1
           if (v == this && isPc())
@@ -1212,7 +1212,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
                           getName() % v->getName() % grouplist.str() % lastname;
       }
 
-      Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
+      Discord::sendMessageAsync(Discord::CHANNEL_ACHIEVEMENT, achievement_msg);
     }
 
     strcpy(buf2, v->name.c_str());
