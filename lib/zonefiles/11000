@@ -584,7 +584,7 @@ G 1 11098 10				  Burnt parchment
 E 1 11046 1 18			  Emerald orb
 ? 0 2 0 G
 G 1 11029 1				    Grimoire of arcane might
-Z 0 5 5					      star velvet local
+Z 0 4 5					      star velvet local
 M 0 11040 1 11088 	Cavell
 ? 0 5 0 G
 G 1 11045 10				  Delicate parchment
@@ -596,7 +596,7 @@ E 1 11048 2 18			  Sapphire orb
 E 1 11021 1 19			  Spiritshiv
 ? 0 5 0 E
 E 1 10045 10 5			  Sigil Cowl
-Z 0 5 5					      star velvet local
+Z 0 4 4				  star velvet local
 M 0 11042 2 11005 	Goshawk
 M 0 11043 2 11007 	Wild boar
 M 0 11044 1 11070 	Doom guard
