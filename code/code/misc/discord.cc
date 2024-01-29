@@ -4,6 +4,7 @@
 #include <queue>
 #include <thread>
 #include <mutex>
+#include <condition_variable>
 #include <utility>
 #include <chrono>
 
@@ -32,6 +33,7 @@ int Discord::ACHIEVEMENT_THRESHOLD;
 // for thread management
 bool Discord::stop_thread = false;
 std::thread Discord::messenger_thread;
+std::condition_variable Discord::cv;
 std::queue<std::pair<sstring, sstring>> Discord::message_queue;
 std::mutex Discord::queue_mutex;
 
@@ -78,7 +80,7 @@ bool Discord::doConfig() {
 
 // send a message to a discord webhook
 // we use the curl library for this and keep it simple
-bool Discord::sendMessageAsync(sstring channel, sstring msg) {
+bool Discord::sendMessage(sstring channel, sstring msg) {
   CURL* curl = curl_easy_init();
   if (!curl) {
     vlogf(LOG_MISC, "Discord webhooks: curl_easy_init() failed");
@@ -110,7 +112,7 @@ bool Discord::sendMessageAsync(sstring channel, sstring msg) {
   return true;
 }
 
-void Discord::sendMessage(sstring channel, sstring msg) {
+void Discord::sendMessageAsync(sstring channel, sstring msg) {
   if (channel == "") {
     // no channel configuration, so bail
     return;
@@ -120,25 +122,24 @@ void Discord::sendMessage(sstring channel, sstring msg) {
 
   std::lock_guard<std::mutex> lock(queue_mutex);
   message_queue.push({channel, msg});
+  cv.notify_one();
 }
 
 void Discord::messenger() {
-  while (true) {
-    if (message_queue.empty() && !stop_thread) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));  // sleep
-      continue;
+  std::unique_lock<std::mutex> lock(queue_mutex);
+
+  do {
+    cv.wait(lock, [] { return !message_queue.empty() || stop_thread; });
+
+    while (!message_queue.empty()) {
+      std::pair<sstring, sstring> message = message_queue.front();
+      message_queue.pop();
+
+      lock.unlock();
+      sendMessage(message.first, message.second);
+      lock.lock();
     }
-
-    if (stop_thread) {
-      break;
-    }
-
-    std::lock_guard<std::mutex> lock(queue_mutex);
-    std::pair<sstring, sstring> message = message_queue.front();
-    message_queue.pop();
-
-    sendMessageAsync(message.first, message.second);
-  }
+  } while (!stop_thread);
 }
 
 bool Discord::doCleanup() {
@@ -150,6 +151,7 @@ bool Discord::doCleanup() {
     std::lock_guard<std::mutex> lock(queue_mutex);
     stop_thread = true;
   }
+  cv.notify_one();
 
   return true;
 }
