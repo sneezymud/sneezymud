@@ -143,15 +143,14 @@ void Discord::messenger() {
 }
 
 bool Discord::doCleanup() {
-  // let the thread finish
-  messenger_thread.join();
-
   // Signal the worker thread to stop
   {
     std::lock_guard<std::mutex> lock(queue_mutex);
     stop_thread = true;
   }
   cv.notify_one();
+  // let the thread finish
+  messenger_thread.join();
 
   return true;
 }
