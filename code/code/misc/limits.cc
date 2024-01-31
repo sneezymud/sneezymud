@@ -662,12 +662,14 @@ void TPerson::advanceLevel(classIndT Class) {
   if (desc && GetMaxLevel() >= 50) {
     if (desc->career.hit_level50 == 0) {
       desc->career.hit_level50 = time(0);
-      
+
       // discord webhook announcement
       if (GetMaxLevel() == 50) {
         sstring discord_msg;
-        discord_msg = format(":tada: **%s** has achieved level 50 as a **%s**!") % getName() % getProfName();
-        Discord::sendMessage(Discord::CHANNEL_ACHIEVEMENT, discord_msg);
+        discord_msg =
+          format(":tada: **%s** has achieved level 50 as a **%s**!") %
+          getName() % getProfName();
+        Discord::sendMessageAsync(Discord::CHANNEL_ACHIEVEMENT, discord_msg);
       }
     }
     if (isSingleClass()) {
@@ -1525,119 +1527,119 @@ int TBeing::checkIdling() {
     }
   }
 #endif
-    return FALSE;
+  return FALSE;
+}
+
+int TBeing::moneyMeBeing(TThing* mon, TThing* sub) {
+  int rc = mon->moneyMeMoney(this, sub);
+  if (IS_SET_DELETE(rc, DELETE_THIS))
+    return DELETE_ITEM;
+  return FALSE;
+}
+
+void TBeing::classSpecificStuff() {
+  if (hasClass(CLASS_WARRIOR))
+    setMult(1.0);
+
+  if (hasClass(CLASS_MONK)) {
+    // from balance note
+    // we desire monks to be getting 5/7 sqrt(lev) hits per round
+    // barehand prof is linear from L1-L30 : n = 10/3 * L
+    // barehand spec is linear roughly L31-L50 n = (L-30) * 5
+    // solve for L as a function of n
+    double value = 0;
+    if (doesKnowSkill(SKILL_BAREHAND_PROF))
+      value += 3.0 * getSkillValue(SKILL_BAREHAND_PROF) / 10.0;
+    if (doesKnowSkill(SKILL_BAREHAND_SPEC))
+      value += getSkillValue(SKILL_BAREHAND_SPEC) / 5.0;
+
+    // value is roughly their actual level, but based on skill instead
+    value = min(max(1.0, value), 50.0);
+
+    // now make it into numHits
+    value = 5.0 * sqrt(value) / 7.0;
+
+    if (doesKnowSkill(SKILL_ADVANCED_KICKING))
+      value += getSkillValue(SKILL_ADVANCED_KICKING) / 100.0;
+
+    // adjust for speed
+    value *= getStatMod(STAT_SPE);
+
+    // give at least 1 hit per hand
+    // reverse engineering, we realize 2.0 comes around L7.8 = 26%barehand
+    // so this is also a newbie normalization
+    value = max(value, 2.0);
+
+    setMult(value);
+  }
+}
+
+// computes the time it takes to get back 1 point of hp,mana and move
+// it uses worst of the three
+int TBeing::regenTime() {
+  int iTime = 100;
+
+  if (getHit() < hitLimit())
+    iTime = min(iTime, hitGain());
+
+  if (getMove() < moveLimit())
+    iTime = min(iTime, moveGain());
+
+  if (getMana() < manaLimit())
+    iTime = min(iTime, manaGain());
+
+  iTime = max(iTime, 1);
+
+  // iTime now holds the lesser of my mana/move/hp gain (per update)
+  // regen time for 1 point should simply be the inverse multiplied
+  // by how long a points-update is
+  iTime = Pulse::UPDATE / iTime;
+  return iTime;
+}
+
+int TBeing::hpGainForClass(classIndT Class) const {
+  int hpgain = 0;
+
+  // add for classes first
+  if (hasClass(CLASS_MAGE) && Class == MAGE_LEVEL_IND)
+    hpgain += ::number(3, 7);  // old 2,8
+
+  if (hasClass(CLASS_CLERIC) && Class == CLERIC_LEVEL_IND)
+    hpgain += ::number(5, 7);  // old 4,8
+
+  if (hasClass(CLASS_WARRIOR) && Class == WARRIOR_LEVEL_IND)
+    hpgain += ::number(6, 11);  // old 5,12
+
+  if (hasClass(CLASS_THIEF) && Class == THIEF_LEVEL_IND)
+    hpgain += ::number(4, 8);  // old 3,9
+
+  if (hasClass(CLASS_DEIKHAN) && Class == DEIKHAN_LEVEL_IND)
+    hpgain += ::number(6, 9);  // old 5,10
+
+  if (hasClass(CLASS_MONK) && Class == MONK_LEVEL_IND)
+    hpgain += ::number(4, 7);  // old 3,8
+
+  if (hasClass(CLASS_RANGER) && Class == RANGER_LEVEL_IND)
+    hpgain += ::number(6, 8);  // old 5,9
+
+  if (hasClass(CLASS_SHAMAN) && Class == SHAMAN_LEVEL_IND)
+    hpgain += ::number(3, 8);
+
+  return hpgain;
+}
+
+int TBeing::hpGainForLevel(classIndT Class) const {
+  double hpgain = 0;
+
+  hpgain = (double)hpGainForClass(Class);
+
+  hpgain *= (double)getConHpModifier();
+
+  // hpgain /= (double) howManyClasses();
+
+  if (roll_chance(hpgain - (int)hpgain)) {
+    hpgain += 1.0;
   }
 
-  int TBeing::moneyMeBeing(TThing * mon, TThing * sub) {
-    int rc = mon->moneyMeMoney(this, sub);
-    if (IS_SET_DELETE(rc, DELETE_THIS))
-      return DELETE_ITEM;
-    return FALSE;
-  }
-
-  void TBeing::classSpecificStuff() {
-    if (hasClass(CLASS_WARRIOR))
-      setMult(1.0);
-
-    if (hasClass(CLASS_MONK)) {
-      // from balance note
-      // we desire monks to be getting 5/7 sqrt(lev) hits per round
-      // barehand prof is linear from L1-L30 : n = 10/3 * L
-      // barehand spec is linear roughly L31-L50 n = (L-30) * 5
-      // solve for L as a function of n
-      double value = 0;
-      if (doesKnowSkill(SKILL_BAREHAND_PROF))
-        value += 3.0 * getSkillValue(SKILL_BAREHAND_PROF) / 10.0;
-      if (doesKnowSkill(SKILL_BAREHAND_SPEC))
-        value += getSkillValue(SKILL_BAREHAND_SPEC) / 5.0;
-
-      // value is roughly their actual level, but based on skill instead
-      value = min(max(1.0, value), 50.0);
-
-      // now make it into numHits
-      value = 5.0 * sqrt(value) / 7.0;
-
-      if (doesKnowSkill(SKILL_ADVANCED_KICKING))
-        value += getSkillValue(SKILL_ADVANCED_KICKING) / 100.0;
-
-      // adjust for speed
-      value *= getStatMod(STAT_SPE);
-
-      // give at least 1 hit per hand
-      // reverse engineering, we realize 2.0 comes around L7.8 = 26%barehand
-      // so this is also a newbie normalization
-      value = max(value, 2.0);
-
-      setMult(value);
-    }
-  }
-
-  // computes the time it takes to get back 1 point of hp,mana and move
-  // it uses worst of the three
-  int TBeing::regenTime() {
-    int iTime = 100;
-
-    if (getHit() < hitLimit())
-      iTime = min(iTime, hitGain());
-
-    if (getMove() < moveLimit())
-      iTime = min(iTime, moveGain());
-
-    if (getMana() < manaLimit())
-      iTime = min(iTime, manaGain());
-
-    iTime = max(iTime, 1);
-
-    // iTime now holds the lesser of my mana/move/hp gain (per update)
-    // regen time for 1 point should simply be the inverse multiplied
-    // by how long a points-update is
-    iTime = Pulse::UPDATE / iTime;
-    return iTime;
-  }
-
-  int TBeing::hpGainForClass(classIndT Class) const {
-    int hpgain = 0;
-
-    // add for classes first
-    if (hasClass(CLASS_MAGE) && Class == MAGE_LEVEL_IND)
-      hpgain += ::number(3, 7);  // old 2,8
-
-    if (hasClass(CLASS_CLERIC) && Class == CLERIC_LEVEL_IND)
-      hpgain += ::number(5, 7);  // old 4,8
-
-    if (hasClass(CLASS_WARRIOR) && Class == WARRIOR_LEVEL_IND)
-      hpgain += ::number(6, 11);  // old 5,12
-
-    if (hasClass(CLASS_THIEF) && Class == THIEF_LEVEL_IND)
-      hpgain += ::number(4, 8);  // old 3,9
-
-    if (hasClass(CLASS_DEIKHAN) && Class == DEIKHAN_LEVEL_IND)
-      hpgain += ::number(6, 9);  // old 5,10
-
-    if (hasClass(CLASS_MONK) && Class == MONK_LEVEL_IND)
-      hpgain += ::number(4, 7);  // old 3,8
-
-    if (hasClass(CLASS_RANGER) && Class == RANGER_LEVEL_IND)
-      hpgain += ::number(6, 8);  // old 5,9
-
-    if (hasClass(CLASS_SHAMAN) && Class == SHAMAN_LEVEL_IND)
-      hpgain += ::number(3, 8);
-
-    return hpgain;
-  }
-
-  int TBeing::hpGainForLevel(classIndT Class) const {
-    double hpgain = 0;
-
-    hpgain = (double)hpGainForClass(Class);
-
-    hpgain *= (double)getConHpModifier();
-
-    // hpgain /= (double) howManyClasses();
-
-    if (roll_chance(hpgain - (int)hpgain)) {
-      hpgain += 1.0;
-    }
-
-    return max(1, (int)hpgain);
-  }
+  return max(1, (int)hpgain);
+}
