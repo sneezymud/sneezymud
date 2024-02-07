@@ -20,15 +20,15 @@ M 0 1399 3 1385       trash collectors
 M 0 1399 3 1385       trash collectors
 
 M 0 1214 5 1200       leper hunter
-? 0 2 0 E
+? 0 4 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 M 0 1214 5 1200       leper hunter
-? 0 2 0 E
+? 0 4 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 M 0 1214 5 1200       leper hunter
-? 0 2 0 E
+? 0 4 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 
@@ -45,117 +45,112 @@ D 0 1210   0    1 ; Sidedoor
 D 0 1210   1    1 ; Silo
 D 0 1213   5    2 ; Cellar
 D 1 1214   4    2 ; ""
-D 0 1215   3    1 ; Main Gate
-D 0 1218   3    1 ; Porticullis (Main)
-D 0 1218   0    2 ; Tower (Outer)
-D 1 1219   2    2 ; ""
-D 0 1218   2    2 ; ""
-D 1 1220   0    2 ; ""
-D 0 1250   0    2 ; Wall (Secret door)
-D 1 1251   2    2 ; ""
-D 0 1251   0    1 ; Tower (Inner)
-D 0 1251   7    1 ; ""
-D 0 1255   8    1 ; ""
-D 0 1255   3    1 ; ""
-D 0 1257   3    2 ; Wall (Secret door)
-D 1 1259   1    2 ; ""
-D 0 1260   3    2 ; Tower (Outer)
-D 1 1261   1    2 ; ""
-D 0 1261   0    1 ; Northern Gate
-D 0 1261   2    1 ; Porticullis (Northern)
-D 0 1261   3    1 ; Tower (Outer)
-D 0 1262   1    1 ; ""
-D 0 1263   3    1 ; Wall (Secret Door)
-D 0 1264   1    1 ; ""
-D 0 1264   3    1 ; Tower (Inner)
-D 0 1265   9    1 ; ""
-D 0 1277   9    1 ; ""
-D 0 1278   6    1 ; ""
-D 0 1238   2    2 ; Wall (Secret Door)
-D 1 1239   0    2 ; ""
-D 0 1240   0    1 ; Tower (Inner)
-D 0 1240   9    1 ; ""
-D 0 1244   6    1 ; ""
-D 0 1244   3    1 ; ""
-D 0 1247   1    2 ; Wall (Secret Door)
-D 1 1246   3    2 ; ""
-D 0 1249   0    1 ; Porticullis (Southern)
-D 1 1321   2    1 ; ""
-D 0 1249   1    2 ; Tower (Outer)
-D 1 1248   3    2 ; ""
-D 0 1249   2    1 ; Southern Gate
-D 0 1249   3    2 ; Tower (Outer)
-D 1 1280   1    2 ; ""
-D 0 1281   3    2 ; Wall (Secret Door)
-D 1 1282   1    2 ; ""
-D 0 1283   1    1 ; Tower (Inner)
-D 0 1283   7    1 ; ""
-D 0 1285   7    2 ; ""
-D 1 1286   8    2 ; ""
-D 0 1293   1    1 ; Ticket Agency
-D 0 1294   1    1 ; Jonah's Sailing Supplies
-D 0 1297   0    1 ; Portal Room
-D 0 1297   2    1 ; ""
-D 0 1332   1    1 ; Brightlaughter Tavern & Inn
-D 0 1332   8    1 ; ""
-D 0 1332   2    1 ; ""
-D 0 1334   0    2 ; Door behind the bar
-D 0 1337   6    1 ; Cathedral Gate
-D 0 1337   2    1 ; Garden Gate
-D 0 1337   9    1 ; Cathedral of Brightmoon
-D 0 1338   2    1 ; Mayor Rhodan's Office
-D 0 1338   9    1 ; ""
-D 0 1338   3    1 ; ""
-D 0 1339   0    1 ; Proctor's Office
-D 0 1339   7    1 ; ""
-D 0 1339   3    1 ; ""
-D 0 1340   0    2 ; Jail Cell
-D 1 1341   2    2 ; ""
-D 0 1340   1    2 ; ""
-D 1 1343   3    2 ; ""
-D 0 1340   2    2 ; ""
-D 1 1342   0    2 ; ""
-D 0 1344   2    1 ; Pompo's Fine Pastries
-D 0 1344   9    1 ; ""
-D 0 1344   3    1 ; ""
-D 0 1345   1    1 ; Brombur's Repairshop
-D 0 1345   8    1 ; ""
-D 0 1345   2    1 ; ""
-D 0 1346   0    1 ; Shookran's General Store
-D 0 1346   6    1 ; ""
-D 0 1346   1    1 ; ""
-D 0 1347   1    1 ; Ylorin's Weapons Sharpening
-D 0 1347   8    1 ; ""
-D 0 1347   2    1 ; ""
-D 0 1349   1    1 ; Small Chapel
-D 0 1348   3    1 ;
-D 0 1350   2    1 ; Infirmary
-D 0 1337   0    1 ;
-D 0 1360   7    1 ; Sacristy
-D 0 1361   8    1 ;
-D 0 1360   9    1 ; Fazoul
-D 0 1394   6    1 ;
-D 0 1362   0    1 ; Hourne's Fine Armours
-D 0 1362   6    1 ; ""
-D 0 1362   1    1 ; ""
-D 0 1363   0    1 ; Zephyr's Weapons of Destruction
-D 0 1363   7    1 ; ""
-D 0 1363   3    1 ; ""
 
-D 0 1364   0    1 ; Huma's Bestiary
-D 0 1364   6    1 ; ""
-D 0 1364   1    1 ; ""
-D 0 1365   0    1 ; The White Tower
-D 0 1365   7    1 ; ""
-D 0 1365   3    1 ; ""
-D 0 1391   2    1 ; Door behind the bar
-D 0 1393   2    1 ; Katherines Commodities
-D 0 1393   9    1 ; ""
-D 0 1393   3    1 ; ""
+***given the awful numbering in BM, the best way to organize the Doors is numerically
+***god help you if you need to alter these - Vasco
+D 0 1215 3 1
+D 0 1218 0 1
+D 0 1218 1 1
+D 0 1218 2 1
+D 0 1219 2 1
+D 0 1220 0 1
+D 0 1226 1 1
+D 0 1225 3 1
+D 0 1229 2 1
+D 0 1233 3 1
+D 0 1234 1 1
+D 0 1238 2 1
+D 0 1239 0 1
+D 0 1240 4 1
+D 0 1244 3 1
+D 0 1247 1 1
+D 0 1247 4 1
+D 0 1248 3 1
+D 0 1249 1 1
+D 0 1249 2 1
+D 0 1249 3 1
+D 0 1252 4 1
+D 0 1255 0 1
+D 0 1259 1 1
+D 0 1259 4 1
+D 0 1260 3 1
+D 0 1261 0 1
+D 0 1261 1 1
+D 0 1261 3 1
+D 0 1262 1 1
+D 0 1263 3 1
+D 0 1263 4 1
+D 0 1277 9 1
+D 0 1278 6 1
+D 0 1280 1 1
+D 0 1281 3 1
+D 0 1281 4 1
+D 0 1285 7 1
+D 0 1286 8 1
+D 0 1303 6 1
+D 0 1303 7 1
+D 0 1303 8 1
+D 0 1303 9 1
+D 0 1332 0 2
+D 0 1335 1 2
+D 0 1336 8 1
+D 0 1337 6 1
+D 0 1337 2 1
+D 0 1338 9 1
+D 0 1339 7 1
+D 0 1339 4 1
+D 0 1340 1 1
+D 0 1340 8 1
+D 0 1340 2 1
+D 0 1340 5 1
+D 0 1341 3 1
+D 0 1342 0 1
+D 0 1343 7 1
+D 0 1348 1 2
+D 0 1348 2 2
+D 0 1349 0 2
+D 0 1349 5 2
+D 0 1350 4 1
+D 0 1351 4 2
+D 0 1351 5 2
+D 0 1351 2 2
+D 0 1351 3 2
+D 0 1352 0 1
+D 0 1352 3 1
+D 0 1352 5 2
+D 0 1353 1 1
+D 0 1354 5 1
+D 0 1355 0 2
+D 0 1355 5 2
+D 0 1358 2 2
+D 0 1359 3 1
+D 0 1361 1 1
 D 0 1370   2    1 ; Arena
+D 0 1390 3 1
+D 0 1391 1 2
+D 0 1394 1 1
+D 0 1396 1 1
+D 0 1399 5 2
+D 0 18576 5 2
+D 0 18577 5 2
+D 0 18578 5 2
+D 0 18579 5 2
+D 0 18580 5 2
+D 0 18581 5 2
+D 0 18582 5 2
+D 0 18583 5 2
+D 0 18584 5 2
+D 0 18585 5 2
+D 0 18586 3 1
+D 0 18586 4 2
+D 0 18587 1 1
+D 0 18587 4 2
+D 0 18588 3 1
+D 0 18588 4 2
+D 0 18589 4 2
+D 0 18589 1 1
 
-* Apartment above Pahoran's
-D 0 1399 4 2         Magical Nexus -> Galek Armory
+
 
 O 0 104 1 1364     Window in Huma's Beastiary
 V 1 0 1397                    looking into room 1397
@@ -189,36 +184,36 @@ Y 0 11 5		5% chance of platemail
 
 
 M 0 1201 1 1339  ; Paladin Guard Lieutenant
-? 0 2 0 E
+? 0 4 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 M 0 1201 1 1253  ; Paladin Guard Lieutenant
-? 0 2 0 E
+? 0 4 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 M 0 1201 1 1242  ; Paladin Guard Lieutenant
-? 0 2 0 E
+? 0 4 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 
 M 0 1202 1 1339 39 ; Captain Paladin Guard
 G 1 1250 1            key
-? 0 3 0 E
+? 0 4 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 
 M 0 1202 1 1279 79 ; Captain Paladin Guard
-? 0 3 0 E
+? 0 6 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 M 0 1202 1 1287 87 ; Captain Paladin Guard
-? 0 3 0 E
+? 0 6 0 E
 E 1 1365 30 19          Battle Axe (Two-Handed)
 Y 0 11 5		5% chance of platemail
 
 M 0 1203 1 1339 39 ; Proctor of Brightmoon
 E 1 1340 1 3       ; 	Cell key
-Y 0 31 2           ; 	Load set Admantium
+Y 0 31 5           ; 	Load set Admantium
 M 0 1204 2 1202 02 ; Fieldworker
 ? 0 50 0 G
 G 1 1208 1         ; 	Farmhouse key
@@ -269,7 +264,9 @@ M 0 1340 1 1341  ; prisoner
 M 0 1340 1 1342  ; prisoner
 M 0 1340 1 1343  ; prisoner
 ? 0 7 0 E
-E 1 1344 1      ; 	golden greaves
+E 1 1344 9999 6      ; 	golden greave
+? 0 7 0 E
+E 1 1344 9999 7	golden greave
 M 0 1354 1 1354 54 ; Priest of Brightmoon
 M 0 1354 1 1354 54 ; Priest of Brightmoon
 M 0 1354 1 1354 54 ; Priest of Brightmoon
@@ -278,16 +275,23 @@ M 0 1361 1 1361 61 ; Bishop of Brightmoon
 ? 0 5 0 E
 E 1 1361   1    4 ; 	bishop's robes
 ? 0 5 0 E
-E 1 1121   1    3 ; 	mithril necklace
+E 1 1362  1    3 ; 	mithril necklace
 M 0 1371 1 1371 71 ; gladiator
 M 0 1371 1 1377 77 ; ""
 M 0 1371 1 1379 79 ; ""
 O 0 1209   2 1208 ; Farmhouse window
 O 0 1209   2 1213 ; ""
 O 0 1212   1 1212 ; wooden chest
+? 0 20 0 L
+L 1 20 30 0 1
+? 0 50 0 E
 P 1 1215   1 1212 ; small ruby
 O 0 1214   2 1214 ; storage barrel
+? 0 20 0 L
+L 1 10 20 0 1
 O 0 1214   2 1214 ; storage barrel
+? 0 20 0 L
+L 1 10 20 0 1
 O 0 1200  1 1209 ; Wall Lamp 10
 O 0 1200  1 1295 ; ""
 O 0 1200  1 1296 ; ""
