@@ -320,8 +320,9 @@ procSendGmcpTick::procSendGmcpTick(const int& p) {
 }
 
 void procSendGmcpTick::run(const TPulse&) const {
+  sstring gametime = GameTime::hmtAsString(GameTime::hourminTime());
   for (Descriptor* d = descriptor_list; d; d = d->next)
-    d->sendGmcp("comm.tick { }", false);
+    d->sendGmcp(format("comm.tick { \"time\": \"%s\" }") % gametime, false);
 }
 
 // procQueryQueue
