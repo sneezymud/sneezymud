@@ -1020,6 +1020,7 @@ void TBeing::setCond(condTypeT i, short val) {
   }
 
   specials.conditions[i] = val;
+  sendStatusGmcp();
 }
 
 short TBeing::getCond(condTypeT i) const { return (specials.conditions[i]); }

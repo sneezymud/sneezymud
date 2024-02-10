@@ -1649,6 +1649,7 @@ void TBeing::setFighting(TThing* vict, int dam, bool inFight) {
       checkForQuestTog(tbv);
   }
   specials.fighting = tbv;
+  sendPositionGmcp();
 
   musicNumT mus = pickRandMusic(MUSIC_COMBAT_01, MUSIC_COMBAT_03);
   playmusic(mus, MUSIC_TYPE_COMBAT);
@@ -1886,6 +1887,7 @@ void TBeing::stopFighting() {
 
   next_fighting = NULL;
   specials.fighting = NULL;
+  sendPositionGmcp();
 
   updatePos();
 

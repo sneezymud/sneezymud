@@ -1167,6 +1167,8 @@ class TBeing : public TThing {
     void sendMobsGmcp() const;
     void sendVitalsGmcp() const;
     void sendMaxStatsGmcp() const;
+    void sendStatusGmcp() const;
+    void sendPositionGmcp() const;
     virtual void sendTo(colorTypeT, const sstring&) const;
     virtual void sendTo(const sstring&) const;
     void sendRoomName(TRoom*) const;

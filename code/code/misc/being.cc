@@ -937,7 +937,10 @@ double TBeing::getMaxExp() const {
   return points.max_exp;
 }
 
-void TBeing::setMaxExp(double n) { points.max_exp = n; }
+void TBeing::setMaxExp(double n) {
+  points.max_exp = n;
+  sendStatusGmcp();
+}
 
 double TBeing::getExp() const {
   if (snum > -1)
@@ -946,7 +949,10 @@ double TBeing::getExp() const {
   return points.exp;
 }
 
-void TBeing::setExp(double n) { points.exp = n; }
+void TBeing::setExp(double n) {
+  points.exp = n;
+  sendStatusGmcp();
+}
 
 void TBeing::addToExp(double n) {
   points.exp += n;
@@ -955,6 +961,7 @@ void TBeing::addToExp(double n) {
     desc->session.xp += n;
     if (n > 0)
       desc->career.exp += n;
+    sendStatusGmcp();
   }
 }
 
@@ -1011,6 +1018,7 @@ int TBeing::getBank() const {
 void TBeing::setBank(int bank) {
   vlogf(LOG_BUG, format("%s called setBank(%i)!") % getName() % bank);
   points.bankmoney = bank;
+  sendStatusGmcp();
 }
 
 int TBeing::getMoney() const { return points.money; }
@@ -1023,6 +1031,7 @@ void TBeing::setMoney(int money) {
   if (money < 0)
     vlogf(LOG_BUG, format("TBeing::setMoney(%i) < 0, clamping") % money);
   points.money = max(0, money);
+  sendStatusGmcp();
 }
 
 sexTypeT TBeing::getSex() const { return player.sex; }
