@@ -3148,6 +3148,7 @@ void TBeing::setPosition(positionTypeT pos) {
   if (pos == POSITION_SLEEPING) {
     playsound(SOUND_SNORE, SOUND_TYPE_SOCIAL, 100, 50, -1);
   }
+  sendPositionGmcp();
 }
 
 void TBeing::doCrawl() {

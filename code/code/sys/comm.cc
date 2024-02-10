@@ -248,6 +248,7 @@ void TBeing::sendVitalsGmcp() const {
 void TBeing::sendMaxStatsGmcp() const {
   if (!desc)
     return;
+
   sstring maxStats = format(
                        "char.maxstats {"
                        "\"maxhp\": %d, "
@@ -256,6 +257,52 @@ void TBeing::sendMaxStatsGmcp() const {
                      points.prevMaxHit % points.prevMaxMana %
                      points.prevMaxMove;
   desc->sendGmcp(maxStats, false);
+}
+
+void TBeing::sendStatusGmcp() const {
+  if (!desc)
+    return;
+
+  float xp = static_cast<float>(getExp());
+  float xptnl =
+    static_cast<float>(getExpClassLevel(GetMaxLevel() + 1) - getExp());
+  float levelxp = static_cast<float>(getExpClassLevel(GetMaxLevel()));
+  float nextlevelxp = static_cast<float>(getExpClassLevel(GetMaxLevel() + 1));
+
+  sstring charData = format(
+                       "char.status {"
+                       "\"xp\": %lf, "
+                       "\"xptnl\": %lf, "
+                       "\"levelxp\": %lf, "
+                       "\"nextlevelxp\": %lf, "
+                       "\"level\": %d, "
+                       "\"talens\": %d, "
+                       "\"bank\": %d, "
+                       "\"hunger\": %d, "
+                       "\"thirst\": %d, "
+                       "\"drunk\": %d}") %
+                     xp % xptnl % levelxp % nextlevelxp % GetMaxLevel() %
+                     getMoney() % getBank() % getCond(FULL) % getCond(THIRST) %
+                     getCond(DRUNK);
+  desc->sendGmcp(charData, false);
+}
+
+void TBeing::sendPositionGmcp() const {
+  if (!desc)
+    return;
+
+  std::string fighting = "nobody";
+  if (fight()) {
+    fighting = fight()->name;
+    boost::replace_all(fighting, " ", "-");
+  }
+
+  sstring position = format(
+                       "char.position {"
+                       "\"position\": \"%s\", "
+                       "\"fighting\": \"%s\"}") %
+                     sprinttype(getPosition(), position_types) % fighting;
+  desc->sendGmcp(position, false);
 }
 
 void TBeing::sendRoomGmcp(bool changedZones) const {
