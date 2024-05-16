@@ -1173,7 +1173,7 @@ const char* const immunity_names[MAX_IMMUNES] = {
   "Fear",
   "Earth",  // 25
   "Summon",
-  "",
+  "Holy",
 };
 
 // make first letter '*' to block the sstring anywhere in the name

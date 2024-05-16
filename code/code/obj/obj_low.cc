@@ -235,7 +235,7 @@ int ObjectEvaluator::getStatPointsRaw() {
     0.5,  // IMMUNE_FEAR
     0.5,  // IMMUNE_EARTH
     0.5,  // IMMUNE_SUMMON
-    0.5,  // IMMUNE_UNUSED2
+    0.5,  // IMMUNE_HOLY
   };
   static float flagCost[MAX_OBJ_STAT] = {
     0.5,  // ITEM_GLOW

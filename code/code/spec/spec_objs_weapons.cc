@@ -2784,28 +2784,6 @@ int gnomeTenderizer(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o,
   return TRUE;
 }
 
-int demonSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
-  TBeing* ch;
-  int rc, dam;
-
-  ch = genericWeaponProcCheck(vict, cmd, o, 3);
-  if (!ch)
-    return FALSE;
-  if (vict->getRace() != RACE_DEMON || vict->isImmune(IMMUNE_BLEED, WEAR_BODY))
-    return FALSE;
-
-  dam = ch->GetMaxLevel();
-  act("$p cleaves into the flesh of $n, trailing gore and a mist of blood!", 0,
-    vict, o, 0, TO_ROOM, ANSI_WHITE_BOLD);
-  act("$p rends your flesh, leaving a bloody gaping wound!", 0, vict, o, 0,
-    TO_CHAR, ANSI_WHITE_BOLD);
-
-  rc = ch->reconcileDamage(vict, dam, DAMAGE_HEMORRHAGE);
-  if (IS_SET_DELETE(rc, DELETE_VICT))
-    return DELETE_VICT;
-  return TRUE;
-}
-
 int holyCutlass(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBaseWeapon* cutlass;
   TBeing* ch;

@@ -2,6 +2,25 @@
 #include "obj_base_weapon.h"
 #include "being.h"
 
+bool isEvil(TBeing* vict) {
+
+  switch (vict->getRace()) {
+    case RACE_DEMON:
+    case RACE_BANSHEE:
+    case RACE_DEVIL:
+    case RACE_UNDEAD:
+    case RACE_VAMPIRE:
+    case RACE_VAMPIREBAT:
+    case RACE_GOLEM:
+    case RACE_LYCANTH:
+      return TRUE;
+    default:
+      return FALSE;
+  }
+  return FALSE;
+
+}
+
 // Previously we used item VNUM to control affects of different deikhan swords
 // Hoping to acheive similar results using item levels to control which affects
 // are active TBaseWeapon::damageLevel() Avenger = 31.75 Vindicator = 40.75
@@ -113,7 +132,36 @@ int doHarm(TBeing* ch, TBeing* vict, TObj* o) {
   act("Your $o projects righteous <Y>fury<1> into $N.", 0, ch, o, vict,
     TO_CHAR);
 
-  rc = ch->reconcileDamage(vict, dam, DAMAGE_DRAIN);
+  rc = ch->reconcileDamage(vict, dam, DAMAGE_HOLY);
+  if (rc == -1)
+    return DELETE_VICT;
+  return TRUE;
+}
+
+// Damage is higher than a standard proc and based on wielder level
+int doSmiteEvil(TBeing* ch, TBeing* vict, TObj* o) {
+  int rc = 0;
+
+  if (!isEvil(vict))
+    return FALSE;
+
+  // Get char level to control strengthd of harm
+  int charLevel = ch->GetMaxLevel();
+
+  // Dam is random between 5 and 10-25 depending on char level
+  int dam = ::number(5, max(10, (int)(charLevel / 2)));
+
+  if (ch->hasClass(CLASS_DEIKHAN))
+    dam += 3;
+  if (ch->hasClass(CLASS_CLERIC))
+    dam += 2;
+
+  act("<W>$n's $o tears into $N <W>with holy <Y>fury<1>.", 0, ch, o, vict,
+    TO_ROOM);
+  act("<W>Your $o tears into $N <W>with holy <Y>fury<1>.", 0, ch, o, vict,
+    TO_CHAR);
+
+  rc = ch->reconcileDamage(vict, dam, DAMAGE_HOLY);
   if (rc == -1)
     return DELETE_VICT;
   return TRUE;
@@ -151,6 +199,8 @@ int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     }
 
     if (!::number(0, 3)) {
+      if (!::number(0, 2) && isEvil(vict))
+        return doSmiteEvil(ch, vict, o);
       return doHarm(ch, vict, o);
     }
     return TRUE;
@@ -158,3 +208,14 @@ int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
 
   return FALSE;
 }
+
+int demonSlayer(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*) {
+  TBeing* ch;
+
+  ch = genericWeaponProcCheck(vict, cmd, o, 4);
+  if (!ch)
+    return FALSE;
+  
+  return doSmiteEvil(ch, vict, o);
+}
+

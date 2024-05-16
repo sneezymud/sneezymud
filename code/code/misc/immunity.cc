@@ -72,8 +72,8 @@ immuneTypeT Immunities::convert(const sstring& immunity) const {
     return IMMUNE_EARTH;
   if (!immunity.compare("IMMUNE_SUMMON"))
     return IMMUNE_SUMMON;
-  if (!immunity.compare("IMMUNE_UNUSED2"))
-    return IMMUNE_UNUSED2;
+  if (!immunity.compare("IMMUNE_HOLY"))
+    return IMMUNE_HOLY;
 
   vlogf(LOG_BUG, format("Unknown immunity '%s', in convert()") % immunity);
   return IMMUNE_NONE;
@@ -216,6 +216,9 @@ immuneTypeT getTypeImmunity(spellNumT type) {
   immuneTypeT bit = IMMUNE_NONE;
 
   switch (type) {
+    case DAMAGE_HOLY:
+      bit = IMMUNE_HOLY;
+      break;
     case SPELL_BLOOD_BOIL:
     case DAMAGE_FIRE:
     case SPELL_FIREBALL:

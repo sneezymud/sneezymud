@@ -1208,6 +1208,7 @@ int mapSpellnumToFile(spellNumT stt) {
     case DAMAGE_ARROWS:
     case DAMAGE_FIRE:
     case DAMAGE_FROST:
+    case DAMAGE_HOLY:
     case DAMAGE_HEADBUTT_SKULL:
     case DAMAGE_COLLISION:
     case DAMAGE_KICK_SHIN:

@@ -1281,6 +1281,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case DAMAGE_WHIRLPOOL:
     case DAMAGE_ELECTRIC:
     case DAMAGE_ACID:
+    case DAMAGE_HOLY:
     case DAMAGE_GUST:
     case DAMAGE_EATTEN:
     case DAMAGE_KICK_HEAD:
