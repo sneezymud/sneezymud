@@ -1447,7 +1447,7 @@ static void change_mob_immune(TBeing* ch, TMonster* mob, const char* arg,
       return;
     }
 
-    if (immune == IMMUNE_UNUSED2 || !*immunity_names[immune]) {
+    if (!*immunity_names[immune]) {
       ch->sendTo("Please don't set these until they are defined.\n\r");
       return;
     }

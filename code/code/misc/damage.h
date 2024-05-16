@@ -57,3 +57,4 @@ const int DAMAGE_KNEESTRIKE_FACE = -55;
 const int DAMAGE_KICK_SIDE = -56;
 const int DAMAGE_DISEMBOWLED_VR = -57;
 const int DAMAGE_RIPPED_OUT_HEART = -58;
+const int DAMAGE_HOLY = -59;

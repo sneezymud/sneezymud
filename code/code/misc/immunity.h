@@ -42,7 +42,7 @@ enum immuneTypeT {
   IMMUNE_FEAR,
   IMMUNE_EARTH,
   IMMUNE_SUMMON,
-  IMMUNE_UNUSED2,
+  IMMUNE_HOLY,
   MAX_IMMUNES
 };
 // more then 28 will be real bad

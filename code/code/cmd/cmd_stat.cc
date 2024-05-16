@@ -2379,6 +2379,7 @@ void TBeing::statBeing(TBeing* k) {
       case DAMAGE_IMPALE:
       case DAMAGE_TRAP_POISON:
       case DAMAGE_ACID:
+      case DAMAGE_HOLY:
       case DAMAGE_TRAP_ACID:
       case DAMAGE_COLLISION:
       case DAMAGE_FALL:

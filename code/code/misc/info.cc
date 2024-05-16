@@ -2095,6 +2095,7 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
       case DAMAGE_NORMAL:
       case DAMAGE_TRAP_SLEEP:
       case DAMAGE_TRAP_TELEPORT:
+      case DAMAGE_HOLY:
       case MAX_SKILL:
       case TYPE_WATER:
       case TYPE_AIR:
