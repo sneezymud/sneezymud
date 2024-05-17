@@ -3076,7 +3076,7 @@ void TPerson::doStart() {
   desc->autobits = 0;
   SET_BIT(desc->autobits,
     (unsigned int)(AUTO_EAT | AUTO_AFK | AUTO_KILL | AUTO_LOOT_NOTMONEY |
-                   AUTO_SPLIT | AUTO_DISSECT | AUTO_NOHARM | AUTO_TIPS));
+                   AUTO_SPLIT | AUTO_DISSECT | AUTO_NOHARM | AUTO_TIPS | AUTO_MAP));
 
   if ((GetMaxLevel() > MAX_MORT) && !isPlayerAction(PLR_IMMORTAL)) {
     addPlayerAction(PLR_IMMORTAL);
