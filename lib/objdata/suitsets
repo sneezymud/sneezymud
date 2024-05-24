@@ -32,6 +32,51 @@
 :shield   = 
 // Paste below this line.
 // ----------------------
+:Set #162
+#castleguard
+$human
+head     = 2922
+neck     = 2916
+body     = 2868
+back     = 2917
+arm      = 2866
+wrist    = 2865
+hand     = 2933
+finger   = 2870
+waist    = 8760
+leg      = 2867
+foot     = 2864
+shield   = 2930
+:Set # 161
+#drab green
+$hobbit
+head     = 5152
+neck     = 5153
+body     = 5154
+back     = 5155
+arm      = 5156
+wrist    = 5157
+hand     = 5158
+finger   = 5161
+waist    = 5159
+leg      = 5160
+foot     = -1
+shield   = -1
+:Set # 160
+#potiron
+$ hobbit
+head     = 5141
+neck     = 5142
+body     = 5143
+back     = 5144
+arm      =  5145
+wrist    = 5146
+hand     = 5147
+finger   = -1
+waist    = 5148
+leg      = 5149
+foot     = -1
+shield   = 5151
 :Set #159
 #legion
 $human
