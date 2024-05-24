@@ -9,7 +9,7 @@ D 0 2864 0 2
 D 0 2857 1 2	SERVANT QUARTERS
 D 0 2858 3 1
 D 0 2861 2 1	GUEST ROOM
-D 0 2868 0 2
+D 0 2868 0 2	
 D 0 2862 2 2	ARMORY DOOR
 D 0 2869 0 2
 D 0 2864 2 1	BAR DOOR
@@ -103,7 +103,7 @@ D 0 2970 0 2
 D 0 2969 1 2	CONVERVATORY
 D 0 2970 3 2
 D 0 2969 2 2	KING'S SITTING ROOM
-D 0 2976 0 2
+D 0 2976 0 2	
 D 0 2971 2 2	LAB
 D 0 2978 0 2
 D 0 2972 2 2	FLORA'S ROOM
@@ -132,7 +132,7 @@ D 0 2996 1 1	FIREPLACE
 D 0 2997 3 1
 
 ? 0 5 0 B
-B 1 2920 1 2964    FABERGE EGG
+B 0 2920 1 2964    FABERGE EGG
 
 ? 0 5 0 B
 B 1 2921 1 2973    SHELL OF NEPTUNE
@@ -146,6 +146,14 @@ B 1 3013 1 2891    GREENISH AMBER POTION
 ? 0 5 0 B
 B 1 3014 1 2856    RUDDY AMBER POTION
 
+? 0 5 0 B
+B 1 2932 4 2856    ARROW
+? 0 5 0 B
+B 1 2932 4 2856    ARROW
+? 0 5 0 B
+B 1 2932 4 2856    ARROW
+? 0 5 0 B
+B 1 2932 4 2856    ARROW
 ? 0 5 0 B
 B 1 2932 4 2856    ARROW
 
@@ -180,58 +188,59 @@ P 1 2854 16 2851        WHITE WINE
 O 0 2915 1 2936        SCRIBBLED NOTES
 
 M 0 2918 2 2872     FEMALE CASTLE SERVENT
-Y 0 10 4		Metal Set - 4%
+Y 0 10 8		Metal Set - 4%
 M 0 2918 2 2910     FEMALE CASTLE SERVENT
-Y 0 10 4		Metal Set - 4%
+Y 0 10 8		Metal Set - 4%
 M 0 2918 2 2982     FEMALE CASTLE SERVENT
-Y 0 10 4		Metal Set - 4%
+Y 0 10 8		Metal Set - 4%
 M 0 2919 2 2870     MALE CASTLE SERVANT
-Y 0 10 4		Metal Set - 4%
+Y 0 10 8		Metal Set - 4%
 M 0 2919 2 2930     MALE CASTLE SERVANT
-Y 0 10 4		Metal Set - 4%
+Y 0 10 8		Metal Set - 4%
 M 0 2919 2 2961     MALE CASTLE SERVANT
-Y 0 10 4		Metal Set - 4%
+Y 0 10 8		Metal Set - 4%
 M 0 2920 1 2919     GHOSTWHEEL
 M 0 2921 1 2883     LUKE
 ? 0 5 0 E
 E 1 328 999 18          great sword
-Y 0 13 2		Jeweled Set - 2%
+Y 0 13 6		Jeweled Set - 2%
 M 0 2922 1 2925     FLORA
 G 1 2972 10             KEY TO FLORA'S
-Y 0 13 2		Jeweled Set - 2%
+Y 0 13 6		Jeweled Set - 2%
 M 0 2923 1 2954     VIALLE
 G 1 2976 10             KEY TO SITTING ROOM
 E 1 2934 20 4           PLAIN ROBE
-? 0 5 0 G
+? 0 15 0 G
 G 1 3014 24             RUDDY AMBER POTION
 M 0 2924 1 2976     RANDOM
 ? 0 10 0 E
 E 1 2919 1 5            CROWN
-Y 0 13 2		Jeweled Set - 2%
+Y 0 13 10		Jeweled Set - 2%
 M 0 2925 1 2980     ERIC
-? 0 5 0 G
+? 0 15 0 G
 G 1 3013 10             GREENISH AMBER POTION
-? 0 5 0 G
+? 0 15 0 G
 G 1 3014 24             RUDDY AMBER POTION
 M 0 2926 1 2881     BLEYS
-? 0 4 0 E
+? 0 15 0 E
 E 1 328 999 18          great sword
-? 0 2 1 E
+? 0 5 1 E
 E 1 2927 2 1            EMERALD RING
-? 0 2 1 E
+? 0 5 1 E
 E 1 2928 2 2            RUBY RING
-? 0 2 1 G
+? 0 5 1 G
 G 1 2929 2              SAPPHIRE RING
-? 0 5 0 G
+? 0 15 0 G
 G 1 3013 24             GREENISH AMBER POTION
-? 0 5 0 G
+? 0 15 0 G
 G 1 3014 24             RUDDY AMBER POTION
-E 1 2934 20 4           PLAIN ROBE
+Y 0 13 6		Jeweled Set - 2%
 M 0 2927 1 2959     CAINE
 ? 0 5 0 G
 G 1 3013 24             GREENISH AMBER POTION
 ? 0 7 0 G
 G 1 3014 24             RUDDY AMBER POTION
+Y 0 13 6		Jeweled Set - 2%
 M 0 2928 1 2982     LLEWELLA
 G 1 2974 10             KEY TO LLEWELLA'S
 ? 0 4 0 E
@@ -241,6 +250,7 @@ G 1 3013 24             GREENISH AMBER POTION
 ? 0 8 0 G
 G 1 3014 24             RUDDY AMBER POTION
 E 1 2934 20 4           PLAIN ROBE
+Y 0 13 6		Jeweled Set - 2%
 M 0 2929 1 2969     MARTIN
 G 1 2967 30             KEY TO MARTIN'S
 ? 0 8 0 G
@@ -249,7 +259,7 @@ G 1 3013 24             GREENISH AMBER POTION
 G 1 3014 24             RUDDY AMBER POTION
 ? 0 8 0 E
 E 1 2923 35 15          GIRDLE scale
-Y 0 13 2		Jeweled Set - 2%
+Y 0 13 6		Jeweled Set - 2%
 M 0 2930 1 2946     DEIRDRE
 ? 0 10 0 E
 E 1 2923 35 15          GIRDLE scale
@@ -266,114 +276,80 @@ E 1 2917 1 3            CLOAK
 ? 0 5 0 E
 E 1 2923 35 15          GIRDLE
 ? 0 2 0 E
-E 1 1168 20 8           jeweled boot
+Y 0 13 6		Jeweled Set - 2%
 M 0 2932 1 2981     FIONA
-Y 0 13 2		Jeweled Set - 2%
+Y 0 13 6		Jeweled Set - 2%
 M 0 2933 1 2927     BRAND
 G 1 2912 1              KEY TO MERLIN'S
 ? 0 2 0 E
 E 1 2931 1 19           WEREWINDLE
+Y 0 13 6		Jeweled Set - 2%
 M 0 2935 2 2955    KING'S GUARD
 ? 0 1 0 E
 E 1 328 999 18          great sword
-? 0 4 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 2 2955    KING'S GUARD
 ? 0 1 0 E
 E 1 328 999 18          great sword
-? 0 8 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 2 2962    KING'S GUARD
-? 0 1 0 E
+? 0 6 0 E
 E 1 328 999 18          great sword
-? 0 5 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 2 2962    KING'S GUARD
-? 0 1 0 E
+? 0 6 0 E
 E 1 328 999 18          great sword
 ? 0 5 0 E
 E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 1 2963    KING'S GUARD
-? 0 1 0 E
+? 0 6 0 E
 E 1 328 999 18          great sword
-? 0 5 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 1 2963    KING'S GUARD
-? 0 1 0 E
+? 0 6 0 E
 E 1 328 999 18          great sword
-? 0 5 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 1 2970    KING'S GUARD
-? 0 1 0 E
+? 0 6 0 E
 E 1 328 999 18          great sword
-? 0 3 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 1 2970    KING'S GUARD
-? 0 1 0 E
+? 0 6 0 E
 E 1 328 999 18          great sword
-? 0 3 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 1 2862    KING'S GUARD
 ? 0 1 0 E
 E 1 328 999 18          great sword
-? 0 5 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2935 1 2897    KING'S GUARD
-? 0 1 0 E
+? 0 6 0 E
 E 1 328 999 18          great sword
-? 0 5 0 E
-E 1 2923 35 15          GIRDLE scale
+Y 0 162 4		castleguard set
+
 M 0 2936 2 2874    CASTLEGUARD
 G 1 3010 30             KEY TO CASTLE
-? 0 4 0 E
-E 1 2866 60 12          ARM
-E 1 2866 60 13          ARM
-? 0 4 0 E
-E 1 2867 40 6           LEGS
-E 1 2867 40 7           LEGS
-? 0 3 0 E
-E 1 2868 40 4           BODY
-? 0 2 0 E
-E 1 2864 80 8           BOOT
-E 1 2864 80 9           BOOT
+Y 0 162 4		castleguard set
+
 M 0 2936 2 2932    CASTLEGUARD
 G 1 3010 30             KEY TO CASTLE
-? 0 4 0 E
-E 1 2866 60 12          ARM
-E 1 2866 60 13          ARM
-? 0 4 0 E
-E 1 2867 40 6           LEGS
-E 1 2867 40 7           LEGS
-? 0 3 0 E
-E 1 2868 40 4           BODY
-? 0 2 0 E
-E 1 2864 80 8           BOOT
-E 1 2864 80 9           BOOT
+Y 0 162 4		castleguard set
+
 M 0 2936 2 2982    CASTLEGUARD
 G 1 3010 30             KEY TO CASTLE
-? 0 4 0 E
-E 1 2866 60 12          ARM
-E 1 2866 60 13          ARM
-? 0 4 0 E
-E 1 2867 40 6           LEGS
-E 1 2867 40 7           LEGS
-? 0 3 0 E
-E 1 2868 40 4           BODY
-? 0 2 0 E
-E 1 2864 80 8           BOOT
-E 1 2864 80 9           BOOT
+Y 0 162 4		castleguard set
+
 M 0 2936 1 3010    CASTLEGUARD
 G 1 3010 30             KEY TO CASTLE
-? 0 4 0 E
-E 1 2866 60 12          ARM
-E 1 2866 60 13          ARM
-? 0 4 0 E
-E 1 2867 40 6           LEGS
-E 1 2867 40 7           LEGS
-? 0 3 0 E
-E 1 2868 40 4           BODY
-? 0 2 0 E
-E 1 2864 80 8           BOOT
-E 1 2864 80 9           BOOT
-S
+Y 0 162 4		castleguard set
 
+S
