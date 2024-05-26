@@ -240,7 +240,6 @@ M 0 2927 1 2959     CAINE
 G 1 3013 24             GREENISH AMBER POTION
 ? 0 7 0 G
 G 1 3014 24             RUDDY AMBER POTION
-Y 0 13 6		Jeweled Set - 2%
 M 0 2928 1 2982     LLEWELLA
 G 1 2974 10             KEY TO LLEWELLA'S
 ? 0 4 0 E
@@ -278,7 +277,6 @@ E 1 2923 35 15          GIRDLE
 ? 0 2 0 E
 Y 0 13 5		Jeweled Set - 5%
 M 0 2932 1 2981     FIONA
-Y 0 13 6		Jeweled Set - 2%
 M 0 2933 1 2927     BRAND
 G 1 2912 1              KEY TO MERLIN'S
 ? 0 2 0 E
