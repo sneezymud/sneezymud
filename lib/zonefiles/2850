@@ -203,7 +203,7 @@ M 0 2920 1 2919     GHOSTWHEEL
 M 0 2921 1 2883     LUKE
 ? 0 5 0 E
 E 1 328 999 18          great sword
-Y 0 13 6		Jeweled Set - 2%
+Y 0 13 5		Jeweled Set - 5%
 M 0 2922 1 2925     FLORA
 G 1 2972 10             KEY TO FLORA'S
 Y 0 13 6		Jeweled Set - 2%
@@ -215,7 +215,7 @@ G 1 3014 24             RUDDY AMBER POTION
 M 0 2924 1 2976     RANDOM
 ? 0 10 0 E
 E 1 2919 1 5            CROWN
-Y 0 13 10		Jeweled Set - 2%
+Y 0 13 5		Jeweled Set - 5%
 M 0 2925 1 2980     ERIC
 ? 0 15 0 G
 G 1 3013 10             GREENISH AMBER POTION
@@ -234,7 +234,7 @@ G 1 2929 2              SAPPHIRE RING
 G 1 3013 24             GREENISH AMBER POTION
 ? 0 15 0 G
 G 1 3014 24             RUDDY AMBER POTION
-Y 0 13 6		Jeweled Set - 2%
+Y 0 13 5		Jeweled Set - 5%
 M 0 2927 1 2959     CAINE
 ? 0 5 0 G
 G 1 3013 24             GREENISH AMBER POTION
@@ -250,7 +250,7 @@ G 1 3013 24             GREENISH AMBER POTION
 ? 0 8 0 G
 G 1 3014 24             RUDDY AMBER POTION
 E 1 2934 20 4           PLAIN ROBE
-Y 0 13 6		Jeweled Set - 2%
+Y 0 13 5		Jeweled Set - 5%
 M 0 2929 1 2969     MARTIN
 G 1 2967 30             KEY TO MARTIN'S
 ? 0 8 0 G
@@ -259,7 +259,7 @@ G 1 3013 24             GREENISH AMBER POTION
 G 1 3014 24             RUDDY AMBER POTION
 ? 0 8 0 E
 E 1 2923 35 15          GIRDLE scale
-Y 0 13 6		Jeweled Set - 2%
+Y 0 13 5		Jeweled Set - 5%
 M 0 2930 1 2946     DEIRDRE
 ? 0 10 0 E
 E 1 2923 35 15          GIRDLE scale
@@ -276,14 +276,14 @@ E 1 2917 1 3            CLOAK
 ? 0 5 0 E
 E 1 2923 35 15          GIRDLE
 ? 0 2 0 E
-Y 0 13 6		Jeweled Set - 2%
+Y 0 13 5		Jeweled Set - 5%
 M 0 2932 1 2981     FIONA
 Y 0 13 6		Jeweled Set - 2%
 M 0 2933 1 2927     BRAND
 G 1 2912 1              KEY TO MERLIN'S
 ? 0 2 0 E
 E 1 2931 1 19           WEREWINDLE
-Y 0 13 6		Jeweled Set - 2%
+Y 0 13 5		Jeweled Set - 5%
 M 0 2935 2 2955    KING'S GUARD
 ? 0 1 0 E
 E 1 328 999 18          great sword
