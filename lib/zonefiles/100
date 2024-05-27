@@ -1156,7 +1156,7 @@ A 0 100 245
 M 0 128 1 -99        hobbit emissary
 ? 0 5 0 E
 E 1 305 100 19          chance of dagger
-Y 0 161                drab green
+Y 0 161 5              drab green
 
 A 0 100 245
 M 0 138 1 -99        elf trader
