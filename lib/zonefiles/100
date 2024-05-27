@@ -1092,9 +1092,9 @@ E 1 304 100 19          chance of short sword
 
 A 0 100 245
 M 0 101 1 -99        city guard
-Y 1 8 5                 chance of studded
 ? 0 5 0 E
 E 1 300 100 19          chance of long sword
+Y 0 8 5                 chance of studded
 
 A 0 100 245
 M 0 102 1 -99        Elite guard
