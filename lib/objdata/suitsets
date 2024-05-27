@@ -64,7 +64,7 @@ foot     = -1
 shield   = -1
 :Set # 160
 #potiron
-$ hobbit
+$hobbit
 head     = 5141
 neck     = 5142
 body     = 5143
