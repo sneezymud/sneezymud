@@ -1160,7 +1160,7 @@ Y 0 161 5              drab green
 
 A 0 100 245
 M 0 138 1 -99        elf trader
-Y 0 71 3                 chance of sheepskin
+G 1 29912 9999                 Coils of the Serpent
 ? 0 3 0 E
 E 1 307 100 19          chance of bow
 ? 0 3 0 G
@@ -1169,7 +1169,7 @@ G 1 3409 1000           chance of arrow
 G 1 3409 1000           chance of arrow
 ? 0 3 0 G
 G 1 3409 1000           chance of arrow
-G 1 29912 9999                 Coils of the Serpent
+Y 0 71 3                 chance of sheepskin
 
 A 0 100 245
 M 0 126 1 -99        gnome missionary
@@ -1338,7 +1338,16 @@ M 0 194 1 -99         burly man
 
 A 0 100 245
 M 0 195 1 -99         elf traveler
-Y 0 71 7		sheepskin set - 3%
+G 1 29912 9999                 Coils of the Serpent
+? 0 3 0 E
+E 1 307 100 19          chance of bow
+? 0 3 0 G
+G 1 3409 1000           chance of arrow
+? 0 3 0 G
+G 1 3409 1000           chance of arrow
+? 0 3 0 G
+G 1 3409 1000           chance of arrow
+Y 0 71 3                 chance of sheepskin
 
 A 0 100 245
 M 0 196 1 -99         ogre outcast
