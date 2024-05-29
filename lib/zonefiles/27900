@@ -93,10 +93,10 @@ O 0 27911 1 27962              a mine lantern
 O 0 27911 1 27963              a mine lantern
 O 0 27921 1 27973               a hammock
 O 0 27919 1 27991               a large stone chest
-? 1 5 0 P
+? 0 5 0 P
 P 1 28052 1 27919                the drakkalan
 O 0 27919 1 27991               a large stone chest
-? 1 5 0 P
+? 0 5 0 P
 P 1 27913 1 27919                icy death
 O 0 27919 1 27991               a large stone chest
 P 1 27936 1 27919                treasure-talens

@@ -149,67 +149,67 @@ D 0 7199 3 1
 
 O 0 1212 1 7058 	; Small Wooden Chest - Maid's key
 V 1 2 7053			; Change to key 7053
-? 1 25 0 P
+? 0 25 0 P
 P 1 10726 500 1212		; Slipper
 O 0 1212 1 7058
 V 1 2 7053
-? 1 25 0 P
+? 0 25 0 P
 P 1 10778 500 1212		; Ivory and Gold Brush
 O 0 1212 1 7071 	; Small Wooden Chest - Student's key
 V 1 2 7054			; Change to key 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 814 9999 1212		; Colorful Scroll (color spray)
 O 0 1212 1 7071
 V 1 2 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 1301 9999 1212		; Yellow Scroll (magic missile)
 O 0 1212 1 7072
 V 1 2 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 1302 9999 1212		; Light Blue Scroll (chill touch)
 O 0 1212 1 7072
 V 1 2 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 1304 9999 1212		; Red Scroll (burning hands)
 O 0 1212 1 7099
 V 1 2 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 1305 9999 1212		; Slivery Blue Scroll (shocking grasp)
 O 0 1212 1 7099
 V 1 2 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 1306 9999 1212		; Beige Scroll (sense life)
 O 0 1212 1 7100
 V 1 2 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 10915 9999 1212		; Aquamarine Scroll (water breath)
 O 0 1212 1 7100
 V 1 2 7054
-? 1 10 0 P
+? 0 10 0 P
 P 1 1303 9999 1212		; White Scroll (identify)
 O 0 1212 1 7075 	; Small Wooden Chest - Peasant's key
 V 1 2 7055			; Change to key 7055
-? 1 25 0 P
+? 0 25 0 P
 P 1 10729 500 1212		; Pendant set w/ a Red Stone
 O 0 1212 1 7088
 V 1 2 7055
-? 1 25 0 P
+? 0 25 0 P
 P 1 10728 500 1212		; Pendant set w/ a Blue Stone
 O 0 1212 1 7116 	; Small Wooden Chest - Blacksmith's key
 V 1 2 7056			; Change to key 7056
-? 1 15 0 P
+? 0 15 0 P
 P 1 7012 500 1212		; Fancy Silk Shirt
 O 0 1212 1 7116
 V 1 2 7056
-? 1 15 0 P
+? 0 15 0 P
 P 1 7007 10 1212		; Blacksmiths Hammer
 O 0 1212 1 7167 	; Small Wooden Chest - Head Guard's key
 V 1 2 7057			; Change to key 7057
-? 1 10 0 P
+? 0 10 0 P
 P 1 10735 500 1212		; Medal for Honor and Bravery
 O 0 1212 1 7168 	; Small Wooden Chest - Obsidian Cutter's key
 V 1 2 7058			; Change to key 7058
-? 1 25 0 P
+? 0 25 0 P
 P 1 7018 9999 1212		; Chunk of Polished Obsidian
 
 ? 0 20 0 B
@@ -296,18 +296,18 @@ O 0 7050 1 7167
 O 0 7050 1 7168
 O 0 7051 1 7087 	; Librarians Desk - Librarian's key
 V 1 2 7062			; Change to key 7062
-? 1 3 0 P
+? 0 3 0 P
 P 1 7064 10 7051		; Ancient Parchment Scroll (divination)
 O 0 7052 1 7137 	; Classroom Experimenting Table
 O 0 7063 3 7087  	; Classroom desk/table
 O 0 7063 3 7138
 O 0 10757 1 7064 	; Solid Oak Desk - Mercees' Key
 V 1 2 7059			; Change to key 7059
-? 1 7 0 P
+? 0 7 0 P
 P 1 824 9999 10757		; Shriveled Scroll (restore limb)
 O 0 10757 1 7090                       - Maldar's key
 V 1 2 7060			; Change to key 7060
-? 1 5 0 P
+? 0 5 0 P
 P 1 824 9999 10757		; Shriveled Scroll (restore limb)
 O 0 10757 1 7109                       - Blacksmith's key
 V 1 2 7056			; Change to key 7056
@@ -326,11 +326,11 @@ O 0 10760 1 7090
 O 0 10760 2 7148
 O 0 10762 1 7064 	; Solid Oak Wardrobe - Mercees' key
 V 1 2 7059			; Change to key 7059
-? 1 10 0 P
+? 0 10 0 P
 P 1 819 9999 10762		; Balsa Staff (refresh)
 O 0 10762 1 7134                           - Mercees' key
 V 1 2 7059			; Change to key 7059
-? 1 10 0 P
+? 0 10 0 P
 P 1 818 9999 10762		; Wooden Staff (cure light)
 O 0 10762 1 7168                           - Obsidian Cutters key
 V 1 2 7058			; Change to key 7058
@@ -724,7 +724,7 @@ E 1 300 9999 19		; Long Sword
 
 M 0 7025 1 7087      ; Mage Librarian
 G 1 7062 1			; Librarians's Desk key
-? 1 15 0 E
+? 0 15 0 E
 E 1 7017 10 18		; Tome of Knowledge
 
 M 0 7026 1 7126      ; Lady

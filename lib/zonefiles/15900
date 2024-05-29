@@ -74,7 +74,7 @@ O 1 15931 1 15914 	 Scroll        ::: Cure Blindness
 M 0 15900 1 15911 	 Staphiner
 F 1 2 2			   Fear elf
 G 1 15911 9999		 	Stone Key
-? 1 10 0 G
+? 0 10 0 G
 G 1 15908 9999		 	Stone Staff    ::: Heal-Light
 M 0 15901 1 15905 	 Sand Monster
 M 0 15902 1 15912 	 Dirt Monster

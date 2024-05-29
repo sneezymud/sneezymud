@@ -67,8 +67,8 @@ O 0 9541 1 9535 				Roses
 O 0 16221 1 9535 				chair
 O 0 1201 1 9536 	9536 Wardrobe		Torch
 O 0 10762 1 9536 				Wardrobe
-V 0 1 5                                          Set to non-lockable
-V 0 2 -1                                         Set to no key
+V 1 1 5                                          Set to non-lockable
+V 1 2 -1                                         Set to no key
 O 0 14378 1 9536 				Stool
 O 0 1201 1 9537 	9537 Hall		Torch
 O 0 1201 1 9538 	9538 Make Up		Torch

@@ -47,32 +47,32 @@ O 0 7027 1 7282
 O 0 7027 1 7284
 O 0 7027 1 7286
 O 0 7028 1 7218 	; Mine Cart
-? 1 50 0 P
+? 0 50 0 P
 P 1 7030 9999 7028		; Rough Chunk of Obsidian
 ? 0 50 0 P
 P 1 7030 9999 7028
 O 0 7028 1 7222 	; Mine Cart
-? 1 50 0 P
+? 0 50 0 P
 P 1 7030 9999 7028		; Rough Chunk of Obsidian
 ? 0 50 0 P
 P 1 7030 9999 7028
 O 0 7028 1 7246 	; Mine Cart
-? 1 50 0 P
+? 0 50 0 P
 P 1 7030 9999 7028		; Rough Chunk of Obsidian
 ? 0 50 0 P
 P 1 7030 9999 7028
 O 0 7028 1 7250 	; Mine Cart
-? 1 50 0 P
+? 0 50 0 P
 P 1 7030 9999 7028		; Rough Chunk of Obsidian
 ? 0 50 0 P
 P 1 7030 9999 7028
 O 0 7028 1 7285 	; Mine Cart
-? 1 50 0 P
+? 0 50 0 P
 P 1 7030 9999 7028		; Rough Chunk of Obsidian
 ? 0 50 0 P
 P 1 7030 9999 7028
 O 0 7028 1 7286 	; Mine Cart
-? 1 50 0 P
+? 0 50 0 P
 P 1 7030 9999 7028		; Rough Chunk of Obsidian
 ? 0 50 0 P
 P 1 7030 9999 7028
@@ -304,7 +304,7 @@ E 1 10769 100 4		; Tattered Shirt
 E 1 10770 100 7		; Tattered Pants
 ? 0 40 0 G
 G 1 7026 200		; Water Bucket
-? 1 40 0 G
+? 0 40 0 G
 G 1 7025 200		; Water Dipper
 
 M 0 7059 1 7246      ; Mine Rat

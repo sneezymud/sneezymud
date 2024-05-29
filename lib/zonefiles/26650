@@ -328,7 +328,7 @@ O 0 26692 1 26692		golden reliquary of Logrus
 P 1 27015 10 26692		vial tiny indigo potion[poison]
 ? 0 10 0 P
 P 1 27016 10 26692		vial tiny charcoal gray potion[bone break]
-? 0 10 P
+? 0 10 0 P
 P 1 27017 10 26692		vial tiny purple potion purple [faerie fire]
 ? 0 10 0 P
 P 1 27018 10 26692		vial tiny light pink potion light pink [bind]
