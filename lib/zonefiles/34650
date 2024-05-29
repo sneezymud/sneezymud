@@ -3,19 +3,19 @@ Peel - West Tundra Road~
 34674 25 2 1
 * 10202 east, then east into 10203
 A 0 34650 34674
-M 0 10200 1 10296 			moose
+M 0 10200 1 -99 			moose
 A 0 34650 34674
-M 0 10210 1 10262 			moose
+M 0 10210 1 -99 			moose
 
 A 0 34650 34674
-M 0 10201 1 10259 			caribou
+M 0 10201 1 -99 			caribou
 A 0 34650 34674
-M 0 10211 1 10215 			caribou
+M 0 10211 1 -99 			caribou
 
 A 0 34650 34674
-M 0 10202 1 10247 			reindeer
+M 0 10202 1 -99 			reindeer
 A 0 34650 34674
-M 0 10212 1 10267 			reindeer
+M 0 10212 1 -99 			reindeer
 S
 
 

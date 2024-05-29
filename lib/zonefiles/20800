@@ -191,7 +191,7 @@ M 1 20812 1 -99       simal apprentice by canyon on calthor plains
 E 1 20623 20 19             painted club
 Y 0 99 2                    chance of dyed hide
 A 0 20838 20846
-M 1 20812 1 20840     simal apprentice on the calthor plains
+M 1 20812 1 -99     simal apprentice on the calthor plains
 ? 0 3 0 E
 E 1 20623 20 19             painted club
 Y 0 99 2                    chance of dyed hide
