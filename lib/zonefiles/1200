@@ -39,12 +39,12 @@ O 0 1202 1 1303        Sewer Entrance Grate
 
 D 0 1205   0    1 ; Farm Gate
 D 0 1208   0    2 ; Farmhouse
-D 1 1209   2    2 ; ""
+D 0 1209   2    2 ; ""
 D 0 1208   1    1 ; Barn
 D 0 1210   0    1 ; Sidedoor
 D 0 1210   1    1 ; Silo
 D 0 1213   5    2 ; Cellar
-D 1 1214   4    2 ; ""
+D 0 1214   4    2 ; ""
 
 ***given the awful numbering in BM, the best way to organize the Doors is numerically
 ***god help you if you need to alter these - Vasco
