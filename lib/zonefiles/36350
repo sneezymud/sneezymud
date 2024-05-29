@@ -210,85 +210,83 @@ Z 0 3 5
 
 
 M 0 36361 1 36380       a hunched gnome shaman
-Z 0 2 5
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
-E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+Z 0 2 5
 
 M 0 36361 2 36381       a hunched gnome shaman
-Z 0 2 5
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
-E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+Z 0 2 5
 
 M 0 36362 2 36382       an entranced shaman
-Z 0 2 5
 ? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+Z 0 2 5
 
 M 0 36363 2 36383       a wild-eyed shaman
-Z 0 2 5
 ? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+Z 0 2 5
 
 M 0 36363 4 36383       a wild-eyed shaman
-Z 0 2 5
 ? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+Z 0 2 5
 
 M 0 36363 1 36384       a wild-eyed shaman
-Z 0 2 5
 ? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+Z 0 2 5
 
 M 0 36363 1 36385       a wild-eyed shaman
-Z 0 2 5
 ? 0 5 0 E
 E 1 36424 9999 18         a flask of panther blood [hold-right]
+Z 0 2 5
 
 M 0 36367 1 36387       a soldier of the Elite Gnome Cadre
 Z 0 3 5
 
 M 0 36365 1 36391       a burly gnome savage
-Z 0 2 5
 ? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
-E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+Z 0 2 5
 
 M 0 36365 1 36393       a burly gnome savage
-Z 0 2 5
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
-E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+Z 0 2 5
 
 M 0 36365 1 36395       a burly gnome savage
-Z 0 2 5
 ? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
-E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+Z 0 2 5
 
 M 0 36365 1 36396       a burly gnome savage
-Z 0 2 5
 ? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
-E 1 36413 9999 19         a holy spear ornamented with feathers [hold-left]
+Z 0 2 5
 
 M 0 36354 2 36397       a member of The Green Ladybirds
-Z 0 1 5
 *? 0 99 0 I
 *I 1 36427 9999 19	prop dirk
+Z 0 1 5
+
 M 0 36354 4 36397       a member of The Green Ladybirds
-Z 0 1 5
 *? 0 99 0 I
 *I 1 36427 9999 19	prop dirk
+Z 0 1 5
+
 M 0 36358 1 36398       Mortis, second lieutenant of the Green Ladybirds
 ? 0 3 0 E
 E 1 36411 9999 19         a short black mace [hold-left]
 Z 0 1 5
+
 M 0 36360 1 36399       Noefris, third lieutentant of the Green Ladybirds
 ? 0 3 0 E
 E 1 36381 9999 19		bone misericord
-Z 0 1 5
 *? 0 99 0 I
 *I 1 36427 9999 19	prop dirk
+Z 0 1 5
+
 M 0 36367 1 36401       a soldier of the Elite Gnome Cadre
 Z 0 3 5
 
@@ -302,7 +300,6 @@ M 0 36371 1 36402       a shaken soldier of the Elite Gnome Cadre
 Z 0 3 5
 
 M 0 36368 1 36402       King Gnumble
-Z 0 3 5
 ? 0 3 0 E
 E 1 36365 9999 5          a helm with a frog-faced visor [head]
 ? 0 3 0 E
@@ -333,7 +330,7 @@ E 1 36368 9999 18         a spiked turtle shell [hold-right]
 E 1 36382 9999 19         an ice-covered flail [hold-left]
 *? 0 99 0 I
 *I 1 36382 9999 19	        prop flail
-C 1 36367 1 36408       a soldier of the Elite Gnome Cadre
+Z 0 3 5
 G 1 36428 1               a fine gnomish key
 Z 0 3 5
 
@@ -369,27 +366,25 @@ E 1 34052 9999 18         a bizarre shield [hold-right]
 E 1 34063 9999 19         a dull, wide saber [hold-left]
 
 M 0 36372 2 36421       an intense-looking shaman
-Z 0 2 5
 ? 0 3 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers
-E 1 36413 9999 19         a holy spear ornamented with feathers
 ? 0 5 0 E
 E 1 36425 1 5          panther mask
 ? 0 3 0 E
 E 1 36426 9999 10         panther paw glove
 ? 0 3 0 E
 E 1 36426 9999 11         panther paw glove [hand-left]
+Z 0 2 5
 
 M 0 36372 4 36421       an intense-looking shaman
-Z 0 2 5
 ? 0 5 0 E
 E 1 36413 9999 18         a holy spear ornamented with feathers
-E 1 36413 9999 19         a holy spear ornamented with feathers
 ? 0 3 0 E
 E 1 36426 9999 10         panther paw glove
 ? 0 3 0 E
 E 1 36426 9999 11         panther paw glove [hand-left]
 ? 0 5 0 E
 E 1 36425 1 5          panther mask
+Z 0 2 5
 
 S
