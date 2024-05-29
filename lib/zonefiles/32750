@@ -44,9 +44,7 @@ P 1 32763 1 32760		glass iced-tea
 O 0 32760 1 32760	bed mahogany 4-poster
 
 O 0 32761 1 32762	diamond pedestal
-*P 1 32784 9999 32761            fake glove power always load
 P 1 32762 1 32761		glove power
-*O 0 104 1 32762			window to force fake glove load
 
 O 0 32756 1 32757	well small shoddy
 
