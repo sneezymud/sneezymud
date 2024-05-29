@@ -95,7 +95,7 @@ D 0 3857 3 1
 D 0 3855   3    1      ; Anteroom
 D 0 3858 1 1
 D 0 3889   0    2      ; Grate
-D 1 3890   2    2      ; ""
+D 0 3890   2    2      ; ""
 
 O 0 3706 1 3737       ; grate (window) in Kludge's Pet Shop
 
