@@ -331,6 +331,7 @@ E 1 36382 9999 19         an ice-covered flail [hold-left]
 *? 0 99 0 I
 *I 1 36382 9999 19	        prop flail
 Z 0 3 5
+C 1 36367 1 36402       a soldier of the Elite Gnome Cadre
 G 1 36428 1               a fine gnomish key
 Z 0 3 5
 
