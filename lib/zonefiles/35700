@@ -127,11 +127,11 @@ B 0 35712 1 35795    		some colorful flowers
 B 0 35712 1 35796    		some colorful flowers
 B 0 35712 1 35797    		some colorful flowers
 M 0 35711 9 35746       a ratling royal guard
-Z 0 0 5				tiny torn set
+Z 0 1 5				tiny torn set
 M 0 35711 9 35754       a ratling royal guard
-Z 0 0 5				tiny torn set
+Z 0 1 5				tiny torn set
 M 0 35707 1 35755       Raphilite, Ratling Prince
-Z 0 0 5				tiny torn set
+Z 0 1 5				tiny torn set
 M 0 35721 1 35755       a ratling princess
 M 0 35713 1 35756       a ratling midwife
 M 0 35720 1 35757       a ratling royal baby
@@ -142,11 +142,11 @@ M 0 35710 1 35760       a ratling cook
 M 0 35714 1 35763       Ralyn, Ratling Queen
 ? 0 8 0 E
 E 1 35720 199 19          	a crystal shard [hold-left]
-Z 0 0 5				tiny torn set
+Z 0 1 5				tiny torn set
 M 0 35716 1 35763       Rhameu, Ratling King
-Z 0 0 5				tiny torn set
+Z 0 1 5				tiny torn set
 M 0 35711 1 35766       a ratling royal guard
-Z 0 0 5				tiny torn set
+Z 0 1 5				tiny torn set
 M 0 35719 1 35767       a ratling baby
 M 0 35719 1 35767       a ratling baby
 M 0 35719 1 35767       a ratling baby
