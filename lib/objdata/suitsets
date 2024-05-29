@@ -18,20 +18,50 @@
 :Set #
 :#
 :$
-:head     = 
-:neck     = 
-:body     = 
-:back     = 
-:arm      = 
-:wrist    = 
-:hand     = 
-:finger   = 
-:waist    = 
-:leg      = 
-:foot     = 
-:shield   = 
+:head     =
+:neck     =
+:body     =
+:back     =
+:arm      =
+:wrist    =
+:hand     =
+:finger   =
+:waist    =
+:leg      =
+:foot     =
+:shield   =
 // Paste below this line.
 // ----------------------
+:Set #164
+#finegnomemail
+$gnome
+head     = 36362
+neck     = 36361
+body     = 36360
+back     = 36359
+arm      = 36357
+wrist    = 36353
+hand     = 36356
+finger   = -1
+waist    = 36358
+leg      = 36355
+foot     = 36354
+shield   = 36363
+:Set #163
+#gnumble
+$hobbit
+head     = 36365
+neck     = 36366
+body     = 36367
+back     = 36375
+arm      = 36370
+wrist    = 36373
+hand     = 36371
+finger   = 36364
+waist    = 36369
+leg      = 36374
+foot     = 36372
+shield   = 36368
 :Set #162
 #castleguard
 $human
@@ -47,7 +77,7 @@ waist    = 8760
 leg      = 2867
 foot     = 2864
 shield   = 2930
-:Set # 161
+:Set #161
 #drab green
 $hobbit
 head     = 5152
@@ -62,7 +92,7 @@ waist    = 5159
 leg      = 5160
 foot     = -1
 shield   = -1
-:Set # 160
+:Set #160
 #potiron
 $hobbit
 head     = 5141
@@ -118,7 +148,7 @@ finger   = 757
 waist    = 758
 leg      = 759
 foot     = 760
-shield   = 761 
+shield   = 761
 :Set #156
 #grizzled
 $ogre
@@ -146,20 +176,20 @@ hand     = 32779
 finger   = 32780
 waist    = 32781
 leg      = 32782
-:Set #154 
-#thin_elven_chain 
+:Set #154
+#thin_elven_chain
 $elf
-head     = 34094 
-neck     = 34093 
-body     = 34095 
-arm      = 34097 
-hand     = 34099 
-waist    = 34090 
-wrist    = 34098 
-leg      = 34100 
-foot     = 34096 
-finger   = 34092 
-shield   = 34101 
+head     = 34094
+neck     = 34093
+body     = 34095
+arm      = 34097
+hand     = 34099
+waist    = 34090
+wrist    = 34098
+leg      = 34100
+foot     = 34096
+finger   = 34092
+shield   = 34101
 back     = 34091
 :Set #153
 #jellyfish
@@ -187,7 +217,7 @@ hand     = 6538
 waist    = 6537
 wrist    = 6536
 leg      = 6535
-back     = 6534 
+back     = 6534
 :Set #151
 #purple_mithril
 $elf
@@ -217,7 +247,7 @@ foot     = 6488
 finger   = 6487
 shield   = 6485
 back     = 6484
-:set #149 
+:set #149
 #shady
 $hobbit
 head     = 6453
@@ -229,7 +259,7 @@ waist    = 6455
 wrist    = 6459
 leg      = 6457
 back     = 6456
-:set #148 
+:set #148
 #cluttered
 $gnome
 head     = 6441
@@ -237,11 +267,11 @@ body     = 6442
 arm      = 6444
 hand     = 6446
 waist    = 6447
-wrist    = 6445 
+wrist    = 6445
 leg      = 6448
 foot     = 6449
 back     = 6443
-:set #147 
+:set #147
 #white_marble
 $dwarf
 head     = 6438
@@ -255,7 +285,7 @@ foot     = 6432
 finger   = 6430
 shield   = 6429
 back     = 6431
-:set #146 
+:set #146
 #ceremonial
 $gnome
 head     = 6389
@@ -270,7 +300,7 @@ foot     = 6394
 finger   = 6388
 shield   = 6398
 back     = 6391
-:set #145 
+:set #145
 #black_chain
 $elf
 head     = 6408
@@ -282,8 +312,8 @@ waist    = 6406
 wrist    = 6412
 leg      = 6405
 foot     = 6404
-back     = 6410	
-:set #144 
+back     = 6410
+:set #144
 #malachite
 $human
 head     = 6348
@@ -313,7 +343,7 @@ foot     = 6333
 finger   = 6328
 shield   = 6337
 back     = 6329
-:set #142 
+:set #142
 #turtle_Shell
 $ogre
 head     = 6311
@@ -342,7 +372,7 @@ back     = 6548
 :Set #140
 #frost tipped
 $ogre
-head     = 33782 
+head     = 33782
 neck     = 33787
 body     = 33783
 arm      = 33786
@@ -716,7 +746,7 @@ shield   = 14140
 back     = 14141
 :Set #113
 #runed-flesh
-$hobbit 
+$hobbit
 head     = 14121
 neck     = 14122
 body     = 14123
@@ -817,7 +847,7 @@ wrist    = 20825
 leg      = 20827
 foot     = 20828
 finger   = 20818
-shield   = 20819 
+shield   = 20819
 back     = 20829
 :Set #106
 #pumice
@@ -966,11 +996,11 @@ waist    = 27927
 wrist    = 27926
 leg      = 27925
 foot     = 27924
-finger   = -1    
+finger   = -1
 shield   = 27923
 back     = 27922
 :Set 96
-#heavy cloth monk          
+#heavy cloth monk
 $human
 head     = 25577
 neck     = 25576
@@ -985,7 +1015,7 @@ finger   = -1
 shield   = -1
 back     = 25581
 :Set 95
-#gemstone-black   
+#gemstone-black
 $human
 head     = 12038
 neck     = 12037
@@ -1182,7 +1212,7 @@ foot     = 12002
 finger   = 12000
 shield   = 12001
 back     = 12011
-#black-leather 
+#black-leather
 $human
 head     = 7719
 neck     = 7720
