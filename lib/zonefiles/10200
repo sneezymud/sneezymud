@@ -8,9 +8,9 @@ O 0 10202 1 10248 			tombstone type3
 O 0 10203 1 10242 			bunk cot
 O 0 10203 1 10243 			bunk cot
 O 0 10203 1 10244 			bunk cot
-O 0 10204 1 10242 			footlocker
 O 0 151 2 10255                          Anvil
 O 0 152 2 10255                          Forge
+O 0 10204 1 10242 			footlocker
 ? 0 15 0 P
 P 1 602 999 10204				small pouch
 P 1 802 100 602					with a cure_crit potion

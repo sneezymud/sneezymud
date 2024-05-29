@@ -167,7 +167,7 @@ M 0 5114 1 5264     spider queen at center of web
 G 1 5136 9999         sticky cocoon
 P 1 5138 9999 5136      fresh corpse
 ? 0 5 0 P
-P 1 243 9999 5137       black widow's web - bind spell comp
+P 1 243 9999 5136       black widow's web - bind spell comp
 ? 0 8 0 P
 P 1 5128 9999 5136      filthy dirk
 ? 0 8 0 P
