@@ -118,7 +118,6 @@ O 0 1200 1 15336      Lamp
 M 0 15302 1 15336   	Naked Man
 ? 0 5 0 E
 E 1 15304 9999 6          Buttless chaps, equiv supple pants
-*M 0 15303 1 15336   	Naked Woman
 ? 0 99 0 G              give to satisfy K command
 G 1 22430 9999
 K 1 15303 1 15336
