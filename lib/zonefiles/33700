@@ -15,11 +15,7 @@ M 0 33703 1 33749       Black Bellied Marmot
 M 0 33704 1 33713       Bighorn Sheep
 M 0 33704 1 33736       Bighorn Sheep
 M 0 33705 1 33705       Pronghorn Antelope
-F 1 1 1                 -fear male
-F 1 1 2                 -fear female
 M 0 33705 1 33738       Pronghorn Antelope
-F 1 1 1                 -fear male
-F 1 1 2                 -fear female
 M 0 33706 1 33719       Giant Hoary Bat
 *Stone Giant should probably load west of or in the western half
 *of this extension, to keep him in a more "remote" location.

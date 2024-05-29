@@ -153,8 +153,8 @@ E 1 2106 40 16
 E 1 2106 40 17
 
 M 0 2102 1 2149   ;  Dwarven Workers
-G 1 150 9999                    ball pien hammer (smythe tool)
 H 1 2 2
+G 1 150 9999                    ball pien hammer (smythe tool)
 ? 0 5 0 E
 E 1 2140 100 19		Iron Chisel
 
