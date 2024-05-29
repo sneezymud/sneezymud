@@ -102,7 +102,7 @@ O 0 3706 1 3737       ; grate (window) in Kludge's Pet Shop
 M 0 3865 1 3865 ; tax collector
 
 M 0 3701 2 3720      ; Dire Wolf (Sentinel)
-R 1 3700   4 3724      ; Orc Guard
+R 1 3700   4 3720      ; Orc Guard
 ? 0 2 0 E
 E 1 1036 999 3		   hardened steel collar
 ? 0 2 0 E
