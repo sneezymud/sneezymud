@@ -168,25 +168,25 @@ O 0 26665 1 26665
 O 0 26666 1 26666		bloody carcass
 
 O 0 26668 1 26682		equipment rack
-P 1 27001 10 26666    long black arrows
+P 1 27001 10 26668    long black arrows
 ? 0 30 0 P
-P 1 926 5 26666		    casing mine trap
+P 1 926 5 26668		    casing mine trap
 ? 0 30 0 P
-P 1 927 5 26666		    casing grenade trap
+P 1 927 5 26668		    casing grenade trap
 ? 0 30 0 P
-P 1 928 5 26666		    gas compressed vial trap
+P 1 928 5 26668		    gas compressed vial trap
 ? 0 30 0 P
-P 1 929 5 26666		    tubing metal trap
+P 1 929 5 26668		    tubing metal trap
 ? 0 30 0 P
-P 1 930 5 26666		    pebbles bag polished trap
+P 1 930 5 26668		    pebbles bag polished trap
 ? 0 30 0 P
-P 1 931 5 26666		    bolts box sharpened trap
+P 1 931 5 26668		    bolts box sharpened trap
 ? 0 30 0 P
-P 1 932 5 26666		    canister trap
+P 1 932 5 26668		    canister trap
 ? 0 30 0 P
-P 1 933 5 26666		    crystalline trap
+P 1 933 5 26668		    crystalline trap
 ? 0 30 0 P
-P 1 934 5 26666		    disks razor trap
+P 1 934 5 26668		    disks razor trap
 
 O 0 26668 1 26663		equipment rack
 ? 0 30 0 P
@@ -202,19 +202,19 @@ P 1 927 5 26668		    casing grenade trap
 
 O 0 26668 1 26684		mage room equipment
 ? 0 30 0 P
-P 1 916 5 26666		    tripwire wire trap
+P 1 916 5 26668		    tripwire wire trap
 ? 0 30 0 P
-P 1 921 5 26666		    pentagram magic trap
+P 1 921 5 26668		    pentagram magic trap
 ? 0 30 0 P
-P 1 922 5 26666		    powder blink trap
+P 1 922 5 26668		    powder blink trap
 ? 0 30 0 P
-P 1 923 5 26666		    athanor refined trap
+P 1 923 5 26668		    athanor refined trap
 ? 0 30 0 P
-P 1 925 5 26666		    grenade trap
+P 1 925 5 26668		    grenade trap
 ? 0 30 0 P
-P 1 926 5 26666		    casing mine trap
+P 1 926 5 26668		    casing mine trap
 ? 0 30 0 P
-P 1 927 5 26666		    casing grenade trap
+P 1 927 5 26668		    casing grenade trap
 
 O 0 26668 1 26668		eq rack
 ? 0 30 0 P
@@ -260,59 +260,59 @@ O 0 26674 1 26682		cracked iron cauldron
 
 O 0 26676 1 26671		iron safe [dojo]
 ? 0 5 0 P
-P 1 27015 10 26672		vial tiny indigo potion[poison]
+P 1 27015 10 26676		vial tiny indigo potion[poison]
 ? 0 5 0 P
-P 1 27016 10 26672		vial tiny charcoal gray potion[bone break]
+P 1 27016 10 26676		vial tiny charcoal gray potion[bone break]
 ? 0 5 0 P
-P 1 27017 10 26672		vial tiny purple potion purple [faerie fire]
+P 1 27017 10 26676		vial tiny purple potion purple [faerie fire]
 ? 0 5 0 P
-P 1 27018 10 26672		vial tiny light pink potion light pink [bind]
+P 1 27018 10 26676		vial tiny light pink potion light pink [bind]
 ? 0 5 0 P
-P 1 27019 10 26672		vial tiny magenta potion [blindness]
+P 1 27019 10 26676		vial tiny magenta potion [blindness]
 ? 0 5 0 P
-P 1 27020 10 26672		vial tiny maroon potion [curse]
+P 1 27020 10 26676		vial tiny maroon potion [curse]
 ? 0 5 0 P
-P 1 27021 10 26672		vial tiny translucent white potion [suffocate]
+P 1 27021 10 26676		vial tiny translucent white potion [suffocate]
 ? 0 5 0 P
-P 1 27022 10 26672		vial tiny gray potion [teleport]
+P 1 27022 10 26676		vial tiny gray potion [teleport]
 ? 0 5 0 P
-P 1 27023 10 26672		vial tiny smooth grey potion [stealth]
+P 1 27023 10 26676		vial tiny smooth grey potion [stealth]
 ? 0 5 0 P
-P 1 27024 10 26672		vial tiny puce potion puce [invis]
+P 1 27024 10 26676		vial tiny puce potion puce [invis]
 ? 0 5 0 P
-P 1 27025 10 26672		vial tiny milky white potion [slumber]
+P 1 27025 10 26676		vial tiny milky white potion [slumber]
 ? 0 5 0 P
-P 1 27026 10 26672		vial tiny transparent potion [stupidity]
+P 1 27026 10 26676		vial tiny transparent potion [stupidity]
 ? 0 5 0 P
-P 1 27027 10 26672		vial tiny scarlet potion [boiling blood]
+P 1 27027 10 26676		vial tiny scarlet potion [boiling blood]
 
 O 0 26676 1 26676		iron safe [archives]
 ? 0 5 0 P
-P 1 27015 10 26672		vial tiny indigo potion[poison]
+P 1 27015 10 26676		vial tiny indigo potion[poison]
 ? 0 5 0 P
-P 1 27016 10 26672		vial tiny charcoal gray potion[bone break]
+P 1 27016 10 26676		vial tiny charcoal gray potion[bone break]
 ? 0 5 0 P
-P 1 27017 10 26672		vial tiny purple potion purple [faerie fire]
+P 1 27017 10 26676		vial tiny purple potion purple [faerie fire]
 ? 0 5 0 P
-P 1 27018 10 26672		vial tiny light pink potion light pink [bind]
+P 1 27018 10 26676		vial tiny light pink potion light pink [bind]
 ? 0 5 0 P
-P 1 27019 10 26672		vial tiny magenta potion [blindness]
+P 1 27019 10 26676		vial tiny magenta potion [blindness]
 ? 0 5 0 P
-P 1 27020 10 26672		vial tiny maroon potion [curse]
+P 1 27020 10 26676		vial tiny maroon potion [curse]
 ? 0 5 0 P
-P 1 27021 10 26672		vial tiny translucent white potion [suffocate]
+P 1 27021 10 26676		vial tiny translucent white potion [suffocate]
 ? 0 5 0 P
-P 1 27022 10 26672		vial tiny gray potion [teleport]
+P 1 27022 10 26676		vial tiny gray potion [teleport]
 ? 0 5 0 P
-P 1 27023 10 26672		vial tiny smooth grey potion [stealth]
+P 1 27023 10 26676		vial tiny smooth grey potion [stealth]
 ? 0 5 0 P
-P 1 27024 10 26672		vial tiny puce potion puce [invis]
+P 1 27024 10 26676		vial tiny puce potion puce [invis]
 ? 0 5 0 P
-P 1 27025 10 26672		vial tiny milky white potion [slumber]
+P 1 27025 10 26676		vial tiny milky white potion [slumber]
 ? 0 5 0 P
-P 1 27026 10 26672		vial tiny transparent potion [stupidity]
+P 1 27026 10 26676		vial tiny transparent potion [stupidity]
 ? 0 5 0 P
-P 1 27027 10 26672		vial tiny scarlet potion [boiling blood]
+P 1 27027 10 26676		vial tiny scarlet potion [boiling blood]
 
 O 0 26680 1 26680		sorcerors sand
 O 0 26683 1 26683		Tharchions chair

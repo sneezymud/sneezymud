@@ -91,9 +91,9 @@ P 1 35716 1 35715      	a large mushroom
 O 0 35719 1 35761   		 a wide rickety wooden table
 O 0 35718 1 35763    	a rickety wooden throne
 O 0 35713 1 35764    	a bone pile
-P 1 35764 1 35764      	a small key on a hemp cord
+P 1 35764 1 35713      	a small key on a hemp cord
 O 0 35713 1 35736    	a bone pile
-P 1 35736 1 35736      	a dirty wooden key
+P 1 35736 1 35713      	a dirty wooden key
 O 0 35713 1 35785    	a bone pile
 P 1 59 1 35713     		 treasure
 O 0 35713 1 35788    	a bone pile

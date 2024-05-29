@@ -38,8 +38,8 @@ O 0 32754 1 32788	leaves bed
 O 0 32755 1 32759	fire pot rabbit stew
 
 O 0 32758 1 32760	table bedside small
-P 1 32759 1 32760		note
-P 1 32763 1 32760		glass iced-tea
+P 1 32759 1 32758		note
+P 1 32763 1 32758		glass iced-tea
 
 O 0 32760 1 32760	bed mahogany 4-poster
 
