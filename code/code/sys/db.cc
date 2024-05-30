@@ -1328,6 +1328,17 @@ void zoneData::renumCmd(void) {
           continue;
         }
         break;
+      // J is identical to Z except it loads items as props
+      case 'J':
+        if (rs->arg1 < 0 || rs->arg1 > 15) {
+          logError('J', "macro", comm, rs->arg3);
+          continue;
+        }
+        if (rs->arg2 <= 0 || rs->arg2 > 100) {
+          logError('J', "percent", comm, rs->arg2);
+          continue;
+        }
+        break;
         // Add one for each suit load ..loadset
       case 'Y':
         if (rs->arg1 <= 0 || rs->arg1 > (signed)suitSets.suits.size()) {
@@ -1352,6 +1363,23 @@ void zoneData::renumCmd(void) {
           logError('E', "bogus slot", comm, value);
           continue;
         }
+        break;
+      // I is identical to E except it loads items as props
+      case 'I':
+        rs->arg1 = real_object(value = rs->arg1);
+
+        if (rs->arg1 < 0) {
+          logError('I', "object", comm, value);
+          continue;
+        }
+        // Don't count prop loads in stats
+        rs->arg3 = mapFileToSlot(value = rs->arg3);
+
+        if (rs->arg3 < MIN_WEAR || rs->arg3 >= MAX_WEAR) {
+          logError('I', "bogus slot", comm, value);
+          continue;
+        }
+
         break;
       case 'P':
         rs->arg1 = real_object(value = rs->arg1);
@@ -1558,6 +1586,7 @@ bool zoneData::bootZone(int zone_nr) {
       case 'G':
       case 'P':
       case 'E':
+      case 'I':
         if (!rs.if_flag) {
           vlogf(LOG_LOW, format("command %u in %s has bogus if_flag") %
                            cmd_table.size() % name);
@@ -1570,8 +1599,9 @@ bool zoneData::bootZone(int zone_nr) {
 
     if (rs.command == 'M' || rs.command == 'O' || rs.command == 'B' ||
         rs.command == 'C' || rs.command == 'K' || rs.command == 'E' ||
-        rs.command == 'P' || (rs.command == 'T' && !rs.if_flag) ||
-        rs.command == 'R' || rs.command == 'D' || rs.command == 'L')
+        rs.command == 'I' || rs.command == 'P' ||
+        (rs.command == 'T' && !rs.if_flag) || rs.command == 'R' ||
+        rs.command == 'D' || rs.command == 'L')
       if ((rc = fscanf(fl, " %d", &rs.arg3)) != 1)
         vlogf(LOG_LOW, format("command %u ('%c') in %s missing arg3 (rc=%d)") %
                          cmd_table.size() % rs.command % name % rc);
@@ -2813,11 +2843,21 @@ static void mobRepop(TMonster* mob, int zone, int tRPNum = 0) {
 // Sets an object up as a "prop" object. Basically a temporary item that can be
 // equipped on a mob without any risk of players permanently owning it if they
 // kill said mob. Allows things like spawning daggers on thief mobs every time
-// they repop. Prop items can't rent and will poof when dropped. Used by I and J
-// zonefile commands.
+// they repop. Prop items can't rent or be sold, and decay after a period of
+// time. Used by I and J zonefile commands.
 void markProp(TObj& obj) {
-  obj.addObjStat(ITEM_NORENT | ITEM_NEWBIE | ITEM_NOLOCATE | ITEM_PROTOTYPE);
+  obj.addObjStat(ITEM_NORENT | ITEM_NOLOCATE);
   obj.obj_flags.cost = 0;
+
+  // decay_time ticks down in procObjTickUpdate, which occurs every mud hour.
+  // One mud hour is 144 real life seconds, making 200 ticks of decay_time
+  // about 8 real life hours. Should give people a decent amount of time to mess
+  // with prop items after looting them while not cluttering things up.
+  obj.obj_flags.decay_time = 200;
+
+  obj.swapToStrung();
+  obj.name = format("%s prop") % obj.name;
+  obj.shortDescr = format("%s (<k>prop<z>)") % obj.shortDescr;
 }
 
 /* --------------------------
@@ -2886,10 +2926,21 @@ void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
     return;
   }
 
+  const bool isPropLoad = IS_SET(flags, resetFlagPropLoad);
+
+  // Prevent items with low remaining max_exist space from being loaded as
+  // props, so that rare items can't inadvertently be blocked from loading.
+  // To use artifacts as props, copies of the items should be made with high
+  // max_exist, to only be loaded via I/J commands.
+  if (isPropLoad && (itemToEquip.max_exist - itemToEquip.getNumber() < 5)) {
+    vlogf(LOG_LOW, format("Prevented prop load of object %d - %s. (max_exist - "
+                          "current_exist) < 5") %
+                     vnum % itemToEquip.name);
+  }
+
   if (itemToEquip.getNumber() < itemToEquip.max_exist) {
-    obj = !IS_SET(flags, resetFlagPropLoad)
-            ? read_object_buy_build(mob, rs.arg1, REAL)
-            : read_object(rs.arg1, REAL);
+    obj = isPropLoad ? read_object(rs.arg1, REAL)
+                     : read_object_buy_build(mob, rs.arg1, REAL);
   }
 
   if (!obj) {
@@ -2937,15 +2988,19 @@ void runResetCmdE(zoneData& zd, resetCom& rs, resetFlag flags, bool&,
   // stored in the mob's loadCom property until then. Imms can use the stat
   // command on any mob that was created via zone repop to see if it will load
   // an item when killed.
-  if (Config::LoadOnDeath() && !IS_SET(flags, resetFlagPropLoad))
+  if (Config::LoadOnDeath() && !isPropLoad)
     *mob += *obj;
   else {
-    if (IS_SET(flags, resetFlagPropLoad))
+    if (isPropLoad)
       markProp(*obj);
     mob->equipChar(obj, realslot);
   }
-  mob->logItem(obj, CMD_LOAD);
-  log_object(obj);
+
+  // No need to log prop items
+  if (!isPropLoad) {
+    mob->logItem(obj, CMD_LOAD);
+    log_object(obj);
+  }
 
   // run some sanity checks after load
   // for items without levels, objLevel = 0 so this logic is OK
@@ -3537,20 +3592,22 @@ void runResetCmdL(zoneData&, resetCom& rs, resetFlag flags, bool&,
 // operations and equips it even if LoadOnDeath is configured on.
 void runResetCmdI(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   TMonster*& mob, bool& objload, TObj*& obj, bool& last_cmd) {
-  runResetCmdE(zone, rs, (flags | resetFlagPropLoad), mobload, mob, objload,
-    obj, last_cmd);
+  // Don't include prop items in load potential
+  if (IS_SET(flags, resetFlagFindLoadPotential))
+    return;
+
+  SET_BIT(flags, resetFlagPropLoad);
+
+  runResetCmdE(zone, rs, flags, mobload, mob, objload, obj, last_cmd);
 }
 
 // loads a local set of eq as prop objects same syntax as 'Z' (see 'I' cmd for
 // more info on props)
 void runResetCmdJ(zoneData& zone, resetCom& rs, resetFlag flags, bool& mobload,
   TMonster*& mob, bool&, TObj*&, bool&) {
-  if (IS_SET(flags, resetFlagFindLoadPotential)) {
-    for (wearSlotT i = MIN_WEAR; i < MAX_WEAR; i++)
-      if (zone.armorSets.getArmor(rs.arg1, i) != 0)
-        tallyObjLoadPotential(zone.armorSets.getArmor(rs.arg1, i));
+  // Don't include prop loads in load potential
+  if (IS_SET(flags, resetFlagFindLoadPotential))
     return;
-  }
 
   if (mob && mobload && rs.arg1 >= 0) {
     for (wearSlotT slot = MIN_WEAR; slot < MAX_WEAR; slot++) {

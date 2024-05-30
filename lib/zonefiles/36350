@@ -154,17 +154,17 @@ Z 0 4 5
 M 0 36354 2 36359       a member of The Green Ladybirds
 Z 0 1 5
 *? 0 99 0 I
-*I 1 36427 9999 19	      prop dirk
+I 1 36427 9999 19	      prop dirk
 M 0 36354 4 36359       a member of The Green Ladybirds
 Z 0 1 5
 *? 0 99 0 I
-*I 1 36427 9999 19	      prop dirk
+I 1 36427 9999 19	      prop dirk
 M 0 36356 1 36360       Tarfox, Captain of the Green Ladybirds
 Z 0 1 5
 ? 0 3 0 E
 E 1 34036 9999 19         a vampiric dagger [hold-left]
 *? 0 99 0 I
-*I 1 36427 9999          19	prop dirk
+I 1 36427 9999          19	prop dirk
 M 0 36367 1 36362       a soldier of the Elite Gnome Cadre
 Z 0 3 5
 
@@ -181,21 +181,21 @@ M 0 36369 1 36368       the ghost of an Elite Gnome Cadre soldier
 Z 0 3 5
 
 M 0 36354 1 36369       a member of The Green Ladybirds
+I 1 36427 9999 19	        prop dirk
 Z 0 1 5
-*? 0 99 0 I
-*I 1 36427 9999 19	prop dirk
+
 M 0 36354 2 36370       a member of The Green Ladybirds
+I 1 36427 9999 19	        prop dirk
 Z 0 1 5
-*? 0 99 0 I
-*I 1 36427 9999 19	prop dirk
+
 M 0 36354 4 36370       a member of The Green Ladybirds
+I 1 36427 9999 19	        prop dirk
 Z 0 1 5
-*? 0 99 0 I
-*I 1 36427 9999 19	prop dirk
+
 M 0 36354 1 36371       a member of The Green Ladybirds
+I 1 36427 9999 19	        prop dirk
 Z 0 1 5
-*? 0 99 0 I
-*I 1 36427 9999 19	prop dirk
+
 M 0 36369 1 36375       the ghost of an Elite Gnome Cadre soldier
 Z 0 3 5
 
@@ -266,13 +266,11 @@ E 1 36413 9999 18         a holy spear ornamented with feathers [hold-right]
 Z 0 2 5
 
 M 0 36354 2 36397       a member of The Green Ladybirds
-*? 0 99 0 I
-*I 1 36427 9999 19	prop dirk
+I 1 36427 9999 19	        prop dirk
 Z 0 1 5
 
 M 0 36354 4 36397       a member of The Green Ladybirds
-*? 0 99 0 I
-*I 1 36427 9999 19	prop dirk
+I 1 36427 9999 19	        prop dirk
 Z 0 1 5
 
 M 0 36358 1 36398       Mortis, second lieutenant of the Green Ladybirds
@@ -281,10 +279,9 @@ E 1 36411 9999 19         a short black mace [hold-left]
 Z 0 1 5
 
 M 0 36360 1 36399       Noefris, third lieutentant of the Green Ladybirds
+I 1 36427 9999 19	        prop dirk
 ? 0 3 0 E
-E 1 36381 9999 19		bone misericord
-*? 0 99 0 I
-*I 1 36427 9999 19	prop dirk
+E 1 36381 9999 19		      bone misericord
 Z 0 1 5
 
 M 0 36367 1 36401       a soldier of the Elite Gnome Cadre
@@ -293,13 +290,15 @@ Z 0 3 5
 M 0 36367 1 36401       a soldier of the Elite Gnome Cadre
 Z 0 3 5
 
-M 0 36367 1 36402       a soldier of the Elite Gnome Cadre
+M 0 36367 2 36402       a soldier of the Elite Gnome Cadre
+G 1 36428 1               a fine gnomish key
 Z 0 3 5
 
 M 0 36371 1 36402       a shaken soldier of the Elite Gnome Cadre
 Z 0 3 5
 
 M 0 36368 1 36402       King Gnumble
+I 1 36382 9999 19	        prop flail
 ? 0 3 0 E
 E 1 36365 9999 5          a helm with a frog-faced visor [head]
 ? 0 3 0 E
@@ -328,11 +327,8 @@ E 1 36372 9999 9          an oversized boot of green platemail [foot-left]
 E 1 36368 9999 18         a spiked turtle shell [hold-right]
 ? 0 3 0 E
 E 1 36382 9999 19         an ice-covered flail [hold-left]
-*? 0 99 0 I
-*I 1 36382 9999 19	        prop flail
 Z 0 3 5
-C 1 36367 1 36402       a soldier of the Elite Gnome Cadre
-G 1 36428 1               a fine gnomish key
+C 1 36367 2 36402       a soldier of the Elite Gnome Cadre
 Z 0 3 5
 
 M 0 36367 1 36408       a soldier of the Elite Gnome Cadre

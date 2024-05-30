@@ -150,6 +150,16 @@ bool loadsetCheck(TBeing* ch, int vnum, int chance, wearSlotT slot,
     return false;
   }
 
+  // Prevent items with low remaining max_exist space from being loaded as
+  // props, so that rare items can't inadvertently be blocked from loading.
+  // To use artifacts as props, copies of the items should be made with high
+  // max_exist, to only be loaded via I/J commands.
+  if (isPropLoad && (objInfo->max_exist - objInfo->getNumber() < 5)) {
+    vlogf(LOG_LOW, format("Prevented prop load of object %d - %s. (max_exist - "
+                          "current_exist) < 5") %
+                     vnum % objInfo->name);
+  }
+
   if (objInfo->getNumber() >= objInfo->max_exist) {
     if (!isImmLoad)
       return false;

@@ -1,3 +1,65 @@
+05-29-24: Prop items are now implemented and available to use in your zonefiles.
+          Information about them hasn't been added to the builder books yet.
+
+          They work identically to the E and Z zonefile commands. Just replace
+          them with I and J respectively. Prop items load and are equipped on
+          mobs **when they spawn**, even when load-on-death is enabled, so they'll
+          wear them while wandering their zones.
+
+          Their purpose is to allow making fights more difficult, interesting,
+          and dynamic by providing mobs with non-rentable, non-sellable copies
+          of weapons and armor that decay a set period of time after being looted.
+          The current decay time is set to 8 real life hours, but can easily be
+          adjusted by a coder if needed.
+
+          They can also act as a temporary consolation prize when a player wins a
+          fight but the mob fails to load the real version of the item on death.
+
+          Mobs with prop items might do more damage, take less damage, cause players
+          to damage their weapons when striking the mobs' armor, be protected from
+          certain insta-kill crits, and be able to use abilities that require items
+          to function which players aren't expecting a mob to use (e.g. backstab or
+          stab), etc.
+
+          Trying to load as a prop any item with less than 5 more possible loads
+          before reaching its max_exist will fail. Since prop items still count
+          towards an item's max_exist, adding enough props of a specific item
+          could potentially block the real version from ever loading.
+
+          To use a low max_exist item (e.g. an artifact weapon) as a prop, create a
+          copy of the item under a new vnum (and consider adding [prop] to its short
+          name), give it a high max_exist, then make sure to only ever load that
+          specific version as a prop.
+
+          Example zonefile commands:
+
+          * Load mob 1234 with a max_exist of 1 in room 100
+          M 0 1234 1 100
+
+          * If the above mob loads successfully, equip a prop version of item
+          * 1000 with a max_exist of 9999 in its right hand
+          I 1 1000 9999 18
+
+          * Load locally defined zonefile armor set 1 as prop items with 100%
+          * chance per piece and equip them on the above mob
+          J 0 1 100
+
+          * Give the mob a 10% chance to load the real version of item 1000
+          * on death.
+          ? 0 10 0 E
+          E 1 1000 9999 18
+
+          * Give the mob a 2% chance per piece to load the locally defined
+          * zonefile armor set on death
+          Z 0 1 2
+
+          These commands can all coexist on the same mob at the same time.
+
+          Note: there is no prop equivalent of the Y command for loading sets
+          defined in the suitset file.
+
+          Talk to Vasco or Cirius for further info/help.
+
 07-22-15 : Many moons pass and SneezyMUD is alive again. Hopefully progress in
            The World shall continue!
 

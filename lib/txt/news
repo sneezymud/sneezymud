@@ -1,8 +1,49 @@
+05-29-24: Prop item loads have been added, so they should start appearing
+          in The World more over time. Currently only three zones feature them:
+          Gnomish Wonders, Tsirin Prison, and Upper Cimea. And yes, that means
+          everyone's favorite backstabber is anxiously awaiting his first victims.
+
+          Prop items are exactly the same as the normal version of an item,
+          except they can't be rented or sold and decay after about 8 real-life
+          hours.
+
+          Props will appear on mobs **when they spawn**, which is intentional.
+          Load-on-death is still active otherwise, so if you see a mob wielding
+          an item or wearing armor it's almost definitely a prop.
+
+          The usage of prop items is up to builders, as they're added via
+          zonefiles. Their primary purpose is to make fights more difficult,
+          interesting, and dynamic.
+
+          Mobs equipped with prop weapons and armor might do more damage, take
+          less damage, be protected from certain insta-kill crits, cause players
+          to damage their weapons when striking the mobs' prop armor, and be able
+          to use skills players aren't expecting a mob to use (for example, backstab
+          or stab), etc.
+
+          The secondary purpose of prop items is to act as a temporary reward for
+          winning a fight, if the mob fails to load the real thing on death.
+
+          If you notice anything weird, broken, or overpowered please let an imm
+          know in game or mention it on Discord.
+
 01-10-24 : Fixed a couple crash bugs
 
-08-10-22 : Spells/rituals/prayers commands updated. All three commands now do the same
-           thing, and should make seeing all spells/prayers/rituals available to a
-           multiclass character much easier. See helpfiles for usage.
+-----------------------------------------------------------------------------
+
+NOTE: quite a few changes were pushed in this intervening period without
+updating the news file. Until we rectify that, looking through the commits
+in the Sneezy GitHub repo is the best way to see what's been changed:
+
+https://github.com/sneezymud/sneezymud/commits/master/
+
+-----------------------------------------------------------------------------
+
+08-10-22 : Spells/rituals/prayers commands updated.
+
+           All three commands now do the same thing, and should make seeing all
+           spells/prayers/rituals available to a multiclass character much
+           easier. See helpfiles for usage.
 
 06-22-22 : Fixed energy drain touch and vampire bite mob special procs
 
@@ -44,8 +85,6 @@
               - an elvish banshee
               - a grimlock
               - Cladosporium (nocturnal version)
-
-
 
 06-22-22 : Limb Damage Redesign
            - With the changes to critical hits, it's now possible (and even likely)
