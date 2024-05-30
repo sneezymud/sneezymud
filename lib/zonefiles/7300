@@ -579,19 +579,19 @@ M 0 7305 1 7306 Fabin
 E 1 7304 50 15 black leather weight belt
 M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-*I 1 7350 9999 19		PROP pottery shard
+I 1 7350 9999 19		PROP pottery shard
 M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-*I 1 7350 9999 19		PROP pottery shard
+I 1 7350 9999 19		PROP pottery shard
 M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-*I 1 7350 9999 19		PROP pottery shard
+I 1 7350 9999 19		PROP pottery shard
 M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-*I 1 7350 9999 19		PROP pottery shard
+I 1 7350 9999 19		PROP pottery shard
 M 0 3365 5 7306	adolescent gangmember
 Z 0 0 5				blue leather set
-*I 1 7350 9999 19		PROP pottery shard
+I 1 7350 9999 19		PROP pottery shard
 M 0 7306 1 7307 Ratcliff
 ? 0 5 0 E
 E 1 7305 16 4 gnomish mithril shirt

@@ -281,7 +281,7 @@ Z 0 2 3					      CLOUDSTONE LOCAL
 ? 0 99 0 G
 G 1 11004 9999			  Vault key
 C 1 11026 1 11068 	Giko
-*I 1 11020 5 19        blade pure shadow (PROP-LOAD)
+I 1 11020 5 19        blade pure shadow (PROP-LOAD)
 ? 0 5 0 E
 E 1 11041 50 4			  Black silk shirt
 ? 0 5 0 E
@@ -289,7 +289,7 @@ E 1 11036 50 6			  Khaki pants
 ? 0 99 0 G
 G 1 11096 9999
 C 1 11041 4 11068	  Sycophant
-*I 1 16153 5 19		    PROP HAMMER
+I 1 16153 5 19		    PROP HAMMER
 
 M 0 11001 1 11073 	Iris
 ? 0 5 0 E
@@ -307,7 +307,7 @@ E 1 11022 1 18			  Malachite martel
 ? 0 99 0 G
 G 1 11096 9999
 C 1 11041 4 11073	  Sycophant
-*I 1 16153 5 19		    PROP HAMMER
+I 1 16153 5 19		    PROP HAMMER
 
 M 0 11002 1 11069 	Coel
 ? 0 20 0 E
@@ -324,7 +324,7 @@ Z 0 2 1					      CLOUDSTONE LOCAL
 ? 0 99 0 G
 G 1 11096 9999
 C 1 11041 4 11069	  Sycophant
-*I 1 16153 5 19		    PROP HAMMER
+I 1 16153 5 19		    PROP HAMMER
 
 M 0 11003 1 11072 	Isis
 ? 0 5 0 G
@@ -522,14 +522,14 @@ E 1 11051 20 19			  Jade falchion
 Z 0 1 10				      stately green
 
 M 0 11024 2 11054 	Courtier
-*I 1 14144 5 19			  PROP FLAIL
+I 1 14144 5 19			  PROP FLAIL
 ? 0 5 0 G
 G 1 11016 20				  Mica Symbol
 ? 0 5 0 E
 E 1 11034 50 14       Black and green tabard
 
 M 0 11024 1 11065 	Courtier
-*I 1 14144 5 19			PROP FLAIL
+I 1 14144 5 19			PROP FLAIL
 ? 0 5 0 G
 G 1 11016 20				  Mica Symbol
 ? 0 5 0 E
@@ -695,7 +695,7 @@ M 0 11056 1 11048 	Frutius
 G 1 11042 10				  Silk noose
 
 M 0 11057 1 11051 	Mandor
-*I 1 11020 5 19        blade pure shadow (PROP-LOAD)
+I 1 11020 5 19        blade pure shadow (PROP-LOAD)
 ? 0 5 0 E
 E 1 11031 5 4				  Black silk robe
 ? 0 5 0 E
