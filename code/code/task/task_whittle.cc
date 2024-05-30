@@ -327,7 +327,7 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
 
   if (ch) {
     for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end(); ++it) {
-      if (isname((*it)->name, tStWood)) {
+      if (isname(tStWood, (*it)->name)) {
         if ((tWood = dynamic_cast<TOrganic*>(*it))) {
           if (tWood->getOType() != ORGANIC_WOOD) {
             tWood = NULL;
@@ -354,7 +354,7 @@ bool task_whittleCreateNew(TBeing* ch, sstring tStWood, int tIndex) {
     for (StuffIter it = ch->stuff.begin(); it != ch->stuff.end();) {
       TThing* tObjTemp = *(it++);
 
-      if (!isname(tObjTemp->name, tStWood))
+      if (!isname(tStWood, tObjTemp->name))
         continue;
 
       if ((tWood = dynamic_cast<TOrganic*>(tObjTemp))) {
