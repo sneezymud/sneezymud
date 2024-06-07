@@ -1416,6 +1416,7 @@ CSkill* TBeing::getSkill(spellNumT skill) const {
     case AFFECT_GUARDIANS_LIGHT:
     case AFFECT_HOLY_WRATH:
     case AFFECT_FORTIFY:
+    case AFFECT_HOLY_BEAM:
     case AFFECT_PREENED:
     case AFFECT_WET:
     case ABSOLUTE_MAX_SKILL:
