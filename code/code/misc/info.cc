@@ -1989,6 +1989,12 @@ sstring TBeing::describeAffects(TBeing* ch, showMeT showme) const {
                  describeDuration(this, aff->duration);
         }
         break;
+      case AFFECT_HOLY_BEAM:
+        if (show) {
+          str += format("Affected: Holy Beam.  Approx. duration : %s\n\r") %
+                 describeDuration(this, aff->duration);
+        }
+        break;
       case AFFECT_FORTIFY:
         if (show) {
           str += format("Affected: Shield Wall.  Approx. duration : %s\n\r") %

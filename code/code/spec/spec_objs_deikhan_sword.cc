@@ -30,6 +30,58 @@ bool isEvil(TBeing* vict) {
 // (No twinked nebies) This seems more fair and also doesn't require a code
 // change to add a new deikhan sword
 
+int doHolyLight(TBeing* ch, TObj* o) {
+  TBeing* vict = NULL;
+  int rc = FALSE;
+
+  if (ch->checkObjUsed(o)) {
+    act("You cannot use $p's powers again this soon.", TRUE, ch, o, NULL,
+      TO_CHAR, NULL);
+    return rc;
+  }
+  if (!(vict = ch->fight())) {
+    act("You cannot use $p's powers unless you are fighting.", TRUE, ch, o,
+      NULL, TO_CHAR, NULL);
+    return rc;
+  }
+
+  ch->addObjUsed(o, 3 * Pulse::UPDATES_PER_MUDHOUR);
+
+  affectedData aff;
+  int level = ch->GetMaxLevel();
+
+  aff.type = AFFECT_HOLY_BEAM;
+  aff.level = level;
+  aff.bitvector = 0;
+  aff.location = APPLY_IMMUNITY;
+  aff.modifier = IMMUNE_HOLY;
+  aff.modifier2 = -(int(level / 2));
+  aff.duration = (level / 5) * Pulse::UPDATES_PER_MUDHOUR;
+
+  act(
+    "<y>$n's $o glows as $e chants a <z><W>word of "
+    "power<1><y>.<1>",
+    TRUE, ch, o, NULL, TO_ROOM, NULL);
+  act(
+    "<y>Your $o glows as you chant the <z><W>word of "
+    "power<1><y>.<1>",
+    TRUE, ch, o, NULL, TO_CHAR, NULL);
+
+  act(
+    "<y>A beam of holy light bursts from $n's $o<y>, and strikes $N<y> full on!<1>",
+    TRUE, ch, o, vict, TO_NOTVICT, NULL);
+  act("<y>A beam of holy light bursts from $n's $o<y>, and strikes you full on!<1>",
+    TRUE, ch, o, vict, TO_VICT, NULL);
+  act(
+    "<y>A beam of holy light bursts from your $o<y>, and strikes $N<y> full on!<1>",
+    TRUE, ch, o, vict, TO_CHAR, NULL);
+
+  vict->affectTo(&aff);
+
+  int dam = ::number(10, 60);
+  return ch->reconcileDamage(vict, dam, DAMAGE_HOLY);
+}
+
 // heal ser for avenger, heal crit for vindicator, heal for devastator
 void doHeal(TBeing* ch, TObj* o) {
   int hp;
@@ -97,23 +149,33 @@ void doBlind(TBeing* ch, TBeing* vict, TObj* o) {
   vict->rawBlind((int)tWeap->weaponLevel(), tDuration, tSave);
 }
 
-void doHolyWrath(TBeing* ch, TObj* o) {
-  affectedData aff, aff2;
+void doHolyWrath(TBeing* ch, TObj* o, bool evil) {
+  int WRATH_MOD = 2;
+  affectedData* ch_affected;
+  affectedData aff;
 
-  // normalize bonus between 1 and 3
-  int modifier = max(1, (int)(ch->GetMaxLevel() / 15));
-  modifier = min(3, modifier);
-
-  aff.type = AFFECT_HOLY_WRATH;
-  aff.duration = Pulse::UPDATES_PER_MUDHOUR / 40 * ch->GetMaxLevel();
-  aff.location = APPLY_HITROLL;
-  aff.modifier = modifier;
-  aff.bitvector = 0;
-
-  if (!ch->affectedBySpell(AFFECT_HOLY_WRATH)) {
+  if (evil)
+    WRATH_MOD += 3;
+  
+  // Ensure we apply the right modifier
+  if (ch->affectedBySpell(AFFECT_HOLY_WRATH)) {
+    for (ch_affected = ch->affected; ch_affected;
+         ch_affected = ch_affected->next) {
+      if (ch_affected->type == AFFECT_HOLY_WRATH) {
+        ch->affectRemove(ch_affected, SILENT_YES);
+        break;
+      }
+    } 
+  } else {
     act("$n's $o glows with <y>Holy Wrath<1>!", 0, ch, o, 0, TO_ROOM);
     act("Your $o glows with <y>Holy Wrath<1>!", 0, ch, o, 0, TO_CHAR);
   }
+
+  aff.type = AFFECT_HOLY_WRATH;
+  aff.duration = Pulse::TICK * 18;
+  aff.location = APPLY_HITROLL;
+  aff.modifier = WRATH_MOD;
+  aff.bitvector = 0;
 
   ch->affectJoin(ch, &aff, AVG_DUR_NO, AVG_EFF_YES, FALSE);
 }
@@ -124,8 +186,8 @@ int doHarm(TBeing* ch, TBeing* vict, TObj* o) {
   // Get char level to control strength of harm
   int charLevel = ch->GetMaxLevel();
 
-  // Dam is random between 1 and 2-10 depending on char level
-  int dam = ::number(1, max(2, (int)(charLevel / 5)));
+  // 2-6 scales to 11-15
+  int dam = ::number(1, 5) + (int)(charLevel / 5);
 
   act("$n's $o projects righteous <Y>fury<1> into $N.", 0, ch, o, vict,
     TO_ROOM);
@@ -148,8 +210,8 @@ int doSmiteEvil(TBeing* ch, TBeing* vict, TObj* o) {
   // Get char level to control strengthd of harm
   int charLevel = ch->GetMaxLevel();
 
-  // Dam is random between 5 and 10-25 depending on char level
-  int dam = ::number(5, max(10, (int)(charLevel / 2)));
+  // 5-20 scales up to 14-29
+  int dam = ::number(4, 19) + (int)(charLevel / 5);
 
   if (ch->hasClass(CLASS_DEIKHAN))
     dam += 3;
@@ -169,34 +231,33 @@ int doSmiteEvil(TBeing* ch, TBeing* vict, TObj* o) {
 
 int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
   TBeing* ch;
+  TBeing* victim;
 
   if (!(ch = dynamic_cast<TBeing*>(o->equippedBy)))
     return FALSE;  // weapon not equipped (carried or on ground)
 
+  if (!(ch->hasClass(CLASS_DEIKHAN)))
+    return FALSE;
+  
   if (cmd == CMD_GENERIC_PULSE) {
-    if (!::number(0, 29)) {
-      doHolyWrath(ch, o);
-      return TRUE;
-    }
 
     if (!::number(0, 49)) {
       doHeal(ch, o);
       return TRUE;
     }
-    return TRUE;
+
+    if ( (victim = ch->fight()) ) {
+      doHolyWrath(ch, o, isEvil(victim));
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   if (cmd == CMD_OBJ_HIT && vict) {
     TBaseWeapon* tWeap;
     if (!(tWeap = dynamic_cast<TBaseWeapon*>(o)))
       return FALSE;
-    // damageLevel of the weapon (devastator is 52)
-    int weaponLevel = tWeap->damageLevel();
-
-    if (!::number(0, 24) && weaponLevel >= 40) {
-      doBlind(ch, vict, o);
-      return TRUE;
-    }
 
     if (!::number(0, 3)) {
       if (!::number(0, 2) && isEvil(vict))
@@ -206,6 +267,23 @@ int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     return TRUE;
   }
 
+  if (cmd == CMD_SAY || cmd == CMD_SAY2) {
+    sstring buf, buf2;
+    buf = sstring(arg).word(0);
+    buf2 = sstring(arg).word(1);
+    int rc;
+
+    if (buf == "holy" && buf2 == "light") {
+      rc = doHolyLight(ch, o);
+      if (IS_SET_DELETE(rc, DELETE_VICT)) {
+        vict->reformGroup();
+        delete vict;
+        vict = NULL;
+      }
+      return TRUE;
+    }
+  
+  }
   return FALSE;
 }
 
