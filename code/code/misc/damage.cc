@@ -27,6 +27,229 @@
 #define DAMAGE_DEFINE 0
 #define DAMAGE_DEBUG 0
 
+namespace {
+
+  void deathShout(TBeing* v, TBeing* being) {
+    sstring taunt_buf;
+    sstring discord_taunt_msg;
+
+    switch (::number(1, 43)) {
+      case 1:
+        taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
+        break;
+      case 2:
+        taunt_buf = format("Yeah! That moron %s just had to push it!") % v->getName();
+        break;
+      case 3:
+        taunt_buf = format("Someone help %s regen some hitpoints! *snort*") % v->getName();
+        break;
+      case 4:
+        taunt_buf = format("I didn't kill %s! Really!!") % v->getName();
+        break;
+      case 5:
+        taunt_buf = format(
+                    "Creatures killed : Alone 45,687! Looks like %s "
+                    "makes that 45,688!") % v->getName();
+        break;
+      case 6:
+        taunt_buf = format("HAHAHA! Hey %s! How much to next level NOW?!?") %
+          v->getName();
+        break;
+      case 7:
+        taunt_buf = format(
+                    "It's time to remind %s that SneezyMUD is... Aw "
+                    "hell, can't remind the dead!") % v->getName();
+        break;
+      case 8:
+        taunt_buf = format(
+                      "SneezyMUD is WAY too easy! Everytime losers like %s "
+                      "try to kill me they die! No challenge at all...") %
+                    v->getName();
+        break;
+      case 9:
+        taunt_buf = format("There once was a player named %s... once...") %
+                    v->getName();
+        break;
+      case 10:
+        taunt_buf =
+          format("Dime a dozen, %s failed, who's next to die to my hand?") %
+          v->getName();
+        break;
+      case 11:
+        taunt_buf = format(
+                      "Told %s once, Told %s twice, did %s listen to my "
+                      "advice? R.I.P.") %
+                    v->getName() % v->getName() % v->getName();
+        break;
+      case 12:
+        taunt_buf =
+          format("Did %s bring a scroll of recall? Oooops, guess not!") %
+          v->getName();
+        break;
+      case 13:
+        taunt_buf = format(
+                      "Hey %s, it's time to go back to scrabbling in the "
+                      "dirt, it can't KILL you like I did!") %
+                    v->getName();
+        break;
+      case 14:
+        taunt_buf = format(
+                      "I'm walkin' on Sunshine, oooh yeah, and %s is dead, "
+                      "oooh yeah...") %
+                    v->getName();
+        break;
+      case 15:
+        taunt_buf = format(
+                      "Mama always said, \"Life is like a box of "
+                      "chocolate, you never know what you're gonna get "
+                      "unless you're fighting %s.\"") %
+                    v->getName();
+        break;
+      case 16:
+        taunt_buf = format(
+                      "Let us contemplate for a moment the very brave and "
+                      "often foolish deeds of %s. R.I.P.") %
+                    v->getName();
+        break;
+      case 17:
+        taunt_buf =
+          format("No, now go away %s or I shall kill you a second time.") %
+          v->getName();
+        break;
+      case 18:
+        taunt_buf = format(
+                      "Sometimes I think I'd be better off dead. No, wait. "
+                      "Not me, %s.") %
+                    v->getName();
+        break;
+      case 19:
+        taunt_buf = format(
+                      "Please! This is supposed to be a happy occasion. "
+                      "Let's not bicker and argue over who killed %s.") %
+                    v->getName();
+        break;
+      case 20:
+        taunt_buf =
+          format(
+            "This %s is no more. It has ceased to be. It's expired and "
+            "gone to meet its maker. This is a late %s.") %
+          v->getName() % v->getName();
+        break;
+      case 21:
+        taunt_buf = format("This is what it sounds like, when %s dies!") %
+                    v->getName();
+        break;
+      case 22:
+        taunt_buf =
+          format("Well, %s is dead. Who could have forseen that?!") %
+          v->getName();
+        break;
+      case 23:
+        taunt_buf =
+          format("Quick, summon %s! Or, well, maybe next time...") %
+          v->getName();
+        break;
+      case 24:
+        taunt_buf =
+          format("Your pets will love new %s brand kibble!") % v->getName();
+        break;
+      case 25:
+        taunt_buf =
+          format("%s-lite, now with 100%% less hitpoints!") % v->getName();
+        break;
+      case 26:
+        taunt_buf =
+          format("Ouch! Does someone have a relive for %s?") % v->getName();
+        break;
+      case 27:
+        taunt_buf = format(
+                      "Let %s's defeat be a cautionary tale for aspiring "
+                      "adventurers everywhere.") %
+                    v->getName();
+        break;
+      case 28:
+        taunt_buf =
+          format(
+            "You should have stayed in the safety of the tavern, %s!") %
+          v->getName();
+        break;
+      case 29:
+        taunt_buf =
+          format("%s's skills are as rusty as their armor!") % v->getName();
+        break;
+      case 30:
+        taunt_buf = format("Back to the inn with you, %s!") % v->getName();
+        break;
+      case 31:
+        taunt_buf =
+          format("Is %s the best SneezyMUD has to offer?  Pathetic!") %
+          v->getName();
+        break;
+      case 32:
+        taunt_buf = format(
+                      "Looks like %s needs to spend more time grinding and "
+                      "less time dreaming of glory!") %
+                    v->getName();
+        break;
+      case 33:
+        taunt_buf = format(
+                      "Back to training, %s.  Maybe one day you'll pose a "
+                      "challenge.") %
+                    v->getName();
+        break;
+      case 34:
+        taunt_buf =
+          format("%s wasn't the hero SneezyMUD needed - or deserved.") %
+          v->getName();
+        break;
+      case 35:
+        taunt_buf =
+          format(
+            "%s apparently thought the skill system on SneezyMUD was "
+            "called learn by *dying*.  Who wants to tell em?") %
+          v->getName();
+        break;
+      case 36:
+        taunt_buf = format("%s's mom is so old she gets the references to "
+                      "all the other death taunts!") % v->getName();
+        break;
+      case 37:
+        taunt_buf = format("Someone start planning for %s's funeral and "
+                      "um... it's probably going to need to be a closed casket!") %
+                      v->getName();
+        break;
+      case 38:
+        taunt_buf = format("%s went down faster than Aaron Rodgers in a Jets uniform!")
+                      % v->getName();
+        break;
+      case 39:
+        taunt_buf = format("Remember when %s was good at SneezyMud? Yeah me either.")
+                      % v->getName();
+        break;
+      case 40:
+        taunt_buf = format("I don't always kill players, but when I do, I kill %s")
+                      % v->getName();
+        break;
+      case 41:
+        taunt_buf = format("I guess %s wasn't vaccinated against an ass whooping!")
+                      % v->getName();
+        break;
+      case 42:
+        taunt_buf = format("Players only have one ending. Ideas live forever. "
+                      "Remember that %s") % v->getName();
+        break;
+      default:
+        taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
+    }
+
+    being->doShout(taunt_buf);
+    discord_taunt_msg =
+      format(":skull: %s shouts, \"%s\"") % v->getName().cap() % taunt_buf;
+    Discord::sendMessageAsync(Discord::CHANNEL_DEATHS, discord_taunt_msg);
+
+  }
+}
+
 // -1 = v is dead, needs to go bye-bye
 int TBeing::reconcileDamage(TBeing* v, int dam, spellNumT how) {
   int rc = 0;
@@ -879,163 +1102,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
                               v->getName() % getName() % v->roomp->name %
                               v->inRoom() % buf2);
           // taunting shout
-          // added for information to other players that haven't died but
-          // didn't want to write an information channel etc
-          // should be fun to come up with new shouts
-          int chance = ::number(1, 35);
-          if (chance == 1) {
-            taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
-          } else if (chance == 2) {
-            taunt_buf =
-              format("Yeah! That moron %s just had to push it!") % v->getName();
-          } else if (chance == 3) {
-            taunt_buf =
-              format("Someone help %s regen some hitpoints! *snort*") %
-              v->getName();
-          } else if (chance == 4) {
-            taunt_buf = format("I didn't kill %s! Really!!") % v->getName();
-          } else if (chance == 5) {
-            taunt_buf = format(
-                          "Creatures killed : Alone 45,687! Looks like %s "
-                          "makes that 45,688!") %
-                        v->getName();
-          } else if (chance == 6) {
-            taunt_buf =
-              format("HAHAHA! Hey %s! How much to next level NOW?!?") %
-              v->getName();
-          } else if (chance == 7) {
-            taunt_buf = format(
-                          "It's time to remind %s that SneezyMUD is... Aw "
-                          "hell, can't remind the dead!") %
-                        v->getName();
-          } else if (chance == 8) {
-            taunt_buf = format(
-                          "SneezyMUD is WAY too easy! Everytime losers like %s "
-                          "try to kill me they die! No challenge at all...") %
-                        v->getName();
-          } else if (chance == 9) {
-            taunt_buf = format("There once was a player named %s... once...") %
-                        v->getName();
-          } else if (chance == 10) {
-            taunt_buf =
-              format("Dime a dozen, %s failed, who's next to die to my hand?") %
-              v->getName();
-          } else if (chance == 11) {
-            taunt_buf = format(
-                          "Told %s once, Told %s twice, did %s listen to my "
-                          "advice? R.I.P.") %
-                        v->getName() % v->getName() % v->getName();
-          } else if (chance == 12) {
-            taunt_buf =
-              format("Did %s bring a scroll of recall? Oooops, guess not!") %
-              v->getName();
-          } else if (chance == 13) {
-            taunt_buf = format(
-                          "Hey %s, it's time to go back to scrabbling in the "
-                          "dirt, it can't KILL you like I did!") %
-                        v->getName();
-          } else if (chance == 14) {
-            taunt_buf = format(
-                          "I'm walkin' on Sunshine, oooh yeah, and %s is dead, "
-                          "oooh yeah...") %
-                        v->getName();
-          } else if (chance == 15) {
-            taunt_buf = format(
-                          "Mama always said, \"Life is like a box of "
-                          "chocolate, you never know what you're gonna get "
-                          "unless you're fighting %s.\"") %
-                        v->getName();
-          } else if (chance == 16) {
-            taunt_buf = format(
-                          "Let us contemplate for a moment the very brave and "
-                          "often foolish deeds of %s. R.I.P.") %
-                        v->getName();
-          } else if (chance == 17) {
-            taunt_buf =
-              format("No, now go away %s or I shall kill you a second time.") %
-              v->getName();
-          } else if (chance == 18) {
-            taunt_buf = format(
-                          "Sometimes I think I'd be better off dead. No, wait. "
-                          "Not me, %s.") %
-                        v->getName();
-          } else if (chance == 19) {
-            taunt_buf = format(
-                          "Please! This is supposed to be a happy occasion. "
-                          "Let's not bicker and argue over who killed %s.") %
-                        v->getName();
-          } else if (chance == 20) {
-            taunt_buf =
-              format(
-                "This %s is no more. It has ceased to be. It's expired and "
-                "gone to meet its maker. This is a late %s.") %
-              v->getName() % v->getName();
-          } else if (chance == 21) {
-            taunt_buf = format("This is what it sounds like, when %s dies!") %
-                        v->getName();
-          } else if (chance == 22) {
-            taunt_buf =
-              format("Well, %s is dead. Who could have forseen that?!") %
-              v->getName();
-          } else if (chance == 23) {
-            taunt_buf =
-              format("Quick, summon %s! Or, well, maybe next time...") %
-              v->getName();
-          } else if (chance == 24) {
-            taunt_buf =
-              format("Your pets will love new %s brand kibble!") % v->getName();
-          } else if (chance == 25) {
-            taunt_buf =
-              format("%s-lite, now with 100%% less hitpoints!") % v->getName();
-          } else if (chance == 26) {
-            taunt_buf =
-              format("Ouch! Does someone have a relive for %s?") % v->getName();
-          } else if (chance == 27) {
-            taunt_buf = format(
-                          "Let %s's defeat be a cautionary tale for aspiring "
-                          "adventurers everywhere.") %
-                        v->getName();
-          } else if (chance == 28) {
-            taunt_buf =
-              format(
-                "You should have stayed in the safety of the tavern, %s!") %
-              v->getName();
-          } else if (chance == 29) {
-            taunt_buf =
-              format("%s's skills are as rusty as their armor!") % v->getName();
-          } else if (chance == 30) {
-            taunt_buf = format("Back to the inn with you, %s!") % v->getName();
-          } else if (chance == 31) {
-            taunt_buf =
-              format("Is %s the best SneezyMUD has to offer?  Pathetic!") %
-              v->getName();
-          } else if (chance == 32) {
-            taunt_buf = format(
-                          "Looks like %s needs to spend more time grinding and "
-                          "less time dreaming of glory!") %
-                        v->getName();
-          } else if (chance == 33) {
-            taunt_buf = format(
-                          "Back to training, %s.  Maybe one day you'll pose a "
-                          "challenge.") %
-                        v->getName();
-          } else if (chance == 34) {
-            taunt_buf =
-              format("%s wasn't the hero SneezyMUD needed - or deserved.") %
-              v->getName();
-          } else if (chance == 35) {
-            taunt_buf =
-              format(
-                "%s apparently thought the skill system on SneezyMUD was "
-                "called learn by *dying*.  Who wants to tell em?") %
-              v->getName();
-          } else {
-            taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
-          }
-          doShout(taunt_buf);
-          discord_taunt_msg =
-            format(":skull: %s shouts, \"%s\"") % getName().cap() % taunt_buf;
-          Discord::sendMessageAsync(Discord::CHANNEL_DEATHS, discord_taunt_msg);
+          deathShout(v, this);
         } else {
 #if 1
           if (v == this && isPc())
