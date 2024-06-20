@@ -11,8 +11,7 @@
  *****************************************************************************/
 
 #include <stdio.h>
-
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/predicate.hpp>
 
 #include "room.h"
 #include "being.h"
@@ -2959,12 +2958,12 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
     "%i)",
     ch->getName().c_str(), useSecond, start, end);
   db.query(
-    "delete from roomexit where owner='%s' and block=%i and (block=%i or vnum "
-    "between %i and %i)",
+    "delete from roomexit where owner='%s' and (block=%i or vnum between %i "
+    "and %i)",
     ch->getName().c_str(), useSecond, start, end);
   db.query(
-    "delete from roomextra where owner='%s' and block=%i and (block=%i or vnum "
-    "between %i and %i)",
+    "delete from roomextra where owner='%s' and (block=%i or vnum between %i "
+    "and %i)",
     ch->getName().c_str(), useSecond, start, end);
 
   for (i = rstart; i <= rend; i++) {
@@ -2989,7 +2988,7 @@ static void RoomSave(TBeing* ch, int start, int end, int useSecond) {
       "insert into room (owner, block, "
       "vnum,x,y,z,name,description,room_flag,sector,teletime,teletarg,telelook,"
       "river_speed,river_dir,capacity,height,zone,spec) values "
-      "('%s',%i,%i,%i,%i,%i, '%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i)",
+      "('%s',%i,%i,%i,%i,%i,'%s','%s',%i,%i,%i,%i,%i,%i,%i,%i,%i,%i,%i)",
       ch->getName().c_str(), useSecond, rp->number, rp->getXCoord(),
       rp->getYCoord(), rp->getZCoord(), rp->name.c_str(), temp,
       rp->getRoomFlags(), mapSectorToFile(rp->getSectorType()),
