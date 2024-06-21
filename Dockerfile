@@ -1,42 +1,91 @@
-FROM ubuntu:focal AS build
-LABEL maintainer Elmo Todurov <elmo.todurov@eesti.ee>
+# syntax=docker/dockerfile:1
+
+# Build arguments
+ARG UBUNTU_VERSION=noble
+ARG BRANCH="master"
+ARG CMAKE_PRESET="release-gcc"
+
+FROM ubuntu:${UBUNTU_VERSION} AS build
 
 # Set this first to ensure it applies to all commands
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Removing cache after install reduces image size
-RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadbclient-dev scons libcurl4-openssl-dev git ca-certificates pkgconf && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Using cache mounts throughout and removing cache after install reduces image size and speeds up builds
+RUN --mount=type=cache,target=/var/cache/apt \
+  apt-get update && \
+  TZ=utc apt-get install --yes --no-install-recommends \
+  build-essential \
+  ca-certificates \
+  cmake \
+  git \
+  libboost-atomic1.83-dev \
+  libboost-filesystem1.83-dev \
+  libboost-program-options1.83-dev \
+  libboost-regex1.83-dev \
+  libboost-system1.83-dev \
+  libcurl4-openssl-dev \
+  libmariadb-dev \
+  mold \
+  ninja-build \
+  pkgconf && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
-ARG UID=1000
-ARG BRANCH="master"
+ARG BRANCH
+RUN echo Building from branch: "${BRANCH}" && \
+  git clone \
+  --depth 1 \
+  --shallow-submodules \
+  --recurse-submodules \
+  --single-branch \
+  --branch "${BRANCH}" \
+  --no-tags https://github.com/sneezymud/sneezymud /home/ubuntu/sneezymud
 
-# This could possibly also be accomplished by passing the --no-cache flag
-ARG FORCE_REBUILD=1
+ARG CMAKE_PRESET
+RUN --mount=type=cache,target=/home/ubuntu/sneezymud/build \
+  cd /home/ubuntu/sneezymud && \
+  cmake --preset ${CMAKE_PRESET} && \
+  cmake --build --preset ${CMAKE_PRESET} && \
+  cp build/${CMAKE_PRESET}/code/code/sneezy code/sneezy
 
-# Combining commands reduces the number of layers, which reduces image size
-RUN useradd -m -u "$UID" sneezy && \
-  echo Building from branch: "$BRANCH" && \
-  git clone --depth 1 --shallow-submodules --recurse-submodules --single-branch --branch "$BRANCH" --no-tags https://github.com/sneezymud/sneezymud /home/sneezy/sneezymud && \
-  scons -C /home/sneezy/sneezymud/code -j`nproc` -Q debug=1 sanitize=1 fortify=1 olevel=2 sneezy
-
-FROM ubuntu:focal AS run
+FROM ubuntu:${UBUNTU_VERSION} AS run
+LABEL maintainer="SneezyMUD Development Team <https://discord.gg/F5zdYwWBzY>"
+LABEL org.opencontainers.image.source="https://github.com/sneezymud/sneezymud"
+LABEL org.opencontainers.image.description="SneezyMUD Game Server"
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && TZ=utc apt-get install --yes --no-install-recommends libboost-program-options1.71.0 libboost-regex1.71.0 libboost-filesystem1.71.0 libboost-system1.71.0 libmariadb3 libcurl4 libasan5 gdb ca-certificates && apt-get clean && rm -rf /var/lib/apt/lists/*
+# Sanitizer options for enhanced error reporting (ASan is enabled in production builds)
+ENV ASAN_OPTIONS=strict_string_checks=1:detect_stack_use_after_return=1:check_initialization_order=1:strict_init_order=1
 
-ARG UID=1000
+RUN --mount=type=cache,target=/var/cache/apt \
+  apt-get update && \
+  TZ=utc apt-get install --yes --no-install-recommends \
+  ca-certificates \
+  gdb \
+  libasan8 \
+  libboost-atomic1.83.0 \
+  libboost-filesystem1.83.0 \
+  libboost-program-options1.83.0 \
+  libboost-regex1.83.0 \
+  libboost-system1.83.0 \
+  libcurl4 \
+  libmariadb3 \
+  netcat-openbsd && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m -u "$UID" sneezy && \
-  mkdir -p /home/sneezy/code/objs/ && \
-  mkdir -p /home/sneezy/lib
+# useradd -r flag creates a system account, which is preferrable when running as a service
+# useradd -m flag forces creation of home directory, which -r flag prevents by default
+RUN groupadd -r ubuntu && useradd -r -g ubuntu -m ubuntu
 
-WORKDIR /home/sneezy/code
+COPY --from=build --chown=ubuntu:ubuntu /home/ubuntu/sneezymud/code/sneezy /home/ubuntu/code/sneezy
+COPY --from=build --chown=ubuntu:ubuntu /home/ubuntu/sneezymud/lib /home/ubuntu/lib
+COPY --from=build --chown=ubuntu:ubuntu /home/ubuntu/sneezymud/code/sneezy.cfg /home/ubuntu/code/sneezy.cfg
 
-COPY --from=build --chown=sneezy:sneezy /home/sneezy/sneezymud/code/sneezy /home/sneezy/code/sneezy
-COPY --from=build --chown=sneezy:sneezy /home/sneezy/sneezymud/lib /home/sneezy/lib
-COPY --from=build --chown=sneezy:sneezy /home/sneezy/sneezymud/code/sneezy.cfg /home/sneezy/code/sneezy.cfg
+WORKDIR /home/ubuntu/code
 
 EXPOSE 7900
-USER sneezy
-CMD ./sneezy
+USER ubuntu
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 CMD nc -z localhost 7900 || exit 1
+CMD ["./sneezy"]

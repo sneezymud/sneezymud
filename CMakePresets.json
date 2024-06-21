@@ -1,0 +1,113 @@
+{
+    "version": 6,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 21,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "generator": "Ninja",
+            "cacheVariables": {
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+            }
+        },
+        {
+            "name": "base-gcc",
+            "hidden": true,
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "base-clang",
+            "hidden": true,
+            "inherits": "base",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        },
+        {
+            "name": "dev-gcc",
+            "displayName": "GCC Development",
+            "description": "Debug build with GCC, ASan + UBSan enabled",
+            "inherits": "base-gcc",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "SNEEZY_ENABLE_ASAN": "ON",
+                "SNEEZY_ENABLE_UBSAN": "ON"
+            }
+        },
+        {
+            "name": "dev-clang",
+            "displayName": "Clang Development",
+            "description": "Debug build with Clang, ASan + UBSan enabled",
+            "inherits": "base-clang",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "SNEEZY_ENABLE_ASAN": "ON",
+                "SNEEZY_ENABLE_UBSAN": "ON"
+            }
+        },
+        {
+            "name": "release-gcc",
+            "displayName": "GCC Production",
+            "description": "Release build with GCC, -O2 + ASan + LTO",
+            "inherits": "base-gcc",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_CXX_FLAGS_RELEASE": "-O2 -g",
+                "SNEEZY_ENABLE_ASAN": "ON",
+                "SNEEZY_ENABLE_UBSAN": "OFF",
+                "SNEEZY_ENABLE_LTO": "ON"
+            }
+        },
+        {
+            "name": "release-clang",
+            "displayName": "Clang Production",
+            "description": "Release build with Clang, -O2 + ASan + ThinLTO",
+            "inherits": "base-clang",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_CXX_FLAGS_RELEASE": "-O2 -g",
+                "SNEEZY_ENABLE_ASAN": "ON",
+                "SNEEZY_ENABLE_UBSAN": "OFF",
+                "SNEEZY_ENABLE_LTO": "ON"
+            }
+        },
+        {
+            "name": "minimal",
+            "hidden": true,
+            "displayName": "Minimal (Hidden)",
+            "description": "Debug build without sanitizers - only for debugging sanitizer issues",
+            "inherits": "base-gcc",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "SNEEZY_ENABLE_ASAN": "OFF",
+                "SNEEZY_ENABLE_UBSAN": "OFF"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "dev-gcc",
+            "configurePreset": "dev-gcc"
+        },
+        {
+            "name": "dev-clang",
+            "configurePreset": "dev-clang"
+        },
+        {
+            "name": "release-gcc",
+            "configurePreset": "release-gcc"
+        },
+        {
+            "name": "release-clang",
+            "configurePreset": "release-clang"
+        }
+    ]
+}
