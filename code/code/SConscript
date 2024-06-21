@@ -1,42 +1,37 @@
 # hey emacs, this is -*- python -*- vim: ft=python
-
-import sys
-
 external_libs = [
     'boost_program_options',
     'boost_regex',
     'boost_filesystem',
     'boost_system',
+    'crypt'
 ]
-
-if not sys.platform.startswith('darwin'):
-    external_libs.append('crypt')
 
 # ordered by dependencies
 libsneezy_dirs = 'sys misc cmd disc game obj spec task'.split()
 
-Import('env');
-
-env.Append(CPPPATH=[ '#/code/' + path for path in libsneezy_dirs ])
-env.Append(CPPPATH=[ '#/libs/json/src' ])
+Import('env')
+env.Append(CPPPATH=['#/code/' + path for path in libsneezy_dirs])
+env.Append(CPPPATH=['#/libs/json/src'])
 
 # libsneezy
 if env['shared']:
     # one shared lib per dir to speed up linking in case of changes
-    libsneezy = [ env.SharedLibrary(target=path, source=Glob('%s/*.cc' % path))
-            for path in libsneezy_dirs ]
+    libsneezy = [env.SharedLibrary(target=path, source=Glob('%s/*.cc' % path))
+                 for path in libsneezy_dirs]
 else:
     # single static library, included whole in every binary
-    libsneezy_files = [ Glob('%s/*.cc' % path) for path in libsneezy_dirs ]
-    libsneezy = [ env.StaticLibrary(target='sneezy', source=libsneezy_files) ]
-libs = libsneezy  + env.get('extra_libs', []) + external_libs + env.get('LIBS')
+    libsneezy_files = [Glob('%s/*.cc' % path) for path in libsneezy_dirs]
+    libsneezy = [env.StaticLibrary(target='sneezy', source=libsneezy_files)]
+
+libs = libsneezy + env.get('extra_libs', []) + external_libs + env.get('LIBS')
 
 # main binary
 sneezy = env.Program('sneezy', 'main.cc', LIBS=libs)
 env.InstallAs('../sneezy', sneezy)
 
 # low tools
-lto=env.Object('low/lowtools.cc');
+lto = env.Object('low/lowtools.cc')
 
 lowtools = [
     'amap',
@@ -51,26 +46,25 @@ lowtools = [
     'sqledshop',
     'sqledwld',
 ]
-lowtools_progs = [ env.Program(tool, ['low/%s.cc' % tool, lto], LIBS=libs)
-        for tool in lowtools ]
+lowtools_progs = [env.Program(tool, ['low/%s.cc' % tool, lto], LIBS=libs)
+                  for tool in lowtools]
 env.Install('../lowtools', lowtools)
 env.Alias('lowtools', '../lowtools')
 
 # cgi
-cgi=env.Object('cgi/session.cgi.cc')
+cgi = env.Object('cgi/session.cgi.cc')
 
-mudmail=env.Program(['cgi/mudmail.cgi.cc', cgi], LIBS=libs)
+mudmail = env.Program(['cgi/mudmail.cgi.cc', cgi],
+                      LIBS=libs + ['crypto', 'cgicc'])
 
 env.Install('../cgi', [mudmail])
 env.Alias('cgi', '../cgi')
 
 # shell tools
-econ=env.Program(['shell/econ.cc'], LIBS=libs)
+econ = env.Program(['shell/econ.cc'], LIBS=libs)
 
 env.Install('../shell', [econ])
 env.Alias('shell', '../shell')
 
-
 # unit tests
-env.SConscript('tests/SConscript',
-               exports='libs')
+env.SConscript('tests/SConscript', exports='libs')
