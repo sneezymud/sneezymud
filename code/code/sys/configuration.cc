@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <random>
 
 #include "configuration.h"
 #include "extern.h"
@@ -8,6 +9,9 @@
 
 #include <boost/program_options.hpp>
 namespace po = boost::program_options;
+
+sstring MUD_NAME_VERS;
+std::mt19937 rng{std::random_device{}()};
 
 // static data member defs
 int Config::ITEM_DAMAGE_RATE;
