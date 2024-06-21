@@ -235,7 +235,7 @@ sstring TSession::generateSessionID() {
   seed[0] = time(NULL);
   seed[1] = random();
   seed[2] = getpid();
-  seed[3] = (int)&seed;
+  seed[3] = static_cast<int>((long)&seed);
 
   int c = 0;
   for (int i = 0; i < 4; ++i) {
