@@ -1,0 +1,26 @@
+name: Build with CMake
+inputs:
+  preset:
+    description: CMake preset to use
+    required: false
+    default: release-gcc
+runs:
+  using: composite
+  steps:
+    - name: Configure
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+      run: cmake --preset "${PRESET}"
+
+    - name: Build
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+      run: cmake --build --preset "${PRESET}"
+
+    - name: Symlink binary for verify_boot.sh
+      shell: bash
+      env:
+        PRESET: ${{ inputs.preset }}
+      run: ln -sf "build/${PRESET}/code/code/sneezy" code/sneezy

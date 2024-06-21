@@ -24,9 +24,6 @@ extern int run_the_game();
 
 #ifndef LOWTOOLS
 
-std::mt19937 rng;
-sstring MUD_NAME_VERS;
-
 namespace {
   // Expects to be called only *after* Config::doConfiguration() has executed.
   // lib/version.txt is created by the build system, as defined in the

@@ -1,227 +1,224 @@
-SneezyMUD is opensource! See LICENSE.txt for details.
+# SneezyMUD
 
-[![Build Status](https://travis-ci.org/sneezymud/sneezymud.svg?branch=master)](https://travis-ci.org/sneezymud/sneezymud)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE.txt)
+[![Discord](https://img.shields.io/discord/207349014543867904?label=Discord&logo=discord)](https://discord.gg/AE3xf8BQHr)
 
-# -h|--help)
+SneezyMUD is an open-source text-based MUD (Multi-User Dungeon) server with over 30 years of history, tracing its lineage back to DikuMUD. Players explore, fight monsters, complete quests, and interact with each other through typed commands.
+
+## Production Setup
+
+The easiest way to run a production instance of SneezyMUD is with Docker. See the [sneezymud-docker](https://github.com/sneezymud/sneezymud-docker) repository for full deployment instructions.
+
+## Development Setup
+
+### Via Docker
+
+You can develop using the Docker setup as well, though it can introduce some extra complexity to the process. The sneezymud-docker repo also includes full instructions for setting up a development environment with Docker.
+
+### From Source
+
+For non-Docker development, build from source on Linux (native or WSL2). An in-depth guide can be found [in the wiki](https://github.com/sneezymud/sneezymud/wiki/Setting-Up-A-Sneezy-Development-Environment-(non%E2%80%90Docker,-Linux-or-Windows-WSL)).
+
+#### Install Prerequisites
+
+**Ubuntu LTS:**
+```bash
+sudo apt update
+sudo apt install build-essential cmake ninja-build mold \
+  libboost1.83-dev libboost-program-options1.83-dev \
+  libboost-regex1.83-dev libboost-filesystem1.83-dev \
+  libboost-system1.83-dev libmariadb-dev mariadb-server \
+  libcurl4-openssl-dev pkgconf git
+```
+
+#### Clone Repository
+
+```bash
+git clone --recurse-submodules https://github.com/sneezymud/sneezymud
+cd sneezymud
+```
+
+#### Database Setup
+
+```bash
+# Start MariaDB
+sudo systemctl start mariadb
+
+# Create databases
+sudo mariadb -e "CREATE DATABASE sneezy; CREATE DATABASE immortal;"
+
+# Create user (replace $USER with your username)
+sudo mariadb -e "CREATE USER '$USER'@'localhost'; \
+  GRANT ALL ON sneezy.* TO '$USER'@'localhost'; \
+  GRANT ALL ON immortal.* TO '$USER'@'localhost';"
+
+# Load initial data
+for db in immortal sneezy; do
+  for phase in tables views data; do
+    [ -d "_Setup-data/sql_$phase/$db" ] || continue
+    for sql in _Setup-data/sql_$phase/$db/*.sql; do
+      echo "Loading $sql"
+      mysql $db < $sql
+    done
+  done
+done
+```
+
+## Build System
+
+The build uses CMake with Ninja. Parallel builds are automatic.
+
+```bash
+# Configure build first (only needed once)
+cmake --preset <preset-name>
+
+# Add --build to actually compile every time thereafter
+cmake --build --preset <preset-name>
+```
+
+The binary is output to `build/<preset-name>/code/code/sneezy` with a symlink at `code/sneezy`.
+
+### Available Presets
+
+| Preset | Compiler | Type | ASan | UBSan | LTO |
+|--------|----------|------|------|-------|-----|
+| `dev-gcc` | GCC | Debug | Yes | Yes | No |
+| `dev-clang` | Clang | Debug | Yes | Yes | No |
+| `release-gcc` | GCC | Release | Yes | No | Yes |
+| `release-clang` | Clang | Release | Yes | No | ThinLTO |
+
+### Example Build Commands
+
+```bash
+# Development build (use dev-gcc or dev-clang)
+cmake --preset dev-gcc
+cmake --build --preset dev-gcc
+
+# Production build with LTO (for CI/Docker)
+cmake --preset release-gcc
+cmake --build --preset release-gcc
+
+# Clean a build
+rm -rf build/dev-gcc
+```
+
+### Build Acceleration
+
+The build system automatically uses these optimizations when available:
+
+| Technique | When Used | Benefit |
+|-----------|-----------|---------|
+| ccache | Auto-enabled if installed | Caches object files across builds |
+| PCH | Always | Pre-parses common STL/Boost headers |
+| mold/lld linkers | Auto-detected | 5-10x faster linking |
+
+## Running the Server
+
+```bash
+# Run from project root
+./code/sneezy
+```
+
+The server logs to stdout. Use Ctrl+C to shut down cleanly.
+
+### Command Line Options
 
 ```
 Usage: sneezy [-p PORT] [-l LIBDIR] [-c CONFIG]
 
-Run sneezy, logging to stdout. Ctrl-C to exit.
-
-    -p PORT     listen for Telnet connections on PORT
-    -l LIBDIR   use LIBDIR as the lib flatfiles directory
-    -c CONFIG   read configuration from CONFIG
-
-SIGHUP, SIGINT, SIGTERM also initiate shutdown.
+    -p PORT     Listen for Telnet connections on PORT
+    -l LIBDIR   Use LIBDIR as the lib flatfiles directory
+    -c CONFIG   Read configuration from CONFIG
 ```
 
-## Defaults
+### Defaults
 
-| Configuration             | Default                       |
-|---------------------------|-------------------------------|
-| Telnet port               | 7900                          |
-| Config file (optional)    | `./sneezy.cfg`                |
-| Lib directory             | `./lib`                       |
-| Database names            | `sneezy` and `immortal`       |
-| Database hostname         | `localhost`                   |
-| Database username         | none (see below)              |
-| Database password         | none                          |
+| Setting | Default |
+|---------|---------|
+| Telnet port | 7900 |
+| Config file | `./sneezy.cfg` |
+| Lib directory | `./lib` |
+| Database names | `sneezy`, `immortal` |
+| Database host | `localhost` |
 
-Note: when no username is configured, Sneezy's MySQL username defaults to the
-Unix account name of the current user, similar to the mysql commandline
-program.
+When no database username is configured, it defaults to the current Unix user (like the `mysql` CLI).
 
-## Configuration
+### Configuration
 
-To change the database and runtime configuration from the defaults, you must create a
-custom config file. Two example cfg files are located in `code/`. Copy one of
-them to `sneezy.cfg` and edit as needed. If you put it in Sneezy's starting
-directory, it will get loaded automatically, or you can specify it on the
-command line.
+Copy an example config file and edit as needed:
 
-# Requirements
+```bash
+cp code/sneezy.cfg sneezy.cfg
+# Edit sneezy.cfg with your database settings
+```
 
-## Server Environment
+### Connecting
 
-* Modern Unix, probably Linux, typically Ubuntu
-* MySQL-compatible database server, two databases, and a user with table-level
-  write access. See above for the defaults for these.
+Connect with any MUD client or telnet:
+```bash
+telnet localhost 7900
+```
 
-## Build Dependencies
+The first character created in a new instance automatically becomes a level 60 immortal.
 
-* Modern C++ compiler with working C++14 support
-  -- Tested with clang 3.8 and gcc 5, but the newer the better generally
-* scons -- Tested with version 2.4.1 on Python 2.7
-* libmysqlclient -- Tested with libmysqlclient 5.7.19
-* Boost C++ library, with 'program-options', 'regex', and 'filesystem' modules
-  -- Tested with 1.58
+## Testing
 
-## Recommended
+Test setup is currently pretty minimal. Run the following scripts from the project root:
 
-* bash shell and sudo root access
+```bash
+# Boot smoke test (requires database)
+./scripts/verify_boot.sh
 
-# Installation
+# Functional tests (requires running server)
+func-test/run_test.sh
+```
 
-For most people, the install script `install_server.sh` should be enough to
-get you going. Run with no arguments to get some help instructions. You
-must still currently create the needed databases, users, and permissions
-however. Refer to the section on database setup below.
+### Continuous Integration
 
-## Manual Installation
+Pull requests run both `dev-gcc` and `release-gcc` builds in parallel to catch different categories of bugs:
+- **dev-gcc**: Debug build with UBSan for catching undefined behavior early
+- **release-gcc**: Catches bugs that only appear with optimizations and LTO
 
-When these instructions refer to 'Sneezy', they are mainly specifically
-referring to the sneezymud server daemon program.
+## Project Structure
 
-Shell commands below are assumed to have started in the root of the source
-code directory tree. Substitute any changes from the defaults you require, and
-remove sudo if it's unnecessary. Parts of the command where you must
-substitute arbitrary choices are represented as shell **$VARIABLES**.
+```
+code/code/     Source code
+  sys/           Core systems (networking, database, config)
+  misc/          Game logic (combat, skills, movement)
+  cmd/           Player commands (cmd_*.cc)
+  obj/           Object types (~80 TObj subclasses)
+  spec/          Special procedures for NPCs/objects/rooms
 
-## Compiling
+lib/           Runtime data
+  zonefiles/     Zone definitions
+  mutable/       Player files, corpses, rent (writable at runtime)
+  help/          Help content
 
-Running the `scons` command in the `code` dir will start the build process:
+_Setup-data/   Database setup
+  sql_tables/    Table schemas
+  sql_views/     View definitions
+  sql_data/      Seed data
+  migrations/    Database migrations
 
-    $ cd code
-    $ scons -j$(nproc)
+cmake/         CMake modules
+scripts/       Build and utility scripts
+```
 
-This will output a `code/sneezy` binary, along with some .so files in
-`code/objs/`. These .so files are **required**, and must be located in an
-`objs/` dir relative to the directory Sneezy is started in.
+## Database Migrations
 
-If you need to change build flags, some can be specified on the commandline,
-and others by editing the file `code/SConstruct`.  For more information see
-the scons help message:
+Ongoing changes to the database structure are stored as numbered migrations in `_Setup-data/migrations/`. Migrations already applied to the seed data in this repository are in `migrations/applied/` and don't need to be run on fresh installations.
 
-    $ scons -h
+## Contributing
 
-### Debugging Builds
+1. Join the [SneezyMUD Discord](https://discord.gg/AE3xf8BQHr) to discuss changes
+2. Fork the repository and create a feature branch
+3. Run `./scripts/run_clang_format.sh` on modified files (or configure pre-commit on your system - see `.pre-commit-config.yaml`)
+4. Submit a pull request
 
-Setting debug=1 during a build enables a variety of runtime misbehavior
-checkers. In particular, AddressSanitizer is configured mainly via the
-`ASAN_OPTIONS` and `LSAN_OPTIONS` environment variables. Documentation:
+See the [development wiki](https://github.com/sneezymud/sneezymud/wiki) for detailed guides.
 
-https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
+## License
 
-## Installing The Binary
+SneezyMUD is free and open-source software, licensed under the [GNU Affero General Public License v3.0](LICENSE.txt).
 
-If you're copying `code/sneezy` to a different location, you must copy the .so
-files in their `objs` dir along with it. The easiest thing is just to copy the
-whole dir:
-
-    $ cd code && cp -r sneezy objs $DEST
-
-Optionally delete the extraneous .o files:
-
-    $ rm objs/*.o objs/*/*.o
-
-## /lib - Flat Files
-
-The 'lib' dir, as it is known, contains various text and data files that
-Sneezy reads and occasionally writes. Files written to by the game are in
-`lib/mutable`, whereas anything outside that dir is only ever read. This
-structure is important for the Docker build to function correctly due to
-the way Docker volumes work.
-
-To keep paths simple in the source code, Sneezy changes directory to the
-lib dir on startup. By default, Sneezy looks for a `lib/` subdir of the
-directory it was started in.
-
-First you'll need to make the required empty directories, because git doesn't
-store them (the .. part of the cmd only works in bash):
-
-    $ mkdir -p lib/mutable && cd lib/mutable && mkdir -p roomdata/saved immortals \
-        corpses/corrupt rent/corrupt player/corrupt \
-        rent/{a..z} account/{a..z} player/{a..z}
-
-If you are planning to run Sneezy directly from the source tree, you're done.
-Otherwise, copy the lib directory to its new location:
-
-    $ cp -r lib $DEST/lib
-
-## Database Setup
-
-Sneezy uses both MySQL and flat files to store data, flat files being a
-holdover from its early MUD roots. It connects to MySQL over TCP, so make sure
-your database server's `bind-address` config option is set to `localhost` or
-`127.0.0.1`.
-
-### Create Databases
-
-The names can be changed in the config file:
-
-    $ sudo mysql -e "CREATE DATABASE sneezy ; CREATE DATABASE immortal ;"
-
-### Create User
-
-If you're using the defaults (no username/pw), set `$USERNAME` below to the
-Unix account sneezy will be running as, and create a no-password user:
-
-    $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost'"
-
-Without a password, anyone who can connect to MySQL can log in as this user.
-If this is a problem, set a password for the database user instead:
-
-    $ sudo mysql -e "CREATE USER '$USERNAME'@'localhost' IDENTIFIED BY '$PASSWORD'"
-
-### Set Database Permissions
-
-    $ sudo mysql -e "GRANT ALL on sneezy.* to '$USERNAME'@'localhost' ;" \
-                -e "GRANT ALL on immortal.* to '$USERNAME'@'localhost' ;"
-
-Technically Sneezy itself (probably) only needs `SELECT, UPDATE, INSERT`
-permissions, if you use some other user to create the tables and populate the
-initial database.
-
-### Initial SQL Data
-
-The initial database contents are loaded from files containing valid SQL, one
-per file. They are in MySQL dialect (mostly originating from `mysqldump`) and
-can be loaded simply by piping them into the `mysql` command. The files are
-grouped by three main phases, which must be loaded in order:
-
-1. Table creation (`sql_tables`)
-2. View creation (`sql_views`)
-3. Data insertion (`sql_data`)
-
-Since Sneezy uses two databases, they are further divided by which database
-they belong to, into `sneezy` and `immortal` dirs. So, we end up with the
-following very complicated chunk of shell code to load it all correctly:
-
-    $ for db in immortal sneezy ; do
-        for phase in tables views data ; do
-            [ -d "_Setup-data/sql_$phase/$db" ] || continue
-            for sql in _Setup-data/sql_$phase/$db/*.sql ; do
-                echo "loading '$sql'"
-                mysql $db < $sql
-            done
-        done
-    done
-
-
-## Running
-
-When run, Sneezy will print copious logs to stdout, and can be safely shut
-down using ctrl-C.
-
-Run Sneezy in the source tree using the defaults:
-
-    $ code/sneezy
-
-If you created a custom sneezy.cfg in code/:
-
-    $ cd code && ./sneezy
-
-# Database Migration
-
-Ongoing changes to the database structure are stored as numbered migrations in
-the `_Sql-data/migrations/` dir, one dir per migration. The naming convention
-should be obvious. The SQL statements are stored in one of `immortal.sql` or
-`sneezy.sql`, depending on which database they are for.
-
-Migrations that have been applied to the initial data contained in this
-repository are located in `_Sql-data/migrations/applied/` and do not need to
-be applied to a fresh installation.
-
-**Note:** there is currently no provision for migrating the _contents_ of
-the databases, such as edits to room descriptions.
+You are free to use, modify, and distribute this software. If you run a modified version as a network service, the AGPL requires you to make your source code available to users of that service.

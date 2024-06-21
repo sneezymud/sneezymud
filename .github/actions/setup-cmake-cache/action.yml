@@ -1,0 +1,14 @@
+name: Setup CMake cache environment
+description: Configure environment variables for CMake build caching
+runs:
+  using: composite
+  steps:
+    - name: Set cache paths and hash globs
+      shell: bash
+      run: |
+        # Paths to cache - the CMake build directory contains all compiled objects
+        echo "CMAKE_CACHE_PATHS=build/" >> "$GITHUB_ENV"
+
+        # Files that affect the build - if any of these change, cache should be invalidated
+        # Includes CMake files, source files, and headers
+        echo "CMAKE_CACHE_HASH_GLOBS=CMakeLists.txt CMakePresets.json cmake/** code/CMakeLists.txt code/code/CMakeLists.txt code/code/**/*.cc code/code/**/*.h" >> "$GITHUB_ENV"
