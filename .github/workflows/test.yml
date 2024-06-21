@@ -1,23 +1,41 @@
 name: Build and Test
 on:
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: build-and-test-${{ github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   build_and_test:
-    runs-on: ubuntu-22.04
-    name: Build and Test
+    runs-on: ubuntu-24.04
+    name: Build and Test (${{ matrix.preset }})
+    strategy:
+      fail-fast: false
+      matrix:
+        preset:
+          # Dev build: catches unity-masked bugs (ODR violations, namespace collisions)
+          - dev-gcc
+          # Release build: catches optimization-only bugs (UB, LTO issues)
+          - release-gcc
     steps:
       - name: Checkout this commit
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
+
+      - name: Configure cache settings
+        uses: ./.github/actions/setup-cmake-cache
 
       - name: Install dependencies
-        run: |
-          set -e
-          sudo apt-get update
-          export DEBIAN_FRONTEND=noninteractive
-          sudo apt-get install --yes --no-install-recommends g++-9 build-essential libboost-dev libboost-program-options-dev libboost-regex-dev libboost-filesystem-dev libboost-system-dev libmariadb-dev scons libcurl4-openssl-dev ca-certificates mariadb-server
+        uses: ./.github/actions/install-build-deps
+        with:
+          extra-packages: mariadb-server
 
       - name: Verify, configure, and seed a test database
         run: |
@@ -38,25 +56,15 @@ jobs:
       - name: Restore cached build objects from master branch
         uses: actions/cache/restore@v4
         with:
-          path: |
-            code/.sconsign.dblite
-            code/objs/libsneezy.a
-            code/objs/main.o
-            code/objs/cmd
-            code/objs/disc
-            code/objs/game
-            code/objs/misc
-            code/objs/obj
-            code/objs/spec
-            code/objs/sys
-            code/objs/task
-          key: ${{ runner.os }}-scons-master-${{ hashFiles('code/code/**.cc', 'code/code/**.h') }}
+          path: ${{ env.CMAKE_CACHE_PATHS }}
+          key: ${{ runner.os }}-cmake-master-${{ hashFiles(env.CMAKE_CACHE_HASH_GLOBS) }}
           restore-keys: |
-            ${{ runner.os }}-scons-master-
+            ${{ runner.os }}-cmake-master-
 
       - name: Compile code
-        run: |
-          scons -C code -j`nproc` CXX=g++-9 pretty=0 debug=1 sanitize=1 olevel=2 sneezy
+        uses: ./.github/actions/build-cmake
+        with:
+          preset: ${{ matrix.preset }}
 
       - name: Verify the game boots up successfully
-        run: ./verify_boot.sh
+        run: ./scripts/verify_boot.sh
