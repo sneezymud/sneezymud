@@ -3,7 +3,6 @@ import os
 import sys
 import subprocess
 import re
-import git
 
 
 def info(*msg):
@@ -108,13 +107,19 @@ opt_cxx = get_option('CXX', 'g++')
 # ensure submodules are ready to go
 info('Initializing submodule dependencies, please wait...')
 
-for submodule in git.Repo("..").submodules:
-    try:
-        submodule.update(init=True)
-        if submodule.module().is_dirty():
-            error_exit(f'Submodule {submodule.name} failed to initialize')
-    except Exception:
-        error_exit('Submodule init failed, is your Internet connection working?')
+try:
+    # Initialize and update submodules
+    subprocess.check_call(['git', 'submodule', 'update',
+                          '--init', '--recursive'], cwd='..')
+except subprocess.CalledProcessError:
+    error_exit('Submodule init failed, is your Internet connection working?')
+
+# Check if any submodule is dirty
+try:
+    result = subprocess.check_output(
+        ['git', 'submodule', 'foreach', '--recursive', 'git', 'diff', '--quiet', 'HEAD'], cwd='..')
+except subprocess.CalledProcessError:
+    error_exit('One or more submodules failed to initialize or are dirty.')
 
 info('Submodules initialized.')
 
@@ -125,11 +130,11 @@ info('Submodules initialized.')
 compiler_config = {
     'g++': {
         'min_version': (9, 4, 0),
-        'regex': "^g\+\+-?\d* \(.*\) (\d+)\.(\d+)\.(\d+) ?.*$",
+        'regex': "^g\\+\\+-?\\d* \\(.*\\) (\\d+)\\.(\\d+)\\.(\\d+) ?.*$",
     },
     'clang++': {
         'min_version': (10, 0, 0),
-        'regex': "^.* clang version (\d+)\.(\d+)\.(\d+).*$",
+        'regex': "^.* clang version (\\d+)\\.(\\d+)\\.(\\d+).*$",
     }
 }
 
