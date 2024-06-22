@@ -183,7 +183,7 @@ if flag_ccache:
 
 # setup scons environment
 env = Environment(
-    tools=['default', 'cxxtest'],
+    tools=['default'],
     shared=flag_shared,
     CXX=opt_cxx,
     SHCXX=opt_cxx,  # must have both of these, along with LINK and SHLINK
