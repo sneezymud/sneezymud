@@ -45,7 +45,7 @@ jobs:
 
       - name: Compile code
         run: |
-          scons -C code -j`nproc` CXX=g++-9 pretty=0 debug=1 sanitize=1 olevel=2 sneezy
+          scons -C code -j`nproc` CXX=g++-9 pretty=0 asan=1 optimize=1 sneezy
 
       - name: Cache compilation results
         uses: actions/cache/save@v4
