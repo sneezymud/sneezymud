@@ -68,7 +68,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (23,'Peel - GK Highrollers Casino',1,2350,2374,2,25,NULL,1),
 (24,'Peel - The Knot',1,2375,2399,2,25,NULL,1),
 (25,'Kranor River',1,2400,2499,2,25,NULL,1),
-(26,'Lucifer Zone (200 rooms)',0,2500,2699,2,25,NULL,1),
+(26,'Sidartha - North Valley',1,2500,2699,2,20,NULL,1),
 (27,'Pygmy trading camp - Jimbus',0,2700,2749,2,45,NULL,1),
 (28,'Unused - 100 rooms old amber town',0,2750,2849,2,45,NULL,1),
 (29,'Minion - Amber Castle',1,2850,3014,2,45,NULL,1),
@@ -147,7 +147,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (102,'Demo\'s Area - Ryoken Catacombs',0,11250,11299,2,25,NULL,1),
 (103,'Stregan - The Ancient Malithean Mines',1,11300,11499,2,35,NULL,1),
 (104,'Coral - Amazon Headquarters',0,11500,11799,2,25,NULL,1),
-(105,'Stonecold - Inverse Grimhaven',1,11800,11999,2,22,NULL,1),
+(105,'Stonecold - Inverse Grimhaven',1,11800,11999,2,576,NULL,1),
 (106,'Stonecold - Inverse Grimhaven',1,12000,12199,2,22,NULL,1),
 (107,'Stonecold - Inverse GH - East Gate Settlement',1,12200,12399,2,22,NULL,1),
 (108,'Mithros - Myrian Ocean',1,12400,13499,2,20,NULL,1),
@@ -374,7 +374,7 @@ INSERT INTO `zone` VALUES (0,'Void',1,0,0,2,25,NULL,1),
 (329,'Onslaught - The Morass',0,46345,46444,2,35,NULL,1),
 (330,'Aion - Adventurer\'s Guild',0,46445,46494,2,35,NULL,1),
 (331,'Xyndaris - The Dell',0,46495,46544,2,35,NULL,1),
-(332,'Sidartha - Avalon Outpost',0,46545,46594,2,35,NULL,1),
+(332,'Sidartha - Avalon Outpost',1,46545,46594,2,30,NULL,1),
 (333,'Warluk - Old Cemetery',0,46595,46619,2,35,NULL,1),
 (334,'Last Block',0,46620,99998,2,25,NULL,1);
 /*!40000 ALTER TABLE `zone` ENABLE KEYS */;
@@ -389,4 +389,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-16  2:35:15
+-- Dump completed on 2024-07-02 15:14:49

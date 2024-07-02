@@ -274,7 +274,6 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Clock',5,0,'no one'),
 ('Precious',8,0,'no one'),
 ('Timon',14,0,'no one'),
-('Pumba',14,0,'no one'),
 ('Bender',10,1,'an elven traveler'),
 ('Bromidrosis',17,1,'Gnarrelus, the gadget-maker'),
 ('Zigma',28,1,'a caravan guard'),
@@ -288,7 +287,13 @@ INSERT INTO `permadeath` VALUES ('Telaqui',5,1,'a robber'),
 ('Colambo',7,0,'no one'),
 ('Stark',20,0,'no one'),
 ('Arya',21,0,'no one'),
-('Aquaman',4,0,'no one');
+('Aquaman',4,1,'Nicodemus the old fisherman'),
+('Permidaeth',50,0,'no one'),
+('Minotauro',3,0,'no one'),
+('Angus',50,0,'no one'),
+('Baal',50,0,'no one'),
+('Permanaut',20,1,'an undead savage warrior'),
+('Urraca',15,0,'no one');
 /*!40000 ALTER TABLE `permadeath` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -301,4 +306,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-16  2:35:06
+-- Dump completed on 2024-07-02 15:14:43
