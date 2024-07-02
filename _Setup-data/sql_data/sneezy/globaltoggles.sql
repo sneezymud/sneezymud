@@ -46,7 +46,7 @@ INSERT INTO `globaltoggles` VALUES (1,0,0,'No-Shouting','allow shouting'),
 (8,0,0,'Twinky Combat','twinky combat messages'),
 (9,0,0,'Time DB Queries','time database queries'),
 (10,0,0,'Game Loop Timing','print timing info for game loop'),
-(11,0,0,'Double Exp','turn on double exp'),
+(11,1,0,'Double Exp','turn on double exp'),
 (12,1,1,'Test Code 1','Queued player saves'),
 (14,0,1,'Test Code 3','not currently used'),
 (15,0,1,'Test Code 4','not currently used'),
@@ -70,4 +70,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-08-16  2:35:04
+-- Dump completed on 2024-07-02 15:14:41
