@@ -8,6 +8,7 @@
 #include <cmath>
 #include <algorithm>
 #include <stdio.h>
+#include <sstream>
 
 #include "extern.h"
 #include "handler.h"
@@ -1428,9 +1429,85 @@ void mvMob(TPerson& ch, const sstring& immortal, const sstring& rooms) {
   db_beta.query("commit");
 }
 
-void TPerson::doLow(const sstring& argument) {
-  sstring buf, arg = argument;
+/*
+  Keeping this as a separate command rather than adding it to mvmob, as the LOW
+  would often want to be able to move a builder's mobs over without moving
+  any responses as well, to allow auditing of responses first.
+*/
+void mvResponse(TPerson& ch, const sstring& immortal,
+  const sstring& vnumsString) {
+  static constexpr const char* usage =
+    "Syntax: low mvresponse <builder_name> [vnums]\n\rLeave vnums blank to "
+    "list mob responses owned by the builder.\n\r";
 
+  if (immortal.empty()) {
+    ch.sendTo(
+      "Must specify the name of the builder who owns the vnums being "
+      "moved.\n\r");
+    ch.sendTo(usage);
+    return;
+  }
+
+  TDatabase prodDb(DB_SNEEZY);
+  TDatabase immDb(DB_IMMORTAL);
+
+  if (vnumsString.empty()) {
+    std::stringstream output;
+    output << "Mob responses owned by " << immortal << ":\n\r\n\r";
+    output << "  Vnum | Name\n\r";
+    output << "-------|-------------------\n\r";
+
+    immDb.query(
+      "select mobresponses.vnum, mob.name from mobresponses join "
+      "mob on mob.vnum=mobresponses.vnum where mobresponses.owner='%s'",
+      immortal.c_str());
+
+    while (immDb.fetchRow())
+      output << format("%6i | %s\n\r") % immDb["vnum"] % immDb["name"];
+
+    ch.sendTo(output.str());
+    return;
+  }
+
+  std::vector<int> vnums;
+  if (!parse_num_args(ch, vnumsString, vnums)) {
+    ch.sendTo("Error encountered when parsing provided vnums.\n\r");
+    ch.sendTo(
+      "Vnums should be separated by spaces, and can be ranges separated by a "
+      "hyphen.\n\rExample: low mvresponse someimm 100 102 105-107 115-120\n\r");
+    ch.sendTo(usage);
+    return;
+  }
+
+  prodDb.query("begin");
+  ch.sendTo(
+    format(
+      "Copying mob responses for vnums '%s' owned by '%s' from immortal DB to "
+      "live DB...\n\r") %
+    vnumsString % immortal);
+
+  for (auto vnum : vnums) {
+    immDb.query(
+      "select vnum, response from mobresponses where owner='%s' and vnum=%i",
+      immortal.c_str(), vnum);
+
+    if (immDb.fetchRow()) {
+      prodDb.query("delete from mobresponses where vnum=%i", vnum);
+      prodDb.query("insert into mobresponses (vnum, response) values (%s,'%s')",
+        immDb["vnum"].c_str(), immDb["response"].c_str());
+      ch.sendTo(format("Moved response for vnum %i.\n\r") % vnum);
+    } else {
+      ch.sendTo(format("No entry found for vnum %i.\n\r") % vnum);
+    }
+  }
+
+  prodDb.query("commit");
+  ch.sendTo(
+    "Done. Use 'boot zone <zone_number>' to reflect changes without "
+    "rebooting.\n\r");
+}
+
+void TPerson::doLow(const sstring& argument) {
   if (!hasWizPower(POWER_LOW)) {
     sendTo(
       "You do not yet have the low command. If you need something, see a "
@@ -1438,49 +1515,70 @@ void TPerson::doLow(const sstring& argument) {
     return;
   }
 
-  arg = one_argument(arg, buf);
+  sstring command;
+  sstring options = one_argument(argument, command);
 
-  sstring usage =
-    "Syntax: low <mob | race | statbonus | statcharts | tasks | path room | "
+  static constexpr const char* usage =
+    "Syntax: low [mobs | race | statbonus | statcharts | tasks | path | "
     "mvroom <builder> <zone> <vnums> | mvobj <builder> <vnums> | mvmob "
-    "<builder> <vnums> > ...\n\r";
-  if (buf.empty()) {
+    "<builder> <vnums> | mvresponse <builder> <vnums>] \n\r";
+
+  if (command.empty()) {
     sendTo(usage);
     return;
-  } else if (is_abbrev(buf, "mvroom")) {
+  }
+
+  if (is_abbrev(command, "mvroom")) {
     int block = convertTo<int>(argument.word(2));
-    if (!(block == 1 || block == 2)) {
+    if (block != 1 && block != 2) {
       sendTo("Block must be either 1 or 2\n");
       return;
     }
     mvRoom(*this, argument.word(1), block, argument.dropWords(3));
-  } else if (is_abbrev(buf, "mvobj")) {
-    mvObj(*this, argument.word(1), argument.dropWords(2));
-  } else if (is_abbrev(buf, "mvmob")) {
-    mvMob(*this, argument.word(1), argument.dropWords(2));
-  } else if (is_abbrev(buf, "objs") || is_abbrev(buf, "weapons")) {
-    sendTo(
-      "The low command does not currently work for objects or weapons.\n\r");
+    return;
+  }
 
-#if 0
-    lowObjs(arg.c_str());
+  if (is_abbrev(command, "mvobj")) {
+    mvObj(*this, argument.word(1), argument.dropWords(2));
     return;
-  } else if (is_abbrev(buf, "weapons")) {
-    lowWeaps(arg.c_str());
-#endif
+  }
+
+  if (is_abbrev(command, "mvmob")) {
+    mvMob(*this, argument.word(1), argument.dropWords(2));
     return;
-  } else if (is_abbrev(buf, "tasks")) {
-    lowTasks(arg.c_str());
+  }
+
+  if (is_abbrev(command, "mvresponse")) {
+    mvResponse(*this, argument.word(1), argument.dropWords(2));
     return;
-  } else if (is_abbrev(buf, "mobs")) {
-    lowMobs(arg.c_str());
+  }
+
+  if (is_abbrev(command, "objs") || is_abbrev(command, "weapons")) {
+    sendTo("This option is deprecated. Use 'low mvobj' instead.\n\r");
     return;
-  } else if (is_abbrev(buf, "race")) {
-    lowRace(arg.c_str());
+  }
+
+  if (is_abbrev(command, "tasks")) {
+    lowTasks(options.c_str());
     return;
-  } else if (is_abbrev(buf, "path")) {
-    lowPath(arg);
-  } else if (is_abbrev(buf, "statbonus")) {
+  }
+
+  if (is_abbrev(command, "mobs")) {
+    lowMobs(options.c_str());
+    return;
+  }
+
+  if (is_abbrev(command, "race")) {
+    lowRace(options.c_str());
+    return;
+  }
+
+  if (is_abbrev(command, "path")) {
+    lowPath(options);
+    return;
+  }
+
+  if (is_abbrev(command, "statbonus")) {
     TDatabase db(DB_SNEEZY);
     db.query(
       "select type, count(*) as count, max(mod1) as max, min(mod1) as min, "
@@ -1490,55 +1588,58 @@ void TPerson::doLow(const sstring& argument) {
            "Max" % "Min" % "Avg" % "Sum");
 
     while (db.fetchRow()) {
-      buf = format("%5s %5s %5s %10s %10s") % db["count"] % db["max"] %
-            db["min"] % db["avg"] % db["sum"];
+      const sstring output = format("%5s %5s %5s %10s %10s") % db["count"] %
+                             db["max"] % db["min"] % db["avg"] % db["sum"];
 
       switch (mapFileToApply(convertTo<int>(db["type"]))) {
         case APPLY_STR:
-          sendTo(format("Strength    : %s\n\r") % buf);
+          sendTo(format("Strength    : %s\n\r") % output);
           break;
         case APPLY_BRA:
-          sendTo(format("Brawn       : %s\n\r") % buf);
+          sendTo(format("Brawn       : %s\n\r") % output);
           break;
         case APPLY_CON:
-          sendTo(format("Constitution: %s\n\r") % buf);
+          sendTo(format("Constitution: %s\n\r") % output);
           break;
         case APPLY_DEX:
-          sendTo(format("Dexterity   : %s\n\r") % buf);
+          sendTo(format("Dexterity   : %s\n\r") % output);
           break;
         case APPLY_AGI:
-          sendTo(format("Agility     : %s\n\r") % buf);
+          sendTo(format("Agility     : %s\n\r") % output);
           break;
         case APPLY_INT:
-          sendTo(format("Intelligence: %s\n\r") % buf);
+          sendTo(format("Intelligence: %s\n\r") % output);
           break;
         case APPLY_WIS:
-          sendTo(format("Wisdom      : %s\n\r") % buf);
+          sendTo(format("Wisdom      : %s\n\r") % output);
           break;
         case APPLY_FOC:
-          sendTo(format("Focus       : %s\n\r") % buf);
+          sendTo(format("Focus       : %s\n\r") % output);
           break;
         case APPLY_PER:
-          sendTo(format("Perception  : %s\n\r") % buf);
+          sendTo(format("Perception  : %s\n\r") % output);
           break;
         case APPLY_CHA:
-          sendTo(format("Charisma    : %s\n\r") % buf);
+          sendTo(format("Charisma    : %s\n\r") % output);
           break;
         case APPLY_KAR:
-          sendTo(format("Karma       : %s\n\r") % buf);
+          sendTo(format("Karma       : %s\n\r") % output);
           break;
         case APPLY_SPE:
-          sendTo(format("Speed       : %s\n\r") % buf);
+          sendTo(format("Speed       : %s\n\r") % output);
           break;
         case APPLY_CRIT_FREQUENCY:
-          sendTo(format("Crit. Chance: %s\n\r") % buf);
+          sendTo(format("Crit. Chance: %s\n\r") % output);
           break;
         default:
           break;
       }
     }
 
-  } else if (is_abbrev(buf, "statcharts")) {
+    return;
+  }
+
+  if (is_abbrev(command, "statcharts")) {
     Stats st;
     sstring buf;
     char tmpbuf[256];
@@ -1637,11 +1738,10 @@ void TPerson::doLow(const sstring& argument) {
           break;
       }
     }
-
-  } else {
-    sendTo(usage);
     return;
   }
+
+  sendTo(usage);
 }
 
 void TBeing::lowPath(const sstring& arg) {
