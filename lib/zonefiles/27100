@@ -28,6 +28,9 @@ O 0 27103 1 27105   Willow Tree
 
 O 0 27104 1 27130   Statue of gargoyle
 O 0 27106 1 27130   Sarcophagus
+? 0 15 0 L 
+ L 1 29 30 0 1
+
 
 O 0 27123 1 27147   straight stick
 O 0 27123 1 27101   straight stick
@@ -35,25 +38,53 @@ O 0 27123 1 27127   straight stick
 O 0 27123 1 27118   straight stick
 
 O 0 27107 1 27134   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27135   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27136   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27137   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
+
 O 0 27107 1 27138   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27139   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27140   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27141   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27142   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27143   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27144   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27145   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
 O 0 27107 1 27146   decaying wooden coffin
+? 0 15 0 L 
+ L 1 26 27 0 1
+
 
 O 0 45512 1 27125   Tomb Portal to Parnithian Tomb Zone
 
-M 0 27100 1 27130    Skeleton in Crypt
-M 0 27100 1 27132
+M 0 27111 1 27130    Skeleton in Crypt
+M 0 27111 1 27132
 
-M 0 27100 1 27134    Skeleton in Grave
+M 0 27100 1 27134    Skeleton in Grave (resting)
 M 0 27100 1 27135
 M 0 27100 1 27136
 M 0 27100 1 27137
@@ -61,13 +92,12 @@ M 0 27100 1 27138
 M 0 27100 1 27139
 M 0 27100 1 27140
 
-? 0 50 0 M
 M 1 27101 1 27105    elvish banshee
 
-M 0 27102 1 27131    Zombie in Crypt
-M 0 27102 1 27133
+M 0 27110 1 27131    Zombie in Crypt
+M 0 27110 1 27133
 
-M 0 27102 1 27140    Zombie in Grave
+M 0 27102 1 27140    Zombie in Grave (resting)
 M 0 27102 1 27141
 M 0 27102 1 27142
 M 0 27102 1 27143
@@ -75,102 +105,24 @@ M 0 27102 1 27144
 M 0 27102 1 27145
 M 0 27102 1 27146
 
-? 0 20 0 A        loading drelik randomly somewhere in the zone that is !crypt
-A 1 27100 27104
-M 1 27103 1 -99
+A 0 27101 27133         loading drelik randomly
+M 1 27103 1 -99    Drelik
 
-? 0 20 0 A
-A 1 27106 27113
-M 1 27103 1 -99
-
-? 0 20 0 A
-A 1 27116 27119
-M 1 27103 1 -99
-
-? 0 20 0 A
-A 1 27122 27129
-M 1 27103 1 -99
+A 1 27100 27104         loading kalus randomly
+M 1 27104 1 -99    Kalus
 
 
-? 0 20 0 A        loading kalus randomly somewhere in the zone that is !crypt
-A 1 27100 27104
-M 1 27104 1 -99
+A 0 27101 27133         loading dreyfus randomly
+M 1 27105 1 -99    Dreyfus
 
-? 0 20 0 A
-A 1 27106 27113
-M 1 27104 1 -99
+A 1 27100 27104          loading yez randomly
+M 1 27106 1 -99    Yez
 
-? 0 20 0 A
-A 1 27116 27119
-M 1 27104 1 -99
+A 0 27101 27133         loading krak randomly
+M 1 27107 1 -99    Krak
 
-? 0 20 0 A
-A 1 27122 27129
-M 1 27104 1 -99
+A 0 27101 27133        loading brighton randomly 
+M 1 27108 1 -99    Brighton
 
-? 0 20 0 A        loading dreyfus randomly somewhere in the zone that is !crypt
-A 1 27100 27104
-M 1 27105 1 -99
-
-? 0 20 0 A
-A 1 27106 27113
-M 1 27105 1 -99
-
-? 0 20 0 A
-A 1 27116 27119
-M 1 27105 1 -99
-
-? 0 20 0 A
-A 1 27122 27129
-M 1 27105 1 -99
-
-? 0 20 0 A        loading yez randomly somewhere in the zone that is !crypt
-A 1 27100 27104
-M 1 27106 1 -99
-
-? 0 20 0 A
-A 1 27106 27113
-M 1 27106 1 -99
-
-? 0 20 0 A
-A 1 27116 27119
-M 1 27106 1 -99
-
-? 0 20 0 A
-A 1 27122 27129
-M 1 27106 1 -99
-
-? 0 20 0 A        loading krak randomly somewhere in the zone that is !crypt
-A 1 27100 27104
-M 1 27107 1 -99
-
-? 0 20 0 A
-A 1 27106 27113
-M 1 27107 1 -99
-
-? 0 20 0 A
-A 1 27116 27119
-M 1 27107 1 -99
-
-? 0 20 0 A
-A 1 27122 27129
-M 1 27107 1 -99
-
-
-? 0 20 0 A        loading brighton randomly somewhere in the zone that is !crypt
-A 1 27100 27104
-M 1 27108 1 -99
-
-? 0 20 0 A
-A 1 27106 27113
-M 1 27108 1 -99
-
-? 0 20 0 A
-A 1 27116 27119
-M 1 27108 1 -99
-
-? 0 20 0 A
-A 1 27122 27129
-M 1 27108 1 -99
+M 0 27109 1 27130    skeletal wizard
 S
-
