@@ -1,5 +1,47 @@
 #4900
-Cevni's area (25 rooms)~
-4924 25 2 0
+Sidartha – Cardam’s Tomb~
+4924 60 2 1
+
+D 0 4900 0 1 	rubble entryway
+D 0 4901 2 1
+D 0 4908 3 2	door to tailor ward trader
+D 0 4909 1 2
+D 0 4906 1 2 	door to smithy ward trader
+D 0 4907 3 2
+D 0 4905 0 2 	panel to cardam temple
+D 0 4910 2 2
+D 0 4915 0 2	altar of cardam
+D 0 4918 2 2
+D 0 4923 0 2	tomb of cardam
+D 0 4924 2 2
+
+M 0 46565 1 4909 	bolo tailor ward pass trader
+M 0 46567 1 4907 	loupe smithy ward pass trader
+M 0 4901 1 4901	chanting monk
+M 0 4901 1 4903
+M 0 4902 1 4902	tomb raider
+M 0 4902 1 4904
+M 0 4908 1 4905	Cardam’s guardian
+G 1 4905 1		key to temple
+M 0 4909 1 4923	cardam’s assasin
+G 1 4923 1		key to tomb
+M 0 4910 1 4908	stolid guard to tailor
+G 1 4908 1		key to tailor needle key
+M 0 4911 1 4906	phlegmatic guard to smithy
+G 1 4906 1		key to smithy anvil key
+M 0 4903 1 4911	undead worshipper
+M 0 4903 1 4912
+M 0 4903 1 4916
+M 0 4903 1 4917
+M 0 4904 1 4913	Stealthy assassin
+M 0 4904 1 4914
+M 0 4905 1 4915	undead guardian
+G 1 4915 1		key to altar
+M 0 4906 1 4918	undead woman in anguish
+M 0 4906 1 4919
+M 0 4907 1 4922	undead priest
+M 0 4907 1 4921
+M 0 4900 1 4924	Cardam
+
 S
 
