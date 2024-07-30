@@ -771,37 +771,37 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
       }
       break;
 
-    case RANGER_LEVEL_IND:
-      if (getLevel(Class) >= 7 && !hasQuestBit(TOG_RANGER_FIRST_ELIGIBLE) &&
-          !hasQuestBit(TOG_RANGER_FIRST_FOUND_HERMIT) &&
-          !hasQuestBit(TOG_RANGER_FIRST_STARTED) &&
-          !hasQuestBit(TOG_RANGER_FIRST_GNOBLE) &&
-          !hasQuestBit(TOG_RANGER_FIRST_FARMER) &&
-          !hasQuestBit(TOG_RANGER_FIRST_CHILDREN) &&
-          !hasQuestBit(TOG_RANGER_FIRST_FARMHAND) &&
-          !hasQuestBit(TOG_RANGER_FIRST_KILLED_OK) &&
-          !hasQuestBit(TOG_RANGER_FIRST_GAVE_HIDE) &&
-          !hasQuestBit(TOG_RANGER_FIRST_GAVE_PELT) &&
-          !hasQuestBit(TOG_RANGER_FIRST_HUNTING) &&
-          !hasQuestBit(TOG_RANGER_FIRST_GOT_SCROLL) &&
-          !hasQuestBit(TOG_RANGER_FIRST_FINISHED)) {
+    case WARRIOR_LEVEL_IND:
+      if (getLevel(Class) >= 7 && !hasQuestBit(TOG_WARRIOR_FIRST_ELIGIBLE) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_FOUND_HERMIT) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_STARTED) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_GNOBLE) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_FARMER) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_CHILDREN) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_FARMHAND) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_KILLED_OK) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_GAVE_HIDE) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_GAVE_PELT) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_HUNTING) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_GOT_SCROLL) &&
+          !hasQuestBit(TOG_WARRIOR_FIRST_FINISHED)) {
         if (!silent) {
           gm->doSay("There is a hermit that lives in the Grimhaven Park.");
           gm->doSay(
             "I wish for you to go and speak with him, he has a task for you.");
           gm->doSay(
             "He can be found observing the mallards nest.  Ask him about the "
-            "<w>ranger's first quest<1>.");
+            "<w>hero's first quest<1>.");
         }
 
         if (gm)
-          setQuestBit(TOG_RANGER_FIRST_ELIGIBLE);
+          setQuestBit(TOG_WARRIOR_FIRST_ELIGIBLE);
         else if (getLevel(Class) == 7)
           bHasQuestAvailable = true;
       }
-      if (getLevel(Class) >= 14 && hasQuestBit(TOG_RANGER_FIRST_FINISHED) &&
-          !hasQuestBit(TOG_ELIGIBLE_RANGER_L14) &&
-          !hasQuestBit(TOG_STARTED_RANGER_L14) &&
+      if (getLevel(Class) >= 14 && hasQuestBit(TOG_WARRIOR_FIRST_FINISHED) &&
+          !hasQuestBit(TOG_ELIGIBLE_WARRIOR_L14) &&
+          !hasQuestBit(TOG_STARTED_WARRIOR_L14) &&
           !hasQuestBit(TOG_SEEN_KOBOLD_POACHER) &&
           !hasQuestBit(TOG_SEEKING_ORC_POACHER) &&
           !hasQuestBit(TOG_SEEN_ORC_POACHER) &&
@@ -811,22 +811,49 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
           !hasQuestBit(TOG_SEEKING_ORC_MAGI) &&
           !hasQuestBit(TOG_FAILED_TO_KILL_MAGI) &&
           !hasQuestBit(TOG_PROVING_SELF) && !hasQuestBit(TOG_KILLED_ORC_MAGI) &&
-          !hasQuestBit(TOG_FINISHED_RANGER_L14)) {
+          !hasQuestBit(TOG_FINISHED_WARRIOR_L14)) {
         if (!silent) {
           gm->doSay("You are now ready for another quest.");
           gm->doSay(
             "Seek out Jed the Hermit within the valley that is southwest of "
             "Grimhaven.");
-          gm->doSay("Ask him about the <W>hunter's belt<1>.");
+          gm->doSay("Ask him about the <W>hero's belt<1>.");
         }
 
         if (gm)
-          setQuestBit(TOG_ELIGIBLE_RANGER_L14);
+          setQuestBit(TOG_ELIGIBLE_WARRIOR_L14);
         else if (getLevel(Class) == 14)
           bHasQuestAvailable = true;
       }
-      break;
-    case WARRIOR_LEVEL_IND:
+
+      if (getLevel(Class) >= 21 && hasQuestBit(TOG_FINISHED_WARRIOR_L14) &&
+          !hasQuestBit(TOG_ELIGIBLE_WARRIOR_L21) &&
+          !hasQuestBit(TOG_STARTED_WARRIOR_L21) &&
+          !hasQuestBit(TOG_KILLED_CLERIC_V) &&
+          !hasQuestBit(TOG_FAILED_CLERIC_V) &&
+          !hasQuestBit(TOG_PENANCE_R21_1) &&
+          !hasQuestBit(TOG_SEEKING_CLERIC_A) &&
+          !hasQuestBit(TOG_KILLED_CLERIC_A) &&
+          !hasQuestBit(TOG_FAILED_CLERIC_A) &&
+          !hasQuestBit(TOG_PENANCE_R21_2) &&
+          !hasQuestBit(TOG_SEEKING_FEATHERS) &&
+          !hasQuestBit(TOG_TALKED_CHIEF_A) && !hasQuestBit(TOG_GOT_FEATHERS) &&
+          !hasQuestBit(TOG_SEEKING_2_PELTS) && !hasQuestBit(TOG_GAVE_1_PELT) &&
+          !hasQuestBit(TOG_SEEKING_OIL) && !hasQuestBit(TOG_SEEKING_BANDITS) &&
+          !hasQuestBit(TOG_GOT_OIL) && !hasQuestBit(TOG_FINISHED_WARRIOR_L21)) {
+        if (!silent) {
+          gm->doSay("You are now ready for another quest.");
+          gm->doSay(
+            "Seek out the silent warrior near the docks of Amber city.");
+          gm->doSay("Ask him about the <W>champion’s mantle<1>.");
+        }
+
+        if (gm)
+          setQuestBit(TOG_ELIGIBLE_WARRIOR_L21);
+        else if (getLevel(Class) == 21)
+          bHasQuestAvailable = true;
+      }
+
       if (getLevel(Class) >= 40 && !hasQuestBit(TOG_FINISHED_WARRIOR_L41) &&
           !hasQuestBit(TOG_KILL_SHAMAN) && !hasQuestBit(TOG_KILL_CHIEF) &&
           !hasQuestBit(TOG_GAVE_HEAD_CHIEF) &&
@@ -868,6 +895,114 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
           "inventory. Where did that come from?",
           false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
       }
+
+      if (getLevel(Class) >= 15 && !hasQuestBit(TOG_THIEF_L15_ELIGIBLE) &&
+          !hasQuestBit(TOG_THIEF_L15_ACCEPTED) &&
+          !hasQuestBit(TOG_THIEF_L15_GAVE_PIPE) &&
+          !hasQuestBit(TOG_THIEF_L15_GAVE_MSG) &&
+          !hasQuestBit(TOG_THIEF_L15_GAVE_BOX) &&
+          !hasQuestBit(TOG_THIEF_L15_HAS_CARD)) {
+        setQuestBit(TOG_THIEF_L15_ELIGIBLE);
+
+        TNote* note = createNote(
+          format("%s -\n\n\rGuildmaster wants to see you. South marketplace in "
+                 "Grimhaven, behind Jennica's. Don't be followed.\n\n\r") %
+          getName());
+
+        *this += *note;
+
+        act(
+          "You suddenly realize there's an unfamiliar note in your "
+          "inventory. Where did that come from?",
+          false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
+      }
+
+      if (getLevel(Class) >= 20 && !hasQuestBit(TOG_THIEF_L15_ELIGIBLE) &&
+          !hasQuestBit(TOG_THIEF_L20_HAS_LETTER) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_LETTER) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_STILETTO) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_PIE) &&
+          !hasQuestBit(TOG_THIEF_L20_LETTER_TO_WIFE) &&
+          !hasQuestBit(TOG_THIEF_L20_HELP_WIFE) &&
+          !hasQuestBit(TOG_THIEF_L20_CONFRONT_WMN) &&
+          !hasQuestBit(TOG_THIEF_L20_PIE_TO_WMN) &&
+          !hasQuestBit(TOG_THIEF_L20_PIE_TO_CYRIN) &&
+          !hasQuestBit(TOG_THIEF_L20_GNIFE_TOWIFE) &&
+          !hasQuestBit(TOG_THIEF_L20_KERCH_TOWIFE) &&
+          !hasQuestBit(TOG_THIEF_L20_HAS_WIFEGNIFE) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_WEEDBREAD) &&
+          !hasQuestBit(TOG_THIEF_L20_FIRST_FAVOR) &&
+          !hasQuestBit(TOG_THIEF_L20_SECOND_FAVOR) &&
+          !hasQuestBit(TOG_THIEF_L20_THIRD_FAVOR) &&
+          !hasQuestBit(TOG_THIEF_L20_HAS_SERPENTKEY) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_LADYSBANE) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_MEAT) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_GOODMEAT) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_BADMEAT) &&
+          !hasQuestBit(TOG_THIEF_L20_PAID_BYTAKER) &&
+          !hasQuestBit(TOG_THIEF_L20_BLACKMAIL_GUARD) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_HAMMER) &&
+          !hasQuestBit(TOG_THIEF_L20_GAVE_TWIG) &&
+          !hasQuestBit(TOG_THIEF_L20_RIGGED_HAMMER) &&
+          !hasQuestBit(TOG_THIEF_L20_PAID_BYCATRINA) &&
+          !hasQuestBit(TOG_THIEF_L20_MET_RASMIN) &&
+          !hasQuestBit(TOG_THIEF_L20_LEARN_SECRET) &&
+          !hasQuestBit(TOG_THIEF_L20_MET_MERIN) &&
+          !hasQuestBit(TOG_THIEF_L20_DISCOVER_CARAVAN) &&
+          !hasQuestBit(TOG_THIEF_L20_DISCOVER_CONTACT) &&
+          !hasQuestBit(TOG_THIEF_L20_GIVE_CANDLE) &&
+          !hasQuestBit(TOG_THIEF_L20_DELIVER_TORASMIN) &&
+          !hasQuestBit(TOG_THIEF_L20_INVESTIGATE_ATTACK) &&
+          !hasQuestBit(TOG_THIEF_L20_MET_WESTLEY) &&
+          !hasQuestBit(TOG_THIEF_L20_MAKE_BMCONTACT) &&
+          !hasQuestBit(TOG_THIEF_L20_LOCATE_OONA) &&
+          !hasQuestBit(TOG_THIEF_L20_GIVE_SAWDUST) &&
+          !hasQuestBit(TOG_THIEF_L20_GIVE_CLIPPINGS) &&
+          !hasQuestBit(TOG_THIEF_L20_GIVE_MANURE) &&
+          !hasQuestBit(TOG_THIEF_L2_GIVE_FERTILIZER) &&
+          !hasQuestBit(TOG_THIEF_L20_DELIVER_FAT) &&
+          !hasQuestBit(TOG_THIEF_L20_GIVE_TALLOW) &&
+          !hasQuestBit(TOG_THIEF_L20_GIVE_EXPLOSIVE) &&
+          !hasQuestBit(TOG_THIEF_L20_ESCORT_NEPHEW)) {
+        setQuestBit(TOG_THIEF_L20_ELIGIBLE);
+
+        TNote* note = createNote(format("%s -\n\n\rTime for a smoke break. "
+                                        "In the cave, through the gates. Up "
+                                        "the Gut. Don't be followed.\n\n\r") %
+                                 getName());
+
+        *this += *note;
+
+        act(
+          "You suddenly realize there's an unfamiliar note in your "
+          "inventory. Where did that come from?",
+          false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
+      }
+
+      if (getLevel(Class) >= 45 && !hasQuestBit(TOG_THIEF_L45_ELIGIBLE) &&
+          !hasQuestBit(TOG_THIEF_L45_GAVE_TATTOO) &&
+          !hasQuestBit(TOG_THIEF_L45_GAVE_LSD) &&
+          !hasQuestBit(TOG_THIEF_L45_GAVE_DRAWING) &&
+          !hasQuestBit(TOG_THIEF_L45_GAVE_PENDANT) &&
+          !hasQuestBit(TOG_THIEF_L45_GAVE_SUIT) &&
+          !hasQuestBit(TOG_THIEF_L45_GAVE_BLOOD) &&
+          !hasQuestBit(TOG_THIEF_L45_NEED_HAMMER) &&
+          !hasQuestBit(TOG_THIEF_L45_HAS_GNICEGNIFE)) {
+        setQuestBit(TOG_THIEF_L45_ELIGIBLE);
+
+        TNote* note = createNote(
+          format("%s -\n\n\rBig Boss wants to see you in church."
+                 "Hobbits. Bet you need a key. Don't be followed.\n\n\r") %
+          getName());
+
+        *this += *note;
+
+        act(
+          "You suddenly realize there's an unfamiliar note in your "
+          "inventory. Where did that come from?",
+          false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
+      }
+
       break;
     default:
       break;
