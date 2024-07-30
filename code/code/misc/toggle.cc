@@ -129,7 +129,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Is Eligible for Skill: Tornado", Mob::NONE},
   {"Has Skill:  Tornado", Mob::GERSARD},
   {"Is Eligible for Skill: Barkskin", Mob::NONE},  // 105
-  {"Has Skill:  Barkskin", Mob::FIRST_WARRIOR_BASIC_TRAINER},
+  {"Has Skill:  Barkskin", Mob::FIRST_RANGER_BASIC_TRAINER},
   {"Is Eligible for Skill: Earthquake", Mob::NONE},
   {"Has Skill:  Earthquake", Mob::TALAR},
   {"Is Eligible for Skill:  Dual Wield", Mob::NONE},
