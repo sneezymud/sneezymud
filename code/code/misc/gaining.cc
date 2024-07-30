@@ -823,7 +823,7 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
         }
         
         if (gm)
-          setQuestBit(TOG_ELIGIBLE_RANGER_L14);
+          setQuestBit(TOG_ELIGIBLE_WARRIOR_L14);
         else if (getLevel(Class) == 14)
           bHasQuestAvailable = true;
         }
