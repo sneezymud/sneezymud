@@ -38,27 +38,31 @@ namespace {
         taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
         break;
       case 2:
-        taunt_buf = format("Yeah! That moron %s just had to push it!") % v->getName();
+        taunt_buf =
+          format("Yeah! That moron %s just had to push it!") % v->getName();
         break;
       case 3:
-        taunt_buf = format("Someone help %s regen some hitpoints! *snort*") % v->getName();
+        taunt_buf = format("Someone help %s regen some hitpoints! *snort*") %
+                    v->getName();
         break;
       case 4:
         taunt_buf = format("I didn't kill %s! Really!!") % v->getName();
         break;
       case 5:
         taunt_buf = format(
-                    "Creatures killed : Alone 45,687! Looks like %s "
-                    "makes that 45,688!") % v->getName();
+                      "Creatures killed : Alone 45,687! Looks like %s "
+                      "makes that 45,688!") %
+                    v->getName();
         break;
       case 6:
         taunt_buf = format("HAHAHA! Hey %s! How much to next level NOW?!?") %
-          v->getName();
+                    v->getName();
         break;
       case 7:
         taunt_buf = format(
-                    "It's time to remind %s that SneezyMUD is... Aw "
-                    "hell, can't remind the dead!") % v->getName();
+                      "It's time to remind %s that SneezyMUD is... Aw "
+                      "hell, can't remind the dead!") %
+                    v->getName();
         break;
       case 8:
         taunt_buf = format(
@@ -67,8 +71,8 @@ namespace {
                     v->getName();
         break;
       case 9:
-        taunt_buf = format("There once was a player named %s... once...") %
-                    v->getName();
+        taunt_buf =
+          format("There once was a player named %s... once...") % v->getName();
         break;
       case 10:
         taunt_buf =
@@ -136,18 +140,16 @@ namespace {
           v->getName() % v->getName();
         break;
       case 21:
-        taunt_buf = format("This is what it sounds like, when %s dies!") %
-                    v->getName();
+        taunt_buf =
+          format("This is what it sounds like, when %s dies!") % v->getName();
         break;
       case 22:
-        taunt_buf =
-          format("Well, %s is dead. Who could have forseen that?!") %
-          v->getName();
+        taunt_buf = format("Well, %s is dead. Who could have forseen that?!") %
+                    v->getName();
         break;
       case 23:
-        taunt_buf =
-          format("Quick, summon %s! Or, well, maybe next time...") %
-          v->getName();
+        taunt_buf = format("Quick, summon %s! Or, well, maybe next time...") %
+                    v->getName();
         break;
       case 24:
         taunt_buf =
@@ -169,8 +171,7 @@ namespace {
         break;
       case 28:
         taunt_buf =
-          format(
-            "You should have stayed in the safety of the tavern, %s!") %
+          format("You should have stayed in the safety of the tavern, %s!") %
           v->getName();
         break;
       case 29:
@@ -203,40 +204,49 @@ namespace {
           v->getName();
         break;
       case 35:
-        taunt_buf =
-          format(
-            "%s apparently thought the skill system on SneezyMUD was "
-            "called learn by *dying*.  Who wants to tell em?") %
-          v->getName();
+        taunt_buf = format(
+                      "%s apparently thought the skill system on SneezyMUD was "
+                      "called learn by *dying*.  Who wants to tell em?") %
+                    v->getName();
         break;
       case 36:
-        taunt_buf = format("%s's mom is so old she gets the references to "
-                      "all the other death taunts!") % v->getName();
+        taunt_buf = format(
+                      "%s's mom is so old she gets the references to "
+                      "all the other death taunts!") %
+                    v->getName();
         break;
       case 37:
-        taunt_buf = format("Someone start planning for %s's funeral and "
-                      "um... it's probably going to need to be a closed casket!") %
-                      v->getName();
+        taunt_buf =
+          format(
+            "Someone start planning for %s's funeral and "
+            "um... it's probably going to need to be a closed casket!") %
+          v->getName();
         break;
       case 38:
-        taunt_buf = format("%s went down faster than Aaron Rodgers in a Jets uniform!")
-                      % v->getName();
+        taunt_buf =
+          format("%s went down faster than Aaron Rodgers in a Jets uniform!") %
+          v->getName();
         break;
       case 39:
-        taunt_buf = format("Remember when %s was good at SneezyMud? Yeah me either.")
-                      % v->getName();
+        taunt_buf =
+          format("Remember when %s was good at SneezyMud? Yeah me either.") %
+          v->getName();
         break;
       case 40:
-        taunt_buf = format("I don't always kill players, but when I do, I kill %s")
-                      % v->getName();
+        taunt_buf =
+          format("I don't always kill players, but when I do, I kill %s") %
+          v->getName();
         break;
       case 41:
-        taunt_buf = format("I guess %s wasn't vaccinated against an ass whooping!")
-                      % v->getName();
+        taunt_buf =
+          format("I guess %s wasn't vaccinated against an ass whooping!") %
+          v->getName();
         break;
       case 42:
-        taunt_buf = format("Players only have one ending. Ideas live forever. "
-                      "Remember that %s") % v->getName();
+        taunt_buf = format(
+                      "Players only have one ending. Ideas live forever. "
+                      "Remember that %s") %
+                    v->getName();
         break;
       default:
         taunt_buf = format("WOO! And %s goes down! HA!") % v->getName();
@@ -246,9 +256,8 @@ namespace {
     discord_taunt_msg =
       format(":skull: %s shouts, \"%s\"") % v->getName().cap() % taunt_buf;
     Discord::sendMessageAsync(Discord::CHANNEL_DEATHS, discord_taunt_msg);
-
   }
-}
+}  // namespace
 
 // -1 = v is dead, needs to go bye-bye
 int TBeing::reconcileDamage(TBeing* v, int dam, spellNumT how) {
@@ -879,8 +888,8 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             setQuestBit(TOG_VINDICATOR_SOLO_2);
             break;
           case Mob::JOHN_RUSTLER:
-            setQuestBit(TOG_RANGER_FIRST_KILLED_OK);
-            remQuestBit(TOG_RANGER_FIRST_FARMHAND);
+            setQuestBit(TOG_WARRIOR_FIRST_KILLED_OK);
+            remQuestBit(TOG_WARRIOR_FIRST_FARMHAND);
             break;
           case Mob::ORC_MAGI:
             setQuestBit(TOG_KILLED_ORC_MAGI);
@@ -888,7 +897,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             break;
           case Mob::CLERIC_VOLCANO:
             setQuestBit(TOG_KILLED_CLERIC_V);
-            remQuestBit(TOG_STARTED_RANGER_L21);
+            remQuestBit(TOG_STARTED_WARRIOR_L21);
             break;
           case Mob::CLERIC_ARDEN:
             setQuestBit(TOG_KILLED_CLERIC_A);
@@ -964,7 +973,7 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
         }
         break;
       case Mob::CLERIC_VOLCANO:
-        if (hasQuestBit(TOG_STARTED_RANGER_L21) &&
+        if (hasQuestBit(TOG_STARTED_WARRIOR_L21) &&
             !hasQuestBit(TOG_FAILED_CLERIC_V) &&
             !hasQuestBit(TOG_PENANCE_R21_1)) {
           sendTo(
