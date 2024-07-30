@@ -352,26 +352,26 @@ const int TOG_MAGE_BELT_OWNED = 160;
 
 const int TOG_HAS_CATFALL = 161;
 
-// Ranger Level 7 Quest
+// Warrior Level 7 Quest
 
-const int TOG_RANGER_FIRST_ELIGIBLE = 162;
-const int TOG_RANGER_FIRST_FOUND_HERMIT = 28;  // safe to reuse
-const int TOG_RANGER_FIRST_STARTED = 163;
-const int TOG_RANGER_FIRST_GNOBLE = 164;
-const int TOG_RANGER_FIRST_FARMER = 165;
-const int TOG_RANGER_FIRST_CHILDREN = 166;
-const int TOG_RANGER_FIRST_FARMHAND = 167;
-const int TOG_RANGER_FIRST_KILLED_OK = 168;
-const int TOG_RANGER_FIRST_GAVE_HIDE = 169;
-const int TOG_RANGER_FIRST_GAVE_PELT = 170;
-const int TOG_RANGER_FIRST_HUNTING = 171;
-const int TOG_RANGER_FIRST_GOT_SCROLL = 172;
-const int TOG_RANGER_FIRST_FINISHED = 173;
+const int TOG_WARRIOR_FIRST_ELIGIBLE = 162;
+const int TOG_WARRIOR_FIRST_FOUND_HERMIT = 28;  // safe to reuse
+const int TOG_WARRIOR_FIRST_STARTED = 163;
+const int TOG_WARRIOR_FIRST_GNOBLE = 164;
+const int TOG_WARRIOR_FIRST_FARMER = 165;
+const int TOG_WARRIOR_FIRST_CHILDREN = 166;
+const int TOG_WARRIOR_FIRST_FARMHAND = 167;
+const int TOG_WARRIOR_FIRST_KILLED_OK = 168;
+const int TOG_WARRIOR_FIRST_GAVE_HIDE = 169;
+const int TOG_WARRIOR_FIRST_GAVE_PELT = 170;
+const int TOG_WARRIOR_FIRST_HUNTING = 171;
+const int TOG_WARRIOR_FIRST_GOT_SCROLL = 172;
+const int TOG_WARRIOR_FIRST_FINISHED = 173;
 
-// Ranger Level 14 Quest
+// Warrior Level 14 Quest
 
-const int TOG_ELIGIBLE_RANGER_L14 = 174;
-const int TOG_STARTED_RANGER_L14 = 175;
+const int TOG_ELIGIBLE_WARRIOR_L14 = 174;
+const int TOG_STARTED_WARRIOR_L14 = 175;
 const int TOG_SEEN_KOBOLD_POACHER = 176;
 const int TOG_SEEKING_ORC_POACHER = 177;
 const int TOG_SEEN_ORC_POACHER = 178;
@@ -382,7 +382,7 @@ const int TOG_SEEKING_ORC_MAGI = 182;
 const int TOG_FAILED_TO_KILL_MAGI = 183;
 const int TOG_PROVING_SELF = 184;
 const int TOG_KILLED_ORC_MAGI = 185;
-const int TOG_FINISHED_RANGER_L14 = 186;
+const int TOG_FINISHED_WARRIOR_L14 = 186;
 
 const int TOG_DEVESTATOR_ELIGIBLE = 187;
 
@@ -396,10 +396,10 @@ const int TOG_MAGE_ROBE_GET_METAL = 192;
 const int TOG_MAGE_ROBE_GET_FABRIC = 193;
 const int TOG_HAS_MAGE_ROBE = 194;
 
-// Ranger Level 21 Quest
+// Warrior Level 21 Quest
 
-const int TOG_ELIGIBLE_RANGER_L21 = 195;
-const int TOG_STARTED_RANGER_L21 = 196;
+const int TOG_ELIGIBLE_WARRIOR_L21 = 195;
+const int TOG_STARTED_WARRIOR_L21 = 196;
 const int TOG_KILLED_CLERIC_V = 197;
 const int TOG_FAILED_CLERIC_V = 198;
 const int TOG_PENANCE_R21_1 = 199;
@@ -415,7 +415,8 @@ const int TOG_GAVE_1_PELT = 208;
 const int TOG_SEEKING_OIL = 209;
 const int TOG_SEEKING_BANDITS = 210;
 const int TOG_GOT_OIL = 211;
-const int TOG_FINISHED_RANGER_L21 = 212;
+const int TOG_FINISHED_WARRIOR_L21 = 212;
+
 
 const int TOG_FACTIONS_ELIGIBLE = 213;
 
@@ -637,10 +638,98 @@ inline constexpr int TOG_COMBAT_NOSTALGIA_QUEST_COMPLETE = 373;
 inline constexpr int TOG_THIEF_L5_ELIGIBLE = 374;
 inline constexpr int TOG_THIEF_L5_ACCEPTED = 375;
 inline constexpr int TOG_THIEF_L5_GAVE_CARDS = 376;
-inline constexpr int TOG_THIEF_L5_COMPLETE = 377;
+
+// Hero of Grimhaven Quest
+inline constexpr int TOG_HEADACHE_HEALED = 378
+inline constexpr int TOG_HERO_OF_GH = 379
+
+//Thief L15 Calling Card Quest
+inline constexpr int TOG_THIEF_L15_ELIGIBLE = 380
+inline constexpr int TOG_THIEF_L15_ACCEPTED = 381
+inline constexpr int TOG_THIEF_L15_GAVE_PIPE = 382
+inline constexpr int TOG_THIEF_L15_GAVE_MSG = 383
+inline constexpr int TOG_THIEF_L15_GAVE_BOX = 384
+inline constexpr int TOG_THIEF_L15_HAS_CARD = 385
+
+//Thief L20 Thief For Hire Quest
+inline constexpr int TOG_THIEF_L20_ELIGIBLE = 386
+inline constexpr int TOG_THIEF_L20_HAS_LETTER = 387
+inline constexpr int TOG_THIEF_L20_GAVE_LETTER = 388
+inline constexpr int TOG_THIEF_L20_GAVE_STILETTO = 389
+inline constexpr int TOG_THIEF_L20_GAVE_PIE = 390
+inline constexpr int TOG_THIEF_L20_LETTER_TO_WIFE = 391
+inline constexpr int TOG_THIEF_L20_HELP_WIFE = 392
+inline constexpr int TOG_THIEF_L20_CONFRONT_WMN = 393
+inline constexpr int TOG_THIEF_L20_PIE_TO_WMN = 394
+inline constexpr int TOG_THIEF_L20_PIE_TO_CYRIN = 395
+inline constexpr int TOG_THIEF_L20_GNIFE_TOWIFE = 396
+inline constexpr int TOG_THIEF_L20_KERCH_TOWIFE = 397
+inline constexpr int TOG_THIEF_L20_HAS_WIFEGNIFE = 398
+inline constexpr int TOG_THIEF_L20_GAVE_WEEDBREAD = 399
+inline constexpr int TOG_THIEF_L20_FIRST_FAVOR = 400
+inline constexpr int TOG_THIEF_L20_SECOND_FAVOR = 401
+inline constexpr int TOG_THIEF_L20_THIRD_FAVOR = 402
+inline constexpr int TOG_THIEF_L20_HAS_SERPENTKEY = 403
+inline constexpr int TOG_THIEF_L20_GAVE_LADYSBANE = 404
+inline constexpr int TOG_THIEF_L20_GAVE_MEAT = 405
+inline constexpr int TOG_THIEF_L20_GAVE_GOODMEAT = 406
+inline constexpr int TOG_THIEF_L20_GAVE_BADMEAT = 407
+inline constexpr int TOG_THIEF_L20_PAID_BYTAKER = 408
+inline constexpr int TOG_THIEF_L20_BLACKMAIL_GUARD = 409
+inline constexpr int TOG_THIEF_L20_GAVE_HAMMER = 410
+inline constexpr int TOG_THIEF_L20_GAVE_TWIG = 411
+inline constexpr int TOG_THIEF_L20_RIGGED_HAMMER = 412
+inline constexpr int TOG_THIEF_L20_PAID_BYCATRINA = 413
+inline constexpr int TOG_THIEF_L20_MET_RASMIN = 414
+inline constexpr int TOG_THIEF_L20_LEARN_SECRET = 415
+inline constexpr int TOG_THIEF_L20_MET_MERIN =416
+inline constexpr int TOG_THIEF_L20_DISCOVER_CARAVAN =417
+inline constexpr int TOG_THIEF_L20_DISCOVER_CONTACT =418
+inline constexpr int TOG_THIEF_L20_GIVE_CANDLE =419
+inline constexpr int TOG_THIEF_L20_DELIVER_TORASMIN =420
+inline constexpr int TOG_THIEF_L20_INVESTIGATE_ATTACK =421
+inline constexpr int TOG_THIEF_L20_MET_WESTLEY =422
+inline constexpr int TOG_THIEF_L20_MAKE_BMCONTACT =423
+inline constexpr int TOG_THIEF_L20_LOCATE_OONA = 424
+inline constexpr int TOG_THIEF_L20_GIVE_SAWDUST = 425
+inline constexpr int TOG_THIEF_L20_GIVE_CLIPPINGS = 426
+inline constexpr int TOG_THIEF_L20_GIVE_MANURE = 427
+inline constexpr int TOG_THIEF_L2_GIVE_FERTILIZER = 428
+inline constexpr int TOG_THIEF_L20_DELIVER_FAT = 429
+inline constexpr int TOG_THIEF_L20_GIVE_TALLOW = 430
+inline constexpr int TOG_THIEF_L20_GIVE_EXPLOSIVE =431
+inline constexpr int TOG_THIEF_L20_ESCORT_NEPHEW = 432
+
+
+//Thief L45 Gnife Quest
+inline constexpr int TOG_THIEF_L45_ELIGIBLE = 433
+inline constexpr int TOG_THIEF_L45_GAVE_TATTOO =  434
+inline constexpr int TOG_THIEF_L45_GAVE_LSD = 435
+inline constexpr int TOG_THIEF_L45_GAVE_DRAWING = 436
+inline constexpr int TOG_THIEF_L45_GAVE_PENDANT = 437
+inline constexpr int TOG_THIEF_L45_GAVE_SUIT = 438
+inline constexpr int TOG_THIEF_L45_GAVE_BLOOD = 439
+inline constexpr int TOG_THIEF_L45_NEED_HAMMER = 440
+inline constexpr int TOG_THIEF_L45_HAS_GNICEGNIFE = 441
+
+//Deikhan Holy Blunt Exchange Quests
+inline constexpr int TOG_AVENGER_HAMMER_SHROUD = 442
+inline constexpr int TOG_AVENGER_HAMMER_TRADED = 443
+inline constexpr int TOG_VINDICATOR_MACE_DAGGER = 444
+inline constexpr int TOG_VINDICATOR_MACE_TRADED = 445
+inline constexpr int TOG_DEVASTATOR_MAUL_CROWN = 446
+inline constexpr int TOG_DEVASTATOR_MAUL_TRADED = 447
+
+//Deikhan Holy Dagger Exchange Quests
+inline constexpr int TOG_AVENGER_STABENGER_BLANKET = 448
+inline constexpr int TOG_AVENGER_STABENGER_TRADED = 449
+inline constexpr int TOG_VINDICATOR_CUFF = 450
+inline constexpr int TOG_VINDICATOR_DIRK_TRADED = 451
+inline constexpr int TOG_DEVASTATOR_SICKLE_CANDLE = 452
+inline constexpr int TOG_DEVASTATOR_SICKLE_TRADED = 453
 
 // move and change - should be one higher than last toggle
-inline constexpr int MAX_TOG_INDEX = 378;
+inline constexpr int MAX_TOG_INDEX = 454;
 
 extern TOGINFO TogIndex[MAX_TOG_INDEX + 1];
 extern togInfoT toggleInfo;

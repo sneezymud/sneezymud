@@ -19,6 +19,7 @@
 
 TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"", Mob::NONE},  // 0           Leave Blank
+  
   {"Avenger Quest: eligible", Mob::NONE},
   {"Avenger Quest: got rules", Mob::BISHOP_BMOON},
   {"Avenger Quest: hunting troll", Mob::BISHOP_BMOON},
@@ -46,7 +47,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Vindicator Quest: seeking penance", Mob::GM_IRIS},  // 25
   {"Vindicator Quest: got penance object", Mob::NITELLION},
   {"Vindicator Quest: purified", Mob::GM_IRIS},
-  {"Ranger 1st Quest: Found Hermit", Mob::HERMIT_GHPARK},
+  {"Warrior 1st Quest: Found Hermit", Mob::HERMIT_GHPARK},
 
   {"Immortal Quest: On Quest", Mob::NONE},
   {"Silverclaw Quest: find Scar", Mob::SILVERCLAW},  // 30
@@ -128,7 +129,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Is Eligible for Skill: Tornado", Mob::NONE},
   {"Has Skill:  Tornado", Mob::GERSARD},
   {"Is Eligible for Skill: Barkskin", Mob::NONE},  // 105
-  {"Has Skill:  Barkskin", Mob::FIRST_RANGER_BASIC_TRAINER},
+  {"Has Skill:  Barkskin", Mob::FIRST_WARRIOR_BASIC_TRAINER},
   {"Is Eligible for Skill: Earthquake", Mob::NONE},
   {"Has Skill:  Earthquake", Mob::TALAR},
   {"Is Eligible for Skill:  Dual Wield", Mob::NONE},
@@ -184,21 +185,21 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Mage Belt Quest: searching for thread", Mob::MAGE_GM_LEVEL15},
   {"Mage Belt Quest: owned", Mob::MAGE_GM_LEVEL15},  // 160
   {"Has Skill: Catfall", Mob::MONK_GM_LEVEL40},
-  {"Ranger 1st Quest: Eligible", Mob::NONE},
-  {"Ranger 1st Quest: Started", Mob::HERMIT_GHPARK},
-  {"Ranger 1st Quest: Talked to Gnome Gnoble of Farmers", Mob::GNOBLE_FARMER},
-  {"Ranger 1st Quest: Talked to Gnome Farmer", Mob::GNOME_FARMER},  // 165
-  {"Ranger 1st Quest: Talked to Gnome Male Child", Mob::GNOME_CHILD},
-  {"Ranger 1st Quest: Talked to Gnome Farmhand", Mob::GNOME_FARMHAND},
-  {"Ranger 1st Quest: Killed John the Rustler", Mob::NONE},
-  {"Ranger 1st Quest: Gave Hermit the Gnomish Cattle Hide", Mob::HERMIT_GHPARK},
-  {"Ranger 1st Quest: Gave Hermit the Squirrel Pelts",
+  {"Warrior 1st Quest: Eligible", Mob::NONE},
+  {"Warrior 1st Quest: Started", Mob::HERMIT_GHPARK},
+  {"Warrior 1st Quest: Talked to Gnome Gnoble of Farmers", Mob::GNOBLE_FARMER},
+  {"Warrior 1st Quest: Talked to Gnome Farmer", Mob::GNOME_FARMER},  // 165
+  {"Warrior 1st Quest: Talked to Gnome Male Child", Mob::GNOME_CHILD},
+  {"Warrior 1st Quest: Talked to Gnome Farmhand", Mob::GNOME_FARMHAND},
+  {"Warrior 1st Quest: Killed John the Rustler", Mob::NONE},
+  {"Warrior 1st Quest: Gave Hermit the Gnomish Cattle Hide", Mob::HERMIT_GHPARK},
+  {"Warrior 1st Quest: Gave Hermit the Squirrel Pelts",
     Mob::HERMIT_GHPARK},  // 170
-  {"Ranger 1st Quest: Seeking Balcor the Mage", Mob::HERMIT_GHPARK},
-  {"Ranger 1st Quest: Got Scroll from Balcor", Mob::BALCOR},
-  {"Ranger 1st Quest: Finished", Mob::HERMIT_GHPARK},
-  {"Is Eligible for Ranger L14 Quest", Mob::NONE},
-  {"Has Started Ranger L14 Quest", Mob::HERMIT_JED},  // 175
+  {"Warrior 1st Quest: Seeking Balcor the Mage", Mob::HERMIT_GHPARK},
+  {"Warrior 1st Quest: Got Scroll from Balcor", Mob::BALCOR},
+  {"Warrior 1st Quest: Finished", Mob::HERMIT_GHPARK},
+  {"Is Eligible for Warrior L14 Quest", Mob::NONE},
+  {"Has Started Warrior L14 Quest", Mob::HERMIT_JED},  // 175
   {"Has Seen Kobold Poacher", Mob::POACH_KOBOLD},
   {"Seeking Orc Poacher", Mob::HERMIT_JED},
   {"Has Seen Orc Poacher", Mob::POACH_ORC},
@@ -209,7 +210,7 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Failed to Kill Orc Magi", Mob::NONE},
   {"Proving Self", Mob::HERMIT_JED},
   {"Killed Orc Magi", Mob::NONE},  // 185
-  {"Finished Ranger L14 Quest", Mob::HERMIT_JED},
+  {"Finished Warrior L14 Quest", Mob::HERMIT_JED},
   {"Holy Devastator Quest: eligible", Mob::NONE},
   {"Mage Robe Quest: eligible", Mob::NONE},
   {"Mage Robe Quest: seeking Druidess", Mob::SIMON_SPELLCRAFTER},
@@ -218,24 +219,24 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Mage Robe Quest: getting metal", Mob::SIMON_SPELLCRAFTER},
   {"Mage Robe Quest: getting fabric", Mob::SIMON_SPELLCRAFTER},
   {"Mage Robe Quest: has mage robe", Mob::SIMON_SPELLCRAFTER},
-  {"Ranger L21 Quest: Eligible", Mob::NONE},  // 195
-  {"Ranger L21 Quest: Started", Mob::RANGER_AMBER},
-  {"Ranger L21 Quest: Killed Volcano Cleric", Mob::NONE},
-  {"Ranger L21 Quest: Failed to kill Volcano Cleric", Mob::NONE},
-  {"Ranger L21 Quest: Proving self L21A", Mob::RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Arden Cleric", Mob::RANGER_AMBER},  // 200
-  {"Ranger L21 Quest: Killed Arden Cleric", Mob::NONE},
-  {"Ranger L21 Quest: Failed to kill Arden Cleric", Mob::NONE},
-  {"Ranger L21 Quest: Proving self L21B", Mob::RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Aarakocra Chief", Mob::RANGER_AMBER},
-  {"Ranger L21 Quest: Talked to Aarakocra Chief", Mob::CHIEF_AARAKOCRA},  // 205
-  {"Ranger L21 Quest: Got feathers", Mob::CHIEF_AARAKOCRA},
-  {"Ranger L21 Quest: Seeking two rabbit skins", Mob::RANGER_AMBER},
-  {"Ranger L21 Quest: Gave one rbbit skin", Mob::RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Bullywug Oil", Mob::RANGER_AMBER},
-  {"Ranger L21 Quest: Seeking Bandits in Bullywug", Mob::SHAMAN_BULLY},  // 210
-  {"Ranger L21 Quest: Got Bullywug Oil", Mob::SHAMAN_BULLY},
-  {"Ranger L21 Quest: Finished Ranger L21 Quest", Mob::RANGER_AMBER},
+  {"Warrior L21 Quest: Eligible", Mob::NONE},  // 195
+  {"Warrior L21 Quest: Started", Mob::WARRIOR_AMBER},
+  {"Warrior L21 Quest: Killed Volcano Cleric", Mob::NONE},
+  {"Warrior L21 Quest: Failed to kill Volcano Cleric", Mob::NONE},
+  {"Warrior L21 Quest: Proving self L21A", Mob::WARRIOR_AMBER},
+  {"Warrior L21 Quest: Seeking Arden Cleric", Mob::WARRIOR_AMBER},  // 200
+  {"Warrior L21 Quest: Killed Arden Cleric", Mob::NONE},
+  {"Warrior L21 Quest: Failed to kill Arden Cleric", Mob::NONE},
+  {"Warrior L21 Quest: Proving self L21B", Mob::WARRIOR_AMBER},
+  {"Warrior L21 Quest: Seeking Aarakocra Chief", Mob::WARRIOR_AMBER},
+  {"Warrior L21 Quest: Talked to Aarakocra Chief", Mob::CHIEF_AARAKOCRA},  // 205
+  {"Warrior L21 Quest: Got feathers", Mob::CHIEF_AARAKOCRA},
+  {"Warrior L21 Quest: Seeking two rabbit skins", Mob::WARRIOR_AMBER},
+  {"Warrior L21 Quest: Gave one rbbit skin", Mob::WARRIOR_AMBER},
+  {"Warrior L21 Quest: Seeking Bullywug Oil", Mob::WARRIOR_AMBER},
+  {"Warrior L21 Quest: Seeking Bandits in Bullywug", Mob::SHAMAN_BULLY},  // 210
+  {"Warrior L21 Quest: Got Bullywug Oil", Mob::SHAMAN_BULLY},
+  {"Warrior L21 Quest: Finished Warrior L21 Quest", Mob::WARRIOR_AMBER},
   {"Faction Membership: eligible", Mob::NONE},
   {"Caldonia: bought her a shot of whisky", Mob::CALDONIA},
   {"", Mob::NONE},  // 215
@@ -401,6 +402,85 @@ TOGINFO TogIndex[MAX_TOG_INDEX + 1] = {
   {"Thief L5 Quest: Accepted", Mob::FIRST_THIEF_GM},                   // 375
   {"Thief L5 Quest: Gave Cards", Mob::FIRST_THIEF_GM},                 // 376
   {"Thief L5 Quest: Complete", Mob::FIRST_THIEF_GM},                   // 377
+  {"Hero of GH: Queen’s Headache Healed", Mob::QUEEN_GH},
+  {"Hero of GH: Rewarded by Queen", Mob::QUEEN_GH},
+  {"Thief L15 Quest: Eligible For Calling Card", Mob::NONE},            // 380
+  {"Thief L15 Quest: Accepted",Mob::FIRST_THIEF_GM},
+  {"Thief L15 Quest: Gave Pipe To GM", Mob::FIRST_THIEF_GM},
+  {"Thief L15 Quest: Message to Hobbit", Mob::SMALL_HOBBIT}, 
+  {"Thief L15 Quest: Delivered Box to Cyvik", Mob::CYVIK}, 
+  {"Thief L15 Quest: Has Calling Card", Mob::FIRST_THIEF_GM}, 
+  {"Thief L20 Quest: Eligible For Jobs",Mob::NONE},                     //386
+  {"Thief L20 Quest: Has Woman’s Letter", Mob::MOURNING_WIDOW},   
+  {"Thief L20 Quest: Letter to Baker", Mob::GNOME_BAKER},
+  {"Thief L20 Quest: Stiletto to Baker", Mob::GNOME_BAKER},   
+  {"Thief L20 Quest: Pie to Baker", Mob::GNOME_BAKER},      
+  {"Thief L20 Quest: Letter to Baker’s Wife", Mob::MOURNING_WIDOW},      //391
+  {"Thief L20 Quest: Agreed to Help Wife", Mob::BAKERS_WIFE},   
+  {"Thief L20 Quest: Gave Pie to Woman", Mob::BAKERS_WIFE},   
+  {"Thief L20 Quest: Gave Pie to Cyrin", Mob::CYRIN_FORGEHAMMER},   
+  {"Thief L20 Quest: Gave Gnife to Wife", Mob::BAKERS_WIFE},   
+  {"Thief L20 Quest: Gave Kerchief to Wife", Mob::BAKERS_WIFE},   
+  {"Thief L20 Quest: Has Short Gnife", Mob::BAKERS_WIFE},                //398
+  {"Thief L20 Quest: Gave Bread to Gonchar", Mob::GONCHAR},
+  {"Thief L20 Quest: Bought First Favor", Mob::GONCHAR},
+  {"Thief L20 Quest: Bought Second Favor", Mob::GONCHAR},   
+  {"Thief L20 Quest: Bought Third Favor", Mob::GONCHAR}, 
+  {"Thief L20 Quest: Has Serpent’s Key", Mob::CROP_MANAGER},             //403
+  {"Thief L20 Quest: Gave Ladysbane to Mgr", Mob::CROP_MANAGER},
+  {"Thief L20 Quest: Gave Meat to Mgr", Mob::CROP_MANAGER},   
+  {"Thief L20 Quest: Gave Good Meat", Mob::ANIMAL_KEEPER},   
+  {"Thief L20 Quest: Gave Bad Meat", Mob::ANIMAL_KEEPER},   
+  {"Thief L20 Quest: Paid by Bet Taker", Mob::BET_TAKER},   
+  {"Thief L20 Quest: Blackmailed Wpn’s Guard", Mob::WEAPONS_GUARD},      //409
+  {"Thief L20 Quest: Hammer to prop", Mob::PROP_MASTER},   
+  {"Thief L20 Quest: Gave twig to prop", Mob::PROP_MASTER},   
+  {"Thief L20 Quest: Gave hammer to Nethker", Mob::NETHKER},
+  {"Thief L20 Quest: Paid by Catrina", Mob::CATRINA},   
+  {"Thief L20 Quest: Meet Rasmin", Mob::RASMIN_LIGHTTOES},                 //414
+  {"Thief L20 Quest: Learn Rasmin’s Secret", Mob::RASMIN_LIGHTTOES},
+  {"Thief L20 Quest: Meet Merin", Mob::MERIN_LIGHTTOES},
+  {"Thief L20 Quest: Find Caravan Driver", Mob::CARAVAN_DRIVER},
+  {"Thief L20 Quest: Find Merin’s Contact", Mob::LUMTARB_ROIFINGERS},
+  {"Thief L20 Quest: Give contact a candle", Mob::LUMTARB_ROIFINGERS},
+  {"Thief L20 Quest: Deliver the Intel to Rasmin", Mob::RASMIN_LIGHTTOES}, //420
+  {"Thief L20 Quest: Find Clues", Mob::PANICKED_THIEF},
+  {"Thief L20 Quest: Met Westley", Mob:: DREAD_PIRATE},
+  {"Thief L20 Quest: Find Nephew", Mob::FRIGHTENED_PRISONER},
+  {"Thief L20 Quest: Find Contact", “Mob::FOPPISH_RAKE},
+  {"Thief L20 Quest: Find Oona", Mob::OONA},                               //424
+  {"Thief L20 Quest: Give Sawdust”, Mob::OONA},
+  {"Thief L20 Quest: Give Clippings”, Mob::ABANOS},
+  {"Thief L20 Quest: Give Manure”, Mob::ABANOS},
+  {"Thief L20 Quest: Give Fertilizer", Mob:: OONA},
+  {"Thief L20 Quest: Deliver Fat", Mob:: BUSH_COOK},
+  {"Thief L20 Quest: Give Tallow", Mob::OONA},
+  {"Thief L20 Quest: Give Explosive", Mob::FRIGHTENED_PRISONER},
+  {"Thief L20 Quest: Take Nephew to Westley", Mob::FRIGHTENED_PRISONER},    //432
+  {"Thief L45 Quest: Eligible For Gnife", Mob:: NONE},
+  {"Thief L45 Quest: Tattoo to Malovhor", Mob::MALOVHOR},  
+  {"Thief L45 Quest: Dagger to Malovhor", Mob::MALOVHOR},  
+  {"Thief L45 Quest: Drawing to Khelfenn", Mob::KHELFENN_SMITH},   
+  {"Thief L45 Quest: Pendant to Mishrak", Mob::MISHRAK},                   //437   
+  {"Thief L45 Quest: Suit to Khelfenn", Mob::KHELFENN_SMITH}, 
+  {"Thief L45 Quest: Blood to Khelfenn", Mob::KHELFENN_SMITH},   
+  {"Thief L45 Quest: Need big hammer", Mob::KHELFENN_SMITH},   
+  {"Thief L45 Quest: Has Gnice Gnife", Mob::KHELFENN_SMITH},   
+  {"Deikhan Holy Hammer: Given Shroud", Mob::ALISAARD},                      //442
+  {"Deikhan Holy Hammer: Traded", Mob::ALISAARD},
+  {"Deikhan Holy Mace: Dagger", Mob::GHOST_WPN_MASTER},
+  {"Deikhan Holy Mace: Traded", Mob:: GHOST_WPN_MASTER},
+  {"Deikhan Holy Maul: Crown", Mob::ROTHWAR},
+  {"Deikhan Holy Maul: Traded", Mob::ROTHWAR},
+  {"Deikhan Holy Shiv: Given Blanket", Mob::ILLUSION_SHROUD},
+  {"Deikhan Holy Shiv: Traded", Mob::ILLUSION_SHROUD},
+  {"Deikhan Holy Dirk: Given Cuff", Mob::GNELIX},                            //450
+  {"Deikhan Holy Dirk: Traded", Mob::GNELIX},
+  {"Deikhan Holy Sickle: Given Candle", Mob::GILTHANTHIL},
+  {"Deikhan Holy Sickle, Traded", Mob::GILTHANTHIL},
+
+
+
   {"", Mob::NONE},
 };
 
