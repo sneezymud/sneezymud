@@ -1709,19 +1709,10 @@ void TBeing::checkForQuestTog(TBeing* vict) {
       if (hasQuestBit(bitnum = TOG_VINDICATOR_HUNTING_2))
         found = TRUE;
       break;
-    case Mob::JOHN_RUSTLER:
-      if (hasQuestBit(bitnum = TOG_RANGER_FIRST_FARMHAND))
-        found = TRUE;
-      break;
     case Mob::ORC_MAGI:
       if (hasQuestBit(bitnum = TOG_SEEKING_ORC_MAGI) &&
           !hasQuestBit(TOG_FAILED_TO_KILL_MAGI) &&
           !hasQuestBit(TOG_PROVING_SELF))
-        found = TRUE;
-      break;
-    case Mob::CLERIC_VOLCANO:
-      if (hasQuestBit(bitnum = TOG_STARTED_RANGER_L21) &&
-          !hasQuestBit(TOG_FAILED_CLERIC_V) && !hasQuestBit(TOG_PENANCE_R21_1))
         found = TRUE;
       break;
     case Mob::CLERIC_ARDEN:

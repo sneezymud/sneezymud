@@ -878,17 +878,9 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             remQuestBit(TOG_VINDICATOR_HUNTING_2);
             setQuestBit(TOG_VINDICATOR_SOLO_2);
             break;
-          case Mob::JOHN_RUSTLER:
-            setQuestBit(TOG_RANGER_FIRST_KILLED_OK);
-            remQuestBit(TOG_RANGER_FIRST_FARMHAND);
-            break;
           case Mob::ORC_MAGI:
             setQuestBit(TOG_KILLED_ORC_MAGI);
             remQuestBit(TOG_SEEKING_ORC_MAGI);
-            break;
-          case Mob::CLERIC_VOLCANO:
-            setQuestBit(TOG_KILLED_CLERIC_V);
-            remQuestBit(TOG_STARTED_RANGER_L21);
             break;
           case Mob::CLERIC_ARDEN:
             setQuestBit(TOG_KILLED_CLERIC_A);
@@ -961,16 +953,6 @@ int TBeing::damageEpilog(TBeing* v, spellNumT dmg_type) {
             "<c>You realize you did not follow the guidelines of your quest, "
             "so this fight will be for naught.<1>\n\r");
           setQuestBit(TOG_FAILED_TO_KILL_MAGI);
-        }
-        break;
-      case Mob::CLERIC_VOLCANO:
-        if (hasQuestBit(TOG_STARTED_RANGER_L21) &&
-            !hasQuestBit(TOG_FAILED_CLERIC_V) &&
-            !hasQuestBit(TOG_PENANCE_R21_1)) {
-          sendTo(
-            "<c>You realize you did not follow the guidelines of your quest, "
-            "so this fight will be for naught.<1>\n\r");
-          setQuestBit(TOG_FAILED_CLERIC_V);
         }
         break;
       case Mob::CLERIC_ARDEN:

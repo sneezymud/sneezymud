@@ -829,23 +829,23 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
         }
 
           if (getLevel(Class) >= 21 && hasQuestBit(TOG_FINISHED_WARRIOR_L14) &&
-          !hasQuestBit(TOG_ELIGIBLE_WARRIOR_L21) &&;
-          !hasQuestBit(TOG_STARTED_WARRIOR_L21) &&;
-          !hasQuestBit(TOG_KILLED_CLERIC_V) &&;
-          !hasQuestBit(TOG_FAILED_CLERIC_V) &&;
-          !hasQuestBit(TOG_PENANCE_R21_1) &&;
-          !hasQuestBit(TOG_SEEKING_CLERIC_A) &&;
-          !hasQuestBit(TOG_KILLED_CLERIC_A) &&;
-          !hasQuestBit(TOG_FAILED_CLERIC_A) &&;
-          !hasQuestBit(TOG_PENANCE_R21_2) &&;
-          !hasQuestBit(TOG_SEEKING_FEATHERS) &&;
-          !hasQuestBit(TOG_TALKED_CHIEF_A) &&;
-          !hasQuestBit(TOG_GOT_FEATHERS) &&;
-          !hasQuestBit(TOG_SEEKING_2_PELTS) &&;
-          !hasQuestBit(TOG_GAVE_1_PELT) &&;
-          !hasQuestBit(TOG_SEEKING_OIL) &&;
-          !hasQuestBit(TOG_SEEKING_BANDITS) &&;
-          !hasQuestBit(TOG_GOT_OIL) &&;
+          !hasQuestBit(TOG_ELIGIBLE_WARRIOR_L21) &&
+          !hasQuestBit(TOG_STARTED_WARRIOR_L21) &&
+          !hasQuestBit(TOG_KILLED_CLERIC_V) &&
+          !hasQuestBit(TOG_FAILED_CLERIC_V) &&
+          !hasQuestBit(TOG_PENANCE_R21_1) &&
+          !hasQuestBit(TOG_SEEKING_CLERIC_A) &&
+          !hasQuestBit(TOG_KILLED_CLERIC_A) &&
+          !hasQuestBit(TOG_FAILED_CLERIC_A) &&
+          !hasQuestBit(TOG_PENANCE_R21_2) &&
+          !hasQuestBit(TOG_SEEKING_FEATHERS) &&
+          !hasQuestBit(TOG_TALKED_CHIEF_A) &&
+          !hasQuestBit(TOG_GOT_FEATHERS) &&
+          !hasQuestBit(TOG_SEEKING_2_PELTS) &&
+          !hasQuestBit(TOG_GAVE_1_PELT) &&
+          !hasQuestBit(TOG_SEEKING_OIL) &&
+          !hasQuestBit(TOG_SEEKING_BANDITS) &&
+          !hasQuestBit(TOG_GOT_OIL) &&
           !hasQuestBit(TOG_FINISHED_WARRIOR_L21)) {
 
         if (!silent) {
@@ -903,7 +903,7 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
           "inventory. Where did that come from?",
           false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
       }
-    case THIEF_LEVEL_IND:
+
       if (getLevel(Class) >= 15 && !hasQuestBit(TOG_THIEF_L15_ELIGIBLE) &&
           !hasQuestBit(TOG_THIEF_L15_ACCEPTED) &&
           !hasQuestBit(TOG_THIEF_L15_GAVE_PIPE) &&
@@ -925,7 +925,6 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
           false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
       }
     
-     case THIEF_LEVEL_IND:
       if (getLevel(Class) >= 20 && !hasQuestBit(TOG_THIEF_L15_ELIGIBLE) &&
           !hasQuestBit(TOG_THIEF_L20_HAS_LETTER) &&
           !hasQuestBit(TOG_THIEF_L20_GAVE_LETTER) &&
@@ -956,14 +955,14 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
           !hasQuestBit(TOG_THIEF_L20_PAID_BYCATRINA) &&
           !hasQuestBit(TOG_THIEF_L20_MET_RASMIN) &&
           !hasQuestBit(TOG_THIEF_L20_LEARN_SECRET) &&
-          !hasQuestBit(TOG_THIEF_L20_MET_MERIN =416
-          !hasQuestBit(TOG_THIEF_L20_DISCOVER_CARAVAN =417
-          !hasQuestBit(TOG_THIEF_L20_DISCOVER_CONTACT =418
-          !hasQuestBit(TOG_THIEF_L20_GIVE_CANDLE =419
-          !hasQuestBit(TOG_THIEF_L20_DELIVER_TORASMIN =420
-          !hasQuestBit(TOG_THIEF_L20_INVESTIGATE_ATTACK =421
-          !hasQuestBit(TOG_THIEF_L20_MET_WESTLEY =422
-          !hasQuestBit(TOG_THIEF_L20_MAKE_BMCONTACT =423
+          !hasQuestBit(TOG_THIEF_L20_MET_MERIN) &&
+          !hasQuestBit(TOG_THIEF_L20_DISCOVER_CARAVAN) &&
+          !hasQuestBit(TOG_THIEF_L20_DISCOVER_CONTACT) &&
+          !hasQuestBit(TOG_THIEF_L20_GIVE_CANDLE) &&
+          !hasQuestBit(TOG_THIEF_L20_DELIVER_TORASMIN) &&
+          !hasQuestBit(TOG_THIEF_L20_INVESTIGATE_ATTACK) &&
+          !hasQuestBit(TOG_THIEF_L20_MET_WESTLEY) &&
+          !hasQuestBit(TOG_THIEF_L20_MAKE_BMCONTACT) &&
           !hasQuestBit(TOG_THIEF_L20_LOCATE_OONA) &&
           !hasQuestBit(TOG_THIEF_L20_GIVE_SAWDUST) &&
           !hasQuestBit(TOG_THIEF_L20_GIVE_CLIPPINGS) &&
@@ -989,7 +988,6 @@ void TPerson::setSelectToggles(TBeing* gm, classIndT Class,
           false, this, nullptr, nullptr, TO_CHAR, ANSI_CYAN);
       }
  
-  case THIEF_LEVEL_IND:
       if (getLevel(Class) >= 45 && !hasQuestBit(TOG_THIEF_L45_ELIGIBLE) &&
           !hasQuestBit(TOG_THIEF_L45_GAVE_TATTOO) &&
           !hasQuestBit(TOG_THIEF_L45_GAVE_LSD) &&
