@@ -79,7 +79,13 @@ int doHolyLight(TBeing* ch, TObj* o) {
   vict->affectTo(&aff);
 
   int dam = ::number(10, 60);
-  return ch->reconcileDamage(vict, dam, DAMAGE_HOLY);
+  rc = ch->reconcileDamage(vict, dam, DAMAGE_HOLY);
+  if (IS_SET_DELETE(rc, DELETE_VICT)) {
+    vict->reformGroup();
+    delete vict;
+    vict = NULL;
+  }
+  return TRUE;
 }
 
 // heal ser for avenger, heal crit for vindicator, heal for devastator
@@ -271,17 +277,9 @@ int deikhanSword(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*) {
     sstring buf, buf2;
     buf = sstring(arg).word(0);
     buf2 = sstring(arg).word(1);
-    int rc;
 
-    if (buf == "holy" && buf2 == "light") {
-      rc = doHolyLight(ch, o);
-      if (IS_SET_DELETE(rc, DELETE_VICT)) {
-        vict->reformGroup();
-        delete vict;
-        vict = NULL;
-      }
-      return TRUE;
-    }
+    if (buf == "holy" && buf2 == "light")
+      return doHolyLight(ch, o);
   
   }
   return FALSE;
