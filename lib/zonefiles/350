@@ -43,6 +43,11 @@ M 0 353 1 392        King (quest_mob_avenger)
 M 0 354 1 393        Queen
 M 0 356 1 390        Princess
 M 0 394 1 394        Business agent
+M 0 6846 1 380       Elderly Alchemist
+? 0 3 0 E
+E 1 6907 20 1        Glamourous Ring
+? 0 3 0 E
+E 1 6909 10 4        Luxuriant Black Silk Robe
 M 0 503 1 364        Drunken mage (headache quest)
 
 S
