@@ -10,6 +10,8 @@ D 0 364 5 2
 D 0 295 4 2
 
 O 1 22472 1 380    bubbling cauldron
+O 0 9026 1 373    an old dusty wooden chest
+L 1 5 8 0 1
 
 M 0 372 1 372        Royal Guard/Qst
 Y 0 10 10            metal set
@@ -46,5 +48,6 @@ M 0 6846 1 380          Elderly Alchemist
 E 1 6907 20 1                   Glamourous Ring
 ? 0 3 0 E
 E 1 6909 10 4                   Luxuriant Black Silk Robe
-M 0 503 1 364        Drunken Mage (quest mob)
+M 0 503 1 364        Drunken mage (headache quest)
+
 S
