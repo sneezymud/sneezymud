@@ -497,15 +497,29 @@ int TMonster::lookForEngaged() {
 }
 
 bool TMonster::isShopkeeper() const {
-  if (spec == SPEC_SHOPKEEPER || spec == SPEC_REPAIRMAN ||
-      spec == SPEC_LOAN_SHARK || spec == SPEC_BANKER || spec == SPEC_DOCTOR ||
-      spec == SPEC_DIVMAN || spec == SPEC_ATTUNER || spec == SPEC_ENGRAVER ||
-      spec == SPEC_SHARPENER || spec == SPEC_POSTMASTER ||
-      spec == SPEC_PET_KEEPER || spec == SPEC_TAXMAN ||
-      spec == SPEC_SIGNMAKER || spec == SPEC_RECEPTIONIST ||
-      spec == SPEC_AUCTIONEER || spec == SPEC_CENTRAL_BANKER ||
-      spec == SPEC_COMMOD_MAKER || spec == SPEC_BUTLER)
-    return true;
+  static constexpr std::array validShopkeeperSpecs = {
+    SPEC_SHOPKEEPER,
+    SPEC_REPAIRMAN,
+    SPEC_LOAN_SHARK,
+    SPEC_BANKER,
+    SPEC_DOCTOR,
+    SPEC_DIVMAN,
+    SPEC_ATTUNER,
+    SPEC_ENGRAVER,
+    SPEC_SHARPENER,
+    SPEC_POSTMASTER,
+    SPEC_PET_KEEPER,
+    SPEC_TAXMAN,
+    SPEC_SIGNMAKER,
+    SPEC_RECEPTIONIST,
+    SPEC_AUCTIONEER,
+    SPEC_CENTRAL_BANKER,
+    SPEC_COMMOD_MAKER,
+    SPEC_BUTLER,
+    SPEC_BLACKSMITH,
+    SPEC_TAILOR,
+  };
 
-  return false;
+  return std::find(validShopkeeperSpecs.begin(), validShopkeeperSpecs.end(),
+           spec) != validShopkeeperSpecs.end();
 }
