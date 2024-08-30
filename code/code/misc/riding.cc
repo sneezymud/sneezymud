@@ -144,14 +144,7 @@ int TMonster::lookForHorse() {
     // utilmobs already accounted for
     case SPEC_BOUNTY_HUNTER:
     case SPEC_JANITOR:
-    case SPEC_DOCTOR:
-    case SPEC_POSTMASTER:
     case SPEC_STABLE_MAN:
-    case SPEC_REPAIRMAN:
-    case SPEC_SHARPENER:
-    case SPEC_PET_KEEPER:
-    case SPEC_ENGRAVER:
-    case SPEC_SHOPKEEPER:
       return FALSE;
     default:
       break;

@@ -52,6 +52,9 @@ class Room {
     static constexpr int KALYSIA_INN = 14233;
     static constexpr int BULLYWUG_INN = 45054;
     static constexpr int NEWBIE = 584;
+    static constexpr int TAILOR_BLACKSMITH_ENTRANCE = 46592;
+    static constexpr int TAILOR = 46594;
+    static constexpr int BLACKSMITH = 46593;
 
     Room() = delete;
 };
@@ -183,6 +186,8 @@ class Obj {
     static constexpr int IMMORTAL_EXCHANGE_COIN = 37142;
     static constexpr int PREEN_FEATHER = 44845;
     static constexpr int GENERIC_L_TOKEN = 9995;
+    static constexpr int LOUPE_WARD_KEY = 46593;
+    static constexpr int BOLO_WARD_KEY = 46590;
 
     Obj() = delete;
 };
