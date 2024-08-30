@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <boost/optional.hpp>
+#include <unordered_map>
 
 #include "handler.h"
 #include "extern.h"
@@ -120,11 +121,118 @@ void TBeing::notLegalMove() const {
   sendTo("Alas, you cannot go that way...\n\r");
 }
 
+namespace {
+  // Nested unordered maps to allow creation of multiple warded exits from a
+  // single room, with each requiring a different ward key. Two entries, one
+  // from each adjoining room, are required for each warded exit (one for each
+  // direction the ward key can be used to pass through the ward) unless for
+  // some reason the ward should only apply one-way.
+  const std::unordered_map<int, const std::unordered_map<dirTypeT, int>>
+    wardKeysByRoom{
+      {
+        Room::WARD_1,
+        {
+          {
+            DIR_SOUTHWEST,
+            Obj::TALISMAN,
+          },
+        },
+      },
+      {
+        Room::WARD_2,
+        {
+          {
+            DIR_NORTHEAST,
+            Obj::TALISMAN,
+          },
+        },
+      },
+      {
+        Room::TAILOR_BLACKSMITH_ENTRANCE,
+        {
+          {
+            DIR_NORTH,
+            Obj::LOUPE_WARD_KEY,
+          },
+          {
+            DIR_EAST,
+            Obj::BOLO_WARD_KEY,
+          },
+        },
+      },
+      {
+        Room::BLACKSMITH,
+        {
+          {
+            DIR_SOUTH,
+            Obj::LOUPE_WARD_KEY,
+          },
+        },
+      },
+      {
+        Room::TAILOR,
+        {
+          {
+            DIR_WEST,
+            Obj::BOLO_WARD_KEY,
+          },
+        },
+      },
+    };
+
+  int tryPassWardedExit(TBeing& ch, dirTypeT cmd) {
+    if (ch.isImmortal() || IS_SET(ch.specials.act, ACT_GHOST)) {
+      act("$n's body splits into a cloud of atoms before your eyes!", true, &ch,
+        nullptr, nullptr, TO_ROOM, nullptr,
+        (ch.isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
+      ch.sendTo("You make yourself ethereal to pass through the ward.\n\r");
+      return 1;
+    }
+
+    act("There is a disturbance in the air around you.", true, &ch, nullptr,
+      nullptr, TO_CHAR);
+    act("There is a disturbance in the air around $n.", true, &ch, nullptr,
+      nullptr, TO_ROOM);
+
+    const char* dir = dirs[cmd];
+
+    const auto& wardedRoom = wardKeysByRoom.find(ch.in_room);
+
+    if (wardedRoom != wardKeysByRoom.end()) {
+      const auto& wardedDir = wardedRoom->second.find(cmd);
+
+      if (wardedDir != wardedRoom->second.end()) {
+        // Ward keys must be worn or held to pass through the ward
+        for (int i = MIN_WEAR; i < MAX_WEAR; ++i) {
+          const TObj* eq = dynamic_cast<TObj*>(ch.equipment[i]);
+
+          if (eq && eq->objVnum() == wardedDir->second) {
+            act(format("Your $o flares as it encounters the disturbance.\n\r"
+                       "Your $o protects you from the magic and allows you to "
+                       "move %s.") %
+                  dir,
+              false, &ch, eq, nullptr, TO_CHAR);
+            act("$n's $o flares as it encounters the disturbance.", false, &ch,
+              eq, nullptr, TO_ROOM);
+
+            return 1;
+          }
+        }
+      }
+    }
+
+    act(format("You are prevented from moving %s by a magical ward.") % dir,
+      false, &ch, nullptr, nullptr, TO_CHAR);
+    act(format("$n is stopped by a magical ward as $e tries to go %s.") % dir,
+      true, &ch, nullptr, nullptr, TO_ROOM);
+    return 0;
+  }
+}  // namespace
+
 bool TBeing::validMove(dirTypeT cmd) {
   roomDirData* exitp;
   TRoom* rp;
   int iHeight;
-  int pass;
   TBeing* tbt;
   TMonster* tmon;
 
@@ -228,20 +336,9 @@ bool TBeing::validMove(dirTypeT cmd) {
       return FALSE;
     }
   }
+
   if (IS_SET(exitp->condition, EXIT_WARDED)) {
-    if (isImmortal() || IS_SET(specials.act, ACT_GHOST)) {
-      act("$n's body splits into a cloud of atoms before your eyes!", TRUE,
-        this, 0, NULL, TO_ROOM, NULL,
-        (isPlayerAction(PLR_STEALTH) ? MAX_MORT : 0));
-      sendTo("You make yourself ethereal to pass through the ward.\n\r");
-      return TRUE;
-    }
-    pass = checkPassWard(cmd);  // centralized messages
-    if (pass) {
-      return TRUE;
-    } else {
-      return FALSE;
-    }
+    return tryPassWardedExit(*this, cmd);
   }
 
   rp = real_roomp(exitp->to_room);
@@ -294,73 +391,6 @@ bool TBeing::validMove(dirTypeT cmd) {
     }
   }
   return TRUE;
-}
-
-int TBeing::checkPassWard(dirTypeT cmd) const {
-  int rp = 0;
-  TObj* tmp = NULL;
-  char buf[512];
-
-  rp = in_room;
-
-  if (!rp || !(in_room == rp)) {
-    vlogf(LOG_BUG,
-      format("Bad room in checkPassWard: %s in %d") % getName() % rp);
-    sendTo("Please bug what you just tried to do.\n\r");
-    return FALSE;
-  }
-
-  switch (rp) {
-    case (Room::WARD_1):
-    case (Room::WARD_2):
-      tmp = dynamic_cast<TObj*>(equipment[WEAR_NECK]);
-      if (tmp) {
-        if (tmp->objVnum() == Obj::TALISMAN) {
-          act("There is a disturbance in the air around you.", TRUE, this, 0, 0,
-            TO_CHAR);
-          act("There is a disturbance in the air around $n.", TRUE, this, 0, 0,
-            TO_ROOM);
-          act("$n's talisman flares as it encounters the disturbance.", TRUE,
-            this, 0, 0, TO_ROOM);
-          act("Your talisman flares as it encounters the disturbance.", TRUE,
-            this, 0, 0, TO_CHAR);
-          act(
-            "Your talisman protects you from the magic and allows you to move "
-            "forward.",
-            TRUE, this, 0, 0, TO_CHAR);
-          return TRUE;
-        } else {
-          act("There is a disturbance in the air around you.", TRUE, this, 0, 0,
-            TO_CHAR);
-          act("There is a disturbance in the air around $n.", TRUE, this, 0, 0,
-            TO_ROOM);
-          sendTo(
-            "You are prevented from moving forward by a magical force.\n\r");
-          sprintf(buf, "$n is stopped by a magical force as $e tries to go %s",
-            dirs[cmd]);
-          act(buf, TRUE, this, 0, 0, TO_ROOM);
-          return FALSE;
-        }
-      } else {
-        act("There is a disturbance in the air around you.", TRUE, this, 0, 0,
-          TO_CHAR);
-        act("There is a disturbance in the air around $n.", TRUE, this, 0, 0,
-          TO_ROOM);
-        sendTo("You are prevented from moving forward by a magical force.\n\r");
-        sprintf(buf, "$n is stopped by a magical force as $e tries to go %s",
-          dirs[cmd]);
-        act(buf, TRUE, this, 0, 0, TO_ROOM);
-        return FALSE;
-      }
-      break;
-    default:
-      sendTo("**SMACK**  You seem to have slammed into a magical ward.\n\r");
-      sprintf(buf, "$n slams into a magical ward as $e tries to go %s",
-        dirs[cmd]);
-      act(buf, TRUE, this, 0, 0, TO_ROOM);
-      return FALSE;
-  }
-  return FALSE;
 }
 
 void TBeing::putOutLightsInWater() {

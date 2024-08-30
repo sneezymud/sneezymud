@@ -562,6 +562,8 @@ bool UtilProcs(int spec) {
   switch (spec) {
     case SPEC_ALIGN_DEITY:
     case SPEC_ENGRAVER:
+    case SPEC_BLACKSMITH:
+    case SPEC_TAILOR:
     case SPEC_PET_KEEPER:
     case SPEC_HORSE_FAMINE:
     case SPEC_HORSE_WAR:
