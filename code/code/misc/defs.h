@@ -121,6 +121,7 @@ const uint64_t AFF_CLARITY =
 const uint64_t AFF_FLIGHTWORTHY = uint64_t(0x0000000100000000LLU);
 const uint64_t AFF_FOCUS_ATTACK = uint64_t(0x0000000200000000LLU);
 const uint64_t AFF_ORIENT = uint64_t(0x0000000400000000LLU);
+const uint64_t AFF_FLURRY = uint64_t(0x0000000800000000LLU);
 const int AFF_MAX = 35;
 
 // these are used to pass deletion bitvectors through functions
