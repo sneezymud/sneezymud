@@ -7333,6 +7333,9 @@ extern int livingVines(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int dkSword(TBeing* vict, cmdTypeT cmd, const char*, TObj* o, TObj*);
 extern int moltenWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
 extern int glacialWeapon(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int gustWeaponT1(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int gustWeaponT2(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
+extern int gustWeaponT3(TBeing* vict, cmdTypeT cmd, const char* arg, TObj* o, TObj*);
 
 // assign special procedures to objects
 
@@ -7500,4 +7503,7 @@ TObjSpecs objSpecials[NUM_OBJ_SPECIALS + 1] = {
   {TRUE, "DK Sword", dkSword},
   {TRUE, "Molten Weapon", moltenWeapon},
   {TRUE, "Glacial Weapon", glacialWeapon},
+  {TRUE, "Gust Weapon Tier 1", gustWeaponT1},
+  {TRUE, "Gust Weapon Tier 2", gustWeaponT2},
+  {TRUE, "Gust Weapon Tier 3", gustWeaponT3},
   {FALSE, "last proc", bogusObjProc}};

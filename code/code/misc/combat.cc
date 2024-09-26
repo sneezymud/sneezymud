@@ -1892,6 +1892,7 @@ void TBeing::stopFighting() {
   REMOVE_BIT(specials.affectedBy, AFF_ENGAGER);
   REMOVE_BIT(specials.affectedBy, AFF_RIPOSTE);
   REMOVE_BIT(specials.affectedBy, AFF_FOCUS_ATTACK);
+  REMOVE_BIT(specials.affectedBy, AFF_FLURRY);
 
   if (gCombatList == this)
     gCombatList = next_fighting;
@@ -2535,6 +2536,15 @@ int TBeing::hit(TBeing* target, int pulse) {
       if (bSuccess(SKILL_CHIVALRY))
         ;  // do nothing, just for sake of learning
     }
+  }
+
+  // Add attacks for flurry
+  if (isAffected(AFF_FLURRY)) {
+    fx += 3;
+    REMOVE_BIT(specials.affectedBy, AFF_FLURRY);
+    act("<W>$n executes a <b>flurry<z><W> of attacks<z>", FALSE, this, 0, 0, TO_ROOM);
+    act("<W>You execute a <b>flurry<z><W> of attacks.<z>", FALSE, this, 0, 0, TO_CHAR);
+
   }
 
   // this affect is added after a successful parry
