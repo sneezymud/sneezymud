@@ -1,4 +1,32 @@
 #44855
-Vasco - Undead Tunnels~
-44879 25 2 0
+Vasco - Rat Tunnels~
+44879 25 2 1
+M 0 44865 5 44857   giant rats
+M 0 44865 5 44858
+M 0 44865 3 44859
+M 0 44865 3 44860
+M 0 44865 5 44861
+M 0 44865 3 44862
+M 0 44865 5 44863
+M 0 44865 5 44864
+M 0 44865 5 44865
+M 0 44864 1 44865    giant rat queen
+
+M 0 44871 5 44867    massive rats
+M 0 44871 5 44868
+M 0 44871 5 44869
+M 0 44871 5 44870
+M 0 44871 5 44871
+M 0 44871 5 44872
+M 0 44872 5 44872    massive rat queen
+
+M 0 44879 1 44879    monstrous rat creature
+
+O 0 602 1 44866      leather pouch
+? 0 20 0 L
+L 1 5 5 1
+
+O 0 44865 1 44866   small wooden chest
+P 1 231 1 44865     brimstone
+P 44867 1 44865     poisoned rum
 S

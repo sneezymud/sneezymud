@@ -63,15 +63,18 @@ O 0 3319 1 3372 		Ashtray
 O 0 3319 1 3385 		Ashtray
 
 O 0 3341 1 3366 		Glass Case
+? 0 20 0 L
 L 1 12 15 1           small loot list
 
 O 0 3342 1 3365 		Grey Glass Case
 P 1 27110 1 3342         Spellbook - Kalus Quest
 
 O 0 3343 1 3365 		Blue Glass Case
+? 0 20 0 L
 L 1 12 15 1           small loot list
 
 O 0 3341 1 3364 		Glass Case
+? 0 20 0 L
 L 1 12 15 1           small loot list
 
 O 0 3344 1 3364          Tapestry
@@ -92,9 +95,9 @@ D 0 3339 1 1
 
 *quest mobs
 M 0 3366 1 3314     Yarken
-M 0 3367 1 3395     hauler
-M 0 3368 1 3397     hauler
-M 0 3369 1 3361     hauler
+M 0 3367 1 3395     hauler (in freezer)
+M 0 3368 1 3397     hauler (past ghost)
+M 0 3369 1 3337     hauler (in cell)
 
 M 0 3300 1 3342 		Kraegin
 G 1 20049 2
