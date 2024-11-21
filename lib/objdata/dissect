@@ -1,373 +1,608 @@
+#head of vermithrax
+36355
+36380 9999
+You rip $p from $N.
+$n rips $p from $N.
+
+#head of tarfox
+36356
+36376 9999
+You pull with all your might and rip $p from $N.
+$n strains and rips $p from $N.
+
+#head of a strong wolf
+28908
+28956 9999
+You pull with all your might and rip $p from $N.
+$n strains and rips $p from $N.
+
+#demonic ribcage
 6539
 6559 50
 You reach into $N and rip out $p.
 $n reaches into $N and rips out $p.
+
+#red-yellow butterflywings
 33308
 33304 9999
 You rip $p from the $N.
 $n rips $p from the $N.
+
+#illithid sinew
 13745
 13891 9999
 You cut $p from $N.
 $n cuts $p from $N.
+
+#red dragon scales
 12403
 13888 9999
 You collect $p from $N.
 $n collects $p from $N.
+
+#white dragon scales
 2107
 13890 9999
 You collect $p from $N.
 $n collects $p from $N.
+
+#green dragon scales
 3416
 13889 9999
 You collect $p from $N.
 $n collects $p from $N.
+
+#scaled animal hide
 31316
 31361 9999
 You rip $p from $N.
 $n rips $p from $N.
+
+#ogre’s stray thought
 127
 31338 9999
 You capture $p from $N.
 $n captures $p from $N.
+
+#unicorn urine
 31309
 31335 9999
 You rip $p completely off of $N.
 $n rips $p completely off of $N.
+
+#trolloc leg
 28926
 28925 9999
 With a grunt you rip $p from $N.
 With a grunt $n rips $p from $N.
+
+#trolloc arm
 28901
 28924 9999
 With a grunt you rip $p from $N.
 With a grunt $n rips $p from $N.
+
+#small spine
 28931
 28908 9999
 You slice $p from $N.
 $n slices $p from $N.
+
+#ring of a fade
 28902
 28922 4
 You dig your hand deep into the stomach of $N, and pull out $p.
-$n digs around a bit in $N's then removes $p.
+$n digs around a bit in the stomach of $N then removes $p.
+
+#bullywug liver
 4300
 23020 9999
 You slice open $N, and rip out $p.
 $n slices open $N, and rips out $p.
+
+#blue mare’s hide
 31307
 31314 9999
 You tear $p from $N.
 $n tears $p from $N.
+
+#rusty sword
 16305
 16303 50
 You rip $p from the bloody, mangled skull of $N.
 $n rips $p from the bloody, mangled skull of $N.
+
+#raw silver fish filet
 10620
 10682 25
 You rip $p from $N.
 $n rips $p from $N.
+
+#robes of gnilis
 14150
 14152 1
 Examining $N you discover a secret compartment and extract $p from it.
 $n examines $N discovering a secret compartment and extracts $p from it.
+
+#badger skull
 14161 
 14102 50
 You rip the $o from $N and quickly clean it. 
 $n rips the $o from $N and quickly cleans it.
+
+#badger skull
 14104
 14102 30
 You rip the $o from $N and quickly clean it.
 $n rips the $o from $N and quickly cleans it.
+
+#colorful shell
 14108
 14101 50
 You carefully remove $N from $p and save the shell.
 $n carefully removes $N from $p and saves the shell.
+
+#crimson shadow essence
 9551
 9572 9999
 You carefully capture the $p in a small generic vial.
 $n carefully captures $p in a small generic vial.
+
+#cape hawk tail feathers
 5701
 5744 50
 You carefully fashion $p from $N.
 $n carefully fashions $p from $N.
+
+#gritty grey potion
 20875
 20875 50
 Scraping dust from $N you mix it with water forming $p.
 $n creates $p using dust from $N.
+
+#displacer beast blood
 20880
 20883 50
 You fill a vial with blood from $N.
 $n fills a vial with blood from $N.
+
+#bear claw
 5705
 5745 50
 You rip $p from $N.
 $n rips $p from $N.
+
+#rhino’s horn
 8514
 8505 25
 You cut $p from $N.
 $n cuts $p from $N.
+
+#ivory tusk
 8525
 8504 25
 You cut $p from $N.
 $n cuts $p from $N.
+
+#globe of stone
 20438
 20476 60
 You rip $p from $N.
 $n rips $p from $N.
+
+#globe of water
 20415
 20477 60
 You get $p from $N.
 $n gets $p from $N.
+
+#globe of air
 20807
 20860 60
 You get $p from $N.
 $n gets $p from $N.
+
+#shadowy feather
 20808
 20861 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#chieftain’s mane
 20600
 20617 3
 You cut $p from $N.
 $n cuts $p from $N.
+
+#horn othoram
 20611
 20625 25
 You cut $p from $N.
 $n cuts $p from $N.
+
+#horn othoram
 20621
 20625 25
 You cut $p from $N.
 $n cuts $p from $N.
+
+#horn orthoram
 7032
 20625 25
 You cut $p from $N.
 $n cuts $p from $N.
+
+#hoof kelk stag
 20625
 20626 15
 You cut a hoof from $N.
 $n cuts a hoof from $N.
+
+#horn of ganthi
 20628
 20627 5
 You rip the horn from $N.
 $n rips the horn from $N.
+
+#fish filet
 20630
 20636 9999
 You cut $p from $N.
 $n cuts $p from $N.
+
+#silvery blood
 20631
 20635 9999
 You grab a scrap piece of reed and fill it with blood from $N.
 $n grabs a scrap piece of reed filling it with blood from $N.
+
+#othora steak
 20612
 20638 9999
 You cut $p from $N.
 $n cuts $p from $N.
+
+#othora steak
 20613
 20638 9999
 You cut $p from $N.
 $n cuts $p from $N.
+
+#othora steak
 20622
 20638 9999
 You cut $p from $N.
 $n cuts $p from $N.
+
+#othora steak
 20623
 20638 9999
 You cut $p from $N.
 $n cuts $p from $N.
+
+#glowing gland
 20614
 20624 9999
 You rip $p from $N.
 $n rips $p from $N.
+
+#glowing gland
 20419
 20624 9999
 You rip $p from $N.
 $n rips $p from $N.
+
+#pigeon feather
 172
 205 50
 You pluck $p from $N's wing.
 $n plucks $p from $N's wing.
+
+#whale grease
 12411
 263 50
 You slop some whale grease into a jar and save it for later.
 $n obtains $p from $N.
+
+
 12415
 263 50
 You slop some whale grease into a jar and save it for later.
 $n obtains $p from $N.
+
+#eyes blindman
 7800
 246 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#banshee larynx
 928
 212 50
 You snap the neck of $N and yank out $p.
 $n snaps the neck of $N and yanks out $p.
+
+#green falcon feather
 10913
 206 50
 You pluck $p from $N's wing.
 $n plucks $p from $N's wing.
+
+#bat wings
 11340
 237 50
 You snap $p from $N.
 $n snaps $p from $N.
+
+
 13700
 237 50
 You snap $p from $N.
 $n snaps $p from $N.
+
+#eyes of eagle
 953
 247 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+
 575
 247 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
 9235
 247 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
 20428
 247 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#siren’s hair
 12406
 251 50
 You pull $p from $N's head.
 $n pulls $p from $N's head.
+
+#nightmare hoof
 7803
 252 50
 You snap $p from $N.
 $n snaps $p from $N.
+
+#paw greyhound
 7816
 260 50
 You snap $p from $N.
 $n snaps $p from $N.
+
+#shark gill
 12431
 271 50
 You carve $p from $N.
 $n carve $p from $N.
+
+#red snake eye
 5112
 273 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#kraken pestual
 12407
 272 50
 You carve $p from $N.
 $n carve $p from $N.
+
+#rattler
 9314
 31324 50
 You reach into $N and tear out $p.
 $n reaches into $N and tears out $p.
+
+#cat eye
 104
 1406 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#cat eye
 560
 1406 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#cat eye
 25402
 1406 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#kiss mermaid
 12440
 1412 50
 You embracw $N and steal $p.
 $n embraces $N and steals $p.
+
+#cheetah paw
 8511
 261 50
 You snap $p from $N.
 $n snaps $p from $N.
+
+#widow web
 6605
 243 50
 You tear open $N and get $p from its websack.
 $n tears open $N and gets $p from its websack.
+
+#eel tail
 12416
 235 50
 You snip $p from $N.
 $n snips $p from $N.
+
+
+#eel tail
 14125
 235 50
 You snip $p from $N.
 $n snips $p from $N.
+
+#peacock feather
 31089
 207 50
 You pluck $p from $N's tail.
 $n plucks $p from $N's tail.
+
+#peacock feather
 7806
 207 50
 You pluck $p from $N's tail.
 $n plucks $p from $N's tail.
+
+#cat eye
 11105
 1406 50
 You pluck $p from $N.
 $n plucks $p from $N.
+
+#large golden feather
 4791
 4791 10
 You pluck $p from $N's wing.
 $n plucks $p from $N's wing.
+
+#aquatic dragon head
 22517
 22522 100
 You tear $p from $N.
 $n tears $p from $N.
+
+#stone club
 20408
 20425 50
 You tear $p from $N.
 $n tears $p from $N.
+
+#river serpent venom
 20409
 20426 50
 You extract $p from $N.
 $n extracts $p from $N.
+
+#ice shard lance XXX
 20420
 20437 50
 You pull $p from $N.
 $n pulls $p from $N.
+
+#small ice shard
 20421
 20440 50
 You pull $p from $N.
 $n pulls $p from $N.
+
+#polar bear hide cloak
 20422
 20441 50
 You carve $p from $N.
 $n carves $p from $N.
+
+#polar bear cape
 20423
 20441 50
 You carve $p from $N.
 $n carves $p from $N.
+
+#horn snow beast
 20424
 20442 50
 You cut $p from $N.
 $n cuts $p from $N.
+
+#animal hide
 20427
 20443 50
 You cut $p from $N.
 $n cuts $p from $N.
+
+#seal hide
 20430
 20450 50
 You cut $p from $N.
 $n cuts $p from $N.
+
+
+#rat tail - good sized rat
 129
 89 9999
 You cut off $p from $N.
 $n cuts off $p from $N.
+
+#rat tail - large rat
 132
 89 9999
 You cut off $p from $N.
 $n cuts off $p from $N.
+
+#rat tail - small rat
 600
 89 9999
 You cut off $p from $N.
 $n cuts off $p from $N.
+
+#rat tail - giant rat queen
+44864
+89 9999
+You cut off $p from $N.
+$n cuts off $p from $N.
+
+#rat tail - giant rat
+44865
+89 9999
+You cut off $p from $N.
+$n cuts off $p from $N.
+
+#rat tail - massiverat
+44871
+89 9999
+You cut off $p from $N.
+$n cuts off $p from $N.
+
+#rat tail - massive rat queen
+44872
+89 9999
+You cut off $p from $N.
+$n cuts off $p from $N.
+
+#rat tail - monstrous rat
+44879
+89 9999
+You cut off $p from $N.
+$n cuts off $p from $N.
+
+#rune key
 25507
 25502 100
 You pry open the right claw of $N and find $p.
 $n pries open the right claw of $N and finds $p.
+
+#fleshy key
 31400
 7403 100
 You plunge your fist deep inside the gut of $N and yank out $p.
 $n plunges their fist deep inside the gut of $N and yanks out $p.
+
+#cheetah paw
 45664
 261 90
-You'd think that a $N would contain a <o>golden carrot<z>. Instead, you pull out $p from its intestines. Weird.
+You would think that a $N would contain a <o>golden carrot<z>. Instead, you pull out $p from its intestines. Weird.
 Surprisingly, $n finds $p in the stomach of $N.
+
+
 
