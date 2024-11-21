@@ -3,9 +3,10 @@ Saint - Caves of the Ancients~
 3399 25 2 1
 
 O 0 20027 1 3343         Chest (kraegin)
-? 0 10 0 P
+? 0 20 0 P
 P 1 3346 5 20027	  Gleaming Necklace
-? 0 10 0 P
+O 0 20027 1 3343
+? 0 20 0 P
 P 1 3349 5 20027	  Ivory-hilted Poinard
 
 O 0 3318 2 3394       Torchiere
@@ -35,8 +36,18 @@ O 0 3306 1 3376 		Pile of Refuse
 O 0 3306 1 3377 		Pile of Refuse
 
 O 0 3307 1 3378 		Cask
+P 1 3423 999 3307       supplies 
+P 1 340 999 3307        small hand axe
 P 1 404 999 3307              food inside cask
 P 1 404 999 3307              food inside cask
+
+O 0 3307 1 3359 		Cask
+P 1 3423 999 3307       supplies
+P 1 5122 999 3307       decay shirt
+
+O 0 3307 1 3395 		Cask
+P 1 3423 999 3307       supplies
+P 1 5135 999 3307       decay pants
 
 O 0 3308 1 3379 		Crate
 P 1 3328 29 3308             workglove inside crate
@@ -52,13 +63,16 @@ O 0 3319 1 3372 		Ashtray
 O 0 3319 1 3385 		Ashtray
 
 O 0 3341 1 3366 		Glass Case
+L 1 12 15 1           small loot list
 
 O 0 3342 1 3365 		Grey Glass Case
 P 1 27110 1 3342         Spellbook - Kalus Quest
 
 O 0 3343 1 3365 		Blue Glass Case
+L 1 12 15 1           small loot list
 
 O 0 3341 1 3364 		Glass Case
+L 1 12 15 1           small loot list
 
 O 0 3344 1 3364          Tapestry
 O 0 3344 1 3365          Tapestry
@@ -76,8 +90,13 @@ D 0 3338 2 1
 D 0 3335 3 1	Cell Door
 D 0 3339 1 1
 
+*quest mobs
+M 0 3366 1 3314     Yarken
+M 0 3367 1 3395     hauler
+M 0 3368 1 3397     hauler
+M 0 3369 1 3361     hauler
+
 M 0 3300 1 3342 		Kraegin
-? 0 30 0 G
 G 1 20049 2
 
 M 0 3301 2 3341 		Angler fish
