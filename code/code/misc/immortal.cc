@@ -2951,7 +2951,7 @@ void TPerson::doStart() {
   static const sstring tattoo_adj[] = {
     // really really generic adjectives that could describe ANY object tattood
     "<W>white",
-    "<p>pink",
+    "<P>pink",
     "<k>black",
     "<r>red",
     "<g>green",
@@ -3011,10 +3011,6 @@ void TPerson::doStart() {
     WEAR_LEG_L,
     WEAR_FOOT_R,
     WEAR_FOOT_L,
-    WEAR_EX_LEG_R,
-    WEAR_EX_LEG_L,
-    WEAR_EX_FOOT_R,
-    WEAR_EX_FOOT_L,
   };
   static unsigned int defaultPrompt =
     PROMPT_HIT | PROMPT_MOVE | PROMPT_EXP | PROMPT_OPPONENT | PROMPT_TANK;
@@ -3056,9 +3052,9 @@ void TPerson::doStart() {
     while (!hasPart(location) && ++cBodypartCheck < 15)
       location = tattoo_slot[::number(0, cElements(tattoo_slot) - 1)];
     if (::number(0, 1))
-      tattoo = format("A tattoo of a %s %s<1>.") % adj % noun;
+      tattoo = format("A %s <1>%s.") % adj % noun;
     else
-      tattoo = format("A tattoo of a %s.") % noun;
+      tattoo = format("A %s.") % noun;
     if (cBodypartCheck < 15 && hasPart(location))
       applyTattoo(location, tattoo, SILENT_YES);
   }
